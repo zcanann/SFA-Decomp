@@ -8,14 +8,13 @@ jobs:
   build:
     # This is a *private* build container.
     # See docs/github_actions.md for more information.
-    container: ghcr.io/my/game-build:main
+    container: ghcr.io/zcanann/sfa-decomp-private:main
 
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        # Add game versions here
-        version: [GAMEID]
+        version: [GCCP01] #, GCCE01, GCCJGC] # Enable these eventually
 
     steps:
     # Checkout the repository
