@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [GCCP01] #, GCCE01, GCCJGC] # Enable these eventually
+        version: [GSAE01] #, GSAJ01, GSAP01] # Enable these eventually
 
     steps:
     # Checkout the repository
