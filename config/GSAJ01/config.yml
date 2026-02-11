@@ -1,0 +1,9 @@
+# See config.example.yml for documentation.
+object_base: orig/GSAJ01
+object: sys/main.dol
+hash: a0646def31229c051f5143e6551840e6560b0556
+symbols: config/GSAJ01/symbols.txt
+splits: config/GSAJ01/splits.txt
+# Change this to match the linker version.
+# See config.example.yml for a list.
+mw_comment_version: 11
