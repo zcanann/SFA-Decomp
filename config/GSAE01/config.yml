@@ -1,9 +1,95 @@
-# See config.example.yml for documentation.
-object_base: orig/GSAE01
+# NOTE: All paths in this file can utilize decomp-toolkit's VFS (virtual file system).
+# This allows you to directly reference files inside of containers (disc images, .arc, etc.).
+# Files compressed with Yaz0 (SZS), Yay0 (SZP) are automatically decompressed.
+# Files compressed with NLZSS (Nintendo LZSS) can use a `:nlzss` suffix to decompress.
+# See https://github.com/encounter/decomp-toolkit#vfs-ls for more information on the VFS.
+
+game_name: Star Fox Adventures (USA)
+
+# (optional) Main module name. Defaults to "main".
+name: main
+
+# Path to the main.dol file.
 object: sys/main.dol
+
+# (optional) SHA-1 hash of the main.dol file for verification.
 hash: 8bde4669c75260cc058b8b44ef36bacff3a67d20
+
+# (optional) If set, all object paths will be relative to this directory.
+# If not set, all object paths will be relative to the root of the project.
+# decomp-toolkit will search the root of this directory for any disc images. (ISO, RVZ, WBFS, etc.)
+# If a disc image is found, decomp-toolkit will fetch all objects from the disc image instead of the filesystem.
+# For example, if `game.iso` exists in the `object_base`, the object path would become the VFS path
+# `orig/GAMEID/game.iso:sys/main.dol`. See information on the VFS above.
+object_base: orig/GSAE01
+
+# (optional) If true, objects will be extracted from a disc image into `object_base`.
+# This allows users to delete the disc image after the initial build to save space.
+# Enabled by default if `object_base` is set.
+extract_objects: true
+
+# (optional) Path to the symbols.txt file.
+# This file will be created if it does not exist.
+# See docs/symbols.md for more information.
 symbols: config/GSAE01/symbols.txt
+
+# (optional) Path to the splits.txt file.
+# This file will be created if it does not exist.
+# See docs/splits.md for more information.
 splits: config/GSAE01/splits.txt
-# Change this to match the linker version.
-# See config.example.yml for a list.
+
+# (optional) Version used to generate `.comment` sections in the split objects.
+# If not specified, no `.comment` sections will be generated.
+# See docs/comment_section.md for more information.
+# Known versions:
+# 8 - CodeWarrior for GameCube 1.0+
+# 10 - CodeWarrior for GameCube 1.3.2+
+# 11 - CodeWarrior for GameCube 2.7+
+# 14 - CodeWarrior for GameCube 3.0a3+
 mw_comment_version: 11
+
+# (optional) When enabled, function boundary analysis will be skipped.
+# Only valid _after_ initial analysis has been performed and
+# the symbols and splits files have been generated. 
+quick_analysis: false
+
+# (optional) When enabled, the analyzer will attempt to detect sizes
+# and data types of objects based on code usage and alignment.
+detect_objects: true
+
+# (optional) When enabled, the analyzer will attempt to detect strings,
+# wide strings, and string tables.
+detect_strings: true
+
+# (optional) Whether to write disassembly to the split output directory.
+# While not used in the build process, the disassembly is useful
+# for reading and usage with other tools, like decomp.me.
+write_asm: true
+
+# (optional) If symbols are _fully_ known (e.g. from a complete map file),
+# this can be set to true to skip most analysis steps, and ensure new
+# symbols are not created by the analyzer.
+# If you're not sure, leave this false.
+symbols_known: false
+
+# (optional) Whether to create `gap_` symbols to prevent the linker from
+# adjusting the alignment / address of symbols.
+# When alignments are fully known (e.g. from a complete map file),
+# this can be set to false.
+fill_gaps: true
+
+# (optional) By default, emitted objects will "export" all symbols (force active).
+# This is useful to prevent the linker from removing any symbols.
+# Individual symbols can be excluded using `noexport` in the symbols file.
+export_all: true
+
+# (optional) Scrub uninitialized data from the extab section.
+# Certain extab acctions contain uninitialized data from the compiler.
+# Affected games can use `dtk extab clean in.dol out.dol` to get a DOL with
+# the uninitialized data zeroed out. When targeting a cleaned DOL hash,
+# this option can be set to true to scrub the uninitialized data from 
+# the extab section in the split objects.
+#
+# Alternatively, you can set extab_padding on any affected objects in
+# configure.py, in order to exactly match the original DOL.
+clean_extab: false
