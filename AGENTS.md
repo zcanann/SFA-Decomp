@@ -28,6 +28,7 @@ This repo starts from very little. Expect to do naming, struct recovery, type cl
 - Work outward aggressively if the blocker is adjacent code, missing types, unknown globals, constructor patterns, SDK reuse, or bad file boundaries.
 - Do not get trapped in local optima. If a path stops yielding structure, switch level: inspect related code, assets, rodata, strings, object layouts, SDK analogs, or write tooling.
 - Prefer recovering coherent source over narrowly chasing one assembly diff while the surrounding code remains obviously wrong.
+- Please try to keep the build in a functional state (ninja should compile successfully on work complete and a fresh run).
 
 ## Expected Work
 - Infer function names where none exist yet.
@@ -52,12 +53,12 @@ This repo starts from very little. Expect to do naming, struct recovery, type cl
 3. Build.
 4. Run objdiff and judge net progress.
 5. If stuck, change angle quickly: adjacent code, data, assets, references, or tooling.
-6. Commit real progress directly to the main working branch for this phase. No PR flow is required right now.
+6. Commit real progress directly to the main working branch for this phase and push to main. No PR flow is required right now.
 7. If the process changes (ie we expect ninja to pass after a session, etc.) please update this document.
 
 ## Commit Standard
 Commit when both are true:
-- The repo is materially better: codegen, data, linkage, structure, or tooling improved.
+- The repo is materially better: codegen, data, linkage, structure, or tooling improved, even if marginally.
 - The result is plausible original source or materially improves the ability to recover it.
 
 Less process is intentional. Use judgment, move fast, and avoid spending an hour proving a bad assumption.

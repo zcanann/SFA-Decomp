@@ -1,13 +1,5 @@
 #include "src/audio/synth_internal.h"
 
-extern void fn_80278D74(SynthVoiceSlot*);
-extern u32 fn_80279C00(u32);
-extern void fn_80282630(u32, SynthVoiceSlot*, SynthVoiceSlot*);
-extern void fn_802836E4(s32*);
-extern const f32 lbl_803E8430;
-extern const f32 lbl_803E8440;
-extern const f32 lbl_803E846C;
-
 #define SYNTH_FADE_COUNT 0x20
 #define SYNTH_FADE_SELECTOR_ACTION_2 0xFA
 #define SYNTH_FADE_SELECTOR_ACTION_3 0xFB
@@ -17,9 +9,9 @@ extern const f32 lbl_803E846C;
 #define SYNTH_FADE_SELECTOR_ACTION_0_OR_1 0xFF
 #define SYNTH_FADE_ACTION_DISABLED 4
 #define SYNTH_INVALID_LINK_ID 0xFFFFFFFF
-#define SYNTH_FADE_SCALE lbl_803E8430
-#define SYNTH_FADE_ONE lbl_803E8440
-#define SYNTH_FADE_TIME_SCALE lbl_803E846C
+#define SYNTH_FADE_SCALE sSynthFadeScale
+#define SYNTH_FADE_ONE sSynthFadeUnit
+#define SYNTH_FADE_TIME_SCALE sSynthFadeTimeScale
 
 #define SYNTH_APPLY_FADE(fade, fadeIndex, fadeHandle)      \
     do {                                                   \
@@ -44,11 +36,11 @@ extern const f32 lbl_803E846C;
     } while (0)
 
 void synthCopyVoiceSlotMixState(SynthVoiceSlot* dst, SynthVoiceSlot* src) {
-    fn_80282630(7, dst, src);
-    fn_80282630(10, dst, src);
-    fn_80282630(0x5B, dst, src);
-    fn_80282630(0x80, dst, src);
-    fn_80282630(0x84, dst, src);
+    synthCopyControllerValue(7, dst, src);
+    synthCopyControllerValue(10, dst, src);
+    synthCopyControllerValue(0x5B, dst, src);
+    synthCopyControllerValue(0x80, dst, src);
+    synthCopyControllerValue(0x84, dst, src);
 }
 
 s32 synthTriggerCallback(u32 callbackId) {
@@ -57,13 +49,13 @@ s32 synthTriggerCallback(u32 callbackId) {
 
     handled = 0;
     if (gSynthInitialized != 0) {
-        for (linkId = fn_80279C00(callbackId); linkId != SYNTH_INVALID_LINK_ID;
+        for (linkId = synthLookupCallbackLinkId(callbackId); linkId != SYNTH_INVALID_LINK_ID;
              linkId = gSynthVoiceSlots[linkId & 0xFF].callbackNext) {
             SynthVoiceSlot* slot;
 
             slot = &gSynthVoiceSlots[linkId & 0xFF];
             if (linkId == slot->callbackLinkId) {
-                fn_80278D74(slot);
+                synthReleaseVoiceSlot(slot);
                 handled = 1;
             }
         }
@@ -82,7 +74,7 @@ void synthSetFade(u8 value, u16 time, u8 selector, u8 action, u32 handle) {
 
     fadeTime = time;
     if (fadeTime != 0) {
-        fn_802836E4((s32*)&fadeTime);
+        synthScaleFadeTime((s32*)&fadeTime);
     }
 
     fadeTable = gSynthFades;

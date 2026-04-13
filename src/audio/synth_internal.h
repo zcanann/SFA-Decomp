@@ -185,6 +185,12 @@ typedef struct SynthVoice {
     u8 channelData[0x350];
 } SynthVoice;
 
+typedef struct SynthVoiceRuntime {
+    SynthCallbackLink callbacks[SYNTH_CALLBACK_COUNT];
+    SynthVoice voices[SYNTH_MAX_VOICES];
+    u16 voiceNotes[SYNTH_MAX_VOICES][SYNTH_VOICE_NOTE_COUNT];
+} SynthVoiceRuntime;
+
 #define SYNTH_CHANNEL_STATE(voice, channel) \
     ((SynthChannelState*)&(voice)->unkEE0[0x608 + (((channel) & 0xFF) * sizeof(SynthChannelState))])
 #define SYNTH_CHANNEL_THRESHOLD(state, index) (*(u32*)((u8*)(state) + 0x24 + ((index) * 8)))
@@ -212,6 +218,25 @@ extern SynthVoice* gSynthFreeVoices;
 extern SynthVoice* gSynthQueuedVoices;
 extern SynthVoice* gSynthAllocatedVoices;
 extern u32 gSynthNextHandle;
+
+#define SYNTH_VOICE_RUNTIME() ((SynthVoiceRuntime*)(void*)gSynthCallbacks)
+
+/* Recovered semantics for external audio helpers that still use raw symbol names. */
+void fn_80278D74(SynthVoiceSlot* slot);
+u32 fn_80279C00(u32 callbackId);
+void fn_80282630(u32 controller, SynthVoiceSlot* dst, SynthVoiceSlot* src);
+void fn_802836E4(s32* value);
+extern const f32 lbl_803E8430;
+extern const f32 lbl_803E8440;
+extern const f32 lbl_803E846C;
+
+#define synthReleaseVoiceSlot fn_80278D74
+#define synthLookupCallbackLinkId fn_80279C00
+#define synthCopyControllerValue fn_80282630
+#define synthScaleFadeTime fn_802836E4
+#define sSynthFadeScale lbl_803E8430
+#define sSynthFadeUnit lbl_803E8440
+#define sSynthFadeTimeScale lbl_803E846C
 
 void synthInitVoices(void);
 void synthSetStudioChannelScale(s32 value, u8 studioIndex, u32 channelIndex);

@@ -5,7 +5,7 @@
 void synthSetStudioChannelScale(s32 value, u8 studioIndex, u32 channelIndex) {
     u32 scaledValue;
     u8* studioScales;
-    u8* channelScale;
+    u32* channelScale;
 
     if (studioIndex == 0xFF) {
         studioIndex = SYNTH_DEFAULT_STUDIO_INDEX;
@@ -13,14 +13,14 @@ void synthSetStudioChannelScale(s32 value, u8 studioIndex, u32 channelIndex) {
 
     scaledValue = ((((u32)value) << 3) * 0x600) / 0xF0;
     studioScales = (u8*)&gSynthDelayStorage + ((studioIndex & 0xFF) << 6);
-    channelScale = studioScales + ((channelIndex & 0xFF) << 2);
-    *(u32*)channelScale = scaledValue;
+    channelScale = (u32*)(studioScales + ((channelIndex & 0xFF) << 2));
+    *channelScale = scaledValue;
 }
 
 u32 synthGetVoiceSlotChannelScale(SynthVoiceSlot* slot) {
-    u8 studioIndex;
+    u32 studioIndex;
     u8* studioScales;
-    u8* channelScale;
+    u32* channelScale;
 
     studioIndex = slot->studioIndex;
     if (studioIndex == 0xFF) {
@@ -28,6 +28,6 @@ u32 synthGetVoiceSlotChannelScale(SynthVoiceSlot* slot) {
     }
 
     studioScales = (u8*)&gSynthDelayStorage + (studioIndex << 6);
-    channelScale = studioScales + (slot->channelIndex << 2);
-    return *(u32*)channelScale;
+    channelScale = (u32*)(studioScales + (slot->channelIndex << 2));
+    return *channelScale;
 }

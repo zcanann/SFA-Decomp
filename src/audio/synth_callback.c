@@ -157,6 +157,8 @@ void synthFlushCallbacks(void) {
 }
 
 void synthFreeCallback(SynthCallbackLink* callback) {
+    SynthCallbackLink* freeCallback;
+
     if (callback->next != 0) {
         callback->next->prev = callback->prev;
     }
@@ -167,11 +169,10 @@ void synthFreeCallback(SynthCallbackLink* callback) {
         gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX] = callback->next;
     }
 
-    if (gSynthFreeCallbacks != 0) {
-        callback->next = gSynthFreeCallbacks;
-        gSynthFreeCallbacks->prev = callback;
-    } else {
-        callback->next = 0;
+    freeCallback = gSynthFreeCallbacks;
+    callback->next = freeCallback;
+    if (freeCallback != 0) {
+        freeCallback->prev = callback;
     }
 
     callback->prev = 0;
