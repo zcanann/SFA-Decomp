@@ -49,6 +49,7 @@ SPAM_OBJECTS = {
 
 @dataclass(frozen=True)
 class DolphinSymbol:
+    line_number: int
     section: str
     address: int
     size: int
@@ -139,7 +140,10 @@ def parse_lib_and_object(extra: str) -> tuple[str, str]:
 def load_dolphin_symbols(path: Path) -> list[DolphinSymbol]:
     symbols: list[DolphinSymbol] = []
     section = ""
-    for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+    for line_number, line in enumerate(
+        path.read_text(encoding="utf-8", errors="ignore").splitlines(),
+        start=1,
+    ):
         stripped = line.strip()
         if not stripped:
             continue
@@ -158,6 +162,7 @@ def load_dolphin_symbols(path: Path) -> list[DolphinSymbol]:
         library, object_path = parse_lib_and_object(extra)
         symbols.append(
             DolphinSymbol(
+                line_number=line_number,
                 section=section,
                 address=int(match.group("address"), 16),
                 size=int(match.group("size"), 16),
@@ -213,6 +218,24 @@ def load_splits(path: Path) -> list[SplitRange]:
             )
         )
     return ranges
+
+
+SOURCE_FUNCTION_RE = re.compile(
+    r"^(?:asm\s+)?(?:static\s+)?(?:inline\s+)?"
+    r"(?:[\w:~*<>\[\]\s]+?\s+)?(?P<name>[A-Za-z_~]\w*(?:::\w+)*)\s*\([^;]*\)\s*\{"
+)
+
+
+def load_source_function_names(path: Path) -> set[str]:
+    names: set[str] = set()
+    for raw_line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("//") or line.startswith("#"):
+            continue
+        match = SOURCE_FUNCTION_RE.match(line)
+        if match is not None:
+            names.add(match.group("name"))
+    return names
 
 
 def is_anonymous(name: str) -> bool:
@@ -489,6 +512,132 @@ def build_candidates(
     return candidates
 
 
+def has_provenance(symbol: DolphinSymbol) -> bool:
+    return bool(symbol.library and symbol.object_path)
+
+
+def translated_range(
+    symbols: list[DolphinSymbol],
+    start_index: int,
+    end_index: int,
+    anchor_indexes: dict[str, tuple[list[int], list[AddressAnchor]]],
+    manual_delta: int | None,
+) -> tuple[int, int]:
+    start_symbol = symbols[start_index]
+    end_symbol = symbols[end_index]
+    translated_start, _, _ = translate_address(start_symbol, anchor_indexes, manual_delta)
+    translated_end, _, _ = translate_address(end_symbol, anchor_indexes, manual_delta)
+    return translated_start, translated_end + end_symbol.size
+
+
+def infer_object_span(
+    dolphin_symbols: list[DolphinSymbol],
+    library: str,
+    object_path: str,
+    source_functions: set[str] | None,
+) -> tuple[int, int]:
+    anchor_indices = [
+        index
+        for index, symbol in enumerate(dolphin_symbols)
+        if symbol.library == library and symbol.object_path == object_path
+    ]
+    if not anchor_indices:
+        raise SystemExit(f"No Dolphin symbols found for {library} {object_path}")
+
+    first_anchor = anchor_indices[0]
+    last_anchor = anchor_indices[-1]
+
+    end_index = last_anchor
+    for index in range(last_anchor + 1, len(dolphin_symbols)):
+        if has_provenance(dolphin_symbols[index]):
+            break
+        end_index = index
+
+    start_index = first_anchor
+    if source_functions:
+        for index in range(first_anchor, -1, -1):
+            symbol = dolphin_symbols[index]
+            if has_provenance(symbol) and index not in anchor_indices:
+                break
+            if symbol.name in source_functions:
+                start_index = index
+
+    return start_index, end_index
+
+
+def print_object_span(
+    dolphin_symbols: list[DolphinSymbol],
+    config_symbols: list[ConfigSymbol],
+    split_ranges: list[SplitRange],
+    manual_delta: int | None,
+    library: str,
+    object_path: str,
+    source_path: Path | None,
+) -> None:
+    _, by_section, by_name = build_symbol_indexes(config_symbols)
+    anchors = build_address_anchors(dolphin_symbols, by_name)
+    anchor_indexes = build_anchor_indexes(anchors)
+    source_functions = load_source_function_names(source_path) if source_path else None
+    start_index, end_index = infer_object_span(
+        dolphin_symbols,
+        library,
+        object_path,
+        source_functions,
+    )
+    translated_start, translated_end = translated_range(
+        dolphin_symbols,
+        start_index,
+        end_index,
+        anchor_indexes,
+        manual_delta,
+    )
+
+    print(f"# {library} {object_path}")
+    if source_path is not None:
+        print(f"# source={source_path}")
+    print(
+        f"# export-lines={dolphin_symbols[start_index].line_number}-{dolphin_symbols[end_index].line_number} "
+        f"count={end_index - start_index + 1}"
+    )
+    print(
+        f"# translated .text span start=0x{translated_start:08X} end=0x{translated_end:08X} "
+        f"size=0x{translated_end - translated_start:X}"
+    )
+    print()
+
+    for index in range(start_index, end_index + 1):
+        symbol = dolphin_symbols[index]
+        translated_address, translation_delta, translation_anchor = translate_address(
+            symbol,
+            anchor_indexes,
+            manual_delta,
+        )
+        exact = next(
+            (
+                config_symbol
+                for config_symbol in config_symbols
+                if config_symbol.section == symbol.section
+                and config_symbol.address == translated_address
+            ),
+            None,
+        )
+        split_range = find_split(split_ranges, symbol.section, translated_address)
+        anchor_text = "-"
+        if translation_anchor is not None:
+            anchor_text = f"{translation_anchor.name}@0x{translation_anchor.dolphin_address:08X}"
+        exact_text = exact.name if exact is not None else "-"
+        split_text = split_range.path if split_range is not None else "-"
+        print(
+            f"0x{symbol.address:08X} -> 0x{translated_address:08X} "
+            f"size=0x{symbol.size:X} name={symbol.name}"
+        )
+        print(
+            f"  line={symbol.line_number} delta={format_signed_hex(translation_delta or 0)} "
+            f"anchor={anchor_text}"
+        )
+        print(f"  exact={exact_text} split={split_text}")
+
+
 def is_actionable(
     candidate: Candidate,
     min_score: int,
@@ -704,7 +853,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "command",
-        choices=["summary", "candidates", "split-seeds"],
+        choices=["summary", "candidates", "split-seeds", "object-span"],
         help="Which report to print",
     )
     parser.add_argument(
@@ -768,6 +917,11 @@ def parse_args() -> argparse.Namespace:
         type=lambda value: int(value, 0),
         help="Manual address delta to apply to Dolphin symbols before matching",
     )
+    parser.add_argument(
+        "--source",
+        type=Path,
+        help="Local source file used to infer the start of an object span",
+    )
     return parser.parse_args()
 
 
@@ -822,6 +976,18 @@ def main() -> None:
             gap=args.gap,
             min_count=args.min_count,
             limit=args.limit,
+        )
+    elif args.command == "object-span":
+        if not args.lib or not args.obj:
+            raise SystemExit("object-span requires --lib and --obj")
+        print_object_span(
+            dolphin_symbols=dolphin_symbols,
+            config_symbols=config_symbols,
+            split_ranges=split_ranges,
+            manual_delta=args.address_delta,
+            library=args.lib,
+            object_path=args.obj,
+            source_path=args.source,
         )
     else:
         raise SystemExit(f"Unknown command: {args.command}")

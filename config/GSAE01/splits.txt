@@ -22,6 +22,9 @@ sdk/mtx/mtxvec.c:
 sdk/mtx/vec.c:
 	.text       start:0x80247E94 end:0x80248180
 
+gx/GXLight.c:
+	.text       start:0x80259DD4 end:0x8025AE7C
+
 audio/synth_callback.c:
 	extab       start:0x80005620 end:0x80005630
 	extabindex  start:0x80005CC0 end:0x80005CD8

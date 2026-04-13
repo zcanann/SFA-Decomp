@@ -307,9 +307,15 @@ config.libs = [
     DolphinLib(
         "mtx",
         [
-            Object(NonMatching, "sdk/mtx/mtx.c"),
-            Object(NonMatching, "sdk/mtx/mtxvec.c"),
+            Object(NonMatching, "sdk/mtx/mtx.c", source="mtx/mtx.c"),
+            Object(NonMatching, "sdk/mtx/mtxvec.c", source="mtx/mtxvec.c"),
             Object(NonMatching, "sdk/mtx/vec.c"),
+        ],
+    ),
+    DolphinLib(
+        "gx",
+        [
+            Object(NonMatching, "gx/GXLight.c"),
         ],
     ),
     {

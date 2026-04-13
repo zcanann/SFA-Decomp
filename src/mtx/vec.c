@@ -1,5 +1,4 @@
 #include "dolphin/mtx.h"
-#include "ffcc/symbols_shared.h"
 #include "math.h"
 
 #define R_RET fp1
