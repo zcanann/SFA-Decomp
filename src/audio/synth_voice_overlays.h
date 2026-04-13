@@ -3,8 +3,6 @@
 
 #include "src/audio/synth_internal.h"
 
-#define SYNTH_SEQUENCE_TRACK_COUNT 0x40
-
 typedef struct SynthVoiceProgramState {
     u8 unk00[0x108];
     u8* programData;
@@ -15,13 +13,6 @@ typedef struct SynthVoiceTrackRuntime {
     u8 studioMap[SYNTH_SEQUENCE_TRACK_COUNT];
     SynthSequenceState sequenceStates[SYNTH_SEQUENCE_TRACK_COUNT];
 } SynthVoiceTrackRuntime;
-
-typedef struct SynthCallbackControllerState {
-    u8 listIndex;
-    u8 unk01;
-    u16 value16;
-    u8 unk04[0x38 - 4];
-} SynthCallbackControllerState;
 
 #define SYNTH_VOICE_PROGRAM_STATE(voice) ((SynthVoiceProgramState*)&(voice)->unk10)
 #define SYNTH_VOICE_TRACK_RUNTIME(voice) ((SynthVoiceTrackRuntime*)&(voice)->unk124)

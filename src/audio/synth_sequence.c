@@ -19,7 +19,7 @@ u8* synthReadVariablePair(u8* input, u16* value0, s16* value1) {
 
     if ((high & 0x80) != 0) {
         combinedValue = (u32)((high & 0x7F) << 8);
-        combinedValue |= low;
+        combinedValue = combinedValue | low;
         *value0 = (u16)combinedValue;
         input += 2;
     } else {
@@ -31,15 +31,17 @@ u8* synthReadVariablePair(u8* input, u16* value0, s16* value1) {
     low = input[1];
     if ((high & 0x80) != 0) {
         combinedValue = (u32)((high & 0x7F) << 8);
-        combinedValue |= low;
+        combinedValue = combinedValue | low;
         combined = (s16)combinedValue;
         shift = 1;
-        *value1 = (s16)((combined << shift) >> shift);
+        combined = (s16)(combined << shift);
+        *value1 = (s16)(combined >> shift);
         input += 2;
     } else {
         combined = high;
         shift = 9;
-        *value1 = (s16)((combined << shift) >> shift);
+        combined = (s16)(combined << shift);
+        *value1 = (s16)(combined >> shift);
         input += 1;
     }
 
@@ -51,7 +53,6 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel) {
     SynthKeyGroupState* keyGroupState;
     SynthSequenceState* state;
     SynthTrackCommand* command;
-    SynthVoiceTrackRuntime* trackRuntime;
     SynthTrackCursor* cursor;
     SynthVoice* voice;
     u8* keyGroupMap;
@@ -59,9 +60,8 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel) {
     u32 value;
 
     voice = gSynthCurrentVoice;
-    trackRuntime = SYNTH_VOICE_TRACK_RUNTIME(voice);
-    cursor = &trackRuntime->trackCursors[channel];
-    state = &trackRuntime->sequenceStates[channel];
+    cursor = SYNTH_TRACK_CURSOR(voice, channel);
+    state = SYNTH_SEQUENCE_STATE(voice, channel);
     if (cursor->current != 0) {
         event = SYNTH_CHANNEL_EVENT(voice, channel);
         event->channel = channel;
@@ -69,42 +69,42 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel) {
 
         if (state->stream == 0) {
             goto handle_command;
-        }
+        } else {
+            while (1) {
+                stream = state->stream;
+                value = *(u16*)stream + state->currentValue;
+                if (value < state->primaryLimit) {
+                    if (value < state->secondaryLimit) {
+                        if (stream[2] == 0xFF && stream[3] == 0xFF) {
+                            state->stream = 0;
+                            goto handle_command;
+                        }
 
-        while (1) {
-            stream = state->stream;
-            value = *(u16*)stream + state->currentValue;
-            if (value < state->primaryLimit) {
-                if (value < state->secondaryLimit) {
-                    if (stream[2] == 0xFF && stream[3] == 0xFF) {
-                        state->stream = 0;
-                        goto handle_command;
+                        event->eventData = stream;
+                        state->currentValue = value;
+                        if ((stream[2] & 0x80) != 0) {
+                            state->stream = stream + 4;
+                        } else if ((stream[2] | stream[3]) == 0) {
+                            state->stream = stream + 4;
+                            continue;
+                        } else {
+                            state->stream = stream + 6;
+                        }
+
+                        event->type = 0;
+                        event->value = value + state->valueOffset;
+                        return event;
                     }
-
-                    event->eventData = stream;
-                    state->currentValue = value;
-                    if ((stream[2] & 0x80) != 0) {
-                        state->stream = stream + 4;
-                    } else if ((stream[2] | stream[3]) == 0) {
-                        state->stream = stream + 4;
-                        continue;
-                    } else {
-                        state->stream = stream + 6;
-                    }
-
-                    event->type = 0;
-                    event->value = value + state->valueOffset;
+                } else if (state->primaryLimit < state->secondaryLimit) {
+                    event->value = state->primaryLimit + state->valueOffset;
+                    event->type = 2;
                     return event;
                 }
-            } else if (state->primaryLimit < state->secondaryLimit) {
-                event->value = state->primaryLimit + state->valueOffset;
-                event->type = 2;
+
+                event->value = state->secondaryLimit + state->valueOffset;
+                event->type = 1;
                 return event;
             }
-
-            event->value = state->secondaryLimit + state->valueOffset;
-            event->type = 1;
-            return event;
         }
 
 handle_command:

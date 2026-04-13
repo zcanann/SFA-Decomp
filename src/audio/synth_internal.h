@@ -11,6 +11,7 @@ typedef float f32;
 #define SYNTH_MAX_VOICES 8
 #define SYNTH_CALLBACK_COUNT 0x100
 #define SYNTH_VOICE_NOTE_COUNT 0x10
+#define SYNTH_SEQUENCE_TRACK_COUNT 0x40
 #define SYNTH_STUDIO_CHANNEL_SCALE_STUDIO_COUNT 9
 #define SYNTH_DELAY_BUCKET_COUNT 0x20
 #define SYNTH_DELAY_BUCKET_INVALID 0xFF
@@ -151,6 +152,13 @@ typedef struct SynthSequenceQueue {
     u8 unk20[0x18];
 } SynthSequenceQueue;
 
+typedef struct SynthCallbackControllerState {
+    u8 listIndex;
+    u8 unk01;
+    u16 value16;
+    u8 unk04[0x38 - 4];
+} SynthCallbackControllerState;
+
 typedef struct SynthTrackCommand {
     u32 value0;
     u32 value1;
@@ -163,6 +171,26 @@ typedef struct SynthKeyGroupState {
     u8 active;
     u8 pad37;
 } SynthKeyGroupState;
+
+/* The voice tail overlays sequence events, queue/keygroup state, and callback controller state. */
+typedef struct SynthVoiceEventScratch {
+    u8 unk00[4];
+    SynthSequenceEvent channelEvents[SYNTH_SEQUENCE_TRACK_COUNT];
+    u8* keyGroupMap;
+} SynthVoiceEventScratch;
+
+typedef union SynthVoiceControllerOverlay {
+    SynthSequenceQueue sequenceQueues[SYNTH_VOICE_NOTE_COUNT];
+    SynthKeyGroupState keyGroupStates[SYNTH_VOICE_NOTE_COUNT];
+    SynthChannelState channelStates[SYNTH_VOICE_NOTE_COUNT];
+    SynthCallbackControllerState callbackControllers[SYNTH_VOICE_NOTE_COUNT];
+    u8 raw[0x380];
+} SynthVoiceControllerOverlay;
+
+typedef struct SynthVoiceScratch {
+    SynthVoiceEventScratch eventScratch;
+    SynthVoiceControllerOverlay overlay;
+} SynthVoiceScratch;
 
 typedef struct SynthVoice {
     struct SynthVoice* next;
@@ -192,14 +220,18 @@ typedef struct SynthVoiceRuntime {
     u16 voiceNotes[SYNTH_MAX_VOICES][SYNTH_VOICE_NOTE_COUNT];
 } SynthVoiceRuntime;
 
+#define SYNTH_VOICE_EVENT_SCRATCH(voice) ((SynthVoiceEventScratch*)&(voice)->unkEE0)
+#define SYNTH_VOICE_CONTROLLER_OVERLAY(voice) ((SynthVoiceControllerOverlay*)&(voice)->unkEE0[0x608])
 #define SYNTH_CHANNEL_STATE(voice, channel) \
     ((SynthChannelState*)&(voice)->unkEE0[0x608 + (((channel) & 0xFF) * sizeof(SynthChannelState))])
 #define SYNTH_CHANNEL_THRESHOLD(state, index) (*(u32*)((u8*)(state) + 0x24 + ((index) * 8)))
-#define SYNTH_CHANNEL_EVENT(voice, channel) ((SynthSequenceEvent*)&(voice)->unkEE0[0x4 + ((channel) * 0x18)])
+#define SYNTH_CHANNEL_EVENT(voice, channel) \
+    ((SynthSequenceEvent*)&(voice)->unkEE0[0x4 + ((channel) * 0x18)])
 #define SYNTH_KEYGROUP_MAP(voice) (*(u8**)&(voice)->unkEE0[0x604])
 #define SYNTH_SEQUENCE_QUEUE(voice, index) \
     ((SynthSequenceQueue*)&(voice)->unkEE0[0x608 + (((index) & 0xFF) * sizeof(SynthSequenceQueue))])
-#define SYNTH_KEYGROUP_STATE(voice, index) ((SynthKeyGroupState*)&(voice)->unkEE0[0x608 + ((index) * 0x38)])
+#define SYNTH_KEYGROUP_STATE(voice, index) \
+    ((SynthKeyGroupState*)&(voice)->unkEE0[0x608 + ((index) * 0x38)])
 #define SYNTH_SEQUENCE_STATE(voice, channel) ((SynthSequenceState*)&(voice)->unk364[(channel) * 0x2C])
 #define SYNTH_TRACK_CURSOR(voice, channel) ((SynthTrackCursor*)&(voice)->unk124[(channel) * 8])
 

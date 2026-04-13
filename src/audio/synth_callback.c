@@ -3,7 +3,8 @@
 
 #define SYNTH_CALLBACK_ACTIVE_LIST_COUNT 2
 #define SYNTH_CALLBACK_COMPLETED_LIST_INDEX 2
-#define SYNTH_CALLBACK_THRESHOLD(voice, index) (*(s32*)&((voice)->unkEE0[0x62C + ((index) * 8)]))
+#define SYNTH_CALLBACK_THRESHOLD(voice, index) \
+    (*(s32*)&((voice)->unkEE0[0x62C + ((index) * 8)]))
 
 void synthRecycleVoiceCallbacks(SynthVoice* voice) {
     SynthCallbackLink* callback;
