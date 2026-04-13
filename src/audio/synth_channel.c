@@ -8,42 +8,51 @@ typedef struct SynthPitchPoint {
     u32 value;
 } SynthPitchPoint;
 
-#define SYNTH_CHANNEL_STATE(voice, channel) ((u8*)&(voice)->unkEE0[0x608 + (((channel) & 0xFF) * 0x38)])
-#define SYNTH_CHANNEL_EVENT_ACTIVE(state) (*(s32*)((state) + 0x00))
-#define SYNTH_CHANNEL_EVENT_CURSOR(state) (*(SynthPitchPoint**)((state) + 0x04))
-#define SYNTH_CHANNEL_CURRENT_VALUE(state) (*(u32*)((state) + 0x08))
-#define SYNTH_CHANNEL_THRESHOLD_INDEX(state) (*(u8*)((state) + 0x30))
-#define SYNTH_CHANNEL_THRESHOLD_VALUE(state, index) (*(u32*)((state) + 0x24 + ((index) * 8)))
+typedef struct SynthChannelState {
+    s32 eventActive;
+    SynthPitchPoint* eventCursor;
+    u32 currentValue;
+    u8 unk0C[0x24 - 0x0C];
+    u32 threshold0;
+    u32 unk28;
+    u32 threshold1;
+    u8 thresholdIndex;
+    u8 unk31[0x38 - 0x31];
+} SynthChannelState;
+
+#define SYNTH_CHANNEL_STATE(voice, channel) \
+    ((SynthChannelState*)&(voice)->unkEE0[0x608 + (((channel) & 0xFF) * sizeof(SynthChannelState))])
+#define SYNTH_CHANNEL_THRESHOLD(state, index) (*(u32*)((u8*)(state) + 0x24 + ((index) * 8)))
 #define SYNTH_VOICE_PROGRAM_DATA(voice) (*(u8**)((voice)->unk10 + 0x108))
 #define SYNTH_PROGRAM_FLAGS(program) (*(u32*)((program) + 0x10))
 
 void fn_8026D6DC(u32 channelIndex) {
-    u8* channelState;
+    SynthChannelState* channelState;
     SynthPitchPoint* point;
+    u32 value;
 
     channelState = SYNTH_CHANNEL_STATE(gSynthCurrentVoice, channelIndex);
-    if (SYNTH_CHANNEL_EVENT_ACTIVE(channelState) == 0) {
-        return;
-    }
+    if (channelState->eventActive != 0) {
+        do {
+            point = channelState->eventCursor;
+            if (point->threshold == 0xFFFFFFFF ||
+                point->threshold > SYNTH_CHANNEL_THRESHOLD(channelState, channelState->thresholdIndex)) {
+                break;
+            }
 
-    while (1) {
-        point = SYNTH_CHANNEL_EVENT_CURSOR(channelState);
-        if (point->threshold == 0xFFFFFFFF ||
-            point->threshold > SYNTH_CHANNEL_THRESHOLD_VALUE(
-                                   channelState, SYNTH_CHANNEL_THRESHOLD_INDEX(channelState))) {
-            break;
-        }
+            if ((SYNTH_PROGRAM_FLAGS(SYNTH_VOICE_PROGRAM_DATA(gSynthCurrentVoice)) & 0x40000000) !=
+                0) {
+                value = point->value;
+                channelState->currentValue = value;
+                fn_8026FCA0((s32)(value >> 10), (u8)lbl_803DEEA0, channelIndex);
+            } else {
+                fn_8026FCA0((s32)point->value, (u8)lbl_803DEEA0, channelIndex);
+                point = channelState->eventCursor;
+                channelState->currentValue = point->value << 10;
+            }
 
-        if ((SYNTH_PROGRAM_FLAGS(SYNTH_VOICE_PROGRAM_DATA(gSynthCurrentVoice)) & 0x40000000) != 0) {
-            SYNTH_CHANNEL_CURRENT_VALUE(channelState) = point->value;
-            fn_8026FCA0((s32)(point->value >> 10), (u8)lbl_803DEEA0, channelIndex);
-        } else {
-            fn_8026FCA0((s32)point->value, (u8)lbl_803DEEA0, channelIndex);
-            point = SYNTH_CHANNEL_EVENT_CURSOR(channelState);
-            SYNTH_CHANNEL_CURRENT_VALUE(channelState) = point->value << 10;
-        }
-
-        point = SYNTH_CHANNEL_EVENT_CURSOR(channelState);
-        SYNTH_CHANNEL_EVENT_CURSOR(channelState) = point + 1;
+            point = channelState->eventCursor;
+            channelState->eventCursor = point + 1;
+        } while (1);
     }
 }
