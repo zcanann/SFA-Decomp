@@ -466,8 +466,11 @@ def generate_build_ninja(
     configure_script = Path(os.path.relpath(os.path.abspath(sys.argv[0])))
     python_lib = Path(os.path.relpath(__file__))
     python_lib_dir = python_lib.parent
+    configure_args = sys.argv[1:]
+    if configure_args[:1] == ["configure"]:
+        configure_args = configure_args[1:]
     n.comment("The arguments passed to configure.py, for rerunning it.")
-    n.variable("configure_args", sys.argv[1:])
+    n.variable("configure_args", configure_args)
     n.variable("python", f'"{sys.executable}"')
     n.newline()
 

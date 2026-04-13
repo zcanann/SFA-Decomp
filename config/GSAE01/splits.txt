@@ -12,3 +12,6 @@ Sections:
 	.sbss       type:bss align:32
 	.sdata2     type:rodata align:32
 	.sbss2      type:bss align:4
+
+Runtime.PPCEABI.H/__start.s: comment:0
+	.init       start:0x80003100 end:0x80003538
