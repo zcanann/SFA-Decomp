@@ -1,25 +1,27 @@
 #include "src/audio/synth_internal.h"
 
 void synthInitVoices(void) {
+    SynthVoiceRuntime* runtime;
     SynthCallbackLink* callback;
     SynthCallbackLink* prevCallback;
     u16* note;
-    SynthVoice* prevVoice;
     SynthVoice* voice;
+    u8 voiceIndex;
     s32 callbackIndex;
-    s32 voiceIndex;
 
+    runtime = SYNTH_VOICE_RUNTIME();
     gSynthAllocatedVoices = 0;
     gSynthQueuedVoices = 0;
-    gSynthFreeVoices = &gSynthVoices[0];
 
-    voice = &gSynthVoices[0];
-    note = &gSynthVoiceNotes[0][0];
-    prevVoice = 0;
-    for (voiceIndex = 0; voiceIndex < SYNTH_MAX_VOICES; voiceIndex += 2) {
-        voice->prev = prevVoice;
-        if (prevVoice != 0) {
-            prevVoice->next = voice;
+    voice = &runtime->voices[0];
+    note = &runtime->voiceNotes[0][0];
+    for (voiceIndex = 0; voiceIndex < SYNTH_MAX_VOICES;) {
+        if (voiceIndex == 0) {
+            gSynthFreeVoices = voice;
+            voice->prev = 0;
+        } else {
+            voice[-1].next = voice;
+            voice->prev = &voice[-1];
         }
         voice->slotIndex = (u8)voiceIndex;
         voice->state = 0;
@@ -41,13 +43,18 @@ void synthInitVoices(void) {
         note[14] = 0xFFFF;
         note[15] = 0xFFFF;
 
-        prevVoice = voice;
         voice++;
         note += SYNTH_VOICE_NOTE_COUNT;
+        voiceIndex++;
 
-        voice->prev = prevVoice;
-        prevVoice->next = voice;
-        voice->slotIndex = (u8)(voiceIndex + 1);
+        if (voiceIndex == 0) {
+            gSynthFreeVoices = voice;
+            voice->prev = 0;
+        } else {
+            voice[-1].next = voice;
+            voice->prev = &voice[-1];
+        }
+        voice->slotIndex = voiceIndex;
         voice->state = 0;
 
         note[0] = 0xFFFF;
@@ -67,16 +74,16 @@ void synthInitVoices(void) {
         note[14] = 0xFFFF;
         note[15] = 0xFFFF;
 
-        prevVoice = voice;
         voice++;
         note += SYNTH_VOICE_NOTE_COUNT;
+        voiceIndex++;
     }
-    prevVoice->next = 0;
+    voice[-1].next = 0;
 
-    gSynthFreeCallbacks = &gSynthCallbacks[0];
+    gSynthFreeCallbacks = &runtime->callbacks[0];
     prevCallback = 0;
     for (callbackIndex = 0; callbackIndex < SYNTH_CALLBACK_COUNT; callbackIndex++) {
-        callback = &gSynthCallbacks[callbackIndex];
+        callback = &runtime->callbacks[callbackIndex];
         callback->prev = prevCallback;
         if (prevCallback != 0) {
             prevCallback->next = callback;
