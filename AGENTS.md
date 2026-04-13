@@ -53,6 +53,7 @@ This repo starts from very little. Expect to do naming, struct recovery, type cl
 4. Run objdiff and judge net progress.
 5. If stuck, change angle quickly: adjacent code, data, assets, references, or tooling.
 6. Commit real progress directly to the main working branch for this phase. No PR flow is required right now.
+7. If the process changes (ie we expect ninja to pass after a session, etc.) please update this document.
 
 ## Commit Standard
 Commit when both are true:
