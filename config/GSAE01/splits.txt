@@ -28,6 +28,9 @@ os/OSAlloc.c:
 os/OSArena.c:
 	.text       start:0x80241DE8 end:0x80241E08
 
+os/OSAudioSystem.c:
+	.text       start:0x80241E08 end:0x8024209C
+
 os/OSCache.c:
 	.text       start:0x8024209C end:0x80242758
 
@@ -43,6 +46,9 @@ os/OSMemory.c:
 os/OSReset.c:
 	.text       start:0x80244E64 end:0x80245248
 
+os/OSResetSW.c:
+	.text       start:0x80245248 end:0x802455D4
+
 os/OSRtc.c:
 	.text       start:0x802455D4 end:0x80246190
 
@@ -51,6 +57,9 @@ os/OSThread.c:
 
 os/OSTime.c:
 	.text       start:0x802473B4 end:0x80247438
+
+os/__ppc_eabi_init.c:
+	.text       start:0x80247438 end:0x802474CC
 
 db/db.c:
 	.text       start:0x802474CC end:0x80247568
@@ -70,8 +79,44 @@ dvd/dvdlow.c:
 dvd/dvdfs.c:
 	.text       start:0x80248FD4 end:0x80249958
 
+dvd/dvd.c:
+	.text       start:0x80249958 end:0x8024C0D4
+
 dvd/dvdqueue.c:
 	.text       start:0x8024C0D4 end:0x8024C2CC
+
+dvd/dvderror.c:
+	.text       start:0x8024C2CC end:0x8024C464
+
+dvd/fstload.c:
+	.text       start:0x8024C464 end:0x8024C6A4
+
+ai/ai.c:
+	.text       start:0x8024FE1C end:0x80250748
+
+ar/ar.c:
+	.text       start:0x80250748 end:0x80251290
+
+ar/arq.c:
+	.text       start:0x80251290 end:0x80251624
+
+dsp/dsp.c:
+	.text       start:0x80251624 end:0x80251880
+
+dsp/dsp_task.c:
+	.text       start:0x80251880 end:0x80252104
+
+si/SIBios.c:
+	.text       start:0x80252104 end:0x802537E4
+
+si/SISamplingRate.c:
+	.text       start:0x802537E4 end:0x802539E0
+
+exi/EXIBios.c:
+	.text       start:0x802539E0 end:0x802554D0
+
+gx/GXInit.c:
+	.text       start:0x802554D0 end:0x8025665C
 
 gx/GXLight.c:
 	.text       start:0x80259DD4 end:0x8025AE7C

@@ -322,14 +322,17 @@ config.libs = [
             Object(NonMatching, "os/OSAlarm.c"),
             Object(NonMatching, "os/OSAlloc.c"),
             Object(NonMatching, "os/OSArena.c"),
+            Object(NonMatching, "os/OSAudioSystem.c"),
             Object(NonMatching, "os/OSCache.c"),
             Object(NonMatching, "os/OSContext.c"),
             Object(NonMatching, "os/OSInterrupt.c"),
             Object(NonMatching, "os/OSMemory.c"),
             Object(NonMatching, "os/OSReset.c"),
+            Object(NonMatching, "os/OSResetSW.c"),
             Object(NonMatching, "os/OSRtc.c"),
             Object(NonMatching, "os/OSThread.c"),
             Object(MatchingFor("GSAE01"), "os/OSTime.c"),
+            Object(NonMatching, "os/__ppc_eabi_init.c"),
         ],
     ),
     DolphinLib(
@@ -357,12 +360,49 @@ config.libs = [
         [
             Object(NonMatching, "dvd/dvdlow.c"),
             Object(NonMatching, "dvd/dvdfs.c"),
+            Object(NonMatching, "dvd/dvd.c"),
             Object(NonMatching, "dvd/dvdqueue.c"),
+            Object(NonMatching, "dvd/dvderror.c"),
+            Object(NonMatching, "dvd/fstload.c"),
+        ],
+    ),
+    DolphinLib(
+        "ai",
+        [
+            Object(NonMatching, "ai/ai.c"),
+        ],
+    ),
+    DolphinLib(
+        "ar",
+        [
+            Object(NonMatching, "ar/ar.c"),
+            Object(NonMatching, "ar/arq.c"),
+        ],
+    ),
+    DolphinLib(
+        "dsp",
+        [
+            Object(NonMatching, "dsp/dsp.c"),
+            Object(NonMatching, "dsp/dsp_task.c"),
+        ],
+    ),
+    DolphinLib(
+        "si",
+        [
+            Object(NonMatching, "si/SIBios.c"),
+            Object(NonMatching, "si/SISamplingRate.c"),
+        ],
+    ),
+    DolphinLib(
+        "exi",
+        [
+            Object(NonMatching, "exi/EXIBios.c"),
         ],
     ),
     DolphinLib(
         "gx",
         [
+            Object(NonMatching, "gx/GXInit.c"),
             Object(NonMatching, "gx/GXLight.c"),
         ],
     ),
