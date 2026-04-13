@@ -5,7 +5,8 @@ Keep this light. The project is still in the "recover the game" phase, not the "
 ## Target
 - Target version is `EN v1.0` (`GCCE01`).
 - `orig/` may contain EN, PAL, and JP artifacts. Use them for cross-checking only.
-- `resources/*` contains raw Ghidra decomp. Treat it as rough shape data, not analysis.
+- `resources/ghidra-decomp-4-12-2026/` contains the raw Ghidra decomp with no code analysis. Use it for basic code structure only.
+- Other `resources/*` content should also be treated as rough shape data, not analysis.
 - `reference_projects/*` exists to mine patterns, especially SDK code and common Nintendo/GameCube layouts. Do not commit anything from there.
 
 ## What Progress Looks Like
@@ -35,7 +36,7 @@ This repo starts from very little. Expect to do naming, struct recovery, type cl
 - Replace guessed offsets and anonymous blobs with real fields when justified.
 - Identify reusable SDK or middleware code from `reference_projects/*`.
 - Mine strings, assets, tables, and binary patterns when that reveals structure.
-- Write small custom tools when the repo lacks the visibility needed to move quickly.
+- Write small custom tools and scripts under the tools/ folder when the repo lacks the visibility needed to move quickly.
 
 ## Rules
 - Bias toward EN `GCCE01` for addresses, sizes, and matching decisions.
