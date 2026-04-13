@@ -1,0 +1,19 @@
+// Function: FUN_8022ed04
+// Entry: 8022ed04
+// Size: 64 bytes
+
+void FUN_8022ed04(int param_1)
+
+{
+  uint uVar1;
+  int iVar2;
+  
+  iVar2 = *(int *)(param_1 + 0xb8);
+  FUN_8003709c(param_1,2);
+  uVar1 = *(uint *)(iVar2 + 0x14);
+  if (uVar1 != 0) {
+    FUN_8001f448(uVar1);
+  }
+  return;
+}
+

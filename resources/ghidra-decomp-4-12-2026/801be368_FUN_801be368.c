@@ -1,0 +1,61 @@
+// Function: FUN_801be368
+// Entry: 801be368
+// Size: 364 bytes
+
+/* WARNING: Removing unreachable block (ram,0x801be3e4) */
+
+undefined4
+FUN_801be368(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+            undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,int param_10
+            )
+
+{
+  undefined4 uVar1;
+  ushort *puVar2;
+  undefined *puVar3;
+  undefined *puVar4;
+  int iVar5;
+  undefined4 in_r10;
+  undefined auStack_18 [2];
+  undefined auStack_16 [2];
+  ushort local_14 [6];
+  
+  if (*(char *)(param_10 + 0x27a) != '\0') {
+    FLOAT_803de81c = FLOAT_803de820;
+    uVar1 = FUN_8002bac4();
+    puVar2 = local_14;
+    puVar3 = auStack_16;
+    puVar4 = auStack_18;
+    iVar5 = *DAT_803dd738;
+    (**(code **)(iVar5 + 0x14))(param_9,uVar1,4);
+    if (local_14[0] == 1) {
+      if (*(char *)(param_10 + 0x27a) != '\0') {
+        FUN_8003042c((double)FLOAT_803e5928,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                     param_9,3,0,puVar2,puVar3,puVar4,iVar5,in_r10);
+        *(undefined *)(param_10 + 0x346) = 0;
+      }
+    }
+    else if (local_14[0] == 0) {
+      if (*(char *)(param_10 + 0x27a) != '\0') {
+        FUN_8003042c((double)FLOAT_803e5928,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                     param_9,1,0,puVar2,puVar3,puVar4,iVar5,in_r10);
+        *(undefined *)(param_10 + 0x346) = 0;
+      }
+    }
+    else if (local_14[0] < 3) {
+      if (*(char *)(param_10 + 0x27a) != '\0') {
+        FUN_8003042c((double)FLOAT_803e5928,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                     param_9,2,0,puVar2,puVar3,puVar4,iVar5,in_r10);
+        *(undefined *)(param_10 + 0x346) = 0;
+      }
+    }
+    else if (*(char *)(param_10 + 0x27a) != '\0') {
+      FUN_8003042c((double)FLOAT_803e5928,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                   param_9,4,0,puVar2,puVar3,puVar4,iVar5,in_r10);
+      *(undefined *)(param_10 + 0x346) = 0;
+    }
+    *(float *)(param_10 + 0x2a0) = FLOAT_803e592c;
+  }
+  return 0;
+}
+

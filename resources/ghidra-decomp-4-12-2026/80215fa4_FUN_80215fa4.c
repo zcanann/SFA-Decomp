@@ -1,0 +1,31 @@
+// Function: FUN_80215fa4
+// Entry: 80215fa4
+// Size: 272 bytes
+
+void FUN_80215fa4(void)
+
+{
+  DAT_803ade00 = FUN_802143c4;
+  DAT_803ade04 = FUN_80214214;
+  DAT_803ade08 = FUN_80213f8c;
+  DAT_803ade0c = FUN_80213e70;
+  DAT_803ade10 = FUN_80213d54;
+  DAT_803ade14 = FUN_80213cb8;
+  DAT_803ade18 = FUN_80213be0;
+  DAT_803ade1c = FUN_80213b30;
+  DAT_803ade20 = FUN_80213a68;
+  DAT_803addd0 = &LAB_80213a60;
+  DAT_803addd4 = FUN_80213840;
+  DAT_803addd8 = FUN_8021349c;
+  DAT_803adddc = FUN_8021339c;
+  DAT_803adde0 = FUN_80213290;
+  DAT_803adde4 = FUN_80213128;
+  DAT_803adde8 = FUN_80213094;
+  DAT_803addec = FUN_80212f90;
+  DAT_803addf0 = FUN_80212e4c;
+  DAT_803addf4 = FUN_80212d78;
+  DAT_803addf8 = FUN_802129a8;
+  DAT_803addfc = &LAB_80212830;
+  return;
+}
+

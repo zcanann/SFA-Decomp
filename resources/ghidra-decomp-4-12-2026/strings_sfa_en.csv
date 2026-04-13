@@ -1,0 +1,1328 @@
+"Location","String Value","String Representation","Data Type"
+"802c30b8","MetroTRK for GAMECUBE v0.9","\"MetroTRK for GAMECUBE v0.9\"","ds"
+"802c30d8","ERROR : No buffer available
+","\"ERROR : No buffer available\n\"","ds"
+"802c31bd","542101086242752217003726400434970855712890625","\"542101086242752217003726400434970855712890625\"","ds"
+"802c31eb","11102230246251565404236316680908203125","\"11102230246251565404236316680908203125\"","ds"
+"802c3212","23283064365386962890625","\"23283064365386962890625\"","ds"
+"802c322a","152587890625","\"152587890625\"","ds"
+"802c3237","390625","\"390625\"","ds"
+"802c323e","78125","\"78125\"","ds"
+"802c3244","15625","\"15625\"","ds"
+"802c5688","sampleBufferSLoadedCallback load error
+","\"sampleBufferSLoadedCallback load error\n\"","ds"
+"802c56b0","sampleDirectorySLoadedCallback load error
+","\"sampleDirectorySLoadedCallback load error\n\"","ds"
+"802c56dc","projectDataSLoadedCallback load error
+","\"projectDataSLoadedCallback load error\n\"","ds"
+"802c5704","poolDataSLoadedCallback load error
+","\"poolDataSLoadedCallback load error\n\"","ds"
+"802c5728","sampleBufferMLoadedCallback load error
+","\"sampleBufferMLoadedCallback load error\n\"","ds"
+"802c5750","sampleDirectoryMLoadedCallback load error
+","\"sampleDirectoryMLoadedCallback load error\n\"","ds"
+"802c577c","projectDataMLoadedCallback load error
+","\"projectDataMLoadedCallback load error\n\"","ds"
+"802c57a4","poolDataMLoadedCallback load error
+","\"poolDataMLoadedCallback load error\n\"","ds"
+"802c57c8","streamsLoadedCallback load error
+","\"streamsLoadedCallback load error\n\"","ds"
+"802c57ec","sfxTriggersLoadedCallback load error
+","\"sfxTriggersLoadedCallback load error\n\"","ds"
+"802c5814","musicTriggersLoadedCallback load error
+","\"musicTriggersLoadedCallback load error\n\"","ds"
+"802c583c","/audio/data/Music.bin","\"/audio/data/Music.bin\"","ds"
+"802c5854","/audio/data/Sfx.bin","\"/audio/data/Sfx.bin\"","ds"
+"802c5868","/audio/data/Streams.bin","\"/audio/data/Streams.bin\"","ds"
+"802c5880","audioInit: sndIsInstalled() returned FALSE!
+","\"audioInit: sndIsInstalled() returned FALSE!\n\"","ds"
+"802c58b0","/audio/starfoxm.poo","\"/audio/starfoxm.poo\"","ds"
+"802c58c4","/audio/starfoxm.pro","\"/audio/starfoxm.pro\"","ds"
+"802c58d8","/audio/starfoxm.sdi","\"/audio/starfoxm.sdi\"","ds"
+"802c58ec","/audio/starfoxm.sam","\"/audio/starfoxm.sam\"","ds"
+"802c5900","/audio/starfoxs.poo","\"/audio/starfoxs.poo\"","ds"
+"802c5914","/audio/starfoxs.pro","\"/audio/starfoxs.pro\"","ds"
+"802c5928","/audio/starfoxs.sdi","\"/audio/starfoxs.sdi\"","ds"
+"802c593c","/audio/starfoxs.sam","\"/audio/starfoxs.sam\"","ds"
+"802c5950","sndPushGroup failed on group %d
+","\"sndPushGroup failed on group %d\n\"","ds"
+"802c5978","amb_ingae_rain","\"amb_ingae_rain\"","ds"
+"802c5988","amb_moonlink","\"amb_moonlink\"","ds"
+"802c5998","Andross tune","\"Andross tune\"","ds"
+"802c59a8","Arwing_Crash","\"Arwing_Crash\"","ds"
+"802c59b8","CC Visit1","\"CC Visit1\"","ds"
+"802c59c4","DIM Caves","\"DIM Caves\"","ds"
+"802c59d0","TTH Fight","\"TTH Fight\"","ds"
+"802c59dc","CRF_Bridge","\"CRF_Bridge\"","ds"
+"802c59e8","CRF_Suspense","\"CRF_Suspense\"","ds"
+"802c59f8","CRF_Swim","\"CRF_Swim\"","ds"
+"802c5a04","CRF_Treasure","\"CRF_Treasure\"","ds"
+"802c5a14","Dark_Ice_Lava","\"Dark_Ice_Lava\"","ds"
+"802c5a24","Krazoa_Docks","\"Krazoa_Docks\"","ds"
+"802c5a34","Krazoa_Shrine","\"Krazoa_Shrine\"","ds"
+"802c5a44","LFV_Swamp","\"LFV_Swamp\"","ds"
+"802c5a50","Slow_Motion","\"Slow_Motion\"","ds"
+"802c5a5c","amb_lavapits","\"amb_lavapits\"","ds"
+"802c5a6c","back_of_cloudrunner","\"back_of_cloudrunner\"","ds"
+"802c5a80","blizzard","\"blizzard\"","ds"
+"802c5a8c","capeclaw_seaside","\"capeclaw_seaside\"","ds"
+"802c5aa0","cave_trade","\"cave_trade\"","ds"
+"802c5aac","cclaw_caves","\"cclaw_caves\"","ds"
+"802c5ab8","cclaw_gasroom","\"cclaw_gasroom\"","ds"
+"802c5ac8","citytombs","\"citytombs\"","ds"
+"802c5ad4","cldrnr_dungeon","\"cldrnr_dungeon\"","ds"
+"802c5ae4","cldrnr_tune1","\"cldrnr_tune1\"","ds"
+"802c5af4","cldrnr_walkabout","\"cldrnr_walkabout\"","ds"
+"802c5b08","communicator","\"communicator\"","ds"
+"802c5b18","crun_dungeon","\"crun_dungeon\"","ds"
+"802c5b28","dark_ice_boss_1","\"dark_ice_boss_1\"","ds"
+"802c5b38","DIM_Cavern","\"DIM_Cavern\"","ds"
+"802c5b44","DIM_Mines","\"DIM_Mines\"","ds"
+"802c5b50","DIM_Snow","\"DIM_Snow\"","ds"
+"802c5b68","downthewell","\"downthewell\"","ds"
+"802c5b74","ewt_chase","\"ewt_chase\"","ds"
+"802c5b80","ewt_link","\"ewt_link\"","ds"
+"802c5b8c","ewt_outside","\"ewt_outside\"","ds"
+"802c5b98","galleon_battle","\"galleon_battle\"","ds"
+"802c5ba8","galleon_docks","\"galleon_docks\"","ds"
+"802c5bb8","galleon_outside","\"galleon_outside\"","ds"
+"802c5bc8","galleon_storm","\"galleon_storm\"","ds"
+"802c5bd8","greatfox_int","\"greatfox_int\"","ds"
+"802c5be8","guard_theme","\"guard_theme\"","ds"
+"802c5bf4","ice_walkaround","\"ice_walkaround\"","ds"
+"802c5c04","inside_galleon","\"inside_galleon\"","ds"
+"802c5c14","inside_warlock","\"inside_warlock\"","ds"
+"802c5c24","kpanomaly","\"kpanomaly\"","ds"
+"802c5c30","LVF_Tracking","\"LVF_Tracking\"","ds"
+"802c5c40","mammoth_walk","\"mammoth_walk\"","ds"
+"802c5c50","menu_page","\"menu_page\"","ds"
+"802c5c5c","minecaves","\"minecaves\"","ds"
+"802c5c68","mmpassalien","\"mmpassalien\"","ds"
+"802c5c74","Mound_Music","\"Mound_Music\"","ds"
+"802c5c80","new_ice_race","\"new_ice_race\"","ds"
+"802c5c90","newstorm","\"newstorm\"","ds"
+"802c5c9c","nightjungle","\"nightjungle\"","ds"
+"802c5ca8","options_page","\"options_page\"","ds"
+"802c5cb8","PU1_Mysterious","\"PU1_Mysterious\"","ds"
+"802c5cc8","PU2_Heroic","\"PU2_Heroic\"","ds"
+"802c5cd4","PU3_Adventure","\"PU3_Adventure\"","ds"
+"802c5ce4","seq_swaphol1","\"seq_swaphol1\"","ds"
+"802c5cf4","sforestday","\"sforestday\"","ds"
+"802c5d00","starfox_area_6","\"starfox_area_6\"","ds"
+"802c5d10","starfox_map","\"starfox_map\"","ds"
+"802c5d1c","starfox_rwing_1","\"starfox_rwing_1\"","ds"
+"802c5d2c","swaphol_night","\"swaphol_night\"","ds"
+"802c5d3c","swapstone_circle","\"swapstone_circle\"","ds"
+"802c5d50","teleport","\"teleport\"","ds"
+"802c5d5c","test_of_combat","\"test_of_combat\"","ds"
+"802c5d6c","test_of_fear","\"test_of_fear\"","ds"
+"802c5d7c","test_of_magic","\"test_of_magic\"","ds"
+"802c5d8c","test_of_sacrifice","\"test_of_sacrifice\"","ds"
+"802c5da0","test_of_skill","\"test_of_skill\"","ds"
+"802c5db0","test_of_strength","\"test_of_strength\"","ds"
+"802c5dc4","trex_chase","\"trex_chase\"","ds"
+"802c5dd0","trex_hit","\"trex_hit\"","ds"
+"802c5ddc","TTH_Night","\"TTH_Night\"","ds"
+"802c5de8","underwater","\"underwater\"","ds"
+"802c5df4","vfp_walkabout","\"vfp_walkabout\"","ds"
+"802c5e04","volcano_fp","\"volcano_fp\"","ds"
+"802c5e10","warlockmagic","\"warlockmagic\"","ds"
+"802c5e20","wcity_day","\"wcity_day\"","ds"
+"802c5e2c","windydocks","\"windydocks\"","ds"
+"802c5e38","LFV_Strength","\"LFV_Strength\"","ds"
+"802c5e48","WLC_Chase","\"WLC_Chase\"","ds"
+"802c5e54","WLC_Corridors","\"WLC_Corridors\"","ds"
+"802c5e64","WLC_Puzzle","\"WLC_Puzzle\"","ds"
+"802c5e70","WLC_Chambers","\"WLC_Chambers\"","ds"
+"802c64c0","MIDIWADLoadedCallback load error
+","\"MIDIWADLoadedCallback load error\n\"","ds"
+"802c64e4","audio/midi.wad","\"audio/midi.wad\"","ds"
+"802c6544","WARNING:DVDCancelStreamAsync returned FALSE
+","\"WARNING:DVDCancelStreamAsync returned FALSE\n\"","ds"
+"802c6574","/streams/","\"/streams/\"","ds"
+"802c6790","curvesSetupMoveNetworkCurve: There must be at least four control points
+","\"curvesSetupMoveNetworkCurve: There must be at least four control points\n\"","ds"
+"802c67dc","curvesSetupMoveNetworkCurve: There must be a multiple of four control points for bezier or hermite curves
+","\"curvesSetupMoveNetworkCurve: There must be a multiple of four control points for bezier or hermite curves\n\"","ds"
+"802c6848","curvesMove: There must be at least four control points
+","\"curvesMove: There must be at least four control points\n\"","ds"
+"802c6880","curvesMove: There must be a multiple of four control points for bezier or hermite curves
+","\"curvesMove: There must be a multiple of four control points for bezier or hermite curves\n\"","ds"
+"802c68e0","VOXMAPS: route nodes list overflow
+","\"VOXMAPS: route nodes list overflow\n\"","ds"
+"802c6904","Childnode Null
+","\"Childnode Null\n\"","ds"
+"802c6914","overflow in 'genVoxelCircle'
+","\"overflow in 'genVoxelCircle'\n\"","ds"
+"802c6934","VOXMAP: attempt to load invalid object voxmap '%d'
+","\"VOXMAP: attempt to load invalid object voxmap '%d'\n\"","ds"
+"802c6968","VOXMAP: Size overflow on object voxmap load->Ignoring defined voxmap
+","\"VOXMAP: Size overflow on object voxmap load->Ignoring defined voxmap\n\"","ds"
+"802c69b0","<voxLoadVoxMapActual>  Warning voxRomTab is NULL
+","\"<voxLoadVoxMapActual>  Warning voxRomTab is NULL\n\"","ds"
+"802c69e4","VOXMAP: Size overflow on load->Ignoring defined voxmap
+","\"VOXMAP: Size overflow on load->Ignoring defined voxmap\n\"","ds"
+"802c6a1c","<voxLoadVoxMapActual>  Warning uncompressedSize is 0
+","\"<voxLoadVoxMapActual>  Warning uncompressedSize is 0\n\"","ds"
+"802c6a54"," WARNING: Voxmap has no mem available 
+","\" WARNING: Voxmap has no mem available \n\"","ds"
+"802c7730","Animtest","\"Animtest\"","ds"
+"802c773c","BOSSAndross","\"BOSSAndross\"","ds"
+"802c7748","BossDrakor","\"BossDrakor\"","ds"
+"802c7754","BossGaldon","\"BossGaldon\"","ds"
+"802c7760","BossTrex","\"BossTrex\"","ds"
+"802c776c","CapeClaw","\"CapeClaw\"","ds"
+"802c7778","CloudDungeon","\"CloudDungeon\"","ds"
+"802c7788","CloudRace","\"CloudRace\"","ds"
+"802c7794","Communicator","\"Communicator\"","ds"
+"802c77a4","DBShrine","\"DBShrine\"","ds"
+"802c77b0","DFShrine","\"DFShrine\"","ds"
+"802c77bc","DarkIceMines","\"DarkIceMines\"","ds"
+"802c77cc","DarkIceMines2","\"DarkIceMines2\"","ds"
+"802c77dc","DragRock","\"DragRock\"","ds"
+"802c77e8","DragRockBot","\"DragRockBot\"","ds"
+"802c77f4","ECShrine","\"ECShrine\"","ds"
+"802c7800","FrontEnd","\"FrontEnd\"","ds"
+"802c780c","GPShrine","\"GPShrine\"","ds"
+"802c7818","GameMaze","\"GameMaze\"","ds"
+"802c7824","IceMountain","\"IceMountain\"","ds"
+"802c7830","InsideGal","\"InsideGal\"","ds"
+"802c783c","LightFoot","\"LightFoot\"","ds"
+"802c7848","MMShrine","\"MMShrine\"","ds"
+"802c7854","MagicCave","\"MagicCave\"","ds"
+"802c7860","NWShrine","\"NWShrine\"","ds"
+"802c786c","Sequences","\"Sequences\"","ds"
+"802c7878","ShipBattle","\"ShipBattle\"","ds"
+"802c7884","TaskTexts000","\"TaskTexts000\"","ds"
+"802c7894","TaskTexts001","\"TaskTexts001\"","ds"
+"802c78a4","TaskTexts002","\"TaskTexts002\"","ds"
+"802c78b4","TaskTexts003","\"TaskTexts003\"","ds"
+"802c78c4","TaskTexts004","\"TaskTexts004\"","ds"
+"802c78d4","TaskTexts005","\"TaskTexts005\"","ds"
+"802c78e4","TaskTexts006","\"TaskTexts006\"","ds"
+"802c78f4","TaskTexts007","\"TaskTexts007\"","ds"
+"802c7904","TaskTexts008","\"TaskTexts008\"","ds"
+"802c7914","TaskTexts009","\"TaskTexts009\"","ds"
+"802c7924","TaskTexts010","\"TaskTexts010\"","ds"
+"802c7934","TaskTexts011","\"TaskTexts011\"","ds"
+"802c7944","TaskTexts012","\"TaskTexts012\"","ds"
+"802c7954","TaskTexts013","\"TaskTexts013\"","ds"
+"802c7964","TaskTexts014","\"TaskTexts014\"","ds"
+"802c7974","TaskTexts015","\"TaskTexts015\"","ds"
+"802c7984","TaskTexts016","\"TaskTexts016\"","ds"
+"802c7994","TaskTexts017","\"TaskTexts017\"","ds"
+"802c79a4","TaskTexts018","\"TaskTexts018\"","ds"
+"802c79b4","TaskTexts019","\"TaskTexts019\"","ds"
+"802c79c4","TaskTexts021","\"TaskTexts021\"","ds"
+"802c79d4","TaskTexts022","\"TaskTexts022\"","ds"
+"802c79e4","TaskTexts023","\"TaskTexts023\"","ds"
+"802c79f4","TaskTexts024","\"TaskTexts024\"","ds"
+"802c7a04","WallCity","\"WallCity\"","ds"
+"802c7a10","WorldMap","\"WorldMap\"","ds"
+"802c7b44","Japanese","\"Japanese\"","ds"
+"802c9770","An error has occurred.","\"An error has occurred.\"","ds"
+"802c9788","Turn the power OFF and check the NINTENDO GAMECUBE Instruction Booklet for further instructions.","\"Turn the power OFF and check the NINTENDO GAMECUBE Instruction Booklet for further instructions.\"","ds"
+"802c97f8","The Game Disc could not be read.","\"The Game Disc could not be read.\"","ds"
+"802c981c","Please read the NINTENDO GAMECUBE Instruction Booklet for more information.","\"Please read the NINTENDO GAMECUBE Instruction Booklet for more information.\"","ds"
+"802c9874","Reading disc...","\"Reading disc...\"","ds"
+"802c9884","The Disc Cover is open.","\"The Disc Cover is open.\"","ds"
+"802c989c","If you want to continue the game\,","\"If you want to continue the game\,\"","ds"
+"802c98c0","please close the Disc Cover.","\"please close the Disc Cover.\"","ds"
+"802c98f0","Please insert a","\"Please insert a\"","ds"
+"802c9900","Star Fox Adventures Game Disc.","\"Star Fox Adventures Game Disc.\"","ds"
+"802c9920","This is not the","\"This is not the\"","ds"
+"802c9930","Star Fox Adventures","\"Star Fox Adventures\"","ds"
+"802c9944","Game Disc.","\"Game Disc.\"","ds"
+"802c9950","Please insert a","\"Please insert a\"","ds"
+"802c9960","Star Fox Adventures Game Disc.","\"Star Fox Adventures Game Disc.\"","ds"
+"802ca93c","urstovwxazbcmdefghtkilnpoq","\"urstovwxazbcmdefghtkilnpoq\"","ds"
+"802ca988","<uninitialised>","\"<uninitialised>\"","ds"
+"802ca998","<loading>","\"<loading>\"","ds"
+"802ca9a4","<file empty!>","\"<file empty!>\"","ds"
+"802ca9b4","<no file!>","\"<no file!>\"","ds"
+"802ca9c0","<%d's not in %s>","\"<%d's not in %s>\"","ds"
+"802ca9d4","<%d\, doesn't have phrase %d>","\"<%d\, doesn't have phrase %d>\"","ds"
+"802ca9f4","gametext/%s/%s.bin","\"gametext/%s/%s.bin\"","ds"
+"802caa48","gametext/Sequences/%d_%s.bin","\"gametext/Sequences/%d_%s.bin\"","ds"
+"802caad1","H H H H H H H H","\"H H H H H H H H\"","ds"
+"802cab6e","PZPZPZPZPZPZPZPZPZ","\"PZPZPZPZPZPZPZPZPZ\"","ds"
+"802caff0","Version 2.8 14/12/98 15.30 L.Schuneman","\"Version 2.8 14/12/98 15.30 L.Schuneman\"","ds"
+"802cb09c","WARNING in mainSetBits: Bit %d can't be set to %d while a savegame is loading
+","\"WARNING in mainSetBits: Bit %d can't be set to %d while a savegame is loading\n\"","ds"
+"802cb0ec","GAME_STATE_RESETPRESSED
+","\"GAME_STATE_RESETPRESSED\n\"","ds"
+"802cb108","GAME_STATE_RESETNOW
+","\"GAME_STATE_RESETNOW\n\"","ds"
+"802cb120","audioQuit passed
+","\"audioQuit passed\n\"","ds"
+"802cb134","GX flush passed
+","\"GX flush passed\n\"","ds"
+"802cb148","VIFlush passed
+","\"VIFlush passed\n\"","ds"
+"802cb158","reset default
+","\"reset default\n\"","ds"
+"802cb19c","finished init
+","\"finished init\n\"","ds"
+"802cb1b0","<mmShowInfoFBMemoryStore> failed to find store with requested handle in MMSTORE_ARRAY
+","\"<mmShowInfoFBMemoryStore> failed to find store with requested handle in MMSTORE_ARRAY\n\"","ds"
+"802cb208","thisStore 0x%8x thisStore->handle %d thisStore->size %d thisStore->ptrStore 0x%8x thisStore->ptrCurrent 0x%8x  end of this store array 0x%8x
+","\"thisStore 0x%8x thisStore->handle %d thisStore->size %d thisStore->ptrStore 0x%8x thisStore->ptrCurrent 0x%8x  end of this store array 0x%8x\n\"","ds"
+"802cb298","<mmAllocateFromFBMemoryStore> failed to find store with requested handle in MMSTORE_ARRAY
+","\"<mmAllocateFromFBMemoryStore> failed to find store with requested handle in MMSTORE_ARRAY\n\"","ds"
+"802cb2f4","<mmAllocateFromFBMemoryStore> available space in this store %d size wanted %d
+","\"<mmAllocateFromFBMemoryStore> available space in this store %d size wanted %d\n\"","ds"
+"802cb344","<mmDestroyMemoryStore> failed to find store with requested handle in MMSTORE_ARRAY
+","\"<mmDestroyMemoryStore> failed to find store with requested handle in MMSTORE_ARRAY\n\"","ds"
+"802cb398","<mmCreateMemoryStore> failed as size was %d
+","\"<mmCreateMemoryStore> failed as size was %d\n\"","ds"
+"802cb3c8","<mmCreateMemoryStore> failed as size %d was greater than MM_MAX_MEM_STORE_SIZE %d
+","\"<mmCreateMemoryStore> failed as size %d was greater than MM_MAX_MEM_STORE_SIZE %d\n\"","ds"
+"802cb41c","<mmCreateMemoryStore> failed to allocate mmStore Object
+","\"<mmCreateMemoryStore> failed to allocate mmStore Object\n\"","ds"
+"802cb458","mmStore->ptrStore","\"mmStore->ptrStore\"","ds"
+"802cb46c","<mmCreateMemoryStore> failed to allocate mmStore->ptrStore
+","\"<mmCreateMemoryStore> failed to allocate mmStore->ptrStore\n\"","ds"
+"802cb4a8","<mmCreateMemoryStore> failed to find slot in MMSTORE_ARRAY
+","\"<mmCreateMemoryStore> failed to find slot in MMSTORE_ARRAY\n\"","ds"
+"802cb4e4","mm:audioheap","\"mm:audioheap\"","ds"
+"802cb4f4","mem %dk/%dk %dk/%dk %dk/%dk %dk/%dk
+	slot %d/%d %d/%d %d/%d %d/%d	
+ 
+","\"mem %dk/%dk %dk/%dk %dk/%dk %dk/%dk\n\tslot %d/%d %d/%d %d/%d %d/%d\t\n \n\"","ds"
+"802cb53c","SPAWNED A SLOT NOT ALIGNED TO 32 slot->stack %d slot->loc 0x%x slot->size %d 
+","\"SPAWNED A SLOT NOT ALIGNED TO 32 slot->stack %d slot->loc 0x%x slot->size %d \n\"","ds"
+"802cb58c","
+
+ERROR<free> memory usage value corrupted 
+
+
+","\"\n\nERROR<free> memory usage value corrupted \n\n\n\"","ds"
+"802cb5bc","
+7: *** mm Error *** ---> stbf stack too deep!
+","\"\n7: *** mm Error *** ---> stbf stack too deep!\n\"","ds"
+"802cb5ec","
+5: *** mm Error *** ---> Can't free ram at this location: %x
+","\"\n5: *** mm Error *** ---> Can't free ram at this location: %x\n\"","ds"
+"802cb62c","
+6: *** mm Error *** ---> No match found for mmFree\, %08x.
+","\"\n6: *** mm Error *** ---> No match found for mmFree\, %08x.\n\"","ds"
+"802cb668","1: *** mm Error *** ---> '%s' No more slots available.  region %d used %d avail %d
+","\"1: *** mm Error *** ---> '%s' No more slots available.  region %d used %d avail %d\n\"","ds"
+"802cb6bc","
+
+ERROR<alloc> memory usage value corrupted 
+
+
+","\"\n\nERROR<alloc> memory usage value corrupted \n\n\n\"","ds"
+"802cb6ec","mmUniqueIdent","\"mmUniqueIdent\"","ds"
+"802cb6fc","
+2: *** mm Error *** --->  '%s' region=%d col=%x wantsize=%d largestsize=%d...No suitble block found for allocation.
+","\"\n2: *** mm Error *** --->  '%s' region=%d col=%x wantsize=%d largestsize=%d...No suitble block found for allocation.\n\"","ds"
+"802cb784","Warning: Model animation buffer overflow!! size=%d
+","\"Warning: Model animation buffer overflow!! size=%d\n\"","ds"
+"802cb7d8","<objSetupObject>  loading is locked can't setup objno %d
+","\"<objSetupObject>  loading is locked can't setup objno %d\n\"","ds"
+"802cb814","LOADED OBJECT %s
+","\"LOADED OBJECT %s\n\"","ds"
+"802cb828","=======  OBJFREEALL 
+","\"=======  OBJFREEALL \n\"","ds"
+"802cb840","
+
+
+
+
+
+
+    LOADING CHARACTER     maptype %d  playerno %d
+
+
+
+
+
+
+","\"\n\n\n\n\n\n\n    LOADING CHARACTER     maptype %d  playerno %d\n\n\n\n\n\n\n\"","ds"
+"802cb880","objFreeObjdef: Error!! (%d)
+","\"objFreeObjdef: Error!! (%d)\n\"","ds"
+"802cb8a0","Tried to free non-existent object
+","\"Tried to free non-existent object\n\"","ds"
+"802cb8c4","FREED OBJECT %s
+","\"FREED OBJECT %s\n\"","ds"
+"802cb8d8","Warning: Unknown object type '%d/%d romdefno %d'\, using DummyObject (128)
+","\"Warning: Unknown object type '%d/%d romdefno %d'\, using DummyObject (128)\n\"","ds"
+"802cb928","<objanim.c -- setBlendMove> WARNING tried to load anim -1 from cache modno %d
+","\"<objanim.c -- setBlendMove> WARNING tried to load anim -1 from cache modno %d\n\"","ds"
+"802cb98c","HIT VOLUMES: an object has too many hit spheres
+","\"HIT VOLUMES: an object has too many hit spheres\n\"","ds"
+"802cb9c0","hitstate frame=%f
+","\"hitstate frame=%f\n\"","ds"
+"802cb9d4","objHitReact.c: sphere overflow! %d
+","\"objHitReact.c: sphere overflow! %d\n\"","ds"
+"802cb9f8","objAddObjectType: Reached MAXTYPES!!
+","\"objAddObjectType: Reached MAXTYPES!!\n\"","ds"
+"802cba20","objmsg (%x): overflow in object %d defno=%d FROM: defno %d
+","\"objmsg (%x): overflow in object %d defno=%d FROM: defno %d\n\"","ds"
+"802cbaf0","<renderOpMatrix> ERROR CASE numMatrices = %d
+","\"<renderOpMatrix> ERROR CASE numMatrices = %d\n\"","ds"
+"802cbb20","AUDIO.tab","\"AUDIO.tab\"","ds"
+"802cbb2c","AUDIO.bin","\"AUDIO.bin\"","ds"
+"802cbb38","AMBIENT.tab","\"AMBIENT.tab\"","ds"
+"802cbb44","AMBIENT.bin","\"AMBIENT.bin\"","ds"
+"802cbb50","MUSIC.tab","\"MUSIC.tab\"","ds"
+"802cbb5c","MUSIC.bin","\"MUSIC.bin\"","ds"
+"802cbb68","MPEG.tab","\"MPEG.tab\"","ds"
+"802cbb74","MPEG.bin","\"MPEG.bin\"","ds"
+"802cbb80","MUSICACT.bin","\"MUSICACT.bin\"","ds"
+"802cbb90","CAMACTIO.bin","\"CAMACTIO.bin\"","ds"
+"802cbba0","LACTIONS.bin","\"LACTIONS.bin\"","ds"
+"802cbbb0","ANIMCURV.bin","\"ANIMCURV.bin\"","ds"
+"802cbbc0","ANIMCURV.tab","\"ANIMCURV.tab\"","ds"
+"802cbbd0","OBJSEQ2C.tab","\"OBJSEQ2C.tab\"","ds"
+"802cbbe0","FONTS.bin","\"FONTS.bin\"","ds"
+"802cbbec","CACHEFON.bin","\"CACHEFON.bin\"","ds"
+"802cbbfc","GAMETEXT.bin","\"GAMETEXT.bin\"","ds"
+"802cbc0c","GAMETEXT.tab","\"GAMETEXT.tab\"","ds"
+"802cbc1c","globalma.bin","\"globalma.bin\"","ds"
+"802cbc2c","TABLES.bin","\"TABLES.bin\"","ds"
+"802cbc38","TABLES.tab","\"TABLES.tab\"","ds"
+"802cbc44","SCREENS.bin","\"SCREENS.bin\"","ds"
+"802cbc50","SCREENS.tab","\"SCREENS.tab\"","ds"
+"802cbc5c","VOXMAP.tab","\"VOXMAP.tab\"","ds"
+"802cbc68","VOXMAP.bin","\"VOXMAP.bin\"","ds"
+"802cbc74","WARPTAB.bin","\"WARPTAB.bin\"","ds"
+"802cbc80","MAPS.bin","\"MAPS.bin\"","ds"
+"802cbc8c","MAPS.tab","\"MAPS.tab\"","ds"
+"802cbc98","MAPINFO.bin","\"MAPINFO.bin\"","ds"
+"802cbca4","TEX1.bin","\"TEX1.bin\"","ds"
+"802cbcb0","TEX1.tab","\"TEX1.tab\"","ds"
+"802cbcbc","TEXTABLE.bin","\"TEXTABLE.bin\"","ds"
+"802cbccc","TEX0.bin","\"TEX0.bin\"","ds"
+"802cbcd8","TEX0.tab","\"TEX0.tab\"","ds"
+"802cbce4","BLOCKS.bin","\"BLOCKS.bin\"","ds"
+"802cbcf0","BLOCKS.tab","\"BLOCKS.tab\"","ds"
+"802cbcfc","TRKBLK.tab","\"TRKBLK.tab\"","ds"
+"802cbd08","HITS.bin","\"HITS.bin\"","ds"
+"802cbd14","HITS.tab","\"HITS.tab\"","ds"
+"802cbd20","MODELS.tab","\"MODELS.tab\"","ds"
+"802cbd2c","MODELS.bin","\"MODELS.bin\"","ds"
+"802cbd38","MODELIND.bin","\"MODELIND.bin\"","ds"
+"802cbd48","MODANIM.TAB","\"MODANIM.TAB\"","ds"
+"802cbd54","MODANIM.BIN","\"MODANIM.BIN\"","ds"
+"802cbd60","ANIM.TAB","\"ANIM.TAB\"","ds"
+"802cbd6c","ANIM.BIN","\"ANIM.BIN\"","ds"
+"802cbd78","AMAP.TAB","\"AMAP.TAB\"","ds"
+"802cbd84","AMAP.BIN","\"AMAP.BIN\"","ds"
+"802cbd90","BITTABLE.bin","\"BITTABLE.bin\"","ds"
+"802cbda0","WEAPONDA.bin","\"WEAPONDA.bin\"","ds"
+"802cbdb0","VOXOBJ.tab","\"VOXOBJ.tab\"","ds"
+"802cbdbc","VOXOBJ.bin","\"VOXOBJ.bin\"","ds"
+"802cbdc8","MODLINES.bin","\"MODLINES.bin\"","ds"
+"802cbdd8","MODLINES.tab","\"MODLINES.tab\"","ds"
+"802cbde8","SAVEGAME.bin","\"SAVEGAME.bin\"","ds"
+"802cbdf8","SAVEGAME.tab","\"SAVEGAME.tab\"","ds"
+"802cbe08","OBJSEQ.bin","\"OBJSEQ.bin\"","ds"
+"802cbe14","OBJSEQ.tab","\"OBJSEQ.tab\"","ds"
+"802cbe20","OBJECTS.tab","\"OBJECTS.tab\"","ds"
+"802cbe2c","OBJECTS.bin","\"OBJECTS.bin\"","ds"
+"802cbe38","OBJINDEX.bin","\"OBJINDEX.bin\"","ds"
+"802cbe48","OBJEVENT.bin","\"OBJEVENT.bin\"","ds"
+"802cbe58","OBJHITS.bin","\"OBJHITS.bin\"","ds"
+"802cbe64","DLLS.bin","\"DLLS.bin\"","ds"
+"802cbe70","DLLS.tab","\"DLLS.tab\"","ds"
+"802cbe7c","DLLSIMPO.bin","\"DLLSIMPO.bin\"","ds"
+"802cbe8c","TEXPRE.bin","\"TEXPRE.bin\"","ds"
+"802cbe98","TEXPRE.tab","\"TEXPRE.tab\"","ds"
+"802cbea4","PREANIM.bin","\"PREANIM.bin\"","ds"
+"802cbeb0","PREANIM.tab","\"PREANIM.tab\"","ds"
+"802cbebc","ENVFXACT.bin","\"ENVFXACT.bin\"","ds"
+"802cc034","frontend","\"frontend\"","ds"
+"802cc040","frontend2","\"frontend2\"","ds"
+"802cc04c","dragrock","\"dragrock\"","ds"
+"802cc058","krazoapalace","\"krazoapalace\"","ds"
+"802cc068","discovery","\"discovery\"","ds"
+"802cc074","mazecave","\"mazecave\"","ds"
+"802cc080","fortress","\"fortress\"","ds"
+"802cc08c","wallcity","\"wallcity\"","ds"
+"802cc098","swapcircle","\"swapcircle\"","ds"
+"802cc0a4","cloudtreasure","\"cloudtreasure\"","ds"
+"802cc0b4","clouddungeon","\"clouddungeon\"","ds"
+"802cc0c4","cloudtrap","\"cloudtrap\"","ds"
+"802cc0d0","moonpass","\"moonpass\"","ds"
+"802cc0dc","snowmines","\"snowmines\"","ds"
+"802cc0e8","krashrin2","\"krashrin2\"","ds"
+"802cc0f4","kraztest","\"kraztest\"","ds"
+"802cc100","krazchamber","\"krazchamber\"","ds"
+"802cc10c","newicemount","\"newicemount\"","ds"
+"802cc118","newicemount2","\"newicemount2\"","ds"
+"802cc128","newicemount3","\"newicemount3\"","ds"
+"802cc138","animtest","\"animtest\"","ds"
+"802cc144","snowmines2","\"snowmines2\"","ds"
+"802cc150","snowmines3","\"snowmines3\"","ds"
+"802cc15c","capeclaw","\"capeclaw\"","ds"
+"802cc168","insidegal","\"insidegal\"","ds"
+"802cc174","dfshrine","\"dfshrine\"","ds"
+"802cc180","mmshrine","\"mmshrine\"","ds"
+"802cc18c","ecshrine","\"ecshrine\"","ds"
+"802cc198","gpshrine","\"gpshrine\"","ds"
+"802cc1a4","diamondbay","\"diamondbay\"","ds"
+"802cc1b0","earthwalker","\"earthwalker\"","ds"
+"802cc1bc","dbshrine","\"dbshrine\"","ds"
+"802cc1c8","nwshrine","\"nwshrine\"","ds"
+"802cc1d4","ccshrine","\"ccshrine\"","ds"
+"802cc1e0","wgshrine","\"wgshrine\"","ds"
+"802cc1ec","cloudrace","\"cloudrace\"","ds"
+"802cc1f8","finalboss","\"finalboss\"","ds"
+"802cc204","wminsert","\"wminsert\"","ds"
+"802cc210","snowmines4","\"snowmines4\"","ds"
+"802cc21c","snowmines5","\"snowmines5\"","ds"
+"802cc228","trexboss","\"trexboss\"","ds"
+"802cc234","mikelava","\"mikelava\"","ds"
+"802cc240","swapstore","\"swapstore\"","ds"
+"802cc24c","magicave","\"magicave\"","ds"
+"802cc258","cloudjoin","\"cloudjoin\"","ds"
+"802cc264","arwingtoplanet","\"arwingtoplanet\"","ds"
+"802cc274","arwingdarkice","\"arwingdarkice\"","ds"
+"802cc284","arwingcloud","\"arwingcloud\"","ds"
+"802cc290","arwingcity","\"arwingcity\"","ds"
+"802cc29c","arwingdragon","\"arwingdragon\"","ds"
+"802cc2ac","gamefront","\"gamefront\"","ds"
+"802cc2b8","linklevel","\"linklevel\"","ds"
+"802cc2c4","greatfox","\"greatfox\"","ds"
+"802cc2d0","dfpodium","\"dfpodium\"","ds"
+"802cc2dc","dfcradle","\"dfcradle\"","ds"
+"802cc2e8","dfcavehatch1","\"dfcavehatch1\"","ds"
+"802cc2f8","dfcavehatch2","\"dfcavehatch2\"","ds"
+"802cc308","scstatue","\"scstatue\"","ds"
+"802cc314","galleonship","\"galleonship\"","ds"
+"802cc320","cfgalleon","\"cfgalleon\"","ds"
+"802cc32c","cfgangplank","\"cfgangplank\"","ds"
+"802cc338","nwtreebridge","\"nwtreebridge\"","ds"
+"802cc348","cfdungeonblock","\"cfdungeonblock\"","ds"
+"802cc358","cloudrunnermap","\"cloudrunnermap\"","ds"
+"802cc368","ccbridge","\"ccbridge\"","ds"
+"802cc374","cfcolumn","\"cfcolumn\"","ds"
+"802cc380","nwboulder","\"nwboulder\"","ds"
+"802cc38c","cfprisondoor","\"cfprisondoor\"","ds"
+"802cc39c","cfprisoncage","\"cfprisoncage\"","ds"
+"802cc3ac","nwtreebridge2","\"nwtreebridge2\"","ds"
+"802cc3bc","dim2iceblock1","\"dim2iceblock1\"","ds"
+"802cc3cc","dimpushblock","\"dimpushblock\"","ds"
+"802cc3dc","dim2iceblock2","\"dim2iceblock2\"","ds"
+"802cc3ec","dimhornplinth","\"dimhornplinth\"","ds"
+"802cc3fc","nwshcolpush","\"nwshcolpush\"","ds"
+"802cc408","dim2lift","\"dim2lift\"","ds"
+"802cc414","dim2icefloe","\"dim2icefloe\"","ds"
+"802cc420","dim2icefloe1","\"dim2icefloe1\"","ds"
+"802cc430","dim2icefloe2","\"dim2icefloe2\"","ds"
+"802cc440","cfliftplat","\"cfliftplat\"","ds"
+"802cc44c","imspacecraft","\"imspacecraft\"","ds"
+"802cc45c","dimbossgut","\"dimbossgut\"","ds"
+"802cc468","wmcolrise","\"wmcolrise\"","ds"
+"802cc474","vfpslide1","\"vfpslide1\"","ds"
+"802cc480","vfpslide2","\"vfpslide2\"","ds"
+"802cc48c","drpushcart","\"drpushcart\"","ds"
+"802cc498","drliftplat","\"drliftplat\"","ds"
+"802cc4a4","dim2stonepillar","\"dim2stonepillar\"","ds"
+"802cc4b4","bossdrakorflatr","\"bossdrakorflatr\"","ds"
+"802cc4c4","wcbouncycrate","\"wcbouncycrate\"","ds"
+"802cc4d4","wcpushblock","\"wcpushblock\"","ds"
+"802cc4e0","wctemplelift","\"wctemplelift\"","ds"
+"802cc4f0","KamColumn","\"KamColumn\"","ds"
+"802cc4fc","dbstepstone","\"dbstepstone\"","ds"
+"802cc508","vfppushblock","\"vfppushblock\"","ds"
+"802cc6ec","dragrockbot","\"dragrockbot\"","ds"
+"802cc6f8","shipbattle","\"shipbattle\"","ds"
+"802cc704","swapholbot","\"swapholbot\"","ds"
+"802cc710","lightfoot","\"lightfoot\"","ds"
+"802cc71c","darkicemines","\"darkicemines\"","ds"
+"802cc72c","icemountain","\"icemountain\"","ds"
+"802cc738","darkicemines2","\"darkicemines2\"","ds"
+"802cc748","bossgaldon","\"bossgaldon\"","ds"
+"802cc754","magiccave","\"magiccave\"","ds"
+"802cc760","worldmap","\"worldmap\"","ds"
+"802cc76c","bossdrakor","\"bossdrakor\"","ds"
+"802cc778","bosstrex","\"bosstrex\"","ds"
+"802ccf30","%s/animcurv.bin","\"%s/animcurv.bin\"","ds"
+"802ccf40","%s/animcurv.tab","\"%s/animcurv.tab\"","ds"
+"802ccf50","%s/voxmap.bin","\"%s/voxmap.bin\"","ds"
+"802ccf60","warlock/voxmap.bin","\"warlock/voxmap.bin\"","ds"
+"802ccf74","%s/voxmap.tab","\"%s/voxmap.tab\"","ds"
+"802ccf84","%s/mod%d.zlb.bin","\"%s/mod%d.zlb.bin\"","ds"
+"802ccf98","%s/mod%d.tab","\"%s/mod%d.tab\"","ds"
+"802cd0d0","HALT	%s
+","\"HALT\t%s\n\"","ds"
+"802cd0dc","%s.romlist.zlb","\"%s.romlist.zlb\"","ds"
+"8030d260","Suspected graphics hang or infinite loop","\"Suspected graphics hang or infinite loop\"","ds"
+"8030d28c","GP status %d%d%d%d%d%d --> ","\"GP status %d%d%d%d%d%d --> \"","ds"
+"8030d2a8","GP hang due to XF stall bug.","\"GP hang due to XF stall bug.\"","ds"
+"8030d2c8","GP hang due to unterminated primitive","\"GP hang due to unterminated primitive\"","ds"
+"8030d2f0","GP hang due to illegal instruction.","\"GP hang due to illegal instruction.\"","ds"
+"8030d314","GP appears to be not hung (waiting for input).","\"GP appears to be not hung (waiting for input).\"","ds"
+"8030d344","GP is in unknown state.","\"GP is in unknown state.\"","ds"
+"8030d35c","GP hang due to XF stall bug.
+","\"GP hang due to XF stall bug.\n\"","ds"
+"8030d37c","GP hang due to unterminated primitive.
+","\"GP hang due to unterminated primitive.\n\"","ds"
+"8030d3a4","GP hang due to illegal instruction.
+","\"GP hang due to illegal instruction.\n\"","ds"
+"8030d3cc","GP appears to be not hung (waiting for input).
+","\"GP appears to be not hung (waiting for input).\n\"","ds"
+"8030d3fc","GP is in unknown state.
+","\"GP is in unknown state.\n\"","ds"
+"8030d418","thread: state=%d attr=%d suspend=%d
+","\"thread: state=%d attr=%d suspend=%d\n\"","ds"
+"8030ed48","Failed to allocate memory->forcing texture free
+","\"Failed to allocate memory->forcing texture free\n\"","ds"
+"8030ed7c","^^^^^^^^^^^^^^^^  Restruct textures Running
+","\"^^^^^^^^^^^^^^^^  Restruct textures Running\n\"","ds"
+"8030edac","^^^^^^^^^^^^^^^^  REREGION 
+","\"^^^^^^^^^^^^^^^^  REREGION \n\"","ds"
+"8030edcc","texRestructRefs  No Space to ReRegion from 0x%x size %d!!!!
+","\"texRestructRefs  No Space to ReRegion from 0x%x size %d!!!!\n\"","ds"
+"8030ee0c","texRestructRefs   Optimal ReRegion from 0x%x to 0x%x size %d!!!!
+","\"texRestructRefs   Optimal ReRegion from 0x%x to 0x%x size %d!!!!\n\"","ds"
+"8030ee50","^^^^^^^^^^^^^^^^  AFTER REREGION 
+","\"^^^^^^^^^^^^^^^^  AFTER REREGION \n\"","ds"
+"8030ee74","texRestructRefs  No Space to Restructure from 0x%x size %d!!!!
+","\"texRestructRefs  No Space to Restructure from 0x%x size %d!!!!\n\"","ds"
+"8030eeb4","texRestructRefs Wrong region from 0x%x to 0x%x size %d!!!!
+","\"texRestructRefs Wrong region from 0x%x to 0x%x size %d!!!!\n\"","ds"
+"8030eef0","texRestructRefs   SubOptimal Restructure from 0x%x to 0x%x size %d!!!!
+","\"texRestructRefs   SubOptimal Restructure from 0x%x to 0x%x size %d!!!!\n\"","ds"
+"8030ef38","texRestructRefs   Optimal Restructure from 0x%x to 0x%x size %d!!!!
+","\"texRestructRefs   Optimal Restructure from 0x%x to 0x%x size %d!!!!\n\"","ds"
+"8030ef80","texRestructRefs ReRegioned alloc can't get back into region 0 from 0x%x to 0x%x size %d!!!!
+","\"texRestructRefs ReRegioned alloc can't get back into region 0 from 0x%x to 0x%x size %d!!!!\n\"","ds"
+"8030efe0","texRestructRefs   ReRegioned alloc Optimal Restructure from 0x%x to 0x%x size %d!!!!
+","\"texRestructRefs   ReRegioned alloc Optimal Restructure from 0x%x to 0x%x size %d!!!!\n\"","ds"
+"8030f038","^^^^^^^^^^^^^^^^  Restruct textures Finished passes %d
+","\"^^^^^^^^^^^^^^^^  Restruct textures Finished passes %d\n\"","ds"
+"8030f23c","LOAD PASS: Level object
+","\"LOAD PASS: Level object\n\"","ds"
+"8030f258","LOAD FAIL: Manual load
+","\"LOAD FAIL: Manual load\n\"","ds"
+"8030f270","LOAD FAIL: Outside map x=%f y=%f z=%f
+","\"LOAD FAIL: Outside map x=%f y=%f z=%f\n\"","ds"
+"8030f298","LOAD FAIL: No block
+","\"LOAD FAIL: No block\n\"","ds"
+"8030f2b0","LOAD PASS: Block object
+","\"LOAD PASS: Block object\n\"","ds"
+"8030f2cc","LOAD PASS: In range %f
+","\"LOAD PASS: In range %f\n\"","ds"
+"8030f2e4","LOAD FAIL: Out of range
+","\"LOAD FAIL: Out of range\n\"","ds"
+"8030f300","TRACK ERROR: Global texanim overflow
+","\"TRACK ERROR: Global texanim overflow\n\"","ds"
+"8030f328","trackLoadBlockEnd: track block overrun
+","\"trackLoadBlockEnd: track block overrun\n\"","ds"
+"8030f350","track piLocked %x
+","\"track piLocked %x\n\"","ds"
+"8030f364"," cellx %i celly %i cellz %i ","\" cellx %i celly %i cellz %i \"","ds"
+"8030f428","NO FREE LAST LINE
+","\"NO FREE LAST LINE\n\"","ds"
+"8030f43c","trackIntersect: FUNC OVERFLOW %d
+","\"trackIntersect: FUNC OVERFLOW %d\n\"","ds"
+"8030f460","HIT OVERFLOW
+","\"HIT OVERFLOW\n\"","ds"
+"8030f678","Star Fox Adventures","\"Star Fox Adventures\"","ds"
+"8030f718","opening.bnr","\"opening.bnr\"","ds"
+"8030f724","card/memcardicon0.img","\"card/memcardicon0.img\"","ds"
+"8030f73c","card/memcardicon1.img","\"card/memcardicon1.img\"","ds"
+"8030f754","card/memcardicon2.img","\"card/memcardicon2.img\"","ds"
+"8030f76c","card/memcardicon3.img","\"card/memcardicon3.img\"","ds"
+"8030f784","card/memcardicon0.pal","\"card/memcardicon0.pal\"","ds"
+"8030f79c","STARFOX ADVENTURES","\"STARFOX ADVENTURES\"","ds"
+"8030f7b0","Dinosaur Planet","\"Dinosaur Planet\"","ds"
+"8030fa94","endObjSequence: max number of obj frees
+","\"endObjSequence: max number of obj frees\n\"","ds"
+"8030fac0"," SEQUENCE: Could not Find Object %i 
+","\" SEQUENCE: Could not Find Object %i \n\"","ds"
+"8030fae8","<objLoadAnimdata>  Warning ACRomTab is NULL
+","\"<objLoadAnimdata>  Warning ACRomTab is NULL\n\"","ds"
+"803101b0","!!! Error non-existant cloud id - %i - in snowFreeSnowCloud
+","\"!!! Error non-existant cloud id - %i - in snowFreeSnowCloud\n\"","ds"
+"803101f0","!!! Error non-existant cloud id - %i - in snowPrintSnowCloud
+","\"!!! Error non-existant cloud id - %i - in snowPrintSnowCloud\n\"","ds"
+"80310230","!!! Error non-existant cloud id - %i - in snowReposSnowCloud
+","\"!!! Error non-existant cloud id - %i - in snowReposSnowCloud\n\"","ds"
+"80310270","warning in newcloud dll no spare memory for light available
+","\"warning in newcloud dll no spare memory for light available\n\"","ds"
+"803102b0","warning in newclouds dll no spare memory for clouds available
+","\"warning in newclouds dll no spare memory for clouds available\n\"","ds"
+"803102f0","!!! Error non-existant cloud id - %i - in snowKillSnowCloud
+","\"!!! Error non-existant cloud id - %i - in snowKillSnowCloud\n\"","ds"
+"8031042c","Could not allocate memory for waterfx dll
+","\"Could not allocate memory for waterfx dll\n\"","ds"
+"803107b0","expgfx.c: mismatch in add/remove in exptab
+","\"expgfx.c: mismatch in add/remove in exptab\n\"","ds"
+"803107dc","notexture 
+","\"notexture \n\"","ds"
+"803107e8","expgfx.c: addToTable usage overflow
+","\"expgfx.c: addToTable usage overflow\n\"","ds"
+"80310810","expgfx.c: exptab is FULL
+","\"expgfx.c: exptab is FULL\n\"","ds"
+"8031082c","expgfx.c: invalid tabindex
+","\"expgfx.c: invalid tabindex\n\"","ds"
+"80310848","expgfx.c: scale overflow
+","\"expgfx.c: scale overflow\n\"","ds"
+"8031091c","<projgfx rayhit Do>No Longer supported 
+","\"<projgfx rayhit Do>No Longer supported \n\"","ds"
+"80310948","<projgfx setzscale  Do>No Longer supported 
+","\"<projgfx setzscale  Do>No Longer supported \n\"","ds"
+"80310978","<projgfx release Do>No Longer supported 
+","\"<projgfx release Do>No Longer supported \n\"","ds"
+"803111ec","alpha %d
+","\"alpha %d\n\"","ds"
+"80312150","Corner is too far out (%f)
+","\"Corner is too far out (%f)\n\"","ds"
+"8031216c","Found new walk group patch from walkgroup %d
+","\"Found new walk group patch from walkgroup %d\n\"","ds"
+"8031219c","Error in isPointWithinPatchGroup
+","\"Error in isPointWithinPatchGroup\n\"","ds"
+"803121c0","Unable to find exit point 0 on patch between walkgroup %d and %d
+","\"Unable to find exit point 0 on patch between walkgroup %d and %d\n\"","ds"
+"80312204","Unable to find exit point 1 on patch between walkgroup %d and %d
+","\"Unable to find exit point 1 on patch between walkgroup %d and %d\n\"","ds"
+"8031230c","curves.c: MAX_ROMCURVES exceeded!!
+","\"curves.c: MAX_ROMCURVES exceeded!!\n\"","ds"
+"80312af0","!!!! This modgfx needs an owner object
+","\"!!!! This modgfx needs an owner object\n\"","ds"
+"80319fe8","<projdummy Do>No Longer supported 
+","\"<projdummy Do>No Longer supported \n\"","ds"
+"8031a02f","$<projmagicstream Do>No Longer supported 
+","\"$<projmagicstream Do>No Longer supported \n\"","ds"
+"8031a07f","\<projmagicemmit1 Do>No Longer supported 
+","\"\\<projmagicemmit1 Do>No Longer supported \n\"","ds"
+"8031a0d0","<projroombeam Do>No Longer supported 
+","\"<projroombeam Do>No Longer supported \n\"","ds"
+"8031a118","<projlightning1 Do>No Longer supported 
+","\"<projlightning1 Do>No Longer supported \n\"","ds"
+"8031a168","<projlightning2 Do>No Longer supported 
+","\"<projlightning2 Do>No Longer supported \n\"","ds"
+"8031a1b6","	<<projlightning3 Do>No Longer supported 
+","\"\t<<projlightning3 Do>No Longer supported \n\"","ds"
+"8031a206","	t<projlightning4 Do>No Longer supported 
+","\"\tt<projlightning4 Do>No Longer supported \n\"","ds"
+"8031a258","<projlightning5 Do>No Longer supported 
+","\"<projlightning5 Do>No Longer supported \n\"","ds"
+"8031a2a8","<projlightning7 Do>No Longer supported 
+","\"<projlightning7 Do>No Longer supported \n\"","ds"
+"8031a2f8","<projlightning6 Do>No Longer supported 
+","\"<projlightning6 Do>No Longer supported \n\"","ds"
+"8031a346","
+T<projenergise1 Do>No Longer supported 
+","\"\nT<projenergise1 Do>No Longer supported \n\"","ds"
+"8031a390","<projenergise2 Do>No Longer supported 
+","\"<projenergise2 Do>No Longer supported \n\"","ds"
+"8031a3d8","<projrobotfire Do>No Longer supported 
+","\"<projrobotfire Do>No Longer supported \n\"","ds"
+"8031a420","<projsquirt1 Do>No Longer supported 
+","\"<projsquirt1 Do>No Longer supported \n\"","ds"
+"8031a467","4<projship1 Do>No Longer supported 
+","\"4<projship1 Do>No Longer supported \n\"","ds"
+"8031a4af","l<projwallpower Do>No Longer supported 
+","\"l<projwallpower Do>No Longer supported \n\"","ds"
+"8031a4f8","<projquakeshock Do>No Longer supported 
+","\"<projquakeshock Do>No Longer supported \n\"","ds"
+"8031a548","<projsunshock Do>No Longer supported 
+","\"<projsunshock Do>No Longer supported \n\"","ds"
+"8031a590","<projtesla Do>No Longer supported 
+","\"<projtesla Do>No Longer supported \n\"","ds"
+"8031a5d7","L<projcore1 Do>No Longer supported 
+","\"L<projcore1 Do>No Longer supported \n\"","ds"
+"8031a620","<projcore2 Do>No Longer supported 
+","\"<projcore2 Do>No Longer supported \n\"","ds"
+"8031a668","<projcore3 Do>No Longer supported 
+","\"<projcore3 Do>No Longer supported \n\"","ds"
+"8031a6b0","<projdfp1r Do>No Longer supported 
+","\"<projdfp1r Do>No Longer supported \n\"","ds"
+"8031a764","<camcontrol.c>  failed to load triggered camaction actionno %d
+","\"<camcontrol.c>  failed to load triggered camaction actionno %d\n\"","ds"
+"8031a904","PATHCAM error: need at least two control points
+","\"PATHCAM error: need at least two control points\n\"","ds"
+"8031ad30","##########","u\"##########\"","unicode"
+"8031ae18","n_rareware
+","\"n_rareware\n\"","ds"
+"8031af7c","starfox.thp","\"starfox.thp\"","ds"
+"8031af88","^^^^^^^^^^^^^^^^  malloc for movie failed
+","\"^^^^^^^^^^^^^^^^  malloc for movie failed\n\"","ds"
+"8031afb4","^^^^^^^^^^^^^^^^  RESTRUCT for movie
+","\"^^^^^^^^^^^^^^^^  RESTRUCT for movie\n\"","ds"
+"8031afdc","n_attractmode.c","\"n_attractmode.c\"","ds"
+"8031afec","Fail to prepare
+","\"Fail to prepare\n\"","ds"
+"8031b4a4","%3d:%02d:%02d","\"%3d:%02d:%02d\"","ds"
+"8031b4b4","/savegame/save%d.bin","\"/savegame/save%d.bin\"","ds"
+"8031bca0","B8CDEFGHI","\"B8CDEFGHI\"","ds"
+"8031ccf4"," x %.2f
+","\" x %.2f\n\"","ds"
+"8031cd00","%02d/%02d","\"%02d/%02d\"","ds"
+"8031cd70","  %02d:%02d.%02d","\"  %02d:%02d.%02d\"","ds"
+"8031ce84","PICMENU: tex overflow
+","\"PICMENU: tex overflow\n\"","ds"
+"8031ce9c","UPLINK overflow=%d
+","\"UPLINK overflow=%d\n\"","ds"
+"8031ceb0","DOWNLINK overflow=%d
+","\"DOWNLINK overflow=%d\n\"","ds"
+"8031cec8","LEFTLINK overflow=%d
+","\"LEFTLINK overflow=%d\n\"","ds"
+"8031cee0","RIGHTLINK overflow=%d
+","\"RIGHTLINK overflow=%d\n\"","ds"
+"8031ddf0","	errorThreadFunc %x","\"\terrorThreadFunc %x\"","ds"
+"8031de04","Exception:","\"Exception:\"","ds"
+"8031de10","System reset","\"System reset\"","ds"
+"8031de20","Machine check","\"Machine check\"","ds"
+"8031de30","Alignment","\"Alignment\"","ds"
+"8031de3c","Performance monitor","\"Performance monitor\"","ds"
+"8031de50","System management interrupt","\"System management interrupt\"","ds"
+"8031de6c","Memory Protection Error","\"Memory Protection Error\"","ds"
+"8031de84","Unknown error","\"Unknown error\"","ds"
+"8031de94","Stack trace","\"Stack trace\"","ds"
+"8031dea0","Stack %x; depth %d","\"Stack %x; depth %d\"","ds"
+"8031deb4","	%08x	%08x","\"\t%08x\t%08x\"","ds"
+"8031dec0","General Purpose Registers","\"General Purpose Registers\"","ds"
+"8031dedc","	%08x	%08x	%08x	%08x","\"\t%08x\t%08x\t%08x\t%08x\"","ds"
+"8031e0bc","in water
+","\"in water\n\"","ds"
+"8031e0c8","out of water
+","\"out of water\n\"","ds"
+"8031e0d8","moveTricky: out of water
+","\"moveTricky: out of water\n\"","ds"
+"8031e0f4","Turning in water
+","\"Turning in water\n\"","ds"
+"8031e108","Turning out of water
+","\"Turning out of water\n\"","ds"
+"8031e120","tricky wg %d->%d target wg %d\, dest wg %d
+","\"tricky wg %d->%d target wg %d\, dest wg %d\n\"","ds"
+"8031e14c","tricky last walk group is zero. Has he been loaded within a walk group? %f %f %f
+","\"tricky last walk group is zero. Has he been loaded within a walk group? %f %f %f\n\"","ds"
+"8031e1a0","velbefore %f\, vel now %f
+","\"velbefore %f\, vel now %f\n\"","ds"
+"8031e1bc","target is within a walkGroup or its patch
+","\"target is within a walkGroup or its patch\n\"","ds"
+"8031e1e8","target is not within a walkGroup or any patches
+","\"target is not within a walkGroup or any patches\n\"","ds"
+"8031e21c","target is within patch group %d
+","\"target is within patch group %d\n\"","ds"
+"8031e240","Patch %d: Last xyz %f %f %f
+","\"Patch %d: Last xyz %f %f %f\n\"","ds"
+"8031e260","Last Patch Point %f %f %f
+","\"Last Patch Point %f %f %f\n\"","ds"
+"8031e27c","Tricky is neither in a walkgroup or in a patch
+","\"Tricky is neither in a walkgroup or in a patch\n\"","ds"
+"8031e2ac","tricky error\, target patch %d\, targetWalkGroup %d\, trickyWalkGroup %d\, tricky last walkGroup %d\, tricky in patch %d
+","\"tricky error\, target patch %d\, targetWalkGroup %d\, trickyWalkGroup %d\, tricky last walkGroup %d\, tricky in patch %d\n\"","ds"
+"8031e324","tricky error 2!!!!!
+","\"tricky error 2!!!!!\n\"","ds"
+"8031e33c","movement state is %d
+","\"movement state is %d\n\"","ds"
+"8031e354","walk wait
+","\"walk wait\n\"","ds"
+"8031e360","walk free
+","\"walk free\n\"","ds"
+"8031e36c","walk start patch
+","\"walk start patch\n\"","ds"
+"8031e380","walk patch exit
+","\"walk patch exit\n\"","ds"
+"8031e394","walk end patch
+","\"walk end patch\n\"","ds"
+"8031e3a4","walk to node %d %d
+","\"walk to node %d %d\n\"","ds"
+"8031e3b8","curve setup
+","\"curve setup\n\"","ds"
+"8031e3c8","walk nodes
+","\"walk nodes\n\"","ds"
+"8031e3d4","Jump run up
+","\"Jump run up\n\"","ds"
+"8031e3e4","Jump prep
+","\"Jump prep\n\"","ds"
+"8031e3f0","Jumping
+","\"Jumping\n\"","ds"
+"8031e3fc","Jump up run up
+","\"Jump up run up\n\"","ds"
+"8031e40c","JUMPDOWN or JUMPUP
+","\"JUMPDOWN or JUMPUP\n\"","ds"
+"8031e420","JUMPDOWN_RUNUP
+","\"JUMPDOWN_RUNUP\n\"","ds"
+"8031e430","entered a non valid movementstate
+","\"entered a non valid movementstate\n\"","ds"
+"8031e490","GROWLAT_GOTO
+","\"GROWLAT_GOTO\n\"","ds"
+"8031e4a0","GROWLAT_GROWLING
+","\"GROWLAT_GROWLING\n\"","ds"
+"8031e4b4","GROWLAT_GOTOFLAME
+","\"GROWLAT_GOTOFLAME\n\"","ds"
+"8031e4c8","GROWLAT_FLAME
+","\"GROWLAT_FLAME\n\"","ds"
+"8031e4d8","BADDIEALERT_GOTO
+","\"BADDIEALERT_GOTO\n\"","ds"
+"8031e4ec","BADDIEALERT_BARK %d %d
+","\"BADDIEALERT_BARK %d %d\n\"","ds"
+"8031e504","BADDIEALLERT_GOTOFLAME
+","\"BADDIEALLERT_GOTOFLAME\n\"","ds"
+"8031e51c","BADDIEALLERT_FLAME
+","\"BADDIEALLERT_FLAME\n\"","ds"
+"8031e530","error tricky should never stop when circling
+","\"error tricky should never stop when circling\n\"","ds"
+"8031e580","GUARD_INIT
+","\"GUARD_INIT\n\"","ds"
+"8031e58c","GUARD_FINDING
+","\"GUARD_FINDING\n\"","ds"
+"8031e59c","GUARD_TOSPOT
+","\"GUARD_TOSPOT\n\"","ds"
+"8031e5ac","GUARD_TOFRONT
+","\"GUARD_TOFRONT\n\"","ds"
+"8031e5bc","GUARD_TOBADDIE
+","\"GUARD_TOBADDIE\n\"","ds"
+"8031e5cc","GUARD_FLAME
+","\"GUARD_FLAME\n\"","ds"
+"8031e5dc","GUARD_DOWNTOGROWL
+","\"GUARD_DOWNTOGROWL\n\"","ds"
+"8031e5f0","GUARD_GROWL
+","\"GUARD_GROWL\n\"","ds"
+"8031e600","GUARD_UPFROMGROWL
+","\"GUARD_UPFROMGROWL\n\"","ds"
+"8031e638","FLAME_NONE
+","\"FLAME_NONE\n\"","ds"
+"8031e644","FLAME_FINDING_OUT
+","\"FLAME_FINDING_OUT\n\"","ds"
+"8031e658","FLAME_GOINGTOEDGE
+","\"FLAME_GOINGTOEDGE\n\"","ds"
+"8031e66c","FLAME_TOSTART
+","\"FLAME_TOSTART\n\"","ds"
+"8031e67c","FLAME_OUT
+","\"FLAME_OUT\n\"","ds"
+"8031e688","FLAME_FINDING_IN
+","\"FLAME_FINDING_IN\n\"","ds"
+"8031e69c","FLAME_TURNING_IN
+","\"FLAME_TURNING_IN\n\"","ds"
+"8031e6b0","FLAME_IN
+","\"FLAME_IN\n\"","ds"
+"8031e6bc","FLAME_TOEND
+","\"FLAME_TOEND\n\"","ds"
+"8031e6f0","DIGTUNNEL_FINDING
+","\"DIGTUNNEL_FINDING\n\"","ds"
+"8031e704","DIGTUNNEL_GOINGTOSTART
+","\"DIGTUNNEL_GOINGTOSTART\n\"","ds"
+"8031e71c","DIGTUNNEL_DIGGING
+","\"DIGTUNNEL_DIGGING\n\"","ds"
+"8031e730","DIGTUNNEL_TOEND1 %f
+","\"DIGTUNNEL_TOEND1 %f\n\"","ds"
+"8031e748","DIGTUNNEL_TOEND2
+","\"DIGTUNNEL_TOEND2\n\"","ds"
+"8031e75c","DIGTUNNEL_WAIT
+","\"DIGTUNNEL_WAIT\n\"","ds"
+"8031e78c","sideCommandEnable warning: need to increase MAX_COMM_PRESENT
+","\"sideCommandEnable warning: need to increase MAX_COMM_PRESENT\n\"","ds"
+"8031e7cc","hits: %d %d %d %d %d %d %d %d","\"hits: %d %d %d %d %d %d %d %d\"","ds"
+"8031e7ec","
+Energy: %d/%d
+","\"\nEnergy: %d/%d\n\"","ds"
+"8031e7fc","find command used on the wrong object
+","\"find command used on the wrong object\n\"","ds"
+"8032194c","Magic collected","\"Magic collected\"","ds"
+"803219e0","PUSHPULL OBJECT: hitpoint overflow
+","\"PUSHPULL OBJECT: hitpoint overflow\n\"","ds"
+"80321bc4","yvel %f\, depth %f
+","\"yvel %f\, depth %f\n\"","ds"
+"80321bd8"," dot %f ","\" dot %f \"","ds"
+"80321e28","newseqobj %d: need bit clear during sequence
+","\"newseqobj %d: need bit clear during sequence\n\"","ds"
+"80321e58","newseqobj %d: used bit set during sequence
+","\"newseqobj %d: used bit set during sequence\n\"","ds"
+"80321e84","newseqobj %d: need bit clear before preempting sequence
+","\"newseqobj %d: need bit clear before preempting sequence\n\"","ds"
+"80321ec0","newseqobj %d: used bit set before preempting sequence
+","\"newseqobj %d: used bit set before preempting sequence\n\"","ds"
+"80321ef8","newseqobj %d: about to prempt the sequence - objs %d
+","\"newseqobj %d: about to prempt the sequence - objs %d\n\"","ds"
+"80321f30","newseqobj %d: need bit clear after sequence
+","\"newseqobj %d: need bit clear after sequence\n\"","ds"
+"80321f60","newseqobj %d: used bit set after sequence
+","\"newseqobj %d: used bit set after sequence\n\"","ds"
+"80321f8c","newseqobj %d: need bit clear before sequence
+","\"newseqobj %d: need bit clear before sequence\n\"","ds"
+"80321fbc","newseqobj %d: used bit set before sequence
+","\"newseqobj %d: used bit set before sequence\n\"","ds"
+"80321fe8","newseqobj %d: about to start the sequence
+","\"newseqobj %d: about to start the sequence\n\"","ds"
+"80322014","newseqobj %d: Need Bit %d\, Used Bit %d
+","\"newseqobj %d: Need Bit %d\, Used Bit %d\n\"","ds"
+"80322bc0","%x   %f %f
+","\"%x   %f %f\n\"","ds"
+"80323038"," TEXFRAMEANIM %i ","\" TEXFRAMEANIM %i \"","ds"
+"80323168","!!!!!!!!!!! TRIGGER %d  ident %d
+","\"!!!!!!!!!!! TRIGGER %d  ident %d\n\"","ds"
+"8032318c","initialise
+","\"initialise\n\"","ds"
+"80323198","Trigger [%d]\, Environment Effect\, Action Num [%d]\, Range [%d]","\"Trigger [%d]\, Environment Effect\, Action Num [%d]\, Range [%d]\"","ds"
+"803231d8","^^^^^^^^
+^^^^^^^^
+LOAD %d
+","\"^^^^^^^^\n^^^^^^^^\nLOAD %d\n\"","ds"
+"803231f4","^^^^^^^^
+^^^^^^^^
+FREE %d
+","\"^^^^^^^^\n^^^^^^^^\nFREE %d\n\"","ds"
+"80323210","^^^^^^^^
+^^^^^^^^
+LEVELLOCKED level %d  bucket %d
+","\"^^^^^^^^\n^^^^^^^^\nLEVELLOCKED level %d  bucket %d\n\"","ds"
+"80323244","^^^^^^^^
+^^^^^^^^
+LEVELUNLOCKED level %d  bucket %d
+","\"^^^^^^^^\n^^^^^^^^\nLEVELUNLOCKED level %d  bucket %d\n\"","ds"
+"80326784","<DIMBoss.c> freeing assets for DIMBoss
+","\"<DIMBoss.c> freeing assets for DIMBoss\n\"","ds"
+"803267ac","<DIMBoss.c> loading assets for DIMTop
+","\"<DIMBoss.c> loading assets for DIMTop\n\"","ds"
+"80326e18","WARNING Water Spike [%d] as invalid xyzAnim ID
+","\"WARNING Water Spike [%d] as invalid xyzAnim ID\n\"","ds"
+"80326ff8","((00--","u\"((00--\"","unicode"
+"803272c0","time %d
+","\"time %d\n\"","ds"
+"803280ae","d|angle %d\, obj-yaw %d
+","\"d|angle %d\, obj-yaw %d\n\"","ds"
+"803280c8","SHthorntail.c","\"SHthorntail.c\"","ds"
+"803280d8","Thorntail entered an invalid state
+","\"Thorntail entered an invalid state\n\"","ds"
+"80328394","numBloops %d
+","\"numBloops %d\n\"","ds"
+"80329664","diff %d
+","\"diff %d\n\"","ds"
+"80329f38"," GREATER 
+","\" GREATER \n\"","ds"
+"8032a184","popOutOfGround","\"popOutOfGround\"","ds"
+"8032a193","burstIntoGroun","\"burstIntoGroun\"","ds"
+"8032a1a2","biteAttack    ","\"biteAttack    \"","ds"
+"8032a1b1","standStill    ","\"standStill    \"","ds"
+"8032a1c0","standAndSpit  ","\"standAndSpit  \"","ds"
+"8032a1cf","hitFightMain  ","\"hitFightMain  \"","ds"
+"8032a1de","fight_die     ","\"fight_die     \"","ds"
+"8032a1ed","runto_Object  ","\"runto_Object  \"","ds"
+"8032a1fc","runto_ThrowObj","\"runto_ThrowObj\"","ds"
+"8032a20b","pickup_Object ","\"pickup_Object \"","ds"
+"8032a21a","throw_AtObject","\"throw_AtObject\"","ds"
+"8032a229","wait_forObject","\"wait_forObject\"","ds"
+"8032a238","Wait_for_throw","\"Wait_for_throw\"","ds"
+"8032a247","try_to_catch  ","\"try_to_catch  \"","ds"
+"8032a256","catch_Object  ","\"catch_Object  \"","ds"
+"8032a265","Kill_Object   ","\"Kill_Object   \"","ds"
+"8032a3f4"," Stack -------------------
+","\" Stack -------------------\n\"","ds"
+"8032a410","%i : %s : Opand %i 
+","\"%i : %s : Opand %i \n\"","ds"
+"8032a428"," HAS BALL : %x= %x
+","\" HAS BALL : %x= %x\n\"","ds"
+"8032a43c"," THROW CHANCE %i 
+","\" THROW CHANCE %i \n\"","ds"
+"8032a580","<doorswitch Init>No Longer supported 
+","\"<doorswitch Init>No Longer supported \n\"","ds"
+"8032a788","<dfperchwitch Init>No Longer supported 
+","\"<dfperchwitch Init>No Longer supported \n\"","ds"
+"8032a838","<textblock.c Init>No Longer supported 
+","\"<textblock.c Init>No Longer supported \n\"","ds"
+"8032a860","<laser.c Init>No Longer supported 
+","\"<laser.c Init>No Longer supported \n\"","ds"
+"8032a930","<textblock.c Init>No Longer supported 
+","\"<textblock.c Init>No Longer supported \n\"","ds"
+"8032a990","<platform1 draw>No Longer supported 
+","\"<platform1 draw>No Longer supported \n\"","ds"
+"8032a9b8","<platform1 control>No Longer supported 
+","\"<platform1 control>No Longer supported \n\"","ds"
+"8032a9e4","<platform1 Init>No Longer supported 
+","\"<platform1 Init>No Longer supported \n\"","ds"
+"8032ad18"," DRAKOR SPEED %f ","\" DRAKOR SPEED %f \"","ds"
+"8032b4c4"," YAW DIFF ","\" YAW DIFF \"","ds"
+"8032b508"," Time %i : %i ","\" Time %i : %i \"","ds"
+"8032be78"," Avitvate %i ","\" Avitvate %i \"","ds"
+"8032c658","Mode: YAW
+","\"Mode: YAW\n\"","ds"
+"8032c664","Angle: %d
+","\"Angle: %d\n\"","ds"
+"8032c670","Mode: PITCH
+","\"Mode: PITCH\n\"","ds"
+"8032c680","Mode: DIFFUSE COLOUR RED
+","\"Mode: DIFFUSE COLOUR RED\n\"","ds"
+"8032c69c","Colour: %d
+","\"Colour: %d\n\"","ds"
+"8032c6a8","Mode: DIFFUSE COLOUR GREEN
+","\"Mode: DIFFUSE COLOUR GREEN\n\"","ds"
+"8032c6c4","Mode: DIFFUSE COLOUR BLUE
+","\"Mode: DIFFUSE COLOUR BLUE\n\"","ds"
+"8032c6e0","Mode: SPECULAR COLOUR RED
+","\"Mode: SPECULAR COLOUR RED\n\"","ds"
+"8032c6fc","Mode: SPECULAR COLOUR GREEN
+","\"Mode: SPECULAR COLOUR GREEN\n\"","ds"
+"8032c71c","Mode: SPECULAR COLOUR BLUE
+","\"Mode: SPECULAR COLOUR BLUE\n\"","ds"
+"8032cfb8","
+Dolphin OS $Revision: 54 $.
+","\"\nDolphin OS $Revision: 54 $.\n\"","ds"
+"8032cfd8","Kernel built : %s %s
+","\"Kernel built : %s %s\n\"","ds"
+"8032cff0","Jun  5 2002","\"Jun  5 2002\"","ds"
+"8032cffc","02:09:12","\"02:09:12\"","ds"
+"8032d008","Console Type : ","\"Console Type : \"","ds"
+"8032d018","Retail %d
+","\"Retail %d\n\"","ds"
+"8032d024","Mac Emulator
+","\"Mac Emulator\n\"","ds"
+"8032d034","PC Emulator
+","\"PC Emulator\n\"","ds"
+"8032d044","EPPC Arthur
+","\"EPPC Arthur\n\"","ds"
+"8032d054","EPPC Minnow
+","\"EPPC Minnow\n\"","ds"
+"8032d064","Development HW%d
+","\"Development HW%d\n\"","ds"
+"8032d078","Memory %d MB
+","\"Memory %d MB\n\"","ds"
+"8032d088","Arena : 0x%x - 0x%x
+","\"Arena : 0x%x - 0x%x\n\"","ds"
+"8032d0dc","Installing OSDBIntegrator
+","\"Installing OSDBIntegrator\n\"","ds"
+"8032d0f8",">>> OSINIT: exception %d commandeered by TRK
+","\">>> OSINIT: exception %d commandeered by TRK\n\"","ds"
+"8032d128",">>> OSINIT: exception %d vectored to debugger
+","\">>> OSINIT: exception %d vectored to debugger\n\"","ds"
+"8032d158","Exceptions initialized...
+","\"Exceptions initialized...\n\"","ds"
+"8032d1f8",">>> L2 INVALIDATE : SHOULD NEVER HAPPEN
+","\">>> L2 INVALIDATE : SHOULD NEVER HAPPEN\n\"","ds"
+"8032d224","Machine check received
+","\"Machine check received\n\"","ds"
+"8032d23c","HID2 = 0x%x   SRR1 = 0x%x
+","\"HID2 = 0x%x   SRR1 = 0x%x\n\"","ds"
+"8032d258","Machine check was not DMA/locked cache related
+","\"Machine check was not DMA/locked cache related\n\"","ds"
+"8032d288","DMAErrorHandler(): An error occurred while processing DMA.
+","\"DMAErrorHandler(): An error occurred while processing DMA.\n\"","ds"
+"8032d2c4","The following errors have been detected and cleared :
+","\"The following errors have been detected and cleared :\n\"","ds"
+"8032d2fc","	- Requested a locked cache tag that was already in the cache
+","\"\t- Requested a locked cache tag that was already in the cache\n\"","ds"
+"8032d33c","	- DMA attempted to access normal cache
+","\"\t- DMA attempted to access normal cache\n\"","ds"
+"8032d368","	- DMA missed in data cache
+","\"\t- DMA missed in data cache\n\"","ds"
+"8032d388","	- DMA queue overflowed
+","\"\t- DMA queue overflowed\n\"","ds"
+"8032d3a4","L1 i-caches initialized
+","\"L1 i-caches initialized\n\"","ds"
+"8032d3c0","L1 d-caches initialized
+","\"L1 d-caches initialized\n\"","ds"
+"8032d3dc","L2 cache initialized
+","\"L2 cache initialized\n\"","ds"
+"8032d3f4","Locked cache machine check handler installed
+","\"Locked cache machine check handler installed\n\"","ds"
+"8032d428","------------------------- Context 0x%08x -------------------------
+","\"------------------------- Context 0x%08x -------------------------\n\"","ds"
+"8032d46c","r%-2d  = 0x%08x (%14d)  r%-2d  = 0x%08x (%14d)
+","\"r%-2d  = 0x%08x (%14d)  r%-2d  = 0x%08x (%14d)\n\"","ds"
+"8032d49c","LR   = 0x%08x                   CR   = 0x%08x
+","\"LR   = 0x%08x                   CR   = 0x%08x\n\"","ds"
+"8032d4cc","SRR0 = 0x%08x                   SRR1 = 0x%08x
+","\"SRR0 = 0x%08x                   SRR1 = 0x%08x\n\"","ds"
+"8032d4fc","
+GQRs----------
+","\"\nGQRs----------\n\"","ds"
+"8032d510","gqr%d = 0x%08x 	 gqr%d = 0x%08x
+","\"gqr%d = 0x%08x \t gqr%d = 0x%08x\n\"","ds"
+"8032d534","
+
+FPRs----------
+","\"\n\nFPRs----------\n\"","ds"
+"8032d548","fr%d 	= %d 	 fr%d 	= %d
+","\"fr%d \t= %d \t fr%d \t= %d\n\"","ds"
+"8032d564","
+
+PSFs----------
+","\"\n\nPSFs----------\n\"","ds"
+"8032d578","ps%d 	= 0x%x 	 ps%d 	= 0x%x
+","\"ps%d \t= 0x%x \t ps%d \t= 0x%x\n\"","ds"
+"8032d598","
+Address:      Back Chain    LR Save
+","\"\nAddress:      Back Chain    LR Save\n\"","ds"
+"8032d5c0","0x%08x:   0x%08x    0x%08x
+","\"0x%08x:   0x%08x    0x%08x\n\"","ds"
+"8032d5dc","FPU-unavailable handler installed
+","\"FPU-unavailable handler installed\n\"","ds"
+"8032d600"," in \"%s\" on line %d.
+","\" in \\"%s\\" on line %d.\n\"","ds"
+"8032d618","
+Address:      Back Chain    LR Save
+","\"\nAddress:      Back Chain    LR Save\n\"","ds"
+"8032d640","0x%08x:   0x%08x    0x%08x
+","\"0x%08x:   0x%08x    0x%08x\n\"","ds"
+"8032d65c","Non-recoverable Exception %d","\"Non-recoverable Exception %d\"","ds"
+"8032d67c","Unhandled Exception %d","\"Unhandled Exception %d\"","ds"
+"8032d694","
+DSISR = 0x%08x                   DAR  = 0x%08x
+","\"\nDSISR = 0x%08x                   DAR  = 0x%08x\n\"","ds"
+"8032d6c8","TB = 0x%016llx
+","\"TB = 0x%016llx\n\"","ds"
+"8032d6d8","
+Instruction at 0x%x (read from SRR0) attempted to access invalid address 0x%x (read from DAR)
+","\"\nInstruction at 0x%x (read from SRR0) attempted to access invalid address 0x%x (read from DAR)\n\"","ds"
+"8032d738","
+Attempted to fetch instruction from invalid address 0x%x (read from SRR0)
+","\"\nAttempted to fetch instruction from invalid address 0x%x (read from SRR0)\n\"","ds"
+"8032d784","
+Instruction at 0x%x (read from SRR0) attempted to access unaligned address 0x%x (read from DAR)
+","\"\nInstruction at 0x%x (read from SRR0) attempted to access unaligned address 0x%x (read from DAR)\n\"","ds"
+"8032d7e8","
+Program exception : Possible illegal instruction/operation at or around 0x%x (read from SRR0)
+","\"\nProgram exception : Possible illegal instruction/operation at or around 0x%x (read from SRR0)\n\"","ds"
+"8032d848","AI DMA Address =   0x%04x%04x
+","\"AI DMA Address =   0x%04x%04x\n\"","ds"
+"8032d868","ARAM DMA Address = 0x%04x%04x
+","\"ARAM DMA Address = 0x%04x%04x\n\"","ds"
+"8032d888","DI DMA Address =   0x%08x
+","\"DI DMA Address =   0x%08x\n\"","ds"
+"8032d8a4","
+Last interrupt (%d): SRR0 = 0x%08x  TB = 0x%016llx
+","\"\nLast interrupt (%d): SRR0 = 0x%08x  TB = 0x%016llx\n\"","ds"
+"8032dae0"," !\"#$%&'()*+\,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijk","u\" !\\"#$%&'()*+\,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijk\"","unicode"
+"8032e470","DBExceptionDestination
+","\"DBExceptionDestination\n\"","ds"
+"8032e488","DVDConvertEntrynumToPath(possibly DVDOpen or DVDChangeDir or DVDOpenDir): specified directory or file (%s) doesn't match standard 8.3 format. This is a temporary restriction and will be removed soon
+","\"DVDConvertEntrynumToPath(possibly DVDOpen or DVDChangeDir or DVDOpenDir): specified directory or file (%s) doesn't match standard 8.3 format. This is a temporary restriction and will be removed soon\n\"","ds"
+"8032e550","Warning: DVDOpen(): file '%s' was not found under %s.
+","\"Warning: DVDOpen(): file '%s' was not found under %s.\n\"","ds"
+"8032e588","DVDReadAsync(): specified area is out of the file  ","\"DVDReadAsync(): specified area is out of the file  \"","ds"
+"8032e5bc","DVDRead(): specified area is out of the file  ","\"DVDRead(): specified area is out of the file  \"","ds"
+"8032e5ec","DVDSeek(): offset is out of the file  ","\"DVDSeek(): offset is out of the file  \"","ds"
+"8032e614","Warning: DVDOpenDir(): file '%s' was not found under %s.
+","\"Warning: DVDOpenDir(): file '%s' was not found under %s.\n\"","ds"
+"8032e650","DVDPrepareStreamAsync(): Specified start address (filestart(0x%x) + offset(0x%x)) is not 32KB aligned","\"DVDPrepareStreamAsync(): Specified start address (filestart(0x%x) + offset(0x%x)) is not 32KB aligned\"","ds"
+"8032e6b8","DVDPrepareStreamAsync(): Specified length (0x%x) is not a multiple of 32768(32*1024)","\"DVDPrepareStreamAsync(): Specified length (0x%x) is not a multiple of 32768(32*1024)\"","ds"
+"8032e710","DVDPrepareStreamAsync(): The area specified (offset(0x%x)\, length(0x%x)) is out of the file","\"DVDPrepareStreamAsync(): The area specified (offset(0x%x)\, length(0x%x)) is out of the file\"","ds"
+"8032e76c","DVDPrepareStream(): Specified start address (filestart(0x%x) + offset(0x%x)) is not 32KB aligned","\"DVDPrepareStream(): Specified start address (filestart(0x%x) + offset(0x%x)) is not 32KB aligned\"","ds"
+"8032e7d0","DVDPrepareStream(): Specified length (0x%x) is not a multiple of 32768(32*1024)","\"DVDPrepareStream(): Specified length (0x%x) is not a multiple of 32768(32*1024)\"","ds"
+"8032e820","DVDPrepareStream(): The area specified (offset(0x%x)\, length(0x%x)) is out of the file","\"DVDPrepareStream(): The area specified (offset(0x%x)\, length(0x%x)) is out of the file\"","ds"
+"8032e878","app booted via JTAG
+","\"app booted via JTAG\n\"","ds"
+"8032e890","load fst
+","\"load fst\n\"","ds"
+"8032e89c","app booted from bootrom
+","\"app booted from bootrom\n\"","ds"
+"8032e8b8","bootrom
+","\"bootrom\n\"","ds"
+"8032e9d8","  Game Name ... %c%c%c%c
+","\"  Game Name ... %c%c%c%c\n\"","ds"
+"8032e9f4","  Company ..... %c%c
+","\"  Company ..... %c%c\n\"","ds"
+"8032ea0c","  Disk # ...... %d
+","\"  Disk # ...... %d\n\"","ds"
+"8032ea20","  Game ver .... %d
+","\"  Game ver .... %d\n\"","ds"
+"8032ea34","  Streaming ... %s
+","\"  Streaming ... %s\n\"","ds"
+"8032ec04","***************************************
+","\"***************************************\n\"","ds"
+"8032ec30"," ! ! ! C A U T I O N ! ! !             
+","\" ! ! ! C A U T I O N ! ! !             \n\"","ds"
+"8032ec5c","This TV format \"DEBUG_PAL\" is only for 
+","\"This TV format \\"DEBUG_PAL\\" is only for \n\"","ds"
+"8032ec88","temporary solution until PAL DAC board 
+","\"temporary solution until PAL DAC board \n\"","ds"
+"8032ecb4","is available. Please do NOT use this   
+","\"is available. Please do NOT use this   \n\"","ds"
+"8032ece0","mode in real games!!!                  
+","\"mode in real games!!!                  \n\"","ds"
+"8032ed20","DSPInit(): Build Date: %s %s
+","\"DSPInit(): Build Date: %s %s\n\"","ds"
+"8032ed40","Dec 17 2001","\"Dec 17 2001\"","ds"
+"8032ed4c","18:25:00","\"18:25:00\"","ds"
+"8032ed58","DSP is booting task: 0x%08X
+","\"DSP is booting task: 0x%08X\n\"","ds"
+"8032ed78","__DSP_boot_task()  : IRAM MMEM ADDR: 0x%08X
+","\"__DSP_boot_task()  : IRAM MMEM ADDR: 0x%08X\n\"","ds"
+"8032eda8","__DSP_boot_task()  : IRAM DSP ADDR : 0x%08X
+","\"__DSP_boot_task()  : IRAM DSP ADDR : 0x%08X\n\"","ds"
+"8032edd8","__DSP_boot_task()  : IRAM LENGTH   : 0x%08X
+","\"__DSP_boot_task()  : IRAM LENGTH   : 0x%08X\n\"","ds"
+"8032ee08","__DSP_boot_task()  : DRAM MMEM ADDR: 0x%08X
+","\"__DSP_boot_task()  : DRAM MMEM ADDR: 0x%08X\n\"","ds"
+"8032ee38","__DSP_boot_task()  : Start Vector  : 0x%08X
+","\"__DSP_boot_task()  : Start Vector  : 0x%08X\n\"","ds"
+"8032ee68","__DSP_add_task() : Added task    : 0x%08X
+","\"__DSP_add_task() : Added task    : 0x%08X\n\"","ds"
+"8032eebc","No response","\"No response\"","ds"
+"8032eec8","N64 controller","\"N64 controller\"","ds"
+"8032eed8","N64 microphone","\"N64 microphone\"","ds"
+"8032eee8","N64 keyboard","\"N64 keyboard\"","ds"
+"8032eef8","N64 mouse","\"N64 mouse\"","ds"
+"8032ef04","GameBoy Advance","\"GameBoy Advance\"","ds"
+"8032ef14","Standard controller","\"Standard controller\"","ds"
+"8032ef28","Wireless receiver","\"Wireless receiver\"","ds"
+"8032ef3c","WaveBird controller","\"WaveBird controller\"","ds"
+"8032ef50","Keyboard","\"Keyboard\"","ds"
+"8032ef5c","Steering","\"Steering\"","ds"
+"8032efc8","SISetSamplingRate: unknown TV format. Use default.","\"SISetSamplingRate: unknown TV format. Use default.\"","ds"
+"803358a8","FAIL ON NOT ON GROUND
+","\"FAIL ON NOT ON GROUND\n\"","ds"
+"80336490","ON CLOUD=%d
+","\"ON CLOUD=%d\n\"","ds"
+"803dbe50","barren","\"barren\"","ds"
+"803dbe58","barrels","\"barrels\"","ds"
+"803dbe60","bloop","\"bloop\"","ds"
+"803dbe68","DIM_Day","\"DIM_Day\"","ds"
+"803dbe98","slope","\"slope\"","ds"
+"803dbf10","Arwing","\"Arwing\"","ds"
+"803dbf20","CRFort","\"CRFort\"","ds"
+"803dbf28","DFPTop","\"DFPTop\"","ds"
+"803dbf30","Desert","\"Desert\"","ds"
+"803dbf38","LINKG","\"LINKG\"","ds"
+"803dbf48","LinkB","\"LinkB\"","ds"
+"803dbf50","LinkC","\"LinkC\"","ds"
+"803dbf58","LinkD","\"LinkD\"","ds"
+"803dbf60","LinkE","\"LinkE\"","ds"
+"803dbf68","LinkF","\"LinkF\"","ds"
+"803dbf70","LinkH","\"LinkH\"","ds"
+"803dbf78","LinkJ","\"LinkJ\"","ds"
+"803dbf80","MMPass","\"MMPass\"","ds"
+"803dbf88","NWastes","\"NWastes\"","ds"
+"803dbf98","SwapHol","\"SwapHol\"","ds"
+"803dbfa0","Volcano","\"Volcano\"","ds"
+"803dbfa8","Warlock","\"Warlock\"","ds"
+"803dbfb0","English","\"English\"","ds"
+"803dbfb8","French","\"French\"","ds"
+"803dbfc0","German","\"German\"","ds"
+"803dbfc8","Italian","\"Italian\"","ds"
+"803dbfd0","Spanish","\"Spanish\"","ds"
+"803dc098","mmStore","\"mmStore\"","ds"
+"803dc0b4","reset
+","\"reset\n\"","ds"
+"803dc100","SFX.tab","\"SFX.tab\"","ds"
+"803dc108","SFX.bin","\"SFX.bin\"","ds"
+"803dc118","temple","\"temple\"","ds"
+"803dc120","hightop","\"hightop\"","ds"
+"803dc128","hollow","\"hollow\"","ds"
+"803dc130","hollow2","\"hollow2\"","ds"
+"803dc138","wastes","\"wastes\"","ds"
+"803dc140","warlock","\"warlock\"","ds"
+"803dc148","willow","\"willow\"","ds"
+"803dc150","arwing","\"arwing\"","ds"
+"803dc158","dfptop","\"dfptop\"","ds"
+"803dc160","dragbot","\"dragbot\"","ds"
+"803dc168","kamdrag","\"kamdrag\"","ds"
+"803dc170","duster","\"duster\"","ds"
+"803dc178","linkb","\"linkb\"","ds"
+"803dc180","linka","\"linka\"","ds"
+"803dc188","linkc","\"linkc\"","ds"
+"803dc190","linkd","\"linkd\"","ds"
+"803dc198","linke","\"linke\"","ds"
+"803dc1a0","linkf","\"linkf\"","ds"
+"803dc1a8","linkg","\"linkg\"","ds"
+"803dc1b0","linkh","\"linkh\"","ds"
+"803dc1b8","linkj","\"linkj\"","ds"
+"803dc1c0","linki","\"linki\"","ds"
+"803dc1c8","volcano","\"volcano\"","ds"
+"803dc1d0","dfalls","\"dfalls\"","ds"
+"803dc1d8","swaphol","\"swaphol\"","ds"
+"803dc1e0","nwastes","\"nwastes\"","ds"
+"803dc1f0","crfort","\"crfort\"","ds"
+"803dc1f8","mmpass","\"mmpass\"","ds"
+"803dc200","desert","\"desert\"","ds"
+"803dc89c","%d - %d","\"%d - %d\"","ds"

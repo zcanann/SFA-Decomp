@@ -1,0 +1,67 @@
+// Function: FUN_8011c2ac
+// Entry: 8011c2ac
+// Size: 848 bytes
+
+/* WARNING: Heritage AFTER dead removal. Example location: r0x803a9434 : 0x8011c390 */
+/* WARNING: Restarted to delay deadcode elimination for space: ram */
+
+void FUN_8011c2ac(int param_1,int param_2)
+
+{
+  int iVar1;
+  byte bVar3;
+  uint uVar2;
+  
+  if (((&DAT_803a9430)[param_2] != 0) && (iVar1 = (**(code **)(*DAT_803dd724 + 0x2c))(), iVar1 != 0)
+     ) {
+    if (param_2 == 3) {
+      uVar2 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a943c);
+      FUN_80009a28(uVar2 & 0xff,10,0,0,1);
+    }
+    else if (param_2 < 3) {
+      if (param_2 == 1) {
+        uVar2 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9434);
+        FUN_80009a28(uVar2 & 0xff,10,1,0,0);
+        (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9434);
+        (**(code **)(*DAT_803dd6f0 + 0x28))();
+      }
+      else if (param_2 < 1) {
+        if (-1 < param_2) {
+          bVar3 = (**(code **)(*DAT_803dd724 + 0x24))((&DAT_803a9430)[param_2]);
+          FUN_80009920(bVar3,'\x01');
+        }
+      }
+      else {
+        uVar2 = (**(code **)(*DAT_803dd724 + 0x24))((&DAT_803a9430)[param_2]);
+        FUN_80009a28(uVar2 & 0xff,10,0,1,0);
+      }
+    }
+    else if (param_2 == 5) {
+      DAT_803de37c = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9444);
+    }
+  }
+  if (((&DAT_803a9430)[param_2] == 0) || (((param_2 != 2 && (param_2 != 1)) && (param_2 != 3)))) {
+    FUN_8000b844(0,0x3b9);
+  }
+  if (param_1 == 0) {
+    FUN_8000bb38(0,0x100);
+    (**(code **)(*DAT_803dd6cc + 8))(0x14,5);
+    DAT_803de384 = 0x23;
+    DAT_803de385 = 1;
+  }
+  else if ((param_1 == 1) && (param_2 == 4)) {
+    FUN_800e81a0();
+    (**(code **)(*DAT_803dd724 + 0x28))(DAT_803a9434,*(undefined *)(DAT_803de388 + 10));
+    (**(code **)(*DAT_803dd724 + 0x28))(DAT_803a9438,*(undefined *)(DAT_803de388 + 0xb));
+    (**(code **)(*DAT_803dd724 + 0x28))(DAT_803a943c,*(undefined *)(DAT_803de388 + 0xc));
+    uVar2 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9434);
+    FUN_80009a28(uVar2 & 0xff,10,0,1,0);
+    uVar2 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9438);
+    FUN_80009a28(uVar2 & 0xff,10,1,0,0);
+    uVar2 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a943c);
+    FUN_80009a28(uVar2 & 0xff,10,0,0,1);
+    FUN_8000bb38(0,0x418);
+  }
+  return;
+}
+

@@ -1,0 +1,32 @@
+// Function: FUN_8015df94
+// Entry: 8015df94
+// Size: 284 bytes
+
+void FUN_8015df94(void)
+
+{
+  DAT_803ad1a8 = FUN_8015ce08;
+  DAT_803ad1ac = FUN_8015cc74;
+  DAT_803ad1b0 = FUN_8015cb60;
+  DAT_803ad1b4 = FUN_8015ca70;
+  DAT_803ad1b8 = FUN_8015c958;
+  DAT_803ad1bc = FUN_8015c758;
+  DAT_803ad1c0 = FUN_8015c560;
+  DAT_803ad1c4 = FUN_8015c44c;
+  DAT_803ad1c8 = FUN_8015c3a0;
+  DAT_803ad1cc = FUN_8015c2b4;
+  DAT_803ad1d0 = FUN_8015c1d8;
+  DAT_803ad1d4 = FUN_8015c0c4;
+  DAT_803ad1d8 = FUN_8015bfac;
+  DAT_803ad1dc = FUN_8015be64;
+  DAT_803ad188 = FUN_8015bc98;
+  DAT_803ad18c = FUN_8015bbf4;
+  DAT_803ad190 = FUN_8015bb1c;
+  DAT_803ad194 = FUN_8015bac0;
+  DAT_803ad198 = FUN_8015ba78;
+  DAT_803ad19c = FUN_8015b9d0;
+  DAT_803ad1a0 = FUN_8015b74c;
+  DAT_803ad1a4 = FUN_8015b3bc;
+  return;
+}
+

@@ -1,0 +1,135 @@
+// Function: FUN_8027adc4
+// Entry: 8027adc4
+// Size: 628 bytes
+
+/* WARNING: Removing unreachable block (ram,0x8027aedc) */
+/* WARNING: Removing unreachable block (ram,0x8027ae00) */
+/* WARNING: Removing unreachable block (ram,0x8027ade0) */
+
+undefined4 FUN_8027adc4(char *param_1)
+
+{
+  byte bVar1;
+  int iVar2;
+  
+  if (*param_1 != '\x01') {
+    if (*param_1 != '\0') {
+      return 0;
+    }
+    bVar1 = param_1[1];
+    if (bVar1 != 2) {
+      if (1 < bVar1) {
+        if (bVar1 != 4) {
+          return 0;
+        }
+        goto LAB_8027aeb0;
+      }
+      if ((bVar1 == 0) &&
+         (*(int *)(param_1 + 4) = *(int *)(param_1 + 0x14), *(int *)(param_1 + 0x14) != 0)) {
+        param_1[1] = '\x01';
+        param_1[8] = '\0';
+        param_1[9] = '\0';
+        param_1[10] = '\0';
+        param_1[0xb] = '\0';
+        *(uint *)(param_1 + 0x10) = 0x7fff0000 / *(uint *)(param_1 + 0x14);
+        return 0;
+      }
+      *(int *)(param_1 + 4) = *(int *)(param_1 + 0x18);
+      if (*(int *)(param_1 + 0x18) != 0) {
+        param_1[1] = '\x02';
+        param_1[8] = '\x7f';
+        param_1[9] = -1;
+        param_1[10] = '\0';
+        param_1[0xb] = '\0';
+        *(uint *)(param_1 + 0x10) =
+             -(((uint)*(ushort *)(param_1 + 0x1c) * -0x10000 + 0x7fff0000) /
+              *(uint *)(param_1 + 0x18));
+        return 0;
+      }
+    }
+    if (*(short *)(param_1 + 0x1c) != 0) {
+      param_1[1] = '\x03';
+      *(uint *)(param_1 + 8) = (uint)*(ushort *)(param_1 + 0x1c) << 0x10;
+      param_1[0x10] = '\0';
+      param_1[0x11] = '\0';
+      param_1[0x12] = '\0';
+      param_1[0x13] = '\0';
+      return 0;
+    }
+LAB_8027aeb0:
+    param_1[8] = '\0';
+    param_1[9] = '\0';
+    param_1[10] = '\0';
+    param_1[0xb] = '\0';
+    return 1;
+  }
+  bVar1 = param_1[1];
+  if (bVar1 != 2) {
+    if (1 < bVar1) {
+      if (bVar1 != 4) {
+        return 0;
+      }
+      goto LAB_8027b024;
+    }
+    if ((bVar1 == 0) &&
+       (*(int *)(param_1 + 4) = *(int *)(param_1 + 0x14), *(int *)(param_1 + 0x14) != 0)) {
+      param_1[1] = '\x01';
+      if (param_1[0x26] == '\0') {
+        param_1[8] = '\0';
+        param_1[9] = '\0';
+        param_1[10] = '\0';
+        param_1[0xb] = '\0';
+        *(uint *)(param_1 + 0x10) = 0x7fff0000 / *(uint *)(param_1 + 4);
+        return 0;
+      }
+      param_1[0xc] = '\0';
+      param_1[0xd] = '\0';
+      param_1[0xe] = '\0';
+      param_1[0xf] = '\0';
+      param_1[8] = '\0';
+      param_1[9] = '\0';
+      param_1[10] = '\0';
+      param_1[0xb] = '\0';
+      *(uint *)(param_1 + 0x10) = 0xc10000 / *(uint *)(param_1 + 4);
+      return 0;
+    }
+    *(uint *)(param_1 + 4) =
+         *(int *)(param_1 + 0x18) * (((0xc1 - (uint)*(ushort *)(param_1 + 0x1c)) * 0x10000) / 0xc1)
+         >> 0x10;
+    if (*(int *)(param_1 + 4) != 0) {
+      param_1[1] = '\x02';
+      param_1[8] = '\x7f';
+      param_1[9] = -1;
+      param_1[10] = '\0';
+      param_1[0xb] = '\0';
+      param_1[0xc] = '\0';
+      param_1[0xd] = -0x3f;
+      param_1[0xe] = '\0';
+      param_1[0xf] = '\0';
+      *(uint *)(param_1 + 0x10) =
+           -(((0xc1 - (uint)*(ushort *)(param_1 + 0x1c)) * 0x10000) / *(uint *)(param_1 + 4));
+      return 0;
+    }
+  }
+  if (*(short *)(param_1 + 0x1c) != 0) {
+    param_1[1] = '\x03';
+    *(uint *)(param_1 + 0xc) = (uint)*(ushort *)(param_1 + 0x1c) << 0x10;
+    iVar2 = 0xc1 - (*(int *)(param_1 + 0xc) + 0x8000 >> 0x10);
+    if (iVar2 < 0) {
+      iVar2 = 0;
+    }
+    *(uint *)(param_1 + 8) = (uint)(ushort)(&DAT_80330278)[iVar2] << 0x10;
+    param_1[0x10] = '\0';
+    param_1[0x11] = '\0';
+    param_1[0x12] = '\0';
+    param_1[0x13] = '\0';
+    return 0;
+  }
+LAB_8027b024:
+  param_1[8] = '\0';
+  param_1[9] = '\0';
+  param_1[10] = '\0';
+  param_1[0xb] = '\0';
+  return 1;
+}
+
