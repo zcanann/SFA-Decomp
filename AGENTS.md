@@ -5,7 +5,8 @@ Keep this light. The project is still in the "recover the game" phase, not the "
 ## Target
 - Target version is `EN v1.0` (`GCCE01`).
 - `orig/` may contain EN, PAL, and JP artifacts. Use them for cross-checking only.
-- `resources/ghidra-decomp-4-12-2026/` contains the raw Ghidra decomp with no code analysis. Use it for basic code structure only.
+- `resources/ghidra-decomp-4-12-2026/` contains the raw EN v1.0 Ghidra decomp with no code analysis. Use it for basic code structure only.
+- `resources/DolphinSymbolExtract_GSAE01.txt` contains the EN v1.0 english symbols based on Dolphin Signature analysis. This is good for SDK matching. Please use this when determining SDK splits.
 - Other `resources/*` content should also be treated as rough shape data, not analysis.
 - `reference_projects/*` exists to mine patterns, especially SDK code and common Nintendo/GameCube layouts. Do not commit anything from there.
 
