@@ -115,10 +115,21 @@ class Candidate:
 
 
 @dataclass(frozen=True)
+class TranslatedSymbol:
+    symbol: DolphinSymbol
+    translated_address: int
+    translation_delta: int | None
+    translation_anchor: AddressAnchor | None
+    exact: ConfigSymbol | None
+    cover: ConfigSymbol | None
+    split: SplitRange | None
+
+
+@dataclass(frozen=True)
 class SourceCluster:
     source_path: Path
     split_path: str
-    candidates: tuple[Candidate, ...]
+    candidates: tuple[TranslatedSymbol, ...]
     dominant_library: str
     dominant_object_path: str
     dominant_count: int
@@ -303,6 +314,25 @@ def suggest_source_path(candidate: Candidate) -> str:
     lib_name = sanitize_component(library.removesuffix(".a"))
     extension = ".cpp" if "::" in candidate.symbol.name else ".c"
     return f"sdk/{lib_name}/{object_name}{extension}"
+
+
+def source_match_names(
+    symbol: DolphinSymbol,
+    exact: ConfigSymbol | None,
+) -> tuple[str, ...]:
+    names: list[str] = []
+    if not is_anonymous(symbol.name):
+        names.append(symbol.name)
+    if exact is not None and not is_placeholder(exact.name):
+        if exact.name not in names:
+            names.append(exact.name)
+    return tuple(names)
+
+
+def preferred_match_name(item: TranslatedSymbol) -> str:
+    if item.exact is not None and not is_placeholder(item.exact.name):
+        return item.exact.name
+    return item.symbol.name
 
 
 def build_symbol_indexes(
@@ -509,23 +539,55 @@ def score_symbol(
 
 
 def build_candidates(
+    translated_symbols: list[TranslatedSymbol],
+) -> list[Candidate]:
+    occurrences = Counter(
+        item.symbol.name for item in translated_symbols if not is_anonymous(item.symbol.name)
+    )
+    candidates: list[Candidate] = []
+
+    for item in translated_symbols:
+        symbol = item.symbol
+        if is_anonymous(symbol.name):
+            continue
+
+        score, reasons = score_symbol(
+            symbol,
+            occurrences,
+            item.exact,
+            item.cover,
+            item.split,
+        )
+        candidates.append(
+            Candidate(
+                symbol=symbol,
+                translated_address=item.translated_address,
+                translation_delta=item.translation_delta,
+                translation_anchor=item.translation_anchor,
+                score=score,
+                reasons=reasons,
+                exact=item.exact,
+                cover=item.cover,
+                split=item.split,
+            )
+        )
+
+    candidates.sort(key=lambda candidate: (-candidate.score, candidate.symbol.address, candidate.symbol.name))
+    return candidates
+
+
+def build_translated_symbols(
     dolphin_symbols: list[DolphinSymbol],
     config_symbols: list[ConfigSymbol],
     split_ranges: list[SplitRange],
     manual_delta: int | None,
-) -> list[Candidate]:
-    occurrences = Counter(
-        symbol.name for symbol in dolphin_symbols if not is_anonymous(symbol.name)
-    )
+) -> list[TranslatedSymbol]:
     by_address, by_section, by_name = build_symbol_indexes(config_symbols)
     anchors = build_address_anchors(dolphin_symbols, by_name)
     anchor_indexes = build_anchor_indexes(anchors)
-    candidates: list[Candidate] = []
+    translated_symbols: list[TranslatedSymbol] = []
 
     for symbol in dolphin_symbols:
-        if is_anonymous(symbol.name):
-            continue
-
         translated_address, translation_delta, translation_anchor = translate_address(
             symbol, anchor_indexes, manual_delta
         )
@@ -534,23 +596,19 @@ def build_candidates(
             by_section, symbol.section, translated_address
         )
         split_range = find_split(split_ranges, symbol.section, translated_address)
-        score, reasons = score_symbol(symbol, occurrences, exact, cover, split_range)
-        candidates.append(
-            Candidate(
+        translated_symbols.append(
+            TranslatedSymbol(
                 symbol=symbol,
                 translated_address=translated_address,
                 translation_delta=translation_delta,
                 translation_anchor=translation_anchor,
-                score=score,
-                reasons=reasons,
                 exact=exact,
                 cover=cover,
                 split=split_range,
             )
         )
 
-    candidates.sort(key=lambda candidate: (-candidate.score, candidate.symbol.address, candidate.symbol.name))
-    return candidates
+    return translated_symbols
 
 
 def has_provenance(symbol: DolphinSymbol) -> bool:
@@ -572,15 +630,15 @@ def translated_range(
 
 
 def infer_object_span(
-    dolphin_symbols: list[DolphinSymbol],
+    translated_symbols: list[TranslatedSymbol],
     library: str,
     object_path: str,
     source_functions: set[str] | None,
 ) -> tuple[int, int]:
     anchor_indices = [
         index
-        for index, symbol in enumerate(dolphin_symbols)
-        if symbol.library == library and symbol.object_path == object_path
+        for index, item in enumerate(translated_symbols)
+        if item.symbol.library == library and item.symbol.object_path == object_path
     ]
     if not anchor_indices:
         raise SystemExit(f"No Dolphin symbols found for {library} {object_path}")
@@ -589,55 +647,48 @@ def infer_object_span(
     last_anchor = anchor_indices[-1]
 
     end_index = last_anchor
-    for index in range(last_anchor + 1, len(dolphin_symbols)):
-        if has_provenance(dolphin_symbols[index]):
+    for index in range(last_anchor + 1, len(translated_symbols)):
+        if has_provenance(translated_symbols[index].symbol):
             break
         end_index = index
 
     start_index = first_anchor
     if source_functions:
         for index in range(first_anchor, -1, -1):
-            symbol = dolphin_symbols[index]
+            item = translated_symbols[index]
+            symbol = item.symbol
             if has_provenance(symbol) and index not in anchor_indices:
                 break
-            if symbol.name in source_functions:
+            if any(name in source_functions for name in source_match_names(symbol, item.exact)):
                 start_index = index
 
     return start_index, end_index
 
 
 def print_object_span(
-    dolphin_symbols: list[DolphinSymbol],
-    config_symbols: list[ConfigSymbol],
-    split_ranges: list[SplitRange],
-    manual_delta: int | None,
+    translated_symbols: list[TranslatedSymbol],
     library: str,
     object_path: str,
     source_path: Path | None,
 ) -> None:
-    _, by_section, by_name = build_symbol_indexes(config_symbols)
-    anchors = build_address_anchors(dolphin_symbols, by_name)
-    anchor_indexes = build_anchor_indexes(anchors)
     source_functions = load_source_function_names(source_path) if source_path else None
     start_index, end_index = infer_object_span(
-        dolphin_symbols,
+        translated_symbols,
         library,
         object_path,
         source_functions,
     )
-    translated_start, translated_end = translated_range(
-        dolphin_symbols,
-        start_index,
-        end_index,
-        anchor_indexes,
-        manual_delta,
+    translated_start = translated_symbols[start_index].translated_address
+    translated_end = (
+        translated_symbols[end_index].translated_address + translated_symbols[end_index].symbol.size
     )
 
     print(f"# {library} {object_path}")
     if source_path is not None:
         print(f"# source={source_path}")
     print(
-        f"# export-lines={dolphin_symbols[start_index].line_number}-{dolphin_symbols[end_index].line_number} "
+        f"# export-lines={translated_symbols[start_index].symbol.line_number}-"
+        f"{translated_symbols[end_index].symbol.line_number} "
         f"count={end_index - start_index + 1}"
     )
     print(
@@ -647,33 +698,19 @@ def print_object_span(
     print()
 
     for index in range(start_index, end_index + 1):
-        symbol = dolphin_symbols[index]
-        translated_address, translation_delta, translation_anchor = translate_address(
-            symbol,
-            anchor_indexes,
-            manual_delta,
-        )
-        exact = next(
-            (
-                config_symbol
-                for config_symbol in config_symbols
-                if config_symbol.section == symbol.section
-                and config_symbol.address == translated_address
-            ),
-            None,
-        )
-        split_range = find_split(split_ranges, symbol.section, translated_address)
+        item = translated_symbols[index]
+        symbol = item.symbol
         anchor_text = "-"
-        if translation_anchor is not None:
-            anchor_text = f"{translation_anchor.name}@0x{translation_anchor.dolphin_address:08X}"
-        exact_text = exact.name if exact is not None else "-"
-        split_text = split_range.path if split_range is not None else "-"
+        if item.translation_anchor is not None:
+            anchor_text = f"{item.translation_anchor.name}@0x{item.translation_anchor.dolphin_address:08X}"
+        exact_text = item.exact.name if item.exact is not None else "-"
+        split_text = item.split.path if item.split is not None else "-"
         print(
-            f"0x{symbol.address:08X} -> 0x{translated_address:08X} "
+            f"0x{symbol.address:08X} -> 0x{item.translated_address:08X} "
             f"size=0x{symbol.size:X} name={symbol.name}"
         )
         print(
-            f"  line={symbol.line_number} delta={format_signed_hex(translation_delta or 0)} "
+            f"  line={symbol.line_number} delta={format_signed_hex(item.translation_delta or 0)} "
             f"anchor={anchor_text}"
         )
         print(f"  exact={exact_text} split={split_text}")
@@ -902,8 +939,9 @@ def iter_source_paths(src_root: Path) -> list[Path]:
 def cluster_source_candidates(
     source_path: Path,
     src_root: Path,
-    name_index: dict[str, list[Candidate]],
+    name_index: dict[str, list[TranslatedSymbol]],
     gap: int,
+    require_provenance: bool,
 ) -> list[SourceCluster]:
     try:
         split_path = source_path.relative_to(src_root).as_posix()
@@ -914,13 +952,13 @@ def cluster_source_candidates(
     if not source_functions:
         return []
 
-    matched: list[Candidate] = []
+    matched: list[TranslatedSymbol] = []
     seen: set[tuple[int, str]] = set()
     for name in sorted(source_functions):
         for candidate in name_index.get(name, []):
             if candidate.symbol.section != ".text":
                 continue
-            key = (candidate.translated_address, candidate.symbol.name)
+            key = (candidate.translated_address, name)
             if key in seen:
                 continue
             seen.add(key)
@@ -950,7 +988,7 @@ def cluster_source_candidates(
 
     reports: list[SourceCluster] = []
     for cluster in clusters:
-        unique_names = {candidate.symbol.name for candidate in cluster}
+        unique_names = {preferred_match_name(candidate) for candidate in cluster}
         if len(unique_names) < 2:
             continue
 
@@ -959,11 +997,20 @@ def cluster_source_candidates(
             for candidate in cluster
             if candidate.symbol.library and candidate.symbol.object_path
         )
-        if not provenance_counts:
+        if require_provenance and not provenance_counts:
             continue
 
-        (dominant_library, dominant_object_path), dominant_count = provenance_counts.most_common(1)[0]
-        exact_name_count = sum(candidate.status == "matched" for candidate in cluster)
+        dominant_library = ""
+        dominant_object_path = ""
+        dominant_count = 0
+        if provenance_counts:
+            (dominant_library, dominant_object_path), dominant_count = provenance_counts.most_common(1)[0]
+        exact_name_count = sum(
+            candidate.exact is not None
+            and not is_placeholder(candidate.exact.name)
+            and candidate.exact.name in source_functions
+            for candidate in cluster
+        )
         active_count = sum(candidate.split is not None for candidate in cluster)
         split_free_count = len(cluster) - active_count
         score = (
@@ -1001,24 +1048,32 @@ def cluster_source_candidates(
 
 
 def print_source_clusters(
-    candidates: list[Candidate],
+    translated_symbols: list[TranslatedSymbol],
     src_root: Path,
     gap: int,
     limit: int | None,
     source_filter: Path | None,
+    require_provenance: bool,
 ) -> None:
-    name_index: dict[str, list[Candidate]] = defaultdict(list)
-    for candidate in candidates:
-        if is_anonymous(candidate.symbol.name):
-            continue
-        name_index[candidate.symbol.name].append(candidate)
+    name_index: dict[str, list[TranslatedSymbol]] = defaultdict(list)
+    for candidate in translated_symbols:
+        for name in source_match_names(candidate.symbol, candidate.exact):
+            name_index[name].append(candidate)
 
     source_paths = [source_filter] if source_filter is not None else iter_source_paths(src_root)
     reports: list[SourceCluster] = []
     for source_path in source_paths:
         if source_path is None or not source_path.is_file():
             continue
-        reports.extend(cluster_source_candidates(source_path, src_root, name_index, gap))
+        reports.extend(
+            cluster_source_candidates(
+                source_path,
+                src_root,
+                name_index,
+                gap,
+                require_provenance,
+            )
+        )
 
     reports = [report for report in reports if report.active_count < len(report.candidates)]
     reports.sort(
@@ -1032,7 +1087,7 @@ def print_source_clusters(
 
     emitted = 0
     for report in reports:
-        names = ", ".join(candidate.symbol.name for candidate in report.candidates[:6])
+        names = ", ".join(preferred_match_name(candidate) for candidate in report.candidates[:6])
         if len(report.candidates) > 6:
             names += ", ..."
 
@@ -1157,12 +1212,13 @@ def main() -> None:
     split_ranges = load_splits(splits_path)
     _, _, by_name = build_symbol_indexes(config_symbols)
     anchors = build_address_anchors(dolphin_symbols, by_name)
-    candidates = build_candidates(
+    translated_symbols = build_translated_symbols(
         dolphin_symbols,
         config_symbols,
         split_ranges,
         args.address_delta,
     )
+    candidates = build_candidates(translated_symbols)
 
     if args.command == "summary":
         print_summary(
@@ -1196,21 +1252,19 @@ def main() -> None:
         if not args.lib or not args.obj:
             raise SystemExit("object-span requires --lib and --obj")
         print_object_span(
-            dolphin_symbols=dolphin_symbols,
-            config_symbols=config_symbols,
-            split_ranges=split_ranges,
-            manual_delta=args.address_delta,
+            translated_symbols=translated_symbols,
             library=args.lib,
             object_path=args.obj,
             source_path=args.source,
         )
     elif args.command == "source-clusters":
         print_source_clusters(
-            candidates=candidates,
+            translated_symbols=translated_symbols,
             src_root=args.src_root,
             gap=args.gap,
             limit=args.limit,
             source_filter=args.source,
+            require_provenance=not args.no_provenance_required,
         )
     else:
         raise SystemExit(f"Unknown command: {args.command}")

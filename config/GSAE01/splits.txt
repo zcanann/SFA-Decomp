@@ -13,8 +13,47 @@ Sections:
 	.sdata2     type:rodata align:32
 	.sbss2      type:bss align:4
 
+base/PPCArch.c:
+	.text       start:0x80240A6C end:0x80240AD0
+
+os/OS.c:
+	.text       start:0x80240AD0 end:0x8024142C
+
+os/OSAlarm.c:
+	.text       start:0x8024142C end:0x80241858
+
+os/OSAlloc.c:
+	.text       start:0x80241AD8 end:0x80241DE8
+
+os/OSArena.c:
+	.text       start:0x80241DE8 end:0x80241E08
+
+os/OSCache.c:
+	.text       start:0x8024209C end:0x80242758
+
 os/OSContext.c:
 	.text       start:0x80242758 end:0x802430EC
+
+os/OSInterrupt.c:
+	.text       start:0x80243E74 end:0x80244690
+
+os/OSMemory.c:
+	.text       start:0x802448FC end:0x80244BDC
+
+os/OSReset.c:
+	.text       start:0x80244E64 end:0x80245248
+
+os/OSRtc.c:
+	.text       start:0x802455D4 end:0x80246190
+
+os/OSThread.c:
+	.text       start:0x802463B4 end:0x802473B4
+
+os/OSTime.c:
+	.text       start:0x802473B4 end:0x80247438
+
+db/db.c:
+	.text       start:0x802474CC end:0x80247568
 
 sdk/mtx/mtx.c:
 	.text       start:0x802475B8 end:0x80247BF8
@@ -24,6 +63,15 @@ sdk/mtx/mtxvec.c:
 
 sdk/mtx/vec.c:
 	.text       start:0x80247E94 end:0x80248180
+
+dvd/dvdlow.c:
+	.text       start:0x80248180 end:0x80248FD4
+
+dvd/dvdfs.c:
+	.text       start:0x80248FD4 end:0x80249958
+
+dvd/dvdqueue.c:
+	.text       start:0x8024C0D4 end:0x8024C2CC
 
 gx/GXLight.c:
 	.text       start:0x80259DD4 end:0x8025AE7C

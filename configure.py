@@ -307,7 +307,30 @@ config.libs = [
     DolphinLib(
         "os",
         [
+            Object(NonMatching, "os/OS.c"),
+            Object(NonMatching, "os/OSAlarm.c"),
+            Object(NonMatching, "os/OSAlloc.c"),
+            Object(NonMatching, "os/OSArena.c"),
+            Object(NonMatching, "os/OSCache.c"),
             Object(NonMatching, "os/OSContext.c"),
+            Object(NonMatching, "os/OSInterrupt.c"),
+            Object(NonMatching, "os/OSMemory.c"),
+            Object(NonMatching, "os/OSReset.c"),
+            Object(NonMatching, "os/OSRtc.c"),
+            Object(NonMatching, "os/OSThread.c"),
+            Object(MatchingFor("GSAE01"), "os/OSTime.c"),
+        ],
+    ),
+    DolphinLib(
+        "base",
+        [
+            Object(NonMatching, "base/PPCArch.c"),
+        ],
+    ),
+    DolphinLib(
+        "db",
+        [
+            Object(NonMatching, "db/db.c"),
         ],
     ),
     DolphinLib(
@@ -316,6 +339,14 @@ config.libs = [
             Object(NonMatching, "sdk/mtx/mtx.c", source="mtx/mtx.c"),
             Object(NonMatching, "sdk/mtx/mtxvec.c", source="mtx/mtxvec.c"),
             Object(NonMatching, "sdk/mtx/vec.c"),
+        ],
+    ),
+    DolphinLib(
+        "dvd",
+        [
+            Object(NonMatching, "dvd/dvdlow.c"),
+            Object(NonMatching, "dvd/dvdfs.c"),
+            Object(NonMatching, "dvd/dvdqueue.c"),
         ],
     ),
     DolphinLib(
