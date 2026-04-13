@@ -31,6 +31,11 @@ audio/synth_handle.c:
 audio/synth_sequence.c:
 	.text       start:0x8026E518 end:0x8026E848
 
+audio/synth_seq_queue.c:
+	extab       start:0x80005668 end:0x80005678
+	extabindex  start:0x80005D2C end:0x80005D44
+	.text       start:0x8026EFC8 end:0x8026F134
+
 audio/synth_init.c:
 	.text       start:0x8026FA70 end:0x8026FCA0
 

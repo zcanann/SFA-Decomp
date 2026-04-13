@@ -148,6 +148,7 @@ typedef struct SynthSequenceState {
 typedef struct SynthSequenceQueue {
     u8 unk00[0x1C];
     SynthSequenceEvent* eventList;
+    u8 unk20[0x18];
 } SynthSequenceQueue;
 
 typedef struct SynthTrackCommand {
@@ -196,6 +197,8 @@ typedef struct SynthVoiceRuntime {
 #define SYNTH_CHANNEL_THRESHOLD(state, index) (*(u32*)((u8*)(state) + 0x24 + ((index) * 8)))
 #define SYNTH_CHANNEL_EVENT(voice, channel) ((SynthSequenceEvent*)&(voice)->unkEE0[0x4 + ((channel) * 0x18)])
 #define SYNTH_KEYGROUP_MAP(voice) (*(u8**)&(voice)->unkEE0[0x604])
+#define SYNTH_SEQUENCE_QUEUE(voice, index) \
+    ((SynthSequenceQueue*)&(voice)->unkEE0[0x608 + (((index) & 0xFF) * sizeof(SynthSequenceQueue))])
 #define SYNTH_KEYGROUP_STATE(voice, index) ((SynthKeyGroupState*)&(voice)->unkEE0[0x608 + ((index) * 0x38)])
 #define SYNTH_SEQUENCE_STATE(voice, channel) ((SynthSequenceState*)&(voice)->unk364[(channel) * 0x2C])
 #define SYNTH_TRACK_CURSOR(voice, channel) ((SynthTrackCursor*)&(voice)->unk124[(channel) * 8])
@@ -234,6 +237,8 @@ extern const f32 lbl_803E846C;
 #define synthLookupCallbackLinkId fn_80279C00
 #define synthCopyControllerValue fn_80282630
 #define synthScaleFadeTime fn_802836E4
+#define synthInitChannelEventQueues fn_8026EFC8
+#define synthRefreshChannelEventQueue fn_8026F070
 #define sSynthFadeScale lbl_803E8430
 #define sSynthFadeUnit lbl_803E8440
 #define sSynthFadeTimeScale lbl_803E846C
@@ -241,6 +246,10 @@ extern const f32 lbl_803E846C;
 void synthInitVoices(void);
 void synthSetStudioChannelScale(s32 value, u8 studioIndex, u32 channelIndex);
 u32 synthGetVoiceSlotChannelScale(SynthVoiceSlot* slot);
+SynthSequenceEvent* synthGetNextChannelEvent(u8 channel);
+void synthInsertChannelEvent(SynthSequenceQueue* queue, SynthSequenceEvent* event);
+void fn_8026EFC8(void);
+void fn_8026F070(u8 groupIndex);
 void synthRecycleVoiceCallbacks(SynthVoice* voice);
 SynthCallbackLink* synthAllocCallback(s32 triggerValue, u8 controllerIndex);
 s32 synthUpdateCallbacks(void);

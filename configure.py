@@ -314,6 +314,7 @@ config.libs = [
             Object(NonMatching, "audio/synth_channel.c"),
             Object(NonMatching, "audio/synth_handle.c"),
             Object(NonMatching, "audio/synth_sequence.c"),
+            Object(NonMatching, "audio/synth_seq_queue.c"),
             Object(NonMatching, "audio/synth_init.c"),
             Object(NonMatching, "audio/synth_scale.c"),
             Object(NonMatching, "audio/synth_delay.c"),
