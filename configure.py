@@ -250,6 +250,17 @@ cflags_rel = [
     "-sdata2 0",
 ]
 
+cflags_trk = [
+    *cflags_base,
+    "-sdata 0",
+    "-sdata2 0",
+    "-inline auto,deferred",
+    "-rostr",
+    "-char signed",
+    "-use_lmw_stmw on",
+    "-common off",
+]
+
 config.linker_version = "GC/1.3.2"
 
 
@@ -355,6 +366,36 @@ config.libs = [
             Object(NonMatching, "gx/GXLight.c"),
         ],
     ),
+    {
+        "lib": "TRK_MINNOW_DOLPHIN",
+        "mw_version": "GC/1.3",
+        "cflags": cflags_trk,
+        "progress_category": "sdk",
+        "objects": [
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/mainloop.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/nubevent.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/nubinit.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/msg.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/msgbuf.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/serpoll.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/usr_put.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/dispatch.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/msghndlr.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/support.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/mutex_TRK.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/notify.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/flush_cache.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/targimpl.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/targsupp.s"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/dolphin_trk.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/mpc_7xx_603e.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/main_TRK.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/dolphin_trk_glue.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/targcont.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/target_options.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/mslsupp.c"),
+        ],
+    },
     {
         "lib": "main",
         "mw_version": config.linker_version,

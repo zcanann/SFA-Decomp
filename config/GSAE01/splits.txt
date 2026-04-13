@@ -134,6 +134,87 @@ Runtime.PPCEABI.H/fragment.s: comment:0
 	.text       start:0x80286EB8 end:0x80286F20
 	.bss        start:0x803D7540 end:0x803D754C
 
+TRK_MINNOW_DOLPHIN/mainloop.c:
+	.text       start:0x80286FC0 end:0x802870B8
+
+TRK_MINNOW_DOLPHIN/nubevent.c:
+	.text       start:0x802870B8 end:0x802872E0
+	.bss        start:0x803D7550 end:0x803D7578
+
+TRK_MINNOW_DOLPHIN/nubinit.c:
+	.text       start:0x802872E0 end:0x80287460
+	.rodata     start:0x802C30B8 end:0x802C30D8
+	.bss        start:0x803D7578 end:0x803D7580
+
+TRK_MINNOW_DOLPHIN/msg.c:
+	.text       start:0x80287460 end:0x8028763C
+
+TRK_MINNOW_DOLPHIN/msgbuf.c:
+	.text       start:0x8028763C end:0x80288068
+	.rodata     start:0x802C30D8 end:0x802C30F8
+	.bss        start:0x803D7580 end:0x803D8F30
+
+TRK_MINNOW_DOLPHIN/serpoll.c:
+	.text       start:0x80288068 end:0x80288434
+	.bss        start:0x803D8F30 end:0x803D8F48
+
+TRK_MINNOW_DOLPHIN/usr_put.c:
+	.text       start:0x80288434 end:0x802884C0
+
+TRK_MINNOW_DOLPHIN/dispatch.c:
+	.text       start:0x802884C0 end:0x8028855C
+	.data       start:0x80332E90 end:0x80332F18
+	.bss        start:0x803D8F48 end:0x803D8F50
+
+TRK_MINNOW_DOLPHIN/msghndlr.c:
+	.text       start:0x8028855C end:0x8028B394
+	.data       start:0x80332F18 end:0x80332F50
+	.bss        start:0x803D8F50 end:0x803D8F58
+
+TRK_MINNOW_DOLPHIN/support.c:
+	.text       start:0x8028B394 end:0x8028B658
+
+TRK_MINNOW_DOLPHIN/mutex_TRK.c:
+	.text       start:0x8028B658 end:0x8028B670
+
+TRK_MINNOW_DOLPHIN/notify.c:
+	.text       start:0x8028B670 end:0x8028B748
+
+TRK_MINNOW_DOLPHIN/flush_cache.c:
+	.text       start:0x8028B748 end:0x8028B780
+
+TRK_MINNOW_DOLPHIN/targimpl.c:
+	.text       start:0x8028B83C end:0x8028D0D0
+	.rodata     start:0x802C30F8 end:0x802C3180
+	.data       start:0x80332F50 end:0x80332F80
+
+TRK_MINNOW_DOLPHIN/targsupp.s: comment:0
+	.text       start:0x8028D0D0 end:0x8028D0F0
+
+TRK_MINNOW_DOLPHIN/dolphin_trk.c:
+	.text       start:0x8028D0F0 end:0x8028D230
+	.data       start:0x80332F80 end:0x80332FC0
+
+TRK_MINNOW_DOLPHIN/mpc_7xx_603e.c:
+	.text       start:0x8028D230 end:0x8028D5A8
+
+TRK_MINNOW_DOLPHIN/main_TRK.c:
+	.text       start:0x8028D5A8 end:0x8028D5EC
+	.bss        start:0x803D94E0 end:0x803D94E8
+
+TRK_MINNOW_DOLPHIN/dolphin_trk_glue.c:
+	.text       start:0x8028D5EC end:0x8028DA78
+	.data       start:0x80332FC0 end:0x80332FE0
+
+TRK_MINNOW_DOLPHIN/targcont.c:
+	.text       start:0x8028DA78 end:0x8028DAAC
+
+TRK_MINNOW_DOLPHIN/target_options.c:
+	.text       start:0x8028DAAC end:0x8028DAC8
+
+TRK_MINNOW_DOLPHIN/mslsupp.c:
+	.text       start:0x8028DAC8 end:0x8028DC08
+
 Runtime.PPCEABI.H/__start.s: comment:0
 	.init       start:0x80003100 end:0x800033A8
 
