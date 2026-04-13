@@ -118,8 +118,62 @@ exi/EXIBios.c:
 gx/GXInit.c:
 	.text       start:0x802554D0 end:0x8025665C
 
+gx/GXFifo.c:
+	.text       start:0x8025665C end:0x80256D50
+
 gx/GXLight.c:
 	.text       start:0x80259DD4 end:0x8025AE7C
+
+gx/GXTexture.c:
+	.text       start:0x8025AE7C end:0x8025B258
+
+card/CARDBios.c:
+	.text       start:0x8025E61C end:0x8025F730
+
+card/CARDUnlock.c:
+	.text       start:0x8025F730 end:0x80260990
+
+card/CARDRdwr.c:
+	.text       start:0x80260990 end:0x80260C10
+
+card/CARDBlock.c:
+	.text       start:0x80260C18 end:0x80261014
+
+card/CARDDir.c:
+	.text       start:0x80261014 end:0x80261278
+
+card/CARDCheck.c:
+	.text       start:0x80261278 end:0x802621E0
+
+card/CARDMount.c:
+	.text       start:0x802621E0 end:0x80262CA0
+
+card/CARDFormat.c:
+	.text       start:0x80262CA0 end:0x80263490
+
+card/CARDOpen.c:
+	.text       start:0x80263490 end:0x802638E4
+
+card/CARDCreate.c:
+	.text       start:0x802638E4 end:0x80263C7C
+
+card/CARDRead.c:
+	.text       start:0x80263C7C end:0x802640F4
+
+card/CARDWrite.c:
+	.text       start:0x802640F4 end:0x80264470
+
+card/CARDDelete.c:
+	.text       start:0x80264470 end:0x8026466C
+
+card/CARDStat.c:
+	.text       start:0x8026466C end:0x80264C10
+
+thp/THPDec.c:
+	.text       start:0x80264C10 end:0x8026C150
+
+thp/THPAudio.c:
+	.text       start:0x8026C150 end:0x8026C680
 
 amcstubs/AmcExi2Stubs.c:
 	.text       start:0x8026C680 end:0x8026C6B0
