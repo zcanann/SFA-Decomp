@@ -72,7 +72,10 @@ typedef struct SynthVoiceSlot {
     u32 callbackLinkId;
     u8 unk0F8[0x24];
     u8 callbackActive;
-    u8 unk11D[0x404 - 0x11D];
+    u8 unk11D[5];
+    u8 studioIndex;
+    u8 channelIndex;
+    u8 unk124[0x404 - 0x124];
 } SynthVoiceSlot;
 
 typedef struct SynthFade {

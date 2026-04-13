@@ -1,31 +1,33 @@
 #include "src/audio/synth_internal.h"
 
 #define SYNTH_DEFAULT_STUDIO_INDEX 8
-#define SYNTH_SLOT_STUDIO_INDEX(slot) (((u8*)(slot))[0x122])
-#define SYNTH_SLOT_CHANNEL_INDEX(slot) (((u8*)(slot))[0x123])
 
 void synthSetStudioChannelScale(s32 value, u8 studioIndex, u32 channelIndex) {
-    u8* scale;
+    u32* channelScale;
+    u32 scaledValue;
+    u8* studioScales;
 
     if (studioIndex == 0xFF) {
         studioIndex = SYNTH_DEFAULT_STUDIO_INDEX;
     }
 
-    scale = (u8*)&gSynthDelayStorage + ((studioIndex & 0xFF) << 6);
-    scale += (channelIndex & 0xFF) << 2;
-    *(u32*)scale = ((((u32)value) << 3) * 0x600) / 0xF0;
+    scaledValue = ((((u32)value) << 3) * 0x600) / 0xF0;
+    studioScales = (u8*)&gSynthDelayStorage + ((studioIndex & 0xFF) << 6);
+    channelScale = (u32*)(studioScales + ((channelIndex & 0xFF) << 2));
+    *channelScale = scaledValue;
 }
 
 u32 synthGetVoiceSlotChannelScale(SynthVoiceSlot* slot) {
-    u8* scale;
+    u32* channelScale;
     u8 studioIndex;
+    u8* studioScales;
 
-    studioIndex = SYNTH_SLOT_STUDIO_INDEX(slot);
+    studioIndex = slot->studioIndex;
     if (studioIndex == 0xFF) {
         studioIndex = SYNTH_DEFAULT_STUDIO_INDEX;
     }
 
-    scale = (u8*)&gSynthDelayStorage + (studioIndex << 6);
-    scale += SYNTH_SLOT_CHANNEL_INDEX(slot) << 2;
-    return *(u32*)scale;
+    studioScales = (u8*)&gSynthDelayStorage + (studioIndex << 6);
+    channelScale = (u32*)(studioScales + (slot->channelIndex << 2));
+    return *channelScale;
 }
