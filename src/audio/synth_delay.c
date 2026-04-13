@@ -134,17 +134,11 @@ void synthDispatchDelayedAction(SynthFade* fade) {
     action = fade->delayAction;
     if (action == SYNTH_DELAY_ACTION_QUEUE) {
         synthQueueHandle(fade->handle);
-        return;
-    }
-
-    if (action < SYNTH_DELAY_ACTION_QUEUE) {
+    } else if (action < SYNTH_DELAY_ACTION_QUEUE) {
         if (action >= SYNTH_DELAY_ACTION_FREE) {
             synthFreeHandle(fade->handle);
         }
-        return;
-    }
-
-    if (action < 4) {
+    } else if (action < 4) {
         synthSetHandleMixData(fade->handle, 0, 0);
     }
 }
