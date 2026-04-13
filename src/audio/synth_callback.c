@@ -1,9 +1,9 @@
 #include "src/audio/synth_internal.h"
+#include "src/audio/synth_voice_overlays.h"
 
 #define SYNTH_CALLBACK_ACTIVE_LIST_COUNT 2
 #define SYNTH_CALLBACK_COMPLETED_LIST_INDEX 2
 #define SYNTH_CALLBACK_THRESHOLD(voice, index) (*(s32*)&((voice)->unkEE0[0x62C + ((index) * 8)]))
-#define SYNTH_CALLBACK_STUDIO_INDEX(voice, controller) ((voice)->channelData[(controller) * 0x38])
 
 void synthRecycleVoiceCallbacks(SynthVoice* voice) {
     SynthCallbackLink* callback;
@@ -68,7 +68,8 @@ SynthCallbackLink* synthAllocCallback(s32 triggerValue, u8 controllerIndex) {
 
         callback->triggerValue = triggerValue;
         callback->controllerIndex = controllerIndex;
-        callback->listIndex = SYNTH_CALLBACK_STUDIO_INDEX(gSynthCurrentVoice, controllerIndex);
+        callback->listIndex =
+            SYNTH_CALLBACK_CONTROLLER_STATE(gSynthCurrentVoice, controllerIndex)->listIndex;
 
         prev = 0;
         current = gSynthCurrentVoice->callbackLists[callback->listIndex];

@@ -1,4 +1,5 @@
 #include "src/audio/synth_internal.h"
+#include "src/audio/synth_voice_overlays.h"
 
 extern void synthRecycleVoiceCallbacks(SynthVoice*);
 
@@ -10,7 +11,8 @@ extern void synthRecycleVoiceCallbacks(SynthVoice*);
 #define SYNTH_PENDING_FLAG_VALUE16 0x20
 #define SYNTH_PENDING_FLAG_UPDATE_MODE3 0x80
 
-#define SYNTH_CHANNEL_VALUE16(voice, channel) (*(u16*)&((voice)->channelData[((channel) * 0x38) + 2]))
+#define SYNTH_CHANNEL_VALUE16(voice, channel) \
+    (SYNTH_CALLBACK_CONTROLLER_STATE(voice, channel)->value16)
 #define SYNTH_HANDLE_SLOT_INVALID 0xFFFFFFFF
 
 void synthQueueVoice(SynthVoice* voice) {

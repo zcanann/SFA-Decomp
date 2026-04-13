@@ -1,4 +1,5 @@
 #include "src/audio/synth_internal.h"
+#include "src/audio/synth_voice_overlays.h"
 
 #define SYNTH_TRACK_COMMAND_END 0xFFFF
 #define SYNTH_TRACK_COMMAND_JUMP 0xFFFE
@@ -50,6 +51,7 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel) {
     SynthKeyGroupState* keyGroupState;
     SynthSequenceState* state;
     SynthTrackCommand* command;
+    SynthVoiceTrackRuntime* trackRuntime;
     SynthTrackCursor* cursor;
     SynthVoice* voice;
     u8* keyGroupMap;
@@ -57,8 +59,9 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel) {
     u32 value;
 
     voice = gSynthCurrentVoice;
-    cursor = SYNTH_TRACK_CURSOR(voice, channel);
-    state = SYNTH_SEQUENCE_STATE(voice, channel);
+    trackRuntime = SYNTH_VOICE_TRACK_RUNTIME(voice);
+    cursor = &trackRuntime->trackCursors[channel];
+    state = &trackRuntime->sequenceStates[channel];
     if (cursor->current != 0) {
         event = SYNTH_CHANNEL_EVENT(voice, channel);
         event->channel = channel;
