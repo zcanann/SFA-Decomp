@@ -22,6 +22,12 @@ build/
 .ninja_*
 build.ninja
 
+# Reference projects
+reference_projects/
+reference_projects/*
+resources/*/reference_projects/
+resources/*/reference_projects/*
+
 # decompctx output
 ctx.*
 *.ctx
