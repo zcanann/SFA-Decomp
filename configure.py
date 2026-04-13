@@ -305,6 +305,12 @@ config.libs = [
         ],
     },
     DolphinLib(
+        "os",
+        [
+            Object(NonMatching, "os/OSContext.c"),
+        ],
+    ),
+    DolphinLib(
         "mtx",
         [
             Object(NonMatching, "sdk/mtx/mtx.c", source="mtx/mtx.c"),

@@ -13,6 +13,9 @@ Sections:
 	.sdata2     type:rodata align:32
 	.sbss2      type:bss align:4
 
+os/OSContext.c:
+	.text       start:0x80242758 end:0x802430EC
+
 sdk/mtx/mtx.c:
 	.text       start:0x802475B8 end:0x80247BF8
 

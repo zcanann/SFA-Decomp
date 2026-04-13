@@ -114,6 +114,33 @@ class Candidate:
         return "new"
 
 
+@dataclass(frozen=True)
+class SourceCluster:
+    source_path: Path
+    split_path: str
+    candidates: tuple[Candidate, ...]
+    dominant_library: str
+    dominant_object_path: str
+    dominant_count: int
+    unique_name_count: int
+    exact_name_count: int
+    active_count: int
+    score: int
+
+    @property
+    def start(self) -> int:
+        return self.candidates[0].translated_address
+
+    @property
+    def end(self) -> int:
+        last = self.candidates[-1]
+        return last.translated_address + last.symbol.size
+
+    @property
+    def span(self) -> int:
+        return self.end - self.start
+
+
 def default_dolphin_path(version: str) -> Path:
     candidates = [
         Path("resources") / f"DolphinSymbolExport_{version}.txt",
@@ -222,19 +249,33 @@ def load_splits(path: Path) -> list[SplitRange]:
 
 SOURCE_FUNCTION_RE = re.compile(
     r"^(?:asm\s+)?(?:static\s+)?(?:inline\s+)?"
-    r"(?:[\w:~*<>\[\]\s]+?\s+)?(?P<name>[A-Za-z_~]\w*(?:::\w+)*)\s*\([^;]*\)\s*\{"
+    r"(?:[\w:~*<>\[\]\s]+?\s+)?(?P<name>[A-Za-z_~]\w*(?:::\w+)*)\s*\([^;]*\)\s*(?:\{|$)"
 )
+CONTROL_KEYWORDS = {"if", "for", "while", "switch"}
 
 
 def load_source_function_names(path: Path) -> set[str]:
     names: set[str] = set()
+    pending_name: str | None = None
     for raw_line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
         line = raw_line.strip()
         if not line or line.startswith("//") or line.startswith("#"):
             continue
+
+        if pending_name is not None:
+            if line.startswith("{"):
+                names.add(pending_name)
+            pending_name = None
+
         match = SOURCE_FUNCTION_RE.match(line)
         if match is not None:
-            names.add(match.group("name"))
+            name = match.group("name")
+            if name in CONTROL_KEYWORDS:
+                continue
+            if line.endswith("{"):
+                names.add(name)
+            else:
+                pending_name = name
     return names
 
 
@@ -847,13 +888,181 @@ def print_split_seeds(
                 return
 
 
+SOURCE_SUFFIXES = {".c", ".cc", ".cp", ".cpp", ".cxx", ".s"}
+
+
+def iter_source_paths(src_root: Path) -> list[Path]:
+    return sorted(
+        path
+        for path in src_root.rglob("*")
+        if path.is_file() and path.suffix.lower() in SOURCE_SUFFIXES
+    )
+
+
+def cluster_source_candidates(
+    source_path: Path,
+    src_root: Path,
+    name_index: dict[str, list[Candidate]],
+    gap: int,
+) -> list[SourceCluster]:
+    try:
+        split_path = source_path.relative_to(src_root).as_posix()
+    except ValueError:
+        split_path = source_path.as_posix()
+
+    source_functions = load_source_function_names(source_path)
+    if not source_functions:
+        return []
+
+    matched: list[Candidate] = []
+    seen: set[tuple[int, str]] = set()
+    for name in sorted(source_functions):
+        for candidate in name_index.get(name, []):
+            if candidate.symbol.section != ".text":
+                continue
+            key = (candidate.translated_address, candidate.symbol.name)
+            if key in seen:
+                continue
+            seen.add(key)
+            matched.append(candidate)
+
+    if len(matched) < 2:
+        return []
+
+    matched.sort(key=lambda candidate: candidate.translated_address)
+    clusters: list[list[Candidate]] = []
+    current: list[Candidate] = []
+
+    for candidate in matched:
+        if not current:
+            current = [candidate]
+            continue
+
+        previous = current[-1]
+        if candidate.translated_address <= previous.translated_address + previous.symbol.size + gap:
+            current.append(candidate)
+        else:
+            clusters.append(current)
+            current = [candidate]
+
+    if current:
+        clusters.append(current)
+
+    reports: list[SourceCluster] = []
+    for cluster in clusters:
+        unique_names = {candidate.symbol.name for candidate in cluster}
+        if len(unique_names) < 2:
+            continue
+
+        provenance_counts = Counter(
+            (candidate.symbol.library, candidate.symbol.object_path)
+            for candidate in cluster
+            if candidate.symbol.library and candidate.symbol.object_path
+        )
+        if not provenance_counts:
+            continue
+
+        (dominant_library, dominant_object_path), dominant_count = provenance_counts.most_common(1)[0]
+        exact_name_count = sum(candidate.status == "matched" for candidate in cluster)
+        active_count = sum(candidate.split is not None for candidate in cluster)
+        split_free_count = len(cluster) - active_count
+        score = (
+            len(unique_names) * 8
+            + dominant_count * 4
+            + exact_name_count * 2
+            + split_free_count * 2
+            - active_count * 4
+        )
+
+        reports.append(
+            SourceCluster(
+                source_path=source_path,
+                split_path=split_path,
+                candidates=tuple(cluster),
+                dominant_library=dominant_library,
+                dominant_object_path=dominant_object_path,
+                dominant_count=dominant_count,
+                unique_name_count=len(unique_names),
+                exact_name_count=exact_name_count,
+                active_count=active_count,
+                score=score,
+            )
+        )
+
+    reports.sort(
+        key=lambda report: (
+            -report.score,
+            -report.unique_name_count,
+            report.start,
+            report.split_path,
+        )
+    )
+    return reports
+
+
+def print_source_clusters(
+    candidates: list[Candidate],
+    src_root: Path,
+    gap: int,
+    limit: int | None,
+    source_filter: Path | None,
+) -> None:
+    name_index: dict[str, list[Candidate]] = defaultdict(list)
+    for candidate in candidates:
+        if is_anonymous(candidate.symbol.name):
+            continue
+        name_index[candidate.symbol.name].append(candidate)
+
+    source_paths = [source_filter] if source_filter is not None else iter_source_paths(src_root)
+    reports: list[SourceCluster] = []
+    for source_path in source_paths:
+        if source_path is None or not source_path.is_file():
+            continue
+        reports.extend(cluster_source_candidates(source_path, src_root, name_index, gap))
+
+    reports = [report for report in reports if report.active_count < len(report.candidates)]
+    reports.sort(
+        key=lambda report: (
+            -report.score,
+            -report.unique_name_count,
+            report.start,
+            report.split_path,
+        )
+    )
+
+    emitted = 0
+    for report in reports:
+        names = ", ".join(candidate.symbol.name for candidate in report.candidates[:6])
+        if len(report.candidates) > 6:
+            names += ", ..."
+
+        print(f"# {report.source_path}")
+        print(
+            f"# split={report.split_path} score={report.score} span=0x{report.span:X} "
+            f"matches={len(report.candidates)} unique={report.unique_name_count} "
+            f"exact={report.exact_name_count} active={report.active_count}"
+        )
+        print(
+            f"# dominant={report.dominant_library} {report.dominant_object_path} "
+            f"count={report.dominant_count}"
+        )
+        print(f"# names={names}")
+        print(f"{report.split_path}:")
+        print(f"\t.text       start:0x{report.start:08X} end:0x{report.end:08X}")
+        print()
+
+        emitted += 1
+        if limit is not None and emitted >= limit:
+            return
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Filter useful SDK symbol candidates from a Dolphin symbol export."
     )
     parser.add_argument(
         "command",
-        choices=["summary", "candidates", "split-seeds", "object-span"],
+        choices=["summary", "candidates", "split-seeds", "object-span", "source-clusters"],
         help="Which report to print",
     )
     parser.add_argument(
@@ -922,6 +1131,12 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         help="Local source file used to infer the start of an object span",
     )
+    parser.add_argument(
+        "--src-root",
+        type=Path,
+        default=Path("src"),
+        help="Root source directory scanned by source-clusters (default: src)",
+    )
     return parser.parse_args()
 
 
@@ -988,6 +1203,14 @@ def main() -> None:
             library=args.lib,
             object_path=args.obj,
             source_path=args.source,
+        )
+    elif args.command == "source-clusters":
+        print_source_clusters(
+            candidates=candidates,
+            src_root=args.src_root,
+            gap=args.gap,
+            limit=args.limit,
+            source_filter=args.source,
         )
     else:
         raise SystemExit(f"Unknown command: {args.command}")
