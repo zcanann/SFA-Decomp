@@ -175,6 +175,9 @@ dolphin/gx/GXDisplayList.c:
 dolphin/gx/GXTransform.c:
 	.text       start:0x8025D6AC end:0x8025DBF4
 
+dolphin/gx/GXPerf.c:
+	.text       start:0x8025DC78 end:0x8025E520
+
 dolphin/card/CARDBios.c:
 	.text       start:0x8025E61C end:0x8025F730
 
