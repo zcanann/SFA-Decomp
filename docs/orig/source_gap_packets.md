@@ -13,6 +13,7 @@ That matters because the next recovery step is often not "name one anchor", but 
   - Builds source-order corridor packets between those anchors.
   - Resolves each in-between basename to the best debug-side path hint available.
   - Attaches the current EN function gap and current `splits.txt` coverage status so the next split pass can open the right address window immediately.
+  - Can emit machine-readable JSON or materialize ready corridor briefs under [source_gap_packet_briefs/README.md](/C:/Projects/SFA-Decomp/docs/orig/source_gap_packet_briefs/README.md).
 
 ## High-Value Findings
 
@@ -90,11 +91,17 @@ That makes it a good "recover the neighborhood shape first" packet even though i
   - `python tools/orig/source_gap_packets.py --search DIMBoss SHthorntail`
 - Spreadsheet-friendly dump:
   - `python tools/orig/source_gap_packets.py --format csv`
+- Machine-readable dump:
+  - `python tools/orig/source_gap_packets.py --format json`
+- Write ready corridor briefs:
+  - `python tools/orig/source_gap_packets.py --materialize-all`
+  - writes one markdown brief per visible packet under [source_gap_packet_briefs/README.md](/C:/Projects/SFA-Decomp/docs/orig/source_gap_packet_briefs/README.md)
 
 ## How It Fits
 
 - Use `source_skeleton.py` to find retail-backed EN islands.
 - Use `source_corridors.py` to judge whether an anchor is too small, too wide, or sitting near likely missing files.
 - Use `source_gap_packets.py` when you want the next recoverable filename packet between two anchors, with the current EN gap functions already attached.
+- Use `source_gap_packets.py --materialize-all` when the next step is handing someone an ordered corridor packet instead of a terminal summary.
 
 The new value here is packaging. It turns source-order evidence into concrete filename packets that are easier to hand to the next decomp pass.

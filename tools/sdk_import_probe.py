@@ -6,6 +6,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+from bisect import bisect_left
 from collections import defaultdict
 from dataclasses import dataclass
 from functools import lru_cache
@@ -86,6 +87,7 @@ class SourceReport:
     text_size: int
     anchors: tuple[AnchorCandidate, ...]
     hypotheses: tuple[StartHypothesis, ...]
+    size_windows: tuple["TextWindowMatch", ...] = ()
     translated_clusters: tuple["TranslatedCluster", ...] = ()
 
 
@@ -101,6 +103,23 @@ class TranslatedCluster:
     active_count: int
     text_overrun: int
     names: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class TextWindowMatch:
+    start: int
+    end: int
+    span: int
+    size_delta: int
+    symbol_count: int
+    overlap_count: int
+    overlaps: tuple[str, ...]
+    first_symbol: str
+    last_symbol: str
+
+    @property
+    def exact(self) -> bool:
+        return self.size_delta == 0
 
 
 @dataclass(frozen=True)
@@ -341,12 +360,15 @@ def find_anchor_candidates(
     return candidates
 
 
-def describe_overlap(version: str, start: int, end: int) -> list[str]:
+@lru_cache(maxsize=None)
+def load_text_splits(version: str) -> tuple:
     splits_path = Path("config") / version / "splits.txt"
+    return tuple(split for split in load_splits(splits_path) if split.section == ".text")
+
+
+def describe_overlap(version: str, start: int, end: int) -> list[str]:
     overlaps: list[str] = []
-    for split in load_splits(splits_path):
-        if split.section != ".text":
-            continue
+    for split in load_text_splits(version):
         if split.end <= start or split.start >= end:
             continue
         overlaps.append(f"{split.path}@0x{split.start:08X}-0x{split.end:08X}")
@@ -366,6 +388,75 @@ def load_text_symbols(version: str) -> tuple[ConfigSymbol, ...]:
             key=lambda symbol: symbol.address,
         )
     )
+
+
+def find_text_size_windows(
+    version: str,
+    text_size: int,
+    limit: int,
+    range_start: int | None = None,
+    range_end: int | None = None,
+) -> tuple[TextWindowMatch, ...]:
+    if text_size <= 0 or limit <= 0:
+        return ()
+
+    text_symbols = load_text_symbols(version)
+    if not text_symbols:
+        return ()
+
+    symbol_ends = [symbol.address + symbol.size for symbol in text_symbols]
+    matches: list[TextWindowMatch] = []
+    seen: set[tuple[int, int]] = set()
+
+    for start_index, start_symbol in enumerate(text_symbols):
+        window_start = start_symbol.address
+        if range_end is not None and window_start >= range_end:
+            break
+
+        target_end = window_start + text_size
+        insert_at = bisect_left(symbol_ends, target_end, lo=start_index)
+        candidate_indexes = {insert_at - 1, insert_at, insert_at + 1}
+
+        for end_index in sorted(candidate_indexes):
+            if end_index < start_index or end_index >= len(text_symbols):
+                continue
+
+            window_end = symbol_ends[end_index]
+            if range_start is not None and window_end <= range_start:
+                continue
+            if range_end is not None and window_start >= range_end:
+                continue
+
+            key = (window_start, window_end)
+            if key in seen:
+                continue
+            seen.add(key)
+
+            span = window_end - window_start
+            overlaps = tuple(describe_overlap(version, window_start, window_end))
+            matches.append(
+                TextWindowMatch(
+                    start=window_start,
+                    end=window_end,
+                    span=span,
+                    size_delta=span - text_size,
+                    symbol_count=end_index - start_index + 1,
+                    overlap_count=len(overlaps),
+                    overlaps=overlaps,
+                    first_symbol=start_symbol.name,
+                    last_symbol=text_symbols[end_index].name,
+                )
+            )
+
+    matches.sort(
+        key=lambda item: (
+            abs(item.size_delta),
+            item.overlap_count,
+            item.symbol_count,
+            item.start,
+        )
+    )
+    return tuple(matches[:limit])
 
 
 def describe_boundary_conflicts(version: str, start: int, end: int) -> list[BoundaryConflict]:
@@ -438,6 +529,9 @@ def analyze_source(
     output_root: Path,
     extra_include_dirs: tuple[Path, ...],
     translated_clusters: tuple[TranslatedCluster, ...],
+    size_window_limit: int,
+    range_start: int | None,
+    range_end: int | None,
 ) -> SourceReport:
     include_dirs = resolve_extra_include_dirs(source, extra_include_dirs)
     object_path = compile_source(
@@ -460,6 +554,13 @@ def analyze_source(
         )
     )
     text_size = next((section.size for section in sections if section.name == ".text"), 0)
+    size_windows = find_text_size_windows(
+        version=version,
+        text_size=text_size,
+        limit=size_window_limit,
+        range_start=range_start,
+        range_end=range_end,
+    )
     normalized_clusters = tuple(
         TranslatedCluster(
             start=cluster.start,
@@ -482,6 +583,7 @@ def analyze_source(
         text_size=text_size,
         anchors=tuple(anchors),
         hypotheses=tuple(build_start_hypotheses(anchors)),
+        size_windows=size_windows,
         translated_clusters=normalized_clusters,
     )
 
@@ -579,11 +681,17 @@ def build_translated_clusters(
     return tuple(deduped)
 
 
+def format_signed_hex(value: int) -> str:
+    sign = "+" if value >= 0 else "-"
+    return f"{sign}0x{abs(value):X}"
+
+
 def print_report(
     version: str,
     report: SourceReport,
     hypothesis_limit: int,
     cluster_limit: int,
+    size_window_limit: int,
     show_functions: bool,
     function_limit: int,
 ) -> None:
@@ -605,6 +713,21 @@ def print_report(
             )
             if cluster.names:
                 print(f"    names={', '.join(cluster.names)}")
+
+    if report.size_windows and size_window_limit > 0:
+        print("size windows:")
+        for window in report.size_windows[:size_window_limit]:
+            print(
+                f"  0x{window.start:08X}-0x{window.end:08X} span=0x{window.span:X} "
+                f"delta={format_signed_hex(window.size_delta)} symbols={window.symbol_count} "
+                f"overlaps={window.overlap_count}"
+            )
+            print(f"    symbols={window.first_symbol} .. {window.last_symbol}")
+            if window.overlaps:
+                for overlap in window.overlaps[:4]:
+                    print(f"    {overlap}")
+                if len(window.overlaps) > 4:
+                    print(f"    ... {len(window.overlaps) - 4} more overlaps")
 
     if not report.anchors:
         print("anchors: none")
@@ -705,10 +828,17 @@ def print_ranked_summary(version: str, reports: list[SourceReport]) -> None:
 
     for anchor_count, exact_count, neg_boundary_conflict_count, neg_overlap_count, _, report, best in ranked:
         if best is None:
+            window = report.size_windows[0] if report.size_windows else None
             print(
                 f"anchors=0 exact=0 blockers=0 overlaps=0 text=0x{report.text_size:X} "
                 f"{report.source.as_posix()} -"
             )
+            if window is not None:
+                print(
+                    f"  size-window=0x{window.start:08X}-0x{window.end:08X} "
+                    f"delta={format_signed_hex(window.size_delta)} overlaps={window.overlap_count} "
+                    f"symbols={window.symbol_count}"
+                )
             continue
 
         boundary_conflict_count = -neg_boundary_conflict_count
@@ -800,6 +930,27 @@ def parse_args() -> argparse.Namespace:
         help="Print projected per-function addresses for each start hypothesis.",
     )
     parser.add_argument(
+        "--show-size-windows",
+        action="store_true",
+        help="Print the best matching config text windows for the compiled .text size.",
+    )
+    parser.add_argument(
+        "--size-window-limit",
+        type=int,
+        default=5,
+        help="Maximum size-window matches to print per source (default: 5).",
+    )
+    parser.add_argument(
+        "--range-start",
+        type=lambda value: int(value, 0),
+        help="Optional start address used to filter size-window matches.",
+    )
+    parser.add_argument(
+        "--range-end",
+        type=lambda value: int(value, 0),
+        help="Optional end address used to filter size-window matches.",
+    )
+    parser.add_argument(
         "--function-limit",
         type=int,
         default=0,
@@ -843,6 +994,9 @@ def main() -> None:
                 output_root=object_dir,
                 extra_include_dirs=extra_include_dirs,
                 translated_clusters=translated_clusters,
+                size_window_limit=args.size_window_limit if (args.show_size_windows or args.rank) else 0,
+                range_start=args.range_start,
+                range_end=args.range_end,
             )
         except subprocess.CalledProcessError as exc:
             if args.keep_going:
@@ -863,6 +1017,7 @@ def main() -> None:
             report,
             args.hypothesis_limit,
             args.cluster_limit,
+            args.size_window_limit if args.show_size_windows else 0,
             args.show_functions,
             args.function_limit,
         )
