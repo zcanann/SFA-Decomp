@@ -160,6 +160,18 @@ dolphin/gx/GXTexture.c:
 dolphin/gx/GXBump.c:
 	.text       start:0x8025B94C end:0x8025C000
 
+dolphin/gx/GXTev.c:
+	.text       start:0x8025C000 end:0x8025CA38
+
+dolphin/gx/GXPixel.c:
+	.text       start:0x8025CA38 end:0x8025D180
+
+dolphin/gx/GXStubs.c:
+	.text       start:0x8025D49C end:0x8025D4A0
+
+dolphin/gx/GXDisplayList.c:
+	.text       start:0x8025D4A0 end:0x8025D6AC
+
 dolphin/card/CARDBios.c:
 	.text       start:0x8025E61C end:0x8025F730
 
