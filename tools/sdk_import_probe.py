@@ -82,6 +82,7 @@ class StartHypothesis:
 class SourceReport:
     source: Path
     sections: tuple[ObjectSection, ...]
+    compiled_functions: tuple[ObjectSymbol, ...]
     text_size: int
     anchors: tuple[AnchorCandidate, ...]
     hypotheses: tuple[StartHypothesis, ...]
@@ -380,6 +381,21 @@ def describe_boundary_conflicts(version: str, start: int, end: int) -> list[Boun
     return conflicts
 
 
+def find_exact_text_symbol(version: str, address: int) -> ConfigSymbol | None:
+    for symbol in load_text_symbols(version):
+        if symbol.address == address:
+            return symbol
+    return None
+
+
+def find_covering_text_symbol(version: str, address: int) -> ConfigSymbol | None:
+    for symbol in load_text_symbols(version):
+        symbol_end = symbol.address + symbol.size
+        if symbol.address <= address < symbol_end:
+            return symbol
+    return None
+
+
 def build_start_hypotheses(anchors: list[AnchorCandidate]) -> list[StartHypothesis]:
     by_start: dict[int, list[AnchorCandidate]] = {}
     for anchor in anchors:
@@ -421,6 +437,16 @@ def analyze_source(
     )
     sections, symbols = parse_llvm_readobj(object_path)
     anchors = find_anchor_candidates(symbols, config_symbols_path)
+    compiled_functions = tuple(
+        sorted(
+            (
+                symbol
+                for symbol in symbols
+                if symbol.type_name == "Function" and symbol.section == ".text"
+            ),
+            key=lambda symbol: symbol.value,
+        )
+    )
     text_size = next((section.size for section in sections if section.name == ".text"), 0)
     normalized_clusters = tuple(
         TranslatedCluster(
@@ -440,6 +466,7 @@ def analyze_source(
     return SourceReport(
         source=source,
         sections=tuple(sections),
+        compiled_functions=compiled_functions,
         text_size=text_size,
         anchors=tuple(anchors),
         hypotheses=tuple(build_start_hypotheses(anchors)),
@@ -545,6 +572,8 @@ def print_report(
     report: SourceReport,
     hypothesis_limit: int,
     cluster_limit: int,
+    show_functions: bool,
+    function_limit: int,
 ) -> None:
     print(f"# {report.source.as_posix()}")
     print("sections:")
@@ -602,6 +631,29 @@ def print_report(
                 f"    +0x{symbol.value:04X} {symbol.name:<28} "
                 f"size=0x{symbol.size:X} addr=0x{anchor.config_address:08X} size-match={exact_text}"
             )
+        if show_functions:
+            print("  projected functions:")
+            projected_functions = report.compiled_functions
+            if function_limit > 0:
+                projected_functions = projected_functions[:function_limit]
+            for symbol in projected_functions:
+                address = hypothesis.start + symbol.value
+                exact = find_exact_text_symbol(version, address)
+                cover = find_covering_text_symbol(version, address)
+                status = "free"
+                if exact is not None:
+                    size_text = "yes" if exact.size == symbol.size else "no"
+                    status = f"start:{exact.name},size-match:{size_text}"
+                elif cover is not None:
+                    offset = address - cover.address
+                    status = (
+                        f"inside:{cover.name}"
+                        f"@+0x{offset:X}/0x{cover.size:X}"
+                    )
+                print(
+                    f"    +0x{symbol.value:04X} 0x{address:08X} "
+                    f"size=0x{symbol.size:X} {symbol.name} [{status}]"
+                )
     print()
 
 
@@ -730,6 +782,17 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Only use translated symbols with Dolphin library/object provenance when building source clusters.",
     )
+    parser.add_argument(
+        "--show-functions",
+        action="store_true",
+        help="Print projected per-function addresses for each start hypothesis.",
+    )
+    parser.add_argument(
+        "--function-limit",
+        type=int,
+        default=0,
+        help="Maximum projected functions to print per hypothesis (default: 0 = all).",
+    )
     return parser.parse_args()
 
 
@@ -783,7 +846,14 @@ def main() -> None:
         return
 
     for report in reports:
-        print_report(args.version, report, args.hypothesis_limit, args.cluster_limit)
+        print_report(
+            args.version,
+            report,
+            args.hypothesis_limit,
+            args.cluster_limit,
+            args.show_functions,
+            args.function_limit,
+        )
 
 
 if __name__ == "__main__":
