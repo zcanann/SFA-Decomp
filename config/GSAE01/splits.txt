@@ -401,7 +401,7 @@ dolphin/MSL_C/PPCEABI/bare/H/misc_io.c:
 	.text       start:0x8028FD18 end:0x8028FDE8
 
 dolphin/MSL_C/PPCEABI/bare/H/printf.c:
-	.text       start:0x8028FDE8 end:0x802907F4
+	.text       start:0x8028FDE8 end:0x80291D44
 
 dolphin/MSL_C/PPCEABI/bare/H/string.c:
 	.text       start:0x80291D44 end:0x80292020
