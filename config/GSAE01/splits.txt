@@ -190,6 +190,9 @@ thp/THPAudio.c:
 amcstubs/AmcExi2Stubs.c:
 	.text       start:0x8026C680 end:0x8026C6B0
 
+odenotstub/odenotstub.c:
+	.text       start:0x8026C6B0 end:0x8026C6B8
+
 audio/synth_callback.c:
 	extab       start:0x80005620 end:0x80005630
 	extabindex  start:0x80005CC0 end:0x80005CD8

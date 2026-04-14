@@ -494,6 +494,7 @@ config.libs = [
         "cflags": cflags_base,
         "progress_category": "game",
         "objects": [
+            Object(NonMatching, "odenotstub/odenotstub.c"),
             Object(NonMatching, "audio/synth_callback.c"),
             Object(NonMatching, "audio/synth_channel.c"),
             Object(NonMatching, "audio/synth_handle.c"),
