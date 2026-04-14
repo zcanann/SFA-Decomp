@@ -477,6 +477,7 @@ config.libs = [
             Object(NonMatching, "TRK_MINNOW_DOLPHIN/mutex_TRK.c"),
             Object(NonMatching, "TRK_MINNOW_DOLPHIN/notify.c"),
             Object(MatchingFor("GSAE01"), "TRK_MINNOW_DOLPHIN/flush_cache.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/mem_TRK.c"),
             Object(NonMatching, "TRK_MINNOW_DOLPHIN/targimpl.c"),
             Object(NonMatching, "TRK_MINNOW_DOLPHIN/targsupp.s"),
             Object(NonMatching, "TRK_MINNOW_DOLPHIN/dolphin_trk.c"),

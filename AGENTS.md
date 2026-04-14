@@ -42,6 +42,7 @@ This repo starts from very little. Expect to do naming, struct recovery, type cl
 - Mine strings, assets, tables, and binary patterns when that reveals structure.
 - Use `python tools/orig/source_leaks.py` when checking whether `orig/*` still preserves direct source/header names before leaning on external debug-side references.
 - Use `python tools/orig/source_recovery.py` when `main.dol` source-tagged strings may give EN file/function anchors for naming or splits.
+- Use `python tools/orig/source_materialize.py` when you want to materialize exact disc source/header artifacts and retail-backed stub files under `src/recovered/`.
 - Use `python tools/orig/tab_catalog.py` when you need real retail chunk boundaries from `.tab` / `.bin` families before proposing asset splits.
 - Use `python tools/orig/dol_vtables.py --stores-only` when hunting constructor-backed class boundaries, vtables, or callback tables in the retail DOL.
 - Use `python tools/orig/romlist_params.py` when recovering object placement structs, param widths, or variable-length romlist families from retail data.
