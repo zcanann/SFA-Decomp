@@ -578,7 +578,9 @@ config.libs = [
         "MSL_C",
         [
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/abort_exit.c"),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/alloc.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c"),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/ansi_fp.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/buffer_io.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/mbstring.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/mem.c"),

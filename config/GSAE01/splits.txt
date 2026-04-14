@@ -367,8 +367,14 @@ dolphin/TRK_MINNOW_DOLPHIN/mslsupp.c:
 dolphin/MSL_C/PPCEABI/bare/H/abort_exit.c:
 	.text       start:0x8028DB4C end:0x8028DCD4
 
+dolphin/MSL_C/PPCEABI/bare/H/alloc.c:
+	.text       start:0x8028DCD4 end:0x8028E23C
+
 dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c:
-	.text       start:0x8028DCD4 end:0x8028E344
+	.text       start:0x8028E23C end:0x8028E344
+
+dolphin/MSL_C/PPCEABI/bare/H/ansi_fp.c:
+	.text       start:0x8028E344 end:0x8028EF5C
 
 dolphin/MSL_C/PPCEABI/bare/H/buffer_io.c:
 	.text       start:0x8028EF5C end:0x8028F054
