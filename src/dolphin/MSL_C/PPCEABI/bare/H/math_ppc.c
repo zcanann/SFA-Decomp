@@ -5,15 +5,15 @@ float acosf(float arg0) {
     return (float)acos(arg0);
 }
 
-float cosf(float arg0) {
+__declspec(weak) float cosf(float arg0) {
     return (float)cos(arg0);
 }
 
-float sinf(float arg0) {
+__declspec(weak) float sinf(float arg0) {
     return (float)sin(arg0);
 }
 
-float tanf(float arg0) {
+__declspec(weak) float tanf(float arg0) {
     return (float)tan(arg0);
 }
 

@@ -463,6 +463,10 @@ dolphin/MSL_C/PPCEABI/bare/H/s_floor.c:
 dolphin/MSL_C/PPCEABI/bare/H/s_sin.c:
 	.text       start:0x80294964 end:0x80294A4C
 
+dolphin/MSL_C/PPCEABI/bare/H/trigf.c:
+	.text       start:0x80294F2C end:0x80295318
+	.ctors      start:0x802C2004 end:0x802C2008
+
 Runtime.PPCEABI.H/__start.s: comment:0
 	.init       start:0x80003100 end:0x800033A8
 
