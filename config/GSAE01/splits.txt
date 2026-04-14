@@ -433,6 +433,9 @@ dolphin/MSL_C/PPCEABI/bare/H/rand.c:
 dolphin/MSL_C/PPCEABI/bare/H/k_sin.c:
 	.text       start:0x80292754 end:0x80292804
 
+dolphin/MSL_C/PPCEABI/bare/H/s_cos.c:
+	.text       start:0x80292804 end:0x802928F4
+
 dolphin/MSL_C/PPCEABI/bare/H/math_ppc.c:
 	.text       start:0x802928F4 end:0x802929A8
 
