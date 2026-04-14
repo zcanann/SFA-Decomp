@@ -221,12 +221,12 @@ def compile_source(
     compile_args = [
         str(sjiswrap),
         str(compiler),
-        *build_config.cflags,
         *(
             arg
             for include_dir in extra_include_dirs
             for arg in ("-i", str(include_dir).replace("/", "\\"))
         ),
+        *build_config.cflags,
         "-MMD",
         "-c",
         str(source).replace("/", "\\"),
@@ -263,6 +263,22 @@ def resolve_extra_include_dirs(
 
     add(source.parent)
 
+    parts = source.parts
+    if "reference_projects" in parts:
+        ref_index = parts.index("reference_projects")
+        if ref_index + 1 < len(parts):
+            reference_include = Path(*parts[: ref_index + 2]) / "include"
+            add(reference_include)
+            if reference_include.is_dir():
+                header_dirs = sorted(
+                    {
+                        header.parent
+                        for header in reference_include.rglob("*.h")
+                    }
+                )
+                for header_dir in header_dirs:
+                    add(header_dir)
+
     include_root = Path("include")
     search_root = include_root if include_root.is_dir() else None
     if search_root is None:
@@ -283,6 +299,31 @@ def resolve_extra_include_dirs(
         add(matches[0].parent)
 
     return tuple(resolved)
+
+
+def expand_source_args(source_args: list[str]) -> list[Path]:
+    expanded: list[Path] = []
+    seen: set[Path] = set()
+
+    def add(path: Path) -> None:
+        try:
+            normalized = path.resolve()
+        except OSError:
+            normalized = path
+        if normalized in seen:
+            return
+        seen.add(normalized)
+        expanded.append(path)
+
+    for source_arg in source_args:
+        source_path = Path(source_arg)
+        if source_path.is_dir():
+            for candidate in sorted(source_path.rglob("*.c")):
+                add(candidate)
+        else:
+            add(source_path)
+
+    return expanded
 
 
 def parse_llvm_readobj(object_path: Path) -> tuple[list[ObjectSection], list[ObjectSymbol]]:
@@ -1022,7 +1063,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Compile dormant SDK imports and compare their emitted object spans against the active config."
     )
-    parser.add_argument("sources", nargs="+", help="Source files under src/ to probe")
+    parser.add_argument(
+        "sources",
+        nargs="+",
+        help="Source files or directories to probe. Directories are searched recursively for *.c files.",
+    )
     parser.add_argument("-v", "--version", default="GSAE01", help="Target version (default: GSAE01)")
     parser.add_argument(
         "--build-ninja",
@@ -1134,8 +1179,7 @@ def main() -> None:
     extra_include_dirs = tuple(args.extra_include)
     reports: list[SourceReport] = []
 
-    for source_arg in args.sources:
-        source = Path(source_arg)
+    for source in expand_source_args(args.sources):
         if not source.is_file():
             if args.keep_going:
                 print(f"# {source.as_posix()}")
