@@ -184,6 +184,9 @@ class ProjectConfig:
         self.reconfig_deps: Optional[List[Path]] = (
             None  # Additional re-configuration dependency files
         )
+        self.split_deps: Optional[List[Path]] = (
+            None  # Additional split-config dependency files
+        )
         self.custom_build_rules: Optional[List[Dict[str, Any]]] = (
             None  # Custom ninja build rules
         )
@@ -1501,7 +1504,7 @@ def generate_build_ninja(
         inputs=config.config_path,
         outputs=build_config_path,
         rule="split",
-        implicit=dtk,
+        implicit=[dtk, *(config.split_deps or [])],
         variables={"out_dir": build_path},
     )
     n.newline()
