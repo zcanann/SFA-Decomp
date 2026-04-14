@@ -45,6 +45,7 @@ This repo starts from very little. Expect to do naming, struct recovery, type cl
 - Use `python tools/orig/source_recovery.py` when `main.dol` source-tagged strings may give EN file/function anchors for naming or splits.
 - Use `python tools/orig/source_functions.py` when you want a tighter report of retail-labeled function candidates such as `setBlendMove` / `Init` with their current EN xref clusters.
 - Use `python tools/orig/source_reference_hints.py` when retail EN evidence names a file but you want clearly-labeled reference-project path, function, DLL, or object hints without promoting them to source-truth.
+- Use `python tools/orig/source_object_packets.py` when a retail source tag needs to be tied back to current EN object/class/DLL packets or materialized into a non-built source packet under `src/main/unknown/source_packets/`.
 - Use `python tools/orig/source_materialize.py` when you want to materialize retail-backed stubs under `src/` and/or export exact disc source/header artifacts to a local non-source folder.
 - Use `python tools/orig/object_family_packets.py` when you want retail-backed object/DLL family packets or non-built `src/main/unknown/` boundary stubs for exploratory split planning before a real source filename is proven.
 - Use `python tools/orig/object_def_packets.py` when you want retail-backed per-object exploratory stubs under `src/main/unknown/objects/`, cross-linked to class packets, DLL families, placement widths, and EN descriptor slots for rapid split planning.
