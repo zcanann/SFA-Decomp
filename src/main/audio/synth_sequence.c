@@ -1,5 +1,5 @@
-#include "src/audio/synth_internal.h"
-#include "src/audio/synth_voice_overlays.h"
+#include "src/main/audio/synth_internal.h"
+#include "src/main/audio/synth_voice_overlays.h"
 
 #define SYNTH_TRACK_COMMAND_END 0xFFFF
 #define SYNTH_TRACK_COMMAND_JUMP 0xFFFE

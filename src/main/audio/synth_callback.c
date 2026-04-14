@@ -1,5 +1,5 @@
-#include "src/audio/synth_internal.h"
-#include "src/audio/synth_voice_overlays.h"
+#include "src/main/audio/synth_internal.h"
+#include "src/main/audio/synth_voice_overlays.h"
 
 #define SYNTH_CALLBACK_ACTIVE_LIST_COUNT 2
 #define SYNTH_CALLBACK_COMPLETED_LIST_INDEX 2

@@ -1,5 +1,5 @@
-#include "src/audio/synth_internal.h"
-#include "src/audio/synth_voice_overlays.h"
+#include "src/main/audio/synth_internal.h"
+#include "src/main/audio/synth_voice_overlays.h"
 
 extern u32 gSynthCurrentVoiceSlotIndex;
 

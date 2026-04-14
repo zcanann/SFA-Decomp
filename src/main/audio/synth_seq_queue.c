@@ -1,5 +1,5 @@
-#include "src/audio/synth_internal.h"
-#include "src/audio/synth_voice_overlays.h"
+#include "src/main/audio/synth_internal.h"
+#include "src/main/audio/synth_voice_overlays.h"
 
 void fn_8026EFC8(void) {
     SynthSequenceEvent* event;

@@ -1,4 +1,4 @@
-#include "src/audio/synth_internal.h"
+#include "src/main/audio/synth_internal.h"
 
 typedef void (*SynthDelayCallback)(void);
 

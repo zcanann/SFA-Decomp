@@ -1,4 +1,4 @@
-#include "src/audio/synth_internal.h"
+#include "src/main/audio/synth_internal.h"
 
 void synthInitVoices(void) {
     SynthVoiceRuntime* runtime;

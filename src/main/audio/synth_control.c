@@ -1,4 +1,4 @@
-#include "src/audio/synth_internal.h"
+#include "src/main/audio/synth_internal.h"
 
 #define SYNTH_FADE_COUNT 0x20
 #define SYNTH_FADE_SELECTOR_ACTION_2 0xFA

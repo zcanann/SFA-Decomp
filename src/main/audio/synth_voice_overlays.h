@@ -1,7 +1,7 @@
 #ifndef SFA_AUDIO_SYNTH_VOICE_OVERLAYS_H
 #define SFA_AUDIO_SYNTH_VOICE_OVERLAYS_H
 
-#include "src/audio/synth_internal.h"
+#include "src/main/audio/synth_internal.h"
 
 typedef struct SynthVoiceProgramState {
     u8 unk00[0x108];
