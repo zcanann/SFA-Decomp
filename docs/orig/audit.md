@@ -42,6 +42,7 @@ This is a side-agent reconnaissance pass over the bundled retail assets in `orig
 - `python tools/orig/source_blueprints.py`
   - Reconciles retail-backed anchor windows and short gap packets into address-ordered local source skeleton blocks.
   - Keeps overlap warnings explicit so first-pass boundary work starts from one neighborhood view instead of several separate reports.
+  - Can materialize ready neighborhood briefs under `docs/orig/source_blueprint_briefs/`.
 - `python tools/orig/object_family_packets.py`
   - Synthesizes retail object defs, root romlist widths, EN DLL descriptors, and optional reference-only XML hints into ranked object-family recovery packets.
   - Can materialize non-built packet stubs under `src/main/unknown/` for boundary planning without touching the active build.
@@ -64,6 +65,7 @@ Focused notes for current EN boundary seeds live in [source_boundaries.md](/C:/P
 Focused notes for retail function-label recovery live in [source_functions.md](/C:/Projects/SFA-Decomp/docs/orig/source_functions.md).
 Focused notes for the prioritized boundary queue live in [source_worklist.md](/C:/Projects/SFA-Decomp/docs/orig/source_worklist.md).
 Focused notes for ordered source skeleton neighborhoods live in [source_blueprints.md](/C:/Projects/SFA-Decomp/docs/orig/source_blueprints.md).
+Ready neighborhood packet briefs live in [source_blueprint_briefs/README.md](/C:/Projects/SFA-Decomp/docs/orig/source_blueprint_briefs/README.md).
 
 ## High-value findings
 
@@ -307,6 +309,7 @@ The new local tools are meant to keep the most immediately useful parts reproduc
 - Use `python tools/orig/dol_xrefs.py --search camcontrol curves SHthorntail romlist` before naming anonymous functions that already have retail string evidence.
 - Use `python tools/orig/source_functions.py --search objanim setBlendMove Init` when a retail warning string appears to expose a real function label and you want the EN xref cluster immediately.
 - Use `python tools/orig/source_worklist.py --materialize-all` when the next step is handing a decomp worker a ready-to-open packet for the strongest retail-backed boundary jobs instead of a loose list of source names.
+- Use `python tools/orig/source_blueprints.py --materialize-all` when the next step is handing a decomp worker one ordered neighborhood brief with anchor windows, in-between files, and EN function spans together.
 - Use `python tools/orig/dol_vtables.py --stores-only` before recovering a class-like subsystem that seems to write a function pointer to offset `0`.
 - Use `python tools/orig/constructor_packets.py --materialize-top 2` when the vtable scan needs to become an actual non-built source packet for class-boundary work.
 - Decide whether the `darkicemines` root duplication should drive a first-pass file-ID enum or loader switch table.

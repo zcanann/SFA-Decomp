@@ -33,6 +33,7 @@ It is:
     - a short resolved gap packet connects them
   - Keeps overlap warnings explicit instead of pretending the current window guesses are already final file boundaries.
   - Can emit JSON or CSV when a worker wants to script against the blocks instead of reading markdown.
+  - Can materialize ready neighborhood briefs under [source_blueprint_briefs/README.md](/C:/Projects/SFA-Decomp/docs/orig/source_blueprint_briefs/README.md).
 
 ## High-value findings
 
@@ -115,6 +116,9 @@ The blueprint view confirms they do not need short-gap packet context before fir
   - `python tools/orig/source_blueprints.py --search objanim objhits`
   - `python tools/orig/source_blueprints.py --search expgfx curves camcontrol`
   - `python tools/orig/source_blueprints.py --search textblock laser`
+- Write neighborhood briefs:
+  - `python tools/orig/source_blueprints.py --materialize-all`
+  - writes one markdown brief per visible block under [source_blueprint_briefs/README.md](/C:/Projects/SFA-Decomp/docs/orig/source_blueprint_briefs/README.md)
 - Machine-readable dump:
   - `python tools/orig/source_blueprints.py --format json`
 - Spreadsheet-friendly dump:

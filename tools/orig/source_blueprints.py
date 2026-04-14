@@ -4,6 +4,7 @@ import argparse
 import csv
 import io
 import json
+import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -92,6 +93,22 @@ def unique_strings(values: list[str]) -> tuple[str, ...]:
 
 def span_text(start: int, end: int) -> str:
     return f"`0x{start:08X}-0x{end:08X}`"
+
+
+def write_text_if_changed(path: Path, text: str) -> bool:
+    if path.is_file() and path.read_text(encoding="utf-8") == text:
+        return False
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8", newline="\n")
+    return True
+
+
+def sanitize_filename_component(value: str) -> str:
+    return re.sub(r"[^A-Za-z0-9._-]+", "_", value).strip("._") or "block"
+
+
+def format_symbol_span(function) -> str:
+    return f"{function.name}@0x{function.address:08X}-0x{function.address + function.size:08X}"
 
 
 def source_span(item: WorkItem) -> tuple[int, int, str] | None:
@@ -239,6 +256,18 @@ def gap_path_preview(packet: SourceGapPacket, limit: int = 8) -> str:
     return ", ".join(parts) if parts else "none"
 
 
+def packet_between(block: BlueprintBlock, left_anchor: BlueprintAnchor, right_anchor: BlueprintAnchor) -> SourceGapPacket | None:
+    return next(
+        (
+            candidate
+            for candidate in block.packets
+            if candidate.left.retail_source_name == left_anchor.retail_source_name
+            and candidate.right.retail_source_name == right_anchor.retail_source_name
+        ),
+        None,
+    )
+
+
 def anchor_line(anchor: BlueprintAnchor) -> str:
     parts = [
         f"`{anchor.item.suggested_path}`",
@@ -267,6 +296,215 @@ def packet_line(packet: SourceGapPacket) -> str:
         parts.append(f"ambiguous=`{packet.ambiguous_path_count}`")
     parts.append("files: " + gap_path_preview(packet))
     return " ".join(parts)
+
+
+def functions_in_span(current_functions, start: int | None, end: int | None):
+    if start is None or end is None:
+        return ()
+    return tuple(
+        function
+        for function in current_functions
+        if start <= function.address and function.address < end
+    )
+
+
+def preview_paths(paths: tuple[str, ...], limit: int = 8) -> str:
+    if not paths:
+        return "none"
+    preview = ", ".join(f"`{path}`" for path in paths[:limit])
+    if len(paths) > limit:
+        preview += f", ... (+{len(paths) - limit} more)"
+    return preview
+
+
+def gap_resolution_line(packet: SourceGapPacket, limit: int = 24) -> list[str]:
+    lines: list[str] = []
+    for hint in packet.gap_path_hints[:limit]:
+        if hint.resolved_paths:
+            lines.append(
+                f"- `{hint.basename}` status=`{hint.resolution_status}` paths="
+                + ", ".join(f"`{path}`" for path in hint.resolved_paths)
+            )
+        else:
+            lines.append(f"- `{hint.basename}` status=`{hint.resolution_status}`")
+    if len(packet.gap_path_hints) > limit:
+        lines.append(f"- ... (+{len(packet.gap_path_hints) - limit} more gap-path hints)")
+    return lines
+
+
+def function_lines(functions, limit: int = 24) -> list[str]:
+    if not functions:
+        return ["- none"]
+    lines = [f"- `{format_symbol_span(function)}` size=`0x{function.size:X}`" for function in functions[:limit]]
+    if len(functions) > limit:
+        lines.append(f"- ... (+{len(functions) - limit} more functions)")
+    return lines
+
+
+def ordered_skeleton_paths(block: BlueprintBlock) -> tuple[str, ...]:
+    ordered: list[str] = []
+    for index, anchor in enumerate(block.anchors):
+        ordered.append(anchor.suggested_path)
+        if index >= len(block.anchors) - 1:
+            continue
+        packet = packet_between(block, anchor, block.anchors[index + 1])
+        if packet is None:
+            continue
+        for hint in packet.gap_path_hints:
+            if len(hint.resolved_paths) == 1:
+                ordered.append(hint.resolved_paths[0])
+            elif hint.resolved_paths:
+                ordered.append(f"{hint.basename} ({hint.resolution_status})")
+            else:
+                ordered.append(f"{hint.basename} ({hint.resolution_status})")
+    return tuple(ordered)
+
+
+def next_steps(block: BlueprintBlock) -> tuple[str, ...]:
+    steps: list[str] = []
+    split_now = [anchor.suggested_path for anchor in block.anchors if anchor.action == "split-now"]
+    resize = [anchor.suggested_path for anchor in block.anchors if anchor.action in {"expand-window", "shrink-window"}]
+    if split_now:
+        steps.append(
+            "Start with the near-fit anchor(s) "
+            + ", ".join(f"`{path}`" for path in split_now)
+            + " and use the rest of the block only as edge/context guards."
+        )
+    if resize:
+        steps.append(
+            "Treat "
+            + ", ".join(f"`{path}`" for path in resize)
+            + " as resize-first jobs before asserting final file boundaries."
+        )
+    if block.conflict_anchor_names:
+        steps.append(
+            "Keep the overlapping anchors "
+            + ", ".join(f"`{name}`" for name in block.conflict_anchor_names)
+            + " in one shared neighborhood until local ownership is clearer."
+        )
+    if block.short_packet_count:
+        steps.append("Walk the ordered gap-path hints in this block when sketching the first-pass source skeleton.")
+    if any(packet.unresolved_path_count or packet.ambiguous_path_count for packet in block.packets):
+        steps.append("Resolve ambiguous or unresolved gap names before turning the whole neighborhood into fixed source filenames.")
+    if not steps:
+        steps.append("Use this block as a direct first-pass source skeleton seed.")
+    return tuple(steps)
+
+
+def block_filename(index: int, width: int, block: BlueprintBlock) -> str:
+    first = sanitize_filename_component(Path(block.anchors[0].retail_source_name).stem)
+    if len(block.anchors) == 1:
+        return f"{index:0{width}d}-{first}.md"
+    last = sanitize_filename_component(Path(block.anchors[-1].retail_source_name).stem)
+    return f"{index:0{width}d}-{first}-to-{last}.md"
+
+
+def block_markdown(block: BlueprintBlock, current_functions) -> str:
+    block_functions = functions_in_span(current_functions, block.start, block.end)
+    lines: list[str] = []
+    lines.append(f"# Retail Source Blueprint Block: {span_text(block.start, block.end)}")
+    lines.append("")
+    lines.append("Generated by `python tools/orig/source_blueprints.py --materialize-all`.")
+    lines.append("")
+    lines.append("## Summary")
+    lines.append(f"- block span: {span_text(block.start, block.end)} size=`0x{block.size:X}`")
+    lines.append(f"- anchors: `{block.anchor_count}`")
+    lines.append(f"- short gap packets: `{block.short_packet_count}`")
+    lines.append(f"- block score: `{block.score}`")
+    lines.append(f"- block function count: `{len(block_functions)}`")
+    if block.conflict_anchor_names:
+        lines.append("- overlap warnings: " + ", ".join(f"`{name}`" for name in block.conflict_anchor_names))
+    lines.append("- ordered skeleton paths: " + preview_paths(ordered_skeleton_paths(block), limit=16))
+    lines.append("")
+    lines.append("## Ordered Skeleton")
+    for index, anchor in enumerate(block.anchors):
+        lines.append(f"### `{anchor.suggested_path}`")
+        lines.append(f"- retail source: `{anchor.retail_source_name}`")
+        lines.append(f"- action: `{anchor.action}`")
+        lines.append(f"- confidence: `{anchor.confidence}`")
+        lines.append(f"- plan window: {span_text(anchor.plan_start, anchor.plan_end)} size=`0x{anchor.plan_size:X}` from=`{anchor.span_source}`")
+        if anchor.item.current_seed_start is not None and anchor.item.current_seed_end is not None:
+            lines.append(
+                "- current seed: "
+                + span_text(anchor.item.current_seed_start, anchor.item.current_seed_end)
+                + f" size=`0x{anchor.item.current_seed_size:X}` functions=`{anchor.item.current_seed_functions}`"
+            )
+        if anchor.item.debug_target_size is not None:
+            lines.append(f"- debug target size: `0x{anchor.item.debug_target_size:X}` fit=`{anchor.item.fit_status}`")
+        if anchor.item.window_coverage:
+            lines.append(f"- xref coverage inside plan: `{anchor.item.window_coverage}`")
+        if anchor.item.retail_labels:
+            lines.append("- retail labels: " + ", ".join(f"`{label}`" for label in anchor.item.retail_labels))
+        lines.append(f"- why: {anchor.item.reason}")
+        lines.append("- plan-window functions:")
+        lines.extend(function_lines(functions_in_span(current_functions, anchor.plan_start, anchor.plan_end)))
+        if index >= len(block.anchors) - 1:
+            lines.append("")
+            continue
+
+        packet = packet_between(block, anchor, block.anchors[index + 1])
+        if packet is None:
+            lines.append("")
+            continue
+
+        lines.append("")
+        lines.append(
+            f"### Gap: `{anchor.retail_source_name}` -> `{block.anchors[index + 1].retail_source_name}`"
+        )
+        if packet.en_gap_start is not None and packet.en_gap_end is not None and packet.en_gap_size is not None:
+            lines.append(
+                f"- EN gap: {span_text(packet.en_gap_start, packet.en_gap_end)} size=`0x{packet.en_gap_size:X}` functions=`{len(packet.gap_functions)}`"
+            )
+        else:
+            lines.append(f"- EN gap: none (`{len(packet.gap_functions)}` functions)")
+        lines.append(
+            f"- resolved gap names: `{packet.unique_path_count}/{packet.gap_path_count}` ambiguous=`{packet.ambiguous_path_count}` unresolved=`{packet.unresolved_path_count}`"
+        )
+        lines.append(f"- exact debug interval paths: `{packet.exact_debug_interval_count}`")
+        lines.append("- exact debug interval preview: " + preview_paths(packet.exact_debug_interval_paths, limit=12))
+        lines.append("- gap path hints:")
+        lines.extend(gap_resolution_line(packet))
+        lines.append("- EN gap functions:")
+        lines.extend(function_lines(packet.gap_functions))
+        lines.append("")
+
+    lines.append("## Recommended Next Steps")
+    for step in next_steps(block):
+        lines.append(f"- {step}")
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def block_index_markdown(blocks: list[BlueprintBlock], output_root: Path) -> str:
+    width = max(2, len(str(len(blocks))))
+    lines = ["# Retail Source Blueprint Briefs", ""]
+    lines.append("Generated by `python tools/orig/source_blueprints.py --materialize-all`.")
+    lines.append("")
+    for index, block in enumerate(blocks, start=1):
+        filename = block_filename(index, width, block)
+        lines.append(
+            f"- [{filename}]({filename}) span={span_text(block.start, block.end)} anchors=`{block.anchor_count}` packets=`{block.short_packet_count}`"
+        )
+    lines.append("")
+    lines.append(f"- Packet root: `{output_root.as_posix()}`")
+    return "\n".join(lines) + "\n"
+
+
+def materialize_blocks(blocks: list[BlueprintBlock], current_functions, output_root: Path) -> tuple[int, int]:
+    written = 0
+    unchanged = 0
+    width = max(2, len(str(len(blocks))))
+    for index, block in enumerate(blocks, start=1):
+        path = output_root / block_filename(index, width, block)
+        if write_text_if_changed(path, block_markdown(block, current_functions)):
+            written += 1
+        else:
+            unchanged += 1
+    index_path = output_root / "README.md"
+    if write_text_if_changed(index_path, block_index_markdown(blocks, output_root)):
+        written += 1
+    else:
+        unchanged += 1
+    return written, unchanged
 
 
 def residual_items(items: list[WorkItem]) -> list[WorkItem]:
@@ -330,6 +568,7 @@ def summary_markdown(blocks: list[BlueprintBlock], items: list[WorkItem], limit:
     lines.append("- Summary: `python tools/orig/source_blueprints.py`")
     lines.append("- Inspect one neighborhood: `python tools/orig/source_blueprints.py --search objanim objhits`")
     lines.append("- Structured dump: `python tools/orig/source_blueprints.py --format json`")
+    lines.append("- Write neighborhood briefs: `python tools/orig/source_blueprints.py --materialize-all`")
     return "\n".join(lines)
 
 
@@ -390,15 +629,7 @@ def detailed_markdown(blocks: list[BlueprintBlock], patterns: list[str]) -> str:
                     f"    seed={span_text(anchor.item.current_seed_start, anchor.item.current_seed_end)} size=`0x{anchor.item.current_seed_size:X}`"
                 )
             if index < len(block.anchors) - 1:
-                packet = next(
-                    (
-                        candidate
-                        for candidate in block.packets
-                        if candidate.left.retail_source_name == anchor.retail_source_name
-                        and candidate.right.retail_source_name == block.anchors[index + 1].retail_source_name
-                    ),
-                    None,
-                )
+                packet = packet_between(block, anchor, block.anchors[index + 1])
                 if packet is not None:
                     lines.append(f"    {packet_line(packet)}")
         lines.append("")
@@ -472,6 +703,7 @@ def rows_to_json(blocks: list[BlueprintBlock], residual: list[WorkItem]) -> str:
                     }
                     for anchor in block.anchors
                 ],
+                "ordered_paths": list(ordered_skeleton_paths(block)),
                 "packets": [
                     {
                         "left": packet.left.retail_source_name,
@@ -523,6 +755,9 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--search", nargs="+", help="Case-insensitive substring search across anchors, paths, and gap files.")
     parser.add_argument("--limit", type=int, default=6, help="Maximum blocks to show in the summary.")
     parser.add_argument("--max-gap-paths", type=int, default=8, help="Maximum in-between filenames allowed when bridging anchors into one blueprint block.")
+    parser.add_argument("--materialize-top", type=int, default=0, help="Write the top N visible blueprint blocks under --output-root.")
+    parser.add_argument("--materialize-all", action="store_true", help="Write every visible blueprint block under --output-root.")
+    parser.add_argument("--output-root", type=Path, default=Path("docs/orig/source_blueprint_briefs"), help="Destination directory for generated blueprint briefs.")
     return parser
 
 
@@ -581,6 +816,19 @@ def main() -> None:
         visible_blocks = blocks
 
     residual = residual_items(items)
+    if args.materialize_all:
+        materialized_blocks = visible_blocks
+    elif args.materialize_top > 0:
+        materialized_blocks = visible_blocks[: args.materialize_top]
+    else:
+        materialized_blocks = []
+
+    if materialized_blocks:
+        written, unchanged = materialize_blocks(materialized_blocks, current_functions, args.output_root)
+        print(
+            f"materialized={len(materialized_blocks)} written={written} unchanged={unchanged} root={args.output_root.as_posix()}",
+            file=sys.stderr,
+        )
 
     try:
         if args.format == "csv":
