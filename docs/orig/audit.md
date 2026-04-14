@@ -24,6 +24,9 @@ This is a side-agent reconnaissance pass over the bundled retail assets in `orig
 - `python tools/orig/dol_vtables.py --stores-only`
   - Scans the EN retail DOL for short function-pointer tables and keeps the ones that are written into object-like registers by code.
   - Gives constructor-style anchors for vtable or callback-table recovery without guessing from decomp artifacts.
+- `python tools/orig/constructor_packets.py`
+  - Turns the store-backed `dol_vtables.py` hits into ready packet summaries or non-built `src/main/unknown/constructors/` stubs.
+  - Keeps constructor-like stores, slot methods, and any nearby retail string evidence together for class-boundary work.
 - `python tools/orig/developer_artifacts.py`
   - Catalogs the generated `*.c.new` boot-text sources, the MusyX symbol header backup, the leftover REL testcase files, and the SDK-style source leaks in `apploader.img`.
 - `python tools/orig/source_leaks.py`
@@ -43,6 +46,7 @@ Focused notes for that tool live in [map_catalog.md](/C:/Projects/SFA-Decomp/doc
 Focused notes for the DOL runtime tables live in [dol_tables.md](/C:/Projects/SFA-Decomp/docs/orig/dol_tables.md).
 Focused notes for direct DOL string xrefs live in [dol_xrefs.md](/C:/Projects/SFA-Decomp/docs/orig/dol_xrefs.md).
 Focused notes for constructor-backed function-pointer tables live in [dol_vtables.md](/C:/Projects/SFA-Decomp/docs/orig/dol_vtables.md).
+Focused notes for materialized constructor/class packets live in [constructor_packets.md](/C:/Projects/SFA-Decomp/docs/orig/constructor_packets.md).
 Focused notes for per-object retail placement widths live in [romlist_params.md](/C:/Projects/SFA-Decomp/docs/orig/romlist_params.md).
 Focused notes for object/DLL family packetization live in [object_family_packets.md](/C:/Projects/SFA-Decomp/docs/orig/object_family_packets.md).
 Focused notes for per-object packet materialization live in [object_def_packets.md](/C:/Projects/SFA-Decomp/docs/orig/object_def_packets.md).
@@ -293,4 +297,5 @@ The new local tools are meant to keep the most immediately useful parts reproduc
 - Use `python tools/orig/dol_xrefs.py --search camcontrol curves SHthorntail romlist` before naming anonymous functions that already have retail string evidence.
 - Use `python tools/orig/source_functions.py --search objanim setBlendMove Init` when a retail warning string appears to expose a real function label and you want the EN xref cluster immediately.
 - Use `python tools/orig/dol_vtables.py --stores-only` before recovering a class-like subsystem that seems to write a function pointer to offset `0`.
+- Use `python tools/orig/constructor_packets.py --materialize-top 2` when the vtable scan needs to become an actual non-built source packet for class-boundary work.
 - Decide whether the `darkicemines` root duplication should drive a first-pass file-ID enum or loader switch table.
