@@ -3,6 +3,8 @@
 
 #include "dolphin/gx/__gx.h"
 
+#define gx __GXData
+
 void GXSetDispCopySrc(u16 left, u16 top, u16 wd, u16 ht) {
     CHECK_GXBEGIN(1235, "GXSetDispCopySrc");
     __GXData->cpDispSrc = 0;
@@ -31,11 +33,15 @@ void GXSetTexCopySrc(u16 left, u16 top, u16 wd, u16 ht) {
 }
 
 void GXSetDispCopyDst(u16 wd, u16 ht) {
+    u16 stride;
+
     ASSERTMSGLINE(1293, (wd & 0xF) == 0, "GXSetDispCopyDst: Width must be a multiple of 16");
     CHECK_GXBEGIN(1294, "GXSetDispCopyDst");
-    __GXData->cpDispStride = 0;
-    __GXData->cpDispStride = (__GXData->cpDispStride & 0xFFFFFC00) | ((int)((wd & 0x7FFF) << 1) >> 5);
-    __GXData->cpDispStride = (__GXData->cpDispStride & 0x00FFFFFF) | 0x4D000000;
+
+    stride = (int)wd * 2;
+    gx->cpDispStride = 0;
+    SET_REG_FIELD(1299, gx->cpDispStride, 10, 0, stride >> 5);
+    SET_REG_FIELD(1300, gx->cpDispStride, 8, 24, 0x4D);
 }
 
 void GXSetTexCopyDst(u16 wd, u16 ht, GXTexFmt fmt, GXBool mipmap) {
@@ -47,7 +53,7 @@ void GXSetTexCopyDst(u16 wd, u16 ht, GXTexFmt fmt, GXBool mipmap) {
 
     CHECK_GXBEGIN(1327, "GXSetTexCopyDst");
 
-    __GXData->cpTexZ = 0;
+    gx->cpTexZ = 0;
     peTexFmt = fmt & 0xF;
     ASSERTMSGLINEV(1358, peTexFmt < 13, "%s: invalid texture format", "GXSetTexCopyDst");
 
@@ -61,86 +67,91 @@ void GXSetTexCopyDst(u16 wd, u16 ht, GXTexFmt fmt, GXBool mipmap) {
     case GX_TF_IA4:
     case GX_TF_IA8:
     case GX_CTF_YUVA8:
-        __GXData->cpTex = (__GXData->cpTex & 0xFFFE7FFF) | 0x18000;
+        SET_REG_FIELD(0, gx->cpTex, 2, 15, 3);
         break;
     default:
-        __GXData->cpTex = (__GXData->cpTex & 0xFFFE7FFF) | 0x10000;
+        SET_REG_FIELD(0, gx->cpTex, 2, 15, 2);
         break;
     }
 
-    __GXData->cpTexZ = (fmt & _GX_TF_ZTF) == _GX_TF_ZTF;
+    gx->cpTexZ = (fmt & _GX_TF_ZTF) == _GX_TF_ZTF;
     peTexFmtH = (peTexFmt >> 3) & 1;
     !peTexFmt;
-    SET_REG_FIELD(0, __GXData->cpTex, 1, 3, peTexFmtH);
+    SET_REG_FIELD(0, gx->cpTex, 1, 3, peTexFmtH);
     peTexFmt = peTexFmt & 7;
     __GetImageTileCount(fmt, wd, ht, &rowTiles, &colTiles, &cmpTiles);
 
-    __GXData->cpTexStride = 0;
-    SET_REG_FIELD(0, __GXData->cpTexStride, 10, 0, rowTiles * cmpTiles);
-    SET_REG_FIELD(0, __GXData->cpTexStride, 8, 24, 0x4D);
-    SET_REG_FIELD(0, __GXData->cpTex, 1, 9, mipmap);
-    SET_REG_FIELD(0, __GXData->cpTex, 3, 4, peTexFmt);
+    gx->cpTexStride = 0;
+    SET_REG_FIELD(0, gx->cpTexStride, 10, 0, rowTiles * cmpTiles);
+    SET_REG_FIELD(0, gx->cpTexStride, 8, 24, 0x4D);
+    SET_REG_FIELD(0, gx->cpTex, 1, 9, mipmap);
+    SET_REG_FIELD(0, gx->cpTex, 3, 4, peTexFmt);
 }
 
 void GXSetDispCopyFrame2Field(GXCopyMode mode) {
-    GXData* gxData;
-    u32* cpTex;
-    u32 reg;
-
     CHECK_GXBEGIN(1410, "GXSetDispCopyFrame2Field");
-    gxData = __GXData;
-
-    reg = gxData->cpDisp;
-    reg = (reg & 0xFFFFCFFF) | ((u32)mode << 12);
-    gxData->cpDisp = reg;
-
-    cpTex = &gxData->cpTex;
-    reg = *cpTex;
-    reg &= 0xFFFFCFFF;
-    *cpTex = reg;
+    SET_REG_FIELD(1411, gx->cpDisp, 2, 12, mode);
+    SET_REG_FIELD(1411, gx->cpTex, 2, 12, 0);
 }
 
 void GXSetCopyClamp(GXFBClamp clamp) {
-    u32 reg;
-    u32 clmpB;
-    GXData* gxData;
+    u8 clmpB;
+    u8 clmpT;
 
     CHECK_GXBEGIN(1431, "GXSetCopyClamp");
-    gxData = __GXData;
 
-    reg = gxData->cpDisp;
-    reg = (reg & 0xFFFFFFFE) | ((((u32)__cntlzw((clamp & GX_CLAMP_TOP) - GX_CLAMP_TOP)) >> 5) & 0xFF);
-    gxData->cpDisp = reg;
+    clmpT = (clamp & GX_CLAMP_TOP) == GX_CLAMP_TOP;
+    clmpB = (clamp & GX_CLAMP_BOTTOM) == GX_CLAMP_BOTTOM;
 
-    clmpB = ((u32)__cntlzw((clamp & GX_CLAMP_BOTTOM) - GX_CLAMP_BOTTOM) >> 4) & 0x1FE;
-    reg = gxData->cpDisp;
-    reg &= 0xFFFFFFFD;
-    gxData->cpDisp = reg | clmpB;
+    SET_REG_FIELD(1435, gx->cpDisp, 1, 0, clmpT);
+    SET_REG_FIELD(1436, gx->cpDisp, 1, 1, clmpB);
 
-    reg = gxData->cpTex;
-    reg = (reg & 0xFFFFFFFE) | ((((u32)__cntlzw((clamp & GX_CLAMP_TOP) - GX_CLAMP_TOP)) >> 5) & 0xFF);
-    gxData->cpTex = reg;
-
-    reg = gxData->cpTex;
-    reg = (reg & 0xFFFFFFFD) | clmpB;
-    gxData->cpTex = reg;
+    SET_REG_FIELD(1438, gx->cpTex, 1, 0, clmpT);
+    SET_REG_FIELD(1439, gx->cpTex, 1, 1, clmpB);
 }
 
 u32 GXSetDispCopyYScale(f32 vscale) {
     u32 iScale;
     GXBool copyYScaleEnable;
+    u32 height;
+    u32 iScaleD;
+    u32 count;
+    u32 realHt;
+    u32 reg;
 
     CHECK_GXBEGIN(1557, "GXSetDispCopyYScale");
 
     ASSERTMSGLINE(1559, vscale >= 1.0f, "GXSetDispCopyYScale: Vertical scale must be >= 1.0");
 
     iScale = (u32)(256.0f / vscale) & 0x1FF;
-    GX_WRITE_RAS_REG((iScale & 0x1FF) | 0x4E000000);
+    reg = 0;
+    SET_REG_FIELD(1566, reg, 9, 0, iScale);
+    SET_REG_FIELD(1566, reg, 8, 24, 0x4E);
+    GX_WRITE_RAS_REG(reg);
     copyYScaleEnable = (iScale != 0x100);
-    __GXData->bpSentNot = 0;
-    __GXData->cpDisp = (__GXData->cpDisp & ~0x400) | ((u32)copyYScaleEnable << 10);
+    gx->bpSentNot = 0;
+    SET_REG_FIELD(1569, gx->cpDisp, 1, 10, copyYScaleEnable);
 
-    return ((((u32)__GXData->cpDispSize >> 20) + 1) * 0x100) / iScale + 1;
+    height = (u32)GET_REG_FIELD(gx->cpDispSize, 10, 10) + 1;
+    count = (height - 1) * 0x100;
+    realHt = (count / iScale) + 1;
+    iScaleD = iScale;
+
+    if (iScaleD > 0x80 && iScaleD < 0x100) {
+        while ((iScaleD & 1) == 0) {
+            iScaleD >>= 1;
+        }
+
+        if ((height % iScaleD) == 0) {
+            realHt++;
+        }
+    }
+
+    if (realHt > 0x400) {
+        realHt = 0x400;
+    }
+
+    return realHt;
 }
 
 void GXSetCopyClear(GXColor clear_clr, u32 clear_z) {
