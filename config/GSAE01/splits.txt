@@ -40,6 +40,9 @@ dolphin/os/OSContext.c:
 dolphin/os/OSError.c:
 	.text       start:0x80242FC0 end:0x80243308
 
+dolphin/os/OSFont.c:
+	.text       start:0x80243308 end:0x80243E74
+
 dolphin/os/OSInterrupt.c:
 	.text       start:0x80243E74 end:0x802446E0
 
