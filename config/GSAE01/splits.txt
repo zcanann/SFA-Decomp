@@ -154,9 +154,6 @@ dolphin/gx/GXAttr.c:
 dolphin/gx/GXMisc.c:
 	.text       start:0x8025898C end:0x80259958
 
-dolphin/gx/GXFrameBuf.c:
-	.text       start:0x80259958 end:0x80259DD4
-
 dolphin/gx/GXLight.c:
 	.text       start:0x80259DD4 end:0x8025AE7C
 
