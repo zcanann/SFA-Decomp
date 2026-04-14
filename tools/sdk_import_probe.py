@@ -38,6 +38,10 @@ TYPE_RE = re.compile(r"^\s+Type: (?P<type>.+?) \(")
 SYMBOL_START_RE = re.compile(r"^\s*Symbol \{$")
 SECTION_START_RE = re.compile(r"^\s*Section \{$")
 QUOTED_INCLUDE_RE = re.compile(r'^\s*#\s*include\s+"(?P<path>[^"]+)"')
+ASM_FN_HEADER_RE = re.compile(
+    r"^# \.text:0x[0-9A-Fa-f]+ \| 0x(?P<start>[0-9A-Fa-f]+) \| size: 0x(?P<size>[0-9A-Fa-f]+)$"
+)
+ASM_FN_NAME_RE = re.compile(r"^\.fn (?P<name>[^,\s]+),")
 
 
 @dataclass(frozen=True)
@@ -88,6 +92,7 @@ class SourceReport:
     anchors: tuple[AnchorCandidate, ...]
     hypotheses: tuple[StartHypothesis, ...]
     size_windows: tuple["TextWindowMatch", ...] = ()
+    asm_pattern_windows: tuple["AsmPatternWindowMatch", ...] = ()
     translated_clusters: tuple["TranslatedCluster", ...] = ()
 
 
@@ -120,6 +125,29 @@ class TextWindowMatch:
     @property
     def exact(self) -> bool:
         return self.size_delta == 0
+
+
+@dataclass(frozen=True)
+class AsmTextFunction:
+    start: int
+    end: int
+    size: int
+    name: str
+
+
+@dataclass(frozen=True)
+class AsmPatternWindowMatch:
+    start: int
+    end: int
+    span: int
+    size_delta: int
+    function_count: int
+    exact_function_matches: int
+    size_mismatch_count: int
+    overlap_count: int
+    overlaps: tuple[str, ...]
+    first_symbol: str
+    last_symbol: str
 
 
 @dataclass(frozen=True)
@@ -390,6 +418,39 @@ def load_text_symbols(version: str) -> tuple[ConfigSymbol, ...]:
     )
 
 
+@lru_cache(maxsize=None)
+def load_auto_text_functions(version: str) -> tuple[AsmTextFunction, ...]:
+    asm_root = Path("build") / version / "asm"
+    if not asm_root.is_dir():
+        return ()
+
+    functions: list[AsmTextFunction] = []
+    seen: set[tuple[int, int, str]] = set()
+    for asm_path in sorted(asm_root.glob("auto_*_text.s")):
+        lines = asm_path.read_text(encoding="utf-8", errors="ignore").splitlines()
+        for index, line in enumerate(lines):
+            header_match = ASM_FN_HEADER_RE.match(line)
+            if header_match is None or index + 1 >= len(lines):
+                continue
+
+            name_match = ASM_FN_NAME_RE.match(lines[index + 1].strip())
+            if name_match is None:
+                continue
+
+            start = int(header_match.group("start"), 16)
+            size = int(header_match.group("size"), 16)
+            end = start + size
+            name = name_match.group("name")
+            key = (start, end, name)
+            if key in seen:
+                continue
+            seen.add(key)
+            functions.append(AsmTextFunction(start=start, end=end, size=size, name=name))
+
+    functions.sort(key=lambda item: (item.start, item.end, item.name))
+    return tuple(functions)
+
+
 def find_text_size_windows(
     version: str,
     text_size: int,
@@ -453,6 +514,66 @@ def find_text_size_windows(
             abs(item.size_delta),
             item.overlap_count,
             item.symbol_count,
+            item.start,
+        )
+    )
+    return tuple(matches[:limit])
+
+
+def find_asm_pattern_windows(
+    version: str,
+    compiled_functions: tuple[ObjectSymbol, ...],
+    text_size: int,
+    limit: int,
+    range_start: int | None = None,
+    range_end: int | None = None,
+) -> tuple[AsmPatternWindowMatch, ...]:
+    if limit <= 0 or not compiled_functions or text_size <= 0:
+        return ()
+
+    asm_functions = load_auto_text_functions(version)
+    if not asm_functions or len(compiled_functions) > len(asm_functions):
+        return ()
+
+    matches: list[AsmPatternWindowMatch] = []
+    function_count = len(compiled_functions)
+    compiled_sizes = tuple(symbol.size for symbol in compiled_functions)
+    for start_index in range(len(asm_functions) - function_count + 1):
+        window = asm_functions[start_index:start_index + function_count]
+        window_start = window[0].start
+        window_end = window[-1].end
+        if range_start is not None and window_end <= range_start:
+            continue
+        if range_end is not None and window_start >= range_end:
+            break
+
+        span = window_end - window_start
+        overlaps = tuple(describe_overlap(version, window_start, window_end))
+        exact_function_matches = sum(
+            compiled_size == asm_function.size
+            for compiled_size, asm_function in zip(compiled_sizes, window)
+        )
+        matches.append(
+            AsmPatternWindowMatch(
+                start=window_start,
+                end=window_end,
+                span=span,
+                size_delta=span - text_size,
+                function_count=function_count,
+                exact_function_matches=exact_function_matches,
+                size_mismatch_count=function_count - exact_function_matches,
+                overlap_count=len(overlaps),
+                overlaps=overlaps,
+                first_symbol=window[0].name,
+                last_symbol=window[-1].name,
+            )
+        )
+
+    matches.sort(
+        key=lambda item: (
+            item.size_mismatch_count,
+            abs(item.size_delta),
+            item.overlap_count,
             item.start,
         )
     )
@@ -530,6 +651,7 @@ def analyze_source(
     extra_include_dirs: tuple[Path, ...],
     translated_clusters: tuple[TranslatedCluster, ...],
     size_window_limit: int,
+    asm_pattern_limit: int,
     range_start: int | None,
     range_end: int | None,
 ) -> SourceReport:
@@ -561,6 +683,14 @@ def analyze_source(
         range_start=range_start,
         range_end=range_end,
     )
+    asm_pattern_windows = find_asm_pattern_windows(
+        version=version,
+        compiled_functions=compiled_functions,
+        text_size=text_size,
+        limit=asm_pattern_limit,
+        range_start=range_start,
+        range_end=range_end,
+    )
     normalized_clusters = tuple(
         TranslatedCluster(
             start=cluster.start,
@@ -584,6 +714,7 @@ def analyze_source(
         anchors=tuple(anchors),
         hypotheses=tuple(build_start_hypotheses(anchors)),
         size_windows=size_windows,
+        asm_pattern_windows=asm_pattern_windows,
         translated_clusters=normalized_clusters,
     )
 
@@ -692,6 +823,7 @@ def print_report(
     hypothesis_limit: int,
     cluster_limit: int,
     size_window_limit: int,
+    asm_pattern_limit: int,
     show_functions: bool,
     function_limit: int,
 ) -> None:
@@ -720,6 +852,22 @@ def print_report(
             print(
                 f"  0x{window.start:08X}-0x{window.end:08X} span=0x{window.span:X} "
                 f"delta={format_signed_hex(window.size_delta)} symbols={window.symbol_count} "
+                f"overlaps={window.overlap_count}"
+            )
+            print(f"    symbols={window.first_symbol} .. {window.last_symbol}")
+            if window.overlaps:
+                for overlap in window.overlaps[:4]:
+                    print(f"    {overlap}")
+                if len(window.overlaps) > 4:
+                    print(f"    ... {len(window.overlaps) - 4} more overlaps")
+
+    if report.asm_pattern_windows and asm_pattern_limit > 0:
+        print("asm pattern windows:")
+        for window in report.asm_pattern_windows[:asm_pattern_limit]:
+            print(
+                f"  0x{window.start:08X}-0x{window.end:08X} span=0x{window.span:X} "
+                f"delta={format_signed_hex(window.size_delta)} "
+                f"func-matches={window.exact_function_matches}/{window.function_count} "
                 f"overlaps={window.overlap_count}"
             )
             print(f"    symbols={window.first_symbol} .. {window.last_symbol}")
@@ -829,6 +977,7 @@ def print_ranked_summary(version: str, reports: list[SourceReport]) -> None:
     for anchor_count, exact_count, neg_boundary_conflict_count, neg_overlap_count, _, report, best in ranked:
         if best is None:
             window = report.size_windows[0] if report.size_windows else None
+            asm_window = report.asm_pattern_windows[0] if report.asm_pattern_windows else None
             print(
                 f"anchors=0 exact=0 blockers=0 overlaps=0 text=0x{report.text_size:X} "
                 f"{report.source.as_posix()} -"
@@ -838,6 +987,13 @@ def print_ranked_summary(version: str, reports: list[SourceReport]) -> None:
                     f"  size-window=0x{window.start:08X}-0x{window.end:08X} "
                     f"delta={format_signed_hex(window.size_delta)} overlaps={window.overlap_count} "
                     f"symbols={window.symbol_count}"
+                )
+            if asm_window is not None:
+                print(
+                    f"  asm-window=0x{asm_window.start:08X}-0x{asm_window.end:08X} "
+                    f"delta={format_signed_hex(asm_window.size_delta)} "
+                    f"func-matches={asm_window.exact_function_matches}/{asm_window.function_count} "
+                    f"overlaps={asm_window.overlap_count}"
                 )
             continue
 
@@ -941,6 +1097,17 @@ def parse_args() -> argparse.Namespace:
         help="Maximum size-window matches to print per source (default: 5).",
     )
     parser.add_argument(
+        "--show-asm-pattern-windows",
+        action="store_true",
+        help="Print the best matching auto-asm function windows for the compiled function-size pattern.",
+    )
+    parser.add_argument(
+        "--asm-pattern-limit",
+        type=int,
+        default=5,
+        help="Maximum auto-asm pattern matches to print per source (default: 5).",
+    )
+    parser.add_argument(
         "--range-start",
         type=lambda value: int(value, 0),
         help="Optional start address used to filter size-window matches.",
@@ -995,6 +1162,7 @@ def main() -> None:
                 extra_include_dirs=extra_include_dirs,
                 translated_clusters=translated_clusters,
                 size_window_limit=args.size_window_limit if (args.show_size_windows or args.rank) else 0,
+                asm_pattern_limit=args.asm_pattern_limit if (args.show_asm_pattern_windows or args.rank) else 0,
                 range_start=args.range_start,
                 range_end=args.range_end,
             )
@@ -1018,6 +1186,7 @@ def main() -> None:
             args.hypothesis_limit,
             args.cluster_limit,
             args.size_window_limit if args.show_size_windows else 0,
+            args.asm_pattern_limit if args.show_asm_pattern_windows else 0,
             args.show_functions,
             args.function_limit,
         )
