@@ -31,6 +31,7 @@ Exploratory notes derived from the bundled retail assets under `orig/`.
 - [source_gap_packet_briefs/README.md](/C:/Projects/SFA-Decomp/docs/orig/source_gap_packet_briefs/README.md)
 - [source_functions.md](/C:/Projects/SFA-Decomp/docs/orig/source_functions.md)
 - [source_worklist.md](/C:/Projects/SFA-Decomp/docs/orig/source_worklist.md)
+- [source_blueprints.md](/C:/Projects/SFA-Decomp/docs/orig/source_blueprints.md)
 - [source_worklist_packets/README.md](/C:/Projects/SFA-Decomp/docs/orig/source_worklist_packets/README.md)
 - [source_reference_hints.md](/C:/Projects/SFA-Decomp/docs/orig/source_reference_hints.md)
 - [source_object_packets.md](/C:/Projects/SFA-Decomp/docs/orig/source_object_packets.md)

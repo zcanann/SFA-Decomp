@@ -39,6 +39,9 @@ This is a side-agent reconnaissance pass over the bundled retail assets in `orig
   - Focuses the same retail string evidence down to function-label candidates, keeping file name, retail label, EN xref cluster, and debug-side name bridges together in one report.
 - `python tools/orig/source_worklist.py`
   - Collapses the boundary, corridor, and shared-island signals into one prioritized queue and can materialize ready boundary packets under `docs/orig/source_worklist_packets/`.
+- `python tools/orig/source_blueprints.py`
+  - Reconciles retail-backed anchor windows and short gap packets into address-ordered local source skeleton blocks.
+  - Keeps overlap warnings explicit so first-pass boundary work starts from one neighborhood view instead of several separate reports.
 - `python tools/orig/object_family_packets.py`
   - Synthesizes retail object defs, root romlist widths, EN DLL descriptors, and optional reference-only XML hints into ranked object-family recovery packets.
   - Can materialize non-built packet stubs under `src/main/unknown/` for boundary planning without touching the active build.
@@ -60,6 +63,7 @@ Focused notes for source-tagged EN `main.dol` recovery targets live in [source_r
 Focused notes for current EN boundary seeds live in [source_boundaries.md](/C:/Projects/SFA-Decomp/docs/orig/source_boundaries.md).
 Focused notes for retail function-label recovery live in [source_functions.md](/C:/Projects/SFA-Decomp/docs/orig/source_functions.md).
 Focused notes for the prioritized boundary queue live in [source_worklist.md](/C:/Projects/SFA-Decomp/docs/orig/source_worklist.md).
+Focused notes for ordered source skeleton neighborhoods live in [source_blueprints.md](/C:/Projects/SFA-Decomp/docs/orig/source_blueprints.md).
 
 ## High-value findings
 
