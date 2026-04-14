@@ -451,6 +451,12 @@ dolphin/MSL_C/PPCEABI/bare/H/s_tan.c:
 dolphin/MSL_C/PPCEABI/bare/H/extras.c:
 	.text       start:0x80293544 end:0x8029354C
 
+dolphin/MSL_C/PPCEABI/bare/H/k_tan.c:
+	.text       start:0x8029388C end:0x80293A9C
+
+dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.c:
+	.text       start:0x80293BC4 end:0x80293FB4
+
 dolphin/MSL_C/PPCEABI/bare/H/s_floor.c:
 	.text       start:0x802947F8 end:0x80294964
 
