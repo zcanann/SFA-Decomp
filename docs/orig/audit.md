@@ -43,6 +43,9 @@ This is a side-agent reconnaissance pass over the bundled retail assets in `orig
 - `python tools/orig/source_gap_windows.py`
   - Turns the short retail-backed gap packets into estimated current EN per-file windows by fitting debug split sizes onto the live EN function ranges.
   - Can materialize ready gap-window briefs under `docs/orig/source_gap_window_briefs/`.
+- `python tools/orig/source_layout.py`
+  - Flattens the anchor windows from `source_worklist.py` and the short-gap estimates from `source_gap_windows.py` into one ordered per-file skeleton.
+  - Keeps gap/overlap warnings explicit so a worker can start from one stitched layout instead of separate reports.
 - `python tools/orig/source_blueprints.py`
   - Reconciles retail-backed anchor windows and short gap packets into address-ordered local source skeleton blocks.
   - Keeps overlap warnings explicit so first-pass boundary work starts from one neighborhood view instead of several separate reports.
@@ -69,6 +72,7 @@ Focused notes for current EN boundary seeds live in [source_boundaries.md](/C:/P
 Focused notes for retail function-label recovery live in [source_functions.md](/C:/Projects/SFA-Decomp/docs/orig/source_functions.md).
 Focused notes for the prioritized boundary queue live in [source_worklist.md](/C:/Projects/SFA-Decomp/docs/orig/source_worklist.md).
 Focused notes for estimated gap-file windows live in [source_gap_windows.md](/C:/Projects/SFA-Decomp/docs/orig/source_gap_windows.md).
+Focused notes for ordered per-file source skeletons live in [source_layout.md](/C:/Projects/SFA-Decomp/docs/orig/source_layout.md).
 Ready gap-window packet briefs live in [source_gap_window_briefs/README.md](/C:/Projects/SFA-Decomp/docs/orig/source_gap_window_briefs/README.md).
 Focused notes for ordered source skeleton neighborhoods live in [source_blueprints.md](/C:/Projects/SFA-Decomp/docs/orig/source_blueprints.md).
 Ready neighborhood packet briefs live in [source_blueprint_briefs/README.md](/C:/Projects/SFA-Decomp/docs/orig/source_blueprint_briefs/README.md).
@@ -316,6 +320,7 @@ The new local tools are meant to keep the most immediately useful parts reproduc
 - Use `python tools/orig/source_functions.py --search objanim setBlendMove Init` when a retail warning string appears to expose a real function label and you want the EN xref cluster immediately.
 - Use `python tools/orig/source_worklist.py --materialize-all` when the next step is handing a decomp worker a ready-to-open packet for the strongest retail-backed boundary jobs instead of a loose list of source names.
 - Use `python tools/orig/source_blueprints.py --materialize-all` when the next step is handing a decomp worker one ordered neighborhood brief with anchor windows, in-between files, and EN function spans together.
+- Use `python tools/orig/source_layout.py` when the next step is claiming a first-pass per-file skeleton that interleaves the anchor files and any short-gap estimated neighbors in address order.
 - Use `python tools/orig/dol_vtables.py --stores-only` before recovering a class-like subsystem that seems to write a function pointer to offset `0`.
 - Use `python tools/orig/constructor_packets.py --materialize-top 2` when the vtable scan needs to become an actual non-built source packet for class-boundary work.
 - Decide whether the `darkicemines` root duplication should drive a first-pass file-ID enum or loader switch table.

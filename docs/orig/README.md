@@ -29,6 +29,7 @@ Exploratory notes derived from the bundled retail assets under `orig/`.
 - [source_windows.md](/C:/Projects/SFA-Decomp/docs/orig/source_windows.md)
 - [source_gap_packets.md](/C:/Projects/SFA-Decomp/docs/orig/source_gap_packets.md)
 - [source_gap_windows.md](/C:/Projects/SFA-Decomp/docs/orig/source_gap_windows.md)
+- [source_layout.md](/C:/Projects/SFA-Decomp/docs/orig/source_layout.md)
 - [source_gap_packet_briefs/README.md](/C:/Projects/SFA-Decomp/docs/orig/source_gap_packet_briefs/README.md)
 - [source_gap_window_briefs/README.md](/C:/Projects/SFA-Decomp/docs/orig/source_gap_window_briefs/README.md)
 - [source_functions.md](/C:/Projects/SFA-Decomp/docs/orig/source_functions.md)

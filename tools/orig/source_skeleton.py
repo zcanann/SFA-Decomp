@@ -525,7 +525,13 @@ def main() -> None:
     )
     current_functions = load_function_symbols(args.symbols)
     split_ranges = build_split_ranges(args.splits)
-    boundary_hints = build_boundary_hints(groups, reference_hints, current_functions, split_ranges)
+    boundary_hints = build_boundary_hints(
+        groups,
+        reference_hints,
+        current_functions,
+        split_ranges,
+        args.dol,
+    )
     islands = build_islands(
         boundary_hints,
         current_functions,

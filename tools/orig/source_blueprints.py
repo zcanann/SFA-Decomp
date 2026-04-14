@@ -782,7 +782,13 @@ def main() -> None:
     )
     current_functions = load_function_symbols(args.symbols)
     split_ranges = build_split_ranges(args.splits)
-    hints = build_boundary_hints(groups, reference_hints, current_functions, split_ranges)
+    hints = build_boundary_hints(
+        groups,
+        reference_hints,
+        current_functions,
+        split_ranges,
+        args.dol,
+    )
     debug_split_paths = list(parse_debug_split_text_ranges(args.debug_splits))
     srcfiles_entries = parse_source_inventory(args.debug_srcfiles)
     anchors = build_anchors(
