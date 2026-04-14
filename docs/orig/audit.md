@@ -18,10 +18,14 @@ This is a side-agent reconnaissance pass over the bundled retail assets in `orig
 - `python tools/orig/dol_xrefs.py`
   - Recovers direct string xrefs from the EN retail DOL so source-tagged warnings and file-path strings can be tied back to concrete code addresses.
   - Resolves those xrefs through `config/GSAE01/symbols.txt` so current `fn_...` ranges can be opened immediately.
+- `python tools/orig/dol_vtables.py --stores-only`
+  - Scans the EN retail DOL for short function-pointer tables and keeps the ones that are written into object-like registers by code.
+  - Gives constructor-style anchors for vtable or callback-table recovery without guessing from decomp artifacts.
 
 Focused notes for that tool live in [map_catalog.md](/C:/Projects/SFA-Decomp/docs/orig/map_catalog.md).
 Focused notes for the DOL runtime tables live in [dol_tables.md](/C:/Projects/SFA-Decomp/docs/orig/dol_tables.md).
 Focused notes for direct DOL string xrefs live in [dol_xrefs.md](/C:/Projects/SFA-Decomp/docs/orig/dol_xrefs.md).
+Focused notes for constructor-backed function-pointer tables live in [dol_vtables.md](/C:/Projects/SFA-Decomp/docs/orig/dol_vtables.md).
 
 ## High-value findings
 
@@ -185,6 +189,23 @@ That gives one concrete unnamed constructor target in the retail binary and remo
 
 This is useful because it converts leftover retail strings into directly actionable EN code anchors for naming, split proposals, and subsystem clustering.
 
+### 9. The EN retail DOL still exposes at least one real constructor-backed vtable-like table
+
+`dol_vtables.py --stores-only` keeps the candidate set deliberately small and already finds two object-owned table writes in the EN retail DOL:
+
+- `0x8031ABF4`
+  - short 4-slot function-pointer table
+  - loaded from `fn_80136CE4+0x70`
+  - stored to `r30+0x0`
+  - strongest current vtable-like hit
+- `0x8031E614`
+  - 9-slot function-pointer table
+  - loaded from `fn_80140340+0x30`
+  - stored to `r30+0x730`
+  - more likely a callback/state table than a primary vtable
+
+The first one is the main takeaway: it gives one concrete retail data address and one constructor-like function that can be attacked together while recovering class boundaries or virtual methods.
+
 ## Romlist mining highlights
 
 `romlist_audit.py` reports:
@@ -231,4 +252,5 @@ The new local tools are meant to keep the most immediately useful parts reproduc
 - Follow the `BLOCKS.bin` / `BLOCKS.tab` DOL strings into loader code and rename the `modXX` path family accordingly.
 - Use `python tools/orig/dol_tables.py --search BLOCKS DLLS PREANIM` while naming file-loader switch tables and split candidates around the EN DOL loaders.
 - Use `python tools/orig/dol_xrefs.py --search camcontrol curves SHthorntail romlist` before naming anonymous functions that already have retail string evidence.
+- Use `python tools/orig/dol_vtables.py --stores-only` before recovering a class-like subsystem that seems to write a function pointer to offset `0`.
 - Decide whether the `darkicemines` root duplication should drive a first-pass file-ID enum or loader switch table.

@@ -40,6 +40,7 @@ This repo starts from very little. Expect to do naming, struct recovery, type cl
 - Replace guessed offsets and anonymous blobs with real fields when justified.
 - Identify reusable SDK or middleware code from `reference_projects/*`.
 - Mine strings, assets, tables, and binary patterns when that reveals structure.
+- Use `python tools/orig/dol_vtables.py --stores-only` when hunting constructor-backed class boundaries, vtables, or callback tables in the retail DOL.
 - Write small custom tools and scripts under the tools/ folder when the repo lacks the visibility needed to move quickly.
 
 ## Rules

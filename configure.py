@@ -407,6 +407,7 @@ config.libs = [
             Object(NonMatching, "gx/GXFifo.c"),
             Object(NonMatching, "gx/GXLight.c"),
             Object(NonMatching, "gx/GXTexture.c"),
+            Object(NonMatching, "gx/GXBump.c"),
         ],
     ),
     DolphinLib(
