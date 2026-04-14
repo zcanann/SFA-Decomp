@@ -25,6 +25,7 @@ Exploratory notes derived from the bundled retail assets under `orig/`.
 - [source_recovery.md](/C:/Projects/SFA-Decomp/docs/orig/source_recovery.md)
 - [source_skeleton.md](/C:/Projects/SFA-Decomp/docs/orig/source_skeleton.md)
 - [source_corridors.md](/C:/Projects/SFA-Decomp/docs/orig/source_corridors.md)
+- [source_gap_packets.md](/C:/Projects/SFA-Decomp/docs/orig/source_gap_packets.md)
 - [source_functions.md](/C:/Projects/SFA-Decomp/docs/orig/source_functions.md)
 - [source_reference_hints.md](/C:/Projects/SFA-Decomp/docs/orig/source_reference_hints.md)
 - [source_object_packets.md](/C:/Projects/SFA-Decomp/docs/orig/source_object_packets.md)
