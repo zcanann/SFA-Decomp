@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import heapq
 import struct
 from dataclasses import dataclass
 from difflib import SequenceMatcher
@@ -10,7 +11,7 @@ from pathlib import Path
 
 from dolphin_sdk_symbols import ConfigSymbol, SplitRange, load_config_symbols, load_splits
 from orig.dol_xrefs import DolFile
-from sdk_import_probe import find_assigned_text_split, load_auto_text_functions
+from sdk_import_probe import AsmTextFunction, find_assigned_text_split, load_auto_text_functions
 
 
 DEFAULT_REFERENCE_SPECS = (
@@ -130,6 +131,14 @@ class WindowSignature:
     def flat_masked_words(self) -> tuple[int, ...]:
         return tuple(word for function in self.functions for word in function.masked_words)
 
+    @cached_property
+    def first_size(self) -> int:
+        return self.functions[0].size
+
+    @cached_property
+    def last_size(self) -> int:
+        return self.functions[-1].size
+
 
 @dataclass(frozen=True)
 class MatchResult:
@@ -156,6 +165,35 @@ class DiscoveryHit:
     count_score: float
     exact_size_matches: int
     compared_function_count: int
+
+
+@dataclass(frozen=True)
+class RawWindow:
+    source_path: str
+    game: str
+    start: int
+    end: int
+    function_defs: tuple[tuple[int, int, str], ...]
+
+    @cached_property
+    def span(self) -> int:
+        return self.end - self.start
+
+    @cached_property
+    def function_count(self) -> int:
+        return len(self.function_defs)
+
+    @cached_property
+    def size_vector(self) -> tuple[int, ...]:
+        return tuple(end - start for start, end, _ in self.function_defs)
+
+    @cached_property
+    def first_size(self) -> int:
+        return self.size_vector[0]
+
+    @cached_property
+    def last_size(self) -> int:
+        return self.size_vector[-1]
 
 
 def parse_reference_spec(value: str) -> ReferenceSpec:
@@ -261,6 +299,17 @@ def build_function_signature(dol: DolFile, start: int, end: int, name: str) -> F
     )
 
 
+@lru_cache(maxsize=None)
+def build_target_function_signature(
+    version: str,
+    dol_path: Path,
+    start: int,
+    end: int,
+    name: str,
+) -> FunctionSignature:
+    return build_function_signature(load_dol(dol_path), start, end, name)
+
+
 def build_window_signature(
     dol: DolFile,
     label: str,
@@ -279,6 +328,22 @@ def build_window_signature(
         start=signature_functions[0].start,
         end=signature_functions[-1].end,
         functions=signature_functions,
+    )
+
+
+def build_window_signature_from_defs(
+    dol: DolFile,
+    label: str,
+    source_path: str,
+    game: str,
+    function_defs: tuple[tuple[int, int, str], ...],
+) -> WindowSignature:
+    return build_window_signature(
+        dol=dol,
+        label=label,
+        source_path=source_path,
+        game=game,
+        functions=function_defs,
     )
 
 
@@ -395,9 +460,29 @@ def load_target_text_splits(version: str) -> tuple[SplitRange, ...]:
     )
 
 
+@lru_cache(maxsize=None)
+def load_target_ownership_prefix(version: str) -> tuple[int, ...]:
+    splits = load_target_text_splits(version)
+    functions = load_auto_text_functions(version)
+    owned_prefix = [0]
+    split_index = 0
+    for function in functions:
+        while split_index < len(splits) and splits[split_index].end <= function.start:
+            split_index += 1
+        owned = (
+            split_index < len(splits)
+            and splits[split_index].start <= function.start
+            and function.end <= splits[split_index].end
+        )
+        owned_prefix.append(owned_prefix[-1] + (1 if owned else 0))
+    return tuple(owned_prefix)
+
+
 def collect_reference_window_metadata(
     spec: ReferenceSpec,
     path_filters: tuple[str, ...],
+    min_functions: int = 1,
+    min_span: int = 0,
 ) -> list[tuple[str, tuple[tuple[int, int, str], ...]]]:
     symbols = load_reference_symbols(spec.symbols_path)
     windows: list[tuple[str, tuple[tuple[int, int, str], ...]]] = []
@@ -412,17 +497,50 @@ def collect_reference_window_metadata(
         )
         if not functions:
             continue
+        span = functions[-1][1] - functions[0][0]
+        if len(functions) < min_functions or span < min_span:
+            continue
         windows.append((split_path, functions))
     return windows
+
+
+def collect_reference_raw_windows(
+    spec: ReferenceSpec,
+    path_filters: tuple[str, ...],
+    min_functions: int = 1,
+    min_span: int = 0,
+) -> list[RawWindow]:
+    return [
+        RawWindow(
+            source_path=split_path,
+            game=spec.label,
+            start=functions[0][0],
+            end=functions[-1][1],
+            function_defs=functions,
+        )
+        for split_path, functions in collect_reference_window_metadata(
+            spec,
+            path_filters,
+            min_functions=min_functions,
+            min_span=min_span,
+        )
+    ]
 
 
 def collect_reference_windows(
     spec: ReferenceSpec,
     path_filters: tuple[str, ...],
+    min_functions: int = 1,
+    min_span: int = 0,
 ) -> list[WindowSignature]:
     dol = load_dol(spec.dol_path)
     windows: list[WindowSignature] = []
-    for split_path, functions in collect_reference_window_metadata(spec, path_filters):
+    for split_path, functions in collect_reference_window_metadata(
+        spec,
+        path_filters,
+        min_functions=min_functions,
+        min_span=min_span,
+    ):
         windows.append(
             build_window_signature(
                 dol=dol,
@@ -459,12 +577,21 @@ def target_dol_path_for_version(version: str) -> Path:
     return path
 
 
-@lru_cache(maxsize=None)
-def load_target_functions(version: str, dol_path: Path) -> tuple[FunctionSignature, ...]:
-    dol = load_dol(dol_path)
-    return tuple(
-        build_function_signature(dol, function.start, function.end, function.name)
-        for function in load_auto_text_functions(version)
+def build_target_window_signature(
+    version: str,
+    dol_path: Path,
+    raw_window: RawWindow,
+) -> WindowSignature:
+    return WindowSignature(
+        label=version,
+        source_path=raw_window.source_path,
+        game=version,
+        start=raw_window.start,
+        end=raw_window.end,
+        functions=tuple(
+            build_target_function_signature(version, dol_path, start, end, name)
+            for start, end, name in raw_window.function_defs
+        ),
     )
 
 
@@ -475,8 +602,8 @@ def build_target_window_from_range(
     end: int,
 ) -> WindowSignature:
     functions = tuple(
-        function
-        for function in load_target_functions(version, dol_path)
+        build_target_function_signature(version, dol_path, function.start, function.end, function.name)
+        for function in load_auto_text_functions(version)
         if start <= function.start and function.end <= end
     )
     if not functions:
@@ -514,10 +641,11 @@ def iter_target_windows(
     range_end: int | None,
     only_unassigned: bool = False,
 ) -> tuple[WindowSignature, ...]:
-    functions = load_target_functions(version, dol_path)
+    functions = load_auto_text_functions(version)
     if function_count <= 0 or function_count > len(functions):
         return ()
 
+    ownership_prefix = load_target_ownership_prefix(version) if only_unassigned else ()
     windows: list[WindowSignature] = []
     for index in range(len(functions) - function_count + 1):
         chunk = functions[index : index + function_count]
@@ -527,7 +655,7 @@ def iter_target_windows(
             continue
         if range_end is not None and window_start >= range_end:
             break
-        if only_unassigned and not window_is_unassigned(version, window_start, window_end):
+        if only_unassigned and ownership_prefix[index + function_count] != ownership_prefix[index]:
             continue
         windows.append(
             WindowSignature(
@@ -536,14 +664,85 @@ def iter_target_windows(
                 game=version,
                 start=window_start,
                 end=window_end,
-                functions=chunk,
+                functions=tuple(
+                    build_target_function_signature(version, dol_path, function.start, function.end, function.name)
+                    for function in chunk
+                ),
             )
         )
     return tuple(windows)
 
 
-def rank_candidates(target: WindowSignature, candidates: list[WindowSignature], limit: int) -> list[MatchResult]:
-    results = [compare_windows(target, candidate) for candidate in candidates]
+def coarse_size_score(target: WindowSignature, candidate: WindowSignature) -> float:
+    compared_pairs = list(zip(target.size_vector, candidate.size_vector))
+    if not compared_pairs:
+        return 0.0
+    vector_score = sum(
+        1.0 - (abs(left - right) / max(left, right))
+        for left, right in compared_pairs
+    ) / len(compared_pairs)
+    span_score = 1.0 - (abs(target.span - candidate.span) / max(target.span, candidate.span))
+    edge_score = (
+        1.0 - (abs(target.first_size - candidate.first_size) / max(target.first_size, candidate.first_size))
+        + 1.0 - (abs(target.last_size - candidate.last_size) / max(target.last_size, candidate.last_size))
+    ) / 2.0
+    return vector_score * 0.6 + span_score * 0.25 + edge_score * 0.15
+
+
+def coarse_size_score_raw(target: RawWindow, candidate: RawWindow) -> float:
+    compared_pairs = list(zip(target.size_vector, candidate.size_vector))
+    if not compared_pairs:
+        return 0.0
+    vector_score = sum(
+        1.0 - (abs(left - right) / max(left, right))
+        for left, right in compared_pairs
+    ) / len(compared_pairs)
+    span_score = 1.0 - (abs(target.span - candidate.span) / max(target.span, candidate.span))
+    edge_score = (
+        1.0 - (abs(target.first_size - candidate.first_size) / max(target.first_size, candidate.first_size))
+        + 1.0 - (abs(target.last_size - candidate.last_size) / max(target.last_size, candidate.last_size))
+    ) / 2.0
+    return vector_score * 0.6 + span_score * 0.25 + edge_score * 0.15
+
+
+def prefilter_candidates(
+    target: WindowSignature,
+    candidates: list[WindowSignature],
+    coarse_limit: int | None,
+) -> list[WindowSignature]:
+    if coarse_limit is None or coarse_limit <= 0 or len(candidates) <= coarse_limit:
+        return candidates
+    scored = heapq.nlargest(
+        coarse_limit,
+        ((coarse_size_score(target, candidate), candidate) for candidate in candidates),
+        key=lambda item: (item[0], -abs(item[1].span - target.span), -item[1].function_count),
+    )
+    return [candidate for _, candidate in scored]
+
+
+def prefilter_raw_candidates(
+    target: RawWindow,
+    candidates: tuple[RawWindow, ...],
+    coarse_limit: int | None,
+) -> list[RawWindow]:
+    if coarse_limit is None or coarse_limit <= 0 or len(candidates) <= coarse_limit:
+        return list(candidates)
+    scored = heapq.nlargest(
+        coarse_limit,
+        ((coarse_size_score_raw(target, candidate), candidate) for candidate in candidates),
+        key=lambda item: (item[0], -abs(item[1].span - target.span), -item[1].function_count),
+    )
+    return [candidate for _, candidate in scored]
+
+
+def rank_candidates(
+    target: WindowSignature,
+    candidates: list[WindowSignature],
+    limit: int,
+    coarse_limit: int | None = None,
+) -> list[MatchResult]:
+    shortlisted = prefilter_candidates(target, candidates, coarse_limit)
+    results = [compare_windows(target, candidate) for candidate in shortlisted]
     results.sort(
         key=lambda result: (
             -result.overall_score,
@@ -559,39 +758,83 @@ def rank_candidates(target: WindowSignature, candidates: list[WindowSignature], 
 def discover_reference_hits(
     version: str,
     dol_path: Path,
-    references: list[WindowSignature],
+    references: list[RawWindow],
     range_start: int,
     range_end: int,
     min_score: float,
     limit: int,
     limit_per_reference: int,
     only_unassigned: bool,
+    coarse_limit: int | None,
+    min_functions: int,
+    min_span: int,
 ) -> list[DiscoveryHit]:
-    target_cache: dict[int, tuple[WindowSignature, ...]] = {}
+    target_cache: dict[int, tuple[RawWindow, ...]] = {}
     best_by_target: dict[tuple[int, int], DiscoveryHit] = {}
+    auto_functions = load_auto_text_functions(version)
+    ownership_prefix = load_target_ownership_prefix(version) if only_unassigned else ()
+    reference_dol_cache: dict[str, DolFile] = {}
 
     for reference in references:
+        if reference.function_count < min_functions or reference.span < min_span:
+            continue
         target_windows = target_cache.get(reference.function_count)
         if target_windows is None:
-            target_windows = iter_target_windows(
-                version=version,
-                dol_path=dol_path,
-                function_count=reference.function_count,
-                range_start=range_start,
-                range_end=range_end,
-                only_unassigned=only_unassigned,
-            )
+            count = reference.function_count
+            raw_windows: list[RawWindow] = []
+            for index in range(len(auto_functions) - count + 1):
+                chunk = auto_functions[index : index + count]
+                window_start = chunk[0].start
+                window_end = chunk[-1].end
+                if range_start is not None and window_end <= range_start:
+                    continue
+                if range_end is not None and window_start >= range_end:
+                    break
+                if only_unassigned and ownership_prefix[index + count] != ownership_prefix[index]:
+                    continue
+                raw_windows.append(
+                    RawWindow(
+                        source_path=f"range:0x{window_start:08X}-0x{window_end:08X}",
+                        game=version,
+                        start=window_start,
+                        end=window_end,
+                        function_defs=tuple((function.start, function.end, function.name) for function in chunk),
+                    )
+                )
+            target_windows = tuple(raw_windows)
             target_cache[reference.function_count] = target_windows
         if not target_windows:
             continue
 
-        ranked = rank_candidates(reference, list(target_windows), limit_per_reference)
+        shortlisted_targets = prefilter_raw_candidates(reference, target_windows, coarse_limit)
+        if not shortlisted_targets:
+            continue
+
+        reference_dol = reference_dol_cache.get(reference.game)
+        if reference_dol is None:
+            project, config = reference.game.split(":", 1)
+            reference_dol = load_dol(ReferenceSpec(project=project, config=config).dol_path)
+            reference_dol_cache[reference.game] = reference_dol
+        reference_signature = build_window_signature_from_defs(
+            dol=reference_dol,
+            label=reference.game,
+            source_path=reference.source_path,
+            game=reference.game,
+            function_defs=reference.function_defs,
+        )
+
+        ranked = rank_candidates(
+            reference_signature,
+            [build_target_window_signature(version, dol_path, candidate) for candidate in shortlisted_targets],
+            limit_per_reference,
+            coarse_limit=None,
+        )
         for result in ranked:
             if result.overall_score < min_score:
                 continue
             key = (result.candidate.start, result.candidate.end)
             hit = DiscoveryHit(
-                reference=reference,
+                reference=reference_signature,
                 target=result.candidate,
                 overall_score=result.overall_score,
                 function_mask_score=result.function_mask_score,
@@ -774,6 +1017,24 @@ def parse_args() -> argparse.Namespace:
         default=1,
         help="Maximum candidate SFA windows to keep per reference split in --discover mode",
     )
+    parser.add_argument(
+        "--coarse-limit",
+        type=int,
+        default=4,
+        help="Cheap size-shape shortlist size before expensive signature comparison",
+    )
+    parser.add_argument(
+        "--min-functions",
+        type=int,
+        default=4,
+        help="Minimum reference function count to include in --discover mode",
+    )
+    parser.add_argument(
+        "--min-span",
+        type=parse_int,
+        default=0x100,
+        help="Minimum reference text span to include in --discover mode",
+    )
     parser.add_argument("--limit", type=int, default=20, help="Number of matches to show")
     args = parser.parse_args()
 
@@ -814,9 +1075,16 @@ def main() -> None:
             path_filters = tuple(args.path_contains)
         else:
             path_filters = tuple(args.path_contains) or DEFAULT_SDK_FILTERS
-        references: list[WindowSignature] = []
+        references: list[RawWindow] = []
         for spec in args.reference:
-            references.extend(collect_reference_windows(spec, path_filters))
+            references.extend(
+                collect_reference_raw_windows(
+                    spec,
+                    path_filters,
+                    min_functions=args.min_functions,
+                    min_span=args.min_span,
+                )
+            )
         if not references:
             raise SystemExit("No reference windows matched the requested filters")
         hits = discover_reference_hits(
@@ -829,6 +1097,9 @@ def main() -> None:
             limit=args.limit,
             limit_per_reference=args.limit_per_reference,
             only_unassigned=args.only_unassigned,
+            coarse_limit=args.coarse_limit,
+            min_functions=args.min_functions,
+            min_span=args.min_span,
         )
         print_discovery_hits(
             range_start=args.target_range_start,
@@ -854,7 +1125,7 @@ def main() -> None:
         )
         if not candidates:
             raise SystemExit("No SFA target windows available for the requested search")
-        results = rank_candidates(reference_window, candidates, args.limit)
+        results = rank_candidates(reference_window, candidates, args.limit, args.coarse_limit)
         print_window("reference", reference_window)
         print("matches:")
         for index, result in enumerate(results, start=1):
@@ -892,7 +1163,7 @@ def main() -> None:
     if not candidates:
         raise SystemExit("No reference windows matched the requested filters")
 
-    results = rank_candidates(target_window, candidates, args.limit)
+    results = rank_candidates(target_window, candidates, args.limit, args.coarse_limit)
     print_match_results(target_window, results)
 
 
