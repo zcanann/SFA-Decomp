@@ -14,6 +14,7 @@ Exploratory notes derived from the bundled retail assets under `orig/`.
 - [dol_vtables.md](/C:/Projects/SFA-Decomp/docs/orig/dol_vtables.md)
 - [constructor_packets.md](/C:/Projects/SFA-Decomp/docs/orig/constructor_packets.md)
 - [object_catalog.md](/C:/Projects/SFA-Decomp/docs/orig/object_catalog.md)
+- [object_bin2.md](/C:/Projects/SFA-Decomp/docs/orig/object_bin2.md)
 - [object_def_packets.md](/C:/Projects/SFA-Decomp/docs/orig/object_def_packets.md)
 - [object_family_packets.md](/C:/Projects/SFA-Decomp/docs/orig/object_family_packets.md)
 - [romlist_params.md](/C:/Projects/SFA-Decomp/docs/orig/romlist_params.md)

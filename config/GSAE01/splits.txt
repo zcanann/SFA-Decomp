@@ -421,6 +421,15 @@ dolphin/MSL_C/PPCEABI/bare/H/s_ldexp.c:
 dolphin/MSL_C/PPCEABI/bare/H/s_modf.c:
 	.text       start:0x80292320 end:0x8029241C
 
+dolphin/MSL_C/PPCEABI/bare/H/s_floor.c:
+	.text       start:0x802947F8 end:0x80294964
+
+dolphin/MSL_C/PPCEABI/bare/H/s_sin.c:
+	.text       start:0x80294964 end:0x80294A4C
+
+dolphin/MSL_C/PPCEABI/bare/H/math_ppc.c:
+	.text       start:0x80294CAC end:0x80294D40
+
 Runtime.PPCEABI.H/__start.s: comment:0
 	.init       start:0x80003100 end:0x800033A8
 

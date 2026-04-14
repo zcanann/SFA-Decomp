@@ -49,6 +49,7 @@ This repo starts from very little. Expect to do naming, struct recovery, type cl
 - Use `python tools/orig/source_materialize.py` when you want to materialize retail-backed stubs under `src/` and/or export exact disc source/header artifacts to a local non-source folder.
 - Use `python tools/orig/object_family_packets.py` when you want retail-backed object/DLL family packets or non-built `src/main/unknown/` boundary stubs for exploratory split planning before a real source filename is proven.
 - Use `python tools/orig/object_def_packets.py` when you want retail-backed per-object exploratory stubs under `src/main/unknown/objects/`, cross-linked to class packets, DLL families, placement widths, and EN descriptor slots for rapid split planning.
+- Use `python tools/orig/object_bin2_audit.py` when `OBJECTS.bin2` may clarify a shaky object boundary, inline substructure, or exploratory packet by comparing the sibling retail object-table lineage against live `OBJECTS.bin`.
 - Use `python tools/orig/tab_catalog.py` when you need real retail chunk boundaries from `.tab` / `.bin` families before proposing asset splits.
 - Use `python tools/orig/dol_vtables.py --stores-only` when hunting constructor-backed class boundaries, vtables, or callback tables in the retail DOL.
 - Use `python tools/orig/constructor_packets.py` when a store-backed DOL vtable/callback-table hit should become a non-built `src/main/unknown/constructors/` packet for class-boundary or hierarchy recovery.
