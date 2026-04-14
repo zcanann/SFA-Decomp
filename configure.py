@@ -330,6 +330,7 @@ config.libs = [
             Object(NonMatching, "os/OSReset.c"),
             Object(NonMatching, "os/OSResetSW.c"),
             Object(NonMatching, "os/OSRtc.c"),
+            Object(NonMatching, "os/OSSync.c"),
             Object(NonMatching, "os/OSThread.c"),
             Object(MatchingFor("GSAE01"), "os/OSTime.c"),
             Object(MatchingFor("GSAE01"), "os/__ppc_eabi_init.c"),

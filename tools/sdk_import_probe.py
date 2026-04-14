@@ -54,6 +54,25 @@ class AnchorCandidate:
     size_matches: bool
 
 
+@dataclass(frozen=True)
+class StartHypothesis:
+    start: int
+    anchors: tuple[AnchorCandidate, ...]
+
+    @property
+    def exact_count(self) -> int:
+        return sum(anchor.size_matches for anchor in self.anchors)
+
+
+@dataclass(frozen=True)
+class SourceReport:
+    source: Path
+    sections: tuple[ObjectSection, ...]
+    text_size: int
+    anchors: tuple[AnchorCandidate, ...]
+    hypotheses: tuple[StartHypothesis, ...]
+
+
 def parse_build_config(build_ninja: Path, version: str) -> BuildConfig:
     lines = build_ninja.read_text(encoding="utf-8").splitlines()
     for index, line in enumerate(lines):
@@ -92,6 +111,7 @@ def compile_source(
     build_config: BuildConfig,
     version: str,
     output_root: Path,
+    extra_include_dirs: tuple[Path, ...] = (),
 ) -> Path:
     output_root.mkdir(parents=True, exist_ok=True)
     compiler = Path("build") / "compilers" / build_config.mw_version / "mwcceppc.exe"
@@ -105,6 +125,11 @@ def compile_source(
         str(sjiswrap),
         str(compiler),
         *build_config.cflags,
+        *(
+            arg
+            for include_dir in extra_include_dirs
+            for arg in ("-i", str(include_dir).replace("/", "\\"))
+        ),
         "-MMD",
         "-c",
         str(source).replace("/", "\\"),
@@ -234,51 +259,144 @@ def describe_overlap(version: str, start: int, end: int) -> list[str]:
     return overlaps
 
 
-def print_report(version: str, source: Path, sections: list[ObjectSection], symbols: list[ObjectSymbol]) -> None:
+def build_start_hypotheses(anchors: list[AnchorCandidate]) -> list[StartHypothesis]:
+    by_start: dict[int, list[AnchorCandidate]] = {}
+    for anchor in anchors:
+        by_start.setdefault(anchor.predicted_start, []).append(anchor)
+
+    hypotheses = [
+        StartHypothesis(
+            start=start,
+            anchors=tuple(sorted(group, key=lambda item: item.compiled_symbol.value)),
+        )
+        for start, group in by_start.items()
+    ]
+    hypotheses.sort(
+        key=lambda item: (
+            -len(item.anchors),
+            -item.exact_count,
+            item.start,
+        )
+    )
+    return hypotheses
+
+
+def analyze_source(
+    version: str,
+    config_symbols_path: Path,
+    source: Path,
+    build_config: BuildConfig,
+    output_root: Path,
+    extra_include_dirs: tuple[Path, ...],
+) -> SourceReport:
+    object_path = compile_source(
+        source,
+        build_config,
+        version,
+        output_root,
+        extra_include_dirs=extra_include_dirs,
+    )
+    sections, symbols = parse_llvm_readobj(object_path)
+    anchors = find_anchor_candidates(symbols, config_symbols_path)
     text_size = next((section.size for section in sections if section.name == ".text"), 0)
-    print(f"# {source.as_posix()}")
+    return SourceReport(
+        source=source,
+        sections=tuple(sections),
+        text_size=text_size,
+        anchors=tuple(anchors),
+        hypotheses=tuple(build_start_hypotheses(anchors)),
+    )
+
+
+def print_report(
+    version: str,
+    report: SourceReport,
+    hypothesis_limit: int,
+) -> None:
+    print(f"# {report.source.as_posix()}")
     print("sections:")
-    for section in sections:
+    for section in report.sections:
         if section.name.startswith(".rela") or section.name in {".symtab", ".strtab", ".shstrtab", ".comment"}:
             continue
         print(f"  {section.name:<8} 0x{section.size:X}")
 
-    anchors = find_anchor_candidates(symbols, Path("config") / version / "symbols.txt")
-    if not anchors:
+    if not report.anchors:
         print("anchors: none")
         print()
         return
 
-    start_counts: dict[int, int] = {}
-    for anchor in anchors:
-        start_counts[anchor.predicted_start] = start_counts.get(anchor.predicted_start, 0) + 1
-    best_start = max(start_counts.items(), key=lambda item: (item[1], item[0]))[0]
-    best_anchors = [anchor for anchor in anchors if anchor.predicted_start == best_start]
-    span_end = best_start + text_size
-    overlaps = describe_overlap(version, best_start, span_end)
-
-    exact_count = sum(anchor.size_matches for anchor in best_anchors)
-    print(
-        "best-text-span: "
-        f"0x{best_start:08X}-0x{span_end:08X} size=0x{text_size:X} "
-        f"anchors={len(best_anchors)} exact-size={exact_count}"
-    )
-    if overlaps:
-        print("overlaps:")
-        for overlap in overlaps:
-            print(f"  {overlap}")
-    else:
-        print("overlaps: none")
-
-    print("anchor details:")
-    for anchor in sorted(best_anchors, key=lambda item: item.compiled_symbol.value):
-        symbol = anchor.compiled_symbol
-        exact_text = "yes" if anchor.size_matches else "no"
+    print("start hypotheses:")
+    for hypothesis in report.hypotheses[:hypothesis_limit]:
+        span_end = hypothesis.start + report.text_size
+        overlaps = describe_overlap(version, hypothesis.start, span_end)
         print(
-            f"  +0x{symbol.value:04X} {symbol.name:<28} "
-            f"size=0x{symbol.size:X} addr=0x{anchor.config_address:08X} size-match={exact_text}"
+            f"  0x{hypothesis.start:08X}-0x{span_end:08X} size=0x{report.text_size:X} "
+            f"anchors={len(hypothesis.anchors)} exact-size={hypothesis.exact_count} "
+            f"overlaps={len(overlaps)}"
         )
+        if overlaps:
+            for overlap in overlaps[:5]:
+                print(f"    {overlap}")
+            if len(overlaps) > 5:
+                print(f"    ... {len(overlaps) - 5} more")
+
+        print("  anchor details:")
+        for anchor in hypothesis.anchors:
+            symbol = anchor.compiled_symbol
+            exact_text = "yes" if anchor.size_matches else "no"
+            print(
+                f"    +0x{symbol.value:04X} {symbol.name:<28} "
+                f"size=0x{symbol.size:X} addr=0x{anchor.config_address:08X} size-match={exact_text}"
+            )
     print()
+
+
+def print_ranked_summary(version: str, reports: list[SourceReport]) -> None:
+    ranked: list[tuple[int, int, int, int, SourceReport, StartHypothesis | None]] = []
+    for report in reports:
+        best = report.hypotheses[0] if report.hypotheses else None
+        overlap_count = 9999
+        if best is not None:
+            overlap_count = len(describe_overlap(version, best.start, best.start + report.text_size))
+        ranked.append(
+            (
+                len(best.anchors) if best is not None else 0,
+                best.exact_count if best is not None else 0,
+                -overlap_count,
+                report.text_size,
+                report,
+                best,
+            )
+        )
+
+    ranked.sort(
+        key=lambda item: (
+            -item[0],
+            -item[1],
+            item[2],
+            -item[3],
+            item[4].source.as_posix(),
+        )
+    )
+
+    for anchor_count, exact_count, neg_overlap_count, _, report, best in ranked:
+        if best is None:
+            print(
+                f"anchors=0 exact=0 overlaps=0 text=0x{report.text_size:X} "
+                f"{report.source.as_posix()} -"
+            )
+            continue
+
+        overlap_count = -neg_overlap_count
+        span_end = best.start + report.text_size
+        names = ", ".join(anchor.compiled_symbol.name for anchor in best.anchors[:5])
+        print(
+            f"anchors={anchor_count} exact={exact_count} overlaps={overlap_count} "
+            f"text=0x{report.text_size:X} {report.source.as_posix()} "
+            f"0x{best.start:08X}-0x{span_end:08X}"
+        )
+        if names:
+            print(f"  names={names}")
 
 
 def parse_args() -> argparse.Namespace:
@@ -297,6 +415,29 @@ def parse_args() -> argparse.Namespace:
         default="temp/sdk_import_probe",
         help="Directory used for temporary object output",
     )
+    parser.add_argument(
+        "--extra-include",
+        action="append",
+        type=Path,
+        default=[],
+        help="Additional include directory passed as '-i'. Can be repeated.",
+    )
+    parser.add_argument(
+        "--keep-going",
+        action="store_true",
+        help="Continue after compile failures when probing multiple sources.",
+    )
+    parser.add_argument(
+        "--rank",
+        action="store_true",
+        help="Print a ranked one-line summary for all probed sources.",
+    )
+    parser.add_argument(
+        "--hypothesis-limit",
+        type=int,
+        default=3,
+        help="Maximum start hypotheses to print per source (default: 3).",
+    )
     return parser.parse_args()
 
 
@@ -304,15 +445,45 @@ def main() -> None:
     args = parse_args()
     build_config = parse_build_config(Path(args.build_ninja), args.version)
     output_root = Path(args.output_root)
+    config_symbols_path = Path("config") / args.version / "symbols.txt"
+    extra_include_dirs = tuple(args.extra_include)
+    reports: list[SourceReport] = []
 
     for source_arg in args.sources:
         source = Path(source_arg)
         if not source.is_file():
+            if args.keep_going:
+                print(f"# {source.as_posix()}")
+                print(f"error: missing source file: {source}")
+                print()
+                continue
             raise SystemExit(f"Missing source file: {source}")
+
         object_dir = output_root / source.stem
-        object_path = compile_source(source, build_config, args.version, object_dir)
-        sections, symbols = parse_llvm_readobj(object_path)
-        print_report(args.version, source, sections, symbols)
+        try:
+            report = analyze_source(
+                version=args.version,
+                config_symbols_path=config_symbols_path,
+                source=source,
+                build_config=build_config,
+                output_root=object_dir,
+                extra_include_dirs=extra_include_dirs,
+            )
+        except subprocess.CalledProcessError as exc:
+            if args.keep_going:
+                print(f"# {source.as_posix()}")
+                print(f"error: compile failed with exit code {exc.returncode}")
+                print()
+                continue
+            raise
+        reports.append(report)
+
+    if args.rank:
+        print_ranked_summary(args.version, reports)
+        return
+
+    for report in reports:
+        print_report(args.version, report, args.hypothesis_limit)
 
 
 if __name__ == "__main__":
