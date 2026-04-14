@@ -3,6 +3,10 @@
 Exploratory notes derived from the bundled retail assets under `orig/`.
 
 - [audit.md](/C:/Projects/SFA-Decomp/docs/orig/audit.md)
+- [blocks.md](/C:/Projects/SFA-Decomp/docs/orig/blocks.md)
+- [dll_catalog.md](/C:/Projects/SFA-Decomp/docs/orig/dll_catalog.md)
+- [map_catalog.md](/C:/Projects/SFA-Decomp/docs/orig/map_catalog.md)
+- [tab_catalog.md](/C:/Projects/SFA-Decomp/docs/orig/tab_catalog.md)
 - [sys.md](/C:/Projects/SFA-Decomp/docs/orig/sys.md)
 - [dol_xrefs.md](/C:/Projects/SFA-Decomp/docs/orig/dol_xrefs.md)
 - [dol_strings.md](/C:/Projects/SFA-Decomp/docs/orig/dol_strings.md)
