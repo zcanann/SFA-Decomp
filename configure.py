@@ -497,6 +497,7 @@ config.libs = [
             Object(NonMatching, "MSL_C/PPCEABI/bare/H/mem.c"),
             Object(NonMatching, "MSL_C/PPCEABI/bare/H/printf.c"),
             Object(NonMatching, "MSL_C/PPCEABI/bare/H/string.c"),
+            Object(NonMatching, "MSL_C/PPCEABI/bare/H/wchar_io.c"),
         ],
     ),
     {

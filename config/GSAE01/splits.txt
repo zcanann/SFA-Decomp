@@ -355,6 +355,9 @@ MSL_C/PPCEABI/bare/H/printf.c:
 MSL_C/PPCEABI/bare/H/string.c:
 	.text       start:0x80291D44 end:0x80292020
 
+MSL_C/PPCEABI/bare/H/wchar_io.c:
+	.text       start:0x80292020 end:0x802920A8
+
 Runtime.PPCEABI.H/__start.s: comment:0
 	.init       start:0x80003100 end:0x800033A8
 

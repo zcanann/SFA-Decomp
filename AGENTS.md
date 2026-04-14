@@ -41,6 +41,7 @@ This repo starts from very little. Expect to do naming, struct recovery, type cl
 - Identify reusable SDK or middleware code from `reference_projects/*`.
 - Mine strings, assets, tables, and binary patterns when that reveals structure.
 - Use `python tools/orig/source_leaks.py` when checking whether `orig/*` still preserves direct source/header names before leaning on external debug-side references.
+- Use `python tools/orig/source_matrix.py` when PAL / JP / EN rev1 may strengthen or rename a weak source-tag clue before you commit to a file name or materialize a stub.
 - Use `python tools/orig/source_recovery.py` when `main.dol` source-tagged strings may give EN file/function anchors for naming or splits.
 - Use `python tools/orig/source_functions.py` when you want a tighter report of retail-labeled function candidates such as `setBlendMove` / `Init` with their current EN xref clusters.
 - Use `python tools/orig/source_materialize.py` when you want to materialize exact disc source/header artifacts and retail-backed stub files directly under `src/`.

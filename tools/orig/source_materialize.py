@@ -12,8 +12,16 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.orig.source_leaks import DirectSourceArtifact, collect_direct_source_artifacts
+from tools.orig.source_matrix import (
+    BundleSourceEvidence,
+    build_source_variant_index,
+    collect_all_bundle_source_hits,
+    default_bundle_specs,
+    nearby_source_strings,
+)
 from tools.orig.source_recovery import (
     RecoveryGroup,
+    clean_context_text,
     collect_candidates,
     format_function_name,
     group_candidates,
@@ -33,6 +41,7 @@ class StubDecision:
     confidence: str
     score: int
     reason: str
+    bundle_evidence: BundleSourceEvidence | None
 
 
 def normalize_separators(value: str) -> str:
@@ -132,11 +141,19 @@ def candidate_score(candidate: RecoveryGroup) -> int:
     return score
 
 
+def bundle_support_score(evidence: BundleSourceEvidence | None) -> int:
+    if evidence is None:
+        return 0
+    return max(0, len(evidence.all_bundle_ids) - 1) * 2 + min(len(evidence.alias_names), 2)
+
+
 def choose_stub_decisions(
     groups: list[RecoveryGroup],
     src_root: Path,
     existing_basenames: dict[str, list[str]],
     include_debug_path_only: bool,
+    include_cross_version_weak: bool,
+    source_evidence_by_name: dict[str, BundleSourceEvidence],
 ) -> tuple[list[StubDecision], list[dict[str, object]]]:
     generated: list[StubDecision] = []
     skipped: list[dict[str, object]] = []
@@ -144,6 +161,7 @@ def choose_stub_decisions(
     for candidate in groups:
         basename = Path(candidate.retail_source_name).name.lower()
         output_relpath = stub_output_relpath(candidate)
+        bundle_evidence = source_evidence_by_name.get(candidate.retail_source_name.lower())
         existing_paths = existing_basenames.get(basename, [])
         other_paths = [path for path in existing_paths if path != output_relpath]
         exact_target_exists = output_relpath in existing_paths
@@ -171,24 +189,30 @@ def choose_stub_decisions(
             continue
 
         confidence = candidate_confidence(candidate)
+        cross_version_strong = bundle_evidence is not None and len(bundle_evidence.all_bundle_ids) >= 3
         if not candidate.xrefs and not (include_debug_path_only and candidate.debug_sources):
-            skipped.append(
-                {
-                    "type": "stub",
-                    "status": "skipped-weak",
-                    "retail_source_name": candidate.retail_source_name,
-                    "confidence": confidence,
-                }
-            )
-            continue
+            if not (include_cross_version_weak and cross_version_strong):
+                skipped.append(
+                    {
+                        "type": "stub",
+                        "status": "skipped-weak",
+                        "retail_source_name": candidate.retail_source_name,
+                        "confidence": confidence,
+                    }
+                )
+                continue
+            reason = "cross-version-source-tag"
+        else:
+            reason = "retail-xref-backed" if candidate.xrefs else "debug-path-only"
 
         generated.append(
             StubDecision(
                 candidate=candidate,
                 output_relpath=output_relpath,
                 confidence=confidence,
-                score=candidate_score(candidate),
-                reason="retail-xref-backed" if candidate.xrefs else "debug-path-only",
+                score=candidate_score(candidate) + bundle_support_score(bundle_evidence),
+                reason=reason,
+                bundle_evidence=bundle_evidence,
             )
         )
 
@@ -223,7 +247,34 @@ def cleaned_function_hints(candidate: RecoveryGroup, limit: int = 10) -> list[st
     return result
 
 
-def render_stub(candidate: RecoveryGroup, output_relpath: str, confidence: str, score: int) -> str:
+def format_bundle_hits(evidence: BundleSourceEvidence) -> list[str]:
+    lines: list[str] = []
+    for hit in evidence.all_hits:
+        context = hit.message or hit.label or clean_context_text(hit.text) or hit.text
+        lines.append(f" * - {hit.bundle_id} @ 0x{hit.address:08X}: {hit.source_name} :: {context}")
+    return lines
+
+
+def nearby_en_strings(bundle_evidence: BundleSourceEvidence | None) -> list[str]:
+    if bundle_evidence is None:
+        return []
+    en_hit = next((hit for hit in bundle_evidence.all_hits if hit.bundle_id == "GSAE01"), None)
+    if en_hit is None:
+        return []
+    spec_by_id = {spec.bundle_id: spec for spec in default_bundle_specs()}
+    en_spec = spec_by_id.get("GSAE01")
+    if en_spec is None:
+        return []
+    return nearby_source_strings(en_spec, en_hit.address)
+
+
+def render_stub(
+    candidate: RecoveryGroup,
+    output_relpath: str,
+    confidence: str,
+    score: int,
+    bundle_evidence: BundleSourceEvidence | None,
+) -> str:
     function_hints = cleaned_function_hints(candidate)
     lines: list[str] = []
     lines.append("/*")
@@ -253,6 +304,15 @@ def render_stub(candidate: RecoveryGroup, output_relpath: str, confidence: str, 
     else:
         lines.append(" * - EN xref: none")
     lines.append(" *")
+    lines.append(" * Cross-version bundle evidence:")
+    if bundle_evidence is not None:
+        for line in format_bundle_hits(bundle_evidence):
+            lines.append(line)
+        if bundle_evidence.alias_names:
+            lines.append(" * - alias source names: " + ", ".join(bundle_evidence.alias_names))
+    else:
+        lines.append(" * - none")
+    lines.append(" *")
     lines.append(" * Retail function-label hints:")
     if candidate.retail_labels:
         for label in candidate.retail_labels:
@@ -275,6 +335,12 @@ def render_stub(candidate: RecoveryGroup, output_relpath: str, confidence: str, 
         lines.append(f" * - symbol hint: {candidate.debug_symbol_hits[0]}")
     else:
         lines.append(" * - function hint: none")
+    nearby_strings = nearby_en_strings(bundle_evidence)
+    if nearby_strings:
+        lines.append(" *")
+        lines.append(" * Nearby EN strings:")
+        for value in nearby_strings[:4]:
+            lines.append(f" * - nearby: {value}")
     lines.append(" */")
     lines.append("")
 
@@ -340,6 +406,7 @@ def materialize_stubs(
             output_relpath=decision.output_relpath,
             confidence=decision.confidence,
             score=decision.score,
+            bundle_evidence=decision.bundle_evidence,
         )
         dst_path = output_root / decision.output_relpath
         changed = write_text_if_changed(dst_path, text)
@@ -357,6 +424,8 @@ def materialize_stubs(
             "function_hints": cleaned_function_hints(decision.candidate),
             "retail_labels": list(decision.candidate.retail_labels),
             "retail_messages": list(decision.candidate.retail_messages),
+            "bundle_ids": [] if decision.bundle_evidence is None else list(decision.bundle_evidence.all_bundle_ids),
+            "bundle_aliases": [] if decision.bundle_evidence is None else list(decision.bundle_evidence.alias_names),
         }
         if changed:
             written.append(entry)
@@ -476,6 +545,11 @@ def build_argument_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Also emit stubs for debug-path-only candidates that lack an EN xref.",
     )
+    parser.add_argument(
+        "--include-cross-version-weak",
+        action="store_true",
+        help="Also emit weak EN candidates that are repeated across multiple bundled retail versions.",
+    )
     return parser
 
 
@@ -491,6 +565,9 @@ def main() -> None:
         debug_srcfiles_path=args.debug_srcfiles,
     )
     groups = group_candidates(candidates)
+    source_evidence_by_name = build_source_variant_index(
+        collect_all_bundle_source_hits(default_bundle_specs())
+    )
     excluded_roots: list[Path] = []
     if args.output_root.resolve() != args.src_root.resolve() and is_relative_to(
         args.output_root.resolve(),
@@ -509,6 +586,8 @@ def main() -> None:
         src_root=args.src_root,
         existing_basenames=existing_basenames,
         include_debug_path_only=args.include_debug_path_only,
+        include_cross_version_weak=args.include_cross_version_weak,
+        source_evidence_by_name=source_evidence_by_name,
     )
 
     artifact_written, artifact_unchanged = materialize_artifacts(args.orig_root, args.output_root)

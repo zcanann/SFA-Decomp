@@ -142,16 +142,18 @@
         "retail_source_name": "dvdfs.c",
         "status": "skipped-existing",
         "type": "stub"
-      },
-      {
-        "confidence": "weak",
-        "retail_source_name": "n_attractmode.c",
-        "status": "skipped-weak",
-        "type": "stub"
       }
     ],
-    "unchanged": [
+    "unchanged": [],
+    "written": [
       {
+        "bundle_aliases": [],
+        "bundle_ids": [
+          "GSAE01",
+          "GSAE01_rev1",
+          "GSAJ01",
+          "GSAP01"
+        ],
         "confidence": "exact",
         "debug_paths": [
           "main/objanim.c"
@@ -177,11 +179,18 @@
           "WARNING tried to load anim -1 from cache modno %d"
         ],
         "retail_source_name": "objanim.c",
-        "score": 29,
-        "status": "unchanged",
+        "score": 35,
+        "status": "written",
         "type": "stub"
       },
       {
+        "bundle_aliases": [],
+        "bundle_ids": [
+          "GSAE01",
+          "GSAE01_rev1",
+          "GSAJ01",
+          "GSAP01"
+        ],
         "confidence": "exact",
         "debug_paths": [
           "dll/CF/laser.c"
@@ -211,11 +220,61 @@
           "No Longer supported"
         ],
         "retail_source_name": "laser.c",
-        "score": 27,
-        "status": "unchanged",
+        "score": 33,
+        "status": "written",
         "type": "stub"
       },
       {
+        "bundle_aliases": [
+          "hcurves.c"
+        ],
+        "bundle_ids": [
+          "GSAE01",
+          "GSAE01_rev1",
+          "GSAP01",
+          "GSAJ01"
+        ],
+        "confidence": "exact",
+        "debug_paths": [
+          "dll/curves.c"
+        ],
+        "en_xrefs": [
+          "fn_800E556C+0x18"
+        ],
+        "function_hints": [
+          "curves_initialise",
+          "curves_release",
+          "curves_clear",
+          "curves_addCurveDef",
+          "curves_remove",
+          "curves_getCurves",
+          "curves_find",
+          "RomCurve_getById",
+          "curves_getRandomPoint",
+          "curves_getIds_18"
+        ],
+        "output_path": "dll/curves.c",
+        "reason": "retail-xref-backed",
+        "retail_addresses": [
+          "0x8031230C"
+        ],
+        "retail_labels": [],
+        "retail_messages": [
+          "MAX_ROMCURVES exceeded!!"
+        ],
+        "retail_source_name": "curves.c",
+        "score": 32,
+        "status": "written",
+        "type": "stub"
+      },
+      {
+        "bundle_aliases": [],
+        "bundle_ids": [
+          "GSAE01",
+          "GSAE01_rev1",
+          "GSAJ01",
+          "GSAP01"
+        ],
         "confidence": "exact",
         "debug_paths": [
           "dll/DIM/DIMboss.c"
@@ -247,11 +306,18 @@
           "loading assets for DIMTop"
         ],
         "retail_source_name": "DIMBoss.c",
-        "score": 26,
-        "status": "unchanged",
+        "score": 32,
+        "status": "written",
         "type": "stub"
       },
       {
+        "bundle_aliases": [],
+        "bundle_ids": [
+          "GSAE01",
+          "GSAE01_rev1",
+          "GSAJ01",
+          "GSAP01"
+        ],
         "confidence": "exact",
         "debug_paths": [
           "dll/CAM/camcontrol.c"
@@ -274,45 +340,18 @@
           "failed to load triggered camaction actionno %d"
         ],
         "retail_source_name": "camcontrol.c",
-        "score": 25,
-        "status": "unchanged",
+        "score": 31,
+        "status": "written",
         "type": "stub"
       },
       {
-        "confidence": "exact",
-        "debug_paths": [
-          "dll/curves.c"
+        "bundle_aliases": [],
+        "bundle_ids": [
+          "GSAE01",
+          "GSAE01_rev1",
+          "GSAJ01",
+          "GSAP01"
         ],
-        "en_xrefs": [
-          "fn_800E556C+0x18"
-        ],
-        "function_hints": [
-          "curves_initialise",
-          "curves_release",
-          "curves_clear",
-          "curves_addCurveDef",
-          "curves_remove",
-          "curves_getCurves",
-          "curves_find",
-          "RomCurve_getById",
-          "curves_getRandomPoint",
-          "curves_getIds_18"
-        ],
-        "output_path": "dll/curves.c",
-        "reason": "retail-xref-backed",
-        "retail_addresses": [
-          "0x8031230C"
-        ],
-        "retail_labels": [],
-        "retail_messages": [
-          "MAX_ROMCURVES exceeded!!"
-        ],
-        "retail_source_name": "curves.c",
-        "score": 25,
-        "status": "unchanged",
-        "type": "stub"
-      },
-      {
         "confidence": "exact",
         "debug_paths": [
           "dll/SH/SHthorntail.c"
@@ -337,11 +376,18 @@
         "retail_labels": [],
         "retail_messages": [],
         "retail_source_name": "SHthorntail.c",
-        "score": 25,
-        "status": "unchanged",
+        "score": 31,
+        "status": "written",
         "type": "stub"
       },
       {
+        "bundle_aliases": [],
+        "bundle_ids": [
+          "GSAE01",
+          "GSAE01_rev1",
+          "GSAJ01",
+          "GSAP01"
+        ],
         "confidence": "xref-symbol",
         "debug_paths": [],
         "en_xrefs": [
@@ -374,11 +420,18 @@
           "scale overflow"
         ],
         "retail_source_name": "expgfx.c",
-        "score": 20,
-        "status": "unchanged",
+        "score": 26,
+        "status": "written",
         "type": "stub"
       },
       {
+        "bundle_aliases": [],
+        "bundle_ids": [
+          "GSAE01",
+          "GSAE01_rev1",
+          "GSAJ01",
+          "GSAP01"
+        ],
         "confidence": "xref-only",
         "debug_paths": [],
         "en_xrefs": [
@@ -402,11 +455,18 @@
           "No Longer supported"
         ],
         "retail_source_name": "textblock.c",
-        "score": 15,
-        "status": "unchanged",
+        "score": 21,
+        "status": "written",
         "type": "stub"
       },
       {
+        "bundle_aliases": [],
+        "bundle_ids": [
+          "GSAE01",
+          "GSAE01_rev1",
+          "GSAJ01",
+          "GSAP01"
+        ],
         "confidence": "xref-symbol",
         "debug_paths": [],
         "en_xrefs": [
@@ -423,18 +483,41 @@
           "sphere overflow! %d"
         ],
         "retail_source_name": "objHitReact.c",
-        "score": 14,
-        "status": "unchanged",
+        "score": 20,
+        "status": "written",
+        "type": "stub"
+      },
+      {
+        "bundle_aliases": [],
+        "bundle_ids": [
+          "GSAE01",
+          "GSAE01_rev1",
+          "GSAJ01",
+          "GSAP01"
+        ],
+        "confidence": "weak",
+        "debug_paths": [],
+        "en_xrefs": [],
+        "function_hints": [],
+        "output_path": "unknown/n_attractmode.c",
+        "reason": "cross-version-source-tag",
+        "retail_addresses": [
+          "0x8031AFDC"
+        ],
+        "retail_labels": [],
+        "retail_messages": [],
+        "retail_source_name": "n_attractmode.c",
+        "score": 6,
+        "status": "written",
         "type": "stub"
       }
-    ],
-    "written": []
+    ]
   },
   "summary": {
     "artifact_unchanged": 12,
     "artifact_written": 0,
-    "stub_skipped": 2,
-    "stub_unchanged": 9,
-    "stub_written": 0
+    "stub_skipped": 1,
+    "stub_unchanged": 0,
+    "stub_written": 10
   }
 }

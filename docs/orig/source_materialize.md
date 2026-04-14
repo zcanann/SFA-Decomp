@@ -7,6 +7,7 @@ This pass turns the `orig/` audit work into concrete files under `src/` without 
 - `python tools/orig/source_materialize.py`
   - Copies literal source/header artifacts preserved on disc into `src/disc_artifacts/`.
   - Generates non-built `.c` stubs for EN `main.dol` source-recovery candidates directly into `src/`.
+  - Can also promote weak EN candidates when the same source tag repeats across multiple bundled retail versions.
   - Writes a machine-readable manifest to [source_materialize.json](/C:/Projects/SFA-Decomp/docs/orig/source_materialize.json).
   - Treats previously generated stubs as managed outputs, so reruns can refresh them in place while still refusing to overwrite unrelated real sources.
 
@@ -41,6 +42,7 @@ These files are generated placeholders, not source-truth. Each one carries:
 - the exact retail string text
 - any retail-authored function label extracted from that string
 - current EN xrefs resolved through `config/GSAE01/symbols.txt`
+- cross-version bundle evidence when PAL, JP, or EN rev1 preserve the same source tag
 - debug-side path/function hints kept clearly separate from retail evidence
 
 Current generated stubs:
@@ -52,6 +54,7 @@ Current generated stubs:
 - [SHthorntail.c](/C:/Projects/SFA-Decomp/src/dll/SH/SHthorntail.c)
 - [objanim.c](/C:/Projects/SFA-Decomp/src/main/objanim.c)
 - [expgfx.c](/C:/Projects/SFA-Decomp/src/unknown/expgfx.c)
+- [n_attractmode.c](/C:/Projects/SFA-Decomp/src/unknown/n_attractmode.c)
 - [objHitReact.c](/C:/Projects/SFA-Decomp/src/unknown/objHitReact.c)
 - [textblock.c](/C:/Projects/SFA-Decomp/src/unknown/textblock.c)
 
@@ -61,11 +64,12 @@ Two immediate examples of why this matters:
 
 - [objanim.c](/C:/Projects/SFA-Decomp/src/main/objanim.c) now carries both the retail label `setBlendMove` and the debug-side bridge `Object_ObjAnimSetMove`.
 - [textblock.c](/C:/Projects/SFA-Decomp/src/unknown/textblock.c) now materializes a concrete `Init` placeholder from the retail string even without any usable debug-side names.
+- [curves.c](/C:/Projects/SFA-Decomp/src/dll/curves.c) now records the JP-only alias `hcurves.c` next to the shared `MAX_ROMCURVES exceeded!!` warning.
+- [n_attractmode.c](/C:/Projects/SFA-Decomp/src/unknown/n_attractmode.c) is now present because the same weak source tag repeats in EN v1.0, EN rev1, PAL, and JP.
 
 ## Skips That Matter
 
 - `dvdfs.c` was not materialized as a stub because the active tree already has [dvdfs.c](/C:/Projects/SFA-Decomp/src/dvd/dvdfs.c).
-- `n_attractmode.c` was skipped because the current bundled evidence is still too weak.
 
 ## Practical Use
 
@@ -73,5 +77,7 @@ Two immediate examples of why this matters:
   - `python tools/orig/source_materialize.py`
 - Also include debug-path-only files that do not yet have an EN xref:
   - `python tools/orig/source_materialize.py --include-debug-path-only`
+- Also include weak EN candidates that are repeated across multiple bundled retail versions:
+  - `python tools/orig/source_materialize.py --include-cross-version-weak`
 
 The intent is not to declare these files solved. The intent is to reduce the activation energy between "retail evidence exists" and "there is a concrete file in-tree someone can start recovering right now."
