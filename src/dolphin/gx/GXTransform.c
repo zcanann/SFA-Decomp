@@ -6,45 +6,6 @@
 
 extern u32 __cvt_fp2unsigned(f64 d);
 
-/*
- * --INFO--
- * PAL Address: TODO
- * PAL Size: TODO
- * EN Address: TODO
- * EN Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- */
-void GXProject(f32 x, f32 y, f32 z, const Mtx mtx, const f32* pm, const f32* vp, f32* sx, f32* sy, f32* sz) {
-    Vec peye;
-    f32 xc;
-    f32 yc;
-    f32 zc;
-    f32 wc;
-
-    ASSERTMSGLINE(168, pm && vp && sx && sy && sz, "GXGet*: invalid null pointer");
-
-    peye.x = mtx[0][3] + ((mtx[0][2] * z) + ((mtx[0][0] * x) + (mtx[0][1] * y)));
-    peye.y = mtx[1][3] + ((mtx[1][2] * z) + ((mtx[1][0] * x) + (mtx[1][1] * y)));
-    peye.z = mtx[2][3] + ((mtx[2][2] * z) + ((mtx[2][0] * x) + (mtx[2][1] * y)));
-
-    if (pm[0] == 0.0f) {
-        xc = (peye.x * pm[1]) + (peye.z * pm[2]);
-        yc = (peye.y * pm[3]) + (peye.z * pm[4]);
-        zc = pm[6] + (peye.z * pm[5]);
-        wc = 1.0f / -peye.z;
-    } else {
-        xc = pm[2] + (peye.x * pm[1]);
-        yc = pm[4] + (peye.y * pm[3]);
-        zc = pm[6] + (peye.z * pm[5]);
-        wc = 1.0f;
-    }
-
-    *sx = (vp[2] / 2.0f) + (vp[0] + (wc * (xc * vp[2] / 2.0f)));
-    *sy = (vp[3] / 2.0f) + (vp[1] + (wc * (-yc * vp[3] / 2.0f)));
-    *sz = vp[5] + (wc * (zc * (vp[5] - vp[4])));
-}
-
 void GXSetProjection(const Mtx44 mtx, GXProjectionType type) {
     CHECK_GXBEGIN(295, "GXSetProjection");
 
@@ -94,18 +55,6 @@ void GXSetProjectionv(const f32* ptr) {
     GX_WRITE_F32(__GXData->projMtx[5]);
     GX_WRITE_U32(__GXData->projType);
     __GXData->bpSentNot = 1;
-}
-
-void GXGetProjectionv(f32* ptr) {
-    ASSERTMSGLINE(370, ptr, "GXGet*: invalid null pointer");
-
-    ptr[0] = (f32)__GXData->projType;
-    ptr[1] = __GXData->projMtx[0];
-    ptr[2] = __GXData->projMtx[1];
-    ptr[3] = __GXData->projMtx[2];
-    ptr[4] = __GXData->projMtx[3];
-    ptr[5] = __GXData->projMtx[4];
-    ptr[6] = __GXData->projMtx[5];
 }
 
 #define qr0 0
@@ -350,17 +299,6 @@ void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz) {
     GXSetViewportJitter(left, top, wd, ht, nearz, farz, 1);
 }
 
-void GXGetViewportv(f32* vp) {
-    ASSERTMSGLINE(968, vp, "GXGet*: invalid null pointer");
-
-    vp[0] = __GXData->vpLeft;
-    vp[1] = __GXData->vpTop;
-    vp[2] = __GXData->vpWd;
-    vp[3] = __GXData->vpHt;
-    vp[4] = __GXData->vpNearz;
-    vp[5] = __GXData->vpFarz;
-}
-
 void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht) {
     u32 topOrigin;
     u32 leftOrigin;
@@ -386,6 +324,28 @@ void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht) {
     GX_WRITE_RAS_REG(__GXData->suScis0);
     GX_WRITE_RAS_REG(__GXData->suScis1);
     __GXData->bpSentNot = 0;
+}
+
+void GXGetScissor(u32* left, u32* top, u32* wd, u32* ht) {
+    u32 suScis0;
+    u32 suScis1;
+    u32 topOrigin;
+    u32 leftOrigin;
+    u32 bottom;
+    u32 right;
+
+    suScis0 = __GXData->suScis0;
+    suScis1 = __GXData->suScis1;
+
+    topOrigin = suScis0 & 0x7FF;
+    leftOrigin = (suScis0 >> 12) & 0x7FF;
+    bottom = suScis1 & 0x7FF;
+    right = (suScis1 >> 12) & 0x7FF;
+
+    *left = leftOrigin - 0x156;
+    *top = topOrigin - 0x156;
+    *wd = (right - leftOrigin) + 1;
+    *ht = (bottom - topOrigin) + 1;
 }
 
 /*
