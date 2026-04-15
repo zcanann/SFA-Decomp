@@ -66,7 +66,6 @@ int __OSCallResetFunctions(BOOL final);
 
 // OSResetSW
 void __OSResetSWInterruptHandler(s16 exception, OSContext* context);
-void __OSSetResetButtonTimer(u8 min);
 
 // OSRtc
 int __OSGetRTC(u32* rtc);

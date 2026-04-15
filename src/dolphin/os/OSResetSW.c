@@ -29,24 +29,6 @@ void __OSResetSWInterruptHandler(s16 exception, OSContext* context) {
     __PIRegs[0] = 2;
 }
 
-OSResetCallback OSSetResetCallback(OSResetCallback callback) {
-    BOOL enabled;
-    OSResetCallback prevCallback;
-
-    enabled = OSDisableInterrupts();
-    prevCallback = ResetCallback;
-    ResetCallback = callback;
-
-    if (callback) {
-        __PIRegs[0] = 2;
-        __OSUnmaskInterrupts(0x200);
-    } else {
-        __OSMaskInterrupts(0x200);
-    }
-    OSRestoreInterrupts(enabled);
-    return prevCallback;
-}
-
 BOOL OSGetResetButtonState(void) {
     BOOL enabled = OSDisableInterrupts();
     int state;
@@ -54,9 +36,6 @@ BOOL OSGetResetButtonState(void) {
     OSTime now;
 
     now = __OSGetSystemTime();
-    ASSERTLINE(158, 0 <= now);
-    ASSERTLINE(159, HoldUp == 0 || HoldUp < now);
-    ASSERTLINE(160, HoldDown == 0 || HoldDown < now);
 
     reg = __PIRegs[0];
     if (!(reg & 0x00010000)) {
@@ -102,19 +81,4 @@ BOOL OSGetResetButtonState(void) {
 
     OSRestoreInterrupts(enabled);
     return state;
-}
-
-int OSGetResetSwitchState(void) {
-    return OSGetResetButtonState();
-}
-
-void __OSSetResetButtonTimer(u8 min) {
-    BOOL enabled = OSDisableInterrupts();
-    if (min > 0x3F) {
-        min = 0x3F;
-    }
-
-    __gUnknown800030E3 &= ~0x3F;
-    __gUnknown800030E3 |= min;
-    OSRestoreInterrupts(enabled);
 }
