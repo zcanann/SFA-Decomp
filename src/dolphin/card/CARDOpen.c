@@ -32,28 +32,6 @@ s32 __CARDAccess(CARDControl* card, CARDDir* ent) {
     return CARD_RESULT_NOPERM;
 }
 
-s32 __CARDIsWritable(CARDControl* card, CARDDir* ent) {
-    const DVDDiskID* diskID = card->diskID;
-    s32 result;
-    u8 perm;
-
-    result = __CARDAccess(card, ent);
-    if (result == CARD_RESULT_NOPERM) {
-        perm = ent->permission & __CARDPermMask;
-        if (perm & 0x20 && (memcmp(ent->gameName, __CARDDiskNone.gameName, sizeof(ent->gameName)) == 0 &&
-                            memcmp(ent->company, __CARDDiskNone.company, sizeof(ent->company)) == 0))
-        {
-            return CARD_RESULT_READY;
-        } else if (perm & 0x40 && (memcmp(ent->gameName, __CARDDiskNone.gameName, sizeof(ent->gameName)) == 0 &&
-                                  memcmp(ent->company, diskID->company, sizeof(ent->company)) == 0))
-        {
-            return CARD_RESULT_READY;
-        }
-    }
-
-    return result;
-}
-
 s32 __CARDIsPublic(CARDDir* ent) {
     if (ent->gameName[0] == 0xFF) {
         return CARD_RESULT_NOFILE;
@@ -65,16 +43,6 @@ s32 __CARDIsPublic(CARDDir* ent) {
 
     return CARD_RESULT_NOPERM;
 }
-
-s32 __CARDIsReadable(CARDControl* card, CARDDir* ent) {
-    s32 result = __CARDIsWritable(card, ent);
-    if (result == CARD_RESULT_NOPERM && (ent->permission & 0x4)) {
-        return CARD_RESULT_READY;
-    }
-
-    return result;
-}
-
 s32 __CARDGetFileNo(CARDControl* card, const char* fileName, s32* pfileNo) {
     CARDDir* dir;
     CARDDir* ent;
@@ -98,42 +66,6 @@ s32 __CARDGetFileNo(CARDControl* card, const char* fileName, s32* pfileNo) {
     }
 
     return CARD_RESULT_NOFILE;
-}
-
-s32 CARDFastOpen(s32 chan, s32 fileNo, CARDFileInfo* fileInfo) {
-    CARDControl* card;
-    CARDDir* dir;
-    CARDDir* ent;
-    s32 result;
-
-    ASSERTLINE(278, 0 <= fileNo && fileNo < CARD_MAX_FILE);
-    ASSERTLINE(279, 0 <= chan && chan < 2);
-
-    if (fileNo < 0 || fileNo >= CARD_MAX_FILE)
-        return CARD_RESULT_FATAL_ERROR;
-
-    fileInfo->chan = -1;
-    result = __CARDGetControlBlock(chan, &card);
-    if (result < 0)
-        return result;
-
-    dir = __CARDGetDirBlock(card);
-    ent = &dir[fileNo];
-    result = __CARDAccess(card, ent);
-    if (result == CARD_RESULT_NOPERM)
-        result = __CARDIsPublic(ent);
-
-    if (0 <= result) {
-        if (!CARDIsValidBlockNo(card, ent->startBlock))
-            result = CARD_RESULT_BROKEN;
-        else {
-            fileInfo->chan = chan;
-            fileInfo->fileNo = fileNo;
-            fileInfo->offset = 0;
-            fileInfo->iBlock = ent->startBlock;
-        }
-    }
-    return __CARDPutControlBlock(card, result);
 }
 
 s32 CARDOpen(s32 chan, const char* fileName, CARDFileInfo* fileInfo) {

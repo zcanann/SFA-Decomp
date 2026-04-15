@@ -35,8 +35,6 @@ s32 __CARDAccess(CARDControl* card, CARDDir* ent);
 s32 __CARDIsPublic(CARDDir* ent);
 s32 __CARDGetFileNo(CARDControl* card, const char* fileName, s32* pfileNo);
 BOOL __CARDIsOpened(CARDControl* card, s32 fileNo);
-s32 __CARDIsWritable(CARDControl* card, CARDDir* ent);
-s32 __CARDIsReadable(CARDControl* card, CARDDir* ent);
 
 // CARDNet
 extern u16 __CARDVendorID;

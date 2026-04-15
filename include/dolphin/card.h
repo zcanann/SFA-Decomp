@@ -276,7 +276,6 @@ s32 CARDSetAttributesAsync(s32 chan, s32 fileNo, u8 attr, CARDCallback callback)
 s32 CARDSetAttributes(s32 chan, s32 fileNo, u8 attr);
 
 // CARDOpen
-s32 CARDFastOpen(s32 chan, s32 fileNo, CARDFileInfo* fileInfo);
 s32 CARDOpen(s32 chan, const char* fileName, CARDFileInfo* fileInfo);
 s32 CARDClose(CARDFileInfo* fileInfo);
 
