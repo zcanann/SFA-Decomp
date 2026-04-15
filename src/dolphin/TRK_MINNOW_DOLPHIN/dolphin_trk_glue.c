@@ -153,7 +153,6 @@ int InitMetroTRKCommTable(int hwId)
 DSError TRKInitializeIntDrivenUART(u32 param_0, u32 param_1, u32 param_2, void* param_3)
 {
     gDBCommTable.initialize_func(param_3, TRKEXICallBack);
-    gDBCommTable.open_func();
     return DS_NoError;
 }
 
