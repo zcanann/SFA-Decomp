@@ -29,6 +29,8 @@ CONFIDENCE_ORDER = {
     "low": 2,
 }
 
+BROAD_EXACT_LAYOUT_LIMIT = 128
+
 
 @dataclass(frozen=True)
 class LayoutEntry:
@@ -321,6 +323,17 @@ def summary_markdown(
     ranked = sorted(layout_blocks, key=lambda item: (-item.score, item.start))
     tiled = [block for block in layout_blocks if block.contiguous]
     placeholder = [block for block in layout_blocks if block.placeholder_count]
+    exact_entries = [
+        entry
+        for block in layout_blocks
+        for entry in block.entries
+        if entry.kind == "gap-window" and entry.source_mode == "exact-debug-interval"
+    ]
+    exact_blocks = [
+        block
+        for block in layout_blocks
+        if any(entry.kind == "gap-window" and entry.source_mode == "exact-debug-interval" for entry in block.entries)
+    ]
 
     lines: list[str] = []
     lines.append("# Retail source layout")
@@ -330,9 +343,10 @@ def summary_markdown(
     lines.append(f"- Ordered file entries: `{sum(block.entry_count for block in layout_blocks)}`")
     lines.append(f"- Anchor-backed entries: `{sum(block.anchor_count for block in layout_blocks)}`")
     lines.append(f"- Gap-window entries: `{sum(block.gap_entry_count for block in layout_blocks)}`")
+    lines.append(f"- Exact-debug-interval gap windows: `{len(exact_entries)}` in `{len(exact_blocks)}` blocks")
     lines.append(f"- Blocks that tile cleanly: `{len(tiled)}`")
     lines.append(f"- Blocks still carrying packet placeholders: `{len(placeholder)}`")
-    lines.append(f"- Short gap packets with per-file windows: `{len(plans)}/{len(packets)}`")
+    lines.append(f"- Gap packets with per-file windows: `{len(plans)}/{len(packets)}`")
     lines.append("")
     lines.append("## Highest-value layouts")
     for block in ranked[:limit]:
@@ -353,6 +367,9 @@ def summary_markdown(
     lines.append("## Usage")
     lines.append("- Summary: `python tools/orig/source_layout.py`")
     lines.append("- Inspect one block, path, or source: `python tools/orig/source_layout.py --search expgfx modgfx curves`")
+    lines.append(
+        f"- Broad exact-interval layouts: `python tools/orig/source_layout.py --broad-exact-layout`"
+    )
     lines.append("- CSV dump: `python tools/orig/source_layout.py --format csv`")
     lines.append("- JSON dump: `python tools/orig/source_layout.py --format json`")
     return "\n".join(lines)
@@ -524,12 +541,23 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-gap-paths", type=int, default=8, help="Maximum in-between filenames allowed when bridging anchors into one layout block.")
     parser.add_argument("--exact-interval-limit", type=int, default=16, help="Use the full exact debug interval only when it has at most this many paths.")
     parser.add_argument("--hinted-path-limit", type=int, default=8, help="Skip broad hint-only packets with more than this many uniquely resolved paths.")
+    parser.add_argument(
+        "--broad-exact-layout",
+        action="store_true",
+        help=(
+            "Raise --exact-interval-limit to a broader exploratory preset so larger exact-debug "
+            "corridor windows can be flattened without spelling out a custom limit."
+        ),
+    )
     return parser
 
 
 def main() -> None:
     parser = build_argument_parser()
     args = parser.parse_args()
+
+    if args.broad_exact_layout:
+        args.exact_interval_limit = max(args.exact_interval_limit, BROAD_EXACT_LAYOUT_LIMIT)
 
     groups = build_groups(
         dol=args.dol,

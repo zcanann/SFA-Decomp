@@ -22,6 +22,9 @@ from tools.orig.source_reference_hints import build_groups, collect_reference_hi
 from tools.orig.source_recovery import parse_debug_split_text_ranges
 
 
+BROAD_EXACT_INTERVAL_LIMIT = 128
+
+
 @dataclass(frozen=True)
 class DebugSplitInfo:
     path: str
@@ -530,6 +533,7 @@ def materialize_plans(plans: list[GapWindowPlan], output_root: Path) -> tuple[in
 def summary_markdown(plans: list[GapWindowPlan], limit: int) -> str:
     high = [plan for plan in plans if plan.confidence == "high"]
     medium = [plan for plan in plans if plan.confidence == "medium"]
+    exact = [plan for plan in plans if plan.layout_mode == "exact-debug-interval"]
     partial = [
         plan
         for plan in plans
@@ -543,6 +547,7 @@ def summary_markdown(plans: list[GapWindowPlan], limit: int) -> str:
     lines.append(f"- Gap packets with per-file EN estimates: `{len(plans)}`")
     lines.append(f"- High-confidence plans: `{len(high)}`")
     lines.append(f"- Medium-confidence plans: `{len(medium)}`")
+    lines.append(f"- Exact-debug-interval plans: `{len(exact)}`")
     lines.append(f"- Partial or seed-only plans: `{len(partial)}`")
     lines.append("")
     lines.append("## Highest-value plans")
@@ -563,6 +568,9 @@ def summary_markdown(plans: list[GapWindowPlan], limit: int) -> str:
     lines.append("## Usage")
     lines.append("- Summary: `python tools/orig/source_gap_windows.py`")
     lines.append("- Inspect one gap or file: `python tools/orig/source_gap_windows.py --search objanim objhits`")
+    lines.append(
+        f"- Broad exact-interval corridors: `python tools/orig/source_gap_windows.py --broad-exact-intervals`"
+    )
     lines.append("- CSV dump: `python tools/orig/source_gap_windows.py --format csv`")
     lines.append("- JSON dump: `python tools/orig/source_gap_windows.py --format json`")
     lines.append("- Write window briefs: `python tools/orig/source_gap_windows.py --materialize-all`")
@@ -712,6 +720,14 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--limit", type=int, default=6, help="Maximum rows to show in summary sections.")
     parser.add_argument("--exact-interval-limit", type=int, default=16, help="Use the full exact debug interval only when it has at most this many paths.")
     parser.add_argument("--hinted-path-limit", type=int, default=8, help="Skip broad hint-only packets with more than this many uniquely resolved paths.")
+    parser.add_argument(
+        "--broad-exact-intervals",
+        action="store_true",
+        help=(
+            "Raise --exact-interval-limit to a broader exploratory preset so full exact-debug intervals "
+            "like DIMBoss -> SHthorntail can be projected without spelling out a custom limit."
+        ),
+    )
     parser.add_argument("--materialize-top", type=int, default=0, help="Write the top N visible window briefs under --output-root.")
     parser.add_argument("--materialize-all", action="store_true", help="Write every visible window brief under --output-root.")
     parser.add_argument("--output-root", type=Path, default=Path("docs/orig/source_gap_window_briefs"), help="Destination directory for generated gap-window briefs.")
@@ -721,6 +737,9 @@ def build_argument_parser() -> argparse.ArgumentParser:
 def main() -> None:
     parser = build_argument_parser()
     args = parser.parse_args()
+
+    if args.broad_exact_intervals:
+        args.exact_interval_limit = max(args.exact_interval_limit, BROAD_EXACT_INTERVAL_LIMIT)
 
     groups = build_groups(
         dol=args.dol,
