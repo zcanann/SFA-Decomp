@@ -236,7 +236,10 @@ dolphin/card/CARDDelete.c:
 	.text       start:0x80264470 end:0x8026466C
 
 dolphin/card/CARDStat.c:
-	.text       start:0x8026466C end:0x80264C10
+	.text       start:0x8026466C end:0x80264B4C
+
+dolphin/card/CARDNet.c:
+	.text       start:0x80264B4C end:0x80264C10
 
 dolphin/thp/THPDec.c:
 	.text       start:0x80264C10 end:0x8026C150
