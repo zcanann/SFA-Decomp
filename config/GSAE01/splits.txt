@@ -466,9 +466,6 @@ dolphin/MSL_C/PPCEABI/bare/H/gamecube.c:
 dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c:
 	.text       start:0x80292460 end:0x80292538
 
-dolphin/MSL_C/PPCEABI/bare/H/rand.c:
-	.text       start:0x80292538 end:0x80292568
-
 dolphin/MSL_C/PPCEABI/bare/H/k_sin.c:
 	.text       start:0x80292754 end:0x80292804
 
@@ -487,8 +484,8 @@ dolphin/MSL_C/PPCEABI/bare/H/e_sqrt.c:
 dolphin/MSL_C/PPCEABI/bare/H/s_tan.c:
 	.text       start:0x8029349C end:0x80293520
 
-dolphin/MSL_C/PPCEABI/bare/H/extras.c:
-	.text       start:0x80293544 end:0x8029354C
+dolphin/MSL_C/PPCEABI/bare/H/rand.c:
+	.text       start:0x80293520 end:0x8029354C
 
 dolphin/MSL_C/PPCEABI/bare/H/k_tan.c:
 	.text       start:0x8029388C end:0x80293A9C
