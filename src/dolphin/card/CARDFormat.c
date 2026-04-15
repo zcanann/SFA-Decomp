@@ -118,8 +118,8 @@ s32 CARDFormat(s32 chan) {
     s32 result;
 
     result = __CARDFormatRegionAsync(chan, OSGetFontEncode(), __CARDSyncCallback);
-    if (result >= 0)
-        result = __CARDSync(chan);
+    if (result < 0)
+        return result;
 
-    return result;
+    return __CARDSync(chan);
 }

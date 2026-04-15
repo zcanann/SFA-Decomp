@@ -58,7 +58,7 @@ static s32 VerifyID(CARDControl* card) {
 
     __OSUnlockSramEx(FALSE);
 
-    if (id->encode != __CARDGetFontEncode())
+    if (id->encode != OSGetFontEncode())
         return CARD_RESULT_ENCODING;
 
     return CARD_RESULT_READY;

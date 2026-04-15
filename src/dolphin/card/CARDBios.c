@@ -555,6 +555,14 @@ s32 __CARDPutControlBlock(CARDControl* card, s32 result) {
     return result;
 }
 
+static inline s32 CARDGetResultCode(s32 chan) {
+    if (chan < 0 || chan >= 2) {
+        return CARD_RESULT_FATAL_ERROR;
+    }
+
+    return __CARDBlock[chan].result;
+}
+
 s32 __CARDSync(s32 chan) {
     CARDControl* block;
     s32 result;
@@ -562,7 +570,7 @@ s32 __CARDSync(s32 chan) {
 
     block = &__CARDBlock[chan];
     enabled = OSDisableInterrupts();
-    while ((result = block->result) == CARD_RESULT_BUSY) {
+    while ((result = CARDGetResultCode(chan)) == CARD_RESULT_BUSY) {
         OSSleepThread(&block->threadQueue);
     }
 
