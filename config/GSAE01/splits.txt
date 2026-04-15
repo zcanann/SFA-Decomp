@@ -110,7 +110,7 @@ dolphin/dvd/fstload.c:
 	.text       start:0x8024C464 end:0x8024C6A4
 
 dolphin/vi/vi.c:
-	.text       start:0x8024C9E4 end:0x8024E4F8
+	.text       start:0x8024C6A4 end:0x8024E4F8
 
 dolphin/pad/Pad.c:
 	.text       start:0x8024E4F8 end:0x8024FE1C
