@@ -13,7 +13,7 @@ u32 __CARDFreq = EXI_FREQ_16M;
 
 CARDControl __CARDBlock[2];
 
-static u16 __CARDEncode;
+u16 __CARDEncode;
 
 DVDDiskID __CARDDiskNone;
 
@@ -491,10 +491,6 @@ void CARDInit(void) {
         return;
     }
 
-    __CARDEncode = OSGetFontEncode();
-
-    OSRegisterVersion(__CARDVersion);
-
     DSPInit();
     OSInitAlarm();
 
@@ -508,10 +504,6 @@ void CARDInit(void) {
     __CARDSetDiskID((void*)OSPhysicalToCached(0));
 
     OSRegisterResetFunction(&ResetFunctionInfo);
-}
-
-u16 __CARDGetFontEncode(void) {
-    return __CARDEncode;
 }
 
 void __CARDSetDiskID(const DVDDiskID* id) {
@@ -563,67 +555,6 @@ s32 __CARDPutControlBlock(CARDControl* card, s32 result) {
     return result;
 }
 
-s32 CARDGetResultCode(s32 chan) {
-    CARDControl* card;
-    
-    ASSERTLINE(1292, 0 <= chan && chan < 2);
-
-    if (chan < 0 || chan >= 2) {
-        return CARD_RESULT_FATAL_ERROR;
-    }
-    card = &__CARDBlock[chan];
-    return card->result;
-}
-
-s32 CARDFreeBlocks(s32 chan, s32* byteNotUsed, s32* filesNotUsed) {
-    CARDControl* card;
-    s32 result;
-    u16* fat;
-    CARDDir* dir;
-    CARDDir* ent;
-    u16 fileNo;
-
-    result = __CARDGetControlBlock(chan, &card);
-    if (result < 0) {
-        return result;
-    }
-
-    fat = __CARDGetFatBlock(card);
-    dir = __CARDGetDirBlock(card);
-    if (fat == 0 || dir == 0) {
-        return __CARDPutControlBlock(card, CARD_RESULT_BROKEN);
-    }
-
-    if (byteNotUsed) {
-        *byteNotUsed = (s32)(card->sectorSize * fat[CARD_FAT_FREEBLOCKS]);
-    }
-
-    if (filesNotUsed) {
-        *filesNotUsed = 0;
-        for (fileNo = 0; fileNo < CARD_MAX_FILE; fileNo++) {
-            ent = &dir[fileNo];
-            if (ent->fileName[0] == 0xff) {
-                ++*filesNotUsed;
-            }
-        }
-    }
-
-    return __CARDPutControlBlock(card, CARD_RESULT_READY);
-}
-
-s32 CARDGetSectorSize(s32 chan, u32* size) {
-    CARDControl* card;
-    s32 result;
-
-    result = __CARDGetControlBlock(chan, &card);
-    if (result < 0) {
-        return result;
-    }
-
-    *size = card->sectorSize;
-    return __CARDPutControlBlock(card, CARD_RESULT_READY);
-}
-
 s32 __CARDSync(s32 chan) {
     CARDControl* block;
     s32 result;
@@ -631,7 +562,7 @@ s32 __CARDSync(s32 chan) {
 
     block = &__CARDBlock[chan];
     enabled = OSDisableInterrupts();
-    while ((result = CARDGetResultCode(chan)) == CARD_RESULT_BUSY) {
+    while ((result = block->result) == CARD_RESULT_BUSY) {
         OSSleepThread(&block->threadQueue);
     }
 

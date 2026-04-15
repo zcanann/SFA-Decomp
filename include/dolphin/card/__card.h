@@ -68,6 +68,7 @@ s32 __CARDUpdateFatBlock(s32 chan, u16* fat, CARDCallback callback);
 
 // CARDBios
 extern CARDControl __CARDBlock[2];
+extern u16 __CARDEncode;
 
 extern DVDDiskID* __CARDDiskID;
 extern DVDDiskID __CARDDiskNone;
@@ -93,7 +94,7 @@ void __CARDSetDiskID(const DVDDiskID* id);
 s32 __CARDGetControlBlock(s32 chan, CARDControl **pcard);
 s32 __CARDPutControlBlock(CARDControl* card, s32 result);
 s32 __CARDSync(s32 chan);
-u16 __CARDGetFontEncode(void);
+#define __CARDGetFontEncode() (__CARDEncode)
 u16 __CARDSetFontEncode(u16 encode);
 
 #ifdef __cplusplus

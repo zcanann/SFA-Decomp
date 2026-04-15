@@ -229,17 +229,12 @@ extern u32 __CARDFreq;
 #endif
 
 void CARDInit(void);
-s32 CARDGetResultCode(s32 chan);
-s32 CARDFreeBlocks(s32 chan, s32* byteNotUsed, s32* filesNotUsed);
 s32 CARDRenameAsync(s32 chan, const char* oldName, const char* newName, CARDCallback callback);
 
 // CARDBios
 void CARDInit(void);
-s32 CARDGetResultCode(s32 chan);
-s32 CARDFreeBlocks(s32 chan, s32* byteNotUsed, s32* filesNotUsed);
 s32 CARDGetEncoding(s32 chan, u16* encode);
 s32 CARDGetMemSize(s32 chan, u16* size);
-s32 CARDGetSectorSize(s32 chan, u32* size);
 const DVDDiskID* CARDGetDiskID(s32 chan);
 s32 CARDSetDiskID(s32 chan, const DVDDiskID* diskID);
 BOOL CARDSetFastMode(BOOL enable);
