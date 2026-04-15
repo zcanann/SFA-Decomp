@@ -5,6 +5,8 @@ extern void SetTRKConnected(BOOL);
 extern BOOL GetTRKConnected(void);
 void OSReport(const char* msg);
 
+void usr_put_initialize(void) { }
+
 BOOL usr_puts_serial(const char* msg)
 {
 	BOOL connect_ = FALSE;
@@ -25,5 +27,3 @@ BOOL usr_puts_serial(const char* msg)
 	}
 	return connect_;
 }
-
-void usr_put_initialize(void) { }
