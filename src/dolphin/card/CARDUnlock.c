@@ -28,52 +28,54 @@ static u8 CardData[352] ATTRIBUTE_ALIGN(DOLPHIN_ALIGNMENT) = {
 static u32 next = 1;
 
 // prototypes
-static u32 exnor_1st(u32 data, u32 rshift);
-static u32 exnor(u32 data, u32 lshift);
 static u32 bitrev(u32 data);
 static s32 ReadArrayUnlock(s32 chan, u32 data, void* rbuf, s32 rlen, int mode);
-static u32 GetInitVal(void);
+static inline u32 GetInitVal(void);
 static s32 DummyLen(void);
 static void InitCallback(void* _task);
 static void DoneCallback(void* _task);
 
-static int CARDRand(void) {
-    next = (next * 0x41C64E6D) + 0x3039;
-    return (next / 0x10000) & 0x7FFF;
+#define EXNOR_1ST(dst, data, rshift)     \
+    do {                                 \
+        u32 _wk;                         \
+        u32 _i;                          \
+        (dst) = (data);                  \
+        for (_i = 0; _i < (rshift); _i++) { \
+            _wk = ~((dst) ^ ((dst) >> 7) ^ ((dst) >> 15) ^ ((dst) >> 23)); \
+            (dst) = ((dst) >> 1) | ((_wk << 30) & 0x40000000); \
+        }                                \
+    } while (0)
+
+static inline int CARDRand(void) {
+    next = next * 1103515245 + 12345;
+    return (int)((unsigned int)(next / 65536) % 32768);
 }
 
-static void CARDSrand(unsigned int seed) {
+static inline void CARDSrand(unsigned int seed) {
     next = seed;
 }
 
-static u32 exnor_1st(u32 data, u32 rshift) {
-    u32 wk;
-    u32 work;
-    u32 i;
+static inline u32 GetInitVal(void) {
+    u32 tmp;
+    u32 tick;
 
-    work = data;
-    for (i = 0; i < rshift; i++) {
-        wk = ~(work ^ (work >> 7) ^ (work >> 15) ^ (work >> 23));
-        work = (work >> 1) | ((wk << 30) & 0x40000000);
-    }
-
-    return work;
+    tick = OSGetTick();
+    CARDSrand(tick);
+    tmp = 0x7fec8000;
+    tmp |= CARDRand();
+    tmp &= 0xfffff000;
+    return tmp;
 }
-
-static u32 exnor(u32 data, u32 lshift) {
-    u32 wk;
-    u32 work;
-    u32 i;
-
-    work = data;
-    for (i = 0; i < lshift; i++) {
-        // 1bit Left Shift
-        wk = ~(work ^ (work << 7) ^ (work << 15) ^ (work << 23));
-        work = (work << 1) | ((wk >> 30) & 0x00000002);
-    }
-
-    return work;
-}
+#define EXNOR(dst, data, lshift)         \
+    do {                                 \
+        u32 _wk;                         \
+        u32 _i;                          \
+        (dst) = (data);                  \
+        for (_i = 0; _i < (lshift); _i++) { \
+            _wk = ~((dst) ^ ((dst) << 7) ^ ((dst) << 15) ^ ((dst) << 23)); \
+            (dst) = ((dst) << 1) | ((_wk >> 30) & 0x00000002); \
+        }                                \
+    } while (0)
 
 static u32 bitrev(u32 data) {
     u32 wk;
@@ -135,18 +137,6 @@ static s32 ReadArrayUnlock(s32 chan, u32 data, void* rbuf, s32 rlen, int mode) {
     err |= !EXIDeselect(chan);
 
     return err ? CARD_RESULT_NOCARD : CARD_RESULT_READY;
-}
-
-static u32 GetInitVal(void) {
-    u32 tmp;
-    u32 tick;
-
-    tick = OSGetTick();
-    CARDSrand(tick);
-    tmp = 0x7fec8000;
-    tmp |= CARDRand();
-    tmp &= 0xfffff000;
-    return tmp;
 }
 
 static s32 DummyLen(void) {
@@ -223,7 +213,7 @@ s32 __CARDUnlock(s32 chan, u8 flashID[12]) {
         return CARD_RESULT_NOCARD;
 
     rshift = (u32)(dummy * 8 + 1);
-    wk = exnor_1st(init_val, rshift);
+    EXNOR_1ST(wk, init_val, rshift);
     wk1 = ~(wk ^ (wk >> 7) ^ (wk >> 15) ^ (wk >> 23));
     card->scramble = (wk | ((wk1 << 31) & 0x80000000));
     card->scramble = bitrev(card->scramble);
@@ -241,36 +231,36 @@ s32 __CARDUnlock(s32 chan, u8 flashID[12]) {
     para2B = *dp++;
     para1A = (para1A ^ card->scramble);
     rshift = 32;
-    wk = exnor(card->scramble, rshift);
+    EXNOR(wk, card->scramble, rshift);
     wk1 = ~(wk ^ (wk << 7) ^ (wk << 15) ^ (wk << 23));
     card->scramble = (wk | ((wk1 >> 31) & 0x00000001));
 
     para1B = (para1B ^ card->scramble);
     rshift = 32;
-    wk = exnor(card->scramble, rshift);
+    EXNOR(wk, card->scramble, rshift);
     wk1 = ~(wk ^ (wk << 7) ^ (wk << 15) ^ (wk << 23));
     card->scramble = (wk | ((wk1 >> 31) & 0x00000001));
 
     Ans1 ^= card->scramble;
     rshift = 32;
-    wk = exnor(card->scramble, rshift);
+    EXNOR(wk, card->scramble, rshift);
     wk1 = ~(wk ^ (wk << 7) ^ (wk << 15) ^ (wk << 23));
     card->scramble = (wk | ((wk1 >> 31) & 0x00000001));
 
     para2A = (para2A ^ card->scramble);
     rshift = 32;
-    wk = exnor(card->scramble, rshift);
+    EXNOR(wk, card->scramble, rshift);
     wk1 = ~(wk ^ (wk << 7) ^ (wk << 15) ^ (wk << 23));
     card->scramble = (wk | ((wk1 >> 31) & 0x00000001));
 
     para2B = (para2B ^ card->scramble);
     rshift = (u32)(dummy * 8);
-    wk = exnor(card->scramble, rshift);
+    EXNOR(wk, card->scramble, rshift);
     wk1 = ~(wk ^ (wk << 7) ^ (wk << 15) ^ (wk << 23));
     card->scramble = (wk | ((wk1 >> 31) & 0x00000001));
 
     rshift = 32 + 1;
-    wk = exnor(card->scramble, rshift);
+    EXNOR(wk, card->scramble, rshift);
     wk1 = ~(wk ^ (wk << 7) ^ (wk << 15) ^ (wk << 23));
     card->scramble = (wk | ((wk1 >> 31) & 0x00000001));
 
@@ -375,7 +365,7 @@ static void DoneCallback(void* _task) {
     }
 
     rshift = (u32)((dummy + 4 + card->latency) * 8 + 1);
-    wk = exnor(card->scramble, rshift);
+    EXNOR(wk, card->scramble, rshift);
     wk1 = ~(wk ^ (wk << 7) ^ (wk << 15) ^ (wk << 23));
     card->scramble = (wk | ((wk1 >> 31) & 0x00000001));
 
