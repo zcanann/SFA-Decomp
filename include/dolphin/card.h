@@ -250,8 +250,6 @@ s32 CARDCreateAsync(s32 chan, const char* fileName, u32 size, CARDFileInfo* file
 s32 CARDCreate(s32 chan, const char* fileName, u32 size, CARDFileInfo* fileInfo);
 
 // CARDDelete
-s32 CARDFastDeleteAsync(s32 chan, s32 fileNo, CARDCallback callback);
-s32 CARDFastDelete(s32 chan, s32 fileNo);
 s32 CARDDeleteAsync(s32 chan, const char* fileName, CARDCallback callback);
 s32 CARDDelete(s32 chan, const char* fileName);
 
