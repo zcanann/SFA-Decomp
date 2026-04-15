@@ -1,0 +1,138 @@
+{
+  "key": "expgfx",
+  "labels": [
+    "expgfx.c"
+  ],
+  "categories": [
+    "source"
+  ],
+  "direct_xref_count": 6,
+  "direct_function_count": 4,
+  "source_string_count": 5,
+  "orig": {
+    "root_file_count": 0,
+    "root_files": [],
+    "nested_file_count": 0,
+    "nested_files": [],
+    "named_directory_count": 0,
+    "named_directories": [],
+    "root_romlist_count": 0,
+    "root_romlists": []
+  },
+  "family_hint": null,
+  "map_hints": [],
+  "functions": [
+    {
+      "function_start": "0x8009B36C",
+      "function_name": "fn_8009B36C",
+      "xrefs": [
+        {
+          "xref_address": "0x8009B450",
+          "pair_address": "0x8009B454",
+          "target_address": "0x803107B0",
+          "target_text": "expgfx.c: mismatch in add/remove in exptab",
+          "pair_kind": "lis/addi",
+          "function_name": "fn_8009B36C"
+        }
+      ]
+    },
+    {
+      "function_start": "0x8009B4E0",
+      "function_name": "fn_8009B4E0",
+      "xrefs": [
+        {
+          "xref_address": "0x8009B5C0",
+          "pair_address": "0x8009B5C4",
+          "target_address": "0x803107B0",
+          "target_text": "expgfx.c: mismatch in add/remove in exptab",
+          "pair_kind": "lis/addi",
+          "function_name": "fn_8009B4E0"
+        }
+      ]
+    },
+    {
+      "function_start": "0x8009E078",
+      "function_name": "fn_8009E078",
+      "xrefs": [
+        {
+          "xref_address": "0x8009E0EC",
+          "pair_address": "0x8009E0F0",
+          "target_address": "0x803107E8",
+          "target_text": "expgfx.c: addToTable usage overflow",
+          "pair_kind": "lis/addi",
+          "function_name": "fn_8009E078"
+        },
+        {
+          "xref_address": "0x8009E174",
+          "pair_address": "0x8009E178",
+          "target_address": "0x80310810",
+          "target_text": "expgfx.c: exptab is FULL",
+          "pair_kind": "lis/addi",
+          "function_name": "fn_8009E078"
+        }
+      ]
+    },
+    {
+      "function_start": "0x8009F558",
+      "function_name": "fn_8009F558",
+      "xrefs": [
+        {
+          "xref_address": "0x8009F8CC",
+          "pair_address": "0x8009F8D0",
+          "target_address": "0x8031082C",
+          "target_text": "expgfx.c: invalid tabindex",
+          "pair_kind": "lis/addi",
+          "function_name": "fn_8009F558"
+        },
+        {
+          "xref_address": "0x8009F98C",
+          "pair_address": "0x8009F990",
+          "target_address": "0x80310848",
+          "target_text": "expgfx.c: scale overflow",
+          "pair_kind": "lis/addi",
+          "function_name": "fn_8009F558"
+        }
+      ]
+    }
+  ],
+  "strings": [
+    {
+      "address": "0x803107B0",
+      "text": "expgfx.c: mismatch in add/remove in exptab",
+      "tags": [
+        "source"
+      ]
+    },
+    {
+      "address": "0x803107E8",
+      "text": "expgfx.c: addToTable usage overflow",
+      "tags": [
+        "source",
+        "warning"
+      ]
+    },
+    {
+      "address": "0x80310810",
+      "text": "expgfx.c: exptab is FULL",
+      "tags": [
+        "source"
+      ]
+    },
+    {
+      "address": "0x8031082C",
+      "text": "expgfx.c: invalid tabindex",
+      "tags": [
+        "source"
+      ]
+    },
+    {
+      "address": "0x80310848",
+      "text": "expgfx.c: scale overflow",
+      "tags": [
+        "source",
+        "warning"
+      ]
+    }
+  ],
+  "neighbor_strings": []
+}

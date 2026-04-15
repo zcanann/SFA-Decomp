@@ -1,0 +1,85 @@
+{
+  "key": "gametext",
+  "labels": [
+    "gametext"
+  ],
+  "categories": [
+    "file"
+  ],
+  "direct_xref_count": 2,
+  "direct_function_count": 2,
+  "source_string_count": 0,
+  "orig": {
+    "root_file_count": 2,
+    "root_files": [
+      "GAMETEXT.bin",
+      "GAMETEXT.tab"
+    ],
+    "nested_file_count": 0,
+    "nested_files": [],
+    "named_directory_count": 1,
+    "named_directories": [
+      "gametext"
+    ],
+    "root_romlist_count": 0,
+    "root_romlists": []
+  },
+  "family_hint": {
+    "family": "GAMETEXT",
+    "bin_slots": [
+      19
+    ],
+    "tab_slots": [
+      20
+    ]
+  },
+  "map_hints": [],
+  "functions": [
+    {
+      "function_start": "0x80019C5C",
+      "function_name": "fn_80019C5C",
+      "xrefs": [
+        {
+          "xref_address": "0x80019DA0",
+          "pair_address": "0x80019DA4",
+          "target_address": "0x802CA9F4",
+          "target_text": "gametext/%s/%s.bin",
+          "pair_kind": "lis/addi",
+          "function_name": "fn_80019C5C"
+        }
+      ]
+    },
+    {
+      "function_start": "0x8001A6A4",
+      "function_name": "fn_8001A6A4",
+      "xrefs": [
+        {
+          "xref_address": "0x8001A8C4",
+          "pair_address": "0x8001A8C8",
+          "target_address": "0x802CA9F4",
+          "target_text": "gametext/%s/%s.bin",
+          "pair_kind": "lis/addi",
+          "function_name": "fn_8001A6A4"
+        }
+      ]
+    }
+  ],
+  "strings": [
+    {
+      "address": "0x802CA9F4",
+      "text": "gametext/%s/%s.bin",
+      "tags": [
+        "file"
+      ]
+    }
+  ],
+  "neighbor_strings": [
+    {
+      "address": "0x802CAA47",
+      "text": "`gametext/Sequences/%d_%s.bin",
+      "tags": [
+        "file"
+      ]
+    }
+  ]
+}

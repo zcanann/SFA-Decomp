@@ -1,0 +1,50 @@
+{
+  "key": "n-attractmode",
+  "labels": [
+    "n_attractmode.c"
+  ],
+  "categories": [
+    "source"
+  ],
+  "direct_xref_count": 0,
+  "direct_function_count": 0,
+  "source_string_count": 1,
+  "orig": {
+    "root_file_count": 0,
+    "root_files": [],
+    "nested_file_count": 0,
+    "nested_files": [],
+    "named_directory_count": 0,
+    "named_directories": [],
+    "root_romlist_count": 0,
+    "root_romlists": []
+  },
+  "family_hint": null,
+  "map_hints": [],
+  "functions": [],
+  "strings": [
+    {
+      "address": "0x8031AFDC",
+      "text": "n_attractmode.c",
+      "tags": [
+        "source"
+      ]
+    }
+  ],
+  "neighbor_strings": [
+    {
+      "address": "0x8031AF88",
+      "text": "^^^^^^^^^^^^^^^^  malloc for movie failed",
+      "tags": [
+        "warning"
+      ]
+    },
+    {
+      "address": "0x8031B4B4",
+      "text": "/savegame/save%d.bin",
+      "tags": [
+        "file"
+      ]
+    }
+  ]
+}

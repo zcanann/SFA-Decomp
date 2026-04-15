@@ -1,0 +1,66 @@
+{
+  "key": "lactions",
+  "labels": [
+    "LACTIONS.bin"
+  ],
+  "categories": [
+    "file"
+  ],
+  "direct_xref_count": 2,
+  "direct_function_count": 1,
+  "source_string_count": 0,
+  "orig": {
+    "root_file_count": 1,
+    "root_files": [
+      "LACTIONS.bin"
+    ],
+    "nested_file_count": 0,
+    "nested_files": [],
+    "named_directory_count": 0,
+    "named_directories": [],
+    "root_romlist_count": 0,
+    "root_romlists": []
+  },
+  "family_hint": {
+    "family": "LACTIONS",
+    "bin_slots": [
+      12
+    ],
+    "tab_slots": []
+  },
+  "map_hints": [],
+  "functions": [
+    {
+      "function_start": "0x8001A950",
+      "function_name": "fn_8001A950",
+      "xrefs": [
+        {
+          "xref_address": "0x8001A964",
+          "pair_address": "0x8001A978",
+          "target_address": "0x802CBBA0",
+          "target_text": "LACTIONS.bin",
+          "pair_kind": "lis/addi",
+          "function_name": "fn_8001A950"
+        },
+        {
+          "xref_address": "0x8001A96C",
+          "pair_address": "0x8001A978",
+          "target_address": "0x802CBBA0",
+          "target_text": "LACTIONS.bin",
+          "pair_kind": "lis/addi",
+          "function_name": "fn_8001A950"
+        }
+      ]
+    }
+  ],
+  "strings": [
+    {
+      "address": "0x802CBBA0",
+      "text": "LACTIONS.bin",
+      "tags": [
+        "file"
+      ]
+    }
+  ],
+  "neighbor_strings": []
+}

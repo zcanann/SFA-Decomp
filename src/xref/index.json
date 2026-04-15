@@ -1,0 +1,314 @@
+{
+  "generated_by": "python tools/xref/asset_clusters.py --materialize-all",
+  "cluster_count": 16,
+  "clusters": [
+    {
+      "key": "expgfx",
+      "labels": [
+        "expgfx.c"
+      ],
+      "categories": [
+        "source"
+      ],
+      "direct_xref_count": 6,
+      "direct_function_count": 4,
+      "source_string_count": 5,
+      "packet_path": "src/xref/packets/expgfx.json",
+      "doc_path": "docs/xref/packets/expgfx.md",
+      "orig_summary": "none",
+      "map_summary": "none",
+      "top_strings": [
+        "expgfx.c: mismatch in add/remove in exptab",
+        "expgfx.c: addToTable usage overflow",
+        "expgfx.c: exptab is FULL"
+      ]
+    },
+    {
+      "key": "textblock",
+      "labels": [
+        "textblock.c"
+      ],
+      "categories": [
+        "source"
+      ],
+      "direct_xref_count": 3,
+      "direct_function_count": 3,
+      "source_string_count": 2,
+      "packet_path": "src/xref/packets/textblock.json",
+      "doc_path": "docs/xref/packets/textblock.md",
+      "orig_summary": "none",
+      "map_summary": "none",
+      "top_strings": [
+        "<textblock.c Init>No Longer supported ",
+        "H<textblock.c Init>No Longer supported "
+      ]
+    },
+    {
+      "key": "objanim",
+      "labels": [
+        "objanim.c"
+      ],
+      "categories": [
+        "source"
+      ],
+      "direct_xref_count": 3,
+      "direct_function_count": 3,
+      "source_string_count": 1,
+      "packet_path": "src/xref/packets/objanim.json",
+      "doc_path": "docs/xref/packets/objanim.md",
+      "orig_summary": "none",
+      "map_summary": "none",
+      "top_strings": [
+        "<objanim.c -- setBlendMove> WARNING tried to load anim -1 from cache modno %d"
+      ]
+    },
+    {
+      "key": "gametext",
+      "labels": [
+        "gametext"
+      ],
+      "categories": [
+        "file"
+      ],
+      "direct_xref_count": 2,
+      "direct_function_count": 2,
+      "source_string_count": 0,
+      "packet_path": "src/xref/packets/gametext.json",
+      "doc_path": "docs/xref/packets/gametext.md",
+      "orig_summary": "root files=2, dirs=1",
+      "map_summary": "none",
+      "top_strings": [
+        "gametext/%s/%s.bin"
+      ]
+    },
+    {
+      "key": "dimboss",
+      "labels": [
+        "DIMBoss.c"
+      ],
+      "categories": [
+        "source"
+      ],
+      "direct_xref_count": 2,
+      "direct_function_count": 1,
+      "source_string_count": 2,
+      "packet_path": "src/xref/packets/dimboss.json",
+      "doc_path": "docs/xref/packets/dimboss.md",
+      "orig_summary": "none",
+      "map_summary": "none",
+      "top_strings": [
+        "<DIMBoss.c> freeing assets for DIMBoss",
+        "<DIMBoss.c> loading assets for DIMTop"
+      ]
+    },
+    {
+      "key": "romlist",
+      "labels": [
+        ".romlist.zlb"
+      ],
+      "categories": [
+        "file"
+      ],
+      "direct_xref_count": 2,
+      "direct_function_count": 1,
+      "source_string_count": 0,
+      "packet_path": "src/xref/packets/romlist.json",
+      "doc_path": "docs/xref/packets/romlist.md",
+      "orig_summary": "root romlists=124",
+      "map_summary": "none",
+      "top_strings": [
+        "%s.romlist.zlb"
+      ]
+    },
+    {
+      "key": "lactions",
+      "labels": [
+        "LACTIONS.bin"
+      ],
+      "categories": [
+        "file"
+      ],
+      "direct_xref_count": 2,
+      "direct_function_count": 1,
+      "source_string_count": 0,
+      "packet_path": "src/xref/packets/lactions.json",
+      "doc_path": "docs/xref/packets/lactions.md",
+      "orig_summary": "root files=1",
+      "map_summary": "none",
+      "top_strings": [
+        "LACTIONS.bin"
+      ]
+    },
+    {
+      "key": "shthorntail",
+      "labels": [
+        "SHthorntail.c"
+      ],
+      "categories": [
+        "source"
+      ],
+      "direct_xref_count": 1,
+      "direct_function_count": 1,
+      "source_string_count": 1,
+      "packet_path": "src/xref/packets/shthorntail.json",
+      "doc_path": "docs/xref/packets/shthorntail.md",
+      "orig_summary": "none",
+      "map_summary": "none",
+      "top_strings": [
+        "SHthorntail.c"
+      ]
+    },
+    {
+      "key": "objhitreact",
+      "labels": [
+        "objHitReact.c"
+      ],
+      "categories": [
+        "source"
+      ],
+      "direct_xref_count": 1,
+      "direct_function_count": 1,
+      "source_string_count": 1,
+      "packet_path": "src/xref/packets/objhitreact.json",
+      "doc_path": "docs/xref/packets/objhitreact.md",
+      "orig_summary": "none",
+      "map_summary": "none",
+      "top_strings": [
+        "objHitReact.c: sphere overflow! %d"
+      ]
+    },
+    {
+      "key": "laser",
+      "labels": [
+        "laser.c"
+      ],
+      "categories": [
+        "source"
+      ],
+      "direct_xref_count": 1,
+      "direct_function_count": 1,
+      "source_string_count": 1,
+      "packet_path": "src/xref/packets/laser.json",
+      "doc_path": "docs/xref/packets/laser.md",
+      "orig_summary": "none",
+      "map_summary": "none",
+      "top_strings": [
+        "<laser.c Init>No Longer supported "
+      ]
+    },
+    {
+      "key": "curves",
+      "labels": [
+        "curves.c"
+      ],
+      "categories": [
+        "source"
+      ],
+      "direct_xref_count": 1,
+      "direct_function_count": 1,
+      "source_string_count": 1,
+      "packet_path": "src/xref/packets/curves.json",
+      "doc_path": "docs/xref/packets/curves.md",
+      "orig_summary": "none",
+      "map_summary": "none",
+      "top_strings": [
+        "curves.c: MAX_ROMCURVES exceeded!!"
+      ]
+    },
+    {
+      "key": "camcontrol",
+      "labels": [
+        "camcontrol.c"
+      ],
+      "categories": [
+        "source"
+      ],
+      "direct_xref_count": 1,
+      "direct_function_count": 1,
+      "source_string_count": 1,
+      "packet_path": "src/xref/packets/camcontrol.json",
+      "doc_path": "docs/xref/packets/camcontrol.md",
+      "orig_summary": "none",
+      "map_summary": "none",
+      "top_strings": [
+        "<camcontrol.c>  failed to load triggered camaction actionno %d"
+      ]
+    },
+    {
+      "key": "savegame",
+      "labels": [
+        "savegame"
+      ],
+      "categories": [
+        "file"
+      ],
+      "direct_xref_count": 1,
+      "direct_function_count": 1,
+      "source_string_count": 0,
+      "packet_path": "src/xref/packets/savegame.json",
+      "doc_path": "docs/xref/packets/savegame.md",
+      "orig_summary": "root files=2, dirs=1",
+      "map_summary": "none",
+      "top_strings": [
+        "/savegame/save%d.bin"
+      ]
+    },
+    {
+      "key": "audio",
+      "labels": [
+        "AUDIO.tab"
+      ],
+      "categories": [
+        "file"
+      ],
+      "direct_xref_count": 1,
+      "direct_function_count": 1,
+      "source_string_count": 0,
+      "packet_path": "src/xref/packets/audio.json",
+      "doc_path": "docs/xref/packets/audio.md",
+      "orig_summary": "dirs=1",
+      "map_summary": "none",
+      "top_strings": [
+        "AUDIO.tab"
+      ]
+    },
+    {
+      "key": "n-attractmode",
+      "labels": [
+        "n_attractmode.c"
+      ],
+      "categories": [
+        "source"
+      ],
+      "direct_xref_count": 0,
+      "direct_function_count": 0,
+      "source_string_count": 1,
+      "packet_path": "src/xref/packets/n-attractmode.json",
+      "doc_path": "docs/xref/packets/n-attractmode.md",
+      "orig_summary": "none",
+      "map_summary": "none",
+      "top_strings": [
+        "n_attractmode.c"
+      ]
+    },
+    {
+      "key": "dvdfs",
+      "labels": [
+        "dvdfs.c"
+      ],
+      "categories": [
+        "source"
+      ],
+      "direct_xref_count": 0,
+      "direct_function_count": 0,
+      "source_string_count": 1,
+      "packet_path": "src/xref/packets/dvdfs.json",
+      "doc_path": "docs/xref/packets/dvdfs.md",
+      "orig_summary": "none",
+      "map_summary": "none",
+      "top_strings": [
+        "dvdfs.c"
+      ]
+    }
+  ]
+}

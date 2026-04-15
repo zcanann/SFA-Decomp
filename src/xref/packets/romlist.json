@@ -1,0 +1,75 @@
+{
+  "key": "romlist",
+  "labels": [
+    ".romlist.zlb"
+  ],
+  "categories": [
+    "file"
+  ],
+  "direct_xref_count": 2,
+  "direct_function_count": 1,
+  "source_string_count": 0,
+  "orig": {
+    "root_file_count": 0,
+    "root_files": [],
+    "nested_file_count": 0,
+    "nested_files": [],
+    "named_directory_count": 0,
+    "named_directories": [],
+    "root_romlist_count": 124,
+    "root_romlists": [
+      "animtest.romlist.zlb",
+      "arwing.romlist.zlb",
+      "arwingcity.romlist.zlb",
+      "arwingcloud.romlist.zlb",
+      "arwingdarkice.romlist.zlb",
+      "arwingdragon.romlist.zlb",
+      "arwingtoplanet.romlist.zlb",
+      "bossdrakorflatr.romlist.zlb",
+      "capeclaw.romlist.zlb",
+      "ccbridge.romlist.zlb",
+      "ccshrine.romlist.zlb",
+      "cfcolumn.romlist.zlb",
+      "cfdungeonblock.romlist.zlb",
+      "cfgalleon.romlist.zlb",
+      "cfgangplank.romlist.zlb",
+      "cfledge.romlist.zlb"
+    ]
+  },
+  "family_hint": null,
+  "map_hints": [],
+  "functions": [
+    {
+      "function_start": "0x800484A4",
+      "function_name": "fn_800484A4",
+      "xrefs": [
+        {
+          "xref_address": "0x800484E4",
+          "pair_address": "0x800484E8",
+          "target_address": "0x802CD0DC",
+          "target_text": "%s.romlist.zlb",
+          "pair_kind": "lis/addi",
+          "function_name": "fn_800484A4"
+        },
+        {
+          "xref_address": "0x80048580",
+          "pair_address": "0x80048584",
+          "target_address": "0x802CD0DC",
+          "target_text": "%s.romlist.zlb",
+          "pair_kind": "lis/addi",
+          "function_name": "fn_800484A4"
+        }
+      ]
+    }
+  ],
+  "strings": [
+    {
+      "address": "0x802CD0DC",
+      "text": "%s.romlist.zlb",
+      "tags": [
+        "file"
+      ]
+    }
+  ],
+  "neighbor_strings": []
+}
