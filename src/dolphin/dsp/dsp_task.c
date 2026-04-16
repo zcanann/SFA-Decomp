@@ -280,7 +280,7 @@ void __DSP_boot_task(DSPTaskInfo* task) {
     __DSP_debug_printf("__DSP_boot_task()  : Start Vector  : 0x%08X\n", task->dsp_init_vector);
 }
 
-void __DSP_insert_task(DSPTaskInfo* task) {
+void __DSP_add_task(DSPTaskInfo* task) {
     DSPTaskInfo* temp;
 
     if (__DSP_first_task == NULL) {
@@ -311,25 +311,6 @@ void __DSP_insert_task(DSPTaskInfo* task) {
         task->prev = __DSP_last_task;
         __DSP_last_task = task;
     }
-}
-
-void __DSP_add_task(DSPTaskInfo* task) {
-    ASSERTMSGLINE(771, task != NULL, "__DSP_add_task(): Why are you adding a NULL task?\n");
-
-    if (__DSP_last_task == NULL) {
-        __DSP_curr_task = task;
-        __DSP_last_task = task;
-        __DSP_first_task = task;
-        task->next = task->prev = NULL;
-    } else {
-        __DSP_last_task->next = task;
-        task->next = NULL;
-        task->prev = __DSP_last_task;
-        __DSP_last_task = task;
-    }
-
-    task->state = 0;
-    __DSP_debug_printf("__DSP_add_task() : Added task    : 0x%08X\n", (u32)task);
 }
 
 void __DSP_remove_task(DSPTaskInfo* task) {
