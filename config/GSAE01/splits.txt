@@ -67,6 +67,9 @@ dolphin/os/OSMessage.c:
 dolphin/os/OSMemory.c:
 	.text       start:0x802448FC end:0x80244BDC
 
+dolphin/os/OSMutex.c:
+	.text       start:0x80244BDC end:0x80244C4C
+
 dolphin/os/OSReboot.c:
 	.text       start:0x80244C4C end:0x80244E64
 
