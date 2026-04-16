@@ -22,7 +22,7 @@ static void TimeoutHandler(OSAlarm* alarm, OSContext* context);
 static inline void SetupTimeoutAlarm(CARDControl* card);
 static s32 Retry(s32 chan);
 static void UnlockedCallback(s32 chan, s32 result);
-static BOOL OnReset(BOOL f);
+BOOL OnReset(BOOL f);
 
 static OSResetFunctionInfo ResetFunctionInfo = {OnReset, 127};
 
@@ -578,7 +578,7 @@ s32 __CARDSync(s32 chan) {
     return result;
 }
 
-static BOOL OnReset(BOOL final) {
+BOOL OnReset(BOOL final) {
     if (!final) {
         if (CARDUnmount(0) == CARD_RESULT_BUSY || CARDUnmount(1) == CARD_RESULT_BUSY) {
             return FALSE;
