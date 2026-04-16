@@ -26,7 +26,7 @@ dolphin/TRK_MINNOW_DOLPHIN/MWCriticalSection_gc.c:
 	.text       start:0x801B1398 end:0x801B13F0
 
 dolphin/base/PPCArch.c:
-	.text       start:0x80240A6C end:0x80240AD0
+	.text       start:0x80240A44 end:0x80240AD0
 
 dolphin/os/OS.c:
 	.text       start:0x80240AD0 end:0x8024142C
