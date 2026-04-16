@@ -71,6 +71,7 @@ void DSPAssertInt(void) {
     tmp = __DSPRegs[5];
     tmp = (tmp & ~0xA8) | 2;
     __DSPRegs[5] = tmp;
+    __DSP_init_flag = 0;
     OSRestoreInterrupts(old);
 }
 
