@@ -148,6 +148,10 @@ class WindowSignature:
     def last_size(self) -> int:
         return self.functions[-1].size
 
+    @cached_property
+    def max_function_size(self) -> int:
+        return max(function.size for function in self.functions)
+
 
 @dataclass(frozen=True)
 class MatchResult:
@@ -217,6 +221,10 @@ class RawWindow:
     @cached_property
     def last_size(self) -> int:
         return self.size_vector[-1]
+
+    @cached_property
+    def max_function_size(self) -> int:
+        return max(self.size_vector)
 
 
 def parse_reference_spec(value: str) -> ReferenceSpec:
@@ -549,6 +557,7 @@ def collect_reference_window_metadata(
     path_filters: tuple[str, ...],
     min_functions: int = 1,
     min_span: int = 0,
+    min_largest_function: int = 0,
 ) -> list[tuple[str, tuple[tuple[int, int, str], ...]]]:
     symbols = load_reference_symbols(spec.symbols_path)
     windows: list[tuple[str, tuple[tuple[int, int, str], ...]]] = []
@@ -564,7 +573,12 @@ def collect_reference_window_metadata(
         if not functions:
             continue
         span = functions[-1][1] - functions[0][0]
-        if len(functions) < min_functions or span < min_span:
+        max_function_size = max(end - start for start, end, _ in functions)
+        if (
+            len(functions) < min_functions
+            or span < min_span
+            or max_function_size < min_largest_function
+        ):
             continue
         windows.append((split_path, functions))
     return windows
@@ -575,6 +589,7 @@ def collect_reference_raw_windows(
     path_filters: tuple[str, ...],
     min_functions: int = 1,
     min_span: int = 0,
+    min_largest_function: int = 0,
 ) -> list[RawWindow]:
     return [
         RawWindow(
@@ -586,10 +601,11 @@ def collect_reference_raw_windows(
         )
         for split_path, functions in collect_reference_window_metadata(
             spec,
-            path_filters,
-            min_functions=min_functions,
-            min_span=min_span,
-        )
+                path_filters,
+                min_functions=min_functions,
+                min_span=min_span,
+                min_largest_function=min_largest_function,
+            )
     ]
 
 
@@ -598,15 +614,17 @@ def collect_reference_windows(
     path_filters: tuple[str, ...],
     min_functions: int = 1,
     min_span: int = 0,
+    min_largest_function: int = 0,
 ) -> list[WindowSignature]:
     dol = load_dol(spec.dol_path)
     windows: list[WindowSignature] = []
     for split_path, functions in collect_reference_window_metadata(
         spec,
-        path_filters,
-        min_functions=min_functions,
-        min_span=min_span,
-    ):
+            path_filters,
+            min_functions=min_functions,
+            min_span=min_span,
+            min_largest_function=min_largest_function,
+        ):
         windows.append(
             build_window_signature(
                 dol=dol,
@@ -834,6 +852,7 @@ def discover_reference_hits(
     coarse_limit: int | None,
     min_functions: int,
     min_span: int,
+    min_largest_function: int,
 ) -> list[DiscoveryHit]:
     target_cache: dict[int, tuple[RawWindow, ...]] = {}
     best_by_target: dict[tuple[int, int], DiscoveryHit] = {}
@@ -842,7 +861,11 @@ def discover_reference_hits(
     reference_dol_cache: dict[str, DolFile] = {}
 
     for reference in references:
-        if reference.function_count < min_functions or reference.span < min_span:
+        if (
+            reference.function_count < min_functions
+            or reference.span < min_span
+            or reference.max_function_size < min_largest_function
+        ):
             continue
         target_windows = target_cache.get(reference.function_count)
         if target_windows is None:
@@ -858,15 +881,16 @@ def discover_reference_hits(
                     break
                 if only_unassigned and ownership_prefix[index + count] != ownership_prefix[index]:
                     continue
-                raw_windows.append(
-                    RawWindow(
-                        source_path=f"range:0x{window_start:08X}-0x{window_end:08X}",
-                        game=version,
-                        start=window_start,
-                        end=window_end,
-                        function_defs=tuple((function.start, function.end, function.name) for function in chunk),
-                    )
+                raw_window = RawWindow(
+                    source_path=f"range:0x{window_start:08X}-0x{window_end:08X}",
+                    game=version,
+                    start=window_start,
+                    end=window_end,
+                    function_defs=tuple((function.start, function.end, function.name) for function in chunk),
                 )
+                if raw_window.max_function_size < min_largest_function:
+                    continue
+                raw_windows.append(raw_window)
             target_windows = tuple(raw_windows)
             target_cache[reference.function_count] = target_windows
         if not target_windows:
@@ -1236,6 +1260,12 @@ def parse_args() -> argparse.Namespace:
         default=0x100,
         help="Minimum reference text span to include in --discover mode",
     )
+    parser.add_argument(
+        "--min-largest-function",
+        type=parse_int,
+        default=0,
+        help="Minimum size of the largest function in a candidate window for --discover mode",
+    )
     parser.add_argument("--limit", type=int, default=20, help="Number of matches to show")
     args = parser.parse_args()
 
@@ -1293,6 +1323,7 @@ def main() -> None:
                     path_filters,
                     min_functions=args.min_functions,
                     min_span=args.min_span,
+                    min_largest_function=args.min_largest_function,
                 )
             )
         if not references:
@@ -1310,6 +1341,7 @@ def main() -> None:
             coarse_limit=args.coarse_limit,
             min_functions=args.min_functions,
             min_span=args.min_span,
+            min_largest_function=args.min_largest_function,
         )
         print_discovery_hits(
             version=args.version,
