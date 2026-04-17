@@ -8,6 +8,7 @@ import shutil
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Iterable
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
@@ -43,6 +44,23 @@ class StubDecision:
     score: int
     reason: str
     bundle_evidence: BundleSourceEvidence | None
+
+
+@dataclass(frozen=True)
+class GapWindowStubDecision:
+    output_relpath: str
+    retail_source_name: str
+    left_anchor: str
+    right_anchor: str
+    current_start: int
+    current_end: int
+    debug_start: int | None
+    debug_end: int | None
+    debug_functions: int | None
+    confidence: str
+    confidence_note: str
+    functions: tuple[str, ...]
+    reason: str = "gap-window-brief"
 
 
 def normalize_separators(value: str) -> str:
@@ -235,6 +253,13 @@ def matches_search_terms(candidate: RecoveryGroup, search_terms: list[str]) -> b
     return all(any(term in value for value in lowered) for term in search_terms)
 
 
+def matches_text_search(values: Iterable[str], search_terms: list[str]) -> bool:
+    if not search_terms:
+        return True
+    lowered = [value.lower() for value in values]
+    return all(any(term in value for value in lowered) for term in search_terms)
+
+
 def cleaned_function_hints(candidate: RecoveryGroup, limit: int = 10) -> list[str]:
     result: list[str] = []
     seen: set[str] = set()
@@ -382,6 +407,187 @@ def render_stub(
     return "\n".join(lines).rstrip() + "\n"
 
 
+GAP_HEADING_RE = re.compile(r"^### `(.+)`$")
+HEX_RANGE_RE = re.compile(r"`(0x[0-9A-Fa-f]+)-(0x[0-9A-Fa-f]+)`")
+DEBUG_SPLIT_RE = re.compile(r"`(0x[0-9A-Fa-f]+)-(0x[0-9A-Fa-f]+)`.*functions=`(\d+)`")
+
+
+def parse_gap_window_brief(path: Path) -> list[GapWindowStubDecision]:
+    lines = path.read_text(encoding="utf-8").splitlines()
+    left_anchor = ""
+    right_anchor = ""
+    confidence = "medium"
+    confidence_note = ""
+    decisions: list[GapWindowStubDecision] = []
+    current: dict[str, object] | None = None
+
+    def flush_current() -> None:
+        nonlocal current
+        if current is None:
+            return
+        decisions.append(
+            GapWindowStubDecision(
+                output_relpath=str(current["path"]),
+                retail_source_name=Path(str(current["path"])).name,
+                left_anchor=left_anchor,
+                right_anchor=right_anchor,
+                current_start=int(current["current_start"]),
+                current_end=int(current["current_end"]),
+                debug_start=current.get("debug_start"),
+                debug_end=current.get("debug_end"),
+                debug_functions=current.get("debug_functions"),
+                confidence=confidence,
+                confidence_note=confidence_note,
+                functions=tuple(current["functions"]),
+            )
+        )
+        current = None
+
+    for line in lines:
+        if line.startswith("- left anchor: `"):
+            left_anchor = line.split("`", 2)[1]
+            continue
+        if line.startswith("- right anchor: `"):
+            right_anchor = line.split("`", 2)[1]
+            continue
+        if line.startswith("- confidence: `"):
+            confidence = line.split("`", 2)[1]
+            continue
+        if line.startswith("- confidence note: "):
+            confidence_note = line[len("- confidence note: ") :].strip()
+            continue
+
+        heading_match = GAP_HEADING_RE.match(line)
+        if heading_match:
+            flush_current()
+            current = {"path": heading_match.group(1), "functions": []}
+            continue
+
+        if current is None:
+            continue
+
+        if line.startswith("- current EN window: "):
+            range_match = HEX_RANGE_RE.search(line)
+            if range_match:
+                current["current_start"] = int(range_match.group(1), 16)
+                current["current_end"] = int(range_match.group(2), 16)
+            continue
+
+        if line.startswith("- debug split: "):
+            range_match = DEBUG_SPLIT_RE.search(line)
+            if range_match:
+                current["debug_start"] = int(range_match.group(1), 16)
+                current["debug_end"] = int(range_match.group(2), 16)
+                current["debug_functions"] = int(range_match.group(3))
+            continue
+
+        if line.startswith("  - `"):
+            current["functions"].append(line.strip()[2:].strip())
+
+    flush_current()
+    return decisions
+
+
+def choose_gap_window_stub_decisions(
+    brief_paths: list[Path],
+    src_root: Path,
+    existing_basenames: dict[str, list[str]],
+    search_terms: list[str],
+) -> tuple[list[GapWindowStubDecision], list[dict[str, object]]]:
+    generated: list[GapWindowStubDecision] = []
+    skipped: list[dict[str, object]] = []
+
+    for brief_path in brief_paths:
+        for decision in parse_gap_window_brief(brief_path):
+            if not matches_text_search(
+                [
+                    decision.output_relpath,
+                    decision.retail_source_name,
+                    decision.left_anchor,
+                    decision.right_anchor,
+                ],
+                search_terms,
+            ):
+                continue
+
+            basename = Path(decision.output_relpath).name.lower()
+            existing_paths = existing_basenames.get(basename, [])
+            other_paths = [path for path in existing_paths if path != decision.output_relpath]
+            exact_target_exists = decision.output_relpath in existing_paths
+            exact_target_is_managed = exact_target_exists and is_managed_generated_stub(
+                src_root / decision.output_relpath
+            )
+
+            if other_paths:
+                skipped.append(
+                    {
+                        "type": "gap-window-stub",
+                        "status": "skipped-existing",
+                        "retail_source_name": decision.retail_source_name,
+                        "existing_paths": other_paths,
+                    }
+                )
+                continue
+            if exact_target_exists and not exact_target_is_managed:
+                skipped.append(
+                    {
+                        "type": "gap-window-stub",
+                        "status": "skipped-existing",
+                        "retail_source_name": decision.retail_source_name,
+                        "existing_paths": [decision.output_relpath],
+                    }
+                )
+                continue
+            generated.append(decision)
+
+    generated.sort(key=lambda item: item.output_relpath.lower())
+    return generated, skipped
+
+
+def render_gap_window_stub(decision: GapWindowStubDecision) -> str:
+    lines: list[str] = []
+    lines.append("/*")
+    lines.append(" * Auto-generated by tools/orig/source_materialize.py.")
+    lines.append(" *")
+    lines.append(" * This file is intentionally not wired into the build yet.")
+    lines.append(" * It exists to turn a retail-backed gap-window estimate into a concrete")
+    lines.append(" * source-file target that can be filled in during decomp work.")
+    lines.append(" *")
+    lines.append(f" * Retail source name: {decision.retail_source_name}")
+    lines.append(f" * Output path: {decision.output_relpath}")
+    lines.append(f" * Confidence: {decision.confidence}")
+    lines.append(f" * Reason: {decision.reason}")
+    lines.append(" *")
+    lines.append(" * Gap-window brief evidence:")
+    lines.append(f" * - left anchor: {decision.left_anchor}")
+    lines.append(f" * - right anchor: {decision.right_anchor}")
+    lines.append(
+        f" * - current EN window: 0x{decision.current_start:08X}-0x{decision.current_end:08X}"
+    )
+    if decision.debug_start is not None and decision.debug_end is not None:
+        lines.append(
+            f" * - debug split: 0x{decision.debug_start:08X}-0x{decision.debug_end:08X}"
+        )
+    if decision.debug_functions is not None:
+        lines.append(f" * - debug function count: {decision.debug_functions}")
+    if decision.confidence_note:
+        lines.append(f" * - confidence note: {decision.confidence_note}")
+    if decision.functions:
+        lines.append(" *")
+        lines.append(" * Current EN functions in this estimated window:")
+        for func in decision.functions[:20]:
+            lines.append(f" * - {func}")
+        if len(decision.functions) > 20:
+            lines.append(f" * - ... (+{len(decision.functions) - 20} more)")
+    lines.append(" */")
+    lines.append("")
+    lines.append("/*")
+    lines.append(" * No function names were promoted here yet.")
+    lines.append(" * Start from the estimated window and nearby anchors above.")
+    lines.append(" */")
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def build_artifact_entry(
     src_path: Path,
     artifact: DirectSourceArtifact,
@@ -468,6 +674,39 @@ def materialize_stubs(
             "retail_messages": list(decision.candidate.retail_messages),
             "bundle_ids": [] if decision.bundle_evidence is None else list(decision.bundle_evidence.all_bundle_ids),
             "bundle_aliases": [] if decision.bundle_evidence is None else list(decision.bundle_evidence.alias_names),
+        }
+        if changed:
+            written.append(entry)
+        else:
+            unchanged.append(entry)
+    return written, unchanged
+
+
+def materialize_gap_window_stubs(
+    decisions: list[GapWindowStubDecision],
+    output_root: Path,
+) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
+    written: list[dict[str, object]] = []
+    unchanged: list[dict[str, object]] = []
+
+    for decision in decisions:
+        text = render_gap_window_stub(decision)
+        dst_path = output_root / decision.output_relpath
+        changed = write_text_if_changed(dst_path, text)
+        entry = {
+            "type": "gap-window-stub",
+            "status": "written" if changed else "unchanged",
+            "retail_source_name": decision.retail_source_name,
+            "confidence": decision.confidence,
+            "reason": decision.reason,
+            "output_path": decision.output_relpath,
+            "left_anchor": decision.left_anchor,
+            "right_anchor": decision.right_anchor,
+            "current_window": f"0x{decision.current_start:08X}-0x{decision.current_end:08X}",
+            "debug_window": None
+            if decision.debug_start is None or decision.debug_end is None
+            else f"0x{decision.debug_start:08X}-0x{decision.debug_end:08X}",
+            "function_count": len(decision.functions),
         }
         if changed:
             written.append(entry)
@@ -618,6 +857,13 @@ def build_argument_parser() -> argparse.ArgumentParser:
         help="Also emit weak EN candidates that are repeated across multiple bundled retail versions.",
     )
     parser.add_argument(
+        "--gap-window-brief",
+        action="append",
+        type=Path,
+        default=[],
+        help="Gap-window markdown brief to materialize as non-built stubs. Can be repeated.",
+    )
+    parser.add_argument(
         "--search",
         nargs="+",
         default=[],
@@ -670,6 +916,13 @@ def main() -> None:
         include_cross_version_weak=args.include_cross_version_weak,
         source_evidence_by_name=source_evidence_by_name,
     )
+    search_terms = [term.lower() for term in args.search]
+    gap_window_decisions, gap_window_skipped = choose_gap_window_stub_decisions(
+        brief_paths=args.gap_window_brief,
+        src_root=args.src_root,
+        existing_basenames=existing_basenames,
+        search_terms=search_terms,
+    )
 
     artifact_reports = report_artifacts(args.orig_root)
     artifact_reported = [entry for _src_path, _relpath, entry in artifact_reports]
@@ -681,13 +934,14 @@ def main() -> None:
     else:
         artifact_written, artifact_unchanged = [], []
     stub_written, stub_unchanged = materialize_stubs(stub_decisions, args.output_root)
+    gap_written, gap_unchanged = materialize_gap_window_stubs(gap_window_decisions, args.output_root)
     manifest = build_manifest(
         artifact_reported=artifact_reported,
         artifact_written=artifact_written,
         artifact_unchanged=artifact_unchanged,
-        stub_written=stub_written,
-        stub_unchanged=stub_unchanged,
-        stub_skipped=stub_skipped,
+        stub_written=[*stub_written, *gap_written],
+        stub_unchanged=[*stub_unchanged, *gap_unchanged],
+        stub_skipped=[*stub_skipped, *gap_window_skipped],
     )
     write_manifest(args.manifest, manifest)
     print(
