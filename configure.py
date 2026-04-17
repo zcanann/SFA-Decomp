@@ -369,6 +369,7 @@ config.libs = [
             Object(NonMatching, "dolphin/mtx/vec.c", source="sdk/mtx/vec.c"),
             Object(NonMatching, "dolphin/mtx/mtx44.c"),
             Object(NonMatching, "dolphin/mtx/mtx44vec.c"),
+            Object(NonMatching, "dolphin/mtx/psmtx.c"),
         ],
     ),
     DolphinLib(
