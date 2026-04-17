@@ -32,8 +32,15 @@ from typing import (
     cast,
 )
 
-from . import ninja_syntax
-from .ninja_syntax import serialize_path
+if __package__ in (None, ""):
+    tools_root = Path(__file__).resolve().parent.parent
+    if str(tools_root) not in sys.path:
+        sys.path.insert(0, str(tools_root))
+    from tools import ninja_syntax  # type: ignore
+    from tools.ninja_syntax import serialize_path  # type: ignore
+else:
+    from . import ninja_syntax
+    from .ninja_syntax import serialize_path
 
 if sys.platform == "cygwin":
     sys.exit(
