@@ -665,19 +665,37 @@ main/dll/staffAction.c:
 	.text       start:0x80165A38 end:0x801672E4
 
 main/dll/treasurechest.c:
-	.text       start:0x801672E4 end:0x80167C10
+	.text       start:0x801672E4 end:0x801678A4
+
+main/dll/dll_131.c:
+	.text       start:0x801678A4 end:0x80167D90
+
+main/dll/dll_134.c:
+	.text       start:0x80167D90 end:0x80168370
 
 main/dll/campfire.c:
-	.text       start:0x80167C10 end:0x80169A38
+	.text       start:0x80168370 end:0x80169564
+
+main/dll/dll_13B.c:
+	.text       start:0x80169564 end:0x80169CF8
+
+main/dll/dll_13C.c:
+	.text       start:0x80169CF8 end:0x8016B550
 
 main/dll/genprops.c:
-	.text       start:0x80169A38 end:0x801725F0
+	.text       start:0x8016B550 end:0x801725F0
 
 main/dll/gfxEmit.c:
-	.text       start:0x801725F0 end:0x80174A34
+	.text       start:0x801725F0 end:0x80173750
+
+main/dll/dll_141.c:
+	.text       start:0x80173750 end:0x80174B14
+
+main/dll/dll_138.c:
+	.text       start:0x80174B14 end:0x801758D4
 
 main/dll/transporter.c:
-	.text       start:0x80174A34 end:0x80178640
+	.text       start:0x801758D4 end:0x80178640
 
 main/dll/autoTransporter.c:
 	.text       start:0x80178640 end:0x80179864
