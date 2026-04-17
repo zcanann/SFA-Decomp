@@ -560,10 +560,10 @@ main/dll/baddie/dll_DA.c:
 	.text       start:0x801309A8 end:0x80131078
 
 main/dll/baddie/TumbleweedBush.c:
-	.text       start:0x80131078 end:0x8013209C
+	.text       start:0x80131078 end:0x80132368
 
 main/dll/baddie/Tumbleweed.c:
-	.text       start:0x801338A4 end:0x80139724
+	.text       start:0x80132368 end:0x80139724
 
 main/dll/baddie/skeetla.c:
 	.text       start:0x80139724 end:0x8013B6F0
