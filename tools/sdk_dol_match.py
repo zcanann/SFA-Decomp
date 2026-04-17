@@ -474,6 +474,33 @@ def load_target_text_splits(version: str) -> tuple[SplitRange, ...]:
     )
 
 
+def describe_target_split_overlap(version: str, start: int, end: int) -> str:
+    overlaps = [
+        split
+        for split in load_target_text_splits(version)
+        if split.start < end and start < split.end
+    ]
+    if not overlaps:
+        return "ownership=unassigned"
+
+    if len(overlaps) == 1:
+        split = overlaps[0]
+        span_label = f"{split.path}@0x{split.start:08X}-0x{split.end:08X}"
+        if split.start == start and split.end == end:
+            return f"ownership=split-exact {span_label}"
+        if split.start <= start and end <= split.end:
+            return f"ownership=inside {span_label}"
+        return f"ownership=partial {span_label}"
+
+    preview = ", ".join(
+        f"{split.path}@0x{split.start:08X}-0x{split.end:08X}"
+        for split in overlaps[:3]
+    )
+    if len(overlaps) > 3:
+        preview += f", ... ({len(overlaps)} total)"
+    return f"ownership=crosses {preview}"
+
+
 @lru_cache(maxsize=None)
 def load_target_ownership_prefix(version: str) -> tuple[int, ...]:
     splits = load_target_text_splits(version)
@@ -930,6 +957,7 @@ def print_match_results(target: WindowSignature, results: list[MatchResult]) -> 
 
 
 def print_discovery_hits(
+    version: str,
     range_start: int,
     range_end: int,
     only_unassigned: bool,
@@ -952,6 +980,7 @@ def print_discovery_hits(
             f"span=0x{hit.target.span:X} funcs={hit.target.function_count} "
             f"score={hit.overall_score * 100:.2f} {verdict_for_hit(hit)}"
         )
+        print(f"      {describe_target_split_overlap(version, hit.target.start, hit.target.end)}")
         print(
             f"      ref={hit.reference.game} {hit.reference.source_path} "
             f"0x{hit.reference.start:08X}-0x{hit.reference.end:08X}"
@@ -1043,6 +1072,7 @@ def aggregate_reference_source_matches(
 
 
 def print_aggregated_reference_source_matches(
+    version: str,
     source_query: str,
     range_start: int | None,
     range_end: int | None,
@@ -1077,6 +1107,7 @@ def print_aggregated_reference_source_matches(
             f"avg-score={aggregate.average_score * 100:.2f} "
             f"best={aggregate.best_score * 100:.2f}"
         )
+        print(f"      {describe_target_split_overlap(version, target.start, target.end)}")
         for hit in aggregate.hits:
             result = hit.result
             print(
@@ -1256,6 +1287,7 @@ def main() -> None:
             min_span=args.min_span,
         )
         print_discovery_hits(
+            version=args.version,
             range_start=args.target_range_start,
             range_end=args.target_range_end,
             only_unassigned=args.only_unassigned,
@@ -1279,6 +1311,7 @@ def main() -> None:
                 limit=args.limit,
             )
             print_aggregated_reference_source_matches(
+                version=args.version,
                 source_query=args.reference_source,
                 range_start=args.target_range_start,
                 range_end=args.target_range_end,
@@ -1317,6 +1350,9 @@ def main() -> None:
                 f"size={result.size_score * 100:.2f} "
                 f"exact-sizes={result.exact_size_matches}/{result.compared_function_count} "
                 f"{verdict_for_result(result)}"
+            )
+            print(
+                f"      {describe_target_split_overlap(args.version, candidate.start, candidate.end)}"
             )
         return
 
