@@ -18,6 +18,7 @@ DEFAULT_REFERENCE_SPECS = (
     "animal_crossing:GAFE01",
     "pikmin2:GPVE01",
     "marioparty4:GMPE01",
+    "super_mario_sunshine:GMSJ01",
     "twilight_princess:GZ2E01",
 )
 DEFAULT_SDK_FILTERS = (

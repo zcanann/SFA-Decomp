@@ -91,6 +91,10 @@ def normalize_sdk_path(raw_path: str) -> str | None:
     root, rest = path.split("/", 1)
     if root not in SDK_ROOTS:
         return None
+    if root == "TRK_MINNOW_DOLPHIN":
+        # Some references keep MetroTRK's original deep directory layout,
+        # but our imported TRK sources are flattened by translation unit.
+        rest = Path(rest).name
     return f"dolphin/{root}/{rest}"
 
 
