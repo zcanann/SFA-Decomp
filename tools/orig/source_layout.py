@@ -746,6 +746,7 @@ def main() -> None:
     plans = build_window_plans(
         packets,
         debug_info=debug_info,
+        current_split_ranges=split_ranges,
         exact_interval_limit=args.exact_interval_limit,
         hinted_path_limit=args.hinted_path_limit,
     )
