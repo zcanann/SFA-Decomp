@@ -442,17 +442,20 @@ main/dll/FRONT/dll_3B.c:
 dolphin/ax/AX.c:
 	.text       start:0x801177DC end:0x8011784C
 
+main/dll/FRONT/n_options.c:
+	.text       start:0x8011784C end:0x801184E8
+
 main/dll/FRONT/n_pausemenu.c:
-	.text       start:0x80117F1C end:0x80118434
+	.text       start:0x801184E8 end:0x80118714
 
 main/dll/FRONT/dll_3E.c:
-	.text       start:0x80118434 end:0x80118AC4
+	.text       start:0x80118714 end:0x80118E30
 
 main/dll/FRONT/dll_40.c:
-	.text       start:0x80118AC4 end:0x80118BA8
+	.text       start:0x80118E30 end:0x80118E60
 
 main/dll/FRONT/dll_44.c:
-	.text       start:0x80118BA8 end:0x801192A8
+	.text       start:0x80118E60 end:0x801192A8
 
 main/dll/FRONT/picmenu.c:
 	.text       start:0x801192A8 end:0x80119CC4
