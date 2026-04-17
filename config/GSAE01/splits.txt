@@ -752,7 +752,13 @@ main/dll/dll_150.c:
 	.text       start:0x80181C50 end:0x80182754
 
 main/dll/exploder.c:
-	.text       start:0x80182754 end:0x801835EC
+	.text       start:0x80182754 end:0x80182B44
+
+main/dll/dll_152.c:
+	.text       start:0x80182B44 end:0x80182C40
+
+main/dll/dll_153.c:
+	.text       start:0x80182C40 end:0x801835EC
 
 main/dll/CF/CFguardian.c:
 	.text       start:0x801835EC end:0x80184D40
