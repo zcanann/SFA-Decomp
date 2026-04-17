@@ -385,6 +385,36 @@ main/dll/dll_CE.c:
 main/dll/CAM/camcontrol.c:
 	.text       start:0x80102D3C end:0x80103130
 
+main/dll/CAM/cutCam.c:
+	.text       start:0x80103130 end:0x801047DC
+
+main/dll/CAM/attention.c:
+	.text       start:0x801047DC end:0x80104C4C
+
+main/dll/CAM/camslide.c:
+	.text       start:0x80104C4C end:0x8010525C
+
+main/dll/CAM/firstperson.c:
+	.text       start:0x8010525C end:0x80105A4C
+
+main/dll/CAM/dll_53.c:
+	.text       start:0x80105A4C end:0x80105AAC
+
+main/dll/CAM/camstatic.c:
+	.text       start:0x80105AAC end:0x80106118
+
+main/dll/CAM/pathcam.c:
+	.text       start:0x80106118 end:0x80106888
+
+main/dll/CAM/camlockon.c:
+	.text       start:0x80106888 end:0x80107020
+
+main/dll/CAM/camshipbattle.c:
+	.text       start:0x80107020 end:0x80107398
+
+main/dll/CAM/camclimb.c:
+	.text       start:0x80107398 end:0x80107718
+
 dolphin/ax/AX.c:
 	.text       start:0x801177DC end:0x8011784C
 
