@@ -583,6 +583,9 @@ config.libs = [
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/mslsupp.c"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/MWTrace.c"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/MWCriticalSection_gc.c"),
+            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/CircleBuffer.c"),
+            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/main.c"),
+            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/main_gdev.c"),
         ],
     },
     DolphinLib(
