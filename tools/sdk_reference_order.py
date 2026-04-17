@@ -42,6 +42,10 @@ SDK_ROOTS = {
 }
 TEXT_RE = re.compile(r"\s*\.text\s+start:(0x[0-9A-Fa-f]+)\s+end:(0x[0-9A-Fa-f]+)")
 CANONICAL_EXTENSIONS = {".c", ".cpp", ".cp", ".cxx", ".s", ".S"}
+PATH_ALIASES = {
+    "dolphin/dvd/dvdfatal.c": "dolphin/dvd/dvdFatal.c",
+    "dolphin/pad/PadClamp.c": "dolphin/pad/Padclamp.c",
+}
 
 
 @dataclass(frozen=True)
@@ -90,7 +94,7 @@ def canonicalize_sdk_path(path: str) -> str:
         sdk_path = sdk_path.with_suffix(sdk_path.suffix.lower())
         if sdk_path.suffix.lower() in {".cpp", ".cp", ".cxx"}:
             sdk_path = sdk_path.with_suffix(".c")
-    return sdk_path.as_posix()
+    return PATH_ALIASES.get(sdk_path.as_posix(), sdk_path.as_posix())
 
 
 def iter_reference_text_order(spec: RefSpec) -> Iterable[str]:

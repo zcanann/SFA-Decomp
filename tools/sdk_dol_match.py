@@ -99,6 +99,10 @@ SDK_ROOTS = {
     "thp",
     "vi",
 }
+PATH_ALIASES = {
+    "dolphin/dvd/dvdfatal.c": "dolphin/dvd/dvdFatal.c",
+    "dolphin/pad/PadClamp.c": "dolphin/pad/Padclamp.c",
+}
 
 
 @dataclass(frozen=True)
@@ -314,8 +318,13 @@ def normalize_path(value: str) -> str:
         if "/" in rel:
             root, rest = rel.split("/", 1)
             if root in SDK_ROOTS:
-                return f"dolphin/{root}/{rest}"
-    return path
+                path = f"dolphin/{root}/{rest}"
+    path_obj = Path(path)
+    suffix_lower = path_obj.suffix.lower()
+    if suffix_lower in {".cpp", ".cp", ".cxx"}:
+        path_obj = path_obj.with_suffix(".c")
+    canonical = path_obj.as_posix()
+    return PATH_ALIASES.get(canonical, canonical)
 
 
 def configured_reference_object_path(config_yml_path: Path) -> Path | None:
