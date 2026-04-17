@@ -130,6 +130,21 @@ def main():
     parser.add_argument("--same-category-only", action="store_true")
     parser.add_argument("--path-contains")
     parser.add_argument(
+        "--contains",
+        type=lambda v: int(v, 0),
+        help="Only show gaps whose uncovered span contains this address.",
+    )
+    parser.add_argument(
+        "--range-start",
+        type=lambda v: int(v, 0),
+        help="Only show gaps whose uncovered span ends after this address.",
+    )
+    parser.add_argument(
+        "--range-end",
+        type=lambda v: int(v, 0),
+        help="Only show gaps whose uncovered span starts before this address.",
+    )
+    parser.add_argument(
         "--source-clues",
         action="store_true",
         help="Attach retail-backed source-layout clue summaries for game-side gap endpoints.",
@@ -158,6 +173,12 @@ def main():
             continue
         if args.path_contains and args.path_contains not in left_path and args.path_contains not in right_path:
             continue
+        if args.contains is not None and not (left_end <= args.contains < right_start):
+            continue
+        if args.range_start is not None and right_start <= args.range_start:
+            continue
+        if args.range_end is not None and left_end >= args.range_end:
+            continue
         gaps.append((gap, left_end, right_start, left_path, right_path, left_category, right_category))
 
     gaps.sort(reverse=True)
@@ -166,6 +187,12 @@ def main():
     print(f"- category: `{args.category}`")
     print(f"- min gap: `0x{args.min_gap:X}`")
     print(f"- same-category-only: `{args.same_category_only}`")
+    if args.contains is not None:
+        print(f"- contains: `0x{args.contains:08X}`")
+    if args.range_start is not None or args.range_end is not None:
+        start_text = f"0x{args.range_start:08X}" if args.range_start is not None else "-inf"
+        end_text = f"0x{args.range_end:08X}" if args.range_end is not None else "+inf"
+        print(f"- range filter: `{start_text}` to `{end_text}`")
     print(f"- source-clues: `{args.source_clues}`")
     print(f"- matches: `{min(len(gaps), args.limit)}` / `{len(gaps)}`")
     for gap, gap_start, gap_end, left_path, right_path, left_category, right_category in gaps[: args.limit]:
