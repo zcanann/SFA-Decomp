@@ -1373,7 +1373,10 @@ dolphin/gx/GXAttr.c:
 	.text       start:0x80256F84 end:0x8025898C
 
 dolphin/gx/GXMisc.c:
-	.text       start:0x8025898C end:0x80259340
+	.text       start:0x8025898C end:0x80258F60
+
+dolphin/gx/GXGeometry.c:
+	.text       start:0x80258F60 end:0x80259340
 
 dolphin/gx/GXFrameBuf.c:
 	.text       start:0x80259340 end:0x80259DD4
@@ -1403,10 +1406,7 @@ dolphin/gx/GXDisplayList.c:
 	.text       start:0x8025D4A0 end:0x8025D6AC
 
 dolphin/gx/GXTransform.c:
-	.text       start:0x8025D6AC end:0x8025DBF4
-
-dolphin/gx/GXGeometry.c:
-	.text       start:0x8025DBF4 end:0x8025DC78
+	.text       start:0x8025D6AC end:0x8025DC78
 
 dolphin/gx/GXPerf.c:
 	.text       start:0x8025DC78 end:0x8025E5E4
