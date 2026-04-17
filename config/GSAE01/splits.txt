@@ -1184,22 +1184,37 @@ main/dll/anim.c:
 	.text       start:0x801FF168 end:0x80206444
 
 main/dll/baddie/chuka.c:
-	.text       start:0x80206444 end:0x802069B4
+	.text       start:0x80206444 end:0x802065F0
+
+main/dll/baddie/chukachuck.c:
+	.text       start:0x802065F0 end:0x802069B4
 
 main/dll/tesla.c:
-	.text       start:0x802069B4 end:0x80207568
+	.text       start:0x802069B4 end:0x80206F64
+
+main/dll/dll_EC.c:
+	.text       start:0x80206F64 end:0x80207250
+
+main/dll/TrickyCurve.c:
+	.text       start:0x80207250 end:0x80207F80
+
+main/dll/sfxplayer.c:
+	.text       start:0x80207F80 end:0x8020816C
 
 main/dll/crate.c:
-	.text       start:0x80207568 end:0x802077C4
+	.text       start:0x8020816C end:0x8020831C
+
+main/dll/crate2.c:
+	.text       start:0x8020831C end:0x802085F4
 
 main/dll/door.c:
-	.text       start:0x802077C4 end:0x80207BA4
+	.text       start:0x802085F4 end:0x802086C8
 
 main/dll/fruit.c:
-	.text       start:0x80207BA4 end:0x80208C98
+	.text       start:0x802086C8 end:0x80208CFC
 
 main/dll/zBomb.c:
-	.text       start:0x80208C98 end:0x802093B4
+	.text       start:0x80208CFC end:0x802093B4
 
 main/dll/fire.c:
 	.text       start:0x802093B4 end:0x80209624
