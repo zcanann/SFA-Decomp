@@ -41,7 +41,6 @@ int __DVDPushWaitingQueue(s32 prio, DVDCommandBlock* block);
 DVDCommandBlock* __DVDPopWaitingQueue(void);
 int __DVDCheckWaitingQueue(void);
 int __DVDDequeueWaitingQueue(DVDCommandBlock* block);
-int __DVDIsBlockInWaitingQueue(DVDCommandBlock* block);
 
 // FST LOAD
 void __fstLoad(void);

@@ -230,8 +230,6 @@ DVDLowCallback DVDLowClearCallback(void);
 u32 DVDLowGetCoverStatus(void);
 
 // DVD QUEUE
-void DVDDumpWaitingQueue(void);
-
 #ifdef __cplusplus
 }
 #endif
