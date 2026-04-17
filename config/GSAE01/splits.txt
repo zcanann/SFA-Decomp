@@ -58,6 +58,9 @@ main/newshadows.c:
 track/intersect.c:
 	.text       start:0x8006F0B4 end:0x8007E7A0
 
+main/maketex.c:
+	.text       start:0x8007E7A0 end:0x80080E28
+
 dolphin/os/OSAddress.c:
 	.text       start:0x80080E28 end:0x80080E58
 
