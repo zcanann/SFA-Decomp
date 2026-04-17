@@ -832,6 +832,21 @@ main/dll/LGT/LGTcontrollight.c:
 main/dll/boulder.c:
 	.text       start:0x801F4EF0 end:0x801F5184
 
+main/light.c:
+	.text       start:0x801FBA6C end:0x801FD3A4
+
+main/main.c:
+	.text       start:0x801FD3A4 end:0x801FF044
+
+main/expr.c:
+	.text       start:0x801FF044 end:0x801FF094
+
+main/timer.c:
+	.text       start:0x801FF094 end:0x801FF168
+
+main/dll/anim.c:
+	.text       start:0x801FF168 end:0x80206444
+
 main/dll/baddie/chuka.c:
 	.text       start:0x80206444 end:0x802069B4
 
