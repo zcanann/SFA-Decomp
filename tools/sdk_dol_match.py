@@ -605,8 +605,36 @@ def collect_reference_raw_windows(
                 min_functions=min_functions,
                 min_span=min_span,
                 min_largest_function=min_largest_function,
-            )
+        )
     ]
+
+
+def collect_reference_raw_functions(
+    spec: ReferenceSpec,
+    path_filters: tuple[str, ...],
+    min_function_size: int = 0,
+) -> list[RawWindow]:
+    symbols = load_reference_symbols(spec.symbols_path)
+    windows: list[RawWindow] = []
+    for split in load_reference_text_splits(spec.splits_path):
+        split_path = normalize_path(split.path)
+        if not matches_path_filters(split_path, path_filters):
+            continue
+        for symbol in symbols:
+            if not (split.start <= symbol.address and symbol.address + symbol.size <= split.end):
+                continue
+            if symbol.size < min_function_size:
+                continue
+            windows.append(
+                RawWindow(
+                    source_path=f"{split_path}::{symbol.name}",
+                    game=spec.label,
+                    start=symbol.address,
+                    end=symbol.address + symbol.size,
+                    function_defs=((symbol.address, symbol.address + symbol.size, symbol.name),),
+                )
+            )
+    return windows
 
 
 def collect_reference_windows(
@@ -1012,10 +1040,12 @@ def print_discovery_hits(
     only_unassigned: bool,
     min_score: float,
     hits: list[DiscoveryHit],
+    function_mode: bool = False,
 ) -> None:
     assignment_mode = "unassigned-only" if only_unassigned else "all-windows"
+    mode_label = "function-discovery" if function_mode else "discovery"
     print(
-        f"discovery: 0x{range_start:08X}-0x{range_end:08X} "
+        f"{mode_label}: 0x{range_start:08X}-0x{range_end:08X} "
         f"mode={assignment_mode} min-score={min_score * 100:.2f}"
     )
     if not hits:
@@ -1034,6 +1064,11 @@ def print_discovery_hits(
             f"      ref={hit.reference.game} {hit.reference.source_path} "
             f"0x{hit.reference.start:08X}-0x{hit.reference.end:08X}"
         )
+        if hit.reference.function_count == 1 and hit.target.function_count == 1:
+            print(
+                f"      ref-func={hit.reference.functions[0].name} "
+                f"target-func={hit.target.functions[0].name}"
+            )
         print(
             f"      mask-fn={hit.function_mask_score * 100:.2f} "
             f"mask-win={hit.window_mask_score * 100:.2f} "
@@ -1205,6 +1240,11 @@ def parse_args() -> argparse.Namespace:
         help="Bulk-scan reference windows against a target SFA range",
     )
     parser.add_argument(
+        "--discover-functions",
+        action="store_true",
+        help="In --discover mode, scan individual reference functions as one-function anchors",
+    )
+    parser.add_argument(
         "--path-contains",
         action="append",
         default=[],
@@ -1266,6 +1306,12 @@ def parse_args() -> argparse.Namespace:
         default=0,
         help="Minimum size of the largest function in a candidate window for --discover mode",
     )
+    parser.add_argument(
+        "--min-function-size",
+        type=parse_int,
+        default=0,
+        help="Minimum reference/target function size for --discover-functions mode",
+    )
     parser.add_argument("--limit", type=int, default=20, help="Number of matches to show")
     args = parser.parse_args()
 
@@ -1298,6 +1344,8 @@ def parse_args() -> argparse.Namespace:
         )
     if args.discover and (args.target_range_start is None or args.target_range_end is None):
         parser.error("--discover requires --target-range-start and --target-range-end")
+    if args.discover_functions and not args.discover:
+        parser.error("--discover-functions requires --discover")
     if args.target_range_start is not None and args.target_range_end is not None:
         if args.target_range_end <= args.target_range_start:
             parser.error("--target-range-end must be greater than --target-range-start")
@@ -1316,16 +1364,33 @@ def main() -> None:
         else:
             path_filters = tuple(args.path_contains) or DEFAULT_SDK_FILTERS
         references: list[RawWindow] = []
+        effective_min_functions = 1 if args.discover_functions else args.min_functions
+        effective_min_span = max(args.min_span, args.min_function_size) if args.discover_functions else args.min_span
+        effective_min_largest_function = (
+            max(args.min_largest_function, args.min_function_size)
+            if args.discover_functions
+            else args.min_largest_function
+        )
         for spec in args.reference:
-            references.extend(
-                collect_reference_raw_windows(
-                    spec,
-                    path_filters,
-                    min_functions=args.min_functions,
-                    min_span=args.min_span,
-                    min_largest_function=args.min_largest_function,
+            if args.discover_functions:
+                references.extend(
+                    collect_reference_raw_functions(
+                        spec,
+                        path_filters,
+                        min_function_size=args.min_function_size,
+                    )
                 )
-            )
+            else:
+                references.extend(
+                    collect_reference_raw_windows(
+                        spec,
+                        path_filters,
+                        min_functions=args.min_functions,
+                        min_span=args.min_span,
+                        min_largest_function=args.min_largest_function,
+                    )
+                )
+            
         if not references:
             raise SystemExit("No reference windows matched the requested filters")
         hits = discover_reference_hits(
@@ -1339,9 +1404,9 @@ def main() -> None:
             limit_per_reference=args.limit_per_reference,
             only_unassigned=args.only_unassigned,
             coarse_limit=args.coarse_limit,
-            min_functions=args.min_functions,
-            min_span=args.min_span,
-            min_largest_function=args.min_largest_function,
+            min_functions=effective_min_functions,
+            min_span=effective_min_span,
+            min_largest_function=effective_min_largest_function,
         )
         print_discovery_hits(
             version=args.version,
@@ -1350,6 +1415,7 @@ def main() -> None:
             only_unassigned=args.only_unassigned,
             min_score=args.min_score,
             hits=hits,
+            function_mode=args.discover_functions,
         )
         return
 
