@@ -967,8 +967,11 @@ dolphin/dvd/dvdfs.c:
 dolphin/dvd/dvdFatal.c:
 	.text       start:0x80249928 end:0x80249958
 
+dolphin/dvd/dvdidutils.c:
+	.text       start:0x80249958 end:0x80249A54
+
 dolphin/dvd/dvd.c:
-	.text       start:0x80249958 end:0x8024C0D4
+	.text       start:0x80249A54 end:0x8024C0D4
 
 dolphin/dvd/dvdqueue.c:
 	.text       start:0x8024C0D4 end:0x8024C2CC
