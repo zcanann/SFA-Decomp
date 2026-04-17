@@ -1,8 +1,14 @@
 import argparse
+import json
 import re
+import subprocess
+import sys
+from functools import lru_cache
 from pathlib import Path
 
 
+ROOT = Path(__file__).resolve().parents[1]
+SOURCE_LAYOUT = ROOT / "tools" / "orig" / "source_layout.py"
 SDK_PREFIXES = (
     "dolphin/",
     "Runtime.PPCEABI.H/",
@@ -33,6 +39,88 @@ def load_text_entries(splits_path: Path):
     return sorted(entries)
 
 
+def gap_stem(path: str) -> str:
+    stem = Path(path).stem
+    return stem.lower()
+
+
+@lru_cache(maxsize=None)
+def source_layout_blocks_for_terms(terms: tuple[str, ...], limit: int):
+    if not terms:
+        return []
+
+    command = [
+        sys.executable,
+        str(SOURCE_LAYOUT),
+        "--format",
+        "json",
+        "--limit",
+        str(limit),
+        "--search",
+        *terms,
+    ]
+    completed = subprocess.run(
+        command,
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if completed.returncode != 0:
+        return []
+    try:
+        payload = json.loads(completed.stdout)
+    except json.JSONDecodeError:
+        return []
+    return payload.get("blocks", [])
+
+
+def summarize_block(block: dict) -> str:
+    entries = block.get("entries", [])
+    file_names = []
+    for entry in entries[:4]:
+        name = entry.get("retail_source_name")
+        if name:
+            file_names.append(name)
+    files = ", ".join(file_names) if file_names else "no-names"
+    extra = ""
+    if len(entries) > 4:
+        extra = f", ... (+{len(entries) - 4} more)"
+    return (
+        f"layout `0x{int(block['start'], 16):08X}-0x{int(block['end'], 16):08X}` "
+        f"entries=`{len(entries)}` coverage=`{block.get('coverage', 'n/a')}` "
+        f"files=`{files}{extra}`"
+    )
+
+
+def source_clue_summaries(left_path: str, right_path: str, limit: int):
+    terms_to_try: list[tuple[str, ...]] = []
+    left_game = classify(left_path) == "game"
+    right_game = classify(right_path) == "game"
+    left_term = gap_stem(left_path)
+    right_term = gap_stem(right_path)
+
+    if left_game and right_game and left_term != right_term:
+        terms_to_try.append((left_term, right_term))
+    if left_game:
+        terms_to_try.append((left_term,))
+    if right_game:
+        terms_to_try.append((right_term,))
+
+    seen: set[tuple[int, int]] = set()
+    summaries: list[str] = []
+    for terms in terms_to_try:
+        for block in source_layout_blocks_for_terms(terms, limit):
+            key = (int(block["start"], 16), int(block["end"], 16))
+            if key in seen:
+                continue
+            seen.add(key)
+            summaries.append(summarize_block(block))
+            if len(summaries) >= limit:
+                return summaries
+    return summaries
+
+
 def main():
     parser = argparse.ArgumentParser(description="Audit uncovered .text gaps between split owners.")
     parser.add_argument("--splits", type=Path, default=Path("config/GSAE01/splits.txt"))
@@ -41,6 +129,17 @@ def main():
     parser.add_argument("--limit", type=int, default=50)
     parser.add_argument("--same-category-only", action="store_true")
     parser.add_argument("--path-contains")
+    parser.add_argument(
+        "--source-clues",
+        action="store_true",
+        help="Attach retail-backed source-layout clue summaries for game-side gap endpoints.",
+    )
+    parser.add_argument(
+        "--source-clue-limit",
+        type=int,
+        default=1,
+        help="Maximum number of source-layout blocks to summarize per gap.",
+    )
     args = parser.parse_args()
 
     entries = load_text_entries(args.splits)
@@ -67,12 +166,20 @@ def main():
     print(f"- category: `{args.category}`")
     print(f"- min gap: `0x{args.min_gap:X}`")
     print(f"- same-category-only: `{args.same_category_only}`")
+    print(f"- source-clues: `{args.source_clues}`")
     print(f"- matches: `{min(len(gaps), args.limit)}` / `{len(gaps)}`")
     for gap, gap_start, gap_end, left_path, right_path, left_category, right_category in gaps[: args.limit]:
         print(
             f"- `0x{gap_start:08X}-0x{gap_end:08X}` gap=`0x{gap:X}` "
             f"`{left_category}->{right_category}` `{left_path}` -> `{right_path}`"
         )
+        if args.source_clues:
+            clues = source_clue_summaries(left_path, right_path, args.source_clue_limit)
+            if clues:
+                for clue in clues:
+                    print(f"  source-clue: {clue}")
+            elif left_category == "game" or right_category == "game":
+                print("  source-clue: none")
 
 
 if __name__ == "__main__":
