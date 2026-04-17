@@ -698,7 +698,10 @@ dolphin/dvd/dvdlow.c:
 	.text       start:0x80248180 end:0x80248FD4
 
 dolphin/dvd/dvdfs.c:
-	.text       start:0x80248FD4 end:0x80249958
+	.text       start:0x80248FD4 end:0x80249928
+
+dolphin/dvd/dvdFatal.c:
+	.text       start:0x80249928 end:0x80249958
 
 dolphin/dvd/dvd.c:
 	.text       start:0x80249958 end:0x8024C0D4
