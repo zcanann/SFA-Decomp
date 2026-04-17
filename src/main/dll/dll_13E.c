@@ -6,19 +6,13 @@
  * Corridor evidence:
  * - exact debug-side neighborhood: autoTransporter.c -> dll_13E.c ->
  *   dll_140.c -> tFrameAnimator.c -> screenOverlay.c -> ... -> CFguardian.c
- * - projected current EN window: 0x80179F40-0x8017A3F4
- * - debug-side path: dll/tFrameAnimator.c
- * - debug-side text: 0x801F643C-0x801F6668
+ * - projected current EN window: 0x80179864-0x80179AF4
+ * - debug-side path: dll/dll_13E.c
  *
  * Why this stub exists:
- * - tFrameAnimator.c is a concrete missing source target in the best current
+ * - dll_13E.c is a concrete missing source target in the best current
  *   interval projection for the autoTransporter -> CFguardian corridor.
  * - Materializing it keeps that corridor organized until a safe split claim
  *   is justified.
  */
 
-/*
- * No function names were promoted here yet.
- * Start from the projected 0x80179F40-0x8017A3F4 window and the
- * autoTransporter -> CFguardian interval projection when this file is revisited.
- */
