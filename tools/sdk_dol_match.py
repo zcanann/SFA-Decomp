@@ -147,6 +147,19 @@ class FunctionSignature:
     words: tuple[int, ...]
     masked_words: tuple[int, ...]
 
+    @cached_property
+    def fingerprint(self) -> tuple[int, ...]:
+        sample = min(3, len(self.masked_words))
+        head = self.masked_words[:sample]
+        tail = self.masked_words[-sample:] if sample else ()
+        return (
+            self.size,
+            len(self.masked_words),
+            *head,
+            -1,
+            *tail,
+        )
+
 
 @dataclass(frozen=True)
 class WindowSignature:
@@ -196,6 +209,8 @@ class MatchResult:
     overall_score: float
     function_mask_score: float
     window_mask_score: float
+    anchor_score: float
+    anchor_run_score: float
     ngram_score: float
     size_score: float
     count_score: float
@@ -210,6 +225,8 @@ class DiscoveryHit:
     overall_score: float
     function_mask_score: float
     window_mask_score: float
+    anchor_score: float
+    anchor_run_score: float
     ngram_score: float
     size_score: float
     count_score: float
@@ -481,6 +498,69 @@ def jaccard_score(left: tuple[int, ...], right: tuple[int, ...]) -> float:
     return len(left_ngrams & right_ngrams) / len(union)
 
 
+def function_anchor_scores(target: WindowSignature, candidate: WindowSignature) -> tuple[float, float]:
+    target_fingerprints = tuple(function.fingerprint for function in target.functions)
+    candidate_fingerprints = tuple(function.fingerprint for function in candidate.functions)
+    if not target_fingerprints and not candidate_fingerprints:
+        return 1.0, 1.0
+    if not target_fingerprints or not candidate_fingerprints:
+        return 0.0, 0.0
+
+    matcher = SequenceMatcher(None, target_fingerprints, candidate_fingerprints, autojunk=False)
+    matched_bytes = 0
+    longest_run_bytes = 0
+    for block in matcher.get_matching_blocks():
+        if block.size <= 0:
+            continue
+        block_bytes = sum(target.functions[block.a + offset].size for offset in range(block.size))
+        matched_bytes += block_bytes
+        longest_run_bytes = max(longest_run_bytes, block_bytes)
+
+    span_denominator = max(target.span, candidate.span)
+    if span_denominator <= 0:
+        return 0.0, 0.0
+    return matched_bytes / span_denominator, longest_run_bytes / span_denominator
+
+
+def describe_function_alignment(
+    target: WindowSignature,
+    candidate: WindowSignature,
+    max_blocks: int = 4,
+) -> list[str]:
+    matcher = SequenceMatcher(
+        None,
+        tuple(function.fingerprint for function in target.functions),
+        tuple(function.fingerprint for function in candidate.functions),
+        autojunk=False,
+    )
+    blocks = [block for block in matcher.get_matching_blocks() if block.size > 0]
+    blocks.sort(
+        key=lambda block: (
+            -sum(target.functions[block.a + offset].size for offset in range(block.size)),
+            -block.size,
+            block.a,
+            block.b,
+        )
+    )
+
+    lines: list[str] = []
+    for block in blocks[:max_blocks]:
+        block_bytes = sum(target.functions[block.a + offset].size for offset in range(block.size))
+        target_start = target.functions[block.a].start
+        target_end = target.functions[block.a + block.size - 1].end
+        candidate_start = candidate.functions[block.b].start
+        candidate_end = candidate.functions[block.b + block.size - 1].end
+        lines.append(
+            "block "
+            f"target[{block.a}:{block.a + block.size}] "
+            f"0x{target_start:08X}-0x{target_end:08X} "
+            f"<-> cand[{block.b}:{block.b + block.size}] "
+            f"0x{candidate_start:08X}-0x{candidate_end:08X} "
+            f"funcs={block.size} bytes=0x{block_bytes:X}"
+        )
+    return lines
+
+
 def compare_windows(target: WindowSignature, candidate: WindowSignature) -> MatchResult:
     target_count = target.function_count
     candidate_count = candidate.function_count
@@ -506,19 +586,23 @@ def compare_windows(target: WindowSignature, candidate: WindowSignature) -> Matc
     )
     count_score = 1.0 - (abs(target_count - candidate_count) / max(target_count, candidate_count))
     window_mask_score = sequence_ratio(target.flat_masked_words, candidate.flat_masked_words)
+    anchor_score, anchor_run_score = function_anchor_scores(target, candidate)
     ngram_score = jaccard_score(target.flat_masked_words, candidate.flat_masked_words)
     overall_score = (
-        function_mask_score * 0.35
-        + window_mask_score * 0.25
-        + size_score * 0.20
+        function_mask_score * 0.28
+        + window_mask_score * 0.20
+        + anchor_score * 0.15
+        + anchor_run_score * 0.10
+        + size_score * 0.17
         + ngram_score * 0.10
-        + count_score * 0.10
     )
     return MatchResult(
         candidate=candidate,
         overall_score=overall_score,
         function_mask_score=function_mask_score,
         window_mask_score=window_mask_score,
+        anchor_score=anchor_score,
+        anchor_run_score=anchor_run_score,
         ngram_score=ngram_score,
         size_score=size_score,
         count_score=count_score,
@@ -1023,6 +1107,8 @@ def discover_reference_hits(
                 overall_score=result.overall_score,
                 function_mask_score=result.function_mask_score,
                 window_mask_score=result.window_mask_score,
+                anchor_score=result.anchor_score,
+                anchor_run_score=result.anchor_run_score,
                 ngram_score=result.ngram_score,
                 size_score=result.size_score,
                 count_score=result.count_score,
@@ -1078,7 +1164,11 @@ def print_window(label: str, window: WindowSignature) -> None:
     print(f"  sizes={','.join(f'0x{size:X}' for size in window.size_vector)}")
 
 
-def print_match_results(target: WindowSignature, results: list[MatchResult]) -> None:
+def print_match_results(
+    target: WindowSignature,
+    results: list[MatchResult],
+    show_alignment: bool = False,
+) -> None:
     print_window("target", target)
     print("matches:")
     for index, result in enumerate(results, start=1):
@@ -1092,11 +1182,16 @@ def print_match_results(target: WindowSignature, results: list[MatchResult]) -> 
         print(
             f"      mask-fn={result.function_mask_score * 100:.2f} "
             f"mask-win={result.window_mask_score * 100:.2f} "
+            f"anchor={result.anchor_score * 100:.2f} "
+            f"run={result.anchor_run_score * 100:.2f} "
             f"ngram={result.ngram_score * 100:.2f} "
             f"size={result.size_score * 100:.2f} "
             f"count={result.count_score * 100:.2f} "
             f"exact-sizes={result.exact_size_matches}/{result.compared_function_count}"
         )
+        if show_alignment:
+            for line in describe_function_alignment(target, candidate):
+                print(f"      {line}")
 
 
 def print_discovery_hits(
@@ -1107,6 +1202,7 @@ def print_discovery_hits(
     min_score: float,
     hits: list[DiscoveryHit],
     function_mode: bool = False,
+    show_alignment: bool = False,
 ) -> None:
     assignment_mode = "unassigned-only" if only_unassigned else "all-windows"
     mode_label = "function-discovery" if function_mode else "discovery"
@@ -1138,11 +1234,16 @@ def print_discovery_hits(
         print(
             f"      mask-fn={hit.function_mask_score * 100:.2f} "
             f"mask-win={hit.window_mask_score * 100:.2f} "
+            f"anchor={hit.anchor_score * 100:.2f} "
+            f"run={hit.anchor_run_score * 100:.2f} "
             f"ngram={hit.ngram_score * 100:.2f} "
             f"size={hit.size_score * 100:.2f} "
             f"count={hit.count_score * 100:.2f} "
             f"exact-sizes={hit.exact_size_matches}/{hit.compared_function_count}"
         )
+        if show_alignment:
+            for line in describe_function_alignment(hit.reference, hit.target):
+                print(f"      {line}")
 
 
 def aggregate_reference_source_matches(
@@ -1267,6 +1368,8 @@ def print_aggregated_reference_source_matches(
                 f"score={result.overall_score * 100:.2f} "
                 f"mask-fn={result.function_mask_score * 100:.2f} "
                 f"mask-win={result.window_mask_score * 100:.2f} "
+                f"anchor={result.anchor_score * 100:.2f} "
+                f"run={result.anchor_run_score * 100:.2f} "
                 f"size={result.size_score * 100:.2f} "
                 f"exact-sizes={result.exact_size_matches}/{result.compared_function_count}"
             )
@@ -1389,6 +1492,11 @@ def parse_args() -> argparse.Namespace:
         default=0,
         help="Minimum reference/target function size for --discover-functions mode",
     )
+    parser.add_argument(
+        "--show-alignment",
+        action="store_true",
+        help="Print the strongest ordered function-match blocks for each reported result",
+    )
     parser.add_argument("--limit", type=int, default=20, help="Number of matches to show")
     args = parser.parse_args()
 
@@ -1495,6 +1603,7 @@ def main() -> None:
             min_score=args.min_score,
             hits=hits,
             function_mode=args.discover_functions,
+            show_alignment=args.show_alignment,
         )
         return
 
@@ -1551,6 +1660,8 @@ def main() -> None:
                 f"score={result.overall_score * 100:.2f} "
                 f"mask-fn={result.function_mask_score * 100:.2f} "
                 f"mask-win={result.window_mask_score * 100:.2f} "
+                f"anchor={result.anchor_score * 100:.2f} "
+                f"run={result.anchor_run_score * 100:.2f} "
                 f"size={result.size_score * 100:.2f} "
                 f"exact-sizes={result.exact_size_matches}/{result.compared_function_count} "
                 f"{verdict_for_result(result)}"
@@ -1558,6 +1669,9 @@ def main() -> None:
             print(
                 f"      {describe_target_split_overlap(args.version, candidate.start, candidate.end)}"
             )
+            if args.show_alignment:
+                for line in describe_function_alignment(reference_window, candidate):
+                    print(f"      {line}")
         return
 
     if args.source is not None:
@@ -1588,7 +1702,7 @@ def main() -> None:
         raise SystemExit("No reference windows matched the requested filters")
 
     results = rank_candidates(target_window, candidates, args.limit, args.coarse_limit)
-    print_match_results(target_window, results)
+    print_match_results(target_window, results, show_alignment=args.show_alignment)
 
 
 if __name__ == "__main__":
