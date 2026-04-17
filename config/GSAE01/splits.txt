@@ -631,6 +631,27 @@ main/dll/SH/dll_1E8.c:
 main/dll/SH/SHthorntail.c:
 	.text       start:0x801D5764 end:0x801D5AFC
 
+main/dll/SH/SHroot.c:
+	.text       start:0x801D5AFC end:0x801D5ED4
+
+main/dll/SC/SClevelcontrol.c:
+	.text       start:0x801D5ED4 end:0x801D647C
+
+main/dll/SC/SClightfoot.c:
+	.text       start:0x801D647C end:0x801D6548
+
+main/dll/SC/SCchieflightfoot.c:
+	.text       start:0x801D6548 end:0x801D6CD0
+
+main/dll/SC/SClantern.c:
+	.text       start:0x801D6CD0 end:0x801D6F04
+
+main/dll/SC/SCcollectables.c:
+	.text       start:0x801D6F04 end:0x801D76A4
+
+main/dll/SC/SCanimobj.c:
+	.text       start:0x801D76A4 end:0x801D7C64
+
 main/textblock.c:
 	.text       start:0x80209624 end:0x802096AC
 
