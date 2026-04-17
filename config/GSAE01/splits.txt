@@ -415,8 +415,20 @@ main/dll/CAM/camshipbattle.c:
 main/dll/CAM/camclimb.c:
 	.text       start:0x80107398 end:0x80107718
 
+main/dll/baddieControl.c:
+	.text       start:0x80108EC8 end:0x80113590
+
 dolphin/ax/AX.c:
 	.text       start:0x801177DC end:0x8011784C
+
+main/dll/FRONT/n_pausemenu.c:
+	.text       start:0x80117F1C end:0x801192A8
+
+main/dll/FRONT/picmenu.c:
+	.text       start:0x801192A8 end:0x8011DC94
+
+main/dll/tricky.c:
+	.text       start:0x8011DC94 end:0x8012434C
 
 dolphin/TRK_MINNOW_DOLPHIN/MWCriticalSection_gc.c:
 	.text       start:0x801B1398 end:0x801B13F0
