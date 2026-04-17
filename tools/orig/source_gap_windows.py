@@ -15,7 +15,12 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.orig.dol_xrefs import FunctionSymbol, load_function_symbols
-from tools.orig.source_boundaries import build_split_ranges
+from tools.orig.source_boundaries import (
+    SplitRange,
+    build_split_ranges,
+    describe_gap_context,
+    split_gap_context,
+)
 from tools.orig.source_corridors import build_anchors, build_corridors, format_symbol_span
 from tools.orig.source_gap_packets import SourceGapPacket, build_gap_packets
 from tools.orig.source_reference_hints import build_groups, collect_reference_hints, parse_source_inventory
@@ -56,6 +61,13 @@ class GapWindowEstimate:
     scaled_delta: int
     start_function_index: int
     end_function_index: int
+    split_status: str
+    current_split_paths: tuple[str, ...]
+    gap_start: int | None
+    gap_end: int | None
+    gap_prev_path: str | None
+    gap_next_path: str | None
+    free_fragments: tuple[tuple[int, int], ...]
     functions: tuple[FunctionSymbol, ...]
 
 
@@ -255,9 +267,36 @@ def scale_reason(
     return "low", "Only a partial set of gap files could be sized or ordered; treat these as exploratory windows."
 
 
+def subtract_split_ranges(
+    ranges: list[SplitRange],
+    start: int,
+    end: int,
+) -> tuple[tuple[int, int], ...]:
+    cursor = start
+    fragments: list[tuple[int, int]] = []
+    for split_range in ranges:
+        if split_range.end <= cursor:
+            continue
+        if split_range.start >= end:
+            break
+        if cursor < split_range.start:
+            fragments.append((cursor, min(split_range.start, end)))
+        cursor = max(cursor, split_range.end)
+        if cursor >= end:
+            break
+    if cursor < end:
+        fragments.append((cursor, end))
+    return tuple(
+        (fragment_start, fragment_end)
+        for fragment_start, fragment_end in fragments
+        if fragment_start < fragment_end
+    )
+
+
 def build_window_plan(
     packet: SourceGapPacket,
     debug_info: dict[str, DebugSplitInfo],
+    current_split_ranges: list[SplitRange],
     exact_interval_limit: int,
     hinted_path_limit: int,
 ) -> GapWindowPlan | None:
@@ -304,6 +343,12 @@ def build_window_plan(
         current_start = segment_functions[0].address
         current_end = segment_functions[-1].address + segment_functions[-1].size
         current_size = current_end - current_start
+        split_status, current_split_paths, gap_start, gap_end, gap_prev_path, gap_next_path = split_gap_context(
+            current_split_ranges,
+            current_start,
+            current_end,
+        )
+        free_fragments = subtract_split_ranges(current_split_ranges, current_start, current_end)
         estimates.append(
             GapWindowEstimate(
                 ordinal=ordinal,
@@ -322,6 +367,13 @@ def build_window_plan(
                 scaled_delta=current_size - scaled_target,
                 start_function_index=start_index,
                 end_function_index=end_index,
+                split_status=split_status,
+                current_split_paths=current_split_paths,
+                gap_start=gap_start,
+                gap_end=gap_end,
+                gap_prev_path=gap_prev_path,
+                gap_next_path=gap_next_path,
+                free_fragments=free_fragments,
                 functions=segment_functions,
             )
         )
@@ -356,6 +408,7 @@ def build_window_plan(
 def build_window_plans(
     packets: list[SourceGapPacket],
     debug_info: dict[str, DebugSplitInfo],
+    current_split_ranges: list[SplitRange],
     exact_interval_limit: int,
     hinted_path_limit: int,
 ) -> list[GapWindowPlan]:
@@ -364,6 +417,7 @@ def build_window_plans(
         plan = build_window_plan(
             packet,
             debug_info=debug_info,
+            current_split_ranges=current_split_ranges,
             exact_interval_limit=exact_interval_limit,
             hinted_path_limit=hinted_path_limit,
         )
@@ -427,12 +481,32 @@ def format_ratio(value: float) -> str:
 
 
 def estimate_summary_line(estimate: GapWindowEstimate) -> str:
-    return (
+    summary = (
         f"`{estimate.path}` "
         f"current=`0x{estimate.current_start:08X}-0x{estimate.current_end:08X}` size=`0x{estimate.current_size:X}` "
         f"debug=`0x{estimate.debug_size:X}` scaled=`0x{estimate.scaled_target_size:X}` "
         f"delta=`{estimate.scaled_delta:+#x}` functions=`{estimate.current_function_count}`"
     )
+    coverage = describe_gap_context(
+        estimate.split_status,
+        estimate.current_split_paths,
+        estimate.gap_start,
+        estimate.gap_end,
+        estimate.gap_prev_path,
+        estimate.gap_next_path,
+        no_xrefs_text="no split coverage context",
+    )
+    fragment_text = ""
+    if estimate.free_fragments and not (
+        len(estimate.free_fragments) == 1
+        and estimate.free_fragments[0][0] == estimate.current_start
+        and estimate.free_fragments[0][1] == estimate.current_end
+    ):
+        fragment_text = " free=" + ",".join(
+            f"0x{fragment_start:08X}-0x{fragment_end:08X}"
+            for fragment_start, fragment_end in estimate.free_fragments
+        )
+    return f"{summary} coverage={coverage}{fragment_text}"
 
 
 def plan_markdown(plan: GapWindowPlan) -> str:
@@ -472,6 +546,26 @@ def plan_markdown(plan: GapWindowPlan) -> str:
             f"- current EN window: `0x{estimate.current_start:08X}-0x{estimate.current_end:08X}` "
             f"size=`0x{estimate.current_size:X}` functions=`{estimate.current_function_count}`"
         )
+        lines.append(
+            "- current split coverage: "
+            + describe_gap_context(
+                estimate.split_status,
+                estimate.current_split_paths,
+                estimate.gap_start,
+                estimate.gap_end,
+                estimate.gap_prev_path,
+                estimate.gap_next_path,
+                no_xrefs_text="no split coverage context",
+            )
+        )
+        if estimate.free_fragments:
+            lines.append(
+                "- free fragments after subtracting current splits: "
+                + ", ".join(
+                    f"`0x{fragment_start:08X}-0x{fragment_end:08X}`"
+                    for fragment_start, fragment_end in estimate.free_fragments
+                )
+            )
         lines.append(
             f"- debug split: `0x{estimate.debug_start:08X}-0x{estimate.debug_end:08X}` "
             f"size=`0x{estimate.debug_size:X}` functions=`{estimate.debug_function_count}`"
@@ -628,6 +722,9 @@ def rows_to_csv(plans: list[GapWindowPlan]) -> str:
         "current_function_count",
         "scaled_target_size",
         "scaled_delta",
+        "split_status",
+        "current_split_paths",
+        "free_fragments",
         "function_spans",
     ]
     buffer = io.StringIO()
@@ -657,6 +754,12 @@ def rows_to_csv(plans: list[GapWindowPlan]) -> str:
                     "current_function_count": estimate.current_function_count,
                     "scaled_target_size": f"0x{estimate.scaled_target_size:X}",
                     "scaled_delta": f"{estimate.scaled_delta:+#x}",
+                    "split_status": estimate.split_status,
+                    "current_split_paths": ",".join(estimate.current_split_paths),
+                    "free_fragments": ",".join(
+                        f"0x{fragment_start:08X}-0x{fragment_end:08X}"
+                        for fragment_start, fragment_end in estimate.free_fragments
+                    ),
                     "function_spans": ",".join(format_symbol_span(function) for function in estimate.functions),
                 }
             )
@@ -695,6 +798,19 @@ def rows_to_json(plans: list[GapWindowPlan]) -> str:
                         "current_function_count": estimate.current_function_count,
                         "scaled_target_size": f"0x{estimate.scaled_target_size:X}",
                         "scaled_delta": estimate.scaled_delta,
+                        "split_status": estimate.split_status,
+                        "current_split_paths": list(estimate.current_split_paths),
+                        "gap_start": None if estimate.gap_start is None else f"0x{estimate.gap_start:08X}",
+                        "gap_end": None if estimate.gap_end is None else f"0x{estimate.gap_end:08X}",
+                        "gap_prev_path": estimate.gap_prev_path,
+                        "gap_next_path": estimate.gap_next_path,
+                        "free_fragments": [
+                            {
+                                "start": f"0x{fragment_start:08X}",
+                                "end": f"0x{fragment_end:08X}",
+                            }
+                            for fragment_start, fragment_end in estimate.free_fragments
+                        ],
                         "functions": [format_symbol_span(function) for function in estimate.functions],
                     }
                     for estimate in plan.window_estimates
@@ -790,6 +906,7 @@ def main() -> None:
     plans = build_window_plans(
         packets,
         debug_info=debug_info,
+        current_split_ranges=current_split_ranges,
         exact_interval_limit=args.exact_interval_limit,
         hinted_path_limit=args.hinted_path_limit,
     )
