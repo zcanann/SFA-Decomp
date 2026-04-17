@@ -686,7 +686,10 @@ main/dll/genprops.c:
 	.text       start:0x8016B550 end:0x801725F0
 
 main/dll/gfxEmit.c:
-	.text       start:0x801725F0 end:0x80173750
+	.text       start:0x801725F0 end:0x801730CC
+
+main/dll/dll_13F.c:
+	.text       start:0x801730CC end:0x80173750
 
 main/dll/dll_141.c:
 	.text       start:0x80173750 end:0x80174B14
