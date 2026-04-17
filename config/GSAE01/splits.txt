@@ -673,6 +673,30 @@ main/dll/SP/SPshopkeeper.c:
 main/dll/SP/SPdrape.c:
 	.text       start:0x801D8DE8 end:0x801D90F0
 
+main/dll/IM/IMsnowbike.c:
+	.text       start:0x801D90F0 end:0x801DA010
+
+main/dll/DR/DRearthwalk.c:
+	.text       start:0x801DA010 end:0x801DB048
+
+main/dll/CR/CRsnowbike.c:
+	.text       start:0x801DB048 end:0x801DC444
+
+main/dll/DR/DRcloudrunner.c:
+	.text       start:0x801DC444 end:0x801DD1E8
+
+main/dll/WM/deaddino.c:
+	.text       start:0x801DD1E8 end:0x801DD600
+
+main/dll/WM/WMlevcontrol.c:
+	.text       start:0x801DD600 end:0x801DD798
+
+main/dll/WM/WMcrystal.c:
+	.text       start:0x801DD798 end:0x801DE458
+
+main/dll/VF/VFlevcontrol.c:
+	.text       start:0x801DE458 end:0x801DEA20
+
 main/textblock.c:
 	.text       start:0x80209624 end:0x802096AC
 
