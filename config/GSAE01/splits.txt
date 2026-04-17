@@ -1096,6 +1096,9 @@ main/dll/fruit.c:
 main/dll/zBomb.c:
 	.text       start:0x80208C98 end:0x802093B4
 
+main/dll/fire.c:
+	.text       start:0x802093B4 end:0x80209624
+
 main/textblock.c:
 	.text       start:0x80209624 end:0x802096AC
 
