@@ -760,8 +760,17 @@ main/dll/dll_152.c:
 main/dll/dll_153.c:
 	.text       start:0x80182C40 end:0x801835EC
 
+main/dll/dll_159.c:
+	.text       start:0x801835EC end:0x8018393C
+
+main/dll/dll_15A.c:
+	.text       start:0x8018393C end:0x801841F4
+
+main/dll/dll_15B.c:
+	.text       start:0x801841F4 end:0x801846D8
+
 main/dll/CF/CFguardian.c:
-	.text       start:0x801835EC end:0x80184D40
+	.text       start:0x801846D8 end:0x80184D40
 
 main/dll/CF/windlift.c:
 	.text       start:0x80184D40 end:0x80186BA4
