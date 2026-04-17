@@ -566,10 +566,16 @@ main/dll/baddie/Tumbleweed.c:
 	.text       start:0x801338A4 end:0x80139724
 
 main/dll/baddie/skeetla.c:
-	.text       start:0x80139724 end:0x8013D92C
+	.text       start:0x80139724 end:0x8013B6F0
+
+main/dll/baddie/dll_DF.c:
+	.text       start:0x8013B6F0 end:0x8013D92C
 
 main/dll/baddie/MMP_cratercritter.c:
-	.text       start:0x8013D92C end:0x8013E458
+	.text       start:0x8013D92C end:0x8013DC78
+
+main/dll/baddie/MMP_critterspit.c:
+	.text       start:0x8013DC78 end:0x8013E458
 
 main/dll/cannon.c:
 	.text       start:0x8013E458 end:0x80140D64
