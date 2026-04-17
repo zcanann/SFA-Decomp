@@ -47,6 +47,8 @@ CONFIG_OBJECT_EXTENSIONS = "c|cpp|cp|cxx|s|S"
 PATH_ALIASES = {
     "dolphin/dvd/dvdfatal.c": "dolphin/dvd/dvdFatal.c",
     "dolphin/pad/PadClamp.c": "dolphin/pad/Padclamp.c",
+    "dolphin/pad/pad.c": "dolphin/pad/Pad.c",
+    "dolphin/pad/padclamp.c": "dolphin/pad/Padclamp.c",
     "dolphin/mtx/mtx44vec.c": "dolphin/mtx/mtxvec.c",
 }
 
