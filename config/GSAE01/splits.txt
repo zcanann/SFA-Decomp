@@ -854,16 +854,16 @@ main/dll/creator19D.c:
 	.text       start:0x801C446C end:0x801C4B54
 
 main/dll/laser19F.c:
-	.text       start:0x801C4B54 end:0x801C54D4
+	.text       start:0x801C4B54 end:0x801C532C
 
 main/dll/mmshrine/shrine.c:
-	.text       start:0x801C54D4 end:0x801C5EE0
+	.text       start:0x801C532C end:0x801C5B9C
 
 main/dll/mmshrine/animobj1C0.c:
-	.text       start:0x801C5EE0 end:0x801C6298
+	.text       start:0x801C5B9C end:0x801C5EE0
 
 main/dll/mmshrine/torch1C1.c:
-	.text       start:0x801C6298 end:0x801C666C
+	.text       start:0x801C5EE0 end:0x801C666C
 
 main/dll/mmshrine/shrine1C2.c:
 	.text       start:0x801C666C end:0x801C7CD8
