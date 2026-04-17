@@ -793,8 +793,20 @@ main/dll/CF/CFtoggleswitch.c:
 main/dll/CF/CFforcecontrol.c:
 	.text       start:0x8018BC64 end:0x8018CDAC
 
+main/dll/CF/treasureRelated0177.c:
+	.text       start:0x8018CDAC end:0x8018D74C
+
+main/dll/CF/dll_179.c:
+	.text       start:0x8018D74C end:0x8018DA28
+
+main/dll/CF/dll_17A.c:
+	.text       start:0x8018DA28 end:0x8018DE58
+
+main/dll/CF/CFlevelControl.c:
+	.text       start:0x8018DE58 end:0x8018E620
+
 main/dll/CF/CFTreasSharpy.c:
-	.text       start:0x8018CDAC end:0x8018F020
+	.text       start:0x8018E620 end:0x8018F020
 
 main/dll/CF/CFchuckobj.c:
 	.text       start:0x8018F020 end:0x80191150
