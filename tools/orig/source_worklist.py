@@ -87,6 +87,7 @@ class WorkItem:
     suggested_start: int | None
     suggested_end: int | None
     suggested_size: int | None
+    suggested_overlap_paths: tuple[str, ...]
     debug_target_size: int | None
     window_delta: int | None
     window_coverage: str | None
@@ -426,6 +427,15 @@ def current_range_satisfies_action(
     return False
 
 
+def preview_path_list(paths: tuple[str, ...], limit: int = 4) -> str:
+    if not paths:
+        return "none"
+    preview = ", ".join(f"`{path}`" for path in paths[:limit])
+    if len(paths) > limit:
+        preview += f", ... (+{len(paths) - limit} more)"
+    return preview
+
+
 def build_work_items(
     anchors: list[SourceAnchor],
     hints: list[BoundaryHint],
@@ -458,6 +468,23 @@ def build_work_items(
             split_range_by_path,
         ):
             continue
+        matching_range = find_matching_split_range(anchor.suggested_path, split_range_by_path)
+        suggested_overlap_paths: tuple[str, ...] = ()
+        if estimate is not None:
+            suggested_overlap_paths = overlapping_split_paths(current_split_ranges, estimate.start, estimate.end)
+        conflicting_suggested_paths = suggested_overlap_paths
+        if matching_range is not None:
+            conflicting_suggested_paths = tuple(
+                path for path in suggested_overlap_paths if path != matching_range.path
+            )
+        if action in {"split-now", "expand-window", "shrink-window"} and conflicting_suggested_paths:
+            action = "corridor-packet"
+            confidence = "medium"
+            reason = (
+                "Suggested window overlaps existing split owners "
+                + preview_path_list(conflicting_suggested_paths)
+                + "; treat this as an ownership packet instead of a clean boundary move."
+            )
         suggested_start, suggested_end, suggested_size, window_delta, coverage = window_text(estimate)
 
         island_sources = ()
@@ -485,6 +512,7 @@ def build_work_items(
                 suggested_start=suggested_start,
                 suggested_end=suggested_end,
                 suggested_size=suggested_size,
+                suggested_overlap_paths=suggested_overlap_paths,
                 debug_target_size=anchor.debug_split_size,
                 window_delta=window_delta,
                 window_coverage=coverage,
@@ -548,6 +576,8 @@ def markdown_for_item(item: WorkItem) -> list[str]:
             + span_text(item.suggested_start, item.suggested_end, item.suggested_size)
             + f" delta=`{item.window_delta:+#x}` xrefs=`{item.window_coverage}`"
         )
+    if item.suggested_overlap_paths:
+        lines.append("  suggested overlaps: " + preview_paths(item.suggested_overlap_paths))
     if item.retail_labels:
         lines.append("  retail labels: " + ", ".join(f"`{label}`" for label in item.retail_labels))
     if item.island_sources and len(item.island_sources) > 1:
@@ -685,6 +715,7 @@ def rows_to_json(items: list[WorkItem]) -> str:
                 "suggested_start": None if item.suggested_start is None else f"0x{item.suggested_start:08X}",
                 "suggested_end": None if item.suggested_end is None else f"0x{item.suggested_end:08X}",
                 "suggested_size": None if item.suggested_size is None else f"0x{item.suggested_size:X}",
+                "suggested_overlap_paths": item.suggested_overlap_paths,
                 "debug_target_size": None if item.debug_target_size is None else f"0x{item.debug_target_size:X}",
                 "window_delta": item.window_delta,
                 "window_coverage": item.window_coverage,
@@ -780,6 +811,8 @@ def packet_markdown(item: WorkItem, current_functions: list[FunctionSymbol]) -> 
             + span_text(item.suggested_start, item.suggested_end, item.suggested_size)
             + f" delta=`{item.window_delta:+#x}` xref_coverage=`{item.window_coverage}`"
         )
+    if item.suggested_overlap_paths:
+        lines.append("- suggested overlaps: " + preview_path_list(item.suggested_overlap_paths))
     if item.retail_labels:
         lines.append("- retail labels: " + ", ".join(f"`{label}`" for label in item.retail_labels))
     lines.append(f"- xref count: `{item.xref_count}`")

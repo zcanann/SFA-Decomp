@@ -807,7 +807,7 @@ def main() -> None:
         max_gap_bytes=0x3000,
         max_gap_functions=8,
     )
-    items = build_work_items(anchors, hints, corridors, islands, current_functions)
+    items = build_work_items(anchors, hints, corridors, islands, current_functions, split_ranges)
     packets = build_gap_packets(corridors, debug_split_paths, debug_split_ranges, split_ranges)
     blueprint_anchors = build_blueprint_anchors(items)
     blocks = build_blocks(blueprint_anchors, packets, max_gap_paths=args.max_gap_paths)
