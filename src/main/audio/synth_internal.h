@@ -276,6 +276,8 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel);
 void synthInsertChannelEvent(SynthSequenceQueue* queue, SynthSequenceEvent* event);
 void synthInitChannelEventQueues(void);
 void synthRefreshChannelEventQueue(u8 groupIndex);
+u32 synthProcessChannelEventQueue(u8 groupIndex, u32 delta);
+void synthUpdateVoices(s32 delta);
 void synthRecycleVoiceCallbacks(SynthVoice* voice);
 SynthCallbackLink* synthAllocCallback(s32 triggerValue, u8 controllerIndex);
 s32 synthUpdateCallbacks(void);
