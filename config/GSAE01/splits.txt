@@ -1511,10 +1511,10 @@ dolphin/pad/Pad.c:
 	.text       start:0x8024E4F8 end:0x8024FE1C
 
 dolphin/ai/ai.c:
-	.text       start:0x8024FE1C end:0x80250748
+	.text       start:0x8024FE1C end:0x80250704
 
 dolphin/ar/ar.c:
-	.text       start:0x80250748 end:0x80251290
+	.text       start:0x80250704 end:0x80251290
 
 dolphin/ar/arq.c:
 	.text       start:0x80251290 end:0x80251624
