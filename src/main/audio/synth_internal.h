@@ -274,6 +274,7 @@ void synthSetStudioChannelScale(s32 value, u8 studioIndex, u32 channelIndex);
 u32 synthGetVoiceSlotChannelScale(SynthVoiceSlot* slot);
 SynthSequenceEvent* synthGetNextChannelEvent(u8 channel);
 void synthInsertChannelEvent(SynthSequenceQueue* queue, SynthSequenceEvent* event);
+SynthSequenceEvent* synthHandleSequenceEvent(SynthSequenceEvent* event, u8 groupIndex, u32* output);
 void synthInitChannelEventQueues(void);
 void synthRefreshChannelEventQueue(u8 groupIndex);
 u32 synthProcessChannelEventQueue(u8 groupIndex, u32 delta);
