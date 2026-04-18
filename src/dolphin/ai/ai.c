@@ -53,6 +53,17 @@ AIDCallback AIRegisterDMACallback(AIDCallback callback) {
     return old_callback;
 }
 
+AISCallback AIRegisterStreamCallback(AISCallback callback) {
+    AISCallback old_callback;
+    BOOL old;
+
+    old_callback = __AIS_Callback;
+    old = OSDisableInterrupts();
+    __AIS_Callback = callback;
+    OSRestoreInterrupts(old);
+    return old_callback;
+}
+
 void AIInitDMA(u32 start_addr, u32 length) {
     BOOL old;
 
