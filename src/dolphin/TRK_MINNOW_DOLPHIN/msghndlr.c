@@ -6,6 +6,20 @@
 #include "PowerPC_EABI_Support/MetroTRK/trk.h"
 #include <string.h>
 
+typedef struct DSCPUType {
+    u8 cpuMajor;
+    u8 cpuMinor;
+    u8 bigEndian;
+    u8 defaultTypeSize;
+    u8 fpTypeSize;
+    u8 extended1TypeSize;
+    u8 extended2TypeSize;
+} DSCPUType;
+
+DSError TRKTargetVersions(DSVersions* versions);
+DSError TRKTargetSupportMask(u8 mask[32]);
+DSError TRKTargetCPUType(DSCPUType* cpuType);
+
 BOOL IsTRKConnected;
 
 void OutputData(void* data, int length) {
@@ -82,12 +96,106 @@ DSError TRKDoOverride(TRKBuffer* buffer) {
     return DS_NoError;
 }
 
-DSError TRKDoVersions(TRKBuffer*) {
-    return DS_NoError;
+DSError TRKDoVersions(TRKBuffer* buffer) {
+    DSError err;
+    DSVersions versions;
+
+    if (buffer->length != 1) {
+        return TRKStandardACK(buffer, DSMSG_ReplyACK, DSREPLY_PacketSizeError);
+    }
+
+    TRKResetBuffer(buffer, TRUE);
+    err = TRKAppendBuffer1_ui8(buffer, DSMSG_ReplyACK);
+    if (err == DS_NoError) {
+        err = TRKAppendBuffer1_ui8(buffer, DSREPLY_NoError);
+    }
+    if (err == DS_NoError) {
+        err = TRKTargetVersions(&versions);
+    }
+    if (err == DS_NoError) {
+        err = TRKAppendBuffer1_ui8(buffer, versions.kernelMajor);
+    }
+    if (err == DS_NoError) {
+        err = TRKAppendBuffer1_ui8(buffer, versions.kernelMinor);
+    }
+    if (err == DS_NoError) {
+        err = TRKAppendBuffer1_ui8(buffer, versions.protocolMajor);
+    }
+    if (err == DS_NoError) {
+        err = TRKAppendBuffer1_ui8(buffer, versions.protocolMinor);
+    }
+    if (err != DS_NoError) {
+        return TRKStandardACK(buffer, DSMSG_ReplyACK, DSREPLY_CWDSError);
+    }
+    return TRKSendACK(buffer);
 }
 
-DSError TRKDoSupportMask(TRKBuffer*) {
-    return DS_NoError;
+DSError TRKDoSupportMask(TRKBuffer* buffer) {
+    DSError err;
+    u8 mask[32];
+
+    if (buffer->length != 1) {
+        return TRKStandardACK(buffer, DSMSG_ReplyACK, DSREPLY_PacketSizeError);
+    }
+
+    TRKResetBuffer(buffer, TRUE);
+    err = TRKAppendBuffer1_ui8(buffer, DSMSG_ReplyACK);
+    if (err == DS_NoError) {
+        err = TRKAppendBuffer1_ui8(buffer, DSREPLY_NoError);
+    }
+    if (err == DS_NoError) {
+        err = TRKTargetSupportMask(mask);
+    }
+    if (err == DS_NoError) {
+        err = TRKAppendBuffer(buffer, mask, sizeof(mask));
+    }
+    if (err != DS_NoError) {
+        return TRKStandardACK(buffer, DSMSG_ReplyACK, DSREPLY_CWDSError);
+    }
+    return TRKSendACK(buffer);
+}
+
+DSError TRKDoCPUType(TRKBuffer* buffer) {
+    DSError err;
+    DSCPUType cpuType;
+
+    if (buffer->length != 1) {
+        return TRKStandardACK(buffer, DSMSG_ReplyACK, DSREPLY_PacketSizeError);
+    }
+
+    TRKResetBuffer(buffer, TRUE);
+    err = TRKAppendBuffer1_ui8(buffer, DSMSG_ReplyACK);
+    if (err == DS_NoError) {
+        err = TRKAppendBuffer1_ui8(buffer, DSREPLY_NoError);
+    }
+    if (err == DS_NoError) {
+        err = TRKTargetCPUType(&cpuType);
+    }
+    if (err == DS_NoError) {
+        err = TRKAppendBuffer1_ui8(buffer, cpuType.cpuMajor);
+    }
+    if (err == DS_NoError) {
+        err = TRKAppendBuffer1_ui8(buffer, cpuType.cpuMinor);
+    }
+    if (err == DS_NoError) {
+        err = TRKAppendBuffer1_ui8(buffer, cpuType.bigEndian);
+    }
+    if (err == DS_NoError) {
+        err = TRKAppendBuffer1_ui8(buffer, cpuType.defaultTypeSize);
+    }
+    if (err == DS_NoError) {
+        err = TRKAppendBuffer1_ui8(buffer, cpuType.fpTypeSize);
+    }
+    if (err == DS_NoError) {
+        err = TRKAppendBuffer1_ui8(buffer, cpuType.extended1TypeSize);
+    }
+    if (err == DS_NoError) {
+        err = TRKAppendBuffer1_ui8(buffer, cpuType.extended2TypeSize);
+    }
+    if (err != DS_NoError) {
+        return TRKStandardACK(buffer, DSMSG_ReplyACK, DSREPLY_CWDSError);
+    }
+    return TRKSendACK(buffer);
 }
 
 DSError TRKDoReadMemory(TRKBuffer* buffer) {

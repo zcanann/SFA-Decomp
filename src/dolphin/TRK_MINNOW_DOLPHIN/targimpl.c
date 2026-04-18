@@ -34,6 +34,19 @@ static TRKStepStatus gTRKStepStatus = { FALSE, DSSTEP_IntoCount, 0, 0 };
 
 typedef void (*RegAccessFunc)(void* srcDestPtr, u128 val);
 
+typedef struct DSCPUType {
+	u8 cpuMajor;
+	u8 cpuMinor;
+	u8 bigEndian;
+	u8 defaultTypeSize;
+	u8 fpTypeSize;
+	u8 extended1TypeSize;
+	u8 extended2TypeSize;
+} DSCPUType;
+
+extern BOOL gTRKBigEndian;
+u8 TRKTargetCPUMinorType(void);
+
 static void TRKExceptionHandler(u16);
 void TRKInterruptHandlerEnableInterrupts();
 static void GetThreadInfo(int*, int*);
@@ -400,27 +413,46 @@ DSError TRKTargetAccessExtended2(u32 firstRegister, u32 lastRegister, MessageBuf
  * @note Address: TODO
  * @note Size: TODO
  */
-void TRKTargetVersions(void)
+DSError TRKTargetVersions(DSVersions* versions)
 {
-	// UNUSED FUNCTION
+	versions->kernelMajor   = 0;
+	versions->kernelMinor   = 9;
+	versions->protocolMajor = 1;
+	versions->protocolMinor = 10;
+	return DS_NoError;
 }
 
 /**
  * @note Address: TODO
  * @note Size: TODO
  */
-void TRKTargetSupportMask(void)
+DSError TRKTargetSupportMask(u8 mask[32])
 {
-	// UNUSED FUNCTION
+	memset(mask, 0, 32);
+	mask[0]  = 0x7A;
+	mask[2]  = 0x4F;
+	mask[3]  = 0x07;
+	mask[16] = 0x01;
+	mask[18] = 0x03;
+	mask[26] = 0x03;
+	mask[31] = 0x80;
+	return DS_NoError;
 }
 
 /**
  * @note Address: TODO
  * @note Size: TODO
  */
-void TRKTargetCPUType(void)
+DSError TRKTargetCPUType(DSCPUType* cpuType)
 {
-	// UNUSED FUNCTION
+	cpuType->cpuMajor          = 0;
+	cpuType->cpuMinor          = TRKTargetCPUMinorType();
+	cpuType->bigEndian         = gTRKBigEndian;
+	cpuType->defaultTypeSize   = 4;
+	cpuType->fpTypeSize        = 8;
+	cpuType->extended1TypeSize = 4;
+	cpuType->extended2TypeSize = 8;
+	return DS_NoError;
 }
 
 /**
