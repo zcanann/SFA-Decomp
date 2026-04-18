@@ -1748,12 +1748,12 @@ dolphin/TRK_MINNOW_DOLPHIN/dispatch.c:
 	.bss        start:0x803D8F48 end:0x803D8F50
 
 dolphin/TRK_MINNOW_DOLPHIN/msghndlr.c:
-	.text       start:0x8028855C end:0x8028B394
+	.text       start:0x8028855C end:0x8028ADBC
 	.data       start:0x80332F18 end:0x80332F50
 	.bss        start:0x803D8F50 end:0x803D8F58
 
 dolphin/TRK_MINNOW_DOLPHIN/support.c:
-	.text       start:0x8028B394 end:0x8028B658
+	.text       start:0x8028ADBC end:0x8028B658
 
 dolphin/TRK_MINNOW_DOLPHIN/mutex_TRK.c:
 	.text       start:0x8028B658 end:0x8028B670
