@@ -1,7 +1,7 @@
 #include "src/main/audio/synth_internal.h"
 #include "src/main/audio/synth_voice_overlays.h"
 
-void fn_8026EFC8(void) {
+void synthInitChannelEventQueues(void) {
     SynthSequenceEvent* event;
     SynthSequenceQueue* queue;
     SynthVoice* voice;
@@ -29,7 +29,7 @@ void fn_8026EFC8(void) {
     }
 }
 
-void fn_8026F070(u8 groupIndex) {
+void synthRefreshChannelEventQueue(u8 groupIndex) {
     SynthSequenceEvent* event;
     SynthSequenceQueue* queue;
     SynthVoice* voice;

@@ -46,6 +46,7 @@ class MissingRun:
     gap_size: int
     function_summary: str
     function_count: int
+    overlap_paths: tuple[str, ...]
 
 
 def parse_config_order(configure_path: Path) -> list[str]:
@@ -113,6 +114,21 @@ def function_summary(
     if len(hits) > limit:
         summary += f", ... (+{len(hits) - limit} more)"
     return summary, len(hits)
+
+
+def overlap_summary(
+    spans: dict[str, TextSpan],
+    start: int,
+    end: int,
+    exclude: set[str],
+) -> tuple[str, ...]:
+    overlaps = [
+        path
+        for path, span in spans.items()
+        if path not in exclude and span.start < end and span.end > start
+    ]
+    overlaps.sort(key=lambda path: (spans[path].start, spans[path].end, path))
+    return tuple(overlaps)
 
 
 def main() -> None:
@@ -281,6 +297,12 @@ def main() -> None:
                     gap_size=gap_size,
                     function_summary=summary,
                     function_count=count,
+                    overlap_paths=overlap_summary(
+                        spans,
+                        gap_start,
+                        gap_end,
+                        {left.path, right.path, *missing_paths},
+                    ),
                 )
             )
             left_index = right_index
@@ -320,6 +342,11 @@ def main() -> None:
             print(f"  missing: " + ", ".join(f"`{path}`" for path in run.missing_paths))
             print(f"  functions: `{run.function_count}`")
             print(f"  summary: {run.function_summary}")
+            if run.overlap_paths:
+                overlap_preview = ", ".join(f"`{path}`" for path in run.overlap_paths[:6])
+                if len(run.overlap_paths) > 6:
+                    overlap_preview += f", ... (+{len(run.overlap_paths) - 6} more)"
+                print(f"  overlaps: {overlap_preview}")
 
 
 if __name__ == "__main__":

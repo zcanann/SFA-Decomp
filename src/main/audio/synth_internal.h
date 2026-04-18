@@ -269,8 +269,6 @@ extern const f32 lbl_803E846C;
 #define synthLookupCallbackLinkId fn_80279C00
 #define synthCopyControllerValue fn_80282630
 #define synthScaleFadeTime fn_802836E4
-#define synthInitChannelEventQueues fn_8026EFC8
-#define synthRefreshChannelEventQueue fn_8026F070
 #define sSynthFadeScale lbl_803E8430
 #define sSynthFadeUnit lbl_803E8440
 #define sSynthFadeTimeScale lbl_803E846C
@@ -280,8 +278,8 @@ void synthSetStudioChannelScale(s32 value, u8 studioIndex, u32 channelIndex);
 u32 synthGetVoiceSlotChannelScale(SynthVoiceSlot* slot);
 SynthSequenceEvent* synthGetNextChannelEvent(u8 channel);
 void synthInsertChannelEvent(SynthSequenceQueue* queue, SynthSequenceEvent* event);
-void fn_8026EFC8(void);
-void fn_8026F070(u8 groupIndex);
+void synthInitChannelEventQueues(void);
+void synthRefreshChannelEventQueue(u8 groupIndex);
 void synthRecycleVoiceCallbacks(SynthVoice* voice);
 SynthCallbackLink* synthAllocCallback(s32 triggerValue, u8 controllerIndex);
 s32 synthUpdateCallbacks(void);
