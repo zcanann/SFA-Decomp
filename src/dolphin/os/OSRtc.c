@@ -138,34 +138,54 @@ int __OSSyncSram(void) {
 }
 
 int __OSReadROM(void* buffer, s32 length, s32 offset) {
-    OSSram* sram;
-    (void)buffer;
-    (void)length;
-    (void)offset;
+    int err;
+    u32 cmd;
 
-    sram = (OSSram*)LockSram(0);
-    offset = (sram->flags & 4) ? 1 : 0;
-    __OSUnlockSram(0);
-    return offset;
+    if (!EXILock(0, 1, NULL)) {
+        return 0;
+    }
+    if (!EXISelect(0, 1, 3)) {
+        EXIUnlock(0);
+        return 0;
+    }
+    cmd = offset << 6;
+    err = 0;
+    err |= !EXIImm(0, &cmd, 4, 1, 0);
+    err |= !EXISync(0);
+    err |= !EXIDma(0, buffer, length, 0, NULL);
+    err |= !EXISync(0);
+    err |= !EXIDeselect(0);
+    EXIUnlock(0);
+    return !err;
+}
+
+u32 OSGetSoundMode(void) {
+    OSSram* sram;
+    u32 mode;
+
+    sram = __OSLockSram();
+    mode = (sram->flags & 4) ? OS_SOUND_MODE_STEREO : OS_SOUND_MODE_MONO;
+    __OSUnlockSram(FALSE);
+    return mode;
 }
 
 void OSSetSoundMode(u32 mode) {
     OSSram* sram;
-    int unused;
+    u32 newFlags;
 
     ASSERTLINE(617, mode == OS_SOUND_MODE_MONO || mode == OS_SOUND_MODE_STEREO);
-    mode = (mode & 1) << 2;
+    newFlags = (mode & 1) << 2;
     sram = __OSLockSram();
-    if (mode == (sram->flags & 4)) {
+    if (newFlags == (sram->flags & 4)) {
         __OSUnlockSram(FALSE);
         return;
     }
     sram->flags &= ~4;
-    sram->flags |= mode;
+    sram->flags |= newFlags;
     __OSUnlockSram(TRUE);
 }
 
-u32 OSGetSoundMode(void) {
+u32 OSGetProgressiveMode(void) {
     OSSram* sram;
     u32 on;
 
@@ -177,23 +197,21 @@ u32 OSGetSoundMode(void) {
 
 void OSSetProgressiveMode(u32 on) {
     OSSram* sram;
-#ifndef DEBUG
-    u16 padding;
-#endif
+    u32 newFlags;
 
     ASSERTLINE(670, on == OS_PROGRESSIVE_MODE_OFF || on == OS_PROGRESSIVE_MODE_ON);
-    on = (on & 1) << 7;
+    newFlags = (on & 1) << 7;
     sram = __OSLockSram();
-    if (on == (sram->flags & 0x80)) {
+    if (newFlags == (sram->flags & 0x80)) {
         __OSUnlockSram(FALSE);
         return;
     }
     sram->flags &= ~0x80;
-    sram->flags |= on;
+    sram->flags |= newFlags;
     __OSUnlockSram(TRUE);
 }
 
-u32 OSGetProgressiveMode(void) {
+u8 OSGetLanguage(void) {
     OSSram* sram;
     u8 language;
 
