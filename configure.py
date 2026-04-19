@@ -560,7 +560,7 @@ config.libs = [
         "progress_category": "sdk",
         "objects": [
             Object(
-                NonMatching,
+                MatchingFor("GSAE01"),
                 "dolphin/TRK_MINNOW_DOLPHIN/mainloop.c",
                 mw_version="GC/1.3.2",
             ),
@@ -585,7 +585,7 @@ config.libs = [
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/targsupp.s"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk.c"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/mpc_7xx_603e.c"),
-            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/main_TRK.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/main_TRK.c"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk_glue.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/targcont.c"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/target_options.c"),
