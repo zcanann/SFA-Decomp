@@ -1398,12 +1398,17 @@ dolphin/os/OSAlarm.c:
 
 dolphin/os/OSAlloc.c:
 	.text       start:0x80241AD8 end:0x80241DE8
+	.sdata      start:0x803DD198 end:0x803DD19C
+	.sbss       start:0x803DEA90 end:0x803DEAA0
 
 dolphin/os/OSArena.c:
 	.text       start:0x80241DE8 end:0x80241E08
+	.sdata      start:0x803DD1A0 end:0x803DD1A4
+	.sbss       start:0x803DEAA0 end:0x803DEAA4
 
 dolphin/os/OSAudioSystem.c:
 	.text       start:0x80241E08 end:0x8024209C
+	.data       start:0x8032D178 end:0x8032D1F8
 
 dolphin/os/OSCache.c:
 	.text       start:0x8024209C end:0x80242758
@@ -1419,6 +1424,7 @@ dolphin/os/OSFont.c:
 
 dolphin/os/OSInterrupt.c:
 	.text       start:0x80243E74 end:0x802446E0
+	.sbss       start:0x803DEABC end:0x803DEAD0
 
 dolphin/os/OSLink.c:
 	.text       start:0x802446E0 end:0x802446F8
