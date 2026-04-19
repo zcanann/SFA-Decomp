@@ -5,6 +5,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
+import subprocess
+import sys
 from pathlib import Path
 
 
@@ -24,6 +27,11 @@ def get_argparser() -> argparse.ArgumentParser:
         default=20,
         help="Maximum number of near-miss files to print.",
     )
+    parser.add_argument(
+        "--probe-exact",
+        action="store_true",
+        help="Run sdk_import_probe.py for exact-report SDK files that are still not linked.",
+    )
     return parser
 
 
@@ -38,6 +46,55 @@ def format_misses(unit: dict) -> str:
         if fn.get("fuzzy_match_percent", 100.0) != 100.0
     ]
     return ", ".join(misses[:5])
+
+
+def unit_name_to_source_path(unit_name: str) -> Path | None:
+    if not unit_name.startswith("main/"):
+        return None
+
+    base = Path("src") / unit_name.removeprefix("main/")
+    for candidate in (base.with_suffix(".c"), base.with_suffix(".s"), base):
+        if candidate.exists():
+            return candidate
+    return None
+
+
+def summarize_probe(source_path: Path) -> str:
+    try:
+        result = subprocess.run(
+            [sys.executable, "tools/sdk_import_probe.py", str(source_path)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except subprocess.CalledProcessError as exc:
+        return f"probe failed ({exc.returncode})"
+
+    sections: list[str] = []
+    best_cluster = ""
+    in_sections = False
+
+    for line in result.stdout.splitlines():
+        if line.startswith("sections:"):
+            in_sections = True
+            continue
+        if in_sections:
+            if not line.startswith("  ."):
+                in_sections = False
+            else:
+                section_match = re.match(r"\s+(\.\S+)\s+(0x[0-9A-Fa-f]+)", line)
+                if section_match:
+                    sections.append(f"{section_match.group(1)}={section_match.group(2)}")
+                continue
+        if not best_cluster and re.match(r"\s+0x[0-9A-Fa-f]+-0x[0-9A-Fa-f]+", line):
+            best_cluster = " ".join(line.split())
+
+    summary_parts = []
+    if sections:
+        summary_parts.append("sections " + " ".join(sections))
+    if best_cluster:
+        summary_parts.append("best " + best_cluster)
+    return "; ".join(summary_parts) if summary_parts else "probe produced no summary"
 
 
 def main() -> int:
@@ -68,6 +125,12 @@ def main() -> int:
     if exact_unlinked:
         for _, _, _, unit in exact_unlinked:
             print(f"  {unit['name']}")
+            if args.probe_exact:
+                source_path = unit_name_to_source_path(unit["name"])
+                if source_path is None:
+                    print("    probe: no source path found")
+                else:
+                    print(f"    probe: {summarize_probe(source_path)}")
     else:
         print("  (none)")
 
