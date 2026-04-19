@@ -5,23 +5,16 @@
 
 #include "dolphin/gx/__gx.h"
 
-#ifdef DEBUG
-const char* __AIVersion = "<< Dolphin SDK - AI\tdebug build: Apr  5 2004 03:56:18 (0x2301) >>";
-#else
-const char* __AIVersion = "<< Dolphin SDK - AI\trelease build: Sep  5 2002 05:34:25 (0x2301) >>";
-#endif
-
 static AISCallback __AIS_Callback;
 static AIDCallback __AID_Callback;
 static u8* __CallbackStack;
 static u8* __OldStack;
 static BOOL __AI_init_flag;
-static BOOL __AID_Active;
 static OSTime bound_32KHz;
 static OSTime bound_48KHz;
-OSTime min_wait;
-OSTime max_wait;
-OSTime buffer;
+extern OSTime min_wait;
+extern OSTime max_wait;
+extern OSTime buffer;
 
 typedef struct {
     OSTime t_start;
@@ -187,8 +180,6 @@ u8 AIGetStreamVolRight(void)
 
 void AIInit(u8* stack) {
     if (__AI_init_flag != TRUE) {
-        OSRegisterVersion(__AIVersion);
-
         bound_32KHz = OSNanosecondsToTicks(31524);
         bound_48KHz = OSNanosecondsToTicks(42024);
         min_wait = OSNanosecondsToTicks(42000);
@@ -243,14 +234,12 @@ void __AIDHandler(__OSInterrupt interrupt, OSContext* context) {
     __DSPRegs[5] = tmp;
     OSClearContext(&exceptionContext);
     OSSetCurrentContext(&exceptionContext);
-    if (__AID_Callback && !__AID_Active) {
-        __AID_Active = TRUE;
+    if (__AID_Callback) {
         if (__CallbackStack) {
             __AICallbackStackSwitch(__AID_Callback);
         } else {
             __AID_Callback();
         }
-        __AID_Active = FALSE;
     }
     OSClearContext(&exceptionContext);
     OSSetCurrentContext(context);
