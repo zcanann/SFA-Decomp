@@ -56,7 +56,10 @@ void DSPInit(void) {
     tmp = __DSPRegs[5];
     __DSPRegs[5] = tmp = tmp & ~0xAC;
 
-    __DSP_first_task = __DSP_last_task = __DSP_curr_task = __DSP_tmp_task = NULL;
+    __DSP_tmp_task = NULL;
+    __DSP_first_task = NULL;
+    __DSP_last_task = NULL;
+    __DSP_curr_task = NULL;
     __DSP_init_flag = 1;
 
     OSRestoreInterrupts(old);
@@ -68,7 +71,7 @@ void DSPAssertInt(void) {
 
     old = OSDisableInterrupts();
     tmp = __DSPRegs[5];
-    tmp = (tmp & ~0xA8) | 2;
+    tmp = (tmp & ~0xA8) | 0x801;
     __DSPRegs[5] = tmp;
     __DSP_init_flag = 0;
     OSRestoreInterrupts(old);
