@@ -1,39 +1,41 @@
-#include <dolphin/os.h>
+#include <dolphin/types.h>
 
-// undefine the macros so they do not error the file.
-#undef OSPhysicalToCached
-#undef OSPhysicalToUncached
-#undef OSCachedToPhysical
-#undef OSUncachedToPhysical
-#undef OSCachedToUncached
-#undef OSUncachedToCached
+extern s16 lbl_803DDCEC;
+extern s16 lbl_803DDCEE;
+extern u8 lbl_803DDD00;
 
-void* OSPhysicalToCached(u32 paddr) {
-    ASSERTMSGLINE(47, paddr < 0x10000000U, "OSPhysicalToCached(): illegal address.");
-    return (void*)(paddr + 0x80000000);
+asm void* OSPhysicalToCached(register s16 paddr) {
+    nofralloc
+    sth r3, lbl_803DDCEE(r13)
+    blr
 }
 
-void* OSPhysicalToUncached(u32 paddr) {
-    ASSERTMSGLINE(62, paddr < 0x10000000U, "OSPhysicalToUncached(): illegal address.");
-    return (void*)(paddr - 0x40000000);
+asm void* OSPhysicalToUncached(register u32 paddr) {
+    nofralloc
+    lha r3, lbl_803DDCEE(r13)
+    blr
 }
 
-u32 OSCachedToPhysical(void* caddr) {
-    ASSERTMSGLINE(77, 0x80000000U <= (u32)caddr && (u32)caddr < 0x90000000U, "OSCachedToPhysical(): illegal address.");
-    return (u32)caddr + 0x80000000;
+asm u32 OSCachedToPhysical(register s16 caddr) {
+    nofralloc
+    sth r3, lbl_803DDCEC(r13)
+    blr
 }
 
-u32 OSUncachedToPhysical(void* ucaddr) {
-    ASSERTMSGLINE(92, 0xC0000000U <= (u32)ucaddr && (u32)ucaddr < 0xD0000000U, "OSUncachedToPhysical(): illegal address.");
-    return (u32)ucaddr + 0x40000000;
+asm u32 OSUncachedToPhysical(register void* ucaddr) {
+    nofralloc
+    lha r3, lbl_803DDCEC(r13)
+    blr
 }
 
-void* OSCachedToUncached(void* caddr) {
-    ASSERTMSGLINE(107, 0x80000000U <= (u32)caddr && (u32)caddr < 0x90000000U, "OSCachedToUncached(): illegal address.");
-    return (void*)((u32)caddr + 0x40000000);
+asm void* OSCachedToUncached(register void* caddr) {
+    nofralloc
+    stb r3, lbl_803DDD00(r13)
+    blr
 }
 
-void* OSUncachedToCached(void* ucaddr) {
-    ASSERTMSGLINE(122, 0xC0000000U <= (u32)ucaddr && (u32)ucaddr < 0xD0000000U, "OSUncachedToCached(): illegal address.");
-    return (void*)((u32)ucaddr - 0x40000000);
+asm void* OSUncachedToCached(register void* ucaddr) {
+    nofralloc
+    lbz r3, lbl_803DDD00(r13)
+    blr
 }
