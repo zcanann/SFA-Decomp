@@ -68,6 +68,13 @@ class SplitEntry:
     end: int
 
 
+@dataclass
+class ObjectLinkHints:
+    defined_data_symbols: list[str]
+    undefined_symbols: list[str]
+    owner_hints: list[str]
+
+
 def is_sdk(unit: dict) -> bool:
     return "sdk" in unit.get("metadata", {}).get("progress_categories", [])
 
@@ -97,6 +104,15 @@ def parse_range(text: str) -> tuple[int, int] | None:
     if not match:
         return None
     return int(match.group(1), 16), int(match.group(2), 16)
+
+
+def unit_name_to_object_path(unit_name: str) -> Path | None:
+    if not unit_name.startswith("main/"):
+        return None
+
+    base = Path("build/GSAE01/src") / unit_name.removeprefix("main/")
+    candidate = base.with_suffix(".o")
+    return candidate if candidate.exists() else None
 
 
 def load_text_splits(splits_path: Path) -> list[SplitEntry]:
@@ -141,6 +157,82 @@ def find_adjacent_split_names(source_path: Path, split_entries: list[SplitEntry]
         next_name = split_entries[index + 1].name if index + 1 < len(split_entries) else None
         return previous_name, next_name
     return None, None
+
+
+def load_symbol_owners(map_path: Path) -> tuple[dict[str, str], dict[int, str]]:
+    owners: dict[str, str] = {}
+    address_owners: dict[int, str] = {}
+    pattern = re.compile(r"\]\s+(\S+)\s+\(object,global\)\s+found in\s+(\S+)")
+    address_pattern = re.compile(
+        r"^\s*[0-9A-Fa-f]+\s+[0-9A-Fa-f]+\s+([0-9A-Fa-f]{8})\s+\d+\s+(\S+)\s+(\S+\.o)\s*$"
+    )
+
+    for line in map_path.read_text(errors="replace").splitlines():
+        match = pattern.search(line)
+        if match:
+            owners.setdefault(match.group(1), match.group(2))
+        address_match = address_pattern.match(line)
+        if address_match:
+            address_owners.setdefault(int(address_match.group(1), 16), address_match.group(3))
+    return owners, address_owners
+
+
+def load_symbol_addresses(symbols_path: Path) -> dict[str, int]:
+    addresses: dict[str, int] = {}
+    pattern = re.compile(r"^(\S+)\s+=\s+\.\S+:(0x[0-9A-Fa-f]+);")
+
+    for line in symbols_path.read_text(errors="replace").splitlines():
+        match = pattern.match(line)
+        if match:
+            addresses[match.group(1)] = int(match.group(2), 16)
+    return addresses
+
+
+def collect_object_link_hints(
+    object_path: Path,
+    symbol_owners: dict[str, str],
+    address_owners: dict[int, str],
+    symbol_addresses: dict[str, int],
+) -> ObjectLinkHints | str:
+    try:
+        result = subprocess.run(
+            ["build/binutils/powerpc-eabi-nm.exe", "-n", str(object_path)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except subprocess.CalledProcessError as exc:
+        return f"nm failed ({exc.returncode})"
+
+    defined_data_symbols: list[str] = []
+    undefined_symbols: list[str] = []
+
+    for line in result.stdout.splitlines():
+        match = re.match(r"\s*(\S+)?\s+([A-Za-z])\s+(\S+)$", line)
+        if not match:
+            continue
+        symbol_type = match.group(2)
+        name = match.group(3)
+        if symbol_type in {"D", "R", "S", "B", "G", "C"}:
+            defined_data_symbols.append(name)
+        elif symbol_type == "U":
+            undefined_symbols.append(name)
+
+    owner_hints = []
+    for name in defined_data_symbols:
+        owner = symbol_owners.get(name)
+        if owner is None:
+            address = symbol_addresses.get(name)
+            if address is not None:
+                owner = address_owners.get(address)
+        if owner and owner.startswith("auto_"):
+            owner_hints.append(f"{name}->{owner}")
+
+    return ObjectLinkHints(
+        defined_data_symbols=defined_data_symbols,
+        undefined_symbols=undefined_symbols,
+        owner_hints=owner_hints,
+    )
 
 
 def parse_probe(source_path: Path, *, include_functions: bool = False) -> ProbeSummary | str:
@@ -276,6 +368,7 @@ def summarize_probe(
     *,
     include_near: bool = False,
     split_entries: list[SplitEntry] | None = None,
+    link_hints: ObjectLinkHints | None = None,
 ) -> str:
     parsed = parse_probe(source_path, include_functions=include_near)
     if isinstance(parsed, str):
@@ -307,6 +400,11 @@ def summarize_probe(
             summary_parts.append("after-split " + ", ".join(parsed.trailing_functions[:4]))
     elif parsed.best_cluster:
         summary_parts.append("best " + parsed.best_cluster)
+    if link_hints:
+        if link_hints.owner_hints:
+            summary_parts.append("owners " + ", ".join(link_hints.owner_hints[:4]))
+        if link_hints.undefined_symbols:
+            summary_parts.append("undef " + ", ".join(link_hints.undefined_symbols[:4]))
     return "; ".join(summary_parts) if summary_parts else "probe produced no summary"
 
 
@@ -314,6 +412,8 @@ def main() -> int:
     args = get_argparser().parse_args()
     data = json.loads(args.report.read_text())
     split_entries = load_text_splits(args.splits)
+    symbol_owners, address_owners = load_symbol_owners(Path("build/GSAE01/main.elf.MAP"))
+    symbol_addresses = load_symbol_addresses(Path("config/GSAE01/symbols.txt"))
     sdk_units = [unit for unit in data["units"] if is_sdk(unit)]
 
     exact_unlinked = []
@@ -344,7 +444,20 @@ def main() -> int:
                 if source_path is None:
                     print("    probe: no source path found")
                 else:
-                    print(f"    probe: {summarize_probe(source_path, split_entries=split_entries)}")
+                    link_hints = None
+                    object_path = unit_name_to_object_path(unit["name"])
+                    if object_path is not None:
+                        parsed_hints = collect_object_link_hints(
+                            object_path,
+                            symbol_owners,
+                            address_owners,
+                            symbol_addresses,
+                        )
+                        if isinstance(parsed_hints, ObjectLinkHints):
+                            link_hints = parsed_hints
+                    print(
+                        f"    probe: {summarize_probe(source_path, split_entries=split_entries, link_hints=link_hints)}"
+                    )
     else:
         print("  (none)")
 
