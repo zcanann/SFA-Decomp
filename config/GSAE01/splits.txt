@@ -1765,10 +1765,10 @@ dolphin/TRK_MINNOW_DOLPHIN/flush_cache.c:
 	.text       start:0x8028B748 end:0x8028B780
 
 dolphin/TRK_MINNOW_DOLPHIN/mem_TRK.c:
-	.text       start:0x8028B780 end:0x8028B844
+	.text       start:0x8028B780 end:0x8028B83C
 
 dolphin/TRK_MINNOW_DOLPHIN/targimpl.c:
-	.text       start:0x8028B844 end:0x8028D0D0
+	.text       start:0x8028B83C end:0x8028D0D0
 	.rodata     start:0x802C30F8 end:0x802C3180
 	.data       start:0x80332F50 end:0x80332F80
 
