@@ -403,7 +403,7 @@ config.libs = [
         [
             Object(NonMatching, "dolphin/dsp/dsp.c"),
             Object(NonMatching, "dolphin/dsp/dsp_task.c"),
-            Object(NonMatching, "dolphin/dsp/dsp_debug.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/dsp/dsp_debug.c"),
         ],
     ),
     DolphinLib(
@@ -476,7 +476,7 @@ config.libs = [
             Object(NonMatching, "dolphin/gx/GXPerf.c"),
             Object(NonMatching, "dolphin/gx/GXPixel.c"),
             Object(NonMatching, "dolphin/gx/GXSave.c"),
-            Object(NonMatching, "dolphin/gx/GXStubs.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/gx/GXStubs.c"),
             Object(NonMatching, "dolphin/gx/GXTev.c"),
             Object(NonMatching, "dolphin/gx/GXTransform.c"),
             Object(NonMatching, "dolphin/gx/GXGeometry.c"),
@@ -541,7 +541,7 @@ config.libs = [
     DolphinLib(
         "odenotstub",
         [
-            Object(NonMatching, "dolphin/odenotstub/odenotstub.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/odenotstub/odenotstub.c"),
         ],
     ),
     {
@@ -577,14 +577,14 @@ config.libs = [
             ),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/msghndlr.c"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/support.c"),
-            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/mutex_TRK.c"),
-            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/notify.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/mutex_TRK.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/notify.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/flush_cache.c"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/mem_TRK.c"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/targimpl.c"),
-            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/targsupp.s"),
+            Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/targsupp.s"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk.c"),
-            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/mpc_7xx_603e.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/mpc_7xx_603e.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/main_TRK.c"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk_glue.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/targcont.c"),
