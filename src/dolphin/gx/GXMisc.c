@@ -10,32 +10,31 @@ static GXDrawSyncCallback TokenCB;
 static GXDrawDoneCallback DrawDoneCB;
 static u8 DrawDone;
 static OSThreadQueue FinishQueue;
+extern GXData* gx;
 
 void GXSetMisc(GXMiscToken token, u32 val) {
-    switch (token) {
-    case GX_MT_XF_FLUSH:
-        __GXData->vNum = val;
-        __GXData->vNumNot = !__GXData->vNum;
-        __GXData->bpSentNot = 1;
+    if (token == GX_MT_XF_FLUSH) {
+        goto set_xf_flush;
+    }
 
-        if (__GXData->vNum != 0) {
-            __GXData->dirtyState |= 8;
-        }
-        break;
-    case GX_MT_DL_SAVE_CONTEXT:
-        ASSERTMSGLINE(223, !__GXData->inDispList, "GXSetMisc: Cannot change DL context setting while making a display list");
-        __GXData->dlSaveContext = (val != 0);
-        break;
-    case GX_MT_ABORT_WAIT_COPYOUT:
-        __GXData->abtWaitPECopy = (val != 0);
-        break;
-    case GX_MT_NULL:
-        break;
-    default:
-#if DEBUG
-        OSReport("GXSetMisc: bad token %d (val %d)\n", token, val);
-#endif
-        break;
+    if (token < GX_MT_XF_FLUSH) {
+        return;
+    }
+
+    if (token >= GX_MT_ABORT_WAIT_COPYOUT) {
+        return;
+    }
+
+    gx->dlSaveContext = (val != 0);
+    return;
+
+set_xf_flush:
+    gx->vNum = val;
+    gx->vNumNot = !gx->vNum;
+    gx->bpSentNot = 1;
+
+    if (gx->vNum != 0) {
+        gx->dirtyState |= 8;
     }
 }
 
@@ -73,22 +72,28 @@ static void __GXAbortWait(u32 clocks) {
     } while (time1 - time0 <= (clocks / 4));
 }
 
-static void __GXAbortWaitPECopyDone(void) {
-    u32 peCnt0;
-    u32 peCnt1;
+static void __GXAbortWaitPECopyDone_80258A94(void) {
+    OSTime time0;
+    OSTime time1;
 
-    peCnt0 = __GXReadMEMCounterU32(0x28, 0x27);
+    ((volatile u32*)__piReg)[0x18 / 4] = 1;
+    time0 = OSGetTime();
     do {
-        peCnt1 = peCnt0;
-        __GXAbortWait(32);
+        time1 = OSGetTime();
+    } while (time1 - time0 <= 50);
 
-        peCnt0 = __GXReadMEMCounterU32(0x28, 0x27);
-    } while (peCnt0 != peCnt1);
+    ((volatile u32*)__piReg)[0x18 / 4] = 0;
+    time0 = OSGetTime();
+    do {
+        time1 = OSGetTime();
+    } while (time1 - time0 <= 5);
+
+    __GXCleanGPFifo();
 }
 
 void __GXAbort(void) {
     if (__GXData->abtWaitPECopy && GXGetGPFifo() != (GXFifoObj*)NULL) {
-        __GXAbortWaitPECopyDone();
+        __GXAbortWaitPECopyDone_80258A94();
     }
 
     __PIRegs[0x18 / 4] = 1;
