@@ -388,7 +388,7 @@ config.libs = [
     DolphinLib(
         "ai",
         [
-            Object(NonMatching, "dolphin/ai/ai.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/ai/ai.c"),
         ],
     ),
     DolphinLib(
