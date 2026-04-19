@@ -3,15 +3,11 @@
 
 #include "dolphin/os/__os.h"
 
-// external functions
-extern void __RAS_OSDisableInterrupts_begin();
-extern void __RAS_OSDisableInterrupts_end();
-extern void DBPrintf(char*, ...);
-
 #define HID2 920
 
 volatile OSContext* __OSCurrentContext AT_ADDRESS(OS_BASE_CACHED | 0x00D4);
 volatile OSContext* __OSFPUContext AT_ADDRESS(OS_BASE_CACHED | 0x00D8);
+extern char lbl_8032D428[];
 
 static asm void __OSLoadFPUContext(register u32 dummy, register OSContext* fpucontext) {
     nofralloc
@@ -181,18 +177,6 @@ _return:
     blr
 }
 
-asm void OSLoadFPUContext(register OSContext* fpucontext) {
-    nofralloc
-    addi    r4, fpucontext, 0
-    b       __OSLoadFPUContext
-}
-
-asm void OSSaveFPUContext(register OSContext* fpucontext) {
-    nofralloc
-    addi    r5, fpucontext, 0
-    b       __OSSaveFPUContext
-}
-
 asm void OSSetCurrentContext(register OSContext* context){
     nofralloc
 
@@ -270,15 +254,15 @@ asm u32 OSSaveContext(register OSContext* context) {
 asm void OSLoadContext(register OSContext* context) {
     nofralloc
 
-    lis      r4,__RAS_OSDisableInterrupts_begin@ha
+    lis      r4,OSDisableInterrupts@ha
     lwz      r6,context->srr0
-    addi     r5,r4,__RAS_OSDisableInterrupts_begin@l
+    addi     r5,r4,OSDisableInterrupts@l
     cmplw    r6,r5
-    ble      _notInRAS
-    lis      r4,__RAS_OSDisableInterrupts_end@ha
-    addi     r0,r4,__RAS_OSDisableInterrupts_end@l
+    blt      _notInRAS
+    lis      r4,OSDisableInterrupts+0x10@ha
+    addi     r0,r4,OSDisableInterrupts+0x10@l
     cmplw    r6,r0
-    bge      _notInRAS
+    bgt      _notInRAS
     stw      r5,context->srr0
 
 _notInRAS:
@@ -341,30 +325,6 @@ notexc:
 asm u32 OSGetStackPointer() {
     nofralloc 
     mr r3, r1 
-    blr
-}
-
-asm u32 OSSwitchStack(register u32 newsp) {
-    nofralloc
-    mr  r5, r1
-    mr  r1, newsp
-    mr  r3, r5
-    blr
-}
-
-asm int OSSwitchFiber(register u32 pc, register u32 newsp) {
-    nofralloc
-    mflr    r0
-    mr      r5, r1
-    stwu    r5, -8(newsp)
-    mr      r1, newsp
-    stw     r0, 4(r5)
-    mtlr    pc
-    blrl
-    lwz     r5, 0(r1)
-    lwz     r0, 4(r5)
-    mtlr    r0
-    mr      r1, r5
     blr
 }
 
@@ -435,20 +395,22 @@ asm void OSInitContext(register OSContext* context, register u32 pc, register u3
 void OSDumpContext(OSContext* context) {
     u32 i;
     u32* p;
+    char* fmt;
 
-    OSReport("------------------------- Context 0x%08x -------------------------\n", context);
+    fmt = lbl_8032D428;
+    OSReport(lbl_8032D428, context);
 
     for (i = 0; i < 16; ++i) {
-        OSReport("r%-2d  = 0x%08x (%14d)  r%-2d  = 0x%08x (%14d)\n", i, context->gpr[i],
+        OSReport(fmt + 68, i, context->gpr[i],
                 context->gpr[i], i + 16, context->gpr[i + 16], context->gpr[i + 16]);
     }
 
-    OSReport("LR   = 0x%08x                   CR   = 0x%08x\n", context->lr, context->cr);
-    OSReport("SRR0 = 0x%08x                   SRR1 = 0x%08x\n", context->srr0, context->srr1);
+    OSReport(fmt + 116, context->lr, context->cr);
+    OSReport(fmt + 164, context->srr0, context->srr1);
 
-    OSReport("\nGQRs----------\n");
+    OSReport(fmt + 212);
     for (i = 0; i < 4; ++i) {
-        OSReport("gqr%d = 0x%08x \t gqr%d = 0x%08x\n", i, context->gqr[i], i + 4, context->gqr[i + 4]);
+        OSReport(fmt + 232, i, context->gqr[i], i + 4, context->gqr[i + 4]);
     }
 
     if (context->state & OS_CONTEXT_STATE_FPSAVED) {
@@ -461,14 +423,14 @@ void OSDumpContext(OSContext* context) {
         OSClearContext(&fpucontext);
         OSSetCurrentContext(&fpucontext);
 
-        OSReport("\n\nFPRs----------\n");
+        OSReport(fmt + 268);
         for (i = 0; i < 32; i += 2) {
-            OSReport("fr%d \t= %d \t fr%d \t= %d\n", i, (u32)context->fpr[i], i + 1,
+            OSReport(fmt + 288, i, (u32)context->fpr[i], i + 1,
                     (u32)context->fpr[i + 1]);
         }
-        OSReport("\n\nPSFs----------\n");
+        OSReport(fmt + 316);
         for (i = 0; i < 32; i += 2) {
-            OSReport("ps%d \t= 0x%x \t ps%d \t= 0x%x\n", i, (u32)context->psf[i], i + 1,
+            OSReport(fmt + 336, i, (u32)context->psf[i], i + 1,
                     (u32)context->psf[i + 1]);
         }
 
@@ -477,9 +439,9 @@ void OSDumpContext(OSContext* context) {
         OSRestoreInterrupts(enabled);
     }
 
-    OSReport("\nAddress:      Back Chain    LR Save\n");
+    OSReport(fmt + 368);
     for (i = 0, p = (u32*)context->gpr[1]; p && (u32)p != 0xffffffff && i++ < 16; p = (u32*)*p) {
-        OSReport("0x%08x:   0x%08x    0x%08x\n", p, p[0], p[1]);
+        OSReport(fmt + 408, p, p[0], p[1]);
     }
 }
 
@@ -520,90 +482,4 @@ _restoreAndExit:
     lwz     r3, OS_CONTEXT_R3(context)
     lwz     r4, OS_CONTEXT_R4(context)
     rfi
-}
-
-asm void OSFillFPUContext(register OSContext* context) {
-    nofralloc
-    mfmsr   r5
-    ori     r5, r5, 0x2000
-    mtmsr   r5
-    isync
-
-    stfd    fp0,  context->fpr[0]
-    stfd    fp1,  context->fpr[1]
-    stfd    fp2,  context->fpr[2]
-    stfd    fp3,  context->fpr[3]
-    stfd    fp4,  context->fpr[4]
-    stfd    fp5,  context->fpr[5]
-    stfd    fp6,  context->fpr[6]
-    stfd    fp7,  context->fpr[7]
-    stfd    fp8,  context->fpr[8]
-    stfd    fp9,  context->fpr[9]
-    stfd    fp10, context->fpr[10]
-    stfd    fp11, context->fpr[11]
-    stfd    fp12, context->fpr[12]
-    stfd    fp13, context->fpr[13]
-    stfd    fp14, context->fpr[14]
-    stfd    fp15, context->fpr[15]
-    stfd    fp16, context->fpr[16]
-    stfd    fp17, context->fpr[17]
-    stfd    fp18, context->fpr[18]
-    stfd    fp19, context->fpr[19]
-    stfd    fp20, context->fpr[20]
-    stfd    fp21, context->fpr[21]
-    stfd    fp22, context->fpr[22]
-    stfd    fp23, context->fpr[23]
-    stfd    fp24, context->fpr[24]
-    stfd    fp25, context->fpr[25]
-    stfd    fp26, context->fpr[26]
-    stfd    fp27, context->fpr[27]
-    stfd    fp28, context->fpr[28]
-    stfd    fp29, context->fpr[29]
-    stfd    fp30, context->fpr[30]
-    stfd    fp31, context->fpr[31]
-
-    mffs    fp0
-    stfd    fp0,  OS_CONTEXT_FPSCR(context)
-
-    lfd     fp0,  context->fpr[0]
-
-    mfspr   r5, HID2
-    rlwinm. r5, r5, 3, 31, 31
-    bc      12, 2, _return
-
-    psq_st  fp0, OS_CONTEXT_PSF0(context), 0, 0
-    psq_st  fp1, OS_CONTEXT_PSF1(context), 0, 0
-    psq_st  fp2, OS_CONTEXT_PSF2(context), 0, 0
-    psq_st  fp3, OS_CONTEXT_PSF3(context), 0, 0
-    psq_st  fp4, OS_CONTEXT_PSF4(context), 0, 0
-    psq_st  fp5, OS_CONTEXT_PSF5(context), 0, 0
-    psq_st  fp6, OS_CONTEXT_PSF6(context), 0, 0
-    psq_st  fp7, OS_CONTEXT_PSF7(context), 0, 0
-    psq_st  fp8, OS_CONTEXT_PSF8(context), 0, 0
-    psq_st  fp9, OS_CONTEXT_PSF9(context), 0, 0
-    psq_st  fp10, OS_CONTEXT_PSF10(context), 0, 0
-    psq_st  fp11, OS_CONTEXT_PSF11(context), 0, 0
-    psq_st  fp12, OS_CONTEXT_PSF12(context), 0, 0
-    psq_st  fp13, OS_CONTEXT_PSF13(context), 0, 0
-    psq_st  fp14, OS_CONTEXT_PSF14(context), 0, 0
-    psq_st  fp15, OS_CONTEXT_PSF15(context), 0, 0
-    psq_st  fp16, OS_CONTEXT_PSF16(context), 0, 0
-    psq_st  fp17, OS_CONTEXT_PSF17(context), 0, 0
-    psq_st  fp18, OS_CONTEXT_PSF18(context), 0, 0
-    psq_st  fp19, OS_CONTEXT_PSF19(context), 0, 0
-    psq_st  fp20, OS_CONTEXT_PSF20(context), 0, 0
-    psq_st  fp21, OS_CONTEXT_PSF21(context), 0, 0
-    psq_st  fp22, OS_CONTEXT_PSF22(context), 0, 0
-    psq_st  fp23, OS_CONTEXT_PSF23(context), 0, 0
-    psq_st  fp24, OS_CONTEXT_PSF24(context), 0, 0
-    psq_st  fp25, OS_CONTEXT_PSF25(context), 0, 0
-    psq_st  fp26, OS_CONTEXT_PSF26(context), 0, 0
-    psq_st  fp27, OS_CONTEXT_PSF27(context), 0, 0
-    psq_st  fp28, OS_CONTEXT_PSF28(context), 0, 0
-    psq_st  fp29, OS_CONTEXT_PSF29(context), 0, 0
-    psq_st  fp30, OS_CONTEXT_PSF30(context), 0, 0
-    psq_st  fp31, OS_CONTEXT_PSF31(context), 0, 0
-
-_return:
-    blr
 }
