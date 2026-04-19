@@ -70,7 +70,8 @@ class SplitEntry:
 
 @dataclass
 class ObjectLinkHints:
-    defined_data_symbols: list[str]
+    exported_data_symbols: dict[str, list[str]]
+    local_data_symbols: dict[str, list[str]]
     undefined_symbols: list[str]
     owner_hints: list[str]
 
@@ -195,41 +196,61 @@ def collect_object_link_hints(
     symbol_addresses: dict[str, int],
 ) -> ObjectLinkHints | str:
     try:
-        result = subprocess.run(
+        nm_result = subprocess.run(
             ["build/binutils/powerpc-eabi-nm.exe", "-n", str(object_path)],
             check=True,
             capture_output=True,
             text=True,
         )
+        objdump_result = subprocess.run(
+            ["build/binutils/powerpc-eabi-objdump.exe", "-t", str(object_path)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
     except subprocess.CalledProcessError as exc:
-        return f"nm failed ({exc.returncode})"
+        return f"object inspection failed ({exc.returncode})"
 
-    defined_data_symbols: list[str] = []
+    exported_data_symbols: dict[str, list[str]] = {}
+    local_data_symbols: dict[str, list[str]] = {}
     undefined_symbols: list[str] = []
+    data_sections = {".data", ".rodata", ".sdata", ".sdata2", ".bss", ".sbss"}
 
-    for line in result.stdout.splitlines():
+    for line in nm_result.stdout.splitlines():
         match = re.match(r"\s*(\S+)?\s+([A-Za-z])\s+(\S+)$", line)
         if not match:
             continue
         symbol_type = match.group(2)
         name = match.group(3)
-        if symbol_type in {"D", "R", "S", "B", "G", "C"}:
-            defined_data_symbols.append(name)
-        elif symbol_type == "U":
+        if symbol_type == "U":
             undefined_symbols.append(name)
 
+    for line in objdump_result.stdout.splitlines():
+        parts = line.split()
+        if len(parts) != 6:
+            continue
+        _, bind, symbol_kind, section, _, name = parts
+        if symbol_kind != "O" or section not in data_sections:
+            continue
+        if bind == "g":
+            exported_data_symbols.setdefault(section, []).append(name)
+        elif bind == "l":
+            local_data_symbols.setdefault(section, []).append(name)
+
     owner_hints = []
-    for name in defined_data_symbols:
-        owner = symbol_owners.get(name)
-        if owner is None:
-            address = symbol_addresses.get(name)
-            if address is not None:
-                owner = address_owners.get(address)
-        if owner and owner.startswith("auto_"):
-            owner_hints.append(f"{name}->{owner}")
+    for names in exported_data_symbols.values():
+        for name in names:
+            owner = symbol_owners.get(name)
+            if owner is None:
+                address = symbol_addresses.get(name)
+                if address is not None:
+                    owner = address_owners.get(address)
+            if owner and owner.startswith("auto_"):
+                owner_hints.append(f"{name}->{owner}")
 
     return ObjectLinkHints(
-        defined_data_symbols=defined_data_symbols,
+        exported_data_symbols=exported_data_symbols,
+        local_data_symbols=local_data_symbols,
         undefined_symbols=undefined_symbols,
         owner_hints=owner_hints,
     )
@@ -401,10 +422,16 @@ def summarize_probe(
     elif parsed.best_cluster:
         summary_parts.append("best " + parsed.best_cluster)
     if link_hints:
+        for section in sorted(link_hints.exported_data_symbols):
+            names = link_hints.exported_data_symbols[section]
+            summary_parts.append(f"exports {section} " + ", ".join(names[:8]))
+        for section in sorted(link_hints.local_data_symbols):
+            names = link_hints.local_data_symbols[section]
+            summary_parts.append(f"locals {section} " + ", ".join(names[:8]))
         if link_hints.owner_hints:
-            summary_parts.append("owners " + ", ".join(link_hints.owner_hints[:4]))
+            summary_parts.append("owners " + ", ".join(link_hints.owner_hints))
         if link_hints.undefined_symbols:
-            summary_parts.append("undef " + ", ".join(link_hints.undefined_symbols[:4]))
+            summary_parts.append("undef " + ", ".join(link_hints.undefined_symbols))
     return "; ".join(summary_parts) if summary_parts else "probe produced no summary"
 
 
