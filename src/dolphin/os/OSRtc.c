@@ -141,6 +141,7 @@ int __OSReadROM(void* buffer, s32 length, s32 offset) {
     int err;
     u32 cmd;
 
+    DCInvalidateRange(buffer, length);
     if (!EXILock(0, 1, NULL)) {
         return 0;
     }

@@ -134,13 +134,12 @@ typedef struct OSBootInfo_s {
 
 typedef struct OSStopwatch {
     char* name;
-    u32 hits;
     OSTime total;
+    u32 hits;
     OSTime min;
     OSTime max;
     OSTime last;
     BOOL running;
-    u32 _padding;
 } OSStopwatch;
 
 void OSInitStopwatch(OSStopwatch* sw, char* name);
