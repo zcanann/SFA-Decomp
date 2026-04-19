@@ -2,25 +2,21 @@
 #include <dolphin/pad.h>
 #include "dolphin/fake_tgmath.h"
 
-static const PADClampRegion ClampRegion = {
-    // Triggers
-    30,
-    180,
+typedef struct PADClampExtents {
+    u8 minTrigger;
+    u8 maxTrigger;
+    s8 minStick;
+    s8 maxStick;
+    s8 xyStick;
+    s8 minSubstick;
+    s8 maxSubstick;
+    s8 xySubstick;
+} PADClampExtents;
 
-    // Left stick
-    15,
-    72,
-    40,
+extern PADClampExtents lbl_803DD1E8;
 
-    // Right stick
-    15,
-    59,
-    31,
-
-    // Stick radii
-    56,
-    44,
-};
+#define PAD_CLAMP_RAD_STICK    56
+#define PAD_CLAMP_RAD_SUBSTICK 44
 
 // prototypes
 static void ClampStick(s8* px, s8* py, s8 max, s8 xy, s8 min);
@@ -131,10 +127,13 @@ void PADClamp(PADStatus * status) {
 
     for (i = 0; i < 4; i++, status++) {
         if (status->err == PAD_ERR_NONE) {
-            ClampStick(&status->stickX, &status->stickY, ClampRegion.maxStick, ClampRegion.xyStick, ClampRegion.minStick);
-            ClampStick(&status->substickX, &status->substickY, ClampRegion.maxSubstick, ClampRegion.xySubstick, ClampRegion.minSubstick);
-            ClampTrigger(&status->triggerLeft, ClampRegion.minTrigger, ClampRegion.maxTrigger);
-            ClampTrigger(&status->triggerRight, ClampRegion.minTrigger, ClampRegion.maxTrigger);
+            ClampStick(&status->stickX, &status->stickY, lbl_803DD1E8.maxStick, lbl_803DD1E8.xyStick, lbl_803DD1E8.minStick);
+            ClampStick(
+                &status->substickX, &status->substickY, lbl_803DD1E8.maxSubstick, lbl_803DD1E8.xySubstick,
+                lbl_803DD1E8.minSubstick
+            );
+            ClampTrigger(&status->triggerLeft, lbl_803DD1E8.minTrigger, lbl_803DD1E8.maxTrigger);
+            ClampTrigger(&status->triggerRight, lbl_803DD1E8.minTrigger, lbl_803DD1E8.maxTrigger);
         }
     }
 }
@@ -143,10 +142,10 @@ void PADClampCircle(PADStatus* status) {
     int i;
     for (i = 0; i < 4; ++i, status++) {
         if (status->err == PAD_ERR_NONE) {
-            ClampCircle(&status->stickX, &status->stickY, ClampRegion.radStick, ClampRegion.minStick);
-            ClampCircle(&status->substickX, &status->substickY, ClampRegion.radSubstick, ClampRegion.minSubstick);
-            ClampTrigger(&status->triggerLeft, ClampRegion.minTrigger, ClampRegion.maxTrigger);
-            ClampTrigger(&status->triggerRight, ClampRegion.minTrigger, ClampRegion.maxTrigger);
+            ClampCircle(&status->stickX, &status->stickY, PAD_CLAMP_RAD_STICK, lbl_803DD1E8.minStick);
+            ClampCircle(&status->substickX, &status->substickY, PAD_CLAMP_RAD_SUBSTICK, lbl_803DD1E8.minSubstick);
+            ClampTrigger(&status->triggerLeft, lbl_803DD1E8.minTrigger, lbl_803DD1E8.maxTrigger);
+            ClampTrigger(&status->triggerRight, lbl_803DD1E8.minTrigger, lbl_803DD1E8.maxTrigger);
         }
     }
 }
