@@ -8,6 +8,22 @@ static struct {
     /* 0x04 */ DVDCommandBlock* prev;
 } WaitingQueue[4];
 
+static inline DVDCommandBlock* PopWaitingQueuePrio(s32 prio) {
+    DVDCommandBlock* tmp;
+    BOOL enabled;
+    DVDCommandBlock* q;
+
+    enabled = OSDisableInterrupts();
+    q = (DVDCommandBlock*)&WaitingQueue[prio];
+    tmp = q->next;
+    q->next = tmp->next;
+    tmp->next->prev = q;
+    OSRestoreInterrupts(enabled);
+    tmp->next = NULL;
+    tmp->prev = NULL;
+    return tmp;
+}
+
 void __DVDClearWaitingQueue(void) {
     u32 i;
     DVDCommandBlock* q;
@@ -33,7 +49,6 @@ int __DVDPushWaitingQueue(s32 prio, DVDCommandBlock* block) {
 
 DVDCommandBlock* __DVDPopWaitingQueue(void) {
     u32 i;
-    DVDCommandBlock* tmp;
     BOOL enabled;
     DVDCommandBlock* q;
 
@@ -41,13 +56,8 @@ DVDCommandBlock* __DVDPopWaitingQueue(void) {
     for (i = 0; i < 4; i++) {
         q = (DVDCommandBlock*)&WaitingQueue[i];
         if (q->next != q) {
-            tmp = q->next;
-            q->next = tmp->next;
-            tmp->next->prev = q;
             OSRestoreInterrupts(enabled);
-            tmp->next = NULL;
-            tmp->prev = NULL;
-            return tmp;
+            return PopWaitingQueuePrio(i);
         }
     }
 
