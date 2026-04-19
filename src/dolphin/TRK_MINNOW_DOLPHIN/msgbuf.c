@@ -161,6 +161,24 @@ DSError TRKAppendBuffer1_ui8(TRKBuffer* buffer, const u8 data) {
     return DS_NoError;
 }
 
+DSError TRKAppendBuffer1_ui16(TRKBuffer* buffer, const u16 data) {
+    u8* bigEndianData;
+    u8* byteData;
+    u8 swapBuffer[sizeof(data)];
+
+    if (gTRKBigEndian) {
+        bigEndianData = (u8*)&data;
+    } else {
+        byteData = (u8*)&data;
+        bigEndianData = swapBuffer;
+
+        bigEndianData[0] = byteData[1];
+        bigEndianData[1] = byteData[0];
+    }
+
+    return TRKAppendBuffer(buffer, (const void*)bigEndianData, sizeof(data));
+}
+
 DSError TRKAppendBuffer1_ui32(TRKBuffer* buffer, const u32 data) {
     u8* bigEndianData;
     u8* byteData;
@@ -228,6 +246,31 @@ DSError TRKAppendBuffer_ui32(TRKBuffer* buffer, const u32* data, int count) {
 
 DSError TRKReadBuffer1_ui8(TRKBuffer* buffer, u8* data) {
     return TRKReadBuffer(buffer, (void*)data, 1);
+}
+
+DSError TRKReadBuffer1_ui16(TRKBuffer* buffer, u16* data) {
+    DSError err;
+
+    u8* bigEndianData;
+    u8* byteData;
+    u8 swapBuffer[sizeof(*data)];
+
+    if (gTRKBigEndian) {
+        bigEndianData = (u8*)data;
+    } else {
+        bigEndianData = swapBuffer;
+    }
+
+    err = TRKReadBuffer(buffer, (void*)bigEndianData, sizeof(*data));
+
+    if (!gTRKBigEndian && err == DS_NoError) {
+        byteData = (u8*)data;
+
+        byteData[0] = bigEndianData[1];
+        byteData[1] = bigEndianData[0];
+    }
+
+    return err;
 }
 
 DSError TRKReadBuffer1_ui32(TRKBuffer* buffer, u32* data) {

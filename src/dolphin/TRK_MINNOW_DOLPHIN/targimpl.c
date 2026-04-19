@@ -533,18 +533,49 @@ u32* ConvertAddress(u32 addr)
 DSError TRKTargetAddStopInfo(MessageBuffer* b)
 {
 	DSError error;
-	CommandReply reply;
-	int t;
+	size_t instructionLength;
+	u32 instruction;
+	s32 i;
 
-	memset(&reply, 0, 0x40);
-	reply._00          = 0x40;
-	reply.commandID.b  = 0x90;
-	reply.replyError.r = gTRKCPUState.Default.PC;
-	TRKTargetReadInstruction(&t, gTRKCPUState.Default.PC);
+	error = TRKAppendBuffer1_ui32(b, gTRKCPUState.Default.PC);
 
-	reply._0C        = t;
-	*(u32*)reply._10 = gTRKCPUState.Extended1.exceptionID & 0xFFFF;
-	error            = TRKAppendBuffer_ui8(b, (u8*)&reply, 0x40);
+	if (error == DS_NoError) {
+		instructionLength = sizeof(instruction);
+		error             = TRKTargetAccessMemory(&instruction, gTRKCPUState.Default.PC, &instructionLength, MEMACCESS_UserMemory, TRUE);
+
+		if (error == DS_NoError && instructionLength != sizeof(instruction)) {
+			error = DS_InvalidMemory;
+		}
+	}
+
+	if (error == DS_NoError) {
+		error = TRKAppendBuffer1_ui32(b, instruction);
+	}
+
+	if (error == DS_NoError) {
+		error = TRKAppendBuffer1_ui16(b, (u16)gTRKCPUState.Extended1.exceptionID);
+	}
+
+	if (error == DS_NoError) {
+		for (i = 0; i < ARRAY_COUNT(gTRKCPUState.Default.GPR); i++) {
+			error = TRKAppendBuffer1_ui32(b, gTRKCPUState.Default.GPR[i]);
+
+			if (error != DS_NoError) {
+				break;
+			}
+		}
+	}
+
+	if (error == DS_NoError) {
+		for (i = 0; i < ARRAY_COUNT(gTRKCPUState.Float.FPR); i++) {
+			error = TRKAppendBuffer1_ui64(b, gTRKCPUState.Float.FPR[i]);
+
+			if (error != DS_NoError) {
+				break;
+			}
+		}
+	}
+
 	return error;
 }
 
@@ -552,24 +583,32 @@ DSError TRKTargetAddStopInfo(MessageBuffer* b)
  * @note Address: TODO
  * @note Size: TODO
  */
-void TRKTargetAddExceptionInfo(MessageBuffer* b)
+DSError TRKTargetAddExceptionInfo(MessageBuffer* b)
 {
-	size_t local_58;
-	u32 local_54;
-	CommandReply reply;
+	DSError error;
+	size_t instructionLength;
+	u32 instruction;
 
-	memset(&reply, 0, 0x40);
+	error = TRKAppendBuffer1_ui32(b, gTRKExceptionStatus.exceptionInfo.PC);
 
-	reply._00          = 0x40;
-	reply.commandID.b  = 0x91;
-	reply.replyError.r = gTRKExceptionStatus.exceptionInfo.PC;
+	if (error == DS_NoError) {
+		instructionLength = sizeof(instruction);
+		error             = TRKTargetAccessMemory(&instruction, gTRKExceptionStatus.exceptionInfo.PC, &instructionLength, MEMACCESS_UserMemory, TRUE);
 
-	TRKTargetReadInstruction(&local_54, gTRKExceptionStatus.exceptionInfo.PC);
+		if (error == DS_NoError && instructionLength != sizeof(instruction)) {
+			error = DS_InvalidMemory;
+		}
+	}
 
-	reply._0C        = local_54;
-	*(u32*)reply._10 = gTRKExceptionStatus.exceptionInfo.exceptionID;
+	if (error == DS_NoError) {
+		error = TRKAppendBuffer1_ui32(b, instruction);
+	}
 
-	TRKAppendBuffer_ui8(b, (u8*)&reply, 0x40);
+	if (error == DS_NoError) {
+		error = TRKAppendBuffer1_ui16(b, gTRKExceptionStatus.exceptionInfo.exceptionID);
+	}
+
+	return error;
 }
 
 /**

@@ -71,6 +71,7 @@ DSError TRKAppendBuffer_ui16(TRKBuffer*, const u16*, int);
 DSError TRKAppendBuffer_ui32(TRKBuffer*, const u32*, int);
 DSError TRKAppendBuffer_ui64(TRKBuffer*, const u64*, int);
 DSError TRKAppendBuffer1_ui8(TRKBuffer*, const u8);
+DSError TRKAppendBuffer1_ui16(TRKBuffer*, const u16);
 DSError TRKSetBufferPosition(TRKBuffer*, u32);
 
 DSError TRKReadBuffer1_ui8(TRKBuffer*, u8*);
@@ -122,7 +123,7 @@ void SetUseSerialIO(u8);
 u8 GetUseSerialIO(void);
 
 DSError TRKTargetAddStopInfo(TRKBuffer*);
-void TRKTargetAddExceptionInfo(TRKBuffer*);
+DSError TRKTargetAddExceptionInfo(TRKBuffer*);
 void TRKInterruptHandler(void);
 BOOL usr_puts_serial(const char* msg);
 
