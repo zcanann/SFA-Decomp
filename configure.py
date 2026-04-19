@@ -313,7 +313,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__mem.s"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/mem_TRK.s"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__exception.s"),
-            Object(NonMatching, "Runtime.PPCEABI.H/__va_arg.c"),
+            Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__va_arg.c"),
             Object(Matching, "Runtime.PPCEABI.H/global_destructor_chain.c"),
             Object(NonMatching, "Runtime.PPCEABI.H/runtime.s"),
             Object(Matching, "Runtime.PPCEABI.H/__init_cpp_exceptions.cpp"),
@@ -424,7 +424,7 @@ config.libs = [
         "si",
         [
             Object(NonMatching, "dolphin/si/SIBios.c"),
-            Object(NonMatching, "dolphin/si/SISamplingRate.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/si/SISamplingRate.c"),
         ],
     ),
     DolphinLib(

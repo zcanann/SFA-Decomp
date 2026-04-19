@@ -1536,6 +1536,8 @@ dolphin/si/SIBios.c:
 
 dolphin/si/SISamplingRate.c:
 	.text       start:0x802537E4 end:0x802538EC
+	.data       start:0x8032EF68 end:0x8032F000
+	.sbss       start:0x803DED10 end:0x803DED14
 
 dolphin/exi/EXIBios.c:
 	.text       start:0x802538EC end:0x802551C0
