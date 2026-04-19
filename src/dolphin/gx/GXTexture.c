@@ -5,6 +5,7 @@
 #include "dolphin/gx/__gx.h"
 
 extern GXData* gx;
+extern u8 GX2HWFiltConv[6];
 
 typedef struct __GXTexObjInt_struct {
     u32 mode0;
@@ -45,16 +46,7 @@ typedef struct GXDataCallbacksView {
     GXTlutRegionCallback tlutRegionCallback;
 } GXDataCallbacksView;
 
-u8 GXTexMode0Ids[8] = {0x80, 0x81, 0x82, 0x83, 0xA0, 0xA1, 0xA2, 0xA3};
-u8 GXTexMode1Ids[8] = {0x84, 0x85, 0x86, 0x87, 0xA4, 0xA5, 0xA6, 0xA7};
-u8 GXTexImage0Ids[8] = {0x88, 0x89, 0x8A, 0x8B, 0xA8, 0xA9, 0xAA, 0xAB};
-u8 GXTexImage1Ids[8] = {0x8C, 0x8D, 0x8E, 0x8F, 0xAC, 0xAD, 0xAE, 0xAF};
-u8 GXTexImage2Ids[8] = {0x90, 0x91, 0x92, 0x93, 0xB0, 0xB1, 0xB2, 0xB3};
-u8 GXTexImage3Ids[8] = {0x94, 0x95, 0x96, 0x97, 0xB4, 0xB5, 0xB6, 0xB7};
-u8 GXTexTlutIds[8] = {0x98, 0x99, 0x9A, 0x9B, 0xB8, 0xB9, 0xBA, 0xBB};
-u8 GX2HWFiltConv[6] = {0x00, 0x04, 0x01, 0x05, 0x02, 0x06};
-
-static void __GXGetTexTileShift_8025A7EC(GXTexFmt fmt, u32* rowTileS, u32* colTileS) {
+void __GXGetTexTileShift_8025A7EC(GXTexFmt fmt, u32* rowTileS, u32* colTileS) {
     switch (fmt) {
     case GX_TF_I4:
     case 0x8:
@@ -408,18 +400,18 @@ void GXLoadTexObjPreLoaded(GXTexObj* obj, GXTexRegion* region, GXTexMapID id) {
     GX_WRITE_RAS_REG(t->image3);
 
     if (!(t->flags & 2)) {
-        ASSERTMSGLINEV(1287, __GXData->tlutRegionCallback, "%s: Tex/Tlut Region Callback not set", "GXLoadTexObj/PreLoaded");
-        tlr = (__GXTlutRegionInt*)__GXData->tlutRegionCallback(t->tlutName);
+        ASSERTMSGLINEV(1287, gx->tlutRegionCallback, "%s: Tex/Tlut Region Callback not set", "GXLoadTexObj/PreLoaded");
+        tlr = (__GXTlutRegionInt*)gx->tlutRegionCallback(t->tlutName);
         ASSERTMSGLINEV(1289, tlr, "%s: Tex/Tlut Region Callback returns NULL", "GXLoadTexObj/PreLoaded");
 
         tlr->tlutObj.tlut = (tlr->tlutObj.tlut & 0x00FFFFFF) | ((u32)GXTexTlutIds[id] << 24);
         GX_WRITE_RAS_REG(tlr->tlutObj.tlut);
     }
 
-    (*((GXData * volatile*)&__GXData))->tImage0[id] = t->image0;
-    (*((GXData * volatile*)&__GXData))->tMode0[id] = t->mode0;
-    (*((GXData * volatile*)&__GXData))->dirtyState |= 1;
-    (*((GXData * volatile*)&__GXData))->bpSentNot = 0;
+    (*((GXData * volatile*)&gx))->tImage0[id] = t->image0;
+    (*((GXData * volatile*)&gx))->tMode0[id] = t->mode0;
+    (*((GXData * volatile*)&gx))->dirtyState |= 1;
+    (*((GXData * volatile*)&gx))->bpSentNot = 0;
 }
 
 void GXLoadTexObj(GXTexObj* obj, GXTexMapID id) {
@@ -427,8 +419,8 @@ void GXLoadTexObj(GXTexObj* obj, GXTexMapID id) {
 
     CHECK_GXBEGIN(1318, "GXLoadTexObj");
     ASSERTMSGLINEV(1319, id < 8, "%s: invalid texture map ID", "GXLoadTexObj");
-    ASSERTMSGLINEV(1324, ((GXDataCallbacksView*)__GXData)->texRegionCallback, "%s: Tex/Tlut Region Callback not set", "GXLoadTexObj");
-    r = ((GXDataCallbacksView*)__GXData)->texRegionCallback(obj, id);
+    ASSERTMSGLINEV(1324, ((GXDataCallbacksView*)gx)->texRegionCallback, "%s: Tex/Tlut Region Callback not set", "GXLoadTexObj");
+    r = ((GXDataCallbacksView*)gx)->texRegionCallback(obj, id);
     ASSERTMSGLINEV(1326, r, "%s: Tex/Tlut Region Callback returns NULL", "GXLoadTexObj");
     GXLoadTexObjPreLoaded(obj, r, id);
 }
@@ -516,16 +508,16 @@ void GXInvalidateTexAll(void) {
 }
 
 GXTexRegionCallback GXSetTexRegionCallback(GXTexRegionCallback f) {
-    GXTexRegionCallback oldcb = __GXData->texRegionCallback;
+    GXTexRegionCallback oldcb = gx->texRegionCallback;
 
-    __GXData->texRegionCallback = f;
+    gx->texRegionCallback = f;
     return oldcb;
 }
 
 GXTlutRegionCallback GXSetTlutRegionCallback(GXTlutRegionCallback f) {
-    GXTlutRegionCallback oldcb = __GXData->tlutRegionCallback;
+    GXTlutRegionCallback oldcb = gx->tlutRegionCallback;
 
-    __GXData->tlutRegionCallback = f;
+    gx->tlutRegionCallback = f;
     return oldcb;
 }
 
