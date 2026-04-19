@@ -585,11 +585,12 @@ asm u32 LCQueueLength(void) {
 
 asm void LCQueueWait(register u32 len) {
     nofralloc
+    addi r3, r3, 1
 @1
     mfspr r4, HID2
     rlwinm r4, r4, 8, 28, 31
-    cmpw r4, r3
-    bgt @1
+    cmpw cr2, r4, r3
+    bge cr2, @1
     blr
 }
 #endif
