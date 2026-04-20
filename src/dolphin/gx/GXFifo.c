@@ -542,9 +542,6 @@ void __GXCleanGPFifo(void) {
     void* base;
 
     gpFifo = GXGetGPFifo();
-    if (gpFifo == (GXFifoObj*)NULL)
-        return;
-
     cpuFifo = GXGetCPUFifo();
     base = GXGetFifoBase(gpFifo);
 
