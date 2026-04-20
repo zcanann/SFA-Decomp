@@ -44,6 +44,25 @@ ASM_FN_HEADER_RE = re.compile(
 ASM_FN_NAME_RE = re.compile(r"^\.fn (?P<name>[^,\s]+),")
 
 
+def normalize_mw_version(mw_version: str) -> str:
+    return mw_version.replace("\\", "/")
+
+
+def build_compiler_path(mw_version: str) -> Path:
+    return Path("build") / "compilers" / Path(*normalize_mw_version(mw_version).split("/")) / "mwcceppc.exe"
+
+
+def discover_mw_versions() -> tuple[str, ...]:
+    gc_root = Path("build") / "compilers" / "GC"
+    if not gc_root.is_dir():
+        return ()
+    return tuple(
+        f"GC/{entry.name}"
+        for entry in sorted(gc_root.iterdir(), key=lambda item: item.name)
+        if entry.is_dir()
+    )
+
+
 @dataclass(frozen=True)
 class BuildConfig:
     mw_version: str
@@ -213,7 +232,7 @@ def parse_rule_config(lines: list[str], start_index: int) -> BuildConfig | None:
     if not mw_version or not cflags_parts:
         return None
     cflags = tuple(shlex.split(" ".join(cflags_parts), posix=True))
-    return BuildConfig(mw_version=mw_version, cflags=cflags)
+    return BuildConfig(mw_version=normalize_mw_version(mw_version), cflags=cflags)
 
 
 def candidate_source_keys(source: Path) -> tuple[str, ...]:
@@ -281,7 +300,7 @@ def compile_source(
     prepend_extra_includes: bool = True,
 ) -> Path:
     output_root.mkdir(parents=True, exist_ok=True)
-    compiler = Path("build") / "compilers" / build_config.mw_version / "mwcceppc.exe"
+    compiler = build_compiler_path(build_config.mw_version)
     sjiswrap = Path("build") / "tools" / "sjiswrap.exe"
     if not compiler.is_file():
         raise SystemExit(f"Missing compiler: {compiler}")
@@ -1092,6 +1111,10 @@ def format_signed_hex(value: int) -> str:
     return f"{sign}0x{abs(value):X}"
 
 
+def report_label(report: SourceReport) -> str:
+    return f"{report.source.as_posix()} [{report.mw_version}]"
+
+
 def print_report(
     version: str,
     report: SourceReport,
@@ -1103,8 +1126,7 @@ def print_report(
     show_functions: bool,
     function_limit: int,
 ) -> None:
-    print(f"# {report.source.as_posix()}")
-    print(f"compiler: {report.mw_version}")
+    print(f"# {report_label(report)}")
     print("sections:")
     for section in report.sections:
         if section.name.startswith(".rela") or section.name in {".symtab", ".strtab", ".shstrtab", ".comment"}:
@@ -1270,7 +1292,7 @@ def print_ranked_summary(version: str, reports: list[SourceReport]) -> None:
             asm_window = report.asm_pattern_windows[0] if report.asm_pattern_windows else None
             print(
                 f"anchors=0 exact=0 blockers=0 overlaps=0 text=0x{report.text_size:X} "
-                f"{report.source.as_posix()} -"
+                    f"{report_label(report)} -"
             )
             if report.assigned_audit is not None:
                 audit = report.assigned_audit
@@ -1303,7 +1325,7 @@ def print_ranked_summary(version: str, reports: list[SourceReport]) -> None:
         print(
             f"anchors={anchor_count} exact={exact_count} blockers={boundary_conflict_count} "
             f"overlaps={overlap_count} "
-            f"text=0x{report.text_size:X} {report.source.as_posix()} "
+            f"text=0x{report.text_size:X} {report_label(report)} "
             f"0x{best.start:08X}-0x{span_end:08X}"
         )
         if names:
@@ -1348,7 +1370,7 @@ def print_assigned_rank_summary(reports: list[SourceReport]) -> None:
             f"mismatches={audit.size_mismatch_count} "
             f"delta={format_signed_hex(audit.size_delta)} "
             f"boundary-conflicts={audit.boundary_conflict_count} "
-            f"{report.source.as_posix()} "
+            f"{report_label(report)} "
             f"0x{audit.start:08X}-0x{audit.end:08X}"
         )
         print(
@@ -1390,10 +1412,17 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--mw-version",
+        action="append",
+        default=[],
         help=(
-            "Override the recovered Metrowerks compiler version for every probe, "
+            "Override the recovered Metrowerks compiler version. Can be repeated, "
             "for example 'GC/1.2.5n' or 'GC\\1.2.5n'."
         ),
+    )
+    parser.add_argument(
+        "--all-mw-versions",
+        action="store_true",
+        help="Probe each source with every installed GC compiler under build/compilers/GC.",
     )
     parser.add_argument(
         "--extra-include",
@@ -1516,6 +1545,8 @@ def main() -> None:
     extra_include_dirs = tuple(args.extra_include)
     extra_cflags = tuple(args.extra_cflag)
     prepend_extra_includes = not args.append_extra_includes
+    requested_mw_versions = tuple(dict.fromkeys(normalize_mw_version(version) for version in args.mw_version))
+    discovered_mw_versions = discover_mw_versions() if args.all_mw_versions else ()
     reports: list[SourceReport] = []
 
     for source in expand_source_args(args.sources):
@@ -1530,8 +1561,6 @@ def main() -> None:
         object_dir = output_root / source.with_suffix("")
         try:
             build_config = resolve_build_config(build_ninja, args.version, source)
-            if args.mw_version:
-                build_config = BuildConfig(mw_version=args.mw_version, cflags=build_config.cflags)
             translated_clusters = build_translated_clusters(
                 version=args.version,
                 source=source,
@@ -1539,21 +1568,33 @@ def main() -> None:
                 require_provenance=args.require_cluster_provenance,
                 gap=args.cluster_gap,
             )
-            report = analyze_source(
-                version=args.version,
-                config_symbols_path=config_symbols_path,
-                source=source,
-                build_config=build_config,
-                output_root=object_dir,
-                extra_include_dirs=extra_include_dirs,
-                extra_cflags=extra_cflags,
-                prepend_extra_includes=prepend_extra_includes,
-                translated_clusters=translated_clusters,
-                size_window_limit=args.size_window_limit if (args.show_size_windows or args.rank) else 0,
-                asm_pattern_limit=args.asm_pattern_limit if (args.show_asm_pattern_windows or args.rank) else 0,
-                range_start=args.range_start,
-                range_end=args.range_end,
+            probe_mw_versions = tuple(
+                dict.fromkeys(
+                    requested_mw_versions
+                    + discovered_mw_versions
+                    + ((build_config.mw_version,) if not requested_mw_versions and not discovered_mw_versions else ())
+                )
             )
+            for mw_version in probe_mw_versions:
+                active_build_config = build_config
+                if mw_version != build_config.mw_version:
+                    active_build_config = BuildConfig(mw_version=mw_version, cflags=build_config.cflags)
+                report = analyze_source(
+                    version=args.version,
+                    config_symbols_path=config_symbols_path,
+                    source=source,
+                    build_config=active_build_config,
+                    output_root=object_dir,
+                    extra_include_dirs=extra_include_dirs,
+                    extra_cflags=extra_cflags,
+                    prepend_extra_includes=prepend_extra_includes,
+                    translated_clusters=translated_clusters,
+                    size_window_limit=args.size_window_limit if (args.show_size_windows or args.rank) else 0,
+                    asm_pattern_limit=args.asm_pattern_limit if (args.show_asm_pattern_windows or args.rank) else 0,
+                    range_start=args.range_start,
+                    range_end=args.range_end,
+                )
+                reports.append(report)
         except subprocess.CalledProcessError as exc:
             if args.keep_going:
                 print(f"# {source.as_posix()}")
@@ -1561,7 +1602,6 @@ def main() -> None:
                 print()
                 continue
             raise
-        reports.append(report)
 
     if args.rank:
         print_ranked_summary(args.version, reports)
