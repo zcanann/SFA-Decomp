@@ -9,11 +9,16 @@ typedef struct FSTEntry {
     /* 0x08 */ unsigned int nextEntryOrLength;
 } FSTEntry;
 
-static OSBootInfo* BootInfo;
-static FSTEntry* FstStart;
-char* FstStringStart;
-static u32 MaxEntryNum;
-u32 sDvdfsCurrentDirEntry;
+extern OSBootInfo* BootInfo_803DEB68;
+extern FSTEntry* FstStart_803DEB6C;
+extern char* FstStringStart_803DEB70;
+extern u32 MaxEntryNum_803DEB74;
+extern u32 sDvdfsCurrentDirEntry;
+
+#define BootInfo BootInfo_803DEB68
+#define FstStart FstStart_803DEB6C
+#define FstStringStart FstStringStart_803DEB70
+#define MaxEntryNum MaxEntryNum_803DEB74
 
 // prototypes
 static BOOL isSame(const char* path, const char* string);
