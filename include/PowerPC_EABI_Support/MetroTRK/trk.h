@@ -39,7 +39,7 @@ BOOL GetTRKConnected(void);
 
 DSError TRKGetFreeBuffer(int*, TRKBuffer**);
 void OutputData(void* data, int length);
-void TRKResetBuffer(TRKBuffer* msg, BOOL keepData);
+void TRKResetBuffer(TRKBuffer* msg, u8 keepData);
 
 DSError TRKReadBuffer1_ui64(TRKBuffer* buffer, u64* data);
 DSError TRKAppendBuffer1_ui64(TRKBuffer* buffer, const u64 data);
