@@ -124,32 +124,32 @@ void GXInitLightSpot(GXLightObj* lt_obj, f32 cutoff, GXSpotFn spot_func) {
         break;
     case GX_SP_COS:
         a2 = 0.0f;
+        a0 = -cr / (1.0f - cr);
         a1 = 1.0f / (1.0f - cr);
-        a0 = -cr * a1;
         break;
     case GX_SP_COS2:
-        a2 = 1.0f / (1.0f - cr);
-        a1 = -cr * a2;
         a0 = 0.0f;
+        a1 = -cr / (1.0f - cr);
+        a2 = 1.0f / (1.0f - cr);
         break;
     case GX_SP_SHARP:
         a0 = 1.0f - cr;
-        d = 1.0f / (a0 * a0);
-        a0 = d * (cr * (cr - 2.0f));
-        a1 = 2.0f * d;
-        a2 = -d;
+        d = a0 * a0;
+        a1 = 2.0f / d;
+        a0 = (cr * (cr - 2.0f)) / d;
+        a2 = lbl_803E8338 / d;
         break;
     case GX_SP_RING1:
-        d = 1.0f / ((1.0f - cr) * (1.0f - cr));
-        a2 = -4.0f * d;
-        a1 = (4.0f * (1.0f + cr)) * d;
-        a0 = a2 * cr;
+        d = (1.0f - cr) * (1.0f - cr);
+        a0 = (lbl_803E833C * cr) / d;
+        a1 = (lbl_803E8340 * (1.0f + cr)) / d;
+        a2 = lbl_803E833C / d;
         break;
     case GX_SP_RING2:
-        d = 1.0f / ((1.0f - cr) * (1.0f - cr));
-        a0 = 1.0f - (d * ((2.0f * cr) * cr));
-        a1 = (4.0f * cr) * d;
-        a2 = -2.0f * d;
+        d = (1.0f - cr) * (1.0f - cr);
+        a1 = (lbl_803E8340 * cr) / d;
+        a0 = 1.0f - ((lbl_803E8334 * cr) * cr) / d;
+        a2 = lbl_803E8344 / d;
         break;
     case GX_SP_OFF:
     default:
@@ -243,10 +243,7 @@ void GXInitSpecularDir(GXLightObj* lt_obj, f32 nx, f32 ny, f32 nz) {
     vy = -ny;
     vz = 1.0f - nz;
 
-    mag = (vx * vx) + (vy * vy) + (vz * vz);
-    if (mag != 0.0f) {
-        mag = 1.0f / sqrtf(mag);
-    }
+    mag = 1.0f / sqrtf((vx * vx) + (vy * vy) + (vz * vz));
 
     obj->ldir[0] = vx * mag;
     obj->ldir[1] = vy * mag;
@@ -397,11 +394,17 @@ void GXSetChanAmbColor(GXChannelID chan, GXColor amb_color) {
         colIdx = 1;
         break;
     case GX_COLOR0A0:
-        reg = (u32)amb_color.a | ((u32)amb_color.b << 8) | ((u32)amb_color.g << 16) | ((u32)amb_color.r << 24);
+        reg = amb_color.a;
+        SET_REG_FIELD(0, reg, 8, 8, amb_color.b);
+        SET_REG_FIELD(0, reg, 8, 16, amb_color.g);
+        SET_REG_FIELD(0, reg, 8, 24, amb_color.r);
         colIdx = 0;
         break;
     case GX_COLOR1A1:
-        reg = (u32)amb_color.a | ((u32)amb_color.b << 8) | ((u32)amb_color.g << 16) | ((u32)amb_color.r << 24);
+        reg = amb_color.a;
+        SET_REG_FIELD(0, reg, 8, 8, amb_color.b);
+        SET_REG_FIELD(0, reg, 8, 16, amb_color.g);
+        SET_REG_FIELD(0, reg, 8, 24, amb_color.r);
         colIdx = 1;
         break;
     default:
@@ -444,11 +447,17 @@ void GXSetChanMatColor(GXChannelID chan, GXColor mat_color) {
         colIdx = 1;
         break;
     case GX_COLOR0A0:
-        reg = (u32)mat_color.a | ((u32)mat_color.b << 8) | ((u32)mat_color.g << 16) | ((u32)mat_color.r << 24);
+        reg = mat_color.a;
+        SET_REG_FIELD(0, reg, 8, 8, mat_color.b);
+        SET_REG_FIELD(0, reg, 8, 16, mat_color.g);
+        SET_REG_FIELD(0, reg, 8, 24, mat_color.r);
         colIdx = 0;
         break;
     case GX_COLOR1A1:
-        reg = (u32)mat_color.a | ((u32)mat_color.b << 8) | ((u32)mat_color.g << 16) | ((u32)mat_color.r << 24);
+        reg = mat_color.a;
+        SET_REG_FIELD(0, reg, 8, 8, mat_color.b);
+        SET_REG_FIELD(0, reg, 8, 16, mat_color.g);
+        SET_REG_FIELD(0, reg, 8, 24, mat_color.r);
         colIdx = 1;
         break;
     default:
@@ -494,43 +503,30 @@ void GXSetChanCtrl(GXChannelID chan, GXBool enable, GXColorSrc amb_src, GXColorS
 
     reg = (((u32)enable & 0xFF) << 1) | (u32)mat_src;
 
-    {
-        u32 b0, b1, b2, b3, b4, b5, b6, b7;
-        b0 = (light_mask & (1u << 0)) != 0;
-        b1 = (light_mask & (1u << 1)) != 0;
-        b2 = (light_mask & (1u << 2)) != 0;
-        b3 = (light_mask & (1u << 3)) != 0;
-        b4 = (light_mask & (1u << 4)) != 0;
-        b5 = (light_mask & (1u << 5)) != 0;
-        b6 = (light_mask & (1u << 6)) != 0;
-        b7 = (light_mask & (1u << 7)) != 0;
+    SET_REG_FIELD(0, reg, 2, 6, amb_src);
+    SET_REG_FIELD(0, reg, 1, 2, (light_mask & (1u << 0)) != 0);
+    SET_REG_FIELD(0, reg, 1, 3, (light_mask & (1u << 1)) != 0);
+    SET_REG_FIELD(0, reg, 1, 4, (light_mask & (1u << 2)) != 0);
+    SET_REG_FIELD(0, reg, 1, 5, (light_mask & (1u << 3)) != 0);
+    SET_REG_FIELD(0, reg, 1, 11, (light_mask & (1u << 4)) != 0);
+    SET_REG_FIELD(0, reg, 1, 12, (light_mask & (1u << 5)) != 0);
+    SET_REG_FIELD(0, reg, 1, 13, (light_mask & (1u << 6)) != 0);
+    SET_REG_FIELD(0, reg, 1, 14, (light_mask & (1u << 7)) != 0);
 
-        SET_REG_FIELD(0, reg, 2, 6, amb_src);
-        SET_REG_FIELD(0, reg, 1, 2, b0);
-        SET_REG_FIELD(0, reg, 1, 3, b1);
-        SET_REG_FIELD(0, reg, 1, 4, b2);
-        SET_REG_FIELD(0, reg, 1, 5, b3);
-
-        if (attn_fn == GX_AF_SPEC) {
-            diff_fn = GX_DF_NONE;
-        }
-
-        SET_REG_FIELD(0, reg, 2, 7, diff_fn);
-        SET_REG_FIELD(0, reg, 1, 9, attn_fn != GX_AF_NONE);
-        SET_REG_FIELD(0, reg, 1, 10, attn_fn != GX_AF_SPEC);
-        SET_REG_FIELD(0, reg, 1, 11, b4);
-        SET_REG_FIELD(0, reg, 1, 12, b5);
-        SET_REG_FIELD(0, reg, 1, 13, b6);
-        SET_REG_FIELD(0, reg, 1, 14, b7);
+    if (attn_fn == GX_AF_SPEC) {
+        diff_fn = GX_DF_NONE;
     }
 
+    SET_REG_FIELD(0, reg, 2, 7, diff_fn);
+    SET_REG_FIELD(0, reg, 1, 9, attn_fn != GX_AF_NONE);
+    SET_REG_FIELD(0, reg, 1, 10, attn_fn != GX_AF_SPEC);
+
     GX_WRITE_XF_REG(idx + 14, reg);
-    
+    __GXData->bpSentNot = 1;
+
     if (chan == GX_COLOR0A0) {
         GX_WRITE_XF_REG(16, reg);
     } else if (chan == GX_COLOR1A1) {
         GX_WRITE_XF_REG(17, reg);
     }
-
-    __GXData->bpSentNot = 1;
 }
