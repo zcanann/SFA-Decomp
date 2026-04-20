@@ -75,6 +75,8 @@ MessageBufferID TRKTestForPacket(void) {
                         gTRKFramingState.receiveState = DSRECV_Wait;
                         return msgBufID;
                     }
+
+                    gTRKFramingState.receiveState = DSRECV_Wait;
                 } else {
                     if (gTRKFramingState.isEscape) {
                         c ^= 0x20;
