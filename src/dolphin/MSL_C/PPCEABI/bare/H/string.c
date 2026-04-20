@@ -4,16 +4,10 @@
 #define K1 0x80808080
 #define K2 0xFEFEFEFF
 
-extern char msl_string_table_1[];
-
-char* strtok_null = msl_string_table_1;
-char* strtok_ptr  = msl_string_table_1;
-const unsigned char strtok_delimiter_table_init[32] = { 0 };
-
 size_t strlen(const char* str)
 {
-	size_t len       = -1;
 	unsigned char* p = (unsigned char*)str - 1;
+	size_t len       = -1;
 
 	do {
 		len++;
@@ -129,9 +123,11 @@ int strcmp(const char* str1, const char* str2)
 
 	l1 = *left;
 	r1 = *right;
-	if (l1 - r1) {
-		return l1 - r1;
+	r1 = l1 - r1;
+	if (r1) {
+		return r1;
 	}
+	r1 = *right;
 
 	if ((align = ((int)left & 3)) != ((int)right & 3)) {
 		goto bytecopy;
@@ -171,17 +167,19 @@ int strcmp(const char* str1, const char* str2)
 		}
 	}
 
-	if (l1 > r1) {
-		return 1;
+	if (l1 < r1) {
+		return -1;
 	}
-	return -1;
+	return 1;
 
 adjust:
 	l1 = *left;
 	r1 = *right;
-	if (l1 - r1) {
-		return l1 - r1;
+	r1 = l1 - r1;
+	if (r1) {
+		return r1;
 	}
+	r1 = *right;
 
 bytecopy:
 	if (l1 == 0) {
@@ -229,113 +227,4 @@ char* strchr(const char* str, int c)
 	}
 
 	return chr ? NULL : (char*)p;
-}
-
-char* strrchr(const char* str, int c)
-{
-	const unsigned char* p = (unsigned char*)str - 1;
-	const unsigned char* q = NULL;
-	unsigned long chr      = (c & 0xFF);
-
-	unsigned long ch;
-	while (ch = *++p) {
-		if (ch == chr) {
-			q = p;
-		}
-	}
-
-	if (q != NULL) {
-		return (char*)q;
-	}
-
-	return chr ? NULL : (char*)p;
-}
-
-/*
- * --INFO--
- * PAL Address: TODO
- * PAL Size: TODO
- * EN Address: TODO
- * EN Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- */
-char* strtok(char* str, const char* delim)
-{
-	unsigned char delimiter_table[32];
-	int ch;
-	unsigned char* p;
-	char* tokenStart;
-
-	((unsigned int*)delimiter_table)[0] = ((const unsigned int*)strtok_delimiter_table_init)[0];
-	((unsigned int*)delimiter_table)[1] = ((const unsigned int*)strtok_delimiter_table_init)[1];
-	((unsigned int*)delimiter_table)[2] = ((const unsigned int*)strtok_delimiter_table_init)[2];
-	((unsigned int*)delimiter_table)[3] = ((const unsigned int*)strtok_delimiter_table_init)[3];
-	((unsigned int*)delimiter_table)[4] = ((const unsigned int*)strtok_delimiter_table_init)[4];
-	((unsigned int*)delimiter_table)[5] = ((const unsigned int*)strtok_delimiter_table_init)[5];
-	((unsigned int*)delimiter_table)[6] = ((const unsigned int*)strtok_delimiter_table_init)[6];
-	((unsigned int*)delimiter_table)[7] = ((const unsigned int*)strtok_delimiter_table_init)[7];
-
-	if (str != NULL) {
-		strtok_ptr = str;
-	}
-
-	p = (unsigned char*)delim - 1;
-	while ((ch = *++p) != '\0') {
-		delimiter_table[(ch & 0xFF) >> 3] |= 1 << (ch & 7);
-	}
-
-	p = (unsigned char*)strtok_ptr - 1;
-	while ((ch = *++p) != '\0') {
-		if ((delimiter_table[(ch & 0xFF) >> 3] & (1 << (ch & 7))) == 0) {
-			break;
-		}
-	}
-
-	if (ch == '\0') {
-		strtok_ptr = strtok_null;
-		return NULL;
-	}
-
-	tokenStart = (char*)p;
-	while ((ch = *++p) != '\0') {
-		if ((delimiter_table[(ch & 0xFF) >> 3] & (1 << (ch & 7))) != 0) {
-			break;
-		}
-	}
-
-	if (ch == '\0') {
-		strtok_ptr = strtok_null;
-	} else {
-		strtok_ptr = (char*)(p + 1);
-		*p = '\0';
-	}
-
-	return tokenStart;
-}
-
-char* strstr(const char* str, const char* pat)
-{
-	const unsigned char* s1 = (const unsigned char*)str - 1;
-	const unsigned char* p1 = (const unsigned char*)pat - 1;
-	unsigned long firstc, c1, c2;
-
-	if ((pat == 0) || (!(firstc = *++p1))) {
-		return (char*)str;
-	}
-
-	while (c1 = *++s1) {
-		if (c1 == firstc) {
-			const unsigned char* s2 = s1 - 1;
-			const unsigned char* p2 = p1 - 1;
-
-			while ((c1 = *++s2) == (c2 = *++p2) && c1)
-				;
-
-			if (!c2)
-				return (char*)s1;
-		}
-	}
-
-	return NULL;
 }
