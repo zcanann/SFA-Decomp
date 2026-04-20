@@ -575,12 +575,15 @@ def inspect_object_symbols(object_path: Path) -> ObjectSymbolShape | str:
 
     for line in objdump_result.stdout.splitlines():
         parts = line.split()
-        if len(parts) != 6:
+        if len(parts) == 6:
+            _, bind, symbol_kind, section, size_text, name = parts
+        elif len(parts) == 7 and parts[5] == ".hidden":
+            _, bind, symbol_kind, section, size_text, _, name = parts
+        else:
             continue
-        _, bind, symbol_kind, section, _, name = parts
         if symbol_kind != "O" or section not in data_sections:
             continue
-        size = int(parts[4], 16)
+        size = int(size_text, 16)
         if bind == "g":
             exported_data_symbols.setdefault(section, []).append(name)
             exported_data_symbol_sizes.setdefault(section, {})[name] = size
