@@ -56,6 +56,12 @@ def get_argparser() -> argparse.ArgumentParser:
         help="Maximum number of boundary-only SDK files to print. Defaults to the near-miss limit.",
     )
     parser.add_argument(
+        "--codegen-limit",
+        type=int,
+        default=None,
+        help="Also print a shortlist of near-miss files that look like codegen-first seams rather than object-shape drift.",
+    )
+    parser.add_argument(
         "--splits",
         type=Path,
         default=Path("config/GSAE01/splits.txt"),
@@ -86,6 +92,7 @@ class ProbeSummary:
     crossing_functions: list[str]
     assigned_range: tuple[int, int] | None
     best_exact_range: tuple[int, int] | None
+    assigned_delta: int | None
 
 
 @dataclass
@@ -508,7 +515,31 @@ def parse_probe(source_path: Path, *, include_functions: bool = False) -> ProbeS
         crossing_functions=crossing_functions,
         assigned_range=assigned_range,
         best_exact_range=best_exact_range,
+        assigned_delta=assigned_delta_value(assigned_split),
     )
+
+
+def object_shape_issue_names(
+    link_hints: ObjectLinkHints | None,
+    known_functions: list[str] | None,
+) -> tuple[list[str], bool]:
+    if link_hints is None:
+        return [], False
+
+    issue_names: list[str] = []
+    known_function_set = set(known_functions or [])
+    extra_text = [
+        name
+        for name in link_hints.defined_text_symbols
+        if name not in known_function_set
+    ]
+    if extra_text:
+        issue_names.append("extra-text")
+    if link_hints.exported_data_symbols:
+        issue_names.append("exports-data")
+    if link_hints.local_data_symbols:
+        issue_names.append("locals-data")
+    return issue_names, bool(extra_text)
 
 
 def summarize_probe(
@@ -600,15 +631,15 @@ def summarize_probe(
     elif parsed.best_cluster:
         summary_parts.append("best " + parsed.best_cluster)
     if link_hints:
-        if known_functions:
-            known_function_set = set(known_functions)
+        issue_names, has_extra_text = object_shape_issue_names(link_hints, known_functions)
+        if has_extra_text:
+            known_function_set = set(known_functions or [])
             extra_text = [
                 name
                 for name in link_hints.defined_text_symbols
                 if name not in known_function_set
             ]
-            if extra_text:
-                summary_parts.append("extra-text " + ", ".join(extra_text[:8]))
+            summary_parts.append("extra-text " + ", ".join(extra_text[:8]))
         for section in sorted(link_hints.exported_data_symbols):
             names = link_hints.exported_data_symbols[section]
             summary_parts.append(f"exports {section} " + ", ".join(names[:8]))
@@ -626,6 +657,27 @@ def summarize_probe(
         ]
         summary_parts.append("refs " + ", ".join(refs))
     return "; ".join(summary_parts) if summary_parts else "probe produced no summary"
+
+
+def describe_codegen_seam(parsed: ProbeSummary, link_hints: ObjectLinkHints | None, known_functions: list[str]) -> str:
+    issue_names, _ = object_shape_issue_names(link_hints, known_functions)
+
+    if issue_names:
+        return "object-shape " + ",".join(issue_names)
+
+    delta = parsed.assigned_delta
+    if delta is None:
+        return "codegen-first"
+
+    if delta == 0:
+        return "codegen-first exact-span"
+
+    if abs(delta) <= 0x20:
+        if parsed.crossing_functions and not parsed.leading_functions and not parsed.trailing_functions:
+            return "codegen-first tiny-overhang"
+        return "codegen-first near-span"
+
+    return "boundary-first"
 
 
 def main() -> int:
@@ -762,6 +814,46 @@ def main() -> int:
                 print(
                     f"    probe: {summarize_probe(source_path, include_near=True, split_entries=split_entries, link_hints=link_hints, reference_split_hints=reference_split_hints, known_functions=[fn['name'] for fn in unit.get('functions', [])])}"
                 )
+
+    if args.codegen_limit is not None:
+        print()
+        shortlist = []
+        scan_limit = max(args.codegen_limit, 5)
+        for matched_code, matched_funcs, fuzzy, unit in near_misses[:scan_limit]:
+            source_path = unit_name_to_source_path(unit["name"])
+            object_path = unit_name_to_object_path(unit["name"])
+            if source_path is None or object_path is None:
+                continue
+
+            parsed_probe = parse_probe(source_path, include_functions=False)
+            if isinstance(parsed_probe, str):
+                continue
+
+            parsed_hints = collect_object_link_hints(
+                object_path,
+                symbol_owners,
+                address_owners,
+                symbol_addresses,
+            )
+            if isinstance(parsed_hints, str):
+                continue
+
+            known_functions = [fn["name"] for fn in unit.get("functions", [])]
+            seam = describe_codegen_seam(parsed_probe, parsed_hints, known_functions)
+            if seam.startswith("object-shape") or seam == "boundary-first":
+                continue
+
+            shortlist.append((matched_code, fuzzy, unit["name"], format_misses(unit), seam))
+
+        print(f"Top {min(args.codegen_limit, len(shortlist))} SDK codegen-first files:")
+        if shortlist:
+            shortlist.sort(reverse=True)
+            for matched_code, fuzzy, name, miss_summary, seam in shortlist[: args.codegen_limit]:
+                print(f"  {name}: code={matched_code:.2f}% fuzzy={fuzzy:.3f} {seam}")
+                if miss_summary:
+                    print(f"    misses: {miss_summary}")
+        else:
+            print("  (none)")
 
     return 0
 
