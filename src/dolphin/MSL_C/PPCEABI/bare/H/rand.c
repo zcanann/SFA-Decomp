@@ -2,12 +2,12 @@
 
 // rand.c from Runtime library
 
-u32 next = 1;
+extern u32 lbl_803DF090;
 
 u32 rand(void)
 {
-	next = 0x41C64E6D * next + 12345;
-	return (next >> 16) & 0x7FFF;
+	lbl_803DF090 = lbl_803DF090 * 0x19660D + 0x3C6EF35F;
+	return lbl_803DF090;
 }
 
-void srand(u32 seed) { next = seed; }
+void srand(u32 seed) { lbl_803DF090 = seed; }
