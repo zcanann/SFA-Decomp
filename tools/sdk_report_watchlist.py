@@ -842,6 +842,21 @@ def ordered_section_symbol_diff(
     return current_only, target_only
 
 
+def split_gap_symbols(symbols_by_section: dict[str, list[str]]) -> tuple[dict[str, list[str]], dict[str, list[str]]]:
+    gap_symbols: dict[str, list[str]] = {}
+    other_symbols: dict[str, list[str]] = {}
+
+    for section, names in symbols_by_section.items():
+        gaps = [name for name in names if name.startswith("gap_")]
+        others = [name for name in names if not name.startswith("gap_")]
+        if gaps:
+            gap_symbols[section] = gaps
+        if others:
+            other_symbols[section] = others
+
+    return gap_symbols, other_symbols
+
+
 def section_symbol_size_diff(
     current: dict[str, dict[str, int]],
     target: dict[str, dict[str, int]],
@@ -1022,6 +1037,8 @@ def summarize_probe(
                 link_hints.current.exported_data_symbols,
                 link_hints.target.exported_data_symbols,
             )
+            current_gap_exports, current_only_exports = split_gap_symbols(current_only_exports)
+            target_gap_exports, target_only_exports = split_gap_symbols(target_only_exports)
             export_size_deltas = section_symbol_size_diff(
                 link_hints.current.exported_data_symbol_sizes,
                 link_hints.target.exported_data_symbol_sizes,
@@ -1041,6 +1058,14 @@ def summarize_probe(
                 summary_parts.append("cur-only-text " + ", ".join(current_only_text[:8]))
             if target_only_text:
                 summary_parts.append("target-only-text " + ", ".join(target_only_text[:8]))
+            for section in sorted(current_gap_exports):
+                summary_parts.append(
+                    f"cur-only-gaps {section} " + ", ".join(current_gap_exports[section][:8])
+                )
+            for section in sorted(target_gap_exports):
+                summary_parts.append(
+                    f"target-only-gaps {section} " + ", ".join(target_gap_exports[section][:8])
+                )
             for section in sorted(current_only_exports):
                 summary_parts.append(
                     f"cur-only-exports {section} " + ", ".join(current_only_exports[section][:8])
