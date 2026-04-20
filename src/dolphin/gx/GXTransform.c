@@ -325,7 +325,7 @@ void GXSetScissorBoxOffset(s32 x_off, s32 y_off) {
     x_off += 0x156;
     y_off += 0x156;
     x_off = ((u32)x_off >> 1) & 0xFFF003FF;
-    y_off = (y_off << 9) & 0xFFFFFC00;
+    y_off = (u32)((u32)y_off >> 1) << 10;
     reg = ((u32)x_off | (u32)y_off) & 0x00FFFFFF;
     reg |= 0x59000000;
     GX_WRITE_RAS_REG(reg);
