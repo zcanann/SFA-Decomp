@@ -576,7 +576,12 @@ config.libs = [
                 mw_version="GC/1.3.2",
             ),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/msghndlr.c"),
-            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/support.c"),
+            Object(
+                NonMatching,
+                "dolphin/TRK_MINNOW_DOLPHIN/support.c",
+                src_dir="reference_projects/marioparty4/src",
+                source="TRK_MINNOW_DOLPHIN/support.c",
+            ),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/mutex_TRK.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/notify.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/flush_cache.c"),

@@ -181,6 +181,45 @@ def unit_name_to_source_path(unit_name: str) -> Path | None:
     return None
 
 
+@lru_cache(maxsize=1)
+def load_build_ninja_source_map(build_ninja: str = "build.ninja") -> dict[str, str]:
+    lines = Path(build_ninja).read_text(encoding="utf-8").splitlines()
+    logical_lines: list[str] = []
+    index = 0
+
+    while index < len(lines):
+        line = lines[index]
+        while line.endswith("$") and index + 1 < len(lines):
+            index += 1
+            line = line[:-1].rstrip() + " " + lines[index].lstrip()
+        logical_lines.append(line)
+        index += 1
+
+    source_map: dict[str, str] = {}
+    for line in logical_lines:
+        match = re.match(r"^build\s+(.+?):\s+\S+\s+(\S+)(?:\s+\||$)", line)
+        if not match:
+            continue
+        output = match.group(1).replace("\\", "/")
+        source = match.group(2).replace("\\", "/")
+        source_map[output] = source
+
+    return source_map
+
+
+def unit_name_to_probe_source_path(unit_name: str) -> Path | None:
+    object_path = unit_name_to_object_path(unit_name)
+    if object_path is not None:
+        source_map = load_build_ninja_source_map()
+        source = source_map.get(object_path.as_posix())
+        if source is not None:
+            candidate = Path(source)
+            if candidate.exists():
+                return candidate
+
+    return unit_name_to_source_path(unit_name)
+
+
 def objdump_hint_for_unit(unit: dict) -> str | None:
     source_path = unit_name_to_source_path(unit["name"])
     top_miss = top_miss_function(unit)
@@ -1027,13 +1066,22 @@ def main() -> int:
         for _, _, _, unit in exact_rows:
             print(f"  {unit['name']}")
             if args.probe_exact:
-                source_path = unit_name_to_source_path(unit["name"])
+                source_path = unit_name_to_probe_source_path(unit["name"])
                 if source_path is None:
                     print("    probe: no source path found")
                 else:
                     link_hints = None
-                    reference_split_hints = collect_reference_split_hints(source_path) if args.reference_splits else None
-                    reference_source_hints = collect_reference_source_hints(source_path) if args.reference_sources else None
+                    split_source_path = unit_name_to_source_path(unit["name"])
+                    reference_split_hints = (
+                        collect_reference_split_hints(split_source_path)
+                        if args.reference_splits and split_source_path is not None
+                        else None
+                    )
+                    reference_source_hints = (
+                        collect_reference_source_hints(split_source_path or source_path)
+                        if args.reference_sources
+                        else None
+                    )
                     object_path = unit_name_to_object_path(unit["name"])
                     if object_path is not None:
                         target_object_path = unit_name_to_target_object_path(unit["name"])
@@ -1068,12 +1116,17 @@ def main() -> int:
                 f"  {unit['name']}: code={matched_code:.2f}% funcs={matched_funcs:.2f}% fuzzy={fuzzy:.3f}"
             )
             if args.probe_boundary:
-                source_path = unit_name_to_source_path(unit["name"])
+                source_path = unit_name_to_probe_source_path(unit["name"])
                 if source_path is None:
                     print("    probe: no source path found")
                 else:
                     link_hints = None
-                    reference_source_hints = collect_reference_source_hints(source_path) if args.reference_sources else None
+                    split_source_path = unit_name_to_source_path(unit["name"])
+                    reference_source_hints = (
+                        collect_reference_source_hints(split_source_path or source_path)
+                        if args.reference_sources
+                        else None
+                    )
                     object_path = unit_name_to_object_path(unit["name"])
                     if object_path is not None:
                         target_object_path = unit_name_to_target_object_path(unit["name"])
@@ -1086,7 +1139,11 @@ def main() -> int:
                         )
                         if isinstance(parsed_hints, ObjectLinkHints):
                             link_hints = parsed_hints
-                    reference_split_hints = collect_reference_split_hints(source_path) if args.reference_splits else None
+                    reference_split_hints = (
+                        collect_reference_split_hints(split_source_path)
+                        if args.reference_splits and split_source_path is not None
+                        else None
+                    )
                     print(
                         f"    probe: {summarize_probe(source_path, include_near=True, split_entries=split_entries, link_hints=link_hints, reference_split_hints=reference_split_hints, known_functions=[fn['name'] for fn in unit.get('functions', [])])}"
                     )
@@ -1112,12 +1169,17 @@ def main() -> int:
             for line in objdump_output.splitlines():
                 print(f"      {line}")
         if args.probe_near:
-            source_path = unit_name_to_source_path(unit["name"])
+            source_path = unit_name_to_probe_source_path(unit["name"])
             if source_path is None:
                 print("    probe: no source path found")
             else:
                 link_hints = None
-                reference_source_hints = collect_reference_source_hints(source_path) if args.reference_sources else None
+                split_source_path = unit_name_to_source_path(unit["name"])
+                reference_source_hints = (
+                    collect_reference_source_hints(split_source_path or source_path)
+                    if args.reference_sources
+                    else None
+                )
                 object_path = unit_name_to_object_path(unit["name"])
                 if object_path is not None:
                     target_object_path = unit_name_to_target_object_path(unit["name"])
@@ -1130,7 +1192,11 @@ def main() -> int:
                     )
                     if isinstance(parsed_hints, ObjectLinkHints):
                         link_hints = parsed_hints
-                reference_split_hints = collect_reference_split_hints(source_path) if args.reference_splits else None
+                reference_split_hints = (
+                    collect_reference_split_hints(split_source_path)
+                    if args.reference_splits and split_source_path is not None
+                    else None
+                )
                 print(
                     f"    probe: {summarize_probe(source_path, include_near=True, split_entries=split_entries, link_hints=link_hints, reference_split_hints=reference_split_hints, known_functions=[fn['name'] for fn in unit.get('functions', [])])}"
                 )
@@ -1142,7 +1208,7 @@ def main() -> int:
         shortlist = []
         scan_limit = max(args.codegen_limit, 5)
         for matched_code, matched_funcs, fuzzy, unit in near_misses[:scan_limit]:
-            source_path = unit_name_to_source_path(unit["name"])
+            source_path = unit_name_to_probe_source_path(unit["name"])
             object_path = unit_name_to_object_path(unit["name"])
             if source_path is None or object_path is None:
                 continue
