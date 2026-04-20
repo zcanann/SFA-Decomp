@@ -8,6 +8,32 @@ extern GXData* gx;
 
 extern const f32 GX_F32_256;
 
+static inline u32 __GXGetNumXfbLines(u32 efbHt, u32 iScale) {
+    u32 count;
+    u32 realHt;
+    u32 iScaleD;
+
+    count = (efbHt - 1) * 0x100;
+    realHt = (count / iScale) + 1;
+    iScaleD = iScale;
+
+    if (iScaleD > 0x80 && iScaleD < 0x100) {
+        while ((iScaleD & 1) == 0) {
+            iScaleD >>= 1;
+        }
+
+        if ((efbHt % iScaleD) == 0) {
+            realHt++;
+        }
+    }
+
+    if (realHt > 0x400) {
+        realHt = 0x400;
+    }
+
+    return realHt;
+}
+
 void GXSetDispCopySrc(u16 left, u16 top, u16 wd, u16 ht) {
     CHECK_GXBEGIN(1235, "GXSetDispCopySrc");
     __GXData->cpDispSrc = 0;
@@ -117,9 +143,6 @@ u32 GXSetDispCopyYScale(f32 vscale) {
     u32 iScale;
     GXBool copyYScaleEnable;
     u32 height;
-    u32 iScaleD;
-    u32 count;
-    u32 realHt;
     u32 reg;
 
     CHECK_GXBEGIN(1557, "GXSetDispCopyYScale");
@@ -134,27 +157,8 @@ u32 GXSetDispCopyYScale(f32 vscale) {
     copyYScaleEnable = (iScale != 0x100);
     gx->bpSentNot = 0;
     SET_REG_FIELD(1569, gx->cpDisp, 1, 10, copyYScaleEnable);
-
     height = (u32)GET_REG_FIELD(gx->cpDispSize, 10, 10) + 1;
-    count = (height - 1) * 0x100;
-    realHt = (count / iScale) + 1;
-    iScaleD = iScale;
-
-    if (iScaleD > 0x80 && iScaleD < 0x100) {
-        while ((iScaleD & 1) == 0) {
-            iScaleD >>= 1;
-        }
-
-        if ((height % iScaleD) == 0) {
-            realHt++;
-        }
-    }
-
-    if (realHt > 0x400) {
-        realHt = 0x400;
-    }
-
-    return realHt;
+    return __GXGetNumXfbLines(height, iScale);
 }
 
 void GXSetCopyClear(GXColor clear_clr, u32 clear_z) {
