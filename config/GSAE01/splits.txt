@@ -1541,6 +1541,9 @@ dolphin/dsp/dsp_task.c:
 
 dolphin/si/SIBios.c:
 	.text       start:0x80252104 end:0x802537E4
+	.data       start:0x8032EE98 end:0x8032EF68
+	.bss        start:0x803AEE60 end:0x803AF060
+	.sbss       start:0x803DED00 end:0x803DED08
 
 dolphin/si/SISamplingRate.c:
 	.text       start:0x802537E4 end:0x802538EC

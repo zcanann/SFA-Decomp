@@ -290,8 +290,6 @@ BOOL SIUnregisterPollingHandler(__OSInterruptHandler handler) {
 }
 
 void SIInit(void) {
-    OSRegisterVersion(__SIVersion);
-
     Packet[0].chan = Packet[1].chan = Packet[2].chan = Packet[3].chan = -1;
     Si.poll = 0;
     SISetSamplingRate(0);
