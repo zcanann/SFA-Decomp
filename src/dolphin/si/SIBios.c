@@ -6,9 +6,7 @@
 #define ROUND(n, a) (((u32)(n) + (a)-1) & ~((a)-1))
 
 #ifdef DEBUG
-const char* __SIVersion = "<< Dolphin SDK - SI\tdebug build: Apr  5 2004 03:55:31 (0x2301) >>";
-#else
-const char* __SIVersion = "<< Dolphin SDK - SI\trelease build: Sep  5 2002 05:33:08 (0x2301) >>";
+static const char* __SIVersion = "<< Dolphin SDK - SI\tdebug build: Apr  5 2004 03:55:31 (0x2301) >>";
 #endif
 
 static SIControl Si = {
@@ -22,18 +20,6 @@ static SIControl Si = {
 static SIPacket Packet[4];
 static OSAlarm Alarm[4];
 static u32 Type[4] = { SI_ERROR_NO_RESPONSE, SI_ERROR_NO_RESPONSE, SI_ERROR_NO_RESPONSE, SI_ERROR_NO_RESPONSE };
-char SITypeStrings[] =
-    "No response\0"
-    "N64 controller\0\0"
-    "N64 microphone\0\0"
-    "N64 keyboard\0\0\0\0"
-    "N64 mouse\0\0\0"
-    "GameBoy Advance\0"
-    "Standard controller\0"
-    "Wireless receiver\0\0\0"
-    "WaveBird controller\0"
-    "Keyboard\0\0\0\0"
-    "Steering\0\0\0\0\0\0\0";
 static OSTime TypeTime[4];
 static OSTime XferTime[4];
 static SITypeCallback TypeCallback[4][4];
@@ -41,13 +27,6 @@ static __OSInterruptHandler RDSTHandler[4];
 static BOOL InputBufferValid[4];
 static u32 InputBuffer[4][2];
 static volatile u32 InputBufferVcount[4];
-typedef union FloatPair {
-    u64 align;
-    f32 values[2];
-} FloatPair;
-FloatPair Unit01 = { 0x000000003F800000ULL };
-
-u32 __PADFixBits;
 
 // prototypes
 static u32 CompleteTransfer();
@@ -290,7 +269,9 @@ BOOL SIUnregisterPollingHandler(__OSInterruptHandler handler) {
 }
 
 void SIInit(void) {
+#ifdef DEBUG
     OSRegisterVersion(__SIVersion);
+#endif
 
     Packet[0].chan = Packet[1].chan = Packet[2].chan = Packet[3].chan = -1;
     Si.poll = 0;
