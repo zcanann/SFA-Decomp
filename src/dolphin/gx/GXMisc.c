@@ -6,27 +6,39 @@
 
 #include "dolphin/gx/__gx.h"
 
+extern GXData* gx;
+#define __GXData gx
+
 static GXDrawSyncCallback TokenCB;
 static GXDrawDoneCallback DrawDoneCB;
 static u8 DrawDone;
 static OSThreadQueue FinishQueue;
-extern GXData* gx;
 
 void GXSetMisc(GXMiscToken token, u32 val) {
-    switch (token) {
-    case GX_MT_XF_FLUSH:
-        gx->vNum = val;
-        gx->vNumNot = !gx->vNum;
-        gx->bpSentNot = 1;
-
-        if (gx->vNum != 0) {
-            gx->dirtyState |= 8;
-        }
-        break;
-    case GX_MT_DL_SAVE_CONTEXT:
-        gx->dlSaveContext = (val != 0);
-        break;
+    if (token == GX_MT_XF_FLUSH) {
+        goto case1;
     }
+    if (token < GX_MT_XF_FLUSH) {
+        goto out;
+    }
+    if (token >= 3) {
+        goto out;
+    }
+    goto case2;
+
+case1:
+    gx->vNum = val;
+    gx->vNumNot = !gx->vNum;
+    gx->bpSentNot = 1;
+
+    if (gx->vNum != 0) {
+        gx->dirtyState |= 8;
+    }
+    goto out;
+
+case2:
+    gx->dlSaveContext = (val != 0);
+out:;
 }
 
 void GXFlush(void) {
