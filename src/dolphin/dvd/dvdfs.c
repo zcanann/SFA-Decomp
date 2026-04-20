@@ -14,6 +14,8 @@ extern FSTEntry* FstStart_803DEB6C;
 extern char* FstStringStart_803DEB70;
 extern u32 MaxEntryNum_803DEB74;
 extern u32 sDvdfsCurrentDirEntry;
+extern const char lbl_8032E488[];
+extern const char lbl_803DD1C8[];
 
 #define BootInfo BootInfo_803DEB68
 #define FstStart FstStart_803DEB6C
@@ -350,18 +352,21 @@ BOOL DVDPrepareStreamAsync(DVDFileInfo* fileInfo, u32 length, u32 offset, DVDCal
     u32 start;
 
     start = fileInfo->startAddr + offset;
-    DVD_ASSERTMSG2LINE(1186, !OFFSET(start, 32768),
-                       "DVDPrepareStreamAsync(): Specified start address (filestart(0x%x) + offset(0x%x)) is not 32KB aligned",
-                       fileInfo->startAddr, offset);
+    if (OFFSET(start, 32768)) {
+        OSPanic(lbl_803DD1C8, 1186, lbl_8032E488 + 0x1C8, fileInfo->startAddr, offset);
+    }
 
     if (length == 0) {
         length = fileInfo->length - offset;
     }
 
-    DVD_ASSERTMSG1LINE(1196, !OFFSET(length, 32768),
-                       "DVDPrepareStreamAsync(): Specified length (0x%x) is not a multiple of 32768(32*1024)", length);
-    DVD_ASSERTMSG2LINE(1204, (offset < fileInfo->length) && (offset + length <= fileInfo->length),
-                       "DVDPrepareStreamAsync(): The area specified (offset(0x%x), length(0x%x)) is out of the file", offset, length);
+    if (OFFSET(length, 32768)) {
+        OSPanic(lbl_803DD1C8, 1196, lbl_8032E488 + 0x230, length);
+    }
+
+    if (!(offset < fileInfo->length) || offset + length > fileInfo->length) {
+        OSPanic(lbl_803DD1C8, 1204, lbl_8032E488 + 0x288, offset, length);
+    }
 
     fileInfo->callback = callback;
     return DVDPrepareStreamAbsAsync(&fileInfo->cb, length, fileInfo->startAddr + offset, (DVDCBCallback)__DVDPrintFatalMessage);
