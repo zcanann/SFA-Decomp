@@ -33,9 +33,9 @@ extern BOOL __DBIsExceptionMarked(__OSException exception);
 #define OS_EXCEPTIONTABLE_ADDR 0x3000
 #define OS_DBJUMPPOINT_ADDR 0x60
 
-#define BUILD_DATE  "Mar 17 2003"
-#define DBUILD_TIME "04:20:41"
-#define RBUILD_TIME "04:20:41"
+#define BUILD_DATE  "Jun  5 2002"
+#define DBUILD_TIME "02:09:12"
+#define RBUILD_TIME "02:09:12"
 
 #ifdef DEBUG
 const char* __OSVersion = "<< Dolphin SDK - OS\tdebug build: "BUILD_DATE" "DBUILD_TIME" (0x2301) >>";
@@ -236,12 +236,6 @@ void OSInit(void) {
         __OSStartTime = __OSGetSystemTime();
         OSDisableInterrupts();
 
-        PPCMtmmcr0(0);
-        PPCMtmmcr1(0);
-        PPCMtpmc1(0);
-        PPCMtpmc2(0);
-        PPCMtpmc3(0);
-        PPCMtpmc4(0);
         PPCDisableSpeculation();
         PPCSetFpNonIEEEMode();
 
@@ -285,11 +279,18 @@ void OSInit(void) {
 
         PPCMthid2(PPCMfhid2() & ~0x40000000);
 
+        if (BootInfo->consoleType & 0x10000000) {
+            BootInfo->consoleType = 0x10000004;
+        } else {
+            BootInfo->consoleType = 1;
+        }
+        BootInfo->consoleType += __PIRegs[11] >> 28;
+
         if (!__OSInIPL) {
             __OSInitMemoryProtection();
         }
 
-        OSReport("\nDolphin OS\n");
+        OSReport("\nDolphin OS $Revision: 54 $.\n");
 #if DEBUG
         OSReport("Kernel built : %s %s\n", BUILD_DATE, DBUILD_TIME);
 #else
@@ -298,13 +299,8 @@ void OSInit(void) {
         OSReport("Console Type : ");
 
         consoleType = OSGetConsoleType();
-        switch (consoleType & 0xF0000000) {
-        case OS_CONSOLE_RETAIL:
-            OSReport("Retail %d\n", consoleType);
-            break;
-        case OS_CONSOLE_DEVELOPMENT:
-        case OS_CONSOLE_TDEV:
-            switch (consoleType & 0x0FFFFFFF) {
+        if (consoleType & 0x10000000) {
+            switch (consoleType) {
             case OS_CONSOLE_EMULATOR:
                 OSReport("Mac Emulator\n");
                 break;
@@ -318,14 +314,12 @@ void OSInit(void) {
                 OSReport("EPPC Minnow\n");
                 break;
             default:
-                OSReport("Development HW%d (%08x)\n", (consoleType & 0xFFFFFFF) - 3, consoleType);
+                OSReport("Development HW%d\n", consoleType - 0x10000003);
                 break;
             }
-            break;
-        default:
+        } else {
             OSReport(sOSConsoleTypeFmt, consoleType);
-            break;
-    }
+        }
 
         OSReport("Memory %d MB\n", (u32)BootInfo->memorySize >> 0x14U);
         OSReport("Arena : 0x%x - 0x%x\n", OSGetArenaLo(), OSGetArenaHi());
@@ -605,13 +599,6 @@ void __OSPSInit(void) {
     {
         li      r3, 0
         mtspr   GQR0, r3
-        mtspr   GQR1, r3
-        mtspr   GQR2, r3
-        mtspr   GQR3, r3
-        mtspr   GQR4, r3
-        mtspr   GQR5, r3
-        mtspr   GQR6, r3
-        mtspr   GQR7, r3
     }
 }
 #endif
@@ -620,6 +607,8 @@ u32 __OSGetDIConfig(void) {
     return (__DIRegs[9] & 0xFF);
 }
 
+#pragma dont_inline on
 void OSRegisterVersion(const char* id) {
     OSReport(sOSRegisterVersionFmt, id);
 }
+#pragma dont_inline reset

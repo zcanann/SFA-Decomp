@@ -1392,6 +1392,8 @@ dolphin/base/PPCArch.c:
 
 dolphin/os/OS.c:
 	.text       start:0x80240AD0 end:0x8024142C
+	.bss        start:0x803ADF80 end:0x803ADFD0
+	.sbss       start:0x803DEA58 end:0x803DEA88
 
 dolphin/os/OSAlarm.c:
 	.text       start:0x8024142C end:0x80241AD8
