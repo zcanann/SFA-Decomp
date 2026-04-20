@@ -5,6 +5,9 @@
 
 #include "dolphin/gx/__gx.h"
 
+extern GXData* gx;
+#define __GXData gx
+
 static __GXFifoObj* CPUFifo;
 static __GXFifoObj* GPFifo;
 
@@ -155,7 +158,7 @@ void GXSetCPUFifo(GXFifoObj* fifo) {
     BOOL enabled = OSDisableInterrupts();
 
     CPUFifo = realFifo;
-    if (CPUFifo == GPFifo) {
+    if (realFifo == GPFifo) {
         GX_SET_PI_REG(3, (u32)realFifo->base & 0x3FFFFFFF);
         GX_SET_PI_REG(4, (u32)realFifo->top & 0x3FFFFFFF);
         writePtr = (u32)realFifo->wrPtr & 0x3FFFFFE0;
@@ -180,7 +183,7 @@ void GXSetCPUFifo(GXFifoObj* fifo) {
         GX_SET_PI_REG(5, writePtr);
     }
 
-    PPCSync();
+    { asm { sync; } }
     OSRestoreInterrupts(enabled);
 }
 
@@ -210,7 +213,7 @@ void GXSetGPFifo(GXFifoObj* fifo) {
     GX_SET_CP_REG(21, (u32)realFifo->hiWatermark >> 16);
     GX_SET_CP_REG(23, (u32)realFifo->loWatermark >> 16);
 
-    PPCSync();
+    { asm { sync; } }
 
     if (CPUFifo == GPFifo) {
         CPGPLinked = GX_TRUE;
@@ -413,8 +416,6 @@ GXBreakPtCallback GXSetBreakPtCallback(GXBreakPtCallback cb) {
     return oldcb;
 }
 
-void* __GXCurrentBP;
-
 void GXEnableBreakPt(void* break_pt) {
     BOOL enabled = OSDisableInterrupts();
 
@@ -422,12 +423,12 @@ void GXEnableBreakPt(void* break_pt) {
     GX_SET_CP_REG(30, (u32)break_pt);
     GX_SET_CP_REG(31, ((u32)break_pt >> 16) & 0x3FFF);
 #if SDK_REVISION >= 2
-    SOME_SET_REG_MACRO(__GXData->cpEnable, 1, 1, 0);
-    SOME_SET_REG_MACRO(__GXData->cpEnable, 1, 5, 0);
+    SET_REG_FIELD(0, __GXData->cpEnable, 1, 1, 0);
+    SET_REG_FIELD(0, __GXData->cpEnable, 1, 5, 0);
     GX_SET_CP_REG(1, __GXData->cpEnable);
 #endif
-    SOME_SET_REG_MACRO(__GXData->cpEnable, 1, 1, 1);
-    SOME_SET_REG_MACRO(__GXData->cpEnable, 1, 5, 1);
+    SET_REG_FIELD(0, __GXData->cpEnable, 1, 1, 1);
+    SET_REG_FIELD(0, __GXData->cpEnable, 1, 5, 1);
     GX_SET_CP_REG(1, __GXData->cpEnable);
     __GXCurrentBP = break_pt;
     __GXFifoReadEnable();
@@ -437,8 +438,8 @@ void GXEnableBreakPt(void* break_pt) {
 void GXDisableBreakPt(void) {
     BOOL enabled = OSDisableInterrupts();
 
-    SOME_SET_REG_MACRO(__GXData->cpEnable, 1, 1, 0);
-    SOME_SET_REG_MACRO(__GXData->cpEnable, 1, 5, 0);
+    SET_REG_FIELD(0, __GXData->cpEnable, 1, 1, 0);
+    SET_REG_FIELD(0, __GXData->cpEnable, 1, 5, 0);
     GX_SET_CP_REG(1, __GXData->cpEnable);
     __GXCurrentBP = NULL;
     OSRestoreInterrupts(enabled);
@@ -463,7 +464,9 @@ static void __GXFifoReadEnable(void) {
 }
 
 static void __GXFifoReadDisable(void) {
-    __GXData->cpEnable &= ~1;
+    u32 reg = __GXData->cpEnable;
+    reg &= ~1;
+    __GXData->cpEnable = reg;
     GX_SET_CP_REG(1, __GXData->cpEnable);
 }
 
@@ -483,19 +486,15 @@ static void __GXFifoLink(u8 en) {
 }
 
 static void __GXWriteFifoIntEnable(u8 hiWatermarkEn, u8 loWatermarkEn) {
-    GXData* data = __GXData;
-
-    data->cpEnable = (data->cpEnable & ~4) | ((u32)(u8)hiWatermarkEn << 2);
-    data->cpEnable = (data->cpEnable & ~8) | ((u32)(u8)loWatermarkEn << 3);
-    GX_SET_CP_REG(1, data->cpEnable);
+    __GXData->cpEnable = (__GXData->cpEnable & ~4) | ((u32)(u8)hiWatermarkEn << 2);
+    __GXData->cpEnable = (__GXData->cpEnable & ~8) | ((u32)(u8)loWatermarkEn << 3);
+    GX_SET_CP_REG(1, __GXData->cpEnable);
 }
 
 static void __GXWriteFifoIntReset(u8 hiWatermarkClr, u8 loWatermarkClr) {
-    GXData* data = __GXData;
-
-    data->cpClr = (data->cpClr & ~1) | (u32)(u8)hiWatermarkClr;
-    data->cpClr = (data->cpClr & ~2) | ((u32)(u8)loWatermarkClr << 1);
-    GX_SET_CP_REG(2, data->cpClr);
+    __GXData->cpClr = (__GXData->cpClr & ~1) | (u32)(u8)hiWatermarkClr;
+    __GXData->cpClr = (__GXData->cpClr & ~2) | ((u32)(u8)loWatermarkClr << 1);
+    GX_SET_CP_REG(2, __GXData->cpClr);
 }
 
 void __GXInsaneWatermark(void) {
@@ -595,7 +594,7 @@ volatile void* GXRedirectWriteGatherPipe(void* ptr) {
     reg &= 0xFBFFFFFF;
     GX_SET_PI_REG(5, reg);
 
-    PPCSync();
+    { asm { sync; } }
     OSRestoreInterrupts(enabled);
     return (volatile void*)GXFIFO_ADDR;
 }
@@ -617,7 +616,7 @@ void GXRestoreWriteGatherPipe(void) {
         GXWGFifo.u8 = 0;
     }
 
-    PPCSync();
+    { asm { sync; } }
     while (PPCMfwpar() & 1) {}
     PPCMtwpar((u32)OSUncachedToPhysical((void*)GXFIFO_ADDR));
     GX_SET_PI_REG(3, (u32)CPUFifo->base & 0x3FFFFFFF);
@@ -631,6 +630,6 @@ void GXRestoreWriteGatherPipe(void) {
         __GXFifoLink(1);
     }
 
-    PPCSync();
+    { asm { sync; } }
     OSRestoreInterrupts(enabled);
 }

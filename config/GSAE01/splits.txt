@@ -1558,6 +1558,7 @@ dolphin/gx/GXInit.c:
 
 dolphin/gx/GXFifo.c:
 	.text       start:0x80256520 end:0x80256F84
+	.sbss       start:0x803DED38 end:0x803DED58
 
 dolphin/gx/GXAttr.c:
 	.text       start:0x80256F84 end:0x8025898C
