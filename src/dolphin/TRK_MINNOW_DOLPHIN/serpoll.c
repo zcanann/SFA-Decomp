@@ -52,7 +52,6 @@ MessageBufferID TRKTestForPacket(void) {
                         break;
                     }
 
-                    packetComplete = FALSE;
                     buffer = gTRKFramingState.buffer;
                     if (buffer->length < 2) {
                         TRKStandardACK(buffer, DSMSG_ReplyNAK, DSREPLY_PacketSizeError);
@@ -62,10 +61,11 @@ MessageBufferID TRKTestForPacket(void) {
                         }
                         gTRKFramingState.buffer = NULL;
                         gTRKFramingState.receiveState = DSRECV_Wait;
+                        packetComplete = FALSE;
                     } else {
-                        packetComplete = TRUE;
                         buffer->position = 0;
                         buffer->length--;
+                        packetComplete = TRUE;
                     }
 
                     if (packetComplete) {
