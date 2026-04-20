@@ -27,8 +27,8 @@ from dolphin_sdk_symbols import (
 
 
 BUILD_LINE_RE = re.compile(
-    r"^build build\\(?P<version>[^\\]+)\\src\\(?:dolphin\\)?base\\PPCArch\.o: \S+\s+"
-    r"src\\(?:dolphin\\)?base\\PPCArch\.c(?:\s+\|.*)?$"
+    r"^build build\\(?P<version>[^\\]+)\\src\\.+?\.o: \S+\s+"
+    r"(?P<source>src\\.+?\.c)(?:\s+\|.*)?$"
 )
 NAME_RE = re.compile(r"^\s+Name: (?P<name>.*?)(?: \(\d+\))?$")
 SIZE_RE = re.compile(r"^\s+Size: (?P<size>0x[0-9A-Fa-f]+|\d+)$")
@@ -175,7 +175,7 @@ class BoundaryConflict:
     symbol_end: int
 
 
-def parse_build_config(build_ninja: Path, version: str) -> BuildConfig:
+def load_build_ninja_lines(build_ninja: Path) -> tuple[list[str], list[tuple[int, str]]]:
     lines = build_ninja.read_text(encoding="utf-8").splitlines()
     logical_lines: list[tuple[int, str]] = []
     index = 0
@@ -188,35 +188,85 @@ def parse_build_config(build_ninja: Path, version: str) -> BuildConfig:
             index += 1
         logical_lines.append((start_index, line))
         index += 1
+    return lines, logical_lines
+
+
+def parse_rule_config(lines: list[str], start_index: int) -> BuildConfig | None:
+    mw_version = ""
+    cflags_parts: list[str] = []
+    cursor = start_index + 1
+    while cursor < len(lines) and lines[cursor].startswith("  "):
+        entry = lines[cursor]
+        if entry.startswith("  mw_version = "):
+            mw_version = entry.split("=", 1)[1].strip()
+        elif entry.startswith("  cflags = "):
+            value = entry.split("=", 1)[1].strip()
+            cflags_parts.append(value.removesuffix("$").strip())
+            cursor += 1
+            while cursor < len(lines) and lines[cursor].startswith("      "):
+                continuation = lines[cursor].strip()
+                cflags_parts.append(continuation.removesuffix("$").strip())
+                cursor += 1
+            continue
+        cursor += 1
+    if not mw_version or not cflags_parts:
+        return None
+    cflags = tuple(shlex.split(" ".join(cflags_parts), posix=True))
+    return BuildConfig(mw_version=mw_version, cflags=cflags)
+
+
+def candidate_source_keys(source: Path) -> tuple[str, ...]:
+    candidates: list[str] = []
+    seen: set[str] = set()
+
+    def add(path: Path) -> None:
+        normalized = str(path).replace("/", "\\").casefold()
+        if normalized in seen:
+            return
+        seen.add(normalized)
+        candidates.append(normalized)
+
+    try:
+        add(source.resolve().relative_to(Path.cwd().resolve()))
+    except ValueError:
+        pass
+
+    add(source)
+
+    parts = source.parts
+    if "src" in parts:
+        src_index = parts.index("src")
+        add(Path(*parts[src_index:]))
+
+    return tuple(candidates)
+
+
+def parse_build_config(build_ninja: Path, version: str) -> BuildConfig:
+    return resolve_build_config(build_ninja, version, Path("src/dolphin/base/PPCArch.c"))
+
+
+def resolve_build_config(build_ninja: Path, version: str, source: Path) -> BuildConfig:
+    lines, logical_lines = load_build_ninja_lines(build_ninja)
+    target_sources = set(candidate_source_keys(source))
+    fallback: BuildConfig | None = None
 
     for start_index, line in logical_lines:
         match = BUILD_LINE_RE.match(line)
         if match is None or match.group("version") != version:
             continue
 
-        mw_version = ""
-        cflags_parts: list[str] = []
-        cursor = start_index + 1
-        while cursor < len(lines) and lines[cursor].startswith("  "):
-            entry = lines[cursor]
-            if entry.startswith("  mw_version = "):
-                mw_version = entry.split("=", 1)[1].strip()
-            elif entry.startswith("  cflags = "):
-                value = entry.split("=", 1)[1].strip()
-                cflags_parts.append(value.removesuffix("$").strip())
-                cursor += 1
-                while cursor < len(lines) and lines[cursor].startswith("      "):
-                    continuation = lines[cursor].strip()
-                    cflags_parts.append(continuation.removesuffix("$").strip())
-                    cursor += 1
-                continue
-            cursor += 1
+        config = parse_rule_config(lines, start_index)
+        if config is None:
+            continue
 
-        if not mw_version or not cflags_parts:
-            break
-        cflags = tuple(shlex.split(" ".join(cflags_parts), posix=True))
-        return BuildConfig(mw_version=mw_version, cflags=cflags)
+        ninja_source = match.group("source").casefold()
+        if ninja_source.endswith(r"src\dolphin\base\ppcarch.c") and fallback is None:
+            fallback = config
+        if ninja_source in target_sources:
+            return config
 
+    if fallback is not None:
+        return fallback
     raise SystemExit(f"Unable to locate Dolphin C build flags for {version} in {build_ninja}")
 
 
@@ -1450,7 +1500,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    build_config = parse_build_config(Path(args.build_ninja), args.version)
+    build_ninja = Path(args.build_ninja)
     output_root = Path(args.output_root)
     config_symbols_path = Path("config") / args.version / "symbols.txt"
     extra_include_dirs = tuple(args.extra_include)
@@ -1469,6 +1519,7 @@ def main() -> None:
 
         object_dir = output_root / source.with_suffix("")
         try:
+            build_config = resolve_build_config(build_ninja, args.version, source)
             translated_clusters = build_translated_clusters(
                 version=args.version,
                 source=source,
