@@ -344,7 +344,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/os/OSRtc.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSStopwatch.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSSync.c"),
-            Object(NonMatching, "dolphin/os/OSThread.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/os/OSThread.c", extra_cflags=["-use_lmw_stmw", "on"]),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSTime.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/__ppc_eabi_init.c"),
         ],

@@ -53,10 +53,9 @@ struct OSThread {
     /* 0x2F0 */ OSMutex* mutex;     
     /* 0x2F4 */ OSMutexQueue queueMutex;              
     /* 0x2FC */ OSThreadLink linkActive;             
-    /* 0x304 */ u8* stackBase; 
-    /* 0x308 */ u32* stackEnd;  
+    /* 0x304 */ u8* stackBase;
+    /* 0x308 */ u32* stackEnd;
     /* 0x30C */ s32 error;
-    /* 0x310 */ void* specific[2];
 };
 
 enum OS_THREAD_STATE {
