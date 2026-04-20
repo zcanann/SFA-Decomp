@@ -234,7 +234,6 @@ void __DSP_exec_task(DSPTaskInfo* curr, DSPTaskInfo* next) {
 }
 
 void __DSP_boot_task(DSPTaskInfo* task) {
-    register const DSPTaskStrings* taskStrings = &sDSPTaskStrings;
     volatile u32 mail;
 
     ASSERTMSGLINE(634, task != NULL, "__DSP_boot_task(): NULL task!\n");
@@ -284,12 +283,12 @@ void __DSP_boot_task(DSPTaskInfo* task) {
     while (DSPCheckMailToDSP() != 0)
         ;
 
-    __DSP_debug_printf(taskStrings->bootingTask, (u32)task);
-    __DSP_debug_printf(taskStrings->iramMmemAddr, (u32)task->iram_mmem_addr);
-    __DSP_debug_printf(taskStrings->iramDspAddr, task->iram_addr);
-    __DSP_debug_printf(taskStrings->iramLength, task->iram_length);
-    __DSP_debug_printf(taskStrings->dramMmemAddr, task->dram_length);
-    __DSP_debug_printf(taskStrings->startVector, task->dsp_init_vector);
+    __DSP_debug_printf("DSP is booting task: 0x%08X\n", (u32)task);
+    __DSP_debug_printf("__DSP_boot_task()  : IRAM MMEM ADDR: 0x%08X\n", (u32)task->iram_mmem_addr);
+    __DSP_debug_printf("__DSP_boot_task()  : IRAM DSP ADDR : 0x%08X\n", task->iram_addr);
+    __DSP_debug_printf("__DSP_boot_task()  : IRAM LENGTH   : 0x%08X\n", task->iram_length);
+    __DSP_debug_printf("__DSP_boot_task()  : DRAM MMEM ADDR: 0x%08X\n", task->dram_length);
+    __DSP_debug_printf("__DSP_boot_task()  : Start Vector  : 0x%08X\n", task->dsp_init_vector);
 }
 
 void __DSP_add_task(DSPTaskInfo* task) {
