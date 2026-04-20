@@ -1602,6 +1602,7 @@ dolphin/gx/GXTransform.c:
 
 dolphin/gx/GXPerf.c:
 	.text       start:0x8025DC78 end:0x8025E5E4
+	.data       start:0x8032F728 end:0x8032F818
 
 dolphin/card/CARDBios.c:
 	.text       start:0x8025E5E4 end:0x8025F730

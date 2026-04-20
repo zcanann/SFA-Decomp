@@ -4,6 +4,9 @@
 
 #include "dolphin/gx/__gx.h"
 
+extern GXData* gx;
+#define __GXData gx
+
 void GXSetGPMetric(GXPerf0 perf0, GXPerf1 perf1) {
     u32 reg;
 
@@ -83,7 +86,7 @@ void GXSetGPMetric(GXPerf0 perf0, GXPerf1 perf1) {
     case GX_PERF1_VC_STREAMBUF_LOW:
     case GX_PERF1_VC_ALL_STALLS:
     case GX_PERF1_VERTICES:
-        __GXData->perfSel &= 0xFFFFFF0F;
+        __GXData->perfSel = __GXData->perfSel & 0xFFFFFF0F;
         GX_WRITE_SOME_REG4(8, 0x20, __GXData->perfSel, -12);
         break;
     case GX_PERF1_FIFO_REQ:
