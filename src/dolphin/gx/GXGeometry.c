@@ -62,21 +62,24 @@ void __GXSendFlushPrim(void) {
 void GXSetLineWidth(u8 width, GXTexOffset texOffsets) {
     SET_REG_FIELD(425, gx->lpSize, 8, 0, width);
     SET_REG_FIELD(426, gx->lpSize, 3, 16, texOffsets);
-    GX_WRITE_BP_REG(gx->lpSize);
+    GX_WRITE_U8(0x61);
+    GX_WRITE_U32(gx->lpSize);
     gx->bpSentNot = 0;
 }
 
 void GXSetPointSize(u8 pointSize, GXTexOffset texOffsets) {
     SET_REG_FIELD(469, gx->lpSize, 8, 8, pointSize);
     SET_REG_FIELD(470, gx->lpSize, 3, 19, texOffsets);
-    GX_WRITE_BP_REG(gx->lpSize);
+    GX_WRITE_U8(0x61);
+    GX_WRITE_U32(gx->lpSize);
     gx->bpSentNot = 0;
 }
 
 void GXEnableTexOffsets(GXTexCoordID coord, u8 line_enable, u8 point_enable) {
     SET_REG_FIELD(514, gx->suTs0[coord], 1, 18, line_enable);
     SET_REG_FIELD(515, gx->suTs0[coord], 1, 19, point_enable);
-    GX_WRITE_BP_REG(gx->suTs0[coord]);
+    GX_WRITE_U8(0x61);
+    GX_WRITE_U32(gx->suTs0[coord]);
     gx->bpSentNot = 0;
 }
 
@@ -101,11 +104,14 @@ void GXSetCullMode(GXCullMode mode) {
 
 void GXSetCoPlanar(GXBool enable) {
     SET_REG_FIELD(611, gx->genMode, 1, 19, enable);
-    GX_WRITE_BP_REG(0xFE080000);
-    GX_WRITE_BP_REG(gx->genMode);
+    GX_WRITE_U8(0x61);
+    GX_WRITE_U32(0xFE080000);
+    GX_WRITE_U8(0x61);
+    GX_WRITE_U32(gx->genMode);
 }
 
 void __GXSetGenMode(void) {
-    GX_WRITE_BP_REG(gx->genMode);
+    GX_WRITE_U8(0x61);
+    GX_WRITE_U32(gx->genMode);
     gx->bpSentNot = 0;
 }
