@@ -11,7 +11,7 @@
 
 #define EXCEPTIONMASK_ADDR 0x80000044
 
-static u32 gTRKDBAT3StartAddress;
+extern u32 lc_base;
 extern u32 _db_stack_addr;
 extern void* TRK_memcpy(void* dst, const void* src, unsigned int n);
 
@@ -101,7 +101,6 @@ asm void InitMetroTRK()
 	blr
 initCommTableSuccess:
 	b TRK_main //Jump to TRK_main
-	blr
 #endif // clang-format on
 }
 
@@ -193,14 +192,10 @@ void EnableMetroTRKInterrupts(void) { EnableEXI2Interrupts(); }
 
 u32 TRKTargetTranslate(u32 param_0)
 {
-	if (param_0 >= gTRKDBAT3StartAddress && param_0 < gTRKDBAT3StartAddress + 0x4000) {
+	if (param_0 >= lc_base && param_0 < lc_base + 0x4000) {
 		if ((gTRKCPUState.Extended1.DBAT3U & 3) != 0) {
 			return param_0;
 		}
-	}
-
-	if ((param_0 >= 0x7E000000) && (param_0 <= 0x80000000)) {
-		return param_0;
 	}
 
 	return param_0 & 0x3FFFFFFF | 0x80000000;
@@ -210,7 +205,7 @@ extern u8 gTRKInterruptVectorTable[];
 
 void __TRK_copy_vectors(void)
 {
-	u32 r3 = gTRKDBAT3StartAddress;
+	u32 r3 = lc_base;
 	u32* isrOffsetPtr;
 	int i;
 	u32 r29;
@@ -240,7 +235,7 @@ DSError TRKInitializeTarget()
 {
 	gTRKState.isStopped     = TRUE;
 	gTRKState.msr           = __TRK_get_MSR();
-	gTRKDBAT3StartAddress   = 0xE0000000;
+	lc_base   = 0xE0000000;
 	return DS_NoError;
 }
 
