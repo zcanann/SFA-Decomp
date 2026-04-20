@@ -114,7 +114,7 @@ s32 DVDConvertPathToEntrynum(const char* pathPtr) {
                 illegal = TRUE;
         
             if (illegal)
-                OSPanic(__FILE__, 379,
+                OSPanic(__FILE__, 376,
                     "DVDConvertEntrynumToPath(possibly DVDOpen or DVDChangeDir or DVDOpenDir): "
                     "specified directory or file (%s) doesn't match standard 8.3 format. This is a "
                     "temporary restriction and will be removed soon\n",
@@ -273,8 +273,8 @@ BOOL DVDReadAsyncPrio(DVDFileInfo* fileInfo, void* addr, s32 length, s32 offset,
     ASSERTMSGLINE(743, !(length & 0x1F), "DVDReadAsync(): length must be  multiple of 32 byte  ");
     ASSERTMSGLINE(745, !(offset & 3), "DVDReadAsync(): offset must be multiple of 4 byte  ");
 
-    DVD_ASSERTMSGLINE(742, (0 <= offset) && (offset < fileInfo->length), "DVDReadAsync(): specified area is out of the file  ");
-    DVD_ASSERTMSGLINE(748, (0 <= offset + length) && (offset + length < fileInfo->length + DVD_MIN_TRANSFER_SIZE), "DVDReadAsync(): specified area is out of the file  ");
+    DVD_ASSERTMSGLINE(739, (0 <= offset) && (offset < fileInfo->length), "DVDReadAsync(): specified area is out of the file  ");
+    DVD_ASSERTMSGLINE(745, (0 <= offset + length) && (offset + length < fileInfo->length + DVD_MIN_TRANSFER_SIZE), "DVDReadAsync(): specified area is out of the file  ");
 
     fileInfo->callback = callback;
     DVDReadAbsAsyncPrio(&fileInfo->cb, addr, length, (s32)(fileInfo->startAddr + offset), cbForReadAsync, prio);
