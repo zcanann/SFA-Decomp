@@ -1,6 +1,12 @@
 #include <dolphin.h>
 #include <dolphin/pad.h>
-#include "dolphin/fake_tgmath.h"
+#include <dolphin/si.h>
+
+#include "dolphin/si/__si.h"
+
+extern u32 XPatchBits;
+extern u32 AnalogMode;
+extern PADStatus Origin[4];
 
 typedef struct PADClampExtents {
     u8 minTrigger;
@@ -20,8 +26,7 @@ extern PADClampExtents lbl_803DD1E8;
 
 // prototypes
 static void ClampStick(s8* px, s8* py, s8 max, s8 xy, s8 min);
-static void ClampCircle(s8* px, s8* py, s8 radius, s8 min);
-static void ClampTrigger(u8* trigger, u8 min, u8 max);
+void ClampCircle_8024E354(s32 chan);
 
 static void ClampStick(s8* px, s8* py, s8 max, s8 xy, s8 min) {
     int x = *px;
@@ -78,50 +83,6 @@ static void ClampStick(s8* px, s8* py, s8 max, s8 xy, s8 min) {
     *py = (s8)(signY * y);
 }
 
-static void ClampCircle(s8* px, s8* py, s8 radius, s8 min) {
-    int x = *px;
-    int y = *py;
-    int squared;
-    int length;
-
-    if (-min < x && x < min) {
-        x = 0;
-    } else if (0 < x) {
-        x -= min;
-    } else {
-        x += min;
-    }
-
-    if (-min < y && y < min) {
-        y = 0;
-    } else if (0 < y) {
-        y -= min;
-    } else {
-        y += min;
-    }
-
-    squared = x * x + y * y;
-    if (radius * radius < squared) {
-        length = sqrtf(squared);
-        x = (x * radius) / length;
-        y = (y * radius) / length;
-    }
-
-    *px = x;
-    *py = y;
-}
-
-static void ClampTrigger(u8* trigger, u8 min, u8 max) {
-    if (*trigger <= min) {
-        *trigger = 0;
-    } else {
-        if (max < *trigger) {
-            *trigger = max;
-        }
-        *trigger -= min;
-    }
-}
-
 void PADClamp(PADStatus * status) {
     int i;
 
@@ -132,20 +93,65 @@ void PADClamp(PADStatus * status) {
                 &status->substickX, &status->substickY, lbl_803DD1E8.maxSubstick, lbl_803DD1E8.xySubstick,
                 lbl_803DD1E8.minSubstick
             );
-            ClampTrigger(&status->triggerLeft, lbl_803DD1E8.minTrigger, lbl_803DD1E8.maxTrigger);
-            ClampTrigger(&status->triggerRight, lbl_803DD1E8.minTrigger, lbl_803DD1E8.maxTrigger);
+            if (status->triggerLeft <= lbl_803DD1E8.minTrigger) {
+                status->triggerLeft = 0;
+            } else {
+                if (lbl_803DD1E8.maxTrigger < status->triggerLeft) {
+                    status->triggerLeft = lbl_803DD1E8.maxTrigger;
+                }
+                status->triggerLeft -= lbl_803DD1E8.minTrigger;
+            }
+            if (status->triggerRight <= lbl_803DD1E8.minTrigger) {
+                status->triggerRight = 0;
+            } else {
+                if (lbl_803DD1E8.maxTrigger < status->triggerRight) {
+                    status->triggerRight = lbl_803DD1E8.maxTrigger;
+                }
+                status->triggerRight -= lbl_803DD1E8.minTrigger;
+            }
         }
     }
 }
 
-void PADClampCircle(PADStatus* status) {
-    int i;
-    for (i = 0; i < 4; ++i, status++) {
-        if (status->err == PAD_ERR_NONE) {
-            ClampCircle(&status->stickX, &status->stickY, PAD_CLAMP_RAD_STICK, lbl_803DD1E8.minStick);
-            ClampCircle(&status->substickX, &status->substickY, PAD_CLAMP_RAD_SUBSTICK, lbl_803DD1E8.minSubstick);
-            ClampTrigger(&status->triggerLeft, lbl_803DD1E8.minTrigger, lbl_803DD1E8.maxTrigger);
-            ClampTrigger(&status->triggerRight, lbl_803DD1E8.minTrigger, lbl_803DD1E8.maxTrigger);
+void ClampCircle_8024E354(s32 chan) {
+    PADStatus* origin;
+    u32 chanBit = PAD_CHAN0_BIT >> chan;
+
+    origin = &Origin[chan];
+    switch (AnalogMode & 0x00000700u) {
+    case 0x00000000u:
+    case 0x00000500u:
+    case 0x00000600u:
+    case 0x00000700u:
+        origin->triggerLeft &= ~15;
+        origin->triggerRight &= ~15;
+        origin->analogA &= ~15;
+        origin->analogB &= ~15;
+        break;
+    case 0x00000100u:
+        origin->substickX &= ~15;
+        origin->substickY &= ~15;
+        origin->analogA &= ~15;
+        origin->analogB &= ~15;
+        break;
+    case 0x00000200u:
+        origin->substickX &= ~15;
+        origin->substickY &= ~15;
+        origin->triggerLeft &= ~15;
+        origin->triggerRight &= ~15;
+        break;
+    case 0x00000300u: break;
+    case 0x00000400u: break;
+    }
+
+    origin->stickX -= 128;
+    origin->stickY -= 128;
+    origin->substickX -= 128;
+    origin->substickY -= 128;
+
+    if (XPatchBits & chanBit) {
+        if (64 < origin->stickX && (SIGetType(chan) & 0xFFFF0000) == SI_GC_CONTROLLER) {
+            origin->stickX = 0;
         }
     }
 }
