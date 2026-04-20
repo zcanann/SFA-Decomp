@@ -432,6 +432,33 @@ def index_reference_sources(root: str = "reference_projects") -> tuple[tuple[str
     return tuple(indexed)
 
 
+@lru_cache(maxsize=1)
+def build_reference_source_indexes(
+    root: str = "reference_projects",
+) -> tuple[dict[str, tuple[tuple[str, str], ...]], dict[str, tuple[tuple[str, str], ...]]]:
+    suffix_index: dict[str, list[tuple[str, str]]] = {}
+    basename_index: dict[str, list[tuple[str, str]]] = {}
+
+    for repo, relative_path in index_reference_sources(root):
+        basename = Path(relative_path).name
+        basename_index.setdefault(basename, []).append((repo, relative_path))
+
+        parts = relative_path.split("/")
+        for start in range(len(parts)):
+            suffix = "/" + "/".join(parts[start:])
+            suffix_index.setdefault(suffix, []).append((repo, relative_path))
+
+    frozen_suffix_index = {
+        suffix: tuple(entries)
+        for suffix, entries in suffix_index.items()
+    }
+    frozen_basename_index = {
+        basename: tuple(entries)
+        for basename, entries in basename_index.items()
+    }
+    return frozen_suffix_index, frozen_basename_index
+
+
 def collect_reference_source_hints(
     source_path: Path,
     root: Path = Path("reference_projects"),
@@ -440,11 +467,23 @@ def collect_reference_source_hints(
     suffixes = tuple(f"/{candidate}" for candidate in normalize_split_name_candidates(split_name))
     basename = source_path.name
     hints: list[ReferenceSourceHint] = []
+    seen: set[tuple[str, str]] = set()
 
-    for repo, relative_path in index_reference_sources(str(root)):
-        if any(relative_path.endswith(suffix) for suffix in suffixes):
+    suffix_index, basename_index = build_reference_source_indexes(str(root))
+
+    for suffix in suffixes:
+        for repo, relative_path in suffix_index.get(suffix, ()):
+            key = (repo, relative_path)
+            if key in seen:
+                continue
+            seen.add(key)
             hints.append(ReferenceSourceHint(repo=repo, path=relative_path, match_kind="suffix"))
-        elif relative_path.endswith(f"/{basename}"):
+
+    for repo, relative_path in basename_index.get(basename, ()):
+        key = (repo, relative_path)
+        if key in seen:
+            continue
+        if relative_path.endswith(f"/{basename}"):
             hints.append(ReferenceSourceHint(repo=repo, path=relative_path, match_kind="basename"))
 
     hints.sort(key=lambda hint: (hint.match_kind != "suffix", hint.repo, hint.path))
