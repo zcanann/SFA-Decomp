@@ -19,11 +19,11 @@ typedef struct TRKExceptionStatus {
 } TRKExceptionStatus;
 
 typedef struct TRKStepStatus {
-	BOOL active;               // 0x0
-	DSMessageStepOptions type; // 0x4
-	u32 count;                 // 0x8
-	u32 rangeStart;            // 0xC
-	u32 rangeEnd;              // 0x10
+	BOOL active;   // 0x0
+	u8 type;       // 0x4
+	u32 count;     // 0x8
+	u32 rangeStart;// 0xC
+	u32 rangeEnd;  // 0x10
 } TRKStepStatus;
 
 ProcessorRestoreFlags_PPC gTRKRestoreFlags = { FALSE, FALSE };
@@ -129,8 +129,8 @@ DSError TRKValidMemory32(const void* addr, size_t length, ValidMemoryOptions rea
 			** after the valid range.
 			*/
 
-			if (((readWriteable == VALIDMEM_Readable) && !gTRKMemMap[i].readable)
-			    || ((readWriteable == VALIDMEM_Writeable) && !gTRKMemMap[i].writeable)) {
+			if ((((u8)readWriteable == VALIDMEM_Readable) && !gTRKMemMap[i].readable)
+			    || (((u8)readWriteable == VALIDMEM_Writeable) && !gTRKMemMap[i].writeable)) {
 				err = DS_InvalidMemory;
 			} else {
 				err = DS_NoError;
@@ -428,13 +428,37 @@ DSError TRKTargetVersions(DSVersions* versions)
  */
 DSError TRKTargetSupportMask(u8 mask[32])
 {
-	memset(mask, 0, 32);
 	mask[0]  = 0x7A;
+	mask[1]  = 0;
 	mask[2]  = 0x4F;
 	mask[3]  = 0x07;
+	mask[4]  = 0;
+	mask[5]  = 0;
+	mask[6]  = 0;
+	mask[7]  = 0;
+	mask[8]  = 0;
+	mask[9]  = 0;
+	mask[10] = 0;
+	mask[11] = 0;
+	mask[12] = 0;
+	mask[13] = 0;
+	mask[14] = 0;
+	mask[15] = 0;
 	mask[16] = 0x01;
+	mask[17] = 0;
 	mask[18] = 0x03;
+	mask[19] = 0;
+	mask[20] = 0;
+	mask[21] = 0;
+	mask[22] = 0;
+	mask[23] = 0;
+	mask[24] = 0;
+	mask[25] = 0;
 	mask[26] = 0x03;
+	mask[27] = 0;
+	mask[28] = 0;
+	mask[29] = 0;
+	mask[30] = 0;
 	mask[31] = 0x80;
 	return DS_NoError;
 }
@@ -533,8 +557,8 @@ u32* ConvertAddress(u32 addr)
 DSError TRKTargetAddStopInfo(MessageBuffer* b)
 {
 	DSError error;
-	size_t instructionLength;
 	u32 instruction;
+	size_t instructionLength;
 	s32 i;
 
 	error = TRKAppendBuffer1_ui32(b, gTRKCPUState.Default.PC);
@@ -558,21 +582,11 @@ DSError TRKTargetAddStopInfo(MessageBuffer* b)
 
 	if (error == DS_NoError) {
 		for (i = 0; i < ARRAY_COUNT(gTRKCPUState.Default.GPR); i++) {
-			error = TRKAppendBuffer1_ui32(b, gTRKCPUState.Default.GPR[i]);
-
-			if (error != DS_NoError) {
-				break;
-			}
+			TRKAppendBuffer1_ui16(b, gTRKCPUState.Default.GPR[i]);
 		}
-	}
 
-	if (error == DS_NoError) {
 		for (i = 0; i < ARRAY_COUNT(gTRKCPUState.Float.FPR); i++) {
-			error = TRKAppendBuffer1_ui64(b, gTRKCPUState.Float.FPR[i]);
-
-			if (error != DS_NoError) {
-				break;
-			}
+			error = TRKAppendBuffer1_ui64(b, (u16)gTRKCPUState.Float.FPR[i]);
 		}
 	}
 
@@ -586,8 +600,8 @@ DSError TRKTargetAddStopInfo(MessageBuffer* b)
 DSError TRKTargetAddExceptionInfo(MessageBuffer* b)
 {
 	DSError error;
-	size_t instructionLength;
 	u32 instruction;
+	size_t instructionLength;
 
 	error = TRKAppendBuffer1_ui32(b, gTRKExceptionStatus.exceptionInfo.PC);
 
@@ -657,10 +671,9 @@ BOOL TRKTargetStepDone()
  * @note Address: TODO
  * @note Size: TODO
  */
-inline DSError TRKTargetDoStep()
+inline DSError TRKTargetDoStep(void)
 {
 	gTRKStepStatus.active = TRUE;
-	MWTRACE(1, "TargetDoStep()\n");
 	TRKTargetEnableTrace(TRUE);
 
 	if (gTRKStepStatus.type == DSSTEP_IntoCount || gTRKStepStatus.type == DSSTEP_OverCount) {
@@ -701,8 +714,8 @@ DSError TRKTargetSingleStep(u32 count, BOOL stepOver)
 	if (stepOver) {
 		error = DS_UnsupportedError;
 	} else {
-		gTRKStepStatus.count = count;
 		gTRKStepStatus.type  = DSSTEP_IntoCount;
+		gTRKStepStatus.count = count;
 		error                = TRKTargetDoStep();
 	}
 
@@ -747,9 +760,9 @@ u32 TRKTargetGetPC(void)
 
 DSError TRKTargetSupportRequest()
 {
-	DSIOResult ioResult;
+	u8 ioResult;
 	size_t* length;
-	MessageCommandID commandId;
+	u8 commandId;
 	DSError error;
 	TRKEvent event;
 
@@ -761,7 +774,7 @@ DSError TRKTargetSupportRequest()
 		return DS_NoError;
 	} else if (commandId == DSMSG_OpenFile) {
 		error = HandleOpenFileSupportRequest(gTRKCPUState.Default.GPR[4], gTRKCPUState.Default.GPR[5] & 0xff, gTRKCPUState.Default.GPR[6],
-		                                     &ioResult);
+		                                     (DSIOResult*)&ioResult);
 
 		if (ioResult == DS_IONoError && error != DS_NoError) {
 			ioResult = DS_IOError;
@@ -769,7 +782,7 @@ DSError TRKTargetSupportRequest()
 
 		gTRKCPUState.Default.GPR[3] = ioResult;
 	} else if (commandId == DSMSG_CloseFile) {
-		error = HandleCloseFileSupportRequest(gTRKCPUState.Default.GPR[4], &ioResult);
+		error = HandleCloseFileSupportRequest(gTRKCPUState.Default.GPR[4], (DSIOResult*)&ioResult);
 
 		if (ioResult == DS_IONoError && error != DS_NoError) {
 			ioResult = DS_IOError;
@@ -778,7 +791,7 @@ DSError TRKTargetSupportRequest()
 		gTRKCPUState.Default.GPR[3] = ioResult;
 	} else if (commandId == DSMSG_PositionFile) {
 		error = HandlePositionFileSupportRequest(gTRKCPUState.Default.GPR[4], gTRKCPUState.Default.GPR[5],
-		                                         (u8)gTRKCPUState.Default.GPR[6], &ioResult);
+		                                         (u8)gTRKCPUState.Default.GPR[6], (DSIOResult*)&ioResult);
 
 		if (ioResult == DS_IONoError && error != DS_NoError) {
 			ioResult = DS_IOError;
@@ -787,7 +800,7 @@ DSError TRKTargetSupportRequest()
 		gTRKCPUState.Default.GPR[3] = ioResult;
 	} else {
 		length = (size_t*)gTRKCPUState.Default.GPR[5];
-		error  = TRKSuppAccessFile(gTRKCPUState.Default.GPR[4], (u8*)gTRKCPUState.Default.GPR[6], length, &ioResult, TRUE,
+		error  = TRKSuppAccessFile((u8)gTRKCPUState.Default.GPR[4], (u8*)gTRKCPUState.Default.GPR[6], length, (DSIOResult*)&ioResult, TRUE,
 		                           commandId == DSMSG_ReadFile);
 
 		if (ioResult == DS_IONoError && error != DS_NoError) {
@@ -925,12 +938,6 @@ DSError TRKPPCAccessFPRegister(void* srcDestPtr, u32 fpr, BOOL read)
 
 		error = TRKPPCAccessSpecialReg(srcDestPtr, instructionData1, read);
 	} else if (fpr == 0x20) {
-		if (read) {
-			ReadFPSCR(srcDestPtr);
-		} else {
-			WriteFPSCR(srcDestPtr);
-		}
-
 		*(u64*)srcDestPtr &= 0xFFFFFFFF;
 	} else if (fpr == 0x21) {
 		if (!read) {
