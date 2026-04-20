@@ -121,6 +121,7 @@ class ObjectSymbolShape:
     exported_data_symbol_sizes: dict[str, dict[str, int]]
     local_data_symbols: dict[str, list[str]]
     local_data_symbol_sizes: dict[str, dict[str, int]]
+    data_symbol_records: dict[str, list["DataSymbolRecord"]]
     undefined_symbols: list[str]
     section_sizes: dict[str, int]
 
@@ -130,6 +131,15 @@ class ObjectLinkHints:
     current: ObjectSymbolShape
     target: ObjectSymbolShape | None
     owner_hints: list[str]
+
+
+@dataclass(frozen=True)
+class DataSymbolRecord:
+    name: str
+    section: str
+    value: int
+    size: int
+    bind: str
 
 
 @dataclass
@@ -548,6 +558,7 @@ def inspect_object_symbols(object_path: Path) -> ObjectSymbolShape | str:
     exported_data_symbol_sizes: dict[str, dict[str, int]] = {}
     local_data_symbols: dict[str, list[str]] = {}
     local_data_symbol_sizes: dict[str, dict[str, int]] = {}
+    data_symbol_records: dict[str, list[DataSymbolRecord]] = {}
     defined_text_symbols: list[str] = []
     undefined_symbols: list[str] = []
     section_sizes: dict[str, int] = {}
@@ -576,14 +587,24 @@ def inspect_object_symbols(object_path: Path) -> ObjectSymbolShape | str:
     for line in objdump_result.stdout.splitlines():
         parts = line.split()
         if len(parts) == 6:
-            _, bind, symbol_kind, section, size_text, name = parts
+            value_text, bind, symbol_kind, section, size_text, name = parts
         elif len(parts) == 7 and parts[5] == ".hidden":
-            _, bind, symbol_kind, section, size_text, _, name = parts
+            value_text, bind, symbol_kind, section, size_text, _, name = parts
         else:
             continue
         if symbol_kind != "O" or section not in data_sections:
             continue
+        value = int(value_text, 16)
         size = int(size_text, 16)
+        data_symbol_records.setdefault(section, []).append(
+            DataSymbolRecord(
+                name=name,
+                section=section,
+                value=value,
+                size=size,
+                bind=bind,
+            )
+        )
         if bind == "g":
             exported_data_symbols.setdefault(section, []).append(name)
             exported_data_symbol_sizes.setdefault(section, {})[name] = size
@@ -597,6 +618,7 @@ def inspect_object_symbols(object_path: Path) -> ObjectSymbolShape | str:
         exported_data_symbol_sizes=exported_data_symbol_sizes,
         local_data_symbols=local_data_symbols,
         local_data_symbol_sizes=local_data_symbol_sizes,
+        data_symbol_records=data_symbol_records,
         undefined_symbols=undefined_symbols,
         section_sizes=section_sizes,
     )
@@ -861,6 +883,32 @@ def is_anonymous_local_symbol(name: str) -> bool:
     return name.startswith("@")
 
 
+def describe_padding_owner(
+    shape: ObjectSymbolShape,
+    section: str,
+    gap_names: list[str],
+) -> str | None:
+    records = shape.data_symbol_records.get(section, [])
+    if not records:
+        return None
+
+    gap_name_set = set(gap_names)
+    gap_records = [record for record in records if record.name in gap_name_set]
+    if not gap_records:
+        return None
+
+    gap_start = min(record.value for record in gap_records)
+    owner_candidates = [
+        record
+        for record in records
+        if not record.name.startswith("gap_") and record.value + record.size <= gap_start
+    ]
+    if owner_candidates:
+        owner = max(owner_candidates, key=lambda record: (record.value + record.size, record.value))
+        return owner.name
+    return f"+0x{gap_start:X}"
+
+
 def padding_only_section_deltas(
     current: ObjectSymbolShape,
     target: ObjectSymbolShape,
@@ -910,7 +958,11 @@ def padding_only_section_deltas(
         if expected_delta != actual_delta:
             continue
 
-        padding_sections.append(f"{section} +0x{actual_delta:X}")
+        padding_entry = f"{section} +0x{actual_delta:X}"
+        owner_name = describe_padding_owner(target, section, target_gap_names)
+        if owner_name is not None:
+            padding_entry += f" after {owner_name}"
+        padding_sections.append(padding_entry)
 
     return padding_sections
 
