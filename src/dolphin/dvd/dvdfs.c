@@ -21,6 +21,7 @@ static u32 myStrncpy(char* dest, char* src, u32 maxlen);
 static u32 entryToPath(u32 entry, char* path, u32 maxlen);
 static BOOL DVDConvertEntrynumToPath(s32 entrynum, char* path, u32 maxlen);
 static void cbForReadAsync(s32 result, DVDCommandBlock* block);
+static void cbForReadSync(s32 result, DVDCommandBlock* block);
 
 void __DVDFSInit(void) {
     BootInfo = (void*)OSPhysicalToCached(0);
@@ -293,4 +294,70 @@ static void cbForReadAsync(s32 result, DVDCommandBlock* block) {
     if (fileInfo->callback) {
         fileInfo->callback(result, fileInfo);
     }
+}
+
+s32 DVDReadPrio(DVDFileInfo* fileInfo, void* addr, s32 length, s32 offset, s32 prio) {
+    BOOL result;
+    DVDCommandBlock* block;
+    s32 state;
+    BOOL enabled;
+    s32 retVal;
+
+    DVD_ASSERTMSGLINE(809, (0 <= offset) && (offset < fileInfo->length), "DVDRead(): specified area is out of the file  ");
+    DVD_ASSERTMSGLINE(815, (0 <= offset + length) && (offset + length < fileInfo->length + DVD_MIN_TRANSFER_SIZE),
+                      "DVDRead(): specified area is out of the file  ");
+
+    block = &fileInfo->cb;
+    result = DVDReadAbsAsyncPrio(block, addr, length, (s32)(fileInfo->startAddr + offset), cbForReadSync, prio);
+    if (result == FALSE) {
+        return -1;
+    }
+
+    enabled = OSDisableInterrupts();
+    while (TRUE) {
+        state = ((volatile DVDCommandBlock*)block)->state;
+        if (state == DVD_STATE_END) {
+            retVal = (s32)block->transferredSize;
+            break;
+        }
+        if (state == DVD_STATE_FATAL_ERROR) {
+            retVal = DVD_RESULT_FATAL_ERROR;
+            break;
+        }
+        if (state == DVD_STATE_CANCELED) {
+            retVal = -3;
+            break;
+        }
+        OSSleepThread(&__DVDThreadQueue);
+    }
+
+    OSRestoreInterrupts(enabled);
+    return retVal;
+}
+
+static void cbForReadSync(s32 result, DVDCommandBlock* block) {
+    (void)result;
+    (void)block;
+    OSWakeupThread(&__DVDThreadQueue);
+}
+
+BOOL DVDPrepareStreamAsync(DVDFileInfo* fileInfo, u32 length, u32 offset, DVDCallback callback) {
+    u32 start;
+
+    start = fileInfo->startAddr + offset;
+    DVD_ASSERTMSG2LINE(1186, !OFFSET(start, 32768),
+                       "DVDPrepareStreamAsync(): Specified start address (filestart(0x%x) + offset(0x%x)) is not 32KB aligned",
+                       fileInfo->startAddr, offset);
+
+    if (length == 0) {
+        length = fileInfo->length - offset;
+    }
+
+    DVD_ASSERTMSG1LINE(1196, !OFFSET(length, 32768),
+                       "DVDPrepareStreamAsync(): Specified length (0x%x) is not a multiple of 32768(32*1024)", length);
+    DVD_ASSERTMSG2LINE(1204, (offset < fileInfo->length) && (offset + length <= fileInfo->length),
+                       "DVDPrepareStreamAsync(): The area specified (offset(0x%x), length(0x%x)) is out of the file", offset, length);
+
+    fileInfo->callback = callback;
+    return DVDPrepareStreamAbsAsync(&fileInfo->cb, length, fileInfo->startAddr + offset, (DVDCBCallback)__DVDPrintFatalMessage);
 }
