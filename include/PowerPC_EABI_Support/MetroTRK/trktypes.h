@@ -57,7 +57,7 @@ typedef struct TRKPacketSeq {
 typedef struct TRKFramingState {
 	MessageBufferID msgBufID;
 	MessageBuffer* buffer;
-	ReceiverState receiveState;
+	u8 receiveState;
 	BOOL isEscape;
 	u8 fcsType;
 } TRKFramingState;
