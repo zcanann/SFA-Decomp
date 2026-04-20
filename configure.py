@@ -618,7 +618,7 @@ config.libs = [
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/alloc.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/ansi_fp.c"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/buffer_io.c"),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/buffer_io.c", mw_version="GC/1.3"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/direct_io.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/file_io.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/FILE_POS.c"),
