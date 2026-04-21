@@ -4,21 +4,15 @@
 
 #include "dolphin/os/__os.h"
 
-int vprintf(const char* format, va_list arg);
+int vsprintf(const char* format, va_list arg);
 extern void DBPrintf(char*, ...);
-extern volatile OSContext* __OSFPUContext;
+extern volatile OSContext* __OSFPUContext AT_ADDRESS(OS_BASE_CACHED | 0x00D8);
 void OSSwitchFPUContext(__OSException exception, OSContext* context);
 
 OSErrorHandler __OSErrorTable[17];
 
 #define FPSCR_ENABLE (FPSCR_VE | FPSCR_OE | FPSCR_UE | FPSCR_ZE | FPSCR_XE)
 u32 __OSFpscrEnableBits = FPSCR_ENABLE;
-
-void __OSContextInit(void) {
-    __OSSetExceptionHandler(__OS_EXCEPTION_FLOATING_POINT, OSSwitchFPUContext);
-    __OSFPUContext = NULL;
-    DBPrintf("FPU-unavailable handler installed\n");
-}
 
 void OSPanic(const char* file, int line, const char* msg, ...) {
     va_list marker;
@@ -27,7 +21,7 @@ void OSPanic(const char* file, int line, const char* msg, ...) {
 
     OSDisableInterrupts();
     va_start(marker, msg);
-    vprintf(msg, marker);
+    vsprintf(msg, marker);
     va_end(marker);
     OSReport(" in \"%s\" on line %d.\n", file, line);
 
@@ -104,4 +98,10 @@ void __OSUnhandledException(__OSException exception, OSContext* context, u32 dsi
     OSReport("\nLast interrupt (%d): SRR0 = 0x%08x  TB = 0x%016llx\n", __OSLastInterrupt,
              __OSLastInterruptSrr0, __OSLastInterruptTime);
     PPCHalt();
+}
+
+void __OSContextInit(void) {
+    __OSSetExceptionHandler(__OS_EXCEPTION_FLOATING_POINT, OSSwitchFPUContext);
+    __OSFPUContext = NULL;
+    DBPrintf("FPU-unavailable handler installed\n");
 }

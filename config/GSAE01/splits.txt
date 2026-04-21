@@ -1517,6 +1517,8 @@ dolphin/dvd/dvdlow.c:
 
 dolphin/dvd/dvdfs.c:
 	.text       start:0x80248FD4 end:0x80249928
+	.data       start:0x8032E488 end:0x8032E9D8
+	.sdata      start:0x803DD1C8 end:0x803DD1D0
 
 dolphin/dvd/dvdFatal.c:
 	.text       start:0x80249928 end:0x80249958
@@ -1987,6 +1989,7 @@ dolphin/TRK_MINNOW_DOLPHIN/main_TRK.c:
 dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk_glue.c:
 	.text       start:0x8028D5EC end:0x8028DA78
 	.data       start:0x80332FC0 end:0x80332FE0
+	.bss        start:0x803D94E8 end:0x803DB710
 
 dolphin/TRK_MINNOW_DOLPHIN/targcont.c:
 	.text       start:0x8028DA78 end:0x8028DAAC

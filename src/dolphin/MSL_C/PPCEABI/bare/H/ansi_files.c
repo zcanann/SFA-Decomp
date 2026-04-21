@@ -162,8 +162,6 @@ void __close_all() {
     FILE* file = &__files[0];
     FILE* last_file;
 
-    __begin_critical_region(2);
-
     while (file != NULL) {
         if (file->file_mode.file_kind != __closed_file) {
             fclose(file);
@@ -182,7 +180,6 @@ void __close_all() {
         }
     }
 
-    __end_critical_region(2);
 }
 
 unsigned int __flush_all() {

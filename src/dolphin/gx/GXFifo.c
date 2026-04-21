@@ -8,28 +8,18 @@
 extern GXData* gx;
 #define __GXData gx
 
-extern __GXFifoObj* lbl_803DED38;
-extern __GXFifoObj* lbl_803DED3C;
-extern OSThread* lbl_803DED40;
-extern GXBool lbl_803DED44;
-extern BOOL lbl_803DED48;
-extern GXBreakPtCallback lbl_803DED4C;
-extern u32 lbl_803DED50;
-extern void* lbl_803DED54;
-
-#define CPUFifo lbl_803DED38
-#define GPFifo lbl_803DED3C
-#define __GXCurrentThread lbl_803DED40
-#define CPGPLinked lbl_803DED44
-#define GXOverflowSuspendInProgress lbl_803DED48
-#define BreakPointCB lbl_803DED4C
-#define __GXOverflowCount lbl_803DED50
+extern __GXFifoObj* CPUFifo;
+extern __GXFifoObj* GPFifo;
+extern OSThread* __GXCurrentThread;
+extern GXBool CPGPLinked;
+extern BOOL GXOverflowSuspendInProgress;
+extern GXBreakPtCallback BreakPointCB;
+extern u32 __GXOverflowCount;
+extern void* __GXCurrentBP;
 
 #if DEBUG
 static BOOL IsWGPipeRedirected;
 #endif
-
-#define __GXCurrentBP lbl_803DED54
 
 static void __GXFifoReadEnable(void);
 static void __GXFifoReadDisable(void);
@@ -159,14 +149,13 @@ void GXInitFifoLimits(GXFifoObj* fifo, u32 hiWatermark, u32 loWatermark) {
 
 #define GX_SET_PI_REG(offset, val) (*(volatile u32*)((volatile u32*)(__piReg) + (offset)) = val)
 
-// NONMATCHING DEBUG
 void GXSetCPUFifo(GXFifoObj* fifo) {
     __GXFifoObj* realFifo = (__GXFifoObj*)fifo;
-    u32 writePtr;
     BOOL enabled = OSDisableInterrupts();
 
     CPUFifo = realFifo;
     if (realFifo == GPFifo) {
+        u32 writePtr;
         GX_SET_PI_REG(3, (u32)realFifo->base & 0x3FFFFFFF);
         GX_SET_PI_REG(4, (u32)realFifo->top & 0x3FFFFFFF);
         writePtr = (u32)realFifo->wrPtr & 0x3FFFFFE0;
@@ -178,6 +167,8 @@ void GXSetCPUFifo(GXFifoObj* fifo) {
         __GXWriteFifoIntEnable(1, 0);
         __GXFifoLink(1);
     } else {
+        u32 wp;
+
         if (CPGPLinked) {
             __GXFifoLink(0);
             CPGPLinked = GX_FALSE;
@@ -186,9 +177,9 @@ void GXSetCPUFifo(GXFifoObj* fifo) {
         __GXWriteFifoIntEnable(0, 0);
         GX_SET_PI_REG(3, (u32)realFifo->base & 0x3FFFFFFF);
         GX_SET_PI_REG(4, (u32)realFifo->top & 0x3FFFFFFF);
-        writePtr = (u32)realFifo->wrPtr & 0x3FFFFFE0;
-        writePtr &= 0xFBFFFFFF;
-        GX_SET_PI_REG(5, writePtr);
+        wp = (u32)realFifo->wrPtr & 0x3FFFFFE0;
+        wp &= 0xFBFFFFFF;
+        GX_SET_PI_REG(5, wp);
     }
 
     { asm { sync; } }
@@ -518,10 +509,12 @@ void __GXCleanGPFifo(void) {
     GXFifoObj* gpFifo;
     GXFifoObj* cpuFifo;
     void* base;
+    u32 _pad[3];
 
     gpFifo = GXGetGPFifo();
     cpuFifo = GXGetCPUFifo();
     base = ((__GXFifoObj*)gpFifo)->base;
+    (void)_pad;
 
     dummyFifo = *gpFifo;
     GXInitFifoPtrs(&dummyFifo, base, base);

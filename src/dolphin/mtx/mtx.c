@@ -1,6 +1,9 @@
 #include "dolphin/mtx.h"
 
-static f32 Unit01[] = { 0.0f, 1.0f };
+static f32 lbl_803DD1B8[] = { 0.0f, 1.0f };
+
+extern const f32 lbl_803E82B0;
+extern const f32 lbl_803E82B4;
 
 extern f32 sinf(f32);
 extern f32 cosf(f32);
@@ -22,8 +25,8 @@ void C_MTXIdentity(Mtx mtx)
 #ifdef GEKKO
 void PSMTXIdentity(register Mtx m)
 {
-    register f32 zero_c = 0.0f;
-    register f32 one_c = 1.0f;
+    register f32 zero_c = lbl_803E82B4;
+    register f32 one_c = lbl_803E82B0;
     register f32 c_01;
     register f32 c_10;
     // clang-format off
@@ -148,10 +151,10 @@ asm void PSMTXConcat(const register Mtx mA, const register Mtx mB, register Mtx 
     psq_l   FP0, 0(mA), 0, 0;
     stfd    fp14, 8(r1);
     psq_l   FP6, 0(mB), 0, 0;
-    addis   r6, 0, Unit01@ha;
+    addis   r6, 0, lbl_803DD1B8@ha;
     psq_l   FP7, 8(mB), 0, 0;
     stfd    fp15, 16(r1)
-    addi    r6, r6, Unit01@l;
+    addi    r6, r6, lbl_803DD1B8@l;
     stfd    fp31, 40(r1)
     psq_l   FP8, 16(mB), 0, 0
     ps_muls0 FP12, FP6, FP0
@@ -245,7 +248,7 @@ void PSMTXConcatArray(const register Mtx a, const register Mtx *srcBase, registe
     register f32 vb0, vb1, vb2, vb3, vb4, vb5;
     register f32 vd0, vd1, vd2, vd3, vd4, vd5;
     register f32 u01;
-    register f32 *u01Ptr = Unit01;
+    register f32 *u01Ptr = lbl_803DD1B8;
 
     // clang-format off
   asm
@@ -949,8 +952,8 @@ void C_MTXTrans(Mtx m, f32 xT, f32 yT, f32 zT)
 #ifdef GEKKO
 void PSMTXTrans(register Mtx m, register f32 xT, register f32 yT, register f32 zT)
 {
-    register f32 c0 = 0.0F;
-    register f32 c1 = 1.0F;
+    register f32 c0 = lbl_803E82B4;
+    register f32 c1 = lbl_803E82B0;
     // clang-format off
   asm
   {
@@ -1035,7 +1038,7 @@ void C_MTXScale(Mtx m, f32 xS, f32 yS, f32 zS)
 #ifdef GEKKO
 void PSMTXScale(register Mtx m, register f32 xS, register f32 yS, register f32 zS)
 {
-    register f32 c0 = 0.0F;
+    register f32 c0 = lbl_803E82B4;
     // clang-format off
   asm
   {

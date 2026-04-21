@@ -39,13 +39,7 @@ inline fpos_t _ftell(FILE* file) {
 }
 
 long ftell(FILE* file) {
-    long retval;
-
-    __begin_critical_region(2);
-    retval = (long)_ftell(file);
-    __end_critical_region(2);
-
-    return retval;
+    return (long)_ftell(file);
 }
 
 int _fseek(FILE* file, fpos_t offset, int file_mode) {
@@ -104,12 +98,5 @@ int _fseek(FILE* file, fpos_t offset, int file_mode) {
 
 int fseek(FILE * file, long offset, int file_mode)
 {
-    fpos_t real_offset = (fpos_t)offset;
-    int retval;
-
-    __begin_critical_region(2);
-    retval = _fseek(file, real_offset, file_mode);
-    __end_critical_region(2);
-
-    return(retval);
+    return _fseek(file, (fpos_t)offset, file_mode);
 }

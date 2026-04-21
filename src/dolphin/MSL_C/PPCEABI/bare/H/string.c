@@ -167,10 +167,10 @@ int strcmp(const char* str1, const char* str2)
 		}
 	}
 
-	if (l1 < r1) {
-		return -1;
+	if (l1 > r1) {
+		return 1;
 	}
-	return 1;
+	return -1;
 
 adjust:
 	l1 = *left;

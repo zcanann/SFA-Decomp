@@ -163,13 +163,7 @@ size_t __fread(void* buffer, size_t size, size_t count, FILE* stream)
 }
 
 size_t fwrite(const void* buffer, size_t size, size_t count, FILE* stream) {
-    size_t retval;
-
-    __begin_critical_region(stdin_access);
-    retval = __fwrite(buffer, size, count, stream);
-    __end_critical_region(stdin_access);
-
-    return (retval);
+    return __fwrite(buffer, size, count, stream);
 }
 
 size_t __fwrite(const void* buffer, size_t size, size_t count, FILE* stream) {

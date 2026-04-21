@@ -16,7 +16,8 @@ const char* __GXVersion = s___GXVersion;
 
 static GXData gxData;
 static GXFifoObj FifoObj;
-GXData* const __GXData = &gxData;
+GXData* const gx = &gxData;
+#define __GXData gx
 const GXColor GXInit_ClearColor = {64, 64, 64, 255};
 const GXColor GXInit_BlackColor = {0, 0, 0, 0};
 const GXColor GXInit_WhiteColor = {255, 255, 255, 255};
