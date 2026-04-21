@@ -229,7 +229,7 @@ undefined FUN_80103900(float *param_1,int param_2,float *param_3)
  * PAL Size: TODO
  */
 
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup, forced full-owner stub for compile-first import. */
+/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
 /* Original raw Ghidra body omitted for compile-first stubbing. */
 
 undefined FUN_801039a4(int param_1,short *param_2,float *param_3,short *param_4)
@@ -251,7 +251,7 @@ undefined FUN_801039a4(int param_1,short *param_2,float *param_3,short *param_4)
  * PAL Size: TODO
  */
 
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup, forced full-owner stub for compile-first import. */
+/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
 /* Original raw Ghidra body omitted for compile-first stubbing. */
 
 void FUN_80103bec(int param_1,int param_2)
@@ -272,7 +272,7 @@ void FUN_80103bec(int param_1,int param_2)
  * PAL Size: TODO
  */
 
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup, forced full-owner stub for compile-first import. */
+/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
 /* Original raw Ghidra body omitted for compile-first stubbing. */
 
 void FUN_80103ddc(void)

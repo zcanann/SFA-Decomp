@@ -94,7 +94,7 @@ void FUN_8018d520(void);
  * PAL Size: TODO
  */
 
-/* Auto-stubbed for compileability: unsupported helper macros: SUB42, function-pointer stores need manual cleanup, forced full-owner stub for compile-first import. */
+/* Auto-stubbed for compileability: unsupported helper macros: SUB42, forced full-owner stub for compile-first import. */
 /* Original raw Ghidra body omitted for compile-first stubbing. */
 
 void FUN_8018cdac(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
@@ -116,7 +116,7 @@ void FUN_8018cdac(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Size: TODO
  */
 
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup, forced full-owner stub for compile-first import. */
+/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
 /* Original raw Ghidra body omitted for compile-first stubbing. */
 
 void FUN_8018d208(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
@@ -182,7 +182,7 @@ void FUN_8018d378(undefined2 *param_1,int param_2)
  * PAL Size: TODO
  */
 
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup, forced full-owner stub for compile-first import. */
+/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
 /* Original raw Ghidra body omitted for compile-first stubbing. */
 
 void FUN_8018d470(int param_1)
@@ -224,7 +224,7 @@ void FUN_8018d4bc(int param_1)
  * PAL Size: TODO
  */
 
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup, forced full-owner stub for compile-first import. */
+/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
 /* Original raw Ghidra body omitted for compile-first stubbing. */
 
 void FUN_8018d520(void)
