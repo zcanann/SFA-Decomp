@@ -15,7 +15,7 @@ extern char* FstStringStart_803DEB70;
 extern u32 MaxEntryNum_803DEB74;
 extern u32 sDvdfsCurrentDirEntry;
 extern const char lbl_8032E488[];
-extern const char lbl_803DD1C8[];
+__declspec(section ".sdata") extern const char lbl_803DD1C8[];
 
 #define BootInfo BootInfo_803DEB68
 #define FstStart FstStart_803DEB6C
