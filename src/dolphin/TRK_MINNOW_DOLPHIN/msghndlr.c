@@ -57,6 +57,7 @@ DSError TRKSendACK(TRKBuffer* buffer) {
 DSError TRKStandardACK(TRKBuffer* buffer, MessageCommandID commandID,
                               DSReplyError replyError) {
     int retries;
+    DSError result;
 
     TRKResetBuffer(buffer, TRUE);
     TRKAppendBuffer1_ui8(buffer, commandID);
@@ -64,13 +65,13 @@ DSError TRKStandardACK(TRKBuffer* buffer, MessageCommandID commandID,
 
     retries = 3;
     do {
-        DSError result = TRKMessageSend(buffer);
+        result = TRKMessageSend(buffer);
         retries--;
         if (result == DS_NoError) {
             break;
         }
     } while (retries > 0);
-    return DS_NoError;
+    return result;
 }
 
 DSError TRKDoUnsupported(TRKBuffer* buffer) {
