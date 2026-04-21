@@ -92,6 +92,10 @@ u32 ARInit(u32* stack_index_addr, u32 num_entries) {
     return __AR_StackPointer;
 }
 
+u32 ARGetBaseAddress(void) {
+    return 0x4000;
+}
+
 void __ARHandler(__OSInterrupt exception, OSContext* context) {
     OSContext exceptionContext;
     u16 tmp;

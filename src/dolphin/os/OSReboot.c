@@ -39,6 +39,15 @@ static asm void Run(register void* entryPoint) {
     mtlr r31
     blr
 }
+
+static asm void fn_80244C78(void) {
+    nofralloc
+    lwz r0, 0x1c(r1)
+    lwz r31, 0x14(r1)
+    addi r1, r1, 0x18
+    mtlr r0
+    blr
+}
 #pragma dont_inline reset
 
 static void Callback(s32 result, DVDCommandBlock* block) {
