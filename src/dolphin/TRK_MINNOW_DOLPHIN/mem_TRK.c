@@ -1,88 +1,84 @@
-/* TODO: restore stripped imported address metadata if needed. */
-
-/**
- * mem_TRK.c
- * Description:
- */
-
+#include "stddef.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/mem_TRK.h"
+#include "dolphin/types.h"
 
-#pragma dont_inline on
-void TRK_fill_mem(void* dst, int val, u32 n) {
-    u32 v;
-    u32 i;
-    union {
-        u8* p8;
-        u32* p32;
-    } p;
+void TRK_fill_mem(void *dest, int value, unsigned long length)
+{
+#define cDest ((unsigned char *)dest)
+#define lDest ((unsigned long *)dest)
+    unsigned long val = (unsigned char)value;
+    unsigned long i;
+    lDest = (unsigned long *)dest;
+    cDest = (unsigned char *)dest;
 
-    v = (u8)val;
-    p.p8 = (u8*)dst - 1;
+    cDest--;
 
-    if (n >= 32) {
-        i = (~(u32)p.p8) & 3;
+    if (length >= 32) {
+        i = ~(unsigned long)dest & 3;
 
         if (i) {
-            n -= i;
-
+            length -= i;
             do {
-                *++p.p8 = (u8)v;
+                *++cDest = val;
             } while (--i);
         }
 
-        if (v)
-            v |= v << 24 | v << 16 | v << 8;
+        if (val) {
+            val |= val << 24 | val << 16 | val << 8;
+        }
 
-        p.p32 = (u32*)(p.p8 - 3);
-        i = n >> 5;
-        if (i != 0) {
+        lDest = (unsigned long *)(cDest + 1) - 1;
+
+        i = length >> 5;
+        if (i) {
             do {
-                p.p32[1] = v;
-                p.p32[2] = v;
-                p.p32[3] = v;
-                p.p32[4] = v;
-                p.p32[5] = v;
-                p.p32[6] = v;
-                p.p32[7] = v;
-                p.p32 += 8;
-                *p.p32 = v;
+                *++lDest = val;
+                *++lDest = val;
+                *++lDest = val;
+                *++lDest = val;
+                *++lDest = val;
+                *++lDest = val;
+                *++lDest = val;
+                *++lDest = val;
             } while (--i);
         }
 
-        i = (n >> 2) & 7;
+        i = (length & 31) >> 2;
 
-        if (i != 0) {
+        if (i) {
             do {
-                *++p.p32 = v;
+                *++lDest = val;
             } while (--i);
         }
 
-        p.p8 = (u8*)p.p32 + 3;
-        {
-            u32 mask = 3;
-            n &= mask;
-        }
+        cDest = (unsigned char *)(lDest + 1) - 1;
+
+        length &= 3;
     }
 
-    if (n)
+    if (length) {
         do {
-            *++p.p8 = (u8)v;
-        } while (--n);
+            *++cDest = val;
+        } while (--length);
+    }
+
+#undef cDest
+#undef lDest
 }
-#pragma dont_inline reset
 
-__declspec(section ".init") void* TRK_memcpy(void* dst, const void* src, unsigned int n) {
-    const unsigned char* s = (const unsigned char*)src - 1;
-    unsigned char* d = (unsigned char*)dst - 1;
+__declspec(section ".init") void *TRK_memcpy(void *dst, const void *src, size_t n)
+{
+    const char *p;
+    char *q;
 
-    n++;
-    while (--n != 0)
-        *++d = *++s;
+    for (p = (const char *)src - 1, q = (char *)dst - 1, n++; --n;)
+        *++q = *++p;
+
     return dst;
 }
 
-__declspec(section ".init") void* TRK_memset(void* dst, int val, unsigned int n) {
+__declspec(section ".init") void *TRK_memset(void *dst, int val, size_t n)
+{
     TRK_fill_mem(dst, val, n);
-
     return dst;
 }

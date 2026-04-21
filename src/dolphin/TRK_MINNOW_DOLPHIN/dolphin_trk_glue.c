@@ -158,7 +158,7 @@ UARTError TRKWriteUARTN(const void* bytes, u32 length)
 }
 
 #pragma dont_inline on
-asm UARTError TRKReadUARTPoll(register u8* byte) {
+asm UARTError TRKReadUARTPoll(register s8* byte) {
     nofralloc
     stwu r1, -0x20(r1)
     mflr r0
