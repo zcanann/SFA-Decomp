@@ -143,13 +143,9 @@ DSError TRKDoSupportMask(TRKBuffer* buffer) {
     }
 
     TRKResetBuffer(buffer, TRUE);
-    err = TRKAppendBuffer1_ui8(buffer, DSMSG_ReplyACK);
-    if (err == DS_NoError) {
-        err = TRKAppendBuffer1_ui8(buffer, DSREPLY_NoError);
-    }
-    if (err == DS_NoError) {
-        err = TRKTargetSupportMask(mask);
-    }
+    TRKAppendBuffer1_ui8(buffer, DSMSG_ReplyACK);
+    TRKAppendBuffer1_ui8(buffer, DSREPLY_NoError);
+    err = TRKTargetSupportMask(mask);
     if (err == DS_NoError) {
         err = TRKAppendBuffer(buffer, mask, sizeof(mask));
     }
