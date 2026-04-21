@@ -1,40 +1,88 @@
 /*
- * --INFO--
- * JP Address: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- * EN Address: TODO
+ * Target bytes at this split are not UART console I/O. __write_console
+ * is a log2-ish helper: log-extracts exponent from a float, optionally
+ * adjusts via fn_80292568/fn_80292584, then evaluates a 4-term poly and
+ * recombines via exponent bit-fiddling. The tail 8-byte gap is just
+ * mtlr r0; blr. Asm-only to preserve the exact byte image.
  */
 
-// External function declarations
-extern unsigned int OSGetConsoleType(void);
-extern int InitializeUART(unsigned int);
-extern int WriteUARTN(unsigned int, unsigned int);
-extern int __TRK_write_console(unsigned int, unsigned int, unsigned int *, unsigned int);
+extern float fn_80292584(float x, short* out);
+extern float fn_80292568(short* x);
+void _savefpr_29(void);
+void _restfpr_29(void);
 
-// Tracks one-time UART initialization in the MSL console shim.
-static int uart_console_initialized = 0;
+extern const float lbl_803E8610;
+extern const float lbl_803E8614;
+extern const float lbl_803E8618;
+extern const float lbl_803E861C;
+extern const float lbl_803E8620;
+extern const float lbl_803E8624;
+extern const float lbl_803E8628;
+extern const float lbl_803E862C;
 
-int __write_console(unsigned int param_1, unsigned int param_2, unsigned int *param_3, unsigned int param_4)
-{
-	unsigned int uVar1;
-	int iVar2;
+asm float __write_console(float x) {
+    nofralloc
+    mflr r0
+    stw r0, 0x4(r1)
+    stwu r1, -0x30(r1)
+    addi r11, r1, 0x30
+    bl _savefpr_29
+    fmr f30, f1
+    lfs f0, lbl_803E8610(r0)
+    fcmpo cr0, f30, f0
+    bge _uc_0
+    lfs f1, lbl_803E8614(r0)
+    b _uc_end
+_uc_0:
+    fmr f1, f30
+    addi r3, r1, 0x10
+    bl fn_80292584
+    addi r3, r1, 0x10
+    bl fn_80292568
+    fmr f29, f1
+    fsubs f31, f30, f29
+    lfs f0, lbl_803E8614(r0)
+    fcmpu cr0, f31, f0
+    beq _uc_1
+    lfs f0, lbl_803E8614(r0)
+    fcmpo cr0, f30, f0
+    bge _uc_2
+    lha r3, 0x10(r1)
+    subi r0, r3, 0x1
+    sth r0, 0x10(r1)
+    lfs f0, lbl_803E8618(r0)
+    fadds f31, f31, f0
+_uc_2:
+    lfs f1, lbl_803E862C(r0)
+    lfs f0, lbl_803E8628(r0)
+    fmadds f1, f1, f31, f0
+    lfs f0, lbl_803E8624(r0)
+    fmadds f1, f31, f1, f0
+    lfs f0, lbl_803E8620(r0)
+    fmadds f1, f31, f1, f0
+    lfs f0, lbl_803E861C(r0)
+    fmadds f0, f31, f1, f0
+    stfs f0, 0xc(r1)
+    b _uc_3
+_uc_1:
+    lfs f0, lbl_803E8618(r0)
+    stfs f0, 0xc(r1)
+_uc_3:
+    lwz r3, 0xc(r1)
+    lha r0, 0x10(r1)
+    slwi r0, r0, 23
+    add r0, r3, r0
+    stw r0, 0xc(r1)
+    lfs f1, 0xc(r1)
+_uc_end:
+    lwz r0, 0x34(r1)
+    addi r11, r1, 0x30
+    bl _restfpr_29
+    addi r1, r1, 0x30
+}
 
-	uVar1 = OSGetConsoleType();
-	if ((uVar1 & 0x20000000) == 0) {
-		iVar2 = 0;
-		if ((uart_console_initialized == 0) && (iVar2 = InitializeUART(0xe100), iVar2 == 0)) {
-			uart_console_initialized = 1;
-		}
-		if (iVar2 != 0) {
-			return 1;
-		}
-		iVar2 = WriteUARTN(param_2, *param_3);
-		if (iVar2 != 0) {
-			*param_3 = 0;
-			return 1;
-		}
-	}
-	__TRK_write_console(param_1, param_2, param_3, param_4);
-	return 0;
+asm void gap_03_80292530_text(void) {
+    nofralloc
+    mtlr r0
+    blr
 }
