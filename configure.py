@@ -364,7 +364,7 @@ config.libs = [
     DolphinLib(
         "mtx",
         [
-            Object(NonMatching, "dolphin/mtx/mtx.c", source="dolphin/mtx/mtx.c"),
+            Object(NonMatching, "dolphin/mtx/mtx.c", source="dolphin/mtx/mtx.c", extra_cflags=["-DGEKKO"]),
             Object(MatchingFor("GSAE01"), "dolphin/mtx/mtxvec.c", source="dolphin/mtx/mtxvec.c"),
             Object(NonMatching, "dolphin/mtx/vec.c", source="sdk/mtx/vec.c"),
             Object(MatchingFor("GSAE01"), "dolphin/mtx/mtx44.c"),
