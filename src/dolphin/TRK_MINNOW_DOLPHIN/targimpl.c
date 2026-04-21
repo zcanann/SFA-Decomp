@@ -760,10 +760,10 @@ u32 TRKTargetGetPC(void)
 
 DSError TRKTargetSupportRequest()
 {
-	u8 ioResult;
-	size_t* length;
 	u8 commandId;
 	DSError error;
+	u8 ioResult;
+	size_t* length;
 	TRKEvent event;
 
 	commandId = gTRKCPUState.Default.GPR[3];
