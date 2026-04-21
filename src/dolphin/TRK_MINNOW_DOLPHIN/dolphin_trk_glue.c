@@ -4,6 +4,18 @@
 #include "amcstubs/AmcExi2Stubs.h"
 #include "dolphin/base/PPCArch.h"
 #include "PowerPC_EABI_Support/MetroTRK/trk.h"
+#include "string.h"
+
+typedef struct UARTInlineBuffer {
+    s32 writeLen;
+    s32 readPos;
+    s32 readLen;
+    u32 _0C;
+    u8  readData[0x110C];
+} UARTInlineBuffer;
+
+static UARTInlineBuffer gUARTBuffer;
+static u8 gUARTWriteBuffer[0x110C];
 
 volatile u8 TRK_Use_BBA = 0;
 BOOL _MetroTRK_Has_Framing = FALSE;
@@ -143,6 +155,84 @@ UARTError TRKWriteUARTN(const void* bytes, u32 length)
 {
     int writeErr = gDBCommTable.write_func(bytes, length);
     return writeErr == 0 ? 0 : -1;
+}
+
+UARTError TRKReadUARTPoll(u8* byte)
+{
+    UARTError err = UART_NoData;
+
+    if (gUARTBuffer.readPos >= gUARTBuffer.readLen) {
+        int peekLen;
+        gUARTBuffer.readPos = 0;
+        peekLen = gDBCommTable.peek_func();
+        gUARTBuffer.readLen = peekLen;
+        if (peekLen > 0) {
+            int readErr;
+            if (gUARTBuffer.readLen > 0x110A) {
+                gUARTBuffer.readLen = 0x110A;
+            }
+            readErr = gDBCommTable.read_func(gUARTBuffer.readData, gUARTBuffer.readLen);
+            err = (readErr != 0) ? -1 : 0;
+            if (err != 0) {
+                gUARTBuffer.readLen = 0;
+            }
+        }
+    }
+
+    if (gUARTBuffer.readPos < gUARTBuffer.readLen) {
+        *byte = gUARTBuffer.readData[gUARTBuffer.readPos++];
+        err = UART_NoError;
+    }
+
+    return err;
+}
+
+UARTError WriteUART1(s8 byte)
+{
+    gUARTWriteBuffer[gUARTBuffer.writeLen++] = byte;
+    return UART_NoError;
+}
+
+UARTError WriteUARTFlush(void)
+{
+    UARTError err = UART_NoError;
+    s32 len = (s32)gUARTBuffer.writeLen;
+    u8* dst = &gUARTWriteBuffer[len];
+    u32 remaining = 0x800 - len;
+    u8 zero = 0;
+    int writeErr;
+
+    if (len < 0x800) {
+        u32 blocks = remaining >> 3;
+        u32 tail;
+        if (blocks != 0) {
+            do {
+                dst[0] = zero;
+                dst[1] = zero;
+                dst[2] = zero;
+                dst[3] = zero;
+                dst[4] = zero;
+                dst[5] = zero;
+                dst[6] = zero;
+                dst[7] = zero;
+                dst += 8;
+            } while (--blocks);
+        }
+        tail = remaining & 7;
+        if (tail != 0) {
+            do {
+                *dst++ = zero;
+            } while (--tail);
+        }
+        len += remaining;
+    }
+    gUARTBuffer.writeLen = len;
+    if (len != 0) {
+        writeErr = gDBCommTable.write_func(gUARTWriteBuffer, len);
+        gUARTBuffer.writeLen = 0;
+        err = (writeErr != 0) ? -1 : 0;
+    }
+    return err;
 }
 
 void ReserveEXI2Port(void) { gDBCommTable.open_func(); }
