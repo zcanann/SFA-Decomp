@@ -1,6 +1,6 @@
 #include "dolphin/mtx.h"
 
-static f32 Unit01[] = { 0.0f, 1.0f };
+static f32 lbl_803DD1B8[] = { 0.0f, 1.0f };
 
 extern f32 sinf(f32);
 extern f32 cosf(f32);
@@ -148,10 +148,10 @@ asm void PSMTXConcat(const register Mtx mA, const register Mtx mB, register Mtx 
     psq_l   FP0, 0(mA), 0, 0;
     stfd    fp14, 8(r1);
     psq_l   FP6, 0(mB), 0, 0;
-    addis   r6, 0, Unit01@ha;
+    addis   r6, 0, lbl_803DD1B8@ha;
     psq_l   FP7, 8(mB), 0, 0;
     stfd    fp15, 16(r1)
-    addi    r6, r6, Unit01@l;
+    addi    r6, r6, lbl_803DD1B8@l;
     stfd    fp31, 40(r1)
     psq_l   FP8, 16(mB), 0, 0
     ps_muls0 FP12, FP6, FP0
@@ -245,7 +245,7 @@ void PSMTXConcatArray(const register Mtx a, const register Mtx *srcBase, registe
     register f32 vb0, vb1, vb2, vb3, vb4, vb5;
     register f32 vd0, vd1, vd2, vd3, vd4, vd5;
     register f32 u01;
-    register f32 *u01Ptr = Unit01;
+    register f32 *u01Ptr = lbl_803DD1B8;
 
     // clang-format off
   asm
