@@ -23,7 +23,7 @@ extern int* DAT_803def74;
 extern int* DAT_803def78;
 extern undefined4 DAT_803def7c;
 
-/* Local declarations keep old-style call compatibility across imported functions. */
+/* Local declarations keep imported functions visible within the TU. */
 undefined4 FUN_80279af0(int param_1);
 uint FUN_80279b04(int param_1,int param_2);
 undefined4 FUN_80279c00(uint param_1);

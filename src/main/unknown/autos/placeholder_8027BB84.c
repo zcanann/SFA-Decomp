@@ -14,7 +14,7 @@
 /* Raw global references kept as loose externs for later cleanup. */
 extern undefined4 DAT_803def88;
 
-/* Local declarations keep old-style call compatibility across imported functions. */
+/* Local declarations keep imported functions visible within the TU. */
 void FUN_8027bb84(void);
 
 // Function: FUN_8027bb84

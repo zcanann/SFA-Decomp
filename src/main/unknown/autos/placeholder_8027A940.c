@@ -80,7 +80,7 @@ extern undefined4 DAT_803cb7ef;
 extern f64 DOUBLE_803e84b8;
 extern f32 FLOAT_803e84b0;
 
-/* Local declarations keep old-style call compatibility across imported functions. */
+/* Local declarations keep imported functions visible within the TU. */
 undefined4 FUN_8027a940(int param_1);
 void FUN_8027a9bc(int param_1);
 void FUN_8027aa18(int param_1);

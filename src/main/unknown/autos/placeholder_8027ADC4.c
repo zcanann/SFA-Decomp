@@ -14,7 +14,7 @@
 /* Raw global references kept as loose externs for later cleanup. */
 extern undefined4 DAT_80330278;
 
-/* Local declarations keep old-style call compatibility across imported functions. */
+/* Local declarations keep imported functions visible within the TU. */
 undefined4 FUN_8027adc4(char *param_1);
 
 // Function: FUN_8027adc4

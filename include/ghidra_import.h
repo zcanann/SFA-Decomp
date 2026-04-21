@@ -27,7 +27,7 @@ typedef unsigned long ulong;
 typedef s64 longlong;
 typedef u64 ulonglong;
 
-typedef void (*code)(void);
+typedef void (*code)();
 
 #define CONCAT11(x, y) ((u16)(((u16)(u8)(x) << 8) | (u8)(y)))
 #define CONCAT12(x, y) ((u32)(((u32)(u8)(x) << 16) | (u16)(y)))

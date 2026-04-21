@@ -35,6 +35,8 @@ SUPPORTED_HELPERS = {
     "SBORROW4",
 }
 CONTROL_TOKENS = {
+    "case",
+    "default",
     "if",
     "for",
     "while",
@@ -86,6 +88,23 @@ HELPER_TOKEN_RE = re.compile(r"\b(?:CONCAT\d+|SUB\d+|SEXT\d+|ZEXT\d+|CARRY\d+|SC
 LOCAL_DECL_RE = re.compile(
     r"^\s*(?P<type>[A-Za-z_]\w*(?:\s+[A-Za-z_]\w*)*)\s+(?P<pointer>\*+)?\s*(?P<name>[A-Za-z_]\w*)\s*(?:=\s*[^;]+)?;$"
 )
+FORCE_STUB_FUNCTIONS = {
+    "FUN_80009594",
+    "FUN_80017508",
+    "FUN_80080ea4",
+    "FUN_801f55c0",
+    "FUN_8020a768",
+}
+FORCE_STUB_OWNERS = {
+    "main/unknown/autos/placeholder_800066E0.c",
+    "main/unknown/autos/placeholder_8001746C.c",
+    "main/unknown/autos/placeholder_80080E58.c",
+    "main/unknown/autos/placeholder_801F5184.c",
+    "main/unknown/autos/placeholder_80209FE0.c",
+    "main/unknown/autos/placeholder_80280F28.c",
+    "main/unknown/autos/placeholder_80295318.c",
+    "main/unknown/autos/placeholder_802BBC10.c",
+}
 
 
 @dataclass(frozen=True)
@@ -229,6 +248,10 @@ def make_safe_forward_declaration(function: FunctionDump) -> str:
     if function.safe_signature:
         return function.signature_text + ";"
     return f"{simplify_return_type(function.return_type)} {function.name}();"
+
+
+def make_loose_forward_declaration(function: FunctionDump) -> str:
+    return f"{normalize_type_name(function.return_type)} {function.name}();"
 
 
 def default_return_statement(return_type: str) -> str | None:
@@ -376,6 +399,21 @@ def infer_global_types(functions: list[FunctionDump]) -> dict[str, str]:
                 if rhs_type is not None and pointer_base_type(rhs_type) is not None:
                     changed |= observe_symbol_type(inferred, lhs, rhs_type)
 
+    for function in functions:
+        raw_text = stripped_sources[function.name]
+        for symbol in function.globals_used:
+            escaped_symbol = re.escape(symbol)
+            if re.search(rf"(?<![A-Za-z0-9_])\*{escaped_symbol}\b", raw_text):
+                observe_symbol_type(inferred, symbol, "undefined4 *")
+            if re.search(rf"\b{escaped_symbol}\s*\[", raw_text):
+                observe_symbol_type(inferred, symbol, "undefined4 *")
+
+    for symbol in list(inferred):
+        if symbol.startswith("FLOAT_"):
+            inferred[symbol] = "f32"
+        elif symbol.startswith("DOUBLE_"):
+            inferred[symbol] = "f64"
+
     return inferred
 
 
@@ -413,11 +451,15 @@ def detect_conflicted_pointer_globals(functions: list[FunctionDump]) -> set[str]
     return {symbol for symbol, bases in pointer_bases.items() if len(bases) > 1}
 
 
-def function_stub_reasons(functions: list[FunctionDump]) -> dict[str, list[str]]:
+def function_stub_reasons(owner: str, functions: list[FunctionDump]) -> dict[str, list[str]]:
     reasons: dict[str, list[str]] = {}
     conflicted_globals = detect_conflicted_pointer_globals(functions)
     for function in functions:
         function_reasons = list(function.unsafe_reasons)
+        if owner in FORCE_STUB_OWNERS:
+            function_reasons.append("forced full-owner stub for compile-first import")
+        if function.name in FORCE_STUB_FUNCTIONS:
+            function_reasons.append("forced stub for compile-first import")
         conflicted_used = sorted(conflicted_globals.intersection(function.globals_used))
         if conflicted_used:
             function_reasons.append(
@@ -427,6 +469,45 @@ def function_stub_reasons(functions: list[FunctionDump]) -> dict[str, list[str]]
         if function_reasons:
             reasons[function.name] = function_reasons
     return reasons
+
+
+def observe_external_return_type(
+    inferred: dict[str, str],
+    name: str,
+    type_name: str,
+) -> None:
+    normalized = normalize_type_name(type_name)
+    current = inferred.get(name)
+    if current == normalized:
+        return
+
+    def score(candidate: str) -> tuple[int, int]:
+        return (1 if pointer_base_type(candidate) is not None else 0, 0 if candidate == "undefined4" else 1)
+
+    if current is None or score(normalized) > score(current):
+        inferred[name] = normalized
+
+
+def infer_external_function_types(functions: list[FunctionDump], local_names: set[str]) -> dict[str, str]:
+    inferred: dict[str, str] = {}
+    local_var_maps = {function.name: parse_local_var_types(function.raw_text) for function in functions}
+    stripped_sources = {function.name: strip_comments(function.raw_text) for function in functions}
+
+    for function in functions:
+        raw_text = stripped_sources[function.name]
+        local_var_types = local_var_maps[function.name]
+        calls = [call for call in function.called_functions if call not in local_names]
+        for call in calls:
+            escaped_call = re.escape(call)
+            for var_name, var_type in local_var_types.items():
+                escaped_var = re.escape(var_name)
+                if re.search(rf"\b{escaped_var}\s*=\s*{escaped_call}\s*\(", raw_text):
+                    observe_external_return_type(inferred, call, var_type)
+            simplified_return = simplify_return_type(function.return_type)
+            if re.search(rf"\breturn\s+{escaped_call}\s*\(", raw_text):
+                observe_external_return_type(inferred, call, simplified_return)
+
+    return inferred
 
 
 def check_safety(raw_text: str, signature_text: str) -> tuple[bool, bool, list[str]]:
@@ -533,7 +614,8 @@ def render_source(
     extern_functions = sorted({call for function in functions for call in function.called_functions if call not in local_names})
     extern_globals = sorted({symbol for function in functions for symbol in function.globals_used})
     inferred_global_types = infer_global_types(functions)
-    stub_reasons = function_stub_reasons(functions)
+    inferred_external_function_types = infer_external_function_types(functions, local_names)
+    stub_reasons = function_stub_reasons(owner, functions)
     safe_count = len(functions) - len(stub_reasons)
     stubbed_count = len(stub_reasons)
 
@@ -557,7 +639,7 @@ def render_source(
     if extern_functions:
         lines.append("/* Cross-file calls lifted from the raw Ghidra output. */")
         for name in extern_functions:
-            lines.append(f"extern undefined4 {name}();")
+            lines.append(f"extern {inferred_external_function_types.get(name, 'undefined4')} {name}();")
         lines.append("")
 
     if extern_globals:
@@ -566,7 +648,7 @@ def render_source(
             lines.append(extern_decl_for_global(symbol, inferred_global_types.get(symbol)))
         lines.append("")
 
-    lines.append("/* Local declarations keep old-style call compatibility across imported functions. */")
+    lines.append("/* Local declarations keep imported functions visible within the TU. */")
     for function in functions:
         lines.append(make_safe_forward_declaration(function))
     lines.append("")
@@ -707,7 +789,7 @@ def main() -> None:
         if not functions:
             continue
         span = span_map[owner]
-        stub_reasons = function_stub_reasons(functions)
+        stub_reasons = function_stub_reasons(owner, functions)
         safe_count = len(functions) - len(stub_reasons)
         stubbed_count = len(stub_reasons)
         summaries.append(

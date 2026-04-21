@@ -11,7 +11,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_80292428.h"
 
-/* Local declarations keep old-style call compatibility across imported functions. */
+/* Local declarations keep imported functions visible within the TU. */
 double FUN_80292428(float *param_1);
 void FUN_80292444(double param_1,float *param_2);
 
