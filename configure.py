@@ -376,7 +376,7 @@ config.libs = [
         "dvd",
         [
             Object(NonMatching, "dolphin/dvd/dvdlow.c"),
-            Object(NonMatching, "dolphin/dvd/dvdfs.c"),
+            Object(NonMatching, "dolphin/dvd/dvdfs.c", extra_cflags=["-use_lmw_stmw", "on"]),
             Object(NonMatching, "dolphin/dvd/dvd.c", extra_cflags=["-str", "pool"]),
             Object(MatchingFor("GSAE01"), "dolphin/dvd/dvdqueue.c"),
             Object(MatchingFor("GSAE01"), "dolphin/dvd/dvderror.c"),

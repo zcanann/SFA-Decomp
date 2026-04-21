@@ -350,10 +350,11 @@ static void cbForReadSync(s32 result, DVDCommandBlock* block) {
 
 BOOL DVDPrepareStreamAsync(DVDFileInfo* fileInfo, u32 length, u32 offset, DVDCallback callback) {
     u32 start;
+    const char* const msgs = lbl_8032E488;
 
     start = fileInfo->startAddr + offset;
     if (OFFSET(start, 32768)) {
-        OSPanic(lbl_803DD1C8, 1186, lbl_8032E488 + 0x1C8, fileInfo->startAddr, offset);
+        OSPanic(lbl_803DD1C8, 1186, msgs + 0x1C8, fileInfo->startAddr, offset);
     }
 
     if (length == 0) {
@@ -361,11 +362,11 @@ BOOL DVDPrepareStreamAsync(DVDFileInfo* fileInfo, u32 length, u32 offset, DVDCal
     }
 
     if (OFFSET(length, 32768)) {
-        OSPanic(lbl_803DD1C8, 1196, lbl_8032E488 + 0x230, length);
+        OSPanic(lbl_803DD1C8, 1196, msgs + 0x230, length);
     }
 
     if (!(offset < fileInfo->length) || offset + length > fileInfo->length) {
-        OSPanic(lbl_803DD1C8, 1204, lbl_8032E488 + 0x288, offset, length);
+        OSPanic(lbl_803DD1C8, 1204, msgs + 0x288, offset, length);
     }
 
     fileInfo->callback = callback;
