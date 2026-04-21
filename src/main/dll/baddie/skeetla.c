@@ -116,13 +116,8 @@ void FUN_8013b568(undefined4 param_1,undefined4 param_2,float *param_3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80139724(uint param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -137,13 +132,8 @@ void FUN_80139724(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 undefined4 FUN_80139bbc(double param_1,int param_2,float *param_3)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
     return 0;
 }
 
@@ -159,13 +149,8 @@ undefined4 FUN_80139bbc(double param_1,int param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 int FUN_80139cb8(ushort *param_1,ushort param_2)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
     return 0;
 }
 
@@ -181,13 +166,8 @@ int FUN_80139cb8(ushort *param_1,ushort param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80139e14(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -202,13 +182,8 @@ void FUN_80139e14(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 undefined4 FUN_8013a778(double param_1,int param_2,int param_3,uint param_4)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
     return 0;
 }
 
@@ -224,13 +199,8 @@ undefined4 FUN_8013a778(double param_1,int param_2,int param_3,uint param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8013a874(undefined4 param_1,undefined4 param_2,uint param_3,uint param_4)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -245,13 +215,8 @@ void FUN_8013a874(undefined4 param_1,undefined4 param_2,uint param_3,uint param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 int FUN_8013aa44(int param_1,int param_2,int param_3)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
     return 0;
 }
 
@@ -267,13 +232,8 @@ int FUN_8013aa44(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8013ab7c(undefined4 param_1,undefined4 param_2,int param_3,int param_4)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -288,13 +248,8 @@ void FUN_8013ab7c(undefined4 param_1,undefined4 param_2,int param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8013ad50(int param_1,int param_2,byte param_3)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -309,13 +264,8 @@ void FUN_8013ad50(int param_1,int param_2,byte param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8013aed4(undefined4 param_1,undefined4 param_2,ushort param_3,undefined4 *param_4)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -330,13 +280,8 @@ void FUN_8013aed4(undefined4 param_1,undefined4 param_2,ushort param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8013b184(undefined2 *param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -351,14 +296,9 @@ void FUN_8013b184(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8013b368(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  float *param_5,float *param_6)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -373,11 +313,6 @@ void FUN_8013b368(undefined8 param_1,double param_2,undefined4 param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8013b568(undefined4 param_1,undefined4 param_2,float *param_3)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

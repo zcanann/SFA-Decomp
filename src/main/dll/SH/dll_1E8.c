@@ -44,13 +44,6 @@ uint FUN_801d5558(short *param_1,int param_2,int param_3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801d5470
-// Entry: 801d5470
-// Size: 232 bytes
-
-/* WARNING: Removing unreachable block (ram,0x801d549c) */
-
 void FUN_801d5470(uint param_1,int param_2)
 
 {
@@ -91,11 +84,6 @@ void FUN_801d5470(uint param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801d5558
-// Entry: 801d5558
-// Size: 524 bytes
-
 uint FUN_801d5558(short *param_1,int param_2,int param_3)
 
 {

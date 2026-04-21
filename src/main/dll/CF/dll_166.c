@@ -43,15 +43,6 @@ void FUN_8018aa94(short *param_1,int param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8018aa94
-// Entry: 8018aa94
-// Size: 896 bytes
-
-/* WARNING: Removing unreachable block (ram,0x8018adec) */
-/* WARNING: Removing unreachable block (ram,0x8018ab0c) */
-/* WARNING: Removing unreachable block (ram,0x8018aaa4) */
-
 void FUN_8018aa94(short *param_1,int param_2)
 
 {

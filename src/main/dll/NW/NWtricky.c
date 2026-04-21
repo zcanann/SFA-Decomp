@@ -4,8 +4,8 @@
  * Owner: main/dll/NW/NWtricky.c
  * Text span: 0x801D21EC-0x801D23AC
  * Imported Ghidra functions: 2
- * Verbatim-safe functions: 1
- * Auto-stubbed functions: 1
+ * Verbatim-safe functions: 2
+ * Auto-stubbed functions: 0
  */
 
 #include "ghidra_import.h"
@@ -41,11 +41,6 @@ void FUN_801d2364(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801d21ec
-// Entry: 801d21ec
-// Size: 348 bytes
-
 void FUN_801d21ec(undefined2 *param_1,undefined4 *param_2,int param_3)
 
 {
@@ -93,11 +88,10 @@ void FUN_801d21ec(undefined2 *param_1,undefined4 *param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801d2364(int param_1)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  (**(code **)(*DAT_803dd6f8 + 0x14))();
+  FUN_8003709c(param_1,3);
+  return;
 }

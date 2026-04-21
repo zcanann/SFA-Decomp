@@ -103,13 +103,8 @@ void FUN_801ef9ac(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801ee880(undefined4 param_1,int param_2)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -124,14 +119,9 @@ void FUN_801ee880(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801ee9ec(short *param_1,int param_2,undefined4 param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -146,14 +136,9 @@ void FUN_801ee9ec(short *param_1,int param_2,undefined4 param_3,undefined4 param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801eeca0(ushort *param_1,int param_2,undefined4 param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -168,13 +153,8 @@ void FUN_801eeca0(ushort *param_1,int param_2,undefined4 param_3,undefined4 para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-label references need manual cleanup, pointer-heavy local typing needs manual cleanup, forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801ef0a0(undefined4 param_1,undefined4 param_2,int param_3)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -189,13 +169,8 @@ void FUN_801ef0a0(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801ef188(uint param_1,int param_2)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -210,13 +185,8 @@ void FUN_801ef188(uint param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801ef35c(int param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -231,13 +201,8 @@ void FUN_801ef35c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801ef394(int param_1,undefined4 *param_2,undefined4 *param_3,undefined4 *param_4)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -252,13 +217,8 @@ void FUN_801ef394(int param_1,undefined4 *param_2,undefined4 *param_3,undefined4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801ef3b8(int param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -273,13 +233,8 @@ void FUN_801ef3b8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801ef484(int param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -294,13 +249,8 @@ void FUN_801ef484(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: pointer-heavy local typing needs manual cleanup, forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801ef518(int param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -315,14 +265,9 @@ void FUN_801ef518(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801ef65c(ushort *param_1,undefined4 param_2,int param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -337,16 +282,11 @@ void FUN_801ef65c(ushort *param_1,undefined4 param_2,int param_3,undefined4 para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer assignments need manual cleanup, forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801ef8e8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -361,11 +301,6 @@ void FUN_801ef8e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801ef9ac(int param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

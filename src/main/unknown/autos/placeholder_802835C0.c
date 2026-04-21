@@ -4,8 +4,8 @@
  * Owner: main/unknown/autos/placeholder_802835C0.c
  * Text span: 0x802835C0-0x8028364C
  * Imported Ghidra functions: 2
- * Verbatim-safe functions: 1
- * Auto-stubbed functions: 1
+ * Verbatim-safe functions: 0
+ * Auto-stubbed functions: 2
  */
 
 #include "ghidra_import.h"
@@ -31,16 +31,9 @@ int FUN_802835e0(uint param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_802835c0
-// Entry: 802835c0
-// Size: 32 bytes
-
 uint FUN_802835c0(void)
-
 {
-  DAT_803dd278 = DAT_803dd278 * -0x57cae29d;
-  return DAT_803dd278 >> 6 & 0xffff;
+    return 0;
 }
 
 /*
@@ -55,12 +48,7 @@ uint FUN_802835c0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 int FUN_802835e0(uint param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
     return 0;
 }

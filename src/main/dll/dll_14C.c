@@ -49,11 +49,6 @@ void FUN_8017f1ac(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8017eebc
-// Entry: 8017eebc
-// Size: 684 bytes
-
 void FUN_8017eebc(undefined2 *param_1,int param_2)
 
 {
@@ -143,11 +138,6 @@ void FUN_8017eebc(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8017f17c
-// Entry: 8017f17c
-// Size: 48 bytes
-
 void FUN_8017f17c(int param_1)
 
 {
@@ -171,11 +161,6 @@ void FUN_8017f17c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8017f1ac
-// Entry: 8017f1ac
-// Size: 64 bytes
-
 void FUN_8017f1ac(int param_1)
 
 {

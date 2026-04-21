@@ -59,11 +59,6 @@ void FUN_801c446c(uint param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: typed global pointer comparisons need manual cleanup, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801c446c(uint param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

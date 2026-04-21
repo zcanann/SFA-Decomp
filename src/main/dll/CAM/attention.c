@@ -50,11 +50,6 @@ void FUN_80104990(undefined4 param_1,undefined4 param_2,undefined param_3,float 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801047dc
-// Entry: 801047dc
-// Size: 436 bytes
-
 void FUN_801047dc(int param_1)
 
 {
@@ -132,11 +127,6 @@ void FUN_801047dc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80104990
-// Entry: 80104990
-// Size: 612 bytes
-
 void FUN_80104990(undefined4 param_1,undefined4 param_2,undefined param_3,float *param_4,
                  float *param_5)
 

@@ -4,8 +4,8 @@
  * Owner: main/dll/df_partfx.c
  * Text span: 0x800D6778-0x800D8FE0
  * Imported Ghidra functions: 23
- * Verbatim-safe functions: 22
- * Auto-stubbed functions: 1
+ * Verbatim-safe functions: 16
+ * Auto-stubbed functions: 7
  */
 
 #include "ghidra_import.h"
@@ -136,11 +136,6 @@ void FUN_800d8f94(uint param_1,int param_2,int param_3,int param_4,int param_5);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d6844
-// Entry: 800d6844
-// Size: 128 bytes
-
 void FUN_800d6844(int param_1)
 
 {
@@ -175,32 +170,6 @@ void FUN_800d6844(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d68ec
-// Entry: 800d68ec
-// Size: 1136 bytes
-
-/* WARNING: Removing unreachable block (ram,0x800d6d3c) */
-/* WARNING: Removing unreachable block (ram,0x800d6d34) */
-/* WARNING: Removing unreachable block (ram,0x800d6d2c) */
-/* WARNING: Removing unreachable block (ram,0x800d6d24) */
-/* WARNING: Removing unreachable block (ram,0x800d6d1c) */
-/* WARNING: Removing unreachable block (ram,0x800d6d14) */
-/* WARNING: Removing unreachable block (ram,0x800d6d0c) */
-/* WARNING: Removing unreachable block (ram,0x800d6d04) */
-/* WARNING: Removing unreachable block (ram,0x800d6cfc) */
-/* WARNING: Removing unreachable block (ram,0x800d6cf4) */
-/* WARNING: Removing unreachable block (ram,0x800d6944) */
-/* WARNING: Removing unreachable block (ram,0x800d693c) */
-/* WARNING: Removing unreachable block (ram,0x800d6934) */
-/* WARNING: Removing unreachable block (ram,0x800d692c) */
-/* WARNING: Removing unreachable block (ram,0x800d6924) */
-/* WARNING: Removing unreachable block (ram,0x800d691c) */
-/* WARNING: Removing unreachable block (ram,0x800d6914) */
-/* WARNING: Removing unreachable block (ram,0x800d690c) */
-/* WARNING: Removing unreachable block (ram,0x800d6904) */
-/* WARNING: Removing unreachable block (ram,0x800d68fc) */
-
 void FUN_800d68ec(void)
 
 {
@@ -400,13 +369,8 @@ LAB_800d6cf4:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, NAN macro needs manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_800d6d5c(undefined4 param_1,undefined4 param_2,int param_3)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -421,11 +385,6 @@ void FUN_800d6d5c(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d77f4
-// Entry: 800d77f4
-// Size: 1288 bytes
-
 void FUN_800d77f4(void)
 
 {
@@ -578,16 +537,8 @@ void FUN_800d77f4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d7cfc
-// Entry: 800d7cfc
-// Size: 12 bytes
-
 void FUN_800d7cfc(undefined param_1)
-
 {
-  DAT_803de0af = param_1;
-  return;
 }
 
 /*
@@ -602,22 +553,8 @@ void FUN_800d7cfc(undefined param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d7d18
-// Entry: 800d7d18
-// Size: 96 bytes
-
 void FUN_800d7d18(double param_1,uint param_2,undefined param_3)
-
 {
-  FLOAT_803de0a0 = (float)((double)FLOAT_803e11d8 * param_1);
-  FLOAT_803de0a4 =
-       -(float)((double)FLOAT_803e11dc * param_1) /
-       (float)((double)CONCAT44(0x43300000,param_2 ^ 0x80000000) - DOUBLE_803e11d0);
-  FLOAT_803de0a8 = FLOAT_803e11e0;
-  DAT_803de0ac = param_3;
-  DAT_803de0ae = 1;
-  return;
 }
 
 /*
@@ -632,11 +569,6 @@ void FUN_800d7d18(double param_1,uint param_2,undefined param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d7d78
-// Entry: 800d7d78
-// Size: 24 bytes
-
 uint FUN_800d7d78(void)
 
 {
@@ -655,22 +587,8 @@ uint FUN_800d7d78(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d7d90
-// Entry: 800d7d90
-// Size: 84 bytes
-
 void FUN_800d7d90(uint param_1,undefined param_2)
-
 {
-  FLOAT_803de0a0 = FLOAT_803e11d8;
-  FLOAT_803de0a4 =
-       FLOAT_803e11e4 / (float)((double)CONCAT44(0x43300000,param_1 ^ 0x80000000) - DOUBLE_803e11d0)
-  ;
-  FLOAT_803de0a8 = FLOAT_803e11e0;
-  DAT_803de0ac = param_2;
-  DAT_803de0ae = 5;
-  return;
 }
 
 /*
@@ -685,24 +603,8 @@ void FUN_800d7d90(uint param_1,undefined param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d7de4
-// Entry: 800d7de4
-// Size: 116 bytes
-
 void FUN_800d7de4(uint param_1,undefined param_2)
-
 {
-  if ((FLOAT_803e11e0 <= FLOAT_803de0a4) || (FLOAT_803e11e0 == FLOAT_803de0a0)) {
-    FLOAT_803de0a0 = FLOAT_803e11d8;
-  }
-  FLOAT_803de0a4 =
-       FLOAT_803e11e4 / (float)((double)CONCAT44(0x43300000,param_1 ^ 0x80000000) - DOUBLE_803e11d0)
-  ;
-  FLOAT_803de0a8 = FLOAT_803e11e0;
-  DAT_803de0ac = param_2;
-  DAT_803de0ae = 1;
-  return;
 }
 
 /*
@@ -717,24 +619,8 @@ void FUN_800d7de4(uint param_1,undefined param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d7e58
-// Entry: 800d7e58
-// Size: 120 bytes
-
 void FUN_800d7e58(uint param_1,undefined param_2)
-
 {
-  if ((FLOAT_803de0a4 <= FLOAT_803e11e0) || (FLOAT_803e11d8 == FLOAT_803de0a0)) {
-    FLOAT_803de0a0 = FLOAT_803e11e0;
-  }
-  FLOAT_803de0a4 =
-       FLOAT_803e11dc / (float)((double)CONCAT44(0x43300000,param_1 ^ 0x80000000) - DOUBLE_803e11d0)
-  ;
-  FLOAT_803de0a8 = FLOAT_803e11e0;
-  DAT_803de0ac = param_2;
-  DAT_803de0ae = 0;
-  return;
 }
 
 /*
@@ -749,102 +635,8 @@ void FUN_800d7e58(uint param_1,undefined param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d7ed0
-// Entry: 800d7ed0
-// Size: 792 bytes
-
 void FUN_800d7ed0(void)
-
 {
-  undefined4 local_68;
-  int local_64;
-  int local_60;
-  int local_5c;
-  int local_58;
-  undefined4 local_54;
-  undefined4 local_50;
-  int local_4c;
-  int local_48;
-  int local_44;
-  int local_40;
-  undefined4 local_3c;
-  uint local_38;
-  int local_34;
-  int local_30;
-  int local_2c;
-  int local_28;
-  uint local_24;
-  longlong local_20;
-  
-  if (DAT_803de0ae == '\0') {
-    if ((DAT_803de0af == '\0') && (FLOAT_803e11e8 <= FLOAT_803de0a8)) {
-      (**(code **)(*DAT_803dd6cc + 0xc))(0x1e,DAT_803de0ac);
-      FLOAT_803de0a8 = FLOAT_803e11e0;
-    }
-    FLOAT_803de0a0 = FLOAT_803de0a4 * FLOAT_803dc074 + FLOAT_803de0a0;
-    if (FLOAT_803de0a0 < FLOAT_803e11e0) {
-      FLOAT_803de0a0 = FLOAT_803e11e0;
-      DAT_803de0ad = 1;
-      if (DAT_803de0ac != 5) {
-        DAT_803de0ad = 1;
-        return;
-      }
-      FUN_80070538(0xff);
-      return;
-    }
-    if (FLOAT_803de0a0 <= FLOAT_803e11d8) {
-      DAT_803de0ad = 0;
-    }
-    else {
-      FLOAT_803de0a0 = FLOAT_803e11d8;
-      DAT_803de0ad = 1;
-      if (DAT_803de0af == '\0') {
-        FLOAT_803de0a8 = FLOAT_803de0a8 + FLOAT_803dc074;
-      }
-      if (DAT_803de0ac != 5) {
-        FUN_80070538(0xff);
-      }
-    }
-  }
-  else {
-    DAT_803de0ae = DAT_803de0ae + -1;
-  }
-  if (DAT_803dd5d0 == '\0') {
-    if (DAT_803de0ac == 3) {
-      FUN_800d77f4();
-    }
-    else if (DAT_803de0ac < 3) {
-      if (DAT_803de0ac == 1) {
-        FUN_8025db38(&local_34,&local_30,&local_2c,&local_28);
-        FUN_8025da88(0,0,0x280,0x1e0);
-        local_20 = (longlong)(int)FLOAT_803de0a0;
-        local_38 = (int)FLOAT_803de0a0 & 0xff;
-        local_24 = local_38;
-        FUN_80075534(local_34,local_30,local_2c,local_28,&local_24);
-        FUN_8025da88(local_34,local_30,local_2c,local_28);
-      }
-      else if (DAT_803de0ac != 0) {
-        FUN_8025db38(&local_4c,&local_48,&local_44,&local_40);
-        FUN_8025da88(0,0,0x280,0x1e0);
-        local_20 = (longlong)(int)FLOAT_803de0a0;
-        local_50 = CONCAT31(0xffffff,(char)(int)FLOAT_803de0a0);
-        local_3c = local_50;
-        FUN_80075534(local_4c,local_48,local_44,local_40,&local_3c);
-        FUN_8025da88(local_4c,local_48,local_44,local_40);
-      }
-    }
-    else if ((DAT_803de0ac != 5) && (DAT_803de0ac < 5)) {
-      FUN_8025db38(&local_64,&local_60,&local_5c,&local_58);
-      FUN_8025da88(0,0,0x280,0x1e0);
-      local_20 = (longlong)(int)FLOAT_803de0a0;
-      local_68 = CONCAT31(0xff0000,(char)(int)FLOAT_803de0a0);
-      local_54 = local_68;
-      FUN_80075534(local_64,local_60,local_5c,local_58,&local_54);
-      FUN_8025da88(local_64,local_60,local_5c,local_58);
-    }
-  }
-  return;
 }
 
 /*
@@ -859,22 +651,6 @@ void FUN_800d7ed0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d82ac
-// Entry: 800d82ac
-// Size: 332 bytes
-
-/* WARNING: Removing unreachable block (ram,0x800d83dc) */
-/* WARNING: Removing unreachable block (ram,0x800d83d4) */
-/* WARNING: Removing unreachable block (ram,0x800d83cc) */
-/* WARNING: Removing unreachable block (ram,0x800d83c4) */
-/* WARNING: Removing unreachable block (ram,0x800d83bc) */
-/* WARNING: Removing unreachable block (ram,0x800d82dc) */
-/* WARNING: Removing unreachable block (ram,0x800d82d4) */
-/* WARNING: Removing unreachable block (ram,0x800d82cc) */
-/* WARNING: Removing unreachable block (ram,0x800d82c4) */
-/* WARNING: Removing unreachable block (ram,0x800d82bc) */
-
 void FUN_800d82ac(double param_1,double param_2,double param_3,double param_4,double param_5,
                  int param_6,int param_7)
 
@@ -929,18 +705,6 @@ void FUN_800d82ac(double param_1,double param_2,double param_3,double param_4,do
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d83f8
-// Entry: 800d83f8
-// Size: 316 bytes
-
-/* WARNING: Removing unreachable block (ram,0x800d8518) */
-/* WARNING: Removing unreachable block (ram,0x800d8510) */
-/* WARNING: Removing unreachable block (ram,0x800d8508) */
-/* WARNING: Removing unreachable block (ram,0x800d8418) */
-/* WARNING: Removing unreachable block (ram,0x800d8410) */
-/* WARNING: Removing unreachable block (ram,0x800d8408) */
-
 void FUN_800d83f8(double param_1,double param_2,double param_3,int param_4,uint *param_5)
 
 {
@@ -995,14 +759,6 @@ void FUN_800d83f8(double param_1,double param_2,double param_3,int param_4,uint 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d8534
-// Entry: 800d8534
-// Size: 364 bytes
-
-/* WARNING: Removing unreachable block (ram,0x800d8680) */
-/* WARNING: Removing unreachable block (ram,0x800d8544) */
-
 void FUN_800d8534(double param_1,ushort *param_2,uint *param_3)
 
 {
@@ -1064,11 +820,6 @@ void FUN_800d8534(double param_1,ushort *param_2,uint *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d86a0
-// Entry: 800d86a0
-// Size: 400 bytes
-
 void FUN_800d86a0(ushort *param_1,int param_2)
 
 {
@@ -1132,11 +883,6 @@ void FUN_800d86a0(ushort *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d8830
-// Entry: 800d8830
-// Size: 264 bytes
-
 void FUN_800d8830(int param_1,undefined4 param_2,undefined4 param_3,int param_4,int param_5)
 
 {
@@ -1167,11 +913,6 @@ void FUN_800d8830(int param_1,undefined4 param_2,undefined4 param_3,int param_4,
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d8938
-// Entry: 800d8938
-// Size: 268 bytes
-
 void FUN_800d8938(undefined4 param_1,undefined4 param_2,int param_3,int param_4,undefined4 param_5,
                  int param_6)
 
@@ -1206,14 +947,6 @@ void FUN_800d8938(undefined4 param_1,undefined4 param_2,int param_3,int param_4,
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d8a44
-// Entry: 800d8a44
-// Size: 420 bytes
-
-/* WARNING: Removing unreachable block (ram,0x800d8bc0) */
-/* WARNING: Removing unreachable block (ram,0x800d8a54) */
-
 void FUN_800d8a44(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10,uint param_11,uint param_12,undefined4 param_13,
@@ -1292,20 +1025,6 @@ void FUN_800d8a44(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d8c10
-// Entry: 800d8c10
-// Size: 556 bytes
-
-/* WARNING: Removing unreachable block (ram,0x800d8e1c) */
-/* WARNING: Removing unreachable block (ram,0x800d8e14) */
-/* WARNING: Removing unreachable block (ram,0x800d8e0c) */
-/* WARNING: Removing unreachable block (ram,0x800d8e04) */
-/* WARNING: Removing unreachable block (ram,0x800d8c38) */
-/* WARNING: Removing unreachable block (ram,0x800d8c30) */
-/* WARNING: Removing unreachable block (ram,0x800d8c28) */
-/* WARNING: Removing unreachable block (ram,0x800d8c20) */
-
 void FUN_800d8c10(double param_1,double param_2,int param_3,int param_4)
 
 {
@@ -1371,14 +1090,6 @@ void FUN_800d8c10(double param_1,double param_2,int param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d8e40
-// Entry: 800d8e40
-// Size: 168 bytes
-
-/* WARNING: Removing unreachable block (ram,0x800d8ec8) */
-/* WARNING: Removing unreachable block (ram,0x800d8e50) */
-
 void FUN_800d8e40(double param_1,int param_2,uint *param_3)
 
 {
@@ -1412,11 +1123,6 @@ void FUN_800d8e40(double param_1,int param_2,uint *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d8ee8
-// Entry: 800d8ee8
-// Size: 96 bytes
-
 void FUN_800d8ee8(int param_1,int param_2,undefined4 param_3)
 
 {
@@ -1443,11 +1149,6 @@ void FUN_800d8ee8(int param_1,int param_2,undefined4 param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d8f48
-// Entry: 800d8f48
-// Size: 76 bytes
-
 void FUN_800d8f48(uint param_1,int param_2,int param_3,int param_4,int param_5)
 
 {
@@ -1470,11 +1171,6 @@ void FUN_800d8f48(uint param_1,int param_2,int param_3,int param_4,int param_5)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800d8f94
-// Entry: 800d8f94
-// Size: 76 bytes
-
 void FUN_800d8f94(uint param_1,int param_2,int param_3,int param_4,int param_5)
 
 {

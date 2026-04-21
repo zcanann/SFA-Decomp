@@ -4,8 +4,8 @@
  * Owner: main/dll/dll_4B.c
  * Text span: 0x8011C150-0x8011C180
  * Imported Ghidra functions: 1
- * Verbatim-safe functions: 0
- * Auto-stubbed functions: 1
+ * Verbatim-safe functions: 1
+ * Auto-stubbed functions: 0
  */
 
 #include "ghidra_import.h"
@@ -29,11 +29,9 @@ void FUN_8011c150(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8011c150(void)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  (**(code **)(*DAT_803dd720 + 8))();
+  return;
 }

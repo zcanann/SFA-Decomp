@@ -4,8 +4,8 @@
  * Owner: main/dll/CR/CRsnowClaw.c
  * Text span: 0x801E383C-0x801E3A44
  * Imported Ghidra functions: 4
- * Verbatim-safe functions: 3
- * Auto-stubbed functions: 1
+ * Verbatim-safe functions: 4
+ * Auto-stubbed functions: 0
  */
 
 #include "ghidra_import.h"
@@ -50,11 +50,6 @@ void FUN_801e3a14(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e383c
-// Entry: 801e383c
-// Size: 112 bytes
-
 void FUN_801e383c(int param_1)
 
 {
@@ -81,11 +76,6 @@ void FUN_801e383c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e38c0
-// Entry: 801e38c0
-// Size: 48 bytes
-
 void FUN_801e38c0(int param_1)
 
 {
@@ -109,11 +99,6 @@ void FUN_801e38c0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e38f4
-// Entry: 801e38f4
-// Size: 268 bytes
-
 void FUN_801e38f4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
@@ -177,11 +162,9 @@ void FUN_801e38f4(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801e3a14(void)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  (**(code **)(*DAT_803dd6f8 + 0x18))();
+  return;
 }

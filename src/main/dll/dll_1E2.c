@@ -34,11 +34,6 @@ void FUN_801d2da8(undefined2 *param_1,int param_2,int param_3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801d2da8
-// Entry: 801d2da8
-// Size: 172 bytes
-
 void FUN_801d2da8(undefined2 *param_1,int param_2,int param_3)
 
 {

@@ -29,11 +29,6 @@ void FUN_80101c10(undefined param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80101c10
-// Entry: 80101c10
-// Size: 12 bytes
-
 void FUN_80101c10(undefined param_1)
 
 {

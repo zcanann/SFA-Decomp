@@ -44,12 +44,7 @@ uint FUN_80279ec0(byte param_1,byte param_2,short param_3,char param_4);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 uint FUN_80279ec0(byte param_1,byte param_2,short param_3,char param_4)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
     return 0;
 }

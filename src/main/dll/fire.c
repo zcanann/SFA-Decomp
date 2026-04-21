@@ -41,14 +41,6 @@ void FUN_802093b4(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_802093b4
-// Entry: 802093b4
-// Size: 600 bytes
-
-/* WARNING: Removing unreachable block (ram,0x802095ec) */
-/* WARNING: Removing unreachable block (ram,0x802093c4) */
-
 void FUN_802093b4(void)
 
 {

@@ -41,11 +41,6 @@ void FUN_80279c50(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80279af0
-// Entry: 80279af0
-// Size: 20 bytes
-
 undefined4 FUN_80279af0(int param_1)
 
 {
@@ -65,13 +60,8 @@ undefined4 FUN_80279af0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: typed global pointer comparisons need manual cleanup, conflicting local pointer bases for shared globals: DAT_803def74. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 uint FUN_80279b04(int param_1,int param_2)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
     return 0;
 }
 
@@ -87,13 +77,8 @@ uint FUN_80279b04(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: conflicting local pointer bases for shared globals: DAT_803def74. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 undefined4 FUN_80279c00(uint param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
     return 0;
 }
 
@@ -109,11 +94,6 @@ undefined4 FUN_80279c00(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80279c50(int param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

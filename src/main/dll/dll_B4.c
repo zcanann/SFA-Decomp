@@ -45,11 +45,6 @@ undefined4 FUN_80101068(int param_1,int *param_2,int param_3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80101068
-// Entry: 80101068
-// Size: 468 bytes
-
 undefined4 FUN_80101068(int param_1,int *param_2,int param_3)
 
 {

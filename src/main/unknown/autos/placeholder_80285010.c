@@ -30,11 +30,6 @@ int FUN_80285010(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80285010
-// Entry: 80285010
-// Size: 44 bytes
-
 int FUN_80285010(void)
 
 {

@@ -52,11 +52,6 @@ void FUN_802946dc(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80293fb4
-// Entry: 80293fb4
-// Size: 296 bytes
-
 void FUN_80293fb4(void)
 
 {
@@ -82,11 +77,6 @@ void FUN_80293fb4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_802940dc
-// Entry: 802940dc
-// Size: 328 bytes
-
 void FUN_802940dc(void)
 
 {
@@ -112,11 +102,6 @@ void FUN_802940dc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80294224
-// Entry: 80294224
-// Size: 416 bytes
-
 void FUN_80294224(void)
 
 {
@@ -142,11 +127,6 @@ void FUN_80294224(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_802943c4
-// Entry: 802943c4
-// Size: 320 bytes
-
 void FUN_802943c4(void)
 
 {
@@ -221,11 +201,6 @@ LAB_802944e8:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80294504
-// Entry: 80294504
-// Size: 220 bytes
-
 void FUN_80294504(void)
 
 {
@@ -247,11 +222,6 @@ void FUN_80294504(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_802945e0
-// Entry: 802945e0
-// Size: 252 bytes
-
 void FUN_802945e0(void)
 
 {
@@ -273,11 +243,6 @@ void FUN_802945e0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_802946dc
-// Entry: 802946dc
-// Size: 284 bytes
-
 void FUN_802946dc(void)
 
 {

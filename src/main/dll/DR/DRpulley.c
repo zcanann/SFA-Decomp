@@ -4,8 +4,8 @@
  * Owner: main/dll/DR/DRpulley.c
  * Text span: 0x801ECF60-0x801ED1FC
  * Imported Ghidra functions: 4
- * Verbatim-safe functions: 1
- * Auto-stubbed functions: 3
+ * Verbatim-safe functions: 4
+ * Auto-stubbed functions: 0
  */
 
 #include "ghidra_import.h"
@@ -56,11 +56,6 @@ void FUN_801ed09c(short *param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801ecf60
-// Entry: 801ecf60
-// Size: 148 bytes
-
 void FUN_801ecf60(undefined4 param_1,int param_2)
 
 {
@@ -102,13 +97,11 @@ void FUN_801ecf60(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801ecff4(int param_1)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  (**(code **)(*DAT_803dd6ec + 0x34))(*(int *)(param_1 + 0xb8) + 0x28);
+  return;
 }
 
 /*
@@ -123,14 +116,21 @@ void FUN_801ecff4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 uint FUN_801ed02c(int param_1)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
-    return 0;
+  int iVar1;
+  uint uVar2;
+  
+  iVar1 = (**(code **)(*DAT_803dd6ec + 0x34))(*(int *)(param_1 + 0xb8) + 0x28);
+  if ((iVar1 == 3) && (DAT_803dcd24 == -1)) {
+    uVar2 = 1;
+  }
+  else {
+    uVar2 = countLeadingZeros((DAT_803dcd24 + -1) - iVar1);
+    uVar2 = uVar2 >> 5;
+  }
+  return uVar2;
 }
 
 /*
@@ -145,11 +145,41 @@ uint FUN_801ed02c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801ed09c(short *param_1)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  float fVar1;
+  int iVar2;
+  short *psVar3;
+  
+  psVar3 = *(short **)(param_1 + 0x5c);
+  iVar2 = FUN_8005b60c(*(int *)((uint)*(byte *)(psVar3 + 0x21a) * 0xc + -0x7fcd6e30 +
+                               (uint)*(byte *)((int)psVar3 + 0x435) * 4),(int *)0x0,(int *)0x0,
+                       (int *)0x0,(uint *)0x0);
+  if (iVar2 != 0) {
+    if (*(char *)(psVar3 + 0x21a) != '\0') {
+      *(undefined4 *)(param_1 + 6) = *(undefined4 *)(iVar2 + 8);
+      *(undefined4 *)(param_1 + 8) = *(undefined4 *)(iVar2 + 0xc);
+      *(undefined4 *)(param_1 + 10) = *(undefined4 *)(iVar2 + 0x10);
+      *param_1 = (ushort)*(byte *)(iVar2 + 0x29) << 8;
+    }
+    (**(code **)(*DAT_803dd6ec + 0x10))(param_1,psVar3 + 0x14,0);
+    *(undefined4 *)(psVar3 + 6) = *(undefined4 *)(param_1 + 6);
+    *(undefined4 *)(psVar3 + 8) = *(undefined4 *)(param_1 + 8);
+    *(undefined4 *)(psVar3 + 10) = *(undefined4 *)(param_1 + 10);
+    *psVar3 = *param_1;
+    fVar1 = FLOAT_803e6780;
+    *(float *)(psVar3 + 0x24a) = FLOAT_803e6780;
+    *(float *)(psVar3 + 0x24c) = fVar1;
+    *(float *)(psVar3 + 0x24e) = fVar1;
+    (**(code **)(*DAT_803dd728 + 0x20))(param_1,psVar3 + 0xbc);
+    *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x10) = *(undefined4 *)(param_1 + 6);
+    *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x14) = *(undefined4 *)(param_1 + 8);
+    *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x18) = *(undefined4 *)(param_1 + 10);
+    *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x1c) = *(undefined4 *)(param_1 + 0xc);
+    *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x20) = *(undefined4 *)(param_1 + 0xe);
+    *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x24) = *(undefined4 *)(param_1 + 0x10);
+    *(undefined *)((int)psVar3 + 0x3d3) = 1;
+  }
+  return;
 }

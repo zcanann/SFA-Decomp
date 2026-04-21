@@ -32,11 +32,6 @@ void FUN_802801a8(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_802801a8
-// Entry: 802801a8
-// Size: 196 bytes
-
 void FUN_802801a8(void)
 
 {

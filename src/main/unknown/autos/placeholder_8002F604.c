@@ -53,11 +53,6 @@ void FUN_8003042c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8002f604
-// Entry: 8002f604
-// Size: 32 bytes
-
 undefined2 FUN_8002f604(int param_1)
 
 {
@@ -78,11 +73,6 @@ undefined2 FUN_8002f604(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8002f624
-// Entry: 8002f624
-// Size: 72 bytes
-
 void FUN_8002f624(int param_1,int param_2,short param_3,undefined2 param_4)
 
 {
@@ -114,11 +104,6 @@ void FUN_8002f624(int param_1,int param_2,short param_3,undefined2 param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8002f66c
-// Entry: 8002f66c
-// Size: 96 bytes
-
 void FUN_8002f66c(int param_1,uint param_2)
 
 {
@@ -145,11 +130,6 @@ void FUN_8002f66c(int param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8002f6cc
-// Entry: 8002f6cc
-// Size: 1140 bytes
-
 undefined4 FUN_8002f6cc(double param_1,int param_2,float *param_3)
 
 {
@@ -335,11 +315,6 @@ undefined4 FUN_8002f6cc(double param_1,int param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8002fb40
-// Entry: 8002fb40
-// Size: 2236 bytes
-
 void FUN_8002fb40(undefined8 param_1,double param_2)
 
 {
@@ -658,11 +633,6 @@ void FUN_8002fb40(undefined8 param_1,double param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_800303fc
-// Entry: 800303fc
-// Size: 48 bytes
-
 undefined4 FUN_800303fc(double param_1,int param_2)
 
 {
@@ -688,14 +658,6 @@ undefined4 FUN_800303fc(double param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8003042c
-// Entry: 8003042c
-// Size: 852 bytes
-
-/* WARNING: Removing unreachable block (ram,0x80030760) */
-/* WARNING: Removing unreachable block (ram,0x8003043c) */
-
 void FUN_8003042c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,uint param_11,undefined4 param_12,

@@ -41,11 +41,6 @@ undefined4 FUN_80100f2c(int param_1,int *param_2,int param_3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80100f2c
-// Entry: 80100f2c
-// Size: 316 bytes
-
 undefined4 FUN_80100f2c(int param_1,int *param_2,int param_3)
 
 {

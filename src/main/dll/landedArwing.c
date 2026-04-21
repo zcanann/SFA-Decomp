@@ -41,11 +41,6 @@ undefined4 FUN_80165884(short *param_1,int param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80165884
-// Entry: 80165884
-// Size: 436 bytes
-
 undefined4 FUN_80165884(short *param_1,int param_2)
 
 {

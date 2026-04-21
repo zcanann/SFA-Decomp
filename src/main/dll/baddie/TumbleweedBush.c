@@ -130,13 +130,8 @@ void FUN_80132308(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 undefined4 FUN_80131078(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
     return 0;
 }
 
@@ -152,13 +147,8 @@ undefined4 FUN_80131078(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80131508(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -173,17 +163,12 @@ void FUN_80131508(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, pointer-heavy local typing needs manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80131574(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,undefined param_11,undefined *param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16,
                  undefined2 param_17,undefined2 param_18,undefined2 param_19,undefined2 param_20)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -198,11 +183,6 @@ void FUN_80131574(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801317f4
-// Entry: 801317f4
-// Size: 88 bytes
-
 void FUN_801317f4(void)
 
 {
@@ -229,16 +209,11 @@ void FUN_801317f4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8013184c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -253,11 +228,6 @@ void FUN_8013184c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80131920
-// Entry: 80131920
-// Size: 116 bytes
-
 void FUN_80131920(int param_1,int param_2)
 
 {
@@ -288,16 +258,11 @@ void FUN_80131920(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801319a0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,undefined4 param_10,uint param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -312,13 +277,6 @@ void FUN_801319a0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80131cc8
-// Entry: 80131cc8
-// Size: 948 bytes
-
-/* WARNING: Removing unreachable block (ram,0x80131d20) */
-
 void FUN_80131cc8(int param_1)
 
 {
@@ -453,11 +411,6 @@ LAB_80131fc8:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8013207c
-// Entry: 8013207c
-// Size: 32 bytes
-
 void FUN_8013207c(uint param_1)
 
 {
@@ -477,11 +430,6 @@ void FUN_8013207c(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8013209c
-// Entry: 8013209c
-// Size: 168 bytes
-
 void FUN_8013209c(undefined4 param_1,undefined4 param_2,short param_3,short param_4,short param_5)
 
 {
@@ -521,11 +469,6 @@ void FUN_8013209c(undefined4 param_1,undefined4 param_2,short param_3,short para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80132144
-// Entry: 80132144
-// Size: 164 bytes
-
 void FUN_80132144(undefined4 param_1,undefined4 param_2,short param_3,short param_4,short param_5)
 
 {
@@ -565,11 +508,6 @@ void FUN_80132144(undefined4 param_1,undefined4 param_2,short param_3,short para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801321e8
-// Entry: 801321e8
-// Size: 172 bytes
-
 void FUN_801321e8(undefined4 param_1,undefined4 param_2,short param_3,short param_4,short param_5,
                  undefined2 param_6)
 
@@ -611,16 +549,11 @@ void FUN_801321e8(undefined4 param_1,undefined4 param_2,short param_3,short para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80132294(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -635,11 +568,6 @@ void FUN_80132294(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80132308(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

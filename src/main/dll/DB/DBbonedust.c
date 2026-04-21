@@ -26,11 +26,6 @@ int FUN_801e18cc(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e18cc
-// Entry: 801e18cc
-// Size: 16 bytes
-
 int FUN_801e18cc(int param_1)
 
 {

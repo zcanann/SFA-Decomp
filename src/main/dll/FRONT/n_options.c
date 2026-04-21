@@ -4,8 +4,8 @@
  * Owner: main/dll/FRONT/n_options.c
  * Text span: 0x8011784C-0x801184E8
  * Imported Ghidra functions: 7
- * Verbatim-safe functions: 3
- * Auto-stubbed functions: 4
+ * Verbatim-safe functions: 2
+ * Auto-stubbed functions: 5
  */
 
 #include "ghidra_import.h"
@@ -111,13 +111,8 @@ bool FUN_801184a0(uint param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 undefined4 FUN_8011784c(int param_1,int param_2)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
     return 0;
 }
 
@@ -133,11 +128,6 @@ undefined4 FUN_8011784c(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80117910
-// Entry: 80117910
-// Size: 1280 bytes
-
 void FUN_80117910(undefined4 param_1,undefined4 param_2,uint param_3,uint param_4,uint param_5)
 
 {
@@ -241,48 +231,9 @@ void FUN_80117910(undefined4 param_1,undefined4 param_2,uint param_3,uint param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80117e10
-// Entry: 80117e10
-// Size: 268 bytes
-
 undefined4 FUN_80117e10(uint param_1,int param_2)
-
 {
-  undefined4 uVar1;
-  
-  if ((DAT_803a6a58 == 0) || (DAT_803a6a5f == '\0')) {
-    uVar1 = 0;
-  }
-  else {
-    if (0x7f < (int)param_1) {
-      param_1 = 0x7f;
-    }
-    if ((int)param_1 < 0) {
-      param_1 = 0;
-    }
-    if (60000 < param_2) {
-      param_2 = 60000;
-    }
-    if (param_2 < 0) {
-      param_2 = 0;
-    }
-    FUN_80243e74();
-    DAT_803a6a98 = (float)((double)CONCAT44(0x43300000,param_1 ^ 0x80000000) - DOUBLE_803e29c8);
-    if (param_2 == 0) {
-      DAT_803a6aa0 = 0;
-      DAT_803a6a94 = DAT_803a6a98;
-    }
-    else {
-      DAT_803a6aa0 = param_2 << 5;
-      DAT_803a6a9c = (DAT_803a6a98 - DAT_803a6a94) /
-                     (float)((double)CONCAT44(0x43300000,DAT_803a6aa0 ^ 0x80000000) -
-                            DOUBLE_803e29c8);
-    }
-    FUN_80243e9c();
-    uVar1 = 1;
-  }
-  return uVar1;
+    return 0;
 }
 
 /*
@@ -297,13 +248,8 @@ undefined4 FUN_80117e10(uint param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80117f1c(undefined2 *param_1,short *param_2,uint param_3)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -318,13 +264,8 @@ void FUN_80117f1c(undefined2 *param_1,short *param_2,uint param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, typed global pointer comparisons need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801182c0(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -339,13 +280,8 @@ void FUN_801182c0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80118434(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -360,11 +296,6 @@ void FUN_80118434(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801184a0
-// Entry: 801184a0
-// Size: 72 bytes
-
 bool FUN_801184a0(uint param_1)
 
 {

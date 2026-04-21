@@ -816,6 +816,30 @@ def render_function_info_block(function: FunctionDump) -> str:
     return "\n".join(lines) + "\n"
 
 
+def strip_leading_function_prologue(raw_text: str) -> str:
+    lines = raw_text.rstrip().splitlines()
+    index = 0
+
+    while index < len(lines):
+        stripped = lines[index].strip()
+        if not stripped:
+            index += 1
+            continue
+        if stripped.startswith("//"):
+            index += 1
+            continue
+        if stripped.startswith("/*"):
+            while index < len(lines):
+                end_stripped = lines[index].strip()
+                index += 1
+                if "*/" in end_stripped:
+                    break
+            continue
+        break
+
+    return "\n".join(lines[index:]).rstrip() + "\n"
+
+
 def header_relpath_for_owner(owner: str) -> str:
     return normalize(owner).removesuffix(".c") + ".h"
 
@@ -826,18 +850,12 @@ def header_guard(relpath: str) -> str:
 
 def render_stub(function: FunctionDump, override_reasons: list[str] | None = None) -> str:
     lines: list[str] = []
-    reasons = override_reasons or function.unsafe_reasons
-    reason = ", ".join(reasons)
-    lines.append(f"/* Auto-stubbed for compileability: {reason}. */")
-    lines.append("/* Original raw Ghidra body omitted for compile-first stubbing. */")
-    lines.append("")
     if function.safe_signature:
         lines.append(function.signature_text)
     else:
         lines.append(f"{simplify_return_type(function.return_type)}")
         lines.append(f"{function.name}()")
     lines.append("{")
-    lines.append("    /* TODO: replace this stub with a cleaned-up Ghidra body. */")
     return_stmt = default_return_statement(function.return_type)
     if return_stmt is not None:
         lines.append(return_stmt)
@@ -898,9 +916,8 @@ def render_source(
     for function in functions:
         reasons = stub_reasons.get(function.name)
         lines.append(render_function_info_block(function).rstrip())
-        lines.append("")
         if reasons is None:
-            lines.append(function.raw_text.rstrip())
+            lines.append(strip_leading_function_prologue(function.raw_text).rstrip())
         else:
             lines.append(render_stub(function, reasons).rstrip())
         lines.append("")

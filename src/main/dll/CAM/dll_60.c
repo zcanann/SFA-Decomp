@@ -4,8 +4,8 @@
  * Owner: main/dll/CAM/dll_60.c
  * Text span: 0x8010C19C-0x8010C374
  * Imported Ghidra functions: 2
- * Verbatim-safe functions: 1
- * Auto-stubbed functions: 1
+ * Verbatim-safe functions: 2
+ * Auto-stubbed functions: 0
  */
 
 #include "ghidra_import.h"
@@ -39,11 +39,6 @@ void FUN_8010c304(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8010c1a4
-// Entry: 8010c1a4
-// Size: 348 bytes
-
 void FUN_8010c1a4(int param_1,float *param_2,float *param_3,float *param_4,float *param_5)
 
 {
@@ -107,11 +102,15 @@ void FUN_8010c1a4(int param_1,float *param_2,float *param_3,float *param_4,float
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8010c304(int param_1)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  if (*(int *)(param_1 + 0x11c) != 0) {
+    (**(code **)(*DAT_803dd6d0 + 0x48))(0);
+  }
+  FUN_800238c4(DAT_803de1e0);
+  DAT_803de1e0 = 0;
+  FUN_800551ec();
+  *(byte *)(param_1 + 0x143) = *(byte *)(param_1 + 0x143) & 0x7f;
+  return;
 }

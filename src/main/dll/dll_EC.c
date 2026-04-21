@@ -41,11 +41,6 @@ void FUN_80206fa0(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: pointer-heavy local typing needs manual cleanup, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80206fa0(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

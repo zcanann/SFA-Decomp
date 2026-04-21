@@ -4,8 +4,8 @@
  * Owner: main/dll/IM/IMspacecraft.c
  * Text span: 0x801A57EC-0x801A6AD0
  * Imported Ghidra functions: 12
- * Verbatim-safe functions: 9
- * Auto-stubbed functions: 3
+ * Verbatim-safe functions: 7
+ * Auto-stubbed functions: 5
  */
 
 #include "ghidra_import.h"
@@ -127,11 +127,6 @@ void FUN_801a6608(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801a5818
-// Entry: 801a5818
-// Size: 48 bytes
-
 void FUN_801a5818(int param_1)
 
 {
@@ -155,14 +150,6 @@ void FUN_801a5818(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801a584c
-// Entry: 801a584c
-// Size: 896 bytes
-
-/* WARNING: Removing unreachable block (ram,0x801a5bac) */
-/* WARNING: Removing unreachable block (ram,0x801a585c) */
-
 int FUN_801a584c(ushort *param_1,float *param_2)
 
 {
@@ -281,13 +268,8 @@ int FUN_801a584c(ushort *param_1,float *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: NAN macro needs manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801a5bcc(ushort *param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -302,11 +284,6 @@ void FUN_801a5bcc(ushort *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801a5cb4
-// Entry: 801a5cb4
-// Size: 224 bytes
-
 void FUN_801a5cb4(int param_1,int param_2,int param_3)
 
 {
@@ -343,11 +320,6 @@ void FUN_801a5cb4(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801a5dac
-// Entry: 801a5dac
-// Size: 48 bytes
-
 void FUN_801a5dac(int param_1)
 
 {
@@ -369,11 +341,6 @@ void FUN_801a5dac(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801a5ddc
-// Entry: 801a5ddc
-// Size: 48 bytes
-
 void FUN_801a5ddc(int param_1)
 
 {
@@ -397,13 +364,8 @@ void FUN_801a5ddc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: pointer-heavy local typing needs manual cleanup, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801a5e10(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -418,11 +380,6 @@ void FUN_801a5e10(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801a6224
-// Entry: 801a6224
-// Size: 272 bytes
-
 void FUN_801a6224(undefined2 *param_1,int param_2,int param_3)
 
 {
@@ -465,60 +422,10 @@ void FUN_801a6224(undefined2 *param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801a633c
-// Entry: 801a633c
-// Size: 488 bytes
-
-/* WARNING: Removing unreachable block (ram,0x801a6500) */
-/* WARNING: Removing unreachable block (ram,0x801a634c) */
-
 void FUN_801a633c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
-
 {
-  uint uVar1;
-  uint uVar2;
-  int iVar3;
-  double dVar4;
-  
-  iVar3 = *(int *)(param_9 + 0xb8);
-  DAT_803de7a0 = DAT_803de7a0 + 1;
-  FUN_8000bb38(param_9,0x106);
-  if (DAT_803de7a0 < 2) {
-    uVar1 = FUN_80022264(0,1);
-    uVar2 = FUN_80022264(0x32,0x3c);
-    FUN_8009adfc((double)(float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5120),
-                 param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,1,1,0,uVar1 & 0xff,
-                 0,1,0);
-  }
-  else {
-    uVar1 = FUN_80022264(0,1);
-    uVar2 = FUN_80022264(0x32,0x3c);
-    FUN_8009adfc((double)(float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5120),
-                 param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,1,1,0,uVar1 & 0xff,
-                 0,0,0);
-  }
-  *(undefined *)(iVar3 + 0x114) = 1;
-  *(float *)(iVar3 + 0x110) = FLOAT_803e5100;
-  *(ushort *)(param_9 + 6) = *(ushort *)(param_9 + 6) | 0x4000;
-  FUN_80035a6c(param_9,(short)(int)(FLOAT_803e5104 *
-                                   (float)((double)CONCAT44(0x43300000,
-                                                            (uint)*(byte *)(*(int *)(param_9 + 0x50)
-                                                                           + 0x62)) -
-                                          DOUBLE_803e5128)));
-  iVar3 = FUN_8002bac4();
-  if ((*(ushort *)(iVar3 + 0xb0) & 0x1000) == 0) {
-    dVar4 = (double)FUN_800217c8((float *)(param_9 + 0x18),(float *)(iVar3 + 0x18));
-    if (dVar4 <= (double)FLOAT_803e5108) {
-      dVar4 = (double)(FLOAT_803e510c - (float)(dVar4 / (double)FLOAT_803e5108));
-      FUN_8000e670((double)(float)((double)FLOAT_803e5110 * dVar4),
-                   (double)(float)((double)FLOAT_803e5114 * dVar4),(double)FLOAT_803e5118);
-      FUN_80014acc((double)(float)((double)FLOAT_803e511c * dVar4));
-    }
-  }
-  return;
 }
 
 /*
@@ -533,34 +440,8 @@ void FUN_801a633c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801a6534
-// Entry: 801a6534
-// Size: 140 bytes
-
 void FUN_801a6534(int param_1)
-
 {
-  int *piVar1;
-  int iVar2;
-  int local_18 [4];
-  
-  iVar2 = *(int *)(param_1 + 0xb8);
-  piVar1 = FUN_80037048(0x2f,local_18);
-  if (0 < local_18[0]) {
-    do {
-      if (*piVar1 == param_1) {
-        FUN_8003709c(param_1,0x2f);
-        break;
-      }
-      piVar1 = piVar1 + 1;
-      local_18[0] = local_18[0] + -1;
-    } while (local_18[0] != 0);
-  }
-  if (*(char *)(iVar2 + 0x114) == '\x01') {
-    DAT_803de7a0 = DAT_803de7a0 + -1;
-  }
-  return;
 }
 
 /*
@@ -575,11 +456,6 @@ void FUN_801a6534(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801a65c0
-// Entry: 801a65c0
-// Size: 68 bytes
-
 void FUN_801a65c0(int param_1)
 
 {
@@ -603,13 +479,8 @@ void FUN_801a65c0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: pointer-heavy local typing needs manual cleanup, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801a6608(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

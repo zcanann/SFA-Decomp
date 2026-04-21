@@ -68,11 +68,6 @@ void FUN_801eda60(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801eda60
-// Entry: 801eda60
-// Size: 1700 bytes
-
 void FUN_801eda60(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9)

@@ -41,14 +41,6 @@ void FUN_801c176c(int param_1,int param_2,int param_3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801c1414
-// Entry: 801c1414
-// Size: 376 bytes
-
-/* WARNING: Removing unreachable block (ram,0x801c156c) */
-/* WARNING: Removing unreachable block (ram,0x801c1424) */
-
 void FUN_801c1414(void)
 
 {
@@ -122,13 +114,8 @@ void FUN_801c1414(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: scalar-to-pointer casts need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801c158c(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -143,11 +130,6 @@ void FUN_801c158c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801c176c
-// Entry: 801c176c
-// Size: 128 bytes
-
 void FUN_801c176c(int param_1,int param_2,int param_3)
 
 {

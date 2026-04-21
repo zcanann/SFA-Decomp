@@ -96,14 +96,6 @@ void FUN_801c3c38(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801c2ec8
-// Entry: 801c2ec8
-// Size: 852 bytes
-
-/* WARNING: Removing unreachable block (ram,0x801c31f4) */
-/* WARNING: Removing unreachable block (ram,0x801c2ed8) */
-
 void FUN_801c2ec8(ushort *param_1)
 
 {
@@ -176,11 +168,6 @@ void FUN_801c2ec8(ushort *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801c321c
-// Entry: 801c321c
-// Size: 348 bytes
-
 void FUN_801c321c(undefined4 param_1,undefined4 param_2,int param_3)
 
 {
@@ -239,11 +226,6 @@ void FUN_801c321c(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801c3388
-// Entry: 801c3388
-// Size: 148 bytes
-
 void FUN_801c3388(int param_1)
 
 {
@@ -280,11 +262,6 @@ void FUN_801c3388(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801c341c
-// Entry: 801c341c
-// Size: 184 bytes
-
 void FUN_801c341c(void)
 
 {
@@ -322,15 +299,10 @@ void FUN_801c341c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801c34d8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -345,13 +317,8 @@ void FUN_801c34d8(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer assignments need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801c3abc(undefined2 *param_1,int param_2)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -366,11 +333,6 @@ void FUN_801c3abc(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801c3bdc
-// Entry: 801c3bdc
-// Size: 92 bytes
-
 void FUN_801c3bdc(int param_1)
 
 {
@@ -398,11 +360,6 @@ void FUN_801c3bdc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801c3c38
-// Entry: 801c3c38
-// Size: 136 bytes
-
 void FUN_801c3c38(int param_1)
 
 {

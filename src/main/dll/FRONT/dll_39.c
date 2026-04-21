@@ -117,13 +117,8 @@ void FUN_801164c0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80115ff0(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -138,11 +133,6 @@ void FUN_80115ff0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80116110
-// Entry: 80116110
-// Size: 72 bytes
-
 undefined4 FUN_80116110(void)
 
 {
@@ -166,11 +156,6 @@ undefined4 FUN_80116110(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8011615c
-// Entry: 8011615c
-// Size: 96 bytes
-
 void FUN_8011615c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
@@ -205,13 +190,8 @@ void FUN_8011615c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 undefined4 FUN_80116258(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
     return 0;
 }
 
@@ -227,11 +207,6 @@ undefined4 FUN_80116258(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8011637c
-// Entry: 8011637c
-// Size: 60 bytes
-
 void FUN_8011637c(void)
 
 {
@@ -256,11 +231,6 @@ void FUN_8011637c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801163b8
-// Entry: 801163b8
-// Size: 264 bytes
-
 void FUN_801163b8(void)
 
 {
@@ -318,12 +288,7 @@ void FUN_801163b8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: raw string-label references need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801164c0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

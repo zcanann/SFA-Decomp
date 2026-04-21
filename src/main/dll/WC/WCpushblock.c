@@ -4,8 +4,8 @@
  * Owner: main/dll/WC/WCpushblock.c
  * Text span: 0x801EE104-0x801EE880
  * Imported Ghidra functions: 4
- * Verbatim-safe functions: 3
- * Auto-stubbed functions: 1
+ * Verbatim-safe functions: 2
+ * Auto-stubbed functions: 2
  */
 
 #include "ghidra_import.h"
@@ -90,13 +90,8 @@ void FUN_801ee6f8(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, pointer-heavy local typing needs manual cleanup, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801ee104(undefined4 param_1,undefined4 param_2,int param_3)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -111,11 +106,6 @@ void FUN_801ee104(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801ee658
-// Entry: 801ee658
-// Size: 52 bytes
-
 void FUN_801ee658(void)
 
 {
@@ -138,23 +128,11 @@ void FUN_801ee658(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801ee68c
-// Entry: 801ee68c
-// Size: 52 bytes
-
 void FUN_801ee68c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
-
 {
-  if (DAT_803de8e0 == 0) {
-    DAT_803de8e0 = FUN_80054ed0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                                0x186,param_10,param_11,param_12,param_13,param_14,param_15,param_16
-                               );
-  }
-  return;
 }
 
 /*
@@ -169,11 +147,6 @@ void FUN_801ee68c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801ee6f8
-// Entry: 801ee6f8
-// Size: 392 bytes
-
 void FUN_801ee6f8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9)

@@ -4,8 +4,8 @@
  * Owner: main/dll/dll_13F.c
  * Text span: 0x801730CC-0x80173750
  * Imported Ghidra functions: 4
- * Verbatim-safe functions: 2
- * Auto-stubbed functions: 2
+ * Verbatim-safe functions: 3
+ * Auto-stubbed functions: 1
  */
 
 #include "ghidra_import.h"
@@ -69,11 +69,6 @@ void FUN_8017372c(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801730d0
-// Entry: 801730d0
-// Size: 752 bytes
-
 void FUN_801730d0(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9)
@@ -200,13 +195,8 @@ void FUN_801730d0(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801733c0(short *param_1,int param_2)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -221,13 +211,14 @@ void FUN_801733c0(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801736d8(int param_1)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  if (*(int *)(param_1 + 0xc4) != 0) {
+    FUN_80037da8(*(int *)(param_1 + 0xc4),param_1);
+  }
+  (**(code **)(*DAT_803dd6f8 + 0x18))(param_1);
+  return;
 }
 
 /*
@@ -242,11 +233,6 @@ void FUN_801736d8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8017372c
-// Entry: 8017372c
-// Size: 36 bytes
-
 void FUN_8017372c(int param_1)
 
 {

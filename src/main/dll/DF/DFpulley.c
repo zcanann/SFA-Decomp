@@ -44,11 +44,6 @@ void FUN_801c10e8(short *param_1,int param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801c0f60
-// Entry: 801c0f60
-// Size: 172 bytes
-
 void FUN_801c0f60(int param_1,undefined4 param_2,int param_3)
 
 {
@@ -81,11 +76,6 @@ void FUN_801c0f60(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801c101c
-// Entry: 801c101c
-// Size: 52 bytes
-
 void FUN_801c101c(int param_1)
 
 {
@@ -107,11 +97,6 @@ void FUN_801c101c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801c1054
-// Entry: 801c1054
-// Size: 148 bytes
-
 void FUN_801c1054(int param_1)
 
 {
@@ -148,11 +133,6 @@ void FUN_801c1054(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801c10e8
-// Entry: 801c10e8
-// Size: 196 bytes
-
 void FUN_801c10e8(short *param_1,int param_2)
 
 {

@@ -35,11 +35,6 @@ void FUN_801e167c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e167c
-// Entry: 801e167c
-// Size: 592 bytes
-
 void FUN_801e167c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)

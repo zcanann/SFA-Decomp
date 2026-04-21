@@ -26,11 +26,6 @@ void FUN_8026fd1c(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8026fd1c
-// Entry: 8026fd1c
-// Size: 120 bytes
-
 void FUN_8026fd1c(int param_1)
 
 {

@@ -36,11 +36,6 @@ void FUN_8017ab28(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8017ab28
-// Entry: 8017ab28
-// Size: 280 bytes
-
 void FUN_8017ab28(int param_1)
 
 {

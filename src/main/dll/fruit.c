@@ -48,11 +48,6 @@ void FUN_80208cac(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_802086d0
-// Entry: 802086d0
-// Size: 348 bytes
-
 undefined4 FUN_802086d0(int param_1,undefined4 param_2,int param_3)
 
 {
@@ -113,11 +108,6 @@ undefined4 FUN_802086d0(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8020882c
-// Entry: 8020882c
-// Size: 436 bytes
-
 void FUN_8020882c(uint param_1)
 
 {
@@ -178,11 +168,6 @@ void FUN_8020882c(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_802089fc
-// Entry: 802089fc
-// Size: 32 bytes
-
 void FUN_802089fc(uint param_1)
 
 {
@@ -202,13 +187,8 @@ void FUN_802089fc(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer assignments need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80208a1c(undefined2 *param_1,int param_2)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -223,11 +203,6 @@ void FUN_80208a1c(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80208ae0
-// Entry: 80208ae0
-// Size: 44 bytes
-
 void FUN_80208ae0(void)
 
 {
@@ -247,11 +222,6 @@ void FUN_80208ae0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80208b0c
-// Entry: 80208b0c
-// Size: 44 bytes
-
 void FUN_80208b0c(void)
 
 {
@@ -271,16 +241,6 @@ void FUN_80208b0c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80208b40
-// Entry: 80208b40
-// Size: 344 bytes
-
-/* WARNING: Removing unreachable block (ram,0x80208c70) */
-/* WARNING: Removing unreachable block (ram,0x80208c68) */
-/* WARNING: Removing unreachable block (ram,0x80208b58) */
-/* WARNING: Removing unreachable block (ram,0x80208b50) */
-
 void FUN_80208b40(int *param_1,int param_2)
 
 {
@@ -337,11 +297,6 @@ void FUN_80208b40(int *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80208cac
-// Entry: 80208cac
-// Size: 80 bytes
-
 void FUN_80208cac(int param_1)
 
 {

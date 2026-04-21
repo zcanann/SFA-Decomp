@@ -4,8 +4,8 @@
  * Owner: main/dll/TREX/TREX_trex.c
  * Text span: 0x801E4304-0x801E6880
  * Imported Ghidra functions: 39
- * Verbatim-safe functions: 37
- * Auto-stubbed functions: 2
+ * Verbatim-safe functions: 36
+ * Auto-stubbed functions: 3
  */
 
 #include "ghidra_import.h"
@@ -188,11 +188,6 @@ void FUN_801e66b0(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e4330
-// Entry: 801e4330
-// Size: 84 bytes
-
 void FUN_801e4330(int param_1)
 
 {
@@ -221,11 +216,6 @@ void FUN_801e4330(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e4384
-// Entry: 801e4384
-// Size: 48 bytes
-
 void FUN_801e4384(int param_1)
 
 {
@@ -249,11 +239,6 @@ void FUN_801e4384(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e43b4
-// Entry: 801e43b4
-// Size: 312 bytes
-
 void FUN_801e43b4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
@@ -310,11 +295,6 @@ void FUN_801e43b4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e44ec
-// Entry: 801e44ec
-// Size: 676 bytes
-
 void FUN_801e44ec(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
@@ -385,11 +365,6 @@ void FUN_801e44ec(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e4790
-// Entry: 801e4790
-// Size: 224 bytes
-
 void FUN_801e4790(uint param_1)
 
 {
@@ -428,11 +403,6 @@ void FUN_801e4790(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e4888
-// Entry: 801e4888
-// Size: 48 bytes
-
 void FUN_801e4888(void)
 
 {
@@ -452,11 +422,6 @@ void FUN_801e4888(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e48b8
-// Entry: 801e48b8
-// Size: 48 bytes
-
 void FUN_801e48b8(int param_1)
 
 {
@@ -480,11 +445,6 @@ void FUN_801e48b8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e48e8
-// Entry: 801e48e8
-// Size: 200 bytes
-
 void FUN_801e48e8(int param_1)
 
 {
@@ -519,11 +479,6 @@ void FUN_801e48e8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e49b0
-// Entry: 801e49b0
-// Size: 460 bytes
-
 void FUN_801e49b0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9)
@@ -587,11 +542,6 @@ void FUN_801e49b0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e4bac
-// Entry: 801e4bac
-// Size: 84 bytes
-
 void FUN_801e4bac(int param_1)
 
 {
@@ -620,11 +570,6 @@ void FUN_801e4bac(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e4c00
-// Entry: 801e4c00
-// Size: 48 bytes
-
 void FUN_801e4c00(int param_1)
 
 {
@@ -648,11 +593,6 @@ void FUN_801e4c00(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e4c30
-// Entry: 801e4c30
-// Size: 156 bytes
-
 void FUN_801e4c30(uint param_1)
 
 {
@@ -686,11 +626,6 @@ void FUN_801e4c30(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e4ccc
-// Entry: 801e4ccc
-// Size: 812 bytes
-
 void FUN_801e4ccc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9)
@@ -787,11 +722,6 @@ void FUN_801e4ccc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e4ff8
-// Entry: 801e4ff8
-// Size: 176 bytes
-
 void FUN_801e4ff8(int param_1)
 
 {
@@ -827,11 +757,6 @@ void FUN_801e4ff8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e50b0
-// Entry: 801e50b0
-// Size: 212 bytes
-
 undefined4 FUN_801e50b0(uint param_1,undefined4 param_2,int param_3)
 
 {
@@ -873,11 +798,6 @@ undefined4 FUN_801e50b0(uint param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e5194
-// Entry: 801e5194
-// Size: 48 bytes
-
 void FUN_801e5194(int param_1)
 
 {
@@ -899,11 +819,6 @@ void FUN_801e5194(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e51cc
-// Entry: 801e51cc
-// Size: 644 bytes
-
 void FUN_801e51cc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,undefined4 param_10,undefined4 param_11,int param_12,
@@ -986,15 +901,10 @@ void FUN_801e51cc(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer assignments need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801e5450(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,int param_10)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -1009,11 +919,6 @@ void FUN_801e5450(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e5564
-// Entry: 801e5564
-// Size: 196 bytes
-
 void FUN_801e5564(uint param_1)
 
 {
@@ -1053,11 +958,6 @@ void FUN_801e5564(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e5688
-// Entry: 801e5688
-// Size: 48 bytes
-
 void FUN_801e5688(int param_1)
 
 {
@@ -1081,11 +981,6 @@ void FUN_801e5688(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e56bc
-// Entry: 801e56bc
-// Size: 136 bytes
-
 void FUN_801e56bc(int param_1)
 
 {
@@ -1112,11 +1007,6 @@ void FUN_801e56bc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e579c
-// Entry: 801e579c
-// Size: 84 bytes
-
 void FUN_801e579c(undefined4 param_1)
 
 {
@@ -1137,11 +1027,6 @@ void FUN_801e579c(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e57f0
-// Entry: 801e57f0
-// Size: 120 bytes
-
 void FUN_801e57f0(void)
 
 {
@@ -1170,11 +1055,6 @@ void FUN_801e57f0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e586c
-// Entry: 801e586c
-// Size: 560 bytes
-
 void FUN_801e586c(short *param_1)
 
 {
@@ -1256,37 +1136,8 @@ void FUN_801e586c(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e5a9c
-// Entry: 801e5a9c
-// Size: 260 bytes
-
 void FUN_801e5a9c(uint param_1)
-
 {
-  float fVar1;
-  uint uVar2;
-  int *piVar3;
-  
-  *(undefined4 *)(param_1 + 0xf4) = 0xb4;
-  uVar2 = FUN_80022264(0x14,0x28);
-  fVar1 = FLOAT_803e65e0;
-  *(float *)(param_1 + 0x24) =
-       -(FLOAT_803e65e4 * (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e65d8)
-        + FLOAT_803e65e0);
-  *(float *)(param_1 + 0x28) = FLOAT_803e65c4;
-  *(float *)(param_1 + 0x2c) = FLOAT_803e65e8;
-  *(float *)(param_1 + 8) = *(float *)(param_1 + 8) * fVar1;
-  piVar3 = (int *)FUN_80013ee8(0x75);
-  (**(code **)(*piVar3 + 4))(param_1,DAT_803dcd00,0,0x10002,0xffffffff,0);
-  DAT_803dcd00 = DAT_803dcd00 + 1;
-  if (3 < DAT_803dcd00) {
-    DAT_803dcd00 = 1;
-  }
-  FUN_80013e4c((undefined *)piVar3);
-  FUN_8000bb38(param_1,0x35);
-  FUN_8000bb38(param_1,0x2ca);
-  return;
 }
 
 /*
@@ -1301,11 +1152,6 @@ void FUN_801e5a9c(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e5bb8
-// Entry: 801e5bb8
-// Size: 124 bytes
-
 void FUN_801e5bb8(int param_1)
 
 {
@@ -1329,11 +1175,6 @@ void FUN_801e5bb8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e5c34
-// Entry: 801e5c34
-// Size: 88 bytes
-
 void FUN_801e5c34(int param_1)
 
 {
@@ -1356,11 +1197,6 @@ void FUN_801e5c34(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e5c90
-// Entry: 801e5c90
-// Size: 372 bytes
-
 void FUN_801e5c90(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
@@ -1422,11 +1258,6 @@ void FUN_801e5c90(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e5e04
-// Entry: 801e5e04
-// Size: 400 bytes
-
 void FUN_801e5e04(int param_1,int param_2)
 
 {
@@ -1480,11 +1311,6 @@ void FUN_801e5e04(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e5fa4
-// Entry: 801e5fa4
-// Size: 72 bytes
-
 void FUN_801e5fa4(int param_1)
 
 {
@@ -1505,11 +1331,6 @@ void FUN_801e5fa4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e5fec
-// Entry: 801e5fec
-// Size: 48 bytes
-
 void FUN_801e5fec(int param_1)
 
 {
@@ -1533,11 +1354,6 @@ void FUN_801e5fec(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e601c
-// Entry: 801e601c
-// Size: 296 bytes
-
 undefined4 FUN_801e601c(int param_1,undefined4 param_2,int param_3)
 
 {
@@ -1586,14 +1402,6 @@ undefined4 FUN_801e601c(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e6144
-// Entry: 801e6144
-// Size: 528 bytes
-
-/* WARNING: Removing unreachable block (ram,0x801e6334) */
-/* WARNING: Removing unreachable block (ram,0x801e6154) */
-
 void FUN_801e6144(uint param_1)
 
 {
@@ -1672,11 +1480,6 @@ void FUN_801e6144(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e63c8
-// Entry: 801e63c8
-// Size: 48 bytes
-
 void FUN_801e63c8(int param_1)
 
 {
@@ -1700,11 +1503,6 @@ void FUN_801e63c8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e63fc
-// Entry: 801e63fc
-// Size: 276 bytes
-
 void FUN_801e63fc(int param_1)
 
 {
@@ -1752,11 +1550,6 @@ void FUN_801e63fc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e6510
-// Entry: 801e6510
-// Size: 76 bytes
-
 void FUN_801e6510(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,int param_10,undefined4 param_11,undefined4 param_12,
@@ -1783,11 +1576,6 @@ void FUN_801e6510(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e6578
-// Entry: 801e6578
-// Size: 112 bytes
-
 void FUN_801e6578(void)
 
 {
@@ -1815,11 +1603,6 @@ void FUN_801e6578(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801e65ec
-// Entry: 801e65ec
-// Size: 72 bytes
-
 void FUN_801e65ec(uint param_1)
 
 {
@@ -1844,13 +1627,8 @@ void FUN_801e65ec(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801e66b0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

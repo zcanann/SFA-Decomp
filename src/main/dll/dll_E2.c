@@ -36,11 +36,6 @@ undefined FUN_8013dec4(int param_1,int param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8013dec4
-// Entry: 8013dec4
-// Size: 332 bytes
-
 undefined FUN_8013dec4(int param_1,int param_2)
 
 {

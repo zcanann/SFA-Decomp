@@ -4,8 +4,8 @@
  * Owner: main/dll/DR/DRshackle.c
  * Text span: 0x801EA878-0x801EAE8C
  * Imported Ghidra functions: 2
- * Verbatim-safe functions: 1
- * Auto-stubbed functions: 1
+ * Verbatim-safe functions: 2
+ * Auto-stubbed functions: 0
  */
 
 #include "ghidra_import.h"
@@ -70,14 +70,6 @@ double FUN_801eacb0(int param_1,int param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801ea878
-// Entry: 801ea878
-// Size: 1080 bytes
-
-/* WARNING: Removing unreachable block (ram,0x801eac88) */
-/* WARNING: Removing unreachable block (ram,0x801ea888) */
-
 void FUN_801ea878(double param_1,uint param_2,int param_3,uint param_4,undefined4 param_5,
                  uint param_6)
 
@@ -208,12 +200,67 @@ void FUN_801ea878(double param_1,uint param_2,int param_3,uint param_4,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 double FUN_801eacb0(int param_1,int param_2)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
-    return 0.0;
+  float fVar1;
+  float fVar2;
+  int iVar3;
+  double dVar4;
+  double in_f30;
+  double in_f31;
+  
+  if ((DAT_803dcd24 == -1) ||
+     (iVar3 = (**(code **)(*DAT_803dd6ec + 0x34))(param_2 + 0x28), iVar3 < DAT_803dcd24)) {
+    if (DAT_803dcd24 == -1) {
+      iVar3 = FUN_8002bac4();
+      dVar4 = (double)FUN_800217c8((float *)(param_1 + 0x18),(float *)(iVar3 + 0x18));
+      fVar1 = (float)(dVar4 * (double)FLOAT_803e6790);
+    }
+    else {
+      in_f31 = (double)(FLOAT_803e67e0 *
+                        (float)((double)CONCAT44(0x43300000,DAT_803add04 ^ 0x80000000) -
+                               DOUBLE_803e6798) + FLOAT_803e67e0 * DAT_803adcf4);
+      in_f30 = (double)(FLOAT_803e67e0 *
+                        (float)((double)CONCAT44(0x43300000,*(uint *)(param_2 + 0x44) ^ 0x80000000)
+                               - DOUBLE_803e6798) + FLOAT_803e67e0 * *(float *)(param_2 + 0x34));
+      fVar1 = (float)(in_f31 - in_f30);
+      if (fVar1 < FLOAT_803e6780) {
+        fVar1 = -fVar1;
+      }
+    }
+    fVar2 = *(float *)(param_2 + 0x1c);
+    if (fVar2 < fVar1) {
+      if (fVar1 < *(float *)(param_2 + 0x18)) {
+        dVar4 = (double)(((fVar1 - fVar2) / (*(float *)(param_2 + 0x18) - fVar2)) *
+                         (*(float *)(param_2 + 0x20) - *(float *)(param_2 + 0x24)) +
+                        *(float *)(param_2 + 0x24));
+      }
+      else {
+        dVar4 = (double)*(float *)(param_2 + 0x20);
+      }
+    }
+    else {
+      dVar4 = (double)*(float *)(param_2 + 0x24);
+    }
+    if (*(char *)(param_2 + 0x434) == '\0') {
+      fVar1 = (float)(in_f30 - in_f31);
+      if (fVar1 < FLOAT_803e6780) {
+        fVar1 = -fVar1;
+      }
+      if (FLOAT_803dcd48 < fVar1) {
+        dVar4 = (double)FLOAT_803e6780;
+      }
+    }
+  }
+  else {
+    iVar3 = (**(code **)(*DAT_803dd6ec + 0x34))(param_2 + 0x28);
+    if (iVar3 == 2) {
+      dVar4 = (double)FLOAT_803e67f8;
+    }
+    else {
+      dVar4 = (double)FLOAT_803e67fc;
+    }
+  }
+  return dVar4;
 }

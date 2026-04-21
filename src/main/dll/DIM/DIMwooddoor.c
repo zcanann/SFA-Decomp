@@ -78,11 +78,6 @@ void FUN_801b27f8(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801b206c
-// Entry: 801b206c
-// Size: 136 bytes
-
 void FUN_801b206c(undefined2 *param_1,int param_2)
 
 {
@@ -112,11 +107,6 @@ void FUN_801b206c(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801b2108
-// Entry: 801b2108
-// Size: 48 bytes
-
 void FUN_801b2108(int param_1)
 
 {
@@ -140,13 +130,6 @@ void FUN_801b2108(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801b213c
-// Entry: 801b213c
-// Size: 340 bytes
-
-/* WARNING: Removing unreachable block (ram,0x801b216c) */
-
 void FUN_801b213c(uint param_1)
 
 {
@@ -217,11 +200,6 @@ void FUN_801b213c(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801b2290
-// Entry: 801b2290
-// Size: 160 bytes
-
 void FUN_801b2290(undefined2 *param_1,int param_2)
 
 {
@@ -256,13 +234,6 @@ void FUN_801b2290(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801b2338
-// Entry: 801b2338
-// Size: 624 bytes
-
-/* WARNING: Removing unreachable block (ram,0x801b2370) */
-
 void FUN_801b2338(double param_1,double param_2,double param_3,double param_4,undefined8 param_5,
                  undefined8 param_6,undefined8 param_7,undefined8 param_8,short *param_9)
 
@@ -338,14 +309,9 @@ void FUN_801b2338(double param_1,double param_2,double param_3,double param_4,un
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: pointer-heavy local typing needs manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801b25a8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -360,16 +326,6 @@ void FUN_801b25a8(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801b27f8
-// Entry: 801b27f8
-// Size: 780 bytes
-
-/* WARNING: Removing unreachable block (ram,0x801b2ae4) */
-/* WARNING: Removing unreachable block (ram,0x801b2adc) */
-/* WARNING: Removing unreachable block (ram,0x801b2810) */
-/* WARNING: Removing unreachable block (ram,0x801b2808) */
-
 void FUN_801b27f8(void)
 
 {

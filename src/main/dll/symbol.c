@@ -4,8 +4,8 @@
  * Owner: main/dll/symbol.c
  * Text span: 0x801CB288-0x801CB334
  * Imported Ghidra functions: 2
- * Verbatim-safe functions: 1
- * Auto-stubbed functions: 1
+ * Verbatim-safe functions: 2
+ * Auto-stubbed functions: 0
  */
 
 #include "ghidra_import.h"
@@ -34,13 +34,13 @@ void FUN_801cb300(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801cb298(void)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  (**(code **)(*DAT_803dd6fc + 0x18))();
+  (**(code **)(*DAT_803dd6f0 + 0x38))(3,0);
+  (**(code **)(*DAT_803dd6f0 + 0x38))(2,0);
+  return;
 }
 
 /*
@@ -55,11 +55,6 @@ void FUN_801cb298(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801cb300
-// Entry: 801cb300
-// Size: 48 bytes
-
 void FUN_801cb300(int param_1)
 
 {

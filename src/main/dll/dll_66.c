@@ -45,12 +45,7 @@ void FUN_8010055c(double param_1,undefined4 param_2,undefined param_3,int param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8010055c(double param_1,undefined4 param_2,undefined param_3,int param_4,undefined4 param_5
                  )
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

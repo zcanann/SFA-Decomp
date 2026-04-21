@@ -38,18 +38,6 @@ void FUN_801c11ac(undefined4 param_1,undefined4 param_2,float *param_3,float *pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801c11ac
-// Entry: 801c11ac
-// Size: 616 bytes
-
-/* WARNING: Removing unreachable block (ram,0x801c13f4) */
-/* WARNING: Removing unreachable block (ram,0x801c13ec) */
-/* WARNING: Removing unreachable block (ram,0x801c13e4) */
-/* WARNING: Removing unreachable block (ram,0x801c11cc) */
-/* WARNING: Removing unreachable block (ram,0x801c11c4) */
-/* WARNING: Removing unreachable block (ram,0x801c11bc) */
-
 void FUN_801c11ac(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4,short *param_5
                  )
 

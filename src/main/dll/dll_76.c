@@ -29,11 +29,6 @@ undefined4 FUN_80100904(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80100904
-// Entry: 80100904
-// Size: 48 bytes
-
 undefined4 FUN_80100904(void)
 
 {

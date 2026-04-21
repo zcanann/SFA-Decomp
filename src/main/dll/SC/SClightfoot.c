@@ -36,11 +36,6 @@ void FUN_801d64c4(short *param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801d6484
-// Entry: 801d6484
-// Size: 64 bytes
-
 void FUN_801d6484(int param_1)
 
 {
@@ -63,11 +58,6 @@ void FUN_801d6484(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801d64c4
-// Entry: 801d64c4
-// Size: 132 bytes
-
 void FUN_801d64c4(short *param_1)
 
 {

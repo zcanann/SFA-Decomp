@@ -42,18 +42,6 @@ void FUN_8013d92c(double param_1,short *param_2,int param_3,float *param_4,char 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8013d92c
-// Entry: 8013d92c
-// Size: 844 bytes
-
-/* WARNING: Removing unreachable block (ram,0x8013dc50) */
-/* WARNING: Removing unreachable block (ram,0x8013dc48) */
-/* WARNING: Removing unreachable block (ram,0x8013dc40) */
-/* WARNING: Removing unreachable block (ram,0x8013d94c) */
-/* WARNING: Removing unreachable block (ram,0x8013d944) */
-/* WARNING: Removing unreachable block (ram,0x8013d93c) */
-
 void FUN_8013d92c(double param_1,short *param_2,int param_3,float *param_4,char param_5)
 
 {

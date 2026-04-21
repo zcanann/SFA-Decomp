@@ -4,8 +4,8 @@
  * Owner: main/dll/autoTransporter.c
  * Text span: 0x80178640-0x80179864
  * Imported Ghidra functions: 9
- * Verbatim-safe functions: 6
- * Auto-stubbed functions: 3
+ * Verbatim-safe functions: 7
+ * Auto-stubbed functions: 2
  */
 
 #include "ghidra_import.h"
@@ -90,11 +90,6 @@ uint FUN_80179850(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80178648
-// Entry: 80178648
-// Size: 88 bytes
-
 void FUN_80178648(undefined4 param_1)
 
 {
@@ -121,11 +116,6 @@ void FUN_80178648(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801786a0
-// Entry: 801786a0
-// Size: 212 bytes
-
 void FUN_801786a0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
@@ -169,11 +159,6 @@ void FUN_801786a0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80178774
-// Entry: 80178774
-// Size: 112 bytes
-
 void FUN_80178774(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10)
@@ -202,16 +187,11 @@ void FUN_80178774(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: NAN macro needs manual cleanup, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801787e4(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -226,11 +206,6 @@ void FUN_801787e4(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80179480
-// Entry: 80179480
-// Size: 100 bytes
-
 void FUN_80179480(int param_1)
 
 {
@@ -259,11 +234,6 @@ void FUN_80179480(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801794e4
-// Entry: 801794e4
-// Size: 48 bytes
-
 void FUN_801794e4(int param_1)
 
 {
@@ -287,13 +257,43 @@ void FUN_801794e4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80179518(undefined2 *param_1)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  int iVar1;
+  uint uVar2;
+  int iVar3;
+  
+  iVar3 = *(int *)(param_1 + 0x5c);
+  *(undefined *)(iVar3 + 0x21) = 0;
+  if (*(int *)(param_1 + 0x7a) == 0) {
+    iVar1 = *(int *)(param_1 + 0x26);
+    *(undefined4 *)(param_1 + 6) = *(undefined4 *)(iVar1 + 8);
+    *(undefined4 *)(param_1 + 8) = *(undefined4 *)(iVar1 + 0xc);
+    *(undefined4 *)(param_1 + 10) = *(undefined4 *)(iVar1 + 0x10);
+    *param_1 = (short)((int)*(char *)(iVar1 + 0x18) << 8);
+    if (param_1[0x23] == 0x151) {
+      uVar2 = FUN_80020078(*(uint *)(iVar3 + 0x10));
+      if (uVar2 != 0) {
+        (**(code **)(*DAT_803dd6d4 + 0x54))(param_1,0x75);
+        *(undefined *)(iVar3 + 0x21) = 1;
+      }
+      (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+    }
+    else if (param_1[0x23] == 0x37a) {
+      uVar2 = FUN_80020078(*(uint *)(iVar3 + 0x10));
+      if (uVar2 != 0) {
+        (**(code **)(*DAT_803dd6d4 + 0x54))(param_1,0x8a);
+        *(undefined *)(iVar3 + 0x21) = 1;
+      }
+      (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+    }
+    else {
+      (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+    }
+    *(undefined4 *)(param_1 + 0x7a) = 1;
+  }
+  return;
 }
 
 /*
@@ -308,13 +308,8 @@ void FUN_80179518(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: NAN macro needs manual cleanup, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8017967c(undefined2 *param_1,int param_2)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -329,11 +324,6 @@ void FUN_8017967c(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80179850
-// Entry: 80179850
-// Size: 20 bytes
-
 uint FUN_80179850(int param_1)
 
 {

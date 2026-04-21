@@ -4,8 +4,8 @@
  * Owner: main/dll/FRONT/picmenu.c
  * Text span: 0x801192A8-0x80119CC4
  * Imported Ghidra functions: 15
- * Verbatim-safe functions: 4
- * Auto-stubbed functions: 11
+ * Verbatim-safe functions: 3
+ * Auto-stubbed functions: 12
  */
 
 #include "ghidra_import.h"
@@ -119,14 +119,9 @@ void FUN_80119b88(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801192a8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -141,11 +136,6 @@ void FUN_801192a8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80119594
-// Entry: 80119594
-// Size: 76 bytes
-
 void FUN_80119594(void)
 
 {
@@ -170,13 +160,8 @@ void FUN_80119594(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 undefined4 FUN_801195e0(int param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
     return 0;
 }
 
@@ -192,13 +177,8 @@ undefined4 FUN_801195e0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80119700(undefined4 param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -213,13 +193,8 @@ void FUN_80119700(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 undefined4 FUN_80119730(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
     return 0;
 }
 
@@ -235,13 +210,8 @@ undefined4 FUN_80119730(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80119764(undefined4 param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -256,13 +226,8 @@ void FUN_80119764(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 undefined4 FUN_80119794(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
     return 0;
 }
 
@@ -278,14 +243,9 @@ undefined4 FUN_80119794(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801197c8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -300,11 +260,6 @@ void FUN_801197c8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801198c0
-// Entry: 801198c0
-// Size: 60 bytes
-
 void FUN_801198c0(void)
 
 {
@@ -327,11 +282,6 @@ void FUN_801198c0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801198fc
-// Entry: 801198fc
-// Size: 52 bytes
-
 void FUN_801198fc(void)
 
 {
@@ -353,13 +303,8 @@ void FUN_801198fc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 bool FUN_80119930(int param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
     return 0;
 }
 
@@ -375,13 +320,8 @@ bool FUN_80119930(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 undefined4 FUN_801199cc(uint param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
     return 0;
 }
 
@@ -397,13 +337,8 @@ undefined4 FUN_801199cc(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80119a10(undefined4 param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -418,13 +353,8 @@ void FUN_80119a10(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80119a40(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -439,33 +369,6 @@ void FUN_80119a40(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80119b88
-// Entry: 80119b88
-// Size: 316 bytes
-
 void FUN_80119b88(void)
-
 {
-  int iVar1;
-  
-  iVar1 = 0;
-  do {
-    if (DAT_803a6a5f != '\0') {
-      while (DAT_803a6a90 < 0) {
-        FUN_80243e74();
-        DAT_803a6a90 = DAT_803a6a90 + 1;
-        FUN_80243e9c();
-        if (((iVar1 + DAT_803a6a78) - ((uint)(iVar1 + DAT_803a6a78) / DAT_803a6a10) * DAT_803a6a10
-             == DAT_803a6a10 - 1) && ((DAT_803a6a5e & 1) == 0)) break;
-        iVar1 = iVar1 + 1;
-      }
-    }
-    FUN_80119a40();
-    if (((iVar1 + DAT_803a6a78) - ((uint)(iVar1 + DAT_803a6a78) / DAT_803a6a10) * DAT_803a6a10 ==
-         DAT_803a6a10 - 1) && ((DAT_803a6a5e & 1) == 0)) {
-      FUN_80247054(-0x7fc57058);
-    }
-    iVar1 = iVar1 + 1;
-  } while( true );
 }

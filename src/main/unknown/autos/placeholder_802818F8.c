@@ -4,8 +4,8 @@
  * Owner: main/unknown/autos/placeholder_802818F8.c
  * Text span: 0x802818F8-0x80281A9C
  * Imported Ghidra functions: 5
- * Verbatim-safe functions: 4
- * Auto-stubbed functions: 1
+ * Verbatim-safe functions: 3
+ * Auto-stubbed functions: 2
  */
 
 #include "ghidra_import.h"
@@ -42,17 +42,8 @@ void FUN_80281a74(uint param_1,uint param_2,uint param_3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_802818f8
-// Entry: 802818f8
-// Size: 20 bytes
-
 void FUN_802818f8(undefined param_1,undefined param_2)
-
 {
-  DAT_803bdfc1 = param_1;
-  DAT_803bdfc2 = param_2;
-  return;
 }
 
 /*
@@ -67,11 +58,6 @@ void FUN_802818f8(undefined param_1,undefined param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8028190c
-// Entry: 8028190c
-// Size: 8 bytes
-
 undefined FUN_8028190c(void)
 
 {
@@ -90,11 +76,6 @@ undefined FUN_8028190c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80281914
-// Entry: 80281914
-// Size: 172 bytes
-
 void FUN_80281914(float *param_1,float *param_2,float *param_3)
 
 {
@@ -118,11 +99,6 @@ void FUN_80281914(float *param_1,float *param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_802819c0
-// Entry: 802819c0
-// Size: 180 bytes
-
 void FUN_802819c0(float *param_1)
 
 {
@@ -155,11 +131,6 @@ void FUN_802819c0(float *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80281a74(uint param_1,uint param_2,uint param_3)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

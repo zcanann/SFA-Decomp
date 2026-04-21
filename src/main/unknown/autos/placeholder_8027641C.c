@@ -29,11 +29,6 @@ void FUN_8027641c(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8027641c(int param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

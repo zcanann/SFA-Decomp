@@ -29,13 +29,6 @@ int FUN_8028436c(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8028436c
-// Entry: 8028436c
-// Size: 164 bytes
-
-/* WARNING: Removing unreachable block (ram,0x802843ac) */
-
 int FUN_8028436c(int param_1)
 
 {

@@ -35,11 +35,6 @@ void FUN_801c20b8(double param_1,int param_2,float *param_3,float *param_4,float
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801c1f24
-// Entry: 801c1f24
-// Size: 164 bytes
-
 void FUN_801c1f24(double param_1,double param_2,int param_3)
 
 {
@@ -77,14 +72,6 @@ void FUN_801c1f24(double param_1,double param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801c1fc8
-// Entry: 801c1fc8
-// Size: 240 bytes
-
-/* WARNING: Removing unreachable block (ram,0x801c2098) */
-/* WARNING: Removing unreachable block (ram,0x801c1fd8) */
-
 void FUN_801c1fc8(double param_1,int param_2,float *param_3)
 
 {
@@ -124,11 +111,6 @@ void FUN_801c1fc8(double param_1,int param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801c20b8
-// Entry: 801c20b8
-// Size: 196 bytes
-
 void FUN_801c20b8(double param_1,int param_2,float *param_3,float *param_4,float *param_5)
 
 {

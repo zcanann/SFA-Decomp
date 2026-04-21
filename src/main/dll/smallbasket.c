@@ -4,8 +4,8 @@
  * Owner: main/dll/smallbasket.c
  * Text span: 0x801570E0-0x8015ADD0
  * Imported Ghidra functions: 25
- * Verbatim-safe functions: 13
- * Auto-stubbed functions: 12
+ * Verbatim-safe functions: 14
+ * Auto-stubbed functions: 11
  */
 
 #include "ghidra_import.h"
@@ -271,15 +271,10 @@ void FUN_8015ac28(uint param_1,int param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801570e0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,int param_10)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -294,11 +289,6 @@ void FUN_801570e0(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80157188
-// Entry: 80157188
-// Size: 104 bytes
-
 void FUN_80157188(undefined4 param_1,int param_2)
 
 {
@@ -333,11 +323,6 @@ void FUN_80157188(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801571f0
-// Entry: 801571f0
-// Size: 92 bytes
-
 void FUN_801571f0(uint param_1,int param_2,undefined4 param_3,int param_4)
 
 {
@@ -364,11 +349,6 @@ void FUN_801571f0(uint param_1,int param_2,undefined4 param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8015724c
-// Entry: 8015724c
-// Size: 612 bytes
-
 void FUN_8015724c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9,int param_10)
@@ -474,14 +454,6 @@ void FUN_8015724c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801574b0
-// Entry: 801574b0
-// Size: 1364 bytes
-
-/* WARNING: Removing unreachable block (ram,0x801579e4) */
-/* WARNING: Removing unreachable block (ram,0x801574c0) */
-
 void FUN_801574b0(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 
@@ -703,11 +675,6 @@ LAB_801579e4:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80157a04
-// Entry: 80157a04
-// Size: 832 bytes
-
 void FUN_80157a04(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9,int param_10)
@@ -825,11 +792,6 @@ void FUN_80157a04(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80157d44
-// Entry: 80157d44
-// Size: 240 bytes
-
 void FUN_80157d44(int param_1,int param_2)
 
 {
@@ -880,13 +842,8 @@ void FUN_80157d44(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80157e34(undefined4 param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -901,11 +858,6 @@ void FUN_80157e34(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80157f04
-// Entry: 80157f04
-// Size: 256 bytes
-
 void FUN_80157f04(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
@@ -960,14 +912,6 @@ void FUN_80157f04(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80158004
-// Entry: 80158004
-// Size: 388 bytes
-
-/* WARNING: Removing unreachable block (ram,0x80158160) */
-/* WARNING: Removing unreachable block (ram,0x80158014) */
-
 void FUN_80158004(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,int param_10)
@@ -1027,14 +971,9 @@ void FUN_80158004(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80158188(undefined8 param_1,double param_2,double param_3,double param_4,double param_5,
                  undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -1049,16 +988,11 @@ void FUN_80158188(undefined8 param_1,double param_2,double param_3,double param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80158368(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,int param_12,
                  undefined4 param_13,int param_14,undefined4 param_15,undefined4 param_16)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -1073,14 +1007,9 @@ void FUN_80158368(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, pointer-heavy local typing needs manual cleanup, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80158940(undefined8 param_1,undefined8 param_2,double param_3,double param_4,double param_5
                  ,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -1095,14 +1024,9 @@ void FUN_80158940(undefined8 param_1,undefined8 param_2,double param_3,double pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801590d8(undefined8 param_1,undefined8 param_2,double param_3,double param_4,double param_5
                  ,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -1117,14 +1041,9 @@ void FUN_801590d8(undefined8 param_1,undefined8 param_2,double param_3,double pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80159730(undefined8 param_1,undefined8 param_2,double param_3,double param_4,double param_5
                  ,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -1139,11 +1058,6 @@ void FUN_80159730(undefined8 param_1,undefined8 param_2,double param_3,double pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80159b00
-// Entry: 80159b00
-// Size: 488 bytes
-
 void FUN_80159b00(int param_1,int param_2)
 
 {
@@ -1226,11 +1140,6 @@ void FUN_80159b00(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80159ce8
-// Entry: 80159ce8
-// Size: 124 bytes
-
 void FUN_80159ce8(undefined4 param_1,undefined4 param_2,float *param_3,undefined4 param_4,
                  uint param_5)
 
@@ -1260,11 +1169,6 @@ void FUN_80159ce8(undefined4 param_1,undefined4 param_2,float *param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80159d64
-// Entry: 80159d64
-// Size: 36 bytes
-
 void FUN_80159d64(int param_1)
 
 {
@@ -1284,11 +1188,6 @@ void FUN_80159d64(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80159d88
-// Entry: 80159d88
-// Size: 124 bytes
-
 void FUN_80159d88(uint param_1,int param_2,undefined4 param_3,int param_4)
 
 {
@@ -1318,15 +1217,10 @@ void FUN_80159d88(uint param_1,int param_2,undefined4 param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80159e04(undefined8 param_1,undefined8 param_2,double param_3,double param_4,double param_5
                  ,double param_6,double param_7,undefined8 param_8,ushort *param_9,
                  undefined4 *param_10)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -1341,13 +1235,8 @@ void FUN_80159e04(undefined8 param_1,undefined8 param_2,double param_3,double pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8015a478(short *param_1,int *param_2)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -1362,15 +1251,10 @@ void FUN_8015a478(short *param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8015a8d0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -1385,11 +1269,6 @@ void FUN_8015a8d0(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8015a9d8
-// Entry: 8015a9d8
-// Size: 308 bytes
-
 void FUN_8015a9d8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
@@ -1438,14 +1317,9 @@ void FUN_8015a9d8(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8015ab0c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -1460,11 +1334,62 @@ void FUN_8015ab0c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8015ac28(uint param_1,int param_2)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  bool bVar1;
+  
+  bVar1 = false;
+  switch(*(undefined2 *)(param_1 + 0xa0)) {
+  case 2:
+    if (*(short *)(param_2 + 0x2f8) != 0) {
+      FUN_8000b4f0(param_1,0x49b,2);
+    }
+    bVar1 = true;
+    break;
+  case 3:
+    if (*(short *)(param_2 + 0x2f8) != 0) {
+      FUN_8000bb38(param_1,0x498);
+    }
+    break;
+  case 4:
+    if (*(short *)(param_2 + 0x2f8) != 0) {
+      if (FLOAT_803e3954 <= *(float *)(param_1 + 0x98)) {
+        FUN_8000bb38(param_1,0x24e);
+      }
+      else {
+        FUN_8000bb38(param_1,0x499);
+      }
+    }
+    break;
+  case 5:
+    if (*(short *)(param_2 + 0x2f8) != 0) {
+      FUN_8000bb38(param_1,0x49d);
+    }
+    break;
+  case 6:
+    if (*(short *)(param_2 + 0x2f8) != 0) {
+      FUN_8000bb38(param_1,0x49d);
+    }
+    break;
+  case 7:
+    if (*(short *)(param_2 + 0x2f8) != 0) {
+      FUN_8000b4f0(param_1,0x49c,2);
+    }
+    bVar1 = true;
+    break;
+  case 9:
+    if (*(short *)(param_2 + 0x2f8) != 0) {
+      FUN_8000bb38(param_1,0x49a);
+    }
+  }
+  if (bVar1) {
+    if (*(short *)(param_2 + 0x338) == 0) {
+      (**(code **)(*DAT_803dd708 + 8))(param_1,0x809,0,2,0xffffffff,0);
+    }
+    else {
+      (**(code **)(*DAT_803dd708 + 8))(param_1,0x802,0,2,0xffffffff,0);
+    }
+  }
+  return;
 }

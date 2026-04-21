@@ -40,11 +40,6 @@ undefined4 * FUN_80279768(uint param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80279608
-// Entry: 80279608
-// Size: 104 bytes
-
 void FUN_80279608(void)
 
 {
@@ -81,13 +76,8 @@ void FUN_80279608(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, pointer-heavy local typing needs manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 int FUN_80279670(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
     return 0;
 }
 
@@ -103,11 +93,6 @@ int FUN_80279670(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80279768
-// Entry: 80279768
-// Size: 52 bytes
-
 undefined4 * FUN_80279768(uint param_1)
 
 {

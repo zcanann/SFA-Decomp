@@ -4,8 +4,8 @@
  * Owner: main/dll/dll_10A.c
  * Text span: 0x8015413C-0x80154A30
  * Imported Ghidra functions: 7
- * Verbatim-safe functions: 5
- * Auto-stubbed functions: 2
+ * Verbatim-safe functions: 6
+ * Auto-stubbed functions: 1
  */
 
 #include "ghidra_import.h"
@@ -90,11 +90,6 @@ void FUN_80154994(uint param_1,int param_2,undefined4 param_3,int param_4);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8015413c
-// Entry: 8015413c
-// Size: 104 bytes
-
 void FUN_8015413c(undefined4 param_1,int param_2)
 
 {
@@ -133,11 +128,6 @@ void FUN_8015413c(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801541a4
-// Entry: 801541a4
-// Size: 276 bytes
-
 void FUN_801541a4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,int param_10,undefined4 param_11,int param_12,undefined4 param_13,
@@ -192,15 +182,10 @@ void FUN_801541a4(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801542b8(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,undefined4 *param_10)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -215,11 +200,6 @@ void FUN_801542b8(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8015454c
-// Entry: 8015454c
-// Size: 524 bytes
-
 void FUN_8015454c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,int param_10)
@@ -292,11 +272,6 @@ void FUN_8015454c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80154758
-// Entry: 80154758
-// Size: 124 bytes
-
 void FUN_80154758(undefined4 param_1,int param_2)
 
 {
@@ -337,13 +312,62 @@ void FUN_80154758(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801547d4(ushort *param_1,int param_2)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  double dVar1;
+  float local_88;
+  float fStack_84;
+  float local_80;
+  ushort local_7c [4];
+  float local_74;
+  float local_70;
+  float local_6c;
+  float local_68;
+  float afStack_64 [17];
+  undefined4 local_20;
+  uint uStack_1c;
+  undefined4 local_18;
+  uint uStack_14;
+  undefined4 local_10;
+  uint uStack_c;
+  
+  *(float *)(param_2 + 0x330) = *(float *)(param_2 + 0x330) - FLOAT_803dc074;
+  if (*(float *)(param_2 + 0x330) <= FLOAT_803e3628) {
+    uStack_1c = FUN_80022264(0x1e,0x3c);
+    uStack_1c = uStack_1c ^ 0x80000000;
+    local_20 = 0x43300000;
+    *(float *)(param_2 + 0x330) = (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e3640);
+    local_70 = *(float *)(param_1 + 6);
+    local_6c = FLOAT_803e3628;
+    local_68 = *(float *)(param_1 + 10);
+    local_7c[0] = *param_1;
+    local_7c[1] = 0;
+    local_7c[2] = 0;
+    local_74 = FLOAT_803e362c;
+    FUN_80021fac(afStack_64,local_7c);
+    uStack_14 = FUN_80022264(0xffffffec,0x14);
+    uStack_14 = uStack_14 ^ 0x80000000;
+    local_18 = 0x43300000;
+    local_80 = FLOAT_803e3630 +
+               (float)((double)CONCAT44(0x43300000,uStack_14) - DOUBLE_803e3640) / FLOAT_803e3634;
+    uStack_c = FUN_80022264(0xffffffec,0x14);
+    uStack_c = uStack_c ^ 0x80000000;
+    local_10 = 0x43300000;
+    local_88 = FLOAT_803e3638 +
+               (float)((double)CONCAT44(0x43300000,uStack_c) - DOUBLE_803e3640) / FLOAT_803e3634;
+    FUN_80022790((double)local_80,(double)FLOAT_803e3628,(double)local_88,afStack_64,&local_80,
+                 &fStack_84,&local_88);
+    (**(code **)(*DAT_803dd718 + 0x14))
+              ((double)local_80,(double)*(float *)(param_2 + 0x32c),(double)local_88,
+               (double)FLOAT_803e3628,0,3);
+    dVar1 = FUN_80293900((double)(*(float *)(param_1 + 0x12) * *(float *)(param_1 + 0x12) +
+                                 *(float *)(param_1 + 0x16) * *(float *)(param_1 + 0x16)));
+    if ((double)FLOAT_803e363c < dVar1) {
+      FUN_8000bb00((double)local_70,(double)local_6c,(double)local_68,(uint)param_1,0x235);
+    }
+  }
+  return;
 }
 
 /*
@@ -358,11 +382,6 @@ void FUN_801547d4(ushort *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80154994
-// Entry: 80154994
-// Size: 156 bytes
-
 void FUN_80154994(uint param_1,int param_2,undefined4 param_3,int param_4)
 
 {

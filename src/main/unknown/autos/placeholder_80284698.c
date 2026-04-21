@@ -4,8 +4,8 @@
  * Owner: main/unknown/autos/placeholder_80284698.c
  * Text span: 0x80284698-0x80284704
  * Imported Ghidra functions: 5
- * Verbatim-safe functions: 5
- * Auto-stubbed functions: 0
+ * Verbatim-safe functions: 4
+ * Auto-stubbed functions: 1
  */
 
 #include "ghidra_import.h"
@@ -39,11 +39,6 @@ uint FUN_802846e4(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80284698
-// Entry: 80284698
-// Size: 4 bytes
-
 void FUN_80284698(void)
 
 {
@@ -62,17 +57,8 @@ void FUN_80284698(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8028469c
-// Entry: 8028469c
-// Size: 20 bytes
-
 void FUN_8028469c(undefined4 *param_1)
-
 {
-  DAT_803deff4 = *param_1;
-  DAT_803deff8 = param_1[1];
-  return;
 }
 
 /*
@@ -87,11 +73,6 @@ void FUN_8028469c(undefined4 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_802846b0
-// Entry: 802846b0
-// Size: 12 bytes
-
 void FUN_802846b0(void)
 
 {
@@ -111,11 +92,6 @@ void FUN_802846b0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_802846bc
-// Entry: 802846bc
-// Size: 40 bytes
-
 undefined4 FUN_802846bc(int param_1)
 
 {
@@ -140,11 +116,6 @@ undefined4 FUN_802846bc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_802846e4
-// Entry: 802846e4
-// Size: 32 bytes
-
 uint FUN_802846e4(int param_1)
 
 {

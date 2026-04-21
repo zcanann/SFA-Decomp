@@ -43,11 +43,6 @@ void FUN_801d86e4(uint *param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801d84c4
-// Entry: 801d84c4
-// Size: 396 bytes
-
 void FUN_801d84c4(undefined4 param_1,undefined4 param_2,short param_3,short param_4,short param_5,
                  int *param_6)
 
@@ -113,11 +108,6 @@ void FUN_801d84c4(undefined4 param_1,undefined4 param_2,short param_3,short para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801d8650
-// Entry: 801d8650
-// Size: 148 bytes
-
 void FUN_801d8650(undefined4 param_1,undefined4 param_2,short param_3,short param_4,short param_5,
                  int *param_6)
 
@@ -151,11 +141,6 @@ void FUN_801d8650(undefined4 param_1,undefined4 param_2,short param_3,short para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: int-to-pointer casts of dereferenced values need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801d86e4(uint *param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

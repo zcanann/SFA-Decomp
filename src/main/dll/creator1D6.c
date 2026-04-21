@@ -47,13 +47,8 @@ void FUN_801cfd90(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801cfac0(undefined2 *param_1,int param_2,int param_3)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -68,11 +63,6 @@ void FUN_801cfac0(undefined2 *param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801cfd5c
-// Entry: 801cfd5c
-// Size: 44 bytes
-
 undefined4 FUN_801cfd5c(void)
 
 {
@@ -95,11 +85,6 @@ undefined4 FUN_801cfd5c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801cfd90
-// Entry: 801cfd90
-// Size: 40 bytes
-
 void FUN_801cfd90(void)
 
 {

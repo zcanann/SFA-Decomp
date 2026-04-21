@@ -4,8 +4,8 @@
  * Owner: main/dll/FRONT/frontend_control.c
  * Text span: 0x80119CC4-0x8011A07C
  * Imported Ghidra functions: 5
- * Verbatim-safe functions: 3
- * Auto-stubbed functions: 2
+ * Verbatim-safe functions: 2
+ * Auto-stubbed functions: 3
  */
 
 #include "ghidra_import.h"
@@ -68,42 +68,8 @@ void FUN_80119ec8(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80119cc4
-// Entry: 80119cc4
-// Size: 204 bytes
-
 void FUN_80119cc4(void)
-
 {
-  int iVar1;
-  undefined4 uVar2;
-  uint uVar3;
-  
-  do {
-    if (DAT_803a6a5f != '\0') {
-      while (DAT_803a6a90 < 0) {
-        iVar1 = FUN_80119730();
-        uVar3 = *(int *)(iVar1 + 4) + DAT_803a6a78;
-        if ((uVar3 - (uVar3 / DAT_803a6a10) * DAT_803a6a10 == DAT_803a6a10 - 1) &&
-           ((DAT_803a6a5e & 1) == 0)) {
-          FUN_80119a40();
-        }
-        FUN_80119764(iVar1);
-        FUN_80243e74();
-        DAT_803a6a90 = DAT_803a6a90 + 1;
-        FUN_80243e9c();
-      }
-    }
-    if (DAT_803a6a5f == '\0') {
-      uVar2 = FUN_80119794();
-    }
-    else {
-      uVar2 = FUN_80119730();
-    }
-    FUN_80119a40();
-    FUN_80119764(uVar2);
-  } while( true );
 }
 
 /*
@@ -118,11 +84,6 @@ void FUN_80119cc4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80119d90
-// Entry: 80119d90
-// Size: 60 bytes
-
 void FUN_80119d90(void)
 
 {
@@ -145,11 +106,6 @@ void FUN_80119d90(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80119dcc
-// Entry: 80119dcc
-// Size: 52 bytes
-
 void FUN_80119dcc(void)
 
 {
@@ -171,13 +127,8 @@ void FUN_80119dcc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 undefined4 FUN_80119e00(int param_1,int param_2)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
     return 0;
 }
 
@@ -193,11 +144,6 @@ undefined4 FUN_80119e00(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80119ec8(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

@@ -34,30 +34,6 @@ void FUN_801d188c(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801d188c
-// Entry: 801d188c
-// Size: 704 bytes
-
-/* WARNING: Removing unreachable block (ram,0x801d1b2c) */
-/* WARNING: Removing unreachable block (ram,0x801d1b24) */
-/* WARNING: Removing unreachable block (ram,0x801d1b1c) */
-/* WARNING: Removing unreachable block (ram,0x801d1b14) */
-/* WARNING: Removing unreachable block (ram,0x801d1b0c) */
-/* WARNING: Removing unreachable block (ram,0x801d1b04) */
-/* WARNING: Removing unreachable block (ram,0x801d1afc) */
-/* WARNING: Removing unreachable block (ram,0x801d1af4) */
-/* WARNING: Removing unreachable block (ram,0x801d1aec) */
-/* WARNING: Removing unreachable block (ram,0x801d18dc) */
-/* WARNING: Removing unreachable block (ram,0x801d18d4) */
-/* WARNING: Removing unreachable block (ram,0x801d18cc) */
-/* WARNING: Removing unreachable block (ram,0x801d18c4) */
-/* WARNING: Removing unreachable block (ram,0x801d18bc) */
-/* WARNING: Removing unreachable block (ram,0x801d18b4) */
-/* WARNING: Removing unreachable block (ram,0x801d18ac) */
-/* WARNING: Removing unreachable block (ram,0x801d18a4) */
-/* WARNING: Removing unreachable block (ram,0x801d189c) */
-
 void FUN_801d188c(void)
 
 {

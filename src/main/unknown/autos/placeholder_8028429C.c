@@ -33,12 +33,7 @@ void FUN_8028429c(uint param_1,undefined4 param_2,undefined4 param_3,undefined4 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8028429c(uint param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                  undefined4 param_5)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

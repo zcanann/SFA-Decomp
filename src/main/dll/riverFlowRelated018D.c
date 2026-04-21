@@ -4,8 +4,8 @@
  * Owner: main/dll/riverFlowRelated018D.c
  * Text span: 0x801BEE20-0x801BEEAC
  * Imported Ghidra functions: 1
- * Verbatim-safe functions: 0
- * Auto-stubbed functions: 1
+ * Verbatim-safe functions: 1
+ * Auto-stubbed functions: 0
  */
 
 #include "ghidra_import.h"
@@ -34,11 +34,16 @@ void FUN_801bee40(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801bee40(int param_1)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  undefined4 uVar1;
+  
+  uVar1 = *(undefined4 *)(param_1 + 0xb8);
+  FUN_8003709c(param_1,3);
+  (**(code **)(*DAT_803dd738 + 0x40))(param_1,uVar1,1);
+  if (DAT_803de810 != 0) {
+    FUN_8001f448(DAT_803de810);
+  }
+  return;
 }

@@ -57,11 +57,6 @@ void FUN_80293778(undefined4 param_1,undefined4 param_2,float *param_3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8029354c
-// Entry: 8029354c
-// Size: 52 bytes
-
 double FUN_8029354c(double param_1)
 
 {
@@ -85,11 +80,6 @@ double FUN_8029354c(double param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80293580
-// Entry: 80293580
-// Size: 244 bytes
-
 void FUN_80293580(undefined4 param_1,undefined4 param_2,float *param_3)
 
 {
@@ -147,11 +137,6 @@ LAB_80293658:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80293674
-// Entry: 80293674
-// Size: 260 bytes
-
 void FUN_80293674(undefined4 param_1,undefined4 param_2,float *param_3)
 
 {
@@ -211,11 +196,6 @@ LAB_8029375c:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80293778
-// Entry: 80293778
-// Size: 276 bytes
-
 void FUN_80293778(undefined4 param_1,undefined4 param_2,float *param_3)
 
 {

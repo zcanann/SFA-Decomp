@@ -38,11 +38,6 @@ bool FUN_802bb844(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_802bb780
-// Entry: 802bb780
-// Size: 164 bytes
-
 void FUN_802bb780(ushort *param_1,float *param_2,float *param_3,float *param_4)
 
 {
@@ -80,11 +75,6 @@ void FUN_802bb780(ushort *param_1,float *param_2,float *param_3,float *param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_802bb844
-// Entry: 802bb844
-// Size: 96 bytes
-
 bool FUN_802bb844(int param_1)
 
 {

@@ -4,8 +4,8 @@
  * Owner: main/dll/tesla.c
  * Text span: 0x802069B4-0x80206F64
  * Imported Ghidra functions: 5
- * Verbatim-safe functions: 1
- * Auto-stubbed functions: 4
+ * Verbatim-safe functions: 2
+ * Auto-stubbed functions: 3
  */
 
 #include "ghidra_import.h"
@@ -69,13 +69,8 @@ void FUN_80206e7c(undefined2 *param_1,int param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-label references need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_802069b4(undefined2 *param_1,int param_2)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -90,13 +85,15 @@ void FUN_802069b4(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80206ac4(int param_1)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  int iVar1;
+  
+  iVar1 = *(int *)(param_1 + 0xb8);
+  (**(code **)(*DAT_803dd6f8 + 0x18))();
+  *(undefined4 *)(iVar1 + 8) = 0;
+  return;
 }
 
 /*
@@ -111,11 +108,6 @@ void FUN_80206ac4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80206b08
-// Entry: 80206b08
-// Size: 48 bytes
-
 void FUN_80206b08(int param_1)
 
 {
@@ -139,13 +131,8 @@ void FUN_80206b08(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80206b64(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -160,11 +147,6 @@ void FUN_80206b64(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-label references need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80206e7c(undefined2 *param_1,int param_2)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

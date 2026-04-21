@@ -4,8 +4,8 @@
  * Owner: main/dll/scene1C7.c
  * Text span: 0x801C9470-0x801C95F4
  * Imported Ghidra functions: 1
- * Verbatim-safe functions: 0
- * Auto-stubbed functions: 1
+ * Verbatim-safe functions: 1
+ * Auto-stubbed functions: 0
  */
 
 #include "ghidra_import.h"
@@ -41,11 +41,53 @@ void FUN_801c9470(undefined4 param_1,undefined4 param_2,int param_3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801c9470(undefined4 param_1,undefined4 param_2,int param_3)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  byte bVar1;
+  int iVar2;
+  int iVar3;
+  undefined4 uVar4;
+  int iVar5;
+  int *piVar6;
+  
+  iVar2 = FUN_8028683c();
+  piVar6 = *(int **)(iVar2 + 0xb8);
+  iVar3 = FUN_8002bac4();
+  *(undefined2 *)(param_3 + 0x70) = 0xffff;
+  *(undefined *)(param_3 + 0x56) = 0;
+  for (iVar5 = 0; iVar5 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar5 = iVar5 + 1) {
+    bVar1 = *(byte *)(param_3 + iVar5 + 0x81);
+    if (bVar1 != 0) {
+      if (bVar1 == 7) {
+        FUN_80296c78(iVar3,2,1);
+        FUN_800201ac(0x15f,1);
+        FUN_800201ac(0xc6e,1);
+        (**(code **)(*DAT_803dd72c + 0x44))(0xb,3);
+        FUN_80043604(0,0,1);
+        uVar4 = FUN_8004832c(10);
+        FUN_80043658(uVar4,0);
+      }
+      else if (bVar1 < 7) {
+        if (bVar1 == 3) {
+          *(byte *)((int)piVar6 + 0x15) = *(byte *)((int)piVar6 + 0x15) & 0x7f | 0x80;
+        }
+      }
+      else if (bVar1 == 0xf) {
+        *(ushort *)(iVar2 + 6) = *(ushort *)(iVar2 + 6) & 0xbfff;
+        if (*piVar6 != 0) {
+          FUN_8001dc30((double)FLOAT_803e5d70,*piVar6,'\0');
+        }
+      }
+      else if ((bVar1 < 0xf) && (0xd < bVar1)) {
+        *(ushort *)(iVar2 + 6) = *(ushort *)(iVar2 + 6) | 0x4000;
+        if (*piVar6 != 0) {
+          FUN_8001dc30((double)FLOAT_803e5d70,*piVar6,'\0');
+        }
+      }
+    }
+    *(undefined *)(param_3 + iVar5 + 0x81) = 0;
+  }
+  FUN_80286888();
+  return;
 }

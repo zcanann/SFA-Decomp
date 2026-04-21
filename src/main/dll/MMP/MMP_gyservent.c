@@ -54,24 +54,6 @@ void FUN_80199868(int param_1,undefined4 param_2,undefined4 param_3,undefined4 p
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801990e4
-// Entry: 801990e4
-// Size: 640 bytes
-
-/* WARNING: Removing unreachable block (ram,0x80199344) */
-/* WARNING: Removing unreachable block (ram,0x8019933c) */
-/* WARNING: Removing unreachable block (ram,0x80199334) */
-/* WARNING: Removing unreachable block (ram,0x8019932c) */
-/* WARNING: Removing unreachable block (ram,0x80199324) */
-/* WARNING: Removing unreachable block (ram,0x8019931c) */
-/* WARNING: Removing unreachable block (ram,0x8019911c) */
-/* WARNING: Removing unreachable block (ram,0x80199114) */
-/* WARNING: Removing unreachable block (ram,0x8019910c) */
-/* WARNING: Removing unreachable block (ram,0x80199104) */
-/* WARNING: Removing unreachable block (ram,0x801990fc) */
-/* WARNING: Removing unreachable block (ram,0x801990f4) */
-
 undefined4 FUN_801990e4(int param_1,float *param_2)
 
 {
@@ -138,14 +120,6 @@ undefined4 FUN_801990e4(int param_1,float *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80199364
-// Entry: 80199364
-// Size: 444 bytes
-
-/* WARNING: Removing unreachable block (ram,0x80199500) */
-/* WARNING: Removing unreachable block (ram,0x80199374) */
-
 void FUN_80199364(void)
 
 {
@@ -250,11 +224,6 @@ void FUN_80199364(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80199520
-// Entry: 80199520
-// Size: 484 bytes
-
 void FUN_80199520(ushort *param_1,int param_2)
 
 {
@@ -328,11 +297,6 @@ void FUN_80199520(ushort *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80199704
-// Entry: 80199704
-// Size: 356 bytes
-
 void FUN_80199704(int param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,int param_5,
                  undefined4 param_6,undefined4 param_7,undefined4 param_8)
 
@@ -427,11 +391,6 @@ LAB_80199848:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80199868
-// Entry: 80199868
-// Size: 196 bytes
-
 void FUN_80199868(int param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,int param_5,
                  undefined4 param_6,undefined4 param_7,undefined4 param_8)
 

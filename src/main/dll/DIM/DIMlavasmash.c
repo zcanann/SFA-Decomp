@@ -79,11 +79,6 @@ void FUN_801b119c(int param_1,int param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801b0b58
-// Entry: 801b0b58
-// Size: 196 bytes
-
 void FUN_801b0b58(short *param_1,int param_2)
 
 {
@@ -118,11 +113,6 @@ void FUN_801b0b58(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801b0c24
-// Entry: 801b0c24
-// Size: 276 bytes
-
 undefined4 FUN_801b0c24(uint param_1,undefined4 param_2,int param_3)
 
 {
@@ -171,11 +161,6 @@ undefined4 FUN_801b0c24(uint param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801b0d74
-// Entry: 801b0d74
-// Size: 136 bytes
-
 void FUN_801b0d74(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10)
@@ -211,11 +196,6 @@ void FUN_801b0d74(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801b0dfc
-// Entry: 801b0dfc
-// Size: 220 bytes
-
 void FUN_801b0dfc(void)
 
 {
@@ -256,11 +236,6 @@ void FUN_801b0dfc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801b0ed8
-// Entry: 801b0ed8
-// Size: 708 bytes
-
 void FUN_801b0ed8(uint param_1)
 
 {
@@ -371,11 +346,6 @@ LAB_801b10e4:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer assignments need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801b119c(int param_1,int param_2)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

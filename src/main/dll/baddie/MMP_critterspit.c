@@ -50,16 +50,6 @@ void FUN_8013dc78(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8013dc78
-// Entry: 8013dc78
-// Size: 588 bytes
-
-/* WARNING: Removing unreachable block (ram,0x8013dea4) */
-/* WARNING: Removing unreachable block (ram,0x8013de9c) */
-/* WARNING: Removing unreachable block (ram,0x8013dc90) */
-/* WARNING: Removing unreachable block (ram,0x8013dc88) */
-
 void FUN_8013dc78(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,

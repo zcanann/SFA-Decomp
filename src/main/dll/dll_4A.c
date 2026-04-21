@@ -70,14 +70,9 @@ FUN_8011bb4c(undefined4 param_1,undefined4 param_2,int param_3,undefined4 param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 undefined4
 FUN_8011bb4c(undefined4 param_1,undefined4 param_2,int param_3,undefined4 param_4,undefined4 param_5
             ,undefined4 param_6,undefined4 param_7,undefined4 param_8)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
     return 0;
 }

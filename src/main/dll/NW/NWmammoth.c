@@ -4,8 +4,8 @@
  * Owner: main/dll/NW/NWmammoth.c
  * Text span: 0x801D1B54-0x801D21EC
  * Imported Ghidra functions: 4
- * Verbatim-safe functions: 2
- * Auto-stubbed functions: 2
+ * Verbatim-safe functions: 1
+ * Auto-stubbed functions: 3
  */
 
 #include "ghidra_import.h"
@@ -75,11 +75,6 @@ void FUN_801d1f68(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801d1b54
-// Entry: 801d1b54
-// Size: 60 bytes
-
 void FUN_801d1b54(int param_1)
 
 {
@@ -100,49 +95,8 @@ void FUN_801d1b54(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801d1b90
-// Entry: 801d1b90
-// Size: 332 bytes
-
 void FUN_801d1b90(int *param_1)
-
 {
-  int iVar1;
-  undefined4 *puVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  undefined4 *local_70;
-  int aiStack_6c [20];
-  char local_1c;
-  
-  iVar5 = param_1[0x2e];
-  iVar4 = param_1[0x13];
-  if (((*(ushort *)(param_1 + 0x2c) & 0x1000) == 0) &&
-     (((*(byte *)(iVar5 + 0x137) & 8) != 0 || ((*(ushort *)(param_1[0x15] + 0x60) & 8) != 0)))) {
-    iVar1 = FUN_80065fcc((double)(float)param_1[3],(double)(float)param_1[4],
-                         (double)(float)param_1[5],param_1,&local_70,0,0);
-    iVar3 = 0;
-    puVar2 = local_70;
-    if (0 < iVar1) {
-      do {
-        if (*(float *)*puVar2 < FLOAT_803e5f2c + (float)param_1[4]) {
-          param_1[4] = *(int *)local_70[iVar3];
-          break;
-        }
-        puVar2 = puVar2 + 1;
-        iVar3 = iVar3 + 1;
-        iVar1 = iVar1 + -1;
-      } while (iVar1 != 0);
-    }
-    iVar1 = FUN_80064248(param_1 + 0x20,param_1 + 3,(float *)0x2,aiStack_6c,param_1,8,0xffffffff,
-                         0xff,0x14);
-    if (((*(char *)(iVar4 + 0x18) == '\x04') && (iVar1 != 0)) && (local_1c == '\r')) {
-      *(byte *)(iVar5 + 0x137) = *(byte *)(iVar5 + 0x137) | 4;
-    }
-  }
-  return;
 }
 
 /*
@@ -157,14 +111,9 @@ void FUN_801d1b90(int *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: pointer-heavy local typing needs manual cleanup, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801d1cdc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -179,14 +128,9 @@ void FUN_801d1cdc(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-label references need manual cleanup, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801d1f68(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

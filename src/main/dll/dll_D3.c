@@ -34,16 +34,6 @@ int FUN_8013f20c(int param_1,int param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8013f20c
-// Entry: 8013f20c
-// Size: 264 bytes
-
-/* WARNING: Removing unreachable block (ram,0x8013f2f0) */
-/* WARNING: Removing unreachable block (ram,0x8013f2e8) */
-/* WARNING: Removing unreachable block (ram,0x8013f224) */
-/* WARNING: Removing unreachable block (ram,0x8013f21c) */
-
 int FUN_8013f20c(int param_1,int param_2)
 
 {

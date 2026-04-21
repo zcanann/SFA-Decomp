@@ -38,11 +38,6 @@ void FUN_802817a4(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80281760
-// Entry: 80281760
-// Size: 68 bytes
-
 void FUN_80281760(uint param_1)
 
 {
@@ -70,11 +65,6 @@ void FUN_80281760(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_802817a4
-// Entry: 802817a4
-// Size: 4 bytes
-
 void FUN_802817a4(void)
 
 {

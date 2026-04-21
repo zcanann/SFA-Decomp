@@ -4,8 +4,8 @@
  * Owner: main/dll/SH/SHspore.c
  * Text span: 0x801D441C-0x801D4D8C
  * Imported Ghidra functions: 5
- * Verbatim-safe functions: 1
- * Auto-stubbed functions: 4
+ * Verbatim-safe functions: 2
+ * Auto-stubbed functions: 3
  */
 
 #include "ghidra_import.h"
@@ -75,13 +75,8 @@ void FUN_801d4a94(short *param_1,byte *param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801d441c(int param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -96,13 +91,50 @@ void FUN_801d441c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801d45e4(undefined2 *param_1)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  uint uVar1;
+  int iVar2;
+  int iVar3;
+  
+  iVar3 = *(int *)(param_1 + 0x26);
+  *param_1 = (short)((int)*(char *)(iVar3 + 0x18) << 8);
+  if (((int)*(short *)(iVar3 + 0x20) == 0xffffffff) ||
+     (uVar1 = FUN_80020078((int)*(short *)(iVar3 + 0x20)), uVar1 != 0)) {
+    uVar1 = FUN_80020078(0x66c);
+    if (uVar1 == 0) {
+      *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 0x10;
+    }
+    else {
+      *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) & 0xef;
+    }
+    iVar2 = FUN_8003809c((int)param_1,0x66c);
+    if (iVar2 == 0) {
+      if (((*(byte *)((int)param_1 + 0xaf) & 4) != 0) && (uVar1 = FUN_80020078(0x196), uVar1 == 0))
+      {
+        (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+        FUN_800201ac(0x196,1);
+      }
+    }
+    else {
+      FUN_8001ffac(0x66c);
+      FUN_800201ac((int)*(short *)(iVar3 + 0x1e),1);
+      (**(code **)(*DAT_803dd6d4 + 0x48))(1,param_1,0xffffffff);
+    }
+    uVar1 = FUN_80020078((int)*(short *)(iVar3 + 0x1e));
+    if (uVar1 == 0) {
+      *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) & 0xf7;
+      FUN_80041110();
+    }
+    else {
+      *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 8;
+    }
+  }
+  else {
+    *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 8;
+  }
+  return;
 }
 
 /*
@@ -117,13 +149,6 @@ void FUN_801d45e4(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801d4788
-// Entry: 801d4788
-// Size: 460 bytes
-
-/* WARNING: Removing unreachable block (ram,0x801d480c) */
-
 undefined4 FUN_801d4788(short *param_1,undefined4 param_2,int param_3)
 
 {
@@ -189,13 +214,8 @@ undefined4 FUN_801d4788(short *param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801d4954(short *param_1,int param_2)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -210,11 +230,6 @@ void FUN_801d4954(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801d4a94(short *param_1,byte *param_2)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

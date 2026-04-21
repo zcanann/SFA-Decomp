@@ -48,14 +48,6 @@ void FUN_801158ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801158ec
-// Entry: 801158ec
-// Size: 908 bytes
-
-/* WARNING: Removing unreachable block (ram,0x80115c58) */
-/* WARNING: Removing unreachable block (ram,0x801158fc) */
-
 void FUN_801158ec(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int *param_11,int param_12,float *param_13,

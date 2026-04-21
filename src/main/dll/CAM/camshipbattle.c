@@ -4,8 +4,8 @@
  * Owner: main/dll/CAM/camshipbattle.c
  * Text span: 0x80107020-0x80107398
  * Imported Ghidra functions: 3
- * Verbatim-safe functions: 1
- * Auto-stubbed functions: 2
+ * Verbatim-safe functions: 2
+ * Auto-stubbed functions: 1
  */
 
 #include "ghidra_import.h"
@@ -44,14 +44,9 @@ void FUN_8010736c(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: unsupported body pseudo-types. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80107020(undefined8 param_1,double param_2,double param_3,double param_4,double param_5,
                  double param_6,undefined4 param_7,undefined4 param_8,int *param_9)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -66,13 +61,37 @@ void FUN_80107020(undefined8 param_1,double param_2,double param_3,double param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80107214(int param_1,int param_2)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  short sVar1;
+  uint uVar2;
+  int iVar3;
+  undefined4 local_28;
+  undefined4 local_24;
+  undefined2 local_20;
+  longlong local_18;
+  
+  if (*(int *)(param_2 + 0xc0) == 0) {
+    uVar2 = FUN_80014e9c(0);
+    if ((((*(int *)(param_1 + 0x124) == 0) ||
+         (((sVar1 = *(short *)(*(int *)(param_1 + 0x124) + 0x44), sVar1 != 0x1c && (sVar1 != 0x2a))
+          || (*(short *)(param_2 + 0x44) != 1)))) || (iVar3 = FUN_80296e60(param_2), iVar3 == 0)) &&
+       ((*(byte *)(param_1 + 0x141) & 2) == 0)) {
+      if ((((uVar2 & 0x10) != 0) && (*(short *)(param_2 + 0x44) == 1)) &&
+         (iVar3 = FUN_80296a14(param_2), iVar3 != 0)) {
+        local_28 = *(undefined4 *)(DAT_803de1b0 + 4);
+        local_24 = *(undefined4 *)(DAT_803de1b0 + 0xc);
+        local_18 = (longlong)(int)*(float *)(DAT_803de1b0 + 0x10);
+        local_20 = (undefined2)(int)*(float *)(DAT_803de1b0 + 0x10);
+        (**(code **)(*DAT_803dd6d0 + 0x1c))(0x44,1,0,0xc,&local_28,0,0xff);
+      }
+    }
+    else {
+      (**(code **)(*DAT_803dd6d0 + 0x1c))(0x49,1,0,4,param_1 + 0x124,0x3c,0xff);
+    }
+  }
+  return;
 }
 
 /*
@@ -87,11 +106,6 @@ void FUN_80107214(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8010736c
-// Entry: 8010736c
-// Size: 44 bytes
-
 void FUN_8010736c(void)
 
 {

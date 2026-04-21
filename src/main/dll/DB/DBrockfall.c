@@ -4,8 +4,8 @@
  * Owner: main/dll/DB/DBrockfall.c
  * Text span: 0x801DF454-0x801DFA2C
  * Imported Ghidra functions: 5
- * Verbatim-safe functions: 2
- * Auto-stubbed functions: 3
+ * Verbatim-safe functions: 3
+ * Auto-stubbed functions: 2
  */
 
 #include "ghidra_import.h"
@@ -57,11 +57,6 @@ void FUN_801df918(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801df458
-// Entry: 801df458
-// Size: 36 bytes
-
 void FUN_801df458(int param_1)
 
 {
@@ -81,13 +76,8 @@ void FUN_801df458(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: pointer-heavy local typing needs manual cleanup, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801df480(undefined2 *param_1)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -102,11 +92,6 @@ void FUN_801df480(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801df700
-// Entry: 801df700
-// Size: 220 bytes
-
 uint FUN_801df700(int param_1,undefined4 param_2,int param_3)
 
 {
@@ -161,15 +146,10 @@ uint FUN_801df700(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801df7dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -184,11 +164,36 @@ void FUN_801df7dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801df918(int param_1)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  byte bVar1;
+  uint uVar2;
+  byte *pbVar3;
+  
+  pbVar3 = *(byte **)(param_1 + 0xb8);
+  bVar1 = *pbVar3;
+  if (bVar1 == 1) {
+    if ((*(byte *)(param_1 + 0xaf) & 1) != 0) {
+      (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+    }
+    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
+  }
+  else if (bVar1 == 0) {
+    uVar2 = (uint)*(short *)(*(int *)(param_1 + 0x4c) + 0x1e);
+    if ((uVar2 == 0xffffffff) || (uVar2 = FUN_80020078(uVar2), uVar2 == 0)) {
+      *pbVar3 = 1;
+    }
+    else {
+      *pbVar3 = 2;
+    }
+  }
+  else if (bVar1 < 3) {
+    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
+  }
+  pbVar3[2] = 0;
+  if (((*(uint *)(*(int *)(param_1 + 0x50) + 0x44) & 1) != 0) && (*(int *)(param_1 + 0x74) != 0)) {
+    FUN_80041110();
+  }
+  return;
 }

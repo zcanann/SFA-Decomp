@@ -4,8 +4,8 @@
  * Owner: main/dll/DF/dll_198.c
  * Text span: 0x801C2460-0x801C2828
  * Imported Ghidra functions: 2
- * Verbatim-safe functions: 0
- * Auto-stubbed functions: 2
+ * Verbatim-safe functions: 1
+ * Auto-stubbed functions: 1
  */
 
 #include "ghidra_import.h"
@@ -57,13 +57,32 @@ void FUN_801c2510(undefined4 param_1,undefined4 param_2,undefined4 param_3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801c2460(int param_1)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  uint uVar1;
+  int iVar2;
+  int *piVar3;
+  int iVar4;
+  int local_18 [3];
+  
+  piVar3 = *(int **)(param_1 + 0xb8);
+  FUN_8003709c(param_1,0x17);
+  uVar1 = piVar3[0xb];
+  if ((uVar1 != 0) && (uVar1 != 0)) {
+    FUN_800238c4(uVar1);
+  }
+  iVar4 = *piVar3;
+  if (iVar4 != 0) {
+    piVar3 = FUN_80037048(0x17,local_18);
+    for (iVar2 = 0; iVar2 < local_18[0]; iVar2 = iVar2 + 1) {
+      if (*piVar3 == iVar4) {
+        (**(code **)(**(int **)(iVar4 + 0x68) + 0x44))(iVar4);
+      }
+      piVar3 = piVar3 + 1;
+    }
+  }
+  return;
 }
 
 /*
@@ -78,11 +97,6 @@ void FUN_801c2460(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801c2510(undefined4 param_1,undefined4 param_2,undefined4 param_3)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

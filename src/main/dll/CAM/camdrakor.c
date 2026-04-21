@@ -108,13 +108,8 @@ void FUN_8010d5dc(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8010c374(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -129,13 +124,8 @@ void FUN_8010c374(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: typed global pointer comparisons need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8010cff8(int param_1,undefined4 param_2,undefined4 *param_3)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -150,11 +140,6 @@ void FUN_8010cff8(int param_1,undefined4 param_2,undefined4 *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8010d160
-// Entry: 8010d160
-// Size: 44 bytes
-
 void FUN_8010d160(void)
 
 {
@@ -175,11 +160,6 @@ void FUN_8010d160(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8010d18c
-// Entry: 8010d18c
-// Size: 936 bytes
-
 void FUN_8010d18c(undefined2 *param_1)
 
 {
@@ -273,13 +253,8 @@ void FUN_8010d18c(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: typed global pointer comparisons need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8010d534(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -294,11 +269,6 @@ void FUN_8010d534(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8010d5dc
-// Entry: 8010d5dc
-// Size: 44 bytes
-
 void FUN_8010d5dc(void)
 
 {

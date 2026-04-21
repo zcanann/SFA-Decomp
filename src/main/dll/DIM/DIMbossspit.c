@@ -4,8 +4,8 @@
  * Owner: main/dll/DIM/DIMbossspit.c
  * Text span: 0x801BE2A4-0x801BE4D4
  * Imported Ghidra functions: 3
- * Verbatim-safe functions: 0
- * Auto-stubbed functions: 3
+ * Verbatim-safe functions: 3
+ * Auto-stubbed functions: 0
  */
 
 #include "ghidra_import.h"
@@ -43,14 +43,13 @@ FUN_801be368(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 bool FUN_801be2ac(undefined4 param_1,int param_2)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
-    return 0;
+  if (*(char *)(param_2 + 0x27a) != '\0') {
+    (**(code **)(*DAT_803dd70c + 0x14))(param_1,param_2,1);
+  }
+  return *(char *)(param_2 + 0x346) != '\0';
 }
 
 /*
@@ -65,14 +64,14 @@ bool FUN_801be2ac(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 undefined4 FUN_801be318(undefined4 param_1,int param_2)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
-    return 0;
+  if (*(char *)(param_2 + 0x27b) != '\0') {
+    *(undefined *)(param_2 + 0x27a) = 1;
+    (**(code **)(*DAT_803dd70c + 0x14))(param_1,param_2,0);
+  }
+  return 0;
 }
 
 /*
@@ -87,15 +86,57 @@ undefined4 FUN_801be318(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 undefined4
 FUN_801be368(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,int param_10
             )
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
-    return 0;
+  undefined4 uVar1;
+  ushort *puVar2;
+  undefined *puVar3;
+  undefined *puVar4;
+  int iVar5;
+  undefined4 in_r10;
+  undefined auStack_18 [2];
+  undefined auStack_16 [2];
+  ushort local_14 [6];
+  
+  if (*(char *)(param_10 + 0x27a) != '\0') {
+    FLOAT_803de81c = FLOAT_803de820;
+    uVar1 = FUN_8002bac4();
+    puVar2 = local_14;
+    puVar3 = auStack_16;
+    puVar4 = auStack_18;
+    iVar5 = *DAT_803dd738;
+    (**(code **)(iVar5 + 0x14))(param_9,uVar1,4);
+    if (local_14[0] == 1) {
+      if (*(char *)(param_10 + 0x27a) != '\0') {
+        FUN_8003042c((double)FLOAT_803e5928,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                     param_9,3,0,puVar2,puVar3,puVar4,iVar5,in_r10);
+        *(undefined *)(param_10 + 0x346) = 0;
+      }
+    }
+    else if (local_14[0] == 0) {
+      if (*(char *)(param_10 + 0x27a) != '\0') {
+        FUN_8003042c((double)FLOAT_803e5928,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                     param_9,1,0,puVar2,puVar3,puVar4,iVar5,in_r10);
+        *(undefined *)(param_10 + 0x346) = 0;
+      }
+    }
+    else if (local_14[0] < 3) {
+      if (*(char *)(param_10 + 0x27a) != '\0') {
+        FUN_8003042c((double)FLOAT_803e5928,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                     param_9,2,0,puVar2,puVar3,puVar4,iVar5,in_r10);
+        *(undefined *)(param_10 + 0x346) = 0;
+      }
+    }
+    else if (*(char *)(param_10 + 0x27a) != '\0') {
+      FUN_8003042c((double)FLOAT_803e5928,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                   param_9,4,0,puVar2,puVar3,puVar4,iVar5,in_r10);
+      *(undefined *)(param_10 + 0x346) = 0;
+    }
+    *(float *)(param_10 + 0x2a0) = FLOAT_803e592c;
+  }
+  return 0;
 }

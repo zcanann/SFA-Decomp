@@ -38,13 +38,8 @@ void FUN_801f0d70(int param_1);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer assignments need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801f0c0c(undefined2 *param_1,int param_2)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }
 
 /*
@@ -59,11 +54,6 @@ void FUN_801f0c0c(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801f0d70
-// Entry: 801f0d70
-// Size: 48 bytes
-
 void FUN_801f0d70(int param_1)
 
 {

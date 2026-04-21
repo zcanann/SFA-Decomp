@@ -59,11 +59,6 @@ void FUN_801673d8(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_801672e4
-// Entry: 801672e4
-// Size: 240 bytes
-
 void FUN_801672e4(float *param_1,float *param_2,float *param_3)
 
 {
@@ -109,11 +104,6 @@ void FUN_801672e4(float *param_1,float *param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_801673d8(void)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

@@ -27,13 +27,6 @@ void FUN_80292444(double param_1,float *param_2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80292428
-// Entry: 80292428
-// Size: 28 bytes
-
-/* WARNING: Removing unreachable block (ram,0x80292430) */
-
 double FUN_80292428(float *param_1)
 
 {
@@ -52,13 +45,6 @@ double FUN_80292428(float *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_80292444
-// Entry: 80292444
-// Size: 28 bytes
-
-/* WARNING: Removing unreachable block (ram,0x80292450) */
-
 void FUN_80292444(double param_1,float *param_2)
 
 {

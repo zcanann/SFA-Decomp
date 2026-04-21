@@ -56,11 +56,6 @@ void FUN_80107718(undefined4 param_1,undefined4 param_2,short *param_3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: address-label references need manual cleanup, typed global pointer comparisons need manual cleanup, function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_80107718(undefined4 param_1,undefined4 param_2,short *param_3)
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
 }

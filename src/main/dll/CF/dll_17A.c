@@ -4,8 +4,8 @@
  * Owner: main/dll/CF/dll_17A.c
  * Text span: 0x8018DA28-0x8018DE58
  * Imported Ghidra functions: 6
- * Verbatim-safe functions: 4
- * Auto-stubbed functions: 2
+ * Verbatim-safe functions: 6
+ * Auto-stubbed functions: 0
  */
 
 #include "ghidra_import.h"
@@ -53,11 +53,6 @@ void FUN_8018dd40(undefined4 param_1,undefined4 param_2,int param_3);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8018da3c
-// Entry: 8018da3c
-// Size: 48 bytes
-
 void FUN_8018da3c(int param_1)
 
 {
@@ -81,11 +76,6 @@ void FUN_8018da3c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8018da70
-// Entry: 8018da70
-// Size: 144 bytes
-
 void FUN_8018da70(int param_1)
 
 {
@@ -120,11 +110,6 @@ void FUN_8018da70(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8018db00
-// Entry: 8018db00
-// Size: 348 bytes
-
 void FUN_8018db00(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,int param_10,undefined4 param_11,undefined4 param_12,
@@ -179,13 +164,11 @@ void FUN_8018db00(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8018dc74(void)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  (**(code **)(*DAT_803dd6f8 + 0x18))();
+  return;
 }
 
 /*
@@ -200,11 +183,6 @@ void FUN_8018dc74(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-// Function: FUN_8018dca4
-// Entry: 8018dca4
-// Size: 156 bytes
-
 void FUN_8018dca4(void)
 
 {
@@ -234,11 +212,28 @@ void FUN_8018dca4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup. */
-/* Original raw Ghidra body omitted for compile-first stubbing. */
-
 void FUN_8018dd40(undefined4 param_1,undefined4 param_2,int param_3)
+
 {
-    /* TODO: replace this stub with a cleaned-up Ghidra body. */
+  short sVar1;
+  int iVar2;
+  uint uVar3;
+  int iVar4;
+  
+  iVar2 = FUN_80286840();
+  sVar1 = *(short *)(iVar2 + 0x46);
+  if (((sVar1 != 0xae) && (0xad < sVar1)) && (sVar1 == 0x2b7)) {
+    uVar3 = FUN_80020078((int)*(short *)(*(int *)(iVar2 + 0xb8) + 0x3a));
+    if (uVar3 != 0) {
+      *(byte *)(param_3 + 0x90) = *(byte *)(param_3 + 0x90) | 4;
+    }
+    for (iVar4 = 0; iVar4 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar4 = iVar4 + 1) {
+      if (*(char *)(param_3 + iVar4 + 0x81) == '\x01') {
+        (**(code **)(*DAT_803dd708 + 8))(iVar2,0x44,0,2,0xffffffff,0);
+      }
+      *(undefined *)(param_3 + iVar4 + 0x81) = 0;
+    }
+  }
+  FUN_8028688c();
+  return;
 }
