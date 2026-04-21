@@ -171,8 +171,6 @@ FORCE_STUB_OWNERS = {
     "main/dll/moveLib.c",
     # Rebody sweep owners that still fail MWCC on raw Ghidra bodies.
     "main/dll/ARW/ARWarwingattachment.c",
-    "main/dll/CF/CFBaby.c",
-    "main/dll/CF/CFchuckobj.c",
     "main/dll/CF/treasureRelated0177.c",
     "main/dll/CF/windlift.c",
     "main/dll/CR/CRsnowbike.c",
@@ -194,7 +192,6 @@ FORCE_STUB_OWNERS = {
     "main/dll/anim.c",
     "main/dll/baddie/Tumbleweed.c",
     "main/dll/baddie/baby_snowworm.c",
-    "main/dll/baddie/skeetla.c",
     "main/dll/collectable.c",
     "main/dll/dll_148.c",
     "main/dll/dll_14F.c",
@@ -208,7 +205,7 @@ FORCE_STUB_OWNERS = {
     "main/dll/mmshrine/shrine1C2.c",
     "main/dll/pressureSwitch.c",
     "main/dll/seqObj11D.c",
-    "main/dll/sidekickToy.c",
+    "main/dll/baddie/skeetla.c",
     "main/dll/weaponE6.c",
     "main/dll/colrise.c",
     "main/dll/shrine1CE.c",
@@ -586,8 +583,17 @@ def detect_void_return_assignment_hazards(functions: list[FunctionDump]) -> dict
             if re.search(rf"(?<![=!<>+\-*/%&|^])=\s*{escaped_callee}\s*\(", raw_text):
                 bad_callees.append(callee)
                 continue
+            if re.search(rf"(?<![=!<>+\-*/%&|^])=\s*\([^()]+\)\s*{escaped_callee}\s*\(", raw_text):
+                bad_callees.append(callee)
+                continue
             if simplify_return_type(function.return_type) != "void" and re.search(
                 rf"\breturn\s+{escaped_callee}\s*\(",
+                raw_text,
+            ):
+                bad_callees.append(callee)
+                continue
+            if simplify_return_type(function.return_type) != "void" and re.search(
+                rf"\breturn\s+\([^()]+\)\s*{escaped_callee}\s*\(",
                 raw_text,
             ):
                 bad_callees.append(callee)
