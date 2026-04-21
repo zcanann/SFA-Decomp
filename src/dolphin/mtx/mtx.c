@@ -4,6 +4,9 @@ static f32 lbl_803DD1B8[] = { 0.0f, 1.0f };
 
 extern const f32 lbl_803E82B0;
 extern const f32 lbl_803E82B4;
+extern const f32 lbl_803E82BC;
+extern const f32 lbl_803E82C0;
+extern const f32 lbl_803E82C4;
 
 extern f32 sinf(f32);
 extern f32 cosf(f32);
@@ -1327,25 +1330,25 @@ void C_MTXLightPerspective(Mtx m, f32 fovY, f32 aspect, float scaleS, float scal
     f32 angle;
     f32 cot;
 
-    angle = fovY * 0.5f;
-    angle = MTXDegToRad(angle);
+    angle = fovY * lbl_803E82C0;
+    angle = angle * lbl_803E82C4;
 
-    cot = 1.0f / tanf(angle);
+    cot = lbl_803E82B0 / tanf(angle);
 
     m[0][0] = (cot / aspect) * scaleS;
-    m[0][1] = 0.0f;
+    m[0][1] = lbl_803E82B4;
     m[0][2] = -transS;
-    m[0][3] = 0.0f;
+    m[0][3] = lbl_803E82B4;
 
-    m[1][0] = 0.0f;
+    m[1][0] = lbl_803E82B4;
     m[1][1] = cot * scaleT;
     m[1][2] = -transT;
-    m[1][3] = 0.0f;
+    m[1][3] = lbl_803E82B4;
 
-    m[2][0] = 0.0f;
-    m[2][1] = 0.0f;
-    m[2][2] = -1.0f;
-    m[2][3] = 0.0f;
+    m[2][0] = lbl_803E82B4;
+    m[2][1] = lbl_803E82B4;
+    m[2][2] = lbl_803E82BC;
+    m[2][3] = lbl_803E82B4;
 }
 
 void C_MTXLightOrtho(Mtx m, f32 t, f32 b, f32 l, f32 r, float scaleS, float scaleT, float transS, float transT)
