@@ -553,29 +553,26 @@ DSError TRKDoFlushCache(TRKBuffer* b) {
     return TRKStandardACK(b, DSMSG_ReplyACK, DSREPLY_NoError);
 }
 
-DSError TRKDoContinue(TRKBuffer*) {
-    MWTRACE(1, "DoContinue\n");
+DSError TRKDoContinue(TRKBuffer* b) {
+    int retries;
+    DSError result;
+
     if (!TRKTargetStopped()) {
-        u8 arr[0x40];
-        memset(arr, 0, 0x40);
-
-        arr[4] = 0x80;
-        *(u32*)arr = 0x40;
-        arr[8] = 0x16;
-
-        TRKWriteUARTN(arr, 0x40);
-        return DS_NoError;
-    } else {
-        u8 arr[0x40];
-        memset(arr, 0, 0x40);
-
-        arr[4] = 0x80;
-        *(u32*)arr = 0x40;
-        arr[8] = 0x00;
-
-        TRKWriteUARTN(arr, 0x40);
-        return TRKTargetContinue();
+        TRKResetBuffer(b, TRUE);
+        TRKAppendBuffer1_ui8(b, DSMSG_ReplyACK);
+        TRKAppendBuffer1_ui8(b, DSREPLY_NotStopped);
+        retries = 3;
+        do {
+            result = TRKMessageSend(b);
+            retries--;
+            if (result == DS_NoError) {
+                break;
+            }
+        } while (retries > 0);
+        return result;
     }
+    TRKStandardACK(b, DSMSG_ReplyACK, DSREPLY_NoError);
+    return TRKTargetContinue();
 }
 
 DSError TRKDoStep(TRKBuffer* b) {
