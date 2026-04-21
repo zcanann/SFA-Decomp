@@ -47,11 +47,18 @@ void SetTRKConnected(BOOL isTRKConnected) {
 }
 
 DSError TRKSendACK(TRKBuffer* buffer) {
-    DSError err;
-    MWTRACE(1, "SendACK : Calling MessageSend\n");
-    err = TRKMessageSend(buffer);
-    MWTRACE(1, "MessageSend err : %ld\n", err);
-    return err;
+    int retries;
+    DSError result;
+
+    retries = 3;
+    do {
+        result = TRKMessageSend(buffer);
+        retries--;
+        if (result == DS_NoError) {
+            break;
+        }
+    } while (retries > 0);
+    return result;
 }
 
 DSError TRKStandardACK(TRKBuffer* buffer, MessageCommandID commandID,
