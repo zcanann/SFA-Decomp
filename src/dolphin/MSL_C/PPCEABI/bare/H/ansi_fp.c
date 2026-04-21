@@ -199,37 +199,76 @@ void __timesdec(decimal* result, const decimal* x, const decimal* y) {
     }
 }
 
-void __str2dec(decimal* d, const char* s, short exp) {
-    int i;
-
-    d->exp = exp;
-    d->sign = 0;
-
-    for (i = 0; i < SIGDIGLEN && *s;) {
-        d->sig.text[i++] = *s++ - '0';
-    }
-    d->sig.length = i;
-
-    if (*s != 0) {
-        if (*s < 5)
-            return;
-        if (*s > 5)
-            goto round;
-
-        {
-            const char* p = s + 1;
-
-            for (; *p != 0; p++) {
-                if (*p != '0')
-                    goto round;
-            }
-
-            if ((d->sig.text[i - 1] & 1) == 0)
-                return;
-        }
-    round:
-        __dorounddecup(d, d->sig.length);
-    }
+asm void __str2dec(decimal* d, const char* s, short exp) {
+    nofralloc
+    sth r5, 0x2(r3)
+    li r0, 0x0
+    li r6, 0x0
+    stb r0, 0x0(r3)
+    b _s2d_1
+_s2d_0:
+    lbz r5, 0x0(r4)
+    addi r0, r6, 0x5
+    addi r4, r4, 0x1
+    addi r6, r6, 0x1
+    subi r5, r5, 0x30
+    stbx r5, r3, r0
+_s2d_1:
+    cmpwi r6, 0x24
+    bge _s2d_2
+    lbz r0, 0x0(r4)
+    extsb. r0, r0
+    bne _s2d_0
+_s2d_2:
+    stb r6, 0x4(r3)
+    lbz r5, 0x0(r4)
+    extsb. r0, r5
+    beqlr
+    extsb r0, r5
+    cmpwi r0, 0x5
+    bltlr
+    addi r5, r4, 0x1
+    b _s2d_4
+_s2d_3:
+    extsb r0, r4
+    cmpwi r0, 0x30
+    bne _s2d_5
+    addi r5, r5, 0x1
+_s2d_4:
+    lbz r4, 0x0(r5)
+    extsb. r0, r4
+    bne _s2d_3
+    add r4, r3, r6
+    lbz r0, 0x4(r4)
+    clrlwi. r0, r0, 31
+    beqlr
+_s2d_5:
+    lbz r4, 0x4(r3)
+    addi r6, r3, 0x5
+    li r0, 0x0
+    subi r5, r4, 0x1
+    add r5, r6, r5
+_s2d_6:
+    lbz r4, 0x0(r5)
+    cmplwi r4, 0x9
+    bge _s2d_7
+    addi r0, r4, 0x1
+    stb r0, 0x0(r5)
+    blr
+_s2d_7:
+    cmplw r5, r6
+    bne _s2d_8
+    li r0, 0x1
+    stb r0, 0x0(r5)
+    lha r4, 0x2(r3)
+    addi r0, r4, 0x1
+    sth r0, 0x2(r3)
+    blr
+_s2d_8:
+    stb r0, 0x0(r5)
+    subi r5, r5, 0x1
+    b _s2d_6
+    blr
 }
 
 static const char* const unused = "179769313486231580793729011405303420";
