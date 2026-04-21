@@ -1837,7 +1837,7 @@ main/unknown/autos/placeholder_802836E4.c:
 main/unknown/autos/placeholder_8028373C.c:
 	.text       start:0x8028373C end:0x80283744
 
-dolphin/TRK_MINNOW_DOLPHIN/CircleBuffer.c:
+main/unknown/autos/placeholder_80283744.c:
 	extab       start:0x80005B50 end:0x80005B68
 	extabindex  start:0x80006488 end:0x800064AC
 	.text       start:0x80283744 end:0x802839B0
