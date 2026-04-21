@@ -143,6 +143,13 @@ FORCE_STUB_FUNCTIONS = {
 }
 SIGNATURE_OVERRIDES = {
     "FUN_8014e670": ("void FUN_8014e670()", "void"),
+    "FUN_8019992c": (
+        "undefined4 FUN_8019992c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,\n"
+        "                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,\n"
+        "                 undefined4 param_9,undefined4 param_10,undefined4 param_11,int param_12,\n"
+        "                 int param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)",
+        "undefined4",
+    ),
 }
 GLOBAL_TYPE_OVERRIDES = {
     "DAT_803de7d0": "void*",
@@ -187,8 +194,6 @@ FORCE_STUB_OWNERS = {
     "main/dll/CF/windlift.c",
     "main/dll/CR/CRsnowbike.c",
     "main/dll/DF/DFlantern.c",
-    "main/dll/DIM/DIMlavaball.c",
-    "main/dll/DR/hightop.c",
     "main/dll/SC/SCtotembondpuz.c",
     "main/dll/WC/WClevcontrol.c",
     "main/dll/baddie/Tumbleweed.c",
@@ -335,6 +340,53 @@ def parse_signature_block(raw_text: str, name: str) -> tuple[str, str]:
     if not return_type:
         return_type = "undefined4"
     return signature_text, return_type
+
+
+def replace_signature_block(raw_text: str, function: FunctionDump) -> str:
+    lines = raw_text.splitlines()
+    target_line = None
+    for index, line in enumerate(lines):
+        if re.search(rf"\b{re.escape(function.name)}\s*\(", line):
+            target_line = index
+            break
+    if target_line is None:
+        return raw_text
+
+    start = target_line
+    while start > 0:
+        previous = lines[start - 1].strip()
+        if not previous or previous.startswith("//") or previous.startswith("/*"):
+            break
+        start -= 1
+
+    end = target_line + 1
+    while end < len(lines):
+        if lines[end].strip() == "{":
+            break
+        end += 1
+
+    replacement = function.signature_text.splitlines()
+    new_lines = lines[:start] + replacement + lines[end:]
+    return "\n".join(new_lines) + ("\n" if raw_text.endswith("\n") else "")
+
+
+def normalize_empty_labels(raw_text: str) -> str:
+    lines = raw_text.splitlines()
+    new_lines: list[str] = []
+    for index, line in enumerate(lines):
+        new_lines.append(line)
+        stripped = line.strip()
+        if not re.fullmatch(r"[A-Za-z_]\w*:", stripped):
+            continue
+        next_nonblank = None
+        for lookahead in lines[index + 1 :]:
+            if lookahead.strip():
+                next_nonblank = lookahead.strip()
+                break
+        if next_nonblank == "}":
+            indent = re.match(r"\s*", line).group(0)
+            new_lines.append(f"{indent};")
+    return "\n".join(new_lines) + ("\n" if raw_text.endswith("\n") else "")
 
 
 def simplify_return_type(return_type: str) -> str:
@@ -976,7 +1028,9 @@ def render_source(
         reasons = stub_reasons.get(function.name)
         lines.append(render_function_info_block(function).rstrip())
         if reasons is None:
-            body_text = normalize_null_pointer_casts(function.raw_text, inferred_global_types)
+            body_text = replace_signature_block(function.raw_text, function)
+            body_text = normalize_empty_labels(body_text)
+            body_text = normalize_null_pointer_casts(body_text, inferred_global_types)
             lines.append(strip_leading_function_prologue(body_text).rstrip())
         else:
             lines.append(render_stub(function, use_loose_signature=True).rstrip())
