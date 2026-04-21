@@ -82,9 +82,13 @@ KNOWN_TYPES = {
 }
 GHIDRA_FILE_RE = re.compile(r"(?P<addr>[0-9a-fA-F]{8})_(?P<name>[A-Za-z0-9_]+)\.c$")
 CALL_RE = re.compile(r"\b([A-Za-z_]\w*)\s*\(")
-GLOBAL_RE = re.compile(r"\b(_?DAT_[0-9a-fA-F]+|PTR_[A-Za-z0-9_]+|FLOAT_[0-9a-fA-F]+|DOUBLE_[0-9a-fA-F]+)\b")
+GLOBAL_RE = re.compile(
+    r"\b(_?DAT_[0-9a-fA-F]+|PTR_[A-Za-z0-9_]+|FLOAT_[0-9a-fA-F]+|DOUBLE_[0-9a-fA-F]+|s_[A-Za-z0-9_]+_[0-9a-fA-F]+|[A-Za-z]+Ram[0-9a-fA-F]+)\b"
+)
 UNSUPPORTED_TOKEN_RE = re.compile(r"\b(?:undefined[3567]|u?int3|u?int5|u?int6|u?int7|float10)\b")
 INVALID_SLICE_RE = re.compile(r"\._\d+_\d+_")
+LABEL_REF_RE = re.compile(r"&LAB_[0-9A-Fa-f]+")
+STRING_LABEL_RE = re.compile(r"\bs_[A-Za-z0-9_]+_[0-9a-fA-F]+\b")
 HELPER_TOKEN_RE = re.compile(r"\b(?:CONCAT\d+|SUB\d+|SEXT\d+|ZEXT\d+|CARRY\d+|SCARRY\d+|SBORROW\d+)\b")
 LOCAL_DECL_RE = re.compile(
     r"^\s*(?P<type>[A-Za-z_]\w*(?:\s+[A-Za-z_]\w*)*)\s+(?P<pointer>\*+)?\s*(?P<name>[A-Za-z_]\w*)\s*(?:=\s*[^;]+)?;$"
@@ -92,16 +96,37 @@ LOCAL_DECL_RE = re.compile(
 FORCE_STUB_FUNCTIONS = {
     "FUN_80009594",
     "FUN_80017508",
+    "FUN_80037048",
+    "FUN_8003a328",
+    "FUN_8003d7f0",
+    "FUN_80046644",
+    "FUN_80053674",
+    "FUN_80055ea0",
     "FUN_8003549c",
     "FUN_8005b11c",
     "FUN_8005be04",
     "FUN_8005c8cc",
+    "FUN_8005e4c4",
+    "FUN_8005fa9c",
+    "FUN_8006c63c",
+    "FUN_8007ed98",
     "FUN_80080ea4",
     "FUN_801f55c0",
     "FUN_8020a768",
 }
 FORCE_STUB_OWNERS = {
+    "main/light.c",
     "main/lightmap.c",
+    "main/main.c",
+    "main/maketex.c",
+    "main/newshadows.c",
+    "main/objlib.c",
+    "main/objhits.c",
+    "main/objprint_dolphin.c",
+    "main/pi_dolphin.c",
+    "main/rcp_dolphin.c",
+    "main/shader.c",
+    "main/track_dolphin.c",
     "main/unknown/autos/placeholder_800066E0.c",
     "main/unknown/autos/placeholder_8001746C.c",
     "main/unknown/autos/placeholder_80080E58.c",
@@ -534,8 +559,20 @@ def check_safety(raw_text: str, signature_text: str) -> tuple[bool, bool, list[s
         reasons.append("unsupported signature pseudo-types")
         safe_signature = False
 
+    if UNSUPPORTED_TOKEN_RE.search(raw_text):
+        reasons.append("unsupported body pseudo-types")
+        safe_body = False
+
     if INVALID_SLICE_RE.search(raw_text):
         reasons.append("invalid Ghidra slice syntax")
+        safe_body = False
+
+    if LABEL_REF_RE.search(raw_text):
+        reasons.append("address-label references need manual cleanup")
+        safe_body = False
+
+    if STRING_LABEL_RE.search(raw_text):
+        reasons.append("raw string-label references need manual cleanup")
         safe_body = False
 
     unsupported_helpers = {
@@ -579,12 +616,34 @@ def load_function_dump(path: Path) -> FunctionDump:
 def extern_decl_for_global(symbol: str, inferred_type: str | None = None) -> str:
     if inferred_type is not None:
         return f"extern {inferred_type} {symbol};"
+    addr_match = re.search(r"([0-9a-fA-F]+)$", symbol)
+    addr = int(addr_match.group(1), 16) if addr_match is not None else None
+    if symbol.startswith("s_"):
+        return f"extern char {symbol}[];"
     if symbol.startswith("DOUBLE_"):
         return f"extern f64 {symbol};"
     if symbol.startswith("FLOAT_"):
         return f"extern f32 {symbol};"
     if symbol.startswith("PTR_"):
         return f"extern void* {symbol};"
+    if symbol.startswith("psRam"):
+        return f"extern short* {symbol};"
+    if symbol.startswith("piRam"):
+        return f"extern int* {symbol};"
+    if symbol.startswith("pfRam"):
+        return f"extern f32* {symbol};"
+    if symbol.startswith("fRam"):
+        return f"extern f32 {symbol};"
+    if symbol.startswith("iRam") and addr is not None and addr % 4 == 0:
+        return f"extern int {symbol};"
+    if symbol.startswith("sRam") and addr is not None and addr % 2 == 0:
+        return f"extern short {symbol};"
+    if symbol.startswith(("bRam", "cRam", "uRam")):
+        if addr is not None and addr % 4 == 0:
+            return f"extern undefined4 {symbol};"
+        if addr is not None and addr % 2 == 0:
+            return f"extern undefined2 {symbol};"
+        return f"extern undefined {symbol};"
     return f"extern undefined4 {symbol};"
 
 
@@ -601,14 +660,8 @@ def render_stub(function: FunctionDump, override_reasons: list[str] | None = Non
     reasons = override_reasons or function.unsafe_reasons
     reason = ", ".join(reasons)
     lines.append(f"/* Auto-stubbed for compileability: {reason}. */")
-    if any("forced" in stub_reason for stub_reason in reasons):
-        lines.append("/* Original raw Ghidra body omitted for forced compile-first stubbing. */")
-        lines.append("")
-    else:
-        lines.append("#if 0")
-        lines.append(function.raw_text.rstrip())
-        lines.append("#endif")
-        lines.append("")
+    lines.append("/* Original raw Ghidra body omitted for compile-first stubbing. */")
+    lines.append("")
     if function.safe_signature:
         lines.append(function.signature_text)
     else:
