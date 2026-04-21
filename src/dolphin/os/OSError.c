@@ -4,9 +4,9 @@
 
 #include "dolphin/os/__os.h"
 
-int vprintf(const char* format, va_list arg);
+int vsprintf(const char* format, va_list arg);
 extern void DBPrintf(char*, ...);
-extern volatile OSContext* __OSFPUContext;
+extern volatile OSContext* __OSFPUContext AT_ADDRESS(OS_BASE_CACHED | 0x00D8);
 void OSSwitchFPUContext(__OSException exception, OSContext* context);
 
 OSErrorHandler __OSErrorTable[17];
@@ -27,7 +27,7 @@ void OSPanic(const char* file, int line, const char* msg, ...) {
 
     OSDisableInterrupts();
     va_start(marker, msg);
-    vprintf(msg, marker);
+    vsprintf(msg, marker);
     va_end(marker);
     OSReport(" in \"%s\" on line %d.\n", file, line);
 

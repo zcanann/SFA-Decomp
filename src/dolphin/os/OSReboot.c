@@ -49,7 +49,7 @@ void __OSReboot(u32 resetCode, u32 bootDol) {
     DVDCommandBlock appLoaderReadBlock;
     DVDCommandBlock rebootReadBlock;
     u32 rebootSize;
-    u32 state;
+    s32 state;
     u32 offset;
 
     (void)resetCode;
@@ -69,7 +69,6 @@ void __OSReboot(u32 resetCode, u32 bootDol) {
     DVDInit();
     DVDSetAutoInvalidation(TRUE);
 
-    Prepared = FALSE;
     __DVDPrepareResetAsync(Callback);
 
     if (!DVDCheckDisk()) {
@@ -86,27 +85,43 @@ void __OSReboot(u32 resetCode, u32 bootDol) {
     DVDReadAbsAsyncForBS(&appLoaderReadBlock, &FatalParam, sizeof(AppLoaderStruct), 0x2440, NULL);
     while (TRUE) {
         state = appLoaderReadBlock.state;
-        if (state == 0) {
-            break;
-        }
-        if (state == 1 || state >= 0xC) {
+        if (state == 1) {
             continue;
         }
-        __OSDoHotReset(g_unk_817FFFFC);
+        if (state > 1) {
+            if (state < 0xC) {
+                __OSDoHotReset(g_unk_817FFFFC);
+            }
+            continue;
+        }
+        if (state < 0) {
+            __OSDoHotReset(g_unk_817FFFFC);
+        }
+        break;
     }
 
     offset = FatalParam.size + 0x20;
     rebootSize = OSRoundUp32B(FatalParam.rebootSize);
+
+    while (!Prepared) {
+    }
+
     DVDReadAbsAsyncForBS(&rebootReadBlock, (void*)0x81300000, rebootSize, offset + 0x2440, NULL);
     while (TRUE) {
         state = rebootReadBlock.state;
-        if (state == 0) {
-            break;
-        }
-        if (state == 1 || state >= 0xC) {
+        if (state == 1) {
             continue;
         }
-        __OSDoHotReset(g_unk_817FFFFC);
+        if (state > 1) {
+            if (state < 0xC) {
+                __OSDoHotReset(g_unk_817FFFFC);
+            }
+            continue;
+        }
+        if (state < 0) {
+            __OSDoHotReset(g_unk_817FFFFC);
+        }
+        break;
     }
 
     ICInvalidateRange((void*)0x81300000, rebootSize);
