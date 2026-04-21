@@ -175,7 +175,7 @@ void ReserveEXI2Port(void) { gDBCommTable.open_func(); }
 
 void UnreserveEXI2Port(void) { gDBCommTable.close_func(); }
 
-void TRK_board_display(char* str) { OSReport("%s\n", str); }
+void TRK_board_display(char* str) { OSReport(str); }
 
 /*
  * --INFO--
