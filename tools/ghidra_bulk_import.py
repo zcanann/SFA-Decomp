@@ -98,6 +98,9 @@ FUNCTION_PTR_ASSIGN_RE = re.compile(
 GLOBAL_FUNCTION_ASSIGN_RE = re.compile(
     r"\b(?:_?DAT_[0-9A-Fa-f]+|PTR_[A-Za-z0-9_]+|[A-Za-z]+Ram[0-9A-Fa-f]+)\b\s*=\s*(?:&)?(?:FUN_[0-9A-Fa-f]{8}|LAB_[0-9A-Fa-f]+|[A-Za-z_]\w*)\b"
 )
+INDIRECT_FUNCTION_ASSIGN_RE = re.compile(
+    r"(?P<lhs>\*+\s*[A-Za-z_]\w*(?:\[[^\]]+\])?)\s*=\s*(?:&)?(?:FUN_[0-9A-Fa-f]{8}|LAB_[0-9A-Fa-f]+|[A-Za-z_]\w*)\b"
+)
 SCALAR_MEMBER_TO_POINTER_CAST_RE = re.compile(
     r"\(\s*[A-Za-z_]\w*(?:\s+[A-Za-z_]\w*)*\s*\*\s*\)\s*[A-Za-z_]\w+\s*(?:\[[^\]]+\]|->\w+|\.\w+)"
 )
@@ -138,7 +141,9 @@ FORCE_STUB_FUNCTIONS = {
     "FUN_8019d314",
     "FUN_801a478c",
 }
-SIGNATURE_OVERRIDES = {}
+SIGNATURE_OVERRIDES = {
+    "FUN_8014e670": ("void FUN_8014e670()", "void"),
+}
 GLOBAL_TYPE_OVERRIDES = {
     "DAT_803de7d0": "void*",
 }
@@ -183,7 +188,6 @@ FORCE_STUB_OWNERS = {
     "main/dll/CR/CRsnowbike.c",
     "main/dll/DF/DFlantern.c",
     "main/dll/DIM/DIMlavaball.c",
-    "main/dll/DIM/DIMsnowball.c",
     "main/dll/DR/hightop.c",
     "main/dll/SC/SCtotembondpuz.c",
     "main/dll/WC/WClevcontrol.c",
@@ -196,7 +200,6 @@ FORCE_STUB_OWNERS = {
     "main/dll/dll_1D3.c",
     "main/dll/mmshrine/shrine.c",
     "main/dll/mmshrine/shrine1C2.c",
-    "main/dll/pressureSwitch.c",
     "main/dll/seqObj11D.c",
     "main/dll/baddie/skeetla.c",
     "main/dll/weaponE6.c",
@@ -359,6 +362,10 @@ def make_safe_forward_declaration(function: FunctionDump) -> str:
 
 def make_loose_forward_declaration(function: FunctionDump) -> str:
     return f"{normalize_type_name(function.return_type)} {function.name}();"
+
+
+def make_loose_definition_signature(function: FunctionDump) -> str:
+    return f"{normalize_type_name(function.return_type)} {function.name}()"
 
 
 def default_return_statement(return_type: str) -> str | None:
@@ -541,6 +548,24 @@ def has_pointer_assignment_hazard(raw_text: str) -> bool:
                 return True
             if re.search(rf"\*\s*{escaped_lhs}\s*=\s*{escaped_rhs}\b", stripped):
                 return True
+    return False
+
+
+def has_indirect_function_assignment_hazard(raw_text: str) -> bool:
+    stripped = strip_comments(raw_text)
+    local_var_types = parse_local_var_types(raw_text)
+    for match in INDIRECT_FUNCTION_ASSIGN_RE.finditer(stripped):
+        lhs = match.group("lhs")
+        local_match = re.search(r"([A-Za-z_]\w*)", lhs)
+        if local_match is None:
+            continue
+        local_name = local_match.group(1)
+        local_type = local_var_types.get(local_name)
+        if local_type is None:
+            return True
+        normalized = normalize_type_name(local_type)
+        if "code" not in normalized:
+            return True
     return False
 
 
@@ -735,6 +760,10 @@ def check_safety(raw_text: str, signature_text: str) -> tuple[bool, bool, list[s
         reasons.append("function-pointer assignments need manual cleanup")
         safe_body = False
 
+    if has_indirect_function_assignment_hazard(raw_text):
+        reasons.append("indirect function-symbol stores need manual cleanup")
+        safe_body = False
+
     if SCALAR_MEMBER_TO_POINTER_CAST_RE.search(raw_text):
         reasons.append("scalar-to-pointer casts need manual cleanup")
         safe_body = False
@@ -871,9 +900,11 @@ def header_guard(relpath: str) -> str:
     return re.sub(r"[^A-Za-z0-9]", "_", relpath.upper()) + "_"
 
 
-def render_stub(function: FunctionDump, override_reasons: list[str] | None = None) -> str:
+def render_stub(function: FunctionDump, use_loose_signature: bool = False) -> str:
     lines: list[str] = []
-    if function.safe_signature:
+    if use_loose_signature:
+        lines.append(make_loose_definition_signature(function))
+    elif function.safe_signature:
         lines.append(function.signature_text)
     else:
         lines.append(f"{simplify_return_type(function.return_type)}")
@@ -899,6 +930,7 @@ def render_source(
     inferred_global_types = infer_global_types(functions)
     inferred_external_function_types = infer_external_function_types(functions, local_names)
     stub_reasons = function_stub_reasons(owner, functions, forced_stub_owners)
+    stubbed_names = set(stub_reasons)
     safe_count = len(functions) - len(stub_reasons)
     stubbed_count = len(stub_reasons)
 
@@ -936,7 +968,10 @@ def render_source(
 
     lines.append("/* Local declarations keep imported functions visible within the TU. */")
     for function in functions:
-        lines.append(make_safe_forward_declaration(function))
+        if function.name in stubbed_names:
+            lines.append(make_loose_forward_declaration(function))
+        else:
+            lines.append(make_safe_forward_declaration(function))
     lines.append("")
 
     for function in functions:
@@ -946,15 +981,20 @@ def render_source(
             body_text = normalize_null_pointer_casts(function.raw_text, inferred_global_types)
             lines.append(strip_leading_function_prologue(body_text).rstrip())
         else:
-            lines.append(render_stub(function, reasons).rstrip())
+            lines.append(render_stub(function, use_loose_signature=True).rstrip())
         lines.append("")
 
     return "\n".join(lines).rstrip() + "\n"
 
 
-def render_header(owner: str, functions: list[FunctionDump]) -> str:
+def render_header(
+    owner: str,
+    functions: list[FunctionDump],
+    stubbed_names: set[str] | None = None,
+) -> str:
     relpath = header_relpath_for_owner(owner)
     guard = header_guard(relpath)
+    stubbed_names = stubbed_names or set()
     lines = [
         "/*",
         f" * {GENERATED_MARKER}",
@@ -967,7 +1007,10 @@ def render_header(owner: str, functions: list[FunctionDump]) -> str:
         "",
     ]
     for function in functions:
-        lines.append(make_safe_forward_declaration(function))
+        if function.name in stubbed_names:
+            lines.append(make_loose_forward_declaration(function))
+        else:
+            lines.append(make_safe_forward_declaration(function))
     lines.extend(["", f"#endif /* {guard} */", ""])
     return "\n".join(lines)
 
@@ -1257,7 +1300,11 @@ def main() -> None:
                 skipped_existing += 1
                 continue
             if functions:
-                header_text = render_header(owner, functions)
+                header_text = render_header(
+                    owner,
+                    functions,
+                    set(function_stub_reasons(owner, functions, forced_stub_owners)),
+                )
             elif inventory:
                 header_text = render_inventory_header(owner, inventory)
             else:
