@@ -732,6 +732,12 @@ config.libs = [
             Object(NonMatching, "main/unknown/autos/placeholder_80295318.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_802BB768.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_802BBC10.c"),
+            Object(NonMatching, "main/objanim.c"),
+            Object(NonMatching, "main/lightmap.c"),
+            Object(NonMatching, "main/textblock.c"),
+            Object(NonMatching, "main/objHitReact.c"),
+            Object(NonMatching, "main/expr.c"),
+            Object(NonMatching, "main/timer.c"),
         ],
     },
 ]
