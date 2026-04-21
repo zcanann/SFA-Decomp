@@ -1443,7 +1443,7 @@ dolphin/os/OSContext.c:
 dolphin/os/OSError.c:
 	.text       start:0x80242F78 end:0x80243308
 
-main/unknown/autos/placeholder_80243308.c:
+dolphin/os/OSFont.c:
 	.text       start:0x80243308 end:0x80243E74
 
 dolphin/os/OSInterrupt.c:
@@ -2009,7 +2009,7 @@ dolphin/MSL_C/PPCEABI/bare/H/alloc.c:
 dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c:
 	.text       start:0x8028E23C end:0x8028E344
 
-main/unknown/autos/placeholder_8028E344.c:
+dolphin/MSL_C/PPCEABI/bare/H/ansi_fp.c:
 	.text       start:0x8028E344 end:0x8028EF5C
 
 dolphin/MSL_C/PPCEABI/bare/H/buffer_io.c:
