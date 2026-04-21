@@ -60,18 +60,71 @@ DSError TRKDoConnect(TRKBuffer* buffer)
 	return TRKStandardACK(buffer, DSMSG_ReplyACK, DSREPLY_NoError);
 }
 
-DSError TRKDoDisconnect(TRKBuffer* buffer)
+asm DSError TRKDoDisconnect(TRKBuffer* buffer)
 {
-	DSError error = DS_NoError;
-	TRKEvent event;
-	SetTRKConnected(FALSE);
-
-	if ((error = TRKStandardACK(buffer, DSMSG_ReplyACK, DSREPLY_NoError))
-	    == DS_NoError) {
-		TRKConstructEvent(&event, 1);
-		TRKPostEvent(&event);
-	}
-	return error;
+	nofralloc
+	stwu r1, -0x30(r1)
+	mflr r0
+	lis r4, IsTRKConnected@ha
+	stw r0, 0x34(r1)
+	li r0, 0x0
+	stw r31, 0x2c(r1)
+	mr r31, r3
+	stw r30, 0x28(r1)
+	stw r29, 0x24(r1)
+	stw r0, IsTRKConnected@l(r4)
+	li r4, 0x1
+	bl TRKResetBuffer
+	lwz r3, 0xc(r31)
+	cmplwi r3, 0x880
+	bge _dd_1
+	addi r0, r3, 0x1
+	add r3, r31, r3
+	stw r0, 0xc(r31)
+	li r0, 0x80
+	stb r0, 0x10(r3)
+	lwz r3, 0x8(r31)
+	addi r0, r3, 0x1
+	stw r0, 0x8(r31)
+_dd_1:
+	lwz r3, 0xc(r31)
+	cmplwi r3, 0x880
+	bge _dd_2
+	addi r0, r3, 0x1
+	add r3, r31, r3
+	stw r0, 0xc(r31)
+	li r0, 0x0
+	stb r0, 0x10(r3)
+	lwz r3, 0x8(r31)
+	addi r0, r3, 0x1
+	stw r0, 0x8(r31)
+_dd_2:
+	li r30, 0x3
+_dd_3:
+	mr r3, r31
+	bl TRKMessageSend
+	mr. r29, r3
+	subi r30, r30, 0x1
+	beq _dd_4
+	cmpwi r30, 0x0
+	bgt _dd_3
+_dd_4:
+	cmpwi r29, 0x0
+	bne _dd_5
+	addi r3, r1, 0x8
+	li r4, 0x1
+	bl TRKConstructEvent
+	addi r3, r1, 0x8
+	bl TRKPostEvent
+_dd_5:
+	lwz r0, 0x34(r1)
+	mr r3, r29
+	lwz r31, 0x2c(r1)
+	lwz r30, 0x28(r1)
+	lwz r29, 0x24(r1)
+	mtlr r0
+	addi r1, r1, 0x30
+	blr
 }
 
 DSError TRKDoReset(TRKBuffer* buffer)
