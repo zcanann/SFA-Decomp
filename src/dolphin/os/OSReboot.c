@@ -25,16 +25,19 @@ typedef struct {
 static AppLoaderStruct FatalParam ATTRIBUTE_ALIGN(32);
 
 #pragma dont_inline on
-static asm void myFunc() { }
-static void Run(register void* entryPoint) {
-    OSDisableInterrupts();
-    ICFlashInvalidate();
-    asm {
-        sync
-        isync
-        mtlr entryPoint
-        blr
-    }
+static asm void Run(register void* entryPoint) {
+    nofralloc
+    mflr r0
+    stw r0, 4(r1)
+    stwu r1, -0x18(r1)
+    stw r31, 0x14(r1)
+    mr r31, r3
+    bl OSDisableInterrupts
+    bl ICFlashInvalidate
+    sync
+    isync
+    mtlr r31
+    blr
 }
 #pragma dont_inline reset
 
