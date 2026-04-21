@@ -1515,8 +1515,10 @@ dolphin/mtx/psmtx.c:
 dolphin/dvd/dvdlow.c:
 	.text       start:0x80248180 end:0x80248FD4
 
-main/unknown/autos/placeholder_80248FD4.c:
+dolphin/dvd/dvdfs.c:
 	.text       start:0x80248FD4 end:0x80249928
+	.data       start:0x8032E488 end:0x8032E9D8
+	.sdata      start:0x803DD1C8 end:0x803DD1D0
 
 dolphin/dvd/dvdFatal.c:
 	.text       start:0x80249928 end:0x80249958
@@ -1589,8 +1591,9 @@ dolphin/exi/EXIUart.c:
 dolphin/gx/GXInit.c:
 	.text       start:0x80255430 end:0x80256520
 
-main/unknown/autos/placeholder_80256520.c:
+dolphin/gx/GXFifo.c:
 	.text       start:0x80256520 end:0x80256F84
+	.sbss       start:0x803DED38 end:0x803DED58
 
 dolphin/gx/GXAttr.c:
 	.text       start:0x80256F84 end:0x8025898C
@@ -1606,7 +1609,7 @@ dolphin/gx/GXGeometry.c:
 dolphin/gx/GXFrameBuf.c:
 	.text       start:0x80259340 end:0x80259DD4
 
-main/unknown/autos/placeholder_80259DD4.c:
+dolphin/gx/GXLight.c:
 	.text       start:0x80259DD4 end:0x8025A7EC
 
 dolphin/gx/GXTexture.c:
@@ -2120,7 +2123,7 @@ main/unknown/autos/placeholder_80294964.c:
 main/unknown/autos/placeholder_80294A4C.c:
 	.text       start:0x80294A4C end:0x80294F2C
 
-main/unknown/autos/placeholder_80294F2C.c:
+dolphin/MSL_C/PPCEABI/bare/H/trigf.c:
 	.text       start:0x80294F2C end:0x80295318
 	.ctors      start:0x802C2004 end:0x802C2008
 
