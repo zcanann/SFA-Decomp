@@ -2,14 +2,18 @@
 #include <dolphin/os.h>
 #include "dolphin/os/__os.h"
 
-static s32 Chan;
-static u32 Dev;
-static u32 Enabled;
-static u32 BarnacleEnabled;
+static s32 Chan_803DED18;
+static u32 Dev_803DED1C;
+static u32 Enabled_803DED20;
+static u32 BarnacleEnabled_803DED24;
+
+#define Chan Chan_803DED18
+#define Dev Dev_803DED1C
+#define Enabled Enabled_803DED20
+#define BarnacleEnabled BarnacleEnabled_803DED24
 
 // prototypes
 int InitializeUART(void);
-int ReadUARTN(void);
 int WriteUARTN(void *buf, u32 len);
 void __OSEnableBarnacle(s32 chan, u32 dev);
 
@@ -108,30 +112,10 @@ int InitializeUART(void) {
     return 0;
 }
 
-int ReadUARTN(void) {
-    return 4;
-}
-
-static int QueueLength(void) {
-    u32 cmd;
-
-    if (EXISelect(Chan, Dev, 3) == 0) {
-        return -1;
-    }
-
-    cmd = 0x20010000;
-    EXIImm(Chan, &cmd, sizeof(cmd), EXI_WRITE, 0);
-    EXISync(Chan);
-    EXIImm(Chan, &cmd, 1, EXI_READ, 0);
-    EXISync(Chan);
-    EXIDeselect(Chan);
-    return 0x10 - (cmd >> 0x18);
-}
-
 int WriteUARTN(void *buf, u32 len) {
+    u32 cmd_A;
     u32 cmd;
     s32 xLen;
-    BOOL enabled;
     int qLen;
     char* ptr;
     int error;
@@ -140,9 +124,7 @@ int WriteUARTN(void *buf, u32 len) {
         return 2;
     }
 
-    enabled = OSDisableInterrupts();
     if (!EXILock(Chan, Dev, NULL)) {
-        OSRestoreInterrupts(enabled);
         return 0;
     }
     ptr = (char*)buf;
@@ -154,22 +136,32 @@ int WriteUARTN(void *buf, u32 len) {
         ptr++;
     }
     error = 0;
-    cmd = 0xA0010000;
+    cmd_A = 0xA0010000;
 
     while (len != 0) {
-        qLen = QueueLength();
+        if (EXISelect(Chan, Dev, 3) == 0) {
+            qLen = -1;
+        } else {
+            cmd = 0x20010000;
+            EXIImm(Chan, &cmd, sizeof(cmd), EXI_WRITE, 0);
+            EXISync(Chan);
+            EXIImm(Chan, &cmd, 1, EXI_READ, 0);
+            EXISync(Chan);
+            EXIDeselect(Chan);
+            qLen = 0x10 - (cmd >> 0x18);
+        }
         if (qLen < 0) {
             error = 3;
             break;
         }
-        
+
         if ((qLen >= 0xC) || (qLen >= len)) {
             if (EXISelect(Chan, Dev, EXI_FREQ_8M) == 0) {
                 error = 3;
                 break;
             }
-            
-            EXIImm(Chan, &cmd, sizeof(cmd), EXI_WRITE, 0);
+
+            EXIImm(Chan, &cmd_A, sizeof(cmd_A), EXI_WRITE, 0);
             EXISync(Chan);
 
             while((qLen != 0) && (len != 0)) {
@@ -178,7 +170,7 @@ int WriteUARTN(void *buf, u32 len) {
                 }
 
                 xLen = len < 4 ? (long)len : 4;
-                
+
                 EXIImm(Chan, buf, xLen, EXI_WRITE, 0);
                 buf = (char*)buf + xLen;
                 len -= xLen;
@@ -190,6 +182,5 @@ int WriteUARTN(void *buf, u32 len) {
     }
 
     EXIUnlock(Chan);
-    OSRestoreInterrupts(enabled);
     return error;
 }
