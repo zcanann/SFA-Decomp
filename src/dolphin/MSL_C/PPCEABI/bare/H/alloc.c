@@ -236,15 +236,16 @@ inline void __init_pool_obj(__mem_pool* pool_obj) {
     memset(pool_obj, 0, sizeof(__mem_pool_obj));
 }
 
+static __mem_pool protopool_803DB818;
+static unsigned char init_803DF080 = 0;
+
 static inline __mem_pool* get_malloc_pool(void) {
-    static __mem_pool protopool;
-    static unsigned char init = 0;
-    if (!init) {
-        __init_pool_obj(&protopool);
-        init = 1;
+    if (!init_803DF080) {
+        __init_pool_obj(&protopool_803DB818);
+        init_803DF080 = 1;
     }
 
-    return &protopool;
+    return &protopool_803DB818;
 }
 
 /*
@@ -759,7 +760,5 @@ void* malloc(size_t size) {
 }
 
 void free(void* ptr) {
-    __begin_critical_region(malloc_pool_access);
     __pool_free(get_malloc_pool(), ptr);
-    __end_critical_region(malloc_pool_access);
 }

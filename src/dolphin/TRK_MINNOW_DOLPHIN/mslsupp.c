@@ -212,3 +212,4 @@ int __position_file(__file_handle file, fpos_t* position, int mode, __idle_proc 
 
     return DS_IOError;
 }
+

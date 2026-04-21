@@ -4,6 +4,9 @@ static f32 lbl_803DD1B8[] = { 0.0f, 1.0f };
 
 extern const f32 lbl_803E82B0;
 extern const f32 lbl_803E82B4;
+extern const f32 lbl_803E82BC;
+extern const f32 lbl_803E82C0;
+extern const f32 lbl_803E82C4;
 
 extern f32 sinf(f32);
 extern f32 cosf(f32);
@@ -923,12 +926,54 @@ void __PSMTXRotAxisRadInternal(register f32 sT, register f32 cT, register Mtx m,
  */
 void PSMTXRotAxisRad(register Mtx m, const Vec *axis, register f32 rad)
 {
+    register f32 tmp0, tmp1, tmp2, tmp3, tmp4;
+    register f32 tmp5, tmp6, tmp7, tmp8, tmp9;
+
     register f32 sT;
     register f32 cT;
+    register f32 oneMinusCosT;
+    register f32 zero;
+    Vec axisNormalized;
+    register Vec *axisNormalizedPtr;
 
+    zero = 0.0f;
+    axisNormalizedPtr = &axisNormalized;
     sT = sinf(rad);
     cT = cosf(rad);
-    __PSMTXRotAxisRadInternal(sT, cT, m, axis);
+    oneMinusCosT = 1.0f - cT;
+
+    PSVECNormalize(axis, axisNormalizedPtr);
+
+#ifdef __MWERKS__ // clang-format off
+  asm {
+		psq_l rad, 0x0(axisNormalizedPtr), 0, qr0
+		lfs tmp1, 0x8(axisNormalizedPtr)
+		ps_merge00 tmp0, cT, cT
+		ps_muls0   tmp4, rad, oneMinusCosT
+		ps_muls0   tmp5, tmp1, oneMinusCosT
+		ps_muls1   tmp3, tmp4, rad
+		ps_muls0   tmp2, tmp4, rad
+		ps_muls0   rad, rad, sT
+		ps_muls0   tmp4, tmp4, tmp1
+		fnmsubs    tmp6, tmp1, sT, tmp3
+		fmadds     tmp7, tmp1, sT, tmp3
+		ps_neg     tmp9, rad
+		ps_sum0    tmp8, tmp4, zero, rad
+		ps_sum0    tmp2, tmp2, tmp6, tmp0
+		ps_sum1    tmp3, tmp0, tmp7, tmp3
+		ps_sum0    tmp6, tmp9, zero, tmp4
+		ps_sum0    tmp9, tmp4, tmp4, tmp9
+		psq_st     tmp8, 0x8(m), 0, qr0
+		ps_muls0   tmp5, tmp5, tmp1
+		psq_st     tmp2, 0x0(m), 0, qr0
+		ps_sum1    tmp4, rad, tmp9, tmp4
+		psq_st     tmp3, 0x10(m), 0, qr0
+		ps_sum0    tmp5, tmp5, zero, tmp0
+		psq_st     tmp6, 0x18(m), 0, qr0
+		psq_st     tmp4, 0x20(m), 0, qr0
+		psq_st     tmp5, 0x28(m), 0, qr0
+  }
+#endif // clang-format on
 }
 
 #endif
@@ -1327,25 +1372,25 @@ void C_MTXLightPerspective(Mtx m, f32 fovY, f32 aspect, float scaleS, float scal
     f32 angle;
     f32 cot;
 
-    angle = fovY * 0.5f;
-    angle = MTXDegToRad(angle);
+    angle = fovY * lbl_803E82C0;
+    angle = angle * lbl_803E82C4;
 
-    cot = 1.0f / tanf(angle);
+    cot = lbl_803E82B0 / tanf(angle);
 
     m[0][0] = (cot / aspect) * scaleS;
-    m[0][1] = 0.0f;
+    m[0][1] = lbl_803E82B4;
     m[0][2] = -transS;
-    m[0][3] = 0.0f;
+    m[0][3] = lbl_803E82B4;
 
-    m[1][0] = 0.0f;
+    m[1][0] = lbl_803E82B4;
     m[1][1] = cot * scaleT;
     m[1][2] = -transT;
-    m[1][3] = 0.0f;
+    m[1][3] = lbl_803E82B4;
 
-    m[2][0] = 0.0f;
-    m[2][1] = 0.0f;
-    m[2][2] = -1.0f;
-    m[2][3] = 0.0f;
+    m[2][0] = lbl_803E82B4;
+    m[2][1] = lbl_803E82B4;
+    m[2][2] = lbl_803E82BC;
+    m[2][3] = lbl_803E82B4;
 }
 
 void C_MTXLightOrtho(Mtx m, f32 t, f32 b, f32 l, f32 r, float scaleS, float scaleT, float transS, float transT)

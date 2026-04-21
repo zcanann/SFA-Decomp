@@ -1837,7 +1837,7 @@ main/unknown/autos/placeholder_802836E4.c:
 main/unknown/autos/placeholder_8028373C.c:
 	.text       start:0x8028373C end:0x80283744
 
-dolphin/TRK_MINNOW_DOLPHIN/CircleBuffer.c:
+main/unknown/autos/placeholder_80283744.c:
 	extab       start:0x80005B50 end:0x80005B68
 	extabindex  start:0x80006488 end:0x800064AC
 	.text       start:0x80283744 end:0x802839B0
@@ -1998,10 +1998,10 @@ dolphin/TRK_MINNOW_DOLPHIN/target_options.c:
 	.text       start:0x8028DAAC end:0x8028DAC8
 
 dolphin/TRK_MINNOW_DOLPHIN/mslsupp.c:
-	.text       start:0x8028DAC8 end:0x8028DB4C
+	.text       start:0x8028DAC8 end:0x8028DC08
 
 dolphin/MSL_C/PPCEABI/bare/H/abort_exit.c:
-	.text       start:0x8028DB4C end:0x8028DCD4
+	.text       start:0x8028DC08 end:0x8028DCD4
 
 dolphin/MSL_C/PPCEABI/bare/H/alloc.c:
 	.text       start:0x8028DCD4 end:0x8028E23C
@@ -2031,10 +2031,10 @@ dolphin/MSL_C/PPCEABI/bare/H/mem.c:
 	.text       start:0x8028F988 end:0x8028FAF8
 
 dolphin/MSL_C/PPCEABI/bare/H/mem_funcs.c:
-	.text       start:0x8028FAF8 end:0x8028FD18
+	.text       start:0x8028FAF8 end:0x8028FDD8
 
 dolphin/MSL_C/PPCEABI/bare/H/misc_io.c:
-	.text       start:0x8028FD18 end:0x8028FDE8
+	.text       start:0x8028FDD8 end:0x8028FDE8
 
 dolphin/MSL_C/PPCEABI/bare/H/printf.c:
 	.text       start:0x8028FDE8 end:0x80291D44
