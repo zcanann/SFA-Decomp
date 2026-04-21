@@ -1,0 +1,39 @@
+#ifndef MAIN_EXPGFX_H_
+#define MAIN_EXPGFX_H_
+
+#include "ghidra_import.h"
+
+void FUN_8009b36c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                 undefined4 param_9,undefined4 param_10,int param_11,int param_12,uint param_13,
+                 undefined4 param_14,undefined4 param_15,undefined4 param_16);
+void FUN_8009b4e0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+undefined4 FUN_8009b648(short *param_1,undefined2 *param_2,short param_3,int param_4,int param_5);
+void FUN_8009b960(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
+                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                 undefined2 *param_9);
+void FUN_8009bc54(undefined8 param_1,double param_2,double param_3,double param_4,double param_5,
+                 double param_6,undefined8 param_7,undefined8 param_8);
+int FUN_8009e078(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+                undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                int param_9,int param_10,int param_11,undefined4 param_12);
+void FUN_8009e290(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void FUN_8009e2c0(void);
+void FUN_8009e3c8(void);
+void FUN_8009ef70(void);
+void FUN_8009f144(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void FUN_8009f164(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void FUN_8009f268(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void FUN_8009f438(undefined8 param_1,undefined8 param_2,double param_3,double param_4,double param_5
+                 ,double param_6,undefined8 param_7,undefined8 param_8);
+void FUN_8009f558(undefined8 param_1,double param_2,double param_3,double param_4,undefined8 param_5
+                 ,undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,
+                 undefined4 param_10,short param_11,undefined param_12,undefined4 param_13,
+                 undefined4 param_14,undefined4 param_15,undefined4 param_16);
+
+#endif /* MAIN_EXPGFX_H_ */

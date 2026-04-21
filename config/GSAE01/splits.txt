@@ -13,11 +13,20 @@ Sections:
 	.sdata2     type:rodata align:32
 	.sbss2      type:bss align:4
 
+main/unknown/autos/placeholder_800066E0.c:
+	.text       start:0x800066E0 end:0x8001741C
+
 dolphin/TRK_MINNOW_DOLPHIN/MWTrace.c:
 	.text       start:0x8001741C end:0x8001746C
 
+main/unknown/autos/placeholder_8001746C.c:
+	.text       start:0x8001746C end:0x8002EC4C
+
 main/objanim.c:
 	.text       start:0x8002EC4C end:0x8002F604
+
+main/unknown/autos/placeholder_8002F604.c:
+	.text       start:0x8002F604 end:0x80030780
 
 main/objhits.c:
 	.text       start:0x80030780 end:0x8003549C
@@ -63,6 +72,9 @@ main/maketex.c:
 
 dolphin/os/OSAddress.c:
 	.text       start:0x80080E28 end:0x80080E58
+
+main/unknown/autos/placeholder_80080E58.c:
+	.text       start:0x80080E58 end:0x8009B36C
 
 main/expgfx.c:
 	.text       start:0x8009B36C end:0x8009FF68
@@ -474,6 +486,9 @@ main/dll/FRONT/n_filemenu.c:
 
 main/dll/FRONT/dll_3B.c:
 	.text       start:0x8011722C end:0x801175B4
+
+main/unknown/autos/placeholder_801175B4.c:
+	.text       start:0x801175B4 end:0x801177DC
 
 dolphin/ax/AX.c:
 	.text       start:0x801177DC end:0x8011784C
@@ -1330,6 +1345,9 @@ main/dll/LGT/LGTcontrollight.c:
 main/dll/boulder.c:
 	.text       start:0x801F4EF0 end:0x801F5184
 
+main/unknown/autos/placeholder_801F5184.c:
+	.text       start:0x801F5184 end:0x801FBA6C
+
 main/light.c:
 	.text       start:0x801FBA6C end:0x801FD3A4
 
@@ -1386,6 +1404,9 @@ main/textblock.c:
 
 main/dll/CF/laser.c:
 	.text       start:0x802096AC end:0x80209FE0
+
+main/unknown/autos/placeholder_80209FE0.c:
+	.text       start:0x80209FE0 end:0x80240A44
 
 dolphin/base/PPCArch.c:
 	.text       start:0x80240A44 end:0x80240AD0
@@ -1710,6 +1731,9 @@ main/audio/synth_init.c:
 main/audio/synth_scale.c:
 	.text       start:0x8026FCA0 end:0x8026FD1C
 
+main/unknown/autos/placeholder_8026FD1C.c:
+	.text       start:0x8026FD1C end:0x8026FD94
+
 main/audio/synth_delay.c:
 	extab       start:0x800056C0 end:0x800056E8
 	extabindex  start:0x80005DB0 end:0x80005DEC
@@ -1720,10 +1744,148 @@ main/audio/synth_control.c:
 	extabindex  start:0x80005E1C end:0x80005E40
 	.text       start:0x802721A0 end:0x8027273C
 
+main/unknown/autos/placeholder_80272EEC.c:
+	.text       start:0x80272EEC end:0x80272F0C
+
+main/unknown/autos/placeholder_80273608.c:
+	.text       start:0x80273608 end:0x802736D4
+
+main/unknown/autos/placeholder_80273F4C.c:
+	.text       start:0x80273F4C end:0x80273F50
+
+main/unknown/autos/placeholder_802755D0.c:
+	.text       start:0x802755D0 end:0x802755E0
+
+main/unknown/autos/placeholder_80275674.c:
+	.text       start:0x80275674 end:0x80275684
+
+main/unknown/autos/placeholder_802757AC.c:
+	.text       start:0x802757AC end:0x802757BC
+
+main/unknown/autos/placeholder_8027587C.c:
+	.text       start:0x8027587C end:0x8027588C
+
+main/unknown/autos/placeholder_8027590C.c:
+	.text       start:0x8027590C end:0x8027591C
+
+main/unknown/autos/placeholder_8027641C.c:
+	.text       start:0x8027641C end:0x802765AC
+
+main/unknown/autos/placeholder_80278F74.c:
+	.text       start:0x80278F74 end:0x80279018
+
+main/unknown/autos/placeholder_802791FC.c:
+	.text       start:0x802791FC end:0x802792F8
+
+main/unknown/autos/placeholder_80279608.c:
+	.text       start:0x80279608 end:0x8027979C
+
+main/unknown/autos/placeholder_80279AF0.c:
+	.text       start:0x80279AF0 end:0x80279D30
+
+main/unknown/autos/placeholder_80279EC0.c:
+	.text       start:0x80279EC0 end:0x8027A2FC
+
+main/unknown/autos/placeholder_8027A3E0.c:
+	.text       start:0x8027A3E0 end:0x8027A710
+
+main/unknown/autos/placeholder_8027A940.c:
+	.text       start:0x8027A940 end:0x8027AC80
+
+main/unknown/autos/placeholder_8027ADC4.c:
+	.text       start:0x8027ADC4 end:0x8027B038
+
+main/unknown/autos/placeholder_8027B41C.c:
+	.text       start:0x8027B41C end:0x8027B53C
+
+main/unknown/autos/placeholder_8027BB84.c:
+	.text       start:0x8027BB84 end:0x8027BB90
+
+main/unknown/autos/placeholder_8027C728.c:
+	.text       start:0x8027C728 end:0x8027CAF4
+
+main/unknown/autos/placeholder_8027F724.c:
+	.text       start:0x8027F724 end:0x8027F8B0
+
+main/unknown/autos/placeholder_802801A8.c:
+	.text       start:0x802801A8 end:0x8028026C
+
+main/unknown/autos/placeholder_80280F28.c:
+	.text       start:0x80280F28 end:0x8028116C
+
+main/unknown/autos/placeholder_80281760.c:
+	.text       start:0x80281760 end:0x802817A8
+
+main/unknown/autos/placeholder_802818F8.c:
+	.text       start:0x802818F8 end:0x80281A9C
+
+main/unknown/autos/placeholder_80282288.c:
+	.text       start:0x80282288 end:0x80282594
+
+main/unknown/autos/placeholder_80282630.c:
+	.text       start:0x80282630 end:0x802827D4
+
+main/unknown/autos/placeholder_80283134.c:
+	.text       start:0x80283134 end:0x80283488
+
+main/unknown/autos/placeholder_802835C0.c:
+	.text       start:0x802835C0 end:0x8028364C
+
+main/unknown/autos/placeholder_802836E4.c:
+	.text       start:0x802836E4 end:0x802836F4
+
+main/unknown/autos/placeholder_8028373C.c:
+	.text       start:0x8028373C end:0x80283744
+
 dolphin/TRK_MINNOW_DOLPHIN/CircleBuffer.c:
 	extab       start:0x80005B50 end:0x80005B68
 	extabindex  start:0x80006488 end:0x800064AC
 	.text       start:0x80283744 end:0x802839B0
+
+main/unknown/autos/placeholder_802839B0.c:
+	.text       start:0x802839B0 end:0x802839F4
+
+main/unknown/autos/placeholder_80283BA0.c:
+	.text       start:0x80283BA0 end:0x80283BF0
+
+main/unknown/autos/placeholder_80283DA0.c:
+	.text       start:0x80283DA0 end:0x80283E10
+
+main/unknown/autos/placeholder_80283E4C.c:
+	.text       start:0x80283E4C end:0x80283FA0
+
+main/unknown/autos/placeholder_8028429C.c:
+	.text       start:0x8028429C end:0x802842C4
+
+main/unknown/autos/placeholder_8028436C.c:
+	.text       start:0x8028436C end:0x80284410
+
+main/unknown/autos/placeholder_802844BC.c:
+	.text       start:0x802844BC end:0x802844C0
+
+main/unknown/autos/placeholder_80284698.c:
+	.text       start:0x80284698 end:0x80284704
+
+main/unknown/autos/placeholder_80284970.c:
+	.text       start:0x80284970 end:0x80284988
+
+main/unknown/autos/placeholder_80284BA8.c:
+	.text       start:0x80284BA8 end:0x80284BAC
+
+main/unknown/autos/placeholder_80284CBC.c:
+	.text       start:0x80284CBC end:0x80284DD4
+
+main/unknown/autos/placeholder_80284E78.c:
+	.text       start:0x80284E78 end:0x80284E88
+
+main/unknown/autos/placeholder_80285010.c:
+	.text       start:0x80285010 end:0x8028503C
+
+main/unknown/autos/placeholder_8028521C.c:
+	.text       start:0x8028521C end:0x80285220
+
+main/unknown/autos/placeholder_802857B0.c:
+	.text       start:0x802857B0 end:0x80285B64
 
 dolphin/OdemuExi2/DebuggerDriver.c:
 	.text       start:0x80285B88 end:0x80286608
@@ -1749,6 +1911,9 @@ Runtime.PPCEABI.H/__init_cpp_exceptions.cpp:
 Runtime.PPCEABI.H/fragment.s: comment:0
 	.text       start:0x80286EB8 end:0x80286F20
 	.bss        start:0x803D7540 end:0x803D754C
+
+main/unknown/autos/placeholder_80286F20.c:
+	.text       start:0x80286F20 end:0x80286FC0
 
 dolphin/TRK_MINNOW_DOLPHIN/mainloop.c:
 	.text       start:0x80286FC0 end:0x802870B8
@@ -1895,8 +2060,14 @@ dolphin/MSL_C/PPCEABI/bare/H/s_modf.c:
 dolphin/MSL_C/PPCEABI/bare/H/gamecube.c:
 	.text       start:0x8029241C end:0x80292428
 
+main/unknown/autos/placeholder_80292428.c:
+	.text       start:0x80292428 end:0x80292460
+
 dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c:
 	.text       start:0x80292460 end:0x80292538
+
+main/unknown/autos/placeholder_80292538.c:
+	.text       start:0x80292538 end:0x80292754
 
 dolphin/MSL_C/PPCEABI/bare/H/k_sin.c:
 	.text       start:0x80292754 end:0x80292804
@@ -1907,11 +2078,20 @@ dolphin/MSL_C/PPCEABI/bare/H/s_cos.c:
 dolphin/MSL_C/PPCEABI/bare/H/math_ppc.c:
 	.text       start:0x802928F4 end:0x802929A8
 
+main/unknown/autos/placeholder_802929A8.c:
+	.text       start:0x802929A8 end:0x80292B24
+
 dolphin/MSL_C/PPCEABI/bare/H/k_cos.c:
 	.text       start:0x80292B24 end:0x80292C14
 
+main/unknown/autos/placeholder_80292C14.c:
+	.text       start:0x80292C14 end:0x80292F04
+
 dolphin/MSL_C/PPCEABI/bare/H/e_sqrt.c:
 	.text       start:0x80292F04 end:0x8029312C
+
+main/unknown/autos/placeholder_8029312C.c:
+	.text       start:0x8029312C end:0x8029349C
 
 dolphin/MSL_C/PPCEABI/bare/H/s_tan.c:
 	.text       start:0x8029349C end:0x80293520
@@ -1919,11 +2099,20 @@ dolphin/MSL_C/PPCEABI/bare/H/s_tan.c:
 dolphin/MSL_C/PPCEABI/bare/H/rand.c:
 	.text       start:0x80293520 end:0x8029354C
 
+main/unknown/autos/placeholder_8029354C.c:
+	.text       start:0x8029354C end:0x8029388C
+
 dolphin/MSL_C/PPCEABI/bare/H/k_tan.c:
 	.text       start:0x8029388C end:0x80293A9C
 
+main/unknown/autos/placeholder_80293A9C.c:
+	.text       start:0x80293A9C end:0x80293BC4
+
 dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.c:
 	.text       start:0x80293BC4 end:0x80293FB4
+
+main/unknown/autos/placeholder_80293FB4.c:
+	.text       start:0x80293FB4 end:0x802947F8
 
 dolphin/MSL_C/PPCEABI/bare/H/s_floor.c:
 	.text       start:0x802947F8 end:0x80294964
@@ -1931,15 +2120,27 @@ dolphin/MSL_C/PPCEABI/bare/H/s_floor.c:
 dolphin/MSL_C/PPCEABI/bare/H/s_sin.c:
 	.text       start:0x80294964 end:0x80294A4C
 
+main/unknown/autos/placeholder_80294A4C.c:
+	.text       start:0x80294A4C end:0x80294F2C
+
 dolphin/MSL_C/PPCEABI/bare/H/trigf.c:
 	.text       start:0x80294F2C end:0x80295318
 	.ctors      start:0x802C2004 end:0x802C2008
 
+main/unknown/autos/placeholder_80295318.c:
+	.text       start:0x80295318 end:0x802BB420
+
 dolphin/TRK_MINNOW_DOLPHIN/main.c:
 	.text       start:0x802BB420 end:0x802BB768
 
+main/unknown/autos/placeholder_802BB768.c:
+	.text       start:0x802BB768 end:0x802BB8C4
+
 dolphin/TRK_MINNOW_DOLPHIN/main_gdev.c:
 	.text       start:0x802BB8C4 end:0x802BBC10
+
+main/unknown/autos/placeholder_802BBC10.c:
+	.text       start:0x802BBC10 end:0x802C1FEC
 
 Runtime.PPCEABI.H/__start.s: comment:0
 	.init       start:0x80003100 end:0x800033A8

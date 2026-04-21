@@ -1,0 +1,8 @@
+#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802755D0_H_
+#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802755D0_H_
+
+#include "ghidra_import.h"
+
+undefined4 fn_802755D0(void);
+
+#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802755D0_H_ */
