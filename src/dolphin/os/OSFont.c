@@ -12,7 +12,7 @@ static ParseStringCallback ParseString;
 static u16 FontEncode_803DD1B0 = 0xFFFF;
 
 // prototypes
-static char* ParseStringS(u16 encode, const char* string, OSFontHeader** pfont, int* pfontCode);
+static char* ParseStringS_80243D34(u16 encode, const char* string, OSFontHeader** pfont, int* pfontCode);
 static char* ParseStringW(u16 encode, const char* string, OSFontHeader** pfont, int* pfontCode);
 
 static u16 lbl_8032D920[]
@@ -374,7 +374,7 @@ static void ReadROM(void* buf, int length, int offset) {
     }
 }
 
-static u32 ReadFont(void* img, u16 encode, void* fontData) {
+static u32 ReadFont_802436FC(void* img, u16 encode, void* fontData) {
     u32 size;
 #ifndef DEBUG
     u32 padding[1];
@@ -438,20 +438,20 @@ u32 OSLoadFont(OSFontHeader* fontData, void* tmp) {
     switch (encode) {
     case 0:
         FontDataAnsi = fontData;
-        size = ReadFont(tmp, 0, FontDataAnsi);
+        size = ReadFont_802436FC(tmp, 0, FontDataAnsi);
         break;
     case 1:
         FontDataSjis = fontData;
-        size = ReadFont(tmp, 1, FontDataSjis);
+        size = ReadFont_802436FC(tmp, 1, FontDataSjis);
         break;
     case 3:
     case 4:
     case 5:
         FontDataAnsi = fontData;
-        size = ReadFont(tmp, 0, FontDataAnsi);
+        size = ReadFont_802436FC(tmp, 0, FontDataAnsi);
         if (size != 0) {
             FontDataSjis = (OSFontHeader*)((u8*)FontDataAnsi + size);
-            size += ReadFont(tmp, 1, FontDataSjis);
+            size += ReadFont_802436FC(tmp, 1, FontDataSjis);
         }
         break;
     case 2:
@@ -463,7 +463,7 @@ u32 OSLoadFont(OSFontHeader* fontData, void* tmp) {
     return size;
 }
 
-static char* ParseStringS(u16 encode, const char* string, OSFontHeader** pfont, int* pfontCode) {
+static char* ParseStringS_80243D34(u16 encode, const char* string, OSFontHeader** pfont, int* pfontCode) {
     OSFontHeader* font;
     u16 code = 0;
 
@@ -649,8 +649,8 @@ int OSInitFont(OSFontHeader* fontData) {
     case 0:
         tmp = (void*)((u8*)fontData + 0x1D120);
         FontDataAnsi = fontData;
-        ParseString = ParseStringS;
-        size = ReadFont(tmp, 0, FontDataAnsi);
+        ParseString = ParseStringS_80243D34;
+        size = ReadFont_802436FC(tmp, 0, FontDataAnsi);
         if (size == 0) {
             return 0;
         }
@@ -662,8 +662,8 @@ int OSInitFont(OSFontHeader* fontData) {
     case 1:
         tmp = (void*)((u8*)fontData + 0xD3F00);
         FontDataSjis = fontData;
-        ParseString = ParseStringS;
-        size = ReadFont(tmp, 1, FontDataSjis);
+        ParseString = ParseStringS_80243D34;
+        size = ReadFont_802436FC(tmp, 1, FontDataSjis);
         if (size == 0) {
             return 0;
         }
@@ -678,7 +678,7 @@ int OSInitFont(OSFontHeader* fontData) {
         tmp = (void*)((u8*)fontData + 0xF4020);
         FontDataAnsi = fontData;
         ParseString = ParseStringW;
-        size = ReadFont(tmp, 0, FontDataAnsi);
+        size = ReadFont_802436FC(tmp, 0, FontDataAnsi);
         if (size == 0) {
             return 0;
         }
@@ -688,7 +688,7 @@ int OSInitFont(OSFontHeader* fontData) {
         ExpandFontSheet(FontDataAnsi, img, (u8*)FontDataAnsi + FontDataAnsi->sheetImage);
 
         FontDataSjis = (OSFontHeader*)((u8*)FontDataAnsi + 0x20120);
-        size = ReadFont(tmp, 1, FontDataSjis);
+        size = ReadFont_802436FC(tmp, 1, FontDataSjis);
         if (size == 0) {
             return 0;
         }
