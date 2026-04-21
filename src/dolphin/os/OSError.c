@@ -14,12 +14,6 @@ OSErrorHandler __OSErrorTable[17];
 #define FPSCR_ENABLE (FPSCR_VE | FPSCR_OE | FPSCR_UE | FPSCR_ZE | FPSCR_XE)
 u32 __OSFpscrEnableBits = FPSCR_ENABLE;
 
-void __OSContextInit(void) {
-    __OSSetExceptionHandler(__OS_EXCEPTION_FLOATING_POINT, OSSwitchFPUContext);
-    __OSFPUContext = NULL;
-    DBPrintf("FPU-unavailable handler installed\n");
-}
-
 void OSPanic(const char* file, int line, const char* msg, ...) {
     va_list marker;
     u32 i;
@@ -104,4 +98,10 @@ void __OSUnhandledException(__OSException exception, OSContext* context, u32 dsi
     OSReport("\nLast interrupt (%d): SRR0 = 0x%08x  TB = 0x%016llx\n", __OSLastInterrupt,
              __OSLastInterruptSrr0, __OSLastInterruptTime);
     PPCHalt();
+}
+
+void __OSContextInit(void) {
+    __OSSetExceptionHandler(__OS_EXCEPTION_FLOATING_POINT, OSSwitchFPUContext);
+    __OSFPUContext = NULL;
+    DBPrintf("FPU-unavailable handler installed\n");
 }
