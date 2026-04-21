@@ -109,13 +109,9 @@ DSError TRKDoVersions(TRKBuffer* buffer) {
     }
 
     TRKResetBuffer(buffer, TRUE);
-    err = TRKAppendBuffer1_ui8(buffer, DSMSG_ReplyACK);
-    if (err == DS_NoError) {
-        err = TRKAppendBuffer1_ui8(buffer, DSREPLY_NoError);
-    }
-    if (err == DS_NoError) {
-        err = TRKTargetVersions(&versions);
-    }
+    TRKAppendBuffer1_ui8(buffer, DSMSG_ReplyACK);
+    TRKAppendBuffer1_ui8(buffer, DSREPLY_NoError);
+    err = TRKTargetVersions(&versions);
     if (err == DS_NoError) {
         err = TRKAppendBuffer1_ui8(buffer, versions.kernelMajor);
     }
@@ -164,13 +160,9 @@ DSError TRKDoCPUType(TRKBuffer* buffer) {
     }
 
     TRKResetBuffer(buffer, TRUE);
-    err = TRKAppendBuffer1_ui8(buffer, DSMSG_ReplyACK);
-    if (err == DS_NoError) {
-        err = TRKAppendBuffer1_ui8(buffer, DSREPLY_NoError);
-    }
-    if (err == DS_NoError) {
-        err = TRKTargetCPUType(&cpuType);
-    }
+    TRKAppendBuffer1_ui8(buffer, DSMSG_ReplyACK);
+    TRKAppendBuffer1_ui8(buffer, DSREPLY_NoError);
+    err = TRKTargetCPUType(&cpuType);
     if (err == DS_NoError) {
         err = TRKAppendBuffer1_ui8(buffer, cpuType.cpuMajor);
     }
