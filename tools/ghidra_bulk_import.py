@@ -202,9 +202,7 @@ FORCE_STUB_OWNERS = {
     "main/dll/mmshrine/shrine1C2.c",
     "main/dll/seqObj11D.c",
     "main/dll/baddie/skeetla.c",
-    "main/dll/weaponE6.c",
     "main/dll/colrise.c",
-    "main/dll/shrine1CE.c",
 }
 
 
