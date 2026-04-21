@@ -95,6 +95,9 @@ CPP_SCOPE_RE = re.compile(r"::")
 FUNCTION_PTR_ASSIGN_RE = re.compile(
     r"\*\s*\(\s*code\s*\*\*\s*\)[^=;\n]*=\s*(?:&)?(?:FUN_[0-9A-Fa-f]{8}|LAB_[0-9A-Fa-f]+|[A-Za-z_]\w*)\b"
 )
+GLOBAL_FUNCTION_ASSIGN_RE = re.compile(
+    r"\b(?:_?DAT_[0-9A-Fa-f]+|PTR_[A-Za-z0-9_]+|[A-Za-z]+Ram[0-9A-Fa-f]+)\b\s*=\s*(?:&)?(?:FUN_[0-9A-Fa-f]{8}|LAB_[0-9A-Fa-f]+|[A-Za-z_]\w*)\b"
+)
 SCALAR_MEMBER_TO_POINTER_CAST_RE = re.compile(
     r"\(\s*[A-Za-z_]\w*(?:\s+[A-Za-z_]\w*)*\s*\*\s*\)\s*[A-Za-z_]\w+\s*(?:\[[^\]]+\]|->\w+|\.\w+)"
 )
@@ -134,7 +137,6 @@ FORCE_STUB_FUNCTIONS = {
 }
 FORCE_STUB_OWNERS = {
     "main/dll/curves.c",
-    "main/dll/df_partfx.c",
     "main/dll/dim_partfx.c",
     "main/dll/objfsa.c",
     "main/dll/modelfx.c",
@@ -188,7 +190,6 @@ FORCE_STUB_OWNERS = {
     "main/dll/DR/sandwormBoss.c",
     "main/dll/IM/IMicicle.c",
     "main/dll/SC/SCtotembondpuz.c",
-    "main/dll/TREX/TREX_trex.c",
     "main/dll/WC/WClevcontrol.c",
     "main/dll/anim.c",
     "main/dll/baddie/Tumbleweed.c",
@@ -206,10 +207,8 @@ FORCE_STUB_OWNERS = {
     "main/dll/mmshrine/shrine.c",
     "main/dll/mmshrine/shrine1C2.c",
     "main/dll/pressureSwitch.c",
-    "main/dll/scarab.c",
     "main/dll/seqObj11D.c",
     "main/dll/sidekickToy.c",
-    "main/dll/transporter.c",
     "main/dll/weaponE6.c",
     "main/dll/colrise.c",
     "main/dll/shrine1CE.c",
@@ -572,6 +571,32 @@ def detect_conflicted_pointer_globals(functions: list[FunctionDump]) -> set[str]
     return {symbol for symbol, bases in pointer_bases.items() if len(bases) > 1}
 
 
+def detect_void_return_assignment_hazards(functions: list[FunctionDump]) -> dict[str, list[str]]:
+    hazards: dict[str, list[str]] = {}
+    local_return_types = {function.name: simplify_return_type(function.return_type) for function in functions}
+    stripped_sources = {function.name: strip_comments(function.raw_text) for function in functions}
+
+    for function in functions:
+        raw_text = stripped_sources[function.name]
+        bad_callees: list[str] = []
+        for callee, return_type in local_return_types.items():
+            if callee == function.name or return_type != "void":
+                continue
+            escaped_callee = re.escape(callee)
+            if re.search(rf"(?<![=!<>+\-*/%&|^])=\s*{escaped_callee}\s*\(", raw_text):
+                bad_callees.append(callee)
+                continue
+            if simplify_return_type(function.return_type) != "void" and re.search(
+                rf"\breturn\s+{escaped_callee}\s*\(",
+                raw_text,
+            ):
+                bad_callees.append(callee)
+        if bad_callees:
+            hazards[function.name] = sorted(set(bad_callees))
+
+    return hazards
+
+
 def function_stub_reasons(
     owner: str,
     functions: list[FunctionDump],
@@ -579,6 +604,7 @@ def function_stub_reasons(
 ) -> dict[str, list[str]]:
     reasons: dict[str, list[str]] = {}
     conflicted_globals = detect_conflicted_pointer_globals(functions)
+    void_assignment_hazards = detect_void_return_assignment_hazards(functions)
     forced_stub_owners = forced_stub_owners or set()
     for function in functions:
         function_reasons = list(function.unsafe_reasons)
@@ -591,6 +617,11 @@ def function_stub_reasons(
             function_reasons.append(
                 "conflicting local pointer bases for shared globals: "
                 + ", ".join(conflicted_used)
+            )
+        bad_void_callees = void_assignment_hazards.get(function.name)
+        if bad_void_callees:
+            function_reasons.append(
+                "uses return value from void local helper(s): " + ", ".join(bad_void_callees)
             )
         if function_reasons:
             reasons[function.name] = function_reasons
@@ -695,7 +726,7 @@ def check_safety(raw_text: str, signature_text: str) -> tuple[bool, bool, list[s
         reasons.append("pointer-heavy local typing needs manual cleanup")
         safe_body = False
 
-    if FUNCTION_PTR_ASSIGN_RE.search(raw_text):
+    if FUNCTION_PTR_ASSIGN_RE.search(raw_text) or GLOBAL_FUNCTION_ASSIGN_RE.search(raw_text):
         reasons.append("function-pointer assignments need manual cleanup")
         safe_body = False
 

@@ -378,7 +378,7 @@ void FUN_80145560(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Size: TODO
  */
 
-/* Auto-stubbed for compileability: pointer-heavy local typing needs manual cleanup, function-pointer stores need manual cleanup, forced full-owner stub for compile-first import. */
+/* Auto-stubbed for compileability: pointer-heavy local typing needs manual cleanup, forced full-owner stub for compile-first import. */
 /* Original raw Ghidra body omitted for compile-first stubbing. */
 
 void FUN_8014568c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
@@ -509,7 +509,7 @@ uint FUN_80146580(void)
  * PAL Size: TODO
  */
 
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup, forced full-owner stub for compile-first import. */
+/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
 /* Original raw Ghidra body omitted for compile-first stubbing. */
 
 void FUN_80146604(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
@@ -574,7 +574,7 @@ void FUN_801469b4(int param_1)
  * PAL Size: TODO
  */
 
-/* Auto-stubbed for compileability: address-label references need manual cleanup, pointer-heavy local typing needs manual cleanup, function-pointer stores need manual cleanup, forced full-owner stub for compile-first import. */
+/* Auto-stubbed for compileability: address-label references need manual cleanup, pointer-heavy local typing needs manual cleanup, scalar-to-pointer casts need manual cleanup, forced full-owner stub for compile-first import. */
 /* Original raw Ghidra body omitted for compile-first stubbing. */
 
 void FUN_80146ba8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
@@ -596,7 +596,7 @@ void FUN_80146ba8(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Size: TODO
  */
 
-/* Auto-stubbed for compileability: address-of global symbols need manual typing, function-pointer stores need manual cleanup, forced full-owner stub for compile-first import. */
+/* Auto-stubbed for compileability: address-of global symbols need manual typing, function-pointer assignments need manual cleanup, forced full-owner stub for compile-first import. */
 /* Original raw Ghidra body omitted for compile-first stubbing. */
 
 void FUN_80148d88(int param_1)
@@ -683,7 +683,7 @@ void FUN_80149040(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Size: TODO
  */
 
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup, forced full-owner stub for compile-first import. */
+/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
 /* Original raw Ghidra body omitted for compile-first stubbing. */
 
 void FUN_801491d4(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
@@ -707,7 +707,7 @@ void FUN_801491d4(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Size: TODO
  */
 
-/* Auto-stubbed for compileability: typed global pointer comparisons need manual cleanup, function-pointer stores need manual cleanup, forced full-owner stub for compile-first import. */
+/* Auto-stubbed for compileability: typed global pointer comparisons need manual cleanup, forced full-owner stub for compile-first import. */
 /* Original raw Ghidra body omitted for compile-first stubbing. */
 
 void FUN_80149528(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
@@ -751,7 +751,7 @@ void FUN_8014a014(double param_1,int param_2,uint param_3,undefined2 param_4)
  * PAL Size: TODO
  */
 
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup, forced full-owner stub for compile-first import. */
+/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
 /* Original raw Ghidra body omitted for compile-first stubbing. */
 
 void FUN_8014a14c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
@@ -821,7 +821,7 @@ void FUN_8014a5b0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Size: TODO
  */
 
-/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
+/* Auto-stubbed for compileability: scalar-to-pointer casts need manual cleanup, forced full-owner stub for compile-first import. */
 /* Original raw Ghidra body omitted for compile-first stubbing. */
 
 void FUN_8014a764(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
@@ -843,7 +843,7 @@ void FUN_8014a764(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Size: TODO
  */
 
-/* Auto-stubbed for compileability: function-pointer stores need manual cleanup, forced full-owner stub for compile-first import. */
+/* Auto-stubbed for compileability: forced full-owner stub for compile-first import. */
 /* Original raw Ghidra body omitted for compile-first stubbing. */
 
 void FUN_8014aa5c(int param_1,int param_2)
