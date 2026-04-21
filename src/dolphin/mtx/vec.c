@@ -61,16 +61,6 @@ asm void PSVECScale(register const Vec *src, register Vec *dst, register f32 sca
 #endif // clang-format on
 }
 
-void C_VECScale(const Vec *src, Vec *dst, f32 scale)
-{
-    f32 s;
-
-    s = 1.0f / sqrtf(src->z * src->z + src->x * src->x + src->y * src->y);
-    dst->x = src->x * s;
-    dst->y = src->y * s;
-    dst->z = src->z * s;
-}
-
 void PSVECNormalize(const register Vec *vec1, register Vec *ret)
 {
 #ifdef __MWERKS__ // clang-format off
@@ -206,27 +196,6 @@ void C_VECHalfAngle(const Vec *a, const Vec *b, Vec *half)
     else {
         *half = ab;
     }
-}
-
-void C_VECReflect(const Vec *src, const Vec *normal, Vec *dst)
-{
-    Vec a0;
-    Vec b0;
-    f32 dot;
-
-    a0.x = -src->x;
-    a0.y = -src->y;
-    a0.z = -src->z;
-
-    VECNormalize(&a0, &a0);
-    VECNormalize(normal, &b0);
-
-    dot = VECDotProduct(&a0, &b0);
-    dst->x = b0.x * 2.0f * dot - a0.x;
-    dst->y = b0.y * 2.0f * dot - a0.y;
-    dst->z = b0.z * 2.0f * dot - a0.z;
-
-    VECNormalize(dst, dst);
 }
 
 asm f32 PSVECSquareDistance(register const Vec *a, register const Vec *b) {
