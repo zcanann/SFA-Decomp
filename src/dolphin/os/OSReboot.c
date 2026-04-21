@@ -10,9 +10,9 @@ extern u8 g_unk_800030E2 AT_ADDRESS(0x800030E2);
 extern u32 g_unk_817FFFF8 AT_ADDRESS(0x817FFFF8);
 extern u32 g_unk_817FFFFC AT_ADDRESS(0x817FFFFC);
 
-static void* SaveStart;
-static void* SaveEnd;
-static volatile BOOL Prepared;
+static void* SaveStart_803DEAD0;
+static void* SaveEnd_803DEAD4;
+static volatile BOOL Prepared_803DEAD8;
 
 typedef struct {
     char date[16];
@@ -41,7 +41,7 @@ static void Run(register void* entryPoint) {
 static void Callback(s32 result, DVDCommandBlock* block) {
     (void)result;
     (void)block;
-    Prepared = TRUE;
+    Prepared_803DEAD8 = TRUE;
 }
 
 void __OSReboot(u32 resetCode, u32 bootDol) {
@@ -60,8 +60,8 @@ void __OSReboot(u32 resetCode, u32 bootDol) {
     g_unk_817FFFFC = 0;
     g_unk_817FFFF8 = 0;
     g_unk_800030E2 = 1;
-    BOOT_REGION_START = (u32)SaveStart;
-    BOOT_REGION_END = (u32)SaveEnd;
+    BOOT_REGION_START = (u32)SaveStart_803DEAD0;
+    BOOT_REGION_END = (u32)SaveEnd_803DEAD4;
 
     OSClearContext(&exceptionContext);
     OSSetCurrentContext(&exceptionContext);
@@ -79,7 +79,7 @@ void __OSReboot(u32 resetCode, u32 bootDol) {
     __OSUnmaskInterrupts(0x400);
     OSEnableInterrupts();
 
-    while (!Prepared) {
+    while (!Prepared_803DEAD8) {
     }
 
     DVDReadAbsAsyncForBS(&appLoaderReadBlock, &FatalParam, sizeof(AppLoaderStruct), 0x2440, NULL);
@@ -103,7 +103,7 @@ void __OSReboot(u32 resetCode, u32 bootDol) {
     offset = FatalParam.size + 0x20;
     rebootSize = OSRoundUp32B(FatalParam.rebootSize);
 
-    while (!Prepared) {
+    while (!Prepared_803DEAD8) {
     }
 
     DVDReadAbsAsyncForBS(&rebootReadBlock, (void*)0x81300000, rebootSize, offset + 0x2440, NULL);
@@ -129,6 +129,6 @@ void __OSReboot(u32 resetCode, u32 bootDol) {
 }
 
 void OSSetSaveRegion(void* start, void* end) {
-    SaveStart = start;
-    SaveEnd = end;
+    SaveStart_803DEAD0 = start;
+    SaveEnd_803DEAD4 = end;
 }
