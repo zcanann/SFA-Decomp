@@ -1,6 +1,7 @@
 /* TODO: restore stripped imported address metadata if needed. */
 
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msghndlr.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msgbuf.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/nubevent.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/MWTrace.h"
 #include "PowerPC_EABI_Support/MetroTRK/trk.h"
@@ -55,13 +56,20 @@ DSError TRKSendACK(TRKBuffer* buffer) {
 
 DSError TRKStandardACK(TRKBuffer* buffer, MessageCommandID commandID,
                               DSReplyError replyError) {
-    CommandReply reply;
+    int retries;
 
-    memset(&reply, 0, sizeof(CommandReply));
-    reply.commandID.b = commandID;
-    reply._00 = 0x40;
-    reply.replyError.b = replyError;
-    TRKWriteUARTN(&reply, sizeof(CommandReply));
+    TRKResetBuffer(buffer, TRUE);
+    TRKAppendBuffer1_ui8(buffer, commandID);
+    TRKAppendBuffer1_ui8(buffer, replyError);
+
+    retries = 3;
+    do {
+        DSError result = TRKMessageSend(buffer);
+        retries--;
+        if (result == DS_NoError) {
+            break;
+        }
+    } while (retries > 0);
     return DS_NoError;
 }
 
