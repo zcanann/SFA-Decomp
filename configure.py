@@ -750,7 +750,11 @@ config.libs = [
             Object(NonMatching, "main/tex_dolphin.c"),
             Object(NonMatching, "main/track_dolphin.c"),
             Object(NonMatching, "main/newshadows.c"),
+            Object(NonMatching, "track/intersect.c"),
             Object(NonMatching, "main/maketex.c"),
+            Object(NonMatching, "main/expgfx.c"),
+            Object(NonMatching, "main/dll/modgfx.c"),
+            Object(NonMatching, "main/dll/modelfx.c"),
         ],
     },
 ]

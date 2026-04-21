@@ -115,6 +115,9 @@ FORCE_STUB_FUNCTIONS = {
     "FUN_8020a768",
 }
 FORCE_STUB_OWNERS = {
+    "main/dll/modelfx.c",
+    "main/dll/modgfx.c",
+    "main/expgfx.c",
     "main/light.c",
     "main/lightmap.c",
     "main/main.c",
@@ -127,6 +130,7 @@ FORCE_STUB_OWNERS = {
     "main/rcp_dolphin.c",
     "main/shader.c",
     "main/track_dolphin.c",
+    "track/intersect.c",
     "main/unknown/autos/placeholder_800066E0.c",
     "main/unknown/autos/placeholder_8001746C.c",
     "main/unknown/autos/placeholder_80080E58.c",
