@@ -273,90 +273,224 @@ _s2d_8:
 
 static const char* const unused = "179769313486231580793729011405303420";
 
-void __two_exp(decimal* result, long exp) {
-    switch (exp) {
-    case -64:
-        __str2dec(result, "542101086242752217003726400434970855712890625", -20);
-        return;
-    case -53:
-        __str2dec(result, "11102230246251565404236316680908203125", -16);
-        return;
-    case -32:
-        __str2dec(result, "23283064365386962890625", -10);
-        return;
-    case -16:
-        __str2dec(result, "152587890625", -5);
-        return;
-    case -8:
-        __str2dec(result, "390625", -3);
-        return;
-    case -7:
-        __str2dec(result, "78125", -3);
-        return;
-    case -6:
-        __str2dec(result, "15625", -2);
-        return;
-    case -5:
-        __str2dec(result, "3125", -2);
-        return;
-    case -4:
-        __str2dec(result, "625", -2);
-        return;
-    case -3:
-        __str2dec(result, "125", -1);
-        return;
-    case -2:
-        __str2dec(result, "25", -1);
-        return;
-    case -1:
-        __str2dec(result, "5", -1);
-        return;
-    case 0:
-        __str2dec(result, "1", 0);
-        return;
-    case 1:
-        __str2dec(result, "2", 0);
-        return;
-    case 2:
-        __str2dec(result, "4", 0);
-        return;
-    case 3:
-        __str2dec(result, "8", 0);
-        return;
-    case 4:
-        __str2dec(result, "16", 1);
-        return;
-    case 5:
-        __str2dec(result, "32", 1);
-        return;
-    case 6:
-        __str2dec(result, "64", 1);
-        return;
-    case 7:
-        __str2dec(result, "128", 2);
-        return;
-    case 8:
-        __str2dec(result, "256", 2);
-        return;
-    }
+extern const char lbl_802C3198[];
+extern void* jumptable_80333120[];
 
-    {
-        decimal x2, temp;
-
-        __two_exp(&x2, exp / 2);
-        __timesdec(result, &x2, &x2);
-
-        if (exp & 1) {
-            temp = *result;
-            if (exp > 0) {
-                __str2dec(&x2, "2", 0);
-            } else {
-                __str2dec(&x2, "5", -1);
-            }
-            __timesdec(result, &temp, &x2);
-        }
-    }
+asm void __two_exp(decimal* result, long exp) {
+    nofralloc
+    stwu r1, -0xd0(r1)
+    mflr r0
+    stw r0, 0xd4(r1)
+    stw r31, 0xcc(r1)
+    mr r31, r3
+    stw r30, 0xc8(r1)
+    stw r29, 0xc4(r1)
+    mr r29, r4
+    extsh r30, r29
+    addi r0, r30, 0x40
+    cmplwi r0, 0x48
+    bgt _te_0
+    lis r4, jumptable_80333120@ha
+    slwi r0, r0, 2
+    addi r4, r4, jumptable_80333120@l
+    lwzx r0, r4, r0
+    mtctr r0
+    bctr
+    lis r4, lbl_802C3198@ha
+    li r5, -0x14
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0x25
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, -0x10
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0x53
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, -0xa
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0x7a
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, -0x5
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0x92
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, -0x3
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0x9f
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, -0x3
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0xa6
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, -0x2
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0xac
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, -0x2
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0xb2
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, -0x2
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0xb7
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, -0x1
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0xbb
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, -0x1
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0xbf
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, -0x1
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0xc2
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, 0x0
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0xc4
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, 0x0
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0xc6
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, 0x0
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0xc8
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, 0x0
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0xca
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, 0x1
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0xcc
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, 0x1
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0xcf
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, 0x1
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0xd2
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, 0x2
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0xd5
+    bl __str2dec
+    b _te_2
+    lis r4, lbl_802C3198@ha
+    li r5, 0x2
+    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, 0xd9
+    bl __str2dec
+    b _te_2
+_te_0:
+    srwi r0, r30, 31
+    addi r3, r1, 0x8c
+    add r0, r0, r30
+    srawi r0, r0, 1
+    extsh r4, r0
+    bl __two_exp
+    addi r4, r1, 0x8c
+    mr r3, r31
+    mr r5, r4
+    bl __timesdec
+    clrlwi. r0, r30, 31
+    beq _te_2
+    lwz r3, 0x0(r31)
+    extsh. r0, r29
+    lwz r0, 0x4(r31)
+    stw r3, 0x60(r1)
+    stw r0, 0x64(r1)
+    lwz r3, 0x8(r31)
+    lwz r0, 0xc(r31)
+    stw r3, 0x68(r1)
+    stw r0, 0x6c(r1)
+    lwz r3, 0x10(r31)
+    lwz r0, 0x14(r31)
+    stw r3, 0x70(r1)
+    stw r0, 0x74(r1)
+    lwz r3, 0x18(r31)
+    lwz r0, 0x1c(r31)
+    stw r3, 0x78(r1)
+    stw r0, 0x7c(r1)
+    lwz r3, 0x20(r31)
+    lwz r0, 0x24(r31)
+    stw r3, 0x80(r1)
+    stw r0, 0x84(r1)
+    lhz r0, 0x28(r31)
+    sth r0, 0x88(r1)
+    ble _te_1
+    lis r4, lbl_802C3198@ha
+    addi r3, r1, 0x34
+    addi r4, r4, lbl_802C3198@l
+    li r5, 0x0
+    addi r4, r4, 0xc6
+    bl __str2dec
+    mr r3, r31
+    addi r4, r1, 0x60
+    addi r5, r1, 0x34
+    bl __timesdec
+    b _te_2
+_te_1:
+    lis r4, lbl_802C3198@ha
+    addi r3, r1, 0x8
+    addi r4, r4, lbl_802C3198@l
+    li r5, -0x1
+    addi r4, r4, 0xc2
+    bl __str2dec
+    mr r3, r31
+    addi r4, r1, 0x60
+    addi r5, r1, 0x8
+    bl __timesdec
+_te_2:
+    lwz r0, 0xd4(r1)
+    lwz r31, 0xcc(r1)
+    lwz r30, 0xc8(r1)
+    lwz r29, 0xc4(r1)
+    mtlr r0
+    addi r1, r1, 0xd0
+    blr
 }
+
 
 int __equals_dec(const decimal* x, const decimal* y) {
     if (x->sig.text[0] == 0) {
