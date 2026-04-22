@@ -239,6 +239,9 @@ extern undefined4 DAT_803de3b0;
 extern undefined4 DAT_803de3b8;
 extern undefined4 DAT_803de3d6;
 extern undefined4 DAT_803de3d8;
+extern u8 lbl_803DE3D9;
+extern u16 lbl_803DE3F6;
+extern u8 lbl_803DE3FE;
 extern undefined4 DAT_803de3d9;
 extern undefined4 DAT_803de3db;
 extern undefined4 DAT_803de3dc;
@@ -461,8 +464,8 @@ void FUN_8012dab8();
 void FUN_8012dca8();
 void FUN_8012e050();
 void FUN_8012e0b8();
-undefined FUN_8012e0e0(void);
-ushort FUN_8012e0e8(void);
+u8 fn_8012E0E0(void);
+u8 fn_8012E0E8(void);
 void FUN_8012e0f4(char param_1);
 void FUN_8012e114();
 void FUN_8012e250(void);
@@ -1098,9 +1101,9 @@ void FUN_8012e0b8()
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined FUN_8012e0e0(void)
+u8 fn_8012E0E0(void)
 {
-  return DAT_803de3d9;
+  return lbl_803DE3D9;
 }
 
 /*
@@ -1115,9 +1118,9 @@ undefined FUN_8012e0e0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-ushort FUN_8012e0e8(void)
+u8 fn_8012E0E8(void)
 {
-  return DAT_803de3f6 & 0xff;
+  return lbl_803DE3F6 & 0xff;
 }
 
 /*
