@@ -13,8 +13,8 @@
 
 /* Cross-file calls lifted from the raw Ghidra output. */
 extern int FUN_80015888();
-extern undefined4 fn_801177DC();
-extern undefined4 fn_80117818();
+extern undefined4 FUN_801177dc();
+extern undefined4 FUN_80117818();
 extern undefined4 FUN_8011784c();
 extern int FUN_801185cc();
 extern undefined4 FUN_80118e60();

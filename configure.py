@@ -409,6 +409,7 @@ config.libs = [
     DolphinLib(
         "ax",
         [
+            Object(NonMatching, "dolphin/ax/AX.c"),
             Object(NonMatching, "dolphin/ax/AXAlloc.c"),
             Object(NonMatching, "dolphin/ax/AXAux.c"),
             Object(NonMatching, "dolphin/ax/AXCL.c"),
@@ -684,7 +685,6 @@ config.libs = [
             Object(NonMatching, "main/unknown/autos/placeholder_8002F604.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_80080E58.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_801175B4.c"),
-            Object(NonMatching, "main/unknown/placeholder_801177DC.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_801F5184.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_80209FE0.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8026FD1C.c"),

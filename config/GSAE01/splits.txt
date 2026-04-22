@@ -490,7 +490,7 @@ main/dll/FRONT/dll_3B.c:
 main/unknown/autos/placeholder_801175B4.c:
 	.text       start:0x801175B4 end:0x801177DC
 
-main/unknown/placeholder_801177DC.c:
+dolphin/ax/AX.c:
 	.text       start:0x801177DC end:0x8011784C
 
 main/dll/FRONT/n_options.c:
