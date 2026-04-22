@@ -31,11 +31,12 @@ asm float acosf(float x) {
     fcmpo cr0, f28, f0
 }
 
+void _mp1_loop(void);
 asm void fn_80292918(void) {
     nofralloc
     cror 2, 0, 2
-_mp1_0:
-    bne _mp1_0
+    entry _mp1_loop
+    bne _mp1_loop
     fmuls f31, f29, f29
     lfs f1, lbl_803E86B0(r0)
     lfs f0, lbl_803E86AC(r0)
@@ -58,6 +59,7 @@ asm void fn_8029293C(void) {
     lfs f0, lbl_803E86A8(r0)
 }
 
+void _mp4_loop(void);
 asm void fn_80292960(void) {
     nofralloc
     fmadds f27, f31, f1, f0
@@ -68,8 +70,8 @@ asm void fn_80292960(void) {
     lfs f0, lbl_803E865C(r0)
     fcmpo cr0, f29, f0
     cror 2, 1, 2
-_mp4_0:
-    bne _mp4_0
+    entry _mp4_loop
+    bne _mp4_loop
 }
 
 asm float powf(float x, float y) {
