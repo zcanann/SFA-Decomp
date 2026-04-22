@@ -194,30 +194,19 @@ _fb9_loop_cond:
     blr
 }
 
-asm int fn_802BBAEC(void) {
-    nofralloc
-    li r3, 0xd0c
-    blr
+int fn_802BBAEC(void) {
+    return 0xd0c;
 }
 
-asm int fn_802BBAF4(void) {
-    nofralloc
-    li r3, 0x43
-    blr
+int fn_802BBAF4(void) {
+    return 0x43;
 }
 
-asm void fn_802BBAFC(void* obj) {
-    nofralloc
-    stwu r1, -0x10(r1)
-    mflr r0
-    stw r0, 0x14(r1)
-    li r4, 0xa
-    bl fn_8003709C
-    lwz r0, 0x14(r1)
-    mtlr r0
-    addi r1, r1, 0x10
-    blr
+#pragma scheduling off
+void fn_802BBAFC(void* obj) {
+    fn_8003709C(obj, 10);
 }
+#pragma scheduling reset
 
 asm void fn_802BBB20(void* a, void* b, void* c, void* d, void* e, signed char f) {
     nofralloc

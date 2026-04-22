@@ -11,9 +11,7 @@
 void fn_8003B9EC(float x);
 __declspec(section ".sdata2") extern const float lbl_803E54E0;
 
-asm void MWInitializeCriticalSection(u32* section) {
-    nofralloc
-    blr
+void MWInitializeCriticalSection(u32* section) {
 }
 
 asm void MWEnterCriticalSection(u32* section) {

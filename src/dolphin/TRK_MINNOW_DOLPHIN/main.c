@@ -237,15 +237,11 @@ asm void fn_802BB648(void* obj, float x) {
     blr
 }
 
-asm void fn_802BB718(void) {
-    nofralloc
-    blr
+void fn_802BB718(void) {
 }
 
-asm int fn_802BB71C(void) {
-    nofralloc
-    li r3, 0x0
-    blr
+int fn_802BB71C(void) {
+    return 0;
 }
 
 asm void fn_802BB724(void* a, float* out) {
@@ -266,11 +262,9 @@ _f724_1:
     blr
 }
 
-asm void fn_802BB754(void* a, float* out, int* flag) {
-    nofralloc
-    lfs f0, lbl_803E8ECC(r0)
-    stfs f0, 0x0(r4)
-    li r0, 0x0
-    stw r0, 0x0(r5)
-    blr
+#pragma scheduling off
+void fn_802BB754(void* a, float* out, int* flag) {
+    *out = lbl_803E8ECC;
+    *flag = 0;
 }
+#pragma scheduling reset
