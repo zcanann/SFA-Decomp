@@ -17,6 +17,19 @@ extern undefined4 FUN_8028688c();
 extern int DAT_803add98;
 extern undefined4* DAT_803dd72c;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8020831c
+ * EN v1.0 Address: 0x8020831C
+ * EN v1.0 Size: 728b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8020831c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -32,7 +45,7 @@ void FUN_8020831c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   undefined8 uVar9;
   undefined8 extraout_f1_00;
   int local_28 [10];
-
+  
   psVar1 = (short *)FUN_80286840();
   psVar7 = *(short **)(psVar1 + 0x5c);
   if (((*(byte *)(psVar7 + 4) >> 5 & 1) == 0) &&

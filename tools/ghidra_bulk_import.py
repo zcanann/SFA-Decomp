@@ -1013,6 +1013,7 @@ def render_source(
 
     for function in functions:
         reasons = stub_reasons.get(function.name)
+        lines.append(render_function_info_block(function).rstrip())
         if reasons is None:
             body_text = replace_signature_block(function.raw_text, function)
             body_text = normalize_empty_labels(body_text)

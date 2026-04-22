@@ -29,6 +29,19 @@ extern f32 FLOAT_803e5ee0;
 extern f32 FLOAT_803e5ee4;
 extern f32 FLOAT_803e5ee8;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801cefc8
+ * EN v1.0 Address: 0x801CEFC8
+ * EN v1.0 Size: 792b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801cefc8(short *param_1,int param_2,int param_3)
 {
 }

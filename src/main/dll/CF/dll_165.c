@@ -16,6 +16,19 @@ extern f32 FLOAT_803e4874;
 extern f32 FLOAT_803e4898;
 extern f32 FLOAT_803e489c;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8018a7dc
+ * EN v1.0 Address: 0x8018A7DC
+ * EN v1.0 Size: 696b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8018a7dc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
@@ -32,7 +45,7 @@ void FUN_8018a7dc(undefined8 param_1,double param_2,double param_3,undefined8 pa
   float local_1c;
   float local_18;
   float local_14;
-
+  
   iVar5 = *(int *)(param_9 + 0x4c);
   iVar4 = *(int *)(param_9 + 0xb8);
   iVar1 = FUN_8002bac4();

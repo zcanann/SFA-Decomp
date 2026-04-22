@@ -10,13 +10,26 @@ extern f32 FLOAT_803e5a94;
 extern f32 FLOAT_803e5ab0;
 extern f32 FLOAT_803e5ab4;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c1c4c
+ * EN v1.0 Address: 0x801C1C4C
+ * EN v1.0 Size: 168b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 double FUN_801c1c4c(double param_1,double param_2,double param_3,double param_4,double param_5,
                    double param_6,float *param_7,float *param_8,float *param_9)
 {
   double dVar1;
   double dVar2;
   double dVar3;
-
+  
   dVar2 = (double)(float)(param_4 - param_1);
   dVar3 = (double)(float)(param_6 - param_3);
   dVar1 = (double)FLOAT_803e5a94;
@@ -45,6 +58,19 @@ double FUN_801c1c4c(double param_1,double param_2,double param_3,double param_4,
   return dVar1;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c1cf4
+ * EN v1.0 Address: 0x801C1CF4
+ * EN v1.0 Size: 560b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801c1cf4(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,float *param_6,undefined *param_7)
 {
@@ -87,7 +113,7 @@ void FUN_801c1cf4(undefined8 param_1,double param_2,double param_3,undefined4 pa
   float fStack_14;
   float local_8;
   float fStack_4;
-
+  
   local_8 = (float)in_f31;
   fStack_4 = (float)in_ps31_1;
   local_18 = (float)in_f30;

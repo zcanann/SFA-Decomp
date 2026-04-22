@@ -3,6 +3,19 @@
 
 extern undefined4 DAT_803def88;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8027bb84
+ * EN v1.0 Address: 0x8027BB84
+ * EN v1.0 Size: 12b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8027bb84(void)
 {
 }

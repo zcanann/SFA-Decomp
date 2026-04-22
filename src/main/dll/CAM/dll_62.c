@@ -18,6 +18,19 @@ extern f32 FLOAT_803e2624;
 extern f32 FLOAT_803e2628;
 extern f32 FLOAT_803e2634;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8010d608
+ * EN v1.0 Address: 0x8010D608
+ * EN v1.0 Size: 1188b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8010d608(ushort *param_1)
 {
 }

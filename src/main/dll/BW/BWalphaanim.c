@@ -39,6 +39,19 @@ extern f32 FLOAT_803e6808;
 extern f32 FLOAT_803e6838;
 extern f32 FLOAT_803e68b0;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801eda60
+ * EN v1.0 Address: 0x801EDA60
+ * EN v1.0 Size: 1700b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801eda60(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9)
@@ -84,7 +97,7 @@ void FUN_801eda60(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   undefined4 local_18;
   uint uStack_14;
   longlong local_10;
-
+  
   iVar6 = *(int *)(param_9 + 0x5c);
   if (*(char *)(param_9 + 0x56) == -1) {
     uVar3 = FUN_80020078(0x1fa);

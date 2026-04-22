@@ -53,11 +53,24 @@ extern void* PTR_DAT_8031fdd8;
 extern void* PTR_DAT_8031fddc;
 extern void* PTR_DAT_8031fde0;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80150830
+ * EN v1.0 Address: 0x80150830
+ * EN v1.0 Size: 288b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80150830(uint param_1,int param_2)
 {
   int iVar1;
   double dVar2;
-
+  
   if ((*(ushort *)(param_2 + 0x2f8) & 0x200) != 0) {
     FUN_8000bb38(param_1,899);
     iVar1 = FUN_8002bac4();
@@ -87,10 +100,36 @@ void FUN_80150830(uint param_1,int param_2)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80150950
+ * EN v1.0 Address: 0x80150950
+ * EN v1.0 Size: 60b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80150950(int param_1,char param_2)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8015098c
+ * EN v1.0 Address: 0x8015098C
+ * EN v1.0 Size: 1048b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8015098c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,int param_12,int param_13,
@@ -98,6 +137,19 @@ void FUN_8015098c(undefined8 param_1,double param_2,double param_3,undefined8 pa
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80150da4
+ * EN v1.0 Address: 0x80150DA4
+ * EN v1.0 Size: 1484b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80150da4(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -123,7 +175,7 @@ void FUN_80150da4(undefined8 param_1,undefined8 param_2,double param_3,undefined
   double dVar13;
   double dVar14;
   undefined8 uVar15;
-
+  
   uVar15 = FUN_8028683c();
   puVar3 = (ushort *)((ulonglong)uVar15 >> 0x20);
   puVar5 = (undefined4 *)uVar15;

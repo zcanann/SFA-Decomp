@@ -30,6 +30,19 @@ extern undefined4 DAT_803de591;
 extern undefined4 DAT_803de592;
 extern f64 DOUBLE_803e2e70;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801309a8
+ * EN v1.0 Address: 0x801309A8
+ * EN v1.0 Size: 616b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801309a8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
@@ -40,7 +53,7 @@ void FUN_801309a8(undefined8 param_1,double param_2,double param_3,undefined8 pa
   undefined *extraout_r4;
   int iVar3;
   undefined2 *puVar4;
-
+  
   puVar2 = &DAT_803b0000;
   puVar4 = &DAT_803aa0b8;
   for (iVar3 = 0; iVar3 < DAT_803de591; iVar3 = iVar3 + 1) {
@@ -66,6 +79,19 @@ void FUN_801309a8(undefined8 param_1,double param_2,double param_3,undefined8 pa
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80130c10
+ * EN v1.0 Address: 0x80130C10
+ * EN v1.0 Size: 1128b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80130c10(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -81,7 +107,7 @@ void FUN_80130c10(undefined8 param_1,double param_2,undefined8 param_3,undefined
   ushort *puVar10;
   undefined8 uVar11;
   double dVar12;
-
+  
   FUN_80286830();
   puVar10 = &DAT_803aa0b8;
   for (iVar9 = 0; iVar9 < DAT_803de591; iVar9 = iVar9 + 1) {

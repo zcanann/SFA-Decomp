@@ -8,12 +8,25 @@ extern undefined4 DAT_803de19c;
 extern f64 DOUBLE_803e22e0;
 extern f32 FLOAT_803e22ac;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80101b44
+ * EN v1.0 Address: 0x80101B44
+ * EN v1.0 Size: 204b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80101b44(uint param_1,undefined param_2)
 {
   float fVar1;
   undefined2 *puVar2;
   double dVar3;
-
+  
   FUN_8000facc();
   fVar1 = FLOAT_803e22ac;
   *(float *)(DAT_803de19c + 0xf4) = FLOAT_803e22ac;

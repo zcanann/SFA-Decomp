@@ -51,6 +51,19 @@ extern f32 FLOAT_803e3168;
 extern f32 FLOAT_803e3188;
 extern f32 FLOAT_803e3194;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80140340
+ * EN v1.0 Address: 0x80140340
+ * EN v1.0 Size: 2276b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80140340(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
@@ -58,6 +71,19 @@ void FUN_80140340(undefined8 param_1,double param_2,double param_3,undefined8 pa
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80140c24
+ * EN v1.0 Address: 0x80140C24
+ * EN v1.0 Size: 320b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_80140c24(int param_1)
 {
   int *piVar1;
@@ -68,7 +94,7 @@ undefined4 FUN_80140c24(int param_1)
   double dVar6;
   double in_f30;
   int local_28 [2];
-
+  
   iVar4 = 0;
   piVar1 = FUN_80037048(3,local_28);
   for (sVar5 = 0; sVar5 < local_28[0]; sVar5 = sVar5 + 1) {
@@ -104,6 +130,19 @@ undefined4 FUN_80140c24(int param_1)
   return uVar3;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80140d64
+ * EN v1.0 Address: 0x80140D64
+ * EN v1.0 Size: 2228b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80140d64(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
@@ -125,7 +164,7 @@ void FUN_80140d64(undefined8 param_1,double param_2,double param_3,undefined8 pa
   double extraout_f1;
   double extraout_f1_00;
   undefined8 uVar14;
-
+  
   uVar14 = FUN_8028683c();
   puVar4 = (ushort *)((ulonglong)uVar14 >> 0x20);
   puVar10 = (undefined4 *)uVar14;

@@ -24,6 +24,19 @@ extern f32 FLOAT_803e6984;
 extern f32 FLOAT_803e6988;
 extern f32 FLOAT_803e698c;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801f05b4
+ * EN v1.0 Address: 0x801F05B4
+ * EN v1.0 Size: 592b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4
 FUN_801f05b4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10
@@ -34,7 +47,7 @@ FUN_801f05b4(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   undefined4 in_r9;
   undefined4 in_r10;
   int iVar3;
-
+  
   DAT_803dcd58 = (uint)DAT_803dc070;
   *(undefined2 *)(param_11 + 0x6e) = 0xffff;
   *(undefined *)(param_11 + 0x56) = 0;
@@ -86,16 +99,42 @@ FUN_801f05b4(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801f0804
+ * EN v1.0 Address: 0x801F0804
+ * EN v1.0 Size: 96b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801f0804(int param_1,int param_2)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801f0864
+ * EN v1.0 Address: 0x801F0864
+ * EN v1.0 Size: 196b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801f0864(void)
 {
   int iVar1;
   uint uVar2;
   char in_r8;
-
+  
   iVar1 = FUN_8028683c();
   uVar2 = FUN_80020078(0x78);
   if (((uVar2 == 0) && (in_r8 != '\0')) &&
@@ -109,13 +148,26 @@ void FUN_801f0864(void)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801f0928
+ * EN v1.0 Address: 0x801F0928
+ * EN v1.0 Size: 740b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801f0928(short *param_1)
 {
   uint uVar1;
   short *psVar2;
   char cVar3;
   undefined4 *puVar4;
-
+  
   uVar1 = FUN_80020078(0x78);
   if (uVar1 == 0) {
     if (param_1[0x23] == 0x188) {

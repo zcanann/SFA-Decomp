@@ -26,6 +26,19 @@ extern f32 FLOAT_803e4658;
 extern f32 FLOAT_803e466c;
 extern f32 FLOAT_803e4670;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8018393c
+ * EN v1.0 Address: 0x8018393C
+ * EN v1.0 Size: 1824b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4
 FUN_8018393c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int param_10,
@@ -47,7 +60,7 @@ FUN_8018393c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   uint uStack_1c;
   undefined4 local_18;
   uint uStack_14;
-
+  
   uVar1 = FUN_8002e144();
   if ((uVar1 & 0xff) != 0) {
     uVar5 = FUN_800201ac((int)*(short *)(param_11 + 0xe),1);
@@ -259,6 +272,19 @@ FUN_8018393c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8018405c
+ * EN v1.0 Address: 0x8018405C
+ * EN v1.0 Size: 80b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_8018405c(int param_1)
 {
   if (*(short *)(param_1 + 0xb4) != -1) {
@@ -267,6 +293,19 @@ undefined4 FUN_8018405c(int param_1)
   return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801840ac
+ * EN v1.0 Address: 0x801840AC
+ * EN v1.0 Size: 56b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801840ac(void)
 {
   (**(code **)(*DAT_803dd6fc + 0x18))();
@@ -274,6 +313,19 @@ void FUN_801840ac(void)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801840e4
+ * EN v1.0 Address: 0x801840E4
+ * EN v1.0 Size: 272b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801840e4(void)
 {
   short sVar1;
@@ -281,7 +333,7 @@ void FUN_801840e4(void)
   int iVar3;
   char in_r8;
   int iVar4;
-
+  
   iVar2 = FUN_80286838();
   iVar4 = *(int *)(iVar2 + 0xb8);
   iVar3 = (**(code **)(*DAT_803dd72c + 0x68))(*(undefined4 *)(*(int *)(iVar2 + 0x4c) + 0x14));

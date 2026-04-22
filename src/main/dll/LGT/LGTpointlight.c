@@ -30,6 +30,19 @@ extern f32 FLOAT_803e6aa8;
 extern f32 FLOAT_803e6aac;
 extern f32 FLOAT_803e6ab4;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801f3824
+ * EN v1.0 Address: 0x801F3824
+ * EN v1.0 Size: 472b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801f3824(int param_1,int param_2)
 {
   int iVar1;
@@ -38,7 +51,7 @@ void FUN_801f3824(int param_1,int param_2)
   float local_18;
   undefined4 local_10;
   uint uStack_c;
-
+  
   iVar1 = *(int *)(param_1 + 0xb8);
   if ((int)*(short *)(param_2 + 0x1a) == 0) {
     *(float *)(iVar1 + 4) = FLOAT_803e6a84;
@@ -77,10 +90,23 @@ void FUN_801f3824(int param_1,int param_2)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801f39fc
+ * EN v1.0 Address: 0x801F39FC
+ * EN v1.0 Size: 76b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801f39fc(int param_1)
 {
   uint *puVar1;
-
+  
   puVar1 = *(uint **)(param_1 + 0xb8);
   (**(code **)(*DAT_803dd6f8 + 0x18))();
   if (*puVar1 != 0) {
@@ -89,12 +115,25 @@ void FUN_801f39fc(int param_1)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801f3a48
+ * EN v1.0 Address: 0x801F3A48
+ * EN v1.0 Size: 156b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801f3a48(void)
 {
   int iVar1;
   int iVar2;
   char in_r8;
-
+  
   iVar1 = FUN_8028683c();
   iVar2 = **(int **)(iVar1 + 0xb8);
   if (((iVar2 != 0) && (*(char *)(iVar2 + 0x2f8) != '\0')) && (*(char *)(iVar2 + 0x4c) != '\0')) {
@@ -107,6 +146,19 @@ void FUN_801f3a48(void)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801f3ae4
+ * EN v1.0 Address: 0x801F3AE4
+ * EN v1.0 Size: 800b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801f3ae4(uint param_1)
 {
   short sVar1;
@@ -118,7 +170,7 @@ void FUN_801f3ae4(uint param_1)
   float local_30;
   undefined auStack_2c [8];
   float local_24;
-
+  
   piVar4 = *(int **)(param_1 + 0xb8);
   if (*(char *)(piVar4 + 5) == '\x01') {
     *(undefined *)(piVar4 + 6) = *(undefined *)((int)piVar4 + 0x17);

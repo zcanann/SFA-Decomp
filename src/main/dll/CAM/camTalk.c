@@ -43,6 +43,19 @@ extern f32 FLOAT_803e2448;
 extern f32 FLOAT_803e244c;
 extern f32 FLOAT_803e2450;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80107dbc
+ * EN v1.0 Address: 0x80107DBC
+ * EN v1.0 Size: 44b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80107dbc(void)
 {
   FUN_800238c4(DAT_803de1b8);
@@ -50,6 +63,19 @@ void FUN_80107dbc(void)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80107de8
+ * EN v1.0 Address: 0x80107DE8
+ * EN v1.0 Size: 1076b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80107de8(short *param_1)
 {
   int iVar1;
@@ -91,7 +117,7 @@ void FUN_80107de8(short *param_1)
   undefined4 local_50;
   uint uStack_4c;
   longlong local_48;
-
+  
   (**(code **)(*DAT_803dd6d0 + 0x18))();
   puVar5 = *(ushort **)(param_1 + 0x52);
   if (puVar5 != (ushort *)0x0) {
@@ -179,10 +205,36 @@ void FUN_80107de8(short *param_1)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8010821c
+ * EN v1.0 Address: 0x8010821C
+ * EN v1.0 Size: 144b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8010821c(int param_1)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801082ac
+ * EN v1.0 Address: 0x801082AC
+ * EN v1.0 Size: 388b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801082ac(int param_1,int param_2)
 {
   ushort *puVar1;
@@ -193,7 +245,7 @@ void FUN_801082ac(int param_1,int param_2)
   float local_1c;
   float local_18;
   float local_14;
-
+  
   if (*(short *)(param_1 + 0x44) == 1) {
     FUN_80297334(param_1,&local_28,&local_24,&local_20);
     if (((param_2 != 0) || (*(float *)(DAT_803de1c0 + 0x120) != local_28)) ||
@@ -223,6 +275,19 @@ void FUN_801082ac(int param_1,int param_2)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80108430
+ * EN v1.0 Address: 0x80108430
+ * EN v1.0 Size: 744b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80108430(short *param_1)
 {
 }

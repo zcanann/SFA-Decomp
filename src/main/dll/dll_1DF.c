@@ -4,11 +4,24 @@
 extern undefined4 FUN_80038524();
 extern undefined4 FUN_8003b9ec();
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d23ac
+ * EN v1.0 Address: 0x801D23AC
+ * EN v1.0 Size: 100b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801d23ac(int param_1)
 {
   char in_r8;
   int iVar1;
-
+  
   iVar1 = *(int *)(param_1 + 0xb8);
   if (in_r8 != '\0') {
     FUN_8003b9ec(param_1);

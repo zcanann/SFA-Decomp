@@ -35,6 +35,19 @@ extern f32 FLOAT_803e23a8;
 extern f32 FLOAT_803e23ac;
 extern f32 FLOAT_803e23b0;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80105aac
+ * EN v1.0 Address: 0x80105AAC
+ * EN v1.0 Size: 1644b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80105aac(short *param_1)
 {
   float fVar1;
@@ -63,7 +76,7 @@ void FUN_80105aac(short *param_1)
   undefined4 local_20;
   uint uStack_1c;
   longlong local_18;
-
+  
   psVar4 = *(short **)(param_1 + 0x52);
   if (psVar4 == (short *)0x0) {
     return;

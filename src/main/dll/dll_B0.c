@@ -3,6 +3,19 @@
 
 extern undefined4 DAT_803de19c;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80100d2c
+ * EN v1.0 Address: 0x80100D2C
+ * EN v1.0 Size: 12b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined FUN_80100d2c(void)
 {
   return *(undefined *)(DAT_803de19c + 0x138);

@@ -33,6 +33,19 @@ extern undefined4 DAT_803deea0;
 extern int* DAT_803deeac;
 extern undefined4* DAT_803deeb4;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8026cbec
+ * EN v1.0 Address: 0x8026CBEC
+ * EN v1.0 Size: 2800b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 int FUN_8026cbec(int param_1,int param_2,int param_3,int *param_4,uint *param_5,undefined param_6,
                 undefined2 param_7)
 {

@@ -43,6 +43,19 @@ extern f32 FLOAT_803e5bf0;
 extern f32 FLOAT_803e5bf4;
 extern f32 FLOAT_803e5bf8;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c4b54
+ * EN v1.0 Address: 0x801C4B54
+ * EN v1.0 Size: 196b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801c4b54(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,int param_10,undefined4 param_11,undefined4 param_12,
@@ -50,6 +63,19 @@ void FUN_801c4b54(undefined8 param_1,double param_2,double param_3,undefined8 pa
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c4c18
+ * EN v1.0 Address: 0x801C4C18
+ * EN v1.0 Size: 852b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801c4c18(ushort *param_1)
 {
   int iVar1;
@@ -59,7 +85,7 @@ void FUN_801c4c18(ushort *param_1)
   double dVar5;
   double dVar6;
   undefined8 local_30;
-
+  
   iVar4 = *(int *)(param_1 + 0x26);
   iVar3 = *(int *)(param_1 + 0x5c);
   iVar1 = FUN_8002bac4();
@@ -109,6 +135,19 @@ void FUN_801c4c18(ushort *param_1)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c4f6c
+ * EN v1.0 Address: 0x801C4F6C
+ * EN v1.0 Size: 344b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_801c4f6c(int param_1)
 {
   float fVar1;
@@ -117,7 +156,7 @@ undefined4 FUN_801c4f6c(int param_1)
   undefined4 uVar3;
   int iVar5;
   undefined8 local_18;
-
+  
   iVar5 = *(int *)(param_1 + 0xb8);
   if ((*(uint *)(iVar5 + 0x18) & 0x20) == 0) {
     FUN_8011f9b8(1);
@@ -155,6 +194,19 @@ undefined4 FUN_801c4f6c(int param_1)
   return uVar3;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c50c4
+ * EN v1.0 Address: 0x801C50C4
+ * EN v1.0 Size: 616b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801c50c4(undefined4 param_1,undefined4 param_2,int param_3)
 {
   int iVar1;
@@ -162,7 +214,7 @@ void FUN_801c50c4(undefined4 param_1,undefined4 param_2,int param_3)
   uint uVar3;
   int iVar4;
   int *piVar5;
-
+  
   iVar1 = FUN_8028683c();
   piVar5 = *(int **)(iVar1 + 0xb8);
   iVar2 = FUN_8002bac4();

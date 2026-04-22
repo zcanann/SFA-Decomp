@@ -23,6 +23,19 @@ extern f32 FLOAT_803e4334;
 extern f32 FLOAT_803e4338;
 extern f32 FLOAT_803e433c;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80179864
+ * EN v1.0 Address: 0x80179864
+ * EN v1.0 Size: 656b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80179864(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,int param_10,undefined4 param_11,undefined4 param_12,
@@ -41,7 +54,7 @@ void FUN_80179864(undefined8 param_1,double param_2,double param_3,undefined8 pa
   float local_28;
   float local_24;
   float local_20;
-
+  
   puVar4 = (ushort *)FUN_8002bac4();
   iVar6 = *(int *)(puVar4 + 0x5c);
   if (*(char *)(param_10 + 0x2c8) != '\x01') {
@@ -127,10 +140,23 @@ void FUN_80179864(undefined8 param_1,double param_2,double param_3,undefined8 pa
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80179af4
+ * EN v1.0 Address: 0x80179AF4
+ * EN v1.0 Size: 36b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80179af4(int param_1)
 {
   char cVar1;
-
+  
   cVar1 = *(char *)(*(int *)(param_1 + 0xb8) + 0x274);
   if ((cVar1 != '\x03') && (cVar1 != '\x02')) {
     return;
@@ -139,11 +165,24 @@ void FUN_80179af4(int param_1)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80179b18
+ * EN v1.0 Address: 0x80179B18
+ * EN v1.0 Size: 40b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_80179b18(int param_1)
 {
   char cVar1;
   undefined4 uVar2;
-
+  
   uVar2 = 0;
   cVar1 = *(char *)(*(int *)(param_1 + 0xb8) + 0x274);
   if ((cVar1 == '\x02') || (cVar1 == '\x01')) {
@@ -152,10 +191,23 @@ undefined4 FUN_80179b18(int param_1)
   return uVar2;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80179b40
+ * EN v1.0 Address: 0x80179B40
+ * EN v1.0 Size: 68b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80179b40(int param_1)
 {
   int iVar1;
-
+  
   iVar1 = *(int *)(param_1 + 0xb8);
   *(float *)(iVar1 + 0x26c) = FLOAT_803e4334;
   *(undefined *)(iVar1 + 0x274) = 0;

@@ -28,6 +28,19 @@ extern f32 FLOAT_803e685c;
 extern f32 FLOAT_803e6898;
 extern f32 FLOAT_803e68e4;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ed5cc
+ * EN v1.0 Address: 0x801ED5CC
+ * EN v1.0 Size: 1172b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801ed5cc(short *param_1)
 {
   int iVar1;
@@ -48,7 +61,7 @@ void FUN_801ed5cc(short *param_1)
   undefined4 local_48;
   uint uStack_44;
   longlong local_40;
-
+  
   iVar8 = *(int *)(param_1 + 0x5c);
   iVar7 = **(int **)(param_1 + 0x2a);
   if (*(int *)(param_1 + 0x60) == 0) {

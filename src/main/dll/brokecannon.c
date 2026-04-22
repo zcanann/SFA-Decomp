@@ -7,13 +7,26 @@ extern undefined8 FUN_80043938();
 
 extern undefined4* DAT_803dd72c;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d8284
+ * EN v1.0 Address: 0x801D8284
+ * EN v1.0 Size: 576b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801d8284(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10)
 {
   uint uVar1;
   undefined8 uVar2;
-
+  
   uVar1 = FUN_80020078(0xbf8);
   if (uVar1 != 0) {
     *(undefined *)(param_10 + 7) = 5;

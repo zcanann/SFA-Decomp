@@ -45,13 +45,26 @@ extern undefined4 DAT_803de318;
 extern f32 FLOAT_803e2990;
 extern f32 FLOAT_803e2998;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8011722c
+ * EN v1.0 Address: 0x8011722C
+ * EN v1.0 Size: 904b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8011722c(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   int iVar1;
   undefined8 uVar2;
   double dVar3;
-
+  
   DAT_803de298 = (*(byte *)(DAT_803de110 + 0x21) & 0x80) == 0;
   if (0xfd < DAT_803dc084) {
     param_1 = FUN_8007dadc('\0');

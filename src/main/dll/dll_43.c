@@ -18,6 +18,19 @@ extern f32 FLOAT_803e29dc;
 extern f32 FLOAT_803e29e0;
 extern char s__3d__02d__02d_8031b4a4[];
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8011a07c
+ * EN v1.0 Address: 0x8011A07C
+ * EN v1.0 Size: 472b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8011a07c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,uint param_10,undefined4 param_11,undefined4 param_12,
@@ -30,7 +43,7 @@ void FUN_8011a07c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   undefined8 uVar5;
   double dVar6;
   undefined auStack_18 [20];
-
+  
   FUN_80077318((double)FLOAT_803e29d8,(double)FLOAT_803e29dc,DAT_803a92e4,param_10,0x100);
   dVar6 = (double)FLOAT_803e29dc;
   FUN_80077318((double)FLOAT_803e29e0,dVar6,DAT_803a92e8,param_10,0x100);

@@ -17,10 +17,23 @@ extern f32 FLOAT_803e6508;
 extern f32 FLOAT_803e650c;
 extern f32 FLOAT_803e6510;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e383c
+ * EN v1.0 Address: 0x801E383C
+ * EN v1.0 Size: 132b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801e383c(int param_1)
 {
   int iVar1;
-
+  
   iVar1 = *(int *)(param_1 + 0xb8);
   FUN_800372f8(param_1,3);
   FUN_80037a5c(param_1,10);
@@ -30,16 +43,42 @@ void FUN_801e383c(int param_1)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e38c0
+ * EN v1.0 Address: 0x801E38C0
+ * EN v1.0 Size: 52b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801e38c0(int param_1)
 {
   char in_r8;
-
+  
   if (in_r8 != '\0') {
     FUN_8003b9ec(param_1);
   }
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e38f4
+ * EN v1.0 Address: 0x801E38F4
+ * EN v1.0 Size: 288b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801e38f4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
@@ -48,7 +87,7 @@ void FUN_801e38f4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   float fVar1;
   int iVar2;
   double dVar3;
-
+  
   fVar1 = FLOAT_803e6504;
   if (*(int *)(param_9 + 0x30) != 0) {
     iVar2 = *(int *)(*(int *)(param_9 + 0x30) + 0xf4);
@@ -90,6 +129,19 @@ void FUN_801e38f4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e3a14
+ * EN v1.0 Address: 0x801E3A14
+ * EN v1.0 Size: 48b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801e3a14(void)
 {
   (**(code **)(*DAT_803dd6f8 + 0x18))();

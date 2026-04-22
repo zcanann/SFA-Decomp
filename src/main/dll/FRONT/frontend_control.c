@@ -37,12 +37,25 @@ extern undefined4 DAT_803de33d;
 extern undefined4 DAT_803de33e;
 extern undefined4 DAT_803de6a8;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80119cc4
+ * EN v1.0 Address: 0x80119CC4
+ * EN v1.0 Size: 204b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80119cc4(void)
 {
   int iVar1;
   undefined4 uVar2;
   uint uVar3;
-
+  
   do {
     if (DAT_803a6a5f != '\0') {
       while (DAT_803a6a90 < 0) {
@@ -69,6 +82,19 @@ void FUN_80119cc4(void)
   } while( true );
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80119d90
+ * EN v1.0 Address: 0x80119D90
+ * EN v1.0 Size: 60b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80119d90(void)
 {
   if (DAT_803de310 != 0) {
@@ -78,6 +104,19 @@ void FUN_80119d90(void)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80119dcc
+ * EN v1.0 Address: 0x80119DCC
+ * EN v1.0 Size: 52b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80119dcc(void)
 {
   if (DAT_803de310 != 0) {
@@ -86,10 +125,23 @@ void FUN_80119dcc(void)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80119e00
+ * EN v1.0 Address: 0x80119E00
+ * EN v1.0 Size: 200b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_80119e00(int param_1,int param_2)
 {
   int iVar1;
-
+  
   if (param_2 == 0) {
     iVar1 = FUN_80246a0c(-0x7fc57058,FUN_80119cc4,0,0x803a8fa8,0x1000,param_1,1);
     if (iVar1 == 0) {
@@ -109,10 +161,23 @@ undefined4 FUN_80119e00(int param_1,int param_2)
   return 1;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80119ec8
+ * EN v1.0 Address: 0x80119EC8
+ * EN v1.0 Size: 436b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80119ec8(void)
 {
   uint uVar1;
-
+  
   if (((DAT_803de33c != 0) || (DAT_803de33d != 0)) &&
      (DAT_803de33e = DAT_803de33e + 1, 0xf < DAT_803de33e)) {
     DAT_803de33c = 0;

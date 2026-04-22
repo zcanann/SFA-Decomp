@@ -108,30 +108,121 @@ extern undefined uRam803deed9;
 extern undefined2 uRam803deeda;
 extern undefined uRam803deedb;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8027280c
+ * EN v1.0 Address: 0x8027280C
+ * EN v1.0 Size: 1348b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8027280c(undefined4 param_1,int param_2)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80272d50
+ * EN v1.0 Address: 0x80272D50
+ * EN v1.0 Size: 36b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80272d50(void)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80272d74
+ * EN v1.0 Address: 0x80272D74
+ * EN v1.0 Size: 56b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80272d74(uint param_1)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80272dac
+ * EN v1.0 Address: 0x80272DAC
+ * EN v1.0 Size: 72b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80272dac(uint param_1,undefined2 param_2)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80272df4
+ * EN v1.0 Address: 0x80272DF4
+ * EN v1.0 Size: 56b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80272df4(uint param_1)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80272e2c
+ * EN v1.0 Address: 0x80272E2C
+ * EN v1.0 Size: 88b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80272e2c(uint param_1,undefined4 param_2,undefined4 param_3)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80272e84
+ * EN v1.0 Address: 0x80272E84
+ * EN v1.0 Size: 104b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80272e84(uint param_1,uint param_2,uint param_3,byte param_4)
 {
 }

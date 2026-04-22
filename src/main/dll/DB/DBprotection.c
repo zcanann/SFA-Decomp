@@ -88,6 +88,19 @@ extern f32 FLOAT_803e6448;
 extern f32 FLOAT_803e644c;
 extern f32 FLOAT_803e6450;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e0018
+ * EN v1.0 Address: 0x801E0018
+ * EN v1.0 Size: 5732b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801e0018(void)
 {
   char cVar1;
@@ -165,7 +178,7 @@ void FUN_801e0018(void)
   float fStack_14;
   float local_8;
   float fStack_4;
-
+  
   local_8 = (float)in_f31;
   fStack_4 = (float)in_ps31_1;
   local_18 = (float)in_f30;

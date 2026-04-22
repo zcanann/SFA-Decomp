@@ -6,6 +6,19 @@ extern double FUN_80293900();
 extern f64 DOUBLE_803e5a88;
 extern f32 FLOAT_803e5ab0;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c1f24
+ * EN v1.0 Address: 0x801C1F24
+ * EN v1.0 Size: 164b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801c1f24(double param_1,double param_2,int param_3)
 {
   int iVar1;
@@ -13,7 +26,7 @@ void FUN_801c1f24(double param_1,double param_2,int param_3)
   int iVar3;
   int iVar4;
   double dVar5;
-
+  
   iVar4 = *(int *)(param_3 + 0xb8);
   dVar5 = param_1 - (double)(float)((double)CONCAT44(0x43300000,(int)(char)(int)param_1 ^ 0x80000000
                                                     ) - DOUBLE_803e5a88);
@@ -30,6 +43,19 @@ void FUN_801c1f24(double param_1,double param_2,int param_3)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c1fc8
+ * EN v1.0 Address: 0x801C1FC8
+ * EN v1.0 Size: 240b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801c1fc8(double param_1,int param_2,float *param_3)
 {
   float fVar1;
@@ -39,7 +65,7 @@ void FUN_801c1fc8(double param_1,int param_2,float *param_3)
   int iVar5;
   char cVar6;
   double dVar7;
-
+  
   iVar3 = *(int *)(param_2 + 0xb8);
   cVar6 = (char)(int)*param_3;
   *param_3 = *param_3 -
@@ -56,6 +82,19 @@ void FUN_801c1fc8(double param_1,int param_2,float *param_3)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c20b8
+ * EN v1.0 Address: 0x801C20B8
+ * EN v1.0 Size: 236b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801c20b8(double param_1,int param_2,float *param_3,float *param_4,float *param_5)
 {
   float fVar1;
@@ -67,7 +106,7 @@ void FUN_801c20b8(double param_1,int param_2,float *param_3,float *param_4,float
   int iVar7;
   int iVar8;
   int iVar9;
-
+  
   iVar9 = *(int *)(param_2 + 0xb8);
   fVar1 = (float)(param_1 -
                  (double)(float)((double)CONCAT44(0x43300000,(int)(char)(int)param_1 ^ 0x80000000) -

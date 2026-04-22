@@ -41,69 +41,251 @@ extern undefined4 DAT_803def12;
 extern f64 DOUBLE_803e8478;
 extern f32 FLOAT_803e8470;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80273f50
+ * EN v1.0 Address: 0x80273F50
+ * EN v1.0 Size: 132b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80273f50(int param_1)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80273fd4
+ * EN v1.0 Address: 0x80273FD4
+ * EN v1.0 Size: 328b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80273fd4(void)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8027411c
+ * EN v1.0 Address: 0x8027411C
+ * EN v1.0 Size: 496b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_8027411c(ushort param_1,undefined4 param_2)
 {
     return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8027430c
+ * EN v1.0 Address: 0x8027430C
+ * EN v1.0 Size: 388b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_8027430c(short param_1)
 {
     return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80274490
+ * EN v1.0 Address: 0x80274490
+ * EN v1.0 Size: 584b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_80274490(ushort param_1,undefined4 param_2,undefined2 param_3)
 {
     return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_802746d8
+ * EN v1.0 Address: 0x802746D8
+ * EN v1.0 Size: 460b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_802746d8(short param_1)
 {
     return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_802748a4
+ * EN v1.0 Address: 0x802748A4
+ * EN v1.0 Size: 504b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_802748a4(ushort param_1,undefined4 param_2)
 {
     return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80274a9c
+ * EN v1.0 Address: 0x80274A9C
+ * EN v1.0 Size: 388b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_80274a9c(short param_1)
 {
     return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80274c20
+ * EN v1.0 Address: 0x80274C20
+ * EN v1.0 Size: 364b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_80274c20(short *param_1,undefined4 param_2)
 {
     return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80274d8c
+ * EN v1.0 Address: 0x80274D8C
+ * EN v1.0 Size: 216b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_80274d8c(short param_1)
 {
     return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80274e64
+ * EN v1.0 Address: 0x80274E64
+ * EN v1.0 Size: 152b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_80274e64(short param_1)
 {
     return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80274efc
+ * EN v1.0 Address: 0x80274EFC
+ * EN v1.0 Size: 296b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_80274efc(short param_1,int param_2,uint param_3)
 {
     return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80275024
+ * EN v1.0 Address: 0x80275024
+ * EN v1.0 Size: 784b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_80275024(uint param_1,undefined4 param_2)
 {
     return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80275334
+ * EN v1.0 Address: 0x80275334
+ * EN v1.0 Size: 668b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_80275334(uint param_1)
 {
     return 0;

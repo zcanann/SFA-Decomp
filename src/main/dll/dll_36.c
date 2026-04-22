@@ -32,6 +32,19 @@ extern undefined4 DAT_803de34e;
 extern undefined4 DAT_803de34f;
 extern undefined4* PTR_DAT_8031b418;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8011b698
+ * EN v1.0 Address: 0x8011B698
+ * EN v1.0 Size: 544b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8011b698(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {

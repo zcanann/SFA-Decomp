@@ -20,6 +20,19 @@ extern f32 FLOAT_803e60d0;
 extern char s_SHthorntail_c_803280c8[];
 extern char s_Thorntail_entered_an_invalid_sta_803280d8[];
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d5764
+ * EN v1.0 Address: 0x801D5764
+ * EN v1.0 Size: 920b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801d5764(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,int param_10,undefined4 param_11,undefined4 param_12,
@@ -27,7 +40,7 @@ void FUN_801d5764(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 {
   int iVar1;
   uint uVar2;
-
+  
   switch(*(undefined *)(param_10 + 0x624)) {
   case 0:
     uVar2 = FUN_80022150((double)FLOAT_803e60c8,(double)FLOAT_803e60cc,(float *)(param_10 + 0x910));

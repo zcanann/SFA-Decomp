@@ -9,6 +9,19 @@ extern undefined4 DAT_803dc070;
 extern f64 DOUBLE_803e43b8;
 extern f32 FLOAT_803e43b0;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8017ab28
+ * EN v1.0 Address: 0x8017AB28
+ * EN v1.0 Size: 280b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8017ab28(int param_1)
 {
   float fVar1;
@@ -16,7 +29,7 @@ void FUN_8017ab28(int param_1)
   undefined4 *puVar3;
   char *pcVar4;
   undefined *puVar5;
-
+  
   pcVar4 = *(char **)(param_1 + 0xb8);
   if (*pcVar4 == '\0') {
     uVar2 = FUN_80020078((int)*(short *)(pcVar4 + 2));

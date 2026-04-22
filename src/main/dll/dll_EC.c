@@ -14,6 +14,19 @@ extern f64 DOUBLE_803e70d8;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803e70d0;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80206fa0
+ * EN v1.0 Address: 0x80206FA0
+ * EN v1.0 Size: 688b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80206fa0(void)
 {
   float fVar1;
@@ -27,7 +40,7 @@ void FUN_80206fa0(void)
   char cVar9;
   short *psVar10;
   undefined8 local_28;
-
+  
   iVar4 = FUN_8028683c();
   psVar10 = *(short **)(iVar4 + 0xb8);
   uVar5 = FUN_8002bac4();

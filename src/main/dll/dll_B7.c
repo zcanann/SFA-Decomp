@@ -7,11 +7,24 @@ extern double FUN_80293900();
 extern f32 FLOAT_803e22b0;
 extern f32 FLOAT_803e22d8;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80101844
+ * EN v1.0 Address: 0x80101844
+ * EN v1.0 Size: 232b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80101844(int param_1,int param_2)
 {
   float fVar1;
   double dVar2;
-
+  
   *(undefined4 *)(param_1 + 200) = *(undefined4 *)(param_1 + 0xcc);
   *(undefined4 *)(param_1 + 0xcc) = *(undefined4 *)(param_1 + 0xd0);
   *(undefined4 *)(param_1 + 0xd0) = *(undefined4 *)(param_1 + 0xd4);

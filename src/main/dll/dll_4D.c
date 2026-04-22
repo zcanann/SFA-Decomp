@@ -20,6 +20,19 @@ extern undefined4 DAT_803de384;
 extern undefined4 DAT_803de385;
 extern f32 FLOAT_803e2a50;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8011c5fc
+ * EN v1.0 Address: 0x8011C5FC
+ * EN v1.0 Size: 516b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8011c5fc(int param_1,int param_2)
 {
   uint uVar1;
@@ -28,7 +41,7 @@ void FUN_8011c5fc(int param_1,int param_2)
   char cVar5;
   undefined4 uVar4;
   int *piVar6;
-
+  
   if (((&DAT_803a9430)[param_2] != 0) && (iVar3 = (**(code **)(*DAT_803dd724 + 0x2c))(), iVar3 != 0)
      ) {
     if (param_2 == 2) {

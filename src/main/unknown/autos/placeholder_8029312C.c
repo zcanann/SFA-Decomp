@@ -24,27 +24,105 @@ extern f32 FLOAT_803e8888;
 extern f32 FLOAT_803e888c;
 extern f32 FLOAT_803e8890;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8029312c
+ * EN v1.0 Address: 0x8029312C
+ * EN v1.0 Size: 376b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8029312c(undefined8 param_1,double param_2)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_802932a4
+ * EN v1.0 Address: 0x802932A4
+ * EN v1.0 Size: 236b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_802932a4(undefined8 param_1,double param_2)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80293390
+ * EN v1.0 Address: 0x80293390
+ * EN v1.0 Size: 68b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80293390(float *param_1,float *param_2)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_802933d4
+ * EN v1.0 Address: 0x802933D4
+ * EN v1.0 Size: 40b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_802933d4(double param_1,float *param_2,float *param_3)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_802933fc
+ * EN v1.0 Address: 0x802933FC
+ * EN v1.0 Size: 40b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 double FUN_802933fc(float *param_1)
 {
     return 0.0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80293424
+ * EN v1.0 Address: 0x80293424
+ * EN v1.0 Size: 120b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80293424(void)
 {
 }

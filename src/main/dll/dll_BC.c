@@ -22,12 +22,25 @@ extern f64 DOUBLE_803e22d0;
 extern f32 FLOAT_803e22ac;
 extern f32 FLOAT_803e22b0;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80102158
+ * EN v1.0 Address: 0x80102158
+ * EN v1.0 Size: 400b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80102158(void)
 {
   float fVar1;
   undefined2 *puVar2;
   double dVar3;
-
+  
   if (DAT_803de17a != '\0') {
     if ((int)DAT_803de174 < 2) {
       *(float *)(DAT_803de19c + 0x7a) = FLOAT_803e22b0;

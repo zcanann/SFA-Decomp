@@ -35,60 +35,229 @@ extern undefined4 DAT_803deed4;
 extern undefined4 DAT_803deee4;
 extern undefined4 DAT_803deee8;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80272f0c
+ * EN v1.0 Address: 0x80272F0C
+ * EN v1.0 Size: 96b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_80272f0c(uint param_1,byte param_2,byte param_3)
 {
     return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80272f6c
+ * EN v1.0 Address: 0x80272F6C
+ * EN v1.0 Size: 96b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_80272f6c(uint param_1,byte param_2,uint param_3)
 {
     return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80272fcc
+ * EN v1.0 Address: 0x80272FCC
+ * EN v1.0 Size: 64b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_80272fcc(uint param_1)
 {
     return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8027300c
+ * EN v1.0 Address: 0x8027300C
+ * EN v1.0 Size: 132b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_8027300c(undefined2 param_1,byte param_2,uint param_3,byte param_4)
 {
     return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80273090
+ * EN v1.0 Address: 0x80273090
+ * EN v1.0 Size: 68b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 uint FUN_80273090(uint param_1)
 {
     return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_802730d4
+ * EN v1.0 Address: 0x802730D4
+ * EN v1.0 Size: 96b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_802730d4(uint param_1,uint param_2,uint param_3)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80273134
+ * EN v1.0 Address: 0x80273134
+ * EN v1.0 Size: 148b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80273134(uint param_1,uint param_2,char param_3,char param_4)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_802731c8
+ * EN v1.0 Address: 0x802731C8
+ * EN v1.0 Size: 248b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_802731c8(int param_1)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_802732c0
+ * EN v1.0 Address: 0x802732C0
+ * EN v1.0 Size: 360b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_802732c0(uint param_1,int param_2,undefined4 param_3,char param_4,uint param_5,int param_6,
                  undefined4 param_7,char param_8,uint param_9)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80273428
+ * EN v1.0 Address: 0x80273428
+ * EN v1.0 Size: 176b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80273428(uint param_1,undefined param_2,undefined4 param_3)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_802734d8
+ * EN v1.0 Address: 0x802734D8
+ * EN v1.0 Size: 240b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_802734d8(uint param_1)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_802735c8
+ * EN v1.0 Address: 0x802735C8
+ * EN v1.0 Size: 32b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_802735c8(uint param_1,byte *param_2)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_802735e8
+ * EN v1.0 Address: 0x802735E8
+ * EN v1.0 Size: 32b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_802735e8(uint param_1,int param_2)
 {
 }

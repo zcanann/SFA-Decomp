@@ -21,6 +21,19 @@ extern undefined4* DAT_803dd708;
 extern undefined4 DAT_803de868;
 extern f32 FLOAT_803e5e78;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801cd80c
+ * EN v1.0 Address: 0x801CD80C
+ * EN v1.0 Size: 1056b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801cd80c(uint param_1)
 {
   int iVar1;
@@ -33,7 +46,7 @@ void FUN_801cd80c(uint param_1)
   undefined4 local_2c;
   undefined auStack_28 [16];
   float local_18;
-
+  
   puVar4 = *(uint **)(param_1 + 0xb8);
   local_38 = DAT_802c2b58;
   local_34 = DAT_802c2b5c;

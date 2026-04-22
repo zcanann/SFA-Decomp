@@ -5,6 +5,19 @@ extern undefined4 FUN_8000fb0c();
 
 extern undefined4 DAT_803de19c;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80102354
+ * EN v1.0 Address: 0x80102354
+ * EN v1.0 Size: 84b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80102354(int param_1,int param_2)
 {
   if (*(char *)(DAT_803de19c + 0x13b) < param_1) {

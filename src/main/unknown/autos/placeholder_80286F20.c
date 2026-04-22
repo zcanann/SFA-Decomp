@@ -11,6 +11,19 @@ extern undefined4 FUN_80241e00();
 
 extern undefined4 DAT_803df068;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80286f20
+ * EN v1.0 Address: 0x80286F20
+ * EN v1.0 Size: 160b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80286f20(int param_1)
 {
 }

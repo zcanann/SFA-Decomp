@@ -76,6 +76,19 @@ extern f32 FLOAT_803e25f8;
 extern f32 FLOAT_803e25fc;
 extern f32 FLOAT_803e2600;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8010c374
+ * EN v1.0 Address: 0x8010C374
+ * EN v1.0 Size: 3204b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8010c374(void)
 {
   float fVar1;
@@ -130,7 +143,7 @@ void FUN_8010c374(void)
   float fStack_14;
   float local_8;
   float fStack_4;
-
+  
   local_8 = (float)in_f31;
   fStack_4 = (float)in_ps31_1;
   local_18 = (float)in_f30;
@@ -423,10 +436,36 @@ LAB_8010cfb8:
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8010cff8
+ * EN v1.0 Address: 0x8010CFF8
+ * EN v1.0 Size: 360b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8010cff8(int param_1,undefined4 param_2,undefined4 *param_3)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8010d160
+ * EN v1.0 Address: 0x8010D160
+ * EN v1.0 Size: 44b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8010d160(void)
 {
   FUN_800238c4(DAT_803de1e8);
@@ -434,6 +473,19 @@ void FUN_8010d160(void)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8010d18c
+ * EN v1.0 Address: 0x8010D18C
+ * EN v1.0 Size: 936b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8010d18c(undefined2 *param_1)
 {
   float fVar1;
@@ -442,7 +494,7 @@ void FUN_8010d18c(undefined2 *param_1)
   double dVar4;
   uint uVar5;
   int iVar6;
-
+  
   uVar5 = 0;
   iVar6 = *(int *)(param_1 + 0x52);
   if (iVar6 != 0) {
@@ -514,10 +566,36 @@ void FUN_8010d18c(undefined2 *param_1)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8010d534
+ * EN v1.0 Address: 0x8010D534
+ * EN v1.0 Size: 168b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8010d534(void)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8010d5dc
+ * EN v1.0 Address: 0x8010D5DC
+ * EN v1.0 Size: 44b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8010d5dc(void)
 {
   FUN_800238c4(DAT_803de1f0);

@@ -23,10 +23,23 @@ extern f32 FLOAT_803e433c;
 extern f32 FLOAT_803e4340;
 extern f32 FLOAT_803e4344;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80179b84
+ * EN v1.0 Address: 0x80179B84
+ * EN v1.0 Size: 160b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80179b84(double param_1,double param_2,double param_3,int param_4)
 {
   int iVar1;
-
+  
   iVar1 = *(int *)(param_4 + 0xb8);
   *(undefined *)(iVar1 + 0x274) = 3;
   *(float *)(iVar1 + 0x26c) = FLOAT_803e4334;
@@ -43,22 +56,61 @@ void FUN_80179b84(double param_1,double param_2,double param_3,int param_4)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80179c24
+ * EN v1.0 Address: 0x80179C24
+ * EN v1.0 Size: 40b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80179c24(void)
 {
   FUN_800201ac(0x3f8,1);
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80179c4c
+ * EN v1.0 Address: 0x80179C4C
+ * EN v1.0 Size: 60b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80179c4c(int param_1)
 {
   char in_r8;
-
+  
   if ((*(int *)(param_1 + 0xf8) == 0) || (in_r8 == -1)) {
     FUN_8003b9ec(param_1);
   }
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80179c88
+ * EN v1.0 Address: 0x80179C88
+ * EN v1.0 Size: 696b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80179c88(double param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5
                  ,undefined8 param_6,undefined8 param_7,undefined8 param_8,ushort *param_9,
                  undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13,
@@ -74,7 +126,7 @@ void FUN_80179c88(double param_1,double param_2,double param_3,undefined8 param_
   int iVar8;
   double dVar9;
   double dVar10;
-
+  
   iVar8 = *(int *)(param_9 + 0x5c);
   *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) | 8;
   *(undefined *)(iVar8 + 0x275) = 0;

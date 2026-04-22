@@ -51,16 +51,55 @@ extern f32 FLOAT_803e674c;
 extern f32 FLOAT_803e6750;
 extern f32 FLOAT_803e6754;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e93b4
+ * EN v1.0 Address: 0x801E93B4
+ * EN v1.0 Size: 312b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801e93b4(short *param_1,int param_2)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e94ec
+ * EN v1.0 Address: 0x801E94EC
+ * EN v1.0 Size: 44b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801e94ec(void)
 {
   FUN_8000dbb0();
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e9518
+ * EN v1.0 Address: 0x801E9518
+ * EN v1.0 Size: 588b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801e9518(int *param_1)
 {
   int iVar1;
@@ -72,7 +111,7 @@ void FUN_801e9518(int *param_1)
   int local_74;
   int aiStack_70 [7];
   float afStack_54 [18];
-
+  
   pfVar3 = (float *)param_1[0x2e];
   iVar2 = param_1[0x13];
   if (*pfVar3 < (float)param_1[4]) {
@@ -115,6 +154,19 @@ void FUN_801e9518(int *param_1)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e9764
+ * EN v1.0 Address: 0x801E9764
+ * EN v1.0 Size: 536b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801e9764(short *param_1,int param_2)
 {
   char cVar1;
@@ -132,7 +184,7 @@ void FUN_801e9764(short *param_1,int param_2)
   uint uStack_1c;
   undefined4 local_18;
   uint uStack_14;
-
+  
   pfVar4 = *(float **)(param_1 + 0x5c);
   local_38 = DAT_803e6708;
   local_36 = DAT_803e670a;
@@ -175,6 +227,19 @@ void FUN_801e9764(short *param_1,int param_2)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e997c
+ * EN v1.0 Address: 0x801E997C
+ * EN v1.0 Size: 760b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801e997c(undefined8 param_1,double param_2,double param_3,double param_4,undefined8 param_5
                  ,undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9,
                  undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13,

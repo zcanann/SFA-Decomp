@@ -43,6 +43,19 @@ extern f32 FLOAT_803e611c;
 extern f32 FLOAT_803e6120;
 extern f32 FLOAT_803e6130;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d6f04
+ * EN v1.0 Address: 0x801D6F04
+ * EN v1.0 Size: 752b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801d6f04(int param_1)
 {
   float fVar1;
@@ -59,7 +72,7 @@ void FUN_801d6f04(int param_1)
   float local_24;
   undefined4 local_20;
   uint uStack_1c;
-
+  
   uVar2 = FUN_8002bac4();
   iVar4 = *(int *)(param_1 + 0xb8);
   local_2c = FLOAT_803e60f8;
@@ -124,6 +137,19 @@ void FUN_801d6f04(int param_1)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d71f4
+ * EN v1.0 Address: 0x801D71F4
+ * EN v1.0 Size: 340b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801d71f4(void)
 {
   short *psVar1;
@@ -134,7 +160,7 @@ void FUN_801d71f4(void)
   float local_28;
   float local_24;
   float local_20 [8];
-
+  
   psVar1 = (short *)FUN_8028683c();
   iVar4 = 0;
   DAT_803adcc3 = '\0';
@@ -172,16 +198,42 @@ void FUN_801d71f4(void)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d7348
+ * EN v1.0 Address: 0x801D7348
+ * EN v1.0 Size: 64b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_801d7348(void)
 {
   int iVar1;
-
+  
   (**(code **)(*DAT_803dd72c + 0x74))();
   iVar1 = FUN_8002bac4();
   FUN_80296cb4(iVar1,0xff);
   return 2;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d7388
+ * EN v1.0 Address: 0x801D7388
+ * EN v1.0 Size: 796b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4
 FUN_801d7388(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
@@ -192,7 +244,7 @@ FUN_801d7388(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
   undefined8 uVar3;
   char local_18;
   char local_17 [19];
-
+  
   FUN_8002bac4();
   uVar3 = FUN_80014ba4(0,local_17,&local_18);
   if (param_11 == 0x17) {

@@ -8,6 +8,19 @@ extern undefined4 FUN_8028688c();
 extern undefined4 FUN_802945e0();
 extern undefined4 FUN_80294964();
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d188c
+ * EN v1.0 Address: 0x801D188C
+ * EN v1.0 Size: 704b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801d188c(void)
 {
   int *piVar1;
@@ -66,7 +79,7 @@ void FUN_801d188c(void)
   float fStack_14;
   float local_8;
   float fStack_4;
-
+  
   local_8 = (float)in_f31;
   fStack_4 = (float)in_ps31_1;
   local_18 = (float)in_f30;

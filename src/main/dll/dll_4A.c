@@ -41,6 +41,19 @@ extern undefined uRam803de371;
 extern undefined2 uRam803de372;
 extern undefined uRam803de373;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8011bb4c
+ * EN v1.0 Address: 0x8011BB4C
+ * EN v1.0 Size: 1540b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4
 FUN_8011bb4c(undefined4 param_1,undefined4 param_2,int param_3,undefined4 param_4,undefined4 param_5
             ,undefined4 param_6,undefined4 param_7,undefined4 param_8)
@@ -59,7 +72,7 @@ FUN_8011bb4c(undefined4 param_1,undefined4 param_2,int param_3,undefined4 param_
   undefined8 in_f6;
   undefined8 in_f7;
   undefined8 in_f8;
-
+  
   cVar5 = FUN_80014cec(0);
   FUN_80014b94(0);
   if ((int)cVar5 == 0) {

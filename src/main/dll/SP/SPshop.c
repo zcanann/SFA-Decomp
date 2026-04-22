@@ -12,6 +12,19 @@ extern uint countLeadingZeros();
 
 extern undefined4* DAT_803dd6d8;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d84c4
+ * EN v1.0 Address: 0x801D84C4
+ * EN v1.0 Size: 396b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801d84c4(undefined4 param_1,undefined4 param_2,short param_3,short param_4,short param_5,
                  int *param_6)
 {
@@ -22,7 +35,7 @@ void FUN_801d84c4(undefined4 param_1,undefined4 param_2,short param_3,short para
   uint uVar5;
   uint uVar6;
   undefined8 uVar7;
-
+  
   uVar7 = FUN_80286834();
   puVar3 = (uint *)((ulonglong)uVar7 >> 0x20);
   uVar5 = (uint)uVar7;
@@ -64,13 +77,26 @@ void FUN_801d84c4(undefined4 param_1,undefined4 param_2,short param_3,short para
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d8650
+ * EN v1.0 Address: 0x801D8650
+ * EN v1.0 Size: 148b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801d8650(undefined4 param_1,undefined4 param_2,short param_3,short param_4,short param_5,
                  int *param_6)
 {
   uint uVar1;
   uint uVar2;
   undefined8 uVar3;
-
+  
   uVar3 = FUN_80286838();
   uVar2 = (uint)param_5;
   uVar1 = FUN_80020078(uVar2);
@@ -84,6 +110,19 @@ void FUN_801d8650(undefined4 param_1,undefined4 param_2,short param_3,short para
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d86e4
+ * EN v1.0 Address: 0x801D86E4
+ * EN v1.0 Size: 532b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801d86e4(uint *param_1)
 {
 }

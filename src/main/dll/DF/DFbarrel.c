@@ -10,6 +10,19 @@ extern undefined4 FUN_80294964();
 extern f64 DOUBLE_803e5a88;
 extern f32 FLOAT_803e5a78;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c11ac
+ * EN v1.0 Address: 0x801C11AC
+ * EN v1.0 Size: 616b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801c11ac(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4,short *param_5
                  )
 {
@@ -31,7 +44,7 @@ void FUN_801c11ac(undefined4 param_1,undefined4 param_2,float *param_3,float *pa
   double dVar16;
   double dVar17;
   double dVar18;
-
+  
   uVar13 = FUN_8028682c();
   fVar1 = FLOAT_803e5a78 * *param_3;
   fVar2 = FLOAT_803e5a78 * param_3[1];

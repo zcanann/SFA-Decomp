@@ -18,6 +18,19 @@ extern undefined4* DAT_803dee9c;
 extern undefined4 DAT_803deea0;
 extern undefined4 DAT_803deea4;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8026e848
+ * EN v1.0 Address: 0x8026E848
+ * EN v1.0 Size: 1920b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 int FUN_8026e848(int param_1,byte param_2,uint *param_3)
 {
     return 0;

@@ -19,6 +19,19 @@ extern undefined4 DAT_803de374;
 extern f64 DOUBLE_803e2a28;
 extern f32 FLOAT_803de360;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8011c180
+ * EN v1.0 Address: 0x8011C180
+ * EN v1.0 Size: 300b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8011c180(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,

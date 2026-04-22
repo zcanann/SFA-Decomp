@@ -27,6 +27,19 @@ extern f32 FLOAT_803e2508;
 extern f32 FLOAT_803e250c;
 extern f32 FLOAT_803e253c;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8010b6c0
+ * EN v1.0 Address: 0x8010B6C0
+ * EN v1.0 Size: 1652b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8010b6c0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -91,7 +104,7 @@ void FUN_8010b6c0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   float fStack_14;
   float local_8;
   float fStack_4;
-
+  
   local_8 = (float)in_f31;
   fStack_4 = (float)in_ps31_1;
   local_18 = (float)in_f30;
@@ -259,6 +272,19 @@ void FUN_8010b6c0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8010bd34
+ * EN v1.0 Address: 0x8010BD34
+ * EN v1.0 Size: 1128b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8010bd34(undefined4 param_1,undefined4 param_2,undefined4 *param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)
 {

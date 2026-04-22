@@ -18,19 +18,58 @@ extern f32 FLOAT_803e5ee4;
 extern f32 FLOAT_803e5eec;
 extern f32 FLOAT_803e5ef0;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801cfac0
+ * EN v1.0 Address: 0x801CFAC0
+ * EN v1.0 Size: 668b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801cfac0(undefined2 *param_1,int param_2,int param_3)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801cfd5c
+ * EN v1.0 Address: 0x801CFD5C
+ * EN v1.0 Size: 52b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_801cfd5c(void)
 {
   int iVar1;
-
+  
   iVar1 = FUN_8002ba84();
   FUN_8000b7dc(iVar1,0x10);
   return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801cfd90
+ * EN v1.0 Address: 0x801CFD90
+ * EN v1.0 Size: 40b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801cfd90(void)
 {
   FUN_800201ac(0x4e4,1);

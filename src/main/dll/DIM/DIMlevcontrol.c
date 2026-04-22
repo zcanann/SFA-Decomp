@@ -52,6 +52,19 @@ extern f32 FLOAT_803dcb70;
 extern f32 FLOAT_803e5584;
 extern f32 FLOAT_803e5588;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801b2b04
+ * EN v1.0 Address: 0x801B2B04
+ * EN v1.0 Size: 1560b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801b2b04(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11)
@@ -75,7 +88,7 @@ void FUN_801b2b04(undefined8 param_1,undefined8 param_2,double param_3,undefined
   undefined4 local_30;
   uint uStack_2c;
   undefined8 local_28;
-
+  
   psVar4 = (short *)FUN_80286838();
   iVar13 = *(int *)(psVar4 + 0x26);
   bVar9 = false;
@@ -233,6 +246,19 @@ void FUN_801b2b04(undefined8 param_1,undefined8 param_2,double param_3,undefined
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801b311c
+ * EN v1.0 Address: 0x801B311C
+ * EN v1.0 Size: 100b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801b311c(int param_1)
 {
   if (*(short *)(param_1 + 0x46) != 0x1d6) {
@@ -244,11 +270,24 @@ void FUN_801b311c(int param_1)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801b3180
+ * EN v1.0 Address: 0x801B3180
+ * EN v1.0 Size: 156b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801b3180(undefined2 *param_1)
 {
   undefined2 uVar1;
   int iVar2;
-
+  
   if (param_1[0x23] == 0x1d6) {
     FUN_8003b9ec((int)param_1);
   }
@@ -264,6 +303,19 @@ void FUN_801b3180(undefined2 *param_1)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801b321c
+ * EN v1.0 Address: 0x801B321C
+ * EN v1.0 Size: 1120b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801b321c(double param_1,double param_2,double param_3,double param_4,undefined8 param_5,
                  undefined8 param_6,undefined8 param_7,undefined8 param_8,short *param_9)
 {
@@ -280,7 +332,7 @@ void FUN_801b321c(double param_1,double param_2,double param_3,double param_4,un
   short *local_28 [2];
   undefined4 local_20;
   uint uStack_1c;
-
+  
   iVar5 = *(int *)(param_9 + 0x26);
   if (param_9[0x23] == 0x1d6) {
     FUN_801b2338(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9);

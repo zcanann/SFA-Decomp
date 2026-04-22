@@ -7,6 +7,19 @@ extern undefined4 FUN_800201ac();
 extern undefined4 FUN_8002bac4();
 extern int FUN_8002e1ac();
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e167c
+ * EN v1.0 Address: 0x801E167C
+ * EN v1.0 Size: 592b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801e167c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
@@ -19,7 +32,7 @@ void FUN_801e167c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   undefined4 in_r9;
   undefined4 in_r10;
   undefined8 uVar4;
-
+  
   uVar1 = FUN_8002bac4();
   uVar2 = FUN_80020078(0xa3c);
   if (uVar2 != 0) {

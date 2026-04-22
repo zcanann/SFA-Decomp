@@ -11,11 +11,24 @@ extern undefined4* DAT_803dd6cc;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd72c;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d8de8
+ * EN v1.0 Address: 0x801D8DE8
+ * EN v1.0 Size: 776b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801d8de8(undefined4 param_1,uint *param_2)
 {
   uint uVar1;
   int iVar2;
-
+  
   uVar1 = FUN_80020078(0x193);
   if (uVar1 == 0) {
     if (*(short *)((int)param_2 + 0x12) == 0xcc) {

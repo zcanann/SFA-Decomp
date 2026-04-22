@@ -32,6 +32,19 @@ extern f32 FLOAT_803e5b88;
 extern f32 FLOAT_803e5b8c;
 extern f32 FLOAT_803e5b90;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c446c
+ * EN v1.0 Address: 0x801C446C
+ * EN v1.0 Size: 1768b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801c446c(uint param_1)
 {
 }

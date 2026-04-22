@@ -44,18 +44,57 @@ extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803e5ea4;
 extern f32 FLOAT_803e5ea8;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801cf2e0
+ * EN v1.0 Address: 0x801CF2E0
+ * EN v1.0 Size: 224b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801cf2e0(int param_1,int param_2)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801cf3c0
+ * EN v1.0 Address: 0x801CF3C0
+ * EN v1.0 Size: 432b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801cf3c0(uint param_1,int param_2)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801cf570
+ * EN v1.0 Address: 0x801CF570
+ * EN v1.0 Size: 84b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801cf570(int param_1)
 {
   int iVar1;
-
+  
   iVar1 = *(int *)(param_1 + 0xb8);
   FUN_8003709c(param_1,0x4d);
   if ((*(byte *)(iVar1 + 0x43c) & 0x40) != 0) {
@@ -64,12 +103,25 @@ void FUN_801cf570(int param_1)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801cf5c4
+ * EN v1.0 Address: 0x801CF5C4
+ * EN v1.0 Size: 156b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801cf5c4(int param_1)
 {
   int iVar1;
   int iVar2;
   int iVar3;
-
+  
   iVar1 = *(int *)(param_1 + 0xb8);
   FUN_8003b9ec(param_1);
   iVar2 = 0;
@@ -85,6 +137,19 @@ void FUN_801cf5c4(int param_1)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801cf660
+ * EN v1.0 Address: 0x801CF660
+ * EN v1.0 Size: 1120b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801cf660(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9)
@@ -101,7 +166,7 @@ void FUN_801cf660(undefined8 param_1,double param_2,double param_3,undefined8 pa
   int iVar6;
   undefined *puVar7;
   double dVar8;
-
+  
   puVar7 = &DAT_80327400;
   iVar6 = *(int *)(param_9 + 0x5c);
   iVar5 = *(int *)(param_9 + 0x26);

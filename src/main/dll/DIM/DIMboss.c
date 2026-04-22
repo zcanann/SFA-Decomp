@@ -55,6 +55,19 @@ extern undefined4 DAT_803de808;
 extern f32 FLOAT_803e58dc;
 extern f32 FLOAT_803e5908;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801bd0e8
+ * EN v1.0 Address: 0x801BD0E8
+ * EN v1.0 Size: 1836b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801bd0e8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
@@ -76,7 +89,7 @@ void FUN_801bd0e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
   undefined8 uVar14;
   undefined8 extraout_f1;
   undefined8 extraout_f1_00;
-
+  
   puVar3 = (undefined4 *)FUN_80286834();
   puVar13 = (undefined4 *)puVar3[0x2e];
   iVar12 = puVar3[0x13];
@@ -297,17 +310,43 @@ LAB_801bd7dc:
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801bd814
+ * EN v1.0 Address: 0x801BD814
+ * EN v1.0 Size: 260b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801bd814(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801bd918
+ * EN v1.0 Address: 0x801BD918
+ * EN v1.0 Size: 176b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801bd918(short *param_1)
 {
   char in_r8;
   int iVar1;
-
+  
   iVar1 = *(int *)(param_1 + 0x5c);
   if (((in_r8 != '\0') && (*(int *)(param_1 + 0x7a) == 0)) && (*(short *)(iVar1 + 0x402) != 3)) {
     FUN_8003b9ec((int)param_1);
@@ -321,6 +360,19 @@ void FUN_801bd918(short *param_1)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801bd9c8
+ * EN v1.0 Address: 0x801BD9C8
+ * EN v1.0 Size: 60b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801bd9c8(int param_1)
 {
   (**(code **)(*DAT_803dd70c + 0xc))(param_1,*(undefined4 *)(param_1 + 0xb8),&DAT_803adc78);

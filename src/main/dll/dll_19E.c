@@ -32,6 +32,19 @@ extern f32 FLOAT_803e5b34;
 extern f32 FLOAT_803e5b48;
 extern f32 FLOAT_803e5b4c;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c3cc4
+ * EN v1.0 Address: 0x801C3CC4
+ * EN v1.0 Size: 612b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801c3cc4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
@@ -47,7 +60,7 @@ void FUN_801c3cc4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   undefined8 uVar8;
   int local_28;
   int local_24 [5];
-
+  
   iVar2 = *(int *)(param_9 + 0x4c);
   iVar7 = *(int *)(param_9 + 0xb8);
   if (((iVar2 != 0) && (*(short *)(iVar2 + 0x18) != -1)) && (*(int *)(iVar2 + 0x14) != 0x4ca62)) {
@@ -106,13 +119,26 @@ void FUN_801c3cc4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c3f28
+ * EN v1.0 Address: 0x801C3F28
+ * EN v1.0 Size: 520b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801c3f28(int param_1,int param_2)
 {
   int *piVar1;
   uint uVar2;
   int iVar3;
   int iVar4;
-
+  
   iVar4 = *(int *)(param_1 + 0xb8);
   if (*(int *)(param_2 + 0x14) != 0x4ca62) {
     *(undefined2 *)(iVar4 + 0x6a) = *(undefined2 *)(param_2 + 0x1a);
@@ -159,16 +185,42 @@ void FUN_801c3f28(int param_1,int param_2)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c4130
+ * EN v1.0 Address: 0x801C4130
+ * EN v1.0 Size: 52b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801c4130(int param_1)
 {
   char in_r8;
-
+  
   if (in_r8 != '\0') {
     FUN_8003b9ec(param_1);
   }
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c4164
+ * EN v1.0 Address: 0x801C4164
+ * EN v1.0 Size: 668b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801c4164(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9)
@@ -181,7 +233,7 @@ void FUN_801c4164(undefined8 param_1,double param_2,double param_3,undefined8 pa
   undefined4 in_r10;
   short *psVar4;
   int iVar5;
-
+  
   iVar5 = *(int *)(param_9 + 0x26);
   psVar4 = *(short **)(param_9 + 0x5c);
   uVar1 = FUN_80020078(0x589);
@@ -242,10 +294,23 @@ void FUN_801c4164(undefined8 param_1,double param_2,double param_3,undefined8 pa
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c4400
+ * EN v1.0 Address: 0x801C4400
+ * EN v1.0 Size: 108b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801c4400(int param_1)
 {
   int *piVar1;
-
+  
   piVar1 = *(int **)(param_1 + 0xb8);
   (**(code **)(*DAT_803dd6fc + 0x18))();
   FUN_80013e4c(DAT_803de838);

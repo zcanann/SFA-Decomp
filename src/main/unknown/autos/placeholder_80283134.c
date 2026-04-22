@@ -67,10 +67,36 @@ extern undefined4 DAT_803befae;
 extern undefined4 DAT_803befd2;
 extern undefined4 DAT_803d4900;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80283134
+ * EN v1.0 Address: 0x80283134
+ * EN v1.0 Size: 740b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80283134(int param_1)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80283418
+ * EN v1.0 Address: 0x80283418
+ * EN v1.0 Size: 112b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 uint FUN_80283418(uint param_1)
 {
     return 0;

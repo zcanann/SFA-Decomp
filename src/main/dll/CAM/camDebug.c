@@ -15,6 +15,19 @@ extern f32 FLOAT_803e2640;
 extern f32 FLOAT_803e2644;
 extern f32 FLOAT_803e2648;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8010daac
+ * EN v1.0 Address: 0x8010DAAC
+ * EN v1.0 Size: 720b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8010daac(undefined4 param_1,int param_2,int param_3)
 {
   double dVar1;
@@ -31,7 +44,7 @@ void FUN_8010daac(undefined4 param_1,int param_2,int param_3)
   undefined8 local_28;
   undefined4 local_20;
   uint uStack_1c;
-
+  
   if (DAT_803de1f0 == (undefined4 *)0x0) {
     DAT_803de1f0 = (undefined4 *)FUN_80023d8c(0x38,0xf);
   }
@@ -79,6 +92,19 @@ void FUN_8010daac(undefined4 param_1,int param_2,int param_3)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8010dd7c
+ * EN v1.0 Address: 0x8010DD7C
+ * EN v1.0 Size: 156b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8010dd7c(undefined2 *param_1,undefined4 param_2,undefined2 *param_3)
 {
   if (param_3 != (undefined2 *)0x0) {

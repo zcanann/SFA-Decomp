@@ -17,11 +17,37 @@ extern uint countLeadingZeros();
 extern undefined4 DAT_803bdfc0;
 extern undefined4 DAT_803deee8;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8026fd94
+ * EN v1.0 Address: 0x8026FD94
+ * EN v1.0 Size: 648b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 uint FUN_8026fd94(byte param_1,char param_2,char param_3,int param_4,undefined4 *param_5)
 {
     return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8027001c
+ * EN v1.0 Address: 0x8027001C
+ * EN v1.0 Size: 980b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 uint FUN_8027001c(undefined2 param_1,int param_2,undefined4 param_3,undefined4 param_4,uint param_5,
                  byte param_6,uint param_7,uint param_8,byte param_9,undefined param_10,
                  ushort param_11,undefined2 param_12,int param_13,undefined param_14,
@@ -30,6 +56,19 @@ uint FUN_8027001c(undefined2 param_1,int param_2,undefined4 param_3,undefined4 p
     return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_802703f0
+ * EN v1.0 Address: 0x802703F0
+ * EN v1.0 Size: 608b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_802703f0(undefined2 param_1,short param_2,undefined4 param_3,undefined4 param_4,
                  uint param_5,byte param_6,uint param_7,uint param_8,byte param_9,undefined param_10
                  ,ushort param_11,undefined2 param_12,uint param_13,undefined param_14,
@@ -37,6 +76,19 @@ void FUN_802703f0(undefined2 param_1,short param_2,undefined4 param_3,undefined4
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80270650
+ * EN v1.0 Address: 0x80270650
+ * EN v1.0 Size: 4748b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80270650(uint param_1,int param_2,undefined4 param_3,uint param_4,byte param_5,uint param_6
                  ,uint param_7,uint param_8,undefined param_9,ushort param_10,undefined2 param_11,
                  undefined param_12,short param_13,undefined param_14,int param_15)

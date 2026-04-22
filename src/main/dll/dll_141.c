@@ -69,6 +69,19 @@ extern f32 FLOAT_803e4194;
 extern f32 FLOAT_803e41ac;
 extern f32 FLOAT_803e41c4;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80173750
+ * EN v1.0 Address: 0x80173750
+ * EN v1.0 Size: 2120b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80173750(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -89,7 +102,7 @@ void FUN_80173750(undefined8 param_1,double param_2,double param_3,undefined8 pa
   char local_28;
   char local_27 [3];
   uint local_24 [9];
-
+  
   psVar4 = (short *)FUN_80286840();
   iVar5 = FUN_8002bac4();
   iVar8 = *(int *)(psVar4 + 0x5c);
@@ -291,6 +304,19 @@ LAB_80173f80:
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80173f98
+ * EN v1.0 Address: 0x80173F98
+ * EN v1.0 Size: 1188b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80173f98(int param_1,int param_2)
 {
   short sVar1;
@@ -309,7 +335,7 @@ void FUN_80173f98(int param_1,int param_2)
   uint uStack_3c;
   undefined4 local_38;
   uint uStack_34;
-
+  
   iVar5 = *(int *)(param_1 + 0xb8);
   local_58[0] = 3;
   local_50[0] = DAT_803e4140;
@@ -425,22 +451,61 @@ LAB_80174324:
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8017443c
+ * EN v1.0 Address: 0x8017443C
+ * EN v1.0 Size: 32b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8017443c(int param_1)
 {
   FUN_8002b830(param_1);
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8017445c
+ * EN v1.0 Address: 0x8017445C
+ * EN v1.0 Size: 52b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8017445c(int param_1)
 {
   char in_r8;
-
+  
   if (in_r8 != '\0') {
     FUN_8003b9ec(param_1);
   }
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80174490
+ * EN v1.0 Address: 0x80174490
+ * EN v1.0 Size: 980b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80174490(int param_1)
 {
   byte bVar1;
@@ -476,7 +541,7 @@ void FUN_80174490(int param_1)
   uint uStack_b4;
   undefined4 local_b0;
   uint uStack_ac;
-
+  
   iVar5 = *(int *)(param_1 + 0x4c);
   if (((int)*(uint *)(param_1 + 0xf8) < 0) ||
      (uVar2 = FUN_80020078(*(uint *)(param_1 + 0xf8)), *(byte *)(iVar5 + 0x1f) != uVar2)) {
@@ -558,6 +623,19 @@ void FUN_80174490(int param_1)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80174864
+ * EN v1.0 Address: 0x80174864
+ * EN v1.0 Size: 128b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80174864(int param_1,int param_2)
 {
   if (*(int *)(param_1 + 0xf4) == 0) {
@@ -574,12 +652,25 @@ void FUN_80174864(int param_1,int param_2)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801748e4
+ * EN v1.0 Address: 0x801748E4
+ * EN v1.0 Size: 336b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_801748e4(uint param_1,int param_2)
 {
   int iVar1;
   uint uVar2;
   int iVar3;
-
+  
   iVar3 = *(int *)(param_1 + 0x4c);
   iVar1 = FUN_8002bac4();
   if (((*(ushort *)(param_2 + 0x100) & 0x80) == 0) && (uVar2 = FUN_80296164(iVar1,10), uVar2 == 0))
@@ -610,13 +701,26 @@ undefined4 FUN_801748e4(uint param_1,int param_2)
   return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80174a34
+ * EN v1.0 Address: 0x80174A34
+ * EN v1.0 Size: 224b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80174a34(int param_1,int param_2)
 {
   uint uVar1;
   undefined4 *puVar2;
   int iVar3;
   int iVar4;
-
+  
   iVar4 = *(int *)(param_1 + 0x4c);
   iVar3 = *(int *)(iVar4 + 0x14);
   if (iVar3 == 0x49b5d) {

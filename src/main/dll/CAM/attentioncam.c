@@ -7,6 +7,19 @@ extern undefined4* DAT_803dd71c;
 extern f32 FLOAT_803e2508;
 extern f32 FLOAT_803e2528;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8010aee4
+ * EN v1.0 Address: 0x8010AEE4
+ * EN v1.0 Size: 608b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 double FUN_8010aee4(double param_1,undefined8 param_2,double param_3,undefined4 *param_4)
 {
   float fVar1;
@@ -23,7 +36,7 @@ double FUN_8010aee4(double param_1,undefined8 param_2,double param_3,undefined4 
   double dVar12;
   double dVar13;
   int local_98 [7];
-
+  
   iVar6 = 0;
   piVar7 = local_98;
   do {

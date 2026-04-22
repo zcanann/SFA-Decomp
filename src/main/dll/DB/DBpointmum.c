@@ -10,6 +10,19 @@ extern undefined4* DAT_803dd708;
 extern f32 FLOAT_803e6348;
 extern f32 FLOAT_803e634c;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801dfa9c
+ * EN v1.0 Address: 0x801DFA9C
+ * EN v1.0 Size: 928b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4
 FUN_801dfa9c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9
@@ -34,7 +47,7 @@ FUN_801dfa9c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
   float local_3c;
   float local_38;
   float local_34;
-
+  
   iVar5 = 0;
   dVar6 = (double)FLOAT_803e6348;
   dVar7 = (double)FLOAT_803e634c;

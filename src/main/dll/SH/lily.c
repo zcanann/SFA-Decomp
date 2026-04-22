@@ -19,6 +19,19 @@ extern undefined4 DAT_80327b18;
 extern undefined4 DAT_80327b28;
 extern f32 FLOAT_803e60ac;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d52c0
+ * EN v1.0 Address: 0x801D52C0
+ * EN v1.0 Size: 432b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801d52c0(void)
 {
   int iVar1;
@@ -31,7 +44,7 @@ void FUN_801d52c0(void)
   char cVar8;
   double dVar9;
   int local_28 [10];
-
+  
   iVar1 = FUN_80286834();
   cVar8 = -1;
   cVar6 = '\0';

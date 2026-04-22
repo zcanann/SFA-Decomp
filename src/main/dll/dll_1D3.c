@@ -58,15 +58,41 @@ extern f32 FLOAT_803e5ec8;
 extern f32 FLOAT_803e5ecc;
 extern f32 FLOAT_803e5ed0;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ce1a0
+ * EN v1.0 Address: 0x801CE1A0
+ * EN v1.0 Size: 140b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801ce1a0(undefined2 *param_1,int param_2)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ce22c
+ * EN v1.0 Address: 0x801CE22C
+ * EN v1.0 Size: 216b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_801ce22c(int param_1,undefined4 param_2,int param_3)
 {
   uint uVar1;
   int iVar2;
-
+  
   uVar1 = FUN_80020078(10);
   if (uVar1 != 0) {
     *(byte *)(param_3 + 0x90) = *(byte *)(param_3 + 0x90) | 4;
@@ -82,16 +108,42 @@ undefined4 FUN_801ce22c(int param_1,undefined4 param_2,int param_3)
   return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ce304
+ * EN v1.0 Address: 0x801CE304
+ * EN v1.0 Size: 64b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801ce304(int param_1)
 {
   (**(code **)(*DAT_803dd72c + 0x50))((int)*(char *)(param_1 + 0xac),0x1f,0);
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ce344
+ * EN v1.0 Address: 0x801CE344
+ * EN v1.0 Size: 224b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801ce344(uint param_1)
 {
   uint uVar1;
-
+  
   uVar1 = FUN_80020078(10);
   if (uVar1 == 0) {
     FUN_8000dcdc(param_1,0x372);
@@ -110,15 +162,41 @@ void FUN_801ce344(uint param_1)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ce424
+ * EN v1.0 Address: 0x801CE424
+ * EN v1.0 Size: 12b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 int FUN_801ce424(int param_1)
 {
   return *(int *)(param_1 + 0xb8) + 0xc;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ce430
+ * EN v1.0 Address: 0x801CE430
+ * EN v1.0 Size: 280b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_801ce430(short *param_1,undefined4 param_2,int param_3)
 {
   int iVar1;
-
+  
   iVar1 = *(int *)(param_1 + 0x5c);
   if ((*(byte *)(iVar1 + 0x43c) & 0x20) == 0) {
     FUN_8000b7dc((int)param_1,0x7f);
@@ -141,6 +219,19 @@ undefined4 FUN_801ce430(short *param_1,undefined4 param_2,int param_3)
   return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ce548
+ * EN v1.0 Address: 0x801CE548
+ * EN v1.0 Size: 228b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801ce548(short *param_1,int param_2,int param_3)
 {
   if (((param_3 == 0) || (*(int *)(param_2 + 0x28) == 0)) ||
@@ -164,6 +255,19 @@ void FUN_801ce548(short *param_1,int param_2,int param_3)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ce62c
+ * EN v1.0 Address: 0x801CE62C
+ * EN v1.0 Size: 580b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_801ce62c(uint param_1,int param_2)
 {
   byte bVar1;
@@ -175,7 +279,7 @@ undefined4 FUN_801ce62c(uint param_1,int param_2)
   undefined4 local_28;
   undefined4 local_24;
   undefined4 local_20;
-
+  
   cVar4 = (**(code **)(*DAT_803dd6d8 + 0x24))(auStack_38);
   if (*(char *)(param_2 + 0x45b) == '\0') {
     uVar3 = 0;
@@ -239,6 +343,19 @@ undefined4 FUN_801ce62c(uint param_1,int param_2)
   return 1;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ce870
+ * EN v1.0 Address: 0x801CE870
+ * EN v1.0 Size: 1880b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801ce870(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11)

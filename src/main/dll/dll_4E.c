@@ -20,12 +20,25 @@ extern undefined4 DAT_803de384;
 extern undefined4 DAT_803de385;
 extern undefined4 DAT_803de388;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8011c2ac
+ * EN v1.0 Address: 0x8011C2AC
+ * EN v1.0 Size: 848b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8011c2ac(int param_1,int param_2)
 {
   int iVar1;
   byte bVar3;
   uint uVar2;
-
+  
   if (((&DAT_803a9430)[param_2] != 0) && (iVar1 = (**(code **)(*DAT_803dd724 + 0x2c))(), iVar1 != 0)
      ) {
     if (param_2 == 3) {

@@ -12,11 +12,37 @@ extern undefined4* DAT_803def44;
 extern undefined4 uRam803def34;
 extern undefined4 uRam803def40;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_802757bc
+ * EN v1.0 Address: 0x802757BC
+ * EN v1.0 Size: 96b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_802757bc(undefined2 param_1)
 {
     return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8027581c
+ * EN v1.0 Address: 0x8027581C
+ * EN v1.0 Size: 96b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_8027581c(undefined2 param_1)
 {
     return 0;

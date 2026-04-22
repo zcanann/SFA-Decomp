@@ -14,13 +14,26 @@ extern undefined4 FUN_8025cce8();
 
 extern undefined4 DAT_803de19c;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80100f2c
+ * EN v1.0 Address: 0x80100F2C
+ * EN v1.0 Size: 316b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_80100f2c(int param_1,int *param_2,int param_3)
 {
   int iVar1;
   uint uVar2;
   char acStack_18 [3];
   byte local_15;
-
+  
   iVar1 = FUN_800284e8(*param_2,param_3);
   FUN_80052a6c();
   if (*(char *)(iVar1 + 0x29) == '\x01') {

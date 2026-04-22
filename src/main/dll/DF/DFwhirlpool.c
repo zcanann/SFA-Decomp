@@ -9,6 +9,19 @@ extern f32 FLOAT_803e5a94;
 extern f32 FLOAT_803e5ab8;
 extern f32 FLOAT_803e5abc;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c21a4
+ * EN v1.0 Address: 0x801C21A4
+ * EN v1.0 Size: 700b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_801c21a4(int param_1)
 {
   double dVar1;
@@ -23,7 +36,7 @@ undefined4 FUN_801c21a4(int param_1)
   double dVar10;
   double dVar11;
   double dVar12;
-
+  
   if ((*(byte *)(*(int *)(param_1 + 0x4c) + 0x18) & 1) == 0) {
     iVar6 = **(int **)(param_1 + 0xb8);
     if (iVar6 == 0) {

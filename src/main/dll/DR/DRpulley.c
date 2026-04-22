@@ -26,10 +26,23 @@ extern f32 FLOAT_803e68d4;
 extern f32 FLOAT_803e68d8;
 extern f32 FLOAT_803e68dc;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ecf60
+ * EN v1.0 Address: 0x801ECF60
+ * EN v1.0 Size: 148b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801ecf60(undefined4 param_1,int param_2)
 {
   float fVar1;
-
+  
   *(float *)(param_2 + 0x4b0) = FLOAT_803e68d4;
   *(float *)(param_2 + 0x530) = FLOAT_803e68d0;
   *(float *)(param_2 + 0x534) = FLOAT_803e688c;
@@ -54,17 +67,43 @@ void FUN_801ecf60(undefined4 param_1,int param_2)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ecff4
+ * EN v1.0 Address: 0x801ECFF4
+ * EN v1.0 Size: 56b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801ecff4(int param_1)
 {
   (**(code **)(*DAT_803dd6ec + 0x34))(*(int *)(param_1 + 0xb8) + 0x28);
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ed02c
+ * EN v1.0 Address: 0x801ED02C
+ * EN v1.0 Size: 112b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 uint FUN_801ed02c(int param_1)
 {
   int iVar1;
   uint uVar2;
-
+  
   iVar1 = (**(code **)(*DAT_803dd6ec + 0x34))(*(int *)(param_1 + 0xb8) + 0x28);
   if ((iVar1 == 3) && (DAT_803dcd24 == -1)) {
     uVar2 = 1;
@@ -76,12 +115,25 @@ uint FUN_801ed02c(int param_1)
   return uVar2;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ed09c
+ * EN v1.0 Address: 0x801ED09C
+ * EN v1.0 Size: 352b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801ed09c(short *param_1)
 {
   float fVar1;
   int iVar2;
   short *psVar3;
-
+  
   psVar3 = *(short **)(param_1 + 0x5c);
   iVar2 = FUN_8005b60c(*(int *)((uint)*(byte *)(psVar3 + 0x21a) * 0xc + -0x7fcd6e30 +
                                (uint)*(byte *)((int)psVar3 + 0x435) * 4),(int *)0x0,(int *)0x0,

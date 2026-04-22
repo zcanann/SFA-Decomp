@@ -10,6 +10,19 @@ extern f64 DOUBLE_803e7098;
 extern f32 FLOAT_803e7090;
 extern f32 FLOAT_803e7094;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_802065f0
+ * EN v1.0 Address: 0x802065F0
+ * EN v1.0 Size: 964b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_802065f0(int param_1)
 {
   byte bVar1;
@@ -20,7 +33,7 @@ void FUN_802065f0(int param_1)
   int iVar6;
   int local_28;
   int local_24 [6];
-
+  
   iVar6 = *(int *)(param_1 + 0x4c);
   iVar5 = *(int *)(param_1 + 0xb8);
   iVar2 = *(int *)(iVar5 + 4);

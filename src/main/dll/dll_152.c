@@ -7,6 +7,19 @@ extern undefined4 FUN_80286884();
 
 extern undefined4* DAT_803dd72c;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80182b44
+ * EN v1.0 Address: 0x80182B44
+ * EN v1.0 Size: 252b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80182b44(void)
 {
   short sVar1;
@@ -14,7 +27,7 @@ void FUN_80182b44(void)
   int iVar3;
   char in_r8;
   int iVar4;
-
+  
   iVar2 = FUN_80286838();
   iVar4 = *(int *)(iVar2 + 0xb8);
   iVar3 = (**(code **)(*DAT_803dd72c + 0x68))(*(undefined4 *)(*(int *)(iVar2 + 0x4c) + 0x14));

@@ -3,6 +3,19 @@
 
 extern ushort DAT_8032fa46;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8027641c
+ * EN v1.0 Address: 0x8027641C
+ * EN v1.0 Size: 400b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8027641c(int param_1)
 {
 }

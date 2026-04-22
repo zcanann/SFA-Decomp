@@ -23,13 +23,26 @@ extern f32 FLOAT_803e5950;
 extern f32 FLOAT_803e5954;
 extern f32 FLOAT_803e5958;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801be750
+ * EN v1.0 Address: 0x801BE750
+ * EN v1.0 Size: 688b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801be750(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,undefined4 param_10,int param_11,int param_12)
 {
   double dVar1;
   double dVar2;
-
+  
   dVar2 = (double)FLOAT_803e5928;
   *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) = *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) | 1;
   *(undefined *)(param_12 + 0x25f) = 1;

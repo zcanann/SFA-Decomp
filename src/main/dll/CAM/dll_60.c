@@ -11,6 +11,19 @@ extern f32 FLOAT_803e2540;
 extern f32 FLOAT_803e2544;
 extern f32 FLOAT_803e2548;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8010c1a4
+ * EN v1.0 Address: 0x8010C1A4
+ * EN v1.0 Size: 352b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8010c1a4(int param_1,float *param_2,float *param_3,float *param_4,float *param_5)
 {
   float fVar1;
@@ -22,7 +35,7 @@ void FUN_8010c1a4(int param_1,float *param_2,float *param_3,float *param_4,float
   int iVar7;
   int iVar8;
   int iVar9;
-
+  
   iVar7 = *(int *)(param_1 + 0x11c);
   iVar6 = *(int *)(param_1 + 0xa4);
   iVar9 = *(int *)(iVar7 + 0x74);
@@ -61,6 +74,19 @@ void FUN_8010c1a4(int param_1,float *param_2,float *param_3,float *param_4,float
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8010c304
+ * EN v1.0 Address: 0x8010C304
+ * EN v1.0 Size: 112b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8010c304(int param_1)
 {
   if (*(int *)(param_1 + 0x11c) != 0) {

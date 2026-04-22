@@ -29,6 +29,19 @@ extern f32 FLOAT_803dda5c;
 extern f32 FLOAT_803e6780;
 extern f32 FLOAT_803e6784;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801e9f54
+ * EN v1.0 Address: 0x801E9F54
+ * EN v1.0 Size: 740b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801e9f54(void)
 {
 }

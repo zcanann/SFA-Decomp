@@ -9,6 +9,19 @@ extern int FUN_8005b128();
 extern f32 FLOAT_803e30bc;
 extern f32 FLOAT_803e3154;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8013dec4
+ * EN v1.0 Address: 0x8013DEC4
+ * EN v1.0 Size: 332b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined FUN_8013dec4(int param_1,int param_2)
 {
   byte bVar1;
@@ -17,7 +30,7 @@ undefined FUN_8013dec4(int param_1,int param_2)
   undefined uVar4;
   double dVar5;
   float local_18 [3];
-
+  
   local_18[0] = FLOAT_803e30bc;
   bVar1 = *(byte *)(param_2 + 0x58) >> 1 & 0xf;
   uVar4 = bVar1 != 0;

@@ -14,6 +14,19 @@ extern f32 FLOAT_803e3c8c;
 extern f32 FLOAT_803e3c94;
 extern f32 FLOAT_803e3c98;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80165884
+ * EN v1.0 Address: 0x80165884
+ * EN v1.0 Size: 436b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_80165884(short *param_1,int param_2)
 {
   float fVar1;
@@ -23,7 +36,7 @@ undefined4 FUN_80165884(short *param_1,int param_2)
   double dVar5;
   double dVar6;
   double dVar7;
-
+  
   iVar4 = *(int *)(*(int *)(param_1 + 0x5c) + 0x40c);
   iVar2 = FUN_8002bac4();
   *(undefined *)(param_2 + 0x34d) = 1;

@@ -18,6 +18,19 @@ extern f64 DOUBLE_803e2968;
 extern f32 FLOAT_803e2974;
 extern f32 FLOAT_803e2978;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80115c80
+ * EN v1.0 Address: 0x80115C80
+ * EN v1.0 Size: 880b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80115c80(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -37,7 +50,7 @@ void FUN_80115c80(undefined8 param_1,double param_2,undefined8 param_3,undefined
   undefined4 local_14;
   undefined8 local_10;
   undefined8 local_8;
-
+  
   if (DAT_803de264 < 0xf0) {
     if (DAT_803de264 < 0x1e) {
       param_2 = (double)FLOAT_803e2974;

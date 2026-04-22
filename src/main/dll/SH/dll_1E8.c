@@ -16,10 +16,23 @@ extern f32 FLOAT_803e60b4;
 extern f32 FLOAT_803e60b8;
 extern f32 FLOAT_803e60bc;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d5470
+ * EN v1.0 Address: 0x801D5470
+ * EN v1.0 Size: 232b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801d5470(uint param_1,int param_2)
 {
   byte bVar1;
-
+  
   bVar1 = *(byte *)(param_2 + 0x627);
   if (bVar1 == 1) {
     *(float *)(param_2 + 0x628) = *(float *)(param_2 + 0x628) - FLOAT_803dc074;
@@ -43,13 +56,26 @@ void FUN_801d5470(uint param_1,int param_2)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d5558
+ * EN v1.0 Address: 0x801D5558
+ * EN v1.0 Size: 524b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 uint FUN_801d5558(short *param_1,int param_2,int param_3)
 {
   short sVar1;
   int iVar2;
   uint uVar3;
   double dVar4;
-
+  
   if (*(char *)(param_3 + 0x1b) == '\0') {
     uVar3 = 7;
   }

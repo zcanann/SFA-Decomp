@@ -25,6 +25,19 @@ extern f32 FLOAT_803e22b0;
 extern f32 FLOAT_803e22e8;
 extern f32 FLOAT_803e22ec;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80101c1c
+ * EN v1.0 Address: 0x80101C1C
+ * EN v1.0 Size: 1340b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80101c1c(short *param_1)
 {
   float fVar1;
@@ -43,7 +56,7 @@ void FUN_80101c1c(short *param_1)
   float local_30;
   undefined8 local_28;
   undefined8 local_20;
-
+  
   FUN_8000f478(0);
   psVar3 = FUN_8000facc();
   *psVar3 = *param_1;

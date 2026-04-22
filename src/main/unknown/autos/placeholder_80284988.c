@@ -17,6 +17,19 @@ extern undefined4 DAT_803df000;
 extern undefined4 DAT_803df004;
 extern undefined4 DAT_803df00c;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80284988
+ * EN v1.0 Address: 0x80284988
+ * EN v1.0 Size: 544b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80284988(int param_1)
 {
 }

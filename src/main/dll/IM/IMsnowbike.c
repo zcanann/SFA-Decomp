@@ -41,12 +41,25 @@ extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803e614c;
 extern f32 FLOAT_803e6158;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d90f0
+ * EN v1.0 Address: 0x801D90F0
+ * EN v1.0 Size: 544b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801d90f0(int param_1,uint *param_2)
 {
   uint uVar1;
   int iVar2;
   char cVar3;
-
+  
   uVar1 = FUN_80020078(0x1ab);
   if (uVar1 == 0) {
     if (*(short *)((int)param_2 + 0x12) == 0xcc) {
@@ -98,26 +111,78 @@ void FUN_801d90f0(int param_1,uint *param_2)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d9310
+ * EN v1.0 Address: 0x801D9310
+ * EN v1.0 Size: 2452b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801d9310(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d9ca4
+ * EN v1.0 Address: 0x801D9CA4
+ * EN v1.0 Size: 380b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801d9ca4(int param_1)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d9e20
+ * EN v1.0 Address: 0x801D9E20
+ * EN v1.0 Size: 52b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801d9e20(int param_1)
 {
   char in_r8;
-
+  
   if (in_r8 != '\0') {
     FUN_8003b9ec(param_1);
   }
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801d9e54
+ * EN v1.0 Address: 0x801D9E54
+ * EN v1.0 Size: 444b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801d9e54(int param_1)
 {
   byte bVar1;
@@ -127,7 +192,7 @@ void FUN_801d9e54(int param_1)
   int iVar5;
   byte *pbVar6;
   short local_18 [8];
-
+  
   pbVar6 = *(byte **)(param_1 + 0xb8);
   bVar2 = false;
   iVar3 = (int)*(char *)(*(int *)(param_1 + 0x58) + 0x10f);

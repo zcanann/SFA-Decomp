@@ -27,6 +27,19 @@ extern f32 FLOAT_803e4a28;
 extern f32 FLOAT_803e4a2c;
 extern f32 FLOAT_803e4a30;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8018d74c
+ * EN v1.0 Address: 0x8018D74C
+ * EN v1.0 Size: 732b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8018d74c(int param_1,int param_2)
 {
   int iVar1;
@@ -55,7 +68,7 @@ void FUN_8018d74c(int param_1,int param_2)
   undefined4 local_20;
   uint uStack_1c;
   longlong local_18;
-
+  
   piVar7 = *(int **)(param_1 + 0xb8);
   uVar3 = (uint)*(byte *)(param_2 + 0x1a);
   if (uVar3 != 0) {

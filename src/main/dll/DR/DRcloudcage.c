@@ -18,6 +18,19 @@ extern f32 FLOAT_803e678c;
 extern f32 FLOAT_803e6790;
 extern f32 FLOAT_803e6794;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ea238
+ * EN v1.0 Address: 0x801EA238
+ * EN v1.0 Size: 1600b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801ea238(void)
 {
 }

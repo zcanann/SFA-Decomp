@@ -29,6 +29,19 @@ extern f32 FLOAT_803e58e4;
 extern f32 FLOAT_803e58e8;
 extern f32 FLOAT_803e58ec;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801bda04
+ * EN v1.0 Address: 0x801BDA04
+ * EN v1.0 Size: 860b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801bda04(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9)
@@ -43,7 +56,7 @@ void FUN_801bda04(undefined8 param_1,double param_2,double param_3,undefined8 pa
   int iVar4;
   int iVar5;
   undefined8 uVar6;
-
+  
   iVar4 = *(int *)(param_9 + 0x5c);
   iVar3 = *(int *)(param_9 + 0x26);
   FUN_8002bac4();

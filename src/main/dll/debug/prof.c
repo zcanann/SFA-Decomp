@@ -29,6 +29,19 @@ extern undefined4 DAT_803de388;
 extern undefined4* PTR_DAT_8031b918;
 extern undefined4* PTR_DAT_8031b938;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8011c800
+ * EN v1.0 Address: 0x8011C800
+ * EN v1.0 Size: 176b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_8011c800(int param_1,int param_2)
 {
   if (param_1 == 1) {
@@ -56,11 +69,24 @@ undefined4 FUN_8011c800(int param_1,int param_2)
   return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8011c8b0
+ * EN v1.0 Address: 0x8011C8B0
+ * EN v1.0 Size: 488b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8011c8b0(void)
 {
   uint uVar1;
   undefined4 uVar2;
-
+  
   if (DAT_803dc690 != -1) {
     (**(code **)(*DAT_803dd720 + 8))();
   }
@@ -88,12 +114,25 @@ void FUN_8011c8b0(void)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8011ca98
+ * EN v1.0 Address: 0x8011CA98
+ * EN v1.0 Size: 704b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8011ca98(void)
 {
   uint uVar1;
   bool bVar3;
   undefined4 uVar2;
-
+  
   if (DAT_803dc690 != -1) {
     (**(code **)(*DAT_803dd720 + 8))();
   }

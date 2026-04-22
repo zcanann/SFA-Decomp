@@ -20,12 +20,25 @@ extern f32 FLOAT_803e6830;
 extern f32 FLOAT_803e6840;
 extern f32 FLOAT_803e6850;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ed20c
+ * EN v1.0 Address: 0x801ED20C
+ * EN v1.0 Size: 192b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 double FUN_801ed20c(int param_1,undefined4 *param_2)
 {
   int iVar1;
   double dVar2;
   double dVar3;
-
+  
   iVar1 = *(int *)(param_1 + 0xb8);
   *param_2 = FLOAT_803e6850;
   dVar2 = FUN_80293900((double)(*(float *)(iVar1 + 0x49c) * *(float *)(iVar1 + 0x49c) +
@@ -38,10 +51,23 @@ double FUN_801ed20c(int param_1,undefined4 *param_2)
   return dVar3;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ed2cc
+ * EN v1.0 Address: 0x801ED2CC
+ * EN v1.0 Size: 428b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801ed2cc(int param_1,int param_2)
 {
   int iVar1;
-
+  
   iVar1 = *(int *)(param_1 + 0xb8);
   *(char *)(iVar1 + 0x421) = (char)param_2;
   if (param_2 == 2) {
@@ -64,12 +90,25 @@ void FUN_801ed2cc(int param_1,int param_2)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ed478
+ * EN v1.0 Address: 0x801ED478
+ * EN v1.0 Size: 132b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801ed478(int param_1)
 {
   int iVar1;
   int iVar2;
   int iVar3;
-
+  
   iVar1 = *(int *)(param_1 + 0xb8);
   FUN_8003709c(param_1,10);
   iVar2 = 0;
@@ -85,12 +124,25 @@ void FUN_801ed478(int param_1)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801ed4fc
+ * EN v1.0 Address: 0x801ED4FC
+ * EN v1.0 Size: 208b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801ed4fc(void)
 {
   int iVar1;
   char in_r8;
   int iVar2;
-
+  
   iVar1 = FUN_80286838();
   iVar2 = *(int *)(iVar1 + 0xb8);
   FUN_801e9f54();

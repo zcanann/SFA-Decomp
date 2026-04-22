@@ -15,6 +15,19 @@ extern f32 FLOAT_803e30cc;
 extern f32 FLOAT_803e3118;
 extern f32 FLOAT_803e311c;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8013d92c
+ * EN v1.0 Address: 0x8013D92C
+ * EN v1.0 Size: 844b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8013d92c(double param_1,short *param_2,int param_3,float *param_4,char param_5)
 {
   float fVar1;
@@ -29,7 +42,7 @@ void FUN_8013d92c(double param_1,short *param_2,int param_3,float *param_4,char 
   float local_50;
   float local_4c;
   float local_48;
-
+  
   fVar1 = *(float *)(param_3 + 0x14);
   fVar2 = FLOAT_803e30b0;
   while( true ) {

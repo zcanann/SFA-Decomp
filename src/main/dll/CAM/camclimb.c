@@ -16,6 +16,19 @@ extern f32 FLOAT_803e23c0;
 extern f32 FLOAT_803e23d8;
 extern f32 FLOAT_803e23dc;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80107398
+ * EN v1.0 Address: 0x80107398
+ * EN v1.0 Size: 896b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80107398(ushort *param_1)
 {
   char cVar2;
@@ -30,7 +43,7 @@ void FUN_80107398(ushort *param_1)
   undefined4 local_28;
   undefined4 local_24;
   undefined4 local_20 [4];
-
+  
   if (*(char *)(DAT_803de1b0 + 0x6f) == '\0') {
     if (*DAT_803de1b0 != *(int *)(param_1 + 0x18)) {
       iVar3 = 0;

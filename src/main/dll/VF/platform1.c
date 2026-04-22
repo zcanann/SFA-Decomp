@@ -43,6 +43,19 @@ extern f32 FLOAT_803e6334;
 extern f32 FLOAT_803e6338;
 extern f32 FLOAT_803e633c;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801dea20
+ * EN v1.0 Address: 0x801DEA20
+ * EN v1.0 Size: 2596b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801dea20(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,int param_12,int *param_13,
@@ -136,7 +149,7 @@ void FUN_801dea20(undefined8 param_1,double param_2,double param_3,undefined8 pa
   float fStack_14;
   float local_8;
   float fStack_4;
-
+  
   local_8 = (float)in_f31;
   fStack_4 = (float)in_ps31_1;
   local_18 = (float)in_f30;

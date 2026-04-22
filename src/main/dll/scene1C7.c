@@ -14,6 +14,19 @@ extern undefined4 FUN_80296c78();
 extern undefined4* DAT_803dd72c;
 extern f32 FLOAT_803e5d70;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801c9470
+ * EN v1.0 Address: 0x801C9470
+ * EN v1.0 Size: 388b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801c9470(undefined4 param_1,undefined4 param_2,int param_3)
 {
   byte bVar1;
@@ -22,7 +35,7 @@ void FUN_801c9470(undefined4 param_1,undefined4 param_2,int param_3)
   undefined4 uVar4;
   int iVar5;
   int *piVar6;
-
+  
   iVar2 = FUN_8028683c();
   piVar6 = *(int **)(iVar2 + 0xb8);
   iVar3 = FUN_8002bac4();

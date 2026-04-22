@@ -19,12 +19,25 @@ extern f32 FLOAT_803e3c18;
 extern f32 FLOAT_803e3c1c;
 extern f32 FLOAT_803e3c20;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80163e3c
+ * EN v1.0 Address: 0x80163E3C
+ * EN v1.0 Size: 556b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80163e3c(short *param_1,int param_2)
 {
   double dVar1;
   int iVar2;
   float local_58 [20];
-
+  
   *(float *)(param_1 + 0x12) = *(float *)(param_1 + 0x12) / FLOAT_803e3bf4;
   iVar2 = FUN_80065800((double)*(float *)(param_1 + 6),(double)*(float *)(param_1 + 8),
                        (double)*(float *)(param_1 + 10),param_1,local_58,0);
@@ -65,6 +78,19 @@ void FUN_80163e3c(short *param_1,int param_2)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80164068
+ * EN v1.0 Address: 0x80164068
+ * EN v1.0 Size: 976b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80164068(short *param_1,int param_2)
 {
   int iVar1;
@@ -90,7 +116,7 @@ void FUN_80164068(short *param_1,int param_2)
   undefined4 local_28;
   uint uStack_24;
   undefined8 local_20;
-
+  
   local_68[0] = (undefined4 *)0x0;
   dVar7 = (double)FLOAT_803e3c10;
   iVar1 = FUN_80065fcc((double)*(float *)(param_1 + 6),(double)*(float *)(param_1 + 8),

@@ -18,6 +18,19 @@ extern f32 FLOAT_803e22b4;
 extern f32 FLOAT_803e22b8;
 extern f32 FLOAT_803e22bc;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80101068
+ * EN v1.0 Address: 0x80101068
+ * EN v1.0 Size: 468b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_80101068(int param_1,int *param_2,int param_3)
 {
   float fVar1;
@@ -25,7 +38,7 @@ undefined4 FUN_80101068(int param_1,int *param_2,int param_3)
   uint uVar3;
   byte bVar4;
   char local_18 [12];
-
+  
   iVar2 = FUN_800284e8(*param_2,param_3);
   fVar1 = *(float *)(DAT_803de19c + 0x134);
   if (FLOAT_803e22b0 < fVar1) {

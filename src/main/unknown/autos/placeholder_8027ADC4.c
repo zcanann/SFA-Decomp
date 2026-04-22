@@ -3,6 +3,19 @@
 
 extern undefined4 DAT_80330278;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8027adc4
+ * EN v1.0 Address: 0x8027ADC4
+ * EN v1.0 Size: 628b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_8027adc4(char *param_1)
 {
     return 0;

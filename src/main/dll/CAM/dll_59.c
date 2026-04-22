@@ -29,6 +29,19 @@ extern f32 FLOAT_803e23f0;
 extern f32 FLOAT_803e23f4;
 extern f32 FLOAT_803e23f8;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80107718
+ * EN v1.0 Address: 0x80107718
+ * EN v1.0 Size: 1640b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80107718(undefined4 param_1,undefined4 param_2,short *param_3)
 {
 }

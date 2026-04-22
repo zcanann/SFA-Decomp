@@ -10,10 +10,36 @@ extern f32 FLOAT_803e8ef0;
 extern f32 FLOAT_803e8f30;
 extern f32 FLOAT_803e8f34;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_802bb780
+ * EN v1.0 Address: 0x802BB780
+ * EN v1.0 Size: 196b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_802bb780(ushort *param_1,float *param_2,float *param_3,float *param_4)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_802bb844
+ * EN v1.0 Address: 0x802BB844
+ * EN v1.0 Size: 128b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 bool FUN_802bb844(int param_1)
 {
     return 0;

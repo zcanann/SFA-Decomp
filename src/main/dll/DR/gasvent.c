@@ -40,11 +40,24 @@ extern f32 FLOAT_803e4f84;
 extern f32 FLOAT_803e4f88;
 extern f32 FLOAT_803e4fa0;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801a1380
+ * EN v1.0 Address: 0x801A1380
+ * EN v1.0 Size: 244b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801a1380(int param_1,char param_2)
 {
   int iVar1;
   int iVar2;
-
+  
   iVar2 = *(int *)(param_1 + 0xb8);
   iVar1 = *(int *)(param_1 + 0x54);
   if (param_2 == '\0') {
@@ -69,10 +82,23 @@ void FUN_801a1380(int param_1,char param_2)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801a1474
+ * EN v1.0 Address: 0x801A1474
+ * EN v1.0 Size: 96b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801a1474(int param_1,float *param_2)
 {
   int iVar1;
-
+  
   iVar1 = *(int *)(param_1 + 0xb8);
   if (*(char *)(iVar1 + 0x15) != '\0') {
     return;
@@ -87,6 +113,19 @@ void FUN_801a1474(int param_1,float *param_2)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801a14d4
+ * EN v1.0 Address: 0x801A14D4
+ * EN v1.0 Size: 728b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801a14d4(undefined4 param_1,undefined4 param_2,short param_3)
 {
   float fVar1;
@@ -116,7 +155,7 @@ void FUN_801a14d4(undefined4 param_1,undefined4 param_2,short param_3)
   float fStack_14;
   float local_8;
   float fStack_4;
-
+  
   local_8 = (float)in_f31;
   fStack_4 = (float)in_ps31_1;
   local_18 = (float)in_f30;
@@ -200,6 +239,19 @@ void FUN_801a14d4(undefined4 param_1,undefined4 param_2,short param_3)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801a17ac
+ * EN v1.0 Address: 0x801A17AC
+ * EN v1.0 Size: 716b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801a17ac(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -228,7 +280,7 @@ void FUN_801a17ac(undefined8 param_1,double param_2,double param_3,undefined8 pa
   float fStack_14;
   float local_8;
   float fStack_4;
-
+  
   local_8 = (float)in_f31;
   fStack_4 = (float)in_ps31_1;
   local_18 = (float)in_f30;

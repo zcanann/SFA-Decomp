@@ -6,12 +6,25 @@ extern int FUN_80134f70();
 
 extern undefined4 DAT_803de19c;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80102440
+ * EN v1.0 Address: 0x80102440
+ * EN v1.0 Size: 168b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80102440(void)
 {
   byte bVar1;
   int iVar2;
   int iVar3;
-
+  
   iVar3 = *(int *)(DAT_803de19c + 0x124);
   iVar2 = FUN_80134f70();
   if ((iVar2 == 0) && (iVar3 != 0)) {

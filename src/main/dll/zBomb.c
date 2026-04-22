@@ -33,6 +33,19 @@ extern f32 FLOAT_803e7158;
 extern f32 FLOAT_803e715c;
 extern f32 FLOAT_803e7160;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80208cfc
+ * EN v1.0 Address: 0x80208CFC
+ * EN v1.0 Size: 1196b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80208cfc(int *param_1)
 {
   float fVar1;
@@ -52,7 +65,7 @@ void FUN_80208cfc(int *param_1)
   int local_44;
   int local_40;
   int local_3c;
-
+  
   local_58 = -1;
   iVar6 = param_1[0x2e];
   iVar5 = param_1[0x13];
@@ -181,6 +194,19 @@ void FUN_80208cfc(int *param_1)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_802091a8
+ * EN v1.0 Address: 0x802091A8
+ * EN v1.0 Size: 524b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_802091a8(int param_1)
 {
   char cVar1;
@@ -192,7 +218,7 @@ void FUN_802091a8(int param_1)
   float local_1c;
   float local_18;
   float local_14;
-
+  
   piVar5 = *(int **)(param_1 + 0xb8);
   iVar4 = *(int *)(param_1 + 0x4c);
   if (*(short *)(param_1 + 0x46) == 0x4e0) {

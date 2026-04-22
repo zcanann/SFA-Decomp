@@ -3,6 +3,19 @@
 
 extern undefined4 FUN_802857b0();
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80285b64
+ * EN v1.0 Address: 0x80285B64
+ * EN v1.0 Size: 36b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80285b64(uint *param_1,undefined4 param_2,undefined4 param_3,int param_4)
 {
 }

@@ -26,6 +26,19 @@ extern f32 FLOAT_803e4ad4;
 extern f32 FLOAT_803e4ad8;
 extern f32 FLOAT_803e4ae0;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8018e620
+ * EN v1.0 Address: 0x8018E620
+ * EN v1.0 Size: 1568b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8018e620(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,short *param_10,undefined4 param_11,undefined4 param_12,
@@ -33,6 +46,19 @@ void FUN_8018e620(undefined8 param_1,undefined8 param_2,double param_3,undefined
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8018ec40
+ * EN v1.0 Address: 0x8018EC40
+ * EN v1.0 Size: 992b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8018ec40(void)
 {
   byte bVar1;
@@ -49,7 +75,7 @@ void FUN_8018ec40(void)
   undefined4 local_2c;
   undefined4 local_28;
   undefined4 local_24;
-
+  
   puVar2 = (undefined2 *)FUN_80286840();
   iVar7 = *(int *)(puVar2 + 0x5c);
   iVar4 = *(int *)(puVar2 + 0x26);

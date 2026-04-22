@@ -21,6 +21,19 @@ extern f32 FLOAT_803e43d0;
 extern f32 FLOAT_803e43d4;
 extern f32 FLOAT_803e43e8;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8017ac40
+ * EN v1.0 Address: 0x8017AC40
+ * EN v1.0 Size: 504b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8017ac40(short *param_1,int param_2)
 {
   uint uVar1;
@@ -28,7 +41,7 @@ void FUN_8017ac40(short *param_1,int param_2)
   int iVar3;
   char *pcVar4;
   undefined *puVar5;
-
+  
   pcVar4 = *(char **)(param_1 + 0x5c);
   *param_1 = (ushort)*(byte *)(param_2 + 0x1f) << 8;
   param_1[1] = (ushort)*(byte *)(param_2 + 0x1c) << 8;
@@ -85,13 +98,26 @@ void FUN_8017ac40(short *param_1,int param_2)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8017ae38
+ * EN v1.0 Address: 0x8017AE38
+ * EN v1.0 Size: 556b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8017ae38(int param_1)
 {
   float fVar1;
   uint uVar2;
   char *pcVar3;
   int iVar4;
-
+  
   iVar4 = *(int *)(param_1 + 0x4c);
   pcVar3 = *(char **)(param_1 + 0xb8);
   if (*pcVar3 == '\0') {
@@ -159,11 +185,24 @@ void FUN_8017ae38(int param_1)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8017b064
+ * EN v1.0 Address: 0x8017B064
+ * EN v1.0 Size: 268b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_8017b064(int param_1,int param_2)
 {
   uint uVar1;
   undefined *puVar2;
-
+  
   puVar2 = *(undefined **)(param_1 + 0xb8);
   *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x6000;
   if (*(byte *)(param_2 + 0x1d) == 0) {
@@ -191,6 +230,19 @@ void FUN_8017b064(int param_1,int param_2)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_8017b170
+ * EN v1.0 Address: 0x8017B170
+ * EN v1.0 Size: 348b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_8017b170(int param_1,undefined4 param_2,int param_3)
 {
   short sVar1;
@@ -200,7 +252,7 @@ undefined4 FUN_8017b170(int param_1,undefined4 param_2,int param_3)
   undefined4 *puVar5;
   int iVar6;
   int iVar7;
-
+  
   iVar7 = *(int *)(param_1 + 0xb8);
   iVar6 = *(int *)(param_1 + 0x4c);
   if (*(char *)(param_3 + 0x80) == '\x01') {

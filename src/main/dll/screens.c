@@ -64,6 +64,19 @@ extern f32 FLOAT_803e2060;
 extern f32 FLOAT_803e2064;
 extern f32 FLOAT_803e2068;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_800fc854
+ * EN v1.0 Address: 0x800FC854
+ * EN v1.0 Size: 2436b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_800fc854(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
 {
   float fVar1;
@@ -162,7 +175,7 @@ void FUN_800fc854(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   float fStack_14;
   float local_8;
   float fStack_4;
-
+  
   local_8 = (float)in_f31;
   fStack_4 = (float)in_ps31_1;
   local_18 = (float)in_f30;
@@ -442,6 +455,19 @@ void FUN_800fc854(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_800fd1d8
+ * EN v1.0 Address: 0x800FD1D8
+ * EN v1.0 Size: 888b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_800fd1d8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
 {
   int iVar1;
@@ -570,7 +596,7 @@ void FUN_800fd1d8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   undefined2 local_1dc;
   undefined local_1da;
   undefined auStack_1d8 [472];
-
+  
   local_384 = FUN_80286838();
   local_388 = &local_328;
   local_312 = 0;
@@ -713,6 +739,19 @@ void FUN_800fd1d8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_800fd550
+ * EN v1.0 Address: 0x800FD550
+ * EN v1.0 Size: 1160b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_800fd550(int param_1,int param_2,short *param_3,uint param_4)
 {
   int iVar1;
@@ -799,7 +838,7 @@ void FUN_800fd550(int param_1,int param_2,short *param_3,uint param_4)
   uint uStack_1c;
   undefined4 local_18;
   uint uStack_14;
-
+  
   local_312 = 0;
   local_314 = 0x15;
   local_318 = &DAT_80318c00;

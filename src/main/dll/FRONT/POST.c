@@ -18,6 +18,19 @@ extern f32 FLOAT_803e2944;
 extern f32 FLOAT_803e295c;
 extern f32 FLOAT_803e2960;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_801158ec
+ * EN v1.0 Address: 0x801158EC
+ * EN v1.0 Size: 916b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_801158ec(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int *param_11,int param_12,float *param_13,
@@ -35,7 +48,7 @@ void FUN_801158ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
   int iVar10;
   short sVar11;
   undefined8 uVar12;
-
+  
   uVar12 = FUN_80286834();
   puVar2 = (ushort *)((ulonglong)uVar12 >> 0x20);
   iVar7 = (int)uVar12;

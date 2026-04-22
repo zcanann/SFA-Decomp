@@ -57,16 +57,42 @@ extern undefined4 DAT_803a6ab0;
 extern undefined4* DAT_803de2e4;
 extern undefined4 DAT_803de300;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80118714
+ * EN v1.0 Address: 0x80118714
+ * EN v1.0 Size: 944b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80118714(void)
 {
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80118ac4
+ * EN v1.0 Address: 0x80118AC4
+ * EN v1.0 Size: 228b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80118ac4(void)
 {
   int iVar1;
   int iVar2;
   int local_18 [5];
-
+  
   if ((DAT_803a6a58 != 0) && (DAT_803a6a5c != '\0')) {
     DAT_803a6a5d = 0;
     DAT_803a6a5c = '\0';
@@ -94,6 +120,19 @@ void FUN_80118ac4(void)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80118ba8
+ * EN v1.0 Address: 0x80118BA8
+ * EN v1.0 Size: 96b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_80118ba8(void)
 {
   if ((DAT_803a6a58 != 0) && ((DAT_803a6a5c == '\x01' || (DAT_803a6a5c == '\x04')))) {
@@ -107,6 +146,19 @@ undefined4 FUN_80118ba8(void)
   return 0;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80118c08
+ * EN v1.0 Address: 0x80118C08
+ * EN v1.0 Size: 552b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 bool FUN_80118c08(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,undefined param_10,undefined4 param_11,undefined4 param_12,

@@ -44,12 +44,25 @@ extern undefined4 DAT_803a6b58;
 extern undefined4 DAT_803a6b5c;
 extern undefined4 DAT_803de2fc;
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80118e60
+ * EN v1.0 Address: 0x80118E60
+ * EN v1.0 Size: 208b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80118e60(void)
 {
   int iVar1;
   undefined *puVar2;
   undefined *puVar3;
-
+  
   puVar3 = &DAT_803a69c0;
   if (DAT_803a6a68 == 0) {
     iVar1 = 0;
@@ -79,6 +92,19 @@ void FUN_80118e60(void)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80118f30
+ * EN v1.0 Address: 0x80118F30
+ * EN v1.0 Size: 548b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80118f30(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                  int param_5,undefined4 param_6)
 {
@@ -89,7 +115,7 @@ void FUN_80118f30(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
   undefined *puVar5;
   uint uVar6;
   undefined8 uVar7;
-
+  
   uVar7 = FUN_8028682c();
   iVar2 = (int)((ulonglong)uVar7 >> 0x20);
   if ((DAT_803a6a58 != 0) && (DAT_803a6a5c == '\0')) {
@@ -143,12 +169,25 @@ void FUN_80118f30(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80119154
+ * EN v1.0 Address: 0x80119154
+ * EN v1.0 Size: 256b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 void FUN_80119154(uint *param_1,int *param_2,int *param_3,int *param_4,int *param_5,
                  undefined4 *param_6)
 {
   uint uVar1;
   int iVar2;
-
+  
   if (DAT_803a6a58 != 0) {
     if (DAT_803a6a68 == 0) {
       uVar1 = (DAT_803a6a04 + 0x1fU & 0xffffffe0) * 10;
@@ -179,10 +218,23 @@ void FUN_80119154(uint *param_1,int *param_2,int *param_3,int *param_4,int *para
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: FUN_80119254
+ * EN v1.0 Address: 0x80119254
+ * EN v1.0 Size: 84b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 undefined4 FUN_80119254(void)
 {
   undefined4 uVar1;
-
+  
   if ((DAT_803a6a58 == 0) || (DAT_803a6a5c != '\0')) {
     uVar1 = 0;
   }
