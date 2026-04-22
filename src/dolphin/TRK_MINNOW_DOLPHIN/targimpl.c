@@ -707,41 +707,86 @@ static BOOL TRKTargetCheckStep()
  * @note Address: TODO
  * @note Size: TODO
  */
-DSError TRKTargetSingleStep(u32 count, BOOL stepOver)
+asm DSError TRKTargetSingleStep(u32 count, BOOL stepOver)
 {
-	DSError error = DS_NoError;
-
-	if (stepOver) {
-		error = DS_UnsupportedError;
-	} else {
-		gTRKStepStatus.type  = DSSTEP_IntoCount;
-		gTRKStepStatus.count = count;
-		error                = TRKTargetDoStep();
-	}
-
-	return error;
+	nofralloc
+	cmpwi r4, 0x0
+	beq _tss_1
+	li r3, 0x703
+	blr
+_tss_1:
+	lis r5, gTRKStepStatus@ha
+	lis r4, gTRKCPUState@ha
+	addi r6, r5, gTRKStepStatus@l
+	li r0, 0x0
+	stb r0, 0x4(r6)
+	addi r4, r4, gTRKCPUState@l
+	lwz r0, 0x1f8(r4)
+	li r5, 0x1
+	lbz r7, 0x4(r6)
+	ori r0, r0, 0x400
+	stw r3, 0x8(r6)
+	cmplwi r7, 0x0
+	stw r5, 0x0(r6)
+	stw r0, 0x1f8(r4)
+	beq _tss_2
+	cmplwi r7, 0x10
+	bne _tss_3
+_tss_2:
+	lwz r3, 0x8(r6)
+	subi r0, r3, 0x1
+	stw r0, 0x8(r6)
+_tss_3:
+	lis r3, gTRKState@ha
+	li r0, 0x0
+	addi r4, r3, gTRKState@l
+	li r3, 0x0
+	stw r0, 0x98(r4)
+	blr
 }
 
 /**
  * @note Address: TODO
  * @note Size: TODO
  */
-DSError TRKTargetStepOutOfRange(u32 rangeStart, u32 rangeEnd, BOOL stepOver)
+asm DSError TRKTargetStepOutOfRange(u32 rangeStart, u32 rangeEnd, BOOL stepOver)
 {
-	DSError error = DS_NoError;
-
-	if (stepOver) {
-		// Stepping over isn't supported for PowerPC
-		error = DS_UnsupportedError;
-	} else {
-		gTRKStepStatus.type = DSSTEP_IntoRange;
-		// gTRKStepStatus.active = TRUE;
-		gTRKStepStatus.rangeStart = rangeStart;
-		gTRKStepStatus.rangeEnd   = rangeEnd;
-		error                     = TRKTargetDoStep();
-	}
-
-	return error;
+	nofralloc
+	cmpwi r5, 0x0
+	beq _tsr_1
+	li r3, 0x703
+	blr
+_tsr_1:
+	lis r6, gTRKStepStatus@ha
+	lis r5, gTRKCPUState@ha
+	addi r6, r6, gTRKStepStatus@l
+	li r7, 0x1
+	stb r7, 0x4(r6)
+	addi r5, r5, gTRKCPUState@l
+	lwz r0, 0x1f8(r5)
+	lbz r8, 0x4(r6)
+	ori r0, r0, 0x400
+	stw r3, 0xc(r6)
+	cmplwi r8, 0x0
+	stw r4, 0x10(r6)
+	stw r7, 0x0(r6)
+	stw r0, 0x1f8(r5)
+	beq _tsr_2
+	cmplwi r8, 0x10
+	bne _tsr_3
+_tsr_2:
+	lis r3, gTRKStepStatus@ha
+	addi r4, r3, gTRKStepStatus@l
+	lwz r3, 0x8(r4)
+	subi r0, r3, 0x1
+	stw r0, 0x8(r4)
+_tsr_3:
+	lis r3, gTRKState@ha
+	li r0, 0x0
+	addi r4, r3, gTRKState@l
+	li r3, 0x0
+	stw r0, 0x98(r4)
+	blr
 }
 
 /**

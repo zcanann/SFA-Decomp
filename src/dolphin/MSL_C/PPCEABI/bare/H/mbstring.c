@@ -1,65 +1,113 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/ansi_files.h"
 #include "string.h"
 
-static inline int unicode_to_UTF8(char* s, wchar_t wchar) {
-    int number_of_bytes;
-    char* target_ptr;
-    char first_byte_mark[4] = {0x00, 0x00, 0xc0, 0xe0};
+extern const int lbl_803E85D0;
 
-    if (!s) {
-        return 0;
-    }
-
-    if (wchar < 0x0080)
-        number_of_bytes = 1;
-    else if (wchar < 0x0800)
-        number_of_bytes = 2;
-    else
-        number_of_bytes = 3;
-
-    target_ptr = s + number_of_bytes;
-
-    switch (number_of_bytes) {
-    case 3:
-        *--target_ptr = (wchar & 0x003f) | 0x80;
-        wchar >>= 6;
-    case 2:
-        *--target_ptr = (wchar & 0x003f) | 0x80;
-        wchar >>= 6;
-    case 1:
-        *--target_ptr = wchar | first_byte_mark[number_of_bytes];
-    }
-
-    return (number_of_bytes);
+static asm int unicode_to_UTF8(char* s, wchar_t wchar) {
+    nofralloc
+    stwu r1, -0x10(r1)
+    cmplwi r3, 0x0
+    lwz r0, lbl_803E85D0(r2)
+    stw r0, 0x8(r1)
+    bne _u8_0
+    li r3, 0x0
+    b _u8_end
+_u8_0:
+    clrlwi r0, r4, 16
+    cmplwi r0, 0x80
+    bge _u8_1
+    li r5, 0x1
+    b _u8_2
+_u8_1:
+    cmplwi r0, 0x800
+    bge _u8_3
+    li r5, 0x2
+    b _u8_2
+_u8_3:
+    li r5, 0x3
+_u8_2:
+    cmpwi r5, 0x2
+    add r6, r3, r5
+    beq _u8_4
+    bge _u8_5
+    cmpwi r5, 0x1
+    bge _u8_6
+    b _u8_7
+_u8_5:
+    cmpwi r5, 0x4
+    bge _u8_7
+    clrlwi r0, r4, 26
+    extrwi r4, r4, 10, 16
+    ori r0, r0, 0x80
+    stbu r0, -0x1(r6)
+_u8_4:
+    clrlwi r0, r4, 26
+    extrwi r4, r4, 10, 16
+    ori r0, r0, 0x80
+    stbu r0, -0x1(r6)
+_u8_6:
+    addi r3, r1, 0x8
+    lbzx r0, r3, r5
+    or r0, r4, r0
+    stb r0, -0x1(r6)
+_u8_7:
+    mr r3, r5
+_u8_end:
+    addi r1, r1, 0x10
+    blr
 }
 
 static inline int wctomb(char* s, wchar_t wchar) {
     return (unicode_to_UTF8(s, wchar));
 }
 
-size_t wcstombs(char* s, const wchar_t* pwcs, size_t n) {
-    int chars_written = 0;
-    int result;
-    char temp[3];
-    wchar_t* source;
-
-    if (!s || !pwcs)
-        return (0);
-
-    source = (wchar_t*)pwcs;
-    while (chars_written <= n) {
-        if (!*source) {
-            *(s + chars_written) = '\0';
-            break;
-        } else {
-            result = wctomb(temp, *source++);
-            if ((chars_written + result) <= n) {
-                strncpy(s + chars_written, temp, result);
-                chars_written += result;
-            } else
-                break;
-        }
-    }
-
-    return (chars_written);
+asm size_t wcstombs(char* s, const wchar_t* pwcs, size_t n) {
+    nofralloc
+    stwu r1, -0x30(r1)
+    mflr r0
+    stw r0, 0x34(r1)
+    stmw r27, 0x1c(r1)
+    mr. r27, r3
+    mr r28, r5
+    li r30, 0x0
+    beq _wcs_0
+    cmplwi r4, 0x0
+    bne _wcs_1
+_wcs_0:
+    li r3, 0x0
+    b _wcs_end
+_wcs_1:
+    mr r29, r4
+    b _wcs_loop_head
+_wcs_loop:
+    lhz r4, 0x0(r29)
+    cmplwi r4, 0x0
+    bne _wcs_enc
+    li r0, 0x0
+    stbx r0, r27, r30
+    b _wcs_done
+_wcs_enc:
+    addi r3, r1, 0x8
+    addi r29, r29, 0x2
+    bl unicode_to_UTF8
+    mr r31, r3
+    add r0, r30, r31
+    cmplw r0, r28
+    bgt _wcs_done
+    mr r5, r31
+    add r3, r27, r30
+    addi r4, r1, 0x8
+    bl strncpy
+    add r30, r30, r31
+_wcs_loop_head:
+    cmplw r30, r28
+    ble _wcs_loop
+_wcs_done:
+    mr r3, r30
+_wcs_end:
+    lmw r27, 0x1c(r1)
+    lwz r0, 0x34(r1)
+    mtlr r0
+    addi r1, r1, 0x30
+    blr
 }

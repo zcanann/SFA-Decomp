@@ -4,6 +4,9 @@ static f32 lbl_803DD1B8[] = { 0.0f, 1.0f };
 
 extern const f32 lbl_803E82B0;
 extern const f32 lbl_803E82B4;
+extern const f32 lbl_803E82BC;
+extern const f32 lbl_803E82C0;
+extern const f32 lbl_803E82C4;
 
 extern f32 sinf(f32);
 extern f32 cosf(f32);
@@ -651,14 +654,37 @@ void C_MTXRotRad(Mtx m, char axis, f32 rad)
 }
 
 #ifdef GEKKO
-void PSMTXRotRad(Mtx m, char axis, f32 rad)
+asm void PSMTXRotRad(Mtx m, char axis, f32 rad)
 {
-    f32 sinA, cosA;
-
-    sinA = sinf(rad);
-    cosA = cosf(rad);
-
-    PSMTXRotTrig(m, axis, sinA, cosA);
+    nofralloc
+    mflr r0
+    stw r0, 0x4(r1)
+    stwu r1, -0x28(r1)
+    stfd f31, 0x20(r1)
+    stw r31, 0x1c(r1)
+    stw r30, 0x18(r1)
+    fmr f31, f1
+    mr r30, r3
+    mr r31, r4
+    fmr f1, f31
+    bl sinf
+    fmr f0, f1
+    fmr f1, f31
+    fmr f31, f0
+    bl cosf
+    fmr f0, f1
+    mr r3, r30
+    fmr f1, f31
+    mr r4, r31
+    fmr f2, f0
+    bl PSMTXRotTrig
+    lwz r0, 0x2c(r1)
+    lfd f31, 0x20(r1)
+    lwz r31, 0x1c(r1)
+    mtlr r0
+    lwz r30, 0x18(r1)
+    addi r1, r1, 0x28
+    blr
 }
 #endif
 
@@ -729,70 +755,58 @@ void C_MTXRotTrig(Mtx m, char axis, f32 sinA, f32 cosA)
  * JP Address: TODO
  * JP Size: TODO
  */
-void PSMTXRotTrig(register Mtx m, register char axis, register f32 sinA, register f32 cosA)
+extern const f32 lbl_803E82B0;
+extern const f32 lbl_803E82B4;
+
+asm void PSMTXRotTrig(register Mtx m, register char axis, register f32 sinA, register f32 cosA)
 {
-    register f32 fc0, fc1, nsinA;
-    register f32 fw0, fw1, fw2, fw3;
-    register f32 cosB, sinB;
-    // clang-format off
-
-  asm {
-    frsp sinB, sinA
-    frsp cosB, cosA
-  }
-  fc0 = 0.0F;
-  fc1 = 1.0F;
-  asm
-  {
-    ori         axis, axis, 0x20
-    ps_neg      nsinA, sinB
-    cmplwi      axis, 'x'
-    beq         _case_x
-    cmplwi      axis, 'y'
-    beq         _case_y
-    cmplwi      axis, 'z'
-    beq         _case_z
-    b           _end
-
-_case_x:
-    psq_st      fc1,  0(m), 1, 0
-    psq_st      fc0,  4(m), 0, 0
-    ps_merge00  fw0, sinB, cosB
-    psq_st      fc0, 12(m), 0, 0
-    ps_merge00  fw1, cosB, nsinA
-    psq_st      fc0, 28(m), 0, 0
-    psq_st      fc0, 44(m), 1, 0
-    psq_st      fw0, 36(m), 0, 0
-    psq_st      fw1, 20(m), 0, 0
-    b           _end;
-
-_case_y:
-    ps_merge00  fw0, cosB, fc0
-    ps_merge00  fw1, fc0, fc1
-    psq_st      fc0, 24(m), 0, 0
-    psq_st      fw0,  0(m), 0, 0
-    ps_merge00  fw2, nsinA, fc0
-    ps_merge00  fw3, sinB, fc0
-    psq_st      fw0, 40(m), 0, 0;
-    psq_st      fw1, 16(m), 0, 0;
-    psq_st      fw3,  8(m), 0, 0;
-    psq_st      fw2, 32(m), 0, 0;
-    b           _end;
-
-_case_z:
-    psq_st      fc0,  8(m), 0, 0
-    ps_merge00  fw0, sinB, cosB
-    ps_merge00  fw2, cosB, nsinA
-    psq_st      fc0, 24(m), 0, 0
-    psq_st      fc0, 32(m), 0, 0
-    ps_merge00  fw1, fc1, fc0
-    psq_st      fw0, 16(m), 0, 0
-    psq_st      fw2,  0(m), 0, 0
-    psq_st      fw1, 40(m), 0, 0
-
-_end:
-  }
-    // clang-format on
+    nofralloc
+    lfs f0, lbl_803E82B4(r2)
+    lfs f3, lbl_803E82B0(r2)
+    ori r0, r4, 0x20
+    ps_neg f4, f1
+    cmplwi r0, 0x78
+    beq _prt_x
+    cmplwi r0, 0x79
+    beq _prt_y
+    cmplwi r0, 0x7a
+    beq _prt_z
+    b _prt_end
+_prt_x:
+    psq_st f3, 0x0(r3), 1, 0
+    psq_st f0, 0x4(r3), 0, 0
+    ps_merge00 f5, f1, f2
+    psq_st f0, 0xc(r3), 0, 0
+    ps_merge00 f2, f2, f4
+    psq_st f0, 0x1c(r3), 0, 0
+    psq_st f0, 0x2c(r3), 1, 0
+    psq_st f5, 0x24(r3), 0, 0
+    psq_st f2, 0x14(r3), 0, 0
+    b _prt_end
+_prt_y:
+    ps_merge00 f5, f2, f0
+    ps_merge00 f2, f0, f3
+    psq_st f0, 0x18(r3), 0, 0
+    psq_st f5, 0x0(r3), 0, 0
+    ps_merge00 f4, f4, f0
+    ps_merge00 f0, f1, f0
+    psq_st f5, 0x28(r3), 0, 0
+    psq_st f2, 0x10(r3), 0, 0
+    psq_st f0, 0x8(r3), 0, 0
+    psq_st f4, 0x20(r3), 0, 0
+    b _prt_end
+_prt_z:
+    psq_st f0, 0x8(r3), 0, 0
+    ps_merge00 f5, f1, f2
+    ps_merge00 f4, f2, f4
+    psq_st f0, 0x18(r3), 0, 0
+    psq_st f0, 0x20(r3), 0, 0
+    ps_merge00 f2, f3, f0
+    psq_st f5, 0x10(r3), 0, 0
+    psq_st f4, 0x0(r3), 0, 0
+    psq_st f2, 0x28(r3), 0, 0
+_prt_end:
+    blr
 }
 
 #endif
@@ -898,16 +912,16 @@ void __PSMTXRotAxisRadInternal(register f32 sT, register f32 cT, register Mtx m,
         ps_sum0 tmp2, tmp2, tmp6, cT
         ps_sum1 tmp3, cT, tmp7, tmp3
         ps_sum0 tmp6, tmp0, fc0, tmp4
-        psq_st tmp8, 0x8(m), 0, qr0
+        psq_st tmp8, 0x8(m), 0, 0
         ps_sum0 tmp0, tmp4, tmp4, tmp0
-        psq_st tmp2, 0x0(m), 0, qr0
+        psq_st tmp2, 0x0(m), 0, 0
         ps_muls0 tmp5, tmp5, tmp1
-        psq_st tmp3, 0x10(m), 0, qr0
+        psq_st tmp3, 0x10(m), 0, 0
         ps_sum1 tmp4, tmp9, tmp0, tmp4
-        psq_st tmp6, 0x18(m), 0, qr0
+        psq_st tmp6, 0x18(m), 0, 0
         ps_sum0 tmp5, tmp5, fc0, cT
-        psq_st tmp4, 0x20(m), 0, qr0
-        psq_st tmp5, 0x28(m), 0, qr0
+        psq_st tmp4, 0x20(m), 0, 0
+        psq_st tmp5, 0x28(m), 0, 0
   }
 #endif // clang-format on
 }
@@ -921,14 +935,74 @@ void __PSMTXRotAxisRadInternal(register f32 sT, register f32 cT, register Mtx m,
  * JP Address: TODO
  * JP Size: TODO
  */
-void PSMTXRotAxisRad(register Mtx m, const Vec *axis, register f32 rad)
+asm void PSMTXRotAxisRad(register Mtx m, const Vec *axis, register f32 rad)
 {
-    register f32 sT;
-    register f32 cT;
-
-    sT = sinf(rad);
-    cT = cosf(rad);
-    __PSMTXRotAxisRadInternal(sT, cT, m, axis);
+    nofralloc
+    mflr r0
+    stw r0, 0x4(r1)
+    stwu r1, -0x58(r1)
+    stfd f31, 0x50(r1)
+    stfd f30, 0x48(r1)
+    stfd f29, 0x40(r1)
+    stfd f28, 0x38(r1)
+    stfd f27, 0x30(r1)
+    stw r31, 0x2c(r1)
+    stw r30, 0x28(r1)
+    stw r29, 0x24(r1)
+    fmr f27, f1
+    mr r29, r3
+    mr r30, r4
+    fmr f1, f27
+    lfs f28, lbl_803E82B4(r2)
+    addi r31, r1, 0x14
+    bl sinf
+    fmr f30, f1
+    fmr f1, f27
+    bl cosf
+    fmr f31, f1
+    lfs f0, lbl_803E82B0(r2)
+    mr r3, r30
+    mr r4, r31
+    fsubs f29, f0, f31
+    bl PSVECNormalize
+    psq_l f27, 0x0(r31), 0, 0
+    lfs f1, 0x1c(r1)
+    ps_merge00 f0, f31, f31
+    ps_muls0 f4, f27, f29
+    ps_muls0 f5, f1, f29
+    ps_muls1 f3, f4, f27
+    ps_muls0 f2, f4, f27
+    ps_muls0 f27, f27, f30
+    ps_muls0 f4, f4, f1
+    fnmsubs f6, f1, f30, f3
+    fmadds f7, f1, f30, f3
+    ps_neg f9, f27
+    ps_sum0 f8, f4, f28, f27
+    ps_sum0 f2, f2, f6, f0
+    ps_sum1 f3, f0, f7, f3
+    ps_sum0 f6, f9, f28, f4
+    ps_sum0 f9, f4, f4, f9
+    psq_st f8, 0x8(r29), 0, 0
+    ps_muls0 f5, f5, f1
+    psq_st f2, 0x0(r29), 0, 0
+    ps_sum1 f4, f27, f9, f4
+    psq_st f3, 0x10(r29), 0, 0
+    ps_sum0 f5, f5, f28, f0
+    psq_st f6, 0x18(r29), 0, 0
+    psq_st f4, 0x20(r29), 0, 0
+    psq_st f5, 0x28(r29), 0, 0
+    lwz r0, 0x5c(r1)
+    lfd f31, 0x50(r1)
+    lfd f30, 0x48(r1)
+    mtlr r0
+    lfd f29, 0x40(r1)
+    lfd f28, 0x38(r1)
+    lfd f27, 0x30(r1)
+    lwz r31, 0x2c(r1)
+    lwz r30, 0x28(r1)
+    lwz r29, 0x24(r1)
+    addi r1, r1, 0x58
+    blr
 }
 
 #endif
@@ -1322,30 +1396,60 @@ void C_MTXLightFrustum(Mtx m, float t, float b, float l, float r, float n, float
     m[2][3] = 0.0f;
 }
 
-void C_MTXLightPerspective(Mtx m, f32 fovY, f32 aspect, float scaleS, float scaleT, float transS, float transT)
+asm void C_MTXLightPerspective(Mtx m, f32 fovY, f32 aspect, float scaleS, float scaleT, float transS, float transT)
 {
-    f32 angle;
-    f32 cot;
-
-    angle = fovY * 0.5f;
-    angle = MTXDegToRad(angle);
-
-    cot = 1.0f / tanf(angle);
-
-    m[0][0] = (cot / aspect) * scaleS;
-    m[0][1] = 0.0f;
-    m[0][2] = -transS;
-    m[0][3] = 0.0f;
-
-    m[1][0] = 0.0f;
-    m[1][1] = cot * scaleT;
-    m[1][2] = -transT;
-    m[1][3] = 0.0f;
-
-    m[2][0] = 0.0f;
-    m[2][1] = 0.0f;
-    m[2][2] = -1.0f;
-    m[2][3] = 0.0f;
+    nofralloc
+    mflr r0
+    stw r0, 0x4(r1)
+    stwu r1, -0x58(r1)
+    stfd f31, 0x50(r1)
+    stfd f30, 0x48(r1)
+    stfd f29, 0x40(r1)
+    stfd f28, 0x38(r1)
+    stfd f27, 0x30(r1)
+    stw r31, 0x2c(r1)
+    fmr f27, f2
+    mr r31, r3
+    fmr f28, f3
+    fmr f29, f4
+    fmr f30, f5
+    fmr f31, f6
+    lfs f2, lbl_803E82C0(r2)
+    lfs f0, lbl_803E82C4(r2)
+    fmuls f1, f2, f1
+    fmuls f1, f0, f1
+    bl tanf
+    lfs f3, lbl_803E82B0(r2)
+    fneg f2, f30
+    fneg f0, f31
+    fdivs f4, f3, f1
+    fdivs f1, f4, f27
+    fmuls f3, f28, f1
+    fmuls f1, f4, f29
+    stfs f3, 0x0(r31)
+    lfs f3, lbl_803E82B4(r2)
+    stfs f3, 0x4(r31)
+    stfs f2, 0x8(r31)
+    stfs f3, 0xc(r31)
+    stfs f3, 0x10(r31)
+    stfs f1, 0x14(r31)
+    stfs f0, 0x18(r31)
+    stfs f3, 0x1c(r31)
+    stfs f3, 0x20(r31)
+    stfs f3, 0x24(r31)
+    lfs f0, lbl_803E82BC(r2)
+    stfs f0, 0x28(r31)
+    stfs f3, 0x2c(r31)
+    lwz r0, 0x5c(r1)
+    lfd f31, 0x50(r1)
+    lfd f30, 0x48(r1)
+    mtlr r0
+    lfd f29, 0x40(r1)
+    lfd f28, 0x38(r1)
+    lfd f27, 0x30(r1)
+    lwz r31, 0x2c(r1)
+    addi r1, r1, 0x58
+    blr
 }
 
 void C_MTXLightOrtho(Mtx m, f32 t, f32 b, f32 l, f32 r, float scaleS, float scaleT, float transS, float transT)

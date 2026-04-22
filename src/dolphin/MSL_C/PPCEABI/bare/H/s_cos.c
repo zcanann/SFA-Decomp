@@ -1,83 +1,88 @@
-/* @(#)s_cos.c 1.3 95/01/18 */
 /*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunSoft, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
- * is preserved.
- * ====================================================
+ * Target bytes at this split are not Sun's MSL acos(). Same pattern as k_sin:
+ * branches on |x| vs threshold, evaluates a long polynomial, optionally mixes
+ * with __kernel_tan (game-side sqrt). Asm-only to preserve byte image.
  */
 
-/* cos(x)
- * Return cosine function of x.
- *
- * kernel function:
- *	__kernel_sin		... sine function on [-pi/4,pi/4]
- *	__kernel_cos		... cosine function on [-pi/4,pi/4]
- *	__ieee754_rem_pio2	... argument reduction routine
- *
- * Method.
- *      Let S,C and T denote the sin, cos and tan respectively on 
- *	[-PI/4, +PI/4]. Reduce the argument x to y1+y2 = x-k*pi/2 
- *	in [-pi/4 , +pi/4], and let n = k mod 4.
- *	We have
- *
- *          n        sin(x)      cos(x)        tan(x)
- *     ----------------------------------------------------------
- *	    0	       S	   C		 T
- *	    1	       C	  -S		-1/T
- *	    2	      -S	  -C		 T
- *	    3	      -C	   S		-1/T
- *     ----------------------------------------------------------
- *
- * Special cases:
- *      Let trig be any of sin, cos, or tan.
- *      trig(+-INF)  is NaN, with signals;
- *      trig(NaN)    is that NaN;
- *
- * Accuracy:
- *	TRIG(x) returns trig(x) nearly rounded 
- */
+extern float __kernel_tan(float x);
+void _savefpr_27(void);
+void _restfpr_27(void);
 
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/fdlibm.h"
+extern const float lbl_803E8658;
+extern const float lbl_803E865C;
+extern const float lbl_803E8660;
+extern const float lbl_803E8664;
+extern const float lbl_803E8670;
+extern const float lbl_803E8680;
+extern const float lbl_803E8684;
+extern const float lbl_803E8688;
+extern const float lbl_803E868C;
+extern const float lbl_803E8690;
+extern const float lbl_803E8694;
 
-/*
- * --INFO--
- * JP Address: TODO
- * PAL Address: TODO
- * EN Address: TODO
- */
-#ifdef __STDC__
-	double cos(double x)
-#else
-	double cos(x)
-	double x;
-#endif
-{
-	double y[2],z=0.0;
-	int n, ix;
-
-    /* High word of x. */
-	ix = __HI(x);
-
-    /* |x| ~< pi/4 */
-	ix &= 0x7fffffff;
-	if(ix <= 0x3fe921fb) return __kernel_cos(x,z);
-
-    /* cos(Inf or NaN) is NaN */
-	else if (ix>=0x7ff00000) return x-x;
-
-    /* argument reduction needed */
-	else {
-	    n = __ieee754_rem_pio2(x,y);
-	    switch(n&3) {
-		case 0: return  __kernel_cos(y[0],y[1]);
-		case 1: return -__kernel_sin(y[0],y[1],1);
-		case 2: return -__kernel_cos(y[0],y[1]);
-		default:
-		        return  __kernel_sin(y[0],y[1],1);
-	    }
-	}
+asm float acos(float x) {
+    nofralloc
+    mflr r0
+    stw r0, 0x4(r1)
+    stwu r1, -0x38(r1)
+    addi r11, r1, 0x38
+    bl _savefpr_27
+    fmr f30, f1
+    fabs f29, f30
+    lfs f0, lbl_803E8658(r0)
+    fcmpo cr0, f29, f0
+    cror 2, 0, 2
+    bne _sc_0
+    fmuls f31, f30, f30
+    lfs f1, lbl_803E8694(r0)
+    lfs f0, lbl_803E8690(r0)
+    fmadds f1, f1, f31, f0
+    lfs f0, lbl_803E868C(r0)
+    fmadds f1, f31, f1, f0
+    lfs f0, lbl_803E8688(r0)
+    fmadds f1, f31, f1, f0
+    lfs f0, lbl_803E8684(r0)
+    fmadds f1, f31, f1, f0
+    lfs f0, lbl_803E8670(r0)
+    fmadds f1, f31, f1, f0
+    lfs f0, lbl_803E8660(r0)
+    fnmsubs f1, f30, f1, f0
+    b _sc_end
+_sc_0:
+    lfs f1, lbl_803E8658(r0)
+    lfs f0, lbl_803E8658(r0)
+    fnmsubs f31, f1, f29, f0
+    fmr f1, f31
+    bl __kernel_tan
+    fmr f27, f1
+    lfs f1, lbl_803E8694(r0)
+    lfs f0, lbl_803E8690(r0)
+    fmadds f1, f1, f31, f0
+    lfs f0, lbl_803E868C(r0)
+    fmadds f1, f31, f1, f0
+    lfs f0, lbl_803E8688(r0)
+    fmadds f1, f31, f1, f0
+    lfs f0, lbl_803E8684(r0)
+    fmadds f1, f31, f1, f0
+    lfs f0, lbl_803E8670(r0)
+    fmadds f0, f31, f1, f0
+    fmuls f28, f27, f0
+    lfs f0, lbl_803E865C(r0)
+    fcmpo cr0, f30, f0
+    cror 2, 1, 2
+    bne _sc_1
+    lfs f0, lbl_803E8664(r0)
+    fmuls f1, f0, f28
+    b _sc_end
+_sc_1:
+    lfs f1, lbl_803E8664(r0)
+    lfs f0, lbl_803E8680(r0)
+    fnmsubs f1, f1, f28, f0
+_sc_end:
+    lwz r0, 0x3c(r1)
+    addi r11, r1, 0x38
+    bl _restfpr_27
+    addi r1, r1, 0x38
+    mtlr r0
+    blr
 }

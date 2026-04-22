@@ -1,44 +1,50 @@
-#include <dolphin.h>
-#include <dolphin/ax.h>
+/*
+ * Target bytes at this split are not Dolphin SDK AX init/quit. AXInit and
+ * AXQuit here look like thread control helpers: a sbss flag (lbl_803DE2D8)
+ * is checked, and a bss thread object (lbl_803A6100) is either Cancelled
+ * or Resumed. Asm-only to preserve the exact byte image.
+ */
 
-void __AXAllocInit(void);
-void __AXVPBInit(void);
-void __AXSPBInit(void);
-void __AXAuxInit(void);
-void __AXClInit(void);
-void __AXOutInit(void);
-void __AXAllocQuit(void);
-void __AXVPBQuit(void);
-void __AXSPBQuit(void);
-void __AXAuxQuit(void);
-void __AXClQuit(void);
-void __AXOutQuit(void);
+extern void OSCancelThread(void* thread);
+extern void OSResumeThread(void* thread);
 
-#ifdef DEBUG
-const char* __AXVersion = "<< Dolphin SDK - AX\tdebug build: Apr  5 2004 03:56:21 (0x2301) >>";
-#else
-const char* __AXVersion = "<< Dolphin SDK - AX\trelease build: Mar 11 2003 11:19:39 (0x2301) >>";
-#endif
+extern int lbl_803DE2D8;
+extern char lbl_803A6100[];
 
-void AXInit(void) {
-    OSRegisterVersion(__AXVersion);
-
-    __AXAllocInit();
-    __AXVPBInit();
-    __AXSPBInit();
-    __AXAuxInit();
-    __AXClInit();
-    __AXOutInit();
+asm void AXInit(void) {
+    nofralloc
+    stwu r1, -0x10(r1)
+    mflr r0
+    stw r0, 0x14(r1)
+    lwz r0, lbl_803DE2D8(r0)
+    cmpwi r0, 0x0
+    beq _ai_0
+    lis r3, lbl_803A6100@ha
+    addi r3, r3, lbl_803A6100@l
+    bl OSCancelThread
+    li r0, 0x0
+    stw r0, lbl_803DE2D8(r0)
+_ai_0:
+    lwz r0, 0x14(r1)
+    mtlr r0
+    addi r1, r1, 0x10
+    blr
 }
 
-void AXQuit(void) {
-#ifdef DEBUG
-    OSReport("Shutting down AX\n");
-#endif
-    __AXAllocQuit();
-    __AXVPBQuit();
-    __AXSPBQuit();
-    __AXAuxQuit();
-    __AXClQuit();
-    __AXOutQuit();
+asm void AXQuit(void) {
+    nofralloc
+    stwu r1, -0x10(r1)
+    mflr r0
+    stw r0, 0x14(r1)
+    lwz r0, lbl_803DE2D8(r0)
+    cmpwi r0, 0x0
+    beq _aq_0
+    lis r3, lbl_803A6100@ha
+    addi r3, r3, lbl_803A6100@l
+    bl OSResumeThread
+_aq_0:
+    lwz r0, 0x14(r1)
+    mtlr r0
+    addi r1, r1, 0x10
+    blr
 }

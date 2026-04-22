@@ -17,8 +17,6 @@ asm u32 rand(void) {
     blr
 }
 
-asm void srand(register u32 seed) {
-    nofralloc
-    stw seed, lbl_803DF090
-    blr
+void srand(u32 seed) {
+    lbl_803DF090 = seed;
 }

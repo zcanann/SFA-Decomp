@@ -61,16 +61,6 @@ asm void PSVECScale(register const Vec *src, register Vec *dst, register f32 sca
 #endif // clang-format on
 }
 
-void C_VECScale(const Vec *src, Vec *dst, f32 scale)
-{
-    f32 s;
-
-    s = 1.0f / sqrtf(src->z * src->z + src->x * src->x + src->y * src->y);
-    dst->x = src->x * s;
-    dst->y = src->y * s;
-    dst->z = src->z * s;
-}
-
 void PSVECNormalize(const register Vec *vec1, register Vec *ret)
 {
 #ifdef __MWERKS__ // clang-format off
@@ -111,29 +101,38 @@ asm f32 PSVECSquareMag(register const Vec *v) {
 #endif // clang-format on
 }
 
-asm f32 PSVECMag(const register Vec *v)
+f32 PSVECMag(const register Vec *v)
 {
+    register f32 v_xy, v_zz, square_mag;
+    register f32 ret_mag, n_0, n_1;
+    register f32 three, half, zero;
 #ifdef __MWERKS__ // clang-format off
-	nofralloc
-    lfs         f4, kVecInvSqrtHalfConst(r2)
-    psq_l       f0, 0(v), 0, 0
-    ps_mul      f0, f0, f0
-    lfs         f1, 8(v)
-    fsubs       f2, f4, f4
-    ps_madd     f1, f1, f1, f0
-    ps_sum0     f1, f1, f0, f0
-    fcmpu       cr0, f1, f2
-    beq         lbl_PSVECMag_ret
-    frsqrte     f0, f1
-    lfs         f3, kVecInvSqrtThreeConst(r2)
-    fmuls       f2, f0, f0
-    fmuls       f0, f0, f4
-    fnmsubs     f2, f2, f1, f3
-    fmuls       f0, f2, f0
-    fmuls       f1, f1, f0
-lbl_PSVECMag_ret:
-    blr
+	asm {
+		psq_l       v_xy, 0(v), 0, 0
+		ps_mul      v_xy, v_xy, v_xy
+		lfs         v_zz, 8(v)
+		ps_madd     square_mag, v_zz, v_zz, v_xy
+    }
 #endif // clang-format on
+    half = 0.5f;
+#ifdef __MWERKS__ // clang-format off
+    asm {
+		ps_sum0     square_mag, square_mag, v_xy, v_xy
+		frsqrte     ret_mag, square_mag
+    }
+#endif // clang-format on
+    three = 3.0f;
+#ifdef __MWERKS__ // clang-format off
+asm {
+		fmuls       n_0, ret_mag, ret_mag
+		fmuls       n_1, ret_mag, half
+		fnmsubs     n_0, n_0, square_mag, three
+		fmuls       ret_mag, n_0, n_1
+        fsel        ret_mag, ret_mag, ret_mag, square_mag
+		fmuls       square_mag, square_mag, ret_mag
+	}
+#endif // clang-format on
+    return square_mag;
 }
 
 asm f32 PSVECDotProduct(const register Vec *vec1, const register Vec *vec2)
@@ -173,55 +172,64 @@ asm void PSVECCrossProduct(register const Vec *a, register const Vec *b, registe
 #endif // clang-format on
 }
 
-void C_VECHalfAngle(const Vec *a, const Vec *b, Vec *half)
+extern const float lbl_803E82E8;
+
+asm void C_VECHalfAngle(const Vec *a, const Vec *b, Vec *half)
 {
-    Vec a0;
-    Vec b0;
-    Vec ab;
-
-    a0.x = -a->x;
-    a0.y = -a->y;
-    a0.z = -a->z;
-
-    b0.x = -b->x;
-    b0.y = -b->y;
-    b0.z = -b->z;
-
-    VECNormalize(&a0, &a0);
-    VECNormalize(&b0, &b0);
-    VECAdd(&a0, &b0, &ab);
-
-    if (VECDotProduct(&ab, &ab) > 0.0f) {
-        VECNormalize(&ab, half);
-    }
-    else {
-        *half = ab;
-    }
-}
-
-void C_VECReflect(const Vec *src, const Vec *normal, Vec *dst)
-{
-    Vec a0;
-    Vec b0;
-    f32 dot;
-    f32 scaledDot;
-
-    a0.x = -src->x;
-    a0.y = -src->y;
-    a0.z = -src->z;
-
-    VECNormalize(&a0, &a0);
-    VECNormalize(normal, &b0);
-
-    dot = VECDotProduct(&a0, &b0);
-    scaledDot = b0.x * 2.0f * dot;
-    dst->x = scaledDot - a0.x;
-    scaledDot = b0.y * 2.0f * dot;
-    dst->y = scaledDot - a0.y;
-    scaledDot = b0.z * 2.0f * dot;
-    dst->z = scaledDot - a0.z;
-
-    VECNormalize(dst, dst);
+    nofralloc
+    mflr r0
+    stw r0, 0x4(r1)
+    stwu r1, -0x38(r1)
+    stw r31, 0x34(r1)
+    stw r30, 0x30(r1)
+    mr r30, r4
+    mr r31, r5
+    lfs f0, 0x0(r3)
+    fneg f0, f0
+    stfs f0, 0x20(r1)
+    lfs f0, 0x4(r3)
+    fneg f0, f0
+    stfs f0, 0x24(r1)
+    lfs f0, 0x8(r3)
+    addi r3, r1, 0x20
+    mr r4, r3
+    fneg f0, f0
+    stfs f0, 0x28(r1)
+    bl PSVECNormalize
+    mr r3, r30
+    addi r4, r1, 0x14
+    bl PSVECNormalize
+    addi r3, r1, 0x20
+    addi r4, r1, 0x14
+    bl PSVECDotProduct
+    lfs f3, lbl_803E82E8(r2)
+    mr r3, r31
+    lfs f2, 0x14(r1)
+    mr r4, r31
+    lfs f0, 0x20(r1)
+    fmuls f2, f3, f2
+    fmuls f2, f2, f1
+    fsubs f0, f2, f0
+    stfs f0, 0x0(r31)
+    lfs f2, 0x18(r1)
+    lfs f0, 0x24(r1)
+    fmuls f2, f3, f2
+    fmuls f2, f2, f1
+    fsubs f0, f2, f0
+    stfs f0, 0x4(r31)
+    lfs f2, 0x1c(r1)
+    lfs f0, 0x28(r1)
+    fmuls f2, f3, f2
+    fmuls f1, f2, f1
+    fsubs f0, f1, f0
+    stfs f0, 0x8(r31)
+    bl PSVECNormalize
+    lwz r0, 0x3c(r1)
+    lwz r31, 0x34(r1)
+    lwz r30, 0x30(r1)
+    mtlr r0
+    addi r1, r1, 0x38
+    blr
 }
 
 asm f32 PSVECSquareDistance(register const Vec *a, register const Vec *b) {
@@ -240,31 +248,43 @@ asm f32 PSVECSquareDistance(register const Vec *a, register const Vec *b) {
 #endif // clang-format on
 }
 
-asm f32 PSVECDistance(register const Vec *a, register const Vec *b)
+f32 PSVECDistance(register const Vec *a, register const Vec *b)
 {
+
+    register f32 half_c;
+    register f32 three_c;
+    register f32 dist;
+
 #ifdef __MWERKS__ // clang-format off
-	nofralloc
-    psq_l       f0, 4(a), 0, 0
-    psq_l       f1, 4(b), 0, 0
-    ps_sub      f2, f0, f1
-    psq_l       f0, 0(a), 0, 0
-    psq_l       f1, 0(b), 0, 0
-    ps_mul      f2, f2, f2
-    ps_sub      f0, f0, f1
-    lfs         f3, kVecInvSqrtHalfConst(r2)
-    ps_madd     f1, f0, f0, f2
-    fsubs       f0, f3, f3
-    ps_sum0     f1, f1, f2, f2
-    fcmpu       cr0, f0, f1
-    beq         lbl_PSVECDistance_ret
-    lfs         f4, kVecInvSqrtThreeConst(r2)
-    frsqrte     f0, f1
-    fmuls       f2, f0, f0
-    fmuls       f0, f0, f3
-    fnmsubs     f2, f2, f1, f4
-    fmuls       f0, f2, f0
-    fmuls       f1, f1, f0
-lbl_PSVECDistance_ret:
-    blr
+	asm {
+		psq_l       f0, 4(a), 0, 0 /* qr0 */
+        psq_l       f1, 4(b), 0, 0 /* qr0 */
+        ps_sub      f2, f0, f1
+        psq_l       f0, 0(a), 0, 0 /* qr0 */
+        psq_l       f1, 0(b), 0, 0 /* qr0 */
+        ps_mul      f2, f2, f2
+        ps_sub      f0, f0, f1    
+	}
+
+    half_c = 0.5f;
+
+    asm {
+        ps_madd     f0, f0, f0, f2
+        ps_sum0     f0, f0, f2, f2
+    }
+
+    three_c = 3.0f;
+
+    asm {
+        frsqrte     dist, f0
+        fmuls       f2, dist, dist
+        fmuls       dist, dist, half_c
+        fnmsubs     f2, f2, f0, three_c
+        fmuls       dist, f2, dist
+        fsel        dist, dist, dist, f0
+        fmuls       dist, f0, dist
+    }
+
+    return dist;
 #endif // clang-format on
 }

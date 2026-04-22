@@ -5,8 +5,6 @@
 
 inline fpos_t _ftell(FILE* file) {
     int charsInUndoBuffer = 0;
-    int charsToCheck;
-    unsigned char* curChar;
     fpos_t position;
     unsigned char tmp_kind = file->file_mode.file_kind;
 
@@ -23,16 +21,6 @@ inline fpos_t _ftell(FILE* file) {
     if (file->file_state.io_state >= __rereading) {
         charsInUndoBuffer = file->file_state.io_state - __rereading + 1;
         position -= charsInUndoBuffer;
-    }
-
-    if (!file->file_mode.binary_io) {
-        charsToCheck = (int)(file->buffer_ptr - file->buffer) - charsInUndoBuffer;
-        curChar = file->buffer;
-
-        while (charsToCheck--) {
-            if (*curChar++ == '\n')
-                ++position;
-        }
     }
 
     return (position);

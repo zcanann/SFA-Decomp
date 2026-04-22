@@ -287,25 +287,15 @@ void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht) {
 }
 
 void GXGetScissor(u32* left, u32* top, u32* wd, u32* ht) {
-    u32 suScis0;
-    u32 suScis1;
-    u32 topOrigin;
-    u32 leftOrigin;
-    u32 bottom;
-    u32 right;
+    u32 y1 = gx->suScis0 & 0x7FF;
+    u32 x1 = (gx->suScis0 & 0x7FF000) >> 12;
+    u32 y2 = gx->suScis1 & 0x7FF;
+    u32 x2 = (gx->suScis1 & 0x7FF000) >> 12;
 
-    suScis0 = __GXData->suScis0;
-    suScis1 = __GXData->suScis1;
-
-    topOrigin = suScis0 & 0x7FF;
-    leftOrigin = (suScis0 & 0x7FF000) >> 12;
-    bottom = suScis1 & 0x7FF;
-    right = (suScis1 & 0x7FF000) >> 12;
-
-    *left = leftOrigin - 0x156;
-    *top = topOrigin - 0x156;
-    *wd = (right - leftOrigin) + 1;
-    *ht = (bottom - topOrigin) + 1;
+    *left = x1 - 0x156;
+    *top = y1 - 0x156;
+    *wd = (x2 - x1) + 1;
+    *ht = (y2 - y1) + 1;
 }
 
 /*

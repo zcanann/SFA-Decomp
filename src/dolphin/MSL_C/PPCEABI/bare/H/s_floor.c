@@ -1,78 +1,125 @@
-/* @(#)s_floor.c 1.3 95/01/18 */
 /*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunSoft, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
+ * Target bytes at this split are not Sun's MSL floor(). Game-side helper
+ * that calls tan (another mislabeled game-side func at s_tan.c) to get an
+ * int quadrant, xors a rounding bit, then runs a per-quadrant double-poly
+ * and rounds to float. Asm-only to preserve the exact byte image.
  */
 
-/*
- * floor(x)
- * Return x rounded toward -inf to integral value
- * Method:
- *    Bit twiddling.
- * Exception:
- *    Inexact flag raised if x not equal to floor(x).
- */
+extern double tan(int* out_n, float x);
+void _savefpr_30(void);
+void _restfpr_30(void);
 
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/fdlibm.h"
+extern const double lbl_803E8A48;
+extern const double lbl_803E8A50;
+extern const double lbl_803E8A58;
+extern const double lbl_803E8A60;
+extern const double lbl_803E8A68;
+extern const double lbl_803E8A70;
+extern const double lbl_803E8A78;
+extern const double lbl_803E8A80;
+extern const double lbl_803E8A88;
+extern const double lbl_803E8A90;
+extern const double lbl_803E8A98;
+extern const double lbl_803E8AA0;
+extern const double lbl_803E8AA8;
 
-#ifdef __STDC__
-static const double huge = 1.0e300;
-#else
-static double huge = 1.0e300;
-#endif
-
-#ifdef __STDC__
-    double floor(double x)
-#else
-    double floor(x)
-    double x;
-#endif
-{
-    int i0,i1,j0;
-    unsigned i,j;
-    i0 =  __HI(x);
-    i1 =  __LO(x);
-    j0 = ((i0>>20)&0x7ff)-0x3ff;
-    if(j0<20) {
-        if(j0<0) {     /* raise inexact if x != 0 */
-        if(huge+x>0.0) {/* return 0*sign(x) if |x|<1 */
-            if(i0>=0) {i0=i1=0;}
-            else if(((i0&0x7fffffff)|i1)!=0)
-            { i0=0xbff00000;i1=0;}
-        }
-        } else {
-        i = (0x000fffff)>>j0;
-        if(((i0&i)|i1)==0) return x; /* x is integral */
-        if(huge+x>0.0) {    /* raise inexact flag */
-            if(i0<0) i0 += (0x00100000)>>j0;
-            i0 &= (~i); i1=0;
-        }
-        }
-    } else if (j0>51) {
-        if(j0==0x400) return x+x;    /* inf or NaN */
-        else return x;        /* x is integral */
-    } else {
-        i = ((unsigned)(0xffffffff))>>(j0-20);
-        if((i1&i)==0) return x;    /* x is integral */
-        if(huge+x>0.0) {         /* raise inexact flag */
-        if(i0<0) {
-            if(j0==20) i0+=1;
-            else {
-            j = i1+(1<<(52-j0));
-            if(j<i1) i0 +=1 ;     /* got a carry */
-            i1=j;
-            }
-        }
-        i1 &= (~i);
-        }
-    }
-    __HI(x) = i0;
-    __LO(x) = i1;
-    return x;
+asm float floor(float x) {
+    nofralloc
+    mflr r0
+    stw r0, 0x4(r1)
+    stwu r1, -0x20(r1)
+    addi r11, r1, 0x20
+    bl _savefpr_30
+    stfs f1, 0x8(r1)
+    addi r3, r1, 0xc
+    lfs f1, 0x8(r1)
+    bl tan
+    fmr f30, f1
+    lwz r4, 0xc(r1)
+    lwz r3, 0x8(r1)
+    rlwinm r0, r3, 3, 29, 29
+    add r0, r4, r0
+    stw r0, 0xc(r1)
+    fmul f31, f30, f30
+    lwz r0, 0xc(r1)
+    rlwinm r0, r0, 0, 29, 30
+    cmpwi r0, 0x2
+    beq _sf_2
+    bge _sf_ge
+    cmpwi r0, 0x0
+    beq _sf_0
+    b _sf_d
+_sf_ge:
+    cmpwi r0, 0x4
+    beq _sf_4
+    b _sf_d
+_sf_0:
+    lfd f1, lbl_803E8A70(r0)
+    lfd f0, lbl_803E8A68(r0)
+    fmadd f1, f1, f31, f0
+    lfd f0, lbl_803E8A60(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8A58(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8A50(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8A48(r0)
+    fmadd f0, f31, f1, f0
+    fmul f1, f30, f0
+    frsp f1, f1
+    b _sf_end
+_sf_2:
+    lfd f1, lbl_803E8AA8(r0)
+    lfd f0, lbl_803E8AA0(r0)
+    fmadd f1, f1, f31, f0
+    lfd f0, lbl_803E8A98(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8A90(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8A88(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8A80(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8A78(r0)
+    fmadd f1, f31, f1, f0
+    frsp f1, f1
+    b _sf_end
+_sf_4:
+    lfd f1, lbl_803E8A70(r0)
+    lfd f0, lbl_803E8A68(r0)
+    fmadd f1, f1, f31, f0
+    lfd f0, lbl_803E8A60(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8A58(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8A50(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8A48(r0)
+    fmadd f0, f31, f1, f0
+    fmul f0, f30, f0
+    fneg f1, f0
+    frsp f1, f1
+    b _sf_end
+_sf_d:
+    lfd f1, lbl_803E8AA8(r0)
+    lfd f0, lbl_803E8AA0(r0)
+    fmadd f1, f1, f31, f0
+    lfd f0, lbl_803E8A98(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8A90(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8A88(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8A80(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8A78(r0)
+    fnmadd f1, f31, f1, f0
+    frsp f1, f1
+_sf_end:
+    lwz r0, 0x24(r1)
+    addi r11, r1, 0x20
+    bl _restfpr_30
+    addi r1, r1, 0x20
+    mtlr r0
+    blr
 }

@@ -1,7 +1,7 @@
 #include <dolphin.h>
 #include <dolphin/mtx.h>
 
-extern f32 fn_80294F2C(f32);
+extern f32 tanf(f32);
 
 extern const f32 lbl_803E82C8;
 extern const f32 lbl_803E82CC;
@@ -17,7 +17,7 @@ void C_MTXPerspective(Mtx44 m, f32 fovY, f32 aspect, f32 n, f32 f) {
 
     angle = lbl_803E82D8 * fovY;
     angle = lbl_803E82DC * angle;
-    cot = lbl_803E82C8 / fn_80294F2C(angle);
+    cot = lbl_803E82C8 / tanf(angle);
 
     m[0][0] = cot / aspect;
     m[0][1] = lbl_803E82D0;

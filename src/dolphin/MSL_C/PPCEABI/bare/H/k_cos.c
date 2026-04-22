@@ -1,98 +1,87 @@
-/* @(#)k_cos.c 1.3 95/01/18 */
 /*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunSoft, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
- * is preserved.
- * ====================================================
+ * Target bytes at this split are not Sun's MSL __kernel_cos. Game-side
+ * 2-arg atan2-like helper: takes two floats (via r3=f1 slot, r4=f2 slot),
+ * computes the ratio of the smaller to larger, evaluates a short polynomial,
+ * then adjusts based on sign/quadrant extracted from the raw bits of the
+ * inputs. Asm-only to preserve the exact byte image.
  */
 
-/*
- * __kernel_cos( x,  y )
- * kernel cos function on [-pi/4, pi/4], pi/4 ~ 0.785398164
- * Input x is assumed to be bounded by ~pi/4 in magnitude.
- * Input y is the tail of x. 
- *
- * Algorithm
- *	1. Since cos(-x) = cos(x), we need only to consider positive x.
- *	2. if x < 2^-27 (hx<0x3e400000 0), return 1 with inexact if x!=0.
- *	3. cos(x) is approximated by a polynomial of degree 14 on
- *	   [0,pi/4]
- *		  	                 4            14
- *	   	cos(x) ~ 1 - x*x/2 + C1*x + ... + C6*x
- *	   where the remez error is
- *	
- * 	|              2     4     6     8     10    12     14 |     -58
- * 	|cos(x)-(1-.5*x +C1*x +C2*x +C3*x +C4*x +C5*x  +C6*x  )| <= 2
- * 	|    					               | 
- * 
- * 	               4     6     8     10    12     14 
- *	4. let r = C1*x +C2*x +C3*x +C4*x +C5*x  +C6*x  , then
- *	       cos(x) = 1 - x*x/2 + r
- *	   since cos(x+y) ~ cos(x) - sin(x)*y 
- *			  ~ cos(x) - x*y,
- *	   a correction term is necessary in cos(x) and hence
- *		cos(x+y) = 1 - (x*x/2 - (r - x*y))
- *	   For better accuracy when x > 0.3, let qx = |x|/4 with
- *	   the last 32 bits mask off, and if x > 0.78125, let qx = 0.28125.
- *	   Then
- *		cos(x+y) = (1-qx) - ((x*x/2-qx) - (r-x*y)).
- *	   Note that 1-qx and (x*x/2-qx) is EXACT here, and the
- *	   magnitude of the latter is at least a quarter of x*x/2,
- *	   thus, reducing the rounding error in the subtraction.
- */
+void _savefpr_27(void);
+void _restfpr_27(void);
 
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/fdlibm.h"
+extern const float lbl_803E8660;
+extern const float lbl_803E8680;
+extern const float lbl_803E86A0;
+extern const float lbl_803E86A4;
 
-#ifdef __STDC__
-static const double 
-#else
-static double 
-#endif
-one =  1.00000000000000000000e+00, /* 0x3FF00000, 0x00000000 */
-C1  =  4.16666666666666019037e-02, /* 0x3FA55555, 0x5555554C */
-C2  = -1.38888888888741095749e-03, /* 0xBF56C16C, 0x16C15177 */
-C3  =  2.48015872894767294178e-05, /* 0x3EFA01A0, 0x19CB1590 */
-C4  = -2.75573143513906633035e-07, /* 0xBE927E4F, 0x809C52AD */
-C5  =  2.08757232129817482790e-09, /* 0x3E21EE9E, 0xBDB4B1C4 */
-C6  = -1.13596475577881948265e-11; /* 0xBDA8FAE9, 0xBE8838D4 */
-
-/*
- * --INFO--
- * JP Address: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- * EN Address: TODO
- */
-#ifdef __STDC__
-	double __kernel_cos(double x, double y)
-#else
-	double __kernel_cos(x, y)
-	double x,y;
-#endif
-{
-	double a,hz,z,r,qx;
-	int ix;
-	ix = __HI(x)&0x7fffffff;	/* ix = |x|'s high word*/
-	if(ix<0x3e400000) {			/* if x < 2**27 */
-	    if(((int)x)==0) return one;		/* generate inexact */
-	}
-	z  = x*x;
-	r  = z*(C1+z*(C2+z*(C3+z*(C4+z*(C5+z*C6)))));
-	if(ix < 0x3FD33333) 			/* if |x| < 0.3 */ 
-	    return one - (0.5*z - (z*r - x*y));
-	else {
-	    if(ix > 0x3fe90000) {		/* x > 0.78125 */
-		qx = 0.28125;
-	    } else {
-	        __HI(qx) = ix-0x00200000;	/* x/4 */
-	        __LO(qx) = 0;
-	    }
-	    hz = 0.5*z-qx;
-	    a  = one-qx;
-	    return a - (hz - (z*r-x*y));
-	}
+asm float __kernel_cos(float y, float x) {
+    nofralloc
+    mflr r0
+    stw r0, 0x4(r1)
+    stwu r1, -0x40(r1)
+    addi r11, r1, 0x40
+    bl _savefpr_27
+    stw r31, 0x14(r1)
+    stfs f1, 0x8(r1)
+    stfs f2, 0xc(r1)
+    lfs f0, 0xc(r1)
+    fabs f29, f0
+    lfs f0, 0x8(r1)
+    fabs f28, f0
+    fcmpo cr0, f29, f28
+    ble _kc_0
+    fdivs f31, f28, f29
+    fmuls f27, f31, f31
+    lfs f1, lbl_803E86A4(r0)
+    lfs f0, lbl_803E86A0(r0)
+    fmadds f0, f1, f27, f0
+    fmuls f30, f31, f0
+    b _kc_1
+_kc_0:
+    fdivs f31, f29, f28
+    fmuls f27, f31, f31
+    lfs f1, lbl_803E86A4(r0)
+    lfs f0, lbl_803E86A0(r0)
+    fmadds f1, f1, f27, f0
+    lfs f0, lbl_803E8660(r0)
+    fnmsubs f30, f31, f1, f0
+_kc_1:
+    lwz r4, 0x8(r1)
+    lwz r3, 0xc(r1)
+    rlwinm r31, r3, 31, 1, 1
+    rlwimi r31, r4, 0, 0, 0
+    cmpwi r31, 0x0
+    beq _kc_p
+    bge _kc_q
+    lis r3, 0x8000
+    addi r3, r3, 0x1
+    cmpw r31, r3
+    bge _kc_sub
+    b _kc_neg
+_kc_q:
+    lis r0, 0x4000
+    cmpw r31, r0
+    beq _kc_subpi
+    b _kc_sub
+_kc_p:
+    fmr f1, f30
+    b _kc_end
+_kc_neg:
+    fneg f1, f30
+    b _kc_end
+_kc_subpi:
+    lfs f0, lbl_803E8680(r0)
+    fsubs f1, f0, f30
+    b _kc_end
+_kc_sub:
+    lfs f0, lbl_803E8680(r0)
+    fsubs f1, f30, f0
+_kc_end:
+    lwz r0, 0x44(r1)
+    addi r11, r1, 0x40
+    bl _restfpr_27
+    lwz r31, 0x14(r1)
+    addi r1, r1, 0x40
+    mtlr r0
+    blr
 }

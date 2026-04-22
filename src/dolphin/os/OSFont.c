@@ -12,9 +12,6 @@ static ParseStringCallback ParseString;
 static u16 FontEncode_803DD1B0 = 0xFFFF;
 
 // prototypes
-static char* ParseStringS_80243D34(u16 encode, const char* string, OSFontHeader** pfont, int* pfontCode);
-static char* ParseStringW(u16 encode, const char* string, OSFontHeader** pfont, int* pfontCode);
-
 static u16 lbl_8032D920[]
     = { 0x20C, 0x20D, 0x20E, 0x20F, 0x210, 0x211, 0x212, 0x213,
         0x214, 0x215, 0x216, 0x217, 0x218, 0x219, 0x21A, 0x21B,
@@ -201,11 +198,11 @@ static u16 lbl_8032DAA0[]
         0x317, 0x318, 0x319, 0x31A, 0x31B, 0x000 
     };
 
-static BOOL IsSjisLeadByte(u8 c) {
+static inline BOOL IsSjisLeadByte(u8 c) {
     return (0x81 <= c && c <= 0x9F) || (0xE0 <= c && c <= 0xFC);
 }
 
-static BOOL IsSjisTrailByte(u8 c) {
+static inline BOOL IsSjisTrailByte(u8 c) {
     return (0x40 <= c && c <= 0xFC) && (c != 0x7F);
 }
 
@@ -314,14 +311,6 @@ static void Decode(u8* s, u8* d) {
     } while (q < os);
 }
 
-static u32 GetFontSize(u8* buf) {
-    if (buf[0] == 'Y' && buf[1] == 'a' && buf[2] == 'y') {
-        return *(u32*)(buf + 0x4);
-    }
-
-    return 0;
-}
-
 u16 OSGetFontEncode(void) {
     if (FontEncode_803DD1B0 <= OS_FONT_ENCODE_SJIS) {
         return FontEncode_803DD1B0;
@@ -343,22 +332,6 @@ u16 OSGetFontEncode(void) {
     return FontEncode_803DD1B0;
 }
 
-u16 OSSetFontEncode(u16 encode) {
-    u16 prev;
-
-    ASSERTLINE(463, encode <= OS_FONT_ENCODE_MAX);
-
-    prev = OSGetFontEncode();
-    if (encode <= OS_FONT_ENCODE_MAX) {
-        FontEncode_803DD1B0 = encode;
-        if (encode >= 3 && encode <= OS_FONT_ENCODE_MAX) {
-            ParseString = (ParseStringCallback)ParseStringW;
-        }
-    }
-
-    return prev;
-}
-
 static void ReadROM(void* buf, int length, int offset) {
     int len;
     while (length > 0) {
@@ -374,381 +347,542 @@ static void ReadROM(void* buf, int length, int offset) {
     }
 }
 
-static u32 ReadFont_802436FC(void* img, u16 encode, void* fontData) {
-    u32 size;
-#ifndef DEBUG
-    u32 padding[1];
-#endif
+extern const u32 lbl_803E82A8;
+extern const u32 lbl_803E82AC;
 
-    if (encode == OS_FONT_ENCODE_SJIS) {
-        ReadROM(img, OS_FONT_ROM_SIZE_SJIS, 0x1AFF00);
-    } else {
-        ReadROM(img, OS_FONT_ROM_SIZE_ANSI, 0x1FCF00);
-    }
-
-    size = GetFontSize(img);
-    if (size == 0) {
-        return 0;
-    }
-
-    Decode(img, fontData);
-    if (encode == OS_FONT_ENCODE_SJIS) {
-        OSFontHeader* font = (OSFontHeader*)fontData;
-        int fontCode;
-        u8* imageSrc;
-        int sheet;
-        int numChars;
-        int row;
-        int column;
-        int x;
-        int y;
-        u8* src;
-        u16 imageT[4] = {0x2ABE, 0x003D, 0x003D, 0x003D};
-
-        fontCode = GetFontCode(0x54);
-        sheet = fontCode / (font->sheetColumn * font->sheetRow);
-        numChars = fontCode - (sheet * (font->sheetColumn * font->sheetRow)); 
-        row = numChars / font->sheetColumn;
-        column = numChars - (row * font->sheetColumn);
-        row *= font->cellHeight;
-        column *= font->cellWidth;
-
-        imageSrc = (u8*)font + font->sheetImage;
-        imageSrc += ((sheet * font->sheetSize) >> 1);
-
-        for (y = 4; y < 8; y++) {
-            x = 0;
-            src = imageSrc + ((((font->sheetWidth / 8) << 5) / 2) * ((row + y) / 8));
-            src += ((column + x) / 8) * 0x10;
-            src += ((row + y) % 8) * 2;
-            src += ((column + x) % 8) / 4;
-
-            *(u16*)src = imageT[y - 4];
-        }
-    }
-
-    return size;
+static asm u32 ReadFont_802436FC(void* img, u16 encode, void* fontData) {
+    nofralloc
+    mflr r0
+    stw r0, 0x4(r1)
+    li r0, 0x0
+    stwu r1, -0x40(r1)
+    stw r31, 0x3c(r1)
+    stw r30, 0x38(r1)
+    addi r30, r4, 0x0
+    stw r29, 0x34(r1)
+    addi r29, r3, 0x0
+    stw r0, FontDataSjis(r13)
+    bl OSGetFontEncode
+    clrlwi r0, r3, 16
+    cmplwi r0, 0x1
+    bne _rf_0
+    lis r4, 0x5
+    lis r5, 0x1b
+    addi r3, r30, 0x0
+    subi r4, r4, 0x3000
+    subi r5, r5, 0x100
+    bl ReadROM
+    b _rf_1
+_rf_0:
+    lis r4, 0x20
+    addi r3, r30, 0x0
+    subi r5, r4, 0x3100
+    li r4, 0x3000
+    bl ReadROM
+_rf_1:
+    lbz r0, 0x0(r30)
+    cmplwi r0, 0x59
+    bne _rf_2
+    lbz r0, 0x1(r30)
+    cmplwi r0, 0x61
+    bne _rf_2
+    lbz r0, 0x2(r30)
+    cmplwi r0, 0x79
+    bne _rf_2
+    lwz r31, 0x4(r30)
+    b _rf_3
+_rf_2:
+    li r31, 0x0
+_rf_3:
+    cmplwi r31, 0x0
+    beq _rf_11
+    addi r3, r30, 0x0
+    addi r4, r29, 0x0
+    bl Decode
+    stw r29, FontDataAnsi(r13)
+    lhz r4, FontEncode_803DD1B0(r13)
+    lhz r0, 0x22(r29)
+    cmplwi r4, 0x1
+    add r0, r29, r0
+    stw r0, FixedPitch(r13)
+    lhz r3, 0x1a(r29)
+    lhz r0, 0x1c(r29)
+    mullw r0, r3, r0
+    stw r0, ParseString(r13)
+    bgt _rf_4
+    b _rf_10
+_rf_4:
+    lis r3, 0x8000
+    lwz r0, 0xcc(r3)
+    cmpwi r0, 0x0
+    beq _rf_5
+    blt _rf_8
+    b _rf_8
+_rf_5:
+    lis r3, 0xcc00
+    lhz r0, 0x206e(r3)
+    rlwinm. r0, r0, 0, 30, 30
+    beq _rf_6
+    li r0, 0x1
+    b _rf_7
+_rf_6:
+    li r0, 0x0
+_rf_7:
+    sth r0, FontEncode_803DD1B0(r13)
+    b _rf_9
+_rf_8:
+    li r0, 0x0
+    sth r0, FontEncode_803DD1B0(r13)
+_rf_9:
+    lhz r4, FontEncode_803DD1B0(r13)
+_rf_10:
+    clrlwi r0, r4, 16
+    cmplwi r0, 0x1
+    bne _rf_11
+    lwz r4, lbl_803E82A8(r13)
+    li r3, 0x54
+    lwz r0, lbl_803E82AC(r13)
+    stw r4, 0x1c(r1)
+    stw r0, 0x20(r1)
+    bl GetFontCode
+    lwz r5, ParseString(r13)
+    lwz r12, FontDataAnsi(r13)
+    divw r10, r3, r5
+    lhz r6, 0x1c(r1)
+    lhz r0, 0x1e(r12)
+    lwz r4, 0x14(r12)
+    lwz r11, 0x24(r12)
+    mullw r8, r10, r5
+    lhz r9, 0x1a(r12)
+    lhz r5, 0x12(r12)
+    lhz r7, 0x10(r12)
+    subf r30, r8, r3
+    divw r8, r30, r9
+    mullw r3, r8, r9
+    mullw r5, r8, r5
+    srawi r0, r0, 3
+    subf r3, r3, r30
+    addze r0, r0
+    slwi r0, r0, 5
+    srawi r9, r0, 1
+    mullw r10, r10, r4
+    mullw r3, r3, r7
+    addze r9, r9
+    addi r0, r5, 0x4
+    srawi r4, r0, 3
+    addze r4, r4
+    srawi r8, r3, 3
+    addze r8, r8
+    srawi r7, r0, 3
+    addze r7, r7
+    slwi r7, r7, 3
+    subfc r7, r7, r0
+    srawi r0, r3, 3
+    addze r0, r0
+    slwi r0, r0, 3
+    subfc r0, r0, r3
+    srawi r3, r0, 2
+    mullw r0, r9, r4
+    add r4, r12, r11
+    srwi r9, r10, 1
+    add r4, r4, r9
+    add r9, r4, r0
+    slwi r0, r8, 4
+    add r9, r9, r0
+    slwi r7, r7, 1
+    add r9, r9, r7
+    addze r3, r3
+    add r9, r9, r3
+    sth r6, 0x0(r9)
+    addi r10, r5, 0x5
+    addi r9, r5, 0x6
+    lwz r7, FontDataAnsi(r13)
+    addi r6, r5, 0x7
+    lhz r5, 0x1e(r1)
+    lhz r7, 0x1e(r7)
+    srawi r7, r7, 3
+    addze r7, r7
+    slwi r7, r7, 5
+    srawi r8, r7, 1
+    addze r8, r8
+    srawi r7, r10, 3
+    addze r7, r7
+    mullw r8, r8, r7
+    srawi r7, r10, 3
+    addze r7, r7
+    slwi r7, r7, 3
+    add r8, r4, r8
+    subfc r7, r7, r10
+    add r8, r8, r0
+    slwi r7, r7, 1
+    add r8, r8, r7
+    add r8, r8, r3
+    sth r5, 0x0(r8)
+    lwz r7, FontDataAnsi(r13)
+    lhz r5, 0x20(r1)
+    lhz r7, 0x1e(r7)
+    srawi r7, r7, 3
+    addze r7, r7
+    slwi r7, r7, 5
+    srawi r8, r7, 1
+    addze r8, r8
+    srawi r7, r9, 3
+    addze r7, r7
+    mullw r8, r8, r7
+    srawi r7, r9, 3
+    addze r7, r7
+    slwi r7, r7, 3
+    add r8, r4, r8
+    subfc r7, r7, r9
+    add r8, r8, r0
+    slwi r7, r7, 1
+    add r8, r8, r7
+    add r8, r8, r3
+    sth r5, 0x0(r8)
+    lwz r5, FontDataAnsi(r13)
+    lhz r5, 0x1e(r5)
+    srawi r5, r5, 3
+    addze r5, r5
+    slwi r5, r5, 5
+    srawi r7, r5, 1
+    addze r7, r7
+    srawi r5, r6, 3
+    addze r5, r5
+    mullw r5, r7, r5
+    add r7, r4, r5
+    srawi r5, r6, 3
+    lhz r4, 0x22(r1)
+    addze r5, r5
+    slwi r5, r5, 3
+    subfc r5, r5, r6
+    add r7, r7, r0
+    slwi r0, r5, 1
+    add r7, r7, r0
+    add r7, r7, r3
+    sth r4, 0x0(r7)
+_rf_11:
+    mr r3, r31
+    lwz r0, 0x44(r1)
+    lwz r31, 0x3c(r1)
+    lwz r30, 0x38(r1)
+    lwz r29, 0x34(r1)
+    addi r1, r1, 0x40
+    mtlr r0
+    blr
 }
 
-u32 OSLoadFont(OSFontHeader* fontData, void* tmp) {
-    u16 encode;
-    u32 size;
-
-    encode = OSGetFontEncode();
-    switch (encode) {
-    case 0:
-        FontDataAnsi = fontData;
-        size = ReadFont_802436FC(tmp, 0, FontDataAnsi);
-        break;
-    case 1:
-        FontDataSjis = fontData;
-        size = ReadFont_802436FC(tmp, 1, FontDataSjis);
-        break;
-    case 3:
-    case 4:
-    case 5:
-        FontDataAnsi = fontData;
-        size = ReadFont_802436FC(tmp, 0, FontDataAnsi);
-        if (size != 0) {
-            FontDataSjis = (OSFontHeader*)((u8*)FontDataAnsi + size);
-            size += ReadFont_802436FC(tmp, 1, FontDataSjis);
-        }
-        break;
-    case 2:
-    default:
-        size = 0;
-        break;
-    }
-
-    return size;
+static asm char* ParseStringS_80243D34(const char* string, int* pfontCode) {
+    nofralloc
+    mflr r0
+    stw r0, 0x4(r1)
+    stwu r1, -0x18(r1)
+    stw r31, 0x14(r1)
+    addi r31, r4, 0x0
+    stw r30, 0x10(r1)
+    mr r30, r3
+    lbz r0, 0x0(r3)
+    cmplwi r0, 0x0
+    mr r3, r0
+    bne _ps_0
+    mr r3, r30
+    b _ps_13
+_ps_0:
+    lhz r0, FontEncode_803DD1B0(r13)
+    addi r30, r30, 0x1
+    cmplwi r0, 0x1
+    bgt _ps_1
+    b _ps_7
+_ps_1:
+    lis r4, 0x8000
+    lwz r0, 0xcc(r4)
+    cmpwi r0, 0x0
+    beq _ps_2
+    blt _ps_5
+    b _ps_5
+_ps_2:
+    lis r4, 0xcc00
+    lhz r0, 0x206e(r4)
+    rlwinm. r0, r0, 0, 30, 30
+    beq _ps_3
+    li r0, 0x1
+    b _ps_4
+_ps_3:
+    li r0, 0x0
+_ps_4:
+    sth r0, FontEncode_803DD1B0(r13)
+    b _ps_6
+_ps_5:
+    li r0, 0x0
+    sth r0, FontEncode_803DD1B0(r13)
+_ps_6:
+    lhz r0, FontEncode_803DD1B0(r13)
+_ps_7:
+    clrlwi r0, r0, 16
+    cmplwi r0, 0x1
+    bne _ps_12
+    clrlwi r0, r3, 24
+    cmplwi r0, 0x81
+    li r4, 0x1
+    li r5, 0x0
+    blt _ps_8
+    cmplwi r0, 0x9f
+    bgt _ps_8
+    mr r5, r4
+_ps_8:
+    cmpwi r5, 0x0
+    bne _ps_10
+    clrlwi r0, r3, 24
+    cmplwi r0, 0xe0
+    li r5, 0x0
+    blt _ps_9
+    cmplwi r0, 0xfc
+    bgt _ps_9
+    li r5, 0x1
+_ps_9:
+    cmpwi r5, 0x0
+    bne _ps_10
+    li r4, 0x0
+_ps_10:
+    cmpwi r4, 0x0
+    beq _ps_12
+    lbz r4, 0x0(r30)
+    extsb. r0, r4
+    beq _ps_12
+    clrlslwi r0, r3, 16, 8
+    or r3, r0, r4
+    addi r30, r30, 0x1
+_ps_12:
+    cmplwi r31, 0x0
+    beq _ps_14
+    bl GetFontCode
+    lwz r4, FixedPitch(r13)
+    lbzx r0, r4, r3
+    stw r0, 0x0(r31)
+_ps_14:
+    mr r3, r30
+_ps_13:
+    lwz r0, 0x1c(r1)
+    lwz r31, 0x14(r1)
+    lwz r30, 0x10(r1)
+    addi r1, r1, 0x18
+    mtlr r0
+    blr
 }
 
-static char* ParseStringS_80243D34(u16 encode, const char* string, OSFontHeader** pfont, int* pfontCode) {
-    OSFontHeader* font;
-    u16 code = 0;
-
-    switch (encode) {
-    case OS_FONT_ENCODE_ANSI:
-        font = FontDataAnsi;
-        code = *string;
-        if (code != 0) {
-            string++;
-        }
-        break;
-    case OS_FONT_ENCODE_SJIS:
-        font = FontDataSjis;
-        code = *string;
-        if (code == 0) {
-            break;
-        }
-        string++;
-
-        if (IsSjisLeadByte(code) && IsSjisTrailByte(*string)) {
-            code = (code << 8 | *string++);
-        }
-        break;
-    }
-
-    *pfont = font;
-    *pfontCode = GetFontCode(code);
-
-    return (char*)string;
+asm char* OSGetFontTexel(const char* string, void* image, s32 pos, s32 stride, s32* width) {
+    nofralloc
+    mflr r0
+    stw r0, 0x4(r1)
+    stwu r1, -0x60(r1)
+    stmw r17, 0x24(r1)
+    mr r28, r3
+    addi r29, r4, 0x0
+    addi r30, r5, 0x0
+    addi r24, r6, 0x0
+    addi r31, r7, 0x0
+    lbz r0, 0x0(r3)
+    cmplwi r0, 0x0
+    mr r3, r0
+    bne _gft_0
+    mr r3, r28
+    b _gft_19
+_gft_0:
+    lhz r0, FontEncode_803DD1B0(r13)
+    addi r28, r28, 0x1
+    cmplwi r0, 0x1
+    bgt _gft_1
+    b _gft_7
+_gft_1:
+    lis r4, 0x8000
+    lwz r0, 0xcc(r4)
+    cmpwi r0, 0x0
+    beq _gft_2
+    blt _gft_5
+    b _gft_5
+_gft_2:
+    lis r4, 0xcc00
+    lhz r0, 0x206e(r4)
+    rlwinm. r0, r0, 0, 30, 30
+    beq _gft_3
+    li r0, 0x1
+    b _gft_4
+_gft_3:
+    li r0, 0x0
+_gft_4:
+    sth r0, FontEncode_803DD1B0(r13)
+    b _gft_6
+_gft_5:
+    li r0, 0x0
+    sth r0, FontEncode_803DD1B0(r13)
+_gft_6:
+    lhz r0, FontEncode_803DD1B0(r13)
+_gft_7:
+    clrlwi r0, r0, 16
+    cmplwi r0, 0x1
+    bne _gft_11
+    clrlwi r0, r3, 24
+    cmplwi r0, 0x81
+    li r4, 0x1
+    li r5, 0x0
+    blt _gft_8
+    cmplwi r0, 0x9f
+    bgt _gft_8
+    mr r5, r4
+_gft_8:
+    cmpwi r5, 0x0
+    bne _gft_10
+    clrlwi r0, r3, 24
+    cmplwi r0, 0xe0
+    li r5, 0x0
+    blt _gft_9
+    cmplwi r0, 0xfc
+    bgt _gft_9
+    li r5, 0x1
+_gft_9:
+    cmpwi r5, 0x0
+    bne _gft_10
+    li r4, 0x0
+_gft_10:
+    cmpwi r4, 0x0
+    beq _gft_11
+    lbz r4, 0x0(r28)
+    extsb. r0, r4
+    beq _gft_11
+    clrlslwi r0, r3, 16, 8
+    or r3, r0, r4
+    addi r28, r28, 0x1
+_gft_11:
+    lwz r4, FontDataAnsi(r13)
+    addi r25, r4, 0x2c
+    bl GetFontCode
+    lwz r6, ParseString(r13)
+    slwi r0, r24, 2
+    lwz r12, FontDataAnsi(r13)
+    srawi r0, r0, 3
+    divw r11, r3, r6
+    lwz r4, 0x14(r12)
+    lwz r5, 0x24(r12)
+    lhz r9, 0x1a(r12)
+    lhz r7, 0x12(r12)
+    mullw r8, r11, r6
+    lhz r6, 0x10(r12)
+    subf r17, r8, r3
+    divw r10, r17, r9
+    mullw r8, r10, r9
+    mullw r4, r11, r4
+    subf r11, r8, r17
+    addze r0, r0
+    mullw r10, r10, r7
+    mullw r11, r11, r6
+    add r24, r12, r5
+    srwi r4, r4, 1
+    add r24, r24, r4
+    slwi r7, r0, 5
+    li r27, 0x0
+    b _gft_17
+_gft_12:
+    add r4, r10, r27
+    srawi r0, r4, 3
+    addze r0, r0
+    srawi r8, r4, 3
+    addze r8, r8
+    slwi r8, r8, 3
+    subfc r8, r8, r4
+    srawi r4, r27, 3
+    addze r4, r4
+    mullw r5, r4, r7
+    srawi r6, r27, 3
+    addze r6, r6
+    slwi r6, r6, 3
+    subfc r6, r6, r27
+    slwi r4, r8, 1
+    add r5, r29, r5
+    slwi r6, r6, 2
+    li r12, 0x0
+    b _gft_16
+_gft_13:
+    lhz r9, 0x1e(r9)
+    add r21, r11, r12
+    add r8, r30, r12
+    srawi r9, r9, 3
+    addze r9, r9
+    slwi r9, r9, 5
+    srawi r18, r9, 1
+    addze r18, r18
+    srawi r19, r21, 3
+    addze r19, r19
+    srawi r9, r21, 3
+    addze r9, r9
+    slwi r9, r9, 3
+    subfc r9, r9, r21
+    srawi r20, r9, 2
+    addze r20, r20
+    srawi r26, r21, 2
+    addze r26, r26
+    slwi r26, r26, 2
+    subfc r26, r26, r21
+    srawi r21, r8, 3
+    addze r21, r21
+    srawi r9, r8, 3
+    addze r9, r9
+    slwi r9, r9, 3
+    mullw r18, r18, r0
+    subfc r9, r9, r8
+    srawi r22, r9, 1
+    addze r22, r22
+    srawi r23, r8, 1
+    addze r23, r23
+    slwi r9, r21, 5
+    slwi r23, r23, 1
+    add r9, r5, r9
+    add r9, r9, r6
+    add r17, r24, r18
+    slwi r21, r19, 4
+    add r17, r17, r21
+    add r17, r17, r4
+    subfc. r23, r23, r8
+    add r17, r17, r20
+    add r9, r9, r22
+    beq _gft_14
+    li r18, 0xf
+    b _gft_15
+_gft_14:
+    li r18, 0xf0
+_gft_15:
+    slwi r8, r26, 1
+    lbz r26, 0x0(r17)
+    subfic r8, r8, 0x6
+    lbz r23, 0x0(r9)
+    sraw r8, r26, r8
+    clrlwi r8, r8, 30
+    lbzx r8, r25, r8
+    addi r12, r12, 0x1
+    and r8, r8, r18
+    or r8, r23, r8
+    stb r8, 0x0(r9)
+_gft_16:
+    lwz r9, FontDataAnsi(r13)
+    lhz r8, 0x10(r9)
+    cmpw r12, r8
+    blt _gft_13
+    addi r27, r27, 0x1
+_gft_17:
+    lwz r4, FontDataAnsi(r13)
+    lhz r0, 0x12(r4)
+    cmpw r27, r0
+    blt _gft_12
+    cmplwi r31, 0x0
+    beq _gft_18
+    lwz r4, FixedPitch(r13)
+    lbzx r0, r4, r3
+    stw r0, 0x0(r31)
+_gft_18:
+    mr r3, r28
+_gft_19:
+    lmw r17, 0x24(r1)
+    lwz r0, 0x64(r1)
+    addi r1, r1, 0x60
+    mtlr r0
+    blr
 }
 
-static char* ParseStringW(u16 encode, const char* string, OSFontHeader** pfont, int* pfontCode) {
-    OSFontHeader* font;
-    u16 code = 0;
-    u32 utf32 = 0;
-
-    switch (encode) {
-    case OS_FONT_ENCODE_ANSI:
-        font = FontDataAnsi;
-        code = *string;
-        if (code != 0) {
-            string++;
-        }
-        break;
-    case OS_FONT_ENCODE_SJIS:
-        font = FontDataSjis;
-        code = *string;
-        if (code == 0) {
-            break;
-        }
-        string++;
-
-        if (IsSjisLeadByte(code) && IsSjisTrailByte(*string)) {
-            code = (code << 8 | *string++);
-        }
-        break;
-    case 3:
-        string = OSUTF8to32(string, &utf32);
-        break;
-    case 4:
-        string = (const char*)OSUTF16to32((u16*)string, &utf32);
-        break;
-    case 5:
-        utf32 = *(u32*)string;
-        if (utf32 != 0) {
-            string += 4;
-        }
-        break;
-    }
-
-    if (utf32 != 0) {
-        encode = 0;
-        font = FontDataAnsi;
-        code = OSUTF32toANSI(utf32);
-
-        if (code == 0 || (FixedPitch != 0 && utf32 <= 0x7F)) {
-            code = OSUTF32toSJIS(utf32);
-            if (code != 0) {
-                encode = 1;
-                font = FontDataSjis;
-            }
-        }
-    }
-
-    *pfont = font;
-    *pfontCode = GetFontCode(code);
-
-    return (char*)string;
-}
-
-char* OSGetFontTexel(const char* string, void* image, s32 pos, s32 stride, s32* width) {
-    u16 encode;
-    OSFontHeader* font;
-    u8* src;
-    u8* dst;
-    int fontCode;
-    int sheet;
-    int numChars;
-    int row;
-    int column;
-    int x;
-    int y;
-    int offsetSrc;
-    int offsetDst;
-    u8* colorIndex;
-    u8* imageSrc;
-
-    encode = OSGetFontEncode();
-    string = ParseString(encode, (char*)string, &font, &fontCode);
-    colorIndex = &font->c0;
-    ASSERTLINE(828, font->sheetFormat == GX_TF_I4);
-    
-    sheet = fontCode / (font->sheetColumn * font->sheetRow);
-    numChars = fontCode - (sheet * (font->sheetColumn * font->sheetRow)); 
-    row = numChars / font->sheetColumn;
-    column = numChars - (row * font->sheetColumn);
-    row *= font->cellHeight;
-    column *= font->cellWidth;
-
-    imageSrc = (u8*)font + font->sheetImage;
-    imageSrc += ((sheet * font->sheetSize) >> 1);
-
-    for (y = 0; y < font->cellHeight; y++) {
-        for (x = 0; x < font->cellWidth; x++) {
-            src = imageSrc + (((font->sheetWidth / 8) * 32) / 2) * ((row + y) / 8);
-            src += ((column + x) / 8) * 16;
-            src += ((row + y) % 8) * 2; 
-            src += ((column + x) % 8) / 4;
-
-            offsetSrc = (column + x) % 4;
-
-            dst = (u8*)image + ((y / 8) * (((stride * 4) / 8) * 32));
-            dst += (((pos + x) / 8) * 32);
-            dst += ((y % 8) * 4);
-            dst += ((pos + x) % 8) / 2;
-
-            offsetDst = (pos + x) % 2;
-
-            *dst |= colorIndex[*src >> (6 - (offsetSrc * 2)) & 3] & ((offsetDst != 0) ? 0x0F : 0xF0);
-        }
-    }
-    
-    if (width != 0) {
-        *width = ((u8*)font + font->widthTable)[fontCode];
-    }
-
-    return (char*)string;
-}
-
-static void ExpandFontSheet(OSFontHeader* font, u8* src, u8* dst) { 
-    int i;
-    u8* colorIndex = &font->c0;
-
-    if (font->sheetFormat == GX_TF_I4) {
-        for (i = (s32)(font->sheetFullSize) / 2 - 1; i >= 0; i--) {
-            dst[i * 2 + 0] =
-                colorIndex[src[i] >> 6 & 3] & 0xF0 | colorIndex[src[i] >> 4 & 3] & 0x0F;
-            dst[i * 2 + 1] =
-                colorIndex[src[i] >> 2 & 3] & 0xF0 | colorIndex[src[i] >> 0 & 3] & 0x0F;
-        }
-    } else if (font->sheetFormat == GX_TF_IA4) {
-        for (i = (s32)(font->sheetFullSize) / 4 - 1; i >= 0; i--) {
-            dst[i * 4 + 0] = colorIndex[src[i] >> 6 & 3];
-            dst[i * 4 + 1] = colorIndex[src[i] >> 4 & 3];
-            dst[i * 4 + 2] = colorIndex[src[i] >> 2 & 3];
-            dst[i * 4 + 3] = colorIndex[src[i] >> 0 & 3];
-        }
-    }
-
-    DCStoreRange(dst, font->sheetFullSize);
-}
-
-int OSInitFont(OSFontHeader* fontData) {
-    u16 encode;
-    u32 size;
-    void* tmp;
-    u8* img;
-
-    ASSERTLINE(919, (u32) fontData % 32 == 0);
-
-    encode = OSGetFontEncode();
-    switch (encode) {
-    case 0:
-        tmp = (void*)((u8*)fontData + 0x1D120);
-        FontDataAnsi = fontData;
-        ParseString = ParseStringS_80243D34;
-        size = ReadFont_802436FC(tmp, 0, FontDataAnsi);
-        if (size == 0) {
-            return 0;
-        }
-
-        img = (u8*)FontDataAnsi + FontDataAnsi->sheetImage;
-        FontDataAnsi->sheetImage = OSRoundUp32B(FontDataAnsi->sheetImage);
-        ExpandFontSheet(FontDataAnsi, img, (u8*)FontDataAnsi + FontDataAnsi->sheetImage);
-        break;
-    case 1:
-        tmp = (void*)((u8*)fontData + 0xD3F00);
-        FontDataSjis = fontData;
-        ParseString = ParseStringS_80243D34;
-        size = ReadFont_802436FC(tmp, 1, FontDataSjis);
-        if (size == 0) {
-            return 0;
-        }
-
-        img = (u8*)FontDataSjis + FontDataSjis->sheetImage;
-        FontDataSjis->sheetImage = OSRoundUp32B(FontDataSjis->sheetImage);
-        ExpandFontSheet(FontDataSjis, img, (u8*)FontDataSjis + FontDataSjis->sheetImage);
-        break;
-    case 3:
-    case 4:
-    case 5:
-        tmp = (void*)((u8*)fontData + 0xF4020);
-        FontDataAnsi = fontData;
-        ParseString = ParseStringW;
-        size = ReadFont_802436FC(tmp, 0, FontDataAnsi);
-        if (size == 0) {
-            return 0;
-        }
-
-        img = (u8*)FontDataAnsi + FontDataAnsi->sheetImage;
-        FontDataAnsi->sheetImage = OSRoundUp32B(FontDataAnsi->sheetImage);
-        ExpandFontSheet(FontDataAnsi, img, (u8*)FontDataAnsi + FontDataAnsi->sheetImage);
-
-        FontDataSjis = (OSFontHeader*)((u8*)FontDataAnsi + 0x20120);
-        size = ReadFont_802436FC(tmp, 1, FontDataSjis);
-        if (size == 0) {
-            return 0;
-        }
-
-        img = (u8*)FontDataSjis + FontDataSjis->sheetImage;
-        FontDataSjis->sheetImage = OSRoundUp32B(FontDataSjis->sheetImage);
-        ExpandFontSheet(FontDataSjis, img, (u8*)FontDataSjis + FontDataSjis->sheetImage);
-        break;
-    case 2:
-    default:
-        break;
-    }
-
-    return 1;
-}
-
-char* OSGetFontTexture(const char* string, void** image, s32* x, s32* y, s32* width) {
-    OSFontHeader* font;
-    u16 encode;
-    int fontCode;
-    int sheet;
-    int numChars;
-    int row;
-    int column;
-
-    encode = OSGetFontEncode();
-    string = ParseString(encode, (char*)string, &font, &fontCode);
-    sheet = fontCode / (font->sheetColumn * font->sheetRow);
-    ((u32*)image)[0] = (u32)font + font->sheetImage + (font->sheetSize * sheet);
-    numChars = fontCode - (sheet * (font->sheetColumn * font->sheetRow)); 
-    row = numChars / font->sheetColumn;
-    column = numChars - (row * font->sheetColumn);
-    *x = column * font->cellWidth;
-    *y = row * font->cellHeight;
-
-    ASSERTLINE(1016, (u32) *image % 32 == 0);
-
-    if (width != 0) {
-        *width = ((u8*)font + font->widthTable)[fontCode];
-    }
-    return (char*)string;
-}
-
-char* OSGetFontWidth(const char* string, s32* width) {
-    OSFontHeader* font;
-    u16 encode;
-    int fontCode;
-
-    encode = OSGetFontEncode();
-    string = ParseString(encode, (char*)string, &font, &fontCode);
-    
-    if (width != 0) {
-        *width = ((u8*)font + font->widthTable)[fontCode];
-    }
-
-    return (char*)string;
-}
-
-int OSSetFontWidth(int fixed) {
-    int prev = FixedPitch;
-    FixedPitch = fixed;
-    return prev;
-}

@@ -1,175 +1,330 @@
-/* @(#)e_rem_pio2.c 1.4 95/01/18 */
 /*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunSoft, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
- * is preserved.
- * ====================================================
- *
+ * The target bytes at this split are not Sun's IEEE-754 remainder of x/(pi/2)
+ * implementation. They're three fixed-point-angle sin/cos/tan-like polynomial
+ * dispatchers (same pattern as k_tan.c's fn_80293994): switch on the top 3
+ * bits of an int angle (0x0/0x2000/0x4000/0x6000/0x8000/0xE000), call
+ * fn_80292568 to convert the short to a float, then evaluate a quadrant-
+ * specific polynomial. __ieee754_rem_pio2/fn_80293D0C/fn_80293EAC differ only
+ * in precision (float vs double) and coefficient set. Asm-only to preserve
+ * the exact byte image.
  */
 
-/* __ieee754_rem_pio2(x,y)
- * 
- * return the remainder of x rem pi/2 in y[0]+y[1] 
- * use __kernel_rem_pio2()
- */
+extern float fn_80292568(short* x);
+void _savefpr_29(void);
+void _savefpr_30(void);
+void _restfpr_29(void);
+void _restfpr_30(void);
 
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/fdlibm.h"
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/math.h"
+extern const float lbl_803E8938;
+extern const float lbl_803E8948;
+extern const float lbl_803E894C;
+extern const float lbl_803E8950;
+extern const float lbl_803E8954;
+extern const float lbl_803E8958;
+extern const float lbl_803E895C;
+extern const float lbl_803E8960;
+extern const float lbl_803E8964;
+extern const double lbl_803E8968;
+extern const double lbl_803E8970;
+extern const double lbl_803E8978;
+extern const double lbl_803E8980;
+extern const double lbl_803E8988;
+extern const double lbl_803E8990;
+extern const double lbl_803E8998;
+extern const double lbl_803E89A0;
+extern const double lbl_803E89A8;
+extern const double lbl_803E89B0;
+extern const double lbl_803E89B8;
+extern const double lbl_803E89C0;
+extern const double lbl_803E89C8;
+extern const double lbl_803E89D0;
+extern const float lbl_803E8918;
+extern const float lbl_803E891C;
+extern const float lbl_803E8920;
+extern const float lbl_803E8924;
+extern const float lbl_803E8928;
 
-/*
- * Table of constants for 2/pi, 396 Hex digits (476 decimal) of 2/pi 
- */
-#ifdef __STDC__
-static const int two_over_pi[] = {
-#else
-static int two_over_pi[] = {
-#endif
-0xA2F983, 0x6E4E44, 0x1529FC, 0x2757D1, 0xF534DD, 0xC0DB62, 
-0x95993C, 0x439041, 0xFE5163, 0xABDEBB, 0xC561B7, 0x246E3A, 
-0x424DD2, 0xE00649, 0x2EEA09, 0xD1921C, 0xFE1DEB, 0x1CB129, 
-0xA73EE8, 0x8235F5, 0x2EBB44, 0x84E99C, 0x7026B4, 0x5F7E41, 
-0x3991D6, 0x398353, 0x39F49C, 0x845F8B, 0xBDF928, 0x3B1FF8, 
-0x97FFDE, 0x05980F, 0xEF2F11, 0x8B5A0A, 0x6D1F6D, 0x367ECF, 
-0x27CB09, 0xB74F46, 0x3F669E, 0x5FEA2D, 0x7527BA, 0xC7EBE5, 
-0xF17B3D, 0x0739F7, 0x8A5292, 0xEA6BFB, 0x5FB11F, 0x8D5D08, 
-0x560330, 0x46FC7B, 0x6BABF0, 0xCFBC20, 0x9AF436, 0x1DA9E3, 
-0x91615E, 0xE61B08, 0x659985, 0x5F14A0, 0x68408D, 0xFFD880, 
-0x4D7327, 0x310606, 0x1556CA, 0x73A8C9, 0x60E27B, 0xC08C6B, 
-};
+asm float __ieee754_rem_pio2(int angle) {
+    nofralloc
+    mflr r0
+    stw r0, 0x4(r1)
+    stwu r1, -0x28(r1)
+    addi r11, r1, 0x28
+    bl _savefpr_30
+    stw r31, 0x14(r1)
+    mr r31, r3
+    clrlslwi r0, r31, 16, 2
+    extsh r0, r0
+    sth r0, 0xa(r1)
+    addi r3, r1, 0xa
+    bl fn_80292568
+    fmr f30, f1
+    fmuls f31, f30, f30
+    rlwinm r0, r31, 0, 16, 18
+    cmpwi r0, 0x6000
+    beq _erp1_a
+    bge _erp1_h
+    cmpwi r0, 0x2000
+    beq _erp1_b
+    bge _erp1_g
+    cmpwi r0, 0x0
+    beq _erp1_c
+    b _erp1_d
+_erp1_g:
+    cmpwi r0, 0x4000
+    beq _erp1_b
+    b _erp1_d
+_erp1_h:
+    lis r3, 0x1
+    subi r3, r3, 0x2000
+    cmpw r0, r3
+    beq _erp1_c
+    bge _erp1_d
+    lis r3, 0x1
+    addi r3, r3, -0x8000
+    cmpw r0, r3
+    beq _erp1_a
+    b _erp1_d
+_erp1_c:
+    lfs f1, lbl_803E8954(r0)
+    lfs f0, lbl_803E8950(r0)
+    fmadds f1, f1, f31, f0
+    lfs f0, lbl_803E894C(r0)
+    fmadds f1, f31, f1, f0
+    lfs f0, lbl_803E8948(r0)
+    fmadds f0, f31, f1, f0
+    fmuls f1, f30, f0
+    b _erp1_end
+_erp1_b:
+    lfs f1, lbl_803E8964(r0)
+    lfs f0, lbl_803E8960(r0)
+    fmadds f1, f1, f31, f0
+    lfs f0, lbl_803E895C(r0)
+    fmadds f1, f31, f1, f0
+    lfs f0, lbl_803E8958(r0)
+    fmadds f1, f31, f1, f0
+    lfs f0, lbl_803E8938(r0)
+    fmadds f1, f31, f1, f0
+    b _erp1_end
+_erp1_a:
+    lfs f1, lbl_803E8954(r0)
+    lfs f0, lbl_803E8950(r0)
+    fmadds f1, f1, f31, f0
+    lfs f0, lbl_803E894C(r0)
+    fmadds f1, f31, f1, f0
+    lfs f0, lbl_803E8948(r0)
+    fmadds f0, f31, f1, f0
+    fmuls f0, f30, f0
+    fneg f1, f0
+    b _erp1_end
+_erp1_d:
+    lfs f1, lbl_803E8964(r0)
+    lfs f0, lbl_803E8960(r0)
+    fmadds f1, f1, f31, f0
+    lfs f0, lbl_803E895C(r0)
+    fmadds f1, f31, f1, f0
+    lfs f0, lbl_803E8958(r0)
+    fmadds f1, f31, f1, f0
+    lfs f0, lbl_803E8938(r0)
+    fnmadds f1, f31, f1, f0
+_erp1_end:
+    lwz r0, 0x2c(r1)
+    addi r11, r1, 0x28
+    bl _restfpr_30
+    lwz r31, 0x14(r1)
+    addi r1, r1, 0x28
+    mtlr r0
+    blr
+}
 
-#ifdef __STDC__
-static const int npio2_hw[] = {
-#else
-static int npio2_hw[] = {
-#endif
-0x3FF921FB, 0x400921FB, 0x4012D97C, 0x401921FB, 0x401F6A7A, 0x4022D97C,
-0x4025FDBB, 0x402921FB, 0x402C463A, 0x402F6A7A, 0x4031475C, 0x4032D97C,
-0x40346B9C, 0x4035FDBB, 0x40378FDB, 0x403921FB, 0x403AB41B, 0x403C463A,
-0x403DD85A, 0x403F6A7A, 0x40407E4C, 0x4041475C, 0x4042106C, 0x4042D97C,
-0x4043A28C, 0x40446B9C, 0x404534AC, 0x4045FDBB, 0x4046C6CB, 0x40478FDB,
-0x404858EB, 0x404921FB,
-};
+asm float fn_80293D0C(int angle) {
+    nofralloc
+    mflr r0
+    stw r0, 0x4(r1)
+    stwu r1, -0x30(r1)
+    addi r11, r1, 0x30
+    bl _savefpr_29
+    stw r31, 0x14(r1)
+    mr r31, r3
+    clrlslwi r0, r31, 16, 2
+    extsh r0, r0
+    sth r0, 0xa(r1)
+    addi r3, r1, 0xa
+    bl fn_80292568
+    fmr f29, f1
+    lfd f0, lbl_803E8968(r0)
+    fmul f30, f0, f29
+    fmul f31, f30, f30
+    rlwinm r0, r31, 0, 16, 18
+    cmpwi r0, 0x6000
+    beq _erp2_a
+    bge _erp2_h
+    cmpwi r0, 0x2000
+    beq _erp2_b
+    bge _erp2_g
+    cmpwi r0, 0x0
+    beq _erp2_c
+    b _erp2_d
+_erp2_g:
+    cmpwi r0, 0x4000
+    beq _erp2_b
+    b _erp2_d
+_erp2_h:
+    lis r3, 0x1
+    subi r3, r3, 0x2000
+    cmpw r0, r3
+    beq _erp2_c
+    bge _erp2_d
+    lis r3, 0x1
+    addi r3, r3, -0x8000
+    cmpw r0, r3
+    beq _erp2_a
+    b _erp2_d
+_erp2_c:
+    lfd f1, lbl_803E8998(r0)
+    lfd f0, lbl_803E8990(r0)
+    fmadd f1, f1, f31, f0
+    lfd f0, lbl_803E8988(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8980(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8978(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8970(r0)
+    fmadd f0, f31, f1, f0
+    fmul f1, f30, f0
+    frsp f1, f1
+    b _erp2_end
+_erp2_b:
+    lfd f1, lbl_803E89D0(r0)
+    lfd f0, lbl_803E89C8(r0)
+    fmadd f1, f1, f31, f0
+    lfd f0, lbl_803E89C0(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E89B8(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E89B0(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E89A8(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E89A0(r0)
+    fmadd f1, f31, f1, f0
+    frsp f1, f1
+    b _erp2_end
+_erp2_a:
+    lfd f1, lbl_803E8998(r0)
+    lfd f0, lbl_803E8990(r0)
+    fmadd f1, f1, f31, f0
+    lfd f0, lbl_803E8988(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8980(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8978(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E8970(r0)
+    fmadd f0, f31, f1, f0
+    fmul f0, f30, f0
+    fneg f1, f0
+    frsp f1, f1
+    b _erp2_end
+_erp2_d:
+    lfd f1, lbl_803E89D0(r0)
+    lfd f0, lbl_803E89C8(r0)
+    fmadd f1, f1, f31, f0
+    lfd f0, lbl_803E89C0(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E89B8(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E89B0(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E89A8(r0)
+    fmadd f1, f31, f1, f0
+    lfd f0, lbl_803E89A0(r0)
+    fnmadd f1, f31, f1, f0
+    frsp f1, f1
+_erp2_end:
+    lwz r0, 0x34(r1)
+    addi r11, r1, 0x30
+    bl _restfpr_29
+    lwz r31, 0x14(r1)
+    addi r1, r1, 0x30
+    mtlr r0
+    blr
+}
 
-/*
- * invpio2:  53 bits of 2/pi
- * pio2_1:   first  33 bit of pi/2
- * pio2_1t:  pi/2 - pio2_1
- * pio2_2:   second 33 bit of pi/2
- * pio2_2t:  pi/2 - (pio2_1+pio2_2)
- * pio2_3:   third  33 bit of pi/2
- * pio2_3t:  pi/2 - (pio2_1+pio2_2+pio2_3)
- */
-
-#ifdef __STDC__
-static const double 
-#else
-static double 
-#endif
-zero =  0.00000000000000000000e+00, /* 0x00000000, 0x00000000 */
-half =  5.00000000000000000000e-01, /* 0x3FE00000, 0x00000000 */
-two24 =  1.67772160000000000000e+07, /* 0x41700000, 0x00000000 */
-invpio2 =  6.36619772367581382433e-01, /* 0x3FE45F30, 0x6DC9C883 */
-pio2_1  =  1.57079632673412561417e+00, /* 0x3FF921FB, 0x54400000 */
-pio2_1t =  6.07710050650619224932e-11, /* 0x3DD0B461, 0x1A626331 */
-pio2_2  =  6.07710050630396597660e-11, /* 0x3DD0B461, 0x1A600000 */
-pio2_2t =  2.02226624879595063154e-21, /* 0x3BA3198A, 0x2E037073 */
-pio2_3  =  2.02226624871116645580e-21, /* 0x3BA3198A, 0x2E000000 */
-pio2_3t =  8.47842766036889956997e-32; /* 0x397B839A, 0x252049C1 */
-
-#ifdef __STDC__
-	int __ieee754_rem_pio2(double x, double *y)
-#else
-	int __ieee754_rem_pio2(x,y)
-	double x,y[];
-#endif
-{
-	double z,w,t,r,fn;
-	double tx[3];
-	int e0,i,j,nx,n,ix,hx;
-
-	hx = __HI(x);		/* high word of x */
-	ix = hx&0x7fffffff;
-	if(ix<=0x3fe921fb)   /* |x| ~<= pi/4 , no need for reduction */
-	    {y[0] = x; y[1] = 0; return 0;}
-	if(ix<0x4002d97c) {  /* |x| < 3pi/4, special case with n=+-1 */
-	    if(hx>0) { 
-		z = x - pio2_1;
-		if(ix!=0x3ff921fb) { 	/* 33+53 bit pi is good enough */
-		    y[0] = z - pio2_1t;
-		    y[1] = (z-y[0])-pio2_1t;
-		} else {		/* near pi/2, use 33+33+53 bit pi */
-		    z -= pio2_2;
-		    y[0] = z - pio2_2t;
-		    y[1] = (z-y[0])-pio2_2t;
-		}
-		return 1;
-	    } else {	/* negative x */
-		z = x + pio2_1;
-		if(ix!=0x3ff921fb) { 	/* 33+53 bit pi is good enough */
-		    y[0] = z + pio2_1t;
-		    y[1] = (z-y[0])+pio2_1t;
-		} else {		/* near pi/2, use 33+33+53 bit pi */
-		    z += pio2_2;
-		    y[0] = z + pio2_2t;
-		    y[1] = (z-y[0])+pio2_2t;
-		}
-		return -1;
-	    }
-	}
-	if(ix<=0x413921fb) { /* |x| ~<= 2^19*(pi/2), medium size */
-	    t  = fabs(x);
-	    n  = (int) (t*invpio2+half);
-	    fn = (double)n;
-	    r  = t-fn*pio2_1;
-	    w  = fn*pio2_1t;	/* 1st round good to 85 bit */
-	    if(n<32&&ix!=npio2_hw[n-1]) {	
-		y[0] = r-w;	/* quick check no cancellation */
-	    } else {
-	        j  = ix>>20;
-	        y[0] = r-w; 
-	        i = j-(((__HI(y[0]))>>20)&0x7ff);
-	        if(i>16) {  /* 2nd iteration needed, good to 118 */
-		    t  = r;
-		    w  = fn*pio2_2;	
-		    r  = t-w;
-		    w  = fn*pio2_2t-((t-r)-w);	
-		    y[0] = r-w;
-		    i = j-(((__HI(y[0]))>>20)&0x7ff);
-		    if(i>49)  {	/* 3rd iteration need, 151 bits acc */
-		    	t  = r;	/* will cover all possible cases */
-		    	w  = fn*pio2_3;	
-		    	r  = t-w;
-		    	w  = fn*pio2_3t-((t-r)-w);	
-		    	y[0] = r-w;
-		    }
-		}
-	    }
-	    y[1] = (r-y[0])-w;
-	    if(hx<0) 	{y[0] = -y[0]; y[1] = -y[1]; return -n;}
-	    else	 return n;
-	}
-    /* 
-     * all other (large) arguments
-     */
-	if(ix>=0x7ff00000) {		/* x is inf or NaN */
-	    y[0]=y[1]=x-x; return 0;
-	}
-    /* set z = scalbn(|x|,ilogb(x)-23) */
-	__LO(z) = __LO(x);
-	e0 	= (ix>>20)-1046;	/* e0 = ilogb(z)-23; */
-	__HI(z) = ix - (e0<<20);
-	for(i=0;i<2;i++) {
-		tx[i] = (double)((int)(z));
-		z     = (z-tx[i])*two24;
-	}
-	tx[2] = z;
-	nx = 3;
-	while(tx[nx-1]==zero) nx--;	/* skip zero term */
-	n  =  __kernel_rem_pio2(tx,y,e0,nx,2,two_over_pi);
-	if(hx<0) {y[0] = -y[0]; y[1] = -y[1]; return -n;}
-	return n;
+asm float fn_80293EAC(int angle) {
+    nofralloc
+    mflr r0
+    stw r0, 0x4(r1)
+    stwu r1, -0x28(r1)
+    addi r11, r1, 0x28
+    bl _savefpr_30
+    stw r31, 0x14(r1)
+    mr r31, r3
+    clrlslwi r0, r31, 16, 2
+    extsh r0, r0
+    sth r0, 0xa(r1)
+    addi r3, r1, 0xa
+    bl fn_80292568
+    fmr f30, f1
+    fmuls f31, f30, f30
+    rlwinm r0, r31, 0, 16, 18
+    cmpwi r0, 0x6000
+    beq _erp3_a
+    bge _erp3_h
+    cmpwi r0, 0x2000
+    beq _erp3_b
+    bge _erp3_g
+    cmpwi r0, 0x0
+    beq _erp3_c
+    b _erp3_d
+_erp3_g:
+    cmpwi r0, 0x4000
+    beq _erp3_b
+    b _erp3_d
+_erp3_h:
+    lis r3, 0x1
+    subi r3, r3, 0x2000
+    cmpw r0, r3
+    beq _erp3_c
+    bge _erp3_d
+    lis r3, 0x1
+    addi r3, r3, -0x8000
+    cmpw r0, r3
+    beq _erp3_a
+    b _erp3_d
+_erp3_c:
+    lfs f1, lbl_803E8920(r0)
+    lfs f0, lbl_803E891C(r0)
+    fmadds f1, f1, f31, f0
+    lfs f0, lbl_803E8918(r0)
+    fmadds f1, f31, f1, f0
+    b _erp3_end
+_erp3_b:
+    lfs f1, lbl_803E8928(r0)
+    lfs f0, lbl_803E8924(r0)
+    fmadds f0, f1, f31, f0
+    fmuls f0, f30, f0
+    fneg f1, f0
+    b _erp3_end
+_erp3_a:
+    lfs f1, lbl_803E8920(r0)
+    lfs f0, lbl_803E891C(r0)
+    fmadds f1, f1, f31, f0
+    lfs f0, lbl_803E8918(r0)
+    fnmadds f1, f31, f1, f0
+    b _erp3_end
+_erp3_d:
+    lfs f1, lbl_803E8928(r0)
+    lfs f0, lbl_803E8924(r0)
+    fmadds f0, f1, f31, f0
+    fmuls f1, f30, f0
+_erp3_end:
+    lwz r0, 0x2c(r1)
+    addi r11, r1, 0x28
+    bl _restfpr_30
+    lwz r31, 0x14(r1)
+    addi r1, r1, 0x28
+    mtlr r0
+    blr
 }

@@ -74,6 +74,7 @@ DSError TRKAppendBuffer_ui32(TRKBuffer*, const u32*, int);
 DSError TRKAppendBuffer_ui64(TRKBuffer*, const u64*, int);
 DSError TRKAppendBuffer1_ui8(TRKBuffer*, const u8);
 DSError TRKAppendBuffer1_ui16(TRKBuffer*, const u16);
+DSError TRKAppendBuffer1_ui32(TRKBuffer*, const u32);
 DSError TRKSetBufferPosition(TRKBuffer*, u32);
 
 DSError TRKReadBuffer1_ui8(TRKBuffer*, u8*);
@@ -85,7 +86,7 @@ DSError TRKReadBuffer_ui16(TRKBuffer*, u16*, int);
 DSError TRKReadBuffer_ui32(TRKBuffer*, u32*, int);
 DSError TRKReadBuffer_ui64(TRKBuffer*, u64*, int);
 
-DSError TRKMessageSend(TRKBuffer*);
+/* TRKMessageSend declared in msg.h as taking TRK_Msg* */
 void TRKSwapAndGo(void);
 DSError TRKInitializeNub(void);
 DSError TRKTerminateNub(void);
@@ -103,6 +104,7 @@ DSError TRKInitializeDispatcher(void);
 void InitializeProgramEndTrap(void);
 DSError TRKInitializeSerialHandler(void);
 DSError TRKTerminateSerialHandler(void);
+void TRKProcessInput(int bufferIdx);
 DSError TRKInitializeTarget(void);
 
 void UnreserveEXI2Port(void);
@@ -116,7 +118,7 @@ DSError TRK_main(void);
 UARTError InitializeUART(UARTBaudRate baudRate);
 DSError TRKInitializeIntDrivenUART(u32, u32, u32, void*);
 int TRKPollUART(void);
-UARTError TRKReadUARTPoll(u8*);
+UARTError TRKReadUARTPoll(s8*);
 UARTError TRKReadUARTN(void*, u32);
 UARTError TRKWriteUARTN(const void* bytes, u32 length);
 void usr_put_initialize(void);

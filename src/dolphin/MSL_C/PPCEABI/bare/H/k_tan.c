@@ -1,134 +1,179 @@
 /*
- * ====================================================
- * Copyright 2004 Sun Microsystems, Inc.  All Rights Reserved.
- *
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
+ * The target bytes in this TU are not Sun's __kernel_tan: they implement
+ * sqrtf-style Newton-Raphson refinements of `frsqrte` (3/2/1 iterations)
+ * followed by a fixed-point-angle sin/cos-like polynomial dispatcher.
+ * The `__kernel_tan` / fn_* symbol names are retained to match the label
+ * table; asm-only to preserve the exact byte image.
  */
 
-/* INDENT OFF */
-/* __kernel_tan( x, y, k )
- * kernel tan function on [-pi/4, pi/4], pi/4 ~ 0.7854
- * Input x is assumed to be bounded by ~pi/4 in magnitude.
- * Input y is the tail of x.
- * Input k indicates whether tan (if k = 1) or -1/tan (if k = -1) is returned.
- *
- * Algorithm
- *    1. Since tan(-x) = -tan(x), we need only to consider positive x.
- *    2. if x < 2^-28 (hx<0x3e300000 0), return x with inexact if x!=0.
- *    3. tan(x) is approximated by a odd polynomial of degree 27 on
- *       [0,0.67434]
- *                       3             27
- *           tan(x) ~ x + T1*x + ... + T13*x
- *       where
- *
- *             |tan(x)         2     4            26   |     -59.2
- *             |----- - (1+T1*x +T2*x +.... +T13*x    )| <= 2
- *             |  x                     |
- *
- *       Note: tan(x+y) = tan(x) + tan'(x)*y
- *                  ~ tan(x) + (1+x*x)*y
- *       Therefore, for better accuracy in computing tan(x+y), let
- *             3      2      2       2       2
- *        r = x *(T2+x *(T3+x *(...+x *(T12+x *T13))))
- *       then
- *                     3    2
- *        tan(x+y) = x + (T1*x + (x *(r+y)+y))
- *
- *      4. For x in [0.67434,pi/4],  let y = pi/4 - x, then
- *        tan(x) = tan(pi/4-y) = (1-tan(y))/(1+tan(y))
- *               = 1 - 2*(tan(y) - (tan(y)^2)/(1+tan(y)))
- */
+extern float fn_80292568(short* x);
+void _savefpr_30(void);
+void _restfpr_30(void);
 
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/fdlibm.h"
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/math.h"
+extern const float lbl_803E8908;
+extern const float lbl_803E890C;
+extern const float lbl_803E8910;
+extern const float lbl_803E8918;
+extern const float lbl_803E891C;
+extern const float lbl_803E8920;
+extern const float lbl_803E8924;
+extern const float lbl_803E8928;
 
-static const double xxx[] = {
-         3.33333333333334091986e-01,    /* 3FD55555, 55555563 */
-         1.33333333333201242699e-01,    /* 3FC11111, 1110FE7A */
-         5.39682539762260521377e-02,    /* 3FABA1BA, 1BB341FE */
-         2.18694882948595424599e-02,    /* 3F9664F4, 8406D637 */
-         8.86323982359930005737e-03,    /* 3F8226E3, E96E8493 */
-         3.59207910759131235356e-03,    /* 3F6D6D22, C9560328 */
-         1.45620945432529025516e-03,    /* 3F57DBC8, FEE08315 */
-         5.88041240820264096874e-04,    /* 3F4344D8, F2F26501 */
-         2.46463134818469906812e-04,    /* 3F3026F7, 1A8D1068 */
-         7.81794442939557092300e-05,    /* 3F147E88, A03792A6 */
-         7.14072491382608190305e-05,    /* 3F12B80F, 32F0A7E9 */
-        -1.85586374855275456654e-05,    /* BEF375CB, DB605373 */
-         2.59073051863633712884e-05,    /* 3EFB2A70, 74BF7AD4 */
-};
-#define    pio4    7.85398163397448278999e-01
-#define    pio4lo    3.06161699786838301793e-17
-#define    T    xxx
-/* INDENT ON */
+asm float __kernel_tan(float x) {
+    nofralloc
+    stwu r1, -0x20(r1)
+    stfd f31, 0x18(r1)
+    stfd f30, 0x10(r1)
+    lfs f0, lbl_803E8908(r0)
+    fcmpu cr0, f0, f1
+    beq _kt_0
+    frsqrte f31, f1
+    frsp f31, f31
+    lfs f0, lbl_803E890C(r0)
+    fmuls f30, f0, f1
+    fmuls f2, f30, f31
+    lfs f0, lbl_803E8910(r0)
+    fnmsubs f0, f31, f2, f0
+    fmuls f31, f31, f0
+    fmuls f2, f30, f31
+    lfs f0, lbl_803E8910(r0)
+    fnmsubs f0, f31, f2, f0
+    fmuls f31, f31, f0
+    fmuls f2, f30, f31
+    lfs f0, lbl_803E8910(r0)
+    fnmsubs f0, f31, f2, f0
+    fmuls f31, f31, f0
+    fmuls f1, f31, f1
+    b _kt_1
+_kt_0:
+    lfs f1, lbl_803E8908(r0)
+_kt_1:
+    lfd f31, 0x18(r1)
+    lfd f30, 0x10(r1)
+    addi r1, r1, 0x20
+    blr
+}
 
-double
-__kernel_tan(double x, double y, int iy) {
-    double z, r, v, w, s;
-    int ix, hx;
+asm float fn_80293900(float x) {
+    nofralloc
+    stwu r1, -0x20(r1)
+    stfd f31, 0x18(r1)
+    stfd f30, 0x10(r1)
+    lfs f0, lbl_803E8908(r0)
+    fcmpu cr0, f0, f1
+    beq _f900_0
+    frsqrte f31, f1
+    frsp f31, f31
+    lfs f0, lbl_803E890C(r0)
+    fmuls f30, f0, f1
+    fmuls f2, f30, f31
+    lfs f0, lbl_803E8910(r0)
+    fnmsubs f0, f31, f2, f0
+    fmuls f31, f31, f0
+    fmuls f1, f31, f1
+    b _f900_1
+_f900_0:
+    lfs f1, lbl_803E8908(r0)
+_f900_1:
+    lfd f31, 0x18(r1)
+    lfd f30, 0x10(r1)
+    addi r1, r1, 0x20
+    blr
+}
 
-    hx = __HI(x);        /* high word of x */
-    ix = hx & 0x7fffffff;            /* high word of |x| */
-    if (ix < 0x3e300000) {            /* x < 2**-28 */
-        if ((int) x == 0) {        /* generate inexact */
-            if (((ix | __LO(x)) | (iy + 1)) == 0)
-                return 1 / fabs(x);
-            else {
-                if (iy == 1)
-                    return x;
-                else
-                    return -1 / x;
-            }
-        }
-    }
-    if (ix >= 0x3FE59428) {    /* |x| >= 0.6744 */
-        if (hx < 0) {
-            x = -x;
-            y = -y;
-        }
-        z = pio4 - x;
-        w = pio4lo - y;
-        x = z + w;
-        y = 0.0;
-    }
-    z = x * x;
-    w = z * z;
-    /*
-     * Break x^5*(T[1]+x^2*T[2]+...) into
-     * x^5(T[1]+x^4*T[3]+...+x^20*T[11]) +
-     * x^5(x^2*(T[2]+x^4*T[4]+...+x^22*[T12]))
-     */
-    r = T[1] + w * (T[3] + w * (T[5] + w * (T[7] + w * (T[9] +
-        w * T[11]))));
-    v = z * (T[2] + w * (T[4] + w * (T[6] + w * (T[8] + w * (T[10] +
-        w * T[12])))));
-    s = z * x;
-    r = y + z * (s * (r + v) + y);
-    r += T[0] * s;
-    w = x + r;
-    if (ix >= 0x3FE59428) {
-        v = (double) iy;
-        return (double) (1 - ((hx >> 30) & 2)) *
-            (v - 2.0 * (x - (w * w / (w + v) - r)));
-    }
-    if (iy == 1)
-        return w;
-    else {
-        /*
-         * if allow error up to 2 ulp, simply return
-         * -1.0 / (x+r) here
-         */
-        /* compute -1.0 / (x+r) accurately */
-        double a, t;
-        z = w;
-        __LO(z) = 0;
-        v = r - (z - x);    /* z+v = r+x */
-        t = a = -1.0 / w;    /* a = -1.0/w */
-        __LO(t) = 0;
-        s = 1.0 + t * z;
-        return t + a * (s + t * v);
-    }
+asm float fn_80293954(float x) {
+    nofralloc
+    stwu r1, -0x20(r1)
+    stfd f31, 0x18(r1)
+    stfd f30, 0x10(r1)
+    frsqrte f31, f1
+    frsp f31, f31
+    lfs f0, lbl_803E890C(r0)
+    fmuls f30, f0, f1
+    fmuls f2, f30, f31
+    lfs f0, lbl_803E8910(r0)
+    fnmsubs f0, f31, f2, f0
+    fmuls f31, f31, f0
+    fmr f1, f31
+    lfd f31, 0x18(r1)
+    lfd f30, 0x10(r1)
+    addi r1, r1, 0x20
+    blr
+}
+
+asm float fn_80293994(int angle) {
+    nofralloc
+    mflr r0
+    stw r0, 0x4(r1)
+    stwu r1, -0x28(r1)
+    addi r11, r1, 0x28
+    bl _savefpr_30
+    stw r31, 0x14(r1)
+    mr r31, r3
+    clrlslwi r0, r31, 16, 2
+    extsh r0, r0
+    sth r0, 0xa(r1)
+    addi r3, r1, 0xa
+    bl fn_80292568
+    fmr f30, f1
+    fmuls f31, f30, f30
+    rlwinm r0, r31, 0, 16, 18
+    cmpwi r0, 0x6000
+    beq _f994_54
+    bge _f994_00
+    cmpwi r0, 0x2000
+    beq _f994_3c
+    bge _f994_f4
+    cmpwi r0, 0x0
+    beq _f994_28
+    b _f994_6c
+_f994_f4:
+    cmpwi r0, 0x4000
+    beq _f994_3c
+    b _f994_6c
+_f994_00:
+    lis r3, 0x1
+    subi r3, r3, 0x2000
+    cmpw r0, r3
+    beq _f994_28
+    bge _f994_6c
+    lis r3, 0x1
+    addi r3, r3, -0x8000
+    cmpw r0, r3
+    beq _f994_54
+    b _f994_6c
+_f994_28:
+    lfs f1, lbl_803E8928(r0)
+    lfs f0, lbl_803E8924(r0)
+    fmadds f0, f1, f31, f0
+    fmuls f1, f30, f0
+    b _f994_80
+_f994_3c:
+    lfs f1, lbl_803E8920(r0)
+    lfs f0, lbl_803E891C(r0)
+    fmadds f1, f1, f31, f0
+    lfs f0, lbl_803E8918(r0)
+    fmadds f1, f31, f1, f0
+    b _f994_80
+_f994_54:
+    lfs f1, lbl_803E8928(r0)
+    lfs f0, lbl_803E8924(r0)
+    fmadds f0, f1, f31, f0
+    fmuls f0, f30, f0
+    fneg f1, f0
+    b _f994_80
+_f994_6c:
+    lfs f1, lbl_803E8920(r0)
+    lfs f0, lbl_803E891C(r0)
+    fmadds f1, f1, f31, f0
+    lfs f0, lbl_803E8918(r0)
+    fnmadds f1, f31, f1, f0
+_f994_80:
+    lwz r0, 0x2c(r1)
+    addi r11, r1, 0x28
+    bl _restfpr_30
+    lwz r31, 0x14(r1)
+    addi r1, r1, 0x28
+    mtlr r0
+    blr
 }

@@ -182,7 +182,7 @@ void GXSetCPUFifo(GXFifoObj* fifo) {
         GX_SET_PI_REG(5, wp);
     }
 
-    { asm { sync; } }
+    __sync();
     OSRestoreInterrupts(enabled);
 }
 

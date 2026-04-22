@@ -56,28 +56,51 @@ static void Callback(s32 result, DVDCommandBlock* block) {
     Prepared_803DEAD8 = TRUE;
 }
 
+static inline void ReadApploader(DVDCommandBlock* dvdCmd, void* addr, u32 offset, u32 numBytes) {
+    while (Prepared_803DEAD8 == FALSE) { }
+    DVDReadAbsAsyncForBS(dvdCmd, addr, numBytes, offset + 0x2440, NULL);
+
+    while (TRUE) {
+        switch (dvdCmd->state) {
+        case 0:
+            break;
+        case 1:
+        default:
+            continue;
+        case -1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+            __OSDoHotReset(g_unk_817FFFFC);
+            continue;
+        }
+        break;
+    }
+}
+
 void __OSReboot(u32 resetCode, u32 bootDol) {
     OSContext exceptionContext;
-    DVDCommandBlock appLoaderReadBlock;
-    DVDCommandBlock rebootReadBlock;
-    u32 rebootSize;
-    s32 state;
+    DVDCommandBlock dvdCmd;
+    DVDCommandBlock dvdCmd2;
+    u32 numBytes;
     u32 offset;
-
-    (void)resetCode;
-    (void)bootDol;
 
     OSDisableInterrupts();
 
     g_unk_817FFFFC = 0;
     g_unk_817FFFF8 = 0;
-    g_unk_800030E2 = 1;
+    g_unk_800030E2 = TRUE;
     BOOT_REGION_START = (u32)SaveStart_803DEAD0;
     BOOT_REGION_END = (u32)SaveEnd_803DEAD4;
-
     OSClearContext(&exceptionContext);
     OSSetCurrentContext(&exceptionContext);
-
     DVDInit();
     DVDSetAutoInvalidation(TRUE);
 
@@ -89,55 +112,19 @@ void __OSReboot(u32 resetCode, u32 bootDol) {
 
     __OSMaskInterrupts(0xFFFFFFE0);
     __OSUnmaskInterrupts(0x400);
+
     OSEnableInterrupts();
 
-    while (!Prepared_803DEAD8) {
-    }
-
-    DVDReadAbsAsyncForBS(&appLoaderReadBlock, &FatalParam, sizeof(AppLoaderStruct), 0x2440, NULL);
-    while (TRUE) {
-        state = appLoaderReadBlock.state;
-        if (state == 1) {
-            continue;
-        }
-        if (state > 1) {
-            if (state < 0xC) {
-                __OSDoHotReset(g_unk_817FFFFC);
-            }
-            continue;
-        }
-        if (state < 0) {
-            __OSDoHotReset(g_unk_817FFFFC);
-        }
-        break;
-    }
+    offset = 0;
+    numBytes = 32;
+    ReadApploader(&dvdCmd, (void*)&FatalParam, offset, numBytes);
 
     offset = FatalParam.size + 0x20;
-    rebootSize = OSRoundUp32B(FatalParam.rebootSize);
+    numBytes = OSRoundUp32B(FatalParam.rebootSize);
+    ReadApploader(&dvdCmd2, OS_BOOTROM_ADDR, offset, numBytes);
 
-    while (!Prepared_803DEAD8) {
-    }
-
-    DVDReadAbsAsyncForBS(&rebootReadBlock, (void*)0x81300000, rebootSize, offset + 0x2440, NULL);
-    while (TRUE) {
-        state = rebootReadBlock.state;
-        if (state == 1) {
-            continue;
-        }
-        if (state > 1) {
-            if (state < 0xC) {
-                __OSDoHotReset(g_unk_817FFFFC);
-            }
-            continue;
-        }
-        if (state < 0) {
-            __OSDoHotReset(g_unk_817FFFFC);
-        }
-        break;
-    }
-
-    ICInvalidateRange((void*)0x81300000, rebootSize);
-    Run((void*)0x81300000);
+    ICInvalidateRange(OS_BOOTROM_ADDR, numBytes);
+    Run(OS_BOOTROM_ADDR);
 }
 
 void OSSetSaveRegion(void* start, void* end) {
