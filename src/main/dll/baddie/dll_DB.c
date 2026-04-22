@@ -91,6 +91,18 @@ extern f32 FLOAT_803de56c;
 extern f32 FLOAT_803e2abc;
 extern f32 FLOAT_803e2e68;
 
+/* Narrowly-typed aliases for the sbss/sdata state vars this DLL owns. */
+extern u8 lbl_803DC6DA;
+extern u8 lbl_803DE408;
+extern u8 lbl_803DE409;
+extern u16 lbl_803DE418;
+extern s8 lbl_803DE434;
+extern s8 lbl_803DE568;
+extern s8 lbl_803DE570;
+extern s8 lbl_803DE574;
+extern u8 lbl_803DE578;
+extern u8 lbl_803DE579;
+
 /* Local declarations keep imported functions visible within the TU. */
 void FUN_8012fd0c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
@@ -190,6 +202,13 @@ FUN_8012fe84(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   return 0;
 }
 
+/* EN v1.0 Address: 0x8012FEE0  Size: 8b
+ * Setter for the sdata byte at lbl_803DC6DA. */
+void fn_8012FEE0(u8 param_1)
+{
+    lbl_803DC6DA = param_1;
+}
+
 /*
  * --INFO--
  *
@@ -236,8 +255,9 @@ void FUN_80130044(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80130110(undefined param_1)
+void fn_80130110(u8 param_1)
 {
+    lbl_803DE409 = param_1;
 }
 
 /*
@@ -252,11 +272,9 @@ void FUN_80130110(undefined param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80130118(void)
-
+void fn_80130118(void)
 {
-  DAT_803de408 = 0x3c;
-  return;
+    lbl_803DE408 = 0x3c;
 }
 
 /*
@@ -271,8 +289,9 @@ void FUN_80130118(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80130124(undefined2 param_1)
+void fn_80130124(u16 param_1)
 {
+    lbl_803DE418 = param_1;
 }
 
 /*
@@ -291,6 +310,19 @@ void FUN_8013012c(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+{
+}
+
+/* EN v1.0 Address: 0x80130224  Size: 12b
+ * Signed-byte getter for lbl_803DE570. */
+s32 fn_80130224(void)
+{
+    return lbl_803DE570;
+}
+
+/* EN v1.0 Address: 0x8013023C  Size: 4b
+ * Empty function — just blr. */
+void fn_8013023C(void)
 {
 }
 
@@ -365,6 +397,12 @@ void FUN_801303fc(undefined4 param_1,undefined2 param_2)
 {
 }
 
+/* EN v1.0 Address: 0x8013045C  Size: 4b
+ * Empty function — just blr. */
+void fn_8013045C(void)
+{
+}
+
 /*
  * --INFO--
  *
@@ -426,8 +464,9 @@ void FUN_80130618(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801307d4(undefined param_1)
+void fn_801307D4(u8 param_1)
 {
+    lbl_803DE578 = param_1;
 }
 
 /*
@@ -442,11 +481,9 @@ void FUN_801307d4(undefined param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801307dc(void)
-
+void fn_801307DC(void)
 {
-  DAT_803de579 = 0;
-  return;
+    lbl_803DE579 = 0;
 }
 
 /*
@@ -461,11 +498,9 @@ void FUN_801307dc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801307e8(void)
-
+void fn_801307E8(void)
 {
-  DAT_803de579 = 1;
-  return;
+    lbl_803DE579 = 1;
 }
 
 /*
