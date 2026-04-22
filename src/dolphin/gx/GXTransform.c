@@ -286,28 +286,16 @@ void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht) {
     __GXData->bpSentNot = 0;
 }
 
-asm void GXGetScissor(u32* left, u32* top, u32* wd, u32* ht) {
-    nofralloc
-    lwz r8, gx(r13)
-    lwz r7, 0xf8(r8)
-    lwz r8, 0xfc(r8)
-    rlwinm r0, r7, 0, 9, 19
-    srwi r9, r0, 12
-    subi r0, r9, 0x156
-    clrlwi r7, r7, 21
-    stw r0, 0x0(r3)
-    rlwinm r0, r8, 0, 9, 19
-    subi r3, r7, 0x156
-    srwi r0, r0, 12
-    stw r3, 0x0(r4)
-    subf r3, r9, r0
-    clrlwi r4, r8, 21
-    addi r0, r3, 0x1
-    subf r3, r7, r4
-    stw r0, 0x0(r5)
-    addi r0, r3, 0x1
-    stw r0, 0x0(r6)
-    blr
+void GXGetScissor(u32* left, u32* top, u32* wd, u32* ht) {
+    u32 y1 = gx->suScis0 & 0x7FF;
+    u32 x1 = (gx->suScis0 & 0x7FF000) >> 12;
+    u32 y2 = gx->suScis1 & 0x7FF;
+    u32 x2 = (gx->suScis1 & 0x7FF000) >> 12;
+
+    *left = x1 - 0x156;
+    *top = y1 - 0x156;
+    *wd = (x2 - x1) + 1;
+    *ht = (y2 - y1) + 1;
 }
 
 /*

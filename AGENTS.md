@@ -8,7 +8,7 @@ Keep this light. The project is still in the "recover the game" phase, not the "
 - `resources/ghidra-decomp-4-12-2026/` contains the raw EN v1.0 Ghidra decomp with no code analysis. Use it for basic code structure only.
 - `resources/DolphinSymbolExport_GSAE01.txt` contains the active EN symbol export based on Dolphin Signature analysis. This is good for SDK matching, but the addresses need to be translated against the current `config/GSAE01/symbols.txt` anchors before using them for splits.
 - Other `resources/*` content should also be treated as rough shape data, not analysis.
-- `reference_projects/*` may exist in some checkouts to mine patterns, especially SDK code and common Nintendo/GameCube layouts. Do not edit anything in this folder, as it is reference code from other game decompilation efforts.
+- `reference_projects/*` may exist in some checkouts to mine patterns, especially SDK code and common Nintendo/GameCube layouts. Do not edit anything in this folder, as it is reference code from other game decompilation efforts. Known donors: `marioparty4` (2002, closest-era Nintendo title), `tww` (2002–03 Wind Waker), `melee` (2001, oldest SDK baseline), `mkdd` (2003 Mario Kart DD), `pikmin2` (2004, richest Dolphin SDK coverage — `src/Dolphin/` mirrors our layout), `prime` (2002 Metroid Prime, same year as SFA).
 - SDK files have already been added to this project, but they are from another game. We will need to assign our splits to use these files, update symbols, and possibly learn from `reference_projects/*` to drive our SDK files to matching.
 - `reference_projects/rena-tools*` may exist in some checkouts with Rena's SFA decomp projects, and may have some information that helps.
 
