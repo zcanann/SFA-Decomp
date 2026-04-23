@@ -17,7 +17,7 @@ extern undefined4 gCamcontrolCurrentActionMode;
 extern undefined4 gCamcontrolCurrentActionFlags;
 extern int gCamcontrolQueuedActionSource;
 extern undefined4 gCamcontrolCurrentActionId;
-extern undefined4* DAT_803de19c;
+extern undefined4* gCamcontrolState;
 extern f64 DOUBLE_803e22d0;
 extern f32 FLOAT_803e22ac;
 extern f32 FLOAT_803e22b0;
@@ -43,8 +43,8 @@ void camcontrol_applyQueuedAction(void)
   
   if (gCamcontrolQueuedActionPending != '\0') {
     if ((int)gCamcontrolQueuedActionBlendFrames < 2) {
-      *(float *)(DAT_803de19c + 0x7a) = FLOAT_803e22b0;
-      *(undefined *)((int)DAT_803de19c + 0x13f) = 0;
+      *(float *)(gCamcontrolState + 0x7a) = FLOAT_803e22b0;
+      *(undefined *)((int)gCamcontrolState + 0x13f) = 0;
     }
     else {
       fVar1 = FLOAT_803e22ac /
@@ -53,27 +53,27 @@ void camcontrol_applyQueuedAction(void)
       if ((fVar1 <= FLOAT_803e22b0) || (FLOAT_803e22ac < fVar1)) {
         fVar1 = FLOAT_803e22ac;
       }
-      *(float *)(DAT_803de19c + 0x7a) = FLOAT_803e22ac;
-      *(float *)(DAT_803de19c + 0x7c) = fVar1;
-      *(undefined *)((int)DAT_803de19c + 0x13f) = gCamcontrolQueuedActionMode;
+      *(float *)(gCamcontrolState + 0x7a) = FLOAT_803e22ac;
+      *(float *)(gCamcontrolState + 0x7c) = fVar1;
+      *(undefined *)((int)gCamcontrolState + 0x13f) = gCamcontrolQueuedActionMode;
     }
     puVar2 = FUN_8000facc();
-    if (FLOAT_803e22ac == *(float *)(DAT_803de19c + 0x7a)) {
-      *(undefined4 *)(DAT_803de19c + 0x86) = *(undefined4 *)(puVar2 + 6);
-      *(undefined4 *)(DAT_803de19c + 0x88) = *(undefined4 *)(puVar2 + 8);
-      *(undefined4 *)(DAT_803de19c + 0x8a) = *(undefined4 *)(puVar2 + 10);
-      DAT_803de19c[0x83] = *puVar2;
-      DAT_803de19c[0x84] = puVar2[1];
-      DAT_803de19c[0x85] = puVar2[2];
+    if (FLOAT_803e22ac == *(float *)(gCamcontrolState + 0x7a)) {
+      *(undefined4 *)(gCamcontrolState + 0x86) = *(undefined4 *)(puVar2 + 6);
+      *(undefined4 *)(gCamcontrolState + 0x88) = *(undefined4 *)(puVar2 + 8);
+      *(undefined4 *)(gCamcontrolState + 0x8a) = *(undefined4 *)(puVar2 + 10);
+      gCamcontrolState[0x83] = *puVar2;
+      gCamcontrolState[0x84] = puVar2[1];
+      gCamcontrolState[0x85] = puVar2[2];
       dVar3 = FUN_8000fc54();
-      *(float *)(DAT_803de19c + 0x8c) = (float)dVar3;
+      *(float *)(gCamcontrolState + 0x8c) = (float)dVar3;
     }
     else {
-      *DAT_803de19c = *puVar2;
-      DAT_803de19c[1] = puVar2[1];
-      DAT_803de19c[2] = puVar2[2];
+      *gCamcontrolState = *puVar2;
+      gCamcontrolState[1] = puVar2[1];
+      gCamcontrolState[2] = puVar2[2];
       dVar3 = FUN_8000fc54();
-      *(float *)(DAT_803de19c + 0x5a) = (float)dVar3;
+      *(float *)(gCamcontrolState + 0x5a) = (float)dVar3;
     }
     gCamcontrolSavedActionId = gCamcontrolCurrentActionId;
     gCamcontrolSavedActionFlags = gCamcontrolCurrentActionFlags;

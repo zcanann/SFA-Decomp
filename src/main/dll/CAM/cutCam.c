@@ -38,7 +38,7 @@ extern undefined4 DAT_803de144;
 extern undefined4 DAT_803de188;
 extern undefined4 DAT_803de18c;
 extern undefined4 gCamcontrolCurrentActionId;
-extern undefined4* DAT_803de19c;
+extern undefined4* gCamcontrolState;
 extern undefined4 DAT_803de1a0;
 extern undefined4* DAT_803de1a8;
 extern f64 DOUBLE_803e2318;
@@ -74,21 +74,21 @@ extern f32 FLOAT_803e234c;
  */
 void FUN_80103648(double param_1,double param_2,double param_3,undefined4 param_4)
 {
-  FUN_800033a8(DAT_803de19c,0,0x144);
-  *(float *)(DAT_803de19c + 0xc) = (float)param_1;
-  *(float *)(DAT_803de19c + 0x10) = (float)param_2;
-  *(float *)(DAT_803de19c + 0x14) = (float)param_3;
-  *(float *)(DAT_803de19c + 0x18) = (float)param_1;
-  *(float *)(DAT_803de19c + 0x1c) = (float)param_2;
-  *(float *)(DAT_803de19c + 0x20) = (float)param_3;
-  *(float *)(DAT_803de19c + 0xa8) = (float)param_1;
-  *(float *)(DAT_803de19c + 0xac) = (float)param_2;
-  *(float *)(DAT_803de19c + 0xb0) = (float)param_3;
-  *(float *)(DAT_803de19c + 0xb8) = (float)param_1;
-  *(float *)(DAT_803de19c + 0xbc) = (float)param_2;
-  *(float *)(DAT_803de19c + 0xc0) = (float)param_3;
-  *(undefined4 *)(DAT_803de19c + 0xa4) = param_4;
-  *(float *)(DAT_803de19c + 0xb4) = FLOAT_803e2304;
+  FUN_800033a8(gCamcontrolState,0,0x144);
+  *(float *)(gCamcontrolState + 0xc) = (float)param_1;
+  *(float *)(gCamcontrolState + 0x10) = (float)param_2;
+  *(float *)(gCamcontrolState + 0x14) = (float)param_3;
+  *(float *)(gCamcontrolState + 0x18) = (float)param_1;
+  *(float *)(gCamcontrolState + 0x1c) = (float)param_2;
+  *(float *)(gCamcontrolState + 0x20) = (float)param_3;
+  *(float *)(gCamcontrolState + 0xa8) = (float)param_1;
+  *(float *)(gCamcontrolState + 0xac) = (float)param_2;
+  *(float *)(gCamcontrolState + 0xb0) = (float)param_3;
+  *(float *)(gCamcontrolState + 0xb8) = (float)param_1;
+  *(float *)(gCamcontrolState + 0xbc) = (float)param_2;
+  *(float *)(gCamcontrolState + 0xc0) = (float)param_3;
+  *(undefined4 *)(gCamcontrolState + 0xa4) = param_4;
+  *(float *)(gCamcontrolState + 0xb4) = FLOAT_803e2304;
   DAT_803de142 = 0;
   return;
 }
@@ -138,7 +138,7 @@ void FUN_80103760(undefined8 param_1,double param_2,double param_3,undefined8 pa
   undefined4 in_r9;
   undefined4 in_r10;
   
-  DAT_803de19c = &DAT_803a4ed8;
+  gCamcontrolState = &DAT_803a4ed8;
   uVar2 = 0;
   uVar3 = 0x144;
   iVar1 = FUN_800033a8(-0x7fc5b128,0,0x144);

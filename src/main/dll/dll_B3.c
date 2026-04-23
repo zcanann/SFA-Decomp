@@ -12,7 +12,7 @@ extern undefined4 FUN_80259288();
 extern undefined4 FUN_8025c754();
 extern undefined4 FUN_8025cce8();
 
-extern undefined4 DAT_803de19c;
+extern undefined4 gCamcontrolState;
 
 /*
  * --INFO--
@@ -37,7 +37,7 @@ undefined4 FUN_80100f2c(int param_1,int *param_2,int param_3)
   iVar1 = FUN_800284e8(*param_2,param_3);
   FUN_80052a6c();
   if (*(char *)(iVar1 + 0x29) == '\x01') {
-    if ((*(byte *)(DAT_803de19c + 0x141) & 0x20) == 0) {
+    if ((*(byte *)(gCamcontrolState + 0x141) & 0x20) == 0) {
       local_15 = 0;
     }
     else {
@@ -47,7 +47,7 @@ undefined4 FUN_80100f2c(int param_1,int *param_2,int param_3)
   else {
     local_15 = *(byte *)(param_1 + 0x36);
   }
-  if (*(char *)(DAT_803de19c + 0x138) == '\b') {
+  if (*(char *)(gCamcontrolState + 0x138) == '\b') {
     local_15 = 0;
   }
   uVar2 = FUN_8005383c(*(uint *)(iVar1 + 0x24));

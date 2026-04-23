@@ -7,7 +7,7 @@ extern undefined4 countLeadingZeros();
 
 extern undefined4 DAT_803dc5f0;
 extern undefined4 gCamcontrolCurrentActionId;
-extern undefined4 DAT_803de19c;
+extern undefined4 gCamcontrolState;
 
 /*
  * --INFO--
@@ -31,7 +31,7 @@ void FUN_801023a8(void)
     DAT_803dc5f0 = 0xffff;
     countLeadingZeros(0x49 - gCamcontrolCurrentActionId);
     FUN_80100d40();
-    *(undefined4 *)(DAT_803de19c + 0x120) = 0;
+    *(undefined4 *)(gCamcontrolState + 0x120) = 0;
   }
   return;
 }

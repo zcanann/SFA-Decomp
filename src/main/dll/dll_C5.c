@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_8000fb0c();
 
-extern undefined4 DAT_803de19c;
+extern undefined4 gCamcontrolState;
 
 /*
  * --INFO--
@@ -20,9 +20,9 @@ extern undefined4 DAT_803de19c;
  */
 void FUN_80102354(int param_1,int param_2)
 {
-  if (*(char *)(DAT_803de19c + 0x13b) < param_1) {
-    *(char *)(DAT_803de19c + 0x13b) = (char)param_1;
-    *(undefined *)(DAT_803de19c + 0x13c) = 2;
+  if (*(char *)(gCamcontrolState + 0x13b) < param_1) {
+    *(char *)(gCamcontrolState + 0x13b) = (char)param_1;
+    *(undefined *)(gCamcontrolState + 0x13c) = 2;
     if (param_2 != 0) {
       FUN_8000fb0c((short)param_1);
     }

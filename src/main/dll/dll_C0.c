@@ -4,7 +4,7 @@
 extern undefined4 FUN_8011f6d0();
 extern int FUN_80134f70();
 
-extern undefined4 DAT_803de19c;
+extern undefined4 gCamcontrolState;
 
 /*
  * --INFO--
@@ -25,7 +25,7 @@ void FUN_80102440(void)
   int iVar2;
   int iVar3;
   
-  iVar3 = *(int *)(DAT_803de19c + 0x124);
+  iVar3 = *(int *)(gCamcontrolState + 0x124);
   iVar2 = FUN_80134f70();
   if ((iVar2 == 0) && (iVar3 != 0)) {
     bVar1 = *(byte *)(*(int *)(iVar3 + 0x78) + (uint)*(byte *)(iVar3 + 0xe4) * 5 + 4) & 0xf;

@@ -16,7 +16,7 @@ extern undefined4 FUN_80247ef8();
 extern double FUN_80247f54();
 
 extern undefined4 DAT_803de138;
-extern undefined4 DAT_803de19c;
+extern undefined4 gCamcontrolState;
 extern f64 DOUBLE_803e22d0;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803de148;
@@ -92,11 +92,11 @@ void FUN_80101c1c(short *param_1)
       fVar2 = FLOAT_803e22ac;
     }
     *(float *)(param_1 + 0x7a) = fVar2;
-    if (*(char *)(DAT_803de19c + 0x139) == '\x02') {
+    if (*(char *)(gCamcontrolState + 0x139) == '\x02') {
       fVar2 = *(float *)(param_1 + 0x7a);
       dVar5 = (double)(FLOAT_803e22ac - fVar2 * fVar2 * fVar2);
     }
-    else if (*(char *)(DAT_803de19c + 0x139) == '\x01') {
+    else if (*(char *)(gCamcontrolState + 0x139) == '\x01') {
       dVar5 = (double)(FLOAT_803e22ac - *(float *)(param_1 + 0x7a) * *(float *)(param_1 + 0x7a));
     }
     else {

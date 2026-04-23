@@ -28,7 +28,7 @@ extern int FUN_80286838();
 extern undefined4 FUN_80286884();
 extern double FUN_80293900();
 
-extern undefined4 DAT_803a4e88;
+extern undefined4 gCamcontrolHandlers;
 extern undefined4* DAT_803dd738;
 extern undefined4 DAT_803de130;
 extern short* DAT_803de134;
@@ -43,9 +43,9 @@ extern undefined gCamcontrolQueuedActionPending;
 extern void *gCamcontrolQueuedActionData;
 extern int gCamcontrolQueuedActionSource;
 extern undefined4 gCamcontrolCurrentActionId;
-extern undefined4 DAT_803de194;
-extern undefined4 DAT_803de198;
-extern short* DAT_803de19c;
+extern undefined4 gCamcontrolCurrentHandler;
+extern undefined4 gCamcontrolHandlerCount;
+extern short* gCamcontrolState;
 extern f64 DOUBLE_803e22d0;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803de14c;
@@ -101,7 +101,7 @@ void FUN_801024e8(void)
   double dVar12;
   
   psVar6 = DAT_803de134;
-  iVar11 = *(int *)(DAT_803de19c + 0x124);
+  iVar11 = *(int *)(gCamcontrolState + 0x124);
   if (DAT_803de134 == (short *)0x0) {
     return;
   }
@@ -110,7 +110,7 @@ void FUN_801024e8(void)
     return;
   }
   if ((DAT_803de130 != '\0') && (DAT_803de130 = '\0', iVar11 != 0)) {
-    cVar2 = *(char *)(DAT_803de19c + 0x138);
+    cVar2 = *(char *)(gCamcontrolState + 0x138);
     if (cVar2 == '\x01') {
       FUN_8000bb38(0,0x3ff);
       FUN_80098230((double)FLOAT_803e22ac,psVar6,2);
@@ -147,24 +147,24 @@ void FUN_801024e8(void)
       FUN_8002fb40((double)FLOAT_803e22f0,(double)FLOAT_803dc074);
     }
     else if (iVar11 == 0) {
-      *(undefined4 *)(DAT_803de19c + 0x128) = 0;
+      *(undefined4 *)(gCamcontrolState + 0x128) = 0;
     }
     else {
-      *(int *)(DAT_803de19c + 0x128) = iVar11;
-      *(byte *)(DAT_803de19c + 0x138) =
+      *(int *)(gCamcontrolState + 0x128) = iVar11;
+      *(byte *)(gCamcontrolState + 0x138) =
            *(byte *)(*(int *)(iVar11 + 0x78) + (uint)*(byte *)(iVar11 + 0xe4) * 5 + 4) & 0xf;
       DAT_803de142 = '\x03';
       DAT_803de130 = '\x01';
     }
   }
-  else if ((*(int *)(DAT_803de19c + 0x128) == iVar11) ||
+  else if ((*(int *)(gCamcontrolState + 0x128) == iVar11) ||
           (*(float *)(psVar6 + 0x4c) < FLOAT_803e22ac)) {
     FUN_8002fb40((double)FLOAT_803e22f4,(double)FLOAT_803dc074);
   }
   else {
     DAT_803de142 = '\0';
     if (iVar11 == 0) {
-      cVar2 = *(char *)(DAT_803de19c + 0x138);
+      cVar2 = *(char *)(gCamcontrolState + 0x138);
       if (cVar2 == '\x01') {
         FUN_8000bb38(0,0x400);
       }
@@ -179,18 +179,18 @@ void FUN_801024e8(void)
       FUN_800303fc((double)FLOAT_803e22b0,(int)psVar6);
     }
   }
-  iVar11 = FUN_80037ad4(*(int *)(DAT_803de19c + 0x128));
+  iVar11 = FUN_80037ad4(*(int *)(gCamcontrolState + 0x128));
   if (iVar11 == 0) {
-    *(undefined4 *)(DAT_803de19c + 0x128) = 0;
+    *(undefined4 *)(gCamcontrolState + 0x128) = 0;
   }
-  if ((DAT_803de142 != '\x03') || (*(int *)(DAT_803de19c + 0x128) == 0)) goto LAB_80102ab4;
-  if ((*(byte *)(*(int *)(DAT_803de19c + 0x128) + 0xaf) & 0x10) == 0) {
-    *(byte *)(DAT_803de19c + 0x141) = *(byte *)(DAT_803de19c + 0x141) & 0xdf;
+  if ((DAT_803de142 != '\x03') || (*(int *)(gCamcontrolState + 0x128) == 0)) goto LAB_80102ab4;
+  if ((*(byte *)(*(int *)(gCamcontrolState + 0x128) + 0xaf) & 0x10) == 0) {
+    *(byte *)(gCamcontrolState + 0x141) = *(byte *)(gCamcontrolState + 0x141) & 0xdf;
   }
   else {
-    *(byte *)(DAT_803de19c + 0x141) = *(byte *)(DAT_803de19c + 0x141) | 0x20;
+    *(byte *)(gCamcontrolState + 0x141) = *(byte *)(gCamcontrolState + 0x141) | 0x20;
   }
-  iVar11 = *(int *)(DAT_803de19c + 0x128);
+  iVar11 = *(int *)(gCamcontrolState + 0x128);
   sVar3 = *(short *)(iVar11 + 0x46);
   if (sVar3 == 0x49f) {
 LAB_80102994:
@@ -260,13 +260,13 @@ LAB_801029ac:
   }
 LAB_801029e0:
   if (((double)FLOAT_803e22b0 < dVar12) ||
-     ((double)*(float *)(DAT_803de19c + 0x134) <= (double)FLOAT_803e22b0)) {
+     ((double)*(float *)(gCamcontrolState + 0x134) <= (double)FLOAT_803e22b0)) {
     if (((double)FLOAT_803e22b4 < dVar12) ||
-       ((double)*(float *)(DAT_803de19c + 0x134) <= (double)FLOAT_803e22b4)) {
+       ((double)*(float *)(gCamcontrolState + 0x134) <= (double)FLOAT_803e22b4)) {
       if (((double)FLOAT_803e22b8 < dVar12) ||
-         ((double)*(float *)(DAT_803de19c + 0x134) <= (double)FLOAT_803e22b8)) {
+         ((double)*(float *)(gCamcontrolState + 0x134) <= (double)FLOAT_803e22b8)) {
         if ((dVar12 <= (double)FLOAT_803e22bc) &&
-           ((double)FLOAT_803e22bc < (double)*(float *)(DAT_803de19c + 0x134))) {
+           ((double)FLOAT_803e22bc < (double)*(float *)(gCamcontrolState + 0x134))) {
           FUN_80098230((double)FLOAT_803e22ac,psVar6,4);
         }
       }
@@ -281,7 +281,7 @@ LAB_801029e0:
   else {
     FUN_80098230((double)FLOAT_803e22ac,psVar6,4);
   }
-  *(float *)(DAT_803de19c + 0x134) = (float)dVar12;
+  *(float *)(gCamcontrolState + 0x134) = (float)dVar12;
 LAB_80102ab4:
   fVar4 = FLOAT_803e22f8 * *(float *)(psVar6 + 0x4c);
   fVar5 = FLOAT_803e22b0;
@@ -299,7 +299,7 @@ LAB_80102ab4:
 /*
  * --INFO--
  *
- * Function: FUN_80102bb0
+ * Function: camcontrol_getRelativePosition
  * EN v1.0 Address: 0x80102BB0
  * EN v1.0 Size: 396b
  * EN v1.1 Address: TODO
@@ -309,13 +309,13 @@ LAB_80102ab4:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80102bb0(double param_1,int param_2,float *param_3,float *param_4,float *param_5,
-                 float *param_6,int param_7)
+void camcontrol_getRelativePosition(double param_1,int param_2,float *param_3,float *param_4,
+                                    float *param_5,float *param_6,int param_7)
 {
   int iVar1;
   double dVar2;
   
-  iVar1 = *(int *)(DAT_803de19c + 0xa4);
+  iVar1 = *(int *)(gCamcontrolState + 0xa4);
   if (param_7 == 0) {
     *param_3 = *(float *)(param_2 + 0x18) - *(float *)(iVar1 + 0x18);
     *param_4 = *(float *)(param_2 + 0x1c) - (float)((double)*(float *)(iVar1 + 0x1c) + param_1);
@@ -386,7 +386,7 @@ void camcontrol_loadTriggeredCamAction(undefined8 param_1,double param_2,double 
     if ((param_9 != 0) && (-1 < param_9)) {
       local_20 = param_10 & 0x7f;
       local_1c = (byte)param_10 & 0x80;
-      *(undefined *)(DAT_803de19c + 0x139) = 1;
+      *(undefined *)(gCamcontrolState + 0x139) = 1;
       if ((param_10 & 0x80) == 0) {
         uVar4 = 0x78;
       }
@@ -426,10 +426,10 @@ void camcontrol_loadTriggeredCamAction(undefined8 param_1,double param_2,double 
       }
       else {
         iVar2 = 0;
-        puVar3 = &DAT_803a4e88;
-        for (uVar1 = (uint)DAT_803de198; uVar1 != 0; uVar1 = uVar1 - 1) {
+        puVar3 = &gCamcontrolHandlers;
+        for (uVar1 = (uint)gCamcontrolHandlerCount; uVar1 != 0; uVar1 = uVar1 - 1) {
           if (*(short *)*puVar3 == 0x42) {
-            iVar2 = (&DAT_803a4e88)[iVar2];
+            iVar2 = (&gCamcontrolHandlers)[iVar2];
             goto LAB_80103090;
           }
           puVar3 = puVar3 + 1;
@@ -467,10 +467,10 @@ LAB_80103090:
       }
       else {
         iVar2 = 0;
-        puVar3 = &DAT_803a4e88;
-        for (uVar1 = (uint)DAT_803de198; uVar1 != 0; uVar1 = uVar1 - 1) {
+        puVar3 = &gCamcontrolHandlers;
+        for (uVar1 = (uint)gCamcontrolHandlerCount; uVar1 != 0; uVar1 = uVar1 - 1) {
           if (*(short *)*puVar3 == 0x42) {
-            iVar2 = (&DAT_803a4e88)[iVar2];
+            iVar2 = (&gCamcontrolHandlers)[iVar2];
             goto LAB_80102f3c;
           }
           puVar3 = puVar3 + 1;
@@ -525,7 +525,7 @@ int camcontrol_loadCamAction(undefined8 param_1,double param_2,double param_3,un
 /*
  * --INFO--
  *
- * Function: FUN_801031a4
+ * Function: camcontrol_releaseCurrentHandler
  * EN v1.0 Address: 0x801031A4
  * EN v1.0 Size: 60b
  * EN v1.1 Address: TODO
@@ -535,10 +535,10 @@ int camcontrol_loadCamAction(undefined8 param_1,double param_2,double param_3,un
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801031a4(void)
+void camcontrol_releaseCurrentHandler(void)
 {
-  if (DAT_803de194 != 0) {
-    (**(code **)(**(int **)(DAT_803de194 + 4) + 0x10))();
+  if (gCamcontrolCurrentHandler != 0) {
+    (**(code **)(**(int **)(gCamcontrolCurrentHandler + 4) + 0x10))();
   }
   return;
 }
@@ -611,7 +611,7 @@ void camcontrol_queueCamAction(undefined4 param_1,undefined4 param_2,undefined p
 /*
  * --INFO--
  *
- * Function: FUN_8010335c
+ * Function: camcontrol_updateState
  * EN v1.0 Address: 0x8010335C
  * EN v1.0 Size: 748b
  * EN v1.1 Address: TODO
@@ -621,8 +621,9 @@ void camcontrol_queueCamAction(undefined4 param_1,undefined4 param_2,undefined p
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010335c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void camcontrol_updateState(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                            undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                            undefined8 param_8)
 {
   int iVar1;
   undefined4 uVar2;
@@ -630,12 +631,12 @@ void FUN_8010335c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   undefined8 uVar4;
   
   iVar1 = FUN_80134f70();
-  psVar3 = *(short **)(DAT_803de19c + 0x52);
+  psVar3 = *(short **)(gCamcontrolState + 0x52);
   if (psVar3 == (short *)0x0) {
-    psVar3 = DAT_803de19c;
+    psVar3 = gCamcontrolState;
     psVar3[0x92] = 0;
     psVar3[0x93] = 0;
-    psVar3 = DAT_803de19c;
+    psVar3 = gCamcontrolState;
     psVar3[0x8e] = 0;
     psVar3[0x8f] = 0;
   }
@@ -646,67 +647,67 @@ void FUN_8010335c(undefined8 param_1,double param_2,double param_3,undefined8 pa
     FLOAT_803de154 = *(float *)(psVar3 + 0xc);
     FLOAT_803de150 = *(float *)(psVar3 + 0xe);
     FLOAT_803de14c = *(float *)(psVar3 + 0x10);
-    FUN_80101844((int)DAT_803de19c,(int)psVar3);
-    if (*(char *)((int)DAT_803de19c + 0x13d) != '\0') {
-      *(undefined4 *)(psVar3 + 0xc) = *(undefined4 *)(DAT_803de19c + 0x6e);
-      *(undefined4 *)(psVar3 + 0xe) = *(undefined4 *)(DAT_803de19c + 0x70);
-      *(undefined4 *)(psVar3 + 0x10) = *(undefined4 *)(DAT_803de19c + 0x72);
+    FUN_80101844((int)gCamcontrolState,(int)psVar3);
+    if (*(char *)((int)gCamcontrolState + 0x13d) != '\0') {
+      *(undefined4 *)(psVar3 + 0xc) = *(undefined4 *)(gCamcontrolState + 0x6e);
+      *(undefined4 *)(psVar3 + 0xe) = *(undefined4 *)(gCamcontrolState + 0x70);
+      *(undefined4 *)(psVar3 + 0x10) = *(undefined4 *)(gCamcontrolState + 0x72);
       param_2 = (double)*(float *)(psVar3 + 0xe);
       param_3 = (double)*(float *)(psVar3 + 0x10);
       FUN_8000e054((double)*(float *)(psVar3 + 0xc),param_2,param_3,(float *)(psVar3 + 6),
                    (float *)(psVar3 + 8),(float *)(psVar3 + 10),*(int *)(psVar3 + 0x18));
-      *(undefined *)((int)DAT_803de19c + 0x13d) = 0;
+      *(undefined *)((int)gCamcontrolState + 0x13d) = 0;
     }
-    if (*(int *)(DAT_803de19c + 0x18) != *(int *)(psVar3 + 0x18)) {
-      FUN_8000e0c0((double)*(float *)(DAT_803de19c + 6),(double)*(float *)(DAT_803de19c + 8),
-                   (double)*(float *)(DAT_803de19c + 10),(float *)(DAT_803de19c + 0xc),
-                   (float *)(DAT_803de19c + 0xe),(float *)(DAT_803de19c + 0x10),
-                   *(int *)(DAT_803de19c + 0x18));
-      FUN_8000e0c0((double)*(float *)(DAT_803de19c + 0x54),(double)*(float *)(DAT_803de19c + 0x56),
-                   (double)*(float *)(DAT_803de19c + 0x58),(float *)(DAT_803de19c + 0x5c),
-                   (float *)(DAT_803de19c + 0x5e),(float *)(DAT_803de19c + 0x60),
-                   *(int *)(DAT_803de19c + 0x18));
-      FUN_8000e054((double)*(float *)(DAT_803de19c + 0xc),(double)*(float *)(DAT_803de19c + 0xe),
-                   (double)*(float *)(DAT_803de19c + 0x10),(float *)(DAT_803de19c + 6),
-                   (float *)(DAT_803de19c + 8),(float *)(DAT_803de19c + 10),*(int *)(psVar3 + 0x18))
+    if (*(int *)(gCamcontrolState + 0x18) != *(int *)(psVar3 + 0x18)) {
+      FUN_8000e0c0((double)*(float *)(gCamcontrolState + 6),(double)*(float *)(gCamcontrolState + 8),
+                   (double)*(float *)(gCamcontrolState + 10),(float *)(gCamcontrolState + 0xc),
+                   (float *)(gCamcontrolState + 0xe),(float *)(gCamcontrolState + 0x10),
+                   *(int *)(gCamcontrolState + 0x18));
+      FUN_8000e0c0((double)*(float *)(gCamcontrolState + 0x54),(double)*(float *)(gCamcontrolState + 0x56),
+                   (double)*(float *)(gCamcontrolState + 0x58),(float *)(gCamcontrolState + 0x5c),
+                   (float *)(gCamcontrolState + 0x5e),(float *)(gCamcontrolState + 0x60),
+                   *(int *)(gCamcontrolState + 0x18));
+      FUN_8000e054((double)*(float *)(gCamcontrolState + 0xc),(double)*(float *)(gCamcontrolState + 0xe),
+                   (double)*(float *)(gCamcontrolState + 0x10),(float *)(gCamcontrolState + 6),
+                   (float *)(gCamcontrolState + 8),(float *)(gCamcontrolState + 10),*(int *)(psVar3 + 0x18))
       ;
-      param_2 = (double)*(float *)(DAT_803de19c + 0x5e);
-      param_3 = (double)*(float *)(DAT_803de19c + 0x60);
-      FUN_8000e054((double)*(float *)(DAT_803de19c + 0x5c),param_2,param_3,
-                   (float *)(DAT_803de19c + 0x54),(float *)(DAT_803de19c + 0x56),
-                   (float *)(DAT_803de19c + 0x58),*(int *)(psVar3 + 0x18));
-      *(undefined4 *)(DAT_803de19c + 0x18) = *(undefined4 *)(psVar3 + 0x18);
+      param_2 = (double)*(float *)(gCamcontrolState + 0x5e);
+      param_3 = (double)*(float *)(gCamcontrolState + 0x60);
+      FUN_8000e054((double)*(float *)(gCamcontrolState + 0x5c),param_2,param_3,
+                   (float *)(gCamcontrolState + 0x54),(float *)(gCamcontrolState + 0x56),
+                   (float *)(gCamcontrolState + 0x58),*(int *)(psVar3 + 0x18));
+      *(undefined4 *)(gCamcontrolState + 0x18) = *(undefined4 *)(psVar3 + 0x18);
     }
     if (*(short **)(psVar3 + 0x18) != (short *)0x0) {
       *psVar3 = *psVar3 + **(short **)(psVar3 + 0x18);
     }
     camcontrol_applyQueuedAction();
-    if (DAT_803de194 != 0) {
-      (**(code **)(**(int **)(DAT_803de194 + 4) + 8))(DAT_803de19c);
-      param_2 = (double)*(float *)(DAT_803de19c + 8);
-      param_3 = (double)*(float *)(DAT_803de19c + 10);
-      FUN_8000e0c0((double)*(float *)(DAT_803de19c + 6),param_2,param_3,
-                   (float *)(DAT_803de19c + 0xc),(float *)(DAT_803de19c + 0xe),
-                   (float *)(DAT_803de19c + 0x10),*(int *)(DAT_803de19c + 0x18));
-      FUN_80101c1c(DAT_803de19c);
+    if (gCamcontrolCurrentHandler != 0) {
+      (**(code **)(**(int **)(gCamcontrolCurrentHandler + 4) + 8))(gCamcontrolState);
+      param_2 = (double)*(float *)(gCamcontrolState + 8);
+      param_3 = (double)*(float *)(gCamcontrolState + 10);
+      FUN_8000e0c0((double)*(float *)(gCamcontrolState + 6),param_2,param_3,
+                   (float *)(gCamcontrolState + 0xc),(float *)(gCamcontrolState + 0xe),
+                   (float *)(gCamcontrolState + 0x10),*(int *)(gCamcontrolState + 0x18));
+      FUN_80101c1c(gCamcontrolState);
     }
     uVar4 = camcontrol_applyQueuedAction();
     if (iVar1 == 0) {
-      if (*(int *)(DAT_803de19c + 0x8e) == 0) {
+      if (*(int *)(gCamcontrolState + 0x8e) == 0) {
         uVar2 = FUN_80101350(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        *(undefined4 *)(DAT_803de19c + 0x92) = uVar2;
+        *(undefined4 *)(gCamcontrolState + 0x92) = uVar2;
       }
       else {
-        *(int *)(DAT_803de19c + 0x92) = *(int *)(DAT_803de19c + 0x8e);
+        *(int *)(gCamcontrolState + 0x92) = *(int *)(gCamcontrolState + 0x8e);
       }
     }
-    *(undefined4 *)(DAT_803de19c + 0x54) = *(undefined4 *)(DAT_803de19c + 6);
-    *(undefined4 *)(DAT_803de19c + 0x56) = *(undefined4 *)(DAT_803de19c + 8);
-    *(undefined4 *)(DAT_803de19c + 0x58) = *(undefined4 *)(DAT_803de19c + 10);
-    *(undefined4 *)(DAT_803de19c + 0x5c) = *(undefined4 *)(DAT_803de19c + 0xc);
-    *(undefined4 *)(DAT_803de19c + 0x5e) = *(undefined4 *)(DAT_803de19c + 0xe);
-    *(undefined4 *)(DAT_803de19c + 0x60) = *(undefined4 *)(DAT_803de19c + 0x10);
-    *(undefined *)(DAT_803de19c + 0xa0) = 0;
+    *(undefined4 *)(gCamcontrolState + 0x54) = *(undefined4 *)(gCamcontrolState + 6);
+    *(undefined4 *)(gCamcontrolState + 0x56) = *(undefined4 *)(gCamcontrolState + 8);
+    *(undefined4 *)(gCamcontrolState + 0x58) = *(undefined4 *)(gCamcontrolState + 10);
+    *(undefined4 *)(gCamcontrolState + 0x5c) = *(undefined4 *)(gCamcontrolState + 0xc);
+    *(undefined4 *)(gCamcontrolState + 0x5e) = *(undefined4 *)(gCamcontrolState + 0xe);
+    *(undefined4 *)(gCamcontrolState + 0x60) = *(undefined4 *)(gCamcontrolState + 0x10);
+    *(undefined *)(gCamcontrolState + 0xa0) = 0;
     *(float *)(psVar3 + 6) = FLOAT_803de160;
     *(float *)(psVar3 + 8) = FLOAT_803de15c;
     *(float *)(psVar3 + 10) = FLOAT_803de158;

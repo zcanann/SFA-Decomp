@@ -7,16 +7,16 @@ extern undefined4 FUN_800238c4();
 extern int FUN_80023d8c();
 
 extern undefined4 DAT_803a4e84;
-extern undefined4 DAT_803a4e88;
+extern undefined4 gCamcontrolHandlers;
 extern undefined4 DAT_803de178;
 extern undefined4 DAT_803de179;
 extern undefined4 gCamcontrolCurrentActionMode;
 extern undefined4 gCamcontrolCurrentActionFlags;
 extern undefined4 DAT_803de18c;
 extern undefined4 gCamcontrolCurrentActionId;
-extern undefined4* DAT_803de194;
-extern undefined4 DAT_803de198;
-extern undefined4 DAT_803de19c;
+extern undefined4* gCamcontrolCurrentHandler;
+extern undefined4 gCamcontrolHandlerCount;
+extern undefined4 gCamcontrolState;
 
 /*
  * --INFO--
