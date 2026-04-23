@@ -333,7 +333,7 @@ void FUN_8006b6d4(ushort *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006b9ac(int param_1,int param_2)
+void newshadows_sortQueuedShadowCasters(int queueBase,int casterCount)
 {
   int iVar1;
   float fVar2;
@@ -349,23 +349,23 @@ void FUN_8006b9ac(int param_1,int param_2)
   int iVar12;
   int iVar13;
   
-  iVar1 = (param_2 + -1) / 9 + (param_2 + -1 >> 0x1f);
+  iVar1 = (casterCount + -1) / 9 + (casterCount + -1 >> 0x1f);
   for (iVar5 = 1; iVar5 <= iVar1 - (iVar1 >> 0x1f); iVar5 = iVar5 * 3 + 1) {
   }
   for (; 0 < iVar5; iVar5 = iVar5 / 3) {
     iVar13 = iVar5 + 1;
     iVar9 = iVar13 * 0xc;
-    iVar10 = param_1 + iVar9;
-    iVar1 = (param_2 + 1) - iVar13;
-    if (iVar13 <= param_2) {
+    iVar10 = queueBase + iVar9;
+    iVar1 = (casterCount + 1) - iVar13;
+    if (iVar13 <= casterCount) {
       do {
         uVar6 = *(undefined4 *)(iVar10 + -0xc);
         fVar2 = *(float *)(iVar10 + -8);
         uVar3 = *(undefined4 *)(iVar10 + -4);
-        iVar7 = param_1 + iVar9;
+        iVar7 = queueBase + iVar9;
         iVar12 = iVar13;
         while ((iVar5 < iVar12 &&
-               (iVar11 = param_1 + (iVar12 - iVar5) * 0xc, *(float *)(iVar11 + -8) < fVar2))) {
+               (iVar11 = queueBase + (iVar12 - iVar5) * 0xc, *(float *)(iVar11 + -8) < fVar2))) {
           uVar4 = *(undefined4 *)(iVar11 + -8);
           *(undefined4 *)(iVar7 + -0xc) = *(undefined4 *)(iVar11 + -0xc);
           *(undefined4 *)(iVar7 + -8) = uVar4;
@@ -373,7 +373,7 @@ void FUN_8006b9ac(int param_1,int param_2)
           iVar7 = iVar7 + iVar5 * -0xc;
           iVar12 = iVar12 - iVar5;
         }
-        puVar8 = (undefined4 *)(param_1 + iVar12 * 0xc + -0xc);
+        puVar8 = (undefined4 *)(queueBase + iVar12 * 0xc + -0xc);
         *puVar8 = uVar6;
         puVar8[1] = fVar2;
         puVar8[2] = uVar3;
@@ -400,7 +400,7 @@ void FUN_8006b9ac(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006badc(void)
+void newshadows_renderQueuedShadowCasters(void)
 {
   undefined2 uVar1;
   undefined2 uVar2;
@@ -537,7 +537,7 @@ void FUN_8006badc(void)
   FUN_8028680c();
   if (DAT_803ddbf8 != 0) {
     FUN_8000faec();
-    FUN_8006b9ac(-0x7fc710f8,(uint)DAT_803ddbf8);
+    newshadows_sortQueuedShadowCasters(-0x7fc710f8,(uint)DAT_803ddbf8);
     FUN_8000f478(1);
     puVar5 = FUN_8000facc();
     dVar21 = FUN_8000fc54();

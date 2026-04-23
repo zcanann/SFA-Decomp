@@ -57,7 +57,7 @@ extern undefined4 FUN_80062984();
 extern undefined4 FUN_80062a10();
 extern undefined4 FUN_80062a54();
 extern undefined4 FUN_8006b6d4();
-extern undefined4 FUN_8006badc();
+extern void newshadows_renderQueuedShadowCasters(void);
 extern void newshadows_queueShadowCaster(int object);
 extern void newshadows_refreshShadowCaptureTexture(void);
 extern void newshadows_flushShadowRenderTargets(void);
@@ -888,7 +888,7 @@ void FUN_8005b7d0(void)
   if (1 < DAT_803ddb2e) {
     FUN_8005b6e8(-0x7fc78ac8,(int)DAT_803ddb2e);
   }
-  FUN_8006badc();
+  newshadows_renderQueuedShadowCasters();
   FUN_80286884();
   return;
 }
