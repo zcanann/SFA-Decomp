@@ -14,31 +14,28 @@ Sections:
 	.sbss2      type:bss align:4
 
 main/unknown/autos/placeholder_800066E0.c:
-	.text       start:0x800066E0 end:0x8001741C
+	.text       start:0x800066E0 end:0x800173E4
 
 dolphin/TRK_MINNOW_DOLPHIN/MWTrace.c:
-	.text       start:0x8001741C end:0x8001746C
+	.text       start:0x800173E4 end:0x80017434
 
 main/unknown/autos/placeholder_8001746C.c:
-	.text       start:0x8001746C end:0x8002EC4C
+	.text       start:0x80017434 end:0x8002E07C
 
 main/objanim.c:
-	.text       start:0x8002EC4C end:0x8002F604
-
-main/unknown/autos/placeholder_8002F604.c:
-	.text       start:0x8002F604 end:0x80030780
+	.text       start:0x8002E07C end:0x80030688
 
 main/objhits.c:
-	.text       start:0x80030780 end:0x8003549C
+	.text       start:0x80030688 end:0x800353A4
 
 main/objHitReact.c:
-	.text       start:0x8003549C end:0x80035728
+	.text       start:0x800353A4 end:0x80035630
 
 main/objlib.c:
-	.text       start:0x80035728 end:0x80039030
+	.text       start:0x80035630 end:0x80038F38
 
 main/objprint.c:
-	.text       start:0x80039030 end:0x8003D7F0
+	.text       start:0x80038F38 end:0x8003D7F0
 
 main/objprint_dolphin.c:
 	.text       start:0x8003D7F0 end:0x80044510
@@ -1873,322 +1870,51 @@ main/unknown/autos/placeholder_80278F74.c:
 	.text       start:0x80278F74 end:0x80279018
 
 main/unknown/autos/placeholder_80279018.c:
-	extab       start:0x80005958 end:0x80005960
-	extabindex  start:0x80006194 end:0x800061A0
-	.text       start:0x80279018 end:0x802791FC
-
-main/unknown/autos/placeholder_802791FC.c:
-	.text       start:0x802791FC end:0x802792F8
-
-main/unknown/autos/placeholder_802792F8.c:
-	extab       start:0x80005960 end:0x80005968
-	extabindex  start:0x800061A0 end:0x800061AC
-	.text       start:0x802792F8 end:0x80279608
-
-main/unknown/autos/placeholder_80279608.c:
-	.text       start:0x80279608 end:0x8027979C
-
-main/unknown/autos/placeholder_8027979C.c:
-	.text       start:0x8027979C end:0x80279AF0
-
-main/unknown/autos/placeholder_80279AF0.c:
-	.text       start:0x80279AF0 end:0x80279D30
-
-main/unknown/autos/placeholder_80279D30.c:
-	.text       start:0x80279D30 end:0x80279EC0
-
-main/unknown/autos/placeholder_80279EC0.c:
-	.text       start:0x80279EC0 end:0x8027A2FC
-
-main/unknown/autos/placeholder_8027A2FC.c:
-	extab       start:0x80005968 end:0x80005970
-	extabindex  start:0x800061AC end:0x800061B8
-	.text       start:0x8027A2FC end:0x8027A3E0
-
-main/unknown/autos/placeholder_8027A3E0.c:
-	.text       start:0x8027A3E0 end:0x8027A710
-
-main/unknown/autos/placeholder_8027A710.c:
-	extab       start:0x80005970 end:0x80005988
-	extabindex  start:0x800061B8 end:0x800061DC
-	.text       start:0x8027A710 end:0x8027A940
-
-main/unknown/autos/placeholder_8027A940.c:
-	.text       start:0x8027A940 end:0x8027AC80
-
-main/unknown/autos/placeholder_8027AC80.c:
-	extab       start:0x80005988 end:0x80005998
-	extabindex  start:0x800061DC end:0x800061F4
-	.text       start:0x8027AC80 end:0x8027ADC4
-
-main/unknown/autos/placeholder_8027ADC4.c:
-	.text       start:0x8027ADC4 end:0x8027B038
-
-main/unknown/autos/placeholder_8027B038.c:
-	extab       start:0x80005998 end:0x800059C0
-	extabindex  start:0x800061F4 end:0x80006230
-	.text       start:0x8027B038 end:0x8027B41C
-
-main/unknown/autos/placeholder_8027B41C.c:
-	.text       start:0x8027B41C end:0x8027B53C
-
-main/unknown/autos/placeholder_8027B53C.c:
-	extab       start:0x800059C0 end:0x800059E0
-	extabindex  start:0x80006230 end:0x80006260
-	.text       start:0x8027B53C end:0x8027BB84
-
-main/unknown/autos/placeholder_8027BB84.c:
-	.text       start:0x8027BB84 end:0x8027BB90
-
-main/unknown/autos/placeholder_8027BB90.c:
-	extab       start:0x800059E0 end:0x80005A28
-	extabindex  start:0x80006260 end:0x800062CC
-	.text       start:0x8027BB90 end:0x8027C728
-
-main/unknown/autos/placeholder_8027C728.c:
-	.text       start:0x8027C728 end:0x8027CAF4
-
-main/unknown/autos/placeholder_8027CAF4.c:
-	extab       start:0x80005A28 end:0x80005A48
-	extabindex  start:0x800062CC end:0x800062FC
-	.text       start:0x8027CAF4 end:0x8027F724
-
-main/unknown/autos/placeholder_8027F724.c:
-	.text       start:0x8027F724 end:0x8027F8B0
-
-main/unknown/autos/placeholder_8027F8B0.c:
-	extab       start:0x80005A48 end:0x80005A58
-	extabindex  start:0x800062FC end:0x80006314
-	.text       start:0x8027F8B0 end:0x802801A8
-
-main/unknown/autos/placeholder_802801A8.c:
-	.text       start:0x802801A8 end:0x8028026C
-
-main/unknown/autos/placeholder_8028026C.c:
-	extab       start:0x80005A58 end:0x80005A78
-	extabindex  start:0x80006314 end:0x80006344
-	.text       start:0x8028026C end:0x80280F28
-
-main/unknown/autos/placeholder_80280F28.c:
-	.text       start:0x80280F28 end:0x8028116C
-
-main/unknown/autos/placeholder_8028116C.c:
-	extab       start:0x80005A78 end:0x80005A88
-	extabindex  start:0x80006344 end:0x8000635C
-	.text       start:0x8028116C end:0x80281760
-
-main/unknown/autos/placeholder_80281760.c:
-	.text       start:0x80281760 end:0x802817A8
-
-main/unknown/autos/placeholder_802817A8.c:
-	extab       start:0x80005A88 end:0x80005A98
-	extabindex  start:0x8000635C end:0x80006374
-	.text       start:0x802817A8 end:0x802818F8
-
-main/unknown/autos/placeholder_802818F8.c:
-	.text       start:0x802818F8 end:0x80281A9C
-
-main/unknown/autos/placeholder_80281A9C.c:
-	extab       start:0x80005A98 end:0x80005AB0
-	extabindex  start:0x80006374 end:0x80006398
-	.text       start:0x80281A9C end:0x80282288
-
-main/unknown/autos/placeholder_80282288.c:
-	.text       start:0x80282288 end:0x80282594
-
-main/unknown/autos/placeholder_80282594.c:
-	extab       start:0x80005AB0 end:0x80005AB8
-	extabindex  start:0x80006398 end:0x800063A4
-	.text       start:0x80282594 end:0x80282630
-
-main/unknown/autos/placeholder_80282630.c:
-	.text       start:0x80282630 end:0x802827D4
-
-main/unknown/autos/placeholder_802827D4.c:
-	extab       start:0x80005AB8 end:0x80005B30
-	extabindex  start:0x800063A4 end:0x80006458
-	.text       start:0x802827D4 end:0x80283134
-
-main/unknown/autos/placeholder_80283134.c:
-	.text       start:0x80283134 end:0x80283488
-
-main/unknown/autos/placeholder_80283488.c:
-	extab       start:0x80005B30 end:0x80005B40
-	extabindex  start:0x80006458 end:0x80006470
-	.text       start:0x80283488 end:0x802835C0
-
-main/unknown/autos/placeholder_802835C0.c:
-	.text       start:0x802835C0 end:0x8028364C
-
-main/unknown/autos/placeholder_8028364C.c:
-	extab       start:0x80005B40 end:0x80005B48
-	extabindex  start:0x80006470 end:0x8000647C
-	.text       start:0x8028364C end:0x802836E4
-
-main/unknown/autos/placeholder_802836E4.c:
-	.text       start:0x802836E4 end:0x802836F4
-
-main/unknown/autos/placeholder_802836F4.c:
-	extab       start:0x80005B48 end:0x80005B50
-	extabindex  start:0x8000647C end:0x80006488
-	.text       start:0x802836F4 end:0x8028373C
-
-main/unknown/autos/placeholder_8028373C.c:
-	.text       start:0x8028373C end:0x80283744
-
-main/unknown/autos/placeholder_80283744.c:
-	extab       start:0x80005B50 end:0x80005B68
-	extabindex  start:0x80006488 end:0x800064AC
-	.text       start:0x80283744 end:0x802839B0
-
-main/unknown/autos/placeholder_802839B0.c:
-	.text       start:0x802839B0 end:0x802839F4
-
-main/unknown/autos/placeholder_802839F4.c:
-	extab       start:0x80005B68 end:0x80005B70
-	extabindex  start:0x800064AC end:0x800064B8
-	.text       start:0x802839F4 end:0x80283BA0
-
-main/unknown/autos/placeholder_80283BA0.c:
-	.text       start:0x80283BA0 end:0x80283BF0
-
-main/unknown/autos/placeholder_80283BF0.c:
-	extab       start:0x80005B70 end:0x80005B78
-	extabindex  start:0x800064B8 end:0x800064C4
-	.text       start:0x80283BF0 end:0x80283DA0
-
-main/unknown/autos/placeholder_80283DA0.c:
-	.text       start:0x80283DA0 end:0x80283E10
-
-main/unknown/autos/placeholder_80283E10.c:
-	extab       start:0x80005B78 end:0x80005B80
-	extabindex  start:0x800064C4 end:0x800064D0
-	.text       start:0x80283E10 end:0x80283E4C
-
-main/unknown/autos/placeholder_80283E4C.c:
-	.text       start:0x80283E4C end:0x80283FA0
-
-main/unknown/autos/placeholder_80283FA0.c:
-	extab       start:0x80005B80 end:0x80005B90
-	extabindex  start:0x800064D0 end:0x800064E8
-	.text       start:0x80283FA0 end:0x8028429C
-
-main/unknown/autos/placeholder_8028429C.c:
-	.text       start:0x8028429C end:0x802842C4
-
-main/unknown/autos/placeholder_802842C4.c:
-	extab       start:0x80005B90 end:0x80005BB0
-	extabindex  start:0x800064E8 end:0x80006518
-	.text       start:0x802842C4 end:0x8028436C
-
-main/unknown/autos/placeholder_8028436C.c:
-	.text       start:0x8028436C end:0x80284410
-
-main/unknown/autos/placeholder_80284410.c:
-	extab       start:0x80005BB0 end:0x80005BC0
-	extabindex  start:0x80006518 end:0x80006530
-	.text       start:0x80284410 end:0x802844BC
-
-main/unknown/autos/placeholder_802844BC.c:
-	.text       start:0x802844BC end:0x802844C0
-
-main/unknown/autos/placeholder_802844C0.c:
-	extab       start:0x80005BC0 end:0x80005BF0
-	extabindex  start:0x80006530 end:0x80006578
-	.text       start:0x802844C0 end:0x80284698
-
-main/unknown/autos/placeholder_80284698.c:
-	.text       start:0x80284698 end:0x80284704
-
-main/unknown/autos/placeholder_8028479C.c:
-	extab       start:0x80005BF0 end:0x80005C00
-	extabindex  start:0x80006578 end:0x80006590
-	.text       start:0x80284704 end:0x80284970
-
-main/unknown/autos/placeholder_80284970.c:
-	.text       start:0x80284970 end:0x80284988
-
-main/unknown/autos/placeholder_80284988.c:
-	extab       start:0x80005C00 end:0x80005C08
-	extabindex  start:0x80006590 end:0x8000659C
-	.text       start:0x80284988 end:0x80284BA8
-
-main/unknown/autos/placeholder_80284BA8.c:
-	.text       start:0x80284BA8 end:0x80284BAC
-
-main/unknown/autos/placeholder_80284BAC.c:
-	extab       start:0x80005C08 end:0x80005C18
-	extabindex  start:0x8000659C end:0x800065B4
-	.text       start:0x80284BAC end:0x80284CBC
-
-main/unknown/autos/placeholder_80284CBC.c:
-	.text       start:0x80284CBC end:0x80284DD4
-
-main/unknown/autos/placeholder_80284E78.c:
-	.text       start:0x80284E78 end:0x80284E88
-
-main/unknown/autos/placeholder_80284EF0.c:
-	extab       start:0x80005C20 end:0x80005C40
-	extabindex  start:0x800065C0 end:0x800065F0
-	.text       start:0x80284E88 end:0x80285010
-
-main/unknown/autos/placeholder_80285010.c:
-	.text       start:0x80285010 end:0x8028503C
-
-main/unknown/autos/placeholder_8028503C.c:
-	extab       start:0x80005C40 end:0x80005C68
-	extabindex  start:0x800065F0 end:0x8000662C
-	.text       start:0x8028503C end:0x8028521C
-
-main/unknown/autos/placeholder_8028521C.c:
-	.text       start:0x8028521C end:0x80285220
-
-main/unknown/autos/placeholder_80285220.c:
-	extab       start:0x80005C68 end:0x80005CB0
-	extabindex  start:0x8000662C end:0x80006698
-	.text       start:0x80285220 end:0x802857B0
-
-main/unknown/autos/placeholder_802857B0.c:
-	.text       start:0x802857B0 end:0x80285B64
-
-main/unknown/autos/placeholder_80285B64.c:
-	extab       start:0x80005CB0 end:0x80005CB8
-	extabindex  start:0x80006698 end:0x800066A4
-	.text       start:0x80285B64 end:0x80285B88
+	extab       start:0x80005958 end:0x80005CB0
+	extabindex  start:0x80006194 end:0x80006698
+	.text       start:0x80279018 end:0x8028504C
 
 dolphin/OdemuExi2/DebuggerDriver.c:
-	.text       start:0x80285B88 end:0x80286608
+	extab       start:0x80005CB0 end:0x80005CB8
+	extabindex  start:0x80006698 end:0x800066A4
+	.text       start:0x8028504C end:0x80285EA4
 
 Runtime.PPCEABI.H/__va_arg.c:
-	.text       start:0x80286608 end:0x802866D0
+	.text       start:0x80285EA4 end:0x80285F6C
 
 Runtime.PPCEABI.H/global_destructor_chain.c:
-	.text       start:0x802866D0 end:0x802866E0
+	.text       start:0x80285F6C end:0x80286010
 	.dtors      start:0x802C18A8 end:0x802C18AC
 	.sbss       start:0x803DE3E0 end:0x803DE3E4
 
+Runtime.PPCEABI.H/runtime.c:
+	.text       start:0x80286010 end:0x802866D8
+
 Runtime.PPCEABI.H/__init_cpp_exceptions.cpp:
-	.text       start:0x802866E0 end:0x802867BC
+	.text       start:0x802866D8 end:0x80286754
 	.ctors      start:0x802C1880 end:0x802C1884
 	.dtors      start:0x802C18A0 end:0x802C18A8
 	.sdata      start:0x803DC640 end:0x803DC648
 
+Runtime.PPCEABI.H/fragment.s:
+	.text       start:0x80286754 end:0x802867BC
+	.bss        start:0x803D68E0 end:0x803D68F0
+
 main/unknown/autos/placeholder_802867BC.c:
 	.text       start:0x802867BC end:0x8028685C
 	.rodata     start:0x802C2920 end:0x802C2938
-	.bss        start:0x803D7540 end:0x803D754C
 
 dolphin/TRK_MINNOW_DOLPHIN/mainloop.c:
 	.text       start:0x8028685C end:0x80286954
 
 dolphin/TRK_MINNOW_DOLPHIN/nubevent.c:
 	.text       start:0x80286954 end:0x80286BC8
-	.bss        start:0x803D7550 end:0x803D7578
+	.bss        start:0x803D68F0 end:0x803D6918
 
 dolphin/TRK_MINNOW_DOLPHIN/nubinit.c:
 	.text       start:0x80286BC8 end:0x80287460
 	.rodata     start:0x802C2938 end:0x802C2958
-	.bss        start:0x803D7578 end:0x803D7580
+	.bss        start:0x803D6918 end:0x803D6920
 
 dolphin/TRK_MINNOW_DOLPHIN/msg.c:
 	.text       start:0x80287460 end:0x8028763C
@@ -2196,11 +1922,11 @@ dolphin/TRK_MINNOW_DOLPHIN/msg.c:
 dolphin/TRK_MINNOW_DOLPHIN/msgbuf.c:
 	.text       start:0x8028763C end:0x80288068
 	.rodata     start:0x802C2958 end:0x802C2978
-	.bss        start:0x803D7580 end:0x803D8F30
+	.bss        start:0x803D6920 end:0x803D82D0
 
 dolphin/TRK_MINNOW_DOLPHIN/serpoll.c:
 	.text       start:0x80288068 end:0x80288434
-	.bss        start:0x803D8F30 end:0x803D8F48
+	.bss        start:0x803D82D0 end:0x803D82E8
 
 dolphin/TRK_MINNOW_DOLPHIN/usr_put.c:
 	.text       start:0x80288434 end:0x802884C0
@@ -2208,12 +1934,12 @@ dolphin/TRK_MINNOW_DOLPHIN/usr_put.c:
 dolphin/TRK_MINNOW_DOLPHIN/dispatch.c:
 	.text       start:0x802884C0 end:0x8028855C
 	.data       start:0x80332E90 end:0x80332F18
-	.bss        start:0x803D8F48 end:0x803D8F50
+	.bss        start:0x803D82F0 end:0x803D82F8
 
 dolphin/TRK_MINNOW_DOLPHIN/msghndlr.c:
 	.text       start:0x8028855C end:0x8028ADBC
 	.data       start:0x80332F18 end:0x80332F50
-	.bss        start:0x803D8F50 end:0x803D8F58
+	.bss        start:0x803D82E8 end:0x803D82F0
 
 dolphin/TRK_MINNOW_DOLPHIN/support.c:
 	.text       start:0x8028ADBC end:0x8028B658
@@ -2234,6 +1960,7 @@ dolphin/TRK_MINNOW_DOLPHIN/targimpl.c:
 	.text       start:0x8028B83C end:0x8028D0D0
 	.rodata     start:0x802C2978 end:0x802C2A00
 	.data       start:0x80332F50 end:0x80332F80
+	.bss        start:0x803D82F8 end:0x803D8880
 
 dolphin/TRK_MINNOW_DOLPHIN/targsupp.s: comment:0
 	.text       start:0x8028D0D0 end:0x8028D0F0
@@ -2247,7 +1974,7 @@ dolphin/TRK_MINNOW_DOLPHIN/mpc_7xx_603e.c:
 
 dolphin/TRK_MINNOW_DOLPHIN/main_TRK.c:
 	.text       start:0x8028D5A8 end:0x8028D5EC
-	.bss        start:0x803D94E0 end:0x803D94E8
+	.bss        start:0x803D8880 end:0x803D8888
 
 dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk_glue.c:
 	.text       start:0x8028D5EC end:0x8028DA78
@@ -2384,14 +2111,14 @@ dolphin/MSL_C/PPCEABI/bare/H/s_sin.c:
 	.text       start:0x80294964 end:0x80294A4C
 
 main/unknown/autos/placeholder_80294A4C.c:
-	.text       start:0x80294A4C end:0x80294F2C
+	.text       start:0x80294A4C end:0x80294B88
 
 dolphin/MSL_C/PPCEABI/bare/H/trigf.c:
-	.text       start:0x80294F2C end:0x80295318
+	.text       start:0x80294B88 end:0x80295334
 	.ctors      start:0x802C1884 end:0x802C1888
 
 main/unknown/autos/placeholder_80295318.c:
-	.text       start:0x80295318 end:0x802BB420
+	.text       start:0x80295334 end:0x802BB420
 
 dolphin/TRK_MINNOW_DOLPHIN/main.c:
 	.text       start:0x802BB420 end:0x802BB768
