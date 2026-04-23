@@ -1094,8 +1094,12 @@ void FUN_80070580(double param_1,double param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80070658(undefined *param_1)
+void trackIntersect_getColorRgb(undefined *param_1)
 {
+  *param_1 = *(undefined *)&DAT_803ddc9c;
+  param_1[1] = *(undefined *)((int)&DAT_803ddc9c + 1);
+  param_1[2] = *(undefined *)((int)&DAT_803ddc9c + 2);
+  return;
 }
 
 /*
@@ -1111,8 +1115,12 @@ void FUN_80070658(undefined *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80070678(undefined param_1,undefined param_2,undefined param_3)
+void trackIntersect_setColorRgb(undefined param_1,undefined param_2,undefined param_3)
 {
+  *(undefined *)&DAT_803ddc9c = param_1;
+  *(undefined *)((int)&DAT_803ddc9c + 1) = param_2;
+  *(undefined *)((int)&DAT_803ddc9c + 2) = param_3;
+  return;
 }
 
 /*

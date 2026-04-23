@@ -63,7 +63,7 @@ extern undefined4 FUN_8006c924();
 extern undefined4 FUN_8006c9ac();
 extern void newshadows_updateFrameState(void);
 extern undefined4 FUN_8006f67c();
-extern undefined4 FUN_80070678();
+extern void trackIntersect_setColorRgb();
 extern undefined4 FUN_80071050();
 extern undefined4 FUN_80071978();
 extern undefined4 FUN_80071ed0();
@@ -2053,7 +2053,7 @@ void fn_8005D108(int param_1,int param_2,int param_3)
  */
 void FUN_8005d238(undefined4 param_1,undefined param_2,undefined param_3,undefined param_4)
 {
-  FUN_80070678(param_2,param_3,param_4);
+  trackIntersect_setColorRgb(param_2,param_3,param_4);
   return;
 }
 

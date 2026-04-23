@@ -111,7 +111,7 @@ extern int FUN_8006ff74();
 extern undefined4 FUN_80070434();
 extern undefined4 FUN_8007048c();
 extern undefined4 FUN_80070540();
-extern undefined4 FUN_80070658();
+extern void trackIntersect_getColorRgb();
 extern undefined4 FUN_80072f78();
 extern undefined4 FUN_80076ef4();
 extern undefined4 FUN_8007d858();
@@ -1493,7 +1493,7 @@ LAB_8003f328:
     fn_8003EA84((undefined4)(u32)puVar6, (undefined4)iVar7, piVar9, 0, iVar18, iVar14);
     cVar12 = FUN_8004c3c4();
     if ((cVar12 != '\0') && ((*(ushort *)(iVar13 + 2) & 0x100) == 0)) {
-      FUN_80070658((undefined *)&uStack_120);
+      trackIntersect_getColorRgb((undefined *)&uStack_120);
       FUN_8004e974(&uStack_120);
     }
     if ((*(uint *)(iVar7 + 0x3c) & 0x100) != 0) {
@@ -1782,7 +1782,7 @@ void fn_8003F8EC(undefined4 param_1,undefined4 param_2,int param_3)
       FUN_80052134(uVar5, 0, 0, (char *)&local_a0, 0, 0);
       cVar8 = FUN_8004c3c4();
       if (cVar8 != '\0') {
-        FUN_80070658((undefined *)&uStack_a4);
+        trackIntersect_getColorRgb((undefined *)&uStack_a4);
         FUN_8004e974(&uStack_a4);
       }
       FUN_80052a38();

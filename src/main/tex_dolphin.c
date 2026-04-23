@@ -35,7 +35,7 @@ extern void newshadows_getShadowTextureTable16();
 extern undefined4 FUN_80070434();
 extern undefined4 FUN_8007048c();
 extern undefined4 FUN_80070540();
-extern undefined4 FUN_80070658();
+extern void trackIntersect_getColorRgb();
 extern undefined4 FUN_800889bc();
 extern undefined4 FUN_80089ab8();
 extern uint FUN_8011853c();
