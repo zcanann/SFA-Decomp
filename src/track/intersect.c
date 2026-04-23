@@ -1177,18 +1177,14 @@ void trackIntersect_updateColorBandRange(double param_1,double param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-/* 32b RGB getter. MWCC insists on compiling array[0..2] as three
- * direct sda21 loads; target uses a pointer-reloaded intermediate
- * (li r4, lbl@sda21 then lbz 1(r4) / lbz 2(r4)). Not crackable
- * without inline asm. Kept as Ghidra port below for reference;
- * the compiled output is 75% match. */
+#pragma scheduling off
 void fn_80070658(u8* param_1)
 {
-    u8* p = (u8*)&lbl_803DDC9C;
-    param_1[0] = p[0];
-    param_1[1] = p[1];
-    param_1[2] = p[2];
+    param_1[0] = lbl_803DDC9C.r;
+    param_1[1] = lbl_803DDC9C.g;
+    param_1[2] = lbl_803DDC9C.b;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1203,13 +1199,14 @@ void fn_80070658(u8* param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void fn_80070678(u8 param_1, u8 param_2, u8 param_3)
 {
-    u8* p = (u8*)&lbl_803DDC9C;
-    p[0] = param_1;
-    p[1] = param_2;
-    p[2] = param_3;
+    lbl_803DDC9C.r = param_1;
+    lbl_803DDC9C.g = param_2;
+    lbl_803DDC9C.b = param_3;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
