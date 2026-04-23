@@ -4,7 +4,7 @@
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_8000e054();
 extern int FUN_80021884();
-extern undefined4 FUN_801039a4();
+extern undefined4 camcontrol_getTargetPosition();
 
 extern undefined4* DAT_803dd6d0;
 extern float* DAT_803de1a8;
@@ -146,7 +146,7 @@ void FUN_80106118(undefined2 *param_1,int param_2,int param_3)
     DAT_803de1a8[0x13] = DAT_803de1a8[4];
     DAT_803de1a8[0x15] = DAT_803de1a8[5];
     if ((param_3 != 0) && (*(char *)(param_3 + 0xd) != '\0')) {
-      FUN_801039a4((int)param_1,psVar7,(float *)(param_1 + 0xc),param_1 + 1);
+      camcontrol_getTargetPosition((int)param_1,psVar7,(float *)(param_1 + 0xc),param_1 + 1);
       FUN_8000e054((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
                    (double)*(float *)(param_1 + 0x10),(float *)(param_1 + 6),(float *)(param_1 + 8),
                    (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
@@ -201,7 +201,7 @@ void FUN_80106118(undefined2 *param_1,int param_2,int param_3)
       DAT_803de1a8[8] = FLOAT_803e2354;
       *(undefined *)((int)DAT_803de1a8 + 0xc1) = 1;
       DAT_803de1a8[0x1c] = *(float *)(param_1 + 0x5a);
-      FUN_801039a4((int)param_1,psVar7,(float *)(param_1 + 0xc),param_1 + 1);
+      camcontrol_getTargetPosition((int)param_1,psVar7,(float *)(param_1 + 0xc),param_1 + 1);
       uVar3 = *(undefined4 *)(param_1 + 0xc);
       *(undefined4 *)(param_1 + 6) = uVar3;
       *(undefined4 *)(param_1 + 0x5c) = uVar3;
@@ -230,7 +230,7 @@ void FUN_80106118(undefined2 *param_1,int param_2,int param_3)
     }
   }
   else if (param_2 == 4) {
-    FUN_801039a4((int)param_1,psVar7,(float *)(param_1 + 0xc),param_1 + 1);
+    camcontrol_getTargetPosition((int)param_1,psVar7,(float *)(param_1 + 0xc),param_1 + 1);
     FUN_8000e054((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
                  (double)*(float *)(param_1 + 0x10),(float *)(param_1 + 6),(float *)(param_1 + 8),
                  (float *)(param_1 + 10),*(int *)(param_1 + 0x18));

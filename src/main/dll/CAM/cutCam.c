@@ -156,7 +156,7 @@ void FUN_80103760(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_801037c0
+ * Function: camcontrol_traceMove
  * EN v1.0 Address: 0x801037C0
  * EN v1.0 Size: 316b
  * EN v1.1 Address: TODO
@@ -167,8 +167,8 @@ void FUN_80103760(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Size: TODO
  */
 undefined4
-FUN_801037c0(double param_1,float *param_2,float *param_3,float *param_4,int param_5,
-            undefined param_6,char param_7,char param_8)
+camcontrol_traceMove(double param_1,float *param_2,float *param_3,float *param_4,int param_5,
+                     undefined param_6,char param_7,char param_8)
 {
   char cVar2;
   undefined4 uVar1;
@@ -223,7 +223,7 @@ void FUN_801038fc(void)
 /*
  * --INFO--
  *
- * Function: FUN_80103900
+ * Function: camcontrol_traceFromTarget
  * EN v1.0 Address: 0x80103900
  * EN v1.0 Size: 164b
  * EN v1.1 Address: TODO
@@ -233,7 +233,7 @@ void FUN_801038fc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined FUN_80103900(float *param_1,int param_2,float *param_3)
+undefined camcontrol_traceFromTarget(float *param_1,int param_2,float *param_3)
 {
   float local_88;
   float local_84;
@@ -249,14 +249,15 @@ undefined FUN_80103900(float *param_1,int param_2,float *param_3)
     local_84 = *(float *)(param_2 + 0x1c) + *(float *)(DAT_803de1a8 + 0x8c);
     local_80 = *(undefined4 *)(param_2 + 0x20);
   }
-  FUN_801037c0((double)FLOAT_803e2308,&local_88,param_1,param_3,(int)auStack_7c,3,'\x01','\x01');
+  camcontrol_traceMove((double)FLOAT_803e2308,&local_88,param_1,param_3,(int)auStack_7c,3,'\x01',
+                       '\x01');
   return local_e;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_801039a4
+ * Function: camcontrol_getTargetPosition
  * EN v1.0 Address: 0x801039A4
  * EN v1.0 Size: 584b
  * EN v1.1 Address: TODO
@@ -266,7 +267,7 @@ undefined FUN_80103900(float *param_1,int param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined FUN_801039a4(int param_1,short *param_2,float *param_3,short *param_4)
+undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3,short *param_4)
 {
   float fVar1;
   float fVar2;
@@ -321,7 +322,8 @@ undefined FUN_801039a4(int param_1,short *param_2,float *param_3,short *param_4)
   local_b4 = fVar3;
   local_b8 = fVar1;
   local_bc = fVar2;
-  FUN_801037c0((double)FLOAT_803e2308,&local_bc,&local_c8,param_3,(int)auStack_b0,3,'\x01','\x01');
+  camcontrol_traceMove((double)FLOAT_803e2308,&local_bc,&local_c8,param_3,(int)auStack_b0,3,
+                       '\x01','\x01');
   (**(code **)(*DAT_803dd6d0 + 0x38))
             ((double)*(float *)(DAT_803de1a8 + 0x8c),param_1,auStack_d0,&local_d4,auStack_d8,
              &local_cc,0);
@@ -344,7 +346,7 @@ undefined FUN_801039a4(int param_1,short *param_2,float *param_3,short *param_4)
 /*
  * --INFO--
  *
- * Function: FUN_80103bec
+ * Function: camcontrol_updateTargetAction
  * EN v1.0 Address: 0x80103BEC
  * EN v1.0 Size: 496b
  * EN v1.1 Address: TODO
@@ -354,7 +356,7 @@ undefined FUN_801039a4(int param_1,short *param_2,float *param_3,short *param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80103bec(int param_1,int param_2)
+void camcontrol_updateTargetAction(int param_1,int param_2)
 {
   short sVar1;
   uint uVar2;
@@ -524,8 +526,8 @@ void FUN_80103ddc(void)
       pfVar12[3] = local_1ac;
       pfVar12[4] = local_1a8;
       pfVar12[5] = fVar1;
-      iVar4 = FUN_801037c0((double)FLOAT_803e2320,&local_2e8,&local_1ac,(float *)0x0,
-                           (int)auStack_234,7,'\0','\0');
+      iVar4 = camcontrol_traceMove((double)FLOAT_803e2320,&local_2e8,&local_1ac,(float *)0x0,
+                                   (int)auStack_234,7,'\0','\0');
       if (iVar4 != 0) {
         iVar6 = iVar7;
       }
@@ -546,8 +548,8 @@ void FUN_80103ddc(void)
       pfVar11[3] = local_1ac;
       pfVar11[4] = local_1a8;
       pfVar11[5] = fVar1;
-      iVar4 = FUN_801037c0((double)FLOAT_803e2320,&local_2e8,&local_1ac,(float *)0x0,
-                           (int)auStack_234,7,'\0','\0');
+      iVar4 = camcontrol_traceMove((double)FLOAT_803e2320,&local_2e8,&local_1ac,(float *)0x0,
+                                   (int)auStack_234,7,'\0','\0');
       if (iVar4 != 0) {
         iVar5 = iVar7;
       }
@@ -562,8 +564,8 @@ void FUN_80103ddc(void)
   }
   else {
     for (iVar7 = 0; iVar7 <= iVar6; iVar7 = iVar7 + 1) {
-      iVar4 = FUN_801037c0((double)FLOAT_803e2320,pfVar10,local_288 + (iVar7 + 1) * 3,(float *)0x0,
-                           (int)auStack_234,7,'\0','\0');
+      iVar4 = camcontrol_traceMove((double)FLOAT_803e2320,pfVar10,local_288 + (iVar7 + 1) * 3,
+                                   (float *)0x0,(int)auStack_234,7,'\0','\0');
       if (iVar4 == 0) {
         iVar6 = 6;
         break;
@@ -576,8 +578,8 @@ void FUN_80103ddc(void)
   }
   else {
     for (iVar7 = 0; iVar7 <= iVar5; iVar7 = iVar7 + 1) {
-      iVar4 = FUN_801037c0((double)FLOAT_803e2320,pfVar9,local_2dc + (iVar7 + 1) * 3,(float *)0x0,
-                           (int)auStack_234,7,'\0','\0');
+      iVar4 = camcontrol_traceMove((double)FLOAT_803e2320,pfVar9,local_2dc + (iVar7 + 1) * 3,
+                                   (float *)0x0,(int)auStack_234,7,'\0','\0');
       if (iVar4 == 0) {
         iVar5 = 6;
         break;

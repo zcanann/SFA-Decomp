@@ -4,7 +4,7 @@
 extern undefined4 FUN_8000e054();
 extern double FUN_80021434();
 extern uint FUN_80021884();
-extern undefined4 FUN_801039a4();
+extern undefined4 camcontrol_getTargetPosition();
 extern double FUN_80247f54();
 extern double FUN_80293900();
 
@@ -26,7 +26,7 @@ extern f32 FLOAT_803e2394;
 /*
  * --INFO--
  *
- * Function: FUN_8010525c
+ * Function: firstperson_updatePitch
  * EN v1.0 Address: 0x8010525C
  * EN v1.0 Size: 220b
  * EN v1.1 Address: TODO
@@ -36,7 +36,7 @@ extern f32 FLOAT_803e2394;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010525c(int param_1)
+void firstperson_updatePitch(int param_1)
 {
   uint uVar1;
   double dVar2;
@@ -62,7 +62,7 @@ void FUN_8010525c(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80105338
+ * Function: firstperson_updatePosition
  * EN v1.0 Address: 0x80105338
  * EN v1.0 Size: 1140b
  * EN v1.1 Address: TODO
@@ -72,7 +72,7 @@ void FUN_8010525c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80105338(int param_1,short *param_2)
+void firstperson_updatePosition(int param_1,short *param_2)
 {
   float fVar1;
   float fVar2;
@@ -95,7 +95,7 @@ void FUN_80105338(int param_1,short *param_2)
     local_38 = FLOAT_803e2314;
   }
   if (FLOAT_803e2380 * DAT_803de1a8[1] < local_38) {
-    FUN_801039a4(param_1,param_2,(float *)(param_1 + 0x18),(short *)(param_1 + 2));
+    camcontrol_getTargetPosition(param_1,param_2,(float *)(param_1 + 0x18),(short *)(param_1 + 2));
     FUN_8000e054((double)*(float *)(param_1 + 0x18),(double)*(float *)(param_1 + 0x1c),
                  (double)*(float *)(param_1 + 0x20),(float *)(param_1 + 0xc),
                  (float *)(param_1 + 0x10),(float *)(param_1 + 0x14),*(int *)(param_1 + 0x30));
@@ -187,7 +187,7 @@ void FUN_80105338(int param_1,short *param_2)
 /*
  * --INFO--
  *
- * Function: FUN_801057ac
+ * Function: firstperson_loadSettings
  * EN v1.0 Address: 0x801057AC
  * EN v1.0 Size: 672b
  * EN v1.1 Address: TODO
@@ -197,7 +197,7 @@ void FUN_80105338(int param_1,short *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801057ac(int param_1)
+void firstperson_loadSettings(int param_1)
 {
   float fVar1;
   double dVar2;

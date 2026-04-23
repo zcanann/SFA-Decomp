@@ -11,7 +11,7 @@ extern undefined4 FUN_80021fac();
 extern undefined4 FUN_80022790();
 extern undefined4 FUN_800238c4();
 extern undefined4 FUN_80023d8c();
-extern undefined4 FUN_801039a4();
+extern undefined4 camcontrol_getTargetPosition();
 extern int FUN_801e18cc();
 extern undefined4 FUN_801e2398();
 extern double FUN_80293900();

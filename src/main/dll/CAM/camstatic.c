@@ -5,13 +5,13 @@ extern undefined4 FUN_8000e054();
 extern undefined4 FUN_8000e0c0();
 extern double FUN_80021434();
 extern int FUN_80021884();
-extern undefined4 FUN_801037c0();
-extern undefined4 FUN_80103bec();
+extern undefined4 camcontrol_traceMove();
+extern undefined4 camcontrol_updateTargetAction();
 extern undefined4 FUN_801042dc();
 extern undefined4 FUN_801047dc();
 extern undefined4 FUN_80104990();
 extern undefined4 FUN_80104c4c();
-extern undefined4 FUN_80105338();
+extern undefined4 firstperson_updatePosition();
 extern int FUN_80296bb8();
 extern undefined4 FUN_80296ccc();
 extern undefined4 FUN_80297334();
@@ -118,7 +118,7 @@ LAB_80105bbc:
   *(undefined *)(param_1 + 0x9f) = 0;
   FUN_801047dc((int)param_1);
   FUN_801042dc();
-  FUN_80105338((int)param_1,psVar4);
+  firstperson_updatePosition((int)param_1,psVar4);
   FUN_8000e0c0((double)*(float *)(param_1 + 6),(double)*(float *)(param_1 + 8),
                (double)*(float *)(param_1 + 10),(float *)(param_1 + 0xc),(float *)(param_1 + 0xe),
                (float *)(param_1 + 0x10),*(int *)(param_1 + 0x18));
@@ -170,8 +170,8 @@ LAB_80105bbc:
         local_124 = *(float *)(psVar4 + 0xe) + *(float *)(DAT_803de1a8 + 0x8c);
         local_120 = *(undefined4 *)(psVar4 + 0x10);
       }
-      FUN_801037c0((double)FLOAT_803e2308,&local_128,(float *)(param_1 + 0xc),
-                   (float *)(param_1 + 0xc),(int)auStack_ac,3,'\x01','\x01');
+      camcontrol_traceMove((double)FLOAT_803e2308,&local_128,(float *)(param_1 + 0xc),
+                           (float *)(param_1 + 0xc),(int)auStack_ac,3,'\x01','\x01');
       *(undefined4 *)(param_1 + 0x5c) = *(undefined4 *)(param_1 + 0xc);
       *(undefined4 *)(param_1 + 0x5e) = *(undefined4 *)(param_1 + 0xe);
       *(undefined4 *)(param_1 + 0x60) = *(undefined4 *)(param_1 + 0x10);
@@ -194,8 +194,8 @@ LAB_80105bbc:
         local_130 = *(float *)(psVar4 + 0xe) + *(float *)(DAT_803de1a8 + 0x8c);
         local_12c = *(undefined4 *)(psVar4 + 0x10);
       }
-      FUN_801037c0((double)FLOAT_803e2308,&local_134,(float *)(param_1 + 0xc),
-                   (float *)(param_1 + 0xc),(int)auStack_11c,3,'\x01','\x01');
+      camcontrol_traceMove((double)FLOAT_803e2308,&local_134,(float *)(param_1 + 0xc),
+                           (float *)(param_1 + 0xc),(int)auStack_11c,3,'\x01','\x01');
       *(undefined4 *)(param_1 + 0x5c) = *(undefined4 *)(param_1 + 0xc);
       *(undefined4 *)(param_1 + 0x5e) = *(undefined4 *)(param_1 + 0xe);
       *(undefined4 *)(param_1 + 0x60) = *(undefined4 *)(param_1 + 0x10);
@@ -226,7 +226,7 @@ LAB_80105bbc:
                        (double)FLOAT_803dc074);
   local_28 = (longlong)(int)dVar5;
   param_1[1] = param_1[1] + (short)(int)dVar5;
-  FUN_80103bec((int)param_1,(int)psVar4);
+  camcontrol_updateTargetAction((int)param_1,(int)psVar4);
   uStack_1c = (int)param_1[2] ^ 0x80000000;
   local_20 = 0x43300000;
   dVar5 = FUN_80021434((double)(float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e2318),

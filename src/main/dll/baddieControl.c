@@ -50,9 +50,9 @@ extern uint FUN_8005cf2c();
 extern int FUN_80064248();
 extern int FUN_800804c0();
 extern u8 *gameplay_getPreviewSettings();
-extern undefined4 FUN_801037c0();
-extern undefined4 FUN_80103900();
-extern undefined4 FUN_801039a4();
+extern undefined4 camcontrol_traceMove();
+extern undefined4 camcontrol_traceFromTarget();
+extern undefined4 camcontrol_getTargetPosition();
 extern undefined4 FUN_80117e10();
 extern undefined4 FUN_8012e0f4();
 extern int FUN_8022ddd4();
@@ -860,7 +860,7 @@ void FUN_8010f7dc(int param_1,int param_2)
     }
     iVar3 = FUN_80021884();
     *psVar4 = (short)iVar3;
-    FUN_801039a4(iVar2,psVar4,&local_48,(short *)0x0);
+    camcontrol_getTargetPosition(iVar2,psVar4,&local_48,(short *)0x0);
     *psVar4 = sVar1;
     *(float *)(iVar2 + 0x18) = local_48;
     *(float *)(iVar2 + 0xb8) = local_48;
@@ -1159,7 +1159,7 @@ void FUN_8010ff18(short *param_1)
   local_cc = FLOAT_803e2788 + *(float *)(psVar2 + 0xe);
   dVar3 = (double)*(float *)(psVar2 + 0x10);
   local_c8 = (float)(dVar4 * (double)FLOAT_803dc628 + dVar3);
-  FUN_80103900(&local_d0,(int)psVar2,&local_d0);
+  camcontrol_traceFromTarget(&local_d0,(int)psVar2,&local_d0);
   dVar3 = FUN_80293900((double)((float)((double)local_d0 - dVar10) *
                                 (float)((double)local_d0 - dVar10) +
                                (float)((double)local_c8 - dVar3) * (float)((double)local_c8 - dVar3)
@@ -1220,7 +1220,7 @@ void FUN_8010ff18(short *param_1)
   *(float *)(param_1 + 0xc) = (float)(dVar10 + (double)(float)(dVar8 * dVar7));
   *(float *)(param_1 + 0xe) = (float)(dVar4 + (double)(float)(dVar5 * dVar9));
   *(float *)(param_1 + 0x10) = (float)(dVar3 + (double)(float)(dVar8 * dVar6));
-  FUN_80103900((float *)(param_1 + 0xc),(int)psVar2,(float *)(param_1 + 0xc));
+  camcontrol_traceFromTarget((float *)(param_1 + 0xc),(int)psVar2,(float *)(param_1 + 0xc));
   FUN_8000e054((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
                (double)*(float *)(param_1 + 0x10),(float *)(param_1 + 6),(float *)(param_1 + 8),
                (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
@@ -1262,7 +1262,7 @@ void FUN_80110354(int param_1,undefined4 param_2,undefined4 *param_3)
   local_40 = FLOAT_803e2788 + *(float *)(psVar1 + 0xe);
   dVar2 = (double)*(float *)(psVar1 + 0x10);
   local_3c = (float)(dVar3 * (double)FLOAT_803dc628 + dVar2);
-  FUN_80103900(&local_44,(int)psVar1,&local_44);
+  camcontrol_traceFromTarget(&local_44,(int)psVar1,&local_44);
   dVar2 = FUN_80293900((double)((float)((double)local_44 - dVar4) *
                                 (float)((double)local_44 - dVar4) +
                                (float)((double)local_3c - dVar2) * (float)((double)local_3c - dVar2)

@@ -8,12 +8,12 @@ void FUN_80103738(void);
 void FUN_80103760(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 undefined4
-FUN_801037c0(double param_1,float *param_2,float *param_3,float *param_4,int param_5,
-            undefined param_6,char param_7,char param_8);
+camcontrol_traceMove(double param_1,float *param_2,float *param_3,float *param_4,int param_5,
+                     undefined param_6,char param_7,char param_8);
 void FUN_801038fc(void);
-undefined FUN_80103900(float *param_1,int param_2,float *param_3);
-undefined FUN_801039a4(int param_1,short *param_2,float *param_3,short *param_4);
-void FUN_80103bec(int param_1,int param_2);
+undefined camcontrol_traceFromTarget(float *param_1,int param_2,float *param_3);
+undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3,short *param_4);
+void camcontrol_updateTargetAction(int param_1,int param_2);
 void FUN_80103ddc(void);
 void FUN_801042dc(void);
 

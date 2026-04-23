@@ -5,7 +5,7 @@ extern undefined4 FUN_8000e054();
 extern undefined4 FUN_8000e0c0();
 extern uint FUN_80021884();
 extern undefined4 FUN_801038fc();
-extern char FUN_801039a4();
+extern char camcontrol_getTargetPosition();
 extern char FUN_801068f0();
 extern undefined4 FUN_80107214();
 
@@ -84,7 +84,8 @@ void FUN_80107398(ushort *param_1)
       DAT_803de1b0[0x47] = (int)((float)DAT_803de1b0[0x47] + FLOAT_803dc074);
     }
     if (FLOAT_803e23c0 < (float)DAT_803de1b0[0x47]) {
-      cVar2 = FUN_801039a4((int)param_1,psVar4,(float *)(param_1 + 0xc),(short *)(param_1 + 1));
+      cVar2 = camcontrol_getTargetPosition((int)param_1,psVar4,(float *)(param_1 + 0xc),
+                                           (short *)(param_1 + 1));
       if (cVar2 == '\x01') {
         FUN_801038fc();
       }

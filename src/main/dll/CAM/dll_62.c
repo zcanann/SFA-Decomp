@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_8000e054();
 extern uint FUN_80021884();
-extern undefined4 FUN_801037c0();
+extern undefined4 camcontrol_traceMove();
 extern undefined4 FUN_802945e0();
 extern undefined4 FUN_80294964();
 

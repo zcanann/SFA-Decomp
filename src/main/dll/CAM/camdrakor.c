@@ -9,7 +9,7 @@ extern uint FUN_80021884();
 extern undefined4 FUN_800238c4();
 extern undefined4 FUN_80023d8c();
 extern undefined4 FUN_800551f8();
-extern undefined4 FUN_801037c0();
+extern undefined4 camcontrol_traceMove();
 extern undefined4 FUN_8010c1a4();
 extern uint FUN_801ef35c();
 extern undefined4 FUN_80247e94();
@@ -353,8 +353,8 @@ void FUN_8010c374(void)
               }
               FUN_80247edc(dVar14,afStack_100,afStack_100);
               FUN_80247e94((float *)(psVar4 + 0xc),afStack_100,(float *)(psVar4 + 0xc));
-              FUN_801037c0((double)FLOAT_803e254c,&fStack_118,(float *)(psVar4 + 0xc),
-                           (float *)(psVar4 + 0xc),(int)auStack_f4,3,'\x01','\x01');
+              camcontrol_traceMove((double)FLOAT_803e254c,&fStack_118,(float *)(psVar4 + 0xc),
+                                   (float *)(psVar4 + 0xc),(int)auStack_f4,3,'\x01','\x01');
               fVar3 = *(float *)(puVar5 + 6) -
                       (FLOAT_803e2578 * local_124 + *(float *)(iVar8 + 0x18));
               local_11c = (float)((double)*(float *)(puVar5 + 8) - dVar15);
