@@ -36,7 +36,7 @@ void newshadows_bindShadowCaptureTexture(int textureSlot);
 void FUN_8006c924(void);
 void FUN_8006c9ac(void);
 void newshadows_updateFrameState(void);
-void FUN_8006cc38(undefined4 *param_1,undefined4 *param_2);
+void newshadows_getShadowNoiseScroll(float *xOffsetOut,float *yOffsetOut);
 void FUN_8006cc4c(undefined *param_1);
 void FUN_8006cca0(void);
 void FUN_8006cccc(void);

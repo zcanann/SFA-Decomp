@@ -39,7 +39,7 @@ extern uint FUN_8005383c();
 extern void newshadows_getShadowTextureTable4x8();
 extern void newshadows_getShadowTextureTable16();
 extern void newshadows_getShadowNoiseTexture(int *textureOut);
-extern undefined4 FUN_8006cc38();
+extern void newshadows_getShadowNoiseScroll(float *xOffsetOut,float *yOffsetOut);
 extern undefined4 FUN_80070434();
 extern undefined4 FUN_8007048c();
 extern void trackIntersect_drawColorBand(void);
@@ -2831,7 +2831,7 @@ undefined4 FUN_8003c360(int param_1,int *param_2,int param_3)
     FUN_8025c368(1,0,0,0,1,0);
     newshadows_getShadowNoiseTexture(&local_164);
     FUN_8004c460(local_164,4);
-    FUN_8006cc38(&local_168,&local_16c);
+    newshadows_getShadowNoiseScroll(&local_168,&local_16c);
     FUN_80247a48((double)(FLOAT_803df6a8 * local_168),(double)(FLOAT_803df6a8 * local_16c),
                  (double)FLOAT_803df684,local_f4);
     local_f4[0] = FLOAT_803df69c;

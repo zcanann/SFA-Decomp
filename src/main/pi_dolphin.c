@@ -72,7 +72,7 @@ extern void newshadows_bindShadowRenderTexture(int textureSlot);
 extern int newshadows_getInverseShadowRampTexture(void);
 extern int newshadows_getRadialFalloffTexture(void);
 extern void newshadows_bindShadowCaptureTexture(int textureSlot);
-extern undefined4 FUN_8006cc38();
+extern void newshadows_getShadowNoiseScroll(float *xOffsetOut,float *yOffsetOut);
 extern undefined4 FUN_80070434();
 extern undefined4 FUN_8007048c();
 extern undefined4 FUN_8007d858();
@@ -3417,7 +3417,7 @@ void FUN_8004cf88(float *param_1)
       FUN_8025aeac((uint *)(local_7c + 0x20),*(uint **)(local_7c + 0x40),2);
     }
   }
-  FUN_8006cc38(&local_74,&local_78);
+  newshadows_getShadowNoiseScroll(&local_74,&local_78);
   FUN_80247a48((double)(FLOAT_803df760 * local_74),(double)(FLOAT_803df760 * local_78),
                (double)FLOAT_803df74c,local_70);
   local_70[0] = FLOAT_803df768;
@@ -3915,7 +3915,7 @@ void FUN_8004e278(void)
       FUN_8025aeac((uint *)(local_204 + 0x20),*(uint **)(local_204 + 0x40),DAT_803dda0c);
     }
   }
-  FUN_8006cc38(&local_20c,&local_210);
+  newshadows_getShadowNoiseScroll(&local_20c,&local_210);
   FUN_8025b9e8(2,&local_1d0,-1);
   FUN_8025bd1c(DAT_803dd9fc,DAT_803dda08 + 2,DAT_803dda0c + 1);
   local_98 = FLOAT_803df7a0;
@@ -4115,7 +4115,7 @@ void FUN_8004e974(undefined4 *param_1)
     DAT_803dd9e9 = DAT_803dd9e9 + '\x01';
   }
   else {
-    FUN_8006cc38(&local_f8,&local_fc);
+    newshadows_getShadowNoiseScroll(&local_f8,&local_fc);
     local_fc = local_fc * FLOAT_803df760;
     local_f8 = local_f8 * FLOAT_803df788;
     FUN_8025b9e8(2,&local_ec,-2);

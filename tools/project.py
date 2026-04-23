@@ -742,10 +742,12 @@ def generate_build_ninja(
         mwcc_extab_implicit.append(transform_dep)
         mwcc_sjis_extab_implicit.append(transform_dep)
 
+    normalize_rsp = config.tools_dir / "normalize_rsp.py"
+
     n.comment("Link ELF file")
     n.rule(
         name="link",
-        command=mwld_cmd,
+        command=f'cmd /c "$python {normalize_rsp} $out.rsp && {mwld_cmd}"',
         description="LINK $out",
         rspfile="$out.rsp",
         rspfile_content="$in_newline",

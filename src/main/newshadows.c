@@ -1490,10 +1490,10 @@ void newshadows_updateFrameState(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006cc38(undefined4 *param_1,undefined4 *param_2)
+void newshadows_getShadowNoiseScroll(float *xOffsetOut,float *yOffsetOut)
 {
-  *param_1 = FLOAT_803ddc2c;
-  *param_2 = FLOAT_803ddc28;
+  *xOffsetOut = FLOAT_803ddc2c;
+  *yOffsetOut = FLOAT_803ddc28;
   return;
 }
 

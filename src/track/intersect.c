@@ -60,7 +60,7 @@ extern void newshadows_bindShadowRenderTexture(int textureSlot);
 extern int newshadows_getShadowRenderTexture(void);
 extern int FUN_8006c8c0();
 extern undefined4 FUN_8006c9ac();
-extern undefined4 FUN_8006cc38();
+extern void newshadows_getShadowNoiseScroll(float *xOffsetOut,float *yOffsetOut);
 extern undefined8 FUN_8007e7a0();
 extern undefined4 FUN_8007e928();
 extern undefined4 FUN_8007e99c();
