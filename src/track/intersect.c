@@ -295,7 +295,7 @@ extern s32 lbl_803DC360;
 extern u32 lbl_803DDC84;
 extern u8 lbl_803DDC99;
 extern u8 lbl_803DDC9A;
-extern u8 lbl_803DDC9C[3];
+extern GXColor lbl_803DDC9C;
 extern u8 lbl_803DDC88;
 extern u8 lbl_803DDC89;
 extern u8 lbl_803DDC8A;
@@ -309,6 +309,10 @@ extern u32 lbl_803DDCCC;
 extern u32 lbl_803DDCD0;
 extern u32 lbl_803DDCD4;
 extern u8 lbl_803DDC91;
+extern f32 lbl_803DDCA0;
+extern f32 lbl_803DDCA4;
+extern f32 lbl_803DDCB4;
+extern f32 lbl_803DDCB8;
 extern undefined4 DAT_803dc364;
 extern undefined4 DAT_803dc368;
 extern undefined4* DAT_803dd6d8;
@@ -1085,15 +1089,13 @@ void fn_80070538(u8 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void trackIntersect_drawColorBand(void)
+#pragma scheduling off
+void fn_80070540(void)
 {
-  undefined4 local_8;
-  
-  local_8 = DAT_803ddc9c;
-  FUN_8025ca38((double)FLOAT_803ddca4,(double)FLOAT_803ddca0,(double)FLOAT_803ddcb8,
-               (double)FLOAT_803ddcb4,4,&local_8);
-  return;
+    GXColor c = lbl_803DDC9C;
+    GXSetFog(GX_FOG_PERSP_EXP, lbl_803DDCA4, lbl_803DDCA0, lbl_803DDCB8, lbl_803DDCB4, c);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1171,9 +1173,10 @@ void trackIntersect_updateColorBandRange(double param_1,double param_2)
  * the compiled output is 75% match. */
 void fn_80070658(u8* param_1)
 {
-    param_1[0] = lbl_803DDC9C[0];
-    param_1[1] = lbl_803DDC9C[1];
-    param_1[2] = lbl_803DDC9C[2];
+    u8* p = (u8*)&lbl_803DDC9C;
+    param_1[0] = p[0];
+    param_1[1] = p[1];
+    param_1[2] = p[2];
 }
 
 /*
@@ -1191,9 +1194,10 @@ void fn_80070658(u8* param_1)
  */
 void fn_80070678(u8 param_1, u8 param_2, u8 param_3)
 {
-    lbl_803DDC9C[0] = param_1;
-    lbl_803DDC9C[1] = param_2;
-    lbl_803DDC9C[2] = param_3;
+    u8* p = (u8*)&lbl_803DDC9C;
+    p[0] = param_1;
+    p[1] = param_2;
+    p[2] = param_3;
 }
 
 /*
