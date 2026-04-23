@@ -1,5 +1,14 @@
 #include "ghidra_import.h"
+#include "dolphin/card.h"
+#include "dolphin/gx.h"
+#include "dolphin/mtx.h"
 #include "track/intersect.h"
+
+extern Mtx lbl_80397420;
+extern Mtx lbl_80397480;
+extern Mtx lbl_803974B0;
+extern f32 lbl_803DFB10;
+extern f32 fn_80293900(f32 x);
 
 extern undefined4 ABS();
 extern undefined4 FUN_8000bb00();
@@ -286,6 +295,31 @@ extern undefined4 DAT_803dc350;
 extern undefined4 DAT_803dc354;
 extern undefined4 DAT_803dc358;
 extern undefined4 DAT_803dc360;
+/* Narrow-typed aliases for sbss/sdata state vars touched by the small
+ * helpers below. */
+extern u8 lbl_803DC2D9;
+extern s32 lbl_803DC360;
+extern u32 lbl_803DDC84;
+extern u8 lbl_803DDC99;
+extern u8 lbl_803DDC9A;
+extern GXColor lbl_803DDC9C;
+extern u8 lbl_803DDC88;
+extern u8 lbl_803DDC89;
+extern u8 lbl_803DDC8A;
+extern u8 lbl_803DDC8B;
+extern u32 lbl_803DDCB0;
+extern u32 lbl_803DDCAC;
+extern u32 lbl_803DDCA8;
+extern u8 lbl_803DDCD9;
+extern u32 lbl_803DDCC8;
+extern u32 lbl_803DDCCC;
+extern u32 lbl_803DDCD0;
+extern u32 lbl_803DDCD4;
+extern u8 lbl_803DDC91;
+extern f32 lbl_803DDCA0;
+extern f32 lbl_803DDCA4;
+extern f32 lbl_803DDCB4;
+extern f32 lbl_803DDCB8;
 extern undefined4 DAT_803dc364;
 extern undefined4 DAT_803dc368;
 extern undefined4* DAT_803dd6d8;
@@ -445,6 +479,40 @@ void FUN_8006f0b4(undefined8 param_1,double param_2,undefined4 param_3,undefined
 /*
  * --INFO--
  *
+ * Function: fn_8006F504
+ * EN v1.0 Address: 0x8006F504
+ * EN v1.0 Size: 120b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+void* fn_8006F504(u32 i)
+{
+    extern u8 lbl_8030F470[];
+    u8* base = lbl_8030F470;
+    switch (i) {
+        case 0:  return base;
+        case 1:  return base + 0x14;
+        case 2:  return base + 0x3C;
+        case 3:  return base + 0x64;
+        case 4:  return base + 0x50;
+        case 5:  return base + 0x78;
+        case 6:  return base + 0x8C;
+        case 7:  return base + 0xA0;
+        case 10:
+        case 8:  return base + 0x28;
+        default: return base + 0x28;
+    }
+}
+#pragma scheduling reset
+
+/*
+ * --INFO--
+ *
  * Function: FUN_8006f57c
  * EN v1.0 Address: 0x8006F57C
  * EN v1.0 Size: 256b
@@ -455,48 +523,51 @@ void FUN_8006f0b4(undefined8 param_1,double param_2,undefined4 param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006f57c(double param_1)
+/* EN v1.0 Size: 256b - 77% match. Per-iteration byte decrement:
+ *   if (b != 0) {
+ *     v = (f32)(u32)b - step;
+ *     if (v <= 0) b = 0; else b = (u8)v;
+ *   }
+ * for 256 rows in two parallel arrays. MWCC CSEs the conversion
+ * expression (v) between the compare and the store, emitting a
+ * single fctiwz on cached f2. Target recomputes the full
+ * stw/lfd/fsubs sequence before the second use, which suggests
+ * retail source had a variable reassignment between the two uses
+ * (see Ghidra: local_18 reassigned before the else-branch store).
+ * Can't reproduce the re-store without __asm. */
+#pragma peephole off
+#pragma scheduling off
+void fn_8006F57C(f32 step)
 {
-  undefined *puVar1;
-  undefined4 *puVar2;
-  uint uVar3;
-  int iVar4;
-  undefined8 local_18;
-  undefined8 local_10;
-  
-  puVar2 = &DAT_80393a40;
-  puVar1 = &DAT_80392a40;
-  iVar4 = 0x100;
-  do {
-    uVar3 = (uint)*(byte *)((int)puVar2 + 0x33);
-    if (uVar3 != 0) {
-      local_18 = (double)CONCAT44(0x43300000,uVar3);
-      if (FLOAT_803dfaa0 < (float)((double)(float)(local_18 - DOUBLE_803dfab0) - param_1)) {
-        local_18 = (double)CONCAT44(0x43300000,uVar3);
-        *(char *)((int)puVar2 + 0x33) =
-             (char)(int)((double)(float)(local_18 - DOUBLE_803dfab0) - param_1);
-      }
-      else {
-        *(undefined *)((int)puVar2 + 0x33) = 0;
-      }
+    int i;
+    u8* a;
+    u8* b;
+    extern u8 lbl_80393A40[];
+    extern u8 lbl_80392A40[];
+
+    a = lbl_80393A40;
+    b = lbl_80392A40;
+    for (i = 0; i < 256; i++) {
+        if (a[0x33] != 0) {
+            if ((f32)(u32)a[0x33] - step <= 0.0f) {
+                a[0x33] = 0;
+            } else {
+                a[0x33] = (u8)(s32)((f32)(u32)a[0x33] - step);
+            }
+        }
+        if (b[0x0E] != 0) {
+            if ((f32)(u32)b[0x0E] - step <= 0.0f) {
+                b[0x0E] = 0;
+            } else {
+                b[0x0E] = (u8)(s32)((f32)(u32)b[0x0E] - step);
+            }
+        }
+        a += 0x38;
+        b += 0x10;
     }
-    uVar3 = (uint)(byte)puVar1[0xe];
-    if (uVar3 != 0) {
-      local_10 = (double)CONCAT44(0x43300000,uVar3);
-      if (FLOAT_803dfaa0 < (float)((double)(float)(local_10 - DOUBLE_803dfab0) - param_1)) {
-        local_10 = (double)CONCAT44(0x43300000,uVar3);
-        puVar1[0xe] = (char)(int)((double)(float)(local_10 - DOUBLE_803dfab0) - param_1);
-      }
-      else {
-        puVar1[0xe] = 0;
-      }
-    }
-    puVar2 = puVar2 + 0xe;
-    puVar1 = puVar1 + 0x10;
-    iVar4 = iVar4 + -1;
-  } while (iVar4 != 0);
-  return;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -648,60 +719,52 @@ void FUN_8006facc(undefined4 param_1,undefined4 param_2,undefined param_3,uint p
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006fd7c(int param_1)
+#pragma peephole off
+#pragma scheduling off
+void fn_8006FD7C(int param_1)
 {
-  undefined *puVar1;
-  undefined4 *puVar2;
-  int iVar3;
-  
-  DAT_803ddc7a = (undefined)param_1;
-  if (param_1 != 0) {
-    return;
-  }
-  puVar2 = &DAT_80393a40;
-  puVar1 = &DAT_80392a40;
-  iVar3 = 0x10;
-  do {
-    *(undefined *)((int)puVar2 + 0x33) = 0;
-    puVar1[0xe] = 0;
-    *(undefined *)((int)puVar2 + 0x6b) = 0;
-    puVar1[0x1e] = 0;
-    *(undefined *)((int)puVar2 + 0xa3) = 0;
-    puVar1[0x2e] = 0;
-    *(undefined *)((int)puVar2 + 0xdb) = 0;
-    puVar1[0x3e] = 0;
-    *(undefined *)((int)puVar2 + 0x113) = 0;
-    puVar1[0x4e] = 0;
-    *(undefined *)((int)puVar2 + 0x14b) = 0;
-    puVar1[0x5e] = 0;
-    *(undefined *)((int)puVar2 + 0x183) = 0;
-    puVar1[0x6e] = 0;
-    *(undefined *)((int)puVar2 + 0x1bb) = 0;
-    puVar1[0x7e] = 0;
-    *(undefined *)((int)puVar2 + 499) = 0;
-    puVar1[0x8e] = 0;
-    *(undefined *)((int)puVar2 + 0x22b) = 0;
-    puVar1[0x9e] = 0;
-    *(undefined *)((int)puVar2 + 0x263) = 0;
-    puVar1[0xae] = 0;
-    *(undefined *)((int)puVar2 + 0x29b) = 0;
-    puVar1[0xbe] = 0;
-    *(undefined *)((int)puVar2 + 0x2d3) = 0;
-    puVar1[0xce] = 0;
-    *(undefined *)((int)puVar2 + 0x30b) = 0;
-    puVar1[0xde] = 0;
-    *(undefined *)((int)puVar2 + 0x343) = 0;
-    puVar1[0xee] = 0;
-    *(undefined *)((int)puVar2 + 0x37b) = 0;
-    puVar1[0xfe] = 0;
-    puVar2 = puVar2 + 0xe0;
-    puVar1 = puVar1 + 0x100;
-    iVar3 = iVar3 + -1;
-  } while (iVar3 != 0);
-  DAT_803ddc79 = 0;
-  DAT_803ddc78 = 0;
-  return;
+    int i;
+    u8* a;
+    u8* b;
+    extern u8 lbl_80393A40[];
+    extern u8 lbl_80392A40[];
+    extern u8 lbl_803DDC78;
+    extern u8 lbl_803DDC79;
+    extern u8 lbl_803DDC7A;
+
+    lbl_803DDC7A = (u8)param_1;
+    if (param_1 != 0) {
+        return;
+    }
+    a = lbl_80393A40;
+    b = lbl_80392A40;
+    for (i = 0; i < 16; i++) {
+        a[0x033] = 0;  b[0x0E] = 0;
+        a[0x06B] = 0;  b[0x1E] = 0;
+        a[0x0A3] = 0;  b[0x2E] = 0;
+        a[0x0DB] = 0;  b[0x3E] = 0;
+        a[0x113] = 0;  b[0x4E] = 0;
+        a[0x14B] = 0;  b[0x5E] = 0;
+        a[0x183] = 0;  b[0x6E] = 0;
+        a[0x1BB] = 0;  b[0x7E] = 0;
+        a += 0x1C0;
+        b += 0x80;
+        a[0x033] = 0;  b[0x0E] = 0;
+        a[0x06B] = 0;  b[0x1E] = 0;
+        a[0x0A3] = 0;  b[0x2E] = 0;
+        a[0x0DB] = 0;  b[0x3E] = 0;
+        a[0x113] = 0;  b[0x4E] = 0;
+        a[0x14B] = 0;  b[0x5E] = 0;
+        a[0x183] = 0;  b[0x6E] = 0;
+        a[0x1BB] = 0;  b[0x7E] = 0;
+        a += 0x1C0;
+        b += 0x80;
+    }
+    lbl_803DDC79 = 0;
+    lbl_803DDC78 = 0;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -716,73 +779,53 @@ void FUN_8006fd7c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006fe48(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+#pragma scheduling off
+void fn_8006FE48(void)
 {
-  undefined4 *puVar1;
-  undefined *puVar2;
-  int iVar3;
-  
-  puVar1 = &DAT_80393a40;
-  puVar2 = &DAT_80392a40;
-  iVar3 = 0x10;
-  do {
-    *(undefined *)((int)puVar1 + 0x33) = 0;
-    puVar2[0xe] = 0;
-    *(undefined *)((int)puVar1 + 0x6b) = 0;
-    puVar2[0x1e] = 0;
-    *(undefined *)((int)puVar1 + 0xa3) = 0;
-    puVar2[0x2e] = 0;
-    *(undefined *)((int)puVar1 + 0xdb) = 0;
-    puVar2[0x3e] = 0;
-    *(undefined *)((int)puVar1 + 0x113) = 0;
-    puVar2[0x4e] = 0;
-    *(undefined *)((int)puVar1 + 0x14b) = 0;
-    puVar2[0x5e] = 0;
-    *(undefined *)((int)puVar1 + 0x183) = 0;
-    puVar2[0x6e] = 0;
-    *(undefined *)((int)puVar1 + 0x1bb) = 0;
-    puVar2[0x7e] = 0;
-    *(undefined *)((int)puVar1 + 499) = 0;
-    puVar2[0x8e] = 0;
-    *(undefined *)((int)puVar1 + 0x22b) = 0;
-    puVar2[0x9e] = 0;
-    *(undefined *)((int)puVar1 + 0x263) = 0;
-    puVar2[0xae] = 0;
-    *(undefined *)((int)puVar1 + 0x29b) = 0;
-    puVar2[0xbe] = 0;
-    *(undefined *)((int)puVar1 + 0x2d3) = 0;
-    puVar2[0xce] = 0;
-    *(undefined *)((int)puVar1 + 0x30b) = 0;
-    puVar2[0xde] = 0;
-    *(undefined *)((int)puVar1 + 0x343) = 0;
-    puVar2[0xee] = 0;
-    *(undefined *)((int)puVar1 + 0x37b) = 0;
-    puVar2[0xfe] = 0;
-    puVar1 = puVar1 + 0xe0;
-    puVar2 = puVar2 + 0x100;
-    iVar3 = iVar3 + -1;
-  } while (iVar3 != 0);
-  DAT_80392a30 = FUN_80054ed0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x19,
-                              puVar2,param_11,param_12,param_13,param_14,param_15,param_16);
-  DAT_80392a34 = FUN_80054ed0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x18,
-                              puVar2,param_11,param_12,param_13,param_14,param_15,param_16);
-  DAT_80392a38 = FUN_80054ed0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x1a,
-                              puVar2,param_11,param_12,param_13,param_14,param_15,param_16);
-  DAT_80392a3c = FUN_80054ed0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x646,
-                              puVar2,param_11,param_12,param_13,param_14,param_15,param_16);
-  DAT_80392a20 = FLOAT_803dfadc;
-  DAT_80392a24 = FLOAT_803dfae0;
-  DAT_80392a28 = FLOAT_803dfae0;
-  DAT_80392a2c = FLOAT_803dfae4;
-  DAT_803ddc7a = 0;
-  DAT_803ddc79 = 0;
-  DAT_803ddc78 = 0;
-  DAT_803ddc74 = 0;
-  return;
+    extern u8 lbl_80392A20[];
+    extern f32 lbl_803DFADC, lbl_803DFAE0, lbl_803DFAE4;
+    extern u32 fn_80054ED0(int);
+    extern u32 lbl_803DDC74;
+    extern u8 lbl_803DDC78, lbl_803DDC79, lbl_803DDC7A;
+    int i;
+    u8* base = lbl_80392A20;
+    u8* a = base + 0x1020;
+    u8* b = base + 0x0020;
+
+    for (i = 0; i < 16; i++) {
+        a[0x033] = 0; b[0x0E] = 0;
+        a[0x06B] = 0; b[0x1E] = 0;
+        a[0x0A3] = 0; b[0x2E] = 0;
+        a[0x0DB] = 0; b[0x3E] = 0;
+        a[0x113] = 0; b[0x4E] = 0;
+        a[0x14B] = 0; b[0x5E] = 0;
+        a[0x183] = 0; b[0x6E] = 0;
+        a[0x1BB] = 0; b[0x7E] = 0;
+        a[0x1F3] = 0; b[0x8E] = 0;
+        a[0x22B] = 0; b[0x9E] = 0;
+        a[0x263] = 0; b[0xAE] = 0;
+        a[0x29B] = 0; b[0xBE] = 0;
+        a[0x2D3] = 0; b[0xCE] = 0;
+        a[0x30B] = 0; b[0xDE] = 0;
+        a[0x343] = 0; b[0xEE] = 0;
+        a[0x37B] = 0; b[0xFE] = 0;
+        a += 0x380;
+        b += 0x100;
+    }
+    *(u32*)(base + 0x10) = fn_80054ED0(0x19);
+    *(u32*)(base + 0x14) = fn_80054ED0(0x18);
+    *(u32*)(base + 0x18) = fn_80054ED0(0x1A);
+    *(u32*)(base + 0x1C) = fn_80054ED0(0x646);
+    *(f32*)(base + 0x00) = lbl_803DFADC;
+    *(f32*)(base + 0x04) = lbl_803DFAE0;
+    *(f32*)(base + 0x08) = lbl_803DFAE0;
+    *(f32*)(base + 0x0C) = lbl_803DFAE4;
+    lbl_803DDC7A = 0;
+    lbl_803DDC79 = 0;
+    lbl_803DDC78 = 0;
+    lbl_803DDC74 = 0;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -852,13 +895,18 @@ undefined4 FUN_8006ff74(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80070050(void)
+#pragma peephole off
+#pragma scheduling off
+uint fn_80070050(void)
 {
-  if (DAT_803ddc84 != 0) {
-    return DAT_803ddc84 | DAT_803ddc84 << 0x10;
-  }
-  return 0x1e00280;
+    u32 v = lbl_803DDC84;
+    if (v != 0) {
+        return v | (v << 16);
+    }
+    return 0x01E00280;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -873,10 +921,9 @@ uint FUN_80070050(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80070074(undefined4 param_1)
+void fn_80070074(u32 param_1)
 {
-  DAT_803ddc84 = param_1;
-  return;
+    lbl_803DDC84 = param_1;
 }
 
 /*
@@ -892,10 +939,9 @@ void FUN_80070074(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007007c(void)
+void fn_8007007C(void)
 {
-  DAT_803ddc84 = 0;
-  return;
+    lbl_803DDC84 = 0;
 }
 
 /*
@@ -929,18 +975,21 @@ void FUN_80070088(double param_1,double param_2,double param_3,double param_4,do
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80070320(float *param_1,float *param_2,float *param_3)
+#pragma peephole off
+#pragma scheduling off
+void fn_80070320(f32* x, f32* y, f32* z)
 {
-  float fVar1;
-  double dVar2;
-  
-  dVar2 = FUN_80293900((double)(*param_3 * *param_3 + *param_1 * *param_1 + *param_2 * *param_2));
-  fVar1 = (float)((double)FLOAT_803dfb10 / dVar2);
-  *param_1 = *param_1 * fVar1;
-  *param_2 = *param_2 * fVar1;
-  *param_3 = *param_3 * fVar1;
-  return;
+    f32 scale;
+    f32 len;
+
+    len = fn_80293900(*z * *z + (*x * *x + *y * *y));
+    scale = lbl_803DFB10 / len;
+    *x = *x * scale;
+    *y = *y * scale;
+    *z = *z * scale;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -955,9 +1004,31 @@ void FUN_80070320(float *param_1,float *param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800703b0(undefined4 *param_1)
+extern f32 lbl_803DFB18;
+extern f32 lbl_803DFB1C;
+
+/* EN v1.0 Size: 132b - 74% match. 4x4 identity fill. Remaining diff:
+ * target uses 'li r0, N; cmpw r4, r0' per column, mine uses 'cmpwi
+ * r4, N' — MWCC always folds the integer literal into the compare
+ * immediate form. The +4 extra li instructions explain the 116 vs
+ * 132 byte discrepancy. Not crackable without materializing the
+ * comparison indices via a global/volatile, which would break other
+ * matches. */
+#pragma optimize_for_size on
+void fn_800703B0(f32* param_1)
 {
+    int i;
+    f32 zero = lbl_803DFB1C;
+    f32 one = lbl_803DFB18;
+    for (i = 0; i < 4; i++) {
+        if (i == 0) param_1[0] = one; else param_1[0] = zero;
+        if (i == 1) param_1[1] = one; else param_1[1] = zero;
+        if (i == 2) param_1[2] = one; else param_1[2] = zero;
+        if (i == 3) param_1[3] = one; else param_1[3] = zero;
+        param_1 += 4;
+    }
 }
+#pragma optimize_for_size reset
 
 /*
  * --INFO--
@@ -972,15 +1043,17 @@ void FUN_800703b0(undefined4 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80070434(uint param_1)
+#pragma scheduling off
+void fn_80070434(u32 param_1)
 {
-  if (((uint)DAT_803ddc91 != (param_1 & 0xff)) || (DAT_803ddc99 == '\0')) {
-    FUN_8025cee4(param_1);
-    DAT_803ddc91 = (byte)param_1;
-    DAT_803ddc99 = '\x01';
-  }
-  return;
+    extern void GXSetZCompLoc();
+    if ((u32)lbl_803DDC91 != (param_1 & 0xff) || lbl_803DDC99 == 0) {
+        GXSetZCompLoc(param_1);
+        lbl_803DDC91 = (u8)param_1;
+        lbl_803DDC99 = 1;
+    }
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -995,18 +1068,27 @@ void FUN_80070434(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007048c(uint param_1,int param_2,uint param_3)
+#pragma scheduling off
+void fn_8007048C(u32 param_1, int param_2, u32 param_3)
 {
-  if (((((uint)DAT_803ddc98 != (param_1 & 0xff)) || (DAT_803ddc94 != param_2)) ||
-      ((uint)DAT_803ddc92 != (param_3 & 0xff))) || (DAT_803ddc9a == '\0')) {
-    FUN_8025ce6c(param_1,param_2,param_3);
-    DAT_803ddc98 = (byte)param_1;
-    DAT_803ddc92 = (byte)param_3;
-    DAT_803ddc9a = '\x01';
-    DAT_803ddc94 = param_2;
-  }
-  return;
+    extern void GXSetZMode();
+    extern u8 lbl_803DDC92;
+    extern int lbl_803DDC94;
+    extern u8 lbl_803DDC98;
+    extern u8 lbl_803DDC9A;
+
+    if ((u32)lbl_803DDC98 != (param_1 & 0xff) ||
+        lbl_803DDC94 != param_2 ||
+        (u32)lbl_803DDC92 != (param_3 & 0xff) ||
+        lbl_803DDC9A == 0) {
+        GXSetZMode(param_1, param_2, param_3);
+        lbl_803DDC98 = (u8)param_1;
+        lbl_803DDC94 = param_2;
+        lbl_803DDC92 = (u8)param_3;
+        lbl_803DDC9A = 1;
+    }
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1021,11 +1103,10 @@ void FUN_8007048c(uint param_1,int param_2,uint param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void trackIntersect_invalidateCachedRenderState(void)
+void fn_80070528(void)
 {
-  DAT_803ddc9a = 0;
-  DAT_803ddc99 = 0;
-  return;
+    lbl_803DDC9A = 0;
+    lbl_803DDC99 = 0;
 }
 
 /*
@@ -1041,10 +1122,9 @@ void trackIntersect_invalidateCachedRenderState(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80070538(undefined param_1)
+void fn_80070538(u8 param_1)
 {
-  DAT_803dc2d9 = param_1;
-  return;
+    lbl_803DC2D9 = param_1;
 }
 
 /*
@@ -1060,15 +1140,13 @@ void FUN_80070538(undefined param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void trackIntersect_drawColorBand(void)
+#pragma scheduling off
+void fn_80070540(void)
 {
-  undefined4 local_8;
-  
-  local_8 = DAT_803ddc9c;
-  FUN_8025ca38((double)FLOAT_803ddca4,(double)FLOAT_803ddca0,(double)FLOAT_803ddcb8,
-               (double)FLOAT_803ddcb4,4,&local_8);
-  return;
+    GXColor c = lbl_803DDC9C;
+    GXSetFog(GX_FOG_PERSP_EXP, lbl_803DDCA4, lbl_803DDCA0, lbl_803DDCB8, lbl_803DDCB4, c);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1083,48 +1161,46 @@ void trackIntersect_drawColorBand(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void trackIntersect_updateColorBandRange(double param_1,double param_2)
+#pragma scheduling off
+void fn_80070580(f32 a, f32 b)
 {
-  double dVar1;
-  double dVar2;
-  double dVar3;
-  double dVar4;
-  double in_f30;
-  double in_f31;
-  double in_ps30_1;
-  double in_ps31_1;
-  undefined4 local_28;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  dVar1 = FUN_8000fc3c();
-  FLOAT_803ddcb8 = (float)dVar1;
-  dVar1 = FUN_8000fc08();
-  FLOAT_803ddcb4 = (float)dVar1;
-  dVar2 = (double)(float)((double)FLOAT_803dfb58 * param_1);
-  dVar3 = (double)(float)((double)FLOAT_803dfb58 * param_2);
-  dVar1 = (double)FLOAT_803dfb5c;
-  if ((dVar1 <= dVar2) && (dVar1 = dVar2, (double)FLOAT_803dfb60 < dVar2)) {
-    dVar1 = (double)FLOAT_803dfb60;
-  }
-  dVar2 = (double)FLOAT_803dfb5c;
-  if ((dVar2 <= dVar3) && (dVar2 = dVar3, (double)FLOAT_803dfb60 < dVar3)) {
-    dVar2 = (double)FLOAT_803dfb60;
-  }
-  dVar3 = (double)FLOAT_803ddcb8;
-  dVar4 = (double)(float)((double)FLOAT_803ddcb4 - dVar3);
-  FLOAT_803ddca4 = (float)(dVar1 * dVar4 + dVar3);
-  FLOAT_803ddca0 = (float)(dVar2 * dVar4 + dVar3);
-  local_28 = DAT_803ddc9c;
-  FUN_8025ca38((double)FLOAT_803ddca4,(double)FLOAT_803ddca0,dVar3,(double)FLOAT_803ddcb4,4,&local_28);
-  return;
+    extern f32 fn_8000FC3C(void);
+    extern f32 fn_8000FC08(void);
+    extern f32 lbl_803DFB58;
+    extern f32 lbl_803DFB5C;
+    extern f32 lbl_803DFB60;
+    extern f32 lbl_803DDCA0, lbl_803DDCA4, lbl_803DDCB4, lbl_803DDCB8;
+    f32 xc, yc, x, y, range;
+    GXColor c;
+
+    lbl_803DDCB8 = fn_8000FC3C();
+    lbl_803DDCB4 = fn_8000FC08();
+
+    x = lbl_803DFB58 * a;
+    y = lbl_803DFB58 * b;
+
+    xc = lbl_803DFB5C;
+    if (x >= lbl_803DFB5C) {
+        xc = x;
+        if (x > lbl_803DFB60) {
+            xc = lbl_803DFB60;
+        }
+    }
+    yc = lbl_803DFB5C;
+    if (y >= lbl_803DFB5C) {
+        yc = y;
+        if (y > lbl_803DFB60) {
+            yc = lbl_803DFB60;
+        }
+    }
+
+    range = lbl_803DDCB4 - lbl_803DDCB8;
+    lbl_803DDCA4 = xc * range + lbl_803DDCB8;
+    lbl_803DDCA0 = yc * range + lbl_803DDCB8;
+    c = lbl_803DDC9C;
+    GXSetFog(GX_FOG_PERSP_EXP, lbl_803DDCA4, lbl_803DDCA0, lbl_803DDCB8, lbl_803DDCB4, c);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1139,13 +1215,14 @@ void trackIntersect_updateColorBandRange(double param_1,double param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void trackIntersect_getColorRgb(undefined *param_1)
+#pragma scheduling off
+void fn_80070658(u8* param_1)
 {
-  *param_1 = *(undefined *)&DAT_803ddc9c;
-  param_1[1] = *(undefined *)((int)&DAT_803ddc9c + 1);
-  param_1[2] = *(undefined *)((int)&DAT_803ddc9c + 2);
-  return;
+    param_1[0] = lbl_803DDC9C.r;
+    param_1[1] = lbl_803DDC9C.g;
+    param_1[2] = lbl_803DDC9C.b;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1160,13 +1237,14 @@ void trackIntersect_getColorRgb(undefined *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void trackIntersect_setColorRgb(undefined param_1,undefined param_2,undefined param_3)
+#pragma scheduling off
+void fn_80070678(u8 param_1, u8 param_2, u8 param_3)
 {
-  *(undefined *)&DAT_803ddc9c = param_1;
-  *(undefined *)((int)&DAT_803ddc9c + 1) = param_2;
-  *(undefined *)((int)&DAT_803ddc9c + 2) = param_3;
-  return;
+    lbl_803DDC9C.r = param_1;
+    lbl_803DDC9C.g = param_2;
+    lbl_803DDC9C.b = param_3;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1300,50 +1378,52 @@ void FUN_800737e8(undefined param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80073c28(int param_1,undefined4 *param_2,undefined4 *param_3)
+#pragma scheduling off
+void fn_80073C28(void* texture, u32* colorA, u32* colorB)
 {
-  undefined4 local_18;
-  undefined4 local_14 [2];
-  
-  FUN_80258674(0,1,4,0x3c,0,0x7d);
-  FUN_8004c460(param_1,0);
-  local_14[0] = *param_2;
-  FUN_8025c510(0,(byte *)local_14);
-  FUN_8025c5f0(0,0x1c);
-  FUN_8025c584(0,0xc);
-  local_18 = *param_3;
-  FUN_8025c428(1,(byte *)&local_18);
-  FUN_8025be54(0);
-  FUN_8025a608(4,0,0,0,0,0,2);
-  FUN_8025a608(5,0,0,0,0,0,2);
-  FUN_8025a5bc(0);
-  FUN_80258944(1);
-  FUN_8025ca04(1);
-  FUN_8025be80(0);
-  FUN_8025c828(0,0,0,0xff);
-  FUN_8025c1a4(0,0xf,8,0xe,2);
-  FUN_8025c224(0,7,4,6,7);
-  FUN_8025c65c(0,0,0);
-  FUN_8025c2a8(0,0,0,0,1,0);
-  FUN_8025c368(0,0,0,0,1,0);
-  FUN_8025cce8(1,4,1,5);
-  if ((((DAT_803ddc98 != '\x01') || (DAT_803ddc94 != 3)) || (DAT_803ddc92 != '\0')) ||
-     (DAT_803ddc9a == '\0')) {
-    FUN_8025ce6c(1,3,0);
-    DAT_803ddc98 = '\x01';
-    DAT_803ddc94 = 3;
-    DAT_803ddc92 = '\0';
-    DAT_803ddc9a = '\x01';
-  }
-  if ((DAT_803ddc91 != '\x01') || (DAT_803ddc99 == '\0')) {
-    FUN_8025cee4(1);
-    DAT_803ddc91 = '\x01';
-    DAT_803ddc99 = '\x01';
-  }
-  FUN_8025c754(7,0,0,7,0);
-  FUN_80259288(2);
-  return;
+    extern void fn_8004C460(void*, int);
+    extern void GXSetZMode();
+    extern void GXSetZCompLoc();
+    extern u8 lbl_803DDC92;
+    extern int lbl_803DDC94;
+    extern u8 lbl_803DDC98;
+    GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
+    fn_8004C460(texture, 0);
+    GXSetTevKColor(0, *(GXColor*)colorA);
+    GXSetTevKAlphaSel(0, 0x1C);
+    GXSetTevKColorSel(0, 0xC);
+    GXSetTevColor(1, *(GXColor*)colorB);
+    GXSetNumIndStages(0);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(0);
+    GXSetNumTexGens(1);
+    GXSetNumTevStages(1);
+    GXSetTevDirect(0);
+    GXSetTevOrder(0, 0, 0, 0xFF);
+    GXSetTevColorIn(0, 0xF, 8, 0xE, 2);
+    GXSetTevAlphaIn(0, 7, 4, 6, 7);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetBlendMode(1, 4, 1, 5);
+    if ((u32)lbl_803DDC98 != 1 || lbl_803DDC94 != 3 ||
+        (u32)lbl_803DDC92 != 0 || lbl_803DDC9A == 0) {
+        GXSetZMode(1, 3, 0);
+        lbl_803DDC98 = 1;
+        lbl_803DDC94 = 3;
+        lbl_803DDC92 = 0;
+        lbl_803DDC9A = 1;
+    }
+    if ((u32)lbl_803DDC91 != 1 || lbl_803DDC99 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DDC91 = 1;
+        lbl_803DDC99 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXSetCullMode(2);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1429,9 +1509,84 @@ undefined4 FUN_80074e80(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80075534(undefined4 param_1,undefined4 param_2,int param_3,int param_4,undefined4 *param_5)
+#pragma peephole off
+#pragma scheduling off
+void fn_80075534(int x1, int y1, int x2, int y2, u8* color)
 {
+    extern void fn_8000FB20(void);
+    extern Mtx lbl_803974E0;
+    extern f32 lbl_803DFB5C;
+    extern void GXSetZMode();
+    extern u8 lbl_803DDC92;
+    extern int lbl_803DDC94;
+    extern u8 lbl_803DDC98;
+
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXSetCullMode(GX_CULL_NONE);
+    GXSetProjection(lbl_803974E0, GX_ORTHOGRAPHIC);
+    if ((u32)lbl_803DDC98 != 0 || lbl_803DDC94 != 7 ||
+        (u32)lbl_803DDC92 != 0 || lbl_803DDC9A == 0) {
+        GXSetZMode(0, 7, 0);
+        lbl_803DDC98 = 0;
+        lbl_803DDC94 = 7;
+        lbl_803DDC92 = 0;
+        lbl_803DDC9A = 1;
+    }
+    GXSetBlendMode(1, 4, 5, 5);
+    color[3] = (u8)(((s32)color[3] * (s32)lbl_803DC2D9) >> 8);
+    GXSetTevKColor(0, *(GXColor*)color);
+    GXSetTevKAlphaSel(0, 0x1C);
+    GXSetTevKColorSel(0, 0xC);
+    GXSetTevOrder(0, 0xFF, 0xFF, 4);
+    GXSetTevDirect(0);
+    GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xE);
+    GXSetTevAlphaIn(0, 7, 7, 7, 6);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetChanCtrl(0, 0, 0, 1, 0, 0, 2);
+    GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+    GXSetNumChans(1);
+    GXSetNumIndStages(0);
+    GXSetNumTexGens(0);
+    GXSetNumTevStages(1);
+    GXBegin(GX_QUADS, GX_VTXFMT1, 4);
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = x1 << 2;
+    GXWGFifo.s16 = y1 << 2;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DFB5C;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = x2 << 2;
+    GXWGFifo.s16 = y1 << 2;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DFB5C;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = x2 << 2;
+    GXWGFifo.s16 = y2 << 2;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DFB5C;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = x1 << 2;
+    GXWGFifo.s16 = y2 << 2;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DFB5C;
+
+    fn_8000FB20();
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -1446,10 +1601,94 @@ void FUN_80075534(undefined4 param_1,undefined4 param_2,int param_3,int param_4,
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80075800(double param_1,double param_2,double param_3,double param_4,double param_5,
-                 double param_6,double param_7,double param_8,undefined4 *param_9)
+#pragma peephole off
+#pragma scheduling off
+void fn_80075800(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4)
 {
+    extern void fn_8000FB20(void);
+    extern Mtx lbl_803974E0;
+    extern f32 lbl_803DFBAC;
+    extern f32 lbl_803DFB5C;
+    extern void GXSetZMode();
+    extern u8 lbl_803DDC92;
+    extern int lbl_803DDC94;
+    extern u8 lbl_803DDC98;
+    f32 scale = lbl_803DFBAC;
+    f32 fx1 = scale * x1;
+    f32 fy1 = scale * y1;
+    f32 fx2 = scale * x2;
+    f32 fy2 = scale * y2;
+    f32 fx3 = scale * x3;
+    f32 fy3 = scale * y3;
+    f32 fx4 = scale * x4;
+    f32 fy4 = scale * y4;
+
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXSetCullMode(GX_CULL_NONE);
+    GXSetProjection(lbl_803974E0, GX_ORTHOGRAPHIC);
+    if ((u32)lbl_803DDC98 != 0 || lbl_803DDC94 != 7 ||
+        (u32)lbl_803DDC92 != 0 || lbl_803DDC9A == 0) {
+        GXSetZMode(0, 7, 0);
+        lbl_803DDC98 = 0;
+        lbl_803DDC94 = 7;
+        lbl_803DDC92 = 0;
+        lbl_803DDC9A = 1;
+    }
+    GXSetBlendMode(1, 4, 5, 5);
+    color[3] = (u8)(((s32)color[3] * (s32)lbl_803DC2D9) >> 8);
+    GXSetTevKColor(0, *(GXColor*)color);
+    GXSetTevKAlphaSel(0, 0x1C);
+    GXSetTevKColorSel(0, 0xC);
+    GXSetTevOrder(0, 0xFF, 0xFF, 4);
+    GXSetTevDirect(0);
+    GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xE);
+    GXSetTevAlphaIn(0, 7, 7, 7, 6);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetChanCtrl(0, 0, 0, 1, 0, 0, 2);
+    GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+    GXSetNumChans(1);
+    GXSetNumIndStages(0);
+    GXSetNumTexGens(0);
+    GXSetNumTevStages(1);
+    GXBegin(GX_QUADS, GX_VTXFMT1, 4);
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = (s32)fx1;
+    GXWGFifo.s16 = (s32)fy1;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DFB5C;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = (s32)fx2;
+    GXWGFifo.s16 = (s32)fy2;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DFB5C;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = (s32)fx3;
+    GXWGFifo.s16 = (s32)fy3;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DFB5C;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = (s32)fx4;
+    GXWGFifo.s16 = (s32)fy4;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DFB5C;
+
+    fn_8000FB20();
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -1464,10 +1703,85 @@ void FUN_80075800(double param_1,double param_2,double param_3,double param_4,do
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80075b98(double param_1,double param_2,double param_3,double param_4,double param_5,
-                 double param_6,undefined4 *param_7)
+#pragma peephole off
+#pragma scheduling off
+void fn_80075B98(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
 {
+    extern void fn_8000FB20(void);
+    extern Mtx lbl_803974E0;
+    extern f32 lbl_803DFBAC;
+    extern f32 lbl_803DFB5C;
+    extern void GXSetZMode();
+    extern u8 lbl_803DDC92;
+    extern int lbl_803DDC94;
+    extern u8 lbl_803DDC98;
+    f32 scale = lbl_803DFBAC;
+    f32 fx1 = scale * x1;
+    f32 fy1 = scale * y1;
+    f32 fx2 = scale * x2;
+    f32 fy2 = scale * y2;
+    f32 fx3 = scale * x3;
+    f32 fy3 = scale * y3;
+
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXSetCullMode(GX_CULL_NONE);
+    GXSetProjection(lbl_803974E0, GX_ORTHOGRAPHIC);
+    if ((u32)lbl_803DDC98 != 0 || lbl_803DDC94 != 7 ||
+        (u32)lbl_803DDC92 != 0 || lbl_803DDC9A == 0) {
+        GXSetZMode(0, 7, 0);
+        lbl_803DDC98 = 0;
+        lbl_803DDC94 = 7;
+        lbl_803DDC92 = 0;
+        lbl_803DDC9A = 1;
+    }
+    GXSetBlendMode(1, 4, 5, 5);
+    color[3] = (u8)(((s32)color[3] * (s32)lbl_803DC2D9) >> 8);
+    GXSetTevKColor(0, *(GXColor*)color);
+    GXSetTevKAlphaSel(0, 0x1C);
+    GXSetTevKColorSel(0, 0xC);
+    GXSetTevOrder(0, 0xFF, 0xFF, 4);
+    GXSetTevDirect(0);
+    GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xE);
+    GXSetTevAlphaIn(0, 7, 7, 7, 6);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetChanCtrl(0, 0, 0, 1, 0, 0, 2);
+    GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+    GXSetNumChans(1);
+    GXSetNumIndStages(0);
+    GXSetNumTexGens(0);
+    GXSetNumTevStages(1);
+    GXBegin(GX_TRIANGLES, GX_VTXFMT1, 3);
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = (s32)fx1;
+    GXWGFifo.s16 = (s32)fy1;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DFB5C;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = (s32)fx2;
+    GXWGFifo.s16 = (s32)fy2;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DFB5C;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = (s32)fx3;
+    GXWGFifo.s16 = (s32)fy3;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DFB5C;
+
+    fn_8000FB20();
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -1482,10 +1796,53 @@ void FUN_80075b98(double param_1,double param_2,double param_3,double param_4,do
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80075ed8(undefined8 param_1,double param_2,double param_3,double param_4,undefined4 param_5
-                 ,undefined4 param_6,undefined2 param_7,undefined2 param_8,undefined2 param_9)
+#pragma peephole off
+#pragma scheduling off
+void fn_80075ED8(int x1, int y1, int x2, int y2, int z, f32 u1, f32 v1, f32 u2, f32 v2)
 {
+    extern void fn_8000FB20(void);
+    extern Mtx lbl_803974E0;
+
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXSetCullMode(GX_CULL_NONE);
+    GXSetProjection(lbl_803974E0, GX_ORTHOGRAPHIC);
+    GXBegin(GX_QUADS, GX_VTXFMT1, 4);
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = x1;
+    GXWGFifo.s16 = y1;
+    GXWGFifo.s16 = z;
+    GXWGFifo.f32 = u1;
+    GXWGFifo.f32 = v1;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = x2;
+    GXWGFifo.s16 = y1;
+    GXWGFifo.s16 = z;
+    GXWGFifo.f32 = u2;
+    GXWGFifo.f32 = v1;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = x2;
+    GXWGFifo.s16 = y2;
+    GXWGFifo.s16 = z;
+    GXWGFifo.f32 = u2;
+    GXWGFifo.f32 = v2;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = x1;
+    GXWGFifo.s16 = y2;
+    GXWGFifo.s16 = z;
+    GXWGFifo.f32 = u1;
+    GXWGFifo.f32 = v2;
+
+    fn_8000FB20();
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -1500,10 +1857,53 @@ void FUN_80075ed8(undefined8 param_1,double param_2,double param_3,double param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80076008(undefined8 param_1,double param_2,double param_3,double param_4,undefined4 param_5
-                 ,undefined4 param_6,undefined2 param_7,undefined2 param_8)
+#pragma peephole off
+#pragma scheduling off
+void fn_80076008(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
 {
+    extern void fn_8000FB20(void);
+    extern Mtx lbl_803974E0;
+
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXSetCullMode(GX_CULL_NONE);
+    GXSetProjection(lbl_803974E0, GX_ORTHOGRAPHIC);
+    GXBegin(GX_QUADS, GX_VTXFMT1, 4);
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = x1;
+    GXWGFifo.s16 = y1;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = u1;
+    GXWGFifo.f32 = v1;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = x2;
+    GXWGFifo.s16 = y1;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = u2;
+    GXWGFifo.f32 = v1;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = x2;
+    GXWGFifo.s16 = y2;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = u2;
+    GXWGFifo.f32 = v2;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = x1;
+    GXWGFifo.s16 = y2;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = u1;
+    GXWGFifo.f32 = v2;
+
+    fn_8000FB20();
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -1606,53 +2006,57 @@ void FUN_80077318(double param_1,double param_2,int param_3,uint param_4,uint pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80077780(float *param_1,undefined4 *param_2,float *param_3)
+#pragma scheduling off
+void fn_80077780(f32* obj, u32* colorPtr, Mtx mtx)
 {
-  undefined4 local_48;
-  undefined4 local_44;
-  float afStack_40 [13];
-  
-  FUN_8025c6b4(1,3,0,3,0);
-  FUN_80247618(param_1,param_3,afStack_40);
-  FUN_8025d8c4(afStack_40,0x1e,1);
-  FUN_80258674(0,1,0,0x1e,0,0x7d);
-  FUN_8004c460((int)param_1[0x18],0);
-  local_44 = *param_2;
-  FUN_8025c510(0,(byte *)&local_44);
-  FUN_8025c5f0(0,0x1c);
-  FUN_8025c584(0,0xc);
-  local_48 = DAT_803dc308;
-  FUN_8025c428(2,(byte *)&local_48);
-  FUN_8025c828(0,0,0,0xff);
-  FUN_8025be80(0);
-  FUN_8025c1a4(0,0xf,0xf,0xf,0xe);
-  FUN_8025c224(0,2,4,6,7);
-  FUN_8025c65c(0,0,1);
-  FUN_8025c2a8(0,0,0,0,0,1);
-  FUN_8025c368(0,0xe,0,0,1,0);
-  FUN_8025cce8(1,4,5,5);
-  FUN_8025be54(0);
-  FUN_8025a608(4,0,0,0,0,0,2);
-  FUN_8025a608(5,0,0,0,0,0,2);
-  FUN_8025a5bc(0);
-  FUN_80258944(1);
-  FUN_8025ca04(1);
-  if ((((DAT_803ddc98 != '\x01') || (DAT_803ddc94 != 3)) || (DAT_803ddc92 != '\0')) ||
-     (DAT_803ddc9a == '\0')) {
-    FUN_8025ce6c(1,3,0);
-    DAT_803ddc98 = '\x01';
-    DAT_803ddc94 = 3;
-    DAT_803ddc92 = '\0';
-    DAT_803ddc9a = '\x01';
-  }
-  if ((DAT_803ddc91 != '\x01') || (DAT_803ddc99 == '\0')) {
-    FUN_8025cee4(1);
-    DAT_803ddc91 = '\x01';
-    DAT_803ddc99 = '\x01';
-  }
-  FUN_8025c754(7,0,0,7,0);
-  return;
+    extern void fn_8004C460(int, int);
+    extern GXColor lbl_803DC308;
+    extern void GXSetZMode();
+    extern void GXSetZCompLoc();
+    extern u8 lbl_803DDC92;
+    extern int lbl_803DDC94;
+    extern u8 lbl_803DDC98;
+    Mtx tmp;
+
+    GXSetTevSwapModeTable(1, 3, 0, 3, 0);
+    PSMTXConcat((float(*)[4])obj, mtx, tmp);
+    GXLoadTexMtxImm(tmp, 0x1E, 1);
+    GXSetTexCoordGen2(0, 1, 0, 0x1E, 0, 0x7D);
+    fn_8004C460(*(int*)(obj + 0x18), 0);
+    GXSetTevKColor(0, *(GXColor*)colorPtr);
+    GXSetTevKAlphaSel(0, 0x1C);
+    GXSetTevKColorSel(0, 0xC);
+    GXSetTevColor(2, lbl_803DC308);
+    GXSetTevOrder(0, 0, 0, 0xFF);
+    GXSetTevDirect(0);
+    GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xE);
+    GXSetTevAlphaIn(0, 2, 4, 6, 7);
+    GXSetTevSwapMode(0, 0, 1);
+    GXSetTevColorOp(0, 0, 0, 0, 0, 1);
+    GXSetTevAlphaOp(0, 0xE, 0, 0, 1, 0);
+    GXSetBlendMode(1, 4, 5, 5);
+    GXSetNumIndStages(0);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(0);
+    GXSetNumTexGens(1);
+    GXSetNumTevStages(1);
+    if ((u32)lbl_803DDC98 != 1 || lbl_803DDC94 != 3 ||
+        (u32)lbl_803DDC92 != 0 || lbl_803DDC9A == 0) {
+        GXSetZMode(1, 3, 0);
+        lbl_803DDC98 = 1;
+        lbl_803DDC94 = 3;
+        lbl_803DDC92 = 0;
+        lbl_803DDC9A = 1;
+    }
+    if ((u32)lbl_803DDC91 != 1 || lbl_803DDC99 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DDC91 = 1;
+        lbl_803DDC99 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1667,49 +2071,54 @@ void FUN_80077780(float *param_1,undefined4 *param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80077a08(float *param_1,undefined4 *param_2,float *param_3)
+#pragma scheduling off
+void fn_80077A08(f32* obj, u32* colorPtr, Mtx mtx)
 {
-  undefined4 local_48;
-  float afStack_44 [15];
-  
-  FUN_80247618(param_1,param_3,afStack_44);
-  FUN_8025d8c4(afStack_44,0x1e,1);
-  FUN_80258674(0,1,0,0x1e,0,0x7d);
-  FUN_8004c460((int)param_1[0x18],0);
-  local_48 = *param_2;
-  FUN_8025c510(0,(byte *)&local_48);
-  FUN_8025c5f0(0,0x1c);
-  FUN_8025c584(0,0xc);
-  FUN_8025c828(0,0,0,0xff);
-  FUN_8025be80(0);
-  FUN_8025c1a4(0,0xf,0xf,0xf,0xe);
-  FUN_8025c224(0,7,4,6,7);
-  FUN_8025c65c(0,0,0);
-  FUN_8025c2a8(0,0,0,0,1,0);
-  FUN_8025c368(0,0,0,0,1,0);
-  FUN_8025cce8(1,4,5,5);
-  FUN_8025be54(0);
-  FUN_8025a608(4,0,0,0,0,0,2);
-  FUN_8025a608(5,0,0,0,0,0,2);
-  FUN_8025a5bc(0);
-  FUN_80258944(1);
-  FUN_8025ca04(1);
-  if ((((DAT_803ddc98 != '\x01') || (DAT_803ddc94 != 3)) || (DAT_803ddc92 != '\0')) ||
-     (DAT_803ddc9a == '\0')) {
-    FUN_8025ce6c(1,3,0);
-    DAT_803ddc98 = '\x01';
-    DAT_803ddc94 = 3;
-    DAT_803ddc92 = '\0';
-    DAT_803ddc9a = '\x01';
-  }
-  if ((DAT_803ddc91 != '\x01') || (DAT_803ddc99 == '\0')) {
-    FUN_8025cee4(1);
-    DAT_803ddc91 = '\x01';
-    DAT_803ddc99 = '\x01';
-  }
-  FUN_8025c754(7,0,0,7,0);
-  return;
+    extern void fn_8004C460(int, int);
+    extern void GXSetZMode();
+    extern void GXSetZCompLoc();
+    extern u8 lbl_803DDC92;
+    extern int lbl_803DDC94;
+    extern u8 lbl_803DDC98;
+    Mtx tmp;
+
+    PSMTXConcat((float(*)[4])obj, mtx, tmp);
+    GXLoadTexMtxImm(tmp, 0x1E, 1);
+    GXSetTexCoordGen2(0, 1, 0, 0x1E, 0, 0x7D);
+    fn_8004C460(*(int*)(obj + 0x18), 0);
+    GXSetTevKColor(0, *(GXColor*)colorPtr);
+    GXSetTevKAlphaSel(0, 0x1C);
+    GXSetTevKColorSel(0, 0xC);
+    GXSetTevOrder(0, 0, 0, 0xFF);
+    GXSetTevDirect(0);
+    GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xE);
+    GXSetTevAlphaIn(0, 7, 4, 6, 7);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetBlendMode(1, 4, 5, 5);
+    GXSetNumIndStages(0);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(0);
+    GXSetNumTexGens(1);
+    GXSetNumTevStages(1);
+    if ((u32)lbl_803DDC98 != 1 || lbl_803DDC94 != 3 ||
+        (u32)lbl_803DDC92 != 0 || lbl_803DDC9A == 0) {
+        GXSetZMode(1, 3, 0);
+        lbl_803DDC98 = 1;
+        lbl_803DDC94 = 3;
+        lbl_803DDC92 = 0;
+        lbl_803DDC9A = 1;
+    }
+    if ((u32)lbl_803DDC91 != 1 || lbl_803DDC99 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DDC91 = 1;
+        lbl_803DDC99 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1758,25 +2167,31 @@ void FUN_80078074(undefined4 param_1,undefined4 param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800788bc(void)
+#pragma scheduling off
+void fn_800788BC(void)
 {
-  if ((((DAT_803ddc98 != '\x01') || (DAT_803ddc94 != 3)) || (DAT_803ddc92 != '\x01')) ||
-     (DAT_803ddc9a == '\0')) {
-    FUN_8025ce6c(1,3,1);
-    DAT_803ddc98 = '\x01';
-    DAT_803ddc94 = 3;
-    DAT_803ddc92 = '\x01';
-    DAT_803ddc9a = '\x01';
-  }
-  FUN_8025cce8(0,1,0,5);
-  if ((DAT_803ddc91 != '\x01') || (DAT_803ddc99 == '\0')) {
-    FUN_8025cee4(1);
-    DAT_803ddc91 = '\x01';
-    DAT_803ddc99 = '\x01';
-  }
-  FUN_8025c754(7,0,0,7,0);
-  return;
+    extern void GXSetZMode();
+    extern void GXSetZCompLoc();
+    extern u8 lbl_803DDC92;
+    extern int lbl_803DDC94;
+    extern u8 lbl_803DDC98;
+    if ((u32)lbl_803DDC98 != 1 || lbl_803DDC94 != 3 ||
+        (u32)lbl_803DDC92 != 1 || lbl_803DDC9A == 0) {
+        GXSetZMode(1, 3, 1);
+        lbl_803DDC98 = 1;
+        lbl_803DDC94 = 3;
+        lbl_803DDC92 = 1;
+        lbl_803DDC9A = 1;
+    }
+    GXSetBlendMode(0, 1, 0, 5);
+    if ((u32)lbl_803DDC91 != 1 || lbl_803DDC99 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DDC91 = 1;
+        lbl_803DDC99 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1791,25 +2206,31 @@ void FUN_800788bc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80078988(void)
+#pragma scheduling off
+void fn_80078988(void)
 {
-  if ((((DAT_803ddc98 != '\x01') || (DAT_803ddc94 != 3)) || (DAT_803ddc92 != '\0')) ||
-     (DAT_803ddc9a == '\0')) {
-    FUN_8025ce6c(1,3,0);
-    DAT_803ddc98 = '\x01';
-    DAT_803ddc94 = 3;
-    DAT_803ddc92 = '\0';
-    DAT_803ddc9a = '\x01';
-  }
-  FUN_8025cce8(0,1,0,5);
-  if ((DAT_803ddc91 != '\x01') || (DAT_803ddc99 == '\0')) {
-    FUN_8025cee4(1);
-    DAT_803ddc91 = '\x01';
-    DAT_803ddc99 = '\x01';
-  }
-  FUN_8025c754(7,0,0,7,0);
-  return;
+    extern void GXSetZMode();
+    extern void GXSetZCompLoc();
+    extern u8 lbl_803DDC92;
+    extern int lbl_803DDC94;
+    extern u8 lbl_803DDC98;
+    if ((u32)lbl_803DDC98 != 1 || lbl_803DDC94 != 3 ||
+        (u32)lbl_803DDC92 != 0 || lbl_803DDC9A == 0) {
+        GXSetZMode(1, 3, 0);
+        lbl_803DDC98 = 1;
+        lbl_803DDC94 = 3;
+        lbl_803DDC92 = 0;
+        lbl_803DDC9A = 1;
+    }
+    GXSetBlendMode(0, 1, 0, 5);
+    if ((u32)lbl_803DDC91 != 1 || lbl_803DDC99 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DDC91 = 1;
+        lbl_803DDC99 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1824,25 +2245,31 @@ void FUN_80078988(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80078a58(void)
+#pragma scheduling off
+void fn_80078A58(void)
 {
-  if ((((DAT_803ddc98 != '\x01') || (DAT_803ddc94 != 3)) || (DAT_803ddc92 != '\0')) ||
-     (DAT_803ddc9a == '\0')) {
-    FUN_8025ce6c(1,3,0);
-    DAT_803ddc98 = '\x01';
-    DAT_803ddc94 = 3;
-    DAT_803ddc92 = '\0';
-    DAT_803ddc9a = '\x01';
-  }
-  FUN_8025cce8(1,4,1,5);
-  if ((DAT_803ddc91 != '\x01') || (DAT_803ddc99 == '\0')) {
-    FUN_8025cee4(1);
-    DAT_803ddc91 = '\x01';
-    DAT_803ddc99 = '\x01';
-  }
-  FUN_8025c754(7,0,0,7,0);
-  return;
+    extern void GXSetZMode();
+    extern void GXSetZCompLoc();
+    extern u8 lbl_803DDC92;
+    extern int lbl_803DDC94;
+    extern u8 lbl_803DDC98;
+    if ((u32)lbl_803DDC98 != 1 || lbl_803DDC94 != 3 ||
+        (u32)lbl_803DDC92 != 0 || lbl_803DDC9A == 0) {
+        GXSetZMode(1, 3, 0);
+        lbl_803DDC98 = 1;
+        lbl_803DDC94 = 3;
+        lbl_803DDC92 = 0;
+        lbl_803DDC9A = 1;
+    }
+    GXSetBlendMode(1, 4, 1, 5);
+    if ((u32)lbl_803DDC91 != 1 || lbl_803DDC99 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DDC91 = 1;
+        lbl_803DDC99 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1857,25 +2284,31 @@ void FUN_80078a58(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80078b28(void)
+#pragma scheduling off
+void fn_80078B28(void)
 {
-  if ((((DAT_803ddc98 != '\0') || (DAT_803ddc94 != 7)) || (DAT_803ddc92 != '\0')) ||
-     (DAT_803ddc9a == '\0')) {
-    FUN_8025ce6c(0,7,0);
-    DAT_803ddc98 = '\0';
-    DAT_803ddc94 = 7;
-    DAT_803ddc92 = '\0';
-    DAT_803ddc9a = '\x01';
-  }
-  FUN_8025cce8(1,4,1,5);
-  if ((DAT_803ddc91 != '\x01') || (DAT_803ddc99 == '\0')) {
-    FUN_8025cee4(1);
-    DAT_803ddc91 = '\x01';
-    DAT_803ddc99 = '\x01';
-  }
-  FUN_8025c754(7,0,0,7,0);
-  return;
+    extern void GXSetZMode();
+    extern void GXSetZCompLoc();
+    extern u8 lbl_803DDC92;
+    extern int lbl_803DDC94;
+    extern u8 lbl_803DDC98;
+    if ((u32)lbl_803DDC98 != 0 || lbl_803DDC94 != 7 ||
+        (u32)lbl_803DDC92 != 0 || lbl_803DDC9A == 0) {
+        GXSetZMode(0, 7, 0);
+        lbl_803DDC98 = 0;
+        lbl_803DDC94 = 7;
+        lbl_803DDC92 = 0;
+        lbl_803DDC9A = 1;
+    }
+    GXSetBlendMode(1, 4, 1, 5);
+    if ((u32)lbl_803DDC91 != 1 || lbl_803DDC99 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DDC91 = 1;
+        lbl_803DDC99 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1890,25 +2323,31 @@ void FUN_80078b28(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80078bf8(void)
+#pragma scheduling off
+void fn_80078BF8(void)
 {
-  if ((((DAT_803ddc98 != '\0') || (DAT_803ddc94 != 7)) || (DAT_803ddc92 != '\0')) ||
-     (DAT_803ddc9a == '\0')) {
-    FUN_8025ce6c(0,7,0);
-    DAT_803ddc98 = '\0';
-    DAT_803ddc94 = 7;
-    DAT_803ddc92 = '\0';
-    DAT_803ddc9a = '\x01';
-  }
-  FUN_8025cce8(1,4,5,5);
-  if ((DAT_803ddc91 != '\x01') || (DAT_803ddc99 == '\0')) {
-    FUN_8025cee4(1);
-    DAT_803ddc91 = '\x01';
-    DAT_803ddc99 = '\x01';
-  }
-  FUN_8025c754(7,0,0,7,0);
-  return;
+    extern void GXSetZMode();
+    extern void GXSetZCompLoc();
+    extern u8 lbl_803DDC92;
+    extern int lbl_803DDC94;
+    extern u8 lbl_803DDC98;
+    if ((u32)lbl_803DDC98 != 0 || lbl_803DDC94 != 7 ||
+        (u32)lbl_803DDC92 != 0 || lbl_803DDC9A == 0) {
+        GXSetZMode(0, 7, 0);
+        lbl_803DDC98 = 0;
+        lbl_803DDC94 = 7;
+        lbl_803DDC92 = 0;
+        lbl_803DDC9A = 1;
+    }
+    GXSetBlendMode(1, 4, 5, 5);
+    if ((u32)lbl_803DDC91 != 1 || lbl_803DDC99 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DDC91 = 1;
+        lbl_803DDC99 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1923,25 +2362,31 @@ void FUN_80078bf8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80078cc8(void)
+#pragma scheduling off
+void fn_80078CC8(void)
 {
-  if ((((DAT_803ddc98 != '\x01') || (DAT_803ddc94 != 3)) || (DAT_803ddc92 != '\0')) ||
-     (DAT_803ddc9a == '\0')) {
-    FUN_8025ce6c(1,3,0);
-    DAT_803ddc98 = '\x01';
-    DAT_803ddc94 = 3;
-    DAT_803ddc92 = '\0';
-    DAT_803ddc9a = '\x01';
-  }
-  FUN_8025cce8(1,4,5,5);
-  if ((DAT_803ddc91 != '\x01') || (DAT_803ddc99 == '\0')) {
-    FUN_8025cee4(1);
-    DAT_803ddc91 = '\x01';
-    DAT_803ddc99 = '\x01';
-  }
-  FUN_8025c754(7,0,0,7,0);
-  return;
+    extern void GXSetZMode();
+    extern void GXSetZCompLoc();
+    extern u8 lbl_803DDC92;
+    extern int lbl_803DDC94;
+    extern u8 lbl_803DDC98;
+    if ((u32)lbl_803DDC98 != 1 || lbl_803DDC94 != 3 ||
+        (u32)lbl_803DDC92 != 0 || lbl_803DDC9A == 0) {
+        GXSetZMode(1, 3, 0);
+        lbl_803DDC98 = 1;
+        lbl_803DDC94 = 3;
+        lbl_803DDC92 = 0;
+        lbl_803DDC9A = 1;
+    }
+    GXSetBlendMode(1, 4, 5, 5);
+    if ((u32)lbl_803DDC91 != 1 || lbl_803DDC99 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DDC91 = 1;
+        lbl_803DDC99 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1956,39 +2401,45 @@ void FUN_80078cc8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80078d98(void)
+#pragma scheduling off
+void fn_80078D98(void)
 {
-  FUN_80259288(0);
-  FUN_8025c828(0,0,0,0xff);
-  FUN_8025be80(0);
-  FUN_8025c1a4(0,0xf,8,2,0xf);
-  FUN_8025c224(0,7,7,7,4);
-  FUN_8025c65c(0,0,0);
-  FUN_8025c2a8(0,0,0,0,1,0);
-  FUN_8025c368(0,0,0,0,1,0);
-  FUN_80258674(0,1,4,0x3c,0,0x7d);
-  FUN_8025a608(4,0,0,0,0,0,2);
-  FUN_8025a608(5,0,0,0,0,0,2);
-  FUN_8025a5bc(0);
-  FUN_80258944(1);
-  FUN_8025ca04(1);
-  if ((((DAT_803ddc98 != '\0') || (DAT_803ddc94 != 7)) || (DAT_803ddc92 != '\0')) ||
-     (DAT_803ddc9a == '\0')) {
-    FUN_8025ce6c(0,7,0);
-    DAT_803ddc98 = '\0';
-    DAT_803ddc94 = 7;
-    DAT_803ddc92 = '\0';
-    DAT_803ddc9a = '\x01';
-  }
-  FUN_8025cce8(1,4,5,5);
-  if ((DAT_803ddc91 != '\x01') || (DAT_803ddc99 == '\0')) {
-    FUN_8025cee4(1);
-    DAT_803ddc91 = '\x01';
-    DAT_803ddc99 = '\x01';
-  }
-  FUN_8025c754(7,0,0,7,0);
-  return;
+    extern void GXSetZMode();
+    extern void GXSetZCompLoc();
+    extern u8 lbl_803DDC92;
+    extern int lbl_803DDC94;
+    extern u8 lbl_803DDC98;
+    GXSetCullMode(0);
+    GXSetTevOrder(0, 0, 0, 0xFF);
+    GXSetTevDirect(0);
+    GXSetTevColorIn(0, 0xF, 8, 2, 0xF);
+    GXSetTevAlphaIn(0, 7, 7, 7, 4);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(0);
+    GXSetNumTexGens(1);
+    GXSetNumTevStages(1);
+    if ((u32)lbl_803DDC98 != 0 || lbl_803DDC94 != 7 ||
+        (u32)lbl_803DDC92 != 0 || lbl_803DDC9A == 0) {
+        GXSetZMode(0, 7, 0);
+        lbl_803DDC98 = 0;
+        lbl_803DDC94 = 7;
+        lbl_803DDC92 = 0;
+        lbl_803DDC9A = 1;
+    }
+    GXSetBlendMode(1, 4, 5, 5);
+    if ((u32)lbl_803DDC91 != 1 || lbl_803DDC99 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DDC91 = 1;
+        lbl_803DDC99 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2003,20 +2454,21 @@ void FUN_80078d98(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80078f78(void)
+#pragma scheduling off
+void fn_80078F78(void)
 {
-  FUN_8025c828(DAT_803ddcb0,0xff,0xff,4);
-  FUN_8025be80(DAT_803ddcb0);
-  FUN_8025c1a4(DAT_803ddcb0,0xf,0,10,0xf);
-  FUN_8025c224(DAT_803ddcb0,7,0,5,7);
-  FUN_8025c65c(DAT_803ddcb0,0,0);
-  FUN_8025c2a8(DAT_803ddcb0,0,0,0,1,0);
-  FUN_8025c368(DAT_803ddcb0,0,0,0,1,0);
-  DAT_803ddcb0 = DAT_803ddcb0 + 1;
-  DAT_803ddc8b = DAT_803ddc8b + '\x01';
-  DAT_803ddc89 = DAT_803ddc89 + '\x01';
-  return;
+    GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
+    GXSetTevDirect(lbl_803DDCB0);
+    GXSetTevColorIn(lbl_803DDCB0, 0xF, 0, 10, 0xF);
+    GXSetTevAlphaIn(lbl_803DDCB0, 7, 0, 5, 7);
+    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
+    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    lbl_803DDCB0 += 1;
+    lbl_803DDC8B += 1;
+    lbl_803DDC89 += 1;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2031,20 +2483,21 @@ void FUN_80078f78(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007904c(void)
+#pragma scheduling off
+void fn_8007904C(void)
 {
-  FUN_8025c828(DAT_803ddcb0,0xff,0xff,4);
-  FUN_8025be80(DAT_803ddcb0);
-  FUN_8025c1a4(DAT_803ddcb0,0xf,10,4,0xf);
-  FUN_8025c224(DAT_803ddcb0,7,5,2,7);
-  FUN_8025c65c(DAT_803ddcb0,0,0);
-  FUN_8025c2a8(DAT_803ddcb0,0,0,0,1,0);
-  FUN_8025c368(DAT_803ddcb0,0,0,0,1,0);
-  DAT_803ddcb0 = DAT_803ddcb0 + 1;
-  DAT_803ddc8b = DAT_803ddc8b + '\x01';
-  DAT_803ddc89 = DAT_803ddc89 + '\x01';
-  return;
+    GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
+    GXSetTevDirect(lbl_803DDCB0);
+    GXSetTevColorIn(lbl_803DDCB0, 0xF, 10, 4, 0xF);
+    GXSetTevAlphaIn(lbl_803DDCB0, 7, 5, 2, 7);
+    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
+    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    lbl_803DDCB0 += 1;
+    lbl_803DDC8B += 1;
+    lbl_803DDC89 += 1;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2059,23 +2512,24 @@ void FUN_8007904c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80079120(void)
+#pragma scheduling off
+void fn_80079120(void)
 {
-  FUN_8025c828(DAT_803ddcb0,DAT_803ddcac,DAT_803ddca8,0xff);
-  FUN_8025be80(DAT_803ddcb0);
-  FUN_8025c1a4(DAT_803ddcb0,4,0xf,0xf,0xf);
-  FUN_8025c224(DAT_803ddcb0,7,2,4,7);
-  FUN_8025c65c(DAT_803ddcb0,0,0);
-  FUN_8025c2a8(DAT_803ddcb0,0,0,0,1,0);
-  FUN_8025c368(DAT_803ddcb0,0,0,0,1,0);
-  FUN_80258674(DAT_803ddcac,1,4,0x3c,0,0x7d);
-  DAT_803ddcb0 = DAT_803ddcb0 + 1;
-  DAT_803ddc8b = DAT_803ddc8b + '\x01';
-  DAT_803ddcac = DAT_803ddcac + 1;
-  DAT_803ddc8a = DAT_803ddc8a + '\x01';
-  DAT_803ddca8 = DAT_803ddca8 + 1;
-  return;
+    GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 0xFF);
+    GXSetTevDirect(lbl_803DDCB0);
+    GXSetTevColorIn(lbl_803DDCB0, 4, 0xF, 0xF, 0xF);
+    GXSetTevAlphaIn(lbl_803DDCB0, 7, 2, 4, 7);
+    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
+    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTexCoordGen2(lbl_803DDCAC, 1, 4, 0x3C, 0, 0x7D);
+    lbl_803DDCB0 += 1;
+    lbl_803DDC8B += 1;
+    lbl_803DDCAC += 1;
+    lbl_803DDC8A += 1;
+    lbl_803DDCA8 += 1;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2090,20 +2544,21 @@ void FUN_80079120(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80079228(void)
+#pragma scheduling off
+void fn_80079228(void)
 {
-  FUN_8025c828(DAT_803ddcb0,0xff,0xff,4);
-  FUN_8025be80(DAT_803ddcb0);
-  FUN_8025c1a4(DAT_803ddcb0,0xf,0xf,0xf,4);
-  FUN_8025c224(DAT_803ddcb0,7,7,7,2);
-  FUN_8025c65c(DAT_803ddcb0,0,0);
-  FUN_8025c2a8(DAT_803ddcb0,0,0,0,1,0);
-  FUN_8025c368(DAT_803ddcb0,0,0,0,1,0);
-  DAT_803ddcb0 = DAT_803ddcb0 + 1;
-  DAT_803ddc8b = DAT_803ddc8b + '\x01';
-  DAT_803ddc89 = DAT_803ddc89 + '\x01';
-  return;
+    GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
+    GXSetTevDirect(lbl_803DDCB0);
+    GXSetTevColorIn(lbl_803DDCB0, 0xF, 0xF, 0xF, 4);
+    GXSetTevAlphaIn(lbl_803DDCB0, 7, 7, 7, 2);
+    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
+    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    lbl_803DDCB0 += 1;
+    lbl_803DDC8B += 1;
+    lbl_803DDC89 += 1;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2118,20 +2573,21 @@ void FUN_80079228(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800792fc(void)
+#pragma scheduling off
+void fn_800792FC(void)
 {
-  FUN_8025c828(DAT_803ddcb0,0xff,0xff,4);
-  FUN_8025be80(DAT_803ddcb0);
-  FUN_8025c1a4(DAT_803ddcb0,0xf,0xf,0xf,10);
-  FUN_8025c224(DAT_803ddcb0,7,7,7,5);
-  FUN_8025c65c(DAT_803ddcb0,0,0);
-  FUN_8025c2a8(DAT_803ddcb0,0,0,0,1,0);
-  FUN_8025c368(DAT_803ddcb0,0,0,0,1,0);
-  DAT_803ddcb0 = DAT_803ddcb0 + 1;
-  DAT_803ddc8b = DAT_803ddc8b + '\x01';
-  DAT_803ddc89 = DAT_803ddc89 + '\x01';
-  return;
+    GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
+    GXSetTevDirect(lbl_803DDCB0);
+    GXSetTevColorIn(lbl_803DDCB0, 0xF, 0xF, 0xF, 10);
+    GXSetTevAlphaIn(lbl_803DDCB0, 7, 7, 7, 5);
+    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
+    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    lbl_803DDCB0 += 1;
+    lbl_803DDC8B += 1;
+    lbl_803DDC89 += 1;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2146,20 +2602,21 @@ void FUN_800792fc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800793d0(void)
+#pragma scheduling off
+void fn_800793D0(void)
 {
-  FUN_8025c828(DAT_803ddcb0,0xff,0xff,4);
-  FUN_8025be80(DAT_803ddcb0);
-  FUN_8025c1a4(DAT_803ddcb0,0xf,0,4,0xf);
-  FUN_8025c224(DAT_803ddcb0,7,0,2,7);
-  FUN_8025c65c(DAT_803ddcb0,0,0);
-  FUN_8025c2a8(DAT_803ddcb0,0,0,0,1,0);
-  FUN_8025c368(DAT_803ddcb0,0,0,0,1,0);
-  DAT_803ddcb0 = DAT_803ddcb0 + 1;
-  DAT_803ddc8b = DAT_803ddc8b + '\x01';
-  DAT_803ddc89 = DAT_803ddc89 + '\x01';
-  return;
+    GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
+    GXSetTevDirect(lbl_803DDCB0);
+    GXSetTevColorIn(lbl_803DDCB0, 0xF, 0, 4, 0xF);
+    GXSetTevAlphaIn(lbl_803DDCB0, 7, 0, 2, 7);
+    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
+    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    lbl_803DDCB0 += 1;
+    lbl_803DDC8B += 1;
+    lbl_803DDC89 += 1;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2174,33 +2631,34 @@ void FUN_800793d0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800794a4(void)
+#pragma scheduling off
+void fn_800794A4(void)
 {
-  FUN_8025c828(DAT_803ddcb0,DAT_803ddcac,DAT_803ddca8,0xff);
-  FUN_8025be80(DAT_803ddcb0);
-  FUN_8025c1a4(DAT_803ddcb0,0xf,0xf,0xf,8);
-  FUN_8025c224(DAT_803ddcb0,7,7,7,4);
-  FUN_8025c65c(DAT_803ddcb0,0,0);
-  FUN_8025c2a8(DAT_803ddcb0,0,0,0,1,0);
-  FUN_8025c368(DAT_803ddcb0,0,0,0,1,0);
-  DAT_803ddcb0 = DAT_803ddcb0 + 1;
-  DAT_803ddc8b = DAT_803ddc8b + '\x01';
-  DAT_803ddca8 = DAT_803ddca8 + 1;
-  FUN_8025c828(DAT_803ddcb0,DAT_803ddcac,DAT_803ddca8,0xff);
-  FUN_8025be80(DAT_803ddcb0);
-  FUN_8025c1a4(DAT_803ddcb0,0,8,3,0xf);
-  FUN_8025c224(DAT_803ddcb0,0,4,1,7);
-  FUN_8025c65c(DAT_803ddcb0,0,0);
-  FUN_8025c2a8(DAT_803ddcb0,0,0,0,1,0);
-  FUN_8025c368(DAT_803ddcb0,0,0,0,1,0);
-  FUN_80258674(DAT_803ddcac,1,4,0x3c,0,0x7d);
-  DAT_803ddcb0 = DAT_803ddcb0 + 1;
-  DAT_803ddc8b = DAT_803ddc8b + '\x01';
-  DAT_803ddcac = DAT_803ddcac + 1;
-  DAT_803ddc8a = DAT_803ddc8a + '\x01';
-  DAT_803ddca8 = DAT_803ddca8 + 1;
-  return;
+    GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 0xFF);
+    GXSetTevDirect(lbl_803DDCB0);
+    GXSetTevColorIn(lbl_803DDCB0, 0xF, 0xF, 0xF, 8);
+    GXSetTevAlphaIn(lbl_803DDCB0, 7, 7, 7, 4);
+    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
+    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    lbl_803DDCB0 += 1;
+    lbl_803DDC8B += 1;
+    lbl_803DDCA8 += 1;
+    GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 0xFF);
+    GXSetTevDirect(lbl_803DDCB0);
+    GXSetTevColorIn(lbl_803DDCB0, 0, 8, 3, 0xF);
+    GXSetTevAlphaIn(lbl_803DDCB0, 0, 4, 1, 7);
+    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
+    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTexCoordGen2(lbl_803DDCAC, 1, 4, 0x3C, 0, 0x7D);
+    lbl_803DDCB0 += 1;
+    lbl_803DDC8B += 1;
+    lbl_803DDCAC += 1;
+    lbl_803DDC8A += 1;
+    lbl_803DDCA8 += 1;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2215,23 +2673,24 @@ void FUN_800794a4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007965c(void)
+#pragma scheduling off
+void fn_8007965C(void)
 {
-  FUN_8025c828(DAT_803ddcb0,DAT_803ddcac,DAT_803ddca8,0xff);
-  FUN_8025be80(DAT_803ddcb0);
-  FUN_8025c1a4(DAT_803ddcb0,0xf,0xf,0xf,4);
-  FUN_8025c224(DAT_803ddcb0,7,4,2,7);
-  FUN_8025c65c(DAT_803ddcb0,0,0);
-  FUN_8025c2a8(DAT_803ddcb0,0,0,0,1,0);
-  FUN_8025c368(DAT_803ddcb0,0,0,0,1,0);
-  FUN_80258674(DAT_803ddcac,1,4,0x3c,0,0x7d);
-  DAT_803ddcb0 = DAT_803ddcb0 + 1;
-  DAT_803ddc8b = DAT_803ddc8b + '\x01';
-  DAT_803ddca8 = DAT_803ddca8 + 1;
-  DAT_803ddcac = DAT_803ddcac + 1;
-  DAT_803ddc8a = DAT_803ddc8a + '\x01';
-  return;
+    GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 0xFF);
+    GXSetTevDirect(lbl_803DDCB0);
+    GXSetTevColorIn(lbl_803DDCB0, 0xF, 0xF, 0xF, 4);
+    GXSetTevAlphaIn(lbl_803DDCB0, 7, 4, 2, 7);
+    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
+    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTexCoordGen2(lbl_803DDCAC, 1, 4, 0x3C, 0, 0x7D);
+    lbl_803DDCB0 += 1;
+    lbl_803DDC8B += 1;
+    lbl_803DDCA8 += 1;
+    lbl_803DDCAC += 1;
+    lbl_803DDC8A += 1;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2246,23 +2705,24 @@ void FUN_8007965c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80079764(void)
+#pragma scheduling off
+void fn_80079764(void)
 {
-  FUN_8025c828(DAT_803ddcb0,DAT_803ddcac,DAT_803ddca8,0xff);
-  FUN_8025be80(DAT_803ddcb0);
-  FUN_8025c1a4(DAT_803ddcb0,0xf,8,4,0xf);
-  FUN_8025c224(DAT_803ddcb0,7,4,2,7);
-  FUN_8025c65c(DAT_803ddcb0,0,0);
-  FUN_8025c2a8(DAT_803ddcb0,0,0,0,1,0);
-  FUN_8025c368(DAT_803ddcb0,0,0,0,1,0);
-  FUN_80258674(DAT_803ddcac,1,4,0x3c,0,0x7d);
-  DAT_803ddcb0 = DAT_803ddcb0 + 1;
-  DAT_803ddc8b = DAT_803ddc8b + '\x01';
-  DAT_803ddca8 = DAT_803ddca8 + 1;
-  DAT_803ddcac = DAT_803ddcac + 1;
-  DAT_803ddc8a = DAT_803ddc8a + '\x01';
-  return;
+    GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 0xFF);
+    GXSetTevDirect(lbl_803DDCB0);
+    GXSetTevColorIn(lbl_803DDCB0, 0xF, 8, 4, 0xF);
+    GXSetTevAlphaIn(lbl_803DDCB0, 7, 4, 2, 7);
+    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
+    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTexCoordGen2(lbl_803DDCAC, 1, 4, 0x3C, 0, 0x7D);
+    lbl_803DDCB0 += 1;
+    lbl_803DDC8B += 1;
+    lbl_803DDCA8 += 1;
+    lbl_803DDCAC += 1;
+    lbl_803DDC8A += 1;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2277,24 +2737,25 @@ void FUN_80079764(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007986c(void)
+#pragma scheduling off
+void fn_8007986C(void)
 {
-  FUN_8025c828(DAT_803ddcb0,DAT_803ddcac,DAT_803ddca8,4);
-  FUN_8025be80(DAT_803ddcb0);
-  FUN_8025c1a4(DAT_803ddcb0,0xf,8,10,0xf);
-  FUN_8025c224(DAT_803ddcb0,7,4,5,7);
-  FUN_8025c65c(DAT_803ddcb0,0,0);
-  FUN_8025c2a8(DAT_803ddcb0,0,0,0,1,0);
-  FUN_8025c368(DAT_803ddcb0,0,0,0,1,0);
-  FUN_80258674(DAT_803ddcac,1,4,0x3c,0,0x7d);
-  DAT_803ddcb0 = DAT_803ddcb0 + 1;
-  DAT_803ddc8b = DAT_803ddc8b + '\x01';
-  DAT_803ddca8 = DAT_803ddca8 + 1;
-  DAT_803ddcac = DAT_803ddcac + 1;
-  DAT_803ddc8a = DAT_803ddc8a + '\x01';
-  DAT_803ddc89 = DAT_803ddc89 + '\x01';
-  return;
+    GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 4);
+    GXSetTevDirect(lbl_803DDCB0);
+    GXSetTevColorIn(lbl_803DDCB0, 0xF, 8, 10, 0xF);
+    GXSetTevAlphaIn(lbl_803DDCB0, 7, 4, 5, 7);
+    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
+    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTexCoordGen2(lbl_803DDCAC, 1, 4, 0x3C, 0, 0x7D);
+    lbl_803DDCB0 += 1;
+    lbl_803DDC8B += 1;
+    lbl_803DDCA8 += 1;
+    lbl_803DDCAC += 1;
+    lbl_803DDC8A += 1;
+    lbl_803DDC89 += 1;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2326,16 +2787,15 @@ void FUN_80079980(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80079b3c(void)
+void fn_80079B3C(void)
 {
-  DAT_803ddc88 = 0;
-  DAT_803ddc89 = 0;
-  DAT_803ddc8a = 0;
-  DAT_803ddc8b = 0;
-  DAT_803ddcb0 = 0;
-  DAT_803ddcac = 0;
-  DAT_803ddca8 = 0;
-  return;
+    lbl_803DDC88 = 0;
+    lbl_803DDC89 = 0;
+    lbl_803DDC8A = 0;
+    lbl_803DDC8B = 0;
+    lbl_803DDCB0 = 0;
+    lbl_803DDCAC = 0;
+    lbl_803DDCA8 = 0;
 }
 
 /*
@@ -2351,16 +2811,17 @@ void FUN_80079b3c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80079b60(undefined param_1,undefined param_2,undefined param_3,undefined param_4)
+#pragma scheduling off
+void fn_80079B60(u8 r, u8 g, u8 b, u8 a)
 {
-  undefined4 local_8;
-  undefined4 local_4;
-  
-  local_4 = CONCAT31(CONCAT21(CONCAT11(param_1,param_2),param_3),param_4);
-  local_8 = local_4;
-  FUN_8025c428(2,(byte *)&local_8);
-  return;
+    GXColor c;
+    c.r = r;
+    c.g = g;
+    c.b = b;
+    c.a = a;
+    GXSetTevColor(GX_TEVREG1, c);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2375,16 +2836,17 @@ void FUN_80079b60(undefined param_1,undefined param_2,undefined param_3,undefine
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80079ba0(undefined param_1,undefined param_2,undefined param_3,undefined param_4)
+#pragma scheduling off
+void fn_80079BA0(u8 r, u8 g, u8 b, u8 a)
 {
-  undefined4 local_8;
-  undefined4 local_4;
-  
-  local_4 = CONCAT31(CONCAT21(CONCAT11(param_1,param_2),param_3),param_4);
-  local_8 = local_4;
-  FUN_8025c428(1,(byte *)&local_8);
-  return;
+    GXColor c;
+    c.r = r;
+    c.g = g;
+    c.b = b;
+    c.a = a;
+    GXSetTevColor(GX_TEVREG0, c);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2502,54 +2964,54 @@ void FUN_8007bf08(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007c54c(char param_1)
+#pragma peephole off
+#pragma scheduling off
+void fn_8007C54C(u8 flag)
 {
-  float local_20;
-  float local_1c;
-  float local_18;
-  float local_14;
-  float local_10;
-  float local_c;
-  
-  newshadows_bindShadowRenderTexture(1);
-  FUN_80258674(1,0,0,0x24,0,0x7d);
-  FUN_80258674(0,1,4,0x3c,0,0x7d);
-  local_20 = FLOAT_803dfb5c;
-  local_1c = FLOAT_803dfb78;
-  local_18 = FLOAT_803dfb5c;
-  local_14 = FLOAT_803dfb5c;
-  local_10 = FLOAT_803dfb5c;
-  local_c = FLOAT_803dfb78;
-  FUN_8025bd1c(0,0,0);
-  FUN_8025bb48(0,0,0);
-  FUN_8025b9e8(1,&local_20,-2);
-  FUN_8025b94c(1,0,0,7,1,0,0,0,0,1);
-  FUN_8025be54(1);
-  FUN_80258944(2);
-  FUN_8025ca04(2);
-  FUN_8025a608(0,0,0,1,0,0,2);
-  FUN_8025a608(2,0,0,1,0,0,2);
-  FUN_8025a5bc(1);
-  FUN_8025be80(0);
-  FUN_8025c828(0,0xff,0xff,4);
-  FUN_8025c1a4(0,0xf,0xf,0xf,10);
-  FUN_8025c224(0,7,7,7,5);
-  FUN_8025c65c(0,0,0);
-  FUN_8025c2a8(0,0,0,0,1,0);
-  FUN_8025c368(0,0,0,0,1,0);
-  if (param_1 == '\0') {
-    FUN_8025c1a4(1,0xf,8,0,0xf);
-  }
-  else {
-    FUN_8025c1a4(1,8,0xf,0xf,0);
-  }
-  FUN_8025c828(1,1,1,8);
-  FUN_8025c224(1,7,5,0,7);
-  FUN_8025c65c(1,0,0);
-  FUN_8025c2a8(1,0,0,0,1,0);
-  FUN_8025c368(1,0,0,0,1,0);
-  return;
+    extern f32 lbl_803DFB5C;
+    extern f32 lbl_803DFB78;
+    extern void fn_8006C86C(int);
+    f32 mtx[6];
+
+    fn_8006C86C(1);
+    GXSetTexCoordGen2(1, 0, 0, 0x24, 0, 0x7D);
+    GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
+    mtx[0] = lbl_803DFB5C;
+    mtx[1] = lbl_803DFB78;
+    mtx[2] = lbl_803DFB5C;
+    mtx[3] = lbl_803DFB5C;
+    mtx[4] = lbl_803DFB5C;
+    mtx[5] = lbl_803DFB78;
+    GXSetIndTexOrder(0, 0, 0);
+    GXSetIndTexCoordScale(0, 0, 0);
+    GXSetIndTexMtx(1, (void*)mtx, -2);
+    GXSetTevIndirect(1, 0, 0, 7, 1, 0, 0, 0, 0, 1);
+    GXSetNumIndStages(1);
+    GXSetNumTexGens(2);
+    GXSetNumTevStages(2);
+    GXSetChanCtrl(0, 0, 0, 1, 0, 0, 2);
+    GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+    GXSetNumChans(1);
+    GXSetTevDirect(0);
+    GXSetTevOrder(0, 0xFF, 0xFF, 4);
+    GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xA);
+    GXSetTevAlphaIn(0, 7, 7, 7, 5);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    if (flag != 0) {
+        GXSetTevColorIn(1, 8, 0xF, 0xF, 0);
+    } else {
+        GXSetTevColorIn(1, 0xF, 8, 0, 0xF);
+    }
+    GXSetTevOrder(1, 1, 1, 8);
+    GXSetTevAlphaIn(1, 7, 5, 0, 7);
+    GXSetTevSwapMode(1, 0, 0);
+    GXSetTevColorOp(1, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -2615,15 +3077,39 @@ void FUN_8007d0f8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007d7ec(void)
+/* EN v1.0 Size: 108b - 77% match. MWCC recomputes &lbl_80397420 for
+ * each PSMTXConcat call; target caches it once in r31 (callee-save)
+ * and reuses across both calls. Register-allocator preference — not
+ * crackable without inline asm. */
+void fn_8007D7EC(void)
 {
-  float afStack_38 [13];
-  
-  FUN_80247618((float *)&DAT_803974b0,(float *)&DAT_80397420,afStack_38);
-  FUN_8025d8c4(afStack_38,0x1e,0);
-  FUN_80247618((float *)&DAT_80397480,(float *)&DAT_80397420,afStack_38);
-  FUN_8025d8c4(afStack_38,0x24,0);
-  return;
+    Mtx* mats = &lbl_80397420;
+    Mtx tmp;
+    PSMTXConcat(mats[3], mats[0], tmp);
+    GXLoadTexMtxImm(tmp, 0x1E, GX_MTX3x4);
+    PSMTXConcat(mats[2], mats[0], tmp);
+    GXLoadTexMtxImm(tmp, 0x24, GX_MTX3x4);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: OSReport
+ * EN v1.0 Address: 0x8007D858
+ * EN v1.0 Size: 80b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ *
+ * Retail ships a locally-defined empty OSReport that disables debug
+ * output. MWCC generates a varargs prologue saving r3-r10 and, if
+ * cr1 indicates FP args, f1-f8 — exactly what the empty body emits.
+ */
+void OSReport(const char* msg, ...)
+{
 }
 
 /*
@@ -2675,18 +3161,22 @@ undefined4 FUN_8007d8a8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007dadc(char param_1)
+#pragma scheduling off
+#pragma peephole off
+void fn_8007DADC(u32 param_1)
 {
-  DAT_803ddcd9 = param_1;
-  if (param_1 != '\0') {
-    return;
-  }
-  DAT_803ddccc = 0;
-  DAT_803ddcc8 = 0;
-  DAT_803ddcd4 = 0;
-  DAT_803ddcd0 = 0;
-  return;
+    u8 v = (u8)param_1;
+    lbl_803DDCD9 = v;
+    if (v != 0) {
+        return;
+    }
+    lbl_803DDCCC = 0;
+    lbl_803DDCC8 = 0;
+    lbl_803DDCD4 = 0;
+    lbl_803DDCD0 = 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2701,10 +3191,9 @@ void FUN_8007dadc(char param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007db04(void)
+void fn_8007DB04(void)
 {
-  DAT_803dc360 = 0xd;
-  return;
+    lbl_803DC360 = 0xd;
 }
 
 /*
@@ -2720,9 +3209,9 @@ void FUN_8007db04(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8007db10(void)
+s32 fn_8007DB10(void)
 {
-  return DAT_803dc360;
+    return lbl_803DC360;
 }
 
 /*
@@ -2738,12 +3227,70 @@ undefined4 FUN_8007db10(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-FUN_8007db18(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+extern void fn_8007E7A0(int);
+extern int fn_8007ED98(int, int, int, int, int, void*);
+extern void fn_8007E328(int);
+extern void fn_8007E928(void);
+extern void fn_8007E99C(void);
+extern void fn_8007E9D0(void);
+extern u8 lbl_803DDCD8;
+
+#pragma scheduling off
+int fn_8007DB18(void)
 {
+    extern void* fn_80023D8C();
+    extern s32 CARDMount();
+    extern s32 CARDCheck();
+    extern s32 CARDDelete();
+    extern void CARDUnmount();
+    extern void fn_800238C4();
+    extern void fn_80080084();
+    extern void* lbl_803DDCC0;
+    extern const char* lbl_803DC364;
+    extern s32 lbl_803DC360;
+    int res;
+
+    lbl_803DDCD8 = 0;
+
+    do {
+        if (fn_8007DF88(0) == 0) {
+            return 0;
+        }
+        lbl_803DDCC0 = fn_80023D8C(0xA000, -1, 0);
+        if (lbl_803DDCC0 == 0) {
+            lbl_803DC360 = 8;
+            return 0;
+        }
+        lbl_803DC360 = 0;
+        res = CARDMount(0, lbl_803DDCC0, (void*)fn_80080084);
+        if (res == 0 || res == -6) {
+            if (res == -6) {
+                res = CARDCheck(0);
+            }
+        }
+        if (res == 0) {
+            res = CARDDelete(0, lbl_803DC364);
+        }
+        CARDUnmount(0);
+        fn_800238C4(lbl_803DDCC0);
+        lbl_803DDCC0 = 0;
+
+        switch (res + 13) {
+            case 11: lbl_803DC360 = 1; break;
+            case 10:
+                if (lbl_803DC360 != 3) lbl_803DC360 = 2;
+                break;
+            case 0:  lbl_803DC360 = 6; break;
+            case 8:  lbl_803DC360 = 4; break;
+            case 13:
+                lbl_803DC360 = 13;
+                return 1;
+        }
+        fn_8007E328(0);
+    } while (lbl_803DDCD8 != 0);
     return 0;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2758,11 +3305,22 @@ FUN_8007db18(undefined8 param_1,double param_2,undefined8 param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007dca0(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,undefined4 param_11)
+#pragma scheduling off
+int fn_8007DCA0(int a, int b, int c)
 {
+    int ret;
+    lbl_803DDCD8 = 0;
+    fn_8007E7A0(1);
+    do {
+        ret = fn_8007ED98(0, a, 0, b, c, fn_8007E928);
+        fn_8007E328(0);
+        if (lbl_803DDCD8 != 0) {
+            fn_8007E7A0(1);
+        }
+    } while (lbl_803DDCD8 != 0);
+    return ret;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2777,13 +3335,22 @@ void FUN_8007dca0(undefined8 param_1,double param_2,undefined8 param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-FUN_8007dd3c(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-            undefined4 param_9)
+#pragma scheduling off
+int fn_8007DD3C(int a)
 {
-    return 0;
+    int ret;
+    lbl_803DDCD8 = 0;
+    fn_8007E7A0(0);
+    do {
+        ret = fn_8007ED98(1, 0, 0, a, 0, fn_8007E99C);
+        fn_8007E328(1);
+        if (lbl_803DDCD8 != 0) {
+            fn_8007E7A0(0);
+        }
+    } while (lbl_803DDCD8 != 0);
+    return ret;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2798,13 +3365,22 @@ FUN_8007dd3c(undefined8 param_1,double param_2,undefined8 param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-FUN_8007ddd8(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-            undefined4 param_9,undefined4 param_10)
+#pragma scheduling off
+int fn_8007DDD8(int a, int b)
 {
-    return 0;
+    int ret;
+    lbl_803DDCD8 = 0;
+    fn_8007E7A0(0);
+    do {
+        ret = fn_8007ED98(1, a, 0, b, 0, fn_8007E9D0);
+        fn_8007E328(0);
+        if (lbl_803DDCD8 != 0) {
+            fn_8007E7A0(0);
+        }
+    } while (lbl_803DDCD8 != 0);
+    return ret;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2819,14 +3395,50 @@ FUN_8007ddd8(undefined8 param_1,double param_2,undefined8 param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-FUN_8007de80(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,char param_9
-            ,undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13,
-            undefined4 param_14,uint param_15,uint param_16)
+#pragma peephole off
+#pragma scheduling off
+int fn_8007DE80(u8 retry)
 {
-    return 0;
+    extern int fn_8007FAC8(int);
+    extern void CARDClose(void*);
+    extern void CARDUnmount(s32);
+    extern void fn_800238C4(void*);
+    extern u8 lbl_80397560[];
+    extern void* lbl_803DDCC0;
+    extern u8 lbl_803DDCDA;
+    extern s32 lbl_803DC360;
+    int ret;
+
+    if (retry != 0) {
+        lbl_803DDCD8 = 0;
+        fn_8007E7A0(2);
+    }
+    do {
+        ret = fn_8007FAC8(0);
+        if (ret != 0) {
+            if (lbl_803DDCDA != 0) {
+                lbl_803DDCDA = 0;
+                CARDClose(lbl_80397560);
+            }
+            CARDUnmount(0);
+            fn_800238C4(lbl_803DDCC0);
+            lbl_803DDCC0 = 0;
+            lbl_803DC360 = 13;
+            if (ret == 2) {
+                ret = fn_8007ED98(0, 0, 0, 0, 0, 0);
+            }
+        }
+        if (retry != 0) {
+            fn_8007E328(0);
+        }
+        if (lbl_803DDCD8 != 0) {
+            fn_8007E7A0(2);
+        }
+    } while (lbl_803DDCD8 != 0 && retry != 0);
+    return ret;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -2841,13 +3453,45 @@ FUN_8007de80(undefined8 param_1,double param_2,undefined8 param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-FUN_8007df88(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,char param_9
-            )
+#pragma peephole off
+#pragma scheduling off
+int fn_8007DF88(u8 retry)
 {
+    extern s32 CARDProbeEx(s32 chan, s32* memSize, s32* sectorSize);
+    extern s32 lbl_803DC360;
+    s32 memSize;
+    s32 sectorSize;
+    s32 res;
+
+    if (retry != 0) {
+        lbl_803DDCD8 = 0;
+    }
+    do {
+        res = -1;
+        while (res == -1) {
+            res = CARDProbeEx(0, &memSize, &sectorSize);
+        }
+        if (res == 0) {
+            if (sectorSize == 0x2000) {
+                lbl_803DC360 = 13;
+                return 1;
+            }
+            lbl_803DC360 = 7;
+        } else if (res == -3) {
+            lbl_803DC360 = 2;
+        } else if (res == -2) {
+            lbl_803DC360 = 1;
+        } else {
+            lbl_803DC360 = 0;
+        }
+        if (retry != 0) {
+            fn_8007E328(0);
+        }
+    } while (lbl_803DDCD8 != 0 && retry != 0);
     return 0;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -2862,10 +3506,9 @@ FUN_8007df88(undefined8 param_1,double param_2,undefined8 param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007e06c(void)
+void fn_8007E06C(void)
 {
-  FUN_8025f458();
-  return;
+    CARDInit();
 }
 
 /*
@@ -2881,112 +3524,119 @@ void FUN_8007e06c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007e08c(undefined4 *param_1,undefined4 *param_2,undefined4 *param_3)
+#pragma peephole off
+#pragma scheduling off
+void fn_8007E08C(u32* buttons, u32* texts, u32* count)
 {
-  if ((DAT_803ddcd9 != '\0') && ((DAT_803dc360 == 7 || (DAT_803dc360 == 9)))) {
-    DAT_803dc360 = 0xb;
-  }
-  switch(DAT_803dc360) {
-  case 0:
-    *param_3 = 0;
-    DAT_803dc360 = 0xd;
-    return;
-  case 1:
-    *param_1 = 1;
-    param_1[1] = 2;
-    *param_2 = 0x325;
-    param_2[1] = 0x51d;
-    param_2[2] = 0x51b;
-    *param_3 = 2;
-    return;
-  case 2:
-    *param_1 = 1;
-    param_1[1] = 2;
-    *param_2 = 0x51a;
-    param_2[1] = 0x51d;
-    param_2[2] = 0x51b;
-    *param_3 = 2;
-    return;
-  case 3:
-    *param_1 = 1;
-    param_1[1] = 2;
-    *param_2 = 0x51a;
-    param_2[1] = 0x51d;
-    param_2[2] = 0x51b;
-    *param_3 = 2;
-    return;
-  case 4:
-    *param_1 = 1;
-    param_1[1] = 2;
-    *param_2 = 0x329;
-    param_2[1] = 0x51d;
-    param_2[2] = 0x51b;
-    *param_3 = 2;
-    return;
-  case 5:
-    *param_1 = 1;
-    param_1[1] = 2;
-    param_1[2] = 0;
-    *param_2 = 0x51f;
-    param_2[1] = 0x51d;
-    param_2[2] = 0x51b;
-    param_2[3] = 0x326;
-    *param_3 = 3;
-    return;
-  case 6:
-    *param_1 = 1;
-    param_1[1] = 2;
-    param_1[2] = 0;
-    *param_2 = 0x51e;
-    param_2[1] = 0x51d;
-    param_2[2] = 0x51b;
-    param_2[3] = 0x326;
-    *param_3 = 3;
-    return;
-  case 7:
-    *param_1 = 1;
-    param_1[1] = 2;
-    *param_2 = 0x51c;
-    param_2[1] = 0x51d;
-    param_2[2] = 0x51b;
-    *param_3 = 2;
-    return;
-  case 8:
-    *param_3 = 0;
-    return;
-  case 9:
-    *param_1 = 1;
-    param_1[1] = 2;
-    param_1[2] = 3;
-    *param_2 = 0x32a;
-    param_2[1] = 0x51d;
-    param_2[2] = 0x51b;
-    param_2[3] = 0x520;
-    *param_3 = 3;
-    return;
-  case 10:
-    *param_1 = 2;
-    param_1[1] = 4;
-    *param_2 = 0x497;
-    param_2[1] = 0x51b;
-    param_2[2] = 0x522;
-    *param_3 = 2;
-    return;
-  case 0xb:
-  case 0xc:
-    *param_1 = 1;
-    param_1[1] = 2;
-    *param_2 = 0x521;
-    param_2[1] = 0x51d;
-    param_2[2] = 0x51b;
-    *param_3 = 2;
-    return;
-  default:
-    *param_3 = 0;
-    DAT_803dc360 = 0xd;
-    return;
-  }
+    extern u8 lbl_803DDCD9;
+    extern s32 lbl_803DC360;
+    if (lbl_803DDCD9 != 0 && (lbl_803DC360 == 7 || lbl_803DC360 == 9)) {
+        lbl_803DC360 = 11;
+    }
+    switch (lbl_803DC360) {
+        case 0:
+            *count = 0;
+            lbl_803DC360 = 13;
+            return;
+        case 1:
+            buttons[0] = 1;
+            buttons[1] = 2;
+            texts[0] = 0x325;
+            texts[1] = 0x51D;
+            texts[2] = 0x51B;
+            *count = 2;
+            return;
+        case 2:
+            buttons[0] = 1;
+            buttons[1] = 2;
+            texts[0] = 0x51A;
+            texts[1] = 0x51D;
+            texts[2] = 0x51B;
+            *count = 2;
+            return;
+        case 3:
+            buttons[0] = 1;
+            buttons[1] = 2;
+            texts[0] = 0x51A;
+            texts[1] = 0x51D;
+            texts[2] = 0x51B;
+            *count = 2;
+            return;
+        case 4:
+            buttons[0] = 1;
+            buttons[1] = 2;
+            texts[0] = 0x329;
+            texts[1] = 0x51D;
+            texts[2] = 0x51B;
+            *count = 2;
+            return;
+        case 5:
+            buttons[0] = 1;
+            buttons[1] = 2;
+            buttons[2] = 0;
+            texts[0] = 0x51F;
+            texts[1] = 0x51D;
+            texts[2] = 0x51B;
+            texts[3] = 0x326;
+            *count = 3;
+            return;
+        case 6:
+            buttons[0] = 1;
+            buttons[1] = 2;
+            buttons[2] = 0;
+            texts[0] = 0x51E;
+            texts[1] = 0x51D;
+            texts[2] = 0x51B;
+            texts[3] = 0x326;
+            *count = 3;
+            return;
+        case 7:
+            buttons[0] = 1;
+            buttons[1] = 2;
+            texts[0] = 0x51C;
+            texts[1] = 0x51D;
+            texts[2] = 0x51B;
+            *count = 2;
+            return;
+        case 8:
+            *count = 0;
+            return;
+        case 9:
+            buttons[0] = 1;
+            buttons[1] = 2;
+            buttons[2] = 3;
+            texts[0] = 0x32A;
+            texts[1] = 0x51D;
+            texts[2] = 0x51B;
+            texts[3] = 0x520;
+            *count = 3;
+            return;
+        case 10:
+            buttons[0] = 2;
+            buttons[1] = 4;
+            texts[0] = 0x497;
+            texts[1] = 0x51B;
+            texts[2] = 0x522;
+            *count = 2;
+            return;
+        case 11:
+        case 12:
+            buttons[0] = 1;
+            buttons[1] = 2;
+            texts[0] = 0x521;
+            texts[1] = 0x51D;
+            texts[2] = 0x51B;
+            *count = 2;
+            return;
+        case 13:
+        default:
+            *count = 0;
+            lbl_803DC360 = 13;
+            return;
+    }
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
