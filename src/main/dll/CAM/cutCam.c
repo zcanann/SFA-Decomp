@@ -30,7 +30,7 @@ extern int FUN_80296e60();
 extern undefined4 FUN_80297334();
 
 extern undefined4 DAT_803a4ed8;
-extern undefined4 DAT_803dc5f2;
+extern undefined4 gCamcontrolTargetTypeMask;
 extern undefined4* DAT_803dd6d0;
 extern undefined4 gCamcontrolTargetState;
 extern undefined4 DAT_803de143;
@@ -62,7 +62,7 @@ extern f32 FLOAT_803e234c;
 /*
  * --INFO--
  *
- * Function: FUN_80103648
+ * Function: camcontrol_setPosition
  * EN v1.0 Address: 0x80103648
  * EN v1.0 Size: 240b
  * EN v1.1 Address: TODO
@@ -72,7 +72,7 @@ extern f32 FLOAT_803e234c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80103648(double param_1,double param_2,double param_3,undefined4 param_4)
+void camcontrol_setPosition(double param_1,double param_2,double param_3,undefined4 param_4)
 {
   FUN_800033a8(gCamcontrolState,0,0x144);
   *(float *)(gCamcontrolState + 0xc) = (float)param_1;
@@ -116,7 +116,7 @@ void FUN_80103738(void)
 /*
  * --INFO--
  *
- * Function: FUN_80103760
+ * Function: camcontrol_resetState
  * EN v1.0 Address: 0x80103760
  * EN v1.0 Size: 96b
  * EN v1.1 Address: TODO
@@ -126,8 +126,9 @@ void FUN_80103738(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80103760(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void camcontrol_resetState(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                           undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                           undefined8 param_8)
 {
   int iVar1;
   undefined4 uVar2;
@@ -149,7 +150,7 @@ void FUN_80103760(undefined8 param_1,double param_2,double param_3,undefined8 pa
   DAT_803de188 = 0xffffffff;
   DAT_803de144 = 0;
   DAT_803de143 = 0xff;
-  DAT_803dc5f2 = 0xffff;
+  gCamcontrolTargetTypeMask = 0xffff;
   return;
 }
 

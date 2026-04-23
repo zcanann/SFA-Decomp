@@ -3,10 +3,11 @@
 
 #include "ghidra_import.h"
 
-void FUN_80103648(double param_1,double param_2,double param_3,undefined4 param_4);
+void camcontrol_setPosition(double param_1,double param_2,double param_3,undefined4 param_4);
 void FUN_80103738(void);
-void FUN_80103760(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void camcontrol_resetState(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                           undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                           undefined8 param_8);
 undefined4
 camcontrol_traceMove(double param_1,float *param_2,float *param_3,float *param_4,int param_5,
                      undefined param_6,char param_7,char param_8);

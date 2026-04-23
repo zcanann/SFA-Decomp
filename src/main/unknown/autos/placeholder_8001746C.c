@@ -183,7 +183,7 @@ extern uint FUN_800e8a34();
 extern undefined4 FUN_800e969c();
 extern undefined4 FUN_800ea564();
 extern undefined4 FUN_800ea74c();
-extern undefined8 FUN_80102440();
+extern undefined8 camcontrol_playTargetTypeSfx();
 extern undefined8 FUN_80115c80();
 extern undefined4 FUN_80115ff0();
 extern undefined4 FUN_8012c9e8();

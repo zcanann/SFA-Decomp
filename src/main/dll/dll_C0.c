@@ -9,7 +9,7 @@ extern undefined4 gCamcontrolState;
 /*
  * --INFO--
  *
- * Function: FUN_80102440
+ * Function: camcontrol_playTargetTypeSfx
  * EN v1.0 Address: 0x80102440
  * EN v1.0 Size: 168b
  * EN v1.1 Address: TODO
@@ -19,7 +19,7 @@ extern undefined4 gCamcontrolState;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80102440(void)
+void camcontrol_playTargetTypeSfx(void)
 {
   byte bVar1;
   int iVar2;

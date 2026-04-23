@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_80102440(void);
+void camcontrol_playTargetTypeSfx(void);
 
 #endif /* MAIN_DLL_DLL_C0_H_ */

@@ -10,7 +10,7 @@ extern undefined4 FUN_8028687c();
 extern uint FUN_80296384();
 extern int FUN_80296a88();
 
-extern undefined4 DAT_803dc5f2;
+extern undefined4 gCamcontrolTargetTypeMask;
 extern undefined4 gCamcontrolCurrentActionId;
 extern f64 DOUBLE_803e22d0;
 extern f32 FLOAT_803e22b0;
@@ -95,7 +95,7 @@ void camcontrol_findBestTarget(undefined8 param_1,double param_2,undefined8 para
          (((*(ushort *)((int)fVar13 + 6) & 0x4000) != 0 ||
           (((*(ushort *)((int)fVar13 + 0xb0) & 0x40) != 0 ||
            (bVar2 = true,
-           ((uint)DAT_803dc5f2 &
+           ((uint)gCamcontrolTargetTypeMask &
            1 << (*(byte *)(iVar4 + (uint)*(byte *)((int)fVar13 + 0xe4) * 5 + 4) & 0xf)) == 0)))))) {
         bVar2 = false;
       }
