@@ -4,7 +4,7 @@
 extern uint FUN_80014e9c();
 extern undefined4 FUN_80021b8c();
 extern undefined4 FUN_800238c4();
-extern undefined4 FUN_80106ae8();
+extern undefined4 camcontrol_buildPathAngles();
 extern undefined4 FUN_80286834();
 extern undefined4 FUN_80286880();
 extern int FUN_80296a14();
@@ -17,7 +17,7 @@ extern f64 DOUBLE_803e23d0;
 /*
  * --INFO--
  *
- * Function: FUN_80107020
+ * Function: camcontrol_buildPathPoints
  * EN v1.0 Address: 0x80107020
  * EN v1.0 Size: 500b
  * EN v1.1 Address: TODO
@@ -27,8 +27,9 @@ extern f64 DOUBLE_803e23d0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80107020(undefined8 param_1,double param_2,double param_3,double param_4,double param_5,
-                 double param_6,undefined4 param_7,undefined4 param_8,int *param_9)
+void camcontrol_buildPathPoints(undefined8 param_1,double param_2,double param_3,double param_4,
+                                double param_5,double param_6,undefined4 param_7,
+                                undefined4 param_8,int *param_9)
 {
   short sVar1;
   int iVar2;
@@ -103,7 +104,7 @@ void FUN_80107020(undefined8 param_1,double param_2,double param_3,double param_
   }
   local_e8[0] = 0;
   dVar10 = extraout_f1;
-  FUN_80106ae8(auStack_d0,local_e8,0,sVar1,(int)iVar11);
+  camcontrol_buildPathAngles(auStack_d0,local_e8,0,sVar1,(int)iVar11);
   dVar8 = (double)(float)(param_3 - dVar10);
   dVar7 = (double)(float)(param_6 - param_4);
   dVar6 = (double)(float)(param_5 - param_2);
@@ -148,7 +149,7 @@ void FUN_80107020(undefined8 param_1,double param_2,double param_3,double param_
 /*
  * --INFO--
  *
- * Function: FUN_80107214
+ * Function: camcontrol_updatePathTargetAction
  * EN v1.0 Address: 0x80107214
  * EN v1.0 Size: 344b
  * EN v1.1 Address: TODO
@@ -158,7 +159,7 @@ void FUN_80107020(undefined8 param_1,double param_2,double param_3,double param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80107214(int param_1,int param_2)
+void camcontrol_updatePathTargetAction(int param_1,int param_2)
 {
   short sVar1;
   uint uVar2;

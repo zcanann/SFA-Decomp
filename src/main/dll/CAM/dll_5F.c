@@ -9,8 +9,8 @@ extern undefined4 FUN_80014e9c();
 extern int FUN_80021884();
 extern undefined4 FUN_80023d8c();
 extern undefined4 FUN_8010a3a0();
-extern undefined4 FUN_8010a82c();
-extern undefined8 FUN_8010acf0();
+extern undefined4 pathcam_buildWindowSamples();
+extern undefined8 pathcam_findTaggedNodeWindow();
 extern double FUN_8010aee4();
 extern uint FUN_8010b144();
 extern undefined4 FUN_8010b4d4();
@@ -119,16 +119,18 @@ void FUN_8010b6c0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     FUN_80014e9c(0);
     uVar4 = (**(code **)(*DAT_803dd71c + 0x1c))(DAT_803de1d8[3]);
     uVar5 = (**(code **)(*DAT_803dd71c + 0x1c))(DAT_803de1d8[2]);
-    uVar15 = FUN_8010acf0(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar5,
-                          local_98,DAT_803de1d8[1],in_r6,in_r7,in_r8,in_r9,in_r10);
-    FUN_8010acf0(uVar15,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar4,local_88,
-                 DAT_803de1d8[1],in_r6,in_r7,in_r8,in_r9,in_r10);
+    uVar15 = pathcam_findTaggedNodeWindow(extraout_f1,param_2,param_3,param_4,param_5,param_6,
+                                          param_7,param_8,uVar5,local_98,DAT_803de1d8[1],in_r6,
+                                          in_r7,in_r8,in_r9,in_r10);
+    pathcam_findTaggedNodeWindow(uVar15,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                                 uVar4,local_88,DAT_803de1d8[1],in_r6,in_r7,in_r8,in_r9,in_r10);
     pfVar8 = afStack_c8;
     pfVar9 = afStack_d8;
     pfVar10 = afStack_e8;
     pfVar11 = afStack_f8;
     pfVar12 = afStack_108;
-    FUN_8010a82c(local_98,afStack_a8,afStack_b8,pfVar8,pfVar9,pfVar10,pfVar11,pfVar12);
+    pathcam_buildWindowSamples(local_98,afStack_a8,afStack_b8,pfVar8,pfVar9,pfVar10,pfVar11,
+                               pfVar12);
     dVar17 = (double)*(float *)(iVar13 + 0x1c);
     dVar18 = (double)*(float *)(iVar13 + 0x20);
     dVar16 = FUN_8010aee4((double)*(float *)(iVar13 + 0x18),dVar17,dVar18,local_88);
@@ -142,18 +144,20 @@ void FUN_8010b6c0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         else {
           DAT_803de1d8[3] = local_80;
           uVar4 = (**(code **)(*DAT_803dd71c + 0x1c))(DAT_803de1d8[3]);
-          FUN_8010acf0(extraout_f1_02,dVar17,dVar18,param_4,param_5,param_6,param_7,param_8,uVar4,
-                       local_88,DAT_803de1d8[1],pfVar8,pfVar9,pfVar10,pfVar11,pfVar12);
+          pathcam_findTaggedNodeWindow(extraout_f1_02,dVar17,dVar18,param_4,param_5,param_6,param_7,
+                                       param_8,uVar4,local_88,DAT_803de1d8[1],pfVar8,pfVar9,
+                                       pfVar10,pfVar11,pfVar12);
           if ((local_90 < 0) || (local_8c < 0)) {
             dVar14 = (double)FLOAT_803e250c;
           }
           else {
             DAT_803de1d8[2] = local_90;
             uVar4 = (**(code **)(*DAT_803dd71c + 0x1c))(DAT_803de1d8[2]);
-            FUN_8010acf0(extraout_f1_03,dVar17,dVar18,param_4,param_5,param_6,param_7,param_8,uVar4,
-                         local_98,DAT_803de1d8[1],pfVar8,pfVar9,pfVar10,pfVar11,pfVar12);
-            FUN_8010a82c(local_98,afStack_a8,afStack_b8,afStack_c8,afStack_d8,afStack_e8,afStack_f8,
-                         afStack_108);
+            pathcam_findTaggedNodeWindow(extraout_f1_03,dVar17,dVar18,param_4,param_5,param_6,
+                                         param_7,param_8,uVar4,local_98,DAT_803de1d8[1],pfVar8,
+                                         pfVar9,pfVar10,pfVar11,pfVar12);
+            pathcam_buildWindowSamples(local_98,afStack_a8,afStack_b8,afStack_c8,afStack_d8,
+                                       afStack_e8,afStack_f8,afStack_108);
             dVar14 = FUN_8010aee4((double)*(float *)(iVar13 + 0x18),
                                   (double)*(float *)(iVar13 + 0x1c),
                                   (double)*(float *)(iVar13 + 0x20),local_88);
@@ -165,18 +169,20 @@ void FUN_8010b6c0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     else if (-1 < local_88[0]) {
       DAT_803de1d8[3] = local_88[0];
       uVar4 = (**(code **)(*DAT_803dd71c + 0x1c))(DAT_803de1d8[3]);
-      FUN_8010acf0(extraout_f1_00,dVar17,dVar18,param_4,param_5,param_6,param_7,param_8,uVar4,
-                   local_88,DAT_803de1d8[1],pfVar8,pfVar9,pfVar10,pfVar11,pfVar12);
+      pathcam_findTaggedNodeWindow(extraout_f1_00,dVar17,dVar18,param_4,param_5,param_6,param_7,
+                                   param_8,uVar4,local_88,DAT_803de1d8[1],pfVar8,pfVar9,pfVar10,
+                                   pfVar11,pfVar12);
       if (local_98[0] < 0) {
         dVar14 = (double)FLOAT_803e2508;
       }
       else {
         DAT_803de1d8[2] = local_98[0];
         uVar4 = (**(code **)(*DAT_803dd71c + 0x1c))(DAT_803de1d8[2]);
-        FUN_8010acf0(extraout_f1_01,dVar17,dVar18,param_4,param_5,param_6,param_7,param_8,uVar4,
-                     local_98,DAT_803de1d8[1],pfVar8,pfVar9,pfVar10,pfVar11,pfVar12);
-        FUN_8010a82c(local_98,afStack_a8,afStack_b8,afStack_c8,afStack_d8,afStack_e8,afStack_f8,
-                     afStack_108);
+        pathcam_findTaggedNodeWindow(extraout_f1_01,dVar17,dVar18,param_4,param_5,param_6,param_7,
+                                     param_8,uVar4,local_98,DAT_803de1d8[1],pfVar8,pfVar9,
+                                     pfVar10,pfVar11,pfVar12);
+        pathcam_buildWindowSamples(local_98,afStack_a8,afStack_b8,afStack_c8,afStack_d8,afStack_e8,
+                                   afStack_f8,afStack_108);
         dVar14 = FUN_8010aee4((double)*(float *)(iVar13 + 0x18),(double)*(float *)(iVar13 + 0x1c),
                               (double)*(float *)(iVar13 + 0x20),local_88);
         DAT_803de1d8[0x16] = (int)((float)DAT_803de1d8[0x16] + FLOAT_803e250c);

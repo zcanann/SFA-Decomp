@@ -62,7 +62,7 @@ void camcontrol_initialiseModeSettings(void)
 /*
  * --INFO--
  *
- * Function: FUN_801068f0
+ * Function: camcontrol_samplePathState
  * EN v1.0 Address: 0x801068F0
  * EN v1.0 Size: 504b
  * EN v1.1 Address: TODO
@@ -72,8 +72,8 @@ void camcontrol_initialiseModeSettings(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801068f0(undefined4 param_1,undefined4 param_2,undefined4 *param_3,undefined4 param_4,
-                 int param_5)
+void camcontrol_samplePathState(undefined4 param_1,undefined4 param_2,undefined4 *param_3,
+                                undefined4 param_4,int param_5)
 {
   int iVar1;
   int iVar2;
@@ -145,7 +145,7 @@ void FUN_801068f0(undefined4 param_1,undefined4 param_2,undefined4 *param_3,unde
 /*
  * --INFO--
  *
- * Function: FUN_80106ae8
+ * Function: camcontrol_buildPathAngles
  * EN v1.0 Address: 0x80106AE8
  * EN v1.0 Size: 1336b
  * EN v1.1 Address: TODO
@@ -155,7 +155,7 @@ void FUN_801068f0(undefined4 param_1,undefined4 param_2,undefined4 *param_3,unde
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80106ae8(undefined4 param_1,undefined4 param_2,short param_3,short param_4,
-                 undefined4 param_5)
+void camcontrol_buildPathAngles(undefined4 param_1,undefined4 param_2,short param_3,short param_4,
+                                undefined4 param_5)
 {
 }

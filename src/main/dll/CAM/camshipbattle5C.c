@@ -13,12 +13,12 @@ extern f32 FLOAT_803e2508;
 extern f32 FLOAT_803e2510;
 extern f32 FLOAT_803e2514;
 extern f32 FLOAT_803e2518;
-extern char s_PATHCAM_error__need_at_least_two_8031a904[];
+extern char sPathcamErrorNeedAtLeastTwoControlPoints[];
 
 /*
  * --INFO--
  *
- * Function: FUN_8010a82c
+ * Function: pathcam_buildWindowSamples
  * EN v1.0 Address: 0x8010A82C
  * EN v1.0 Size: 1220b
  * EN v1.1 Address: TODO
@@ -28,8 +28,8 @@ extern char s_PATHCAM_error__need_at_least_two_8031a904[];
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010a82c(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4,float *param_5
-                 ,float *param_6,float *param_7,float *param_8)
+void pathcam_buildWindowSamples(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4,
+                                float *param_5,float *param_6,float *param_7,float *param_8)
 {
   float fVar1;
   float fVar2;
@@ -226,7 +226,7 @@ void FUN_8010a82c(undefined4 param_1,undefined4 param_2,float *param_3,float *pa
 /*
  * --INFO--
  *
- * Function: FUN_8010acf0
+ * Function: pathcam_findTaggedNodeWindow
  * EN v1.0 Address: 0x8010ACF0
  * EN v1.0 Size: 500b
  * EN v1.1 Address: TODO
@@ -236,10 +236,12 @@ void FUN_8010a82c(undefined4 param_1,undefined4 param_2,float *param_3,float *pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010acf0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,uint param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+void pathcam_findTaggedNodeWindow(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                                  undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                  undefined8 param_7,undefined8 param_8,undefined4 param_9,
+                                  undefined4 param_10,uint param_11,undefined4 param_12,
+                                  undefined4 param_13,undefined4 param_14,undefined4 param_15,
+                                  undefined4 param_16)
 {
   bool bVar1;
   int iVar2;
@@ -313,7 +315,7 @@ void FUN_8010acf0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     }
     if (((int)puVar4[1] < 0) || ((int)puVar4[2] < 0)) {
       FUN_80137c30(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                   s_PATHCAM_error__need_at_least_two_8031a904,uVar5,uVar6,param_12,param_13,
+                   sPathcamErrorNeedAtLeastTwoControlPoints,uVar5,uVar6,param_12,param_13,
                    param_14,param_15,param_16);
     }
   }

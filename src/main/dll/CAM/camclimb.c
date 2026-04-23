@@ -6,8 +6,8 @@ extern undefined4 FUN_8000e0c0();
 extern uint FUN_80021884();
 extern undefined4 FUN_801038fc();
 extern char camcontrol_getTargetPosition();
-extern char FUN_801068f0();
-extern undefined4 FUN_80107214();
+extern char camcontrol_samplePathState();
+extern undefined4 camcontrol_updatePathTargetAction();
 
 extern undefined4* DAT_803dd6d0;
 extern undefined4* gCamcontrolPathState;
@@ -70,7 +70,7 @@ void camclimb_update(ushort *param_1)
     }
     psVar4 = *(short **)(param_1 + 0x52);
     local_24 = *(undefined4 *)(param_1 + 8);
-    cVar2 = FUN_801068f0(&local_28,&local_24,local_20,psVar4,(int)param_1);
+    cVar2 = camcontrol_samplePathState(&local_28,&local_24,local_20,psVar4,(int)param_1);
     *(undefined4 *)(param_1 + 6) = local_28;
     *(undefined4 *)(param_1 + 10) = local_20[0];
     iVar3 = (**(code **)(*DAT_803dd6d0 + 0x18))();
@@ -111,7 +111,7 @@ void camclimb_update(ushort *param_1)
     if (cVar2 != '\0') {
       (**(code **)(*DAT_803dd6d0 + 0x1c))(0x42,0,1,0,0,0,0xff);
     }
-    FUN_80107214((int)param_1,(int)psVar4);
+    camcontrol_updatePathTargetAction((int)param_1,(int)psVar4);
     FUN_8000e054((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
                  (double)*(float *)(param_1 + 0x10),(float *)(param_1 + 6),(float *)(param_1 + 8),
                  (float *)(param_1 + 10),*(int *)(param_1 + 0x18));

@@ -9,7 +9,7 @@ extern undefined4 FUN_80010f00();
 extern int FUN_80021884();
 extern undefined4 FUN_80023d8c();
 extern undefined4 camcontrol_getTargetPosition();
-extern undefined8 FUN_80107020();
+extern undefined8 camcontrol_buildPathPoints();
 extern int FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
