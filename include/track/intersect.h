@@ -80,7 +80,7 @@ void FUN_8007965c(void);
 void FUN_80079764(void);
 void FUN_8007986c(void);
 void FUN_80079980(void);
-void FUN_80079b3c(void);
+void fn_80079B3C(void);
 void FUN_80079b60(undefined param_1,undefined param_2,undefined param_3,undefined param_4);
 void FUN_80079ba0(undefined param_1,undefined param_2,undefined param_3,undefined param_4);
 void FUN_80079be0(double param_1,double param_2,byte param_3,char param_4);
@@ -97,7 +97,7 @@ void FUN_8007d0f8(void);
 void FUN_8007d7ec(void);
 void FUN_8007d858(void);
 undefined4 FUN_8007d8a8(void);
-void FUN_8007dadc(char param_1);
+void fn_8007DADC(u8 param_1);
 void fn_8007DB04(void);
 s32 fn_8007DB10(void);
 undefined4

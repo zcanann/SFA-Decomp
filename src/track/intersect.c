@@ -295,6 +295,18 @@ extern u32 lbl_803DDC84;
 extern u8 lbl_803DDC99;
 extern u8 lbl_803DDC9A;
 extern u8 lbl_803DDC9C[3];
+extern u8 lbl_803DDC88;
+extern u8 lbl_803DDC89;
+extern u8 lbl_803DDC8A;
+extern u8 lbl_803DDC8B;
+extern u32 lbl_803DDCB0;
+extern u32 lbl_803DDCAC;
+extern u32 lbl_803DDCA8;
+extern u8 lbl_803DDCD9;
+extern u32 lbl_803DDCC8;
+extern u32 lbl_803DDCCC;
+extern u32 lbl_803DDCD0;
+extern u32 lbl_803DDCD4;
 extern undefined4 DAT_803dc364;
 extern undefined4 DAT_803dc368;
 extern undefined4* DAT_803dd6d8;
@@ -2339,16 +2351,15 @@ void FUN_80079980(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80079b3c(void)
+void fn_80079B3C(void)
 {
-  DAT_803ddc88 = 0;
-  DAT_803ddc89 = 0;
-  DAT_803ddc8a = 0;
-  DAT_803ddc8b = 0;
-  DAT_803ddcb0 = 0;
-  DAT_803ddcac = 0;
-  DAT_803ddca8 = 0;
-  return;
+    lbl_803DDC88 = 0;
+    lbl_803DDC89 = 0;
+    lbl_803DDC8A = 0;
+    lbl_803DDC8B = 0;
+    lbl_803DDCB0 = 0;
+    lbl_803DDCAC = 0;
+    lbl_803DDCA8 = 0;
 }
 
 /*
@@ -2688,18 +2699,21 @@ undefined4 FUN_8007d8a8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007dadc(char param_1)
+#pragma scheduling off
+#pragma peephole off
+void fn_8007DADC(u8 param_1)
 {
-  DAT_803ddcd9 = param_1;
-  if (param_1 != '\0') {
-    return;
-  }
-  DAT_803ddccc = 0;
-  DAT_803ddcc8 = 0;
-  DAT_803ddcd4 = 0;
-  DAT_803ddcd0 = 0;
-  return;
+    lbl_803DDCD9 = param_1;
+    if (param_1 != 0) {
+        return;
+    }
+    lbl_803DDCCC = 0;
+    lbl_803DDCC8 = 0;
+    lbl_803DDCD4 = 0;
+    lbl_803DDCD0 = 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
