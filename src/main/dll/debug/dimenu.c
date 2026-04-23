@@ -25,7 +25,7 @@ extern undefined4 FUN_8005d06c();
 extern undefined4 gameplay_setDebugOptionEnabled();
 extern undefined4 gameplay_isDebugOptionEnabled();
 extern uint gameplay_hasDebugOption();
-extern undefined4 FUN_800e81bc();
+extern u8 *gameplay_getPreviewSettings();
 extern undefined4 FUN_800e8954();
 extern undefined4 FUN_8011c2ac();
 extern undefined4 FUN_8011c5fc();
@@ -364,7 +364,7 @@ void FUN_8011d774(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   uVar1 = (**(code **)(*DAT_803dd6cc + 0xc))(0x14,5);
   FUN_800199a8(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x15);
   DAT_803de38c = 0;
-  DAT_803de388 = FUN_800e81bc();
+  DAT_803de388 = (undefined4)gameplay_getPreviewSettings();
   if (DAT_803de378 == '\0') {
     FUN_8011cd58();
   }

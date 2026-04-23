@@ -484,16 +484,16 @@ extern undefined4 DAT_803a3c16;
 extern undefined4 DAT_803a3c19;
 extern uint DAT_803a3c1c;
 extern undefined4 DAT_803a3dac;
-extern undefined1 DAT_803a3e24;
+extern undefined1 gGameplayPreviewSettings;
 extern undefined4 DAT_803a3e26;
 extern undefined4 DAT_803a3e27;
 extern undefined4 DAT_803a3e28;
 extern undefined4 DAT_803a3e2a;
 extern undefined4 DAT_803a3e2c;
 extern undefined4 DAT_803a3e2d;
-extern undefined4 DAT_803a3e2e;
-extern undefined4 DAT_803a3e2f;
-extern undefined4 DAT_803a3e30;
+extern undefined4 gGameplayPreviewColorRed;
+extern undefined4 gGameplayPreviewColorGreen;
+extern undefined4 gGameplayPreviewColorBlue;
 extern undefined4 gGameplayRegisteredDebugOptions;
 extern undefined4 gGameplayEnabledDebugOptions;
 extern undefined4 DAT_803a3e40;
@@ -1039,7 +1039,7 @@ uint gameplay_hasDebugOption(uint param_1)
 /*
  * --INFO--
  *
- * Function: FUN_800e81a0
+ * Function: gameplay_resetPreviewColor
  * EN v1.0 Address: 0x800E81A0
  * EN v1.0 Size: 28b
  * EN v1.1 Address: TODO
@@ -1049,18 +1049,18 @@ uint gameplay_hasDebugOption(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800e81a0(void)
+void gameplay_resetPreviewColor(void)
 {
-  DAT_803a3e2e = 0x7f;
-  DAT_803a3e2f = 0x7f;
-  DAT_803a3e30 = 0x7f;
+  gGameplayPreviewColorRed = 0x7f;
+  gGameplayPreviewColorGreen = 0x7f;
+  gGameplayPreviewColorBlue = 0x7f;
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_800e81bc
+ * Function: gameplay_getPreviewSettings
  * EN v1.0 Address: 0x800E81BC
  * EN v1.0 Size: 12b
  * EN v1.1 Address: TODO
@@ -1070,15 +1070,15 @@ void FUN_800e81a0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined1 * FUN_800e81bc(void)
+u8 * gameplay_getPreviewSettings(void)
 {
-  return &DAT_803a3e24;
+  return &gGameplayPreviewSettings;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_800e81c8
+ * Function: gameplay_applyPreviewSettings
  * EN v1.0 Address: 0x800E81C8
  * EN v1.0 Size: 256b
  * EN v1.1 Address: TODO
@@ -1088,8 +1088,9 @@ undefined1 * FUN_800e81bc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800e81c8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void gameplay_applyPreviewSettings(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                                   undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                   undefined8 param_7,undefined8 param_8)
 {
   FUN_8005ced0(DAT_803a3e2a);
   FUN_8001bd8c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(uint)DAT_803a3e26);
@@ -1097,9 +1098,9 @@ void FUN_800e81c8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   FUN_80009920(DAT_803a3e2d,'\0');
   (**(code **)(*DAT_803dd6e8 + 0x50))(DAT_803a3e27);
   (**(code **)(*DAT_803dd6d0 + 0x6c))(DAT_803a3e28);
-  FUN_80009a28((uint)DAT_803a3e2f,10,0,1,0);
-  FUN_80009a28((uint)DAT_803a3e2e,10,1,0,0);
-  FUN_80009a28((uint)DAT_803a3e30,10,0,0,1);
+  FUN_80009a28((uint)gGameplayPreviewColorGreen,10,0,1,0);
+  FUN_80009a28((uint)gGameplayPreviewColorRed,10,1,0,0);
+  FUN_80009a28((uint)gGameplayPreviewColorBlue,10,0,0,1);
   return;
 }
 
@@ -1430,17 +1431,18 @@ int FUN_800e878c(undefined8 param_1,double param_2,undefined8 param_3,undefined8
 {
   int iVar1;
   
-  iVar1 = FUN_8007dd3c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,&DAT_803a3e24
+  iVar1 = FUN_8007dd3c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                      &gGameplayPreviewSettings
                       );
-  if ((iVar1 == 0) || (DAT_803a3e24 == '\0')) {
+  if ((iVar1 == 0) || (gGameplayPreviewSettings == '\0')) {
     FUN_800033a8(-0x7fc5c1dc,0,0xe4);
     DAT_803a3e2a = 0;
     DAT_803a3e26 = 1;
     DAT_803a3e2c = 1;
-    DAT_803a3e24 = '\x01';
-    DAT_803a3e2e = 0x7f;
-    DAT_803a3e2f = 0x7f;
-    DAT_803a3e30 = 0x7f;
+    gGameplayPreviewSettings = '\x01';
+    gGameplayPreviewColorRed = 0x7f;
+    gGameplayPreviewColorGreen = 0x7f;
+    gGameplayPreviewColorBlue = 0x7f;
   }
   return iVar1;
 }
@@ -1480,7 +1482,7 @@ void FUN_800e8824(undefined8 param_1,double param_2,undefined8 param_3,undefined
     DAT_803de110[0xc] = '\x01';
   }
   FUN_8007dca0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(uint)DAT_803dc4f0,
-               DAT_803de110,&DAT_803a3e24);
+               DAT_803de110,&gGameplayPreviewSettings);
   return;
 }
 
@@ -1538,7 +1540,7 @@ void FUN_800e8954(undefined8 param_1,double param_2,undefined8 param_3,undefined
     DAT_803de110[0xc] = '\x01';
   }
   FUN_8007dca0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(uint)DAT_803dc4f0,
-               DAT_803de110,&DAT_803a3e24);
+               DAT_803de110,&gGameplayPreviewSettings);
   return;
 }
 
@@ -1704,7 +1706,7 @@ int FUN_800e8b38(uint param_1,byte param_2,uint param_3,undefined *param_4)
   
   iVar2 = 0;
   iVar1 = (param_1 & 0xff) * 0x28;
-  puVar6 = &DAT_803a3e24 + iVar1;
+  puVar6 = &gGameplayPreviewSettings + iVar1;
   iVar7 = 5;
   puVar4 = puVar6;
   do {
@@ -1754,10 +1756,10 @@ LAB_800e8c5c:
       *(uint *)(puVar6 + iVar7 + 0x1c) = param_3 << 1 | *(uint *)(puVar6 + iVar7 + 0x1c) & 1;
       puVar6[iVar7 + 0x1f] = param_2 & 1 | puVar6[iVar7 + 0x1f] & 0xfe;
       iVar7 = iVar7 + iVar1;
-      (&DAT_803a3e24)[iVar7 + 0x20] = *param_4;
-      (&DAT_803a3e24)[iVar7 + 0x21] = param_4[1];
-      (&DAT_803a3e24)[iVar7 + 0x22] = param_4[2];
-      (&DAT_803a3e24)[iVar7 + 0x23] = param_4[3];
+      (&gGameplayPreviewSettings)[iVar7 + 0x20] = *param_4;
+      (&gGameplayPreviewSettings)[iVar7 + 0x21] = param_4[1];
+      (&gGameplayPreviewSettings)[iVar7 + 0x22] = param_4[2];
+      (&gGameplayPreviewSettings)[iVar7 + 0x23] = param_4[3];
       return iVar2;
     }
     puVar4 = puVar4 + 8;
@@ -1893,7 +1895,7 @@ void FUN_800e8d40(undefined8 param_1,double param_2,undefined8 param_3,undefined
   cVar8 = (char)uVar10;
   if ((cVar8 != -1) && (DAT_803dc4f0 = cVar8, pcVar7 != (char *)0x0)) {
     FUN_8007dca0(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(uint)uVar10 & 0xff,
-                 DAT_803de110,&DAT_803a3e24);
+                 DAT_803de110,&gGameplayPreviewSettings);
   }
   FUN_8028688c();
   return;
@@ -2736,10 +2738,10 @@ void FUN_800ea2fc(void)
   DAT_803a3e2a = 0;
   DAT_803a3e26 = 1;
   DAT_803a3e2c = 1;
-  DAT_803a3e24 = 1;
-  DAT_803a3e2e = 0x7f;
-  DAT_803a3e2f = 0x7f;
-  DAT_803a3e30 = 0x7f;
+  gGameplayPreviewSettings = 1;
+  gGameplayPreviewColorRed = 0x7f;
+  gGameplayPreviewColorGreen = 0x7f;
+  gGameplayPreviewColorBlue = 0x7f;
   DAT_803a3be0 = 0xff;
   DAT_803a3be3 = 0xff;
   DAT_803a3be6 = 0xff;

@@ -6,10 +6,11 @@
 undefined4 gameplay_isDebugOptionEnabled(uint param_1);
 void gameplay_registerDebugOption(uint param_1);
 uint gameplay_hasDebugOption(uint param_1);
-void FUN_800e81a0(void);
-undefined1 * FUN_800e81bc(void);
-void FUN_800e81c8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void gameplay_resetPreviewColor(void);
+u8 * gameplay_getPreviewSettings(void);
+void gameplay_applyPreviewSettings(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                                   undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                   undefined8 param_7,undefined8 param_8);
 undefined * FUN_800e82c8(void);
 undefined4 FUN_800e82d8(int param_1);
 undefined4 FUN_800e8384(int param_1);

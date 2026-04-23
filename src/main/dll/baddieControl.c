@@ -49,7 +49,7 @@ extern int FUN_8005b478();
 extern uint FUN_8005cf2c();
 extern int FUN_80064248();
 extern int FUN_800804c0();
-extern void* FUN_800e81bc();
+extern u8 *gameplay_getPreviewSettings();
 extern undefined4 FUN_801037c0();
 extern undefined4 FUN_80103900();
 extern undefined4 FUN_801039a4();
@@ -1956,7 +1956,7 @@ void FUN_80111888(char param_1)
         FUN_8000a538((int *)0xc1,1);
       }
       else {
-        puVar1 = FUN_800e81bc();
+        puVar1 = gameplay_getPreviewSettings();
         FUN_80117e10(0,1000);
         FUN_80009a28((uint)(byte)puVar1[10],1000,1,0,0);
       }
@@ -1986,7 +1986,7 @@ void FUN_80111944(void)
 {
   undefined1 *puVar1;
   
-  puVar1 = FUN_800e81bc();
+  puVar1 = gameplay_getPreviewSettings();
   FUN_80009a28((uint)(byte)puVar1[10],1000,1,0,0);
   return;
 }
@@ -2021,7 +2021,7 @@ void FUN_8011197c(ushort *param_1)
     DAT_803de248 = '\0';
   }
   if (DAT_803de24a != DAT_803de249) {
-    puVar3 = FUN_800e81bc();
+    puVar3 = gameplay_getPreviewSettings();
     FLOAT_803dc638 = FLOAT_803dc638 + FLOAT_803e2868;
     if (FLOAT_803dc638 < FLOAT_803e2860) {
       if (DAT_803de24a == 4) {

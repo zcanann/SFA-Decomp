@@ -5,7 +5,7 @@ extern undefined4 FUN_80009920();
 extern undefined4 FUN_80009a28();
 extern undefined4 FUN_8000b844();
 extern undefined4 FUN_8000bb38();
-extern undefined4 FUN_800e81a0();
+extern void gameplay_resetPreviewColor(void);
 
 extern undefined4 DAT_803a9430;
 extern undefined4 DAT_803a9434;
@@ -77,7 +77,7 @@ void FUN_8011c2ac(int param_1,int param_2)
     DAT_803de385 = 1;
   }
   else if ((param_1 == 1) && (param_2 == 4)) {
-    FUN_800e81a0();
+    gameplay_resetPreviewColor();
     (**(code **)(*DAT_803dd724 + 0x28))(DAT_803a9434,*(undefined *)(DAT_803de388 + 10));
     (**(code **)(*DAT_803dd724 + 0x28))(DAT_803a9438,*(undefined *)(DAT_803de388 + 0xb));
     (**(code **)(*DAT_803dd724 + 0x28))(DAT_803a943c,*(undefined *)(DAT_803de388 + 0xc));

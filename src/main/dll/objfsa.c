@@ -29,7 +29,7 @@ extern int FUN_800e1da8();
 extern int FUN_800e2278();
 extern int RomCurve_getById();
 extern undefined4 FUN_800e4a48();
-extern undefined4 FUN_800e4e68();
+extern undefined4 RomCurve_distanceToSegment();
 extern int FUN_80286818();
 extern undefined4 FUN_80286824();
 extern undefined8 FUN_8028682c();
@@ -3643,7 +3643,7 @@ LAB_800e0d84:
         local_5c = *(undefined4 *)(iVar5 + 8);
         local_58 = *(undefined4 *)(iVar5 + 0xc);
         local_54 = *(undefined4 *)(iVar5 + 0x10);
-        FUN_800e4e68(param_1,param_2,param_3,&local_68);
+        RomCurve_distanceToSegment(param_1,param_2,param_3,&local_68);
         fVar1 = (float)((double)local_48 - param_3) * (float)((double)local_48 - param_3) +
                 (float)((double)local_50 - param_1) * (float)((double)local_50 - param_1) +
                 (float)((double)local_4c - param_2) * (float)((double)local_4c - param_2);

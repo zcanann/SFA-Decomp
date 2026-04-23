@@ -1009,7 +1009,7 @@ LAB_800e33ac:
 /*
  * --INFO--
  *
- * Function: FUN_800e35b4
+ * Function: curves_distXZ
  * EN v1.0 Address: 0x800E35B4
  * EN v1.0 Size: 176b
  * EN v1.1 Address: TODO
@@ -1019,7 +1019,7 @@ LAB_800e33ac:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-double FUN_800e35b4(double param_1,double param_2,uint param_3)
+double curves_distXZ(double param_1,double param_2,uint param_3)
 {
   float fVar1;
   float fVar2;
@@ -1233,7 +1233,7 @@ LAB_800e3878:
             local_8c = *(undefined4 *)(iVar6 + 8);
             local_88 = *(undefined4 *)(iVar6 + 0xc);
             local_84 = *(undefined4 *)(iVar6 + 0x10);
-            dVar13 = FUN_800e4e68(dVar15,param_2,param_3,&local_98);
+            dVar13 = RomCurve_distanceToSegment(dVar15,param_2,param_3,&local_98);
             dVar14 = dVar16;
             if (dVar16 < (double)FLOAT_803e12b8) {
               dVar14 = -dVar16;
@@ -2086,7 +2086,7 @@ LAB_800e4d74:
         local_5c = *(undefined4 *)(iVar5 + 8);
         local_58 = *(undefined4 *)(iVar5 + 0xc);
         local_54 = *(undefined4 *)(iVar5 + 0x10);
-        FUN_800e4e68(param_1,param_2,param_3,&local_68);
+        RomCurve_distanceToSegment(param_1,param_2,param_3,&local_68);
         fVar1 = (float)((double)local_48 - param_3) * (float)((double)local_48 - param_3) +
                 (float)((double)local_50 - param_1) * (float)((double)local_50 - param_1) +
                 (float)((double)local_4c - param_2) * (float)((double)local_4c - param_2);
@@ -2112,7 +2112,7 @@ LAB_800e4d74:
 /*
  * --INFO--
  *
- * Function: FUN_800e4e68
+ * Function: RomCurve_distanceToSegment
  * EN v1.0 Address: 0x800E4E68
  * EN v1.0 Size: 324b
  * EN v1.1 Address: TODO
@@ -2122,7 +2122,7 @@ LAB_800e4d74:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-double FUN_800e4e68(double param_1,double param_2,double param_3,float *param_4)
+double RomCurve_distanceToSegment(double param_1,double param_2,double param_3,float *param_4)
 {
   double dVar1;
   double dVar2;
@@ -2185,7 +2185,7 @@ double FUN_800e4e68(double param_1,double param_2,double param_3,float *param_4)
 /*
  * --INFO--
  *
- * Function: FUN_800e4fac
+ * Function: RomCurve_getRandomBlockedLink
  * EN v1.0 Address: 0x800E4FAC
  * EN v1.0 Size: 472b
  * EN v1.1 Address: TODO
@@ -2195,7 +2195,7 @@ double FUN_800e4e68(double param_1,double param_2,double param_3,float *param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800e4fac(int param_1,int param_2)
+int RomCurve_getRandomBlockedLink(int param_1,int param_2)
 {
   uint uVar1;
   int iVar2;
@@ -2240,7 +2240,7 @@ int FUN_800e4fac(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_800e5184
+ * Function: RomCurve_getRandomUnblockedLink
  * EN v1.0 Address: 0x800E5184
  * EN v1.0 Size: 428b
  * EN v1.1 Address: TODO
@@ -2250,7 +2250,7 @@ int FUN_800e4fac(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800e5184(int param_1,int param_2)
+int RomCurve_getRandomUnblockedLink(int param_1,int param_2)
 {
   uint uVar1;
   int iVar2;
