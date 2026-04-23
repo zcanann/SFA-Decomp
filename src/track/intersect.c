@@ -286,6 +286,13 @@ extern undefined4 DAT_803dc350;
 extern undefined4 DAT_803dc354;
 extern undefined4 DAT_803dc358;
 extern undefined4 DAT_803dc360;
+/* Narrow-typed aliases for sbss/sdata state vars touched by the small
+ * helpers below. */
+extern u8 lbl_803DC2D9;
+extern s32 lbl_803DC360;
+extern u32 lbl_803DDC84;
+extern u8 lbl_803DDC99;
+extern u8 lbl_803DDC9A;
 extern undefined4 DAT_803dc364;
 extern undefined4 DAT_803dc368;
 extern undefined4* DAT_803dd6d8;
@@ -873,10 +880,9 @@ uint FUN_80070050(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80070074(undefined4 param_1)
+void fn_80070074(u32 param_1)
 {
-  DAT_803ddc84 = param_1;
-  return;
+    lbl_803DDC84 = param_1;
 }
 
 /*
@@ -892,10 +898,9 @@ void FUN_80070074(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007007c(void)
+void fn_8007007C(void)
 {
-  DAT_803ddc84 = 0;
-  return;
+    lbl_803DDC84 = 0;
 }
 
 /*
@@ -1021,11 +1026,10 @@ void FUN_8007048c(uint param_1,int param_2,uint param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void trackIntersect_invalidateCachedRenderState(void)
+void fn_80070528(void)
 {
-  DAT_803ddc9a = 0;
-  DAT_803ddc99 = 0;
-  return;
+    lbl_803DDC9A = 0;
+    lbl_803DDC99 = 0;
 }
 
 /*
@@ -1041,10 +1045,9 @@ void trackIntersect_invalidateCachedRenderState(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80070538(undefined param_1)
+void fn_80070538(u8 param_1)
 {
-  DAT_803dc2d9 = param_1;
-  return;
+    lbl_803DC2D9 = param_1;
 }
 
 /*
@@ -2701,10 +2704,9 @@ void FUN_8007dadc(char param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007db04(void)
+void fn_8007DB04(void)
 {
-  DAT_803dc360 = 0xd;
-  return;
+    lbl_803DC360 = 0xd;
 }
 
 /*
@@ -2720,9 +2722,9 @@ void FUN_8007db04(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8007db10(void)
+s32 fn_8007DB10(void)
 {
-  return DAT_803dc360;
+    return lbl_803DC360;
 }
 
 /*

@@ -15,16 +15,16 @@ void FUN_8006fe48(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 undefined4 FUN_8006ff74(int param_1,int param_2,int param_3);
 uint FUN_80070050(void);
-void FUN_80070074(undefined4 param_1);
-void FUN_8007007c(void);
+void fn_80070074(u32 param_1);
+void fn_8007007C(void);
 void FUN_80070088(double param_1,double param_2,double param_3,double param_4,double param_5,
                  float *param_6,short *param_7);
 void FUN_80070320(float *param_1,float *param_2,float *param_3);
 void FUN_800703b0(undefined4 *param_1);
 void FUN_80070434(uint param_1);
 void FUN_8007048c(uint param_1,int param_2,uint param_3);
-void trackIntersect_invalidateCachedRenderState(void);
-void FUN_80070538(undefined param_1);
+void fn_80070528(void);
+void fn_80070538(u8 param_1);
 void trackIntersect_drawColorBand(void);
 void trackIntersect_updateColorBandRange(double param_1,double param_2);
 void trackIntersect_getColorRgb(undefined *param_1);
@@ -98,8 +98,8 @@ void FUN_8007d7ec(void);
 void FUN_8007d858(void);
 undefined4 FUN_8007d8a8(void);
 void FUN_8007dadc(char param_1);
-void FUN_8007db04(void);
-undefined4 FUN_8007db10(void);
+void fn_8007DB04(void);
+s32 fn_8007DB10(void);
 undefined4
 FUN_8007db18(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
