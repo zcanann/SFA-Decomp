@@ -145,7 +145,7 @@ extern undefined4 FUN_8002f6cc();
 extern int FUN_8002fb40();
 extern undefined8 FUN_8003042c();
 extern undefined8 FUN_80033a34();
-extern char fn_8003549C();
+extern char objHitReact_update();
 extern undefined4 FUN_800359cc();
 extern undefined4 FUN_80035a58();
 extern undefined4 FUN_80035a6c();

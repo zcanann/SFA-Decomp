@@ -27,7 +27,7 @@ int FUN_800e4fac(int param_1,int param_2);
 int FUN_800e5184(int param_1,int param_2);
 void FUN_800e5330(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,int param_6);
-void FUN_800e556c(int param_1);
+void curves_addCurveDef(int param_1);
 void FUN_800e56b8(void);
 void FUN_800e5928(int param_1,uint *param_2);
 void FUN_800e5b80(void);

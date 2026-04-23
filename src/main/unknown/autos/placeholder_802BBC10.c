@@ -47,7 +47,7 @@ extern undefined4 FUN_8002f66c();
 extern int FUN_8002f6cc();
 extern undefined4 FUN_8003042c();
 extern undefined4 FUN_80033a34();
-extern undefined fn_8003549C();
+extern undefined objHitReact_update();
 extern undefined4 FUN_80035f84();
 extern undefined4 FUN_80035f9c();
 extern undefined4 FUN_80035ff8();

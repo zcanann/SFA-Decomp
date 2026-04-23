@@ -10,7 +10,7 @@ extern undefined4 FUN_8002b7b0();
 extern undefined4 FUN_8002bac4();
 extern int FUN_8002fb40();
 extern undefined4 FUN_8003042c();
-extern undefined fn_8003549C();
+extern undefined objHitReact_update();
 extern undefined4 FUN_8003709c();
 extern int FUN_8003809c();
 extern int FUN_8003811c();
@@ -193,8 +193,9 @@ void FUN_801cf660(undefined8 param_1,double param_2,double param_3,undefined8 pa
       puVar7 = &DAT_80327414;
     }
     in_r7 = (float *)(iVar6 + 0x50);
-    uVar3 = fn_8003549C(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,
-                        puVar7,1,(uint)*(byte *)(iVar6 + 0x3d4),in_r7,in_r8,in_r9,in_r10);
+    uVar3 = objHitReact_update(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                               param_9,puVar7,1,(uint)*(byte *)(iVar6 + 0x3d4),in_r7,in_r8,in_r9,
+                               in_r10);
     *(undefined *)(iVar6 + 0x3d4) = uVar3;
     if (*(char *)(iVar6 + 0x3d4) != '\0') {
       FUN_8003a260((int)param_9,iVar6 + 0x40c);

@@ -2368,7 +2368,7 @@ void FUN_800e5330(undefined8 param_1,double param_2,double param_3,undefined4 pa
 /*
  * --INFO--
  *
- * Function: FUN_800e556c
+ * Function: curves_addCurveDef
  * EN v1.0 Address: 0x800E556C
  * EN v1.0 Size: 332b
  * EN v1.1 Address: TODO
@@ -2378,7 +2378,7 @@ void FUN_800e5330(undefined8 param_1,double param_2,double param_3,undefined4 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800e556c(int param_1)
+void curves_addCurveDef(int param_1)
 {
 }
 

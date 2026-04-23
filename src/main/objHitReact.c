@@ -36,7 +36,7 @@ typedef struct ObjHitReactEntry {
 /*
  * --INFO--
  *
- * Function: fn_8003549C
+ * Function: objHitReact_update
  * EN v1.0 Address: 0x8003549C
  * EN v1.0 Size: 652b
  * EN v1.1 Address: TODO
@@ -46,10 +46,10 @@ typedef struct ObjHitReactEntry {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-u8 fn_8003549C(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-               undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-               undefined4 param_9,undefined4 param_10,uint param_11,uint param_12,float *param_13,
-               undefined4 param_14,undefined4 param_15,undefined4 param_16)
+u8 objHitReact_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                      undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                      undefined4 param_9,undefined4 param_10,uint param_11,uint param_12,
+                      float *param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
   uint object;
   int iVar2;
