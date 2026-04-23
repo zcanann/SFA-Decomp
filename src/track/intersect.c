@@ -3290,112 +3290,119 @@ void fn_8007E06C(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007e08c(undefined4 *param_1,undefined4 *param_2,undefined4 *param_3)
+#pragma peephole off
+#pragma scheduling off
+void fn_8007E08C(u32* buttons, u32* texts, u32* count)
 {
-  if ((DAT_803ddcd9 != '\0') && ((DAT_803dc360 == 7 || (DAT_803dc360 == 9)))) {
-    DAT_803dc360 = 0xb;
-  }
-  switch(DAT_803dc360) {
-  case 0:
-    *param_3 = 0;
-    DAT_803dc360 = 0xd;
-    return;
-  case 1:
-    *param_1 = 1;
-    param_1[1] = 2;
-    *param_2 = 0x325;
-    param_2[1] = 0x51d;
-    param_2[2] = 0x51b;
-    *param_3 = 2;
-    return;
-  case 2:
-    *param_1 = 1;
-    param_1[1] = 2;
-    *param_2 = 0x51a;
-    param_2[1] = 0x51d;
-    param_2[2] = 0x51b;
-    *param_3 = 2;
-    return;
-  case 3:
-    *param_1 = 1;
-    param_1[1] = 2;
-    *param_2 = 0x51a;
-    param_2[1] = 0x51d;
-    param_2[2] = 0x51b;
-    *param_3 = 2;
-    return;
-  case 4:
-    *param_1 = 1;
-    param_1[1] = 2;
-    *param_2 = 0x329;
-    param_2[1] = 0x51d;
-    param_2[2] = 0x51b;
-    *param_3 = 2;
-    return;
-  case 5:
-    *param_1 = 1;
-    param_1[1] = 2;
-    param_1[2] = 0;
-    *param_2 = 0x51f;
-    param_2[1] = 0x51d;
-    param_2[2] = 0x51b;
-    param_2[3] = 0x326;
-    *param_3 = 3;
-    return;
-  case 6:
-    *param_1 = 1;
-    param_1[1] = 2;
-    param_1[2] = 0;
-    *param_2 = 0x51e;
-    param_2[1] = 0x51d;
-    param_2[2] = 0x51b;
-    param_2[3] = 0x326;
-    *param_3 = 3;
-    return;
-  case 7:
-    *param_1 = 1;
-    param_1[1] = 2;
-    *param_2 = 0x51c;
-    param_2[1] = 0x51d;
-    param_2[2] = 0x51b;
-    *param_3 = 2;
-    return;
-  case 8:
-    *param_3 = 0;
-    return;
-  case 9:
-    *param_1 = 1;
-    param_1[1] = 2;
-    param_1[2] = 3;
-    *param_2 = 0x32a;
-    param_2[1] = 0x51d;
-    param_2[2] = 0x51b;
-    param_2[3] = 0x520;
-    *param_3 = 3;
-    return;
-  case 10:
-    *param_1 = 2;
-    param_1[1] = 4;
-    *param_2 = 0x497;
-    param_2[1] = 0x51b;
-    param_2[2] = 0x522;
-    *param_3 = 2;
-    return;
-  case 0xb:
-  case 0xc:
-    *param_1 = 1;
-    param_1[1] = 2;
-    *param_2 = 0x521;
-    param_2[1] = 0x51d;
-    param_2[2] = 0x51b;
-    *param_3 = 2;
-    return;
-  default:
-    *param_3 = 0;
-    DAT_803dc360 = 0xd;
-    return;
-  }
+    extern u8 lbl_803DDCD9;
+    extern s32 lbl_803DC360;
+    if (lbl_803DDCD9 != 0 && (lbl_803DC360 == 7 || lbl_803DC360 == 9)) {
+        lbl_803DC360 = 11;
+    }
+    switch (lbl_803DC360) {
+        case 0:
+            *count = 0;
+            lbl_803DC360 = 13;
+            return;
+        case 1:
+            buttons[0] = 1;
+            buttons[1] = 2;
+            texts[0] = 0x325;
+            texts[1] = 0x51D;
+            texts[2] = 0x51B;
+            *count = 2;
+            return;
+        case 2:
+            buttons[0] = 1;
+            buttons[1] = 2;
+            texts[0] = 0x51A;
+            texts[1] = 0x51D;
+            texts[2] = 0x51B;
+            *count = 2;
+            return;
+        case 3:
+            buttons[0] = 1;
+            buttons[1] = 2;
+            texts[0] = 0x51A;
+            texts[1] = 0x51D;
+            texts[2] = 0x51B;
+            *count = 2;
+            return;
+        case 4:
+            buttons[0] = 1;
+            buttons[1] = 2;
+            texts[0] = 0x329;
+            texts[1] = 0x51D;
+            texts[2] = 0x51B;
+            *count = 2;
+            return;
+        case 5:
+            buttons[0] = 1;
+            buttons[1] = 2;
+            buttons[2] = 0;
+            texts[0] = 0x51F;
+            texts[1] = 0x51D;
+            texts[2] = 0x51B;
+            texts[3] = 0x326;
+            *count = 3;
+            return;
+        case 6:
+            buttons[0] = 1;
+            buttons[1] = 2;
+            buttons[2] = 0;
+            texts[0] = 0x51E;
+            texts[1] = 0x51D;
+            texts[2] = 0x51B;
+            texts[3] = 0x326;
+            *count = 3;
+            return;
+        case 7:
+            buttons[0] = 1;
+            buttons[1] = 2;
+            texts[0] = 0x51C;
+            texts[1] = 0x51D;
+            texts[2] = 0x51B;
+            *count = 2;
+            return;
+        case 8:
+            *count = 0;
+            return;
+        case 9:
+            buttons[0] = 1;
+            buttons[1] = 2;
+            buttons[2] = 3;
+            texts[0] = 0x32A;
+            texts[1] = 0x51D;
+            texts[2] = 0x51B;
+            texts[3] = 0x520;
+            *count = 3;
+            return;
+        case 10:
+            buttons[0] = 2;
+            buttons[1] = 4;
+            texts[0] = 0x497;
+            texts[1] = 0x51B;
+            texts[2] = 0x522;
+            *count = 2;
+            return;
+        case 11:
+        case 12:
+            buttons[0] = 1;
+            buttons[1] = 2;
+            texts[0] = 0x521;
+            texts[1] = 0x51D;
+            texts[2] = 0x51B;
+            *count = 2;
+            return;
+        case 13:
+        default:
+            *count = 0;
+            lbl_803DC360 = 13;
+            return;
+    }
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
