@@ -3034,14 +3034,50 @@ int fn_8007DDD8(int a, int b)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-FUN_8007de80(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,char param_9
-            ,undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13,
-            undefined4 param_14,uint param_15,uint param_16)
+#pragma peephole off
+#pragma scheduling off
+int fn_8007DE80(u8 retry)
 {
-    return 0;
+    extern int fn_8007FAC8(int);
+    extern void CARDClose(void*);
+    extern void CARDUnmount(s32);
+    extern void fn_800238C4(void*);
+    extern u8 lbl_80397560[];
+    extern void* lbl_803DDCC0;
+    extern u8 lbl_803DDCDA;
+    extern s32 lbl_803DC360;
+    int ret;
+
+    if (retry != 0) {
+        lbl_803DDCD8 = 0;
+        fn_8007E7A0(2);
+    }
+    do {
+        ret = fn_8007FAC8(0);
+        if (ret != 0) {
+            if (lbl_803DDCDA != 0) {
+                lbl_803DDCDA = 0;
+                CARDClose(lbl_80397560);
+            }
+            CARDUnmount(0);
+            fn_800238C4(lbl_803DDCC0);
+            lbl_803DDCC0 = 0;
+            lbl_803DC360 = 13;
+            if (ret == 2) {
+                ret = fn_8007ED98(0, 0, 0, 0, 0, 0);
+            }
+        }
+        if (retry != 0) {
+            fn_8007E328(0);
+        }
+        if (lbl_803DDCD8 != 0) {
+            fn_8007E7A0(2);
+        }
+    } while (lbl_803DDCD8 != 0 && retry != 0);
+    return ret;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
