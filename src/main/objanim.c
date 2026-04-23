@@ -109,7 +109,7 @@ static s32 ObjAnim_ResolveMoveIndex(ObjAnimDef *animDef, u32 moveId) {
 /*
  * --INFO--
  *
- * Function: fn_8002EC4C
+ * Function: ObjAnim_SetBlendMove
  * EN v1.0 Address: 0x8002EC4C
  * EN v1.0 Size: 452b
  * EN v1.1 Address: TODO
@@ -119,9 +119,10 @@ static s32 ObjAnim_ResolveMoveIndex(ObjAnimDef *animDef, u32 moveId) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8002EC4C(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,int param_10,int param_11,uint param_12,undefined2 param_13)
+void ObjAnim_SetBlendMove(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                          undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                          undefined4 param_9,int param_10,int param_11,uint param_12,
+                          undefined2 param_13)
 {
   ObjAnimDef *animDef;
   ObjAnimState *state;
@@ -193,8 +194,8 @@ void fn_8002EE10(undefined8 param_1,double param_2,double param_3,undefined8 par
   
   bank = ObjAnim_GetActiveBank((ObjAnimComponent *)param_9);
   if (bank->animDef->moveCount != 0) {
-    fn_8002EC4C(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,
-                (int)bank->animDef,(int)bank->primaryState,param_10,param_11);
+    ObjAnim_SetBlendMove(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,
+                         (int)bank->animDef,(int)bank->primaryState,param_10,param_11);
   }
   return;
 }
@@ -220,8 +221,8 @@ void fn_8002EE64(undefined8 param_1,double param_2,double param_3,undefined8 par
   
   bank = ObjAnim_GetActiveBank((ObjAnimComponent *)param_9);
   if (bank->animDef->moveCount != 0) {
-    fn_8002EC4C(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,
-                (int)bank->animDef,(int)bank->secondaryState,param_10,param_11);
+    ObjAnim_SetBlendMove(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,
+                         (int)bank->animDef,(int)bank->secondaryState,param_10,param_11);
   }
   return;
 }
@@ -427,7 +428,7 @@ undefined4 fn_8002F304(double param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: fn_8002F334
+ * Function: Object_ObjAnimSetMove
  * EN v1.0 Address: 0x8002F334
  * EN v1.0 Size: 720b
  * EN v1.1 Address: TODO
@@ -438,9 +439,9 @@ undefined4 fn_8002F304(double param_1,int param_2)
  * PAL Size: TODO
  */
 undefined4
-fn_8002F334(double param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,uint param_10,
-            undefined param_11)
+Object_ObjAnimSetMove(double param_1,double param_2,double param_3,undefined8 param_4,
+                      undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                      int param_9,uint param_10,undefined param_11)
 {
   ObjAnimComponent *objAnim;
   ObjAnimBank *bank;

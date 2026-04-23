@@ -86,7 +86,7 @@ extern undefined4 fn_8002EE10();
 extern undefined4 fn_8002EE64();
 extern undefined4 fn_8002EEB8();
 extern undefined4 fn_8002F304();
-extern undefined4 fn_8002F334();
+extern undefined4 Object_ObjAnimSetMove();
 extern short FUN_8002f604();
 extern undefined4 FUN_8002f624();
 extern undefined4 FUN_8002f66c();
