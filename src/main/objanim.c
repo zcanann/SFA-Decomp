@@ -13,6 +13,100 @@ extern f32 FLOAT_803df578;
 extern f32 FLOAT_803df588;
 
 /*
+ * Shared state used by the object-animation helpers in this file.
+ * Most names are descriptive placeholders, but the layout itself is stable
+ * enough to stop repeating raw offsets everywhere.
+ */
+typedef struct ObjAnimDef {
+  u8 pad00[2];
+  u16 flags;
+  u8 pad04[0x64 - 4];
+  u8 **moveData;
+  u8 pad68[4];
+  s16 *blendMoveIds;
+  u8 pad70[0xEC - 0x70];
+  u16 moveCount;
+} ObjAnimDef;
+
+typedef struct ObjAnimState {
+  u8 pad00[4];
+  f32 speed;
+  f32 progress;
+  f32 step;
+  f32 savedStep;
+  f32 segmentLength;
+  f32 prevSegmentLength;
+  u8 *moveCache[2];
+  u8 *blendMoveCache[2];
+  u8 pad2c[8];
+  u8 *frameData;
+  u8 *prevFrameData;
+  u8 *frameCmd;
+  u8 *prevFrameCmd;
+  u16 moveCacheSlot;
+  u16 prevMoveCacheSlot;
+  u16 blendCacheSlot;
+  u16 prevBlendCacheSlot;
+  u8 pad4c[0x58 - 0x4C];
+  u16 eventCountdown;
+  u16 eventState;
+  u16 prevEventState;
+  u16 eventStep;
+  u8 frameType;
+  u8 prevFrameType;
+  s8 blendToggle;
+  u8 flags;
+  s16 lastBlendMoveIndex;
+} ObjAnimState;
+
+typedef struct ObjAnimBank {
+  ObjAnimDef *animDef;
+  u8 pad04[0x2C - 4];
+  ObjAnimState *secondaryState;
+  ObjAnimState *primaryState;
+} ObjAnimBank;
+
+typedef struct ObjAnimComponent {
+  u8 pad00[0x60];
+  void *eventTable;
+  u8 pad64[0x7C - 0x64];
+  ObjAnimBank **banks;
+  u8 pad80[0x9C - 0x80];
+  f32 moveProgress;
+  u8 padA0[2];
+  s16 activeMove;
+  u8 padA4[0xAD - 0xA4];
+  s8 bankIndex;
+} ObjAnimComponent;
+
+typedef struct ObjAnimEventList {
+  u8 pad00[0x12];
+  u8 resetFlag;
+  u8 triggeredIds[8];
+  u8 count;
+} ObjAnimEventList;
+
+static ObjAnimBank *ObjAnim_GetActiveBank(ObjAnimComponent *objAnim) {
+  return objAnim->banks[objAnim->bankIndex];
+}
+
+static s16 *ObjAnim_GetMoveBaseTable(ObjAnimDef *animDef) {
+  return (s16 *)((u8 *)animDef + 0x70);
+}
+
+static s32 ObjAnim_ResolveMoveIndex(ObjAnimDef *animDef, u32 moveId) {
+  s32 moveIndex = ObjAnim_GetMoveBaseTable(animDef)[moveId >> 8] + (moveId & 0xFF);
+
+  if ((u32)animDef->moveCount <= moveIndex) {
+    moveIndex = animDef->moveCount - 1;
+  }
+  if (moveIndex < 0) {
+    moveIndex = 0;
+  }
+  return moveIndex;
+}
+
+/*
  * --INFO--
  *
  * Function: FUN_8002ec4c
@@ -29,54 +123,51 @@ void FUN_8002ec4c(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,int param_10,int param_11,uint param_12,undefined2 param_13)
 {
-  float fVar1;
-  uint uVar2;
-  int iVar3;
+  ObjAnimDef *animDef;
+  ObjAnimState *state;
+  float frameValue;
+  uint frameType;
+  int moveData;
+  int moveIndex;
   
-  iVar3 = (int)*(short *)(param_10 + ((int)param_12 >> 8) * 2 + 0x70) + (param_12 & 0xff);
-  if ((int)(uint)*(ushort *)(param_10 + 0xec) <= iVar3) {
-    iVar3 = *(ushort *)(param_10 + 0xec) - 1;
-  }
-  if (iVar3 < 0) {
-    iVar3 = 0;
-  }
-  if ((*(ushort *)(param_10 + 2) & 0x40) == 0) {
-    *(short *)(param_11 + 0x48) = (short)iVar3;
-    iVar3 = *(int *)(*(int *)(param_10 + 100) + (uint)*(ushort *)(param_11 + 0x48) * 4);
+  animDef = (ObjAnimDef *)param_10;
+  state = (ObjAnimState *)param_11;
+  moveIndex = ObjAnim_ResolveMoveIndex(animDef, param_12);
+  if ((animDef->flags & 0x40) == 0) {
+    state->blendCacheSlot = (u16)moveIndex;
+    moveData = (int)animDef->moveData[state->blendCacheSlot];
   }
   else {
-    if (*(short *)(param_11 + 100) != iVar3) {
-      *(short *)(param_11 + 0x48) = (short)*(char *)(param_11 + 0x62);
-      *(short *)(param_11 + 0x4a) = 1 - *(char *)(param_11 + 0x62);
-      if (*(short *)(*(int *)(param_10 + 0x6c) + iVar3 * 2) == -1) {
+    if (state->lastBlendMoveIndex != moveIndex) {
+      state->blendCacheSlot = (u16)state->blendToggle;
+      state->prevBlendCacheSlot = (u16)(1 - state->blendToggle);
+      if (animDef->blendMoveIds[moveIndex] == -1) {
         param_1 = FUN_8007d858();
-        iVar3 = 0;
+        moveIndex = 0;
       }
       FUN_80024f40(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                   (int)*(short *)(*(int *)(param_10 + 0x6c) + iVar3 * 2),(int)(short)iVar3,
-                   *(undefined4 *)(param_11 + (uint)*(ushort *)(param_11 + 0x48) * 4 + 0x24),
-                   param_10);
-      *(short *)(param_11 + 100) = (short)iVar3;
+                   (int)animDef->blendMoveIds[moveIndex],(int)(s16)moveIndex,
+                   (undefined4)state->blendMoveCache[state->blendCacheSlot],param_10);
+      state->lastBlendMoveIndex = (s16)moveIndex;
     }
-    iVar3 = *(int *)(param_11 + (uint)*(ushort *)(param_11 + 0x48) * 4 + 0x24) + 0x80;
+    moveData = (int)state->blendMoveCache[state->blendCacheSlot] + 0x80;
   }
-  *(int *)(param_11 + 0x3c) = iVar3 + 6;
-  uVar2 = (int)*(char *)(iVar3 + 1) & 0xf0;
-  if (uVar2 == (int)*(char *)(param_11 + 0x60)) {
-    fVar1 = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(*(int *)(param_11 + 0x3c) + 1)) -
-                   DOUBLE_803df568);
-    if (uVar2 == 0) {
-      fVar1 = fVar1 - FLOAT_803df560;
+  state->frameCmd = (u8 *)(moveData + 6);
+  frameType = (uint)*(s8 *)(moveData + 1) & 0xf0;
+  if (frameType == state->frameType) {
+    frameValue = (float)((double)CONCAT44(0x43300000,(uint)state->frameCmd[1]) - DOUBLE_803df568);
+    if (frameType == 0) {
+      frameValue = frameValue - FLOAT_803df560;
     }
-    if (fVar1 == *(float *)(param_11 + 0x14)) {
-      *(undefined2 *)(param_11 + 0x5a) = param_13;
+    if (frameValue == state->segmentLength) {
+      state->eventState = param_13;
     }
     else {
-      *(undefined2 *)(param_11 + 0x5a) = 0;
+      state->eventState = 0;
     }
   }
   else {
-    *(undefined2 *)(param_11 + 0x5a) = 0;
+    state->eventState = 0;
   }
   return;
 }
@@ -98,14 +189,12 @@ void FUN_8002ee10(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,uint param_10,undefined2 param_11)
 {
-  int iVar1;
-  int *piVar2;
+  ObjAnimBank *bank;
   
-  piVar2 = *(int **)(*(int *)(param_9 + 0x7c) + *(char *)(param_9 + 0xad) * 4);
-  iVar1 = *piVar2;
-  if (*(short *)(iVar1 + 0xec) != 0) {
-    FUN_8002ec4c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar1,
-                 piVar2[0xc],param_10,param_11);
+  bank = ObjAnim_GetActiveBank((ObjAnimComponent *)param_9);
+  if (bank->animDef->moveCount != 0) {
+    FUN_8002ec4c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,
+                 (int)bank->animDef,(int)bank->primaryState,param_10,param_11);
   }
   return;
 }
@@ -127,14 +216,12 @@ void FUN_8002ee64(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,uint param_10,undefined2 param_11)
 {
-  int iVar1;
-  int *piVar2;
+  ObjAnimBank *bank;
   
-  piVar2 = *(int **)(*(int *)(param_9 + 0x7c) + *(char *)(param_9 + 0xad) * 4);
-  iVar1 = *piVar2;
-  if (*(short *)(iVar1 + 0xec) != 0) {
-    FUN_8002ec4c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar1,
-                 piVar2[0xb],param_10,param_11);
+  bank = ObjAnim_GetActiveBank((ObjAnimComponent *)param_9);
+  if (bank->animDef->moveCount != 0) {
+    FUN_8002ec4c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,
+                 (int)bank->animDef,(int)bank->secondaryState,param_10,param_11);
   }
   return;
 }
@@ -154,6 +241,10 @@ void FUN_8002ee64(undefined8 param_1,double param_2,double param_3,undefined8 pa
  */
 undefined4 FUN_8002eeb8(double param_1,double param_2,int param_3,int param_4)
 {
+  ObjAnimComponent *objAnim;
+  ObjAnimEventList *events;
+  ObjAnimBank *bank;
+  ObjAnimState *state;
   int iVar1;
   int iVar2;
   char cVar3;
@@ -171,48 +262,51 @@ undefined4 FUN_8002eeb8(double param_1,double param_2,int param_3,int param_4)
   undefined uVar15;
   undefined8 local_28;
   
+  objAnim = (ObjAnimComponent *)param_3;
+  events = (ObjAnimEventList *)param_4;
   uVar7 = 0;
-  piVar10 = *(int **)(*(int *)(param_3 + 0x7c) + *(char *)(param_3 + 0xad) * 4);
-  if (*(short *)(*piVar10 + 0xec) == 0) {
+  bank = ObjAnim_GetActiveBank(objAnim);
+  piVar10 = (int *)bank;
+  if (bank->animDef->moveCount == 0) {
     uVar7 = 0;
   }
   else {
-    iVar11 = piVar10[0xc];
-    *(float *)(iVar11 + 0xc) = (float)(param_1 * (double)*(float *)(iVar11 + 0x14));
-    if (*(short *)(iVar11 + 0x58) != 0) {
-      if ((*(byte *)(iVar11 + 99) & 8) != 0) {
-        *(undefined4 *)(iVar11 + 0x10) = *(undefined4 *)(iVar11 + 0xc);
+    state = bank->primaryState;
+    iVar11 = (int)state;
+    state->step = (float)(param_1 * (double)state->segmentLength);
+    if (state->eventCountdown != 0) {
+      if ((state->flags & 8) != 0) {
+        state->savedStep = state->step;
       }
-      *(float *)(iVar11 + 8) =
-           (float)((double)*(float *)(iVar11 + 0x10) * param_2 + (double)*(float *)(iVar11 + 8));
+      state->progress = (float)((double)state->savedStep * param_2 + (double)state->progress);
       fVar5 = FLOAT_803df570;
-      fVar4 = *(float *)(iVar11 + 0x18);
-      if (*(char *)(iVar11 + 0x61) == '\0') {
-        fVar5 = *(float *)(iVar11 + 8);
+      fVar4 = state->prevSegmentLength;
+      if (state->prevFrameType == '\0') {
+        fVar5 = state->progress;
         fVar6 = FLOAT_803df570;
         if ((FLOAT_803df570 <= fVar5) && (fVar6 = fVar5, fVar4 < fVar5)) {
           fVar6 = fVar4;
         }
-        *(float *)(iVar11 + 8) = fVar6;
+        state->progress = fVar6;
       }
       else {
-        if (*(float *)(iVar11 + 8) < FLOAT_803df570) {
-          while (*(float *)(iVar11 + 8) < fVar5) {
-            *(float *)(iVar11 + 8) = *(float *)(iVar11 + 8) + fVar4;
+        if (state->progress < FLOAT_803df570) {
+          while (state->progress < fVar5) {
+            state->progress = state->progress + fVar4;
           }
         }
-        if (fVar4 <= *(float *)(iVar11 + 8)) {
-          while (fVar4 <= *(float *)(iVar11 + 8)) {
-            *(float *)(iVar11 + 8) = *(float *)(iVar11 + 8) - fVar4;
+        if (fVar4 <= state->progress) {
+          while (fVar4 <= state->progress) {
+            state->progress = state->progress - fVar4;
           }
         }
       }
-      if ((*(byte *)(iVar11 + 99) & 2) == 0) {
+      if ((state->flags & 2) == 0) {
         uVar8 = (uint)-(float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                (uint)*(ushort *)(iVar11 + 0x5e)) -
+                                                                (uint)state->eventStep) -
                                               DOUBLE_803df568) * param_2 -
                               (double)(float)((double)CONCAT44(0x43300000,
-                                                               *(ushort *)(iVar11 + 0x58) ^
+                                                               state->eventCountdown ^
                                                                0x80000000) - DOUBLE_803df580));
         fVar4 = FLOAT_803df570;
         if ((-1 < (int)uVar8) &&
@@ -221,77 +315,77 @@ undefined4 FUN_8002eeb8(double param_1,double param_2,int param_3,int param_4)
           local_28 = (double)CONCAT44(0x43300000,uVar8);
           fVar4 = (float)(local_28 - DOUBLE_803df580);
         }
-        *(short *)(iVar11 + 0x58) = (short)(int)fVar4;
+        state->eventCountdown = (u16)(int)fVar4;
       }
-      if (*(short *)(iVar11 + 0x58) == 0) {
-        *(undefined2 *)(iVar11 + 0x5c) = 0;
+      if (state->eventCountdown == 0) {
+        state->prevEventState = 0;
       }
     }
-    fVar4 = *(float *)(param_3 + 0x9c);
-    *(float *)(param_3 + 0x9c) = fVar4 + (float)(param_1 * param_2);
+    fVar4 = objAnim->moveProgress;
+    objAnim->moveProgress = fVar4 + (float)(param_1 * param_2);
     fVar6 = FLOAT_803df570;
     fVar5 = FLOAT_803df560;
-    if (*(float *)(param_3 + 0x9c) < FLOAT_803df560) {
-      if (*(float *)(param_3 + 0x9c) < FLOAT_803df570) {
-        if (*(char *)(iVar11 + 0x60) == '\0') {
-          *(float *)(param_3 + 0x9c) = FLOAT_803df570;
+    if (objAnim->moveProgress < FLOAT_803df560) {
+      if (objAnim->moveProgress < FLOAT_803df570) {
+        if (state->frameType == '\0') {
+          objAnim->moveProgress = FLOAT_803df570;
         }
         else {
-          while (*(float *)(param_3 + 0x9c) < fVar6) {
-            *(float *)(param_3 + 0x9c) = *(float *)(param_3 + 0x9c) + fVar5;
+          while (objAnim->moveProgress < fVar6) {
+            objAnim->moveProgress = objAnim->moveProgress + fVar5;
           }
         }
         uVar7 = 1;
       }
     }
     else {
-      if (*(char *)(iVar11 + 0x60) == '\0') {
-        *(float *)(param_3 + 0x9c) = FLOAT_803df560;
+      if (state->frameType == '\0') {
+        objAnim->moveProgress = FLOAT_803df560;
       }
       else {
-        while (fVar5 <= *(float *)(param_3 + 0x9c)) {
-          *(float *)(param_3 + 0x9c) = *(float *)(param_3 + 0x9c) - fVar5;
+        while (fVar5 <= objAnim->moveProgress) {
+          objAnim->moveProgress = objAnim->moveProgress - fVar5;
         }
       }
       uVar7 = 1;
     }
-    if ((param_4 != 0) && (*(undefined *)(param_4 + 0x12) = 0, *(int *)(param_3 + 0x60) != 0)) {
-      *(undefined *)(param_4 + 0x1b) = 0;
-      iVar11 = **(int **)(param_3 + 0x60) >> 1;
+    if ((events != (ObjAnimEventList *)0) && (events->resetFlag = 0, objAnim->eventTable != 0)) {
+      events->count = 0;
+      iVar11 = **(int **)objAnim->eventTable >> 1;
       if (iVar11 != 0) {
         iVar1 = (int)(FLOAT_803df578 * fVar4);
-        iVar2 = (int)(FLOAT_803df578 * *(float *)(param_3 + 0x9c));
+        iVar2 = (int)(FLOAT_803df578 * objAnim->moveProgress);
         bVar13 = iVar2 < iVar1;
         if ((float)(param_1 * param_2) < FLOAT_803df570) {
           bVar13 = bVar13 | 2;
         }
         iVar12 = 0;
         iVar9 = 0;
-        while ((iVar12 < iVar11 && (*(char *)(param_4 + 0x1b) < '\b'))) {
-          uVar14 = (uint)*(short *)(*(int *)(*(int *)(param_3 + 0x60) + 4) + iVar9);
+        while ((iVar12 < iVar11 && (events->count < 8))) {
+          uVar14 = (uint)*(short *)(*(int *)(*(int *)objAnim->eventTable + 4) + iVar9);
           uVar8 = uVar14 & 0x1ff;
           uVar14 = uVar14 >> 9 & 0x7f;
           if (uVar14 != 0x7f) {
             uVar15 = (undefined)uVar14;
             if (((bVar13 == 0) && (iVar1 <= (int)uVar8)) && ((int)uVar8 < iVar2)) {
-              cVar3 = *(char *)(param_4 + 0x1b);
-              *(char *)(param_4 + 0x1b) = cVar3 + '\x01';
-              *(undefined *)(param_4 + cVar3 + 0x13) = uVar15;
+              cVar3 = events->count;
+              events->count = cVar3 + '\x01';
+              events->triggeredIds[(u8)cVar3] = uVar15;
             }
             if ((bVar13 == 1) && ((iVar1 <= (int)uVar8 || ((int)uVar8 < iVar2)))) {
-              cVar3 = *(char *)(param_4 + 0x1b);
-              *(char *)(param_4 + 0x1b) = cVar3 + '\x01';
-              *(undefined *)(param_4 + cVar3 + 0x13) = uVar15;
+              cVar3 = events->count;
+              events->count = cVar3 + '\x01';
+              events->triggeredIds[(u8)cVar3] = uVar15;
             }
             if (((bVar13 == 3) && (iVar2 < (int)uVar8)) && ((int)uVar8 <= iVar1)) {
-              cVar3 = *(char *)(param_4 + 0x1b);
-              *(char *)(param_4 + 0x1b) = cVar3 + '\x01';
-              *(undefined *)(param_4 + cVar3 + 0x13) = uVar15;
+              cVar3 = events->count;
+              events->count = cVar3 + '\x01';
+              events->triggeredIds[(u8)cVar3] = uVar15;
             }
             if ((bVar13 == 2) && ((iVar2 < (int)uVar8 || ((int)uVar8 <= iVar1)))) {
-              cVar3 = *(char *)(param_4 + 0x1b);
-              *(char *)(param_4 + 0x1b) = cVar3 + '\x01';
-              *(undefined *)(param_4 + cVar3 + 0x13) = uVar15;
+              cVar3 = events->count;
+              events->count = cVar3 + '\x01';
+              events->triggeredIds[(u8)cVar3] = uVar15;
             }
           }
           iVar9 = iVar9 + 2;
@@ -318,13 +412,15 @@ undefined4 FUN_8002eeb8(double param_1,double param_2,int param_3,int param_4)
  */
 undefined4 FUN_8002f304(double param_1,int param_2)
 {
+  ObjAnimComponent *objAnim;
   double dVar1;
   
+  objAnim = (ObjAnimComponent *)param_2;
   dVar1 = (double)FLOAT_803df588;
   if ((param_1 <= dVar1) && (dVar1 = param_1, param_1 < (double)FLOAT_803df570)) {
     dVar1 = (double)FLOAT_803df570;
   }
-  *(float *)(param_2 + 0x9c) = (float)dVar1;
+  objAnim->moveProgress = (float)dVar1;
   return 0;
 }
 
@@ -346,80 +442,77 @@ FUN_8002f334(double param_1,double param_2,double param_3,undefined8 param_4,und
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,uint param_10,
             undefined param_11)
 {
+  ObjAnimComponent *objAnim;
+  ObjAnimBank *bank;
+  ObjAnimDef *animDef;
+  ObjAnimState *state;
   short sVar1;
   uint uVar2;
   int iVar3;
-  int *piVar4;
-  int iVar5;
   int iVar6;
   double dVar7;
   
+  objAnim = (ObjAnimComponent *)param_9;
   dVar7 = (double)FLOAT_803df560;
   if ((param_1 <= dVar7) && (dVar7 = param_1, param_1 < (double)FLOAT_803df570)) {
     dVar7 = (double)FLOAT_803df570;
   }
-  *(float *)(param_9 + 0x9c) = (float)dVar7;
-  piVar4 = *(int **)(*(int *)(param_9 + 0x7c) + *(char *)(param_9 + 0xad) * 4);
-  iVar6 = *piVar4;
-  if (*(short *)(iVar6 + 0xec) != 0) {
-    iVar5 = piVar4[0xc];
-    *(undefined *)(iVar5 + 99) = param_11;
-    *(undefined2 *)(iVar5 + 0x46) = *(undefined2 *)(iVar5 + 0x44);
-    *(undefined4 *)(iVar5 + 8) = *(undefined4 *)(iVar5 + 4);
-    *(undefined4 *)(iVar5 + 0x18) = *(undefined4 *)(iVar5 + 0x14);
-    *(undefined4 *)(iVar5 + 0x10) = *(undefined4 *)(iVar5 + 0xc);
-    *(undefined4 *)(iVar5 + 0x38) = *(undefined4 *)(iVar5 + 0x34);
-    *(undefined *)(iVar5 + 0x61) = *(undefined *)(iVar5 + 0x60);
-    *(undefined2 *)(iVar5 + 0x4a) = *(undefined2 *)(iVar5 + 0x48);
-    *(undefined4 *)(iVar5 + 0x40) = *(undefined4 *)(iVar5 + 0x3c);
-    *(undefined2 *)(iVar5 + 0x5c) = *(undefined2 *)(iVar5 + 0x5a);
-    *(undefined2 *)(iVar5 + 0x5a) = 0;
-    *(undefined2 *)(iVar5 + 100) = 0xffff;
-    sVar1 = *(short *)(param_9 + 0xa2);
-    *(short *)(param_9 + 0xa2) = (short)param_10;
-    iVar3 = (int)*(short *)(iVar6 + ((int)param_10 >> 8) * 2 + 0x70) + (param_10 & 0xff);
-    if ((int)(uint)*(ushort *)(iVar6 + 0xec) <= iVar3) {
-      iVar3 = *(ushort *)(iVar6 + 0xec) - 1;
-    }
-    if (iVar3 < 0) {
-      iVar3 = 0;
-    }
-    if ((*(ushort *)(iVar6 + 2) & 0x40) == 0) {
-      *(short *)(iVar5 + 0x44) = (short)iVar3;
-      iVar6 = *(int *)(*(int *)(iVar6 + 100) + (uint)*(ushort *)(iVar5 + 0x44) * 4);
+  objAnim->moveProgress = (float)dVar7;
+  bank = ObjAnim_GetActiveBank(objAnim);
+  animDef = bank->animDef;
+  if (animDef->moveCount != 0) {
+    state = bank->primaryState;
+    state->flags = param_11;
+    state->prevMoveCacheSlot = state->moveCacheSlot;
+    state->progress = state->speed;
+    state->prevSegmentLength = state->segmentLength;
+    state->savedStep = state->step;
+    state->prevFrameData = state->frameData;
+    state->prevFrameType = state->frameType;
+    state->prevBlendCacheSlot = state->blendCacheSlot;
+    state->prevFrameCmd = state->frameCmd;
+    state->prevEventState = state->eventState;
+    state->eventState = 0;
+    state->lastBlendMoveIndex = -1;
+    sVar1 = objAnim->activeMove;
+    objAnim->activeMove = (s16)param_10;
+    iVar3 = ObjAnim_ResolveMoveIndex(animDef, param_10);
+    if ((animDef->flags & 0x40) == 0) {
+      state->moveCacheSlot = (u16)iVar3;
+      iVar6 = (int)animDef->moveData[state->moveCacheSlot];
     }
     else {
       if ((int)(param_10 - (int)sVar1 | (int)sVar1 - param_10) < 0) {
-        *(char *)(iVar5 + 0x62) = '\x01' - *(char *)(iVar5 + 0x62);
-        *(short *)(iVar5 + 0x44) = (short)*(char *)(iVar5 + 0x62);
-        if (*(short *)(*(int *)(iVar6 + 0x6c) + iVar3 * 2) == -1) {
+        state->blendToggle = '\x01' - state->blendToggle;
+        state->moveCacheSlot = (u16)state->blendToggle;
+        if (animDef->blendMoveIds[iVar3] == -1) {
           param_1 = (double)FUN_8007d858();
           iVar3 = 0;
         }
         FUN_80024f40(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                     (int)*(short *)(*(int *)(iVar6 + 0x6c) + iVar3 * 2),(int)(short)iVar3,
-                     *(undefined4 *)(iVar5 + (uint)*(ushort *)(iVar5 + 0x44) * 4 + 0x1c),iVar6);
+                     (int)animDef->blendMoveIds[iVar3],(int)(s16)iVar3,
+                     (undefined4)state->moveCache[state->moveCacheSlot],(int)animDef);
       }
-      iVar6 = *(int *)(iVar5 + (uint)*(ushort *)(iVar5 + 0x44) * 4 + 0x1c) + 0x80;
+      iVar6 = (int)state->moveCache[state->moveCacheSlot] + 0x80;
     }
-    *(int *)(iVar5 + 0x34) = iVar6 + 6;
-    *(byte *)(iVar5 + 0x60) = *(byte *)(iVar6 + 1) & 0xf0;
-    *(float *)(iVar5 + 0x14) =
-         (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(*(int *)(iVar5 + 0x34) + 1)) -
+    state->frameData = (u8 *)(iVar6 + 6);
+    state->frameType = *(u8 *)(iVar6 + 1) & 0xf0;
+    state->segmentLength =
+         (float)((double)CONCAT44(0x43300000,(uint)state->frameData[1]) -
                 DOUBLE_803df568);
-    if (*(char *)(iVar5 + 0x60) == '\0') {
-      *(float *)(iVar5 + 0x14) = *(float *)(iVar5 + 0x14) - FLOAT_803df560;
+    if (state->frameType == '\0') {
+      state->segmentLength = state->segmentLength - FLOAT_803df560;
     }
     uVar2 = (int)*(char *)(iVar6 + 1) & 0xf;
     if (uVar2 != 0) {
-      *(undefined4 *)(iVar5 + 0x10) = *(undefined4 *)(iVar5 + 0xc);
-      *(short *)(iVar5 + 0x5e) =
+      state->savedStep = state->step;
+      state->eventStep =
            (short)(int)(FLOAT_803df574 /
-                       (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803df580));
-      *(undefined2 *)(iVar5 + 0x58) = 0x4000;
+                        (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803df580));
+      state->eventCountdown = 0x4000;
     }
-    *(float *)(iVar5 + 0xc) = FLOAT_803df570;
-    *(float *)(iVar5 + 4) = (float)(dVar7 * (double)*(float *)(iVar5 + 0x14));
+    state->step = FLOAT_803df570;
+    state->speed = (float)(dVar7 * (double)state->segmentLength);
   }
   return 0;
 }

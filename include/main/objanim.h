@@ -3,6 +3,8 @@
 
 #include "ghidra_import.h"
 
+#define Object_ObjAnimSetMove FUN_8002f334
+
 void FUN_8002ec4c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,int param_10,int param_11,uint param_12,undefined2 param_13);
