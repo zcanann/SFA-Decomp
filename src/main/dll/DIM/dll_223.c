@@ -31,7 +31,7 @@ extern undefined4 FUN_801bb50c();
 extern undefined4 FUN_801bb68c();
 extern undefined4 FUN_801bb7a0();
 extern undefined4 FUN_801bb864();
-extern undefined4 DIMboss_update();
+extern undefined4 DIMboss_updateState();
 extern int FUN_80286840();
 extern undefined4 FUN_8028688c();
 
@@ -75,7 +75,7 @@ extern f32 FLOAT_803e5920;
 /*
  * --INFO--
  *
- * Function: FUN_801bdd60
+ * Function: DIMboss_init
  * EN v1.0 Address: 0x801BDD60
  * EN v1.0 Size: 808b
  * EN v1.1 Address: TODO
@@ -85,14 +85,14 @@ extern f32 FLOAT_803e5920;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bdd60(int param_1,undefined4 param_2,int param_3)
+void DIMboss_init(int param_1,undefined4 param_2,int param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_801be088
+ * Function: DIMboss_initialise
  * EN v1.0 Address: 0x801BE088
  * EN v1.0 Size: 32b
  * EN v1.1 Address: TODO
@@ -102,7 +102,7 @@ void FUN_801bdd60(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801be088(void)
+void DIMboss_initialise(void)
 {
   FUN_801be0a8();
   return;
@@ -128,7 +128,7 @@ void FUN_801be0a8(void)
 /*
  * --INFO--
  *
- * Function: FUN_801be1c0
+ * Function: DIMbossgut_render
  * EN v1.0 Address: 0x801BE1C0
  * EN v1.0 Size: 128b
  * EN v1.1 Address: TODO
@@ -138,7 +138,7 @@ void FUN_801be0a8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801be1c0(void)
+void DIMbossgut_render(void)
 {
   int iVar1;
   char in_r8;
@@ -155,7 +155,7 @@ void FUN_801be1c0(void)
 /*
  * --INFO--
  *
- * Function: FUN_801be240
+ * Function: DIMbossgut_init
  * EN v1.0 Address: 0x801BE240
  * EN v1.0 Size: 100b
  * EN v1.1 Address: TODO
@@ -165,9 +165,10 @@ void FUN_801be1c0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801be240(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+void DIMbossgut_init(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                     undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                     int param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
+                     undefined4 param_13,undefined4 param_14,undefined4 param_15,
+                     undefined4 param_16)
 {
 }

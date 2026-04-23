@@ -58,7 +58,7 @@ extern f32 FLOAT_803e5908;
 /*
  * --INFO--
  *
- * Function: DIMboss_update
+ * Function: DIMboss_updateState
  * EN v1.0 Address: 0x801BD0E8
  * EN v1.0 Size: 1836b
  * EN v1.1 Address: TODO
@@ -68,10 +68,11 @@ extern f32 FLOAT_803e5908;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMboss_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                    undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                    undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
-                    undefined4 param_13,int param_14,int param_15,undefined4 param_16)
+void DIMboss_updateState(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                         undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                         undefined8 param_8,undefined4 param_9,undefined4 param_10,int param_11,
+                         undefined4 param_12,undefined4 param_13,int param_14,int param_15,
+                         undefined4 param_16)
 {
   byte bVar1;
   bool bVar2;

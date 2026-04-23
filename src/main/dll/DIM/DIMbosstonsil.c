@@ -32,7 +32,7 @@ extern f32 FLOAT_803e58ec;
 /*
  * --INFO--
  *
- * Function: FUN_801bda04
+ * Function: DIMboss_update
  * EN v1.0 Address: 0x801BDA04
  * EN v1.0 Size: 860b
  * EN v1.1 Address: TODO
@@ -42,9 +42,9 @@ extern f32 FLOAT_803e58ec;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bda04(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 ushort *param_9)
+void DIMboss_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                    undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                    ushort *param_9)
 {
   uint uVar1;
   undefined4 uVar2;
