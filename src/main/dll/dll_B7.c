@@ -10,7 +10,7 @@ extern f32 FLOAT_803e22d8;
 /*
  * --INFO--
  *
- * Function: FUN_80101844
+ * Function: camcontrol_updateMoveAverage
  * EN v1.0 Address: 0x80101844
  * EN v1.0 Size: 232b
  * EN v1.1 Address: TODO
@@ -20,7 +20,7 @@ extern f32 FLOAT_803e22d8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80101844(int param_1,int param_2)
+void camcontrol_updateMoveAverage(int param_1,int param_2)
 {
   float fVar1;
   double dVar2;

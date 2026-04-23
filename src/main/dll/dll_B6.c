@@ -20,7 +20,7 @@ extern f32 FLOAT_803e22c8;
 /*
  * --INFO--
  *
- * Function: FUN_80101350
+ * Function: camcontrol_findBestTarget
  * EN v1.0 Address: 0x80101350
  * EN v1.0 Size: 1268b
  * EN v1.1 Address: TODO
@@ -30,8 +30,9 @@ extern f32 FLOAT_803e22c8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80101350(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void camcontrol_findBestTarget(undefined8 param_1,double param_2,undefined8 param_3,
+                               undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                               undefined8 param_7,undefined8 param_8)
 {
   float fVar1;
   bool bVar2;

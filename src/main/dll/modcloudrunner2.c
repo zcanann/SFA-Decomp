@@ -20,8 +20,8 @@
  *
  * Current EN functions in this estimated window:
  * - `fn_80102CC8@0x80102CC8-0x80102CFC` size=`0x34`
- * - `fn_80102CFC@0x80102CFC-0x80102D24` size=`0x28`
- * - `fn_80102D24@0x80102D24-0x80102D3C` size=`0x18`
+ * - `camcontrol_initialise@0x80102CFC-0x80102D24` size=`0x28`
+ * - `camcontrol_release@0x80102D24-0x80102D3C` size=`0x18`
  */
 
 /*

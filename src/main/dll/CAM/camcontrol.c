@@ -15,9 +15,9 @@ extern int FUN_80037ad4();
 extern undefined8 FUN_8007d858();
 extern undefined4 FUN_80098230();
 extern undefined4 FUN_800e875c();
-extern undefined4 FUN_80101350();
-extern undefined4 FUN_80101844();
-extern undefined4 FUN_80101c1c();
+extern undefined4 camcontrol_findBestTarget();
+extern undefined4 camcontrol_updateMoveAverage();
+extern undefined4 camcontrol_applyState();
 extern undefined8 camcontrol_applyQueuedAction();
 extern int FUN_80111fb0();
 extern int FUN_8012ee7c();
@@ -30,10 +30,10 @@ extern double FUN_80293900();
 
 extern undefined4 gCamcontrolHandlers;
 extern undefined4* DAT_803dd738;
-extern undefined4 DAT_803de130;
+extern undefined4 gCamcontrolTargetChanged;
 extern short* DAT_803de134;
 extern undefined4 DAT_803de140;
-extern undefined4 DAT_803de142;
+extern undefined4 gCamcontrolTargetState;
 extern undefined4 gCamcontrolSavedActionMode;
 extern undefined4 gCamcontrolSavedActionFlags;
 extern undefined4 gCamcontrolSavedActionId;
@@ -109,7 +109,7 @@ void FUN_801024e8(void)
   if (iVar8 != 0) {
     return;
   }
-  if ((DAT_803de130 != '\0') && (DAT_803de130 = '\0', iVar11 != 0)) {
+  if ((gCamcontrolTargetChanged != '\0') && (gCamcontrolTargetChanged = '\0', iVar11 != 0)) {
     cVar2 = *(char *)(gCamcontrolState + 0x138);
     if (cVar2 == '\x01') {
       FUN_8000bb38(0,0x3ff);
@@ -142,7 +142,7 @@ void FUN_801024e8(void)
       FUN_8000bb38(0,0x287);
     }
   }
-  if (DAT_803de142 == '\0') {
+  if (gCamcontrolTargetState == '\0') {
     if (FLOAT_803e22b0 < *(float *)(psVar6 + 0x4c)) {
       FUN_8002fb40((double)FLOAT_803e22f0,(double)FLOAT_803dc074);
     }
@@ -153,8 +153,8 @@ void FUN_801024e8(void)
       *(int *)(gCamcontrolState + 0x128) = iVar11;
       *(byte *)(gCamcontrolState + 0x138) =
            *(byte *)(*(int *)(iVar11 + 0x78) + (uint)*(byte *)(iVar11 + 0xe4) * 5 + 4) & 0xf;
-      DAT_803de142 = '\x03';
-      DAT_803de130 = '\x01';
+      gCamcontrolTargetState = '\x03';
+      gCamcontrolTargetChanged = '\x01';
     }
   }
   else if ((*(int *)(gCamcontrolState + 0x128) == iVar11) ||
@@ -162,7 +162,7 @@ void FUN_801024e8(void)
     FUN_8002fb40((double)FLOAT_803e22f4,(double)FLOAT_803dc074);
   }
   else {
-    DAT_803de142 = '\0';
+    gCamcontrolTargetState = '\0';
     if (iVar11 == 0) {
       cVar2 = *(char *)(gCamcontrolState + 0x138);
       if (cVar2 == '\x01') {
@@ -183,7 +183,8 @@ void FUN_801024e8(void)
   if (iVar11 == 0) {
     *(undefined4 *)(gCamcontrolState + 0x128) = 0;
   }
-  if ((DAT_803de142 != '\x03') || (*(int *)(gCamcontrolState + 0x128) == 0)) goto LAB_80102ab4;
+  if ((gCamcontrolTargetState != '\x03') || (*(int *)(gCamcontrolState + 0x128) == 0))
+  goto LAB_80102ab4;
   if ((*(byte *)(*(int *)(gCamcontrolState + 0x128) + 0xaf) & 0x10) == 0) {
     *(byte *)(gCamcontrolState + 0x141) = *(byte *)(gCamcontrolState + 0x141) & 0xdf;
   }
@@ -647,7 +648,7 @@ void camcontrol_updateState(undefined8 param_1,double param_2,double param_3,und
     FLOAT_803de154 = *(float *)(psVar3 + 0xc);
     FLOAT_803de150 = *(float *)(psVar3 + 0xe);
     FLOAT_803de14c = *(float *)(psVar3 + 0x10);
-    FUN_80101844((int)gCamcontrolState,(int)psVar3);
+    camcontrol_updateMoveAverage((int)gCamcontrolState,(int)psVar3);
     if (*(char *)((int)gCamcontrolState + 0x13d) != '\0') {
       *(undefined4 *)(psVar3 + 0xc) = *(undefined4 *)(gCamcontrolState + 0x6e);
       *(undefined4 *)(psVar3 + 0xe) = *(undefined4 *)(gCamcontrolState + 0x70);
@@ -689,12 +690,13 @@ void camcontrol_updateState(undefined8 param_1,double param_2,double param_3,und
       FUN_8000e0c0((double)*(float *)(gCamcontrolState + 6),param_2,param_3,
                    (float *)(gCamcontrolState + 0xc),(float *)(gCamcontrolState + 0xe),
                    (float *)(gCamcontrolState + 0x10),*(int *)(gCamcontrolState + 0x18));
-      FUN_80101c1c(gCamcontrolState);
+      camcontrol_applyState(gCamcontrolState);
     }
     uVar4 = camcontrol_applyQueuedAction();
     if (iVar1 == 0) {
       if (*(int *)(gCamcontrolState + 0x8e) == 0) {
-        uVar2 = FUN_80101350(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        uVar2 = camcontrol_findBestTarget(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,
+                                          param_8);
         *(undefined4 *)(gCamcontrolState + 0x92) = uVar2;
       }
       else {

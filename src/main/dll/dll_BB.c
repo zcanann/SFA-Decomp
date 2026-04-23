@@ -28,7 +28,7 @@ extern f32 FLOAT_803e22ec;
 /*
  * --INFO--
  *
- * Function: FUN_80101c1c
+ * Function: camcontrol_applyState
  * EN v1.0 Address: 0x80101C1C
  * EN v1.0 Size: 1340b
  * EN v1.1 Address: TODO
@@ -38,7 +38,7 @@ extern f32 FLOAT_803e22ec;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80101c1c(short *param_1)
+void camcontrol_applyState(short *param_1)
 {
   float fVar1;
   float fVar2;

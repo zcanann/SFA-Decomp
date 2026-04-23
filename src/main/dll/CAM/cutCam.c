@@ -32,7 +32,7 @@ extern undefined4 FUN_80297334();
 extern undefined4 DAT_803a4ed8;
 extern undefined4 DAT_803dc5f2;
 extern undefined4* DAT_803dd6d0;
-extern undefined4 DAT_803de142;
+extern undefined4 gCamcontrolTargetState;
 extern undefined4 DAT_803de143;
 extern undefined4 DAT_803de144;
 extern undefined4 DAT_803de188;
@@ -89,7 +89,7 @@ void FUN_80103648(double param_1,double param_2,double param_3,undefined4 param_
   *(float *)(gCamcontrolState + 0xc0) = (float)param_3;
   *(undefined4 *)(gCamcontrolState + 0xa4) = param_4;
   *(float *)(gCamcontrolState + 0xb4) = FLOAT_803e2304;
-  DAT_803de142 = 0;
+  gCamcontrolTargetState = 0;
   return;
 }
 

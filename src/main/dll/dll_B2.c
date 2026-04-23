@@ -8,7 +8,7 @@ extern undefined4 FUN_80286884();
 
 extern undefined4 DAT_803dc5f0;
 extern undefined4 DAT_803de134;
-extern undefined4 DAT_803de142;
+extern undefined4 gCamcontrolTargetState;
 extern undefined4 gCamcontrolState;
 extern f32 FLOAT_803e22a8;
 
@@ -38,11 +38,11 @@ void FUN_80100d40(void)
   undefined unaff_r31;
   
   iVar5 = FUN_80286838();
-  uVar6 = DAT_803de142;
+  uVar6 = gCamcontrolTargetState;
   iVar1 = DAT_803de134;
   iVar2 = *(int *)(gCamcontrolState + 0x120);
   if (iVar2 != 0) {
-    DAT_803de142 = 3;
+    gCamcontrolTargetState = 3;
     unaff_r30 = *(undefined *)(DAT_803de134 + 0x36);
     *(undefined *)(DAT_803de134 + 0x36) = 0xff;
     iVar5 = iVar2;
@@ -99,7 +99,7 @@ LAB_80100e04:
   iVar5 = *(int *)(*(int *)(iVar1 + 0x7c) + *(char *)(iVar1 + 0xad) * 4);
   *(ushort *)(iVar5 + 0x18) = *(ushort *)(iVar5 + 0x18) & 0xfff7;
   if (*(int *)(gCamcontrolState + 0x120) != 0) {
-    DAT_803de142 = unaff_r31;
+    gCamcontrolTargetState = unaff_r31;
     *(undefined *)(iVar1 + 0x36) = unaff_r30;
   }
 LAB_80100f14:
