@@ -1691,9 +1691,14 @@ dolphin/card/CARDNet.c:
 	.text       start:0x80264B4C end:0x80264C10
 
 dolphin/thp/THPDec.c:
+	extab       start:0x80005620 end:0x80005628
+	extabindex  start:0x80005CC0 end:0x80005CCC
 	.text       start:0x80264C10 end:0x8026C150
 
 dolphin/thp/THPAudio.c:
+	extab       start:0x80005628 end:0x80005630
+	extabindex  start:0x80005CCC end:0x80005CE4
+	extab       start:0x80005630 end:0x80005638
 	.text       start:0x8026C150 end:0x8026C680
 
 dolphin/amcstubs/AmcExi2Stubs.c:
@@ -1703,49 +1708,50 @@ dolphin/odenotstub/odenotstub.c:
 	.text       start:0x8026C6B0 end:0x8026C6B8
 
 main/audio/synth_callback.c:
-	extab       start:0x80005620 end:0x80005630
-	extabindex  start:0x80005CC0 end:0x80005CD8
 	.text       start:0x8026C6B8 end:0x8026CBEC
 
 main/unknown/autos/placeholder_8026CBEC.c:
-	extab       start:0x80005630 end:0x80005638
-	extabindex  start:0x80005CD8 end:0x80005CE4
+	extab       start:0x80005638 end:0x80005640
+	extabindex  start:0x80005CE4 end:0x80005D08
+	extab       start:0x80005640 end:0x80005650
 	.text       start:0x8026CBEC end:0x8026D6DC
 
 main/audio/synth_channel.c:
-	extab       start:0x80005638 end:0x80005640
-	extabindex  start:0x80005CE4 end:0x80005CF0
+	extab       start:0x80005650 end:0x80005658
+	extabindex  start:0x80005D08 end:0x80005D14
 	.text       start:0x8026D6DC end:0x8026D7C4
 
 main/audio/synth_handle.c:
-	extab       start:0x80005640 end:0x80005658
-	extabindex  start:0x80005CF0 end:0x80005D14
+	extab       start:0x80005658 end:0x80005660
+	extabindex  start:0x80005D14 end:0x80005D20
 	.text       start:0x8026D7C4 end:0x8026DFE4
 
 main/unknown/autos/placeholder_8026DFE4.c:
-	extab       start:0x80005658 end:0x80005660
-	extabindex  start:0x80005D14 end:0x80005D20
+	extab       start:0x80005660 end:0x80005668
+	extabindex  start:0x80005D20 end:0x80005D2C
 	.text       start:0x8026DFE4 end:0x8026E518
 
 main/audio/synth_sequence.c:
 	.text       start:0x8026E518 end:0x8026E848
 
 main/unknown/autos/placeholder_8026E848.c:
-	extab       start:0x80005660 end:0x80005668
-	extabindex  start:0x80005D20 end:0x80005D2C
+	extab       start:0x80005678 end:0x80005688
+	extabindex  start:0x80005D44 end:0x80005D5C
+	extab       start:0x80005668 end:0x80005678
+	extabindex  start:0x80005D2C end:0x80005D44
 	.text       start:0x8026E848 end:0x8026EFC8
 
 main/audio/synth_seq_queue.c:
-	extab       start:0x80005668 end:0x80005678
-	extabindex  start:0x80005D2C end:0x80005D44
 	.text       start:0x8026EFC8 end:0x8026F134
 
 main/unknown/autos/placeholder_8026F134.c:
-	extab       start:0x80005678 end:0x80005688
-	extabindex  start:0x80005D44 end:0x80005D5C
+	extab       start:0x80005688 end:0x80005698
+	extabindex  start:0x80005D5C end:0x80005D74
 	.text       start:0x8026F134 end:0x8026FA70
 
 main/audio/synth_init.c:
+	extab       start:0x80005698 end:0x800056A0
+	extabindex  start:0x80005D74 end:0x80005D80
 	.text       start:0x8026FA70 end:0x8026FCA0
 
 main/audio/synth_scale.c:
@@ -1755,8 +1761,8 @@ main/unknown/autos/placeholder_8026FD1C.c:
 	.text       start:0x8026FD1C end:0x8026FD94
 
 main/unknown/autos/placeholder_8026FD94.c:
-	extab       start:0x80005688 end:0x800056C0
-	extabindex  start:0x80005D5C end:0x80005DB0
+	extab       start:0x800056A0 end:0x800056C0
+	extabindex  start:0x80005D80 end:0x80005DB0
 	.text       start:0x8026FD94 end:0x802718DC
 
 main/audio/synth_delay.c:
@@ -2149,36 +2155,30 @@ Runtime.PPCEABI.H/__va_arg.c:
 	.text       start:0x80286608 end:0x802866D0
 
 Runtime.PPCEABI.H/global_destructor_chain.c:
-	.text       start:0x802866D0 end:0x80286718
+	.text       start:0x802866D0 end:0x802866E0
 	.dtors      start:0x802C18A8 end:0x802C18AC
 	.sbss       start:0x803DE3E0 end:0x803DE3E4
 
-Runtime.PPCEABI.H/runtime.s: comment:0
-	.text       start:0x80286718 end:0x80286E3C
-	.rodata     start:0x802C2920 end:0x802C2938
-
 Runtime.PPCEABI.H/__init_cpp_exceptions.cpp:
-	.text       start:0x80286E3C end:0x80286EB8
+	.text       start:0x802866E0 end:0x802867BC
 	.ctors      start:0x802C1880 end:0x802C1884
 	.dtors      start:0x802C18A0 end:0x802C18A8
 	.sdata      start:0x803DC640 end:0x803DC648
 
-Runtime.PPCEABI.H/fragment.s: comment:0
-	.text       start:0x80286EB8 end:0x80286F20
+main/unknown/autos/placeholder_802867BC.c:
+	.text       start:0x802867BC end:0x8028685C
+	.rodata     start:0x802C2920 end:0x802C2938
 	.bss        start:0x803D7540 end:0x803D754C
 
-main/unknown/autos/placeholder_80286F20.c:
-	.text       start:0x80286F20 end:0x80286FC0
-
 dolphin/TRK_MINNOW_DOLPHIN/mainloop.c:
-	.text       start:0x80286FC0 end:0x802870B8
+	.text       start:0x8028685C end:0x80286954
 
 dolphin/TRK_MINNOW_DOLPHIN/nubevent.c:
-	.text       start:0x802870B8 end:0x802872E0
+	.text       start:0x80286954 end:0x80286BC8
 	.bss        start:0x803D7550 end:0x803D7578
 
 dolphin/TRK_MINNOW_DOLPHIN/nubinit.c:
-	.text       start:0x802872E0 end:0x80287460
+	.text       start:0x80286BC8 end:0x80287460
 	.rodata     start:0x802C2938 end:0x802C2958
 	.bss        start:0x803D7578 end:0x803D7580
 
@@ -2395,7 +2395,7 @@ dolphin/TRK_MINNOW_DOLPHIN/main_gdev.c:
 	.text       start:0x802BB8C4 end:0x802BBC10
 
 main/unknown/autos/placeholder_802BBC10.c:
-	.text       start:0x802BB4A0 end:0x802C187C
+	.text       start:0x802BBC10 end:0x802C187C
 
 Runtime.PPCEABI.H/__start.s: comment:0
 	.init       start:0x80003100 end:0x800033A8
