@@ -745,9 +745,14 @@ def generate_build_ninja(
     normalize_rsp = config.tools_dir / "normalize_rsp.py"
 
     n.comment("Link ELF file")
+    link_cmd = (
+        f'cmd /c "$python {normalize_rsp} $out.rsp && {mwld_cmd}"'
+        if is_windows()
+        else f"$python {normalize_rsp} $out.rsp && {mwld_cmd}"
+    )
     n.rule(
         name="link",
-        command=f'cmd /c "$python {normalize_rsp} $out.rsp && {mwld_cmd}"',
+        command=link_cmd,
         description="LINK $out",
         rspfile="$out.rsp",
         rspfile_content="$in_newline",
