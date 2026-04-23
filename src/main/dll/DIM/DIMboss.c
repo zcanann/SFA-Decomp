@@ -58,7 +58,7 @@ extern f32 FLOAT_803e5908;
 /*
  * --INFO--
  *
- * Function: FUN_801bd0e8
+ * Function: DIMboss_update
  * EN v1.0 Address: 0x801BD0E8
  * EN v1.0 Size: 1836b
  * EN v1.1 Address: TODO
@@ -68,10 +68,10 @@ extern f32 FLOAT_803e5908;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bd0e8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
-                 undefined4 param_13,int param_14,int param_15,undefined4 param_16)
+void DIMboss_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                    undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                    undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
+                    undefined4 param_13,int param_14,int param_15,undefined4 param_16)
 {
   byte bVar1;
   bool bVar2;
@@ -313,7 +313,7 @@ LAB_801bd7dc:
 /*
  * --INFO--
  *
- * Function: FUN_801bd814
+ * Function: DIMboss_hitDetect
  * EN v1.0 Address: 0x801BD814
  * EN v1.0 Size: 260b
  * EN v1.1 Address: TODO
@@ -323,16 +323,16 @@ LAB_801bd7dc:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bd814(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9)
+void DIMboss_hitDetect(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+                       undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                       int param_9)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_801bd918
+ * Function: DIMboss_render
  * EN v1.0 Address: 0x801BD918
  * EN v1.0 Size: 176b
  * EN v1.1 Address: TODO
@@ -342,7 +342,7 @@ void FUN_801bd814(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bd918(short *param_1)
+void DIMboss_render(short *param_1)
 {
   char in_r8;
   int iVar1;
@@ -363,7 +363,7 @@ void FUN_801bd918(short *param_1)
 /*
  * --INFO--
  *
- * Function: FUN_801bd9c8
+ * Function: DIMboss_free
  * EN v1.0 Address: 0x801BD9C8
  * EN v1.0 Size: 60b
  * EN v1.1 Address: TODO
@@ -373,7 +373,7 @@ void FUN_801bd918(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bd9c8(int param_1)
+void DIMboss_free(int param_1)
 {
   (**(code **)(*DAT_803dd70c + 0xc))(param_1,*(undefined4 *)(param_1 + 0xb8),&DAT_803adc78);
   return;

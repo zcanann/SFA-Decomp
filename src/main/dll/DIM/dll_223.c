@@ -31,7 +31,7 @@ extern undefined4 FUN_801bb50c();
 extern undefined4 FUN_801bb68c();
 extern undefined4 FUN_801bb7a0();
 extern undefined4 FUN_801bb864();
-extern undefined4 FUN_801bd0e8();
+extern undefined4 DIMboss_update();
 extern int FUN_80286840();
 extern undefined4 FUN_8028688c();
 
