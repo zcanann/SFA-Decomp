@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "dolphin/os.h"
 #include "main/dll/CF/laser.h"
 
 extern undefined4 FUN_8000a3a0();
@@ -22,11 +23,12 @@ extern undefined4 FUN_80088a84();
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd72c;
+extern char sLaserInitNoLongerSupported[];
 
 /*
  * --INFO--
  *
- * Function: FUN_802096ac
+ * Function: laser_init
  * EN v1.0 Address: 0x802096AC
  * EN v1.0 Size: 80b
  * EN v1.1 Address: TODO
@@ -36,9 +38,9 @@ extern undefined4* DAT_803dd72c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802096ac(void)
+void laser_init(void)
 {
-  FUN_8007d858();
+  OSReport(sLaserInitNoLongerSupported);
   return;
 }
 
@@ -101,7 +103,7 @@ void FUN_802096fc(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_802098a4
+ * Function: laser_initialise
  * EN v1.0 Address: 0x802098A4
  * EN v1.0 Size: 160b
  * EN v1.1 Address: TODO
@@ -111,7 +113,7 @@ void FUN_802096fc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802098a4(undefined2 *param_1,int param_2)
+void laser_initialise(undefined2 *param_1,int param_2)
 {
   uint uVar1;
   short *psVar2;
@@ -133,7 +135,7 @@ void FUN_802098a4(undefined2 *param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80209944
+ * Function: laser_update
  * EN v1.0 Address: 0x80209944
  * EN v1.0 Size: 1032b
  * EN v1.1 Address: TODO
@@ -144,10 +146,10 @@ void FUN_802098a4(undefined2 *param_1,int param_2)
  * PAL Size: TODO
  */
 undefined4
-FUN_80209944(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10
-            ,int param_11,int param_12,undefined4 param_13,undefined4 param_14,undefined4 param_15,
-            undefined4 param_16)
+laser_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
+             undefined4 param_10,int param_11,int param_12,undefined4 param_13,
+             undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
   char cVar1;
   byte bVar4;
@@ -254,7 +256,7 @@ FUN_80209944(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_80209d4c
+ * Function: laser_render
  * EN v1.0 Address: 0x80209D4C
  * EN v1.0 Size: 40b
  * EN v1.1 Address: TODO
@@ -264,7 +266,7 @@ FUN_80209944(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80209d4c(int param_1)
+void laser_render(int param_1)
 {
   FUN_8003b9ec(param_1);
   return;
@@ -273,7 +275,7 @@ void FUN_80209d4c(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80209d74
+ * Function: laser_release
  * EN v1.0 Address: 0x80209D74
  * EN v1.0 Size: 60b
  * EN v1.1 Address: TODO
@@ -283,7 +285,7 @@ void FUN_80209d4c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80209d74(undefined4 param_1)
+void laser_release(undefined4 param_1)
 {
   (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
   return;
@@ -292,7 +294,7 @@ void FUN_80209d74(undefined4 param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80209db0
+ * Function: laser_hitDetect
  * EN v1.0 Address: 0x80209DB0
  * EN v1.0 Size: 168b
  * EN v1.1 Address: TODO
@@ -302,9 +304,9 @@ void FUN_80209d74(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80209db0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9)
+void laser_hitDetect(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                     undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                     int param_9)
 {
 }
 
@@ -425,7 +427,7 @@ void FUN_80209f5c(void)
 /*
  * --INFO--
  *
- * Function: FUN_80209f98
+ * Function: laser_free
  * EN v1.0 Address: 0x80209F98
  * EN v1.0 Size: 72b
  * EN v1.1 Address: TODO
@@ -435,7 +437,7 @@ void FUN_80209f5c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80209f98(int param_1)
+void laser_free(int param_1)
 {
   uint uVar1;
   uint *puVar2;

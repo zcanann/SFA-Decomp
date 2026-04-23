@@ -3,8 +3,8 @@
 
 #include "ghidra_import.h"
 
-void FUN_80209624(void);
-void FUN_80209650(void);
-void FUN_80209680(void);
+void textblock_init(void);
+void textblock_init_01(void);
+void textblock_init_02(void);
 
 #endif /* MAIN_TEXTBLOCK_H_ */

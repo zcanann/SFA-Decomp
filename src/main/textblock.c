@@ -1,12 +1,13 @@
 #include "ghidra_import.h"
+#include "dolphin/os.h"
 #include "main/textblock.h"
 
-extern undefined4 FUN_8007d858();
+extern char sTextBlockInitNoLongerSupported[];
 
 /*
  * --INFO--
  *
- * Function: FUN_80209624
+ * Function: textblock_init
  * EN v1.0 Address: 0x80209624
  * EN v1.0 Size: 44b
  * EN v1.1 Address: TODO
@@ -16,16 +17,16 @@ extern undefined4 FUN_8007d858();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80209624(void)
+void textblock_init(void)
 {
-  FUN_8007d858();
+  OSReport(sTextBlockInitNoLongerSupported);
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80209650
+ * Function: textblock_init_01
  * EN v1.0 Address: 0x80209650
  * EN v1.0 Size: 48b
  * EN v1.1 Address: TODO
@@ -35,16 +36,16 @@ void FUN_80209624(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80209650(void)
+void textblock_init_01(void)
 {
-  FUN_8007d858();
+  OSReport(sTextBlockInitNoLongerSupported);
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80209680
+ * Function: textblock_init_02
  * EN v1.0 Address: 0x80209680
  * EN v1.0 Size: 44b
  * EN v1.1 Address: TODO
@@ -54,8 +55,8 @@ void FUN_80209650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80209680(void)
+void textblock_init_02(void)
 {
-  FUN_8007d858();
+  OSReport(sTextBlockInitNoLongerSupported);
   return;
 }
