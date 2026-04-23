@@ -7,7 +7,7 @@ extern undefined4 FUN_800201ac();
 extern uint FUN_80022264();
 extern int FUN_8003811c();
 extern int FUN_801d52c0();
-extern undefined4 SHthorntail_update();
+extern undefined4 SHthorntail_updateState();
 
 extern undefined4 DAT_80328014;
 extern undefined4 DAT_80328072;

@@ -23,7 +23,7 @@ extern char sThorntailEnteredInvalidState[];
 /*
  * --INFO--
  *
- * Function: SHthorntail_update
+ * Function: SHthorntail_updateState
  * EN v1.0 Address: 0x801D5764
  * EN v1.0 Size: 920b
  * EN v1.1 Address: TODO
@@ -33,10 +33,11 @@ extern char sThorntailEnteredInvalidState[];
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SHthorntail_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                        undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                        short *param_9,int param_10,undefined4 param_11,undefined4 param_12,
-                        undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                             undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                             undefined8 param_7,undefined8 param_8,short *param_9,int param_10,
+                             undefined4 param_11,undefined4 param_12,undefined4 param_13,
+                             undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
   int iVar1;
   uint uVar2;

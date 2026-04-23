@@ -20,7 +20,7 @@ extern f32 FLOAT_803e60f4;
 /*
  * --INFO--
  *
- * Function: FUN_801d6cd0
+ * Function: SHthorntail_init
  * EN v1.0 Address: 0x801D6CD0
  * EN v1.0 Size: 564b
  * EN v1.1 Address: TODO
@@ -30,6 +30,6 @@ extern f32 FLOAT_803e60f4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d6cd0(short *param_1,int param_2)
+void SHthorntail_init(short *param_1,int param_2)
 {
 }
