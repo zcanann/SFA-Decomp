@@ -69,7 +69,7 @@ extern void newshadows_getShadowRampTexture(int *textureOut);
 extern undefined4 FUN_8006c760();
 extern double FUN_8006c7ec();
 extern undefined4 FUN_8006c86c();
-extern int FUN_8006c8c8();
+extern int newshadows_getInverseShadowRampTexture(void);
 extern int FUN_8006c8d0();
 extern undefined4 FUN_8006c8d8();
 extern undefined4 FUN_8006cc38();
@@ -3569,7 +3569,7 @@ void FUN_8004d3ac(void)
   FUN_8025c2a8(DAT_803dda10,0,0,0,1,0);
   FUN_8025c368(DAT_803dda10,1,0,0,1,0);
   DAT_803dd9b0 = 1;
-  iVar1 = FUN_8006c8c8();
+  iVar1 = newshadows_getInverseShadowRampTexture();
   if (iVar1 != 0) {
     if (*(char *)(iVar1 + 0x48) == '\0') {
       FUN_8025b054((uint *)(iVar1 + 0x20),DAT_803dda0c);

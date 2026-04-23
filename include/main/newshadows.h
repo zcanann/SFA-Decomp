@@ -30,7 +30,7 @@ void FUN_8006c820(int param_1);
 void FUN_8006c86c(int param_1);
 undefined4 FUN_8006c8b8(void);
 undefined4 FUN_8006c8c0(void);
-undefined4 FUN_8006c8c8(void);
+int newshadows_getInverseShadowRampTexture(void);
 undefined4 FUN_8006c8d0(void);
 void FUN_8006c8d8(int param_1);
 void FUN_8006c924(void);

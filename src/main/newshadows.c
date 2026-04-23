@@ -1296,7 +1296,7 @@ undefined4 FUN_8006c8c0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8006c8c8(void)
+int newshadows_getInverseShadowRampTexture(void)
 {
   return DAT_803ddc18;
 }
