@@ -27,7 +27,7 @@ void fn_8007048C(u32 param_1, int param_2, u32 param_3);
 void fn_80070528(void);
 void fn_80070538(u8 param_1);
 void fn_80070540(void);
-void trackIntersect_updateColorBandRange(double param_1,double param_2);
+void fn_80070580(f32 a, f32 b);
 void fn_80070658(u8* param_1);
 void fn_80070678(u8 param_1, u8 param_2, u8 param_3);
 void FUN_8007068c(undefined4 param_1,undefined4 param_2,int param_3);

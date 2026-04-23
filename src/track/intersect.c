@@ -1181,48 +1181,46 @@ void fn_80070540(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void trackIntersect_updateColorBandRange(double param_1,double param_2)
+#pragma scheduling off
+void fn_80070580(f32 a, f32 b)
 {
-  double dVar1;
-  double dVar2;
-  double dVar3;
-  double dVar4;
-  double in_f30;
-  double in_f31;
-  double in_ps30_1;
-  double in_ps31_1;
-  undefined4 local_28;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  dVar1 = FUN_8000fc3c();
-  FLOAT_803ddcb8 = (float)dVar1;
-  dVar1 = FUN_8000fc08();
-  FLOAT_803ddcb4 = (float)dVar1;
-  dVar2 = (double)(float)((double)FLOAT_803dfb58 * param_1);
-  dVar3 = (double)(float)((double)FLOAT_803dfb58 * param_2);
-  dVar1 = (double)FLOAT_803dfb5c;
-  if ((dVar1 <= dVar2) && (dVar1 = dVar2, (double)FLOAT_803dfb60 < dVar2)) {
-    dVar1 = (double)FLOAT_803dfb60;
-  }
-  dVar2 = (double)FLOAT_803dfb5c;
-  if ((dVar2 <= dVar3) && (dVar2 = dVar3, (double)FLOAT_803dfb60 < dVar3)) {
-    dVar2 = (double)FLOAT_803dfb60;
-  }
-  dVar3 = (double)FLOAT_803ddcb8;
-  dVar4 = (double)(float)((double)FLOAT_803ddcb4 - dVar3);
-  FLOAT_803ddca4 = (float)(dVar1 * dVar4 + dVar3);
-  FLOAT_803ddca0 = (float)(dVar2 * dVar4 + dVar3);
-  local_28 = DAT_803ddc9c;
-  FUN_8025ca38((double)FLOAT_803ddca4,(double)FLOAT_803ddca0,dVar3,(double)FLOAT_803ddcb4,4,&local_28);
-  return;
+    extern f32 fn_8000FC3C(void);
+    extern f32 fn_8000FC08(void);
+    extern f32 lbl_803DFB58;
+    extern f32 lbl_803DFB5C;
+    extern f32 lbl_803DFB60;
+    extern f32 lbl_803DDCA0, lbl_803DDCA4, lbl_803DDCB4, lbl_803DDCB8;
+    f32 xc, yc, x, y, range;
+    GXColor c;
+
+    lbl_803DDCB8 = fn_8000FC3C();
+    lbl_803DDCB4 = fn_8000FC08();
+
+    x = lbl_803DFB58 * a;
+    y = lbl_803DFB58 * b;
+
+    xc = lbl_803DFB5C;
+    if (x >= lbl_803DFB5C) {
+        xc = x;
+        if (x > lbl_803DFB60) {
+            xc = lbl_803DFB60;
+        }
+    }
+    yc = lbl_803DFB5C;
+    if (y >= lbl_803DFB5C) {
+        yc = y;
+        if (y > lbl_803DFB60) {
+            yc = lbl_803DFB60;
+        }
+    }
+
+    range = lbl_803DDCB4 - lbl_803DDCB8;
+    lbl_803DDCA4 = xc * range + lbl_803DDCB8;
+    lbl_803DDCA0 = yc * range + lbl_803DDCB8;
+    c = lbl_803DDC9C;
+    GXSetFog(GX_FOG_PERSP_EXP, lbl_803DDCA4, lbl_803DDCA0, lbl_803DDCB8, lbl_803DDCB4, c);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
