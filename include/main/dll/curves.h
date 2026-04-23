@@ -16,7 +16,7 @@ double FUN_800e35b4(double param_1,double param_2,uint param_3);
 double FUN_800e3664(int param_1,uint param_2);
 void FUN_800e3734(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 *param_6,undefined4 *param_7,undefined4 *param_8);
-undefined4 FUN_800e397c(uint param_1,int *param_2);
+undefined4 RomCurve_getById(uint param_1,int *param_2);
 void FUN_800e3a00(undefined4 param_1,undefined4 param_2,int param_3,int param_4,int param_5);
 int FUN_800e45b4(int param_1);
 void FUN_800e4854(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4);
@@ -40,7 +40,7 @@ void FUN_800e6a30(void);
 void FUN_800e6ba0(void);
 double FUN_800e6d14(undefined8 param_1,double param_2,double param_3,double param_4,int param_5);
 undefined4 *
-FUN_800e6dbc(undefined8 param_1,double param_2,int param_3,undefined4 *param_4,int param_5);
+curves_getCurves(undefined8 param_1,double param_2,int param_3,undefined4 *param_4,int param_5);
 void FUN_800e6f68(void);
 void FUN_800e7910(undefined4 param_1,uint *param_2);
 void FUN_800e79a0(void);
