@@ -979,9 +979,9 @@ void FUN_8006c698(undefined4 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006c6a4(undefined4 *param_1)
+void newshadows_getBlankShadowTexture(int *textureOut)
 {
-  *param_1 = DAT_803ddc38;
+  *textureOut = DAT_803ddc38;
   return;
 }
 
