@@ -112,10 +112,7 @@ FUN_8007de80(undefined8 param_1,double param_2,undefined8 param_3,undefined8 par
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,char param_9
             ,undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13,
             undefined4 param_14,uint param_15,uint param_16);
-undefined4
-FUN_8007df88(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,char param_9
-            );
+int fn_8007DF88(u8 retry);
 void fn_8007E06C(void);
 void FUN_8007e08c(undefined4 *param_1,undefined4 *param_2,undefined4 *param_3);
 void FUN_8007e328(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,

@@ -2782,6 +2782,27 @@ void fn_8007D7EC(void)
 /*
  * --INFO--
  *
+ * Function: OSReport
+ * EN v1.0 Address: 0x8007D858
+ * EN v1.0 Size: 80b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ *
+ * Retail ships a locally-defined empty OSReport that disables debug
+ * output. MWCC generates a varargs prologue saving r3-r10 and, if
+ * cr1 indicates FP args, f1-f8 — exactly what the empty body emits.
+ */
+void OSReport(const char* msg, ...)
+{
+}
+
+/*
+ * --INFO--
+ *
  * Function: FUN_8007d858
  * EN v1.0 Address: 0x8007D858
  * EN v1.0 Size: 80b
@@ -3034,13 +3055,45 @@ FUN_8007de80(undefined8 param_1,double param_2,undefined8 param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-FUN_8007df88(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,char param_9
-            )
+#pragma peephole off
+#pragma scheduling off
+int fn_8007DF88(u8 retry)
 {
+    extern s32 CARDProbeEx(s32 chan, s32* memSize, s32* sectorSize);
+    extern s32 lbl_803DC360;
+    s32 memSize;
+    s32 sectorSize;
+    s32 res;
+
+    if (retry != 0) {
+        lbl_803DDCD8 = 0;
+    }
+    do {
+        res = -1;
+        while (res == -1) {
+            res = CARDProbeEx(0, &memSize, &sectorSize);
+        }
+        if (res == 0) {
+            if (sectorSize == 0x2000) {
+                lbl_803DC360 = 13;
+                return 1;
+            }
+            lbl_803DC360 = 7;
+        } else if (res == -3) {
+            lbl_803DC360 = 2;
+        } else if (res == -2) {
+            lbl_803DC360 = 1;
+        } else {
+            lbl_803DC360 = 0;
+        }
+        if (retry != 0) {
+            fn_8007E328(0);
+        }
+    } while (lbl_803DDCD8 != 0 && retry != 0);
     return 0;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
