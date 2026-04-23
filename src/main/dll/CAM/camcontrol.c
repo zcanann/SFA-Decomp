@@ -37,13 +37,11 @@ extern undefined4 DAT_803de142;
 extern undefined4 DAT_803de164;
 extern undefined4 DAT_803de168;
 extern undefined4 DAT_803de16c;
-extern undefined4 DAT_803de170;
-extern undefined4 DAT_803de174;
-extern undefined4 DAT_803de178;
-extern undefined4 DAT_803de179;
-extern undefined4 DAT_803de17a;
-extern undefined4 DAT_803de17c;
-extern undefined4 DAT_803de188;
+extern undefined gCamcontrolQueuedActionMode;
+extern undefined4 gCamcontrolQueuedActionBlendFrames;
+extern undefined gCamcontrolQueuedActionPending;
+extern void *gCamcontrolQueuedActionData;
+extern int gCamcontrolQueuedActionSource;
 extern undefined4 DAT_803de190;
 extern undefined4 DAT_803de194;
 extern undefined4 DAT_803de198;
@@ -66,6 +64,13 @@ extern f32 FLOAT_803e22f4;
 extern f32 FLOAT_803e22f8;
 extern f32 FLOAT_803e22fc;
 extern f32 FLOAT_803e2300;
+
+typedef struct CamcontrolTriggeredAction {
+  u8 actionKind;
+  u8 pad01[0xC];
+  s8 triggerMode;
+  u8 pad0E[2];
+} CamcontrolTriggeredAction;
 
 /*
  * --INFO--
@@ -358,7 +363,7 @@ void camcontrol_loadTriggeredCamAction(undefined8 param_1,double param_2,double 
   int iVar2;
   undefined4 *puVar3;
   undefined4 uVar4;
-  char *pcVar5;
+  CamcontrolTriggeredAction *camAction;
   undefined8 uVar6;
   uint local_28;
   undefined local_24;
@@ -404,19 +409,19 @@ void camcontrol_loadTriggeredCamAction(undefined8 param_1,double param_2,double 
   }
   if (param_10 == 0) {
     uVar6 = FUN_8007d858();
-    pcVar5 = (char *)FUN_80023d8c(0x10,0xf);
-    if (pcVar5 != (char *)0x0) {
-      FUN_8001f7e0(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,pcVar5,0xb,0,0x10,
-                   param_13,param_14,param_15,param_16);
-      pcVar5[0xd] = param_11;
+    camAction = (CamcontrolTriggeredAction *)FUN_80023d8c(0x10,0xf);
+    if (camAction != (CamcontrolTriggeredAction *)0x0) {
+      FUN_8001f7e0(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,camAction,0xb,0,
+                   0x10,param_13,param_14,param_15,param_16);
+      camAction->triggerMode = param_11;
       FUN_800e875c(1);
       if ((((DAT_803de190 == 0x42) || (DAT_803de190 == 0x4b)) || (DAT_803de190 == 0x48)) ||
          (DAT_803de190 == 0x47)) {
-        if (*pcVar5 == '\x01') {
-          camcontrol_queueCamAction(0x4b,1,2,0x10,(uint)pcVar5,0,0xff);
+        if (camAction->actionKind == 1) {
+          camcontrol_queueCamAction(0x4b,1,2,0x10,(uint)camAction,0,0xff);
         }
         else {
-          camcontrol_queueCamAction(0x42,0,2,0x10,(uint)pcVar5,0,0xff);
+          camcontrol_queueCamAction(0x42,0,2,0x10,(uint)camAction,0,0xff);
         }
       }
       else {
@@ -432,32 +437,32 @@ void camcontrol_loadTriggeredCamAction(undefined8 param_1,double param_2,double 
         }
         iVar2 = 0;
 LAB_80103090:
-        (**(code **)(**(int **)(iVar2 + 4) + 0x10))(pcVar5,0x10);
+        (**(code **)(**(int **)(iVar2 + 4) + 0x10))(camAction,0x10);
       }
-      FUN_800238c4((uint)pcVar5);
+      FUN_800238c4((uint)camAction);
     }
   }
   else {
     if (param_10 == 0) {
-      pcVar5 = (char *)0x0;
+      camAction = (CamcontrolTriggeredAction *)0x0;
     }
     else {
-      pcVar5 = (char *)FUN_80023d8c(0x10,0xf);
-      if (pcVar5 != (char *)0x0) {
-        FUN_8001f7e0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,pcVar5,0xb,
+      camAction = (CamcontrolTriggeredAction *)FUN_80023d8c(0x10,0xf);
+      if (camAction != (CamcontrolTriggeredAction *)0x0) {
+        FUN_8001f7e0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,camAction,0xb,
                      (param_10 - 1) * 0x10,0x10,param_13,param_14,param_15,param_16);
       }
     }
-    if (pcVar5 != (char *)0x0) {
-      pcVar5[0xd] = param_11;
+    if (camAction != (CamcontrolTriggeredAction *)0x0) {
+      camAction->triggerMode = param_11;
       FUN_800e875c((short)param_10);
       if (((DAT_803de190 == 0x42) || (DAT_803de190 == 0x4b)) ||
          ((DAT_803de190 == 0x48 || (DAT_803de190 == 0x47)))) {
-        if (*pcVar5 == '\x01') {
-          camcontrol_queueCamAction(0x4b,1,2,0x10,(uint)pcVar5,0,0xff);
+        if (camAction->actionKind == 1) {
+          camcontrol_queueCamAction(0x4b,1,2,0x10,(uint)camAction,0,0xff);
         }
         else {
-          camcontrol_queueCamAction(0x42,0,2,0x10,(uint)pcVar5,0,0xff);
+          camcontrol_queueCamAction(0x42,0,2,0x10,(uint)camAction,0,0xff);
         }
       }
       else {
@@ -473,9 +478,9 @@ LAB_80103090:
         }
         iVar2 = 0;
 LAB_80102f3c:
-        (**(code **)(**(int **)(iVar2 + 4) + 0x10))(pcVar5,0x10);
+        (**(code **)(**(int **)(iVar2 + 4) + 0x10))(camAction,0x10);
       }
-      FUN_800238c4((uint)pcVar5);
+      FUN_800238c4((uint)camAction);
     }
   }
   return;
@@ -579,27 +584,25 @@ void camcontrol_queueCamAction(undefined4 param_1,undefined4 param_2,undefined p
   undefined extraout_r4;
   
   iVar1 = FUN_80286838();
-  if (DAT_803de17c != 0) {
-    FUN_800238c4(DAT_803de17c);
-    DAT_803de17c = 0;
-    DAT_803de17a = 0;
+  if (gCamcontrolQueuedActionData != (void *)0x0) {
+    FUN_800238c4((uint)gCamcontrolQueuedActionData);
+    gCamcontrolQueuedActionData = (void *)0x0;
+    gCamcontrolQueuedActionPending = 0;
   }
-  DAT_803de174 = param_6;
-  DAT_803de188 = iVar1;
+  gCamcontrolQueuedActionBlendFrames = param_6;
+  gCamcontrolQueuedActionSource = iVar1;
   if (param_5 == 0) {
-    DAT_803de17c = 0;
+    gCamcontrolQueuedActionData = (void *)0x0;
   }
   else {
-    DAT_803de17c = FUN_80023d8c(param_4,0xf);
-    FUN_80003494(DAT_803de17c,param_5,param_4);
+    gCamcontrolQueuedActionData = (void *)FUN_80023d8c(param_4,0xf);
+    FUN_80003494((uint)gCamcontrolQueuedActionData,param_5,param_4);
   }
-  DAT_803de178 = extraout_r4;
   if (iVar1 == 0x42) {
-    DAT_803de178 = 0;
+    extraout_r4 = 0;
   }
-  DAT_803de17a = 1;
-  DAT_803de170 = param_7;
-  DAT_803de179 = param_3;
+  gCamcontrolQueuedActionPending = 1;
+  gCamcontrolQueuedActionMode = param_7;
   FUN_80286884();
   return;
 }
