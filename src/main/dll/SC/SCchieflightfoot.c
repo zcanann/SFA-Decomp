@@ -7,7 +7,7 @@ extern int FUN_80021884();
 extern uint FUN_80022264();
 extern int FUN_8002fb40();
 extern undefined4 FUN_8003042c();
-extern char FUN_8003549c();
+extern char fn_8003549C();
 extern int FUN_8003811c();
 extern undefined4 FUN_80038524();
 extern undefined4 FUN_8003b320();
@@ -123,8 +123,8 @@ void FUN_801d6548(undefined8 param_1,double param_2,double param_3,undefined8 pa
   iVar6 = 0x19;
   uVar7 = (uint)*(byte *)(iVar10 + 0x640);
   pfVar8 = (float *)(iVar10 + 0x8ac);
-  cVar3 = FUN_8003549c(dVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,psVar2,puVar5,
-                       0x19,uVar7,pfVar8,in_r8,in_r9,in_r10);
+  cVar3 = fn_8003549C(dVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,psVar2,puVar5,
+                      0x19,uVar7,pfVar8,in_r8,in_r9,in_r10);
   *(char *)(iVar10 + 0x640) = cVar3;
   if (cVar3 == '\0') {
     uVar4 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(psVar2 + 0x56));

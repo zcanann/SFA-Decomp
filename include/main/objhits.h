@@ -40,9 +40,9 @@ void FUN_80033a34(undefined4 param_1);
 void FUN_80033a8c(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,int param_6);
 void FUN_8003407c(void);
-void FUN_8003454c(undefined4 param_1,undefined4 param_2,int *param_3);
+void fn_8003454C(undefined4 param_1,undefined4 param_2,int *param_3);
 void FUN_800349a8(void);
-void FUN_80034dd4(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void fn_80034DD4(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
+                undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 
 #endif /* MAIN_OBJHITS_H_ */

@@ -2547,7 +2547,7 @@ LAB_800344f4:
 /*
  * --INFO--
  *
- * Function: FUN_8003454c
+ * Function: fn_8003454C
  * EN v1.0 Address: 0x8003454C
  * EN v1.0 Size: 1116b
  * EN v1.1 Address: TODO
@@ -2700,7 +2700,7 @@ static void objhits_FUN_8003454c_inner(undefined4 param_1, undefined4 param_2, i
   FUN_8028688c();
 }
 
-void FUN_8003454c(undefined4 param_1,undefined4 param_2,int *param_3)
+void fn_8003454C(undefined4 param_1,undefined4 param_2,int *param_3)
 {
   objhits_FUN_8003454c_inner(param_1, param_2, param_3, 0);
 }
@@ -2892,7 +2892,7 @@ void FUN_800349a8(void)
 /*
  * --INFO--
  *
- * Function: FUN_80034dd4
+ * Function: fn_80034DD4
  * EN v1.0 Address: 0x80034DD4
  * EN v1.0 Size: 1736b
  * EN v1.1 Address: TODO
@@ -2902,8 +2902,8 @@ void FUN_800349a8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80034dd4(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void fn_80034DD4(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
+                undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   int attachedObj;
   ObjHitsSweepEntry *candidateEntry;
@@ -3076,10 +3076,10 @@ void FUN_80034dd4(undefined8 param_1,double param_2,undefined8 param_3,undefined
                     FUN_8003407c();
                   }
                 } else {
-                  FUN_8003454c(obj, candidateObj, aiStack_e58);
+                  fn_8003454C(obj, candidateObj, aiStack_e58);
                 }
               } else {
-                FUN_8003454c(candidateObj, obj, aiStack_e58);
+                fn_8003454C(candidateObj, obj, aiStack_e58);
               }
             }
             if (dVar17 < (double)(*(float *)(objState + 0x34) + *(float *)(attachedState + 0x34))) {

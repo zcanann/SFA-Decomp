@@ -20,7 +20,7 @@ undefined4 FUN_80039ab8(int param_1,int param_2);
 void FUN_80039c4c(double param_1,undefined4 param_2,char *param_3,int param_4);
 void FUN_80039ef0(double param_1,short *param_2,char *param_3,int param_4);
 void FUN_8003a260(int param_1,int param_2);
-void FUN_8003a328(double param_1,short *param_2,char *param_3);
+void fn_8003A328(double param_1,short *param_2,char *param_3);
 void FUN_8003a478(undefined4 param_1,undefined4 param_2,float *param_3,int param_4,short *param_5,
                  undefined4 param_6,short param_7);
 void FUN_8003a9ac(undefined4 param_1,undefined4 param_2,int param_3,int param_4);

@@ -1085,7 +1085,7 @@ void FUN_8003a260(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8003a328
+ * Function: fn_8003A328
  * EN v1.0 Address: 0x8003A328
  * EN v1.0 Size: 336b
  * EN v1.1 Address: TODO
@@ -1095,7 +1095,7 @@ void FUN_8003a260(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003a328(double param_1,short *param_2,char *param_3)
+void fn_8003A328(double param_1,short *param_2,char *param_3)
 {
   uint uVar1;
   short *psVar2;

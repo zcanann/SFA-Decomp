@@ -20,7 +20,7 @@ extern undefined4 FUN_80036f50();
 extern int FUN_8003811c();
 extern int FUN_800395a4();
 extern undefined4 FUN_8003a260();
-extern undefined4 FUN_8003a328();
+extern undefined4 fn_8003A328();
 extern undefined4 FUN_8003b320();
 extern undefined4 FUN_8003b408();
 extern undefined4 FUN_8006f0b4();
@@ -245,7 +245,7 @@ void FUN_801ce548(short *param_1,int param_2,int param_3)
     *(undefined4 *)(param_2 + 0x418) = *(undefined4 *)(*(int *)(param_2 + 0x28) + 0x14);
   }
   if (((&DAT_803274f4)[*(byte *)(param_2 + 0x408)] & 2) == 0) {
-    FUN_8003a328((double)FLOAT_803e5ea4,param_1,(char *)(param_2 + 0x40c));
+    fn_8003A328((double)FLOAT_803e5ea4,param_1,(char *)(param_2 + 0x40c));
     FUN_8003b408((int)param_1,param_2 + 0x40c);
   }
   else {

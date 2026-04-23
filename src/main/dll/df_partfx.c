@@ -9,7 +9,7 @@ extern int FUN_80021884();
 extern undefined4 FUN_80021fac();
 extern undefined4 FUN_80022790();
 extern undefined4 FUN_8002ba34();
-extern undefined4 FUN_8002ee64();
+extern undefined4 fn_8002EE64();
 extern int FUN_8002f6cc();
 extern undefined4 FUN_8003042c();
 extern undefined4 FUN_80070538();
@@ -1429,12 +1429,12 @@ void FUN_800d8a44(undefined8 param_1,double param_2,double param_3,undefined8 pa
     }
     dVar4 = (double)*(float *)(param_10 + 0x284);
     if (dVar4 <= (double)FLOAT_803e11f0) {
-      FUN_8002ee64(dVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_11,
-                   (short)uVar2);
+      fn_8002EE64(dVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_11,
+                  (short)uVar2);
     }
     else {
-      FUN_8002ee64(dVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_12,
-                   (short)uVar2);
+      fn_8002EE64(dVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_12,
+                  (short)uVar2);
     }
   }
   return;

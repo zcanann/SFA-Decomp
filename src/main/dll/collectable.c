@@ -50,7 +50,7 @@ extern undefined4 FUN_80039030();
 extern undefined8 FUN_800394f0();
 extern int FUN_800396d0();
 extern undefined4 FUN_8003a260();
-extern undefined4 FUN_8003a328();
+extern undefined4 fn_8003A328();
 extern undefined4 FUN_8003b320();
 extern undefined4 FUN_8003b408();
 extern undefined4 FUN_8003b9ec();

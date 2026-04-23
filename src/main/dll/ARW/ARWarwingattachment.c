@@ -20,7 +20,7 @@ extern undefined4 FUN_8002cc9c();
 extern undefined4 FUN_8002f6cc();
 extern int FUN_8002fb40();
 extern undefined4 FUN_8003042c();
-extern char FUN_8003549c();
+extern char fn_8003549C();
 extern undefined8 FUN_80035ff8();
 extern undefined4 FUN_80036018();
 extern int FUN_80036974();

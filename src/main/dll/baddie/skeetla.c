@@ -16,7 +16,7 @@ extern int FUN_80037b60();
 extern undefined4 FUN_800394f0();
 extern undefined4 FUN_8004b294();
 extern undefined4 FUN_8004b2c4();
-extern int FUN_8004b394();
+extern int fn_8004B394();
 extern undefined4 FUN_8004b498();
 extern int FUN_8005b128();
 extern int FUN_8005b478();
@@ -523,7 +523,7 @@ int FUN_8013aa44(int param_1,int param_2,int param_3)
   }
   FUN_8004b498((int *)(param_1 + 0x6b8),param_2,*(int *)(param_1 + 0x28),param_3,
                (byte)*(undefined4 *)(param_1 + 0x4a0));
-  iVar3 = FUN_8004b394();
+  iVar3 = fn_8004B394();
   if (iVar3 == 1) {
     FUN_8004b2c4((int *)(param_1 + 0x6b8));
     uVar1 = FUN_8004b294(param_1 + 0x6b8);
@@ -589,7 +589,7 @@ void FUN_8013ab7c(undefined4 param_1,undefined4 param_2,int param_3,int param_4)
         *pcVar8 = -1;
       }
       else {
-        cVar3 = FUN_8004b394();
+        cVar3 = fn_8004B394();
         *pcVar8 = cVar3;
       }
       cVar3 = *pcVar8;
@@ -617,7 +617,7 @@ LAB_8013ad38:
 LAB_8013ad10:
   if ('\a' < cVar7) goto LAB_8013ad38;
   if (*piVar2 != 0) {
-    cVar4 = FUN_8004b394();
+    cVar4 = fn_8004B394();
     local_28[cVar7] = cVar4;
     goto LAB_8013ad38;
   }
