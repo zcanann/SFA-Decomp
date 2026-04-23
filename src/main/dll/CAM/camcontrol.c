@@ -18,7 +18,7 @@ extern undefined4 FUN_800e875c();
 extern undefined4 FUN_80101350();
 extern undefined4 FUN_80101844();
 extern undefined4 FUN_80101c1c();
-extern undefined8 FUN_80102158();
+extern undefined8 camcontrol_applyQueuedAction();
 extern int FUN_80111fb0();
 extern int FUN_8012ee7c();
 extern int FUN_80134f70();
@@ -679,7 +679,7 @@ void FUN_8010335c(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if (*(short **)(psVar3 + 0x18) != (short *)0x0) {
       *psVar3 = *psVar3 + **(short **)(psVar3 + 0x18);
     }
-    FUN_80102158();
+    camcontrol_applyQueuedAction();
     if (DAT_803de194 != 0) {
       (**(code **)(**(int **)(DAT_803de194 + 4) + 8))(DAT_803de19c);
       param_2 = (double)*(float *)(DAT_803de19c + 8);
@@ -689,7 +689,7 @@ void FUN_8010335c(undefined8 param_1,double param_2,double param_3,undefined8 pa
                    (float *)(DAT_803de19c + 0x10),*(int *)(DAT_803de19c + 0x18));
       FUN_80101c1c(DAT_803de19c);
     }
-    uVar4 = FUN_80102158();
+    uVar4 = camcontrol_applyQueuedAction();
     if (iVar1 == 0) {
       if (*(int *)(DAT_803de19c + 0x8e) == 0) {
         uVar2 = FUN_80101350(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8);

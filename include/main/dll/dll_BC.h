@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_80102158(void);
+void camcontrol_applyQueuedAction(void);
 
 #endif /* MAIN_DLL_DLL_BC_H_ */

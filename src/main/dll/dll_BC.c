@@ -25,7 +25,7 @@ extern f32 FLOAT_803e22b0;
 /*
  * --INFO--
  *
- * Function: FUN_80102158
+ * Function: camcontrol_applyQueuedAction
  * EN v1.0 Address: 0x80102158
  * EN v1.0 Size: 400b
  * EN v1.1 Address: TODO
@@ -35,7 +35,7 @@ extern f32 FLOAT_803e22b0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80102158(void)
+void camcontrol_applyQueuedAction(void)
 {
   float fVar1;
   undefined2 *puVar2;
