@@ -8,10 +8,10 @@ undefined4 FUN_80139bbc(double param_1,int param_2,float *param_3);
 int FUN_80139cb8(ushort *param_1,ushort param_2);
 void FUN_80139e14(void);
 undefined4 FUN_8013a778(double param_1,int param_2,int param_3,uint param_4);
-void FUN_8013a874(undefined4 param_1,undefined4 param_2,uint param_3,uint param_4);
+int fn_8013A874(undefined4 param_1,undefined4 param_2,uint param_3,uint param_4);
 int FUN_8013aa44(int param_1,int param_2,int param_3);
 void FUN_8013ab7c(undefined4 param_1,undefined4 param_2,int param_3,int param_4);
-void FUN_8013ad50(int param_1,int param_2,byte param_3);
+void fn_8013AD50(int param_1,int param_2,byte param_3);
 void FUN_8013aed4(undefined4 param_1,undefined4 param_2,ushort param_3,undefined4 *param_4);
 void FUN_8013b184(undefined2 *param_1);
 void FUN_8013b368(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,

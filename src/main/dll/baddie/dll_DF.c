@@ -29,7 +29,7 @@ extern undefined4 FUN_80139cb8();
 extern undefined4 FUN_80139e14();
 extern undefined4 FUN_8013a778();
 extern int FUN_8013ab7c();
-extern undefined4 FUN_8013ad50();
+extern void fn_8013AD50();
 extern undefined4 FUN_8013aed4();
 extern undefined4 FUN_8013d92c();
 extern undefined4 FUN_80148fa0();
