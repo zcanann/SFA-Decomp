@@ -862,8 +862,12 @@ void FUN_8006c500(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006c63c(undefined4 *param_1,undefined4 *param_2,undefined4 *param_3)
+void newshadows_getShadowTextureTable4x8(int *tableOut,int *columnsOut,int *rowsOut)
 {
+  *tableOut = (int)&DAT_8038ee48;
+  *columnsOut = 4;
+  *rowsOut = 8;
+  return;
 }
 
 /*
@@ -879,8 +883,11 @@ void FUN_8006c63c(undefined4 *param_1,undefined4 *param_2,undefined4 *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006c65c(undefined4 *param_1,undefined4 *param_2)
+void newshadows_getShadowTextureTable16(int *tableOut,int *countOut)
 {
+  *tableOut = (int)&DAT_8038eec8;
+  *countOut = 0x10;
+  return;
 }
 
 /*

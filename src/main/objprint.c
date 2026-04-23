@@ -36,8 +36,8 @@ extern undefined4 FUN_80041bbc();
 extern undefined4 FUN_8004c3cc();
 extern undefined4 FUN_8004c460();
 extern uint FUN_8005383c();
-extern undefined4 FUN_8006c63c();
-extern undefined4 FUN_8006c65c();
+extern void newshadows_getShadowTextureTable4x8();
+extern void newshadows_getShadowTextureTable16();
 extern undefined4 FUN_8006c760();
 extern undefined4 FUN_8006cc38();
 extern undefined4 FUN_80070434();
@@ -2790,7 +2790,7 @@ undefined4 FUN_8003c360(int param_1,int *param_2,int param_3)
   }
   else {
     DAT_803dd8be = 1;
-    FUN_8006c65c(&local_15c,&local_160);
+    newshadows_getShadowTextureTable16(&local_15c,&local_160);
     uStack_2c = DAT_803dd8c4 ^ 0x80000000;
     local_30 = 0x43300000;
     uStack_24 = local_160 ^ 0x80000000;
@@ -2896,7 +2896,7 @@ undefined4 FUN_8003c360(int param_1,int *param_2,int param_3)
       FUN_8025c510(0,(byte *)&local_18c);
       FUN_8025c5f0(5,0x1c);
       FUN_8025c584(5,0xc);
-      FUN_8006c63c(&local_174,&local_178,&uStack_17c);
+      newshadows_getShadowTextureTable4x8(&local_174,&local_178,&uStack_17c);
       FUN_8004c460(*(int *)(local_174 + (DAT_803dd8c4 + (uint)DAT_803dd8bd * local_178 + -0xc) * 4),
                    5);
       FUN_80247a7c((double)FLOAT_803df6b8,(double)FLOAT_803df6b8,(double)FLOAT_803df69c,afStack_124)
