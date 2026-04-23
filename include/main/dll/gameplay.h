@@ -3,9 +3,9 @@
 
 #include "ghidra_import.h"
 
-undefined4 FUN_800e8118(uint param_1);
-void FUN_800e815c(uint param_1);
-uint FUN_800e8180(uint param_1);
+undefined4 gameplay_isDebugOptionEnabled(uint param_1);
+void gameplay_registerDebugOption(uint param_1);
+uint gameplay_hasDebugOption(uint param_1);
 void FUN_800e81a0(void);
 undefined1 * FUN_800e81bc(void);
 void FUN_800e81c8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,

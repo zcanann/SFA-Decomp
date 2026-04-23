@@ -271,7 +271,7 @@ extern undefined4 FUN_8009a468();
 extern undefined4 FUN_8009ab54();
 extern undefined4 FUN_8009abf8();
 extern undefined4 FUN_8009adfc();
-extern undefined4 FUN_800e815c();
+extern undefined4 gameplay_registerDebugOption();
 extern undefined4 FUN_800e85f4();
 extern ushort FUN_800ea540();
 extern undefined4 FUN_80114230();

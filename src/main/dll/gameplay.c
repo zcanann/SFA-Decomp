@@ -494,8 +494,8 @@ extern undefined4 DAT_803a3e2d;
 extern undefined4 DAT_803a3e2e;
 extern undefined4 DAT_803a3e2f;
 extern undefined4 DAT_803a3e30;
-extern undefined4 DAT_803a3e34;
-extern undefined4 DAT_803a3e38;
+extern undefined4 gGameplayRegisteredDebugOptions;
+extern undefined4 gGameplayEnabledDebugOptions;
 extern undefined4 DAT_803a3e40;
 extern undefined DAT_803a3e44;
 extern undefined1 DAT_803a3f08;
@@ -977,7 +977,7 @@ extern undefined uRam803de10d;
 /*
  * --INFO--
  *
- * Function: FUN_800e8118
+ * Function: gameplay_isDebugOptionEnabled
  * EN v1.0 Address: 0x800E8118
  * EN v1.0 Size: 68b
  * EN v1.1 Address: TODO
@@ -987,12 +987,13 @@ extern undefined uRam803de10d;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_800e8118(uint param_1)
+undefined4 gameplay_isDebugOptionEnabled(uint param_1)
 {
   uint uVar1;
   
   uVar1 = 1 << (param_1 & 0xff);
-  if (((DAT_803a3e34 & uVar1) != 0) && ((DAT_803a3e38 & uVar1) != 0)) {
+  if (((gGameplayRegisteredDebugOptions & uVar1) != 0) &&
+     ((gGameplayEnabledDebugOptions & uVar1) != 0)) {
     return 1;
   }
   return 0;
@@ -1001,7 +1002,7 @@ undefined4 FUN_800e8118(uint param_1)
 /*
  * --INFO--
  *
- * Function: FUN_800e815c
+ * Function: gameplay_registerDebugOption
  * EN v1.0 Address: 0x800E815C
  * EN v1.0 Size: 36b
  * EN v1.1 Address: TODO
@@ -1011,16 +1012,16 @@ undefined4 FUN_800e8118(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800e815c(uint param_1)
+void gameplay_registerDebugOption(uint param_1)
 {
-  DAT_803a3e34 = DAT_803a3e34 | 1 << (param_1 & 0xff);
+  gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (param_1 & 0xff);
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_800e8180
+ * Function: gameplay_hasDebugOption
  * EN v1.0 Address: 0x800E8180
  * EN v1.0 Size: 32b
  * EN v1.1 Address: TODO
@@ -1030,9 +1031,9 @@ void FUN_800e815c(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_800e8180(uint param_1)
+uint gameplay_hasDebugOption(uint param_1)
 {
-  return DAT_803a3e34 & 1 << (param_1 & 0xff);
+  return gGameplayRegisteredDebugOptions & 1 << (param_1 & 0xff);
 }
 
 /*

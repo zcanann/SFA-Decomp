@@ -22,9 +22,9 @@ extern undefined4 FUN_80055464();
 extern undefined4 FUN_8005ced0();
 extern undefined4 FUN_8005cf50();
 extern undefined4 FUN_8005d06c();
-extern undefined4 FUN_800e80c4();
-extern undefined4 FUN_800e8118();
-extern uint FUN_800e8180();
+extern undefined4 gameplay_setDebugOptionEnabled();
+extern undefined4 gameplay_isDebugOptionEnabled();
+extern uint gameplay_hasDebugOption();
 extern undefined4 FUN_800e81bc();
 extern undefined4 FUN_800e8954();
 extern undefined4 FUN_8011c2ac();
@@ -290,7 +290,7 @@ int FUN_8011d260(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
           else {
             uVar5 = (**(code **)(*DAT_803dd724 + 0x24))((&DAT_803a9430)[iVar4]);
             uVar2 = countLeadingZeros(uVar5);
-            FUN_800e80c4(3,(char)(uVar2 >> 5));
+            gameplay_setDebugOptionEnabled(3,(char)(uVar2 >> 5));
           }
         }
       }

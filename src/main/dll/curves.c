@@ -46,8 +46,8 @@ extern uint countLeadingZeros();
 
 extern int DAT_803a2448;
 extern undefined4 DAT_803a3898;
-extern undefined4 DAT_803a3e34;
-extern undefined4 DAT_803a3e38;
+extern undefined4 gGameplayRegisteredDebugOptions;
+extern undefined4 gGameplayEnabledDebugOptions;
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803de0e8;
 extern undefined4 DAT_803de0ec;
@@ -2385,7 +2385,7 @@ void curves_addCurveDef(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_800e56b8
+ * Function: curves_countRandomPoints
  * EN v1.0 Address: 0x800E56B8
  * EN v1.0 Size: 624b
  * EN v1.1 Address: TODO
@@ -2395,7 +2395,7 @@ void curves_addCurveDef(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800e56b8(void)
+void curves_countRandomPoints(void)
 {
   bool bVar1;
   int iVar2;
@@ -3464,7 +3464,7 @@ void FUN_800e6f68(void)
       }
       bVar1 = *(byte *)((int)puVar8 + 0x262);
       if (bVar1 == 3) {
-        FUN_800e56b8();
+          curves_countRandomPoints();
       }
       else if (bVar1 < 3) {
         if (bVar1 == 1) {
@@ -3937,7 +3937,7 @@ void FUN_800e7f08(uint *param_1,byte param_2,uint param_3,uint param_4,undefined
 /*
  * --INFO--
  *
- * Function: FUN_800e7fa4
+ * Function: curves_clear
  * EN v1.0 Address: 0x800E7FA4
  * EN v1.0 Size: 128b
  * EN v1.1 Address: TODO
@@ -3947,7 +3947,7 @@ void FUN_800e7f08(uint *param_1,byte param_2,uint param_3,uint param_4,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800e7fa4(uint *param_1,undefined param_2,uint param_3,undefined param_4)
+void curves_clear(uint *param_1,undefined param_2,uint param_3,undefined param_4)
 {
   FUN_800033a8((int)param_1,0,0x268);
   *(undefined *)((int)param_1 + 0x25b) = param_4;
@@ -3995,7 +3995,7 @@ uint FUN_800e8024(char param_1,uint param_2)
 /*
  * --INFO--
  *
- * Function: FUN_800e80c4
+ * Function: gameplay_setDebugOptionEnabled
  * EN v1.0 Address: 0x800E80C4
  * EN v1.0 Size: 84b
  * EN v1.1 Address: TODO
@@ -4005,18 +4005,18 @@ uint FUN_800e8024(char param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800e80c4(uint param_1,char param_2)
+void gameplay_setDebugOptionEnabled(uint param_1,char param_2)
 {
   uint uVar1;
   
   uVar1 = 1 << (param_1 & 0xff);
-  if ((DAT_803a3e34 & uVar1) == 0) {
+  if ((gGameplayRegisteredDebugOptions & uVar1) == 0) {
     return;
   }
   if (param_2 != '\0') {
-    DAT_803a3e38 = DAT_803a3e38 | uVar1;
+    gGameplayEnabledDebugOptions = gGameplayEnabledDebugOptions | uVar1;
     return;
   }
-  DAT_803a3e38 = DAT_803a3e38 & ~uVar1;
+  gGameplayEnabledDebugOptions = gGameplayEnabledDebugOptions & ~uVar1;
   return;
 }

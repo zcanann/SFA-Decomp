@@ -28,7 +28,7 @@ int FUN_800e5184(int param_1,int param_2);
 void FUN_800e5330(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,int param_6);
 void curves_addCurveDef(int param_1);
-void FUN_800e56b8(void);
+void curves_countRandomPoints(void);
 void FUN_800e5928(int param_1,uint *param_2);
 void FUN_800e5b80(void);
 void FUN_800e5f40(short *param_1,int param_2);
@@ -46,8 +46,8 @@ void FUN_800e7910(undefined4 param_1,uint *param_2);
 void FUN_800e79a0(void);
 void FUN_800e7f08(uint *param_1,byte param_2,uint param_3,uint param_4,undefined param_5,
                  undefined param_6);
-void FUN_800e7fa4(uint *param_1,undefined param_2,uint param_3,undefined param_4);
+void curves_clear(uint *param_1,undefined param_2,uint param_3,undefined param_4);
 uint FUN_800e8024(char param_1,uint param_2);
-void FUN_800e80c4(uint param_1,char param_2);
+void gameplay_setDebugOptionEnabled(uint param_1,char param_2);
 
 #endif /* MAIN_DLL_CURVES_H_ */
