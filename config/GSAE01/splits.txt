@@ -1861,6 +1861,10 @@ main/unknown/autos/placeholder_8027641C.c:
 	.text       start:0x8027641C end:0x802765AC
 
 main/unknown/autos/placeholder_802765AC.c:
+	extab       start:0x80005950 end:0x80005958
+	extabindex  start:0x80006188 end:0x80006194
+	extab       start:0x80005940 end:0x80005950
+	extabindex  start:0x80006170 end:0x80006188
 	extab       start:0x800058D8 end:0x80005940
 	extabindex  start:0x800060D4 end:0x80006170
 	.text       start:0x802765AC end:0x80278F74
@@ -1869,32 +1873,28 @@ main/unknown/autos/placeholder_80278F74.c:
 	.text       start:0x80278F74 end:0x80279018
 
 main/unknown/autos/placeholder_80279018.c:
-	extab       start:0x80005940 end:0x80005950
-	extabindex  start:0x80006170 end:0x80006188
+	extab       start:0x80005958 end:0x80005960
+	extabindex  start:0x80006194 end:0x800061A0
 	.text       start:0x80279018 end:0x802791FC
 
 main/unknown/autos/placeholder_802791FC.c:
 	.text       start:0x802791FC end:0x802792F8
 
 main/unknown/autos/placeholder_802792F8.c:
-	extab       start:0x80005950 end:0x80005958
-	extabindex  start:0x80006188 end:0x80006194
+	extab       start:0x80005960 end:0x80005968
+	extabindex  start:0x800061A0 end:0x800061AC
 	.text       start:0x802792F8 end:0x80279608
 
 main/unknown/autos/placeholder_80279608.c:
 	.text       start:0x80279608 end:0x8027979C
 
 main/unknown/autos/placeholder_8027979C.c:
-	extab       start:0x80005958 end:0x80005960
-	extabindex  start:0x80006194 end:0x800061A0
 	.text       start:0x8027979C end:0x80279AF0
 
 main/unknown/autos/placeholder_80279AF0.c:
 	.text       start:0x80279AF0 end:0x80279D30
 
 main/unknown/autos/placeholder_80279D30.c:
-	extab       start:0x80005960 end:0x80005968
-	extabindex  start:0x800061A0 end:0x800061AC
 	.text       start:0x80279D30 end:0x80279EC0
 
 main/unknown/autos/placeholder_80279EC0.c:
