@@ -1761,36 +1761,36 @@ main/unknown/autos/placeholder_8026FD1C.c:
 	.text       start:0x8026FD1C end:0x8026FD94
 
 main/unknown/autos/placeholder_8026FD94.c:
-	extab       start:0x800056A0 end:0x800056C0
-	extabindex  start:0x80005D80 end:0x80005DB0
+	extab       start:0x800056A0 end:0x80005700
+	extabindex  start:0x80005D80 end:0x80005E10
 	.text       start:0x8026FD94 end:0x802718DC
 
 main/audio/synth_delay.c:
-	extab       start:0x800056C0 end:0x800056E8
-	extabindex  start:0x80005DB0 end:0x80005DEC
+	extab       start:0x80005700 end:0x80005720
+	extabindex  start:0x80005E10 end:0x80005E40
 	.text       start:0x802718DC end:0x80271BFC
 
 main/unknown/autos/placeholder_80271BFC.c:
-	extab       start:0x800056E8 end:0x80005708
-	extabindex  start:0x80005DEC end:0x80005E1C
+	extab       start:0x80005720 end:0x80005730
+	extabindex  start:0x80005E40 end:0x80005E58
 	.text       start:0x80271BFC end:0x802721A0
 
 main/audio/synth_control.c:
-	extab       start:0x80005708 end:0x80005720
-	extabindex  start:0x80005E1C end:0x80005E40
+	extab       start:0x80005730 end:0x80005760
+	extabindex  start:0x80005E58 end:0x80005EA0
 	.text       start:0x802721A0 end:0x8027273C
 
 main/unknown/autos/placeholder_8027280C.c:
-	extab       start:0x80005720 end:0x80005760
-	extabindex  start:0x80005E40 end:0x80005EA0
+	extab       start:0x80005760 end:0x80005778
+	extabindex  start:0x80005EA0 end:0x80005EC4
 	.text       start:0x8027273C end:0x80272EEC
 
 main/unknown/autos/placeholder_80272EEC.c:
 	.text       start:0x80272EEC end:0x80272F0C
 
 main/unknown/autos/placeholder_80272F0C.c:
-	extab       start:0x80005760 end:0x800057C8
-	extabindex  start:0x80005EA0 end:0x80005F3C
+	extab       start:0x80005778 end:0x800057C8
+	extabindex  start:0x80005EC4 end:0x80005F3C
 	.text       start:0x80272F0C end:0x80273608
 
 main/unknown/autos/placeholder_80273608.c:
