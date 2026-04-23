@@ -1378,50 +1378,52 @@ void FUN_800737e8(undefined param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80073c28(int param_1,undefined4 *param_2,undefined4 *param_3)
+#pragma scheduling off
+void fn_80073C28(void* texture, u32* colorA, u32* colorB)
 {
-  undefined4 local_18;
-  undefined4 local_14 [2];
-  
-  FUN_80258674(0,1,4,0x3c,0,0x7d);
-  FUN_8004c460(param_1,0);
-  local_14[0] = *param_2;
-  FUN_8025c510(0,(byte *)local_14);
-  FUN_8025c5f0(0,0x1c);
-  FUN_8025c584(0,0xc);
-  local_18 = *param_3;
-  FUN_8025c428(1,(byte *)&local_18);
-  FUN_8025be54(0);
-  FUN_8025a608(4,0,0,0,0,0,2);
-  FUN_8025a608(5,0,0,0,0,0,2);
-  FUN_8025a5bc(0);
-  FUN_80258944(1);
-  FUN_8025ca04(1);
-  FUN_8025be80(0);
-  FUN_8025c828(0,0,0,0xff);
-  FUN_8025c1a4(0,0xf,8,0xe,2);
-  FUN_8025c224(0,7,4,6,7);
-  FUN_8025c65c(0,0,0);
-  FUN_8025c2a8(0,0,0,0,1,0);
-  FUN_8025c368(0,0,0,0,1,0);
-  FUN_8025cce8(1,4,1,5);
-  if ((((DAT_803ddc98 != '\x01') || (DAT_803ddc94 != 3)) || (DAT_803ddc92 != '\0')) ||
-     (DAT_803ddc9a == '\0')) {
-    FUN_8025ce6c(1,3,0);
-    DAT_803ddc98 = '\x01';
-    DAT_803ddc94 = 3;
-    DAT_803ddc92 = '\0';
-    DAT_803ddc9a = '\x01';
-  }
-  if ((DAT_803ddc91 != '\x01') || (DAT_803ddc99 == '\0')) {
-    FUN_8025cee4(1);
-    DAT_803ddc91 = '\x01';
-    DAT_803ddc99 = '\x01';
-  }
-  FUN_8025c754(7,0,0,7,0);
-  FUN_80259288(2);
-  return;
+    extern void fn_8004C460(void*, int);
+    extern void GXSetZMode();
+    extern void GXSetZCompLoc();
+    extern u8 lbl_803DDC92;
+    extern int lbl_803DDC94;
+    extern u8 lbl_803DDC98;
+    GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
+    fn_8004C460(texture, 0);
+    GXSetTevKColor(0, *(GXColor*)colorA);
+    GXSetTevKAlphaSel(0, 0x1C);
+    GXSetTevKColorSel(0, 0xC);
+    GXSetTevColor(1, *(GXColor*)colorB);
+    GXSetNumIndStages(0);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(0);
+    GXSetNumTexGens(1);
+    GXSetNumTevStages(1);
+    GXSetTevDirect(0);
+    GXSetTevOrder(0, 0, 0, 0xFF);
+    GXSetTevColorIn(0, 0xF, 8, 0xE, 2);
+    GXSetTevAlphaIn(0, 7, 4, 6, 7);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetBlendMode(1, 4, 1, 5);
+    if ((u32)lbl_803DDC98 != 1 || lbl_803DDC94 != 3 ||
+        (u32)lbl_803DDC92 != 0 || lbl_803DDC9A == 0) {
+        GXSetZMode(1, 3, 0);
+        lbl_803DDC98 = 1;
+        lbl_803DDC94 = 3;
+        lbl_803DDC92 = 0;
+        lbl_803DDC9A = 1;
+    }
+    if ((u32)lbl_803DDC91 != 1 || lbl_803DDC99 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DDC91 = 1;
+        lbl_803DDC99 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXSetCullMode(2);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--

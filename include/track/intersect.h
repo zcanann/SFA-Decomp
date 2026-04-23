@@ -34,7 +34,7 @@ void FUN_80071ed0(byte *param_1);
 void FUN_8007242c(double param_1,double param_2,float *param_3,byte *param_4);
 void FUN_80072f78(undefined4 param_1,undefined4 param_2,int param_3);
 void FUN_800737e8(undefined param_1);
-void FUN_80073c28(int param_1,undefined4 *param_2,undefined4 *param_3);
+void fn_80073C28(void* texture, u32* colorA, u32* colorB);
 undefined4 FUN_80073e80(int param_1,int *param_2);
 undefined4 FUN_8007428c(int param_1,int *param_2,int param_3);
 void FUN_80074694(undefined4 param_1,undefined4 param_2,int param_3);
