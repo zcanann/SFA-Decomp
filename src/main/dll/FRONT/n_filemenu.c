@@ -18,8 +18,8 @@ extern undefined4 FUN_8005d024();
 extern undefined4 FUN_8007dadc();
 extern undefined4 FUN_8007de80();
 extern void gameplay_applyPreviewSettings();
-extern int FUN_800e878c();
-extern undefined4 FUN_800e88f0();
+extern int gameplay_loadPreviewSettings();
+extern void gameplay_capturePreviewSettings();
 extern double FUN_80111880();
 extern undefined4 FUN_801163b8();
 extern undefined4 FUN_801164c0();
@@ -155,7 +155,8 @@ int FUN_80116964(undefined8 param_1,double param_2,undefined8 param_3,undefined8
   cVar2 = DAT_803de2d1;
   bVar8 = DAT_803dc070;
   if (DAT_803dc084 == -2) {
-    iVar3 = FUN_800e878c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+    iVar3 = gameplay_loadPreviewSettings(param_1,param_2,param_3,param_4,param_5,param_6,param_7,
+                                         param_8);
     if ((iVar3 == 0) && (DAT_803dc084 != '\0')) {
       FUN_8007de80(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,'\x01',param_10,
                    param_11,param_12,param_13,param_14,param_15,param_16);
@@ -173,7 +174,7 @@ int FUN_80116964(undefined8 param_1,double param_2,undefined8 param_3,undefined8
     uVar4 = FUN_800238f8(0);
     FUN_80043938(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
     FUN_800238f8(uVar4);
-    FUN_800e88f0();
+    gameplay_capturePreviewSettings();
     iVar3 = 0;
   }
   else {
@@ -226,7 +227,8 @@ int FUN_80116964(undefined8 param_1,double param_2,undefined8 param_3,undefined8
           uVar9 = (**(code **)(iVar3 + 0x60))(0,1);
           if (DAT_803dc084 == -1) {
             uVar4 = extraout_r4;
-            iVar6 = FUN_800e878c(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+            iVar6 = gameplay_loadPreviewSettings(uVar9,param_2,param_3,param_4,param_5,param_6,
+                                                 param_7,param_8);
             if ((iVar6 == 0) && (DAT_803dc084 != '\0')) {
               FUN_8007de80(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,'\x01',
                            uVar4,iVar3,param_12,param_13,param_14,param_15,param_16);

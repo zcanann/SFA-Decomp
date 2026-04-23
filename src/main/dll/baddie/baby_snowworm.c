@@ -109,7 +109,7 @@ extern undefined4 FUN_80076998();
 extern undefined4 FUN_80076ef4();
 extern undefined8 FUN_80077318();
 extern int FUN_80080490();
-extern undefined4 FUN_800e8954();
+extern void gameplay_applyCurrentPreviewSettings();
 extern undefined4 FUN_800e8b10();
 extern int FUN_800e8b38();
 extern void* FUN_800e8d30();

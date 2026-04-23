@@ -11,17 +11,18 @@ void FUN_800e2278(undefined8 param_1,double param_2,double param_3);
 int FUN_800e2498(double param_1,double param_2,double param_3,int param_4);
 void FUN_800e260c(undefined4 param_1,undefined4 param_2,uint param_3,int *param_4);
 void FUN_800e2b94(undefined4 param_1,undefined4 param_2,int param_3,int *param_4);
-int FUN_800e31e0(int param_1,int param_2,int param_3,int *param_4);
+int RomCurve_getRandomLinkedOfTypes(int param_1,int param_2,int param_3,int *param_4);
 double curves_distXZ(double param_1,double param_2,uint param_3);
-double FUN_800e3664(int param_1,uint param_2);
-void FUN_800e3734(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
+double RomCurve_distanceToObject(int param_1,uint param_2);
+void curves_find(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 *param_6,undefined4 *param_7,undefined4 *param_8);
 undefined4 RomCurve_getById(uint param_1,int *param_2);
 void FUN_800e3a00(undefined4 param_1,undefined4 param_2,int param_3,int param_4,int param_5);
 int FUN_800e45b4(int param_1);
 void FUN_800e4854(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4);
-void FUN_800e4a48(int param_1,int *param_2);
-int FUN_800e4c84(double param_1,double param_2,double param_3,int param_4,int param_5);
+void RomCurve_getAdjacentWindow(int param_1,int *param_2);
+int RomCurve_getNearestAdjacentLink(double param_1,double param_2,double param_3,int param_4,
+                                    int param_5);
 double RomCurve_distanceToSegment(double param_1,double param_2,double param_3,float *param_4);
 int RomCurve_getRandomBlockedLink(int param_1,int param_2);
 int RomCurve_getRandomUnblockedLink(int param_1,int param_2);

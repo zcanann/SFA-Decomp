@@ -886,7 +886,7 @@ LAB_800e3130:
 /*
  * --INFO--
  *
- * Function: FUN_800e31e0
+ * Function: RomCurve_getRandomLinkedOfTypes
  * EN v1.0 Address: 0x800E31E0
  * EN v1.0 Size: 980b
  * EN v1.1 Address: TODO
@@ -896,7 +896,7 @@ LAB_800e3130:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800e31e0(int param_1,int param_2,int param_3,int *param_4)
+int RomCurve_getRandomLinkedOfTypes(int param_1,int param_2,int param_3,int *param_4)
 {
   uint uVar1;
   int iVar2;
@@ -1063,7 +1063,7 @@ LAB_800e3628:
 /*
  * --INFO--
  *
- * Function: FUN_800e3664
+ * Function: RomCurve_distanceToObject
  * EN v1.0 Address: 0x800E3664
  * EN v1.0 Size: 208b
  * EN v1.1 Address: TODO
@@ -1073,7 +1073,7 @@ LAB_800e3628:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-double FUN_800e3664(int param_1,uint param_2)
+double RomCurve_distanceToObject(int param_1,uint param_2)
 {
   float fVar1;
   float fVar2;
@@ -1119,7 +1119,7 @@ LAB_800e36d8:
 /*
  * --INFO--
  *
- * Function: FUN_800e3734
+ * Function: curves_find
  * EN v1.0 Address: 0x800E3734
  * EN v1.0 Size: 584b
  * EN v1.1 Address: TODO
@@ -1129,7 +1129,7 @@ LAB_800e36d8:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800e3734(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
+void curves_find(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 *param_6,undefined4 *param_7,undefined4 *param_8)
 {
   float fVar1;
@@ -1896,7 +1896,7 @@ LAB_800e48f4:
 /*
  * --INFO--
  *
- * Function: FUN_800e4a48
+ * Function: RomCurve_getAdjacentWindow
  * EN v1.0 Address: 0x800E4A48
  * EN v1.0 Size: 572b
  * EN v1.1 Address: TODO
@@ -1906,7 +1906,7 @@ LAB_800e48f4:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800e4a48(int param_1,int *param_2)
+void RomCurve_getAdjacentWindow(int param_1,int *param_2)
 {
   bool bVar1;
   int iVar2;
@@ -2020,7 +2020,7 @@ LAB_800e4bc4:
 /*
  * --INFO--
  *
- * Function: FUN_800e4c84
+ * Function: RomCurve_getNearestAdjacentLink
  * EN v1.0 Address: 0x800E4C84
  * EN v1.0 Size: 484b
  * EN v1.1 Address: TODO
@@ -2030,7 +2030,8 @@ LAB_800e4bc4:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800e4c84(double param_1,double param_2,double param_3,int param_4,int param_5)
+int RomCurve_getNearestAdjacentLink(double param_1,double param_2,double param_3,int param_4,
+                                    int param_5)
 {
   float fVar1;
   int iVar2;

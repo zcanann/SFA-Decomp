@@ -28,7 +28,7 @@ extern undefined4 FUN_800d86a0();
 extern int FUN_800e1da8();
 extern int FUN_800e2278();
 extern int RomCurve_getById();
-extern undefined4 FUN_800e4a48();
+extern undefined4 RomCurve_getAdjacentWindow();
 extern undefined4 RomCurve_distanceToSegment();
 extern int FUN_80286818();
 extern undefined4 FUN_80286824();
@@ -4207,7 +4207,7 @@ LAB_800e1c9c:
         *param_5 = FLOAT_803e12b8;
         return param_4;
       }
-      FUN_800e4a48(param_4,(int *)auStack_5c);
+      RomCurve_getAdjacentWindow(param_4,(int *)auStack_5c);
       iVar2 = FUN_800e1da8(param_1,param_2,param_3,auStack_5c,&local_70,&local_74,&local_78);
       if ((((iVar2 != 0) && (FLOAT_803e12c8 < local_70)) && (local_70 < FLOAT_803e12cc)) &&
          ((FLOAT_803e12d0 < local_74 && (local_74 < FLOAT_803e12d4)))) {

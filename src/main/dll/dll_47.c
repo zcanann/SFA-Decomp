@@ -17,7 +17,7 @@ extern undefined4 FUN_800238c4();
 extern undefined4 FUN_800238f8();
 extern undefined8 FUN_80043938();
 extern undefined4 FUN_80054484();
-extern undefined4 FUN_800e8824();
+extern void gameplay_applyPreviewSettingsForSlot();
 extern undefined4 FUN_800e8a50();
 extern undefined4 FUN_800e8d40();
 extern undefined4 FUN_800e9020();
@@ -184,8 +184,8 @@ void FUN_8011a384(undefined8 param_1,double param_2,undefined8 param_3,undefined
     else {
       cVar2 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803de338);
       if (cVar2 == '\x01') {
-        FUN_800e8824(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                     DAT_803de324);
+        gameplay_applyPreviewSettingsForSlot(extraout_f1,param_2,param_3,param_4,param_5,param_6,
+                                             param_7,param_8,DAT_803de324);
       }
       uVar3 = (**(code **)(*DAT_803dd724 + 0x10))(DAT_803de338);
       DAT_803de338 = 0;

@@ -19,14 +19,18 @@ void FUN_800e85f4(int param_1);
 void FUN_800e875c(undefined2 param_1);
 int FUN_800e876c(void);
 undefined4 * FUN_800e877c(void);
-int FUN_800e878c(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-void FUN_800e8824(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 byte param_9);
-void FUN_800e88f0(void);
-void FUN_800e8954(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+int gameplay_loadPreviewSettings(undefined8 param_1,double param_2,undefined8 param_3,
+                                 undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                 undefined8 param_7,undefined8 param_8);
+void gameplay_applyPreviewSettingsForSlot(undefined8 param_1,double param_2,undefined8 param_3,
+                                          undefined8 param_4,undefined8 param_5,
+                                          undefined8 param_6,undefined8 param_7,
+                                          undefined8 param_8,byte param_9);
+void gameplay_capturePreviewSettings(void);
+void gameplay_applyCurrentPreviewSettings(undefined8 param_1,double param_2,undefined8 param_3,
+                                          undefined8 param_4,undefined8 param_5,
+                                          undefined8 param_6,undefined8 param_7,
+                                          undefined8 param_8);
 void FUN_800e8a10(void);
 void FUN_800e8a1c(void);
 uint FUN_800e8a34(void);

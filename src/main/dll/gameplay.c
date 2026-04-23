@@ -1416,7 +1416,7 @@ undefined4 * FUN_800e877c(void)
 /*
  * --INFO--
  *
- * Function: FUN_800e878c
+ * Function: gameplay_loadPreviewSettings
  * EN v1.0 Address: 0x800E878C
  * EN v1.0 Size: 152b
  * EN v1.1 Address: TODO
@@ -1426,8 +1426,9 @@ undefined4 * FUN_800e877c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800e878c(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+int gameplay_loadPreviewSettings(undefined8 param_1,double param_2,undefined8 param_3,
+                                 undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                 undefined8 param_7,undefined8 param_8)
 {
   int iVar1;
   
@@ -1450,7 +1451,7 @@ int FUN_800e878c(undefined8 param_1,double param_2,undefined8 param_3,undefined8
 /*
  * --INFO--
  *
- * Function: FUN_800e8824
+ * Function: gameplay_applyPreviewSettingsForSlot
  * EN v1.0 Address: 0x800E8824
  * EN v1.0 Size: 204b
  * EN v1.1 Address: TODO
@@ -1460,9 +1461,10 @@ int FUN_800e878c(undefined8 param_1,double param_2,undefined8 param_3,undefined8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800e8824(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 byte param_9)
+void gameplay_applyPreviewSettingsForSlot(undefined8 param_1,double param_2,undefined8 param_3,
+                                          undefined8 param_4,undefined8 param_5,
+                                          undefined8 param_6,undefined8 param_7,
+                                          undefined8 param_8,byte param_9)
 {
   DAT_803a3f29 = 0;
   DAT_803dc4f0 = param_9;
@@ -1489,7 +1491,7 @@ void FUN_800e8824(undefined8 param_1,double param_2,undefined8 param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_800e88f0
+ * Function: gameplay_capturePreviewSettings
  * EN v1.0 Address: 0x800E88F0
  * EN v1.0 Size: 100b
  * EN v1.1 Address: TODO
@@ -1499,7 +1501,7 @@ void FUN_800e8824(undefined8 param_1,double param_2,undefined8 param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800e88f0(void)
+void gameplay_capturePreviewSettings(void)
 {
   FUN_80244e58(0,0);
   DAT_803dc4f0 = (undefined)((int)(*(byte *)(DAT_803de110 + 0x21) & 0x60) >> 5);
@@ -1511,7 +1513,7 @@ void FUN_800e88f0(void)
 /*
  * --INFO--
  *
- * Function: FUN_800e8954
+ * Function: gameplay_applyCurrentPreviewSettings
  * EN v1.0 Address: 0x800E8954
  * EN v1.0 Size: 188b
  * EN v1.1 Address: TODO
@@ -1521,8 +1523,10 @@ void FUN_800e88f0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800e8954(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void gameplay_applyCurrentPreviewSettings(undefined8 param_1,double param_2,undefined8 param_3,
+                                          undefined8 param_4,undefined8 param_5,
+                                          undefined8 param_6,undefined8 param_7,
+                                          undefined8 param_8)
 {
   if (DAT_803a3f2a == '\0') {
     param_1 = FUN_80003494((uint)DAT_803de110,0x803a3f08,0x564);
