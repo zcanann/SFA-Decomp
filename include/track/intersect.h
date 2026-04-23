@@ -23,7 +23,7 @@ void FUN_80070088(double param_1,double param_2,double param_3,double param_4,do
 void fn_80070320(f32* x, f32* y, f32* z);
 void fn_800703B0(f32* param_1);
 void fn_80070434(u32 param_1);
-void FUN_8007048c(uint param_1,int param_2,uint param_3);
+void fn_8007048C(u32 param_1, int param_2, u32 param_3);
 void fn_80070528(void);
 void fn_80070538(u8 param_1);
 void fn_80070540(void);

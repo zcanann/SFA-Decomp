@@ -1085,18 +1085,27 @@ void fn_80070434(u32 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007048c(uint param_1,int param_2,uint param_3)
+#pragma scheduling off
+void fn_8007048C(u32 param_1, int param_2, u32 param_3)
 {
-  if (((((uint)DAT_803ddc98 != (param_1 & 0xff)) || (DAT_803ddc94 != param_2)) ||
-      ((uint)DAT_803ddc92 != (param_3 & 0xff))) || (DAT_803ddc9a == '\0')) {
-    FUN_8025ce6c(param_1,param_2,param_3);
-    DAT_803ddc98 = (byte)param_1;
-    DAT_803ddc92 = (byte)param_3;
-    DAT_803ddc9a = '\x01';
-    DAT_803ddc94 = param_2;
-  }
-  return;
+    extern void GXSetZMode();
+    extern u8 lbl_803DDC92;
+    extern int lbl_803DDC94;
+    extern u8 lbl_803DDC98;
+    extern u8 lbl_803DDC9A;
+
+    if ((u32)lbl_803DDC98 != (param_1 & 0xff) ||
+        lbl_803DDC94 != param_2 ||
+        (u32)lbl_803DDC92 != (param_3 & 0xff) ||
+        lbl_803DDC9A == 0) {
+        GXSetZMode(param_1, param_2, param_3);
+        lbl_803DDC98 = (u8)param_1;
+        lbl_803DDC94 = param_2;
+        lbl_803DDC92 = (u8)param_3;
+        lbl_803DDC9A = 1;
+    }
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
