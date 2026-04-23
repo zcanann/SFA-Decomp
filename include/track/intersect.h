@@ -104,17 +104,9 @@ s32 fn_8007DB10(void);
 undefined4
 FUN_8007db18(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-void FUN_8007dca0(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,undefined4 param_11);
-undefined4
-FUN_8007dd3c(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-            undefined4 param_9);
-undefined4
-FUN_8007ddd8(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-            undefined4 param_9,undefined4 param_10);
+int fn_8007DCA0(int a, int b, int c);
+int fn_8007DD3C(int a);
+int fn_8007DDD8(int a, int b);
 undefined4
 FUN_8007de80(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,char param_9

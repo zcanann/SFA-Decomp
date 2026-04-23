@@ -2862,11 +2862,30 @@ FUN_8007db18(undefined8 param_1,double param_2,undefined8 param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007dca0(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,undefined4 param_11)
+extern void fn_8007E7A0(int);
+extern int fn_8007ED98(int, int, int, int, int, void*);
+extern void fn_8007E328(int);
+extern void fn_8007E928(void);
+extern void fn_8007E99C(void);
+extern void fn_8007E9D0(void);
+extern u8 lbl_803DDCD8;
+
+#pragma scheduling off
+int fn_8007DCA0(int a, int b, int c)
 {
+    int ret;
+    lbl_803DDCD8 = 0;
+    fn_8007E7A0(1);
+    do {
+        ret = fn_8007ED98(0, a, 0, b, c, fn_8007E928);
+        fn_8007E328(0);
+        if (lbl_803DDCD8 != 0) {
+            fn_8007E7A0(1);
+        }
+    } while (lbl_803DDCD8 != 0);
+    return ret;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2881,13 +2900,22 @@ void FUN_8007dca0(undefined8 param_1,double param_2,undefined8 param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-FUN_8007dd3c(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-            undefined4 param_9)
+#pragma scheduling off
+int fn_8007DD3C(int a)
 {
-    return 0;
+    int ret;
+    lbl_803DDCD8 = 0;
+    fn_8007E7A0(0);
+    do {
+        ret = fn_8007ED98(1, 0, 0, a, 0, fn_8007E99C);
+        fn_8007E328(1);
+        if (lbl_803DDCD8 != 0) {
+            fn_8007E7A0(0);
+        }
+    } while (lbl_803DDCD8 != 0);
+    return ret;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2902,13 +2930,22 @@ FUN_8007dd3c(undefined8 param_1,double param_2,undefined8 param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-FUN_8007ddd8(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-            undefined4 param_9,undefined4 param_10)
+#pragma scheduling off
+int fn_8007DDD8(int a, int b)
 {
-    return 0;
+    int ret;
+    lbl_803DDCD8 = 0;
+    fn_8007E7A0(0);
+    do {
+        ret = fn_8007ED98(1, a, 0, b, 0, fn_8007E9D0);
+        fn_8007E328(0);
+        if (lbl_803DDCD8 != 0) {
+            fn_8007E7A0(0);
+        }
+    } while (lbl_803DDCD8 != 0);
+    return ret;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
