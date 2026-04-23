@@ -1781,80 +1781,88 @@ main/audio/synth_control.c:
 	.text       start:0x802721A0 end:0x8027273C
 
 main/unknown/autos/placeholder_8027280C.c:
-	extab       start:0x80005760 end:0x80005778
-	extabindex  start:0x80005EA0 end:0x80005EC4
+	extab       start:0x80005760 end:0x800057C8
+	extabindex  start:0x80005EA0 end:0x80005F3C
 	.text       start:0x8027273C end:0x80272EEC
 
 main/unknown/autos/placeholder_80272EEC.c:
 	.text       start:0x80272EEC end:0x80272F0C
 
 main/unknown/autos/placeholder_80272F0C.c:
-	extab       start:0x80005778 end:0x800057C8
-	extabindex  start:0x80005EC4 end:0x80005F3C
+	extab       start:0x800057C8 end:0x800057D0
+	extabindex  start:0x80005F3C end:0x80005F48
 	.text       start:0x80272F0C end:0x80273608
 
 main/unknown/autos/placeholder_80273608.c:
 	.text       start:0x80273608 end:0x802736D4
 
 main/unknown/autos/placeholder_802736D4.c:
-	extab       start:0x800057C8 end:0x800057D0
-	extabindex  start:0x80005F3C end:0x80005F48
+	extab       start:0x800057D0 end:0x800057F8
+	extabindex  start:0x80005F48 end:0x80005F84
 	.text       start:0x802736D4 end:0x80273F4C
 
 main/unknown/autos/placeholder_80273F4C.c:
 	.text       start:0x80273F4C end:0x80273F50
 
 main/unknown/autos/placeholder_80273F50.c:
-	extab       start:0x800057D0 end:0x80005840
-	extabindex  start:0x80005F48 end:0x80005FF0
+	extab       start:0x80005868 end:0x80005888
+	extabindex  start:0x8000602C end:0x8000605C
+	extab       start:0x80005860 end:0x80005868
+	extabindex  start:0x80006020 end:0x8000602C
+	extab       start:0x80005850 end:0x80005860
+	extabindex  start:0x80006008 end:0x80006020
+	extab       start:0x80005848 end:0x80005850
+	extabindex  start:0x80005FFC end:0x80006008
+	extab       start:0x80005840 end:0x80005848
+	extabindex  start:0x80005FF0 end:0x80005FFC
+	extab       start:0x800057F8 end:0x80005840
+	extabindex  start:0x80005F84 end:0x80005FF0
 	.text       start:0x80273F50 end:0x802755D0
 
 main/unknown/autos/placeholder_802755D0.c:
 	.text       start:0x802755D0 end:0x802755E0
 
 main/unknown/autos/placeholder_802755E0.c:
-	extab       start:0x80005840 end:0x80005848
-	extabindex  start:0x80005FF0 end:0x80005FFC
+	extab       start:0x80005888 end:0x80005890
+	extabindex  start:0x8000605C end:0x80006068
 	.text       start:0x802755E0 end:0x80275674
 
 main/unknown/autos/placeholder_80275674.c:
 	.text       start:0x80275674 end:0x80275684
 
 main/unknown/autos/placeholder_80275684.c:
-	extab       start:0x80005848 end:0x80005850
-	extabindex  start:0x80005FFC end:0x80006008
 	.text       start:0x80275684 end:0x802757AC
 
 main/unknown/autos/placeholder_802757AC.c:
 	.text       start:0x802757AC end:0x802757BC
 
 main/unknown/autos/placeholder_802757BC.c:
-	extab       start:0x80005850 end:0x80005860
-	extabindex  start:0x80006008 end:0x80006020
+	extab       start:0x80005890 end:0x80005898
+	extabindex  start:0x80006068 end:0x80006074
 	.text       start:0x802757BC end:0x8027587C
 
 main/unknown/autos/placeholder_8027587C.c:
 	.text       start:0x8027587C end:0x8027588C
 
 main/unknown/autos/placeholder_8027588C.c:
-	extab       start:0x80005860 end:0x80005868
-	extabindex  start:0x80006020 end:0x8000602C
 	.text       start:0x8027588C end:0x8027590C
 
 main/unknown/autos/placeholder_8027590C.c:
 	.text       start:0x8027590C end:0x8027591C
 
 main/unknown/autos/placeholder_8027591C.c:
-	extab       start:0x80005868 end:0x800058A8
-	extabindex  start:0x8000602C end:0x8000608C
+	extab       start:0x80005898 end:0x800058C8
+	extabindex  start:0x80006074 end:0x800060BC
 	.text       start:0x8027591C end:0x8027641C
 
 main/unknown/autos/placeholder_8027641C.c:
+	extab       start:0x800058C8 end:0x800058D8
+	extabindex  start:0x800060BC end:0x800060D4
 	.text       start:0x8027641C end:0x802765AC
 
 main/unknown/autos/placeholder_802765AC.c:
-	extab       start:0x800058A8 end:0x80005940
-	extabindex  start:0x8000608C end:0x80006170
+	extab       start:0x800058D8 end:0x80005940
+	extabindex  start:0x800060D4 end:0x80006170
 	.text       start:0x802765AC end:0x80278F74
 
 main/unknown/autos/placeholder_80278F74.c:
