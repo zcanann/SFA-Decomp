@@ -69,7 +69,7 @@ void fn_80078A58(void);
 void fn_80078B28(void);
 void fn_80078BF8(void);
 void fn_80078CC8(void);
-void FUN_80078d98(void);
+void fn_80078D98(void);
 void fn_80078F78(void);
 void fn_8007904C(void);
 void fn_80079120(void);
