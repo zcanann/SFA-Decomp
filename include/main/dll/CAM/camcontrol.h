@@ -12,11 +12,11 @@ void camcontrol_loadTriggeredCamAction(undefined8 param_1,double param_2,double 
                                        uint param_10,char param_11,undefined4 param_12,
                                        undefined4 param_13,undefined4 param_14,undefined4 param_15,
                                        undefined4 param_16);
-int FUN_80103130(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                int param_9);
+int camcontrol_loadCamAction(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                             undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                             undefined8 param_8,int param_9);
 void FUN_801031a4(void);
-void FUN_801031e0(undefined4 param_1,undefined param_2);
+void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2);
 void camcontrol_queueCamAction(undefined4 param_1,undefined4 param_2,undefined param_3,int param_4,
                                uint param_5,undefined4 param_6,undefined param_7);
 void FUN_8010335c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,

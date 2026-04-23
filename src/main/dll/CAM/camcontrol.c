@@ -34,15 +34,15 @@ extern undefined4 DAT_803de130;
 extern short* DAT_803de134;
 extern undefined4 DAT_803de140;
 extern undefined4 DAT_803de142;
-extern undefined4 DAT_803de164;
-extern undefined4 DAT_803de168;
-extern undefined4 DAT_803de16c;
+extern undefined4 gCamcontrolSavedActionMode;
+extern undefined4 gCamcontrolSavedActionFlags;
+extern undefined4 gCamcontrolSavedActionId;
 extern undefined gCamcontrolQueuedActionMode;
 extern undefined4 gCamcontrolQueuedActionBlendFrames;
 extern undefined gCamcontrolQueuedActionPending;
 extern void *gCamcontrolQueuedActionData;
 extern int gCamcontrolQueuedActionSource;
-extern undefined4 DAT_803de190;
+extern undefined4 gCamcontrolCurrentActionId;
 extern undefined4 DAT_803de194;
 extern undefined4 DAT_803de198;
 extern short* DAT_803de19c;
@@ -415,8 +415,8 @@ void camcontrol_loadTriggeredCamAction(undefined8 param_1,double param_2,double 
                    0x10,param_13,param_14,param_15,param_16);
       camAction->triggerMode = param_11;
       FUN_800e875c(1);
-      if ((((DAT_803de190 == 0x42) || (DAT_803de190 == 0x4b)) || (DAT_803de190 == 0x48)) ||
-         (DAT_803de190 == 0x47)) {
+      if ((((gCamcontrolCurrentActionId == 0x42) || (gCamcontrolCurrentActionId == 0x4b)) ||
+          (gCamcontrolCurrentActionId == 0x48)) || (gCamcontrolCurrentActionId == 0x47)) {
         if (camAction->actionKind == 1) {
           camcontrol_queueCamAction(0x4b,1,2,0x10,(uint)camAction,0,0xff);
         }
@@ -456,8 +456,8 @@ LAB_80103090:
     if (camAction != (CamcontrolTriggeredAction *)0x0) {
       camAction->triggerMode = param_11;
       FUN_800e875c((short)param_10);
-      if (((DAT_803de190 == 0x42) || (DAT_803de190 == 0x4b)) ||
-         ((DAT_803de190 == 0x48 || (DAT_803de190 == 0x47)))) {
+      if (((gCamcontrolCurrentActionId == 0x42) || (gCamcontrolCurrentActionId == 0x4b)) ||
+         ((gCamcontrolCurrentActionId == 0x48 || (gCamcontrolCurrentActionId == 0x47)))) {
         if (camAction->actionKind == 1) {
           camcontrol_queueCamAction(0x4b,1,2,0x10,(uint)camAction,0,0xff);
         }
@@ -489,7 +489,7 @@ LAB_80102f3c:
 /*
  * --INFO--
  *
- * Function: FUN_80103130
+ * Function: camcontrol_loadCamAction
  * EN v1.0 Address: 0x80103130
  * EN v1.0 Size: 116b
  * EN v1.1 Address: TODO
@@ -499,9 +499,9 @@ LAB_80102f3c:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_80103130(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                int param_9)
+int camcontrol_loadCamAction(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                             undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                             undefined8 param_8,int param_9)
 {
   int iVar1;
   undefined4 in_r7;
@@ -546,7 +546,7 @@ void FUN_801031a4(void)
 /*
  * --INFO--
  *
- * Function: FUN_801031e0
+ * Function: camcontrol_queueSavedAction
  * EN v1.0 Address: 0x801031E0
  * EN v1.0 Size: 68b
  * EN v1.1 Address: TODO
@@ -556,10 +556,11 @@ void FUN_801031a4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801031e0(undefined4 param_1,undefined param_2)
+void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2)
 {
-  if (DAT_803de16c != -1) {
-    camcontrol_queueCamAction(DAT_803de16c,DAT_803de168,(char)DAT_803de164,0,0,param_1,param_2);
+  if (gCamcontrolSavedActionId != -1) {
+    camcontrol_queueCamAction(gCamcontrolSavedActionId,gCamcontrolSavedActionFlags,
+                              (char)gCamcontrolSavedActionMode,0,0,param_1,param_2);
   }
   return;
 }

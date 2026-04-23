@@ -6,17 +6,17 @@ extern double FUN_8000fc54();
 extern undefined4 FUN_800238c4();
 extern undefined4 FUN_8010192c();
 
-extern undefined4 DAT_803de164;
-extern undefined4 DAT_803de168;
-extern undefined4 DAT_803de16c;
+extern undefined4 gCamcontrolSavedActionMode;
+extern undefined4 gCamcontrolSavedActionFlags;
+extern undefined4 gCamcontrolSavedActionId;
 extern undefined gCamcontrolQueuedActionMode;
 extern undefined4 gCamcontrolQueuedActionBlendFrames;
 extern undefined gCamcontrolQueuedActionPending;
 extern void *gCamcontrolQueuedActionData;
-extern undefined4 DAT_803de180;
-extern undefined4 DAT_803de184;
+extern undefined4 gCamcontrolCurrentActionMode;
+extern undefined4 gCamcontrolCurrentActionFlags;
 extern int gCamcontrolQueuedActionSource;
-extern undefined4 DAT_803de190;
+extern undefined4 gCamcontrolCurrentActionId;
 extern undefined4* DAT_803de19c;
 extern f64 DOUBLE_803e22d0;
 extern f32 FLOAT_803e22ac;
@@ -75,9 +75,9 @@ void camcontrol_applyQueuedAction(void)
       dVar3 = FUN_8000fc54();
       *(float *)(DAT_803de19c + 0x5a) = (float)dVar3;
     }
-    DAT_803de16c = DAT_803de190;
-    DAT_803de168 = DAT_803de184;
-    DAT_803de164 = DAT_803de180;
+    gCamcontrolSavedActionId = gCamcontrolCurrentActionId;
+    gCamcontrolSavedActionFlags = gCamcontrolCurrentActionFlags;
+    gCamcontrolSavedActionMode = gCamcontrolCurrentActionMode;
     FUN_8010192c(gCamcontrolQueuedActionSource & 0xffff,(undefined4)gCamcontrolQueuedActionData);
     gCamcontrolQueuedActionPending = '\0';
     if (gCamcontrolQueuedActionData != (void *)0x0) {

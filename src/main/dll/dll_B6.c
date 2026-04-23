@@ -11,7 +11,7 @@ extern uint FUN_80296384();
 extern int FUN_80296a88();
 
 extern undefined4 DAT_803dc5f2;
-extern undefined4 DAT_803de190;
+extern undefined4 gCamcontrolCurrentActionId;
 extern f64 DOUBLE_803e22d0;
 extern f32 FLOAT_803e22b0;
 extern f32 FLOAT_803e22c4;
@@ -80,7 +80,7 @@ void FUN_80101350(undefined8 param_1,double param_2,undefined8 param_3,undefined
   iVar12 = 0;
   iVar11 = 0;
   iVar3 = FUN_8002bac4();
-  if ((((iVar3 != 0) && (extraout_r4 != 0)) && (DAT_803de190 != 0x44)) &&
+  if ((((iVar3 != 0) && (extraout_r4 != 0)) && (gCamcontrolCurrentActionId != 0x44)) &&
      (iVar4 = FUN_80296a88(iVar3), iVar4 != 0)) {
     iVar4 = FUN_8002e1f4(&local_c0,&local_c4);
     pfVar15 = (float *)(iVar4 + local_c0 * 4);

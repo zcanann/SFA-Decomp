@@ -37,7 +37,7 @@ extern undefined4 DAT_803de143;
 extern undefined4 DAT_803de144;
 extern undefined4 DAT_803de188;
 extern undefined4 DAT_803de18c;
-extern undefined4 DAT_803de190;
+extern undefined4 gCamcontrolCurrentActionId;
 extern undefined4* DAT_803de19c;
 extern undefined4 DAT_803de1a0;
 extern undefined4* DAT_803de1a8;
@@ -144,7 +144,7 @@ void FUN_80103760(undefined8 param_1,double param_2,double param_3,undefined8 pa
   iVar1 = FUN_800033a8(-0x7fc5b128,0,0x144);
   FUN_80013590(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,uVar2,uVar3,
                in_r6,in_r7,in_r8,in_r9,in_r10);
-  DAT_803de190 = 0xffffffff;
+  gCamcontrolCurrentActionId = 0xffffffff;
   DAT_803de18c = 0xffffffff;
   DAT_803de188 = 0xffffffff;
   DAT_803de144 = 0;
