@@ -31,7 +31,7 @@ extern double FUN_80293900();
 extern undefined4 gCamcontrolHandlers;
 extern undefined4* DAT_803dd738;
 extern undefined4 gCamcontrolTargetChanged;
-extern short* DAT_803de134;
+extern short* gCamcontrolTargetReticle;
 extern undefined4 DAT_803de140;
 extern undefined4 gCamcontrolTargetState;
 extern undefined4 gCamcontrolSavedActionMode;
@@ -75,7 +75,7 @@ typedef struct CamcontrolTriggeredAction {
 /*
  * --INFO--
  *
- * Function: FUN_801024e8
+ * Function: camcontrol_updateTargetFeedback
  * EN v1.0 Address: 0x801024E8
  * EN v1.0 Size: 1736b
  * EN v1.1 Address: TODO
@@ -85,7 +85,7 @@ typedef struct CamcontrolTriggeredAction {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801024e8(void)
+void camcontrol_updateTargetFeedback(void)
 {
   bool bVar1;
   char cVar2;
@@ -100,9 +100,9 @@ void FUN_801024e8(void)
   int iVar11;
   double dVar12;
   
-  psVar6 = DAT_803de134;
+  psVar6 = gCamcontrolTargetReticle;
   iVar11 = *(int *)(gCamcontrolState + 0x124);
-  if (DAT_803de134 == (short *)0x0) {
+  if (gCamcontrolTargetReticle == (short *)0x0) {
     return;
   }
   iVar8 = FUN_80134f70();

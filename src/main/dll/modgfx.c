@@ -94,7 +94,7 @@ extern undefined4 DAT_802c28e0;
 extern undefined4 DAT_802c28e4;
 extern undefined4 DAT_802c28e8;
 extern undefined4 DAT_802c28ec;
-extern undefined2 DAT_80310488;
+extern undefined2 gExpgfxSlotTypeIds;
 extern undefined DAT_80310528;
 extern undefined4 DAT_803109a8;
 extern undefined4 DAT_803109ac;
@@ -157,14 +157,14 @@ extern undefined4 DAT_8031122c;
 extern undefined DAT_80380209;
 extern int DAT_8039b7b8;
 extern undefined DAT_8039c638;
-extern undefined4 DAT_8039c688;
+extern undefined4 gExpgfxSlotSourceIds;
 extern undefined4 DAT_8039c7c8;
 extern undefined4 DAT_8039c7cc;
 extern undefined4 DAT_8039c7d0;
 extern undefined4 DAT_8039c7d4;
-extern undefined DAT_8039c828;
-extern undefined4 DAT_8039c878;
-extern uint DAT_8039c9b8;
+extern undefined gExpgfxSlotActiveCounts;
+extern undefined4 gExpgfxSlotActiveMasks;
+extern uint gExpgfxSlotPoolBases;
 extern undefined4* DAT_8039caf8;
 extern undefined4 DAT_8039cafc;
 extern undefined4 DAT_8039cb18;
@@ -1093,12 +1093,12 @@ void FUN_8009ff68(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   
   piVar7 = &DAT_8039b7b8;
   expgfx_initialise(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-  puVar2 = &DAT_8039c878;
-  puVar3 = &DAT_8039c828;
-  puVar4 = &DAT_80310488;
+  puVar2 = &gExpgfxSlotActiveMasks;
+  puVar3 = &gExpgfxSlotActiveCounts;
+  puVar4 = &gExpgfxSlotTypeIds;
   puVar1 = &DAT_80310528;
   puVar5 = &DAT_8039c638;
-  puVar6 = &DAT_8039c688;
+  puVar6 = &gExpgfxSlotSourceIds;
   iVar8 = 10;
   do {
     *puVar2 = 0;
@@ -1199,7 +1199,7 @@ void FUN_800a0108(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   
   expgfx_initialise(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
   iVar1 = 0;
-  puVar2 = &DAT_8039c9b8;
+  puVar2 = &gExpgfxSlotPoolBases;
   do {
     FUN_800238c4(*puVar2);
     puVar2 = puVar2 + 1;
@@ -1231,9 +1231,9 @@ void FUN_800a015c(void)
   uint *puVar6;
   int iVar7;
   
-  puVar3 = &DAT_8039c878;
-  puVar4 = &DAT_8039c828;
-  puVar1 = &DAT_80310488;
+  puVar3 = &gExpgfxSlotActiveMasks;
+  puVar4 = &gExpgfxSlotActiveCounts;
+  puVar1 = &gExpgfxSlotTypeIds;
   iVar7 = 10;
   do {
     iVar5 = 0;
@@ -1266,7 +1266,7 @@ void FUN_800a015c(void)
     puVar1 = puVar1 + 8;
     iVar7 = iVar7 + -1;
   } while (iVar7 != 0);
-  puVar6 = &DAT_8039c9b8;
+  puVar6 = &gExpgfxSlotPoolBases;
   do {
     uVar2 = FUN_80023d8c(4000,0x14);
     *puVar6 = uVar2;

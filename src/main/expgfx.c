@@ -74,7 +74,7 @@ extern double FUN_80293900();
 extern double FUN_8029686c();
 
 extern undefined4 DAT_80310458;
-extern undefined2 DAT_80310488;
+extern undefined2 gExpgfxSlotTypeIds;
 extern undefined DAT_80310528;
 extern undefined2 DAT_803105a8;
 extern undefined4 DAT_80397420;
@@ -91,14 +91,14 @@ extern undefined4 DAT_8039c140;
 extern short DAT_8039c144;
 extern undefined4 DAT_8039c146;
 extern byte DAT_8039c638;
-extern int DAT_8039c688;
+extern int gExpgfxSlotSourceIds;
 extern undefined4 DAT_8039c7c8;
 extern undefined4 DAT_8039c7cc;
 extern byte DAT_8039c7d8;
-extern char DAT_8039c828;
+extern char gExpgfxSlotActiveCounts;
 extern char DAT_8039c829;
-extern uint DAT_8039c878;
-extern uint DAT_8039c9b8;
+extern uint gExpgfxSlotActiveMasks;
+extern uint gExpgfxSlotPoolBases;
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dd430;
 extern undefined4* DAT_803dd708;
@@ -198,7 +198,7 @@ void expgfx_release(undefined8 param_1,undefined8 param_2,undefined8 param_3,und
   
   uVar8 = FUN_80286838();
   iVar2 = (int)uVar8;
-  puVar7 = &DAT_8039c878 + iVar2;
+  puVar7 = &gExpgfxSlotActiveMasks + iVar2;
   if ((1 << param_11 & *puVar7) != 0) {
     uVar6 = (int)((ulonglong)uVar8 >> 0x20) + param_11 * 0xa0;
     *(undefined4 *)(uVar6 + 0x7c) = 0;
@@ -230,10 +230,10 @@ void expgfx_release(undefined8 param_1,undefined8 param_2,undefined8 param_3,und
       FUN_802420e0(uVar6,0xa0);
     }
     *puVar7 = *puVar7 & ~(1 << param_11);
-    pcVar4 = &DAT_8039c828 + iVar2;
+    pcVar4 = &gExpgfxSlotActiveCounts + iVar2;
     *pcVar4 = *pcVar4 + -1;
     if (*pcVar4 == '\0') {
-      (&DAT_80310488)[iVar2] = 0xffff;
+      (&gExpgfxSlotTypeIds)[iVar2] = 0xffff;
     }
   }
   FUN_80286884();
@@ -274,10 +274,10 @@ void expgfx_initialise(undefined8 param_1,undefined8 param_2,undefined8 param_3,
   
   uVar10 = FUN_80286830();
   iVar5 = 0;
-  puVar9 = &DAT_8039c9b8;
-  puVar8 = &DAT_8039c878;
-  pcVar7 = &DAT_8039c828;
-  puVar6 = &DAT_80310488;
+  puVar9 = &gExpgfxSlotPoolBases;
+  puVar8 = &gExpgfxSlotActiveMasks;
+  pcVar7 = &gExpgfxSlotActiveCounts;
+  puVar6 = &gExpgfxSlotTypeIds;
   do {
     uVar3 = *puVar9;
     iVar4 = 0;
@@ -325,7 +325,7 @@ void expgfx_initialise(undefined8 param_1,undefined8 param_2,undefined8 param_3,
 /*
  * --INFO--
  *
- * Function: fn_8009B648
+ * Function: expgfx_reserveSlot
  * EN v1.0 Address: 0x8009B648
  * EN v1.0 Size: 792b
  * EN v1.1 Address: TODO
@@ -335,7 +335,8 @@ void expgfx_initialise(undefined8 param_1,undefined8 param_2,undefined8 param_3,
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 fn_8009B648(short *param_1,undefined2 *param_2,short param_3,int param_4,int param_5)
+undefined4 expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,int param_4,
+                              int param_5)
 {
   bool bVar1;
   short sVar2;
@@ -351,9 +352,9 @@ undefined4 fn_8009B648(short *param_1,undefined2 *param_2,short param_3,int para
   sVar2 = -1;
   bVar1 = false;
   iVar4 = 0;
-  piVar8 = &DAT_8039c688;
-  psVar6 = (short *)&DAT_80310488;
-  pcVar3 = &DAT_8039c828;
+  piVar8 = &gExpgfxSlotSourceIds;
+  psVar6 = (short *)&gExpgfxSlotTypeIds;
+  pcVar3 = &gExpgfxSlotActiveCounts;
   iVar9 = 0x10;
   pcVar5 = pcVar3;
   do {
@@ -394,14 +395,14 @@ undefined4 fn_8009B648(short *param_1,undefined2 *param_2,short param_3,int para
   } while (iVar9 != 0);
   if (bVar1) {
     iVar9 = 0;
-    puVar7 = &DAT_8039c878 + sVar2;
+    puVar7 = &gExpgfxSlotActiveMasks + sVar2;
     iVar10 = 0x19;
     do {
       if ((1 << iVar9 & *puVar7) == 0) {
         *param_2 = (short)iVar9;
         *param_1 = sVar2;
         *puVar7 = *puVar7 | 1 << iVar9;
-        (&DAT_8039c828)[sVar2] = (&DAT_8039c828)[sVar2] + '\x01';
+        (&gExpgfxSlotActiveCounts)[sVar2] = (&gExpgfxSlotActiveCounts)[sVar2] + '\x01';
         return 1;
       }
       iVar9 = iVar9 + 1;
@@ -410,7 +411,7 @@ undefined4 fn_8009B648(short *param_1,undefined2 *param_2,short param_3,int para
   }
   bVar1 = false;
   if (param_4 != -1) {
-    if ((param_4 != -1) && (iVar4 = param_4, (char)(&DAT_8039c828)[param_4] < '\x19')) {
+    if ((param_4 != -1) && (iVar4 = param_4, (char)(&gExpgfxSlotActiveCounts)[param_4] < '\x19')) {
       sVar2 = (short)param_4;
       bVar1 = true;
     }
@@ -422,7 +423,7 @@ undefined4 fn_8009B648(short *param_1,undefined2 *param_2,short param_3,int para
       if (*pcVar3 < '\x01') {
         sVar2 = (short)iVar4;
         bVar1 = true;
-        (&DAT_8039c828)[iVar4] = 0;
+        (&gExpgfxSlotActiveCounts)[iVar4] = 0;
         break;
       }
       pcVar3 = pcVar3 + 1;
@@ -432,15 +433,15 @@ undefined4 fn_8009B648(short *param_1,undefined2 *param_2,short param_3,int para
   }
   if (bVar1) {
     iVar9 = 0;
-    puVar7 = &DAT_8039c878 + sVar2;
+    puVar7 = &gExpgfxSlotActiveMasks + sVar2;
     iVar10 = 0x19;
     do {
       if ((1 << iVar9 & *puVar7) == 0) {
         *param_2 = (short)iVar9;
         *param_1 = sVar2;
         *puVar7 = *puVar7 | 1 << iVar9;
-        (&DAT_80310488)[iVar4] = param_3;
-        (&DAT_8039c828)[sVar2] = (&DAT_8039c828)[sVar2] + '\x01';
+        (&gExpgfxSlotTypeIds)[iVar4] = param_3;
+        (&gExpgfxSlotActiveCounts)[sVar2] = (&gExpgfxSlotActiveCounts)[sVar2] + '\x01';
         return 1;
       }
       iVar9 = iVar9 + 1;
@@ -728,8 +729,8 @@ void FUN_8009e2c0(void)
   
   uVar8 = FUN_80286830();
   iVar2 = 0;
-  pcVar7 = &DAT_8039c828;
-  piVar6 = &DAT_8039c688;
+  pcVar7 = &gExpgfxSlotActiveCounts;
+  piVar6 = &gExpgfxSlotSourceIds;
   pbVar5 = &DAT_8039c638;
   pbVar4 = &DAT_8039c7d8;
   pfVar3 = (float *)&DAT_8039b9b8;
@@ -951,10 +952,10 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
   dVar19 = extraout_f1;
   iVar6 = FUN_80020800();
   if ((iVar6 == 0) &&
-     (iVar6 = fn_8009B648(local_56,&local_58,param_11,(int)uVar22,*piVar5), iVar6 != -1)) {
+     (iVar6 = expgfx_reserveSlot(local_56,&local_58,param_11,(int)uVar22,*piVar5), iVar6 != -1)) {
     uVar3 = (uint)local_56[0];
     if ((int)uVar3 < 0x50) {
-      (&DAT_8039c688)[uVar3] = *piVar5;
+      (&gExpgfxSlotSourceIds)[uVar3] = *piVar5;
     }
     if (((int)uVar3 < 0x50) && ((piVar5[0x11] & 0x40000U) != 0)) {
       uVar2 = uVar3 & 1;
@@ -975,7 +976,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
       (&DAT_8039c7c8)[uVar2 * 2] = uVar12 & (int)uVar8 >> 0x1f;
     }
     piVar16 = &DAT_8039b7b8 + (uVar3 & 1) * 2;
-    puVar18 = (undefined2 *)((&DAT_8039c9b8)[uVar3] + local_58 * 0xa0);
+    puVar18 = (undefined2 *)((&gExpgfxSlotPoolBases)[uVar3] + local_58 * 0xa0);
     DAT_803dded0 = DAT_803dded0 + 1;
     if (30000 < DAT_803dded0) {
       DAT_803dded0 = 0;
@@ -990,19 +991,22 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
     iVar6 = (int)(short)iVar6;
     if (iVar6 < 0) {
       expgfx_release(dVar19,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                     (&DAT_8039c9b8)[local_56[0]],(int)local_56[0],(int)local_58,1,1,param_14,
+                     (&gExpgfxSlotPoolBases)[local_56[0]],(int)local_56[0],(int)local_58,1,1,
+                     param_14,
                      param_15,param_16);
     }
     else {
       iVar7 = (&DAT_8039b7b8)[iVar6 * 4];
       if (iVar7 == 0) {
         expgfx_release(dVar19,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                       (&DAT_8039c9b8)[local_56[0]],(int)local_56[0],(int)local_58,1,1,param_14,
+                       (&gExpgfxSlotPoolBases)[local_56[0]],(int)local_56[0],(int)local_58,1,1,
+                       param_14,
                        param_15,param_16);
       }
       else if (*(short *)(iVar7 + 0xe) == -1) {
         expgfx_release(dVar19,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                       (&DAT_8039c9b8)[local_56[0]],(int)local_56[0],(int)local_58,1,1,param_14,
+                       (&gExpgfxSlotPoolBases)[local_56[0]],(int)local_56[0],(int)local_58,1,1,
+                       param_14,
                        param_15,param_16);
       }
       else {
@@ -1047,7 +1051,8 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
                                 sExpgfxInvalidTabIndex,puVar10,iVar13,iVar15,piVar16,
                                 param_14,param_15,param_16);
           expgfx_release(uVar22,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                         (&DAT_8039c9b8)[local_56[0]],(int)local_56[0],(int)local_58,1,1,param_14,
+                         (&gExpgfxSlotPoolBases)[local_56[0]],(int)local_56[0],(int)local_58,1,1,
+                         param_14,
                          param_15,param_16);
         }
         else {

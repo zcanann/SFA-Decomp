@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_C6.h"
 
-extern undefined4 FUN_80100d40();
+extern undefined4 camcontrol_updateTargetReticle();
 extern int FUN_80134f70();
 extern undefined4 countLeadingZeros();
 
@@ -30,7 +30,7 @@ void FUN_801023a8(void)
   if (iVar1 == 0) {
     DAT_803dc5f0 = 0xffff;
     countLeadingZeros(0x49 - gCamcontrolCurrentActionId);
-    FUN_80100d40();
+    camcontrol_updateTargetReticle();
     *(undefined4 *)(gCamcontrolState + 0x120) = 0;
   }
   return;

@@ -7,7 +7,7 @@ extern int FUN_80286838();
 extern undefined4 FUN_80286884();
 
 extern undefined4 DAT_803dc5f0;
-extern undefined4 DAT_803de134;
+extern undefined4 gCamcontrolTargetReticle;
 extern undefined4 gCamcontrolTargetState;
 extern undefined4 gCamcontrolState;
 extern f32 FLOAT_803e22a8;
@@ -15,7 +15,7 @@ extern f32 FLOAT_803e22a8;
 /*
  * --INFO--
  *
- * Function: FUN_80100d40
+ * Function: camcontrol_updateTargetReticle
  * EN v1.0 Address: 0x80100D40
  * EN v1.0 Size: 492b
  * EN v1.1 Address: TODO
@@ -25,7 +25,7 @@ extern f32 FLOAT_803e22a8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80100d40(void)
+void camcontrol_updateTargetReticle(void)
 {
   int iVar1;
   int iVar2;
@@ -39,12 +39,12 @@ void FUN_80100d40(void)
   
   iVar5 = FUN_80286838();
   uVar6 = gCamcontrolTargetState;
-  iVar1 = DAT_803de134;
+  iVar1 = gCamcontrolTargetReticle;
   iVar2 = *(int *)(gCamcontrolState + 0x120);
   if (iVar2 != 0) {
     gCamcontrolTargetState = 3;
-    unaff_r30 = *(undefined *)(DAT_803de134 + 0x36);
-    *(undefined *)(DAT_803de134 + 0x36) = 0xff;
+    unaff_r30 = *(undefined *)(gCamcontrolTargetReticle + 0x36);
+    *(undefined *)(gCamcontrolTargetReticle + 0x36) = 0xff;
     iVar5 = iVar2;
     unaff_r31 = uVar6;
   }

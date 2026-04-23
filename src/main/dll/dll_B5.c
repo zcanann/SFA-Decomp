@@ -15,7 +15,7 @@ extern undefined4 FUN_8002e088();
 extern undefined4 FUN_80100f2c();
 extern undefined4 FUN_80101068();
 
-extern undefined4 DAT_803de134;
+extern undefined4 gCamcontrolTargetReticle;
 extern undefined4 DAT_803de13c;
 extern f32 FLOAT_803e22ac;
 extern f32 FLOAT_803e22b0;
