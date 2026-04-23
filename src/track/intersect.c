@@ -2656,12 +2656,17 @@ void FUN_8007d0f8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+/* EN v1.0 Size: 108b - 77% match. MWCC recomputes &lbl_80397420 for
+ * each PSMTXConcat call; target caches it once in r31 (callee-save)
+ * and reuses across both calls. Register-allocator preference — not
+ * crackable without inline asm. */
 void fn_8007D7EC(void)
 {
+    Mtx* mats = &lbl_80397420;
     Mtx tmp;
-    PSMTXConcat(lbl_803974B0, lbl_80397420, tmp);
+    PSMTXConcat(mats[3], mats[0], tmp);
     GXLoadTexMtxImm(tmp, 0x1E, GX_MTX3x4);
-    PSMTXConcat(lbl_80397480, lbl_80397420, tmp);
+    PSMTXConcat(mats[2], mats[0], tmp);
     GXLoadTexMtxImm(tmp, 0x24, GX_MTX3x4);
 }
 
