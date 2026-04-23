@@ -12,7 +12,7 @@ void newshadows_getShadowTextureTable4x8(int *tableOut,int *columnsOut,int *rows
 void newshadows_getShadowTextureTable16(int *tableOut,int *countOut);
 void FUN_8006c674(undefined4 *param_1);
 void FUN_8006c680(undefined4 *param_1);
-void FUN_8006c68c(undefined4 *param_1);
+void newshadows_getShadowTexture(int *textureOut);
 void FUN_8006c698(undefined4 *param_1);
 void FUN_8006c6a4(undefined4 *param_1);
 void FUN_8006c6b0(undefined4 *param_1);

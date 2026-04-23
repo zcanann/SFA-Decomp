@@ -1021,7 +1021,7 @@ void FUN_8007048c(uint param_1,int param_2,uint param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80070528(void)
+void trackIntersect_invalidateCachedRenderState(void)
 {
   DAT_803ddc9a = 0;
   DAT_803ddc99 = 0;

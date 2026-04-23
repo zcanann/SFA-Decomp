@@ -156,7 +156,7 @@ extern undefined4 FUN_8006f57c();
 extern undefined4 FUN_8006fe48();
 extern undefined4 FUN_80070434();
 extern undefined4 FUN_8007048c();
-extern undefined4 FUN_80070528();
+extern void trackIntersect_invalidateCachedRenderState(void);
 extern undefined4 FUN_80072f78();
 extern undefined4 FUN_80073e80();
 extern undefined4 FUN_80074694();

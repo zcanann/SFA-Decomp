@@ -23,7 +23,7 @@ void FUN_80070320(float *param_1,float *param_2,float *param_3);
 void FUN_800703b0(undefined4 *param_1);
 void FUN_80070434(uint param_1);
 void FUN_8007048c(uint param_1,int param_2,uint param_3);
-void FUN_80070528(void);
+void trackIntersect_invalidateCachedRenderState(void);
 void FUN_80070538(undefined param_1);
 void trackIntersect_drawColorBand(void);
 void trackIntersect_updateColorBandRange(double param_1,double param_2);
