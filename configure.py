@@ -122,6 +122,12 @@ parser.add_argument(
     help="builds equivalent (but non-matching) or modded objects",
 )
 parser.add_argument(
+    "--matching",
+    dest="non_matching",
+    action="store_false",
+    help="build matching objects and use the hash-checked default target",
+)
+parser.add_argument(
     "--warn",
     dest="warn",
     type=str,
@@ -134,6 +140,7 @@ parser.add_argument(
     action="store_false",
     help="disable progress calculation",
 )
+parser.set_defaults(non_matching=True)
 args = parser.parse_args()
 
 config = ProjectConfig()
@@ -760,6 +767,10 @@ config.libs = [
             Object(NonMatching, "main/dll/df_partfx.c"),
             Object(NonMatching, "main/dll/objfsa.c"),
             Object(NonMatching, "main/dll/curves.c"),
+            Object(NonMatching, "main/dll/gameplay.c"),
+            Object(NonMatching, "main/dll/foodbag.c"),
+            Object(NonMatching, "main/dll/savegame.c"),
+            Object(NonMatching, "main/dll/screens.c"),
             Object(NonMatching, "main/dll/CAM/cutCam.c"),
             Object(NonMatching, "main/dll/CAM/camlockon.c"),
             Object(NonMatching, "main/dll/CAM/camTalk.c"),
