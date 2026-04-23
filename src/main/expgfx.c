@@ -161,17 +161,17 @@ extern f32 FLOAT_803e009c;
 extern f32 FLOAT_803e00a0;
 extern f32 FLOAT_803e00a4;
 extern f32 FLOAT_803e00a8;
-extern char s_expgfx_c__addToTable_usage_overf_803107e8[];
-extern char s_expgfx_c__exptab_is_FULL_80310810[];
-extern char s_expgfx_c__invalid_tabindex_8031082c[];
-extern char s_expgfx_c__mismatch_in_add_remove_803107b0[];
-extern char s_expgfx_c__scale_overflow_80310848[];
-extern char s_notexture_803107dc[];
+extern char sExpgfxAddToTableUsageOverflow[];
+extern char sExpgfxExpTabIsFull[];
+extern char sExpgfxInvalidTabIndex[];
+extern char sExpgfxMismatchInAddRemove[];
+extern char sExpgfxScaleOverflow[];
+extern char sExpgfxNoTexture[];
 
 /*
  * --INFO--
  *
- * Function: FUN_8009b36c
+ * Function: expgfx_release
  * EN v1.0 Address: 0x8009B36C
  * EN v1.0 Size: 372b
  * EN v1.1 Address: TODO
@@ -214,7 +214,7 @@ void expgfx_release(undefined8 param_1,undefined8 param_2,undefined8 param_3,und
       psVar3 = &DAT_8039c144 + uVar1 * 8;
       if (*psVar3 == 0) {
         FUN_80137c30(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                     s_expgfx_c__mismatch_in_add_remove_803107b0,psVar3,uVar1 * 0x10,param_12,uVar5,
+                     sExpgfxMismatchInAddRemove,psVar3,uVar1 * 0x10,param_12,uVar5,
                      param_14,param_15,param_16);
       }
       else {
@@ -243,7 +243,7 @@ void expgfx_release(undefined8 param_1,undefined8 param_2,undefined8 param_3,und
 /*
  * --INFO--
  *
- * Function: FUN_8009b4e0
+ * Function: expgfx_initialise
  * EN v1.0 Address: 0x8009B4E0
  * EN v1.0 Size: 360b
  * EN v1.1 Address: TODO
@@ -293,7 +293,7 @@ void expgfx_initialise(undefined8 param_1,undefined8 param_2,undefined8 param_3,
         psVar2 = &DAT_8039c144 + uVar1 * 8;
         if (*psVar2 == 0) {
           uVar10 = FUN_80137c30(uVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                                s_expgfx_c__mismatch_in_add_remove_803107b0,psVar2,
+                                sExpgfxMismatchInAddRemove,psVar2,
                                 &DAT_8039c138 + uVar1 * 4,in_r6,in_r7,in_r8,in_r9,in_r10);
         }
         else {
@@ -591,7 +591,7 @@ LAB_8009ba84:
     param_9[0x1d] = uVar4;
   }
   else {
-    FUN_80137c30(dVar9,param_2,dVar10,param_4,param_5,param_6,param_7,param_8,s_notexture_803107dc,
+    FUN_80137c30(dVar9,param_2,dVar10,param_4,param_5,param_6,param_7,param_8,sExpgfxNoTexture,
                  &DAT_80310458,puVar2,uVar3,0,in_r8,in_r9,in_r10);
   }
   return;
@@ -618,7 +618,7 @@ void FUN_8009bc54(undefined8 param_1,double param_2,double param_3,double param_
 /*
  * --INFO--
  *
- * Function: FUN_8009e078
+ * Function: expgfx_addToTable
  * EN v1.0 Address: 0x8009E078
  * EN v1.0 Size: 536b
  * EN v1.1 Address: TODO
@@ -666,7 +666,7 @@ int expgfx_addToTable(undefined8 param_1,undefined8 param_2,undefined8 param_3,u
         iVar6 = iVar6 + -1;
       } while (iVar6 != 0);
       FUN_80137c30(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                   s_expgfx_c__exptab_is_FULL_80310810,param_10,param_11,param_12,piVar2,piVar3,
+                   sExpgfxExpTabIsFull,param_10,param_11,param_12,piVar2,piVar3,
                    iVar4,iVar5);
       return -1;
     }
@@ -674,7 +674,7 @@ int expgfx_addToTable(undefined8 param_1,undefined8 param_2,undefined8 param_3,u
   psVar1 = &DAT_8039c144 + iVar4 * 8;
   if (*psVar1 == -1) {
     FUN_80137c30(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                 s_expgfx_c__addToTable_usage_overf_803107e8,psVar1,param_11,param_12,piVar2,
+                 sExpgfxAddToTableUsageOverflow,psVar1,param_11,param_12,piVar2,
                  &DAT_8039c138,iVar4,in_r10);
     return -1;
   }
@@ -899,7 +899,7 @@ void FUN_8009f438(undefined8 param_1,undefined8 param_2,double param_3,double pa
 /*
  * --INFO--
  *
- * Function: FUN_8009f558
+ * Function: expgfx_addremove
  * EN v1.0 Address: 0x8009F558
  * EN v1.0 Size: 2576b
  * EN v1.1 Address: TODO
@@ -1044,7 +1044,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
                                   iVar7,(int)puVar17,iVar13,iVar15);
         if ((short)uVar3 == -1) {
           uVar22 = FUN_80137c30(dVar19,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                                s_expgfx_c__invalid_tabindex_8031082c,puVar10,iVar13,iVar15,piVar16,
+                                sExpgfxInvalidTabIndex,puVar10,iVar13,iVar15,piVar16,
                                 param_14,param_15,param_16);
           expgfx_release(uVar22,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                          (&DAT_8039c9b8)[local_56[0]],(int)local_56[0],(int)local_58,1,1,param_14,
@@ -1070,7 +1070,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
           puVar18[0xb] = (short)piVar5[2];
           if ((double)FLOAT_803dffd4 < (double)(float)piVar5[0xf]) {
             FUN_80137c30((double)(float)piVar5[0xf],param_2,param_3,param_4,param_5,param_6,param_7,
-                         param_8,s_expgfx_c__scale_overflow_80310848,puVar10,iVar13,iVar15,piVar16,
+                         param_8,sExpgfxScaleOverflow,puVar10,iVar13,iVar15,piVar16,
                          param_14,param_15,param_16);
           }
           dVar20 = (double)FLOAT_803dffd0;
