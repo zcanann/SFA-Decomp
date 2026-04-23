@@ -709,7 +709,7 @@ int FUN_8005b60c(int param_1,int *param_2,int *param_3,int *param_4,uint *param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8005b6e8(int param_1,int param_2)
+void lightmap_sortQueuedRenderKeys(int queueBase,int keyCount)
 {
   int iVar1;
   int iVar2;
@@ -721,26 +721,26 @@ void FUN_8005b6e8(int param_1,int param_2)
   uint uVar8;
   int iVar9;
   
-  iVar1 = param_2 / 9 + (param_2 >> 0x1f);
+  iVar1 = keyCount / 9 + (keyCount >> 0x1f);
   for (iVar9 = 1; iVar9 <= iVar1 - (iVar1 >> 0x1f); iVar9 = iVar9 * 3 + 1) {
   }
   for (; 0 < iVar9; iVar9 = iVar9 / 3) {
     iVar6 = iVar9 + 1;
     iVar1 = iVar6 * 4;
-    iVar5 = param_1 + iVar1;
-    iVar2 = (param_2 + 1) - iVar6;
-    if (iVar6 <= param_2) {
+    iVar5 = queueBase + iVar1;
+    iVar2 = (keyCount + 1) - iVar6;
+    if (iVar6 <= keyCount) {
       do {
         uVar8 = *(uint *)(iVar5 + -4);
-        iVar4 = param_1 + iVar1;
+        iVar4 = queueBase + iVar1;
         iVar7 = iVar6;
         while ((iVar9 < iVar7 &&
-               (uVar3 = *(uint *)(param_1 + (iVar7 - iVar9) * 4 + -4), uVar3 < uVar8))) {
+               (uVar3 = *(uint *)(queueBase + (iVar7 - iVar9) * 4 + -4), uVar3 < uVar8))) {
           *(uint *)(iVar4 + -4) = uVar3;
           iVar4 = iVar4 + iVar9 * -4;
           iVar7 = iVar7 - iVar9;
         }
-        *(uint *)(param_1 + iVar7 * 4 + -4) = uVar8;
+        *(uint *)(queueBase + iVar7 * 4 + -4) = uVar8;
         iVar5 = iVar5 + 4;
         iVar6 = iVar6 + 1;
         iVar1 = iVar1 + 4;
@@ -886,7 +886,7 @@ void FUN_8005b7d0(void)
     pcVar3 = pcVar3 + 1;
   }
   if (1 < DAT_803ddb2e) {
-    FUN_8005b6e8(-0x7fc78ac8,(int)DAT_803ddb2e);
+    lightmap_sortQueuedRenderKeys(-0x7fc78ac8,(int)DAT_803ddb2e);
   }
   newshadows_renderQueuedShadowCasters();
   FUN_80286884();

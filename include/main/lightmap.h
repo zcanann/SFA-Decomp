@@ -13,7 +13,7 @@ void FUN_8005b224(float *param_1,float *param_2);
 undefined4 FUN_8005b2e8(void);
 int FUN_8005b478(undefined8 param_1,double param_2);
 int FUN_8005b60c(int param_1,int *param_2,int *param_3,int *param_4,uint *param_5);
-void FUN_8005b6e8(int param_1,int param_2);
+void lightmap_sortQueuedRenderKeys(int queueBase,int keyCount);
 void FUN_8005b7d0(void);
 void FUN_8005bc3c(void);
 void FUN_8005be04(void);
