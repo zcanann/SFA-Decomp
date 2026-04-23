@@ -3664,7 +3664,7 @@ void FUN_80069798(uint *param_1,float *param_2,float *param_3,float *param_4,int
 /*
  * --INFO--
  *
- * Function: FUN_80069ac0
+ * Function: fn_80069AC0
  * EN v1.0 Address: 0x80069AC0
  * EN v1.0 Size: 20b
  * EN v1.1 Address: TODO
@@ -3674,9 +3674,10 @@ void FUN_80069798(uint *param_1,float *param_2,float *param_3,float *param_4,int
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 * FUN_80069ac0(uint *param_1)
+undefined4 * fn_80069AC0(uint *param_1)
 {
-    return 0;
+  *param_1 = (uint)DAT_803ddbec;
+  return (undefined4 *)&DAT_8038e8c4;
 }
 
 /*

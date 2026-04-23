@@ -507,7 +507,7 @@ void FUN_80056618(void)
 /*
  * --INFO--
  *
- * Function: FUN_80056800
+ * Function: fn_80056800
  * EN v1.0 Address: 0x80056800
  * EN v1.0 Size: 16b
  * EN v1.1 Address: TODO
@@ -517,9 +517,9 @@ void FUN_80056618(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_80056800(int param_1)
+int fn_80056800(int param_1)
 {
-    return 0;
+  return (int)(DAT_803ddaec + param_1 * 4);
 }
 
 /*

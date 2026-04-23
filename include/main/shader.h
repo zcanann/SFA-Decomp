@@ -7,7 +7,7 @@ void FUN_80055afc(undefined4 param_1,undefined4 param_2,undefined4 param_3);
 void FUN_80055ea0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_80056618(void);
-int FUN_80056800(int param_1);
+int fn_80056800(int param_1);
 undefined4 FUN_80056810(void);
 undefined4 FUN_80056818(void);
 void FUN_80056820(int param_1,uint param_2);

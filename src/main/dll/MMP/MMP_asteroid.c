@@ -12,7 +12,7 @@ extern undefined4 FUN_8003709c();
 extern undefined4 FUN_800372f8();
 extern undefined4 FUN_8003b9ec();
 extern int FUN_8004c3cc();
-extern int FUN_80056800();
+extern int fn_80056800();
 extern undefined4 FUN_80056810();
 extern int FUN_8005b068();
 extern int FUN_8005b478();
@@ -935,7 +935,7 @@ void FUN_80197750(int param_1)
     if ((iVar2 != 0) &&
        (((*(ushort *)(iVar2 + 4) & 8) != 0 &&
         (psVar3 = (short *)FUN_80056810(), psVar3 != (short *)0x0)))) {
-      iVar2 = FUN_80056800((int)*psVar3);
+      iVar2 = fn_80056800((int)*psVar3);
       piVar5[4] = piVar5[4] + (uint)*(byte *)(piVar5 + 1) * (uint)DAT_803dc070;
       FUN_80137cd0();
       if (piVar5[4] < 0) {
