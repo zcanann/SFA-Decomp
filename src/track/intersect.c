@@ -479,6 +479,40 @@ void FUN_8006f0b4(undefined8 param_1,double param_2,undefined4 param_3,undefined
 /*
  * --INFO--
  *
+ * Function: fn_8006F504
+ * EN v1.0 Address: 0x8006F504
+ * EN v1.0 Size: 120b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+void* fn_8006F504(u32 i)
+{
+    extern u8 lbl_8030F470[];
+    u8* base = lbl_8030F470;
+    switch (i) {
+        case 0:  return base;
+        case 1:  return base + 0x14;
+        case 2:  return base + 0x3C;
+        case 3:  return base + 0x64;
+        case 4:  return base + 0x50;
+        case 5:  return base + 0x78;
+        case 6:  return base + 0x8C;
+        case 7:  return base + 0xA0;
+        case 10:
+        case 8:  return base + 0x28;
+        default: return base + 0x28;
+    }
+}
+#pragma scheduling reset
+
+/*
+ * --INFO--
+ *
  * Function: FUN_8006f57c
  * EN v1.0 Address: 0x8006F57C
  * EN v1.0 Size: 256b

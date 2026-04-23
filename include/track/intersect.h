@@ -5,6 +5,7 @@
 
 void FUN_8006f0b4(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  uint param_5,int param_6,int param_7);
+void* fn_8006F504(u32 i);
 void FUN_8006f57c(double param_1);
 void FUN_8006f67c(void);
 void FUN_8006facc(undefined4 param_1,undefined4 param_2,undefined param_3,uint param_4);
