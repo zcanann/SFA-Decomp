@@ -2136,20 +2136,21 @@ void FUN_80078d98(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80078f78(void)
+#pragma scheduling off
+void fn_80078F78(void)
 {
-  FUN_8025c828(DAT_803ddcb0,0xff,0xff,4);
-  FUN_8025be80(DAT_803ddcb0);
-  FUN_8025c1a4(DAT_803ddcb0,0xf,0,10,0xf);
-  FUN_8025c224(DAT_803ddcb0,7,0,5,7);
-  FUN_8025c65c(DAT_803ddcb0,0,0);
-  FUN_8025c2a8(DAT_803ddcb0,0,0,0,1,0);
-  FUN_8025c368(DAT_803ddcb0,0,0,0,1,0);
-  DAT_803ddcb0 = DAT_803ddcb0 + 1;
-  DAT_803ddc8b = DAT_803ddc8b + '\x01';
-  DAT_803ddc89 = DAT_803ddc89 + '\x01';
-  return;
+    GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
+    GXSetTevDirect(lbl_803DDCB0);
+    GXSetTevColorIn(lbl_803DDCB0, 0xF, 0, 10, 0xF);
+    GXSetTevAlphaIn(lbl_803DDCB0, 7, 0, 5, 7);
+    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
+    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    lbl_803DDCB0 += 1;
+    lbl_803DDC8B += 1;
+    lbl_803DDC89 += 1;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2164,20 +2165,21 @@ void FUN_80078f78(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007904c(void)
+#pragma scheduling off
+void fn_8007904C(void)
 {
-  FUN_8025c828(DAT_803ddcb0,0xff,0xff,4);
-  FUN_8025be80(DAT_803ddcb0);
-  FUN_8025c1a4(DAT_803ddcb0,0xf,10,4,0xf);
-  FUN_8025c224(DAT_803ddcb0,7,5,2,7);
-  FUN_8025c65c(DAT_803ddcb0,0,0);
-  FUN_8025c2a8(DAT_803ddcb0,0,0,0,1,0);
-  FUN_8025c368(DAT_803ddcb0,0,0,0,1,0);
-  DAT_803ddcb0 = DAT_803ddcb0 + 1;
-  DAT_803ddc8b = DAT_803ddc8b + '\x01';
-  DAT_803ddc89 = DAT_803ddc89 + '\x01';
-  return;
+    GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
+    GXSetTevDirect(lbl_803DDCB0);
+    GXSetTevColorIn(lbl_803DDCB0, 0xF, 10, 4, 0xF);
+    GXSetTevAlphaIn(lbl_803DDCB0, 7, 5, 2, 7);
+    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
+    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    lbl_803DDCB0 += 1;
+    lbl_803DDC8B += 1;
+    lbl_803DDC89 += 1;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2223,20 +2225,21 @@ void FUN_80079120(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80079228(void)
+#pragma scheduling off
+void fn_80079228(void)
 {
-  FUN_8025c828(DAT_803ddcb0,0xff,0xff,4);
-  FUN_8025be80(DAT_803ddcb0);
-  FUN_8025c1a4(DAT_803ddcb0,0xf,0xf,0xf,4);
-  FUN_8025c224(DAT_803ddcb0,7,7,7,2);
-  FUN_8025c65c(DAT_803ddcb0,0,0);
-  FUN_8025c2a8(DAT_803ddcb0,0,0,0,1,0);
-  FUN_8025c368(DAT_803ddcb0,0,0,0,1,0);
-  DAT_803ddcb0 = DAT_803ddcb0 + 1;
-  DAT_803ddc8b = DAT_803ddc8b + '\x01';
-  DAT_803ddc89 = DAT_803ddc89 + '\x01';
-  return;
+    GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
+    GXSetTevDirect(lbl_803DDCB0);
+    GXSetTevColorIn(lbl_803DDCB0, 0xF, 0xF, 0xF, 4);
+    GXSetTevAlphaIn(lbl_803DDCB0, 7, 7, 7, 2);
+    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
+    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    lbl_803DDCB0 += 1;
+    lbl_803DDC8B += 1;
+    lbl_803DDC89 += 1;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2251,20 +2254,21 @@ void FUN_80079228(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800792fc(void)
+#pragma scheduling off
+void fn_800792FC(void)
 {
-  FUN_8025c828(DAT_803ddcb0,0xff,0xff,4);
-  FUN_8025be80(DAT_803ddcb0);
-  FUN_8025c1a4(DAT_803ddcb0,0xf,0xf,0xf,10);
-  FUN_8025c224(DAT_803ddcb0,7,7,7,5);
-  FUN_8025c65c(DAT_803ddcb0,0,0);
-  FUN_8025c2a8(DAT_803ddcb0,0,0,0,1,0);
-  FUN_8025c368(DAT_803ddcb0,0,0,0,1,0);
-  DAT_803ddcb0 = DAT_803ddcb0 + 1;
-  DAT_803ddc8b = DAT_803ddc8b + '\x01';
-  DAT_803ddc89 = DAT_803ddc89 + '\x01';
-  return;
+    GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
+    GXSetTevDirect(lbl_803DDCB0);
+    GXSetTevColorIn(lbl_803DDCB0, 0xF, 0xF, 0xF, 10);
+    GXSetTevAlphaIn(lbl_803DDCB0, 7, 7, 7, 5);
+    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
+    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    lbl_803DDCB0 += 1;
+    lbl_803DDC8B += 1;
+    lbl_803DDC89 += 1;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2279,20 +2283,21 @@ void FUN_800792fc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800793d0(void)
+#pragma scheduling off
+void fn_800793D0(void)
 {
-  FUN_8025c828(DAT_803ddcb0,0xff,0xff,4);
-  FUN_8025be80(DAT_803ddcb0);
-  FUN_8025c1a4(DAT_803ddcb0,0xf,0,4,0xf);
-  FUN_8025c224(DAT_803ddcb0,7,0,2,7);
-  FUN_8025c65c(DAT_803ddcb0,0,0);
-  FUN_8025c2a8(DAT_803ddcb0,0,0,0,1,0);
-  FUN_8025c368(DAT_803ddcb0,0,0,0,1,0);
-  DAT_803ddcb0 = DAT_803ddcb0 + 1;
-  DAT_803ddc8b = DAT_803ddc8b + '\x01';
-  DAT_803ddc89 = DAT_803ddc89 + '\x01';
-  return;
+    GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
+    GXSetTevDirect(lbl_803DDCB0);
+    GXSetTevColorIn(lbl_803DDCB0, 0xF, 0, 4, 0xF);
+    GXSetTevAlphaIn(lbl_803DDCB0, 7, 0, 2, 7);
+    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
+    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
+    lbl_803DDCB0 += 1;
+    lbl_803DDC8B += 1;
+    lbl_803DDC89 += 1;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
