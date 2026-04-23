@@ -150,7 +150,7 @@ extern undefined4 FUN_800648c0();
 extern undefined4 FUN_80064e08();
 extern undefined4 FUN_80065780();
 extern void trackDolphin_initIntersectionBuffers(void);
-extern uint FUN_8006c740();
+extern int newshadows_getSmallShadowTexture(void);
 extern undefined8 FUN_8006d19c();
 extern undefined4 FUN_8006f57c();
 extern undefined4 FUN_8006fe48();

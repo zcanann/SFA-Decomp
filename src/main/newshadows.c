@@ -1078,7 +1078,7 @@ void FUN_8006c734(undefined4 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8006c740(void)
+int newshadows_getSmallShadowTexture(void)
 {
   return DAT_803ddc54;
 }

@@ -50,7 +50,7 @@ extern uint FUN_8005cf38();
 extern undefined4 FUN_8005edfc();
 extern int FUN_8005f6d4();
 extern int FUN_8006c6c8();
-extern int FUN_8006c740();
+extern int newshadows_getSmallShadowTexture(void);
 extern undefined4 FUN_8006d764();
 extern int FUN_8006ff74();
 extern undefined4 FUN_8007048c();
@@ -1855,7 +1855,7 @@ int FUN_80062a60(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
   if ((*(short *)(iVar2 + 0x4a) == -1) || (*(short *)(iVar2 + 0x48) == 2)) {
     if ((*(byte *)(iVar2 + 0x5f) & 4) == 0) {
       if ((*(byte *)(iVar2 + 0x5f) & 2) == 0) {
-        uVar3 = FUN_8006c740();
+        uVar3 = newshadows_getSmallShadowTexture();
         puVar4[1] = uVar3;
       }
       else {
