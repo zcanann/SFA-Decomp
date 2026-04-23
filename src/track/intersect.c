@@ -779,73 +779,53 @@ void fn_8006FD7C(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006fe48(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+#pragma scheduling off
+void fn_8006FE48(void)
 {
-  undefined4 *puVar1;
-  undefined *puVar2;
-  int iVar3;
-  
-  puVar1 = &DAT_80393a40;
-  puVar2 = &DAT_80392a40;
-  iVar3 = 0x10;
-  do {
-    *(undefined *)((int)puVar1 + 0x33) = 0;
-    puVar2[0xe] = 0;
-    *(undefined *)((int)puVar1 + 0x6b) = 0;
-    puVar2[0x1e] = 0;
-    *(undefined *)((int)puVar1 + 0xa3) = 0;
-    puVar2[0x2e] = 0;
-    *(undefined *)((int)puVar1 + 0xdb) = 0;
-    puVar2[0x3e] = 0;
-    *(undefined *)((int)puVar1 + 0x113) = 0;
-    puVar2[0x4e] = 0;
-    *(undefined *)((int)puVar1 + 0x14b) = 0;
-    puVar2[0x5e] = 0;
-    *(undefined *)((int)puVar1 + 0x183) = 0;
-    puVar2[0x6e] = 0;
-    *(undefined *)((int)puVar1 + 0x1bb) = 0;
-    puVar2[0x7e] = 0;
-    *(undefined *)((int)puVar1 + 499) = 0;
-    puVar2[0x8e] = 0;
-    *(undefined *)((int)puVar1 + 0x22b) = 0;
-    puVar2[0x9e] = 0;
-    *(undefined *)((int)puVar1 + 0x263) = 0;
-    puVar2[0xae] = 0;
-    *(undefined *)((int)puVar1 + 0x29b) = 0;
-    puVar2[0xbe] = 0;
-    *(undefined *)((int)puVar1 + 0x2d3) = 0;
-    puVar2[0xce] = 0;
-    *(undefined *)((int)puVar1 + 0x30b) = 0;
-    puVar2[0xde] = 0;
-    *(undefined *)((int)puVar1 + 0x343) = 0;
-    puVar2[0xee] = 0;
-    *(undefined *)((int)puVar1 + 0x37b) = 0;
-    puVar2[0xfe] = 0;
-    puVar1 = puVar1 + 0xe0;
-    puVar2 = puVar2 + 0x100;
-    iVar3 = iVar3 + -1;
-  } while (iVar3 != 0);
-  DAT_80392a30 = FUN_80054ed0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x19,
-                              puVar2,param_11,param_12,param_13,param_14,param_15,param_16);
-  DAT_80392a34 = FUN_80054ed0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x18,
-                              puVar2,param_11,param_12,param_13,param_14,param_15,param_16);
-  DAT_80392a38 = FUN_80054ed0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x1a,
-                              puVar2,param_11,param_12,param_13,param_14,param_15,param_16);
-  DAT_80392a3c = FUN_80054ed0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x646,
-                              puVar2,param_11,param_12,param_13,param_14,param_15,param_16);
-  DAT_80392a20 = FLOAT_803dfadc;
-  DAT_80392a24 = FLOAT_803dfae0;
-  DAT_80392a28 = FLOAT_803dfae0;
-  DAT_80392a2c = FLOAT_803dfae4;
-  DAT_803ddc7a = 0;
-  DAT_803ddc79 = 0;
-  DAT_803ddc78 = 0;
-  DAT_803ddc74 = 0;
-  return;
+    extern u8 lbl_80392A20[];
+    extern f32 lbl_803DFADC, lbl_803DFAE0, lbl_803DFAE4;
+    extern u32 fn_80054ED0(int);
+    extern u32 lbl_803DDC74;
+    extern u8 lbl_803DDC78, lbl_803DDC79, lbl_803DDC7A;
+    int i;
+    u8* base = lbl_80392A20;
+    u8* a = base + 0x1020;
+    u8* b = base + 0x0020;
+
+    for (i = 0; i < 16; i++) {
+        a[0x033] = 0; b[0x0E] = 0;
+        a[0x06B] = 0; b[0x1E] = 0;
+        a[0x0A3] = 0; b[0x2E] = 0;
+        a[0x0DB] = 0; b[0x3E] = 0;
+        a[0x113] = 0; b[0x4E] = 0;
+        a[0x14B] = 0; b[0x5E] = 0;
+        a[0x183] = 0; b[0x6E] = 0;
+        a[0x1BB] = 0; b[0x7E] = 0;
+        a[0x1F3] = 0; b[0x8E] = 0;
+        a[0x22B] = 0; b[0x9E] = 0;
+        a[0x263] = 0; b[0xAE] = 0;
+        a[0x29B] = 0; b[0xBE] = 0;
+        a[0x2D3] = 0; b[0xCE] = 0;
+        a[0x30B] = 0; b[0xDE] = 0;
+        a[0x343] = 0; b[0xEE] = 0;
+        a[0x37B] = 0; b[0xFE] = 0;
+        a += 0x380;
+        b += 0x100;
+    }
+    *(u32*)(base + 0x10) = fn_80054ED0(0x19);
+    *(u32*)(base + 0x14) = fn_80054ED0(0x18);
+    *(u32*)(base + 0x18) = fn_80054ED0(0x1A);
+    *(u32*)(base + 0x1C) = fn_80054ED0(0x646);
+    *(f32*)(base + 0x00) = lbl_803DFADC;
+    *(f32*)(base + 0x04) = lbl_803DFAE0;
+    *(f32*)(base + 0x08) = lbl_803DFAE0;
+    *(f32*)(base + 0x0C) = lbl_803DFAE4;
+    lbl_803DDC7A = 0;
+    lbl_803DDC79 = 0;
+    lbl_803DDC78 = 0;
+    lbl_803DDC74 = 0;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
