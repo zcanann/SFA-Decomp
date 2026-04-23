@@ -1628,6 +1628,37 @@ undefined4 * FUN_80037048(int param_1,int *param_2)
  */
 void FUN_8003709c(int param_1,int param_2)
 {
+  byte *bucketStarts;
+  char *bucketEnds;
+  int count;
+  int index;
+  int limit;
+  int *entries;
+  
+  if ((param_2 < 0) || (0x53 < param_2)) {
+    return;
+  }
+  bucketStarts = &DAT_80343958;
+  bucketEnds = &DAT_80343959;
+  entries = &DAT_80343558;
+  index = (int)bucketStarts[param_2];
+  limit = (int)(byte)bucketEnds[param_2];
+  while ((index < limit) && (entries[index] != param_1)) {
+    index++;
+  }
+  if (limit <= index) {
+    return;
+  }
+  count = (int)DAT_803dd870 - 1;
+  DAT_803dd870 = count;
+  while (index < count) {
+    entries[index] = entries[index + 1];
+    index++;
+  }
+  while (param_2 < 0x54) {
+    bucketEnds[param_2] = bucketEnds[param_2] - 1;
+    param_2++;
+  }
 }
 
 /*
@@ -1691,6 +1722,40 @@ int FUN_8003728c(int param_1)
  */
 void FUN_800372f8(int param_1,int param_2)
 {
+  byte *bucketStarts;
+  char *bucketEnds;
+  int count;
+  int index;
+  int insertIndex;
+  int limit;
+  int *entries;
+  
+  if ((param_2 < 0) || (0x53 < param_2)) {
+    return;
+  }
+  bucketStarts = &DAT_80343958;
+  entries = &DAT_80343558;
+  bucketEnds = &DAT_80343959;
+  insertIndex = (int)bucketStarts[param_2];
+  limit = (int)(byte)bucketEnds[param_2];
+  for (index = insertIndex; index < limit; index++) {
+    if (entries[index] == param_1) {
+      return;
+    }
+  }
+  if (limit != insertIndex) {
+    insertIndex = limit - 1;
+  }
+  count = (int)DAT_803dd870;
+  DAT_803dd870 = count + 1;
+  for (index = count; insertIndex < index; index--) {
+    entries[index] = entries[index - 1];
+  }
+  entries[insertIndex] = param_1;
+  while (param_2 < 0x54) {
+    bucketEnds[param_2] = bucketEnds[param_2] + 1;
+    param_2++;
+  }
 }
 
 /*
@@ -2082,6 +2147,48 @@ int FUN_80037b60(int param_1,float *param_2,undefined4 *param_3,float *param_4)
 void FUN_80037c38(undefined4 param_1,undefined4 param_2,uint param_3,uint param_4,uint param_5,
                  uint param_6,float *param_7)
 {
+  uint uVar1;
+  int iVar2;
+  int *piVar3;
+  undefined8 uVar4;
+  int local_58;
+  uint local_54;
+  uint local_50;
+  uint local_4c;
+  uint local_48;
+  undefined2 local_44;
+  undefined2 local_42;
+  undefined2 local_40;
+  float local_3c;
+  float local_38;
+  undefined4 uStack_34;
+  float local_30[12];
+  
+  uVar4 = FUN_80286834();
+  uVar1 = (uint)((ulonglong)uVar4 >> 0x20);
+  *param_7 = *param_7 - FLOAT_803dc074;
+  iVar2 = FUN_80036868((int)uVar1, (undefined4 *)&local_58, (int *)0x0, (uint *)0x0,
+                       (undefined4 *)&local_38,
+                       &uStack_34, (undefined4 *)local_30);
+  if ((((*param_7 <= FLOAT_803df5f0) && (iVar2 != 0)) && ((*param_7 = FLOAT_803df5f8), (iVar2 != 0x1a))) &&
+      (iVar2 != 5)) {
+    local_38 = local_38 + FLOAT_803dda58;
+    local_30[0] = local_30[0] + FLOAT_803dda5c;
+    local_3c = FLOAT_803df5fc;
+    local_40 = 0;
+    local_42 = 0;
+    local_44 = 0;
+    piVar3 = (int *)FUN_80013ee8(0x5a);
+    local_54 = (uint)uVar4 & 0xff;
+    local_50 = param_3 & 0xff;
+    local_4c = param_4 & 0xff;
+    local_48 = param_5 & 0xff;
+    (**(code **)(*piVar3 + 4))(0, 1, &local_44, 0x401, 0xffffffff, &local_54);
+    if ((((param_6 & 0xffff) != 0) && (local_58 != 0)) && (*(short *)(local_58 + 0x46) == 0x69)) {
+      FUN_8000bb38((int)uVar1, (ushort)param_6);
+    }
+  }
+  FUN_80286880();
 }
 
 /*
@@ -2452,6 +2559,16 @@ undefined4 FUN_80038300(int param_1)
  */
 void FUN_80038378(undefined4 param_1,undefined4 param_2,int param_3,float *param_4)
 {
+  int iVar1;
+  undefined8 uVar2;
+  
+  uVar2 = FUN_80286840();
+  for (iVar1 = 0; iVar1 < param_3; iVar1 = iVar1 + 1) {
+    FUN_80038524((int)((ulonglong)uVar2 >> 0x20), (int)uVar2 + iVar1, param_4,
+                 (undefined4 *)(param_4 + 1), param_4 + 2, 0);
+    param_4 = param_4 + 3;
+  }
+  FUN_8028688c();
 }
 
 /*
