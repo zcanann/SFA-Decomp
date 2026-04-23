@@ -40,7 +40,7 @@ extern undefined4 FUN_8005d264();
 extern undefined4 FUN_8005d294();
 extern undefined4 FUN_8006933c();
 extern undefined4 FUN_80069798();
-extern undefined4 FUN_80069ad4();
+extern void trackDolphin_getCurrentTrackPoint(uint **param_1);
 extern undefined4 FUN_80069ae4();
 extern undefined4 FUN_80078bf8();
 extern undefined4 FUN_80078cc8();
@@ -2673,7 +2673,7 @@ void FUN_800a43a8(int param_1)
     FUN_8006933c(param_1,auStack_9c,0x84,'\0');
     FUN_80069ae4(&local_b8,&local_b4);
     uVar1 = local_b4;
-    FUN_80069ad4(&local_b0);
+    trackDolphin_getCurrentTrackPoint(&local_b0);
     uStack_1c = *local_b0 ^ 0x80000000;
     local_20 = 0x43300000;
     uStack_14 = local_b0[2] ^ 0x80000000;

@@ -3693,8 +3693,10 @@ undefined4 * fn_80069AC0(uint *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80069ad4(undefined4 *param_1)
+void trackDolphin_getCurrentTrackPoint(uint **param_1)
 {
+  *param_1 = (uint *)&DAT_8038eaa4;
+  return;
 }
 
 /*
