@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_80107398(ushort *param_1);
+void camclimb_update(ushort *param_1);
 
 #endif /* MAIN_DLL_CAM_CAMCLIMB_H_ */

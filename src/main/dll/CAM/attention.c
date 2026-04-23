@@ -13,7 +13,7 @@ extern ulonglong FUN_80286840();
 extern undefined4 FUN_8028688c();
 
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803de1a8;
+extern undefined4* gCamcontrolModeSettings;
 extern f64 DOUBLE_803e2318;
 extern f32 FLOAT_803e2308;
 extern f32 FLOAT_803e2324;
@@ -25,7 +25,7 @@ extern f32 FLOAT_803e2354;
 /*
  * --INFO--
  *
- * Function: FUN_801047dc
+ * Function: camcontrol_updateModeSettings
  * EN v1.0 Address: 0x801047DC
  * EN v1.0 Size: 436b
  * EN v1.1 Address: TODO
@@ -35,7 +35,7 @@ extern f32 FLOAT_803e2354;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801047dc(int param_1)
+void camcontrol_updateModeSettings(int param_1)
 {
   double dVar1;
   float local_28;
@@ -47,16 +47,17 @@ void FUN_801047dc(int param_1)
   undefined4 local_10;
   uint uStack_c;
   
-  if (*(short *)((int)DAT_803de1a8 + 0x82) != 0) {
-    *(ushort *)((int)DAT_803de1a8 + 0x82) =
-         *(short *)((int)DAT_803de1a8 + 0x82) - (ushort)DAT_803dc070;
-    if (*(short *)((int)DAT_803de1a8 + 0x82) < 0) {
-      *(undefined2 *)((int)DAT_803de1a8 + 0x82) = 0;
+  if (*(short *)((int)gCamcontrolModeSettings + 0x82) != 0) {
+    *(ushort *)((int)gCamcontrolModeSettings + 0x82) =
+         *(short *)((int)gCamcontrolModeSettings + 0x82) - (ushort)DAT_803dc070;
+    if (*(short *)((int)gCamcontrolModeSettings + 0x82) < 0) {
+      *(undefined2 *)((int)gCamcontrolModeSettings + 0x82) = 0;
     }
-    uStack_14 = (int)*(short *)(DAT_803de1a8 + 0x21) - (int)*(short *)((int)DAT_803de1a8 + 0x82) ^
+    uStack_14 = (int)*(short *)(gCamcontrolModeSettings + 0x21) -
+                (int)*(short *)((int)gCamcontrolModeSettings + 0x82) ^
                 0x80000000;
     local_18 = 0x43300000;
-    uStack_c = (int)*(short *)(DAT_803de1a8 + 0x21) ^ 0x80000000;
+    uStack_c = (int)*(short *)(gCamcontrolModeSettings + 0x21) ^ 0x80000000;
     local_10 = 0x43300000;
     local_28 = FLOAT_803e232c;
     local_24 = FLOAT_803e2324;
@@ -65,36 +66,47 @@ void FUN_801047dc(int param_1)
     dVar1 = FUN_80010de0((double)((float)((double)CONCAT44(0x43300000,uStack_14) - DOUBLE_803e2318)
                                  / (float)((double)CONCAT44(0x43300000,uStack_c) - DOUBLE_803e2318))
                          ,&local_28,(float *)0x0);
-    DAT_803de1a8[0x23] =
-         (float)(dVar1 * (double)(float)((double)DAT_803de1a8[0x25] - (double)DAT_803de1a8[0x24]) +
-                (double)DAT_803de1a8[0x24]);
-    *DAT_803de1a8 =
-         (float)(dVar1 * (double)(float)((double)DAT_803de1a8[0xc] - (double)DAT_803de1a8[0xb]) +
-                (double)DAT_803de1a8[0xb]);
-    DAT_803de1a8[1] =
-         (float)(dVar1 * (double)(float)((double)DAT_803de1a8[0xe] - (double)DAT_803de1a8[0xd]) +
-                (double)DAT_803de1a8[0xd]);
-    DAT_803de1a8[2] =
-         (float)(dVar1 * (double)(float)((double)DAT_803de1a8[0x10] - (double)DAT_803de1a8[0xf]) +
-                (double)DAT_803de1a8[0xf]);
-    DAT_803de1a8[3] =
-         (float)(dVar1 * (double)(float)((double)DAT_803de1a8[0x12] - (double)DAT_803de1a8[0x11]) +
-                (double)DAT_803de1a8[0x11]);
-    DAT_803de1a8[4] =
-         (float)(dVar1 * (double)(float)((double)DAT_803de1a8[0x14] - (double)DAT_803de1a8[0x13]) +
-                (double)DAT_803de1a8[0x13]);
-    DAT_803de1a8[5] =
-         (float)(dVar1 * (double)(float)((double)DAT_803de1a8[0x16] - (double)DAT_803de1a8[0x15]) +
-                (double)DAT_803de1a8[0x15]);
-    DAT_803de1a8[6] =
-         (float)(dVar1 * (double)(float)((double)DAT_803de1a8[0x18] - (double)DAT_803de1a8[0x17]) +
-                (double)DAT_803de1a8[0x17]);
-    DAT_803de1a8[7] =
-         (float)(dVar1 * (double)(float)((double)DAT_803de1a8[0x1a] - (double)DAT_803de1a8[0x19]) +
-                (double)DAT_803de1a8[0x19]);
+    gCamcontrolModeSettings[0x23] = (float)(dVar1 *
+                                           (double)(float)((double)gCamcontrolModeSettings[0x25] -
+                                                          (double)gCamcontrolModeSettings[0x24]) +
+                                           (double)gCamcontrolModeSettings[0x24]);
+    *gCamcontrolModeSettings = (float)(dVar1 *
+                                      (double)(float)((double)gCamcontrolModeSettings[0xc] -
+                                                     (double)gCamcontrolModeSettings[0xb]) +
+                                      (double)gCamcontrolModeSettings[0xb]);
+    gCamcontrolModeSettings[1] = (float)(dVar1 *
+                                        (double)(float)((double)gCamcontrolModeSettings[0xe] -
+                                                       (double)gCamcontrolModeSettings[0xd]) +
+                                        (double)gCamcontrolModeSettings[0xd]);
+    gCamcontrolModeSettings[2] = (float)(dVar1 *
+                                        (double)(float)((double)gCamcontrolModeSettings[0x10] -
+                                                       (double)gCamcontrolModeSettings[0xf]) +
+                                        (double)gCamcontrolModeSettings[0xf]);
+    gCamcontrolModeSettings[3] = (float)(dVar1 *
+                                        (double)(float)((double)gCamcontrolModeSettings[0x12] -
+                                                       (double)gCamcontrolModeSettings[0x11]) +
+                                        (double)gCamcontrolModeSettings[0x11]);
+    gCamcontrolModeSettings[4] = (float)(dVar1 *
+                                        (double)(float)((double)gCamcontrolModeSettings[0x14] -
+                                                       (double)gCamcontrolModeSettings[0x13]) +
+                                        (double)gCamcontrolModeSettings[0x13]);
+    gCamcontrolModeSettings[5] = (float)(dVar1 *
+                                        (double)(float)((double)gCamcontrolModeSettings[0x16] -
+                                                       (double)gCamcontrolModeSettings[0x15]) +
+                                        (double)gCamcontrolModeSettings[0x15]);
+    gCamcontrolModeSettings[6] = (float)(dVar1 *
+                                        (double)(float)((double)gCamcontrolModeSettings[0x18] -
+                                                       (double)gCamcontrolModeSettings[0x17]) +
+                                        (double)gCamcontrolModeSettings[0x17]);
+    gCamcontrolModeSettings[7] = (float)(dVar1 *
+                                        (double)(float)((double)gCamcontrolModeSettings[0x1a] -
+                                                       (double)gCamcontrolModeSettings[0x19]) +
+                                        (double)gCamcontrolModeSettings[0x19]);
     *(float *)(param_1 + 0xb4) =
-         (float)(dVar1 * (double)(float)((double)DAT_803de1a8[0x1c] - (double)DAT_803de1a8[0x1b]) +
-                (double)DAT_803de1a8[0x1b]);
+         (float)(dVar1 *
+                (double)(float)((double)gCamcontrolModeSettings[0x1c] -
+                               (double)gCamcontrolModeSettings[0x1b]) +
+                (double)gCamcontrolModeSettings[0x1b]);
   }
   return;
 }
@@ -102,7 +114,7 @@ void FUN_801047dc(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80104990
+ * Function: camcontrol_updateVerticalBounds
  * EN v1.0 Address: 0x80104990
  * EN v1.0 Size: 700b
  * EN v1.1 Address: TODO
@@ -112,8 +124,8 @@ void FUN_801047dc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80104990(undefined4 param_1,undefined4 param_2,undefined param_3,float *param_4,
-                 float *param_5)
+void camcontrol_updateVerticalBounds(undefined4 param_1,undefined4 param_2,undefined param_3,
+                                     float *param_4,float *param_5)
 {
   float fVar1;
   float fVar2;

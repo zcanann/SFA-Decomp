@@ -11,7 +11,7 @@ extern int FUN_80296a14();
 extern int FUN_80296e60();
 
 extern undefined4* DAT_803dd6d0;
-extern undefined4 DAT_803de1b0;
+extern undefined4 gCamcontrolPathState;
 extern f64 DOUBLE_803e23d0;
 
 /*
@@ -124,18 +124,18 @@ void FUN_80107020(undefined8 param_1,double param_2,double param_3,double param_
     local_e4[1] = 0;
     local_e4[2] = 0;
     FUN_80021b8c(local_e4,&local_dc);
-    *(float *)(DAT_803de1b0 + iVar4 + 0x1c) = (float)(dVar10 + (double)local_dc);
+    *(float *)(gCamcontrolPathState + iVar4 + 0x1c) = (float)(dVar10 + (double)local_dc);
     uStack_a4 = (int)(short)*puVar5 ^ 0x80000000U;
     local_a8 = 0x43300000;
     uStack_9c = (int)sVar1 ^ 0x80000000U;
     local_a0 = 0x43300000;
-    *(float *)(DAT_803de1b0 + iVar4 + 0x6c) =
+    *(float *)(gCamcontrolPathState + iVar4 + 0x6c) =
          (float)(dVar7 * (double)((float)((double)CONCAT44(0x43300000,
                                                            (int)(short)*puVar5 ^ 0x80000000U) -
                                          dVar9) /
                                  (float)((double)CONCAT44(0x43300000,(int)sVar1 ^ 0x80000000U) -
                                         dVar9)) + param_4);
-    *(float *)(DAT_803de1b0 + iVar4 + 0xbc) = (float)(param_2 + (double)local_d4);
+    *(float *)(gCamcontrolPathState + iVar4 + 0xbc) = (float)(param_2 + (double)local_d4);
     puVar5 = puVar5 + 1;
     iVar4 = iVar4 + 4;
     iVar2 = iVar2 + 1;
@@ -176,10 +176,10 @@ void FUN_80107214(int param_1,int param_2)
        ((*(byte *)(param_1 + 0x141) & 2) == 0)) {
       if ((((uVar2 & 0x10) != 0) && (*(short *)(param_2 + 0x44) == 1)) &&
          (iVar3 = FUN_80296a14(param_2), iVar3 != 0)) {
-        local_28 = *(undefined4 *)(DAT_803de1b0 + 4);
-        local_24 = *(undefined4 *)(DAT_803de1b0 + 0xc);
-        local_18 = (longlong)(int)*(float *)(DAT_803de1b0 + 0x10);
-        local_20 = (undefined2)(int)*(float *)(DAT_803de1b0 + 0x10);
+        local_28 = *(undefined4 *)(gCamcontrolPathState + 4);
+        local_24 = *(undefined4 *)(gCamcontrolPathState + 0xc);
+        local_18 = (longlong)(int)*(float *)(gCamcontrolPathState + 0x10);
+        local_20 = (undefined2)(int)*(float *)(gCamcontrolPathState + 0x10);
         (**(code **)(*DAT_803dd6d0 + 0x1c))(0x44,1,0,0xc,&local_28,0,0xff);
       }
     }
@@ -193,7 +193,7 @@ void FUN_80107214(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8010736c
+ * Function: camcontrol_releasePathState
  * EN v1.0 Address: 0x8010736C
  * EN v1.0 Size: 44b
  * EN v1.1 Address: TODO
@@ -203,9 +203,9 @@ void FUN_80107214(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010736c(void)
+void camcontrol_releasePathState(void)
 {
-  FUN_800238c4(DAT_803de1b0);
-  DAT_803de1b0 = 0;
+  FUN_800238c4(gCamcontrolPathState);
+  gCamcontrolPathState = 0;
   return;
 }

@@ -10,7 +10,7 @@ extern char FUN_801068f0();
 extern undefined4 FUN_80107214();
 
 extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803de1b0;
+extern undefined4* gCamcontrolPathState;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803e23c0;
 extern f32 FLOAT_803e23d8;
@@ -19,7 +19,7 @@ extern f32 FLOAT_803e23dc;
 /*
  * --INFO--
  *
- * Function: FUN_80107398
+ * Function: camclimb_update
  * EN v1.0 Address: 0x80107398
  * EN v1.0 Size: 896b
  * EN v1.1 Address: TODO
@@ -29,7 +29,7 @@ extern f32 FLOAT_803e23dc;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80107398(ushort *param_1)
+void camclimb_update(ushort *param_1)
 {
   char cVar2;
   uint uVar1;
@@ -44,29 +44,29 @@ void FUN_80107398(ushort *param_1)
   undefined4 local_24;
   undefined4 local_20 [4];
   
-  if (*(char *)(DAT_803de1b0 + 0x6f) == '\0') {
-    if (*DAT_803de1b0 != *(int *)(param_1 + 0x18)) {
+  if (*(char *)(gCamcontrolPathState + 0x6f) == '\0') {
+    if (*gCamcontrolPathState != *(int *)(param_1 + 0x18)) {
       iVar3 = 0;
-      for (iVar5 = 0; iVar5 < DAT_803de1b0[0x6c]; iVar5 = iVar5 + 1) {
-        FUN_8000e0c0((double)*(float *)((int)DAT_803de1b0 + iVar3 + 0x1c),
-                     (double)*(float *)((int)DAT_803de1b0 + iVar3 + 0x6c),
-                     (double)*(float *)((int)DAT_803de1b0 + iVar3 + 0xbc),
-                     (float *)((int)DAT_803de1b0 + iVar3 + 0x1c),
-                     (float *)((int)DAT_803de1b0 + iVar3 + 0x6c),
-                     (float *)((int)DAT_803de1b0 + iVar3 + 0xbc),*DAT_803de1b0);
+      for (iVar5 = 0; iVar5 < gCamcontrolPathState[0x6c]; iVar5 = iVar5 + 1) {
+        FUN_8000e0c0((double)*(float *)((int)gCamcontrolPathState + iVar3 + 0x1c),
+                     (double)*(float *)((int)gCamcontrolPathState + iVar3 + 0x6c),
+                     (double)*(float *)((int)gCamcontrolPathState + iVar3 + 0xbc),
+                     (float *)((int)gCamcontrolPathState + iVar3 + 0x1c),
+                     (float *)((int)gCamcontrolPathState + iVar3 + 0x6c),
+                     (float *)((int)gCamcontrolPathState + iVar3 + 0xbc),*gCamcontrolPathState);
         iVar3 = iVar3 + 4;
       }
       iVar3 = 0;
-      for (iVar5 = 0; iVar5 < DAT_803de1b0[0x6c]; iVar5 = iVar5 + 1) {
-        FUN_8000e054((double)*(float *)((int)DAT_803de1b0 + iVar3 + 0x1c),
-                     (double)*(float *)((int)DAT_803de1b0 + iVar3 + 0x6c),
-                     (double)*(float *)((int)DAT_803de1b0 + iVar3 + 0xbc),
-                     (float *)((int)DAT_803de1b0 + iVar3 + 0x1c),
-                     (float *)((int)DAT_803de1b0 + iVar3 + 0x6c),
-                     (float *)((int)DAT_803de1b0 + iVar3 + 0xbc),*(int *)(param_1 + 0x18));
+      for (iVar5 = 0; iVar5 < gCamcontrolPathState[0x6c]; iVar5 = iVar5 + 1) {
+        FUN_8000e054((double)*(float *)((int)gCamcontrolPathState + iVar3 + 0x1c),
+                     (double)*(float *)((int)gCamcontrolPathState + iVar3 + 0x6c),
+                     (double)*(float *)((int)gCamcontrolPathState + iVar3 + 0xbc),
+                     (float *)((int)gCamcontrolPathState + iVar3 + 0x1c),
+                     (float *)((int)gCamcontrolPathState + iVar3 + 0x6c),
+                     (float *)((int)gCamcontrolPathState + iVar3 + 0xbc),*(int *)(param_1 + 0x18));
         iVar3 = iVar3 + 4;
       }
-      *DAT_803de1b0 = *(int *)(param_1 + 0x18);
+      *gCamcontrolPathState = *(int *)(param_1 + 0x18);
     }
     psVar4 = *(short **)(param_1 + 0x52);
     local_24 = *(undefined4 *)(param_1 + 8);
@@ -79,11 +79,12 @@ void FUN_80107398(ushort *param_1)
                  (float *)(param_1 + 0x10),*(int *)(param_1 + 0x18));
     (**(code **)(**(int **)(iVar3 + 4) + 0x1c))
               ((double)FLOAT_803e23d8,(double)FLOAT_803e23dc,param_1,psVar4);
-    (**(code **)(**(int **)(iVar3 + 4) + 0x24))(param_1,1,3,DAT_803de1b0 + 5,DAT_803de1b0 + 6);
+    (**(code **)(**(int **)(iVar3 + 4) + 0x24))(param_1,1,3,gCamcontrolPathState + 5,
+                                                 gCamcontrolPathState + 6);
     if ((param_1[0x50] != 0) || (*(char *)(param_1 + 0xa1) != '\0')) {
-      DAT_803de1b0[0x47] = (int)((float)DAT_803de1b0[0x47] + FLOAT_803dc074);
+      gCamcontrolPathState[0x47] = (int)((float)gCamcontrolPathState[0x47] + FLOAT_803dc074);
     }
-    if (FLOAT_803e23c0 < (float)DAT_803de1b0[0x47]) {
+    if (FLOAT_803e23c0 < (float)gCamcontrolPathState[0x47]) {
       cVar2 = camcontrol_getTargetPosition((int)param_1,psVar4,(float *)(param_1 + 0xc),
                                            (short *)(param_1 + 1));
       if (cVar2 == '\x01') {

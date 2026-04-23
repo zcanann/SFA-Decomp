@@ -17,7 +17,7 @@ extern undefined4 FUN_802945e0();
 extern undefined4 FUN_80294964();
 
 extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803de1b0;
+extern undefined4* gCamcontrolPathState;
 extern f64 DOUBLE_803e23d0;
 extern f32 FLOAT_803e23c0;
 extern f32 FLOAT_803e23c4;
