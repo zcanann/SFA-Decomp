@@ -1703,10 +1703,85 @@ void fn_80075800(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80075b98(double param_1,double param_2,double param_3,double param_4,double param_5,
-                 double param_6,undefined4 *param_7)
+#pragma peephole off
+#pragma scheduling off
+void fn_80075B98(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
 {
+    extern void fn_8000FB20(void);
+    extern Mtx lbl_803974E0;
+    extern f32 lbl_803DFBAC;
+    extern f32 lbl_803DFB5C;
+    extern void GXSetZMode();
+    extern u8 lbl_803DDC92;
+    extern int lbl_803DDC94;
+    extern u8 lbl_803DDC98;
+    f32 scale = lbl_803DFBAC;
+    f32 fx1 = scale * x1;
+    f32 fy1 = scale * y1;
+    f32 fx2 = scale * x2;
+    f32 fy2 = scale * y2;
+    f32 fx3 = scale * x3;
+    f32 fy3 = scale * y3;
+
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXSetCullMode(GX_CULL_NONE);
+    GXSetProjection(lbl_803974E0, GX_ORTHOGRAPHIC);
+    if ((u32)lbl_803DDC98 != 0 || lbl_803DDC94 != 7 ||
+        (u32)lbl_803DDC92 != 0 || lbl_803DDC9A == 0) {
+        GXSetZMode(0, 7, 0);
+        lbl_803DDC98 = 0;
+        lbl_803DDC94 = 7;
+        lbl_803DDC92 = 0;
+        lbl_803DDC9A = 1;
+    }
+    GXSetBlendMode(1, 4, 5, 5);
+    color[3] = (u8)(((s32)color[3] * (s32)lbl_803DC2D9) >> 8);
+    GXSetTevKColor(0, *(GXColor*)color);
+    GXSetTevKAlphaSel(0, 0x1C);
+    GXSetTevKColorSel(0, 0xC);
+    GXSetTevOrder(0, 0xFF, 0xFF, 4);
+    GXSetTevDirect(0);
+    GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xE);
+    GXSetTevAlphaIn(0, 7, 7, 7, 6);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetChanCtrl(0, 0, 0, 1, 0, 0, 2);
+    GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+    GXSetNumChans(1);
+    GXSetNumIndStages(0);
+    GXSetNumTexGens(0);
+    GXSetNumTevStages(1);
+    GXBegin(GX_TRIANGLES, GX_VTXFMT1, 3);
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = (s32)fx1;
+    GXWGFifo.s16 = (s32)fy1;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DFB5C;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = (s32)fx2;
+    GXWGFifo.s16 = (s32)fy2;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DFB5C;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = (s32)fx3;
+    GXWGFifo.s16 = (s32)fy3;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DFB5C;
+
+    fn_8000FB20();
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
