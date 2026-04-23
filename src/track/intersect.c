@@ -886,18 +886,18 @@ undefined4 FUN_8006ff74(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-/* EN v1.0 Size: 36b - kept as stub until we crack MWCC's early-return
- * reshape. Target prepares default 0x01E00280 AFTER the zero check;
- * MWCC hoists the default into the prologue and uses beqlr to return
- * it, regardless of source ordering or pragmas. */
-uint FUN_80070050(void);
-uint FUN_80070050(void)
+#pragma peephole off
+#pragma scheduling off
+uint fn_80070050(void)
 {
-    if (lbl_803DDC84 != 0) {
-        return lbl_803DDC84 | (lbl_803DDC84 << 16);
+    u32 v = lbl_803DDC84;
+    if (v != 0) {
+        return v | (v << 16);
     }
     return 0x01E00280;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--

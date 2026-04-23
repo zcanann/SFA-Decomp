@@ -14,7 +14,7 @@ void FUN_8006fe48(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined4 param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 undefined4 FUN_8006ff74(int param_1,int param_2,int param_3);
-uint FUN_80070050(void);
+uint fn_80070050(void);
 void fn_80070074(u32 param_1);
 void fn_8007007C(void);
 void FUN_80070088(double param_1,double param_2,double param_3,double param_4,double param_5,
