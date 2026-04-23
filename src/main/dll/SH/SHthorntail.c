@@ -17,13 +17,13 @@ extern f32 FLOAT_803e60b0;
 extern f32 FLOAT_803e60c8;
 extern f32 FLOAT_803e60cc;
 extern f32 FLOAT_803e60d0;
-extern char s_SHthorntail_c_803280c8[];
-extern char s_Thorntail_entered_an_invalid_sta_803280d8[];
+extern char sSHthorntailSourceFile[];
+extern char sThorntailEnteredInvalidState[];
 
 /*
  * --INFO--
  *
- * Function: FUN_801d5764
+ * Function: SHthorntail_update
  * EN v1.0 Address: 0x801D5764
  * EN v1.0 Size: 920b
  * EN v1.1 Address: TODO
@@ -33,10 +33,10 @@ extern char s_Thorntail_entered_an_invalid_sta_803280d8[];
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d5764(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9,int param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+void SHthorntail_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+                        undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                        short *param_9,int param_10,undefined4 param_11,undefined4 param_12,
+                        undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
   int iVar1;
   uint uVar2;
@@ -144,8 +144,8 @@ void FUN_801d5764(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     break;
   default:
     FUN_80242fc0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                 s_SHthorntail_c_803280c8,0x6cd,s_Thorntail_entered_an_invalid_sta_803280d8,param_12
-                 ,param_13,param_14,param_15,param_16);
+                 sSHthorntailSourceFile,0x6cd,sThorntailEnteredInvalidState,param_12,param_13,
+                 param_14,param_15,param_16);
   }
   return;
 }
