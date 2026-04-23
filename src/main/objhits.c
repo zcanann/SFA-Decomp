@@ -75,6 +75,12 @@ extern char s_HIT_VOLUMES__an_object_has_too_m_802cb98c[];
 extern undefined4 uRam803dd84c;
 extern undefined4 uRam803dd854;
 
+typedef struct ObjHitsSweepEntry {
+  float minX;
+  float maxX;
+  int obj;
+} ObjHitsSweepEntry;
+
 /*
  * --INFO--
  *
@@ -2899,4 +2905,211 @@ void FUN_800349a8(void)
 void FUN_80034dd4(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
+  int attachedObj;
+  ObjHitsSweepEntry *candidateEntry;
+  ObjHitsSweepEntry **entrySlot;
+  int candidateObj;
+  int obj;
+  int currentIndex;
+  int candidateIndex;
+  int objState;
+  int slotCount;
+  int slotIndex;
+  int attachedState;
+  int objectCount;
+  int candidateAttachedObj;
+  int *objectList;
+  bool broadphaseActive;
+  bool canHit;
+  bool canOverlap;
+  bool hasPrimaryMask;
+  bool hasSecondaryMask;
+  bool shouldProcess;
+  double dVar17;
+  float fVar11;
+  ObjHitsSweepEntry *nextEntry;
+  ObjHitsSweepEntry *sweepEntries;
+  ObjHitsSweepEntry **sweepPtrs;
+  undefined4 uStack_f28;
+  undefined4 auStack_f24[51];
+  int aiStack_e58[918];
+  
+  objectCount = FUN_80286820();
+  objectList = (int *)FUN_8002e1f4(&uStack_f28, auStack_f24);
+  sweepPtrs = (ObjHitsSweepEntry **)&DAT_80341558;
+  sweepEntries = (ObjHitsSweepEntry *)&DAT_80341b98;
+  nextEntry = (ObjHitsSweepEntry *)&DAT_80341ba4;
+  sweepEntries->maxX = FLOAT_803df5e0;
+  sweepEntries->minX = FLOAT_803df5e0;
+  sweepPtrs[0] = sweepEntries;
+  slotCount = 1;
+  entrySlot = (ObjHitsSweepEntry **)&DAT_8034155c;
+  if (0 < objectCount) {
+    do {
+      obj = *objectList;
+      objState = *(int *)(obj + 0x54);
+      if (objState != 0) {
+        if ((((*(ushort *)(objState + 0x60) & 3) != 0) && (*(char *)(objState + 0x62) != '\b')) &&
+            (slotCount < 400)) {
+          *entrySlot = nextEntry;
+          (*entrySlot)->obj = obj;
+          (*entrySlot)->minX = *(float *)(obj + 0x18) - *(float *)(objState + 0x38);
+          nextEntry++;
+          entrySlot++;
+          sweepPtrs[slotCount]->maxX = *(float *)(obj + 0x18) + *(float *)(objState + 0x38);
+          slotCount++;
+        }
+        *(ushort *)(objState + 0x60) = *(ushort *)(objState + 0x60) & 0xfff7;
+        *(undefined *)(objState + 0xad) = 0;
+        *(undefined *)(objState + 0xac) = 0xff;
+        *(undefined4 *)objState = 0;
+        attachedObj = *(int *)(obj + 0xc8);
+        if ((attachedObj != 0) && (*(short *)(attachedObj + 0x44) == 0x2d)) {
+          attachedState = *(int *)(attachedObj + 0x54);
+          *(ushort *)(attachedState + 0x60) = *(ushort *)(attachedState + 0x60) & 0xfff7;
+          *(undefined *)(attachedState + 0xad) = 0;
+          *(undefined *)(attachedState + 0xac) = 0xff;
+          *(undefined4 *)attachedState = 0;
+        }
+      }
+      objectList++;
+      objectCount--;
+    } while (objectCount != 0);
+  }
+  FUN_800323e0((int)&DAT_80341558, slotCount);
+  currentIndex = 1;
+  slotIndex = 1;
+  entrySlot = (ObjHitsSweepEntry **)&DAT_8034155c;
+  do {
+    if (slotCount <= slotIndex) {
+      entrySlot = (ObjHitsSweepEntry **)&DAT_8034155c;
+      for (currentIndex = 1; currentIndex < slotCount; currentIndex++) {
+        obj = (*entrySlot)->obj;
+        if (((*(ushort *)(*(int *)(obj + 0x54) + 0x60) & 0x200) != 0) &&
+            (FUN_800349a8(), *(int *)(obj + 0xc8) != 0)) {
+          FUN_800349a8();
+        }
+        entrySlot++;
+      }
+      entrySlot = (ObjHitsSweepEntry **)&DAT_8034155c;
+      for (currentIndex = 1; currentIndex < slotCount; currentIndex++) {
+        obj = (*entrySlot)->obj;
+        objState = *(int *)(obj + 0x54);
+        *(undefined4 *)(objState + 0x10) = *(undefined4 *)(obj + 0xc);
+        *(undefined4 *)(objState + 0x14) = *(undefined4 *)(obj + 0x10);
+        *(undefined4 *)(objState + 0x18) = *(undefined4 *)(obj + 0x14);
+        if (*(int *)(obj + 0x30) == 0) {
+          *(undefined4 *)(objState + 0x1c) = *(undefined4 *)(obj + 0xc);
+          *(undefined4 *)(objState + 0x20) = *(undefined4 *)(obj + 0x10);
+          *(undefined4 *)(objState + 0x24) = *(undefined4 *)(obj + 0x14);
+        } else {
+          FUN_8000e0c0((double)*(float *)(objState + 0x10), (double)*(float *)(objState + 0x14),
+                       (double)*(float *)(objState + 0x18), (float *)(objState + 0x1c),
+                       (float *)(objState + 0x20), (float *)(objState + 0x24),
+                       *(int *)(obj + 0x30));
+        }
+        *(undefined *)(objState + 0xae) = 0;
+        *(ushort *)(objState + 0x60) = *(ushort *)(objState + 0x60) & 0xdfff;
+        if ((((*(char *)(objState + 0x71) != '\0') || ((*(ushort *)(objState + 0x60) & 8) != 0)) &&
+            ((*(ushort *)(objState + 0x60) & 0x40) == 0)) &&
+            ((*(ushort *)(objState + 0x60) & 0x4000) == 0)) {
+          *(float *)(obj + 0x24) = FLOAT_803dc078 * (*(float *)(obj + 0xc) - *(float *)(obj + 0x80));
+          *(float *)(obj + 0x2c) = FLOAT_803dc078 * (*(float *)(obj + 0x14) - *(float *)(obj + 0x88));
+        }
+        entrySlot++;
+      }
+      DAT_802cb978 = 0;
+      DAT_802cb97c = 0;
+      DAT_802cb980 = 0;
+      DAT_802cb984 = 0;
+      DAT_802cb988 = 0;
+      FUN_8028686c();
+      return;
+    }
+    obj = (*entrySlot)->obj;
+    objState = *(int *)(obj + 0x54);
+    attachedObj = *(int *)(obj + 0xc8);
+    if ((attachedObj != 0) &&
+        ((*(int *)(attachedObj + 0x54) == 0) || ((*(ushort *)(*(int *)(attachedObj + 0x54) + 0x60) & 1) == 0)))
+    {
+      attachedObj = 0;
+    }
+    if ((*(ushort *)(objState + 0x60) & 4) != 0) {
+      candidateIndex = currentIndex;
+      while ((candidateIndex < slotCount) && (sweepPtrs[candidateIndex]->maxX < (*entrySlot)->minX)) {
+        candidateIndex++;
+      }
+      currentIndex = candidateIndex;
+      while (candidateIndex < slotCount) {
+        candidateEntry = sweepPtrs[candidateIndex];
+        if ((*entrySlot)->maxX <= candidateEntry->minX) {
+          break;
+        }
+        candidateObj = candidateEntry->obj;
+        attachedState = *(int *)(candidateObj + 0x54);
+        if ((slotIndex != candidateIndex) && (*(int *)(obj + 0x30) != candidateObj)) {
+          dVar17 = (double)(*(float *)(obj + 0x20) - *(float *)(candidateObj + 0x20));
+          if (dVar17 <= (double)FLOAT_803df590) {
+            dVar17 = -dVar17;
+          }
+          if (dVar17 < (double)(*(float *)(objState + 0x2c) + *(float *)(attachedState + 0x2c))) {
+            dVar17 = (double)(*(float *)(obj + 0x1c) - *(float *)(candidateObj + 0x1c));
+            if (dVar17 <= (double)FLOAT_803df590) {
+              dVar17 = -dVar17;
+            }
+            canOverlap = dVar17 < (double)(*(float *)(objState + 0x28) + *(float *)(attachedState + 0x28));
+            broadphaseActive = ((*(ushort *)(objState + 0x60) & 0x40) == 0) &&
+                               ((*(ushort *)(attachedState + 0x60) & 0x40) == 0);
+            shouldProcess = ((*(ushort *)(attachedState + 0x60) & 4) == 0) || (candidateIndex <= slotIndex);
+            hasPrimaryMask = (*(byte *)(*(int *)(obj + 0x50) + 0x71) & *(byte *)(attachedState + 0xb5)) != 0;
+            hasSecondaryMask = (*(byte *)(*(int *)(candidateObj + 0x50) + 0x71) & *(byte *)(objState + 0xb5)) != 0;
+            if (canOverlap && broadphaseActive && shouldProcess && hasPrimaryMask && hasSecondaryMask) {
+              if ((*(byte *)(attachedState + 0x62) & 0x20) == 0) {
+                if ((*(byte *)(objState + 0x62) & 0x20) == 0) {
+                  if ((*(byte *)(objState + 0x62) == 0x10) || (*(byte *)(attachedState + 0x62) == 0x10)) {
+                    if ((*(char *)(objState + 0x6a) != '\0') || (*(char *)(attachedState + 0x6a) != '\0')) {
+                      FUN_800326b8((double)*(float *)(objState + 0x28), param_2, param_3, param_4,
+                                   param_5, param_6, param_7, param_8, obj, candidateObj, obj, 0, 1,
+                                   0xffffffff, 0, 0);
+                    }
+                  } else if ((*(char *)(objState + 0x6a) != '\0') || (*(char *)(attachedState + 0x6a) != '\0')) {
+                    FUN_8003407c();
+                  }
+                } else {
+                  FUN_8003454c(obj, candidateObj, aiStack_e58);
+                }
+              } else {
+                FUN_8003454c(candidateObj, obj, aiStack_e58);
+              }
+            }
+            if (dVar17 < (double)(*(float *)(objState + 0x34) + *(float *)(attachedState + 0x34))) {
+              param_2 = (double)(*(float *)(obj + 0x1c) - *(float *)(candidateObj + 0x1c));
+              if (param_2 <= (double)FLOAT_803df590) {
+                param_2 = -param_2;
+              }
+              canHit = param_2 < (double)(*(float *)(objState + 0x30) + *(float *)(attachedState + 0x30));
+              broadphaseActive = ((*(ushort *)(objState + 0x60) & 0x100) == 0) &&
+                                 ((*(ushort *)(attachedState + 0x60) & 0x100) == 0);
+              hasPrimaryMask = (*(byte *)(objState + 0xb4) & *(byte *)(attachedState + 0xb5)) != 0;
+              hasSecondaryMask = ((*(byte *)(attachedState + 0xb4) & 0x80) != 0) ||
+                                 ((*(byte *)(attachedState + 0xb4) & *(byte *)(objState + 0xb5)) != 0);
+              if (canHit && broadphaseActive && hasPrimaryMask && hasSecondaryMask) {
+                candidateAttachedObj = *(int *)(candidateObj + 0xc8);
+                if ((candidateAttachedObj != 0) &&
+                    ((*(int *)(candidateAttachedObj + 0x54) == 0) ||
+                     ((*(ushort *)(*(int *)(candidateAttachedObj + 0x54) + 0x60) & 1) == 0))) {
+                  candidateAttachedObj = 0;
+                }
+                FUN_800334c4((double)FLOAT_803dc074, param_2, param_3, param_4, param_5, param_6,
+                             param_7, param_8, obj, candidateObj, attachedObj, candidateAttachedObj);
+              }
+            }
+          }
+        }
+        candidateIndex++;
+      }
+    }
+    entrySlot++;
+    slotIndex++;
+  } while (true);
 }
