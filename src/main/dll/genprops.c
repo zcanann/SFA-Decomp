@@ -691,7 +691,7 @@ void FUN_8016bc8c(undefined2 *param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8016bd54
+ * Function: staticCamera_free
  * EN v1.0 Address: 0x8016BD54
  * EN v1.0 Size: 36b
  * EN v1.1 Address: TODO
@@ -701,7 +701,7 @@ void FUN_8016bc8c(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016bd54(int param_1)
+void staticCamera_free(int param_1)
 {
   FUN_8003709c(param_1,7);
   return;
@@ -710,7 +710,7 @@ void FUN_8016bd54(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8016bd78
+ * Function: staticCamera_render
  * EN v1.0 Address: 0x8016BD78
  * EN v1.0 Size: 56b
  * EN v1.1 Address: TODO
@@ -720,7 +720,7 @@ void FUN_8016bd54(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016bd78(int param_1)
+void staticCamera_render(int param_1)
 {
   char in_r8;
   
@@ -733,7 +733,7 @@ void FUN_8016bd78(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8016bdb0
+ * Function: staticCamera_init
  * EN v1.0 Address: 0x8016BDB0
  * EN v1.0 Size: 172b
  * EN v1.1 Address: TODO
@@ -743,7 +743,7 @@ void FUN_8016bd78(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016bdb0(short *param_1,int param_2,int param_3)
+void staticCamera_init(short *param_1,int param_2,int param_3)
 {
   undefined *puVar1;
   

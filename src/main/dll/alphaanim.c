@@ -297,7 +297,7 @@ FUN_8017c82c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_8017c960
+ * Function: seqObject_free
  * EN v1.0 Address: 0x8017C960
  * EN v1.0 Size: 36b
  * EN v1.1 Address: TODO
@@ -307,7 +307,7 @@ FUN_8017c82c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017c960(int param_1)
+void seqObject_free(int param_1)
 {
   FUN_8003709c(param_1,0xf);
   return;
@@ -316,7 +316,7 @@ void FUN_8017c960(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8017c984
+ * Function: seqObject_render
  * EN v1.0 Address: 0x8017C984
  * EN v1.0 Size: 48b
  * EN v1.1 Address: TODO
@@ -326,7 +326,7 @@ void FUN_8017c960(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017c984(int param_1)
+void seqObject_render(int param_1)
 {
   char in_r8;
   
@@ -339,7 +339,7 @@ void FUN_8017c984(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8017c9b4
+ * Function: seqObject_update
  * EN v1.0 Address: 0x8017C9B4
  * EN v1.0 Size: 592b
  * EN v1.1 Address: TODO
@@ -349,7 +349,7 @@ void FUN_8017c984(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017c9b4(int param_1)
+void seqObject_update(int param_1)
 {
   uint uVar1;
   byte bVar2;
@@ -411,7 +411,7 @@ void FUN_8017c9b4(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8017cc04
+ * Function: seqObject_init
  * EN v1.0 Address: 0x8017CC04
  * EN v1.0 Size: 248b
  * EN v1.1 Address: TODO
@@ -421,7 +421,7 @@ void FUN_8017c9b4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017cc04(short *param_1,int param_2)
+void seqObject_init(short *param_1,int param_2)
 {
 }
 
@@ -465,7 +465,7 @@ undefined4 FUN_8017ccfc(int param_1,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_8017cde4
+ * Function: seqObj2_free
  * EN v1.0 Address: 0x8017CDE4
  * EN v1.0 Size: 44b
  * EN v1.1 Address: TODO
@@ -475,7 +475,7 @@ undefined4 FUN_8017ccfc(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017cde4(int param_1)
+void seqObj2_free(int param_1)
 {
   FUN_8003709c(param_1,0xf);
   return;
@@ -484,7 +484,7 @@ void FUN_8017cde4(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8017ce10
+ * Function: seqObj2_update
  * EN v1.0 Address: 0x8017CE10
  * EN v1.0 Size: 596b
  * EN v1.1 Address: TODO
@@ -494,7 +494,7 @@ void FUN_8017cde4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017ce10(int param_1)
+void seqObj2_update(int param_1)
 {
   uint uVar1;
   int iVar2;
@@ -553,7 +553,7 @@ void FUN_8017ce10(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8017d064
+ * Function: seqObj2_init
  * EN v1.0 Address: 0x8017D064
  * EN v1.0 Size: 200b
  * EN v1.1 Address: TODO
@@ -563,6 +563,6 @@ void FUN_8017ce10(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017d064(short *param_1,int param_2)
+void seqObj2_init(short *param_1,int param_2)
 {
 }
