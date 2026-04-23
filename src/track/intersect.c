@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "dolphin/card.h"
 #include "track/intersect.h"
 
 extern undefined4 ABS();
@@ -293,6 +294,7 @@ extern s32 lbl_803DC360;
 extern u32 lbl_803DDC84;
 extern u8 lbl_803DDC99;
 extern u8 lbl_803DDC9A;
+extern u8 lbl_803DDC9C[3];
 extern undefined4 DAT_803dc364;
 extern undefined4 DAT_803dc368;
 extern undefined4* DAT_803dd6d8;
@@ -859,12 +861,17 @@ undefined4 FUN_8006ff74(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+/* EN v1.0 Size: 36b - kept as stub until we crack MWCC's early-return
+ * reshape. Target prepares default 0x01E00280 AFTER the zero check;
+ * MWCC hoists the default into the prologue and uses beqlr to return
+ * it, regardless of source ordering or pragmas. */
+uint FUN_80070050(void);
 uint FUN_80070050(void)
 {
-  if (DAT_803ddc84 != 0) {
-    return DAT_803ddc84 | DAT_803ddc84 << 0x10;
-  }
-  return 0x1e00280;
+    if (lbl_803DDC84 != 0) {
+        return lbl_803DDC84 | (lbl_803DDC84 << 16);
+    }
+    return 0x01E00280;
 }
 
 /*
@@ -1142,12 +1149,16 @@ void trackIntersect_updateColorBandRange(double param_1,double param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void trackIntersect_getColorRgb(undefined *param_1)
+/* 32b RGB getter. MWCC insists on compiling array[0..2] as three
+ * direct sda21 loads; target uses a pointer-reloaded intermediate
+ * (li r4, lbl@sda21 then lbz 1(r4) / lbz 2(r4)). Not crackable
+ * without inline asm. Kept as Ghidra port below for reference;
+ * the compiled output is 75% match. */
+void fn_80070658(u8* param_1)
 {
-  *param_1 = *(undefined *)&DAT_803ddc9c;
-  param_1[1] = *(undefined *)((int)&DAT_803ddc9c + 1);
-  param_1[2] = *(undefined *)((int)&DAT_803ddc9c + 2);
-  return;
+    param_1[0] = lbl_803DDC9C[0];
+    param_1[1] = lbl_803DDC9C[1];
+    param_1[2] = lbl_803DDC9C[2];
 }
 
 /*
@@ -1163,12 +1174,11 @@ void trackIntersect_getColorRgb(undefined *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void trackIntersect_setColorRgb(undefined param_1,undefined param_2,undefined param_3)
+void fn_80070678(u8 param_1, u8 param_2, u8 param_3)
 {
-  *(undefined *)&DAT_803ddc9c = param_1;
-  *(undefined *)((int)&DAT_803ddc9c + 1) = param_2;
-  *(undefined *)((int)&DAT_803ddc9c + 2) = param_3;
-  return;
+    lbl_803DDC9C[0] = param_1;
+    lbl_803DDC9C[1] = param_2;
+    lbl_803DDC9C[2] = param_3;
 }
 
 /*
@@ -2864,10 +2874,9 @@ FUN_8007df88(undefined8 param_1,double param_2,undefined8 param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007e06c(void)
+void fn_8007E06C(void)
 {
-  FUN_8025f458();
-  return;
+    CARDInit();
 }
 
 /*

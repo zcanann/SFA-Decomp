@@ -27,8 +27,8 @@ void fn_80070528(void);
 void fn_80070538(u8 param_1);
 void trackIntersect_drawColorBand(void);
 void trackIntersect_updateColorBandRange(double param_1,double param_2);
-void trackIntersect_getColorRgb(undefined *param_1);
-void trackIntersect_setColorRgb(undefined param_1,undefined param_2,undefined param_3);
+void fn_80070658(u8* param_1);
+void fn_80070678(u8 param_1, u8 param_2, u8 param_3);
 void FUN_8007068c(undefined4 param_1,undefined4 param_2,int param_3);
 void FUN_80071050(undefined param_1);
 void FUN_80071978(void);
@@ -123,7 +123,7 @@ undefined4
 FUN_8007df88(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,char param_9
             );
-void FUN_8007e06c(void);
+void fn_8007E06C(void);
 void FUN_8007e08c(undefined4 *param_1,undefined4 *param_2,undefined4 *param_3);
 void FUN_8007e328(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
