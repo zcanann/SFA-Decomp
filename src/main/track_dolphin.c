@@ -3590,73 +3590,74 @@ void FUN_8006933c(undefined4 param_1,undefined4 param_2,uint param_3,char param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80069798(uint *param_1,float *param_2,float *param_3,float *param_4,int param_5)
+void trackDolphin_buildSweptBounds(uint *boundsOut,float *startPoints,float *endPoints,
+                                   float *radii,int pointCount)
 {
   double dVar1;
   undefined8 local_8;
   
-  *param_1 = 1000000;
-  param_1[3] = 0xfff0bdc0;
-  param_1[1] = 1000000;
-  param_1[4] = 0xfff0bdc0;
-  param_1[2] = 1000000;
-  param_1[5] = 0xfff0bdc0;
+  *boundsOut = 1000000;
+  boundsOut[3] = 0xfff0bdc0;
+  boundsOut[1] = 1000000;
+  boundsOut[4] = 0xfff0bdc0;
+  boundsOut[2] = 1000000;
+  boundsOut[5] = 0xfff0bdc0;
   dVar1 = DOUBLE_803df958;
-  if (param_5 != 0) {
+  if (pointCount != 0) {
     do {
-      local_8 = (double)CONCAT44(0x43300000,*param_1 ^ 0x80000000);
-      if (*param_2 - *param_4 < (float)(local_8 - dVar1)) {
-        *param_1 = (int)(*param_2 - *param_4);
+      local_8 = (double)CONCAT44(0x43300000,*boundsOut ^ 0x80000000);
+      if (*startPoints - *radii < (float)(local_8 - dVar1)) {
+        *boundsOut = (int)(*startPoints - *radii);
       }
-      local_8 = (double)CONCAT44(0x43300000,param_1[3] ^ 0x80000000);
-      if ((float)(local_8 - dVar1) < *param_2 + *param_4) {
-        param_1[3] = (int)(*param_2 + *param_4);
+      local_8 = (double)CONCAT44(0x43300000,boundsOut[3] ^ 0x80000000);
+      if ((float)(local_8 - dVar1) < *startPoints + *radii) {
+        boundsOut[3] = (int)(*startPoints + *radii);
       }
-      local_8 = (double)CONCAT44(0x43300000,param_1[1] ^ 0x80000000);
-      if (param_2[1] - *param_4 < (float)(local_8 - dVar1)) {
-        param_1[1] = (int)(param_2[1] - *param_4);
+      local_8 = (double)CONCAT44(0x43300000,boundsOut[1] ^ 0x80000000);
+      if (startPoints[1] - *radii < (float)(local_8 - dVar1)) {
+        boundsOut[1] = (int)(startPoints[1] - *radii);
       }
-      local_8 = (double)CONCAT44(0x43300000,param_1[4] ^ 0x80000000);
-      if ((float)(local_8 - dVar1) < param_2[1] + *param_4) {
-        param_1[4] = (int)(param_2[1] + *param_4);
+      local_8 = (double)CONCAT44(0x43300000,boundsOut[4] ^ 0x80000000);
+      if ((float)(local_8 - dVar1) < startPoints[1] + *radii) {
+        boundsOut[4] = (int)(startPoints[1] + *radii);
       }
-      local_8 = (double)CONCAT44(0x43300000,param_1[2] ^ 0x80000000);
-      if (param_2[2] - *param_4 < (float)(local_8 - dVar1)) {
-        param_1[2] = (int)(param_2[2] - *param_4);
+      local_8 = (double)CONCAT44(0x43300000,boundsOut[2] ^ 0x80000000);
+      if (startPoints[2] - *radii < (float)(local_8 - dVar1)) {
+        boundsOut[2] = (int)(startPoints[2] - *radii);
       }
-      local_8 = (double)CONCAT44(0x43300000,param_1[5] ^ 0x80000000);
-      if ((float)(local_8 - dVar1) < param_2[2] + *param_4) {
-        param_1[5] = (int)(param_2[2] + *param_4);
+      local_8 = (double)CONCAT44(0x43300000,boundsOut[5] ^ 0x80000000);
+      if ((float)(local_8 - dVar1) < startPoints[2] + *radii) {
+        boundsOut[5] = (int)(startPoints[2] + *radii);
       }
-      local_8 = (double)CONCAT44(0x43300000,*param_1 ^ 0x80000000);
-      if (*param_3 - *param_4 < (float)(local_8 - dVar1)) {
-        *param_1 = (int)(*param_3 - *param_4);
+      local_8 = (double)CONCAT44(0x43300000,*boundsOut ^ 0x80000000);
+      if (*endPoints - *radii < (float)(local_8 - dVar1)) {
+        *boundsOut = (int)(*endPoints - *radii);
       }
-      local_8 = (double)CONCAT44(0x43300000,param_1[3] ^ 0x80000000);
-      if ((float)(local_8 - dVar1) < *param_3 + *param_4) {
-        param_1[3] = (int)(*param_3 + *param_4);
+      local_8 = (double)CONCAT44(0x43300000,boundsOut[3] ^ 0x80000000);
+      if ((float)(local_8 - dVar1) < *endPoints + *radii) {
+        boundsOut[3] = (int)(*endPoints + *radii);
       }
-      local_8 = (double)CONCAT44(0x43300000,param_1[1] ^ 0x80000000);
-      if (param_3[1] - *param_4 < (float)(local_8 - dVar1)) {
-        param_1[1] = (int)(param_3[1] - *param_4);
+      local_8 = (double)CONCAT44(0x43300000,boundsOut[1] ^ 0x80000000);
+      if (endPoints[1] - *radii < (float)(local_8 - dVar1)) {
+        boundsOut[1] = (int)(endPoints[1] - *radii);
       }
-      local_8 = (double)CONCAT44(0x43300000,param_1[4] ^ 0x80000000);
-      if ((float)(local_8 - dVar1) < param_3[1] + *param_4) {
-        param_1[4] = (int)(param_3[1] + *param_4);
+      local_8 = (double)CONCAT44(0x43300000,boundsOut[4] ^ 0x80000000);
+      if ((float)(local_8 - dVar1) < endPoints[1] + *radii) {
+        boundsOut[4] = (int)(endPoints[1] + *radii);
       }
-      local_8 = (double)CONCAT44(0x43300000,param_1[2] ^ 0x80000000);
-      if (param_3[2] - *param_4 < (float)(local_8 - dVar1)) {
-        param_1[2] = (int)(param_3[2] - *param_4);
+      local_8 = (double)CONCAT44(0x43300000,boundsOut[2] ^ 0x80000000);
+      if (endPoints[2] - *radii < (float)(local_8 - dVar1)) {
+        boundsOut[2] = (int)(endPoints[2] - *radii);
       }
-      local_8 = (double)CONCAT44(0x43300000,param_1[5] ^ 0x80000000);
-      if ((float)(local_8 - dVar1) < param_3[2] + *param_4) {
-        param_1[5] = (int)(param_3[2] + *param_4);
+      local_8 = (double)CONCAT44(0x43300000,boundsOut[5] ^ 0x80000000);
+      if ((float)(local_8 - dVar1) < endPoints[2] + *radii) {
+        boundsOut[5] = (int)(endPoints[2] + *radii);
       }
-      param_2 = param_2 + 3;
-      param_3 = param_3 + 3;
-      param_4 = param_4 + 1;
-      param_5 = param_5 + -1;
-    } while (param_5 != 0);
+      startPoints = startPoints + 3;
+      endPoints = endPoints + 3;
+      radii = radii + 1;
+      pointCount = pointCount + -1;
+    } while (pointCount != 0);
   }
   return;
 }

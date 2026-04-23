@@ -40,7 +40,8 @@ extern int FUN_80064248();
 extern char FUN_80065fcc();
 extern int FUN_80067ad4();
 extern undefined4 FUN_8006933c();
-extern undefined4 FUN_80069798();
+extern void trackDolphin_buildSweptBounds(uint *boundsOut,float *startPoints,float *endPoints,
+                                          float *radii,int pointCount);
 extern undefined4 FUN_80080090();
 extern int FUN_80080100();
 extern undefined4 FUN_800e82d8();
@@ -315,7 +316,7 @@ void FUN_80175a78(undefined8 param_1,double param_2,undefined4 param_3,undefined
         local_50 = 0x43300000;
         dVar16 = (double)FUN_80294964();
         local_1a4 = (float)((double)FLOAT_803e423c * dVar16 + (double)local_198);
-        FUN_80069798(auStack_194,&local_1a0,&local_1ac,local_84,1);
+        trackDolphin_buildSweptBounds(auStack_194,&local_1a0,&local_1ac,local_84,1);
         FUN_8006933c(0,auStack_194,0x208,'\x01');
         iVar13 = FUN_80067ad4();
         if (iVar13 == 0) {
@@ -340,7 +341,7 @@ void FUN_80175a78(undefined8 param_1,double param_2,undefined4 param_3,undefined
       local_50 = 0x43300000;
       dVar16 = (double)FUN_80294964();
       local_1a4 = (float)((double)FLOAT_803e423c * dVar16 + (double)local_198);
-      FUN_80069798(auStack_194,&local_1a0,&local_1ac,local_84,1);
+      trackDolphin_buildSweptBounds(auStack_194,&local_1a0,&local_1ac,local_84,1);
       FUN_8006933c(0,auStack_194,0x208,'\x01');
       iVar13 = FUN_80067ad4();
       if (iVar13 == 0) {
@@ -365,7 +366,7 @@ void FUN_80175a78(undefined8 param_1,double param_2,undefined4 param_3,undefined
     local_48 = 0x43300000;
     dVar16 = (double)FUN_80294964();
     local_1a4 = (float)((double)FLOAT_803e4238 * dVar16 + (double)local_198);
-    FUN_80069798(auStack_194,&local_1a0,&local_1ac,local_84,1);
+    trackDolphin_buildSweptBounds(auStack_194,&local_1a0,&local_1ac,local_84,1);
     FUN_8006933c(0,auStack_194,0x208,'\x01');
     iVar13 = FUN_80067ad4();
     if (iVar13 == 0) {
@@ -747,7 +748,7 @@ LAB_801767e4:
       pfVar11 = pfVar11 + 3;
       iVar5 = iVar5 + 0xc;
     }
-    FUN_80069798(&uStack_e8,(float *)(iVar14 + 0x78),local_90,&local_120,4);
+    trackDolphin_buildSweptBounds(&uStack_e8,(float *)(iVar14 + 0x78),local_90,&local_120,4);
     uStack_5c = local_e4 ^ 0x80000000;
     local_60 = 0x43300000;
     local_e4 = (uint)((float)((double)CONCAT44(0x43300000,uStack_5c) - DOUBLE_803e4210) -

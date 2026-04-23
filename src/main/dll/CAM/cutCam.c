@@ -12,7 +12,8 @@ extern uint FUN_80021884();
 extern char FUN_80064248();
 extern undefined4 FUN_80067ad4();
 extern undefined4 FUN_8006933c();
-extern undefined4 FUN_80069798();
+extern void trackDolphin_buildSweptBounds(uint *boundsOut,float *startPoints,float *endPoints,
+                                          float *radii,int pointCount);
 extern int FUN_80080490();
 extern undefined4 FUN_80101c10();
 extern undefined4 FUN_802473cc();
@@ -190,7 +191,7 @@ FUN_801037c0(double param_1,float *param_2,float *param_3,float *param_4,int par
   }
   DAT_803de1a0 = cVar2;
   if (param_7 != '\0') {
-    FUN_80069798(auStack_34,param_2,param_4,(float *)(param_5 + 0x40),1);
+    trackDolphin_buildSweptBounds(auStack_34,param_2,param_4,(float *)(param_5 + 0x40),1);
     FUN_8006933c(0,auStack_34,0x240,'\x01');
   }
   FUN_80067ad4();
