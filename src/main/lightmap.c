@@ -61,7 +61,7 @@ extern undefined4 FUN_8006badc();
 extern undefined4 FUN_8006c500();
 extern undefined4 FUN_8006c924();
 extern undefined4 FUN_8006c9ac();
-extern undefined4 FUN_8006ca98();
+extern void newshadows_updateFrameState(void);
 extern undefined4 FUN_8006f67c();
 extern undefined4 FUN_80070678();
 extern undefined4 FUN_80071050();
@@ -785,7 +785,7 @@ void FUN_8005b7d0(void)
   longlong local_30;
   
   pcVar3 = (char *)FUN_80286838();
-  FUN_8006ca98();
+  newshadows_updateFrameState();
   puVar4 = (undefined4 *)FUN_8002e1f4((undefined4 *)0x0,(undefined4 *)0x0);
   iVar5 = FUN_8002e288(local_3c);
   for (uVar11 = 0; (int)uVar11 < local_3c[0]; uVar11 = uVar11 + 1) {

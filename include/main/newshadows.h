@@ -35,7 +35,7 @@ undefined4 FUN_8006c8d0(void);
 void FUN_8006c8d8(int param_1);
 void FUN_8006c924(void);
 void FUN_8006c9ac(void);
-void FUN_8006ca98(void);
+void newshadows_updateFrameState(void);
 void FUN_8006cc38(undefined4 *param_1,undefined4 *param_2);
 void FUN_8006cc4c(undefined *param_1);
 void FUN_8006cca0(void);
