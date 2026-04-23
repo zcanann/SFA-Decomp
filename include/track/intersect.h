@@ -101,9 +101,7 @@ undefined4 FUN_8007d8a8(void);
 void fn_8007DADC(u32 param_1);
 void fn_8007DB04(void);
 s32 fn_8007DB10(void);
-undefined4
-FUN_8007db18(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+int fn_8007DB18(void);
 int fn_8007DCA0(int a, int b, int c);
 int fn_8007DD3C(int a);
 int fn_8007DDD8(int a, int b);

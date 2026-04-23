@@ -2916,12 +2916,70 @@ s32 fn_8007DB10(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-FUN_8007db18(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+extern void fn_8007E7A0(int);
+extern int fn_8007ED98(int, int, int, int, int, void*);
+extern void fn_8007E328(int);
+extern void fn_8007E928(void);
+extern void fn_8007E99C(void);
+extern void fn_8007E9D0(void);
+extern u8 lbl_803DDCD8;
+
+#pragma scheduling off
+int fn_8007DB18(void)
 {
+    extern void* fn_80023D8C();
+    extern s32 CARDMount();
+    extern s32 CARDCheck();
+    extern s32 CARDDelete();
+    extern void CARDUnmount();
+    extern void fn_800238C4();
+    extern void fn_80080084();
+    extern void* lbl_803DDCC0;
+    extern const char* lbl_803DC364;
+    extern s32 lbl_803DC360;
+    int res;
+
+    lbl_803DDCD8 = 0;
+
+    do {
+        if (fn_8007DF88(0) == 0) {
+            return 0;
+        }
+        lbl_803DDCC0 = fn_80023D8C(0xA000, -1, 0);
+        if (lbl_803DDCC0 == 0) {
+            lbl_803DC360 = 8;
+            return 0;
+        }
+        lbl_803DC360 = 0;
+        res = CARDMount(0, lbl_803DDCC0, (void*)fn_80080084);
+        if (res == 0 || res == -6) {
+            if (res == -6) {
+                res = CARDCheck(0);
+            }
+        }
+        if (res == 0) {
+            res = CARDDelete(0, lbl_803DC364);
+        }
+        CARDUnmount(0);
+        fn_800238C4(lbl_803DDCC0);
+        lbl_803DDCC0 = 0;
+
+        switch (res + 13) {
+            case 11: lbl_803DC360 = 1; break;
+            case 10:
+                if (lbl_803DC360 != 3) lbl_803DC360 = 2;
+                break;
+            case 0:  lbl_803DC360 = 6; break;
+            case 8:  lbl_803DC360 = 4; break;
+            case 13:
+                lbl_803DC360 = 13;
+                return 1;
+        }
+        fn_8007E328(0);
+    } while (lbl_803DDCD8 != 0);
     return 0;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2936,14 +2994,6 @@ FUN_8007db18(undefined8 param_1,double param_2,undefined8 param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void fn_8007E7A0(int);
-extern int fn_8007ED98(int, int, int, int, int, void*);
-extern void fn_8007E328(int);
-extern void fn_8007E928(void);
-extern void fn_8007E99C(void);
-extern void fn_8007E9D0(void);
-extern u8 lbl_803DDCD8;
-
 #pragma scheduling off
 int fn_8007DCA0(int a, int b, int c)
 {
