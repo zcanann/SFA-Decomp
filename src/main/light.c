@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/light.h"
+#include "main/unknown/autos/placeholder_8002F604.h"
 
 extern bool FUN_8000b598();
 extern undefined4 FUN_8000b7dc();
@@ -12,8 +13,6 @@ extern undefined4 FUN_800201ac();
 extern undefined4 FUN_800217c8();
 extern undefined4 FUN_8002b95c();
 extern int FUN_8002bac4();
-extern undefined4 FUN_8002fb40();
-extern undefined4 FUN_800303fc();
 extern undefined4 FUN_8003b9ec();
 extern undefined4 FUN_80043070();
 extern undefined4 FUN_80043604();
@@ -681,7 +680,7 @@ void FUN_801fc9b0(undefined8 param_1,undefined8 param_2,double param_3,undefined
   }
   if (*(char *)(psVar3 + 1) < '\0') {
     dVar4 = (double)FLOAT_803dc074;
-    FUN_8002fb40((double)FLOAT_803e6db0,dVar4);
+    ObjAnim_AdvanceCurrentMove((double)FLOAT_803e6db0,dVar4);
     if ((*(byte *)(psVar3 + 1) >> 6 & 1) == 0) {
       if (FLOAT_803e6db4 <= *(float *)(param_9 + 0x98)) {
         FUN_80247eb8((float *)(puVar1 + 6),(float *)(param_9 + 0xc),afStack_28);
@@ -800,7 +799,7 @@ void FUN_801fcc3c(undefined2 *param_1,int param_2)
   *psVar2 = *(short *)(param_2 + 0x1e);
   uVar1 = FUN_80020078((int)*psVar2);
   if (uVar1 != 0) {
-    FUN_800303fc((double)FLOAT_803e6db4,(int)param_1);
+    ObjAnim_SetMoveProgress((double)FLOAT_803e6db4,(int)param_1);
     *(byte *)(psVar2 + 1) = *(byte *)(psVar2 + 1) & 0x7f | 0x80;
     *(byte *)(psVar2 + 1) = *(byte *)(psVar2 + 1) & 0xbf | 0x40;
     param_1[3] = param_1[3] | 0x4000;

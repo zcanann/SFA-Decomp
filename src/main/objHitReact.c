@@ -1,12 +1,11 @@
 #include "ghidra_import.h"
 #include "main/objHitReact.h"
+#include "main/unknown/autos/placeholder_8002F604.h"
 
 extern bool FUN_8000b5f0();
 extern undefined4 FUN_8000bb38();
 extern undefined4 FUN_80013e4c();
 extern undefined4 FUN_80013ee8();
-extern int FUN_8002fb40();
-extern undefined4 FUN_8003042c();
 extern int FUN_80036868();
 extern undefined4 FUN_8007d858();
 extern undefined4 FUN_8009a468();
@@ -87,7 +86,7 @@ u8 fn_8003549C(undefined8 param_1,double param_2,double param_3,undefined8 param
   if (reactionState != 0) {
     FUN_8007d858();
     param_2 = (double)FLOAT_803dc074;
-    iVar2 = FUN_8002fb40((double)*param_13,param_2);
+    iVar2 = ObjAnim_AdvanceCurrentMove((double)*param_13,param_2);
     if (iVar2 != 0) {
       FUN_8007d858();
       reactionState = 0;
@@ -139,9 +138,9 @@ u8 fn_8003549C(undefined8 param_1,double param_2,double param_3,undefined8 param
       }
     }
     if ((reactionState == 0) && (reactEntry->reactionAnim != -1)) {
-      FUN_8003042c((double)FLOAT_803df590,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                   object,(int)reactEntry->reactionAnim,0,hitFxFlags,pfVar6,puVar7,pfVar8,
-                   param_16);
+      ObjAnim_SetCurrentMove((double)FLOAT_803df590,param_2,param_3,param_4,param_5,param_6,param_7,
+                             param_8,object,(int)reactEntry->reactionAnim,0,hitFxFlags,
+                             (undefined4)pfVar6,(undefined4)puVar7,(undefined4)pfVar8,param_16);
       *param_13 = reactEntry->cooldown;
     }
   }
