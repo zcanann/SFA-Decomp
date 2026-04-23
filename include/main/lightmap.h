@@ -52,7 +52,7 @@ void FUN_8005d530(int param_1,int param_2,int param_3);
 void FUN_8005d668(int param_1,int param_2,float *param_3);
 void FUN_8005d818(int param_1,int param_2,float *param_3);
 void FUN_8005da10(int param_1,int param_2,float *param_3);
-void FUN_8005dbc4(ushort *param_1);
+void lightmap_renderQueuedObject(ushort *object);
 void lightmap_flushQueuedRenderPackets(void);
 void FUN_8005e010(undefined4 param_1,undefined4 param_2,int param_3);
 
