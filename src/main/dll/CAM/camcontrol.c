@@ -337,7 +337,7 @@ void FUN_80102bb0(double param_1,int param_2,float *param_3,float *param_4,float
 /*
  * --INFO--
  *
- * Function: FUN_80102d3c
+ * Function: camcontrol_loadTriggeredCamAction
  * EN v1.0 Address: 0x80102D3C
  * EN v1.0 Size: 1012b
  * EN v1.1 Address: TODO
@@ -347,10 +347,12 @@ void FUN_80102bb0(double param_1,int param_2,float *param_3,float *param_4,float
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80102d3c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,uint param_10,char param_11,undefined4 param_12,undefined4 param_13,
-                 undefined4 param_14,undefined4 param_15,undefined4 param_16)
+void camcontrol_loadTriggeredCamAction(undefined8 param_1,double param_2,double param_3,
+                                      undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                      undefined8 param_7,undefined8 param_8,int param_9,
+                                      uint param_10,char param_11,undefined4 param_12,
+                                      undefined4 param_13,undefined4 param_14,undefined4 param_15,
+                                      undefined4 param_16)
 {
   uint uVar1;
   int iVar2;
@@ -372,7 +374,7 @@ void FUN_80102d3c(undefined8 param_1,double param_2,double param_3,undefined8 pa
     else {
       uVar4 = 0;
     }
-    FUN_80103224(0x47,1,0,8,(uint)&local_28,uVar4,0xff);
+    camcontrol_queueCamAction(0x47,1,0,8,(uint)&local_28,uVar4,0xff);
     return;
   }
   if (param_9 < 2) {
@@ -386,17 +388,17 @@ void FUN_80102d3c(undefined8 param_1,double param_2,double param_3,undefined8 pa
       else {
         uVar4 = 0;
       }
-      FUN_80103224(0x48,1,0,8,(uint)&local_20,uVar4,0xff);
+      camcontrol_queueCamAction(0x48,1,0,8,(uint)&local_20,uVar4,0xff);
       return;
     }
   }
   else {
     if (param_9 == 4) {
-      FUN_80103224(param_10 + 0x42,1,0,0,0,0x78,0xff);
+      camcontrol_queueCamAction(param_10 + 0x42,1,0,0,0,0x78,0xff);
       return;
     }
     if (param_9 < 4) {
-      FUN_80103224(0x42,0,1,0,0,0x78,0xff);
+      camcontrol_queueCamAction(0x42,0,1,0,0,0x78,0xff);
       return;
     }
   }
@@ -411,10 +413,10 @@ void FUN_80102d3c(undefined8 param_1,double param_2,double param_3,undefined8 pa
       if ((((DAT_803de190 == 0x42) || (DAT_803de190 == 0x4b)) || (DAT_803de190 == 0x48)) ||
          (DAT_803de190 == 0x47)) {
         if (*pcVar5 == '\x01') {
-          FUN_80103224(0x4b,1,2,0x10,(uint)pcVar5,0,0xff);
+          camcontrol_queueCamAction(0x4b,1,2,0x10,(uint)pcVar5,0,0xff);
         }
         else {
-          FUN_80103224(0x42,0,2,0x10,(uint)pcVar5,0,0xff);
+          camcontrol_queueCamAction(0x42,0,2,0x10,(uint)pcVar5,0,0xff);
         }
       }
       else {
@@ -452,10 +454,10 @@ LAB_80103090:
       if (((DAT_803de190 == 0x42) || (DAT_803de190 == 0x4b)) ||
          ((DAT_803de190 == 0x48 || (DAT_803de190 == 0x47)))) {
         if (*pcVar5 == '\x01') {
-          FUN_80103224(0x4b,1,2,0x10,(uint)pcVar5,0,0xff);
+          camcontrol_queueCamAction(0x4b,1,2,0x10,(uint)pcVar5,0,0xff);
         }
         else {
-          FUN_80103224(0x42,0,2,0x10,(uint)pcVar5,0,0xff);
+          camcontrol_queueCamAction(0x42,0,2,0x10,(uint)pcVar5,0,0xff);
         }
       }
       else {
@@ -552,7 +554,7 @@ void FUN_801031a4(void)
 void FUN_801031e0(undefined4 param_1,undefined param_2)
 {
   if (DAT_803de16c != -1) {
-    FUN_80103224(DAT_803de16c,DAT_803de168,(char)DAT_803de164,0,0,param_1,param_2);
+    camcontrol_queueCamAction(DAT_803de16c,DAT_803de168,(char)DAT_803de164,0,0,param_1,param_2);
   }
   return;
 }
@@ -560,7 +562,7 @@ void FUN_801031e0(undefined4 param_1,undefined param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80103224
+ * Function: camcontrol_queueCamAction
  * EN v1.0 Address: 0x80103224
  * EN v1.0 Size: 312b
  * EN v1.1 Address: TODO
@@ -570,8 +572,8 @@ void FUN_801031e0(undefined4 param_1,undefined param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80103224(undefined4 param_1,undefined4 param_2,undefined param_3,int param_4,uint param_5,
-                 undefined4 param_6,undefined param_7)
+void camcontrol_queueCamAction(undefined4 param_1,undefined4 param_2,undefined param_3,int param_4,
+                               uint param_5,undefined4 param_6,undefined param_7)
 {
   int iVar1;
   undefined extraout_r4;
