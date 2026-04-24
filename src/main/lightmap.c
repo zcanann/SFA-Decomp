@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/expgfx.h"
 #include "main/lightmap.h"
 
 extern undefined4 FUN_800033a8();
@@ -81,9 +82,6 @@ extern undefined4 FUN_80080f8c();
 extern undefined4 FUN_8008102c();
 extern undefined4 FUN_80081074();
 extern undefined4 FUN_80081084();
-extern undefined4 FUN_8009bfcc();
-extern undefined4 FUN_8009c0b4();
-extern undefined4 FUN_8009c0b8();
 extern void* FUN_800e87a8();
 extern undefined4 FUN_8012a0f0();
 extern undefined4 FUN_8016dc58();
@@ -2575,9 +2573,9 @@ void lightmap_flushQueuedRenderPackets(void)
   for (iVar5 = 0; iVar5 < DAT_803ddab0; iVar5 = iVar5 + 1) {
     switch(piVar6[3]) {
     case 0:
-      FUN_8009bfcc();
+      expgfx_processCurrentSourceBounds();
       lightmap_renderQueuedObject((ushort *)*piVar6);
-      FUN_8009bfcc();
+      expgfx_processCurrentSourceBounds();
       break;
     case 1:
       iVar3 = *piVar6;

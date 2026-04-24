@@ -74,18 +74,13 @@ extern undefined4 FUN_80293470();
 extern double FUN_80293900();
 extern double FUN_80294c4c();
 
-extern undefined4 DAT_80310458;
+extern ExpgfxBounds DAT_80310458;
 extern undefined2 gExpgfxSlotTypeIds;
 extern undefined DAT_80310528;
 extern undefined2 DAT_803105a8;
 extern undefined4 DAT_80397420;
 extern int DAT_8039b7b8;
-extern undefined4 DAT_8039b9b8;
-extern undefined4 DAT_8039b9bc;
-extern undefined4 DAT_8039b9c0;
-extern undefined4 DAT_8039b9c4;
-extern undefined4 DAT_8039b9c8;
-extern undefined4 DAT_8039b9cc;
+extern ExpgfxBounds DAT_8039b9b8;
 extern int DAT_8039c138;
 extern undefined4 DAT_8039c13c;
 extern undefined4 DAT_8039c140;
@@ -230,6 +225,24 @@ static void Expgfx_SetSlotTableIndex(ExpgfxSlot *slot, u8 tableIndex) {
 
 static ExpgfxSlot *Expgfx_GetSlot(int poolIndex, int slotIndex) {
   return (ExpgfxSlot *)((&gExpgfxSlotPoolBases)[poolIndex] + slotIndex * EXPGFX_SLOT_SIZE);
+}
+
+static ExpgfxBounds *Expgfx_GetBoundsTemplate(int templateIndex) {
+  return &((ExpgfxBounds *)&DAT_80310458)[templateIndex];
+}
+
+static ExpgfxBounds *Expgfx_GetPoolBounds(int poolIndex) {
+  return &((ExpgfxBounds *)&DAT_8039b9b8)[poolIndex];
+}
+
+static ExpgfxCurrentSource Expgfx_GetCurrentSource(void) {
+  undefined8 rawSource;
+  ExpgfxCurrentSource currentSource;
+
+  rawSource = FUN_80286830();
+  currentSource.sourceId = (int)((ulonglong)rawSource >> 0x20);
+  currentSource.sourceMode = (int)rawSource;
+  return currentSource;
 }
 
 /*
@@ -776,7 +789,7 @@ void FUN_8009bf6c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_8009bfcc
+ * Function: expgfx_processCurrentSourceBounds
  * EN v1.0 Address: 0x8009BFCC
  * EN v1.0 Size: 232b
  * EN v1.1 Address: 0x8009E2C0
@@ -786,42 +799,45 @@ void FUN_8009bf6c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8009bfcc(void)
+void expgfx_processCurrentSourceBounds(void)
 {
+  ExpgfxBounds *boundsTemplate;
+  ExpgfxBounds *poolBounds;
+  ExpgfxCurrentSource currentSource;
   uint uVar1;
-  int iVar2;
-  float *pfVar3;
-  byte *pbVar4;
-  byte *pbVar5;
-  int *piVar6;
-  char *pcVar7;
-  undefined8 uVar8;
+  int poolIndex;
+  byte *poolBoundsTemplateIds;
+  byte *poolSourceModes;
+  int *poolSourceIds;
+  char *poolActiveCounts;
   
-  uVar8 = FUN_80286830();
-  iVar2 = 0;
-  pcVar7 = &gExpgfxSlotActiveCounts;
-  piVar6 = &gExpgfxSlotSourceIds;
-  pbVar5 = &DAT_8039c638;
-  pbVar4 = &DAT_8039c7d8;
-  pfVar3 = (float *)&DAT_8039b9b8;
+  currentSource = Expgfx_GetCurrentSource();
+  poolIndex = 0;
+  poolActiveCounts = &gExpgfxSlotActiveCounts;
+  poolSourceIds = &gExpgfxSlotSourceIds;
+  poolSourceModes = &DAT_8039c638;
+  poolBoundsTemplateIds = &DAT_8039c7d8;
+  poolBounds = Expgfx_GetPoolBounds(0);
   do {
-    if ((((*pcVar7 != '\0') && (*piVar6 == (int)((ulonglong)uVar8 >> 0x20))) &&
-        ((uint)*pbVar5 == (int)uVar8 + 1U)) &&
-       (uVar1 = FUN_8005e558((double)(*pfVar3 - FLOAT_803dda58),(double)(pfVar3[1] - FLOAT_803dda58)
-                             ,(double)pfVar3[2],(double)pfVar3[3],
-                             (double)(pfVar3[4] - FLOAT_803dda5c),
-                             (double)(pfVar3[5] - FLOAT_803dda5c),
-                             (float *)(&DAT_80310458 + (uint)*pbVar4 * 0x18)), (uVar1 & 0xff) != 0))
-    {
-      FUN_8009c0b4();
+    if (((*poolActiveCounts != '\0') && (*poolSourceIds == currentSource.sourceId)) &&
+       ((uint)*poolSourceModes == currentSource.sourceMode + 1U)) {
+      boundsTemplate = Expgfx_GetBoundsTemplate(*poolBoundsTemplateIds);
+      uVar1 = FUN_8005e558((double)(poolBounds->minX - FLOAT_803dda58),
+                           (double)(poolBounds->maxX - FLOAT_803dda58),
+                           (double)poolBounds->minY,(double)poolBounds->maxY,
+                           (double)(poolBounds->minZ - FLOAT_803dda5c),
+                           (double)(poolBounds->maxZ - FLOAT_803dda5c),(float *)boundsTemplate);
+      if ((uVar1 & 0xff) != 0) {
+        FUN_8009c0b4();
+      }
     }
-    pcVar7 = pcVar7 + 1;
-    piVar6 = piVar6 + 1;
-    pbVar5 = pbVar5 + 1;
-    pbVar4 = pbVar4 + 1;
-    pfVar3 = pfVar3 + 6;
-    iVar2 = iVar2 + 1;
-  } while (iVar2 < EXPGFX_POOL_COUNT);
+    poolActiveCounts = poolActiveCounts + 1;
+    poolSourceIds = poolSourceIds + 1;
+    poolSourceModes = poolSourceModes + 1;
+    poolBoundsTemplateIds = poolBoundsTemplateIds + 1;
+    poolBounds = poolBounds + 1;
+    poolIndex = poolIndex + 1;
+  } while (poolIndex < EXPGFX_POOL_COUNT);
   FUN_8028687c();
   return;
 }

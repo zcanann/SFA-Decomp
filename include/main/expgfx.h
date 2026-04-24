@@ -21,7 +21,7 @@ int expgfx_addToTable(undefined8 param_1,undefined8 param_2,undefined8 param_3,u
                       int param_9,int param_10,int param_11,undefined4 param_12);
 void FUN_8009bf6c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-void FUN_8009bfcc(void);
+void expgfx_processCurrentSourceBounds(void);
 void FUN_8009c0b4(void);
 void FUN_8009c0b8(void);
 void FUN_8009c0bc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,

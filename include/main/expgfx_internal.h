@@ -9,4 +9,18 @@
 #define EXPGFX_SLOT_SIZE 0xA0
 #define EXPGFX_POOL_BYTES (EXPGFX_SLOTS_PER_POOL * EXPGFX_SLOT_SIZE)
 
+typedef struct ExpgfxBounds {
+  float minX;
+  float maxX;
+  float minY;
+  float maxY;
+  float minZ;
+  float maxZ;
+} ExpgfxBounds;
+
+typedef struct ExpgfxCurrentSource {
+  int sourceId;
+  int sourceMode;
+} ExpgfxCurrentSource;
+
 #endif /* MAIN_EXPGFX_INTERNAL_H_ */
