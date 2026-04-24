@@ -14,16 +14,16 @@ extern f64 DOUBLE_803e7118;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803e7124;
 
-typedef union ZBombControlId {
+typedef union DfpTargetBlockControlId {
   u32 value;
   struct {
     u16 unused0;
     s16 triggerSfxId;
   } audio;
-} ZBombControlId;
+} DfpTargetBlockControlId;
 
-typedef struct ZBombState {
-  ZBombControlId control;
+typedef struct DfpTargetBlockState {
+  DfpTargetBlockControlId control;
   s16 specialSfxStopTimer;
   u8 effectEmitterActive;
   u8 unused7;
@@ -34,20 +34,20 @@ typedef struct ZBombState {
   u8 mode;
   u8 stateSfxReady;
   u8 completionSfxReady;
-} ZBombState;
+} DfpTargetBlockState;
 
-typedef enum ZBombMode {
-  ZBOMB_MODE_RAISING = 0,
-  ZBOMB_MODE_ACTIVE = 1,
-  ZBOMB_MODE_RESETTING = 2,
-  ZBOMB_MODE_LOWERING = 3,
-  ZBOMB_MODE_SETTLED = 4,
-} ZBombMode;
+typedef enum DfpTargetBlockMode {
+  DFPTARGETBLOCK_MODE_RAISING = 0,
+  DFPTARGETBLOCK_MODE_ACTIVE = 1,
+  DFPTARGETBLOCK_MODE_RESETTING = 2,
+  DFPTARGETBLOCK_MODE_LOWERING = 3,
+  DFPTARGETBLOCK_MODE_SETTLED = 4,
+} DfpTargetBlockMode;
 
 /*
  * --INFO--
  *
- * Function: zBomb_hitDetect
+ * Function: dfptargetblock_hitDetect
  * EN v1.0 Address: 0x802086C4
  * EN v1.0 Size: 340b
  * EN v1.1 Address: 0x802086D0
@@ -57,14 +57,14 @@ typedef enum ZBombMode {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 zBomb_hitDetect(int param_1,undefined4 param_2,int param_3)
+undefined4 dfptargetblock_hitDetect(int param_1,undefined4 param_2,int param_3)
 {
   byte bVar1;
   short sVar2;
   int iVar3;
-  ZBombState *state;
+  DfpTargetBlockState *state;
   
-  state = *(ZBombState **)(param_1 + 0xb8);
+  state = *(DfpTargetBlockState **)(param_1 + 0xb8);
   *(undefined2 *)(param_3 + 0x6e) = 0xffff;
   *(undefined *)(param_3 + 0x56) = 0;
   for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar3 = iVar3 + 1) {
@@ -107,7 +107,7 @@ undefined4 zBomb_hitDetect(int param_1,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: zBomb_updateAudioState
+ * Function: dfptargetblock_updateAudioState
  * EN v1.0 Address: 0x80208818
  * EN v1.0 Size: 432b
  * EN v1.1 Address: 0x8020882C
@@ -117,13 +117,13 @@ undefined4 zBomb_hitDetect(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void zBomb_updateAudioState(uint param_1)
+void dfptargetblock_updateAudioState(uint param_1)
 {
   short sVar1;
   uint uVar2;
-  ZBombState *state;
+  DfpTargetBlockState *state;
   
-  state = *(ZBombState **)(param_1 + 0xb8);
+  state = *(DfpTargetBlockState **)(param_1 + 0xb8);
   uVar2 = FUN_80017690((int)state->control.audio.triggerSfxId);
   if (((state->effectEmitterActive == 0) && ((short)uVar2 != 0)) &&
      (uVar2 = FUN_80017690(0xedf), uVar2 != 0)) {
@@ -167,7 +167,7 @@ void zBomb_updateAudioState(uint param_1)
 /*
  * --INFO--
  *
- * Function: zBomb_updateAudioStateWrapper
+ * Function: dfptargetblock_updateAudioStateWrapper
  * EN v1.0 Address: 0x802089C8
  * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x802089FC
@@ -177,9 +177,9 @@ void zBomb_updateAudioState(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void zBomb_updateAudioStateWrapper(uint param_1)
+void dfptargetblock_updateAudioStateWrapper(uint param_1)
 {
-  zBomb_updateAudioState(param_1);
+  dfptargetblock_updateAudioState(param_1);
   return;
 }
 
@@ -241,7 +241,7 @@ void FUN_80208a0c(void)
 /*
  * --INFO--
  *
- * Function: zBomb_resolveCollision
+ * Function: dfptargetblock_resolveCollision
  * EN v1.0 Address: 0x80208A2C
  * EN v1.0 Size: 508b
  * EN v1.1 Address: 0x80208B40
@@ -251,7 +251,7 @@ void FUN_80208a0c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void zBomb_resolveCollision(int *param_1,int param_2)
+void dfptargetblock_resolveCollision(int *param_1,int param_2)
 {
   float fVar1;
   int iVar2;
@@ -309,11 +309,11 @@ void zBomb_resolveCollision(int *param_1,int param_2)
  */
 void FUN_80208c28(int param_1)
 {
-  ZBombState *state;
+  DfpTargetBlockState *state;
   
-  state = *(ZBombState **)(param_1 + 0xb8);
+  state = *(DfpTargetBlockState **)(param_1 + 0xb8);
   if (((state->completionSfxReady == '\0') && (state->stateSfxReady != '\0')) &&
-     (state->mode != ZBOMB_MODE_SETTLED)) {
+     (state->mode != DFPTARGETBLOCK_MODE_SETTLED)) {
     FUN_8003b818(param_1);
   }
   return;

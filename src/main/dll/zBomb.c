@@ -7,7 +7,7 @@ extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
 extern int FUN_800369d0();
 extern undefined4 FUN_800810f8();
-extern void zBomb_resolveCollision(int *param_1,int param_2);
+extern void dfptargetblock_resolveCollision(int *param_1,int param_2);
 extern double FUN_80293900();
 
 extern undefined4* DAT_803dd708;
@@ -33,16 +33,16 @@ extern f32 FLOAT_803e7158;
 extern f32 FLOAT_803e715c;
 extern f32 FLOAT_803e7160;
 
-typedef union ZBombControlId {
+typedef union DfpTargetBlockControlId {
   u32 value;
   struct {
     u16 unused0;
     s16 triggerSfxId;
   } audio;
-} ZBombControlId;
+} DfpTargetBlockControlId;
 
-typedef struct ZBombState {
-  ZBombControlId control;
+typedef struct DfpTargetBlockState {
+  DfpTargetBlockControlId control;
   s16 specialSfxStopTimer;
   u8 effectEmitterActive;
   u8 unused7;
@@ -53,20 +53,20 @@ typedef struct ZBombState {
   u8 mode;
   u8 stateSfxReady;
   u8 completionSfxReady;
-} ZBombState;
+} DfpTargetBlockState;
 
-typedef enum ZBombMode {
-  ZBOMB_MODE_RAISING = 0,
-  ZBOMB_MODE_ACTIVE = 1,
-  ZBOMB_MODE_RESETTING = 2,
-  ZBOMB_MODE_LOWERING = 3,
-  ZBOMB_MODE_SETTLED = 4,
-} ZBombMode;
+typedef enum DfpTargetBlockMode {
+  DFPTARGETBLOCK_MODE_RAISING = 0,
+  DFPTARGETBLOCK_MODE_ACTIVE = 1,
+  DFPTARGETBLOCK_MODE_RESETTING = 2,
+  DFPTARGETBLOCK_MODE_LOWERING = 3,
+  DFPTARGETBLOCK_MODE_SETTLED = 4,
+} DfpTargetBlockMode;
 
 /*
  * --INFO--
  *
- * Function: zBomb_update
+ * Function: dfptargetblock_update
  * EN v1.0 Address: 0x80208B70
  * EN v1.0 Size: 1724b
  * EN v1.1 Address: 0x80208CFC
@@ -76,14 +76,14 @@ typedef enum ZBombMode {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void zBomb_update(int *param_1)
+void dfptargetblock_update(int *param_1)
 {
   float fVar1;
   float fVar2;
   int iVar3;
   char cVar4;
   int iVar5;
-  ZBombState *state;
+  DfpTargetBlockState *state;
   double dVar7;
   double dVar8;
   int local_58;
@@ -97,14 +97,15 @@ void zBomb_update(int *param_1)
   int local_3c;
   
   local_58 = -1;
-  state = *(ZBombState **)(param_1 + 0x2e);
+  state = *(DfpTargetBlockState **)(param_1 + 0x2e);
   iVar5 = param_1[0x13];
   if (*(short *)((int)param_1 + 0x46) == 0x4e0) {
     FLOAT_803de978 = (float)param_1[3];
     FLOAT_803de97c = (float)param_1[5];
   }
   else if ((((state->completionSfxReady == '\0') && (state->stateSfxReady != '\0')) &&
-           (state->mode != ZBOMB_MODE_SETTLED)) && (state->mode != ZBOMB_MODE_LOWERING)) {
+           (state->mode != DFPTARGETBLOCK_MODE_SETTLED)) &&
+          (state->mode != DFPTARGETBLOCK_MODE_LOWERING)) {
     param_1[0x20] = param_1[3];
     param_1[0x21] = param_1[4];
     param_1[0x22] = param_1[5];
@@ -156,7 +157,7 @@ void zBomb_update(int *param_1)
         param_1[0xb] = (int)FLOAT_803e7124;
       }
     }
-    zBomb_resolveCollision(param_1,(int)state);
+    dfptargetblock_resolveCollision(param_1,(int)state);
     dVar8 = (double)(*(float *)(iVar5 + 8) - (float)param_1[3]);
     dVar7 = (double)(*(float *)(iVar5 + 0x10) - (float)param_1[5]);
     cVar4 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(param_1 + 0x2b));
@@ -168,19 +169,19 @@ void zBomb_update(int *param_1)
         fVar1 = FLOAT_803e7124;
         param_1[9] = (int)FLOAT_803e7124;
         param_1[0xb] = (int)fVar1;
-        state->mode = ZBOMB_MODE_RESETTING;
+        state->mode = DFPTARGETBLOCK_MODE_RESETTING;
         param_1[4] = (int)(*(float *)(iVar5 + 0xc) - FLOAT_803e7144);
         FUN_80006824((uint)param_1,0x1d3);
       }
       fVar1 = (float)param_1[3] - FLOAT_803de978;
       fVar2 = (float)param_1[5] - FLOAT_803de97c;
       if ((FLOAT_803e7124 == fVar1) && (FLOAT_803e7124 == fVar2)) {
-        state->mode = ZBOMB_MODE_LOWERING;
+        state->mode = DFPTARGETBLOCK_MODE_LOWERING;
       }
       else {
         dVar7 = FUN_80293900((double)(fVar1 * fVar1 + fVar2 * fVar2));
         if (dVar7 < (double)FLOAT_803e7148) {
-          state->mode = ZBOMB_MODE_LOWERING;
+          state->mode = DFPTARGETBLOCK_MODE_LOWERING;
         }
       }
     }
@@ -192,7 +193,7 @@ void zBomb_update(int *param_1)
         fVar1 = FLOAT_803e7124;
         param_1[9] = (int)FLOAT_803e7124;
         param_1[0xb] = (int)fVar1;
-        state->mode = ZBOMB_MODE_RESETTING;
+        state->mode = DFPTARGETBLOCK_MODE_RESETTING;
         param_1[4] = (int)(*(float *)(iVar5 + 0xc) - FLOAT_803e7144);
         FUN_80006824((uint)param_1,0x1d3);
         local_44 = param_1[3];
@@ -211,12 +212,12 @@ void zBomb_update(int *param_1)
       fVar1 = (float)param_1[3] - FLOAT_803de978;
       fVar2 = (float)param_1[5] - FLOAT_803de97c;
       if ((FLOAT_803e7124 == fVar1) && (FLOAT_803e7124 == fVar2)) {
-        state->mode = ZBOMB_MODE_LOWERING;
+        state->mode = DFPTARGETBLOCK_MODE_LOWERING;
       }
       else {
         dVar7 = FUN_80293900((double)(fVar1 * fVar1 + fVar2 * fVar2));
         if (dVar7 < (double)FLOAT_803e7158) {
-          state->mode = ZBOMB_MODE_LOWERING;
+          state->mode = DFPTARGETBLOCK_MODE_LOWERING;
         }
       }
     }
@@ -227,7 +228,7 @@ void zBomb_update(int *param_1)
 /*
  * --INFO--
  *
- * Function: zBomb_init
+ * Function: dfptargetblock_init
  * EN v1.0 Address: 0x8020922C
  * EN v1.0 Size: 512b
  * EN v1.1 Address: 0x802091A8
@@ -237,19 +238,19 @@ void zBomb_update(int *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void zBomb_init(int param_1)
+void dfptargetblock_init(int param_1)
 {
   char cVar1;
   float fVar2;
   uint uVar3;
   int iVar4;
-  ZBombState *state;
+  DfpTargetBlockState *state;
   undefined auStack_28 [12];
   float local_1c;
   float local_18;
   float local_14;
   
-  state = *(ZBombState **)(param_1 + 0xb8);
+  state = *(DfpTargetBlockState **)(param_1 + 0xb8);
   iVar4 = *(int *)(param_1 + 0x4c);
   if (*(short *)(param_1 + 0x46) == 0x4e0) {
     local_1c = FLOAT_803e7124;
@@ -269,23 +270,23 @@ void zBomb_init(int param_1)
     }
     fVar2 = FLOAT_803e7144;
     if (((state->completionSfxReady == '\0') && (state->stateSfxReady != '\0')) &&
-       (cVar1 = state->mode, cVar1 != ZBOMB_MODE_SETTLED)) {
-      if ((cVar1 == ZBOMB_MODE_RAISING) || (cVar1 == ZBOMB_MODE_RESETTING)) {
+       (cVar1 = state->mode, cVar1 != DFPTARGETBLOCK_MODE_SETTLED)) {
+      if ((cVar1 == DFPTARGETBLOCK_MODE_RAISING) || (cVar1 == DFPTARGETBLOCK_MODE_RESETTING)) {
         if (*(float *)(param_1 + 0x10) <= *(float *)(iVar4 + 0xc)) {
           *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) + FLOAT_803dc074;
           if (*(float *)(iVar4 + 0xc) <= *(float *)(param_1 + 0x10)) {
             *(float *)(param_1 + 0x10) = *(float *)(iVar4 + 0xc);
-            state->mode = ZBOMB_MODE_ACTIVE;
+            state->mode = DFPTARGETBLOCK_MODE_ACTIVE;
           }
         }
       }
-      else if (cVar1 == ZBOMB_MODE_LOWERING) {
+      else if (cVar1 == DFPTARGETBLOCK_MODE_LOWERING) {
         if (*(float *)(iVar4 + 0xc) - FLOAT_803e7144 <= *(float *)(param_1 + 0x10)) {
           *(float *)(param_1 + 0x10) = FLOAT_803e712c * FLOAT_803dc074 + *(float *)(param_1 + 0x10);
           fVar2 = *(float *)(iVar4 + 0xc) - fVar2;
           if (*(float *)(param_1 + 0x10) <= fVar2) {
             *(float *)(param_1 + 0x10) = fVar2;
-            state->mode = ZBOMB_MODE_SETTLED;
+            state->mode = DFPTARGETBLOCK_MODE_SETTLED;
             FUN_80017698((int)state->completionSfxId,1);
           }
         }

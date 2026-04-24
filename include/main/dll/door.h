@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void zBomb_resolveCollisionPoints(undefined2 *param_1,int param_2);
+void dfptargetblock_resolveCollisionPoints(undefined2 *param_1,int param_2);
 
 #endif /* MAIN_DLL_DOOR_H_ */
