@@ -2185,10 +2185,10 @@ dolphin/TRK_MINNOW_DOLPHIN/nubinit.c:
 	.bss        start:0x803D6920 end:0x803D6920
 
 dolphin/TRK_MINNOW_DOLPHIN/msg.c:
-	.text       start:0x80286CFC end:0x80287624
+	.text       start:0x80286CFC end:0x80286ED8
 
 dolphin/TRK_MINNOW_DOLPHIN/msgbuf.c:
-	.text       start:0x80287624 end:0x80287904
+	.text       start:0x80286ED8 end:0x80287904
 	.rodata     start:0x802C2958 end:0x802C2978
 	.bss        start:0x803D6920 end:0x803D8888
 
