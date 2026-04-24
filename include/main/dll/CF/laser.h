@@ -3,6 +3,24 @@
 
 #include "ghidra_import.h"
 
+typedef struct LaserState {
+  s16 primarySequenceId;
+  s16 secondarySequenceId;
+  u8 sequenceLatched;
+} LaserState;
+
+typedef struct LaserObject {
+  u8 pad00[0xAC];
+  s8 modeIndex;
+  u8 padAD[0xAF - 0xAD];
+  u8 statusFlags;
+  u16 objectFlags;
+  u8 padB2[0xB8 - 0xB2];
+  LaserState *state;
+} LaserObject;
+
+#define LASER_OBJECT_STATUS_08 0x08
+
 void laser_initUnsupported(void);
 void laserObj_update(int param_1);
 void laserObj_init(undefined2 *param_1,int param_2);

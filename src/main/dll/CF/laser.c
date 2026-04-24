@@ -2,24 +2,6 @@
 #include "dolphin/os.h"
 #include "main/dll/CF/laser.h"
 
-typedef struct LaserState {
-  s16 primarySequenceId;
-  s16 secondarySequenceId;
-  u8 sequenceLatched;
-} LaserState;
-
-typedef struct LaserObject {
-  u8 pad00[0xAC];
-  s8 modeIndex;
-  u8 padAD[0xAF - 0xAD];
-  u8 statusFlags;
-  u16 objectFlags;
-  u8 padB2[0xB8 - 0xB2];
-  LaserState *state;
-} LaserObject;
-
-#define LASER_OBJECT_STATUS_08 0x08
-
 extern undefined4 FUN_800067bc();
 extern undefined8 FUN_800068c4();
 extern undefined8 FUN_80006b84();
