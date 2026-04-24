@@ -60,6 +60,25 @@ def load_text_symbols(nm_path: Path, obj_path: Path) -> dict[str, list[int]]:
     return symbols
 
 
+def load_ordered_text_symbols(nm_path: Path, obj_path: Path) -> list[tuple[int, str]]:
+    result = subprocess.run(
+        [str(nm_path), "-n", "-S", str(obj_path)],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    ordered_symbols: list[tuple[int, str]] = []
+    for raw_line in result.stdout.splitlines():
+        match = SYMBOL_RE.match(raw_line.strip())
+        if match is None:
+            continue
+        name = match.group(4).strip()
+        if name.startswith("@"):
+            continue
+        ordered_symbols.append((int(match.group(1), 16), name))
+    return ordered_symbols
+
+
 def iter_source_files(root: Path) -> list[Path]:
     return sorted(path for path in root.rglob("*.c") if path.is_file())
 
@@ -101,22 +120,28 @@ def main() -> int:
             continue
 
         symbols = load_text_symbols(args.nm, obj_path)
-        for match in BLOCK_RE.finditer(text):
+        ordered_symbols = load_ordered_text_symbols(args.nm, obj_path)
+        blocks = list(BLOCK_RE.finditer(text))
+        use_sequential = len(blocks) == len(ordered_symbols)
+
+        for index, match in enumerate(blocks):
             function_name = match.group("function").strip()
             name_match = FUN_NAME_RE.match(function_name)
             if name_match is None:
                 continue
 
-            symbol_offsets = symbols.get(function_name)
-            if symbol_offsets is None:
-                skipped_missing_symbol += 1
-                continue
-            if len(symbol_offsets) != 1:
-                skipped_duplicate_symbol += 1
-                continue
-
             suffix_address = int(name_match.group(1), 16)
-            actual_address = split_start + symbol_offsets[0]
+            if use_sequential:
+                actual_address = split_start + ordered_symbols[index][0]
+            else:
+                symbol_offsets = symbols.get(function_name)
+                if symbol_offsets is None:
+                    skipped_missing_symbol += 1
+                    continue
+                if len(symbol_offsets) != 1:
+                    skipped_duplicate_symbol += 1
+                    continue
+                actual_address = split_start + symbol_offsets[0]
             if suffix_address == actual_address:
                 continue
 

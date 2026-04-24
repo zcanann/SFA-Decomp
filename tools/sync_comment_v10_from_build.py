@@ -200,10 +200,12 @@ def main() -> int:
         block_count = len(list(BLOCK_RE.finditer(original)))
         sequential_symbols: list[TextSymbol] | None = None
         sequential_index = 0
-        if obj_path.is_relative_to(args.build_obj_root):
-            nontrivial_symbols = [symbol for symbol in ordered_symbols if symbol.size > 4]
-            if len(nontrivial_symbols) == block_count:
-                sequential_symbols = nontrivial_symbols
+        ordered_text_symbols = [symbol for symbol in ordered_symbols if symbol.size > 0]
+        nontrivial_symbols = [symbol for symbol in ordered_text_symbols if symbol.size > 4]
+        if ordered_text_symbols and len(ordered_text_symbols) == block_count:
+            sequential_symbols = ordered_text_symbols
+        elif obj_path.is_relative_to(args.build_obj_root) and len(nontrivial_symbols) == block_count:
+            sequential_symbols = nontrivial_symbols
 
         def replace(match: re.Match[str]) -> str:
             nonlocal file_changed, blocks_changed, skipped_missing_symbol, skipped_duplicate_symbol
@@ -211,6 +213,32 @@ def main() -> int:
 
             function_name = match.group("function").strip()
             definition_name = find_definition_name(original, match.end())
+            if sequential_symbols is not None:
+                symbol = sequential_symbols[sequential_index]
+                sequential_index += 1
+                if split_start is None:
+                    parsed_address = parse_address_from_name(symbol.name)
+                    if parsed_address is None:
+                        skipped_missing_symbol += 1
+                        return match.group(0)
+                    v10_addr = format_address(parsed_address)
+                else:
+                    v10_addr = format_address(split_start + symbol.offset)
+                v10_size = format_size(symbol.size)
+                if (
+                    match.group("v10_addr").strip() == v10_addr
+                    and match.group("v10_size").strip() == v10_size
+                ):
+                    return match.group(0)
+                file_changed += 1
+                blocks_changed += 1
+                return (
+                    f"{match.group('prefix')}{function_name}"
+                    f"{match.group('mid1')}{v10_addr}"
+                    f"{match.group('mid2')}{v10_size}"
+                    f"{match.group('suffix')}"
+                )
+
             candidate_names: list[str] = []
             if definition_name is not None:
                 candidate_names.append(definition_name)
@@ -245,24 +273,6 @@ def main() -> int:
                             f"{match.group('mid2')}{v10_size}"
                             f"{match.group('suffix')}"
                         )
-                if sequential_symbols is not None:
-                    symbol = sequential_symbols[sequential_index]
-                    sequential_index += 1
-                    v10_addr = format_address(split_start + symbol.offset)
-                    v10_size = format_size(symbol.size)
-                    if (
-                        match.group("v10_addr").strip() == v10_addr
-                        and match.group("v10_size").strip() == v10_size
-                    ):
-                        return match.group(0)
-                    file_changed += 1
-                    blocks_changed += 1
-                    return (
-                        f"{match.group('prefix')}{function_name}"
-                        f"{match.group('mid1')}{v10_addr}"
-                        f"{match.group('mid2')}{v10_size}"
-                        f"{match.group('suffix')}"
-                    )
                 skipped_missing_symbol += 1
                 return match.group(0)
             if len(candidates) != 1:
