@@ -12,7 +12,7 @@ extern f32 FLOAT_803e7080;
 /*
  * --INFO--
  *
- * Function: FUN_8020637c
+ * Function: chuka_init
  * EN v1.0 Address: 0x8020637C
  * EN v1.0 Size: 260b
  * EN v1.1 Address: 0x80206444
@@ -22,7 +22,7 @@ extern f32 FLOAT_803e7080;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020637c(undefined2 *param_1,int param_2)
+void chuka_init(undefined2 *param_1,int param_2)
 {
   int *piVar1;
   int *piVar2;
