@@ -14,7 +14,7 @@ extern f32 FLOAT_803e2548;
 /*
  * --INFO--
  *
- * Function: FUN_8010c0d8
+ * Function: camdrakor_computeTargetOffset
  * EN v1.0 Address: 0x8010C0D8
  * EN v1.0 Size: 348b
  * EN v1.1 Address: 0x8010C1A4
@@ -24,7 +24,8 @@ extern f32 FLOAT_803e2548;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010c0d8(int param_1,float *param_2,float *param_3,float *param_4,float *param_5)
+void camdrakor_computeTargetOffset
+          (int param_1,float *param_2,float *param_3,float *param_4,float *param_5)
 {
   float fVar1;
   float fVar2;

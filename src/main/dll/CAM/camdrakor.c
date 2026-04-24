@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/CAM/camdrakor.h"
+#include "main/dll/CAM/dll_60.h"
 
 extern undefined4 FUN_800068f4();
 extern void* FUN_800069a8();
@@ -10,7 +11,6 @@ extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern undefined4 FUN_80053bb0();
 extern undefined4 camcontrol_traceMove();
-extern undefined4 FUN_8010c0d8();
 extern uint FUN_801ef1a4();
 extern undefined4 FUN_80247e94();
 extern undefined4 FUN_80247eb8();
@@ -201,7 +201,8 @@ void FUN_8010c0d8(void)
                             *(float *)(iVar8 + 0x20);
               }
               else {
-                FUN_8010c0d8((int)psVar4,&local_124,&local_11c,&local_128,&local_120);
+                camdrakor_computeTargetOffset
+                          ((int)psVar4,&local_124,&local_11c,&local_128,&local_120);
               }
             }
             else {

@@ -1,18 +1,18 @@
 #include "ghidra_import.h"
+#include "main/dll/brokecannon.h"
 #include "main/dll/SC/SCtotemstrength.h"
 
 extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
 extern undefined4 FUN_80080f14();
-extern undefined4 FUN_801d80f4();
-extern undefined4 FUN_801d8524();
+extern undefined8 FUN_801d8524();
 
 extern undefined4* DAT_803dd6e8;
 
 /*
  * --INFO--
  *
- * Function: FUN_801d80f4
+ * Function: SCtotemstrength_updateState
  * EN v1.0 Address: 0x801D80F4
  * EN v1.0 Size: 140b
  * EN v1.1 Address: 0x801D81A0
@@ -22,8 +22,9 @@ extern undefined4* DAT_803dd6e8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d80f4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void SCtotemstrength_updateState
+          (undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+           undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   uint uVar1;
   

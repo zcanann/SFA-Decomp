@@ -55,7 +55,7 @@ extern f32 FLOAT_803e4630;
 /*
  * --INFO--
  *
- * Function: FUN_801826e8
+ * Function: dll153_updateExploderState
  * EN v1.0 Address: 0x801826E8
  * EN v1.0 Size: 3072b
  * EN v1.1 Address: 0x80182C40
@@ -65,8 +65,9 @@ extern f32 FLOAT_803e4630;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801826e8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void dll153_updateExploderState
+          (undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+           undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   char cVar1;
   bool bVar2;

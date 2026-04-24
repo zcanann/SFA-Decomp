@@ -51,7 +51,7 @@ extern f32 FLOAT_803e5fd8;
 /*
  * --INFO--
  *
- * Function: FUN_801d1e24
+ * Function: dll1E1_updateTrickyState
  * EN v1.0 Address: 0x801D1E24
  * EN v1.0 Size: 2644b
  * EN v1.1 Address: 0x801D2414
@@ -61,8 +61,9 @@ extern f32 FLOAT_803e5fd8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d1e24(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void dll1E1_updateTrickyState
+          (undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+           undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   float fVar1;
   float fVar2;

@@ -24,10 +24,7 @@ extern int FUN_800e8b98();
 extern undefined4 FUN_8011e824();
 extern int FUN_8012efc4();
 extern undefined4 FUN_801d8180();
-extern undefined4 FUN_801d80f4();
-extern undefined4 FUN_801d8524();
 extern undefined8 FUN_801d87f8();
-extern undefined8 FUN_801d8d20();
 extern uint FUN_80294cc4();
 
 extern short DAT_80328258;

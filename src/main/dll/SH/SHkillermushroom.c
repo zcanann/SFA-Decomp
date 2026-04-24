@@ -27,7 +27,6 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80081120();
 extern undefined4 FUN_8008112c();
 extern undefined4 FUN_8013651c();
-extern undefined4 FUN_801d2c54();
 extern undefined4 FUN_801d2db8();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
@@ -55,7 +54,7 @@ extern f32 FLOAT_803e602c;
 /*
  * --INFO--
  *
- * Function: FUN_801d2c54
+ * Function: SHkillermushroom_free
  * EN v1.0 Address: 0x801D2C54
  * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x801D3138
@@ -65,7 +64,7 @@ extern f32 FLOAT_803e602c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d2c54(int param_1)
+void SHkillermushroom_free(int param_1)
 {
   FUN_8003b818(param_1);
   return;
