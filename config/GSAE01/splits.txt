@@ -1597,10 +1597,10 @@ dolphin/exi/EXIUart.c:
 	.text       start:0x80254CCC end:0x80254CCC
 
 dolphin/gx/GXInit.c:
-	.text       start:0x80254CCC end:0x802564A4
+	.text       start:0x80254CCC end:0x80255DBC
 
 dolphin/gx/GXFifo.c:
-	.text       start:0x802564A4 end:0x80256CD8
+	.text       start:0x80255DBC end:0x80256CD8
 	.sbss       start:0x803DE0B8 end:0x803DE0D8
 
 dolphin/gx/GXAttr.c:
