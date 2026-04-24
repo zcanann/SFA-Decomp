@@ -511,7 +511,7 @@ config.libs = [
             Object(NonMatching, "dolphin/card/CARDWrite.c"),
             Object(NonMatching, "dolphin/card/CARDDelete.c"),
             Object(NonMatching, "dolphin/card/CARDStat.c"),
-            Object(MatchingFor("GSAE01"), "dolphin/card/CARDNet.c"),
+            Object(NonMatching, "dolphin/card/CARDNet.c"),
         ],
     ),
     DolphinLib(
