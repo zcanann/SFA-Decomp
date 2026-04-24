@@ -47,7 +47,7 @@ void laser_init(void)
 /*
  * --INFO--
  *
- * Function: FUN_80209338
+ * Function: laserObj_update
  * EN v1.0 Address: 0x80209338
  * EN v1.0 Size: 416b
  * EN v1.1 Address: 0x802096FC
@@ -57,7 +57,7 @@ void laser_init(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80209338(int param_1)
+void laserObj_update(int param_1)
 {
   uint uVar1;
   byte bVar3;
@@ -103,7 +103,7 @@ void FUN_80209338(int param_1)
 /*
  * --INFO--
  *
- * Function: laser_initialise
+ * Function: laserObj_init
  * EN v1.0 Address: 0x802094D8
  * EN v1.0 Size: 140b
  * EN v1.1 Address: 0x802098A4
@@ -113,7 +113,7 @@ void FUN_80209338(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void laser_initialise(undefined2 *param_1,int param_2)
+void laserObj_init(undefined2 *param_1,int param_2)
 {
   uint uVar1;
   short *psVar2;

@@ -4,8 +4,8 @@
 #include "ghidra_import.h"
 
 void laser_init(void);
-void FUN_80209338(int param_1);
-void laser_initialise(undefined2 *param_1,int param_2);
+void laserObj_update(int param_1);
+void laserObj_init(undefined2 *param_1,int param_2);
 undefined4
 laser_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
              undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
