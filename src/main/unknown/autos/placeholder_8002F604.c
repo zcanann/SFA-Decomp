@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/objanim_internal.h"
 #include "main/unknown/autos/placeholder_8002F604.h"
 
 extern undefined4 FUN_8001786c();
@@ -38,9 +39,7 @@ extern f32 FLOAT_803df58c;
  */
 undefined2 FUN_8002f5d4(int param_1)
 {
-  return *(undefined2 *)
-          (*(int *)(*(int *)(*(int *)(param_1 + 0x7c) + *(char *)(param_1 + 0xad) * 4) + 0x2c) +
-          0x58);
+  return ObjAnim_GetPrimaryState((ObjAnimComponent *)param_1)->eventCountdown;
 }
 
 /*
@@ -58,19 +57,20 @@ undefined2 FUN_8002f5d4(int param_1)
  */
 void FUN_8002f5f4(int param_1,int param_2,short param_3,undefined2 param_4)
 {
-  int iVar1;
+  ObjAnimBank *bank;
+  ObjAnimState *state;
 
-  iVar1 = *(int *)(*(int *)(param_1 + 0x7c) + *(char *)(param_1 + 0xad) * 4);
-  if (iVar1 == 0) {
+  bank = ObjAnim_GetActiveBank((ObjAnimComponent *)param_1);
+  if (bank == (ObjAnimBank *)0x0) {
     return;
   }
   if (param_2 == 0) {
-    iVar1 = *(int *)(iVar1 + 0x2c);
+    state = bank->primaryState;
   }
   else {
-    iVar1 = *(int *)(iVar1 + 0x30);
+    state = bank->secondaryState;
   }
-  *(undefined2 *)(iVar1 + param_3 * 2 + 0x58) = param_4;
+  *(undefined2 *)((u8 *)state + param_3 * 2 + 0x58) = param_4;
 }
 
 /*
@@ -88,13 +88,15 @@ void FUN_8002f5f4(int param_1,int param_2,short param_3,undefined2 param_4)
  */
 void FUN_8002f638(int param_1,uint param_2)
 {
-  int iVar1;
+  ObjAnimBank *bank;
+  ObjAnimState *state;
 
-  iVar1 = *(int *)(*(int *)(param_1 + 0x7c) + *(char *)(param_1 + 0xad) * 4);
-  if (iVar1 != 0) {
-    *(short *)(*(int *)(iVar1 + 0x2c) + 0x5e) =
-         (short)(int)(FLOAT_803df574 /
-                     (float)((double)CONCAT44(0x43300000,param_2 ^ 0x80000000) - DOUBLE_803df580));
+  bank = ObjAnim_GetActiveBank((ObjAnimComponent *)param_1);
+  if (bank != (ObjAnimBank *)0x0) {
+    state = bank->primaryState;
+    state->eventStep = (short)(int)(FLOAT_803df574 /
+                                   (float)((double)CONCAT44(0x43300000,param_2 ^ 0x80000000) -
+                                          DOUBLE_803df580));
   }
 }
 

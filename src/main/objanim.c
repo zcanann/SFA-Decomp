@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
 
 extern undefined4 FUN_8001786c();
 extern undefined4 FUN_800723a0();
@@ -11,84 +12,6 @@ extern f32 FLOAT_803df570;
 extern f32 FLOAT_803df574;
 extern f32 FLOAT_803df578;
 extern f32 FLOAT_803df588;
-
-/*
- * Shared state used by the object-animation helpers in this file.
- * Most names are descriptive placeholders, but the layout itself is stable
- * enough to stop repeating raw offsets everywhere.
- */
-typedef struct ObjAnimDef {
-  u8 pad00[2];
-  u16 flags;
-  u8 pad04[0x64 - 4];
-  u8 **moveData;
-  u8 pad68[4];
-  s16 *blendMoveIds;
-  u8 pad70[0xEC - 0x70];
-  u16 moveCount;
-} ObjAnimDef;
-
-typedef struct ObjAnimState {
-  u8 pad00[4];
-  f32 speed;
-  f32 progress;
-  f32 step;
-  f32 savedStep;
-  f32 segmentLength;
-  f32 prevSegmentLength;
-  u8 *moveCache[2];
-  u8 *blendMoveCache[2];
-  u8 pad2c[8];
-  u8 *frameData;
-  u8 *prevFrameData;
-  u8 *frameCmd;
-  u8 *prevFrameCmd;
-  u16 moveCacheSlot;
-  u16 prevMoveCacheSlot;
-  u16 blendCacheSlot;
-  u16 prevBlendCacheSlot;
-  u8 pad4c[0x58 - 0x4C];
-  u16 eventCountdown;
-  u16 eventState;
-  u16 prevEventState;
-  u16 eventStep;
-  u8 frameType;
-  u8 prevFrameType;
-  s8 blendToggle;
-  u8 flags;
-  s16 lastBlendMoveIndex;
-} ObjAnimState;
-
-typedef struct ObjAnimBank {
-  ObjAnimDef *animDef;
-  u8 pad04[0x2C - 4];
-  ObjAnimState *secondaryState;
-  ObjAnimState *primaryState;
-} ObjAnimBank;
-
-typedef struct ObjAnimComponent {
-  u8 pad00[0x60];
-  void *eventTable;
-  u8 pad64[0x7C - 0x64];
-  ObjAnimBank **banks;
-  u8 pad80[0x9C - 0x80];
-  f32 moveProgress;
-  u8 padA0[2];
-  s16 activeMove;
-  u8 padA4[0xAD - 0xA4];
-  s8 bankIndex;
-} ObjAnimComponent;
-
-typedef struct ObjAnimEventList {
-  u8 pad00[0x12];
-  u8 resetFlag;
-  u8 triggeredIds[8];
-  u8 count;
-} ObjAnimEventList;
-
-static ObjAnimBank *ObjAnim_GetActiveBank(ObjAnimComponent *objAnim) {
-  return objAnim->banks[objAnim->bankIndex];
-}
 
 static s16 *ObjAnim_GetMoveBaseTable(ObjAnimDef *animDef) {
   return (s16 *)((u8 *)animDef + 0x70);

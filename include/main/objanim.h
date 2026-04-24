@@ -7,9 +7,11 @@ void ObjAnim_SetBlendMove(undefined8 param_1,double param_2,double param_3,undef
                           undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                           undefined4 param_9,int param_10,int param_11,uint param_12,
                           undefined2 param_13);
+/* Primary-state wrapper around ObjAnim_SetBlendMove. */
 void fn_8002EE10(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,uint param_10,undefined2 param_11);
+/* Secondary-state wrapper around ObjAnim_SetBlendMove. */
 void fn_8002EE64(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,uint param_10,undefined2 param_11);
@@ -19,5 +21,8 @@ undefined4
 Object_ObjAnimSetMove(double param_1,double param_2,double param_3,undefined8 param_4,
                       undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                       int param_9,uint param_10,undefined param_11);
+
+#define ObjAnim_SetPrimaryBlendMove fn_8002EE10
+#define ObjAnim_SetSecondaryBlendMove fn_8002EE64
 
 #endif /* MAIN_OBJANIM_H_ */

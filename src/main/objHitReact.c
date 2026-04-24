@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/objHitReact.h"
+#include "main/objanim_internal.h"
 #include "main/unknown/autos/placeholder_8002F604.h"
 
 extern bool FUN_800067f8();
@@ -51,6 +52,8 @@ u8 objHitReact_update(undefined8 param_1,double param_2,double param_3,undefined
                       undefined4 param_9,undefined4 param_10,uint param_11,uint param_12,
                       float *param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
+  ObjAnimComponent *objAnim;
+  ObjAnimDef *animDef;
   uint object;
   int iVar2;
   bool bVar3;
@@ -63,7 +66,7 @@ u8 objHitReact_update(undefined8 param_1,double param_2,double param_3,undefined
   ObjHitReactEntry *reactEntry;
   undefined4 *puVar11;
   undefined8 uVar10;
-  int local_48;
+  int hitSphereIndex;
   undefined4 local_44;
   undefined4 local_40;
   undefined4 local_3c;
@@ -78,6 +81,8 @@ u8 objHitReact_update(undefined8 param_1,double param_2,double param_3,undefined
 
   uVar10 = FUN_8028683c();
   object = (uint)((ulonglong)uVar10 >> 0x20);
+  objAnim = (ObjAnimComponent *)object;
+  animDef = ObjAnim_GetAnimDef(objAnim);
   local_44 = DAT_802c2280;
   local_40 = DAT_802c2284;
   local_3c = DAT_802c2288;
@@ -96,7 +101,7 @@ u8 objHitReact_update(undefined8 param_1,double param_2,double param_3,undefined
   pfVar6 = &local_28;
   puVar7 = &uStack_24;
   pfVar8 = local_20;
-  iVar2 = FUN_800368c4(object,(undefined4 *)0x0,&local_48,(uint *)0x0,pfVar6,puVar7,pfVar8);
+  iVar2 = FUN_800368c4(object,(undefined4 *)0x0,&hitSphereIndex,(uint *)0x0,pfVar6,puVar7,pfVar8);
   if (iVar2 != 0) {
     local_28 = local_28 + FLOAT_803dda58;
     local_20[0] = local_20[0] + FLOAT_803dda5c;
@@ -104,13 +109,12 @@ u8 objHitReact_update(undefined8 param_1,double param_2,double param_3,undefined
     local_30 = 0;
     local_32 = 0;
     local_34 = 0;
-    local_48 = (int)*(char *)(*(int *)(**(int **)(*(int *)(object + 0x7c) + *(char *)(object + 0xad) * 4) +
-                                       0x58) + local_48 * 0x18 + 0x16);
-    if ((int)(param_11 & 0xff) <= local_48) {
+    hitSphereIndex = ObjAnim_GetHitReactEntryIndex(animDef, hitSphereIndex);
+    if ((int)(param_11 & 0xff) <= hitSphereIndex) {
       FUN_800723a0();
-      local_48 = 0;
+      hitSphereIndex = 0;
     }
-    reactEntry = (ObjHitReactEntry *)((int)uVar10 + local_48 * sizeof(ObjHitReactEntry));
+    reactEntry = (ObjHitReactEntry *)((int)uVar10 + hitSphereIndex * sizeof(ObjHitReactEntry));
     if (iVar2 != 0x11) {
       if ((reactEntry->clearVolumeA != -1) &&
           (bVar3 = FUN_800067f8(object,reactEntry->clearVolumeA), !bVar3)) {
