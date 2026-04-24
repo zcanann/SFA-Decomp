@@ -50,10 +50,18 @@ typedef struct ZBombState {
   u8 unk09[0x5B];
   s16 stateSfxId;
   s16 completionSfxId;
-  u8 state;
+  u8 mode;
   u8 stateSfxReady;
   u8 completionSfxReady;
 } ZBombState;
+
+typedef enum ZBombMode {
+  ZBOMB_MODE_RAISING = 0,
+  ZBOMB_MODE_ACTIVE = 1,
+  ZBOMB_MODE_RESETTING = 2,
+  ZBOMB_MODE_LOWERING = 3,
+  ZBOMB_MODE_SETTLED = 4,
+} ZBombMode;
 
 /*
  * --INFO--
@@ -96,7 +104,7 @@ void zBomb_update(int *param_1)
     FLOAT_803de97c = (float)param_1[5];
   }
   else if ((((state->completionSfxReady == '\0') && (state->stateSfxReady != '\0')) &&
-           (state->state != '\x04')) && (state->state != '\x03')) {
+           (state->mode != ZBOMB_MODE_SETTLED)) && (state->mode != ZBOMB_MODE_LOWERING)) {
     param_1[0x20] = param_1[3];
     param_1[0x21] = param_1[4];
     param_1[0x22] = param_1[5];
@@ -160,19 +168,19 @@ void zBomb_update(int *param_1)
         fVar1 = FLOAT_803e7124;
         param_1[9] = (int)FLOAT_803e7124;
         param_1[0xb] = (int)fVar1;
-        state->state = 2;
+        state->mode = ZBOMB_MODE_RESETTING;
         param_1[4] = (int)(*(float *)(iVar5 + 0xc) - FLOAT_803e7144);
         FUN_80006824((uint)param_1,0x1d3);
       }
       fVar1 = (float)param_1[3] - FLOAT_803de978;
       fVar2 = (float)param_1[5] - FLOAT_803de97c;
       if ((FLOAT_803e7124 == fVar1) && (FLOAT_803e7124 == fVar2)) {
-        state->state = 3;
+        state->mode = ZBOMB_MODE_LOWERING;
       }
       else {
         dVar7 = FUN_80293900((double)(fVar1 * fVar1 + fVar2 * fVar2));
         if (dVar7 < (double)FLOAT_803e7148) {
-          state->state = 3;
+          state->mode = ZBOMB_MODE_LOWERING;
         }
       }
     }
@@ -184,7 +192,7 @@ void zBomb_update(int *param_1)
         fVar1 = FLOAT_803e7124;
         param_1[9] = (int)FLOAT_803e7124;
         param_1[0xb] = (int)fVar1;
-        state->state = 2;
+        state->mode = ZBOMB_MODE_RESETTING;
         param_1[4] = (int)(*(float *)(iVar5 + 0xc) - FLOAT_803e7144);
         FUN_80006824((uint)param_1,0x1d3);
         local_44 = param_1[3];
@@ -203,12 +211,12 @@ void zBomb_update(int *param_1)
       fVar1 = (float)param_1[3] - FLOAT_803de978;
       fVar2 = (float)param_1[5] - FLOAT_803de97c;
       if ((FLOAT_803e7124 == fVar1) && (FLOAT_803e7124 == fVar2)) {
-        state->state = 3;
+        state->mode = ZBOMB_MODE_LOWERING;
       }
       else {
         dVar7 = FUN_80293900((double)(fVar1 * fVar1 + fVar2 * fVar2));
         if (dVar7 < (double)FLOAT_803e7158) {
-          state->state = 3;
+          state->mode = ZBOMB_MODE_LOWERING;
         }
       }
     }
@@ -261,23 +269,23 @@ void zBomb_init(int param_1)
     }
     fVar2 = FLOAT_803e7144;
     if (((state->completionSfxReady == '\0') && (state->stateSfxReady != '\0')) &&
-       (cVar1 = state->state, cVar1 != '\x04')) {
-      if ((cVar1 == '\0') || (cVar1 == '\x02')) {
+       (cVar1 = state->mode, cVar1 != ZBOMB_MODE_SETTLED)) {
+      if ((cVar1 == ZBOMB_MODE_RAISING) || (cVar1 == ZBOMB_MODE_RESETTING)) {
         if (*(float *)(param_1 + 0x10) <= *(float *)(iVar4 + 0xc)) {
           *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) + FLOAT_803dc074;
           if (*(float *)(iVar4 + 0xc) <= *(float *)(param_1 + 0x10)) {
             *(float *)(param_1 + 0x10) = *(float *)(iVar4 + 0xc);
-            state->state = 1;
+            state->mode = ZBOMB_MODE_ACTIVE;
           }
         }
       }
-      else if (cVar1 == '\x03') {
+      else if (cVar1 == ZBOMB_MODE_LOWERING) {
         if (*(float *)(iVar4 + 0xc) - FLOAT_803e7144 <= *(float *)(param_1 + 0x10)) {
           *(float *)(param_1 + 0x10) = FLOAT_803e712c * FLOAT_803dc074 + *(float *)(param_1 + 0x10);
           fVar2 = *(float *)(iVar4 + 0xc) - fVar2;
           if (*(float *)(param_1 + 0x10) <= fVar2) {
             *(float *)(param_1 + 0x10) = fVar2;
-            state->state = 4;
+            state->mode = ZBOMB_MODE_SETTLED;
             FUN_80017698((int)state->completionSfxId,1);
           }
         }

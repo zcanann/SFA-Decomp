@@ -31,10 +31,18 @@ typedef struct ZBombState {
   u8 unk09[0x5B];
   s16 stateSfxId;
   s16 completionSfxId;
-  u8 state;
+  u8 mode;
   u8 stateSfxReady;
   u8 completionSfxReady;
 } ZBombState;
+
+typedef enum ZBombMode {
+  ZBOMB_MODE_RAISING = 0,
+  ZBOMB_MODE_ACTIVE = 1,
+  ZBOMB_MODE_RESETTING = 2,
+  ZBOMB_MODE_LOWERING = 3,
+  ZBOMB_MODE_SETTLED = 4,
+} ZBombMode;
 
 /*
  * --INFO--
@@ -305,7 +313,7 @@ void FUN_80208c28(int param_1)
   
   state = *(ZBombState **)(param_1 + 0xb8);
   if (((state->completionSfxReady == '\0') && (state->stateSfxReady != '\0')) &&
-     (state->state != '\x04')) {
+     (state->mode != ZBOMB_MODE_SETTLED)) {
     FUN_8003b818(param_1);
   }
   return;
