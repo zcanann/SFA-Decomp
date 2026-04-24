@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/expgfx_internal.h"
 #include "main/dll/modgfx.h"
 
 extern undefined4 FUN_800033a8();
@@ -1069,7 +1070,7 @@ extern void* PTR_LAB_803108a0;
 /*
  * --INFO--
  *
- * Function: FUN_8009fed0
+ * Function: modgfx_resetExpgfxState
  * EN v1.0 Address: 0x8009FED0
  * EN v1.0 Size: 472b
  * EN v1.1 Address: 0x8009FF68
@@ -1079,8 +1080,9 @@ extern void* PTR_LAB_803108a0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8009fed0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void modgfx_resetExpgfxState(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                             undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                             undefined8 param_7,undefined8 param_8)
 {
   undefined *puVar1;
   undefined4 *puVar2;
@@ -1099,7 +1101,7 @@ void FUN_8009fed0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   puVar1 = &DAT_80310528;
   puVar5 = &DAT_8039c638;
   puVar6 = &gExpgfxSlotSourceIds;
-  iVar8 = 10;
+  iVar8 = EXPGFX_POOL_GROUP_COUNT;
   do {
     *puVar2 = 0;
     *puVar3 = 0;
@@ -1181,7 +1183,7 @@ void FUN_8009fed0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_800a00a8
+ * Function: modgfx_releaseExpgfxPools
  * EN v1.0 Address: 0x800A00A8
  * EN v1.0 Size: 144b
  * EN v1.1 Address: 0x800A0108
@@ -1191,8 +1193,9 @@ void FUN_8009fed0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a00a8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void modgfx_releaseExpgfxPools(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                               undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                               undefined8 param_7,undefined8 param_8)
 {
   int iVar1;
   uint *puVar2;
@@ -1204,14 +1207,14 @@ void FUN_800a00a8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     FUN_80017814(*puVar2);
     puVar2 = puVar2 + 1;
     iVar1 = iVar1 + 1;
-  } while (iVar1 < 0x50);
+  } while (iVar1 < EXPGFX_POOL_COUNT);
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_800a0138
+ * Function: modgfx_allocExpgfxPools
  * EN v1.0 Address: 0x800A0138
  * EN v1.0 Size: 276b
  * EN v1.1 Address: 0x800A015C
@@ -1221,7 +1224,7 @@ void FUN_800a00a8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a0138(void)
+void modgfx_allocExpgfxPools(void)
 {
   undefined2 *puVar1;
   uint uVar2;
@@ -1234,7 +1237,7 @@ void FUN_800a0138(void)
   puVar3 = &gExpgfxSlotActiveMasks;
   puVar4 = &gExpgfxSlotActiveCounts;
   puVar1 = &gExpgfxSlotTypeIds;
-  iVar7 = 10;
+  iVar7 = EXPGFX_POOL_GROUP_COUNT;
   do {
     iVar5 = 0;
     *puVar3 = 0;
@@ -1268,13 +1271,13 @@ void FUN_800a0138(void)
   } while (iVar7 != 0);
   puVar6 = &gExpgfxSlotPoolBases;
   do {
-    uVar2 = FUN_80017830(4000,0x14);
+    uVar2 = FUN_80017830(EXPGFX_POOL_BYTES,0x14);
     *puVar6 = uVar2;
-    FUN_800033a8(*puVar6,0,4000);
-    FUN_802420e0(*puVar6,4000);
+    FUN_800033a8(*puVar6,0,EXPGFX_POOL_BYTES);
+    FUN_802420e0(*puVar6,EXPGFX_POOL_BYTES);
     puVar6 = puVar6 + 1;
     iVar5 = iVar5 + 1;
-  } while (iVar5 < 0x50);
+  } while (iVar5 < EXPGFX_POOL_COUNT);
   FUN_800033a8(-0x7fc63ec8,0,0x500);
   return;
 }

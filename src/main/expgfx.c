@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/expgfx.h"
+#include "main/expgfx_internal.h"
 
 extern undefined4 ABS();
 extern int FUN_80006714();
@@ -168,9 +169,6 @@ extern char sExpgfxMismatchInAddRemove[];
 extern char sExpgfxScaleOverflow[];
 extern char sExpgfxNoTexture[];
 
-#define EXPGFX_POOL_COUNT 0x50
-#define EXPGFX_SLOTS_PER_POOL 0x19
-#define EXPGFX_SLOT_SIZE 0xA0
 #define EXPGFX_SLOT_TABLE_INDEX_OFFSET 0x8A
 
 /*
@@ -823,7 +821,7 @@ void FUN_8009bfcc(void)
     pbVar4 = pbVar4 + 1;
     pfVar3 = pfVar3 + 6;
     iVar2 = iVar2 + 1;
-  } while (iVar2 < 0x50);
+  } while (iVar2 < EXPGFX_POOL_COUNT);
   FUN_8028687c();
   return;
 }
@@ -958,7 +956,7 @@ void FUN_8009c124(undefined8 param_1,undefined8 param_2,double param_3,double pa
     DAT_803dd430 = 1;
     FUN_8009bd84(dVar3,dVar4,param_3,param_4,param_5,param_6,param_7,param_8);
     DAT_803dd430 = 0;
-    bVar2 = 0x50;
+    bVar2 = EXPGFX_POOL_COUNT;
     while (bVar2 != 0) {
       bVar2 = bVar2 - 1;
       (&DAT_80310528)[bVar2] = 0;
