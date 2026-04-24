@@ -2162,10 +2162,13 @@ Runtime.PPCEABI.H/__va_arg.c:
 	.text       start:0x8028656C end:0x8028660C
 
 Runtime.PPCEABI.H/__init_cpp_exceptions.cpp:
-	.text       start:0x802866E0 end:0x802867BC
+	.text       start:0x802866E0 end:0x80286754
 	.ctors      start:0x802C1880 end:0x802C1884
 	.dtors      start:0x802C18A0 end:0x802C18A8
 	.sdata      start:0x803DC640 end:0x803DC648
+
+Runtime.PPCEABI.H/fragment.s:
+	.text       start:0x80286754 end:0x802867BC
 
 main/unknown/autos/placeholder_802867BC.c:
 	.text       start:0x802867BC end:0x8028685C

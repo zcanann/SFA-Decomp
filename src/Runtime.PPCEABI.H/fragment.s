@@ -1,5 +1,3 @@
-/* TODO: restore stripped imported address metadata if needed. */
-
 .include "macros.inc"
 .file "fragment"
 
@@ -12,9 +10,9 @@ bltlr
 cmpwi r3, 0x1
 bgelr
 mulli r4, r3, 0xc
-lis r3, fragmentinfo_803D7540@ha
+lis r3, fragmentinfo_803D68E0@ha
 li r0, 0x0
-addi r3, r3, fragmentinfo_803D7540@l
+addi r3, r3, fragmentinfo_803D68E0@l
 add r3, r3, r4
 stw r0, 0x0(r3)
 stw r0, 0x4(r3)
@@ -23,8 +21,8 @@ blr
 .endfn __unregister_fragment
 
 .fn __register_fragment, global
-lis r5, fragmentinfo_803D7540@ha
-addi r5, r5, fragmentinfo_803D7540@l
+lis r5, fragmentinfo_803D68E0@ha
+addi r5, r5, fragmentinfo_803D68E0@l
 lwz r0, 0x8(r5)
 cmpwi r0, 0x0
 bne .L_80286F18
@@ -38,10 +36,3 @@ blr
 li r3, -0x1
 blr
 .endfn __register_fragment
-
-.section .bss, "wa", @nobits
-.balign 8
-
-.obj fragmentinfo_803D7540, global
-	.skip 0xC
-.endobj fragmentinfo_803D7540
