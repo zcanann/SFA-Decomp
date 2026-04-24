@@ -1491,18 +1491,18 @@ dolphin/os/OSSync.c:
 	.text       start:0x802462A8 end:0x802462A8
 
 dolphin/os/OSThread.c:
-	.text       start:0x802462A8 end:0x80247340
+	.text       start:0x802462A8 end:0x80246C50
 	.bss        start:0x803AE068 end:0x803AEA38
 	.sbss       start:0x803DDE88 end:0x803DDE98
 
 dolphin/os/OSTime.c:
-	.text       start:0x80247340 end:0x8024740C
+	.text       start:0x80246C50 end:0x80246CD4
 
 dolphin/os/__ppc_eabi_init.c:
-	.text       start:0x8024740C end:0x80247494
+	.text       start:0x80246CD4 end:0x80246D68
 
 dolphin/db/db.c:
-	.text       start:0x80247494 end:0x80247574
+	.text       start:0x80246D68 end:0x80246E54
 
 dolphin/mtx/mtx.c:
 	.text       start:0x80247574 end:0x80247A1C
