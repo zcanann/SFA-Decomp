@@ -180,7 +180,7 @@ void TrickyCurve_updateBurstTrigger(void)
 /*
  * --INFO--
  *
- * Function: FUN_802074fc
+ * Function: TrickyCurve_updateBoundsTrigger
  * EN v1.0 Address: 0x802074FC
  * EN v1.0 Size: 520b
  * EN v1.1 Address: 0x80207568
@@ -190,7 +190,7 @@ void TrickyCurve_updateBurstTrigger(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802074fc(int param_1)
+void TrickyCurve_updateBoundsTrigger(int param_1)
 {
   float fVar1;
   float fVar2;
@@ -464,7 +464,7 @@ void TrickyCurve_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
                                         param_8);
   }
   else if (cVar1 == '\x01') {
-    FUN_802074fc(param_9);
+    TrickyCurve_updateBoundsTrigger(param_9);
   }
   else if (cVar1 == '\x02') {
     TrickyCurve_updateBurstTrigger();
