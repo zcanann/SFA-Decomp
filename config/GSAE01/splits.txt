@@ -1478,20 +1478,20 @@ dolphin/os/OSReset.c:
 	.sbss       start:0x803DDE60 end:0x803DDE6C
 
 dolphin/os/OSResetSW.c:
-	.text       start:0x80244B50 end:0x80244C44
+	.text       start:0x80244B50 end:0x80244EDC
 
 dolphin/os/OSRtc.c:
-	.text       start:0x80244C44 end:0x80246078
+	.text       start:0x80244EDC end:0x80245A2C
 	.bss        start:0x803AE038 end:0x803AE068
 
 dolphin/os/OSStopwatch.c:
-	.text       start:0x80246078 end:0x802462A8
+	.text       start:0x80245A2C end:0x80245BA4
 
 dolphin/os/OSSync.c:
-	.text       start:0x802462A8 end:0x802462A8
+	.text       start:0x80245BA4 end:0x80245C50
 
 dolphin/os/OSThread.c:
-	.text       start:0x802462A8 end:0x80246C50
+	.text       start:0x80245C50 end:0x80246C50
 	.bss        start:0x803AE068 end:0x803AEA38
 	.sbss       start:0x803DDE88 end:0x803DDE98
 
