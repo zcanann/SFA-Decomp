@@ -28,7 +28,7 @@ extern char sLaserInitNoLongerSupported[];
 /*
  * --INFO--
  *
- * Function: laser_init
+ * Function: laser_initUnsupported
  * EN v1.0 Address: 0x8020930C
  * EN v1.0 Size: 44b
  * EN v1.1 Address: 0x802096AC
@@ -38,7 +38,7 @@ extern char sLaserInitNoLongerSupported[];
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void laser_init(void)
+void laser_initUnsupported(void)
 {
   OSReport(sLaserInitNoLongerSupported);
   return;

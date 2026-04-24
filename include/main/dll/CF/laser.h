@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void laser_init(void);
+void laser_initUnsupported(void);
 void laserObj_update(int param_1);
 void laserObj_init(undefined2 *param_1,int param_2);
 undefined4
