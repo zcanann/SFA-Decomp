@@ -2,6 +2,7 @@
 #define MAIN_DLL_MODGFX_H_
 
 #include "ghidra_import.h"
+#include "main/expgfx_internal.h"
 
 void modgfx_resetExpgfxState(undefined8 param_1,undefined8 param_2,undefined8 param_3,
                              undefined8 param_4,undefined8 param_5,undefined8 param_6,
@@ -68,15 +69,17 @@ void FUN_800a2994(undefined4 param_1,undefined4 param_2,short *param_3,uint para
                  undefined4 param_5,float *param_6);
 void FUN_800a2998(void);
 void FUN_800a299c(void);
-void FUN_800a29a0(undefined4 param_1,undefined4 param_2,undefined2 *param_3,uint param_4,
-                 undefined param_5);
+void FUN_800a29a0(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,
+                 uint param_4,undefined param_5);
 void FUN_800a29a4(void);
-undefined4 FUN_800a2a98(int param_1,int param_2,undefined2 *param_3,uint param_4,undefined param_5);
+undefined4
+FUN_800a2a98(int param_1,int param_2,ExpgfxAttachedSourceState *param_3,uint param_4,
+             undefined param_5);
 void FUN_800a2aa0(void);
-void FUN_800a2b94(undefined4 param_1,undefined4 param_2,undefined2 *param_3,uint param_4,
-                 undefined param_5,float *param_6);
-void FUN_800a2b98(undefined4 param_1,undefined4 param_2,ushort *param_3,uint param_4,
-                 undefined param_5);
+void FUN_800a2b94(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,
+                 uint param_4,undefined param_5,float *param_6);
+void FUN_800a2b98(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,
+                 uint param_4,undefined param_5);
 void FUN_800a2b9c(void);
 void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,
                  uint param_4,undefined param_5);
@@ -85,11 +88,12 @@ undefined4
 projgfx_spawnPresetEffect(int param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,
                           uint param_4,undefined param_5,undefined2 *param_6);
 void FUN_800a363c(void);
-void FUN_800a3730(undefined4 param_1,undefined4 param_2,undefined2 *param_3,uint param_4,
-                 undefined param_5,int param_6);
+void FUN_800a3730(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,
+                 uint param_4,undefined param_5,int param_6);
 void FUN_800a3734(void);
 undefined4
-FUN_800a3828(int param_1,undefined4 param_2,short *param_3,uint param_4,undefined param_5);
+FUN_800a3828(int param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,uint param_4,
+             undefined param_5);
 void FUN_800a3830(void);
 undefined4
 FUN_800a3924(int param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,uint param_4,

@@ -37,6 +37,7 @@ typedef struct ModgfxState {
 } ModgfxState;
 
 #define MODGFX_ACTIVE_EFFECT_COUNT 0x32
+#define PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE 0x200000
 
 typedef struct ModgfxActiveEffect {
   int instanceHandle;
@@ -3179,8 +3180,8 @@ void FUN_800a299c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a29a0(undefined4 param_1,undefined4 param_2,undefined2 *param_3,uint param_4,
-                 undefined param_5)
+void FUN_800a29a0(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,
+                 uint param_4,undefined param_5)
 {
 }
 
@@ -3237,7 +3238,9 @@ void FUN_800a29a4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_800a2a98(int param_1,int param_2,undefined2 *param_3,uint param_4,undefined param_5)
+undefined4
+FUN_800a2a98(int param_1,int param_2,ExpgfxAttachedSourceState *param_3,uint param_4,
+             undefined param_5)
 {
     return 0;
 }
@@ -3295,8 +3298,8 @@ void FUN_800a2aa0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a2b94(undefined4 param_1,undefined4 param_2,undefined2 *param_3,uint param_4,
-                 undefined param_5,float *param_6)
+void FUN_800a2b94(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,
+                 uint param_4,undefined param_5,float *param_6)
 {
 }
 
@@ -3313,8 +3316,8 @@ void FUN_800a2b94(undefined4 param_1,undefined4 param_2,undefined2 *param_3,uint
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a2b98(undefined4 param_1,undefined4 param_2,ushort *param_3,uint param_4,
-                 undefined param_5)
+void FUN_800a2b98(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,
+                 uint param_4,undefined param_5)
 {
 }
 
@@ -3436,7 +3439,7 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceStat
     FLOAT_803dc444 = FLOAT_803e0870;
   }
   if (iVar2 != 0) {
-    if ((param_4 & 0x200000) != 0) {
+    if ((param_4 & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) != 0) {
       if (param_3 == (ExpgfxAttachedSourceState *)0x0) goto LAB_800bd57c;
       local_a8 = param_3->velocityX;
       local_a4 = param_3->velocityY;
@@ -3828,7 +3831,7 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceStat
       local_7c = local_7c ^ 2;
     }
     if ((local_7c & 1) != 0) {
-      if ((param_4 & 0x200000) == 0) {
+      if ((param_4 & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) == 0) {
         if (local_c0[0] != 0) {
           local_90 = local_90 + *(float *)(local_c0[0] + 0x18);
           local_8c = local_8c + *(float *)(local_c0[0] + 0x1c);
@@ -3963,7 +3966,7 @@ projgfx_spawnPresetEffect(int param_1,undefined4 param_2,ExpgfxAttachedSourceSta
     uVar1 = 0xffffffff;
   }
   else {
-    if ((param_4 & 0x200000) != 0) {
+    if ((param_4 & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) != 0) {
       if (param_3 == (ExpgfxAttachedSourceState *)0x0) {
         return 0xffffffff;
       }
@@ -4218,7 +4221,7 @@ projgfx_spawnPresetEffect(int param_1,undefined4 param_2,ExpgfxAttachedSourceSta
       local_74 = local_74 ^ 2;
     }
     if ((local_74 & 1) != 0) {
-      if ((param_4 & 0x200000) == 0) {
+      if ((param_4 & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) == 0) {
         if (local_b8[0] != 0) {
           local_88 = local_88 + *(float *)(local_b8[0] + 0x18);
           local_84 = local_84 + *(float *)(local_b8[0] + 0x1c);
@@ -4289,8 +4292,8 @@ void FUN_800a363c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a3730(undefined4 param_1,undefined4 param_2,undefined2 *param_3,uint param_4,
-                 undefined param_5,int param_6)
+void FUN_800a3730(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,
+                 uint param_4,undefined param_5,int param_6)
 {
 }
 
@@ -4348,7 +4351,8 @@ void FUN_800a3734(void)
  * PAL Size: TODO
  */
 undefined4
-FUN_800a3828(int param_1,undefined4 param_2,short *param_3,uint param_4,undefined param_5)
+FUN_800a3828(int param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,uint param_4,
+             undefined param_5)
 {
     return 0;
 }
