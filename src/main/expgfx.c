@@ -538,7 +538,7 @@ undefined4 expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,i
 /*
  * --INFO--
  *
- * Function: FUN_8009b994
+ * Function: expgfx_initSlotQuad
  * EN v1.0 Address: 0x8009B994
  * EN v1.0 Size: 1008b
  * EN v1.1 Address: 0x8009B960
@@ -548,9 +548,9 @@ undefined4 expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,i
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8009b994(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined2 *param_9)
+void expgfx_initSlotQuad(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
+                         undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                         undefined8 param_8,undefined2 *param_9)
 {
   ExpgfxSlot *slot;
   ExpgfxTableEntry *tableEntry;
@@ -862,7 +862,7 @@ void FUN_8009c0b4(void)
 /*
  * --INFO--
  *
- * Function: FUN_8009c0b8
+ * Function: expgfx_queueLightmapSources
  * EN v1.0 Address: 0x8009C0B8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8009EF70
@@ -872,7 +872,7 @@ void FUN_8009c0b4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8009c0b8(void)
+void expgfx_queueLightmapSources(void)
 {
 }
 
@@ -1320,7 +1320,8 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
           puVar18[0x1c] = 0;
           puVar18[0x1d] = 0;
           if ((*(uint *)(puVar18 + 0x40) & 2) != 0) {
-            FUN_8009b994(dVar20,param_2,dVar21,param_4,param_5,param_6,param_7,param_8,puVar18);
+            expgfx_initSlotQuad(dVar20,param_2,dVar21,param_4,param_5,param_6,param_7,param_8,
+                                puVar18);
           }
           pbVar11 = &gExpgfxPoolSourceModes + local_56[0];
           *pbVar11 = (spawnConfig->behaviorFlags & 0x20000000U) != 0;

@@ -1335,7 +1335,7 @@ void FUN_8005c24c(void)
     FUN_8003b878(0,0,0,0,*piVar5,1);
     piVar5 = piVar5 + 1;
   }
-  FUN_8009c0b8();
+  expgfx_queueLightmapSources();
   FUN_8005bdbc();
   FUN_8005bdbc();
   if (DAT_803ddab0 == 1000) {
