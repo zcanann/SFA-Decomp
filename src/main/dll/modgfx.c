@@ -2,6 +2,50 @@
 #include "main/expgfx_internal.h"
 #include "main/dll/modgfx.h"
 
+typedef struct ModgfxVertexData {
+  s16 posX;
+  s16 posY;
+  s16 posZ;
+  s16 unused06;
+  s16 texCoordS;
+  s16 texCoordT;
+  u8 colorR;
+  u8 colorG;
+  u8 colorB;
+  u8 alpha;
+} ModgfxVertexData;
+
+typedef struct ModgfxState {
+  u8 pad00[0x78];
+  ModgfxVertexData *vertexBuffers[2];
+  ModgfxVertexData *baseVertexData;
+  u8 pad84[0xA4 - 0x84];
+  u32 flags;
+  u8 padA8[0xEA - 0xA8];
+  s16 vertexCount;
+  u8 padEC[0xFE - 0xEC];
+  s16 blendFrameCount;
+  s16 colorStepR;
+  s16 colorStepG;
+  s16 colorStepB;
+  s16 colorValueR;
+  s16 colorValueG;
+  s16 colorValueB;
+  s16 effectId;
+  u8 pad10E[0x130 - 0x10E];
+  u8 activeVertexBufferIndex;
+} ModgfxState;
+
+static ModgfxVertexData *modgfx_getActiveVertexBuffer(ModgfxState *state)
+{
+  return state->vertexBuffers[state->activeVertexBufferIndex];
+}
+
+static ModgfxVertexData *modgfx_getInactiveVertexBuffer(ModgfxState *state)
+{
+  return state->vertexBuffers[1 - (uint)state->activeVertexBufferIndex];
+}
+
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80003494();
 extern int FUN_80006714();
@@ -1364,7 +1408,7 @@ void modgfx_initExpgfxSpawnConfig(undefined4 param_1,undefined4 param_2,undefine
 /*
  * --INFO--
  *
- * Function: FUN_800a0330
+ * Function: modgfx_scrollVertexTexcoords
  * EN v1.0 Address: 0x800A0330
  * EN v1.0 Size: 388b
  * EN v1.1 Address: 0x800A0568
@@ -1374,64 +1418,66 @@ void modgfx_initExpgfxSpawnConfig(undefined4 param_1,undefined4 param_2,undefine
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a0330(int param_1,int param_2)
+void modgfx_scrollVertexTexcoords(int param_1,int param_2)
 {
+  ModgfxState *state;
   short sVar1;
   float fVar2;
   float fVar3;
   int iVar4;
-  int iVar5;
-  int iVar6;
+  ModgfxVertexData *activeVertexData;
+  ModgfxVertexData *inactiveVertexData;
   uint uVar7;
   uint uVar8;
   
+  state = (ModgfxState *)param_1;
   fVar2 = FLOAT_803e00b8 * *(float *)(param_2 + 4) * FLOAT_803ddf04;
   fVar3 = FLOAT_803e00b8 * *(float *)(param_2 + 8) * FLOAT_803ddf04;
-  iVar5 = *(int *)(param_1 + (uint)*(byte *)(param_1 + 0x130) * 4 + 0x78);
-  iVar6 = *(int *)(param_1 + (1 - (uint)*(byte *)(param_1 + 0x130)) * 4 + 0x78);
+  activeVertexData = modgfx_getActiveVertexBuffer(state);
+  inactiveVertexData = modgfx_getInactiveVertexBuffer(state);
   uVar7 = 0;
   uVar8 = 0;
-  for (iVar4 = 0; iVar4 < *(short *)(param_1 + 0xea); iVar4 = iVar4 + 1) {
-    *(undefined2 *)(iVar5 + 8) = *(undefined2 *)(iVar6 + 8);
-    *(undefined2 *)(iVar5 + 10) = *(undefined2 *)(iVar6 + 10);
-    *(short *)(iVar5 + 8) = *(short *)(iVar5 + 8) + (short)(int)fVar2;
-    if (0x100 < *(short *)(iVar5 + 8)) {
+  for (iVar4 = 0; iVar4 < state->vertexCount; iVar4 = iVar4 + 1) {
+    activeVertexData->texCoordS = inactiveVertexData->texCoordS;
+    activeVertexData->texCoordT = inactiveVertexData->texCoordT;
+    activeVertexData->texCoordS = activeVertexData->texCoordS + (short)(int)fVar2;
+    if (0x100 < activeVertexData->texCoordS) {
       uVar7 = uVar7 + 1 & 0xff;
     }
-    if (*(short *)(iVar5 + 8) < -0x100) {
+    if (activeVertexData->texCoordS < -0x100) {
       uVar7 = uVar7 + 1 & 0xff;
     }
-    *(short *)(iVar5 + 10) = *(short *)(iVar5 + 10) + (short)(int)fVar3;
-    if (0x100 < *(short *)(iVar5 + 10)) {
+    activeVertexData->texCoordT = activeVertexData->texCoordT + (short)(int)fVar3;
+    if (0x100 < activeVertexData->texCoordT) {
       uVar8 = uVar8 + 1 & 0xff;
     }
-    if (*(short *)(iVar5 + 10) < -0x100) {
+    if (activeVertexData->texCoordT < -0x100) {
       uVar8 = uVar8 + 1 & 0xff;
     }
-    iVar5 = iVar5 + 0x10;
-    iVar6 = iVar6 + 0x10;
+    activeVertexData = activeVertexData + 1;
+    inactiveVertexData = inactiveVertexData + 1;
   }
-  iVar4 = *(int *)(param_1 + (uint)*(byte *)(param_1 + 0x130) * 4 + 0x78);
-  for (iVar5 = 0; iVar5 < *(short *)(param_1 + 0xea); iVar5 = iVar5 + 1) {
-    if (uVar7 == (int)*(short *)(param_1 + 0xea)) {
-      sVar1 = *(short *)(iVar4 + 8);
+  activeVertexData = modgfx_getActiveVertexBuffer(state);
+  for (iVar4 = 0; iVar4 < state->vertexCount; iVar4 = iVar4 + 1) {
+    if (uVar7 == (int)state->vertexCount) {
+      sVar1 = activeVertexData->texCoordS;
       if (sVar1 < 0x101) {
-        *(short *)(iVar4 + 8) = sVar1 + 0x100;
+        activeVertexData->texCoordS = sVar1 + 0x100;
       }
       else {
-        *(short *)(iVar4 + 8) = sVar1 + -0x100;
+        activeVertexData->texCoordS = sVar1 + -0x100;
       }
     }
-    if (uVar8 == (int)*(short *)(param_1 + 0xea)) {
-      sVar1 = *(short *)(iVar4 + 10);
+    if (uVar8 == (int)state->vertexCount) {
+      sVar1 = activeVertexData->texCoordT;
       if (sVar1 < 0x101) {
-        *(short *)(iVar4 + 10) = sVar1 + 0x100;
+        activeVertexData->texCoordT = sVar1 + 0x100;
       }
       else {
-        *(short *)(iVar4 + 10) = sVar1 + -0x100;
+        activeVertexData->texCoordT = sVar1 + -0x100;
       }
     }
-    iVar4 = iVar4 + 0x10;
+    activeVertexData = activeVertexData + 1;
   }
   return;
 }
@@ -1439,7 +1485,7 @@ void FUN_800a0330(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_800a04b4
+ * Function: modgfx_resetBaseVertexState
  * EN v1.0 Address: 0x800A04B4
  * EN v1.0 Size: 172b
  * EN v1.1 Address: 0x800A0704
@@ -1449,26 +1495,28 @@ void FUN_800a0330(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a04b4(int param_1)
+void modgfx_resetBaseVertexState(int param_1)
 {
+  ModgfxState *state;
   float fVar1;
   float fVar2;
   int iVar3;
-  undefined2 *puVar4;
-  undefined2 *puVar5;
+  ModgfxVertexData *baseVertexData;
+  ModgfxVertexData *inactiveVertexData;
   
-  puVar5 = *(undefined2 **)(param_1 + (1 - (uint)*(byte *)(param_1 + 0x130)) * 4 + 0x78);
-  puVar4 = *(undefined2 **)(param_1 + 0x80);
-  for (iVar3 = 0; fVar2 = FLOAT_803e00b4, iVar3 < *(short *)(param_1 + 0xea); iVar3 = iVar3 + 1) {
-    *puVar4 = *puVar5;
-    puVar4[1] = puVar5[1];
-    puVar4[2] = puVar5[2];
-    *(undefined *)(puVar4 + 6) = *(undefined *)(puVar5 + 6);
-    *(undefined *)((int)puVar4 + 0xd) = *(undefined *)((int)puVar5 + 0xd);
-    *(undefined *)(puVar4 + 7) = *(undefined *)(puVar5 + 7);
-    *(undefined *)((int)puVar4 + 0xf) = *(undefined *)((int)puVar5 + 0xf);
-    puVar4 = puVar4 + 8;
-    puVar5 = puVar5 + 8;
+  state = (ModgfxState *)param_1;
+  inactiveVertexData = modgfx_getInactiveVertexBuffer(state);
+  baseVertexData = state->baseVertexData;
+  for (iVar3 = 0; fVar2 = FLOAT_803e00b4, iVar3 < state->vertexCount; iVar3 = iVar3 + 1) {
+    baseVertexData->posX = inactiveVertexData->posX;
+    baseVertexData->posY = inactiveVertexData->posY;
+    baseVertexData->posZ = inactiveVertexData->posZ;
+    baseVertexData->colorR = inactiveVertexData->colorR;
+    baseVertexData->colorG = inactiveVertexData->colorG;
+    baseVertexData->colorB = inactiveVertexData->colorB;
+    baseVertexData->alpha = inactiveVertexData->alpha;
+    baseVertexData = baseVertexData + 1;
+    inactiveVertexData = inactiveVertexData + 1;
   }
   *(float *)(param_1 + 0x30) = FLOAT_803e00b4;
   *(float *)(param_1 + 0x34) = fVar2;
@@ -1489,7 +1537,7 @@ void FUN_800a04b4(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_800a0560
+ * Function: modgfx_updateVertexRgb
  * EN v1.0 Address: 0x800A0560
  * EN v1.0 Size: 924b
  * EN v1.1 Address: 0x800A07B0
@@ -1499,7 +1547,7 @@ void FUN_800a04b4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a0560(int param_1,int param_2,int param_3)
+void modgfx_updateVertexRgb(int param_1,int param_2,int param_3)
 {
   float fVar1;
   float fVar2;
@@ -1723,7 +1771,7 @@ void FUN_800a0a88(int param_1,int param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_800a0b6c
+ * Function: modgfx_updateVertexAlpha
  * EN v1.0 Address: 0x800A0B6C
  * EN v1.0 Size: 536b
  * EN v1.1 Address: 0x800A0D40
@@ -1733,7 +1781,7 @@ void FUN_800a0a88(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a0b6c(int param_1,int param_2,int param_3,uint param_4)
+void modgfx_updateVertexAlpha(int param_1,int param_2,int param_3,uint param_4)
 {
   float fVar1;
   double dVar2;
@@ -1797,7 +1845,7 @@ void FUN_800a0b6c(int param_1,int param_2,int param_3,uint param_4)
 /*
  * --INFO--
  *
- * Function: FUN_800a0d84
+ * Function: modgfx_updateVertexScale
  * EN v1.0 Address: 0x800A0D84
  * EN v1.0 Size: 984b
  * EN v1.1 Address: 0x800A0F04
@@ -1807,7 +1855,7 @@ void FUN_800a0b6c(int param_1,int param_2,int param_3,uint param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a0d84(int param_1,int param_2,int param_3,uint param_4)
+void modgfx_updateVertexScale(int param_1,int param_2,int param_3,uint param_4)
 {
   float fVar1;
   float fVar2;
@@ -1902,7 +1950,7 @@ void FUN_800a0d84(int param_1,int param_2,int param_3,uint param_4)
 /*
  * --INFO--
  *
- * Function: FUN_800a115c
+ * Function: modgfx_restoreActiveVertexState
  * EN v1.0 Address: 0x800A115C
  * EN v1.0 Size: 112b
  * EN v1.1 Address: 0x800A125C
@@ -1912,24 +1960,26 @@ void FUN_800a0d84(int param_1,int param_2,int param_3,uint param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a115c(int param_1)
+void modgfx_restoreActiveVertexState(int param_1)
 {
+  ModgfxState *state;
   int iVar1;
-  undefined2 *puVar2;
-  undefined2 *puVar3;
+  ModgfxVertexData *activeVertexData;
+  ModgfxVertexData *baseVertexData;
   
-  puVar3 = *(undefined2 **)(param_1 + (uint)*(byte *)(param_1 + 0x130) * 4 + 0x78);
-  puVar2 = *(undefined2 **)(param_1 + 0x80);
-  for (iVar1 = 0; iVar1 < *(short *)(param_1 + 0xea); iVar1 = iVar1 + 1) {
-    *puVar3 = *puVar2;
-    puVar3[1] = puVar2[1];
-    puVar3[2] = puVar2[2];
-    *(undefined *)(puVar3 + 6) = *(undefined *)(puVar2 + 6);
-    *(undefined *)((int)puVar3 + 0xd) = *(undefined *)((int)puVar2 + 0xd);
-    *(undefined *)(puVar3 + 7) = *(undefined *)(puVar2 + 7);
-    *(undefined *)((int)puVar3 + 0xf) = *(undefined *)((int)puVar2 + 0xf);
-    puVar3 = puVar3 + 8;
-    puVar2 = puVar2 + 8;
+  state = (ModgfxState *)param_1;
+  activeVertexData = modgfx_getActiveVertexBuffer(state);
+  baseVertexData = state->baseVertexData;
+  for (iVar1 = 0; iVar1 < state->vertexCount; iVar1 = iVar1 + 1) {
+    activeVertexData->posX = baseVertexData->posX;
+    activeVertexData->posY = baseVertexData->posY;
+    activeVertexData->posZ = baseVertexData->posZ;
+    activeVertexData->colorR = baseVertexData->colorR;
+    activeVertexData->colorG = baseVertexData->colorG;
+    activeVertexData->colorB = baseVertexData->colorB;
+    activeVertexData->alpha = baseVertexData->alpha;
+    activeVertexData = activeVertexData + 1;
+    baseVertexData = baseVertexData + 1;
   }
   return;
 }

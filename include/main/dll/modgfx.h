@@ -17,14 +17,14 @@ void FUN_800a024c(double param_1,double param_2,double param_3,undefined8 param_
 void FUN_800a0250(uint param_1);
 void modgfx_initExpgfxSpawnConfig(undefined4 param_1,undefined4 param_2,undefined param_3,
                                   undefined4 param_4,undefined4 param_5);
-void FUN_800a0330(int param_1,int param_2);
-void FUN_800a04b4(int param_1);
-void FUN_800a0560(int param_1,int param_2,int param_3);
+void modgfx_scrollVertexTexcoords(int param_1,int param_2);
+void modgfx_resetBaseVertexState(int param_1);
+void modgfx_updateVertexRgb(int param_1,int param_2,int param_3);
 void FUN_800a08fc(int param_1,int param_2,int param_3);
 void FUN_800a0a88(int param_1,int param_2,int param_3);
-void FUN_800a0b6c(int param_1,int param_2,int param_3,uint param_4);
-void FUN_800a0d84(int param_1,int param_2,int param_3,uint param_4);
-void FUN_800a115c(int param_1);
+void modgfx_updateVertexAlpha(int param_1,int param_2,int param_3,uint param_4);
+void modgfx_updateVertexScale(int param_1,int param_2,int param_3,uint param_4);
+void modgfx_restoreActiveVertexState(int param_1);
 void FUN_800a11cc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short param_9,int param_10);
