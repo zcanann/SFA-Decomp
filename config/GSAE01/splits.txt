@@ -1406,24 +1406,28 @@ main/dll/CF/laser.c:
 	.text       start:0x8020930C end:0x80209FE0
 
 main/unknown/autos/placeholder_80209FE0.c:
-	.text       start:0x80209FE0 end:0x8024091C
+	.text       start:0x80209FE0 end:0x8024034C
 
 dolphin/base/PPCArch.c:
-	.text       start:0x8024091C end:0x8024091C
+	.text       start:0x8024034C end:0x802403D8
+
+main/unknown/autos/placeholder_802403D8.c:
+	.text       start:0x802403D8 end:0x8024091C
 
 dolphin/os/OS.c:
-	.text       start:0x8024091C end:0x802413E0
+	.text       start:0x8024091C end:0x80240D34
 	.bss        start:0x803ADF80 end:0x803ADFD0
 	.sbss       start:0x803DDDD8 end:0x803DDE08
 
 dolphin/os/OSAlarm.c:
-	.text       start:0x802413E0 end:0x80241AB0
+	.text       start:0x80240D34 end:0x80241AB0
 	.sbss       start:0x803DDE08 end:0x803DDE10
 
 dolphin/os/OSAlloc.c:
 	.text       start:0x80241AB0 end:0x80241D74
 	.sdata      start:0x803DC538 end:0x803DC53C
 	.sbss       start:0x803DDE10 end:0x803DDE20
+	.sdata2     start:0x803DEA90 end:0x803DEAA0
 
 dolphin/os/OSArena.c:
 	.text       start:0x80241D74 end:0x80241D74
@@ -1435,19 +1439,19 @@ dolphin/os/OSAudioSystem.c:
 	.data       start:0x8032CE48 end:0x8032CE48
 
 dolphin/os/OSCache.c:
-	.text       start:0x80242060 end:0x80242554
+	.text       start:0x80242060 end:0x802422AC
 
 dolphin/os/OSContext.c:
-	.text       start:0x80242554 end:0x80242F78
+	.text       start:0x802422AC end:0x80242F78
 
 dolphin/os/OSError.c:
 	.text       start:0x80242F78 end:0x80243004
 
 dolphin/os/OSFont.c:
-	.text       start:0x80243004 end:0x80243C54
+	.text       start:0x80243004 end:0x8024377C
 
 dolphin/os/OSInterrupt.c:
-	.text       start:0x80243C54 end:0x802445A0
+	.text       start:0x8024377C end:0x802445A0
 	.data       start:0x8032E410 end:0x8032E410
 	.sbss       start:0x803DDE38 end:0x803DDE50
 
@@ -1467,14 +1471,14 @@ dolphin/os/OSReboot.c:
 	.text       start:0x80244C44 end:0x80244C44
 
 dolphin/os/OSReset.c:
-	.text       start:0x80244C44 end:0x80245240
+	.text       start:0x80244C44 end:0x80245054
 	.sbss       start:0x803DDE60 end:0x803DDE6C
 
 dolphin/os/OSResetSW.c:
-	.text       start:0x80245240 end:0x802455A0
+	.text       start:0x80245054 end:0x80245054
 
 dolphin/os/OSRtc.c:
-	.text       start:0x802455A0 end:0x80246078
+	.text       start:0x80245054 end:0x80246078
 	.bss        start:0x803AE038 end:0x803AE068
 
 dolphin/os/OSStopwatch.c:
@@ -1524,16 +1528,16 @@ dolphin/dvd/dvdFatal.c:
 	.text       start:0x802498E0 end:0x802498E0
 
 dolphin/dvd/dvd.c:
-	.text       start:0x802498E0 end:0x8024BF40
+	.text       start:0x802498E0 end:0x8024B970
 
 dolphin/dvd/dvdqueue.c:
-	.text       start:0x8024BF40 end:0x8024C280
+	.text       start:0x8024B970 end:0x8024BC84
 
 dolphin/dvd/dvderror.c:
-	.text       start:0x8024C280 end:0x8024C280
+	.text       start:0x8024BC84 end:0x8024BDD8
 
 dolphin/dvd/fstload.c:
-	.text       start:0x8024C280 end:0x8024C478
+	.text       start:0x8024BDD8 end:0x8024C478
 	.data       start:0x8032E958 end:0x8032E958
 	.bss        start:0x803AEA38 end:0x803AECC0
 	.sdata      start:0x803DC578 end:0x803DC588
@@ -1561,6 +1565,7 @@ dolphin/ar/ar.c:
 dolphin/ar/arq.c:
 	.text       start:0x8025111C end:0x80251540
 	.sbss       start:0x803DE038 end:0x803DE060
+	.sdata2     start:0x803DECC8 end:0x803DECE0
 
 dolphin/dsp/dsp.c:
 	.text       start:0x80251540 end:0x802516E0
@@ -1572,13 +1577,13 @@ dolphin/dsp/dsp_task.c:
 	.text       start:0x8025186C end:0x802520D4
 
 dolphin/si/SIBios.c:
-	.text       start:0x802520D4 end:0x80253664
+	.text       start:0x802520D4 end:0x80253080
 	.data       start:0x8032EDD0 end:0x8032EDD0
 	.bss        start:0x803AECC0 end:0x803AECC0
 	.sbss       start:0x803DE080 end:0x803DE088
 
 dolphin/si/SISamplingRate.c:
-	.text       start:0x80253664 end:0x802538E4
+	.text       start:0x80253080 end:0x802538E4
 	.data       start:0x8032EDD0 end:0x8032EDD0
 	.sbss       start:0x803DE090 end:0x803DE094
 
@@ -1691,15 +1696,15 @@ dolphin/card/CARDNet.c:
 	.text       start:0x8026498C end:0x8026498C
 
 dolphin/thp/THPDec.c:
-	.text       start:0x8026498C end:0x8026C124
+	.text       start:0x8026498C end:0x8026BF1C
+
+dolphin/amcstubs/AmcExi2Stubs.c:
+	.text       start:0x8026BF1C end:0x8026C124
 
 dolphin/thp/THPAudio.c:
 	extab       start:0x80005620 end:0x80005630
 	extabindex  start:0x80005CC0 end:0x80005CD8
 	.text       start:0x8026C124 end:0x8026C488
-
-dolphin/amcstubs/AmcExi2Stubs.c:
-	.text       start:0x8026C488 end:0x8026C488
 
 dolphin/odenotstub/odenotstub.c:
 	.text       start:0x8026C488 end:0x8026C488
@@ -2143,19 +2148,20 @@ main/unknown/autos/placeholder_80285B64.c:
 	.text       start:0x80285B14 end:0x80285B14
 
 dolphin/OdemuExi2/DebuggerDriver.c:
-	.text       start:0x80285B14 end:0x8028656C
+	.text       start:0x80285B14 end:0x80285F6C
+
+Runtime.PPCEABI.H/global_destructor_chain.c:
+	.text       start:0x80285F6C end:0x80285FB4
+	.dtors      start:0x802C18A8 end:0x802C18AC
+	.sbss       start:0x803DE3E0 end:0x803DE3E4
 
 Runtime.PPCEABI.H/__va_arg.c:
 	.text       start:0x8028656C end:0x8028660C
 
-Runtime.PPCEABI.H/global_destructor_chain.c:
-	.text       start:0x8028660C end:0x802866E0
-	.sbss       start:0x803DE3E0 end:0x803DE3E4
-
 Runtime.PPCEABI.H/__init_cpp_exceptions.cpp:
 	.text       start:0x802866E0 end:0x802867BC
 	.ctors      start:0x802C1880 end:0x802C1884
-	.dtors      start:0x802C18A0 end:0x802C18AC
+	.dtors      start:0x802C18A0 end:0x802C18A8
 	.sdata      start:0x803DC640 end:0x803DC648
 
 main/unknown/autos/placeholder_802867BC.c:
@@ -2167,11 +2173,11 @@ dolphin/TRK_MINNOW_DOLPHIN/mainloop.c:
 	.text       start:0x8028685C end:0x80286954
 
 dolphin/TRK_MINNOW_DOLPHIN/nubevent.c:
-	.text       start:0x80286954 end:0x80286BC8
+	.text       start:0x80286954 end:0x80286B7C
 	.bss        start:0x803D6920 end:0x803D6920
 
 dolphin/TRK_MINNOW_DOLPHIN/nubinit.c:
-	.text       start:0x80286BC8 end:0x80287458
+	.text       start:0x80286B7C end:0x80287458
 	.rodata     start:0x802C2938 end:0x802C2958
 	.bss        start:0x803D6920 end:0x803D6920
 
@@ -2179,24 +2185,24 @@ dolphin/TRK_MINNOW_DOLPHIN/msg.c:
 	.text       start:0x80287458 end:0x80287624
 
 dolphin/TRK_MINNOW_DOLPHIN/msgbuf.c:
-	.text       start:0x80287624 end:0x80287F9C
+	.text       start:0x80287624 end:0x8028790C
 	.rodata     start:0x802C2958 end:0x802C2978
 	.bss        start:0x803D6920 end:0x803D8888
 
 dolphin/TRK_MINNOW_DOLPHIN/serpoll.c:
-	.text       start:0x80287F9C end:0x8028809C
+	.text       start:0x8028790C end:0x80287CD0
 	.bss        start:0x803D8888 end:0x803D8888
 
 dolphin/TRK_MINNOW_DOLPHIN/usr_put.c:
-	.text       start:0x8028809C end:0x8028809C
+	.text       start:0x80287CD0 end:0x80287D5C
 
 dolphin/TRK_MINNOW_DOLPHIN/dispatch.c:
-	.text       start:0x8028809C end:0x8028809C
+	.text       start:0x80287D5C end:0x80287DF8
 	.data       start:0x80332C78 end:0x80332EF0
 	.bss        start:0x803D8888 end:0x803D8888
 
 dolphin/TRK_MINNOW_DOLPHIN/msghndlr.c:
-	.text       start:0x8028809C end:0x8028AC30
+	.text       start:0x80287DF8 end:0x8028AC30
 	.data       start:0x80332EF0 end:0x80332F48
 	.bss        start:0x803D8888 end:0x803D8888
 
@@ -2216,31 +2222,31 @@ dolphin/TRK_MINNOW_DOLPHIN/mem_TRK.c:
 	.text       start:0x8028B70C end:0x8028B70C
 
 dolphin/TRK_MINNOW_DOLPHIN/targimpl.c:
-	.text       start:0x8028B70C end:0x8028D0B4
+	.text       start:0x8028B70C end:0x8028CAD0
 	.rodata     start:0x802C2978 end:0x802C2A00
 	.data       start:0x80332F48 end:0x80332F78
 
-dolphin/TRK_MINNOW_DOLPHIN/targsupp.s: comment:0
-	.text       start:0x8028D0B4 end:0x8028D0B4
-
-dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk.c:
-	.text       start:0x8028D0B4 end:0x8028D200
-	.data       start:0x80332F78 end:0x80332FC0
-
 dolphin/TRK_MINNOW_DOLPHIN/mpc_7xx_603e.c:
-	.text       start:0x8028D200 end:0x8028D574
+	.text       start:0x8028CAD0 end:0x8028CE48
 
 dolphin/TRK_MINNOW_DOLPHIN/main_TRK.c:
-	.text       start:0x8028D574 end:0x8028D574
+	.text       start:0x8028CE48 end:0x8028CE8C
 	.bss        start:0x803D8888 end:0x803D8888
 
+dolphin/TRK_MINNOW_DOLPHIN/targsupp.s: comment:0
+	.text       start:0x8028CE8C end:0x8028CE8C
+
+dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk.c:
+	.text       start:0x8028CE8C end:0x8028D200
+	.data       start:0x80332F78 end:0x80332FC0
+
 dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk_glue.c:
-	.text       start:0x8028D574 end:0x8028D960
+	.text       start:0x8028D200 end:0x8028D318
 	.data       start:0x80332FC0 end:0x80332FC0
 	.bss        start:0x803D8888 end:0x803DAAB0
 
 dolphin/TRK_MINNOW_DOLPHIN/targcont.c:
-	.text       start:0x8028D960 end:0x8028D960
+	.text       start:0x8028D318 end:0x8028D34C
 
 dolphin/TRK_MINNOW_DOLPHIN/target_options.c:
 	.text       start:0x8028D960 end:0x8028D960
@@ -2369,8 +2375,8 @@ dolphin/MSL_C/PPCEABI/bare/H/s_sin.c:
 	.text       start:0x80294850 end:0x802949E4
 
 main/unknown/autos/placeholder_80294A4C.c:
-	.ctors      start:0x802C1884 end:0x802C1888
 	.text       start:0x802949E4 end:0x80294BB8
+	.ctors      start:0x802C1884 end:0x802C1888
 
 dolphin/MSL_C/PPCEABI/bare/H/trigf.c:
 	.text       start:0x80294BB8 end:0x80294BB8
