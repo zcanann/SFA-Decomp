@@ -5,7 +5,7 @@ extern uint FUN_80017690();
 extern undefined4 FUN_80017a78();
 extern int FUN_80017b00();
 
-extern undefined4 DAT_8032a618;
+extern u8 gChukachuckModeTable[9];
 extern f64 DOUBLE_803e7098;
 extern f32 FLOAT_803e7090;
 extern f32 FLOAT_803e7094;
@@ -51,13 +51,14 @@ void chukachuck_update(int param_1)
         return;
       }
     }
-    (**(code **)(**(int **)(*(int *)(iVar5 + 4) + 0x68) + 0x20))(*(int *)(iVar5 + 4),&DAT_8032a618);
+    (**(code **)(**(int **)(*(int *)(iVar5 + 4) + 0x68) + 0x20))
+              (*(int *)(iVar5 + 4),gChukachuckModeTable);
     uVar3 = FUN_80017690(0x5e4);
     if (uVar3 == 0) {
       *(undefined *)(iVar5 + 9) = 0;
     }
     else {
-      *(undefined1 *)(iVar5 + 9) = (&DAT_8032a618)[*(byte *)(iVar5 + 8)];
+      *(u8 *)(iVar5 + 9) = gChukachuckModeTable[*(byte *)(iVar5 + 8)];
     }
     bVar1 = *(byte *)(iVar5 + 9);
     if (bVar1 == 2) {
