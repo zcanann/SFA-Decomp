@@ -17,19 +17,19 @@ extern int gSfxplayerEffectHandles[8];
 extern undefined4* DAT_803dd72c;
 extern undefined4 sfxplayer_updateEffectHandlePositions();
 
-typedef struct Crate2State {
+typedef struct DfpStatue1State {
   s16 triggerSfxId;
   s16 loopSfxId;
   s16 loopSfxStopTimer;
   u8 loopActive;
   u8 effectPairCount;
   u8 stateFlags;
-} Crate2State;
+} DfpStatue1State;
 
 /*
  * --INFO--
  *
- * Function: crate2_updateState
+ * Function: dfpstatue1_updateState
  * EN v1.0 Address: 0x802081F4
  * EN v1.0 Size: 1128b
  * EN v1.1 Address: 0x8020831C
@@ -39,8 +39,8 @@ typedef struct Crate2State {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void crate2_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                        undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void dfpstatue1_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+                            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   short *psVar1;
   uint uVar2;
@@ -48,7 +48,7 @@ void crate2_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3
   byte bVar5;
   int iVar3;
   short sVar6;
-  Crate2State *state;
+  DfpStatue1State *state;
   int *piVar8;
   undefined8 extraout_f1;
   undefined8 uVar9;
@@ -56,7 +56,7 @@ void crate2_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3
   int local_28 [10];
   
   psVar1 = (short *)FUN_80286840();
-  state = *(Crate2State **)(psVar1 + 0x5c);
+  state = *(DfpStatue1State **)(psVar1 + 0x5c);
   if (((state->stateFlags >> 5 & 1) == 0) &&
      (uVar9 = extraout_f1, uVar2 = FUN_80017690((int)state->triggerSfxId), uVar2 == 0)) {
     if (state->effectPairCount == 4) {
