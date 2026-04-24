@@ -211,6 +211,43 @@ typedef struct ExpgfxSlot {
   u8 pad8F[0xA0 - 0x8F];
 } ExpgfxSlot;
 
+/*
+ * Spawn requests are sourced from the current expgfx context. Not every word
+ * is understood yet, but the stable fields are worth naming directly.
+ */
+typedef struct ExpgfxSpawnConfig {
+  void *attachedSource;
+  u8 pad04[0x0C - 0x04];
+  s16 sourceVecX;
+  s16 sourceVecY;
+  s16 sourceVecZ;
+  u8 pad12[0x14 - 0x12];
+  int sourcePosXBits;
+  int sourcePosYBits;
+  int sourcePosZBits;
+  int sourcePosWBits;
+  float velocityX;
+  float velocityY;
+  float velocityZ;
+  int startPosXBits;
+  int startPosYBits;
+  int startPosZBits;
+  float scale;
+  u8 pad40[0x42 - 0x40];
+  s16 tableKeyType;
+  u32 behaviorFlags;
+  u32 renderFlags;
+  u32 overrideColor0;
+  u32 overrideColor1;
+  u32 overrideColor2;
+  u16 colorByte0Hi;
+  u16 colorByte1Hi;
+  u16 colorByte2Hi;
+  u8 pad5E[0x60 - 0x5E];
+  u8 initialStateByte;
+  u8 linkGroup;
+} ExpgfxSpawnConfig;
+
 static ExpgfxTableEntry *Expgfx_GetTableEntry(int tableIndex) {
   return &((ExpgfxTableEntry *)&DAT_8039c138)[tableIndex];
 }
@@ -1001,12 +1038,13 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
                       undefined4 param_10,short param_11,undefined param_12,undefined4 param_13,
                       undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
+  ExpgfxSpawnConfig *spawnConfig;
   ExpgfxSlot *slot;
   float fVar1;
   uint uVar2;
   uint uVar3;
   undefined2 uVar4;
-  int *piVar5;
+  int *spawnWords;
   int iVar6;
   int iVar7;
   uint uVar8;
@@ -1033,18 +1071,20 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
   undefined8 local_38;
   
   uVar22 = FUN_8028682c();
-  piVar5 = (int *)((ulonglong)uVar22 >> 0x20);
+  spawnConfig = (ExpgfxSpawnConfig *)((ulonglong)uVar22 >> 0x20);
+  spawnWords = (int *)spawnConfig;
   local_56[0] = 0;
   local_58 = 0;
   dVar19 = extraout_f1;
   iVar6 = FUN_800176d0();
   if ((iVar6 == 0) &&
-     (iVar6 = expgfx_reserveSlot(local_56,&local_58,param_11,(int)uVar22,*piVar5), iVar6 != -1)) {
+     (iVar6 = expgfx_reserveSlot(local_56,&local_58,param_11,(int)uVar22,
+                                 (int)spawnConfig->attachedSource), iVar6 != -1)) {
     uVar3 = (uint)local_56[0];
     if ((int)uVar3 < EXPGFX_POOL_COUNT) {
-      (&gExpgfxSlotSourceIds)[uVar3] = *piVar5;
+      (&gExpgfxSlotSourceIds)[uVar3] = (int)spawnConfig->attachedSource;
     }
-    if (((int)uVar3 < EXPGFX_POOL_COUNT) && ((piVar5[0x11] & 0x40000U) != 0)) {
+    if (((int)uVar3 < EXPGFX_POOL_COUNT) && ((spawnConfig->behaviorFlags & 0x40000U) != 0)) {
       uVar2 = uVar3 & 1;
       uVar12 = (&DAT_8039c7c8)[uVar2 * 2];
       uVar14 = (&DAT_8039c7cc)[uVar2 * 2];
@@ -1070,11 +1110,11 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
       DAT_803dded0 = 0;
     }
     puVar18[0x13] = DAT_803dded0;
-    slot->behaviorFlags = piVar5[0x11];
-    slot->renderFlags = piVar5[0x12];
+    slot->behaviorFlags = spawnConfig->behaviorFlags;
+    slot->renderFlags = spawnConfig->renderFlags;
     slot->stateBits = slot->stateBits & 0xf3;
     iVar6 = FUN_80081134(dVar19,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                         (int)*(short *)((int)piVar5 + 0x42),uVar9,uVar12,uVar14,piVar16,param_14,
+                         (int)spawnConfig->tableKeyType,uVar9,uVar12,uVar14,piVar16,param_14,
                          param_15,param_16);
     iVar6 = (int)(short)iVar6;
     if (iVar6 < 0) {
@@ -1099,17 +1139,17 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
       }
       else {
         *(short *)(iVar7 + 0xe) = *(short *)(iVar7 + 0xe) + 1;
-        *(ushort *)(iVar7 + 0x14) = (ushort)*(byte *)((int)piVar5 + 0x61);
-        puVar17 = (undefined2 *)*piVar5;
+        *(ushort *)(iVar7 + 0x14) = (ushort)spawnConfig->linkGroup;
+        puVar17 = (undefined2 *)spawnConfig->attachedSource;
         iVar13 = 0;
         if (puVar17 == (undefined2 *)0x0) {
-          *(int *)(puVar18 + 0x26) = piVar5[6];
-          *(int *)(puVar18 + 0x28) = piVar5[7];
-          *(int *)(puVar18 + 0x2a) = piVar5[8];
-          *(int *)(puVar18 + 0x24) = piVar5[5];
-          puVar18[0x22] = *(undefined2 *)(piVar5 + 4);
-          puVar18[0x21] = *(undefined2 *)((int)piVar5 + 0xe);
-          puVar18[0x20] = *(undefined2 *)(piVar5 + 3);
+          slot->sourcePosY = spawnConfig->sourcePosYBits;
+          slot->sourcePosZ = spawnConfig->sourcePosZBits;
+          slot->sourcePosW = spawnConfig->sourcePosWBits;
+          slot->sourcePosX = spawnConfig->sourcePosXBits;
+          slot->sourceVecZ = spawnConfig->sourceVecZ;
+          slot->sourceVecY = spawnConfig->sourceVecY;
+          slot->sourceVecX = spawnConfig->sourceVecX;
         }
         else if ((slot->behaviorFlags & 0x200000) != 0) {
           *(undefined4 *)(puVar18 + 0x26) = *(undefined4 *)(puVar17 + 0xc);
@@ -1120,17 +1160,17 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
           puVar18[0x21] = puVar17[1];
           puVar18[0x20] = *puVar17;
           if (((slot->behaviorFlags & 2) != 0) || ((slot->behaviorFlags & 4) != 0)) {
-            piVar5[9] = (int)((float)piVar5[9] + *(float *)(puVar17 + 0x12));
-            piVar5[10] = (int)((float)piVar5[10] + *(float *)(puVar17 + 0x14));
-            dVar19 = (double)(float)piVar5[0xb];
-            piVar5[0xb] = (int)(float)(dVar19 + (double)*(float *)(puVar17 + 0x16));
+            spawnConfig->velocityX = spawnConfig->velocityX + *(float *)(puVar17 + 0x12);
+            spawnConfig->velocityY = spawnConfig->velocityY + *(float *)(puVar17 + 0x14);
+            dVar19 = (double)spawnConfig->velocityZ;
+            spawnConfig->velocityZ = (float)(dVar19 + (double)*(float *)(puVar17 + 0x16));
           }
           if (puVar17 != (undefined2 *)0x0) {
             iVar13 = *(int *)(puVar17 + 0x18);
           }
           puVar17 = (undefined2 *)0x0;
         }
-        iVar15 = (int)*(short *)((int)piVar5 + 0x42);
+        iVar15 = (int)spawnConfig->tableKeyType;
         puVar10 = puVar17;
         uVar3 = expgfx_addToTable(dVar19,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                                   iVar7,(int)puVar17,iVar13,iVar15);
@@ -1145,29 +1185,29 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
         }
         else {
           Expgfx_SetSlotTableIndex(slot, (u8)uVar3);
-          iVar7 = piVar5[0xc];
+          iVar7 = spawnConfig->startPosXBits;
           slot->startPosX = iVar7;
           slot->posX = iVar7;
-          iVar7 = piVar5[0xd];
+          iVar7 = spawnConfig->startPosYBits;
           slot->startPosY = iVar7;
           slot->posY = iVar7;
-          iVar7 = piVar5[0xe];
+          iVar7 = spawnConfig->startPosZBits;
           slot->startPosZ = iVar7;
           slot->posZ = iVar7;
-          slot->velocityX = (float)piVar5[9];
-          slot->velocityY = (float)piVar5[10];
-          slot->velocityZ = (float)piVar5[0xb];
-          *(undefined *)((int)puVar18 + 0xf) = *(undefined *)(piVar5 + 0x18);
-          puVar18[0x1b] = (short)piVar5[1];
-          puVar18[3] = (short)piVar5[2];
-          puVar18[0xb] = (short)piVar5[2];
-          if ((double)FLOAT_803dffd4 < (double)(float)piVar5[0xf]) {
-            FUN_80135810((double)(float)piVar5[0xf],param_2,param_3,param_4,param_5,param_6,param_7,
-                         param_8,sExpgfxScaleOverflow,puVar10,iVar13,iVar15,piVar16,
-                         param_14,param_15,param_16);
+          slot->velocityX = spawnConfig->velocityX;
+          slot->velocityY = spawnConfig->velocityY;
+          slot->velocityZ = spawnConfig->velocityZ;
+          *(undefined *)((int)puVar18 + 0xf) = spawnConfig->initialStateByte;
+          puVar18[0x1b] = (short)spawnWords[1];
+          puVar18[3] = (short)spawnWords[2];
+          puVar18[0xb] = (short)spawnWords[2];
+          if ((double)FLOAT_803dffd4 < (double)spawnConfig->scale) {
+            FUN_80135810((double)spawnConfig->scale,param_2,param_3,param_4,param_5,param_6,param_7,
+                         param_8,sExpgfxScaleOverflow,puVar10,iVar13,iVar15,piVar16,param_14,
+                         param_15,param_16);
           }
           dVar20 = (double)FLOAT_803dffd0;
-          dVar19 = dVar20 * (double)(float)piVar5[0xf];
+          dVar19 = dVar20 * (double)spawnConfig->scale;
           dVar21 = (double)(float)dVar19;
           if ((slot->behaviorFlags & 0x100000) == 0) {
             if ((slot->renderFlags & 0x2000) == 0) {
@@ -1202,13 +1242,13 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
           }
           if (((slot->behaviorFlags & 0x20000) != 0) ||
              ((slot->behaviorFlags & 0x4000000) != 0)) {
-            *(int *)(puVar18 + 0x26) = piVar5[6];
-            *(int *)(puVar18 + 0x28) = piVar5[7];
-            *(int *)(puVar18 + 0x2a) = piVar5[8];
-            *(int *)(puVar18 + 0x24) = piVar5[5];
-            puVar18[0x22] = *(undefined2 *)(piVar5 + 4);
-            puVar18[0x21] = *(undefined2 *)((int)piVar5 + 0xe);
-            puVar18[0x20] = *(undefined2 *)(piVar5 + 3);
+            slot->sourcePosY = spawnConfig->sourcePosYBits;
+            slot->sourcePosZ = spawnConfig->sourcePosZBits;
+            slot->sourcePosW = spawnConfig->sourcePosWBits;
+            slot->sourcePosX = spawnConfig->sourcePosXBits;
+            slot->sourceVecZ = spawnConfig->sourceVecZ;
+            slot->sourceVecY = spawnConfig->sourceVecY;
+            slot->sourceVecX = spawnConfig->sourceVecX;
           }
           slot->stateBits = DAT_803dded2 & 1 | slot->stateBits & 0xfe;
           if ((slot->renderFlags & 8) != 0) {
@@ -1297,13 +1337,13 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
             DAT_803ddef0 = DAT_803ddef0 + 1;
             DAT_803ddef8 = DAT_803ddef4 / DAT_803ddef0;
           }
-          *(char *)(puVar18 + 0x46) = (char)((ushort)*(undefined2 *)(piVar5 + 0x16) >> 8);
-          *(char *)((int)puVar18 + 0x8d) = (char)((ushort)*(undefined2 *)((int)piVar5 + 0x5a) >> 8);
-          *(char *)(puVar18 + 0x47) = (char)((ushort)*(undefined2 *)(piVar5 + 0x17) >> 8);
-          if ((piVar5[0x12] & 0x20U) != 0) {
-            *(char *)((int)puVar18 + 0x1f) = (char)((uint)piVar5[0x13] >> 8);
-            *(char *)((int)puVar18 + 0x2f) = (char)((uint)piVar5[0x14] >> 8);
-            *(char *)((int)puVar18 + 0x3f) = (char)((uint)piVar5[0x15] >> 8);
+          slot->colorByte0 = (char)((uint)spawnConfig->colorByte0Hi >> 8);
+          *(char *)((int)puVar18 + 0x8d) = (char)((uint)spawnConfig->colorByte1Hi >> 8);
+          slot->colorByte1 = (char)((uint)spawnConfig->colorByte2Hi >> 8);
+          if ((spawnConfig->renderFlags & 0x20U) != 0) {
+            *(char *)((int)puVar18 + 0x1f) = (char)(spawnConfig->overrideColor0 >> 8);
+            *(char *)((int)puVar18 + 0x2f) = (char)(spawnConfig->overrideColor1 >> 8);
+            *(char *)((int)puVar18 + 0x3f) = (char)(spawnConfig->overrideColor2 >> 8);
           }
           *(undefined *)(puVar18 + 6) = 0xff;
           *(undefined *)((int)puVar18 + 0xd) = 0xff;
@@ -1320,8 +1360,8 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
             FUN_8009b994(dVar20,param_2,dVar21,param_4,param_5,param_6,param_7,param_8,puVar18);
           }
           pbVar11 = &gExpgfxPoolSourceModes + local_56[0];
-          *pbVar11 = (piVar5[0x11] & 0x20000000U) != 0;
-          if ((*pbVar11 != 0) && ((piVar5[0x11] & 0x40000U) == 0)) {
+          *pbVar11 = (spawnConfig->behaviorFlags & 0x20000000U) != 0;
+          if ((*pbVar11 != 0) && ((spawnConfig->behaviorFlags & 0x40000U) == 0)) {
             *pbVar11 = *pbVar11 + 1;
           }
           (&gExpgfxPoolBoundsTemplateIds)[local_56[0]] = param_12;
