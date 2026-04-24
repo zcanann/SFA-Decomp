@@ -1451,34 +1451,34 @@ dolphin/os/OSFont.c:
 	.text       start:0x80243004 end:0x8024377C
 
 dolphin/os/OSInterrupt.c:
-	.text       start:0x8024377C end:0x802445A0
+	.text       start:0x8024377C end:0x80243FE8
 	.data       start:0x8032E410 end:0x8032E410
 	.sbss       start:0x803DDE38 end:0x803DDE50
 
 dolphin/os/OSLink.c:
-	.text       start:0x802445A0 end:0x802445A0
+	.text       start:0x80243FE8 end:0x80244000
 
 dolphin/os/OSMessage.c:
-	.text       start:0x802445A0 end:0x802448A8
+	.text       start:0x80244000 end:0x80244204
 
 dolphin/os/OSMemory.c:
-	.text       start:0x802448A8 end:0x80244B50
+	.text       start:0x80244204 end:0x802444E4
 
 dolphin/os/OSMutex.c:
-	.text       start:0x80244B50 end:0x80244C44
+	.text       start:0x802444E4 end:0x802444E4
 
 dolphin/os/OSReboot.c:
-	.text       start:0x80244C44 end:0x80244C44
+	.text       start:0x802444E4 end:0x8024476C
 
 dolphin/os/OSReset.c:
-	.text       start:0x80244C44 end:0x80245054
+	.text       start:0x8024476C end:0x80244B50
 	.sbss       start:0x803DDE60 end:0x803DDE6C
 
 dolphin/os/OSResetSW.c:
-	.text       start:0x80245054 end:0x80245054
+	.text       start:0x80244B50 end:0x80244C44
 
 dolphin/os/OSRtc.c:
-	.text       start:0x80245054 end:0x80246078
+	.text       start:0x80244C44 end:0x80246078
 	.bss        start:0x803AE038 end:0x803AE068
 
 dolphin/os/OSStopwatch.c:
@@ -1502,22 +1502,22 @@ dolphin/db/db.c:
 	.text       start:0x80247494 end:0x80247574
 
 dolphin/mtx/mtx.c:
-	.text       start:0x80247574 end:0x80247A5C
+	.text       start:0x80247574 end:0x80247A1C
 
 dolphin/mtx/mtxvec.c:
-	.text       start:0x80247A5C end:0x80247A5C
+	.text       start:0x80247A1C end:0x80247A1C
 
 dolphin/mtx/mtx44.c:
-	.text       start:0x80247A5C end:0x80247E44
+	.text       start:0x80247A1C end:0x80247A1C
 
 dolphin/mtx/vec.c:
-	.text       start:0x80247E44 end:0x80247FD4
+	.text       start:0x80247A1C end:0x80247A1C
 
 dolphin/mtx/psmtx.c:
-	.text       start:0x80247FD4 end:0x80247FD4
+	.text       start:0x80247A1C end:0x80247A1C
 
 dolphin/dvd/dvdlow.c:
-	.text       start:0x80247FD4 end:0x80248F9C
+	.text       start:0x80247A1C end:0x80248F9C
 
 dolphin/dvd/dvdfs.c:
 	.text       start:0x80248F9C end:0x802498E0
