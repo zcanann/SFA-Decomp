@@ -36,7 +36,7 @@ extern f32 FLOAT_803e7160;
 /*
  * --INFO--
  *
- * Function: FUN_80208b70
+ * Function: zBomb_update
  * EN v1.0 Address: 0x80208B70
  * EN v1.0 Size: 1724b
  * EN v1.1 Address: 0x80208CFC
@@ -46,7 +46,7 @@ extern f32 FLOAT_803e7160;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80208b70(int *param_1)
+void zBomb_update(int *param_1)
 {
   float fVar1;
   float fVar2;
@@ -197,7 +197,7 @@ void FUN_80208b70(int *param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8020922c
+ * Function: zBomb_init
  * EN v1.0 Address: 0x8020922C
  * EN v1.0 Size: 512b
  * EN v1.1 Address: 0x802091A8
@@ -207,7 +207,7 @@ void FUN_80208b70(int *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020922c(int param_1)
+void zBomb_init(int param_1)
 {
   char cVar1;
   float fVar2;
