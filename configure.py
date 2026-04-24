@@ -388,7 +388,7 @@ config.libs = [
             Object(NonMatching, "dolphin/dvd/dvdqueue.c"),
             Object(NonMatching, "dolphin/dvd/dvderror.c"),
             Object(NonMatching, "dolphin/dvd/fstload.c"),
-            Object(NonMatching, "dolphin/dvd/dvdFatal.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/dvd/dvdFatal.c"),
             Object(NonMatching, "dolphin/dvd/dvdidutils.c"),
         ],
     ),
@@ -445,7 +445,7 @@ config.libs = [
         "exi",
         [
             Object(NonMatching, "dolphin/exi/EXIBios.c"),
-            Object(NonMatching, "dolphin/exi/EXIUart.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/exi/EXIUart.c"),
         ],
     ),
     DolphinLib(
