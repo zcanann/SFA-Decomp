@@ -1376,7 +1376,7 @@ void FUN_800f557c(int param_1,int param_2,int param_3,uint param_4)
   if (param_2 == 0) {
     *(undefined *)((int)puVar2 + 0x16) = 0;
     *(undefined2 *)(puVar2 + 5) = 8;
-    puVar2[4] = &DAT_80316074;
+    puVar2[4] = (undefined4)&DAT_80316074;
     *puVar2 = 2;
     puVar2[1] = FLOAT_803e1ab4;
     puVar2[2] = FLOAT_803e1ab4;
@@ -1385,7 +1385,7 @@ void FUN_800f557c(int param_1,int param_2,int param_3,uint param_4)
   else {
     *(undefined *)((int)puVar2 + 0x16) = 0;
     *(undefined2 *)(puVar2 + 5) = 8;
-    puVar2[4] = &DAT_80316074;
+    puVar2[4] = (undefined4)&DAT_80316074;
     *puVar2 = 2;
     puVar2[1] = FLOAT_803e1abc;
     puVar2[2] = FLOAT_803e1abc;
@@ -1394,7 +1394,7 @@ void FUN_800f557c(int param_1,int param_2,int param_3,uint param_4)
   if (param_2 == 0) {
     *(undefined *)((int)puVar2 + 0x2e) = 1;
     *(undefined2 *)(puVar2 + 0xb) = 8;
-    puVar2[10] = &DAT_80316060;
+    puVar2[10] = (undefined4)&DAT_80316060;
     puVar2[6] = 2;
     puVar2[7] = FLOAT_803e1ac4;
     puVar2[8] = FLOAT_803e1ac4;
@@ -1403,7 +1403,7 @@ void FUN_800f557c(int param_1,int param_2,int param_3,uint param_4)
   else {
     *(undefined *)((int)puVar2 + 0x2e) = 1;
     *(undefined2 *)(puVar2 + 0xb) = 8;
-    puVar2[10] = &DAT_80316060;
+    puVar2[10] = (undefined4)&DAT_80316060;
     puVar2[6] = 2;
     puVar2[7] = FLOAT_803e1ac4;
     puVar2[8] = FLOAT_803e1ac4;
@@ -1413,7 +1413,7 @@ void FUN_800f557c(int param_1,int param_2,int param_3,uint param_4)
   if (param_2 == 0) {
     *(undefined *)((int)puVar2 + 0x46) = 1;
     *(undefined2 *)(puVar2 + 0x11) = 9;
-    puVar2[0x10] = &DAT_80316060;
+    puVar2[0x10] = (undefined4)&DAT_80316060;
     *puVar3 = 0x100;
     puVar2[0xd] = FLOAT_803e1ac8;
     puVar2[0xe] = FLOAT_803e1aac;
@@ -1421,7 +1421,7 @@ void FUN_800f557c(int param_1,int param_2,int param_3,uint param_4)
     puVar3 = puVar2 + 0x12;
     *(undefined *)((int)puVar2 + 0x5e) = 1;
     *(undefined2 *)(puVar2 + 0x17) = 1;
-    puVar2[0x16] = &DAT_803dc548;
+    puVar2[0x16] = (undefined4)&DAT_803dc548;
     *puVar3 = 0x4000;
     puVar2[0x13] = FLOAT_803e1acc;
     puVar2[0x14] = FLOAT_803e1acc;
@@ -1430,7 +1430,7 @@ void FUN_800f557c(int param_1,int param_2,int param_3,uint param_4)
   else if (param_2 == 1) {
     *(undefined *)((int)puVar2 + 0x46) = 1;
     *(undefined2 *)(puVar2 + 0x11) = 9;
-    puVar2[0x10] = &DAT_80316060;
+    puVar2[0x10] = (undefined4)&DAT_80316060;
     *puVar3 = 0x100;
     puVar2[0xd] = FLOAT_803e1ad0;
     puVar2[0xe] = FLOAT_803e1aac;
@@ -1440,14 +1440,14 @@ void FUN_800f557c(int param_1,int param_2,int param_3,uint param_4)
   if (param_2 == 0) {
     *(undefined *)((int)puVar3 + 0x16) = 2;
     *(undefined2 *)(puVar3 + 5) = 9;
-    puVar3[4] = &DAT_80316060;
+    puVar3[4] = (undefined4)&DAT_80316060;
     *puVar3 = 0x100;
     puVar3[1] = FLOAT_803e1ac8;
     puVar3[2] = FLOAT_803e1aac;
     puVar3[3] = FLOAT_803e1aac;
     *(undefined *)((int)puVar3 + 0x2e) = 2;
     *(undefined2 *)(puVar3 + 0xb) = 1;
-    puVar3[10] = &DAT_803dc548;
+    puVar3[10] = (undefined4)&DAT_803dc548;
     puVar3[6] = 0x4000;
     puVar3[7] = FLOAT_803e1acc;
     puVar3[8] = FLOAT_803e1acc;
@@ -1457,7 +1457,7 @@ void FUN_800f557c(int param_1,int param_2,int param_3,uint param_4)
   else if (param_2 == 1) {
     *(undefined *)((int)puVar3 + 0x16) = 2;
     *(undefined2 *)(puVar3 + 5) = 9;
-    puVar3[4] = &DAT_80316060;
+    puVar3[4] = (undefined4)&DAT_80316060;
     *puVar3 = 0x100;
     puVar3[1] = FLOAT_803e1ad0;
     puVar3[2] = FLOAT_803e1aac;
@@ -1466,7 +1466,7 @@ void FUN_800f557c(int param_1,int param_2,int param_3,uint param_4)
   }
   *(undefined *)((int)puVar3 + 0x16) = 2;
   *(undefined2 *)(puVar3 + 5) = 9;
-  puVar3[4] = &DAT_80316060;
+  puVar3[4] = (undefined4)&DAT_80316060;
   *puVar3 = 4;
   puVar3[1] = FLOAT_803e1aac;
   puVar3[2] = FLOAT_803e1aac;
@@ -1854,35 +1854,35 @@ void FUN_800f5d28(int param_1,int param_2,int param_3,uint param_4)
   }
   *(undefined *)((int)puVar4 + 0x16) = 1;
   *(undefined2 *)(puVar4 + 5) = 0x15;
-  puVar4[4] = &DAT_80316348;
+  puVar4[4] = (undefined4)&DAT_80316348;
   *puVar4 = 0x4000;
   puVar4[1] = FLOAT_803e1b20;
   puVar4[2] = fVar1;
   puVar4[3] = FLOAT_803e1b00;
   *(undefined *)((int)puVar4 + 0x2e) = 2;
   *(undefined2 *)(puVar4 + 0xb) = 0x15;
-  puVar4[10] = &DAT_80316348;
+  puVar4[10] = (undefined4)&DAT_80316348;
   puVar4[6] = 4;
   puVar4[7] = FLOAT_803e1b1c;
   puVar4[8] = FLOAT_803e1b00;
   puVar4[9] = FLOAT_803e1b00;
   *(undefined *)((int)puVar4 + 0x46) = 2;
   *(undefined2 *)(puVar4 + 0x11) = 0x15;
-  puVar4[0x10] = &DAT_80316348;
+  puVar4[0x10] = (undefined4)&DAT_80316348;
   puVar4[0xc] = 0x4000;
   puVar4[0xd] = FLOAT_803e1b20;
   puVar4[0xe] = fVar1;
   puVar4[0xf] = FLOAT_803e1b00;
   *(undefined *)((int)puVar4 + 0x5e) = 3;
   *(undefined2 *)(puVar4 + 0x17) = 0x15;
-  puVar4[0x16] = &DAT_80316348;
+  puVar4[0x16] = (undefined4)&DAT_80316348;
   puVar4[0x12] = 0x4000;
   puVar4[0x13] = FLOAT_803e1b20;
   puVar4[0x14] = fVar1;
   puVar4[0x15] = FLOAT_803e1b00;
   *(undefined *)((int)puVar4 + 0x76) = 4;
   *(undefined2 *)(puVar4 + 0x1d) = 0x15;
-  puVar4[0x1c] = &DAT_80316348;
+  puVar4[0x1c] = (undefined4)&DAT_80316348;
   puVar4[0x18] = 0x4000;
   puVar4[0x19] = FLOAT_803e1b20;
   puVar4[0x1a] = fVar1;
@@ -1900,14 +1900,14 @@ void FUN_800f5d28(int param_1,int param_2,int param_3,uint param_4)
   }
   *(undefined *)((int)puVar3 + 0x16) = 5;
   *(undefined2 *)(puVar3 + 5) = 0x15;
-  puVar3[4] = &DAT_80316348;
+  puVar3[4] = (undefined4)&DAT_80316348;
   *puVar3 = 0x4000;
   puVar3[1] = FLOAT_803e1b20;
   puVar3[2] = fVar1;
   puVar3[3] = FLOAT_803e1b00;
   *(undefined *)((int)puVar3 + 0x2e) = 5;
   *(undefined2 *)(puVar3 + 0xb) = 0x15;
-  puVar3[10] = &DAT_80316348;
+  puVar3[10] = (undefined4)&DAT_80316348;
   puVar3[6] = 4;
   puVar3[7] = FLOAT_803e1b00;
   puVar3[8] = FLOAT_803e1b00;
@@ -1916,7 +1916,7 @@ void FUN_800f5d28(int param_1,int param_2,int param_3,uint param_4)
   if ((param_2 == 1) || (param_2 == 3)) {
     *(undefined *)((int)puVar3 + 0x46) = 5;
     *(undefined2 *)(puVar3 + 0x11) = 0x15;
-    puVar3[0x10] = &DAT_80316348;
+    puVar3[0x10] = (undefined4)&DAT_80316348;
     *puVar4 = 2;
     puVar3[0xd] = FLOAT_803e1b20;
     puVar3[0xe] = FLOAT_803e1b20;
@@ -5285,7 +5285,7 @@ void FUN_800f9004(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   if (iVar3 == 0) {
     *(undefined *)((int)puVar4 + 0x16) = 1;
     *(undefined2 *)(puVar4 + 5) = 9;
-    puVar4[4] = &DAT_8031783c;
+    puVar4[4] = (undefined4)&DAT_8031783c;
     *puVar4 = 0x4000;
     puVar4[1] = FLOAT_803e1d6c;
     puVar4[2] = FLOAT_803e1d6c;
@@ -5299,7 +5299,7 @@ void FUN_800f9004(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
     puVar4[9] = FLOAT_803e1d6c;
     *(undefined *)((int)puVar4 + 0x46) = 1;
     *(undefined2 *)(puVar4 + 0x11) = 8;
-    puVar4[0x10] = &DAT_8031783c;
+    puVar4[0x10] = (undefined4)&DAT_8031783c;
     puVar4[0xc] = 2;
     puVar4[0xd] = FLOAT_803e1d9c;
     puVar4[0xe] = FLOAT_803e1d9c;
@@ -5309,7 +5309,7 @@ void FUN_800f9004(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   else if (iVar3 == 1) {
     *(undefined *)((int)puVar4 + 0x16) = 1;
     *(undefined2 *)(puVar4 + 5) = 9;
-    puVar4[4] = &DAT_8031783c;
+    puVar4[4] = (undefined4)&DAT_8031783c;
     *puVar4 = 0x4000;
     puVar4[1] = FLOAT_803e1d6c;
     puVar4[2] = FLOAT_803e1d6c;
@@ -5326,7 +5326,7 @@ void FUN_800f9004(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   else if (iVar3 == 2) {
     *(undefined *)((int)puVar4 + 0x16) = 1;
     *(undefined2 *)(puVar4 + 5) = 9;
-    puVar4[4] = &DAT_8031783c;
+    puVar4[4] = (undefined4)&DAT_8031783c;
     *puVar4 = 0x4000;
     puVar4[1] = FLOAT_803e1d6c;
     puVar4[2] = FLOAT_803e1d6c;
@@ -5343,7 +5343,7 @@ void FUN_800f9004(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   if (iVar3 == 0) {
     *(undefined *)((int)puVar4 + 0x16) = 1;
     *(undefined2 *)(puVar4 + 5) = 9;
-    puVar4[4] = &DAT_8031783c;
+    puVar4[4] = (undefined4)&DAT_8031783c;
     *puVar4 = 0x100;
     puVar4[1] = FLOAT_803e1da4;
     puVar4[2] = FLOAT_803e1d6c;
@@ -5353,7 +5353,7 @@ void FUN_800f9004(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   else if (iVar3 == 1) {
     *(undefined *)((int)puVar4 + 0x16) = 1;
     *(undefined2 *)(puVar4 + 5) = 9;
-    puVar4[4] = &DAT_8031783c;
+    puVar4[4] = (undefined4)&DAT_8031783c;
     *puVar4 = 0x100;
     puVar4[1] = FLOAT_803e1da8;
     puVar4[2] = FLOAT_803e1d6c;
@@ -5363,7 +5363,7 @@ void FUN_800f9004(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   else if (iVar3 == 2) {
     *(undefined *)((int)puVar4 + 0x16) = 1;
     *(undefined2 *)(puVar4 + 5) = 9;
-    puVar4[4] = &DAT_8031783c;
+    puVar4[4] = (undefined4)&DAT_8031783c;
     *puVar4 = 0x100;
     puVar4[1] = FLOAT_803e1da8;
     puVar4[2] = FLOAT_803e1d6c;
@@ -5373,7 +5373,7 @@ void FUN_800f9004(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   if (iVar3 == 0) {
     *(undefined *)((int)puVar4 + 0x16) = 2;
     *(undefined2 *)(puVar4 + 5) = 9;
-    puVar4[4] = &DAT_8031783c;
+    puVar4[4] = (undefined4)&DAT_8031783c;
     *puVar4 = 0x100;
     puVar4[1] = FLOAT_803e1da4;
     puVar4[2] = FLOAT_803e1d6c;
@@ -5383,7 +5383,7 @@ void FUN_800f9004(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   else if (iVar3 == 1) {
     *(undefined *)((int)puVar4 + 0x16) = 2;
     *(undefined2 *)(puVar4 + 5) = 9;
-    puVar4[4] = &DAT_8031783c;
+    puVar4[4] = (undefined4)&DAT_8031783c;
     *puVar4 = 0x100;
     puVar4[1] = FLOAT_803e1da8;
     puVar4[2] = FLOAT_803e1d6c;
@@ -5393,7 +5393,7 @@ void FUN_800f9004(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   else if (iVar3 == 2) {
     *(undefined *)((int)puVar4 + 0x16) = 2;
     *(undefined2 *)(puVar4 + 5) = 9;
-    puVar4[4] = &DAT_8031783c;
+    puVar4[4] = (undefined4)&DAT_8031783c;
     *puVar4 = 0x100;
     puVar4[1] = FLOAT_803e1da8;
     puVar4[2] = FLOAT_803e1d6c;
@@ -5402,7 +5402,7 @@ void FUN_800f9004(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   }
   *(undefined *)((int)puVar4 + 0x16) = 2;
   *(undefined2 *)(puVar4 + 5) = 9;
-  puVar4[4] = &DAT_8031783c;
+  puVar4[4] = (undefined4)&DAT_8031783c;
   *puVar4 = 4;
   puVar4[1] = FLOAT_803e1d6c;
   puVar4[2] = FLOAT_803e1d6c;
@@ -5624,14 +5624,14 @@ void FUN_800f9a18(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   puVar4[3] = (float)dVar5;
   *(undefined *)((int)puVar4 + 0x2e) = 0;
   *(undefined2 *)(puVar4 + 0xb) = 3;
-  puVar4[10] = &DAT_803dc578;
+  puVar4[10] = (undefined4)&DAT_803dc578;
   puVar4[6] = 4;
   puVar4[7] = FLOAT_803e1db8;
   puVar4[8] = FLOAT_803e1db8;
   puVar4[9] = FLOAT_803e1db8;
   *(undefined *)((int)puVar4 + 0x46) = 0;
   *(undefined2 *)(puVar4 + 0x11) = 3;
-  puVar4[0x10] = &DAT_803dc578;
+  puVar4[0x10] = (undefined4)&DAT_803dc578;
   puVar4[0xc] = 2;
   puVar4[0xd] = FLOAT_803e1dbc;
   uStack_44 = FUN_80022264(0,0x32);
@@ -5646,7 +5646,7 @@ void FUN_800f9a18(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
                 FLOAT_803e1dc8;
   *(undefined *)((int)puVar4 + 0x5e) = 1;
   *(undefined2 *)(puVar4 + 0x17) = 3;
-  puVar4[0x16] = &DAT_803dc578;
+  puVar4[0x16] = (undefined4)&DAT_803dc578;
   puVar4[0x12] = 4;
   uVar3 = FUN_80022264(0,10);
   if (uVar3 == 0) {
@@ -5676,7 +5676,7 @@ void FUN_800f9a18(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   puVar4[0x1b] = (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e1df0);
   *(undefined *)((int)puVar4 + 0x8e) = 1;
   *(undefined2 *)(puVar4 + 0x23) = 3;
-  puVar4[0x22] = &DAT_803dc578;
+  puVar4[0x22] = (undefined4)&DAT_803dc578;
   puVar4[0x1e] = 2;
   puVar4[0x1f] = FLOAT_803e1dd4;
   puVar4[0x20] = FLOAT_803e1dd8;
@@ -5693,14 +5693,14 @@ void FUN_800f9a18(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   puVar4[0x27] = (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e1df0);
   *(undefined *)((int)puVar4 + 0xbe) = 2;
   *(undefined2 *)(puVar4 + 0x2f) = 3;
-  puVar4[0x2e] = &DAT_803dc578;
+  puVar4[0x2e] = (undefined4)&DAT_803dc578;
   puVar4[0x2a] = 4;
   puVar4[0x2b] = FLOAT_803e1db8;
   puVar4[0x2c] = FLOAT_803e1db8;
   puVar4[0x2d] = FLOAT_803e1db8;
   *(undefined *)((int)puVar4 + 0xd6) = 2;
   *(undefined2 *)(puVar4 + 0x35) = 3;
-  puVar4[0x34] = &DAT_803dc578;
+  puVar4[0x34] = (undefined4)&DAT_803dc578;
   puVar4[0x30] = 2;
   puVar4[0x31] = FLOAT_803e1de0;
   puVar4[0x32] = FLOAT_803e1de4;
