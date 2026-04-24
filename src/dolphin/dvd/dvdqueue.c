@@ -8,7 +8,7 @@ typedef struct DVDWaitingQueue {
     /* 0x04 */ DVDCommandBlock* prev;
 } DVDWaitingQueue;
 
-extern DVDWaitingQueue WaitingQueue_803AEC38[4];
+static DVDWaitingQueue WaitingQueue_803AEC38[4];
 
 static inline DVDCommandBlock* PopWaitingQueuePrio(s32 prio) {
     DVDCommandBlock* tmp;
