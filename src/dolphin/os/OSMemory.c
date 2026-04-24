@@ -3,10 +3,10 @@
 
 #include "dolphin/os/__os.h"
 
-BOOL OnReset_802448FC(BOOL final);
+BOOL OnReset_80244204(BOOL final);
 extern OSResetFunctionInfo ResetFunctionInfo_8032E460;
 
-BOOL OnReset_802448FC(BOOL final) {
+BOOL OnReset_80244204(BOOL final) {
     if (final != FALSE) {
         __MEMRegs[8] = 0xFF;
         __OSMaskInterrupts(OS_INTERRUPTMASK_MEM_RESET);

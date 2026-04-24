@@ -1465,10 +1465,10 @@ dolphin/os/OSMemory.c:
 	.text       start:0x80244204 end:0x802444E4
 
 dolphin/os/OSMutex.c:
-	.text       start:0x802444E4 end:0x802444E4
+	.text       start:0x802444E4 end:0x80244554
 
 dolphin/os/OSReboot.c:
-	.text       start:0x802444E4 end:0x8024476C
+	.text       start:0x80244554 end:0x8024476C
 
 dolphin/os/OSReset.c:
 	.text       start:0x8024476C end:0x80244B50
