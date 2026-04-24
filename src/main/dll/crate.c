@@ -5,9 +5,9 @@ extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b4c();
 extern undefined8 FUN_80017698();
 extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80207ec4();
 extern undefined8 sfxplayer_update();
 extern int gSfxplayerEffectHandles[8];
+extern undefined4 sfxplayer_updateEffectHandlePositions();
 
 /*
  * --INFO--
@@ -48,7 +48,7 @@ FUN_80208098(undefined8 param_1,double param_2,double param_3,undefined8 param_4
       *(byte *)(iVar2 + 8) = *(byte *)(iVar2 + 8) & 0xbf | 0x40;
     }
   }
-  FUN_80207ec4(param_9);
+  sfxplayer_updateEffectHandlePositions(param_9);
   return 0;
 }
 

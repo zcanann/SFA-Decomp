@@ -476,7 +476,7 @@ void FUN_80207c44(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_80207ec4
+ * Function: sfxplayer_updateEffectHandlePositions
  * EN v1.0 Address: 0x80207EC4
  * EN v1.0 Size: 668b
  * EN v1.1 Address: 0x80207CC4
@@ -486,7 +486,7 @@ void FUN_80207c44(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80207ec4(short *param_1)
+void sfxplayer_updateEffectHandlePositions(short *param_1)
 {
   int iVar1;
   char cVar2;

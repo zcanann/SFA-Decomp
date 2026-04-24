@@ -10,12 +10,12 @@ extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
 extern undefined8 FUN_80017ac8();
 extern int FUN_800369d0();
-extern undefined4 FUN_80207ec4();
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 
 extern int gSfxplayerEffectHandles[8];
 extern undefined4* DAT_803dd72c;
+extern undefined4 sfxplayer_updateEffectHandlePositions();
 
 /*
  * --INFO--
@@ -97,7 +97,7 @@ void crate2_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3
         *(byte *)(psVar7 + 4) = *(byte *)(psVar7 + 4) & 0xef;
         FUN_80017698(0xedf,0);
       }
-      FUN_80207ec4(psVar1);
+      sfxplayer_updateEffectHandlePositions(psVar1);
       piVar8 = gSfxplayerEffectHandles;
       for (sVar6 = 0; sVar6 < 4; sVar6 = sVar6 + 1) {
         if (*piVar8 != 0) {
