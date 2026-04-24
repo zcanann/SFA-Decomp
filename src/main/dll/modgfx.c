@@ -370,13 +370,7 @@ extern undefined4 DAT_8039cfe8;
 extern undefined4 DAT_8039cfec;
 extern undefined4 DAT_8039cff0;
 extern undefined4 DAT_8039cff4;
-extern undefined4 DAT_8039cff8;
-extern undefined4 DAT_8039cffa;
-extern undefined4 DAT_8039cffc;
-extern undefined4 DAT_8039d000;
-extern undefined4 DAT_8039d004;
-extern undefined4 DAT_8039d008;
-extern undefined4 DAT_8039d00c;
+extern ExpgfxAttachedSourceState gProjgfxDefaultAttachedSource;
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dd430;
 extern undefined4* DAT_803dd6f8;
@@ -3377,8 +3371,8 @@ void FUN_800a2b9c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ushort *param_3,uint param_4,
-                 undefined param_5)
+void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,
+                 uint param_4,undefined param_5)
 {
   ushort uVar1;
   int iVar2;
@@ -3443,14 +3437,14 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ushort *param_3,uint par
   }
   if (iVar2 != 0) {
     if ((param_4 & 0x200000) != 0) {
-      if (param_3 == (ushort *)0x0) goto LAB_800bd57c;
-      local_a8 = *(float *)(param_3 + 6);
-      local_a4 = *(float *)(param_3 + 8);
-      local_a0 = *(float *)(param_3 + 10);
-      local_ac = *(undefined4 *)(param_3 + 4);
-      local_b0 = param_3[2];
-      local_b2 = param_3[1];
-      local_b4 = *param_3;
+      if (param_3 == (ExpgfxAttachedSourceState *)0x0) goto LAB_800bd57c;
+      local_a8 = param_3->velocityX;
+      local_a4 = param_3->velocityY;
+      local_a0 = param_3->velocityZ;
+      local_ac = param_3->sourcePosXBits;
+      local_b0 = param_3->sourceVecZ;
+      local_b2 = param_3->sourceVecY;
+      local_b4 = param_3->sourceVecX;
       local_5e = param_5;
     }
     local_7c = 0;
@@ -3501,7 +3495,7 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ushort *param_3,uint par
     default:
       goto LAB_800bd57c;
     case 0xca:
-      if (param_3 == (ushort *)0x0) goto LAB_800bd57c;
+      if (param_3 == (ExpgfxAttachedSourceState *)0x0) goto LAB_800bd57c;
       uStack_3c = FUN_80017760(0xffffffec,0x14);
       uStack_3c = uStack_3c ^ 0x80000000;
       local_40 = 0x43300000;
@@ -3520,7 +3514,7 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ushort *param_3,uint par
       local_d0 = FLOAT_803e0868;
       local_d8[2] = 0;
       local_d8[1] = 0;
-      local_d8[0] = *param_3;
+      local_d8[0] = param_3->sourceVecX;
       FUN_80017748(local_d8,&local_9c);
       uVar3 = FUN_80017760(4,8);
       local_58 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
@@ -3530,7 +3524,7 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ushort *param_3,uint par
       local_5f = 0;
       local_7c = 0x180108;
       local_78 = 0x5000000;
-      uVar1 = param_3[2];
+      uVar1 = param_3->sourceVecZ;
       if (uVar1 == 0) {
         local_7e = 0x2b;
       }
@@ -3546,7 +3540,7 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ushort *param_3,uint par
       }
       break;
     case 0xcb:
-      if (param_3 == (ushort *)0x0) goto LAB_800bd57c;
+      if (param_3 == (ExpgfxAttachedSourceState *)0x0) goto LAB_800bd57c;
       uStack_3c = FUN_80017760(0xffffffec,0x14);
       uStack_3c = uStack_3c ^ 0x80000000;
       local_40 = 0x43300000;
@@ -3565,7 +3559,7 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ushort *param_3,uint par
       local_d0 = FLOAT_803e0868;
       local_d8[2] = 0;
       local_d8[1] = 0;
-      local_d8[0] = *param_3;
+      local_d8[0] = param_3->sourceVecX;
       FUN_80017748(local_d8,&local_9c);
       uVar3 = FUN_80017760(4,8);
       local_58 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
@@ -3575,7 +3569,7 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ushort *param_3,uint par
       local_5f = 0;
       local_7c = 0x1080100;
       local_78 = 0x5000000;
-      uVar1 = param_3[2];
+      uVar1 = param_3->sourceVecZ;
       if (uVar1 == 0) {
         local_7e = 0x2b;
       }
@@ -4413,7 +4407,8 @@ void FUN_800a3830(void)
  * PAL Size: TODO
  */
 undefined4
-FUN_800a3924(int param_1,undefined4 param_2,undefined2 *param_3,uint param_4,undefined param_5)
+FUN_800a3924(int param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,uint param_4,
+             undefined param_5)
 {
     return 0;
 }

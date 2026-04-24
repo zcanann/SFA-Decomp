@@ -89,6 +89,7 @@ typedef struct ExpgfxSpawnConfig {
 #define gExpgfxBoundsTemplates DAT_80310458
 #define gExpgfxSpawnConfig DAT_8039caf8
 #define gExpgfxInlineAttachedSource DAT_8039cb58
+#define gProjgfxDefaultAttachedSource DAT_8039cff8
 #define gExpgfxPoolSlotTypeIds gExpgfxSlotTypeIds
 #define gExpgfxPoolFrameFlags DAT_80310528
 #define gExpgfxPoolBounds DAT_8039b9b8

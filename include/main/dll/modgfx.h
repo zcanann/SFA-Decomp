@@ -78,8 +78,8 @@ void FUN_800a2b94(undefined4 param_1,undefined4 param_2,undefined2 *param_3,uint
 void FUN_800a2b98(undefined4 param_1,undefined4 param_2,ushort *param_3,uint param_4,
                  undefined param_5);
 void FUN_800a2b9c(void);
-void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ushort *param_3,uint param_4,
-                 undefined param_5);
+void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,
+                 uint param_4,undefined param_5);
 void FUN_800a3238(void);
 undefined4
 projgfx_spawnPresetEffect(int param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,
@@ -92,7 +92,8 @@ undefined4
 FUN_800a3828(int param_1,undefined4 param_2,short *param_3,uint param_4,undefined param_5);
 void FUN_800a3830(void);
 undefined4
-FUN_800a3924(int param_1,undefined4 param_2,undefined2 *param_3,uint param_4,undefined param_5);
+FUN_800a3924(int param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,uint param_4,
+             undefined param_5);
 void FUN_800a392c(void);
 
 #endif /* MAIN_DLL_MODGFX_H_ */
