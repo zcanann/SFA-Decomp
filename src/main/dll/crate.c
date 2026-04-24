@@ -6,9 +6,8 @@ extern undefined4 FUN_80006b4c();
 extern undefined8 FUN_80017698();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80207ec4();
-extern undefined8 FUN_80207ce4();
-
-extern int DAT_803add98;
+extern undefined8 sfxplayer_update();
+extern int gSfxplayerEffectHandles[8];
 
 /*
  * --INFO--
@@ -43,7 +42,7 @@ FUN_80208098(undefined8 param_1,double param_2,double param_3,undefined8 param_4
       uVar3 = FUN_80017698(0xedf,1);
       iVar1 = 0;
       do {
-        uVar3 = FUN_80207ce4(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        uVar3 = sfxplayer_update(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
         iVar1 = iVar1 + 1;
       } while (iVar1 < 4);
       *(byte *)(iVar2 + 8) = *(byte *)(iVar2 + 8) & 0xbf | 0x40;
@@ -74,7 +73,7 @@ void FUN_802081e0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   int *piVar2;
   
   if (param_10 == 0) {
-    piVar2 = &DAT_803add98;
+    piVar2 = gSfxplayerEffectHandles;
     for (sVar1 = 0; sVar1 < 4; sVar1 = sVar1 + 1) {
       if (*piVar2 != 0) {
         param_1 = FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,

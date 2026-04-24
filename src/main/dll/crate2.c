@@ -14,7 +14,7 @@ extern undefined4 FUN_80207ec4();
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 
-extern int DAT_803add98;
+extern int gSfxplayerEffectHandles[8];
 extern undefined4* DAT_803dd72c;
 
 /*
@@ -78,7 +78,7 @@ void FUN_802081f4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       }
       bVar5 = FUN_80006b44();
       if (bVar5 != 0) {
-        piVar8 = &DAT_803add98;
+        piVar8 = gSfxplayerEffectHandles;
         for (sVar6 = 0; sVar6 < 4; sVar6 = sVar6 + 1) {
           if (*piVar8 != 0) {
             uVar9 = FUN_80017ac8(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
@@ -98,7 +98,7 @@ void FUN_802081f4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         FUN_80017698(0xedf,0);
       }
       FUN_80207ec4(psVar1);
-      piVar8 = &DAT_803add98;
+      piVar8 = gSfxplayerEffectHandles;
       for (sVar6 = 0; sVar6 < 4; sVar6 = sVar6 + 1) {
         if (*piVar8 != 0) {
           local_28[0] = 0;

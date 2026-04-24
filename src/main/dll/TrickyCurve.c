@@ -17,7 +17,7 @@ extern undefined4 FUN_80286888();
 extern undefined4 FUN_80294c40();
 extern int FUN_80294d6c();
 
-extern int DAT_803add98;
+extern int gSfxplayerEffectHandles[8];
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd72c;
@@ -536,7 +536,7 @@ void FUN_80207ec4(short *param_1)
   sVar5 = 0;
   local_38[2] = 0;
   local_38[1] = 0;
-  piVar6 = &DAT_803add98;
+  piVar6 = gSfxplayerEffectHandles;
   for (sVar3 = 0; sVar3 < 4; sVar3 = sVar3 + 1) {
     if (*piVar6 != 0) {
       *(float *)(*piVar6 + 0xc) = FLOAT_803e70f8;
