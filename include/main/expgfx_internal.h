@@ -23,4 +23,14 @@ typedef struct ExpgfxCurrentSource {
   int sourceMode;
 } ExpgfxCurrentSource;
 
+/*
+ * These arrays are still linker-backed by recovered addresses, but the pool
+ * roles are stable enough to use semantic aliases across the expgfx corridor.
+ */
+#define gExpgfxBoundsTemplates DAT_80310458
+#define gExpgfxPoolFrameFlags DAT_80310528
+#define gExpgfxPoolBounds DAT_8039b9b8
+#define gExpgfxPoolSourceModes DAT_8039c638
+#define gExpgfxPoolBoundsTemplateIds DAT_8039c7d8
+
 #endif /* MAIN_EXPGFX_INTERNAL_H_ */
