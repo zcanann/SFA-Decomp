@@ -47,8 +47,8 @@ extern f32 FLOAT_803e60e8;
  * --INFO--
  *
  * Function: SHthorntail_update
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801D5F58
+ * EN v1.0 Size: 2280b
  * EN v1.1 Address: 0x801D6548
  * EN v1.1 Size: 1928b
  * JP Address: TODO

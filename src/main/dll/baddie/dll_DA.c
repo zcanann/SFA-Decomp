@@ -34,8 +34,8 @@ extern f64 DOUBLE_803e2e70;
  * --INFO--
  *
  * Function: FUN_801309a8
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80130888
+ * EN v1.0 Size: 368b
  * EN v1.1 Address: 0x801309A8
  * EN v1.1 Size: 616b
  * JP Address: TODO
@@ -83,8 +83,8 @@ void FUN_801309a8(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * --INFO--
  *
  * Function: FUN_80130c10
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801309F8
+ * EN v1.0 Size: 1312b
  * EN v1.1 Address: 0x80130C10
  * EN v1.1 Size: 1128b
  * JP Address: TODO

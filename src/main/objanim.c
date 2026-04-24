@@ -110,8 +110,8 @@ static s32 ObjAnim_ResolveMoveIndex(ObjAnimDef *animDef, u32 moveId) {
  * --INFO--
  *
  * Function: ObjAnim_SetBlendMove
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8002EBA8
+ * EN v1.0 Size: 540b
  * EN v1.1 Address: 0x8002EC4C
  * EN v1.1 Size: 452b
  * JP Address: TODO
@@ -177,8 +177,8 @@ void ObjAnim_SetBlendMove(undefined8 param_1,double param_2,double param_3,undef
  * --INFO--
  *
  * Function: fn_8002EE10
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8002EDC4
+ * EN v1.0 Size: 568b
  * EN v1.1 Address: 0x8002EE10
  * EN v1.1 Size: 84b
  * JP Address: TODO
@@ -204,8 +204,8 @@ void fn_8002EE10(undefined8 param_1,double param_2,double param_3,undefined8 par
  * --INFO--
  *
  * Function: fn_8002EE64
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8002EFFC
+ * EN v1.0 Size: 568b
  * EN v1.1 Address: 0x8002EE64
  * EN v1.1 Size: 84b
  * JP Address: TODO
@@ -231,8 +231,8 @@ void fn_8002EE64(undefined8 param_1,double param_2,double param_3,undefined8 par
  * --INFO--
  *
  * Function: fn_8002EEB8
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8002F234
+ * EN v1.0 Size: 1168b
  * EN v1.1 Address: 0x8002EEB8
  * EN v1.1 Size: 1100b
  * JP Address: TODO
@@ -402,8 +402,8 @@ undefined4 fn_8002EEB8(double param_1,double param_2,int param_3,int param_4)
  * --INFO--
  *
  * Function: fn_8002F304
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8002F6C4
+ * EN v1.0 Size: 52b
  * EN v1.1 Address: 0x8002F304
  * EN v1.1 Size: 48b
  * JP Address: TODO
@@ -429,8 +429,8 @@ undefined4 fn_8002F304(double param_1,int param_2)
  * --INFO--
  *
  * Function: Object_ObjAnimSetMove
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8002F6F8
+ * EN v1.0 Size: 816b
  * EN v1.1 Address: 0x8002F334
  * EN v1.1 Size: 720b
  * JP Address: TODO

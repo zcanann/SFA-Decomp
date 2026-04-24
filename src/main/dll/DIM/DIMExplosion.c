@@ -44,8 +44,8 @@ extern f32 FLOAT_803e5520;
  * --INFO--
  *
  * Function: FUN_801b13f0
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801B13F0
+ * EN v1.0 Size: 1392b
  * EN v1.1 Address: 0x801B13F0
  * EN v1.1 Size: 1304b
  * JP Address: TODO
@@ -193,8 +193,8 @@ void FUN_801b13f0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * --INFO--
  *
  * Function: FUN_801b1908
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801B1960
+ * EN v1.0 Size: 136b
  * EN v1.1 Address: 0x801B1908
  * EN v1.1 Size: 168b
  * JP Address: TODO
@@ -227,8 +227,8 @@ void FUN_801b1908(int param_1,int param_2)
  * --INFO--
  *
  * Function: FUN_801b19b0
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801B19E8
+ * EN v1.0 Size: 40b
  * EN v1.1 Address: 0x801B19B0
  * EN v1.1 Size: 52b
  * JP Address: TODO
@@ -250,8 +250,8 @@ void FUN_801b19b0(int param_1)
  * --INFO--
  *
  * Function: FUN_801b19e4
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801B1A10
+ * EN v1.0 Size: 504b
  * EN v1.1 Address: 0x801B19E4
  * EN v1.1 Size: 452b
  * JP Address: TODO
@@ -317,8 +317,8 @@ void FUN_801b19e4(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * --INFO--
  *
  * Function: FUN_801b1ba8
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801B1C08
+ * EN v1.0 Size: 40b
  * EN v1.1 Address: 0x801B1BA8
  * EN v1.1 Size: 52b
  * JP Address: TODO
@@ -340,8 +340,8 @@ void FUN_801b1ba8(int param_1)
  * --INFO--
  *
  * Function: FUN_801b1bdc
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801B1C30
+ * EN v1.0 Size: 264b
  * EN v1.1 Address: 0x801B1BDC
  * EN v1.1 Size: 296b
  * JP Address: TODO
@@ -400,8 +400,8 @@ void FUN_801b1bdc(int param_1)
  * --INFO--
  *
  * Function: FUN_801b1d04
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801B1D38
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801B1D04
  * EN v1.1 Size: 216b
  * JP Address: TODO
@@ -417,8 +417,8 @@ void FUN_801b1d04(undefined2 *param_1)
  * --INFO--
  *
  * Function: FUN_801b1ddc
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801B1D3C
+ * EN v1.0 Size: 424b
  * EN v1.1 Address: 0x801B1DDC
  * EN v1.1 Size: 656b
  * JP Address: TODO

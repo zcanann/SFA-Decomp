@@ -130,8 +130,8 @@ void pressureSwitch_ensureSharedResource(void)
  * --INFO--
  *
  * Function: FUN_8014e670
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8014E244
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8014E670
  * EN v1.1 Size: 1384b
  * JP Address: TODO
@@ -147,8 +147,8 @@ void FUN_8014e670()
  * --INFO--
  *
  * Function: FUN_8014ebd8
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8014E248
+ * EN v1.0 Size: 96b
  * EN v1.1 Address: 0x8014EBD8
  * EN v1.1 Size: 96b
  * JP Address: TODO
@@ -176,8 +176,8 @@ void FUN_8014ebd8(int param_1)
  * --INFO--
  *
  * Function: FUN_8014ec38
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8014E2A8
+ * EN v1.0 Size: 204b
  * EN v1.1 Address: 0x8014EC38
  * EN v1.1 Size: 232b
  * JP Address: TODO
@@ -211,8 +211,8 @@ void FUN_8014ec38(int param_1)
  * --INFO--
  *
  * Function: FUN_8014ed20
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8014E374
+ * EN v1.0 Size: 52b
  * EN v1.1 Address: 0x8014ED20
  * EN v1.1 Size: 52b
  * JP Address: TODO
@@ -232,8 +232,8 @@ void FUN_8014ed20(uint param_1)
  * --INFO--
  *
  * Function: FUN_8014ed54
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8014E3A8
+ * EN v1.0 Size: 1264b
  * EN v1.1 Address: 0x8014ED54
  * EN v1.1 Size: 1168b
  * JP Address: TODO
@@ -374,8 +374,8 @@ void FUN_8014ed54(ushort *param_1)
  * --INFO--
  *
  * Function: FUN_8014f1e4
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8014E898
+ * EN v1.0 Size: 392b
  * EN v1.1 Address: 0x8014F1E4
  * EN v1.1 Size: 316b
  * JP Address: TODO
@@ -422,8 +422,8 @@ void FUN_8014f1e4(int param_1,int param_2,int param_3)
  * --INFO--
  *
  * Function: FUN_8014f320
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8014EA20
+ * EN v1.0 Size: 888b
  * EN v1.1 Address: 0x8014F320
  * EN v1.1 Size: 872b
  * JP Address: TODO
@@ -508,8 +508,8 @@ void FUN_8014f320(short *param_1,undefined4 *param_2)
  * --INFO--
  *
  * Function: FUN_8014f688
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8014ED98
+ * EN v1.0 Size: 72b
  * EN v1.1 Address: 0x8014F688
  * EN v1.1 Size: 88b
  * JP Address: TODO
@@ -536,8 +536,8 @@ void FUN_8014f688(int param_1)
  * --INFO--
  *
  * Function: FUN_8014f6e0
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8014EDE0
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8014F6E0
  * EN v1.1 Size: 680b
  * JP Address: TODO
@@ -553,8 +553,8 @@ void FUN_8014f6e0(short *param_1)
  * --INFO--
  *
  * Function: FUN_8014f988
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8014EDE4
+ * EN v1.0 Size: 380b
  * EN v1.1 Address: 0x8014F988
  * EN v1.1 Size: 300b
  * JP Address: TODO

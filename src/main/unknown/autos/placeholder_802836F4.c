@@ -7,8 +7,8 @@ extern uint FUN_8026fce8();
  * --INFO--
  *
  * Function: FUN_802836f4
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x802836E8
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802836F4
  * EN v1.1 Size: 72b
  * JP Address: TODO

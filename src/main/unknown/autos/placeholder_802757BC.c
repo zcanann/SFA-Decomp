@@ -16,8 +16,8 @@ extern undefined4 uRam803def40;
  * --INFO--
  *
  * Function: FUN_802757bc
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8027566C
+ * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802757BC
  * EN v1.1 Size: 96b
  * JP Address: TODO
@@ -34,8 +34,8 @@ undefined4 FUN_802757bc(undefined2 param_1)
  * --INFO--
  *
  * Function: FUN_8027581c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80275674
+ * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8027581C
  * EN v1.1 Size: 96b
  * JP Address: TODO

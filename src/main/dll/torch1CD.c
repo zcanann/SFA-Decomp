@@ -27,8 +27,8 @@ extern undefined4 DAT_803de860;
  * --INFO--
  *
  * Function: FUN_801cbbe8
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801CBA98
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801CBBE8
  * EN v1.1 Size: 392b
  * JP Address: TODO
@@ -44,8 +44,8 @@ void FUN_801cbbe8(undefined2 *param_1,int param_2)
  * --INFO--
  *
  * Function: FUN_801cbd70
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801CBA9C
+ * EN v1.0 Size: 40b
  * EN v1.1 Address: 0x801CBD70
  * EN v1.1 Size: 52b
  * JP Address: TODO
@@ -67,8 +67,8 @@ void FUN_801cbd70(int param_1)
  * --INFO--
  *
  * Function: FUN_801cbda4
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801CBAC4
+ * EN v1.0 Size: 756b
  * EN v1.1 Address: 0x801CBDA4
  * EN v1.1 Size: 680b
  * JP Address: TODO
@@ -156,8 +156,8 @@ void FUN_801cbda4(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * --INFO--
  *
  * Function: FUN_801cc04c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801CBDB8
+ * EN v1.0 Size: 1092b
  * EN v1.1 Address: 0x801CC04C
  * EN v1.1 Size: 652b
  * JP Address: TODO
@@ -258,8 +258,8 @@ void FUN_801cc04c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * --INFO--
  *
  * Function: FUN_801cc2d8
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801CC1FC
+ * EN v1.0 Size: 52b
  * EN v1.1 Address: 0x801CC2D8
  * EN v1.1 Size: 48b
  * JP Address: TODO
@@ -277,8 +277,8 @@ void FUN_801cc2d8(void)
  * --INFO--
  *
  * Function: FUN_801cc308
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801CC230
+ * EN v1.0 Size: 40b
  * EN v1.1 Address: 0x801CC308
  * EN v1.1 Size: 52b
  * JP Address: TODO

@@ -27,8 +27,8 @@ extern f32 FLOAT_803df58c;
  * --INFO--
  *
  * Function: FUN_8002f604
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8002F5D4
+ * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x8002F604
  * EN v1.1 Size: 32b
  * JP Address: TODO
@@ -47,8 +47,8 @@ undefined2 FUN_8002f604(int param_1)
  * --INFO--
  *
  * Function: FUN_8002f624
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8002F5F4
+ * EN v1.0 Size: 68b
  * EN v1.1 Address: 0x8002F624
  * EN v1.1 Size: 72b
  * JP Address: TODO
@@ -77,8 +77,8 @@ void FUN_8002f624(int param_1,int param_2,short param_3,undefined2 param_4)
  * --INFO--
  *
  * Function: FUN_8002f66c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8002F638
+ * EN v1.0 Size: 116b
  * EN v1.1 Address: 0x8002F66C
  * EN v1.1 Size: 96b
  * JP Address: TODO
@@ -102,8 +102,8 @@ void FUN_8002f66c(int param_1,uint param_2)
  * --INFO--
  *
  * Function: FUN_8002f6cc
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8002F6AC
+ * EN v1.0 Size: 1424b
  * EN v1.1 Address: 0x8002F6CC
  * EN v1.1 Size: 1140b
  * JP Address: TODO
@@ -286,8 +286,8 @@ undefined4 FUN_8002f6cc(double param_1,int param_2,float *param_3)
  * --INFO--
  *
  * Function: FUN_8002fb40
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8002FC3C
+ * EN v1.0 Size: 2440b
  * EN v1.1 Address: 0x8002FB40
  * EN v1.1 Size: 2236b
  * JP Address: TODO
@@ -608,8 +608,8 @@ undefined4 FUN_8002fb40(double param_1,double param_2)
  * --INFO--
  *
  * Function: FUN_800303fc
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x800305C4
+ * EN v1.0 Size: 52b
  * EN v1.1 Address: 0x800303FC
  * EN v1.1 Size: 48b
  * JP Address: TODO
@@ -633,8 +633,8 @@ undefined4 FUN_800303fc(double param_1,int param_2)
  * --INFO--
  *
  * Function: FUN_8003042c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x800305F8
+ * EN v1.0 Size: 1160b
  * EN v1.1 Address: 0x8003042C
  * EN v1.1 Size: 852b
  * JP Address: TODO

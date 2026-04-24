@@ -19,8 +19,8 @@ extern undefined4* DAT_803dd6d4;
  * --INFO--
  *
  * Function: FUN_8017c250
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017C178
+ * EN v1.0 Size: 184b
  * EN v1.1 Address: 0x8017C250
  * EN v1.1 Size: 188b
  * JP Address: TODO
@@ -50,8 +50,8 @@ undefined4 FUN_8017c250(int param_1,undefined4 param_2,int param_3)
  * --INFO--
  *
  * Function: FUN_8017c30c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017C230
+ * EN v1.0 Size: 36b
  * EN v1.1 Address: 0x8017C30C
  * EN v1.1 Size: 36b
  * JP Address: TODO
@@ -69,8 +69,8 @@ void FUN_8017c30c(int param_1)
  * --INFO--
  *
  * Function: FUN_8017c330
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017C254
+ * EN v1.0 Size: 72b
  * EN v1.1 Address: 0x8017C330
  * EN v1.1 Size: 80b
  * JP Address: TODO
@@ -97,8 +97,8 @@ void FUN_8017c330(int param_1)
  * --INFO--
  *
  * Function: FUN_8017c380
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017C29C
+ * EN v1.0 Size: 804b
  * EN v1.1 Address: 0x8017C380
  * EN v1.1 Size: 848b
  * JP Address: TODO
@@ -203,8 +203,8 @@ void FUN_8017c380(int param_1)
  * --INFO--
  *
  * Function: FUN_8017c6d0
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017C5C0
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8017C6D0
  * EN v1.1 Size: 284b
  * JP Address: TODO
@@ -220,8 +220,8 @@ void FUN_8017c6d0(short *param_1,int param_2)
  * --INFO--
  *
  * Function: FUN_8017c7ec
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017C5C4
+ * EN v1.0 Size: 68b
  * EN v1.1 Address: 0x8017C7EC
  * EN v1.1 Size: 64b
  * JP Address: TODO
@@ -241,8 +241,8 @@ void FUN_8017c7ec(int param_1)
  * --INFO--
  *
  * Function: FUN_8017c82c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017C608
+ * EN v1.0 Size: 456b
  * EN v1.1 Address: 0x8017C82C
  * EN v1.1 Size: 308b
  * JP Address: TODO
@@ -298,8 +298,8 @@ FUN_8017c82c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * --INFO--
  *
  * Function: seqObject_free
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017C7D0
+ * EN v1.0 Size: 36b
  * EN v1.1 Address: 0x8017C960
  * EN v1.1 Size: 36b
  * JP Address: TODO
@@ -317,8 +317,8 @@ void seqObject_free(int param_1)
  * --INFO--
  *
  * Function: seqObject_render
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017C7F4
+ * EN v1.0 Size: 40b
  * EN v1.1 Address: 0x8017C984
  * EN v1.1 Size: 48b
  * JP Address: TODO
@@ -340,8 +340,8 @@ void seqObject_render(int param_1)
  * --INFO--
  *
  * Function: seqObject_update
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017C81C
+ * EN v1.0 Size: 548b
  * EN v1.1 Address: 0x8017C9B4
  * EN v1.1 Size: 592b
  * JP Address: TODO
@@ -412,8 +412,8 @@ void seqObject_update(int param_1)
  * --INFO--
  *
  * Function: seqObject_init
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017CA40
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8017CC04
  * EN v1.1 Size: 248b
  * JP Address: TODO
@@ -429,8 +429,8 @@ void seqObject_init(short *param_1,int param_2)
  * --INFO--
  *
  * Function: FUN_8017ccfc
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017CA44
+ * EN v1.0 Size: 176b
  * EN v1.1 Address: 0x8017CCFC
  * EN v1.1 Size: 232b
  * JP Address: TODO
@@ -466,8 +466,8 @@ undefined4 FUN_8017ccfc(int param_1,undefined4 param_2,int param_3)
  * --INFO--
  *
  * Function: seqObj2_free
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017CAF4
+ * EN v1.0 Size: 36b
  * EN v1.1 Address: 0x8017CDE4
  * EN v1.1 Size: 44b
  * JP Address: TODO
@@ -485,8 +485,8 @@ void seqObj2_free(int param_1)
  * --INFO--
  *
  * Function: seqObj2_update
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017CB18
+ * EN v1.0 Size: 460b
  * EN v1.1 Address: 0x8017CE10
  * EN v1.1 Size: 596b
  * JP Address: TODO
@@ -554,8 +554,8 @@ void seqObj2_update(int param_1)
  * --INFO--
  *
  * Function: seqObj2_init
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017CCE4
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8017D064
  * EN v1.1 Size: 200b
  * JP Address: TODO

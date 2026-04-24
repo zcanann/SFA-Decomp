@@ -21,8 +21,8 @@ extern undefined4 DAT_803def54;
  * --INFO--
  *
  * Function: FUN_802792f8
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80279038
+ * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802792F8
  * EN v1.1 Size: 784b
  * JP Address: TODO

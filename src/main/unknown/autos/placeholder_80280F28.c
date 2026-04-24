@@ -23,8 +23,8 @@ extern undefined4 DAT_803defed;
  * --INFO--
  *
  * Function: FUN_80280f28
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80280C30
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80280F28
  * EN v1.1 Size: 276b
  * JP Address: TODO
@@ -40,8 +40,8 @@ void FUN_80280f28(double param_1,int param_2)
  * --INFO--
  *
  * Function: FUN_8028103c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80280C34
+ * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8028103C
  * EN v1.1 Size: 304b
  * JP Address: TODO

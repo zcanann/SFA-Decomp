@@ -12,8 +12,8 @@ extern undefined4 DAT_803dcc60;
  * --INFO--
  *
  * Function: SHthorntail_free
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801D5F58
+ * EN v1.0 Size: 64b
  * EN v1.1 Address: 0x801D6484
  * EN v1.1 Size: 64b
  * JP Address: TODO
@@ -34,8 +34,8 @@ void SHthorntail_free(int param_1)
  * --INFO--
  *
  * Function: SHthorntail_render
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801D5F98
+ * EN v1.0 Size: 128b
  * EN v1.1 Address: 0x801D64C4
  * EN v1.1 Size: 132b
  * JP Address: TODO

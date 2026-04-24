@@ -33,8 +33,8 @@ extern f32 FLOAT_803e6784;
  * --INFO--
  *
  * Function: FUN_801e9f54
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801E9C00
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801E9F54
  * EN v1.1 Size: 740b
  * JP Address: TODO

@@ -20,8 +20,8 @@ extern f32 FLOAT_803e23dc;
  * --INFO--
  *
  * Function: camclimb_update
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801070FC
+ * EN v1.0 Size: 956b
  * EN v1.1 Address: 0x80107398
  * EN v1.1 Size: 896b
  * JP Address: TODO

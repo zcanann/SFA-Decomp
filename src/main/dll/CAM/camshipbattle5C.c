@@ -19,8 +19,8 @@ extern char sPathcamErrorNeedAtLeastTwoControlPoints[];
  * --INFO--
  *
  * Function: pathcam_buildWindowSamples
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8010A590
+ * EN v1.0 Size: 1236b
  * EN v1.1 Address: 0x8010A82C
  * EN v1.1 Size: 1220b
  * JP Address: TODO
@@ -227,8 +227,8 @@ void pathcam_buildWindowSamples(undefined4 param_1,undefined4 param_2,float *par
  * --INFO--
  *
  * Function: pathcam_findTaggedNodeWindow
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8010AA64
+ * EN v1.0 Size: 716b
  * EN v1.1 Address: 0x8010ACF0
  * EN v1.1 Size: 500b
  * JP Address: TODO

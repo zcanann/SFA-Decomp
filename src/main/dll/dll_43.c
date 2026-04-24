@@ -22,8 +22,8 @@ extern char s__3d__02d__02d_8031b4a4[];
  * --INFO--
  *
  * Function: FUN_8011a07c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80119FAC
+ * EN v1.0 Size: 868b
  * EN v1.1 Address: 0x8011A07C
  * EN v1.1 Size: 472b
  * JP Address: TODO

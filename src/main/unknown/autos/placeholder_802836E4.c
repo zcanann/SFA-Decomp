@@ -5,8 +5,8 @@
  * --INFO--
  *
  * Function: FUN_802836e4
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x802836AC
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802836E4
  * EN v1.1 Size: 16b
  * JP Address: TODO

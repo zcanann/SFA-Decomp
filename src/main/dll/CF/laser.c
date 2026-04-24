@@ -29,8 +29,8 @@ extern char sLaserInitNoLongerSupported[];
  * --INFO--
  *
  * Function: laser_init
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8020930C
+ * EN v1.0 Size: 44b
  * EN v1.1 Address: 0x802096AC
  * EN v1.1 Size: 80b
  * JP Address: TODO
@@ -48,8 +48,8 @@ void laser_init(void)
  * --INFO--
  *
  * Function: FUN_802096fc
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80209338
+ * EN v1.0 Size: 416b
  * EN v1.1 Address: 0x802096FC
  * EN v1.1 Size: 424b
  * JP Address: TODO
@@ -104,8 +104,8 @@ void FUN_802096fc(int param_1)
  * --INFO--
  *
  * Function: laser_initialise
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x802094D8
+ * EN v1.0 Size: 140b
  * EN v1.1 Address: 0x802098A4
  * EN v1.1 Size: 160b
  * JP Address: TODO
@@ -136,8 +136,8 @@ void laser_initialise(undefined2 *param_1,int param_2)
  * --INFO--
  *
  * Function: laser_update
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80209564
+ * EN v1.0 Size: 1928b
  * EN v1.1 Address: 0x80209944
  * EN v1.1 Size: 1032b
  * JP Address: TODO
@@ -257,8 +257,8 @@ laser_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * --INFO--
  *
  * Function: laser_render
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80209CEC
+ * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x80209D4C
  * EN v1.1 Size: 40b
  * JP Address: TODO
@@ -276,8 +276,8 @@ void laser_render(int param_1)
  * --INFO--
  *
  * Function: laser_release
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80209D0C
+ * EN v1.0 Size: 64b
  * EN v1.1 Address: 0x80209D74
  * EN v1.1 Size: 60b
  * JP Address: TODO
@@ -295,8 +295,8 @@ void laser_release(undefined4 param_1)
  * --INFO--
  *
  * Function: laser_hitDetect
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80209D4C
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80209DB0
  * EN v1.1 Size: 168b
  * JP Address: TODO
@@ -314,8 +314,8 @@ void laser_hitDetect(undefined8 param_1,double param_2,double param_3,undefined8
  * --INFO--
  *
  * Function: FUN_80209e58
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80209D50
+ * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x80209E58
  * EN v1.1 Size: 52b
  * JP Address: TODO
@@ -333,8 +333,8 @@ void FUN_80209e58(void)
  * --INFO--
  *
  * Function: FUN_80209e8c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80209D70
+ * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x80209E8C
  * EN v1.1 Size: 44b
  * JP Address: TODO
@@ -352,8 +352,8 @@ void FUN_80209e8c(void)
  * --INFO--
  *
  * Function: FUN_80209eb8
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80209D90
+ * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x80209EB8
  * EN v1.1 Size: 72b
  * JP Address: TODO
@@ -371,8 +371,8 @@ void FUN_80209eb8(void)
  * --INFO--
  *
  * Function: FUN_80209f00
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80209DB0
+ * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x80209F00
  * EN v1.1 Size: 48b
  * JP Address: TODO
@@ -390,8 +390,8 @@ void FUN_80209f00(void)
  * --INFO--
  *
  * Function: FUN_80209f30
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80209DD0
+ * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x80209F30
  * EN v1.1 Size: 44b
  * JP Address: TODO
@@ -409,8 +409,8 @@ void FUN_80209f30(void)
  * --INFO--
  *
  * Function: FUN_80209f5c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80209DF0
+ * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x80209F5C
  * EN v1.1 Size: 60b
  * JP Address: TODO
@@ -428,8 +428,8 @@ void FUN_80209f5c(void)
  * --INFO--
  *
  * Function: laser_free
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80209E10
+ * EN v1.0 Size: 72b
  * EN v1.1 Address: 0x80209F98
  * EN v1.1 Size: 72b
  * JP Address: TODO

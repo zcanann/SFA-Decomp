@@ -37,8 +37,8 @@ typedef struct ObjHitReactEntry {
  * --INFO--
  *
  * Function: objHitReact_update
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x800353A4
+ * EN v1.0 Size: 712b
  * EN v1.1 Address: 0x8003549C
  * EN v1.1 Size: 652b
  * JP Address: TODO

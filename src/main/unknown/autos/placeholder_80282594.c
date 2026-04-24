@@ -7,8 +7,8 @@ extern undefined4 FUN_80283418();
  * --INFO--
  *
  * Function: FUN_80282594
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80282588
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80282594
  * EN v1.1 Size: 156b
  * JP Address: TODO

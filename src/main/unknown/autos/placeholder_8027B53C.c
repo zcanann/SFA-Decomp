@@ -29,8 +29,8 @@ extern undefined4 DAT_803deee8;
  * --INFO--
  *
  * Function: FUN_8027b53c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8027B42C
+ * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8027B53C
  * EN v1.1 Size: 488b
  * JP Address: TODO
@@ -47,8 +47,8 @@ uint FUN_8027b53c(byte param_1)
  * --INFO--
  *
  * Function: FUN_8027b724
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8027B434
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8027B724
  * EN v1.1 Size: 172b
  * JP Address: TODO
@@ -64,8 +64,8 @@ void FUN_8027b724(uint param_1)
  * --INFO--
  *
  * Function: FUN_8027b7d0
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8027B438
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8027B7D0
  * EN v1.1 Size: 496b
  * JP Address: TODO
@@ -81,8 +81,8 @@ void FUN_8027b7d0(int param_1,uint param_2)
  * --INFO--
  *
  * Function: FUN_8027b9c0
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8027B43C
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8027B9C0
  * EN v1.1 Size: 452b
  * JP Address: TODO

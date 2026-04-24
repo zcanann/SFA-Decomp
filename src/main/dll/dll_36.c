@@ -36,8 +36,8 @@ extern undefined4* PTR_DAT_8031b418;
  * --INFO--
  *
  * Function: FUN_8011b698
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8011B5D4
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8011B698
  * EN v1.1 Size: 544b
  * JP Address: TODO

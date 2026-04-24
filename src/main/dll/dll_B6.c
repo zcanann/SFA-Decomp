@@ -21,8 +21,8 @@ extern f32 FLOAT_803e22c8;
  * --INFO--
  *
  * Function: camcontrol_findBestTarget
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801010B4
+ * EN v1.0 Size: 1344b
  * EN v1.1 Address: 0x80101350
  * EN v1.1 Size: 1268b
  * JP Address: TODO

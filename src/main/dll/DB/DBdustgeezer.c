@@ -11,8 +11,8 @@ extern int FUN_8002e1ac();
  * --INFO--
  *
  * Function: FUN_801e167c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801E1588
+ * EN v1.0 Size: 1624b
  * EN v1.1 Address: 0x801E167C
  * EN v1.1 Size: 592b
  * JP Address: TODO

@@ -59,8 +59,8 @@ extern f32 FLOAT_803e5908;
  * --INFO--
  *
  * Function: DIMboss_updateState
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801BCB34
+ * EN v1.0 Size: 3404b
  * EN v1.1 Address: 0x801BD0E8
  * EN v1.1 Size: 1836b
  * JP Address: TODO
@@ -315,8 +315,8 @@ LAB_801bd7dc:
  * --INFO--
  *
  * Function: DIMboss_hitDetect
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801BD880
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801BD814
  * EN v1.1 Size: 260b
  * JP Address: TODO
@@ -334,8 +334,8 @@ void DIMboss_hitDetect(undefined8 param_1,undefined8 param_2,undefined8 param_3,
  * --INFO--
  *
  * Function: DIMboss_render
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801BD884
+ * EN v1.0 Size: 156b
  * EN v1.1 Address: 0x801BD918
  * EN v1.1 Size: 176b
  * JP Address: TODO
@@ -365,8 +365,8 @@ void DIMboss_render(short *param_1)
  * --INFO--
  *
  * Function: DIMboss_free
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801BD920
+ * EN v1.0 Size: 60b
  * EN v1.1 Address: 0x801BD9C8
  * EN v1.1 Size: 60b
  * JP Address: TODO

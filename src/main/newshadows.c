@@ -222,8 +222,8 @@ extern f32 FLOAT_803dfa9c;
  * --INFO--
  *
  * Function: FUN_8006a1a4
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006A028
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8006A1A4
  * EN v1.1 Size: 5424b
  * JP Address: TODO
@@ -894,8 +894,8 @@ void newshadows_getShadowTextureTable16(int *tableOut,int *countOut)
  * --INFO--
  *
  * Function: FUN_8006c674
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006AF44
+ * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C674
  * EN v1.1 Size: 12b
  * JP Address: TODO
@@ -913,8 +913,8 @@ void FUN_8006c674(undefined4 *param_1)
  * --INFO--
  *
  * Function: FUN_8006c680
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006AF50
+ * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C680
  * EN v1.1 Size: 12b
  * JP Address: TODO
@@ -951,8 +951,8 @@ void newshadows_getShadowTexture(int *textureOut)
  * --INFO--
  *
  * Function: FUN_8006c698
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006AF68
+ * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C698
  * EN v1.1 Size: 12b
  * JP Address: TODO
@@ -1027,8 +1027,8 @@ void newshadows_getSoftShadowTexture(int *textureOut)
  * --INFO--
  *
  * Function: FUN_8006c6c8
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006AF98
+ * EN v1.0 Size: 108b
  * EN v1.1 Address: 0x8006C6C8
  * EN v1.1 Size: 108b
  * JP Address: TODO
@@ -1106,8 +1106,8 @@ void newshadows_getShadowDiskTexture(int *textureOut)
  * --INFO--
  *
  * Function: FUN_8006c754
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B024
+ * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C754
  * EN v1.1 Size: 12b
  * JP Address: TODO
@@ -1144,8 +1144,8 @@ void newshadows_getShadowNoiseTexture(int *textureOut)
  * --INFO--
  *
  * Function: FUN_8006c76c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B03C
+ * EN v1.0 Size: 120b
  * EN v1.1 Address: 0x8006C76C
  * EN v1.1 Size: 128b
  * JP Address: TODO
@@ -1184,8 +1184,8 @@ double newshadows_getShadowNoiseScale(void)
  * --INFO--
  *
  * Function: FUN_8006c7f4
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B0BC
+ * EN v1.0 Size: 44b
  * EN v1.1 Address: 0x8006C7F4
  * EN v1.1 Size: 44b
  * JP Address: TODO
@@ -1203,8 +1203,8 @@ void FUN_8006c7f4(int param_1)
  * --INFO--
  *
  * Function: FUN_8006c820
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B0E8
+ * EN v1.0 Size: 76b
  * EN v1.1 Address: 0x8006C820
  * EN v1.1 Size: 76b
  * JP Address: TODO
@@ -1269,8 +1269,8 @@ int newshadows_getShadowRenderTexture(void)
  * --INFO--
  *
  * Function: FUN_8006c8c0
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B188
+ * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8006C8C0
  * EN v1.1 Size: 8b
  * JP Address: TODO
@@ -1501,8 +1501,8 @@ void newshadows_getShadowNoiseScroll(float *xOffsetOut,float *yOffsetOut)
  * --INFO--
  *
  * Function: FUN_8006cc4c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B4F8
+ * EN v1.0 Size: 72b
  * EN v1.1 Address: 0x8006CC4C
  * EN v1.1 Size: 84b
  * JP Address: TODO
@@ -1629,8 +1629,8 @@ void newshadows_buildShadowDirectionTexture(void)
  * --INFO--
  *
  * Function: FUN_8006ce9c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B824
+ * EN v1.0 Size: 1216b
  * EN v1.1 Address: 0x8006CE9C
  * EN v1.1 Size: 768b
  * JP Address: TODO
@@ -1749,8 +1749,8 @@ void FUN_8006ce9c(double param_1,double param_2,double param_3,float *param_4,in
  * --INFO--
  *
  * Function: FUN_8006d19c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006BCE4
+ * EN v1.0 Size: 1524b
  * EN v1.1 Address: 0x8006D19C
  * EN v1.1 Size: 1480b
  * JP Address: TODO
@@ -1986,8 +1986,8 @@ void FUN_8006d19c(void)
  * --INFO--
  *
  * Function: FUN_8006d764
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006C2D8
+ * EN v1.0 Size: 6448b
  * EN v1.1 Address: 0x8006D764
  * EN v1.1 Size: 5948b
  * JP Address: TODO
@@ -2612,8 +2612,8 @@ void FUN_8006d764(void)
  * --INFO--
  *
  * Function: FUN_8006eea0
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006DC08
+ * EN v1.0 Size: 160b
  * EN v1.1 Address: 0x8006EEA0
  * EN v1.1 Size: 168b
  * JP Address: TODO
@@ -2670,8 +2670,8 @@ undefined2 FUN_8006eea0(uint param_1,undefined param_2)
  * --INFO--
  *
  * Function: FUN_8006ef48
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006DCA8
+ * EN v1.0 Size: 148b
  * EN v1.1 Address: 0x8006EF48
  * EN v1.1 Size: 364b
  * JP Address: TODO

@@ -76,8 +76,8 @@ extern f32 FLOAT_803e5920;
  * --INFO--
  *
  * Function: DIMboss_init
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801BDCF8
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801BDD60
  * EN v1.1 Size: 808b
  * JP Address: TODO
@@ -93,8 +93,8 @@ void DIMboss_init(int param_1,undefined4 param_2,int param_3)
  * --INFO--
  *
  * Function: DIMboss_initialise
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801BDCFC
+ * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x801BE088
  * EN v1.1 Size: 32b
  * JP Address: TODO
@@ -112,8 +112,8 @@ void DIMboss_initialise(void)
  * --INFO--
  *
  * Function: FUN_801be0a8
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801BDD1C
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801BE0A8
  * EN v1.1 Size: 280b
  * JP Address: TODO
@@ -129,8 +129,8 @@ void FUN_801be0a8(void)
  * --INFO--
  *
  * Function: DIMbossgut_render
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801BDD20
+ * EN v1.0 Size: 76b
  * EN v1.1 Address: 0x801BE1C0
  * EN v1.1 Size: 128b
  * JP Address: TODO
@@ -156,8 +156,8 @@ void DIMbossgut_render(void)
  * --INFO--
  *
  * Function: DIMbossgut_init
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x801BDD6C
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801BE240
  * EN v1.1 Size: 100b
  * JP Address: TODO

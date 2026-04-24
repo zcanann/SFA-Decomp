@@ -26,8 +26,8 @@ extern f32 FLOAT_803e22b0;
  * --INFO--
  *
  * Function: camcontrol_applyQueuedAction
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8010210C
+ * EN v1.0 Size: 400b
  * EN v1.1 Address: 0x80102158
  * EN v1.1 Size: 400b
  * JP Address: TODO

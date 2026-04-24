@@ -9,8 +9,8 @@ extern undefined4 FUN_80292568();
  * --INFO--
  *
  * Function: FUN_80293a9c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8029397C
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80293A9C
  * EN v1.1 Size: 296b
  * JP Address: TODO

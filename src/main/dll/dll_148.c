@@ -43,8 +43,8 @@ extern f32 FLOAT_803e4420;
  * --INFO--
  *
  * Function: FUN_8017b2f8
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017ADB4
+ * EN v1.0 Size: 1540b
  * EN v1.1 Address: 0x8017B2F8
  * EN v1.1 Size: 1604b
  * JP Address: TODO
@@ -284,8 +284,8 @@ void FUN_8017b2f8(void)
  * --INFO--
  *
  * Function: FUN_8017b93c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017B3B8
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8017B93C
  * EN v1.1 Size: 484b
  * JP Address: TODO
@@ -301,8 +301,8 @@ void FUN_8017b93c(short *param_1,int param_2)
  * --INFO--
  *
  * Function: FUN_8017bb20
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017B3BC
+ * EN v1.0 Size: 768b
  * EN v1.1 Address: 0x8017BB20
  * EN v1.1 Size: 796b
  * JP Address: TODO
@@ -411,8 +411,8 @@ void FUN_8017bb20(undefined4 param_1,undefined4 param_2,int param_3)
  * --INFO--
  *
  * Function: FUN_8017be3c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017B6BC
+ * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x8017BE3C
  * EN v1.1 Size: 36b
  * JP Address: TODO
@@ -430,8 +430,8 @@ void FUN_8017be3c(int param_1)
  * --INFO--
  *
  * Function: FUN_8017be60
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017B6DC
+ * EN v1.0 Size: 204b
  * EN v1.1 Address: 0x8017BE60
  * EN v1.1 Size: 196b
  * JP Address: TODO
@@ -467,8 +467,8 @@ void FUN_8017be60(int param_1)
  * --INFO--
  *
  * Function: FUN_8017bf24
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017B7A8
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8017BF24
  * EN v1.1 Size: 464b
  * JP Address: TODO
@@ -484,8 +484,8 @@ void FUN_8017bf24(short *param_1,int param_2)
  * --INFO--
  *
  * Function: FUN_8017c0f4
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017B7AC
+ * EN v1.0 Size: 172b
  * EN v1.1 Address: 0x8017C0F4
  * EN v1.1 Size: 192b
  * JP Address: TODO
@@ -517,8 +517,8 @@ void FUN_8017c0f4(int param_1)
  * --INFO--
  *
  * Function: FUN_8017c1b4
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8017B858
+ * EN v1.0 Size: 136b
  * EN v1.1 Address: 0x8017C1B4
  * EN v1.1 Size: 156b
  * JP Address: TODO

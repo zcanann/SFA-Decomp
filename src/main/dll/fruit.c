@@ -18,8 +18,8 @@ extern f32 FLOAT_803e7124;
  * --INFO--
  *
  * Function: FUN_802086d0
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x802086C4
+ * EN v1.0 Size: 340b
  * EN v1.1 Address: 0x802086D0
  * EN v1.1 Size: 348b
  * JP Address: TODO
@@ -78,8 +78,8 @@ undefined4 FUN_802086d0(int param_1,undefined4 param_2,int param_3)
  * --INFO--
  *
  * Function: FUN_8020882c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80208818
+ * EN v1.0 Size: 432b
  * EN v1.1 Address: 0x8020882C
  * EN v1.1 Size: 464b
  * JP Address: TODO
@@ -138,8 +138,8 @@ void FUN_8020882c(uint param_1)
  * --INFO--
  *
  * Function: FUN_802089fc
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x802089C8
+ * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x802089FC
  * EN v1.1 Size: 32b
  * JP Address: TODO
@@ -157,8 +157,8 @@ void FUN_802089fc(uint param_1)
  * --INFO--
  *
  * Function: FUN_80208a1c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x802089E8
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80208A1C
  * EN v1.1 Size: 196b
  * JP Address: TODO
@@ -174,8 +174,8 @@ void FUN_80208a1c(undefined2 *param_1,int param_2)
  * --INFO--
  *
  * Function: FUN_80208ae0
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x802089EC
+ * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x80208AE0
  * EN v1.1 Size: 44b
  * JP Address: TODO
@@ -193,8 +193,8 @@ void FUN_80208ae0(void)
  * --INFO--
  *
  * Function: FUN_80208b0c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80208A0C
+ * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x80208B0C
  * EN v1.1 Size: 52b
  * JP Address: TODO
@@ -212,8 +212,8 @@ void FUN_80208b0c(void)
  * --INFO--
  *
  * Function: FUN_80208b40
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80208A2C
+ * EN v1.0 Size: 508b
  * EN v1.1 Address: 0x80208B40
  * EN v1.1 Size: 364b
  * JP Address: TODO
@@ -268,8 +268,8 @@ void FUN_80208b40(int *param_1,int param_2)
  * --INFO--
  *
  * Function: FUN_80208cac
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80208C28
+ * EN v1.0 Size: 72b
  * EN v1.1 Address: 0x80208CAC
  * EN v1.1 Size: 80b
  * JP Address: TODO

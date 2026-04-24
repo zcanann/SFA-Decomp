@@ -11,8 +11,8 @@ extern f32 FLOAT_803e22d8;
  * --INFO--
  *
  * Function: camcontrol_updateMoveAverage
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80101690
+ * EN v1.0 Size: 236b
  * EN v1.1 Address: 0x80101844
  * EN v1.1 Size: 232b
  * JP Address: TODO
