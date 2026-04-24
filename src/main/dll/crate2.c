@@ -20,7 +20,7 @@ extern undefined4* DAT_803dd72c;
 /*
  * --INFO--
  *
- * Function: FUN_802081f4
+ * Function: crate2_updateState
  * EN v1.0 Address: 0x802081F4
  * EN v1.0 Size: 1128b
  * EN v1.1 Address: 0x8020831C
@@ -30,8 +30,8 @@ extern undefined4* DAT_803dd72c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802081f4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void crate2_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+                        undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   short *psVar1;
   uint uVar2;
