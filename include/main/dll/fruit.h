@@ -9,7 +9,7 @@ void FUN_802089c8(uint param_1);
 void FUN_802089e8(undefined2 *param_1,int param_2);
 void FUN_802089ec(void);
 void FUN_80208a0c(void);
-void FUN_80208a2c(int *param_1,int param_2);
+void zBomb_resolveCollision(int *param_1,int param_2);
 void FUN_80208c28(int param_1);
 
 #endif /* MAIN_DLL_FRUIT_H_ */

@@ -211,7 +211,7 @@ void FUN_80208a0c(void)
 /*
  * --INFO--
  *
- * Function: FUN_80208a2c
+ * Function: zBomb_resolveCollision
  * EN v1.0 Address: 0x80208A2C
  * EN v1.0 Size: 508b
  * EN v1.1 Address: 0x80208B40
@@ -221,7 +221,7 @@ void FUN_80208a0c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80208a2c(int *param_1,int param_2)
+void zBomb_resolveCollision(int *param_1,int param_2)
 {
   float fVar1;
   int iVar2;

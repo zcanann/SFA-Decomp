@@ -7,7 +7,7 @@ extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
 extern int FUN_800369d0();
 extern undefined4 FUN_800810f8();
-extern undefined4 FUN_80208a2c();
+extern void zBomb_resolveCollision(int *param_1,int param_2);
 extern double FUN_80293900();
 
 extern undefined4* DAT_803dd708;
@@ -126,7 +126,7 @@ void zBomb_update(int *param_1)
         param_1[0xb] = (int)FLOAT_803e7124;
       }
     }
-    FUN_80208a2c(param_1,iVar6);
+    zBomb_resolveCollision(param_1,iVar6);
     dVar8 = (double)(*(float *)(iVar5 + 8) - (float)param_1[3]);
     dVar7 = (double)(*(float *)(iVar5 + 0x10) - (float)param_1[5]);
     cVar4 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(param_1 + 0x2b));
