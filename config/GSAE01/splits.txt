@@ -1420,29 +1420,29 @@ dolphin/os/OS.c:
 	.sbss       start:0x803DDDD8 end:0x803DDE08
 
 dolphin/os/OSAlarm.c:
-	.text       start:0x80240D34 end:0x80241AB0
+	.text       start:0x80240D34 end:0x802413E0
 	.sbss       start:0x803DDE08 end:0x803DDE10
 
 dolphin/os/OSAlloc.c:
-	.text       start:0x80241AB0 end:0x80241D74
+	.text       start:0x802413E0 end:0x802416F0
 	.sdata      start:0x803DC538 end:0x803DC53C
 	.sbss       start:0x803DDE10 end:0x803DDE20
 	.sdata2     start:0x803DEA90 end:0x803DEAA0
 
 dolphin/os/OSArena.c:
-	.text       start:0x80241D74 end:0x80241D74
+	.text       start:0x802416F0 end:0x80241710
 	.sdata      start:0x803DC540 end:0x803DC544
 	.sbss       start:0x803DDE20 end:0x803DDE24
 
 dolphin/os/OSAudioSystem.c:
-	.text       start:0x80241D74 end:0x80242060
+	.text       start:0x80241710 end:0x802419A4
 	.data       start:0x8032CE48 end:0x8032CE48
 
 dolphin/os/OSCache.c:
-	.text       start:0x80242060 end:0x802422AC
+	.text       start:0x802419A4 end:0x80242060
 
 dolphin/os/OSContext.c:
-	.text       start:0x802422AC end:0x80242F78
+	.text       start:0x80242060 end:0x80242F78
 
 dolphin/os/OSError.c:
 	.text       start:0x80242F78 end:0x80243004
@@ -1583,12 +1583,12 @@ dolphin/si/SIBios.c:
 	.sbss       start:0x803DE080 end:0x803DE088
 
 dolphin/si/SISamplingRate.c:
-	.text       start:0x80253080 end:0x802538E4
+	.text       start:0x80253080 end:0x8025327C
 	.data       start:0x8032EDD0 end:0x8032EDD0
 	.sbss       start:0x803DE090 end:0x803DE094
 
 dolphin/exi/EXIBios.c:
-	.text       start:0x802538E4 end:0x80254D6C
+	.text       start:0x8025327C end:0x80254D6C
 
 dolphin/exi/EXIUart.c:
 	.text       start:0x80254D6C end:0x80254D6C
