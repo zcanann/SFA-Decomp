@@ -20,19 +20,22 @@ dolphin/TRK_MINNOW_DOLPHIN/MWTrace.c:
 	.text       start:0x800173E4 end:0x80017434
 
 main/unknown/autos/placeholder_8001746C.c:
-	.text       start:0x80017434 end:0x8002E07C
+	.text       start:0x80017434 end:0x8002EB54
 
 main/objanim.c:
-	.text       start:0x8002E07C end:0x80030688
+	.text       start:0x8002EB54 end:0x8002F5D4
+
+main/unknown/autos/placeholder_8002F604.c:
+	.text       start:0x8002F5D4 end:0x80030688
 
 main/objhits.c:
 	.text       start:0x80030688 end:0x800353A4
 
 main/objHitReact.c:
-	.text       start:0x800353A4 end:0x80035630
+	.text       start:0x800353A4 end:0x800356F0
 
 main/objlib.c:
-	.text       start:0x80035630 end:0x80038F38
+	.text       start:0x800356F0 end:0x80038F38
 
 main/objprint.c:
 	.text       start:0x80038F38 end:0x8003D6F8
@@ -1406,731 +1409,986 @@ main/unknown/autos/placeholder_80209FE0.c:
 	.text       start:0x80209FE0 end:0x8024091C
 
 dolphin/base/PPCArch.c:
-	.text       start:0x80240A44 end:0x80240AD0
+	.text       start:0x8024091C end:0x8024091C
 
 dolphin/os/OS.c:
-	.text       start:0x80240AD0 end:0x8024142C
+	.text       start:0x8024091C end:0x802413E0
 	.bss        start:0x803ADF80 end:0x803ADFD0
 	.sbss       start:0x803DDDD8 end:0x803DDE08
 
 dolphin/os/OSAlarm.c:
-	.text       start:0x8024142C end:0x80241AD8
+	.text       start:0x802413E0 end:0x80241AB0
 	.sbss       start:0x803DDE08 end:0x803DDE10
 
 dolphin/os/OSAlloc.c:
-	.text       start:0x80241AD8 end:0x80241DE8
+	.text       start:0x80241AB0 end:0x80241D74
 	.sdata      start:0x803DC538 end:0x803DC53C
 	.sbss       start:0x803DDE10 end:0x803DDE20
 
 dolphin/os/OSArena.c:
-	.text       start:0x80241DE8 end:0x80241E08
+	.text       start:0x80241D74 end:0x80241D74
 	.sdata      start:0x803DC540 end:0x803DC544
 	.sbss       start:0x803DDE20 end:0x803DDE24
 
 dolphin/os/OSAudioSystem.c:
-	.text       start:0x80241E08 end:0x8024209C
-	.data       start:0x8032D178 end:0x8032D1F8
+	.text       start:0x80241D74 end:0x80242060
+	.data       start:0x8032CE48 end:0x8032CE48
 
 dolphin/os/OSCache.c:
-	.text       start:0x8024209C end:0x80242758
+	.text       start:0x80242060 end:0x80242554
 
 dolphin/os/OSContext.c:
-	.text       start:0x80242758 end:0x80242F78
+	.text       start:0x80242554 end:0x80242F78
 
 dolphin/os/OSError.c:
-	.text       start:0x80242F78 end:0x80243308
+	.text       start:0x80242F78 end:0x80243004
 
 dolphin/os/OSFont.c:
-	.text       start:0x80243308 end:0x80243E74
+	.text       start:0x80243004 end:0x80243C54
 
 dolphin/os/OSInterrupt.c:
-	.text       start:0x80243E74 end:0x802446E0
-	.data       start:0x8032E430 end:0x8032E460
+	.text       start:0x80243C54 end:0x802445A0
+	.data       start:0x8032E410 end:0x8032E410
 	.sbss       start:0x803DDE38 end:0x803DDE50
 
 dolphin/os/OSLink.c:
-	.text       start:0x802446E0 end:0x802446F8
+	.text       start:0x802445A0 end:0x802445A0
 
 dolphin/os/OSMessage.c:
-	.text       start:0x802446F8 end:0x802448FC
+	.text       start:0x802445A0 end:0x802448A8
 
 dolphin/os/OSMemory.c:
-	.text       start:0x802448FC end:0x80244BDC
+	.text       start:0x802448A8 end:0x80244B50
 
 dolphin/os/OSMutex.c:
-	.text       start:0x80244BDC end:0x80244C4C
+	.text       start:0x80244B50 end:0x80244C44
 
 dolphin/os/OSReboot.c:
-	.text       start:0x80244C4C end:0x80244E64
+	.text       start:0x80244C44 end:0x80244C44
 
 dolphin/os/OSReset.c:
-	.text       start:0x80244E64 end:0x80245248
+	.text       start:0x80244C44 end:0x80245240
 	.sbss       start:0x803DDE60 end:0x803DDE6C
 
 dolphin/os/OSResetSW.c:
-	.text       start:0x80245248 end:0x802455D4
+	.text       start:0x80245240 end:0x802455A0
 
 dolphin/os/OSRtc.c:
-	.text       start:0x802455D4 end:0x80246190
-	.bss        start:0x803AE040 end:0x803AE094
+	.text       start:0x802455A0 end:0x80246078
+	.bss        start:0x803AE038 end:0x803AE068
 
 dolphin/os/OSStopwatch.c:
-	.text       start:0x80246190 end:0x80246308
+	.text       start:0x80246078 end:0x802462A8
 
 dolphin/os/OSSync.c:
-	.text       start:0x80246308 end:0x802463B4
+	.text       start:0x802462A8 end:0x802462A8
 
 dolphin/os/OSThread.c:
-	.text       start:0x802463B4 end:0x802473B4
-	.bss        start:0x803AE098 end:0x803AEA80
+	.text       start:0x802462A8 end:0x80247340
+	.bss        start:0x803AE068 end:0x803AEA38
 	.sbss       start:0x803DDE88 end:0x803DDE98
 
 dolphin/os/OSTime.c:
-	.text       start:0x802473B4 end:0x80247438
+	.text       start:0x80247340 end:0x8024740C
 
 dolphin/os/__ppc_eabi_init.c:
-	.text       start:0x80247438 end:0x802474CC
+	.text       start:0x8024740C end:0x80247494
 
 dolphin/db/db.c:
-	.text       start:0x802474CC end:0x802475B8
+	.text       start:0x80247494 end:0x80247574
 
 dolphin/mtx/mtx.c:
-	.text       start:0x802475B8 end:0x80247BF8
+	.text       start:0x80247574 end:0x80247A5C
 
 dolphin/mtx/mtxvec.c:
-	.text       start:0x80247BF8 end:0x80247D2C
+	.text       start:0x80247A5C end:0x80247A5C
 
 dolphin/mtx/mtx44.c:
-	.text       start:0x80247D2C end:0x80247E94
+	.text       start:0x80247A5C end:0x80247E44
 
 dolphin/mtx/vec.c:
-	.text       start:0x80247E94 end:0x80248134
+	.text       start:0x80247E44 end:0x80247FD4
 
 dolphin/mtx/psmtx.c:
-	.text       start:0x80248134 end:0x80248180
+	.text       start:0x80247FD4 end:0x80247FD4
 
 dolphin/dvd/dvdlow.c:
-	.text       start:0x80248180 end:0x80248FD4
+	.text       start:0x80247FD4 end:0x80248F9C
 
 dolphin/dvd/dvdfs.c:
-	.text       start:0x80248FD4 end:0x80249928
-	.data       start:0x8032E488 end:0x8032E9D8
+	.text       start:0x80248F9C end:0x802498E0
+	.data       start:0x8032E478 end:0x8032E958
 	.sdata      start:0x803DC568 end:0x803DC570
 
 dolphin/dvd/dvdFatal.c:
-	.text       start:0x80249928 end:0x80249958
+	.text       start:0x802498E0 end:0x802498E0
 
 dolphin/dvd/dvd.c:
-	.text       start:0x80249958 end:0x8024C0D4
+	.text       start:0x802498E0 end:0x8024BF40
 
 dolphin/dvd/dvdqueue.c:
-	.text       start:0x8024C0D4 end:0x8024C2CC
+	.text       start:0x8024BF40 end:0x8024C280
 
 dolphin/dvd/dvderror.c:
-	.text       start:0x8024C2CC end:0x8024C464
+	.text       start:0x8024C280 end:0x8024C280
 
 dolphin/dvd/fstload.c:
-	.text       start:0x8024C464 end:0x8024C6A4
-	.data       start:0x8032E9D8 end:0x8032EA48
-	.bss        start:0x803AEC58 end:0x803AECC8
+	.text       start:0x8024C280 end:0x8024C478
+	.data       start:0x8032E958 end:0x8032E958
+	.bss        start:0x803AEA38 end:0x803AECC0
 	.sdata      start:0x803DC578 end:0x803DC588
 	.sbss       start:0x803DDF50 end:0x803DDF60
 
 dolphin/vi/vi.c:
-	.text       start:0x8024C6A4 end:0x8024E11C
-	.data       start:0x8032EA48 end:0x8032ED10
-	.bss        start:0x803AECC8 end:0x803AEE10
+	.text       start:0x8024C478 end:0x8024DFF0
+	.data       start:0x8032E958 end:0x8032EBE0
+	.bss        start:0x803AECC0 end:0x803AECC0
 	.sdata      start:0x803DC588 end:0x803DC590
 	.sbss       start:0x803DDF60 end:0x803DDFB0
 
 dolphin/pad/Padclamp.c:
-	.text       start:0x8024E11C end:0x8024E4F8
+	.text       start:0x8024DFF0 end:0x8024E450
 
 dolphin/pad/Pad.c:
-	.text       start:0x8024E4F8 end:0x8024FE1C
+	.text       start:0x8024E450 end:0x8024FDBC
 
 dolphin/ai/ai.c:
-	.text       start:0x8024FE1C end:0x80250704
+	.text       start:0x8024FDBC end:0x80250218
 
 dolphin/ar/ar.c:
-	.text       start:0x80250704 end:0x80251290
+	.text       start:0x80250218 end:0x8025111C
 
 dolphin/ar/arq.c:
-	.text       start:0x80251290 end:0x80251624
+	.text       start:0x8025111C end:0x80251540
 	.sbss       start:0x803DE038 end:0x803DE060
 
 dolphin/dsp/dsp.c:
-	.text       start:0x80251624 end:0x80251830
+	.text       start:0x80251540 end:0x802516E0
 
 dolphin/dsp/dsp_debug.c:
-	.text       start:0x80251830 end:0x80251880
+	.text       start:0x802516E0 end:0x8025186C
 
 dolphin/dsp/dsp_task.c:
-	.text       start:0x80251880 end:0x80252104
+	.text       start:0x8025186C end:0x802520D4
 
 dolphin/si/SIBios.c:
-	.text       start:0x80252104 end:0x802537E4
-	.data       start:0x8032EE98 end:0x8032EF68
-	.bss        start:0x803AEE60 end:0x803AF060
+	.text       start:0x802520D4 end:0x80253664
+	.data       start:0x8032EDD0 end:0x8032EDD0
+	.bss        start:0x803AECC0 end:0x803AECC0
 	.sbss       start:0x803DE080 end:0x803DE088
 
 dolphin/si/SISamplingRate.c:
-	.text       start:0x802537E4 end:0x802538EC
-	.data       start:0x8032EF68 end:0x8032F000
+	.text       start:0x80253664 end:0x802538E4
+	.data       start:0x8032EDD0 end:0x8032EDD0
 	.sbss       start:0x803DE090 end:0x803DE094
 
 dolphin/exi/EXIBios.c:
-	.text       start:0x802538EC end:0x802551C0
+	.text       start:0x802538E4 end:0x80254D6C
 
 dolphin/exi/EXIUart.c:
-	.text       start:0x802551C0 end:0x80255430
+	.text       start:0x80254D6C end:0x80254D6C
 
 dolphin/gx/GXInit.c:
-	.text       start:0x80255430 end:0x80256520
+	.text       start:0x80254D6C end:0x802564A4
 
 dolphin/gx/GXFifo.c:
-	.text       start:0x80256520 end:0x80256F84
+	.text       start:0x802564A4 end:0x80256CD8
 	.sbss       start:0x803DE0B8 end:0x803DE0D8
 
 dolphin/gx/GXAttr.c:
-	.text       start:0x80256F84 end:0x8025898C
-	.data       start:0x8032F000 end:0x8032F274
+	.text       start:0x80256CD8 end:0x8025898C
+	.data       start:0x8032EDD0 end:0x8032F218
 	.sdata      start:0x803DC5B8 end:0x803DC5C8
 
 dolphin/gx/GXMisc.c:
-	.text       start:0x8025898C end:0x80258F60
+	.text       start:0x8025898C end:0x80258F3C
 
 dolphin/gx/GXGeometry.c:
-	.text       start:0x80258F60 end:0x80259340
+	.text       start:0x80258F3C end:0x80259338
 
 dolphin/gx/GXFrameBuf.c:
-	.text       start:0x80259340 end:0x80259DD4
+	.text       start:0x80259338 end:0x80259CF0
 
 dolphin/gx/GXLight.c:
-	.text       start:0x80259DD4 end:0x8025A7EC
+	.text       start:0x80259CF0 end:0x8025A748
 
 dolphin/gx/GXTexture.c:
-	.text       start:0x8025A7EC end:0x8025B94C
-	.data       start:0x8032F3C8 end:0x8032F6E0
+	.text       start:0x8025A748 end:0x8025B89C
+	.data       start:0x8032F218 end:0x8032F618
 	.sdata2     start:0x803E8368 end:0x803E8390
 
 dolphin/gx/GXBump.c:
-	.text       start:0x8025B94C end:0x8025C000
+	.text       start:0x8025B89C end:0x8025BFF0
 
 dolphin/gx/GXTev.c:
-	.text       start:0x8025C000 end:0x8025CA38
+	.text       start:0x8025BFF0 end:0x8025CA1C
 
 dolphin/gx/GXPixel.c:
-	.text       start:0x8025CA38 end:0x8025D180
+	.text       start:0x8025CA1C end:0x8025D160
 
 dolphin/gx/GXDraw.c:
-	.text       start:0x8025D180 end:0x8025D49C
+	.text       start:0x8025D160 end:0x8025D490
 
 dolphin/gx/GXStubs.c:
-	.text       start:0x8025D49C end:0x8025D4A0
+	.text       start:0x8025D490 end:0x8025D490
 
 dolphin/gx/GXDisplayList.c:
-	.text       start:0x8025D4A0 end:0x8025D6AC
+	.text       start:0x8025D490 end:0x8025D514
 
 dolphin/gx/GXTransform.c:
-	.text       start:0x8025D6AC end:0x8025DC78
+	.text       start:0x8025D514 end:0x8025D514
 	.sdata2     start:0x803E83E8 end:0x803E83F4
 
 dolphin/gx/GXPerf.c:
-	.text       start:0x8025DC78 end:0x8025E5E4
-	.data       start:0x8032F728 end:0x8032F818
+	.text       start:0x8025D514 end:0x8025E4D4
+	.data       start:0x8032F618 end:0x8032F79C
 
 dolphin/card/CARDBios.c:
-	.text       start:0x8025E5E4 end:0x8025F730
-	.data       start:0x8032F818 end:0x8032F828
-	.bss        start:0x803AFE40 end:0x803B0080
+	.text       start:0x8025E4D4 end:0x8025F340
+	.data       start:0x8032F79C end:0x8032F79C
+	.bss        start:0x803AF550 end:0x803AF550
 
 dolphin/card/CARDUnlock.c:
-	.text       start:0x8025F730 end:0x80260990
+	.text       start:0x8025F340 end:0x80260988
 
 dolphin/card/CARDRdwr.c:
-	.text       start:0x80260990 end:0x80260C10
+	.text       start:0x80260988 end:0x80260B14
 
 dolphin/card/CARDBlock.c:
-	.text       start:0x80260C10 end:0x80261014
+	.text       start:0x80260B14 end:0x80260F48
 
 dolphin/card/CARDDir.c:
-	.text       start:0x80261014 end:0x80261278
+	.text       start:0x80260F48 end:0x80261188
 
 dolphin/card/CARDCheck.c:
-	.text       start:0x80261278 end:0x802621E0
+	.text       start:0x80261188 end:0x802620D4
 
 dolphin/card/CARDMount.c:
-	.text       start:0x802621E0 end:0x80262CA0
+	.text       start:0x802620D4 end:0x80262680
 
 dolphin/card/CARDFormat.c:
-	.text       start:0x80262CA0 end:0x80263490
+	.text       start:0x80262680 end:0x802632B0
 
 dolphin/card/CARDOpen.c:
-	.text       start:0x80263490 end:0x802638E4
+	.text       start:0x802632B0 end:0x80263800
 
 dolphin/card/CARDCreate.c:
-	.text       start:0x802638E4 end:0x80263C7C
+	.text       start:0x80263800 end:0x80263BB0
 
 dolphin/card/CARDRead.c:
-	.text       start:0x80263C7C end:0x802640F4
+	.text       start:0x80263BB0 end:0x80263F08
 
 dolphin/card/CARDWrite.c:
-	.text       start:0x802640F4 end:0x80264470
+	.text       start:0x80263F08 end:0x802643E8
 
 dolphin/card/CARDDelete.c:
-	.text       start:0x80264470 end:0x8026466C
+	.text       start:0x802643E8 end:0x802644AC
 
 dolphin/card/CARDStat.c:
-	.text       start:0x8026466C end:0x80264B4C
+	.text       start:0x802644AC end:0x8026498C
 
 dolphin/card/CARDNet.c:
-	.text       start:0x80264B4C end:0x80264C10
+	.text       start:0x8026498C end:0x8026498C
 
 dolphin/thp/THPDec.c:
-	extab       start:0x80005620 end:0x80005628
-	extabindex  start:0x80005CC0 end:0x80005CCC
-	.text       start:0x80264C10 end:0x8026C150
+	.text       start:0x8026498C end:0x8026C124
 
 dolphin/thp/THPAudio.c:
-	extab       start:0x80005628 end:0x80005630
-	extabindex  start:0x80005CCC end:0x80005CE4
-	extab       start:0x80005630 end:0x80005638
-	.text       start:0x8026C150 end:0x8026C680
+	extab       start:0x80005620 end:0x80005630
+	extabindex  start:0x80005CC0 end:0x80005CD8
+	.text       start:0x8026C124 end:0x8026C488
 
 dolphin/amcstubs/AmcExi2Stubs.c:
-	.text       start:0x8026C680 end:0x8026C6B0
+	.text       start:0x8026C488 end:0x8026C488
 
 dolphin/odenotstub/odenotstub.c:
-	.text       start:0x8026C6B0 end:0x8026C6B8
+	.text       start:0x8026C488 end:0x8026C488
 
 main/audio/synth_callback.c:
-	.text       start:0x8026C6B8 end:0x8026CBEC
+	.text       start:0x8026C488 end:0x8026C488
 
 main/unknown/autos/placeholder_8026CBEC.c:
-	extab       start:0x80005638 end:0x80005640
-	extabindex  start:0x80005CE4 end:0x80005D08
-	extab       start:0x80005640 end:0x80005650
-	.text       start:0x8026CBEC end:0x8026D6DC
+	extab       start:0x80005630 end:0x80005650
+	extabindex  start:0x80005CD8 end:0x80005D08
+	.text       start:0x8026C488 end:0x8026D630
 
 main/audio/synth_channel.c:
-	extab       start:0x80005650 end:0x80005658
-	extabindex  start:0x80005D08 end:0x80005D14
-	.text       start:0x8026D6DC end:0x8026D7C4
+	.text       start:0x8026D630 end:0x8026D6E4
 
 main/audio/synth_handle.c:
-	extab       start:0x80005658 end:0x80005660
-	extabindex  start:0x80005D14 end:0x80005D20
-	.text       start:0x8026D7C4 end:0x8026DFE4
+	extab       start:0x80005650 end:0x80005660
+	extabindex  start:0x80005D08 end:0x80005D20
+	.text       start:0x8026D6E4 end:0x8026DE58
 
 main/unknown/autos/placeholder_8026DFE4.c:
-	extab       start:0x80005660 end:0x80005668
-	extabindex  start:0x80005D20 end:0x80005D2C
-	.text       start:0x8026DFE4 end:0x8026E518
+	.text       start:0x8026DE58 end:0x8026E0E4
 
 main/audio/synth_sequence.c:
-	.text       start:0x8026E518 end:0x8026E848
+	.text       start:0x8026E0E4 end:0x8026E0E4
 
 main/unknown/autos/placeholder_8026E848.c:
-	extab       start:0x80005678 end:0x80005688
-	extabindex  start:0x80005D44 end:0x80005D5C
-	extab       start:0x80005668 end:0x80005678
-	extabindex  start:0x80005D2C end:0x80005D44
-	.text       start:0x8026E848 end:0x8026EFC8
+	extab       start:0x80005660 end:0x80005680
+	extabindex  start:0x80005D20 end:0x80005D50
+	.text       start:0x8026E0E4 end:0x8026EC44
 
 main/audio/synth_seq_queue.c:
-	.text       start:0x8026EFC8 end:0x8026F134
+	.text       start:0x8026EC44 end:0x8026EC44
 
 main/unknown/autos/placeholder_8026F134.c:
-	extab       start:0x80005688 end:0x80005698
-	extabindex  start:0x80005D5C end:0x80005D74
-	.text       start:0x8026F134 end:0x8026FA70
+	extab       start:0x80005680 end:0x80005690
+	extabindex  start:0x80005D50 end:0x80005D68
+	.text       start:0x8026EC44 end:0x8026F8B8
 
 main/audio/synth_init.c:
-	extab       start:0x80005698 end:0x800056A0
-	extabindex  start:0x80005D74 end:0x80005D80
-	.text       start:0x8026FA70 end:0x8026FCA0
+	extab       start:0x80005690 end:0x80005698
+	extabindex  start:0x80005D68 end:0x80005D74
+	.text       start:0x8026F8B8 end:0x8026FC8C
 
 main/audio/synth_scale.c:
-	.text       start:0x8026FCA0 end:0x8026FD1C
+	.text       start:0x8026FC8C end:0x8026FC8C
 
 main/unknown/autos/placeholder_8026FD1C.c:
-	.text       start:0x8026FD1C end:0x8026FD94
+	.text       start:0x8026FC8C end:0x8026FC8C
 
 main/unknown/autos/placeholder_8026FD94.c:
-	extab       start:0x800056A0 end:0x80005700
-	extabindex  start:0x80005D80 end:0x80005E10
-	.text       start:0x8026FD94 end:0x802718DC
+	extab       start:0x80005698 end:0x800056F8
+	extabindex  start:0x80005D74 end:0x80005E04
+	.text       start:0x8026FC8C end:0x8027186C
 
 main/audio/synth_delay.c:
-	extab       start:0x80005700 end:0x80005720
-	extabindex  start:0x80005E10 end:0x80005E40
-	.text       start:0x802718DC end:0x80271BFC
+	extab       start:0x800056F8 end:0x80005718
+	extabindex  start:0x80005E04 end:0x80005E34
+	.text       start:0x8027186C end:0x80271B4C
 
 main/unknown/autos/placeholder_80271BFC.c:
-	extab       start:0x80005720 end:0x80005730
-	extabindex  start:0x80005E40 end:0x80005E58
-	.text       start:0x80271BFC end:0x802721A0
+	extab       start:0x80005718 end:0x80005728
+	extabindex  start:0x80005E34 end:0x80005E4C
+	.text       start:0x80271B4C end:0x802720A8
 
 main/audio/synth_control.c:
-	extab       start:0x80005730 end:0x80005760
-	extabindex  start:0x80005E58 end:0x80005EA0
-	.text       start:0x802721A0 end:0x8027273C
+	extab       start:0x80005728 end:0x80005758
+	extabindex  start:0x80005E4C end:0x80005E94
+	.text       start:0x802720A8 end:0x80272720
 
 main/unknown/autos/placeholder_8027280C.c:
-	extab       start:0x80005760 end:0x800057C8
-	extabindex  start:0x80005EA0 end:0x80005F3C
-	.text       start:0x8027273C end:0x80272EEC
+	extab       start:0x80005758 end:0x800057C8
+	extabindex  start:0x80005E94 end:0x80005F3C
+	.text       start:0x80272720 end:0x80272EA4
 
 main/unknown/autos/placeholder_80272EEC.c:
-	.text       start:0x80272EEC end:0x80272F0C
+	.text       start:0x80272EA4 end:0x80272EA4
 
 main/unknown/autos/placeholder_80272F0C.c:
-	extab       start:0x800057C8 end:0x800057D0
-	extabindex  start:0x80005F3C end:0x80005F48
-	.text       start:0x80272F0C end:0x80273608
+	.text       start:0x80272EA4 end:0x80272F70
 
 main/unknown/autos/placeholder_80273608.c:
-	.text       start:0x80273608 end:0x802736D4
+	.text       start:0x80272F70 end:0x80272F70
 
 main/unknown/autos/placeholder_802736D4.c:
-	extab       start:0x800057D0 end:0x800057F8
-	extabindex  start:0x80005F48 end:0x80005F84
-	.text       start:0x802736D4 end:0x80273F4C
+	extab       start:0x800057C8 end:0x800057F0
+	extabindex  start:0x80005F3C end:0x80005F78
+	.text       start:0x80272F70 end:0x80273D2C
 
 main/unknown/autos/placeholder_80273F4C.c:
-	.text       start:0x80273F4C end:0x80273F50
+	.text       start:0x80273D2C end:0x80273D2C
 
 main/unknown/autos/placeholder_80273F50.c:
-	extab       start:0x80005868 end:0x80005888
-	extabindex  start:0x8000602C end:0x8000605C
-	extab       start:0x80005860 end:0x80005868
-	extabindex  start:0x80006020 end:0x8000602C
-	extab       start:0x80005850 end:0x80005860
-	extabindex  start:0x80006008 end:0x80006020
-	extab       start:0x80005848 end:0x80005850
-	extabindex  start:0x80005FFC end:0x80006008
-	extab       start:0x80005840 end:0x80005848
-	extabindex  start:0x80005FF0 end:0x80005FFC
-	extab       start:0x800057F8 end:0x80005840
-	extabindex  start:0x80005F84 end:0x80005FF0
-	.text       start:0x80273F50 end:0x802755D0
+	extab       start:0x800057F0 end:0x80005880
+	extabindex  start:0x80005F78 end:0x80006050
+	.text       start:0x80273D2C end:0x80275364
 
 main/unknown/autos/placeholder_802755D0.c:
-	.text       start:0x802755D0 end:0x802755E0
+	.text       start:0x80275364 end:0x80275364
 
 main/unknown/autos/placeholder_802755E0.c:
-	extab       start:0x80005888 end:0x80005890
-	extabindex  start:0x8000605C end:0x80006068
-	.text       start:0x802755E0 end:0x80275674
+	extab       start:0x80005880 end:0x80005888
+	extabindex  start:0x80006050 end:0x8000605C
+	.text       start:0x80275364 end:0x8027566C
 
 main/unknown/autos/placeholder_80275674.c:
-	.text       start:0x80275674 end:0x80275684
+	.text       start:0x8027566C end:0x8027566C
 
 main/unknown/autos/placeholder_80275684.c:
-	.text       start:0x80275684 end:0x802757AC
+	.text       start:0x8027566C end:0x8027566C
 
 main/unknown/autos/placeholder_802757AC.c:
-	.text       start:0x802757AC end:0x802757BC
+	.text       start:0x8027566C end:0x8027566C
 
 main/unknown/autos/placeholder_802757BC.c:
-	extab       start:0x80005890 end:0x80005898
-	extabindex  start:0x80006068 end:0x80006074
-	.text       start:0x802757BC end:0x8027587C
+	extab       start:0x80005888 end:0x80005890
+	extabindex  start:0x8000605C end:0x80006068
+	.text       start:0x8027566C end:0x802757C4
 
 main/unknown/autos/placeholder_8027587C.c:
-	.text       start:0x8027587C end:0x8027588C
+	.text       start:0x802757C4 end:0x802757C4
 
 main/unknown/autos/placeholder_8027588C.c:
-	.text       start:0x8027588C end:0x8027590C
+	.text       start:0x802757C4 end:0x802757C4
 
 main/unknown/autos/placeholder_8027590C.c:
-	.text       start:0x8027590C end:0x8027591C
+	.text       start:0x802757C4 end:0x802757C4
 
 main/unknown/autos/placeholder_8027591C.c:
-	extab       start:0x80005898 end:0x800058C8
-	extabindex  start:0x80006074 end:0x800060BC
-	.text       start:0x8027591C end:0x8027641C
+	extab       start:0x80005890 end:0x800058C0
+	extabindex  start:0x80006068 end:0x800060B0
+	.text       start:0x802757C4 end:0x802763C0
 
 main/unknown/autos/placeholder_8027641C.c:
-	extab       start:0x800058C8 end:0x800058D8
-	extabindex  start:0x800060BC end:0x800060D4
-	.text       start:0x8027641C end:0x802765AC
+	extab       start:0x800058C0 end:0x800058D0
+	extabindex  start:0x800060B0 end:0x800060C8
+	.text       start:0x802763C0 end:0x8027656C
 
 main/unknown/autos/placeholder_802765AC.c:
-	extab       start:0x80005950 end:0x80005958
-	extabindex  start:0x80006188 end:0x80006194
-	extab       start:0x80005940 end:0x80005950
-	extabindex  start:0x80006170 end:0x80006188
-	extab       start:0x800058D8 end:0x80005940
-	extabindex  start:0x800060D4 end:0x80006170
-	.text       start:0x802765AC end:0x80278F74
+	extab       start:0x800058D0 end:0x80005958
+	extabindex  start:0x800060C8 end:0x80006194
+	.text       start:0x8027656C end:0x80278F0C
 
 main/unknown/autos/placeholder_80278F74.c:
-	.text       start:0x80278F74 end:0x80279018
+	.text       start:0x80278F0C end:0x80279004
 
 main/unknown/autos/placeholder_80279018.c:
-	extab       start:0x80005958 end:0x80005CB0
-	extabindex  start:0x80006194 end:0x80006698
-	.text       start:0x80279018 end:0x8028504C
+	.text       start:0x80279004 end:0x80279038
 
-dolphin/OdemuExi2/DebuggerDriver.c:
+main/unknown/autos/placeholder_802791FC.c:
+	.text       start:0x80279038 end:0x80279038
+
+main/unknown/autos/placeholder_802792F8.c:
+	extab       start:0x80005958 end:0x80005960
+	extabindex  start:0x80006194 end:0x800061A0
+	.text       start:0x80279038 end:0x802795CC
+
+main/unknown/autos/placeholder_80279608.c:
+	extab       start:0x80005960 end:0x80005968
+	extabindex  start:0x800061A0 end:0x800061AC
+	.text       start:0x802795CC end:0x8027975C
+
+main/unknown/autos/placeholder_8027979C.c:
+	.text       start:0x8027975C end:0x8027975C
+
+main/unknown/autos/placeholder_80279AF0.c:
+	extab       start:0x80005968 end:0x80005970
+	extabindex  start:0x800061AC end:0x800061B8
+	.text       start:0x8027975C end:0x80279C7C
+
+main/unknown/autos/placeholder_80279D30.c:
+	.text       start:0x80279C7C end:0x80279C7C
+
+main/unknown/autos/placeholder_80279EC0.c:
+	extab       start:0x80005970 end:0x80005988
+	extabindex  start:0x800061B8 end:0x800061DC
+	.text       start:0x80279C7C end:0x8027A2B4
+
+main/unknown/autos/placeholder_8027A2FC.c:
+	.text       start:0x8027A2B4 end:0x8027A330
+
+main/unknown/autos/placeholder_8027A3E0.c:
+	extab       start:0x80005988 end:0x80005998
+	extabindex  start:0x800061DC end:0x800061F4
+	.text       start:0x8027A330 end:0x8027A660
+
+main/unknown/autos/placeholder_8027A710.c:
+	extab       start:0x80005998 end:0x800059A0
+	extabindex  start:0x800061F4 end:0x80006200
+	.text       start:0x8027A660 end:0x8027A8FC
+
+main/unknown/autos/placeholder_8027A940.c:
+	extab       start:0x800059A0 end:0x800059B8
+	extabindex  start:0x80006200 end:0x80006224
+	.text       start:0x8027A8FC end:0x8027AC34
+
+main/unknown/autos/placeholder_8027AC80.c:
+	extab       start:0x800059B8 end:0x800059C0
+	extabindex  start:0x80006224 end:0x80006230
+	.text       start:0x8027AC34 end:0x8027ACB8
+
+main/unknown/autos/placeholder_8027ADC4.c:
+	extab       start:0x800059C0 end:0x800059C8
+	extabindex  start:0x80006230 end:0x8000623C
+	.text       start:0x8027ACB8 end:0x8027AFC0
+
+main/unknown/autos/placeholder_8027B038.c:
+	extab       start:0x800059C8 end:0x800059D8
+	extabindex  start:0x8000623C end:0x80006254
+	.text       start:0x8027AFC0 end:0x8027B25C
+
+main/unknown/autos/placeholder_8027B41C.c:
+	extab       start:0x800059D8 end:0x800059E0
+	extabindex  start:0x80006254 end:0x80006260
+	.text       start:0x8027B25C end:0x8027B42C
+
+main/unknown/autos/placeholder_8027B53C.c:
+	extab       start:0x800059E0 end:0x80005A08
+	extabindex  start:0x80006260 end:0x8000629C
+	.text       start:0x8027B42C end:0x8027BA04
+
+main/unknown/autos/placeholder_8027BB84.c:
+	.text       start:0x8027BA04 end:0x8027BA04
+
+main/unknown/autos/placeholder_8027BB90.c:
+	extab       start:0x80005A08 end:0x80005A30
+	extabindex  start:0x8000629C end:0x800062D8
+	.text       start:0x8027BA04 end:0x8027C48C
+
+main/unknown/autos/placeholder_8027C728.c:
+	.text       start:0x8027C48C end:0x8027C48C
+
+main/unknown/autos/placeholder_8027CAF4.c:
+	extab       start:0x80005A30 end:0x80005A50
+	extabindex  start:0x800062D8 end:0x80006308
+	.text       start:0x8027C48C end:0x8027F2AC
+
+main/unknown/autos/placeholder_8027F724.c:
+	.text       start:0x8027F2AC end:0x8027F2AC
+
+main/unknown/autos/placeholder_8027F8B0.c:
+	extab       start:0x80005A50 end:0x80005A68
+	extabindex  start:0x80006308 end:0x8000632C
+	.text       start:0x8027F2AC end:0x802800C0
+
+main/unknown/autos/placeholder_802801A8.c:
+	.text       start:0x802800C0 end:0x802800C0
+
+main/unknown/autos/placeholder_8028026C.c:
+	extab       start:0x80005A68 end:0x80005A80
+	extabindex  start:0x8000632C end:0x80006350
+	.text       start:0x802800C0 end:0x80280C30
+
+main/unknown/autos/placeholder_80280F28.c:
+	extab       start:0x80005A80 end:0x80005A90
+	extabindex  start:0x80006350 end:0x80006368
+	.text       start:0x80280C30 end:0x80281160
+
+main/unknown/autos/placeholder_8028116C.c:
+	extab       start:0x80005A90 end:0x80005A98
+	extabindex  start:0x80006368 end:0x80006374
+	.text       start:0x80281160 end:0x80281338
+
+main/unknown/autos/placeholder_80281760.c:
+	.text       start:0x80281338 end:0x80281338
+
+main/unknown/autos/placeholder_802817A8.c:
+	.text       start:0x80281338 end:0x80281338
+
+main/unknown/autos/placeholder_802818F8.c:
+	extab       start:0x80005A98 end:0x80005AA8
+	extabindex  start:0x80006374 end:0x8000638C
+	.text       start:0x80281338 end:0x80281A30
+
+main/unknown/autos/placeholder_80281A9C.c:
+	extab       start:0x80005AA8 end:0x80005AB8
+	extabindex  start:0x8000638C end:0x800063A4
+	.text       start:0x80281A30 end:0x80282070
+
+main/unknown/autos/placeholder_80282288.c:
+	extab       start:0x80005AB8 end:0x80005AD0
+	extabindex  start:0x800063A4 end:0x800063C8
+	.text       start:0x80282070 end:0x80282588
+
+main/unknown/autos/placeholder_80282594.c:
+	extab       start:0x80005AD0 end:0x80005AE0
+	extabindex  start:0x800063C8 end:0x800063E0
+	.text       start:0x80282588 end:0x80282618
+
+main/unknown/autos/placeholder_80282630.c:
+	extab       start:0x80005AE0 end:0x80005B10
+	extabindex  start:0x800063E0 end:0x80006428
+	.text       start:0x80282618 end:0x802827C8
+
+main/unknown/autos/placeholder_802827D4.c:
+	extab       start:0x80005B10 end:0x80005B50
+	extabindex  start:0x80006428 end:0x80006488
+	.text       start:0x802827C8 end:0x80282FE0
+
+main/unknown/autos/placeholder_80283134.c:
+	extab       start:0x80005B50 end:0x80005B70
+	extabindex  start:0x80006488 end:0x800064B8
+	.text       start:0x80282FE0 end:0x8028343C
+
+main/unknown/autos/placeholder_80283488.c:
+	.text       start:0x8028343C end:0x8028348C
+
+main/unknown/autos/placeholder_802835C0.c:
+	extab       start:0x80005B70 end:0x80005B78
+	extabindex  start:0x800064B8 end:0x800064C4
+	.text       start:0x8028348C end:0x8028363C
+
+main/unknown/autos/placeholder_8028364C.c:
+	.text       start:0x8028363C end:0x802836AC
+
+main/unknown/autos/placeholder_802836E4.c:
+	extab       start:0x80005B78 end:0x80005B80
+	extabindex  start:0x800064C4 end:0x800064D0
+	.text       start:0x802836AC end:0x802836E8
+
+main/unknown/autos/placeholder_802836F4.c:
+	.text       start:0x802836E8 end:0x80283710
+
+main/unknown/autos/placeholder_8028373C.c:
+	.text       start:0x80283710 end:0x80283710
+
+main/unknown/autos/placeholder_80283744.c:
+	.text       start:0x80283710 end:0x8028383C
+
+main/unknown/autos/placeholder_802839B0.c:
+	.text       start:0x8028383C end:0x8028383C
+
+main/unknown/autos/placeholder_802839F4.c:
+	extab       start:0x80005B80 end:0x80005BA0
+	extabindex  start:0x800064D0 end:0x80006500
+	.text       start:0x8028383C end:0x80283BA0
+
+main/unknown/autos/placeholder_80283BA0.c:
+	extab       start:0x80005BA0 end:0x80005BA8
+	extabindex  start:0x80006500 end:0x8000650C
+	.text       start:0x80283BA0 end:0x80283BD4
+
+main/unknown/autos/placeholder_80283BF0.c:
+	extab       start:0x80005BA8 end:0x80005BC0
+	extabindex  start:0x8000650C end:0x80006530
+	.text       start:0x80283BD4 end:0x80283D5C
+
+main/unknown/autos/placeholder_80283DA0.c:
+	extab       start:0x80005BC0 end:0x80005BD8
+	extabindex  start:0x80006530 end:0x80006554
+	.text       start:0x80283D5C end:0x80283DFC
+
+main/unknown/autos/placeholder_80283E10.c:
+	.text       start:0x80283DFC end:0x80283DFC
+
+main/unknown/autos/placeholder_80283E4C.c:
+	extab       start:0x80005BD8 end:0x80005BF0
+	extabindex  start:0x80006554 end:0x80006578
+	.text       start:0x80283DFC end:0x80283FA0
+
+main/unknown/autos/placeholder_80283FA0.c:
+	extab       start:0x80005BF0 end:0x80005C00
+	extabindex  start:0x80006578 end:0x80006590
+	.text       start:0x80283FA0 end:0x80284224
+
+main/unknown/autos/placeholder_8028429C.c:
+	.text       start:0x80284224 end:0x80284224
+
+main/unknown/autos/placeholder_802842C4.c:
+	.text       start:0x80284224 end:0x80284224
+
+main/unknown/autos/placeholder_8028436C.c:
+	.text       start:0x80284224 end:0x80284224
+
+main/unknown/autos/placeholder_80284410.c:
+	extab       start:0x80005C00 end:0x80005C10
+	extabindex  start:0x80006590 end:0x800065A8
+	.text       start:0x80284224 end:0x80284468
+
+main/unknown/autos/placeholder_802844BC.c:
+	.text       start:0x80284468 end:0x80284468
+
+main/unknown/autos/placeholder_802844C0.c:
+	extab       start:0x80005C10 end:0x80005C18
+	extabindex  start:0x800065A8 end:0x800065B4
+	.text       start:0x80284468 end:0x80284670
+
+main/unknown/autos/placeholder_80284698.c:
+	.text       start:0x80284670 end:0x80284670
+
+main/unknown/autos/placeholder_8028479C.c:
+	extab       start:0x80005C18 end:0x80005C40
+	extabindex  start:0x800065B4 end:0x800065F0
+	.text       start:0x80284670 end:0x802848D8
+
+main/unknown/autos/placeholder_80284970.c:
+	.text       start:0x802848D8 end:0x802848D8
+
+main/unknown/autos/placeholder_80284988.c:
+	extab       start:0x80005C40 end:0x80005C90
+	extabindex  start:0x800065F0 end:0x80006668
+	.text       start:0x802848D8 end:0x80284B94
+
+main/unknown/autos/placeholder_80284BA8.c:
+	.text       start:0x80284B94 end:0x80284B94
+
+main/unknown/autos/placeholder_80284BAC.c:
+	extab       start:0x80005C90 end:0x80005CA8
+	extabindex  start:0x80006668 end:0x8000668C
+	.text       start:0x80284B94 end:0x80284C58
+
+main/unknown/autos/placeholder_80284CBC.c:
+	.text       start:0x80284C58 end:0x80284C58
+
+main/unknown/autos/placeholder_80284E78.c:
+	.text       start:0x80284C58 end:0x80284C58
+
+main/unknown/autos/placeholder_80284EF0.c:
+	.text       start:0x80284C58 end:0x80284C58
+
+main/unknown/autos/placeholder_80285010.c:
+	.text       start:0x80284C58 end:0x80284C58
+
+main/unknown/autos/placeholder_8028503C.c:
+	extab       start:0x80005CA8 end:0x80005CB0
+	extabindex  start:0x8000668C end:0x80006698
+	.text       start:0x80284C58 end:0x8028504C
+
+main/unknown/autos/placeholder_8028521C.c:
+	.text       start:0x8028504C end:0x8028504C
+
+main/unknown/autos/placeholder_80285220.c:
 	extab       start:0x80005CB0 end:0x80005CB8
 	extabindex  start:0x80006698 end:0x800066A4
-	.text       start:0x8028504C end:0x80285EA4
+	.text       start:0x8028504C end:0x80285768
+
+main/unknown/autos/placeholder_802857B0.c:
+	.text       start:0x80285768 end:0x80285B14
+
+main/unknown/autos/placeholder_80285B64.c:
+	.text       start:0x80285B14 end:0x80285B14
+
+dolphin/OdemuExi2/DebuggerDriver.c:
+	.text       start:0x80285B14 end:0x8028656C
 
 Runtime.PPCEABI.H/__va_arg.c:
-	.text       start:0x80285EA4 end:0x80285F6C
+	.text       start:0x8028656C end:0x8028660C
 
 Runtime.PPCEABI.H/global_destructor_chain.c:
-	.text       start:0x80285F6C end:0x80286010
-	.dtors      start:0x802C18A8 end:0x802C18AC
+	.text       start:0x8028660C end:0x802866E0
 	.sbss       start:0x803DE3E0 end:0x803DE3E4
 
-Runtime.PPCEABI.H/runtime.c:
-	.text       start:0x80286010 end:0x802866D8
-
 Runtime.PPCEABI.H/__init_cpp_exceptions.cpp:
-	.text       start:0x802866D8 end:0x80286754
+	.text       start:0x802866E0 end:0x802867BC
 	.ctors      start:0x802C1880 end:0x802C1884
-	.dtors      start:0x802C18A0 end:0x802C18A8
+	.dtors      start:0x802C18A0 end:0x802C18AC
 	.sdata      start:0x803DC640 end:0x803DC648
-
-Runtime.PPCEABI.H/fragment.s:
-	.text       start:0x80286754 end:0x802867BC
-	.bss        start:0x803D68E0 end:0x803D68F0
 
 main/unknown/autos/placeholder_802867BC.c:
 	.text       start:0x802867BC end:0x8028685C
 	.rodata     start:0x802C2920 end:0x802C2938
+	.bss        start:0x803D6920 end:0x803D6920
 
 dolphin/TRK_MINNOW_DOLPHIN/mainloop.c:
 	.text       start:0x8028685C end:0x80286954
 
 dolphin/TRK_MINNOW_DOLPHIN/nubevent.c:
 	.text       start:0x80286954 end:0x80286BC8
-	.bss        start:0x803D68F0 end:0x803D6918
+	.bss        start:0x803D6920 end:0x803D6920
 
 dolphin/TRK_MINNOW_DOLPHIN/nubinit.c:
-	.text       start:0x80286BC8 end:0x80287460
+	.text       start:0x80286BC8 end:0x80287458
 	.rodata     start:0x802C2938 end:0x802C2958
-	.bss        start:0x803D6918 end:0x803D6920
+	.bss        start:0x803D6920 end:0x803D6920
 
 dolphin/TRK_MINNOW_DOLPHIN/msg.c:
-	.text       start:0x80287460 end:0x8028763C
+	.text       start:0x80287458 end:0x80287624
 
 dolphin/TRK_MINNOW_DOLPHIN/msgbuf.c:
-	.text       start:0x8028763C end:0x80288068
+	.text       start:0x80287624 end:0x80287F9C
 	.rodata     start:0x802C2958 end:0x802C2978
-	.bss        start:0x803D6920 end:0x803D82D0
+	.bss        start:0x803D6920 end:0x803D8888
 
 dolphin/TRK_MINNOW_DOLPHIN/serpoll.c:
-	.text       start:0x80288068 end:0x80288434
-	.bss        start:0x803D82D0 end:0x803D82E8
+	.text       start:0x80287F9C end:0x8028809C
+	.bss        start:0x803D8888 end:0x803D8888
 
 dolphin/TRK_MINNOW_DOLPHIN/usr_put.c:
-	.text       start:0x80288434 end:0x802884C0
+	.text       start:0x8028809C end:0x8028809C
 
 dolphin/TRK_MINNOW_DOLPHIN/dispatch.c:
-	.text       start:0x802884C0 end:0x8028855C
-	.data       start:0x80332E90 end:0x80332F18
-	.bss        start:0x803D82F0 end:0x803D82F8
+	.text       start:0x8028809C end:0x8028809C
+	.data       start:0x80332C78 end:0x80332EF0
+	.bss        start:0x803D8888 end:0x803D8888
 
 dolphin/TRK_MINNOW_DOLPHIN/msghndlr.c:
-	.text       start:0x8028855C end:0x8028ADBC
-	.data       start:0x80332F18 end:0x80332F50
-	.bss        start:0x803D82E8 end:0x803D82F0
+	.text       start:0x8028809C end:0x8028AC30
+	.data       start:0x80332EF0 end:0x80332F48
+	.bss        start:0x803D8888 end:0x803D8888
 
 dolphin/TRK_MINNOW_DOLPHIN/support.c:
-	.text       start:0x8028ADBC end:0x8028B658
+	.text       start:0x8028AC30 end:0x8028B47C
 
 dolphin/TRK_MINNOW_DOLPHIN/mutex_TRK.c:
-	.text       start:0x8028B658 end:0x8028B670
+	.text       start:0x8028B47C end:0x8028B47C
 
 dolphin/TRK_MINNOW_DOLPHIN/notify.c:
-	.text       start:0x8028B670 end:0x8028B748
+	.text       start:0x8028B47C end:0x8028B70C
 
 dolphin/TRK_MINNOW_DOLPHIN/flush_cache.c:
-	.text       start:0x8028B748 end:0x8028B780
+	.text       start:0x8028B70C end:0x8028B70C
 
 dolphin/TRK_MINNOW_DOLPHIN/mem_TRK.c:
-	.text       start:0x8028B780 end:0x8028B83C
+	.text       start:0x8028B70C end:0x8028B70C
 
 dolphin/TRK_MINNOW_DOLPHIN/targimpl.c:
-	.text       start:0x8028B83C end:0x8028D0D0
+	.text       start:0x8028B70C end:0x8028D0B4
 	.rodata     start:0x802C2978 end:0x802C2A00
-	.data       start:0x80332F50 end:0x80332F80
-	.bss        start:0x803D82F8 end:0x803D8880
+	.data       start:0x80332F48 end:0x80332F78
 
 dolphin/TRK_MINNOW_DOLPHIN/targsupp.s: comment:0
-	.text       start:0x8028D0D0 end:0x8028D0F0
+	.text       start:0x8028D0B4 end:0x8028D0B4
 
 dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk.c:
-	.text       start:0x8028D0F0 end:0x8028D230
-	.data       start:0x80332F80 end:0x80332FC0
+	.text       start:0x8028D0B4 end:0x8028D200
+	.data       start:0x80332F78 end:0x80332FC0
 
 dolphin/TRK_MINNOW_DOLPHIN/mpc_7xx_603e.c:
-	.text       start:0x8028D230 end:0x8028D5A8
+	.text       start:0x8028D200 end:0x8028D574
 
 dolphin/TRK_MINNOW_DOLPHIN/main_TRK.c:
-	.text       start:0x8028D5A8 end:0x8028D5EC
-	.bss        start:0x803D8880 end:0x803D8888
+	.text       start:0x8028D574 end:0x8028D574
+	.bss        start:0x803D8888 end:0x803D8888
 
 dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk_glue.c:
-	.text       start:0x8028D5EC end:0x8028DA78
-	.data       start:0x80332FC0 end:0x80332FE0
+	.text       start:0x8028D574 end:0x8028D960
+	.data       start:0x80332FC0 end:0x80332FC0
 	.bss        start:0x803D8888 end:0x803DAAB0
 
 dolphin/TRK_MINNOW_DOLPHIN/targcont.c:
-	.text       start:0x8028DA78 end:0x8028DAAC
+	.text       start:0x8028D960 end:0x8028D960
 
 dolphin/TRK_MINNOW_DOLPHIN/target_options.c:
-	.text       start:0x8028DAAC end:0x8028DAC8
+	.text       start:0x8028D960 end:0x8028D960
 
 dolphin/TRK_MINNOW_DOLPHIN/mslsupp.c:
-	.text       start:0x8028DAC8 end:0x8028DC08
+	.text       start:0x8028D960 end:0x8028DBE4
 
 dolphin/MSL_C/PPCEABI/bare/H/abort_exit.c:
-	.text       start:0x8028DC08 end:0x8028DCD4
+	.text       start:0x8028DBE4 end:0x8028DBE4
 
 dolphin/MSL_C/PPCEABI/bare/H/alloc.c:
-	.text       start:0x8028DCD4 end:0x8028E23C
+	.text       start:0x8028DBE4 end:0x8028DFC4
 
 dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c:
-	.text       start:0x8028E23C end:0x8028E344
+	.text       start:0x8028DFC4 end:0x8028E304
 
 dolphin/MSL_C/PPCEABI/bare/H/ansi_fp.c:
-	.text       start:0x8028E344 end:0x8028EF5C
+	.text       start:0x8028E304 end:0x8028EE38
 
 dolphin/MSL_C/PPCEABI/bare/H/buffer_io.c:
-	.text       start:0x8028EF5C end:0x8028F054
+	.text       start:0x8028EE38 end:0x8028EE38
 
 dolphin/MSL_C/PPCEABI/bare/H/direct_io.c:
-	.text       start:0x8028F054 end:0x8028F380
+	.text       start:0x8028EE38 end:0x8028F2CC
 
 dolphin/MSL_C/PPCEABI/bare/H/file_io.c:
-	.text       start:0x8028F380 end:0x8028F578
+	.text       start:0x8028F2CC end:0x8028F50C
 
 dolphin/MSL_C/PPCEABI/bare/H/FILE_POS.c:
-	.text       start:0x8028F578 end:0x8028F844
+	.text       start:0x8028F50C end:0x8028F7E0
 
 dolphin/MSL_C/PPCEABI/bare/H/mbstring.c:
-	.text       start:0x8028F844 end:0x8028F988
+	.text       start:0x8028F7E0 end:0x8028F920
 
 dolphin/MSL_C/PPCEABI/bare/H/mem.c:
-	.text       start:0x8028F988 end:0x8028FAF8
+	.text       start:0x8028F920 end:0x8028F920
 
 dolphin/MSL_C/PPCEABI/bare/H/mem_funcs.c:
-	.text       start:0x8028FAF8 end:0x8028FDD8
+	.text       start:0x8028F920 end:0x8028F920
 
 dolphin/MSL_C/PPCEABI/bare/H/misc_io.c:
-	.text       start:0x8028FDD8 end:0x8028FDE8
+	.text       start:0x8028F920 end:0x8028F920
 
 dolphin/MSL_C/PPCEABI/bare/H/printf.c:
-	.text       start:0x8028FDE8 end:0x80291D44
+	.text       start:0x8028F920 end:0x80291D00
 
 dolphin/MSL_C/PPCEABI/bare/H/string.c:
-	.text       start:0x80291D44 end:0x80292020
+	.text       start:0x80291D00 end:0x80291FF4
 
 dolphin/MSL_C/PPCEABI/bare/H/wchar_io.c:
-	.text       start:0x80292020 end:0x802920A8
+	.text       start:0x80291FF4 end:0x802920A4
 
 dolphin/MSL_C/PPCEABI/bare/H/s_copysign.c:
-	.text       start:0x802920A8 end:0x802920D0
+	.text       start:0x802920A4 end:0x802920A4
 
 dolphin/MSL_C/PPCEABI/bare/H/s_frexp.c:
-	.text       start:0x802920D0 end:0x8029215C
+	.text       start:0x802920A4 end:0x802920A4
 
 dolphin/MSL_C/PPCEABI/bare/H/s_ldexp.c:
-	.text       start:0x8029215C end:0x80292320
+	.text       start:0x802920A4 end:0x80292248
 
 dolphin/MSL_C/PPCEABI/bare/H/s_modf.c:
-	.text       start:0x80292320 end:0x8029241C
+	.text       start:0x80292248 end:0x802923C4
 
 dolphin/MSL_C/PPCEABI/bare/H/gamecube.c:
-	.text       start:0x8029241C end:0x80292428
+	.text       start:0x802923C4 end:0x802923C4
 
 main/unknown/autos/placeholder_80292428.c:
-	.text       start:0x80292428 end:0x80292460
+	.text       start:0x802923C4 end:0x802923C4
 
 dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c:
-	.text       start:0x80292460 end:0x80292538
+	.text       start:0x802923C4 end:0x802924B4
 
 main/unknown/autos/placeholder_80292538.c:
-	.text       start:0x80292538 end:0x80292754
+	.text       start:0x802924B4 end:0x802925C4
 
 dolphin/MSL_C/PPCEABI/bare/H/k_sin.c:
-	.text       start:0x80292754 end:0x80292804
+	.text       start:0x802925C4 end:0x802927A4
 
 dolphin/MSL_C/PPCEABI/bare/H/s_cos.c:
-	.text       start:0x80292804 end:0x802928F4
+	.text       start:0x802927A4 end:0x802927A4
 
 dolphin/MSL_C/PPCEABI/bare/H/math_ppc.c:
-	.text       start:0x802928F4 end:0x802929A8
+	.text       start:0x802927A4 end:0x802927A4
 
 main/unknown/autos/placeholder_802929A8.c:
-	.text       start:0x802929A8 end:0x80292B24
+	.text       start:0x802927A4 end:0x802929CC
 
 dolphin/MSL_C/PPCEABI/bare/H/k_cos.c:
-	.text       start:0x80292B24 end:0x80292C14
+	.text       start:0x802929CC end:0x80292B44
 
 main/unknown/autos/placeholder_80292C14.c:
-	.text       start:0x80292C14 end:0x80292F04
+	.text       start:0x80292B44 end:0x80292E20
 
 dolphin/MSL_C/PPCEABI/bare/H/e_sqrt.c:
-	.text       start:0x80292F04 end:0x8029312C
+	.text       start:0x80292E20 end:0x8029312C
 
 main/unknown/autos/placeholder_8029312C.c:
-	.text       start:0x8029312C end:0x8029349C
+	.text       start:0x8029312C end:0x80293464
 
 dolphin/MSL_C/PPCEABI/bare/H/s_tan.c:
-	.text       start:0x8029349C end:0x80293520
+	.text       start:0x80293464 end:0x80293464
 
 dolphin/MSL_C/PPCEABI/bare/H/rand.c:
-	.text       start:0x80293520 end:0x8029354C
+	.text       start:0x80293464 end:0x80293464
 
 main/unknown/autos/placeholder_8029354C.c:
-	.text       start:0x8029354C end:0x8029388C
+	.text       start:0x80293464 end:0x80293854
 
 dolphin/MSL_C/PPCEABI/bare/H/k_tan.c:
-	.text       start:0x8029388C end:0x80293A9C
+	.text       start:0x80293854 end:0x8029397C
 
 main/unknown/autos/placeholder_80293A9C.c:
-	.text       start:0x80293A9C end:0x80293BC4
+	.text       start:0x8029397C end:0x80293AC4
 
 dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.c:
-	.text       start:0x80293BC4 end:0x80293FB4
+	.text       start:0x80293AC4 end:0x80293F7C
 
 main/unknown/autos/placeholder_80293FB4.c:
-	.text       start:0x80293FB4 end:0x802947F8
+	.text       start:0x80293F7C end:0x802947CC
 
 dolphin/MSL_C/PPCEABI/bare/H/s_floor.c:
-	.text       start:0x802947F8 end:0x80294964
+	.text       start:0x802947CC end:0x80294850
 
 dolphin/MSL_C/PPCEABI/bare/H/s_sin.c:
-	.text       start:0x80294964 end:0x80294A4C
+	.text       start:0x80294850 end:0x802949E4
 
 main/unknown/autos/placeholder_80294A4C.c:
-	.text       start:0x80294A4C end:0x80294B88
+	.ctors      start:0x802C1884 end:0x802C1888
+	.text       start:0x802949E4 end:0x80294BB8
 
 dolphin/MSL_C/PPCEABI/bare/H/trigf.c:
-	.text       start:0x80294B88 end:0x80295334
-	.ctors      start:0x802C1884 end:0x802C1888
+	.text       start:0x80294BB8 end:0x80294BB8
 
 main/unknown/autos/placeholder_80295318.c:
-	.text       start:0x80295334 end:0x802BB420
+	.text       start:0x80294BB8 end:0x802BB3C0
 
 dolphin/TRK_MINNOW_DOLPHIN/main.c:
-	.text       start:0x802BB420 end:0x802BB768
+	.text       start:0x802BB3C0 end:0x802BB720
 
 main/unknown/autos/placeholder_802BB768.c:
-	.text       start:0x802BB768 end:0x802BB8C4
+	.text       start:0x802BB720 end:0x802BB720
 
 dolphin/TRK_MINNOW_DOLPHIN/main_gdev.c:
-	.text       start:0x802BB8C4 end:0x802BBC10
+	.text       start:0x802BB720 end:0x802BB720
 
 main/unknown/autos/placeholder_802BBC10.c:
-	.text       start:0x802BBC10 end:0x802C187C
+	.text       start:0x802BB720 end:0x802C187C
 
 Runtime.PPCEABI.H/__start.s: comment:0
 	.init       start:0x80003100 end:0x800033A8
