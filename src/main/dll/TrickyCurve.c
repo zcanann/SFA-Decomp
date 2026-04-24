@@ -244,7 +244,7 @@ void FUN_802074fc(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80207704
+ * Function: TrickyCurve_updateEffectRingTrigger
  * EN v1.0 Address: 0x80207704
  * EN v1.0 Size: 1292b
  * EN v1.1 Address: 0x802077C4
@@ -254,8 +254,9 @@ void FUN_802074fc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80207704(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                                         undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                         undefined8 param_7,undefined8 param_8)
 {
   bool bVar1;
   uint uVar2;
@@ -459,7 +460,8 @@ void TrickyCurve_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
   
   cVar1 = *(char *)(*(int *)(param_9 + 0xb8) + 0xe);
   if (cVar1 == '\0') {
-    FUN_80207704(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+    TrickyCurve_updateEffectRingTrigger(param_1,param_2,param_3,param_4,param_5,param_6,param_7,
+                                        param_8);
   }
   else if (cVar1 == '\x01') {
     FUN_802074fc(param_9);
