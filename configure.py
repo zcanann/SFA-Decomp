@@ -343,7 +343,7 @@ config.libs = [
             Object(NonMatching, "dolphin/os/OSFont.c", extra_cflags=["-use_lmw_stmw", "on"]),
             Object(NonMatching, "dolphin/os/OSInterrupt.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSLink.c"),
-            Object(NonMatching, "dolphin/os/OSMessage.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/os/OSMessage.c"),
             Object(NonMatching, "dolphin/os/OSMemory.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSMutex.c"),
             Object(NonMatching, "dolphin/os/OSReboot.c"),
@@ -360,7 +360,7 @@ config.libs = [
     DolphinLib(
         "base",
         [
-            Object(NonMatching, "dolphin/base/PPCArch.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/base/PPCArch.c"),
         ],
     ),
     DolphinLib(
