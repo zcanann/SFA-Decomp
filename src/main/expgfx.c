@@ -186,22 +186,52 @@ typedef struct ExpgfxTableEntry {
   s16 slotType;
 } ExpgfxTableEntry;
 
+typedef struct ExpgfxSlot {
+  u8 pad00[0x40];
+  s16 sourceVecX;
+  s16 sourceVecY;
+  s16 sourceVecZ;
+  u8 pad46[0x48 - 0x46];
+  int sourcePosX;
+  int sourcePosY;
+  int sourcePosZ;
+  int sourcePosW;
+  int posX;
+  int posY;
+  int posZ;
+  int startPosX;
+  int startPosY;
+  int startPosZ;
+  float velocityX;
+  float velocityY;
+  float velocityZ;
+  u32 behaviorFlags;
+  u32 renderFlags;
+  s16 scaleCounter;
+  s16 scaleTarget;
+  s16 scaleFrames;
+  u8 encodedTableIndex;
+  u8 stateBits;
+  u8 colorByte0;
+  u8 colorByte1;
+  u8 colorByte2;
+  u8 pad8F[0xA0 - 0x8F];
+} ExpgfxSlot;
+
 static ExpgfxTableEntry *Expgfx_GetTableEntry(int tableIndex) {
   return &((ExpgfxTableEntry *)&DAT_8039c138)[tableIndex];
 }
 
-static u8 Expgfx_GetSlotTableIndex(const void *slot) {
-  return (*(const u8 *)((const u8 *)slot + EXPGFX_SLOT_TABLE_INDEX_OFFSET)) >> 1;
+static u8 Expgfx_GetSlotTableIndex(const ExpgfxSlot *slot) {
+  return slot->encodedTableIndex >> 1;
 }
 
-static void Expgfx_SetSlotTableIndex(void *slot, u8 tableIndex) {
-  u8 *encodedIndex = (u8 *)slot + EXPGFX_SLOT_TABLE_INDEX_OFFSET;
-
-  *encodedIndex = (u8)((tableIndex << 1) | (*encodedIndex & 1));
+static void Expgfx_SetSlotTableIndex(ExpgfxSlot *slot, u8 tableIndex) {
+  slot->encodedTableIndex = (u8)((tableIndex << 1) | (slot->encodedTableIndex & 1));
 }
 
-static void *Expgfx_GetSlot(int poolIndex, int slotIndex) {
-  return (void *)((&gExpgfxSlotPoolBases)[poolIndex] + slotIndex * EXPGFX_SLOT_SIZE);
+static ExpgfxSlot *Expgfx_GetSlot(int poolIndex, int slotIndex) {
+  return (ExpgfxSlot *)((&gExpgfxSlotPoolBases)[poolIndex] + slotIndex * EXPGFX_SLOT_SIZE);
 }
 
 /*
@@ -223,7 +253,7 @@ void expgfx_release(undefined8 param_1,undefined8 param_2,undefined8 param_3,und
                     undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
   ExpgfxTableEntry *tableEntry;
-  u8 *slot;
+  ExpgfxSlot *slot;
   uint uVar1;
   int iVar2;
   char *pcVar4;
@@ -238,7 +268,7 @@ void expgfx_release(undefined8 param_1,undefined8 param_2,undefined8 param_3,und
   puVar7 = &gExpgfxSlotActiveMasks + iVar2;
   if ((1 << param_11 & *puVar7) != 0) {
     slot = Expgfx_GetSlot(iVar2, param_11);
-    *(undefined4 *)(slot + 0x7c) = 0;
+    slot->behaviorFlags = 0;
     if (param_12 == 0) {
       uVar5 = param_13;
       uVar8 = extraout_f1;
@@ -262,7 +292,7 @@ void expgfx_release(undefined8 param_1,undefined8 param_2,undefined8 param_3,und
         }
       }
     }
-    *(undefined2 *)(slot + 0x4c) = 0xffff;
+    *(undefined2 *)((u8 *)slot + 0x4c) = 0xffff;
     if ((param_13 & 0xff) != 0) {
       FUN_802420e0((uint)slot,EXPGFX_SLOT_SIZE);
     }
@@ -294,7 +324,7 @@ void expgfx_initialise(undefined8 param_1,undefined8 param_2,undefined8 param_3,
                        undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   ExpgfxTableEntry *tableEntry;
-  u8 *slot;
+  ExpgfxSlot *slot;
   uint uVar1;
   undefined4 in_r6;
   undefined4 in_r7;
@@ -321,7 +351,7 @@ void expgfx_initialise(undefined8 param_1,undefined8 param_2,undefined8 param_3,
     iVar4 = 0;
     do {
       if ((1 << iVar4 & *puVar8) != 0) {
-        slot = (u8 *)uVar3;
+        slot = (ExpgfxSlot *)uVar3;
         tableEntry = Expgfx_GetTableEntry(Expgfx_GetSlotTableIndex(slot));
         if ((tableEntry->textureOrResource != 0) && (tableEntry->textureOrResource != 0)) {
           DAT_803dded8 = 1;
@@ -341,7 +371,7 @@ void expgfx_initialise(undefined8 param_1,undefined8 param_2,undefined8 param_3,
             tableEntry->key0 = 0;
           }
         }
-        *(undefined2 *)(slot + 0x4c) = 0xffff;
+        *(undefined2 *)((u8 *)slot + 0x4c) = 0xffff;
         *puVar8 = *puVar8 & ~(1 << iVar4);
       }
       uVar3 = uVar3 + EXPGFX_SLOT_SIZE;
@@ -511,6 +541,7 @@ void FUN_8009b994(undefined8 param_1,double param_2,undefined8 param_3,undefined
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9)
 {
+  ExpgfxSlot *slot;
   ExpgfxTableEntry *tableEntry;
   double dVar1;
   undefined2 *puVar2;
@@ -528,11 +559,12 @@ void FUN_8009b994(undefined8 param_1,double param_2,undefined8 param_3,undefined
   undefined8 local_18;
   undefined8 local_8;
   
-  tableEntry = Expgfx_GetTableEntry(Expgfx_GetSlotTableIndex(param_9));
+  slot = (ExpgfxSlot *)param_9;
+  tableEntry = Expgfx_GetTableEntry(Expgfx_GetSlotTableIndex(slot));
   iVar5 = tableEntry->textureOrResource;
-  *(byte *)((int)param_9 + 0x8b) = *(byte *)((int)param_9 + 0x8b) & 0xfe;
-  *(byte *)((int)param_9 + 0x8b) = *(byte *)((int)param_9 + 0x8b) & 0xfd | 2;
-  uVar3 = *(uint *)(param_9 + 0x3e);
+  slot->stateBits = slot->stateBits & 0xfe;
+  slot->stateBits = slot->stateBits & 0xfd | 2;
+  uVar3 = slot->behaviorFlags;
   if ((uVar3 & 0x8000000) == 0) {
     puVar2 = (undefined2 *)0x803105c0;
   }
@@ -567,33 +599,30 @@ void FUN_8009b994(undefined8 param_1,double param_2,undefined8 param_3,undefined
   }
 LAB_8009ba84:
   dVar10 = (double)FLOAT_803e0044;
-  *(float *)(param_9 + 0x2c) =
-       (float)((double)*(float *)(param_9 + 0x38) * dVar10 + (double)*(float *)(param_9 + 0x2c));
-  *(float *)(param_9 + 0x2e) =
-       (float)((double)*(float *)(param_9 + 0x3a) * dVar10 + (double)*(float *)(param_9 + 0x2e));
-  dVar9 = (double)*(float *)(param_9 + 0x3c);
-  *(float *)(param_9 + 0x30) = (float)(dVar9 * dVar10 + (double)*(float *)(param_9 + 0x30));
+  *(float *)&slot->posX = (float)((double)slot->velocityX * dVar10 + (double)*(float *)&slot->posX);
+  *(float *)&slot->posY = (float)((double)slot->velocityY * dVar10 + (double)*(float *)&slot->posY);
+  dVar9 = (double)slot->velocityZ;
+  *(float *)&slot->posZ = (float)(dVar9 * dVar10 + (double)*(float *)&slot->posZ);
   dVar1 = DOUBLE_803dfff8;
-  if ((*(uint *)(param_9 + 0x3e) & 0x100000) == 0) {
-    if ((*(uint *)(param_9 + 0x40) & 0x2000) != 0) {
+  if ((slot->behaviorFlags & 0x100000) == 0) {
+    if ((slot->renderFlags & 0x2000) != 0) {
       uVar3 = 0x43300000;
-      local_8 = (double)CONCAT44(0x43300000,(uint)(ushort)param_9[0x44]);
+      local_8 = (double)CONCAT44(0x43300000,(uint)(ushort)slot->scaleFrames);
       dVar9 = (double)(float)(local_8 - DOUBLE_803dfff8);
-      param_9[0x42] =
+      slot->scaleCounter =
            (short)(int)-(float)(dVar9 * dVar10 -
-                               (double)(float)((double)CONCAT44(0x43300000,
-                                                                (uint)(ushort)param_9[0x42]) -
+                               (double)(float)((double)CONCAT44(0x43300000,(uint)(ushort)slot->scaleCounter) -
                                               DOUBLE_803dfff8));
       param_2 = dVar1;
     }
   }
   else {
     uVar3 = 0x43300000;
-    local_18 = (double)CONCAT44(0x43300000,(uint)(ushort)param_9[0x44]);
+    local_18 = (double)CONCAT44(0x43300000,(uint)(ushort)slot->scaleFrames);
     dVar9 = (double)(float)(local_18 - DOUBLE_803dfff8);
-    param_9[0x42] =
+    slot->scaleCounter =
          (short)(int)(dVar9 * dVar10 +
-                     (double)(float)((double)CONCAT44(0x43300000,(uint)(ushort)param_9[0x42]) -
+                     (double)(float)((double)CONCAT44(0x43300000,(uint)(ushort)slot->scaleCounter) -
                                     DOUBLE_803dfff8));
     param_2 = dVar1;
   }
@@ -606,11 +635,11 @@ LAB_8009ba84:
       uVar8 = 0x80;
       uVar6 = 0x80;
       uVar7 = 0;
-      if ((*(uint *)(param_9 + 0x3e) & 0x80) != 0) {
+      if ((slot->behaviorFlags & 0x80) != 0) {
         uVar7 = 0x80;
         uVar8 = 0;
       }
-      if ((*(uint *)(param_9 + 0x3e) & 0x40) != 0) {
+      if ((slot->behaviorFlags & 0x40) != 0) {
         uVar4 = 0x80;
         uVar6 = 0;
       }
@@ -958,7 +987,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
                       undefined4 param_10,short param_11,undefined param_12,undefined4 param_13,
                       undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
-  u8 *slot;
+  ExpgfxSlot *slot;
   float fVar1;
   uint uVar2;
   uint uVar3;
@@ -1027,9 +1056,9 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
       DAT_803dded0 = 0;
     }
     puVar18[0x13] = DAT_803dded0;
-    *(int *)(puVar18 + 0x3e) = piVar5[0x11];
-    *(int *)(puVar18 + 0x40) = piVar5[0x12];
-    *(byte *)((int)puVar18 + 0x8b) = *(byte *)((int)puVar18 + 0x8b) & 0xf3;
+    slot->behaviorFlags = piVar5[0x11];
+    slot->renderFlags = piVar5[0x12];
+    slot->stateBits = slot->stateBits & 0xf3;
     iVar6 = FUN_80081134(dVar19,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                          (int)*(short *)((int)piVar5 + 0x42),uVar9,uVar12,uVar14,piVar16,param_14,
                          param_15,param_16);
@@ -1068,7 +1097,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
           puVar18[0x21] = *(undefined2 *)((int)piVar5 + 0xe);
           puVar18[0x20] = *(undefined2 *)(piVar5 + 3);
         }
-        else if ((*(uint *)(puVar18 + 0x3e) & 0x200000) != 0) {
+        else if ((slot->behaviorFlags & 0x200000) != 0) {
           *(undefined4 *)(puVar18 + 0x26) = *(undefined4 *)(puVar17 + 0xc);
           *(undefined4 *)(puVar18 + 0x28) = *(undefined4 *)(puVar17 + 0xe);
           *(undefined4 *)(puVar18 + 0x2a) = *(undefined4 *)(puVar17 + 0x10);
@@ -1076,7 +1105,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
           puVar18[0x22] = puVar17[2];
           puVar18[0x21] = puVar17[1];
           puVar18[0x20] = *puVar17;
-          if (((*(uint *)(puVar18 + 0x3e) & 2) != 0) || ((*(uint *)(puVar18 + 0x3e) & 4) != 0)) {
+          if (((slot->behaviorFlags & 2) != 0) || ((slot->behaviorFlags & 4) != 0)) {
             piVar5[9] = (int)((float)piVar5[9] + *(float *)(puVar17 + 0x12));
             piVar5[10] = (int)((float)piVar5[10] + *(float *)(puVar17 + 0x14));
             dVar19 = (double)(float)piVar5[0xb];
@@ -1101,19 +1130,19 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
                          param_15,param_16);
         }
         else {
-          Expgfx_SetSlotTableIndex(puVar18, (u8)uVar3);
+          Expgfx_SetSlotTableIndex(slot, (u8)uVar3);
           iVar7 = piVar5[0xc];
-          *(int *)(puVar18 + 0x32) = iVar7;
-          *(int *)(puVar18 + 0x2c) = iVar7;
+          slot->startPosX = iVar7;
+          slot->posX = iVar7;
           iVar7 = piVar5[0xd];
-          *(int *)(puVar18 + 0x34) = iVar7;
-          *(int *)(puVar18 + 0x2e) = iVar7;
+          slot->startPosY = iVar7;
+          slot->posY = iVar7;
           iVar7 = piVar5[0xe];
-          *(int *)(puVar18 + 0x36) = iVar7;
-          *(int *)(puVar18 + 0x30) = iVar7;
-          *(int *)(puVar18 + 0x38) = piVar5[9];
-          *(int *)(puVar18 + 0x3a) = piVar5[10];
-          *(int *)(puVar18 + 0x3c) = piVar5[0xb];
+          slot->startPosZ = iVar7;
+          slot->posZ = iVar7;
+          slot->velocityX = (float)piVar5[9];
+          slot->velocityY = (float)piVar5[10];
+          slot->velocityZ = (float)piVar5[0xb];
           *(undefined *)((int)puVar18 + 0xf) = *(undefined *)(piVar5 + 0x18);
           puVar18[0x1b] = (short)piVar5[1];
           puVar18[3] = (short)piVar5[2];
@@ -1126,39 +1155,39 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
           dVar20 = (double)FLOAT_803dffd0;
           dVar19 = dVar20 * (double)(float)piVar5[0xf];
           dVar21 = (double)(float)dVar19;
-          if ((*(uint *)(puVar18 + 0x3e) & 0x100000) == 0) {
-            if ((*(uint *)(puVar18 + 0x40) & 0x2000) == 0) {
+          if ((slot->behaviorFlags & 0x100000) == 0) {
+            if ((slot->renderFlags & 0x2000) == 0) {
               local_38 = (double)(longlong)(int)dVar19;
-              puVar18[0x42] = (short)(int)dVar19;
-              puVar18[0x43] = puVar18[0x42];
-              puVar18[0x44] = 0;
+              slot->scaleCounter = (short)(int)dVar19;
+              slot->scaleTarget = slot->scaleCounter;
+              slot->scaleFrames = 0;
             }
             else {
               param_2 = (double)(longlong)(int)dVar19;
               uVar4 = (undefined2)(int)dVar19;
-              puVar18[0x42] = uVar4;
+              slot->scaleCounter = uVar4;
               dVar20 = DOUBLE_803dffe0;
               local_48 = (double)CONCAT44(0x43300000,(int)(short)puVar18[0xb] ^ 0x80000000);
               iVar7 = (int)(dVar21 / (double)(float)(local_48 - DOUBLE_803dffe0));
               local_50 = (double)(longlong)iVar7;
-              puVar18[0x44] = (short)iVar7;
-              puVar18[0x43] = uVar4;
+              slot->scaleFrames = (short)iVar7;
+              slot->scaleTarget = uVar4;
               local_40 = param_2;
               local_38 = param_2;
             }
           }
           else {
-            puVar18[0x42] = 0;
+            slot->scaleCounter = 0;
             dVar20 = DOUBLE_803dffe0;
             local_50 = (double)CONCAT44(0x43300000,(int)(short)puVar18[0xb] ^ 0x80000000);
             iVar7 = (int)(dVar21 / (double)(float)(local_50 - DOUBLE_803dffe0));
             local_48 = (double)(longlong)iVar7;
-            puVar18[0x44] = (short)iVar7;
+            slot->scaleFrames = (short)iVar7;
             local_40 = (double)(longlong)(int)dVar19;
-            puVar18[0x43] = (short)(int)dVar19;
+            slot->scaleTarget = (short)(int)dVar19;
           }
-          if (((*(uint *)(puVar18 + 0x3e) & 0x20000) != 0) ||
-             ((*(uint *)(puVar18 + 0x3e) & 0x4000000) != 0)) {
+          if (((slot->behaviorFlags & 0x20000) != 0) ||
+             ((slot->behaviorFlags & 0x4000000) != 0)) {
             *(int *)(puVar18 + 0x26) = piVar5[6];
             *(int *)(puVar18 + 0x28) = piVar5[7];
             *(int *)(puVar18 + 0x2a) = piVar5[8];
@@ -1167,9 +1196,9 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
             puVar18[0x21] = *(undefined2 *)((int)piVar5 + 0xe);
             puVar18[0x20] = *(undefined2 *)(piVar5 + 3);
           }
-          *(byte *)((int)puVar18 + 0x8b) = DAT_803dded2 & 1 | *(byte *)((int)puVar18 + 0x8b) & 0xfe;
-          if ((*(uint *)(puVar18 + 0x40) & 8) != 0) {
-            *(uint *)(puVar18 + 0x40) = *(uint *)(puVar18 + 0x40) ^ 8;
+          slot->stateBits = DAT_803dded2 & 1 | slot->stateBits & 0xfe;
+          if ((slot->renderFlags & 8) != 0) {
+            slot->renderFlags = slot->renderFlags ^ 8;
             dVar21 = DOUBLE_803dffe0;
             param_4 = (double)FLOAT_803e009c;
             local_38 = (double)CONCAT44(0x43300000,(int)(short)puVar18[3] ^ 0x80000000);
@@ -1191,9 +1220,9 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
             *(float *)(puVar18 + 0x3a) = (float)((double)*(float *)(puVar18 + 0x3a) * dVar20);
             *(float *)(puVar18 + 0x3c) = (float)((double)*(float *)(puVar18 + 0x3c) * dVar20);
           }
-          if ((*(uint *)(puVar18 + 0x40) & 0x10) != 0) {
+          if ((slot->renderFlags & 0x10) != 0) {
             iVar7 = FUN_80017a98();
-            *(uint *)(puVar18 + 0x40) = *(uint *)(puVar18 + 0x40) ^ 0x10;
+            slot->renderFlags = slot->renderFlags ^ 0x10;
             dVar19 = DOUBLE_803dffe0;
             if ((*(uint *)(puVar18 + 0x3e) & 1) == 0) {
               dVar21 = (double)(*(float *)(iVar7 + 0x18) -
@@ -1282,7 +1311,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
             *pbVar11 = *pbVar11 + 1;
           }
           (&DAT_8039c7d8)[local_56[0]] = param_12;
-          FUN_802420e0((uint)puVar18,0xa0);
+          FUN_802420e0((uint)puVar18,EXPGFX_SLOT_SIZE);
           DAT_803ddeec = puVar18;
         }
       }
