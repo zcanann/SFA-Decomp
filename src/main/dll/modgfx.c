@@ -166,7 +166,7 @@ extern undefined4 DAT_8039c7d4;
 extern undefined gExpgfxSlotActiveCounts;
 extern undefined4 gExpgfxSlotActiveMasks;
 extern uint gExpgfxSlotPoolBases;
-extern undefined4* DAT_8039caf8;
+extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
 extern undefined4 DAT_8039cafc;
 extern undefined4 DAT_8039cb18;
 extern undefined4 DAT_8039cb1c;
@@ -1324,7 +1324,7 @@ void FUN_800a0250(uint param_1)
 /*
  * --INFO--
  *
- * Function: FUN_800a0280
+ * Function: modgfx_initExpgfxSpawnConfig
  * EN v1.0 Address: 0x800A0280
  * EN v1.0 Size: 176b
  * EN v1.1 Address: 0x800A04C0
@@ -1334,14 +1334,14 @@ void FUN_800a0250(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a0280(undefined4 param_1,undefined4 param_2,undefined param_3,undefined4 param_4,
-                 undefined4 param_5)
+void modgfx_initExpgfxSpawnConfig(undefined4 param_1,undefined4 param_2,undefined param_3,
+                                  undefined4 param_4,undefined4 param_5)
 {
   undefined4 uVar1;
   ushort extraout_r4;
   
   uVar1 = FUN_80286840();
-  FUN_800033a8(-0x7fc63508,0,0x60);
+  FUN_800033a8((int)&gExpgfxSpawnConfig,0,EXPGFX_SPAWN_CONFIG_PREFIX_BYTES);
   DAT_8039cb50 = (undefined)extraout_r4;
   DAT_8039cb3c = extraout_r4 & 0xff;
   DAT_8039cb24 = FLOAT_803e00b0;
