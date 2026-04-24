@@ -2549,8 +2549,8 @@ LAB_800344f4:
  * --INFO--
  *
  * Function: fn_8003454C
- * EN v1.0 Address: 0x80034910
- * EN v1.0 Size: 36b
+ * EN v1.0 Address: 0x800344B0
+ * EN v1.0 Size: 1120b
  * EN v1.1 Address: 0x8003454C
  * EN v1.1 Size: 1116b
  * JP Address: TODO

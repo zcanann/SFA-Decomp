@@ -87,8 +87,8 @@ extern f32 FLOAT_803e3364;
  * --INFO--
  *
  * Function: FUN_8014e604
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8014E1DC
+ * EN v1.0 Size: 52b
  * EN v1.1 Address: 0x8014E604
  * EN v1.1 Size: 52b
  * JP Address: TODO
@@ -109,8 +109,8 @@ void pressureSwitch_freeSharedResource(void)
  * --INFO--
  *
  * Function: FUN_8014e638
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8014E210
+ * EN v1.0 Size: 52b
  * EN v1.1 Address: 0x8014E638
  * EN v1.1 Size: 56b
  * JP Address: TODO

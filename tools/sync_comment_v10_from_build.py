@@ -25,6 +25,7 @@ BLOCK_RE = re.compile(
 
 TEXT_SPLIT_RE = re.compile(r"\t\.text\s+start:0x([0-9A-Fa-f]+)\s+end:0x([0-9A-Fa-f]+)")
 SYMBOL_RE = re.compile(r"^([0-9A-Fa-f]+)\s+([0-9A-Fa-f]+)\s+([tT])\s+(.+)$")
+NAME_WITH_ADDR_RE = re.compile(r"^(?:FUN|fn)_([0-9A-Fa-f]{8})$")
 
 
 @dataclass(frozen=True)
@@ -47,13 +48,14 @@ def parse_splits(path: Path) -> dict[str, int]:
     return split_starts
 
 
-def load_text_symbols(nm_path: Path, obj_path: Path) -> dict[str, list[TextSymbol]]:
+def load_text_symbols(nm_path: Path, obj_path: Path) -> tuple[list[TextSymbol], dict[str, list[TextSymbol]]]:
     result = subprocess.run(
         [str(nm_path), "-n", "-S", str(obj_path)],
         check=True,
         capture_output=True,
         text=True,
     )
+    ordered_symbols: list[TextSymbol] = []
     symbols: dict[str, list[TextSymbol]] = defaultdict(list)
     for raw_line in result.stdout.splitlines():
         match = SYMBOL_RE.match(raw_line.strip())
@@ -64,8 +66,10 @@ def load_text_symbols(nm_path: Path, obj_path: Path) -> dict[str, list[TextSymbo
         name = match.group(4).strip()
         if name.startswith("@"):
             continue
-        symbols[name].append(TextSymbol(offset=offset, size=size, name=name))
-    return symbols
+        symbol = TextSymbol(offset=offset, size=size, name=name)
+        ordered_symbols.append(symbol)
+        symbols[name].append(symbol)
+    return ordered_symbols, symbols
 
 
 def format_address(value: int) -> str:
@@ -78,6 +82,48 @@ def format_size(value: int) -> str:
 
 def iter_source_files(root: Path) -> list[Path]:
     return sorted(path for path in root.rglob("*.c") if path.is_file())
+
+
+def parse_address_from_name(name: str) -> int | None:
+    match = NAME_WITH_ADDR_RE.match(name.strip())
+    if match is None:
+        return None
+    return int(match.group(1), 16)
+
+
+def find_definition_name(source: str, block_end: int) -> str | None:
+    tail = source[block_end:]
+    window = tail[:2000]
+    lines: list[str] = []
+    for raw_line in window.splitlines():
+        stripped = raw_line.strip()
+        if not stripped:
+            continue
+        if stripped.startswith("#pragma"):
+            continue
+        if stripped.startswith("/*") or stripped.startswith("*") or stripped.startswith("//"):
+            continue
+        lines.append(stripped)
+        if "{" in stripped:
+            break
+    if not lines:
+        return None
+    signature = " ".join(lines)
+    match = re.search(r"([A-Za-z_]\w*)\s*\([^;{}]*\)\s*\{", signature)
+    if match is None:
+        return None
+    return match.group(1)
+
+
+def resolve_obj_path(source_path: Path, source_base: Path, build_root: Path, build_obj_root: Path) -> Path | None:
+    rel = source_path.relative_to(source_base).with_suffix(".o")
+    primary = build_root / rel
+    if primary.exists():
+        return primary
+    secondary = build_obj_root / rel
+    if secondary.exists():
+        return secondary
+    return None
 
 
 def main() -> int:
@@ -102,6 +148,12 @@ def main() -> int:
         type=Path,
         default=Path("build/GSAE01/src"),
         help="Build object root for the current v1.0 target.",
+    )
+    parser.add_argument(
+        "--build-obj-root",
+        type=Path,
+        default=Path("build/GSAE01/obj"),
+        help="Fallback object root for linked-false objects in the current v1.0 target.",
     )
     parser.add_argument(
         "--nm",
@@ -134,25 +186,83 @@ def main() -> int:
 
         rel = source_path.as_posix()
         split_start = split_starts.get(rel)
-        if split_start is None:
-            skipped_missing_split += 1
-            continue
-
-        obj_path = args.build_root / source_path.relative_to(args.source_base)
-        obj_path = obj_path.with_suffix(".o")
-        if not obj_path.exists():
+        obj_path = resolve_obj_path(source_path, args.source_base, args.build_root, args.build_obj_root)
+        if obj_path is None:
+            if split_start is None:
+                skipped_missing_split += 1
             skipped_missing_obj += 1
             continue
+        if split_start is None:
+            skipped_missing_split += 1
 
-        symbols = load_text_symbols(args.nm, obj_path)
+        ordered_symbols, symbols = load_text_symbols(args.nm, obj_path)
         file_changed = 0
+        block_count = len(list(BLOCK_RE.finditer(original)))
+        sequential_symbols: list[TextSymbol] | None = None
+        sequential_index = 0
+        if obj_path.is_relative_to(args.build_obj_root):
+            nontrivial_symbols = [symbol for symbol in ordered_symbols if symbol.size > 4]
+            if len(nontrivial_symbols) == block_count:
+                sequential_symbols = nontrivial_symbols
 
         def replace(match: re.Match[str]) -> str:
             nonlocal file_changed, blocks_changed, skipped_missing_symbol, skipped_duplicate_symbol
+            nonlocal sequential_index
 
             function_name = match.group("function").strip()
-            candidates = symbols.get(function_name)
+            definition_name = find_definition_name(original, match.end())
+            candidate_names: list[str] = []
+            if definition_name is not None:
+                candidate_names.append(definition_name)
+            if function_name not in candidate_names:
+                candidate_names.append(function_name)
+
+            candidates: list[TextSymbol] | None = None
+            for candidate_name in candidate_names:
+                named_candidates = symbols.get(candidate_name)
+                if named_candidates is None:
+                    continue
+                candidates = named_candidates
+                break
+
             if candidates is None:
+                if split_start is None and len(symbols) == 1:
+                    only_symbol = next(iter(symbols.values()))[0]
+                    parsed_address = parse_address_from_name(only_symbol.name)
+                    if parsed_address is not None and only_symbol.offset == 0:
+                        v10_addr = format_address(parsed_address)
+                        v10_size = format_size(only_symbol.size)
+                        if (
+                            match.group("v10_addr").strip() == v10_addr
+                            and match.group("v10_size").strip() == v10_size
+                        ):
+                            return match.group(0)
+                        file_changed += 1
+                        blocks_changed += 1
+                        return (
+                            f"{match.group('prefix')}{function_name}"
+                            f"{match.group('mid1')}{v10_addr}"
+                            f"{match.group('mid2')}{v10_size}"
+                            f"{match.group('suffix')}"
+                        )
+                if sequential_symbols is not None:
+                    symbol = sequential_symbols[sequential_index]
+                    sequential_index += 1
+                    v10_addr = format_address(split_start + symbol.offset)
+                    v10_size = format_size(symbol.size)
+                    if (
+                        match.group("v10_addr").strip() == v10_addr
+                        and match.group("v10_size").strip() == v10_size
+                    ):
+                        return match.group(0)
+                    file_changed += 1
+                    blocks_changed += 1
+                    return (
+                        f"{match.group('prefix')}{function_name}"
+                        f"{match.group('mid1')}{v10_addr}"
+                        f"{match.group('mid2')}{v10_size}"
+                        f"{match.group('suffix')}"
+                    )
                 skipped_missing_symbol += 1
                 return match.group(0)
             if len(candidates) != 1:
@@ -160,6 +270,26 @@ def main() -> int:
                 return match.group(0)
 
             symbol = candidates[0]
+            if split_start is None:
+                parsed_address = parse_address_from_name(symbol.name)
+                if parsed_address is None or symbol.offset != 0:
+                    skipped_missing_symbol += 1
+                    return match.group(0)
+                v10_addr = format_address(parsed_address)
+                v10_size = format_size(symbol.size)
+                if (
+                    match.group("v10_addr").strip() == v10_addr
+                    and match.group("v10_size").strip() == v10_size
+                ):
+                    return match.group(0)
+                file_changed += 1
+                blocks_changed += 1
+                return (
+                    f"{match.group('prefix')}{function_name}"
+                    f"{match.group('mid1')}{v10_addr}"
+                    f"{match.group('mid2')}{v10_size}"
+                    f"{match.group('suffix')}"
+                )
             v10_addr = format_address(split_start + symbol.offset)
             v10_size = format_size(symbol.size)
             if match.group("v10_addr").strip() == v10_addr and match.group("v10_size").strip() == v10_size:

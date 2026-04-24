@@ -239,8 +239,8 @@ void FUN_8006a1a4(undefined4 param_1,undefined4 param_2,uint param_3,undefined4 
  * --INFO--
  *
  * Function: FUN_8006b6d4
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006A02C
+ * EN v1.0 Size: 676b
  * EN v1.1 Address: 0x8006B6D4
  * EN v1.1 Size: 728b
  * JP Address: TODO
@@ -324,8 +324,8 @@ void newshadows_captureProjectedShadow(ushort *object)
  * --INFO--
  *
  * Function: FUN_8006b9ac
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006A2D0
+ * EN v1.0 Size: 320b
  * EN v1.1 Address: 0x8006B9AC
  * EN v1.1 Size: 304b
  * JP Address: TODO
@@ -391,8 +391,8 @@ void newshadows_sortQueuedShadowCasters(int queueBase,int casterCount)
  * --INFO--
  *
  * Function: FUN_8006badc
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006A410
+ * EN v1.0 Size: 2448b
  * EN v1.1 Address: 0x8006BADC
  * EN v1.1 Size: 2596b
  * JP Address: TODO
@@ -801,8 +801,8 @@ void newshadows_renderQueuedShadowCasters(void)
  * --INFO--
  *
  * Function: FUN_8006c500
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006ADA0
+ * EN v1.0 Size: 372b
  * EN v1.1 Address: 0x8006C500
  * EN v1.1 Size: 316b
  * JP Address: TODO
@@ -853,8 +853,8 @@ void newshadows_queueShadowCaster(int object)
  * --INFO--
  *
  * Function: FUN_8006c63c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006AF14
+ * EN v1.0 Size: 28b
  * EN v1.1 Address: 0x8006C63C
  * EN v1.1 Size: 32b
  * JP Address: TODO
@@ -874,8 +874,8 @@ void newshadows_getShadowTextureTable4x8(int *tableOut,int *columnsOut,int *rows
  * --INFO--
  *
  * Function: FUN_8006c65c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006AF30
+ * EN v1.0 Size: 20b
  * EN v1.1 Address: 0x8006C65C
  * EN v1.1 Size: 24b
  * JP Address: TODO
@@ -932,8 +932,8 @@ void FUN_8006c680(undefined4 *param_1)
  * --INFO--
  *
  * Function: FUN_8006c68c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006AF5C
+ * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C68C
  * EN v1.1 Size: 12b
  * JP Address: TODO
@@ -970,8 +970,8 @@ void FUN_8006c698(undefined4 *param_1)
  * --INFO--
  *
  * Function: FUN_8006c6a4
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006AF74
+ * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C6A4
  * EN v1.1 Size: 12b
  * JP Address: TODO
@@ -989,8 +989,8 @@ void newshadows_getBlankShadowTexture(int *textureOut)
  * --INFO--
  *
  * Function: FUN_8006c6b0
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006AF80
+ * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C6B0
  * EN v1.1 Size: 12b
  * JP Address: TODO
@@ -1008,8 +1008,8 @@ void newshadows_getShadowDirectionTexture(int *textureOut)
  * --INFO--
  *
  * Function: FUN_8006c6bc
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006AF8C
+ * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C6BC
  * EN v1.1 Size: 12b
  * JP Address: TODO
@@ -1050,8 +1050,8 @@ int FUN_8006c6c8(void)
  * --INFO--
  *
  * Function: FUN_8006c734
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B004
+ * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C734
  * EN v1.1 Size: 12b
  * JP Address: TODO
@@ -1069,8 +1069,8 @@ void newshadows_getShadowRampTexture(int *textureOut)
  * --INFO--
  *
  * Function: FUN_8006c740
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B010
+ * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8006C740
  * EN v1.1 Size: 8b
  * JP Address: TODO
@@ -1087,8 +1087,8 @@ int newshadows_getSmallShadowTexture(void)
  * --INFO--
  *
  * Function: FUN_8006c748
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B018
+ * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C748
  * EN v1.1 Size: 12b
  * JP Address: TODO
@@ -1125,8 +1125,8 @@ void FUN_8006c754(undefined4 *param_1)
  * --INFO--
  *
  * Function: FUN_8006c760
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B030
+ * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C760
  * EN v1.1 Size: 12b
  * JP Address: TODO
@@ -1166,8 +1166,8 @@ void FUN_8006c76c(int param_1,undefined4 *param_2,undefined4 *param_3,int *param
  * --INFO--
  *
  * Function: FUN_8006c7ec
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B0B4
+ * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8006C7EC
  * EN v1.1 Size: 8b
  * JP Address: TODO
@@ -1227,8 +1227,8 @@ void FUN_8006c820(int param_1)
  * --INFO--
  *
  * Function: FUN_8006c86c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B134
+ * EN v1.0 Size: 76b
  * EN v1.1 Address: 0x8006C86C
  * EN v1.1 Size: 76b
  * JP Address: TODO
@@ -1251,8 +1251,8 @@ void newshadows_bindShadowRenderTexture(int textureSlot)
  * --INFO--
  *
  * Function: FUN_8006c8b8
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B180
+ * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8006C8B8
  * EN v1.1 Size: 8b
  * JP Address: TODO
@@ -1287,8 +1287,8 @@ undefined4 FUN_8006c8c0(void)
  * --INFO--
  *
  * Function: FUN_8006c8c8
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B190
+ * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8006C8C8
  * EN v1.1 Size: 8b
  * JP Address: TODO
@@ -1305,8 +1305,8 @@ int newshadows_getInverseShadowRampTexture(void)
  * --INFO--
  *
  * Function: FUN_8006c8d0
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B198
+ * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8006C8D0
  * EN v1.1 Size: 8b
  * JP Address: TODO
@@ -1323,8 +1323,8 @@ int newshadows_getRadialFalloffTexture(void)
  * --INFO--
  *
  * Function: FUN_8006c8d8
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B1A0
+ * EN v1.0 Size: 76b
  * EN v1.1 Address: 0x8006C8D8
  * EN v1.1 Size: 76b
  * JP Address: TODO
@@ -1347,8 +1347,8 @@ void newshadows_bindShadowCaptureTexture(int textureSlot)
  * --INFO--
  *
  * Function: FUN_8006c924
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B1EC
+ * EN v1.0 Size: 136b
  * EN v1.1 Address: 0x8006C924
  * EN v1.1 Size: 136b
  * JP Address: TODO
@@ -1372,8 +1372,8 @@ void newshadows_refreshShadowCaptureTexture(void)
  * --INFO--
  *
  * Function: FUN_8006c9ac
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B274
+ * EN v1.0 Size: 236b
  * EN v1.1 Address: 0x8006C9AC
  * EN v1.1 Size: 236b
  * JP Address: TODO
@@ -1406,8 +1406,8 @@ void newshadows_flushShadowRenderTargets(void)
  * --INFO--
  *
  * Function: FUN_8006ca98
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B360
+ * EN v1.0 Size: 388b
  * EN v1.1 Address: 0x8006CA98
  * EN v1.1 Size: 416b
  * JP Address: TODO
@@ -1481,8 +1481,8 @@ void newshadows_updateFrameState(void)
  * --INFO--
  *
  * Function: FUN_8006cc38
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B4E4
+ * EN v1.0 Size: 20b
  * EN v1.1 Address: 0x8006CC38
  * EN v1.1 Size: 20b
  * JP Address: TODO
@@ -1535,8 +1535,8 @@ void FUN_8006cc4c(undefined *param_1)
  * --INFO--
  *
  * Function: FUN_8006cca0
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B540
+ * EN v1.0 Size: 44b
  * EN v1.1 Address: 0x8006CCA0
  * EN v1.1 Size: 44b
  * JP Address: TODO
@@ -1555,8 +1555,8 @@ void newshadows_freeShadowDirectionTexture(void)
  * --INFO--
  *
  * Function: FUN_8006cccc
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8006B56C
+ * EN v1.0 Size: 696b
  * EN v1.1 Address: 0x8006CCCC
  * EN v1.1 Size: 464b
  * JP Address: TODO

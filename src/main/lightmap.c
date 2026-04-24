@@ -700,8 +700,8 @@ int FUN_8005b60c(int param_1,int *param_2,int *param_3,int *param_4,uint *param_
  * --INFO--
  *
  * Function: FUN_8005b6e8
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8005B638
+ * EN v1.0 Size: 268b
  * EN v1.1 Address: 0x8005B6E8
  * EN v1.1 Size: 232b
  * JP Address: TODO
@@ -2137,8 +2137,8 @@ void FUN_8005d2c8(void)
  * --INFO--
  *
  * Function: FUN_8005d2cc
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8005D3A8
+ * EN v1.0 Size: 260b
  * EN v1.1 Address: 0x8005D2CC
  * EN v1.1 Size: 288b
  * JP Address: TODO
@@ -2188,8 +2188,8 @@ void lightmap_queueObjectRenderEntry(int object,int sortGroup,int depthBias)
  * --INFO--
  *
  * Function: fn_8005D3EC
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8005D4AC
+ * EN v1.0 Size: 328b
  * EN v1.1 Address: 0x8005D3EC
  * EN v1.1 Size: 324b
  * JP Address: TODO
@@ -2505,8 +2505,8 @@ void FUN_8005da10(int param_1,int param_2,float *param_3)
  * --INFO--
  *
  * Function: FUN_8005dbc4
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8005DC18
+ * EN v1.0 Size: 228b
  * EN v1.1 Address: 0x8005DBC4
  * EN v1.1 Size: 240b
  * JP Address: TODO
@@ -2544,8 +2544,8 @@ void lightmap_renderQueuedObject(ushort *object)
  * --INFO--
  *
  * Function: FUN_8005dcb4
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x8005DCFC
+ * EN v1.0 Size: 1244b
  * EN v1.1 Address: 0x8005DCB4
  * EN v1.1 Size: 860b
  * JP Address: TODO

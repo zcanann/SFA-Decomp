@@ -3581,8 +3581,8 @@ void FUN_8006933c(undefined4 param_1,undefined4 param_2,uint param_3,char param_
  * --INFO--
  *
  * Function: FUN_80069798
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80063A78
+ * EN v1.0 Size: 1008b
  * EN v1.1 Address: 0x80069798
  * EN v1.1 Size: 808b
  * JP Address: TODO
@@ -3666,8 +3666,8 @@ void trackDolphin_buildSweptBounds(uint *boundsOut,float *startPoints,float *end
  * --INFO--
  *
  * Function: fn_80069AC0
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80063E68
+ * EN v1.0 Size: 16b
  * EN v1.1 Address: 0x80069AC0
  * EN v1.1 Size: 20b
  * JP Address: TODO
@@ -3685,8 +3685,8 @@ undefined4 * trackDolphin_getIntersectionDescriptorTable(uint *currentIndexOut)
  * --INFO--
  *
  * Function: FUN_80069ad4
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80063E78
+ * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x80069AD4
  * EN v1.1 Size: 16b
  * JP Address: TODO
@@ -3704,8 +3704,8 @@ void trackDolphin_getCurrentTrackPoint(uint **param_1)
  * --INFO--
  *
  * Function: FUN_80069ae4
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80063E84
+ * EN v1.0 Size: 36b
  * EN v1.1 Address: 0x80069AE4
  * EN v1.1 Size: 40b
  * JP Address: TODO
@@ -3724,8 +3724,8 @@ void trackDolphin_getCurrentIntersectionList(int *entryCountOut,undefined4 *entr
  * --INFO--
  *
  * Function: FUN_80069b0c
- * EN v1.0 Address: TODO
- * EN v1.0 Size: TODO
+ * EN v1.0 Address: 0x80063EA8
+ * EN v1.0 Size: 392b
  * EN v1.1 Address: 0x80069B0C
  * EN v1.1 Size: 396b
  * JP Address: TODO
