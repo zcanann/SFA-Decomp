@@ -3,15 +3,15 @@
 // Source evidence:
 // - DLL 0x00FE is "MagicPlant" in retail XML.
 // - Retail description: gives magic gems.
-// - Current EN object packets tie object def 0x04FE here.
+// - Current EN family packet data ties object def 0x04FE here.
 //
 // Current EN descriptor:
-// - lbl_803221B8 @ 0x803221B8
+// - gMagicPlantObjDescriptor @ 0x80321568
 //
 // Descriptor slots:
-// - 3: magicplant_init (0x801802DC)
-// - 4: magicplant_update (0x8017FF68)
-// - 6: magicplant_render (0x8017FEEC)
-// - 7: magicplant_free (0x8017FE70)
-// - 8: magicplant_func08 (0x8017FE5C)
-// - 9: magicplant_getExtraSize (0x8017FE54)
+// - 3: magicplant_init (0x8017FD84)
+// - 4: magicplant_update (0x8017FA10)
+// - 6: magicplant_render (0x8017F994)
+// - 7: magicplant_free (0x8017F918)
+// - 8: magicplant_func08 (0x8017F904)
+// - 9: magicplant_getExtraSize (0x8017F8FC)

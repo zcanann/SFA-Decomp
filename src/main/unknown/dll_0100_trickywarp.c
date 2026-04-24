@@ -2,13 +2,13 @@
 //
 // Source evidence:
 // - DLL 0x0100 is "TrickyWarp" in retail XML.
-// - Current EN object packets tie object def 0x04C4 here.
+// - Current EN family packet data ties object def 0x04C4 here.
 //
 // Current EN descriptor:
-// - lbl_803221F0 @ 0x803221F0
+// - gTrickyWarpObjDescriptor @ 0x803215A0
 //
 // Descriptor slots:
-// - 3: trickywarp_init (0x80180770)
-// - 4: trickywarp_update (0x801804A0)
-// - 7: trickywarp_free (0x80180464)
-// - 9: trickywarp_getExtraSize (0x80180498)
+// - 3: trickywarp_init (0x80180218)
+// - 4: trickywarp_update (0x8017FF48)
+// - 7: trickywarp_free (0x8017FF0C)
+// - 9: trickywarp_getExtraSize (0x8017FF40)
