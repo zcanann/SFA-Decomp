@@ -17,7 +17,7 @@ extern f32 FLOAT_803e70d0;
 /*
  * --INFO--
  *
- * Function: FUN_80206f30
+ * Function: TrickyCurve_updateCooldownTrigger
  * EN v1.0 Address: 0x80206F30
  * EN v1.0 Size: 780b
  * EN v1.1 Address: 0x80206FA0
@@ -27,7 +27,7 @@ extern f32 FLOAT_803e70d0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80206f30(void)
+void TrickyCurve_updateCooldownTrigger(void)
 {
   float fVar1;
   float fVar2;

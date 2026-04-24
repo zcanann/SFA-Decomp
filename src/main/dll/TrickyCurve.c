@@ -9,7 +9,7 @@ extern undefined4 FUN_80017748();
 extern undefined4 FUN_80017760();
 extern int FUN_80017a98();
 extern undefined4 FUN_80037bd4();
-extern undefined4 FUN_80206f30();
+extern undefined4 TrickyCurve_updateCooldownTrigger();
 extern uint FUN_80286838();
 extern uint FUN_8028683c();
 extern undefined4 FUN_80286884();
@@ -441,7 +441,7 @@ void FUN_80207c10(void)
 /*
  * --INFO--
  *
- * Function: FUN_80207c44
+ * Function: TrickyCurve_updateState
  * EN v1.0 Address: 0x80207C44
  * EN v1.0 Size: 640b
  * EN v1.1 Address: 0x80207BEC
@@ -451,9 +451,9 @@ void FUN_80207c10(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80207c44(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9)
+void TrickyCurve_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                             undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                             undefined8 param_7,undefined8 param_8,int param_9)
 {
   char cVar1;
   
@@ -468,7 +468,7 @@ void FUN_80207c44(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     FUN_8020718c();
   }
   else if (cVar1 == '\x03') {
-    FUN_80206f30();
+    TrickyCurve_updateCooldownTrigger();
   }
   return;
 }
