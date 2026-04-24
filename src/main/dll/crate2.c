@@ -20,10 +20,10 @@ extern undefined4 sfxplayer_updateEffectHandlePositions();
 typedef struct Crate2State {
   s16 triggerSfxId;
   s16 loopSfxId;
-  s16 loopFadeTimer;
+  s16 loopSfxStopTimer;
   u8 loopActive;
   u8 effectPairCount;
-  u8 stopPending;
+  u8 stateFlags;
 } Crate2State;
 
 /*
@@ -57,13 +57,13 @@ void crate2_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3
   
   psVar1 = (short *)FUN_80286840();
   state = *(Crate2State **)(psVar1 + 0x5c);
-  if ((((u8)state->loopFadeTimer >> 5 & 1) == 0) &&
+  if (((state->stateFlags >> 5 & 1) == 0) &&
      (uVar9 = extraout_f1, uVar2 = FUN_80017690((int)state->triggerSfxId), uVar2 == 0)) {
     if (state->effectPairCount == 4) {
       FUN_80006824(0,0x7e);
-      state->loopFadeTimer = state->loopFadeTimer & 0xdf | 0x20;
-      state->loopFadeTimer = state->loopFadeTimer & 0xef;
-      state->loopFadeTimer = state->loopFadeTimer & 0xbf;
+      state->stateFlags = state->stateFlags & 0xdf | 0x20;
+      state->stateFlags = state->stateFlags & 0xef;
+      state->stateFlags = state->stateFlags & 0xbf;
       FUN_80017698((int)state->triggerSfxId,1);
       FUN_80017698(0xedf,0);
       cVar4 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(psVar1 + 0x56));
@@ -73,9 +73,9 @@ void crate2_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3
       FUN_80006b4c();
     }
     else {
-      if (((char)state->loopFadeTimer < '\0') &&
-         (state->loopFadeTimer = state->loopFadeTimer & 0x7f,
-         ((u8)state->loopFadeTimer >> 4 & 1) != 0)) {
+      if (((char)state->stateFlags < '\0') &&
+         (state->stateFlags = state->stateFlags & 0x7f,
+         ((u8)state->stateFlags >> 4 & 1) != 0)) {
         cVar4 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(psVar1 + 0x56));
         if (cVar4 == '\x01') {
           FUN_80006b54(0x1d,0x96);
@@ -102,8 +102,8 @@ void crate2_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3
           piVar8 = piVar8 + 2;
         }
         state->effectPairCount = 0;
-        state->loopFadeTimer = state->loopFadeTimer & 0xbf;
-        state->loopFadeTimer = state->loopFadeTimer & 0xef;
+        state->stateFlags = state->stateFlags & 0xbf;
+        state->stateFlags = state->stateFlags & 0xef;
         FUN_80017698(0xedf,0);
       }
       sfxplayer_updateEffectHandlePositions(psVar1);
