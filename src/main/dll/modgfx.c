@@ -3897,7 +3897,7 @@ void FUN_800a3238(void)
 /*
  * --INFO--
  *
- * Function: FUN_800a332c
+ * Function: projgfx_spawnPresetEffect
  * EN v1.0 Address: 0x800A332C
  * EN v1.0 Size: 784b
  * EN v1.1 Address: 0x800BD6C8
@@ -3908,8 +3908,8 @@ void FUN_800a3238(void)
  * PAL Size: TODO
  */
 undefined4
-FUN_800a332c(int param_1,undefined4 param_2,undefined2 *param_3,uint param_4,undefined param_5,
-            undefined2 *param_6)
+projgfx_spawnPresetEffect(int param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,
+                          uint param_4,undefined param_5,undefined2 *param_6)
 {
   undefined4 uVar1;
   uint uVar2;
@@ -3970,16 +3970,16 @@ FUN_800a332c(int param_1,undefined4 param_2,undefined2 *param_3,uint param_4,und
   }
   else {
     if ((param_4 & 0x200000) != 0) {
-      if (param_3 == (undefined2 *)0x0) {
+      if (param_3 == (ExpgfxAttachedSourceState *)0x0) {
         return 0xffffffff;
       }
-      local_a0 = *(float *)(param_3 + 6);
-      local_9c = *(float *)(param_3 + 8);
-      local_98 = *(float *)(param_3 + 10);
-      local_a4 = *(undefined4 *)(param_3 + 4);
-      local_a8 = param_3[2];
-      local_aa = param_3[1];
-      local_ac = *param_3;
+      local_a0 = *(float *)&param_3->sourcePosYBits;
+      local_9c = *(float *)&param_3->sourcePosZBits;
+      local_98 = *(float *)&param_3->sourcePosWBits;
+      local_a4 = param_3->sourcePosXBits;
+      local_a8 = param_3->sourceVecZ;
+      local_aa = param_3->sourceVecY;
+      local_ac = param_3->sourceVecX;
       local_56 = param_5;
     }
     local_74 = 0;
