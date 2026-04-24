@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/dll/SH/SHthorntail.h"
 #include "main/dll/SH/SHroot.h"
 
 extern undefined4 FUN_80006824();
@@ -7,7 +8,6 @@ extern undefined4 FUN_80017698();
 extern uint FUN_80017760();
 extern int FUN_800384ec();
 extern int FUN_801d5174();
-extern undefined4 SHthorntail_updateState();
 
 extern undefined4 DAT_80328014;
 extern undefined4 DAT_80328072;

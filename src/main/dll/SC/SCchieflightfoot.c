@@ -32,7 +32,6 @@ extern undefined4 DAT_80327f84;
 extern undefined4 DAT_80327fc8;
 extern undefined4 DAT_80327fdc;
 extern undefined4 DAT_80328000;
-extern undefined4 DAT_803dcc60;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd728;
@@ -254,8 +253,8 @@ void SHthorntail_update(undefined8 param_1,double param_2,double param_3,undefin
       }
     }
     runtime->activeMoveValid = 1;
-    if (DAT_803dcc60 == -1) {
-      DAT_803dcc60 = config->configToken;
+    if (gSHthorntailActiveConfigToken == -1) {
+      gSHthorntailActiveConfigToken = config->configToken;
       *(float *)(psVar2 + 0x14) = -(FLOAT_803e60e4 * FLOAT_803dc074 - *(float *)(psVar2 + 0x14));
       (**(code **)(*DAT_803dd728 + 0x10))((double)FLOAT_803dc074,psVar2,(int)runtime->moveScratch);
       (**(code **)(*DAT_803dd728 + 0x14))(psVar2,(int)runtime->moveScratch);
@@ -264,8 +263,8 @@ void SHthorntail_update(undefined8 param_1,double param_2,double param_3,undefin
       psVar2[2] = *(short *)(iVar10 + 0x7de);
     }
     else {
-      if (DAT_803dcc60 == config->configToken) {
-        DAT_803dcc60 = -1;
+      if (gSHthorntailActiveConfigToken == config->configToken) {
+        gSHthorntailActiveConfigToken = -1;
       }
       if ((runtime->behaviorState < '\x02') || ('\x06' < runtime->behaviorState)) {
         (**(code **)(*DAT_803dd728 + 0x20))(psVar2,(int)runtime->moveScratch);

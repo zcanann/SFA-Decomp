@@ -1,9 +1,9 @@
 #ifndef MAIN_DLL_SC_SCLIGHTFOOT_H_
 #define MAIN_DLL_SC_SCLIGHTFOOT_H_
 
-#include "ghidra_import.h"
+#include "main/dll/SH/SHthorntail_internal.h"
 
-void SHthorntail_free(int param_1);
-void SHthorntail_render(short *param_1);
+void SHthorntail_free(SHthorntailObject *obj);
+void SHthorntail_render(SHthorntailObject *obj);
 
 #endif /* MAIN_DLL_SC_SCLIGHTFOOT_H_ */

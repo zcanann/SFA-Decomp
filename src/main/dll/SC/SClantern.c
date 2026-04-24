@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/SC/SClantern.h"
 
 extern uint FUN_80017760();
@@ -30,6 +29,6 @@ extern f32 FLOAT_803e60f4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SHthorntail_init(short *param_1,int param_2)
+void SHthorntail_init(SHthorntailObject *obj,SHthorntailRuntime *runtime)
 {
 }

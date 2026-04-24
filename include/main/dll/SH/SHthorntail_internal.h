@@ -52,6 +52,8 @@ typedef struct SHthorntailObject {
 #define SHTHORNTAIL_FLAG_FREEZE_MOTION 0x10
 #define SHTHORNTAIL_RENDER_PATH_POINT_COUNT 4
 
+extern s32 gSHthorntailActiveConfigToken;
+
 void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime);
 uint SHthorntail_chooseNextState(short *obj,SHthorntailRuntime *runtime,SHthorntailConfig *config);
 

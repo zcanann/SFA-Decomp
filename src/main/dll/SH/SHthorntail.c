@@ -34,22 +34,21 @@ extern char sThorntailEnteredInvalidState[];
  */
 void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3,
                              undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                             undefined8 param_7,undefined8 param_8,short *param_9,int param_10,
+                             undefined8 param_7,undefined8 param_8,SHthorntailObject *obj,
+                             SHthorntailRuntime *runtime,
                              undefined4 param_11,undefined4 param_12,undefined4 param_13,
                              undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
-  SHthorntailRuntime *runtime;
   SHthorntailConfig *config;
   int iVar1;
   uint uVar2;
   
-  runtime = (SHthorntailRuntime *)param_10;
-  config = ((SHthorntailObject *)param_9)->config;
+  config = obj->config;
   switch(runtime->behaviorState) {
   case 0:
     uVar2 = FUN_80017758((double)FLOAT_803e60c8,(double)FLOAT_803e60cc,&runtime->proximityAlertState);
     if (uVar2 != 0) {
-      FUN_80006824((uint)param_9,0x410);
+      FUN_80006824((uint)obj,0x410);
     }
     runtime->idleTimer = runtime->idleTimer - FLOAT_803dc074;
     if (runtime->idleTimer <= FLOAT_803e60d0) {
@@ -61,7 +60,7 @@ void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
     if (runtime->idleTimer <= FLOAT_803e60b0) {
       iVar1 = (**(code **)(*DAT_803dd6d8 + 0x24))(0);
       if (iVar1 == 0) {
-        uVar2 = SHthorntail_chooseNextState(param_9,runtime,config);
+        uVar2 = SHthorntail_chooseNextState((short *)obj,runtime,config);
         runtime->behaviorState = (char)uVar2;
       }
       else {
@@ -77,7 +76,7 @@ void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
       iVar1 = (**(code **)(*DAT_803dd6d8 + 0x24))(0);
       if (iVar1 == 0) {
-        uVar2 = SHthorntail_chooseNextState(param_9,runtime,config);
+        uVar2 = SHthorntail_chooseNextState((short *)obj,runtime,config);
         runtime->behaviorState = (char)uVar2;
       }
       else {
@@ -128,7 +127,7 @@ void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
     }
     break;
   case 0xc:
-    SHthorntail_updateTailSwing((uint)param_9,runtime);
+    SHthorntail_updateTailSwing((uint)obj,runtime);
     if (((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) &&
        (iVar1 = (**(code **)(*DAT_803dd6d8 + 0x24))(0), iVar1 == 0)) {
       runtime->behaviorState = 0xd;
