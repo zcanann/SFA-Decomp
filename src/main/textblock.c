@@ -1,14 +1,14 @@
 #include "ghidra_import.h"
 #include "dolphin/os.h"
-#include "main/textblock.h"
+#include "main/dll/CF/laser.h"
 
 extern char sTextBlockInitNoLongerSupported[];
 
 /*
  * --INFO--
  *
- * Function: textblock_initUnsupported
- * EN v1.0 Address: 0x8020930C
+ * Function: laser_freeUnsupported
+ * EN v1.0 Address: 0x80208FEC
  * EN v1.0 Size: 44b
  * EN v1.1 Address: 0x80209624
  * EN v1.1 Size: 44b
@@ -17,7 +17,7 @@ extern char sTextBlockInitNoLongerSupported[];
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void textblock_initUnsupported(void)
+void laser_freeUnsupported(void)
 {
   OSReport(sTextBlockInitNoLongerSupported);
   return;
@@ -26,8 +26,8 @@ void textblock_initUnsupported(void)
 /*
  * --INFO--
  *
- * Function: textblock_initUnsupported_01
- * EN v1.0 Address: 0x80209338
+ * Function: laser_renderUnsupported
+ * EN v1.0 Address: 0x80209018
  * EN v1.0 Size: 44b
  * EN v1.1 Address: 0x80209650
  * EN v1.1 Size: 48b
@@ -36,7 +36,7 @@ void textblock_initUnsupported(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void textblock_initUnsupported_01(void)
+void laser_renderUnsupported(void)
 {
   OSReport(sTextBlockInitNoLongerSupported);
   return;
@@ -45,8 +45,8 @@ void textblock_initUnsupported_01(void)
 /*
  * --INFO--
  *
- * Function: textblock_initUnsupported_02
- * EN v1.0 Address: 0x80209364
+ * Function: laser_updateUnsupported
+ * EN v1.0 Address: 0x80209048
  * EN v1.0 Size: 44b
  * EN v1.1 Address: 0x80209680
  * EN v1.1 Size: 44b
@@ -55,7 +55,7 @@ void textblock_initUnsupported_01(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void textblock_initUnsupported_02(void)
+void laser_updateUnsupported(void)
 {
   OSReport(sTextBlockInitNoLongerSupported);
   return;
