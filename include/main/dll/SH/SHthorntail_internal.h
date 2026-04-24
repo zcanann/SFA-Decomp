@@ -52,11 +52,32 @@ typedef struct SHthorntailObject {
 #define SHTHORNTAIL_FLAG_IMPACT_PENDING 0x02
 #define SHTHORNTAIL_FLAG_LEVELCONTROL_READY 0x08
 #define SHTHORNTAIL_FLAG_FREEZE_MOTION 0x10
+#define SHTHORNTAIL_CONTROL_MODE_LEVEL_0 0
+#define SHTHORNTAIL_CONTROL_MODE_LEVEL_1 1
+#define SHTHORNTAIL_CONTROL_MODE_ROOT_2 2
+#define SHTHORNTAIL_CONTROL_MODE_ROOT_3 3
 #define SHTHORNTAIL_RENDER_PATH_POINT_COUNT 4
 #define SHTHORNTAIL_CONFIG_TOKEN_NONE -1
 #define SHTHORNTAIL_EXTRA_STATE_BYTES 0x914
 
 extern s32 gSHthorntailActiveConfigToken;
+extern u8 gSHthorntailLevelControlMode1ImpactSfxTable[];
+extern u8 gSHthorntailLevelControlMode0DefaultImpactSfxTable[];
+extern u8 gSHthorntailLevelControlMode0Locomotion6ImpactSfxTable[];
+extern u8 gSHthorntailRootControlMode2DefaultImpactSfxTable[];
+extern u8 gSHthorntailRootControlMode2Locomotion8ImpactSfxTable[];
+extern u8 gSHthorntailRootControlMode3Locomotion1ImpactSfxTable[];
+extern u8 gSHthorntailRootControlMode3LocomotionDefaultImpactSfxTable[];
+extern u8 gSHthorntailRootControlMode3Locomotion2ImpactSfxTable[];
+extern u8 gSHthorntailRootControlMode3Locomotion2AltImpactSfxTable[];
+extern u8 gSHthorntailRootControlMode3Locomotion3ImpactSfxTable[];
+extern u8 gSHthorntailRootControlMode3Locomotion4ImpactSfxTable[];
+extern u8 gSHthorntailRootControlMode3Locomotion5IdleImpactSfxTable[];
+extern u8 gSHthorntailRootControlMode3Locomotion5EventImpactSfxTable[];
+extern u8 gSHthorntailRootControlMode3Locomotion5PlayerImpactSfxTable[];
+extern u8 gSHthorntailRootControlMode3Locomotion6ImpactSfxTable[];
+extern u8 gSHthorntailRootControlMode3Locomotion7ImpactSfxTable[];
+extern u8 gSHthorntailRootControlMode3Locomotion8ImpactSfxTable[];
 
 STATIC_ASSERT(sizeof(SHthorntailRuntime) == SHTHORNTAIL_EXTRA_STATE_BYTES);
 

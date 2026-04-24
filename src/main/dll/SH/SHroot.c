@@ -9,20 +9,6 @@ extern uint FUN_80017760();
 extern int FUN_800384ec();
 extern int FUN_801d5174();
 
-extern undefined4 DAT_80328014;
-extern undefined4 DAT_80328072;
-extern undefined4 DAT_803dcc68;
-extern undefined4 DAT_803dcc70;
-extern undefined4 DAT_803dcc78;
-extern undefined4 DAT_803dcc7c;
-extern undefined4 DAT_803dcc80;
-extern undefined4 DAT_803dcc84;
-extern undefined4 DAT_803dcc88;
-extern undefined4 DAT_803dcc8c;
-extern undefined4 DAT_803dcc90;
-extern undefined4 DAT_803dcc94;
-extern undefined4 DAT_803dcc98;
-extern undefined4 DAT_803dcc9c;
 extern undefined4* DAT_803dd72c;
 extern f64 DOUBLE_803e60c0;
 
