@@ -12,7 +12,6 @@ extern undefined4 FUN_8010910c();
 extern undefined4 pathcam_buildWindowSamples();
 extern undefined8 pathcam_findTaggedNodeWindow();
 extern double FUN_8010aea8();
-extern uint FUN_8010aea8();
 extern undefined4 FUN_8010b218();
 extern undefined8 FUN_8028683c();
 extern undefined4 FUN_80286888();

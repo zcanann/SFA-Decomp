@@ -1478,20 +1478,20 @@ dolphin/os/OSReset.c:
 	.sbss       start:0x803DDE60 end:0x803DDE6C
 
 dolphin/os/OSResetSW.c:
-	.text       start:0x80244B50 end:0x80244C44
+	.text       start:0x80244B50 end:0x80244EDC
 
 dolphin/os/OSRtc.c:
-	.text       start:0x80244C44 end:0x80246078
+	.text       start:0x80244EDC end:0x80245A2C
 	.bss        start:0x803AE038 end:0x803AE068
 
 dolphin/os/OSStopwatch.c:
-	.text       start:0x80246078 end:0x802462A8
+	.text       start:0x80245A2C end:0x80245BA4
 
 dolphin/os/OSSync.c:
-	.text       start:0x802462A8 end:0x802462A8
+	.text       start:0x80245BA4 end:0x80245C50
 
 dolphin/os/OSThread.c:
-	.text       start:0x802462A8 end:0x80246C50
+	.text       start:0x80245C50 end:0x80246C50
 	.bss        start:0x803AE068 end:0x803AEA38
 	.sbss       start:0x803DDE88 end:0x803DDE98
 
@@ -1523,15 +1523,15 @@ dolphin/dvd/dvdlow.c:
 	.text       start:0x80247A1C end:0x80248870
 
 dolphin/dvd/dvdfs.c:
-	.text       start:0x80248870 end:0x802498E0
+	.text       start:0x80248870 end:0x802491F4
 	.data       start:0x8032E478 end:0x8032E958
 	.sdata      start:0x803DC568 end:0x803DC570
 
 dolphin/dvd/dvdFatal.c:
-	.text       start:0x802498E0 end:0x802498E0
+	.text       start:0x802491F4 end:0x802491F4
 
 dolphin/dvd/dvd.c:
-	.text       start:0x802498E0 end:0x8024B970
+	.text       start:0x802491F4 end:0x8024B970
 
 dolphin/dvd/dvdqueue.c:
 	.text       start:0x8024B970 end:0x8024BB68
@@ -2205,12 +2205,12 @@ dolphin/TRK_MINNOW_DOLPHIN/dispatch.c:
 	.bss        start:0x803D8888 end:0x803D8888
 
 dolphin/TRK_MINNOW_DOLPHIN/msghndlr.c:
-	.text       start:0x80287DF8 end:0x8028AC30
+	.text       start:0x80287DF8 end:0x8028A658
 	.data       start:0x80332EF0 end:0x80332F48
 	.bss        start:0x803D8888 end:0x803D8888
 
 dolphin/TRK_MINNOW_DOLPHIN/support.c:
-	.text       start:0x8028AC30 end:0x8028AEF4
+	.text       start:0x8028A658 end:0x8028AEF4
 
 dolphin/TRK_MINNOW_DOLPHIN/mutex_TRK.c:
 	.text       start:0x8028AEF4 end:0x8028AF0C
