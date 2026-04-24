@@ -5,7 +5,7 @@ extern uint FUN_80017690();
 extern undefined4 FUN_80017a78();
 extern int FUN_80017b00();
 
-extern u8 gChukachuckModeTable[9];
+extern u8 gDfpfloorbarModeTable[9];
 extern f64 DOUBLE_803e7098;
 extern f32 FLOAT_803e7090;
 extern f32 FLOAT_803e7094;
@@ -13,7 +13,7 @@ extern f32 FLOAT_803e7094;
 /*
  * --INFO--
  *
- * Function: chukachuck_update
+ * Function: dfpfloorbar_update
  * EN v1.0 Address: 0x8020652C
  * EN v1.0 Size: 912b
  * EN v1.1 Address: 0x802065F0
@@ -23,7 +23,7 @@ extern f32 FLOAT_803e7094;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void chukachuck_update(int param_1)
+void dfpfloorbar_update(int param_1)
 {
   byte bVar1;
   int iVar2;
@@ -52,13 +52,13 @@ void chukachuck_update(int param_1)
       }
     }
     (**(code **)(**(int **)(*(int *)(iVar5 + 4) + 0x68) + 0x20))
-              (*(int *)(iVar5 + 4),gChukachuckModeTable);
+              (*(int *)(iVar5 + 4),gDfpfloorbarModeTable);
     uVar3 = FUN_80017690(0x5e4);
     if (uVar3 == 0) {
       *(undefined *)(iVar5 + 9) = 0;
     }
     else {
-      *(u8 *)(iVar5 + 9) = gChukachuckModeTable[*(byte *)(iVar5 + 8)];
+      *(u8 *)(iVar5 + 9) = gDfpfloorbarModeTable[*(byte *)(iVar5 + 8)];
     }
     bVar1 = *(byte *)(iVar5 + 9);
     if (bVar1 == 2) {
