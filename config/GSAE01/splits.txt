@@ -1537,7 +1537,7 @@ dolphin/dvd/dvderror.c:
 	.text       start:0x8024BC84 end:0x8024BDD8
 
 dolphin/dvd/fstload.c:
-	.text       start:0x8024BDD8 end:0x8024C478
+	.text       start:0x8024BDD8 end:0x8024BF40
 	.data       start:0x8032E958 end:0x8032E958
 	.bss        start:0x803AEA38 end:0x803AECC0
 	.sdata      start:0x803DC578 end:0x803DC588
@@ -2207,22 +2207,22 @@ dolphin/TRK_MINNOW_DOLPHIN/msghndlr.c:
 	.bss        start:0x803D8888 end:0x803D8888
 
 dolphin/TRK_MINNOW_DOLPHIN/support.c:
-	.text       start:0x8028AC30 end:0x8028B47C
+	.text       start:0x8028AC30 end:0x8028AEF4
 
 dolphin/TRK_MINNOW_DOLPHIN/mutex_TRK.c:
-	.text       start:0x8028B47C end:0x8028B47C
+	.text       start:0x8028AEF4 end:0x8028AF0C
 
 dolphin/TRK_MINNOW_DOLPHIN/notify.c:
-	.text       start:0x8028B47C end:0x8028B70C
+	.text       start:0x8028AF0C end:0x8028AFE4
 
 dolphin/TRK_MINNOW_DOLPHIN/flush_cache.c:
-	.text       start:0x8028B70C end:0x8028B70C
+	.text       start:0x8028AFE4 end:0x8028B01C
 
 dolphin/TRK_MINNOW_DOLPHIN/mem_TRK.c:
-	.text       start:0x8028B70C end:0x8028B70C
+	.text       start:0x8028B01C end:0x8028B0D8
 
 dolphin/TRK_MINNOW_DOLPHIN/targimpl.c:
-	.text       start:0x8028B70C end:0x8028CAD0
+	.text       start:0x8028B0D8 end:0x8028CAD0
 	.rodata     start:0x802C2978 end:0x802C2A00
 	.data       start:0x80332F48 end:0x80332F78
 
