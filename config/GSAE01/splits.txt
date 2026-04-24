@@ -1520,10 +1520,10 @@ dolphin/mtx/psmtx.c:
 	.text       start:0x80247A1C end:0x80247A1C
 
 dolphin/dvd/dvdlow.c:
-	.text       start:0x80247A1C end:0x80248F9C
+	.text       start:0x80247A1C end:0x80248870
 
 dolphin/dvd/dvdfs.c:
-	.text       start:0x80248F9C end:0x802498E0
+	.text       start:0x80248870 end:0x802498E0
 	.data       start:0x8032E478 end:0x8032E958
 	.sdata      start:0x803DC568 end:0x803DC570
 
@@ -1657,46 +1657,46 @@ dolphin/card/CARDBios.c:
 	.bss        start:0x803AF550 end:0x803AF550
 
 dolphin/card/CARDUnlock.c:
-	.text       start:0x8025EFCC end:0x80260988
+	.text       start:0x8025EFCC end:0x8026022C
 
 dolphin/card/CARDRdwr.c:
-	.text       start:0x80260988 end:0x80260B14
+	.text       start:0x8026022C end:0x802604AC
 
 dolphin/card/CARDBlock.c:
-	.text       start:0x80260B14 end:0x80260F48
+	.text       start:0x802604AC end:0x802608B0
 
 dolphin/card/CARDDir.c:
-	.text       start:0x80260F48 end:0x80261188
+	.text       start:0x802608B0 end:0x80260B14
 
 dolphin/card/CARDCheck.c:
-	.text       start:0x80261188 end:0x802620D4
+	.text       start:0x80260B14 end:0x80261A7C
 
 dolphin/card/CARDMount.c:
-	.text       start:0x802620D4 end:0x80262680
+	.text       start:0x80261A7C end:0x8026253C
 
 dolphin/card/CARDFormat.c:
-	.text       start:0x80262680 end:0x802632B0
+	.text       start:0x8026253C end:0x80262D2C
 
 dolphin/card/CARDOpen.c:
-	.text       start:0x802632B0 end:0x80263800
+	.text       start:0x80262D2C end:0x80263180
 
 dolphin/card/CARDCreate.c:
-	.text       start:0x80263800 end:0x80263BB0
+	.text       start:0x80263180 end:0x80263518
 
 dolphin/card/CARDRead.c:
-	.text       start:0x80263BB0 end:0x80263F08
+	.text       start:0x80263518 end:0x80263990
 
 dolphin/card/CARDWrite.c:
-	.text       start:0x80263F08 end:0x802643E8
+	.text       start:0x80263990 end:0x80263D0C
 
 dolphin/card/CARDDelete.c:
-	.text       start:0x802643E8 end:0x802644AC
+	.text       start:0x80263D0C end:0x80263F08
 
 dolphin/card/CARDStat.c:
-	.text       start:0x802644AC end:0x8026498C
+	.text       start:0x80263F08 end:0x802643E8
 
 dolphin/card/CARDNet.c:
-	.text       start:0x8026498C end:0x8026498C
+	.text       start:0x802643E8 end:0x8026498C
 
 dolphin/thp/THPDec.c:
 	.text       start:0x8026498C end:0x8026BF1C
