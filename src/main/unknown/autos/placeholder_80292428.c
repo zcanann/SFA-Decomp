@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: FUN_80292428
+ * Function: FUN_802923c4
  * EN v1.0 Address: 0x802923C4
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80292428
@@ -14,7 +14,7 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-double FUN_80292428(float *param_1)
+double FUN_802923c4(float *param_1)
 {
     return 0.0;
 }
@@ -22,7 +22,7 @@ double FUN_80292428(float *param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80292444
+ * Function: FUN_802923cc
  * EN v1.0 Address: 0x802923CC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80292444
@@ -32,6 +32,6 @@ double FUN_80292428(float *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80292444(double param_1,float *param_2)
+void FUN_802923cc(double param_1,float *param_2)
 {
 }

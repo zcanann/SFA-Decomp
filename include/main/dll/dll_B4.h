@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-undefined4 FUN_80101068(int param_1,int *param_2,int param_3);
+undefined4 FUN_80100fa0(int param_1,int *param_2,int param_3);
 
 #endif /* MAIN_DLL_DLL_B4_H_ */

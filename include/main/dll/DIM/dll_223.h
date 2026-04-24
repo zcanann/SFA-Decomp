@@ -5,7 +5,7 @@
 
 void DIMboss_init(int param_1,undefined4 param_2,int param_3);
 void DIMboss_initialise(void);
-void FUN_801be0a8(void);
+void FUN_801bdd1c(void);
 void DIMbossgut_render(void);
 void DIMbossgut_init(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                      undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,

@@ -1,13 +1,13 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_36.h"
 
-extern int FUN_8001495c();
-extern undefined4 FUN_800195a8();
-extern undefined8 FUN_800199a8();
-extern int FUN_80023d8c();
-extern undefined4 FUN_80054ed0();
-extern undefined4 FUN_8011a9b4();
-extern undefined4 FUN_8011aa8c();
+extern int FUN_80006b6c();
+extern undefined4 FUN_80017470();
+extern undefined8 FUN_80017488();
+extern int FUN_80017830();
+extern undefined4 FUN_8005398c();
+extern undefined4 FUN_8011a99c();
+extern undefined4 FUN_8011ab20();
 
 extern undefined4 DAT_8031b41c;
 extern int DAT_803a92b8;
@@ -35,7 +35,7 @@ extern undefined4* PTR_DAT_8031b418;
 /*
  * --INFO--
  *
- * Function: FUN_8011b698
+ * Function: FUN_8011b5d4
  * EN v1.0 Address: 0x8011B5D4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8011B698
@@ -45,7 +45,7 @@ extern undefined4* PTR_DAT_8031b418;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8011b698(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8011b5d4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }

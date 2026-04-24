@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_801d88f8(void);
+void FUN_801d87f8(void);
 
 #endif /* MAIN_DLL_SP_SPSHOPKEEPER_H_ */

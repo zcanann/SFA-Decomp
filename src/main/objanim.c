@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/objanim.h"
 
-extern undefined4 FUN_80024f40();
-extern undefined4 FUN_8007d858();
+extern undefined4 FUN_8001786c();
+extern undefined4 FUN_800723a0();
 
 extern f64 DOUBLE_803df568;
 extern f64 DOUBLE_803df580;
@@ -143,10 +143,10 @@ void ObjAnim_SetBlendMove(undefined8 param_1,double param_2,double param_3,undef
       state->blendCacheSlot = (u16)state->blendToggle;
       state->prevBlendCacheSlot = (u16)(1 - state->blendToggle);
       if (animDef->blendMoveIds[moveIndex] == -1) {
-        param_1 = FUN_8007d858();
+        param_1 = FUN_800723a0();
         moveIndex = 0;
       }
-      FUN_80024f40(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+      FUN_8001786c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                    (int)animDef->blendMoveIds[moveIndex],(int)(s16)moveIndex,
                    (undefined4)state->blendMoveCache[state->blendCacheSlot],param_10);
       state->lastBlendMoveIndex = (s16)moveIndex;
@@ -487,10 +487,10 @@ Object_ObjAnimSetMove(double param_1,double param_2,double param_3,undefined8 pa
         state->blendToggle = '\x01' - state->blendToggle;
         state->moveCacheSlot = (u16)state->blendToggle;
         if (animDef->blendMoveIds[iVar3] == -1) {
-          param_1 = (double)FUN_8007d858();
+          param_1 = (double)FUN_800723a0();
           iVar3 = 0;
         }
-        FUN_80024f40(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+        FUN_8001786c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                      (int)animDef->blendMoveIds[iVar3],(int)(s16)iVar3,
                      (undefined4)state->moveCache[state->moveCacheSlot],(int)animDef);
       }

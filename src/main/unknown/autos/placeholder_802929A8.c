@@ -7,7 +7,7 @@ extern undefined4 FUN_802867f8();
 /*
  * --INFO--
  *
- * Function: FUN_802929a8
+ * Function: FUN_802927a4
  * EN v1.0 Address: 0x802927A4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802929A8
@@ -17,6 +17,6 @@ extern undefined4 FUN_802867f8();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802929a8(void)
+void FUN_802927a4(void)
 {
 }

@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_802757BC.h"
 
-extern undefined4 FUN_8028364c();
+extern undefined4 FUN_8028363c();
 
 extern undefined4 DAT_803def0a;
 extern undefined4 DAT_803def0c;
@@ -15,7 +15,7 @@ extern undefined4 uRam803def40;
 /*
  * --INFO--
  *
- * Function: FUN_802757bc
+ * Function: FUN_8027566c
  * EN v1.0 Address: 0x8027566C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802757BC
@@ -25,7 +25,7 @@ extern undefined4 uRam803def40;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_802757bc(undefined2 param_1)
+undefined4 FUN_8027566c(undefined2 param_1)
 {
     return 0;
 }
@@ -33,7 +33,7 @@ undefined4 FUN_802757bc(undefined2 param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8027581c
+ * Function: FUN_80275674
  * EN v1.0 Address: 0x80275674
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8027581C
@@ -43,7 +43,7 @@ undefined4 FUN_802757bc(undefined2 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8027581c(undefined2 param_1)
+undefined4 FUN_80275674(undefined2 param_1)
 {
     return 0;
 }

@@ -1,9 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/sfxplayer.h"
 
-extern void* FUN_8002becc();
-extern int FUN_8002e088();
-extern uint FUN_8002e144();
+extern void* FUN_80017aa4();
+extern int FUN_80017ae4();
+extern uint FUN_80017ae8();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
 
@@ -17,7 +17,7 @@ extern f32 FLOAT_803e7110;
 /*
  * --INFO--
  *
- * Function: FUN_80207f80
+ * Function: FUN_80207ce4
  * EN v1.0 Address: 0x80207CE4
  * EN v1.0 Size: 720b
  * EN v1.1 Address: 0x80207F80
@@ -27,7 +27,7 @@ extern f32 FLOAT_803e7110;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80207f80(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_80207ce4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   uint uVar1;
@@ -51,11 +51,11 @@ void FUN_80207f80(undefined8 param_1,double param_2,double param_3,undefined8 pa
   local_28 = DAT_803e70e8;
   local_24 = DAT_803e70ec;
   uVar6 = extraout_f1;
-  uVar1 = FUN_8002e144();
+  uVar1 = FUN_80017ae8();
   if ((uVar1 & 0xff) != 0) {
     uVar1 = (uint)uVar7 & 0xff;
     if ((&DAT_803add98)[uVar1 * 2] == 0) {
-      puVar2 = FUN_8002becc(0x2c,0x6e8);
+      puVar2 = FUN_80017aa4(0x2c,0x6e8);
       *(undefined *)(puVar2 + 3) = 0xff;
       *(undefined *)((int)puVar2 + 7) = 0xff;
       *(undefined *)(puVar2 + 2) = 2;
@@ -82,14 +82,14 @@ void FUN_80207f80(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(float *)(puVar2 + 0x10) = FLOAT_803e7110;
       *(undefined *)((int)puVar2 + 0x29) = 0xd2;
       *(undefined *)(puVar2 + 0x15) = 0;
-      uVar3 = FUN_8002e088(extraout_f1_00,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+      uVar3 = FUN_80017ae4(extraout_f1_00,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                            puVar2,5,*(undefined *)(iVar4 + 0xac),0xffffffff,*(uint **)(iVar4 + 0x30)
                            ,in_r8,in_r9,in_r10);
       (&DAT_803add98)[uVar1 * 2] = uVar3;
       uVar6 = extraout_f1_01;
     }
     if ((&DAT_803add9c)[uVar1 * 2] == 0) {
-      puVar2 = FUN_8002becc(4,0x71c);
+      puVar2 = FUN_80017aa4(4,0x71c);
       *(undefined *)(puVar2 + 3) = 0xff;
       *(undefined *)((int)puVar2 + 7) = 0xff;
       *(undefined *)(puVar2 + 2) = 2;
@@ -97,7 +97,7 @@ void FUN_80207f80(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(undefined4 *)(puVar2 + 4) = *(undefined4 *)(iVar4 + 0xc);
       *(undefined4 *)(puVar2 + 6) = *(undefined4 *)(iVar4 + 0x10);
       *(undefined4 *)(puVar2 + 8) = *(undefined4 *)(iVar4 + 0x14);
-      iVar4 = FUN_8002e088(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,5,
+      iVar4 = FUN_80017ae4(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,5,
                            *(undefined *)(iVar4 + 0xac),0xffffffff,*(uint **)(iVar4 + 0x30),in_r8,
                            in_r9,in_r10);
       (&DAT_803add9c)[uVar1 * 2] = iVar4;

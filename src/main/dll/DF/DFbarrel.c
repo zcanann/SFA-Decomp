@@ -4,7 +4,7 @@
 extern undefined4 FUN_80003494();
 extern uint FUN_8028682c();
 extern undefined4 FUN_80286878();
-extern undefined4 FUN_802945e0();
+extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 
 extern f64 DOUBLE_803e5a88;
@@ -13,7 +13,7 @@ extern f32 FLOAT_803e5a78;
 /*
  * --INFO--
  *
- * Function: FUN_801c11ac
+ * Function: FUN_801c0fd8
  * EN v1.0 Address: 0x801C0FD8
  * EN v1.0 Size: 748b
  * EN v1.1 Address: 0x801C11AC
@@ -23,7 +23,7 @@ extern f32 FLOAT_803e5a78;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c11ac(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4,short *param_5
+void FUN_801c0fd8(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4,short *param_5
                  )
 {
   float fVar1;
@@ -60,7 +60,7 @@ void FUN_801c11ac(undefined4 param_1,undefined4 param_2,float *param_3,float *pa
     dVar17 = (double)(float)((double)CONCAT44(0x43300000,(int)*psVar15 ^ 0x80000000) - dVar18);
     dVar16 = (double)FUN_80294964();
     *psVar15 = (short)(int)(dVar17 * dVar16);
-    dVar16 = (double)FUN_802945e0();
+    dVar16 = (double)FUN_80293f90();
     psVar15[2] = (short)(int)(-dVar17 * dVar16);
     psVar15 = psVar15 + 8;
     iVar14 = iVar14 + 1;

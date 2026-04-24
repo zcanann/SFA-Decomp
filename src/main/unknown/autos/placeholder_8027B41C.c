@@ -72,7 +72,7 @@ extern undefined4 DAT_803cc83c;
 /*
  * --INFO--
  *
- * Function: FUN_8027b41c
+ * Function: FUN_8027b25c
  * EN v1.0 Address: 0x8027B25C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8027B41C
@@ -82,6 +82,6 @@ extern undefined4 DAT_803cc83c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8027b41c(void)
+void FUN_8027b25c(void)
 {
 }

@@ -1,9 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/CAM/firstperson.h"
 
-extern undefined4 FUN_8000e054();
-extern double FUN_80021434();
-extern uint FUN_80021884();
+extern undefined4 FUN_800068f4();
+extern double FUN_800176f4();
+extern uint FUN_80017730();
 extern undefined4 camcontrol_getTargetPosition();
 extern double FUN_80247f54();
 extern double FUN_80293900();
@@ -41,7 +41,7 @@ void firstperson_updatePitch(int param_1)
   uint uVar1;
   double dVar2;
   
-  uVar1 = FUN_80021884();
+  uVar1 = FUN_80017730();
   uVar1 = (uVar1 & 0xffff) - (uint)*(ushort *)(param_1 + 2);
   if (0x8000 < (int)uVar1) {
     uVar1 = uVar1 - 0xffff;
@@ -49,7 +49,7 @@ void firstperson_updatePitch(int param_1)
   if ((int)uVar1 < -0x8000) {
     uVar1 = uVar1 + 0xffff;
   }
-  dVar2 = FUN_80021434((double)(float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) -
+  dVar2 = FUN_800176f4((double)(float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) -
                                       DOUBLE_803e2318),
                        (double)(FLOAT_803e2324 /
                                (float)((double)CONCAT44(0x43300000,
@@ -98,7 +98,7 @@ void firstperson_updatePosition(int param_1,short *param_2)
   }
   if (FLOAT_803e2380 * gCamcontrolModeSettings[1] < local_38) {
     camcontrol_getTargetPosition(param_1,param_2,(float *)(param_1 + 0x18),(short *)(param_1 + 2));
-    FUN_8000e054((double)*(float *)(param_1 + 0x18),(double)*(float *)(param_1 + 0x1c),
+    FUN_800068f4((double)*(float *)(param_1 + 0x18),(double)*(float *)(param_1 + 0x1c),
                  (double)*(float *)(param_1 + 0x20),(float *)(param_1 + 0xc),
                  (float *)(param_1 + 0x10),(float *)(param_1 + 0x14),*(int *)(param_1 + 0x30));
     *(undefined4 *)(param_1 + 0xb8) = *(undefined4 *)(param_1 + 0x18);
@@ -140,7 +140,7 @@ void firstperson_updatePosition(int param_1,short *param_2)
     if (local_38 < FLOAT_803e2324) {
       local_38 = FLOAT_803e2324;
     }
-    dVar4 = FUN_80021434((double)(local_38 - fVar1),(double)gCamcontrolModeSettings[4],
+    dVar4 = FUN_800176f4((double)(local_38 - fVar1),(double)gCamcontrolModeSettings[4],
                          (double)FLOAT_803dc074);
     fVar1 = (float)((double)(float)((double)local_38 + dVar4) / (double)local_38);
     if (FLOAT_803e232c < fVar1) {

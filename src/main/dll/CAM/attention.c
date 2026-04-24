@@ -1,12 +1,12 @@
 #include "ghidra_import.h"
 #include "main/dll/CAM/attention.h"
 
-extern undefined4 FUN_8000e054();
-extern double FUN_80010de0();
-extern undefined FUN_80064248();
-extern int FUN_80065fcc();
-extern undefined4 FUN_80067ad4();
-extern undefined4 FUN_8006933c();
+extern undefined4 FUN_800068f4();
+extern double FUN_80006a30();
+extern undefined FUN_800620e8();
+extern int FUN_800632f4();
+extern undefined4 FUN_80063a68();
+extern undefined4 FUN_80063a74();
 extern void trackDolphin_buildSweptBounds(uint *boundsOut,float *startPoints,float *endPoints,
                                           float *radii,int pointCount);
 extern ulonglong FUN_80286840();
@@ -63,7 +63,7 @@ void camcontrol_updateModeSettings(int param_1)
     local_24 = FLOAT_803e2324;
     local_20 = FLOAT_803e232c;
     local_1c = FLOAT_803e232c;
-    dVar1 = FUN_80010de0((double)((float)((double)CONCAT44(0x43300000,uStack_14) - DOUBLE_803e2318)
+    dVar1 = FUN_80006a30((double)((float)((double)CONCAT44(0x43300000,uStack_14) - DOUBLE_803e2318)
                                  / (float)((double)CONCAT44(0x43300000,uStack_c) - DOUBLE_803e2318))
                          ,&local_28,(float *)0x0);
     gCamcontrolModeSettings[0x23] = (float)(dVar1 *
@@ -153,7 +153,7 @@ void camcontrol_updateVerticalBounds(undefined4 param_1,undefined4 param_2,undef
     *(float *)(iVar7 + 0x74) = FLOAT_803e2308;
     *(undefined *)(iVar7 + 0x84) = 0xff;
     *(undefined *)(iVar7 + 0x88) = param_3;
-    uVar9 = FUN_80064248(iVar7 + 0xb8,iVar7 + 0x18,(float *)0x1,(int *)0x0,(int *)0x0,0x10,
+    uVar9 = FUN_800620e8(iVar7 + 0xb8,iVar7 + 0x18,(float *)0x1,(int *)0x0,(int *)0x0,0x10,
                          0xffffffff,0xff,0);
     *(undefined *)(iVar7 + 0x142) = uVar9;
     local_3c = *(float *)(iVar7 + 0x18);
@@ -161,14 +161,14 @@ void camcontrol_updateVerticalBounds(undefined4 param_1,undefined4 param_2,undef
     local_34 = *(undefined4 *)(iVar7 + 0x20);
     trackDolphin_buildSweptBounds(auStack_30,(float *)(iVar7 + 0xb8),&local_3c,
                                   (float *)(iVar7 + 0x74),1);
-    FUN_8006933c(uVar11,auStack_30,0x240,'\x01');
-    FUN_80067ad4();
+    FUN_80063a74(uVar11,auStack_30,0x240,'\x01');
+    FUN_80063a68();
     *(float *)(iVar7 + 0x18) = local_3c;
     *(undefined4 *)(iVar7 + 0x1c) = local_38;
     *(undefined4 *)(iVar7 + 0x20) = local_34;
   }
   if ((uVar13 & 2) != 0) {
-    iVar8 = FUN_80065fcc((double)*(float *)(iVar7 + 0x18),(double)*(float *)(iVar7 + 0x1c),
+    iVar8 = FUN_800632f4((double)*(float *)(iVar7 + 0x18),(double)*(float *)(iVar7 + 0x1c),
                          (double)*(float *)(iVar7 + 0x20),uVar11,&local_40,1,0x40);
     *param_4 = FLOAT_803e2350;
     fVar5 = FLOAT_803e2354;
@@ -222,7 +222,7 @@ void camcontrol_updateVerticalBounds(undefined4 param_1,undefined4 param_2,undef
       } while (iVar8 != 0);
     }
   }
-  FUN_8000e054((double)*(float *)(iVar7 + 0x18),(double)*(float *)(iVar7 + 0x1c),
+  FUN_800068f4((double)*(float *)(iVar7 + 0x18),(double)*(float *)(iVar7 + 0x1c),
                (double)*(float *)(iVar7 + 0x20),(float *)(iVar7 + 0xc),(float *)(iVar7 + 0x10),
                (float *)(iVar7 + 0x14),*(int *)(iVar7 + 0x30));
   FUN_8028688c();

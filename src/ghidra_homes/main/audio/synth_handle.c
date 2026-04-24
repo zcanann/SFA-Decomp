@@ -15,7 +15,7 @@
 
 extern undefined4 FUN_8026c6b8();
 extern undefined4 FUN_802722b0();
-extern undefined4 FUN_8027a830();
+extern undefined4 FUN_8027a668();
 
 extern int DAT_803b15b0;
 extern undefined4 DAT_803b15b4;

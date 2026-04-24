@@ -1,11 +1,11 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_182.h"
 
-extern uint FUN_80020078();
-extern undefined4 FUN_800201ac();
-extern undefined4 FUN_800395a4();
-extern undefined4 FUN_8003b9ec();
-extern undefined4 FUN_800979c0();
+extern uint FUN_80017690();
+extern undefined4 FUN_80017698();
+extern undefined4 FUN_80039520();
+extern undefined4 FUN_8003b818();
+extern undefined4 FUN_800810f8();
 
 extern f64 DOUBLE_803e4bc0;
 extern f32 FLOAT_803e4b98;
@@ -22,7 +22,7 @@ extern f32 FLOAT_803e4bbc;
 /*
  * --INFO--
  *
- * Function: FUN_801920f0
+ * Function: FUN_80191f54
  * EN v1.0 Address: 0x80191F54
  * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x801920F0
@@ -32,16 +32,16 @@ extern f32 FLOAT_803e4bbc;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801920f0(int param_1)
+void FUN_80191f54(int param_1)
 {
-  FUN_8003b9ec(param_1);
+  FUN_8003b818(param_1);
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80192118
+ * Function: FUN_80191f74
  * EN v1.0 Address: 0x80191F74
  * EN v1.0 Size: 140b
  * EN v1.1 Address: 0x80192118
@@ -51,7 +51,7 @@ void FUN_801920f0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80192118(int param_1)
+void FUN_80191f74(int param_1)
 {
   undefined auStack_18 [12];
   float local_c;
@@ -62,14 +62,14 @@ void FUN_80192118(int param_1)
     local_c = FLOAT_803e4b9c;
     local_8 = FLOAT_803e4ba0;
     local_4 = FLOAT_803e4b9c;
-    FUN_800979c0((double)FLOAT_803e4ba4,(double)FLOAT_803e4ba8,(double)FLOAT_803e4ba8,
+    FUN_800810f8((double)FLOAT_803e4ba4,(double)FLOAT_803e4ba8,(double)FLOAT_803e4ba8,
                  (double)FLOAT_803e4bac,param_1,5,5,2,0x19,(int)auStack_18,0);
   }
   else if (*(short *)(param_1 + 0x46) == 0x748) {
     local_c = FLOAT_803e4b9c;
     local_8 = FLOAT_803e4bb0;
     local_4 = FLOAT_803e4b9c;
-    FUN_800979c0((double)FLOAT_803e4bb4,(double)FLOAT_803e4bb8,(double)FLOAT_803e4bb8,
+    FUN_800810f8((double)FLOAT_803e4bb4,(double)FLOAT_803e4bb8,(double)FLOAT_803e4bb8,
                  (double)FLOAT_803e4bac,param_1,5,5,2,5,(int)auStack_18,0);
   }
   return;
@@ -78,7 +78,7 @@ void FUN_80192118(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_801921cc
+ * Function: FUN_80192000
  * EN v1.0 Address: 0x80192000
  * EN v1.0 Size: 184b
  * EN v1.1 Address: 0x801921CC
@@ -88,7 +88,7 @@ void FUN_80192118(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801921cc(short *param_1,int param_2)
+void FUN_80192000(short *param_1,int param_2)
 {
   param_1[2] = (ushort)*(byte *)(param_2 + 0x18) << 8;
   param_1[1] = (ushort)*(byte *)(param_2 + 0x19) << 8;
@@ -109,7 +109,7 @@ void FUN_801921cc(short *param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80192298
+ * Function: FUN_801920b8
  * EN v1.0 Address: 0x801920B8
  * EN v1.0 Size: 288b
  * EN v1.1 Address: 0x80192298
@@ -119,7 +119,7 @@ void FUN_801921cc(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80192298(int param_1)
+void FUN_801920b8(int param_1)
 {
   uint uVar1;
   uint *puVar2;
@@ -129,13 +129,13 @@ void FUN_80192298(int param_1)
   puVar4 = *(uint **)(param_1 + 0xb8);
   iVar3 = *(int *)(param_1 + 0x4c);
   if ((((*(byte *)(puVar4 + 5) >> 5 & 1) == 0) &&
-      (uVar1 = FUN_80020078((int)*(short *)(iVar3 + 0x20)), uVar1 != 0)) &&
+      (uVar1 = FUN_80017690((int)*(short *)(iVar3 + 0x20)), uVar1 != 0)) &&
      ((*(byte *)(puVar4 + 5) >> 6 & 1) == 0)) {
     *(byte *)(puVar4 + 5) = *(byte *)(puVar4 + 5) & 0xdf | 0x20;
     puVar4[4] = 0;
   }
   if (((*(byte *)(puVar4 + 5) >> 5 & 1) != 0) &&
-     (puVar2 = (uint *)FUN_800395a4(param_1,*puVar4), puVar2 != (uint *)0x0)) {
+     (puVar2 = (uint *)FUN_80039520(param_1,*puVar4), puVar2 != (uint *)0x0)) {
     puVar4[4] = puVar4[4] + (uint)*(byte *)(puVar4 + 1);
     if ((int)puVar4[4] < 0) {
       puVar4[4] = 0;
@@ -146,7 +146,7 @@ void FUN_80192298(int param_1)
         puVar4[4] = puVar4[3];
       }
       else {
-        FUN_800201ac(uVar1,1);
+        FUN_80017698(uVar1,1);
         *(byte *)(puVar4 + 5) = *(byte *)(puVar4 + 5) & 0xdf;
         *(byte *)(puVar4 + 5) = *(byte *)(puVar4 + 5) & 0xbf | 0x40;
         puVar4[4] = puVar4[2];

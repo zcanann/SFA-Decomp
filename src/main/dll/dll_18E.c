@@ -1,15 +1,15 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_18E.h"
 
-extern undefined4 FUN_8001d7e0();
-extern undefined4 FUN_8001dab8();
-extern undefined4 FUN_8001de4c();
-extern uint FUN_80022264();
-extern undefined4 FUN_8002bac4();
-extern undefined4 FUN_80038524();
-extern undefined4 FUN_8003b9ec();
-extern undefined4 FUN_80060630();
-extern undefined4 FUN_801be750();
+extern undefined4 FUN_80017548();
+extern undefined4 FUN_80017584();
+extern undefined4 FUN_800175ec();
+extern uint FUN_80017760();
+extern undefined4 FUN_80017a98();
+extern undefined4 FUN_800388b4();
+extern undefined4 FUN_8003b818();
+extern undefined4 FUN_8005fe14();
+extern undefined4 FUN_801be44c();
 
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd708;
@@ -23,7 +23,7 @@ extern f32 FLOAT_803e5960;
 /*
  * --INFO--
  *
- * Function: FUN_801beeac
+ * Function: FUN_801beea0
  * EN v1.0 Address: 0x801BEEA0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801BEEAC
@@ -33,14 +33,14 @@ extern f32 FLOAT_803e5960;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801beeac(int param_1)
+void FUN_801beea0(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_801beff0
+ * Function: FUN_801beea4
  * EN v1.0 Address: 0x801BEEA4
  * EN v1.0 Size: 60b
  * EN v1.1 Address: 0x801BEFF0
@@ -50,7 +50,7 @@ void FUN_801beeac(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801beff0(int param_1)
+void FUN_801beea4(int param_1)
 {
   (**(code **)(*DAT_803dd70c + 0xc))(param_1,*(undefined4 *)(param_1 + 0xb8),&DAT_803de830);
   return;
@@ -59,7 +59,7 @@ void FUN_801beff0(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_801bf028
+ * Function: FUN_801beee0
  * EN v1.0 Address: 0x801BEEE0
  * EN v1.0 Size: 636b
  * EN v1.1 Address: 0x801BF028
@@ -69,7 +69,7 @@ void FUN_801beff0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bf028(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_801beee0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
 {
@@ -106,13 +106,13 @@ void FUN_801bf028(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       iVar4 = (**(code **)(*DAT_803dd738 + 0x30))(param_9,iVar5,1);
       if (iVar4 != 0) {
         uVar6 = extraout_f1;
-        uVar2 = FUN_8002bac4();
+        uVar2 = FUN_80017a98();
         *(undefined4 *)(iVar5 + 0x2d0) = uVar2;
-        FUN_801be750(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,0,iVar5,
+        FUN_801be44c(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,0,iVar5,
                      iVar5);
         if (DAT_803de810 != 0) {
-          FUN_8001dab8(DAT_803de810,local_d,&local_e,&local_f,&uStack_10);
-          FUN_8001d7e0(DAT_803de810,local_d[0],local_e,local_f,0xc0);
+          FUN_80017584(DAT_803de810,local_d,&local_e,&local_f,&uStack_10);
+          FUN_80017548(DAT_803de810,local_d[0],local_e,local_f,0xc0);
           if ((*(char *)(DAT_803de810 + 0x2f8) != '\0') && (*(char *)(DAT_803de810 + 0x4c) != '\0'))
           {
             sVar1 = (ushort)*(byte *)(DAT_803de810 + 0x2f9) + (short)*(char *)(DAT_803de810 + 0x2fa)
@@ -122,7 +122,7 @@ void FUN_801bf028(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
               *(undefined *)(DAT_803de810 + 0x2fa) = 0;
             }
             else if (0xc < sVar1) {
-              uVar3 = FUN_80022264(0xfffffff4,0xc);
+              uVar3 = FUN_80017760(0xfffffff4,0xc);
               sVar1 = sVar1 + (short)uVar3;
               if (0xff < sVar1) {
                 sVar1 = 0xff;

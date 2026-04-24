@@ -2,13 +2,13 @@
 #include "main/objHitReact.h"
 #include "main/unknown/autos/placeholder_8002F604.h"
 
-extern bool FUN_8000b5f0();
-extern undefined4 FUN_8000bb38();
-extern undefined4 FUN_80013e4c();
-extern undefined4 FUN_80013ee8();
-extern int FUN_80036868();
-extern undefined4 FUN_8007d858();
-extern undefined4 FUN_8009a468();
+extern bool FUN_800067f8();
+extern undefined4 FUN_80006824();
+extern undefined4 FUN_80006b0c();
+extern undefined4 FUN_80006b14();
+extern int FUN_800368c4();
+extern undefined4 FUN_800723a0();
+extern undefined4 FUN_80081120();
 extern undefined8 FUN_8028683c();
 extern undefined4 FUN_80286888();
 
@@ -84,11 +84,11 @@ u8 objHitReact_update(undefined8 param_1,double param_2,double param_3,undefined
   local_38 = DAT_802c228c;
   reactionState = (u8)param_12;
   if (reactionState != 0) {
-    FUN_8007d858();
+    FUN_800723a0();
     param_2 = (double)FLOAT_803dc074;
     iVar2 = ObjAnim_AdvanceCurrentMove((double)*param_13,param_2);
     if (iVar2 != 0) {
-      FUN_8007d858();
+      FUN_800723a0();
       reactionState = 0;
     }
   }
@@ -96,7 +96,7 @@ u8 objHitReact_update(undefined8 param_1,double param_2,double param_3,undefined
   pfVar6 = &local_28;
   puVar7 = &uStack_24;
   pfVar8 = local_20;
-  iVar2 = FUN_80036868(object,(undefined4 *)0x0,&local_48,(uint *)0x0,pfVar6,puVar7,pfVar8);
+  iVar2 = FUN_800368c4(object,(undefined4 *)0x0,&local_48,(uint *)0x0,pfVar6,puVar7,pfVar8);
   if (iVar2 != 0) {
     local_28 = local_28 + FLOAT_803dda58;
     local_20[0] = local_20[0] + FLOAT_803dda5c;
@@ -107,21 +107,21 @@ u8 objHitReact_update(undefined8 param_1,double param_2,double param_3,undefined
     local_48 = (int)*(char *)(*(int *)(**(int **)(*(int *)(object + 0x7c) + *(char *)(object + 0xad) * 4) +
                                        0x58) + local_48 * 0x18 + 0x16);
     if ((int)(param_11 & 0xff) <= local_48) {
-      FUN_8007d858();
+      FUN_800723a0();
       local_48 = 0;
     }
     reactEntry = (ObjHitReactEntry *)((int)uVar10 + local_48 * sizeof(ObjHitReactEntry));
     if (iVar2 != 0x11) {
       if ((reactEntry->clearVolumeA != -1) &&
-          (bVar3 = FUN_8000b5f0(object,reactEntry->clearVolumeA), !bVar3)) {
-        FUN_8000bb38(object,reactEntry->clearVolumeA);
+          (bVar3 = FUN_800067f8(object,reactEntry->clearVolumeA), !bVar3)) {
+        FUN_80006824(object,reactEntry->clearVolumeA);
       }
       if ((reactEntry->clearVolumeB != -1) &&
-          (bVar3 = FUN_8000b5f0(object,reactEntry->clearVolumeB), !bVar3)) {
-        FUN_8000bb38(object,reactEntry->clearVolumeB);
+          (bVar3 = FUN_800067f8(object,reactEntry->clearVolumeB), !bVar3)) {
+        FUN_80006824(object,reactEntry->clearVolumeB);
       }
       if (reactEntry->hitFxMode == 1) {
-        piVar4 = (int *)FUN_80013ee8(0x5a);
+        piVar4 = (int *)FUN_80006b14(0x5a);
         hitFxFlags = 0x401;
         pfVar6 = (float *)-1;
         puVar7 = &local_44;
@@ -129,12 +129,12 @@ u8 objHitReact_update(undefined8 param_1,double param_2,double param_3,undefined
         (*(code *)puVar11[1])(0,1,&local_34);
         pfVar8 = (float *)puVar11;
         if (piVar4 != (int *)0x0) {
-          FUN_80013e4c((undefined *)piVar4);
+          FUN_80006b0c((undefined *)piVar4);
         }
       }
       else {
         hitFxFlags = 0;
-        FUN_8009a468(object,&local_34,1,(int *)0x0);
+        FUN_80081120(object,&local_34,1,(int *)0x0);
       }
     }
     if ((reactionState == 0) && (reactEntry->reactionAnim != -1)) {

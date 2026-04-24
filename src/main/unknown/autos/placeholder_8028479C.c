@@ -10,7 +10,7 @@ extern undefined DAT_803d4bc0;
 /*
  * --INFO--
  *
- * Function: FUN_8028479c
+ * Function: FUN_80284670
  * EN v1.0 Address: 0x80284670
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8028479C
@@ -20,7 +20,7 @@ extern undefined DAT_803d4bc0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8028479c(undefined4 param_1,undefined4 param_2,undefined4 param_3,int param_4,
+void FUN_80284670(undefined4 param_1,undefined4 param_2,undefined4 param_3,int param_4,
                  undefined4 param_5,undefined4 param_6)
 {
 }

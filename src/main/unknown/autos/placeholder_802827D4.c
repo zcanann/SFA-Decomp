@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_802827D4.h"
 
-extern int FUN_8027716c();
-extern uint FUN_80282288();
+extern int FUN_80276598();
+extern uint FUN_80282070();
 extern undefined8 FUN_80286bd0();
 
 extern undefined4 DAT_803be6d4;
@@ -16,7 +16,7 @@ extern void* PTR_DAT_80330c50;
 /*
  * --INFO--
  *
- * Function: FUN_802827d4
+ * Function: FUN_802827c8
  * EN v1.0 Address: 0x802827C8
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802827D4
@@ -26,7 +26,7 @@ extern void* PTR_DAT_80330c50;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_802827d4(int param_1,byte *param_2,uint param_3,uint param_4)
+uint FUN_802827c8(int param_1,byte *param_2,uint param_3,uint param_4)
 {
     return 0;
 }
@@ -34,7 +34,7 @@ uint FUN_802827d4(int param_1,byte *param_2,uint param_3,uint param_4)
 /*
  * --INFO--
  *
- * Function: FUN_80282c5c
+ * Function: FUN_802827d0
  * EN v1.0 Address: 0x802827D0
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80282C5C
@@ -44,7 +44,7 @@ uint FUN_802827d4(int param_1,byte *param_2,uint param_3,uint param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80282c5c(int param_1)
+uint FUN_802827d0(int param_1)
 {
     return 0;
 }
@@ -52,7 +52,7 @@ uint FUN_80282c5c(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80282ca4
+ * Function: FUN_802827d8
  * EN v1.0 Address: 0x802827D8
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80282CA4
@@ -62,7 +62,7 @@ uint FUN_80282c5c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80282ca4(int param_1)
+uint FUN_802827d8(int param_1)
 {
     return 0;
 }
@@ -70,7 +70,7 @@ uint FUN_80282ca4(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80282cec
+ * Function: FUN_802827e0
  * EN v1.0 Address: 0x802827E0
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80282CEC
@@ -80,7 +80,7 @@ uint FUN_80282ca4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80282cec(int param_1)
+uint FUN_802827e0(int param_1)
 {
     return 0;
 }
@@ -88,7 +88,7 @@ uint FUN_80282cec(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80282d34
+ * Function: FUN_802827e8
  * EN v1.0 Address: 0x802827E8
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80282D34
@@ -98,7 +98,7 @@ uint FUN_80282cec(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80282d34(int param_1)
+uint FUN_802827e8(int param_1)
 {
     return 0;
 }
@@ -106,7 +106,7 @@ uint FUN_80282d34(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80282d7c
+ * Function: FUN_802827f0
  * EN v1.0 Address: 0x802827F0
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80282D7C
@@ -116,7 +116,7 @@ uint FUN_80282d34(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80282d7c(int param_1)
+uint FUN_802827f0(int param_1)
 {
     return 0;
 }
@@ -124,7 +124,7 @@ uint FUN_80282d7c(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80282dc4
+ * Function: FUN_802827f8
  * EN v1.0 Address: 0x802827F8
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80282DC4
@@ -134,7 +134,7 @@ uint FUN_80282d7c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80282dc4(int param_1)
+uint FUN_802827f8(int param_1)
 {
     return 0;
 }
@@ -142,7 +142,7 @@ uint FUN_80282dc4(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80282e0c
+ * Function: FUN_80282800
  * EN v1.0 Address: 0x80282800
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80282E0C
@@ -152,7 +152,7 @@ uint FUN_80282dc4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80282e0c(int param_1)
+uint FUN_80282800(int param_1)
 {
     return 0;
 }
@@ -160,7 +160,7 @@ uint FUN_80282e0c(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80282e54
+ * Function: FUN_80282808
  * EN v1.0 Address: 0x80282808
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80282E54
@@ -170,7 +170,7 @@ uint FUN_80282e0c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80282e54(int param_1)
+uint FUN_80282808(int param_1)
 {
     return 0;
 }
@@ -178,7 +178,7 @@ uint FUN_80282e54(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80282e9c
+ * Function: FUN_80282810
  * EN v1.0 Address: 0x80282810
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80282E9C
@@ -188,7 +188,7 @@ uint FUN_80282e54(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80282e9c(int param_1)
+uint FUN_80282810(int param_1)
 {
     return 0;
 }
@@ -196,7 +196,7 @@ uint FUN_80282e9c(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80282ee4
+ * Function: FUN_80282818
  * EN v1.0 Address: 0x80282818
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80282EE4
@@ -206,7 +206,7 @@ uint FUN_80282e9c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80282ee4(int param_1)
+uint FUN_80282818(int param_1)
 {
     return 0;
 }
@@ -214,7 +214,7 @@ uint FUN_80282ee4(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80282f2c
+ * Function: FUN_80282820
  * EN v1.0 Address: 0x80282820
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80282F2C
@@ -224,7 +224,7 @@ uint FUN_80282ee4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80282f2c(int param_1)
+uint FUN_80282820(int param_1)
 {
     return 0;
 }
@@ -232,7 +232,7 @@ uint FUN_80282f2c(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80282f74
+ * Function: FUN_80282828
  * EN v1.0 Address: 0x80282828
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80282F74
@@ -242,7 +242,7 @@ uint FUN_80282f2c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80282f74(int param_1)
+uint FUN_80282828(int param_1)
 {
     return 0;
 }
@@ -250,7 +250,7 @@ uint FUN_80282f74(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80282fbc
+ * Function: FUN_80282830
  * EN v1.0 Address: 0x80282830
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80282FBC
@@ -260,7 +260,7 @@ uint FUN_80282f74(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80282fbc(uint param_1,uint param_2,uint param_3,uint param_4)
+uint FUN_80282830(uint param_1,uint param_2,uint param_3,uint param_4)
 {
     return 0;
 }
@@ -268,7 +268,7 @@ uint FUN_80282fbc(uint param_1,uint param_2,uint param_3,uint param_4)
 /*
  * --INFO--
  *
- * Function: FUN_80283078
+ * Function: FUN_80282838
  * EN v1.0 Address: 0x80282838
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80283078
@@ -278,7 +278,7 @@ uint FUN_80282fbc(uint param_1,uint param_2,uint param_3,uint param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80283078(uint param_1,uint param_2,uint param_3,uint param_4)
+uint FUN_80282838(uint param_1,uint param_2,uint param_3,uint param_4)
 {
     return 0;
 }

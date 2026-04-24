@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/DRpickup.h"
 
-extern undefined4 FUN_80014acc();
-extern uint FUN_80022264();
+extern undefined4 FUN_80006b94();
+extern uint FUN_80017760();
 extern double FUN_80247f54();
 extern double FUN_80293900();
 
@@ -39,7 +39,7 @@ extern f32 FLOAT_803e68ac;
 /*
  * --INFO--
  *
- * Function: FUN_801ec398
+ * Function: FUN_801ec1ac
  * EN v1.0 Address: 0x801EC1AC
  * EN v1.0 Size: 1096b
  * EN v1.1 Address: 0x801EC398
@@ -49,7 +49,7 @@ extern f32 FLOAT_803e68ac;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ec398(int param_1,int param_2)
+void FUN_801ec1ac(int param_1,int param_2)
 {
   byte bVar1;
   float fVar2;
@@ -133,17 +133,17 @@ void FUN_801ec398(int param_1,int param_2)
       dVar7 = (double)FLOAT_803e6790;
       if (((*(byte *)(param_2 + 0x428) >> 1 & 1) == 0) &&
          (*(float *)(param_2 + 0x43c) <= FLOAT_803e6780)) {
-        uStack_8c = FUN_80022264(5,10);
+        uStack_8c = FUN_80017760(5,10);
         uStack_8c = uStack_8c ^ 0x80000000;
         local_90 = 0x43300000;
         *(float *)(param_2 + 0x43c) =
              (float)((double)CONCAT44(0x43300000,uStack_8c) - DOUBLE_803e6798);
         dVar6 = FUN_80247f54((float *)(param_1 + 0x24));
         if ((double)FLOAT_803e685c < dVar6) {
-          uStack_8c = FUN_80022264(1,3);
+          uStack_8c = FUN_80017760(1,3);
           uStack_8c = uStack_8c ^ 0x80000000;
           local_90 = 0x43300000;
-          FUN_80014acc((double)(float)((double)CONCAT44(0x43300000,uStack_8c) - DOUBLE_803e6798));
+          FUN_80006b94((double)(float)((double)CONCAT44(0x43300000,uStack_8c) - DOUBLE_803e6798));
         }
       }
       if ((double)FLOAT_803e6884 < dVar5) {

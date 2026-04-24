@@ -9,7 +9,7 @@ extern f32 FLOAT_803e5ab0;
 /*
  * --INFO--
  *
- * Function: FUN_801c1f24
+ * Function: FUN_801c1eac
  * EN v1.0 Address: 0x801C1EAC
  * EN v1.0 Size: 268b
  * EN v1.1 Address: 0x801C1F24
@@ -19,7 +19,7 @@ extern f32 FLOAT_803e5ab0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c1f24(double param_1,double param_2,int param_3)
+void FUN_801c1eac(double param_1,double param_2,int param_3)
 {
   int iVar1;
   uint uVar2;
@@ -46,7 +46,7 @@ void FUN_801c1f24(double param_1,double param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_801c1fc8
+ * Function: FUN_801c1fb8
  * EN v1.0 Address: 0x801C1FB8
  * EN v1.0 Size: 256b
  * EN v1.1 Address: 0x801C1FC8
@@ -56,7 +56,7 @@ void FUN_801c1f24(double param_1,double param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c1fc8(double param_1,int param_2,float *param_3)
+void FUN_801c1fb8(double param_1,int param_2,float *param_3)
 {
   float fVar1;
   float fVar2;

@@ -1,9 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/CAM/camcannon.h"
 
-extern double FUN_80010c70();
-extern double FUN_80010de0();
-extern undefined4 FUN_800238c4();
+extern double FUN_80006a20();
+extern double FUN_80006a30();
+extern undefined4 FUN_80017814();
 extern double FUN_80293900();
 
 extern undefined4* DAT_803dd6d0;
@@ -23,7 +23,7 @@ extern f32 FLOAT_803e2538;
 /*
  * --INFO--
  *
- * Function: FUN_8010b144
+ * Function: FUN_8010aea8
  * EN v1.0 Address: 0x8010AEA8
  * EN v1.0 Size: 880b
  * EN v1.1 Address: 0x8010B144
@@ -33,7 +33,7 @@ extern f32 FLOAT_803e2538;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_8010b144(short *param_1,uint param_2)
+uint FUN_8010aea8(short *param_1,uint param_2)
 {
   float fVar1;
   double dVar2;
@@ -59,7 +59,7 @@ uint FUN_8010b144(short *param_1,uint param_2)
   if ((double)FLOAT_803e250c < dVar2) {
     dVar2 = (double)FLOAT_803e250c;
   }
-  dVar2 = FUN_80010de0(dVar2,(float *)(DAT_803de1d8 + 0x48),(float *)0x0);
+  dVar2 = FUN_80006a30(dVar2,(float *)(DAT_803de1d8 + 0x48),(float *)0x0);
   if (dVar2 < (double)FLOAT_803e252c) {
     dVar2 = (double)FLOAT_803e252c;
   }
@@ -73,13 +73,13 @@ uint FUN_8010b144(short *param_1,uint param_2)
   if ((double)FLOAT_803e250c < dVar2) {
     dVar2 = (double)FLOAT_803e250c;
   }
-  dVar3 = FUN_80010c70(dVar2,(float *)(DAT_803de1d8 + 0x10));
+  dVar3 = FUN_80006a20(dVar2,(float *)(DAT_803de1d8 + 0x10));
   *(float *)(param_1 + 6) = (float)dVar3;
-  dVar3 = FUN_80010c70(dVar2,(float *)(DAT_803de1d8 + 0x18));
+  dVar3 = FUN_80006a20(dVar2,(float *)(DAT_803de1d8 + 0x18));
   *(float *)(param_1 + 8) = (float)dVar3;
-  dVar3 = FUN_80010c70(dVar2,(float *)(DAT_803de1d8 + 0x20));
+  dVar3 = FUN_80006a20(dVar2,(float *)(DAT_803de1d8 + 0x20));
   *(float *)(param_1 + 10) = (float)dVar3;
-  dVar3 = FUN_80010c70(dVar2,(float *)(DAT_803de1d8 + 0x40));
+  dVar3 = FUN_80006a20(dVar2,(float *)(DAT_803de1d8 + 0x40));
   *(float *)(param_1 + 0x5a) = (float)dVar3;
   fVar1 = *(float *)(DAT_803de1d8 + 0x28) - *(float *)(DAT_803de1d8 + 0x2c);
   if ((FLOAT_803e2510 < fVar1) || (fVar1 < FLOAT_803e2514)) {
@@ -115,15 +115,15 @@ uint FUN_8010b144(short *param_1,uint param_2)
     }
   }
   if ((param_2 & 1) == 0) {
-    dVar3 = FUN_80010c70(dVar2,(float *)(DAT_803de1d8 + 0x28));
+    dVar3 = FUN_80006a20(dVar2,(float *)(DAT_803de1d8 + 0x28));
     *param_1 = (short)(int)dVar3;
   }
   if ((param_2 & 2) == 0) {
-    dVar3 = FUN_80010c70(dVar2,(float *)(DAT_803de1d8 + 0x30));
+    dVar3 = FUN_80006a20(dVar2,(float *)(DAT_803de1d8 + 0x30));
     param_1[1] = (short)(int)dVar3;
   }
   if ((param_2 & 4) == 0) {
-    dVar3 = FUN_80010c70(dVar2,(float *)(DAT_803de1d8 + 0x38));
+    dVar3 = FUN_80006a20(dVar2,(float *)(DAT_803de1d8 + 0x38));
     param_1[2] = (short)(int)dVar3;
   }
   return ((uint)(byte)(((double)FLOAT_803e250c <= dVar2) << 1) << 0x1c) >> 0x1d;
@@ -132,7 +132,7 @@ uint FUN_8010b144(short *param_1,uint param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8010b4d4
+ * Function: FUN_8010b218
  * EN v1.0 Address: 0x8010B218
  * EN v1.0 Size: 528b
  * EN v1.1 Address: 0x8010B4D4
@@ -142,7 +142,7 @@ uint FUN_8010b144(short *param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010b4d4(double param_1,short *param_2,undefined4 *param_3,uint param_4,uint param_5,
+void FUN_8010b218(double param_1,short *param_2,undefined4 *param_3,uint param_4,uint param_5,
                  uint param_6)
 {
   float fVar1;
@@ -187,7 +187,7 @@ void FUN_8010b4d4(double param_1,short *param_2,undefined4 *param_3,uint param_4
 /*
  * --INFO--
  *
- * Function: FUN_8010b694
+ * Function: FUN_8010b428
  * EN v1.0 Address: 0x8010B428
  * EN v1.0 Size: 44b
  * EN v1.1 Address: 0x8010B694
@@ -197,9 +197,9 @@ void FUN_8010b4d4(double param_1,short *param_2,undefined4 *param_3,uint param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010b694(void)
+void FUN_8010b428(void)
 {
-  FUN_800238c4(DAT_803de1d8);
+  FUN_80017814(DAT_803de1d8);
   DAT_803de1d8 = 0;
   return;
 }

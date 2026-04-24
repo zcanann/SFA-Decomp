@@ -1,11 +1,11 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/DRyoutube.h"
 
-extern uint FUN_80022264();
-extern int FUN_8002bac4();
-extern undefined4 FUN_80036f50();
-extern int FUN_800395a4();
-extern undefined4 FUN_802945e0();
+extern uint FUN_80017760();
+extern int FUN_80017a98();
+extern undefined4 FUN_80037008();
+extern int FUN_80039520();
+extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 
 extern undefined4 DAT_803dcd18;
@@ -20,7 +20,7 @@ extern f32 FLOAT_803e6770;
 /*
  * --INFO--
  *
- * Function: FUN_801e9c74
+ * Function: FUN_801e9c00
  * EN v1.0 Address: 0x801E9C00
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801E9C74
@@ -30,14 +30,14 @@ extern f32 FLOAT_803e6770;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e9c74(undefined2 *param_1,int param_2)
+void FUN_801e9c00(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_801e9e30
+ * Function: FUN_801e9c04
  * EN v1.0 Address: 0x801E9C04
  * EN v1.0 Size: 260b
  * EN v1.1 Address: 0x801E9E30
@@ -47,7 +47,7 @@ void FUN_801e9c74(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e9e30(int param_1)
+void FUN_801e9c04(int param_1)
 {
   undefined4 uVar1;
   int iVar2;
@@ -59,7 +59,7 @@ void FUN_801e9e30(int param_1)
   iVar3 = *(int *)(param_1 + 0x4c);
   local_18[0] = FLOAT_803e6770;
   if (iVar4 == 0) {
-    uVar1 = FUN_80036f50(9,param_1,local_18);
+    uVar1 = FUN_80037008(9,param_1,local_18);
     *(undefined4 *)(param_1 + 0xf4) = uVar1;
   }
   else {
@@ -70,7 +70,7 @@ void FUN_801e9e30(int param_1)
       *(ushort *)(param_1 + 6) = *(ushort *)(param_1 + 6) | 0x4000;
       *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x8000;
     }
-    iVar3 = FUN_800395a4(param_1,0);
+    iVar3 = FUN_80039520(param_1,0);
     if (iVar3 != 0) {
       *(short *)(iVar3 + 8) = *(short *)(iVar3 + 8) + 8;
       if (0x400 < *(short *)(iVar3 + 8)) {

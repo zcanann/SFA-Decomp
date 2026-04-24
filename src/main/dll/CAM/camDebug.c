@@ -2,8 +2,8 @@
 #include "main/dll/CAM/camDebug.h"
 
 extern undefined4 FUN_800033a8();
-extern undefined4 FUN_8000e054();
-extern undefined4 FUN_80023d8c();
+extern undefined4 FUN_800068f4();
+extern undefined4 FUN_80017830();
 
 extern undefined4* DAT_803dd6d0;
 extern undefined4* DAT_803de1f0;
@@ -18,7 +18,7 @@ extern f32 FLOAT_803e2648;
 /*
  * --INFO--
  *
- * Function: FUN_8010daac
+ * Function: FUN_8010d810
  * EN v1.0 Address: 0x8010D810
  * EN v1.0 Size: 744b
  * EN v1.1 Address: 0x8010DAAC
@@ -28,7 +28,7 @@ extern f32 FLOAT_803e2648;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010daac(undefined4 param_1,int param_2,int param_3)
+void FUN_8010d810(undefined4 param_1,int param_2,int param_3)
 {
   double dVar1;
   int iVar2;
@@ -46,7 +46,7 @@ void FUN_8010daac(undefined4 param_1,int param_2,int param_3)
   uint uStack_1c;
   
   if (DAT_803de1f0 == (undefined4 *)0x0) {
-    DAT_803de1f0 = (undefined4 *)FUN_80023d8c(0x38,0xf);
+    DAT_803de1f0 = (undefined4 *)FUN_80017830(0x38,0xf);
   }
   if (param_2 == 2) {
     *(undefined2 *)((int)DAT_803de1f0 + 0x32) = *(undefined2 *)(DAT_803de1f0 + 0xc);
@@ -95,7 +95,7 @@ void FUN_8010daac(undefined4 param_1,int param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_8010dd7c
+ * Function: FUN_8010daf8
  * EN v1.0 Address: 0x8010DAF8
  * EN v1.0 Size: 144b
  * EN v1.1 Address: 0x8010DD7C
@@ -105,13 +105,13 @@ void FUN_8010daac(undefined4 param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010dd7c(undefined2 *param_1,undefined4 param_2,undefined2 *param_3)
+void FUN_8010daf8(undefined2 *param_1,undefined4 param_2,undefined2 *param_3)
 {
   if (param_3 != (undefined2 *)0x0) {
     *(undefined4 *)(param_1 + 0xc) = *(undefined4 *)(param_3 + 0xc);
     *(undefined4 *)(param_1 + 0xe) = *(undefined4 *)(param_3 + 0xe);
     *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(param_3 + 0x10);
-    FUN_8000e054((double)*(float *)(param_3 + 0xc),(double)*(float *)(param_3 + 0xe),
+    FUN_800068f4((double)*(float *)(param_3 + 0xc),(double)*(float *)(param_3 + 0xe),
                  (double)*(float *)(param_3 + 0x10),(float *)(param_1 + 6),(float *)(param_1 + 8),
                  (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
     *param_1 = *param_3;

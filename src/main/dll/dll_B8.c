@@ -1,10 +1,10 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_B8.h"
 
-extern undefined4 FUN_80013e4c();
-extern undefined4 FUN_80013ee8();
-extern undefined4 FUN_800238c4();
-extern int FUN_80023d8c();
+extern undefined4 FUN_80006b0c();
+extern undefined4 FUN_80006b14();
+extern undefined4 FUN_80017814();
+extern int FUN_80017830();
 
 extern undefined4 DAT_803a4e84;
 extern undefined4 gCamcontrolHandlers;
@@ -21,7 +21,7 @@ extern undefined4 gCamcontrolState;
 /*
  * --INFO--
  *
- * Function: FUN_8010192c
+ * Function: FUN_801018a8
  * EN v1.0 Address: 0x801018A8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8010192C
@@ -31,6 +31,6 @@ extern undefined4 gCamcontrolState;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010192c(uint param_1,undefined4 param_2)
+void FUN_801018a8(uint param_1,undefined4 param_2)
 {
 }

@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_B2.h"
 
-extern undefined4 FUN_8000e054();
-extern undefined4 FUN_8003b9ec();
+extern undefined4 FUN_800068f4();
+extern undefined4 FUN_8003b818();
 extern int FUN_80286838();
 extern undefined4 FUN_80286884();
 
@@ -86,7 +86,7 @@ LAB_80100e04:
       *(undefined4 *)(iVar1 + 0x14) = *(undefined4 *)(iVar1 + 0x20);
     }
     else {
-      FUN_8000e054((double)*(float *)(iVar1 + 0x18),(double)*(float *)(iVar1 + 0x1c),
+      FUN_800068f4((double)*(float *)(iVar1 + 0x18),(double)*(float *)(iVar1 + 0x1c),
                    (double)*(float *)(iVar1 + 0x20),(float *)(iVar1 + 0xc),(float *)(iVar1 + 0x10),
                    (float *)(iVar1 + 0x14),*(int *)(iVar1 + 0x30));
     }
@@ -94,7 +94,7 @@ LAB_80100e04:
     *(undefined2 *)(iVar1 + 4) = 0;
     *(float *)(iVar1 + 8) = FLOAT_803e22a8;
     *(undefined *)(iVar1 + 0x37) = *(undefined *)(iVar1 + 0x36);
-    FUN_8003b9ec(iVar1);
+    FUN_8003b818(iVar1);
   }
   iVar5 = *(int *)(*(int *)(iVar1 + 0x7c) + *(char *)(iVar1 + 0xad) * 4);
   *(ushort *)(iVar5 + 0x18) = *(ushort *)(iVar5 + 0x18) & 0xfff7;

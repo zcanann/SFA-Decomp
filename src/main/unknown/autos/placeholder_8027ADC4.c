@@ -6,7 +6,7 @@ extern undefined4 DAT_80330278;
 /*
  * --INFO--
  *
- * Function: FUN_8027adc4
+ * Function: FUN_8027acb8
  * EN v1.0 Address: 0x8027ACB8
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8027ADC4
@@ -16,7 +16,7 @@ extern undefined4 DAT_80330278;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8027adc4(char *param_1)
+undefined4 FUN_8027acb8(char *param_1)
 {
     return 0;
 }

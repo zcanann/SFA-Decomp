@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/CAM/dll_60.h"
 
-extern undefined4 FUN_800238c4();
-extern undefined4 FUN_800551ec();
+extern undefined4 FUN_80017814();
+extern undefined4 FUN_80053ba4();
 
 extern undefined4* DAT_803dd6d0;
 extern undefined4 DAT_803de1e0;
@@ -14,7 +14,7 @@ extern f32 FLOAT_803e2548;
 /*
  * --INFO--
  *
- * Function: FUN_8010c1a4
+ * Function: FUN_8010c0d8
  * EN v1.0 Address: 0x8010C0D8
  * EN v1.0 Size: 348b
  * EN v1.1 Address: 0x8010C1A4
@@ -24,7 +24,7 @@ extern f32 FLOAT_803e2548;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010c1a4(int param_1,float *param_2,float *param_3,float *param_4,float *param_5)
+void FUN_8010c0d8(int param_1,float *param_2,float *param_3,float *param_4,float *param_5)
 {
   float fVar1;
   float fVar2;
@@ -77,7 +77,7 @@ void FUN_8010c1a4(int param_1,float *param_2,float *param_3,float *param_4,float
 /*
  * --INFO--
  *
- * Function: FUN_8010c304
+ * Function: FUN_8010c234
  * EN v1.0 Address: 0x8010C234
  * EN v1.0 Size: 112b
  * EN v1.1 Address: 0x8010C304
@@ -87,14 +87,14 @@ void FUN_8010c1a4(int param_1,float *param_2,float *param_3,float *param_4,float
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010c304(int param_1)
+void FUN_8010c234(int param_1)
 {
   if (*(int *)(param_1 + 0x11c) != 0) {
     (**(code **)(*DAT_803dd6d0 + 0x48))(0);
   }
-  FUN_800238c4(DAT_803de1e0);
+  FUN_80017814(DAT_803de1e0);
   DAT_803de1e0 = 0;
-  FUN_800551ec();
+  FUN_80053ba4();
   *(byte *)(param_1 + 0x143) = *(byte *)(param_1 + 0x143) & 0x7f;
   return;
 }

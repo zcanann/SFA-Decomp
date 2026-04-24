@@ -1,16 +1,16 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_BB.h"
 
-extern undefined4 FUN_8000de08();
-extern undefined4 FUN_8000f478();
-extern undefined4 FUN_8000f584();
-extern void* FUN_8000facc();
-extern int FUN_8000fb04();
-extern undefined4 FUN_8000fb0c();
-extern undefined4 FUN_8000fc5c();
-extern double FUN_80021434();
-extern undefined4 FUN_80058e58();
-extern undefined4 FUN_8007d858();
+extern undefined4 FUN_800068d8();
+extern undefined4 FUN_80006954();
+extern undefined4 FUN_80006984();
+extern void* FUN_800069a8();
+extern int FUN_800069c0();
+extern undefined4 FUN_800069c8();
+extern undefined4 FUN_80006a00();
+extern double FUN_800176f4();
+extern undefined4 FUN_80056a50();
+extern undefined4 FUN_800723a0();
 extern undefined4 FUN_80247eb8();
 extern undefined4 FUN_80247ef8();
 extern double FUN_80247f54();
@@ -57,8 +57,8 @@ void camcontrol_applyState(short *param_1)
   undefined8 local_28;
   undefined8 local_20;
   
-  FUN_8000f478(0);
-  psVar3 = FUN_8000facc();
+  FUN_80006954(0);
+  psVar3 = FUN_800069a8();
   *psVar3 = *param_1;
   psVar3[1] = param_1[1];
   psVar3[2] = param_1[2];
@@ -68,7 +68,7 @@ void camcontrol_applyState(short *param_1)
     if ((double)FLOAT_803e22b0 < dVar5) {
       FUN_80247ef8(&local_38,&local_38);
     }
-    dVar6 = FUN_80021434(dVar5,(double)FLOAT_803e22e8,(double)FLOAT_803dc074);
+    dVar6 = FUN_800176f4(dVar5,(double)FLOAT_803e22e8,(double)FLOAT_803dc074);
     dVar5 = (double)FLOAT_803e22b0;
     if ((dVar5 <= dVar6) && (dVar5 = dVar6, (double)(FLOAT_803e22ec * FLOAT_803dc074) < dVar6)) {
       dVar5 = (double)(FLOAT_803e22ec * FLOAT_803dc074);
@@ -124,7 +124,7 @@ void camcontrol_applyState(short *param_1)
                                           (double)*(float *)(param_1 + 0x8a)) +
                   (double)*(float *)(param_1 + 0x8a));
     }
-    FUN_8007d858();
+    FUN_800723a0();
     if ((*(byte *)((int)param_1 + 0x13f) & 1) != 0) {
       param_1[0x80] = param_1[0x83] - *psVar3;
       if (0x8000 < param_1[0x80]) {
@@ -165,11 +165,11 @@ void camcontrol_applyState(short *param_1)
       psVar3[2] = param_1[0x85] - (short)iVar4;
     }
   }
-  FUN_8000fc5c((double)FLOAT_803de148);
-  FUN_8000de08(psVar3);
-  FUN_80058e58((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
+  FUN_80006a00((double)FLOAT_803de148);
+  FUN_800068d8(psVar3);
+  FUN_80056a50((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
                (double)*(float *)(param_1 + 0x10),in_f4,in_f5,in_f6,in_f7,in_f8);
-  iVar4 = FUN_8000fb04();
+  iVar4 = FUN_800069c0();
   DAT_803de138 = (short)iVar4;
   if ((int)DAT_803de138 != (int)*(char *)((int)param_1 + 0x13b)) {
     if ((int)DAT_803de138 < (int)*(char *)((int)param_1 + 0x13b)) {
@@ -186,9 +186,9 @@ void camcontrol_applyState(short *param_1)
         DAT_803de138 = (short)*(char *)((int)param_1 + 0x13b);
       }
     }
-    FUN_8000fb0c(DAT_803de138);
+    FUN_800069c8(DAT_803de138);
   }
   *(undefined *)((int)param_1 + 0x13b) = 0;
-  FUN_8000f584();
+  FUN_80006984();
   return;
 }

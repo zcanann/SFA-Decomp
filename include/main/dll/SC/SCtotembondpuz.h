@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_801d80f0(short *param_1,int param_2);
+void FUN_801d8060(short *param_1,int param_2);
 
 #endif /* MAIN_DLL_SC_SCTOTEMBONDPUZ_H_ */

@@ -1,13 +1,13 @@
 #include "ghidra_import.h"
 #include "main/dll/SC/SClantern.h"
 
-extern uint FUN_80022264();
-extern undefined4 FUN_8002b660();
-extern undefined4 FUN_8002cfb8();
-extern undefined4 FUN_800372f8();
-extern undefined4 FUN_80115200();
-extern undefined4 FUN_80115318();
-extern undefined4 FUN_801d6338();
+extern uint FUN_80017760();
+extern undefined4 FUN_80017a54();
+extern undefined4 FUN_80017ad4();
+extern undefined4 FUN_8003735c();
+extern undefined4 FUN_80114b10();
+extern undefined4 FUN_80115094();
+extern undefined4 FUN_801d5edc();
 
 extern undefined4 DAT_80327b38;
 extern undefined4 DAT_80327b68;

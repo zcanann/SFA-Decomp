@@ -1,13 +1,13 @@
 #include "ghidra_import.h"
 #include "main/dll/exploder.h"
 
-extern undefined4 FUN_80013e4c();
-extern undefined4 FUN_80021b8c();
-extern undefined4 FUN_8002bac4();
-extern undefined4 FUN_8003709c();
-extern int FUN_80064248();
-extern byte FUN_80067ad4();
-extern undefined4 FUN_8006933c();
+extern undefined4 FUN_80006b0c();
+extern undefined4 FUN_80017748();
+extern undefined4 FUN_80017a98();
+extern undefined4 FUN_80037180();
+extern int FUN_800620e8();
+extern byte FUN_80063a68();
+extern undefined4 FUN_80063a74();
 extern void trackDolphin_buildSweptBounds(uint *boundsOut,float *startPoints,float *endPoints,
                                           float *radii,int pointCount);
 extern undefined4 FUN_80286840();
@@ -28,7 +28,7 @@ extern f32 FLOAT_803e460c;
 /*
  * --INFO--
  *
- * Function: FUN_80182754
+ * Function: FUN_801826e8
  * EN v1.0 Address: 0x801826E8
  * EN v1.0 Size: 764b
  * EN v1.1 Address: 0x80182754
@@ -38,7 +38,7 @@ extern f32 FLOAT_803e460c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80182754(void)
+void FUN_801826e8(void)
 {
   float fVar1;
   int *piVar2;
@@ -61,7 +61,7 @@ void FUN_80182754(void)
   
   piVar2 = (int *)FUN_80286840();
   iVar5 = piVar2[0x15];
-  iVar3 = FUN_80064248(piVar2 + 0x20,piVar2 + 3,(float *)0x1,(int *)0x0,piVar2,1,0xffffffff,0xff,0);
+  iVar3 = FUN_800620e8(piVar2 + 0x20,piVar2 + 3,(float *)0x1,(int *)0x0,piVar2,1,0xffffffff,0xff,0);
   if (iVar3 == 0) {
     if ((*(uint *)(iVar5 + 0x48) >> 4 != 0) && (*(char *)(iVar5 + 0x70) == '\0')) {
       local_c8 = (float)piVar2[3];
@@ -76,8 +76,8 @@ void FUN_80182754(void)
       local_48[0] = 0xff;
       local_44 = 3;
       trackDolphin_buildSweptBounds(auStack_110,&local_f8,&local_c8,local_58,1);
-      FUN_8006933c(piVar2,auStack_110,(uint)*(ushort *)(iVar5 + 0xb2),'\x01');
-      bVar4 = FUN_80067ad4();
+      FUN_80063a74(piVar2,auStack_110,(uint)*(ushort *)(iVar5 + 0xb2),'\x01');
+      bVar4 = FUN_80063a68();
       if (bVar4 != 0) {
         if ((bVar4 & 1) == 0) {
           if ((bVar4 & 2) == 0) {
@@ -149,7 +149,7 @@ void FUN_80182754(void)
 /*
  * --INFO--
  *
- * Function: FUN_80182a5c
+ * Function: FUN_801829e4
  * EN v1.0 Address: 0x801829E4
  * EN v1.0 Size: 120b
  * EN v1.1 Address: 0x80182A5C
@@ -159,7 +159,7 @@ void FUN_80182754(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80182a5c(int param_1)
+void FUN_801829e4(int param_1)
 {
   ushort *puVar1;
   int iVar2;
@@ -170,7 +170,7 @@ void FUN_80182a5c(int param_1)
   float local_14;
   
   iVar2 = *(int *)(param_1 + 0xb8);
-  puVar1 = (ushort *)FUN_8002bac4();
+  puVar1 = (ushort *)FUN_80017a98();
   *(undefined *)(iVar2 + 6) = 0;
   *(undefined *)(iVar2 + 5) = 0;
   *(undefined *)(iVar2 + 9) = 1;
@@ -183,14 +183,14 @@ void FUN_80182a5c(int param_1)
   local_28[2] = 0;
   local_28[1] = 0;
   local_28[0] = *puVar1;
-  FUN_80021b8c(local_28,(float *)(param_1 + 0x24));
+  FUN_80017748(local_28,(float *)(param_1 + 0x24));
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80182af4
+ * Function: FUN_80182a5c
  * EN v1.0 Address: 0x80182A5C
  * EN v1.0 Size: 84b
  * EN v1.1 Address: 0x80182AF4
@@ -200,10 +200,10 @@ void FUN_80182a5c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80182af4(int param_1)
+void FUN_80182a5c(int param_1)
 {
   (**(code **)(*DAT_803dd6fc + 0x18))();
-  FUN_80013e4c(DAT_803de740);
-  FUN_8003709c(param_1,0x10);
+  FUN_80006b0c(DAT_803de740);
+  FUN_80037180(param_1,0x10);
   return;
 }

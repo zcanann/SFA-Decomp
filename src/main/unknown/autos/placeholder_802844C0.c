@@ -1,11 +1,11 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_802844C0.h"
 
-extern undefined4 FUN_80284970();
-extern undefined4 FUN_80284988();
-extern undefined4 FUN_80284ba8();
-extern uint FUN_80284bcc();
-extern undefined4 FUN_80284cbc();
+extern undefined4 FUN_802848d8();
+extern undefined4 FUN_802848d8();
+extern undefined4 FUN_80284b94();
+extern uint FUN_80284b98();
+extern undefined4 FUN_80284c58();
 extern undefined4 FUN_80286718();
 
 extern undefined4 DAT_803bddb0;
@@ -15,7 +15,7 @@ extern f32 FLOAT_803e8580;
 /*
  * --INFO--
  *
- * Function: FUN_802844c0
+ * Function: FUN_80284468
  * EN v1.0 Address: 0x80284468
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802844C0
@@ -25,14 +25,14 @@ extern f32 FLOAT_803e8580;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802844c0(undefined4 param_1)
+void FUN_80284468(undefined4 param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8028451c
+ * Function: FUN_8028446c
  * EN v1.0 Address: 0x8028446C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8028451C
@@ -42,14 +42,14 @@ void FUN_802844c0(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8028451c(undefined4 param_1,int param_2)
+void FUN_8028446c(undefined4 param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80284540
+ * Function: FUN_80284470
  * EN v1.0 Address: 0x80284470
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80284540
@@ -59,14 +59,14 @@ void FUN_8028451c(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80284540(void)
+void FUN_80284470(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80284560
+ * Function: FUN_80284474
  * EN v1.0 Address: 0x80284474
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80284560
@@ -76,14 +76,14 @@ void FUN_80284540(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80284560(int *param_1,uint *param_2)
+void FUN_80284474(int *param_1,uint *param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802845f4
+ * Function: FUN_80284478
  * EN v1.0 Address: 0x80284478
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802845F4
@@ -93,14 +93,14 @@ void FUN_80284560(int *param_1,uint *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802845f4(int param_1,undefined4 param_2)
+void FUN_80284478(int param_1,undefined4 param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80284678
+ * Function: FUN_8028447c
  * EN v1.0 Address: 0x8028447C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80284678
@@ -110,6 +110,6 @@ void FUN_802845f4(int param_1,undefined4 param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80284678(void)
+void FUN_8028447c(void)
 {
 }

@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/DF/DFwhirlpool.h"
 
-extern int FUN_80021884();
+extern int FUN_80017730();
 extern double FUN_80293900();
 
 extern f64 DOUBLE_803e5a88;
@@ -12,7 +12,7 @@ extern f32 FLOAT_803e5abc;
 /*
  * --INFO--
  *
- * Function: FUN_801c21a4
+ * Function: FUN_801c1f5c
  * EN v1.0 Address: 0x801C1F5C
  * EN v1.0 Size: 996b
  * EN v1.1 Address: 0x801C21A4
@@ -22,7 +22,7 @@ extern f32 FLOAT_803e5abc;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_801c21a4(int param_1)
+undefined4 FUN_801c1f5c(int param_1)
 {
   double dVar1;
   float fVar2;
@@ -53,7 +53,7 @@ undefined4 FUN_801c21a4(int param_1)
     dVar12 = (double)(*(float *)(param_1 + 0xc) - *(float *)(iVar6 + 0xc));
     dVar11 = (double)(*(float *)(param_1 + 0x10) - *(float *)(iVar6 + 0x10));
     dVar10 = (double)(*(float *)(param_1 + 0x14) - *(float *)(iVar6 + 0x14));
-    iVar5 = FUN_80021884();
+    iVar5 = FUN_80017730();
     sVar4 = (short)iVar5;
     if (0x8000 < sVar4) {
       sVar4 = sVar4 + 1;

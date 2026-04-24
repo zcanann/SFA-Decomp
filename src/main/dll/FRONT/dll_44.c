@@ -1,9 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/FRONT/dll_44.h"
 
-extern undefined4 FUN_801175f8();
-extern undefined4 FUN_80119764();
-extern undefined4 FUN_80119a10();
+extern undefined4 FUN_801175ac();
+extern undefined4 FUN_801195e0();
+extern undefined4 FUN_80119928();
 extern undefined4 FUN_802420b0();
 extern undefined4 FUN_802446f8();
 extern undefined4 FUN_802493c8();
@@ -47,7 +47,7 @@ extern undefined4 DAT_803de2fc;
 /*
  * --INFO--
  *
- * Function: FUN_80118e60
+ * Function: FUN_80118c88
  * EN v1.0 Address: 0x80118C88
  * EN v1.0 Size: 188b
  * EN v1.1 Address: 0x80118E60
@@ -57,7 +57,7 @@ extern undefined4 DAT_803de2fc;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80118e60(void)
+void FUN_80118c88(void)
 {
   int iVar1;
   undefined *puVar2;
@@ -67,7 +67,7 @@ void FUN_80118e60(void)
   if (DAT_803a6a68 == 0) {
     iVar1 = 0;
     do {
-      FUN_80119764(puVar3 + 0xf4);
+      FUN_801195e0(puVar3 + 0xf4);
       puVar3 = puVar3 + 8;
       iVar1 = iVar1 + 1;
     } while (iVar1 < 10);
@@ -76,14 +76,14 @@ void FUN_80118e60(void)
   puVar2 = &DAT_803a69c0;
   puVar3 = puVar2;
   do {
-    FUN_80119a10(puVar3 + 0x144);
+    FUN_80119928(puVar3 + 0x144);
     puVar3 = puVar3 + 0x10;
     iVar1 = iVar1 + 1;
   } while (iVar1 < 3);
   if (DAT_803a6a5f != '\0') {
     iVar1 = 0;
     do {
-      FUN_801175f8(puVar2 + 0x174);
+      FUN_801175ac(puVar2 + 0x174);
       puVar2 = puVar2 + 0x10;
       iVar1 = iVar1 + 1;
     } while (iVar1 < 3);
@@ -95,7 +95,7 @@ void FUN_80118e60(void)
 /*
  * --INFO--
  *
- * Function: FUN_80118f30
+ * Function: FUN_80118d44
  * EN v1.0 Address: 0x80118D44
  * EN v1.0 Size: 404b
  * EN v1.1 Address: 0x80118F30
@@ -105,7 +105,7 @@ void FUN_80118e60(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80118f30(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
+void FUN_80118d44(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                  int param_5,undefined4 param_6)
 {
   uint uVar1;
@@ -172,7 +172,7 @@ void FUN_80118f30(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_80119154
+ * Function: FUN_80118ed8
  * EN v1.0 Address: 0x80118ED8
  * EN v1.0 Size: 240b
  * EN v1.1 Address: 0x80119154
@@ -182,7 +182,7 @@ void FUN_80118f30(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80119154(uint *param_1,int *param_2,int *param_3,int *param_4,int *param_5,
+void FUN_80118ed8(uint *param_1,int *param_2,int *param_3,int *param_4,int *param_5,
                  undefined4 *param_6)
 {
   uint uVar1;
@@ -221,7 +221,7 @@ void FUN_80119154(uint *param_1,int *param_2,int *param_3,int *param_4,int *para
 /*
  * --INFO--
  *
- * Function: FUN_80119254
+ * Function: FUN_80118fc8
  * EN v1.0 Address: 0x80118FC8
  * EN v1.0 Size: 80b
  * EN v1.1 Address: 0x80119254
@@ -231,7 +231,7 @@ void FUN_80119154(uint *param_1,int *param_2,int *param_3,int *param_4,int *para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80119254(void)
+undefined4 FUN_80118fc8(void)
 {
   undefined4 uVar1;
   

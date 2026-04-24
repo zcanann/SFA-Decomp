@@ -1,12 +1,12 @@
 #include "ghidra_import.h"
 #include "main/dll/landedArwing.h"
 
-extern int FUN_8002bac4();
-extern undefined4 FUN_80035ff8();
-extern undefined4 FUN_80165fe8();
-extern undefined4 FUN_80166138();
-extern undefined4 FUN_801668f0();
-extern undefined4 FUN_80166efc();
+extern int FUN_80017a98();
+extern undefined4 FUN_800360d4();
+extern undefined4 FUN_801660c0();
+extern undefined4 FUN_801661ec();
+extern undefined4 FUN_8016693c();
+extern undefined4 FUN_80166e9c();
 
 extern undefined4 DAT_803dc070;
 extern f32 FLOAT_803e3c74;
@@ -17,7 +17,7 @@ extern f32 FLOAT_803e3c98;
 /*
  * --INFO--
  *
- * Function: FUN_80165884
+ * Function: FUN_8016558c
  * EN v1.0 Address: 0x8016558C
  * EN v1.0 Size: 468b
  * EN v1.1 Address: 0x80165884
@@ -27,7 +27,7 @@ extern f32 FLOAT_803e3c98;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80165884(short *param_1,int param_2)
+undefined4 FUN_8016558c(short *param_1,int param_2)
 {
   float fVar1;
   int iVar2;
@@ -38,12 +38,12 @@ undefined4 FUN_80165884(short *param_1,int param_2)
   double dVar7;
   
   iVar4 = *(int *)(*(int *)(param_1 + 0x5c) + 0x40c);
-  iVar2 = FUN_8002bac4();
+  iVar2 = FUN_80017a98();
   *(undefined *)(param_2 + 0x34d) = 1;
   if (*(char *)(param_2 + 0x27a) != '\0') {
     *(undefined2 *)(iVar4 + 0x8e) = 0x3c;
     *(float *)(iVar4 + 0x60) = FLOAT_803e3c94;
-    FUN_80035ff8((int)param_1);
+    FUN_800360d4((int)param_1);
   }
   if ((*(char *)(iVar4 + 0x90) == '\x06') ||
      ((((iVar2 != 0 && (*(float *)(iVar4 + 0x48) <= *(float *)(iVar2 + 0x18))) &&
@@ -66,17 +66,17 @@ undefined4 FUN_80165884(short *param_1,int param_2)
     dVar7 = (double)*(float *)(param_1 + 10);
     fVar1 = FLOAT_803e3c74;
   }
-  FUN_80166efc(dVar5,dVar6,dVar7,(double)fVar1,(int)param_1);
+  FUN_80166e9c(dVar5,dVar6,dVar7,(double)fVar1,(int)param_1);
   if (*(char *)(iVar4 + 0x90) == '\x06') {
     if ((*(byte *)(iVar4 + 0x92) >> 2 & 1) == 0) {
-      FUN_801668f0((int)param_1,iVar4);
+      FUN_8016693c((int)param_1,iVar4);
     }
     else {
-      FUN_80165fe8((int)param_1,iVar4);
+      FUN_801660c0((int)param_1,iVar4);
     }
   }
   else {
-    FUN_80166138(param_1,iVar4);
+    FUN_801661ec(param_1,iVar4);
   }
   if ((ushort)DAT_803dc070 < *(ushort *)(iVar4 + 0x8e)) {
     *(ushort *)(iVar4 + 0x8e) = *(ushort *)(iVar4 + 0x8e) - (ushort)DAT_803dc070;

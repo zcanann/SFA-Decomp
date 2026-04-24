@@ -2,9 +2,9 @@
 #include "main/dll/DR/DRcloudcage.h"
 
 extern undefined4 FUN_80003494();
-extern undefined4 FUN_80021fac();
-extern undefined4 FUN_80022790();
-extern int FUN_80065fcc();
+extern undefined4 FUN_80017754();
+extern undefined4 FUN_80017778();
+extern int FUN_800632f4();
 extern undefined8 FUN_8028681c();
 extern undefined4 FUN_80286868();
 
@@ -21,7 +21,7 @@ extern f32 FLOAT_803e6794;
 /*
  * --INFO--
  *
- * Function: FUN_801ea238
+ * Function: FUN_801e9c00
  * EN v1.0 Address: 0x801E9C00
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801EA238
@@ -31,6 +31,6 @@ extern f32 FLOAT_803e6794;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ea238(void)
+void FUN_801e9c00(void)
 {
 }

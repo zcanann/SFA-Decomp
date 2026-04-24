@@ -2,28 +2,28 @@
 #include "main/dll/CAM/camcontrol.h"
 
 extern undefined4 FUN_80003494();
-extern undefined4 FUN_8000bb38();
-extern undefined4 FUN_8000e054();
-extern undefined4 FUN_8000e0c0();
-extern uint FUN_80014e9c();
-extern undefined4 FUN_8001f7e0();
-extern undefined4 FUN_800238c4();
-extern int FUN_80023d8c();
-extern undefined4 FUN_8002fb40();
-extern undefined4 FUN_800303fc();
-extern int FUN_80037ad4();
-extern undefined8 FUN_8007d858();
-extern undefined4 FUN_80098230();
-extern undefined4 FUN_800e875c();
+extern undefined4 FUN_80006824();
+extern undefined4 FUN_800068f4();
+extern undefined4 FUN_800068f8();
+extern uint FUN_80006c00();
+extern undefined4 FUN_80017640();
+extern undefined4 FUN_80017814();
+extern int FUN_80017830();
+extern undefined4 FUN_8002fc3c();
+extern undefined4 FUN_800305c4();
+extern int FUN_80037d50();
+extern undefined8 FUN_800723a0();
+extern undefined4 FUN_80081100();
+extern undefined4 FUN_800e8794();
 extern undefined4 camcontrol_findBestTarget();
 extern undefined4 camcontrol_updateMoveAverage();
 extern undefined4 camcontrol_applyState();
 extern undefined8 camcontrol_applyQueuedAction();
-extern int FUN_80111fb0();
-extern int FUN_8012ee7c();
-extern int FUN_80134f70();
-extern double FUN_8014ca48();
-extern double FUN_8018375c();
+extern int FUN_801113c0();
+extern int FUN_8012ef0c();
+extern int FUN_80133a28();
+extern double FUN_8014cbcc();
+extern double FUN_80183544();
 extern int FUN_80286838();
 extern undefined4 FUN_80286884();
 extern double FUN_80293900();
@@ -105,28 +105,28 @@ void camcontrol_updateTargetFeedback(void)
   if (gCamcontrolTargetReticle == (short *)0x0) {
     return;
   }
-  iVar8 = FUN_80134f70();
+  iVar8 = FUN_80133a28();
   if (iVar8 != 0) {
     return;
   }
   if ((gCamcontrolTargetChanged != '\0') && (gCamcontrolTargetChanged = '\0', iVar11 != 0)) {
     cVar2 = *(char *)(gCamcontrolState + 0x138);
     if (cVar2 == '\x01') {
-      FUN_8000bb38(0,0x3ff);
-      FUN_80098230((double)FLOAT_803e22ac,psVar6,2);
+      FUN_80006824(0,0x3ff);
+      FUN_80081100((double)FLOAT_803e22ac,psVar6,2);
     }
     else if ((cVar2 == '\x04') || (cVar2 == '\t')) {
-      FUN_8000bb38(0,0x402);
-      FUN_80098230((double)FLOAT_803e22ac,psVar6,3);
+      FUN_80006824(0,0x402);
+      FUN_80081100((double)FLOAT_803e22ac,psVar6,3);
     }
     else if (cVar2 != '\b') {
-      FUN_8000bb38(0,0x288);
-      FUN_80098230((double)FLOAT_803e22ac,psVar6,1);
+      FUN_80006824(0,0x288);
+      FUN_80081100((double)FLOAT_803e22ac,psVar6,1);
     }
   }
   if (iVar11 != 0) {
     *(byte *)(iVar11 + 0xaf) = *(byte *)(iVar11 + 0xaf) | 4;
-    uVar9 = FUN_80014e9c(0);
+    uVar9 = FUN_80006c00(0);
     uVar10 = 0x100;
     bVar7 = *(byte *)(*(int *)(iVar11 + 0x78) + (uint)*(byte *)(iVar11 + 0xe4) * 5 + 4) & 0xf;
     if ((bVar7 == 4) || (bVar7 == 9)) {
@@ -138,13 +138,13 @@ void camcontrol_updateTargetFeedback(void)
         *(byte *)(iVar11 + 0xaf) = *(byte *)(iVar11 + 0xaf) | 1;
       }
     }
-    else if ((bVar1) && (iVar8 = FUN_8012ee7c(), iVar8 == 0)) {
-      FUN_8000bb38(0,0x287);
+    else if ((bVar1) && (iVar8 = FUN_8012ef0c(), iVar8 == 0)) {
+      FUN_80006824(0,0x287);
     }
   }
   if (gCamcontrolTargetState == '\0') {
     if (FLOAT_803e22b0 < *(float *)(psVar6 + 0x4c)) {
-      FUN_8002fb40((double)FLOAT_803e22f0,(double)FLOAT_803dc074);
+      FUN_8002fc3c((double)FLOAT_803e22f0,(double)FLOAT_803dc074);
     }
     else if (iVar11 == 0) {
       *(undefined4 *)(gCamcontrolState + 0x128) = 0;
@@ -159,27 +159,27 @@ void camcontrol_updateTargetFeedback(void)
   }
   else if ((*(int *)(gCamcontrolState + 0x128) == iVar11) ||
           (*(float *)(psVar6 + 0x4c) < FLOAT_803e22ac)) {
-    FUN_8002fb40((double)FLOAT_803e22f4,(double)FLOAT_803dc074);
+    FUN_8002fc3c((double)FLOAT_803e22f4,(double)FLOAT_803dc074);
   }
   else {
     gCamcontrolTargetState = '\0';
     if (iVar11 == 0) {
       cVar2 = *(char *)(gCamcontrolState + 0x138);
       if (cVar2 == '\x01') {
-        FUN_8000bb38(0,0x400);
+        FUN_80006824(0,0x400);
       }
       else if ((cVar2 == '\x04') || (cVar2 == '\t')) {
-        FUN_8000bb38(0,0x401);
+        FUN_80006824(0,0x401);
       }
       else if (cVar2 != '\b') {
-        FUN_8000bb38(0,0x289);
+        FUN_80006824(0,0x289);
       }
     }
     else {
-      FUN_800303fc((double)FLOAT_803e22b0,(int)psVar6);
+      FUN_800305c4((double)FLOAT_803e22b0,(int)psVar6);
     }
   }
-  iVar11 = FUN_80037ad4(*(int *)(gCamcontrolState + 0x128));
+  iVar11 = FUN_80037d50(*(int *)(gCamcontrolState + 0x128));
   if (iVar11 == 0) {
     *(undefined4 *)(gCamcontrolState + 0x128) = 0;
   }
@@ -195,7 +195,7 @@ void camcontrol_updateTargetFeedback(void)
   sVar3 = *(short *)(iVar11 + 0x46);
   if (sVar3 == 0x49f) {
 LAB_80102994:
-    dVar12 = FUN_8018375c(iVar11);
+    dVar12 = FUN_80183544(iVar11);
   }
   else {
     if (sVar3 < 0x49f) {
@@ -233,7 +233,7 @@ LAB_80102994:
           if (sVar3 < 0x58b) {
             if ((sVar3 != 0x4d7) && ((0x4d6 < sVar3 || (sVar3 != 0x4ac)))) {
 LAB_801029ac:
-              iVar8 = FUN_80111fb0(iVar11);
+              iVar8 = FUN_801113c0(iVar11);
               if (iVar8 == 0) {
                 dVar12 = (double)FLOAT_803e22ac;
               }
@@ -257,7 +257,7 @@ LAB_801029ac:
         else if ((sVar3 != 0x851) && ((0x850 < sVar3 || (sVar3 != 0x84b)))) goto LAB_801029ac;
       }
     }
-    dVar12 = FUN_8014ca48(iVar11);
+    dVar12 = FUN_8014cbcc(iVar11);
   }
 LAB_801029e0:
   if (((double)FLOAT_803e22b0 < dVar12) ||
@@ -268,19 +268,19 @@ LAB_801029e0:
          ((double)*(float *)(gCamcontrolState + 0x134) <= (double)FLOAT_803e22b8)) {
         if ((dVar12 <= (double)FLOAT_803e22bc) &&
            ((double)FLOAT_803e22bc < (double)*(float *)(gCamcontrolState + 0x134))) {
-          FUN_80098230((double)FLOAT_803e22ac,psVar6,4);
+          FUN_80081100((double)FLOAT_803e22ac,psVar6,4);
         }
       }
       else {
-        FUN_80098230((double)FLOAT_803e22ac,psVar6,4);
+        FUN_80081100((double)FLOAT_803e22ac,psVar6,4);
       }
     }
     else {
-      FUN_80098230((double)FLOAT_803e22ac,psVar6,4);
+      FUN_80081100((double)FLOAT_803e22ac,psVar6,4);
     }
   }
   else {
-    FUN_80098230((double)FLOAT_803e22ac,psVar6,4);
+    FUN_80081100((double)FLOAT_803e22ac,psVar6,4);
   }
   *(float *)(gCamcontrolState + 0x134) = (float)dVar12;
 LAB_80102ab4:
@@ -409,13 +409,13 @@ void camcontrol_loadTriggeredCamAction(undefined8 param_1,double param_2,double 
     }
   }
   if (param_10 == 0) {
-    uVar6 = FUN_8007d858();
-    camAction = (CamcontrolTriggeredAction *)FUN_80023d8c(0x10,0xf);
+    uVar6 = FUN_800723a0();
+    camAction = (CamcontrolTriggeredAction *)FUN_80017830(0x10,0xf);
     if (camAction != (CamcontrolTriggeredAction *)0x0) {
-      FUN_8001f7e0(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,camAction,0xb,0,
+      FUN_80017640(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,camAction,0xb,0,
                    0x10,param_13,param_14,param_15,param_16);
       camAction->triggerMode = param_11;
-      FUN_800e875c(1);
+      FUN_800e8794(1);
       if ((((gCamcontrolCurrentActionId == 0x42) || (gCamcontrolCurrentActionId == 0x4b)) ||
           (gCamcontrolCurrentActionId == 0x48)) || (gCamcontrolCurrentActionId == 0x47)) {
         if (camAction->actionKind == 1) {
@@ -440,7 +440,7 @@ void camcontrol_loadTriggeredCamAction(undefined8 param_1,double param_2,double 
 LAB_80103090:
         (**(code **)(**(int **)(iVar2 + 4) + 0x10))(camAction,0x10);
       }
-      FUN_800238c4((uint)camAction);
+      FUN_80017814((uint)camAction);
     }
   }
   else {
@@ -448,15 +448,15 @@ LAB_80103090:
       camAction = (CamcontrolTriggeredAction *)0x0;
     }
     else {
-      camAction = (CamcontrolTriggeredAction *)FUN_80023d8c(0x10,0xf);
+      camAction = (CamcontrolTriggeredAction *)FUN_80017830(0x10,0xf);
       if (camAction != (CamcontrolTriggeredAction *)0x0) {
-        FUN_8001f7e0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,camAction,0xb,
+        FUN_80017640(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,camAction,0xb,
                      (param_10 - 1) * 0x10,0x10,param_13,param_14,param_15,param_16);
       }
     }
     if (camAction != (CamcontrolTriggeredAction *)0x0) {
       camAction->triggerMode = param_11;
-      FUN_800e875c((short)param_10);
+      FUN_800e8794((short)param_10);
       if (((gCamcontrolCurrentActionId == 0x42) || (gCamcontrolCurrentActionId == 0x4b)) ||
          ((gCamcontrolCurrentActionId == 0x48 || (gCamcontrolCurrentActionId == 0x47)))) {
         if (camAction->actionKind == 1) {
@@ -481,7 +481,7 @@ LAB_80103090:
 LAB_80102f3c:
         (**(code **)(**(int **)(iVar2 + 4) + 0x10))(camAction,0x10);
       }
-      FUN_800238c4((uint)camAction);
+      FUN_80017814((uint)camAction);
     }
   }
   return;
@@ -514,9 +514,9 @@ int camcontrol_loadCamAction(undefined8 param_1,double param_2,double param_3,un
     iVar1 = 0;
   }
   else {
-    iVar1 = FUN_80023d8c(0x10,0xf);
+    iVar1 = FUN_80017830(0x10,0xf);
     if (iVar1 != 0) {
-      FUN_8001f7e0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,0xb,
+      FUN_80017640(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,0xb,
                    (param_9 + -1) * 0x10,0x10,in_r7,in_r8,in_r9,in_r10);
     }
   }
@@ -587,7 +587,7 @@ void camcontrol_queueCamAction(undefined4 param_1,undefined4 param_2,undefined p
   
   iVar1 = FUN_80286838();
   if (gCamcontrolQueuedActionData != (void *)0x0) {
-    FUN_800238c4((uint)gCamcontrolQueuedActionData);
+    FUN_80017814((uint)gCamcontrolQueuedActionData);
     gCamcontrolQueuedActionData = (void *)0x0;
     gCamcontrolQueuedActionPending = 0;
   }
@@ -597,7 +597,7 @@ void camcontrol_queueCamAction(undefined4 param_1,undefined4 param_2,undefined p
     gCamcontrolQueuedActionData = (void *)0x0;
   }
   else {
-    gCamcontrolQueuedActionData = (void *)FUN_80023d8c(param_4,0xf);
+    gCamcontrolQueuedActionData = (void *)FUN_80017830(param_4,0xf);
     FUN_80003494((uint)gCamcontrolQueuedActionData,param_5,param_4);
   }
   if (iVar1 == 0x42) {
@@ -631,7 +631,7 @@ void camcontrol_updateState(undefined8 param_1,double param_2,double param_3,und
   short *psVar3;
   undefined8 uVar4;
   
-  iVar1 = FUN_80134f70();
+  iVar1 = FUN_80133a28();
   psVar3 = *(short **)(gCamcontrolState + 0x52);
   if (psVar3 == (short *)0x0) {
     psVar3 = gCamcontrolState;
@@ -655,26 +655,26 @@ void camcontrol_updateState(undefined8 param_1,double param_2,double param_3,und
       *(undefined4 *)(psVar3 + 0x10) = *(undefined4 *)(gCamcontrolState + 0x72);
       param_2 = (double)*(float *)(psVar3 + 0xe);
       param_3 = (double)*(float *)(psVar3 + 0x10);
-      FUN_8000e054((double)*(float *)(psVar3 + 0xc),param_2,param_3,(float *)(psVar3 + 6),
+      FUN_800068f4((double)*(float *)(psVar3 + 0xc),param_2,param_3,(float *)(psVar3 + 6),
                    (float *)(psVar3 + 8),(float *)(psVar3 + 10),*(int *)(psVar3 + 0x18));
       *(undefined *)((int)gCamcontrolState + 0x13d) = 0;
     }
     if (*(int *)(gCamcontrolState + 0x18) != *(int *)(psVar3 + 0x18)) {
-      FUN_8000e0c0((double)*(float *)(gCamcontrolState + 6),(double)*(float *)(gCamcontrolState + 8),
+      FUN_800068f8((double)*(float *)(gCamcontrolState + 6),(double)*(float *)(gCamcontrolState + 8),
                    (double)*(float *)(gCamcontrolState + 10),(float *)(gCamcontrolState + 0xc),
                    (float *)(gCamcontrolState + 0xe),(float *)(gCamcontrolState + 0x10),
                    *(int *)(gCamcontrolState + 0x18));
-      FUN_8000e0c0((double)*(float *)(gCamcontrolState + 0x54),(double)*(float *)(gCamcontrolState + 0x56),
+      FUN_800068f8((double)*(float *)(gCamcontrolState + 0x54),(double)*(float *)(gCamcontrolState + 0x56),
                    (double)*(float *)(gCamcontrolState + 0x58),(float *)(gCamcontrolState + 0x5c),
                    (float *)(gCamcontrolState + 0x5e),(float *)(gCamcontrolState + 0x60),
                    *(int *)(gCamcontrolState + 0x18));
-      FUN_8000e054((double)*(float *)(gCamcontrolState + 0xc),(double)*(float *)(gCamcontrolState + 0xe),
+      FUN_800068f4((double)*(float *)(gCamcontrolState + 0xc),(double)*(float *)(gCamcontrolState + 0xe),
                    (double)*(float *)(gCamcontrolState + 0x10),(float *)(gCamcontrolState + 6),
                    (float *)(gCamcontrolState + 8),(float *)(gCamcontrolState + 10),*(int *)(psVar3 + 0x18))
       ;
       param_2 = (double)*(float *)(gCamcontrolState + 0x5e);
       param_3 = (double)*(float *)(gCamcontrolState + 0x60);
-      FUN_8000e054((double)*(float *)(gCamcontrolState + 0x5c),param_2,param_3,
+      FUN_800068f4((double)*(float *)(gCamcontrolState + 0x5c),param_2,param_3,
                    (float *)(gCamcontrolState + 0x54),(float *)(gCamcontrolState + 0x56),
                    (float *)(gCamcontrolState + 0x58),*(int *)(psVar3 + 0x18));
       *(undefined4 *)(gCamcontrolState + 0x18) = *(undefined4 *)(psVar3 + 0x18);
@@ -687,7 +687,7 @@ void camcontrol_updateState(undefined8 param_1,double param_2,double param_3,und
       (**(code **)(**(int **)(gCamcontrolCurrentHandler + 4) + 8))(gCamcontrolState);
       param_2 = (double)*(float *)(gCamcontrolState + 8);
       param_3 = (double)*(float *)(gCamcontrolState + 10);
-      FUN_8000e0c0((double)*(float *)(gCamcontrolState + 6),param_2,param_3,
+      FUN_800068f8((double)*(float *)(gCamcontrolState + 6),param_2,param_3,
                    (float *)(gCamcontrolState + 0xc),(float *)(gCamcontrolState + 0xe),
                    (float *)(gCamcontrolState + 0x10),*(int *)(gCamcontrolState + 0x18));
       camcontrol_applyState(gCamcontrolState);

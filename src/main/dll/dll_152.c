@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_152.h"
 
-extern undefined4 FUN_8003b9ec();
+extern undefined4 FUN_8003b818();
 extern int FUN_80286838();
 extern undefined4 FUN_80286884();
 
@@ -10,7 +10,7 @@ extern undefined4* DAT_803dd72c;
 /*
  * --INFO--
  *
- * Function: FUN_80182b44
+ * Function: FUN_801826e8
  * EN v1.0 Address: 0x801826E8
  * EN v1.0 Size: 220b
  * EN v1.1 Address: 0x80182B44
@@ -20,7 +20,7 @@ extern undefined4* DAT_803dd72c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80182b44(void)
+void FUN_801826e8(void)
 {
   short sVar1;
   int iVar2;
@@ -38,7 +38,7 @@ void FUN_80182b44(void)
     sVar1 = *(short *)(iVar4 + 10);
     if (((sVar1 == 0) || (0x32 < sVar1)) && (*(int *)(iVar4 + 0x14) == 0)) {
       if ((*(int *)(iVar2 + 0xf8) == 0) || (in_r8 == -1)) {
-        FUN_8003b9ec(iVar2);
+        FUN_8003b818(iVar2);
       }
       else {
         *(ushort *)(iVar2 + 6) = *(ushort *)(iVar2 + 6) | 0x4000;

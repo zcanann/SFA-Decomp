@@ -1,36 +1,36 @@
 #include "ghidra_import.h"
 #include "main/dll/baddie/wispBaddie.h"
 
-extern undefined4 FUN_8000f478();
-extern undefined4 FUN_8000f584();
-extern undefined4 FUN_8000f7a0();
-extern undefined4 FUN_8000fb20();
-extern undefined4 FUN_8000fc5c();
-extern undefined8 FUN_80015e00();
-extern undefined8 FUN_800162c4();
-extern undefined8 FUN_800163fc();
-extern undefined8 FUN_80016848();
-extern void* FUN_80017400();
-extern undefined8 FUN_80019940();
-extern undefined8 FUN_800199a8();
-extern int FUN_80019c30();
-extern double FUN_80019c38();
-extern undefined4 FUN_8001b4f8();
-extern uint FUN_80020078();
-extern uint FUN_80022264();
-extern int FUN_8002b660();
-extern undefined4 FUN_8002bac4();
-extern undefined4 FUN_8003ba50();
-extern undefined4 FUN_80054ed0();
-extern undefined4 FUN_8007668c();
-extern double FUN_800e9bec();
-extern uint FUN_800ea540();
-extern undefined4 FUN_8011e974();
-extern undefined4 FUN_8011ebbc();
-extern undefined8 FUN_8011ee20();
-extern undefined4 FUN_8011f088();
-extern undefined4 FUN_8011f234();
-extern undefined8 FUN_80121f30();
+extern undefined4 FUN_80006954();
+extern undefined4 FUN_80006984();
+extern undefined4 FUN_80006988();
+extern undefined4 FUN_800069d4();
+extern undefined4 FUN_80006a00();
+extern undefined8 FUN_80006c64();
+extern undefined8 FUN_80006c74();
+extern undefined8 FUN_80006c78();
+extern undefined8 FUN_80006c84();
+extern void* FUN_80006c9c();
+extern undefined8 FUN_80017484();
+extern undefined8 FUN_80017488();
+extern int FUN_800174a0();
+extern double FUN_800174a8();
+extern undefined4 FUN_800174d4();
+extern uint FUN_80017690();
+extern uint FUN_80017760();
+extern int FUN_80017a54();
+extern undefined4 FUN_80017a98();
+extern undefined4 FUN_8003b878();
+extern undefined4 FUN_8005398c();
+extern undefined4 FUN_800709dc();
+extern double FUN_800e9e74();
+extern uint FUN_800ea9ac();
+extern undefined4 FUN_8011e454();
+extern undefined4 FUN_8011e458();
+extern undefined8 FUN_8011e45c();
+extern undefined4 FUN_8011e460();
+extern undefined4 FUN_8011e464();
+extern undefined8 FUN_80121c4c();
 extern undefined8 FUN_80128260();
 extern undefined4 FUN_8012845c();
 extern undefined4 FUN_801287ac();
@@ -43,7 +43,7 @@ extern undefined4 FUN_80286880();
 extern undefined4 FUN_80286888();
 extern undefined8 FUN_8028fde8();
 extern undefined4 FUN_80294964();
-extern undefined4 FUN_80294b54();
+extern undefined4 FUN_802949e8();
 extern undefined4 SUB84();
 
 extern undefined4 DAT_802c7b54;
@@ -145,7 +145,7 @@ extern int iRam803de4e4;
 /*
  * --INFO--
  *
- * Function: FUN_801265b0
+ * Function: FUN_801262cc
  * EN v1.0 Address: 0x801262CC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801265B0
@@ -155,7 +155,7 @@ extern int iRam803de4e4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801265b0(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
+void FUN_801262cc(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
@@ -163,7 +163,7 @@ void FUN_801265b0(undefined8 param_1,double param_2,undefined8 param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_801277dc
+ * Function: FUN_801262d0
  * EN v1.0 Address: 0x801262D0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801277DC
@@ -173,6 +173,6 @@ void FUN_801265b0(undefined8 param_1,double param_2,undefined8 param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801277dc(void)
+void FUN_801262d0(void)
 {
 }

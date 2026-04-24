@@ -2,7 +2,7 @@
 #include "main/dll/dll_C6.h"
 
 extern undefined4 camcontrol_updateTargetReticle();
-extern int FUN_80134f70();
+extern int FUN_80133a28();
 extern undefined4 countLeadingZeros();
 
 extern undefined4 DAT_803dc5f0;
@@ -12,7 +12,7 @@ extern undefined4 gCamcontrolState;
 /*
  * --INFO--
  *
- * Function: FUN_801023a8
+ * Function: FUN_8010224c
  * EN v1.0 Address: 0x8010224C
  * EN v1.0 Size: 80b
  * EN v1.1 Address: 0x801023A8
@@ -22,11 +22,11 @@ extern undefined4 gCamcontrolState;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801023a8(void)
+void FUN_8010224c(void)
 {
   int iVar1;
   
-  iVar1 = FUN_80134f70();
+  iVar1 = FUN_80133a28();
   if (iVar1 == 0) {
     DAT_803dc5f0 = 0xffff;
     countLeadingZeros(0x49 - gCamcontrolCurrentActionId);

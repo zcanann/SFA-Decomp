@@ -13,7 +13,7 @@ extern f32 FLOAT_803e5ab4;
 /*
  * --INFO--
  *
- * Function: FUN_801c1c4c
+ * Function: FUN_801c1bf0
  * EN v1.0 Address: 0x801C1BF0
  * EN v1.0 Size: 232b
  * EN v1.1 Address: 0x801C1C4C
@@ -23,7 +23,7 @@ extern f32 FLOAT_803e5ab4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-double FUN_801c1c4c(double param_1,double param_2,double param_3,double param_4,double param_5,
+double FUN_801c1bf0(double param_1,double param_2,double param_3,double param_4,double param_5,
                    double param_6,float *param_7,float *param_8,float *param_9)
 {
   double dVar1;
@@ -61,7 +61,7 @@ double FUN_801c1c4c(double param_1,double param_2,double param_3,double param_4,
 /*
  * --INFO--
  *
- * Function: FUN_801c1cf4
+ * Function: FUN_801c1cd8
  * EN v1.0 Address: 0x801C1CD8
  * EN v1.0 Size: 808b
  * EN v1.1 Address: 0x801C1CF4
@@ -71,7 +71,7 @@ double FUN_801c1c4c(double param_1,double param_2,double param_3,double param_4,
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c1cf4(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
+void FUN_801c1cd8(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,float *param_6,undefined *param_7)
 {
   float *pfVar1;
@@ -144,7 +144,7 @@ void FUN_801c1cf4(undefined8 param_1,double param_2,double param_3,undefined4 pa
       local_84 = (float)dVar11;
       local_88 = (float)dVar12;
       pfVar2 = (float *)(*(int *)piVar6[0xb] + iVar4);
-      dVar7 = FUN_801c1c4c((double)*pfVar2,(double)pfVar2[1],(double)pfVar2[2],(double)pfVar2[0xd],
+      dVar7 = FUN_801c1bf0((double)*pfVar2,(double)pfVar2[1],(double)pfVar2[2],(double)pfVar2[0xd],
                            (double)pfVar2[0xe],(double)pfVar2[0xf],local_80,&local_84,&local_88);
       if (((dVar9 <= dVar7) && (dVar7 < (double)FLOAT_803e5ab0)) &&
          (dVar8 = FUN_80293900((double)((float)((double)local_88 - dVar12) *

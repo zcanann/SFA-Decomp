@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: FUN_801e18cc
+ * Function: FUN_801e1588
  * EN v1.0 Address: 0x801E1588
  * EN v1.0 Size: 16b
  * EN v1.1 Address: 0x801E18CC
@@ -14,7 +14,7 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_801e18cc(int param_1)
+int FUN_801e1588(int param_1)
 {
   return (int)*(char *)(*(int *)(param_1 + 0xb8) + 0x70);
 }

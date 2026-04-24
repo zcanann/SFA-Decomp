@@ -1,9 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/door.h"
 
-extern undefined4 FUN_800146a8();
-extern uint FUN_80020078();
-extern undefined4 FUN_8020816c();
+extern undefined4 FUN_80006b4c();
+extern uint FUN_80017690();
+extern undefined4 FUN_80208098();
 
 extern undefined4 DAT_803add98;
 extern undefined4 DAT_803add9c;
@@ -17,7 +17,7 @@ extern undefined4 DAT_803addb4;
 /*
  * --INFO--
  *
- * Function: FUN_802085f4
+ * Function: FUN_80208508
  * EN v1.0 Address: 0x80208508
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802085F4
@@ -27,6 +27,6 @@ extern undefined4 DAT_803addb4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802085f4(undefined2 *param_1,int param_2)
+void FUN_80208508(undefined2 *param_1,int param_2)
 {
 }

@@ -11,9 +11,9 @@ extern undefined4 FUN_80251728();
 extern undefined4 FUN_80251770();
 extern ushort FUN_802517b0();
 extern undefined4 FUN_802517c0();
-extern undefined4 FUN_8027cbf0();
-extern undefined4 FUN_80285220();
-extern undefined4 FUN_80285258();
+extern undefined4 FUN_8027c490();
+extern undefined4 FUN_8028504c();
+extern undefined4 FUN_80285050();
 
 extern undefined4 DAT_800000f8;
 extern undefined4 DAT_803314a0;
@@ -44,7 +44,7 @@ extern undefined4 DAT_803df040;
 /*
  * --INFO--
  *
- * Function: FUN_8028503c
+ * Function: FUN_80284c58
  * EN v1.0 Address: 0x80284C58
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8028503C
@@ -54,7 +54,7 @@ extern undefined4 DAT_803df040;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8028503c(void)
+undefined4 FUN_80284c58(void)
 {
     return 0;
 }
@@ -62,7 +62,7 @@ undefined4 FUN_8028503c(void)
 /*
  * --INFO--
  *
- * Function: FUN_802850fc
+ * Function: FUN_80284c60
  * EN v1.0 Address: 0x80284C60
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802850FC
@@ -72,7 +72,7 @@ undefined4 FUN_8028503c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_802850fc(void)
+undefined4 FUN_80284c60(void)
 {
     return 0;
 }
@@ -80,7 +80,7 @@ undefined4 FUN_802850fc(void)
 /*
  * --INFO--
  *
- * Function: FUN_80285130
+ * Function: FUN_80284c68
  * EN v1.0 Address: 0x80284C68
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80285130
@@ -90,14 +90,14 @@ undefined4 FUN_802850fc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80285130(undefined4 param_1)
+void FUN_80284c68(undefined4 param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802851a4
+ * Function: FUN_80284c6c
  * EN v1.0 Address: 0x80284C6C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802851A4
@@ -107,7 +107,7 @@ void FUN_80285130(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_802851a4(void)
+uint FUN_80284c6c(void)
 {
     return 0;
 }
@@ -115,7 +115,7 @@ uint FUN_802851a4(void)
 /*
  * --INFO--
  *
- * Function: FUN_802851f0
+ * Function: FUN_80284c74
  * EN v1.0 Address: 0x80284C74
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802851F0
@@ -125,6 +125,6 @@ uint FUN_802851a4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802851f0(void)
+void FUN_80284c74(void)
 {
 }

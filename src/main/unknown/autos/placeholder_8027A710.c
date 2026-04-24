@@ -1,11 +1,11 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8027A710.h"
 
-extern undefined4 FUN_80273f50();
-extern void* FUN_80279768();
-extern undefined4 FUN_8027979c();
-extern undefined4 FUN_8027a2fc();
-extern bool FUN_802839b8();
+extern undefined4 FUN_80273d2c();
+extern void* FUN_802795d8();
+extern undefined4 FUN_8027975c();
+extern undefined4 FUN_8027a2b4();
+extern bool FUN_80283844();
 extern undefined4 FUN_80283ba0();
 
 extern undefined4 DAT_803deeb8;
@@ -14,7 +14,7 @@ extern undefined4 DAT_803deee8;
 /*
  * --INFO--
  *
- * Function: FUN_8027a710
+ * Function: FUN_8027a660
  * EN v1.0 Address: 0x8027A660
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8027A710
@@ -24,14 +24,14 @@ extern undefined4 DAT_803deee8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8027a710(int param_1)
+void FUN_8027a660(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8027a790
+ * Function: FUN_8027a664
  * EN v1.0 Address: 0x8027A664
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8027A790
@@ -41,14 +41,14 @@ void FUN_8027a710(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8027a790(int param_1)
+void FUN_8027a664(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8027a830
+ * Function: FUN_8027a668
  * EN v1.0 Address: 0x8027A668
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8027A830
@@ -58,7 +58,7 @@ void FUN_8027a790(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8027a830(uint param_1)
+undefined4 FUN_8027a668(uint param_1)
 {
     return 0;
 }

@@ -1,36 +1,36 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/dll_223.h"
 
-extern undefined4 FUN_8000a538();
-extern undefined4 FUN_80013ee8();
-extern uint FUN_80020078();
-extern undefined4 FUN_800201ac();
-extern undefined4 FUN_8002b9a0();
-extern undefined4 FUN_8002fb40();
-extern undefined4 FUN_8003042c();
-extern undefined4 FUN_8003b9ec();
-extern undefined4 FUN_80043604();
-extern undefined4 FUN_80043658();
-extern undefined4 FUN_8004832c();
-extern undefined4 FUN_8005d06c();
-extern undefined4 FUN_80114238();
-extern undefined4 FUN_80115200();
-extern undefined4 FUN_801ba480();
-extern undefined4 FUN_801ba7d8();
-extern undefined4 FUN_801baa6c();
-extern undefined4 FUN_801bab5c();
-extern undefined4 FUN_801bac08();
-extern undefined4 FUN_801bad34();
-extern undefined4 FUN_801bae34();
-extern undefined4 FUN_801baf0c();
-extern undefined4 FUN_801bb038();
-extern undefined4 FUN_801bb13c();
-extern undefined4 FUN_801bb26c();
-extern undefined4 FUN_801bb3b4();
-extern undefined4 FUN_801bb50c();
-extern undefined4 FUN_801bb68c();
-extern undefined4 FUN_801bb7a0();
-extern undefined4 FUN_801bb864();
+extern undefined4 FUN_800067c0();
+extern undefined4 FUN_80006b14();
+extern uint FUN_80017690();
+extern undefined4 FUN_80017698();
+extern undefined4 FUN_80017a7c();
+extern undefined4 FUN_8002fc3c();
+extern undefined4 FUN_800305f8();
+extern undefined4 FUN_8003b818();
+extern undefined4 FUN_80042b9c();
+extern undefined4 FUN_80042bec();
+extern undefined4 FUN_80044404();
+extern undefined4 FUN_8005d17c();
+extern undefined4 FUN_801141e8();
+extern undefined4 FUN_80114b10();
+extern undefined4 FUN_801ba2e0();
+extern undefined4 FUN_801ba6d8();
+extern undefined4 FUN_801ba9ec();
+extern undefined4 FUN_801bab8c();
+extern undefined4 FUN_801babd4();
+extern undefined4 FUN_801bad7c();
+extern undefined4 FUN_801baefc();
+extern undefined4 FUN_801bb080();
+extern undefined4 FUN_801bb2a0();
+extern undefined4 FUN_801bb450();
+extern undefined4 FUN_801bb5e8();
+extern undefined4 FUN_801bb798();
+extern undefined4 FUN_801bb954();
+extern undefined4 FUN_801bbbc8();
+extern undefined4 FUN_801bbd68();
+extern undefined4 FUN_801bbea0();
 extern undefined4 DIMboss_updateState();
 extern int FUN_80286840();
 extern undefined4 FUN_8028688c();
@@ -104,14 +104,14 @@ void DIMboss_init(int param_1,undefined4 param_2,int param_3)
  */
 void DIMboss_initialise(void)
 {
-  FUN_801be0a8();
+  FUN_801bdd1c();
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_801be0a8
+ * Function: FUN_801bdd1c
  * EN v1.0 Address: 0x801BDD1C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801BE0A8
@@ -121,7 +121,7 @@ void DIMboss_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801be0a8(void)
+void FUN_801bdd1c(void)
 {
 }
 
@@ -145,8 +145,8 @@ void DIMbossgut_render(void)
   
   iVar1 = FUN_80286840();
   if (in_r8 != '\0') {
-    FUN_8002fb40((double)FLOAT_803e5918,(double)FLOAT_803dc074);
-    FUN_8003b9ec(iVar1);
+    FUN_8002fc3c((double)FLOAT_803e5918,(double)FLOAT_803dc074);
+    FUN_8003b818(iVar1);
   }
   FUN_8028688c();
   return;

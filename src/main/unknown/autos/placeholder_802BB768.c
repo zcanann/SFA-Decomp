@@ -1,9 +1,9 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_802BB768.h"
 
-extern undefined4 FUN_800201ac();
-extern undefined4 FUN_80021fac();
-extern undefined4 FUN_80022790();
+extern undefined4 FUN_80017698();
+extern undefined4 FUN_80017754();
+extern undefined4 FUN_80017778();
 
 extern f32 FLOAT_803e8ecc;
 extern f32 FLOAT_803e8ef0;
@@ -13,7 +13,7 @@ extern f32 FLOAT_803e8f34;
 /*
  * --INFO--
  *
- * Function: FUN_802bb780
+ * Function: FUN_802bb720
  * EN v1.0 Address: 0x802BB720
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802BB780
@@ -23,14 +23,14 @@ extern f32 FLOAT_803e8f34;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802bb780(ushort *param_1,float *param_2,float *param_3,float *param_4)
+void FUN_802bb720(ushort *param_1,float *param_2,float *param_3,float *param_4)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802bb844
+ * Function: FUN_802bb724
  * EN v1.0 Address: 0x802BB724
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802BB844
@@ -40,7 +40,7 @@ void FUN_802bb780(ushort *param_1,float *param_2,float *param_3,float *param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-bool FUN_802bb844(int param_1)
+bool FUN_802bb724(int param_1)
 {
     return 0;
 }

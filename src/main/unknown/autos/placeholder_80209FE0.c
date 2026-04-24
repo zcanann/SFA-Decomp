@@ -3,315 +3,315 @@
 
 extern undefined4 ABS();
 extern undefined4 FUN_80003494();
-extern undefined8 FUN_80008b74();
-extern undefined8 FUN_80008cbc();
-extern undefined4 FUN_80009a94();
-extern undefined4 FUN_8000a3a0();
-extern undefined4 FUN_8000a538();
-extern undefined4 FUN_8000b4f0();
-extern bool FUN_8000b598();
-extern undefined8 FUN_8000b7dc();
-extern undefined4 FUN_8000b844();
-extern undefined4 FUN_8000b8a8();
-extern undefined4 FUN_8000b9bc();
-extern undefined8 FUN_8000bb38();
-extern char FUN_8000cfc0();
-extern undefined8 FUN_8000d03c();
-extern undefined4 FUN_8000d220();
-extern undefined4 FUN_8000d904();
-extern undefined8 FUN_8000da78();
-extern undefined4 FUN_8000e69c();
-extern undefined4 FUN_8000f0d8();
-extern undefined4 FUN_8000f560();
-extern undefined4 FUN_8000f56c();
-extern undefined4 FUN_8000f578();
-extern void* FUN_8000facc();
-extern undefined4 FUN_8000faf8();
-extern double FUN_8000fc54();
-extern int FUN_80010340();
-extern undefined4 FUN_80010924();
-extern int FUN_800128fc();
-extern undefined8 FUN_80012d20();
-extern undefined4 FUN_80012e2c();
-extern uint FUN_800138d4();
-extern uint FUN_800138e4();
-extern undefined4 FUN_80013900();
-extern undefined4 FUN_80013978();
-extern undefined4 FUN_800139e8();
-extern undefined4 FUN_80013a08();
-extern undefined4 FUN_80013e4c();
-extern undefined4 FUN_80013ee8();
-extern byte FUN_80014074();
-extern undefined4 FUN_800140d4();
-extern byte FUN_8001469c();
-extern undefined4 FUN_800146a8();
-extern undefined4 FUN_800146c8();
-extern undefined4 FUN_800146e8();
-extern undefined8 FUN_80014974();
-extern undefined4 FUN_80014acc();
-extern undefined4 FUN_80014b68();
-extern char FUN_80014c98();
-extern char FUN_80014cec();
-extern uint FUN_80014d40();
-extern uint FUN_80014d84();
-extern uint FUN_80014e40();
-extern uint FUN_80014e9c();
-extern uint FUN_80014f14();
-extern undefined4 FUN_800168a8();
-extern undefined8 FUN_80019940();
-extern undefined4 FUN_8001cc00();
-extern int FUN_8001cd60();
-extern undefined4 FUN_8001d6e4();
-extern undefined4 FUN_8001d774();
-extern undefined4 FUN_8001d7d8();
-extern undefined4 FUN_8001d7e0();
-extern undefined4 FUN_8001d7f4();
-extern undefined4 FUN_8001d8d0();
-extern undefined4 FUN_8001d8e4();
-extern undefined4 FUN_8001d910();
-extern undefined4 FUN_8001d93c();
-extern undefined4 FUN_8001d9b4();
-extern undefined4 FUN_8001da50();
-extern undefined4 FUN_8001daa4();
-extern undefined4 FUN_8001dadc();
-extern undefined4 FUN_8001db24();
-extern undefined4 FUN_8001db7c();
-extern undefined4 FUN_8001db90();
-extern undefined4 FUN_8001dbb4();
-extern undefined4 FUN_8001dbd8();
-extern undefined4 FUN_8001dbe8();
-extern undefined4 FUN_8001dbf0();
-extern undefined4 FUN_8001dbf8();
-extern undefined4 FUN_8001dc18();
-extern undefined4 FUN_8001dc20();
-extern int FUN_8001dc28();
-extern undefined8 FUN_8001dc30();
-extern undefined4 FUN_8001dcfc();
-extern undefined4 FUN_8001dd54();
-extern undefined4 FUN_8001de04();
-extern undefined8 FUN_8001de4c();
-extern undefined4 FUN_8001f448();
-extern void* FUN_8001f58c();
-extern uint FUN_80020000();
-extern uint FUN_80020078();
-extern undefined8 FUN_800201ac();
-extern undefined8 FUN_80020388();
-extern uint FUN_80020800();
-extern double FUN_80021434();
-extern undefined4 FUN_80021634();
-extern undefined4 FUN_80021754();
-extern undefined4 FUN_800217c8();
-extern int FUN_80021884();
-extern undefined4 FUN_80021b8c();
-extern undefined4 FUN_80021fac();
-extern uint FUN_80022150();
-extern uint FUN_80022264();
-extern undefined4 FUN_800223a8();
-extern undefined4 FUN_80022790();
-extern undefined4 FUN_800238c4();
-extern undefined4 FUN_800238f8();
-extern undefined4 FUN_80026fb8();
-extern undefined4 FUN_80028448();
-extern int FUN_800284ac();
-extern undefined4 FUN_800284d8();
-extern int FUN_800284e8();
-extern int FUN_80028568();
-extern undefined4 FUN_80028590();
-extern undefined4 FUN_800285f0();
-extern undefined4 FUN_80028630();
-extern byte FUN_8002acfc();
-extern undefined4 FUN_8002ad08();
-extern byte FUN_8002b11c();
-extern undefined4 FUN_8002b128();
-extern undefined4 FUN_8002b554();
-extern int FUN_8002b660();
-extern uint FUN_8002b678();
-extern undefined4 FUN_8002b7b0();
-extern undefined8 FUN_8002b95c();
-extern undefined4 FUN_8002ba34();
-extern int FUN_8002ba84();
-extern int FUN_8002bac4();
-extern void* FUN_8002becc();
-extern undefined8 FUN_8002cc9c();
-extern undefined4 FUN_8002cf0c();
-extern undefined4 FUN_8002cf80();
-extern undefined8 FUN_8002e088();
-extern uint FUN_8002e144();
-extern int FUN_8002e1ac();
-extern int FUN_8002e1f4();
+extern undefined8 FUN_80006724();
+extern undefined8 FUN_80006728();
+extern undefined4 FUN_80006770();
+extern undefined4 FUN_800067bc();
+extern undefined4 FUN_800067c0();
+extern undefined4 FUN_800067e8();
+extern bool FUN_800067f0();
+extern undefined8 FUN_8000680c();
+extern undefined4 FUN_80006810();
+extern undefined4 FUN_80006814();
+extern undefined4 FUN_80006818();
+extern undefined8 FUN_80006824();
+extern char FUN_80006884();
+extern undefined8 FUN_80006894();
+extern undefined4 FUN_800068a0();
+extern undefined4 FUN_800068c0();
+extern undefined8 FUN_800068c4();
+extern undefined4 FUN_80006920();
+extern undefined4 FUN_80006948();
+extern undefined4 FUN_8000696c();
+extern undefined4 FUN_80006974();
+extern undefined4 FUN_8000697c();
+extern void* FUN_800069a8();
+extern undefined4 FUN_800069bc();
+extern double FUN_800069f8();
+extern int FUN_80006a10();
+extern undefined4 FUN_80006a18();
+extern int FUN_80006a64();
+extern undefined8 FUN_80006a68();
+extern undefined4 FUN_80006a6c();
+extern uint FUN_80006ab0();
+extern uint FUN_80006ab8();
+extern undefined4 FUN_80006ac0();
+extern undefined4 FUN_80006ac4();
+extern undefined4 FUN_80006ac8();
+extern undefined4 FUN_80006acc();
+extern undefined4 FUN_80006b0c();
+extern undefined4 FUN_80006b14();
+extern byte FUN_80006b20();
+extern undefined4 FUN_80006b2c();
+extern byte FUN_80006b44();
+extern undefined4 FUN_80006b4c();
+extern undefined4 FUN_80006b50();
+extern undefined4 FUN_80006b54();
+extern undefined8 FUN_80006b84();
+extern undefined4 FUN_80006b94();
+extern undefined4 FUN_80006ba8();
+extern char FUN_80006bc8();
+extern char FUN_80006bd0();
+extern uint FUN_80006bd8();
+extern uint FUN_80006be0();
+extern uint FUN_80006bf8();
+extern uint FUN_80006c00();
+extern uint FUN_80006c10();
+extern undefined4 FUN_80006c88();
+extern undefined8 FUN_80017484();
+extern undefined4 FUN_80017520();
+extern int FUN_80017524();
+extern undefined4 FUN_8001753c();
+extern undefined4 FUN_80017540();
+extern undefined4 FUN_80017544();
+extern undefined4 FUN_80017548();
+extern undefined4 FUN_8001754c();
+extern undefined4 FUN_80017554();
+extern undefined4 FUN_80017560();
+extern undefined4 FUN_80017564();
+extern undefined4 FUN_80017568();
+extern undefined4 FUN_8001756c();
+extern undefined4 FUN_80017578();
+extern undefined4 FUN_80017580();
+extern undefined4 FUN_80017588();
+extern undefined4 FUN_80017590();
+extern undefined4 FUN_80017594();
+extern undefined4 FUN_80017598();
+extern undefined4 FUN_8001759c();
+extern undefined4 FUN_800175a0();
+extern undefined4 FUN_800175ac();
+extern undefined4 FUN_800175b0();
+extern undefined4 FUN_800175b4();
+extern undefined4 FUN_800175bc();
+extern undefined4 FUN_800175c0();
+extern int FUN_800175c4();
+extern undefined8 FUN_800175cc();
+extern undefined4 FUN_800175d0();
+extern undefined4 FUN_800175d4();
+extern undefined4 FUN_800175d8();
+extern undefined8 FUN_800175ec();
+extern undefined4 FUN_80017620();
+extern void* FUN_80017624();
+extern uint FUN_80017688();
+extern uint FUN_80017690();
+extern undefined8 FUN_80017698();
+extern undefined8 FUN_800176a4();
+extern uint FUN_800176d0();
+extern double FUN_800176f4();
+extern undefined4 FUN_80017700();
+extern undefined4 FUN_80017710();
+extern undefined4 FUN_8001771c();
+extern int FUN_80017730();
+extern undefined4 FUN_80017748();
+extern undefined4 FUN_80017754();
+extern uint FUN_80017758();
+extern uint FUN_80017760();
+extern undefined4 FUN_8001776c();
+extern undefined4 FUN_80017778();
+extern undefined4 FUN_80017814();
+extern undefined4 FUN_80017818();
+extern undefined4 FUN_800178bc();
+extern undefined4 FUN_8001791c();
+extern int FUN_80017920();
+extern undefined4 FUN_80017924();
+extern int FUN_8001792c();
+extern int FUN_80017944();
+extern undefined4 FUN_80017954();
+extern undefined4 FUN_80017958();
+extern undefined4 FUN_80017970();
+extern byte FUN_80017a20();
+extern undefined4 FUN_80017a28();
+extern byte FUN_80017a34();
+extern undefined4 FUN_80017a3c();
+extern undefined4 FUN_80017a50();
+extern int FUN_80017a54();
+extern uint FUN_80017a5c();
+extern undefined4 FUN_80017a6c();
+extern undefined8 FUN_80017a78();
+extern undefined4 FUN_80017a88();
+extern int FUN_80017a90();
+extern int FUN_80017a98();
+extern void* FUN_80017aa4();
+extern undefined8 FUN_80017ac8();
+extern undefined4 FUN_80017acc();
+extern undefined4 FUN_80017ad0();
+extern undefined8 FUN_80017ae4();
+extern uint FUN_80017ae8();
+extern int FUN_80017af8();
+extern int FUN_80017b00();
 extern undefined4 fn_8002EE64();
-extern undefined4 FUN_8002f66c();
-extern undefined4 FUN_8002f6cc();
-extern int FUN_8002fb40();
-extern undefined8 FUN_8003042c();
-extern undefined8 FUN_80033a34();
+extern undefined4 FUN_8002f638();
+extern undefined4 FUN_8002f6ac();
+extern int FUN_8002fc3c();
+extern undefined8 FUN_800305f8();
+extern undefined8 FUN_800339b4();
 extern char objHitReact_update();
-extern undefined4 FUN_800359cc();
-extern undefined4 FUN_80035a58();
-extern undefined4 FUN_80035a6c();
-extern undefined4 FUN_80035c48();
-extern undefined4 FUN_80035ea4();
-extern undefined4 FUN_80035ec0();
-extern undefined8 FUN_80035eec();
-extern undefined4 FUN_80035f28();
-extern undefined4 FUN_80035f84();
-extern undefined4 FUN_80035f9c();
-extern undefined8 FUN_80035ff8();
-extern undefined8 FUN_80036018();
-extern undefined4 FUN_80036548();
-extern int FUN_80036868();
-extern int FUN_80036974();
-extern int FUN_80036f50();
-extern void* FUN_80037048();
-extern undefined8 FUN_8003709c();
-extern undefined4 FUN_800372f8();
-extern undefined4 FUN_800379bc();
-extern int FUN_80037ad4();
-extern int FUN_80037c38();
-extern undefined4 FUN_80037da8();
-extern undefined8 FUN_80037e24();
-extern int FUN_8003809c();
-extern int FUN_8003811c();
-extern int FUN_800381d8();
-extern undefined4 FUN_80038378();
-extern undefined4 FUN_800383e8();
-extern uint FUN_80038498();
-extern undefined8 FUN_80038524();
-extern int FUN_800386e0();
-extern undefined4 FUN_80039030();
-extern undefined4 FUN_80039210();
-extern undefined4 FUN_8003935c();
-extern undefined4 FUN_80039368();
-extern undefined4 FUN_800393e8();
-extern void* FUN_80039598();
-extern int FUN_800395a4();
-extern int FUN_800396d0();
-extern undefined4 FUN_8003ab38();
-extern undefined4 FUN_8003abd8();
-extern undefined8 FUN_8003b408();
-extern undefined4 FUN_8003b6d8();
-extern undefined4 FUN_8003b700();
-extern undefined4 FUN_8003b9ec();
-extern undefined4 FUN_8003ba48();
-extern undefined4 FUN_80041110();
-extern undefined4 FUN_800413cc();
-extern undefined4 FUN_80043070();
-extern undefined8 FUN_8004312c();
-extern undefined4 FUN_8004316c();
-extern int FUN_800431a4();
-extern undefined4 FUN_80043604();
-extern undefined4 FUN_80043658();
-extern undefined4 FUN_80043938();
-extern int FUN_8004832c();
-extern undefined4 FUN_800540a8();
-extern undefined4 FUN_80054320();
-extern undefined4 FUN_80054484();
-extern int FUN_80054ed0();
-extern undefined4 FUN_80055120();
-extern undefined4 FUN_8005512c();
-extern undefined4 FUN_8005517c();
-extern undefined4 FUN_800551b4();
-extern undefined4 FUN_80055240();
-extern undefined4 FUN_80055464();
-extern undefined4 FUN_80056be8();
-extern int FUN_80057360();
-extern int FUN_80059460();
-extern int FUN_8005a310();
-extern int FUN_8005b068();
-extern undefined4 FUN_8005b224();
-extern int FUN_8005b478();
-extern undefined8 FUN_8005cf74();
-extern undefined4 FUN_8005d024();
-extern undefined4 FUN_8005d06c();
-extern undefined4 FUN_80060630();
-extern int FUN_80060888();
-extern undefined4 FUN_80062bcc();
-extern undefined4 FUN_800656f0();
-extern int FUN_800657bc();
-extern undefined4 FUN_80065a20();
-extern undefined4 FUN_8006cca0();
-extern undefined4 FUN_8006cccc();
-extern int FUN_80080100();
-extern int FUN_80080284();
-extern undefined4 FUN_80080304();
-extern uint FUN_8008038c();
-extern uint FUN_800803dc();
-extern undefined4 FUN_800803f8();
-extern undefined8 FUN_80080404();
-extern int FUN_80080434();
-extern undefined4 FUN_80080498();
-extern int FUN_800805cc();
-extern undefined4 FUN_80088a84();
-extern undefined8 FUN_80088f20();
-extern undefined4 FUN_800890e0();
-extern undefined8 FUN_80089734();
-extern undefined4 FUN_8008979c();
-extern undefined4 FUN_80089804();
-extern undefined4 FUN_8008986c();
-extern undefined4 FUN_8008999c();
-extern undefined4 FUN_80089b54();
-extern undefined4 FUN_8008fb90();
-extern uint FUN_8008fdac();
-extern undefined4 FUN_8008ff08();
-extern undefined4 FUN_800945f8();
-extern undefined8 FUN_80094604();
-extern undefined4 FUN_80096f20();
-extern undefined4 FUN_800972fc();
-extern undefined4 FUN_8009742c();
-extern undefined4 FUN_80097568();
-extern undefined4 FUN_800979c0();
-extern undefined4 FUN_80097dbc();
-extern undefined4 FUN_800984fc();
-extern undefined4 FUN_80098608();
-extern undefined4 FUN_80098bb4();
-extern undefined4 FUN_80098da4();
-extern undefined4 FUN_800998ec();
-extern undefined4 FUN_8009a010();
-extern undefined4 FUN_8009a468();
-extern undefined4 FUN_8009ab54();
-extern undefined4 FUN_8009abf8();
-extern undefined4 FUN_8009adfc();
+extern undefined4 FUN_80035ae4();
+extern undefined4 FUN_80035b70();
+extern undefined4 FUN_80035b84();
+extern undefined4 FUN_80035d58();
+extern undefined4 FUN_80035fa8();
+extern undefined4 FUN_80035fc4();
+extern undefined8 FUN_80035fe8();
+extern undefined4 FUN_8003601c();
+extern undefined4 FUN_8003606c();
+extern undefined4 FUN_80036080();
+extern undefined8 FUN_800360d4();
+extern undefined8 FUN_800360f0();
+extern undefined4 FUN_800365a4();
+extern int FUN_800368c4();
+extern int FUN_800369d0();
+extern int FUN_80037008();
+extern void* FUN_80037134();
+extern undefined8 FUN_80037180();
+extern undefined4 FUN_8003735c();
+extern undefined4 FUN_80037bd4();
+extern int FUN_80037d50();
+extern int FUN_80037fa8();
+extern undefined4 FUN_8003817c();
+extern undefined8 FUN_800381f8();
+extern int FUN_80038470();
+extern int FUN_800384ec();
+extern int FUN_80038598();
+extern undefined4 FUN_80038730();
+extern undefined4 FUN_800387ac();
+extern uint FUN_8003882c();
+extern undefined8 FUN_800388b4();
+extern int FUN_80038a34();
+extern undefined4 FUN_80038f38();
+extern undefined4 FUN_80039130();
+extern undefined4 FUN_800392e0();
+extern undefined4 FUN_800392ec();
+extern undefined4 FUN_80039370();
+extern void* FUN_80039518();
+extern int FUN_80039520();
+extern int FUN_8003964c();
+extern undefined4 FUN_8003aa48();
+extern undefined4 FUN_8003aaf0();
+extern undefined8 FUN_8003b280();
+extern undefined4 FUN_8003b540();
+extern undefined4 FUN_8003b56c();
+extern undefined4 FUN_8003b818();
+extern undefined4 FUN_8003b870();
+extern undefined4 FUN_800400b0();
+extern undefined4 FUN_8004036c();
+extern undefined4 FUN_80041ff8();
+extern undefined8 FUN_800427c8();
+extern undefined4 FUN_80042800();
+extern int FUN_80042838();
+extern undefined4 FUN_80042b9c();
+extern undefined4 FUN_80042bec();
+extern undefined4 FUN_80043030();
+extern int FUN_80044404();
+extern undefined4 FUN_800533cc();
+extern undefined4 FUN_80053604();
+extern undefined4 FUN_80053754();
+extern int FUN_8005398c();
+extern undefined4 FUN_80053ae4();
+extern undefined4 FUN_80053af0();
+extern undefined4 FUN_80053b3c();
+extern undefined4 FUN_80053b70();
+extern undefined4 FUN_80053c20();
+extern undefined4 FUN_80053c98();
+extern undefined4 FUN_800562d0();
+extern int FUN_80056600();
+extern int FUN_80056c8c();
+extern int FUN_80057690();
+extern int FUN_8005af70();
+extern undefined4 FUN_8005b12c();
+extern int FUN_8005b398();
+extern undefined8 FUN_8005d0ac();
+extern undefined4 FUN_8005d144();
+extern undefined4 FUN_8005d17c();
+extern undefined4 FUN_8005fe14();
+extern int FUN_800600e4();
+extern undefined4 FUN_800616c0();
+extern undefined4 FUN_800631d4();
+extern int FUN_80063298();
+extern undefined4 FUN_800632e8();
+extern undefined4 FUN_8006b540();
+extern undefined4 FUN_8006b56c();
+extern int FUN_8007f3c8();
+extern int FUN_8007f56c();
+extern undefined4 FUN_8007f5ec();
+extern uint FUN_8007f66c();
+extern uint FUN_8007f6c8();
+extern undefined4 FUN_8007f6e4();
+extern undefined8 FUN_8007f718();
+extern int FUN_8007f764();
+extern undefined4 FUN_8007f7cc();
+extern int FUN_8007f924();
+extern undefined4 FUN_80080f14();
+extern undefined8 FUN_80080f28();
+extern undefined4 FUN_80080f3c();
+extern undefined8 FUN_80080f70();
+extern undefined4 FUN_80080f74();
+extern undefined4 FUN_80080f78();
+extern undefined4 FUN_80080f7c();
+extern undefined4 FUN_80080f80();
+extern undefined4 FUN_80080f8c();
+extern undefined4 FUN_80081028();
+extern uint FUN_80081030();
+extern undefined4 FUN_80081038();
+extern undefined4 FUN_8008107c();
+extern undefined8 FUN_80081080();
+extern undefined4 FUN_800810e4();
+extern undefined4 FUN_800810ec();
+extern undefined4 FUN_800810f0();
+extern undefined4 FUN_800810f4();
+extern undefined4 FUN_800810f8();
+extern undefined4 FUN_800810fc();
+extern undefined4 FUN_80081104();
+extern undefined4 FUN_80081108();
+extern undefined4 FUN_8008110c();
+extern undefined4 FUN_80081110();
+extern undefined4 FUN_80081114();
+extern undefined4 FUN_8008111c();
+extern undefined4 FUN_80081120();
+extern undefined4 FUN_80081124();
+extern undefined4 FUN_80081128();
+extern undefined4 FUN_8008112c();
 extern undefined4 gameplay_registerDebugOption();
-extern undefined4 FUN_800e85f4();
-extern ushort FUN_800ea540();
-extern undefined4 FUN_80114230();
-extern undefined4 FUN_80114238();
-extern int FUN_80114420();
-extern int FUN_80114e4c();
-extern undefined4 FUN_80115088();
-extern undefined4 FUN_80115200();
-extern undefined4 FUN_80115318();
-extern undefined4 FUN_80115330();
-extern undefined8 FUN_8011f638();
-extern undefined4 FUN_8011f670();
-extern undefined4 FUN_8011f68c();
-extern undefined4 FUN_8011f6d0();
-extern undefined4 FUN_80125e88();
-extern undefined4 FUN_80125fe8();
-extern undefined4 FUN_80126070();
+extern undefined4 FUN_800e8630();
+extern ushort FUN_800ea9ac();
+extern undefined4 FUN_801141dc();
+extern undefined4 FUN_801141e8();
+extern int FUN_80114340();
+extern int FUN_801149b8();
+extern undefined4 FUN_801149bc();
+extern undefined4 FUN_80114b10();
+extern undefined4 FUN_80115094();
+extern undefined4 FUN_801150ac();
+extern undefined8 FUN_8011e7c8();
+extern undefined4 FUN_8011e800();
+extern undefined4 FUN_8011e824();
+extern undefined4 FUN_8011e868();
+extern undefined4 FUN_80125b7c();
+extern undefined4 FUN_80125d3c();
+extern undefined4 FUN_80125e30();
 extern undefined4 FUN_801299d4();
 extern undefined8 FUN_8012e0b8();
 extern ushort FUN_8012e0e8();
 extern undefined4 FUN_8012e114();
-extern int FUN_8012f000();
-extern undefined4 FUN_80130118();
-extern undefined4 FUN_80134f4c();
-extern undefined4 FUN_801378a8();
-extern undefined4 FUN_80137cd0();
-extern int FUN_8013929c();
-extern uint FUN_8013930c();
-extern undefined4 FUN_8016de98();
-extern int FUN_80170780();
-extern undefined4 FUN_8017082c();
-extern byte FUN_801a1090();
-extern int FUN_801a10a0();
-extern undefined4 FUN_801a110c();
-extern undefined4 FUN_801a1158();
-extern undefined4 FUN_801a1474();
-extern undefined4 FUN_801d84c4();
-extern undefined4 FUN_801d8650();
-extern int FUN_801ecff4();
-extern uint FUN_801ed02c();
+extern int FUN_8012efc4();
+extern undefined4 FUN_80130298();
+extern undefined4 FUN_80133a04();
+extern undefined4 FUN_8013577c();
+extern undefined4 FUN_80135814();
+extern int FUN_80136538();
+extern uint FUN_801365a0();
+extern undefined4 FUN_8016d994();
+extern int FUN_8016fef4();
+extern undefined4 FUN_80170048();
+extern byte FUN_8019f0ec();
+extern int FUN_8019f0fc();
+extern undefined4 FUN_8019f16c();
+extern undefined4 FUN_8019f1ac();
+extern undefined4 FUN_801a1310();
+extern undefined4 FUN_801d8308();
+extern undefined4 FUN_801d8480();
+extern int FUN_801ecf58();
+extern uint FUN_801ecf94();
 extern undefined4 FUN_8024782c();
 extern undefined4 FUN_80247944();
 extern undefined4 FUN_80247bf8();
@@ -348,15 +348,15 @@ extern undefined4 FUN_80292754();
 extern double FUN_80293900();
 extern undefined4 FUN_80293994();
 extern undefined4 FUN_80293eac();
-extern undefined4 FUN_802945e0();
+extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
-extern double FUN_80294d40();
-extern uint FUN_80296b74();
-extern int FUN_80296e2c();
-extern uint FUN_80297150();
-extern undefined4 FUN_802971fc();
-extern int FUN_80297300();
-extern int FUN_80297a08();
+extern double FUN_802949f0();
+extern uint FUN_80294ca0();
+extern int FUN_80294cf8();
+extern uint FUN_80294d30();
+extern undefined4 FUN_80294d4c();
+extern int FUN_80294d6c();
+extern int FUN_80294dbc();
 extern undefined4 SUB81();
 extern uint countLeadingZeros();
 
@@ -1652,7 +1652,7 @@ void FUN_80209fe0(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8020a0b0
+ * Function: FUN_80209fe4
  * EN v1.0 Address: 0x80209FE4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020A0B0
@@ -1662,14 +1662,14 @@ void FUN_80209fe0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020a0b0(uint param_1)
+void FUN_80209fe4(uint param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020a428
+ * Function: FUN_80209fe8
  * EN v1.0 Address: 0x80209FE8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020A428
@@ -1679,14 +1679,14 @@ void FUN_8020a0b0(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020a428(int param_1,int param_2)
+void FUN_80209fe8(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020a56c
+ * Function: FUN_80209fec
  * EN v1.0 Address: 0x80209FEC
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8020A56C
@@ -1696,7 +1696,7 @@ void FUN_8020a428(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8020a56c(int param_1)
+undefined4 FUN_80209fec(int param_1)
 {
     return 0;
 }
@@ -1704,7 +1704,7 @@ undefined4 FUN_8020a56c(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8020a620
+ * Function: FUN_80209ff4
  * EN v1.0 Address: 0x80209FF4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020A620
@@ -1714,14 +1714,14 @@ undefined4 FUN_8020a56c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020a620(int param_1)
+void FUN_80209ff4(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020a658
+ * Function: FUN_80209ff8
  * EN v1.0 Address: 0x80209FF8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020A658
@@ -1731,14 +1731,14 @@ void FUN_8020a620(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020a658(int param_1)
+void FUN_80209ff8(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020a6fc
+ * Function: FUN_80209ffc
  * EN v1.0 Address: 0x80209FFC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020A6FC
@@ -1748,14 +1748,14 @@ void FUN_8020a658(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020a6fc(int param_1)
+void FUN_80209ffc(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020a768
+ * Function: FUN_8020a000
  * EN v1.0 Address: 0x8020A000
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020A768
@@ -1765,14 +1765,14 @@ void FUN_8020a6fc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020a768(undefined2 *param_1,int param_2)
+void FUN_8020a000(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020a800
+ * Function: FUN_8020a004
  * EN v1.0 Address: 0x8020A004
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020A800
@@ -1782,7 +1782,7 @@ void FUN_8020a768(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020a800(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a004(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -1792,7 +1792,7 @@ void FUN_8020a800(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8020aa14
+ * Function: FUN_8020a008
  * EN v1.0 Address: 0x8020A008
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020AA14
@@ -1802,14 +1802,14 @@ void FUN_8020a800(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020aa14(int param_1,int param_2)
+void FUN_8020a008(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020ac20
+ * Function: FUN_8020a00c
  * EN v1.0 Address: 0x8020A00C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8020AC20
@@ -1819,7 +1819,7 @@ void FUN_8020aa14(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8020ac20(short *param_1,float *param_2)
+undefined4 FUN_8020a00c(short *param_1,float *param_2)
 {
     return 0;
 }
@@ -1827,7 +1827,7 @@ undefined4 FUN_8020ac20(short *param_1,float *param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8020ad98
+ * Function: FUN_8020a014
  * EN v1.0 Address: 0x8020A014
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020AD98
@@ -1837,7 +1837,7 @@ undefined4 FUN_8020ac20(short *param_1,float *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020ad98(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a014(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11)
 {
@@ -1846,7 +1846,7 @@ void FUN_8020ad98(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8020b110
+ * Function: FUN_8020a018
  * EN v1.0 Address: 0x8020A018
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020B110
@@ -1856,14 +1856,14 @@ void FUN_8020ad98(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020b110(undefined4 param_1,int param_2,int param_3)
+void FUN_8020a018(undefined4 param_1,int param_2,int param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020b3b0
+ * Function: FUN_8020a01c
  * EN v1.0 Address: 0x8020A01C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020B3B0
@@ -1873,14 +1873,14 @@ void FUN_8020b110(undefined4 param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020b3b0(int param_1)
+void FUN_8020a01c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020b428
+ * Function: FUN_8020a020
  * EN v1.0 Address: 0x8020A020
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020B428
@@ -1890,14 +1890,14 @@ void FUN_8020b3b0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020b428(int param_1)
+void FUN_8020a020(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020b55c
+ * Function: FUN_8020a024
  * EN v1.0 Address: 0x8020A024
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020B55C
@@ -1907,7 +1907,7 @@ void FUN_8020b428(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020b55c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a024(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
 {
@@ -1916,7 +1916,7 @@ void FUN_8020b55c(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8020b750
+ * Function: FUN_8020a028
  * EN v1.0 Address: 0x8020A028
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020B750
@@ -1926,7 +1926,7 @@ void FUN_8020b55c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020b750(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a028(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
@@ -1934,7 +1934,7 @@ void FUN_8020b750(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8020bff8
+ * Function: FUN_8020a02c
  * EN v1.0 Address: 0x8020A02C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020BFF8
@@ -1944,14 +1944,14 @@ void FUN_8020b750(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020bff8(int param_1,int param_2)
+void FUN_8020a02c(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020c13c
+ * Function: FUN_8020a030
  * EN v1.0 Address: 0x8020A030
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020C13C
@@ -1961,14 +1961,14 @@ void FUN_8020bff8(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020c13c(int param_1)
+void FUN_8020a030(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020c194
+ * Function: FUN_8020a034
  * EN v1.0 Address: 0x8020A034
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020C194
@@ -1978,14 +1978,14 @@ void FUN_8020c13c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020c194(void)
+void FUN_8020a034(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020c228
+ * Function: FUN_8020a038
  * EN v1.0 Address: 0x8020A038
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020C228
@@ -1995,7 +1995,7 @@ void FUN_8020c194(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020c228(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a038(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
 {
@@ -2004,7 +2004,7 @@ void FUN_8020c228(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8020c47c
+ * Function: FUN_8020a03c
  * EN v1.0 Address: 0x8020A03C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020C47C
@@ -2014,7 +2014,7 @@ void FUN_8020c228(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020c47c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_8020a03c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
 {
@@ -2023,7 +2023,7 @@ void FUN_8020c47c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_8020c71c
+ * Function: FUN_8020a040
  * EN v1.0 Address: 0x8020A040
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020C71C
@@ -2033,14 +2033,14 @@ void FUN_8020c47c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020c71c(int param_1,int param_2)
+void FUN_8020a040(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020c904
+ * Function: FUN_8020a044
  * EN v1.0 Address: 0x8020A044
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020C904
@@ -2050,14 +2050,14 @@ void FUN_8020c71c(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020c904(int param_1)
+void FUN_8020a044(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020c938
+ * Function: FUN_8020a048
  * EN v1.0 Address: 0x8020A048
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020C938
@@ -2067,14 +2067,14 @@ void FUN_8020c904(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020c938(short *param_1)
+void FUN_8020a048(short *param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020cac4
+ * Function: FUN_8020a04c
  * EN v1.0 Address: 0x8020A04C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020CAC4
@@ -2084,14 +2084,14 @@ void FUN_8020c938(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020cac4(int param_1)
+void FUN_8020a04c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020cc64
+ * Function: FUN_8020a050
  * EN v1.0 Address: 0x8020A050
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020CC64
@@ -2101,14 +2101,14 @@ void FUN_8020cac4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020cc64(void)
+void FUN_8020a050(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020cfec
+ * Function: FUN_8020a054
  * EN v1.0 Address: 0x8020A054
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020CFEC
@@ -2118,14 +2118,14 @@ void FUN_8020cc64(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020cfec(void)
+void FUN_8020a054(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020d010
+ * Function: FUN_8020a058
  * EN v1.0 Address: 0x8020A058
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020D010
@@ -2135,14 +2135,14 @@ void FUN_8020cfec(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020d010(int param_1)
+void FUN_8020a058(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020d044
+ * Function: FUN_8020a05c
  * EN v1.0 Address: 0x8020A05C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020D044
@@ -2152,7 +2152,7 @@ void FUN_8020d010(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020d044(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a05c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,int param_16)
@@ -2162,7 +2162,7 @@ void FUN_8020d044(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8020dc84
+ * Function: FUN_8020a060
  * EN v1.0 Address: 0x8020A060
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020DC84
@@ -2172,14 +2172,14 @@ void FUN_8020d044(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020dc84(undefined4 param_1,undefined4 param_2,undefined *param_3)
+void FUN_8020a060(undefined4 param_1,undefined4 param_2,undefined *param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020de64
+ * Function: FUN_8020a064
  * EN v1.0 Address: 0x8020A064
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020DE64
@@ -2189,7 +2189,7 @@ void FUN_8020dc84(undefined4 param_1,undefined4 param_2,undefined *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020de64(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a064(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
@@ -2197,7 +2197,7 @@ void FUN_8020de64(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8020e05c
+ * Function: FUN_8020a068
  * EN v1.0 Address: 0x8020A068
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020E05C
@@ -2207,14 +2207,14 @@ void FUN_8020de64(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020e05c(int param_1)
+void FUN_8020a068(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020e23c
+ * Function: FUN_8020a06c
  * EN v1.0 Address: 0x8020A06C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020E23C
@@ -2224,7 +2224,7 @@ void FUN_8020e05c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020e23c(undefined4 param_1,undefined4 param_2,uint param_3,uint param_4,uint param_5,
+void FUN_8020a06c(undefined4 param_1,undefined4 param_2,uint param_3,uint param_4,uint param_5,
                  int param_6,undefined4 param_7)
 {
 }
@@ -2232,7 +2232,7 @@ void FUN_8020e23c(undefined4 param_1,undefined4 param_2,uint param_3,uint param_
 /*
  * --INFO--
  *
- * Function: FUN_8020e3b0
+ * Function: FUN_8020a070
  * EN v1.0 Address: 0x8020A070
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020E3B0
@@ -2242,14 +2242,14 @@ void FUN_8020e23c(undefined4 param_1,undefined4 param_2,uint param_3,uint param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020e3b0(int param_1)
+void FUN_8020a070(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020e414
+ * Function: FUN_8020a074
  * EN v1.0 Address: 0x8020A074
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020E414
@@ -2259,14 +2259,14 @@ void FUN_8020e3b0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020e414(void)
+void FUN_8020a074(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020e620
+ * Function: FUN_8020a078
  * EN v1.0 Address: 0x8020A078
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020E620
@@ -2276,7 +2276,7 @@ void FUN_8020e414(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020e620(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a078(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -2286,7 +2286,7 @@ void FUN_8020e620(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8020f360
+ * Function: FUN_8020a07c
  * EN v1.0 Address: 0x8020A07C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020F360
@@ -2296,7 +2296,7 @@ void FUN_8020e620(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020f360(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a07c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,short *param_10)
 {
@@ -2305,7 +2305,7 @@ void FUN_8020f360(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8020f88c
+ * Function: FUN_8020a080
  * EN v1.0 Address: 0x8020A080
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020F88C
@@ -2315,7 +2315,7 @@ void FUN_8020f360(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020f88c(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void FUN_8020a080(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,uint param_11,uint param_12)
 {
@@ -2324,7 +2324,7 @@ void FUN_8020f88c(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_8020f9fc
+ * Function: FUN_8020a084
  * EN v1.0 Address: 0x8020A084
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020F9FC
@@ -2334,7 +2334,7 @@ void FUN_8020f88c(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020f9fc(ushort *param_1,int param_2,undefined4 param_3,undefined4 param_4,
+void FUN_8020a084(ushort *param_1,int param_2,undefined4 param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)
 {
 }
@@ -2342,7 +2342,7 @@ void FUN_8020f9fc(ushort *param_1,int param_2,undefined4 param_3,undefined4 para
 /*
  * --INFO--
  *
- * Function: FUN_8020fc0c
+ * Function: FUN_8020a088
  * EN v1.0 Address: 0x8020A088
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020FC0C
@@ -2352,7 +2352,7 @@ void FUN_8020f9fc(ushort *param_1,int param_2,undefined4 param_3,undefined4 para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020fc0c(undefined2 *param_1,undefined2 *param_2,undefined4 param_3,undefined4 param_4,
+void FUN_8020a088(undefined2 *param_1,undefined2 *param_2,undefined4 param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 param_6,char param_7,int param_8,int param_9)
 {
 }
@@ -2360,7 +2360,7 @@ void FUN_8020fc0c(undefined2 *param_1,undefined2 *param_2,undefined4 param_3,und
 /*
  * --INFO--
  *
- * Function: FUN_8020fd58
+ * Function: FUN_8020a08c
  * EN v1.0 Address: 0x8020A08C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8020FD58
@@ -2370,7 +2370,7 @@ void FUN_8020fc0c(undefined2 *param_1,undefined2 *param_2,undefined4 param_3,und
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020fd58(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a08c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -2380,7 +2380,7 @@ void FUN_8020fd58(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80210178
+ * Function: FUN_8020a090
  * EN v1.0 Address: 0x8020A090
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80210178
@@ -2390,7 +2390,7 @@ void FUN_8020fd58(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80210178(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_8020a090(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -2399,7 +2399,7 @@ void FUN_80210178(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_802101a4
+ * Function: FUN_8020a094
  * EN v1.0 Address: 0x8020A094
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802101A4
@@ -2409,7 +2409,7 @@ void FUN_80210178(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802101a4(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
+void FUN_8020a094(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                  undefined4 param_5,char param_6)
 {
 }
@@ -2417,7 +2417,7 @@ void FUN_802101a4(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_80210428
+ * Function: FUN_8020a098
  * EN v1.0 Address: 0x8020A098
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80210428
@@ -2427,7 +2427,7 @@ void FUN_802101a4(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80210428(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a098(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9)
 {
@@ -2436,7 +2436,7 @@ void FUN_80210428(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_802107ac
+ * Function: FUN_8020a09c
  * EN v1.0 Address: 0x8020A09C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802107AC
@@ -2446,7 +2446,7 @@ void FUN_80210428(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802107ac(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a09c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9,undefined4 param_10,uint param_11,undefined4 param_12,
                  uint *param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -2456,7 +2456,7 @@ void FUN_802107ac(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80210bd0
+ * Function: FUN_8020a0a0
  * EN v1.0 Address: 0x8020A0A0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80210BD0
@@ -2466,14 +2466,14 @@ void FUN_802107ac(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80210bd0(int param_1,int param_2)
+void FUN_8020a0a0(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80210d38
+ * Function: FUN_8020a0a4
  * EN v1.0 Address: 0x8020A0A4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80210D38
@@ -2483,14 +2483,14 @@ void FUN_80210bd0(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80210d38(undefined4 param_1,int param_2)
+void FUN_8020a0a4(undefined4 param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80210e44
+ * Function: FUN_8020a0a8
  * EN v1.0 Address: 0x8020A0A8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80210E44
@@ -2500,7 +2500,7 @@ void FUN_80210d38(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80210e44(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_8020a0a8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -2509,7 +2509,7 @@ void FUN_80210e44(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_80210ff8
+ * Function: FUN_8020a0ac
  * EN v1.0 Address: 0x8020A0AC
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80210FF8
@@ -2520,7 +2520,7 @@ void FUN_80210e44(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Size: TODO
  */
 undefined4
-FUN_80210ff8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+FUN_8020a0ac(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
             undefined4 param_10,int param_11)
 {
@@ -2530,7 +2530,7 @@ FUN_80210ff8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 /*
  * --INFO--
  *
- * Function: FUN_802110e0
+ * Function: FUN_8020a0b4
  * EN v1.0 Address: 0x8020A0B4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802110E0
@@ -2540,14 +2540,14 @@ FUN_80210ff8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802110e0(int param_1)
+void FUN_8020a0b4(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80211114
+ * Function: FUN_8020a0b8
  * EN v1.0 Address: 0x8020A0B8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80211114
@@ -2557,7 +2557,7 @@ void FUN_802110e0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80211114(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a0b8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -2566,7 +2566,7 @@ void FUN_80211114(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80211200
+ * Function: FUN_8020a0bc
  * EN v1.0 Address: 0x8020A0BC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80211200
@@ -2576,14 +2576,14 @@ void FUN_80211114(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80211200(int param_1)
+void FUN_8020a0bc(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802112d0
+ * Function: FUN_8020a0c0
  * EN v1.0 Address: 0x8020A0C0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802112D0
@@ -2593,14 +2593,14 @@ void FUN_80211200(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802112d0(int param_1)
+void FUN_8020a0c0(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802112f4
+ * Function: FUN_8020a0c4
  * EN v1.0 Address: 0x8020A0C4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802112F4
@@ -2610,14 +2610,14 @@ void FUN_802112d0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802112f4(int param_1)
+void FUN_8020a0c4(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80211338
+ * Function: FUN_8020a0c8
  * EN v1.0 Address: 0x8020A0C8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80211338
@@ -2627,14 +2627,14 @@ void FUN_802112f4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80211338(short *param_1)
+void FUN_8020a0c8(short *param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802114ac
+ * Function: FUN_8020a0cc
  * EN v1.0 Address: 0x8020A0CC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802114AC
@@ -2644,14 +2644,14 @@ void FUN_80211338(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802114ac(int param_1)
+void FUN_8020a0cc(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021151c
+ * Function: FUN_8020a0d0
  * EN v1.0 Address: 0x8020A0D0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021151C
@@ -2661,14 +2661,14 @@ void FUN_802114ac(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021151c(int param_1)
+void FUN_8020a0d0(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802115d0
+ * Function: FUN_8020a0d4
  * EN v1.0 Address: 0x8020A0D4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802115D0
@@ -2678,14 +2678,14 @@ void FUN_8021151c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802115d0(int param_1)
+void FUN_8020a0d4(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802116ac
+ * Function: FUN_8020a0d8
  * EN v1.0 Address: 0x8020A0D8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802116AC
@@ -2695,14 +2695,14 @@ void FUN_802115d0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802116ac(int param_1,int param_2)
+void FUN_8020a0d8(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80211770
+ * Function: FUN_8020a0dc
  * EN v1.0 Address: 0x8020A0DC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80211770
@@ -2712,7 +2712,7 @@ void FUN_802116ac(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80211770(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void FUN_8020a0dc(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
 {
@@ -2721,7 +2721,7 @@ void FUN_80211770(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_802118b4
+ * Function: FUN_8020a0e0
  * EN v1.0 Address: 0x8020A0E0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802118B4
@@ -2731,14 +2731,14 @@ void FUN_80211770(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802118b4(int param_1)
+void FUN_8020a0e0(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802118e8
+ * Function: FUN_8020a0e4
  * EN v1.0 Address: 0x8020A0E4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802118E8
@@ -2748,14 +2748,14 @@ void FUN_802118b4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802118e8(void)
+void FUN_8020a0e4(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802119b4
+ * Function: FUN_8020a0e8
  * EN v1.0 Address: 0x8020A0E8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802119B4
@@ -2765,14 +2765,14 @@ void FUN_802118e8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802119b4(int param_1)
+void FUN_8020a0e8(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80211a70
+ * Function: FUN_8020a0ec
  * EN v1.0 Address: 0x8020A0EC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80211A70
@@ -2782,7 +2782,7 @@ void FUN_802119b4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80211a70(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a0ec(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9)
 {
@@ -2791,7 +2791,7 @@ void FUN_80211a70(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80212088
+ * Function: FUN_8020a0f0
  * EN v1.0 Address: 0x8020A0F0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80212088
@@ -2801,14 +2801,14 @@ void FUN_80211a70(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80212088(undefined2 *param_1,int param_2)
+void FUN_8020a0f0(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802122ac
+ * Function: FUN_8020a0f4
  * EN v1.0 Address: 0x8020A0F4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802122AC
@@ -2818,14 +2818,14 @@ void FUN_80212088(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802122ac(void)
+void FUN_8020a0f4(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021231c
+ * Function: FUN_8020a0f8
  * EN v1.0 Address: 0x8020A0F8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021231C
@@ -2835,14 +2835,14 @@ void FUN_802122ac(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021231c(int param_1)
+void FUN_8020a0f8(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80212350
+ * Function: FUN_8020a0fc
  * EN v1.0 Address: 0x8020A0FC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80212350
@@ -2852,14 +2852,14 @@ void FUN_8021231c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80212350(void)
+void FUN_8020a0fc(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021239c
+ * Function: FUN_8020a100
  * EN v1.0 Address: 0x8020A100
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021239C
@@ -2869,14 +2869,14 @@ void FUN_80212350(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021239c(void)
+void FUN_8020a100(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021243c
+ * Function: FUN_8020a104
  * EN v1.0 Address: 0x8020A104
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021243C
@@ -2886,7 +2886,7 @@ void FUN_8021239c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021243c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a104(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -2895,7 +2895,7 @@ void FUN_8021243c(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_802124e4
+ * Function: FUN_8020a108
  * EN v1.0 Address: 0x8020A108
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802124E4
@@ -2905,14 +2905,14 @@ void FUN_8021243c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802124e4(int param_1)
+void FUN_8020a108(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802125b0
+ * Function: FUN_8020a10c
  * EN v1.0 Address: 0x8020A10C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802125B0
@@ -2922,7 +2922,7 @@ void FUN_802124e4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_802125b0(void)
+undefined4 FUN_8020a10c(void)
 {
     return 0;
 }
@@ -2930,7 +2930,7 @@ undefined4 FUN_802125b0(void)
 /*
  * --INFO--
  *
- * Function: FUN_802126d8
+ * Function: FUN_8020a114
  * EN v1.0 Address: 0x8020A114
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802126D8
@@ -2940,14 +2940,14 @@ undefined4 FUN_802125b0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802126d8(int param_1,undefined2 param_2,int param_3)
+void FUN_8020a114(int param_1,undefined2 param_2,int param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802129a8
+ * Function: FUN_8020a118
  * EN v1.0 Address: 0x8020A118
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802129A8
@@ -2957,14 +2957,14 @@ void FUN_802126d8(int param_1,undefined2 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802129a8(void)
+void FUN_8020a118(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80212d78
+ * Function: FUN_8020a11c
  * EN v1.0 Address: 0x8020A11C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80212D78
@@ -2974,7 +2974,7 @@ void FUN_802129a8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80212d78(undefined4 param_1,int param_2)
+undefined4 FUN_8020a11c(undefined4 param_1,int param_2)
 {
     return 0;
 }
@@ -2982,7 +2982,7 @@ undefined4 FUN_80212d78(undefined4 param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80212e4c
+ * Function: FUN_8020a124
  * EN v1.0 Address: 0x8020A124
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80212E4C
@@ -2992,7 +2992,7 @@ undefined4 FUN_80212d78(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80212e4c(int param_1,int param_2)
+undefined4 FUN_8020a124(int param_1,int param_2)
 {
     return 0;
 }
@@ -3000,7 +3000,7 @@ undefined4 FUN_80212e4c(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80212f90
+ * Function: FUN_8020a12c
  * EN v1.0 Address: 0x8020A12C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80212F90
@@ -3010,7 +3010,7 @@ undefined4 FUN_80212e4c(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80212f90(int param_1,int param_2)
+undefined4 FUN_8020a12c(int param_1,int param_2)
 {
     return 0;
 }
@@ -3018,7 +3018,7 @@ undefined4 FUN_80212f90(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80213094
+ * Function: FUN_8020a134
  * EN v1.0 Address: 0x8020A134
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80213094
@@ -3028,7 +3028,7 @@ undefined4 FUN_80212f90(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_80213094(undefined4 param_1,int param_2)
+int FUN_8020a134(undefined4 param_1,int param_2)
 {
     return 0;
 }
@@ -3036,7 +3036,7 @@ int FUN_80213094(undefined4 param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80213128
+ * Function: FUN_8020a13c
  * EN v1.0 Address: 0x8020A13C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80213128
@@ -3046,7 +3046,7 @@ int FUN_80213094(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80213128(uint param_1,int param_2)
+undefined4 FUN_8020a13c(uint param_1,int param_2)
 {
     return 0;
 }
@@ -3054,7 +3054,7 @@ undefined4 FUN_80213128(uint param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80213290
+ * Function: FUN_8020a144
  * EN v1.0 Address: 0x8020A144
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80213290
@@ -3064,7 +3064,7 @@ undefined4 FUN_80213128(uint param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_80213290(int param_1,int param_2)
+int FUN_8020a144(int param_1,int param_2)
 {
     return 0;
 }
@@ -3072,7 +3072,7 @@ int FUN_80213290(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8021339c
+ * Function: FUN_8020a14c
  * EN v1.0 Address: 0x8020A14C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021339C
@@ -3082,7 +3082,7 @@ int FUN_80213290(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_8021339c(int param_1,int param_2)
+int FUN_8020a14c(int param_1,int param_2)
 {
     return 0;
 }
@@ -3090,7 +3090,7 @@ int FUN_8021339c(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8021349c
+ * Function: FUN_8020a154
  * EN v1.0 Address: 0x8020A154
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021349C
@@ -3100,7 +3100,7 @@ int FUN_8021339c(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8021349c(int param_1,int param_2)
+undefined4 FUN_8020a154(int param_1,int param_2)
 {
     return 0;
 }
@@ -3108,7 +3108,7 @@ undefined4 FUN_8021349c(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80213840
+ * Function: FUN_8020a15c
  * EN v1.0 Address: 0x8020A15C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80213840
@@ -3118,7 +3118,7 @@ undefined4 FUN_8021349c(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80213840(int param_1,int param_2)
+undefined4 FUN_8020a15c(int param_1,int param_2)
 {
     return 0;
 }
@@ -3126,7 +3126,7 @@ undefined4 FUN_80213840(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80213a68
+ * Function: FUN_8020a164
  * EN v1.0 Address: 0x8020A164
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80213A68
@@ -3137,7 +3137,7 @@ undefined4 FUN_80213840(int param_1,int param_2)
  * PAL Size: TODO
  */
 undefined4
-FUN_80213a68(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a164(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9,int param_10,
             undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16)
@@ -3148,7 +3148,7 @@ FUN_80213a68(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_80213b30
+ * Function: FUN_8020a16c
  * EN v1.0 Address: 0x8020A16C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80213B30
@@ -3159,7 +3159,7 @@ FUN_80213a68(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Size: TODO
  */
 undefined4
-FUN_80213b30(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a16c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,int param_10
             ,undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16)
@@ -3170,7 +3170,7 @@ FUN_80213b30(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_80213be0
+ * Function: FUN_8020a174
  * EN v1.0 Address: 0x8020A174
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80213BE0
@@ -3181,7 +3181,7 @@ FUN_80213b30(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Size: TODO
  */
 undefined4
-FUN_80213be0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a174(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9,int param_10,
             undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16)
@@ -3192,7 +3192,7 @@ FUN_80213be0(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_80213cb8
+ * Function: FUN_8020a17c
  * EN v1.0 Address: 0x8020A17C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80213CB8
@@ -3203,7 +3203,7 @@ FUN_80213be0(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Size: TODO
  */
 undefined4
-FUN_80213cb8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a17c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,int param_10
             ,undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16)
@@ -3214,7 +3214,7 @@ FUN_80213cb8(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_80213d54
+ * Function: FUN_8020a184
  * EN v1.0 Address: 0x8020A184
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80213D54
@@ -3225,7 +3225,7 @@ FUN_80213cb8(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Size: TODO
  */
 undefined4
-FUN_80213d54(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a184(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,int param_10
             ,undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16)
@@ -3236,7 +3236,7 @@ FUN_80213d54(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_80213e70
+ * Function: FUN_8020a18c
  * EN v1.0 Address: 0x8020A18C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80213E70
@@ -3247,7 +3247,7 @@ FUN_80213d54(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Size: TODO
  */
 undefined4
-FUN_80213e70(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a18c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined2 *param_9,
             int param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13,
             undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -3258,7 +3258,7 @@ FUN_80213e70(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_80213f8c
+ * Function: FUN_8020a194
  * EN v1.0 Address: 0x8020A194
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80213F8C
@@ -3269,7 +3269,7 @@ FUN_80213e70(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Size: TODO
  */
 undefined4
-FUN_80213f8c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a194(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined2 *param_9,
             int param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13,
             undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -3280,7 +3280,7 @@ FUN_80213f8c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_80214214
+ * Function: FUN_8020a19c
  * EN v1.0 Address: 0x8020A19C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80214214
@@ -3291,7 +3291,7 @@ FUN_80213f8c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Size: TODO
  */
 undefined4
-FUN_80214214(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a19c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int param_10,
             undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16)
@@ -3302,7 +3302,7 @@ FUN_80214214(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_802143c4
+ * Function: FUN_8020a1a4
  * EN v1.0 Address: 0x8020A1A4
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802143C4
@@ -3313,7 +3313,7 @@ FUN_80214214(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Size: TODO
  */
 undefined4
-FUN_802143c4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a1a4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,int param_10
             ,undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16)
@@ -3324,7 +3324,7 @@ FUN_802143c4(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_80214418
+ * Function: FUN_8020a1ac
  * EN v1.0 Address: 0x8020A1AC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80214418
@@ -3334,7 +3334,7 @@ FUN_802143c4(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80214418(double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_8020a1ac(double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,int param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 *param_14,int param_15,undefined4 param_16)
@@ -3344,7 +3344,7 @@ void FUN_80214418(double param_1,undefined8 param_2,undefined8 param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_80214814
+ * Function: FUN_8020a1b0
  * EN v1.0 Address: 0x8020A1B0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80214814
@@ -3354,14 +3354,14 @@ void FUN_80214418(double param_1,undefined8 param_2,undefined8 param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80214814(uint param_1)
+void FUN_8020a1b0(uint param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802150c0
+ * Function: FUN_8020a1b4
  * EN v1.0 Address: 0x8020A1B4
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802150C0
@@ -3371,7 +3371,7 @@ void FUN_80214814(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_802150c0(uint param_1,undefined4 param_2,int param_3)
+undefined4 FUN_8020a1b4(uint param_1,undefined4 param_2,int param_3)
 {
     return 0;
 }
@@ -3379,7 +3379,7 @@ undefined4 FUN_802150c0(uint param_1,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_80215214
+ * Function: FUN_8020a1bc
  * EN v1.0 Address: 0x8020A1BC
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80215214
@@ -3389,7 +3389,7 @@ undefined4 FUN_802150c0(uint param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80215214(int param_1)
+undefined4 FUN_8020a1bc(int param_1)
 {
     return 0;
 }
@@ -3397,7 +3397,7 @@ undefined4 FUN_80215214(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_802153b4
+ * Function: FUN_8020a1c4
  * EN v1.0 Address: 0x8020A1C4
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802153B4
@@ -3407,7 +3407,7 @@ undefined4 FUN_80215214(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_802153b4(int param_1)
+undefined4 FUN_8020a1c4(int param_1)
 {
     return 0;
 }
@@ -3415,7 +3415,7 @@ undefined4 FUN_802153b4(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_802154ac
+ * Function: FUN_8020a1cc
  * EN v1.0 Address: 0x8020A1CC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802154AC
@@ -3425,14 +3425,14 @@ undefined4 FUN_802153b4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802154ac(int param_1)
+void FUN_8020a1cc(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80215598
+ * Function: FUN_8020a1d0
  * EN v1.0 Address: 0x8020A1D0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80215598
@@ -3442,14 +3442,14 @@ void FUN_802154ac(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80215598(void)
+void FUN_8020a1d0(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80215864
+ * Function: FUN_8020a1d4
  * EN v1.0 Address: 0x8020A1D4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80215864
@@ -3459,14 +3459,14 @@ void FUN_80215598(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80215864(undefined4 param_1)
+void FUN_8020a1d4(undefined4 param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802158cc
+ * Function: FUN_8020a1d8
  * EN v1.0 Address: 0x8020A1D8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802158CC
@@ -3476,14 +3476,14 @@ void FUN_80215864(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802158cc(void)
+void FUN_8020a1d8(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80215bb0
+ * Function: FUN_8020a1dc
  * EN v1.0 Address: 0x8020A1DC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80215BB0
@@ -3493,14 +3493,14 @@ void FUN_802158cc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80215bb0(undefined4 param_1,undefined4 param_2,int param_3)
+void FUN_8020a1dc(undefined4 param_1,undefined4 param_2,int param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80215f84
+ * Function: FUN_8020a1e0
  * EN v1.0 Address: 0x8020A1E0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80215F84
@@ -3510,14 +3510,14 @@ void FUN_80215bb0(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80215f84(void)
+void FUN_8020a1e0(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80215fa4
+ * Function: FUN_8020a1e4
  * EN v1.0 Address: 0x8020A1E4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80215FA4
@@ -3527,14 +3527,14 @@ void FUN_80215f84(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80215fa4(void)
+void FUN_8020a1e4(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802160c8
+ * Function: FUN_8020a1e8
  * EN v1.0 Address: 0x8020A1E8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802160C8
@@ -3544,14 +3544,14 @@ void FUN_80215fa4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802160c8(int param_1)
+void FUN_8020a1e8(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802160fc
+ * Function: FUN_8020a1ec
  * EN v1.0 Address: 0x8020A1EC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802160FC
@@ -3561,14 +3561,14 @@ void FUN_802160c8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802160fc(void)
+void FUN_8020a1ec(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80216a74
+ * Function: FUN_8020a1f0
  * EN v1.0 Address: 0x8020A1F0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80216A74
@@ -3578,14 +3578,14 @@ void FUN_802160fc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80216a74(short *param_1,int param_2)
+void FUN_8020a1f0(short *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80216b48
+ * Function: FUN_8020a1f4
  * EN v1.0 Address: 0x8020A1F4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80216B48
@@ -3595,14 +3595,14 @@ void FUN_80216a74(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80216b48(double param_1,ushort *param_2,uint param_3)
+void FUN_8020a1f4(double param_1,ushort *param_2,uint param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80216ca8
+ * Function: FUN_8020a1f8
  * EN v1.0 Address: 0x8020A1F8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80216CA8
@@ -3612,14 +3612,14 @@ void FUN_80216b48(double param_1,ushort *param_2,uint param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80216ca8(int param_1)
+void FUN_8020a1f8(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80216ce8
+ * Function: FUN_8020a1fc
  * EN v1.0 Address: 0x8020A1FC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80216CE8
@@ -3629,14 +3629,14 @@ void FUN_80216ca8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80216ce8(int param_1)
+void FUN_8020a1fc(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80216e10
+ * Function: FUN_8020a200
  * EN v1.0 Address: 0x8020A200
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80216E10
@@ -3646,14 +3646,14 @@ void FUN_80216ce8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80216e10(ushort *param_1)
+void FUN_8020a200(ushort *param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80217120
+ * Function: FUN_8020a204
  * EN v1.0 Address: 0x8020A204
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80217120
@@ -3663,14 +3663,14 @@ void FUN_80216e10(ushort *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80217120(undefined2 *param_1,int param_2)
+void FUN_8020a204(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802171d0
+ * Function: FUN_8020a208
  * EN v1.0 Address: 0x8020A208
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802171D0
@@ -3680,14 +3680,14 @@ void FUN_80217120(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802171d0(int param_1)
+void FUN_8020a208(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80217208
+ * Function: FUN_8020a20c
  * EN v1.0 Address: 0x8020A20C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80217208
@@ -3697,14 +3697,14 @@ void FUN_802171d0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80217208(int param_1)
+void FUN_8020a20c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80217310
+ * Function: FUN_8020a210
  * EN v1.0 Address: 0x8020A210
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80217310
@@ -3714,14 +3714,14 @@ void FUN_80217208(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80217310(int param_1,int param_2)
+void FUN_8020a210(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802173a0
+ * Function: FUN_8020a214
  * EN v1.0 Address: 0x8020A214
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802173A0
@@ -3731,14 +3731,14 @@ void FUN_80217310(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802173a0(void)
+void FUN_8020a214(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802173e0
+ * Function: FUN_8020a218
  * EN v1.0 Address: 0x8020A218
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802173E0
@@ -3748,14 +3748,14 @@ void FUN_802173a0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802173e0(void)
+void FUN_8020a218(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80217524
+ * Function: FUN_8020a21c
  * EN v1.0 Address: 0x8020A21C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80217524
@@ -3765,14 +3765,14 @@ void FUN_802173e0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80217524(undefined4 param_1,undefined4 param_2,int param_3,uint param_4,float *param_5)
+void FUN_8020a21c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4,float *param_5)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802178d0
+ * Function: FUN_8020a220
  * EN v1.0 Address: 0x8020A220
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802178D0
@@ -3782,7 +3782,7 @@ void FUN_80217524(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_802178d0(undefined4 param_1,int *param_2)
+int FUN_8020a220(undefined4 param_1,int *param_2)
 {
     return 0;
 }
@@ -3790,7 +3790,7 @@ int FUN_802178d0(undefined4 param_1,int *param_2)
 /*
  * --INFO--
  *
- * Function: FUN_802179dc
+ * Function: FUN_8020a228
  * EN v1.0 Address: 0x8020A228
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802179DC
@@ -3800,7 +3800,7 @@ int FUN_802178d0(undefined4 param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802179dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_8020a228(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -3809,7 +3809,7 @@ void FUN_802179dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_80217a48
+ * Function: FUN_8020a22c
  * EN v1.0 Address: 0x8020A22C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80217A48
@@ -3819,14 +3819,14 @@ void FUN_802179dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80217a48(int param_1)
+void FUN_8020a22c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80217abc
+ * Function: FUN_8020a230
  * EN v1.0 Address: 0x8020A230
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80217ABC
@@ -3836,7 +3836,7 @@ void FUN_80217a48(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80217abc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a230(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
@@ -3844,7 +3844,7 @@ void FUN_80217abc(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80217ca8
+ * Function: FUN_8020a234
  * EN v1.0 Address: 0x8020A234
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80217CA8
@@ -3854,7 +3854,7 @@ void FUN_80217abc(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80217ca8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a234(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
@@ -3862,7 +3862,7 @@ void FUN_80217ca8(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_802183b0
+ * Function: FUN_8020a238
  * EN v1.0 Address: 0x8020A238
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802183B0
@@ -3872,7 +3872,7 @@ void FUN_80217ca8(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802183b0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a238(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,int param_10)
 {
@@ -3881,7 +3881,7 @@ void FUN_802183b0(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_802185b8
+ * Function: FUN_8020a23c
  * EN v1.0 Address: 0x8020A23C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802185B8
@@ -3891,7 +3891,7 @@ void FUN_802183b0(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802185b8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_8020a23c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -3900,7 +3900,7 @@ void FUN_802185b8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_802185f8
+ * Function: FUN_8020a240
  * EN v1.0 Address: 0x8020A240
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802185F8
@@ -3910,7 +3910,7 @@ void FUN_802185b8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802185f8(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void FUN_8020a240(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
 {
@@ -3919,7 +3919,7 @@ void FUN_802185f8(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_80218740
+ * Function: FUN_8020a244
  * EN v1.0 Address: 0x8020A244
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80218740
@@ -3929,14 +3929,14 @@ void FUN_802185f8(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80218740(double param_1,undefined2 *param_2,int param_3,int param_4)
+void FUN_8020a244(double param_1,undefined2 *param_2,int param_3,int param_4)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80218a94
+ * Function: FUN_8020a248
  * EN v1.0 Address: 0x8020A248
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80218A94
@@ -3946,14 +3946,14 @@ void FUN_80218740(double param_1,undefined2 *param_2,int param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80218a94(int param_1)
+void FUN_8020a248(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80218aec
+ * Function: FUN_8020a24c
  * EN v1.0 Address: 0x8020A24C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80218AEC
@@ -3963,14 +3963,14 @@ void FUN_80218a94(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80218aec(void)
+void FUN_8020a24c(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80218c44
+ * Function: FUN_8020a250
  * EN v1.0 Address: 0x8020A250
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80218C44
@@ -3980,7 +3980,7 @@ void FUN_80218aec(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80218c44(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a250(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9)
 {
@@ -3989,7 +3989,7 @@ void FUN_80218c44(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80219038
+ * Function: FUN_8020a254
  * EN v1.0 Address: 0x8020A254
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80219038
@@ -3999,14 +3999,14 @@ void FUN_80218c44(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80219038(int param_1,int param_2)
+void FUN_8020a254(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021919c
+ * Function: FUN_8020a258
  * EN v1.0 Address: 0x8020A258
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021919C
@@ -4016,7 +4016,7 @@ void FUN_80219038(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8021919c(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_8020a258(int param_1,undefined4 param_2,int param_3)
 {
     return 0;
 }
@@ -4024,7 +4024,7 @@ undefined4 FUN_8021919c(int param_1,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_80219248
+ * Function: FUN_8020a260
  * EN v1.0 Address: 0x8020A260
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80219248
@@ -4034,14 +4034,14 @@ undefined4 FUN_8021919c(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80219248(void)
+void FUN_8020a260(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021927c
+ * Function: FUN_8020a264
  * EN v1.0 Address: 0x8020A264
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021927C
@@ -4051,14 +4051,14 @@ void FUN_80219248(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021927c(int param_1)
+void FUN_8020a264(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802192a0
+ * Function: FUN_8020a268
  * EN v1.0 Address: 0x8020A268
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802192A0
@@ -4068,14 +4068,14 @@ void FUN_8021927c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802192a0(int param_1)
+void FUN_8020a268(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80219508
+ * Function: FUN_8020a26c
  * EN v1.0 Address: 0x8020A26C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80219508
@@ -4085,14 +4085,14 @@ void FUN_802192a0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80219508(int param_1)
+void FUN_8020a26c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80219560
+ * Function: FUN_8020a270
  * EN v1.0 Address: 0x8020A270
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80219560
@@ -4102,7 +4102,7 @@ void FUN_80219508(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80219560(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_8020a270(int param_1,undefined4 param_2,int param_3)
 {
     return 0;
 }
@@ -4110,7 +4110,7 @@ undefined4 FUN_80219560(int param_1,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_80219614
+ * Function: FUN_8020a278
  * EN v1.0 Address: 0x8020A278
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80219614
@@ -4120,7 +4120,7 @@ undefined4 FUN_80219560(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80219614(void)
+undefined4 FUN_8020a278(void)
 {
     return 0;
 }
@@ -4128,7 +4128,7 @@ undefined4 FUN_80219614(void)
 /*
  * --INFO--
  *
- * Function: FUN_80219638
+ * Function: FUN_8020a280
  * EN v1.0 Address: 0x8020A280
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80219638
@@ -4138,7 +4138,7 @@ undefined4 FUN_80219614(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80219638(int param_1)
+undefined4 FUN_8020a280(int param_1)
 {
     return 0;
 }
@@ -4146,7 +4146,7 @@ undefined4 FUN_80219638(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80219790
+ * Function: FUN_8020a288
  * EN v1.0 Address: 0x8020A288
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80219790
@@ -4156,14 +4156,14 @@ undefined4 FUN_80219638(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80219790(undefined4 param_1,undefined4 param_2,ushort *param_3)
+void FUN_8020a288(undefined4 param_1,undefined4 param_2,ushort *param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021989c
+ * Function: FUN_8020a28c
  * EN v1.0 Address: 0x8020A28C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021989C
@@ -4174,7 +4174,7 @@ void FUN_80219790(undefined4 param_1,undefined4 param_2,ushort *param_3)
  * PAL Size: TODO
  */
 undefined4
-FUN_8021989c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a28c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10
             ,undefined4 param_11,int param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16)
@@ -4185,7 +4185,7 @@ FUN_8021989c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_80219a54
+ * Function: FUN_8020a294
  * EN v1.0 Address: 0x8020A294
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80219A54
@@ -4195,7 +4195,7 @@ FUN_8021989c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80219a54(int param_1)
+undefined4 FUN_8020a294(int param_1)
 {
     return 0;
 }
@@ -4203,7 +4203,7 @@ undefined4 FUN_80219a54(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80219ae4
+ * Function: FUN_8020a29c
  * EN v1.0 Address: 0x8020A29C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80219AE4
@@ -4213,7 +4213,7 @@ undefined4 FUN_80219a54(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80219ae4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a29c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -4223,7 +4223,7 @@ void FUN_80219ae4(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80219bc8
+ * Function: FUN_8020a2a0
  * EN v1.0 Address: 0x8020A2A0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80219BC8
@@ -4233,14 +4233,14 @@ void FUN_80219ae4(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80219bc8(int param_1)
+void FUN_8020a2a0(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80219c00
+ * Function: FUN_8020a2a4
  * EN v1.0 Address: 0x8020A2A4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80219C00
@@ -4250,14 +4250,14 @@ void FUN_80219bc8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80219c00(int param_1)
+void FUN_8020a2a4(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80219c34
+ * Function: FUN_8020a2a8
  * EN v1.0 Address: 0x8020A2A8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80219C34
@@ -4267,7 +4267,7 @@ void FUN_80219c00(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80219c34(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a2a8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -4277,7 +4277,7 @@ void FUN_80219c34(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80219f38
+ * Function: FUN_8020a2ac
  * EN v1.0 Address: 0x8020A2AC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80219F38
@@ -4287,7 +4287,7 @@ void FUN_80219c34(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80219f38(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a2ac(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,int param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -4297,7 +4297,7 @@ void FUN_80219f38(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8021a100
+ * Function: FUN_8020a2b0
  * EN v1.0 Address: 0x8020A2B0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021A100
@@ -4307,7 +4307,7 @@ void FUN_80219f38(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021a100(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a2b0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -4317,7 +4317,7 @@ void FUN_8021a100(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8021a318
+ * Function: FUN_8020a2b4
  * EN v1.0 Address: 0x8020A2B4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021A318
@@ -4327,7 +4327,7 @@ void FUN_8021a100(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021a318(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a2b4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -4336,7 +4336,7 @@ void FUN_8021a318(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8021a5f4
+ * Function: FUN_8020a2b8
  * EN v1.0 Address: 0x8020A2B8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021A5F4
@@ -4346,14 +4346,14 @@ void FUN_8021a318(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021a5f4(undefined2 *param_1,int param_2)
+void FUN_8020a2b8(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021a6c4
+ * Function: FUN_8020a2bc
  * EN v1.0 Address: 0x8020A2BC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021A6C4
@@ -4363,14 +4363,14 @@ void FUN_8021a5f4(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021a6c4(int param_1)
+void FUN_8020a2bc(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021a6f8
+ * Function: FUN_8020a2c0
  * EN v1.0 Address: 0x8020A2C0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021A6F8
@@ -4380,14 +4380,14 @@ void FUN_8021a6c4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021a6f8(int param_1)
+void FUN_8020a2c0(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021a768
+ * Function: FUN_8020a2c4
  * EN v1.0 Address: 0x8020A2C4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021A768
@@ -4397,14 +4397,14 @@ void FUN_8021a6f8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021a768(undefined2 *param_1,int param_2)
+void FUN_8020a2c4(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021a7e4
+ * Function: FUN_8020a2c8
  * EN v1.0 Address: 0x8020A2C8
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021A7E4
@@ -4414,7 +4414,7 @@ void FUN_8021a768(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8021a7e4(uint param_1)
+undefined4 FUN_8020a2c8(uint param_1)
 {
     return 0;
 }
@@ -4422,7 +4422,7 @@ undefined4 FUN_8021a7e4(uint param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8021a904
+ * Function: FUN_8020a2d0
  * EN v1.0 Address: 0x8020A2D0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021A904
@@ -4432,14 +4432,14 @@ undefined4 FUN_8021a7e4(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021a904(int param_1)
+void FUN_8020a2d0(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021a938
+ * Function: FUN_8020a2d4
  * EN v1.0 Address: 0x8020A2D4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021A938
@@ -4449,14 +4449,14 @@ void FUN_8021a904(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021a938(int param_1)
+void FUN_8020a2d4(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021aa64
+ * Function: FUN_8020a2d8
  * EN v1.0 Address: 0x8020A2D8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021AA64
@@ -4466,14 +4466,14 @@ void FUN_8021a938(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021aa64(int param_1,int param_2)
+void FUN_8020a2d8(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021ab08
+ * Function: FUN_8020a2dc
  * EN v1.0 Address: 0x8020A2DC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021AB08
@@ -4483,14 +4483,14 @@ void FUN_8021aa64(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021ab08(int param_1)
+void FUN_8020a2dc(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021ab38
+ * Function: FUN_8020a2e0
  * EN v1.0 Address: 0x8020A2E0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021AB38
@@ -4500,14 +4500,14 @@ void FUN_8021ab08(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021ab38(int param_1)
+void FUN_8020a2e0(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021ac80
+ * Function: FUN_8020a2e4
  * EN v1.0 Address: 0x8020A2E4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021AC80
@@ -4517,14 +4517,14 @@ void FUN_8021ab38(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021ac80(undefined2 *param_1,int param_2)
+void FUN_8020a2e4(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021ad3c
+ * Function: FUN_8020a2e8
  * EN v1.0 Address: 0x8020A2E8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021AD3C
@@ -4534,7 +4534,7 @@ void FUN_8021ac80(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021ad3c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_8020a2e8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10)
 {
@@ -4543,7 +4543,7 @@ void FUN_8021ad3c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_8021adbc
+ * Function: FUN_8020a2ec
  * EN v1.0 Address: 0x8020A2EC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021ADBC
@@ -4553,14 +4553,14 @@ void FUN_8021ad3c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021adbc(void)
+void FUN_8020a2ec(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021aeb4
+ * Function: FUN_8020a2f0
  * EN v1.0 Address: 0x8020A2F0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021AEB4
@@ -4570,7 +4570,7 @@ void FUN_8021adbc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021aeb4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a2f0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -4579,7 +4579,7 @@ void FUN_8021aeb4(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8021b234
+ * Function: FUN_8020a2f4
  * EN v1.0 Address: 0x8020A2F4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021B234
@@ -4589,14 +4589,14 @@ void FUN_8021aeb4(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021b234(undefined2 *param_1,int param_2)
+void FUN_8020a2f4(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021b42c
+ * Function: FUN_8020a2f8
  * EN v1.0 Address: 0x8020A2F8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021B42C
@@ -4606,14 +4606,14 @@ void FUN_8021b234(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021b42c(undefined4 param_1,undefined4 param_2,int param_3)
+void FUN_8020a2f8(undefined4 param_1,undefined4 param_2,int param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021b68c
+ * Function: FUN_8020a2fc
  * EN v1.0 Address: 0x8020A2FC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021B68C
@@ -4623,14 +4623,14 @@ void FUN_8021b42c(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021b68c(int param_1)
+void FUN_8020a2fc(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021b6b0
+ * Function: FUN_8020a300
  * EN v1.0 Address: 0x8020A300
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021B6B0
@@ -4640,14 +4640,14 @@ void FUN_8021b68c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021b6b0(int param_1)
+void FUN_8020a300(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021b764
+ * Function: FUN_8020a304
  * EN v1.0 Address: 0x8020A304
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021B764
@@ -4657,14 +4657,14 @@ void FUN_8021b6b0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021b764(uint param_1)
+void FUN_8020a304(uint param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021b820
+ * Function: FUN_8020a308
  * EN v1.0 Address: 0x8020A308
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021B820
@@ -4674,14 +4674,14 @@ void FUN_8021b764(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021b820(void)
+void FUN_8020a308(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021b934
+ * Function: FUN_8020a30c
  * EN v1.0 Address: 0x8020A30C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021B934
@@ -4691,14 +4691,14 @@ void FUN_8021b820(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021b934(int param_1,int param_2)
+void FUN_8020a30c(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021ba00
+ * Function: FUN_8020a310
  * EN v1.0 Address: 0x8020A310
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021BA00
@@ -4708,14 +4708,14 @@ void FUN_8021b934(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021ba00(int param_1)
+void FUN_8020a310(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021ba74
+ * Function: FUN_8020a314
  * EN v1.0 Address: 0x8020A314
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021BA74
@@ -4725,14 +4725,14 @@ void FUN_8021ba00(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021ba74(double param_1,int param_2)
+void FUN_8020a314(double param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021bb64
+ * Function: FUN_8020a318
  * EN v1.0 Address: 0x8020A318
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021BB64
@@ -4742,14 +4742,14 @@ void FUN_8021ba74(double param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021bb64(ushort *param_1,float *param_2,float *param_3,float *param_4)
+void FUN_8020a318(ushort *param_1,float *param_2,float *param_3,float *param_4)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021bc80
+ * Function: FUN_8020a31c
  * EN v1.0 Address: 0x8020A31C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021BC80
@@ -4759,7 +4759,7 @@ void FUN_8021bb64(ushort *param_1,float *param_2,float *param_3,float *param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_8021bc80(int param_1,int param_2,uint param_3)
+int FUN_8020a31c(int param_1,int param_2,uint param_3)
 {
     return 0;
 }
@@ -4767,7 +4767,7 @@ int FUN_8021bc80(int param_1,int param_2,uint param_3)
 /*
  * --INFO--
  *
- * Function: FUN_8021bde0
+ * Function: FUN_8020a324
  * EN v1.0 Address: 0x8020A324
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021BDE0
@@ -4777,7 +4777,7 @@ int FUN_8021bc80(int param_1,int param_2,uint param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_8021bde0(int param_1,int param_2,uint param_3)
+int FUN_8020a324(int param_1,int param_2,uint param_3)
 {
     return 0;
 }
@@ -4785,7 +4785,7 @@ int FUN_8021bde0(int param_1,int param_2,uint param_3)
 /*
  * --INFO--
  *
- * Function: FUN_8021bf40
+ * Function: FUN_8020a32c
  * EN v1.0 Address: 0x8020A32C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021BF40
@@ -4796,7 +4796,7 @@ int FUN_8021bde0(int param_1,int param_2,uint param_3)
  * PAL Size: TODO
  */
 undefined4
-FUN_8021bf40(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+FUN_8020a32c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
             float *param_9,uint param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13
             ,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -4807,7 +4807,7 @@ FUN_8021bf40(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 /*
  * --INFO--
  *
- * Function: FUN_8021c644
+ * Function: FUN_8020a334
  * EN v1.0 Address: 0x8020A334
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021C644
@@ -4817,7 +4817,7 @@ FUN_8021bf40(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8021c644(uint param_1)
+undefined4 FUN_8020a334(uint param_1)
 {
     return 0;
 }
@@ -4825,7 +4825,7 @@ undefined4 FUN_8021c644(uint param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8021c778
+ * Function: FUN_8020a33c
  * EN v1.0 Address: 0x8020A33C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021C778
@@ -4835,14 +4835,14 @@ undefined4 FUN_8021c644(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021c778(undefined4 param_1,undefined4 param_2,uint param_3,undefined4 *param_4)
+void FUN_8020a33c(undefined4 param_1,undefined4 param_2,uint param_3,undefined4 *param_4)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021cd4c
+ * Function: FUN_8020a340
  * EN v1.0 Address: 0x8020A340
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021CD4C
@@ -4852,14 +4852,14 @@ void FUN_8021c778(undefined4 param_1,undefined4 param_2,uint param_3,undefined4 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021cd4c(int param_1)
+void FUN_8020a340(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021cd88
+ * Function: FUN_8020a344
  * EN v1.0 Address: 0x8020A344
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021CD88
@@ -4869,14 +4869,14 @@ void FUN_8021cd4c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021cd88(int param_1)
+void FUN_8020a344(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021cee8
+ * Function: FUN_8020a348
  * EN v1.0 Address: 0x8020A348
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021CEE8
@@ -4886,7 +4886,7 @@ void FUN_8021cd88(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021cee8(undefined8 param_1,double param_2,double param_3,double param_4,undefined8 param_5
+void FUN_8020a348(undefined8 param_1,double param_2,double param_3,double param_4,undefined8 param_5
                  ,undefined8 param_6,undefined8 param_7,undefined8 param_8,ushort *param_9)
 {
 }
@@ -4894,7 +4894,7 @@ void FUN_8021cee8(undefined8 param_1,double param_2,double param_3,double param_
 /*
  * --INFO--
  *
- * Function: FUN_8021d4e4
+ * Function: FUN_8020a34c
  * EN v1.0 Address: 0x8020A34C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021D4E4
@@ -4904,14 +4904,14 @@ void FUN_8021cee8(undefined8 param_1,double param_2,double param_3,double param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021d4e4(undefined2 *param_1,short *param_2)
+void FUN_8020a34c(undefined2 *param_1,short *param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021d608
+ * Function: FUN_8020a350
  * EN v1.0 Address: 0x8020A350
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021D608
@@ -4921,7 +4921,7 @@ void FUN_8021d4e4(undefined2 *param_1,short *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8021d608(int param_1,uint *param_2)
+undefined4 FUN_8020a350(int param_1,uint *param_2)
 {
     return 0;
 }
@@ -4929,7 +4929,7 @@ undefined4 FUN_8021d608(int param_1,uint *param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8021d740
+ * Function: FUN_8020a358
  * EN v1.0 Address: 0x8020A358
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021D740
@@ -4939,7 +4939,7 @@ undefined4 FUN_8021d608(int param_1,uint *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021d740(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a358(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
@@ -4947,7 +4947,7 @@ void FUN_8021d740(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8021dc00
+ * Function: FUN_8020a35c
  * EN v1.0 Address: 0x8020A35C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021DC00
@@ -4958,7 +4958,7 @@ void FUN_8021d740(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Size: TODO
  */
 undefined4
-FUN_8021dc00(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a35c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int param_10,
             undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16)
@@ -4969,7 +4969,7 @@ FUN_8021dc00(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_8021dd90
+ * Function: FUN_8020a364
  * EN v1.0 Address: 0x8020A364
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021DD90
@@ -4980,7 +4980,7 @@ FUN_8021dc00(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Size: TODO
  */
 undefined4
-FUN_8021dd90(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a364(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int param_10,
             undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16)
@@ -4991,7 +4991,7 @@ FUN_8021dd90(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_8021deb4
+ * Function: FUN_8020a36c
  * EN v1.0 Address: 0x8020A36C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021DEB4
@@ -5001,7 +5001,7 @@ FUN_8021dd90(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8021deb4(int param_1,int param_2)
+undefined4 FUN_8020a36c(int param_1,int param_2)
 {
     return 0;
 }
@@ -5009,7 +5009,7 @@ undefined4 FUN_8021deb4(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8021df10
+ * Function: FUN_8020a374
  * EN v1.0 Address: 0x8020A374
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021DF10
@@ -5019,7 +5019,7 @@ undefined4 FUN_8021deb4(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8021df10(int param_1,int param_2)
+undefined4 FUN_8020a374(int param_1,int param_2)
 {
     return 0;
 }
@@ -5027,7 +5027,7 @@ undefined4 FUN_8021df10(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8021dfb8
+ * Function: FUN_8020a37c
  * EN v1.0 Address: 0x8020A37C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021DFB8
@@ -5037,7 +5037,7 @@ undefined4 FUN_8021df10(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021dfb8(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void FUN_8020a37c(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
@@ -5045,7 +5045,7 @@ void FUN_8021dfb8(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_8021e450
+ * Function: FUN_8020a380
  * EN v1.0 Address: 0x8020A380
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021E450
@@ -5055,7 +5055,7 @@ void FUN_8021dfb8(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8021e450(int param_1,undefined param_2)
+undefined4 FUN_8020a380(int param_1,undefined param_2)
 {
     return 0;
 }
@@ -5063,7 +5063,7 @@ undefined4 FUN_8021e450(int param_1,undefined param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8021e53c
+ * Function: FUN_8020a388
  * EN v1.0 Address: 0x8020A388
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021E53C
@@ -5073,7 +5073,7 @@ undefined4 FUN_8021e450(int param_1,undefined param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_8021e53c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+int FUN_8020a388(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                 int param_9,int param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13
                 ,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -5084,7 +5084,7 @@ int FUN_8021e53c(undefined8 param_1,double param_2,double param_3,undefined8 par
 /*
  * --INFO--
  *
- * Function: FUN_8021e618
+ * Function: FUN_8020a390
  * EN v1.0 Address: 0x8020A390
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021E618
@@ -5095,7 +5095,7 @@ int FUN_8021e53c(undefined8 param_1,double param_2,double param_3,undefined8 par
  * PAL Size: TODO
  */
 undefined4
-FUN_8021e618(double param_1,undefined8 param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a390(double param_1,undefined8 param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,short *param_9,uint *param_10,
             undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16)
@@ -5106,7 +5106,7 @@ FUN_8021e618(double param_1,undefined8 param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_8021ea58
+ * Function: FUN_8020a398
  * EN v1.0 Address: 0x8020A398
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021EA58
@@ -5117,7 +5117,7 @@ FUN_8021e618(double param_1,undefined8 param_2,double param_3,undefined8 param_4
  * PAL Size: TODO
  */
 undefined4
-FUN_8021ea58(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a398(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,uint *param_10,
             undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16)
@@ -5128,7 +5128,7 @@ FUN_8021ea58(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_8021eb34
+ * Function: FUN_8020a3a0
  * EN v1.0 Address: 0x8020A3A0
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021EB34
@@ -5138,7 +5138,7 @@ FUN_8021ea58(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8021eb34(int param_1)
+undefined4 FUN_8020a3a0(int param_1)
 {
     return 0;
 }
@@ -5146,7 +5146,7 @@ undefined4 FUN_8021eb34(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8021eb88
+ * Function: FUN_8020a3a8
  * EN v1.0 Address: 0x8020A3A8
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021EB88
@@ -5156,7 +5156,7 @@ undefined4 FUN_8021eb34(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8021eb88(int param_1)
+undefined4 FUN_8020a3a8(int param_1)
 {
     return 0;
 }
@@ -5164,7 +5164,7 @@ undefined4 FUN_8021eb88(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8021ec08
+ * Function: FUN_8020a3b0
  * EN v1.0 Address: 0x8020A3B0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021EC08
@@ -5174,14 +5174,14 @@ undefined4 FUN_8021eb88(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021ec08(uint param_1,int param_2,int param_3)
+void FUN_8020a3b0(uint param_1,int param_2,int param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021ecb0
+ * Function: FUN_8020a3b4
  * EN v1.0 Address: 0x8020A3B4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021ECB0
@@ -5191,14 +5191,14 @@ void FUN_8021ec08(uint param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021ecb0(short *param_1,int param_2,int *param_3)
+void FUN_8020a3b4(short *param_1,int param_2,int *param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021ed8c
+ * Function: FUN_8020a3b8
  * EN v1.0 Address: 0x8020A3B8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021ED8C
@@ -5208,14 +5208,14 @@ void FUN_8021ecb0(short *param_1,int param_2,int *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021ed8c(double param_1,int param_2)
+void FUN_8020a3b8(double param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021eea8
+ * Function: FUN_8020a3bc
  * EN v1.0 Address: 0x8020A3BC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021EEA8
@@ -5225,14 +5225,14 @@ void FUN_8021ed8c(double param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021eea8(undefined4 param_1,float *param_2,float *param_3,float *param_4)
+void FUN_8020a3bc(undefined4 param_1,float *param_2,float *param_3,float *param_4)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021efa0
+ * Function: FUN_8020a3c0
  * EN v1.0 Address: 0x8020A3C0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021EFA0
@@ -5242,14 +5242,14 @@ void FUN_8021eea8(undefined4 param_1,float *param_2,float *param_3,float *param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021efa0(int param_1)
+void FUN_8020a3c0(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021eff0
+ * Function: FUN_8020a3c4
  * EN v1.0 Address: 0x8020A3C4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021EFF0
@@ -5259,7 +5259,7 @@ void FUN_8021efa0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021eff0(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
+void FUN_8020a3c4(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                  undefined4 param_5,char param_6)
 {
 }
@@ -5267,7 +5267,7 @@ void FUN_8021eff0(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_8021f15c
+ * Function: FUN_8020a3c8
  * EN v1.0 Address: 0x8020A3C8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021F15C
@@ -5277,7 +5277,7 @@ void FUN_8021eff0(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021f15c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a3c8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -5286,7 +5286,7 @@ void FUN_8021f15c(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8021f378
+ * Function: FUN_8020a3cc
  * EN v1.0 Address: 0x8020A3CC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021F378
@@ -5296,14 +5296,14 @@ void FUN_8021f15c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021f378(uint param_1)
+void FUN_8020a3cc(uint param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021f624
+ * Function: FUN_8020a3d0
  * EN v1.0 Address: 0x8020A3D0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021F624
@@ -5313,14 +5313,14 @@ void FUN_8021f378(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021f624(void)
+void FUN_8020a3d0(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021f99c
+ * Function: FUN_8020a3d4
  * EN v1.0 Address: 0x8020A3D4
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021F99C
@@ -5330,7 +5330,7 @@ void FUN_8021f624(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8021f99c(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_8020a3d4(int param_1,undefined4 param_2,int param_3)
 {
     return 0;
 }
@@ -5338,7 +5338,7 @@ undefined4 FUN_8021f99c(int param_1,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_8021fa3c
+ * Function: FUN_8020a3dc
  * EN v1.0 Address: 0x8020A3DC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021FA3C
@@ -5348,14 +5348,14 @@ undefined4 FUN_8021f99c(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021fa3c(int param_1)
+void FUN_8020a3dc(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021fa60
+ * Function: FUN_8020a3e0
  * EN v1.0 Address: 0x8020A3E0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021FA60
@@ -5365,14 +5365,14 @@ void FUN_8021fa3c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021fa60(int param_1)
+void FUN_8020a3e0(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021fa90
+ * Function: FUN_8020a3e4
  * EN v1.0 Address: 0x8020A3E4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021FA90
@@ -5382,7 +5382,7 @@ void FUN_8021fa60(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021fa90(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a3e4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -5391,7 +5391,7 @@ void FUN_8021fa90(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8021fbfc
+ * Function: FUN_8020a3e8
  * EN v1.0 Address: 0x8020A3E8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021FBFC
@@ -5401,14 +5401,14 @@ void FUN_8021fa90(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021fbfc(int param_1)
+void FUN_8020a3e8(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021fda4
+ * Function: FUN_8020a3ec
  * EN v1.0 Address: 0x8020A3EC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8021FDA4
@@ -5418,14 +5418,14 @@ void FUN_8021fbfc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8021fda4(undefined2 *param_1,int param_2)
+void FUN_8020a3ec(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8021ff1c
+ * Function: FUN_8020a3f0
  * EN v1.0 Address: 0x8020A3F0
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8021FF1C
@@ -5435,7 +5435,7 @@ void FUN_8021fda4(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_8021ff1c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+int FUN_8020a3f0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                 int *param_9,int param_10,uint param_11)
 {
@@ -5445,7 +5445,7 @@ int FUN_8021ff1c(undefined8 param_1,double param_2,double param_3,undefined8 par
 /*
  * --INFO--
  *
- * Function: FUN_80220088
+ * Function: FUN_8020a3f8
  * EN v1.0 Address: 0x8020A3F8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80220088
@@ -5455,7 +5455,7 @@ int FUN_8021ff1c(undefined8 param_1,double param_2,double param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80220088(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_8020a3f8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -5464,7 +5464,7 @@ void FUN_80220088(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_80220104
+ * Function: FUN_8020a3fc
  * EN v1.0 Address: 0x8020A3FC
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80220104
@@ -5474,7 +5474,7 @@ void FUN_80220088(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80220104(int param_1)
+undefined4 FUN_8020a3fc(int param_1)
 {
     return 0;
 }
@@ -5482,7 +5482,7 @@ undefined4 FUN_80220104(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80220120
+ * Function: FUN_8020a404
  * EN v1.0 Address: 0x8020A404
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80220120
@@ -5492,7 +5492,7 @@ undefined4 FUN_80220104(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80220120(int param_1)
+undefined4 FUN_8020a404(int param_1)
 {
     return 0;
 }
@@ -5500,7 +5500,7 @@ undefined4 FUN_80220120(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8022013c
+ * Function: FUN_8020a40c
  * EN v1.0 Address: 0x8020A40C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022013C
@@ -5510,7 +5510,7 @@ undefined4 FUN_80220120(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022013c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a40c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
@@ -5518,7 +5518,7 @@ void FUN_8022013c(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80220788
+ * Function: FUN_8020a410
  * EN v1.0 Address: 0x8020A410
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80220788
@@ -5529,7 +5529,7 @@ void FUN_8022013c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Size: TODO
  */
 undefined4
-FUN_80220788(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a410(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
     return 0;
@@ -5538,7 +5538,7 @@ FUN_80220788(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_802207b4
+ * Function: FUN_8020a418
  * EN v1.0 Address: 0x8020A418
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802207B4
@@ -5548,7 +5548,7 @@ FUN_80220788(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802207b4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_8020a418(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -5557,7 +5557,7 @@ void FUN_802207b4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_80220830
+ * Function: FUN_8020a41c
  * EN v1.0 Address: 0x8020A41C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80220830
@@ -5567,14 +5567,14 @@ void FUN_802207b4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80220830(void)
+void FUN_8020a41c(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802208d8
+ * Function: FUN_8020a420
  * EN v1.0 Address: 0x8020A420
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802208D8
@@ -5584,7 +5584,7 @@ void FUN_80220830(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802208d8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a420(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -5593,7 +5593,7 @@ void FUN_802208d8(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80220908
+ * Function: FUN_8020a424
  * EN v1.0 Address: 0x8020A424
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80220908
@@ -5603,14 +5603,14 @@ void FUN_802208d8(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80220908(void)
+void FUN_8020a424(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80220c74
+ * Function: FUN_8020a428
  * EN v1.0 Address: 0x8020A428
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80220C74
@@ -5620,7 +5620,7 @@ void FUN_80220908(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80220c74(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a428(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -5630,7 +5630,7 @@ void FUN_80220c74(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80220d78
+ * Function: FUN_8020a42c
  * EN v1.0 Address: 0x8020A42C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80220D78
@@ -5640,14 +5640,14 @@ void FUN_80220c74(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80220d78(undefined2 *param_1,int param_2)
+void FUN_8020a42c(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80220e68
+ * Function: FUN_8020a430
  * EN v1.0 Address: 0x8020A430
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80220E68
@@ -5657,14 +5657,14 @@ void FUN_80220d78(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80220e68(int param_1)
+void FUN_8020a430(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80220ea8
+ * Function: FUN_8020a434
  * EN v1.0 Address: 0x8020A434
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80220EA8
@@ -5674,14 +5674,14 @@ void FUN_80220e68(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80220ea8(uint param_1)
+void FUN_8020a434(uint param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802210bc
+ * Function: FUN_8020a438
  * EN v1.0 Address: 0x8020A438
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802210BC
@@ -5691,7 +5691,7 @@ void FUN_80220ea8(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802210bc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_8020a438(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -5700,7 +5700,7 @@ void FUN_802210bc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_80221130
+ * Function: FUN_8020a43c
  * EN v1.0 Address: 0x8020A43C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80221130
@@ -5710,14 +5710,14 @@ void FUN_802210bc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80221130(void)
+void FUN_8020a43c(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80221150
+ * Function: FUN_8020a440
  * EN v1.0 Address: 0x8020A440
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80221150
@@ -5727,14 +5727,14 @@ void FUN_80221130(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80221150(int param_1)
+void FUN_8020a440(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80221184
+ * Function: FUN_8020a444
  * EN v1.0 Address: 0x8020A444
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80221184
@@ -5744,14 +5744,14 @@ void FUN_80221150(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80221184(void)
+void FUN_8020a444(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80221648
+ * Function: FUN_8020a448
  * EN v1.0 Address: 0x8020A448
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80221648
@@ -5761,14 +5761,14 @@ void FUN_80221184(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80221648(int param_1)
+void FUN_8020a448(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802217c8
+ * Function: FUN_8020a44c
  * EN v1.0 Address: 0x8020A44C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802217C8
@@ -5778,7 +5778,7 @@ void FUN_80221648(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-bool FUN_802217c8(int param_1)
+bool FUN_8020a44c(int param_1)
 {
     return 0;
 }
@@ -5786,7 +5786,7 @@ bool FUN_802217c8(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8022186c
+ * Function: FUN_8020a454
  * EN v1.0 Address: 0x8020A454
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8022186C
@@ -5796,7 +5796,7 @@ bool FUN_802217c8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8022186c(int param_1)
+undefined4 FUN_8020a454(int param_1)
 {
     return 0;
 }
@@ -5804,7 +5804,7 @@ undefined4 FUN_8022186c(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_802218dc
+ * Function: FUN_8020a45c
  * EN v1.0 Address: 0x8020A45C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802218DC
@@ -5814,14 +5814,14 @@ undefined4 FUN_8022186c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802218dc(int param_1)
+void FUN_8020a45c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80221924
+ * Function: FUN_8020a460
  * EN v1.0 Address: 0x8020A460
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80221924
@@ -5831,14 +5831,14 @@ void FUN_802218dc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80221924(undefined2 *param_1,int param_2)
+void FUN_8020a460(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80221aa4
+ * Function: FUN_8020a464
  * EN v1.0 Address: 0x8020A464
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80221AA4
@@ -5848,14 +5848,14 @@ void FUN_80221924(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80221aa4(int param_1)
+void FUN_8020a464(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80221cc0
+ * Function: FUN_8020a468
  * EN v1.0 Address: 0x8020A468
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80221CC0
@@ -5865,7 +5865,7 @@ void FUN_80221aa4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_80221cc0(int param_1)
+int FUN_8020a468(int param_1)
 {
     return 0;
 }
@@ -5873,7 +5873,7 @@ int FUN_80221cc0(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80221cd0
+ * Function: FUN_8020a470
  * EN v1.0 Address: 0x8020A470
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80221CD0
@@ -5883,14 +5883,14 @@ int FUN_80221cc0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80221cd0(int param_1,undefined4 param_2,short param_3)
+void FUN_8020a470(int param_1,undefined4 param_2,short param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80221d3c
+ * Function: FUN_8020a474
  * EN v1.0 Address: 0x8020A474
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80221D3C
@@ -5900,14 +5900,14 @@ void FUN_80221cd0(int param_1,undefined4 param_2,short param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80221d3c(int param_1)
+void FUN_8020a474(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80221d60
+ * Function: FUN_8020a478
  * EN v1.0 Address: 0x8020A478
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80221D60
@@ -5917,14 +5917,14 @@ void FUN_80221d3c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80221d60(int param_1)
+void FUN_8020a478(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80221d94
+ * Function: FUN_8020a47c
  * EN v1.0 Address: 0x8020A47C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80221D94
@@ -5934,7 +5934,7 @@ void FUN_80221d60(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80221d94(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a47c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,undefined4 param_10,undefined4 param_11,int param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -5944,7 +5944,7 @@ void FUN_80221d94(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80221f7c
+ * Function: FUN_8020a480
  * EN v1.0 Address: 0x8020A480
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80221F7C
@@ -5954,14 +5954,14 @@ void FUN_80221d94(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80221f7c(int param_1)
+void FUN_8020a480(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80221fc8
+ * Function: FUN_8020a484
  * EN v1.0 Address: 0x8020A484
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80221FC8
@@ -5971,14 +5971,14 @@ void FUN_80221f7c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80221fc8(undefined4 param_1,undefined4 param_2,int param_3,uint *param_4)
+void FUN_8020a484(undefined4 param_1,undefined4 param_2,int param_3,uint *param_4)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80222268
+ * Function: FUN_8020a488
  * EN v1.0 Address: 0x8020A488
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80222268
@@ -5988,7 +5988,7 @@ void FUN_80221fc8(undefined4 param_1,undefined4 param_2,int param_3,uint *param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80222268(double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+uint FUN_8020a488(double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,float *param_10,float *param_11)
 {
@@ -5998,7 +5998,7 @@ uint FUN_80222268(double param_1,undefined8 param_2,undefined8 param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_802223bc
+ * Function: FUN_8020a490
  * EN v1.0 Address: 0x8020A490
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802223BC
@@ -6008,7 +6008,7 @@ uint FUN_80222268(double param_1,undefined8 param_2,undefined8 param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802223bc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_8020a490(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  float *param_9,float *param_10)
 {
@@ -6017,7 +6017,7 @@ void FUN_802223bc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_80222410
+ * Function: FUN_8020a494
  * EN v1.0 Address: 0x8020A494
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80222410
@@ -6027,7 +6027,7 @@ void FUN_802223bc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80222410(double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_8020a494(double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  float *param_9,float *param_10,float *param_11)
 {
@@ -6036,7 +6036,7 @@ void FUN_80222410(double param_1,undefined8 param_2,undefined8 param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_802224e4
+ * Function: FUN_8020a498
  * EN v1.0 Address: 0x8020A498
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802224E4
@@ -6046,14 +6046,14 @@ void FUN_80222410(double param_1,undefined8 param_2,undefined8 param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802224e4(undefined4 param_1,float *param_2)
+void FUN_8020a498(undefined4 param_1,float *param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80222564
+ * Function: FUN_8020a49c
  * EN v1.0 Address: 0x8020A49C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80222564
@@ -6063,7 +6063,7 @@ void FUN_802224e4(undefined4 param_1,float *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80222564(double param_1,double param_2,double param_3,int param_4,float *param_5,
+void FUN_8020a49c(double param_1,double param_2,double param_3,int param_4,float *param_5,
                  float *param_6)
 {
 }
@@ -6071,7 +6071,7 @@ void FUN_80222564(double param_1,double param_2,double param_3,int param_4,float
 /*
  * --INFO--
  *
- * Function: FUN_802227b0
+ * Function: FUN_8020a4a0
  * EN v1.0 Address: 0x8020A4A0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802227B0
@@ -6081,7 +6081,7 @@ void FUN_80222564(double param_1,double param_2,double param_3,int param_4,float
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802227b0(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
+void FUN_8020a4a0(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,uint param_6,undefined4 *param_7)
 {
 }
@@ -6089,7 +6089,7 @@ void FUN_802227b0(undefined8 param_1,double param_2,double param_3,undefined4 pa
 /*
  * --INFO--
  *
- * Function: FUN_802229a8
+ * Function: FUN_8020a4a4
  * EN v1.0 Address: 0x8020A4A4
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802229A8
@@ -6099,7 +6099,7 @@ void FUN_802227b0(undefined8 param_1,double param_2,double param_3,undefined4 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_802229a8(double param_1,double param_2,double param_3,int param_4,float *param_5,
+int FUN_8020a4a4(double param_1,double param_2,double param_3,int param_4,float *param_5,
                 char param_6)
 {
     return 0;
@@ -6108,7 +6108,7 @@ int FUN_802229a8(double param_1,double param_2,double param_3,int param_4,float 
 /*
  * --INFO--
  *
- * Function: FUN_80222ba0
+ * Function: FUN_8020a4ac
  * EN v1.0 Address: 0x8020A4AC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80222BA0
@@ -6118,14 +6118,14 @@ int FUN_802229a8(double param_1,double param_2,double param_3,int param_4,float 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80222ba0(double param_1,double param_2,ushort *param_3,float *param_4,uint param_5)
+void FUN_8020a4ac(double param_1,double param_2,ushort *param_3,float *param_4,uint param_5)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80222e4c
+ * Function: FUN_8020a4b0
  * EN v1.0 Address: 0x8020A4B0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80222E4C
@@ -6135,14 +6135,14 @@ void FUN_80222ba0(double param_1,double param_2,ushort *param_3,float *param_4,u
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80222e4c(int param_1)
+void FUN_8020a4b0(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80222e94
+ * Function: FUN_8020a4b4
  * EN v1.0 Address: 0x8020A4B4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80222E94
@@ -6152,14 +6152,14 @@ void FUN_80222e4c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80222e94(void)
+void FUN_8020a4b4(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022301c
+ * Function: FUN_8020a4b8
  * EN v1.0 Address: 0x8020A4B8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022301C
@@ -6169,7 +6169,7 @@ void FUN_80222e94(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022301c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a4b8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
@@ -6177,7 +6177,7 @@ void FUN_8022301c(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80223534
+ * Function: FUN_8020a4bc
  * EN v1.0 Address: 0x8020A4BC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80223534
@@ -6187,14 +6187,14 @@ void FUN_8022301c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80223534(undefined2 *param_1,int param_2)
+void FUN_8020a4bc(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80223654
+ * Function: FUN_8020a4c0
  * EN v1.0 Address: 0x8020A4C0
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80223654
@@ -6205,7 +6205,7 @@ void FUN_80223534(undefined2 *param_1,int param_2)
  * PAL Size: TODO
  */
 undefined4
-FUN_80223654(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a4c0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10
             ,int param_11,char param_12,undefined4 param_13,undefined4 param_14,undefined4 param_15,
             undefined4 param_16)
@@ -6216,7 +6216,7 @@ FUN_80223654(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_8022377c
+ * Function: FUN_8020a4c8
  * EN v1.0 Address: 0x8020A4C8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022377C
@@ -6226,14 +6226,14 @@ FUN_80223654(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022377c(short *param_1)
+void FUN_8020a4c8(short *param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802237d4
+ * Function: FUN_8020a4cc
  * EN v1.0 Address: 0x8020A4CC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802237D4
@@ -6243,14 +6243,14 @@ void FUN_8022377c(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802237d4(int param_1)
+void FUN_8020a4cc(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80223834
+ * Function: FUN_8020a4d0
  * EN v1.0 Address: 0x8020A4D0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80223834
@@ -6260,7 +6260,7 @@ void FUN_802237d4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80223834(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a4d0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
 {
@@ -6269,7 +6269,7 @@ void FUN_80223834(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80223ecc
+ * Function: FUN_8020a4d4
  * EN v1.0 Address: 0x8020A4D4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80223ECC
@@ -6279,14 +6279,14 @@ void FUN_80223834(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80223ecc(undefined2 *param_1,int param_2)
+void FUN_8020a4d4(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80223ff4
+ * Function: FUN_8020a4d8
  * EN v1.0 Address: 0x8020A4D8
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80223FF4
@@ -6296,7 +6296,7 @@ void FUN_80223ecc(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80223ff4(int param_1,int param_2)
+undefined4 FUN_8020a4d8(int param_1,int param_2)
 {
     return 0;
 }
@@ -6304,7 +6304,7 @@ undefined4 FUN_80223ff4(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8022406c
+ * Function: FUN_8020a4e0
  * EN v1.0 Address: 0x8020A4E0
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8022406C
@@ -6314,7 +6314,7 @@ undefined4 FUN_80223ff4(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8022406c(int param_1,int param_2)
+undefined4 FUN_8020a4e0(int param_1,int param_2)
 {
     return 0;
 }
@@ -6322,7 +6322,7 @@ undefined4 FUN_8022406c(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8022414c
+ * Function: FUN_8020a4e8
  * EN v1.0 Address: 0x8020A4E8
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8022414C
@@ -6332,7 +6332,7 @@ undefined4 FUN_8022406c(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8022414c(int param_1,int param_2)
+undefined4 FUN_8020a4e8(int param_1,int param_2)
 {
     return 0;
 }
@@ -6340,7 +6340,7 @@ undefined4 FUN_8022414c(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80224214
+ * Function: FUN_8020a4f0
  * EN v1.0 Address: 0x8020A4F0
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80224214
@@ -6350,7 +6350,7 @@ undefined4 FUN_8022414c(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80224214(undefined4 param_1,int param_2)
+undefined4 FUN_8020a4f0(undefined4 param_1,int param_2)
 {
     return 0;
 }
@@ -6358,7 +6358,7 @@ undefined4 FUN_80224214(undefined4 param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80224284
+ * Function: FUN_8020a4f8
  * EN v1.0 Address: 0x8020A4F8
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80224284
@@ -6368,7 +6368,7 @@ undefined4 FUN_80224214(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80224284(undefined2 *param_1,int param_2)
+undefined4 FUN_8020a4f8(undefined2 *param_1,int param_2)
 {
     return 0;
 }
@@ -6376,7 +6376,7 @@ undefined4 FUN_80224284(undefined2 *param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80224378
+ * Function: FUN_8020a500
  * EN v1.0 Address: 0x8020A500
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80224378
@@ -6386,14 +6386,14 @@ undefined4 FUN_80224284(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80224378(int param_1)
+void FUN_8020a500(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022439c
+ * Function: FUN_8020a504
  * EN v1.0 Address: 0x8020A504
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022439C
@@ -6403,14 +6403,14 @@ void FUN_80224378(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022439c(short *param_1)
+void FUN_8020a504(short *param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802243f8
+ * Function: FUN_8020a508
  * EN v1.0 Address: 0x8020A508
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802243F8
@@ -6420,14 +6420,14 @@ void FUN_8022439c(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802243f8(ushort *param_1)
+void FUN_8020a508(ushort *param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80224548
+ * Function: FUN_8020a50c
  * EN v1.0 Address: 0x8020A50C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80224548
@@ -6437,14 +6437,14 @@ void FUN_802243f8(ushort *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80224548(int param_1)
+void FUN_8020a50c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802246f0
+ * Function: FUN_8020a510
  * EN v1.0 Address: 0x8020A510
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802246F0
@@ -6454,14 +6454,14 @@ void FUN_80224548(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802246f0(int param_1)
+void FUN_8020a510(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80224724
+ * Function: FUN_8020a514
  * EN v1.0 Address: 0x8020A514
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80224724
@@ -6471,14 +6471,14 @@ void FUN_802246f0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80224724(int param_1)
+void FUN_8020a514(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802248f8
+ * Function: FUN_8020a518
  * EN v1.0 Address: 0x8020A518
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802248F8
@@ -6488,7 +6488,7 @@ void FUN_80224724(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_802248f8(int param_1,int param_2,int param_3)
+undefined4 FUN_8020a518(int param_1,int param_2,int param_3)
 {
     return 0;
 }
@@ -6496,7 +6496,7 @@ undefined4 FUN_802248f8(int param_1,int param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_80224a80
+ * Function: FUN_8020a520
  * EN v1.0 Address: 0x8020A520
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80224A80
@@ -6506,14 +6506,14 @@ undefined4 FUN_802248f8(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80224a80(int param_1)
+void FUN_8020a520(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80224ab4
+ * Function: FUN_8020a524
  * EN v1.0 Address: 0x8020A524
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80224AB4
@@ -6523,14 +6523,14 @@ void FUN_80224a80(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80224ab4(uint param_1)
+void FUN_8020a524(uint param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022576c
+ * Function: FUN_8020a528
  * EN v1.0 Address: 0x8020A528
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022576C
@@ -6540,14 +6540,14 @@ void FUN_80224ab4(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022576c(int param_1,int param_2)
+void FUN_8020a528(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80225804
+ * Function: FUN_8020a52c
  * EN v1.0 Address: 0x8020A52C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80225804
@@ -6557,14 +6557,14 @@ void FUN_8022576c(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80225804(undefined4 param_1,int param_2)
+void FUN_8020a52c(undefined4 param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80225ddc
+ * Function: FUN_8020a530
  * EN v1.0 Address: 0x8020A530
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80225DDC
@@ -6574,14 +6574,14 @@ void FUN_80225804(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80225ddc(undefined4 param_1,int param_2)
+void FUN_8020a530(undefined4 param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80226228
+ * Function: FUN_8020a534
  * EN v1.0 Address: 0x8020A534
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80226228
@@ -6591,7 +6591,7 @@ void FUN_80225ddc(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80226228(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_8020a534(int param_1,undefined4 param_2,int param_3)
 {
     return 0;
 }
@@ -6599,7 +6599,7 @@ undefined4 FUN_80226228(int param_1,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_8022637c
+ * Function: FUN_8020a53c
  * EN v1.0 Address: 0x8020A53C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022637C
@@ -6609,7 +6609,7 @@ undefined4 FUN_80226228(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022637c(undefined4 param_1,undefined4 param_2,short param_3,float *param_4,float *param_5,
+void FUN_8020a53c(undefined4 param_1,undefined4 param_2,short param_3,float *param_4,float *param_5,
                  int param_6,int param_7)
 {
 }
@@ -6617,7 +6617,7 @@ void FUN_8022637c(undefined4 param_1,undefined4 param_2,short param_3,float *par
 /*
  * --INFO--
  *
- * Function: FUN_80226950
+ * Function: FUN_8020a540
  * EN v1.0 Address: 0x8020A540
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80226950
@@ -6627,14 +6627,14 @@ void FUN_8022637c(undefined4 param_1,undefined4 param_2,short param_3,float *par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80226950(double param_1,double param_2,undefined4 param_3,short *param_4,short *param_5)
+void FUN_8020a540(double param_1,double param_2,undefined4 param_3,short *param_4,short *param_5)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80226a3c
+ * Function: FUN_8020a544
  * EN v1.0 Address: 0x8020A544
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80226A3C
@@ -6644,14 +6644,14 @@ void FUN_80226950(double param_1,double param_2,undefined4 param_3,short *param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80226a3c(undefined4 param_1,short param_2,short param_3,float *param_4,float *param_5)
+void FUN_8020a544(undefined4 param_1,short param_2,short param_3,float *param_4,float *param_5)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80226b14
+ * Function: FUN_8020a548
  * EN v1.0 Address: 0x8020A548
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80226B14
@@ -6661,7 +6661,7 @@ void FUN_80226a3c(undefined4 param_1,short param_2,short param_3,float *param_4,
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80226b14(undefined4 param_1,undefined4 param_2,short param_3,float *param_4,float *param_5,
+void FUN_8020a548(undefined4 param_1,undefined4 param_2,short param_3,float *param_4,float *param_5,
                  int param_6,int param_7)
 {
 }
@@ -6669,7 +6669,7 @@ void FUN_80226b14(undefined4 param_1,undefined4 param_2,short param_3,float *par
 /*
  * --INFO--
  *
- * Function: FUN_802270e8
+ * Function: FUN_8020a54c
  * EN v1.0 Address: 0x8020A54C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802270E8
@@ -6679,14 +6679,14 @@ void FUN_80226b14(undefined4 param_1,undefined4 param_2,short param_3,float *par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802270e8(double param_1,double param_2,undefined4 param_3,short *param_4,short *param_5)
+void FUN_8020a54c(double param_1,double param_2,undefined4 param_3,short *param_4,short *param_5)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802271d4
+ * Function: FUN_8020a550
  * EN v1.0 Address: 0x8020A550
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802271D4
@@ -6696,14 +6696,14 @@ void FUN_802270e8(double param_1,double param_2,undefined4 param_3,short *param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802271d4(undefined4 param_1,short param_2,short param_3,float *param_4,float *param_5)
+void FUN_8020a550(undefined4 param_1,short param_2,short param_3,float *param_4,float *param_5)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802272bc
+ * Function: FUN_8020a554
  * EN v1.0 Address: 0x8020A554
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802272BC
@@ -6713,14 +6713,14 @@ void FUN_802271d4(undefined4 param_1,short param_2,short param_3,float *param_4,
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802272bc(int param_1)
+void FUN_8020a554(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80227368
+ * Function: FUN_8020a558
  * EN v1.0 Address: 0x8020A558
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80227368
@@ -6730,14 +6730,14 @@ void FUN_802272bc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80227368(int param_1)
+void FUN_8020a558(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022739c
+ * Function: FUN_8020a55c
  * EN v1.0 Address: 0x8020A55C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022739C
@@ -6747,14 +6747,14 @@ void FUN_80227368(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022739c(int param_1)
+void FUN_8020a55c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80227544
+ * Function: FUN_8020a560
  * EN v1.0 Address: 0x8020A560
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80227544
@@ -6764,7 +6764,7 @@ void FUN_8022739c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80227544(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a560(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -6773,7 +6773,7 @@ void FUN_80227544(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_802276fc
+ * Function: FUN_8020a564
  * EN v1.0 Address: 0x8020A564
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802276FC
@@ -6783,14 +6783,14 @@ void FUN_80227544(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802276fc(int param_1)
+void FUN_8020a564(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80227970
+ * Function: FUN_8020a568
  * EN v1.0 Address: 0x8020A568
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80227970
@@ -6800,7 +6800,7 @@ void FUN_802276fc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80227970(int param_1)
+undefined4 FUN_8020a568(int param_1)
 {
     return 0;
 }
@@ -6808,7 +6808,7 @@ undefined4 FUN_80227970(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80227a00
+ * Function: FUN_8020a570
  * EN v1.0 Address: 0x8020A570
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80227A00
@@ -6818,14 +6818,14 @@ undefined4 FUN_80227970(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80227a00(int param_1)
+void FUN_8020a570(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80227a30
+ * Function: FUN_8020a574
  * EN v1.0 Address: 0x8020A574
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80227A30
@@ -6835,14 +6835,14 @@ void FUN_80227a00(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80227a30(uint param_1)
+void FUN_8020a574(uint param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80227c84
+ * Function: FUN_8020a578
  * EN v1.0 Address: 0x8020A578
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80227C84
@@ -6852,14 +6852,14 @@ void FUN_80227a30(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80227c84(undefined2 *param_1,int param_2)
+void FUN_8020a578(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80227d90
+ * Function: FUN_8020a57c
  * EN v1.0 Address: 0x8020A57C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80227D90
@@ -6869,14 +6869,14 @@ void FUN_80227c84(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80227d90(int param_1)
+void FUN_8020a57c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80227dc4
+ * Function: FUN_8020a580
  * EN v1.0 Address: 0x8020A580
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80227DC4
@@ -6886,14 +6886,14 @@ void FUN_80227d90(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80227dc4(short *param_1)
+void FUN_8020a580(short *param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802281cc
+ * Function: FUN_8020a584
  * EN v1.0 Address: 0x8020A584
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802281CC
@@ -6903,14 +6903,14 @@ void FUN_80227dc4(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802281cc(int param_1,int param_2)
+void FUN_8020a584(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80228260
+ * Function: FUN_8020a588
  * EN v1.0 Address: 0x8020A588
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80228260
@@ -6920,7 +6920,7 @@ void FUN_802281cc(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80228260(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_8020a588(int param_1,undefined4 param_2,int param_3)
 {
     return 0;
 }
@@ -6928,7 +6928,7 @@ undefined4 FUN_80228260(int param_1,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_802283b0
+ * Function: FUN_8020a590
  * EN v1.0 Address: 0x8020A590
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802283B0
@@ -6938,14 +6938,14 @@ undefined4 FUN_80228260(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802283b0(int param_1)
+void FUN_8020a590(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802283d4
+ * Function: FUN_8020a594
  * EN v1.0 Address: 0x8020A594
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802283D4
@@ -6955,14 +6955,14 @@ void FUN_802283b0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802283d4(int param_1)
+void FUN_8020a594(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80228408
+ * Function: FUN_8020a598
  * EN v1.0 Address: 0x8020A598
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80228408
@@ -6972,14 +6972,14 @@ void FUN_802283d4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80228408(uint param_1)
+void FUN_8020a598(uint param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80228750
+ * Function: FUN_8020a59c
  * EN v1.0 Address: 0x8020A59C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80228750
@@ -6989,14 +6989,14 @@ void FUN_80228408(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80228750(short *param_1,int param_2)
+void FUN_8020a59c(short *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80228874
+ * Function: FUN_8020a5a0
  * EN v1.0 Address: 0x8020A5A0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80228874
@@ -7006,14 +7006,14 @@ void FUN_80228750(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80228874(undefined4 param_1,undefined4 param_2,int param_3)
+void FUN_8020a5a0(undefined4 param_1,undefined4 param_2,int param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80228938
+ * Function: FUN_8020a5a4
  * EN v1.0 Address: 0x8020A5A4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80228938
@@ -7023,14 +7023,14 @@ void FUN_80228874(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80228938(int param_1)
+void FUN_8020a5a4(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80228968
+ * Function: FUN_8020a5a8
  * EN v1.0 Address: 0x8020A5A8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80228968
@@ -7040,14 +7040,14 @@ void FUN_80228938(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80228968(int param_1)
+void FUN_8020a5a8(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80228a20
+ * Function: FUN_8020a5ac
  * EN v1.0 Address: 0x8020A5AC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80228A20
@@ -7057,14 +7057,14 @@ void FUN_80228968(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80228a20(undefined2 *param_1,int param_2,int param_3)
+void FUN_8020a5ac(undefined2 *param_1,int param_2,int param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80228b20
+ * Function: FUN_8020a5b0
  * EN v1.0 Address: 0x8020A5B0
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80228B20
@@ -7074,7 +7074,7 @@ void FUN_80228a20(undefined2 *param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80228b20(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_8020a5b0(int param_1,undefined4 param_2,int param_3)
 {
     return 0;
 }
@@ -7082,7 +7082,7 @@ undefined4 FUN_80228b20(int param_1,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_80228c90
+ * Function: FUN_8020a5b8
  * EN v1.0 Address: 0x8020A5B8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80228C90
@@ -7092,14 +7092,14 @@ undefined4 FUN_80228b20(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80228c90(int param_1)
+void FUN_8020a5b8(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80228cc0
+ * Function: FUN_8020a5bc
  * EN v1.0 Address: 0x8020A5BC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80228CC0
@@ -7109,14 +7109,14 @@ void FUN_80228c90(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80228cc0(int param_1)
+void FUN_8020a5bc(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80228d00
+ * Function: FUN_8020a5c0
  * EN v1.0 Address: 0x8020A5C0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80228D00
@@ -7126,14 +7126,14 @@ void FUN_80228cc0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80228d00(int param_1)
+void FUN_8020a5c0(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802290cc
+ * Function: FUN_8020a5c4
  * EN v1.0 Address: 0x8020A5C4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802290CC
@@ -7143,14 +7143,14 @@ void FUN_80228d00(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802290cc(short *param_1,int param_2)
+void FUN_8020a5c4(short *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80229210
+ * Function: FUN_8020a5c8
  * EN v1.0 Address: 0x8020A5C8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80229210
@@ -7160,14 +7160,14 @@ void FUN_802290cc(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80229210(int param_1)
+void FUN_8020a5c8(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80229244
+ * Function: FUN_8020a5cc
  * EN v1.0 Address: 0x8020A5CC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80229244
@@ -7177,14 +7177,14 @@ void FUN_80229210(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80229244(int param_1)
+void FUN_8020a5cc(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022933c
+ * Function: FUN_8020a5d0
  * EN v1.0 Address: 0x8020A5D0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022933C
@@ -7194,14 +7194,14 @@ void FUN_80229244(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022933c(undefined4 param_1)
+void FUN_8020a5d0(undefined4 param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802293a8
+ * Function: FUN_8020a5d4
  * EN v1.0 Address: 0x8020A5D4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802293A8
@@ -7211,14 +7211,14 @@ void FUN_8022933c(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802293a8(undefined4 param_1)
+void FUN_8020a5d4(undefined4 param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80229494
+ * Function: FUN_8020a5d8
  * EN v1.0 Address: 0x8020A5D8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80229494
@@ -7228,14 +7228,14 @@ void FUN_802293a8(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80229494(int param_1,int param_2)
+void FUN_8020a5d8(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80229614
+ * Function: FUN_8020a5dc
  * EN v1.0 Address: 0x8020A5DC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80229614
@@ -7245,14 +7245,14 @@ void FUN_80229494(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80229614(int param_1)
+void FUN_8020a5dc(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80229644
+ * Function: FUN_8020a5e0
  * EN v1.0 Address: 0x8020A5E0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80229644
@@ -7262,14 +7262,14 @@ void FUN_80229614(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80229644(void)
+void FUN_8020a5e0(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022970c
+ * Function: FUN_8020a5e4
  * EN v1.0 Address: 0x8020A5E4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022970C
@@ -7279,14 +7279,14 @@ void FUN_80229644(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022970c(int param_1)
+void FUN_8020a5e4(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802297b4
+ * Function: FUN_8020a5e8
  * EN v1.0 Address: 0x8020A5E8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802297B4
@@ -7296,14 +7296,14 @@ void FUN_8022970c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802297b4(int param_1)
+void FUN_8020a5e8(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022994c
+ * Function: FUN_8020a5ec
  * EN v1.0 Address: 0x8020A5EC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022994C
@@ -7313,7 +7313,7 @@ void FUN_802297b4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022994c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a5ec(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,int param_10)
 {
@@ -7322,7 +7322,7 @@ void FUN_8022994c(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80229abc
+ * Function: FUN_8020a5f0
  * EN v1.0 Address: 0x8020A5F0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80229ABC
@@ -7332,14 +7332,14 @@ void FUN_8022994c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80229abc(void)
+void FUN_8020a5f0(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80229b90
+ * Function: FUN_8020a5f4
  * EN v1.0 Address: 0x8020A5F4
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80229B90
@@ -7349,7 +7349,7 @@ void FUN_80229abc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80229b90(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_8020a5f4(int param_1,undefined4 param_2,int param_3)
 {
     return 0;
 }
@@ -7357,7 +7357,7 @@ undefined4 FUN_80229b90(int param_1,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_80229c38
+ * Function: FUN_8020a5fc
  * EN v1.0 Address: 0x8020A5FC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80229C38
@@ -7367,14 +7367,14 @@ undefined4 FUN_80229b90(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80229c38(int param_1)
+void FUN_8020a5fc(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80229c6c
+ * Function: FUN_8020a600
  * EN v1.0 Address: 0x8020A600
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80229C6C
@@ -7384,14 +7384,14 @@ void FUN_80229c38(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80229c6c(void)
+void FUN_8020a600(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80229ed0
+ * Function: FUN_8020a604
  * EN v1.0 Address: 0x8020A604
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80229ED0
@@ -7401,14 +7401,14 @@ void FUN_80229c6c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80229ed0(void)
+void FUN_8020a604(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022a060
+ * Function: FUN_8020a608
  * EN v1.0 Address: 0x8020A608
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022A060
@@ -7418,14 +7418,14 @@ void FUN_80229ed0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022a060(int param_1,int param_2)
+void FUN_8020a608(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022a170
+ * Function: FUN_8020a60c
  * EN v1.0 Address: 0x8020A60C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022A170
@@ -7435,14 +7435,14 @@ void FUN_8022a060(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022a170(undefined4 param_1,undefined4 param_2,int param_3)
+void FUN_8020a60c(undefined4 param_1,undefined4 param_2,int param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022a440
+ * Function: FUN_8020a610
  * EN v1.0 Address: 0x8020A610
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022A440
@@ -7452,14 +7452,14 @@ void FUN_8022a170(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022a440(int param_1)
+void FUN_8020a610(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022a488
+ * Function: FUN_8020a614
  * EN v1.0 Address: 0x8020A614
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022A488
@@ -7469,14 +7469,14 @@ void FUN_8022a440(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022a488(void)
+void FUN_8020a614(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022a748
+ * Function: FUN_8020a618
  * EN v1.0 Address: 0x8020A618
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022A748
@@ -7486,14 +7486,14 @@ void FUN_8022a488(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022a748(void)
+void FUN_8020a618(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022a970
+ * Function: FUN_8020a61c
  * EN v1.0 Address: 0x8020A61C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022A970
@@ -7503,14 +7503,14 @@ void FUN_8022a748(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022a970(int param_1)
+void FUN_8020a61c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022a9a4
+ * Function: FUN_8020a620
  * EN v1.0 Address: 0x8020A620
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022A9A4
@@ -7520,14 +7520,14 @@ void FUN_8022a970(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022a9a4(void)
+void FUN_8020a620(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022ad34
+ * Function: FUN_8020a624
  * EN v1.0 Address: 0x8020A624
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022AD34
@@ -7537,14 +7537,14 @@ void FUN_8022a9a4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022ad34(uint param_1,int param_2)
+void FUN_8020a624(uint param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022b08c
+ * Function: FUN_8020a628
  * EN v1.0 Address: 0x8020A628
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022B08C
@@ -7554,14 +7554,14 @@ void FUN_8022ad34(uint param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022b08c(ushort *param_1,int param_2)
+void FUN_8020a628(ushort *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022b22c
+ * Function: FUN_8020a62c
  * EN v1.0 Address: 0x8020A62C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022B22C
@@ -7571,14 +7571,14 @@ void FUN_8022b08c(ushort *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022b22c(int param_1,int param_2)
+void FUN_8020a62c(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022b4e0
+ * Function: FUN_8020a630
  * EN v1.0 Address: 0x8020A630
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022B4E0
@@ -7588,14 +7588,14 @@ void FUN_8022b22c(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022b4e0(int param_1,int param_2)
+void FUN_8020a630(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022b590
+ * Function: FUN_8020a634
  * EN v1.0 Address: 0x8020A634
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022B590
@@ -7605,14 +7605,14 @@ void FUN_8022b4e0(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022b590(undefined2 *param_1,int param_2)
+void FUN_8020a634(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022be28
+ * Function: FUN_8020a638
  * EN v1.0 Address: 0x8020A638
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022BE28
@@ -7622,7 +7622,7 @@ void FUN_8022b590(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022be28(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a638(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,int param_10,int param_11)
 {
@@ -7631,7 +7631,7 @@ void FUN_8022be28(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8022bf64
+ * Function: FUN_8020a63c
  * EN v1.0 Address: 0x8020A63C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022BF64
@@ -7641,7 +7641,7 @@ void FUN_8022be28(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022bf64(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void FUN_8020a63c(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,int param_10)
 {
@@ -7650,7 +7650,7 @@ void FUN_8022bf64(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_8022c05c
+ * Function: FUN_8020a640
  * EN v1.0 Address: 0x8020A640
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022C05C
@@ -7660,7 +7660,7 @@ void FUN_8022bf64(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022c05c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a640(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,int param_12,uint param_13)
 {
@@ -7669,7 +7669,7 @@ void FUN_8022c05c(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8022c204
+ * Function: FUN_8020a644
  * EN v1.0 Address: 0x8020A644
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022C204
@@ -7679,7 +7679,7 @@ void FUN_8022c05c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022c204(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void FUN_8020a644(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9,int param_10)
 {
@@ -7688,7 +7688,7 @@ void FUN_8022c204(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_8022c394
+ * Function: FUN_8020a648
  * EN v1.0 Address: 0x8020A648
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022C394
@@ -7698,14 +7698,14 @@ void FUN_8022c204(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022c394(undefined4 param_1,int param_2)
+void FUN_8020a648(undefined4 param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022c4d8
+ * Function: FUN_8020a64c
  * EN v1.0 Address: 0x8020A64C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022C4D8
@@ -7715,7 +7715,7 @@ void FUN_8022c394(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022c4d8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a64c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,int param_10)
 {
@@ -7724,7 +7724,7 @@ void FUN_8022c4d8(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8022c794
+ * Function: FUN_8020a650
  * EN v1.0 Address: 0x8020A650
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022C794
@@ -7734,7 +7734,7 @@ void FUN_8022c4d8(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022c794(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a650(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,int param_10)
 {
@@ -7743,7 +7743,7 @@ void FUN_8022c794(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8022c9d0
+ * Function: FUN_8020a654
  * EN v1.0 Address: 0x8020A654
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022C9D0
@@ -7753,14 +7753,14 @@ void FUN_8022c794(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022c9d0(uint param_1,int param_2)
+void FUN_8020a654(uint param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022cd44
+ * Function: FUN_8020a658
  * EN v1.0 Address: 0x8020A658
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022CD44
@@ -7770,7 +7770,7 @@ void FUN_8022c9d0(uint param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022cd44(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a658(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -7780,7 +7780,7 @@ void FUN_8022cd44(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8022ce78
+ * Function: FUN_8020a65c
  * EN v1.0 Address: 0x8020A65C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8022CE78
@@ -7791,7 +7791,7 @@ void FUN_8022cd44(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Size: TODO
  */
 undefined4
-FUN_8022ce78(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a65c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,ushort *param_9,
             undefined4 param_10,uint param_11,int param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16)
@@ -7802,7 +7802,7 @@ FUN_8022ce78(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_8022d4b0
+ * Function: FUN_8020a664
  * EN v1.0 Address: 0x8020A664
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022D4B0
@@ -7812,7 +7812,7 @@ FUN_8022ce78(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022d4b0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a664(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10)
 {
@@ -7821,7 +7821,7 @@ void FUN_8022d4b0(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8022d9cc
+ * Function: FUN_8020a668
  * EN v1.0 Address: 0x8020A668
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022D9CC
@@ -7831,14 +7831,14 @@ void FUN_8022d4b0(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022d9cc(undefined2 *param_1)
+void FUN_8020a668(undefined2 *param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022db24
+ * Function: FUN_8020a66c
  * EN v1.0 Address: 0x8020A66C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022DB24
@@ -7848,14 +7848,14 @@ void FUN_8022d9cc(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022db24(double param_1,int param_2)
+void FUN_8020a66c(double param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022db30
+ * Function: FUN_8020a670
  * EN v1.0 Address: 0x8020A670
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8022DB30
@@ -7865,7 +7865,7 @@ void FUN_8022db24(double param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_8022db30(int param_1)
+int FUN_8020a670(int param_1)
 {
     return 0;
 }
@@ -7873,7 +7873,7 @@ int FUN_8022db30(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8022db40
+ * Function: FUN_8020a678
  * EN v1.0 Address: 0x8020A678
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022DB40
@@ -7883,14 +7883,14 @@ int FUN_8022db30(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022db40(int param_1,short param_2)
+void FUN_8020a678(int param_1,short param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022db50
+ * Function: FUN_8020a67c
  * EN v1.0 Address: 0x8020A67C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022DB50
@@ -7900,14 +7900,14 @@ void FUN_8022db40(int param_1,short param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022db50(undefined4 *param_1,int param_2)
+void FUN_8020a67c(undefined4 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022db70
+ * Function: FUN_8020a680
  * EN v1.0 Address: 0x8020A680
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022DB70
@@ -7917,14 +7917,14 @@ void FUN_8022db50(undefined4 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022db70(int param_1,undefined4 *param_2)
+void FUN_8020a680(int param_1,undefined4 *param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022db90
+ * Function: FUN_8020a684
  * EN v1.0 Address: 0x8020A684
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022DB90
@@ -7934,14 +7934,14 @@ void FUN_8022db70(int param_1,undefined4 *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022db90(int param_1,float *param_2)
+void FUN_8020a684(int param_1,float *param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022dbbc
+ * Function: FUN_8020a688
  * EN v1.0 Address: 0x8020A688
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022DBBC
@@ -7951,14 +7951,14 @@ void FUN_8022db90(int param_1,float *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022dbbc(int param_1)
+void FUN_8020a688(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022dbcc
+ * Function: FUN_8020a68c
  * EN v1.0 Address: 0x8020A68C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8022DBCC
@@ -7968,7 +7968,7 @@ void FUN_8022dbbc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined FUN_8022dbcc(int param_1)
+undefined FUN_8020a68c(int param_1)
 {
     return 0;
 }
@@ -7976,7 +7976,7 @@ undefined FUN_8022dbcc(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8022dbd8
+ * Function: FUN_8020a694
  * EN v1.0 Address: 0x8020A694
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8022DBD8
@@ -7986,7 +7986,7 @@ undefined FUN_8022dbcc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined FUN_8022dbd8(int param_1)
+undefined FUN_8020a694(int param_1)
 {
     return 0;
 }
@@ -7994,7 +7994,7 @@ undefined FUN_8022dbd8(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8022dbe4
+ * Function: FUN_8020a69c
  * EN v1.0 Address: 0x8020A69C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022DBE4
@@ -8004,14 +8004,14 @@ undefined FUN_8022dbd8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022dbe4(int param_1,ushort param_2)
+void FUN_8020a69c(int param_1,ushort param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022dc14
+ * Function: FUN_8020a6a0
  * EN v1.0 Address: 0x8020A6A0
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8022DC14
@@ -8021,7 +8021,7 @@ void FUN_8022dbe4(int param_1,ushort param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined2 FUN_8022dc14(int param_1)
+undefined2 FUN_8020a6a0(int param_1)
 {
     return 0;
 }
@@ -8029,7 +8029,7 @@ undefined2 FUN_8022dc14(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8022dc38
+ * Function: FUN_8020a6a8
  * EN v1.0 Address: 0x8020A6A8
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8022DC38
@@ -8039,7 +8039,7 @@ undefined2 FUN_8022dc14(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined FUN_8022dc38(int param_1)
+undefined FUN_8020a6a8(int param_1)
 {
     return 0;
 }
@@ -8047,7 +8047,7 @@ undefined FUN_8022dc38(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8022dc44
+ * Function: FUN_8020a6b0
  * EN v1.0 Address: 0x8020A6B0
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8022DC44
@@ -8057,7 +8057,7 @@ undefined FUN_8022dc38(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_8022dc44(int param_1)
+int FUN_8020a6b0(int param_1)
 {
     return 0;
 }
@@ -8065,7 +8065,7 @@ int FUN_8022dc44(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8022dc54
+ * Function: FUN_8020a6b8
  * EN v1.0 Address: 0x8020A6B8
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8022DC54
@@ -8075,7 +8075,7 @@ int FUN_8022dc44(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_8022dc54(int param_1)
+int FUN_8020a6b8(int param_1)
 {
     return 0;
 }
@@ -8083,7 +8083,7 @@ int FUN_8022dc54(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8022dc64
+ * Function: FUN_8020a6c0
  * EN v1.0 Address: 0x8020A6C0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022DC64
@@ -8093,14 +8093,14 @@ int FUN_8022dc54(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022dc64(int param_1)
+void FUN_8020a6c0(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022dc78
+ * Function: FUN_8020a6c4
  * EN v1.0 Address: 0x8020A6C4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022DC78
@@ -8110,14 +8110,14 @@ void FUN_8022dc64(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022dc78(int param_1)
+void FUN_8020a6c4(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022dc8c
+ * Function: FUN_8020a6c8
  * EN v1.0 Address: 0x8020A6C8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022DC8C
@@ -8127,14 +8127,14 @@ void FUN_8022dc78(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022dc8c(int param_1)
+void FUN_8020a6c8(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022dca0
+ * Function: FUN_8020a6cc
  * EN v1.0 Address: 0x8020A6CC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022DCA0
@@ -8144,14 +8144,14 @@ void FUN_8022dc8c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022dca0(int param_1)
+void FUN_8020a6cc(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022dcb4
+ * Function: FUN_8020a6d0
  * EN v1.0 Address: 0x8020A6D0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022DCB4
@@ -8161,14 +8161,14 @@ void FUN_8022dca0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022dcb4(int param_1)
+void FUN_8020a6d0(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022dcf8
+ * Function: FUN_8020a6d4
  * EN v1.0 Address: 0x8020A6D4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022DCF8
@@ -8178,14 +8178,14 @@ void FUN_8022dcb4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022dcf8(int param_1,char param_2)
+void FUN_8020a6d4(int param_1,char param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022dd10
+ * Function: FUN_8020a6d8
  * EN v1.0 Address: 0x8020A6D8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022DD10
@@ -8195,14 +8195,14 @@ void FUN_8022dcf8(int param_1,char param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022dd10(int param_1,char param_2)
+void FUN_8020a6d8(int param_1,char param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022dd94
+ * Function: FUN_8020a6dc
  * EN v1.0 Address: 0x8020A6DC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022DD94
@@ -8212,14 +8212,14 @@ void FUN_8022dd10(int param_1,char param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022dd94(int param_1)
+void FUN_8020a6dc(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022ddb4
+ * Function: FUN_8020a6e0
  * EN v1.0 Address: 0x8020A6E0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022DDB4
@@ -8229,14 +8229,14 @@ void FUN_8022dd94(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022ddb4(int param_1)
+void FUN_8020a6e0(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022ddd4
+ * Function: FUN_8020a6e4
  * EN v1.0 Address: 0x8020A6E4
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8022DDD4
@@ -8246,7 +8246,7 @@ void FUN_8022ddb4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8022ddd4(int param_1)
+undefined4 FUN_8020a6e4(int param_1)
 {
     return 0;
 }
@@ -8254,7 +8254,7 @@ undefined4 FUN_8022ddd4(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8022ddfc
+ * Function: FUN_8020a6ec
  * EN v1.0 Address: 0x8020A6EC
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8022DDFC
@@ -8264,7 +8264,7 @@ undefined4 FUN_8022ddd4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_8022ddfc(int param_1)
+uint FUN_8020a6ec(int param_1)
 {
     return 0;
 }
@@ -8272,7 +8272,7 @@ uint FUN_8022ddfc(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8022de14
+ * Function: FUN_8020a6f4
  * EN v1.0 Address: 0x8020A6F4
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8022DE14
@@ -8282,7 +8282,7 @@ uint FUN_8022ddfc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_8022de14(int param_1)
+uint FUN_8020a6f4(int param_1)
 {
     return 0;
 }
@@ -8290,7 +8290,7 @@ uint FUN_8022de14(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8022de2c
+ * Function: FUN_8020a6fc
  * EN v1.0 Address: 0x8020A6FC
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8022DE2C
@@ -8300,7 +8300,7 @@ uint FUN_8022de14(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8022de2c(void)
+undefined4 FUN_8020a6fc(void)
 {
     return 0;
 }
@@ -8308,7 +8308,7 @@ undefined4 FUN_8022de2c(void)
 /*
  * --INFO--
  *
- * Function: FUN_8022de44
+ * Function: FUN_8020a704
  * EN v1.0 Address: 0x8020A704
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022DE44
@@ -8318,14 +8318,14 @@ undefined4 FUN_8022de2c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022de44(int param_1)
+void FUN_8020a704(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022de8c
+ * Function: FUN_8020a708
  * EN v1.0 Address: 0x8020A708
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022DE8C
@@ -8335,14 +8335,14 @@ void FUN_8022de44(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022de8c(void)
+void FUN_8020a708(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022dfcc
+ * Function: FUN_8020a70c
  * EN v1.0 Address: 0x8020A70C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022DFCC
@@ -8352,14 +8352,14 @@ void FUN_8022de8c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022dfcc(ushort *param_1)
+void FUN_8020a70c(ushort *param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022e0a0
+ * Function: FUN_8020a710
  * EN v1.0 Address: 0x8020A710
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022E0A0
@@ -8369,7 +8369,7 @@ void FUN_8022dfcc(ushort *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022e0a0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a710(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -8379,7 +8379,7 @@ void FUN_8022e0a0(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8022e924
+ * Function: FUN_8020a714
  * EN v1.0 Address: 0x8020A714
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022E924
@@ -8389,14 +8389,14 @@ void FUN_8022e0a0(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022e924(int param_1)
+void FUN_8020a714(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022eadc
+ * Function: FUN_8020a718
  * EN v1.0 Address: 0x8020A718
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022EADC
@@ -8406,14 +8406,14 @@ void FUN_8022e924(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022eadc(int param_1,char param_2)
+void FUN_8020a718(int param_1,char param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022ec10
+ * Function: FUN_8020a71c
  * EN v1.0 Address: 0x8020A71C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022EC10
@@ -8423,14 +8423,14 @@ void FUN_8022eadc(int param_1,char param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022ec10(double param_1,ushort *param_2)
+void FUN_8020a71c(double param_1,ushort *param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022ecc4
+ * Function: FUN_8020a720
  * EN v1.0 Address: 0x8020A720
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022ECC4
@@ -8440,14 +8440,14 @@ void FUN_8022ec10(double param_1,ushort *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022ecc4(int param_1,uint param_2)
+void FUN_8020a720(int param_1,uint param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022ed04
+ * Function: FUN_8020a724
  * EN v1.0 Address: 0x8020A724
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022ED04
@@ -8457,14 +8457,14 @@ void FUN_8022ecc4(int param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022ed04(int param_1)
+void FUN_8020a724(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022ed44
+ * Function: FUN_8020a728
  * EN v1.0 Address: 0x8020A728
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022ED44
@@ -8474,14 +8474,14 @@ void FUN_8022ed04(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022ed44(int param_1)
+void FUN_8020a728(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022ed74
+ * Function: FUN_8020a72c
  * EN v1.0 Address: 0x8020A72C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022ED74
@@ -8491,7 +8491,7 @@ void FUN_8022ed44(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022ed74(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a72c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
 {
@@ -8500,7 +8500,7 @@ void FUN_8022ed74(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8022f010
+ * Function: FUN_8020a730
  * EN v1.0 Address: 0x8020A730
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022F010
@@ -8510,7 +8510,7 @@ void FUN_8022ed74(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022f010(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_8020a730(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
 {
@@ -8519,7 +8519,7 @@ void FUN_8022f010(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_8022f22c
+ * Function: FUN_8020a734
  * EN v1.0 Address: 0x8020A734
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022F22C
@@ -8529,14 +8529,14 @@ void FUN_8022f010(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022f22c(short *param_1,int param_2)
+void FUN_8020a734(short *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022f3a4
+ * Function: FUN_8020a738
  * EN v1.0 Address: 0x8020A738
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022F3A4
@@ -8546,14 +8546,14 @@ void FUN_8022f22c(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022f3a4(double param_1,ushort *param_2)
+void FUN_8020a738(double param_1,ushort *param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022f438
+ * Function: FUN_8020a73c
  * EN v1.0 Address: 0x8020A73C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022F438
@@ -8563,14 +8563,14 @@ void FUN_8022f3a4(double param_1,ushort *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022f438(int param_1,uint param_2)
+void FUN_8020a73c(int param_1,uint param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022f478
+ * Function: FUN_8020a740
  * EN v1.0 Address: 0x8020A740
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022F478
@@ -8580,14 +8580,14 @@ void FUN_8022f438(int param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022f478(int param_1)
+void FUN_8020a740(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022f4c0
+ * Function: FUN_8020a744
  * EN v1.0 Address: 0x8020A744
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022F4C0
@@ -8597,14 +8597,14 @@ void FUN_8022f478(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022f4c0(int param_1)
+void FUN_8020a744(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022f4f4
+ * Function: FUN_8020a748
  * EN v1.0 Address: 0x8020A748
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022F4F4
@@ -8614,7 +8614,7 @@ void FUN_8022f4c0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022f4f4(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void FUN_8020a748(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
 {
@@ -8623,7 +8623,7 @@ void FUN_8022f4f4(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_8022f7b0
+ * Function: FUN_8020a74c
  * EN v1.0 Address: 0x8020A74C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022F7B0
@@ -8633,14 +8633,14 @@ void FUN_8022f4f4(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022f7b0(short *param_1,int param_2)
+void FUN_8020a74c(short *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022f80c
+ * Function: FUN_8020a750
  * EN v1.0 Address: 0x8020A750
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022F80C
@@ -8650,14 +8650,14 @@ void FUN_8022f7b0(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022f80c(int param_1,char param_2,char param_3)
+void FUN_8020a750(int param_1,char param_2,char param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022f89c
+ * Function: FUN_8020a754
  * EN v1.0 Address: 0x8020A754
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022F89C
@@ -8667,14 +8667,14 @@ void FUN_8022f80c(int param_1,char param_2,char param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022f89c(int param_1,char param_2,char param_3)
+void FUN_8020a754(int param_1,char param_2,char param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022f934
+ * Function: FUN_8020a758
  * EN v1.0 Address: 0x8020A758
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022F934
@@ -8684,14 +8684,14 @@ void FUN_8022f89c(int param_1,char param_2,char param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022f934(int param_1,undefined4 param_2)
+void FUN_8020a758(int param_1,undefined4 param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022f940
+ * Function: FUN_8020a75c
  * EN v1.0 Address: 0x8020A75C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022F940
@@ -8701,14 +8701,14 @@ void FUN_8022f934(int param_1,undefined4 param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022f940(int param_1)
+void FUN_8020a75c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022fa2c
+ * Function: FUN_8020a760
  * EN v1.0 Address: 0x8020A760
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022FA2C
@@ -8718,14 +8718,14 @@ void FUN_8022f940(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022fa2c(int param_1)
+void FUN_8020a760(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022fc1c
+ * Function: FUN_8020a764
  * EN v1.0 Address: 0x8020A764
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022FC1C
@@ -8735,14 +8735,14 @@ void FUN_8022fa2c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022fc1c(int param_1,uint param_2)
+void FUN_8020a764(int param_1,uint param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022fc60
+ * Function: FUN_8020a768
  * EN v1.0 Address: 0x8020A768
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022FC60
@@ -8752,14 +8752,14 @@ void FUN_8022fc1c(int param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022fc60(int param_1)
+void FUN_8020a768(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8022fc88
+ * Function: FUN_8020a76c
  * EN v1.0 Address: 0x8020A76C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8022FC88
@@ -8769,7 +8769,7 @@ void FUN_8022fc60(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8022fc88(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_8020a76c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9)
 {
@@ -8778,7 +8778,7 @@ void FUN_8022fc88(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_802300c4
+ * Function: FUN_8020a770
  * EN v1.0 Address: 0x8020A770
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802300C4
@@ -8788,14 +8788,14 @@ void FUN_8022fc88(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802300c4(int param_1,int param_2)
+void FUN_8020a770(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80230220
+ * Function: FUN_8020a774
  * EN v1.0 Address: 0x8020A774
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80230220
@@ -8805,7 +8805,7 @@ void FUN_802300c4(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80230220(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_8020a774(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,char *param_10,uint param_11)
 {
@@ -8814,7 +8814,7 @@ void FUN_80230220(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_8023039c
+ * Function: FUN_8020a778
  * EN v1.0 Address: 0x8020A778
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8023039C
@@ -8825,7 +8825,7 @@ void FUN_80230220(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Size: TODO
  */
 undefined4
-FUN_8023039c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+FUN_8020a778(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
             char *param_10,int param_11)
 {
@@ -8835,7 +8835,7 @@ FUN_8023039c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 /*
  * --INFO--
  *
- * Function: FUN_802304d4
+ * Function: FUN_8020a780
  * EN v1.0 Address: 0x8020A780
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802304D4
@@ -8845,14 +8845,14 @@ FUN_8023039c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802304d4(int param_1)
+void FUN_8020a780(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80230514
+ * Function: FUN_8020a784
  * EN v1.0 Address: 0x8020A784
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80230514
@@ -8862,14 +8862,14 @@ void FUN_802304d4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80230514(void)
+void FUN_8020a784(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80230598
+ * Function: FUN_8020a788
  * EN v1.0 Address: 0x8020A788
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80230598
@@ -8879,14 +8879,14 @@ void FUN_80230514(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80230598(void)
+void FUN_8020a788(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80230d88
+ * Function: FUN_8020a78c
  * EN v1.0 Address: 0x8020A78C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80230D88
@@ -8896,14 +8896,14 @@ void FUN_80230598(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80230d88(undefined2 *param_1,int param_2)
+void FUN_8020a78c(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80230f78
+ * Function: FUN_8020a790
  * EN v1.0 Address: 0x8020A790
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80230F78
@@ -8913,14 +8913,14 @@ void FUN_80230d88(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80230f78(int param_1)
+void FUN_8020a790(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80230fc8
+ * Function: FUN_8020a794
  * EN v1.0 Address: 0x8020A794
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80230FC8
@@ -8931,7 +8931,7 @@ void FUN_80230f78(int param_1)
  * PAL Size: TODO
  */
 undefined4
-FUN_80230fc8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+FUN_8020a794(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
             undefined4 param_10,int param_11)
 {
@@ -8941,7 +8941,7 @@ FUN_80230fc8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 /*
  * --INFO--
  *
- * Function: FUN_802310e4
+ * Function: FUN_8020a79c
  * EN v1.0 Address: 0x8020A79C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802310E4
@@ -8951,7 +8951,7 @@ FUN_80230fc8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802310e4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_8020a79c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
@@ -8959,7 +8959,7 @@ void FUN_802310e4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_80231114
+ * Function: FUN_8020a7a0
  * EN v1.0 Address: 0x8020A7A0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80231114
@@ -8969,14 +8969,14 @@ void FUN_802310e4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80231114(int param_1)
+void FUN_8020a7a0(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023113c
+ * Function: FUN_8020a7a4
  * EN v1.0 Address: 0x8020A7A4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023113C
@@ -8986,7 +8986,7 @@ void FUN_80231114(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023113c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a7a4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -8995,7 +8995,7 @@ void FUN_8023113c(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8023138c
+ * Function: FUN_8020a7a8
  * EN v1.0 Address: 0x8020A7A8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023138C
@@ -9005,7 +9005,7 @@ void FUN_8023113c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023138c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a7a8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10)
 {
@@ -9014,7 +9014,7 @@ void FUN_8023138c(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80231504
+ * Function: FUN_8020a7ac
  * EN v1.0 Address: 0x8020A7AC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80231504
@@ -9024,14 +9024,14 @@ void FUN_8023138c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80231504(int param_1)
+void FUN_8020a7ac(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023152c
+ * Function: FUN_8020a7b0
  * EN v1.0 Address: 0x8020A7B0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023152C
@@ -9041,7 +9041,7 @@ void FUN_80231504(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023152c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_8020a7b0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -9050,7 +9050,7 @@ void FUN_8023152c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_802316ec
+ * Function: FUN_8020a7b4
  * EN v1.0 Address: 0x8020A7B4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802316EC
@@ -9060,14 +9060,14 @@ void FUN_8023152c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802316ec(int param_1,uint param_2)
+void FUN_8020a7b4(int param_1,uint param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023171c
+ * Function: FUN_8020a7b8
  * EN v1.0 Address: 0x8020A7B8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023171C
@@ -9077,14 +9077,14 @@ void FUN_802316ec(int param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023171c(int param_1,undefined4 *param_2)
+void FUN_8020a7b8(int param_1,undefined4 *param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80231758
+ * Function: FUN_8020a7bc
  * EN v1.0 Address: 0x8020A7BC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80231758
@@ -9094,14 +9094,14 @@ void FUN_8023171c(int param_1,undefined4 *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80231758(int param_1)
+void FUN_8020a7bc(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80231788
+ * Function: FUN_8020a7c0
  * EN v1.0 Address: 0x8020A7C0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80231788
@@ -9111,7 +9111,7 @@ void FUN_80231758(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80231788(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_8020a7c0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9)
 {
@@ -9120,7 +9120,7 @@ void FUN_80231788(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_8023193c
+ * Function: FUN_8020a7c4
  * EN v1.0 Address: 0x8020A7C4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023193C
@@ -9130,14 +9130,14 @@ void FUN_80231788(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023193c(undefined2 *param_1)
+void FUN_8020a7c4(undefined2 *param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80231a10
+ * Function: FUN_8020a7c8
  * EN v1.0 Address: 0x8020A7C8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80231A10
@@ -9147,14 +9147,14 @@ void FUN_8023193c(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80231a10(int param_1,uint param_2)
+void FUN_8020a7c8(int param_1,uint param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80231a40
+ * Function: FUN_8020a7cc
  * EN v1.0 Address: 0x8020A7CC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80231A40
@@ -9164,14 +9164,14 @@ void FUN_80231a10(int param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80231a40(int param_1,undefined4 *param_2)
+void FUN_8020a7cc(int param_1,undefined4 *param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80231a70
+ * Function: FUN_8020a7d0
  * EN v1.0 Address: 0x8020A7D0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80231A70
@@ -9181,14 +9181,14 @@ void FUN_80231a40(int param_1,undefined4 *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80231a70(int param_1)
+void FUN_8020a7d0(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80231a98
+ * Function: FUN_8020a7d4
  * EN v1.0 Address: 0x8020A7D4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80231A98
@@ -9198,7 +9198,7 @@ void FUN_80231a70(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80231a98(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_8020a7d4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9)
 {
@@ -9207,7 +9207,7 @@ void FUN_80231a98(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_80231bf0
+ * Function: FUN_8020a7d8
  * EN v1.0 Address: 0x8020A7D8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80231BF0
@@ -9217,14 +9217,14 @@ void FUN_80231a98(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80231bf0(undefined2 *param_1)
+void FUN_8020a7d8(undefined2 *param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80231cb0
+ * Function: FUN_8020a7dc
  * EN v1.0 Address: 0x8020A7DC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80231CB0
@@ -9234,7 +9234,7 @@ void FUN_80231bf0(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80231cb0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a7dc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,undefined4 param_10,int param_11)
 {
@@ -9243,7 +9243,7 @@ void FUN_80231cb0(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80231e6c
+ * Function: FUN_8020a7e0
  * EN v1.0 Address: 0x8020A7E0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80231E6C
@@ -9253,7 +9253,7 @@ void FUN_80231cb0(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80231e6c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a7e0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,undefined4 param_10,int param_11)
 {
@@ -9262,7 +9262,7 @@ void FUN_80231e6c(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8023203c
+ * Function: FUN_8020a7e4
  * EN v1.0 Address: 0x8020A7E4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023203C
@@ -9272,14 +9272,14 @@ void FUN_80231e6c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023203c(int param_1)
+void FUN_8020a7e4(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80232064
+ * Function: FUN_8020a7e8
  * EN v1.0 Address: 0x8020A7E8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80232064
@@ -9289,7 +9289,7 @@ void FUN_8023203c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80232064(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void FUN_8020a7e8(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -9298,7 +9298,7 @@ void FUN_80232064(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_8023211c
+ * Function: FUN_8020a7ec
  * EN v1.0 Address: 0x8020A7EC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023211C
@@ -9308,14 +9308,14 @@ void FUN_80232064(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023211c(int param_1,int param_2)
+void FUN_8020a7ec(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80232154
+ * Function: FUN_8020a7f0
  * EN v1.0 Address: 0x8020A7F0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80232154
@@ -9325,14 +9325,14 @@ void FUN_8023211c(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80232154(int param_1,int param_2)
+void FUN_8020a7f0(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80232354
+ * Function: FUN_8020a7f4
  * EN v1.0 Address: 0x8020A7F4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80232354
@@ -9342,14 +9342,14 @@ void FUN_80232154(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80232354(void)
+void FUN_8020a7f4(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802324f4
+ * Function: FUN_8020a7f8
  * EN v1.0 Address: 0x8020A7F8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802324F4
@@ -9359,14 +9359,14 @@ void FUN_80232354(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802324f4(void)
+void FUN_8020a7f8(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802327fc
+ * Function: FUN_8020a7fc
  * EN v1.0 Address: 0x8020A7FC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802327FC
@@ -9376,14 +9376,14 @@ void FUN_802324f4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802327fc(ushort *param_1,float *param_2)
+void FUN_8020a7fc(ushort *param_1,float *param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023293c
+ * Function: FUN_8020a800
  * EN v1.0 Address: 0x8020A800
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023293C
@@ -9393,7 +9393,7 @@ void FUN_802327fc(ushort *param_1,float *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023293c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a800(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,undefined4 param_10,int param_11,char param_12)
 {
@@ -9402,7 +9402,7 @@ void FUN_8023293c(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80232a70
+ * Function: FUN_8020a804
  * EN v1.0 Address: 0x8020A804
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80232A70
@@ -9412,7 +9412,7 @@ void FUN_8023293c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80232a70(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a804(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,int param_10)
 {
@@ -9421,7 +9421,7 @@ void FUN_80232a70(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80232d40
+ * Function: FUN_8020a808
  * EN v1.0 Address: 0x8020A808
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80232D40
@@ -9431,7 +9431,7 @@ void FUN_80232a70(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80232d40(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a808(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,int param_10,int param_11)
 {
@@ -9440,7 +9440,7 @@ void FUN_80232d40(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80232ecc
+ * Function: FUN_8020a80c
  * EN v1.0 Address: 0x8020A80C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80232ECC
@@ -9450,14 +9450,14 @@ void FUN_80232d40(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80232ecc(int param_1)
+void FUN_8020a80c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80232ef4
+ * Function: FUN_8020a810
  * EN v1.0 Address: 0x8020A810
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80232EF4
@@ -9467,7 +9467,7 @@ void FUN_80232ecc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80232ef4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a810(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
@@ -9475,7 +9475,7 @@ void FUN_80232ef4(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80233438
+ * Function: FUN_8020a814
  * EN v1.0 Address: 0x8020A814
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80233438
@@ -9485,14 +9485,14 @@ void FUN_80232ef4(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80233438(short *param_1,short *param_2)
+void FUN_8020a814(short *param_1,short *param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80233884
+ * Function: FUN_8020a818
  * EN v1.0 Address: 0x8020A818
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80233884
@@ -9502,14 +9502,14 @@ void FUN_80233438(short *param_1,short *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80233884(int param_1)
+void FUN_8020a818(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802338c4
+ * Function: FUN_8020a81c
  * EN v1.0 Address: 0x8020A81C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802338C4
@@ -9519,14 +9519,14 @@ void FUN_80233884(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802338c4(void)
+void FUN_8020a81c(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80233948
+ * Function: FUN_8020a820
  * EN v1.0 Address: 0x8020A820
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80233948
@@ -9536,7 +9536,7 @@ void FUN_802338c4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80233948(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a820(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -9545,7 +9545,7 @@ void FUN_80233948(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80233ebc
+ * Function: FUN_8020a824
  * EN v1.0 Address: 0x8020A824
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80233EBC
@@ -9555,14 +9555,14 @@ void FUN_80233948(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80233ebc(undefined2 *param_1,int param_2,int param_3)
+void FUN_8020a824(undefined2 *param_1,int param_2,int param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80234000
+ * Function: FUN_8020a828
  * EN v1.0 Address: 0x8020A828
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80234000
@@ -9572,14 +9572,14 @@ void FUN_80233ebc(undefined2 *param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80234000(int param_1)
+void FUN_8020a828(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80234028
+ * Function: FUN_8020a82c
  * EN v1.0 Address: 0x8020A82C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80234028
@@ -9589,14 +9589,14 @@ void FUN_80234000(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80234028(int param_1)
+void FUN_8020a82c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023415c
+ * Function: FUN_8020a830
  * EN v1.0 Address: 0x8020A830
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023415C
@@ -9606,14 +9606,14 @@ void FUN_80234028(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023415c(undefined2 *param_1,int param_2)
+void FUN_8020a830(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802341d0
+ * Function: FUN_8020a834
  * EN v1.0 Address: 0x8020A834
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802341D0
@@ -9623,14 +9623,14 @@ void FUN_8023415c(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802341d0(int param_1,char param_2)
+void FUN_8020a834(int param_1,char param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80234214
+ * Function: FUN_8020a838
  * EN v1.0 Address: 0x8020A838
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80234214
@@ -9640,14 +9640,14 @@ void FUN_802341d0(int param_1,char param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80234214(int param_1)
+void FUN_8020a838(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023425c
+ * Function: FUN_8020a83c
  * EN v1.0 Address: 0x8020A83C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023425C
@@ -9657,14 +9657,14 @@ void FUN_80234214(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023425c(int param_1)
+void FUN_8020a83c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802342a8
+ * Function: FUN_8020a840
  * EN v1.0 Address: 0x8020A840
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802342A8
@@ -9674,14 +9674,14 @@ void FUN_8023425c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802342a8(short *param_1)
+void FUN_8020a840(short *param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80234454
+ * Function: FUN_8020a844
  * EN v1.0 Address: 0x8020A844
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80234454
@@ -9691,14 +9691,14 @@ void FUN_802342a8(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80234454(short *param_1,int param_2)
+void FUN_8020a844(short *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80234710
+ * Function: FUN_8020a848
  * EN v1.0 Address: 0x8020A848
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80234710
@@ -9708,14 +9708,14 @@ void FUN_80234454(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80234710(short *param_1,char *param_2)
+void FUN_8020a848(short *param_1,char *param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80234a9c
+ * Function: FUN_8020a84c
  * EN v1.0 Address: 0x8020A84C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80234A9C
@@ -9725,14 +9725,14 @@ void FUN_80234710(short *param_1,char *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80234a9c(int param_1)
+void FUN_8020a84c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80234acc
+ * Function: FUN_8020a850
  * EN v1.0 Address: 0x8020A850
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80234ACC
@@ -9742,14 +9742,14 @@ void FUN_80234a9c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80234acc(int param_1)
+void FUN_8020a850(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80234af4
+ * Function: FUN_8020a854
  * EN v1.0 Address: 0x8020A854
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80234AF4
@@ -9759,14 +9759,14 @@ void FUN_80234acc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80234af4(short *param_1)
+void FUN_8020a854(short *param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80234c80
+ * Function: FUN_8020a858
  * EN v1.0 Address: 0x8020A858
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80234C80
@@ -9776,14 +9776,14 @@ void FUN_80234af4(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80234c80(short *param_1,int param_2)
+void FUN_8020a858(short *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80234e1c
+ * Function: FUN_8020a85c
  * EN v1.0 Address: 0x8020A85C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80234E1C
@@ -9793,14 +9793,14 @@ void FUN_80234c80(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80234e1c(int param_1)
+void FUN_8020a85c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80234e6c
+ * Function: FUN_8020a860
  * EN v1.0 Address: 0x8020A860
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80234E6C
@@ -9810,14 +9810,14 @@ void FUN_80234e1c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80234e6c(short *param_1)
+void FUN_8020a860(short *param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80234f64
+ * Function: FUN_8020a864
  * EN v1.0 Address: 0x8020A864
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80234F64
@@ -9827,14 +9827,14 @@ void FUN_80234e6c(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80234f64(short *param_1,int param_2)
+void FUN_8020a864(short *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802352f0
+ * Function: FUN_8020a868
  * EN v1.0 Address: 0x8020A868
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802352F0
@@ -9844,14 +9844,14 @@ void FUN_80234f64(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802352f0(void)
+void FUN_8020a868(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80235420
+ * Function: FUN_8020a86c
  * EN v1.0 Address: 0x8020A86C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80235420
@@ -9861,14 +9861,14 @@ void FUN_802352f0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80235420(int param_1,int param_2)
+void FUN_8020a86c(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802354b4
+ * Function: FUN_8020a870
  * EN v1.0 Address: 0x8020A870
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802354B4
@@ -9878,14 +9878,14 @@ void FUN_80235420(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802354b4(int param_1)
+void FUN_8020a870(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802354e8
+ * Function: FUN_8020a874
  * EN v1.0 Address: 0x8020A874
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802354E8
@@ -9895,7 +9895,7 @@ void FUN_802354b4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802354e8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a874(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -9905,7 +9905,7 @@ void FUN_802354e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_802355c0
+ * Function: FUN_8020a878
  * EN v1.0 Address: 0x8020A878
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802355C0
@@ -9915,7 +9915,7 @@ void FUN_802354e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802355c0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a878(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,int param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -9925,7 +9925,7 @@ void FUN_802355c0(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80235700
+ * Function: FUN_8020a87c
  * EN v1.0 Address: 0x8020A87C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80235700
@@ -9935,14 +9935,14 @@ void FUN_802355c0(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80235700(undefined4 param_1,undefined4 param_2,float *param_3)
+void FUN_8020a87c(undefined4 param_1,undefined4 param_2,float *param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80235b5c
+ * Function: FUN_8020a880
  * EN v1.0 Address: 0x8020A880
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80235B5C
@@ -9952,14 +9952,14 @@ void FUN_80235700(undefined4 param_1,undefined4 param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80235b5c(int param_1)
+void FUN_8020a880(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80235b90
+ * Function: FUN_8020a884
  * EN v1.0 Address: 0x8020A884
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80235B90
@@ -9969,7 +9969,7 @@ void FUN_80235b5c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80235b90(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void FUN_8020a884(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -9979,7 +9979,7 @@ void FUN_80235b90(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_80235cac
+ * Function: FUN_8020a888
  * EN v1.0 Address: 0x8020A888
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80235CAC
@@ -9989,7 +9989,7 @@ void FUN_80235b90(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80235cac(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a888(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,int param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -9999,7 +9999,7 @@ void FUN_80235cac(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80235d90
+ * Function: FUN_8020a88c
  * EN v1.0 Address: 0x8020A88C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80235D90
@@ -10009,7 +10009,7 @@ void FUN_80235cac(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80235d90(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a88c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,char param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -10019,7 +10019,7 @@ void FUN_80235d90(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80235eac
+ * Function: FUN_8020a890
  * EN v1.0 Address: 0x8020A890
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80235EAC
@@ -10029,7 +10029,7 @@ void FUN_80235d90(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80235eac(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a890(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
@@ -10037,7 +10037,7 @@ void FUN_80235eac(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80235fc8
+ * Function: FUN_8020a894
  * EN v1.0 Address: 0x8020A894
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80235FC8
@@ -10047,14 +10047,14 @@ void FUN_80235eac(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80235fc8(void)
+void FUN_8020a894(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80236090
+ * Function: FUN_8020a898
  * EN v1.0 Address: 0x8020A898
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80236090
@@ -10064,7 +10064,7 @@ void FUN_80235fc8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80236090(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void FUN_8020a898(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9)
 {
@@ -10073,7 +10073,7 @@ void FUN_80236090(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_80236554
+ * Function: FUN_8020a89c
  * EN v1.0 Address: 0x8020A89C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80236554
@@ -10083,7 +10083,7 @@ void FUN_80236090(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80236554(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void FUN_8020a89c(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,int param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -10093,7 +10093,7 @@ void FUN_80236554(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_80236820
+ * Function: FUN_8020a8a0
  * EN v1.0 Address: 0x8020A8A0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80236820
@@ -10103,14 +10103,14 @@ void FUN_80236554(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80236820(int param_1)
+void FUN_8020a8a0(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80236858
+ * Function: FUN_8020a8a4
  * EN v1.0 Address: 0x8020A8A4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80236858
@@ -10120,14 +10120,14 @@ void FUN_80236820(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80236858(short *param_1,int param_2)
+void FUN_8020a8a4(short *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023695c
+ * Function: FUN_8020a8a8
  * EN v1.0 Address: 0x8020A8A8
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8023695C
@@ -10137,7 +10137,7 @@ void FUN_80236858(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8023695c(undefined4 param_1,int *param_2,int param_3)
+undefined4 FUN_8020a8a8(undefined4 param_1,int *param_2,int param_3)
 {
     return 0;
 }
@@ -10145,7 +10145,7 @@ undefined4 FUN_8023695c(undefined4 param_1,int *param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_80236a4c
+ * Function: FUN_8020a8b0
  * EN v1.0 Address: 0x8020A8B0
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80236A4C
@@ -10155,7 +10155,7 @@ undefined4 FUN_8023695c(undefined4 param_1,int *param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80236a4c(undefined4 param_1,int *param_2,int param_3)
+undefined4 FUN_8020a8b0(undefined4 param_1,int *param_2,int param_3)
 {
     return 0;
 }
@@ -10163,7 +10163,7 @@ undefined4 FUN_80236a4c(undefined4 param_1,int *param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_80236b44
+ * Function: FUN_8020a8b8
  * EN v1.0 Address: 0x8020A8B8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80236B44
@@ -10173,7 +10173,7 @@ undefined4 FUN_80236a4c(undefined4 param_1,int *param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80236b44(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void FUN_8020a8b8(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
@@ -10181,7 +10181,7 @@ void FUN_80236b44(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_80236d30
+ * Function: FUN_8020a8bc
  * EN v1.0 Address: 0x8020A8BC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80236D30
@@ -10191,7 +10191,7 @@ void FUN_80236b44(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80236d30(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a8bc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
@@ -10199,7 +10199,7 @@ void FUN_80236d30(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_802371b0
+ * Function: FUN_8020a8c0
  * EN v1.0 Address: 0x8020A8C0
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802371B0
@@ -10210,7 +10210,7 @@ void FUN_80236d30(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Size: TODO
  */
 undefined4
-FUN_802371b0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a8c0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9)
 {
     return 0;
@@ -10219,7 +10219,7 @@ FUN_802371b0(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_802371d4
+ * Function: FUN_8020a8c8
  * EN v1.0 Address: 0x8020A8C8
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802371D4
@@ -10229,7 +10229,7 @@ FUN_802371b0(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_802371d4(int param_1)
+int FUN_8020a8c8(int param_1)
 {
     return 0;
 }
@@ -10237,7 +10237,7 @@ int FUN_802371d4(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_802371fc
+ * Function: FUN_8020a8d0
  * EN v1.0 Address: 0x8020A8D0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802371FC
@@ -10247,14 +10247,14 @@ int FUN_802371d4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802371fc(int param_1,char param_2)
+void FUN_8020a8d0(int param_1,char param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80237244
+ * Function: FUN_8020a8d4
  * EN v1.0 Address: 0x8020A8D4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80237244
@@ -10264,14 +10264,14 @@ void FUN_802371fc(int param_1,char param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80237244(int param_1)
+void FUN_8020a8d4(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802372a8
+ * Function: FUN_8020a8d8
  * EN v1.0 Address: 0x8020A8D8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802372A8
@@ -10281,14 +10281,14 @@ void FUN_80237244(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802372a8(void)
+void FUN_8020a8d8(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80237360
+ * Function: FUN_8020a8dc
  * EN v1.0 Address: 0x8020A8DC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80237360
@@ -10298,14 +10298,14 @@ void FUN_802372a8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80237360(int param_1)
+void FUN_8020a8dc(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80237448
+ * Function: FUN_8020a8e0
  * EN v1.0 Address: 0x8020A8E0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80237448
@@ -10315,7 +10315,7 @@ void FUN_80237360(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80237448(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a8e0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
 {
@@ -10324,7 +10324,7 @@ void FUN_80237448(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80237654
+ * Function: FUN_8020a8e4
  * EN v1.0 Address: 0x8020A8E4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80237654
@@ -10334,14 +10334,14 @@ void FUN_80237448(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80237654(void)
+void FUN_8020a8e4(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80237c48
+ * Function: FUN_8020a8e8
  * EN v1.0 Address: 0x8020A8E8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80237C48
@@ -10351,14 +10351,14 @@ void FUN_80237654(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80237c48(void)
+void FUN_8020a8e8(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80237c88
+ * Function: FUN_8020a8ec
  * EN v1.0 Address: 0x8020A8EC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80237C88
@@ -10368,14 +10368,14 @@ void FUN_80237c48(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80237c88(int param_1)
+void FUN_8020a8ec(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80237edc
+ * Function: FUN_8020a8f0
  * EN v1.0 Address: 0x8020A8F0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80237EDC
@@ -10385,14 +10385,14 @@ void FUN_80237c88(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80237edc(void)
+void FUN_8020a8f0(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80237f0c
+ * Function: FUN_8020a8f4
  * EN v1.0 Address: 0x8020A8F4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80237F0C
@@ -10402,14 +10402,14 @@ void FUN_80237edc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80237f0c(void)
+void FUN_8020a8f4(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802386b8
+ * Function: FUN_8020a8f8
  * EN v1.0 Address: 0x8020A8F8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802386B8
@@ -10419,14 +10419,14 @@ void FUN_80237f0c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802386b8(int param_1)
+void FUN_8020a8f8(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802387f0
+ * Function: FUN_8020a8fc
  * EN v1.0 Address: 0x8020A8FC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802387F0
@@ -10436,14 +10436,14 @@ void FUN_802386b8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802387f0(void)
+void FUN_8020a8fc(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80238ab4
+ * Function: FUN_8020a900
  * EN v1.0 Address: 0x8020A900
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80238AB4
@@ -10453,14 +10453,14 @@ void FUN_802387f0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80238ab4(int param_1)
+void FUN_8020a900(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80238af0
+ * Function: FUN_8020a904
  * EN v1.0 Address: 0x8020A904
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80238AF0
@@ -10470,14 +10470,14 @@ void FUN_80238ab4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80238af0(int param_1)
+void FUN_8020a904(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80238bf0
+ * Function: FUN_8020a908
  * EN v1.0 Address: 0x8020A908
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80238BF0
@@ -10487,14 +10487,14 @@ void FUN_80238af0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80238bf0(int param_1,uint param_2)
+void FUN_8020a908(int param_1,uint param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80238c8c
+ * Function: FUN_8020a90c
  * EN v1.0 Address: 0x8020A90C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80238C8C
@@ -10504,14 +10504,14 @@ void FUN_80238bf0(int param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80238c8c(int param_1)
+void FUN_8020a90c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80238cb0
+ * Function: FUN_8020a910
  * EN v1.0 Address: 0x8020A910
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80238CB0
@@ -10521,14 +10521,14 @@ void FUN_80238c8c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80238cb0(int param_1)
+void FUN_8020a910(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80238cc8
+ * Function: FUN_8020a914
  * EN v1.0 Address: 0x8020A914
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80238CC8
@@ -10538,7 +10538,7 @@ void FUN_80238cb0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80238cc8(int param_1)
+uint FUN_8020a914(int param_1)
 {
     return 0;
 }
@@ -10546,7 +10546,7 @@ uint FUN_80238cc8(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80238ce0
+ * Function: FUN_8020a91c
  * EN v1.0 Address: 0x8020A91C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80238CE0
@@ -10556,7 +10556,7 @@ uint FUN_80238cc8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-byte FUN_80238ce0(int param_1)
+byte FUN_8020a91c(int param_1)
 {
     return 0;
 }
@@ -10564,7 +10564,7 @@ byte FUN_80238ce0(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80238cf8
+ * Function: FUN_8020a924
  * EN v1.0 Address: 0x8020A924
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80238CF8
@@ -10574,14 +10574,14 @@ byte FUN_80238ce0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80238cf8(int param_1)
+void FUN_8020a924(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80238d40
+ * Function: FUN_8020a928
  * EN v1.0 Address: 0x8020A928
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80238D40
@@ -10591,14 +10591,14 @@ void FUN_80238cf8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80238d40(void)
+void FUN_8020a928(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80238dd4
+ * Function: FUN_8020a92c
  * EN v1.0 Address: 0x8020A92C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80238DD4
@@ -10608,7 +10608,7 @@ void FUN_80238d40(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80238dd4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a92c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
@@ -10616,7 +10616,7 @@ void FUN_80238dd4(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80239114
+ * Function: FUN_8020a930
  * EN v1.0 Address: 0x8020A930
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80239114
@@ -10626,14 +10626,14 @@ void FUN_80238dd4(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80239114(int param_1,int param_2)
+void FUN_8020a930(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802391a8
+ * Function: FUN_8020a934
  * EN v1.0 Address: 0x8020A934
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802391A8
@@ -10644,7 +10644,7 @@ void FUN_80239114(int param_1,int param_2)
  * PAL Size: TODO
  */
 undefined4
-FUN_802391a8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a934(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,
             undefined4 param_10,int param_11)
 {
@@ -10654,7 +10654,7 @@ FUN_802391a8(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_80239270
+ * Function: FUN_8020a93c
  * EN v1.0 Address: 0x8020A93C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80239270
@@ -10664,14 +10664,14 @@ FUN_802391a8(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80239270(int param_1)
+void FUN_8020a93c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802392b8
+ * Function: FUN_8020a940
  * EN v1.0 Address: 0x8020A940
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802392B8
@@ -10681,7 +10681,7 @@ void FUN_80239270(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802392b8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a940(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
 {
@@ -10690,7 +10690,7 @@ void FUN_802392b8(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80239460
+ * Function: FUN_8020a944
  * EN v1.0 Address: 0x8020A944
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80239460
@@ -10700,14 +10700,14 @@ void FUN_802392b8(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80239460(int param_1)
+void FUN_8020a944(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023952c
+ * Function: FUN_8020a948
  * EN v1.0 Address: 0x8020A948
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023952C
@@ -10717,14 +10717,14 @@ void FUN_80239460(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023952c(undefined2 *param_1,int param_2)
+void FUN_8020a948(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80239648
+ * Function: FUN_8020a94c
  * EN v1.0 Address: 0x8020A94C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80239648
@@ -10734,7 +10734,7 @@ void FUN_8023952c(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80239648(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_8020a94c(int param_1,undefined4 param_2,int param_3)
 {
     return 0;
 }
@@ -10742,7 +10742,7 @@ undefined4 FUN_80239648(int param_1,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_8023969c
+ * Function: FUN_8020a954
  * EN v1.0 Address: 0x8020A954
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023969C
@@ -10752,14 +10752,14 @@ undefined4 FUN_80239648(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023969c(int param_1)
+void FUN_8020a954(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023974c
+ * Function: FUN_8020a958
  * EN v1.0 Address: 0x8020A958
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8023974C
@@ -10769,7 +10769,7 @@ void FUN_8023969c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8023974c(undefined4 param_1,undefined4 param_2,int param_3)
+undefined4 FUN_8020a958(undefined4 param_1,undefined4 param_2,int param_3)
 {
     return 0;
 }
@@ -10777,7 +10777,7 @@ undefined4 FUN_8023974c(undefined4 param_1,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_8023980c
+ * Function: FUN_8020a960
  * EN v1.0 Address: 0x8020A960
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023980C
@@ -10787,14 +10787,14 @@ undefined4 FUN_8023974c(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023980c(int param_1)
+void FUN_8020a960(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802398bc
+ * Function: FUN_8020a964
  * EN v1.0 Address: 0x8020A964
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802398BC
@@ -10804,7 +10804,7 @@ void FUN_8023980c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_802398bc(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_8020a964(int param_1,undefined4 param_2,int param_3)
 {
     return 0;
 }
@@ -10812,7 +10812,7 @@ undefined4 FUN_802398bc(int param_1,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_802399b0
+ * Function: FUN_8020a96c
  * EN v1.0 Address: 0x8020A96C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802399B0
@@ -10822,14 +10822,14 @@ undefined4 FUN_802398bc(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802399b0(int param_1)
+void FUN_8020a96c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80239a84
+ * Function: FUN_8020a970
  * EN v1.0 Address: 0x8020A970
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80239A84
@@ -10839,7 +10839,7 @@ void FUN_802399b0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80239a84(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_8020a970(int param_1,undefined4 param_2,int param_3)
 {
     return 0;
 }
@@ -10847,7 +10847,7 @@ undefined4 FUN_80239a84(int param_1,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_80239bd8
+ * Function: FUN_8020a978
  * EN v1.0 Address: 0x8020A978
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80239BD8
@@ -10857,14 +10857,14 @@ undefined4 FUN_80239a84(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80239bd8(int param_1)
+void FUN_8020a978(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80239c18
+ * Function: FUN_8020a97c
  * EN v1.0 Address: 0x8020A97C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80239C18
@@ -10874,14 +10874,14 @@ void FUN_80239bd8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80239c18(void)
+void FUN_8020a97c(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80239e70
+ * Function: FUN_8020a980
  * EN v1.0 Address: 0x8020A980
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80239E70
@@ -10891,14 +10891,14 @@ void FUN_80239c18(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80239e70(int param_1)
+void FUN_8020a980(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80239edc
+ * Function: FUN_8020a984
  * EN v1.0 Address: 0x8020A984
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80239EDC
@@ -10908,14 +10908,14 @@ void FUN_80239e70(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80239edc(int param_1,int param_2)
+void FUN_8020a984(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80239f50
+ * Function: FUN_8020a988
  * EN v1.0 Address: 0x8020A988
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80239F50
@@ -10925,14 +10925,14 @@ void FUN_80239edc(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80239f50(int param_1)
+void FUN_8020a988(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023a02c
+ * Function: FUN_8020a98c
  * EN v1.0 Address: 0x8020A98C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8023A02C
@@ -10943,7 +10943,7 @@ void FUN_80239f50(int param_1)
  * PAL Size: TODO
  */
 undefined4
-FUN_8023a02c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_8020a98c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10
             ,int param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16)
@@ -10954,7 +10954,7 @@ FUN_8023a02c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_8023a420
+ * Function: FUN_8020a994
  * EN v1.0 Address: 0x8020A994
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023A420
@@ -10964,14 +10964,14 @@ FUN_8023a02c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023a420(void)
+void FUN_8020a994(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023a444
+ * Function: FUN_8020a998
  * EN v1.0 Address: 0x8020A998
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023A444
@@ -10981,14 +10981,14 @@ void FUN_8023a420(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023a444(int param_1)
+void FUN_8020a998(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023a488
+ * Function: FUN_8020a99c
  * EN v1.0 Address: 0x8020A99C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023A488
@@ -10998,14 +10998,14 @@ void FUN_8023a444(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023a488(void)
+void FUN_8020a99c(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023a4d0
+ * Function: FUN_8020a9a0
  * EN v1.0 Address: 0x8020A9A0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023A4D0
@@ -11015,7 +11015,7 @@ void FUN_8023a488(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023a4d0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a9a0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10)
 {
@@ -11024,7 +11024,7 @@ void FUN_8023a4d0(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8023a5a4
+ * Function: FUN_8020a9a4
  * EN v1.0 Address: 0x8020A9A4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023A5A4
@@ -11034,14 +11034,14 @@ void FUN_8023a4d0(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023a5a4(void)
+void FUN_8020a9a4(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023a6c4
+ * Function: FUN_8020a9a8
  * EN v1.0 Address: 0x8020A9A8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023A6C4
@@ -11051,7 +11051,7 @@ void FUN_8023a5a4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023a6c4(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void FUN_8020a9a8(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
@@ -11059,7 +11059,7 @@ void FUN_8023a6c4(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_8023a860
+ * Function: FUN_8020a9ac
  * EN v1.0 Address: 0x8020A9AC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023A860
@@ -11069,7 +11069,7 @@ void FUN_8023a6c4(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023a860(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a9ac(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,int param_10)
 {
@@ -11078,7 +11078,7 @@ void FUN_8023a860(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8023a960
+ * Function: FUN_8020a9b0
  * EN v1.0 Address: 0x8020A9B0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023A960
@@ -11088,7 +11088,7 @@ void FUN_8023a860(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023a960(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void FUN_8020a9b0(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,int *param_10)
 {
@@ -11097,7 +11097,7 @@ void FUN_8023a960(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_8023aadc
+ * Function: FUN_8020a9b4
  * EN v1.0 Address: 0x8020A9B4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023AADC
@@ -11107,14 +11107,14 @@ void FUN_8023a960(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023aadc(void)
+void FUN_8020a9b4(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023ad80
+ * Function: FUN_8020a9b8
  * EN v1.0 Address: 0x8020A9B8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023AD80
@@ -11124,14 +11124,14 @@ void FUN_8023aadc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023ad80(int param_1,byte param_2)
+void FUN_8020a9b8(int param_1,byte param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023ad9c
+ * Function: FUN_8020a9bc
  * EN v1.0 Address: 0x8020A9BC
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8023AD9C
@@ -11141,7 +11141,7 @@ void FUN_8023ad80(int param_1,byte param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8023ad9c(double param_1,double param_2,double param_3,int *param_4)
+undefined4 FUN_8020a9bc(double param_1,double param_2,double param_3,int *param_4)
 {
     return 0;
 }
@@ -11149,7 +11149,7 @@ undefined4 FUN_8023ad9c(double param_1,double param_2,double param_3,int *param_
 /*
  * --INFO--
  *
- * Function: FUN_8023af74
+ * Function: FUN_8020a9c4
  * EN v1.0 Address: 0x8020A9C4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023AF74
@@ -11159,7 +11159,7 @@ undefined4 FUN_8023ad9c(double param_1,double param_2,double param_3,int *param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023af74(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void FUN_8020a9c4(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10)
 {
@@ -11168,7 +11168,7 @@ void FUN_8023af74(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_8023b06c
+ * Function: FUN_8020a9c8
  * EN v1.0 Address: 0x8020A9C8
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8023B06C
@@ -11178,7 +11178,7 @@ void FUN_8023af74(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8023b06c(int param_1)
+undefined4 FUN_8020a9c8(int param_1)
 {
     return 0;
 }
@@ -11186,7 +11186,7 @@ undefined4 FUN_8023b06c(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8023b110
+ * Function: FUN_8020a9d0
  * EN v1.0 Address: 0x8020A9D0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023B110
@@ -11196,14 +11196,14 @@ undefined4 FUN_8023b06c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023b110(void)
+void FUN_8020a9d0(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023b134
+ * Function: FUN_8020a9d4
  * EN v1.0 Address: 0x8020A9D4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023B134
@@ -11213,14 +11213,14 @@ void FUN_8023b110(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023b134(int param_1)
+void FUN_8020a9d4(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023b15c
+ * Function: FUN_8020a9d8
  * EN v1.0 Address: 0x8020A9D8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023B15C
@@ -11230,7 +11230,7 @@ void FUN_8023b134(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023b15c(undefined8 param_1,double param_2,double param_3,double param_4,double param_5,
+void FUN_8020a9d8(undefined8 param_1,double param_2,double param_3,double param_4,double param_5,
                  undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
@@ -11238,7 +11238,7 @@ void FUN_8023b15c(undefined8 param_1,double param_2,double param_3,double param_
 /*
  * --INFO--
  *
- * Function: FUN_8023f634
+ * Function: FUN_8020a9dc
  * EN v1.0 Address: 0x8020A9DC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023F634
@@ -11248,14 +11248,14 @@ void FUN_8023b15c(undefined8 param_1,double param_2,double param_3,double param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023f634(undefined2 *param_1,int param_2)
+void FUN_8020a9dc(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023f754
+ * Function: FUN_8020a9e0
  * EN v1.0 Address: 0x8020A9E0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023F754
@@ -11265,7 +11265,7 @@ void FUN_8023f634(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023f754(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void FUN_8020a9e0(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,int param_10)
 {
@@ -11274,7 +11274,7 @@ void FUN_8023f754(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_8023f8f4
+ * Function: FUN_8020a9e4
  * EN v1.0 Address: 0x8020A9E4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023F8F4
@@ -11284,14 +11284,14 @@ void FUN_8023f754(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023f8f4(uint param_1,int *param_2)
+void FUN_8020a9e4(uint param_1,int *param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023fa94
+ * Function: FUN_8020a9e8
  * EN v1.0 Address: 0x8020A9E8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023FA94
@@ -11301,14 +11301,14 @@ void FUN_8023f8f4(uint param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023fa94(int param_1,char param_2,char param_3)
+void FUN_8020a9e8(int param_1,char param_2,char param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023fb38
+ * Function: FUN_8020a9ec
  * EN v1.0 Address: 0x8020A9EC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023FB38
@@ -11318,14 +11318,14 @@ void FUN_8023fa94(int param_1,char param_2,char param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023fb38(int param_1)
+void FUN_8020a9ec(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8023fb60
+ * Function: FUN_8020a9f0
  * EN v1.0 Address: 0x8020A9F0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8023FB60
@@ -11335,7 +11335,7 @@ void FUN_8023fb38(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8023fb60(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a9f0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9)
 {
@@ -11344,7 +11344,7 @@ void FUN_8023fb60(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_802402ec
+ * Function: FUN_8020a9f4
  * EN v1.0 Address: 0x8020A9F4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802402EC
@@ -11354,7 +11354,7 @@ void FUN_8023fb60(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802402ec(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void FUN_8020a9f4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -11364,7 +11364,7 @@ void FUN_802402ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_80240384
+ * Function: FUN_8020a9f8
  * EN v1.0 Address: 0x8020A9F8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80240384
@@ -11374,14 +11374,14 @@ void FUN_802402ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80240384(int param_1,undefined param_2,char param_3)
+void FUN_8020a9f8(int param_1,undefined param_2,char param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80240408
+ * Function: FUN_8020a9fc
  * EN v1.0 Address: 0x8020A9FC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80240408
@@ -11391,14 +11391,14 @@ void FUN_80240384(int param_1,undefined param_2,char param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80240408(int param_1)
+void FUN_8020a9fc(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80240430
+ * Function: FUN_8020aa00
  * EN v1.0 Address: 0x8020AA00
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80240430
@@ -11408,14 +11408,14 @@ void FUN_80240408(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80240430(undefined2 *param_1)
+void FUN_8020aa00(undefined2 *param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802406d8
+ * Function: FUN_8020aa04
  * EN v1.0 Address: 0x8020AA04
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802406D8
@@ -11425,14 +11425,14 @@ void FUN_80240430(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802406d8(int param_1)
+void FUN_8020aa04(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80240708
+ * Function: FUN_8020aa08
  * EN v1.0 Address: 0x8020AA08
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80240708
@@ -11442,14 +11442,14 @@ void FUN_802406d8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80240708(int param_1,int param_2)
+void FUN_8020aa08(int param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80240910
+ * Function: FUN_8020aa0c
  * EN v1.0 Address: 0x8020AA0C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80240910
@@ -11459,14 +11459,14 @@ void FUN_80240708(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80240910(int param_1,undefined param_2,char param_3)
+void FUN_8020aa0c(int param_1,undefined param_2,char param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80240958
+ * Function: FUN_8020aa10
  * EN v1.0 Address: 0x8020AA10
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80240958
@@ -11476,14 +11476,14 @@ void FUN_80240910(int param_1,undefined param_2,char param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80240958(int param_1)
+void FUN_8020aa10(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8024098c
+ * Function: FUN_8020aa14
  * EN v1.0 Address: 0x8020AA14
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8024098C
@@ -11493,6 +11493,6 @@ void FUN_80240958(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8024098c(int param_1)
+void FUN_8020aa14(int param_1)
 {
 }

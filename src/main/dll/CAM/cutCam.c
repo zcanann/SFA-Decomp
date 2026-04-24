@@ -2,32 +2,32 @@
 #include "main/dll/CAM/cutCam.h"
 
 extern int FUN_800033a8();
-extern undefined4 FUN_8000e054();
-extern undefined4 FUN_8000e0c0();
-extern undefined4 FUN_800134f4();
-extern undefined4 FUN_80013590();
-extern ushort FUN_80014dc8();
-extern uint FUN_80014e9c();
-extern uint FUN_80021884();
-extern char FUN_80064248();
-extern undefined4 FUN_80067ad4();
-extern undefined4 FUN_8006933c();
+extern undefined4 FUN_800068f4();
+extern undefined4 FUN_800068f8();
+extern undefined4 FUN_80006a88();
+extern undefined4 FUN_80006a8c();
+extern ushort FUN_80006be8();
+extern uint FUN_80006c00();
+extern uint FUN_80017730();
+extern char FUN_800620e8();
+extern undefined4 FUN_80063a68();
+extern undefined4 FUN_80063a74();
 extern void trackDolphin_buildSweptBounds(uint *boundsOut,float *startPoints,float *endPoints,
                                           float *radii,int pointCount);
-extern int FUN_80080490();
-extern undefined4 FUN_80101c10();
+extern int FUN_8007f7c0();
+extern undefined4 FUN_80101980();
 extern undefined4 FUN_802473cc();
 extern undefined4 FUN_8028681c();
 extern undefined8 FUN_8028683c();
 extern undefined4 FUN_80286868();
 extern undefined4 FUN_80286888();
 extern double FUN_80293900();
-extern undefined4 FUN_802945e0();
+extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
-extern uint FUN_8029636c();
-extern int FUN_80296a14();
-extern int FUN_80296e60();
-extern undefined4 FUN_80297334();
+extern uint FUN_80294bf4();
+extern int FUN_80294c88();
+extern int FUN_80294d10();
+extern undefined4 FUN_80294d78();
 
 extern undefined4 DAT_803a4ed8;
 extern undefined4 gCamcontrolTargetTypeMask;
@@ -96,7 +96,7 @@ void camcontrol_setPosition(double param_1,double param_2,double param_3,undefin
 /*
  * --INFO--
  *
- * Function: FUN_80103738
+ * Function: FUN_80103620
  * EN v1.0 Address: 0x80103620
  * EN v1.0 Size: 40b
  * EN v1.1 Address: 0x80103738
@@ -106,9 +106,9 @@ void camcontrol_setPosition(double param_1,double param_2,double param_3,undefin
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80103738(void)
+void FUN_80103620(void)
 {
-  FUN_800134f4();
+  FUN_80006a88();
   DAT_803de143 = 0xff;
   return;
 }
@@ -143,7 +143,7 @@ void camcontrol_resetState(undefined8 param_1,double param_2,double param_3,unde
   uVar2 = 0;
   uVar3 = 0x144;
   iVar1 = FUN_800033a8(-0x7fc5b128,0,0x144);
-  FUN_80013590(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,uVar2,uVar3,
+  FUN_80006a8c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,uVar2,uVar3,
                in_r6,in_r7,in_r8,in_r9,in_r10);
   gCamcontrolCurrentActionId = 0xffffffff;
   DAT_803de18c = 0xffffffff;
@@ -188,14 +188,14 @@ camcontrol_traceMove(double param_1,float *param_2,float *param_3,float *param_4
   *(undefined2 *)(param_5 + 0x6c) = 0;
   cVar2 = '\0';
   if (param_8 != '\0') {
-    cVar2 = FUN_80064248(param_2,param_4,(float *)0x1,(int *)0x0,(int *)0x0,0x10,0xffffffff,0xff,0);
+    cVar2 = FUN_800620e8(param_2,param_4,(float *)0x1,(int *)0x0,(int *)0x0,0x10,0xffffffff,0xff,0);
   }
   DAT_803de1a0 = cVar2;
   if (param_7 != '\0') {
     trackDolphin_buildSweptBounds(auStack_34,param_2,param_4,(float *)(param_5 + 0x40),1);
-    FUN_8006933c(0,auStack_34,0x240,'\x01');
+    FUN_80063a74(0,auStack_34,0x240,'\x01');
   }
-  FUN_80067ad4();
+  FUN_80063a68();
   uVar1 = 0;
   if ((DAT_803de1a0 == '\0') && (*(short *)(param_5 + 0x6c) == 0)) {
     uVar1 = 1;
@@ -206,7 +206,7 @@ camcontrol_traceMove(double param_1,float *param_2,float *param_3,float *param_4
 /*
  * --INFO--
  *
- * Function: FUN_801038fc
+ * Function: FUN_80103884
  * EN v1.0 Address: 0x80103884
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801038FC
@@ -216,7 +216,7 @@ camcontrol_traceMove(double param_1,float *param_2,float *param_3,float *param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801038fc(void)
+void FUN_80103884(void)
 {
   return;
 }
@@ -243,7 +243,7 @@ undefined camcontrol_traceFromTarget(float *param_1,int param_2,float *param_3)
   undefined local_e;
   
   if (*(short *)(param_2 + 0x44) == 1) {
-    FUN_80297334(param_2,&local_88,&local_84,&local_80);
+    FUN_80294d78(param_2,&local_88,&local_84,&local_80);
   }
   else {
     local_88 = *(float *)(param_2 + 0x18);
@@ -297,7 +297,7 @@ undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3
   
   uStack_3c = (int)*param_2 ^ 0x80000000;
   local_40 = 0x43300000;
-  dVar6 = (double)FUN_802945e0();
+  dVar6 = (double)FUN_80293f90();
   uStack_34 = (int)*param_2 ^ 0x80000000;
   local_38 = 0x43300000;
   dVar7 = (double)FUN_80294964();
@@ -315,7 +315,7 @@ undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3
   fVar2 = *(float *)(param_2 + 0xc);
   fVar3 = *(float *)(param_2 + 0x10);
   if (param_2[0x22] == 1) {
-    FUN_80297334((int)param_2,&local_bc,&local_b8,&local_b4);
+    FUN_80294d78((int)param_2,&local_bc,&local_b8,&local_b4);
     fVar2 = local_bc;
     fVar1 = local_b8;
     fVar3 = local_b4;
@@ -330,7 +330,7 @@ undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3
              &local_cc,0);
   local_d4 = *(float *)(param_1 + 0x1c) -
              (*(float *)(param_2 + 0xe) + *(float *)(gCamcontrolModeSettings + 0x8c));
-  uVar4 = FUN_80021884();
+  uVar4 = FUN_80017730();
   iVar5 = (uVar4 & 0xffff) - (uint)*(ushort *)(param_1 + 2);
   if (0x8000 < iVar5) {
     iVar5 = iVar5 + -0xffff;
@@ -373,16 +373,16 @@ void camcontrol_updateTargetAction(int param_1,int param_2)
   longlong local_18;
   
   if (*(int *)(param_2 + 0xc0) == 0) {
-    uVar2 = FUN_80014e9c(0);
+    uVar2 = FUN_80006c00(0);
     if ((((*(int *)(param_1 + 0x124) == 0) ||
          (((sVar1 = *(short *)(*(int *)(param_1 + 0x124) + 0x44), sVar1 != 0x1c && (sVar1 != 0x2a))
           || (*(short *)(param_2 + 0x44) != 1)))) ||
-        ((iVar3 = FUN_80296e60(param_2), iVar3 == 0 || (uVar4 = FUN_8029636c(param_2), uVar4 == 0)))
+        ((iVar3 = FUN_80294d10(param_2), iVar3 == 0 || (uVar4 = FUN_80294bf4(param_2), uVar4 == 0)))
         ) && ((*(byte *)(param_1 + 0x141) & 2) == 0)) {
       if ((((uVar2 & 0x10) == 0) || (*(short *)(param_2 + 0x44) != 1)) ||
-         (iVar3 = FUN_80296a14(param_2), iVar3 == 0)) {
-        iVar3 = FUN_80080490();
-        if (((iVar3 == 0) && (uVar5 = FUN_80014dc8(0), (uVar5 & 0x40) != 0)) &&
+         (iVar3 = FUN_80294c88(param_2), iVar3 == 0)) {
+        iVar3 = FUN_8007f7c0();
+        if (((iVar3 == 0) && (uVar5 = FUN_80006be8(0), (uVar5 & 0x40) != 0)) &&
            ((*(ushort *)(param_1 + 6) & 4) == 0)) {
           local_28 = 5;
           local_26 = 1;
@@ -395,12 +395,12 @@ void camcontrol_updateTargetAction(int param_1,int param_2)
         local_20 = gCamcontrolModeSettings[2];
         local_18 = (longlong)(int)(float)gCamcontrolModeSettings[0x23];
         local_1c = (undefined2)(int)(float)gCamcontrolModeSettings[0x23];
-        FUN_80101c10(0);
+        FUN_80101980(0);
         (**(code **)(*DAT_803dd6d0 + 0x1c))(0x44,1,0,0xc,&local_24,0xf,0xfe);
       }
     }
     else {
-      FUN_80101c10(1);
+      FUN_80101980(1);
       (**(code **)(*DAT_803dd6d0 + 0x1c))(0x49,1,0,4,param_1 + 0x124,0x3c,0xff);
     }
   }
@@ -410,7 +410,7 @@ void camcontrol_updateTargetAction(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80103ddc
+ * Function: FUN_80103e00
  * EN v1.0 Address: 0x80103E00
  * EN v1.0 Size: 1468b
  * EN v1.1 Address: 0x80103DDC
@@ -420,7 +420,7 @@ void camcontrol_updateTargetAction(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80103ddc(void)
+void FUN_80103e00(void)
 {
   float fVar1;
   float fVar2;
@@ -496,7 +496,7 @@ void FUN_80103ddc(void)
   local_288[2] = local_2dc[2];
   local_1a8 = local_2dc[1];
   if (*(short *)(local_120 + 0x44) == 1) {
-    FUN_80297334(local_120,&local_2e8,&local_2e4,&local_2e0);
+    FUN_80294d78(local_120,&local_2e8,&local_2e4,&local_2e0);
   }
   else {
     local_2e8 = *(float *)(local_120 + 0x18);
@@ -518,7 +518,7 @@ void FUN_80103ddc(void)
       iVar4 = *(int *)(psVar3 + 0x52);
       uStack_7c = (int)sVar13 ^ 0x80000000;
       local_80 = 0x43300000;
-      dVar14 = (double)FUN_802945e0();
+      dVar14 = (double)FUN_80293f90();
       dVar15 = (double)FUN_80294964();
       dVar17 = (double)(float)(dVar17 * dVar15 - (double)(float)(dVar16 * dVar14));
       local_1ac = (float)(dVar17 + (double)*(float *)(iVar4 + 0x18));
@@ -540,7 +540,7 @@ void FUN_80103ddc(void)
       iVar4 = *(int *)(psVar3 + 0x52);
       uStack_7c = (int)(short)(sVar8 * -0xb6) ^ 0x80000000;
       local_80 = 0x43300000;
-      dVar14 = (double)FUN_802945e0();
+      dVar14 = (double)FUN_80293f90();
       dVar15 = (double)FUN_80294964();
       dVar17 = (double)(float)(dVar17 * dVar15 - (double)(float)(dVar16 * dVar14));
       local_1ac = (float)(dVar17 + (double)*(float *)(iVar4 + 0x18));
@@ -641,7 +641,7 @@ void FUN_80103ddc(void)
 /*
  * --INFO--
  *
- * Function: FUN_801042dc
+ * Function: FUN_801043bc
  * EN v1.0 Address: 0x801043BC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801042DC
@@ -651,6 +651,6 @@ void FUN_80103ddc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801042dc(void)
+void FUN_801043bc(void)
 {
 }

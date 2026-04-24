@@ -1,13 +1,13 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_1DF.h"
 
-extern undefined4 FUN_80038524();
-extern undefined4 FUN_8003b9ec();
+extern undefined4 FUN_800388b4();
+extern undefined4 FUN_8003b818();
 
 /*
  * --INFO--
  *
- * Function: FUN_801d23ac
+ * Function: FUN_801d1e24
  * EN v1.0 Address: 0x801D1E24
  * EN v1.0 Size: 92b
  * EN v1.1 Address: 0x801D23AC
@@ -17,15 +17,15 @@ extern undefined4 FUN_8003b9ec();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d23ac(int param_1)
+void FUN_801d1e24(int param_1)
 {
   char in_r8;
   int iVar1;
   
   iVar1 = *(int *)(param_1 + 0xb8);
   if (in_r8 != '\0') {
-    FUN_8003b9ec(param_1);
-    FUN_80038524(param_1,0,(float *)(iVar1 + 0x20),(undefined4 *)(iVar1 + 0x24),
+    FUN_8003b818(param_1);
+    FUN_800388b4(param_1,0,(float *)(iVar1 + 0x20),(undefined4 *)(iVar1 + 0x24),
                  (float *)(iVar1 + 0x28),0);
   }
   return;

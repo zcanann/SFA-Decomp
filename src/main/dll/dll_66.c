@@ -21,7 +21,7 @@ extern f32 FLOAT_803e22a4;
 /*
  * --INFO--
  *
- * Function: FUN_8010055c
+ * Function: FUN_80100550
  * EN v1.0 Address: 0x80100550
  * EN v1.0 Size: 696b
  * EN v1.1 Address: 0x8010055C
@@ -31,7 +31,7 @@ extern f32 FLOAT_803e22a4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010055c(double param_1,undefined4 param_2,undefined param_3,int param_4,undefined4 param_5
+void FUN_80100550(double param_1,undefined4 param_2,undefined param_3,int param_4,undefined4 param_5
                  )
 {
   float fVar1;

@@ -1,20 +1,20 @@
 #include "ghidra_import.h"
 #include "main/dll/CAM/camstatic.h"
 
-extern undefined4 FUN_8000e054();
-extern undefined4 FUN_8000e0c0();
-extern double FUN_80021434();
-extern int FUN_80021884();
+extern undefined4 FUN_800068f4();
+extern undefined4 FUN_800068f8();
+extern double FUN_800176f4();
+extern int FUN_80017730();
 extern undefined4 camcontrol_traceMove();
 extern undefined4 camcontrol_updateTargetAction();
-extern undefined4 FUN_801042dc();
+extern undefined4 FUN_801043bc();
 extern undefined4 camcontrol_updateModeSettings();
 extern undefined4 camcontrol_updateVerticalBounds();
 extern undefined4 camslide_update();
 extern undefined4 firstperson_updatePosition();
-extern int FUN_80296bb8();
-extern undefined4 FUN_80296ccc();
-extern undefined4 FUN_80297334();
+extern int FUN_80294cb0();
+extern undefined4 FUN_80294cd8();
+extern undefined4 FUN_80294d78();
 
 extern undefined4* DAT_803dd6d0;
 extern undefined4 gCamcontrolModeSettings;
@@ -82,9 +82,9 @@ void camstatic_update(short *param_1)
     return;
   }
   if (psVar4[0x22] == 1) {
-    FUN_80296ccc((int)psVar4,&local_148);
+    FUN_80294cd8((int)psVar4,&local_148);
     FLOAT_803de1a4 = FLOAT_803dc074 * local_148;
-    iVar2 = FUN_80296bb8((int)psVar4);
+    iVar2 = FUN_80294cb0((int)psVar4);
     if (iVar2 == 3) {
       *(float *)(gCamcontrolModeSettings + 0x14) = FLOAT_803e23a0;
       *(undefined *)(gCamcontrolModeSettings + 0xc2) = 8;
@@ -118,9 +118,9 @@ void camstatic_update(short *param_1)
 LAB_80105bbc:
   *(undefined *)(param_1 + 0x9f) = 0;
   camcontrol_updateModeSettings((int)param_1);
-  FUN_801042dc();
+  FUN_801043bc();
   firstperson_updatePosition((int)param_1,psVar4);
-  FUN_8000e0c0((double)*(float *)(param_1 + 6),(double)*(float *)(param_1 + 8),
+  FUN_800068f8((double)*(float *)(param_1 + 6),(double)*(float *)(param_1 + 8),
                (double)*(float *)(param_1 + 10),(float *)(param_1 + 0xc),(float *)(param_1 + 0xe),
                (float *)(param_1 + 0x10),*(int *)(param_1 + 0x18));
   camslide_update((int)param_1,(int)psVar4);
@@ -169,7 +169,7 @@ LAB_80105bbc:
     }
     if (10 < *(byte *)(gCamcontrolModeSettings + 199)) {
       if (psVar4[0x22] == 1) {
-        FUN_80297334((int)psVar4,&local_128,&local_124,&local_120);
+        FUN_80294d78((int)psVar4,&local_128,&local_124,&local_120);
       }
       else {
         local_128 = *(float *)(psVar4 + 0xc);
@@ -194,7 +194,7 @@ LAB_80105bbc:
     }
     if (5 < *(byte *)(gCamcontrolModeSettings + 0xc3)) {
       if (psVar4[0x22] == 1) {
-        FUN_80297334((int)psVar4,&local_134,&local_130,&local_12c);
+        FUN_80294d78((int)psVar4,&local_134,&local_130,&local_12c);
       }
       else {
         local_134 = *(float *)(psVar4 + 0xc);
@@ -213,10 +213,10 @@ LAB_80105bbc:
             ((double)*(float *)(gCamcontrolModeSettings + 0x8c),param_1,local_138,auStack_13c,
              local_140,
              local_144,0);
-  iVar2 = FUN_80021884();
+  iVar2 = FUN_80017730();
   *(undefined2 *)(gCamcontrolModeSettings + 0x80) = 0;
   *param_1 = (-0x8000 - (short)iVar2) - *(short *)(gCamcontrolModeSettings + 0x80);
-  uVar3 = FUN_80021884();
+  uVar3 = FUN_80017730();
   uStack_34 = (uVar3 & 0xffff) - (uint)(ushort)param_1[1];
   if (0x8000 < (int)uStack_34) {
     uStack_34 = uStack_34 - 0xffff;
@@ -228,7 +228,7 @@ LAB_80105bbc:
   local_38 = 0x43300000;
   uStack_2c = (uint)*(byte *)(gCamcontrolModeSettings + 0xc2);
   local_30 = 0x43300000;
-  dVar5 = FUN_80021434((double)(float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e2318),
+  dVar5 = FUN_800176f4((double)(float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e2318),
                        (double)(FLOAT_803e2324 /
                                (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e2378)),
                        (double)FLOAT_803dc074);
@@ -237,11 +237,11 @@ LAB_80105bbc:
   camcontrol_updateTargetAction((int)param_1,(int)psVar4);
   uStack_1c = (int)param_1[2] ^ 0x80000000;
   local_20 = 0x43300000;
-  dVar5 = FUN_80021434((double)(float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e2318),
+  dVar5 = FUN_800176f4((double)(float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e2318),
                        (double)FLOAT_803e23b0,(double)FLOAT_803dc074);
   local_18 = (longlong)(int)dVar5;
   param_1[2] = param_1[2] - (short)(int)dVar5;
-  FUN_8000e054((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
+  FUN_800068f4((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
                (double)*(float *)(param_1 + 0x10),(float *)(param_1 + 6),(float *)(param_1 + 8),
                (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
   return;

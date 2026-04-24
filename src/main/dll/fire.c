@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/fire.h"
 
-extern uint FUN_80020078();
-extern undefined4 FUN_80026ec4();
+extern uint FUN_80017690();
+extern undefined4 FUN_800178b8();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
 
@@ -17,7 +17,7 @@ extern f32 FLOAT_803e716c;
 /*
  * --INFO--
  *
- * Function: FUN_802093b4
+ * Function: FUN_8020930c
  * EN v1.0 Address: 0x8020930C
  * EN v1.0 Size: 576b
  * EN v1.1 Address: 0x802093B4
@@ -27,7 +27,7 @@ extern f32 FLOAT_803e716c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802093b4(void)
+void FUN_8020930c(void)
 {
   char cVar1;
   bool bVar2;
@@ -69,13 +69,13 @@ void FUN_802093b4(void)
   else {
     dVar10 = (double)FLOAT_803e7164;
     for (iVar9 = 0; iVar9 < (int)(uint)*(ushort *)(iVar7 + 0xe4); iVar9 = iVar9 + 1) {
-      FUN_80026ec4(iVar7,iVar9,&local_58);
+      FUN_800178b8(iVar7,iVar9,&local_58);
       if ((double)local_54 < dVar10) {
         dVar10 = (double)local_54;
       }
     }
     for (iVar9 = 0; iVar9 < (int)(uint)*(ushort *)(iVar7 + 0xe4); iVar9 = iVar9 + 1) {
-      FUN_80026ec4(iVar7,iVar9,&local_58);
+      FUN_800178b8(iVar7,iVar9,&local_58);
       if ((double)local_54 == dVar10) {
         bVar2 = false;
         cVar1 = *(char *)(iVar8 + 0x68);
@@ -98,9 +98,9 @@ void FUN_802093b4(void)
     *(float *)(iVar3 + 0x10) = *(float *)(iVar3 + 0x10) - FLOAT_803e7144;
     *(undefined2 *)(iVar8 + 0x66) = *(undefined2 *)((int)uVar11 + 0x1e);
     *(undefined2 *)(iVar8 + 100) = *(undefined2 *)((int)uVar11 + 0x20);
-    uVar5 = FUN_80020078((int)*(short *)(iVar8 + 0x66));
+    uVar5 = FUN_80017690((int)*(short *)(iVar8 + 0x66));
     *(char *)(iVar8 + 0x6b) = (char)uVar5;
-    uVar5 = FUN_80020078((int)*(short *)(iVar8 + 100));
+    uVar5 = FUN_80017690((int)*(short *)(iVar8 + 100));
     *(char *)(iVar8 + 0x6a) = (char)uVar5;
     if (*(char *)(iVar8 + 0x6b) != '\0') {
       *(float *)(iVar3 + 0xc) = *(float *)(iVar3 + 0xc) + FLOAT_803e7168;

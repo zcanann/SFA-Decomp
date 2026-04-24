@@ -1,14 +1,14 @@
 #include "ghidra_import.h"
 #include "main/dll/CAM/camshipbattle.h"
 
-extern uint FUN_80014e9c();
-extern undefined4 FUN_80021b8c();
-extern undefined4 FUN_800238c4();
+extern uint FUN_80006c00();
+extern undefined4 FUN_80017748();
+extern undefined4 FUN_80017814();
 extern undefined4 camcontrol_buildPathAngles();
 extern undefined4 FUN_80286834();
 extern undefined4 FUN_80286880();
-extern int FUN_80296a14();
-extern int FUN_80296e60();
+extern int FUN_80294c88();
+extern int FUN_80294d10();
 
 extern undefined4* DAT_803dd6d0;
 extern undefined4 gCamcontrolPathState;
@@ -124,7 +124,7 @@ void camcontrol_buildPathPoints(undefined8 param_1,double param_2,double param_3
     }
     local_e4[1] = 0;
     local_e4[2] = 0;
-    FUN_80021b8c(local_e4,&local_dc);
+    FUN_80017748(local_e4,&local_dc);
     *(float *)(gCamcontrolPathState + iVar4 + 0x1c) = (float)(dVar10 + (double)local_dc);
     uStack_a4 = (int)(short)*puVar5 ^ 0x80000000U;
     local_a8 = 0x43300000;
@@ -170,13 +170,13 @@ void camcontrol_updatePathTargetAction(int param_1,int param_2)
   longlong local_18;
   
   if (*(int *)(param_2 + 0xc0) == 0) {
-    uVar2 = FUN_80014e9c(0);
+    uVar2 = FUN_80006c00(0);
     if ((((*(int *)(param_1 + 0x124) == 0) ||
          (((sVar1 = *(short *)(*(int *)(param_1 + 0x124) + 0x44), sVar1 != 0x1c && (sVar1 != 0x2a))
-          || (*(short *)(param_2 + 0x44) != 1)))) || (iVar3 = FUN_80296e60(param_2), iVar3 == 0)) &&
+          || (*(short *)(param_2 + 0x44) != 1)))) || (iVar3 = FUN_80294d10(param_2), iVar3 == 0)) &&
        ((*(byte *)(param_1 + 0x141) & 2) == 0)) {
       if ((((uVar2 & 0x10) != 0) && (*(short *)(param_2 + 0x44) == 1)) &&
-         (iVar3 = FUN_80296a14(param_2), iVar3 != 0)) {
+         (iVar3 = FUN_80294c88(param_2), iVar3 != 0)) {
         local_28 = *(undefined4 *)(gCamcontrolPathState + 4);
         local_24 = *(undefined4 *)(gCamcontrolPathState + 0xc);
         local_18 = (longlong)(int)*(float *)(gCamcontrolPathState + 0x10);
@@ -206,7 +206,7 @@ void camcontrol_updatePathTargetAction(int param_1,int param_2)
  */
 void camcontrol_releasePathState(void)
 {
-  FUN_800238c4(gCamcontrolPathState);
+  FUN_80017814(gCamcontrolPathState);
   gCamcontrolPathState = 0;
   return;
 }

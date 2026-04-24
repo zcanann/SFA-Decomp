@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-undefined4 FUN_80100b34(void);
+undefined4 FUN_80100aa4(void);
 
 #endif /* MAIN_DLL_DLL_94_H_ */

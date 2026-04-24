@@ -1,10 +1,10 @@
 #include "ghidra_import.h"
 #include "main/dll/DB/DBpointmum.h"
 
-extern undefined4 FUN_800201ac();
-extern void* FUN_80037048();
-extern int FUN_800375e4();
-extern undefined4 FUN_800379bc();
+extern undefined4 FUN_80017698();
+extern void* FUN_80037134();
+extern int FUN_80037584();
+extern undefined4 FUN_80037bd4();
 
 extern undefined4* DAT_803dd708;
 extern f32 FLOAT_803e6348;
@@ -13,7 +13,7 @@ extern f32 FLOAT_803e634c;
 /*
  * --INFO--
  *
- * Function: FUN_801dfa9c
+ * Function: FUN_801dfa28
  * EN v1.0 Address: 0x801DFA28
  * EN v1.0 Size: 1264b
  * EN v1.1 Address: 0x801DFA9C
@@ -24,7 +24,7 @@ extern f32 FLOAT_803e634c;
  * PAL Size: TODO
  */
 undefined4
-FUN_801dfa9c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+FUN_801dfa28(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9
             ,undefined4 param_10,int param_11,undefined4 param_12,undefined4 param_13,
             undefined4 param_14,int param_15,undefined4 param_16)
@@ -77,7 +77,7 @@ FUN_801dfa9c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
       }
       else if (bVar1 < 2) {
         if (bVar1 != 0) {
-          param_1 = FUN_800201ac(0x75,1);
+          param_1 = FUN_80017698(0x75,1);
         }
       }
       else {
@@ -103,10 +103,10 @@ FUN_801dfa9c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
       param_1 = (**(code **)(param_15 + 8))(param_9,0x85,&local_48,1);
     }
   }
-  while (iVar4 = FUN_800375e4(param_9,&local_50,&uStack_4c,&uStack_54), iVar4 != 0) {
+  while (iVar4 = FUN_80037584(param_9,&local_50,&uStack_4c,&uStack_54), iVar4 != 0) {
     if ((*(byte *)(param_11 + 0x90) & 0x80) == 0) {
       if (local_50 == 0xf000c) {
-        puVar2 = FUN_80037048(3,&local_58);
+        puVar2 = FUN_80037134(3,&local_58);
         iVar4 = 0;
         while (iVar4 < local_58) {
           iVar3 = iVar4;
@@ -117,13 +117,13 @@ FUN_801dfa9c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
           iVar4 = iVar3 + 1;
         }
         if (iVar5 != 0) {
-          FUN_800379bc(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar5,
+          FUN_80037bd4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar5,
                        0x130002,param_9,0,param_13,param_14,param_15,param_16);
         }
       }
       else if ((int)local_50 < 0xf000c) {
         if (0xf000a < (int)local_50) {
-          puVar2 = FUN_80037048(3,&local_58);
+          puVar2 = FUN_80037134(3,&local_58);
           iVar4 = 0;
           while (iVar4 < local_58) {
             iVar3 = iVar4;
@@ -134,13 +134,13 @@ FUN_801dfa9c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
             iVar4 = iVar3 + 1;
           }
           if (iVar5 != 0) {
-            FUN_800379bc(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar5,
+            FUN_80037bd4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar5,
                          0x130001,param_9,0,param_13,param_14,param_15,param_16);
           }
         }
       }
       else if ((int)local_50 < 0xf000e) {
-        puVar2 = FUN_80037048(3,&local_58);
+        puVar2 = FUN_80037134(3,&local_58);
         iVar4 = 0;
         while (iVar4 < local_58) {
           iVar3 = iVar4;
@@ -151,7 +151,7 @@ FUN_801dfa9c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
           iVar4 = iVar3 + 1;
         }
         if (iVar5 != 0) {
-          FUN_800379bc(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar5,
+          FUN_80037bd4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar5,
                        0x130003,param_9,0,param_13,param_14,param_15,param_16);
         }
       }

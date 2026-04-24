@@ -1,17 +1,17 @@
 #include "ghidra_import.h"
 #include "main/dll/NW/dll_1DB.h"
 
-extern int FUN_80021884();
-extern int FUN_80064248();
+extern int FUN_80017730();
+extern int FUN_800620e8();
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
-extern undefined4 FUN_802945e0();
+extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 
 /*
  * --INFO--
  *
- * Function: FUN_801d188c
+ * Function: FUN_801d16ec
  * EN v1.0 Address: 0x801D16EC
  * EN v1.0 Size: 768b
  * EN v1.1 Address: 0x801D188C
@@ -21,7 +21,7 @@ extern undefined4 FUN_80294964();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d188c(void)
+void FUN_801d16ec(void)
 {
   int *piVar1;
   int iVar2;
@@ -100,19 +100,19 @@ void FUN_801d188c(void)
   fStack_84 = (float)in_ps23_1;
   piVar1 = (int *)FUN_80286840();
   dVar12 = extraout_f1;
-  iVar2 = FUN_80021884();
+  iVar2 = FUN_80017730();
   uStack_ac = (int)(short)iVar2 ^ 0x80000000;
   local_b0 = 0x43300000;
-  dVar4 = (double)FUN_802945e0();
+  dVar4 = (double)FUN_80293f90();
   dVar5 = (double)FUN_80294964();
   local_c0 = -(float)(dVar12 * dVar4 - (double)(float)piVar1[3]);
   local_bc = piVar1[4];
   local_b8 = -(float)(dVar12 * dVar5 - (double)(float)piVar1[5]);
-  iVar2 = FUN_80064248(piVar1 + 3,&local_c0,(float *)0x3,(int *)0x0,piVar1,8,0xffffffff,0xff,0);
+  iVar2 = FUN_800620e8(piVar1 + 3,&local_c0,(float *)0x3,(int *)0x0,piVar1,8,0xffffffff,0xff,0);
   if (iVar2 != 0) {
     dVar14 = dVar4;
-    dVar6 = (double)FUN_802945e0();
-    dVar7 = (double)FUN_802945e0();
+    dVar6 = (double)FUN_80293f90();
+    dVar7 = (double)FUN_80293f90();
     dVar13 = dVar5;
     dVar8 = (double)FUN_80294964();
     dVar9 = (double)FUN_80294964();
@@ -122,13 +122,13 @@ void FUN_801d188c(void)
       dVar5 = (double)(float)(dVar5 * dVar8 - (double)(float)(dVar4 * dVar6));
       local_c0 = -(float)(dVar12 * dVar10 - (double)(float)piVar1[3]);
       local_b8 = -(float)(dVar12 * dVar5 - (double)(float)piVar1[5]);
-      iVar3 = FUN_80064248(piVar1 + 3,&local_c0,(float *)0x1,(int *)0x0,piVar1,8,0xffffffff,0xff,0);
+      iVar3 = FUN_800620e8(piVar1 + 3,&local_c0,(float *)0x1,(int *)0x0,piVar1,8,0xffffffff,0xff,0);
       if (iVar3 == 0) break;
       dVar11 = (double)(float)(dVar14 * dVar9 + (double)(float)(dVar13 * dVar7));
       dVar13 = (double)(float)(dVar13 * dVar9 - (double)(float)(dVar14 * dVar7));
       local_c0 = -(float)(dVar12 * dVar11 - (double)(float)piVar1[3]);
       local_b8 = -(float)(dVar12 * dVar13 - (double)(float)piVar1[5]);
-      iVar3 = FUN_80064248(piVar1 + 3,&local_c0,(float *)0x1,(int *)0x0,piVar1,8,0xffffffff,0xff,0);
+      iVar3 = FUN_800620e8(piVar1 + 3,&local_c0,(float *)0x1,(int *)0x0,piVar1,8,0xffffffff,0xff,0);
       if ((iVar3 == 0) || (iVar2 = iVar2 + 1, dVar4 = dVar10, dVar14 = dVar11, 7 < iVar2)) break;
     }
   }

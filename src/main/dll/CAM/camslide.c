@@ -1,13 +1,13 @@
 #include "ghidra_import.h"
 #include "main/dll/CAM/camslide.h"
 
-extern double FUN_80021434();
-extern int FUN_80021884();
-extern undefined4 FUN_80021c64();
-extern undefined4 FUN_80022790();
+extern double FUN_800176f4();
+extern int FUN_80017730();
+extern undefined4 FUN_8001774c();
+extern undefined4 FUN_80017778();
 extern double FUN_80293900();
-extern undefined4 FUN_802945e0();
-extern double FUN_80296e54();
+extern undefined4 FUN_80293f90();
+extern double FUN_80294d08();
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6d0;
@@ -83,7 +83,7 @@ void camslide_update(int param_1,int param_2)
   dVar5 = (double)(gCamcontrolModeSettings[2] + fVar1);
   if (*(short *)(param_2 + 0x44) == 1) {
     iVar4 = *(int *)(param_2 + 0xb8);
-    iVar2 = FUN_80021884();
+    iVar2 = FUN_80017730();
     local_ac[0] = -0x8000 - (short)iVar2;
     local_ac[1] = 0;
     local_ac[2] = 0;
@@ -91,10 +91,10 @@ void camslide_update(int param_1,int param_2)
     local_a0 = FLOAT_803e232c;
     local_9c = FLOAT_803e232c;
     local_98 = FLOAT_803e232c;
-    FUN_80021c64(afStack_94,(int)local_ac);
-    FUN_80022790((double)*(float *)(iVar4 + 0x1a4),(double)*(float *)(iVar4 + 0x1a8),
+    FUN_8001774c(afStack_94,(int)local_ac);
+    FUN_80017778((double)*(float *)(iVar4 + 0x1a4),(double)*(float *)(iVar4 + 0x1a8),
                  (double)*(float *)(iVar4 + 0x1ac),afStack_94,&fStack_c0,&local_c4,&local_c8);
-    uVar3 = FUN_80021884();
+    uVar3 = FUN_80017730();
     gCamcontrolModeSettings[0x2b] =
          (float)((int)gCamcontrolModeSettings[0x2b] +
                 ((int)((uint)DAT_803dc070 *
@@ -109,7 +109,7 @@ void camslide_update(int param_1,int param_2)
   if ((int)fVar1 < 0) {
     fStack_4c = -fVar1;
     local_50 = 0x43300000;
-    dVar6 = (double)FUN_802945e0();
+    dVar6 = (double)FUN_80293f90();
     dVar6 = (double)(float)((double)gCamcontrolModeSettings[7] * dVar6);
   }
   else if ((int)fVar1 < 1) {
@@ -118,7 +118,7 @@ void camslide_update(int param_1,int param_2)
   else {
     fStack_4c = -fVar1;
     local_50 = 0x43300000;
-    dVar6 = (double)FUN_802945e0();
+    dVar6 = (double)FUN_80293f90();
     dVar6 = (double)(float)((double)gCamcontrolModeSettings[6] * dVar6);
   }
   dVar8 = (double)(float)(dVar5 + dVar6);
@@ -128,7 +128,7 @@ void camslide_update(int param_1,int param_2)
     dVar5 = (double)FLOAT_803e235c;
   }
   if (*(short *)(param_2 + 0x44) == 1) {
-    dVar6 = FUN_80296e54(param_2);
+    dVar6 = FUN_80294d08(param_2);
     if ((double)FLOAT_803e235c < dVar6) {
       local_b4 = (gCamcontrolModeSettings[0x26] - gCamcontrolModeSettings[2]) * FLOAT_803e2364;
       if (FLOAT_803e2368 < local_b4) {
@@ -215,7 +215,7 @@ void camslide_update(int param_1,int param_2)
   else {
     local_b4 = (float)(dVar8 - dVar5);
   }
-  dVar5 = FUN_80021434((double)local_b4,(double)gCamcontrolModeSettings[5],
+  dVar5 = FUN_800176f4((double)local_b4,(double)gCamcontrolModeSettings[5],
                        (double)FLOAT_803dc074);
   local_b4 = (float)dVar5;
   if ((FLOAT_803e2368 < (float)dVar5) && ((float)dVar5 < FLOAT_803e2374)) {

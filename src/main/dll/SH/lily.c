@@ -1,10 +1,10 @@
 #include "ghidra_import.h"
 #include "main/dll/SH/lily.h"
 
-extern undefined4 FUN_80020078();
-extern double FUN_80021794();
-extern void* FUN_80037048();
-extern undefined4 FUN_8014cae4();
+extern undefined4 FUN_80017690();
+extern double FUN_80017714();
+extern void* FUN_80037134();
+extern undefined4 FUN_8014ccac();
 extern int FUN_80286834();
 extern undefined4 FUN_80286880();
 
@@ -22,7 +22,7 @@ extern f32 FLOAT_803e60ac;
 /*
  * --INFO--
  *
- * Function: FUN_801d52c0
+ * Function: FUN_801d5174
  * EN v1.0 Address: 0x801D5174
  * EN v1.0 Size: 396b
  * EN v1.1 Address: 0x801D52C0
@@ -32,7 +32,7 @@ extern f32 FLOAT_803e60ac;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d52c0(void)
+void FUN_801d5174(void)
 {
   int iVar1;
   int iVar2;
@@ -67,17 +67,17 @@ void FUN_801d52c0(void)
   else if (iVar2 == DAT_80327b28) {
     cVar8 = '\x05';
   }
-  piVar3 = FUN_80037048(3,local_28);
+  piVar3 = FUN_80037134(3,local_28);
   iVar2 = (int)cVar8;
   for (iVar7 = 0; iVar7 < local_28[0]; iVar7 = iVar7 + 1) {
     iVar4 = *piVar3;
     if ((*(short *)(iVar4 + 0x46) == 0x4d7) &&
        (((iVar5 = *(int *)(*(int *)(iVar4 + 0x4c) + 0x14), iVar5 == (&DAT_80327adc)[iVar2 * 4] ||
          (iVar5 == (&DAT_80327ae0)[iVar2 * 4])) || (iVar5 == (&DAT_80327ae4)[iVar2 * 4])))) {
-      FUN_8014cae4(iVar4,iVar1);
-      dVar9 = FUN_80021794((float *)(*piVar3 + 0x18),(float *)(iVar1 + 0x18));
+      FUN_8014ccac(iVar4,iVar1);
+      dVar9 = FUN_80017714((float *)(*piVar3 + 0x18),(float *)(iVar1 + 0x18));
       if (dVar9 < (double)FLOAT_803e60ac) {
-        FUN_80020078((int)*(short *)(*(int *)(*piVar3 + 0x4c) + 0x18));
+        FUN_80017690((int)*(short *)(*(int *)(*piVar3 + 0x4c) + 0x18));
       }
       cVar6 = cVar6 + '\x01';
       if (cVar6 == '\x03') break;

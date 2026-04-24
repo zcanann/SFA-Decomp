@@ -1,14 +1,14 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_B6.h"
 
-extern undefined4 FUN_800128fc();
-extern undefined8 FUN_80012d20();
-extern int FUN_8002bac4();
-extern int FUN_8002e1f4();
+extern undefined4 FUN_80006a64();
+extern undefined8 FUN_80006a68();
+extern int FUN_80017a98();
+extern int FUN_80017b00();
 extern undefined4 FUN_80286830();
 extern undefined4 FUN_8028687c();
-extern uint FUN_80296384();
-extern int FUN_80296a88();
+extern uint FUN_80294bfc();
+extern int FUN_80294c98();
 
 extern undefined4 gCamcontrolTargetTypeMask;
 extern undefined4 gCamcontrolCurrentActionId;
@@ -80,10 +80,10 @@ void camcontrol_findBestTarget(undefined8 param_1,double param_2,undefined8 para
   uVar14 = 0xffffffff;
   iVar12 = 0;
   iVar11 = 0;
-  iVar3 = FUN_8002bac4();
+  iVar3 = FUN_80017a98();
   if ((((iVar3 != 0) && (extraout_r4 != 0)) && (gCamcontrolCurrentActionId != 0x44)) &&
-     (iVar4 = FUN_80296a88(iVar3), iVar4 != 0)) {
-    iVar4 = FUN_8002e1f4(&local_c0,&local_c4);
+     (iVar4 = FUN_80294c98(iVar3), iVar4 != 0)) {
+    iVar4 = FUN_80017b00(&local_c0,&local_c4);
     pfVar15 = (float *)(iVar4 + local_c0 * 4);
     for (; local_c0 < local_c4; local_c0 = local_c0 + 1) {
       fVar13 = *pfVar15;
@@ -121,7 +121,7 @@ void camcontrol_findBestTarget(undefined8 param_1,double param_2,undefined8 para
             fVar1 = (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e22d0);
             if (dVar18 < (double)(fVar1 * fVar1)) {
               bVar2 = true;
-              if (((*(byte *)(iVar4 + 4) & 0xf) == 2) && (uVar5 = FUN_80296384(iVar3), uVar5 != 0))
+              if (((*(byte *)(iVar4 + 4) & 0xf) == 2) && (uVar5 = FUN_80294bfc(iVar3), uVar5 != 0))
               {
                 bVar2 = false;
               }
@@ -207,9 +207,9 @@ LAB_80101720:
       iVar3 = *(int *)((int)local_60[0] + 0x74) + iVar3;
       local_94 = *(undefined4 *)(iVar3 + 4);
       local_90 = *(undefined4 *)(iVar3 + 8);
-      FUN_80012d20(&local_8c,local_a4);
-      uVar17 = FUN_80012d20(&local_98,asStack_b0);
-      FUN_800128fc(uVar17,param_2,param_3,param_4,param_5,param_6,param_7,param_8,local_a4,
+      FUN_80006a68(&local_8c,local_a4);
+      uVar17 = FUN_80006a68(&local_98,asStack_b0);
+      FUN_80006a64(uVar17,param_2,param_3,param_4,param_5,param_6,param_7,param_8,local_a4,
                    asStack_b0,auStack_bc,local_c8,0);
     }
   }

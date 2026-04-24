@@ -4,49 +4,49 @@
 extern float ABS();
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80003494();
-extern undefined4 FUN_8000eba8();
-extern undefined4 FUN_8000f11c();
-extern undefined4 FUN_8000f478();
-extern undefined4 FUN_8000f56c();
-extern void* FUN_8000f578();
-extern undefined4 FUN_8000f584();
-extern undefined4 FUN_8000f7a0();
-extern void* FUN_8000facc();
-extern undefined4 FUN_8000faec();
-extern undefined4 FUN_8000faf8();
-extern undefined4 FUN_8000fb20();
-extern undefined4 FUN_8000fc4c();
-extern double FUN_8000fc54();
-extern undefined4 FUN_8000fc5c();
-extern int FUN_80020800();
-extern uint FUN_80021884();
-extern uint FUN_80022264();
-extern uint FUN_80022e00();
-extern undefined4 FUN_800238c4();
-extern int FUN_80028630();
-extern undefined4 FUN_8002b554();
-extern int FUN_8002b660();
-extern undefined4 FUN_8003b9b0();
-extern undefined4 FUN_8003ba50();
-extern undefined4 FUN_80041e20();
-extern undefined4 FUN_8004a550();
-extern undefined4 FUN_8004c3b0();
-extern char FUN_8004c3c4();
-extern int FUN_80054e14();
-extern undefined4 FUN_80054ed0();
-extern uint FUN_8005cec4();
-extern uint FUN_8005cf2c();
-extern undefined4 FUN_80060d14();
-extern undefined4 FUN_80060d2c();
-extern undefined4 FUN_80061210();
-extern ushort FUN_80062844();
-extern undefined4 FUN_8006a034();
-extern undefined4 FUN_8006f0b4();
-extern undefined4 FUN_80070074();
-extern undefined4 FUN_8007007c();
-extern undefined4 FUN_8007048c();
-extern undefined4 FUN_80077318();
-extern undefined4 FUN_800894c8();
+extern undefined4 FUN_8000693c();
+extern undefined4 FUN_8000694c();
+extern undefined4 FUN_80006954();
+extern undefined4 FUN_80006974();
+extern void* FUN_8000697c();
+extern undefined4 FUN_80006984();
+extern undefined4 FUN_80006988();
+extern void* FUN_800069a8();
+extern undefined4 FUN_800069b8();
+extern undefined4 FUN_800069bc();
+extern undefined4 FUN_800069d4();
+extern undefined4 FUN_800069f4();
+extern double FUN_800069f8();
+extern undefined4 FUN_80006a00();
+extern int FUN_800176d0();
+extern uint FUN_80017730();
+extern uint FUN_80017760();
+extern uint FUN_800177bc();
+extern undefined4 FUN_80017814();
+extern int FUN_80017970();
+extern undefined4 FUN_80017a50();
+extern int FUN_80017a54();
+extern undefined4 FUN_8003b7dc();
+extern undefined4 FUN_8003b878();
+extern undefined4 FUN_80040cd0();
+extern undefined4 FUN_80045be8();
+extern undefined4 FUN_80048048();
+extern char FUN_80048094();
+extern int FUN_800537a0();
+extern undefined4 FUN_8005398c();
+extern uint FUN_8005d00c();
+extern uint FUN_8005d06c();
+extern undefined4 FUN_800606a4();
+extern undefined4 FUN_800606a8();
+extern undefined4 FUN_80060710();
+extern ushort FUN_80061198();
+extern undefined4 FUN_80064384();
+extern undefined4 FUN_8006ef38();
+extern undefined4 FUN_8006f788();
+extern undefined4 FUN_8006f790();
+extern undefined4 FUN_8006f8fc();
+extern undefined4 FUN_800709e8();
+extern undefined4 FUN_80080f6c();
 extern undefined4 FUN_802420b0();
 extern undefined4 FUN_802420e0();
 extern undefined4 FUN_802475e4();
@@ -81,7 +81,7 @@ extern undefined4 FUN_8028686c();
 extern undefined4 FUN_80286880();
 extern undefined4 FUN_8028688c();
 extern undefined4 FUN_802947f8();
-extern undefined4 FUN_80294b54();
+extern undefined4 FUN_802949e8();
 extern undefined4 SQRT();
 
 extern undefined2 DAT_8030f470;
@@ -221,7 +221,7 @@ extern f32 FLOAT_803dfa9c;
 /*
  * --INFO--
  *
- * Function: FUN_8006a1a4
+ * Function: FUN_8006a028
  * EN v1.0 Address: 0x8006A028
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8006A1A4
@@ -231,14 +231,14 @@ extern f32 FLOAT_803dfa9c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006a1a4(undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4)
+void FUN_8006a028(undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8006b6d4
+ * Function: FUN_8006a02c
  * EN v1.0 Address: 0x8006A02C
  * EN v1.0 Size: 676b
  * EN v1.1 Address: 0x8006B6D4
@@ -266,8 +266,8 @@ void newshadows_captureProjectedShadow(ushort *object)
   float local_94;
   float afStack_90 [15];
   
-  FUN_8002b554(object,afStack_90,'\0');
-  FUN_8000eba8((double)(*(float *)(object + 6) - FLOAT_803dda58),(double)*(float *)(object + 8),
+  FUN_80017a50(object,afStack_90,'\0');
+  FUN_8000693c((double)(*(float *)(object + 6) - FLOAT_803dda58),(double)*(float *)(object + 8),
                (double)(*(float *)(object + 10) - FLOAT_803dda5c),
                (double)(FLOAT_803df98c * *(float *)(object + 0x54) * *(float *)(object + 4)),
                &local_94,&local_98,&local_9c,&local_a0,&local_a4,&fStack_a8);
@@ -290,20 +290,20 @@ void newshadows_captureProjectedShadow(ushort *object)
   else {
     dVar5 = (double)*(float *)(object + 4);
     *(float *)(object + 4) = (float)dVar6;
-    FUN_80041e20(1);
-    FUN_8003ba50(0,0,0,0,(int)object,1);
-    FUN_80041e20(0);
+    FUN_80040cd0(1);
+    FUN_8003b878(0,0,0,0,(int)object,1);
+    FUN_80040cd0(0);
     *(float *)(object + 4) = (float)dVar5;
-    iVar2 = FUN_8002b660((int)object);
+    iVar2 = FUN_80017a54((int)object);
     *(ushort *)(iVar2 + 0x18) = *(ushort *)(iVar2 + 0x18) & 0xfff7;
-    FUN_8007048c(1,3,1);
+    FUN_8006f8fc(1,3,1);
     FUN_80259400(0x100,0xb0,0x80,0x80);
     FUN_80259504(0x80,0x80,0x2a,0);
     FUN_80259c0c((&DAT_8038ee3c)[DAT_803ddc0c] + 0x60,1);
-    FUN_8006a1a4((&DAT_8038ee3c)[(DAT_803ddc0c + 1) % 3],0x80,0x10,0);
+    FUN_8006a028((&DAT_8038ee3c)[(DAT_803ddc0c + 1) % 3],0x80,0x10,0);
     **(float **)(object + 0x32) = (float)((double)FLOAT_803df9ac / dVar7);
   }
-  FUN_8000f7a0();
+  FUN_80006988();
   dVar6 = (double)FLOAT_803df994;
   *(float *)(*(int *)(object + 0x32) + 0x14) = (float)(dVar6 * -dVar4);
   dVar4 = (double)FLOAT_803df998;
@@ -323,7 +323,7 @@ void newshadows_captureProjectedShadow(ushort *object)
 /*
  * --INFO--
  *
- * Function: FUN_8006b9ac
+ * Function: FUN_8006a2d0
  * EN v1.0 Address: 0x8006A2D0
  * EN v1.0 Size: 320b
  * EN v1.1 Address: 0x8006B9AC
@@ -390,7 +390,7 @@ void newshadows_sortQueuedShadowCasters(int queueBase,int casterCount)
 /*
  * --INFO--
  *
- * Function: FUN_8006badc
+ * Function: FUN_8006a410
  * EN v1.0 Address: 0x8006A410
  * EN v1.0 Size: 2448b
  * EN v1.1 Address: 0x8006BADC
@@ -536,13 +536,13 @@ void newshadows_renderQueuedShadowCasters(void)
   fStack_a4 = (float)in_ps21_1;
   FUN_8028680c();
   if (DAT_803ddbf8 != 0) {
-    FUN_8000faec();
+    FUN_800069b8();
     newshadows_sortQueuedShadowCasters(-0x7fc710f8,(uint)DAT_803ddbf8);
-    FUN_8000f478(1);
-    puVar5 = FUN_8000facc();
-    dVar21 = FUN_8000fc54();
-    FUN_8000fc5c((double)FLOAT_803df9b0);
-    FUN_8000fc4c((double)FLOAT_803df9ac);
+    FUN_80006954(1);
+    puVar5 = FUN_800069a8();
+    dVar21 = FUN_800069f8();
+    FUN_80006a00((double)FLOAT_803df9b0);
+    FUN_800069f4((double)FLOAT_803df9ac);
     dVar26 = (double)*(float *)(puVar5 + 6);
     dVar25 = (double)*(float *)(puVar5 + 8);
     dVar24 = (double)*(float *)(puVar5 + 10);
@@ -553,8 +553,8 @@ void newshadows_renderQueuedShadowCasters(void)
     local_240 = FLOAT_803df9a8;
     local_23c = FLOAT_803df9ac;
     local_238 = FLOAT_803df9a8;
-    FUN_80061210((double)FLOAT_803df9b4,&local_240,afStack_170);
-    FUN_80060d14(&uStack_25c,&uStack_260);
+    FUN_80060710((double)FLOAT_803df9b4,&local_240,afStack_170);
+    FUN_800606a4(&uStack_25c,&uStack_260);
     bVar17 = 0;
     uVar18 = 0;
     piVar19 = &DAT_8038ef08;
@@ -562,9 +562,9 @@ void newshadows_renderQueuedShadowCasters(void)
         cVar16 = cVar16 + '\x01') {
       iVar13 = *piVar19;
       pfVar12 = *(float **)(iVar13 + 100);
-      FUN_8000f478(0);
-      uVar10 = FUN_80062844(iVar13,(uint)DAT_803dc070);
-      FUN_8000f478(1);
+      FUN_80006954(0);
+      uVar10 = FUN_80061198(iVar13,(uint)DAT_803dc070);
+      FUN_80006954(1);
       if (4 < (uVar10 & 0xff)) {
         if (((uint)pfVar12[0xc] & 0x20) != 0) {
           FUN_80003494((uint)auStack_228,iVar13 + 0xc,0xc);
@@ -597,7 +597,7 @@ void newshadows_renderQueuedShadowCasters(void)
             uVar15 = (uint)*(ushort *)(*(int *)(*(int *)(iVar13 + 100) + 4) + 10);
             uVar14 = uVar15;
           }
-          FUN_800894c8(iVar13,&local_234,&local_230,&local_22c);
+          FUN_80080f6c(iVar13,&local_234,&local_230,&local_22c);
           local_24c = -pfVar12[5];
           local_248 = -pfVar12[6];
           local_244 = -pfVar12[7];
@@ -618,9 +618,9 @@ void newshadows_renderQueuedShadowCasters(void)
           dVar27 = -(double)local_234;
           dVar29 = -(double)local_230;
           dVar28 = -(double)local_22c;
-          uVar6 = FUN_80021884();
+          uVar6 = FUN_80017730();
           DAT_803ddc04 = uVar6 & 0xffff;
-          uVar6 = FUN_80021884();
+          uVar6 = FUN_80017730();
           DAT_803ddc08 = (uVar6 & 0xffff) - 0x3fc8;
           puVar5[1] = (short)DAT_803ddc08;
           *puVar5 = (short)DAT_803ddc04;
@@ -644,9 +644,9 @@ void newshadows_renderQueuedShadowCasters(void)
           pfVar12[5] = -local_234;
           pfVar12[6] = -local_230;
           pfVar12[7] = -local_22c;
-          FUN_80070074(uVar15);
-          piVar7 = (int *)FUN_8002b660(iVar13);
-          iVar8 = FUN_80028630(piVar7,0);
+          FUN_8006f788(uVar15);
+          piVar7 = (int *)FUN_80017a54(iVar13);
+          iVar8 = FUN_80017970(piVar7,0);
           *(float *)(puVar5 + 6) = (float)(dVar27 + (double)*(float *)(iVar8 + 0xc));
           *(float *)(puVar5 + 8) = (float)(dVar29 + (double)*(float *)(iVar8 + 0x1c));
           *(float *)(puVar5 + 10) = (float)(dVar28 + (double)*(float *)(iVar8 + 0x2c));
@@ -673,18 +673,18 @@ void newshadows_renderQueuedShadowCasters(void)
           FUN_80247dfc(dVar27,dVar22,dVar27,dVar22,(double)FLOAT_803df9ac,(double)FLOAT_803df9ec,
                        afStack_210);
           FUN_8025d6ac(afStack_210,1);
-          FUN_8000f584();
+          FUN_80006984();
           FUN_80247b70(dVar22,dVar27,dVar27,dVar22,dVar23,dVar23,dVar23,dVar23,pfVar11);
-          pfVar9 = (float *)FUN_8000f56c();
+          pfVar9 = (float *)FUN_80006974();
           FUN_802475e4(pfVar9,(float *)(&DAT_8038fd48 + iVar4));
           FUN_80247618(pfVar11,pfVar9,pfVar11);
           *(float **)(*(int *)(iVar13 + 100) + 0xc) = pfVar11;
           piVar7 = &DAT_803925b8 + bVar17;
           (&DAT_8038fd78)[uVar3 * 0x1a] = *piVar7;
           (&DAT_8038fd7d)[iVar4] = (&DAT_803dc2c8)[bVar17];
-          FUN_8003b9b0(iVar13);
+          FUN_8003b7dc(iVar13);
           if (*(char *)(piVar19 + 2) == '\x02') {
-            FUN_8007048c(1,3,1);
+            FUN_8006f8fc(1,3,1);
             dVar23 = (double)FLOAT_803df9a8;
             FUN_80247a7c(dVar23,dVar23,dVar23,(float *)(&DAT_8038fd48 + iVar4));
             (&DAT_8038fd50)[uVar3 * 0x1a] = FLOAT_803df9f0;
@@ -695,12 +695,12 @@ void newshadows_renderQueuedShadowCasters(void)
             FUN_80259504((ushort)uVar15,(ushort)uVar15,0x11,0);
             FUN_80259858('\0',(byte *)(DAT_803dd970 + 0x1a),'\0',(byte *)(DAT_803dd970 + 0x32));
             FUN_80259c0c(*(int *)(*(int *)(iVar13 + 100) + 4) + 0x60,1);
-            FUN_8004a550();
+            FUN_80045be8();
             (&DAT_8038fd78)[uVar3 * 0x1a] = *(undefined4 *)(*(int *)(iVar13 + 100) + 4);
           }
           else {
             if (bVar17 == 0) {
-              FUN_8007048c(1,3,1);
+              FUN_8006f8fc(1,3,1);
               FUN_80259400(0,0,uVar15,uVar15);
               FUN_80259504((ushort)uVar14,(ushort)uVar14,0x20,1);
               FUN_80259c0c(*piVar7 + 0x60,1);
@@ -745,53 +745,53 @@ void newshadows_renderQueuedShadowCasters(void)
       piVar19 = piVar19 + 3;
     }
     if (1 < bVar17) {
-      FUN_8007048c(1,3,1);
+      FUN_8006f8fc(1,3,1);
       FUN_80259858('\0',(byte *)(DAT_803dd970 + 0x1a),'\0',(byte *)(DAT_803dd970 + 0x32));
       FUN_80259400(0,0,0x100,0x100);
       FUN_80259504(0x100,0x100,0x28,0);
       FUN_80259c0c(DAT_803925bc + 0x60,1);
       FUN_80258c24();
-      FUN_8004a550();
+      FUN_80045be8();
     }
-    FUN_8007007c();
+    FUN_8006f790();
     *(float *)(puVar5 + 6) = (float)dVar26;
     *(float *)(puVar5 + 8) = (float)dVar25;
     *(float *)(puVar5 + 10) = (float)dVar24;
     puVar5[1] = (short)local_100;
     *puVar5 = uVar1;
     puVar5[2] = uVar2;
-    uVar18 = FUN_8005cec4();
+    uVar18 = FUN_8005d00c();
     if (uVar18 == 0) {
-      uVar18 = FUN_8005cf2c();
+      uVar18 = FUN_8005d06c();
       if (uVar18 == 0) {
-        FUN_8000f478(0);
-        FUN_8000fc5c(dVar21);
-        FUN_8000fc4c((double)FLOAT_803dc2d0);
-        FUN_8000f11c();
+        FUN_80006954(0);
+        FUN_80006a00(dVar21);
+        FUN_800069f4((double)FLOAT_803dc2d0);
+        FUN_8000694c();
       }
       else {
-        FUN_8000f478(0);
-        FUN_8000fc5c(dVar21);
-        FUN_8000fc4c((double)FLOAT_803dfa00);
-        FUN_8000f11c();
+        FUN_80006954(0);
+        FUN_80006a00(dVar21);
+        FUN_800069f4((double)FLOAT_803dfa00);
+        FUN_8000694c();
       }
     }
     else {
-      FUN_8000f478(0);
-      FUN_8000fc5c(dVar21);
-      uVar18 = FUN_8005cf2c();
+      FUN_80006954(0);
+      FUN_80006a00(dVar21);
+      uVar18 = FUN_8005d06c();
       if (uVar18 == 0) {
-        FUN_8000fc4c((double)FLOAT_803df9fc);
+        FUN_800069f4((double)FLOAT_803df9fc);
       }
       else {
-        FUN_8000fc4c((double)FLOAT_803df9f8);
+        FUN_800069f4((double)FLOAT_803df9f8);
       }
-      FUN_8000f11c();
+      FUN_8000694c();
     }
-    FUN_8000f584();
-    FUN_8000fb20();
-    FUN_8000f7a0();
-    FUN_8000faf8();
+    FUN_80006984();
+    FUN_800069d4();
+    FUN_80006988();
+    FUN_800069bc();
   }
   FUN_80286858();
   return;
@@ -800,7 +800,7 @@ void newshadows_renderQueuedShadowCasters(void)
 /*
  * --INFO--
  *
- * Function: FUN_8006c500
+ * Function: FUN_8006ada0
  * EN v1.0 Address: 0x8006ADA0
  * EN v1.0 Size: 372b
  * EN v1.1 Address: 0x8006C500
@@ -852,7 +852,7 @@ void newshadows_queueShadowCaster(int object)
 /*
  * --INFO--
  *
- * Function: FUN_8006c63c
+ * Function: FUN_8006af14
  * EN v1.0 Address: 0x8006AF14
  * EN v1.0 Size: 28b
  * EN v1.1 Address: 0x8006C63C
@@ -873,7 +873,7 @@ void newshadows_getShadowTextureTable4x8(int *tableOut,int *columnsOut,int *rows
 /*
  * --INFO--
  *
- * Function: FUN_8006c65c
+ * Function: FUN_8006af30
  * EN v1.0 Address: 0x8006AF30
  * EN v1.0 Size: 20b
  * EN v1.1 Address: 0x8006C65C
@@ -893,7 +893,7 @@ void newshadows_getShadowTextureTable16(int *tableOut,int *countOut)
 /*
  * --INFO--
  *
- * Function: FUN_8006c674
+ * Function: FUN_8006af44
  * EN v1.0 Address: 0x8006AF44
  * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C674
@@ -903,7 +903,7 @@ void newshadows_getShadowTextureTable16(int *tableOut,int *countOut)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006c674(undefined4 *param_1)
+void FUN_8006af44(undefined4 *param_1)
 {
   *param_1 = DAT_803ddc44;
   return;
@@ -912,7 +912,7 @@ void FUN_8006c674(undefined4 *param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8006c680
+ * Function: FUN_8006af50
  * EN v1.0 Address: 0x8006AF50
  * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C680
@@ -922,7 +922,7 @@ void FUN_8006c674(undefined4 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006c680(undefined4 *param_1)
+void FUN_8006af50(undefined4 *param_1)
 {
   *param_1 = DAT_803ddc48;
   return;
@@ -931,7 +931,7 @@ void FUN_8006c680(undefined4 *param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8006c68c
+ * Function: FUN_8006af5c
  * EN v1.0 Address: 0x8006AF5C
  * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C68C
@@ -950,7 +950,7 @@ void newshadows_getShadowTexture(int *textureOut)
 /*
  * --INFO--
  *
- * Function: FUN_8006c698
+ * Function: FUN_8006af68
  * EN v1.0 Address: 0x8006AF68
  * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C698
@@ -960,7 +960,7 @@ void newshadows_getShadowTexture(int *textureOut)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006c698(undefined4 *param_1)
+void FUN_8006af68(undefined4 *param_1)
 {
   *param_1 = DAT_803ddc34;
   return;
@@ -969,7 +969,7 @@ void FUN_8006c698(undefined4 *param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8006c6a4
+ * Function: FUN_8006af74
  * EN v1.0 Address: 0x8006AF74
  * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C6A4
@@ -988,7 +988,7 @@ void newshadows_getBlankShadowTexture(int *textureOut)
 /*
  * --INFO--
  *
- * Function: FUN_8006c6b0
+ * Function: FUN_8006af80
  * EN v1.0 Address: 0x8006AF80
  * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C6B0
@@ -1007,7 +1007,7 @@ void newshadows_getShadowDirectionTexture(int *textureOut)
 /*
  * --INFO--
  *
- * Function: FUN_8006c6bc
+ * Function: FUN_8006af8c
  * EN v1.0 Address: 0x8006AF8C
  * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C6BC
@@ -1026,7 +1026,7 @@ void newshadows_getSoftShadowTexture(int *textureOut)
 /*
  * --INFO--
  *
- * Function: FUN_8006c6c8
+ * Function: FUN_8006af98
  * EN v1.0 Address: 0x8006AF98
  * EN v1.0 Size: 108b
  * EN v1.1 Address: 0x8006C6C8
@@ -1036,11 +1036,11 @@ void newshadows_getSoftShadowTexture(int *textureOut)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_8006c6c8(void)
+int FUN_8006af98(void)
 {
   int iVar1;
   
-  iVar1 = FUN_80054e14(0x200,0x200,1,'\0',0,0,0,0,0);
+  iVar1 = FUN_800537a0(0x200,0x200,1,'\0',0,0,0,0,0);
   *(undefined2 *)(iVar1 + 0xe) = 1;
   FUN_802420e0(iVar1 + 0x60,*(int *)(iVar1 + 0x44));
   return iVar1;
@@ -1049,7 +1049,7 @@ int FUN_8006c6c8(void)
 /*
  * --INFO--
  *
- * Function: FUN_8006c734
+ * Function: FUN_8006b004
  * EN v1.0 Address: 0x8006B004
  * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C734
@@ -1068,7 +1068,7 @@ void newshadows_getShadowRampTexture(int *textureOut)
 /*
  * --INFO--
  *
- * Function: FUN_8006c740
+ * Function: FUN_8006b010
  * EN v1.0 Address: 0x8006B010
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8006C740
@@ -1086,7 +1086,7 @@ int newshadows_getSmallShadowTexture(void)
 /*
  * --INFO--
  *
- * Function: FUN_8006c748
+ * Function: FUN_8006b018
  * EN v1.0 Address: 0x8006B018
  * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C748
@@ -1105,7 +1105,7 @@ void newshadows_getShadowDiskTexture(int *textureOut)
 /*
  * --INFO--
  *
- * Function: FUN_8006c754
+ * Function: FUN_8006b024
  * EN v1.0 Address: 0x8006B024
  * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C754
@@ -1115,7 +1115,7 @@ void newshadows_getShadowDiskTexture(int *textureOut)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006c754(undefined4 *param_1)
+void FUN_8006b024(undefined4 *param_1)
 {
   *param_1 = DAT_803ddc5c;
   return;
@@ -1124,7 +1124,7 @@ void FUN_8006c754(undefined4 *param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8006c760
+ * Function: FUN_8006b030
  * EN v1.0 Address: 0x8006B030
  * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x8006C760
@@ -1143,7 +1143,7 @@ void newshadows_getShadowNoiseTexture(int *textureOut)
 /*
  * --INFO--
  *
- * Function: FUN_8006c76c
+ * Function: FUN_8006b03c
  * EN v1.0 Address: 0x8006B03C
  * EN v1.0 Size: 120b
  * EN v1.1 Address: 0x8006C76C
@@ -1153,7 +1153,7 @@ void newshadows_getShadowNoiseTexture(int *textureOut)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006c76c(int param_1,undefined4 *param_2,undefined4 *param_3,int *param_4,int *param_5)
+void FUN_8006b03c(int param_1,undefined4 *param_2,undefined4 *param_3,int *param_4,int *param_5)
 {
   *param_2 = (&DAT_8038ee3c)[(DAT_803ddc0c + 1) % 3];
   *param_3 = **(undefined4 **)(param_1 + 100);
@@ -1165,7 +1165,7 @@ void FUN_8006c76c(int param_1,undefined4 *param_2,undefined4 *param_3,int *param
 /*
  * --INFO--
  *
- * Function: FUN_8006c7ec
+ * Function: FUN_8006b0b4
  * EN v1.0 Address: 0x8006B0B4
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8006C7EC
@@ -1183,7 +1183,7 @@ double newshadows_getShadowNoiseScale(void)
 /*
  * --INFO--
  *
- * Function: FUN_8006c7f4
+ * Function: FUN_8006b0bc
  * EN v1.0 Address: 0x8006B0BC
  * EN v1.0 Size: 44b
  * EN v1.1 Address: 0x8006C7F4
@@ -1193,7 +1193,7 @@ double newshadows_getShadowNoiseScale(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006c7f4(int param_1)
+void FUN_8006b0bc(int param_1)
 {
   FUN_8025b054((uint *)(DAT_803ddc50 + 0x20),param_1);
   return;
@@ -1202,7 +1202,7 @@ void FUN_8006c7f4(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8006c820
+ * Function: FUN_8006b0e8
  * EN v1.0 Address: 0x8006B0E8
  * EN v1.0 Size: 76b
  * EN v1.1 Address: 0x8006C820
@@ -1212,7 +1212,7 @@ void FUN_8006c7f4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006c820(int param_1)
+void FUN_8006b0e8(int param_1)
 {
   if (*(char *)(DAT_803ddc4c + 0x48) == '\0') {
     FUN_8025b054((uint *)(DAT_803ddc4c + 0x20),param_1);
@@ -1226,7 +1226,7 @@ void FUN_8006c820(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8006c86c
+ * Function: FUN_8006b134
  * EN v1.0 Address: 0x8006B134
  * EN v1.0 Size: 76b
  * EN v1.1 Address: 0x8006C86C
@@ -1250,7 +1250,7 @@ void newshadows_bindShadowRenderTexture(int textureSlot)
 /*
  * --INFO--
  *
- * Function: FUN_8006c8b8
+ * Function: FUN_8006b180
  * EN v1.0 Address: 0x8006B180
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8006C8B8
@@ -1268,7 +1268,7 @@ int newshadows_getShadowRenderTexture(void)
 /*
  * --INFO--
  *
- * Function: FUN_8006c8c0
+ * Function: FUN_8006b188
  * EN v1.0 Address: 0x8006B188
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8006C8C0
@@ -1278,7 +1278,7 @@ int newshadows_getShadowRenderTexture(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8006c8c0(void)
+undefined4 FUN_8006b188(void)
 {
   return DAT_803ddc14;
 }
@@ -1286,7 +1286,7 @@ undefined4 FUN_8006c8c0(void)
 /*
  * --INFO--
  *
- * Function: FUN_8006c8c8
+ * Function: FUN_8006b190
  * EN v1.0 Address: 0x8006B190
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8006C8C8
@@ -1304,7 +1304,7 @@ int newshadows_getInverseShadowRampTexture(void)
 /*
  * --INFO--
  *
- * Function: FUN_8006c8d0
+ * Function: FUN_8006b198
  * EN v1.0 Address: 0x8006B198
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8006C8D0
@@ -1322,7 +1322,7 @@ int newshadows_getRadialFalloffTexture(void)
 /*
  * --INFO--
  *
- * Function: FUN_8006c8d8
+ * Function: FUN_8006b1a0
  * EN v1.0 Address: 0x8006B1A0
  * EN v1.0 Size: 76b
  * EN v1.1 Address: 0x8006C8D8
@@ -1346,7 +1346,7 @@ void newshadows_bindShadowCaptureTexture(int textureSlot)
 /*
  * --INFO--
  *
- * Function: FUN_8006c924
+ * Function: FUN_8006b1ec
  * EN v1.0 Address: 0x8006B1EC
  * EN v1.0 Size: 136b
  * EN v1.1 Address: 0x8006C924
@@ -1358,7 +1358,7 @@ void newshadows_bindShadowCaptureTexture(int textureSlot)
  */
 void newshadows_refreshShadowCaptureTexture(void)
 {
-  FUN_80077318((double)FLOAT_803df9a8,(double)FLOAT_803df9a8,DAT_803ddbfc,0xff,0x40);
+  FUN_800709e8((double)FLOAT_803df9a8,(double)FLOAT_803df9a8,DAT_803ddbfc,0xff,0x40);
   FUN_80259400(0,0,0x50,0x3c);
   FUN_80259504(0x50,0x3c,4,0);
   FUN_80259c0c(DAT_803ddc64 + 0x60,1);
@@ -1371,7 +1371,7 @@ void newshadows_refreshShadowCaptureTexture(void)
 /*
  * --INFO--
  *
- * Function: FUN_8006c9ac
+ * Function: FUN_8006b274
  * EN v1.0 Address: 0x8006B274
  * EN v1.0 Size: 236b
  * EN v1.1 Address: 0x8006C9AC
@@ -1405,7 +1405,7 @@ void newshadows_flushShadowRenderTargets(void)
 /*
  * --INFO--
  *
- * Function: FUN_8006ca98
+ * Function: FUN_8006b360
  * EN v1.0 Address: 0x8006B360
  * EN v1.0 Size: 388b
  * EN v1.1 Address: 0x8006CA98
@@ -1433,7 +1433,7 @@ void newshadows_updateFrameState(void)
   
   local_8 = (float)in_f31;
   fStack_4 = (float)in_ps31_1;
-  iVar2 = FUN_80020800();
+  iVar2 = FUN_800176d0();
   if (iVar2 == 0) {
     FLOAT_803ddc2c = FLOAT_803dfa14 * FLOAT_803dc074 + FLOAT_803ddc2c;
     FLOAT_803ddc28 = FLOAT_803dfa18 * FLOAT_803dc074 + FLOAT_803ddc28;
@@ -1445,18 +1445,18 @@ void newshadows_updateFrameState(void)
     }
   }
   DAT_803ddbf8 = 0;
-  DAT_803ddc68 = (int)FUN_8000facc();
+  DAT_803ddc68 = (int)FUN_800069a8();
   DAT_803ddc20 = DAT_803ddc20 + (ushort)DAT_803dc070 * 0x28a;
   local_20 = CONCAT44(0x43300000,(uint)DAT_803ddc20);
   dVar5 = (double)FUN_802947f8();
   FLOAT_803ddc24 = (float)((double)FLOAT_803dfa20 * dVar5);
-  FUN_80060d2c();
+  FUN_800606a8();
   DAT_803ddc0c = (char)(DAT_803ddc0c + 1) + (char)((DAT_803ddc0c + 1) / 3) * -3;
-  cVar3 = FUN_8004c3c4();
+  cVar3 = FUN_80048094();
   if (cVar3 != '\0') {
-    puVar4 = FUN_8000f578();
+    puVar4 = FUN_8000697c();
     dVar6 = (double)*(float *)(puVar4 + 0x1c);
-    FUN_8004c3b0(&local_24,&local_28);
+    FUN_80048048(&local_24,&local_28);
     dVar5 = (double)local_24;
     if (dVar6 < dVar5) {
       if ((double)local_28 < dVar6) {
@@ -1471,7 +1471,7 @@ void newshadows_updateFrameState(void)
       uVar1 = 0;
     }
     if ((uVar1 & 0xff) != (uint)DAT_803ddc00) {
-      FUN_8006a034(uVar1 & 0xff);
+      FUN_80064384(uVar1 & 0xff);
     }
   }
   return;
@@ -1480,7 +1480,7 @@ void newshadows_updateFrameState(void)
 /*
  * --INFO--
  *
- * Function: FUN_8006cc38
+ * Function: FUN_8006b4e4
  * EN v1.0 Address: 0x8006B4E4
  * EN v1.0 Size: 20b
  * EN v1.1 Address: 0x8006CC38
@@ -1500,7 +1500,7 @@ void newshadows_getShadowNoiseScroll(float *xOffsetOut,float *yOffsetOut)
 /*
  * --INFO--
  *
- * Function: FUN_8006cc4c
+ * Function: FUN_8006b4f8
  * EN v1.0 Address: 0x8006B4F8
  * EN v1.0 Size: 72b
  * EN v1.1 Address: 0x8006CC4C
@@ -1510,7 +1510,7 @@ void newshadows_getShadowNoiseScroll(float *xOffsetOut,float *yOffsetOut)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006cc4c(undefined *param_1)
+void FUN_8006b4f8(undefined *param_1)
 {
   undefined *puVar1;
   int iVar2;
@@ -1534,7 +1534,7 @@ void FUN_8006cc4c(undefined *param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8006cca0
+ * Function: FUN_8006b540
  * EN v1.0 Address: 0x8006B540
  * EN v1.0 Size: 44b
  * EN v1.1 Address: 0x8006CCA0
@@ -1546,7 +1546,7 @@ void FUN_8006cc4c(undefined *param_1)
  */
 void newshadows_freeShadowDirectionTexture(void)
 {
-  FUN_800238c4(DAT_803ddc3c);
+  FUN_80017814(DAT_803ddc3c);
   DAT_803ddc3c = 0;
   return;
 }
@@ -1554,7 +1554,7 @@ void newshadows_freeShadowDirectionTexture(void)
 /*
  * --INFO--
  *
- * Function: FUN_8006cccc
+ * Function: FUN_8006b56c
  * EN v1.0 Address: 0x8006B56C
  * EN v1.0 Size: 696b
  * EN v1.1 Address: 0x8006CCCC
@@ -1582,7 +1582,7 @@ void newshadows_buildShadowDirectionTexture(void)
   double dVar14;
   undefined8 local_18;
   
-  DAT_803ddc3c = FUN_80054e14(0x100,0x100,3,'\0',0,0,0,1,1);
+  DAT_803ddc3c = FUN_800537a0(0x100,0x100,3,'\0',0,0,0,1,1);
   dVar5 = DOUBLE_803dfa48;
   fVar4 = FLOAT_803dfa40;
   fVar3 = FLOAT_803dfa3c;
@@ -1628,7 +1628,7 @@ void newshadows_buildShadowDirectionTexture(void)
 /*
  * --INFO--
  *
- * Function: FUN_8006ce9c
+ * Function: FUN_8006b824
  * EN v1.0 Address: 0x8006B824
  * EN v1.0 Size: 1216b
  * EN v1.1 Address: 0x8006CE9C
@@ -1638,7 +1638,7 @@ void newshadows_buildShadowDirectionTexture(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006ce9c(double param_1,double param_2,double param_3,float *param_4,int param_5,
+void FUN_8006b824(double param_1,double param_2,double param_3,float *param_4,int param_5,
                  float *param_6,float *param_7)
 {
   float fVar1;
@@ -1748,7 +1748,7 @@ void FUN_8006ce9c(double param_1,double param_2,double param_3,float *param_4,in
 /*
  * --INFO--
  *
- * Function: FUN_8006d19c
+ * Function: FUN_8006bce4
  * EN v1.0 Address: 0x8006BCE4
  * EN v1.0 Size: 1524b
  * EN v1.1 Address: 0x8006D19C
@@ -1758,7 +1758,7 @@ void FUN_8006ce9c(double param_1,double param_2,double param_3,float *param_4,in
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006d19c(void)
+void FUN_8006bce4(void)
 {
   float fVar1;
   float fVar2;
@@ -1841,7 +1841,7 @@ void FUN_8006d19c(void)
   local_78 = (float)in_f24;
   fStack_74 = (float)in_ps24_1;
   FUN_80286820();
-  uVar5 = FUN_80022e00(1);
+  uVar5 = FUN_800177bc(1);
   uVar15 = 0;
   iVar11 = 0;
   dVar21 = (double)FLOAT_803df9ac;
@@ -1851,25 +1851,25 @@ void FUN_8006d19c(void)
   pfVar14 = (float *)&DAT_803925d8;
   dVar19 = DOUBLE_803dfa48;
   while ((iVar11 < 0x32 && (uVar15 < 10000))) {
-    uStack_dc = FUN_80022264(8,0x10);
+    uStack_dc = FUN_80017760(8,0x10);
     uStack_dc = uStack_dc ^ 0x80000000;
     local_e0 = 0x43300000;
     *pfVar14 = (float)((double)CONCAT44(0x43300000,uStack_dc) - dVar19);
-    uStack_d4 = FUN_80022264(5,10);
+    uStack_d4 = FUN_80017760(5,10);
     uStack_d4 = uStack_d4 ^ 0x80000000;
     local_d8 = 0x43300000;
     pfVar14[3] = (float)(dVar18 * (double)(float)((double)CONCAT44(0x43300000,uStack_d4) - dVar19));
-    uVar15 = FUN_80022264(0x14,0x32);
+    uVar15 = FUN_80017760(0x14,0x32);
     local_d0 = (double)CONCAT44(0x43300000,uVar15 ^ 0x80000000);
     pfVar14[4] = pfVar14[3] * (float)(dVar18 * (double)(float)(local_d0 - dVar19));
     uVar15 = 0;
     pfVar9 = pfVar14 + 1;
     pfVar12 = pfVar14 + 2;
     do {
-      uVar10 = FUN_80022264(0,999);
+      uVar10 = FUN_80017760(0,999);
       local_d0 = (double)CONCAT44(0x43300000,uVar10 ^ 0x80000000);
       *pfVar9 = (float)(dVar20 * (double)(float)(local_d0 - dVar19));
-      uStack_d4 = FUN_80022264(0,999);
+      uStack_d4 = FUN_80017760(0,999);
       uStack_d4 = uStack_d4 ^ 0x80000000;
       local_d8 = 0x43300000;
       *pfVar12 = (float)(dVar20 * (double)(float)((double)CONCAT44(0x43300000,uStack_d4) - dVar19));
@@ -1920,7 +1920,7 @@ void FUN_8006d19c(void)
   dVar18 = (double)FLOAT_803df988;
   dVar19 = DOUBLE_803dfa48;
   do {
-    iVar7 = FUN_80054e14(0x40,0x40,3,'\0',0,1,1,1,1);
+    iVar7 = FUN_800537a0(0x40,0x40,3,'\0',0,1,1,1,1);
     *piVar13 = iVar7;
     uVar10 = 0;
     do {
@@ -1932,7 +1932,7 @@ void FUN_8006d19c(void)
         local_d8 = 0x43300000;
         local_e0 = 0x43300000;
         uStack_dc = uVar15 ^ 0x80000000;
-        FUN_8006ce9c((double)(float)((double)(float)(local_d0 - dVar19) * dVar20),
+        FUN_8006b824((double)(float)((double)(float)(local_d0 - dVar19) * dVar20),
                      (double)(float)((double)(float)((double)CONCAT44(0x43300000,uStack_d4) - dVar19
                                                     ) * dVar20),
                      (double)(float)((double)CONCAT44(0x43300000,uVar15 ^ 0x80000000) - dVar19),
@@ -1952,7 +1952,7 @@ void FUN_8006d19c(void)
     piVar13 = piVar13 + 1;
     uVar15 = uVar15 + 1;
   } while ((int)uVar15 < 0x10);
-  DAT_803ddc60 = FUN_80054e14(0x40,0x40,3,'\0',0,1,1,1,1);
+  DAT_803ddc60 = FUN_800537a0(0x40,0x40,3,'\0',0,1,1,1,1);
   uVar15 = 0;
   dVar19 = (double)FLOAT_803dfa40;
   do {
@@ -1961,8 +1961,8 @@ void FUN_8006d19c(void)
       iVar7 = DAT_803ddc60 + (uVar15 & 3) * 2;
       local_c0 = CONCAT44(0x43300000,uVar10 ^ 0x80000000);
       FUN_802947f8();
-      dVar18 = (double)FUN_80294b54();
-      dVar20 = (double)FUN_80294b54();
+      dVar18 = (double)FUN_802949e8();
+      dVar20 = (double)FUN_802949e8();
       iVar11 = (int)(dVar19 * dVar18 + dVar19);
       local_c8 = (longlong)iVar11;
       uVar8 = (uint)(dVar19 * (double)(float)(dVar18 * dVar20) + dVar19);
@@ -1977,7 +1977,7 @@ void FUN_8006d19c(void)
   FUN_802420e0(DAT_803ddc60 + 0x60,*(int *)(DAT_803ddc60 + 0x44));
   FLOAT_803ddc2c = FLOAT_803df9a8;
   FLOAT_803ddc28 = FLOAT_803df9a8;
-  FUN_80022e00(uVar5 & 0xff);
+  FUN_800177bc(uVar5 & 0xff);
   FUN_8028686c();
   return;
 }
@@ -1985,7 +1985,7 @@ void FUN_8006d19c(void)
 /*
  * --INFO--
  *
- * Function: FUN_8006d764
+ * Function: FUN_8006c2d8
  * EN v1.0 Address: 0x8006C2D8
  * EN v1.0 Size: 6448b
  * EN v1.1 Address: 0x8006D764
@@ -1995,7 +1995,7 @@ void FUN_8006d19c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006d764(void)
+void FUN_8006c2d8(void)
 {
   int iVar1;
   int iVar2;
@@ -2053,9 +2053,9 @@ void FUN_8006d764(void)
   
   FUN_80286834();
   puVar26 = &DAT_8038eba8;
-  uVar15 = FUN_80022e00(1);
-  DAT_803925b8 = FUN_80054e14(0x100,0x100,0,'\0',0,0,0,1,1);
-  DAT_803925bc = FUN_80054e14(0x100,0x100,1,'\0',0,0,0,0,0);
+  uVar15 = FUN_800177bc(1);
+  DAT_803925b8 = FUN_800537a0(0x100,0x100,0,'\0',0,0,0,1,1);
+  DAT_803925bc = FUN_800537a0(0x100,0x100,1,'\0',0,0,0,0,0);
   DAT_803925c0 = DAT_803925bc;
   DAT_803925c4 = DAT_803925bc;
   DAT_803925c8 = DAT_803925bc;
@@ -2064,10 +2064,10 @@ void FUN_8006d764(void)
   DAT_803925d4 = DAT_803925bc;
   FUN_800033a8(DAT_803925b8 + 0x60,0,*(uint *)(DAT_803925b8 + 0x44));
   FUN_802420e0(DAT_803925b8 + 0x60,*(int *)(DAT_803925b8 + 0x44));
-  DAT_803ddbfc = FUN_80054e14(0x140,0xf0,4,'\0',0,0,0,1,1);
-  DAT_803ddc64 = FUN_80054e14(0x50,0x3c,4,'\0',0,0,0,1,1);
-  DAT_803ddc5c = FUN_80054e14(0x140,0xf0,1,'\0',0,0,0,1,1);
-  DAT_803ddc58 = FUN_80054e14(0x20,0x20,1,'\0',0,0,0,1,1);
+  DAT_803ddbfc = FUN_800537a0(0x140,0xf0,4,'\0',0,0,0,1,1);
+  DAT_803ddc64 = FUN_800537a0(0x50,0x3c,4,'\0',0,0,0,1,1);
+  DAT_803ddc5c = FUN_800537a0(0x140,0xf0,1,'\0',0,0,0,1,1);
+  DAT_803ddc58 = FUN_800537a0(0x20,0x20,1,'\0',0,0,0,1,1);
   fVar8 = FLOAT_803dfa6c;
   fVar10 = FLOAT_803dfa50;
   dVar41 = DOUBLE_803dfa48;
@@ -2109,7 +2109,7 @@ void FUN_8006d764(void)
     uVar19 = uVar19 + 1;
   } while ((int)uVar19 < 0x20);
   FUN_802420e0(DAT_803ddc58 + 0x60,*(int *)(DAT_803ddc58 + 0x44));
-  DAT_803ddc54 = FUN_80054e14(0x10,0x10,1,'\0',0,0,0,1,1);
+  DAT_803ddc54 = FUN_800537a0(0x10,0x10,1,'\0',0,0,0,1,1);
   fVar10 = FLOAT_803dfa74;
   dVar41 = DOUBLE_803dfa48;
   fVar13 = FLOAT_803df9c0;
@@ -2156,7 +2156,7 @@ void FUN_8006d764(void)
   uVar23 = 0;
   uVar24 = 0;
   uVar25 = 1;
-  DAT_803ddc50 = FUN_80054e14(0x40,0x40,5,'\0',0,0,0,1,1);
+  DAT_803ddc50 = FUN_800537a0(0x40,0x40,5,'\0',0,0,0,1,1);
   dVar29 = (double)FLOAT_803df9a8;
   uVar19 = 0;
   dVar49 = (double)FLOAT_803dfa7c;
@@ -2188,11 +2188,11 @@ void FUN_8006d764(void)
       if (dVar45 < (double)(float)(dVar50 * dVar50 + (double)(fVar5 * fVar5))) {
         dVar38 = DOUBLE_803df9e0;
       }
-      dVar30 = (double)FUN_80294b54();
+      dVar30 = (double)FUN_802949e8();
       dVar30 = -dVar30;
-      dVar31 = (double)FUN_80294b54();
+      dVar31 = (double)FUN_802949e8();
       dVar31 = ABS(dVar31);
-      dVar32 = (double)FUN_80294b54();
+      dVar32 = (double)FUN_802949e8();
       if (dVar29 < (double)(float)(dVar30 - (double)(float)dVar31)) {
         dVar29 = (double)(float)(dVar30 - (double)(float)dVar31);
       }
@@ -2243,11 +2243,11 @@ void FUN_8006d764(void)
       if (dVar48 < (double)(float)(dVar31 * dVar31 + (double)(fVar5 * fVar5))) {
         dVar38 = DOUBLE_803df9d8;
       }
-      dVar33 = (double)FUN_80294b54();
+      dVar33 = (double)FUN_802949e8();
       dVar33 = -dVar33;
-      dVar34 = (double)FUN_80294b54();
+      dVar34 = (double)FUN_802949e8();
       dVar34 = -dVar34;
-      dVar35 = (double)FUN_80294b54();
+      dVar35 = (double)FUN_802949e8();
       if (dVar45 <= dVar44) {
         dVar44 = (double)FLOAT_803df9a8;
       }
@@ -2281,13 +2281,13 @@ void FUN_8006d764(void)
   } while ((int)uVar19 < 0x40);
   iVar16 = *(int *)(DAT_803ddc50 + 0x44);
   FUN_802420e0(DAT_803ddc50 + 0x60,iVar16);
-  DAT_803ddc4c = FUN_80054ed0(lVar36,dVar37,dVar38,dVar32,dVar39,dVar44,dVar40,dVar41,0x5b0,iVar16,
+  DAT_803ddc4c = FUN_8005398c(lVar36,dVar37,dVar38,dVar32,dVar39,dVar44,dVar40,dVar41,0x5b0,iVar16,
                               uVar17,uVar18,uVar20,uVar23,uVar24,uVar25);
-  DAT_803ddc48 = FUN_80054ed0(lVar36,dVar37,dVar38,dVar32,dVar39,dVar44,dVar40,dVar41,0x600,iVar16,
+  DAT_803ddc48 = FUN_8005398c(lVar36,dVar37,dVar38,dVar32,dVar39,dVar44,dVar40,dVar41,0x600,iVar16,
                               uVar17,uVar18,uVar20,uVar23,uVar24,uVar25);
-  DAT_803ddc44 = FUN_80054ed0(lVar36,dVar37,dVar38,dVar32,dVar39,dVar44,dVar40,dVar41,0xc18,iVar16,
+  DAT_803ddc44 = FUN_8005398c(lVar36,dVar37,dVar38,dVar32,dVar39,dVar44,dVar40,dVar41,0xc18,iVar16,
                               uVar17,uVar18,uVar20,uVar23,uVar24,uVar25);
-  DAT_803ddc1c = FUN_80054e14(0x100,4,1,'\0',0,0,0,0,0);
+  DAT_803ddc1c = FUN_800537a0(0x100,4,1,'\0',0,0,0,0,0);
   uVar19 = 0;
   iVar16 = 0x80;
   do {
@@ -2310,7 +2310,7 @@ void FUN_8006d764(void)
     iVar16 = iVar16 + -1;
   } while (iVar16 != 0);
   FUN_802420e0(DAT_803ddc1c + 0x60,*(int *)(DAT_803ddc1c + 0x44));
-  DAT_803ddc18 = FUN_80054e14(0x100,4,1,'\0',0,0,0,1,1);
+  DAT_803ddc18 = FUN_800537a0(0x100,4,1,'\0',0,0,0,1,1);
   uVar19 = 0;
   iVar16 = 0x80;
   do {
@@ -2333,7 +2333,7 @@ void FUN_8006d764(void)
     iVar16 = iVar16 + -1;
   } while (iVar16 != 0);
   FUN_802420e0(DAT_803ddc18 + 0x60,*(int *)(DAT_803ddc18 + 0x44));
-  DAT_803ddc10 = FUN_80054e14(0x80,0x80,1,'\0',0,0,0,1,1);
+  DAT_803ddc10 = FUN_800537a0(0x80,0x80,1,'\0',0,0,0,1,1);
   fVar13 = FLOAT_803dfa60;
   dVar41 = DOUBLE_803dfa48;
   fVar5 = FLOAT_803df99c;
@@ -2380,7 +2380,7 @@ void FUN_8006d764(void)
     uVar19 = uVar19 + 1;
   } while ((int)uVar19 < 0x80);
   FUN_802420e0(DAT_803ddc10 + 0x60,*(int *)(DAT_803ddc10 + 0x44));
-  DAT_803ddc40 = FUN_80054e14(0x80,0x80,1,'\0',0,0,0,1,1);
+  DAT_803ddc40 = FUN_800537a0(0x80,0x80,1,'\0',0,0,0,1,1);
   fVar13 = FLOAT_803dfa60;
   dVar41 = DOUBLE_803dfa48;
   fVar5 = FLOAT_803df99c;
@@ -2417,10 +2417,10 @@ void FUN_8006d764(void)
     uVar19 = uVar19 + 1;
   } while ((int)uVar19 < 0x80);
   FUN_802420e0(DAT_803ddc40 + 0x60,*(int *)(DAT_803ddc40 + 0x44));
-  DAT_803ddc38 = FUN_80054e14(0x40,0x40,1,'\0',0,0,0,1,1);
+  DAT_803ddc38 = FUN_800537a0(0x40,0x40,1,'\0',0,0,0,1,1);
   FUN_802420b0(DAT_803ddc38 + 0x60,*(int *)(DAT_803ddc38 + 0x44));
-  FUN_8006a034(0);
-  DAT_803ddc34 = FUN_80054e14(0x20,4,1,'\0',0,0,0,1,1);
+  FUN_80064384(0);
+  DAT_803ddc34 = FUN_800537a0(0x20,4,1,'\0',0,0,0,1,1);
   fVar10 = FLOAT_803dfa6c;
   fVar13 = FLOAT_803dfa50;
   dVar41 = DOUBLE_803dfa48;
@@ -2458,7 +2458,7 @@ void FUN_8006d764(void)
     uVar19 = uVar19 + 1;
   } while ((int)uVar19 < 0x20);
   FUN_802420e0(DAT_803ddc34 + 0x60,*(int *)(DAT_803ddc34 + 0x44));
-  DAT_803ddc30 = FUN_80054e14(0x80,0x80,1,'\0',0,1,1,1,1);
+  DAT_803ddc30 = FUN_800537a0(0x80,0x80,1,'\0',0,1,1,1,1);
   fVar13 = FLOAT_803dfa60;
   dVar41 = DOUBLE_803dfa48;
   fVar5 = FLOAT_803df99c;
@@ -2511,7 +2511,7 @@ void FUN_8006d764(void)
     uVar19 = uVar19 + 1;
   } while ((int)uVar19 < 0x80);
   FUN_802420e0(DAT_803ddc30 + 0x60,*(int *)(DAT_803ddc30 + 0x44));
-  DAT_803ddc14 = FUN_80054e14(4,4,3,'\0',0,0,0,1,1);
+  DAT_803ddc14 = FUN_800537a0(4,4,3,'\0',0,0,0,1,1);
   fVar8 = FLOAT_803dfa90;
   dVar41 = DOUBLE_803dfa48;
   fVar10 = FLOAT_803dfa3c;
@@ -2537,17 +2537,17 @@ void FUN_8006d764(void)
     iVar28 = iVar28 + -1;
   } while (iVar28 != 0);
   FUN_802420e0(DAT_803ddc14 + 0x60,*(int *)(DAT_803ddc14 + 0x44));
-  iVar16 = FUN_80054e14(0x80,0x80,1,'\0',0,0,0,1,1);
+  iVar16 = FUN_800537a0(0x80,0x80,1,'\0',0,0,0,1,1);
   FUN_800033a8(iVar16 + 0x60,0,*(uint *)(iVar16 + 0x44));
   *(undefined2 *)(iVar16 + 0xe) = 1;
   FUN_802420e0(iVar16 + 0x60,*(int *)(iVar16 + 0x44));
   DAT_8038ee3c = iVar16;
-  iVar16 = FUN_80054e14(0x80,0x80,1,'\0',0,0,0,1,1);
+  iVar16 = FUN_800537a0(0x80,0x80,1,'\0',0,0,0,1,1);
   FUN_800033a8(iVar16 + 0x60,0,*(uint *)(iVar16 + 0x44));
   *(undefined2 *)(iVar16 + 0xe) = 1;
   FUN_802420e0(iVar16 + 0x60,*(int *)(iVar16 + 0x44));
   DAT_8038ee40 = iVar16;
-  iVar16 = FUN_80054e14(0x80,0x80,1,'\0',0,0,0,1,1);
+  iVar16 = FUN_800537a0(0x80,0x80,1,'\0',0,0,0,1,1);
   FUN_800033a8(iVar16 + 0x60,0,*(uint *)(iVar16 + 0x44));
   *(undefined2 *)(iVar16 + 0xe) = 1;
   FUN_802420e0(iVar16 + 0x60,*(int *)(iVar16 + 0x44));
@@ -2603,7 +2603,7 @@ void FUN_8006d764(void)
     } while (iVar27 != 0);
   }
   FUN_8025b210();
-  FUN_80022e00(uVar15 & 0xff);
+  FUN_800177bc(uVar15 & 0xff);
   FUN_80286880();
   return;
 }
@@ -2611,7 +2611,7 @@ void FUN_8006d764(void)
 /*
  * --INFO--
  *
- * Function: FUN_8006eea0
+ * Function: FUN_8006dc08
  * EN v1.0 Address: 0x8006DC08
  * EN v1.0 Size: 160b
  * EN v1.1 Address: 0x8006EEA0
@@ -2621,7 +2621,7 @@ void FUN_8006d764(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined2 FUN_8006eea0(uint param_1,undefined param_2)
+undefined2 FUN_8006dc08(uint param_1,undefined param_2)
 {
   uint uVar1;
   undefined2 *puVar2;
@@ -2669,7 +2669,7 @@ undefined2 FUN_8006eea0(uint param_1,undefined param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8006ef48
+ * Function: FUN_8006dca8
  * EN v1.0 Address: 0x8006DCA8
  * EN v1.0 Size: 148b
  * EN v1.1 Address: 0x8006EF48
@@ -2679,7 +2679,7 @@ undefined2 FUN_8006eea0(uint param_1,undefined param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006ef48(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
+void FUN_8006dca8(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  uint param_5,int param_6,int param_7)
 {
   int iVar1;
@@ -2718,7 +2718,7 @@ void FUN_8006ef48(undefined8 param_1,double param_2,undefined4 param_3,undefined
     uVar2 = uVar2 + 4;
     iVar3 = iVar3 + -1;
   } while (iVar3 != 0);
-  FUN_8006f0b4(uVar4,param_2,(int)((ulonglong)uVar5 >> 0x20),auStack_48,param_5,param_6,param_7);
+  FUN_8006ef38(uVar4,param_2,(int)((ulonglong)uVar5 >> 0x20),auStack_48,param_5,param_6,param_7);
   FUN_8028688c();
   return;
 }

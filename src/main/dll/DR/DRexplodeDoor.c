@@ -1,14 +1,14 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/DRexplodeDoor.h"
 
-extern undefined4 FUN_8000f56c();
-extern undefined4 FUN_8004c460();
-extern undefined4 FUN_80070434();
-extern undefined4 FUN_8007048c();
-extern undefined4 FUN_8007986c();
-extern undefined4 FUN_80079980();
-extern undefined4 FUN_80079b3c();
-extern undefined4 FUN_80089b54();
+extern undefined4 FUN_80006974();
+extern undefined4 FUN_8004812c();
+extern undefined4 FUN_8006f8a4();
+extern undefined4 FUN_8006f8fc();
+extern undefined4 FUN_80071e78();
+extern undefined4 FUN_80071f8c();
+extern undefined4 FUN_80071f90();
+extern undefined4 FUN_80080f8c();
 extern undefined4 FUN_802570dc();
 extern undefined4 FUN_80257b5c();
 extern undefined4 FUN_80259000();
@@ -32,7 +32,7 @@ extern f32 FLOAT_803e6784;
 /*
  * --INFO--
  *
- * Function: FUN_801e9f54
+ * Function: FUN_801e9c00
  * EN v1.0 Address: 0x801E9C00
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801E9F54
@@ -42,6 +42,6 @@ extern f32 FLOAT_803e6784;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e9f54(void)
+void FUN_801e9c00(void)
 {
 }

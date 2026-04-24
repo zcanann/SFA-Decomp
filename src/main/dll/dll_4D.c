@@ -1,13 +1,13 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_4D.h"
 
-extern undefined4 FUN_8000bb38();
-extern undefined4 FUN_80014a54();
-extern undefined4 FUN_80014acc();
-extern undefined4 FUN_800154d0();
-extern undefined4 FUN_800550e8();
-extern undefined4 FUN_8005ced0();
-extern undefined4 FUN_80134f4c();
+extern undefined4 FUN_80006824();
+extern undefined4 FUN_80006b8c();
+extern undefined4 FUN_80006b94();
+extern undefined4 FUN_80006c20();
+extern undefined4 FUN_80053aac();
+extern undefined4 FUN_8005d018();
+extern undefined4 FUN_80133a04();
 extern uint countLeadingZeros();
 
 extern int DAT_803a9430;
@@ -23,7 +23,7 @@ extern f32 FLOAT_803e2a50;
 /*
  * --INFO--
  *
- * Function: FUN_8011c5fc
+ * Function: FUN_8011c5cc
  * EN v1.0 Address: 0x8011C5CC
  * EN v1.0 Size: 532b
  * EN v1.1 Address: 0x8011C5FC
@@ -33,7 +33,7 @@ extern f32 FLOAT_803e2a50;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8011c5fc(int param_1,int param_2)
+void FUN_8011c5cc(int param_1,int param_2)
 {
   uint uVar1;
   uint uVar2;
@@ -47,7 +47,7 @@ void FUN_8011c5fc(int param_1,int param_2)
     if (param_2 == 2) {
       iVar3 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9438);
       if (iVar3 == 0) {
-        FUN_80134f4c();
+        FUN_80133a04();
         if (DAT_803dc690 != -1) {
           (**(code **)(*DAT_803dd720 + 8))();
           DAT_803dc690 = -1;
@@ -67,28 +67,28 @@ void FUN_8011c5fc(int param_1,int param_2)
     else if (param_2 < 2) {
       if (param_2 == 0) {
         cVar5 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9430);
-        FUN_8005ced0(cVar5);
+        FUN_8005d018(cVar5);
       }
       else if (-1 < param_2) {
         uVar4 = (**(code **)(*DAT_803dd724 + 0x24))((&DAT_803a9430)[param_2]);
         uVar2 = countLeadingZeros(uVar4);
         uVar1 = uVar2 >> 5 & 0xff;
         if (uVar1 == 0) {
-          FUN_80014a54();
+          FUN_80006b8c();
         }
-        FUN_800154d0((char)(uVar2 >> 5));
+        FUN_80006c20((char)(uVar2 >> 5));
         if (uVar1 != 0) {
-          FUN_80014acc((double)FLOAT_803e2a50);
+          FUN_80006b94((double)FLOAT_803e2a50);
         }
       }
     }
     else if (param_2 < 4) {
       uVar4 = (**(code **)(*DAT_803dd724 + 0x24))((&DAT_803a9430)[param_2]);
-      FUN_800550e8(uVar4);
+      FUN_80053aac(uVar4);
     }
   }
   if (param_1 == 0) {
-    FUN_8000bb38(0,0x100);
+    FUN_80006824(0,0x100);
     (**(code **)(*DAT_803dd6cc + 8))(0x14,5);
     DAT_803de384 = 0x23;
     DAT_803de385 = 1;

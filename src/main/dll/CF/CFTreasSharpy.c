@@ -1,14 +1,14 @@
 #include "ghidra_import.h"
 #include "main/dll/CF/CFTreasSharpy.h"
 
-extern undefined4 FUN_80013e4c();
-extern undefined4 FUN_80013ee8();
-extern uint FUN_80020078();
-extern uint FUN_80022264();
-extern undefined4 FUN_8002b95c();
-extern undefined4 FUN_8003042c();
-extern undefined4 FUN_80137cd0();
-extern undefined4 FUN_8018dd40();
+extern undefined4 FUN_80006b0c();
+extern undefined4 FUN_80006b14();
+extern uint FUN_80017690();
+extern uint FUN_80017760();
+extern undefined4 FUN_80017a78();
+extern undefined4 FUN_800305f8();
+extern undefined4 FUN_80135814();
+extern undefined4 FUN_8018dc28();
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 
@@ -29,7 +29,7 @@ extern f32 FLOAT_803e4ae0;
 /*
  * --INFO--
  *
- * Function: FUN_8018e620
+ * Function: FUN_8018e0a4
  * EN v1.0 Address: 0x8018E0A4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8018E620
@@ -39,7 +39,7 @@ extern f32 FLOAT_803e4ae0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018e620(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void FUN_8018e0a4(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,short *param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -49,7 +49,7 @@ void FUN_8018e620(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_8018ec40
+ * Function: FUN_8018e0a8
  * EN v1.0 Address: 0x8018E0A8
  * EN v1.0 Size: 952b
  * EN v1.1 Address: 0x8018EC40
@@ -59,7 +59,7 @@ void FUN_8018e620(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018ec40(void)
+void FUN_8018e0a8(void)
 {
   byte bVar1;
   undefined2 *puVar2;
@@ -81,7 +81,7 @@ void FUN_8018ec40(void)
   iVar4 = *(int *)(puVar2 + 0x26);
   uVar6 = 0;
   if (*(short *)(iVar7 + 10) == 0x11) {
-    FUN_80137cd0();
+    FUN_80135814();
   }
   bVar1 = *(byte *)(iVar4 + 0x28);
   if (bVar1 == 2) {
@@ -141,7 +141,7 @@ void FUN_8018ec40(void)
       }
     }
     else if (sVar5 == 1) {
-      piVar3 = (int *)FUN_80013ee8((int)*(short *)(iVar7 + 10) + 0x58U & 0xffff);
+      piVar3 = (int *)FUN_80006b14((int)*(short *)(iVar7 + 10) + 0x58U & 0xffff);
       if (*(short *)(iVar7 + 0xe) < 1) {
         (**(code **)(*piVar3 + 4))(puVar2,0,0,uVar6,0xffffffff,0);
       }
@@ -150,10 +150,10 @@ void FUN_8018ec40(void)
           (**(code **)(*piVar3 + 4))(puVar2,0,0,uVar6,0xffffffff,0);
         }
       }
-      FUN_80013e4c((undefined *)piVar3);
+      FUN_80006b0c((undefined *)piVar3);
     }
     else if (sVar5 == 2) {
-      piVar3 = (int *)FUN_80013ee8((int)*(short *)(iVar7 + 10) + 0xabU & 0xffff);
+      piVar3 = (int *)FUN_80006b14((int)*(short *)(iVar7 + 10) + 0xabU & 0xffff);
       if (*(short *)(iVar7 + 0xe) < 1) {
         (**(code **)(*piVar3 + 4))(puVar2,0,0,uVar6,0xffffffff,*(ushort *)(iVar7 + 10) & 0xff,0);
       }
@@ -162,7 +162,7 @@ void FUN_8018ec40(void)
           (**(code **)(*piVar3 + 4))(puVar2,0,0,uVar6,0xffffffff,*(ushort *)(iVar7 + 10) & 0xff,0);
         }
       }
-      FUN_80013e4c((undefined *)piVar3);
+      FUN_80006b0c((undefined *)piVar3);
     }
   }
   else {

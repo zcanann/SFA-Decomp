@@ -1,19 +1,19 @@
 #include "ghidra_import.h"
 #include "main/dll/crate.h"
 
-extern undefined4 FUN_8000bb38();
-extern undefined4 FUN_800146a8();
-extern undefined8 FUN_800201ac();
-extern undefined4 FUN_8002cc9c();
-extern undefined4 FUN_80207cc4();
-extern undefined8 FUN_80207f80();
+extern undefined4 FUN_80006824();
+extern undefined4 FUN_80006b4c();
+extern undefined8 FUN_80017698();
+extern undefined4 FUN_80017ac8();
+extern undefined4 FUN_80207ec4();
+extern undefined8 FUN_80207ce4();
 
 extern int DAT_803add98;
 
 /*
  * --INFO--
  *
- * Function: FUN_8020816c
+ * Function: FUN_80208098
  * EN v1.0 Address: 0x80208098
  * EN v1.0 Size: 328b
  * EN v1.1 Address: 0x8020816C
@@ -24,7 +24,7 @@ extern int DAT_803add98;
  * PAL Size: TODO
  */
 undefined4
-FUN_8020816c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+FUN_80208098(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,short *param_9,
             undefined4 param_10,int param_11)
 {
@@ -34,29 +34,29 @@ FUN_8020816c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   
   iVar2 = *(int *)(param_9 + 0x5c);
   *(byte *)(iVar2 + 8) = *(byte *)(iVar2 + 8) & 0x7f | 0x80;
-  FUN_800146a8();
+  FUN_80006b4c();
   for (iVar1 = 0; iVar1 < (int)(uint)*(byte *)(param_11 + 0x8b); iVar1 = iVar1 + 1) {
     if (*(char *)(param_11 + iVar1 + 0x81) == '\x01') {
       *(byte *)(iVar2 + 8) = *(byte *)(iVar2 + 8) & 0xef | 0x10;
       *(undefined *)(iVar2 + 7) = 0;
-      FUN_800201ac((int)*(short *)(iVar2 + 2),0);
-      uVar3 = FUN_800201ac(0xedf,1);
+      FUN_80017698((int)*(short *)(iVar2 + 2),0);
+      uVar3 = FUN_80017698(0xedf,1);
       iVar1 = 0;
       do {
-        uVar3 = FUN_80207f80(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        uVar3 = FUN_80207ce4(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
         iVar1 = iVar1 + 1;
       } while (iVar1 < 4);
       *(byte *)(iVar2 + 8) = *(byte *)(iVar2 + 8) & 0xbf | 0x40;
     }
   }
-  FUN_80207cc4(param_9);
+  FUN_80207ec4(param_9);
   return 0;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8020826c
+ * Function: FUN_802081e0
  * EN v1.0 Address: 0x802081E0
  * EN v1.0 Size: 352b
  * EN v1.1 Address: 0x8020826C
@@ -66,7 +66,7 @@ FUN_8020816c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020826c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_802081e0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,int param_10)
 {
@@ -77,18 +77,18 @@ void FUN_8020826c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     piVar2 = &DAT_803add98;
     for (sVar1 = 0; sVar1 < 4; sVar1 = sVar1 + 1) {
       if (*piVar2 != 0) {
-        param_1 = FUN_8002cc9c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+        param_1 = FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                                *piVar2);
       }
       *piVar2 = 0;
       if (piVar2[1] != 0) {
-        FUN_8002cc9c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,piVar2[1]);
+        FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,piVar2[1]);
       }
       piVar2[1] = 0;
-      param_1 = FUN_8000bb38(param_9,0x1ce);
+      param_1 = FUN_80006824(param_9,0x1ce);
       piVar2 = piVar2 + 2;
     }
   }
-  FUN_800146a8();
+  FUN_80006b4c();
   return;
 }

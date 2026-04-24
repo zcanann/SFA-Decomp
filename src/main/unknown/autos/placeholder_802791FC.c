@@ -9,7 +9,7 @@ extern undefined4 DAT_803def64;
 /*
  * --INFO--
  *
- * Function: FUN_802791fc
+ * Function: FUN_80279038
  * EN v1.0 Address: 0x80279038
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802791FC
@@ -19,6 +19,6 @@ extern undefined4 DAT_803def64;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802791fc(int param_1,int param_2)
+void FUN_80279038(int param_1,int param_2)
 {
 }

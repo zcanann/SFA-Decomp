@@ -1,9 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/FRONT/n_pausemenu.h"
 
-extern int FUN_800284e8();
-extern undefined4 FUN_8004c928();
-extern undefined4 FUN_80117910();
+extern int FUN_8001792c();
+extern undefined4 FUN_8004817c();
+extern undefined4 FUN_80117724();
 extern ushort FUN_8024df24();
 extern int FUN_8024e064();
 extern undefined8 FUN_80286990();
@@ -23,7 +23,7 @@ extern f32 FLOAT_803e29d0;
 /*
  * --INFO--
  *
- * Function: FUN_801184e8
+ * Function: FUN_8011846c
  * EN v1.0 Address: 0x8011846C
  * EN v1.0 Size: 76b
  * EN v1.1 Address: 0x801184E8
@@ -33,10 +33,10 @@ extern f32 FLOAT_803e29d0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801184e8(void)
+void FUN_8011846c(void)
 {
   if (DAT_803de288 == 2) {
-    FUN_8004c928(*DAT_803a6aac,DAT_803a6aac[1],DAT_803a6aac[2],(int)(short)DAT_803a6a40,
+    FUN_8004817c(*DAT_803a6aac,DAT_803a6aac[1],DAT_803a6aac[2],(int)(short)DAT_803a6a40,
                  (int)(short)DAT_803a6a44);
   }
   return;
@@ -45,7 +45,7 @@ void FUN_801184e8(void)
 /*
  * --INFO--
  *
- * Function: FUN_8011853c
+ * Function: FUN_801184b8
  * EN v1.0 Address: 0x801184B8
  * EN v1.0 Size: 136b
  * EN v1.1 Address: 0x8011853C
@@ -55,7 +55,7 @@ void FUN_801184e8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8011853c(undefined4 param_1,int *param_2,int param_3)
+undefined4 FUN_801184b8(undefined4 param_1,int *param_2,int param_3)
 {
   int iVar1;
   undefined4 uVar2;
@@ -64,10 +64,10 @@ undefined4 FUN_8011853c(undefined4 param_1,int *param_2,int param_3)
     iVar1 = 0;
   }
   else {
-    iVar1 = FUN_800284e8(*param_2,param_3);
+    iVar1 = FUN_8001792c(*param_2,param_3);
   }
   if (((iVar1 == 0) || (*(char *)(iVar1 + 0x29) == '\x01')) && (DAT_803de288 == 2)) {
-    FUN_80117910(*DAT_803a6aac,DAT_803a6aac[1],DAT_803a6aac[2],(int)(short)DAT_803a6a40,
+    FUN_80117724(*DAT_803a6aac,DAT_803a6aac[1],DAT_803a6aac[2],(int)(short)DAT_803a6a40,
                  (int)(short)DAT_803a6a44);
     uVar2 = 1;
   }
@@ -80,7 +80,7 @@ undefined4 FUN_8011853c(undefined4 param_1,int *param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_801185cc
+ * Function: FUN_80118540
  * EN v1.0 Address: 0x80118540
  * EN v1.0 Size: 296b
  * EN v1.1 Address: 0x801185CC
@@ -90,7 +90,7 @@ undefined4 FUN_8011853c(undefined4 param_1,int *param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_801185cc(void)
+undefined4 FUN_80118540(void)
 {
   uint uVar1;
   ushort uVar3;

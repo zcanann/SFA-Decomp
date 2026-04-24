@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/screens.h"
 
-extern uint FUN_80022264();
+extern uint FUN_80017760();
 extern int FUN_80286838();
 extern undefined8 FUN_8028683c();
 extern undefined4 FUN_80286884();
@@ -67,7 +67,7 @@ extern f32 FLOAT_803e2068;
 /*
  * --INFO--
  *
- * Function: FUN_800fc854
+ * Function: FUN_800fc5b8
  * EN v1.0 Address: 0x800FC5B8
  * EN v1.0 Size: 2428b
  * EN v1.1 Address: 0x800FC854
@@ -77,7 +77,7 @@ extern f32 FLOAT_803e2068;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fc854(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
+void FUN_800fc5b8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
 {
   float fVar1;
   undefined4 uVar2;
@@ -187,14 +187,14 @@ void FUN_800fc854(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   uVar2 = DAT_802c2900;
   iVar7 = (int)((ulonglong)uVar16 >> 0x20);
   iVar6 = (int)uVar16;
-  uVar8 = FUN_80022264(0,0x14);
+  uVar8 = FUN_80017760(0,0x14);
   sStack_426 = (short)uVar2;
   local_428 = (undefined2)((uint)uVar2 >> 0x10);
-  uVar9 = FUN_80022264(0xffffffec,0x14);
+  uVar9 = FUN_80017760(0xffffffec,0x14);
   local_424 = (short)((uint)uVar3 >> 0x10);
   sStack_422 = (short)uVar3;
-  uVar10 = FUN_80022264(0xffffffec,0x14);
-  uVar11 = FUN_80022264(0xffffffec,0x14);
+  uVar10 = FUN_80017760(0xffffffec,0x14);
+  uVar11 = FUN_80017760(0xffffffec,0x14);
   local_420 = (short)((uint)uVar4 >> 0x10);
   uStack_41e = (undefined2)uVar4;
   if (iVar6 == 0) {
@@ -202,15 +202,15 @@ void FUN_800fc854(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
     local_3a4 = 3;
     local_3a8 = &DAT_803dc5c4;
     local_3b8 = 8;
-    uVar12 = FUN_80022264(0,0x69);
+    uVar12 = FUN_80017760(0,0x69);
     uStack_b4 = uVar12 + 0x8c ^ 0x80000000;
     local_b8 = 0x43300000;
     local_3b4 = (float)((double)CONCAT44(0x43300000,uStack_b4) - DOUBLE_803e2018);
-    uVar12 = FUN_80022264(0,0x69);
+    uVar12 = FUN_80017760(0,0x69);
     uStack_ac = uVar12 + 0x8c ^ 0x80000000;
     local_b0 = 0x43300000;
     local_3b0 = (float)((double)CONCAT44(0x43300000,uStack_ac) - DOUBLE_803e2018);
-    uVar12 = FUN_80022264(0,0x1e);
+    uVar12 = FUN_80017760(0,0x1e);
     uStack_a4 = uVar12 + 0xe1 ^ 0x80000000;
     local_a8 = 0x43300000;
     local_3ac = (float)((double)CONCAT44(0x43300000,uStack_a4) - DOUBLE_803e2018);
@@ -223,26 +223,26 @@ void FUN_800fc854(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
       local_3a4 = 3;
       local_3a8 = &DAT_803dc5c4;
       local_3b8 = 8;
-      uVar12 = FUN_80022264(0,0x1e);
+      uVar12 = FUN_80017760(0,0x1e);
       uStack_a4 = uVar12 + 0xe1 ^ 0x80000000;
       local_a8 = 0x43300000;
       local_3b4 = (float)((double)CONCAT44(0x43300000,uStack_a4) - DOUBLE_803e2018);
-      uVar12 = FUN_80022264(0,0x69);
+      uVar12 = FUN_80017760(0,0x69);
       uStack_ac = uVar12 + 0x8c ^ 0x80000000;
       local_b0 = 0x43300000;
       local_3b0 = (float)((double)CONCAT44(0x43300000,uStack_ac) - DOUBLE_803e2018);
-      uVar12 = FUN_80022264(0,0x41);
+      uVar12 = FUN_80017760(0,0x41);
       uStack_b4 = uVar12 + 0x78 ^ 0x80000000;
       local_b8 = 0x43300000;
       local_3ac = (float)((double)CONCAT44(0x43300000,uStack_b4) - DOUBLE_803e2018);
       puVar13 = (undefined4 *)(local_3a2 + 2);
     }
   }
-  uStack_a4 = FUN_80022264(0xffffc950,14000);
+  uStack_a4 = FUN_80017760(0xffffc950,14000);
   uStack_a4 = uStack_a4 ^ 0x80000000;
   local_a8 = 0x43300000;
   dVar15 = (double)(float)((double)CONCAT44(0x43300000,uStack_a4) - DOUBLE_803e2018);
-  uStack_ac = FUN_80022264(0xffffd120,12000);
+  uStack_ac = FUN_80017760(0xffffd120,12000);
   uStack_ac = uStack_ac ^ 0x80000000;
   local_b0 = 0x43300000;
   fVar1 = (float)((double)CONCAT44(0x43300000,uStack_ac) - DOUBLE_803e2018);
@@ -266,12 +266,12 @@ void FUN_800fc854(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   puVar13[0x10] = (undefined4)&DAT_803dc5c4;
   puVar13[0xc] = 2;
   puVar13[0xd] = FLOAT_803e1ff4;
-  uStack_b4 = FUN_80022264(0,0x32);
+  uStack_b4 = FUN_80017760(0,0x32);
   uStack_b4 = uStack_b4 ^ 0x80000000;
   local_b8 = 0x43300000;
   puVar13[0xe] = FLOAT_803e1ffc * (float)((double)CONCAT44(0x43300000,uStack_b4) - DOUBLE_803e2018)
                  + FLOAT_803e1ff8;
-  uStack_9c = FUN_80022264(4,6);
+  uStack_9c = FUN_80017760(4,6);
   uStack_9c = uStack_9c ^ 0x80000000;
   local_a0 = 0x43300000;
   puVar13[0xf] = FLOAT_803e1ffc * (float)((double)CONCAT44(0x43300000,uStack_9c) - DOUBLE_803e2018)
@@ -301,16 +301,16 @@ void FUN_800fc854(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   *(undefined2 *)(puVar13 + 0x29) = 0;
   puVar13[0x28] = 0;
   puVar13[0x24] = 0x80;
-  uStack_94 = FUN_80022264(0xffff8300,32000);
+  uStack_94 = FUN_80017760(0xffff8300,32000);
   uStack_94 = uStack_94 ^ 0x80000000;
   local_98 = 0x43300000;
   puVar13[0x25] = (float)((double)CONCAT44(0x43300000,uStack_94) - DOUBLE_803e2018);
-  uStack_8c = FUN_80022264(0xffffffff,1);
+  uStack_8c = FUN_80017760(0xffffffff,1);
   uStack_8c = uStack_8c ^ 0x80000000;
   local_90 = 0x43300000;
   puVar13[0x26] =
        (float)(dVar14 * (double)(float)((double)CONCAT44(0x43300000,uStack_8c) - DOUBLE_803e2018));
-  uStack_84 = FUN_80022264(0xffffffff,1);
+  uStack_84 = FUN_80017760(0xffffffff,1);
   uStack_84 = uStack_84 ^ 0x80000000;
   local_88 = 0x43300000;
   puVar13[0x27] =
@@ -319,16 +319,16 @@ void FUN_800fc854(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   *(undefined2 *)(puVar13 + 0x2f) = 0;
   puVar13[0x2e] = 0;
   puVar13[0x2a] = 0x80;
-  uStack_7c = FUN_80022264(0xffff8300,32000);
+  uStack_7c = FUN_80017760(0xffff8300,32000);
   uStack_7c = uStack_7c ^ 0x80000000;
   local_80 = 0x43300000;
   puVar13[0x2b] = (float)((double)CONCAT44(0x43300000,uStack_7c) - DOUBLE_803e2018);
-  uStack_74 = FUN_80022264(0xffffffff,1);
+  uStack_74 = FUN_80017760(0xffffffff,1);
   uStack_74 = uStack_74 ^ 0x80000000;
   local_78 = 0x43300000;
   puVar13[0x2c] =
        (float)(dVar14 * (double)(float)((double)CONCAT44(0x43300000,uStack_74) - DOUBLE_803e2018));
-  uStack_6c = FUN_80022264(0xffffffff,1);
+  uStack_6c = FUN_80017760(0xffffffff,1);
   uStack_6c = uStack_6c ^ 0x80000000;
   local_70 = 0x43300000;
   puVar13[0x2d] =
@@ -344,16 +344,16 @@ void FUN_800fc854(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   *(undefined2 *)(puVar13 + 0x3b) = 0;
   puVar13[0x3a] = 0;
   puVar13[0x36] = 0x80;
-  uStack_64 = FUN_80022264(0xffff8300,32000);
+  uStack_64 = FUN_80017760(0xffff8300,32000);
   uStack_64 = uStack_64 ^ 0x80000000;
   local_68 = 0x43300000;
   puVar13[0x37] = (float)((double)CONCAT44(0x43300000,uStack_64) - DOUBLE_803e2018);
-  uStack_5c = FUN_80022264(0xffffffff,1);
+  uStack_5c = FUN_80017760(0xffffffff,1);
   uStack_5c = uStack_5c ^ 0x80000000;
   local_60 = 0x43300000;
   puVar13[0x38] =
        (float)(dVar14 * (double)(float)((double)CONCAT44(0x43300000,uStack_5c) - DOUBLE_803e2018));
-  uStack_54 = FUN_80022264(0xffffffff,1);
+  uStack_54 = FUN_80017760(0xffffffff,1);
   uStack_54 = uStack_54 ^ 0x80000000;
   local_58 = 0x43300000;
   puVar13[0x39] =
@@ -369,16 +369,16 @@ void FUN_800fc854(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   *(undefined2 *)(puVar13 + 0x47) = 0;
   puVar13[0x46] = 0;
   puVar13[0x42] = 0x80;
-  uStack_4c = FUN_80022264(0xffff8300,32000);
+  uStack_4c = FUN_80017760(0xffff8300,32000);
   uStack_4c = uStack_4c ^ 0x80000000;
   local_50 = 0x43300000;
   puVar13[0x43] = (float)((double)CONCAT44(0x43300000,uStack_4c) - DOUBLE_803e2018);
-  uStack_44 = FUN_80022264(0xffffffff,1);
+  uStack_44 = FUN_80017760(0xffffffff,1);
   uStack_44 = uStack_44 ^ 0x80000000;
   local_48 = 0x43300000;
   puVar13[0x44] =
        (float)(dVar14 * (double)(float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e2018));
-  uStack_3c = FUN_80022264(0xffffffff,1);
+  uStack_3c = FUN_80017760(0xffffffff,1);
   uStack_3c = uStack_3c ^ 0x80000000;
   local_40 = 0x43300000;
   puVar13[0x45] =
@@ -458,7 +458,7 @@ void FUN_800fc854(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
 /*
  * --INFO--
  *
- * Function: FUN_800fd1d8
+ * Function: FUN_800fcf3c
  * EN v1.0 Address: 0x800FCF3C
  * EN v1.0 Size: 880b
  * EN v1.1 Address: 0x800FD1D8
@@ -468,7 +468,7 @@ void FUN_800fc854(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fd1d8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
+void FUN_800fcf3c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
 {
   int iVar1;
   undefined2 extraout_r4;
@@ -742,7 +742,7 @@ void FUN_800fd1d8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
 /*
  * --INFO--
  *
- * Function: FUN_800fd550
+ * Function: FUN_800fd2b4
  * EN v1.0 Address: 0x800FD2B4
  * EN v1.0 Size: 1160b
  * EN v1.1 Address: 0x800FD550
@@ -752,7 +752,7 @@ void FUN_800fd1d8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fd550(int param_1,int param_2,short *param_3,uint param_4)
+void FUN_800fd2b4(int param_1,int param_2,short *param_3,uint param_4)
 {
   int iVar1;
   undefined4 *puVar2;

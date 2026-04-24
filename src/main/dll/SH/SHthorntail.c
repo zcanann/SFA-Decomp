@@ -1,11 +1,11 @@
 #include "ghidra_import.h"
 #include "main/dll/SH/SHthorntail.h"
 
-extern undefined4 FUN_8000bb38();
-extern uint FUN_80022150();
-extern uint FUN_80022264();
-extern undefined4 FUN_801d5470();
-extern uint FUN_801d5558();
+extern undefined4 FUN_80006824();
+extern uint FUN_80017758();
+extern uint FUN_80017760();
+extern undefined4 FUN_801d5174();
+extern uint FUN_801d524c();
 extern undefined4 FUN_80242fc0();
 
 extern undefined4 DAT_803dc070;
@@ -44,9 +44,9 @@ void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
   
   switch(*(undefined *)(param_10 + 0x624)) {
   case 0:
-    uVar2 = FUN_80022150((double)FLOAT_803e60c8,(double)FLOAT_803e60cc,(float *)(param_10 + 0x910));
+    uVar2 = FUN_80017758((double)FLOAT_803e60c8,(double)FLOAT_803e60cc,(float *)(param_10 + 0x910));
     if (uVar2 != 0) {
-      FUN_8000bb38((uint)param_9,0x410);
+      FUN_80006824((uint)param_9,0x410);
     }
     *(float *)(param_10 + 0x630) = *(float *)(param_10 + 0x630) - FLOAT_803dc074;
     if (*(float *)(param_10 + 0x630) <= FLOAT_803e60d0) {
@@ -58,7 +58,7 @@ void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
     if (*(float *)(param_10 + 0x630) <= FLOAT_803e60b0) {
       iVar1 = (**(code **)(*DAT_803dd6d8 + 0x24))(0);
       if (iVar1 == 0) {
-        uVar2 = FUN_801d5558(param_9,param_10,*(int *)(param_9 + 0x26));
+        uVar2 = FUN_801d524c(param_9,param_10,*(int *)(param_9 + 0x26));
         *(char *)(param_10 + 0x624) = (char)uVar2;
       }
       else {
@@ -74,7 +74,7 @@ void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
     if ((*(byte *)(param_10 + 0x625) & 1) != 0) {
       iVar1 = (**(code **)(*DAT_803dd6d8 + 0x24))(0);
       if (iVar1 == 0) {
-        uVar2 = FUN_801d5558(param_9,param_10,*(int *)(param_9 + 0x26));
+        uVar2 = FUN_801d524c(param_9,param_10,*(int *)(param_9 + 0x26));
         *(char *)(param_10 + 0x624) = (char)uVar2;
       }
       else {
@@ -85,10 +85,10 @@ void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
   case 7:
     if ((*(byte *)(param_10 + 0x625) & 1) != 0) {
       *(undefined *)(param_10 + 0x624) = 8;
-      uVar2 = FUN_80022264(500,800);
+      uVar2 = FUN_80017760(500,800);
       *(float *)(param_10 + 0x634) =
            (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e60c0);
-      uVar2 = FUN_80022264(1,3);
+      uVar2 = FUN_80017760(1,3);
       *(char *)(param_10 + 0x63e) = (char)uVar2;
     }
     break;
@@ -108,7 +108,7 @@ void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
   case 9:
     if ((*(byte *)(param_10 + 0x625) & 1) != 0) {
       *(undefined *)(param_10 + 0x624) = 8;
-      uVar2 = FUN_80022264(500,800);
+      uVar2 = FUN_80017760(500,800);
       *(float *)(param_10 + 0x634) =
            (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e60c0);
       *(char *)(param_10 + 0x63e) = *(char *)(param_10 + 0x63e) + -1;
@@ -117,7 +117,7 @@ void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
   case 10:
     if ((*(byte *)(param_10 + 0x625) & 1) != 0) {
       *(undefined *)(param_10 + 0x624) = 0;
-      uVar2 = FUN_80022264(1000,2000);
+      uVar2 = FUN_80017760(1000,2000);
       *(float *)(param_10 + 0x630) =
            (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e60c0);
     }
@@ -129,7 +129,7 @@ void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
     }
     break;
   case 0xc:
-    FUN_801d5470((uint)param_9,param_10);
+    FUN_801d5174((uint)param_9,param_10);
     if (((*(byte *)(param_10 + 0x625) & 1) != 0) &&
        (iVar1 = (**(code **)(*DAT_803dd6d8 + 0x24))(0), iVar1 == 0)) {
       *(undefined *)(param_10 + 0x624) = 0xd;
@@ -138,7 +138,7 @@ void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
   case 0xd:
     if ((*(byte *)(param_10 + 0x625) & 1) != 0) {
       *(undefined *)(param_10 + 0x624) = 0;
-      uVar2 = FUN_80022264(1000,2000);
+      uVar2 = FUN_80017760(1000,2000);
       *(float *)(param_10 + 0x630) =
            (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e60c0);
     }

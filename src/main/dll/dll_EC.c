@@ -1,13 +1,13 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_EC.h"
 
-extern undefined4 FUN_8000bb38();
-extern undefined4 FUN_800201ac();
-extern uint FUN_8002bac4();
-extern undefined4 FUN_80036548();
+extern undefined4 FUN_80006824();
+extern undefined4 FUN_80017698();
+extern uint FUN_80017a98();
+extern undefined4 FUN_800365a4();
 extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
-extern int FUN_80297300();
+extern int FUN_80294d6c();
 
 extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e70d8;
@@ -17,7 +17,7 @@ extern f32 FLOAT_803e70d0;
 /*
  * --INFO--
  *
- * Function: FUN_80206fa0
+ * Function: FUN_80206f30
  * EN v1.0 Address: 0x80206F30
  * EN v1.0 Size: 780b
  * EN v1.1 Address: 0x80206FA0
@@ -27,7 +27,7 @@ extern f32 FLOAT_803e70d0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80206fa0(void)
+void FUN_80206f30(void)
 {
   float fVar1;
   float fVar2;
@@ -43,7 +43,7 @@ void FUN_80206fa0(void)
   
   iVar4 = FUN_8028683c();
   psVar10 = *(short **)(iVar4 + 0xb8);
-  uVar5 = FUN_8002bac4();
+  uVar5 = FUN_80017a98();
   iVar6 = 0;
   cVar9 = '\0';
   cVar8 = '\0';
@@ -97,15 +97,15 @@ void FUN_80206fa0(void)
     psVar10[3] = psVar10[3] - (short)(int)FLOAT_803dc074;
   }
   if ((iVar6 == 3) && (psVar10[3] < 1)) {
-    iVar4 = FUN_80297300(uVar5);
+    iVar4 = FUN_80294d6c(uVar5);
     if (iVar4 == 0x1d7) {
-      FUN_800201ac(0x468,1);
+      FUN_80017698(0x468,1);
       (**(code **)(*DAT_803dd708 + 8))(uVar5,0x397,0,2,0xffffffff,0);
     }
     else {
-      FUN_80036548(uVar5,0,'\x14',2,0);
+      FUN_800365a4(uVar5,0,'\x14',2,0);
     }
-    FUN_8000bb38(uVar5,0x1ca);
+    FUN_80006824(uVar5,0x1ca);
     psVar10[3] = 200;
   }
   *(char *)(psVar10 + 8) = cVar9;

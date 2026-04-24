@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/holoPoint.h"
 
-extern undefined4 FUN_8003b9ec();
+extern undefined4 FUN_8003b818();
 
 extern f64 DOUBLE_803e4b90;
 extern f32 FLOAT_803e4b80;
@@ -11,7 +11,7 @@ extern f32 FLOAT_803e4b88;
 /*
  * --INFO--
  *
- * Function: FUN_80192000
+ * Function: FUN_80191f54
  * EN v1.0 Address: 0x80191F54
  * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x80192000
@@ -21,16 +21,16 @@ extern f32 FLOAT_803e4b88;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80192000(int param_1)
+void FUN_80191f54(int param_1)
 {
-  FUN_8003b9ec(param_1);
+  FUN_8003b818(param_1);
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8019202c
+ * Function: FUN_80191f74
  * EN v1.0 Address: 0x80191F74
  * EN v1.0 Size: 184b
  * EN v1.1 Address: 0x8019202C
@@ -40,7 +40,7 @@ void FUN_80192000(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8019202c(short *param_1,int param_2)
+void FUN_80191f74(short *param_1,int param_2)
 {
   param_1[2] = (ushort)*(byte *)(param_2 + 0x18) << 8;
   param_1[1] = (ushort)*(byte *)(param_2 + 0x19) << 8;

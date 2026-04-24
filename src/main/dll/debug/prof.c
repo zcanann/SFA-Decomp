@@ -1,11 +1,11 @@
 #include "ghidra_import.h"
 #include "main/dll/debug/prof.h"
 
-extern undefined4 FUN_8000a398();
-extern undefined4 FUN_8000bb38();
+extern undefined4 FUN_800067b4();
+extern undefined4 FUN_80006824();
 extern undefined4 gameplay_isDebugOptionEnabled();
 extern uint gameplay_hasDebugOption();
-extern undefined4 FUN_8011cd58();
+extern undefined4 FUN_8011cd54();
 extern bool FUN_80245dbc();
 extern uint countLeadingZeros();
 
@@ -32,7 +32,7 @@ extern undefined4* PTR_DAT_8031b938;
 /*
  * --INFO--
  *
- * Function: FUN_8011c800
+ * Function: FUN_8011c7b4
  * EN v1.0 Address: 0x8011C7B4
  * EN v1.0 Size: 172b
  * EN v1.1 Address: 0x8011C800
@@ -42,26 +42,26 @@ extern undefined4* PTR_DAT_8031b938;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8011c800(int param_1,int param_2)
+undefined4 FUN_8011c7b4(int param_1,int param_2)
 {
   if (param_1 == 1) {
     if (param_2 == 2) {
-      FUN_8011ca98();
+      FUN_8011ca28();
       return 1;
     }
     if (param_2 < 2) {
       if (param_2 == 0) {
-        FUN_8011cd58();
+        FUN_8011cd54();
         return 1;
       }
     }
     else if (param_2 < 4) {
-      FUN_8011c8b0();
+      FUN_8011c860();
       return 1;
     }
   }
   else if (param_1 == 0) {
-    FUN_8000bb38(0,0x100);
+    FUN_80006824(0,0x100);
     (**(code **)(*DAT_803dd6cc + 8))(0x14,5);
     DAT_803de384 = 0x23;
     DAT_803de385 = 1;
@@ -72,7 +72,7 @@ undefined4 FUN_8011c800(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8011c8b0
+ * Function: FUN_8011c860
  * EN v1.0 Address: 0x8011C860
  * EN v1.0 Size: 456b
  * EN v1.1 Address: 0x8011C8B0
@@ -82,7 +82,7 @@ undefined4 FUN_8011c800(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8011c8b0(void)
+void FUN_8011c860(void)
 {
   uint uVar1;
   undefined4 uVar2;
@@ -117,7 +117,7 @@ void FUN_8011c8b0(void)
 /*
  * --INFO--
  *
- * Function: FUN_8011ca98
+ * Function: FUN_8011ca28
  * EN v1.0 Address: 0x8011CA28
  * EN v1.0 Size: 672b
  * EN v1.1 Address: 0x8011CA98
@@ -127,7 +127,7 @@ void FUN_8011c8b0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8011ca98(void)
+void FUN_8011ca28(void)
 {
   uint uVar1;
   bool bVar3;
@@ -168,7 +168,7 @@ void FUN_8011ca98(void)
   DAT_803a9444 = 0;
   uVar1 = gameplay_hasDebugOption(2);
   if (uVar1 != 0) {
-    uVar2 = FUN_8000a398();
+    uVar2 = FUN_800067b4();
     DAT_803a9444 = (**(code **)(*DAT_803dd724 + 0xc))
                              (0x3cb,0x27,0,(int)(short)((short)uVar2 + -1),0);
     *(byte *)(DAT_803a9444 + 4) = *(byte *)(DAT_803a9444 + 4) | 0x80;

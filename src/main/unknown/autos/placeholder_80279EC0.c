@@ -21,7 +21,7 @@ extern undefined4 DAT_803def81;
 /*
  * --INFO--
  *
- * Function: FUN_80279ec0
+ * Function: FUN_80279c7c
  * EN v1.0 Address: 0x80279C7C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80279EC0
@@ -31,7 +31,7 @@ extern undefined4 DAT_803def81;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80279ec0(byte param_1,byte param_2,short param_3,char param_4)
+uint FUN_80279c7c(byte param_1,byte param_2,short param_3,char param_4)
 {
     return 0;
 }

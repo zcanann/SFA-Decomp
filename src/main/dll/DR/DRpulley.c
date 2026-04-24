@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/DRpulley.h"
 
-extern int FUN_8005b60c();
+extern int FUN_8005b54c();
 extern uint countLeadingZeros();
 
 extern undefined4 DAT_803dcd24;
@@ -29,7 +29,7 @@ extern f32 FLOAT_803e68dc;
 /*
  * --INFO--
  *
- * Function: FUN_801ecf60
+ * Function: FUN_801ecec4
  * EN v1.0 Address: 0x801ECEC4
  * EN v1.0 Size: 148b
  * EN v1.1 Address: 0x801ECF60
@@ -39,7 +39,7 @@ extern f32 FLOAT_803e68dc;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ecf60(undefined4 param_1,int param_2)
+void FUN_801ecec4(undefined4 param_1,int param_2)
 {
   float fVar1;
   
@@ -70,7 +70,7 @@ void FUN_801ecf60(undefined4 param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_801ecff4
+ * Function: FUN_801ecf58
  * EN v1.0 Address: 0x801ECF58
  * EN v1.0 Size: 60b
  * EN v1.1 Address: 0x801ECFF4
@@ -80,7 +80,7 @@ void FUN_801ecf60(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ecff4(int param_1)
+void FUN_801ecf58(int param_1)
 {
   (**(code **)(*DAT_803dd6ec + 0x34))(*(int *)(param_1 + 0xb8) + 0x28);
   return;
@@ -89,7 +89,7 @@ void FUN_801ecff4(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_801ed02c
+ * Function: FUN_801ecf94
  * EN v1.0 Address: 0x801ECF94
  * EN v1.0 Size: 112b
  * EN v1.1 Address: 0x801ED02C
@@ -99,7 +99,7 @@ void FUN_801ecff4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_801ed02c(int param_1)
+uint FUN_801ecf94(int param_1)
 {
   int iVar1;
   uint uVar2;
@@ -118,7 +118,7 @@ uint FUN_801ed02c(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_801ed09c
+ * Function: FUN_801ed004
  * EN v1.0 Address: 0x801ED004
  * EN v1.0 Size: 352b
  * EN v1.1 Address: 0x801ED09C
@@ -128,14 +128,14 @@ uint FUN_801ed02c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ed09c(short *param_1)
+void FUN_801ed004(short *param_1)
 {
   float fVar1;
   int iVar2;
   short *psVar3;
   
   psVar3 = *(short **)(param_1 + 0x5c);
-  iVar2 = FUN_8005b60c(*(int *)((uint)*(byte *)(psVar3 + 0x21a) * 0xc + -0x7fcd6e30 +
+  iVar2 = FUN_8005b54c(*(int *)((uint)*(byte *)(psVar3 + 0x21a) * 0xc + -0x7fcd6e30 +
                                (uint)*(byte *)((int)psVar3 + 0x435) * 4),(int *)0x0,(int *)0x0,
                        (int *)0x0,(uint *)0x0);
   if (iVar2 != 0) {

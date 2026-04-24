@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/symbol.h"
 
-extern undefined4 FUN_8003b9ec();
+extern undefined4 FUN_8003b818();
 
 extern undefined4* DAT_803dd6f0;
 extern undefined4* DAT_803dd6fc;
@@ -9,7 +9,7 @@ extern undefined4* DAT_803dd6fc;
 /*
  * --INFO--
  *
- * Function: FUN_801cb298
+ * Function: FUN_801cad80
  * EN v1.0 Address: 0x801CAD80
  * EN v1.0 Size: 116b
  * EN v1.1 Address: 0x801CB298
@@ -19,7 +19,7 @@ extern undefined4* DAT_803dd6fc;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801cb298(void)
+void FUN_801cad80(void)
 {
   (**(code **)(*DAT_803dd6fc + 0x18))();
   (**(code **)(*DAT_803dd6f0 + 0x38))(3,0);
@@ -30,7 +30,7 @@ void FUN_801cb298(void)
 /*
  * --INFO--
  *
- * Function: FUN_801cb300
+ * Function: FUN_801cadf4
  * EN v1.0 Address: 0x801CADF4
  * EN v1.0 Size: 40b
  * EN v1.1 Address: 0x801CB300
@@ -40,12 +40,12 @@ void FUN_801cb298(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801cb300(int param_1)
+void FUN_801cadf4(int param_1)
 {
   char in_r8;
   
   if (in_r8 != '\0') {
-    FUN_8003b9ec(param_1);
+    FUN_8003b818(param_1);
   }
   return;
 }

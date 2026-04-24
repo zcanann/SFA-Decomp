@@ -1,10 +1,10 @@
 #include "ghidra_import.h"
 #include "main/dll/waterfallControl.h"
 
-extern undefined4 FUN_8000bb38();
-extern uint FUN_80022264();
-extern int FUN_80065800();
-extern int FUN_80065fcc();
+extern undefined4 FUN_80006824();
+extern uint FUN_80017760();
+extern int FUN_800632d8();
+extern int FUN_800632f4();
 
 extern f64 DOUBLE_803e3c08;
 extern f64 DOUBLE_803e3c28;
@@ -22,7 +22,7 @@ extern f32 FLOAT_803e3c20;
 /*
  * --INFO--
  *
- * Function: FUN_80163e3c
+ * Function: FUN_80163bbc
  * EN v1.0 Address: 0x80163BBC
  * EN v1.0 Size: 648b
  * EN v1.1 Address: 0x80163E3C
@@ -32,14 +32,14 @@ extern f32 FLOAT_803e3c20;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80163e3c(short *param_1,int param_2)
+void FUN_80163bbc(short *param_1,int param_2)
 {
   double dVar1;
   int iVar2;
   float local_58 [20];
   
   *(float *)(param_1 + 0x12) = *(float *)(param_1 + 0x12) / FLOAT_803e3bf4;
-  iVar2 = FUN_80065800((double)*(float *)(param_1 + 6),(double)*(float *)(param_1 + 8),
+  iVar2 = FUN_800632d8((double)*(float *)(param_1 + 6),(double)*(float *)(param_1 + 8),
                        (double)*(float *)(param_1 + 10),param_1,local_58,0);
   if (iVar2 != 0) {
     if (local_58[0] <= FLOAT_803e3bf8) {
@@ -81,7 +81,7 @@ void FUN_80163e3c(short *param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80164068
+ * Function: FUN_80163e44
  * EN v1.0 Address: 0x80163E44
  * EN v1.0 Size: 1020b
  * EN v1.1 Address: 0x80164068
@@ -91,7 +91,7 @@ void FUN_80163e3c(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80164068(short *param_1,int param_2)
+void FUN_80163e44(short *param_1,int param_2)
 {
   int iVar1;
   uint uVar2;
@@ -119,7 +119,7 @@ void FUN_80164068(short *param_1,int param_2)
   
   local_68[0] = (undefined4 *)0x0;
   dVar7 = (double)FLOAT_803e3c10;
-  iVar1 = FUN_80065fcc((double)*(float *)(param_1 + 6),(double)*(float *)(param_1 + 8),
+  iVar1 = FUN_800632f4((double)*(float *)(param_1 + 6),(double)*(float *)(param_1 + 8),
                        (double)*(float *)(param_1 + 10),param_1,local_68,0,0);
   iVar4 = 0;
   iVar5 = 0;
@@ -195,7 +195,7 @@ void FUN_80164068(short *param_1,int param_2)
     if (*(float *)(param_1 + 8) <= FLOAT_803e3bf8 + *(float *)local_68[0][iVar5]) {
       *(float *)(param_1 + 8) = FLOAT_803e3bf8 + *(float *)local_68[0][iVar5];
       if (param_1[0x23] == 0x3fb) {
-        uVar2 = FUN_80022264(0x8c,0xb4);
+        uVar2 = FUN_80017760(0x8c,0xb4);
         local_20 = (double)CONCAT44(0x43300000,uVar2 ^ 0x80000000);
         uStack_24 = (uint)*(ushort *)(param_2 + 0x268);
         *(float *)(param_1 + 0x14) =
@@ -204,7 +204,7 @@ void FUN_80164068(short *param_1,int param_2)
               (float)(local_20 - DOUBLE_803e3c08)));
       }
       else {
-        uVar2 = FUN_80022264(0x14,0x28);
+        uVar2 = FUN_80017760(0x14,0x28);
         local_20 = (double)CONCAT44(0x43300000,uVar2 ^ 0x80000000);
         uStack_24 = (uint)*(ushort *)(param_2 + 0x268);
         *(float *)(param_1 + 0x14) =
@@ -219,10 +219,10 @@ void FUN_80164068(short *param_1,int param_2)
         iVar5 = 0x7f;
       }
       if (0x10 < iVar5) {
-        FUN_8000bb38((uint)param_1,0x27e);
-        uVar2 = FUN_80022264(0,5);
+        FUN_80006824((uint)param_1,0x27e);
+        uVar2 = FUN_80017760(0,5);
         if ((uVar2 == 0) && ((*(byte *)(param_2 + 0x27a) & 8) != 0)) {
-          FUN_8000bb38((uint)param_1,0x27f);
+          FUN_80006824((uint)param_1,0x27f);
         }
       }
     }

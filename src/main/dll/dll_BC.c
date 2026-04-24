@@ -1,10 +1,10 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_BC.h"
 
-extern void* FUN_8000facc();
-extern double FUN_8000fc54();
-extern undefined4 FUN_800238c4();
-extern undefined4 FUN_8010192c();
+extern void* FUN_800069a8();
+extern double FUN_800069f8();
+extern undefined4 FUN_80017814();
+extern undefined4 FUN_801018a8();
 
 extern undefined4 gCamcontrolSavedActionMode;
 extern undefined4 gCamcontrolSavedActionFlags;
@@ -57,7 +57,7 @@ void camcontrol_applyQueuedAction(void)
       *(float *)(gCamcontrolState + 0x7c) = fVar1;
       *(undefined *)((int)gCamcontrolState + 0x13f) = gCamcontrolQueuedActionMode;
     }
-    puVar2 = FUN_8000facc();
+    puVar2 = FUN_800069a8();
     if (FLOAT_803e22ac == *(float *)(gCamcontrolState + 0x7a)) {
       *(undefined4 *)(gCamcontrolState + 0x86) = *(undefined4 *)(puVar2 + 6);
       *(undefined4 *)(gCamcontrolState + 0x88) = *(undefined4 *)(puVar2 + 8);
@@ -65,23 +65,23 @@ void camcontrol_applyQueuedAction(void)
       gCamcontrolState[0x83] = *puVar2;
       gCamcontrolState[0x84] = puVar2[1];
       gCamcontrolState[0x85] = puVar2[2];
-      dVar3 = FUN_8000fc54();
+      dVar3 = FUN_800069f8();
       *(float *)(gCamcontrolState + 0x8c) = (float)dVar3;
     }
     else {
       *gCamcontrolState = *puVar2;
       gCamcontrolState[1] = puVar2[1];
       gCamcontrolState[2] = puVar2[2];
-      dVar3 = FUN_8000fc54();
+      dVar3 = FUN_800069f8();
       *(float *)(gCamcontrolState + 0x5a) = (float)dVar3;
     }
     gCamcontrolSavedActionId = gCamcontrolCurrentActionId;
     gCamcontrolSavedActionFlags = gCamcontrolCurrentActionFlags;
     gCamcontrolSavedActionMode = gCamcontrolCurrentActionMode;
-    FUN_8010192c(gCamcontrolQueuedActionSource & 0xffff,(undefined4)gCamcontrolQueuedActionData);
+    FUN_801018a8(gCamcontrolQueuedActionSource & 0xffff,(undefined4)gCamcontrolQueuedActionData);
     gCamcontrolQueuedActionPending = '\0';
     if (gCamcontrolQueuedActionData != (void *)0x0) {
-      FUN_800238c4((uint)gCamcontrolQueuedActionData);
+      FUN_80017814((uint)gCamcontrolQueuedActionData);
       gCamcontrolQueuedActionData = (void *)0x0;
     }
   }

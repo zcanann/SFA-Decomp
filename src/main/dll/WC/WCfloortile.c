@@ -1,19 +1,19 @@
 #include "ghidra_import.h"
 #include "main/dll/WC/WCfloortile.h"
 
-extern uint FUN_80020078();
-extern undefined4 FUN_800201ac();
-extern undefined4 FUN_8002b9a0();
-extern undefined4 FUN_8003b9ec();
-extern undefined4 FUN_800656f0();
-extern undefined4 FUN_801f05b4();
+extern uint FUN_80017690();
+extern undefined4 FUN_80017698();
+extern undefined4 FUN_80017a7c();
+extern undefined4 FUN_8003b818();
+extern undefined4 FUN_800631d4();
+extern undefined4 FUN_801f02f0();
 
 extern undefined4* DAT_803dd72c;
 
 /*
  * --INFO--
  *
- * Function: FUN_801f0c0c
+ * Function: FUN_801f0b50
  * EN v1.0 Address: 0x801F0B50
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801F0C0C
@@ -23,14 +23,14 @@ extern undefined4* DAT_803dd72c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801f0c0c(undefined2 *param_1,int param_2)
+void FUN_801f0b50(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_801f0d70
+ * Function: FUN_801f0b54
  * EN v1.0 Address: 0x801F0B54
  * EN v1.0 Size: 40b
  * EN v1.1 Address: 0x801F0D70
@@ -40,12 +40,12 @@ void FUN_801f0c0c(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801f0d70(int param_1)
+void FUN_801f0b54(int param_1)
 {
   char in_r8;
   
   if (in_r8 != '\0') {
-    FUN_8003b9ec(param_1);
+    FUN_8003b818(param_1);
   }
   return;
 }

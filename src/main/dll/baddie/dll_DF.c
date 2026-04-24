@@ -1,39 +1,39 @@
 #include "ghidra_import.h"
 #include "main/dll/baddie/dll_DF.h"
 
-extern uint FUN_80020078();
-extern double FUN_80021730();
-extern int FUN_80021884();
-extern undefined4 FUN_80021b8c();
-extern uint FUN_80022264();
-extern undefined4 FUN_8002f6cc();
-extern undefined4 FUN_80036084();
+extern uint FUN_80017690();
+extern double FUN_80017708();
+extern int FUN_80017730();
+extern undefined4 FUN_80017748();
+extern uint FUN_80017760();
+extern undefined4 FUN_8002f6ac();
+extern undefined4 FUN_80036154();
 extern char fn_8004B394();
-extern undefined4 FUN_8004b498();
-extern undefined4 FUN_80063000();
-extern undefined4 FUN_800da174();
-extern undefined4 FUN_800da1c4();
-extern undefined4 FUN_800da4c8();
-extern undefined4 FUN_800dabb4();
-extern undefined4 FUN_800dac0c();
-extern undefined4 FUN_800db4b0();
-extern undefined4 FUN_800db4cc();
-extern short FUN_800db670();
-extern uint FUN_800dbb64();
-extern ushort FUN_800dbcd8();
-extern int FUN_800dbe30();
-extern undefined4 FUN_800dbf88();
-extern ushort FUN_800dc158();
-extern undefined4 FUN_80139bbc();
-extern undefined4 FUN_80139cb8();
-extern undefined4 FUN_80139e14();
-extern undefined4 FUN_8013a778();
-extern int FUN_8013ab7c();
+extern undefined4 FUN_80046cd0();
+extern undefined4 FUN_80061a80();
+extern undefined4 FUN_800d9a98();
+extern undefined4 FUN_800d9b7c();
+extern undefined4 FUN_800d9de0();
+extern undefined4 FUN_800da594();
+extern undefined4 FUN_800da5e8();
+extern undefined4 FUN_800da850();
+extern undefined4 FUN_800da860();
+extern short FUN_800daa04();
+extern uint FUN_800daf38();
+extern ushort FUN_800db110();
+extern int FUN_800db2f0();
+extern undefined4 FUN_800db47c();
+extern ushort FUN_800db690();
+extern undefined4 FUN_80139800();
+extern undefined4 FUN_80139910();
+extern undefined4 FUN_80139a48();
+extern undefined4 FUN_80139a4c();
+extern int FUN_80139e1c();
 extern void fn_8013AD50();
-extern undefined4 FUN_8013aed4();
-extern undefined4 FUN_8013d92c();
-extern undefined4 FUN_80148fa0();
-extern undefined4 FUN_80148ff0();
+extern undefined4 FUN_8013a144();
+extern undefined4 FUN_8013d8f0();
+extern undefined4 FUN_80146f9c();
+extern undefined4 FUN_80146fa0();
 extern undefined8 FUN_80286828();
 extern undefined4 FUN_80286874();
 extern double FUN_80293900();
@@ -73,7 +73,7 @@ extern f32 FLOAT_803e3150;
 /*
  * --INFO--
  *
- * Function: FUN_8013b6f0
+ * Function: FUN_8013b368
  * EN v1.0 Address: 0x8013B368
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8013B6F0
@@ -83,7 +83,7 @@ extern f32 FLOAT_803e3150;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8013b6f0(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void FUN_8013b368(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
                  byte param_13,uint param_14,undefined4 param_15,undefined4 param_16)

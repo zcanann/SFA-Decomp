@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: FUN_8026fd1c
+ * Function: FUN_8026fc8c
  * EN v1.0 Address: 0x8026FC8C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8026FD1C
@@ -14,6 +14,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8026fd1c(int param_1)
+void FUN_8026fc8c(int param_1)
 {
 }

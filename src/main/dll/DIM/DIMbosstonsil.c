@@ -1,23 +1,23 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
 
-extern undefined8 FUN_80008cbc();
-extern undefined4 FUN_800168a8();
-extern uint FUN_80020078();
-extern undefined8 FUN_800201ac();
-extern undefined8 FUN_8002854c();
-extern undefined4 FUN_8002b554();
-extern int FUN_8002b660();
-extern undefined4 FUN_8002ba84();
-extern undefined4 FUN_8002bac4();
-extern undefined8 FUN_80033a34();
-extern undefined4 FUN_80089734();
-extern undefined4 FUN_8008986c();
-extern undefined4 FUN_8008999c();
-extern undefined4 FUN_80115328();
-extern undefined8 FUN_80115330();
-extern undefined4 FUN_801bc0f8();
-extern undefined4 FUN_801bcd98();
+extern undefined8 FUN_80006728();
+extern undefined4 FUN_80006c88();
+extern uint FUN_80017690();
+extern undefined8 FUN_80017698();
+extern undefined8 FUN_80017940();
+extern undefined4 FUN_80017a50();
+extern int FUN_80017a54();
+extern undefined4 FUN_80017a90();
+extern undefined4 FUN_80017a98();
+extern undefined8 FUN_800339b4();
+extern undefined4 FUN_80080f70();
+extern undefined4 FUN_80080f7c();
+extern undefined4 FUN_80080f80();
+extern undefined4 FUN_801150a4();
+extern undefined8 FUN_801150ac();
+extern undefined4 FUN_801bbed0();
+extern undefined4 FUN_801bcc94();
 
 extern undefined4 DAT_803ad60c;
 extern undefined4* DAT_803dd6d4;
@@ -59,18 +59,18 @@ void DIMboss_update(undefined8 param_1,double param_2,double param_3,undefined8 
   
   iVar4 = *(int *)(param_9 + 0x5c);
   iVar3 = *(int *)(param_9 + 0x26);
-  FUN_8002bac4();
+  FUN_80017a98();
   iVar5 = *(int *)(iVar4 + 0x40c);
   if (*(int *)(param_9 + 0x7a) == 0) {
     if ((double)FLOAT_803e5870 < (double)*(float *)(iVar5 + 0xac)) {
-      FUN_800168a8((double)*(float *)(iVar5 + 0xac),param_2,param_3,param_4,param_5,param_6,param_7,
+      FUN_80006c88((double)*(float *)(iVar5 + 0xac),param_2,param_3,param_4,param_5,param_6,param_7,
                    param_8,0x432);
       *(float *)(iVar5 + 0xac) = *(float *)(iVar5 + 0xac) - FLOAT_803dc074;
       if (*(float *)(iVar5 + 0xac) < FLOAT_803e5870) {
         *(float *)(iVar5 + 0xac) = FLOAT_803e5870;
       }
     }
-    uVar6 = FUN_80033a34(param_9);
+    uVar6 = FUN_800339b4(param_9);
     if (*(int *)(param_9 + 0x7c) == 0) {
       *(undefined4 *)(param_9 + 6) = *(undefined4 *)(iVar3 + 8);
       *(undefined4 *)(param_9 + 8) = *(undefined4 *)(iVar3 + 0xc);
@@ -90,47 +90,47 @@ void DIMboss_update(undefined8 param_1,double param_2,double param_3,undefined8 
         *(ushort *)(iVar4 + 0x400) = *(ushort *)(iVar4 + 0x400) & 0xfffd;
         *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) & 0xf7;
         *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) | 0x80;
-        uVar1 = FUN_80020078(0x20c);
+        uVar1 = FUN_80017690(0x20c);
         if (uVar1 < 3) {
           *(undefined2 *)(iVar4 + 0x402) = 1;
           *(undefined *)(iVar4 + 0x354) = 3;
           *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) & 0xf7;
           *(float *)(iVar5 + 0xa4) = FLOAT_803e58dc;
-          uVar6 = FUN_800201ac(0x9e,1);
+          uVar6 = FUN_80017698(0x9e,1);
         }
         else {
           *(undefined2 *)(iVar4 + 0x402) = 2;
           *(undefined *)(iVar4 + 0x354) = 3;
           *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) & 0xf7;
-          uVar6 = FUN_800201ac(0x9e,0);
+          uVar6 = FUN_80017698(0x9e,0);
         }
       }
       if ((*(short *)(iVar4 + 0x402) == 0) || (*(short *)(iVar4 + 0x402) == 3)) {
         if ((*(char *)(iVar5 + 0xb4) != '\0') &&
            (*(char *)(iVar5 + 0xb4) = *(char *)(iVar5 + 0xb4) + -1, *(char *)(iVar5 + 0xb4) == '\0')
            ) {
-          FUN_8002b554(param_9,(float *)&DAT_803ad60c,'\0');
-          iVar3 = FUN_8002b660((int)param_9);
-          uVar6 = FUN_8002854c(param_9,iVar3);
+          FUN_80017a50(param_9,(float *)&DAT_803ad60c,'\0');
+          iVar3 = FUN_80017a54((int)param_9);
+          uVar6 = FUN_80017940(param_9,iVar3);
         }
         if (*(char *)(iVar5 + 0xb6) < '\0') {
-          uVar6 = FUN_80008cbc(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,
+          uVar6 = FUN_80006728(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,
                                0xdb,0,in_r7,in_r8,in_r9,in_r10);
-          FUN_80008cbc(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0xdc,0,
+          FUN_80006728(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0xdc,0,
                        in_r7,in_r8,in_r9,in_r10);
-          FUN_8008999c(7,1,0);
-          FUN_80089734((double)FLOAT_803e58e4,(double)FLOAT_803e58e8,(double)FLOAT_803e58ec,7);
-          FUN_8008986c(7,0xa0,0xa0,0xff,0x7f,0x28);
+          FUN_80080f80(7,1,0);
+          FUN_80080f70((double)FLOAT_803e58e4,(double)FLOAT_803e58e8,(double)FLOAT_803e58ec,7);
+          FUN_80080f7c(7,0xa0,0xa0,0xff,0x7f,0x28);
           *(byte *)(iVar5 + 0xb6) = *(byte *)(iVar5 + 0xb6) & 0x7f;
         }
       }
       else {
         if ((*(ushort *)(iVar4 + 0x400) & 4) == 0) {
-          uVar2 = FUN_8002bac4();
+          uVar2 = FUN_80017a98();
           *(undefined4 *)(iVar4 + 0x2d0) = uVar2;
         }
         else {
-          uVar2 = FUN_8002ba84();
+          uVar2 = FUN_80017a90();
           *(undefined4 *)(iVar4 + 0x2d0) = uVar2;
         }
         if (*(int *)(param_9 + 100) != 0) {
@@ -138,11 +138,11 @@ void DIMboss_update(undefined8 param_1,double param_2,double param_3,undefined8 
         }
         iVar3 = iVar4;
         iVar5 = iVar4;
-        FUN_801bcd98(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,0,iVar4,
+        FUN_801bcc94(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,0,iVar4,
                      iVar4);
-        FUN_80115328(-0x7fc529c4,*(undefined4 *)(iVar4 + 0x2d0));
-        uVar6 = FUN_80115330();
-        FUN_801bc0f8(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar4,
+        FUN_801150a4(-0x7fc529c4,*(undefined4 *)(iVar4 + 0x2d0));
+        uVar6 = FUN_801150ac();
+        FUN_801bbed0(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar4,
                      iVar3,iVar5,in_r7,in_r8,in_r9,in_r10);
       }
     }

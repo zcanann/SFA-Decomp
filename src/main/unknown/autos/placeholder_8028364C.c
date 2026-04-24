@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: FUN_8028364c
+ * Function: FUN_8028363c
  * EN v1.0 Address: 0x8028363C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8028364C
@@ -14,7 +14,7 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_8028364c(undefined4 param_1,int param_2,int param_3,int param_4,undefined *param_5)
+int FUN_8028363c(undefined4 param_1,int param_2,int param_3,int param_4,undefined *param_5)
 {
     return 0;
 }

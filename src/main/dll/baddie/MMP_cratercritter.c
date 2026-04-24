@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/baddie/MMP_cratercritter.h"
 
-extern double FUN_80021730();
-extern undefined4 FUN_80021b8c();
+extern double FUN_80017708();
+extern undefined4 FUN_80017748();
 extern double FUN_80293900();
 
 extern f32 FLOAT_803dc074;
@@ -18,7 +18,7 @@ extern f32 FLOAT_803e311c;
 /*
  * --INFO--
  *
- * Function: FUN_8013d92c
+ * Function: FUN_8013d8f0
  * EN v1.0 Address: 0x8013D8F0
  * EN v1.0 Size: 840b
  * EN v1.1 Address: 0x8013D92C
@@ -28,7 +28,7 @@ extern f32 FLOAT_803e311c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8013d92c(double param_1,short *param_2,int param_3,float *param_4,char param_5)
+void FUN_8013d8f0(double param_1,short *param_2,int param_3,float *param_4,char param_5)
 {
   float fVar1;
   float fVar2;
@@ -53,7 +53,7 @@ void FUN_8013d92c(double param_1,short *param_2,int param_3,float *param_4,char 
   }
   dVar6 = (double)(float)(param_1 + (double)fVar2);
   dVar8 = (double)(float)(dVar6 * dVar6);
-  dVar5 = FUN_80021730(param_4,(float *)(param_2 + 0xc));
+  dVar5 = FUN_80017708(param_4,(float *)(param_2 + 0xc));
   if (dVar8 <= dVar5) {
     if (param_5 != '\0') {
       local_50 = *param_4 - *(float *)(param_2 + 0xc);
@@ -62,7 +62,7 @@ void FUN_8013d92c(double param_1,short *param_2,int param_3,float *param_4,char 
       local_58[0] = -*param_2;
       local_58[1] = 0;
       local_58[2] = 0;
-      FUN_80021b8c(local_58,&local_50);
+      FUN_80017748(local_58,&local_50);
       if (FLOAT_803e306c < local_48) {
         fVar1 = FLOAT_803e30ac * FLOAT_803dc074 + *(float *)(param_3 + 0x14);
         if (fVar1 < FLOAT_803e306c) {

@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_1E2.h"
 
-extern undefined4 FUN_800372f8();
-extern undefined4 FUN_801d21ec();
+extern undefined4 FUN_8003735c();
+extern undefined4 FUN_801d1e24();
 
 extern f32 FLOAT_803e5f94;
 extern f32 FLOAT_803e5fe8;
@@ -10,7 +10,7 @@ extern f32 FLOAT_803e5fe8;
 /*
  * --INFO--
  *
- * Function: FUN_801d2da8
+ * Function: FUN_801d2c54
  * EN v1.0 Address: 0x801D2C54
  * EN v1.0 Size: 168b
  * EN v1.1 Address: 0x801D2DA8
@@ -20,7 +20,7 @@ extern f32 FLOAT_803e5fe8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d2da8(undefined2 *param_1,int param_2,int param_3)
+void FUN_801d2c54(undefined2 *param_1,int param_2,int param_3)
 {
   float fVar1;
   int iVar2;
@@ -41,8 +41,8 @@ void FUN_801d2da8(undefined2 *param_1,int param_2,int param_3)
     *(uint *)(iVar2 + 0x30) = *(uint *)(iVar2 + 0x30) | 0x810;
   }
   if (param_3 == 0) {
-    FUN_801d21ec(param_1,pfVar3,0);
+    FUN_801d1e24(param_1,pfVar3,0);
   }
-  FUN_800372f8((int)param_1,3);
+  FUN_8003735c((int)param_1,3);
   return;
 }

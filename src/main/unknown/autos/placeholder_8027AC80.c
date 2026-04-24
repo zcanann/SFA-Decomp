@@ -2,7 +2,7 @@
 #include "main/unknown/autos/placeholder_8027AC80.h"
 
 extern undefined4 FUN_80286718();
-extern double FUN_80295318();
+extern double FUN_80294bb8();
 
 extern undefined4 DAT_8032fe78;
 extern undefined4 DAT_80330078;
@@ -17,7 +17,7 @@ extern f32 FLOAT_803e84d0;
 /*
  * --INFO--
  *
- * Function: FUN_8027ac80
+ * Function: FUN_8027ac34
  * EN v1.0 Address: 0x8027AC34
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8027AC80
@@ -27,14 +27,14 @@ extern f32 FLOAT_803e84d0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8027ac80(uint param_1,uint param_2)
+void FUN_8027ac34(uint param_1,uint param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8027ad70
+ * Function: FUN_8027ac38
  * EN v1.0 Address: 0x8027AC38
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8027AD70
@@ -44,6 +44,6 @@ void FUN_8027ac80(uint param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8027ad70(uint param_1)
+void FUN_8027ac38(uint param_1)
 {
 }

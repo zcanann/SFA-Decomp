@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/CAM/camshipbattle5C.h"
 
-extern undefined4 FUN_80137c30();
+extern undefined4 FUN_80135810();
 extern undefined8 FUN_8028680c();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_80286858();
@@ -314,7 +314,7 @@ void pathcam_findTaggedNodeWindow(undefined8 param_1,undefined8 param_2,undefine
       } while (iVar7 < 5);
     }
     if (((int)puVar4[1] < 0) || ((int)puVar4[2] < 0)) {
-      FUN_80137c30(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+      FUN_80135810(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                    sPathcamErrorNeedAtLeastTwoControlPoints,uVar5,uVar6,param_12,param_13,
                    param_14,param_15,param_16);
     }

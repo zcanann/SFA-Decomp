@@ -6,10 +6,10 @@ extern undefined4 FUN_802867b0();
 extern undefined4 FUN_802867b4();
 extern undefined4 FUN_802867fc();
 extern undefined4 FUN_80286800();
-extern undefined4 FUN_80292428();
-extern undefined4 FUN_80292444();
-extern double FUN_80292568();
-extern undefined4 FUN_80292584();
+extern undefined4 FUN_802923c4();
+extern undefined4 FUN_802923cc();
+extern double FUN_802924b8();
+extern undefined4 FUN_802924c0();
 extern double FUN_80293954();
 
 extern f32 FLOAT_803e8750;
@@ -44,7 +44,7 @@ void FUN_8029312c(undefined8 param_1,double param_2)
 /*
  * --INFO--
  *
- * Function: FUN_802932a4
+ * Function: FUN_80293130
  * EN v1.0 Address: 0x80293130
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802932A4
@@ -54,14 +54,14 @@ void FUN_8029312c(undefined8 param_1,double param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802932a4(undefined8 param_1,double param_2)
+void FUN_80293130(undefined8 param_1,double param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80293390
+ * Function: FUN_80293134
  * EN v1.0 Address: 0x80293134
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80293390
@@ -71,14 +71,14 @@ void FUN_802932a4(undefined8 param_1,double param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80293390(float *param_1,float *param_2)
+void FUN_80293134(float *param_1,float *param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802933d4
+ * Function: FUN_80293138
  * EN v1.0 Address: 0x80293138
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802933D4
@@ -88,14 +88,14 @@ void FUN_80293390(float *param_1,float *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802933d4(double param_1,float *param_2,float *param_3)
+void FUN_80293138(double param_1,float *param_2,float *param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802933fc
+ * Function: FUN_8029313c
  * EN v1.0 Address: 0x8029313C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802933FC
@@ -105,7 +105,7 @@ void FUN_802933d4(double param_1,float *param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-double FUN_802933fc(float *param_1)
+double FUN_8029313c(float *param_1)
 {
     return 0.0;
 }
@@ -113,7 +113,7 @@ double FUN_802933fc(float *param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80293424
+ * Function: FUN_80293144
  * EN v1.0 Address: 0x80293144
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80293424
@@ -123,6 +123,6 @@ double FUN_802933fc(float *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80293424(void)
+void FUN_80293144(void)
 {
 }

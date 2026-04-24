@@ -70,7 +70,7 @@ extern undefined4 DAT_803d4900;
 /*
  * --INFO--
  *
- * Function: FUN_80283134
+ * Function: FUN_80282fe0
  * EN v1.0 Address: 0x80282FE0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80283134
@@ -80,14 +80,14 @@ extern undefined4 DAT_803d4900;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80283134(int param_1)
+void FUN_80282fe0(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80283418
+ * Function: FUN_80282fe4
  * EN v1.0 Address: 0x80282FE4
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80283418
@@ -97,7 +97,7 @@ void FUN_80283134(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80283418(uint param_1)
+uint FUN_80282fe4(uint param_1)
 {
     return 0;
 }

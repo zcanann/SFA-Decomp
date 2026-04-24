@@ -1,12 +1,12 @@
 #include "ghidra_import.h"
 #include "main/dll/tFrameAnimator.h"
 
-extern undefined4 FUN_8000bb38();
-extern undefined4 FUN_8002a6b4();
-extern undefined4 FUN_8002ba34();
-extern undefined4 FUN_80036018();
-extern undefined4 FUN_8007d858();
-extern undefined4 FUN_80137cd0();
+extern undefined4 FUN_80006824();
+extern undefined4 FUN_80017a08();
+extern undefined4 FUN_80017a88();
+extern undefined4 FUN_800360f0();
+extern undefined4 FUN_800723a0();
+extern undefined4 FUN_80135814();
 extern undefined4 FUN_80247eb8();
 extern undefined4 FUN_80247edc();
 extern undefined4 FUN_80247ef8();
@@ -30,7 +30,7 @@ extern f32 FLOAT_803e436c;
 /*
  * --INFO--
  *
- * Function: FUN_80179f40
+ * Function: FUN_80179eb0
  * EN v1.0 Address: 0x80179EB0
  * EN v1.0 Size: 1220b
  * EN v1.1 Address: 0x80179F40
@@ -40,7 +40,7 @@ extern f32 FLOAT_803e436c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80179f40(ushort *param_1)
+undefined4 FUN_80179eb0(ushort *param_1)
 {
   bool bVar1;
   float fVar2;
@@ -61,7 +61,7 @@ undefined4 FUN_80179f40(ushort *param_1)
   
   iVar5 = *(int *)(param_1 + 0x5c);
   dVar10 = (double)FLOAT_803e4348;
-  FUN_80036018((int)param_1);
+  FUN_800360f0((int)param_1);
   fVar2 = *(float *)(iVar5 + 0x2b4) - *(float *)(param_1 + 8);
   if (fVar2 < FLOAT_803e4334) {
     fVar2 = -fVar2;
@@ -103,7 +103,7 @@ LAB_8017a09c:
     *(float *)(param_1 + 0x14) = *(float *)(param_1 + 0x14) * fVar2;
     *(float *)(param_1 + 0x16) = *(float *)(param_1 + 0x16) * fVar2;
     *(float *)(param_1 + 0x14) = FLOAT_803e4354 * FLOAT_803dc074 + *(float *)(param_1 + 0x14);
-    FUN_8007d858();
+    FUN_800723a0();
     if (((*(float *)(param_1 + 0x14) < FLOAT_803e4358) &&
         (FLOAT_803e435c < *(float *)(param_1 + 0x14))) &&
        (*(float *)(iVar5 + 0x2c4) < FLOAT_803e4338)) {
@@ -113,7 +113,7 @@ LAB_8017a09c:
   else if (bVar6) {
     *(float *)(param_1 + 0x14) = -(FLOAT_803e4360 * FLOAT_803dc074 - *(float *)(param_1 + 0x14));
   }
-  FUN_8002ba34((double)(*(float *)(param_1 + 0x12) * FLOAT_803dc074),
+  FUN_80017a88((double)(*(float *)(param_1 + 0x12) * FLOAT_803dc074),
                (double)(*(float *)(param_1 + 0x14) * FLOAT_803dc074),
                (double)(*(float *)(param_1 + 0x16) * FLOAT_803dc074),(int)param_1);
   if (*(char *)(*(int *)(param_1 + 0x5c) + 0x25b) == '\x01') {
@@ -139,7 +139,7 @@ LAB_8017a09c:
                                         (double)(float)(dVar13 * dVar13 +
                                                        (double)(float)(dVar12 * dVar12))));
     if ((double)FLOAT_803e4364 < dVar8) {
-      FUN_8000bb38((uint)param_1,0x16c);
+      FUN_80006824((uint)param_1,0x16c);
     }
     if ((double)FLOAT_803e4334 != dVar8) {
       dVar7 = (double)(float)((double)FLOAT_803e4338 / dVar8);
@@ -151,7 +151,7 @@ LAB_8017a09c:
                     (float)(dVar11 * (double)local_80 +
                            (double)(float)(dVar13 * (double)local_88 +
                                           (double)(float)(dVar12 * (double)local_84))));
-    FUN_80137cd0();
+    FUN_80135814();
     dVar7 = (double)FLOAT_803e4334;
     if (dVar7 < dVar9) {
       *(float *)(param_1 + 0x12) = (float)((double)local_88 * dVar9);
@@ -171,7 +171,7 @@ LAB_8017a09c:
   if (!bVar6) {
     *(float *)(param_1 + 0x14) = -(FLOAT_803e4360 * FLOAT_803dc074 - *(float *)(param_1 + 0x14));
   }
-  FUN_8002a6b4(param_1);
+  FUN_80017a08(param_1);
   *(undefined4 *)(iVar5 + 0x2b0) = *(undefined4 *)(param_1 + 6);
   *(undefined4 *)(iVar5 + 0x2b4) = *(undefined4 *)(param_1 + 8);
   *(undefined4 *)(iVar5 + 0x2b8) = *(undefined4 *)(param_1 + 10);

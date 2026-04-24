@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/pickup.h"
 
-extern uint FUN_80022264();
+extern uint FUN_80017760();
 extern undefined4 FUN_80286838();
 extern int FUN_8028683c();
 extern int FUN_80286840();
@@ -263,7 +263,7 @@ extern f32 FLOAT_803e227c;
 /*
  * --INFO--
  *
- * Function: FUN_800fd9e0
+ * Function: FUN_800fd744
  * EN v1.0 Address: 0x800FD744
  * EN v1.0 Size: 108b
  * EN v1.1 Address: 0x800FD9E0
@@ -273,7 +273,7 @@ extern f32 FLOAT_803e227c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fd9e0(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
+void FUN_800fd744(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
 {
   int iVar1;
   undefined2 extraout_r4;
@@ -533,7 +533,7 @@ void FUN_800fd9e0(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
 /*
  * --INFO--
  *
- * Function: FUN_800fdd34
+ * Function: FUN_800fd7b0
  * EN v1.0 Address: 0x800FD7B0
  * EN v1.0 Size: 108b
  * EN v1.1 Address: 0x800FDD34
@@ -543,7 +543,7 @@ void FUN_800fd9e0(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fdd34(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
+void FUN_800fd7b0(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
 {
   int iVar1;
   undefined2 extraout_r4;
@@ -817,7 +817,7 @@ void FUN_800fdd34(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
 /*
  * --INFO--
  *
- * Function: FUN_800fe0b4
+ * Function: FUN_800fd81c
  * EN v1.0 Address: 0x800FD81C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x800FE0B4
@@ -827,14 +827,14 @@ void FUN_800fdd34(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fe0b4(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
+void FUN_800fd81c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_800fe4dc
+ * Function: FUN_800fd820
  * EN v1.0 Address: 0x800FD820
  * EN v1.0 Size: 100b
  * EN v1.1 Address: 0x800FE4DC
@@ -844,7 +844,7 @@ void FUN_800fe0b4(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fe4dc(int param_1,int param_2,int param_3,uint param_4)
+void FUN_800fd820(int param_1,int param_2,int param_3,uint param_4)
 {
   undefined4 *local_378;
   int local_374;
@@ -1061,7 +1061,7 @@ void FUN_800fe4dc(int param_1,int param_2,int param_3,uint param_4)
 /*
  * --INFO--
  *
- * Function: FUN_800fe844
+ * Function: FUN_800fd884
  * EN v1.0 Address: 0x800FD884
  * EN v1.0 Size: 108b
  * EN v1.1 Address: 0x800FE844
@@ -1071,7 +1071,7 @@ void FUN_800fe4dc(int param_1,int param_2,int param_3,uint param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fe844(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
+void FUN_800fd884(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
 {
   int iVar1;
   undefined2 extraout_r4;
@@ -1345,7 +1345,7 @@ void FUN_800fe844(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
 /*
  * --INFO--
  *
- * Function: FUN_800febc4
+ * Function: FUN_800fd8f0
  * EN v1.0 Address: 0x800FD8F0
  * EN v1.0 Size: 100b
  * EN v1.1 Address: 0x800FEBC4
@@ -1355,7 +1355,7 @@ void FUN_800fe844(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800febc4(int param_1,undefined2 param_2,int param_3,uint param_4)
+void FUN_800fd8f0(int param_1,undefined2 param_2,int param_3,uint param_4)
 {
   int iVar1;
   undefined4 *local_378;
@@ -1599,7 +1599,7 @@ void FUN_800febc4(int param_1,undefined2 param_2,int param_3,uint param_4)
 /*
  * --INFO--
  *
- * Function: FUN_800fef20
+ * Function: FUN_800fd954
  * EN v1.0 Address: 0x800FD954
  * EN v1.0 Size: 108b
  * EN v1.1 Address: 0x800FEF20
@@ -1609,7 +1609,7 @@ void FUN_800febc4(int param_1,undefined2 param_2,int param_3,uint param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fef20(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
+void FUN_800fd954(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
 {
   int iVar1;
   undefined2 extraout_r4;
@@ -1873,7 +1873,7 @@ void FUN_800fef20(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
 /*
  * --INFO--
  *
- * Function: FUN_800ff2a0
+ * Function: FUN_800fd9c0
  * EN v1.0 Address: 0x800FD9C0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x800FF2A0
@@ -1883,14 +1883,14 @@ void FUN_800fef20(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800ff2a0(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
+void FUN_800fd9c0(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_800ff93c
+ * Function: FUN_800fd9c4
  * EN v1.0 Address: 0x800FD9C4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x800FF93C
@@ -1900,7 +1900,7 @@ void FUN_800ff2a0(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800ff93c(short *param_1,int param_2,int param_3,uint param_4,undefined4 param_5,
+void FUN_800fd9c4(short *param_1,int param_2,int param_3,uint param_4,undefined4 param_5,
                  uint *param_6)
 {
 }
@@ -1908,7 +1908,7 @@ void FUN_800ff93c(short *param_1,int param_2,int param_3,uint param_4,undefined4
 /*
  * --INFO--
  *
- * Function: FUN_800ffde0
+ * Function: FUN_800fd9c8
  * EN v1.0 Address: 0x800FD9C8
  * EN v1.0 Size: 100b
  * EN v1.1 Address: 0x800FFDE0
@@ -1918,7 +1918,7 @@ void FUN_800ff93c(short *param_1,int param_2,int param_3,uint param_4,undefined4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800ffde0(int param_1,undefined2 param_2,int param_3,uint param_4,undefined4 param_5,
+void FUN_800fd9c8(int param_1,undefined2 param_2,int param_3,uint param_4,undefined4 param_5,
                  int param_6)
 {
   undefined4 *local_378;
@@ -2154,7 +2154,7 @@ void FUN_800ffde0(int param_1,undefined2 param_2,int param_3,uint param_4,undefi
 /*
  * --INFO--
  *
- * Function: FUN_801001a0
+ * Function: FUN_800fda2c
  * EN v1.0 Address: 0x800FDA2C
  * EN v1.0 Size: 100b
  * EN v1.1 Address: 0x801001A0
@@ -2164,7 +2164,7 @@ void FUN_800ffde0(int param_1,undefined2 param_2,int param_3,uint param_4,undefi
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801001a0(int param_1,undefined2 param_2,int param_3,uint param_4,undefined4 param_5,
+void FUN_800fda2c(int param_1,undefined2 param_2,int param_3,uint param_4,undefined4 param_5,
                  int param_6)
 {
   undefined4 *local_378;

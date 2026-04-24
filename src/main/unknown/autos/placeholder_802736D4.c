@@ -2,14 +2,14 @@
 #include "main/unknown/autos/placeholder_802736D4.h"
 
 extern undefined4 FUN_802420b0();
-extern undefined4 FUN_802839f4();
+extern undefined4 FUN_8028383c();
+extern undefined4 FUN_80283d78();
 extern undefined4 FUN_80283dfc();
-extern undefined4 FUN_80283e10();
-extern undefined4 FUN_80283e74();
+extern undefined4 FUN_80283e00();
 extern undefined4 FUN_80283fa0();
-extern uint FUN_8028436c();
-extern undefined4 FUN_80284410();
-extern undefined4 FUN_80284498();
+extern uint FUN_80284224();
+extern undefined4 FUN_80284224();
+extern undefined4 FUN_80284228();
 
 extern undefined4 DAT_803bddb0;
 extern undefined4 DAT_803bdfc0;
@@ -23,7 +23,7 @@ extern f32 FLOAT_803e8480;
 /*
  * --INFO--
  *
- * Function: FUN_802736d4
+ * Function: FUN_80272f70
  * EN v1.0 Address: 0x80272F70
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802736D4
@@ -33,6 +33,6 @@ extern f32 FLOAT_803e8480;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802736d4(void)
+void FUN_80272f70(void)
 {
 }

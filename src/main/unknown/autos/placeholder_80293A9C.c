@@ -3,12 +3,12 @@
 
 extern int FUN_802867b4();
 extern undefined4 FUN_80286800();
-extern undefined4 FUN_80292568();
+extern undefined4 FUN_802924b8();
 
 /*
  * --INFO--
  *
- * Function: FUN_80293a9c
+ * Function: FUN_8029397c
  * EN v1.0 Address: 0x8029397C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80293A9C
@@ -18,6 +18,6 @@ extern undefined4 FUN_80292568();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80293a9c(void)
+void FUN_8029397c(void)
 {
 }

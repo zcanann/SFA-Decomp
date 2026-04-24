@@ -1,16 +1,16 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8028026C.h"
 
-extern undefined4 FUN_80271fd0();
-extern undefined4 FUN_802720b8();
+extern undefined4 FUN_80271b58();
+extern undefined4 FUN_80271b60();
 extern undefined4 FUN_80272224();
-extern undefined4 FUN_80273428();
-extern undefined4 FUN_802734d8();
-extern undefined4 FUN_802735c8();
-extern undefined4 FUN_802735e8();
-extern undefined4 FUN_802801a8();
-extern undefined4 FUN_80281914();
-extern undefined4 FUN_802819c0();
+extern undefined4 FUN_80272edc();
+extern undefined4 FUN_80272ee0();
+extern undefined4 FUN_80272ee4();
+extern undefined4 FUN_80272ee8();
+extern undefined4 FUN_802800c0();
+extern undefined4 FUN_80281344();
+extern undefined4 FUN_80281348();
 extern uint FUN_80286718();
 extern undefined4 SQRT();
 
@@ -36,7 +36,7 @@ extern f32 FLOAT_803e8550;
 /*
  * --INFO--
  *
- * Function: FUN_8028026c
+ * Function: FUN_802800c0
  * EN v1.0 Address: 0x802800C0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8028026C
@@ -46,14 +46,14 @@ extern f32 FLOAT_803e8550;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8028026c(void)
+void FUN_802800c0(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80280648
+ * Function: FUN_802800c4
  * EN v1.0 Address: 0x802800C4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80280648
@@ -63,14 +63,14 @@ void FUN_8028026c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80280648(void)
+void FUN_802800c4(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80280824
+ * Function: FUN_802800c8
  * EN v1.0 Address: 0x802800C8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80280824
@@ -80,7 +80,7 @@ void FUN_80280648(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80280824(int param_1,float *param_2,float *param_3,float *param_4,float *param_5,
+void FUN_802800c8(int param_1,float *param_2,float *param_3,float *param_4,float *param_5,
                  float *param_6)
 {
 }
@@ -88,7 +88,7 @@ void FUN_80280824(int param_1,float *param_2,float *param_3,float *param_4,float
 /*
  * --INFO--
  *
- * Function: FUN_80280d08
+ * Function: FUN_802800cc
  * EN v1.0 Address: 0x802800CC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80280D08
@@ -98,7 +98,7 @@ void FUN_80280824(int param_1,float *param_2,float *param_3,float *param_4,float
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80280d08(double param_1,double param_2,undefined8 param_3,double param_4,double param_5,
+void FUN_802800cc(double param_1,double param_2,undefined8 param_3,double param_4,double param_5,
                  int param_6)
 {
 }

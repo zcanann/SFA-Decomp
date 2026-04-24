@@ -10,7 +10,7 @@ extern f32 FLOAT_803e2528;
 /*
  * --INFO--
  *
- * Function: FUN_8010aee4
+ * Function: FUN_8010aea8
  * EN v1.0 Address: 0x8010AEA8
  * EN v1.0 Size: 728b
  * EN v1.1 Address: 0x8010AEE4
@@ -20,7 +20,7 @@ extern f32 FLOAT_803e2528;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-double FUN_8010aee4(double param_1,undefined8 param_2,double param_3,undefined4 *param_4)
+double FUN_8010aea8(double param_1,undefined8 param_2,double param_3,undefined4 *param_4)
 {
   float fVar1;
   float fVar2;

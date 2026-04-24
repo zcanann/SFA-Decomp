@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_801c9af8(undefined2 *param_1);
+void FUN_801c9660(undefined2 *param_1);
 
 #endif /* MAIN_DLL_COLRISE_H_ */

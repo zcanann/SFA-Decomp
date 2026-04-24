@@ -15,7 +15,7 @@ extern undefined4 DAT_803def81;
 /*
  * --INFO--
  *
- * Function: FUN_8027a3e0
+ * Function: FUN_8027a330
  * EN v1.0 Address: 0x8027A330
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8027A3E0
@@ -25,6 +25,6 @@ extern undefined4 DAT_803def81;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8027a3e0(void)
+void FUN_8027a330(void)
 {
 }

@@ -2,8 +2,8 @@
 #include "main/dll/CAM/pathcam.h"
 
 extern undefined4 FUN_800033a8();
-extern undefined4 FUN_8000e054();
-extern int FUN_80021884();
+extern undefined4 FUN_800068f4();
+extern int FUN_80017730();
 extern undefined4 camcontrol_getTargetPosition();
 
 extern undefined4* DAT_803dd6d0;
@@ -150,7 +150,7 @@ void pathcam_loadSettings(undefined2 *param_1,int param_2,int param_3)
     gCamcontrolModeSettings[0x15] = gCamcontrolModeSettings[5];
     if ((param_3 != 0) && (*(char *)(param_3 + 0xd) != '\0')) {
       camcontrol_getTargetPosition((int)param_1,psVar7,(float *)(param_1 + 0xc),param_1 + 1);
-      FUN_8000e054((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
+      FUN_800068f4((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
                    (double)*(float *)(param_1 + 0x10),(float *)(param_1 + 6),(float *)(param_1 + 8),
                    (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
       *(undefined2 *)((int)gCamcontrolModeSettings + 0x82) = 0;
@@ -234,14 +234,14 @@ void pathcam_loadSettings(undefined2 *param_1,int param_2,int param_3)
   }
   else if (param_2 == 4) {
     camcontrol_getTargetPosition((int)param_1,psVar7,(float *)(param_1 + 0xc),param_1 + 1);
-    FUN_8000e054((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
+    FUN_800068f4((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
                  (double)*(float *)(param_1 + 0x10),(float *)(param_1 + 6),(float *)(param_1 + 8),
                  (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
     (**(code **)(*DAT_803dd6d0 + 0x38))
               ((double)gCamcontrolModeSettings[0x23],param_1,auStack_4c,&local_50,auStack_54,
                local_58,0);
     local_50 = *(float *)(param_1 + 8) - (*(float *)(psVar7 + 8) + gCamcontrolModeSettings[0x23]);
-    iVar6 = FUN_80021884();
+    iVar6 = FUN_80017730();
     param_1[1] = (short)iVar6;
     param_1[2] = 0;
     *(undefined4 *)(param_1 + 0x5c) = *(undefined4 *)(param_1 + 0xc);
@@ -258,7 +258,7 @@ void pathcam_loadSettings(undefined2 *param_1,int param_2,int param_3)
     *(float *)(param_1 + 0xc) = gCamcontrolModeSettings[0x1d];
     *(float *)(param_1 + 0xe) = gCamcontrolModeSettings[0x1e];
     *(float *)(param_1 + 0x10) = gCamcontrolModeSettings[0x1f];
-    FUN_8000e054((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
+    FUN_800068f4((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
                  (double)*(float *)(param_1 + 0x10),(float *)(param_1 + 6),(float *)(param_1 + 8),
                  (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
     *param_1 = *(undefined2 *)((int)gCamcontrolModeSettings + 0x86);

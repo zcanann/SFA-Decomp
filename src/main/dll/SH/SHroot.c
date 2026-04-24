@@ -1,12 +1,12 @@
 #include "ghidra_import.h"
 #include "main/dll/SH/SHroot.h"
 
-extern undefined4 FUN_8000bb38();
-extern uint FUN_80020078();
-extern undefined4 FUN_800201ac();
-extern uint FUN_80022264();
-extern int FUN_8003811c();
-extern int FUN_801d52c0();
+extern undefined4 FUN_80006824();
+extern uint FUN_80017690();
+extern undefined4 FUN_80017698();
+extern uint FUN_80017760();
+extern int FUN_800384ec();
+extern int FUN_801d5174();
 extern undefined4 SHthorntail_updateState();
 
 extern undefined4 DAT_80328014;
@@ -29,7 +29,7 @@ extern f64 DOUBLE_803e60c0;
 /*
  * --INFO--
  *
- * Function: FUN_801d5afc
+ * Function: FUN_801d58e4
  * EN v1.0 Address: 0x801D58E4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801D5AFC
@@ -39,7 +39,7 @@ extern f64 DOUBLE_803e60c0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d5afc(double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_801d58e4(double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,int param_10,int param_11,undefined4 param_12,undefined4 param_13,
                  undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -49,7 +49,7 @@ void FUN_801d5afc(double param_1,undefined8 param_2,undefined8 param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_801d5cb4
+ * Function: FUN_801d58e8
  * EN v1.0 Address: 0x801D58E8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801D5CB4
@@ -59,7 +59,7 @@ void FUN_801d5afc(double param_1,undefined8 param_2,undefined8 param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d5cb4(double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_801d58e8(double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,int param_10,undefined4 param_11,int param_12,undefined4 param_13,
                  undefined4 param_14,undefined4 param_15,undefined4 param_16)

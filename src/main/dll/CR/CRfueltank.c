@@ -1,12 +1,12 @@
 #include "ghidra_import.h"
 #include "main/dll/CR/CRfueltank.h"
 
-extern undefined4 FUN_8003b9ec();
+extern undefined4 FUN_8003b818();
 
 /*
  * --INFO--
  *
- * Function: FUN_801e3a44
+ * Function: FUN_801e34c0
  * EN v1.0 Address: 0x801E34C0
  * EN v1.0 Size: 92b
  * EN v1.1 Address: 0x801E3A44
@@ -16,7 +16,7 @@ extern undefined4 FUN_8003b9ec();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e3a44(int param_1)
+void FUN_801e34c0(int param_1)
 {
   char in_r8;
   
@@ -24,7 +24,7 @@ void FUN_801e3a44(int param_1)
       && (in_r8 != '\0')) &&
      ((*(char *)(*(int *)(param_1 + 0xb8) + 0xc) != '\0' &&
       (*(char *)(*(int *)(param_1 + 0xb8) + 0xd) != '\0')))) {
-    FUN_8003b9ec(param_1);
+    FUN_8003b818(param_1);
   }
   return;
 }

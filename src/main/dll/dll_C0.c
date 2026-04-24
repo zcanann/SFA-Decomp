@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_C0.h"
 
-extern undefined4 FUN_8011f6d0();
-extern int FUN_80134f70();
+extern undefined4 FUN_8011e868();
+extern int FUN_80133a28();
 
 extern undefined4 gCamcontrolState;
 
@@ -26,22 +26,22 @@ void camcontrol_playTargetTypeSfx(void)
   int iVar3;
   
   iVar3 = *(int *)(gCamcontrolState + 0x124);
-  iVar2 = FUN_80134f70();
+  iVar2 = FUN_80133a28();
   if ((iVar2 == 0) && (iVar3 != 0)) {
     bVar1 = *(byte *)(*(int *)(iVar3 + 0x78) + (uint)*(byte *)(iVar3 + 0xe4) * 5 + 4) & 0xf;
     if (bVar1 == 6) {
       if (*(short *)(iVar3 + 0x44) == 6) {
-        FUN_8011f6d0(8);
+        FUN_8011e868(8);
       }
       else {
-        FUN_8011f6d0(9);
+        FUN_8011e868(9);
       }
     }
     else if (bVar1 == 2) {
-      FUN_8011f6d0(7);
+      FUN_8011e868(7);
     }
     else if (bVar1 == 5) {
-      FUN_8011f6d0(0xf);
+      FUN_8011e868(0xf);
     }
   }
   return;

@@ -1,19 +1,19 @@
 #include "ghidra_import.h"
 #include "main/dll/FRONT/dll_3E.h"
 
-extern int FUN_80015888();
+extern int FUN_80006c30();
 extern undefined4 FUN_801177dc();
 extern undefined4 FUN_80117818();
-extern undefined4 FUN_8011784c();
-extern int FUN_801185cc();
-extern undefined4 FUN_80118e60();
-extern undefined4 FUN_801198c0();
-extern undefined4 FUN_801198fc();
-extern undefined4 FUN_80119930();
-extern int FUN_801199cc();
-extern undefined4 FUN_80119d90();
-extern undefined4 FUN_80119dcc();
-extern undefined4 FUN_80119e00();
+extern undefined4 FUN_80117668();
+extern int FUN_80118540();
+extern undefined4 FUN_80118c88();
+extern undefined4 FUN_801197e0();
+extern undefined4 FUN_8011981c();
+extern undefined4 FUN_80119850();
+extern int FUN_801198e8();
+extern undefined4 FUN_80119c60();
+extern undefined4 FUN_80119c9c();
+extern undefined4 FUN_80119cd0();
 extern undefined4 FUN_80244758();
 extern int FUN_80244820();
 extern undefined4 FUN_8024bdfc();
@@ -60,7 +60,7 @@ extern undefined4 DAT_803de300;
 /*
  * --INFO--
  *
- * Function: FUN_80118714
+ * Function: FUN_8011846c
  * EN v1.0 Address: 0x8011846C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80118714
@@ -70,14 +70,14 @@ extern undefined4 DAT_803de300;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80118714(void)
+void FUN_8011846c(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80118ac4
+ * Function: FUN_80118470
  * EN v1.0 Address: 0x80118470
  * EN v1.0 Size: 180b
  * EN v1.1 Address: 0x80118AC4
@@ -87,7 +87,7 @@ void FUN_80118714(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80118ac4(void)
+void FUN_80118470(void)
 {
   int iVar1;
   int iVar2;
@@ -99,9 +99,9 @@ void FUN_80118ac4(void)
     FUN_8024c910(DAT_803de2e4);
     if (DAT_803a6a68 == 0) {
       FUN_8024bdfc((int *)&DAT_803a69c0);
-      FUN_801198c0();
+      FUN_801197e0();
     }
-    FUN_80119d90();
+    FUN_80119c60();
     if (DAT_803a6a5f != '\0') {
       FUN_801177dc();
     }
@@ -123,7 +123,7 @@ void FUN_80118ac4(void)
 /*
  * --INFO--
  *
- * Function: FUN_80118ba8
+ * Function: FUN_80118524
  * EN v1.0 Address: 0x80118524
  * EN v1.0 Size: 80b
  * EN v1.1 Address: 0x80118BA8
@@ -133,7 +133,7 @@ void FUN_80118ac4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80118ba8(void)
+undefined4 FUN_80118524(void)
 {
   if ((DAT_803a6a58 != 0) && ((DAT_803a6a5c == '\x01' || (DAT_803a6a5c == '\x04')))) {
     DAT_803a6a5c = 2;
@@ -149,7 +149,7 @@ undefined4 FUN_80118ba8(void)
 /*
  * --INFO--
  *
- * Function: FUN_80118c08
+ * Function: FUN_80118574
  * EN v1.0 Address: 0x80118574
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80118C08
@@ -159,7 +159,7 @@ undefined4 FUN_80118ba8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-bool FUN_80118c08(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+bool FUN_80118574(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,undefined param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)

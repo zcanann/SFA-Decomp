@@ -1,11 +1,11 @@
 #include "ghidra_import.h"
 #include "main/dll/FRONT/n_rareware.h"
 
-extern undefined4 FUN_80015e00();
-extern undefined4 FUN_8001947c();
-extern undefined8 FUN_80019940();
-extern undefined4 FUN_80076ef4();
-extern undefined4 FUN_80077318();
+extern undefined4 FUN_80006c64();
+extern undefined4 FUN_80017468();
+extern undefined8 FUN_80017484();
+extern undefined4 FUN_800709e4();
+extern undefined4 FUN_800709e8();
 
 extern undefined4 DAT_803a5098;
 extern undefined4 DAT_803a509c;
@@ -21,7 +21,7 @@ extern f32 FLOAT_803e2978;
 /*
  * --INFO--
  *
- * Function: FUN_80115c80
+ * Function: FUN_801159e4
  * EN v1.0 Address: 0x801159E4
  * EN v1.0 Size: 1120b
  * EN v1.1 Address: 0x80115C80
@@ -31,7 +31,7 @@ extern f32 FLOAT_803e2978;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80115c80(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
+void FUN_801159e4(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   int iVar1;
@@ -80,7 +80,7 @@ void FUN_80115c80(undefined8 param_1,double param_2,undefined8 param_3,undefined
     local_14 = local_18;
     in_r7 = 0x100;
     in_r8 = 0;
-    FUN_80076ef4(DAT_803a5098,0x85,0xaa,&local_14,0x100,0);
+    FUN_800709e4(DAT_803a5098,0x85,0xaa,&local_14,0x100,0);
   }
   else if (DAT_803de264 < 0x1e0) {
     if (DAT_803de264 < 0x10e) {
@@ -98,7 +98,7 @@ void FUN_80115c80(undefined8 param_1,double param_2,undefined8 param_3,undefined
     local_10 = (double)CONCAT44(0x43300000,(int)(0x1e0 - (uint)*(ushort *)(DAT_803a509c + 0xc)) >> 1
                                );
     param_2 = (double)(float)(local_10 - DOUBLE_803e2968);
-    FUN_80077318((double)(float)(local_8 - DOUBLE_803e2968),param_2,DAT_803a509c,uVar3,0x119);
+    FUN_800709e8((double)(float)(local_8 - DOUBLE_803e2968),param_2,DAT_803a509c,uVar3,0x119);
   }
   else if (DAT_803de264 < 600) {
     if (DAT_803de264 < 0x1fe) {
@@ -116,7 +116,7 @@ void FUN_80115c80(undefined8 param_1,double param_2,undefined8 param_3,undefined
     local_10 = (double)CONCAT44(0x43300000,(int)(0x1e0 - (uint)*(ushort *)(DAT_803a50a0 + 0xc)) >> 1
                                );
     param_2 = (double)(float)(local_10 - DOUBLE_803e2968);
-    FUN_80077318((double)(float)(local_8 - DOUBLE_803e2968),param_2,DAT_803a50a0,uVar3,0x119);
+    FUN_800709e8((double)(float)(local_8 - DOUBLE_803e2968),param_2,DAT_803a50a0,uVar3,0x119);
   }
   if (DAT_803dd5d0 == '\0') {
     DAT_803de264 = DAT_803de264 + 1;
@@ -127,10 +127,10 @@ void FUN_80115c80(undefined8 param_1,double param_2,undefined8 param_3,undefined
   if (((DAT_803de260 != '\0') && (600 < DAT_803de264)) && (DAT_803dd5d0 == '\0')) {
     uVar5 = 0xff;
     uVar6 = 0xff;
-    uVar7 = FUN_80019940(0xff,0xff,0xff,0xff);
-    uVar5 = FUN_8001947c(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x565,
+    uVar7 = FUN_80017484(0xff,0xff,0xff,0xff);
+    uVar5 = FUN_80017468(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x565,
                          extraout_r4,uVar5,uVar6,in_r7,in_r8,in_r9,in_r10);
-    FUN_80015e00(uVar5,0,0x118,300);
+    FUN_80006c64(uVar5,0,0x118,300);
   }
   return;
 }

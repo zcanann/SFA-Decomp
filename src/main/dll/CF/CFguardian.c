@@ -1,17 +1,17 @@
 #include "ghidra_import.h"
 #include "main/dll/CF/CFguardian.h"
 
-extern undefined4 FUN_80013ee8();
-extern uint FUN_80020078();
-extern int FUN_80021884();
-extern undefined4 FUN_80021b8c();
-extern uint FUN_80022264();
-extern undefined4 FUN_80035ff8();
-extern byte FUN_80067ad4();
-extern undefined4 FUN_8006933c();
+extern undefined4 FUN_80006b14();
+extern uint FUN_80017690();
+extern int FUN_80017730();
+extern undefined4 FUN_80017748();
+extern uint FUN_80017760();
+extern undefined4 FUN_800360d4();
+extern byte FUN_80063a68();
+extern undefined4 FUN_80063a74();
 extern void trackDolphin_buildSweptBounds(uint *boundsOut,float *startPoints,float *endPoints,
                                           float *radii,int pointCount);
-extern undefined4 FUN_8018405c();
+extern undefined4 FUN_80183c74();
 extern int FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
@@ -38,7 +38,7 @@ extern f32 FLOAT_803e4698;
 /*
  * --INFO--
  *
- * Function: FUN_801846d8
+ * Function: FUN_801845fc
  * EN v1.0 Address: 0x801845FC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801846D8
@@ -48,14 +48,14 @@ extern f32 FLOAT_803e4698;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801846d8(undefined2 *param_1,int param_2)
+void FUN_801845fc(undefined2 *param_1,int param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80184918
+ * Function: FUN_80184600
  * EN v1.0 Address: 0x80184600
  * EN v1.0 Size: 488b
  * EN v1.1 Address: 0x80184918
@@ -65,7 +65,7 @@ void FUN_801846d8(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80184918(void)
+void FUN_80184600(void)
 {
   int iVar1;
   byte bVar2;
@@ -95,8 +95,8 @@ void FUN_80184918(void)
     local_40[0] = 0xff;
     local_3c = 3;
     trackDolphin_buildSweptBounds(auStack_108,&local_f0,local_c0,local_50,1);
-    FUN_8006933c(iVar1,auStack_108,(uint)*(ushort *)(iVar4 + 0xb2),'\x01');
-    bVar2 = FUN_80067ad4();
+    FUN_80063a74(iVar1,auStack_108,(uint)*(ushort *)(iVar4 + 0xb2),'\x01');
+    bVar2 = FUN_80063a68();
     if (bVar2 != 0) {
       if ((bVar2 & 1) == 0) {
         if ((bVar2 & 2) == 0) {
@@ -149,7 +149,7 @@ void FUN_80184918(void)
 /*
  * --INFO--
  *
- * Function: FUN_80184b54
+ * Function: FUN_801847e8
  * EN v1.0 Address: 0x801847E8
  * EN v1.0 Size: 340b
  * EN v1.1 Address: 0x80184B54
@@ -159,7 +159,7 @@ void FUN_80184918(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80184b54(ushort *param_1,int param_2,char param_3,float *param_4)
+void FUN_801847e8(ushort *param_1,int param_2,char param_3,float *param_4)
 {
   int iVar1;
   int iVar2;
@@ -199,7 +199,7 @@ void FUN_80184b54(ushort *param_1,int param_2,char param_3,float *param_4)
     *(float *)(param_1 + 0x16) = *(float *)(param_1 + 0x16) / (float)(dVar4 * dVar5);
     *puVar3 = *(undefined4 *)(param_1 + 0x12);
     puVar3[1] = *(undefined4 *)(param_1 + 0x16);
-    iVar1 = FUN_80021884();
+    iVar1 = FUN_80017730();
     *param_1 = (ushort)iVar1;
     return;
   }
@@ -210,20 +210,20 @@ void FUN_80184b54(ushort *param_1,int param_2,char param_3,float *param_4)
   local_2c[2] = 0;
   local_2c[1] = 0;
   local_2c[0] = *param_1;
-  FUN_80021b8c(local_2c,&local_38);
+  FUN_80017748(local_2c,&local_38);
   if (param_2 == 0) {
     param_1[2] = 0;
-    iVar1 = FUN_80021884();
+    iVar1 = FUN_80017730();
     param_1[1] = (ushort)iVar1;
     if ((short)param_1[1] < 0) {
       param_1[1] = -param_1[1];
     }
-    iVar1 = FUN_80021884();
+    iVar1 = FUN_80017730();
     *param_1 = (ushort)iVar1;
   }
   else {
-    iVar1 = FUN_80021884();
-    iVar2 = FUN_80021884();
+    iVar1 = FUN_80017730();
+    iVar2 = FUN_80017730();
     param_1[1] = (ushort)iVar2;
     param_1[2] = (ushort)iVar1;
   }

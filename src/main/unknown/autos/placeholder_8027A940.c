@@ -72,7 +72,7 @@ extern f32 FLOAT_803e84b0;
 /*
  * --INFO--
  *
- * Function: FUN_8027a940
+ * Function: FUN_8027a8fc
  * EN v1.0 Address: 0x8027A8FC
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8027A940
@@ -82,7 +82,7 @@ extern f32 FLOAT_803e84b0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8027a940(int param_1)
+undefined4 FUN_8027a8fc(int param_1)
 {
     return 0;
 }
@@ -90,7 +90,7 @@ undefined4 FUN_8027a940(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8027a9bc
+ * Function: FUN_8027a904
  * EN v1.0 Address: 0x8027A904
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8027A9BC
@@ -100,14 +100,14 @@ undefined4 FUN_8027a940(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8027a9bc(int param_1)
+void FUN_8027a904(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8027aa18
+ * Function: FUN_8027a908
  * EN v1.0 Address: 0x8027A908
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8027AA18
@@ -117,14 +117,14 @@ void FUN_8027a9bc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8027aa18(int param_1)
+void FUN_8027a908(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8027aa94
+ * Function: FUN_8027a90c
  * EN v1.0 Address: 0x8027A90C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8027AA94
@@ -134,14 +134,14 @@ void FUN_8027aa18(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8027aa94(void)
+void FUN_8027a90c(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8027ac44
+ * Function: FUN_8027a910
  * EN v1.0 Address: 0x8027A910
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8027AC44
@@ -151,7 +151,7 @@ void FUN_8027aa94(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_8027ac44(uint param_1)
+int FUN_8027a910(uint param_1)
 {
     return 0;
 }

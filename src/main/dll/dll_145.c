@@ -1,9 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_145.h"
 
-extern uint FUN_80020078();
-extern undefined4 FUN_800201ac();
-extern undefined4 FUN_800395a4();
+extern uint FUN_80017690();
+extern undefined4 FUN_80017698();
+extern undefined4 FUN_80039520();
 
 extern undefined4 DAT_803dc070;
 extern f64 DOUBLE_803e43b8;
@@ -12,7 +12,7 @@ extern f32 FLOAT_803e43b0;
 /*
  * --INFO--
  *
- * Function: FUN_8017ab28
+ * Function: FUN_8017ab20
  * EN v1.0 Address: 0x8017AB20
  * EN v1.0 Size: 300b
  * EN v1.1 Address: 0x8017AB28
@@ -22,7 +22,7 @@ extern f32 FLOAT_803e43b0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017ab28(int param_1)
+void FUN_8017ab20(int param_1)
 {
   float fVar1;
   uint uVar2;
@@ -32,10 +32,10 @@ void FUN_8017ab28(int param_1)
   
   pcVar4 = *(char **)(param_1 + 0xb8);
   if (*pcVar4 == '\0') {
-    uVar2 = FUN_80020078((int)*(short *)(pcVar4 + 2));
+    uVar2 = FUN_80017690((int)*(short *)(pcVar4 + 2));
     if (uVar2 != 0) {
       puVar5 = *(undefined **)(param_1 + 0xb8);
-      puVar3 = (undefined4 *)FUN_800395a4(param_1,0);
+      puVar3 = (undefined4 *)FUN_80039520(param_1,0);
       if (puVar3 != (undefined4 *)0x0) {
         *puVar3 = 0x100;
       }
@@ -43,10 +43,10 @@ void FUN_8017ab28(int param_1)
     }
   }
   else {
-    uVar2 = FUN_80020078((int)*(short *)(pcVar4 + 2));
+    uVar2 = FUN_80017690((int)*(short *)(pcVar4 + 2));
     if (uVar2 == 0) {
       puVar5 = *(undefined **)(param_1 + 0xb8);
-      puVar3 = (undefined4 *)FUN_800395a4(param_1,0);
+      puVar3 = (undefined4 *)FUN_80039520(param_1,0);
       if (puVar3 != (undefined4 *)0x0) {
         *puVar3 = 0;
       }
@@ -60,7 +60,7 @@ void FUN_8017ab28(int param_1)
          (float)((double)CONCAT44(0x43300000,(uint)DAT_803dc070) - DOUBLE_803e43b8);
     if (*(float *)(pcVar4 + 4) <= fVar1) {
       *(float *)(pcVar4 + 4) = fVar1;
-      FUN_800201ac((int)*(short *)(pcVar4 + 2),0);
+      FUN_80017698((int)*(short *)(pcVar4 + 2),0);
     }
   }
   return;

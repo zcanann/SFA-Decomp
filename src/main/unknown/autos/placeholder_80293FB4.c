@@ -7,8 +7,8 @@ extern int FUN_802867b4();
 extern undefined4 FUN_802867f4();
 extern undefined4 FUN_802867fc();
 extern undefined4 FUN_80286800();
-extern undefined4 FUN_80292568();
-extern undefined4 FUN_80293424();
+extern undefined4 FUN_802924b8();
+extern undefined4 FUN_80293144();
 
 extern f32 FLOAT_803e89d8;
 extern f32 FLOAT_803e89dc;
@@ -22,7 +22,7 @@ extern f32 FLOAT_803e89f4;
 /*
  * --INFO--
  *
- * Function: FUN_80293fb4
+ * Function: FUN_80293f7c
  * EN v1.0 Address: 0x80293F7C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80293FB4
@@ -32,14 +32,14 @@ extern f32 FLOAT_803e89f4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80293fb4(void)
+void FUN_80293f7c(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802940dc
+ * Function: FUN_80293f80
  * EN v1.0 Address: 0x80293F80
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802940DC
@@ -49,14 +49,14 @@ void FUN_80293fb4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802940dc(void)
+void FUN_80293f80(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80294224
+ * Function: FUN_80293f84
  * EN v1.0 Address: 0x80293F84
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80294224
@@ -66,14 +66,14 @@ void FUN_802940dc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80294224(void)
+void FUN_80293f84(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802943c4
+ * Function: FUN_80293f88
  * EN v1.0 Address: 0x80293F88
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802943C4
@@ -83,14 +83,14 @@ void FUN_80294224(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802943c4(void)
+void FUN_80293f88(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80294504
+ * Function: FUN_80293f8c
  * EN v1.0 Address: 0x80293F8C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80294504
@@ -100,14 +100,14 @@ void FUN_802943c4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80294504(void)
+void FUN_80293f8c(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802945e0
+ * Function: FUN_80293f90
  * EN v1.0 Address: 0x80293F90
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802945E0
@@ -117,14 +117,14 @@ void FUN_80294504(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802945e0(void)
+void FUN_80293f90(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802946dc
+ * Function: FUN_80293f94
  * EN v1.0 Address: 0x80293F94
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802946DC
@@ -134,6 +134,6 @@ void FUN_802945e0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802946dc(void)
+void FUN_80293f94(void)
 {
 }

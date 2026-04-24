@@ -1,16 +1,16 @@
 #include "ghidra_import.h"
 #include "main/timer.h"
 
-extern undefined4 FUN_8002bac4();
-extern int FUN_80036974();
-extern int FUN_80064248();
+extern undefined4 FUN_80017a98();
+extern int FUN_800369d0();
+extern int FUN_800620e8();
 
 extern f32 FLOAT_803e6eb4;
 
 /*
  * --INFO--
  *
- * Function: FUN_801ff094
+ * Function: FUN_801feb30
  * EN v1.0 Address: 0x801FEB30
  * EN v1.0 Size: 320b
  * EN v1.1 Address: 0x801FF094
@@ -20,19 +20,19 @@ extern f32 FLOAT_803e6eb4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ff094(int *param_1)
+void FUN_801feb30(int *param_1)
 {
   float fVar1;
   int iVar2;
   int iVar3;
   
-  iVar2 = FUN_80036974((int)param_1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
+  iVar2 = FUN_800369d0((int)param_1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
   iVar3 = param_1[0x2e];
   if ((iVar2 == 0x12) && (*(char *)(iVar3 + 0x118) != '\x04')) {
-    FUN_8002bac4();
+    FUN_80017a98();
   }
   if (*(char *)(iVar3 + 0x118) != '\t') {
-    iVar2 = FUN_80064248(param_1 + 0x20,param_1 + 3,(float *)0x1,(int *)0x0,param_1,8,0xffffffff,
+    iVar2 = FUN_800620e8(param_1 + 0x20,param_1 + 3,(float *)0x1,(int *)0x0,param_1,8,0xffffffff,
                          0xff,0);
     fVar1 = FLOAT_803e6eb4;
     if (iVar2 != 0) {

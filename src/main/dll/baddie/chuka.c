@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/baddie/chuka.h"
 
-extern undefined4 FUN_80013ee8();
+extern undefined4 FUN_80006b14();
 
 extern undefined4* DAT_803dd6f8;
 extern f64 DOUBLE_803e7088;
@@ -12,7 +12,7 @@ extern f32 FLOAT_803e7080;
 /*
  * --INFO--
  *
- * Function: FUN_80206444
+ * Function: FUN_8020637c
  * EN v1.0 Address: 0x8020637C
  * EN v1.0 Size: 260b
  * EN v1.1 Address: 0x80206444
@@ -22,7 +22,7 @@ extern f32 FLOAT_803e7080;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80206444(undefined2 *param_1,int param_2)
+void FUN_8020637c(undefined2 *param_1,int param_2)
 {
   int *piVar1;
   int *piVar2;
@@ -47,7 +47,7 @@ void FUN_80206444(undefined2 *param_1,int param_2)
   local_28 = FLOAT_803e7078;
   if (*(char *)((int)piVar2 + 9) == '\0') {
     *(undefined *)((int)piVar2 + 10) = 1;
-    piVar1 = (int *)FUN_80013ee8(0x69);
+    piVar1 = (int *)FUN_80006b14(0x69);
     if (*(short *)(param_2 + 0x1c) == 0) {
       (**(code **)(*piVar1 + 4))(param_1,0,auStack_38,0x10004,0xffffffff,0);
     }
@@ -60,7 +60,7 @@ void FUN_80206444(undefined2 *param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80206590
+ * Function: FUN_80206480
  * EN v1.0 Address: 0x80206480
  * EN v1.0 Size: 52b
  * EN v1.1 Address: 0x80206590
@@ -70,7 +70,7 @@ void FUN_80206444(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80206590(void)
+void FUN_80206480(void)
 {
   (**(code **)(*DAT_803dd6f8 + 0x18))();
   return;

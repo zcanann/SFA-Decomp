@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_8018a7b8(int param_1);
+void FUN_8018a53c(int param_1);
 
 #endif /* MAIN_DLL_CF_DLL_164_H_ */

@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/WM/WMlevcontrol.h"
 
-extern uint FUN_80020078();
-extern undefined4 FUN_8002b9a0();
+extern uint FUN_80017690();
+extern undefined4 FUN_80017a7c();
 
 extern undefined4* DAT_803dd6d4;
 extern f64 DOUBLE_803e6280;
@@ -11,7 +11,7 @@ extern f32 FLOAT_803e6278;
 /*
  * --INFO--
  *
- * Function: FUN_801dd600
+ * Function: FUN_801dd46c
  * EN v1.0 Address: 0x801DD46C
  * EN v1.0 Size: 376b
  * EN v1.1 Address: 0x801DD600
@@ -21,12 +21,12 @@ extern f32 FLOAT_803e6278;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801dd600(int param_1,int param_2)
+void FUN_801dd46c(int param_1,int param_2)
 {
   int iVar1;
   int iVar2;
   
-  FUN_8002b9a0(param_1,'d');
+  FUN_80017a7c(param_1,'d');
   iVar2 = *(int *)(param_1 + 0xb8);
   *(undefined2 *)(iVar2 + 0x6a) = *(undefined2 *)(param_2 + 0x1a);
   *(undefined2 *)(iVar2 + 0x6e) = 0xffff;
@@ -58,7 +58,7 @@ void FUN_801dd600(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_801dd760
+ * Function: FUN_801dd5e4
  * EN v1.0 Address: 0x801DD5E4
  * EN v1.0 Size: 44b
  * EN v1.1 Address: 0x801DD760
@@ -68,10 +68,10 @@ void FUN_801dd600(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-bool FUN_801dd760(void)
+bool FUN_801dd5e4(void)
 {
   uint uVar1;
   
-  uVar1 = FUN_80020078(0x639);
+  uVar1 = FUN_80017690(0x639);
   return uVar1 == 0;
 }

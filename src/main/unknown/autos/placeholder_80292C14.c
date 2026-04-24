@@ -7,7 +7,7 @@ extern undefined4 FUN_802867f4();
 /*
  * --INFO--
  *
- * Function: FUN_80292c14
+ * Function: FUN_80292b44
  * EN v1.0 Address: 0x80292B44
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80292C14
@@ -17,14 +17,14 @@ extern undefined4 FUN_802867f4();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80292c14(void)
+void FUN_80292b44(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80292d24
+ * Function: FUN_80292b48
  * EN v1.0 Address: 0x80292B48
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80292D24
@@ -34,6 +34,6 @@ void FUN_80292c14(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80292d24(void)
+void FUN_80292b48(void)
 {
 }

@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-undefined4 FUN_80179f40(ushort *param_1);
+undefined4 FUN_80179eb0(ushort *param_1);
 
 #endif /* MAIN_DLL_TFRAMEANIMATOR_H_ */

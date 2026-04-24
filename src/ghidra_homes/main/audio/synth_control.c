@@ -14,10 +14,10 @@
 #include "ghidra_import.h"
 
 extern undefined4 FUN_80271b90();
-extern undefined4 FUN_80278d74();
-extern uint FUN_80279c00();
-extern undefined4 FUN_80282630();
-extern undefined4 FUN_802836e4();
+extern undefined4 FUN_802765bc();
+extern uint FUN_8027976c();
+extern undefined4 FUN_80282618();
+extern undefined4 FUN_802836ac();
 
 extern undefined4 DAT_803bdfc4;
 extern undefined4 DAT_803bdfc8;
@@ -43,11 +43,11 @@ void FUN_80272714();
 
 void FUN_802721a0(int param_1,int param_2)
 {
-  FUN_80282630(7,param_1,param_2);
-  FUN_80282630(10,param_1,param_2);
-  FUN_80282630(0x5b,param_1,param_2);
-  FUN_80282630(0x80,param_1,param_2);
-  FUN_80282630(0x84,param_1,param_2);
+  FUN_80282618(7,param_1,param_2);
+  FUN_80282618(10,param_1,param_2);
+  FUN_80282618(0x5b,param_1,param_2);
+  FUN_80282618(0x80,param_1,param_2);
+  FUN_80282618(0x84,param_1,param_2);
   return;
 }
 
@@ -59,11 +59,11 @@ undefined4 FUN_80272224(uint param_1)
 
   uVar3 = 0;
   if (DAT_803deeb8 != '\0') {
-    for (uVar1 = FUN_80279c00(param_1); uVar1 != 0xffffffff;
+    for (uVar1 = FUN_8027976c(param_1); uVar1 != 0xffffffff;
         uVar1 = *(uint *)(DAT_803deee8 + (uVar1 & 0xff) * 0x404 + 0xec)) {
       iVar2 = (uVar1 & 0xff) * 0x404;
       if (uVar1 == *(uint *)(DAT_803deee8 + iVar2 + 0xf4)) {
-        FUN_80278d74((int *)(DAT_803deee8 + iVar2));
+        FUN_802765bc((int *)(DAT_803deee8 + iVar2));
         uVar3 = 1;
       }
     }

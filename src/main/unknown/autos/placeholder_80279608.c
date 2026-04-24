@@ -15,7 +15,7 @@ extern undefined4* DAT_803def78;
 /*
  * --INFO--
  *
- * Function: FUN_80279608
+ * Function: FUN_802795cc
  * EN v1.0 Address: 0x802795CC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80279608
@@ -25,14 +25,14 @@ extern undefined4* DAT_803def78;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80279608(void)
+void FUN_802795cc(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80279670
+ * Function: FUN_802795d0
  * EN v1.0 Address: 0x802795D0
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80279670
@@ -42,7 +42,7 @@ void FUN_80279608(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_80279670(void)
+int FUN_802795d0(void)
 {
     return 0;
 }
@@ -50,7 +50,7 @@ int FUN_80279670(void)
 /*
  * --INFO--
  *
- * Function: FUN_80279768
+ * Function: FUN_802795d8
  * EN v1.0 Address: 0x802795D8
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80279768
@@ -60,7 +60,7 @@ int FUN_80279670(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 * FUN_80279768(uint param_1)
+undefined4 * FUN_802795d8(uint param_1)
 {
     return 0;
 }

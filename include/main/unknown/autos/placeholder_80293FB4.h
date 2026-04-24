@@ -3,12 +3,12 @@
 
 #include "ghidra_import.h"
 
-void FUN_80293fb4(void);
-void FUN_802940dc(void);
-void FUN_80294224(void);
-void FUN_802943c4(void);
-void FUN_80294504(void);
-void FUN_802945e0(void);
-void FUN_802946dc(void);
+void FUN_80293f7c(void);
+void FUN_80293f80(void);
+void FUN_80293f84(void);
+void FUN_80293f88(void);
+void FUN_80293f8c(void);
+void FUN_80293f90(void);
+void FUN_80293f94(void);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80293FB4_H_ */

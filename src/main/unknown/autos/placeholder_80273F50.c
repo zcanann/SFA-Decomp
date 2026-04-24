@@ -1,12 +1,12 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_80273F50.h"
 
-extern undefined4 FUN_8027a710();
+extern undefined4 FUN_8027a660();
 extern undefined4 FUN_80283fa0();
-extern undefined4 FUN_80284560();
-extern undefined4 FUN_802845f4();
-extern undefined4 FUN_80285220();
-extern undefined4 FUN_80285258();
+extern undefined4 FUN_80284474();
+extern undefined4 FUN_80284478();
+extern undefined4 FUN_8028504c();
+extern undefined4 FUN_80285050();
 
 extern undefined4 DAT_803bdfc0;
 extern undefined4 DAT_803befe0;
@@ -44,7 +44,7 @@ extern f32 FLOAT_803e8470;
 /*
  * --INFO--
  *
- * Function: FUN_80273f50
+ * Function: FUN_80273d2c
  * EN v1.0 Address: 0x80273D2C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80273F50
@@ -54,14 +54,14 @@ extern f32 FLOAT_803e8470;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80273f50(int param_1)
+void FUN_80273d2c(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80273fd4
+ * Function: FUN_80273d30
  * EN v1.0 Address: 0x80273D30
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80273FD4
@@ -71,14 +71,14 @@ void FUN_80273f50(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80273fd4(void)
+void FUN_80273d30(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8027411c
+ * Function: FUN_80273d34
  * EN v1.0 Address: 0x80273D34
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8027411C
@@ -88,7 +88,7 @@ void FUN_80273fd4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8027411c(ushort param_1,undefined4 param_2)
+undefined4 FUN_80273d34(ushort param_1,undefined4 param_2)
 {
     return 0;
 }
@@ -96,7 +96,7 @@ undefined4 FUN_8027411c(ushort param_1,undefined4 param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8027430c
+ * Function: FUN_80273d3c
  * EN v1.0 Address: 0x80273D3C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8027430C
@@ -106,7 +106,7 @@ undefined4 FUN_8027411c(ushort param_1,undefined4 param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8027430c(short param_1)
+undefined4 FUN_80273d3c(short param_1)
 {
     return 0;
 }
@@ -114,7 +114,7 @@ undefined4 FUN_8027430c(short param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80274490
+ * Function: FUN_80273d44
  * EN v1.0 Address: 0x80273D44
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80274490
@@ -124,7 +124,7 @@ undefined4 FUN_8027430c(short param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80274490(ushort param_1,undefined4 param_2,undefined2 param_3)
+undefined4 FUN_80273d44(ushort param_1,undefined4 param_2,undefined2 param_3)
 {
     return 0;
 }
@@ -132,7 +132,7 @@ undefined4 FUN_80274490(ushort param_1,undefined4 param_2,undefined2 param_3)
 /*
  * --INFO--
  *
- * Function: FUN_802746d8
+ * Function: FUN_80273d4c
  * EN v1.0 Address: 0x80273D4C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802746D8
@@ -142,7 +142,7 @@ undefined4 FUN_80274490(ushort param_1,undefined4 param_2,undefined2 param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_802746d8(short param_1)
+undefined4 FUN_80273d4c(short param_1)
 {
     return 0;
 }
@@ -150,7 +150,7 @@ undefined4 FUN_802746d8(short param_1)
 /*
  * --INFO--
  *
- * Function: FUN_802748a4
+ * Function: FUN_80273d54
  * EN v1.0 Address: 0x80273D54
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802748A4
@@ -160,7 +160,7 @@ undefined4 FUN_802746d8(short param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_802748a4(ushort param_1,undefined4 param_2)
+undefined4 FUN_80273d54(ushort param_1,undefined4 param_2)
 {
     return 0;
 }
@@ -168,7 +168,7 @@ undefined4 FUN_802748a4(ushort param_1,undefined4 param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80274a9c
+ * Function: FUN_80273d5c
  * EN v1.0 Address: 0x80273D5C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80274A9C
@@ -178,7 +178,7 @@ undefined4 FUN_802748a4(ushort param_1,undefined4 param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80274a9c(short param_1)
+undefined4 FUN_80273d5c(short param_1)
 {
     return 0;
 }
@@ -186,7 +186,7 @@ undefined4 FUN_80274a9c(short param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80274c20
+ * Function: FUN_80273d64
  * EN v1.0 Address: 0x80273D64
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80274C20
@@ -196,7 +196,7 @@ undefined4 FUN_80274a9c(short param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80274c20(short *param_1,undefined4 param_2)
+undefined4 FUN_80273d64(short *param_1,undefined4 param_2)
 {
     return 0;
 }
@@ -204,7 +204,7 @@ undefined4 FUN_80274c20(short *param_1,undefined4 param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80274d8c
+ * Function: FUN_80273d6c
  * EN v1.0 Address: 0x80273D6C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80274D8C
@@ -214,7 +214,7 @@ undefined4 FUN_80274c20(short *param_1,undefined4 param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80274d8c(short param_1)
+undefined4 FUN_80273d6c(short param_1)
 {
     return 0;
 }
@@ -222,7 +222,7 @@ undefined4 FUN_80274d8c(short param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80274e64
+ * Function: FUN_80273d74
  * EN v1.0 Address: 0x80273D74
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80274E64
@@ -232,7 +232,7 @@ undefined4 FUN_80274d8c(short param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80274e64(short param_1)
+undefined4 FUN_80273d74(short param_1)
 {
     return 0;
 }
@@ -240,7 +240,7 @@ undefined4 FUN_80274e64(short param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80274efc
+ * Function: FUN_80273d7c
  * EN v1.0 Address: 0x80273D7C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80274EFC
@@ -250,7 +250,7 @@ undefined4 FUN_80274e64(short param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80274efc(short param_1,int param_2,uint param_3)
+undefined4 FUN_80273d7c(short param_1,int param_2,uint param_3)
 {
     return 0;
 }
@@ -258,7 +258,7 @@ undefined4 FUN_80274efc(short param_1,int param_2,uint param_3)
 /*
  * --INFO--
  *
- * Function: FUN_80275024
+ * Function: FUN_80273d84
  * EN v1.0 Address: 0x80273D84
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80275024
@@ -268,7 +268,7 @@ undefined4 FUN_80274efc(short param_1,int param_2,uint param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80275024(uint param_1,undefined4 param_2)
+undefined4 FUN_80273d84(uint param_1,undefined4 param_2)
 {
     return 0;
 }
@@ -276,7 +276,7 @@ undefined4 FUN_80275024(uint param_1,undefined4 param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80275334
+ * Function: FUN_80273d8c
  * EN v1.0 Address: 0x80273D8C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80275334
@@ -286,7 +286,7 @@ undefined4 FUN_80275024(uint param_1,undefined4 param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80275334(uint param_1)
+undefined4 FUN_80273d8c(uint param_1)
 {
     return 0;
 }

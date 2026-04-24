@@ -1,16 +1,16 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/DRbarrelplace.h"
 
-extern bool FUN_8000b598();
-extern undefined4 FUN_8000b9bc();
-extern undefined4 FUN_8000bb38();
-extern undefined4 FUN_8000e69c();
-extern undefined4 FUN_8000faf8();
-extern undefined4 FUN_80014acc();
-extern undefined4 FUN_80022790();
-extern undefined4 FUN_8007d858();
-extern int FUN_80080100();
-extern undefined4 FUN_801ebf78();
+extern bool FUN_800067f0();
+extern undefined4 FUN_80006818();
+extern undefined4 FUN_80006824();
+extern undefined4 FUN_80006920();
+extern undefined4 FUN_800069bc();
+extern undefined4 FUN_80006b94();
+extern undefined4 FUN_80017778();
+extern undefined4 FUN_800723a0();
+extern int FUN_8007f3c8();
+extern undefined4 FUN_801ebd94();
 extern double FUN_80247f54();
 
 extern undefined4 DAT_8032919c;
@@ -31,7 +31,7 @@ extern f32 FLOAT_803e68e4;
 /*
  * --INFO--
  *
- * Function: FUN_801ed5cc
+ * Function: FUN_801ed428
  * EN v1.0 Address: 0x801ED428
  * EN v1.0 Size: 1140b
  * EN v1.1 Address: 0x801ED5CC
@@ -41,7 +41,7 @@ extern f32 FLOAT_803e68e4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ed5cc(short *param_1)
+void FUN_801ed428(short *param_1)
 {
   int iVar1;
   float fVar2;
@@ -66,7 +66,7 @@ void FUN_801ed5cc(short *param_1)
   iVar7 = **(int **)(param_1 + 0x2a);
   if (*(int *)(param_1 + 0x60) == 0) {
     if (*(char *)(iVar8 + 0x421) == '\x02') {
-      FUN_801ebf78(param_1,iVar8);
+      FUN_801ebd94(param_1,iVar8);
       *(short *)(iVar8 + 0x41c) = param_1[1];
       *(short *)(iVar8 + 0x41e) = param_1[2];
       dVar9 = DOUBLE_803e6798;
@@ -93,12 +93,12 @@ void FUN_801ed5cc(short *param_1)
     }
     if (((*(char *)(iVar8 + 0x3d6) != '\0') ||
         (((*(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) & 8) != 0 &&
-         (iVar7 = FUN_80080100((int *)&DAT_8032919c,10,(int)*(short *)(iVar7 + 0x46)), iVar7 == -1))
+         (iVar7 = FUN_8007f3c8((int *)&DAT_8032919c,10,(int)*(short *)(iVar7 + 0x46)), iVar7 == -1))
         )) || ((*(int *)(iVar8 + 0x42c) != 0 && (*(float *)(iVar8 + 0x3e0) <= FLOAT_803e6784)))) {
       dVar9 = FUN_80247f54((float *)(param_1 + 0x12));
       if ((double)FLOAT_803e6784 < dVar9) {
         if ((*(byte *)(iVar8 + 0x428) >> 1 & 1) == 0) {
-          FUN_80014acc((double)(float)((double)FLOAT_803e685c * dVar9));
+          FUN_80006b94((double)(float)((double)FLOAT_803e685c * dVar9));
         }
         *(float *)(iVar8 + 0x430) = *(float *)(iVar8 + 0x430) * FLOAT_803e6854;
         if ((param_1[0x23] == 0x72) || (param_1[0x23] == 0x38c)) {
@@ -112,16 +112,16 @@ void FUN_801ed5cc(short *param_1)
           else {
             iVar7 = 0x50;
           }
-          bVar6 = FUN_8000b598((int)param_1,0x20);
+          bVar6 = FUN_800067f0((int)param_1,0x20);
           if (!bVar6) {
-            FUN_8000bb38((uint)param_1,0x3bc);
-            FUN_8000b9bc((double)FLOAT_803e67c0,(int)param_1,0x3bc,(byte)iVar7);
+            FUN_80006824((uint)param_1,0x3bc);
+            FUN_80006818((double)FLOAT_803e67c0,(int)param_1,0x3bc,(byte)iVar7);
           }
         }
       }
       if (((*(byte *)(iVar8 + 0x428) >> 1 & 1) == 0) && ((double)FLOAT_803e685c < dVar9)) {
-        FUN_8000faf8();
-        FUN_8000e69c((double)(float)(dVar9 * (double)FLOAT_803e6790));
+        FUN_800069bc();
+        FUN_80006920((double)(float)(dVar9 * (double)FLOAT_803e6790));
       }
       fVar2 = FLOAT_803e6820;
       if (*(int *)(iVar8 + 0x42c) == 0) {
@@ -133,7 +133,7 @@ void FUN_801ed5cc(short *param_1)
       }
       else {
         dVar9 = (double)FLOAT_803e6898;
-        FUN_8007d858();
+        FUN_800723a0();
         sVar4 = *(short *)(*(int *)(iVar8 + 0x42c) + 0x46);
         if (((sVar4 == 0x38d) || (sVar4 == 0x38e)) || (sVar4 == 0x4d4)) {
           dVar9 = (double)FLOAT_803e6820;
@@ -145,7 +145,7 @@ void FUN_801ed5cc(short *param_1)
              (float)(dVar9 * (double)(FLOAT_803dc078 *
                                      (*(float *)(param_1 + 10) - *(float *)(param_1 + 0x44))));
       }
-      FUN_80022790((double)*(float *)(param_1 + 0x12),(double)FLOAT_803e6780,
+      FUN_80017778((double)*(float *)(param_1 + 0x12),(double)FLOAT_803e6780,
                    (double)*(float *)(param_1 + 0x16),(float *)(iVar8 + 300),
                    (float *)(iVar8 + 0x494),afStack_68,(float *)(iVar8 + 0x49c));
     }

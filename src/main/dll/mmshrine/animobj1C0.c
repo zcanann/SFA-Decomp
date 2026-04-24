@@ -1,15 +1,15 @@
 #include "ghidra_import.h"
 #include "main/dll/mmshrine/animobj1C0.h"
 
-extern uint FUN_80022264();
-extern void* FUN_8002becc();
-extern undefined4 FUN_8002e088();
-extern uint FUN_8002e144();
-extern int FUN_8002e1ac();
-extern undefined4 FUN_80035eec();
-extern int FUN_80065fcc();
-extern undefined4 FUN_80137cd0();
-extern double FUN_80194e3c();
+extern uint FUN_80017760();
+extern void* FUN_80017aa4();
+extern undefined4 FUN_80017ae4();
+extern uint FUN_80017ae8();
+extern int FUN_80017af8();
+extern undefined4 FUN_80035fe8();
+extern int FUN_800632f4();
+extern undefined4 FUN_80135814();
+extern double FUN_80194a70();
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6d4;
@@ -24,7 +24,7 @@ extern f32 FLOAT_803e5c20;
 /*
  * --INFO--
  *
- * Function: FUN_801c5b9c
+ * Function: FUN_801c5990
  * EN v1.0 Address: 0x801C5990
  * EN v1.0 Size: 668b
  * EN v1.1 Address: 0x801C5B9C
@@ -34,7 +34,7 @@ extern f32 FLOAT_803e5c20;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c5b9c(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void FUN_801c5990(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10)
 {
@@ -71,16 +71,16 @@ void FUN_801c5b9c(undefined8 param_1,undefined8 param_2,double param_3,undefined
     }
     *(int *)(param_9 + 0xf4) = *(short *)(param_10 + 0x18) + 1;
   }
-  uVar1 = FUN_8002e144();
+  uVar1 = FUN_80017ae8();
   if ((uVar1 & 0xff) != 0) {
-    puVar2 = FUN_8002becc(0x24,0x1b8);
+    puVar2 = FUN_80017aa4(0x24,0x1b8);
     *(undefined4 *)(puVar2 + 4) = *(undefined4 *)(param_9 + 0xc);
     *(undefined4 *)(puVar2 + 6) = *(undefined4 *)(param_9 + 0x10);
     *(undefined4 *)(puVar2 + 8) = *(undefined4 *)(param_9 + 0x14);
     *(undefined *)(puVar2 + 2) = 0x20;
     *(undefined *)((int)puVar2 + 5) = 4;
     *(undefined *)((int)puVar2 + 7) = 0xff;
-    uVar3 = FUN_8002e088(dVar6,dVar7,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,5,0xff,
+    uVar3 = FUN_80017ae4(dVar6,dVar7,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,5,0xff,
                          0xffffffff,(uint *)0x0,in_r8,in_r9,in_r10);
     *(undefined4 *)(param_9 + 200) = uVar3;
     *(float *)(*(int *)(param_9 + 200) + 8) =
@@ -92,7 +92,7 @@ void FUN_801c5b9c(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_801c5d64
+ * Function: FUN_801c5c2c
  * EN v1.0 Address: 0x801C5C2C
  * EN v1.0 Size: 384b
  * EN v1.1 Address: 0x801C5D64
@@ -102,7 +102,7 @@ void FUN_801c5b9c(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c5d64(int param_1)
+void FUN_801c5c2c(int param_1)
 {
   float fVar1;
   float fVar2;
@@ -114,11 +114,11 @@ void FUN_801c5d64(int param_1)
   undefined4 *local_28 [4];
   
   iVar5 = *(int *)(param_1 + 0x4c);
-  FUN_80035eec(param_1,9,1,0);
-  iVar3 = FUN_8002e1ac(*(int *)(param_1 + 0xf8));
+  FUN_80035fe8(param_1,9,1,0);
+  iVar3 = FUN_80017af8(*(int *)(param_1 + 0xf8));
   if (iVar3 == 0) {
-    FUN_80137cd0();
-    iVar3 = FUN_80065fcc((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0x10),
+    FUN_80135814();
+    iVar3 = FUN_800632f4((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0x10),
                          (double)*(float *)(param_1 + 0x14),param_1,local_28,0,0);
     if ((iVar3 != 0) && (in_f31 = (double)FLOAT_803e5c18, 0 < iVar3)) {
       do {
@@ -133,7 +133,7 @@ void FUN_801c5d64(int param_1)
     }
   }
   else {
-    dVar6 = FUN_80194e3c(iVar3,3);
+    dVar6 = FUN_80194a70(iVar3,3);
     in_f31 = (double)(float)(dVar6 - (double)*(float *)(param_1 + 0x10));
   }
   fVar1 = (float)((double)*(float *)(param_1 + 0x10) + in_f31);
@@ -142,7 +142,7 @@ void FUN_801c5d64(int param_1)
     *(float *)(param_1 + 0x10) = fVar1;
     *(uint *)(param_1 + 0xf4) = *(int *)(param_1 + 0xf4) - (uint)DAT_803dc070;
     if (*(int *)(param_1 + 0xf4) < 1) {
-      uVar4 = FUN_80022264(0x3c,0xf0);
+      uVar4 = FUN_80017760(0x3c,0xf0);
       *(uint *)(param_1 + 0xf4) = uVar4;
       if ((double)FLOAT_803e5c1c == in_f31) {
         (**(code **)(*DAT_803dd718 + 0x14))

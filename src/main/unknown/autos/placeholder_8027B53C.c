@@ -2,14 +2,14 @@
 #include "main/unknown/autos/placeholder_8027B53C.h"
 
 extern undefined4 FUN_80283ba0();
-extern undefined4 FUN_80283da0();
-extern int FUN_80283dc0();
-extern undefined FUN_80283dd4();
-extern undefined2 FUN_80283de8();
-extern uint FUN_8028436c();
-extern uint FUN_802846bc();
-extern uint FUN_802846e4();
-extern undefined4 FUN_80284d9c();
+extern undefined4 FUN_80283d5c();
+extern int FUN_80283d60();
+extern undefined FUN_80283d68();
+extern undefined2 FUN_80283d70();
+extern uint FUN_80284224();
+extern uint FUN_8028467c();
+extern uint FUN_80284684();
+extern undefined4 FUN_80284c60();
 
 extern undefined1 DAT_803cbef0;
 extern undefined4 DAT_803cbef4;
@@ -28,7 +28,7 @@ extern undefined4 DAT_803deee8;
 /*
  * --INFO--
  *
- * Function: FUN_8027b53c
+ * Function: FUN_8027b42c
  * EN v1.0 Address: 0x8027B42C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8027B53C
@@ -38,7 +38,7 @@ extern undefined4 DAT_803deee8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_8027b53c(byte param_1)
+uint FUN_8027b42c(byte param_1)
 {
     return 0;
 }
@@ -46,7 +46,7 @@ uint FUN_8027b53c(byte param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8027b724
+ * Function: FUN_8027b434
  * EN v1.0 Address: 0x8027B434
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8027B724
@@ -56,14 +56,14 @@ uint FUN_8027b53c(byte param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8027b724(uint param_1)
+void FUN_8027b434(uint param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8027b7d0
+ * Function: FUN_8027b438
  * EN v1.0 Address: 0x8027B438
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8027B7D0
@@ -73,14 +73,14 @@ void FUN_8027b724(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8027b7d0(int param_1,uint param_2)
+void FUN_8027b438(int param_1,uint param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8027b9c0
+ * Function: FUN_8027b43c
  * EN v1.0 Address: 0x8027B43C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8027B9C0
@@ -90,6 +90,6 @@ void FUN_8027b7d0(int param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8027b9c0(void)
+void FUN_8027b43c(void)
 {
 }

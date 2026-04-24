@@ -6,7 +6,7 @@ extern undefined4 gCamcontrolState;
 /*
  * --INFO--
  *
- * Function: FUN_80100d2c
+ * Function: FUN_80100c90
  * EN v1.0 Address: 0x80100C90
  * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x80100D2C
@@ -16,7 +16,7 @@ extern undefined4 gCamcontrolState;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined FUN_80100d2c(void)
+undefined FUN_80100c90(void)
 {
   return *(undefined *)(gCamcontrolState + 0x138);
 }

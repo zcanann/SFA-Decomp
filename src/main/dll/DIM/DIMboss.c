@@ -1,43 +1,43 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIMboss.h"
 
-extern undefined4 FUN_8000a538();
-extern undefined4 FUN_8000faec();
-extern undefined4 FUN_80013e4c();
-extern undefined8 FUN_80014f6c();
-extern undefined4 FUN_80015650();
-extern undefined4 FUN_80019c5c();
-extern undefined4 FUN_8001f448();
-extern uint FUN_80020078();
-extern undefined8 FUN_800201ac();
-extern undefined4 FUN_80020390();
-extern undefined8 FUN_800235b0();
-extern undefined8 FUN_80028500();
-extern int FUN_8002b660();
-extern undefined4 FUN_8002bac4();
-extern undefined4 FUN_8002cc9c();
-extern undefined8 FUN_8003709c();
-extern undefined4 FUN_8003b9ec();
-extern undefined8 FUN_80041f34();
-extern undefined8 FUN_8004312c();
-extern undefined8 FUN_8004316c();
-extern uint FUN_800431a4();
-extern undefined4 FUN_80043604();
-extern undefined4 FUN_80043658();
-extern undefined8 FUN_80043938();
-extern undefined8 FUN_80044548();
-extern undefined4 FUN_8004832c();
-extern undefined8 FUN_80048350();
-extern undefined4 FUN_8004a5b8();
-extern undefined8 FUN_8004a9e4();
-extern undefined4 FUN_8005517c();
-extern undefined4 FUN_80060630();
-extern undefined8 FUN_8007d858();
-extern undefined8 FUN_80114e4c();
-extern undefined4 FUN_80115088();
-extern undefined4 FUN_801bbb4c();
-extern undefined4 FUN_801bc0f8();
-extern undefined8 FUN_801bcd98();
+extern undefined4 FUN_800067c0();
+extern undefined4 FUN_800069b8();
+extern undefined4 FUN_80006b0c();
+extern undefined8 FUN_80006c1c();
+extern undefined4 FUN_80006c28();
+extern undefined4 FUN_800174b8();
+extern undefined4 FUN_80017620();
+extern uint FUN_80017690();
+extern undefined8 FUN_80017698();
+extern undefined4 FUN_800176a8();
+extern undefined8 FUN_80017810();
+extern undefined8 FUN_8001793c();
+extern int FUN_80017a54();
+extern undefined4 FUN_80017a98();
+extern undefined4 FUN_80017ac8();
+extern undefined8 FUN_80037180();
+extern undefined4 FUN_8003b818();
+extern undefined8 FUN_80040da0();
+extern undefined8 FUN_800427c8();
+extern undefined8 FUN_80042800();
+extern uint FUN_80042838();
+extern undefined4 FUN_80042b9c();
+extern undefined4 FUN_80042bec();
+extern undefined8 FUN_80043030();
+extern undefined8 FUN_800443fc();
+extern undefined4 FUN_80044404();
+extern undefined8 FUN_80044424();
+extern undefined4 FUN_80045c4c();
+extern undefined8 FUN_8004600c();
+extern undefined4 FUN_80053b3c();
+extern undefined4 FUN_8005fe14();
+extern undefined8 FUN_800723a0();
+extern undefined8 FUN_801149b8();
+extern undefined4 FUN_801149bc();
+extern undefined4 FUN_801bb848();
+extern undefined4 FUN_801bbed0();
+extern undefined8 FUN_801bcc94();
 extern undefined4 FUN_80286834();
 extern undefined4 FUN_80286880();
 
@@ -94,7 +94,7 @@ void DIMboss_updateState(undefined8 param_1,double param_2,double param_3,undefi
   puVar3 = (undefined4 *)FUN_80286834();
   puVar13 = (undefined4 *)puVar3[0x2e];
   iVar12 = puVar3[0x13];
-  FUN_8002bac4();
+  FUN_80017a98();
   iVar11 = puVar13[0x103];
   *(undefined2 *)((int)puVar13 + 0x402) = 0;
   uVar14 = (**(code **)(*DAT_803dd72c + 0x50))(0x1c,5,0);
@@ -102,7 +102,7 @@ void DIMboss_updateState(undefined8 param_1,double param_2,double param_3,undefi
     puVar7 = (undefined4 *)&DAT_803ad63c;
     puVar8 = (undefined4 *)0x1;
     puVar9 = (undefined4 *)0x1;
-    uVar14 = FUN_80114e4c(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar3,
+    uVar14 = FUN_801149b8(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar3,
                           param_11,(float *)&DAT_803ad63c,1,1,param_14,param_15,param_16);
     for (iVar10 = 0; iVar10 < (int)(uint)*(byte *)(param_11 + 0x8b); iVar10 = iVar10 + 1) {
       switch(*(undefined *)(param_11 + iVar10 + 0x81)) {
@@ -115,9 +115,9 @@ void DIMboss_updateState(undefined8 param_1,double param_2,double param_3,undefi
         puVar9 = (undefined4 *)0x0;
         param_14 = *DAT_803dd734;
         (**(code **)(param_14 + 0xc))(puVar3,0x7ff);
-        iVar4 = FUN_8002b660((int)puVar3);
-        uVar14 = FUN_80028500(iVar4);
-        FUN_8000a538((int *)0x27,1);
+        iVar4 = FUN_80017a54((int)puVar3);
+        uVar14 = FUN_8001793c(iVar4);
+        FUN_800067c0((int *)0x27,1);
         break;
       case 2:
         *(undefined2 *)((int)puVar13 + 0x402) = 1;
@@ -136,7 +136,7 @@ void DIMboss_updateState(undefined8 param_1,double param_2,double param_3,undefi
       case 8:
         iVar11 = puVar13[0x103];
         *(byte *)(iVar11 + 0xb6) = *(byte *)(iVar11 + 0xb6) & 0x7f | 0x80;
-        FUN_8000a538((int *)0xee,0);
+        FUN_800067c0((int *)0xee,0);
         break;
       case 9:
         DAT_803de800 = DAT_803de800 | 0x40;
@@ -161,11 +161,11 @@ void DIMboss_updateState(undefined8 param_1,double param_2,double param_3,undefi
         break;
       case 0x11:
         *(undefined4 *)(iVar11 + 0xb0) = 10;
-        FUN_800201ac(0x123,1);
-        uVar14 = FUN_800201ac(0x17,1);
-        FUN_8000a538((int *)0x27,0);
-        FUN_8000a538((int *)0x36,0);
-        FUN_8000a538((int *)0xee,0);
+        FUN_80017698(0x123,1);
+        uVar14 = FUN_80017698(0x17,1);
+        FUN_800067c0((int *)0x27,0);
+        FUN_800067c0((int *)0x36,0);
+        FUN_800067c0((int *)0xee,0);
         break;
       case 0x12:
         puVar8 = (undefined4 *)0x3c;
@@ -184,67 +184,67 @@ void DIMboss_updateState(undefined8 param_1,double param_2,double param_3,undefi
         uVar14 = (*(code *)puVar8[0x14])(0x1c,2);
         break;
       case 0x15:
-        FUN_8007d858();
-        uVar14 = FUN_8004316c();
+        FUN_800723a0();
+        uVar14 = FUN_80042800();
         puVar7 = (undefined4 *)0x1;
-        FUN_80043604(0,0,1);
-        FUN_8004832c(0x1c);
-        uVar14 = FUN_80043938(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        FUN_8004832c(0x1b);
-        FUN_80043938(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        uVar14 = FUN_80041f34();
+        FUN_80042b9c(0,0,1);
+        FUN_80044404(0x1c);
+        uVar14 = FUN_80043030(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        FUN_80044404(0x1b);
+        FUN_80043030(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        uVar14 = FUN_80040da0();
         break;
       case 0x16:
-        uVar14 = FUN_8007d858();
-        uVar5 = FUN_8004832c(0x13);
-        FUN_80043658(uVar5,0);
-        FUN_8004832c(0x13);
-        uVar14 = FUN_80044548(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        FUN_8004832c(0x13);
-        uVar14 = FUN_80044548(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        FUN_8004832c(0x13);
-        uVar14 = FUN_80044548(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        FUN_8004832c(0x13);
-        uVar14 = FUN_80044548(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        FUN_8004832c(0x13);
-        uVar14 = FUN_80044548(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        FUN_8004832c(0x13);
-        uVar14 = FUN_80044548(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        FUN_8004832c(0x13);
-        uVar14 = FUN_80044548(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        FUN_8004832c(0x13);
-        uVar14 = FUN_80044548(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        FUN_8004832c(0x13);
-        uVar14 = FUN_80044548(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        FUN_8004832c(0x13);
-        uVar14 = FUN_80044548(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        FUN_8004832c(0x13);
-        uVar14 = FUN_80044548(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        FUN_8004832c(0x13);
-        uVar14 = FUN_80044548(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        FUN_8004832c(0x13);
-        uVar14 = FUN_80044548(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        FUN_8004832c(0x13);
-        FUN_80044548(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        uVar14 = FUN_800723a0();
+        uVar5 = FUN_80044404(0x13);
+        FUN_80042bec(uVar5,0);
+        FUN_80044404(0x13);
+        uVar14 = FUN_800443fc(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        FUN_80044404(0x13);
+        uVar14 = FUN_800443fc(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        FUN_80044404(0x13);
+        uVar14 = FUN_800443fc(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        FUN_80044404(0x13);
+        uVar14 = FUN_800443fc(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        FUN_80044404(0x13);
+        uVar14 = FUN_800443fc(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        FUN_80044404(0x13);
+        uVar14 = FUN_800443fc(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        FUN_80044404(0x13);
+        uVar14 = FUN_800443fc(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        FUN_80044404(0x13);
+        uVar14 = FUN_800443fc(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        FUN_80044404(0x13);
+        uVar14 = FUN_800443fc(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        FUN_80044404(0x13);
+        uVar14 = FUN_800443fc(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        FUN_80044404(0x13);
+        uVar14 = FUN_800443fc(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        FUN_80044404(0x13);
+        uVar14 = FUN_800443fc(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        FUN_80044404(0x13);
+        uVar14 = FUN_800443fc(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        FUN_80044404(0x13);
+        FUN_800443fc(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
         bVar2 = false;
-        while (uVar6 = FUN_800431a4(), (uVar6 & 0xffefffff) != 0) {
-          uVar14 = FUN_80014f6c();
-          FUN_80020390();
+        while (uVar6 = FUN_80042838(), (uVar6 & 0xffefffff) != 0) {
+          uVar14 = FUN_80006c1c();
+          FUN_800176a8();
           if (bVar2) {
-            uVar14 = FUN_8004a9e4();
+            uVar14 = FUN_8004600c();
           }
-          uVar14 = FUN_80048350(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-          FUN_80015650(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+          uVar14 = FUN_80044424(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+          FUN_80006c28(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
           if (bVar2) {
-            uVar14 = FUN_800235b0();
-            FUN_80019c5c(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-            FUN_8004a5b8('\x01');
+            uVar14 = FUN_80017810();
+            FUN_800174b8(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+            FUN_80045c4c('\x01');
           }
           if (DAT_803dd5d0 != '\0') {
             bVar2 = true;
           }
         }
-        uVar14 = FUN_8004312c();
+        uVar14 = FUN_800427c8();
         break;
       case 0x17:
         DAT_803de800 = DAT_803de800 | 0x80000;
@@ -263,7 +263,7 @@ void DIMboss_updateState(undefined8 param_1,double param_2,double param_3,undefi
       }
       uVar14 = extraout_f1;
       if (((int)*(short *)((int)puVar13 + 0x3f6) != 0xffffffff) &&
-         (uVar6 = FUN_80020078((int)*(short *)((int)puVar13 + 0x3f6)), uVar6 != 0)) {
+         (uVar6 = FUN_80017690((int)*(short *)((int)puVar13 + 0x3f6)), uVar6 != 0)) {
         puVar7 = (undefined4 *)*DAT_803dd6d4;
         uVar14 = (*(code *)puVar7[0x16])(param_11,(int)*(short *)(iVar12 + 0x2c));
         *(undefined2 *)((int)puVar13 + 0x3f6) = 0xffff;
@@ -287,7 +287,7 @@ void DIMboss_updateState(undefined8 param_1,double param_2,double param_3,undefi
         *(undefined2 *)(param_11 + 0x6e) = 0;
         puVar7 = puVar13;
         puVar8 = puVar13;
-        uVar14 = FUN_801bcd98(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar3,
+        uVar14 = FUN_801bcc94(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar3,
                               param_11,(int)puVar13,(int)puVar13);
         if (*(char *)((int)puVar13 + 0x405) == '\x01') {
           *(undefined2 *)(puVar13 + 0x9c) = 0;
@@ -300,7 +300,7 @@ void DIMboss_updateState(undefined8 param_1,double param_2,double param_3,undefi
         }
       }
     }
-    FUN_801bc0f8(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar3,puVar13,
+    FUN_801bbed0(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar3,puVar13,
                  puVar7,puVar8,puVar9,param_14,param_15,param_16);
     if (*(short *)(puVar3 + 0x2d) == -1) {
       *(ushort *)(puVar13 + 0x100) = *(ushort *)(puVar13 + 0x100) | 2;
@@ -350,12 +350,12 @@ void DIMboss_render(short *param_1)
   
   iVar1 = *(int *)(param_1 + 0x5c);
   if (((in_r8 != '\0') && (*(int *)(param_1 + 0x7a) == 0)) && (*(short *)(iVar1 + 0x402) != 3)) {
-    FUN_8003b9ec((int)param_1);
-    FUN_801bbb4c();
-    FUN_80115088(param_1,-0x7fc529c4,0);
+    FUN_8003b818((int)param_1);
+    FUN_801bb848();
+    FUN_801149bc(param_1,-0x7fc529c4,0);
     iVar1 = **(int **)(iVar1 + 0x40c);
     if (((iVar1 != 0) && (*(char *)(iVar1 + 0x2f8) != '\0')) && (*(char *)(iVar1 + 0x4c) != '\0')) {
-      FUN_80060630(iVar1);
+      FUN_8005fe14(iVar1);
     }
   }
   return;
