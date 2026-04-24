@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/DB/DBrockfall.h"
+#include "main/dll/VF/platform1.h"
 
 extern uint FUN_80006c00();
 extern undefined4 FUN_80006c88();
@@ -65,69 +66,69 @@ void FUN_801df45c(undefined2 *param_1)
   int iVar5;
   char cVar7;
   undefined4 uVar6;
-  undefined4 *puVar8;
+  Platform1State *state;
   
-  puVar8 = *(undefined4 **)(param_1 + 0x5c);
+  state = *(Platform1State **)(param_1 + 0x5c);
   FUN_80017a98();
   FUN_80017698(0xf1d,0);
   cVar7 = (**(code **)(*DAT_803dd72c + 0x40))(0xe);
   if (cVar7 == '\x06') {
-    if ((*(byte *)(puVar8 + 0xc) & 4) == 0) {
-      if ((*(byte *)(puVar8 + 0xc) & 2) != 0) {
-        sVar3 = *(short *)((int)puVar8 + 0x2e);
+    if ((state->flags & PLATFORM1_FLAG_ACTIVE) == 0) {
+      if ((state->flags & 2) != 0) {
+        sVar3 = state->transitionStep;
         if (sVar3 == 0) {
           *param_1 = 0xd700;
-          puVar8[8] = 0xffffd700;
-          puVar8[10] = puVar8[8];
+          state->trackOffset = 0xffffd700;
+          state->previousTrackOffset = state->trackOffset;
           fVar4 = FLOAT_803e6310;
-          puVar8[1] = FLOAT_803e6310;
-          puVar8[2] = fVar4;
-          *(undefined2 *)((int)puVar8 + 0x2e) = 1;
-          *(byte *)(puVar8 + 0xc) = *(byte *)(puVar8 + 0xc) & 0xfe;
+          state->motionValue0 = FLOAT_803e6310;
+          state->trackStep = fVar4;
+          state->transitionStep = 1;
+          state->flags = state->flags & 0xfe;
         }
         else if (sVar3 == 1) {
           FUN_80017698(0xf1d,1);
           FUN_8011e800(1);
           uVar6 = (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
-          puVar8[9] = uVar6;
+          state->activeSfxHandle = uVar6;
         }
         else if (sVar3 == 2) {
-          *(undefined2 *)((int)puVar8 + 0x2e) = 0;
+          state->transitionStep = 0;
         }
         else if (sVar3 == 3) {
-          *(undefined2 *)((int)puVar8 + 0x2e) = 0;
+          state->transitionStep = 0;
         }
       }
     }
     else {
-      if (0 < (int)puVar8[9]) {
+      if (0 < state->activeSfxHandle) {
         (**(code **)(*DAT_803dd6d4 + 0x4c))();
-        FUN_80080eec(puVar8[9]);
+        FUN_80080eec(state->activeSfxHandle);
       }
       iVar5 = DAT_803de890 + -1;
       bVar1 = DAT_803de890 == 0;
       DAT_803de890 = iVar5;
       if (bVar1) {
-        *(byte *)(puVar8 + 0xc) = *(byte *)(puVar8 + 0xc) & 0xfb;
-        *(undefined4 *)(param_1 + 6) = puVar8[3];
-        *(undefined4 *)(param_1 + 8) = puVar8[4];
-        *(undefined4 *)(param_1 + 10) = puVar8[5];
-        *puVar8 = 0;
+        state->flags = state->flags & ~PLATFORM1_FLAG_ACTIVE;
+        *(undefined4 *)(param_1 + 6) = state->savedPosXBits;
+        *(undefined4 *)(param_1 + 8) = state->savedPosYBits;
+        *(undefined4 *)(param_1 + 10) = state->savedPosZBits;
+        state->trackedObject = 0;
         *param_1 = 0xd700;
-        puVar8[8] = 0xffffd700;
-        bVar2 = *(byte *)(puVar8 + 0xc);
-        if ((bVar2 & 8) == 0) {
-          if ((bVar2 & 0x10) != 0) {
-            *(byte *)(puVar8 + 0xc) = bVar2 & 0xef;
-            puVar8[9] = 0xffffffff;
+        state->trackOffset = 0xffffd700;
+        bVar2 = state->flags;
+        if ((bVar2 & PLATFORM1_FLAG_EXIT_NEGATIVE) == 0) {
+          if ((bVar2 & PLATFORM1_FLAG_EXIT_POSITIVE) != 0) {
+            state->flags = bVar2 & ~PLATFORM1_FLAG_EXIT_POSITIVE;
+            state->activeSfxHandle = -1;
             FUN_80017698(0x786,1);
           }
         }
         else {
           FUN_80017698(0x784,1);
-          puVar8[9] = 0xffffffff;
-          *(byte *)(puVar8 + 0xc) = *(byte *)(puVar8 + 0xc) & 0xfc;
-          *(byte *)(puVar8 + 0xc) = *(byte *)(puVar8 + 0xc) & 0xf7;
+          state->activeSfxHandle = -1;
+          state->flags = state->flags & ~PLATFORM1_TRIGGER_MASK;
+          state->flags = state->flags & ~PLATFORM1_FLAG_EXIT_NEGATIVE;
         }
       }
     }
