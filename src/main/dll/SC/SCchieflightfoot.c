@@ -237,10 +237,10 @@ void SHthorntail_update(undefined8 param_1,double param_2,double param_3,undefin
     }
     runtime->behaviorFlags = runtime->behaviorFlags & 0xfd;
     if (((runtime->behaviorFlags & 4) == 0) && (iVar6 = FUN_800384ec((int)psVar2), iVar6 != 0)) {
-      uVar7 = FUN_80017760(1,(uint)*runtime->impactSfxIds);
+      uVar7 = FUN_80017760(1,(uint)*runtime->impactSfxTable);
       runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_IMPACT_PENDING;
       (**(code **)(*DAT_803dd6d4 + 0x48))
-                (*(undefined *)(runtime->impactSfxIds + uVar7),psVar2,0xffffffff);
+                (*(undefined *)(runtime->impactSfxTable + uVar7),psVar2,0xffffffff);
     }
     if (config->leashRadiusByte != '\0') {
       dVar11 = FUN_80017708((float *)(psVar2 + 0xc),(float *)&config->homePos);

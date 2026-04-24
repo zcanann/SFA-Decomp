@@ -11,7 +11,7 @@ typedef struct SHthorntailConfig {
   s32 configToken;
   u8 controlMode;
   u8 pad19;
-  u8 levelControlVariant;
+  u8 impactSfxVariant;
   u8 leashRadiusByte;
 } SHthorntailConfig;
 
@@ -24,7 +24,7 @@ typedef struct SHthorntailRuntime {
   u8 locomotionMode;
   u8 tailSwingState;
   float tailSwingTimer;
-  u8 *impactSfxIds;
+  u8 *impactSfxTable;
   float idleTimer;
   float comboTimer;
   float effectTimer;
