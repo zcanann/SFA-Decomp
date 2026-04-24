@@ -13,12 +13,7 @@ BLOCK_RE = re.compile(
 )
 FUN_TOKEN_RE = re.compile(r"\bFUN_[0-9A-Fa-f]{8}\b")
 
-# Known source-ownership conflicts where the v1.0 address already belongs to a
-# recovered semantic owner in another corridor, so the placeholder should not
-# be retargeted automatically.
-SKIP_MAPPINGS = {
-    "FUN_80270650": "FUN_8026fca0",
-}
+SKIP_MAPPINGS: dict[str, str] = {}
 
 
 def iter_source_files(root: Path) -> list[Path]:

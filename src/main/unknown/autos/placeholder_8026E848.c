@@ -6,7 +6,7 @@ extern undefined4 FUN_8026c9b4();
 extern undefined4 FUN_8026de58();
 extern void* FUN_8026e518();
 extern int FUN_8026e5bc();
-extern int FUN_80270650();
+extern int FUN_8026fca0();
 extern undefined4 FUN_80281a30();
 extern undefined4 FUN_80281a34();
 extern undefined4 FUN_80281a38();

@@ -79,7 +79,7 @@ void FUN_8026fc9c(undefined2 param_1,short param_2,undefined4 param_3,undefined4
 /*
  * --INFO--
  *
- * Function: FUN_80270650
+ * Function: FUN_8026fca0
  * EN v1.0 Address: 0x8026FCA0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80270650
@@ -89,7 +89,7 @@ void FUN_8026fc9c(undefined2 param_1,short param_2,undefined4 param_3,undefined4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80270650(uint param_1,int param_2,undefined4 param_3,uint param_4,byte param_5,uint param_6
+void FUN_8026fca0(uint param_1,int param_2,undefined4 param_3,uint param_4,byte param_5,uint param_6
                  ,uint param_7,uint param_8,undefined param_9,ushort param_10,undefined2 param_11,
                  undefined param_12,short param_13,undefined param_14,int param_15)
 {
