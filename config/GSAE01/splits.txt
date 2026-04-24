@@ -11,7 +11,7 @@ Sections:
 	.sdata      type:data align:4
 	.sbss       type:bss align:32
 	.sdata2     type:rodata align:32
-	.sbss2      type:bss align:4
+	.sbss2      type:bss align:64
 
 main/unknown/autos/placeholder_800066E0.c:
 	.text       start:0x800066E0 end:0x800173E4
