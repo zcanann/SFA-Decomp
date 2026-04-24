@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_SH_SHTHORNTAIL_INTERNAL_H_
 #define MAIN_DLL_SH_SHTHORNTAIL_INTERNAL_H_
 
+#include "global.h"
 #include "ghidra_import.h"
 #include "dolphin/mtx.h"
 
@@ -51,8 +52,12 @@ typedef struct SHthorntailObject {
 #define SHTHORNTAIL_FLAG_LEVELCONTROL_READY 0x08
 #define SHTHORNTAIL_FLAG_FREEZE_MOTION 0x10
 #define SHTHORNTAIL_RENDER_PATH_POINT_COUNT 4
+#define SHTHORNTAIL_CONFIG_TOKEN_NONE -1
+#define SHTHORNTAIL_EXTRA_STATE_BYTES 0x914
 
 extern s32 gSHthorntailActiveConfigToken;
+
+STATIC_ASSERT(sizeof(SHthorntailRuntime) == SHTHORNTAIL_EXTRA_STATE_BYTES);
 
 void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime);
 uint SHthorntail_chooseNextState(short *obj,SHthorntailRuntime *runtime,SHthorntailConfig *config);

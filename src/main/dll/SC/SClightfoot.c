@@ -22,7 +22,7 @@ extern undefined4 FUN_801149bc();
 void SHthorntail_free(SHthorntailObject *obj)
 {
   if (gSHthorntailActiveConfigToken == obj->config->configToken) {
-    gSHthorntailActiveConfigToken = -1;
+    gSHthorntailActiveConfigToken = SHTHORNTAIL_CONFIG_TOKEN_NONE;
   }
   FUN_80037180((int)obj,0x4d);
   return;

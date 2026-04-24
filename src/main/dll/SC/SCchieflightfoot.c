@@ -253,7 +253,7 @@ void SHthorntail_update(undefined8 param_1,double param_2,double param_3,undefin
       }
     }
     runtime->activeMoveValid = 1;
-    if (gSHthorntailActiveConfigToken == -1) {
+    if (gSHthorntailActiveConfigToken == SHTHORNTAIL_CONFIG_TOKEN_NONE) {
       gSHthorntailActiveConfigToken = config->configToken;
       *(float *)(psVar2 + 0x14) = -(FLOAT_803e60e4 * FLOAT_803dc074 - *(float *)(psVar2 + 0x14));
       (**(code **)(*DAT_803dd728 + 0x10))((double)FLOAT_803dc074,psVar2,(int)runtime->moveScratch);
@@ -264,7 +264,7 @@ void SHthorntail_update(undefined8 param_1,double param_2,double param_3,undefin
     }
     else {
       if (gSHthorntailActiveConfigToken == config->configToken) {
-        gSHthorntailActiveConfigToken = -1;
+        gSHthorntailActiveConfigToken = SHTHORNTAIL_CONFIG_TOKEN_NONE;
       }
       if ((runtime->behaviorState < '\x02') || ('\x06' < runtime->behaviorState)) {
         (**(code **)(*DAT_803dd728 + 0x20))(psVar2,(int)runtime->moveScratch);
