@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/dll/DB/DBbonedust.h"
 #include "main/dll/CAM/camTalk.h"
 
 extern undefined4 FUN_800033a8();
@@ -12,7 +13,6 @@ extern undefined4 FUN_80017778();
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern undefined4 camcontrol_getTargetPosition();
-extern int FUN_801e1588();
 extern undefined4 FUN_801e1ee4();
 extern double FUN_80293900();
 extern undefined4 FUN_80293f90();
@@ -263,7 +263,7 @@ void FUN_80107ee4(int param_1,int param_2)
     *(undefined4 *)(DAT_803de1c0 + 0x130) = *(undefined4 *)(DAT_803de1c0 + 0x124);
   }
   puVar1 = (ushort *)FUN_801e1ee4();
-  if ((puVar1 != (ushort *)0x0) && (iVar2 = FUN_801e1588((int)puVar1), iVar2 == 2)) {
+  if ((puVar1 != (ushort *)0x0) && (iVar2 = DBbonedust_getState((int)puVar1), iVar2 == 2)) {
     local_1c = *(float *)(param_1 + 0x18) - *(float *)(puVar1 + 0xc);
     local_18 = (FLOAT_803e2440 + *(float *)(param_1 + 0x1c)) - *(float *)(puVar1 + 0xe);
     local_14 = *(float *)(param_1 + 0x20) - *(float *)(puVar1 + 0x10);

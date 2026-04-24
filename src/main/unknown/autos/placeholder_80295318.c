@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/dll/DB/DBbonedust.h"
 #include "main/unknown/autos/placeholder_80295318.h"
 
 extern undefined4 FUN_80003494();
@@ -193,7 +194,6 @@ extern undefined4 FUN_8018a348();
 extern uint FUN_8018a54c();
 extern undefined4 FUN_8018a558();
 extern byte FUN_8018a56c();
-extern int FUN_801e1588();
 extern int FUN_801e1ee4();
 extern undefined4 FUN_8020a718();
 extern undefined4 FUN_8020a71c();

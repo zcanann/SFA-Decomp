@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/dll/DB/DBbonedust.h"
 #include "main/dll/DB/DBstealerworm.h"
 
 extern undefined4 FUN_800066e0();
@@ -50,8 +51,6 @@ extern double FUN_80081014();
 extern undefined4 FUN_8008112c();
 extern undefined4 FUN_801d8308();
 extern undefined4 FUN_801dfa28();
-extern undefined4 FUN_801e1588();
-extern int FUN_801e1588();
 extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern double FUN_80293900();
@@ -702,7 +701,7 @@ void FUN_801e21b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   if (((*(char *)(pfVar6 + 3) != '\0') && (iVar3 < 6)) && (*(short *)(uVar1 + 0x46) != 0x69c)) {
     FUN_800068c4(uVar1,0x2c6);
   }
-  iVar4 = FUN_801e1588(*(int *)(uVar1 + 0x30));
+  iVar4 = DBbonedust_getState(*(int *)(uVar1 + 0x30));
   if ((iVar4 < 2) && (*(char *)(pfVar6 + 3) < '\x01')) {
     *pfVar6 = *pfVar6 - FLOAT_803dc074;
     if (*pfVar6 <= FLOAT_803e64ac) {
@@ -971,7 +970,7 @@ void FUN_801e2940(undefined8 param_1,double param_2,double param_3,undefined8 pa
   iVar3 = DAT_803de8c8;
   if (iVar10 != 0) {
     iVar3 = FUN_801e1ee4();
-    iVar3 = FUN_801e1588(iVar3);
+    iVar3 = DBbonedust_getState(iVar3);
     if (iVar3 == 2) {
       dVar12 = (double)FUN_8001771c((float *)(iVar2 + 0x18),(float *)(uVar1 + 0x18));
       if ((double)FLOAT_803e64d8 <= dVar12) {
