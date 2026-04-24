@@ -25,12 +25,33 @@ typedef struct ExpgfxCurrentSource {
 } ExpgfxCurrentSource;
 
 /*
+ * Some spawn requests materialize an inline attached-source block after the
+ * fixed config prefix. That state can seed source vectors, source positions,
+ * and inherited velocity for the spawned effect.
+ */
+typedef struct ExpgfxAttachedSourceState {
+  s16 sourceVecX;
+  s16 sourceVecY;
+  s16 sourceVecZ;
+  u8 pad06[0x08 - 0x06];
+  int sourcePosXBits;
+  int sourcePosYBits;
+  int sourcePosZBits;
+  int sourcePosWBits;
+  float velocityX;
+  float velocityY;
+  float velocityZ;
+  int tableKey1;
+} ExpgfxAttachedSourceState;
+
+/*
  * Spawn requests are sourced from the current expgfx context. Not every word
  * is understood yet, but the stable fields are worth naming directly.
  */
 typedef struct ExpgfxSpawnConfig {
   void *attachedSource;
-  u8 pad04[0x0C - 0x04];
+  void *velocitySource;
+  u8 pad08[0x0C - 0x08];
   s16 sourceVecX;
   s16 sourceVecY;
   s16 sourceVecZ;
@@ -67,6 +88,7 @@ typedef struct ExpgfxSpawnConfig {
  */
 #define gExpgfxBoundsTemplates DAT_80310458
 #define gExpgfxSpawnConfig DAT_8039caf8
+#define gExpgfxInlineAttachedSource DAT_8039cb58
 #define gExpgfxPoolSlotTypeIds gExpgfxSlotTypeIds
 #define gExpgfxPoolFrameFlags DAT_80310528
 #define gExpgfxPoolBounds DAT_8039b9b8

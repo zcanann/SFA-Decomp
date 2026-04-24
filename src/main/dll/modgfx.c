@@ -234,7 +234,6 @@ extern undefined gExpgfxPoolActiveCounts;
 extern undefined4 gExpgfxPoolActiveMasks;
 extern uint gExpgfxSlotPoolBases;
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
-extern undefined4 DAT_8039cafc;
 extern undefined4 DAT_8039cb18;
 extern undefined4 DAT_8039cb1c;
 extern undefined4 DAT_8039cb20;
@@ -1420,7 +1419,7 @@ void modgfx_initExpgfxSpawnConfig(undefined4 param_1,undefined4 param_2,undefine
   DAT_8039cb30 = FLOAT_803e00b4;
   DAT_8039cb52 = 0;
   DAT_8039cb53 = 0;
-  DAT_8039cafc = uVar1;
+  gExpgfxSpawnConfig.velocitySource = (void *)uVar1;
   DAT_8039cb34 = param_5;
   DAT_8039cb38 = param_4;
   DAT_8039cb51 = param_3;

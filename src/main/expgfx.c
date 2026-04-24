@@ -1019,7 +1019,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
   uint uVar14;
   int iVar15;
   int *piVar16;
-  undefined2 *puVar17;
+  ExpgfxAttachedSourceState *attachedSource;
   undefined2 *puVar18;
   double extraout_f1;
   double dVar19;
@@ -1103,9 +1103,9 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
       else {
         *(short *)(iVar7 + 0xe) = *(short *)(iVar7 + 0xe) + 1;
         *(ushort *)(iVar7 + 0x14) = (ushort)spawnConfig->linkGroup;
-        puVar17 = (undefined2 *)spawnConfig->attachedSource;
+        attachedSource = (ExpgfxAttachedSourceState *)spawnConfig->attachedSource;
         iVar13 = 0;
-        if (puVar17 == (undefined2 *)0x0) {
+        if (attachedSource == (ExpgfxAttachedSourceState *)0x0) {
           slot->sourcePosY = spawnConfig->sourcePosYBits;
           slot->sourcePosZ = spawnConfig->sourcePosZBits;
           slot->sourcePosW = spawnConfig->sourcePosWBits;
@@ -1115,28 +1115,26 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
           slot->sourceVecX = spawnConfig->sourceVecX;
         }
         else if ((slot->behaviorFlags & 0x200000) != 0) {
-          *(undefined4 *)(puVar18 + 0x26) = *(undefined4 *)(puVar17 + 0xc);
-          *(undefined4 *)(puVar18 + 0x28) = *(undefined4 *)(puVar17 + 0xe);
-          *(undefined4 *)(puVar18 + 0x2a) = *(undefined4 *)(puVar17 + 0x10);
-          *(undefined4 *)(puVar18 + 0x24) = *(undefined4 *)(puVar17 + 4);
-          puVar18[0x22] = puVar17[2];
-          puVar18[0x21] = puVar17[1];
-          puVar18[0x20] = *puVar17;
+          slot->sourcePosY = attachedSource->sourcePosYBits;
+          slot->sourcePosZ = attachedSource->sourcePosZBits;
+          slot->sourcePosW = attachedSource->sourcePosWBits;
+          slot->sourcePosX = attachedSource->sourcePosXBits;
+          slot->sourceVecZ = attachedSource->sourceVecZ;
+          slot->sourceVecY = attachedSource->sourceVecY;
+          slot->sourceVecX = attachedSource->sourceVecX;
           if (((slot->behaviorFlags & 2) != 0) || ((slot->behaviorFlags & 4) != 0)) {
-            spawnConfig->velocityX = spawnConfig->velocityX + *(float *)(puVar17 + 0x12);
-            spawnConfig->velocityY = spawnConfig->velocityY + *(float *)(puVar17 + 0x14);
+            spawnConfig->velocityX = spawnConfig->velocityX + attachedSource->velocityX;
+            spawnConfig->velocityY = spawnConfig->velocityY + attachedSource->velocityY;
             dVar19 = (double)spawnConfig->velocityZ;
-            spawnConfig->velocityZ = (float)(dVar19 + (double)*(float *)(puVar17 + 0x16));
+            spawnConfig->velocityZ = (float)(dVar19 + (double)attachedSource->velocityZ);
           }
-          if (puVar17 != (undefined2 *)0x0) {
-            iVar13 = *(int *)(puVar17 + 0x18);
-          }
-          puVar17 = (undefined2 *)0x0;
+          iVar13 = attachedSource->tableKey1;
+          attachedSource = (ExpgfxAttachedSourceState *)0x0;
         }
         iVar15 = (int)spawnConfig->tableKeyType;
-        puVar10 = puVar17;
+        puVar10 = (undefined2 *)attachedSource;
         uVar3 = expgfx_addToTable(dVar19,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                                  iVar7,(int)puVar17,iVar13,iVar15);
+                                  iVar7,(int)attachedSource,iVar13,iVar15);
         if ((short)uVar3 == -1) {
           uVar22 = FUN_80135810(dVar19,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                                 sExpgfxInvalidTabIndex,puVar10,iVar13,iVar15,piVar16,
@@ -1243,10 +1241,12 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
             dVar19 = DOUBLE_803dffe0;
             if ((*(uint *)(puVar18 + 0x3e) & 1) == 0) {
               dVar21 = (double)(*(float *)(iVar7 + 0x18) -
-                               (*(float *)(puVar18 + 0x32) + *(float *)(puVar17 + 6)));
+                               (*(float *)(puVar18 + 0x32) +
+                               *(float *)&attachedSource->sourcePosYBits));
               param_2 = (double)*(float *)(iVar7 + 0x20);
               fVar1 = (float)(param_2 -
-                             (double)(*(float *)(puVar18 + 0x36) + *(float *)(puVar17 + 10)));
+                             (double)(*(float *)(puVar18 + 0x36) +
+                                     *(float *)&attachedSource->sourcePosWBits));
               dVar20 = (double)(float)(dVar21 * dVar21 + (double)(fVar1 * fVar1));
               if (((dVar20 < (double)FLOAT_803e00a4) &&
                   (dVar20 = (double)FLOAT_803dffdc, dVar20 != (double)*(float *)(iVar7 + 0x24))) &&
@@ -1259,12 +1259,12 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
                 *(float *)(puVar18 + 0x3a) =
                      *(float *)(puVar18 + 0x3a) -
                      ((FLOAT_803e00a8 + *(float *)(iVar7 + 0x1c)) -
-                     (*(float *)(puVar18 + 0x34) + *(float *)(puVar17 + 8))) /
+                     (*(float *)(puVar18 + 0x34) + *(float *)&attachedSource->sourcePosZBits)) /
                      (float)(local_40 - dVar19);
                 dVar21 = (double)*(float *)(puVar18 + 0x3c);
                 param_2 = (double)*(float *)(iVar7 + 0x20);
                 dVar20 = (double)(float)(param_2 - (double)(*(float *)(puVar18 + 0x36) +
-                                                *(float *)(puVar17 + 10)));
+                                                *(float *)&attachedSource->sourcePosWBits));
                 local_48 = (double)CONCAT44(0x43300000,(int)(short)puVar18[3] << 1 ^ 0x80000000);
                 *(float *)(puVar18 + 0x3c) =
                      (float)(dVar21 - (double)(float)(dVar20 / (double)(float)(local_48 - dVar19)));
