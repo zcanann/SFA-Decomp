@@ -66,7 +66,7 @@ void OSRegisterResetFunction(OSResetFunctionInfo* info) {
     ENQUEUE_INFO_PRIO(info, &ResetFunctionQueue);
 }
 
-asm void OSUnregisterResetFunction(u32 resetCode) {
+static asm void Reset(u32 resetCode) {
     nofralloc
     b L_000001BC
 L_000001A0:
@@ -111,7 +111,7 @@ void __OSDoHotReset(u32 resetCode) {
     OSDisableInterrupts();
     __VIRegs[1] = 0;
     ICFlashInvalidate();
-    OSUnregisterResetFunction(resetCode << 3);
+    Reset(resetCode << 3);
 }
 
 void OSResetSystem(BOOL reset, u32 resetCode, BOOL forceMenu) {
@@ -167,7 +167,7 @@ void OSResetSystem(BOOL reset, u32 resetCode, BOOL forceMenu) {
         OSDisableInterrupts();
         __VIRegs[1] = 0;
         ICFlashInvalidate();
-        OSUnregisterResetFunction(resetCode << 3);
+        Reset(resetCode << 3);
     } else if (reset == OS_RESET_RESTART) {
         for (thread = __OSActiveThreadQueue.head; thread != NULL; thread = next) {
             next = thread->linkActive.next;
