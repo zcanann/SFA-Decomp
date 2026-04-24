@@ -17,7 +17,7 @@ extern undefined4 DAT_803addb4;
 /*
  * --INFO--
  *
- * Function: FUN_80208508
+ * Function: zBomb_resolveCollisionPoints
  * EN v1.0 Address: 0x80208508
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802085F4
@@ -27,6 +27,6 @@ extern undefined4 DAT_803addb4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80208508(undefined2 *param_1,int param_2)
+void zBomb_resolveCollisionPoints(undefined2 *param_1,int param_2)
 {
 }
