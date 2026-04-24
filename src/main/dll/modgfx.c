@@ -36,6 +36,24 @@ typedef struct ModgfxState {
   u8 activeVertexBufferIndex;
 } ModgfxState;
 
+#define MODGFX_ACTIVE_EFFECT_COUNT 0x32
+
+typedef struct ModgfxActiveEffect {
+  int instanceHandle;
+  int ownerToken;
+  u8 pad08[0x98 - 0x08];
+  int sharedResourceHandle;
+  int releaseTransformSource;
+  u8 padA4[0x10C - 0xA4];
+  s16 effectType;
+  u8 pad10E[0x12C - 0x10E];
+  int state;
+  u8 pad130[0x13F - 0x130];
+  u8 keepSharedResource;
+} ModgfxActiveEffect;
+
+extern uint DAT_8039ce58;
+
 static ModgfxVertexData *modgfx_getActiveVertexBuffer(ModgfxState *state)
 {
   return state->vertexBuffers[state->activeVertexBufferIndex];
@@ -44,6 +62,11 @@ static ModgfxVertexData *modgfx_getActiveVertexBuffer(ModgfxState *state)
 static ModgfxVertexData *modgfx_getInactiveVertexBuffer(ModgfxState *state)
 {
   return state->vertexBuffers[1 - (uint)state->activeVertexBufferIndex];
+}
+
+static ModgfxActiveEffect **modgfx_getActiveEffectRegistry(void)
+{
+  return (ModgfxActiveEffect **)&DAT_8039ce58;
 }
 
 extern undefined4 FUN_800033a8();
@@ -1987,7 +2010,7 @@ void modgfx_restoreActiveVertexState(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_800a11cc
+ * Function: modgfx_releaseActiveEffectsByType
  * EN v1.0 Address: 0x800A11CC
  * EN v1.0 Size: 364b
  * EN v1.1 Address: 0x800A12CC
@@ -1997,39 +2020,40 @@ void modgfx_restoreActiveVertexState(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a11cc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short param_9,int param_10)
+void modgfx_releaseActiveEffectsByType(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                                       undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                       undefined8 param_7,undefined8 param_8,short param_9,
+                                       int param_10)
 {
-  uint uVar1;
-  uint *puVar2;
+  ModgfxActiveEffect *activeEffect;
+  ModgfxActiveEffect **activeEffects;
   int iVar3;
   
+  activeEffects = modgfx_getActiveEffectRegistry();
   iVar3 = 0;
-  puVar2 = &DAT_8039ce58;
   do {
-    uVar1 = *puVar2;
-    if ((uVar1 != 0) && ((param_9 == *(short *)(uVar1 + 0x10c) || (param_10 != 0)))) {
-      if (*(uint *)(uVar1 + 0xa0) != 0) {
-        param_1 = FUN_80017814(*(uint *)(uVar1 + 0xa0));
+    activeEffect = activeEffects[iVar3];
+    if ((activeEffect != (ModgfxActiveEffect *)0x0) &&
+       ((param_9 == activeEffect->effectType || (param_10 != 0)))) {
+      if (activeEffect->releaseTransformSource != 0) {
+        param_1 = FUN_80017814(activeEffect->releaseTransformSource);
       }
-      if (*(int *)*puVar2 != 0) {
-        FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,*(int *)*puVar2
-                    );
+      if (activeEffect->instanceHandle != 0) {
+        FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                    activeEffect->instanceHandle);
       }
-      *(undefined4 *)(*puVar2 + 300) = 0;
-      if ((*(char *)(*puVar2 + 0x13f) == '\0') && (*(int *)(*puVar2 + 0x98) != 0)) {
+      activeEffect->state = 0;
+      if ((activeEffect->keepSharedResource == 0) && (activeEffect->sharedResourceHandle != 0)) {
         FUN_80053754();
       }
-      if (*(char *)(*puVar2 + 0x13f) == '\0') {
-        *(undefined4 *)(*puVar2 + 0x98) = 0;
+      if (activeEffect->keepSharedResource == 0) {
+        activeEffect->sharedResourceHandle = 0;
       }
-      param_1 = FUN_80017814(*puVar2);
-      *puVar2 = 0;
+      param_1 = FUN_80017814(activeEffect);
+      activeEffects[iVar3] = (ModgfxActiveEffect *)0x0;
     }
-    puVar2 = puVar2 + 1;
     iVar3 = iVar3 + 1;
-  } while (iVar3 < 0x32);
+  } while (iVar3 < MODGFX_ACTIVE_EFFECT_COUNT);
   return;
 }
 
@@ -2072,7 +2096,7 @@ void FUN_800a133c(double param_1,undefined8 param_2,undefined8 param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_800a1340
+ * Function: modgfx_releaseActiveEffectsByOwner
  * EN v1.0 Address: 0x800A1340
  * EN v1.0 Size: 320b
  * EN v1.1 Address: 0x800A2294
@@ -2082,42 +2106,42 @@ void FUN_800a133c(double param_1,undefined8 param_2,undefined8 param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a1340(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9)
+void modgfx_releaseActiveEffectsByOwner(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                                        undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                        undefined8 param_7,undefined8 param_8,int param_9)
 {
-  int *piVar1;
+  ModgfxActiveEffect *activeEffect;
+  ModgfxActiveEffect **activeEffects;
   int iVar2;
-  uint *puVar3;
   
+  activeEffects = modgfx_getActiveEffectRegistry();
   iVar2 = 0;
-  puVar3 = &DAT_8039ce58;
   do {
-    piVar1 = (int *)*puVar3;
-    if ((piVar1 != (int *)0x0) && (piVar1[1] == param_9)) {
-      if (*piVar1 != 0) {
-        FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,*piVar1);
+    activeEffect = activeEffects[iVar2];
+    if ((activeEffect != (ModgfxActiveEffect *)0x0) && (activeEffect->ownerToken == param_9)) {
+      if (activeEffect->instanceHandle != 0) {
+        FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                    activeEffect->instanceHandle);
       }
-      *(undefined4 *)(*puVar3 + 300) = 0;
-      if ((*(char *)(*puVar3 + 0x13f) == '\0') && (*(int *)(*puVar3 + 0x98) != 0)) {
+      activeEffect->state = 0;
+      if ((activeEffect->keepSharedResource == 0) && (activeEffect->sharedResourceHandle != 0)) {
         FUN_80053754();
       }
-      if (*(char *)(*puVar3 + 0x13f) == '\0') {
-        *(undefined4 *)(*puVar3 + 0x98) = 0;
+      if (activeEffect->keepSharedResource == 0) {
+        activeEffect->sharedResourceHandle = 0;
       }
-      param_1 = FUN_80017814(*puVar3);
-      *puVar3 = 0;
+      param_1 = FUN_80017814(activeEffect);
+      activeEffects[iVar2] = (ModgfxActiveEffect *)0x0;
     }
-    puVar3 = puVar3 + 1;
     iVar2 = iVar2 + 1;
-  } while (iVar2 < 0x32);
+  } while (iVar2 < MODGFX_ACTIVE_EFFECT_COUNT);
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_800a1480
+ * Function: modgfx_releaseAllActiveEffects
  * EN v1.0 Address: 0x800A1480
  * EN v1.0 Size: 336b
  * EN v1.1 Address: 0x800A2364
@@ -2127,10 +2151,12 @@ void FUN_800a1340(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a1480(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void modgfx_releaseAllActiveEffects(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                                    undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                    undefined8 param_7,undefined8 param_8)
 {
-  FUN_800a11cc(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,1);
+  modgfx_releaseActiveEffectsByType(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                                    0,1);
   return;
 }
 
@@ -2175,7 +2201,7 @@ void FUN_800a15d4(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_800a15d8
+ * Function: modgfx_resetActiveEffectRegistry
  * EN v1.0 Address: 0x800A15D8
  * EN v1.0 Size: 556b
  * EN v1.1 Address: 0x800A3A68
@@ -2185,68 +2211,30 @@ void FUN_800a15d4(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800a15d8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void modgfx_resetActiveEffectRegistry(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                                      undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                      undefined8 param_7,undefined8 param_8)
 {
+  ModgfxActiveEffect **activeEffects;
   int iVar1;
-  undefined4 *puVar2;
   
-  FUN_800a11cc(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,1);
-  DAT_8039ce58 = 0;
-  DAT_8039ce5c = 0;
-  DAT_8039ce60 = 0;
-  DAT_8039ce64 = 0;
-  DAT_8039ce68 = 0;
-  DAT_8039ce6c = 0;
-  DAT_8039ce70 = 0;
-  DAT_8039ce74 = 0;
-  DAT_8039ce78 = 0;
-  DAT_8039ce7c = 0;
-  DAT_8039ce80 = 0;
-  DAT_8039ce84 = 0;
-  DAT_8039ce88 = 0;
-  DAT_8039ce8c = 0;
-  DAT_8039ce90 = 0;
-  DAT_8039ce94 = 0;
-  DAT_8039ce98 = 0;
-  DAT_8039ce9c = 0;
-  DAT_8039cea0 = 0;
-  DAT_8039cea4 = 0;
-  DAT_8039cea8 = 0;
-  DAT_8039ceac = 0;
-  DAT_8039ceb0 = 0;
-  DAT_8039ceb4 = 0;
-  DAT_8039ceb8 = 0;
-  DAT_8039cebc = 0;
-  DAT_8039cec0 = 0;
-  DAT_8039cec4 = 0;
-  DAT_8039cec8 = 0;
-  DAT_8039cecc = 0;
-  DAT_8039ced0 = 0;
-  DAT_8039ced4 = 0;
-  DAT_8039ced8 = 0;
-  DAT_8039cedc = 0;
-  DAT_8039cee0 = 0;
-  DAT_8039cee4 = 0;
-  DAT_8039cee8 = 0;
-  DAT_8039ceec = 0;
-  DAT_8039cef0 = 0;
-  DAT_8039cef4 = 0;
-  DAT_8039cef8 = 0;
-  DAT_8039cefc = 0;
-  DAT_8039cf00 = 0;
-  DAT_8039cf04 = 0;
-  DAT_8039cf08 = 0;
-  DAT_8039cf0c = 0;
-  DAT_8039cf10 = 0;
-  DAT_8039cf14 = 0;
-  puVar2 = &DAT_8039cf18;
+  modgfx_releaseActiveEffectsByType(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                                    0,1);
+  activeEffects = modgfx_getActiveEffectRegistry();
+  for (iVar1 = 0; iVar1 < MODGFX_ACTIVE_EFFECT_COUNT; iVar1 = iVar1 + 1) {
+    activeEffects[iVar1] = (ModgfxActiveEffect *)0x0;
+  }
   iVar1 = 2;
-  do {
-    *puVar2 = 0;
-    puVar2 = puVar2 + 1;
-    iVar1 = iVar1 + -1;
-  } while (iVar1 != 0);
+  {
+    undefined4 *puVar2;
+
+    puVar2 = &DAT_8039cf18;
+    do {
+      *puVar2 = 0;
+      puVar2 = puVar2 + 1;
+      iVar1 = iVar1 + -1;
+    } while (iVar1 != 0);
+  }
   return;
 }
 

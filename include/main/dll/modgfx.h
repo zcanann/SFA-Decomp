@@ -25,26 +25,29 @@ void FUN_800a0a88(int param_1,int param_2,int param_3);
 void modgfx_updateVertexAlpha(int param_1,int param_2,int param_3,uint param_4);
 void modgfx_updateVertexScale(int param_1,int param_2,int param_3,uint param_4);
 void modgfx_restoreActiveVertexState(int param_1);
-void FUN_800a11cc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short param_9,int param_10);
+void modgfx_releaseActiveEffectsByType(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                                       undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                       undefined8 param_7,undefined8 param_8,short param_9,
+                                       int param_10);
 void FUN_800a1338(void);
 void FUN_800a133c(double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9);
-void FUN_800a1340(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9);
-void FUN_800a1480(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void modgfx_releaseActiveEffectsByOwner(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                                        undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                        undefined8 param_7,undefined8 param_8,int param_9);
+void modgfx_releaseAllActiveEffects(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                                    undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                    undefined8 param_7,undefined8 param_8);
 void FUN_800a15d0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_800a15d4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,undefined2 *param_12,
                  int param_13,undefined2 *param_14,uint param_15,int param_16);
-void FUN_800a15d8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void modgfx_resetActiveEffectRegistry(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                                      undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                      undefined8 param_7,undefined8 param_8);
 void FUN_800a1804(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 undefined4 FUN_800a1954(void);
