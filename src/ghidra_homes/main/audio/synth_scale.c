@@ -15,14 +15,14 @@
 
 extern undefined4 DAT_803bd9f0;
 
-void FUN_8026fca0();
-undefined4 FUN_8026fce8();
+void synthSetStudioChannelScale();
+undefined4 synthGetVoiceSlotChannelScale();
 
-void FUN_8026fca0()
+void synthSetStudioChannelScale()
 {
 }
 
-undefined4 FUN_8026fce8()
+undefined4 synthGetVoiceSlotChannelScale()
 {
     return 0;
 }

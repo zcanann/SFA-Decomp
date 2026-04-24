@@ -4,7 +4,7 @@
 extern int FUN_8026cae4();
 extern undefined4 FUN_8026d7c4();
 extern undefined4 FUN_8026efc8();
-extern undefined4 FUN_8026fca0();
+extern undefined4 synthSetStudioChannelScale();
 extern undefined4 FUN_802722b0();
 extern undefined4 FUN_80272714();
 extern undefined4 FUN_80281a30();

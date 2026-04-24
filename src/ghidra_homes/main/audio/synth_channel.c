@@ -13,7 +13,7 @@
  */
 #include "ghidra_import.h"
 
-extern undefined4 FUN_8026fca0();
+extern undefined4 synthSetStudioChannelScale();
 
 extern undefined4 DAT_803dee98;
 extern undefined4 DAT_803deea0;

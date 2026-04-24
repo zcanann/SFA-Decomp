@@ -13,6 +13,13 @@ BLOCK_RE = re.compile(
 )
 FUN_TOKEN_RE = re.compile(r"\bFUN_[0-9A-Fa-f]{8}\b")
 
+# Known source-ownership conflicts where the v1.0 address already belongs to a
+# recovered semantic owner in another corridor, so the placeholder should not
+# be retargeted automatically.
+SKIP_MAPPINGS = {
+    "FUN_80270650": "FUN_8026fca0",
+}
+
 
 def iter_source_files(root: Path) -> list[Path]:
     return sorted(path for path in root.rglob("*.c") if path.is_file())
@@ -36,6 +43,8 @@ def build_mapping() -> dict[str, str]:
         for match in BLOCK_RE.finditer(text):
             old_name = match.group("function")
             new_name = f"FUN_{match.group('v10_addr')[2:].lower()}"
+            if SKIP_MAPPINGS.get(old_name) == new_name:
+                continue
             if old_name != new_name:
                 mapping[old_name] = new_name
     return mapping
