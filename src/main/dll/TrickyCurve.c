@@ -21,7 +21,7 @@ extern int gSfxplayerEffectHandles[8];
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd72c;
-extern undefined4 DAT_803de970;
+extern u8 gTrickyCurveBurstCounter;
 extern f64 DOUBLE_803e70d8;
 extern f64 DOUBLE_803e7108;
 extern f32 FLOAT_803dc074;
@@ -36,7 +36,7 @@ extern f32 FLOAT_803e7100;
 /*
  * --INFO--
  *
- * Function: FUN_8020718c
+ * Function: TrickyCurve_updateBurstTrigger
  * EN v1.0 Address: 0x8020718C
  * EN v1.0 Size: 880b
  * EN v1.1 Address: 0x80207250
@@ -46,7 +46,7 @@ extern f32 FLOAT_803e7100;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020718c(void)
+void TrickyCurve_updateBurstTrigger(void)
 {
   float fVar1;
   float fVar2;
@@ -93,7 +93,7 @@ void FUN_8020718c(void)
   dVar14 = (double)fVar2;
   fVar3 = *(float *)(iVar5 + 0x14) - *(float *)(uVar4 + 0x14);
   dVar13 = (double)fVar3;
-  DAT_803de970 = DAT_803de970 + 1;
+  gTrickyCurveBurstCounter = gTrickyCurveBurstCounter + 1;
   if (dVar12 <= (double)FLOAT_803e70d0) {
     uStack_1c = (int)*psVar10 ^ 0x80000000;
     local_20 = 0x43300000;
@@ -155,8 +155,8 @@ void FUN_8020718c(void)
     local_24 = fVar3;
     iVar6 = FUN_80294d6c(iVar5);
     if (iVar6 == 0x1d7) {
-      if (0x14 < DAT_803de970) {
-        DAT_803de970 = 0;
+      if (0x14 < gTrickyCurveBurstCounter) {
+        gTrickyCurveBurstCounter = 0;
         FUN_80017698(0x468,1);
         FUN_80006824(uVar4,0x1c9);
       }
@@ -465,7 +465,7 @@ void TrickyCurve_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
     FUN_802074fc(param_9);
   }
   else if (cVar1 == '\x02') {
-    FUN_8020718c();
+    TrickyCurve_updateBurstTrigger();
   }
   else if (cVar1 == '\x03') {
     TrickyCurve_updateCooldownTrigger();
