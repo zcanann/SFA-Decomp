@@ -1445,7 +1445,10 @@ dolphin/os/OSContext.c:
 	.text       start:0x80242060 end:0x80242880
 
 dolphin/os/OSError.c:
-	.text       start:0x80242880 end:0x80243004
+	.text       start:0x80242880 end:0x80242C10
+
+dolphin/os/OSExec.c:
+	.text       start:0x80242C10 end:0x80243004
 
 dolphin/os/OSFont.c:
 	.text       start:0x80243004 end:0x8024377C
@@ -1465,10 +1468,10 @@ dolphin/os/OSMemory.c:
 	.text       start:0x80244204 end:0x802444E4
 
 dolphin/os/OSMutex.c:
-	.text       start:0x802444E4 end:0x802444E4
+	.text       start:0x802444E4 end:0x80244554
 
 dolphin/os/OSReboot.c:
-	.text       start:0x802444E4 end:0x8024476C
+	.text       start:0x80244554 end:0x8024476C
 
 dolphin/os/OSReset.c:
 	.text       start:0x8024476C end:0x80244B50
