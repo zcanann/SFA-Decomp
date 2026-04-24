@@ -1,0 +1,22 @@
+// Function: FUN_802837e0
+// Entry: 802837e0
+// Size: 92 bytes
+
+void FUN_802837e0(int param_1,char param_2)
+
+{
+  int iVar1;
+  
+  if (param_2 == '\0') {
+    param_1 = param_1 * 0xf4;
+    *(uint *)(DAT_803de344 + param_1 + 0xf0) = *(uint *)(DAT_803de344 + param_1 + 0xf0) | 0x80000000
+    ;
+    *(undefined2 *)(DAT_803de344 + param_1 + 0xd0) = 0x10;
+    *(undefined2 *)(DAT_803de344 + param_1 + 0xd2) = 0x10;
+    return;
+  }
+  iVar1 = DAT_803de344 + param_1 * 0xf4;
+  *(uint *)(iVar1 + 0xf0) = *(uint *)(iVar1 + 0xf0) & 0x7fffffff;
+  return;
+}
+
