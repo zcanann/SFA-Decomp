@@ -2,6 +2,7 @@
 #define MAIN_DLL_SH_SHTHORNTAIL_H_
 
 #include "ghidra_import.h"
+#include "main/dll/SH/SHthorntail_internal.h"
 
 void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3,
                              undefined8 param_4,undefined8 param_5,undefined8 param_6,

@@ -1,11 +1,10 @@
 #include "ghidra_import.h"
+#include "main/dll/SH/dll_1E8.h"
 #include "main/dll/SH/SHthorntail.h"
 
 extern undefined4 FUN_80006824();
 extern uint FUN_80017758();
 extern uint FUN_80017760();
-extern undefined4 FUN_801d5174();
-extern uint FUN_801d524c();
 extern undefined4 FUN_80242fc0();
 
 extern undefined4 DAT_803dc070;
@@ -39,30 +38,34 @@ void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
                              undefined4 param_11,undefined4 param_12,undefined4 param_13,
                              undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
+  SHthorntailRuntime *runtime;
+  SHthorntailConfig *config;
   int iVar1;
   uint uVar2;
   
-  switch(*(undefined *)(param_10 + 0x624)) {
+  runtime = (SHthorntailRuntime *)param_10;
+  config = ((SHthorntailObject *)param_9)->config;
+  switch(runtime->behaviorState) {
   case 0:
-    uVar2 = FUN_80017758((double)FLOAT_803e60c8,(double)FLOAT_803e60cc,(float *)(param_10 + 0x910));
+    uVar2 = FUN_80017758((double)FLOAT_803e60c8,(double)FLOAT_803e60cc,&runtime->proximityTargetX);
     if (uVar2 != 0) {
       FUN_80006824((uint)param_9,0x410);
     }
-    *(float *)(param_10 + 0x630) = *(float *)(param_10 + 0x630) - FLOAT_803dc074;
-    if (*(float *)(param_10 + 0x630) <= FLOAT_803e60d0) {
-      *(undefined *)(param_10 + 0x624) = 1;
+    runtime->idleTimer = runtime->idleTimer - FLOAT_803dc074;
+    if (runtime->idleTimer <= FLOAT_803e60d0) {
+      runtime->behaviorState = 1;
     }
     break;
   case 1:
-    *(float *)(param_10 + 0x630) = *(float *)(param_10 + 0x630) - FLOAT_803dc074;
-    if (*(float *)(param_10 + 0x630) <= FLOAT_803e60b0) {
+    runtime->idleTimer = runtime->idleTimer - FLOAT_803dc074;
+    if (runtime->idleTimer <= FLOAT_803e60b0) {
       iVar1 = (**(code **)(*DAT_803dd6d8 + 0x24))(0);
       if (iVar1 == 0) {
-        uVar2 = FUN_801d524c(param_9,param_10,*(int *)(param_9 + 0x26));
-        *(char *)(param_10 + 0x624) = (char)uVar2;
+        uVar2 = SHthorntail_chooseNextState(param_9,runtime,config);
+        runtime->behaviorState = (char)uVar2;
       }
       else {
-        *(undefined *)(param_10 + 0x624) = 0xb;
+        runtime->behaviorState = 0xb;
       }
     }
     break;
@@ -71,76 +74,71 @@ void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
   case 4:
   case 5:
   case 6:
-    if ((*(byte *)(param_10 + 0x625) & 1) != 0) {
+    if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
       iVar1 = (**(code **)(*DAT_803dd6d8 + 0x24))(0);
       if (iVar1 == 0) {
-        uVar2 = FUN_801d524c(param_9,param_10,*(int *)(param_9 + 0x26));
-        *(char *)(param_10 + 0x624) = (char)uVar2;
+        uVar2 = SHthorntail_chooseNextState(param_9,runtime,config);
+        runtime->behaviorState = (char)uVar2;
       }
       else {
-        *(undefined *)(param_10 + 0x624) = 0xb;
+        runtime->behaviorState = 0xb;
       }
     }
     break;
   case 7:
-    if ((*(byte *)(param_10 + 0x625) & 1) != 0) {
-      *(undefined *)(param_10 + 0x624) = 8;
+    if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
+      runtime->behaviorState = 8;
       uVar2 = FUN_80017760(500,800);
-      *(float *)(param_10 + 0x634) =
-           (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e60c0);
+      runtime->comboTimer = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e60c0);
       uVar2 = FUN_80017760(1,3);
-      *(char *)(param_10 + 0x63e) = (char)uVar2;
+      runtime->comboRepeatCount = (char)uVar2;
     }
     break;
   case 8:
-    *(float *)(param_10 + 0x634) =
-         *(float *)(param_10 + 0x634) -
-         (float)((double)CONCAT44(0x43300000,(uint)DAT_803dc070) - DOUBLE_803e60d8);
-    if (*(float *)(param_10 + 0x634) <= FLOAT_803e60b0) {
-      if (*(char *)(param_10 + 0x63e) < '\x01') {
-        *(undefined *)(param_10 + 0x624) = 10;
+    runtime->comboTimer = runtime->comboTimer -
+                          (float)((double)CONCAT44(0x43300000,(uint)DAT_803dc070) - DOUBLE_803e60d8);
+    if (runtime->comboTimer <= FLOAT_803e60b0) {
+      if (runtime->comboRepeatCount < '\x01') {
+        runtime->behaviorState = 10;
       }
       else {
-        *(undefined *)(param_10 + 0x624) = 9;
+        runtime->behaviorState = 9;
       }
     }
     break;
   case 9:
-    if ((*(byte *)(param_10 + 0x625) & 1) != 0) {
-      *(undefined *)(param_10 + 0x624) = 8;
+    if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
+      runtime->behaviorState = 8;
       uVar2 = FUN_80017760(500,800);
-      *(float *)(param_10 + 0x634) =
-           (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e60c0);
-      *(char *)(param_10 + 0x63e) = *(char *)(param_10 + 0x63e) + -1;
+      runtime->comboTimer = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e60c0);
+      runtime->comboRepeatCount = runtime->comboRepeatCount + -1;
     }
     break;
   case 10:
-    if ((*(byte *)(param_10 + 0x625) & 1) != 0) {
-      *(undefined *)(param_10 + 0x624) = 0;
+    if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
+      runtime->behaviorState = 0;
       uVar2 = FUN_80017760(1000,2000);
-      *(float *)(param_10 + 0x630) =
-           (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e60c0);
+      runtime->idleTimer = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e60c0);
     }
     break;
   case 0xb:
-    if ((*(byte *)(param_10 + 0x625) & 1) != 0) {
-      *(undefined *)(param_10 + 0x627) = 2;
-      *(undefined *)(param_10 + 0x624) = 0xc;
+    if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
+      runtime->tailSwingState = 2;
+      runtime->behaviorState = 0xc;
     }
     break;
   case 0xc:
-    FUN_801d5174((uint)param_9,param_10);
-    if (((*(byte *)(param_10 + 0x625) & 1) != 0) &&
+    SHthorntail_updateTailSwing((uint)param_9,runtime);
+    if (((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) &&
        (iVar1 = (**(code **)(*DAT_803dd6d8 + 0x24))(0), iVar1 == 0)) {
-      *(undefined *)(param_10 + 0x624) = 0xd;
+      runtime->behaviorState = 0xd;
     }
     break;
   case 0xd:
-    if ((*(byte *)(param_10 + 0x625) & 1) != 0) {
-      *(undefined *)(param_10 + 0x624) = 0;
+    if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
+      runtime->behaviorState = 0;
       uVar2 = FUN_80017760(1000,2000);
-      *(float *)(param_10 + 0x630) =
-           (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e60c0);
+      runtime->idleTimer = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e60c0);
     }
     break;
   default:

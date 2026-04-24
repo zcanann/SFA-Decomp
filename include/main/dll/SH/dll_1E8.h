@@ -1,9 +1,9 @@
 #ifndef MAIN_DLL_SH_DLL_1E8_H_
 #define MAIN_DLL_SH_DLL_1E8_H_
 
-#include "ghidra_import.h"
+#include "main/dll/SH/SHthorntail_internal.h"
 
-void FUN_801d5174(uint param_1,int param_2);
-uint FUN_801d524c(short *param_1,int param_2,int param_3);
+void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime);
+uint SHthorntail_chooseNextState(short *obj,SHthorntailRuntime *runtime,SHthorntailConfig *config);
 
 #endif /* MAIN_DLL_SH_DLL_1E8_H_ */

@@ -19,7 +19,7 @@ extern f32 FLOAT_803e60bc;
 /*
  * --INFO--
  *
- * Function: FUN_801d5174
+ * Function: SHthorntail_updateTailSwing
  * EN v1.0 Address: 0x801D5174
  * EN v1.0 Size: 216b
  * EN v1.1 Address: 0x801D5470
@@ -29,29 +29,29 @@ extern f32 FLOAT_803e60bc;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d5174(uint param_1,int param_2)
+void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
 {
   byte bVar1;
   
-  bVar1 = *(byte *)(param_2 + 0x627);
+  bVar1 = runtime->tailSwingState;
   if (bVar1 == 1) {
-    *(float *)(param_2 + 0x628) = *(float *)(param_2 + 0x628) - FLOAT_803dc074;
-    if (*(float *)(param_2 + 0x628) <= FLOAT_803e60b0) {
-      FUN_80006824(param_1,0xa8);
-      *(undefined *)(param_2 + 0x627) = 2;
+    runtime->tailSwingTimer = runtime->tailSwingTimer - FLOAT_803dc074;
+    if (runtime->tailSwingTimer <= FLOAT_803e60b0) {
+      FUN_80006824(objectId,0xa8);
+      runtime->tailSwingState = 2;
     }
   }
   else if (bVar1 == 0) {
-    *(float *)(param_2 + 0x628) = *(float *)(param_2 + 0x628) - FLOAT_803dc074;
-    if (*(float *)(param_2 + 0x628) <= FLOAT_803e60b0) {
-      FUN_80006824(param_1,0xa9);
-      *(undefined *)(param_2 + 0x627) = 1;
-      *(float *)(param_2 + 0x628) = FLOAT_803e60b4;
+    runtime->tailSwingTimer = runtime->tailSwingTimer - FLOAT_803dc074;
+    if (runtime->tailSwingTimer <= FLOAT_803e60b0) {
+      FUN_80006824(objectId,0xa9);
+      runtime->tailSwingState = 1;
+      runtime->tailSwingTimer = FLOAT_803e60b4;
     }
   }
-  else if ((bVar1 < 3) && ((*(byte *)(param_2 + 0x625) & 1) != 0)) {
-    *(undefined *)(param_2 + 0x627) = 0;
-    *(float *)(param_2 + 0x628) = FLOAT_803e60b8;
+  else if ((bVar1 < 3) && ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0)) {
+    runtime->tailSwingState = 0;
+    runtime->tailSwingTimer = FLOAT_803e60b8;
   }
   return;
 }
@@ -59,7 +59,7 @@ void FUN_801d5174(uint param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_801d524c
+ * Function: SHthorntail_chooseNextState
  * EN v1.0 Address: 0x801D524C
  * EN v1.0 Size: 452b
  * EN v1.1 Address: 0x801D5558
@@ -69,27 +69,27 @@ void FUN_801d5174(uint param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_801d524c(short *param_1,int param_2,int param_3)
+uint SHthorntail_chooseNextState(short *obj,SHthorntailRuntime *runtime,SHthorntailConfig *config)
 {
   short sVar1;
   int iVar2;
   uint uVar3;
   double dVar4;
   
-  if (*(char *)(param_3 + 0x1b) == '\0') {
+  if (config->leashRadiusByte == '\0') {
     uVar3 = 7;
   }
   else {
     iVar2 = FUN_80017a98();
-    dVar4 = FUN_80017708((float *)(param_1 + 0xc),(float *)(iVar2 + 0x18));
+    dVar4 = FUN_80017708((float *)(obj + 0xc),(float *)(iVar2 + 0x18));
     if ((double)FLOAT_803e60bc <= dVar4) {
-      dVar4 = FUN_80017708((float *)(param_1 + 0xc),(float *)(param_3 + 8));
+      dVar4 = FUN_80017708((float *)(obj + 0xc),&config->homePosX);
       if ((double)(float)((double)CONCAT44(0x43300000,
-                                           (uint)*(byte *)(param_3 + 0x1b) *
-                                           (uint)*(byte *)(param_3 + 0x1b) ^ 0x80000000) -
+                                           (uint)config->leashRadiusByte *
+                                           (uint)config->leashRadiusByte ^ 0x80000000) -
                          DOUBLE_803e60c0) < dVar4) {
         iVar2 = FUN_80017730();
-        sVar1 = (short)iVar2 - *param_1;
+        sVar1 = (short)iVar2 - *obj;
         if (0x8000 < sVar1) {
           sVar1 = sVar1 + 1;
         }
@@ -103,18 +103,17 @@ uint FUN_801d524c(short *param_1,int param_2,int param_3)
         if (0x20 < iVar2) {
           FUN_80017730();
           FUN_800723a0();
-          if (('\x01' < *(char *)(param_2 + 0x624)) && (*(char *)(param_2 + 0x624) < '\x06')) {
+          if (('\x01' < runtime->behaviorState) && (runtime->behaviorState < '\x06')) {
             return 6;
           }
           return 7;
         }
       }
-      iVar2 = FUN_800575b4((double)(*(float *)(param_1 + 0x54) * *(float *)(param_1 + 4)),
-                           (float *)(param_1 + 6));
+      iVar2 = FUN_800575b4((double)(*(float *)(obj + 0x54) * *(float *)(obj + 4)),(float *)(obj + 6));
       if (iVar2 == 0) {
         uVar3 = 7;
       }
-      else if ((*(char *)(param_2 + 0x624) < '\x02') || ('\x05' < *(char *)(param_2 + 0x624))) {
+      else if ((runtime->behaviorState < '\x02') || ('\x05' < runtime->behaviorState)) {
         uVar3 = 2;
       }
       else {
@@ -122,7 +121,7 @@ uint FUN_801d524c(short *param_1,int param_2,int param_3)
         uVar3 = uVar3 & 0xff;
       }
     }
-    else if ((*(char *)(param_2 + 0x624) < '\x02') || ('\x05' < *(char *)(param_2 + 0x624))) {
+    else if ((runtime->behaviorState < '\x02') || ('\x05' < runtime->behaviorState)) {
       uVar3 = 7;
     }
     else {
