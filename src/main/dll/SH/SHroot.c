@@ -29,7 +29,7 @@ extern f64 DOUBLE_803e60c0;
 /*
  * --INFO--
  *
- * Function: FUN_801d58e4
+ * Function: SHthorntail_updateRootControlMode3
  * EN v1.0 Address: 0x801D58E4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801D5AFC
@@ -39,17 +39,20 @@ extern f64 DOUBLE_803e60c0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d58e4(double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9,int param_10,int param_11,undefined4 param_12,undefined4 param_13,
-                 undefined4 param_14,undefined4 param_15,undefined4 param_16)
+void SHthorntail_updateRootControlMode3(double param_1,undefined8 param_2,undefined8 param_3,
+                                        undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                        undefined8 param_7,undefined8 param_8,
+                                        SHthorntailObject *obj,SHthorntailRuntime *runtime,
+                                        int param_11,uint param_12,float *param_13,
+                                        undefined4 param_14,undefined4 param_15,
+                                        undefined4 param_16)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_801d58e8
+ * Function: SHthorntail_updateRootControlMode2
  * EN v1.0 Address: 0x801D58E8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801D5CB4
@@ -59,9 +62,12 @@ void FUN_801d58e4(double param_1,undefined8 param_2,undefined8 param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d58e8(double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9,int param_10,undefined4 param_11,int param_12,undefined4 param_13,
-                 undefined4 param_14,undefined4 param_15,undefined4 param_16)
+void SHthorntail_updateRootControlMode2(double param_1,undefined8 param_2,undefined8 param_3,
+                                        undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                        undefined8 param_7,undefined8 param_8,
+                                        SHthorntailObject *obj,SHthorntailRuntime *runtime,
+                                        int param_11,uint param_12,float *param_13,
+                                        undefined4 param_14,undefined4 param_15,
+                                        undefined4 param_16)
 {
 }

@@ -10,7 +10,8 @@ typedef struct SHthorntailConfig {
   Vec homePos;
   s32 configToken;
   u8 controlMode;
-  u8 pad19[0x1B - 0x19];
+  u8 pad19;
+  u8 levelControlVariant;
   u8 leashRadiusByte;
 } SHthorntailConfig;
 

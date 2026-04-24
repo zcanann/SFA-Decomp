@@ -1,5 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/SH/SHthorntail_internal.h"
+#include "main/dll/SH/SHroot.h"
+#include "main/dll/SC/SClevelcontrol.h"
 #include "main/dll/SC/SCchieflightfoot.h"
 
 extern undefined4 FUN_80006824();
@@ -16,10 +18,6 @@ extern undefined4 FUN_8003b280();
 extern int FUN_800575b4();
 extern undefined4 FUN_8006ef38();
 extern undefined4 FUN_801150ac();
-extern undefined4 FUN_801d58e4();
-extern undefined4 FUN_801d58e8();
-extern undefined4 FUN_801d5ed4();
-extern undefined4 FUN_801d5ed8();
 extern undefined4 FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern undefined4 FUN_80293f90();
@@ -139,21 +137,24 @@ void SHthorntail_update(undefined8 param_1,double param_2,double param_3,undefin
     runtime->locomotionMode = uVar4;
     bVar1 = config->controlMode;
     if (bVar1 == 2) {
-      FUN_801d58e8(extraout_f1_00,param_2,param_3,param_4,param_5,param_6,param_7,param_8,psVar2,
-                   (int)runtime,iVar6,uVar7,pfVar8,in_r8,in_r9,in_r10);
+        SHthorntail_updateRootControlMode2(extraout_f1_00,param_2,param_3,param_4,param_5,param_6,
+                                           param_7,param_8,obj,runtime,iVar6,uVar7,pfVar8,in_r8,
+                                           in_r9,in_r10);
     }
     else if (bVar1 < 2) {
       if (bVar1 == 0) {
-        FUN_801d5ed8(extraout_f1_00,param_2,param_3,param_4,param_5,param_6,param_7,param_8,psVar2,
-                     (int)runtime,(int)config,uVar7,pfVar8,in_r8,in_r9,in_r10);
+        SHthorntail_updateLevelControlMode0(extraout_f1_00,param_2,param_3,param_4,param_5,param_6,
+                                            param_7,param_8,obj,runtime,config,uVar7,pfVar8,in_r8,
+                                            in_r9,in_r10);
       }
       else {
-        FUN_801d5ed4((uint)psVar2,(int)runtime,(int)config);
+        SHthorntail_updateLevelControlMode1((uint)psVar2,runtime,config);
       }
     }
     else if (bVar1 < 4) {
-      FUN_801d58e4(extraout_f1_00,param_2,param_3,param_4,param_5,param_6,param_7,param_8,psVar2,
-                   (int)runtime,iVar6,uVar7,pfVar8,in_r8,in_r9,in_r10);
+      SHthorntail_updateRootControlMode3(extraout_f1_00,param_2,param_3,param_4,param_5,param_6,
+                                         param_7,param_8,obj,runtime,iVar6,uVar7,pfVar8,in_r8,
+                                         in_r9,in_r10);
     }
     if (((&DAT_80327fc8)[runtime->behaviorState] & 1) == 0) {
       *(byte *)((int)psVar2 + 0xaf) = *(byte *)((int)psVar2 + 0xaf) & 0xef;

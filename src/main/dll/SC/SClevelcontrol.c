@@ -28,7 +28,7 @@ extern f32 FLOAT_803e60e0;
 /*
  * --INFO--
  *
- * Function: FUN_801d5ed4
+ * Function: SHthorntail_updateLevelControlMode1
  * EN v1.0 Address: 0x801D5ED4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801D5ED4
@@ -38,14 +38,15 @@ extern f32 FLOAT_803e60e0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d5ed4(uint param_1,int param_2,int param_3)
+void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runtime,
+                                         SHthorntailConfig *config)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_801d5ed8
+ * Function: SHthorntail_updateLevelControlMode0
  * EN v1.0 Address: 0x801D5ED8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801D6158
@@ -55,17 +56,20 @@ void FUN_801d5ed4(uint param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d5ed8(double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9,int param_10,int param_11,undefined4 param_12,undefined4 param_13,
-                 undefined4 param_14,undefined4 param_15,undefined4 param_16)
+void SHthorntail_updateLevelControlMode0(double param_1,undefined8 param_2,undefined8 param_3,
+                                         undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                         undefined8 param_7,undefined8 param_8,
+                                         SHthorntailObject *obj,SHthorntailRuntime *runtime,
+                                         SHthorntailConfig *config,uint param_12,float *param_13,
+                                         undefined4 param_14,
+                                         undefined4 param_15,undefined4 param_16)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_801d5edc
+ * Function: SHthorntail_updateLevelControlState
  * EN v1.0 Address: 0x801D5EDC
  * EN v1.0 Size: 472b
  * EN v1.1 Address: 0x801D6338
@@ -76,18 +80,19 @@ void FUN_801d5ed8(double param_1,undefined8 param_2,undefined8 param_3,undefined
  * PAL Size: TODO
  */
 undefined4
-FUN_801d5edc(double param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10
-            ,int param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
-            undefined4 param_15,undefined4 param_16)
+SHthorntail_updateLevelControlState(double param_1,double param_2,double param_3,undefined8 param_4,
+                                    undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                                    undefined8 param_8,SHthorntailObject *obj,undefined4 param_10,
+                                    int param_11,undefined4 param_12,undefined4 param_13,
+                                    undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
   SHthorntailRuntime *runtime;
   uint uVar1;
   int iVar2;
   
-  runtime = ((SHthorntailObject *)param_9)->runtime;
+  runtime = obj->runtime;
   if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_LEVELCONTROL_READY) == 0) {
-    FUN_8000680c(param_9,0x7f);
+    FUN_8000680c((int)obj,0x7f);
     runtime->behaviorState = 0;
     uVar1 = FUN_80017760(1000,2000);
     param_1 = DOUBLE_803e60c0;
@@ -96,19 +101,19 @@ FUN_801d5edc(double param_1,double param_2,double param_3,undefined8 param_4,und
     runtime->behaviorFlags = runtime->behaviorFlags | (SHTHORNTAIL_FLAG_LEVELCONTROL_READY |
                                                        SHTHORNTAIL_FLAG_FREEZE_MOTION);
     runtime->freezeFrameCounter = 0;
-    *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
+    *(byte *)((int)obj + 0xaf) = *(byte *)((int)obj + 0xaf) | 8;
   }
   if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_IMPACT_PENDING) != 0) {
-    iVar2 = FUN_801149b8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,
+    iVar2 = FUN_801149b8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(int)obj,
                          param_11,runtime,0,0,param_14,param_15,param_16);
     if (iVar2 != 0) {
       return 0;
     }
     *(ushort *)(param_11 + 0x6e) = *(ushort *)(param_11 + 0x6e) & 0xffbf;
-    FUN_8003b280(param_9,(int)runtime->collisionShapeState);
+    FUN_8003b280((int)obj,(int)runtime->collisionShapeState);
   }
   runtime->activeMoveValid = 0;
-  FUN_8006ef38((double)FLOAT_803e60e0,(double)FLOAT_803e60e0,param_9,param_11 + 0xf0,8,
+  FUN_8006ef38((double)FLOAT_803e60e0,(double)FLOAT_803e60e0,(int)obj,param_11 + 0xf0,8,
                (int)runtime->renderPathPoints,(int)runtime->moveScratch);
   return 0;
 }
