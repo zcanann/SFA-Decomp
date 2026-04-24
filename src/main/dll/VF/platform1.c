@@ -182,12 +182,12 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
   state->flags = state->flags | PLATFORM1_FLAG_ACTIVE;
   FUN_8011e868(0xf);
   DAT_803de890 = 0;
-  state->trackedObject = 0;
+  state->linkedObject = 0;
   iVar4 = FUN_80017b00(local_104,&local_108);
   while (local_104[0] < local_108) {
-    state->trackedObject = *(int *)(iVar4 + local_104[0] * 4);
+    state->linkedObject = *(int *)(iVar4 + local_104[0] * 4);
     local_104[0] = local_104[0] + 1;
-    if (*(short *)(state->trackedObject + 0x46) == 0x3ff) {
+    if (*(short *)(state->linkedObject + 0x46) == 0x3ff) {
       local_104[0] = local_108;
     }
   }
@@ -209,10 +209,10 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
     }
     else if (bVar7 < 3) {
       if (bVar7 == 1) {
-        state->flags = state->flags | 1;
+        state->flags = state->flags | PLATFORM1_TRIGGER_FLAG_01;
       }
       else if (bVar7 != 0) {
-        state->flags = state->flags | 2;
+        state->flags = state->flags | PLATFORM1_TRIGGER_FLAG_02;
         state->transitionStep = 0;
         param_12 = 0;
         param_13 = (int *)*DAT_803dd6d4;
@@ -220,15 +220,15 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
       }
     }
     else if (bVar7 == 5) {
-      if (state->trackedObject != 0) {
+      if (state->linkedObject != 0) {
         *(float *)(uVar3 + 0x98) = FLOAT_803e6300;
-        *(float *)(state->trackedObject + 0x98) = fVar1;
+        *(float *)(state->linkedObject + 0x98) = fVar1;
         FUN_800305f8((double)*(float *)(uVar3 + 0x98),param_2,param_3,param_4,param_5,param_6,
                      param_7,param_8,uVar3,0x401,0,param_12,param_13,param_14,param_15,param_16);
-        FUN_800305f8((double)*(float *)(state->trackedObject + 0x98),param_2,param_3,param_4,param_5,
-                     param_6,param_7,param_8,state->trackedObject,0,0,param_12,param_13,param_14,
+        FUN_800305f8((double)*(float *)(state->linkedObject + 0x98),param_2,param_3,param_4,param_5,
+                     param_6,param_7,param_8,state->linkedObject,0,0,param_12,param_13,param_14,
                      param_15,param_16);
-        state->previousTrackOffset = state->trackOffset;
+        state->prevTrackOffset = state->currentTrackOffset;
       }
     }
     else if (bVar7 < 5) {
@@ -245,7 +245,7 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
       }
     }
   }
-  if (((state->flags & PLATFORM1_TRIGGER_MASK) != 0) && (0x18 < state->activeSfxHandle)) {
+  if (((state->flags & PLATFORM1_TRIGGER_MASK) != 0) && (0x18 < state->loopSfxHandle)) {
     iVar4 = (**(code **)(*DAT_803dd6d0 + 0x10))();
     if (iVar4 != 0x48) {
       local_104[1] = 3;
@@ -261,7 +261,7 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
       FUN_800305f8((double)*(float *)(uVar3 + 0x98),param_2,param_3,param_4,param_5,param_6,param_7,
                    param_8,uVar3,0x401,0,param_12,param_13,param_14,param_15,param_16);
     }
-    iVar4 = state->trackedObject;
+    iVar4 = state->linkedObject;
     if (*(short *)(iVar4 + 0xa0) != 0) {
       FUN_800305f8((double)*(float *)(iVar4 + 0x98),param_2,param_3,param_4,param_5,param_6,param_7,
                    param_8,iVar4,0,0,param_12,param_13,param_14,param_15,param_16);
@@ -281,8 +281,8 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
     dVar22 = (double)FLOAT_803e6334;
     dVar12 = DOUBLE_803e6340;
     for (iVar4 = 0; iVar4 < (int)(uint)DAT_803dc070; iVar4 = iVar4 + 1) {
-      if (state->trackedObject == 0) goto LAB_801df3c4;
-      uStack_f4 = state->trackOffset + 0xb24U ^ 0x80000000;
+      if (state->linkedObject == 0) goto LAB_801df3c4;
+      uStack_f4 = state->currentTrackOffset + 0xb24U ^ 0x80000000;
       local_f8 = 0x43300000;
       dVar10 = (double)(float)((double)(float)((double)CONCAT44(0x43300000,uStack_f4) - dVar12) /
                               dVar13);
@@ -293,19 +293,19 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
       dVar10 = (double)(float)((double)(float)(dVar17 * dVar10 + dVar18) * dVar11 + dVar19);
       uVar6 = FUN_80006bf8(0);
       if (((uVar6 & 0x100) != 0) && (bVar7 = FUN_80006b44(), bVar7 == 0)) {
-        state->trackStep = (int)((float)state->trackStep - FLOAT_803e6320);
+        state->offsetVelocity = (int)((float)state->offsetVelocity - FLOAT_803e6320);
       }
-      if ((double)(float)state->trackStep < dVar20) {
-        state->trackStep = (int)(float)dVar20;
+      if ((double)(float)state->offsetVelocity < dVar20) {
+        state->offsetVelocity = (int)(float)dVar20;
       }
-      uVar6 = state->trackOffset;
+      uVar6 = state->currentTrackOffset;
       if ((-0x46dd < (int)uVar6) && ((int)uVar6 < -0xb23)) {
-        state->trackOffset =
+        state->currentTrackOffset =
             (int)((float)((double)CONCAT44(0x43300000,uVar6 ^ 0x80000000) - DOUBLE_803e6340) +
-                  (float)state->trackStep);
+                  (float)state->offsetVelocity);
       }
-      local_f0 = (double)CONCAT44(0x43300000,state->previousTrackOffset ^ 0x80000000);
-      uVar6 = state->trackOffset;
+      local_f0 = (double)CONCAT44(0x43300000,state->prevTrackOffset ^ 0x80000000);
+      uVar6 = state->currentTrackOffset;
       uStack_f4 = uVar6 ^ 0x80000000;
       local_f8 = 0x43300000;
       in_f19 = (double)(float)((double)((float)(local_f0 - dVar12) -
@@ -327,15 +327,15 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
         puVar8 = (uint *)(iVar4 + local_128 * 4);
         goto LAB_801df0d8;
       }
-      if (0 < state->activeSfxHandle) {
+      if (0 < state->loopSfxHandle) {
         (**(code **)(*DAT_803dd6d4 + 0x74))();
       }
-      if ((double)(float)state->trackStep < dVar21) {
-        state->trackStep =
-            (int)(float)((double)FLOAT_803e6330 * dVar10 + (double)(float)state->trackStep);
+      if ((double)(float)state->offsetVelocity < dVar21) {
+        state->offsetVelocity =
+            (int)(float)((double)FLOAT_803e6330 * dVar10 + (double)(float)state->offsetVelocity);
       }
-      local_f0 = (double)CONCAT44(0x43300000,state->previousTrackOffset ^ 0x80000000);
-      uStack_f4 = state->trackOffset ^ 0x80000000;
+      local_f0 = (double)CONCAT44(0x43300000,state->prevTrackOffset ^ 0x80000000);
+      uStack_f4 = state->currentTrackOffset ^ 0x80000000;
       local_f8 = 0x43300000;
       iVar5 = FUN_8002fc3c((double)(float)((double)((float)(local_f0 - dVar12) -
                                                    (float)((double)CONCAT44(0x43300000,uStack_f4) -
@@ -344,46 +344,46 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
       if ((iVar5 != 0) && (*(float *)(uVar3 + 0x98) < FLOAT_803e6310)) {
         *(float *)(uVar3 + 0x98) = FLOAT_803e6314 + *(float *)(uVar3 + 0x98);
       }
-      local_f0 = (double)CONCAT44(0x43300000,state->trackOffset ^ 0x80000000);
-      uStack_f4 = state->previousTrackOffset ^ 0x80000000;
+      local_f0 = (double)CONCAT44(0x43300000,state->currentTrackOffset ^ 0x80000000);
+      uStack_f4 = state->prevTrackOffset ^ 0x80000000;
       local_f8 = 0x43300000;
       iVar5 = FUN_8002fc3c((double)(float)((double)((float)(local_f0 - dVar12) -
                                                    (float)((double)CONCAT44(0x43300000,uStack_f4) -
                                                           dVar12)) / dVar22),(double)FLOAT_803dc074)
       ;
       if (iVar5 != 0) {
-        fVar1 = *(float *)(state->trackedObject + 0x98);
+        fVar1 = *(float *)(state->linkedObject + 0x98);
         if (fVar1 < FLOAT_803e6310) {
-          *(float *)(state->trackedObject + 0x98) = FLOAT_803e6314 + fVar1;
+          *(float *)(state->linkedObject + 0x98) = FLOAT_803e6314 + fVar1;
         }
       }
-      state->previousTrackOffset = state->trackOffset;
+      state->prevTrackOffset = state->currentTrackOffset;
     }
-    state->sfxTimerA = (int)((float)state->sfxTimerA - FLOAT_803dc074);
-    if ((double)(float)state->sfxTimerA < (double)FLOAT_803e6310) {
+    state->playerSfxTimer = (int)((float)state->playerSfxTimer - FLOAT_803dc074);
+    if ((double)(float)state->playerSfxTimer < (double)FLOAT_803e6310) {
       if ((double)FLOAT_803e6310 <= in_f19) {
         uVar6 = FUN_80017760(0x78,0xf0);
         local_f0 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
-        state->sfxTimerA = (int)(float)(local_f0 - DOUBLE_803e6340);
+        state->playerSfxTimer = (int)(float)(local_f0 - DOUBLE_803e6340);
       }
       else {
         uVar6 = FUN_80017760(0x28,100);
         local_f0 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
-        state->sfxTimerA = (int)(float)(local_f0 - DOUBLE_803e6340);
+        state->playerSfxTimer = (int)(float)(local_f0 - DOUBLE_803e6340);
       }
       FUN_80006824(uVar3,0x13a);
     }
-    state->sfxTimerB = (int)((float)state->sfxTimerB - FLOAT_803dc074);
-    if ((double)(float)state->sfxTimerB < (double)FLOAT_803e6310) {
+    state->platformSfxTimer = (int)((float)state->platformSfxTimer - FLOAT_803dc074);
+    if ((double)(float)state->platformSfxTimer < (double)FLOAT_803e6310) {
       if (in_f19 <= (double)FLOAT_803e6310) {
         uVar3 = FUN_80017760(0x78,0xf0);
         local_f0 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
-        state->sfxTimerB = (int)(float)(local_f0 - DOUBLE_803e6340);
+        state->platformSfxTimer = (int)(float)(local_f0 - DOUBLE_803e6340);
       }
       else {
         uVar3 = FUN_80017760(0x28,100);
         local_f0 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
-        state->sfxTimerB = (int)(float)(local_f0 - DOUBLE_803e6340);
+        state->platformSfxTimer = (int)(float)(local_f0 - DOUBLE_803e6340);
       }
       FUN_80006824(uVar2,0x4a3);
     }
@@ -415,8 +415,8 @@ LAB_801defd8:
   local_f0 = (double)(longlong)(int)(dVar12 / (double)FLOAT_803e632c);
   FUN_801de914();
   FUN_8011e800(0);
-  if (0 < state->activeSfxHandle) {
-    FUN_80080eec(state->activeSfxHandle);
+  if (0 < state->loopSfxHandle) {
+    FUN_80080eec(state->loopSfxHandle);
   }
   (**(code **)(*DAT_803dd6cc + 0xc))(0x14,1);
   DAT_803de890 = 2;
@@ -433,8 +433,8 @@ LAB_801df0d8:
   goto LAB_801df0d8;
 LAB_801df0e4:
   FUN_8011e800(0);
-  if (0 < state->activeSfxHandle) {
-    FUN_80080eec(state->activeSfxHandle);
+  if (0 < state->loopSfxHandle) {
+    FUN_80080eec(state->loopSfxHandle);
   }
   (**(code **)(*DAT_803dd6cc + 0xc))(0x14,1);
   DAT_803de890 = 2;

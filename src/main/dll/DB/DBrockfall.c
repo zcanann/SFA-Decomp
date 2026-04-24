@@ -74,23 +74,23 @@ void FUN_801df45c(undefined2 *param_1)
   cVar7 = (**(code **)(*DAT_803dd72c + 0x40))(0xe);
   if (cVar7 == '\x06') {
     if ((state->flags & PLATFORM1_FLAG_ACTIVE) == 0) {
-      if ((state->flags & 2) != 0) {
+      if ((state->flags & PLATFORM1_TRIGGER_FLAG_02) != 0) {
         sVar3 = state->transitionStep;
         if (sVar3 == 0) {
           *param_1 = 0xd700;
-          state->trackOffset = 0xffffd700;
-          state->previousTrackOffset = state->trackOffset;
+          state->currentTrackOffset = 0xffffd700;
+          state->prevTrackOffset = state->currentTrackOffset;
           fVar4 = FLOAT_803e6310;
           state->motionValue0 = FLOAT_803e6310;
-          state->trackStep = fVar4;
+          state->offsetVelocity = fVar4;
           state->transitionStep = 1;
-          state->flags = state->flags & 0xfe;
+          state->flags = state->flags & ~PLATFORM1_TRIGGER_FLAG_01;
         }
         else if (sVar3 == 1) {
           FUN_80017698(0xf1d,1);
           FUN_8011e800(1);
           uVar6 = (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
-          state->activeSfxHandle = uVar6;
+          state->loopSfxHandle = uVar6;
         }
         else if (sVar3 == 2) {
           state->transitionStep = 0;
@@ -101,9 +101,9 @@ void FUN_801df45c(undefined2 *param_1)
       }
     }
     else {
-      if (0 < state->activeSfxHandle) {
+      if (0 < state->loopSfxHandle) {
         (**(code **)(*DAT_803dd6d4 + 0x4c))();
-        FUN_80080eec(state->activeSfxHandle);
+        FUN_80080eec(state->loopSfxHandle);
       }
       iVar5 = DAT_803de890 + -1;
       bVar1 = DAT_803de890 == 0;
@@ -113,20 +113,20 @@ void FUN_801df45c(undefined2 *param_1)
         *(undefined4 *)(param_1 + 6) = state->savedPosXBits;
         *(undefined4 *)(param_1 + 8) = state->savedPosYBits;
         *(undefined4 *)(param_1 + 10) = state->savedPosZBits;
-        state->trackedObject = 0;
+        state->linkedObject = 0;
         *param_1 = 0xd700;
-        state->trackOffset = 0xffffd700;
+        state->currentTrackOffset = 0xffffd700;
         bVar2 = state->flags;
         if ((bVar2 & PLATFORM1_FLAG_EXIT_NEGATIVE) == 0) {
           if ((bVar2 & PLATFORM1_FLAG_EXIT_POSITIVE) != 0) {
             state->flags = bVar2 & ~PLATFORM1_FLAG_EXIT_POSITIVE;
-            state->activeSfxHandle = -1;
+            state->loopSfxHandle = -1;
             FUN_80017698(0x786,1);
           }
         }
         else {
           FUN_80017698(0x784,1);
-          state->activeSfxHandle = -1;
+          state->loopSfxHandle = -1;
           state->flags = state->flags & ~PLATFORM1_TRIGGER_MASK;
           state->flags = state->flags & ~PLATFORM1_FLAG_EXIT_NEGATIVE;
         }
