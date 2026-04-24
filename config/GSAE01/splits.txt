@@ -1445,7 +1445,10 @@ dolphin/os/OSContext.c:
 	.text       start:0x80242060 end:0x80242880
 
 dolphin/os/OSError.c:
-	.text       start:0x80242880 end:0x80243004
+	.text       start:0x80242880 end:0x80242C10
+
+dolphin/os/OSExec.c:
+	.text       start:0x80242C10 end:0x80243004
 
 dolphin/os/OSFont.c:
 	.text       start:0x80243004 end:0x8024377C
