@@ -5,10 +5,10 @@
  * --INFO--
  *
  * Function: FUN_8026fd1c
- * EN v1.0 Address: 0x8026FD1C
- * EN v1.0 Size: 120b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8026FD1C
+ * EN v1.1 Size: 120b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

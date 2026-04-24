@@ -13,10 +13,10 @@ extern undefined4 gCamcontrolState;
  * --INFO--
  *
  * Function: FUN_801023a8
- * EN v1.0 Address: 0x801023A8
- * EN v1.0 Size: 152b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801023A8
+ * EN v1.1 Size: 152b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

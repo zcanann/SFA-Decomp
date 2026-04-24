@@ -10,10 +10,10 @@ extern undefined4* DAT_803dd6fc;
  * --INFO--
  *
  * Function: FUN_801cb298
- * EN v1.0 Address: 0x801CB298
- * EN v1.0 Size: 104b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801CB298
+ * EN v1.1 Size: 104b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -31,10 +31,10 @@ void FUN_801cb298(void)
  * --INFO--
  *
  * Function: FUN_801cb300
- * EN v1.0 Address: 0x801CB300
- * EN v1.0 Size: 52b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801CB300
+ * EN v1.1 Size: 52b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

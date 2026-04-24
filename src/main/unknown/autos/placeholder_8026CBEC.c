@@ -37,10 +37,10 @@ extern undefined4* DAT_803deeb4;
  * --INFO--
  *
  * Function: FUN_8026cbec
- * EN v1.0 Address: 0x8026CBEC
- * EN v1.0 Size: 2800b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8026CBEC
+ * EN v1.1 Size: 2800b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

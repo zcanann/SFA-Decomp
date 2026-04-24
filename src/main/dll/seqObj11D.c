@@ -56,10 +56,10 @@ extern void* PTR_DAT_8031fdd8;
  * --INFO--
  *
  * Function: FUN_80151370
- * EN v1.0 Address: 0x80151370
- * EN v1.0 Size: 780b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80151370
+ * EN v1.1 Size: 780b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -176,10 +176,10 @@ void FUN_80151370(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * --INFO--
  *
  * Function: FUN_8015167c
- * EN v1.0 Address: 0x8015167C
- * EN v1.0 Size: 452b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8015167C
+ * EN v1.1 Size: 452b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -242,10 +242,10 @@ void FUN_8015167c(int param_1,int param_2)
  * --INFO--
  *
  * Function: FUN_80151840
- * EN v1.0 Address: 0x80151840
- * EN v1.0 Size: 688b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80151840
+ * EN v1.1 Size: 688b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -324,10 +324,10 @@ void FUN_80151840(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * --INFO--
  *
  * Function: FUN_80151af0
- * EN v1.0 Address: 0x80151AF0
- * EN v1.0 Size: 760b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80151AF0
+ * EN v1.1 Size: 760b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -434,10 +434,10 @@ void FUN_80151af0(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * --INFO--
  *
  * Function: FUN_80151de8
- * EN v1.0 Address: 0x80151DE8
- * EN v1.0 Size: 788b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80151DE8
+ * EN v1.1 Size: 788b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

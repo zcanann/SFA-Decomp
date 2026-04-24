@@ -80,10 +80,10 @@ extern f32 FLOAT_803e2600;
  * --INFO--
  *
  * Function: FUN_8010c374
- * EN v1.0 Address: 0x8010C374
- * EN v1.0 Size: 3204b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8010C374
+ * EN v1.1 Size: 3204b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -440,10 +440,10 @@ LAB_8010cfb8:
  * --INFO--
  *
  * Function: FUN_8010cff8
- * EN v1.0 Address: 0x8010CFF8
- * EN v1.0 Size: 360b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8010CFF8
+ * EN v1.1 Size: 360b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -457,10 +457,10 @@ void FUN_8010cff8(int param_1,undefined4 param_2,undefined4 *param_3)
  * --INFO--
  *
  * Function: FUN_8010d160
- * EN v1.0 Address: 0x8010D160
- * EN v1.0 Size: 44b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8010D160
+ * EN v1.1 Size: 44b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -477,10 +477,10 @@ void FUN_8010d160(void)
  * --INFO--
  *
  * Function: FUN_8010d18c
- * EN v1.0 Address: 0x8010D18C
- * EN v1.0 Size: 936b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8010D18C
+ * EN v1.1 Size: 936b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -570,10 +570,10 @@ void FUN_8010d18c(undefined2 *param_1)
  * --INFO--
  *
  * Function: FUN_8010d534
- * EN v1.0 Address: 0x8010D534
- * EN v1.0 Size: 168b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8010D534
+ * EN v1.1 Size: 168b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -587,10 +587,10 @@ void FUN_8010d534(void)
  * --INFO--
  *
  * Function: FUN_8010d5dc
- * EN v1.0 Address: 0x8010D5DC
- * EN v1.0 Size: 44b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8010D5DC
+ * EN v1.1 Size: 44b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

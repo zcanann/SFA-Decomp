@@ -24,10 +24,10 @@ extern char sThorntailEnteredInvalidState[];
  * --INFO--
  *
  * Function: SHthorntail_updateState
- * EN v1.0 Address: 0x801D5764
- * EN v1.0 Size: 920b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801D5764
+ * EN v1.1 Size: 920b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

@@ -146,10 +146,10 @@ extern int iRam803de4e4;
  * --INFO--
  *
  * Function: FUN_801265b0
- * EN v1.0 Address: 0x801265B0
- * EN v1.0 Size: 4652b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801265B0
+ * EN v1.1 Size: 4652b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -164,10 +164,10 @@ void FUN_801265b0(undefined8 param_1,double param_2,undefined8 param_3,undefined
  * --INFO--
  *
  * Function: FUN_801277dc
- * EN v1.0 Address: 0x801277DC
- * EN v1.0 Size: 2692b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801277DC
+ * EN v1.1 Size: 2692b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

@@ -45,10 +45,10 @@ extern undefined uRam803de373;
  * --INFO--
  *
  * Function: FUN_8011bb4c
- * EN v1.0 Address: 0x8011BB4C
- * EN v1.0 Size: 1540b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8011BB4C
+ * EN v1.1 Size: 1540b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

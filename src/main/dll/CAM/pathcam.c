@@ -23,10 +23,10 @@ extern f32 FLOAT_803e23b8;
  * --INFO--
  *
  * Function: pathcam_loadSettings
- * EN v1.0 Address: 0x80106118
- * EN v1.0 Size: 1904b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80106118
+ * EN v1.1 Size: 1904b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

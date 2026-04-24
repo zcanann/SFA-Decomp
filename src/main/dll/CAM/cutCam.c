@@ -63,10 +63,10 @@ extern f32 FLOAT_803e234c;
  * --INFO--
  *
  * Function: camcontrol_setPosition
- * EN v1.0 Address: 0x80103648
- * EN v1.0 Size: 240b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80103648
+ * EN v1.1 Size: 240b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -97,10 +97,10 @@ void camcontrol_setPosition(double param_1,double param_2,double param_3,undefin
  * --INFO--
  *
  * Function: FUN_80103738
- * EN v1.0 Address: 0x80103738
- * EN v1.0 Size: 40b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80103738
+ * EN v1.1 Size: 40b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -117,10 +117,10 @@ void FUN_80103738(void)
  * --INFO--
  *
  * Function: camcontrol_resetState
- * EN v1.0 Address: 0x80103760
- * EN v1.0 Size: 96b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80103760
+ * EN v1.1 Size: 96b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -158,10 +158,10 @@ void camcontrol_resetState(undefined8 param_1,double param_2,double param_3,unde
  * --INFO--
  *
  * Function: camcontrol_traceMove
- * EN v1.0 Address: 0x801037C0
- * EN v1.0 Size: 316b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801037C0
+ * EN v1.1 Size: 316b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -207,10 +207,10 @@ camcontrol_traceMove(double param_1,float *param_2,float *param_3,float *param_4
  * --INFO--
  *
  * Function: FUN_801038fc
- * EN v1.0 Address: 0x801038FC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801038FC
+ * EN v1.1 Size: 4b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -225,10 +225,10 @@ void FUN_801038fc(void)
  * --INFO--
  *
  * Function: camcontrol_traceFromTarget
- * EN v1.0 Address: 0x80103900
- * EN v1.0 Size: 164b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80103900
+ * EN v1.1 Size: 164b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -259,10 +259,10 @@ undefined camcontrol_traceFromTarget(float *param_1,int param_2,float *param_3)
  * --INFO--
  *
  * Function: camcontrol_getTargetPosition
- * EN v1.0 Address: 0x801039A4
- * EN v1.0 Size: 584b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801039A4
+ * EN v1.1 Size: 584b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -348,10 +348,10 @@ undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3
  * --INFO--
  *
  * Function: camcontrol_updateTargetAction
- * EN v1.0 Address: 0x80103BEC
- * EN v1.0 Size: 496b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80103BEC
+ * EN v1.1 Size: 496b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -411,10 +411,10 @@ void camcontrol_updateTargetAction(int param_1,int param_2)
  * --INFO--
  *
  * Function: FUN_80103ddc
- * EN v1.0 Address: 0x80103DDC
- * EN v1.0 Size: 1280b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80103DDC
+ * EN v1.1 Size: 1280b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -642,10 +642,10 @@ void FUN_80103ddc(void)
  * --INFO--
  *
  * Function: FUN_801042dc
- * EN v1.0 Address: 0x801042DC
- * EN v1.0 Size: 1280b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801042DC
+ * EN v1.1 Size: 1280b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

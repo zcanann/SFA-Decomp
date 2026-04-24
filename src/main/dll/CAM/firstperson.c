@@ -27,10 +27,10 @@ extern f32 FLOAT_803e2394;
  * --INFO--
  *
  * Function: firstperson_updatePitch
- * EN v1.0 Address: 0x8010525C
- * EN v1.0 Size: 220b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8010525C
+ * EN v1.1 Size: 220b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -64,10 +64,10 @@ void firstperson_updatePitch(int param_1)
  * --INFO--
  *
  * Function: firstperson_updatePosition
- * EN v1.0 Address: 0x80105338
- * EN v1.0 Size: 1140b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80105338
+ * EN v1.1 Size: 1140b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -194,10 +194,10 @@ void firstperson_updatePosition(int param_1,short *param_2)
  * --INFO--
  *
  * Function: firstperson_loadSettings
- * EN v1.0 Address: 0x801057AC
- * EN v1.0 Size: 672b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801057AC
+ * EN v1.1 Size: 672b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

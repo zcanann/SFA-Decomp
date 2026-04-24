@@ -25,10 +25,10 @@ extern undefined4 DAT_803deef0;
  * --INFO--
  *
  * Function: FUN_802817a8
- * EN v1.0 Address: 0x802817A8
- * EN v1.0 Size: 284b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x802817A8
+ * EN v1.1 Size: 284b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -44,10 +44,10 @@ int FUN_802817a8(byte param_1,undefined param_2,undefined param_3,byte param_4,u
  * --INFO--
  *
  * Function: FUN_802818c4
- * EN v1.0 Address: 0x802818C4
- * EN v1.0 Size: 52b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x802818C4
+ * EN v1.1 Size: 52b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

@@ -14,10 +14,10 @@ extern int DAT_803add98;
  * --INFO--
  *
  * Function: FUN_8020816c
- * EN v1.0 Address: 0x8020816C
- * EN v1.0 Size: 256b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8020816C
+ * EN v1.1 Size: 256b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -57,10 +57,10 @@ FUN_8020816c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * --INFO--
  *
  * Function: FUN_8020826c
- * EN v1.0 Address: 0x8020826C
- * EN v1.0 Size: 176b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8020826C
+ * EN v1.1 Size: 176b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

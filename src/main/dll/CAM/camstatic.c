@@ -39,10 +39,10 @@ extern f32 FLOAT_803e23b0;
  * --INFO--
  *
  * Function: camstatic_update
- * EN v1.0 Address: 0x80105AAC
- * EN v1.0 Size: 1644b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80105AAC
+ * EN v1.1 Size: 1644b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

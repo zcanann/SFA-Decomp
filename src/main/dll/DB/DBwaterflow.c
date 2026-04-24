@@ -12,10 +12,10 @@ extern undefined4* DAT_803dd6d4;
  * --INFO--
  *
  * Function: FUN_801dfe50
- * EN v1.0 Address: 0x801DFE50
- * EN v1.0 Size: 52b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801DFE50
+ * EN v1.1 Size: 52b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -35,10 +35,10 @@ void FUN_801dfe50(int param_1)
  * --INFO--
  *
  * Function: FUN_801dfe84
- * EN v1.0 Address: 0x801DFE84
- * EN v1.0 Size: 96b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801DFE84
+ * EN v1.1 Size: 96b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -60,10 +60,10 @@ void FUN_801dfe84(undefined2 *param_1)
  * --INFO--
  *
  * Function: FUN_801dfee4
- * EN v1.0 Address: 0x801DFEE4
- * EN v1.0 Size: 84b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801DFEE4
+ * EN v1.1 Size: 84b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -77,10 +77,10 @@ void FUN_801dfee4(undefined2 *param_1)
  * --INFO--
  *
  * Function: FUN_801dff38
- * EN v1.0 Address: 0x801DFF38
- * EN v1.0 Size: 56b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801DFF38
+ * EN v1.1 Size: 56b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -100,10 +100,10 @@ void FUN_801dff38(int param_1)
  * --INFO--
  *
  * Function: FUN_801dff70
- * EN v1.0 Address: 0x801DFF70
- * EN v1.0 Size: 80b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801DFF70
+ * EN v1.1 Size: 80b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -119,10 +119,10 @@ void FUN_801dff70(int param_1)
  * --INFO--
  *
  * Function: FUN_801dffc0
- * EN v1.0 Address: 0x801DFFC0
- * EN v1.0 Size: 80b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801DFFC0
+ * EN v1.1 Size: 80b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

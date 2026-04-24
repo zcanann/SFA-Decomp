@@ -87,10 +87,10 @@ extern f32 FLOAT_803e1340;
  * --INFO--
  *
  * Function: FUN_800e1da8
- * EN v1.0 Address: 0x800E1DA8
- * EN v1.0 Size: 1048b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E1DA8
+ * EN v1.1 Size: 1048b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -107,10 +107,10 @@ FUN_800e1da8(double param_1,double param_2,double param_3,uint *param_4,float *p
  * --INFO--
  *
  * Function: FUN_800e21c0
- * EN v1.0 Address: 0x800E21C0
- * EN v1.0 Size: 184b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E21C0
+ * EN v1.1 Size: 184b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -148,10 +148,10 @@ undefined4 FUN_800e21c0(double param_1,undefined8 param_2,double param_3,int par
  * --INFO--
  *
  * Function: FUN_800e2278
- * EN v1.0 Address: 0x800E2278
- * EN v1.0 Size: 544b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E2278
+ * EN v1.1 Size: 544b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -257,10 +257,10 @@ LAB_800e23ec:
  * --INFO--
  *
  * Function: FUN_800e2498
- * EN v1.0 Address: 0x800E2498
- * EN v1.0 Size: 372b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E2498
+ * EN v1.1 Size: 372b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -308,10 +308,10 @@ int FUN_800e2498(double param_1,double param_2,double param_3,int param_4)
  * --INFO--
  *
  * Function: FUN_800e260c
- * EN v1.0 Address: 0x800E260C
- * EN v1.0 Size: 1416b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E260C
+ * EN v1.1 Size: 1416b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -578,10 +578,10 @@ LAB_800e2a50:
  * --INFO--
  *
  * Function: FUN_800e2b94
- * EN v1.0 Address: 0x800E2B94
- * EN v1.0 Size: 1612b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E2B94
+ * EN v1.1 Size: 1612b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -887,10 +887,10 @@ LAB_800e3130:
  * --INFO--
  *
  * Function: RomCurve_getRandomLinkedOfTypes
- * EN v1.0 Address: 0x800E31E0
- * EN v1.0 Size: 980b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E31E0
+ * EN v1.1 Size: 980b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -1010,10 +1010,10 @@ LAB_800e33ac:
  * --INFO--
  *
  * Function: curves_distXZ
- * EN v1.0 Address: 0x800E35B4
- * EN v1.0 Size: 176b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E35B4
+ * EN v1.1 Size: 176b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -1064,10 +1064,10 @@ LAB_800e3628:
  * --INFO--
  *
  * Function: RomCurve_distanceToObject
- * EN v1.0 Address: 0x800E3664
- * EN v1.0 Size: 208b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E3664
+ * EN v1.1 Size: 208b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -1120,10 +1120,10 @@ LAB_800e36d8:
  * --INFO--
  *
  * Function: curves_find
- * EN v1.0 Address: 0x800E3734
- * EN v1.0 Size: 584b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E3734
+ * EN v1.1 Size: 584b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -1265,10 +1265,10 @@ LAB_800e3878:
  * --INFO--
  *
  * Function: RomCurve_getById
- * EN v1.0 Address: 0x800E397C
- * EN v1.0 Size: 132b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E397C
+ * EN v1.1 Size: 132b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -1307,10 +1307,10 @@ undefined4 RomCurve_getById(uint param_1,int *param_2)
  * --INFO--
  *
  * Function: FUN_800e3a00
- * EN v1.0 Address: 0x800E3A00
- * EN v1.0 Size: 2996b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E3A00
+ * EN v1.1 Size: 2996b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -1678,10 +1678,10 @@ LAB_800e3ca0:
  * --INFO--
  *
  * Function: FUN_800e45b4
- * EN v1.0 Address: 0x800E45B4
- * EN v1.0 Size: 672b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E45B4
+ * EN v1.1 Size: 672b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -1785,10 +1785,10 @@ LAB_800e4758:
  * --INFO--
  *
  * Function: FUN_800e4854
- * EN v1.0 Address: 0x800E4854
- * EN v1.0 Size: 500b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E4854
+ * EN v1.1 Size: 500b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -1897,10 +1897,10 @@ LAB_800e48f4:
  * --INFO--
  *
  * Function: RomCurve_getAdjacentWindow
- * EN v1.0 Address: 0x800E4A48
- * EN v1.0 Size: 572b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E4A48
+ * EN v1.1 Size: 572b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -2021,10 +2021,10 @@ LAB_800e4bc4:
  * --INFO--
  *
  * Function: RomCurve_getNearestAdjacentLink
- * EN v1.0 Address: 0x800E4C84
- * EN v1.0 Size: 484b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E4C84
+ * EN v1.1 Size: 484b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -2114,10 +2114,10 @@ LAB_800e4d74:
  * --INFO--
  *
  * Function: RomCurve_distanceToSegment
- * EN v1.0 Address: 0x800E4E68
- * EN v1.0 Size: 324b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E4E68
+ * EN v1.1 Size: 324b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -2187,10 +2187,10 @@ double RomCurve_distanceToSegment(double param_1,double param_2,double param_3,f
  * --INFO--
  *
  * Function: RomCurve_getRandomBlockedLink
- * EN v1.0 Address: 0x800E4FAC
- * EN v1.0 Size: 472b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E4FAC
+ * EN v1.1 Size: 472b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -2242,10 +2242,10 @@ int RomCurve_getRandomBlockedLink(int param_1,int param_2)
  * --INFO--
  *
  * Function: RomCurve_getRandomUnblockedLink
- * EN v1.0 Address: 0x800E5184
- * EN v1.0 Size: 428b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E5184
+ * EN v1.1 Size: 428b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -2297,10 +2297,10 @@ int RomCurve_getRandomUnblockedLink(int param_1,int param_2)
  * --INFO--
  *
  * Function: FUN_800e5330
- * EN v1.0 Address: 0x800E5330
- * EN v1.0 Size: 572b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E5330
+ * EN v1.1 Size: 572b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -2370,10 +2370,10 @@ void FUN_800e5330(undefined8 param_1,double param_2,double param_3,undefined4 pa
  * --INFO--
  *
  * Function: curves_addCurveDef
- * EN v1.0 Address: 0x800E556C
- * EN v1.0 Size: 332b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E556C
+ * EN v1.1 Size: 332b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -2387,10 +2387,10 @@ void curves_addCurveDef(int param_1)
  * --INFO--
  *
  * Function: curves_countRandomPoints
- * EN v1.0 Address: 0x800E56B8
- * EN v1.0 Size: 624b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E56B8
+ * EN v1.1 Size: 624b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -2529,10 +2529,10 @@ void curves_countRandomPoints(void)
  * --INFO--
  *
  * Function: FUN_800e5928
- * EN v1.0 Address: 0x800E5928
- * EN v1.0 Size: 600b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E5928
+ * EN v1.1 Size: 600b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -2546,10 +2546,10 @@ void FUN_800e5928(int param_1,uint *param_2)
  * --INFO--
  *
  * Function: FUN_800e5b80
- * EN v1.0 Address: 0x800E5B80
- * EN v1.0 Size: 960b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E5B80
+ * EN v1.1 Size: 960b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -2659,10 +2659,10 @@ void FUN_800e5b80(void)
  * --INFO--
  *
  * Function: FUN_800e5f40
- * EN v1.0 Address: 0x800E5F40
- * EN v1.0 Size: 380b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E5F40
+ * EN v1.1 Size: 380b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -2729,10 +2729,10 @@ void FUN_800e5f40(short *param_1,int param_2)
  * --INFO--
  *
  * Function: FUN_800e60bc
- * EN v1.0 Address: 0x800E60BC
- * EN v1.0 Size: 228b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E60BC
+ * EN v1.1 Size: 228b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -2746,10 +2746,10 @@ void FUN_800e60bc(int param_1,int param_2)
  * --INFO--
  *
  * Function: FUN_800e61a0
- * EN v1.0 Address: 0x800E61A0
- * EN v1.0 Size: 624b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E61A0
+ * EN v1.1 Size: 624b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -2763,10 +2763,10 @@ void FUN_800e61a0(int param_1,int param_2)
  * --INFO--
  *
  * Function: FUN_800e6410
- * EN v1.0 Address: 0x800E6410
- * EN v1.0 Size: 872b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E6410
+ * EN v1.1 Size: 872b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -2904,10 +2904,10 @@ LAB_800e6690:
  * --INFO--
  *
  * Function: FUN_800e6778
- * EN v1.0 Address: 0x800E6778
- * EN v1.0 Size: 696b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E6778
+ * EN v1.1 Size: 696b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -3038,10 +3038,10 @@ void FUN_800e6778(void)
  * --INFO--
  *
  * Function: FUN_800e6a30
- * EN v1.0 Address: 0x800E6A30
- * EN v1.0 Size: 368b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E6A30
+ * EN v1.1 Size: 368b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -3117,10 +3117,10 @@ void FUN_800e6a30(void)
  * --INFO--
  *
  * Function: FUN_800e6ba0
- * EN v1.0 Address: 0x800E6BA0
- * EN v1.0 Size: 372b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E6BA0
+ * EN v1.1 Size: 372b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -3197,10 +3197,10 @@ void FUN_800e6ba0(void)
  * --INFO--
  *
  * Function: FUN_800e6d14
- * EN v1.0 Address: 0x800E6D14
- * EN v1.0 Size: 168b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E6D14
+ * EN v1.1 Size: 168b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -3215,10 +3215,10 @@ double FUN_800e6d14(undefined8 param_1,double param_2,double param_3,double para
  * --INFO--
  *
  * Function: curves_getCurves
- * EN v1.0 Address: 0x800E6DBC
- * EN v1.0 Size: 428b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E6DBC
+ * EN v1.1 Size: 428b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -3293,10 +3293,10 @@ LAB_800e6f44:
  * --INFO--
  *
  * Function: FUN_800e6f68
- * EN v1.0 Address: 0x800E6F68
- * EN v1.0 Size: 2472b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E6F68
+ * EN v1.1 Size: 2472b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -3673,10 +3673,10 @@ LAB_800e78f0:
  * --INFO--
  *
  * Function: FUN_800e7910
- * EN v1.0 Address: 0x800E7910
- * EN v1.0 Size: 144b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E7910
+ * EN v1.1 Size: 144b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -3703,10 +3703,10 @@ void FUN_800e7910(undefined4 param_1,uint *param_2)
  * --INFO--
  *
  * Function: FUN_800e79a0
- * EN v1.0 Address: 0x800E79A0
- * EN v1.0 Size: 1384b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E79A0
+ * EN v1.1 Size: 1384b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -3912,10 +3912,10 @@ void FUN_800e79a0(void)
  * --INFO--
  *
  * Function: FUN_800e7f08
- * EN v1.0 Address: 0x800E7F08
- * EN v1.0 Size: 156b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E7F08
+ * EN v1.1 Size: 156b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -3939,10 +3939,10 @@ void FUN_800e7f08(uint *param_1,byte param_2,uint param_3,uint param_4,undefined
  * --INFO--
  *
  * Function: curves_clear
- * EN v1.0 Address: 0x800E7FA4
- * EN v1.0 Size: 128b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E7FA4
+ * EN v1.1 Size: 128b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -3962,10 +3962,10 @@ void curves_clear(uint *param_1,undefined param_2,uint param_3,undefined param_4
  * --INFO--
  *
  * Function: FUN_800e8024
- * EN v1.0 Address: 0x800E8024
- * EN v1.0 Size: 160b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E8024
+ * EN v1.1 Size: 160b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -3997,10 +3997,10 @@ uint FUN_800e8024(char param_1,uint param_2)
  * --INFO--
  *
  * Function: gameplay_setDebugOptionEnabled
- * EN v1.0 Address: 0x800E80C4
- * EN v1.0 Size: 84b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x800E80C4
+ * EN v1.1 Size: 84b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

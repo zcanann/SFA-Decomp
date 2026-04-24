@@ -44,10 +44,10 @@ extern f32 FLOAT_803e4fa0;
  * --INFO--
  *
  * Function: FUN_801a1380
- * EN v1.0 Address: 0x801A1380
- * EN v1.0 Size: 244b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801A1380
+ * EN v1.1 Size: 244b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -86,10 +86,10 @@ void FUN_801a1380(int param_1,char param_2)
  * --INFO--
  *
  * Function: FUN_801a1474
- * EN v1.0 Address: 0x801A1474
- * EN v1.0 Size: 96b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801A1474
+ * EN v1.1 Size: 96b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -117,10 +117,10 @@ void FUN_801a1474(int param_1,float *param_2)
  * --INFO--
  *
  * Function: FUN_801a14d4
- * EN v1.0 Address: 0x801A14D4
- * EN v1.0 Size: 728b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801A14D4
+ * EN v1.1 Size: 728b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -243,10 +243,10 @@ void FUN_801a14d4(undefined4 param_1,undefined4 param_2,short param_3)
  * --INFO--
  *
  * Function: FUN_801a17ac
- * EN v1.0 Address: 0x801A17AC
- * EN v1.0 Size: 716b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801A17AC
+ * EN v1.1 Size: 716b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

@@ -5,10 +5,10 @@
  * --INFO--
  *
  * Function: FUN_80292428
- * EN v1.0 Address: 0x80292428
- * EN v1.0 Size: 28b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80292428
+ * EN v1.1 Size: 28b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -23,10 +23,10 @@ double FUN_80292428(float *param_1)
  * --INFO--
  *
  * Function: FUN_80292444
- * EN v1.0 Address: 0x80292444
- * EN v1.0 Size: 28b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80292444
+ * EN v1.1 Size: 28b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

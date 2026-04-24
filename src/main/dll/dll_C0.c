@@ -10,10 +10,10 @@ extern undefined4 gCamcontrolState;
  * --INFO--
  *
  * Function: camcontrol_playTargetTypeSfx
- * EN v1.0 Address: 0x80102440
- * EN v1.0 Size: 168b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80102440
+ * EN v1.1 Size: 168b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

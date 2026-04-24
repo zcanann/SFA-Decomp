@@ -9,10 +9,10 @@ extern uint FUN_80283418();
  * --INFO--
  *
  * Function: FUN_80283488
- * EN v1.0 Address: 0x80283488
- * EN v1.0 Size: 160b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80283488
+ * EN v1.1 Size: 160b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -27,10 +27,10 @@ uint FUN_80283488(int param_1,uint param_2)
  * --INFO--
  *
  * Function: FUN_80283528
- * EN v1.0 Address: 0x80283528
- * EN v1.0 Size: 152b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80283528
+ * EN v1.1 Size: 152b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

@@ -8,10 +8,10 @@ extern char sTextBlockInitNoLongerSupported[];
  * --INFO--
  *
  * Function: textblock_init
- * EN v1.0 Address: 0x80209624
- * EN v1.0 Size: 44b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80209624
+ * EN v1.1 Size: 44b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -27,10 +27,10 @@ void textblock_init(void)
  * --INFO--
  *
  * Function: textblock_init_01
- * EN v1.0 Address: 0x80209650
- * EN v1.0 Size: 48b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80209650
+ * EN v1.1 Size: 48b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -46,10 +46,10 @@ void textblock_init_01(void)
  * --INFO--
  *
  * Function: textblock_init_02
- * EN v1.0 Address: 0x80209680
- * EN v1.0 Size: 44b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80209680
+ * EN v1.1 Size: 44b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

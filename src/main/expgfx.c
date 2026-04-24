@@ -172,10 +172,10 @@ extern char sExpgfxNoTexture[];
  * --INFO--
  *
  * Function: expgfx_release
- * EN v1.0 Address: 0x8009B36C
- * EN v1.0 Size: 372b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8009B36C
+ * EN v1.1 Size: 372b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -244,10 +244,10 @@ void expgfx_release(undefined8 param_1,undefined8 param_2,undefined8 param_3,und
  * --INFO--
  *
  * Function: expgfx_initialise
- * EN v1.0 Address: 0x8009B4E0
- * EN v1.0 Size: 360b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8009B4E0
+ * EN v1.1 Size: 360b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -326,10 +326,10 @@ void expgfx_initialise(undefined8 param_1,undefined8 param_2,undefined8 param_3,
  * --INFO--
  *
  * Function: expgfx_reserveSlot
- * EN v1.0 Address: 0x8009B648
- * EN v1.0 Size: 792b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8009B648
+ * EN v1.1 Size: 792b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -455,10 +455,10 @@ undefined4 expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,i
  * --INFO--
  *
  * Function: FUN_8009b960
- * EN v1.0 Address: 0x8009B960
- * EN v1.0 Size: 756b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8009B960
+ * EN v1.1 Size: 756b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -602,10 +602,10 @@ LAB_8009ba84:
  * --INFO--
  *
  * Function: FUN_8009bc54
- * EN v1.0 Address: 0x8009BC54
- * EN v1.0 Size: 9252b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8009BC54
+ * EN v1.1 Size: 9252b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -620,10 +620,10 @@ void FUN_8009bc54(undefined8 param_1,double param_2,double param_3,double param_
  * --INFO--
  *
  * Function: expgfx_addToTable
- * EN v1.0 Address: 0x8009E078
- * EN v1.0 Size: 536b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8009E078
+ * EN v1.1 Size: 536b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -687,10 +687,10 @@ int expgfx_addToTable(undefined8 param_1,undefined8 param_2,undefined8 param_3,u
  * --INFO--
  *
  * Function: FUN_8009e290
- * EN v1.0 Address: 0x8009E290
- * EN v1.0 Size: 48b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8009E290
+ * EN v1.1 Size: 48b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -707,10 +707,10 @@ void FUN_8009e290(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * --INFO--
  *
  * Function: FUN_8009e2c0
- * EN v1.0 Address: 0x8009E2C0
- * EN v1.0 Size: 264b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8009E2C0
+ * EN v1.1 Size: 264b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -760,10 +760,10 @@ void FUN_8009e2c0(void)
  * --INFO--
  *
  * Function: FUN_8009e3c8
- * EN v1.0 Address: 0x8009E3C8
- * EN v1.0 Size: 2984b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8009E3C8
+ * EN v1.1 Size: 2984b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -777,10 +777,10 @@ void FUN_8009e3c8(void)
  * --INFO--
  *
  * Function: FUN_8009ef70
- * EN v1.0 Address: 0x8009EF70
- * EN v1.0 Size: 468b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8009EF70
+ * EN v1.1 Size: 468b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -794,10 +794,10 @@ void FUN_8009ef70(void)
  * --INFO--
  *
  * Function: FUN_8009f144
- * EN v1.0 Address: 0x8009F144
- * EN v1.0 Size: 32b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8009F144
+ * EN v1.1 Size: 32b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -814,10 +814,10 @@ void FUN_8009f144(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * --INFO--
  *
  * Function: FUN_8009f164
- * EN v1.0 Address: 0x8009F164
- * EN v1.0 Size: 260b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8009F164
+ * EN v1.1 Size: 260b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -832,10 +832,10 @@ void FUN_8009f164(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * --INFO--
  *
  * Function: FUN_8009f268
- * EN v1.0 Address: 0x8009F268
- * EN v1.0 Size: 464b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8009F268
+ * EN v1.1 Size: 464b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -850,10 +850,10 @@ void FUN_8009f268(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * --INFO--
  *
  * Function: FUN_8009f438
- * EN v1.0 Address: 0x8009F438
- * EN v1.0 Size: 288b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8009F438
+ * EN v1.1 Size: 288b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -901,10 +901,10 @@ void FUN_8009f438(undefined8 param_1,undefined8 param_2,double param_3,double pa
  * --INFO--
  *
  * Function: expgfx_addremove
- * EN v1.0 Address: 0x8009F558
- * EN v1.0 Size: 2576b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8009F558
+ * EN v1.1 Size: 2576b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

@@ -15,10 +15,10 @@ extern undefined4* DAT_803dd72c;
  * --INFO--
  *
  * Function: FUN_801d8de8
- * EN v1.0 Address: 0x801D8DE8
- * EN v1.0 Size: 776b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801D8DE8
+ * EN v1.1 Size: 776b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

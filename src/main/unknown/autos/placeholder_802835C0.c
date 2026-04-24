@@ -8,10 +8,10 @@ extern undefined4 DAT_803dd278;
  * --INFO--
  *
  * Function: FUN_802835c0
- * EN v1.0 Address: 0x802835C0
- * EN v1.0 Size: 32b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x802835C0
+ * EN v1.1 Size: 32b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -26,10 +26,10 @@ uint FUN_802835c0(void)
  * --INFO--
  *
  * Function: FUN_802835e0
- * EN v1.0 Address: 0x802835E0
- * EN v1.0 Size: 108b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x802835E0
+ * EN v1.1 Size: 108b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

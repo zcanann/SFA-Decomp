@@ -14,10 +14,10 @@ extern f32 FLOAT_803e6b28;
  * --INFO--
  *
  * Function: FUN_801f4c60
- * EN v1.0 Address: 0x801F4C60
- * EN v1.0 Size: 656b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801F4C60
+ * EN v1.1 Size: 656b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

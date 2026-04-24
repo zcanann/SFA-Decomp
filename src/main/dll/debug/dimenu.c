@@ -88,10 +88,10 @@ extern undefined4* PTR_DAT_8031b928;
  * --INFO--
  *
  * Function: FUN_8011cd58
- * EN v1.0 Address: 0x8011CD58
- * EN v1.0 Size: 736b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8011CD58
+ * EN v1.1 Size: 736b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -105,10 +105,10 @@ void FUN_8011cd58(void)
  * --INFO--
  *
  * Function: FUN_8011d038
- * EN v1.0 Address: 0x8011D038
- * EN v1.0 Size: 552b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8011D038
+ * EN v1.1 Size: 552b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -194,10 +194,10 @@ void FUN_8011d038(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * --INFO--
  *
  * Function: FUN_8011d260
- * EN v1.0 Address: 0x8011D260
- * EN v1.0 Size: 1300b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8011D260
+ * EN v1.1 Size: 1300b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -347,10 +347,10 @@ int FUN_8011d260(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
  * --INFO--
  *
  * Function: FUN_8011d774
- * EN v1.0 Address: 0x8011D774
- * EN v1.0 Size: 148b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8011D774
+ * EN v1.1 Size: 148b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -384,10 +384,10 @@ void FUN_8011d774(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * --INFO--
  *
  * Function: FUN_8011d808
- * EN v1.0 Address: 0x8011D808
- * EN v1.0 Size: 552b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8011D808
+ * EN v1.1 Size: 552b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -453,10 +453,10 @@ FUN_8011d808(undefined8 param_1,double param_2,undefined8 param_3,undefined8 par
  * --INFO--
  *
  * Function: FUN_8011da30
- * EN v1.0 Address: 0x8011DA30
- * EN v1.0 Size: 84b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8011DA30
+ * EN v1.1 Size: 84b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -482,10 +482,10 @@ void FUN_8011da30(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * --INFO--
  *
  * Function: FUN_8011da84
- * EN v1.0 Address: 0x8011DA84
- * EN v1.0 Size: 188b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8011DA84
+ * EN v1.1 Size: 188b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -502,10 +502,10 @@ void FUN_8011da84(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * --INFO--
  *
  * Function: FUN_8011db40
- * EN v1.0 Address: 0x8011DB40
- * EN v1.0 Size: 116b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8011DB40
+ * EN v1.1 Size: 116b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -537,10 +537,10 @@ FUN_8011db40(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  * --INFO--
  *
  * Function: FUN_8011dbb4
- * EN v1.0 Address: 0x8011DBB4
- * EN v1.0 Size: 72b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8011DBB4
+ * EN v1.1 Size: 72b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -556,10 +556,10 @@ void FUN_8011dbb4(void)
  * --INFO--
  *
  * Function: FUN_8011dbfc
- * EN v1.0 Address: 0x8011DBFC
- * EN v1.0 Size: 152b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8011DBFC
+ * EN v1.1 Size: 152b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

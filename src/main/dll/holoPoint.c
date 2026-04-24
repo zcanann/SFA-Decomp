@@ -12,10 +12,10 @@ extern f32 FLOAT_803e4b88;
  * --INFO--
  *
  * Function: FUN_80192000
- * EN v1.0 Address: 0x80192000
- * EN v1.0 Size: 44b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80192000
+ * EN v1.1 Size: 44b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -31,10 +31,10 @@ void FUN_80192000(int param_1)
  * --INFO--
  *
  * Function: FUN_8019202c
- * EN v1.0 Address: 0x8019202C
- * EN v1.0 Size: 172b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8019202C
+ * EN v1.1 Size: 172b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

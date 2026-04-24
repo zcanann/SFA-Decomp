@@ -29,10 +29,10 @@ extern f32 FLOAT_803e22ec;
  * --INFO--
  *
  * Function: camcontrol_applyState
- * EN v1.0 Address: 0x80101C1C
- * EN v1.0 Size: 1340b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80101C1C
+ * EN v1.1 Size: 1340b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

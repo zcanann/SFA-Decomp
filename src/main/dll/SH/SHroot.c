@@ -30,10 +30,10 @@ extern f64 DOUBLE_803e60c0;
  * --INFO--
  *
  * Function: FUN_801d5afc
- * EN v1.0 Address: 0x801D5AFC
- * EN v1.0 Size: 440b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801D5AFC
+ * EN v1.1 Size: 440b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -50,10 +50,10 @@ void FUN_801d5afc(double param_1,undefined8 param_2,undefined8 param_3,undefined
  * --INFO--
  *
  * Function: FUN_801d5cb4
- * EN v1.0 Address: 0x801D5CB4
- * EN v1.0 Size: 544b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801D5CB4
+ * EN v1.1 Size: 544b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

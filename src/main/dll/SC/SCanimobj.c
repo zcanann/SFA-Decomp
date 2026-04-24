@@ -49,10 +49,10 @@ extern f32 FLOAT_803dda5c;
  * --INFO--
  *
  * Function: FUN_801d76a4
- * EN v1.0 Address: 0x801D76A4
- * EN v1.0 Size: 36b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801D76A4
+ * EN v1.1 Size: 36b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -68,10 +68,10 @@ void FUN_801d76a4(void)
  * --INFO--
  *
  * Function: FUN_801d76c8
- * EN v1.0 Address: 0x801D76C8
- * EN v1.0 Size: 928b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801D76C8
+ * EN v1.1 Size: 928b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -88,10 +88,10 @@ void FUN_801d76c8(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * --INFO--
  *
  * Function: FUN_801d7a68
- * EN v1.0 Address: 0x801D7A68
- * EN v1.0 Size: 76b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801D7A68
+ * EN v1.1 Size: 76b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -118,10 +118,10 @@ void FUN_801d7a68(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * --INFO--
  *
  * Function: FUN_801d7ab4
- * EN v1.0 Address: 0x801D7AB4
- * EN v1.0 Size: 216b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801D7AB4
+ * EN v1.1 Size: 216b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -162,10 +162,10 @@ void FUN_801d7ab4(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
  * --INFO--
  *
  * Function: FUN_801d7b8c
- * EN v1.0 Address: 0x801D7B8C
- * EN v1.0 Size: 216b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801D7B8C
+ * EN v1.1 Size: 216b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

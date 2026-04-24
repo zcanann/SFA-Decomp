@@ -16,10 +16,10 @@ extern undefined4* DAT_803df01c;
  * --INFO--
  *
  * Function: FUN_80284cbc
- * EN v1.0 Address: 0x80284CBC
- * EN v1.0 Size: 24b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80284CBC
+ * EN v1.1 Size: 24b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -33,10 +33,10 @@ void FUN_80284cbc(undefined4 param_1,int param_2)
  * --INFO--
  *
  * Function: FUN_80284cd4
- * EN v1.0 Address: 0x80284CD4
- * EN v1.0 Size: 200b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80284CD4
+ * EN v1.1 Size: 200b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -50,10 +50,10 @@ void FUN_80284cd4(void)
  * --INFO--
  *
  * Function: FUN_80284d9c
- * EN v1.0 Address: 0x80284D9C
- * EN v1.0 Size: 56b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80284D9C
+ * EN v1.1 Size: 56b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

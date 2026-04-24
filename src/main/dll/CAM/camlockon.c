@@ -23,10 +23,10 @@ extern f32 FLOAT_803e23c8;
  * --INFO--
  *
  * Function: camcontrol_releaseModeSettings
- * EN v1.0 Address: 0x80106888
- * EN v1.0 Size: 44b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80106888
+ * EN v1.1 Size: 44b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -43,10 +43,10 @@ void camcontrol_releaseModeSettings(void)
  * --INFO--
  *
  * Function: camcontrol_initialiseModeSettings
- * EN v1.0 Address: 0x801068B4
- * EN v1.0 Size: 60b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801068B4
+ * EN v1.1 Size: 60b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -63,10 +63,10 @@ void camcontrol_initialiseModeSettings(void)
  * --INFO--
  *
  * Function: camcontrol_samplePathState
- * EN v1.0 Address: 0x801068F0
- * EN v1.0 Size: 504b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801068F0
+ * EN v1.1 Size: 504b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -146,10 +146,10 @@ void camcontrol_samplePathState(undefined4 param_1,undefined4 param_2,undefined4
  * --INFO--
  *
  * Function: camcontrol_buildPathAngles
- * EN v1.0 Address: 0x80106AE8
- * EN v1.0 Size: 1336b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80106AE8
+ * EN v1.1 Size: 1336b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

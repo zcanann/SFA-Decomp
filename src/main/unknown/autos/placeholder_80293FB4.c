@@ -23,10 +23,10 @@ extern f32 FLOAT_803e89f4;
  * --INFO--
  *
  * Function: FUN_80293fb4
- * EN v1.0 Address: 0x80293FB4
- * EN v1.0 Size: 296b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80293FB4
+ * EN v1.1 Size: 296b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -40,10 +40,10 @@ void FUN_80293fb4(void)
  * --INFO--
  *
  * Function: FUN_802940dc
- * EN v1.0 Address: 0x802940DC
- * EN v1.0 Size: 328b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x802940DC
+ * EN v1.1 Size: 328b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -57,10 +57,10 @@ void FUN_802940dc(void)
  * --INFO--
  *
  * Function: FUN_80294224
- * EN v1.0 Address: 0x80294224
- * EN v1.0 Size: 416b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80294224
+ * EN v1.1 Size: 416b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -74,10 +74,10 @@ void FUN_80294224(void)
  * --INFO--
  *
  * Function: FUN_802943c4
- * EN v1.0 Address: 0x802943C4
- * EN v1.0 Size: 320b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x802943C4
+ * EN v1.1 Size: 320b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -91,10 +91,10 @@ void FUN_802943c4(void)
  * --INFO--
  *
  * Function: FUN_80294504
- * EN v1.0 Address: 0x80294504
- * EN v1.0 Size: 220b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80294504
+ * EN v1.1 Size: 220b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -108,10 +108,10 @@ void FUN_80294504(void)
  * --INFO--
  *
  * Function: FUN_802945e0
- * EN v1.0 Address: 0x802945E0
- * EN v1.0 Size: 252b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x802945E0
+ * EN v1.1 Size: 252b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -125,10 +125,10 @@ void FUN_802945e0(void)
  * --INFO--
  *
  * Function: FUN_802946dc
- * EN v1.0 Address: 0x802946DC
- * EN v1.0 Size: 284b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x802946DC
+ * EN v1.1 Size: 284b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

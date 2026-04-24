@@ -30,10 +30,10 @@ extern f32 FLOAT_803e319c;
  * --INFO--
  *
  * Function: FUN_80141618
- * EN v1.0 Address: 0x80141618
- * EN v1.0 Size: 1520b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80141618
+ * EN v1.1 Size: 1520b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

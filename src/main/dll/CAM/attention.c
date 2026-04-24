@@ -26,10 +26,10 @@ extern f32 FLOAT_803e2354;
  * --INFO--
  *
  * Function: camcontrol_updateModeSettings
- * EN v1.0 Address: 0x801047DC
- * EN v1.0 Size: 436b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x801047DC
+ * EN v1.1 Size: 436b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -115,10 +115,10 @@ void camcontrol_updateModeSettings(int param_1)
  * --INFO--
  *
  * Function: camcontrol_updateVerticalBounds
- * EN v1.0 Address: 0x80104990
- * EN v1.0 Size: 700b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80104990
+ * EN v1.1 Size: 700b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

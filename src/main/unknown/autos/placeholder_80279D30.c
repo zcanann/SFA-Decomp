@@ -16,10 +16,10 @@ extern undefined4 DAT_803def7c;
  * --INFO--
  *
  * Function: FUN_80279d30
- * EN v1.0 Address: 0x80279D30
- * EN v1.0 Size: 400b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80279D30
+ * EN v1.1 Size: 400b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

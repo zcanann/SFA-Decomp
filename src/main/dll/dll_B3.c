@@ -18,10 +18,10 @@ extern undefined4 gCamcontrolState;
  * --INFO--
  *
  * Function: FUN_80100f2c
- * EN v1.0 Address: 0x80100F2C
- * EN v1.0 Size: 316b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80100F2C
+ * EN v1.1 Size: 316b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

@@ -18,10 +18,10 @@ extern f64 DOUBLE_803e23d0;
  * --INFO--
  *
  * Function: camcontrol_buildPathPoints
- * EN v1.0 Address: 0x80107020
- * EN v1.0 Size: 500b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80107020
+ * EN v1.1 Size: 500b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -150,10 +150,10 @@ void camcontrol_buildPathPoints(undefined8 param_1,double param_2,double param_3
  * --INFO--
  *
  * Function: camcontrol_updatePathTargetAction
- * EN v1.0 Address: 0x80107214
- * EN v1.0 Size: 344b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x80107214
+ * EN v1.1 Size: 344b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -195,10 +195,10 @@ void camcontrol_updatePathTargetAction(int param_1,int param_2)
  * --INFO--
  *
  * Function: camcontrol_releasePathState
- * EN v1.0 Address: 0x8010736C
- * EN v1.0 Size: 44b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
+ * EN v1.0 Address: TODO
+ * EN v1.0 Size: TODO
+ * EN v1.1 Address: 0x8010736C
+ * EN v1.1 Size: 44b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
