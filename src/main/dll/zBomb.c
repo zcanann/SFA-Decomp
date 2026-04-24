@@ -33,6 +33,28 @@ extern f32 FLOAT_803e7158;
 extern f32 FLOAT_803e715c;
 extern f32 FLOAT_803e7160;
 
+typedef union ZBombControlId {
+  u32 value;
+  struct {
+    u16 unused0;
+    s16 triggerSfxId;
+  } audio;
+} ZBombControlId;
+
+typedef struct ZBombState {
+  ZBombControlId control;
+  s16 specialSfxStopTimer;
+  u8 effectEmitterActive;
+  u8 unused7;
+  u8 stopRequested;
+  u8 unk09[0x5B];
+  s16 stateSfxId;
+  s16 completionSfxId;
+  u8 state;
+  u8 stateSfxReady;
+  u8 completionSfxReady;
+} ZBombState;
+
 /*
  * --INFO--
  *
@@ -53,7 +75,7 @@ void zBomb_update(int *param_1)
   int iVar3;
   char cVar4;
   int iVar5;
-  int iVar6;
+  ZBombState *state;
   double dVar7;
   double dVar8;
   int local_58;
@@ -67,14 +89,14 @@ void zBomb_update(int *param_1)
   int local_3c;
   
   local_58 = -1;
-  iVar6 = param_1[0x2e];
+  state = *(ZBombState **)(param_1 + 0x2e);
   iVar5 = param_1[0x13];
   if (*(short *)((int)param_1 + 0x46) == 0x4e0) {
     FLOAT_803de978 = (float)param_1[3];
     FLOAT_803de97c = (float)param_1[5];
   }
-  else if ((((*(char *)(iVar6 + 0x6b) == '\0') && (*(char *)(iVar6 + 0x6a) != '\0')) &&
-           (*(char *)(iVar6 + 0x69) != '\x04')) && (*(char *)(iVar6 + 0x69) != '\x03')) {
+  else if ((((state->completionSfxReady == '\0') && (state->stateSfxReady != '\0')) &&
+           (state->state != '\x04')) && (state->state != '\x03')) {
     param_1[0x20] = param_1[3];
     param_1[0x21] = param_1[4];
     param_1[0x22] = param_1[5];
@@ -126,7 +148,7 @@ void zBomb_update(int *param_1)
         param_1[0xb] = (int)FLOAT_803e7124;
       }
     }
-    zBomb_resolveCollision(param_1,iVar6);
+    zBomb_resolveCollision(param_1,(int)state);
     dVar8 = (double)(*(float *)(iVar5 + 8) - (float)param_1[3]);
     dVar7 = (double)(*(float *)(iVar5 + 0x10) - (float)param_1[5]);
     cVar4 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(param_1 + 0x2b));
@@ -138,19 +160,19 @@ void zBomb_update(int *param_1)
         fVar1 = FLOAT_803e7124;
         param_1[9] = (int)FLOAT_803e7124;
         param_1[0xb] = (int)fVar1;
-        *(undefined *)(iVar6 + 0x69) = 2;
+        state->state = 2;
         param_1[4] = (int)(*(float *)(iVar5 + 0xc) - FLOAT_803e7144);
         FUN_80006824((uint)param_1,0x1d3);
       }
       fVar1 = (float)param_1[3] - FLOAT_803de978;
       fVar2 = (float)param_1[5] - FLOAT_803de97c;
       if ((FLOAT_803e7124 == fVar1) && (FLOAT_803e7124 == fVar2)) {
-        *(undefined *)(iVar6 + 0x69) = 3;
+        state->state = 3;
       }
       else {
         dVar7 = FUN_80293900((double)(fVar1 * fVar1 + fVar2 * fVar2));
         if (dVar7 < (double)FLOAT_803e7148) {
-          *(undefined *)(iVar6 + 0x69) = 3;
+          state->state = 3;
         }
       }
     }
@@ -162,7 +184,7 @@ void zBomb_update(int *param_1)
         fVar1 = FLOAT_803e7124;
         param_1[9] = (int)FLOAT_803e7124;
         param_1[0xb] = (int)fVar1;
-        *(undefined *)(iVar6 + 0x69) = 2;
+        state->state = 2;
         param_1[4] = (int)(*(float *)(iVar5 + 0xc) - FLOAT_803e7144);
         FUN_80006824((uint)param_1,0x1d3);
         local_44 = param_1[3];
@@ -181,12 +203,12 @@ void zBomb_update(int *param_1)
       fVar1 = (float)param_1[3] - FLOAT_803de978;
       fVar2 = (float)param_1[5] - FLOAT_803de97c;
       if ((FLOAT_803e7124 == fVar1) && (FLOAT_803e7124 == fVar2)) {
-        *(undefined *)(iVar6 + 0x69) = 3;
+        state->state = 3;
       }
       else {
         dVar7 = FUN_80293900((double)(fVar1 * fVar1 + fVar2 * fVar2));
         if (dVar7 < (double)FLOAT_803e7158) {
-          *(undefined *)(iVar6 + 0x69) = 3;
+          state->state = 3;
         }
       }
     }
@@ -213,13 +235,13 @@ void zBomb_init(int param_1)
   float fVar2;
   uint uVar3;
   int iVar4;
-  int *piVar5;
+  ZBombState *state;
   undefined auStack_28 [12];
   float local_1c;
   float local_18;
   float local_14;
   
-  piVar5 = *(int **)(param_1 + 0xb8);
+  state = *(ZBombState **)(param_1 + 0xb8);
   iVar4 = *(int *)(param_1 + 0x4c);
   if (*(short *)(param_1 + 0x46) == 0x4e0) {
     local_1c = FLOAT_803e7124;
@@ -229,23 +251,23 @@ void zBomb_init(int param_1)
                  (double)FLOAT_803e7148,param_1,5,1,2,0x32,(int)auStack_28,0);
   }
   else {
-    if (*(char *)((int)piVar5 + 0x6b) == '\0') {
-      uVar3 = FUN_80017690((int)*(short *)((int)piVar5 + 0x66));
-      *(char *)((int)piVar5 + 0x6b) = (char)uVar3;
+    if (state->completionSfxReady == '\0') {
+      uVar3 = FUN_80017690((int)state->completionSfxId);
+      state->completionSfxReady = (char)uVar3;
     }
-    if (*(char *)((int)piVar5 + 0x6a) == '\0') {
-      uVar3 = FUN_80017690((int)*(short *)(piVar5 + 0x19));
-      *(char *)((int)piVar5 + 0x6a) = (char)uVar3;
+    if (state->stateSfxReady == '\0') {
+      uVar3 = FUN_80017690((int)state->stateSfxId);
+      state->stateSfxReady = (char)uVar3;
     }
     fVar2 = FLOAT_803e7144;
-    if (((*(char *)((int)piVar5 + 0x6b) == '\0') && (*(char *)((int)piVar5 + 0x6a) != '\0')) &&
-       (cVar1 = *(char *)((int)piVar5 + 0x69), cVar1 != '\x04')) {
+    if (((state->completionSfxReady == '\0') && (state->stateSfxReady != '\0')) &&
+       (cVar1 = state->state, cVar1 != '\x04')) {
       if ((cVar1 == '\0') || (cVar1 == '\x02')) {
         if (*(float *)(param_1 + 0x10) <= *(float *)(iVar4 + 0xc)) {
           *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) + FLOAT_803dc074;
           if (*(float *)(iVar4 + 0xc) <= *(float *)(param_1 + 0x10)) {
             *(float *)(param_1 + 0x10) = *(float *)(iVar4 + 0xc);
-            *(undefined *)((int)piVar5 + 0x69) = 1;
+            state->state = 1;
           }
         }
       }
@@ -255,15 +277,15 @@ void zBomb_init(int param_1)
           fVar2 = *(float *)(iVar4 + 0xc) - fVar2;
           if (*(float *)(param_1 + 0x10) <= fVar2) {
             *(float *)(param_1 + 0x10) = fVar2;
-            *(undefined *)((int)piVar5 + 0x69) = 4;
-            FUN_80017698((int)*(short *)((int)piVar5 + 0x66),1);
+            state->state = 4;
+            FUN_80017698((int)state->completionSfxId,1);
           }
         }
       }
-      else if (*piVar5 != 0) {
+      else if (state->control.value != 0) {
         (**(code **)(*DAT_803dd728 + 0x10))((double)FLOAT_803dc074,param_1);
-        (**(code **)(*DAT_803dd728 + 0x14))(param_1,*piVar5);
-        (**(code **)(*DAT_803dd728 + 0x18))((double)FLOAT_803dc074,param_1,*piVar5);
+        (**(code **)(*DAT_803dd728 + 0x14))(param_1,state->control.value);
+        (**(code **)(*DAT_803dd728 + 0x18))((double)FLOAT_803dc074,param_1,state->control.value);
       }
     }
   }

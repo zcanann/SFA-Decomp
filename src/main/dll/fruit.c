@@ -14,14 +14,27 @@ extern f64 DOUBLE_803e7118;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803e7124;
 
-typedef struct ZBombAudioState {
-  s16 unused0;
-  s16 triggerSfxId;
+typedef union ZBombControlId {
+  u32 value;
+  struct {
+    u16 unused0;
+    s16 triggerSfxId;
+  } audio;
+} ZBombControlId;
+
+typedef struct ZBombState {
+  ZBombControlId control;
   s16 specialSfxStopTimer;
   u8 effectEmitterActive;
   u8 unused7;
   u8 stopRequested;
-} ZBombAudioState;
+  u8 unk09[0x5B];
+  s16 stateSfxId;
+  s16 completionSfxId;
+  u8 state;
+  u8 stateSfxReady;
+  u8 completionSfxReady;
+} ZBombState;
 
 /*
  * --INFO--
@@ -41,24 +54,24 @@ undefined4 zBomb_hitDetect(int param_1,undefined4 param_2,int param_3)
   byte bVar1;
   short sVar2;
   int iVar3;
-  ZBombAudioState *state;
+  ZBombState *state;
   
-  state = *(ZBombAudioState **)(param_1 + 0xb8);
+  state = *(ZBombState **)(param_1 + 0xb8);
   *(undefined2 *)(param_3 + 0x6e) = 0xffff;
   *(undefined *)(param_3 + 0x56) = 0;
   for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar3 = iVar3 + 1) {
     bVar1 = *(byte *)(param_3 + iVar3 + 0x81);
     if (bVar1 == 2) {
-      FUN_80017698((int)state->triggerSfxId + 5,0);
+      FUN_80017698((int)state->control.audio.triggerSfxId + 5,0);
       state->stopRequested = 1;
     }
     else if (bVar1 < 2) {
       if (bVar1 != 0) {
-        FUN_80017698((int)state->triggerSfxId + 5,1);
+        FUN_80017698((int)state->control.audio.triggerSfxId + 5,1);
       }
     }
     else if (bVar1 < 4) {
-      sVar2 = state->triggerSfxId;
+      sVar2 = state->control.audio.triggerSfxId;
       if (sVar2 == 0x674) {
         FUN_80017698(0x670,1);
         state->specialSfxStopTimer = 0x96;
@@ -100,10 +113,10 @@ void zBomb_updateAudioState(uint param_1)
 {
   short sVar1;
   uint uVar2;
-  ZBombAudioState *state;
+  ZBombState *state;
   
-  state = *(ZBombAudioState **)(param_1 + 0xb8);
-  uVar2 = FUN_80017690((int)state->triggerSfxId);
+  state = *(ZBombState **)(param_1 + 0xb8);
+  uVar2 = FUN_80017690((int)state->control.audio.triggerSfxId);
   if (((state->effectEmitterActive == 0) && ((short)uVar2 != 0)) &&
      (uVar2 = FUN_80017690(0xedf), uVar2 != 0)) {
     (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
@@ -111,7 +124,7 @@ void zBomb_updateAudioState(uint param_1)
   }
   if (((state->stopRequested != 0) && (state->effectEmitterActive != 0)) &&
      (uVar2 = FUN_80017690(0xedf), uVar2 != 0)) {
-    FUN_80017698((int)state->triggerSfxId,0);
+    FUN_80017698((int)state->control.audio.triggerSfxId,0);
     (**(code **)(*DAT_803dd6d4 + 0x48))(1,param_1,0xffffffff);
     state->effectEmitterActive = 0;
     state->stopRequested = 0;
@@ -123,7 +136,7 @@ void zBomb_updateAudioState(uint param_1)
     FUN_800068c4(param_1,0x458);
     if (state->specialSfxStopTimer < 1) {
       state->specialSfxStopTimer = 0;
-      sVar1 = state->triggerSfxId;
+      sVar1 = state->control.audio.triggerSfxId;
       if (sVar1 == 0x674) {
         FUN_80017698(0x670,0);
       }
@@ -288,11 +301,11 @@ void zBomb_resolveCollision(int *param_1,int param_2)
  */
 void FUN_80208c28(int param_1)
 {
-  int iVar1;
+  ZBombState *state;
   
-  iVar1 = *(int *)(param_1 + 0xb8);
-  if (((*(char *)(iVar1 + 0x6b) == '\0') && (*(char *)(iVar1 + 0x6a) != '\0')) &&
-     (*(char *)(iVar1 + 0x69) != '\x04')) {
+  state = *(ZBombState **)(param_1 + 0xb8);
+  if (((state->completionSfxReady == '\0') && (state->stateSfxReady != '\0')) &&
+     (state->state != '\x04')) {
     FUN_8003b818(param_1);
   }
   return;
