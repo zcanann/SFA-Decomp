@@ -1523,15 +1523,15 @@ dolphin/dvd/dvdlow.c:
 	.text       start:0x80247A1C end:0x80248870
 
 dolphin/dvd/dvdfs.c:
-	.text       start:0x80248870 end:0x802498E0
+	.text       start:0x80248870 end:0x802491F4
 	.data       start:0x8032E478 end:0x8032E958
 	.sdata      start:0x803DC568 end:0x803DC570
 
 dolphin/dvd/dvdFatal.c:
-	.text       start:0x802498E0 end:0x802498E0
+	.text       start:0x802491F4 end:0x802491F4
 
 dolphin/dvd/dvd.c:
-	.text       start:0x802498E0 end:0x8024B970
+	.text       start:0x802491F4 end:0x8024B970
 
 dolphin/dvd/dvdqueue.c:
 	.text       start:0x8024B970 end:0x8024BB68
