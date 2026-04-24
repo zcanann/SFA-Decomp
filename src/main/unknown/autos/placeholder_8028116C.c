@@ -1,13 +1,10 @@
 #include "ghidra_import.h"
+#include "main/unknown/autos/placeholder_8028026C.h"
 #include "main/unknown/autos/placeholder_8028116C.h"
 
 extern int FUN_80271b50();
 extern undefined4 FUN_80272224();
 extern uint FUN_80272ec4();
-extern undefined4 FUN_802800c0();
-extern undefined4 FUN_802800c4();
-extern undefined4 FUN_802800c8();
-extern undefined4 FUN_802800cc();
 extern undefined4 FUN_80280c30();
 extern int FUN_80280c34();
 

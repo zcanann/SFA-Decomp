@@ -8,7 +8,6 @@ extern undefined4 FUN_80272edc();
 extern undefined4 FUN_80272ee0();
 extern undefined4 FUN_80272ee4();
 extern undefined4 FUN_80272ee8();
-extern undefined4 FUN_802800c0();
 extern undefined4 FUN_80281344();
 extern undefined4 FUN_80281348();
 extern uint FUN_80286718();
