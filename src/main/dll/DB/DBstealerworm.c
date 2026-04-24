@@ -50,7 +50,6 @@ extern undefined4 FUN_80080f80();
 extern double FUN_80081014();
 extern undefined4 FUN_8008112c();
 extern undefined4 FUN_801d8308();
-extern undefined4 FUN_801dfa28();
 extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern double FUN_80293900();
