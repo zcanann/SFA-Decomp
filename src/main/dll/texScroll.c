@@ -101,7 +101,7 @@ void FUN_8017ac2c(short *param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8017adf0
+ * Function: invisibleHi_update
  * EN v1.0 Address: 0x8017ADF0
  * EN v1.0 Size: 568b
  * EN v1.1 Address: 0x8017AE38
@@ -111,7 +111,7 @@ void FUN_8017ac2c(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017adf0(int param_1)
+void invisibleHi_update(int param_1)
 {
   float fVar1;
   uint uVar2;
@@ -188,7 +188,7 @@ void FUN_8017adf0(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8017b028
+ * Function: invisibleHi_init
  * EN v1.0 Address: 0x8017B028
  * EN v1.0 Size: 264b
  * EN v1.1 Address: 0x8017B064
@@ -198,7 +198,7 @@ void FUN_8017adf0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017b028(int param_1,int param_2)
+void invisibleHi_init(int param_1,int param_2)
 {
   uint uVar1;
   undefined *puVar2;

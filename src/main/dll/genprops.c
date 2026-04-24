@@ -4005,7 +4005,7 @@ void FUN_80170f64(undefined2 *param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80170f68
+ * Function: checkpoint4_render
  * EN v1.0 Address: 0x80170F68
  * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x80171EA4
@@ -4015,7 +4015,7 @@ void FUN_80170f64(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80170f68(int param_1)
+void checkpoint4_render(int param_1)
 {
   FUN_8003b818(param_1);
   return;
@@ -4024,7 +4024,7 @@ void FUN_80170f68(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80170f88
+ * Function: checkpoint4_init
  * EN v1.0 Address: 0x80170F88
  * EN v1.0 Size: 308b
  * EN v1.1 Address: 0x80171ED0
@@ -4034,7 +4034,7 @@ void FUN_80170f68(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80170f88(ushort *param_1,int param_2)
+void checkpoint4_init(ushort *param_1,int param_2)
 {
   float fVar1;
   uint uVar2;
@@ -4094,7 +4094,7 @@ void FUN_80170f88(ushort *param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_801710bc
+ * Function: sideload_update
  * EN v1.0 Address: 0x801710BC
  * EN v1.0 Size: 352b
  * EN v1.1 Address: 0x80172058
@@ -4104,9 +4104,9 @@ void FUN_80170f88(ushort *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801710bc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9)
+void sideload_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                    undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                    int param_9)
 {
   uint uVar1;
   int iVar2;

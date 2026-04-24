@@ -87,11 +87,11 @@ void FUN_80170f60(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9);
 void FUN_80170f64(undefined2 *param_1,int param_2);
-void FUN_80170f68(int param_1);
-void FUN_80170f88(ushort *param_1,int param_2);
-void FUN_801710bc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9);
+void checkpoint4_render(int param_1);
+void checkpoint4_init(ushort *param_1,int param_2);
+void sideload_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                    undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                    int param_9);
 void FUN_8017121c(int param_1);
 void FUN_80171240(int param_1,int param_2);
 void FUN_801712a8(double param_1,double param_2,double param_3,int param_4);
