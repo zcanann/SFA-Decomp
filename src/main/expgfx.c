@@ -75,7 +75,7 @@ extern double FUN_80293900();
 extern double FUN_80294c4c();
 
 extern ExpgfxBounds gExpgfxBoundsTemplates;
-extern undefined2 gExpgfxSlotTypeIds;
+extern undefined2 gExpgfxPoolSlotTypeIds;
 extern undefined gExpgfxPoolFrameFlags;
 extern undefined2 DAT_803105a8;
 extern undefined4 DAT_80397420;
@@ -87,13 +87,13 @@ extern undefined4 DAT_8039c140;
 extern short DAT_8039c144;
 extern undefined4 DAT_8039c146;
 extern byte gExpgfxPoolSourceModes;
-extern int gExpgfxSlotSourceIds;
+extern int gExpgfxPoolSourceIds;
 extern undefined4 DAT_8039c7c8;
 extern undefined4 DAT_8039c7cc;
 extern byte gExpgfxPoolBoundsTemplateIds;
-extern char gExpgfxSlotActiveCounts;
+extern char gExpgfxPoolActiveCounts;
 extern char DAT_8039c829;
-extern uint gExpgfxSlotActiveMasks;
+extern uint gExpgfxPoolActiveMasks;
 extern uint gExpgfxSlotPoolBases;
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dd430;
@@ -276,7 +276,7 @@ void expgfx_release(undefined8 param_1,undefined8 param_2,undefined8 param_3,und
   
   uVar8 = FUN_80286838();
   iVar2 = (int)uVar8;
-  puVar7 = &gExpgfxSlotActiveMasks + iVar2;
+  puVar7 = &gExpgfxPoolActiveMasks + iVar2;
   if ((1 << param_11 & *puVar7) != 0) {
     slot = Expgfx_GetSlot(iVar2, param_11);
     slot->behaviorFlags = 0;
@@ -308,10 +308,10 @@ void expgfx_release(undefined8 param_1,undefined8 param_2,undefined8 param_3,und
       FUN_802420e0((uint)slot,EXPGFX_SLOT_SIZE);
     }
     *puVar7 = *puVar7 & ~(1 << param_11);
-    pcVar4 = &gExpgfxSlotActiveCounts + iVar2;
+    pcVar4 = &gExpgfxPoolActiveCounts + iVar2;
     *pcVar4 = *pcVar4 + -1;
     if (*pcVar4 == '\0') {
-      (&gExpgfxSlotTypeIds)[iVar2] = 0xffff;
+      (&gExpgfxPoolSlotTypeIds)[iVar2] = 0xffff;
     }
   }
   FUN_80286884();
@@ -354,9 +354,9 @@ void expgfx_initialise(undefined8 param_1,undefined8 param_2,undefined8 param_3,
   uVar10 = FUN_80286830();
   iVar5 = 0;
   puVar9 = &gExpgfxSlotPoolBases;
-  puVar8 = &gExpgfxSlotActiveMasks;
-  pcVar7 = &gExpgfxSlotActiveCounts;
-  puVar6 = &gExpgfxSlotTypeIds;
+  puVar8 = &gExpgfxPoolActiveMasks;
+  pcVar7 = &gExpgfxPoolActiveCounts;
+  puVar6 = &gExpgfxPoolSlotTypeIds;
   do {
     uVar3 = *puVar9;
     iVar4 = 0;
@@ -431,9 +431,9 @@ undefined4 expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,i
   sVar2 = -1;
   bVar1 = false;
   iVar4 = 0;
-  piVar8 = &gExpgfxSlotSourceIds;
-  psVar6 = (short *)&gExpgfxSlotTypeIds;
-  pcVar3 = &gExpgfxSlotActiveCounts;
+  piVar8 = &gExpgfxPoolSourceIds;
+  psVar6 = (short *)&gExpgfxPoolSlotTypeIds;
+  pcVar3 = &gExpgfxPoolActiveCounts;
   iVar9 = 0x10;
   pcVar5 = pcVar3;
   do {
@@ -478,14 +478,14 @@ undefined4 expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,i
   } while (iVar9 != 0);
   if (bVar1) {
     iVar9 = 0;
-    puVar7 = &gExpgfxSlotActiveMasks + sVar2;
+    puVar7 = &gExpgfxPoolActiveMasks + sVar2;
     iVar10 = EXPGFX_SLOTS_PER_POOL;
     do {
       if ((1 << iVar9 & *puVar7) == 0) {
         *param_2 = (short)iVar9;
         *param_1 = sVar2;
         *puVar7 = *puVar7 | 1 << iVar9;
-        (&gExpgfxSlotActiveCounts)[sVar2] = (&gExpgfxSlotActiveCounts)[sVar2] + '\x01';
+        (&gExpgfxPoolActiveCounts)[sVar2] = (&gExpgfxPoolActiveCounts)[sVar2] + '\x01';
         return 1;
       }
       iVar9 = iVar9 + 1;
@@ -495,7 +495,7 @@ undefined4 expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,i
   bVar1 = false;
   if (param_4 != -1) {
     if ((param_4 != -1) &&
-        (iVar4 = param_4, (char)(&gExpgfxSlotActiveCounts)[param_4] < EXPGFX_SLOTS_PER_POOL)) {
+        (iVar4 = param_4, (char)(&gExpgfxPoolActiveCounts)[param_4] < EXPGFX_SLOTS_PER_POOL)) {
       sVar2 = (short)param_4;
       bVar1 = true;
     }
@@ -507,7 +507,7 @@ undefined4 expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,i
       if (*pcVar3 < '\x01') {
         sVar2 = (short)iVar4;
         bVar1 = true;
-        (&gExpgfxSlotActiveCounts)[iVar4] = 0;
+        (&gExpgfxPoolActiveCounts)[iVar4] = 0;
         break;
       }
       pcVar3 = pcVar3 + 1;
@@ -517,15 +517,15 @@ undefined4 expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,i
   }
   if (bVar1) {
     iVar9 = 0;
-    puVar7 = &gExpgfxSlotActiveMasks + sVar2;
+    puVar7 = &gExpgfxPoolActiveMasks + sVar2;
     iVar10 = EXPGFX_SLOTS_PER_POOL;
     do {
       if ((1 << iVar9 & *puVar7) == 0) {
         *param_2 = (short)iVar9;
         *param_1 = sVar2;
         *puVar7 = *puVar7 | 1 << iVar9;
-        (&gExpgfxSlotTypeIds)[iVar4] = param_3;
-        (&gExpgfxSlotActiveCounts)[sVar2] = (&gExpgfxSlotActiveCounts)[sVar2] + '\x01';
+        (&gExpgfxPoolSlotTypeIds)[iVar4] = param_3;
+        (&gExpgfxPoolActiveCounts)[sVar2] = (&gExpgfxPoolActiveCounts)[sVar2] + '\x01';
         return 1;
       }
       iVar9 = iVar9 + 1;
@@ -813,8 +813,8 @@ void expgfx_processCurrentSourceBounds(void)
   
   currentSource = Expgfx_GetCurrentSource();
   poolIndex = 0;
-  poolActiveCounts = &gExpgfxSlotActiveCounts;
-  poolSourceIds = &gExpgfxSlotSourceIds;
+  poolActiveCounts = &gExpgfxPoolActiveCounts;
+  poolSourceIds = &gExpgfxPoolSourceIds;
   poolSourceModes = &gExpgfxPoolSourceModes;
   poolBoundsTemplateIds = &gExpgfxPoolBoundsTemplateIds;
   poolBounds = Expgfx_GetPoolBounds(0);
@@ -1045,7 +1045,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
                                  (int)spawnConfig->attachedSource), iVar6 != -1)) {
     uVar3 = (uint)local_56[0];
     if ((int)uVar3 < EXPGFX_POOL_COUNT) {
-      (&gExpgfxSlotSourceIds)[uVar3] = (int)spawnConfig->attachedSource;
+      (&gExpgfxPoolSourceIds)[uVar3] = (int)spawnConfig->attachedSource;
     }
     if (((int)uVar3 < EXPGFX_POOL_COUNT) && ((spawnConfig->behaviorFlags & 0x40000U) != 0)) {
       uVar2 = uVar3 & 1;

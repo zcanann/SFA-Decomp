@@ -67,9 +67,13 @@ typedef struct ExpgfxSpawnConfig {
  */
 #define gExpgfxBoundsTemplates DAT_80310458
 #define gExpgfxSpawnConfig DAT_8039caf8
+#define gExpgfxPoolSlotTypeIds gExpgfxSlotTypeIds
 #define gExpgfxPoolFrameFlags DAT_80310528
 #define gExpgfxPoolBounds DAT_8039b9b8
+#define gExpgfxPoolSourceIds gExpgfxSlotSourceIds
 #define gExpgfxPoolSourceModes DAT_8039c638
 #define gExpgfxPoolBoundsTemplateIds DAT_8039c7d8
+#define gExpgfxPoolActiveCounts gExpgfxSlotActiveCounts
+#define gExpgfxPoolActiveMasks gExpgfxSlotActiveMasks
 
 #endif /* MAIN_EXPGFX_INTERNAL_H_ */

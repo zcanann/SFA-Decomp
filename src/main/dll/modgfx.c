@@ -162,7 +162,7 @@ extern undefined4 DAT_802c28e0;
 extern undefined4 DAT_802c28e4;
 extern undefined4 DAT_802c28e8;
 extern undefined4 DAT_802c28ec;
-extern undefined2 gExpgfxSlotTypeIds;
+extern undefined2 gExpgfxPoolSlotTypeIds;
 extern undefined gExpgfxPoolFrameFlags;
 extern undefined4 DAT_803109a8;
 extern undefined4 DAT_803109ac;
@@ -225,13 +225,13 @@ extern undefined4 DAT_8031122c;
 extern undefined DAT_80380209;
 extern int DAT_8039b7b8;
 extern undefined gExpgfxPoolSourceModes;
-extern undefined4 gExpgfxSlotSourceIds;
+extern undefined4 gExpgfxPoolSourceIds;
 extern undefined4 DAT_8039c7c8;
 extern undefined4 DAT_8039c7cc;
 extern undefined4 DAT_8039c7d0;
 extern undefined4 DAT_8039c7d4;
-extern undefined gExpgfxSlotActiveCounts;
-extern undefined4 gExpgfxSlotActiveMasks;
+extern undefined gExpgfxPoolActiveCounts;
+extern undefined4 gExpgfxPoolActiveMasks;
 extern uint gExpgfxSlotPoolBases;
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
 extern undefined4 DAT_8039cafc;
@@ -1162,12 +1162,12 @@ void modgfx_resetExpgfxState(undefined8 param_1,undefined8 param_2,undefined8 pa
   
   piVar7 = &DAT_8039b7b8;
   expgfx_initialise(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-  puVar2 = &gExpgfxSlotActiveMasks;
-  puVar3 = &gExpgfxSlotActiveCounts;
-  puVar4 = &gExpgfxSlotTypeIds;
+  puVar2 = &gExpgfxPoolActiveMasks;
+  puVar3 = &gExpgfxPoolActiveCounts;
+  puVar4 = &gExpgfxPoolSlotTypeIds;
   puVar1 = &gExpgfxPoolFrameFlags;
   puVar5 = &gExpgfxPoolSourceModes;
-  puVar6 = &gExpgfxSlotSourceIds;
+  puVar6 = &gExpgfxPoolSourceIds;
   iVar8 = EXPGFX_POOL_GROUP_COUNT;
   do {
     *puVar2 = 0;
@@ -1301,9 +1301,9 @@ void modgfx_allocExpgfxPools(void)
   uint *puVar6;
   int iVar7;
   
-  puVar3 = &gExpgfxSlotActiveMasks;
-  puVar4 = &gExpgfxSlotActiveCounts;
-  puVar1 = &gExpgfxSlotTypeIds;
+  puVar3 = &gExpgfxPoolActiveMasks;
+  puVar4 = &gExpgfxPoolActiveCounts;
+  puVar1 = &gExpgfxPoolSlotTypeIds;
   iVar7 = EXPGFX_POOL_GROUP_COUNT;
   do {
     iVar5 = 0;
