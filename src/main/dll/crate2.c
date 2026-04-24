@@ -17,6 +17,15 @@ extern int gSfxplayerEffectHandles[8];
 extern undefined4* DAT_803dd72c;
 extern undefined4 sfxplayer_updateEffectHandlePositions();
 
+typedef struct Crate2State {
+  s16 triggerSfxId;
+  s16 loopSfxId;
+  s16 loopFadeTimer;
+  u8 loopActive;
+  u8 effectPairCount;
+  u8 stopPending;
+} Crate2State;
+
 /*
  * --INFO--
  *
@@ -39,7 +48,7 @@ void crate2_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3
   byte bVar5;
   int iVar3;
   short sVar6;
-  short *psVar7;
+  Crate2State *state;
   int *piVar8;
   undefined8 extraout_f1;
   undefined8 uVar9;
@@ -47,15 +56,15 @@ void crate2_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3
   int local_28 [10];
   
   psVar1 = (short *)FUN_80286840();
-  psVar7 = *(short **)(psVar1 + 0x5c);
-  if (((*(byte *)(psVar7 + 4) >> 5 & 1) == 0) &&
-     (uVar9 = extraout_f1, uVar2 = FUN_80017690((int)*psVar7), uVar2 == 0)) {
-    if (*(char *)((int)psVar7 + 7) == '\x04') {
+  state = *(Crate2State **)(psVar1 + 0x5c);
+  if ((((u8)state->loopFadeTimer >> 5 & 1) == 0) &&
+     (uVar9 = extraout_f1, uVar2 = FUN_80017690((int)state->triggerSfxId), uVar2 == 0)) {
+    if (state->effectPairCount == 4) {
       FUN_80006824(0,0x7e);
-      *(byte *)(psVar7 + 4) = *(byte *)(psVar7 + 4) & 0xdf | 0x20;
-      *(byte *)(psVar7 + 4) = *(byte *)(psVar7 + 4) & 0xef;
-      *(byte *)(psVar7 + 4) = *(byte *)(psVar7 + 4) & 0xbf;
-      FUN_80017698((int)*psVar7,1);
+      state->loopFadeTimer = state->loopFadeTimer & 0xdf | 0x20;
+      state->loopFadeTimer = state->loopFadeTimer & 0xef;
+      state->loopFadeTimer = state->loopFadeTimer & 0xbf;
+      FUN_80017698((int)state->triggerSfxId,1);
       FUN_80017698(0xedf,0);
       cVar4 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(psVar1 + 0x56));
       if (cVar4 == '\x01') {
@@ -64,9 +73,9 @@ void crate2_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3
       FUN_80006b4c();
     }
     else {
-      if (((char)*(byte *)(psVar7 + 4) < '\0') &&
-         (*(byte *)(psVar7 + 4) = *(byte *)(psVar7 + 4) & 0x7f,
-         (*(byte *)(psVar7 + 4) >> 4 & 1) != 0)) {
+      if (((char)state->loopFadeTimer < '\0') &&
+         (state->loopFadeTimer = state->loopFadeTimer & 0x7f,
+         ((u8)state->loopFadeTimer >> 4 & 1) != 0)) {
         cVar4 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(psVar1 + 0x56));
         if (cVar4 == '\x01') {
           FUN_80006b54(0x1d,0x96);
@@ -92,9 +101,9 @@ void crate2_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3
           uVar9 = FUN_80006824((uint)psVar1,0x1ce);
           piVar8 = piVar8 + 2;
         }
-        *(undefined *)((int)psVar7 + 7) = 0;
-        *(byte *)(psVar7 + 4) = *(byte *)(psVar7 + 4) & 0xbf;
-        *(byte *)(psVar7 + 4) = *(byte *)(psVar7 + 4) & 0xef;
+        state->effectPairCount = 0;
+        state->loopFadeTimer = state->loopFadeTimer & 0xbf;
+        state->loopFadeTimer = state->loopFadeTimer & 0xef;
         FUN_80017698(0xedf,0);
       }
       sfxplayer_updateEffectHandlePositions(psVar1);
@@ -117,7 +126,7 @@ void crate2_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3
             }
             piVar8[1] = 0;
             FUN_80006824(0,0x409);
-            *(char *)((int)psVar7 + 7) = *(char *)((int)psVar7 + 7) + '\x01';
+            state->effectPairCount = state->effectPairCount + 1;
           }
         }
         piVar8 = piVar8 + 2;
