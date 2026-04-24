@@ -12,7 +12,7 @@ extern undefined4 sfxplayer_updateEffectHandlePositions();
 /*
  * --INFO--
  *
- * Function: FUN_80208098
+ * Function: sfxplayer_updateState
  * EN v1.0 Address: 0x80208098
  * EN v1.0 Size: 328b
  * EN v1.1 Address: 0x8020816C
@@ -23,9 +23,9 @@ extern undefined4 sfxplayer_updateEffectHandlePositions();
  * PAL Size: TODO
  */
 undefined4
-FUN_80208098(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,short *param_9,
-            undefined4 param_10,int param_11)
+sfxplayer_updateState(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                      undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                      short *param_9,undefined4 param_10,int param_11)
 {
   int iVar1;
   int iVar2;

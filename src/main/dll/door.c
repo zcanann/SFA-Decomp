@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_80006b4c();
 extern uint FUN_80017690();
-extern undefined4 FUN_80208098();
+extern undefined4 sfxplayer_updateState();
 
 extern undefined4 DAT_803add98;
 extern undefined4 DAT_803add9c;
