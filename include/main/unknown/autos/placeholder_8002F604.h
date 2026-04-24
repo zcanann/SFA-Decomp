@@ -11,15 +11,16 @@
 #define ObjAnim_SetMoveProgress FUN_800305c4
 #define ObjAnim_SetCurrentMove FUN_800305f8
 
-undefined2 FUN_8002f5d4(int param_1);
-void FUN_8002f5f4(int param_1,int param_2,short param_3,undefined2 param_4);
-void FUN_8002f638(int param_1,uint param_2);
-undefined4 FUN_8002f6ac(double param_1,int param_2,float *param_3);
-undefined4 FUN_8002fc3c(double param_1,double param_2);
-undefined4 FUN_800305c4(double param_1,int param_2);
-void FUN_800305f8(double param_1,double param_2,double param_3,undefined8 param_4,
-                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                  undefined4 param_9,undefined4 param_10,uint param_11,undefined4 param_12,
-                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
+undefined2 ObjAnim_GetPrimaryEventCountdown(int objAnim);
+void ObjAnim_WriteStateWord(int objAnim,int stateIndex,short wordIndex,undefined2 value);
+void ObjAnim_SetPrimaryEventStepFrames(int objAnim,uint frameCount);
+undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnim,float *phaseOut);
+undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime);
+undefined4 ObjAnim_SetMoveProgress(double moveProgress,int objAnim);
+void ObjAnim_SetCurrentMove(double moveProgress,double param_2,double param_3,undefined8 param_4,
+                            undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                            undefined8 param_8,undefined4 param_9,undefined4 param_10,u32 flags,
+                            undefined4 param_12,undefined4 param_13,undefined4 param_14,
+                            undefined4 param_15,undefined4 param_16);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8002F604_H_ */

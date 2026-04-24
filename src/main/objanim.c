@@ -44,8 +44,8 @@ static s32 ObjAnim_ResolveMoveIndex(ObjAnimDef *animDef, u32 moveId) {
  */
 void ObjAnim_SetBlendMove(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                           undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                          undefined4 param_9,int param_10,int param_11,uint param_12,
-                          undefined2 param_13)
+                          undefined4 param_9,int param_10,int param_11,uint moveId,
+                          undefined2 eventState)
 {
   ObjAnimDef *animDef;
   ObjAnimState *state;
@@ -53,10 +53,10 @@ void ObjAnim_SetBlendMove(undefined8 param_1,double param_2,double param_3,undef
   uint frameType;
   int moveData;
   int moveIndex;
-  
+
   animDef = (ObjAnimDef *)param_10;
   state = (ObjAnimState *)param_11;
-  moveIndex = ObjAnim_ResolveMoveIndex(animDef, param_12);
+  moveIndex = ObjAnim_ResolveMoveIndex(animDef, moveId);
   if ((animDef->flags & 0x40) == 0) {
     state->blendCacheSlot = (u16)moveIndex;
     moveData = (int)animDef->moveData[state->blendCacheSlot];
@@ -71,7 +71,7 @@ void ObjAnim_SetBlendMove(undefined8 param_1,double param_2,double param_3,undef
       }
       FUN_8001786c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                    (int)animDef->blendMoveIds[moveIndex],(int)(s16)moveIndex,
-                   (undefined4)state->blendMoveCache[state->blendCacheSlot],param_10);
+                   (undefined4)state->blendMoveCache[state->blendCacheSlot],(int)animDef);
       state->lastBlendMoveIndex = (s16)moveIndex;
     }
     moveData = (int)state->blendMoveCache[state->blendCacheSlot] + 0x80;
@@ -84,7 +84,7 @@ void ObjAnim_SetBlendMove(undefined8 param_1,double param_2,double param_3,undef
       frameValue = frameValue - FLOAT_803df560;
     }
     if (frameValue == state->segmentLength) {
-      state->eventState = param_13;
+      state->eventState = eventState;
     }
     else {
       state->eventState = 0;
@@ -99,7 +99,7 @@ void ObjAnim_SetBlendMove(undefined8 param_1,double param_2,double param_3,undef
 /*
  * --INFO--
  *
- * Function: fn_8002EE10
+ * Function: Object_ObjAnimSetPrimaryBlendMove
  * EN v1.0 Address: 0x8002EDC4
  * EN v1.0 Size: 568b
  * EN v1.1 Address: 0x8002EE10
@@ -109,16 +109,17 @@ void ObjAnim_SetBlendMove(undefined8 param_1,double param_2,double param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8002EE10(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,uint param_10,undefined2 param_11)
+void Object_ObjAnimSetPrimaryBlendMove(undefined8 param_1,double param_2,double param_3,
+                                       undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                       undefined8 param_7,undefined8 param_8,int objAnim,uint moveId,
+                                       undefined2 eventState)
 {
   ObjAnimBank *bank;
-  
-  bank = ObjAnim_GetActiveBank((ObjAnimComponent *)param_9);
+
+  bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
   if (bank->animDef->moveCount != 0) {
-    ObjAnim_SetBlendMove(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,
-                         (int)bank->animDef,(int)bank->primaryState,param_10,param_11);
+    ObjAnim_SetBlendMove(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,
+                         (int)bank->animDef,(int)bank->primaryState,moveId,eventState);
   }
   return;
 }
@@ -126,7 +127,7 @@ void fn_8002EE10(undefined8 param_1,double param_2,double param_3,undefined8 par
 /*
  * --INFO--
  *
- * Function: fn_8002EE64
+ * Function: Object_ObjAnimSetSecondaryBlendMove
  * EN v1.0 Address: 0x8002EFFC
  * EN v1.0 Size: 568b
  * EN v1.1 Address: 0x8002EE64
@@ -136,16 +137,17 @@ void fn_8002EE10(undefined8 param_1,double param_2,double param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8002EE64(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,uint param_10,undefined2 param_11)
+void Object_ObjAnimSetSecondaryBlendMove(undefined8 param_1,double param_2,double param_3,
+                                         undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                         undefined8 param_7,undefined8 param_8,int objAnim,uint moveId,
+                                         undefined2 eventState)
 {
   ObjAnimBank *bank;
-  
-  bank = ObjAnim_GetActiveBank((ObjAnimComponent *)param_9);
+
+  bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
   if (bank->animDef->moveCount != 0) {
-    ObjAnim_SetBlendMove(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,
-                         (int)bank->animDef,(int)bank->secondaryState,param_10,param_11);
+    ObjAnim_SetBlendMove(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,
+                         (int)bank->animDef,(int)bank->secondaryState,moveId,eventState);
   }
   return;
 }
@@ -153,7 +155,7 @@ void fn_8002EE64(undefined8 param_1,double param_2,double param_3,undefined8 par
 /*
  * --INFO--
  *
- * Function: fn_8002EEB8
+ * Function: Object_ObjAnimAdvanceMove
  * EN v1.0 Address: 0x8002F234
  * EN v1.0 Size: 1168b
  * EN v1.1 Address: 0x8002EEB8
@@ -163,7 +165,7 @@ void fn_8002EE64(undefined8 param_1,double param_2,double param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 fn_8002EEB8(double param_1,double param_2,int param_3,int param_4)
+undefined4 Object_ObjAnimAdvanceMove(double param_1,double param_2,int param_3,int param_4)
 {
   ObjAnimComponent *objAnim;
   ObjAnimEventList *events;
@@ -185,7 +187,7 @@ undefined4 fn_8002EEB8(double param_1,double param_2,int param_3,int param_4)
   uint uVar14;
   undefined uVar15;
   undefined8 local_28;
-  
+
   objAnim = (ObjAnimComponent *)param_3;
   events = (ObjAnimEventList *)param_4;
   uVar7 = 0;
@@ -324,7 +326,7 @@ undefined4 fn_8002EEB8(double param_1,double param_2,int param_3,int param_4)
 /*
  * --INFO--
  *
- * Function: fn_8002F304
+ * Function: Object_ObjAnimSetMoveProgress
  * EN v1.0 Address: 0x8002F6C4
  * EN v1.0 Size: 52b
  * EN v1.1 Address: 0x8002F304
@@ -334,11 +336,11 @@ undefined4 fn_8002EEB8(double param_1,double param_2,int param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 fn_8002F304(double param_1,int param_2)
+undefined4 Object_ObjAnimSetMoveProgress(double param_1,int param_2)
 {
   ObjAnimComponent *objAnim;
   double dVar1;
-  
+
   objAnim = (ObjAnimComponent *)param_2;
   dVar1 = (double)FLOAT_803df588;
   if ((param_1 <= dVar1) && (dVar1 = param_1, param_1 < (double)FLOAT_803df570)) {
@@ -375,7 +377,6 @@ Object_ObjAnimSetMove(double param_1,double param_2,double param_3,undefined8 pa
   int iVar3;
   int iVar6;
   double dVar7;
-  
   objAnim = (ObjAnimComponent *)param_9;
   dVar7 = (double)FLOAT_803df560;
   if ((param_1 <= dVar7) && (dVar7 = param_1, param_1 < (double)FLOAT_803df570)) {

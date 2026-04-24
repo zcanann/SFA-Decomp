@@ -1,5 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/df_partfx.h"
+#include "main/objanim.h"
+#include "main/unknown/autos/placeholder_8002F604.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006950();
@@ -9,9 +11,6 @@ extern int FUN_80017730();
 extern undefined4 FUN_80017754();
 extern undefined4 FUN_80017778();
 extern undefined4 FUN_80017a88();
-extern undefined4 fn_8002EE64();
-extern int FUN_8002f6ac();
-extern undefined4 FUN_800305f8();
 extern undefined4 FUN_8006f9a8();
 extern undefined4 FUN_8006fd90();
 extern int FUN_800c9030();
@@ -1394,21 +1393,21 @@ void FUN_800d85f4(undefined8 param_1,double param_2,double param_3,undefined8 pa
        (*(short *)(param_9 + 0xa0) == DAT_803de0bc)) {
       if ((*(float *)(param_10 + 0x280) < FLOAT_803e11f0) &&
          (*(short *)(param_9 + 0xa0) != DAT_803de0b8)) {
-        FUN_800305f8((double)*(float *)(param_9 + 0x98),param_2,param_3,param_4,param_5,param_6,
-                     param_7,param_8,param_9,DAT_803de0b8,0,param_12,param_13,param_14,param_15,
-                     param_16);
+        ObjAnim_SetCurrentMove((double)*(float *)(param_9 + 0x98),param_2,param_3,param_4,param_5,
+                               param_6,param_7,param_8,param_9,DAT_803de0b8,0,param_12,param_13,
+                               param_14,param_15,param_16);
         *(undefined *)(param_10 + 0x346) = 0;
       }
     }
     else {
-      FUN_800305f8((double)*(float *)(param_9 + 0x98),param_2,param_3,param_4,param_5,param_6,
-                   param_7,param_8,param_9,DAT_803de0bc,0,param_12,param_13,param_14,param_15,
-                   param_16);
+      ObjAnim_SetCurrentMove((double)*(float *)(param_9 + 0x98),param_2,param_3,param_4,param_5,
+                             param_6,param_7,param_8,param_9,DAT_803de0bc,0,param_12,param_13,
+                             param_14,param_15,param_16);
       *(undefined *)(param_10 + 0x346) = 0;
     }
     dVar4 = FUN_80293900((double)(*(float *)(param_10 + 0x280) * *(float *)(param_10 + 0x280) +
                                  *(float *)(param_10 + 0x284) * *(float *)(param_10 + 0x284)));
-    iVar1 = FUN_8002f6ac(dVar4,param_9,local_38);
+    iVar1 = ObjAnim_SampleRootCurvePhase(dVar4,(int)param_9,local_38);
     if (iVar1 != 0) {
       *(float *)(param_10 + 0x2a0) = local_38[0];
     }
@@ -1429,12 +1428,12 @@ void FUN_800d85f4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     }
     dVar4 = (double)*(float *)(param_10 + 0x284);
     if (dVar4 <= (double)FLOAT_803e11f0) {
-      fn_8002EE64(dVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_11,
-                  (short)uVar2);
+      Object_ObjAnimSetSecondaryBlendMove(dVar4,param_2,param_3,param_4,param_5,param_6,param_7,
+                                          param_8,(int)param_9,param_11,(short)uVar2);
     }
     else {
-      fn_8002EE64(dVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_12,
-                  (short)uVar2);
+      Object_ObjAnimSetSecondaryBlendMove(dVar4,param_2,param_3,param_4,param_5,param_6,param_7,
+                                          param_8,(int)param_9,param_12,(short)uVar2);
     }
   }
   return;

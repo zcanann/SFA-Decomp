@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/CAM/camcontrol.h"
+#include "main/unknown/autos/placeholder_8002F604.h"
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006824();
@@ -9,8 +10,6 @@ extern uint FUN_80006c00();
 extern undefined4 FUN_80017640();
 extern undefined4 FUN_80017814();
 extern int FUN_80017830();
-extern undefined4 FUN_8002fc3c();
-extern undefined4 FUN_800305c4();
 extern int FUN_80037d50();
 extern undefined8 FUN_800723a0();
 extern undefined4 FUN_80081100();
@@ -144,7 +143,7 @@ void camcontrol_updateTargetFeedback(void)
   }
   if (gCamcontrolTargetState == '\0') {
     if (FLOAT_803e22b0 < *(float *)(psVar6 + 0x4c)) {
-      FUN_8002fc3c((double)FLOAT_803e22f0,(double)FLOAT_803dc074);
+      ObjAnim_AdvanceCurrentMove((double)FLOAT_803e22f0,(double)FLOAT_803dc074);
     }
     else if (iVar11 == 0) {
       *(undefined4 *)(gCamcontrolState + 0x128) = 0;
@@ -159,7 +158,7 @@ void camcontrol_updateTargetFeedback(void)
   }
   else if ((*(int *)(gCamcontrolState + 0x128) == iVar11) ||
           (*(float *)(psVar6 + 0x4c) < FLOAT_803e22ac)) {
-    FUN_8002fc3c((double)FLOAT_803e22f4,(double)FLOAT_803dc074);
+    ObjAnim_AdvanceCurrentMove((double)FLOAT_803e22f4,(double)FLOAT_803dc074);
   }
   else {
     gCamcontrolTargetState = '\0';
@@ -176,7 +175,7 @@ void camcontrol_updateTargetFeedback(void)
       }
     }
     else {
-      FUN_800305c4((double)FLOAT_803e22b0,(int)psVar6);
+      ObjAnim_SetMoveProgress((double)FLOAT_803e22b0,(int)psVar6);
     }
   }
   iVar11 = FUN_80037d50(*(int *)(gCamcontrolState + 0x128));
