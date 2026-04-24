@@ -292,6 +292,9 @@ extern undefined4 PTR_DAT_8032a154;
  */
 void FUN_801feb30(void)
 {
+  AnimBehaviorObject *obj;
+  AnimBehaviorConfig *config;
+  AnimBehaviorState *runtimeState;
   float fVar1;
   float fVar2;
   short *psVar3;
@@ -303,10 +306,7 @@ void FUN_801feb30(void)
   undefined4 in_r8;
   int in_r9;
   undefined4 in_r10;
-  int iVar8;
-  int iVar9;
   float *pfVar10;
-  int iVar11;
   double dVar12;
   undefined8 uVar13;
   double dVar14;
@@ -328,9 +328,11 @@ void FUN_801feb30(void)
   undefined8 local_30;
   
   psVar3 = (short *)FUN_80286838();
-  iVar11 = *(int *)(psVar3 + 0x26);
+  obj = (AnimBehaviorObject *)psVar3;
+  config = obj->config;
+  runtimeState = obj->runtimeState;
   iVar4 = FUN_80017a98();
-  pfVar10 = *(float **)(psVar3 + 0x5c);
+  pfVar10 = (float *)runtimeState;
   local_54 = DAT_803e6e58;
   local_50 = DAT_803e6e5c;
   dVar14 = (double)*(float *)(psVar3 + 8);
@@ -340,7 +342,7 @@ void FUN_801feb30(void)
     FUN_801fe3b0((int)psVar3);
     *(ushort *)(*(int *)(psVar3 + 0x2a) + 0x60) =
          *(ushort *)(*(int *)(psVar3 + 0x2a) + 0x60) & 0xfbff;
-    switch(*(undefined *)(pfVar10 + 0x46)) {
+    switch(runtimeState->state) {
     case 1:
       if (*(int *)(psVar3 + 0x7c) == 0) {
         *(ushort *)(*(int *)(psVar3 + 0x2a) + 0x60) =
@@ -349,21 +351,18 @@ void FUN_801feb30(void)
       *(byte *)((int)psVar3 + 0xaf) = *(byte *)((int)psVar3 + 0xaf) & 0xf7;
       break;
     case 2:
-      if ((*(byte *)((int)pfVar10 + 0x119) & 4) != 0) {
+      if ((runtimeState->behaviorFlags & 4) != 0) {
         *(byte *)((int)psVar3 + 0xaf) = *(byte *)((int)psVar3 + 0xaf) | 8;
         fVar2 = FLOAT_803e6e7c;
         *(float *)(psVar3 + 0x12) =
-             *(float *)(psVar3 + 0x12) +
-             (*(float *)(iVar11 + 8) - *(float *)(psVar3 + 6)) / FLOAT_803e6e7c;
+             *(float *)(psVar3 + 0x12) + (config->targetPosX - *(float *)(psVar3 + 6)) / FLOAT_803e6e7c;
         *(float *)(psVar3 + 0x14) =
-             *(float *)(psVar3 + 0x14) + (*(float *)(iVar11 + 0xc) - *(float *)(psVar3 + 8)) / fVar2
-        ;
+             *(float *)(psVar3 + 0x14) + (config->targetPosY - *(float *)(psVar3 + 8)) / fVar2;
         *(float *)(psVar3 + 0x16) =
-             *(float *)(psVar3 + 0x16) +
-             (*(float *)(iVar11 + 0x10) - *(float *)(psVar3 + 10)) / fVar2;
+             *(float *)(psVar3 + 0x16) + (config->targetPosZ - *(float *)(psVar3 + 10)) / fVar2;
         uVar6 = FUN_80017690(0x44d);
         if (uVar6 != 0) {
-          *(undefined *)(pfVar10 + 0x46) = 10;
+          runtimeState->state = 10;
         }
       }
       *(ushort *)(*(int *)(psVar3 + 0x2a) + 0x60) =
@@ -408,7 +407,7 @@ void FUN_801feb30(void)
       }
       uVar6 = FUN_80017690(0x426);
       if (uVar6 == 0) {
-        if ((*(byte *)((int)pfVar10 + 0x119) & 2) != 0) {
+        if ((runtimeState->behaviorFlags & 2) != 0) {
           *(byte *)((int)psVar3 + 0xaf) = *(byte *)((int)psVar3 + 0xaf) | 8;
         }
       }
@@ -419,7 +418,7 @@ void FUN_801feb30(void)
         if (*pfVar10 < FLOAT_803e6e84) {
           uVar6 = FUN_80017690(0x428);
           FUN_80017698(0x428,uVar6 + 1);
-          *(undefined *)(pfVar10 + 0x46) = 7;
+          runtimeState->state = 7;
           fVar2 = FLOAT_803e6e60;
           *(float *)(psVar3 + 0x14) = FLOAT_803e6e60;
           *(float *)(psVar3 + 0x12) = fVar2;
@@ -439,7 +438,7 @@ void FUN_801feb30(void)
       dVar14 = (double)FLOAT_803e6e60;
       iVar5 = FUN_801fe750(dVar14,dVar14,(int)psVar3,&local_58,1);
       if (iVar5 == 0) {
-        *(undefined *)(pfVar10 + 0x46) = 2;
+        runtimeState->state = 2;
       }
       else {
         fVar2 = local_58;
@@ -469,11 +468,11 @@ void FUN_801feb30(void)
           *(byte *)((int)psVar3 + 0xaf) = *(byte *)((int)psVar3 + 0xaf) | 8;
         }
         else {
-          if ((*(byte *)((int)pfVar10 + 0x119) & 0x10) == 0) {
-            *(undefined *)(pfVar10 + 0x46) = 1;
+          if ((runtimeState->behaviorFlags & 0x10) == 0) {
+            runtimeState->state = 1;
           }
           else {
-            *(undefined *)(pfVar10 + 0x46) = 0xd;
+            runtimeState->state = 0xd;
           }
           fVar2 = FLOAT_803e6e60;
           *(float *)(psVar3 + 0x12) = FLOAT_803e6e60;
@@ -484,8 +483,8 @@ void FUN_801feb30(void)
       }
       break;
     case 6:
-      dVar12 = (double)FUN_80017710((float *)(psVar3 + 0xc),(float *)(iVar11 + 8));
-      if ((dVar12 <= (double)FLOAT_803e6ed8) || ((*(byte *)((int)pfVar10 + 0x119) & 2) != 0)) {
+      dVar12 = (double)FUN_80017710((float *)(psVar3 + 0xc),&config->targetPosX);
+      if ((dVar12 <= (double)FLOAT_803e6ed8) || ((runtimeState->behaviorFlags & 2) != 0)) {
         uVar6 = FUN_80006c00(0);
         if ((uVar6 & 0x100) == 0) {
           *(ushort *)(*(int *)(psVar3 + 0x2a) + 0x60) =
@@ -495,25 +494,23 @@ void FUN_801feb30(void)
           *(byte *)((int)psVar3 + 0xaf) = *(byte *)((int)psVar3 + 0xaf) | 8;
         }
         else {
-          *(undefined *)(pfVar10 + 0x46) = 5;
+          runtimeState->state = 5;
           *(byte *)((int)psVar3 + 0xaf) = *(byte *)((int)psVar3 + 0xaf) & 0xf7;
         }
       }
       else {
         iVar5 = FUN_80017a98();
-        iVar8 = *(int *)(psVar3 + 0x5c);
-        iVar9 = *(int *)(psVar3 + 0x26);
         FUN_80037180((int)psVar3,0x24);
-        *(undefined *)(iVar8 + 0x118) = 3;
+        runtimeState->state = 3;
         FUN_80017698(0x3c4,1);
         FUN_80017698(0x86d,1);
         *(byte *)((int)psVar3 + 0xaf) = *(byte *)((int)psVar3 + 0xaf) | 8;
-        uVar13 = FUN_80017698((int)*(short *)(iVar9 + 0x1c),1);
-        *(undefined2 *)(iVar8 + 0x11c) = 0xffff;
-        *(undefined2 *)(iVar8 + 0x11e) = 0;
-        *(float *)(iVar8 + 0x120) = FLOAT_803e6e64;
+        uVar13 = FUN_80017698((int)config->primaryConditionId,1);
+        runtimeState->queuedEvent.queuedConditionId = -1;
+        runtimeState->queuedEvent.queuedConditionValue = 0;
+        runtimeState->queuedEvent.queuedConditionScale = FLOAT_803e6e64;
         FUN_80037bd4(uVar13,dVar14,dVar15,in_f4,in_f5,in_f6,in_f7,in_f8,iVar5,0x7000a,(uint)psVar3,
-                     iVar8 + 0x11c,in_r7,in_r8,in_r9,in_r10);
+                     (uint)&runtimeState->queuedEvent,in_r7,in_r8,in_r9,in_r10);
         psVar3[0x7c] = 0;
         psVar3[0x7d] = 0;
       }
@@ -536,7 +533,7 @@ void FUN_801feb30(void)
         ;
       }
       else {
-        *(undefined *)(pfVar10 + 0x46) = 8;
+        runtimeState->state = 8;
         fVar2 = FLOAT_803e6e60;
         *(float *)(psVar3 + 0x12) = FLOAT_803e6e60;
         *(float *)(psVar3 + 0x16) = fVar2;
@@ -585,7 +582,7 @@ void FUN_801feb30(void)
       else {
         cVar7 = (**(code **)(*DAT_803dd71c + 0x90))(pfVar10 + 1);
         if (cVar7 != '\0') {
-          *(undefined *)(pfVar10 + 0x46) = 5;
+          runtimeState->state = 5;
         }
       }
       break;
@@ -594,40 +591,37 @@ void FUN_801feb30(void)
       cVar7 = (**(code **)(in_r7 + 0x8c))((double)FLOAT_803e6ee4,pfVar10 + 1,psVar3,&local_54,2);
       if (cVar7 == '\0') {
         *(byte *)((int)psVar3 + 0xaf) = *(byte *)((int)psVar3 + 0xaf) & 0xf7;
-        *(undefined *)(pfVar10 + 0x46) = 9;
-        if ((*(byte *)((int)pfVar10 + 0x119) & 4) != 0) {
-          *(byte *)((int)pfVar10 + 0x119) = *(byte *)((int)pfVar10 + 0x119) & 0xfb;
+        runtimeState->state = 9;
+        if ((runtimeState->behaviorFlags & 4) != 0) {
+          runtimeState->behaviorFlags = runtimeState->behaviorFlags & 0xfb;
         }
       }
       else {
-        *(undefined *)(pfVar10 + 0x46) = 5;
+        runtimeState->state = 5;
       }
       break;
     case 0xb:
       *(byte *)((int)psVar3 + 0xaf) = *(byte *)((int)psVar3 + 0xaf) | 8;
       goto LAB_801ffe48;
     case 0xc:
-      uVar6 = FUN_80017690((int)*(short *)(iVar11 + 0x24));
+      uVar6 = FUN_80017690((int)config->readyConditionId);
       if (uVar6 != 0) {
         FUN_8003735c((int)psVar3,0x24);
-        *(undefined *)(pfVar10 + 0x46) = 5;
+        runtimeState->state = 5;
       }
       break;
     case 0xd:
       FUN_800360d4((int)psVar3);
       dVar15 = (double)FLOAT_803e6ef0;
       *(float *)(psVar3 + 0x12) =
-           *(float *)(psVar3 + 0x12) +
-           (float)((double)(*(float *)(iVar11 + 8) - *(float *)(psVar3 + 6)) / dVar15);
+           *(float *)(psVar3 + 0x12) + (float)((double)(config->targetPosX - *(float *)(psVar3 + 6)) / dVar15);
       *(float *)(psVar3 + 0x14) =
-           *(float *)(psVar3 + 0x14) +
-           (float)((double)(*(float *)(iVar11 + 0xc) - *(float *)(psVar3 + 8)) / dVar15);
+           *(float *)(psVar3 + 0x14) + (float)((double)(config->targetPosY - *(float *)(psVar3 + 8)) / dVar15);
       *(float *)(psVar3 + 0x16) =
-           *(float *)(psVar3 + 0x16) +
-           (float)((double)(*(float *)(iVar11 + 0x10) - *(float *)(psVar3 + 10)) / dVar15);
-      local_4c = *(float *)(psVar3 + 6) - *(float *)(iVar11 + 8);
-      local_48 = *(float *)(psVar3 + 8) - *(float *)(iVar11 + 0xc);
-      local_44 = *(float *)(psVar3 + 10) - *(float *)(iVar11 + 0x10);
+           *(float *)(psVar3 + 0x16) + (float)((double)(config->targetPosZ - *(float *)(psVar3 + 10)) / dVar15);
+      local_4c = *(float *)(psVar3 + 6) - config->targetPosX;
+      local_48 = *(float *)(psVar3 + 8) - config->targetPosY;
+      local_44 = *(float *)(psVar3 + 10) - config->targetPosZ;
       FUN_800068c4((uint)psVar3,0x442);
       dVar12 = (double)local_44;
       if (dVar12 < (double)FLOAT_803e6e60) {
@@ -654,31 +648,29 @@ void FUN_801feb30(void)
       }
       else {
         FUN_800360f0((int)psVar3);
-        *(undefined *)(pfVar10 + 0x46) = 1;
-        *(undefined4 *)(psVar3 + 6) = *(undefined4 *)(iVar11 + 8);
-        *(undefined4 *)(psVar3 + 8) = *(undefined4 *)(iVar11 + 0xc);
-        *(undefined4 *)(psVar3 + 10) = *(undefined4 *)(iVar11 + 0x10);
+        runtimeState->state = 1;
+        *(float *)(psVar3 + 6) = config->targetPosX;
+        *(float *)(psVar3 + 8) = config->targetPosY;
+        *(float *)(psVar3 + 10) = config->targetPosZ;
       }
     }
-    if ((*(byte *)((int)pfVar10 + 0x119) & 8) == 0) {
+    if ((runtimeState->behaviorFlags & 8) == 0) {
       if ((((*(byte *)((int)psVar3 + 0xaf) & 1) != 0) && (uVar6 = FUN_80017690(0x3c4), uVar6 == 0))
          && (dVar12 = (double)FUN_80017710((float *)(psVar3 + 0xc),(float *)(iVar4 + 0x18)),
             dVar12 < (double)FLOAT_803e6efc)) {
-        if ((*(byte *)((int)pfVar10 + 0x119) & 1) == 0) {
+        if ((runtimeState->behaviorFlags & 1) == 0) {
           iVar4 = FUN_80017a98();
-          iVar11 = *(int *)(psVar3 + 0x5c);
-          iVar5 = *(int *)(psVar3 + 0x26);
           FUN_80037180((int)psVar3,0x24);
-          *(undefined *)(iVar11 + 0x118) = 3;
+          runtimeState->state = 3;
           FUN_80017698(0x3c4,1);
           FUN_80017698(0x86d,1);
           *(byte *)((int)psVar3 + 0xaf) = *(byte *)((int)psVar3 + 0xaf) | 8;
-          uVar13 = FUN_80017698((int)*(short *)(iVar5 + 0x1c),1);
-          *(undefined2 *)(iVar11 + 0x11c) = 0xffff;
-          *(undefined2 *)(iVar11 + 0x11e) = 0;
-          *(float *)(iVar11 + 0x120) = FLOAT_803e6e64;
+          uVar13 = FUN_80017698((int)config->primaryConditionId,1);
+          runtimeState->queuedEvent.queuedConditionId = -1;
+          runtimeState->queuedEvent.queuedConditionValue = 0;
+          runtimeState->queuedEvent.queuedConditionScale = FLOAT_803e6e64;
           FUN_80037bd4(uVar13,dVar14,dVar15,in_f4,in_f5,in_f6,in_f7,in_f8,iVar4,0x7000a,(uint)psVar3
-                       ,iVar11 + 0x11c,in_r7,in_r8,in_r9,in_r10);
+                       ,(uint)&runtimeState->queuedEvent,in_r7,in_r8,in_r9,in_r10);
         }
         else {
           fVar2 = *(float *)(psVar3 + 8) - *(float *)(iVar4 + 0x10);
@@ -687,7 +679,7 @@ void FUN_801feb30(void)
           }
           if (fVar2 < FLOAT_803e6f00) {
             *(byte *)((int)psVar3 + 0xaf) = *(byte *)((int)psVar3 + 0xaf) | 8;
-            *(undefined *)(pfVar10 + 0x46) = 6;
+            runtimeState->state = 6;
             *(ushort *)(*(int *)(psVar3 + 0x2a) + 0x60) =
                  *(ushort *)(*(int *)(psVar3 + 0x2a) + 0x60) & 0xfffe;
           }
@@ -697,9 +689,9 @@ void FUN_801feb30(void)
     else {
       *(byte *)((int)psVar3 + 0xaf) = *(byte *)((int)psVar3 + 0xaf) | 8;
       FUN_800360d4((int)psVar3);
-      uVar6 = FUN_80017690((int)*(short *)(iVar11 + 0x1c));
+      uVar6 = FUN_80017690((int)config->primaryConditionId);
       if (uVar6 != 0) {
-        *(byte *)((int)pfVar10 + 0x119) = *(byte *)((int)pfVar10 + 0x119) & 0xf6;
+        runtimeState->behaviorFlags = runtimeState->behaviorFlags & 0xf6;
         *(byte *)((int)psVar3 + 0xaf) = *(byte *)((int)psVar3 + 0xaf) & 0xf7;
         FUN_800360f0((int)psVar3);
       }

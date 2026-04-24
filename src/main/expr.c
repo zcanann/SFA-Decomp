@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/dll/anim_internal.h"
 #include "main/expr.h"
 
 extern undefined4 FUN_8003b818();
@@ -18,10 +19,14 @@ extern undefined4 FUN_8003b818();
  */
 void FUN_801feb30(int param_1)
 {
+  AnimBehaviorObject *obj;
+  AnimBehaviorState *runtimeState;
   char cVar1;
   char in_r8;
   
-  if ((((in_r8 != '\0') && (cVar1 = *(char *)(*(int *)(param_1 + 0xb8) + 0x118), cVar1 != '\f')) &&
+  obj = (AnimBehaviorObject *)param_1;
+  runtimeState = obj->runtimeState;
+  if ((((in_r8 != '\0') && (cVar1 = runtimeState->state, cVar1 != '\f')) &&
       (cVar1 != '\x04')) && (cVar1 != '\v')) {
     FUN_8003b818(param_1);
   }

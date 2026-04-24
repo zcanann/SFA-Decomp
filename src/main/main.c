@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/CF/laser.h"
+#include "main/dll/anim_internal.h"
 #include "main/main.h"
 
 extern undefined4 FUN_80006824();
@@ -791,10 +792,11 @@ void FUN_801fe324(undefined2 *param_1,int param_2)
  */
 void FUN_801fe3b0(int param_1)
 {
+  AnimBehaviorObject *obj;
+  AnimBehaviorConfig *config;
+  AnimBehaviorState *runtimeState;
   uint uVar1;
   int iVar2;
-  int iVar3;
-  int iVar4;
   ushort *local_38;
   uint local_34;
   uint local_30;
@@ -804,10 +806,11 @@ void FUN_801fe3b0(int param_1)
   float local_1c;
   float local_18;
   
+  obj = (AnimBehaviorObject *)param_1;
+  config = obj->config;
+  runtimeState = obj->runtimeState;
   local_30 = 0;
   local_34 = 0;
-  iVar4 = *(int *)(param_1 + 0xb8);
-  iVar3 = *(int *)(param_1 + 0x4c);
 LAB_801fe91c:
   while( true ) {
     while( true ) {
@@ -818,11 +821,11 @@ LAB_801fe91c:
         }
       } while (local_30 != 0x11);
       if (local_34 != 0x12) break;
-      if ((*(byte *)(iVar4 + 0x119) & 0x20) == 0) {
+      if ((runtimeState->behaviorFlags & 0x20) == 0) {
         FUN_80037180(param_1,0x24);
       }
       FUN_800360d4(param_1);
-      *(undefined *)(iVar4 + 0x118) = 0xb;
+      runtimeState->state = 0xb;
       *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
     }
     if ((int)local_34 < 0x12) {
@@ -831,8 +834,8 @@ LAB_801fe91c:
     }
     if (local_34 == 0x14) break;
     if ((int)local_34 < 0x14) {
-      FUN_80017698((int)*(short *)(iVar3 + 0x1e),1);
-      uVar1 = (uint)*(short *)(iVar3 + 0x2c);
+      FUN_80017698((int)config->primaryConditionId,1);
+      uVar1 = (uint)config->activationEventId;
       if (0 < (int)uVar1) {
         FUN_80017688(uVar1);
       }
@@ -844,9 +847,9 @@ LAB_801fe91c:
   goto LAB_801fe8b8;
 code_r0x801fe7fc:
   if (0xf < (int)local_34) {
-    *(undefined4 *)(param_1 + 0x24) = *(undefined4 *)(iVar4 + 0x10c);
-    *(undefined4 *)(param_1 + 0x28) = *(undefined4 *)(iVar4 + 0x110);
-    *(float *)(param_1 + 0x2c) = -*(float *)(iVar4 + 0x114);
+    *(float *)(param_1 + 0x24) = runtimeState->reboundVelocityX;
+    *(float *)(param_1 + 0x28) = runtimeState->reboundVelocityY;
+    *(float *)(param_1 + 0x2c) = -runtimeState->reboundVelocityZ;
     local_20 = FLOAT_803e6e60;
     local_1c = FLOAT_803e6e60;
     local_18 = FLOAT_803e6e60;
@@ -858,7 +861,7 @@ code_r0x801fe7fc:
 LAB_801fe8ac:
     FUN_8003735c(param_1,0x24);
 LAB_801fe8b8:
-    *(undefined *)(iVar4 + 0x118) = 5;
+    runtimeState->state = 5;
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
     FUN_800360f0(param_1);
   }
@@ -880,72 +883,74 @@ LAB_801fe8b8:
  */
 void FUN_801fe540(short *param_1,undefined4 *param_2)
 {
+  AnimBehaviorConfig *config;
+  AnimBehaviorState *runtimeState;
   float fVar1;
   undefined uVar2;
   uint uVar3;
   int iVar4;
-  int iVar5;
   float afStack_28 [2];
   undefined4 local_20;
   uint uStack_1c;
   
-  iVar5 = *(int *)(param_1 + 0x26);
-  *(undefined *)((int)param_2 + 0x119) = 0;
-  *param_1 = (ushort)*(byte *)(iVar5 + 0x1b) << 8;
+  config = ((AnimBehaviorObject *)param_1)->config;
+  runtimeState = (AnimBehaviorState *)param_2;
+  runtimeState->behaviorFlags = 0;
+  *param_1 = (ushort)config->facingAngleByte << 8;
   param_1[1] = 0;
   param_1[2] = 0;
-  uStack_1c = (uint)*(byte *)(iVar5 + 0x1a);
+  uStack_1c = (uint)config->speedScaleByte;
   local_20 = 0x43300000;
   *(float *)(param_1 + 4) =
        (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e6e70) * FLOAT_803e6e68;
   *(float *)(param_1 + 4) = *(float *)(param_1 + 4) * *(float *)(*(int *)(param_1 + 0x28) + 4);
-  uVar3 = FUN_80017690((int)*(short *)(iVar5 + 0x1c));
+  uVar3 = FUN_80017690((int)config->primaryConditionId);
   if (uVar3 == 0) {
     uVar2 = 1;
   }
   else {
     uVar2 = 3;
   }
-  *(undefined *)(param_2 + 0x46) = uVar2;
-  if ((*(char *)(param_2 + 0x46) == '\x01') &&
+  runtimeState->state = uVar2;
+  if ((runtimeState->state == 1) &&
      (iVar4 = FUN_801fe750((double)FLOAT_803e6e60,(double)FLOAT_803e6e60,(int)param_1,afStack_28,1),
      iVar4 == 0)) {
-    *(undefined *)(param_2 + 0x46) = 2;
+    runtimeState->state = 2;
   }
-  if (*(char *)(iVar5 + 0x26) != '\0') {
-    *(byte *)((int)param_2 + 0x119) = *(byte *)((int)param_2 + 0x119) | 1;
-    if (*(char *)(iVar5 + 0x26) == '\x02') {
-      *(byte *)((int)param_2 + 0x119) = *(byte *)((int)param_2 + 0x119) | 2;
+  if (config->behaviorMode != '\0') {
+    runtimeState->behaviorFlags = runtimeState->behaviorFlags | 1;
+    if (config->behaviorMode == 2) {
+      runtimeState->behaviorFlags = runtimeState->behaviorFlags | 2;
     }
-    if (*(char *)(iVar5 + 0x26) == '\x03') {
-      *(undefined *)(param_2 + 0x46) = 10;
+    if (config->behaviorMode == 3) {
+      runtimeState->state = 10;
     }
-    if (*(char *)(iVar5 + 0x26) == '\x04') {
-      *(byte *)((int)param_2 + 0x119) = *(byte *)((int)param_2 + 0x119) | 4;
-      *(byte *)((int)param_2 + 0x119) = *(byte *)((int)param_2 + 0x119) & 0xfe;
+    if (config->behaviorMode == 4) {
+      runtimeState->behaviorFlags = runtimeState->behaviorFlags | 4;
+      runtimeState->behaviorFlags = runtimeState->behaviorFlags & 0xfe;
     }
-    if (*(char *)(iVar5 + 0x26) == '\x05') {
-      *(byte *)((int)param_2 + 0x119) = *(byte *)((int)param_2 + 0x119) | 8;
-      *(byte *)((int)param_2 + 0x119) = *(byte *)((int)param_2 + 0x119) | 0x10;
+    if (config->behaviorMode == 5) {
+      runtimeState->behaviorFlags = runtimeState->behaviorFlags | 8;
+      runtimeState->behaviorFlags = runtimeState->behaviorFlags | 0x10;
     }
-    if (*(char *)(iVar5 + 0x26) == '\x06') {
+    if (config->behaviorMode == 6) {
       FUN_80017a78((int)param_1,1);
-      *(byte *)((int)param_2 + 0x119) = *(byte *)((int)param_2 + 0x119) | 8;
-      *(byte *)((int)param_2 + 0x119) = *(byte *)((int)param_2 + 0x119) | 0x10;
+      runtimeState->behaviorFlags = runtimeState->behaviorFlags | 8;
+      runtimeState->behaviorFlags = runtimeState->behaviorFlags | 0x10;
     }
-    if (*(char *)(iVar5 + 0x26) == '\a') {
-      *(byte *)((int)param_2 + 0x119) = *(byte *)((int)param_2 + 0x119) | 0x20;
+    if (config->behaviorMode == 7) {
+      runtimeState->behaviorFlags = runtimeState->behaviorFlags | 0x20;
     }
   }
-  uVar3 = FUN_80017690((int)*(short *)(iVar5 + 0x24));
+  uVar3 = FUN_80017690((int)config->readyConditionId);
   if (uVar3 == 0) {
     uVar2 = 0xc;
   }
   else {
     uVar2 = 5;
   }
-  *(undefined *)(param_2 + 0x46) = uVar2;
-  if (*(char *)(param_2 + 0x46) == '\x05') {
+  runtimeState->state = uVar2;
+  if (runtimeState->state == 5) {
     FUN_8003735c((int)param_1,0x24);
   }
   fVar1 = FLOAT_803e6e60;
@@ -1126,13 +1131,18 @@ void FUN_801fe924(void)
   puVar4 = FUN_80037134(0x14,(int *)local_78);
   dVar12 = (double)FLOAT_803e6e80;
   for (iVar6 = 0; fVar1 = FLOAT_803e6e98, iVar6 < (int)local_78[0]; iVar6 = iVar6 + 1) {
+    AnimBehaviorObject *obj;
+    AnimBehaviorConfig *config;
+    
     psVar7 = (short *)*puVar4;
+    obj = (AnimBehaviorObject *)psVar7;
+    config = obj->config;
     dVar8 = (double)(*(float *)(psVar7 + 8) - *(float *)(iVar3 + 0x10));
     if ((dVar8 <= dVar12) && ((double)FLOAT_803e6e84 <= dVar8)) {
       fVar1 = *(float *)(psVar7 + 6) - *(float *)(iVar3 + 0xc);
       fVar2 = *(float *)(psVar7 + 10) - *(float *)(iVar3 + 0x14);
       dVar8 = FUN_80293900((double)(fVar1 * fVar1 + fVar2 * fVar2));
-      uStack_6c = (uint)*(byte *)(*(int *)(psVar7 + 0x26) + 0x19);
+      uStack_6c = (uint)config->forceRadiusByte;
       local_70 = 0x43300000;
       dVar10 = (double)(FLOAT_803e6e88 *
                        (float)((double)CONCAT44(0x43300000,uStack_6c) - DOUBLE_803e6e70));

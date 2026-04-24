@@ -2,6 +2,7 @@
 #define MAIN_DLL_ANIM_H_
 
 #include "ghidra_import.h"
+#include "main/dll/anim_internal.h"
 
 void FUN_801feb30(void);
 void FUN_801ff8b8(short *param_1);
