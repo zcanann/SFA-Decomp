@@ -694,6 +694,7 @@ config.libs = [
             Object(NonMatching, "main/unknown/autos/placeholder_801175B4.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_801F5184.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_80209FE0.c"),
+            Object(NonMatching, "main/unknown/autos/placeholder_802403D8.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8026FD1C.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_80272EEC.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_80273608.c"),
