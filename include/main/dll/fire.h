@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_8020930c(void);
+void fire_updateState(void);
 
 #endif /* MAIN_DLL_FIRE_H_ */

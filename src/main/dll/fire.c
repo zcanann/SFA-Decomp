@@ -17,7 +17,7 @@ extern f32 FLOAT_803e716c;
 /*
  * --INFO--
  *
- * Function: FUN_8020930c
+ * Function: fire_updateState
  * EN v1.0 Address: 0x8020930C
  * EN v1.0 Size: 576b
  * EN v1.1 Address: 0x802093B4
@@ -27,7 +27,7 @@ extern f32 FLOAT_803e716c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020930c(void)
+void fire_updateState(void)
 {
   char cVar1;
   bool bVar2;
