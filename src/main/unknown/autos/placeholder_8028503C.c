@@ -11,7 +11,6 @@ extern undefined4 FUN_80251728();
 extern undefined4 FUN_80251770();
 extern ushort FUN_802517b0();
 extern undefined4 FUN_802517c0();
-extern undefined4 FUN_8027c490();
 extern undefined4 FUN_8028504c();
 extern undefined4 FUN_80285050();
 
