@@ -13,7 +13,7 @@ extern f32 FLOAT_803e7094;
 /*
  * --INFO--
  *
- * Function: FUN_8020652c
+ * Function: chukachuck_update
  * EN v1.0 Address: 0x8020652C
  * EN v1.0 Size: 912b
  * EN v1.1 Address: 0x802065F0
@@ -23,7 +23,7 @@ extern f32 FLOAT_803e7094;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8020652c(int param_1)
+void chukachuck_update(int param_1)
 {
   byte bVar1;
   int iVar2;
