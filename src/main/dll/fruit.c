@@ -17,7 +17,7 @@ extern f32 FLOAT_803e7124;
 /*
  * --INFO--
  *
- * Function: FUN_802086c4
+ * Function: zBomb_hitDetect
  * EN v1.0 Address: 0x802086C4
  * EN v1.0 Size: 340b
  * EN v1.1 Address: 0x802086D0
@@ -27,7 +27,7 @@ extern f32 FLOAT_803e7124;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_802086c4(int param_1,undefined4 param_2,int param_3)
+undefined4 zBomb_hitDetect(int param_1,undefined4 param_2,int param_3)
 {
   byte bVar1;
   short sVar2;

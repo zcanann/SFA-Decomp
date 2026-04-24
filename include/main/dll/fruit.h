@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-undefined4 FUN_802086c4(int param_1,undefined4 param_2,int param_3);
+undefined4 zBomb_hitDetect(int param_1,undefined4 param_2,int param_3);
 void FUN_80208818(uint param_1);
 void FUN_802089c8(uint param_1);
 void FUN_802089e8(undefined2 *param_1,int param_2);
