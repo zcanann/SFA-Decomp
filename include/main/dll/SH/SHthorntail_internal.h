@@ -2,12 +2,11 @@
 #define MAIN_DLL_SH_SHTHORNTAIL_INTERNAL_H_
 
 #include "ghidra_import.h"
+#include "dolphin/mtx.h"
 
 typedef struct SHthorntailConfig {
   u8 pad00[0x08];
-  float homePosX;
-  float homePosY;
-  float homePosZ;
+  Vec homePos;
   s32 configToken;
   u8 controlMode;
   u8 pad19[0x1B - 0x19];
@@ -36,10 +35,8 @@ typedef struct SHthorntailRuntime {
   u8 activeMoveValid;
   u8 pad8A0[0x8AC - 0x8A0];
   u8 collisionShapeState[0x8E0 - 0x8AC];
-  u8 pathState[0x910 - 0x8E0];
-  float proximityTargetX;
-  float proximityTargetY;
-  float proximityTargetZ;
+  Vec renderPathPoints[4];
+  float proximityAlertState;
 } SHthorntailRuntime;
 
 typedef struct SHthorntailObject {
@@ -53,6 +50,7 @@ typedef struct SHthorntailObject {
 #define SHTHORNTAIL_FLAG_IMPACT_PENDING 0x02
 #define SHTHORNTAIL_FLAG_LEVELCONTROL_READY 0x08
 #define SHTHORNTAIL_FLAG_FREEZE_MOTION 0x10
+#define SHTHORNTAIL_RENDER_PATH_POINT_COUNT 4
 
 void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime);
 uint SHthorntail_chooseNextState(short *obj,SHthorntailRuntime *runtime,SHthorntailConfig *config);

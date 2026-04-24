@@ -83,7 +83,7 @@ uint SHthorntail_chooseNextState(short *obj,SHthorntailRuntime *runtime,SHthornt
     iVar2 = FUN_80017a98();
     dVar4 = FUN_80017708((float *)(obj + 0xc),(float *)(iVar2 + 0x18));
     if ((double)FLOAT_803e60bc <= dVar4) {
-      dVar4 = FUN_80017708((float *)(obj + 0xc),&config->homePosX);
+      dVar4 = FUN_80017708((float *)(obj + 0xc),(float *)&config->homePos);
       if ((double)(float)((double)CONCAT44(0x43300000,
                                            (uint)config->leashRadiusByte *
                                            (uint)config->leashRadiusByte ^ 0x80000000) -

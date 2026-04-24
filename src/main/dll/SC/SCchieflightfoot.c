@@ -220,8 +220,8 @@ void SHthorntail_update(undefined8 param_1,double param_2,double param_3,undefin
       }
       pfVar8 = (float *)((int)pfVar8 + 1);
     }
-    FUN_8006ef38((double)FLOAT_803e60e0,(double)FLOAT_803e60e0,psVar2,local_60,8,(int)runtime->pathState,
-                 (int)runtime->moveScratch);
+    FUN_8006ef38((double)FLOAT_803e60e0,(double)FLOAT_803e60e0,psVar2,local_60,8,
+                 (int)runtime->renderPathPoints,(int)runtime->moveScratch);
     if (((&DAT_80327fc8)[runtime->behaviorState] & 4) == 0) {
       runtime->movementControlFlags = runtime->movementControlFlags | 1;
     }
@@ -243,7 +243,7 @@ void SHthorntail_update(undefined8 param_1,double param_2,double param_3,undefin
                 (*(undefined *)(runtime->impactSfxIds + uVar7),psVar2,0xffffffff);
     }
     if (config->leashRadiusByte != '\0') {
-      dVar11 = FUN_80017708((float *)(psVar2 + 0xc),&config->homePosX);
+      dVar11 = FUN_80017708((float *)(psVar2 + 0xc),(float *)&config->homePos);
       uStack_34 = (uint)config->leashRadiusByte * (uint)config->leashRadiusByte ^ 0x80000000;
       local_38 = 0x43300000;
       if (((double)(float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e60c0) < dVar11) &&

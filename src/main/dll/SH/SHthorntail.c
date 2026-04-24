@@ -47,7 +47,7 @@ void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
   config = ((SHthorntailObject *)param_9)->config;
   switch(runtime->behaviorState) {
   case 0:
-    uVar2 = FUN_80017758((double)FLOAT_803e60c8,(double)FLOAT_803e60cc,&runtime->proximityTargetX);
+    uVar2 = FUN_80017758((double)FLOAT_803e60c8,(double)FLOAT_803e60cc,&runtime->proximityAlertState);
     if (uVar2 != 0) {
       FUN_80006824((uint)param_9,0x410);
     }

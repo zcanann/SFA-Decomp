@@ -109,6 +109,6 @@ FUN_801d5edc(double param_1,double param_2,double param_3,undefined8 param_4,und
   }
   runtime->activeMoveValid = 0;
   FUN_8006ef38((double)FLOAT_803e60e0,(double)FLOAT_803e60e0,param_9,param_11 + 0xf0,8,
-               (int)runtime->pathState,(int)runtime->moveScratch);
+               (int)runtime->renderPathPoints,(int)runtime->moveScratch);
   return 0;
 }

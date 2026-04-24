@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/dll/SH/SHthorntail_internal.h"
 #include "main/dll/SC/SClightfoot.h"
 
 extern undefined4 FUN_80037180();
@@ -23,7 +24,10 @@ extern undefined4 DAT_803dcc60;
  */
 void SHthorntail_free(int param_1)
 {
-  if (DAT_803dcc60 == *(int *)(*(int *)(param_1 + 0x4c) + 0x14)) {
+  SHthorntailObject *obj;
+  
+  obj = (SHthorntailObject *)param_1;
+  if (DAT_803dcc60 == obj->config->configToken) {
     DAT_803dcc60 = -1;
   }
   FUN_80037180(param_1,0x4d);
@@ -45,18 +49,19 @@ void SHthorntail_free(int param_1)
  */
 void SHthorntail_render(short *param_1)
 {
-  int iVar1;
-  int iVar2;
+  SHthorntailRuntime *runtime;
+  Vec *pathPoint;
+  int pointIndex;
   
-  iVar2 = *(int *)(param_1 + 0x5c);
+  runtime = ((SHthorntailObject *)param_1)->runtime;
   FUN_8003b818((int)param_1);
-  FUN_801149bc(param_1,iVar2,0);
-  iVar1 = 0;
+  FUN_801149bc(param_1,(int)runtime,0);
+  pathPoint = runtime->renderPathPoints;
+  pointIndex = 0;
   do {
-    FUN_800388b4(param_1,iVar1,(float *)(iVar2 + 0x8e0),(undefined4 *)(iVar2 + 0x8e4),
-                 (float *)(iVar2 + 0x8e8),0);
-    iVar2 = iVar2 + 0xc;
-    iVar1 = iVar1 + 1;
-  } while (iVar1 < 4);
+    FUN_800388b4(param_1,pointIndex,&pathPoint->x,(undefined4 *)&pathPoint->y,&pathPoint->z,0);
+    pathPoint = pathPoint + 1;
+    pointIndex = pointIndex + 1;
+  } while (pointIndex < SHTHORNTAIL_RENDER_PATH_POINT_COUNT);
   return;
 }
