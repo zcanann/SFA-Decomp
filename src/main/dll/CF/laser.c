@@ -2,6 +2,24 @@
 #include "dolphin/os.h"
 #include "main/dll/CF/laser.h"
 
+typedef struct LaserState {
+  s16 primarySequenceId;
+  s16 secondarySequenceId;
+  u8 sequenceLatched;
+} LaserState;
+
+typedef struct LaserObject {
+  u8 pad00[0xAC];
+  s8 modeIndex;
+  u8 padAD[0xAF - 0xAD];
+  u8 statusFlags;
+  u16 objectFlags;
+  u8 padB2[0xB8 - 0xB2];
+  LaserState *state;
+} LaserObject;
+
+#define LASER_OBJECT_STATUS_08 0x08
+
 extern undefined4 FUN_800067bc();
 extern undefined8 FUN_800068c4();
 extern undefined8 FUN_80006b84();
@@ -59,41 +77,42 @@ void laser_initUnsupported(void)
  */
 void laserObj_update(int param_1)
 {
+  LaserObject *obj;
+  LaserState *state;
   uint uVar1;
   byte bVar3;
   int iVar2;
-  short *psVar4;
   
-  if ((*(char *)(*(int *)(param_1 + 0xb8) + 4) == '\0') &&
-     (uVar1 = FUN_80017690((int)*(short *)(*(int *)(param_1 + 0xb8) + 2)), uVar1 != 0)) {
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
+  obj = (LaserObject *)param_1;
+  state = obj->state;
+  if ((state->sequenceLatched == '\0') &&
+     (uVar1 = FUN_80017690((int)state->primarySequenceId), uVar1 != 0)) {
+    obj->statusFlags = obj->statusFlags & ~LASER_OBJECT_STATUS_08;
   }
   else {
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
+    obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_08;
   }
   FUN_800400b0();
-  if ((*(byte *)(param_1 + 0xaf) & 1) != 0) {
-    bVar3 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(param_1 + 0xac));
+  if ((obj->statusFlags & 1) != 0) {
+    bVar3 = (**(code **)(*DAT_803dd72c + 0x40))((int)obj->modeIndex);
     if (bVar3 == 2) {
-      psVar4 = *(short **)(param_1 + 0xb8);
       iVar2 = (**(code **)(*DAT_803dd6e8 + 0x20))(0x83c);
       if (iVar2 != 0) {
-        FUN_80017698((int)*psVar4,1);
-        FUN_80017698((int)psVar4[1],0);
-        *(undefined *)(psVar4 + 2) = 1;
-        *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
+        FUN_80017698((int)state->primarySequenceId,1);
+        FUN_80017698((int)state->secondarySequenceId,0);
+        state->sequenceLatched = 1;
+        obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_08;
         (**(code **)(*DAT_803dd72c + 0x44))(7,8);
         (**(code **)(*DAT_803dd72c + 0x44))(0xd,2);
       }
     }
     else if ((bVar3 < 2) && (bVar3 != 0)) {
-      psVar4 = *(short **)(param_1 + 0xb8);
       iVar2 = (**(code **)(*DAT_803dd6e8 + 0x20))(0x2e8);
       if (iVar2 != 0) {
-        FUN_80017698((int)*psVar4,1);
-        FUN_80017698((int)psVar4[1],0);
-        *(undefined *)(psVar4 + 2) = 1;
-        *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
+        FUN_80017698((int)state->primarySequenceId,1);
+        FUN_80017698((int)state->secondarySequenceId,0);
+        state->sequenceLatched = 1;
+        obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_08;
       }
     }
   }
@@ -115,20 +134,22 @@ void laserObj_update(int param_1)
  */
 void laserObj_init(undefined2 *param_1,int param_2)
 {
+  LaserObject *obj;
+  LaserState *state;
   uint uVar1;
-  short *psVar2;
   
-  psVar2 = *(short **)(param_1 + 0x5c);
-  *psVar2 = *(short *)(param_2 + 0x1e);
-  psVar2[1] = *(short *)(param_2 + 0x20);
-  *(undefined *)(psVar2 + 2) = 0;
+  obj = (LaserObject *)param_1;
+  state = obj->state;
+  state->primarySequenceId = *(short *)(param_2 + 0x1e);
+  state->secondarySequenceId = *(short *)(param_2 + 0x20);
+  state->sequenceLatched = 0;
   *param_1 = (short)((int)*(char *)(param_2 + 0x18) << 8);
-  uVar1 = FUN_80017690((int)*psVar2);
+  uVar1 = FUN_80017690((int)state->primarySequenceId);
   if (uVar1 != 0) {
-    *(undefined *)(psVar2 + 2) = 1;
-    *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 8;
+    state->sequenceLatched = 1;
+    obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_08;
   }
-  param_1[0x58] = param_1[0x58] | 0x6000;
+  obj->objectFlags = obj->objectFlags | 0x6000;
   return;
 }
 
@@ -151,6 +172,7 @@ laser_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4
              undefined4 param_10,int param_11,int param_12,undefined4 param_13,
              undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
+  LaserObject *obj;
   char cVar1;
   byte bVar4;
   undefined4 uVar2;
@@ -159,8 +181,9 @@ laser_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   int iVar6;
   undefined8 uVar7;
   
+  obj = (LaserObject *)param_9;
   iVar5 = param_11;
-  bVar4 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(param_9 + 0xac));
+  bVar4 = (**(code **)(*DAT_803dd72c + 0x40))((int)obj->modeIndex);
   uVar7 = FUN_800068c4(0,0x48b);
   for (iVar6 = 0; iVar6 < (int)(uint)*(byte *)(param_11 + 0x8b); iVar6 = iVar6 + 1) {
     cVar1 = *(char *)(param_11 + iVar6 + 0x81);
@@ -439,15 +462,17 @@ void FUN_80209df0(void)
  */
 void laser_free(int param_1)
 {
+  LaserObject *obj;
+  LaserState *state;
   uint uVar1;
-  uint *puVar2;
   
   if (param_1 != 0) {
-    puVar2 = *(uint **)(param_1 + 0xb8);
-    uVar1 = *puVar2;
+    obj = (LaserObject *)param_1;
+    state = obj->state;
+    uVar1 = *(uint *)&state->primarySequenceId;
     if (uVar1 != 0) {
       FUN_80017814(uVar1);
-      *puVar2 = 0;
+      *(uint *)&state->primarySequenceId = 0;
     }
   }
   return;
