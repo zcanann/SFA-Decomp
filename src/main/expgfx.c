@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "dolphin/os/OSCache.h"
 #include "main/expgfx.h"
 #include "main/expgfx_internal.h"
 
@@ -25,6 +26,7 @@ extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern undefined4 FUN_8004812c();
 extern undefined8 FUN_80053754();
+extern void fn_80054308(void *resource);
 extern int FUN_8005b024();
 extern undefined4 FUN_8005d340();
 extern undefined4 FUN_8005e1d8();
@@ -172,8 +174,10 @@ extern f32 FLOAT_803e009c;
 extern f32 FLOAT_803e00a0;
 extern f32 FLOAT_803e00a4;
 extern f32 FLOAT_803e00a8;
+extern u8 lbl_8030F898[];
 extern u8 lbl_8039AB58[];
 extern s16 lbl_8030F8C8[];
+extern int lbl_803DD258;
 extern char sExpgfxAddToTableUsageOverflow[];
 extern char sExpgfxExpTabIsFull[];
 extern char sExpgfxInvalidTabIndex[];
@@ -195,7 +199,7 @@ typedef struct ExpgfxTableEntry {
   int key0;
   int key1;
   int textureOrResource;
-  s16 refCount;
+  u16 refCount;
   s16 slotType;
 } ExpgfxTableEntry;
 
@@ -773,7 +777,7 @@ int expgfx_addToTable(int textureOrResource,int key0,int key1,s16 slotType)
       return -1;
     }
   }
-  if (entry->refCount == -1) {
+  if (entry->refCount == 0xffff) {
     fn_801378A8(sExpgfxAddToTableUsageOverflow);
     return -1;
   }
@@ -988,9 +992,94 @@ void fn_8009EED8(int sourceId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void fn_8009EFDC(void)
 {
+  ExpgfxTableEntry *tableEntry;
+  ExpgfxSlot *slot;
+  u8 *expgfxBase;
+  int *poolSourceIds;
+  s16 *poolSlotTypeIds;
+  u8 *poolFrameFlags;
+  char *poolActiveCounts;
+  u32 *poolActiveMasks;
+  u32 *slotPoolBases;
+  u8 *staticDataBase;
+  u32 activeBit;
+  int poolIndex;
+  int resourceIndex;
+  int slotIndex;
+  void *resource;
+
+  expgfxBase = lbl_8039AB58;
+  staticDataBase = lbl_8030F898;
+  poolIndex = 0;
+  slotPoolBases = (u32 *)(expgfxBase + 0x1200);
+  poolActiveMasks = (u32 *)(expgfxBase + 0x10c0);
+  poolActiveCounts = (char *)(expgfxBase + 0x1070);
+  poolSlotTypeIds = (s16 *)(staticDataBase + 0x30);
+  poolSourceIds = (int *)(expgfxBase + 0xed0);
+  poolFrameFlags = staticDataBase + 0xd0;
+  do {
+    slot = (ExpgfxSlot *)*slotPoolBases;
+    slotIndex = 0;
+    do {
+      activeBit = 1 << slotIndex;
+      if ((*poolActiveMasks & activeBit) != 0) {
+        tableEntry =
+            (ExpgfxTableEntry *)(expgfxBase + 0x980 + (Expgfx_GetSlotTableIndex(slot) << 4));
+        if (tableEntry->textureOrResource != 0) {
+          lbl_803DD258 = 1;
+          fn_80054308((void *)tableEntry->textureOrResource);
+          lbl_803DD258 = 0;
+        }
+        if (tableEntry->refCount == 0) {
+          fn_801378A8(sExpgfxMismatchInAddRemove);
+        }
+        else {
+          tableEntry->refCount = tableEntry->refCount - 1;
+          if (tableEntry->refCount == 0) {
+            tableEntry->textureOrResource = 0;
+            tableEntry->key0 = 0;
+          }
+        }
+        *(s16 *)((u8 *)slot + 0x26) = -1;
+        *poolActiveMasks = *poolActiveMasks & ~activeBit;
+      }
+      slot = slot + 1;
+      slotIndex = slotIndex + 1;
+    } while (slotIndex < EXPGFX_SLOTS_PER_POOL);
+    *poolActiveCounts = 0;
+    *poolSlotTypeIds = -1;
+    *poolSourceIds = 0;
+    *poolFrameFlags = 0;
+    DCFlushRange((void *)*slotPoolBases,EXPGFX_POOL_BYTES);
+    slotPoolBases = slotPoolBases + 1;
+    poolActiveMasks = poolActiveMasks + 1;
+    poolActiveCounts = poolActiveCounts + 1;
+    poolSlotTypeIds = poolSlotTypeIds + 1;
+    poolSourceIds = poolSourceIds + 1;
+    poolFrameFlags = poolFrameFlags + 1;
+    poolIndex = poolIndex + 1;
+  } while (poolIndex < EXPGFX_POOL_COUNT);
+  resourceIndex = 0;
+  do {
+    lbl_803DD258 = 1;
+    resource = *(void **)expgfxBase;
+    if (resource != (void *)0x0) {
+      fn_80054308(resource);
+    }
+    lbl_803DD258 = 0;
+    *(int *)(expgfxBase + 0) = 0;
+    *(int *)(expgfxBase + 8) = 0;
+    *(int *)(expgfxBase + 4) = 0;
+    *(int *)(expgfxBase + 0xc) = 0;
+    expgfxBase = expgfxBase + 0x10;
+    resourceIndex = resourceIndex + 1;
+  } while (resourceIndex < 0x20);
+  return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
