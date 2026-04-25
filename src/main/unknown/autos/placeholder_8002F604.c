@@ -3,8 +3,6 @@
 #include "main/objanim_internal.h"
 #include "main/unknown/autos/placeholder_8002F604.h"
 
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_8028688c();
 extern void fn_80024E7C(int animId,int moveIndex,undefined4 cache,ObjAnimDef *animDef);
 extern void fn_8002C6C8(int objAnim,int objType,uint *eventTable,u32 moveId,int param_5);
 extern void fn_80035774(int objAnim,int *bank,int objType,int hitState,u32 moveId,int param_6);
@@ -222,7 +220,8 @@ undefined4 ObjAnim_SampleRootCurvePhase(double param_1,int param_2,float *param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 ObjAnim_AdvanceCurrentMove(double param_1,double param_2)
+#pragma scheduling off
+undefined4 ObjAnim_AdvanceCurrentMove(double param_1,double param_2,int iVar19,float *pfVar20)
 {
   double dVar1;
   char cVar2;
@@ -242,8 +241,6 @@ undefined4 ObjAnim_AdvanceCurrentMove(double param_1,double param_2)
   uint uVar16;
   undefined uVar17;
   undefined4 uVar18;
-  int iVar19;
-  float *pfVar20;
   int iVar21;
   int *piVar22;
   int iVar23;
@@ -255,15 +252,11 @@ undefined4 ObjAnim_AdvanceCurrentMove(double param_1,double param_2)
   byte bVar29;
   int iVar30;
   double dVar31;
-  undefined8 uVar32;
   undefined8 local_48;
   undefined8 local_38;
   undefined8 local_30;
   undefined8 local_20;
 
-  uVar32 = FUN_80286840();
-  iVar19 = (int)((ulonglong)uVar32 >> 0x20);
-  pfVar20 = (float *)uVar32;
   dVar31 = (double)FLOAT_803df58c;
   uVar18 = 0;
   if ((dVar31 <= param_1) && (dVar31 = param_1, (double)FLOAT_803df560 < param_1)) {
@@ -527,9 +520,9 @@ undefined4 ObjAnim_AdvanceCurrentMove(double param_1,double param_2)
       }
     }
   }
-  FUN_8028688c();
   return uVar18;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--

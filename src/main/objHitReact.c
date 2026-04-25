@@ -11,7 +11,7 @@ extern int *fn_8002E0FC(undefined *param_1,undefined *param_2);
 extern int fn_80036770(int obj,undefined4 *param_2,int *sphereIndex,uint *param_4,float *hitPos,
                        undefined *param_6,float *param_7);
 extern void fn_8009A1DC(double param_1,int obj,undefined2 *pos,u32 count,int *param_5);
-extern int ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnim,int events);
+extern int ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnim,float *events);
 extern undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnim,int moveId,u32 flags);
 
 extern undefined4 lbl_802C1B00[4];
@@ -76,7 +76,8 @@ u8 objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,flo
   effectOrigin[3] = lbl_802C1B00[3];
   if ((reactionState & 0xff) != 0) {
     OSReport(sObjHitReactHitstateFrameString,objAnim->hitReactFrame);
-    collisionType = ObjAnim_AdvanceCurrentMove((double)*cooldown,(double)lbl_803DB414,obj,0);
+    collisionType = ObjAnim_AdvanceCurrentMove((double)*cooldown,(double)lbl_803DB414,obj,
+                                               (float *)0x0);
     if (collisionType != 0) {
       OSReport(sObjHitReactResetString);
       reactionState = 0;
