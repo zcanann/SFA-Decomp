@@ -2327,79 +2327,40 @@ dolphin/MSL_C/PPCEABI/bare/H/s_ldexp.c:
 	.text       start:0x802919FC end:0x80291BC0
 
 dolphin/MSL_C/PPCEABI/bare/H/s_modf.c:
-	.text       start:0x80291BC0 end:0x80291CBC
+	.text       start:0x80291BC0 end:0x80291F44
 
 dolphin/MSL_C/PPCEABI/bare/H/k_sin.c:
-	.text       start:0x80291F44 end:0x80291FF4
-
-dolphin/MSL_C/PPCEABI/bare/H/gamecube.c:
-	.text       start:0x802923C4 end:0x802923C4
-
-main/unknown/autos/placeholder_80292428.c:
-	.text       start:0x802923C4 end:0x802923C4
+	.text       start:0x80291F44 end:0x802923C4
 
 dolphin/MSL_C/PPCEABI/bare/H/k_cos.c:
-	.text       start:0x802923C4 end:0x802924B4
-
-main/unknown/autos/placeholder_80292538.c:
-	.text       start:0x802924B4 end:0x802925C4
-
-dolphin/MSL_C/PPCEABI/bare/H/s_cos.c:
-	.text       start:0x802927A4 end:0x802927A4
-
-dolphin/MSL_C/PPCEABI/bare/H/math_ppc.c:
-	.text       start:0x802927A4 end:0x802927A4
+	.text       start:0x802923C4 end:0x802927A4
 
 dolphin/MSL_C/PPCEABI/bare/H/e_sqrt.c:
-	.text       start:0x802927A4 end:0x802929CC
+	.text       start:0x802927A4 end:0x80292B44
 
-main/unknown/autos/placeholder_802929CC.c:
-	.text       start:0x802929CC end:0x80292B44
-
-dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c:
-	.text       start:0x80292B44 end:0x80292B44
-
-main/unknown/autos/placeholder_80292C14.c:
+dolphin/MSL_C/PPCEABI/bare/H/e_pow.c:
 	.text       start:0x80292B44 end:0x80292D3C
 
 dolphin/MSL_C/PPCEABI/bare/H/s_tan.c:
 	.text       start:0x80292D3C end:0x80292DC0
 
 dolphin/MSL_C/PPCEABI/bare/H/rand.c:
-	.text       start:0x80292DC0 end:0x80292DEC
-
-main/unknown/autos/placeholder_80292DEC.c:
-	.text       start:0x80292DEC end:0x80292E20
+	.text       start:0x80292DC0 end:0x8029312C
 
 dolphin/MSL_C/PPCEABI/bare/H/k_tan.c:
-	.text       start:0x8029312C end:0x8029333C
-
-main/unknown/autos/placeholder_8029333C.c:
-	.text       start:0x8029333C end:0x80293464
+	.text       start:0x8029312C end:0x80293464
 
 dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.c:
-	.text       start:0x80293464 end:0x80293854
-
-main/unknown/autos/placeholder_80293854.c:
-	.text       start:0x80293854 end:0x8029397C
-
-main/unknown/autos/placeholder_80293A9C.c:
-	.text       start:0x8029397C end:0x80293AC4
-
-main/unknown/autos/placeholder_80293AC4.c:
-	.text       start:0x80293AC4 end:0x80293F7C
-
-main/unknown/autos/placeholder_80293FB4.c:
-	.text       start:0x80293F7C end:0x80294098
+	.text       start:0x80293464 end:0x80294098
 
 dolphin/MSL_C/PPCEABI/bare/H/s_floor.c:
 	.text       start:0x80294098 end:0x80294204
 
 dolphin/MSL_C/PPCEABI/bare/H/s_sin.c:
-	.text       start:0x80294204 end:0x802942EC
+	.text       start:0x80294204 end:0x80294640
 
-main/unknown/autos/placeholder_802942EC.c:
-	.text       start:0x802942EC end:0x802947CC
+dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c:
+	.text       start:0x80294640 end:0x802947CC
 
 dolphin/MSL_C/PPCEABI/bare/H/trigf.c:
 	.text       start:0x802947CC end:0x80294BB8

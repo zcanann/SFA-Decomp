@@ -650,6 +650,7 @@ config.libs = [
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_sin.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_cos.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_sqrt.c"),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_pow.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_tan.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/extras.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_tan.c"),
