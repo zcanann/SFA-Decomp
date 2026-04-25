@@ -547,8 +547,11 @@ undefined4 ObjAnim_SetMoveProgress(double param_1,int param_2)
 {
   double dVar1;
 
-  dVar1 = (double)FLOAT_803df588;
-  if ((param_1 <= dVar1) && (dVar1 = param_1, param_1 < (double)FLOAT_803df570)) {
+  dVar1 = param_1;
+  if ((double)FLOAT_803df588 < dVar1) {
+    dVar1 = (double)FLOAT_803df588;
+  }
+  if (dVar1 < (double)FLOAT_803df570) {
     dVar1 = (double)FLOAT_803df570;
   }
   *(float *)(param_2 + 0x98) = (float)dVar1;
@@ -588,8 +591,11 @@ void ObjAnim_SetCurrentMove(double param_1,double param_2,double param_3,undefin
   uVar10 = FUN_80286840();
   iVar5 = (int)((ulonglong)uVar10 >> 0x20);
   uVar2 = (uint)uVar10;
-  dVar8 = (double)FLOAT_803df560;
-  if ((param_1 <= dVar8) && (dVar8 = param_1, param_1 < (double)FLOAT_803df570)) {
+  dVar8 = param_1;
+  if ((double)FLOAT_803df560 < dVar8) {
+    dVar8 = (double)FLOAT_803df560;
+  }
+  if (dVar8 < (double)FLOAT_803df570) {
     dVar8 = (double)FLOAT_803df570;
   }
   *(float *)(iVar5 + 0x98) = (float)dVar8;
@@ -635,7 +641,7 @@ void ObjAnim_SetCurrentMove(double param_1,double param_2,double param_3,undefin
       iVar5 = *(int *)(*(int *)(iVar7 + 100) + (uint)*(ushort *)(iVar6 + 0x44) * 4);
     }
     else {
-      if ((int)(uVar2 - (int)sVar1 | (int)sVar1 - uVar2) < 0) {
+      if (uVar2 != (uint)(u16)sVar1) {
         *(char *)(iVar6 + 0x62) = '\x01' - *(char *)(iVar6 + 0x62);
         *(short *)(iVar6 + 0x44) = (short)*(char *)(iVar6 + 0x62);
         if (*(short *)(*(int *)(iVar7 + 0x6c) + iVar5 * 2) == -1) {
@@ -656,7 +662,7 @@ void ObjAnim_SetCurrentMove(double param_1,double param_2,double param_3,undefin
     if (*(char *)(iVar6 + 0x60) == '\0') {
       *(float *)(iVar6 + 0x14) = *(float *)(iVar6 + 0x14) - FLOAT_803df560;
     }
-    uVar2 = (int)*(char *)(iVar5 + 1) & 0xf;
+    uVar2 = *(u8 *)(iVar5 + 1) & 0xf;
     if ((uVar2 == 0) || ((param_11 & 0x10) != 0)) {
       *(undefined2 *)(iVar6 + 0x58) = 0;
     }

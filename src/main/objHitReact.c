@@ -14,10 +14,7 @@ extern void fn_8009A1DC(double param_1,int obj,undefined2 *pos,u32 count,int *pa
 extern int ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnim,int events);
 extern void ObjAnim_SetCurrentMove(double moveProgress,int objAnim,int moveId,u32 flags);
 
-extern undefined4 lbl_802C1B00;
-extern undefined4 lbl_802C1B04;
-extern undefined4 lbl_802C1B08;
-extern undefined4 lbl_802C1B0C;
+extern undefined4 lbl_802C1B00[4];
 extern char sObjHitReactHitstateFrameString[];
 extern char sObjHitReactSphereOverflowString[];
 extern char sObjHitReactResetString[];
@@ -56,10 +53,6 @@ u8 objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,flo
   int *effectHandle;
   bool volumeActive;
   ObjHitReactEntry *reactEntry;
-  undefined4 local_44;
-  undefined4 local_40;
-  undefined4 local_3c;
-  undefined4 local_38;
   undefined2 local_34;
   undefined2 local_32;
   undefined2 local_30;
@@ -68,12 +61,13 @@ u8 objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,flo
   undefined local_24[4];
   float local_20[8];
   int sphereIndex;
+  undefined4 effectOrigin[4];
 
   objAnim = (ObjAnimComponent *)obj;
-  local_44 = lbl_802C1B00;
-  local_40 = lbl_802C1B04;
-  local_3c = lbl_802C1B08;
-  local_38 = lbl_802C1B0C;
+  effectOrigin[0] = lbl_802C1B00[0];
+  effectOrigin[1] = lbl_802C1B00[1];
+  effectOrigin[2] = lbl_802C1B00[2];
+  effectOrigin[3] = lbl_802C1B00[3];
   if ((reactionState & 0xff) != 0) {
     OSReport(sObjHitReactHitstateFrameString,objAnim->moveProgress);
     collisionType = ObjAnim_AdvanceCurrentMove((double)*cooldown,(double)lbl_803DB414,obj,0);
@@ -108,7 +102,7 @@ u8 objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,flo
       }
       if (reactEntry->hitFxMode == 1) {
         effectHandle = (int *)fn_80013EC8(0x5a,1);
-        (**(code **)(*effectHandle + 4))(0,1,&local_34,0x401,-1,&local_44);
+        (**(code **)(*effectHandle + 4))(0,1,&local_34,0x401,-1,effectOrigin);
         if (effectHandle != (int *)0x0) {
           fn_80013E2C(effectHandle);
         }

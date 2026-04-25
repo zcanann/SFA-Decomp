@@ -169,7 +169,7 @@ void Object_ObjAnimSetSecondaryBlendMove(int objAnim,uint moveId,s16 eventState)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 Object_ObjAnimAdvanceMove(double param_1,double param_2,int param_3,int param_4)
+undefined4 Object_ObjAnimAdvanceMove(double moveStepScale,double deltaTime,int objAnimArg,int eventsArg)
 {
   ObjAnimComponent *objAnim;
   ObjAnimEventList *events;
@@ -192,8 +192,8 @@ undefined4 Object_ObjAnimAdvanceMove(double param_1,double param_2,int param_3,i
   undefined uVar15;
   undefined8 local_28;
 
-  objAnim = (ObjAnimComponent *)param_3;
-  events = (ObjAnimEventList *)param_4;
+  objAnim = (ObjAnimComponent *)objAnimArg;
+  events = (ObjAnimEventList *)eventsArg;
   uVar7 = 0;
   bank = ObjAnim_GetActiveBank(objAnim);
   piVar10 = (int *)bank;
@@ -203,15 +203,15 @@ undefined4 Object_ObjAnimAdvanceMove(double param_1,double param_2,int param_3,i
   else {
     state = bank->primaryState;
     iVar11 = (int)state;
-    state->step = (float)(param_1 * (double)state->segmentLength);
+    state->step = (float)(moveStepScale * (double)state->segmentLength);
     if (state->eventCountdown != 0) {
       if ((state->flags & 8) != 0) {
         state->savedStep = state->step;
       }
-      state->progress = (float)((double)state->savedStep * param_2 + (double)state->progress);
+      state->progress = (float)((double)state->savedStep * deltaTime + (double)state->progress);
       fVar5 = FLOAT_803df570;
       fVar4 = state->prevSegmentLength;
-      if (state->prevFrameType == '\0') {
+      if (state->prevFrameType == 0) {
         fVar5 = state->progress;
         fVar6 = FLOAT_803df570;
         if ((FLOAT_803df570 <= fVar5) && (fVar6 = fVar5, fVar4 < fVar5)) {
@@ -233,7 +233,7 @@ undefined4 Object_ObjAnimAdvanceMove(double param_1,double param_2,int param_3,i
       }
       if ((state->flags & 2) == 0) {
         uVar8 = (uint)-(float)((double)(float)(ObjAnim_U32AsDouble((uint)state->eventStep) -
-                                              DOUBLE_803df568) * param_2 -
+                                              DOUBLE_803df568) * deltaTime -
                               (double)(float)(ObjAnim_U32AsDouble(state->eventCountdown ^
                                                                   0x80000000) - DOUBLE_803df580));
         fVar4 = FLOAT_803df570;
@@ -250,12 +250,12 @@ undefined4 Object_ObjAnimAdvanceMove(double param_1,double param_2,int param_3,i
       }
     }
     fVar4 = objAnim->moveProgress;
-    objAnim->moveProgress = fVar4 + (float)(param_1 * param_2);
+    objAnim->moveProgress = fVar4 + (float)(moveStepScale * deltaTime);
     fVar6 = FLOAT_803df570;
     fVar5 = FLOAT_803df560;
     if (objAnim->moveProgress < FLOAT_803df560) {
       if (objAnim->moveProgress < FLOAT_803df570) {
-        if (state->frameType == '\0') {
+        if (state->frameType == 0) {
           objAnim->moveProgress = FLOAT_803df570;
         }
         else {
@@ -267,7 +267,7 @@ undefined4 Object_ObjAnimAdvanceMove(double param_1,double param_2,int param_3,i
       }
     }
     else {
-      if (state->frameType == '\0') {
+      if (state->frameType == 0) {
         objAnim->moveProgress = FLOAT_803df560;
       }
       else {
@@ -284,7 +284,7 @@ undefined4 Object_ObjAnimAdvanceMove(double param_1,double param_2,int param_3,i
         iVar1 = (int)(FLOAT_803df578 * fVar4);
         iVar2 = (int)(FLOAT_803df578 * objAnim->moveProgress);
         bVar13 = iVar2 < iVar1;
-        if ((float)(param_1 * param_2) < FLOAT_803df570) {
+        if ((float)(moveStepScale * deltaTime) < FLOAT_803df570) {
           bVar13 = bVar13 | 2;
         }
         iVar12 = 0;
@@ -429,7 +429,7 @@ Object_ObjAnimSetMove(double moveProgress,int objAnimArg,uint moveId,undefined f
     state->frameType = *(u8 *)(iVar6 + 1) & 0xf0;
     state->segmentLength =
          (float)(ObjAnim_U32AsDouble((uint)state->frameData[1]) - DOUBLE_803df568);
-    if (state->frameType == '\0') {
+    if (state->frameType == 0) {
       state->segmentLength = state->segmentLength - FLOAT_803df560;
     }
     uVar2 = *(u8 *)(iVar6 + 1) & 0xf;
