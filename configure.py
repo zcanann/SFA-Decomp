@@ -1194,6 +1194,8 @@ config.libs = [
             Object(NonMatching, "main/dfplightni.c"),
             Object(NonMatching, "main/dll/CF/laser.c"),
             Object(NonMatching, "main/dfppowersl.c"),
+            Object(NonMatching, "main/worldasteroids.c"),
+            Object(NonMatching, "main/unknown/autos/placeholder_8020C5EC.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8026CBEC.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8026DFE4.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8026E848.c"),
