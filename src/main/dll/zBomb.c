@@ -141,9 +141,7 @@ void dfptargetblock_init(int param_1,int param_2)
   int iVar8;
   DfpTargetBlockState *state;
   double dVar11;
-  float local_58;
-  float local_54;
-  float local_50;
+  DfpTargetBlockPoint point;
 
   state = *(DfpTargetBlockState **)(param_1 + 0xb8);
   iVar7 = **(int **)(*(int *)(param_1 + 0x7c) + *(char *)(param_1 + 0xad) * 4);
@@ -156,28 +154,28 @@ void dfptargetblock_init(int param_1,int param_2)
   else {
     dVar11 = (double)FLOAT_803e64cc;
     for (iVar8 = 0; iVar8 < (int)(uint)*(ushort *)(iVar7 + 0xe4); iVar8 = iVar8 + 1) {
-      FUN_80026e00(iVar7,iVar8,&local_58);
-      if ((double)local_54 < dVar11) {
-        dVar11 = (double)local_54;
+      FUN_80026e00(iVar7,iVar8,&point.x);
+      if ((double)point.y < dVar11) {
+        dVar11 = (double)point.y;
       }
     }
     for (iVar8 = 0; iVar8 < (int)(uint)*(ushort *)(iVar7 + 0xe4); iVar8 = iVar8 + 1) {
-      FUN_80026e00(iVar7,iVar8,&local_58);
-      if ((double)local_54 == dVar11) {
+      FUN_80026e00(iVar7,iVar8,&point.x);
+      if ((double)point.y == dVar11) {
         bVar2 = false;
         cVar1 = state->floorPointCount;
         for (iVar6 = 0; iVar6 < cVar1; iVar6 = iVar6 + 1) {
           iVar4 = (int)&state->floorPoints[iVar6];
-          if ((local_58 == *(float *)iVar4) && (local_50 == *(float *)(iVar4 + 8))) {
+          if ((point.x == *(float *)iVar4) && (point.z == *(float *)(iVar4 + 8))) {
             bVar2 = true;
             iVar6 = (int)cVar1;
           }
         }
         if (!bVar2) {
           iVar3 = (int)state->floorPointCount;
-          state->floorPoints[iVar3].x = local_58;
-          state->floorPoints[(int)state->floorPointCount].y = local_54;
-          state->floorPoints[(int)state->floorPointCount].z = local_50;
+          state->floorPoints[iVar3].x = point.x;
+          state->floorPoints[(int)state->floorPointCount].y = point.y;
+          state->floorPoints[(int)state->floorPointCount].z = point.z;
           state->floorPointCount = state->floorPointCount + '\x01';
         }
       }

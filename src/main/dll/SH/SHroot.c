@@ -4,7 +4,7 @@
 
 extern int fn_8000BB18();
 extern undefined4 fn_8000B7BC();
-extern uint fn_8001FFB4(int eventId);
+extern int fn_8001FFB4(int eventId);
 extern undefined4 fn_800200E8();
 extern f32 fn_8002166C();
 extern undefined4 fn_800221A0();

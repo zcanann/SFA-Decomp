@@ -3,7 +3,7 @@
 #include "main/dll/SH/dll_1E8.h"
 
 extern undefined4 FUN_80006824();
-extern uint fn_8001FFB4(int eventId);
+extern int fn_8001FFB4(int eventId);
 extern undefined4 fn_800221A0();
 extern uint FUN_80017758();
 extern uint FUN_80017760();
