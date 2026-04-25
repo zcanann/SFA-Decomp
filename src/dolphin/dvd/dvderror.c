@@ -5,7 +5,7 @@
 #include "dolphin/dvd/__dvd.h"
 #include "dolphin/os/__os.h"
 
-extern u32 lbl_8032E990[18];
+extern u32 lbl_8032DD38[18];
 
 #define DIDNT_MATCH 29
 
@@ -14,7 +14,7 @@ static u8 ErrorCode2Num(u32 errorCode) {
 	u32 i;
 
 	for (i = 0; i < 18; i++) {
-		if (errorCode == lbl_8032E990[i]) {
+		if (errorCode == lbl_8032DD38[i]) {
             ASSERTLINE(73, i < DIDNT_MATCH);
 			return i;
 		}
