@@ -1417,8 +1417,11 @@ main/dfplightni.c:
 main/dll/CF/laser.c:
 	.text       start:0x80209FE0 end:0x80209FE0
 
+main/dfppowersl.c:
+	.text       start:0x80209FE0 end:0x8020A1C8
+
 main/unknown/autos/placeholder_80209FE0.c:
-	.text       start:0x80209FE0 end:0x8024034C
+	.text       start:0x8020A1C8 end:0x8024034C
 
 dolphin/base/PPCArch.c:
 	.text       start:0x8024034C end:0x802403D8
