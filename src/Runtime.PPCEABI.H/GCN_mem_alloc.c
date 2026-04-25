@@ -1,6 +1,12 @@
 #include "dolphin/os.h"
 
-static int __initialized = 0;
+extern int lbl_803DE3E8;  // was __initialized; lives in sbss outside this TU's range
+
+const double lbl_802C2920[3] = {
+    0.0,
+    4294967296.0,
+    2147483648.0,
+};
 
 asm void __sys_free(register void* p) {
     nofralloc
@@ -11,7 +17,7 @@ asm void __sys_free(register void* p) {
     stw r30, 0x18(r1)
     stw r29, 0x14(r1)
     mr r29, r3
-    lwz r0, __initialized(r0)
+    lwz r0, lbl_803DE3E8(r0)
     cmpwi r0, 0
     bne _sf_skip
     bl OSGetArenaLo
@@ -33,7 +39,7 @@ asm void __sys_free(register void* p) {
     mr r3, r30
     bl OSSetArenaLo
     li r0, 1
-    stw r0, __initialized(r0)
+    stw r0, lbl_803DE3E8(r0)
 _sf_skip:
     mr r4, r29
     li r3, 0
