@@ -51,7 +51,7 @@ void fn_8007681C(undefined8 param_1,double param_2,undefined4 param_3,undefined4
                  uint param_5,int param_6,int param_7,uint param_8);
 void fn_80076D78(undefined4 param_1,undefined4 param_2,int param_3,undefined4 *param_4,uint param_5
                  ,uint param_6);
-void fn_8007719C(double param_1,double param_2,int param_3,uint param_4,uint param_5);
+void fn_8007719C(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale);
 void fn_80077604(f32* obj, u32* colorPtr, Mtx mtx);
 void fn_8007788C(f32* obj, u32* colorPtr, Mtx mtx);
 void fn_80077AD8(double param_1,float *param_2,int param_3,float *param_4);

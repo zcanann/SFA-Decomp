@@ -1234,12 +1234,14 @@ void fn_8007366C(u8 alpha)
     extern void fn_80247318(f32* mtx, f32 a, f32 b, f32 c);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
-    Mtx mtx;
-    f32 ind_mtx[2][3];
-    Mtx tex_mtx;
-    f32 a, b;
-    int handle1, handle2;
     GXColor c;
+    int handle2;
+    f32 b;
+    f32 a;
+    int handle1;
+    f32 ind_mtx[2][3];
+    Mtx mtx;
+    Mtx tex_mtx;
 
     fn_8000F54C();
     fn_8006C6F0(0);
@@ -2012,18 +2014,125 @@ void fn_80076D78(undefined4 param_1,undefined4 param_2,int param_3,undefined4 *p
  * --INFO--
  *
  * Function: fn_8007719C
- * EN v1.0 Address: 0x800709E8
- * EN v1.0 Size: 4b
+ * EN v1.0 Address: 0x8007719C
+ * EN v1.0 Size: 1128b
  * EN v1.1 Address: 0x80077318
  * EN v1.1 Size: 1128b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
+ *
+ * Quad-from-asset blit: takes an "asset record" (with width at +0xA,
+ * height at +0xC, and an optional second-stage flag at +0x50), a per-
+ * call alpha multiplier, screen-pos (sx, sy), and a u16 size scale.
+ * Composes K0 from RGB(255,255,255) plus the global alpha tint
+ * (alpha * lbl_803DB679 >> 8); if the asset opts in, layers a second
+ * tex stage that further K-multiplies by the texture. Final width and
+ * height are 4 * asset_dim * scale >> 8 in screen pixels at z=-8.
  */
-void fn_8007719C(double param_1,double param_2,int param_3,uint param_4,uint param_5)
+#pragma peephole off
+#pragma scheduling off
+void fn_8007719C(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
 {
+    extern f32 lbl_803DEF2C;
+    extern u8 lbl_803DB679;
+    extern Mtx lbl_80396880;
+    extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
+    extern int lbl_803DD014;
+    extern void fn_8004C264(s16* obj, int slot);
+    extern void fn_8000FB00(void);
+    extern void GXSetZMode();
+    GXColor c;
+    s32 w, h;
+
+    c.r = 0xFF;
+    c.g = 0xFF;
+    c.b = 0xFF;
+    c.a = (u8)(((s32)alpha_mod * (s32)lbl_803DB679) >> 8);
+
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXSetTevKColor(0, c);
+    GXSetTevKAlphaSel(0, 0x1C);
+    GXSetTevOrder(0, 0, 0, 0xFF);
+    GXSetTevDirect(0);
+    GXSetTevColorIn(0, 0xF, 0xF, 0xF, 8);
+    GXSetTevAlphaIn(0, 7, 4, 6, 7);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    if (((u32*)obj)[0x14] != 0) {
+        GXSetTevKAlphaSel(1, 0x1C);
+        GXSetTevOrder(1, 1, 1, 0xFF);
+        GXSetTevDirect(1);
+        GXSetTevColorIn(1, 0xF, 0xF, 0xF, 0);
+        GXSetTevAlphaIn(1, 7, 4, 6, 7);
+        GXSetTevSwapMode(1, 0, 0);
+        GXSetTevColorOp(1, 0, 0, 0, 1, 0);
+        GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+        GXSetNumTevStages(2);
+    } else {
+        GXSetNumTevStages(1);
+    }
+    GXSetNumIndStages(0);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(0);
+    GXSetNumTexGens(1);
+    GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
+    fn_8004C264(obj, 0);
+    GXSetCullMode(GX_CULL_NONE);
+    GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
+    if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 7 ||
+        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+        GXSetZMode(0, 7, 0);
+        lbl_803DD018 = 0;
+        lbl_803DD014 = 7;
+        lbl_803DD012 = 0;
+        lbl_803DD01A = 1;
+    }
+    GXSetBlendMode(1, 4, 5, 5);
+    w = ((((u16)obj[5]) << 2) * (s32)scale) >> 8;
+    h = ((((u16)obj[6]) << 2) * (s32)scale) >> 8;
+    sx = sx * lbl_803DEF2C;
+    sy = sy * lbl_803DEF2C;
+    GXBegin(GX_QUADS, GX_VTXFMT1, 4);
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = (s32)sx;
+    GXWGFifo.s16 = (s32)sy;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = 0.0f;
+    GXWGFifo.f32 = 0.0f;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = (s32)(sx + (f32)((u32)w));
+    GXWGFifo.s16 = (s32)sy;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = 1.0f;
+    GXWGFifo.f32 = 0.0f;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = (s32)(sx + (f32)((u32)w));
+    GXWGFifo.s16 = (s32)(sy + (f32)((u32)h));
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = 1.0f;
+    GXWGFifo.f32 = 1.0f;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = (s32)sx;
+    GXWGFifo.s16 = (s32)(sy + (f32)((u32)h));
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = 0.0f;
+    GXWGFifo.f32 = 1.0f;
+
+    fn_8000FB00();
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
