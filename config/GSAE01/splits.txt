@@ -2234,12 +2234,9 @@ dolphin/TRK_MINNOW_DOLPHIN/mem_TRK.c:
 	.text       start:0x8028B01C end:0x8028B0D8
 
 dolphin/TRK_MINNOW_DOLPHIN/targimpl.c:
-	.text       start:0x8028B0D8 end:0x8028C964
+	.text       start:0x8028B0D8 end:0x8028C970
 	.rodata     start:0x802C2978 end:0x802C2A00
 	.data       start:0x80332F48 end:0x80332F78
-
-main/unknown/autos/placeholder_8028C964.c:
-	.text       start:0x8028C964 end:0x8028C970
 
 dolphin/TRK_MINNOW_DOLPHIN/targsupp.s: comment:0
 	.text       start:0x8028C970 end:0x8028C990
@@ -2264,7 +2261,10 @@ dolphin/TRK_MINNOW_DOLPHIN/targcont.c:
 	.text       start:0x8028D318 end:0x8028D34C
 
 dolphin/TRK_MINNOW_DOLPHIN/target_options.c:
-	.text       start:0x8028D34C end:0x8028D4A8
+	.text       start:0x8028D34C end:0x8028D368
+
+dolphin/TRK_MINNOW_DOLPHIN/mslsupp.c:
+	.text       start:0x8028D368 end:0x8028D4A8
 
 dolphin/MSL_C/PPCEABI/bare/H/abort_exit.c:
 	.text       start:0x8028D4A8 end:0x8028D960
@@ -2274,9 +2274,6 @@ dolphin/MSL_C/PPCEABI/bare/H/alloc.c:
 
 dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c:
 	.text       start:0x8028DB4C end:0x8028DBE4
-
-dolphin/TRK_MINNOW_DOLPHIN/mslsupp.c:
-	.text       start:0x8028DBE4 end:0x8028DBE4
 
 dolphin/MSL_C/PPCEABI/bare/H/ansi_fp.c:
 	.text       start:0x8028DBE4 end:0x8028E7FC
@@ -2291,10 +2288,7 @@ dolphin/MSL_C/PPCEABI/bare/H/file_io.c:
 	.text       start:0x8028EC20 end:0x8028EE18
 
 dolphin/MSL_C/PPCEABI/bare/H/FILE_POS.c:
-	.text       start:0x8028EE18 end:0x8028EE38
-
-main/unknown/autos/placeholder_8028EE38.c:
-	.text       start:0x8028EE38 end:0x8028F0E4
+	.text       start:0x8028EE18 end:0x8028F0E4
 
 dolphin/MSL_C/PPCEABI/bare/H/mbstring.c:
 	.text       start:0x8028F0E4 end:0x8028F228
@@ -2338,7 +2332,7 @@ dolphin/MSL_C/PPCEABI/bare/H/k_cos.c:
 dolphin/MSL_C/PPCEABI/bare/H/e_sqrt.c:
 	.text       start:0x802927A4 end:0x80292B44
 
-dolphin/MSL_C/PPCEABI/bare/H/e_pow.c:
+dolphin/MSL_C/PPCEABI/bare/H/e_atan2.c:
 	.text       start:0x80292B44 end:0x80292D3C
 
 dolphin/MSL_C/PPCEABI/bare/H/s_tan.c:
@@ -2366,8 +2360,11 @@ dolphin/MSL_C/PPCEABI/bare/H/trigf.c:
 	.text       start:0x802947CC end:0x80294BB8
 	.ctors      start:0x802C1884 end:0x802C1888
 
+dolphin/MSL_C/PPCEABI/bare/H/e_pow.c:
+	.text       start:0x80294BB8 end:0x80295334
+
 main/unknown/autos/placeholder_80295318.c:
-	.text       start:0x80294BB8 end:0x802BACC0
+	.text       start:0x80295334 end:0x802BACC0
 
 dolphin/TRK_MINNOW_DOLPHIN/main.c:
 	.text       start:0x802BACC0 end:0x802BB008
