@@ -50,6 +50,7 @@ static inline f64 ObjAnim_U32AsDouble(u32 value) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 #pragma dont_inline on
 void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,uint moveId,s16 eventState)
 {
@@ -59,8 +60,8 @@ void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,ui
   int moveIndex;
   u64 frameBits;
 
-  moveIndex = ObjAnim_GetMoveBaseTable(animDef)[(s32)moveId >> 8] + (moveId & 0xff);
-  if ((u32)animDef->moveCount <= moveIndex) {
+  moveIndex = animDef->moveBaseTable[(s32)moveId >> 8] + (moveId & 0xff);
+  if (animDef->moveCount <= moveIndex) {
     moveIndex = animDef->moveCount - 1;
   }
   if (moveIndex < 0) {
@@ -105,6 +106,7 @@ void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,ui
   return;
 }
 #pragma dont_inline reset
+#pragma scheduling reset
 
 /*
  * --INFO--
