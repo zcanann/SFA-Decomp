@@ -370,13 +370,14 @@ undefined4 Object_ObjAnimSetMoveProgress(f32 param_1,int param_2)
  */
 #pragma scheduling off
 undefined4
-Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,uint moveId,undefined flags)
+Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
 {
   ObjAnimComponent *objAnim;
   ObjAnimBank *bank;
   ObjAnimDef *animDef;
   ObjAnimState *state;
   short sVar1;
+  u8 moveChanged;
   uint uVar2;
   int iVar3;
   int iVar6;
@@ -392,58 +393,60 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,uint moveId,undefined flag
   objAnim->moveProgress = clampedProgress;
   bank = ObjAnim_GetActiveBank(objAnim);
   animDef = bank->animDef;
-  if (animDef->moveCount != 0) {
-    state = bank->primaryState;
-    state->flags = flags;
-    state->prevMoveCacheSlot = state->moveCacheSlot;
-    state->progress = state->speed;
-    state->prevSegmentLength = state->segmentLength;
-    state->savedStep = state->step;
-    state->prevFrameData = state->frameData;
-    state->prevFrameType = state->frameType;
-    state->prevBlendCacheSlot = state->blendCacheSlot;
-    state->prevFrameCmd = state->frameCmd;
-    state->prevEventState = state->eventState;
-    state->eventState = 0;
-    state->lastBlendMoveIndex = -1;
-    sVar1 = objAnim->activeMove;
-    objAnim->activeMove = (s16)moveId;
-    iVar3 = ObjAnim_ResolveMoveIndex(animDef, moveId);
-    if ((animDef->flags & 0x40) != 0) {
-      if (moveId != sVar1) {
-        state->blendToggle = '\x01' - state->blendToggle;
-        state->moveCacheSlot = (u16)state->blendToggle;
-        if (animDef->blendMoveIds[iVar3] == -1) {
-          OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
-          iVar3 = 0;
-        }
-        fn_80024E7C((int)animDef->blendMoveIds[iVar3],(int)(s16)iVar3,
-                    (undefined4)state->moveCache[state->moveCacheSlot],animDef);
-      }
-      iVar6 = (int)state->moveCache[state->moveCacheSlot] + 0x80;
-    }
-    else {
-      state->moveCacheSlot = (u16)iVar3;
-      iVar6 = (int)animDef->moveData[state->moveCacheSlot];
-    }
-    state->frameData = (u8 *)(iVar6 + 6);
-    state->frameType = *(u8 *)(iVar6 + 1) & 0xf0;
-    state->segmentLength =
-         ObjAnim_U32AsDouble((uint)state->frameData[1]) - DOUBLE_803df568;
-    if (state->frameType == 0) {
-      state->segmentLength = state->segmentLength - FLOAT_803df560;
-    }
-    uVar2 = *(u8 *)(iVar6 + 1) & 0xf;
-    if (uVar2 != 0) {
-      state->savedStep = state->step;
-      state->eventStep =
-           (short)(int)(FLOAT_803df574 /
-                        (float)(ObjAnim_U32AsDouble(uVar2 ^ 0x80000000) - DOUBLE_803df580));
-      state->eventCountdown = 0x4000;
-    }
-    state->step = FLOAT_803df570;
-    state->speed = clampedProgress * state->segmentLength;
+  if (animDef->moveCount == 0) {
+    return 0;
   }
+  state = bank->primaryState;
+  state->flags = (s8)flags;
+  state->prevMoveCacheSlot = state->moveCacheSlot;
+  state->progress = state->speed;
+  state->prevSegmentLength = state->segmentLength;
+  state->savedStep = state->step;
+  state->prevFrameData = state->frameData;
+  state->prevFrameType = state->frameType;
+  state->prevBlendCacheSlot = state->blendCacheSlot;
+  state->prevFrameCmd = state->frameCmd;
+  state->prevEventState = state->eventState;
+  state->eventState = 0;
+  state->lastBlendMoveIndex = -1;
+  sVar1 = objAnim->activeMove;
+  moveChanged = moveId != sVar1;
+  objAnim->activeMove = moveId;
+  iVar3 = ObjAnim_ResolveMoveIndex(animDef, moveId);
+  if ((animDef->flags & 0x40) != 0) {
+    if (moveChanged != 0) {
+      state->blendToggle = '\x01' - state->blendToggle;
+      state->moveCacheSlot = (u16)state->blendToggle;
+      if (animDef->blendMoveIds[iVar3] == -1) {
+        OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
+        iVar3 = 0;
+      }
+      fn_80024E7C((int)animDef->blendMoveIds[iVar3],(int)(s16)iVar3,
+                  (undefined4)state->moveCache[state->moveCacheSlot],animDef);
+    }
+    iVar6 = (int)state->moveCache[state->moveCacheSlot] + 0x80;
+  }
+  else {
+    state->moveCacheSlot = (u16)iVar3;
+    iVar6 = (int)animDef->moveData[state->moveCacheSlot];
+  }
+  state->frameData = (u8 *)(iVar6 + 6);
+  state->frameType = *(u8 *)(iVar6 + 1) & 0xf0;
+  state->segmentLength =
+       ObjAnim_U32AsDouble((uint)state->frameData[1]) - DOUBLE_803df568;
+  if (state->frameType == 0) {
+    state->segmentLength = state->segmentLength - FLOAT_803df560;
+  }
+  uVar2 = *(u8 *)(iVar6 + 1) & 0xf;
+  if (uVar2 != 0) {
+    state->savedStep = state->step;
+    state->eventStep =
+         (short)(int)(FLOAT_803df574 /
+                      (float)(ObjAnim_U32AsDouble(uVar2 ^ 0x80000000) - DOUBLE_803df580));
+    state->eventCountdown = 0x4000;
+  }
+  state->step = FLOAT_803df570;
+  state->speed = clampedProgress * state->segmentLength;
   return 0;
 }
 #pragma scheduling reset

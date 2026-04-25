@@ -44,10 +44,10 @@ typedef struct ObjAnimState {
   u16 eventState;
   u16 prevEventState;
   u16 eventStep;
-  u8 frameType;
-  u8 prevFrameType;
+  s8 frameType;
+  s8 prevFrameType;
   s8 blendToggle;
-  u8 flags;
+  s8 flags;
   s16 lastBlendMoveIndex;
 } ObjAnimState;
 
