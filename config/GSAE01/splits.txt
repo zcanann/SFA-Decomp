@@ -2285,16 +2285,16 @@ dolphin/MSL_C/PPCEABI/bare/H/FILE_POS.c:
 	.text       start:0x8028EE18 end:0x8028EE38
 
 main/unknown/autos/placeholder_8028EE38.c:
-	.text       start:0x8028EE38 end:0x8028F2CC
-
-dolphin/MSL_C/PPCEABI/bare/H/mem.c:
-	.text       start:0x8028F2CC end:0x8028F398
-
-main/unknown/autos/placeholder_8028F398.c:
-	.text       start:0x8028F398 end:0x8028F7E0
+	.text       start:0x8028EE38 end:0x8028F0E4
 
 dolphin/MSL_C/PPCEABI/bare/H/mbstring.c:
-	.text       start:0x8028F7E0 end:0x8028F920
+	.text       start:0x8028F0E4 end:0x8028F228
+
+dolphin/MSL_C/PPCEABI/bare/H/mem.c:
+	.text       start:0x8028F228 end:0x8028F398
+
+main/unknown/autos/placeholder_8028F398.c:
+	.text       start:0x8028F398 end:0x8028F920
 
 dolphin/MSL_C/PPCEABI/bare/H/mem_funcs.c:
 	.text       start:0x8028F920 end:0x8028F920
