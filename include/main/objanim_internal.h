@@ -60,7 +60,7 @@ typedef struct ObjAnimBank {
 
 typedef struct ObjAnimComponent {
   u8 pad00[0x60];
-  void *eventTable;
+  struct ObjAnimEventTable *eventTable;
   u8 pad64[0x7C - 0x64];
   ObjAnimBank **banks;
   u8 pad80[0x98 - 0x80];
@@ -72,11 +72,16 @@ typedef struct ObjAnimComponent {
   s8 bankIndex;
 } ObjAnimComponent;
 
+typedef struct ObjAnimEventTable {
+  s32 packedCount;
+  s16 *entries;
+} ObjAnimEventTable;
+
 typedef struct ObjAnimEventList {
   u8 pad00[0x12];
   u8 resetFlag;
   u8 triggeredIds[8];
-  u8 count;
+  u8 triggerCount;
 } ObjAnimEventList;
 
 static inline ObjAnimBank *ObjAnim_GetActiveBank(ObjAnimComponent *objAnim) {
