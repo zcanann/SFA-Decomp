@@ -10,7 +10,8 @@ typedef struct LaserState {
 } LaserState;
 
 typedef struct LaserObject {
-  u8 pad00[0xAC];
+  s16 modeWord;
+  u8 pad02[0xAC - 2];
   s8 modeIndex;
   u8 padAD[0xAF - 0xAD];
   u8 statusFlags;
@@ -36,7 +37,7 @@ void laserObj_free(void);
 void laserObj_render(void);
 void laserObj_hitDetect(void);
 void laserObj_update(int param_1);
-void laserObj_init(undefined2 *param_1,int param_2);
+void laserObj_init(LaserObject *obj,int param_2);
 void laserObj_release(void);
 void laserObj_initialise(void);
 undefined4

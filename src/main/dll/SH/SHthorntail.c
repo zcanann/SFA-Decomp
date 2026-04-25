@@ -33,9 +33,17 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
   runtime->impactSfxTable = gSHthorntailLevelControlMode0DefaultImpactSfxTable;
   switch(runtime->locomotionMode) {
   case 1:
+    runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
+    break;
   case 2:
+    runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
+    break;
   case 3:
+    runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
+    break;
   case 4:
+    runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
+    break;
   case 5:
     runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
     break;
