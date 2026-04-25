@@ -25,6 +25,7 @@ extern undefined4 FUN_80017798();
 extern uint FUN_8001779c();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
+extern void fn_80023800(uint slotPoolBase);
 extern undefined4 FUN_8004812c();
 extern undefined8 FUN_80053754();
 extern void fn_80054308(void *resource);
@@ -186,6 +187,7 @@ extern u8 lbl_8030F898[];
 extern u8 lbl_8039AB58[];
 extern u32 lbl_8039BA28[];
 extern u32 lbl_8039BB68[];
+extern u32 lbl_8039BD58;
 extern s16 lbl_8030F8C8[];
 extern int lbl_803DD258;
 extern char sExpgfxAddToTableUsageOverflow[];
@@ -1682,5 +1684,154 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
     }
   }
   FUN_80286878();
+  return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_8009FCDC
+ * EN v1.0 Address: 0x8009FCDC
+ * EN v1.0 Size: 416b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+void fn_8009FCDC(void)
+{
+  ExpgfxTableEntry *resourceEntry;
+  u8 *expgfxBase;
+  u32 *poolActiveMasks;
+  u8 *poolActiveCounts;
+  s16 *poolSlotTypeIds;
+  u8 *poolFrameFlags;
+  u8 *poolSourceModes;
+  u32 *poolSourceIds;
+  int groupIndex;
+  int resourceIndex;
+
+  expgfxBase = lbl_8039AB58;
+  asm {
+    bl expgfx_initialise
+  }
+  poolActiveMasks = (u32 *)(expgfxBase + 0x10c0);
+  poolActiveCounts = expgfxBase + 0x1070;
+  poolSlotTypeIds = lbl_8030F8C8;
+  poolFrameFlags = lbl_8030F968;
+  poolSourceModes = expgfxBase + 0xe80;
+  poolSourceIds = (u32 *)(expgfxBase + 0xed0);
+  groupIndex = 10;
+  do {
+    poolActiveMasks[0] = 0;
+    poolActiveCounts[0] = 0;
+    poolSlotTypeIds[0] = -1;
+    poolFrameFlags[0] = 0;
+    poolSourceModes[0] = 0;
+    poolSourceIds[0] = 0;
+    poolActiveMasks[1] = 0;
+    poolActiveCounts[1] = 0;
+    poolSlotTypeIds[1] = -1;
+    poolFrameFlags[1] = 0;
+    poolSourceModes[1] = 0;
+    poolSourceIds[1] = 0;
+    poolActiveMasks[2] = 0;
+    poolActiveCounts[2] = 0;
+    poolSlotTypeIds[2] = -1;
+    poolFrameFlags[2] = 0;
+    poolSourceModes[2] = 0;
+    poolSourceIds[2] = 0;
+    poolActiveMasks[3] = 0;
+    poolActiveCounts[3] = 0;
+    poolSlotTypeIds[3] = -1;
+    poolFrameFlags[3] = 0;
+    poolSourceModes[3] = 0;
+    poolSourceIds[3] = 0;
+    poolActiveMasks[4] = 0;
+    poolActiveCounts[4] = 0;
+    poolSlotTypeIds[4] = -1;
+    poolFrameFlags[4] = 0;
+    poolSourceModes[4] = 0;
+    poolSourceIds[4] = 0;
+    poolActiveMasks[5] = 0;
+    poolActiveCounts[5] = 0;
+    poolSlotTypeIds[5] = -1;
+    poolFrameFlags[5] = 0;
+    poolSourceModes[5] = 0;
+    poolSourceIds[5] = 0;
+    poolActiveMasks[6] = 0;
+    poolActiveCounts[6] = 0;
+    poolSlotTypeIds[6] = -1;
+    poolFrameFlags[6] = 0;
+    poolSourceModes[6] = 0;
+    poolSourceIds[6] = 0;
+    poolActiveMasks[7] = 0;
+    poolActiveCounts[7] = 0;
+    poolSlotTypeIds[7] = -1;
+    poolFrameFlags[7] = 0;
+    poolSourceModes[7] = 0;
+    poolSourceIds[7] = 0;
+    poolActiveMasks = poolActiveMasks + 8;
+    poolActiveCounts = poolActiveCounts + 8;
+    poolSlotTypeIds = poolSlotTypeIds + 8;
+    poolFrameFlags = poolFrameFlags + 8;
+    poolSourceModes = poolSourceModes + 8;
+    poolSourceIds = poolSourceIds + 8;
+    groupIndex = groupIndex - 1;
+  } while (groupIndex != 0);
+  *(u32 *)(expgfxBase + 0x1014) = 0;
+  *(u32 *)(expgfxBase + 0x1010) = 0;
+  *(u32 *)(expgfxBase + 0x101c) = 0;
+  *(u32 *)(expgfxBase + 0x1018) = 0;
+  lbl_803DD258 = 1;
+  resourceIndex = 0;
+  resourceEntry = (ExpgfxTableEntry *)expgfxBase;
+  do {
+    if (resourceEntry->textureOrResource != 0) {
+      fn_80054308((void *)resourceEntry->textureOrResource);
+    }
+    resourceEntry->textureOrResource = 0;
+    resourceEntry->key1 = 0;
+    resourceEntry->key0 = 0;
+    resourceEntry->slotType = 0;
+    resourceEntry = resourceEntry + 1;
+    resourceIndex = resourceIndex + 1;
+  } while (resourceIndex < 0x20);
+  lbl_803DD258 = 0;
+  return;
+}
+#pragma scheduling reset
+
+/*
+ * --INFO--
+ *
+ * Function: fn_8009FE7C
+ * EN v1.0 Address: 0x8009FE7C
+ * EN v1.0 Size: 84b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_8009FE7C(void)
+{
+  u32 *slotPoolBases;
+  int poolIndex;
+
+  asm {
+    bl expgfx_initialise
+  }
+  poolIndex = 0;
+  slotPoolBases = &lbl_8039BD58;
+  do {
+    fn_80023800(*slotPoolBases);
+    slotPoolBases = slotPoolBases + 1;
+    poolIndex = poolIndex + 1;
+  } while (poolIndex < EXPGFX_POOL_COUNT);
   return;
 }

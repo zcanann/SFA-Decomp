@@ -33,5 +33,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
                       undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,
                       undefined4 param_10,short param_11,undefined param_12,undefined4 param_13,
                       undefined4 param_14,undefined4 param_15,undefined4 param_16);
+void fn_8009FCDC(void);
+void fn_8009FE7C(void);
 
 #endif /* MAIN_EXPGFX_H_ */
