@@ -10,13 +10,18 @@ typedef struct SHthorntailConfig {
   Vec homePos;
   s32 configToken;
   u8 controlMode;
-  u8 pad19;
+  u8 initialFacingByte;
   u8 impactSfxVariant;
   u8 leashRadiusByte;
+  u16 initScale;
 } SHthorntailConfig;
 
 typedef struct SHthorntailRuntime {
-  u8 pad00[0x611];
+  u8 pad00[0x04];
+  float dustEffectTimer;
+  u8 pad08[0xD4 - 0x08];
+  u8 dustEffectFlags;
+  u8 padD5[0x611 - 0xD5];
   u8 movementControlFlags;
   u8 pad612[0x624 - 0x612];
   u8 behaviorState;

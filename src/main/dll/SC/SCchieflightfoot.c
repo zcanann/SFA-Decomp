@@ -8,8 +8,13 @@ extern undefined4 FUN_80006824();
 extern double FUN_80017708();
 extern int FUN_80017730();
 extern uint FUN_80017760();
+extern undefined4 fn_800221A0();
+extern undefined4 fn_8002B588();
+extern undefined4 fn_8002B9EC();
+extern undefined4 fn_8002CEC0();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
+extern undefined4 fn_80037200();
 extern char objHitReact_update();
 extern int FUN_800384ec();
 extern undefined4 FUN_800388b4();
@@ -17,6 +22,8 @@ extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
 extern int FUN_800575b4();
 extern undefined4 FUN_8006ef38();
+extern undefined4 fn_80114F64();
+extern undefined4 fn_8011507C();
 extern undefined4 FUN_801150ac();
 extern undefined4 FUN_8028683c();
 extern undefined4 FUN_80286888();
@@ -30,23 +37,43 @@ extern undefined4 DAT_80327f84;
 extern undefined4 DAT_80327fc8;
 extern undefined4 DAT_80327fdc;
 extern undefined4 DAT_80328000;
+extern undefined4 lbl_80326EF8;
+extern undefined4 lbl_80326F28;
+extern undefined4 lbl_803E5410;
+extern undefined4* lbl_803DCA88;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd728;
 extern undefined4* DAT_803dd72c;
+extern undefined4* lbl_803DCAA8;
+extern f64 lbl_803E5428;
+extern f64 lbl_803E5440;
+extern f32 lbl_803E545C;
 extern f64 DOUBLE_803e60c0;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803e60b0;
 extern f32 FLOAT_803e60e0;
 extern f32 FLOAT_803e60e4;
 extern f32 FLOAT_803e60e8;
+extern f32 lbl_803E5460;
+extern f32 lbl_803E5464;
+extern f32 lbl_803E5468;
+extern f32 lbl_803E546C;
+extern f32 lbl_803E5470;
+extern f32 lbl_803E5474;
+extern f32 lbl_803E5478;
+extern f32 lbl_803E547C;
+extern f32 lbl_803E5480;
+extern f32 lbl_803E5484;
+extern f32 lbl_803E5488;
+extern f64 lbl_803E5490;
 
 /*
  * --INFO--
  *
- * Function: SHthorntail_update
+ * Function: sh_thorntail_update
  * EN v1.0 Address: 0x801D5F58
- * EN v1.0 Size: 2280b
+ * EN v1.0 Size: 1928b
  * EN v1.1 Address: 0x801D6548
  * EN v1.1 Size: 1928b
  * JP Address: TODO
@@ -54,9 +81,9 @@ extern f32 FLOAT_803e60e8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SHthorntail_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                        undefined8 param_5,undefined8 param_6,undefined8 param_7,
-                        undefined8 param_8)
+void sh_thorntail_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                         undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                         undefined8 param_8)
 {
   SHthorntailObject *obj;
   SHthorntailConfig *config;
@@ -276,4 +303,160 @@ void SHthorntail_update(undefined8 param_1,double param_2,double param_3,undefin
   }
   FUN_80286888();
   return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: sh_thorntail_init
+ * EN v1.0 Address: 0x801D66E0
+ * EN v1.0 Size: 564b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
+{
+  SHthorntailRuntime *runtime;
+  uint randomTime;
+  int moveScratch;
+  undefined4 local_28[2];
+  undefined4 local_20;
+  uint uStack_1c;
+
+  runtime = obj->runtime;
+  local_28[0] = lbl_803E5410;
+  *(short *)obj = (ushort)config->initialFacingByte << 8;
+  if (config->controlMode == SHTHORNTAIL_CONTROL_MODE_ROOT_2) {
+    runtime->behaviorState = 0;
+    randomTime = FUN_80017760(1000,2000);
+    runtime->idleTimer =
+        (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
+  }
+  else if (config->controlMode < SHTHORNTAIL_CONTROL_MODE_ROOT_2) {
+    if (config->controlMode == SHTHORNTAIL_CONTROL_MODE_LEVEL_0) {
+      runtime->behaviorState = 0;
+      randomTime = FUN_80017760(1000,2000);
+      runtime->idleTimer =
+          (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
+    }
+    else {
+      runtime->tailSwingState = 2;
+      runtime->behaviorState = 0xc;
+    }
+  }
+  else if (config->controlMode < 4) {
+    runtime->behaviorState = 0;
+    randomTime = FUN_80017760(1000,2000);
+    runtime->idleTimer =
+        (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
+  }
+  uStack_1c = config->initScale;
+  local_20 = 0x43300000;
+  *(float *)((int)obj + 8) = *(float *)(*(int *)((int)obj + 0x50) + 4) *
+      ((float)((double)CONCAT44(0x43300000,uStack_1c) - lbl_803E5440) / lbl_803E545C);
+  fn_8002B588((int)obj);
+  fn_8002CEC0((double)*(float *)((int)obj + 8));
+  moveScratch = (int)runtime->moveScratch;
+  (**(code **)(*lbl_803DCAA8 + 4))(moveScratch,3,0xa3,0);
+  (**(code **)(*lbl_803DCAA8 + 0xc))(moveScratch,4,&lbl_80326EF8,&lbl_80326F28,local_28);
+  (**(code **)(*lbl_803DCAA8 + 0x20))((int)obj,moveScratch);
+  *(code **)((int)obj + 0xbc) = (code *)SHthorntail_updateLevelControlState;
+  fn_80114F64((int)obj,(int)runtime,0xffffdc72,0x2aaa,3);
+  fn_8011507C((int)runtime,400,0x78);
+  fn_80037200((int)obj,0x4d);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801D6914
+ * EN v1.0 Address: 0x801D6914
+ * EN v1.0 Size: 752b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_801D6914(SHthorntailObject *obj)
+{
+  SHthorntailRuntime *runtime;
+  undefined4 playerObj;
+  char burstCount;
+  undefined2 local_38;
+  undefined2 local_36;
+  undefined2 local_34;
+  undefined2 local_32;
+  float local_30;
+  float local_2c;
+  float local_28;
+  float local_24;
+  undefined4 local_20;
+  uint uStack_1c;
+
+  playerObj = fn_8002B9EC();
+  runtime = obj->runtime;
+  local_2c = lbl_803E5460;
+  local_28 = lbl_803E5464;
+  local_24 = lbl_803E5460;
+  local_34 = 0xc0e;
+  local_36 = 1;
+  if ((runtime->dustEffectFlags & 4) != 0) {
+    if (lbl_803E5468 <= runtime->dustEffectTimer) {
+      if (lbl_803E5470 <= runtime->dustEffectTimer) {
+        if (lbl_803E5480 <= runtime->dustEffectTimer) {
+          if (lbl_803E5488 <= runtime->dustEffectTimer) {
+            runtime->dustEffectTimer = lbl_803E5460;
+            runtime->dustEffectFlags = runtime->dustEffectFlags & 0xfb;
+          }
+        }
+        else {
+          uStack_1c = fn_800221A0(0,0x1e0);
+          uStack_1c = uStack_1c ^ 0x80000000;
+          local_20 = 0x43300000;
+          if ((float)((double)CONCAT44(0x43300000,uStack_1c) - lbl_803E5490) <
+              runtime->dustEffectTimer * lbl_803E546C) {
+            (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
+          }
+          if ((runtime->dustEffectFlags & 2) != 0) {
+            runtime->dustEffectFlags = runtime->dustEffectFlags & 0xfd;
+            local_32 = 0x46;
+            local_30 = lbl_803E5484;
+            for (burstCount = 0xf; burstCount != 0; burstCount = burstCount + -1) {
+              (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7d2,&local_38,2,0xffffffff,0);
+            }
+          }
+        }
+      }
+      else {
+        uStack_1c = fn_800221A0(0,0x1e0);
+        uStack_1c = uStack_1c ^ 0x80000000;
+        local_20 = 0x43300000;
+        if ((float)((double)CONCAT44(0x43300000,uStack_1c) - lbl_803E5490) <
+            runtime->dustEffectTimer / lbl_803E5474) {
+          (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
+        }
+        local_32 = 0x28;
+        local_38 = 0;
+        local_30 = lbl_803E5478 * ((runtime->dustEffectTimer - lbl_803E5468) / lbl_803E547C);
+        (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7d2,&local_38,2,0xffffffff,0);
+        runtime->dustEffectFlags = runtime->dustEffectFlags | 2;
+      }
+    }
+    else {
+      uStack_1c = fn_800221A0(0,0x1e0);
+      uStack_1c = uStack_1c ^ 0x80000000;
+      local_20 = 0x43300000;
+      if ((float)((double)CONCAT44(0x43300000,uStack_1c) - lbl_803E5490) <
+          runtime->dustEffectTimer * lbl_803E546C) {
+        (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
+      }
+    }
+    runtime->dustEffectTimer = runtime->dustEffectTimer + FLOAT_803dc074;
+  }
 }
