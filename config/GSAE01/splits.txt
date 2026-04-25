@@ -1618,10 +1618,10 @@ dolphin/gx/GXFrameBuf.c:
 	.text       start:0x80259338 end:0x80259CF0
 
 dolphin/gx/GXLight.c:
-	.text       start:0x80259CF0 end:0x8025A748
+	.text       start:0x80259CF0 end:0x8025A718
 
 dolphin/gx/GXTexture.c:
-	.text       start:0x8025A748 end:0x8025B89C
+	.text       start:0x8025A718 end:0x8025B89C
 	.data       start:0x8032F218 end:0x8032F618
 	.sdata2     start:0x803E8368 end:0x803E8390
 
