@@ -1136,8 +1136,8 @@ void fn_8009EFDC(void)
   int slotIndex;
   void *resource;
 
-  expgfxBase = lbl_8039AB58;
   staticDataBase = lbl_8030F898;
+  expgfxBase = lbl_8039AB58;
   poolIndex = 0;
   slotPoolBases = (u32 *)(expgfxBase + 0x1200);
   poolActiveMasks = (u32 *)(expgfxBase + 0x10c0);
@@ -1151,22 +1151,24 @@ void fn_8009EFDC(void)
     do {
       activeBit = 1 << slotIndex;
       if ((*poolActiveMasks & activeBit) != 0) {
-        tableEntry =
-            (ExpgfxTableEntry *)(expgfxBase + 0x980 + (Expgfx_GetSlotTableIndex(slot) << 4));
-        if (tableEntry->textureOrResource != 0) {
+        if (((ExpgfxTableEntry *)(expgfxBase + 0x980))[Expgfx_GetSlotTableIndex(slot)].
+            textureOrResource != 0) {
           lbl_803DD258 = 1;
-          fn_80054308((void *)tableEntry->textureOrResource);
+          fn_80054308((void *)((ExpgfxTableEntry *)(expgfxBase + 0x980))
+                          [Expgfx_GetSlotTableIndex(slot)].textureOrResource);
           lbl_803DD258 = 0;
         }
-        if (tableEntry->refCount == 0) {
-          fn_801378A8(sExpgfxMismatchInAddRemove);
-        }
-        else {
+        tableEntry =
+            (ExpgfxTableEntry *)(expgfxBase + 0x980 + (Expgfx_GetSlotTableIndex(slot) << 4));
+        if (tableEntry->refCount != 0) {
           tableEntry->refCount = tableEntry->refCount - 1;
           if (tableEntry->refCount == 0) {
             tableEntry->textureOrResource = 0;
             tableEntry->key0 = 0;
           }
+        }
+        else {
+          fn_801378A8((char *)(staticDataBase + 0x358));
         }
         *(s16 *)((u8 *)slot + 0x26) = -1;
         *poolActiveMasks = *poolActiveMasks & ~activeBit;
