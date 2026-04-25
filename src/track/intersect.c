@@ -2810,20 +2810,20 @@ void fn_8007BD8C(int param_1,int param_2)
 #pragma scheduling off
 void fn_8007C3D0(u8 flag)
 {
-    extern f32 lbl_803DFB5C;
-    extern f32 lbl_803DFB78;
+    extern f32 lbl_803DEEDC;
+    extern f32 gSynthDelayedActionWord0;
     extern void fn_8006C6F0(int);
     f32 mtx[6];
 
     fn_8006C6F0(1);
     GXSetTexCoordGen2(1, 0, 0, 0x24, 0, 0x7D);
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
-    mtx[0] = lbl_803DFB5C;
-    mtx[1] = lbl_803DFB78;
-    mtx[2] = lbl_803DFB5C;
-    mtx[3] = lbl_803DFB5C;
-    mtx[4] = lbl_803DFB5C;
-    mtx[5] = lbl_803DFB78;
+    mtx[0] = lbl_803DEEDC;
+    mtx[1] = gSynthDelayedActionWord0;
+    mtx[2] = lbl_803DEEDC;
+    mtx[3] = lbl_803DEEDC;
+    mtx[4] = lbl_803DEEDC;
+    mtx[5] = gSynthDelayedActionWord0;
     GXSetIndTexOrder(0, 0, 0);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, (void*)mtx, -2);
