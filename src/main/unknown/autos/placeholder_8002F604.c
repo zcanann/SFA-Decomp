@@ -1,14 +1,15 @@
 #include "ghidra_import.h"
+#include "dolphin/os.h"
 #include "main/objanim_internal.h"
 #include "main/unknown/autos/placeholder_8002F604.h"
 
-extern undefined4 FUN_8001786c();
-extern undefined4 FUN_80017abc();
-extern undefined4 FUN_8003582c();
-extern undefined4 FUN_800723a0();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
+extern void fn_80024E7C(int animId,int moveIndex,undefined4 cache,ObjAnimDef *animDef);
+extern void fn_8002C6C8(int objAnim,int objType,uint *eventTable,u32 moveId,int param_5);
+extern void fn_80035774(int objAnim,int *bank,int objType,int hitState,u32 moveId,int param_6);
 
+extern char gObjAnimSetBlendMoveMissingAnimWarning[];
 extern f64 DOUBLE_803df568;
 extern f64 DOUBLE_803df580;
 extern f32 FLOAT_803df560;
@@ -585,7 +586,6 @@ void ObjAnim_SetCurrentMove(double param_1,double param_2,double param_3,undefin
   int iVar6;
   int iVar7;
   double dVar8;
-  double dVar9;
   undefined8 uVar10;
 
   uVar10 = FUN_80286840();
@@ -615,17 +615,11 @@ void ObjAnim_SetCurrentMove(double param_1,double param_2,double param_3,undefin
     *(undefined2 *)(iVar6 + 0x5a) = 0;
     *(undefined2 *)(iVar6 + 100) = 0xffff;
     iVar4 = *(int *)(iVar5 + 0x54);
-    dVar9 = param_1;
     if ((iVar4 != 0) && (*(int *)(iVar4 + 8) != 0)) {
-      param_14 = 0;
-      dVar9 = (double)FUN_8003582c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,
-                                   param_8,iVar5,piVar3,(int)*(short *)(iVar5 + 0x46),iVar4,uVar2,0,
-                                   param_15,param_16);
+      fn_80035774(iVar5,piVar3,(int)*(short *)(iVar5 + 0x46),iVar4,uVar2,0);
     }
     if (*(uint **)(iVar5 + 0x60) != (uint *)0x0) {
-      dVar9 = (double)FUN_80017abc(dVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                                   iVar5,(int)*(short *)(iVar5 + 0x46),*(uint **)(iVar5 + 0x60),
-                                   uVar2,0,param_14,param_15,param_16);
+      fn_8002C6C8(iVar5,(int)*(short *)(iVar5 + 0x46),*(uint **)(iVar5 + 0x60),uVar2,0);
     }
     sVar1 = *(short *)(iVar5 + 0xa0);
     *(short *)(iVar5 + 0xa0) = (short)uVar10;
@@ -645,12 +639,12 @@ void ObjAnim_SetCurrentMove(double param_1,double param_2,double param_3,undefin
         *(char *)(iVar6 + 0x62) = '\x01' - *(char *)(iVar6 + 0x62);
         *(short *)(iVar6 + 0x44) = (short)*(char *)(iVar6 + 0x62);
         if (*(short *)(*(int *)(iVar7 + 0x6c) + iVar5 * 2) == -1) {
-          dVar9 = (double)FUN_800723a0();
+          OSReport(gObjAnimSetBlendMoveMissingAnimWarning,*(undefined2 *)(iVar7 + 4));
           iVar5 = 0;
         }
-        FUN_8001786c(dVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                     (int)*(short *)(*(int *)(iVar7 + 0x6c) + iVar5 * 2),(int)(short)iVar5,
-                     *(undefined4 *)(iVar6 + (uint)*(ushort *)(iVar6 + 0x44) * 4 + 0x1c),iVar7);
+        fn_80024E7C((int)*(short *)(*(int *)(iVar7 + 0x6c) + iVar5 * 2),(int)(short)iVar5,
+                    *(undefined4 *)(iVar6 + (uint)*(ushort *)(iVar6 + 0x44) * 4 + 0x1c),
+                    (ObjAnimDef *)iVar7);
       }
       iVar5 = *(int *)(iVar6 + (uint)*(ushort *)(iVar6 + 0x44) * 4 + 0x1c) + 0x80;
     }
