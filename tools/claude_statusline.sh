@@ -27,23 +27,17 @@ if [ -f "$CACHE" ]; then
 fi
 
 line=$(jq -r '
-  def isSDK:  startswith("main/dolphin/") or startswith("main/Runtime.PPCEABI.H") or startswith("main/track");
-  def isAuto: startswith("main/auto_");
-  def code(u):    (u.measures.total_code   // "0" | tonumber);
-  def matched(u): (u.measures.matched_code // "0" | tonumber);
-  def fuzzy(u):   code(u) * ((u.measures.fuzzy_match_percent // 0) / 100);
   def pct(b; t): if t == 0 then 0 else (b * 1000 / t | round) / 10 end;
   def kb(n):     (n / 1024 | round);
+  def cat(id):   (.categories[] | select(.id == id) | .measures);
 
-  [.units[] | select(.name | isSDK)] as $sdk
-  | [.units[] | select((.name | isSDK | not) and (.name | isAuto | not))] as $game
-  | ([$sdk[]  | code(.)]    | add // 0) as $sT
-  | ([$sdk[]  | matched(.)] | add // 0) as $sM
-  | ([$sdk[]  | fuzzy(.)]   | add // 0) as $sF
-  | ([$game[] | code(.)]    | add // 0) as $gT
-  | ([$game[] | matched(.)] | add // 0) as $gM
-  | ([$game[] | fuzzy(.)]   | add // 0) as $gF
-  | "SDK \(pct($sM;$sT))% (fuzzy \(pct($sF;$sT))%, \(kb($sM))/\(kb($sT)) KB) │ Game \(pct($gM;$gT))% (fuzzy \(pct($gF;$gT))%, \(kb($gM))/\(kb($gT)) KB) │ overall \((.measures.matched_code_percent * 100 | round) / 100)%"
+  cat("sdk")  as $s
+  | cat("game") as $g
+  | ($s.total_code   // "0" | tonumber) as $sT
+  | ($s.matched_code // "0" | tonumber) as $sM
+  | ($g.total_code   // "0" | tonumber) as $gT
+  | ($g.matched_code // "0" | tonumber) as $gM
+  | "SDK \(pct($sM;$sT))% (fuzzy \(($s.fuzzy_match_percent * 10 | round) / 10)%, \(kb($sM))/\(kb($sT)) KB) │ Game \(pct($gM;$gT))% (fuzzy \(($g.fuzzy_match_percent * 10 | round) / 10)%, \(kb($gM))/\(kb($gT)) KB) │ overall \((.measures.matched_code_percent * 100 | round) / 100)%"
 ' "$REPORT")
 
 if [ -z "$line" ]; then
