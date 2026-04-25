@@ -50,12 +50,12 @@
  * - objparams size: 0x22
  *
  * EN descriptor slot map:
- * - descriptor=0x80321A08 lbl_80321A08 (slots=10, mask=0001101011)
- * - slot 03: 0x80177B6C fn_80177B6C ref=init
- * - slot 04: 0x8017750C fn_8017750C ref=update
- * - slot 06: 0x801774EC fn_801774EC ref=render
- * - slot 08: 0x801774E4 fn_801774E4 stub=const 1
- * - slot 09: 0x801774DC fn_801774DC stub=const 16 ref=getExtraSize (stub)
+ * - descriptor=0x80321A08 gWarpPointObjDescriptor (slots=10, mask=0001101011)
+ * - slot 03: 0x80177B6C warppoint_init ref=init
+ * - slot 04: 0x8017750C warppoint_update ref=update
+ * - slot 06: 0x801774EC warppoint_render ref=render
+ * - slot 08: 0x801774E4 warppoint_func08 stub=const 1
+ * - slot 09: 0x801774DC warppoint_getExtraSize stub=const 16 ref=getExtraSize (stub)
  */
 
 #if 0

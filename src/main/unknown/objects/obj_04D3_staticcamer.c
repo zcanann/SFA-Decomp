@@ -36,16 +36,16 @@
  * - 0x04D3 StaticCamer: placements=48, class=0x0012, widths=9w x48
  *
  * EN descriptor slot map:
- * - descriptor=0x803212A8 lbl_803212A8 (slots=10, mask=1101111111)
- * - slot 00: 0x8016BE44 fn_8016BE44 stub=blr ref=initialise (stub)
- * - slot 01: 0x8016BE40 fn_8016BE40 stub=blr ref=release (stub)
- * - slot 03: 0x8016BDB0 fn_8016BDB0 ref=init
- * - slot 04: 0x8016BDAC fn_8016BDAC stub=blr ref=update (stub)
- * - slot 05: 0x8016BDA8 fn_8016BDA8 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x8016BD78 fn_8016BD78 ref=render
- * - slot 07: 0x8016BD54 fn_8016BD54 ref=free
- * - slot 08: 0x8016BD4C fn_8016BD4C stub=const 0
- * - slot 09: 0x8016BD44 fn_8016BD44 stub=const 8 ref=getExtraSize (stub)
+ * - descriptor=0x803212A8 gStaticCameraObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x8016BE44 staticcamera_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x8016BE40 staticcamera_release stub=blr ref=release (stub)
+ * - slot 03: 0x8016BDB0 staticcamera_init ref=init
+ * - slot 04: 0x8016BDAC staticcamera_update stub=blr ref=update (stub)
+ * - slot 05: 0x8016BDA8 staticcamera_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x8016BD78 staticcamera_render ref=render
+ * - slot 07: 0x8016BD54 staticcamera_free ref=free
+ * - slot 08: 0x8016BD4C staticcamera_func08 stub=const 0
+ * - slot 09: 0x8016BD44 staticcamera_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 
 #if 0
