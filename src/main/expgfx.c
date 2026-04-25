@@ -4,6 +4,7 @@
 #include "main/expgfx_internal.h"
 
 extern undefined4 ABS();
+extern int fn_8000F54C(void);
 extern int fn_80008B4C(int param_1);
 extern int FUN_80006714();
 extern undefined4 FUN_80006824();
@@ -30,6 +31,7 @@ extern void fn_80054308(void *resource);
 extern int FUN_8005b024();
 extern undefined4 FUN_8005d340();
 extern undefined4 FUN_8005e1d8();
+extern void fn_8005DE94(uint slotPoolBase,int poolIndex,float *position);
 extern uint FUN_8005e558();
 extern u8 fn_8005E97C();
 extern undefined4 FUN_8006f8a4();
@@ -52,6 +54,7 @@ extern void fn_801378A8(char *message);
 extern double FUN_80136594();
 extern undefined4 FUN_802420e0();
 extern undefined4 FUN_802475e4();
+extern void fn_80247494(int matrix,float *src,float *dst);
 extern undefined4 FUN_80247bf8();
 extern undefined4 FUN_80247ef8();
 extern undefined4 FUN_802570dc();
@@ -128,6 +131,7 @@ extern volatile f32 lbl_803DF354;
 extern volatile f32 lbl_803DF35C;
 extern volatile f32 lbl_803DF384;
 extern volatile f32 lbl_803DF418;
+extern f32 lbl_803DF358;
 extern f64 DOUBLE_803dffe0;
 extern f64 DOUBLE_803dfff8;
 extern f32 FLOAT_803dc074;
@@ -949,9 +953,73 @@ void fn_8009E13C(uint slotPoolBase,int poolIndex)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void fn_8009ECE4(void)
 {
+  ExpgfxBounds *boundsTemplate;
+  ExpgfxBounds *poolBounds;
+  float *sourcePosition;
+  u8 *expgfxBase;
+  u8 *poolSourceModes;
+  u8 *poolBoundsTemplateIds;
+  int *poolSourceIds;
+  char *poolActiveCounts;
+  s16 *poolSlotTypeIds;
+  uint *slotPoolBases;
+  int currentMatrix;
+  int poolIndex;
+  float queuePosition[3];
+
+  expgfxBase = lbl_8039AB58;
+  currentMatrix = fn_8000F54C();
+  poolIndex = 0;
+  poolActiveCounts = (char *)(expgfxBase + 0x1070);
+  poolSourceModes = expgfxBase + 0xe80;
+  poolBoundsTemplateIds = expgfxBase + 0x1020;
+  poolBounds = (ExpgfxBounds *)(expgfxBase + 0x200);
+  poolSourceIds = (int *)(expgfxBase + 0xed0);
+  poolSlotTypeIds = lbl_8030F8C8;
+  slotPoolBases = (uint *)(expgfxBase + 0x1200);
+  do {
+    if ((*poolActiveCounts != '\0') && (*poolSourceModes == 0)) {
+      boundsTemplate = (ExpgfxBounds *)(lbl_8030F898 + (uint)*poolBoundsTemplateIds * 0x18);
+      if (fn_8005E97C((double)(poolBounds->minX - lbl_803DCDD8),
+                      (double)(poolBounds->maxX - lbl_803DCDD8),
+                      (double)poolBounds->minY,(double)poolBounds->maxY,
+                      (double)(poolBounds->minZ - lbl_803DCDDC),
+                      (double)(poolBounds->maxZ - lbl_803DCDDC),boundsTemplate) != 0) {
+        sourcePosition = (float *)*poolSourceIds;
+        if (sourcePosition != (float *)0x0) {
+          queuePosition[0] = sourcePosition[3] - lbl_803DCDD8;
+          queuePosition[1] = sourcePosition[4];
+          queuePosition[2] = sourcePosition[5] - lbl_803DCDDC;
+        }
+        else {
+          queuePosition[0] =
+              lbl_803DF358 * (poolBounds->minX + poolBounds->maxX) - lbl_803DCDD8;
+          queuePosition[1] = lbl_803DF358 * (poolBounds->minY + poolBounds->maxY);
+          queuePosition[2] =
+              lbl_803DF358 * (poolBounds->minZ + poolBounds->maxZ) - lbl_803DCDDC;
+        }
+        fn_80247494(currentMatrix,queuePosition,queuePosition);
+        if (*poolSourceIds != 0) {
+          queuePosition[2] = queuePosition[2] - (float)(*poolSlotTypeIds & 0x21);
+        }
+        fn_8005DE94(*slotPoolBases,poolIndex,queuePosition);
+      }
+    }
+    poolActiveCounts = poolActiveCounts + 1;
+    poolSourceModes = poolSourceModes + 1;
+    poolBoundsTemplateIds = poolBoundsTemplateIds + 1;
+    poolBounds = poolBounds + 1;
+    poolSourceIds = poolSourceIds + 1;
+    poolSlotTypeIds = poolSlotTypeIds + 1;
+    slotPoolBases = slotPoolBases + 1;
+    poolIndex = poolIndex + 1;
+  } while (poolIndex < EXPGFX_POOL_COUNT);
+  return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
