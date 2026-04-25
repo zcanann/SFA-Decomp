@@ -1433,7 +1433,19 @@ main/worldplanet.c:
 	.text       start:0x8020C964 end:0x8020C9CC
 
 main/unknown/autos/placeholder_8020C9CC.c:
-	.text       start:0x8020C9CC end:0x8024034C
+	.text       start:0x8020C9CC end:0x80210A54
+
+main/crcloudrace.c:
+	.text       start:0x80210A54 end:0x80210BE8
+
+main/unknown/autos/placeholder_80210BE8.c:
+	.text       start:0x80210BE8 end:0x80210BF0
+
+main/spellstone.c:
+	.text       start:0x80210BF0 end:0x80210E8C
+
+main/unknown/autos/placeholder_80210E8C.c:
+	.text       start:0x80210E8C end:0x8024034C
 
 dolphin/base/PPCArch.c:
 	.text       start:0x8024034C end:0x802403D8

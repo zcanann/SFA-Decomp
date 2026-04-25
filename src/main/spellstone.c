@@ -1,0 +1,167 @@
+#include "ghidra_import.h"
+
+extern f32 fn_80021704(void *posA,void *posB);
+extern void fn_800200E8(int eventId,int value);
+extern int fn_8001FFB4(int eventId);
+extern void *fn_8002B9EC(void);
+extern void fn_8002CE88(void *obj);
+extern void fn_80035F00(void *obj);
+extern void fn_80035F20(void *obj);
+extern void fn_80036FA4(void *obj,int animObjId);
+extern void fn_80037200(void *obj,int animObjId);
+extern void fn_8003B8F4(double scale);
+extern int fn_80210BE8(void);
+
+extern s16 lbl_803DC228;
+extern undefined4 *lbl_803DCAAC;
+extern f32 lbl_803E6750;
+extern f32 lbl_803E6754;
+extern f32 lbl_803E6758;
+
+typedef struct SpellStoneState {
+  u8 state;
+} SpellStoneState;
+
+typedef struct SpellStoneDef {
+  u8 unk0[0x19];
+  s8 eventIndex;
+  u8 unk1A[4];
+  s16 completeEvent;
+  s16 activeEvent;
+} SpellStoneDef;
+
+typedef struct SpellStoneObject {
+  s16 rotX;
+  s16 rotY;
+  s16 rotZ;
+  s16 flags;
+  u8 unk8[4];
+  f32 posX;
+  f32 posY;
+  f32 posZ;
+  u8 unk18[0x34];
+  SpellStoneDef *def;
+  u8 unk50[0x68];
+  SpellStoneState *state;
+  int (*callback)(void);
+  u8 unkC0[4];
+  void *followTarget;
+} SpellStoneObject;
+
+int spellstone_getState(SpellStoneObject *obj)
+{
+  return obj->state->state == 2;
+}
+
+int spellstone_setState(SpellStoneObject *obj,int state)
+{
+  u8 oldState;
+  SpellStoneState *extra;
+
+  extra = obj->state;
+  oldState = extra->state;
+  extra->state = state;
+  if (state == 2) {
+    obj->posY += lbl_803E6750;
+  }
+  return oldState == 1;
+}
+
+int spellstone_getExtraSize(void)
+{
+  return sizeof(SpellStoneState);
+}
+
+int spellstone_func08(void)
+{
+  return 0;
+}
+
+void spellstone_free(SpellStoneObject *obj)
+{
+  fn_80036FA4(obj,0x1e);
+  return;
+}
+
+void spellstone_render(SpellStoneObject *obj,undefined4 param_2,undefined4 param_3,
+                       undefined4 param_4,undefined4 param_5,char visible)
+{
+  if ((visible != 0) && (obj->state->state != 0)) {
+    fn_8003B8F4((double)lbl_803E6754);
+  }
+  return;
+}
+
+void spellstone_hitDetect(void)
+{
+  return;
+}
+
+void spellstone_update(SpellStoneObject *obj)
+{
+  u32 eventActive;
+  void *playerObj;
+  SpellStoneState *state;
+  SpellStoneDef *def;
+
+  state = obj->state;
+  def = obj->def;
+  if (state->state == 2) {
+    obj->rotY = 0;
+    obj->rotX += 0x100;
+    obj->rotZ = 0;
+  }
+  eventActive = fn_8001FFB4(def->completeEvent);
+  if (eventActive != 0) {
+    fn_800200E8(*(&lbl_803DC228 + def->eventIndex),1);
+    obj->flags |= 0x4000;
+    fn_8002CE88(obj);
+    (*(code *)(*lbl_803DCAAC + 0x44))(0x1d,2);
+  }
+  else {
+    eventActive = fn_8001FFB4(def->activeEvent);
+    if (eventActive != 0) {
+      obj->flags |= 0x4000;
+      fn_8002CE88(obj);
+    }
+    if (state->state == 2) {
+      playerObj = fn_8002B9EC();
+      if (fn_80021704(&obj->unk18,(u8 *)playerObj + 0x18) < lbl_803E6758) {
+        fn_800200E8(def->completeEvent,1);
+      }
+    }
+    if (state->state == 0) {
+      fn_80035F00(obj);
+      if (obj->followTarget != NULL) {
+        obj->posX = *(f32 *)((u8 *)obj->followTarget + 0xc);
+        obj->posY = *(f32 *)((u8 *)obj->followTarget + 0x10);
+        obj->posZ = *(f32 *)((u8 *)obj->followTarget + 0x14);
+      }
+    }
+    else {
+      fn_80035F20(obj);
+    }
+  }
+  return;
+}
+
+void spellstone_init(SpellStoneObject *obj)
+{
+  SpellStoneState *state;
+
+  state = obj->state;
+  fn_80037200(obj,0x1e);
+  state->state = 1;
+  obj->callback = fn_80210BE8;
+  return;
+}
+
+void spellstone_release(void)
+{
+  return;
+}
+
+void spellstone_initialise(void)
+{
+  return;
+}
