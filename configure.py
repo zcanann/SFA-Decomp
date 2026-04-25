@@ -351,7 +351,7 @@ config.libs = [
             Object(NonMatching, "dolphin/os/OSReset.c"),
             Object(NonMatching, "dolphin/os/OSResetSW.c"),
             Object(NonMatching, "dolphin/os/OSRtc.c"),
-            Object(NonMatching, "dolphin/os/OSStopwatch.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/os/OSStopwatch.c"),
             Object(NonMatching, "dolphin/os/OSSync.c"),
             Object(NonMatching, "dolphin/os/OSThread.c", extra_cflags=["-use_lmw_stmw", "on"]),
             Object(NonMatching, "dolphin/os/OSTime.c"),
@@ -367,7 +367,7 @@ config.libs = [
     DolphinLib(
         "db",
         [
-            Object(NonMatching, "dolphin/db/db.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/db/db.c"),
         ],
     ),
     DolphinLib(
@@ -578,13 +578,13 @@ config.libs = [
         "progress_category": "sdk",
         "objects": [
             Object(
-                NonMatching,
+                MatchingFor("GSAE01"),
                 "dolphin/TRK_MINNOW_DOLPHIN/mainloop.c",
                 mw_version="GC/1.3.2",
             ),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/nubevent.c"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/nubinit.c"),
-            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/msg.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/msg.c"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/msgbuf.c"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/serpoll.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/usr_put.c"),
