@@ -1604,12 +1604,12 @@ dolphin/gx/GXFifo.c:
 	.sbss       start:0x803DE0B8 end:0x803DE0D8
 
 dolphin/gx/GXAttr.c:
-	.text       start:0x80256CD8 end:0x8025898C
+	.text       start:0x80256CD8 end:0x8025877C
 	.data       start:0x8032EDD0 end:0x8032F218
 	.sdata      start:0x803DC5B8 end:0x803DC5C8
 
 dolphin/gx/GXMisc.c:
-	.text       start:0x8025898C end:0x80258F3C
+	.text       start:0x8025877C end:0x80258F3C
 
 dolphin/gx/GXGeometry.c:
 	.text       start:0x80258F3C end:0x80259338
