@@ -480,18 +480,21 @@ void ObjAnim_WriteStateWord(int objAnim,int stateIndex,short wordIndex,int value
 {
   ObjAnimBank *bank;
   ObjAnimState *state;
+  u16 stateWord;
 
   bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
   if (bank == (ObjAnimBank *)0x0) {
     return;
   }
+  stateWord = value;
   if (stateIndex != 0) {
     state = bank->primaryState;
   }
   else {
     state = bank->secondaryState;
   }
-  *(u16 *)((u8 *)state + wordIndex * 2 + 0x58) = value;
+  state = (ObjAnimState *)((u8 *)state + wordIndex * 2);
+  state->eventCountdown = stateWord;
 }
 
 /*
