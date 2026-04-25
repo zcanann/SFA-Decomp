@@ -77,7 +77,7 @@ void fn_80079804(void);
 void fn_800799C0(void);
 void fn_800799E4(u8 r, u8 g, u8 b, u8 a);
 void fn_80079A24(u8 r, u8 g, u8 b, u8 a);
-void fn_80079A64(double param_1,double param_2,byte param_3,char param_4);
+void fn_80079A64(f32 sx, f32 sy, u8 a, u8 flag);
 void fn_80079E64(double param_1,double param_2,double param_3,undefined param_4,undefined4 param_5,
                  undefined param_6,undefined param_7);
 void fn_8007A71C(uint param_1);
