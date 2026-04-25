@@ -3,6 +3,7 @@
 #include "main/expgfx_internal.h"
 
 extern undefined4 ABS();
+extern int fn_80008B4C(int param_1);
 extern int FUN_80006714();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068d4();
@@ -42,7 +43,9 @@ extern undefined4 FUN_80080f84();
 extern undefined4 FUN_80080f8c();
 extern undefined4 FUN_80081130();
 extern int FUN_80081134();
+extern void fn_8009B9C8(u8 sourceMode,int sourceId,int param_3);
 extern undefined8 FUN_80135810();
+extern void fn_801378A8(char *message);
 extern double FUN_80136594();
 extern undefined4 FUN_802420e0();
 extern undefined4 FUN_802475e4();
@@ -110,6 +113,18 @@ extern undefined4 DAT_803ddef0;
 extern undefined4 DAT_803ddef4;
 extern undefined4 DAT_803ddef8;
 extern undefined4 DAT_cc008000;
+extern undefined lbl_8030F968[];
+extern undefined4* lbl_803DCA88;
+extern u8 lbl_803DC7B0;
+extern u8 lbl_803DD254;
+extern f32 lbl_803DB414;
+extern f32 lbl_803DD25C;
+extern f32 lbl_803DD260;
+extern f32 lbl_803DD264;
+extern f32 lbl_803DF354;
+extern f32 lbl_803DF35C;
+extern f32 lbl_803DF384;
+extern f32 lbl_803DF418;
 extern f64 DOUBLE_803dffe0;
 extern f64 DOUBLE_803dfff8;
 extern f32 FLOAT_803dc074;
@@ -179,6 +194,8 @@ typedef struct ExpgfxTableEntry {
   s16 slotType;
 } ExpgfxTableEntry;
 
+extern ExpgfxTableEntry gExpgfxTableEntries[];
+
 typedef struct ExpgfxSlot {
   u8 pad00[0x40];
   s16 sourceVecX;
@@ -212,7 +229,7 @@ typedef struct ExpgfxSlot {
 } ExpgfxSlot;
 
 static ExpgfxTableEntry *Expgfx_GetTableEntry(int tableIndex) {
-  return &((ExpgfxTableEntry *)&DAT_8039c138)[tableIndex];
+  return &gExpgfxTableEntries[tableIndex];
 }
 
 static u8 Expgfx_GetSlotTableIndex(const ExpgfxSlot *slot) {
@@ -705,8 +722,8 @@ void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_
  * --INFO--
  *
  * Function: expgfx_addToTable
- * EN v1.0 Address: 0x8009BD88
- * EN v1.0 Size: 484b
+ * EN v1.0 Address: 0x8009DDEC
+ * EN v1.0 Size: 288b
  * EN v1.1 Address: 0x8009E078
  * EN v1.1 Size: 536b
  * JP Address: TODO
@@ -714,56 +731,49 @@ void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int expgfx_addToTable(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                      undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                      int param_9,int param_10,int param_11,undefined4 param_12)
+int expgfx_addToTable(int textureOrResource,int key0,int key1,s16 slotType)
 {
   ExpgfxTableEntry *entry;
   ExpgfxTableEntry *entryBase;
-  int iVar4;
-  undefined4 in_r10;
-  int iVar5;
-  int iVar6;
+  int tableIndex;
+  int remaining;
+  int freeIndex;
   
-  iVar4 = 0;
+  tableIndex = 0;
   entryBase = Expgfx_GetTableEntry(0);
-  iVar5 = EXPGFX_POOL_COUNT;
+  remaining = EXPGFX_POOL_COUNT;
   entry = entryBase;
-  while ((((entry->refCount == 0 || (entry->textureOrResource != param_9)) || (entry->key0 != param_10)) ||
-         (entry->key1 != param_11))) {
+  while ((((entry->refCount == 0 || (entry->textureOrResource != textureOrResource)) ||
+          (entry->key0 != key0)) || (entry->key1 != key1))) {
     entry = entry + 1;
-    iVar4 = iVar4 + 1;
-    iVar5 = iVar5 + -1;
-    if (iVar5 == 0) {
-      iVar5 = 0;
-      iVar6 = EXPGFX_POOL_COUNT;
+    tableIndex = tableIndex + 1;
+    remaining = remaining + -1;
+    if (remaining == 0) {
+      freeIndex = 0;
+      remaining = EXPGFX_POOL_COUNT;
       do {
         if (entryBase->refCount == 0) {
           entryBase->refCount = 1;
-          entryBase->textureOrResource = param_9;
-          entryBase->key0 = param_10;
-          entryBase->key1 = param_11;
-          entryBase->slotType = (short)param_12;
-          return (int)(short)iVar5;
+          entryBase->textureOrResource = textureOrResource;
+          entryBase->key0 = key0;
+          entryBase->key1 = key1;
+          entryBase->slotType = slotType;
+          return (int)(short)freeIndex;
         }
         entryBase = entryBase + 1;
-        iVar5 = iVar5 + 1;
-        iVar6 = iVar6 + -1;
-      } while (iVar6 != 0);
-      FUN_80135810(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                   sExpgfxExpTabIsFull,param_10,param_11,param_12,entry,entryBase,
-                   iVar4,iVar5);
+        freeIndex = freeIndex + 1;
+        remaining = remaining + -1;
+      } while (remaining != 0);
+      fn_801378A8(sExpgfxExpTabIsFull);
       return -1;
     }
   }
   if (entry->refCount == -1) {
-    FUN_80135810(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                 sExpgfxAddToTableUsageOverflow,&entry->refCount,param_11,param_12,entry,
-                 Expgfx_GetTableEntry(0),iVar4,in_r10);
+    fn_801378A8(sExpgfxAddToTableUsageOverflow);
     return -1;
   }
   entry->refCount = entry->refCount + 1;
-  return (int)(short)iVar4;
+  return (int)(short)tableIndex;
 }
 
 /*
@@ -936,8 +946,8 @@ void FUN_8009c120(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * --INFO--
  *
  * Function: expgfx_updateFrameState
- * EN v1.0 Address: 0x8009C124
- * EN v1.0 Size: 248b
+ * EN v1.0 Address: 0x8009F1AC
+ * EN v1.0 Size: 288b
  * EN v1.1 Address: 0x8009F438
  * EN v1.1 Size: 288b
  * JP Address: TODO
@@ -945,40 +955,37 @@ void FUN_8009c120(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void expgfx_updateFrameState(undefined8 param_1,undefined8 param_2,double param_3,double param_4,
-                             double param_5,double param_6,undefined8 param_7,undefined8 param_8)
+void expgfx_updateFrameState(int sourceMode,int sourceId)
 {
   int iVar1;
   byte bVar2;
-  double dVar3;
-  double dVar4;
+  f32 frameStep;
   
-  iVar1 = FUN_80006714(-1);
+  iVar1 = fn_80008B4C(-1);
   if ((short)iVar1 != 1) {
-    dVar4 = (double)FLOAT_803dc074;
-    FLOAT_803ddedc = (float)((double)FLOAT_803ddedc + dVar4);
-    if (FLOAT_803e0098 <= FLOAT_803ddedc) {
-      FLOAT_803ddedc = FLOAT_803dffdc;
+    frameStep = lbl_803DB414;
+    lbl_803DD25C = lbl_803DD25C + frameStep;
+    if (lbl_803DD25C >= lbl_803DF418) {
+      lbl_803DD25C = lbl_803DF35C;
     }
-    FLOAT_803ddee0 = (float)((double)FLOAT_803ddee0 + dVar4);
-    if (FLOAT_803e0004 <= FLOAT_803ddee0) {
-      FLOAT_803ddee0 = FLOAT_803dffdc;
+    lbl_803DD260 = lbl_803DD260 + frameStep;
+    if (lbl_803DD260 >= lbl_803DF384) {
+      lbl_803DD260 = lbl_803DF35C;
     }
-    FLOAT_803ddee4 = (float)((double)FLOAT_803ddee4 + dVar4);
-    dVar3 = (double)FLOAT_803ddee4;
-    if ((double)FLOAT_803dffd4 <= dVar3) {
-      FLOAT_803ddee4 = FLOAT_803dffdc;
+    lbl_803DD264 = lbl_803DD264 + frameStep;
+    if (lbl_803DD264 >= lbl_803DF354) {
+      lbl_803DD264 = lbl_803DF35C;
     }
-    DAT_803dd430 = 1;
-    FUN_8009bd84(dVar3,dVar4,param_3,param_4,param_5,param_6,param_7,param_8);
-    DAT_803dd430 = 0;
+    lbl_803DC7B0 = 1;
+    fn_8009B9C8((u8)sourceMode,sourceId,0);
+    lbl_803DC7B0 = 0;
     bVar2 = EXPGFX_POOL_COUNT;
     while (bVar2 != 0) {
       bVar2 = bVar2 - 1;
-      (&gExpgfxPoolFrameFlags)[bVar2] = 0;
+      lbl_8030F968[bVar2] = 0;
     }
-    (**(code **)(*DAT_803dd708 + 0xc))(0);
-    DAT_803dded4 = 1;
+    (*(code *)(*lbl_803DCA88 + 0xc))(0);
+    lbl_803DD254 = 1;
   }
   return;
 }
@@ -1133,8 +1140,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
         }
         iVar15 = (int)spawnConfig->tableKeyType;
         puVar10 = (undefined2 *)attachedSource;
-        uVar3 = expgfx_addToTable(dVar19,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                                  iVar7,(int)attachedSource,iVar13,iVar15);
+        uVar3 = expgfx_addToTable(iVar7,(int)attachedSource,iVar13,iVar15);
         if ((short)uVar3 == -1) {
           uVar22 = FUN_80135810(dVar19,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                                 sExpgfxInvalidTabIndex,puVar10,iVar13,iVar15,piVar16,
