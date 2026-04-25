@@ -1600,16 +1600,16 @@ dolphin/gx/GXInit.c:
 	.text       start:0x80254CCC end:0x80255DBC
 
 dolphin/gx/GXFifo.c:
-	.text       start:0x80255DBC end:0x80256CD8
+	.text       start:0x80255DBC end:0x80256820
 	.sbss       start:0x803DE0B8 end:0x803DE0D8
 
 dolphin/gx/GXAttr.c:
-	.text       start:0x80256CD8 end:0x8025877C
+	.text       start:0x80256820 end:0x80258228
 	.data       start:0x8032EDD0 end:0x8032F218
 	.sdata      start:0x803DC5B8 end:0x803DC5C8
 
 dolphin/gx/GXMisc.c:
-	.text       start:0x8025877C end:0x802587FC
+	.text       start:0x80258228 end:0x802587FC
 
 dolphin/gx/GXGeometry.c:
 	.text       start:0x802587FC end:0x80258BDC
