@@ -3,6 +3,7 @@
 #include "main/dll/SH/SHroot.h"
 #include "main/dll/SC/SClevelcontrol.h"
 #include "main/dll/SC/SCchieflightfoot.h"
+#include "main/objHitReact.h"
 
 extern undefined4 FUN_80006824();
 extern double FUN_80017708();
@@ -15,7 +16,6 @@ extern undefined4 fn_8002CEC0();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 fn_80037200();
-extern char objHitReact_update();
 extern int FUN_800384ec();
 extern undefined4 FUN_800388b4();
 extern undefined4 FUN_8003b1a4();
@@ -155,9 +155,7 @@ void sh_thorntail_update(undefined8 param_1,double param_2,double param_3,undefi
   iVar6 = 0x19;
   uVar7 = (uint)runtime->hitReactState;
   pfVar8 = (float *)runtime->collisionShapeState;
-  cVar3 =
-      objHitReact_update(dVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,psVar2,
-                         puVar5,0x19,uVar7,pfVar8,in_r8,in_r9,in_r10);
+  cVar3 = objHitReact_update((int)psVar2,puVar5,0x19,uVar7,pfVar8);
   runtime->hitReactState = cVar3;
   if (cVar3 == '\0') {
     uVar4 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(psVar2 + 0x56));

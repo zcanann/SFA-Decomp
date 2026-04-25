@@ -1,27 +1,34 @@
 #include "ghidra_import.h"
+#include "dolphin/os.h"
 #include "main/objHitReact.h"
 #include "main/objanim_internal.h"
-#include "main/unknown/autos/placeholder_8002F604.h"
 
-extern bool FUN_800067f8();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern int FUN_800368c4();
-extern undefined4 FUN_800723a0();
-extern undefined4 FUN_80081120();
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_80286888();
+extern int fn_8000B5D0(int obj,u16 volumeId);
+extern void fn_8000BB18(int obj,u16 volumeId);
+extern void fn_80013E2C(void *handle);
+extern void *fn_80013EC8(u32 effectId,u32 count);
+extern int *fn_8002E0FC(undefined *param_1,undefined *param_2);
+extern int fn_80036770(int obj,undefined4 *param_2,int *sphereIndex,uint *param_4,float *hitPos,
+                       undefined *param_6,float *param_7);
+extern void fn_8009A1DC(double param_1,int obj,undefined2 *pos,u32 count,int *param_5);
+extern int ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnim,int events);
+extern void ObjAnim_SetCurrentMove(double moveProgress,int objAnim,int moveId,u32 flags);
 
-extern undefined4 DAT_802c2280;
-extern undefined4 DAT_802c2284;
-extern undefined4 DAT_802c2288;
-extern undefined4 DAT_802c228c;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803dda58;
-extern f32 FLOAT_803dda5c;
-extern f32 FLOAT_803df590;
-extern f32 FLOAT_803df598;
+extern undefined4 lbl_802C1B00;
+extern undefined4 lbl_802C1B04;
+extern undefined4 lbl_802C1B08;
+extern undefined4 lbl_802C1B0C;
+extern char sObjHitReactHitstateFrameString[];
+extern char sObjHitReactSphereOverflowString[];
+extern char sObjHitReactResetString[];
+extern f32 lbl_803DB414;
+extern f32 lbl_803DCDD8;
+extern f32 lbl_803DCDDC;
+extern f32 lbl_803DE910;
+extern f32 lbl_803DE918;
+extern f32 lbl_803DE964;
+extern int gObjHitReactResetObjectCount;
+extern int *gObjHitReactResetObjects;
 
 typedef struct ObjHitReactEntry {
   s16 clearVolumeA;
@@ -39,34 +46,16 @@ typedef struct ObjHitReactEntry {
  *
  * Function: objHitReact_update
  * EN v1.0 Address: 0x800353A4
- * EN v1.0 Size: 712b
- * EN v1.1 Address: 0x8003549C
- * EN v1.1 Size: 652b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 652b
  */
-u8 objHitReact_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                      undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                      undefined4 param_9,undefined4 param_10,uint param_11,uint param_12,
-                      float *param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+u8 objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,float *cooldown)
 {
   ObjAnimComponent *objAnim;
   ObjAnimDef *animDef;
-  uint object;
-  int iVar2;
-  bool bVar3;
-  int *piVar4;
-  undefined4 hitFxFlags;
-  u8 reactionState;
-  float *pfVar6;
-  undefined4 *puVar7;
-  float *pfVar8;
+  int collisionType;
+  int *effectHandle;
+  bool volumeActive;
   ObjHitReactEntry *reactEntry;
-  undefined4 *puVar11;
-  undefined8 uVar10;
-  int hitSphereIndex;
   undefined4 local_44;
   undefined4 local_40;
   undefined4 local_3c;
@@ -76,78 +65,93 @@ u8 objHitReact_update(undefined8 param_1,double param_2,double param_3,undefined
   undefined2 local_30;
   float local_2c;
   float local_28;
-  undefined4 uStack_24;
+  undefined local_24[4];
   float local_20[8];
+  int sphereIndex;
 
-  uVar10 = FUN_8028683c();
-  object = (uint)((ulonglong)uVar10 >> 0x20);
-  objAnim = (ObjAnimComponent *)object;
-  animDef = ObjAnim_GetAnimDef(objAnim);
-  local_44 = DAT_802c2280;
-  local_40 = DAT_802c2284;
-  local_3c = DAT_802c2288;
-  local_38 = DAT_802c228c;
-  reactionState = (u8)param_12;
-  if (reactionState != 0) {
-    FUN_800723a0();
-    param_2 = (double)FLOAT_803dc074;
-    iVar2 = ObjAnim_AdvanceCurrentMove((double)*param_13,param_2);
-    if (iVar2 != 0) {
-      FUN_800723a0();
+  objAnim = (ObjAnimComponent *)obj;
+  local_44 = lbl_802C1B00;
+  local_40 = lbl_802C1B04;
+  local_3c = lbl_802C1B08;
+  local_38 = lbl_802C1B0C;
+  if ((reactionState & 0xff) != 0) {
+    OSReport(sObjHitReactHitstateFrameString,objAnim->moveProgress);
+    collisionType = ObjAnim_AdvanceCurrentMove((double)*cooldown,(double)lbl_803DB414,obj,0);
+    if (collisionType != 0) {
+      OSReport(sObjHitReactResetString);
       reactionState = 0;
     }
   }
-  hitFxFlags = 0;
-  pfVar6 = &local_28;
-  puVar7 = &uStack_24;
-  pfVar8 = local_20;
-  iVar2 = FUN_800368c4(object,(undefined4 *)0x0,&hitSphereIndex,(uint *)0x0,pfVar6,puVar7,pfVar8);
-  if (iVar2 != 0) {
-    local_28 = local_28 + FLOAT_803dda58;
-    local_20[0] = local_20[0] + FLOAT_803dda5c;
-    local_2c = FLOAT_803df598;
+  collisionType = fn_80036770(obj,0,&sphereIndex,0,&local_28,local_24,local_20);
+  if (collisionType != 0) {
+    animDef = ObjAnim_GetAnimDef(objAnim);
+    local_28 = local_28 + lbl_803DCDD8;
+    local_20[0] = local_20[0] + lbl_803DCDDC;
+    local_2c = lbl_803DE918;
     local_30 = 0;
     local_32 = 0;
     local_34 = 0;
-    hitSphereIndex = ObjAnim_GetHitReactEntryIndex(animDef, hitSphereIndex);
-    if ((int)(param_11 & 0xff) <= hitSphereIndex) {
-      FUN_800723a0();
-      hitSphereIndex = 0;
+    sphereIndex = ObjAnim_GetHitReactEntryIndex(animDef,sphereIndex);
+    if ((int)(entryCount & 0xff) <= sphereIndex) {
+      OSReport(sObjHitReactSphereOverflowString);
+      sphereIndex = 0;
     }
-    reactEntry = (ObjHitReactEntry *)((int)uVar10 + hitSphereIndex * sizeof(ObjHitReactEntry));
-    if (iVar2 != 0x11) {
+    reactEntry = (ObjHitReactEntry *)((u8 *)entries + sphereIndex * sizeof(ObjHitReactEntry));
+    if (collisionType != 0x11) {
       if ((reactEntry->clearVolumeA != -1) &&
-          (bVar3 = FUN_800067f8(object,reactEntry->clearVolumeA), !bVar3)) {
-        FUN_80006824(object,reactEntry->clearVolumeA);
+          (volumeActive = fn_8000B5D0(obj,(u16)reactEntry->clearVolumeA), !volumeActive)) {
+        fn_8000BB18(obj,(u16)reactEntry->clearVolumeA);
       }
       if ((reactEntry->clearVolumeB != -1) &&
-          (bVar3 = FUN_800067f8(object,reactEntry->clearVolumeB), !bVar3)) {
-        FUN_80006824(object,reactEntry->clearVolumeB);
+          (volumeActive = fn_8000B5D0(obj,(u16)reactEntry->clearVolumeB), !volumeActive)) {
+        fn_8000BB18(obj,(u16)reactEntry->clearVolumeB);
       }
       if (reactEntry->hitFxMode == 1) {
-        piVar4 = (int *)FUN_80006b14(0x5a);
-        hitFxFlags = 0x401;
-        pfVar6 = (float *)-1;
-        puVar7 = &local_44;
-        puVar11 = (undefined4 *)*piVar4;
-        (*(code *)puVar11[1])(0,1,&local_34);
-        pfVar8 = (float *)puVar11;
-        if (piVar4 != (int *)0x0) {
-          FUN_80006b0c((undefined *)piVar4);
+        effectHandle = (int *)fn_80013EC8(0x5a,1);
+        (**(code **)(*effectHandle + 4))(0,1,&local_34,0x401,-1,&local_44);
+        if (effectHandle != (int *)0x0) {
+          fn_80013E2C(effectHandle);
         }
       }
       else {
-        hitFxFlags = 0;
-        FUN_80081120(object,&local_34,1,(int *)0x0);
+        fn_8009A1DC((double)lbl_803DE964,obj,&local_34,1,0);
       }
     }
-    if ((reactionState == 0) && (reactEntry->reactionAnim != -1)) {
-      ObjAnim_SetCurrentMove((double)FLOAT_803df590,param_2,param_3,param_4,param_5,param_6,param_7,
-                             param_8,object,(int)reactEntry->reactionAnim,0,hitFxFlags,
-                             (undefined4)pfVar6,(undefined4)puVar7,(undefined4)pfVar8,param_16);
-      *param_13 = reactEntry->cooldown;
+    if (((reactionState & 0xff) == 0) && (reactEntry->reactionAnim != -1)) {
+      ObjAnim_SetCurrentMove((double)lbl_803DE910,obj,(int)reactEntry->reactionAnim,0);
+      *cooldown = reactEntry->cooldown;
+      reactionState = 1;
     }
   }
-  FUN_80286888();
   return reactionState;
+}
+
+void fn_80035630(int count)
+{
+  int obj;
+  int hitState;
+  int *objectList;
+  undefined local_18[4];
+  undefined local_14[16];
+
+  objectList = fn_8002E0FC(local_18,local_14);
+  gObjHitReactResetObjectCount = 0;
+  if (0 < count) {
+    do {
+      obj = *objectList;
+      hitState = *(int *)(obj + 0x54);
+      if (((hitState != 0) && ((*(ushort *)(hitState + 0x60) & 1) != 0)) &&
+         ((*(byte *)(hitState + 0x62) & 8) != 0)) {
+        if (gObjHitReactResetObjectCount < 0x32) {
+          gObjHitReactResetObjects[gObjHitReactResetObjectCount] = obj;
+          gObjHitReactResetObjectCount = gObjHitReactResetObjectCount + 1;
+        }
+        *(int *)hitState = 0;
+        *(ushort *)(hitState + 0x60) = *(ushort *)(hitState + 0x60) & 0xfff7;
+        *(undefined2 *)(hitState + 0x58) = 0x400;
+      }
+      objectList = objectList + 1;
+      count = count + -1;
+    } while (count != 0);
+  }
 }
