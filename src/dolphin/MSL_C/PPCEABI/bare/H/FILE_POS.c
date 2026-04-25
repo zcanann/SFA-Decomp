@@ -26,8 +26,9 @@ inline fpos_t _ftell(FILE* file) {
     return (position);
 }
 
-long ftell(FILE* file) {
-    return (long)_ftell(file);
+int fseek(FILE * file, long offset, int file_mode)
+{
+    return _fseek(file, (fpos_t)offset, file_mode);
 }
 
 int _fseek(FILE* file, fpos_t offset, int file_mode) {
@@ -84,7 +85,6 @@ int _fseek(FILE* file, fpos_t offset, int file_mode) {
     return 0;
 }
 
-int fseek(FILE * file, long offset, int file_mode)
-{
-    return _fseek(file, (fpos_t)offset, file_mode);
+long ftell(FILE* file) {
+    return (long)_ftell(file);
 }
