@@ -3050,7 +3050,7 @@ s32 fn_8007D994(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void fn_8007E54C(int);
+extern void fn_8007E54C(u8);
 extern int fn_8007EB44(int, int, int, int, int, void*);
 extern void fn_8007E1AC(int);
 extern int fn_8007E6D4(u8, int, void*, void*);
@@ -3489,10 +3489,78 @@ void fn_8007E1AC(int param_1)
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
+ *
+ * Per-frame "blocking" dialog renderer driven by the card-write retry
+ * loops in fn_8007DB24/DBC0/DC5C/DD04. Pumps 60 frames of the GX/dialog
+ * pipeline; on each frame either lets the active controller draw its own
+ * popup (lbl_803DCA4C[0]->vtbl[1]) or falls back to fn_80076D78 over the
+ * cached prompt id in lbl_803DB708, then routes the OK/Cancel/back text
+ * to fn_80016810 based on the dialog kind passed in.
  */
-void fn_8007E54C(int param_1)
+#pragma peephole off
+#pragma scheduling off
+void fn_8007E54C(u8 kind)
 {
+    extern void fn_80017434(int);
+    extern int fn_80014F40(void);
+    extern void fn_800234EC(int);
+    extern void fn_8004A868(void);
+    extern int fn_8001FD88(int**);
+    extern void** lbl_803DCA4C;
+    extern f32 lbl_803DEF98;
+    extern f32 lbl_803DEF9C;
+    extern void fn_80076510(int, int, f32, f32);
+    extern int fn_8003B8F4(int, int, int, int, int, f32);
+    extern void fn_8001476C(int, int, int, int);
+    extern int lbl_803DB708;
+    extern void fn_8006C73C(void);
+    extern void fn_80076D78(int, int, int, void*, int, int);
+    extern void fn_80019908(int, int, int, int);
+    extern void fn_80016810(int, int, int);
+    extern void fn_80019C24(void);
+    extern void fn_8004A43C(int, int);
+
+    int saved;
+    int* buttons;
+    int frame;
+    int j;
+    int count;
+    void (*draw)(int, int, int);
+    u8 mode = kind;
+
+    fn_80017434(0);
+    for (frame = 0; frame < 0x3C; frame++) {
+        fn_80014F40();
+        fn_800234EC(0);
+        fn_8004A868();
+        count = fn_8001FD88(&buttons) & 0xFF;
+        if (count != 0) {
+            draw = (void (*)(int, int, int))((void**)*lbl_803DCA4C)[1];
+            draw(0, 0, 0);
+            fn_80076510(0x280, 0x1E0, lbl_803DEF98, lbl_803DEF98);
+            for (j = 0; j < count; j++) {
+                fn_8003B8F4(buttons[j], 0, 0, 0, 0, lbl_803DEF9C);
+            }
+            fn_8001476C(0, 0, 0, 0);
+        } else {
+            saved = lbl_803DB708;
+            fn_8006C73C();
+            fn_80076D78(0, 0, 0, &saved, 0x200, 0);
+        }
+        fn_80019908(0xFF, 0xFF, 0xFF, 0xFF);
+        if (mode == 1) {
+            fn_80016810(0x323, 0, 0xC8);
+        } else if (mode == 2) {
+            fn_80016810(0x573, 0, 0xC8);
+        } else {
+            fn_80016810(0x56C, 0, 0xC8);
+        }
+        fn_80019C24();
+        fn_8004A43C(1, 0);
+    }
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
