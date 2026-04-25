@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void fire_updateState(void);
+undefined4 fire_updateState(int obj,undefined4 param_2,u8 *stateList);
 int fireObj_getExtraSize(void);
 int fireObj_func08(void);
 void fireObj_free(void);

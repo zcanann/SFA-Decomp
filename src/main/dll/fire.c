@@ -6,12 +6,22 @@ extern undefined4 FUN_800178b8();
 extern undefined4 FUN_8000a380();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
+extern undefined4 fn_8000DA58(int param_1,int param_2);
+extern undefined4 fn_80014948(int param_1);
+extern undefined4 fn_80041E3C(int param_1);
+extern undefined4 fn_80042F78(int param_1);
+extern undefined4 fn_80043560(undefined4 param_1,int param_2);
+extern undefined4 fn_800437BC(undefined4 param_1,uint param_2);
+extern undefined4 fn_800481B0(int param_1);
+extern undefined4 fn_800552E8(int param_1,int param_2);
+extern uint fn_8001FFB4(int eventId);
 extern void fn_800200E8(int eventId,int value);
 extern undefined4 fn_8003B8F4(double scale);
 extern undefined4 fn_8004350C(int param_1,int param_2,int param_3);
 extern undefined4 fn_800887F8(int param_1);
 
 extern undefined4 *lbl_803DCA54;
+extern undefined4 *lbl_803DCAAC;
 extern undefined4 DAT_8032a7b8;
 extern undefined4 DAT_8032a7bc;
 extern undefined4 DAT_8032a7c0;
@@ -34,89 +44,96 @@ extern f32 FLOAT_803e716c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fire_updateState(void)
+undefined4 fire_updateState(int obj,undefined4 param_2,u8 *stateList)
 {
-  char cVar1;
-  bool bVar2;
-  int iVar3;
-  int iVar4;
-  uint uVar5;
-  int iVar6;
-  int iVar7;
-  int iVar8;
-  int iVar9;
-  double in_f31;
-  double dVar10;
-  double in_ps31_1;
-  undefined8 uVar11;
-  float local_58;
-  float local_54;
-  float local_50;
-  longlong local_48;
-  longlong local_40;
-  longlong local_38;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  uVar11 = FUN_80286840();
-  iVar3 = (int)((ulonglong)uVar11 >> 0x20);
-  iVar8 = *(int *)(iVar3 + 0xb8);
-  iVar7 = **(int **)(*(int *)(iVar3 + 0x7c) + *(char *)(iVar3 + 0xad) * 4);
-  *(ushort *)(iVar3 + 0xb0) = *(ushort *)(iVar3 + 0xb0) | 0x4000;
-  if (*(short *)(iVar3 + 0x46) == 0x4e0) {
-    DAT_8032a7b8 = (int)*(float *)(iVar3 + 0xc);
-    local_48 = (longlong)DAT_8032a7b8;
-    DAT_8032a7bc = (int)*(float *)(iVar3 + 0x10);
-    local_40 = (longlong)DAT_8032a7bc;
-    DAT_8032a7c0 = (int)*(float *)(iVar3 + 0x14);
-    local_38 = (longlong)DAT_8032a7c0;
-  }
-  else {
-    dVar10 = (double)FLOAT_803e7164;
-    for (iVar9 = 0; iVar9 < (int)(uint)*(ushort *)(iVar7 + 0xe4); iVar9 = iVar9 + 1) {
-      FUN_800178b8(iVar7,iVar9,&local_58);
-      if ((double)local_54 < dVar10) {
-        dVar10 = (double)local_54;
-      }
-    }
-    for (iVar9 = 0; iVar9 < (int)(uint)*(ushort *)(iVar7 + 0xe4); iVar9 = iVar9 + 1) {
-      FUN_800178b8(iVar7,iVar9,&local_58);
-      if ((double)local_54 == dVar10) {
-        bVar2 = false;
-        cVar1 = *(char *)(iVar8 + 0x68);
-        for (iVar6 = 0; iVar6 < cVar1; iVar6 = iVar6 + 1) {
-          iVar4 = iVar8 + iVar6 * 0xc;
-          if ((local_58 == *(float *)(iVar4 + 4)) && (local_50 == *(float *)(iVar4 + 0xc))) {
-            bVar2 = true;
-            iVar6 = (int)cVar1;
+  int stateIndex;
+  int mode;
+  u8 state;
+  undefined4 anim;
+
+  mode = (u8)(*(code *)(*lbl_803DCAAC + 0x40))((int)*(s8 *)(obj + 0xac));
+  fn_8000DA58(0,0x48b);
+  for (stateIndex = 0; stateIndex < (int)(uint)stateList[0x8b]; stateIndex++) {
+    state = stateList[stateIndex + 0x81];
+    if (state == 1) {
+      fn_80041E3C(0);
+      if (mode != 2) {
+        if (mode < 2) {
+          if (-1 < mode) {
+            (*(code *)(*lbl_803DCAAC + 0x50))(7,0,0);
+            (*(code *)(*lbl_803DCAAC + 0x50))(7,2,0);
+            (*(code *)(*lbl_803DCAAC + 0x50))(7,3,0);
+            (*(code *)(*lbl_803DCAAC + 0x50))(7,7,0);
+            (*(code *)(*lbl_803DCAAC + 0x50))(7,10,0);
+            (*(code *)(*lbl_803DCAAC + 0x50))(10,7,0);
+            fn_800200E8(0x1ed,1);
+            fn_80042F78(0x17);
+            anim = fn_800481B0(0x17);
+            fn_80043560(anim,0);
           }
         }
-        if (!bVar2) {
-          *(float *)(iVar8 + cVar1 * 0xc + 4) = local_58;
-          *(float *)(iVar8 + *(char *)(iVar8 + 0x68) * 0xc + 8) = local_54;
-          *(float *)(iVar8 + *(char *)(iVar8 + 0x68) * 0xc + 0xc) = local_50;
-          *(char *)(iVar8 + 0x68) = *(char *)(iVar8 + 0x68) + '\x01';
+        else if (mode < 4) {
+          fn_80042F78(7);
+          anim = fn_800481B0(7);
+          fn_80043560(anim,0);
         }
       }
+      else {
+        fn_80042F78(0xb);
+        anim = fn_800481B0(0xb);
+        fn_80043560(anim,0);
+      }
     }
-    *(undefined *)(iVar8 + 0x69) = 0;
-    *(float *)(iVar3 + 0x10) = *(float *)(iVar3 + 0x10) - FLOAT_803e7144;
-    *(undefined2 *)(iVar8 + 0x66) = *(undefined2 *)((int)uVar11 + 0x1e);
-    *(undefined2 *)(iVar8 + 100) = *(undefined2 *)((int)uVar11 + 0x20);
-    uVar5 = FUN_80017690((int)*(short *)(iVar8 + 0x66));
-    *(char *)(iVar8 + 0x6b) = (char)uVar5;
-    uVar5 = FUN_80017690((int)*(short *)(iVar8 + 100));
-    *(char *)(iVar8 + 0x6a) = (char)uVar5;
-    if (*(char *)(iVar8 + 0x6b) != '\0') {
-      *(float *)(iVar3 + 0xc) = *(float *)(iVar3 + 0xc) + FLOAT_803e7168;
-      *(float *)(iVar3 + 0x14) = *(float *)(iVar3 + 0x14) + FLOAT_803e716c;
-      *(undefined *)(iVar8 + 0x69) = 4;
+    else if (state == 2) {
+      if (mode != 2) {
+        if (mode < 2) {
+          if (-1 < mode) {
+            fn_800552E8(2,0);
+          }
+        }
+        else if (mode < 4) {
+          fn_800552E8(0xf,0);
+        }
+      }
+      else {
+        fn_800200E8(0x405,0);
+        if (fn_8001FFB4(0xff) != 0) {
+          (*(code *)(*lbl_803DCAAC + 0x44))(0xb,3);
+          (*(code *)(*lbl_803DCAAC + 0x50))(0xb,8,1);
+          (*(code *)(*lbl_803DCAAC + 0x50))(0xb,9,1);
+          fn_800552E8(0x22,0);
+        }
+        else if (fn_8001FFB4(0xbfd) != 0) {
+          (*(code *)(*lbl_803DCAAC + 0x44))(0xb,2);
+          (*(code *)(*lbl_803DCAAC + 0x50))(0xb,5,1);
+          (*(code *)(*lbl_803DCAAC + 0x50))(0xb,6,1);
+          fn_800552E8(0x20,0);
+        }
+        else if (fn_8001FFB4(0xc6e) != 0) {
+          (*(code *)(*lbl_803DCAAC + 0x44))(0xb,4);
+          (*(code *)(*lbl_803DCAAC + 0x50))(0xb,8,1);
+          (*(code *)(*lbl_803DCAAC + 0x50))(0xb,9,1);
+          fn_800552E8(0x22,0);
+        }
+      }
+      fn_80014948(1);
+    }
+    else if (state == 3) {
+      if (mode != 3) {
+        if (mode < 3) {
+          if (-1 < mode) {
+            anim = fn_800481B0(7);
+            fn_800437BC(anim,0x20000000);
+          }
+        }
+      }
+      else {
+        anim = fn_800481B0(0xb);
+        fn_800437BC(anim,0x20000000);
+      }
     }
   }
-  FUN_8028688c();
-  return;
+  return 0;
 }
 
 int fireObj_getExtraSize(void)
@@ -151,7 +168,7 @@ void fireObj_update(int obj)
 
 void fireObj_init(int obj)
 {
-  *(void (**)(void))(obj + 0xbc) = fire_updateState;
+  *(undefined4 (**)(int,undefined4,u8 *))(obj + 0xbc) = fire_updateState;
   fn_8004350C(0,0,1);
   *(u16 *)(obj + 0xb0) |= 0x2000;
   fn_800887F8(0);
