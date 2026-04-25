@@ -2264,13 +2264,13 @@ dolphin/MSL_C/PPCEABI/bare/H/abort_exit.c:
 	.text       start:0x8028DBE4 end:0x8028DBE4
 
 dolphin/MSL_C/PPCEABI/bare/H/alloc.c:
-	.text       start:0x8028DBE4 end:0x8028DFC4
+	.text       start:0x8028DBE4 end:0x8028DBE4
 
 dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c:
-	.text       start:0x8028DFC4 end:0x8028E304
+	.text       start:0x8028DBE4 end:0x8028DBE4
 
 dolphin/MSL_C/PPCEABI/bare/H/ansi_fp.c:
-	.text       start:0x8028E304 end:0x8028E7FC
+	.text       start:0x8028DBE4 end:0x8028E7FC
 
 dolphin/MSL_C/PPCEABI/bare/H/buffer_io.c:
 	.text       start:0x8028E7FC end:0x8028E8F4
