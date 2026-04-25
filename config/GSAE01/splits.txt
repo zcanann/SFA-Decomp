@@ -2371,17 +2371,14 @@ dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.c:
 main/unknown/autos/placeholder_80293FB4.c:
 	.text       start:0x80293F7C end:0x802947CC
 
-dolphin/MSL_C/PPCEABI/bare/H/s_floor.c:
-	.text       start:0x802947CC end:0x80294850
-
-dolphin/MSL_C/PPCEABI/bare/H/s_sin.c:
-	.text       start:0x80294850 end:0x802949E4
-
-main/unknown/autos/placeholder_80294A4C.c:
-	.text       start:0x802949E4 end:0x80294BB8
+dolphin/MSL_C/PPCEABI/bare/H/trigf.c:
+	.text       start:0x802947CC end:0x80294BB8
 	.ctors      start:0x802C1884 end:0x802C1888
 
-dolphin/MSL_C/PPCEABI/bare/H/trigf.c:
+dolphin/MSL_C/PPCEABI/bare/H/s_floor.c:
+	.text       start:0x80294BB8 end:0x80294BB8
+
+dolphin/MSL_C/PPCEABI/bare/H/s_sin.c:
 	.text       start:0x80294BB8 end:0x80294BB8
 
 main/unknown/autos/placeholder_80295318.c:
