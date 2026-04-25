@@ -38,6 +38,14 @@ typedef struct ObjHitReactEntry {
   u8 pad10[4];
 } ObjHitReactEntry;
 
+typedef struct ObjHitReactEffectPos {
+  s16 x;
+  s16 y;
+  s16 z;
+  u8 pad06[2];
+  f32 scale;
+} ObjHitReactEffectPos;
+
 /*
  * --INFO--
  *
@@ -53,10 +61,7 @@ u8 objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,flo
   int *effectHandle;
   bool volumeActive;
   ObjHitReactEntry *reactEntry;
-  undefined2 local_34;
-  undefined2 local_32;
-  undefined2 local_30;
-  float local_2c;
+  ObjHitReactEffectPos effectPos;
   float local_28;
   undefined local_24[4];
   float local_20[8];
@@ -81,10 +86,10 @@ u8 objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,flo
     animDef = ObjAnim_GetAnimDef(objAnim);
     local_28 = local_28 + lbl_803DCDD8;
     local_20[0] = local_20[0] + lbl_803DCDDC;
-    local_2c = lbl_803DE918;
-    local_30 = 0;
-    local_32 = 0;
-    local_34 = 0;
+    effectPos.x = 0;
+    effectPos.y = 0;
+    effectPos.z = 0;
+    effectPos.scale = lbl_803DE918;
     sphereIndex = ObjAnim_GetHitReactEntryIndex(animDef,sphereIndex);
     if ((int)(entryCount & 0xff) <= sphereIndex) {
       OSReport(sObjHitReactSphereOverflowString);
@@ -102,13 +107,13 @@ u8 objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,flo
       }
       if (reactEntry->hitFxMode == 1) {
         effectHandle = (int *)fn_80013EC8(0x5a,1);
-        (**(code **)(*effectHandle + 4))(0,1,&local_34,0x401,-1,effectOrigin);
+        (**(code **)(*effectHandle + 4))(0,1,&effectPos,0x401,-1,effectOrigin);
         if (effectHandle != (int *)0x0) {
           fn_80013E2C(effectHandle);
         }
       }
       else {
-        fn_8009A1DC((double)lbl_803DE964,obj,&local_34,1,0);
+        fn_8009A1DC((double)lbl_803DE964,obj,(undefined2 *)&effectPos.x,1,0);
       }
     }
     if (((reactionState & 0xff) == 0) && (reactEntry->reactionAnim != -1)) {
@@ -125,20 +130,22 @@ void fn_80035630(int count)
   int obj;
   int hitState;
   int *objectList;
+  int resetObjectCount;
   undefined local_18[4];
   undefined local_14[16];
 
   objectList = fn_8002E0FC(local_18,local_14);
   gObjHitReactResetObjectCount = 0;
-  if (0 < count) {
-    do {
+  if (count > 0) {
+    while (count != 0) {
       obj = *objectList;
       hitState = *(int *)(obj + 0x54);
       if (((hitState != 0) && ((*(ushort *)(hitState + 0x60) & 1) != 0)) &&
          ((*(byte *)(hitState + 0x62) & 8) != 0)) {
         if (gObjHitReactResetObjectCount < 0x32) {
-          gObjHitReactResetObjects[gObjHitReactResetObjectCount] = obj;
-          gObjHitReactResetObjectCount = gObjHitReactResetObjectCount + 1;
+          resetObjectCount = gObjHitReactResetObjectCount;
+          gObjHitReactResetObjectCount = resetObjectCount + 1;
+          gObjHitReactResetObjects[resetObjectCount] = obj;
         }
         *(int *)hitState = 0;
         *(ushort *)(hitState + 0x60) = *(ushort *)(hitState + 0x60) & 0xfff7;
@@ -146,6 +153,6 @@ void fn_80035630(int count)
       }
       objectList = objectList + 1;
       count = count + -1;
-    } while (count != 0);
+    }
   }
 }

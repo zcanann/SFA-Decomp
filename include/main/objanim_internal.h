@@ -63,11 +63,11 @@ typedef struct ObjAnimComponent {
   void *eventTable;
   u8 pad64[0x7C - 0x64];
   ObjAnimBank **banks;
-  u8 pad80[0x9C - 0x80];
+  u8 pad80[0x98 - 0x80];
   f32 moveProgress;
-  u8 padA0[2];
+  u8 pad9C[0xA0 - 0x9C];
   s16 activeMove;
-  u8 padA4[0xAD - 0xA4];
+  u8 padA2[0xAD - 0xA2];
   s8 bankIndex;
 } ObjAnimComponent;
 
