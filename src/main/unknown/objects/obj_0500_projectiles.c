@@ -39,16 +39,16 @@
  * - 0x042C DRProjectil: placements=7, class=0x0051, widths=9w x7
  *
  * EN descriptor slot map:
- * - descriptor=0x80321C68 lbl_80321C68 (slots=10, mask=1101111111)
- * - slot 00: 0x8017AE2C fn_8017AE2C stub=blr ref=initialise (stub)
- * - slot 01: 0x8017AE28 fn_8017AE28 stub=blr ref=release (stub)
- * - slot 03: 0x8017AC40 fn_8017AC40 ref=init
- * - slot 04: 0x8017AB28 fn_8017AB28 ref=update
- * - slot 05: 0x8017A95C fn_8017A95C ref=hitDetect
- * - slot 06: 0x8017A8D0 fn_8017A8D0 ref=render
- * - slot 07: 0x8017A8CC fn_8017A8CC stub=blr ref=free (stub)
- * - slot 08: 0x8017A89C fn_8017A89C
- * - slot 09: 0x8017A894 fn_8017A894 stub=const 8 ref=getExtraSize (stub)
+ * - descriptor=0x80321C68 gProjectileSwitchObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x8017AE2C projectileswitch_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x8017AE28 projectileswitch_release stub=blr ref=release (stub)
+ * - slot 03: 0x8017AC40 projectileswitch_init ref=init
+ * - slot 04: 0x8017AB28 projectileswitch_update ref=update
+ * - slot 05: 0x8017A95C projectileswitch_hitDetect ref=hitDetect
+ * - slot 06: 0x8017A8D0 projectileswitch_render ref=render
+ * - slot 07: 0x8017A8CC projectileswitch_free stub=blr ref=free (stub)
+ * - slot 08: 0x8017A89C projectileswitch_func08
+ * - slot 09: 0x8017A894 projectileswitch_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 
 #if 0

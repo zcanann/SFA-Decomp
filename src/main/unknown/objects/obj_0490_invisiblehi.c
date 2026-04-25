@@ -38,10 +38,10 @@
  * - 0x0490 InvisibleHi: placements=23, class=0x0051, widths=9w x23
  *
  * EN descriptor slot map:
- * - descriptor=0x80321CA0 lbl_80321CA0 (slots=10, mask=0001100001)
- * - slot 03: 0x8017B064 fn_8017B064 ref=init
- * - slot 04: 0x8017AE38 fn_8017AE38 ref=update
- * - slot 09: 0x8017AE30 fn_8017AE30 stub=const 12 ref=getExtraSize (stub)
+ * - descriptor=0x80321CA0 gInvisibleHitSwitchObjDescriptor (slots=10, mask=0001100001)
+ * - slot 03: 0x8017B064 invisiblehitswitch_init ref=init
+ * - slot 04: 0x8017AE38 invisiblehitswitch_update ref=update
+ * - slot 09: 0x8017AE30 invisiblehitswitch_getExtraSize stub=const 12 ref=getExtraSize (stub)
  */
 
 #if 0
