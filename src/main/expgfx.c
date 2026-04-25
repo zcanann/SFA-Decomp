@@ -142,6 +142,12 @@ extern f32 FLOAT_803dda58;
 extern f32 FLOAT_803dda5c;
 extern f32 lbl_803DCDD8;
 extern f32 lbl_803DCDDC;
+extern f64 lbl_803DF378;
+extern f32 lbl_803DF3B4;
+extern f32 lbl_803DF3B8;
+extern f32 lbl_803DF3BC;
+extern f32 lbl_803DF3C0;
+extern f32 lbl_803DF3C4;
 extern f32 FLOAT_803ddedc;
 extern f32 FLOAT_803ddee0;
 extern f32 FLOAT_803ddee4;
@@ -277,6 +283,13 @@ static inline ExpgfxBounds *Expgfx_GetBoundsTemplate(int templateIndex) {
 
 static inline ExpgfxBounds *Expgfx_GetPoolBounds(int poolIndex) {
   return &((ExpgfxBounds *)&gExpgfxPoolBounds)[poolIndex];
+}
+
+static inline f64 Expgfx_U16AsDouble(u16 value) {
+  u64 bits;
+
+  bits = CONCAT44(0x43300000, (u32)value);
+  return *(f64 *)&bits - lbl_803DF378;
 }
 
 static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void) {
@@ -509,146 +522,120 @@ int expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,int para
  * --INFO--
  *
  * Function: expgfx_initSlotQuad
- * EN v1.0 Address: 0x8009B994
- * EN v1.0 Size: 1008b
- * EN v1.1 Address: 0x8009B960
+ * EN v1.0 Address: 0x8009B6D4
+ * EN v1.0 Size: 756b
+ * EN v1.1 Address: TODO
  * EN v1.1 Size: 756b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void expgfx_initSlotQuad(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                         undefined8 param_5,undefined8 param_6,undefined8 param_7,
-                         undefined8 param_8,undefined2 *param_9)
+void expgfx_initSlotQuad(void *slotPtr)
 {
   ExpgfxSlot *slot;
   ExpgfxTableEntry *tableEntry;
-  double dVar1;
-  undefined2 *puVar2;
-  uint uVar3;
-  undefined2 uVar4;
-  int iVar5;
-  undefined2 uVar6;
-  undefined4 in_r8;
-  undefined2 uVar7;
-  undefined4 in_r9;
-  undefined2 uVar8;
-  undefined4 in_r10;
-  double dVar9;
-  double dVar10;
-  undefined8 local_18;
-  undefined8 local_8;
+  u8 *staticDataBase;
+  s16 *slotWords;
+  s16 *quadTemplate;
+  u32 behaviorFlags;
+  s16 tex0S;
+  s16 tex0T;
+  s16 tex1S;
+  s16 tex1T;
+  float frameStep;
+  int texture;
 
-  slot = (ExpgfxSlot *)param_9;
+  staticDataBase = lbl_8030F898;
+  slot = (ExpgfxSlot *)slotPtr;
   tableEntry = Expgfx_GetTableEntry(Expgfx_GetSlotTableIndex(slot));
-  iVar5 = tableEntry->textureOrResource;
+  texture = tableEntry->textureOrResource;
   slot->stateBits = slot->stateBits & 0xfe;
   slot->stateBits = slot->stateBits & 0xfd | 2;
-  uVar3 = slot->behaviorFlags;
-  if ((uVar3 & 0x8000000) == 0) {
-    puVar2 = (undefined2 *)0x803105c0;
+  behaviorFlags = slot->behaviorFlags;
+  if ((behaviorFlags & 0x8000000) == 0) {
+    quadTemplate = (s16 *)(staticDataBase + 0x168);
   }
   else {
-    puVar2 = &DAT_803105a8;
+    quadTemplate = (s16 *)(staticDataBase + 0x150);
   }
-  if ((uVar3 & 0x40000000) != 0) {
-    param_2 = (double)*(float *)(param_9 + 0x3a);
-    if (param_2 < (double)FLOAT_803e0034) {
-      if (((uVar3 & 0x1000000) == 0) || ((double)FLOAT_803e0034 <= param_2)) {
-        param_2 = (double)FLOAT_803e003c;
-        *(float *)(param_9 + 0x3a) =
-             -(float)(param_2 * (double)FLOAT_803dc074 - (double)*(float *)(param_9 + 0x3a));
+  if ((behaviorFlags & 0x40000000) != 0) {
+    if (slot->velocityY < lbl_803DF3B4) {
+      if (((behaviorFlags & 0x1000000) == 0) || (lbl_803DF3B4 <= slot->velocityY)) {
+        slot->velocityY = -(lbl_803DF3BC * lbl_803DB414 - slot->velocityY);
       }
       else {
-        *(float *)(param_9 + 0x3a) =
-             -(float)((double)FLOAT_803e0038 * (double)FLOAT_803dc074 - param_2);
+        slot->velocityY = -(lbl_803DF3B8 * lbl_803DB414 - slot->velocityY);
       }
       goto LAB_8009ba84;
     }
   }
-  if (((uVar3 & 0x1000000) == 0) ||
-     (param_2 = (double)*(float *)(param_9 + 0x3a), param_2 <= (double)FLOAT_803e0040)) {
-    if (((uVar3 & 8) != 0) &&
-       (param_2 = (double)*(float *)(param_9 + 0x3a), (double)FLOAT_803e0040 < param_2)) {
-      *(float *)(param_9 + 0x3a) =
-           (float)((double)FLOAT_803e003c * (double)FLOAT_803dc074 + param_2);
+  if (((behaviorFlags & 0x1000000) == 0) || (slot->velocityY <= lbl_803DF3C0)) {
+    if (((behaviorFlags & 8) != 0) && (lbl_803DF3C0 < slot->velocityY)) {
+      slot->velocityY = lbl_803DF3BC * lbl_803DB414 + slot->velocityY;
     }
   }
   else {
-    *(float *)(param_9 + 0x3a) = (float)((double)FLOAT_803e0038 * (double)FLOAT_803dc074 + param_2);
+    slot->velocityY = lbl_803DF3B8 * lbl_803DB414 + slot->velocityY;
   }
 LAB_8009ba84:
-  dVar10 = (double)FLOAT_803e0044;
-  *(float *)&slot->posX = (float)((double)slot->velocityX * dVar10 + (double)*(float *)&slot->posX);
-  *(float *)&slot->posY = (float)((double)slot->velocityY * dVar10 + (double)*(float *)&slot->posY);
-  dVar9 = (double)slot->velocityZ;
-  *(float *)&slot->posZ = (float)(dVar9 * dVar10 + (double)*(float *)&slot->posZ);
-  dVar1 = DOUBLE_803dfff8;
+  frameStep = lbl_803DF3C4;
+  *(float *)&slot->posX = slot->velocityX * frameStep + *(float *)&slot->posX;
+  *(float *)&slot->posY = slot->velocityY * frameStep + *(float *)&slot->posY;
+  *(float *)&slot->posZ = slot->velocityZ * frameStep + *(float *)&slot->posZ;
   if ((slot->behaviorFlags & 0x100000) == 0) {
     if ((slot->renderFlags & 0x2000) != 0) {
-      uVar3 = 0x43300000;
-      local_8 = (double)CONCAT44(0x43300000,(uint)(ushort)slot->scaleFrames);
-      dVar9 = (double)(float)(local_8 - DOUBLE_803dfff8);
       slot->scaleCounter =
-           (short)(int)-(float)(dVar9 * dVar10 -
-                               (double)(float)((double)CONCAT44(0x43300000,(uint)(ushort)slot->scaleCounter) -
-                                              DOUBLE_803dfff8));
-      param_2 = dVar1;
+           (short)(int)-(Expgfx_U16AsDouble((u16)slot->scaleFrames) * frameStep -
+                         Expgfx_U16AsDouble((u16)slot->scaleCounter));
     }
   }
   else {
-    uVar3 = 0x43300000;
-    local_18 = (double)CONCAT44(0x43300000,(uint)(ushort)slot->scaleFrames);
-    dVar9 = (double)(float)(local_18 - DOUBLE_803dfff8);
     slot->scaleCounter =
-         (short)(int)(dVar9 * dVar10 +
-                     (double)(float)((double)CONCAT44(0x43300000,(uint)(ushort)slot->scaleCounter) -
-                                    DOUBLE_803dfff8));
-    param_2 = dVar1;
+         (short)(int)(Expgfx_U16AsDouble((u16)slot->scaleFrames) * frameStep +
+                     Expgfx_U16AsDouble((u16)slot->scaleCounter));
   }
-  if (iVar5 != 0) {
-    uVar6 = 0;
-    uVar4 = 0;
-    uVar8 = 0;
-    uVar7 = 0;
-    if (iVar5 != 0) {
-      uVar8 = 0x80;
-      uVar6 = 0x80;
-      uVar7 = 0;
+  if (texture != 0) {
+    tex0S = 0;
+    tex0T = 0;
+    tex1S = 0;
+    tex1T = 0;
+    if (texture != 0) {
+      tex1S = 0x80;
+      tex0S = 0x80;
       if ((slot->behaviorFlags & 0x80) != 0) {
-        uVar7 = 0x80;
-        uVar8 = 0;
+        tex1T = 0x80;
+        tex1S = 0;
       }
       if ((slot->behaviorFlags & 0x40) != 0) {
-        uVar4 = 0x80;
-        uVar6 = 0;
+        tex0T = 0x80;
+        tex0S = 0;
       }
     }
-    *param_9 = *puVar2;
-    param_9[1] = puVar2[1];
-    param_9[2] = puVar2[2];
-    param_9[4] = uVar8;
-    param_9[5] = uVar6;
-    param_9[8] = puVar2[3];
-    param_9[9] = puVar2[4];
-    param_9[10] = puVar2[5];
-    param_9[0xc] = uVar7;
-    param_9[0xd] = uVar6;
-    param_9[0x10] = puVar2[6];
-    param_9[0x11] = puVar2[7];
-    param_9[0x12] = puVar2[8];
-    param_9[0x14] = uVar7;
-    param_9[0x15] = uVar4;
-    param_9[0x18] = puVar2[9];
-    param_9[0x19] = puVar2[10];
-    param_9[0x1a] = puVar2[0xb];
-    param_9[0x1c] = uVar8;
-    param_9[0x1d] = uVar4;
+    slotWords = (s16 *)slot;
+    slotWords[0] = quadTemplate[0];
+    slotWords[1] = quadTemplate[1];
+    slotWords[2] = quadTemplate[2];
+    slotWords[4] = tex1S;
+    slotWords[5] = tex0S;
+    slotWords[8] = quadTemplate[3];
+    slotWords[9] = quadTemplate[4];
+    slotWords[10] = quadTemplate[5];
+    slotWords[0xc] = tex1T;
+    slotWords[0xd] = tex0S;
+    slotWords[0x10] = quadTemplate[6];
+    slotWords[0x11] = quadTemplate[7];
+    slotWords[0x12] = quadTemplate[8];
+    slotWords[0x14] = tex1T;
+    slotWords[0x15] = tex0T;
+    slotWords[0x18] = quadTemplate[9];
+    slotWords[0x19] = quadTemplate[10];
+    slotWords[0x1a] = quadTemplate[0xb];
+    slotWords[0x1c] = tex1S;
+    slotWords[0x1d] = tex0T;
   }
   else {
-    FUN_80135810(dVar9,param_2,dVar10,param_4,param_5,param_6,param_7,param_8,sExpgfxNoTexture,
-                 &gExpgfxBoundsTemplates,puVar2,uVar3,0,in_r8,in_r9,in_r10);
+    fn_801378A8(sExpgfxNoTexture);
   }
   return;
 }
@@ -1594,8 +1581,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
           puVar18[0x1c] = 0;
           puVar18[0x1d] = 0;
           if ((*(uint *)(puVar18 + 0x40) & 2) != 0) {
-            expgfx_initSlotQuad(dVar20,param_2,dVar21,param_4,param_5,param_6,param_7,param_8,
-                                puVar18);
+            expgfx_initSlotQuad(puVar18);
           }
           pbVar11 = &gExpgfxPoolSourceModes + local_56[0];
           *pbVar11 = (spawnConfig->behaviorFlags & 0x20000000U) != 0;
