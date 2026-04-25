@@ -3107,15 +3107,15 @@ extern u8 lbl_803DD058;
 #pragma scheduling off
 int fn_8007D99C(void)
 {
-    extern void* fn_80023D8C();
+    extern void* fn_80023CC8();
     extern s32 CARDMount();
     extern s32 CARDCheck();
     extern s32 CARDDelete();
     extern void CARDUnmount();
     extern void fn_80023800();
-    extern void fn_80080084();
+    extern void fn_8007FDF8();
     extern void* lbl_803DD040;
-    extern const char* lbl_803DB6E4;
+    extern const char* lbl_803DB704;
     extern volatile s32 lbl_803DB700;
     int res;
 
@@ -3125,20 +3125,18 @@ int fn_8007D99C(void)
         if (fn_8007DE0C(0) == 0) {
             return 0;
         }
-        lbl_803DD040 = fn_80023D8C(0xA000, -1, 0);
+        lbl_803DD040 = fn_80023CC8(0xA000, -1, 0);
         if (lbl_803DD040 == 0) {
             lbl_803DB700 = 8;
             return 0;
         }
         lbl_803DB700 = 0;
-        res = CARDMount(0, lbl_803DD040, (void*)fn_80080084);
+        res = CARDMount(0, lbl_803DD040, (void*)fn_8007FDF8);
         if (res == 0 || res == -6) {
-            if (res == -6) {
-                res = CARDCheck(0);
-            }
+            res = CARDCheck(0);
         }
         if (res == 0) {
-            res = CARDDelete(0, lbl_803DB6E4);
+            res = CARDDelete(0, lbl_803DB704);
         }
         CARDUnmount(0);
         fn_80023800(lbl_803DD040);
