@@ -117,14 +117,14 @@ extern undefined lbl_8030F968[];
 extern undefined4* lbl_803DCA88;
 extern u8 lbl_803DC7B0;
 extern u8 lbl_803DD254;
-extern f32 lbl_803DB414;
-extern f32 lbl_803DD25C;
-extern f32 lbl_803DD260;
-extern f32 lbl_803DD264;
-extern f32 lbl_803DF354;
-extern f32 lbl_803DF35C;
-extern f32 lbl_803DF384;
-extern f32 lbl_803DF418;
+extern volatile f32 lbl_803DB414;
+extern volatile f32 lbl_803DD25C;
+extern volatile f32 lbl_803DD260;
+extern volatile f32 lbl_803DD264;
+extern volatile f32 lbl_803DF354;
+extern volatile f32 lbl_803DF35C;
+extern volatile f32 lbl_803DF384;
+extern volatile f32 lbl_803DF418;
 extern f64 DOUBLE_803dffe0;
 extern f64 DOUBLE_803dfff8;
 extern f32 FLOAT_803dc074;
@@ -955,25 +955,31 @@ void FUN_8009c120(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void expgfx_updateFrameState(int sourceMode,int sourceId)
 {
   int iVar1;
   byte bVar2;
   f32 frameStep;
+  f32 frameValue;
   
   iVar1 = fn_80008B4C(-1);
   if ((short)iVar1 != 1) {
+    frameValue = lbl_803DD25C;
     frameStep = lbl_803DB414;
-    lbl_803DD25C = lbl_803DD25C + frameStep;
-    if (lbl_803DD25C >= lbl_803DF418) {
+    frameValue = frameValue + frameStep;
+    lbl_803DD25C = frameValue;
+    if (frameValue >= lbl_803DF418) {
       lbl_803DD25C = lbl_803DF35C;
     }
-    lbl_803DD260 = lbl_803DD260 + frameStep;
-    if (lbl_803DD260 >= lbl_803DF384) {
+    frameValue = lbl_803DD260 + frameStep;
+    lbl_803DD260 = frameValue;
+    if (frameValue >= lbl_803DF384) {
       lbl_803DD260 = lbl_803DF35C;
     }
-    lbl_803DD264 = lbl_803DD264 + frameStep;
-    if (lbl_803DD264 >= lbl_803DF354) {
+    frameValue = lbl_803DD264 + frameStep;
+    lbl_803DD264 = frameValue;
+    if (frameValue >= lbl_803DF354) {
       lbl_803DD264 = lbl_803DF35C;
     }
     lbl_803DC7B0 = 1;
@@ -989,6 +995,7 @@ void expgfx_updateFrameState(int sourceMode,int sourceId)
   }
   return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
