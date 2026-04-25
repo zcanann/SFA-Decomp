@@ -1417,11 +1417,8 @@ main/unknown/autos/placeholder_80209FE0.c:
 dolphin/base/PPCArch.c:
 	.text       start:0x8024034C end:0x802403D8
 
-main/unknown/autos/placeholder_802403D8.c:
-	.text       start:0x802403D8 end:0x8024091C
-
 dolphin/os/OS.c:
-	.text       start:0x8024091C end:0x80240D34
+	.text       start:0x802403D8 end:0x80240D34
 	.bss        start:0x803ADF80 end:0x803ADFD0
 	.sbss       start:0x803DDDD8 end:0x803DDE08
 
@@ -1596,11 +1593,8 @@ dolphin/si/SISamplingRate.c:
 	.data       start:0x8032EDD0 end:0x8032EDD0
 	.sbss       start:0x803DE090 end:0x803DE094
 
-main/unknown/autos/placeholder_80253188.c:
-	.text       start:0x80253188 end:0x8025327C
-
 dolphin/exi/EXIBios.c:
-	.text       start:0x8025327C end:0x80254A5C
+	.text       start:0x80253188 end:0x80254A5C
 
 dolphin/exi/EXIUart.c:
 	.text       start:0x80254A5C end:0x80254CCC
