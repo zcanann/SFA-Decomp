@@ -122,6 +122,7 @@ extern undefined4 DAT_cc008000;
 extern undefined lbl_8030F968[];
 extern undefined4* lbl_803DCA88;
 extern u8 lbl_803DC7B0;
+extern u8 lbl_803DD253;
 extern u8 lbl_803DD254;
 extern volatile f32 lbl_803DB414;
 extern volatile f32 lbl_803DD25C;
@@ -183,6 +184,8 @@ extern f32 FLOAT_803e00a4;
 extern f32 FLOAT_803e00a8;
 extern u8 lbl_8030F898[];
 extern u8 lbl_8039AB58[];
+extern u32 lbl_8039BA28[];
+extern u32 lbl_8039BB68[];
 extern s16 lbl_8030F8C8[];
 extern int lbl_803DD258;
 extern char sExpgfxAddToTableUsageOverflow[];
@@ -791,6 +794,70 @@ int expgfx_addToTable(int textureOrResource,int key0,int key1,s16 slotType)
   entry->refCount = entry->refCount + 1;
   return (int)(short)tableIndex;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: fn_8009DF0C
+ * EN v1.0 Address: 0x8009DF0C
+ * EN v1.0 Size: 248b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+int fn_8009DF0C(void *sourceObject)
+{
+  u32 bit;
+  s32 highBit;
+  u32 *sourceMasks;
+  u32 *poolSourceIds;
+  u8 *poolFrameFlags;
+  s8 aggregateState;
+  int poolIndex;
+
+  aggregateState = 0;
+  lbl_803DD253 = 0;
+  poolIndex = 0;
+  poolSourceIds = lbl_8039BA28;
+  poolFrameFlags = lbl_8030F968;
+  while ((s16)poolIndex < EXPGFX_POOL_COUNT) {
+    if ((*(s16 *)((u8 *)sourceObject + 0x46) == 0xd4) || (*poolSourceIds == (u32)sourceObject)) {
+      bit = 1 << ((s16)poolIndex >> 1);
+      highBit = (s32)bit >> 0x1f;
+      sourceMasks = &lbl_8039BB68[((u32)(poolIndex & 1)) * 2];
+      if (((bit & sourceMasks[1]) | (highBit & sourceMasks[0])) != 0) {
+        *poolFrameFlags = 2;
+        if (aggregateState == 1) {
+          aggregateState = 3;
+        }
+        else {
+          aggregateState = 2;
+        }
+      }
+      else {
+        *poolFrameFlags = 1;
+        if (aggregateState == 2) {
+          aggregateState = 3;
+        }
+        else {
+          aggregateState = 1;
+        }
+      }
+    }
+    else {
+      *poolFrameFlags = 0;
+    }
+    poolSourceIds = poolSourceIds + 1;
+    poolFrameFlags = poolFrameFlags + 1;
+    poolIndex = poolIndex + 1;
+  }
+  return aggregateState;
+}
+#pragma scheduling reset
 
 /*
  * --INFO--
