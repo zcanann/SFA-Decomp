@@ -344,8 +344,11 @@ undefined4 Object_ObjAnimSetMoveProgress(double param_1,int param_2)
   double dVar1;
 
   objAnim = (ObjAnimComponent *)param_2;
-  dVar1 = (double)FLOAT_803df588;
-  if ((param_1 <= dVar1) && (dVar1 = param_1, param_1 < (double)FLOAT_803df570)) {
+  dVar1 = param_1;
+  if ((double)FLOAT_803df588 < dVar1) {
+    dVar1 = (double)FLOAT_803df588;
+  }
+  if (dVar1 < (double)FLOAT_803df570) {
     dVar1 = (double)FLOAT_803df570;
   }
   objAnim->moveProgress = (float)dVar1;
@@ -366,9 +369,7 @@ undefined4 Object_ObjAnimSetMoveProgress(double param_1,int param_2)
  * PAL Size: TODO
  */
 undefined4
-Object_ObjAnimSetMove(double param_1,double param_2,double param_3,undefined8 param_4,
-                      undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                      int param_9,uint param_10,undefined param_11)
+Object_ObjAnimSetMove(double moveProgress,int objAnimArg,uint moveId,undefined flags)
 {
   ObjAnimComponent *objAnim;
   ObjAnimBank *bank;
@@ -379,9 +380,12 @@ Object_ObjAnimSetMove(double param_1,double param_2,double param_3,undefined8 pa
   int iVar3;
   int iVar6;
   double dVar7;
-  objAnim = (ObjAnimComponent *)param_9;
-  dVar7 = (double)FLOAT_803df560;
-  if ((param_1 <= dVar7) && (dVar7 = param_1, param_1 < (double)FLOAT_803df570)) {
+  objAnim = (ObjAnimComponent *)objAnimArg;
+  dVar7 = moveProgress;
+  if ((double)FLOAT_803df560 < dVar7) {
+    dVar7 = (double)FLOAT_803df560;
+  }
+  if (dVar7 < (double)FLOAT_803df570) {
     dVar7 = (double)FLOAT_803df570;
   }
   objAnim->moveProgress = (float)dVar7;
@@ -389,7 +393,7 @@ Object_ObjAnimSetMove(double param_1,double param_2,double param_3,undefined8 pa
   animDef = bank->animDef;
   if (animDef->moveCount != 0) {
     state = bank->primaryState;
-    state->flags = param_11;
+    state->flags = flags;
     state->prevMoveCacheSlot = state->moveCacheSlot;
     state->progress = state->speed;
     state->prevSegmentLength = state->segmentLength;
@@ -402,10 +406,10 @@ Object_ObjAnimSetMove(double param_1,double param_2,double param_3,undefined8 pa
     state->eventState = 0;
     state->lastBlendMoveIndex = -1;
     sVar1 = objAnim->activeMove;
-    objAnim->activeMove = (s16)param_10;
-    iVar3 = ObjAnim_ResolveMoveIndex(animDef, param_10);
+    objAnim->activeMove = (s16)moveId;
+    iVar3 = ObjAnim_ResolveMoveIndex(animDef, moveId);
     if ((animDef->flags & 0x40) != 0) {
-      if ((int)(param_10 - (int)sVar1 | (int)sVar1 - param_10) < 0) {
+      if (moveId != (uint)(u16)sVar1) {
         state->blendToggle = '\x01' - state->blendToggle;
         state->moveCacheSlot = (u16)state->blendToggle;
         if (animDef->blendMoveIds[iVar3] == -1) {
@@ -428,7 +432,7 @@ Object_ObjAnimSetMove(double param_1,double param_2,double param_3,undefined8 pa
     if (state->frameType == '\0') {
       state->segmentLength = state->segmentLength - FLOAT_803df560;
     }
-    uVar2 = (int)*(char *)(iVar6 + 1) & 0xf;
+    uVar2 = *(u8 *)(iVar6 + 1) & 0xf;
     if (uVar2 != 0) {
       state->savedStep = state->step;
       state->eventStep =
