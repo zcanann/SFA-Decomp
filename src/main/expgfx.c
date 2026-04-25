@@ -214,6 +214,13 @@ typedef struct ExpgfxTableEntry {
 
 extern ExpgfxTableEntry gExpgfxTableEntries[];
 
+typedef struct ExpgfxResourceEntry {
+  void *resource;
+  u32 word4;
+  u32 word8;
+  u32 wordC;
+} ExpgfxResourceEntry;
+
 typedef struct ExpgfxSlot {
   u8 pad00[0x26];
   s16 sequenceId;
@@ -1622,7 +1629,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
 #pragma scheduling off
 void fn_8009FCDC(void)
 {
-  ExpgfxTableEntry *resourceEntry;
+  ExpgfxResourceEntry *resourceEntry;
   u8 *expgfxBase;
   u32 *poolActiveMasks;
   u8 *poolActiveCounts;
@@ -1707,15 +1714,15 @@ void fn_8009FCDC(void)
   *(u32 *)(expgfxBase + 0x1018) = 0;
   lbl_803DD258 = 1;
   resourceIndex = 0;
-  resourceEntry = (ExpgfxTableEntry *)expgfxBase;
+  resourceEntry = (ExpgfxResourceEntry *)expgfxBase;
   do {
-    if (resourceEntry->textureOrResource != 0) {
-      fn_80054308((void *)resourceEntry->textureOrResource);
+    if (resourceEntry->resource != (void *)0x0) {
+      fn_80054308(resourceEntry->resource);
     }
-    resourceEntry->textureOrResource = 0;
-    resourceEntry->key1 = 0;
-    resourceEntry->key0 = 0;
-    resourceEntry->slotType = 0;
+    resourceEntry->resource = (void *)0x0;
+    resourceEntry->word8 = 0;
+    resourceEntry->word4 = 0;
+    resourceEntry->wordC = 0;
     resourceEntry = resourceEntry + 1;
     resourceIndex = resourceIndex + 1;
   } while (resourceIndex < 0x20);
