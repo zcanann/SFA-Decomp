@@ -1557,13 +1557,13 @@ dolphin/pad/Padclamp.c:
 	.text       start:0x8024D9B8 end:0x8024DD94
 
 dolphin/pad/Pad.c:
-	.text       start:0x8024DD94 end:0x8024FDBC
+	.text       start:0x8024DD94 end:0x8024F6B8
 
 dolphin/ai/ai.c:
-	.text       start:0x8024FDBC end:0x80250218
+	.text       start:0x8024F6B8 end:0x8024FFA0
 
 dolphin/ar/ar.c:
-	.text       start:0x80250218 end:0x80250B2C
+	.text       start:0x8024FFA0 end:0x80250B2C
 
 dolphin/ar/arq.c:
 	.text       start:0x80250B2C end:0x80250EC0
