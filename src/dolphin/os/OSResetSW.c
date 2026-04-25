@@ -3,26 +3,26 @@
 
 #include "dolphin/os/__os.h"
 
-extern OSResetCallback bootThisDol_803DEAE8;
-extern BOOL lbl_803DEAEC;
-extern BOOL lbl_803DEAF0;
-extern OSTime lbl_803DEAF8;
-extern OSTime lbl_803DEB00;
+extern OSResetCallback lbl_803DDE68;
+extern BOOL lbl_803DDE6C;
+extern BOOL lbl_803DDE70;
+extern OSTime lbl_803DDE78;
+extern OSTime lbl_803DDE80;
 
 void __OSResetSWInterruptHandler(s16 exception, OSContext* context) {
     OSResetCallback callback;
 
-    lbl_803DEB00 = __OSGetSystemTime();
-    while (__OSGetSystemTime() - lbl_803DEB00 < OSMicrosecondsToTicks(100) &&
+    lbl_803DDE80 = __OSGetSystemTime();
+    while (__OSGetSystemTime() - lbl_803DDE80 < OSMicrosecondsToTicks(100) &&
            !(__PIRegs[0] & 0x00010000)) {
         ;
     }
     if (!(__PIRegs[0] & 0x00010000)) {
-        lbl_803DEAF0 = lbl_803DEAEC = TRUE;
+        lbl_803DDE70 = lbl_803DDE6C = TRUE;
         __OSMaskInterrupts(OS_INTERRUPTMASK_PI_RSW);
-        if (bootThisDol_803DEAE8) {
-            callback = bootThisDol_803DEAE8;
-            bootThisDol_803DEAE8 = NULL;
+        if (lbl_803DDE68) {
+            callback = lbl_803DDE68;
+            lbl_803DDE68 = NULL;
             callback();
         }
     }
@@ -39,31 +39,31 @@ BOOL OSGetResetButtonState(void) {
 
     reg = __PIRegs[0];
     if (!(reg & 0x00010000)) {
-        if (!lbl_803DEAEC) {
-            lbl_803DEAEC = TRUE;
-            state = lbl_803DEAF8 ? TRUE : FALSE;
-            lbl_803DEB00 = now;
+        if (!lbl_803DDE6C) {
+            lbl_803DDE6C = TRUE;
+            state = lbl_803DDE78 ? TRUE : FALSE;
+            lbl_803DDE80 = now;
         } else {
-            state = lbl_803DEAF8 || (OSMicrosecondsToTicks(100) < now - lbl_803DEB00)
+            state = lbl_803DDE78 || (OSMicrosecondsToTicks(100) < now - lbl_803DDE80)
                         ? TRUE
                         : FALSE;
         }
-    } else if (lbl_803DEAEC) {
-        lbl_803DEAEC = FALSE;
-        state = lbl_803DEAF0;
+    } else if (lbl_803DDE6C) {
+        lbl_803DDE6C = FALSE;
+        state = lbl_803DDE70;
         if (state) {
-            lbl_803DEAF8 = now;
+            lbl_803DDE78 = now;
         } else {
-            lbl_803DEAF8 = 0;
+            lbl_803DDE78 = 0;
         }
-    } else if (lbl_803DEAF8 && (now - lbl_803DEAF8 < OSMillisecondsToTicks(40))) {
+    } else if (lbl_803DDE78 && (now - lbl_803DDE78 < OSMillisecondsToTicks(40))) {
         state = TRUE;
     } else {
         state = FALSE;
-        lbl_803DEAF8 = 0;
+        lbl_803DDE78 = 0;
     }
 
-    lbl_803DEAF0 = state;
+    lbl_803DDE70 = state;
 
     if (__gUnknown800030E3 & 0x3F) {
         OSTime fire = (__gUnknown800030E3 & 0x3F) * 60;
