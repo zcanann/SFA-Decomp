@@ -1509,6 +1509,7 @@ dolphin/db/db.c:
 
 dolphin/mtx/mtx.c:
 	.text       start:0x80246E54 end:0x80247574
+	.sdata      start:0x803DC550 end:0x803DC558
 
 dolphin/mtx/mtxvec.c:
 	.text       start:0x80247574 end:0x802475C8
