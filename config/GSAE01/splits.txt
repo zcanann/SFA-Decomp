@@ -70,8 +70,11 @@ track/intersect.c:
 main/maketex.c:
 	.text       start:0x8007E77C end:0x80080E28
 
-dolphin/os/OSAddress.c:
+main/unknown/autos/placeholder_80080E28.c:
 	.text       start:0x80080E28 end:0x80080E58
+
+dolphin/os/OSAddress.c:
+	.text       start:0x80080E58 end:0x80080E58
 
 main/unknown/autos/placeholder_80080E58.c:
 	.text       start:0x80080E58 end:0x8009B254
