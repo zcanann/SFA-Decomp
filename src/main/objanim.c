@@ -7,7 +7,7 @@
 extern undefined4 FUN_800723a0();
 extern void fn_80024E7C(int animId,int moveIndex,undefined4 cache,ObjAnimDef *animDef);
 
-extern char lbl_802CAD50[];
+extern char gObjAnimSetBlendMoveMissingAnimWarning[];
 extern f64 DOUBLE_803df568;
 extern f64 DOUBLE_803df580;
 extern f32 FLOAT_803df560;
@@ -16,11 +16,11 @@ extern f32 FLOAT_803df574;
 extern f32 FLOAT_803df578;
 extern f32 FLOAT_803df588;
 
-static s16 *ObjAnim_GetMoveBaseTable(ObjAnimDef *animDef) {
+static inline s16 *ObjAnim_GetMoveBaseTable(ObjAnimDef *animDef) {
   return (s16 *)((u8 *)animDef + 0x70);
 }
 
-static s32 ObjAnim_ResolveMoveIndex(ObjAnimDef *animDef, u32 moveId) {
+static inline s32 ObjAnim_ResolveMoveIndex(ObjAnimDef *animDef, u32 moveId) {
   s32 moveIndex = ObjAnim_GetMoveBaseTable(animDef)[moveId >> 8] + (moveId & 0xFF);
 
   if ((u32)animDef->moveCount <= moveIndex) {
@@ -30,6 +30,11 @@ static s32 ObjAnim_ResolveMoveIndex(ObjAnimDef *animDef, u32 moveId) {
     moveIndex = 0;
   }
   return moveIndex;
+}
+
+static inline f64 ObjAnim_U32AsDouble(u32 value) {
+  u64 bits = CONCAT44(0x43300000, value);
+  return *(f64 *)&bits;
 }
 
 /*
@@ -45,17 +50,13 @@ static s32 ObjAnim_ResolveMoveIndex(ObjAnimDef *animDef, u32 moveId) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjAnim_SetBlendMove(int objAnim,int param_2,int param_3,uint moveId,s16 eventState)
+void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,uint moveId,s16 eventState)
 {
-  ObjAnimDef *animDef;
-  ObjAnimState *state;
   float frameValue;
   uint frameType;
   int moveData;
   int moveIndex;
 
-  animDef = (ObjAnimDef *)param_2;
-  state = (ObjAnimState *)param_3;
   moveIndex = ObjAnim_ResolveMoveIndex(animDef, moveId);
   if ((animDef->flags & 0x40) == 0) {
     state->blendCacheSlot = (u16)moveIndex;
@@ -66,7 +67,7 @@ void ObjAnim_SetBlendMove(int objAnim,int param_2,int param_3,uint moveId,s16 ev
       state->blendCacheSlot = (u16)state->blendToggle;
       state->prevBlendCacheSlot = (u16)(1 - state->blendToggle);
       if (animDef->blendMoveIds[moveIndex] == -1) {
-        OSReport(lbl_802CAD50,animDef->modNo);
+        OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
         moveIndex = 0;
       }
       fn_80024E7C((int)animDef->blendMoveIds[moveIndex],(int)(s16)moveIndex,
@@ -78,7 +79,7 @@ void ObjAnim_SetBlendMove(int objAnim,int param_2,int param_3,uint moveId,s16 ev
   state->frameCmd = (u8 *)(moveData + 6);
   frameType = (uint)*(s8 *)(moveData + 1) & 0xf0;
   if (frameType == state->frameType) {
-    frameValue = (float)((double)CONCAT44(0x43300000,(uint)state->frameCmd[1]) - DOUBLE_803df568);
+    frameValue = (float)(ObjAnim_U32AsDouble((uint)state->frameCmd[1]) - DOUBLE_803df568);
     if (frameType == 0) {
       frameValue = frameValue - FLOAT_803df560;
     }
@@ -114,7 +115,7 @@ void Object_ObjAnimSetPrimaryBlendMove(int objAnim,uint moveId,s16 eventState)
 
   bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
   if (bank->animDef->moveCount != 0) {
-    ObjAnim_SetBlendMove(objAnim,(int)bank->animDef,(int)bank->primaryState,moveId,eventState);
+    ObjAnim_SetBlendMove(objAnim,bank->animDef,bank->primaryState,moveId,eventState);
   }
   return;
 }
@@ -138,7 +139,7 @@ void Object_ObjAnimSetSecondaryBlendMove(int objAnim,uint moveId,s16 eventState)
 
   bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
   if (bank->animDef->moveCount != 0) {
-    ObjAnim_SetBlendMove(objAnim,(int)bank->animDef,(int)bank->secondaryState,moveId,eventState);
+    ObjAnim_SetBlendMove(objAnim,bank->animDef,bank->secondaryState,moveId,eventState);
   }
   return;
 }
@@ -219,17 +220,15 @@ undefined4 Object_ObjAnimAdvanceMove(double param_1,double param_2,int param_3,i
         }
       }
       if ((state->flags & 2) == 0) {
-        uVar8 = (uint)-(float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                (uint)state->eventStep) -
+        uVar8 = (uint)-(float)((double)(float)(ObjAnim_U32AsDouble((uint)state->eventStep) -
                                               DOUBLE_803df568) * param_2 -
-                              (double)(float)((double)CONCAT44(0x43300000,
-                                                               state->eventCountdown ^
-                                                               0x80000000) - DOUBLE_803df580));
+                              (double)(float)(ObjAnim_U32AsDouble(state->eventCountdown ^
+                                                                  0x80000000) - DOUBLE_803df580));
         fVar4 = FLOAT_803df570;
         if ((-1 < (int)uVar8) &&
            (uVar8 = uVar8 ^ 0x80000000, fVar4 = FLOAT_803df574,
-           (float)((double)CONCAT44(0x43300000,uVar8) - DOUBLE_803df580) <= FLOAT_803df574)) {
-          local_28 = (double)CONCAT44(0x43300000,uVar8);
+           (float)(ObjAnim_U32AsDouble(uVar8) - DOUBLE_803df580) <= FLOAT_803df574)) {
+          local_28 = ObjAnim_U32AsDouble(uVar8);
           fVar4 = (float)(local_28 - DOUBLE_803df580);
         }
         state->eventCountdown = (u16)(int)fVar4;
@@ -402,7 +401,7 @@ Object_ObjAnimSetMove(double param_1,double param_2,double param_3,undefined8 pa
         state->blendToggle = '\x01' - state->blendToggle;
         state->moveCacheSlot = (u16)state->blendToggle;
         if (animDef->blendMoveIds[iVar3] == -1) {
-          OSReport(lbl_802CAD50,animDef->modNo);
+          OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
           iVar3 = 0;
         }
         fn_80024E7C((int)animDef->blendMoveIds[iVar3],(int)(s16)iVar3,
@@ -413,8 +412,7 @@ Object_ObjAnimSetMove(double param_1,double param_2,double param_3,undefined8 pa
     state->frameData = (u8 *)(iVar6 + 6);
     state->frameType = *(u8 *)(iVar6 + 1) & 0xf0;
     state->segmentLength =
-         (float)((double)CONCAT44(0x43300000,(uint)state->frameData[1]) -
-                DOUBLE_803df568);
+         (float)(ObjAnim_U32AsDouble((uint)state->frameData[1]) - DOUBLE_803df568);
     if (state->frameType == '\0') {
       state->segmentLength = state->segmentLength - FLOAT_803df560;
     }
@@ -423,7 +421,7 @@ Object_ObjAnimSetMove(double param_1,double param_2,double param_3,undefined8 pa
       state->savedStep = state->step;
       state->eventStep =
            (short)(int)(FLOAT_803df574 /
-                        (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803df580));
+                        (float)(ObjAnim_U32AsDouble(uVar2 ^ 0x80000000) - DOUBLE_803df580));
       state->eventCountdown = 0x4000;
     }
     state->step = FLOAT_803df570;
@@ -503,7 +501,7 @@ void ObjAnim_SetPrimaryEventStepFrames(int objAnim,uint frameCount)
   if (bank != (ObjAnimBank *)0x0) {
     state = bank->secondaryState;
     state->eventStep = (short)(int)(FLOAT_803df574 /
-                                   (float)((double)CONCAT44(0x43300000,frameCount ^ 0x80000000) -
+                                   (float)(ObjAnim_U32AsDouble(frameCount ^ 0x80000000) -
                                           DOUBLE_803df580));
   }
 }

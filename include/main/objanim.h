@@ -3,7 +3,10 @@
 
 #include "ghidra_import.h"
 
-void ObjAnim_SetBlendMove(int objAnim,int animDef,int state,uint moveId,s16 eventState);
+typedef struct ObjAnimDef ObjAnimDef;
+typedef struct ObjAnimState ObjAnimState;
+
+void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,uint moveId,s16 eventState);
 void Object_ObjAnimSetPrimaryBlendMove(int objAnim,uint moveId,s16 eventState);
 void Object_ObjAnimSetSecondaryBlendMove(int objAnim,uint moveId,s16 eventState);
 undefined4 Object_ObjAnimAdvanceMove(double moveStepScale,double deltaTime,int objAnim,int events);
