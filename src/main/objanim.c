@@ -32,18 +32,6 @@ static inline s32 ObjAnim_ResolveMoveIndex(ObjAnimDef *animDef, u32 moveId) {
   return moveIndex;
 }
 
-static inline s32 ObjAnim_ResolveBlendMoveIndex(ObjAnimDef *animDef, u32 moveId) {
-  s32 moveIndex = *(s16 *)((u8 *)animDef + 0x70 + ((moveId >> 7) & 0x1FE)) + (moveId & 0xFF);
-
-  if ((u32)animDef->moveCount <= moveIndex) {
-    moveIndex = animDef->moveCount - 1;
-  }
-  if (moveIndex < 0) {
-    moveIndex = 0;
-  }
-  return moveIndex;
-}
-
 static inline f64 ObjAnim_U32AsDouble(u32 value) {
   u64 bits = CONCAT44(0x43300000, value);
   return *(f64 *)&bits;
@@ -69,7 +57,7 @@ void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,ui
   int moveData;
   int moveIndex;
 
-  moveIndex = ObjAnim_ResolveBlendMoveIndex(animDef, moveId);
+  moveIndex = ObjAnim_ResolveMoveIndex(animDef, moveId);
   if ((animDef->flags & 0x40) != 0) {
     if (state->lastBlendMoveIndex != moveIndex) {
       state->blendCacheSlot = (u16)state->blendToggle;

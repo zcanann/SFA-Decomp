@@ -16,7 +16,7 @@ typedef struct ObjAnimDef {
   u8 **moveData;
   u8 pad68[4];
   s16 *blendMoveIds;
-  u8 pad70[0xEC - 0x70];
+  s16 moveBaseTable[0x3E];
   u16 moveCount;
 } ObjAnimDef;
 
@@ -64,8 +64,8 @@ typedef struct ObjAnimComponent {
   u8 pad64[0x7C - 0x64];
   ObjAnimBank **banks;
   u8 pad80[0x98 - 0x80];
+  f32 hitReactFrame;
   f32 moveProgress;
-  u8 pad9C[0xA0 - 0x9C];
   s16 activeMove;
   u8 padA2[0xAD - 0xA2];
   s8 bankIndex;

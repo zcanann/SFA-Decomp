@@ -74,7 +74,7 @@ u8 objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,flo
   effectOrigin[2] = lbl_802C1B00[2];
   effectOrigin[3] = lbl_802C1B00[3];
   if ((reactionState & 0xff) != 0) {
-    OSReport(sObjHitReactHitstateFrameString,objAnim->moveProgress);
+    OSReport(sObjHitReactHitstateFrameString,objAnim->hitReactFrame);
     collisionType = ObjAnim_AdvanceCurrentMove((double)*cooldown,(double)lbl_803DB414,obj,0);
     if (collisionType != 0) {
       OSReport(sObjHitReactResetString);
