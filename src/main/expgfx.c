@@ -889,8 +889,8 @@ void fn_8009E034(int sourceId,int sourceMode)
   poolBounds = (ExpgfxBounds *)(expgfxBase + 0x200);
   slotPoolBases = (uint *)(expgfxBase + 0x1200);
   do {
-    if (((*poolActiveCounts != '\0') && (*poolSourceIds == sourceId)) &&
-       ((uint)*poolSourceModes == sourceMode + 1U)) {
+    if (((*poolActiveCounts != '\0') && ((u32)*poolSourceIds == (u32)sourceId)) &&
+       ((int)*poolSourceModes == sourceMode + 1)) {
       boundsTemplate = (ExpgfxBounds *)(lbl_8030F898 + (uint)*poolBoundsTemplateIds * 0x18);
       uVar1 = fn_8005E97C((double)(poolBounds->minX - lbl_803DCDD8),
                            (double)(poolBounds->maxX - lbl_803DCDD8),
