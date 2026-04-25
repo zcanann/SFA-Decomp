@@ -2397,16 +2397,19 @@ dolphin/MSL_C/PPCEABI/bare/H/trigf.c:
 	.ctors      start:0x802C1884 end:0x802C1888
 
 main/unknown/autos/placeholder_80295318.c:
-	.text       start:0x80294BB8 end:0x802BB3C0
+	.text       start:0x80294BB8 end:0x802BACC0
 
 dolphin/TRK_MINNOW_DOLPHIN/main.c:
-	.text       start:0x802BB3C0 end:0x802BB720
+	.text       start:0x802BACC0 end:0x802BB008
 
-main/unknown/autos/placeholder_802BB768.c:
-	.text       start:0x802BB720 end:0x802BB720
+main/unknown/autos/placeholder_802BB008.c:
+	.text       start:0x802BB008 end:0x802BB164
 
 dolphin/TRK_MINNOW_DOLPHIN/main_gdev.c:
-	.text       start:0x802BB720 end:0x802BB720
+	.text       start:0x802BB164 end:0x802BB4B0
+
+main/unknown/autos/placeholder_802BB4B0.c:
+	.text       start:0x802BB4B0 end:0x802BB720
 
 main/unknown/autos/placeholder_802BBC10.c:
 	.text       start:0x802BB720 end:0x802C187C
