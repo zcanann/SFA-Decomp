@@ -32,6 +32,18 @@ static inline s32 ObjAnim_ResolveMoveIndex(ObjAnimDef *animDef, u32 moveId) {
   return moveIndex;
 }
 
+static inline s32 ObjAnim_ResolveBlendMoveIndex(ObjAnimDef *animDef, u32 moveId) {
+  s32 moveIndex = *(s16 *)((u8 *)animDef + 0x70 + ((moveId >> 7) & 0x1FE)) + (moveId & 0xFF);
+
+  if ((u32)animDef->moveCount <= moveIndex) {
+    moveIndex = animDef->moveCount - 1;
+  }
+  if (moveIndex < 0) {
+    moveIndex = 0;
+  }
+  return moveIndex;
+}
+
 static inline f64 ObjAnim_U32AsDouble(u32 value) {
   u64 bits = CONCAT44(0x43300000, value);
   return *(f64 *)&bits;
@@ -57,12 +69,8 @@ void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,ui
   int moveData;
   int moveIndex;
 
-  moveIndex = ObjAnim_ResolveMoveIndex(animDef, moveId);
-  if ((animDef->flags & 0x40) == 0) {
-    state->blendCacheSlot = (u16)moveIndex;
-    moveData = (int)animDef->moveData[state->blendCacheSlot];
-  }
-  else {
+  moveIndex = ObjAnim_ResolveBlendMoveIndex(animDef, moveId);
+  if ((animDef->flags & 0x40) != 0) {
     if (state->lastBlendMoveIndex != moveIndex) {
       state->blendCacheSlot = (u16)state->blendToggle;
       state->prevBlendCacheSlot = (u16)(1 - state->blendToggle);
@@ -76,22 +84,26 @@ void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,ui
     }
     moveData = (int)state->blendMoveCache[state->blendCacheSlot] + 0x80;
   }
+  else {
+    state->blendCacheSlot = (u16)moveIndex;
+    moveData = (int)animDef->moveData[state->blendCacheSlot];
+  }
   state->frameCmd = (u8 *)(moveData + 6);
-  frameType = (uint)*(s8 *)(moveData + 1) & 0xf0;
-  if (frameType == state->frameType) {
+  frameType = *(u8 *)(moveData + 1) & 0xf0;
+  if (frameType != state->frameType) {
+    state->eventState = 0;
+  }
+  else {
     frameValue = (float)(ObjAnim_U32AsDouble((uint)state->frameCmd[1]) - DOUBLE_803df568);
     if (frameType == 0) {
       frameValue = frameValue - FLOAT_803df560;
     }
-    if (frameValue == state->segmentLength) {
-      state->eventState = eventState;
-    }
-    else {
+    if (frameValue != state->segmentLength) {
       state->eventState = 0;
     }
-  }
-  else {
-    state->eventState = 0;
+    else {
+      state->eventState = eventState;
+    }
   }
   return;
 }
@@ -392,11 +404,7 @@ Object_ObjAnimSetMove(double param_1,double param_2,double param_3,undefined8 pa
     sVar1 = objAnim->activeMove;
     objAnim->activeMove = (s16)param_10;
     iVar3 = ObjAnim_ResolveMoveIndex(animDef, param_10);
-    if ((animDef->flags & 0x40) == 0) {
-      state->moveCacheSlot = (u16)iVar3;
-      iVar6 = (int)animDef->moveData[state->moveCacheSlot];
-    }
-    else {
+    if ((animDef->flags & 0x40) != 0) {
       if ((int)(param_10 - (int)sVar1 | (int)sVar1 - param_10) < 0) {
         state->blendToggle = '\x01' - state->blendToggle;
         state->moveCacheSlot = (u16)state->blendToggle;
@@ -408,6 +416,10 @@ Object_ObjAnimSetMove(double param_1,double param_2,double param_3,undefined8 pa
                     (undefined4)state->moveCache[state->moveCacheSlot],animDef);
       }
       iVar6 = (int)state->moveCache[state->moveCacheSlot] + 0x80;
+    }
+    else {
+      state->moveCacheSlot = (u16)iVar3;
+      iVar6 = (int)animDef->moveData[state->moveCacheSlot];
     }
     state->frameData = (u8 *)(iVar6 + 6);
     state->frameType = *(u8 *)(iVar6 + 1) & 0xf0;
