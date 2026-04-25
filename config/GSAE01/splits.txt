@@ -2326,7 +2326,7 @@ dolphin/MSL_C/PPCEABI/bare/H/gamecube.c:
 main/unknown/autos/placeholder_80292428.c:
 	.text       start:0x802923C4 end:0x802923C4
 
-dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c:
+dolphin/MSL_C/PPCEABI/bare/H/k_cos.c:
 	.text       start:0x802923C4 end:0x802924B4
 
 main/unknown/autos/placeholder_80292538.c:
@@ -2341,8 +2341,11 @@ dolphin/MSL_C/PPCEABI/bare/H/math_ppc.c:
 dolphin/MSL_C/PPCEABI/bare/H/e_sqrt.c:
 	.text       start:0x802927A4 end:0x802929CC
 
-dolphin/MSL_C/PPCEABI/bare/H/k_cos.c:
+main/unknown/autos/placeholder_802929CC.c:
 	.text       start:0x802929CC end:0x80292B44
+
+dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c:
+	.text       start:0x80292B44 end:0x80292B44
 
 main/unknown/autos/placeholder_80292C14.c:
 	.text       start:0x80292B44 end:0x80292D3C
