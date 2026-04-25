@@ -298,7 +298,7 @@ extern undefined4 DAT_803dc360;
 /* Narrow-typed aliases for sbss/sdata state vars touched by the small
  * helpers below. */
 extern u8 lbl_803DC2D9;
-extern s32 lbl_803DC360;
+extern s32 lbl_803DB700;
 extern u32 lbl_803DDC84;
 extern u8 lbl_803DDC99;
 extern u8 lbl_803DDC9A;
@@ -461,7 +461,7 @@ extern undefined4 _DAT_803dc354;
 /*
  * --INFO--
  *
- * Function: FUN_8006ef38
+ * Function: fn_8006EF38
  * EN v1.0 Address: 0x8006EF38
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8006F0B4
@@ -471,7 +471,7 @@ extern undefined4 _DAT_803dc354;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006ef38(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
+void fn_8006EF38(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  uint param_5,int param_6,int param_7)
 {
 }
@@ -479,7 +479,7 @@ void FUN_8006ef38(undefined8 param_1,double param_2,undefined4 param_3,undefined
 /*
  * --INFO--
  *
- * Function: fn_8006F504
+ * Function: fn_8006F388
  * EN v1.0 Address: 0x8006EF3C
  * EN v1.0 Size: 120b
  * EN v1.1 Address: 0x8006F504
@@ -490,10 +490,10 @@ void FUN_8006ef38(undefined8 param_1,double param_2,undefined4 param_3,undefined
  * PAL Size: TODO
  */
 #pragma scheduling off
-void* fn_8006F504(u32 i)
+void* fn_8006F388(u32 i)
 {
-    extern u8 lbl_8030F470[];
-    u8* base = lbl_8030F470;
+    extern u8 lbl_8030E8B0[];
+    u8* base = lbl_8030E8B0;
     switch (i) {
         case 0:  return base;
         case 1:  return base + 0x14;
@@ -537,7 +537,7 @@ void* fn_8006F504(u32 i)
  * Can't reproduce the re-store without __asm. */
 #pragma peephole off
 #pragma scheduling off
-void fn_8006F57C(f32 step)
+void fn_8006F400(f32 step)
 {
     int i;
     u8* a;
@@ -572,7 +572,7 @@ void fn_8006F57C(f32 step)
 /*
  * --INFO--
  *
- * Function: FUN_8006f09c
+ * Function: fn_8006F500
  * EN v1.0 Address: 0x8006F09C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8006F67C
@@ -582,14 +582,14 @@ void fn_8006F57C(f32 step)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006f09c(void)
+void fn_8006F500(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8006f0a0
+ * Function: fn_8006F950
  * EN v1.0 Address: 0x8006F0A0
  * EN v1.0 Size: 1016b
  * EN v1.1 Address: 0x8006FACC
@@ -599,7 +599,7 @@ void FUN_8006f09c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006f0a0(undefined4 param_1,undefined4 param_2,undefined param_3,uint param_4)
+void fn_8006F950(undefined4 param_1,undefined4 param_2,undefined param_3,uint param_4)
 {
   float fVar1;
   float fVar2;
@@ -721,7 +721,7 @@ void FUN_8006f0a0(undefined4 param_1,undefined4 param_2,undefined param_3,uint p
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_8006FD7C(int param_1)
+void fn_8006FC00(int param_1)
 {
     int i;
     u8* a;
@@ -780,7 +780,7 @@ void fn_8006FD7C(int param_1)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_8006FE48(void)
+void fn_8006FCCC(void)
 {
     extern u8 lbl_80392A20[];
     extern f32 lbl_803DFADC, lbl_803DFAE0, lbl_803DFAE4;
@@ -830,7 +830,7 @@ void fn_8006FE48(void)
 /*
  * --INFO--
  *
- * Function: FUN_8006f690
+ * Function: fn_8006FDF8
  * EN v1.0 Address: 0x8006F690
  * EN v1.0 Size: 212b
  * EN v1.1 Address: 0x8006FF74
@@ -840,7 +840,7 @@ void fn_8006FE48(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8006f690(int param_1,int param_2,int param_3)
+undefined4 fn_8006FDF8(int param_1,int param_2,int param_3)
 {
   bool bVar1;
   undefined2 *puVar2;
@@ -897,7 +897,7 @@ undefined4 FUN_8006f690(int param_1,int param_2,int param_3)
  */
 #pragma peephole off
 #pragma scheduling off
-uint fn_80070050(void)
+uint fn_8006FED4(void)
 {
     u32 v = lbl_803DDC84;
     if (v != 0) {
@@ -921,7 +921,7 @@ uint fn_80070050(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80070074(u32 param_1)
+void fn_8006FEF8(u32 param_1)
 {
     lbl_803DDC84 = param_1;
 }
@@ -939,7 +939,7 @@ void fn_80070074(u32 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8007007C(void)
+void fn_8006FF00(void)
 {
     lbl_803DDC84 = 0;
 }
@@ -947,7 +947,7 @@ void fn_8007007C(void)
 /*
  * --INFO--
  *
- * Function: FUN_8006f79c
+ * Function: fn_8006FF0C
  * EN v1.0 Address: 0x8006F79C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80070088
@@ -957,7 +957,7 @@ void fn_8007007C(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006f79c(double param_1,double param_2,double param_3,double param_4,double param_5,
+void fn_8006FF0C(double param_1,double param_2,double param_3,double param_4,double param_5,
                  float *param_6,short *param_7)
 {
 }
@@ -977,7 +977,7 @@ void FUN_8006f79c(double param_1,double param_2,double param_3,double param_4,do
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80070320(f32* x, f32* y, f32* z)
+void fn_800701A4(f32* x, f32* y, f32* z)
 {
     f32 scale;
     f32 len;
@@ -1015,7 +1015,7 @@ extern f32 lbl_803DFB1C;
  * comparison indices via a global/volatile, which would break other
  * matches. */
 #pragma optimize_for_size on
-void fn_800703B0(f32* param_1)
+void fn_80070234(f32* param_1)
 {
     int i;
     f32 zero = lbl_803DFB1C;
@@ -1044,7 +1044,7 @@ void fn_800703B0(f32* param_1)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80070434(u32 param_1)
+void fn_800702B8(u32 param_1)
 {
     extern void GXSetZCompLoc();
     if ((u32)lbl_803DDC91 != (param_1 & 0xff) || lbl_803DDC99 == 0) {
@@ -1069,7 +1069,7 @@ void fn_80070434(u32 param_1)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_8007048C(u32 param_1, int param_2, u32 param_3)
+void fn_80070310(u32 param_1, int param_2, u32 param_3)
 {
     extern void GXSetZMode();
     extern u8 lbl_803DDC92;
@@ -1103,7 +1103,7 @@ void fn_8007048C(u32 param_1, int param_2, u32 param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80070528(void)
+void fn_800703AC(void)
 {
     lbl_803DDC9A = 0;
     lbl_803DDC99 = 0;
@@ -1122,7 +1122,7 @@ void fn_80070528(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80070538(u8 param_1)
+void fn_800703BC(u8 param_1)
 {
     lbl_803DC2D9 = param_1;
 }
@@ -1141,7 +1141,7 @@ void fn_80070538(u8 param_1)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80070540(void)
+void fn_800703C4(void)
 {
     GXColor c = lbl_803DDC9C;
     GXSetFog(GX_FOG_PERSP_EXP, lbl_803DDCA4, lbl_803DDCA0, lbl_803DDCB8, lbl_803DDCB4, c);
@@ -1162,7 +1162,7 @@ void fn_80070540(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80070580(f32 a, f32 b)
+void fn_80070404(f32 a, f32 b)
 {
     extern f32 fn_8000FC3C(void);
     extern f32 fn_8000FC08(void);
@@ -1216,7 +1216,7 @@ void fn_80070580(f32 a, f32 b)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80070658(u8* param_1)
+void fn_800704DC(u8* param_1)
 {
     param_1[0] = lbl_803DDC9C.r;
     param_1[1] = lbl_803DDC9C.g;
@@ -1238,7 +1238,7 @@ void fn_80070658(u8* param_1)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80070678(u8 param_1, u8 param_2, u8 param_3)
+void fn_800704FC(u8 param_1, u8 param_2, u8 param_3)
 {
     lbl_803DDC9C.r = param_1;
     lbl_803DDC9C.g = param_2;
@@ -1249,7 +1249,7 @@ void fn_80070678(u8 param_1, u8 param_2, u8 param_3)
 /*
  * --INFO--
  *
- * Function: FUN_8006fb00
+ * Function: fn_80070510
  * EN v1.0 Address: 0x8006FB00
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8007068C
@@ -1259,14 +1259,14 @@ void fn_80070678(u8 param_1, u8 param_2, u8 param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006fb00(undefined4 param_1,undefined4 param_2,int param_3)
+void fn_80070510(undefined4 param_1,undefined4 param_2,int param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8006fb04
+ * Function: fn_80070ED4
  * EN v1.0 Address: 0x8006FB04
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80071050
@@ -1276,14 +1276,14 @@ void FUN_8006fb00(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006fb04(undefined param_1)
+void fn_80070ED4(undefined param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8006fb08
+ * Function: fn_800717FC
  * EN v1.0 Address: 0x8006FB08
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80071978
@@ -1293,14 +1293,14 @@ void FUN_8006fb04(undefined param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006fb08(void)
+void fn_800717FC(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8006fb0c
+ * Function: fn_80071D54
  * EN v1.0 Address: 0x8006FB0C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80071ED0
@@ -1310,14 +1310,14 @@ void FUN_8006fb08(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006fb0c(byte *param_1)
+void fn_80071D54(byte *param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8006fb10
+ * Function: fn_800722B0
  * EN v1.0 Address: 0x8006FB10
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8007242C
@@ -1327,14 +1327,14 @@ void FUN_8006fb0c(byte *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006fb10(double param_1,double param_2,float *param_3,byte *param_4)
+void fn_800722B0(double param_1,double param_2,float *param_3,byte *param_4)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8006fb14
+ * Function: fn_80072DFC
  * EN v1.0 Address: 0x8006FB14
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80072F78
@@ -1344,14 +1344,14 @@ void FUN_8006fb10(double param_1,double param_2,float *param_3,byte *param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006fb14(undefined4 param_1,undefined4 param_2,int param_3)
+void fn_80072DFC(undefined4 param_1,undefined4 param_2,int param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8006fb18
+ * Function: fn_8007366C
  * EN v1.0 Address: 0x8006FB18
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x800737E8
@@ -1361,7 +1361,7 @@ void FUN_8006fb14(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006fb18(undefined param_1)
+void fn_8007366C(undefined param_1)
 {
 }
 
@@ -1379,7 +1379,7 @@ void FUN_8006fb18(undefined param_1)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80073C28(void* texture, u32* colorA, u32* colorB)
+void fn_80073AAC(void* texture, u32* colorA, u32* colorB)
 {
     extern void fn_8004C460(void*, int);
     extern void GXSetZMode();
@@ -1428,7 +1428,7 @@ void fn_80073C28(void* texture, u32* colorA, u32* colorB)
 /*
  * --INFO--
  *
- * Function: FUN_8006fd74
+ * Function: fn_80073D04
  * EN v1.0 Address: 0x8006FD74
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80073E80
@@ -1438,7 +1438,7 @@ void fn_80073C28(void* texture, u32* colorA, u32* colorB)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8006fd74(int param_1,int *param_2)
+undefined4 fn_80073D04(int param_1,int *param_2)
 {
     return 0;
 }
@@ -1446,7 +1446,7 @@ undefined4 FUN_8006fd74(int param_1,int *param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8006fd7c
+ * Function: fn_80074110
  * EN v1.0 Address: 0x8006FD7C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8007428C
@@ -1456,7 +1456,7 @@ undefined4 FUN_8006fd74(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8006fd7c(int param_1,int *param_2,int param_3)
+undefined4 fn_80074110(int param_1,int *param_2,int param_3)
 {
     return 0;
 }
@@ -1464,7 +1464,7 @@ undefined4 FUN_8006fd7c(int param_1,int *param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_8006fd84
+ * Function: fn_80074518
  * EN v1.0 Address: 0x8006FD84
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80074694
@@ -1474,14 +1474,14 @@ undefined4 FUN_8006fd7c(int param_1,int *param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006fd84(undefined4 param_1,undefined4 param_2,int param_3)
+void fn_80074518(undefined4 param_1,undefined4 param_2,int param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8006fd88
+ * Function: fn_80074D04
  * EN v1.0 Address: 0x8006FD88
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80074E80
@@ -1491,7 +1491,7 @@ void FUN_8006fd84(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8006fd88(int param_1,int *param_2)
+undefined4 fn_80074D04(int param_1,int *param_2)
 {
     return 0;
 }
@@ -1511,7 +1511,7 @@ undefined4 FUN_8006fd88(int param_1,int *param_2)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80075534(int x1, int y1, int x2, int y2, u8* color)
+void fn_800753B8(int x1, int y1, int x2, int y2, u8* color)
 {
     extern void fn_8000FB20(void);
     extern Mtx lbl_803974E0;
@@ -1603,7 +1603,7 @@ void fn_80075534(int x1, int y1, int x2, int y2, u8* color)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80075800(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4)
+void fn_80075684(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4)
 {
     extern void fn_8000FB20(void);
     extern Mtx lbl_803974E0;
@@ -1705,7 +1705,7 @@ void fn_80075800(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80075B98(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
+void fn_80075A1C(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
 {
     extern void fn_8000FB20(void);
     extern Mtx lbl_803974E0;
@@ -1798,7 +1798,7 @@ void fn_80075B98(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80075ED8(int x1, int y1, int x2, int y2, int z, f32 u1, f32 v1, f32 u2, f32 v2)
+void fn_80075D5C(int x1, int y1, int x2, int y2, int z, f32 u1, f32 v1, f32 u2, f32 v2)
 {
     extern void fn_8000FB20(void);
     extern Mtx lbl_803974E0;
@@ -1859,7 +1859,7 @@ void fn_80075ED8(int x1, int y1, int x2, int y2, int z, f32 u1, f32 v1, f32 u2, 
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80076008(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
+void fn_80075E8C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
 {
     extern void fn_8000FB20(void);
     extern Mtx lbl_803974E0;
@@ -1908,7 +1908,7 @@ void fn_80076008(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
 /*
  * --INFO--
  *
- * Function: FUN_800709d8
+ * Function: fn_80075FC8
  * EN v1.0 Address: 0x800709D8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80076144
@@ -1918,7 +1918,7 @@ void fn_80076008(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800709d8(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
+void fn_80075FC8(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  uint param_5,int param_6,int param_7,int param_8,int param_9)
 {
 }
@@ -1926,7 +1926,7 @@ void FUN_800709d8(undefined8 param_1,double param_2,undefined4 param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_800709dc
+ * Function: fn_80076510
  * EN v1.0 Address: 0x800709DC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8007668C
@@ -1936,14 +1936,14 @@ void FUN_800709d8(undefined8 param_1,double param_2,undefined4 param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800709dc(double param_1,double param_2,int param_3,int param_4)
+void fn_80076510(double param_1,double param_2,int param_3,int param_4)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_800709e0
+ * Function: fn_8007681C
  * EN v1.0 Address: 0x800709E0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80076998
@@ -1953,7 +1953,7 @@ void FUN_800709dc(double param_1,double param_2,int param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800709e0(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
+void fn_8007681C(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  uint param_5,int param_6,int param_7,uint param_8)
 {
 }
@@ -1961,7 +1961,7 @@ void FUN_800709e0(undefined8 param_1,double param_2,undefined4 param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_800709e4
+ * Function: fn_80076D78
  * EN v1.0 Address: 0x800709E4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80076EF4
@@ -1971,7 +1971,7 @@ void FUN_800709e0(undefined8 param_1,double param_2,undefined4 param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800709e4(undefined4 param_1,undefined4 param_2,int param_3,undefined4 *param_4,uint param_5
+void fn_80076D78(undefined4 param_1,undefined4 param_2,int param_3,undefined4 *param_4,uint param_5
                  ,uint param_6)
 {
 }
@@ -1979,7 +1979,7 @@ void FUN_800709e4(undefined4 param_1,undefined4 param_2,int param_3,undefined4 *
 /*
  * --INFO--
  *
- * Function: FUN_800709e8
+ * Function: fn_8007719C
  * EN v1.0 Address: 0x800709E8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80077318
@@ -1989,7 +1989,7 @@ void FUN_800709e4(undefined4 param_1,undefined4 param_2,int param_3,undefined4 *
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800709e8(double param_1,double param_2,int param_3,uint param_4,uint param_5)
+void fn_8007719C(double param_1,double param_2,int param_3,uint param_4,uint param_5)
 {
 }
 
@@ -2007,7 +2007,7 @@ void FUN_800709e8(double param_1,double param_2,int param_3,uint param_4,uint pa
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80077780(f32* obj, u32* colorPtr, Mtx mtx)
+void fn_80077604(f32* obj, u32* colorPtr, Mtx mtx)
 {
     extern void fn_8004C460(int, int);
     extern GXColor lbl_803DC308;
@@ -2072,7 +2072,7 @@ void fn_80077780(f32* obj, u32* colorPtr, Mtx mtx)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80077A08(f32* obj, u32* colorPtr, Mtx mtx)
+void fn_8007788C(f32* obj, u32* colorPtr, Mtx mtx)
 {
     extern void fn_8004C460(int, int);
     extern void GXSetZMode();
@@ -2123,7 +2123,7 @@ void fn_80077A08(f32* obj, u32* colorPtr, Mtx mtx)
 /*
  * --INFO--
  *
- * Function: FUN_80070ec0
+ * Function: fn_80077AD8
  * EN v1.0 Address: 0x80070EC0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80077C54
@@ -2133,14 +2133,14 @@ void fn_80077A08(f32* obj, u32* colorPtr, Mtx mtx)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80070ec0(double param_1,float *param_2,int param_3,float *param_4)
+void fn_80077AD8(double param_1,float *param_2,int param_3,float *param_4)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80070ec4
+ * Function: fn_80077EF8
  * EN v1.0 Address: 0x80070EC4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80078074
@@ -2150,7 +2150,7 @@ void FUN_80070ec0(double param_1,float *param_2,int param_3,float *param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80070ec4(undefined4 param_1,undefined4 param_2,float *param_3)
+void fn_80077EF8(undefined4 param_1,undefined4 param_2,float *param_3)
 {
 }
 
@@ -2168,7 +2168,7 @@ void FUN_80070ec4(undefined4 param_1,undefined4 param_2,float *param_3)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_800788BC(void)
+void fn_80078740(void)
 {
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
@@ -2207,7 +2207,7 @@ void fn_800788BC(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80078988(void)
+void fn_8007880C(void)
 {
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
@@ -2246,7 +2246,7 @@ void fn_80078988(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80078A58(void)
+void fn_800788DC(void)
 {
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
@@ -2285,7 +2285,7 @@ void fn_80078A58(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80078B28(void)
+void fn_800789AC(void)
 {
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
@@ -2324,7 +2324,7 @@ void fn_80078B28(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80078BF8(void)
+void fn_80078A7C(void)
 {
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
@@ -2363,7 +2363,7 @@ void fn_80078BF8(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80078CC8(void)
+void fn_80078B4C(void)
 {
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
@@ -2402,7 +2402,7 @@ void fn_80078CC8(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80078D98(void)
+void fn_80078C1C(void)
 {
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
@@ -2455,7 +2455,7 @@ void fn_80078D98(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80078F78(void)
+void fn_80078DFC(void)
 {
     GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
     GXSetTevDirect(lbl_803DDCB0);
@@ -2484,7 +2484,7 @@ void fn_80078F78(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_8007904C(void)
+void fn_80078ED0(void)
 {
     GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
     GXSetTevDirect(lbl_803DDCB0);
@@ -2513,7 +2513,7 @@ void fn_8007904C(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80079120(void)
+void fn_80078FA4(void)
 {
     GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 0xFF);
     GXSetTevDirect(lbl_803DDCB0);
@@ -2545,7 +2545,7 @@ void fn_80079120(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80079228(void)
+void fn_800790AC(void)
 {
     GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
     GXSetTevDirect(lbl_803DDCB0);
@@ -2574,7 +2574,7 @@ void fn_80079228(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_800792FC(void)
+void fn_80079180(void)
 {
     GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
     GXSetTevDirect(lbl_803DDCB0);
@@ -2603,7 +2603,7 @@ void fn_800792FC(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_800793D0(void)
+void fn_80079254(void)
 {
     GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
     GXSetTevDirect(lbl_803DDCB0);
@@ -2632,7 +2632,7 @@ void fn_800793D0(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_800794A4(void)
+void fn_80079328(void)
 {
     GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 0xFF);
     GXSetTevDirect(lbl_803DDCB0);
@@ -2674,7 +2674,7 @@ void fn_800794A4(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_8007965C(void)
+void fn_800794E0(void)
 {
     GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 0xFF);
     GXSetTevDirect(lbl_803DDCB0);
@@ -2706,7 +2706,7 @@ void fn_8007965C(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80079764(void)
+void fn_800795E8(void)
 {
     GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 0xFF);
     GXSetTevDirect(lbl_803DDCB0);
@@ -2738,7 +2738,7 @@ void fn_80079764(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_8007986C(void)
+void fn_800796F0(void)
 {
     GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 4);
     GXSetTevDirect(lbl_803DDCB0);
@@ -2760,7 +2760,7 @@ void fn_8007986C(void)
 /*
  * --INFO--
  *
- * Function: FUN_80071f8c
+ * Function: fn_80079804
  * EN v1.0 Address: 0x80071F8C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80079980
@@ -2770,7 +2770,7 @@ void fn_8007986C(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80071f8c(void)
+void fn_80079804(void)
 {
 }
 
@@ -2787,7 +2787,7 @@ void FUN_80071f8c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80079B3C(void)
+void fn_800799C0(void)
 {
     lbl_803DDC88 = 0;
     lbl_803DDC89 = 0;
@@ -2812,7 +2812,7 @@ void fn_80079B3C(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80079B60(u8 r, u8 g, u8 b, u8 a)
+void fn_800799E4(u8 r, u8 g, u8 b, u8 a)
 {
     GXColor c;
     c.r = r;
@@ -2837,7 +2837,7 @@ void fn_80079B60(u8 r, u8 g, u8 b, u8 a)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80079BA0(u8 r, u8 g, u8 b, u8 a)
+void fn_80079A24(u8 r, u8 g, u8 b, u8 a)
 {
     GXColor c;
     c.r = r;
@@ -2851,7 +2851,7 @@ void fn_80079BA0(u8 r, u8 g, u8 b, u8 a)
 /*
  * --INFO--
  *
- * Function: FUN_80072034
+ * Function: fn_80079A64
  * EN v1.0 Address: 0x80072034
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80079BE0
@@ -2861,14 +2861,14 @@ void fn_80079BA0(u8 r, u8 g, u8 b, u8 a)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80072034(double param_1,double param_2,byte param_3,char param_4)
+void fn_80079A64(double param_1,double param_2,byte param_3,char param_4)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80072038
+ * Function: fn_80079E64
  * EN v1.0 Address: 0x80072038
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80079FE0
@@ -2878,7 +2878,7 @@ void FUN_80072034(double param_1,double param_2,byte param_3,char param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80072038(double param_1,double param_2,double param_3,undefined param_4,undefined4 param_5,
+void fn_80079E64(double param_1,double param_2,double param_3,undefined param_4,undefined4 param_5,
                  undefined param_6,undefined param_7)
 {
 }
@@ -2886,7 +2886,7 @@ void FUN_80072038(double param_1,double param_2,double param_3,undefined param_4
 /*
  * --INFO--
  *
- * Function: FUN_8007203c
+ * Function: fn_8007A71C
  * EN v1.0 Address: 0x8007203C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8007A898
@@ -2896,14 +2896,14 @@ void FUN_80072038(double param_1,double param_2,double param_3,undefined param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007203c(uint param_1)
+void fn_8007A71C(uint param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80072040
+ * Function: fn_8007AD10
  * EN v1.0 Address: 0x80072040
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8007AE8C
@@ -2913,14 +2913,14 @@ void FUN_8007203c(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80072040(double param_1)
+void fn_8007AD10(double param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80072044
+ * Function: fn_8007B01C
  * EN v1.0 Address: 0x80072044
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8007B198
@@ -2930,14 +2930,14 @@ void FUN_80072040(double param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80072044(double param_1,double param_2,double param_3,char param_4,char param_5)
+void fn_8007B01C(double param_1,double param_2,double param_3,char param_4,char param_5)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80072048
+ * Function: fn_8007BD8C
  * EN v1.0 Address: 0x80072048
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8007BF08
@@ -2947,7 +2947,7 @@ void FUN_80072044(double param_1,double param_2,double param_3,char param_4,char
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80072048(int param_1,int param_2)
+void fn_8007BD8C(int param_1,int param_2)
 {
 }
 
@@ -2966,14 +2966,14 @@ void FUN_80072048(int param_1,int param_2)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_8007C54C(u8 flag)
+void fn_8007C3D0(u8 flag)
 {
     extern f32 lbl_803DFB5C;
     extern f32 lbl_803DFB78;
-    extern void fn_8006C86C(int);
+    extern void fn_8006C6F0(int);
     f32 mtx[6];
 
-    fn_8006C86C(1);
+    fn_8006C6F0(1);
     GXSetTexCoordGen2(1, 0, 0, 0x24, 0, 0x7D);
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
     mtx[0] = lbl_803DFB5C;
@@ -3016,7 +3016,7 @@ void fn_8007C54C(u8 flag)
 /*
  * --INFO--
  *
- * Function: FUN_800722e0
+ * Function: fn_8007C664
  * EN v1.0 Address: 0x800722E0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8007C7E0
@@ -3026,14 +3026,14 @@ void fn_8007C54C(u8 flag)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800722e0(int param_1)
+void fn_8007C664(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_800722e4
+ * Function: fn_8007CAF4
  * EN v1.0 Address: 0x800722E4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8007CC70
@@ -3043,14 +3043,14 @@ void FUN_800722e0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800722e4(void)
+void fn_8007CAF4(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_800722e8
+ * Function: fn_8007CF7C
  * EN v1.0 Address: 0x800722E8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8007D0F8
@@ -3060,7 +3060,7 @@ void FUN_800722e4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800722e8(void)
+void fn_8007CF7C(void)
 {
 }
 
@@ -3081,7 +3081,7 @@ void FUN_800722e8(void)
  * each PSMTXConcat call; target caches it once in r31 (callee-save)
  * and reuses across both calls. Register-allocator preference — not
  * crackable without inline asm. */
-void fn_8007D7EC(void)
+void fn_8007D670(void)
 {
     Mtx* mats = &lbl_80397420;
     Mtx tmp;
@@ -3115,25 +3115,7 @@ void OSReport(const char* msg, ...)
 /*
  * --INFO--
  *
- * Function: FUN_800723a0
- * EN v1.0 Address: 0x800723A0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8007D858
- * EN v1.1 Size: 80b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_800723a0(void)
-{
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_800723a4
+ * Function: fn_8007D72C
  * EN v1.0 Address: 0x800723A4
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8007D8A8
@@ -3143,7 +3125,7 @@ void FUN_800723a0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_800723a4(void)
+undefined4 fn_8007D72C(void)
 {
     return 0;
 }
@@ -3163,7 +3145,7 @@ undefined4 FUN_800723a4(void)
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_8007DADC(u32 param_1)
+void fn_8007D960(u32 param_1)
 {
     u8 v = (u8)param_1;
     lbl_803DDCD9 = v;
@@ -3191,9 +3173,9 @@ void fn_8007DADC(u32 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8007DB04(void)
+void fn_8007D988(void)
 {
-    lbl_803DC360 = 0xd;
+    lbl_803DB700 = 0xd;
 }
 
 /*
@@ -3209,9 +3191,9 @@ void fn_8007DB04(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-s32 fn_8007DB10(void)
+s32 fn_8007D994(void)
 {
-    return lbl_803DC360;
+    return lbl_803DB700;
 }
 
 /*
@@ -3227,42 +3209,42 @@ s32 fn_8007DB10(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void fn_8007E7A0(int);
-extern int fn_8007ED98(int, int, int, int, int, void*);
-extern void fn_8007E328(int);
-extern void fn_8007E928(void);
-extern void fn_8007E99C(void);
-extern void fn_8007E9D0(void);
-extern u8 lbl_803DDCD8;
+extern void fn_8007E54C(int);
+extern int fn_8007EB44(int, int, int, int, int, void*);
+extern void fn_8007E1AC(int);
+extern void fn_8007E6D4(void);
+extern void fn_8007E748(void);
+extern void fn_8007E77C(void);
+extern u8 lbl_803DD058;
 
 #pragma scheduling off
-int fn_8007DB18(void)
+int fn_8007D99C(void)
 {
     extern void* fn_80023D8C();
     extern s32 CARDMount();
     extern s32 CARDCheck();
     extern s32 CARDDelete();
     extern void CARDUnmount();
-    extern void fn_800238C4();
+    extern void fn_80023800();
     extern void fn_80080084();
-    extern void* lbl_803DDCC0;
+    extern void* lbl_803DD040;
     extern const char* lbl_803DC364;
-    extern s32 lbl_803DC360;
+    extern s32 lbl_803DB700;
     int res;
 
-    lbl_803DDCD8 = 0;
+    lbl_803DD058 = 0;
 
     do {
-        if (fn_8007DF88(0) == 0) {
+        if (fn_8007DE0C(0) == 0) {
             return 0;
         }
-        lbl_803DDCC0 = fn_80023D8C(0xA000, -1, 0);
-        if (lbl_803DDCC0 == 0) {
-            lbl_803DC360 = 8;
+        lbl_803DD040 = fn_80023D8C(0xA000, -1, 0);
+        if (lbl_803DD040 == 0) {
+            lbl_803DB700 = 8;
             return 0;
         }
-        lbl_803DC360 = 0;
-        res = CARDMount(0, lbl_803DDCC0, (void*)fn_80080084);
+        lbl_803DB700 = 0;
+        res = CARDMount(0, lbl_803DD040, (void*)fn_80080084);
         if (res == 0 || res == -6) {
             if (res == -6) {
                 res = CARDCheck(0);
@@ -3272,22 +3254,22 @@ int fn_8007DB18(void)
             res = CARDDelete(0, lbl_803DC364);
         }
         CARDUnmount(0);
-        fn_800238C4(lbl_803DDCC0);
-        lbl_803DDCC0 = 0;
+        fn_80023800(lbl_803DD040);
+        lbl_803DD040 = 0;
 
         switch (res + 13) {
-            case 11: lbl_803DC360 = 1; break;
+            case 11: lbl_803DB700 = 1; break;
             case 10:
-                if (lbl_803DC360 != 3) lbl_803DC360 = 2;
+                if (lbl_803DB700 != 3) lbl_803DB700 = 2;
                 break;
-            case 0:  lbl_803DC360 = 6; break;
-            case 8:  lbl_803DC360 = 4; break;
+            case 0:  lbl_803DB700 = 6; break;
+            case 8:  lbl_803DB700 = 4; break;
             case 13:
-                lbl_803DC360 = 13;
+                lbl_803DB700 = 13;
                 return 1;
         }
-        fn_8007E328(0);
-    } while (lbl_803DDCD8 != 0);
+        fn_8007E1AC(0);
+    } while (lbl_803DD058 != 0);
     return 0;
 }
 #pragma scheduling reset
@@ -3306,18 +3288,18 @@ int fn_8007DB18(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-int fn_8007DCA0(int a, int b, int c)
+int fn_8007DB24(int a, int b, int c)
 {
     int ret;
-    lbl_803DDCD8 = 0;
-    fn_8007E7A0(1);
+    lbl_803DD058 = 0;
+    fn_8007E54C(1);
     do {
-        ret = fn_8007ED98(0, a, 0, b, c, fn_8007E928);
-        fn_8007E328(0);
-        if (lbl_803DDCD8 != 0) {
-            fn_8007E7A0(1);
+        ret = fn_8007EB44(0, a, 0, b, c, fn_8007E6D4);
+        fn_8007E1AC(0);
+        if (lbl_803DD058 != 0) {
+            fn_8007E54C(1);
         }
-    } while (lbl_803DDCD8 != 0);
+    } while (lbl_803DD058 != 0);
     return ret;
 }
 #pragma scheduling reset
@@ -3336,18 +3318,18 @@ int fn_8007DCA0(int a, int b, int c)
  * PAL Size: TODO
  */
 #pragma scheduling off
-int fn_8007DD3C(int a)
+int fn_8007DBC0(int a)
 {
     int ret;
-    lbl_803DDCD8 = 0;
-    fn_8007E7A0(0);
+    lbl_803DD058 = 0;
+    fn_8007E54C(0);
     do {
-        ret = fn_8007ED98(1, 0, 0, a, 0, fn_8007E99C);
-        fn_8007E328(1);
-        if (lbl_803DDCD8 != 0) {
-            fn_8007E7A0(0);
+        ret = fn_8007EB44(1, 0, 0, a, 0, fn_8007E748);
+        fn_8007E1AC(1);
+        if (lbl_803DD058 != 0) {
+            fn_8007E54C(0);
         }
-    } while (lbl_803DDCD8 != 0);
+    } while (lbl_803DD058 != 0);
     return ret;
 }
 #pragma scheduling reset
@@ -3366,18 +3348,18 @@ int fn_8007DD3C(int a)
  * PAL Size: TODO
  */
 #pragma scheduling off
-int fn_8007DDD8(int a, int b)
+int fn_8007DC5C(int a, int b)
 {
     int ret;
-    lbl_803DDCD8 = 0;
-    fn_8007E7A0(0);
+    lbl_803DD058 = 0;
+    fn_8007E54C(0);
     do {
-        ret = fn_8007ED98(1, a, 0, b, 0, fn_8007E9D0);
-        fn_8007E328(0);
-        if (lbl_803DDCD8 != 0) {
-            fn_8007E7A0(0);
+        ret = fn_8007EB44(1, a, 0, b, 0, fn_8007E77C);
+        fn_8007E1AC(0);
+        if (lbl_803DD058 != 0) {
+            fn_8007E54C(0);
         }
-    } while (lbl_803DDCD8 != 0);
+    } while (lbl_803DD058 != 0);
     return ret;
 }
 #pragma scheduling reset
@@ -3397,44 +3379,44 @@ int fn_8007DDD8(int a, int b)
  */
 #pragma peephole off
 #pragma scheduling off
-int fn_8007DE80(u8 retry)
+int fn_8007DD04(u8 retry)
 {
-    extern int fn_8007FAC8(int);
+    extern int fn_8007F83C(int);
     extern void CARDClose(void*);
     extern void CARDUnmount(s32);
-    extern void fn_800238C4(void*);
-    extern u8 lbl_80397560[];
-    extern void* lbl_803DDCC0;
-    extern u8 lbl_803DDCDA;
-    extern s32 lbl_803DC360;
+    extern void fn_80023800(void*);
+    extern u8 lbl_80396900[];
+    extern void* lbl_803DD040;
+    extern u8 lbl_803DD05A;
+    extern s32 lbl_803DB700;
     int ret;
 
     if (retry != 0) {
-        lbl_803DDCD8 = 0;
-        fn_8007E7A0(2);
+        lbl_803DD058 = 0;
+        fn_8007E54C(2);
     }
     do {
-        ret = fn_8007FAC8(0);
+        ret = fn_8007F83C(0);
         if (ret != 0) {
-            if (lbl_803DDCDA != 0) {
-                lbl_803DDCDA = 0;
-                CARDClose(lbl_80397560);
+            if (lbl_803DD05A != 0) {
+                lbl_803DD05A = 0;
+                CARDClose(lbl_80396900);
             }
             CARDUnmount(0);
-            fn_800238C4(lbl_803DDCC0);
-            lbl_803DDCC0 = 0;
-            lbl_803DC360 = 13;
+            fn_80023800(lbl_803DD040);
+            lbl_803DD040 = 0;
+            lbl_803DB700 = 13;
             if (ret == 2) {
-                ret = fn_8007ED98(0, 0, 0, 0, 0, 0);
+                ret = fn_8007EB44(0, 0, 0, 0, 0, 0);
             }
         }
         if (retry != 0) {
-            fn_8007E328(0);
+            fn_8007E1AC(0);
         }
-        if (lbl_803DDCD8 != 0) {
-            fn_8007E7A0(2);
+        if (lbl_803DD058 != 0) {
+            fn_8007E54C(2);
         }
-    } while (lbl_803DDCD8 != 0 && retry != 0);
+    } while (lbl_803DD058 != 0 && retry != 0);
     return ret;
 }
 #pragma scheduling reset
@@ -3455,16 +3437,16 @@ int fn_8007DE80(u8 retry)
  */
 #pragma peephole off
 #pragma scheduling off
-int fn_8007DF88(u8 retry)
+int fn_8007DE0C(u8 retry)
 {
     extern s32 CARDProbeEx(s32 chan, s32* memSize, s32* sectorSize);
-    extern s32 lbl_803DC360;
+    extern s32 lbl_803DB700;
     s32 memSize;
     s32 sectorSize;
     s32 res;
 
     if (retry != 0) {
-        lbl_803DDCD8 = 0;
+        lbl_803DD058 = 0;
     }
     do {
         res = -1;
@@ -3473,21 +3455,21 @@ int fn_8007DF88(u8 retry)
         }
         if (res == 0) {
             if (sectorSize == 0x2000) {
-                lbl_803DC360 = 13;
+                lbl_803DB700 = 13;
                 return 1;
             }
-            lbl_803DC360 = 7;
+            lbl_803DB700 = 7;
         } else if (res == -3) {
-            lbl_803DC360 = 2;
+            lbl_803DB700 = 2;
         } else if (res == -2) {
-            lbl_803DC360 = 1;
+            lbl_803DB700 = 1;
         } else {
-            lbl_803DC360 = 0;
+            lbl_803DB700 = 0;
         }
         if (retry != 0) {
-            fn_8007E328(0);
+            fn_8007E1AC(0);
         }
-    } while (lbl_803DDCD8 != 0 && retry != 0);
+    } while (lbl_803DD058 != 0 && retry != 0);
     return 0;
 }
 #pragma scheduling reset
@@ -3506,7 +3488,7 @@ int fn_8007DF88(u8 retry)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8007E06C(void)
+void fn_8007DEF0(void)
 {
     CARDInit();
 }
@@ -3526,17 +3508,17 @@ void fn_8007E06C(void)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_8007E08C(u32* buttons, u32* texts, u32* count)
+void fn_8007DF10(u32* buttons, u32* texts, u32* count)
 {
     extern u8 lbl_803DDCD9;
-    extern s32 lbl_803DC360;
-    if (lbl_803DDCD9 != 0 && (lbl_803DC360 == 7 || lbl_803DC360 == 9)) {
-        lbl_803DC360 = 11;
+    extern s32 lbl_803DB700;
+    if (lbl_803DDCD9 != 0 && (lbl_803DB700 == 7 || lbl_803DB700 == 9)) {
+        lbl_803DB700 = 11;
     }
-    switch (lbl_803DC360) {
+    switch (lbl_803DB700) {
         case 0:
             *count = 0;
-            lbl_803DC360 = 13;
+            lbl_803DB700 = 13;
             return;
         case 1:
             buttons[0] = 1;
@@ -3631,7 +3613,7 @@ void fn_8007E08C(u32* buttons, u32* texts, u32* count)
         case 13:
         default:
             *count = 0;
-            lbl_803DC360 = 13;
+            lbl_803DB700 = 13;
             return;
     }
 }
@@ -3641,9 +3623,9 @@ void fn_8007E08C(u32* buttons, u32* texts, u32* count)
 /*
  * --INFO--
  *
- * Function: FUN_80072be8
- * EN v1.0 Address: 0x80072BE8
- * EN v1.0 Size: 4b
+ * Function: fn_8007E1AC
+ * EN v1.0 Address: 0x8007E1AC
+ * EN v1.0 Size: 928b
  * EN v1.1 Address: 0x8007E328
  * EN v1.1 Size: 1144b
  * JP Address: TODO
@@ -3651,7 +3633,57 @@ void fn_8007E08C(u32* buttons, u32* texts, u32* count)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80072be8(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void fn_8007E1AC(int param_1)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_8007E54C
+ * EN v1.0 Address: 0x8007E54C
+ * EN v1.0 Size: 392b
+ * EN v1.1 Address: 0x8007E7A0
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_8007E54C(int param_1)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_8007E6D4
+ * EN v1.0 Address: 0x8007E6D4
+ * EN v1.0 Size: 116b
+ * EN v1.1 Address: 0x8007E928
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_8007E6D4(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_8007E748
+ * EN v1.0 Address: 0x8007E748
+ * EN v1.0 Size: 52b
+ * EN v1.1 Address: 0x8007E99C
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_8007E748(void)
 {
 }
