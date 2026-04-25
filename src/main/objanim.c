@@ -167,6 +167,7 @@ void Object_ObjAnimSetSecondaryBlendMove(int objAnim,uint moveId,int eventState)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,int eventsArg)
 {
   ObjAnimComponent *objAnim;
@@ -326,6 +327,7 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
   }
   return uVar7;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--

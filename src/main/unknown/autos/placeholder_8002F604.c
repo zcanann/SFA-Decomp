@@ -36,6 +36,7 @@ extern f32 FLOAT_803df58c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 undefined4 ObjAnim_SampleRootCurvePhase(double param_1,int param_2,float *param_3)
 {
   float fVar1;
@@ -206,6 +207,7 @@ undefined4 ObjAnim_SampleRootCurvePhase(double param_1,int param_2,float *param_
   }
   return 0;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
