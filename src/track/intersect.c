@@ -2602,18 +2602,62 @@ void fn_800796F0(void)
  * --INFO--
  *
  * Function: fn_80079804
- * EN v1.0 Address: 0x80071F8C
- * EN v1.0 Size: 4b
+ * EN v1.0 Address: 0x80079804
+ * EN v1.0 Size: 444b
  * EN v1.1 Address: 0x80079980
  * EN v1.1 Size: 444b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
+ *
+ * Closes out the TEV pipeline configuration that fn_80079A64 etc. open:
+ * pushes the current ind-stage / chan-ctrl / tex-gen counts in
+ * lbl_803DD008..00B back into GX, and if the global tint alpha
+ * lbl_803DB679 isn't fully transparent (0xFF) appends one final TEV
+ * stage that K-multiplies the tint over the existing color, advancing
+ * lbl_803DD030 (TEV stage cursor) and lbl_803DD00B (stage count).
  */
+#pragma peephole off
+#pragma scheduling off
 void fn_80079804(void)
 {
+    extern u8 lbl_803DD008, lbl_803DD009, lbl_803DD00A, lbl_803DD00B;
+    extern u8 lbl_803DB679;
+    extern u32 lbl_803DD030;
+    GXColor c;
+
+    GXSetNumIndStages(lbl_803DD008);
+    if (lbl_803DD009 != 0) {
+        GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+        GXSetNumChans(1);
+    } else {
+        GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+        GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+        GXSetNumChans(0);
+    }
+    GXSetNumTexGens(lbl_803DD00A);
+    if (lbl_803DB679 < 0xFF) {
+        c.a = lbl_803DB679;
+        GXSetTevKColor(0, c);
+        GXSetTevKAlphaSel(lbl_803DD030, 0x1C);
+        GXSetTevOrder(lbl_803DD030, 0xFF, 0xFF, 0xFF);
+        GXSetTevDirect(lbl_803DD030);
+        GXSetTevColorIn(lbl_803DD030, 0xF, 0xF, 0xF, 0);
+        GXSetTevAlphaIn(lbl_803DD030, 7, 0, 6, 7);
+        GXSetTevSwapMode(lbl_803DD030, 0, 0);
+        GXSetTevColorOp(lbl_803DD030, 0, 0, 0, 1, 0);
+        GXSetTevAlphaOp(lbl_803DD030, 0, 0, 0, 1, 0);
+        lbl_803DD030 = lbl_803DD030 + 1;
+        lbl_803DD00B = lbl_803DD00B + 1;
+    }
+    GXSetNumTevStages(lbl_803DD00B);
+    if (lbl_803DD009 != 0) {
+        GXSetChanCtrl(4, 0, 0, 1, 0, 0, 2);
+    }
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
