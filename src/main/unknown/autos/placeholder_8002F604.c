@@ -544,18 +544,15 @@ undefined4 ObjAnim_AdvanceCurrentMove(double param_1,double param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 ObjAnim_SetMoveProgress(double param_1,int param_2)
+undefined4 ObjAnim_SetMoveProgress(f32 param_1,int param_2)
 {
-  double dVar1;
-
-  dVar1 = param_1;
-  if ((double)FLOAT_803df588 < dVar1) {
-    dVar1 = (double)FLOAT_803df588;
+  if (param_1 > FLOAT_803df588) {
+    param_1 = FLOAT_803df588;
   }
-  if (dVar1 < (double)FLOAT_803df570) {
-    dVar1 = (double)FLOAT_803df570;
+  else if (param_1 < FLOAT_803df570) {
+    param_1 = FLOAT_803df570;
   }
-  *(float *)(param_2 + 0x98) = (float)dVar1;
+  *(float *)(param_2 + 0x98) = param_1;
   return 0;
 }
 

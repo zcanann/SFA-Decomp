@@ -338,20 +338,18 @@ undefined4 Object_ObjAnimAdvanceMove(double moveStepScale,double deltaTime,int o
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 Object_ObjAnimSetMoveProgress(double param_1,int param_2)
+undefined4 Object_ObjAnimSetMoveProgress(f32 param_1,int param_2)
 {
   ObjAnimComponent *objAnim;
-  double dVar1;
 
   objAnim = (ObjAnimComponent *)param_2;
-  dVar1 = param_1;
-  if ((double)FLOAT_803df588 < dVar1) {
-    dVar1 = (double)FLOAT_803df588;
+  if (param_1 > FLOAT_803df588) {
+    param_1 = FLOAT_803df588;
   }
-  if (dVar1 < (double)FLOAT_803df570) {
-    dVar1 = (double)FLOAT_803df570;
+  else if (param_1 < FLOAT_803df570) {
+    param_1 = FLOAT_803df570;
   }
-  objAnim->moveProgress = (float)dVar1;
+  objAnim->moveProgress = param_1;
   return 0;
 }
 
