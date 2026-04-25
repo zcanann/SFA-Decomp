@@ -678,11 +678,13 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
   ExpgfxTableEntry *entryBase;
   int tableIndex;
   int freeIndex;
+  int remaining;
   u16 refCount;
   
   tableIndex = 0;
   entryBase = Expgfx_GetTableEntry(0);
   entry = entryBase;
+  remaining = EXPGFX_POOL_COUNT;
   do {
     if (((entry->refCount != 0 && (entry->textureOrResource == textureOrResource)) &&
         (entry->key0 == key0)) && (entry->key1 == key1)) {
@@ -697,10 +699,12 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
     }
     entry = entry + 1;
     tableIndex = tableIndex + 1;
-  } while (tableIndex < EXPGFX_POOL_COUNT);
+    remaining = remaining + -1;
+  } while (remaining != 0);
 
   freeIndex = 0;
   entry = entryBase;
+  remaining = EXPGFX_POOL_COUNT;
   do {
     if (entry->refCount == 0) {
       entry = &gExpgfxTableEntries[freeIndex];
@@ -713,7 +717,8 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
     }
     entry = entry + 1;
     freeIndex = freeIndex + 1;
-  } while (freeIndex < EXPGFX_POOL_COUNT);
+    remaining = remaining + -1;
+  } while (remaining != 0);
 
   fn_801378A8(sExpgfxExpTabIsFull);
   return -1;
