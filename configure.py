@@ -447,7 +447,7 @@ config.libs = [
         "exi",
         [
             Object(NonMatching, "dolphin/exi/EXIBios.c"),
-            Object(NonMatching, "dolphin/exi/EXIUart.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/exi/EXIUart.c"),
         ],
     ),
     DolphinLib(
