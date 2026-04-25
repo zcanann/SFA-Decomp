@@ -1504,19 +1504,19 @@ dolphin/os/__ppc_eabi_init.c:
 dolphin/db/db.c:
 	.text       start:0x80246D68 end:0x80246E54
 
-dolphin/mtx/mtx.c:
-	.text       start:0x80247574 end:0x80247A1C
-
 dolphin/mtx/mtxvec.c:
-	.text       start:0x80247A1C end:0x80247A1C
+	.text       start:0x80247574 end:0x802475C8
 
 dolphin/mtx/mtx44.c:
-	.text       start:0x80247A1C end:0x80247A1C
+	.text       start:0x802475C8 end:0x80247730
 
 dolphin/mtx/vec.c:
-	.text       start:0x80247A1C end:0x80247A1C
+	.text       start:0x80247730 end:0x802479D0
 
 dolphin/mtx/psmtx.c:
+	.text       start:0x802479D0 end:0x80247A1C
+
+dolphin/mtx/mtx.c:
 	.text       start:0x80247A1C end:0x80247A1C
 
 dolphin/dvd/dvdlow.c:
