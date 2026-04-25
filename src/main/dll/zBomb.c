@@ -1,21 +1,14 @@
 #include "ghidra_import.h"
-#include "dolphin/os.h"
-#include "main/dll/CF/laser.h"
 #include "main/dll/zBomb.h"
 
 extern undefined4 FUN_8000a380();
 extern int fn_8001FFB4(int eventId);
 extern void fn_800200E8(int eventId,int value);
 extern void FUN_80026e00(int param_1,int param_2,float *param_3);
-extern void fn_80041018(int obj);
 extern undefined4 FUN_80097734();
 
-extern undefined4* lbl_803DCA68;
 extern undefined4* DAT_803dcaa8;
-extern undefined4* lbl_803DCAAC;
 extern s32 lbl_80329B78[];
-extern char sTextBlockInitNoLongerSupported[];
-extern char sLaserInitNoLongerSupported[];
 extern f32 FLOAT_803db414;
 extern f32 FLOAT_803e648c;
 extern f32 FLOAT_803e6494;
@@ -202,144 +195,5 @@ void dfptargetblock_release(void)
 }
 
 void dfptargetblock_initialise(void)
-{
-}
-
-int laser_getExtraSizeUnsupported(void)
-{
-  return 0;
-}
-
-int laser_func08(void)
-{
-  return 0;
-}
-
-void laser_freeUnsupported(void)
-{
-  OSReport(sTextBlockInitNoLongerSupported);
-  return;
-}
-
-void laser_renderUnsupported(void)
-{
-  OSReport(sTextBlockInitNoLongerSupported);
-  return;
-}
-
-void laser_hitDetectUnsupported(void)
-{
-}
-
-void laser_updateUnsupported(void)
-{
-  OSReport(sTextBlockInitNoLongerSupported);
-  return;
-}
-
-void laser_initUnsupported(void)
-{
-  OSReport(sLaserInitNoLongerSupported);
-  return;
-}
-
-void laser_releaseUnsupported(void)
-{
-}
-
-void laser_initialiseUnsupported(void)
-{
-}
-
-int laserObj_getExtraSize(void)
-{
-  return sizeof(LaserState);
-}
-
-int laserObj_func08(void)
-{
-  return 0;
-}
-
-void laserObj_free(void)
-{
-}
-
-void laserObj_render(void)
-{
-}
-
-void laserObj_hitDetect(void)
-{
-}
-
-void laserObj_update(int param_1)
-{
-  LaserObject *obj;
-  LaserState *state;
-  uint uVar1;
-  int mode;
-
-  obj = (LaserObject *)param_1;
-  if ((obj->state->sequenceLatched == '\0') &&
-     (uVar1 = fn_8001FFB4((int)obj->state->secondarySequenceId), uVar1 != 0)) {
-    obj->statusFlags &= ~LASER_OBJECT_STATUS_08;
-  }
-  else {
-    obj->statusFlags |= LASER_OBJECT_STATUS_08;
-  }
-  fn_80041018(param_1);
-  if ((obj->statusFlags & 1) != 0) {
-    mode = (u8)(*(code *)(*lbl_803DCAAC + 0x40))((int)obj->modeIndex);
-    if (mode != 2) {
-      if ((mode < 2) && (mode != 0)) {
-        state = obj->state;
-        if ((*(code *)(*lbl_803DCA68 + 0x20))(0x2e8) != 0) {
-          fn_800200E8((int)state->primarySequenceId,1);
-          fn_800200E8((int)state->secondarySequenceId,0);
-          state->sequenceLatched = 1;
-          obj->statusFlags |= LASER_OBJECT_STATUS_08;
-        }
-      }
-    }
-    else {
-      state = obj->state;
-      if ((*(code *)(*lbl_803DCA68 + 0x20))(0x83c) != 0) {
-        fn_800200E8((int)state->primarySequenceId,1);
-        fn_800200E8((int)state->secondarySequenceId,0);
-        state->sequenceLatched = 1;
-        obj->statusFlags |= LASER_OBJECT_STATUS_08;
-        (*(code *)(*lbl_803DCAAC + 0x44))(7,8);
-        (*(code *)(*lbl_803DCAAC + 0x44))(0xd,2);
-      }
-    }
-  }
-  return;
-}
-
-void laserObj_init(LaserObject *obj,int param_2)
-{
-  LaserState *state;
-  uint uVar1;
-
-  state = obj->state;
-  state->primarySequenceId = *(short *)(param_2 + 0x1e);
-  state->secondarySequenceId = *(short *)(param_2 + 0x20);
-  state->sequenceLatched = 0;
-  obj->modeWord = *(s8 *)(param_2 + 0x18) << 8;
-  uVar1 = fn_8001FFB4((int)state->primarySequenceId);
-  if (uVar1 != 0) {
-    state->sequenceLatched = 1;
-    obj->statusFlags |= LASER_OBJECT_STATUS_08;
-  }
-  obj->objectFlags |= 0x6000;
-  return;
-}
-
-void laserObj_release(void)
-{
-}
-
-void laserObj_initialise(void)
 {
 }

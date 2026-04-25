@@ -1400,7 +1400,13 @@ main/dll/fruit.c:
 	.text       start:0x802086C4 end:0x80208B70
 
 main/dll/zBomb.c:
-	.text       start:0x80208B70 end:0x8020930C
+	.text       start:0x80208B70 end:0x80208FDC
+
+main/dll/CF/laser_unsupported.c:
+	.text       start:0x80208FDC end:0x802090A8
+
+main/dll/CF/laserObj.c:
+	.text       start:0x802090A8 end:0x8020930C
 
 main/dll/fire.c:
 	.text       start:0x8020930C end:0x80209810
