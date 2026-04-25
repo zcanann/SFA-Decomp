@@ -1,62 +1,87 @@
 #include "ghidra_import.h"
 #include "dolphin/os.h"
-#include "main/dll/CF/laser.h"
 
-extern char sTextBlockInitNoLongerSupported[];
+extern char sTextBlockNoLongerSupported[];
+
+int textblockObj_getExtraSize(void)
+{
+  return 0;
+}
+
+int textblockObj_func08(void)
+{
+  return 0;
+}
 
 /*
  * --INFO--
  *
- * Function: laser_freeUnsupported
- * EN v1.0 Address: 0x80208FEC
+ * Function: textblockObj_freeUnsupported
+ * EN v1.0 Address: 0x80209820
  * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x80209624
+ * EN v1.1 Address: TODO
  * EN v1.1 Size: 44b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void laser_freeUnsupported(void)
+void textblockObj_freeUnsupported(void)
 {
-  OSReport(sTextBlockInitNoLongerSupported);
+  OSReport(sTextBlockNoLongerSupported);
   return;
+}
+
+void textblockObj_render(void)
+{
+}
+
+void textblockObj_hitDetect(void)
+{
 }
 
 /*
  * --INFO--
  *
- * Function: laser_renderUnsupported
- * EN v1.0 Address: 0x80209018
+ * Function: textblockObj_updateUnsupported
+ * EN v1.0 Address: 0x80209854
  * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x80209650
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void laser_renderUnsupported(void)
-{
-  OSReport(sTextBlockInitNoLongerSupported);
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: laser_updateUnsupported
- * EN v1.0 Address: 0x80209048
- * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x80209680
+ * EN v1.1 Address: TODO
  * EN v1.1 Size: 44b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void laser_updateUnsupported(void)
+void textblockObj_updateUnsupported(void)
 {
-  OSReport(sTextBlockInitNoLongerSupported);
+  OSReport(sTextBlockNoLongerSupported);
   return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: textblockObj_initUnsupported
+ * EN v1.0 Address: 0x80209880
+ * EN v1.0 Size: 44b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: 44b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void textblockObj_initUnsupported(void)
+{
+  OSReport(sTextBlockNoLongerSupported);
+  return;
+}
+
+void textblockObj_release(void)
+{
+}
+
+void textblockObj_initialise(void)
+{
 }
