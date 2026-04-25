@@ -2264,21 +2264,18 @@ dolphin/TRK_MINNOW_DOLPHIN/targcont.c:
 	.text       start:0x8028D318 end:0x8028D34C
 
 dolphin/TRK_MINNOW_DOLPHIN/target_options.c:
-	.text       start:0x8028D960 end:0x8028D960
-
-main/unknown/autos/placeholder_8028D960.c:
-	.text       start:0x8028D960 end:0x8028DBE4
-
-dolphin/TRK_MINNOW_DOLPHIN/mslsupp.c:
-	.text       start:0x8028DBE4 end:0x8028DBE4
+	.text       start:0x8028D34C end:0x8028D4A8
 
 dolphin/MSL_C/PPCEABI/bare/H/abort_exit.c:
-	.text       start:0x8028DBE4 end:0x8028DBE4
+	.text       start:0x8028D4A8 end:0x8028D960
 
 dolphin/MSL_C/PPCEABI/bare/H/alloc.c:
-	.text       start:0x8028DBE4 end:0x8028DBE4
+	.text       start:0x8028D960 end:0x8028DB4C
 
 dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c:
+	.text       start:0x8028DB4C end:0x8028DBE4
+
+dolphin/TRK_MINNOW_DOLPHIN/mslsupp.c:
 	.text       start:0x8028DBE4 end:0x8028DBE4
 
 dolphin/MSL_C/PPCEABI/bare/H/ansi_fp.c:
