@@ -2303,19 +2303,19 @@ dolphin/MSL_C/PPCEABI/bare/H/string.c:
 	.text       start:0x802915E4 end:0x802918C0
 
 dolphin/MSL_C/PPCEABI/bare/H/wchar_io.c:
-	.text       start:0x80291FF4 end:0x802920A4
+	.text       start:0x802918C0 end:0x80291948
 
 dolphin/MSL_C/PPCEABI/bare/H/s_copysign.c:
-	.text       start:0x802920A4 end:0x802920A4
+	.text       start:0x80291948 end:0x80291970
 
 dolphin/MSL_C/PPCEABI/bare/H/s_frexp.c:
-	.text       start:0x802920A4 end:0x802920A4
+	.text       start:0x80291970 end:0x802919FC
 
 dolphin/MSL_C/PPCEABI/bare/H/s_ldexp.c:
-	.text       start:0x802920A4 end:0x80292248
+	.text       start:0x802919FC end:0x80291BC0
 
 dolphin/MSL_C/PPCEABI/bare/H/s_modf.c:
-	.text       start:0x80292248 end:0x802923C4
+	.text       start:0x80291BC0 end:0x80291CBC
 
 dolphin/MSL_C/PPCEABI/bare/H/gamecube.c:
 	.text       start:0x802923C4 end:0x802923C4
