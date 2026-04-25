@@ -10,7 +10,9 @@
 # Keep the raw vector bytes until the individual handlers are recovered.
 .global gTRKInterruptVectorTable
 gTRKInterruptVectorTable:
+.fn pad_00_80003538_init, local
 .incbin "orig/GSAE01/sys/main.dol", 0x538, 0x1F34
+.endfn pad_00_80003538_init
 
 .global gTRKInterruptVectorTableEnd
 gTRKInterruptVectorTableEnd:
