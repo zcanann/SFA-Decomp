@@ -499,7 +499,7 @@ lab1:
 lab2:
 	cmpw    cr0,r0,r9
 	subfic  r10,r0,64
-	bgt     cr0,lab9
+	bgtlr   cr0
 	addi    r9,r9,1
 	subfic  r9,r9,64
 	add     r0,r0,r9
@@ -548,8 +548,6 @@ lab8:
 	bdnz    lab7
 	mr      r4,r8
 	mr      r3,r7
-	blr
-lab9:
 	blr
 #endif // clang-format on
 }
