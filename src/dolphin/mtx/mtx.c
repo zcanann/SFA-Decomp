@@ -2,6 +2,8 @@
 
 static f32 lbl_803DD1B8[] = { 0.0f, 1.0f };
 
+extern const f32 lbl_803E7618;
+extern const f32 lbl_803E761C;
 extern const f32 lbl_803E82B0;
 extern const f32 lbl_803E82B4;
 extern const f32 lbl_803E82BC;
@@ -28,8 +30,8 @@ void C_MTXIdentity(Mtx mtx)
 #ifdef GEKKO
 void PSMTXIdentity(register Mtx m)
 {
-    register f32 zero_c = lbl_803E82B4;
-    register f32 one_c = lbl_803E82B0;
+    register f32 zero_c = lbl_803E761C;
+    register f32 one_c = lbl_803E7618;
     register f32 c_01;
     register f32 c_10;
     // clang-format off
