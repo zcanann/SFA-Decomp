@@ -3,6 +3,7 @@
 
 #include "main/dll/SH/SHthorntail_internal.h"
 
-void SHthorntail_init(SHthorntailObject *obj,SHthorntailRuntime *runtime);
+void SHthorntail_init(void);
+undefined4 fn_801D6D58(void);
 
 #endif /* MAIN_DLL_SC_SCLANTERN_H_ */
