@@ -80,7 +80,7 @@ static void __GXAbortWait(u32 clocks) {
     } while (time1 - time0 <= (clocks / 4));
 }
 
-static void __GXAbortWaitPECopyDone_80258A94(void) {
+static void __GXAbortWaitPECopyDone(void) {
     OSTime time0;
     OSTime time1;
 
@@ -101,7 +101,7 @@ static void __GXAbortWaitPECopyDone_80258A94(void) {
 
 void __GXAbort(void) {
     if (__GXData->abtWaitPECopy && GXGetGPFifo() != (GXFifoObj*)NULL) {
-        __GXAbortWaitPECopyDone_80258A94();
+        __GXAbortWaitPECopyDone();
     }
 
     __PIRegs[0x18 / 4] = 1;
