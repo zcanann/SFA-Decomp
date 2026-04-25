@@ -647,7 +647,7 @@ config.libs = [
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/rand.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/math_ppc.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_cos.c"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_sin.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/k_sin.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_cos.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/e_sqrt.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_pow.c"),
