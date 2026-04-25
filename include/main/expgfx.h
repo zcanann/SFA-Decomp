@@ -18,9 +18,12 @@ void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_
                  double param_6,undefined8 param_7,undefined8 param_8);
 int expgfx_addToTable(int textureOrResource,int key0,int key1,s16 slotType);
 void fn_8009E004(void);
-void expgfx_processCurrentSourceBounds(void);
-void FUN_8009c0b4(void);
-void expgfx_queueLightmapSources(void);
+void fn_8009E024(void);
+void fn_8009E028(void);
+int fn_8009E02C(void);
+void fn_8009E034();
+void fn_8009E13C();
+void fn_8009ECE4(void);
 void fn_8009EEB8(void);
 void fn_8009EED8();
 void fn_8009EFDC(void);

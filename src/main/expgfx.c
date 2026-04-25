@@ -31,6 +31,7 @@ extern int FUN_8005b024();
 extern undefined4 FUN_8005d340();
 extern undefined4 FUN_8005e1d8();
 extern uint FUN_8005e558();
+extern u8 fn_8005E97C();
 extern undefined4 FUN_8006f8a4();
 extern undefined4 FUN_8006f8fc();
 extern void trackIntersect_drawColorBand(void);
@@ -133,6 +134,8 @@ extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803dc3f0;
 extern f32 FLOAT_803dda58;
 extern f32 FLOAT_803dda5c;
+extern f32 lbl_803DCDD8;
+extern f32 lbl_803DCDDC;
 extern f32 FLOAT_803ddedc;
 extern f32 FLOAT_803ddee0;
 extern f32 FLOAT_803ddee4;
@@ -807,9 +810,61 @@ void fn_8009E004(void)
 /*
  * --INFO--
  *
- * Function: expgfx_processCurrentSourceBounds
- * EN v1.0 Address: 0x8009BFCC
- * EN v1.0 Size: 232b
+ * Function: fn_8009E024
+ * EN v1.0 Address: 0x8009E024
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_8009E024(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_8009E028
+ * EN v1.0 Address: 0x8009E028
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_8009E028(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_8009E02C
+ * EN v1.0 Address: 0x8009E02C
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int fn_8009E02C(void)
+{
+  return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_8009E034
+ * EN v1.0 Address: 0x8009E034
+ * EN v1.0 Size: 264b
  * EN v1.1 Address: 0x8009E2C0
  * EN v1.1 Size: 264b
  * JP Address: TODO
@@ -817,36 +872,39 @@ void fn_8009E004(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void expgfx_processCurrentSourceBounds(void)
+#pragma scheduling off
+void fn_8009E034(int sourceId,int sourceMode)
 {
   ExpgfxBounds *boundsTemplate;
   ExpgfxBounds *poolBounds;
-  ExpgfxCurrentSource currentSource;
+  u8 *expgfxBase;
   uint uVar1;
   int poolIndex;
-  byte *poolBoundsTemplateIds;
-  byte *poolSourceModes;
+  uint *slotPoolBases;
+  u8 *poolBoundsTemplateIds;
+  u8 *poolSourceModes;
   int *poolSourceIds;
   char *poolActiveCounts;
   
-  currentSource = Expgfx_GetCurrentSource();
+  expgfxBase = lbl_8039AB58;
   poolIndex = 0;
-  poolActiveCounts = &gExpgfxPoolActiveCounts;
-  poolSourceIds = &gExpgfxPoolSourceIds;
-  poolSourceModes = &gExpgfxPoolSourceModes;
-  poolBoundsTemplateIds = &gExpgfxPoolBoundsTemplateIds;
-  poolBounds = Expgfx_GetPoolBounds(0);
+  poolActiveCounts = (char *)(expgfxBase + 0x1070);
+  poolSourceIds = (int *)(expgfxBase + 0xed0);
+  poolSourceModes = expgfxBase + 0xe80;
+  poolBoundsTemplateIds = expgfxBase + 0x1020;
+  poolBounds = (ExpgfxBounds *)(expgfxBase + 0x200);
+  slotPoolBases = (uint *)(expgfxBase + 0x1200);
   do {
-    if (((*poolActiveCounts != '\0') && (*poolSourceIds == currentSource.sourceId)) &&
-       ((uint)*poolSourceModes == currentSource.sourceMode + 1U)) {
-      boundsTemplate = Expgfx_GetBoundsTemplate(*poolBoundsTemplateIds);
-      uVar1 = FUN_8005e558((double)(poolBounds->minX - FLOAT_803dda58),
-                           (double)(poolBounds->maxX - FLOAT_803dda58),
+    if (((*poolActiveCounts != '\0') && (*poolSourceIds == sourceId)) &&
+       ((uint)*poolSourceModes == sourceMode + 1U)) {
+      boundsTemplate = (ExpgfxBounds *)(lbl_8030F898 + (uint)*poolBoundsTemplateIds * 0x18);
+      uVar1 = fn_8005E97C((double)(poolBounds->minX - lbl_803DCDD8),
+                           (double)(poolBounds->maxX - lbl_803DCDD8),
                            (double)poolBounds->minY,(double)poolBounds->maxY,
-                           (double)(poolBounds->minZ - FLOAT_803dda5c),
-                           (double)(poolBounds->maxZ - FLOAT_803dda5c),(float *)boundsTemplate);
+                           (double)(poolBounds->minZ - lbl_803DCDDC),
+                           (double)(poolBounds->maxZ - lbl_803DCDDC),boundsTemplate);
       if ((uVar1 & 0xff) != 0) {
-        FUN_8009c0b4();
+        fn_8009E13C(*slotPoolBases,poolIndex);
       }
     }
     poolActiveCounts = poolActiveCounts + 1;
@@ -854,18 +912,19 @@ void expgfx_processCurrentSourceBounds(void)
     poolSourceModes = poolSourceModes + 1;
     poolBoundsTemplateIds = poolBoundsTemplateIds + 1;
     poolBounds = poolBounds + 1;
+    slotPoolBases = slotPoolBases + 1;
     poolIndex = poolIndex + 1;
   } while (poolIndex < EXPGFX_POOL_COUNT);
-  FUN_8028687c();
   return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
  *
- * Function: FUN_8009c0b4
- * EN v1.0 Address: 0x8009C0B4
- * EN v1.0 Size: 4b
+ * Function: fn_8009E13C
+ * EN v1.0 Address: 0x8009E13C
+ * EN v1.0 Size: 2984b
  * EN v1.1 Address: 0x8009E3C8
  * EN v1.1 Size: 2984b
  * JP Address: TODO
@@ -873,16 +932,16 @@ void expgfx_processCurrentSourceBounds(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8009c0b4(void)
+void fn_8009E13C(uint slotPoolBase,int poolIndex)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: expgfx_queueLightmapSources
- * EN v1.0 Address: 0x8009C0B8
- * EN v1.0 Size: 4b
+ * Function: fn_8009ECE4
+ * EN v1.0 Address: 0x8009ECE4
+ * EN v1.0 Size: 468b
  * EN v1.1 Address: 0x8009EF70
  * EN v1.1 Size: 468b
  * JP Address: TODO
@@ -890,7 +949,7 @@ void FUN_8009c0b4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void expgfx_queueLightmapSources(void)
+void fn_8009ECE4(void)
 {
 }
 

@@ -1335,7 +1335,7 @@ void FUN_8005c24c(void)
     FUN_8003b878(0,0,0,0,*piVar5,1);
     piVar5 = piVar5 + 1;
   }
-  expgfx_queueLightmapSources();
+  fn_8009ECE4();
   FUN_8005bdbc();
   FUN_8005bdbc();
   if (DAT_803ddab0 == 1000) {
@@ -2573,9 +2573,9 @@ void lightmap_flushQueuedRenderPackets(void)
   for (iVar5 = 0; iVar5 < DAT_803ddab0; iVar5 = iVar5 + 1) {
     switch(piVar6[3]) {
     case 0:
-      expgfx_processCurrentSourceBounds();
+      fn_8009E034();
       lightmap_renderQueuedObject((ushort *)*piVar6);
-      expgfx_processCurrentSourceBounds();
+      fn_8009E034();
       break;
     case 1:
       iVar3 = *piVar6;
@@ -2642,7 +2642,7 @@ void lightmap_flushQueuedRenderPackets(void)
       FUN_8005d85c(*piVar6,piVar6[1],afStack_70);
       break;
     case 7:
-      FUN_8009c0b4();
+      fn_8009E13C();
       break;
     case 8:
       FUN_8006f09c();
