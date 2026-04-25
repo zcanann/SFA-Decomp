@@ -2151,14 +2151,17 @@ main/unknown/autos/placeholder_80285B64.c:
 	.text       start:0x80285B14 end:0x80285B14
 
 dolphin/OdemuExi2/DebuggerDriver.c:
-	.text       start:0x80285B14 end:0x80285F6C
+	.text       start:0x80285B14 end:0x80285EA4
+
+Runtime.PPCEABI.H/__va_arg.c:
+	.text       start:0x80285EA4 end:0x80285F6C
 
 Runtime.PPCEABI.H/global_destructor_chain.c:
 	.text       start:0x80285F6C end:0x80285FB4
 	.dtors      start:0x802C18A8 end:0x802C18AC
 	.sbss       start:0x803DE3E0 end:0x803DE3E4
 
-Runtime.PPCEABI.H/__va_arg.c:
+main/unknown/autos/placeholder_8028656C.c:
 	.text       start:0x8028656C end:0x8028660C
 
 Runtime.PPCEABI.H/__init_cpp_exceptions.cpp:
