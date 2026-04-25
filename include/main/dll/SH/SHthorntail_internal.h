@@ -68,10 +68,10 @@ typedef struct SHthorntailObject {
 #define SHTHORNTAIL_EXTRA_STATE_BYTES 0x914
 
 extern s32 gSHthorntailActiveConfigToken;
-extern u8 gSHthorntailLevelControlMode1ImpactSfxTable[];
+extern u8 gSHthorntailLevelControlMode1ImpactSfxTable;
 extern u8 gSHthorntailLevelControlMode0DefaultImpactSfxTable[];
-extern u8 gSHthorntailLevelControlMode0Locomotion6ImpactSfxTable[];
-extern u8 gSHthorntailRootControlMode2DefaultImpactSfxTable[];
+extern u8 gSHthorntailLevelControlMode0Locomotion6ImpactSfxTable;
+extern u8 gSHthorntailRootControlMode2DefaultImpactSfxTable;
 extern u8 gSHthorntailRootControlMode2Locomotion8ImpactSfxTable[];
 extern u8 gSHthorntailRootControlMode3Locomotion1ImpactSfxTable;
 extern u8 gSHthorntailRootControlMode3LocomotionDefaultImpactSfxTable;
