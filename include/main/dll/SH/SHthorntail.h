@@ -4,11 +4,6 @@
 #include "ghidra_import.h"
 #include "main/dll/SH/SHthorntail_internal.h"
 
-void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3,
-                             undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                             undefined8 param_7,undefined8 param_8,SHthorntailObject *obj,
-                             SHthorntailRuntime *runtime,
-                             undefined4 param_11,undefined4 param_12,undefined4 param_13,
-                             undefined4 param_14,undefined4 param_15,undefined4 param_16);
+void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime);
 
 #endif /* MAIN_DLL_SH_SHTHORNTAIL_H_ */

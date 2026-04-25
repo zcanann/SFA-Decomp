@@ -3,12 +3,27 @@
 #include "main/dll/SH/dll_1E8.h"
 
 extern undefined4 FUN_80006824();
+extern int fn_8001FFB4();
+extern undefined4 fn_800221A0();
 extern uint FUN_80017758();
 extern uint FUN_80017760();
 extern undefined4 FUN_80242fc0();
 
 extern undefined4 DAT_803dc070;
+extern undefined4* lbl_803DCAAC;
 extern undefined4* DAT_803dd6d8;
+extern u8 lbl_803DC008[];
+extern u8 lbl_803DC010[];
+extern u8 lbl_803DC014[];
+extern u8 lbl_803DC018[];
+extern u8 lbl_803DC01C[];
+extern u8 lbl_803DC020[];
+extern u8 lbl_803DC024[];
+extern u8 lbl_803DC028[];
+extern u8 lbl_803DC02C[];
+extern u8 lbl_803DC030[];
+extern u8 lbl_803DC034[];
+extern f64 lbl_803E5428;
 extern f64 DOUBLE_803e60c0;
 extern f64 DOUBLE_803e60d8;
 extern f32 FLOAT_803dc074;
@@ -32,12 +47,7 @@ extern char sThorntailEnteredInvalidState[];
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3,
-                             undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                             undefined8 param_7,undefined8 param_8,SHthorntailObject *obj,
-                             SHthorntailRuntime *runtime,
-                             undefined4 param_11,undefined4 param_12,undefined4 param_13,
-                             undefined4 param_14,undefined4 param_15,undefined4 param_16)
+void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
 {
   SHthorntailConfig *config;
   int iVar1;
@@ -147,9 +157,88 @@ void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
     }
     break;
   default:
-    FUN_80242fc0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                 sSHthorntailSourceFile,0x6cd,sThorntailEnteredInvalidState,param_12,param_13,
-                 param_14,param_15,param_16);
+    FUN_80242fc0(sSHthorntailSourceFile,0x6cd,sThorntailEnteredInvalidState);
   }
   return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: SHthorntail_updateRootControlMode3
+ * EN v1.0 Address: 0x801D550C
+ * EN v1.0 Size: 440b
+ * EN v1.1 Address: 0x801D5AFC
+ * EN v1.1 Size: 440b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntime *runtime)
+{
+  uint randomTime;
+  int eventIsSet;
+
+  runtime->impactSfxTable = lbl_803DC008;
+  switch(runtime->locomotionMode) {
+  case 1:
+    runtime->impactSfxTable = lbl_803DC010;
+    break;
+  case 2:
+    eventIsSet = fn_8001FFB4(0xc2);
+    if (eventIsSet != 6) {
+      runtime->impactSfxTable = lbl_803DC014;
+    }
+    break;
+  case 3:
+    eventIsSet = fn_8001FFB4(0x193);
+    if (eventIsSet == 0) {
+      runtime->impactSfxTable = lbl_803DC018;
+    }
+    break;
+  case 4:
+    runtime->impactSfxTable = lbl_803DC01C;
+    break;
+  case 5:
+    eventIsSet = fn_8001FFB4(0x23c);
+    if (eventIsSet == 0) {
+      eventIsSet = fn_8001FFB4(0x5bd);
+      if (eventIsSet == 0) {
+        eventIsSet = fn_8001FFB4(0x23d);
+        if (eventIsSet == 0) {
+          runtime->impactSfxTable = lbl_803DC020;
+          runtime->behaviorState = 0x10;
+          return;
+        }
+        if (runtime->behaviorState == 0x10) {
+          runtime->behaviorState = 0;
+          randomTime = fn_800221A0(1000,2000);
+          runtime->idleTimer =
+              (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
+        }
+        runtime->impactSfxTable = lbl_803DC024;
+      }
+      else {
+        (**(code **)(*lbl_803DCAAC + 0x44))(0x1d,3);
+        runtime->impactSfxTable = lbl_803DC028;
+      }
+    }
+    break;
+  case 6:
+    eventIsSet = fn_8001FFB4(0x13f);
+    if (eventIsSet == 0) {
+      runtime->impactSfxTable = lbl_803DC02C;
+    }
+    break;
+  case 7:
+    eventIsSet = fn_8001FFB4(0x199);
+    if (eventIsSet == 0) {
+      runtime->impactSfxTable = lbl_803DC030;
+    }
+    break;
+  case 8:
+    runtime->impactSfxTable = lbl_803DC034;
+  }
+  SHthorntail_updateState(obj,runtime);
 }

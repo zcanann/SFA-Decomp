@@ -137,24 +137,18 @@ void SHthorntail_update(undefined8 param_1,double param_2,double param_3,undefin
     runtime->locomotionMode = uVar4;
     bVar1 = config->controlMode;
     if (bVar1 == SHTHORNTAIL_CONTROL_MODE_ROOT_2) {
-      SHthorntail_updateRootControlMode2(extraout_f1_00,param_2,param_3,param_4,param_5,param_6,
-                                         param_7,param_8,obj,runtime,iVar6,uVar7,pfVar8,in_r8,
-                                         in_r9,in_r10);
+      SHthorntail_updateRootControlMode2(obj,runtime);
     }
     else if (bVar1 < SHTHORNTAIL_CONTROL_MODE_ROOT_2) {
       if (bVar1 == SHTHORNTAIL_CONTROL_MODE_LEVEL_0) {
-        SHthorntail_updateLevelControlMode0(extraout_f1_00,param_2,param_3,param_4,param_5,param_6,
-                                            param_7,param_8,obj,runtime,config,uVar7,pfVar8,in_r8,
-                                            in_r9,in_r10);
+        SHthorntail_updateLevelControlMode0(obj,runtime,config);
       }
       else {
         SHthorntail_updateLevelControlMode1((uint)psVar2,runtime,config);
       }
     }
     else if (bVar1 < (SHTHORNTAIL_CONTROL_MODE_ROOT_3 + 1)) {
-      SHthorntail_updateRootControlMode3(extraout_f1_00,param_2,param_3,param_4,param_5,param_6,
-                                         param_7,param_8,obj,runtime,iVar6,uVar7,pfVar8,in_r8,
-                                         in_r9,in_r10);
+      SHthorntail_updateRootControlMode3(obj,runtime);
     }
     if (((&DAT_80327fc8)[runtime->behaviorState] & 1) == 0) {
       *(byte *)((int)psVar2 + 0xaf) = *(byte *)((int)psVar2 + 0xaf) & 0xef;

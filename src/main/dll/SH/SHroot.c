@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/SH/SHroot.h"
+#include "main/dll/SH/SHthorntail.h"
 
 extern int fn_8000BB18();
 extern undefined4 fn_8000B7BC();
@@ -14,7 +15,6 @@ extern undefined4 fn_8003B310();
 extern undefined4 fn_8006EF38();
 extern int fn_80114BB0();
 extern int fn_801D4CD0();
-extern undefined4 SHthorntail_updateState();
 
 extern u8 lbl_803273D4[];
 extern s32 lbl_803DBFF8;
@@ -142,13 +142,8 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SHthorntail_updateLevelControlMode0(double param_1,undefined8 param_2,undefined8 param_3,
-                                         undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                                         undefined8 param_7,undefined8 param_8,
-                                         SHthorntailObject *obj,SHthorntailRuntime *runtime,
-                                         SHthorntailConfig *config,uint param_12,float *param_13,
-                                         undefined4 param_14,
-                                         undefined4 param_15,undefined4 param_16)
+void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRuntime *runtime,
+                                         SHthorntailConfig *config)
 {
   int eventIsSet;
   uint randomTime;
