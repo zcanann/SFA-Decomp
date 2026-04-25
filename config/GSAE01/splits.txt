@@ -2231,9 +2231,12 @@ dolphin/TRK_MINNOW_DOLPHIN/mem_TRK.c:
 	.text       start:0x8028B01C end:0x8028B0D8
 
 dolphin/TRK_MINNOW_DOLPHIN/targimpl.c:
-	.text       start:0x8028B0D8 end:0x8028C970
+	.text       start:0x8028B0D8 end:0x8028C964
 	.rodata     start:0x802C2978 end:0x802C2A00
 	.data       start:0x80332F48 end:0x80332F78
+
+main/unknown/autos/placeholder_8028C964.c:
+	.text       start:0x8028C964 end:0x8028C970
 
 dolphin/TRK_MINNOW_DOLPHIN/targsupp.s: comment:0
 	.text       start:0x8028C970 end:0x8028C990
