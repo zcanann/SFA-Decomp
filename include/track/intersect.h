@@ -104,7 +104,7 @@ void fn_8007DEF0(void);
 void fn_8007DF10(u32* buttons, u32* texts, u32* count);
 void fn_8007E1AC(int param_1);
 void fn_8007E54C(int param_1);
-void fn_8007E6D4(void);
-void fn_8007E748(void);
+int fn_8007E6D4(u8 slot, int unused, void* src1, void* src2);
+int fn_8007E748(int param_1, int param_2, void* dst);
 
 #endif /* TRACK_INTERSECT_H_ */

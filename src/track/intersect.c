@@ -3053,8 +3053,8 @@ s32 fn_8007D994(void)
 extern void fn_8007E54C(int);
 extern int fn_8007EB44(int, int, int, int, int, void*);
 extern void fn_8007E1AC(int);
-extern void fn_8007E6D4(void);
-extern void fn_8007E748(void);
+extern int fn_8007E6D4(u8, int, void*, void*);
+extern int fn_8007E748(int, int, void*);
 extern void fn_8007E77C(void);
 extern u8 lbl_803DD058;
 
@@ -3506,10 +3506,29 @@ void fn_8007E54C(int param_1)
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
+ *
+ * Card-write callback dispatched through fn_8007EB44 from fn_8007DB24.
+ * Stages a per-slot 0x6EC-byte block plus the shared 0xE4-byte trailer
+ * into the card-IO buffer (lbl_803DD044), then asks fn_8007E7C0(2) to
+ * commit; if that fails it falls back to fn_8007E7C0(1).
  */
-void fn_8007E6D4(void)
+#pragma peephole off
+#pragma scheduling off
+int fn_8007E6D4(u8 slot, int unused, void* src1, void* src2)
 {
+    extern char* lbl_803DD044;
+    extern int fn_8007E7C0(int);
+    int ret;
+    memcpy(lbl_803DD044 + (u32)slot * 0x6EC + 0xA50, src1, 0x6EC);
+    memcpy(lbl_803DD044 + 0x1F14, src2, 0xE4);
+    ret = fn_8007E7C0(2);
+    if (ret == 0) {
+        ret = fn_8007E7C0(1);
+    }
+    return ret;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -3523,7 +3542,18 @@ void fn_8007E6D4(void)
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
+ *
+ * Card-write callback dispatched through fn_8007EB44 from fn_8007DBC0.
+ * Copies the 0xE4-byte block at offset 0x1F14 in the card buffer (held in
+ * lbl_803DD044) into the caller-supplied destination.
  */
-void fn_8007E748(void)
+#pragma peephole off
+#pragma scheduling off
+int fn_8007E748(int param_1, int param_2, void* dst)
 {
+    extern char* lbl_803DD044;
+    memcpy(dst, lbl_803DD044 + 0x1F14, 0xE4);
+    return 0;
 }
+#pragma scheduling reset
+#pragma peephole reset
