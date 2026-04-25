@@ -1629,10 +1629,10 @@ dolphin/gx/GXBump.c:
 	.text       start:0x8025B1E8 end:0x8025B89C
 
 dolphin/gx/GXTev.c:
-	.text       start:0x8025B89C end:0x8025CA1C
+	.text       start:0x8025B89C end:0x8025C2D4
 
 dolphin/gx/GXPixel.c:
-	.text       start:0x8025CA1C end:0x8025D01C
+	.text       start:0x8025C2D4 end:0x8025D01C
 
 dolphin/gx/GXDraw.c:
 	.text       start:0x8025D01C end:0x8025D01C
