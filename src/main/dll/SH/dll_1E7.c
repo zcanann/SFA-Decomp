@@ -79,23 +79,24 @@ void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
   byte bVar1;
 
   bVar1 = runtime->tailSwingState;
-  if (bVar1 == 1) {
+  if (bVar1 == SHTHORNTAIL_TAIL_SWING_WINDUP) {
     runtime->tailSwingTimer = runtime->tailSwingTimer - FLOAT_803dc074;
     if (runtime->tailSwingTimer <= FLOAT_803e60b0) {
       FUN_80006824(objectId,0xa8);
-      runtime->tailSwingState = 2;
+      runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_ACTIVE;
     }
   }
-  else if (bVar1 == 0) {
+  else if (bVar1 == SHTHORNTAIL_TAIL_SWING_READY) {
     runtime->tailSwingTimer = runtime->tailSwingTimer - FLOAT_803dc074;
     if (runtime->tailSwingTimer <= FLOAT_803e60b0) {
       FUN_80006824(objectId,0xa9);
-      runtime->tailSwingState = 1;
+      runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_WINDUP;
       runtime->tailSwingTimer = FLOAT_803e60b4;
     }
   }
-  else if ((bVar1 < 3) && ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0)) {
-    runtime->tailSwingState = 0;
+  else if ((bVar1 < SHTHORNTAIL_TAIL_SWING_STATE_COUNT) &&
+           ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0)) {
+    runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_READY;
     runtime->tailSwingTimer = FLOAT_803e60b8;
   }
   return;
@@ -122,7 +123,7 @@ uint SHthorntail_chooseNextState(short *obj,SHthorntailRuntime *runtime,SHthornt
   double dVar4;
 
   if (config->leashRadiusByte == '\0') {
-    uVar3 = 7;
+    uVar3 = SHTHORNTAIL_STATE_CLOSE_ATTACK;
   }
   else {
     iVar2 = FUN_80017a98();
@@ -148,30 +149,33 @@ uint SHthorntail_chooseNextState(short *obj,SHthorntailRuntime *runtime,SHthornt
         if (0x20 < iVar2) {
           FUN_80017730();
           FUN_800723a0();
-          if (('\x01' < runtime->behaviorState) && (runtime->behaviorState < '\x06')) {
-            return 6;
+          if ((SHTHORNTAIL_STATE_IDLE_COUNTDOWN < runtime->behaviorState) &&
+              (runtime->behaviorState < SHTHORNTAIL_STATE_TURN_HOME)) {
+            return SHTHORNTAIL_STATE_TURN_HOME;
           }
-          return 7;
+          return SHTHORNTAIL_STATE_CLOSE_ATTACK;
         }
       }
       iVar2 = FUN_800575b4((double)(*(float *)(obj + 0x54) * *(float *)(obj + 4)),
                            (float *)(obj + 6));
       if (iVar2 == 0) {
-        uVar3 = 7;
+        uVar3 = SHTHORNTAIL_STATE_CLOSE_ATTACK;
       }
-      else if ((runtime->behaviorState < '\x02') || ('\x05' < runtime->behaviorState)) {
-        uVar3 = 2;
+      else if ((runtime->behaviorState < SHTHORNTAIL_STATE_MOVE_2) ||
+               (SHTHORNTAIL_STATE_MOVE_5 < runtime->behaviorState)) {
+        uVar3 = SHTHORNTAIL_STATE_MOVE_2;
       }
       else {
-        uVar3 = FUN_80017760(3,5);
+        uVar3 = FUN_80017760(SHTHORNTAIL_STATE_MOVE_3,SHTHORNTAIL_STATE_MOVE_5);
         uVar3 = uVar3 & 0xff;
       }
     }
-    else if ((runtime->behaviorState < '\x02') || ('\x05' < runtime->behaviorState)) {
-      uVar3 = 7;
+    else if ((runtime->behaviorState < SHTHORNTAIL_STATE_MOVE_2) ||
+             (SHTHORNTAIL_STATE_MOVE_5 < runtime->behaviorState)) {
+      uVar3 = SHTHORNTAIL_STATE_CLOSE_ATTACK;
     }
     else {
-      uVar3 = 6;
+      uVar3 = SHTHORNTAIL_STATE_TURN_HOME;
     }
   }
   return uVar3;

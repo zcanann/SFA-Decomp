@@ -329,25 +329,25 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
   local_28[0] = lbl_803E5410;
   *(short *)obj = (ushort)config->initialFacingByte << 8;
   if (config->controlMode == SHTHORNTAIL_CONTROL_MODE_ROOT_2) {
-    runtime->behaviorState = 0;
+    runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
     randomTime = FUN_80017760(1000,2000);
     runtime->idleTimer =
         (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
   }
   else if (config->controlMode < SHTHORNTAIL_CONTROL_MODE_ROOT_2) {
     if (config->controlMode == SHTHORNTAIL_CONTROL_MODE_LEVEL_0) {
-      runtime->behaviorState = 0;
+      runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
       randomTime = FUN_80017760(1000,2000);
       runtime->idleTimer =
           (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
     }
     else {
-      runtime->tailSwingState = 2;
-      runtime->behaviorState = 0xc;
+      runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_ACTIVE;
+      runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING;
     }
   }
   else if (config->controlMode < 4) {
-    runtime->behaviorState = 0;
+    runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
     randomTime = FUN_80017760(1000,2000);
     runtime->idleTimer =
         (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);

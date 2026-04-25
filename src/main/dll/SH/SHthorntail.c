@@ -32,45 +32,45 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
 
   runtime->impactSfxTable = gSHthorntailLevelControlMode0DefaultImpactSfxTable;
   switch(runtime->locomotionMode) {
-  case 1:
+  case SHTHORNTAIL_LOCOMOTION_1:
     runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
     break;
-  case 2:
+  case SHTHORNTAIL_LOCOMOTION_2:
     runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
     break;
-  case 3:
+  case SHTHORNTAIL_LOCOMOTION_3:
     runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
     break;
-  case 4:
+  case SHTHORNTAIL_LOCOMOTION_4:
     runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
     break;
-  case 5:
+  case SHTHORNTAIL_LOCOMOTION_5:
     runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
     break;
-  case 6:
+  case SHTHORNTAIL_LOCOMOTION_6:
     eventIsSet = fn_801D4CD0();
     if (eventIsSet != 0) {
-      runtime->behaviorState = 0xe;
+      runtime->behaviorState = SHTHORNTAIL_STATE_EVENT_PAUSE;
       return;
     }
-    if (runtime->behaviorState == 0xe) {
+    if (runtime->behaviorState == SHTHORNTAIL_STATE_EVENT_PAUSE) {
       fn_8000BB18(0,0x409);
-      runtime->behaviorState = 0;
+      runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
       randomTime = fn_800221A0(1000,2000);
       runtime->idleTimer =
           (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
     }
     runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
     break;
-  case 7:
-    if (runtime->behaviorState == 0xf) {
+  case SHTHORNTAIL_LOCOMOTION_7:
+    if (runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE2_EVENT) {
       fn_8001FFB4(0x1a0);
       eventIsSet = fn_8001FFB4();
       if (eventIsSet == 0) {
         return;
       }
       (**(code **)(*lbl_803DCAAC + 0x50))((int)obj->animObjId,3,0);
-      runtime->behaviorState = 0;
+      runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
       randomTime = fn_800221A0(1000,2000);
       runtime->idleTimer =
           (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
@@ -79,14 +79,14 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
       eventIsSet = fn_8001FFB4(0x1a0);
       if ((eventIsSet == 0) && (eventIsSet = fn_80038024((int)obj), eventIsSet != 0)) {
         runtime->behaviorFlags = runtime->behaviorFlags | 4;
-        runtime->behaviorState = 0xf;
+        runtime->behaviorState = SHTHORNTAIL_STATE_ROOT_MODE2_EVENT;
         (**(code **)(*lbl_803DCAAC + 0x50))((int)obj->animObjId,3,1);
         fn_800200E8(0x199,1);
         return;
       }
     }
     break;
-  case 8:
+  case SHTHORNTAIL_LOCOMOTION_8:
     runtime->impactSfxTable = gSHthorntailRootControlMode2Locomotion8ImpactSfxTable + 6;
   }
   SHthorntail_updateState(obj,runtime);

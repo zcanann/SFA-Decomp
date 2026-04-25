@@ -79,46 +79,46 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
       closeToPlayer = FALSE;
     }
   }
-  if (runtime->behaviorState == 0xb) {
+  if (runtime->behaviorState == SHTHORNTAIL_STATE_TAIL_SWING_READY) {
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
       if (closeToPlayer) {
-        runtime->behaviorState = 0xd;
+        runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_RECOVER;
       }
       else {
-        runtime->tailSwingState = 2;
-        runtime->behaviorState = 0xc;
+        runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_ACTIVE;
+        runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING;
       }
     }
   }
-  else if (runtime->behaviorState < 0xb) {
-    if (runtime->behaviorState == 1) {
+  else if (runtime->behaviorState < SHTHORNTAIL_STATE_TAIL_SWING_READY) {
+    if (runtime->behaviorState == SHTHORNTAIL_STATE_IDLE_COUNTDOWN) {
       if (closeToPlayer) {
-        runtime->behaviorState = 0;
+        runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
       }
       else {
         runtime->idleTimer = runtime->idleTimer - lbl_803DB414;
         if (runtime->idleTimer <= lbl_803E5418) {
-          runtime->behaviorState = 0xb;
+          runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_READY;
         }
       }
     }
-    else if ((runtime->behaviorState < 1) && ((s8)runtime->behaviorState > -1) &&
-             !closeToPlayer) {
+    else if ((runtime->behaviorState < SHTHORNTAIL_STATE_IDLE_COUNTDOWN) &&
+             ((s8)runtime->behaviorState > -1) && !closeToPlayer) {
       runtime->idleTimer = lbl_803E5438;
-      runtime->behaviorState = 1;
+      runtime->behaviorState = SHTHORNTAIL_STATE_IDLE_COUNTDOWN;
     }
   }
-  else if (runtime->behaviorState == 0xd) {
+  else if (runtime->behaviorState == SHTHORNTAIL_STATE_TAIL_SWING_RECOVER) {
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
-      runtime->behaviorState = 0;
+      runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
       randomTime = fn_800221A0(1000,2000);
       runtime->idleTimer =
           (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
     }
   }
-  else if (runtime->behaviorState < 0xd) {
+  else if (runtime->behaviorState < SHTHORNTAIL_STATE_TAIL_SWING_RECOVER) {
     if (closeToPlayer) {
-      runtime->behaviorState = 0xd;
+      runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_RECOVER;
     }
     else {
       SHthorntail_updateTailSwing(objectId,runtime);
@@ -147,11 +147,11 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
 
   runtime->impactSfxTable = gSHthorntailLevelControlMode0DefaultImpactSfxTable;
   switch(runtime->locomotionMode) {
-  case 1:
+  case SHTHORNTAIL_LOCOMOTION_1:
     runtime->impactSfxTable =
         gSHthorntailLevelControlMode0DefaultImpactSfxTable + 0x10 + config->impactSfxVariant * 2;
     break;
-  case 2:
+  case SHTHORNTAIL_LOCOMOTION_2:
     eventIsSet = fn_8001FFB4(0x9e);
     if (eventIsSet == 0) {
       runtime->impactSfxTable =
@@ -164,7 +164,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
           config->impactSfxVariant * 2;
     }
     break;
-  case 3:
+  case SHTHORNTAIL_LOCOMOTION_3:
     eventIsSet = fn_8001FFB4(0x193);
     if (eventIsSet == 0) {
       runtime->impactSfxTable =
@@ -177,7 +177,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
           config->impactSfxVariant * 2;
     }
     break;
-  case 5:
+  case SHTHORNTAIL_LOCOMOTION_5:
     eventIsSet = fn_8001FFB4(0x23d);
     if (eventIsSet == 0) {
       runtime->impactSfxTable =
@@ -185,15 +185,15 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
           config->impactSfxVariant * 2;
     }
     break;
-  case 6:
+  case SHTHORNTAIL_LOCOMOTION_6:
     eventIsSet = fn_801D4CD0();
     if (eventIsSet != 0) {
-      runtime->behaviorState = 0xe;
+      runtime->behaviorState = SHTHORNTAIL_STATE_EVENT_PAUSE;
       return;
     }
-    if (runtime->behaviorState == 0xe) {
+    if (runtime->behaviorState == SHTHORNTAIL_STATE_EVENT_PAUSE) {
       fn_8000BB18(0,0x409);
-      runtime->behaviorState = 0;
+      runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
       randomTime = fn_800221A0(1000,2000);
       runtime->idleTimer =
           (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
@@ -203,7 +203,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
       runtime->impactSfxTable = &gSHthorntailLevelControlMode0Locomotion6ImpactSfxTable;
     }
     break;
-  case 8:
+  case SHTHORNTAIL_LOCOMOTION_8:
     runtime->impactSfxTable =
         gSHthorntailLevelControlMode0DefaultImpactSfxTable + 0x58 + config->impactSfxVariant * 2;
     break;
@@ -233,7 +233,7 @@ undefined4 SHthorntail_updateLevelControlState(int obj,undefined4 param_2,int pa
   runtime = *(SHthorntailRuntime **)(obj + 0xb8);
   if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_LEVELCONTROL_READY) == 0) {
     fn_8000B7BC(obj,0x7f);
-    runtime->behaviorState = 0;
+    runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
     uVar1 = fn_800221A0(1000,2000);
     runtime->idleTimer = (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) -
                                  DOUBLE_803e60c0);
