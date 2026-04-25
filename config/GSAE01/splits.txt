@@ -1612,13 +1612,13 @@ dolphin/gx/GXMisc.c:
 	.text       start:0x8025877C end:0x802587FC
 
 dolphin/gx/GXGeometry.c:
-	.text       start:0x802587FC end:0x80259338
+	.text       start:0x802587FC end:0x80258BDC
 
 dolphin/gx/GXFrameBuf.c:
-	.text       start:0x80259338 end:0x80259CF0
+	.text       start:0x80258BDC end:0x80259670
 
 dolphin/gx/GXLight.c:
-	.text       start:0x80259CF0 end:0x8025A088
+	.text       start:0x80259670 end:0x8025A088
 
 dolphin/gx/GXTexture.c:
 	.text       start:0x8025A088 end:0x8025B1E8
