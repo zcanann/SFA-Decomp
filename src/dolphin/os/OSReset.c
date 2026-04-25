@@ -58,7 +58,9 @@
     } while(0);
 
 static OSResetFunctionQueue ResetFunctionQueue;
-static u32 bootThisDol;
+u32 lbl_803DDE68;
+extern u32 bootThisDol_803DEAE8;
+#define bootThisDol bootThisDol_803DEAE8
 
 void OSRegisterResetFunction(OSResetFunctionInfo* info) {
     ASSERTLINE(208, info->func);
