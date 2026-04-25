@@ -42,7 +42,7 @@ undefined4 fn_80074D04(int param_1,int *param_2);
 void fn_800753B8(int x1, int y1, int x2, int y2, u8* color);
 void fn_80075684(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4);
 void fn_80075A1C(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3);
-void fn_80075D5C(int x1, int y1, int x2, int y2, int z, f32 u1, f32 v1, f32 u2, f32 v2);
+void fn_80075D5C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z);
 void fn_80075E8C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2);
 void fn_80075FC8(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  uint param_5,int param_6,int param_7,int param_8,int param_9);

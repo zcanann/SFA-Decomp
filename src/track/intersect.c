@@ -185,7 +185,7 @@ extern undefined4 lbl_803DB6D4;
 /* Narrow-typed aliases for sbss/sdata state vars touched by the small
  * helpers below. */
 extern u8 lbl_803DC2D9;
-extern s32 lbl_803DB700;
+extern volatile s32 lbl_803DB700;
 extern u32 lbl_803DD004;
 extern u8 lbl_803DD019;
 extern u8 lbl_803DD01A;
@@ -856,21 +856,18 @@ extern f32 lbl_803DFB1C;
  * 132 byte discrepancy. Not crackable without materializing the
  * comparison indices via a global/volatile, which would break other
  * matches. */
-#pragma optimize_for_size on
 void fn_80070234(f32* param_1)
 {
-    int i;
+    int i, j;
     f32 zero = lbl_803DFB1C;
     f32 one = lbl_803DFB18;
     for (i = 0; i < 4; i++) {
-        if (i == 0) param_1[0] = one; else param_1[0] = zero;
-        if (i == 1) param_1[1] = one; else param_1[1] = zero;
-        if (i == 2) param_1[2] = one; else param_1[2] = zero;
-        if (i == 3) param_1[3] = one; else param_1[3] = zero;
+        for (j = 0; j < 4; j++) {
+            if (i == j) param_1[j] = one; else param_1[j] = zero;
+        }
         param_1 += 4;
     }
 }
-#pragma optimize_for_size reset
 
 /*
  * --INFO--
@@ -1355,7 +1352,7 @@ undefined4 fn_80074D04(int param_1,int *param_2)
 #pragma scheduling off
 void fn_800753B8(int x1, int y1, int x2, int y2, u8* color)
 {
-    extern void fn_8000FB20(void);
+    extern void fn_8000FB00(void);
     extern Mtx lbl_80396880;
     extern f32 lbl_803DFB5C;
     extern void GXSetZMode();
@@ -1425,7 +1422,7 @@ void fn_800753B8(int x1, int y1, int x2, int y2, u8* color)
     GXWGFifo.f32 = lbl_803DFB5C;
     GXWGFifo.f32 = lbl_803DFB5C;
 
-    fn_8000FB20();
+    fn_8000FB00();
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -1447,15 +1444,16 @@ void fn_800753B8(int x1, int y1, int x2, int y2, u8* color)
 #pragma scheduling off
 void fn_80075684(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4)
 {
-    extern void fn_8000FB20(void);
+    extern void fn_8000FB00(void);
     extern Mtx lbl_80396880;
-    extern f32 lbl_803DFBAC;
-    extern f32 lbl_803DFB5C;
+    extern f32 lbl_803DEF2C;
+    extern f32 lbl_803DEEDC;
     extern void GXSetZMode();
     extern u8 lbl_803DD012;
-    extern int lbl_803DDC94;
-    extern u8 lbl_803DDC98;
-    f32 scale = lbl_803DFBAC;
+    extern int lbl_803DD014;
+    extern u8 lbl_803DD018;
+    extern u8 lbl_803DB679;
+    f32 scale = lbl_803DEF2C;
     f32 fx1 = scale * x1;
     f32 fy1 = scale * y1;
     f32 fx2 = scale * x2;
@@ -1471,16 +1469,16 @@ void fn_80075684(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
-    if ((u32)lbl_803DDC98 != 0 || lbl_803DDC94 != 7 ||
+    if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 7 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
         GXSetZMode(0, 7, 0);
-        lbl_803DDC98 = 0;
-        lbl_803DDC94 = 7;
+        lbl_803DD018 = 0;
+        lbl_803DD014 = 7;
         lbl_803DD012 = 0;
         lbl_803DD01A = 1;
     }
     GXSetBlendMode(1, 4, 5, 5);
-    color[3] = (u8)(((s32)color[3] * (s32)lbl_803DC2D9) >> 8);
+    color[3] = (u8)(((s32)color[3] * (s32)lbl_803DB679) >> 8);
     GXSetTevKColor(0, *(GXColor*)color);
     GXSetTevKAlphaSel(0, 0x1C);
     GXSetTevKColorSel(0, 0xC);
@@ -1503,31 +1501,31 @@ void fn_80075684(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 
     GXWGFifo.s16 = (s32)fx1;
     GXWGFifo.s16 = (s32)fy1;
     GXWGFifo.s16 = -8;
-    GXWGFifo.f32 = lbl_803DFB5C;
-    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DEEDC;
+    GXWGFifo.f32 = lbl_803DEEDC;
 
     GXWGFifo.u8 = 0x3C;
     GXWGFifo.s16 = (s32)fx2;
     GXWGFifo.s16 = (s32)fy2;
     GXWGFifo.s16 = -8;
-    GXWGFifo.f32 = lbl_803DFB5C;
-    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DEEDC;
+    GXWGFifo.f32 = lbl_803DEEDC;
 
     GXWGFifo.u8 = 0x3C;
     GXWGFifo.s16 = (s32)fx3;
     GXWGFifo.s16 = (s32)fy3;
     GXWGFifo.s16 = -8;
-    GXWGFifo.f32 = lbl_803DFB5C;
-    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DEEDC;
+    GXWGFifo.f32 = lbl_803DEEDC;
 
     GXWGFifo.u8 = 0x3C;
     GXWGFifo.s16 = (s32)fx4;
     GXWGFifo.s16 = (s32)fy4;
     GXWGFifo.s16 = -8;
-    GXWGFifo.f32 = lbl_803DFB5C;
-    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DEEDC;
+    GXWGFifo.f32 = lbl_803DEEDC;
 
-    fn_8000FB20();
+    fn_8000FB00();
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -1549,7 +1547,7 @@ void fn_80075684(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 
 #pragma scheduling off
 void fn_80075A1C(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
 {
-    extern void fn_8000FB20(void);
+    extern void fn_8000FB00(void);
     extern Mtx lbl_80396880;
     extern f32 lbl_803DFBAC;
     extern f32 lbl_803DFB5C;
@@ -1620,7 +1618,7 @@ void fn_80075A1C(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
     GXWGFifo.f32 = lbl_803DFB5C;
     GXWGFifo.f32 = lbl_803DFB5C;
 
-    fn_8000FB20();
+    fn_8000FB00();
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -1640,9 +1638,9 @@ void fn_80075A1C(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80075D5C(int x1, int y1, int x2, int y2, int z, f32 u1, f32 v1, f32 u2, f32 v2)
+void fn_80075D5C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z)
 {
-    extern void fn_8000FB20(void);
+    extern void fn_8000FB00(void);
     extern Mtx lbl_80396880;
 
     GXClearVtxDesc();
@@ -1681,7 +1679,7 @@ void fn_80075D5C(int x1, int y1, int x2, int y2, int z, f32 u1, f32 v1, f32 u2, 
     GXWGFifo.f32 = u1;
     GXWGFifo.f32 = v2;
 
-    fn_8000FB20();
+    fn_8000FB00();
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -1703,7 +1701,7 @@ void fn_80075D5C(int x1, int y1, int x2, int y2, int z, f32 u1, f32 v1, f32 u2, 
 #pragma scheduling off
 void fn_80075E8C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
 {
-    extern void fn_8000FB20(void);
+    extern void fn_8000FB00(void);
     extern Mtx lbl_80396880;
 
     GXClearVtxDesc();
@@ -1742,7 +1740,7 @@ void fn_80075E8C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
     GXWGFifo.f32 = u1;
     GXWGFifo.f32 = v2;
 
-    fn_8000FB20();
+    fn_8000FB00();
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -3071,7 +3069,7 @@ int fn_8007D99C(void)
     extern void fn_80080084();
     extern void* lbl_803DD040;
     extern const char* lbl_803DB6E4;
-    extern s32 lbl_803DB700;
+    extern volatile s32 lbl_803DB700;
     int res;
 
     lbl_803DD058 = 0;
@@ -3230,7 +3228,7 @@ int fn_8007DD04(u8 retry)
     extern u8 lbl_80396900[];
     extern void* lbl_803DD040;
     extern u8 lbl_803DD05A;
-    extern s32 lbl_803DB700;
+    extern volatile s32 lbl_803DB700;
     int ret;
 
     if (retry != 0) {
@@ -3282,7 +3280,7 @@ int fn_8007DD04(u8 retry)
 int fn_8007DE0C(u8 retry)
 {
     extern s32 CARDProbeEx(s32 chan, s32* memSize, s32* sectorSize);
-    extern s32 lbl_803DB700;
+    extern volatile s32 lbl_803DB700;
     s32 memSize;
     s32 sectorSize;
     s32 res;
@@ -3353,7 +3351,6 @@ void fn_8007DEF0(void)
 void fn_8007DF10(u32* buttons, u32* texts, u32* count)
 {
     extern u8 lbl_803DD059;
-    extern s32 lbl_803DB700;
     if (lbl_803DD059 != 0 && (lbl_803DB700 == 7 || lbl_803DB700 == 9)) {
         lbl_803DB700 = 11;
     }
