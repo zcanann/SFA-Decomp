@@ -41,6 +41,18 @@ extern undefined8 FUN_801bcc94();
 extern undefined4 FUN_80286834();
 extern undefined4 FUN_80286880();
 
+extern undefined4 fn_8000FACC();
+extern undefined4 fn_80013E2C();
+extern undefined4 fn_8001F384();
+extern undefined4 fn_800200E8();
+extern undefined4 fn_8002CBC4();
+extern undefined4 fn_80036FA4();
+extern undefined4 fn_8003B8F4();
+extern undefined4 fn_80055000();
+extern undefined4 fn_800604B4();
+extern undefined4 fn_80114DEC();
+extern undefined4 fn_801BB598();
+
 extern undefined4 DAT_803ad63c;
 extern undefined4 DAT_803adc60;
 extern undefined4 DAT_803adc78;
@@ -54,6 +66,12 @@ extern undefined4 DAT_803de800;
 extern undefined4 DAT_803de808;
 extern f32 FLOAT_803e58dc;
 extern f32 FLOAT_803e5908;
+extern undefined4 lbl_803AC9DC[];
+extern undefined4 lbl_803AD018[];
+extern int lbl_803DCA8C;
+extern undefined4* lbl_803DCAB8;
+extern undefined4 lbl_803DDB88;
+extern f32 lbl_803E4C44;
 
 /*
  * --INFO--
@@ -314,68 +332,166 @@ LAB_801bd7dc:
 /*
  * --INFO--
  *
- * Function: DIMboss_hitDetect
- * EN v1.0 Address: 0x801BD880
+ * Function: dimboss_func11
+ * EN v1.0 Address: 0x801BD240
  * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801BD814
- * EN v1.1 Size: 260b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMboss_hitDetect(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                       undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                       int param_9)
+void dimboss_func11(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: DIMboss_render
- * EN v1.0 Address: 0x801BD884
- * EN v1.0 Size: 156b
- * EN v1.1 Address: 0x801BD918
- * EN v1.1 Size: 176b
+ * Function: dimboss_setScale
+ * EN v1.0 Address: 0x801BD244
+ * EN v1.0 Size: 12b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMboss_render(short *param_1)
+int dimboss_setScale(int param_1)
+{
+  return (int)*(short *)(*(int *)(param_1 + 0xb8) + 0x274);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dimboss_getExtraSize
+ * EN v1.0 Address: 0x801BD250
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dimboss_getExtraSize(void)
+{
+  return 0x4c8;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dimboss_func08
+ * EN v1.0 Address: 0x801BD258
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dimboss_func08(void)
+{
+  return 0x49;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dimboss_free
+ * EN v1.0 Address: 0x801BD260
+ * EN v1.0 Size: 260b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dimboss_free(int param_1)
+{
+  int iVar1;
+
+  iVar1 = *(int *)(param_1 + 0xb8);
+  fn_800200E8(0xefd,0);
+  fn_800200E8(0xc1e,1);
+  fn_800200E8(0xc1f,0);
+  fn_800200E8(0xc20,0);
+  fn_800200E8(0xd8f,0);
+  fn_800200E8(0x3e2,0);
+  *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0x7f;
+  fn_8000FACC();
+  fn_80036FA4(param_1,3);
+  if (*(int *)(param_1 + 0xc8) != 0) {
+    fn_8002CBC4();
+    *(undefined4 *)(param_1 + 0xc8) = 0;
+  }
+  (**(code **)(*lbl_803DCAB8 + 0x40))(param_1,iVar1,0x20);
+  if (lbl_803DDB88 != 0) {
+    fn_80013E2C();
+  }
+  lbl_803DDB88 = 0;
+  if (**(int **)(iVar1 + 0x40c) != 0) {
+    fn_8001F384();
+  }
+  fn_80055000();
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dimboss_render
+ * EN v1.0 Address: 0x801BD364
+ * EN v1.0 Size: 176b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dimboss_render(int param_1)
 {
   char in_r8;
   int iVar1;
-  
-  iVar1 = *(int *)(param_1 + 0x5c);
-  if (((in_r8 != '\0') && (*(int *)(param_1 + 0x7a) == 0)) && (*(short *)(iVar1 + 0x402) != 3)) {
-    FUN_8003b818((int)param_1);
-    FUN_801bb848();
-    FUN_801149bc(param_1,-0x7fc529c4,0);
-    iVar1 = **(int **)(iVar1 + 0x40c);
-    if (((iVar1 != 0) && (*(char *)(iVar1 + 0x2f8) != '\0')) && (*(char *)(iVar1 + 0x4c) != '\0')) {
-      FUN_8005fe14(iVar1);
+
+  iVar1 = *(int *)(param_1 + 0xb8);
+  if (in_r8 != '\0') {
+    if (*(int *)(param_1 + 0xf4) == 0) {
+      if (*(short *)(iVar1 + 0x402) != 3) {
+        fn_8003B8F4((double)lbl_803E4C44);
+        fn_801BB598(param_1,iVar1);
+        fn_80114DEC(param_1,lbl_803AC9DC,0);
+        iVar1 = **(int **)(iVar1 + 0x40c);
+        if (((iVar1 != 0) && (*(char *)(iVar1 + 0x2f8) != '\0')) &&
+            (*(char *)(iVar1 + 0x4c) != '\0')) {
+          fn_800604B4();
+        }
+      }
     }
   }
-  return;
 }
 
 /*
  * --INFO--
  *
- * Function: DIMboss_free
- * EN v1.0 Address: 0x801BD920
+ * Function: dimboss_hitDetect
+ * EN v1.0 Address: 0x801BD414
  * EN v1.0 Size: 60b
- * EN v1.1 Address: 0x801BD9C8
- * EN v1.1 Size: 60b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMboss_free(int param_1)
+void dimboss_hitDetect(int param_1)
 {
-  (**(code **)(*DAT_803dd70c + 0xc))(param_1,*(undefined4 *)(param_1 + 0xb8),&DAT_803adc78);
-  return;
+  (*(code *)(*(int *)lbl_803DCA8C + 0xc))(param_1,*(undefined4 *)(param_1 + 0xb8),
+                                           lbl_803AD018);
 }
