@@ -452,11 +452,13 @@ void expgfx_initialise(undefined8 param_1,undefined8 param_2,undefined8 param_3,
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,int param_4,
-                              int param_5)
+#pragma scheduling off
+int expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,int param_4,uint param_5)
 {
   bool bVar1;
   short sVar2;
+  u8 *expgfxBase;
+  char *poolActiveCounts;
   char *pcVar3;
   int iVar4;
   char *pcVar5;
@@ -469,9 +471,11 @@ undefined4 expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,i
   sVar2 = -1;
   bVar1 = false;
   iVar4 = 0;
-  piVar8 = &gExpgfxPoolSourceIds;
-  psVar6 = (short *)&gExpgfxPoolSlotTypeIds;
-  pcVar3 = &gExpgfxPoolActiveCounts;
+  expgfxBase = lbl_8039AB58;
+  piVar8 = (int *)(expgfxBase + 0xed0);
+  psVar6 = lbl_8030F8C8;
+  poolActiveCounts = (char *)(expgfxBase + 0x1070);
+  pcVar3 = poolActiveCounts;
   iVar9 = 0x10;
   pcVar5 = pcVar3;
   do {
@@ -516,14 +520,14 @@ undefined4 expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,i
   } while (iVar9 != 0);
   if (bVar1) {
     iVar9 = 0;
-    puVar7 = &gExpgfxPoolActiveMasks + sVar2;
+    puVar7 = (uint *)(expgfxBase + 0x10c0) + sVar2;
     iVar10 = EXPGFX_SLOTS_PER_POOL;
     do {
       if ((1 << iVar9 & *puVar7) == 0) {
         *param_2 = (short)iVar9;
         *param_1 = sVar2;
         *puVar7 = *puVar7 | 1 << iVar9;
-        (&gExpgfxPoolActiveCounts)[sVar2] = (&gExpgfxPoolActiveCounts)[sVar2] + '\x01';
+        poolActiveCounts[sVar2] = poolActiveCounts[sVar2] + '\x01';
         return 1;
       }
       iVar9 = iVar9 + 1;
@@ -533,7 +537,7 @@ undefined4 expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,i
   bVar1 = false;
   if (param_4 != -1) {
     if ((param_4 != -1) &&
-        (iVar4 = param_4, (char)(&gExpgfxPoolActiveCounts)[param_4] < EXPGFX_SLOTS_PER_POOL)) {
+        (iVar4 = param_4, poolActiveCounts[param_4] < EXPGFX_SLOTS_PER_POOL)) {
       sVar2 = (short)param_4;
       bVar1 = true;
     }
@@ -545,7 +549,7 @@ undefined4 expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,i
       if (*pcVar3 < '\x01') {
         sVar2 = (short)iVar4;
         bVar1 = true;
-        (&gExpgfxPoolActiveCounts)[iVar4] = 0;
+        poolActiveCounts[iVar4] = 0;
         break;
       }
       pcVar3 = pcVar3 + 1;
@@ -555,15 +559,16 @@ undefined4 expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,i
   }
   if (bVar1) {
     iVar9 = 0;
-    puVar7 = &gExpgfxPoolActiveMasks + sVar2;
+    puVar7 = (uint *)(expgfxBase + 0x10c0) + sVar2;
     iVar10 = EXPGFX_SLOTS_PER_POOL;
     do {
       if ((1 << iVar9 & *puVar7) == 0) {
         *param_2 = (short)iVar9;
         *param_1 = sVar2;
         *puVar7 = *puVar7 | 1 << iVar9;
-        (&gExpgfxPoolSlotTypeIds)[iVar4] = param_3;
-        (&gExpgfxPoolActiveCounts)[sVar2] = (&gExpgfxPoolActiveCounts)[sVar2] + '\x01';
+        lbl_8030F8C8[iVar4] = param_3;
+        ((char *)(lbl_8039AB58 + 0x1070))[sVar2] =
+             ((char *)(lbl_8039AB58 + 0x1070))[sVar2] + '\x01';
         return 1;
       }
       iVar9 = iVar9 + 1;
@@ -572,6 +577,7 @@ undefined4 expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,i
   }
   return 0xffffffff;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
