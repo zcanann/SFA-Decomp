@@ -1003,41 +1003,42 @@ void fn_800703C4(void)
 #pragma scheduling off
 void fn_80070404(f32 a, f32 b)
 {
-    extern f32 fn_8000FC3C(void);
-    extern f32 fn_8000FC08(void);
-    extern f32 lbl_803DFB58;
-    extern f32 lbl_803DFB5C;
-    extern f32 lbl_803DFB60;
-    extern f32 lbl_803DDCA0, lbl_803DDCA4, lbl_803DD034, lbl_803DDCB8;
+    extern f32 fn_8000FC1C(void);
+    extern f32 fn_8000FBE8(void);
+    extern f32 lbl_803DEED8;
+    extern f32 lbl_803DEEDC;
+    extern f32 gSynthFadeMask;
+    extern f32 lbl_803DD020, lbl_803DD024, lbl_803DD034, lbl_803DD038;
+    extern GXColor lbl_803DD01C;
     f32 xc, yc, x, y, range;
     GXColor c;
 
-    lbl_803DDCB8 = fn_8000FC3C();
-    lbl_803DD034 = fn_8000FC08();
+    lbl_803DD038 = fn_8000FC1C();
+    lbl_803DD034 = fn_8000FBE8();
 
-    x = lbl_803DFB58 * a;
-    y = lbl_803DFB58 * b;
+    x = lbl_803DEED8 * a;
+    y = lbl_803DEED8 * b;
 
-    xc = lbl_803DFB5C;
-    if (x >= lbl_803DFB5C) {
+    xc = lbl_803DEEDC;
+    if (x >= lbl_803DEEDC) {
         xc = x;
-        if (x > lbl_803DFB60) {
-            xc = lbl_803DFB60;
+        if (x > gSynthFadeMask) {
+            xc = gSynthFadeMask;
         }
     }
-    yc = lbl_803DFB5C;
-    if (y >= lbl_803DFB5C) {
+    yc = lbl_803DEEDC;
+    if (y >= lbl_803DEEDC) {
         yc = y;
-        if (y > lbl_803DFB60) {
-            yc = lbl_803DFB60;
+        if (y > gSynthFadeMask) {
+            yc = gSynthFadeMask;
         }
     }
 
-    range = lbl_803DD034 - lbl_803DDCB8;
-    lbl_803DDCA4 = xc * range + lbl_803DDCB8;
-    lbl_803DDCA0 = yc * range + lbl_803DDCB8;
-    c = lbl_803DDC9C;
-    GXSetFog(GX_FOG_PERSP_EXP, lbl_803DDCA4, lbl_803DDCA0, lbl_803DDCB8, lbl_803DD034, c);
+    range = lbl_803DD034 - lbl_803DD038;
+    lbl_803DD024 = xc * range + lbl_803DD038;
+    lbl_803DD020 = yc * range + lbl_803DD038;
+    c = lbl_803DD01C;
+    GXSetFog(GX_FOG_PERSP_EXP, lbl_803DD024, lbl_803DD020, lbl_803DD038, lbl_803DD034, c);
 }
 #pragma scheduling reset
 
