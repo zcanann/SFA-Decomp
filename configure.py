@@ -631,7 +631,7 @@ config.libs = [
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/file_io.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/FILE_POS.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/mbstring.c"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/mem.c", mw_version="GC/1.3"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/mem.c", mw_version="GC/1.3"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/mem_funcs.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/misc_io.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/printf.c", mw_version="GC/1.3", extra_cflags=["-use_lmw_stmw", "on", "-char", "signed"]),
