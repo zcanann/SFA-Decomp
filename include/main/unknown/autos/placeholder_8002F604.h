@@ -3,16 +3,13 @@
 
 #include "ghidra_import.h"
 
-#define ObjAnim_GetPrimaryEventCountdown FUN_8002f5d4
-#define ObjAnim_WriteStateWord FUN_8002f5f4
-#define ObjAnim_SetPrimaryEventStepFrames FUN_8002f638
 #define ObjAnim_SampleRootCurvePhase FUN_8002f6ac
 #define ObjAnim_AdvanceCurrentMove FUN_8002fc3c
 #define ObjAnim_SetMoveProgress FUN_800305c4
 #define ObjAnim_SetCurrentMove FUN_800305f8
 
 undefined2 ObjAnim_GetPrimaryEventCountdown(int objAnim);
-void ObjAnim_WriteStateWord(int objAnim,int stateIndex,short wordIndex,undefined2 value);
+void ObjAnim_WriteStateWord(int objAnim,int stateIndex,short wordIndex,int value);
 void ObjAnim_SetPrimaryEventStepFrames(int objAnim,uint frameCount);
 undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnim,float *phaseOut);
 undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime);

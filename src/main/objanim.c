@@ -451,6 +451,7 @@ Object_ObjAnimSetMove(double moveProgress,int objAnimArg,uint moveId,undefined f
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 undefined2 ObjAnim_GetPrimaryEventCountdown(int objAnim)
 {
   return ObjAnim_GetSecondaryState((ObjAnimComponent *)objAnim)->eventCountdown;
@@ -469,7 +470,7 @@ undefined2 ObjAnim_GetPrimaryEventCountdown(int objAnim)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjAnim_WriteStateWord(int objAnim,int stateIndex,short wordIndex,undefined2 value)
+void ObjAnim_WriteStateWord(int objAnim,int stateIndex,short wordIndex,int value)
 {
   ObjAnimBank *bank;
   ObjAnimState *state;
@@ -478,13 +479,13 @@ void ObjAnim_WriteStateWord(int objAnim,int stateIndex,short wordIndex,undefined
   if (bank == (ObjAnimBank *)0x0) {
     return;
   }
-  if (stateIndex == 0) {
-    state = bank->secondaryState;
-  }
-  else {
+  if (stateIndex != 0) {
     state = bank->primaryState;
   }
-  *(undefined2 *)((u8 *)state + wordIndex * 2 + 0x58) = value;
+  else {
+    state = bank->secondaryState;
+  }
+  *(u16 *)((u8 *)state + wordIndex * 2 + 0x58) = value;
 }
 
 /*
@@ -503,13 +504,12 @@ void ObjAnim_WriteStateWord(int objAnim,int stateIndex,short wordIndex,undefined
 void ObjAnim_SetPrimaryEventStepFrames(int objAnim,uint frameCount)
 {
   ObjAnimBank *bank;
-  ObjAnimState *state;
 
   bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
   if (bank != (ObjAnimBank *)0x0) {
-    state = bank->secondaryState;
-    state->eventStep = (short)(int)(FLOAT_803df574 /
-                                   (float)(ObjAnim_U32AsDouble(frameCount ^ 0x80000000) -
-                                          DOUBLE_803df580));
+    bank->secondaryState->eventStep =
+        (short)(int)(FLOAT_803df574 /
+                    (float)(ObjAnim_U32AsDouble(frameCount ^ 0x80000000) - DOUBLE_803df580));
   }
 }
+#pragma scheduling reset

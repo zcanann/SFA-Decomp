@@ -32,7 +32,7 @@ extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80017ad0();
 extern int FUN_80017b00();
-extern undefined4 FUN_8002f638();
+extern undefined4 ObjAnim_SetPrimaryEventStepFrames();
 extern undefined4 FUN_8002f6ac();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
