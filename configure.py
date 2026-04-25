@@ -345,7 +345,7 @@ config.libs = [
             Object(NonMatching, "dolphin/os/OSInterrupt.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSLink.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSMessage.c"),
-            Object(NonMatching, "dolphin/os/OSMemory.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/os/OSMemory.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSMutex.c"),
             Object(NonMatching, "dolphin/os/OSReboot.c"),
             Object(NonMatching, "dolphin/os/OSReset.c"),

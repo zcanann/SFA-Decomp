@@ -4,7 +4,7 @@
 #include "dolphin/os/__os.h"
 
 BOOL OnReset_80244204(BOOL final);
-extern OSResetFunctionInfo ResetFunctionInfo_8032E460;
+extern OSResetFunctionInfo ResetFunctionInfo_8032D808;
 
 BOOL OnReset_80244204(BOOL final) {
     if (final != FALSE) {
@@ -138,7 +138,7 @@ void __OSInitMemoryProtection(void) {
     __OSSetInterruptHandler(__OS_INTERRUPT_MEM_2, MEMIntrruptHandler);
     __OSSetInterruptHandler(__OS_INTERRUPT_MEM_3, MEMIntrruptHandler);
     __OSSetInterruptHandler(__OS_INTERRUPT_MEM_ADDRESS, MEMIntrruptHandler);
-    OSRegisterResetFunction(&ResetFunctionInfo_8032E460);
+    OSRegisterResetFunction(&ResetFunctionInfo_8032D808);
 
     simulatedSize = __OSSimulatedMemSize;
     if (simulatedSize < __OSPhysicalMemSize && simulatedSize == 0x1800000) {
