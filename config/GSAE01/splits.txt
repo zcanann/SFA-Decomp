@@ -1708,12 +1708,12 @@ dolphin/amcstubs/AmcExi2Stubs.c:
 	.text       start:0x8026BF1C end:0x8026BF4C
 
 dolphin/odenotstub/odenotstub.c:
-	extab       start:0x80005620 end:0x80005630
-	extabindex  start:0x80005CC0 end:0x80005CD8
-	.text       start:0x8026BF4C end:0x8026C488
+	.text       start:0x8026BF4C end:0x8026BF54
 
 main/audio/synth_callback.c:
-	.text       start:0x8026C488 end:0x8026C488
+	extab       start:0x80005620 end:0x80005630
+	extabindex  start:0x80005CC0 end:0x80005CD8
+	.text       start:0x8026BF54 end:0x8026C488
 
 main/unknown/autos/placeholder_8026CBEC.c:
 	extab       start:0x80005630 end:0x80005650
