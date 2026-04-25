@@ -2,12 +2,14 @@
 #include "main/dll/SH/dll_1E7.h"
 
 extern void fn_8000BB18(uint objectId,u16 volumeId);
-extern double FUN_80017708();
-extern int FUN_80017730();
+extern f32 fn_8002166C(Vec *a,Vec *b);
+extern s16 fn_800217C0(f32 deltaX,f32 deltaZ);
+extern int fn_800221A0(int min,int max);
+extern int fn_8002B9EC(void);
+extern int fn_8005A10C(Vec *pos,f32 radius);
+extern void OSReport(const char *msg,...);
 extern uint FUN_80017690();
 extern uint FUN_80017758();
-extern uint FUN_80017760();
-extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 FUN_80037008();
@@ -17,10 +19,9 @@ extern undefined4 FUN_8003b280();
 extern undefined4 FUN_8003b444();
 extern undefined4 FUN_801d4810();
 extern undefined4 FUN_801d4814();
-extern int FUN_800575b4();
-extern undefined4 FUN_800723a0();
 
 extern undefined4 DAT_80327a58;
+extern char lbl_80327470[];
 extern undefined4 DAT_80327a64;
 extern undefined4 DAT_803dcc30;
 extern undefined4 DAT_803dcc34;
@@ -35,15 +36,15 @@ extern f32 lbl_803DB414;
 extern f32 lbl_803E5418;
 extern f32 lbl_803E541C;
 extern f32 lbl_803E5420;
+extern f32 lbl_803E5424;
+extern f64 lbl_803E5428;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803e6090;
 extern f32 FLOAT_803e609c;
 extern f32 FLOAT_803e60a0;
-extern f64 DOUBLE_803e60c0;
 extern f32 FLOAT_803e60b0;
 extern f32 FLOAT_803e60b4;
 extern f32 FLOAT_803e60b8;
-extern f32 FLOAT_803e60bc;
 
 /*
  * --INFO--
@@ -121,6 +122,7 @@ void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *runtime,
                                  SHthorntailConfig *config)
 {
@@ -128,22 +130,20 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
   short sVar1;
   int iVar2;
   uint uVar3;
-  double dVar4;
+  f32 distanceSq;
 
   obj = (short *)object;
   if (config->leashRadiusByte == '\0') {
     uVar3 = SHTHORNTAIL_STATE_CLOSE_ATTACK;
   }
   else {
-    iVar2 = FUN_80017a98();
-    dVar4 = FUN_80017708((float *)(obj + 0xc),(float *)(iVar2 + 0x18));
-    if ((double)FLOAT_803e60bc <= dVar4) {
-      dVar4 = FUN_80017708((float *)(obj + 0xc),(float *)&config->homePos);
-      if ((double)(float)((double)CONCAT44(0x43300000,
-                                           (uint)config->leashRadiusByte *
-                                           (uint)config->leashRadiusByte ^ 0x80000000) -
-                         DOUBLE_803e60c0) < dVar4) {
-        iVar2 = FUN_80017730();
+    iVar2 = fn_8002B9EC();
+    distanceSq = fn_8002166C((Vec *)(obj + 0xc),(Vec *)(iVar2 + 0x18));
+    if (lbl_803E5424 <= distanceSq) {
+      distanceSq = fn_8002166C((Vec *)(obj + 0xc),&config->homePos);
+      if ((float)(s32)(config->leashRadiusByte * config->leashRadiusByte) < distanceSq) {
+        iVar2 = fn_800217C0(*(float *)(obj + 6) - config->homePos.x,
+                            *(float *)(obj + 10) - config->homePos.z);
         sVar1 = (short)iVar2 - *obj;
         if (0x8000 < sVar1) {
           sVar1 = sVar1 + 1;
@@ -156,8 +156,9 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
           iVar2 = -iVar2;
         }
         if (0x20 < iVar2) {
-          FUN_80017730();
-          FUN_800723a0();
+          iVar2 = fn_800217C0(*(float *)(obj + 6) - config->homePos.x,
+                              *(float *)(obj + 10) - config->homePos.z);
+          OSReport(lbl_80327470,(u16)iVar2,*obj);
           if ((SHTHORNTAIL_STATE_IDLE_COUNTDOWN < runtime->behaviorState) &&
               (runtime->behaviorState < SHTHORNTAIL_STATE_TURN_HOME)) {
             return SHTHORNTAIL_STATE_TURN_HOME;
@@ -165,8 +166,7 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
           return SHTHORNTAIL_STATE_CLOSE_ATTACK;
         }
       }
-      iVar2 = FUN_800575b4((double)(*(float *)(obj + 0x54) * *(float *)(obj + 4)),
-                           (float *)(obj + 6));
+      iVar2 = fn_8005A10C((Vec *)(obj + 6),*(float *)(obj + 0x54) * *(float *)(obj + 4));
       if (iVar2 == 0) {
         uVar3 = SHTHORNTAIL_STATE_CLOSE_ATTACK;
       }
@@ -175,7 +175,7 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
         uVar3 = SHTHORNTAIL_STATE_MOVE_2;
       }
       else {
-        uVar3 = FUN_80017760(SHTHORNTAIL_STATE_MOVE_3,SHTHORNTAIL_STATE_MOVE_5);
+        uVar3 = fn_800221A0(SHTHORNTAIL_STATE_MOVE_3,SHTHORNTAIL_STATE_MOVE_5);
         uVar3 = uVar3 & 0xff;
       }
     }
@@ -189,3 +189,4 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
   }
   return uVar3;
 }
+#pragma scheduling reset
