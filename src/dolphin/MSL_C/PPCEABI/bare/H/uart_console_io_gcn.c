@@ -1,88 +1,152 @@
 /*
- * Target bytes at this split are not UART console I/O. __write_console
- * is a log2-ish helper: log-extracts exponent from a float, optionally
- * adjusts via fn_80292568/fn_80292584, then evaluates a 4-term poly and
- * recombines via exponent bit-fiddling. The tail 8-byte gap is just
- * mtlr r0; blr. Asm-only to preserve the exact byte image.
+ * Target bytes at 0x80294640..0x802947CC absorbed into this TU.
+ * Contents: PPCMtdec/PPCHalt weak helpers, an EXIDeviceEnable-ish helper,
+ * an InitializeUART/WriteUARTN write_byte wrapper, fabs wrapper, and a
+ * float-to-int magic-constant helper.
+ * Asm-only to preserve the exact byte image.
  */
 
-extern float fn_80292584(float x, short* out);
-extern float fn_80292568(short* x);
-void _savefpr_29(void);
-void _restfpr_29(void);
+#include "dolphin.h"
 
-extern const float lbl_803E8610;
-extern const float lbl_803E8614;
-extern const float lbl_803E8618;
-extern const float lbl_803E861C;
-extern const float lbl_803E8620;
-extern const float lbl_803E8624;
-extern const float lbl_803E8628;
-extern const float lbl_803E862C;
+extern int InitializeUART(u32);
+extern int WriteUARTN(void* buf, u32 n);
 
-asm float __write_console(float x) {
+extern u32 lbl_803326E8;
+extern u32 lbl_803DE418;
+extern const double lbl_803E7E30;
+
+asm void PPCMtdec(register u32 newDec) {
+#ifdef __MWERKS__
     nofralloc
-    mflr r0
-    stw r0, 0x4(r1)
-    stwu r1, -0x30(r1)
-    addi r11, r1, 0x30
-    bl _savefpr_29
-    fmr f30, f1
-    lfs f0, lbl_803E8610(r0)
-    fcmpo cr0, f30, f0
-    bge _uc_0
-    lfs f1, lbl_803E8614(r0)
-    b _uc_end
-_uc_0:
-    fmr f1, f30
-    addi r3, r1, 0x10
-    bl fn_80292584
-    addi r3, r1, 0x10
-    bl fn_80292568
-    fmr f29, f1
-    fsubs f31, f30, f29
-    lfs f0, lbl_803E8614(r0)
-    fcmpu cr0, f31, f0
-    beq _uc_1
-    lfs f0, lbl_803E8614(r0)
-    fcmpo cr0, f30, f0
-    bge _uc_2
-    lha r3, 0x10(r1)
-    subi r0, r3, 0x1
-    sth r0, 0x10(r1)
-    lfs f0, lbl_803E8618(r0)
-    fadds f31, f31, f0
-_uc_2:
-    lfs f1, lbl_803E862C(r0)
-    lfs f0, lbl_803E8628(r0)
-    fmadds f1, f1, f31, f0
-    lfs f0, lbl_803E8624(r0)
-    fmadds f1, f31, f1, f0
-    lfs f0, lbl_803E8620(r0)
-    fmadds f1, f31, f1, f0
-    lfs f0, lbl_803E861C(r0)
-    fmadds f0, f31, f1, f0
-    stfs f0, 0xc(r1)
-    b _uc_3
-_uc_1:
-    lfs f0, lbl_803E8618(r0)
-    stfs f0, 0xc(r1)
-_uc_3:
-    lwz r3, 0xc(r1)
-    lha r0, 0x10(r1)
-    slwi r0, r0, 23
-    add r0, r3, r0
-    stw r0, 0xc(r1)
-    lfs f1, 0xc(r1)
-_uc_end:
-    lwz r0, 0x34(r1)
-    addi r11, r1, 0x30
-    bl _restfpr_29
-    addi r1, r1, 0x30
+    mtdec r3
+    blr
+#endif
 }
 
-asm void gap_03_80292530_text(void) {
+asm void PPCHalt(void) {
+#ifdef __MWERKS__
     nofralloc
+    sync
+_halt_loop:
+    nop
+    li r3, 0
+    nop
+    b _halt_loop
+#endif
+}
+
+asm u8 fn_8029465C(int x) {
+    nofralloc
+    cmpwi r3, -0x1
+    bne _f465c_0
+    li r3, -0x1
+    blr
+_f465c_0:
+    lis r4, lbl_803326E8@ha
+    clrlwi r3, r3, 24
+    addi r0, r4, lbl_803326E8@l
+    add r3, r0, r3
+    lbz r3, 0(r3)
+    blr
+}
+
+asm int fn_80294684(int handle, void* buf, u32* count) {
+    nofralloc
+    mflr r0
+    li r3, 0
+    stw r0, 0x4(r1)
+    stwu r1, -0x28(r1)
+    stw r31, 0x24(r1)
+    addi r31, r5, 0
+    stw r30, 0x20(r1)
+    addi r30, r4, 0
+    lwz r0, lbl_803DE418(r0)
+    cmpwi r0, 0
+    bne _f4684_init_done
+    lis r3, 0x1
+    subi r3, r3, 0x1f00
+    bl InitializeUART
+    cmpwi r3, 0
+    bne _f4684_init_done
+    li r0, 1
+    stw r0, lbl_803DE418(r0)
+_f4684_init_done:
+    cmpwi r3, 0
+    beq _f4684_write
+    li r3, 1
+    b _f4684_end
+_f4684_write:
+    mr r3, r30
+    lwz r4, 0(r31)
+    bl WriteUARTN
+    cmpwi r3, 0
+    beq _f4684_ok
+    li r0, 0
+    stw r0, 0(r31)
+    li r3, 1
+    b _f4684_end
+_f4684_ok:
+    li r3, 0
+_f4684_end:
+    lwz r0, 0x2c(r1)
+    lwz r31, 0x24(r1)
+    lwz r30, 0x20(r1)
     mtlr r0
+    addi r1, r1, 0x28
+    blr
+}
+
+asm float fn_8029471C(float x) {
+    nofralloc
+    fabs f1, f1
+    blr
+}
+
+asm float fn_80294724(float x, int n) {
+    nofralloc
+    stwu r1, -0x28(r1)
+    lis r4, 0x4330
+    stfs f1, 0x8(r1)
+    lfd f2, lbl_803E7E30(r0)
+    lfs f1, 0x8(r1)
+    fctiwz f0, f1
+    stfd f0, 0x18(r1)
+    lwz r0, 0x1c(r1)
+    stfd f0, 0x20(r1)
+    xoris r0, r0, 0x8000
+    stw r0, 0x14(r1)
+    lwz r6, 0x24(r1)
+    stw r4, 0x10(r1)
+    lfd f0, 0x10(r1)
+    fsubs f0, f0, f2
+    fsubs f0, f0, f1
+    stfs f0, 0xc(r1)
+    lwz r0, 0xc(r1)
+    cmpwi r0, 0
+    beq _f4724_skip
+    lwz r5, 0x8(r1)
+    lis r0, 0x4b80
+    rlwinm r3, r5, 0, 1, 8
+    cmpw r3, r0
+    blt _f4724_lt
+    b _f4724_skip
+_f4724_lt:
+    clrrwi. r0, r5, 31
+    beq _f4724_pos
+    subi r6, r6, 0x1
+    xoris r0, r6, 0x8000
+    stw r0, 0x14(r1)
+    stw r4, 0x10(r1)
+    lfd f0, 0x10(r1)
+    fsubs f1, f0, f2
+    b _f4724_skip
+_f4724_pos:
+    xoris r0, r6, 0x8000
+    stw r0, 0x14(r1)
+    stw r4, 0x10(r1)
+    lfd f0, 0x10(r1)
+    fsubs f1, f0, f2
+_f4724_skip:
+    addi r1, r1, 0x28
     blr
 }
