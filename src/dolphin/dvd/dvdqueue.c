@@ -8,7 +8,7 @@ typedef struct DVDWaitingQueue {
     /* 0x04 */ DVDCommandBlock* prev;
 } DVDWaitingQueue;
 
-static DVDWaitingQueue WaitingQueue_803AEC38[4];
+extern DVDWaitingQueue WaitingQueue_803ADFD8[4];
 
 static inline DVDCommandBlock* PopWaitingQueuePrio(s32 prio) {
     DVDCommandBlock* tmp;
@@ -16,7 +16,7 @@ static inline DVDCommandBlock* PopWaitingQueuePrio(s32 prio) {
     DVDCommandBlock* q;
 
     enabled = OSDisableInterrupts();
-    q = (DVDCommandBlock*)&WaitingQueue_803AEC38[prio];
+    q = (DVDCommandBlock*)&WaitingQueue_803ADFD8[prio];
     tmp = q->next;
     q->next = tmp->next;
     tmp->next->prev = q;
@@ -31,7 +31,7 @@ void __DVDClearWaitingQueue(void) {
     DVDCommandBlock* q;
 
     for(i = 0; i < 4; i++) {
-        q = (DVDCommandBlock*)&WaitingQueue_803AEC38[i].next;
+        q = (DVDCommandBlock*)&WaitingQueue_803ADFD8[i].next;
         q->next = q;
         q->prev = q;
     }
@@ -39,7 +39,7 @@ void __DVDClearWaitingQueue(void) {
 
 int __DVDPushWaitingQueue(s32 prio, DVDCommandBlock* block) {
     BOOL enabled = OSDisableInterrupts();
-    DVDCommandBlock* q = (DVDCommandBlock*)&WaitingQueue_803AEC38[prio];
+    DVDCommandBlock* q = (DVDCommandBlock*)&WaitingQueue_803ADFD8[prio];
 
     q->prev->next = block;
     block->prev = q->prev;
@@ -56,7 +56,7 @@ DVDCommandBlock* __DVDPopWaitingQueue(void) {
 
     enabled = OSDisableInterrupts();
     for (i = 0; i < 4; i++) {
-        q = (DVDCommandBlock*)&WaitingQueue_803AEC38[i];
+        q = (DVDCommandBlock*)&WaitingQueue_803ADFD8[i];
         if (q->next != q) {
             OSRestoreInterrupts(enabled);
             return PopWaitingQueuePrio(i);
@@ -74,7 +74,7 @@ int __DVDCheckWaitingQueue(void) {
 
     enabled = OSDisableInterrupts();
     for (i = 0; i < 4; i++) {
-        q = (DVDCommandBlock*)&WaitingQueue_803AEC38[i];
+        q = (DVDCommandBlock*)&WaitingQueue_803ADFD8[i];
         if (q->next != q) {
             OSRestoreInterrupts(enabled);
             return 1;
