@@ -140,7 +140,7 @@ void fn_80035630(int count)
     while (count != 0) {
       obj = *objectList;
       hitState = *(int *)(obj + 0x54);
-      if (((hitState != 0) && ((*(ushort *)(hitState + 0x60) & 1) != 0)) &&
+      if (((hitState != 0) && ((*(short *)(hitState + 0x60) & 1) != 0)) &&
          ((*(byte *)(hitState + 0x62) & 8) != 0)) {
         if (gObjHitReactResetObjectCount < 0x32) {
           resetObjectCount = gObjHitReactResetObjectCount;
@@ -148,7 +148,7 @@ void fn_80035630(int count)
           gObjHitReactResetObjects[resetObjectCount] = obj;
         }
         *(int *)hitState = 0;
-        *(ushort *)(hitState + 0x60) = *(ushort *)(hitState + 0x60) & 0xfff7;
+        *(short *)(hitState + 0x60) = (short)(*(short *)(hitState + 0x60) & ~8);
         *(undefined2 *)(hitState + 0x58) = 0x400;
       }
       objectList = objectList + 1;
