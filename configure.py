@@ -1191,6 +1191,7 @@ config.libs = [
             Object(NonMatching, "main/dll/zBomb.c"),
             Object(NonMatching, "main/dll/fire.c"),
             Object(NonMatching, "main/platform1.c"),
+            Object(NonMatching, "main/dfplightni.c"),
             Object(NonMatching, "main/dll/CF/laser.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8026CBEC.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8026DFE4.c"),

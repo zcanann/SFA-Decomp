@@ -1411,8 +1411,11 @@ main/textblock.c:
 main/platform1.c:
 	.text       start:0x802098B4 end:0x80209958
 
-main/dll/CF/laser.c:
+main/dfplightni.c:
 	.text       start:0x80209958 end:0x80209FE0
+
+main/dll/CF/laser.c:
+	.text       start:0x80209FE0 end:0x80209FE0
 
 main/unknown/autos/placeholder_80209FE0.c:
 	.text       start:0x80209FE0 end:0x8024034C
