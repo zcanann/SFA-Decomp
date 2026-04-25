@@ -1,309 +1,543 @@
-/* @(#)e_pow.c 1.3 95/01/18 */
-
 /*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunSoft, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
- * is preserved.
- * ====================================================
+ * Target bytes at 0x80294BB8..0x80295334 are not Sun's MSL __ieee754_pow.
+ * Custom 480-instruction pow(x,y) implementation. Asm-only.
  */
 
-/* __ieee754_pow(x,y) return x**y
- *
- *		      n
- * Method:  Let x =  2   * (1+f)
- *	1. Compute and return log2(x) in two pieces:
- *		log2(x) = w1 + w2,
- *	   where w1 has 53-24 = 29 bit trailing zeros.
- *	2. Perform y*log2(x) = n+y' by simulating muti-precision 
- *	   arithmetic, where |y'|<=0.5.
- *	3. Return x**y = 2**n*exp(y'*log2)
- *
- * Special cases:
- *	1.  (anything) ** 0  is 1
- *	2.  (anything) ** 1  is itself
- *	3.  (anything) ** NAN is NAN
- *	4.  NAN ** (anything except 0) is NAN
- *	5.  +-(|x| > 1) **  +INF is +INF
- *	6.  +-(|x| > 1) **  -INF is +0
- *	7.  +-(|x| < 1) **  +INF is +0
- *	8.  +-(|x| < 1) **  -INF is +INF
- *	9.  +-1         ** +-INF is NAN
- *	10. +0 ** (+anything except 0, NAN)               is +0
- *	11. -0 ** (+anything except 0, NAN, odd integer)  is +0
- *	12. +0 ** (-anything except 0, NAN)               is +INF
- *	13. -0 ** (-anything except 0, NAN, odd integer)  is +INF
- *	14. -0 ** (odd integer) = -( +0 ** (odd integer) )
- *	15. +INF ** (+anything except 0,NAN) is +INF
- *	16. +INF ** (-anything except 0,NAN) is +0
- *	17. -INF ** (anything)  = -0 ** (-anything)
- *	18. (-anything) ** (integer) is (-1)**(integer)*(+anything**integer)
- *	19. (-anything except 0 and inf) ** (non-integer) is NAN
- *
- * Accuracy:
- *	pow(x,y) returns x**y nearly rounded. In particular
- *			pow(integer,integer)
- *	always returns the correct integer provided it is 
- *	representable.
- *
- * Constants :
- * The hexadecimal values are the intended ones for the following 
- * constants. The decimal values may be used, provided that the 
- * compiler will convert from decimal to binary accurately enough 
- * to produce the hexadecimal values shown.
- */
+#include "dolphin.h"
 
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/fdlibm.h"
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/errno.h"
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/math.h"
+extern const float lbl_803E7E50;
+extern const float lbl_803E7E54;
+extern const float lbl_803E7E58;
+extern const double lbl_803E7E60;
+extern unsigned int lbl_803DC648;
+extern unsigned int lbl_803DC64C;
+extern unsigned int lbl_803DC650;
+extern unsigned int lbl_803DC658;
+extern unsigned int lbl_803DC65C;
+extern unsigned char lbl_80332A28;
+extern unsigned char lbl_80332C78;
 
-#ifdef __STDC__
-static const double 
-#else
-static double 
-#endif
-bp[] = {1.0, 1.5,},
-dp_h[] = { 0.0, 5.84962487220764160156e-01,}, /* 0x3FE2B803, 0x40000000 */
-dp_l[] = { 0.0, 1.35003920212974897128e-08,}, /* 0x3E4CFDEB, 0x43CFD006 */
-zero    =  0.0,
-one	=  1.0,
-two	=  2.0,
-two53	=  9007199254740992.0,	/* 0x43400000, 0x00000000 */
-huge	=  1.0e300,
-tiny    =  1.0e-300,
-	/* poly coefs for (3/2)*(log(x)-2s-2/3*s**3 */
-L1  =  5.99999999999994648725e-01, /* 0x3FE33333, 0x33333303 */
-L2  =  4.28571428578550184252e-01, /* 0x3FDB6DB6, 0xDB6FABFF */
-L3  =  3.33333329818377432918e-01, /* 0x3FD55555, 0x518F264D */
-L4  =  2.72728123808534006489e-01, /* 0x3FD17460, 0xA91D4101 */
-L5  =  2.30660745775561754067e-01, /* 0x3FCD864A, 0x93C9DB65 */
-L6  =  2.06975017800338417784e-01, /* 0x3FCA7E28, 0x4A454EEF */
-P1   =  1.66666666666666019037e-01, /* 0x3FC55555, 0x5555553E */
-P2   = -2.77777777770155933842e-03, /* 0xBF66C16C, 0x16BEBD93 */
-P3   =  6.61375632143793436117e-05, /* 0x3F11566A, 0xAF25DE2C */
-P4   = -1.65339022054652515390e-06, /* 0xBEBBBD41, 0xC5D26BF1 */
-P5   =  4.13813679705723846039e-08, /* 0x3E663769, 0x72BEA4D0 */
-lg2  =  6.93147180559945286227e-01, /* 0x3FE62E42, 0xFEFA39EF */
-lg2_h  =  6.93147182464599609375e-01, /* 0x3FE62E43, 0x00000000 */
-lg2_l  = -1.90465429995776804525e-09, /* 0xBE205C61, 0x0CA86C39 */
-ovt =  8.0085662595372944372e-0017, /* -(1024-log2(ovfl+.5ulp)) */
-cp    =  9.61796693925975554329e-01, /* 0x3FEEC709, 0xDC3A03FD =2/(3ln2) */
-cp_h  =  9.61796700954437255859e-01, /* 0x3FEEC709, 0xE0000000 =(float)cp */
-cp_l  = -7.02846165095275826516e-09, /* 0xBE3E2FE0, 0x145B01F5 =tail of cp_h*/
-ivln2    =  1.44269504088896338700e+00, /* 0x3FF71547, 0x652B82FE =1/ln2 */
-ivln2_h  =  1.44269502162933349609e+00, /* 0x3FF71547, 0x60000000 =24b 1/ln2*/
-ivln2_l  =  1.92596299112661746887e-08; /* 0x3E54AE0B, 0xF85DDF44 =1/ln2 tail*/
-
-#ifdef __STDC__
-	double __ieee754_pow(double x, double y)
-#else
-	double __ieee754_pow(x,y)
-	double x, y;
-#endif
-{
-	double z,ax,z_h,z_l,p_h,p_l;
-	double y1,t1,t2,r,s,t,u,v,w;
-	int i,j,k,yisint,n;
-	int hx,hy,ix,iy;
-	unsigned lx,ly;
-
-	hx = __HI(x); lx = __LO(x);
-	hy = __HI(y); ly = __LO(y);
-	ix = hx&0x7fffffff;  iy = hy&0x7fffffff;
-
-    /* y==zero: x**0 = 1 */
-	if((iy|ly)==0) return one; 	
-
-    /* +-NaN return x+y */
-	if(ix > 0x7ff00000 || ((ix==0x7ff00000)&&(lx!=0)) ||
-	   iy > 0x7ff00000 || ((iy==0x7ff00000)&&(ly!=0))) 
-		return x+y;	
-
-    /* determine if y is an odd int when x < 0
-     * yisint = 0	... y is not an integer
-     * yisint = 1	... y is an odd int
-     * yisint = 2	... y is an even int
-     */
-	yisint  = 0;
-	if(hx<0) {	
-	    if(iy>=0x43400000) yisint = 2; /* even integer y */
-	    else if(iy>=0x3ff00000) {
-		k = (iy>>20)-0x3ff;	   /* exponent */
-		if(k>20) {
-		    j = ly>>(52-k);
-		    if((j<<(52-k))==ly) yisint = 2-(j&1);
-		} else if(ly==0) {
-		    j = iy>>(20-k);
-		    if((j<<(20-k))==iy) yisint = 2-(j&1);
-		}
-	    }		
-	} 
-
-    /* special value of y */
-	if(ly==0) { 	
-	    if (iy==0x7ff00000) {	/* y is +-inf */
-	        if(((ix-0x3ff00000)|lx)==0)
-		    return  y - y;	/* inf**+-1 is NaN */
-	        else if (ix >= 0x3ff00000)/* (|x|>1)**+-inf = inf,0 */
-		    return (hy>=0)? y: zero;
-	        else			/* (|x|<1)**-,+inf = inf,0 */
-		    return (hy<0)?-y: zero;
-	    } 
-	    if(iy==0x3ff00000) {	/* y is  +-1 */
-		if(hy<0) return one/x; else return x;
-	    }
-	    if(hy==0x40000000) return x*x; /* y is  2 */
-	    if(hy==0x3fe00000) {	/* y is  0.5 */
-		if(hx>=0)	/* x >= +0 */
-		return __ieee754_sqrt(x);
-	    }
-	}
-
-	ax   = fabs(x);
-    /* special value of x */
-	if(lx==0) {
-	    if(ix==0x7ff00000||ix==0||ix==0x3ff00000){
-		z = ax;			/*x is +-0,+-inf,+-1*/
-		if(hy<0) z = one/z;	/* z = (1/|x|) */
-		if(hx<0) {
-		    if(((ix-0x3ff00000)|yisint)==0) {
-			z = (z-z)/(z-z); /* (-1)**non-int is NaN */
-		    } else if(yisint==1) 
-			z = -z;		/* (x<0)**odd = -(|x|**odd) */
-		}
-		return z;
-	    }
-	}
-    
-    /* (x<0)**(non-int) is NaN */
-	if((((hx>>31)+1)|yisint)==0) {
-        errno = 0x21;
-        return NAN;
-    }
-
-    /* |y| is huge */
-	if(iy>0x41e00000) { /* if |y| > 2**31 */
-	    if(iy>0x43f00000){	/* if |y| > 2**64, must o/uflow */
-		if(ix<=0x3fefffff) return (hy<0)? huge*huge:tiny*tiny;
-		if(ix>=0x3ff00000) return (hy>0)? huge*huge:tiny*tiny;
-	    }
-	/* over/underflow if x is not close to one */
-	    if(ix<0x3fefffff) return (hy<0)? huge*huge:tiny*tiny;
-	    if(ix>0x3ff00000) return (hy>0)? huge*huge:tiny*tiny;
-	/* now |1-x| is tiny <= 2**-20, suffice to compute 
-	   log(x) by x-x^2/2+x^3/3-x^4/4 */
-	    t = x-1;		/* t has 20 trailing zeros */
-	    w = (t*t)*(0.5-t*(0.3333333333333333333333-t*0.25));
-	    u = ivln2_h*t;	/* ivln2_h has 21 sig. bits */
-	    v = t*ivln2_l-w*ivln2;
-	    t1 = u+v;
-	    __LO(t1) = 0;
-	    t2 = v-(t1-u);
-	} else {
-	    double s2,s_h,s_l,t_h,t_l;
-	    n = 0;
-	/* take care subnormal number */
-	    if(ix<0x00100000)
-		{ax *= two53; n -= 53; ix = __HI(ax); }
-	    n  += ((ix)>>20)-0x3ff;
-	    j  = ix&0x000fffff;
-	/* determine interval */
-	    ix = j|0x3ff00000;		/* normalize ix */
-	    if(j<=0x3988E) k=0;		/* |x|<sqrt(3/2) */
-	    else if(j<0xBB67A) k=1;	/* |x|<sqrt(3)   */
-	    else {k=0;n+=1;ix -= 0x00100000;}
-	    __HI(ax) = ix;
-
-	/* compute s = s_h+s_l = (x-1)/(x+1) or (x-1.5)/(x+1.5) */
-	    u = ax-bp[k];		/* bp[0]=1.0, bp[1]=1.5 */
-	    v = one/(ax+bp[k]);
-	    s = u*v;
-	    s_h = s;
-	    __LO(s_h) = 0;
-	/* t_h=ax+bp[k] High */
-	    t_h = zero;
-	    __HI(t_h)=((ix>>1)|0x20000000)+0x00080000+(k<<18); 
-	    t_l = ax - (t_h-bp[k]);
-	    s_l = v*((u-s_h*t_h)-s_h*t_l);
-	/* compute log(ax) */
-	    s2 = s*s;
-	    r = s2*s2*(L1+s2*(L2+s2*(L3+s2*(L4+s2*(L5+s2*L6)))));
-	    r += s_l*(s_h+s);
-	    s2  = s_h*s_h;
-	    t_h = 3.0+s2+r;
-	    __LO(t_h) = 0;
-	    t_l = r-((t_h-3.0)-s2);
-	/* u+v = s*(1+...) */
-	    u = s_h*t_h;
-	    v = s_l*t_h+t_l*s;
-	/* 2/(3log2)*(s+...) */
-	    p_h = u+v;
-	    __LO(p_h) = 0;
-	    p_l = v-(p_h-u);
-	    z_h = cp_h*p_h;		/* cp_h+cp_l = 2/(3*log2) */
-	    z_l = cp_l*p_h+p_l*cp+dp_l[k];
-	/* log2(ax) = (s+..)*2/(3*log2) = n + dp_h + z_h + z_l */
-	    t = (double)n;
-	    t1 = (((z_h+z_l)+dp_h[k])+t);
-	    __LO(t1) = 0;
-	    t2 = z_l-(((t1-t)-dp_h[k])-z_h);
-	}
-
-	s = one; /* s (sign of result -ve**odd) = -1 else = 1 */
-	if((((hx>>31)+1)|(yisint-1))==0) s = -one;/* (-ve)**(odd int) */
-
-    /* split up y into y1+y2 and compute (y1+y2)*(t1+t2) */
-	y1  = y;
-	__LO(y1) = 0;
-	p_l = (y-y1)*t1+y*t2;
-	p_h = y1*t1;
-	z = p_l+p_h;
-	j = __HI(z);
-	i = __LO(z);
-	if (j>=0x40900000) {				/* z >= 1024 */
-	    if(((j-0x40900000)|i)!=0)			/* if z > 1024 */
-		return s*huge*huge;			/* overflow */
-	    else {
-		if(p_l+ovt>z-p_h) return s*huge*huge;	/* overflow */
-	    }
-	} else if((j&0x7fffffff)>=0x4090cc00 ) {	/* z <= -1075 */
-	    if(((j-0xc090cc00)|i)!=0) 		/* z < -1075 */
-		return s*tiny*tiny;		/* underflow */
-	    else {
-		if(p_l<=z-p_h) return s*tiny*tiny;	/* underflow */
-	    }
-	}
-    /*
-     * compute 2**(p_h+p_l)
-     */
-	i = j&0x7fffffff;
-	k = (i>>20)-0x3ff;
-	n = 0;
-	if(i>0x3fe00000) {		/* if |z| > 0.5, set n = [z+0.5] */
-	    n = j+(0x00100000>>(k+1));
-	    k = ((n&0x7fffffff)>>20)-0x3ff;	/* new k for n */
-	    t = zero;
-	    __HI(t) = (n&~(0x000fffff>>k));
-	    n = ((n&0x000fffff)|0x00100000)>>(20-k);
-	    if(j<0) n = -n;
-	    p_h -= t;
-	} 
-	t = p_l+p_h;
-	__LO(t) = 0;
-	u = t*lg2_h;
-	v = (p_l-(t-p_h))*lg2+t*lg2_l;
-	z = u+v;
-	w = v-(z-u);
-	t  = z*z;
-	t1  = z - t*(P1+t*(P2+t*(P3+t*(P4+t*P5))));
-	r  = (z*t1)/(t1-two)-(w+z*w);
-	z  = one-(r-z);
-	j  = __HI(z);
-	j += (n<<20);
-	if((j>>20)<=0) z = ldexp(z,n);	/* subnormal output */
-	else __HI(z) += (n<<20);
-	return s*z;
+asm float __ieee754_pow(float x, float y) {
+    nofralloc
+    stwu r1, -0x90(r1)
+    stfs f1, 0x8(r1)
+    lfs f1, 0x8(r1)
+    lis r3, lbl_80332C78@ha
+    lfs f3, lbl_803E7E50(r0)
+    addi r3, r3, lbl_80332C78@l
+    fcmpo cr0, f1, f3
+    ble _ep_80294dc0
+    stfs f1, 0x60(r1)
+    lwz r0, lbl_803DC658(r0)
+    lwz r9, 0x60(r1)
+    stw r0, 0x68(r1)
+    clrlwi r0, r9, 16
+    lwz r5, lbl_803DC65C(r0)
+    cmplwi r0, 0x0
+    srwi r4, r9, 23
+    stw r5, 0x6c(r1)
+    clrlwi r6, r9, 9
+    subi r8, r4, 0x80
+    srwi r7, r6, 16
+    beq _ep_80294cc0
+    rlwinm r4, r9, 0, 9, 15
+    rlwinm r0, r9, 0, 16, 16
+    oris r5, r4, 0x3f80
+    oris r4, r6, 0x3f80
+    stw r5, 0x64(r1)
+    cmplwi r0, 0x0
+    stw r4, 0x74(r1)
+    beq _ep_80294c3c
+    lwz r4, 0x64(r1)
+    addi r7, r7, 0x1
+    addis r0, r4, 0x1
+    stw r0, 0x64(r1)
+_ep_80294c3c:
+    lis r4, lbl_80332A28@ha
+    lfs f3, 0x74(r1)
+    lfs f0, 0x64(r1)
+    slwi r5, r7, 2
+    addi r0, r4, lbl_80332A28@l
+    lfs f1, 0x6c(r1)
+    add r4, r0, r5
+    fsubs f7, f3, f0
+    lfs f3, 0x0(r4)
+    addi r4, r13, -0x6B90
+    lfs f0, 0x68(r1)
+    xoris r0, r8, 0x8000
+    fmuls f7, f7, f3
+    lfs f4, 0x4(r4)
+    stw r0, 0x8c(r1)
+    lis r0, 0x4330
+    lfs f5, lbl_803DC650(r0)
+    fmuls f3, f7, f7
+    stw r0, 0x88(r1)
+    fmadds f0, f7, f1, f0
+    lfd f6, lbl_803E7E60(r0)
+    lfd f1, 0x88(r1)
+    fmuls f0, f3, f0
+    lfs f3, lbl_803E7E54(r0)
+    fsubs f6, f1, f6
+    lfsx f1, r3, r5
+    fmadds f0, f4, f7, f0
+    fadds f3, f6, f3
+    fmadds f0, f5, f7, f0
+    fadds f0, f7, f0
+    fadds f0, f1, f0
+    fadds f0, f3, f0
+    b _ep_80294cf0
+_ep_80294cc0:
+    xoris r0, r8, 0x8000
+    lfd f4, lbl_803E7E60(r0)
+    stw r0, 0x8c(r1)
+    lis r4, 0x4330
+    slwi r0, r7, 2
+    lfs f1, lbl_803E7E54(r0)
+    stw r4, 0x88(r1)
+    lfsx f0, r3, r0
+    lfd f3, 0x88(r1)
+    fsubs f3, f3, f4
+    fadds f1, f3, f1
+    fadds f0, f1, f0
+_ep_80294cf0:
+    fmuls f2, f2, f0
+    lis r0, 0x4330
+    lfd f1, lbl_803E7E60(r0)
+    fctiwz f0, f2
+    stfd f0, 0x88(r1)
+    lwz r4, 0x8c(r1)
+    stw r4, 0x58(r1)
+    lwz r5, 0x58(r1)
+    xoris r4, r5, 0x8000
+    stw r4, 0x84(r1)
+    cmpwi r5, 0x80
+    stw r0, 0x80(r1)
+    lfd f0, 0x80(r1)
+    fsubs f0, f0, f1
+    fsubs f8, f2, f0
+    ble _ep_80294d40
+    lis r3, lbl_803DC64C@ha
+    addi r3, r3, lbl_803DC64C@l
+    lfs f1, 0x0(r3)
+    b _ep_80294dbc
+_ep_80294d40:
+    cmpwi r5, -0x7f
+    bge _ep_80294d50
+    lfs f1, lbl_803E7E50(r0)
+    b _ep_80294dbc
+_ep_80294d50:
+    addi r0, r5, 0x7f
+    lfs f0, lbl_803E7E58(r0)
+    stw r0, 0x58(r1)
+    lwz r0, 0x58(r1)
+    slwi r0, r0, 23
+    stw r0, 0x58(r1)
+    lfs f3, 0x224(r3)
+    lfs f1, 0x220(r3)
+    lfs f2, 0x21c(r3)
+    fmadds f3, f8, f3, f1
+    lfs f1, 0x218(r3)
+    lfs f5, 0x214(r3)
+    lfs f4, 0x210(r3)
+    fmadds f6, f8, f3, f2
+    lfs f3, 0x20c(r3)
+    lfs f2, 0x208(r3)
+    fmadds f6, f8, f6, f1
+    lfs f1, 0x204(r3)
+    lfs f7, 0x58(r1)
+    fmadds f5, f8, f6, f5
+    fmadds f4, f8, f5, f4
+    fmadds f3, f8, f4, f3
+    fmadds f2, f8, f3, f2
+    fmadds f1, f8, f2, f1
+    fmuls f1, f8, f1
+    fadds f0, f1, f0
+    fmuls f1, f7, f0
+_ep_80294dbc:
+    b _ep_8029532c
+_ep_80294dc0:
+    bge _ep_802951f4
+    fctiwz f0, f2
+    lis r5, 0x4330
+    lfd f4, lbl_803E7E60(r0)
+    stfd f0, 0x88(r1)
+    lwz r0, 0x8c(r1)
+    stfd f0, 0x80(r1)
+    xoris r0, r0, 0x8000
+    stw r0, 0x7c(r1)
+    lwz r4, 0x84(r1)
+    stw r5, 0x78(r1)
+    lfd f0, 0x78(r1)
+    fsubs f0, f0, f4
+    fsubs f0, f2, f0
+    fcmpu cr0, f0, f3
+    beq _ep_80294e10
+    lis r3, lbl_803DC648@ha
+    addi r3, r3, lbl_803DC648@l
+    lfs f1, 0x0(r3)
+    b _ep_8029532c
+_ep_80294e10:
+    srawi r0, r4, 1
+    addze r0, r0
+    slwi r0, r0, 1
+    subfc r0, r0, r4
+    cmpwi r0, 0x0
+    beq _ep_80295010
+    fneg f0, f1
+    lwz r4, lbl_803DC658(r0)
+    lwz r0, lbl_803DC65C(r0)
+    stw r4, 0x48(r1)
+    stfs f0, 0x40(r1)
+    lwz r9, 0x40(r1)
+    stw r0, 0x4c(r1)
+    clrlwi r0, r9, 16
+    srwi r4, r9, 23
+    clrlwi r6, r9, 9
+    cmplwi r0, 0x0
+    subi r8, r4, 0x80
+    srwi r7, r6, 16
+    beq _ep_80294f14
+    rlwinm r4, r9, 0, 9, 15
+    rlwinm r0, r9, 0, 16, 16
+    oris r5, r4, 0x3f80
+    oris r4, r6, 0x3f80
+    stw r5, 0x44(r1)
+    cmplwi r0, 0x0
+    stw r4, 0x54(r1)
+    beq _ep_80294e90
+    lwz r4, 0x44(r1)
+    addi r7, r7, 0x1
+    addis r0, r4, 0x1
+    stw r0, 0x44(r1)
+_ep_80294e90:
+    lis r4, lbl_80332A28@ha
+    lfs f3, 0x54(r1)
+    lfs f0, 0x44(r1)
+    slwi r5, r7, 2
+    addi r0, r4, lbl_80332A28@l
+    lfs f1, 0x4c(r1)
+    add r4, r0, r5
+    fsubs f7, f3, f0
+    lfs f3, 0x0(r4)
+    addi r4, r13, -0x6B90
+    lfs f0, 0x48(r1)
+    xoris r0, r8, 0x8000
+    fmuls f7, f7, f3
+    lfs f4, 0x4(r4)
+    stw r0, 0x7c(r1)
+    lis r0, 0x4330
+    lfs f5, lbl_803DC650(r0)
+    fmuls f3, f7, f7
+    stw r0, 0x78(r1)
+    fmadds f0, f7, f1, f0
+    lfd f6, lbl_803E7E60(r0)
+    lfd f1, 0x78(r1)
+    fmuls f0, f3, f0
+    lfs f3, lbl_803E7E54(r0)
+    fsubs f6, f1, f6
+    lfsx f1, r3, r5
+    fmadds f0, f4, f7, f0
+    fadds f3, f6, f3
+    fmadds f0, f5, f7, f0
+    fadds f0, f7, f0
+    fadds f0, f1, f0
+    fadds f0, f3, f0
+    b _ep_80294f3c
+_ep_80294f14:
+    xoris r0, r8, 0x8000
+    lfs f1, lbl_803E7E54(r0)
+    stw r0, 0x7c(r1)
+    slwi r0, r7, 2
+    lfsx f0, r3, r0
+    stw r5, 0x78(r1)
+    lfd f3, 0x78(r1)
+    fsubs f3, f3, f4
+    fadds f1, f3, f1
+    fadds f0, f1, f0
+_ep_80294f3c:
+    fmuls f2, f2, f0
+    lis r0, 0x4330
+    lfd f1, lbl_803E7E60(r0)
+    fctiwz f0, f2
+    stfd f0, 0x78(r1)
+    lwz r4, 0x7c(r1)
+    stw r4, 0x38(r1)
+    lwz r5, 0x38(r1)
+    xoris r4, r5, 0x8000
+    stw r4, 0x84(r1)
+    cmpwi r5, 0x80
+    stw r0, 0x80(r1)
+    lfd f0, 0x80(r1)
+    fsubs f0, f0, f1
+    fsubs f8, f2, f0
+    ble _ep_80294f8c
+    lis r3, lbl_803DC64C@ha
+    addi r3, r3, lbl_803DC64C@l
+    lfs f0, 0x0(r3)
+    b _ep_80295008
+_ep_80294f8c:
+    cmpwi r5, -0x7f
+    bge _ep_80294f9c
+    lfs f0, lbl_803E7E50(r0)
+    b _ep_80295008
+_ep_80294f9c:
+    addi r0, r5, 0x7f
+    lfs f0, lbl_803E7E58(r0)
+    stw r0, 0x38(r1)
+    lwz r0, 0x38(r1)
+    slwi r0, r0, 23
+    stw r0, 0x38(r1)
+    lfs f3, 0x224(r3)
+    lfs f1, 0x220(r3)
+    lfs f2, 0x21c(r3)
+    fmadds f3, f8, f3, f1
+    lfs f1, 0x218(r3)
+    lfs f5, 0x214(r3)
+    lfs f4, 0x210(r3)
+    fmadds f6, f8, f3, f2
+    lfs f3, 0x20c(r3)
+    lfs f2, 0x208(r3)
+    fmadds f6, f8, f6, f1
+    lfs f1, 0x204(r3)
+    lfs f7, 0x38(r1)
+    fmadds f5, f8, f6, f5
+    fmadds f4, f8, f5, f4
+    fmadds f3, f8, f4, f3
+    fmadds f2, f8, f3, f2
+    fmadds f1, f8, f2, f1
+    fmuls f1, f8, f1
+    fadds f0, f1, f0
+    fmuls f0, f7, f0
+_ep_80295008:
+    fneg f1, f0
+    b _ep_8029532c
+_ep_80295010:
+    fneg f0, f1
+    lwz r4, lbl_803DC658(r0)
+    lwz r0, lbl_803DC65C(r0)
+    stw r4, 0x28(r1)
+    stfs f0, 0x20(r1)
+    lwz r9, 0x20(r1)
+    stw r0, 0x2c(r1)
+    clrlwi r0, r9, 16
+    srwi r4, r9, 23
+    clrlwi r6, r9, 9
+    cmplwi r0, 0x0
+    subi r8, r4, 0x80
+    srwi r7, r6, 16
+    beq _ep_802950fc
+    rlwinm r4, r9, 0, 9, 15
+    rlwinm r0, r9, 0, 16, 16
+    oris r5, r4, 0x3f80
+    oris r4, r6, 0x3f80
+    stw r5, 0x24(r1)
+    cmplwi r0, 0x0
+    stw r4, 0x34(r1)
+    beq _ep_80295078
+    lwz r4, 0x24(r1)
+    addi r7, r7, 0x1
+    addis r0, r4, 0x1
+    stw r0, 0x24(r1)
+_ep_80295078:
+    lis r4, lbl_80332A28@ha
+    lfs f3, 0x34(r1)
+    lfs f0, 0x24(r1)
+    slwi r5, r7, 2
+    addi r0, r4, lbl_80332A28@l
+    lfs f1, 0x2c(r1)
+    add r4, r0, r5
+    fsubs f7, f3, f0
+    lfs f3, 0x0(r4)
+    addi r4, r13, -0x6B90
+    lfs f0, 0x28(r1)
+    xoris r0, r8, 0x8000
+    fmuls f7, f7, f3
+    lfs f4, 0x4(r4)
+    stw r0, 0x7c(r1)
+    lis r0, 0x4330
+    lfs f5, lbl_803DC650(r0)
+    fmuls f3, f7, f7
+    stw r0, 0x78(r1)
+    fmadds f0, f7, f1, f0
+    lfd f6, lbl_803E7E60(r0)
+    lfd f1, 0x78(r1)
+    fmuls f0, f3, f0
+    lfs f3, lbl_803E7E54(r0)
+    fsubs f6, f1, f6
+    lfsx f1, r3, r5
+    fmadds f0, f4, f7, f0
+    fadds f3, f6, f3
+    fmadds f0, f5, f7, f0
+    fadds f0, f7, f0
+    fadds f0, f1, f0
+    fadds f0, f3, f0
+    b _ep_80295124
+_ep_802950fc:
+    xoris r0, r8, 0x8000
+    lfs f1, lbl_803E7E54(r0)
+    stw r0, 0x7c(r1)
+    slwi r0, r7, 2
+    lfsx f0, r3, r0
+    stw r5, 0x78(r1)
+    lfd f3, 0x78(r1)
+    fsubs f3, f3, f4
+    fadds f1, f3, f1
+    fadds f0, f1, f0
+_ep_80295124:
+    fmuls f2, f2, f0
+    lis r0, 0x4330
+    lfd f1, lbl_803E7E60(r0)
+    fctiwz f0, f2
+    stfd f0, 0x78(r1)
+    lwz r4, 0x7c(r1)
+    stw r4, 0x18(r1)
+    lwz r5, 0x18(r1)
+    xoris r4, r5, 0x8000
+    stw r4, 0x84(r1)
+    cmpwi r5, 0x80
+    stw r0, 0x80(r1)
+    lfd f0, 0x80(r1)
+    fsubs f0, f0, f1
+    fsubs f8, f2, f0
+    ble _ep_80295174
+    lis r3, lbl_803DC64C@ha
+    addi r3, r3, lbl_803DC64C@l
+    lfs f1, 0x0(r3)
+    b _ep_802951f0
+_ep_80295174:
+    cmpwi r5, -0x7f
+    bge _ep_80295184
+    lfs f1, lbl_803E7E50(r0)
+    b _ep_802951f0
+_ep_80295184:
+    addi r0, r5, 0x7f
+    lfs f0, lbl_803E7E58(r0)
+    stw r0, 0x18(r1)
+    lwz r0, 0x18(r1)
+    slwi r0, r0, 23
+    stw r0, 0x18(r1)
+    lfs f3, 0x224(r3)
+    lfs f1, 0x220(r3)
+    lfs f2, 0x21c(r3)
+    fmadds f3, f8, f3, f1
+    lfs f1, 0x218(r3)
+    lfs f5, 0x214(r3)
+    lfs f4, 0x210(r3)
+    fmadds f6, f8, f3, f2
+    lfs f3, 0x20c(r3)
+    lfs f2, 0x208(r3)
+    fmadds f6, f8, f6, f1
+    lfs f1, 0x204(r3)
+    lfs f7, 0x18(r1)
+    fmadds f5, f8, f6, f5
+    fmadds f4, f8, f5, f4
+    fmadds f3, f8, f4, f3
+    fmadds f2, f8, f3, f2
+    fmadds f1, f8, f2, f1
+    fmuls f1, f8, f1
+    fadds f0, f1, f0
+    fmuls f1, f7, f0
+_ep_802951f0:
+    b _ep_8029532c
+_ep_802951f4:
+    stfs f1, 0x14(r1)
+    lis r0, 0x7f80
+    lwz r4, 0x14(r1)
+    rlwinm r3, r4, 0, 1, 8
+    cmpw r3, r0
+    beq _ep_8029521c
+    bge _ep_80295254
+    cmpwi r3, 0x0
+    beq _ep_80295238
+    b _ep_80295254
+_ep_8029521c:
+    clrlwi r0, r4, 9
+    cmpwi r0, 0x0
+    beq _ep_80295230
+    li r0, 0x1
+    b _ep_80295258
+_ep_80295230:
+    li r0, 0x2
+    b _ep_80295258
+_ep_80295238:
+    clrlwi r0, r4, 9
+    cmpwi r0, 0x0
+    beq _ep_8029524c
+    li r0, 0x5
+    b _ep_80295258
+_ep_8029524c:
+    li r0, 0x3
+    b _ep_80295258
+_ep_80295254:
+    li r0, 0x4
+_ep_80295258:
+    cmpwi r0, 0x1
+    bne _ep_80295264
+    b _ep_8029532c
+_ep_80295264:
+    stfs f2, 0x10(r1)
+    lis r0, 0x7f80
+    lwz r4, 0x10(r1)
+    rlwinm r3, r4, 0, 1, 8
+    cmpw r3, r0
+    beq _ep_8029528c
+    bge _ep_802952c4
+    cmpwi r3, 0x0
+    beq _ep_802952a8
+    b _ep_802952c4
+_ep_8029528c:
+    clrlwi r0, r4, 9
+    cmpwi r0, 0x0
+    beq _ep_802952a0
+    li r0, 0x1
+    b _ep_802952c8
+_ep_802952a0:
+    li r0, 0x2
+    b _ep_802952c8
+_ep_802952a8:
+    clrlwi r0, r4, 9
+    cmpwi r0, 0x0
+    beq _ep_802952bc
+    li r0, 0x5
+    b _ep_802952c8
+_ep_802952bc:
+    li r0, 0x3
+    b _ep_802952c8
+_ep_802952c4:
+    li r0, 0x4
+_ep_802952c8:
+    cmpwi r0, 0x3
+    beq _ep_802952ec
+    bge _ep_802952e0
+    cmpwi r0, 0x1
+    bge _ep_802952f4
+    b _ep_80295328
+_ep_802952e0:
+    cmpwi r0, 0x6
+    bge _ep_80295328
+    b _ep_80295304
+_ep_802952ec:
+    lfs f1, lbl_803E7E58(r0)
+    b _ep_8029532c
+_ep_802952f4:
+    lis r3, lbl_803DC648@ha
+    addi r3, r3, lbl_803DC648@l
+    lfs f1, 0x0(r3)
+    b _ep_8029532c
+_ep_80295304:
+    lwz r0, 0x8(r1)
+    clrrwi r0, r0, 31
+    cmplwi r0, 0x0
+    beq _ep_80295324
+    lis r3, lbl_803DC64C@ha
+    addi r3, r3, lbl_803DC64C@l
+    lfs f1, 0x0(r3)
+    b _ep_8029532c
+_ep_80295324:
+    b _ep_8029532c
+_ep_80295328:
+    lfs f1, lbl_803E7E50(r0)
+_ep_8029532c:
+    addi r1, r1, 0x90
+    blr
 }

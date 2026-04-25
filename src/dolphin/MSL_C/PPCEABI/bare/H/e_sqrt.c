@@ -207,7 +207,7 @@ _sq_done:
     blr
 }
 
-asm float __ieee754_pow(float x, float y) {
+asm float __ieee754_log(float x, float y) {
     nofralloc
     mflr r0
     stw r0, 0x4(r1)
