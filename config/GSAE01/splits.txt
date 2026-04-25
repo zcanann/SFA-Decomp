@@ -2228,9 +2228,16 @@ dolphin/TRK_MINNOW_DOLPHIN/mem_TRK.c:
 	.text       start:0x8028B01C end:0x8028B0D8
 
 dolphin/TRK_MINNOW_DOLPHIN/targimpl.c:
-	.text       start:0x8028B0D8 end:0x8028CAD0
+	.text       start:0x8028B0D8 end:0x8028C970
 	.rodata     start:0x802C2978 end:0x802C2A00
 	.data       start:0x80332F48 end:0x80332F78
+
+dolphin/TRK_MINNOW_DOLPHIN/targsupp.s: comment:0
+	.text       start:0x8028C970 end:0x8028C990
+
+dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk.c:
+	.text       start:0x8028C990 end:0x8028CAD0
+	.data       start:0x80332F78 end:0x80332FC0
 
 dolphin/TRK_MINNOW_DOLPHIN/mpc_7xx_603e.c:
 	.text       start:0x8028CAD0 end:0x8028CE48
@@ -2239,15 +2246,8 @@ dolphin/TRK_MINNOW_DOLPHIN/main_TRK.c:
 	.text       start:0x8028CE48 end:0x8028CE8C
 	.bss        start:0x803D8888 end:0x803D8888
 
-dolphin/TRK_MINNOW_DOLPHIN/targsupp.s: comment:0
-	.text       start:0x8028CE8C end:0x8028CE8C
-
-dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk.c:
-	.text       start:0x8028CE8C end:0x8028D200
-	.data       start:0x80332F78 end:0x80332FC0
-
 dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk_glue.c:
-	.text       start:0x8028D200 end:0x8028D318
+	.text       start:0x8028CE8C end:0x8028D318
 	.data       start:0x80332FC0 end:0x80332FC0
 	.bss        start:0x803D8888 end:0x803DAAB0
 
