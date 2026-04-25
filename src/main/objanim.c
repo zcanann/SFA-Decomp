@@ -19,7 +19,7 @@ extern f32 FLOAT_803df588;
 static inline s32 ObjAnim_ResolveMoveIndex(ObjAnimDef *animDef, u32 moveId) {
   s32 moveIndex = animDef->moveBaseTable[(s32)moveId >> 8] + (moveId & 0xFF);
 
-  if (animDef->moveCount <= moveIndex) {
+  if (moveIndex >= animDef->moveCount) {
     moveIndex = animDef->moveCount - 1;
   }
   if (moveIndex < 0) {
@@ -57,7 +57,7 @@ void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,ui
   u64 frameBits;
 
   moveIndex = animDef->moveBaseTable[(s32)moveId >> 8] + (moveId & 0xff);
-  if (animDef->moveCount <= moveIndex) {
+  if (moveIndex >= animDef->moveCount) {
     moveIndex = animDef->moveCount - 1;
   }
   if (moveIndex < 0) {
@@ -410,8 +410,8 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   state->eventState = 0;
   state->lastBlendMoveIndex = -1;
   sVar1 = objAnim->activeMove;
-  moveChanged = moveId != sVar1;
-  objAnim->activeMove = moveId;
+  moveChanged = sVar1 != moveId;
+  objAnim->activeMove = (s16)moveId;
   iVar3 = ObjAnim_ResolveMoveIndex(animDef, moveId);
   if ((animDef->flags & 0x40) != 0) {
     if (moveChanged != 0) {
