@@ -19,6 +19,7 @@ void platform1_free(void)
 {
 }
 
+#pragma scheduling off
 void platform1_renderUnsupported(void)
 {
   OSReport(sPlatform1DrawNoLongerSupported);
@@ -40,6 +41,7 @@ void platform1_initUnsupported(void)
   OSReport(sPlatform1InitNoLongerSupported);
   return;
 }
+#pragma scheduling reset
 
 void platform1_release(void)
 {
