@@ -46,7 +46,7 @@ void fn_80075D5C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2,
 void fn_80075E8C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2);
 void fn_80075FC8(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  uint param_5,int param_6,int param_7,int param_8,int param_9);
-void fn_80076510(double param_1,double param_2,int param_3,int param_4);
+void fn_80076510(int x, int y, f32 sx, f32 sy);
 void fn_8007681C(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  uint param_5,int param_6,int param_7,uint param_8);
 void fn_80076D78(undefined4 param_1,undefined4 param_2,int param_3,undefined4 *param_4,uint param_5

@@ -1770,18 +1770,92 @@ void fn_80075FC8(undefined8 param_1,double param_2,undefined4 param_3,undefined4
  * --INFO--
  *
  * Function: fn_80076510
- * EN v1.0 Address: 0x800709DC
- * EN v1.0 Size: 4b
+ * EN v1.0 Address: 0x80076510
+ * EN v1.0 Size: 780b
  * EN v1.1 Address: 0x8007668C
  * EN v1.1 Size: 780b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
+ *
+ * Generic ortho-projected single-color quad blit. Sets the GX state up
+ * fresh (no tex coords, color from constant K0, additive blend, fixed
+ * 0x3C texmtx) then emits four GX_VTXFMT1 vertices at z=-0x18C with
+ * width 4*size_x and height 4*size_y in screen pixels. Used as the
+ * "draw fullscreen tint" primitive by the dialog code in fn_8007E54C.
  */
-void fn_80076510(double param_1,double param_2,int param_3,int param_4)
+#pragma peephole off
+#pragma scheduling off
+void fn_80076510(int x, int y, f32 sx, f32 sy)
 {
+    extern Mtx lbl_80396880;
+    extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
+    extern u8 lbl_803DD011, lbl_803DD019;
+    extern int lbl_803DD014;
+    extern f32 lbl_803DEF2C;
+    extern void fn_8000FB00(void);
+    extern void GXSetZMode();
+    extern void GXSetZCompLoc(u8);
+
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetColorUpdate(0);
+    GXSetTevOrder(0, 0xFF, 0xFF, 4);
+    GXSetTevDirect(0);
+    GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xC);
+    GXSetTevAlphaIn(0, 7, 7, 7, 7);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetChanCtrl(0, 0, 0, 1, 0, 0, 2);
+    GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+    GXSetNumChans(1);
+    GXSetNumIndStages(0);
+    GXSetNumTexGens(0);
+    GXSetNumTevStages(1);
+    GXSetCullMode(GX_CULL_NONE);
+    GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 7 ||
+        (u32)lbl_803DD012 != 1 || lbl_803DD01A != 0) {
+        GXSetZMode(1, 7, 1);
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 7;
+        lbl_803DD012 = 1;
+        lbl_803DD01A = 1;
+    }
+    if ((u32)lbl_803DD011 != 0 || (u32)lbl_803DD019 == 0) {
+        GXSetZCompLoc(0);
+        lbl_803DD011 = 0;
+        lbl_803DD019 = 1;
+    }
+    GXSetBlendMode(0, 1, 0, 5);
+    GXSetCurrentMtx(0x3C);
+    sx = lbl_803DEF2C * sx;
+    sy = lbl_803DEF2C * sy;
+    GXBegin(GX_QUADS, GX_VTXFMT1, 4);
+
+    GXWGFifo.s16 = (s32)sx;
+    GXWGFifo.s16 = (s32)sy;
+    GXWGFifo.s16 = -0x18C;
+
+    GXWGFifo.s16 = (s32)(sx + (f32)((u32)x * 4));
+    GXWGFifo.s16 = (s32)sy;
+    GXWGFifo.s16 = -0x18C;
+
+    GXWGFifo.s16 = (s32)(sx + (f32)((u32)x * 4));
+    GXWGFifo.s16 = (s32)(sy + (f32)((u32)y * 4));
+    GXWGFifo.s16 = -0x18C;
+
+    GXWGFifo.s16 = (s32)sx;
+    GXWGFifo.s16 = (s32)(sy + (f32)((u32)y * 4));
+    GXWGFifo.s16 = -0x18C;
+
+    fn_8000FB00();
+    GXSetColorUpdate(1);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
