@@ -7,7 +7,7 @@
 
 volatile OSContext* __OSCurrentContext AT_ADDRESS(OS_BASE_CACHED | 0x00D4);
 volatile OSContext* __OSFPUContext AT_ADDRESS(OS_BASE_CACHED | 0x00D8);
-extern char lbl_8032D428[];
+extern char lbl_8032C7D0[];
 
 static asm void __OSLoadFPUContext(register u32 dummy, register OSContext* fpucontext) {
     nofralloc
@@ -397,8 +397,8 @@ void OSDumpContext(OSContext* context) {
     u32* p;
     char* fmt;
 
-    fmt = lbl_8032D428;
-    OSReport(lbl_8032D428, context);
+    fmt = lbl_8032C7D0;
+    OSReport(lbl_8032C7D0, context);
 
     for (i = 0; i < 16; ++i) {
         OSReport(fmt + 68, i, context->gpr[i],

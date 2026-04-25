@@ -338,7 +338,7 @@ config.libs = [
             Object(NonMatching, "dolphin/os/OSArena.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSAudioSystem.c"),
             Object(NonMatching, "dolphin/os/OSCache.c"),
-            Object(NonMatching, "dolphin/os/OSContext.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/os/OSContext.c"),
             Object(NonMatching, "dolphin/os/OSError.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSExec.c"),
             Object(NonMatching, "dolphin/os/OSFont.c", extra_cflags=["-use_lmw_stmw", "on"]),

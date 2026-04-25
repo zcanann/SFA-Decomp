@@ -9298,6 +9298,7 @@ DBClose = .text:0x80285EA0; // type:function size:0x4 scope:global
 __va_arg = .text:0x80285EA4; // type:function size:0xC8 scope:global
 __destroy_global_chain = .text:0x80285F6C; // type:function size:0x48 scope:global
 fn_80285FB4 = .text:0x80285FB4; // type:function size:0x5C
+__cvt_fp2unsigned = .text:0x80285FB4; // type:label scope:global
 __save_fpr = .text:0x80286010; // type:function size:0x4C scope:global
 _savefpr_14 = .text:0x80286010; // type:label scope:global
 _savefpr_15 = .text:0x80286014; // type:label scope:global
