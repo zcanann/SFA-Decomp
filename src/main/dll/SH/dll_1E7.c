@@ -115,13 +115,16 @@ void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint SHthorntail_chooseNextState(short *obj,SHthorntailRuntime *runtime,SHthorntailConfig *config)
+uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *runtime,
+                                 SHthorntailConfig *config)
 {
+  short *obj;
   short sVar1;
   int iVar2;
   uint uVar3;
   double dVar4;
 
+  obj = (short *)object;
   if (config->leashRadiusByte == '\0') {
     uVar3 = SHTHORNTAIL_STATE_CLOSE_ATTACK;
   }

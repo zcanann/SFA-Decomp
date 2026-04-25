@@ -8,6 +8,7 @@ void FUN_801d4cd0(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  short *param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime);
-uint SHthorntail_chooseNextState(short *obj,SHthorntailRuntime *runtime,SHthorntailConfig *config);
+uint SHthorntail_chooseNextState(SHthorntailObject *obj,SHthorntailRuntime *runtime,
+                                 SHthorntailConfig *config);
 
 #endif /* MAIN_DLL_SH_DLL_1E7_H_ */

@@ -2,24 +2,22 @@
 #include "main/dll/SH/dll_1E7.h"
 #include "main/dll/SH/dll_1E8.h"
 
-extern undefined4 FUN_80006824();
+extern void fn_8000BB18(SHthorntailObject *obj,u16 volumeId);
 extern int fn_8001FFB4(int eventId);
-extern undefined4 fn_800221A0();
-extern uint FUN_80017758();
-extern uint FUN_80017760();
-extern undefined4 FUN_80242fc0();
+extern u32 fn_8002208C(f32 *state,f32 min,f32 max);
+extern int fn_800221A0(int min,int max);
+extern void OSPanic(const char *file,int line,const char *msg,...);
 
-extern undefined4 DAT_803dc070;
+extern u8 lbl_803DB410;
+extern f32 lbl_803DB414;
 extern undefined4* lbl_803DCAAC;
-extern undefined4* DAT_803dd6d8;
+extern undefined4* lbl_803DCA58;
+extern f32 lbl_803E5418;
 extern f64 lbl_803E5428;
-extern f64 DOUBLE_803e60c0;
-extern f64 DOUBLE_803e60d8;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e60b0;
-extern f32 FLOAT_803e60c8;
-extern f32 FLOAT_803e60cc;
-extern f32 FLOAT_803e60d0;
+extern f32 lbl_803E5430;
+extern f32 lbl_803E5434;
+extern f32 lbl_803E5438;
+extern f64 lbl_803E5440;
 extern char sSHthorntailSourceFile[];
 extern char sThorntailEnteredInvalidState[];
 
@@ -36,35 +34,33 @@ extern char sThorntailEnteredInvalidState[];
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
 {
-  SHthorntailConfig *config;
   int iVar1;
-  uint uVar2;
+  int iVar2;
   
-  config = obj->config;
-  switch(runtime->behaviorState) {
+  switch((s8)runtime->behaviorState) {
   case SHTHORNTAIL_STATE_IDLE:
-    uVar2 = FUN_80017758((double)FLOAT_803e60c8,(double)FLOAT_803e60cc,
-                         &runtime->proximityAlertState);
-    if (uVar2 != 0) {
-      FUN_80006824((uint)obj,0x410);
+    iVar2 = fn_8002208C(&runtime->proximityAlertState,lbl_803E5430,lbl_803E5434);
+    if (iVar2 != 0) {
+      fn_8000BB18(obj,0x410);
     }
-    runtime->idleTimer = runtime->idleTimer - FLOAT_803dc074;
-    if (runtime->idleTimer <= FLOAT_803e60d0) {
+    runtime->idleTimer = runtime->idleTimer - lbl_803DB414;
+    if (runtime->idleTimer <= lbl_803E5438) {
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE_COUNTDOWN;
     }
     break;
   case SHTHORNTAIL_STATE_IDLE_COUNTDOWN:
-    runtime->idleTimer = runtime->idleTimer - FLOAT_803dc074;
-    if (runtime->idleTimer <= FLOAT_803e60b0) {
-      iVar1 = (**(code **)(*DAT_803dd6d8 + 0x24))(0);
-      if (iVar1 == 0) {
-        uVar2 = SHthorntail_chooseNextState((short *)obj,runtime,config);
-        runtime->behaviorState = (char)uVar2;
+    runtime->idleTimer = runtime->idleTimer - lbl_803DB414;
+    if (runtime->idleTimer <= lbl_803E5418) {
+      iVar1 = (**(code **)(*lbl_803DCA58 + 0x24))(0);
+      if (iVar1 != 0) {
+        runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_READY;
       }
       else {
-        runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_READY;
+        iVar2 = SHthorntail_chooseNextState(obj,runtime,obj->config);
+        runtime->behaviorState = (s8)iVar2;
       }
     }
     break;
@@ -74,31 +70,29 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_MOVE_5:
   case SHTHORNTAIL_STATE_TURN_HOME:
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
-      iVar1 = (**(code **)(*DAT_803dd6d8 + 0x24))(0);
-      if (iVar1 == 0) {
-        uVar2 = SHthorntail_chooseNextState((short *)obj,runtime,config);
-        runtime->behaviorState = (char)uVar2;
+      iVar1 = (**(code **)(*lbl_803DCA58 + 0x24))(0);
+      if (iVar1 != 0) {
+        runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_READY;
       }
       else {
-        runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_READY;
+        iVar2 = SHthorntail_chooseNextState(obj,runtime,obj->config);
+        runtime->behaviorState = (s8)iVar2;
       }
     }
     break;
   case SHTHORNTAIL_STATE_CLOSE_ATTACK:
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_CLOSE_ATTACK_WAIT;
-      uVar2 = FUN_80017760(500,800);
-      runtime->comboTimer = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) -
-                                    DOUBLE_803e60c0);
-      uVar2 = FUN_80017760(1,3);
-      runtime->comboRepeatCount = (char)uVar2;
+      iVar2 = fn_800221A0(500,800);
+      runtime->comboTimer = (float)iVar2;
+      iVar2 = fn_800221A0(1,3);
+      runtime->comboRepeatCount = (s8)iVar2;
     }
     break;
   case SHTHORNTAIL_STATE_CLOSE_ATTACK_WAIT:
     runtime->comboTimer = runtime->comboTimer -
-                          (float)((double)CONCAT44(0x43300000,(uint)DAT_803dc070) -
-                                  DOUBLE_803e60d8);
-    if (runtime->comboTimer <= FLOAT_803e60b0) {
+                          (float)lbl_803DB410;
+    if (runtime->comboTimer <= lbl_803E5418) {
       if (runtime->comboRepeatCount < '\x01') {
         runtime->behaviorState = SHTHORNTAIL_STATE_CLOSE_ATTACK_RECOVER;
       }
@@ -110,18 +104,16 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_CLOSE_ATTACK_REPEAT:
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_CLOSE_ATTACK_WAIT;
-      uVar2 = FUN_80017760(500,800);
-      runtime->comboTimer = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) -
-                                    DOUBLE_803e60c0);
+      iVar2 = fn_800221A0(500,800);
+      runtime->comboTimer = (float)iVar2;
       runtime->comboRepeatCount = runtime->comboRepeatCount + -1;
     }
     break;
   case SHTHORNTAIL_STATE_CLOSE_ATTACK_RECOVER:
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      uVar2 = FUN_80017760(1000,2000);
-      runtime->idleTimer = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) -
-                                   DOUBLE_803e60c0);
+      iVar2 = fn_800221A0(1000,2000);
+      runtime->idleTimer = (float)iVar2;
     }
     break;
   case SHTHORNTAIL_STATE_TAIL_SWING_READY:
@@ -133,23 +125,23 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_TAIL_SWING:
     SHthorntail_updateTailSwing((uint)obj,runtime);
     if (((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) &&
-       (iVar1 = (**(code **)(*DAT_803dd6d8 + 0x24))(0), iVar1 == 0)) {
+       (iVar1 = (**(code **)(*lbl_803DCA58 + 0x24))(0), iVar1 == 0)) {
       runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_RECOVER;
     }
     break;
   case SHTHORNTAIL_STATE_TAIL_SWING_RECOVER:
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      uVar2 = FUN_80017760(1000,2000);
-      runtime->idleTimer = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) -
-                                   DOUBLE_803e60c0);
+      iVar2 = fn_800221A0(1000,2000);
+      runtime->idleTimer = (float)iVar2;
     }
     break;
   default:
-    FUN_80242fc0(sSHthorntailSourceFile,0x6cd,sThorntailEnteredInvalidState);
+    OSPanic(sSHthorntailSourceFile,0x6cd,sThorntailEnteredInvalidState);
   }
   return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
