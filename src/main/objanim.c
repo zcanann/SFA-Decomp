@@ -169,7 +169,7 @@ void Object_ObjAnimSetSecondaryBlendMove(int objAnim,uint moveId,int eventState)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 Object_ObjAnimAdvanceMove(double moveStepScale,double deltaTime,int objAnimArg,int eventsArg)
+undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,int eventsArg)
 {
   ObjAnimComponent *objAnim;
   ObjAnimEventList *events;
@@ -184,13 +184,14 @@ undefined4 Object_ObjAnimAdvanceMove(double moveStepScale,double deltaTime,int o
   undefined4 uVar7;
   uint uVar8;
   int iVar9;
+  int eventCountdown;
   int *piVar10;
   int iVar11;
   int iVar12;
   byte bVar13;
   uint uVar14;
   undefined uVar15;
-  undefined8 local_28;
+  double local_28;
 
   objAnim = (ObjAnimComponent *)objAnimArg;
   events = (ObjAnimEventList *)eventsArg;
@@ -203,12 +204,12 @@ undefined4 Object_ObjAnimAdvanceMove(double moveStepScale,double deltaTime,int o
   else {
     state = bank->primaryState;
     iVar11 = (int)state;
-    state->step = (float)(moveStepScale * (double)state->segmentLength);
+    state->step = moveStepScale * state->segmentLength;
     if (state->eventCountdown != 0) {
       if ((state->flags & 8) != 0) {
         state->savedStep = state->step;
       }
-      state->progress = (float)((double)state->savedStep * deltaTime + (double)state->progress);
+      state->progress = state->savedStep * deltaTime + state->progress;
       fVar5 = FLOAT_803df570;
       fVar4 = state->prevSegmentLength;
       if (state->prevFrameType == 0) {
@@ -232,15 +233,17 @@ undefined4 Object_ObjAnimAdvanceMove(double moveStepScale,double deltaTime,int o
         }
       }
       if ((state->flags & 2) == 0) {
-        uVar8 = (uint)-(float)((double)(float)(ObjAnim_U32AsDouble((uint)state->eventStep) -
-                                              DOUBLE_803df568) * deltaTime -
-                              (double)(float)(ObjAnim_U32AsDouble(state->eventCountdown ^
-                                                                  0x80000000) - DOUBLE_803df580));
+        eventCountdown =
+            (int)-(float)((double)(float)(ObjAnim_U32AsDouble((uint)state->eventStep) -
+                                          DOUBLE_803df568) *
+                              deltaTime -
+                          (double)(float)(ObjAnim_U32AsDouble(state->eventCountdown ^ 0x80000000) -
+                                          DOUBLE_803df580));
         fVar4 = FLOAT_803df570;
-        if ((-1 < (int)uVar8) &&
-           (uVar8 = uVar8 ^ 0x80000000, fVar4 = FLOAT_803df574,
-           (float)(ObjAnim_U32AsDouble(uVar8) - DOUBLE_803df580) <= FLOAT_803df574)) {
-          local_28 = ObjAnim_U32AsDouble(uVar8);
+        if ((-1 < eventCountdown) &&
+           (eventCountdown = eventCountdown ^ 0x80000000, fVar4 = FLOAT_803df574,
+           (float)(ObjAnim_U32AsDouble(eventCountdown) - DOUBLE_803df580) <= FLOAT_803df574)) {
+          local_28 = ObjAnim_U32AsDouble(eventCountdown);
           fVar4 = (float)(local_28 - DOUBLE_803df580);
         }
         state->eventCountdown = (u16)(int)fVar4;
@@ -250,7 +253,7 @@ undefined4 Object_ObjAnimAdvanceMove(double moveStepScale,double deltaTime,int o
       }
     }
     fVar4 = objAnim->moveProgress;
-    objAnim->moveProgress = fVar4 + (float)(moveStepScale * deltaTime);
+    objAnim->moveProgress = fVar4 + moveStepScale * deltaTime;
     fVar6 = FLOAT_803df570;
     fVar5 = FLOAT_803df560;
     if (objAnim->moveProgress < FLOAT_803df560) {
@@ -284,7 +287,7 @@ undefined4 Object_ObjAnimAdvanceMove(double moveStepScale,double deltaTime,int o
         iVar1 = (int)(FLOAT_803df578 * fVar4);
         iVar2 = (int)(FLOAT_803df578 * objAnim->moveProgress);
         bVar13 = iVar2 < iVar1;
-        if ((float)(moveStepScale * deltaTime) < FLOAT_803df570) {
+        if (moveStepScale * deltaTime < FLOAT_803df570) {
           bVar13 = bVar13 | 2;
         }
         iVar12 = 0;
@@ -367,7 +370,7 @@ undefined4 Object_ObjAnimSetMoveProgress(f32 param_1,int param_2)
  * PAL Size: TODO
  */
 undefined4
-Object_ObjAnimSetMove(double moveProgress,int objAnimArg,uint moveId,undefined flags)
+Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,uint moveId,undefined flags)
 {
   ObjAnimComponent *objAnim;
   ObjAnimBank *bank;
@@ -377,16 +380,16 @@ Object_ObjAnimSetMove(double moveProgress,int objAnimArg,uint moveId,undefined f
   uint uVar2;
   int iVar3;
   int iVar6;
-  double dVar7;
+  float clampedProgress;
   objAnim = (ObjAnimComponent *)objAnimArg;
-  dVar7 = moveProgress;
-  if ((double)FLOAT_803df560 < dVar7) {
-    dVar7 = (double)FLOAT_803df560;
+  clampedProgress = moveProgress;
+  if (FLOAT_803df560 < clampedProgress) {
+    clampedProgress = FLOAT_803df560;
   }
-  if (dVar7 < (double)FLOAT_803df570) {
-    dVar7 = (double)FLOAT_803df570;
+  if (clampedProgress < FLOAT_803df570) {
+    clampedProgress = FLOAT_803df570;
   }
-  objAnim->moveProgress = (float)dVar7;
+  objAnim->moveProgress = clampedProgress;
   bank = ObjAnim_GetActiveBank(objAnim);
   animDef = bank->animDef;
   if (animDef->moveCount != 0) {
@@ -439,7 +442,7 @@ Object_ObjAnimSetMove(double moveProgress,int objAnimArg,uint moveId,undefined f
       state->eventCountdown = 0x4000;
     }
     state->step = FLOAT_803df570;
-    state->speed = (float)(dVar7 * (double)state->segmentLength);
+    state->speed = clampedProgress * state->segmentLength;
   }
   return 0;
 }
@@ -513,12 +516,14 @@ void ObjAnim_WriteStateWord(int objAnim,int stateIndex,short wordIndex,int value
 void ObjAnim_SetPrimaryEventStepFrames(int objAnim,uint frameCount)
 {
   ObjAnimBank *bank;
+  u32 biasedFrameCount;
 
   bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
   if (bank != (ObjAnimBank *)0x0) {
+    biasedFrameCount = frameCount ^ 0x80000000;
     bank->secondaryState->eventStep =
         (short)(int)(FLOAT_803df574 /
-                    (float)(ObjAnim_U32AsDouble(frameCount ^ 0x80000000) - DOUBLE_803df580));
+                    (float)(ObjAnim_U32AsDouble(biasedFrameCount) - DOUBLE_803df580));
   }
 }
 #pragma scheduling reset
