@@ -3003,19 +3003,105 @@ void OSReport(const char* msg, ...)
  * --INFO--
  *
  * Function: fn_8007D72C
- * EN v1.0 Address: 0x800723A4
- * EN v1.0 Size: 8b
+ * EN v1.0 Address: 0x8007D72C
+ * EN v1.0 Size: 564b
  * EN v1.1 Address: 0x8007D8A8
  * EN v1.1 Size: 564b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
+ *
+ * Card init / serial-no validation. Mounts slot 0; if the mount comes back
+ * "no card filesystem" (-13) it remembers we need to format. On a check
+ * error (-6) it runs CARDCheck; if that also returns -6 it formats. On a
+ * clean mount (or after the recovery path) it reads the card serial and
+ * compares against the cached pair (lbl_803DD048/04C). If the cached pair
+ * is zero, or doesn't match the live card, the cache is rejected with a
+ * "wrong card" error code (-0x55, lbl_803DB700 = 11). Otherwise CARDFormat
+ * if we still owe one, else success: clear the cache, set state 13,
+ * unmount, return 1.
  */
-undefined4 fn_8007D72C(void)
+#pragma peephole off
+#pragma scheduling off
+int fn_8007D72C(void)
 {
+    extern int fn_8007DE0C(int);
+    extern void* fn_80023CC8(int, int, int);
+    extern void fn_80023800(void*);
+    extern void fn_8007FDF8(void);
+    extern void* lbl_803DD040;
+    extern volatile s32 lbl_803DB700;
+    extern u32 lbl_803DD048, lbl_803DD04C, lbl_803DD050, lbl_803DD054;
+    int need_format;
+    int res;
+    u64 serial;
+
+    need_format = 0;
+    if (fn_8007DE0C(0) == 0) {
+        return 0;
+    }
+    lbl_803DD040 = fn_80023CC8(0xA000, -1, 0);
+    if (lbl_803DD040 == 0) {
+        lbl_803DB700 = 8;
+        return 0;
+    }
+    lbl_803DB700 = 0;
+    res = CARDMount(0, lbl_803DD040, (void*)fn_8007FDF8);
+    if (res == -13) {
+        need_format = 1;
+    }
+    if (res == -6) {
+        res = CARDCheck(0);
+        if (res == -6) {
+            res = CARDFormat(0);
+        }
+    } else if (res == -13 || res == 0) {
+        res = CARDGetSerialNo(0, &serial);
+        if (res == 0) {
+            u32* serial_words = (u32*)&serial;
+            if ((lbl_803DD048 | lbl_803DD04C) == 0 ||
+                ((lbl_803DD048 ^ serial_words[0]) | (lbl_803DD04C ^ serial_words[1])) != 0) {
+                res = -0x55;
+                lbl_803DB700 = 0xB;
+            } else if (need_format) {
+                res = CARDFormat(0);
+            } else {
+                CARDUnmount(0);
+                fn_80023800(lbl_803DD040);
+                lbl_803DD040 = 0;
+                lbl_803DB700 = 0xD;
+                return 1;
+            }
+        }
+    }
+    CARDUnmount(0);
+    fn_80023800(lbl_803DD040);
+    lbl_803DD040 = 0;
+    switch (res) {
+        case -2:
+            lbl_803DB700 = 1;
+            break;
+        case -3:
+            if (lbl_803DB700 != 3) lbl_803DB700 = 2;
+            break;
+        case -5:
+            lbl_803DB700 = 4;
+            break;
+        case 0:
+            lbl_803DB700 = 0xD;
+            lbl_803DD04C = 0;
+            lbl_803DD048 = 0;
+            lbl_803DD054 = 0;
+            lbl_803DD050 = 0;
+            return 1;
+        default:
+            return 0;
+    }
     return 0;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--

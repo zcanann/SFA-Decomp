@@ -90,7 +90,7 @@ void fn_8007CAF4(void);
 void fn_8007CF7C(void);
 void fn_8007D670(void);
 void FUN_800723a0(void);
-undefined4 fn_8007D72C(void);
+int fn_8007D72C(void);
 void fn_8007D960(u32 param_1);
 void fn_8007D988(void);
 s32 fn_8007D994(void);
