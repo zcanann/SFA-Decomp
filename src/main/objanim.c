@@ -16,14 +16,10 @@ extern f32 FLOAT_803df574;
 extern f32 FLOAT_803df578;
 extern f32 FLOAT_803df588;
 
-static inline s16 *ObjAnim_GetMoveBaseTable(ObjAnimDef *animDef) {
-  return (s16 *)((u8 *)animDef + 0x70);
-}
-
 static inline s32 ObjAnim_ResolveMoveIndex(ObjAnimDef *animDef, u32 moveId) {
-  s32 moveIndex = ObjAnim_GetMoveBaseTable(animDef)[moveId >> 8] + (moveId & 0xFF);
+  s32 moveIndex = animDef->moveBaseTable[(s32)moveId >> 8] + (moveId & 0xFF);
 
-  if ((u32)animDef->moveCount <= moveIndex) {
+  if (animDef->moveCount <= moveIndex) {
     moveIndex = animDef->moveCount - 1;
   }
   if (moveIndex < 0) {
@@ -371,6 +367,7 @@ undefined4 Object_ObjAnimSetMoveProgress(f32 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 undefined4
 Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,uint moveId,undefined flags)
 {
@@ -385,10 +382,10 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,uint moveId,undefined flag
   float clampedProgress;
   objAnim = (ObjAnimComponent *)objAnimArg;
   clampedProgress = moveProgress;
-  if (FLOAT_803df560 < clampedProgress) {
+  if (clampedProgress > FLOAT_803df560) {
     clampedProgress = FLOAT_803df560;
   }
-  if (clampedProgress < FLOAT_803df570) {
+  else if (clampedProgress < FLOAT_803df570) {
     clampedProgress = FLOAT_803df570;
   }
   objAnim->moveProgress = clampedProgress;
@@ -412,7 +409,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,uint moveId,undefined flag
     objAnim->activeMove = (s16)moveId;
     iVar3 = ObjAnim_ResolveMoveIndex(animDef, moveId);
     if ((animDef->flags & 0x40) != 0) {
-      if (moveId != (uint)(u16)sVar1) {
+      if (moveId != sVar1) {
         state->blendToggle = '\x01' - state->blendToggle;
         state->moveCacheSlot = (u16)state->blendToggle;
         if (animDef->blendMoveIds[iVar3] == -1) {
@@ -448,6 +445,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,uint moveId,undefined flag
   }
   return 0;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
