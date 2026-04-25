@@ -11,7 +11,8 @@
 typedef struct ObjAnimDef {
   u8 pad00[2];
   u16 flags;
-  u8 pad04[0x64 - 4];
+  u16 modNo;
+  u8 pad06[0x64 - 6];
   u8 **moveData;
   u8 pad68[4];
   s16 *blendMoveIds;

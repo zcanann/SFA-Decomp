@@ -1,11 +1,13 @@
 #include "ghidra_import.h"
+#include "dolphin/os.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/unknown/autos/placeholder_8002F604.h"
 
-extern undefined4 FUN_8001786c();
 extern undefined4 FUN_800723a0();
+extern void fn_80024E7C(int animId,int moveIndex,undefined4 cache,ObjAnimDef *animDef);
 
+extern char lbl_802CAD50[];
 extern f64 DOUBLE_803df568;
 extern f64 DOUBLE_803df580;
 extern f32 FLOAT_803df560;
@@ -43,10 +45,7 @@ static s32 ObjAnim_ResolveMoveIndex(ObjAnimDef *animDef, u32 moveId) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjAnim_SetBlendMove(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                          undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                          undefined4 param_9,int param_10,int param_11,uint moveId,
-                          undefined2 eventState)
+void ObjAnim_SetBlendMove(int objAnim,int param_2,int param_3,uint moveId,s16 eventState)
 {
   ObjAnimDef *animDef;
   ObjAnimState *state;
@@ -55,8 +54,8 @@ void ObjAnim_SetBlendMove(undefined8 param_1,double param_2,double param_3,undef
   int moveData;
   int moveIndex;
 
-  animDef = (ObjAnimDef *)param_10;
-  state = (ObjAnimState *)param_11;
+  animDef = (ObjAnimDef *)param_2;
+  state = (ObjAnimState *)param_3;
   moveIndex = ObjAnim_ResolveMoveIndex(animDef, moveId);
   if ((animDef->flags & 0x40) == 0) {
     state->blendCacheSlot = (u16)moveIndex;
@@ -67,12 +66,11 @@ void ObjAnim_SetBlendMove(undefined8 param_1,double param_2,double param_3,undef
       state->blendCacheSlot = (u16)state->blendToggle;
       state->prevBlendCacheSlot = (u16)(1 - state->blendToggle);
       if (animDef->blendMoveIds[moveIndex] == -1) {
-        param_1 = FUN_800723a0();
+        OSReport(lbl_802CAD50,animDef->modNo);
         moveIndex = 0;
       }
-      FUN_8001786c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                   (int)animDef->blendMoveIds[moveIndex],(int)(s16)moveIndex,
-                   (undefined4)state->blendMoveCache[state->blendCacheSlot],(int)animDef);
+      fn_80024E7C((int)animDef->blendMoveIds[moveIndex],(int)(s16)moveIndex,
+                  (undefined4)state->blendMoveCache[state->blendCacheSlot],animDef);
       state->lastBlendMoveIndex = (s16)moveIndex;
     }
     moveData = (int)state->blendMoveCache[state->blendCacheSlot] + 0x80;
@@ -110,17 +108,13 @@ void ObjAnim_SetBlendMove(undefined8 param_1,double param_2,double param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void Object_ObjAnimSetPrimaryBlendMove(undefined8 param_1,double param_2,double param_3,
-                                       undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                                       undefined8 param_7,undefined8 param_8,int objAnim,uint moveId,
-                                       undefined2 eventState)
+void Object_ObjAnimSetPrimaryBlendMove(int objAnim,uint moveId,s16 eventState)
 {
   ObjAnimBank *bank;
 
   bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
   if (bank->animDef->moveCount != 0) {
-    ObjAnim_SetBlendMove(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,
-                         (int)bank->animDef,(int)bank->primaryState,moveId,eventState);
+    ObjAnim_SetBlendMove(objAnim,(int)bank->animDef,(int)bank->primaryState,moveId,eventState);
   }
   return;
 }
@@ -138,17 +132,13 @@ void Object_ObjAnimSetPrimaryBlendMove(undefined8 param_1,double param_2,double 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void Object_ObjAnimSetSecondaryBlendMove(undefined8 param_1,double param_2,double param_3,
-                                         undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                                         undefined8 param_7,undefined8 param_8,int objAnim,uint moveId,
-                                         undefined2 eventState)
+void Object_ObjAnimSetSecondaryBlendMove(int objAnim,uint moveId,s16 eventState)
 {
   ObjAnimBank *bank;
 
   bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
   if (bank->animDef->moveCount != 0) {
-    ObjAnim_SetBlendMove(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,
-                         (int)bank->animDef,(int)bank->secondaryState,moveId,eventState);
+    ObjAnim_SetBlendMove(objAnim,(int)bank->animDef,(int)bank->secondaryState,moveId,eventState);
   }
   return;
 }
@@ -412,12 +402,11 @@ Object_ObjAnimSetMove(double param_1,double param_2,double param_3,undefined8 pa
         state->blendToggle = '\x01' - state->blendToggle;
         state->moveCacheSlot = (u16)state->blendToggle;
         if (animDef->blendMoveIds[iVar3] == -1) {
-          param_1 = (double)FUN_800723a0();
+          OSReport(lbl_802CAD50,animDef->modNo);
           iVar3 = 0;
         }
-        FUN_8001786c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                     (int)animDef->blendMoveIds[iVar3],(int)(s16)iVar3,
-                     (undefined4)state->moveCache[state->moveCacheSlot],(int)animDef);
+        fn_80024E7C((int)animDef->blendMoveIds[iVar3],(int)(s16)iVar3,
+                    (undefined4)state->moveCache[state->moveCacheSlot],animDef);
       }
       iVar6 = (int)state->moveCache[state->moveCacheSlot] + 0x80;
     }
@@ -458,7 +447,7 @@ Object_ObjAnimSetMove(double param_1,double param_2,double param_3,undefined8 pa
  */
 undefined2 ObjAnim_GetPrimaryEventCountdown(int objAnim)
 {
-  return ObjAnim_GetPrimaryState((ObjAnimComponent *)objAnim)->eventCountdown;
+  return ObjAnim_GetSecondaryState((ObjAnimComponent *)objAnim)->eventCountdown;
 }
 
 /*
@@ -484,10 +473,10 @@ void ObjAnim_WriteStateWord(int objAnim,int stateIndex,short wordIndex,undefined
     return;
   }
   if (stateIndex == 0) {
-    state = bank->primaryState;
+    state = bank->secondaryState;
   }
   else {
-    state = bank->secondaryState;
+    state = bank->primaryState;
   }
   *(undefined2 *)((u8 *)state + wordIndex * 2 + 0x58) = value;
 }
@@ -512,7 +501,7 @@ void ObjAnim_SetPrimaryEventStepFrames(int objAnim,uint frameCount)
 
   bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
   if (bank != (ObjAnimBank *)0x0) {
-    state = bank->primaryState;
+    state = bank->secondaryState;
     state->eventStep = (short)(int)(FLOAT_803df574 /
                                    (float)((double)CONCAT44(0x43300000,frameCount ^ 0x80000000) -
                                           DOUBLE_803df580));
