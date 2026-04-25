@@ -1696,10 +1696,10 @@ dolphin/card/CARDStat.c:
 	.text       start:0x80263F08 end:0x802643E8
 
 dolphin/card/CARDNet.c:
-	.text       start:0x802643E8 end:0x8026498C
+	.text       start:0x802643E8 end:0x802644AC
 
 dolphin/thp/THPDec.c:
-	.text       start:0x8026498C end:0x8026B9EC
+	.text       start:0x802644AC end:0x8026B9EC
 
 dolphin/thp/THPAudio.c:
 	.text       start:0x8026B9EC end:0x8026BF1C
