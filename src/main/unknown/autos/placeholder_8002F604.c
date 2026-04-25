@@ -569,103 +569,103 @@ undefined4 ObjAnim_SetMoveProgress(f32 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjAnim_SetCurrentMove(double moveProgress,double param_2,double param_3,undefined8 param_4,
-                            undefined8 param_5,undefined8 param_6,undefined8 param_7,
-                            undefined8 param_8,undefined4 param_9,undefined4 param_10,
-                            uint flags,undefined4 param_12,undefined4 param_13,
-                            undefined4 param_14,undefined4 param_15,undefined4 param_16)
+undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,u32 flags)
 {
-  short sVar1;
-  uint uVar2;
-  int *piVar3;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  int iVar7;
-  double clampedProgress;
-  undefined8 uVar10;
+  ObjAnimComponent *objAnim;
+  ObjAnimBank *bank;
+  ObjAnimDef *animDef;
+  ObjAnimState *state;
+  s16 previousMove;
+  u8 moveChanged;
+  u32 frameStep;
+  int moveIndex;
+  int moveData;
+  f32 clampedProgress;
+  int hitState;
 
-  uVar10 = FUN_80286840();
-  iVar5 = (int)((ulonglong)uVar10 >> 0x20);
-  uVar2 = (uint)uVar10;
-  clampedProgress = moveProgress;
-  if ((double)FLOAT_803df560 < clampedProgress) {
-    clampedProgress = (double)FLOAT_803df560;
+  objAnim = (ObjAnimComponent *)objAnimArg;
+  clampedProgress = (float)moveProgress;
+  if (FLOAT_803df560 < clampedProgress) {
+    clampedProgress = FLOAT_803df560;
   }
-  if (clampedProgress < (double)FLOAT_803df570) {
-    clampedProgress = (double)FLOAT_803df570;
+  else if (clampedProgress < FLOAT_803df570) {
+    clampedProgress = FLOAT_803df570;
   }
-  *(float *)(iVar5 + 0x98) = (float)clampedProgress;
-  piVar3 = *(int **)(*(int *)(iVar5 + 0x7c) + *(char *)(iVar5 + 0xad) * 4);
-  if ((piVar3 != (int *)0x0) && (iVar7 = *piVar3, *(short *)(iVar7 + 0xec) != 0)) {
-    iVar6 = piVar3[0xb];
-    *(char *)(iVar6 + 99) = (char)flags;
-    *(undefined2 *)(iVar6 + 0x46) = *(undefined2 *)(iVar6 + 0x44);
-    *(undefined4 *)(iVar6 + 8) = *(undefined4 *)(iVar6 + 4);
-    *(undefined4 *)(iVar6 + 0x18) = *(undefined4 *)(iVar6 + 0x14);
-    *(undefined4 *)(iVar6 + 0x10) = *(undefined4 *)(iVar6 + 0xc);
-    *(undefined4 *)(iVar6 + 0x38) = *(undefined4 *)(iVar6 + 0x34);
-    *(undefined *)(iVar6 + 0x61) = *(undefined *)(iVar6 + 0x60);
-    *(undefined2 *)(iVar6 + 0x4a) = *(undefined2 *)(iVar6 + 0x48);
-    *(undefined4 *)(iVar6 + 0x40) = *(undefined4 *)(iVar6 + 0x3c);
-    *(undefined2 *)(iVar6 + 0x5c) = *(undefined2 *)(iVar6 + 0x5a);
-    *(undefined2 *)(iVar6 + 0x5a) = 0;
-    *(undefined2 *)(iVar6 + 100) = 0xffff;
-    iVar4 = *(int *)(iVar5 + 0x54);
-    if ((iVar4 != 0) && (*(int *)(iVar4 + 8) != 0)) {
-      fn_80035774(iVar5,piVar3,(int)*(short *)(iVar5 + 0x46),iVar4,uVar2,0);
-    }
-    if (*(uint **)(iVar5 + 0x60) != (uint *)0x0) {
-      fn_8002C6C8(iVar5,(int)*(short *)(iVar5 + 0x46),*(uint **)(iVar5 + 0x60),uVar2,0);
-    }
-    sVar1 = *(short *)(iVar5 + 0xa0);
-    *(short *)(iVar5 + 0xa0) = (short)uVar10;
-    iVar5 = (int)*(short *)(iVar7 + ((int)uVar2 >> 8) * 2 + 0x70) + (uVar2 & 0xff);
-    if ((int)(uint)*(ushort *)(iVar7 + 0xec) <= iVar5) {
-      iVar5 = *(ushort *)(iVar7 + 0xec) - 1;
-    }
-    if (iVar5 < 0) {
-      iVar5 = 0;
-    }
-    if ((*(ushort *)(iVar7 + 2) & 0x40) == 0) {
-      *(short *)(iVar6 + 0x44) = (short)iVar5;
-      iVar5 = *(int *)(*(int *)(iVar7 + 100) + (uint)*(ushort *)(iVar6 + 0x44) * 4);
-    }
-    else {
-      if (uVar2 != (uint)(u16)sVar1) {
-        *(char *)(iVar6 + 0x62) = '\x01' - *(char *)(iVar6 + 0x62);
-        *(short *)(iVar6 + 0x44) = (short)*(char *)(iVar6 + 0x62);
-        if (*(short *)(*(int *)(iVar7 + 0x6c) + iVar5 * 2) == -1) {
-          OSReport(gObjAnimSetBlendMoveMissingAnimWarning,*(undefined2 *)(iVar7 + 4));
-          iVar5 = 0;
-        }
-        fn_80024E7C((int)*(short *)(*(int *)(iVar7 + 0x6c) + iVar5 * 2),(int)(short)iVar5,
-                    *(undefined4 *)(iVar6 + (uint)*(ushort *)(iVar6 + 0x44) * 4 + 0x1c),
-                    (ObjAnimDef *)iVar7);
+  objAnim->hitReactFrame = clampedProgress;
+  bank = ObjAnim_GetActiveBank(objAnim);
+  if (bank == (ObjAnimBank *)0x0) {
+    return 0;
+  }
+  animDef = bank->animDef;
+  if (animDef->moveCount == 0) {
+    return 0;
+  }
+  state = bank->secondaryState;
+  state->flags = (s8)flags;
+  state->prevMoveCacheSlot = state->moveCacheSlot;
+  state->progress = state->speed;
+  state->prevSegmentLength = state->segmentLength;
+  state->savedStep = state->step;
+  state->prevFrameData = state->frameData;
+  state->prevFrameType = state->frameType;
+  state->prevBlendCacheSlot = state->blendCacheSlot;
+  state->prevFrameCmd = state->frameCmd;
+  state->prevEventState = state->eventState;
+  state->eventState = 0;
+  state->lastBlendMoveIndex = -1;
+  hitState = *(int *)(objAnimArg + 0x54);
+  if ((hitState != 0) && (*(int *)(hitState + 8) != 0)) {
+    fn_80035774(objAnimArg,(int *)bank,(int)*(s16 *)(objAnimArg + 0x46),hitState,moveId,0);
+  }
+  if (objAnim->eventTable != (ObjAnimEventTable *)0x0) {
+    fn_8002C6C8(objAnimArg,(int)*(s16 *)(objAnimArg + 0x46),(uint *)objAnim->eventTable,moveId,0);
+  }
+  previousMove = objAnim->currentMove;
+  moveChanged = previousMove != moveId;
+  objAnim->currentMove = (s16)moveId;
+  moveIndex = animDef->moveBaseTable[(s32)moveId >> 8] + (moveId & 0xff);
+  if (moveIndex >= animDef->moveCount) {
+    moveIndex = animDef->moveCount - 1;
+  }
+  if (moveIndex < 0) {
+    moveIndex = 0;
+  }
+  if ((animDef->flags & 0x40) != 0) {
+    if (moveChanged != 0) {
+      state->blendToggle = '\x01' - state->blendToggle;
+      state->moveCacheSlot = (u16)state->blendToggle;
+      if (animDef->blendMoveIds[moveIndex] == -1) {
+        OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
+        moveIndex = 0;
       }
-      iVar5 = *(int *)(iVar6 + (uint)*(ushort *)(iVar6 + 0x44) * 4 + 0x1c) + 0x80;
+      fn_80024E7C((int)animDef->blendMoveIds[moveIndex],(int)(s16)moveIndex,
+                  (undefined4)state->moveCache[state->moveCacheSlot],animDef);
     }
-    *(int *)(iVar6 + 0x34) = iVar5 + 6;
-    *(byte *)(iVar6 + 0x60) = *(byte *)(iVar5 + 1) & 0xf0;
-    *(float *)(iVar6 + 0x14) =
-         (double)CONCAT44(0x43300000,(uint)*(byte *)(*(int *)(iVar6 + 0x34) + 1)) -
-         DOUBLE_803df568;
-    if (*(char *)(iVar6 + 0x60) == '\0') {
-      *(float *)(iVar6 + 0x14) = *(float *)(iVar6 + 0x14) - FLOAT_803df560;
-    }
-    uVar2 = *(u8 *)(iVar5 + 1) & 0xf;
-    if ((uVar2 == 0) || ((flags & 0x10) != 0)) {
-      *(undefined2 *)(iVar6 + 0x58) = 0;
-    }
-    else {
-      *(undefined4 *)(iVar6 + 0x10) = *(undefined4 *)(iVar6 + 0xc);
-      *(short *)(iVar6 + 0x5e) =
-           (short)(int)(FLOAT_803df574 /
-                       ((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803df580));
-      *(undefined2 *)(iVar6 + 0x58) = 0x4000;
-    }
-    *(float *)(iVar6 + 0xc) = FLOAT_803df570;
-    *(float *)(iVar6 + 4) = (float)(clampedProgress * (double)*(float *)(iVar6 + 0x14));
+    moveData = (int)state->moveCache[state->moveCacheSlot] + 0x80;
   }
-  FUN_8028688c();
+  else {
+    state->moveCacheSlot = (u16)moveIndex;
+    moveData = (int)animDef->moveData[state->moveCacheSlot];
+  }
+  state->frameData = (u8 *)(moveData + 6);
+  state->frameType = *(u8 *)(moveData + 1) & 0xf0;
+  state->segmentLength =
+       ObjAnim_U32AsDouble((uint)state->frameData[1]) - DOUBLE_803df568;
+  if (state->frameType == 0) {
+    state->segmentLength = state->segmentLength - FLOAT_803df560;
+  }
+  frameStep = *(u8 *)(moveData + 1) & 0xf;
+  if ((frameStep != 0) && ((flags & 0x10) == 0)) {
+    state->savedStep = state->step;
+    state->eventStep =
+         (short)(int)(FLOAT_803df574 /
+                      (float)(ObjAnim_U32AsDouble(frameStep ^ 0x80000000) - DOUBLE_803df580));
+    state->eventCountdown = 0x4000;
+  }
+  else {
+    state->eventCountdown = 0;
+  }
+  state->step = FLOAT_803df570;
+  state->speed = clampedProgress * state->segmentLength;
+  return 0;
 }

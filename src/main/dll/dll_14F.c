@@ -278,8 +278,7 @@ void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
   if (FLOAT_803e44f0 <= *(float *)(param_9 + 0x98)) {
     *(undefined *)((int)param_11 + 0xf) = 2;
     param_11[2] = (int)FLOAT_803e4518;
-    ObjAnim_SetCurrentMove((double)FLOAT_803e44f4,param_2,param_3,param_4,param_5,param_6,param_7,
-                           param_8,(int)param_9,2,0,param_12,param_13,param_14,param_15,param_16);
+    ObjAnim_SetCurrentMove((double)FLOAT_803e44f4,(int)param_9,2,0);
   }
   return;
 }
@@ -494,8 +493,7 @@ void FUN_8017fd40(undefined8 param_1,double param_2,double param_3,undefined8 pa
             dVar9 = (double)FLOAT_803e44f4;
             piVar8[1] = (int)FLOAT_803e44f4;
             piVar8[2] = (int)fVar1;
-            ObjAnim_SetCurrentMove(dVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                                   (int)param_9,0,0,param_12,param_13,param_14,param_15,param_16);
+            ObjAnim_SetCurrentMove(dVar9,(int)param_9,0,0);
             ObjAnim_SetMoveProgress((double)FLOAT_803e44f4,(int)param_9);
           }
           *(char *)(param_9 + 0x1b) = (char)iVar7;
@@ -532,9 +530,7 @@ void FUN_8017fd40(undefined8 param_1,double param_2,double param_3,undefined8 pa
             *(short *)(piVar8 + 3) = (short)uVar5;
           }
           if (param_9[0x50] != 0) {
-            ObjAnim_SetCurrentMove((double)(float)piVar8[1],param_2,param_3,param_4,param_5,param_6,
-                                   param_7,param_8,(int)param_9,0,0,param_12,param_13,param_14,
-                                   param_15,param_16);
+            ObjAnim_SetCurrentMove((double)(float)piVar8[1],(int)param_9,0,0);
           }
           ObjAnim_SetMoveProgress((double)(float)piVar8[1],(int)param_9);
         }
@@ -1292,8 +1288,7 @@ LAB_80181668:
     if (dVar15 <= (double)(float)((double)(float)((double)FLOAT_803e45a4 * dVar14) *
                                  (double)FLOAT_803e4598)) {
       if ((puVar1[0x50] == 1) && (FLOAT_803e45a8 < pfVar12[0x43])) {
-        ObjAnim_SetCurrentMove((double)FLOAT_803e4588,dVar14,dVar15,in_f4,in_f5,in_f6,in_f7,in_f8,
-                               (int)puVar1,0,0,uVar9,in_r7,in_r8,in_r9,in_r10);
+        ObjAnim_SetCurrentMove((double)FLOAT_803e4588,(int)puVar1,0,0);
         ObjAnim_SetPrimaryEventStepFrames((int)puVar1,0x3c);
         pfVar12[0x43] = FLOAT_803e4588;
       }
@@ -1301,8 +1296,7 @@ LAB_80181668:
     }
     else {
       if ((puVar1[0x50] == 0) && (FLOAT_803e45a8 < pfVar12[0x43])) {
-        ObjAnim_SetCurrentMove((double)FLOAT_803e4588,dVar14,dVar15,in_f4,in_f5,in_f6,in_f7,in_f8,
-                               (int)puVar1,1,0,uVar9,in_r7,in_r8,in_r9,in_r10);
+        ObjAnim_SetCurrentMove((double)FLOAT_803e4588,(int)puVar1,1,0);
         ObjAnim_SetPrimaryEventStepFrames((int)puVar1,0x3c);
         pfVar12[0x43] = FLOAT_803e4588;
       }
@@ -1311,8 +1305,7 @@ LAB_80181668:
   }
   else {
     if ((puVar1[0x50] == 0) && (FLOAT_803e459c < pfVar12[0x43])) {
-      ObjAnim_SetCurrentMove((double)FLOAT_803e4588,dVar14,dVar15,in_f4,in_f5,in_f6,in_f7,in_f8,
-                             (int)puVar1,1,0,uVar9,in_r7,in_r8,in_r9,in_r10);
+      ObjAnim_SetCurrentMove((double)FLOAT_803e4588,(int)puVar1,1,0);
       ObjAnim_SetPrimaryEventStepFrames((int)puVar1,0x3c);
       pfVar12[0x43] = FLOAT_803e4588;
     }

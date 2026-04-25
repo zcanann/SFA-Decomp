@@ -12,7 +12,7 @@ extern int fn_80036770(int obj,undefined4 *param_2,int *sphereIndex,uint *param_
                        undefined *param_6,float *param_7);
 extern void fn_8009A1DC(double param_1,int obj,undefined2 *pos,u32 count,int *param_5);
 extern int ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnim,int events);
-extern void ObjAnim_SetCurrentMove(double moveProgress,int objAnim,int moveId,u32 flags);
+extern undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnim,int moveId,u32 flags);
 
 extern undefined4 lbl_802C1B00[4];
 extern char sObjHitReactHitstateFrameString[];
