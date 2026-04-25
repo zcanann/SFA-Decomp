@@ -3,12 +3,8 @@
 
 #include "ghidra_import.h"
 
-void expgfx_release(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                    undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                    undefined4 param_9,undefined4 param_10,int param_11,int param_12,uint param_13,
-                    undefined4 param_14,undefined4 param_15,undefined4 param_16);
-void expgfx_initialise(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                       undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void expgfx_release(uint slotPoolBase,int poolIndex,int slotIndex,int freeTexture,int clearActive);
+void expgfx_initialise(void);
 int expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,int param_4,uint param_5);
 void expgfx_initSlotQuad(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                          undefined8 param_5,undefined8 param_6,undefined8 param_7,
