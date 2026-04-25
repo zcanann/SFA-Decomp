@@ -50,6 +50,7 @@ static inline f64 ObjAnim_U32AsDouble(u32 value) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,uint moveId,s16 eventState)
 {
   float frameValue;
@@ -95,6 +96,7 @@ void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,ui
   }
   return;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -109,7 +111,8 @@ void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,ui
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void Object_ObjAnimSetPrimaryBlendMove(int objAnim,uint moveId,s16 eventState)
+#pragma scheduling off
+void Object_ObjAnimSetPrimaryBlendMove(int objAnim,uint moveId,int eventState)
 {
   ObjAnimBank *bank;
 
@@ -133,7 +136,7 @@ void Object_ObjAnimSetPrimaryBlendMove(int objAnim,uint moveId,s16 eventState)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void Object_ObjAnimSetSecondaryBlendMove(int objAnim,uint moveId,s16 eventState)
+void Object_ObjAnimSetSecondaryBlendMove(int objAnim,uint moveId,int eventState)
 {
   ObjAnimBank *bank;
 
@@ -143,6 +146,7 @@ void Object_ObjAnimSetSecondaryBlendMove(int objAnim,uint moveId,s16 eventState)
   }
   return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
