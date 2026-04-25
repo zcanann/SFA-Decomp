@@ -2270,22 +2270,28 @@ dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c:
 	.text       start:0x8028DFC4 end:0x8028E304
 
 dolphin/MSL_C/PPCEABI/bare/H/ansi_fp.c:
-	.text       start:0x8028E304 end:0x8028EE38
+	.text       start:0x8028E304 end:0x8028E7FC
 
 dolphin/MSL_C/PPCEABI/bare/H/buffer_io.c:
-	.text       start:0x8028EE38 end:0x8028EE38
+	.text       start:0x8028E7FC end:0x8028E8F4
 
 dolphin/MSL_C/PPCEABI/bare/H/direct_io.c:
+	.text       start:0x8028E8F4 end:0x8028EC20
+
+dolphin/MSL_C/PPCEABI/bare/H/file_io.c:
+	.text       start:0x8028EC20 end:0x8028EE18
+
+dolphin/MSL_C/PPCEABI/bare/H/FILE_POS.c:
+	.text       start:0x8028EE18 end:0x8028EE38
+
+main/unknown/autos/placeholder_8028EE38.c:
 	.text       start:0x8028EE38 end:0x8028F2CC
 
 dolphin/MSL_C/PPCEABI/bare/H/mem.c:
 	.text       start:0x8028F2CC end:0x8028F398
 
-dolphin/MSL_C/PPCEABI/bare/H/file_io.c:
-	.text       start:0x8028F398 end:0x8028F50C
-
-dolphin/MSL_C/PPCEABI/bare/H/FILE_POS.c:
-	.text       start:0x8028F50C end:0x8028F7E0
+main/unknown/autos/placeholder_8028F398.c:
+	.text       start:0x8028F398 end:0x8028F7E0
 
 dolphin/MSL_C/PPCEABI/bare/H/mbstring.c:
 	.text       start:0x8028F7E0 end:0x8028F920
