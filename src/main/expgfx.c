@@ -51,7 +51,7 @@ extern undefined4 FUN_80081130();
 extern int FUN_80081134();
 extern void fn_8009B9C8(u8 sourceMode,int sourceId,int param_3);
 extern undefined8 FUN_80135810();
-extern void fn_801378A8(char *message);
+extern void fn_801378A8(char *message,...);
 extern double FUN_80136594();
 extern undefined4 FUN_802420e0();
 extern undefined4 FUN_802475e4();
@@ -311,7 +311,7 @@ void expgfx_release(undefined8 param_1,undefined8 param_2,undefined8 param_3,und
   uint *puVar7;
   undefined8 extraout_f1;
   undefined8 uVar8;
-  
+
   uVar8 = FUN_80286838();
   iVar2 = (int)uVar8;
   puVar7 = &gExpgfxPoolActiveMasks + iVar2;
@@ -388,7 +388,7 @@ void expgfx_initialise(undefined8 param_1,undefined8 param_2,undefined8 param_3,
   uint *puVar8;
   uint *puVar9;
   undefined8 uVar10;
-  
+
   uVar10 = FUN_80286830();
   iVar5 = 0;
   puVar9 = &gExpgfxSlotPoolBases;
@@ -465,7 +465,7 @@ undefined4 expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,i
   int *piVar8;
   int iVar9;
   int iVar10;
-  
+
   sVar2 = -1;
   bVar1 = false;
   iVar4 = 0;
@@ -607,7 +607,7 @@ void expgfx_initSlotQuad(undefined8 param_1,double param_2,undefined8 param_3,un
   double dVar10;
   undefined8 local_18;
   undefined8 local_8;
-  
+
   slot = (ExpgfxSlot *)param_9;
   tableEntry = Expgfx_GetTableEntry(Expgfx_GetSlotTableIndex(slot));
   iVar5 = tableEntry->textureOrResource;
@@ -752,50 +752,54 @@ void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int expgfx_addToTable(int textureOrResource,int key0,int key1,s16 slotType)
+#pragma scheduling off
+int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
 {
   ExpgfxTableEntry *entry;
   ExpgfxTableEntry *entryBase;
   int tableIndex;
-  int remaining;
   int freeIndex;
+  u16 refCount;
   
   tableIndex = 0;
   entryBase = Expgfx_GetTableEntry(0);
-  remaining = EXPGFX_POOL_COUNT;
   entry = entryBase;
-  while ((((entry->refCount == 0 || (entry->textureOrResource != textureOrResource)) ||
-          (entry->key0 != key0)) || (entry->key1 != key1))) {
+  do {
+    if (((entry->refCount != 0 && (entry->textureOrResource == textureOrResource)) &&
+        (entry->key0 == key0)) && (entry->key1 == key1)) {
+      entry = &gExpgfxTableEntries[tableIndex];
+      refCount = entry->refCount;
+      if (refCount >= 0xffff) {
+        fn_801378A8(sExpgfxAddToTableUsageOverflow);
+        return -1;
+      }
+      entry->refCount = refCount + 1;
+      return (int)(short)tableIndex;
+    }
     entry = entry + 1;
     tableIndex = tableIndex + 1;
-    remaining = remaining + -1;
-    if (remaining == 0) {
-      freeIndex = 0;
-      remaining = EXPGFX_POOL_COUNT;
-      do {
-        if (entryBase->refCount == 0) {
-          entryBase->refCount = 1;
-          entryBase->textureOrResource = textureOrResource;
-          entryBase->key0 = key0;
-          entryBase->key1 = key1;
-          entryBase->slotType = slotType;
-          return (int)(short)freeIndex;
-        }
-        entryBase = entryBase + 1;
-        freeIndex = freeIndex + 1;
-        remaining = remaining + -1;
-      } while (remaining != 0);
-      fn_801378A8(sExpgfxExpTabIsFull);
-      return -1;
+  } while (tableIndex < EXPGFX_POOL_COUNT);
+
+  freeIndex = 0;
+  entry = entryBase;
+  do {
+    if (entry->refCount == 0) {
+      entry = &gExpgfxTableEntries[freeIndex];
+      entry->refCount = 1;
+      entry->textureOrResource = textureOrResource;
+      entry->key0 = key0;
+      entry->key1 = key1;
+      entry->slotType = slotType;
+      return (int)(short)freeIndex;
     }
-  }
-  if (entry->refCount == 0xffff) {
-    fn_801378A8(sExpgfxAddToTableUsageOverflow);
-    return -1;
-  }
-  entry->refCount = entry->refCount + 1;
-  return (int)(short)tableIndex;
+    entry = entry + 1;
+    freeIndex = freeIndex + 1;
+  } while (freeIndex < EXPGFX_POOL_COUNT);
+
+  fn_801378A8(sExpgfxExpTabIsFull);
+  return -1;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--

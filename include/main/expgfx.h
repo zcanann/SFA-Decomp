@@ -16,7 +16,7 @@ void expgfx_initSlotQuad(undefined8 param_1,double param_2,undefined8 param_3,un
                          undefined8 param_8,undefined2 *param_9);
 void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_4,double param_5,
                  double param_6,undefined8 param_7,undefined8 param_8);
-int expgfx_addToTable(int textureOrResource,int key0,int key1,s16 slotType);
+int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType);
 int fn_8009DF0C(void *sourceObject);
 void fn_8009E004(void);
 void fn_8009E024(void);
