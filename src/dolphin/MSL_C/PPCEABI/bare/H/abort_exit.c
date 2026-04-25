@@ -8,7 +8,7 @@ void _ExitProcess();
 
 extern void (*_dtors[])(void);
 
-void (*__atexit_funcs[64])(void);
+extern void (*__atexit_funcs_803DAAB8[64])(void);
 
 extern void (*__console_exit)(void);
 
@@ -49,8 +49,8 @@ _exit_1:
     li r0, 0x0
     stw r0, __stdio_exit(r0)
 _exit_3:
-    lis r3, __atexit_funcs@ha
-    addi r31, r3, __atexit_funcs@l
+    lis r3, __atexit_funcs_803DAAB8@ha
+    addi r31, r3, __atexit_funcs_803DAAB8@l
     b _exit_5
 _exit_4:
     lwz r3, __atexit_curr_func(r0)
