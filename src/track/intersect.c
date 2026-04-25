@@ -2865,18 +2865,114 @@ void fn_8007A71C(uint param_1)
  * --INFO--
  *
  * Function: fn_8007AD10
- * EN v1.0 Address: 0x80072040
- * EN v1.0 Size: 4b
+ * EN v1.0 Address: 0x8007AD10
+ * EN v1.0 Size: 780b
  * EN v1.1 Address: 0x8007AE8C
  * EN v1.1 Size: 780b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
+ *
+ * Fullscreen 640x480 textured quad with caller-supplied alpha. The alpha
+ * is multiplied by lbl_803DEF20 (a 0..255 scale), fctiwz'd to int and
+ * stamped into byte 3 of the K0 GXColor cache (lbl_803DB6A0). Sets up
+ * one TEV stage that K-multiplies the texture by alpha; uses fixed UVs
+ * 0..0x80 so the texture maps once across the screen. Used when fading
+ * the screen to texture (e.g. boot logo / "now loading").
  */
-void fn_8007AD10(double param_1)
+#pragma peephole off
+#pragma scheduling off
+void fn_8007AD10(f32 alpha)
 {
+    extern f32 lbl_803DEF1C;
+    extern GXColor lbl_803DB6A0;
+    extern Mtx lbl_80396880;
+    extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
+    extern u8 lbl_803DD011, lbl_803DD019;
+    extern int lbl_803DD014;
+    extern void fn_8006C6F0(int);
+    extern void fn_80246E54(f32* mtx);
+    extern void fn_8000FB00(void);
+    extern void GXSetZMode();
+    extern void GXSetZCompLoc(u8);
+    Mtx mtx;
+
+    lbl_803DB6A0.a = (s32)(*(f32*)((u8*)&lbl_803DEF1C + 4) * alpha);
+    fn_8006C6F0(0);
+    GXSetTevKColor(0, lbl_803DB6A0);
+    GXSetTevKAlphaSel(0, 0x1C);
+    fn_80246E54((f32*)mtx);
+    GXLoadTexMtxImm(mtx, 0x24, 1);
+    GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXSetCullMode(GX_CULL_NONE);
+    GXSetBlendMode(1, 4, 5, 5);
+    if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 7 ||
+        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+        GXSetZMode(0, 7, 0);
+        lbl_803DD018 = 0;
+        lbl_803DD014 = 7;
+        lbl_803DD012 = 0;
+        lbl_803DD01A = 1;
+    }
+    if ((u32)lbl_803DD011 != 1 || (u32)lbl_803DD019 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DD011 = 1;
+        lbl_803DD019 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
+    GXSetNumTexGens(1);
+    GXSetNumTevStages(1);
+    GXSetNumIndStages(0);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(0);
+    GXSetTevDirect(0);
+    GXSetTevOrder(0, 0, 0, 6);
+    GXSetTevColorIn(0, 0xF, 0xF, 0xF, 8);
+    GXSetTevAlphaIn(0, 7, 7, 7, 6);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = 0;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = 0x280;
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.s16 = 0x80;
+    GXWGFifo.s16 = 0;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = 0x280;
+    GXWGFifo.s16 = 0x1E0;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.s16 = 0x80;
+    GXWGFifo.s16 = 0x80;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = 0x1E0;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = 0x80;
+
+    fn_8000FB00();
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
