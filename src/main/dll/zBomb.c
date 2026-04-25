@@ -4,15 +4,15 @@
 #include "main/dll/zBomb.h"
 
 extern undefined4 FUN_8000a380();
-extern undefined4 FUN_8001ffb4();
-extern undefined4 FUN_800200e8();
+extern int fn_8001FFB4(int eventId);
+extern void fn_800200E8(int eventId,int value);
 extern void FUN_80026e00(int param_1,int param_2,float *param_3);
-extern void FUN_80041018(int param_1);
+extern void fn_80041018(int obj);
 extern undefined4 FUN_80097734();
 
-extern undefined4* DAT_803dca68;
+extern undefined4* lbl_803DCA68;
 extern undefined4* DAT_803dcaa8;
-extern undefined4* DAT_803dcaac;
+extern undefined4* lbl_803DCAAC;
 extern s32 lbl_80329B78[];
 extern char sTextBlockInitNoLongerSupported[];
 extern char sLaserInitNoLongerSupported[];
@@ -82,11 +82,11 @@ void dfptargetblock_update(int param_1)
   }
   else {
     if (state->completionSfxReady == '\0') {
-      uVar3 = FUN_8001ffb4((int)state->completionSfxId);
+      uVar3 = fn_8001FFB4((int)state->completionSfxId);
       state->completionSfxReady = uVar3;
     }
     if (state->stateSfxReady == '\0') {
-      uVar3 = FUN_8001ffb4((int)state->stateSfxId);
+      uVar3 = fn_8001FFB4((int)state->stateSfxId);
       state->stateSfxReady = uVar3;
     }
     fVar2 = FLOAT_803e64ac;
@@ -108,7 +108,7 @@ void dfptargetblock_update(int param_1)
           if (*(float *)(param_1 + 0x10) <= fVar2) {
             *(float *)(param_1 + 0x10) = fVar2;
             state->mode = DFPTARGETBLOCK_MODE_SETTLED;
-            FUN_800200e8((int)state->completionSfxId,1);
+            fn_800200E8((int)state->completionSfxId,1);
           }
         }
       }
@@ -186,9 +186,9 @@ void dfptargetblock_init(int param_1,int param_2)
     *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) - FLOAT_803e64ac;
     state->completionSfxId = *(short *)(param_2 + 0x1e);
     state->stateSfxId = *(short *)(param_2 + 0x20);
-    uVar5 = FUN_8001ffb4((int)state->completionSfxId);
+    uVar5 = fn_8001FFB4((int)state->completionSfxId);
     state->completionSfxReady = uVar5;
-    uVar5 = FUN_8001ffb4((int)state->stateSfxId);
+    uVar5 = fn_8001FFB4((int)state->stateSfxId);
     state->stateSfxReady = uVar5;
     if (state->completionSfxReady != '\0') {
       *(float *)(param_1 + 0xc) = *(float *)(param_1 + 0xc) + FLOAT_803e64d0;
@@ -280,39 +280,39 @@ void laserObj_update(int param_1)
   LaserObject *obj;
   LaserState *state;
   uint uVar1;
-  byte bVar2;
-  int iVar3;
+  int mode;
 
   obj = (LaserObject *)param_1;
-  state = obj->state;
-  if ((state->sequenceLatched == '\0') &&
-     (uVar1 = FUN_8001ffb4((int)state->secondarySequenceId), uVar1 != 0)) {
-    obj->statusFlags = obj->statusFlags & ~LASER_OBJECT_STATUS_08;
+  if ((obj->state->sequenceLatched == '\0') &&
+     (uVar1 = fn_8001FFB4((int)obj->state->secondarySequenceId), uVar1 != 0)) {
+    obj->statusFlags = (u32)(obj->statusFlags & ~LASER_OBJECT_STATUS_08);
   }
   else {
-    obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_08;
+    obj->statusFlags = (u32)(obj->statusFlags | LASER_OBJECT_STATUS_08);
   }
-  FUN_80041018(param_1);
+  fn_80041018(param_1);
   if ((obj->statusFlags & 1) != 0) {
-    bVar2 = (**(code **)(*DAT_803dcaac + 0x40))((int)obj->modeIndex);
-    if (bVar2 == 2) {
-      iVar3 = (**(code **)(*DAT_803dca68 + 0x20))(0x83c);
-      if (iVar3 != 0) {
-        FUN_800200e8((int)state->primarySequenceId,1);
-        FUN_800200e8((int)state->secondarySequenceId,0);
-        state->sequenceLatched = 1;
-        obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_08;
-        (**(code **)(*DAT_803dcaac + 0x44))(7,8);
-        (**(code **)(*DAT_803dcaac + 0x44))(0xd,2);
+    mode = (u8)(*(code *)(*lbl_803DCAAC + 0x40))((int)obj->modeIndex);
+    if (mode != 2) {
+      if ((mode < 2) && (mode != 0)) {
+        state = obj->state;
+        if ((*(code *)(*lbl_803DCA68 + 0x20))(0x2e8) != 0) {
+          fn_800200E8((int)state->primarySequenceId,1);
+          fn_800200E8((int)state->secondarySequenceId,0);
+          state->sequenceLatched = 1;
+          obj->statusFlags = (u32)(obj->statusFlags | LASER_OBJECT_STATUS_08);
+        }
       }
     }
-    else if ((bVar2 < 2) && (bVar2 != 0)) {
-      iVar3 = (**(code **)(*DAT_803dca68 + 0x20))(0x2e8);
-      if (iVar3 != 0) {
-        FUN_800200e8((int)state->primarySequenceId,1);
-        FUN_800200e8((int)state->secondarySequenceId,0);
+    else {
+      state = obj->state;
+      if ((*(code *)(*lbl_803DCA68 + 0x20))(0x83c) != 0) {
+        fn_800200E8((int)state->primarySequenceId,1);
+        fn_800200E8((int)state->secondarySequenceId,0);
         state->sequenceLatched = 1;
-        obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_08;
+        obj->statusFlags = (u32)(obj->statusFlags | LASER_OBJECT_STATUS_08);
+        (*(code *)(*lbl_803DCAAC + 0x44))(7,8);
+        (*(code *)(*lbl_803DCAAC + 0x44))(0xd,2);
       }
     }
   }
@@ -331,7 +331,7 @@ void laserObj_init(undefined2 *param_1,int param_2)
   state->secondarySequenceId = *(short *)(param_2 + 0x20);
   state->sequenceLatched = 0;
   *param_1 = (short)((int)*(char *)(param_2 + 0x18) << 8);
-  uVar1 = FUN_8001ffb4((int)state->primarySequenceId);
+  uVar1 = fn_8001FFB4((int)state->primarySequenceId);
   if (uVar1 != 0) {
     state->sequenceLatched = 1;
     obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_08;
