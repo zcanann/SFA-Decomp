@@ -2338,7 +2338,7 @@ dolphin/MSL_C/PPCEABI/bare/H/s_cos.c:
 dolphin/MSL_C/PPCEABI/bare/H/math_ppc.c:
 	.text       start:0x802927A4 end:0x802927A4
 
-main/unknown/autos/placeholder_802929A8.c:
+dolphin/MSL_C/PPCEABI/bare/H/e_sqrt.c:
 	.text       start:0x802927A4 end:0x802929CC
 
 dolphin/MSL_C/PPCEABI/bare/H/k_cos.c:
@@ -2346,9 +2346,6 @@ dolphin/MSL_C/PPCEABI/bare/H/k_cos.c:
 
 main/unknown/autos/placeholder_80292C14.c:
 	.text       start:0x80292B44 end:0x80292E20
-
-dolphin/MSL_C/PPCEABI/bare/H/e_sqrt.c:
-	.text       start:0x80292E20 end:0x8029312C
 
 main/unknown/autos/placeholder_8029312C.c:
 	.text       start:0x8029312C end:0x80293464
