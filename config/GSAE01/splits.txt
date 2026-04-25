@@ -907,8 +907,11 @@ main/dll/DIM/DIMcannon.c:
 main/dll/DIM/DIMlavasmash.c:
 	.text       start:0x801B0924 end:0x801B1354
 
-dolphin/TRK_MINNOW_DOLPHIN/MWCriticalSection_gc.c:
+main/unknown/autos/placeholder_801B1354.c:
 	.text       start:0x801B1354 end:0x801B13F0
+
+dolphin/TRK_MINNOW_DOLPHIN/MWCriticalSection_gc.c:
+	.text       start:0x801B13F0 end:0x801B13F0
 
 main/dll/DIM/DIMExplosion.c:
 	.text       start:0x801B13F0 end:0x801B1FF4
@@ -2269,8 +2272,11 @@ dolphin/TRK_MINNOW_DOLPHIN/targcont.c:
 dolphin/TRK_MINNOW_DOLPHIN/target_options.c:
 	.text       start:0x8028D960 end:0x8028D960
 
-dolphin/TRK_MINNOW_DOLPHIN/mslsupp.c:
+main/unknown/autos/placeholder_8028D960.c:
 	.text       start:0x8028D960 end:0x8028DBE4
+
+dolphin/TRK_MINNOW_DOLPHIN/mslsupp.c:
+	.text       start:0x8028DBE4 end:0x8028DBE4
 
 dolphin/MSL_C/PPCEABI/bare/H/abort_exit.c:
 	.text       start:0x8028DBE4 end:0x8028DBE4
