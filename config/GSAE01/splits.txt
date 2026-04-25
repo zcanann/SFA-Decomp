@@ -1632,20 +1632,20 @@ dolphin/gx/GXTev.c:
 	.text       start:0x8025B89C end:0x8025C2D4
 
 dolphin/gx/GXPixel.c:
-	.text       start:0x8025C2D4 end:0x8025D01C
+	.text       start:0x8025C2D4 end:0x8025CA1C
 
 dolphin/gx/GXDraw.c:
-	.text       start:0x8025D01C end:0x8025D01C
-
-dolphin/gx/GXTransform.c:
-	.text       start:0x8025D01C end:0x8025D490
-	.sdata2     start:0x803E83E8 end:0x803E83F4
+	.text       start:0x8025CA1C end:0x8025CD38
 
 dolphin/gx/GXStubs.c:
-	.text       start:0x8025D490 end:0x8025D490
+	.text       start:0x8025CD38 end:0x8025CD3C
 
 dolphin/gx/GXDisplayList.c:
-	.text       start:0x8025D490 end:0x8025D514
+	.text       start:0x8025CD3C end:0x8025CF48
+
+dolphin/gx/GXTransform.c:
+	.text       start:0x8025CF48 end:0x8025D514
+	.sdata2     start:0x803E83E8 end:0x803E83F4
 
 dolphin/gx/GXPerf.c:
 	.text       start:0x8025D514 end:0x8025DE80
