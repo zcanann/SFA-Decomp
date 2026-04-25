@@ -61,12 +61,12 @@ u8 objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,flo
   int *effectHandle;
   bool volumeActive;
   ObjHitReactEntry *reactEntry;
+  undefined4 effectOrigin[4];
   ObjHitReactEffectPos effectPos;
   float local_28;
   undefined local_24[4];
-  float local_20[8];
+  float hitNormalY;
   int sphereIndex;
-  undefined4 effectOrigin[4];
 
   objAnim = (ObjAnimComponent *)obj;
   effectOrigin[0] = lbl_802C1B00[0];
@@ -81,11 +81,11 @@ u8 objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,flo
       reactionState = 0;
     }
   }
-  collisionType = fn_80036770(obj,0,&sphereIndex,0,&local_28,local_24,local_20);
+  collisionType = fn_80036770(obj,0,&sphereIndex,0,&local_28,local_24,&hitNormalY);
   if (collisionType != 0) {
     animDef = ObjAnim_GetAnimDef(objAnim);
     local_28 = local_28 + lbl_803DCDD8;
-    local_20[0] = local_20[0] + lbl_803DCDDC;
+    hitNormalY = hitNormalY + lbl_803DCDDC;
     effectPos.x = 0;
     effectPos.y = 0;
     effectPos.z = 0;
@@ -131,8 +131,8 @@ void fn_80035630(int count)
   int hitState;
   int *objectList;
   int resetObjectCount;
+  undefined local_14[4];
   undefined local_18[4];
-  undefined local_14[16];
 
   objectList = fn_8002E0FC(local_18,local_14);
   gObjHitReactResetObjectCount = 0;
