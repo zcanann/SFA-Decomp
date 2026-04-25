@@ -506,7 +506,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/card/CARDCheck.c"),
             Object(NonMatching, "dolphin/card/CARDMount.c"),
             Object(MatchingFor("GSAE01"), "dolphin/card/CARDFormat.c"),
-            Object(NonMatching, "dolphin/card/CARDOpen.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/card/CARDOpen.c"),
             Object(MatchingFor("GSAE01"), "dolphin/card/CARDCreate.c"),
             Object(MatchingFor("GSAE01"), "dolphin/card/CARDRead.c"),
             Object(MatchingFor("GSAE01"), "dolphin/card/CARDWrite.c"),
