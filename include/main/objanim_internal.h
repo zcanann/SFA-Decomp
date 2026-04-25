@@ -66,8 +66,9 @@ typedef struct ObjAnimComponent {
   u8 pad80[0x98 - 0x80];
   f32 hitReactFrame;
   f32 moveProgress;
+  u8 padA0[2];
   s16 activeMove;
-  u8 padA2[0xAD - 0xA2];
+  u8 padA4[0xAD - 0xA4];
   s8 bankIndex;
 } ObjAnimComponent;
 

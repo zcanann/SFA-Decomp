@@ -57,8 +57,15 @@ void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,ui
   uint frameType;
   int moveData;
   int moveIndex;
+  u64 frameBits;
 
-  moveIndex = ObjAnim_ResolveMoveIndex(animDef, moveId);
+  moveIndex = ObjAnim_GetMoveBaseTable(animDef)[(s32)moveId >> 8] + (moveId & 0xff);
+  if ((u32)animDef->moveCount <= moveIndex) {
+    moveIndex = animDef->moveCount - 1;
+  }
+  if (moveIndex < 0) {
+    moveIndex = 0;
+  }
   if ((animDef->flags & 0x40) != 0) {
     if (state->lastBlendMoveIndex != moveIndex) {
       state->blendCacheSlot = (u16)state->blendToggle;
@@ -83,7 +90,8 @@ void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,ui
     state->eventState = 0;
   }
   else {
-    frameValue = (float)(ObjAnim_U32AsDouble((uint)state->frameCmd[1]) - DOUBLE_803df568);
+    frameBits = CONCAT44(0x43300000, (uint)state->frameCmd[1]);
+    frameValue = (float)(*(f64 *)&frameBits - DOUBLE_803df568);
     if (frameType == 0) {
       frameValue = frameValue - FLOAT_803df560;
     }
