@@ -33,7 +33,7 @@ void fn_800717FC(void);
 void fn_80071D54(byte *param_1);
 void fn_800722B0(double param_1,double param_2,float *param_3,byte *param_4);
 void fn_80072DFC(undefined4 param_1,undefined4 param_2,int param_3);
-void fn_8007366C(undefined param_1);
+void fn_8007366C(u8 alpha);
 void fn_80073AAC(void* texture, u32* colorA, u32* colorB);
 undefined4 fn_80073D04(int param_1,int *param_2);
 undefined4 fn_80074110(int param_1,int *param_2,int param_3);

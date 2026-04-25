@@ -1194,18 +1194,133 @@ void fn_80072DFC(undefined4 param_1,undefined4 param_2,int param_3)
  * --INFO--
  *
  * Function: fn_8007366C
- * EN v1.0 Address: 0x8006FB18
- * EN v1.0 Size: 4b
+ * EN v1.0 Address: 0x8007366C
+ * EN v1.0 Size: 1088b
  * EN v1.1 Address: 0x800737E8
  * EN v1.1 Size: 1088b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
+ *
+ * Three-tex-coord-gen ind+direct TEV setup. Loads the active env-mtx
+ * (lbl_80396820) for tex0, scales tex1 by lbl_803DEF2C through a 3x4
+ * matrix from fn_80247318, and stamps an indirect tex matrix from local
+ * stack data. Two TEV stages: stage 0 K-modulates the texture by alpha,
+ * stage 1 modulates by the second texture. Uses ind tex stage 0 to warp
+ * tex coord 0 by tex1.
  */
-void fn_8007366C(undefined param_1)
+#pragma peephole off
+#pragma scheduling off
+void fn_8007366C(u8 alpha)
 {
+    extern Mtx lbl_80396820;
+    extern f32 lbl_803DEF28;
+    extern f32 lbl_803DEF2C;
+    extern f32 lbl_803DEEDC;
+    extern f32 lbl_803DEEE4;
+    extern f32 lbl_803DEEEC;
+    extern f32 lbl_803DEF30;
+    extern f32 gSynthDelayedActionWord0;
+    extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
+    extern u8 lbl_803DD011, lbl_803DD019;
+    extern int lbl_803DD014;
+    extern void fn_8000F54C(void);
+    extern void fn_8006C6F0(int);
+    extern void fn_8006CABC(f32* a, f32* b);
+    extern void fn_8006C5E4(int* out);
+    extern void fn_8006C5CC(int* out);
+    extern void fn_8004C2E4(int handle, int slot);
+    extern void fn_80247318(f32* mtx, f32 a, f32 b, f32 c);
+    extern void GXSetZMode();
+    extern void GXSetZCompLoc(u8);
+    Mtx mtx;
+    f32 ind_mtx[2][3];
+    Mtx tex_mtx;
+    f32 a, b;
+    int handle1, handle2;
+    GXColor c;
+
+    fn_8000F54C();
+    fn_8006C6F0(0);
+    GXLoadTexMtxImm(lbl_80396820, 0x52, 0);
+    GXSetTexCoordGen2(0, 0, 0, 0, 0, 0x52);
+    fn_8006CABC(&a, &b);
+    a = a * lbl_803DEF28;
+    fn_8006C5E4(&handle1);
+    fn_8004C2E4(handle1, 1);
+    fn_80247318((f32*)tex_mtx, lbl_803DEF2C, lbl_803DEF2C, lbl_803DEF2C);
+    tex_mtx[0][3] = a;
+    GXLoadTexMtxImm(tex_mtx, 0x21, 1);
+    GXSetTexCoordGen2(1, 1, 0, 0x21, 0, 0x7D);
+    ind_mtx[0][0] = gSynthDelayedActionWord0;
+    ind_mtx[0][1] = lbl_803DEEDC;
+    ind_mtx[0][2] = lbl_803DEEDC;
+    ind_mtx[1][0] = lbl_803DEEDC;
+    ind_mtx[1][1] = lbl_803DEEEC;
+    ind_mtx[1][2] = lbl_803DEEDC;
+    GXSetIndTexOrder(0, 1, 1);
+    GXSetIndTexCoordScale(0, 0, 0);
+    GXSetIndTexMtx(1, ind_mtx, -3);
+    *(int*)&c = 0;
+    GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
+    mtx[0][0] = lbl_803DEF30;
+    mtx[0][1] = lbl_803DEEDC;
+    mtx[0][2] = lbl_803DEEDC;
+    mtx[0][3] = gSynthDelayedActionWord0;
+    mtx[1][0] = lbl_803DEEDC;
+    mtx[1][1] = lbl_803DEF30;
+    mtx[1][2] = lbl_803DEEDC;
+    mtx[1][3] = gSynthDelayedActionWord0;
+    mtx[2][0] = lbl_803DEEDC;
+    mtx[2][1] = lbl_803DEEDC;
+    mtx[2][2] = lbl_803DEEDC;
+    mtx[2][3] = lbl_803DEEE4;
+    GXLoadTexMtxImm(mtx, 0x55, 0);
+    GXSetTexCoordGen2(2, 1, 1, 0x1E, 1, 0x55);
+    fn_8006C5CC(&handle2);
+    fn_8004C2E4(handle2, 2);
+    c.a = alpha;
+    GXSetTevKColor(0, c);
+    GXSetTevKAlphaSel(1, 0x1C);
+    GXSetNumIndStages(1);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(0);
+    GXSetNumTexGens(3);
+    GXSetNumTevStages(2);
+    GXSetTevOrder(0, 0, 0, 0xFF);
+    GXSetTevColorIn(0, 0xF, 0xF, 0xF, 8);
+    GXSetTevAlphaIn(0, 7, 7, 7, 7);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetTevDirect(1);
+    GXSetTevOrder(1, 2, 2, 0xFF);
+    GXSetTevColorIn(1, 0xF, 0xF, 0xF, 0);
+    GXSetTevAlphaIn(1, 7, 4, 6, 7);
+    GXSetTevSwapMode(1, 0, 0);
+    GXSetTevColorOp(1, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+        GXSetZMode(1, 3, 0);
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 3;
+        lbl_803DD012 = 0;
+        lbl_803DD01A = 1;
+    }
+    GXSetBlendMode(1, 4, 5, 5);
+    if ((u32)lbl_803DD011 != 1 || (u32)lbl_803DD019 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DD011 = 1;
+        lbl_803DD019 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXSetCullMode(2);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
