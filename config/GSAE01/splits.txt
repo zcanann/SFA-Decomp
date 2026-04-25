@@ -1451,7 +1451,13 @@ main/crfueltank.c:
 	.text       start:0x80210E8C end:0x802110F8
 
 main/unknown/autos/placeholder_802110F8.c:
-	.text       start:0x802110F8 end:0x8024034C
+	.text       start:0x802110F8 end:0x8021122C
+
+main/proximitymine.c:
+	.text       start:0x8021122C end:0x802113F8
+
+main/unknown/autos/placeholder_802113F8.c:
+	.text       start:0x802113F8 end:0x8024034C
 
 dolphin/base/PPCArch.c:
 	.text       start:0x8024034C end:0x802403D8
