@@ -26,7 +26,7 @@ extern PADClampExtents lbl_803DD1E8;
 
 // prototypes
 static void ClampStick(s8* px, s8* py, s8 max, s8 xy, s8 min);
-void ClampCircle_8024E354(s32 chan);
+void ClampCircle(s32 chan);
 
 static void ClampStick(s8* px, s8* py, s8 max, s8 xy, s8 min) {
     int x = *px;
@@ -113,7 +113,7 @@ void PADClamp(PADStatus * status) {
     }
 }
 
-void ClampCircle_8024E354(s32 chan) {
+void ClampCircle(s32 chan) {
     PADStatus* origin;
     u32 chanBit = PAD_CHAN0_BIT >> chan;
 
