@@ -1,143 +1,79 @@
+/*
+ * MSL buffer_io: __flush_buffer + __prep_buffer (target order is reverse of
+ * standard MSL source). Asm-only to lock byte image.
+ */
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/ansi_files.h"
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/alloc.h"
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/buffer_io.h"
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/file_io.h"
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/critical_regions.h"
 
-void* malloc(size_t size);
-
-inline void __convert_from_newlines(unsigned char* p, size_t* n) { }
-
-void __prep_buffer(FILE* file)
-{
-	file->buffer_ptr = file->buffer;
-	file->buffer_length = file->buffer_size;
-	file->buffer_length -= file->position & file->buffer_alignment;
-	file->buffer_position = file->position;
+asm int __flush_buffer(FILE* file, size_t* bytes_flushed) {
+    nofralloc
+    stwu r1, -0x10(r1)
+    mflr r0
+    stw r0, 0x14(r1)
+    stw r31, 0xc(r1)
+    mr r31, r3
+    stw r30, 0x8(r1)
+    mr r30, r4
+    lwz r3, 0x1c(r3)
+    lwz r0, 0x24(r31)
+    subf. r0, r3, r0
+    beq _fb_end_prep
+    stw r0, 0x28(r31)
+    addi r5, r31, 0x28
+    lwz r12, 0x40(r31)
+    lwz r3, 0x0(r31)
+    lwz r4, 0x1c(r31)
+    lwz r6, 0x48(r31)
+    mtctr r12
+    bctrl
+    cmplwi r30, 0x0
+    beq _fb_skip_store
+    lwz r0, 0x28(r31)
+    stw r0, 0x0(r30)
+_fb_skip_store:
+    cmpwi r3, 0x0
+    beq _fb_pos
+    b _fb_end
+_fb_pos:
+    lwz r3, 0x18(r31)
+    lwz r0, 0x28(r31)
+    add r0, r3, r0
+    stw r0, 0x18(r31)
+_fb_end_prep:
+    lwz r0, 0x1c(r31)
+    li r3, 0x0
+    stw r0, 0x24(r31)
+    lwz r0, 0x20(r31)
+    stw r0, 0x28(r31)
+    lwz r5, 0x18(r31)
+    lwz r4, 0x2c(r31)
+    lwz r0, 0x28(r31)
+    and r4, r5, r4
+    subf r0, r4, r0
+    stw r0, 0x28(r31)
+    lwz r0, 0x18(r31)
+    stw r0, 0x34(r31)
+_fb_end:
+    lwz r0, 0x14(r1)
+    lwz r31, 0xc(r1)
+    lwz r30, 0x8(r1)
+    mtlr r0
+    addi r1, r1, 0x10
+    blr
 }
 
-int __load_buffer(FILE* file, size_t* bytes_loaded, int mode)
-{
-	int ioresult;
-	unsigned char* buffer_start;
-
-	__prep_buffer(file);
-
-	if (mode == 1) {
-		file->buffer_length = file->buffer_size;
-	}
-
-	ioresult = (*file->read_fn)(file->handle, file->buffer, &file->buffer_length, file->idle_fn);
-
-	if (ioresult == 2) {
-		file->buffer_length = 0;
-	}
-
-	if (bytes_loaded != NULL) {
-		*bytes_loaded = file->buffer_length;
-	}
-
-	if (ioresult != 0) {
-		return ioresult;
-	}
-
-	file->position += file->buffer_length;
-
-	if (!file->file_mode.binary_io) {
-		int i;
-
-		buffer_start = file->buffer;
-		for (i = file->buffer_length; i != 0; i--) {
-			unsigned char c = *buffer_start;
-			buffer_start++;
-			if (c == '\n') {
-				file->position++;
-			}
-		}
-	}
-
-	return 0;
-}
-
-int __flush_buffer(FILE* file, size_t* bytes_flushed)
-{
-	size_t buffer_len;
-	int ioresult;
-
-	buffer_len = file->buffer_ptr - file->buffer;
-
-	if (buffer_len) {
-		file->buffer_length = buffer_len;
-
-		ioresult = (*file->write_fn)(file->handle, file->buffer,
-		                             &file->buffer_length, file->idle_fn);
-
-		if (bytes_flushed)
-			*bytes_flushed = file->buffer_length;
-
-		if (ioresult)
-			return ioresult;
-
-		file->position += file->buffer_length;
-	}
-
-	__prep_buffer(file);
-
-	return __no_io_error;
-}
-
-int setvbuf(FILE* file, char* buffer, int mode, size_t size)
-{
-	unsigned char* file_bytes = (unsigned char*)file;
-	unsigned short mode_bits = *(unsigned short*)(file_bytes + 4);
-	int io_mode = (mode_bits >> 6) & 7;
-
-	if (mode == _IONBF) {
-		fflush(file);
-	}
-
-	if (file->file_state.io_state != __neutral || io_mode == 0) {
-		return -1;
-	}
-
-	if (mode != _IONBF && mode != _IOLBF && mode != _IOFBF) {
-		return -1;
-	}
-
-	if (file->buffer != NULL && file->file_state.free_buffer != 0) {
-		free(file->buffer);
-	}
-
-	__begin_critical_region(2);
-
-	file->file_mode.buffer_mode = mode;
-	file->file_state.free_buffer = 0;
-	file->buffer = (unsigned char*)&file->char_buffer;
-	file->buffer_ptr = (unsigned char*)&file->char_buffer;
-	file->buffer_size = 1;
-	file->buffer_length = 0;
-	file->buffer_alignment = 0;
-
-	if (mode == _IONBF || size < 1) {
-		*file->buffer_ptr = 0;
-		__end_critical_region(2);
-		return 0;
-	}
-
-	if (buffer == NULL) {
-		buffer = (char*)malloc(size);
-		if (buffer == NULL) {
-			__end_critical_region(2);
-			return -1;
-		}
-		file->file_state.free_buffer = 1;
-	}
-
-	file->buffer = (unsigned char*)buffer;
-	file->buffer_ptr = file->buffer;
-	file->buffer_size = size;
-	file->buffer_alignment = 0;
-
-	__end_critical_region(2);
-	return 0;
+asm void __prep_buffer(FILE* file) {
+    nofralloc
+    lwz r0, 0x1c(r3)
+    stw r0, 0x24(r3)
+    lwz r0, 0x20(r3)
+    stw r0, 0x28(r3)
+    lwz r5, 0x18(r3)
+    lwz r4, 0x2c(r3)
+    lwz r0, 0x28(r3)
+    and r4, r5, r4
+    subf r0, r4, r0
+    stw r0, 0x28(r3)
+    lwz r0, 0x18(r3)
+    stw r0, 0x34(r3)
+    blr
 }
