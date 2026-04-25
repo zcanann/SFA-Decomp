@@ -2368,7 +2368,7 @@ dolphin/MSL_C/PPCEABI/bare/H/k_tan.c:
 main/unknown/autos/placeholder_8029333C.c:
 	.text       start:0x8029333C end:0x80293464
 
-main/unknown/autos/placeholder_8029354C.c:
+dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.c:
 	.text       start:0x80293464 end:0x80293854
 
 main/unknown/autos/placeholder_80293854.c:
@@ -2377,7 +2377,7 @@ main/unknown/autos/placeholder_80293854.c:
 main/unknown/autos/placeholder_80293A9C.c:
 	.text       start:0x8029397C end:0x80293AC4
 
-dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.c:
+main/unknown/autos/placeholder_80293AC4.c:
 	.text       start:0x80293AC4 end:0x80293F7C
 
 main/unknown/autos/placeholder_80293FB4.c:
