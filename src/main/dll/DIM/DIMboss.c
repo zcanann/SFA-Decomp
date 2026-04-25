@@ -413,9 +413,11 @@ int dimboss_func08(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void dimboss_free(int param_1)
 {
   int iVar1;
+  void *pvVar2;
 
   iVar1 = *(int *)(param_1 + 0xb8);
   fn_800200E8(0xefd,0);
@@ -424,20 +426,22 @@ void dimboss_free(int param_1)
   fn_800200E8(0xc20,0);
   fn_800200E8(0xd8f,0);
   fn_800200E8(0x3e2,0);
-  *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0x7f;
+  *(byte *)(param_1 + 0xaf) = (byte)((uint)*(byte *)(param_1 + 0xaf) & 0xffffff7f);
   fn_8000FACC();
   fn_80036FA4(param_1,3);
-  if (*(int *)(param_1 + 0xc8) != 0) {
-    fn_8002CBC4();
+  pvVar2 = *(void **)(param_1 + 0xc8);
+  if (pvVar2 != 0) {
+    fn_8002CBC4(pvVar2);
     *(undefined4 *)(param_1 + 0xc8) = 0;
   }
-  (**(code **)(*lbl_803DCAB8 + 0x40))(param_1,iVar1,0x20);
+  (*(code *)(*lbl_803DCAB8 + 0x40))(param_1,iVar1,0x20);
   if (lbl_803DDB88 != 0) {
-    fn_80013E2C();
+    fn_80013E2C(lbl_803DDB88);
   }
   lbl_803DDB88 = 0;
-  if (**(int **)(iVar1 + 0x40c) != 0) {
-    fn_8001F384();
+  pvVar2 = **(void ***)(iVar1 + 0x40c);
+  if (pvVar2 != 0) {
+    fn_8001F384(pvVar2);
   }
   fn_80055000();
 }
@@ -455,25 +459,33 @@ void dimboss_free(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimboss_render(int param_1)
+void dimboss_render(int param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
+                    undefined4 param_5,char shouldRender)
 {
-  char in_r8;
   int iVar1;
 
   iVar1 = *(int *)(param_1 + 0xb8);
-  if (in_r8 != '\0') {
-    if (*(int *)(param_1 + 0xf4) == 0) {
-      if (*(short *)(iVar1 + 0x402) != 3) {
-        fn_8003B8F4((double)lbl_803E4C44);
-        fn_801BB598(param_1,iVar1);
-        fn_80114DEC(param_1,lbl_803AC9DC,0);
-        iVar1 = **(int **)(iVar1 + 0x40c);
-        if (((iVar1 != 0) && (*(char *)(iVar1 + 0x2f8) != '\0')) &&
-            (*(char *)(iVar1 + 0x4c) != '\0')) {
-          fn_800604B4();
-        }
-      }
-    }
+  if (shouldRender == '\0') {
+    return;
+  }
+  if (*(int *)(param_1 + 0xf4) != 0) {
+    return;
+  }
+  if (*(short *)(iVar1 + 0x402) == 3) {
+    return;
+  }
+  fn_8003B8F4((double)lbl_803E4C44);
+  fn_801BB598(param_1,iVar1);
+  fn_80114DEC(param_1,lbl_803AC9DC,0);
+  iVar1 = **(int **)(iVar1 + 0x40c);
+  if (iVar1 == 0) {
+    return;
+  }
+  if (*(byte *)(iVar1 + 0x2f8) == 0) {
+    return;
+  }
+  if (*(byte *)(iVar1 + 0x4c) != 0) {
+    fn_800604B4();
   }
 }
 
@@ -495,3 +507,4 @@ void dimboss_hitDetect(int param_1)
   (*(code *)(*(int *)lbl_803DCA8C + 0xc))(param_1,*(undefined4 *)(param_1 + 0xb8),
                                            lbl_803AD018);
 }
+#pragma scheduling reset
