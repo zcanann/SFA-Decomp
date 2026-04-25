@@ -3,7 +3,7 @@
 #include "main/dll/SH/dll_1E8.h"
 
 extern undefined4 FUN_80006824();
-extern int fn_8001FFB4();
+extern uint fn_8001FFB4(int eventId);
 extern undefined4 fn_800221A0();
 extern uint FUN_80017758();
 extern uint FUN_80017760();
@@ -12,17 +12,6 @@ extern undefined4 FUN_80242fc0();
 extern undefined4 DAT_803dc070;
 extern undefined4* lbl_803DCAAC;
 extern undefined4* DAT_803dd6d8;
-extern u8 lbl_803DC008[];
-extern u8 lbl_803DC010[];
-extern u8 lbl_803DC014[];
-extern u8 lbl_803DC018[];
-extern u8 lbl_803DC01C[];
-extern u8 lbl_803DC020[];
-extern u8 lbl_803DC024[];
-extern u8 lbl_803DC028[];
-extern u8 lbl_803DC02C[];
-extern u8 lbl_803DC030[];
-extern u8 lbl_803DC034[];
 extern f64 lbl_803E5428;
 extern f64 DOUBLE_803e60c0;
 extern f64 DOUBLE_803e60d8;
@@ -180,25 +169,25 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntim
   uint randomTime;
   int eventIsSet;
 
-  runtime->impactSfxTable = lbl_803DC008;
+  runtime->impactSfxTable = &gSHthorntailRootControlMode3LocomotionDefaultImpactSfxTable;
   switch(runtime->locomotionMode) {
   case 1:
-    runtime->impactSfxTable = lbl_803DC010;
+    runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion1ImpactSfxTable;
     break;
   case 2:
     eventIsSet = fn_8001FFB4(0xc2);
     if (eventIsSet != 6) {
-      runtime->impactSfxTable = lbl_803DC014;
+      runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion2ImpactSfxTable;
     }
     break;
   case 3:
     eventIsSet = fn_8001FFB4(0x193);
     if (eventIsSet == 0) {
-      runtime->impactSfxTable = lbl_803DC018;
+      runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion3ImpactSfxTable;
     }
     break;
   case 4:
-    runtime->impactSfxTable = lbl_803DC01C;
+    runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion4ImpactSfxTable;
     break;
   case 5:
     eventIsSet = fn_8001FFB4(0x23c);
@@ -207,7 +196,7 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntim
       if (eventIsSet == 0) {
         eventIsSet = fn_8001FFB4(0x23d);
         if (eventIsSet == 0) {
-          runtime->impactSfxTable = lbl_803DC020;
+          runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5IdleImpactSfxTable;
           runtime->behaviorState = 0x10;
           return;
         }
@@ -217,28 +206,28 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntim
           runtime->idleTimer =
               (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
         }
-        runtime->impactSfxTable = lbl_803DC024;
+        runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5PlayerImpactSfxTable;
       }
       else {
-        (**(code **)(*lbl_803DCAAC + 0x44))(0x1d,3);
-        runtime->impactSfxTable = lbl_803DC028;
+        (*(code *)(*lbl_803DCAAC + 0x44))(0x1d,3);
+        runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5EventImpactSfxTable;
       }
     }
     break;
   case 6:
     eventIsSet = fn_8001FFB4(0x13f);
     if (eventIsSet == 0) {
-      runtime->impactSfxTable = lbl_803DC02C;
+      runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion6ImpactSfxTable;
     }
     break;
   case 7:
     eventIsSet = fn_8001FFB4(0x199);
     if (eventIsSet == 0) {
-      runtime->impactSfxTable = lbl_803DC030;
+      runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion7ImpactSfxTable;
     }
     break;
   case 8:
-    runtime->impactSfxTable = lbl_803DC034;
+    runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion8ImpactSfxTable;
   }
   SHthorntail_updateState(obj,runtime);
 }
