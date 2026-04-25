@@ -607,7 +607,7 @@ config.libs = [
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk_glue.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/targcont.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/target_options.c"),
-            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/mslsupp.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/mslsupp.c"),
             Object(
                 NonMatching,
                 "dolphin/TRK_MINNOW_DOLPHIN/MWTrace.c",
