@@ -2293,14 +2293,14 @@ dolphin/MSL_C/PPCEABI/bare/H/mbstring.c:
 dolphin/MSL_C/PPCEABI/bare/H/mem.c:
 	.text       start:0x8028F228 end:0x8028F398
 
-main/unknown/autos/placeholder_8028F398.c:
-	.text       start:0x8028F398 end:0x8028F688
+dolphin/MSL_C/PPCEABI/bare/H/mem_funcs.c:
+	.text       start:0x8028F398 end:0x8028F678
+
+main/unknown/autos/placeholder_8028F678.c:
+	.text       start:0x8028F678 end:0x8028F688
 
 dolphin/MSL_C/PPCEABI/bare/H/printf.c:
 	.text       start:0x8028F688 end:0x802915E4
-
-dolphin/MSL_C/PPCEABI/bare/H/mem_funcs.c:
-	.text       start:0x802915E4 end:0x802915E4
 
 dolphin/MSL_C/PPCEABI/bare/H/string.c:
 	.text       start:0x802915E4 end:0x802918C0
