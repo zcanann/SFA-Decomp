@@ -1996,19 +1996,128 @@ void fn_8007681C(undefined8 param_1,double param_2,undefined4 param_3,undefined4
  * --INFO--
  *
  * Function: fn_80076D78
- * EN v1.0 Address: 0x800709E4
- * EN v1.0 Size: 4b
+ * EN v1.0 Address: 0x80076D78
+ * EN v1.0 Size: 1060b
  * EN v1.1 Address: 0x80076EF4
  * EN v1.1 Size: 1060b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
+ *
+ * Caller-coloured asset blit. Same mechanic as fn_8007719C but the K0
+ * color comes from a writable GXColor the caller passes in (we apply the
+ * lbl_803DB679 alpha tint to it in place). The flag arg picks between
+ * "raster passthrough" (TevColorIn 0xF/0xF/0xF/0xE) and "K-tint replace"
+ * (TevColorIn 0xF/0xE/0x8/0xF).
  */
-void fn_80076D78(undefined4 param_1,undefined4 param_2,int param_3,undefined4 *param_4,uint param_5
-                 ,uint param_6)
+#pragma peephole off
+#pragma scheduling off
+void fn_80076D78(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
 {
+    extern f32 lbl_803DEF2C;
+    extern u8 lbl_803DB679;
+    extern Mtx lbl_80396880;
+    extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
+    extern int lbl_803DD014;
+    extern void fn_8004C264(s16* obj, int slot);
+    extern void fn_8000FB00(void);
+    extern void GXSetZMode();
+    f32 sx, sy;
+
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    color->a = (u8)(((s32)color->a * (s32)lbl_803DB679) >> 8);
+    GXSetTevKColor(0, *color);
+    GXSetTevKColorSel(0, 0xC);
+    GXSetTevKAlphaSel(0, 0x1C);
+    GXSetTevOrder(0, 0, 0, 0xFF);
+    GXSetTevDirect(0);
+    if (flag != 0) {
+        GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xE);
+    } else {
+        GXSetTevColorIn(0, 0xF, 0xE, 0x8, 0xF);
+    }
+    GXSetTevAlphaIn(0, 7, 4, 6, 7);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 2, 1, 0);
+    if (((u32*)obj)[0x14] != 0) {
+        GXSetTevKAlphaSel(1, 0x1C);
+        GXSetTevOrder(1, 0, 0, 0xFF);
+        GXSetTevColorIn(1, 0xF, 0xF, 0xF, 0);
+        GXSetTevAlphaIn(1, 7, 4, 6, 7);
+        GXSetTevSwapMode(1, 0, 0);
+        GXSetTevColorOp(1, 0, 0, 0, 1, 0);
+        GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+        GXSetNumTevStages(2);
+    } else {
+        GXSetNumTevStages(1);
+    }
+    GXSetNumIndStages(0);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(0);
+    GXSetNumTexGens(1);
+    GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
+    fn_8004C264(obj, 0);
+    GXSetCullMode(GX_CULL_NONE);
+    GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
+    if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 7 ||
+        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+        GXSetZMode(0, 7, 0);
+        lbl_803DD018 = 0;
+        lbl_803DD014 = 7;
+        lbl_803DD012 = 0;
+        lbl_803DD01A = 1;
+    }
+    if (flag != 0) {
+        GXSetBlendMode(1, 4, 1, 5);
+    } else {
+        GXSetBlendMode(1, 4, 5, 5);
+    }
+    {
+        s32 w, h;
+        w = ((((u16)obj[5]) << 2) * (s32)scale) >> 8;
+        h = ((((u16)obj[6]) << 2) * (s32)scale) >> 8;
+        sx = (f32)x * lbl_803DEF2C;
+        sy = (f32)y * lbl_803DEF2C;
+        GXBegin(GX_QUADS, GX_VTXFMT1, 4);
+
+        GXWGFifo.u8 = 0x3C;
+        GXWGFifo.s16 = (s32)((f32)((u32)x) * lbl_803DEF2C);
+        GXWGFifo.s16 = (s32)((f32)((u32)y) * lbl_803DEF2C);
+        GXWGFifo.s16 = -8;
+        GXWGFifo.f32 = 0.0f;
+        GXWGFifo.f32 = 0.0f;
+
+        GXWGFifo.u8 = 0x3C;
+        GXWGFifo.s16 = (s32)((f32)((u32)(x + w)) * lbl_803DEF2C);
+        GXWGFifo.s16 = (s32)((f32)((u32)y) * lbl_803DEF2C);
+        GXWGFifo.s16 = -8;
+        GXWGFifo.f32 = 1.0f;
+        GXWGFifo.f32 = 0.0f;
+
+        GXWGFifo.u8 = 0x3C;
+        GXWGFifo.s16 = (s32)((f32)((u32)(x + w)) * lbl_803DEF2C);
+        GXWGFifo.s16 = (s32)((f32)((u32)(y + h)) * lbl_803DEF2C);
+        GXWGFifo.s16 = -8;
+        GXWGFifo.f32 = 1.0f;
+        GXWGFifo.f32 = 1.0f;
+
+        GXWGFifo.u8 = 0x3C;
+        GXWGFifo.s16 = (s32)((f32)((u32)x) * lbl_803DEF2C);
+        GXWGFifo.s16 = (s32)((f32)((u32)(y + h)) * lbl_803DEF2C);
+        GXWGFifo.s16 = -8;
+        GXWGFifo.f32 = 0.0f;
+        GXWGFifo.f32 = 1.0f;
+    }
+    fn_8000FB00();
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
