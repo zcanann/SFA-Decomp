@@ -5,7 +5,7 @@
 extern int fn_8000BB18();
 extern int fn_8001FFB4();
 extern undefined4 fn_800200E8();
-extern undefined4 fn_800221A0();
+extern int fn_800221A0(int min,int max);
 extern int fn_80038024();
 extern int fn_801D4CD0();
 
@@ -25,10 +25,11 @@ extern f64 lbl_803E5428;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntime *runtime)
 {
   int eventIsSet;
-  uint randomTime;
+  int randomTime;
 
   runtime->impactSfxTable = gSHthorntailLevelControlMode0DefaultImpactSfxTable;
   switch(runtime->locomotionMode) {
@@ -57,8 +58,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
       fn_8000BB18(0,0x409);
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
       randomTime = fn_800221A0(1000,2000);
-      runtime->idleTimer =
-          (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
+      runtime->idleTimer = (float)randomTime;
     }
     runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
     break;
@@ -72,8 +72,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
       (**(code **)(*lbl_803DCAAC + 0x50))((int)obj->animObjId,3,0);
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
       randomTime = fn_800221A0(1000,2000);
-      runtime->idleTimer =
-          (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
+      runtime->idleTimer = (float)randomTime;
     }
     else {
       eventIsSet = fn_8001FFB4(0x1a0);
@@ -91,3 +90,4 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
   }
   SHthorntail_updateState(obj,runtime);
 }
+#pragma scheduling reset
