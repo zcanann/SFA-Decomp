@@ -9,19 +9,19 @@ extern double tan(int* out_n, float x);
 void _savefpr_30(void);
 void _restfpr_30(void);
 
-extern const double lbl_803E8A48;
-extern const double lbl_803E8A50;
-extern const double lbl_803E8A58;
-extern const double lbl_803E8A60;
-extern const double lbl_803E8A68;
-extern const double lbl_803E8A70;
-extern const double lbl_803E8A78;
-extern const double lbl_803E8A80;
-extern const double lbl_803E8A88;
-extern const double lbl_803E8A90;
-extern const double lbl_803E8A98;
-extern const double lbl_803E8AA0;
-extern const double lbl_803E8AA8;
+extern const double lbl_803E7DB0;
+extern const double lbl_803E7DB8;
+extern const double lbl_803E7DC0;
+extern const double lbl_803E7DC8;
+extern const double lbl_803E7DD0;
+extern const double lbl_803E7DD8;
+extern const double lbl_803E7DE0;
+extern const double lbl_803E7DE8;
+extern const double lbl_803E7DF0;
+extern const double lbl_803E7DF8;
+extern const double lbl_803E7E00;
+extern const double lbl_803E7E08;
+extern const double lbl_803E7E10;
 
 asm float floor(float x) {
     nofralloc
@@ -54,65 +54,65 @@ _sf_ge:
     beq _sf_4
     b _sf_d
 _sf_0:
-    lfd f1, lbl_803E8A70(r0)
-    lfd f0, lbl_803E8A68(r0)
+    lfd f1, lbl_803E7DD8(r0)
+    lfd f0, lbl_803E7DD0(r0)
     fmadd f1, f1, f31, f0
-    lfd f0, lbl_803E8A60(r0)
+    lfd f0, lbl_803E7DC8(r0)
     fmadd f1, f31, f1, f0
-    lfd f0, lbl_803E8A58(r0)
+    lfd f0, lbl_803E7DC0(r0)
     fmadd f1, f31, f1, f0
-    lfd f0, lbl_803E8A50(r0)
+    lfd f0, lbl_803E7DB8(r0)
     fmadd f1, f31, f1, f0
-    lfd f0, lbl_803E8A48(r0)
+    lfd f0, lbl_803E7DB0(r0)
     fmadd f0, f31, f1, f0
     fmul f1, f30, f0
     frsp f1, f1
     b _sf_end
 _sf_2:
-    lfd f1, lbl_803E8AA8(r0)
-    lfd f0, lbl_803E8AA0(r0)
+    lfd f1, lbl_803E7E10(r0)
+    lfd f0, lbl_803E7E08(r0)
     fmadd f1, f1, f31, f0
-    lfd f0, lbl_803E8A98(r0)
+    lfd f0, lbl_803E7E00(r0)
     fmadd f1, f31, f1, f0
-    lfd f0, lbl_803E8A90(r0)
+    lfd f0, lbl_803E7DF8(r0)
     fmadd f1, f31, f1, f0
-    lfd f0, lbl_803E8A88(r0)
+    lfd f0, lbl_803E7DF0(r0)
     fmadd f1, f31, f1, f0
-    lfd f0, lbl_803E8A80(r0)
+    lfd f0, lbl_803E7DE8(r0)
     fmadd f1, f31, f1, f0
-    lfd f0, lbl_803E8A78(r0)
+    lfd f0, lbl_803E7DE0(r0)
     fmadd f1, f31, f1, f0
     frsp f1, f1
     b _sf_end
 _sf_4:
-    lfd f1, lbl_803E8A70(r0)
-    lfd f0, lbl_803E8A68(r0)
+    lfd f1, lbl_803E7DD8(r0)
+    lfd f0, lbl_803E7DD0(r0)
     fmadd f1, f1, f31, f0
-    lfd f0, lbl_803E8A60(r0)
+    lfd f0, lbl_803E7DC8(r0)
     fmadd f1, f31, f1, f0
-    lfd f0, lbl_803E8A58(r0)
+    lfd f0, lbl_803E7DC0(r0)
     fmadd f1, f31, f1, f0
-    lfd f0, lbl_803E8A50(r0)
+    lfd f0, lbl_803E7DB8(r0)
     fmadd f1, f31, f1, f0
-    lfd f0, lbl_803E8A48(r0)
+    lfd f0, lbl_803E7DB0(r0)
     fmadd f0, f31, f1, f0
     fmul f0, f30, f0
     fneg f1, f0
     frsp f1, f1
     b _sf_end
 _sf_d:
-    lfd f1, lbl_803E8AA8(r0)
-    lfd f0, lbl_803E8AA0(r0)
+    lfd f1, lbl_803E7E10(r0)
+    lfd f0, lbl_803E7E08(r0)
     fmadd f1, f1, f31, f0
-    lfd f0, lbl_803E8A98(r0)
+    lfd f0, lbl_803E7E00(r0)
     fmadd f1, f31, f1, f0
-    lfd f0, lbl_803E8A90(r0)
+    lfd f0, lbl_803E7DF8(r0)
     fmadd f1, f31, f1, f0
-    lfd f0, lbl_803E8A88(r0)
+    lfd f0, lbl_803E7DF0(r0)
     fmadd f1, f31, f1, f0
-    lfd f0, lbl_803E8A80(r0)
+    lfd f0, lbl_803E7DE8(r0)
     fmadd f1, f31, f1, f0
-    lfd f0, lbl_803E8A78(r0)
+    lfd f0, lbl_803E7DE0(r0)
     fnmadd f1, f31, f1, f0
     frsp f1, f1
 _sf_end:
