@@ -652,7 +652,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/e_sqrt.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/e_pow.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/e_atan2.c"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_tan.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/s_tan.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/extras.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/k_tan.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.c"),

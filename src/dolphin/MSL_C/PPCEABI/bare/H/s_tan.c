@@ -5,13 +5,13 @@
  * a refined float via fnmsub. Asm-only to preserve the exact byte image.
  */
 
-extern unsigned int __cvt_fp2unsigned(double);
+extern unsigned int fn_80285FB4(double);
 void _savefpr_30(void);
 void _restfpr_30(void);
 
-extern const double lbl_803E8898;
-extern const double lbl_803E88A0;
-extern const double lbl_803E88A8;
+extern const double lbl_803E7C00;
+extern const double lbl_803E7C08;
+extern const double lbl_803E7C10;
 
 asm double tan(int* out_n, float x) {
     nofralloc
@@ -25,16 +25,16 @@ asm double tan(int* out_n, float x) {
     stfs f1, 0xc(r1)
     lfs f0, 0xc(r1)
     fabs f31, f0
-    lfd f0, lbl_803E8898(r0)
+    lfd f0, lbl_803E7C00(r0)
     fmul f30, f0, f31
     fmr f1, f30
-    bl __cvt_fp2unsigned
+    bl fn_80285FB4
     addi r0, r3, 0x1
     clrrwi r31, r0, 1
     lwz r3, 0x8(r1)
     stw r31, 0x0(r3)
-    lfd f2, lbl_803E88A0(r0)
-    lfd f1, lbl_803E88A8(r0)
+    lfd f2, lbl_803E7C08(r0)
+    lfd f1, lbl_803E7C10(r0)
     stw r31, 0x14(r1)
     lis r0, 0x4330
     stw r0, 0x10(r1)
