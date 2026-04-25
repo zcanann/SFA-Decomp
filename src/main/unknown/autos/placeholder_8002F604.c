@@ -27,85 +27,9 @@ extern f32 FLOAT_803df58c;
 /*
  * --INFO--
  *
- * Function: FUN_8002f5d4
+ * Function: ObjAnim_SampleRootCurvePhase
  * EN v1.0 Address: 0x8002F5D4
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x8002F604
- * EN v1.1 Size: 32b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined2 FUN_8002f5d4(int param_1)
-{
-  return ObjAnim_GetPrimaryState((ObjAnimComponent *)param_1)->eventCountdown;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_8002f5f4
- * EN v1.0 Address: 0x8002F5F4
- * EN v1.0 Size: 68b
- * EN v1.1 Address: 0x8002F624
- * EN v1.1 Size: 72b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8002f5f4(int param_1,int param_2,short param_3,undefined2 param_4)
-{
-  ObjAnimBank *bank;
-  ObjAnimState *state;
-
-  bank = ObjAnim_GetActiveBank((ObjAnimComponent *)param_1);
-  if (bank == (ObjAnimBank *)0x0) {
-    return;
-  }
-  if (param_2 == 0) {
-    state = bank->primaryState;
-  }
-  else {
-    state = bank->secondaryState;
-  }
-  *(undefined2 *)((u8 *)state + param_3 * 2 + 0x58) = param_4;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_8002f638
- * EN v1.0 Address: 0x8002F638
- * EN v1.0 Size: 116b
- * EN v1.1 Address: 0x8002F66C
- * EN v1.1 Size: 96b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8002f638(int param_1,uint param_2)
-{
-  ObjAnimBank *bank;
-  ObjAnimState *state;
-
-  bank = ObjAnim_GetActiveBank((ObjAnimComponent *)param_1);
-  if (bank != (ObjAnimBank *)0x0) {
-    state = bank->primaryState;
-    state->eventStep = (short)(int)(FLOAT_803df574 /
-                                   (float)((double)CONCAT44(0x43300000,param_2 ^ 0x80000000) -
-                                          DOUBLE_803df580));
-  }
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_8002f6ac
- * EN v1.0 Address: 0x8002F6AC
- * EN v1.0 Size: 1424b
+ * EN v1.0 Size: 1140b
  * EN v1.1 Address: 0x8002F6CC
  * EN v1.1 Size: 1140b
  * JP Address: TODO
@@ -113,7 +37,7 @@ void FUN_8002f638(int param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8002f6ac(double param_1,int param_2,float *param_3)
+undefined4 ObjAnim_SampleRootCurvePhase(double param_1,int param_2,float *param_3)
 {
   float fVar1;
   float fVar2;
@@ -287,9 +211,9 @@ undefined4 FUN_8002f6ac(double param_1,int param_2,float *param_3)
 /*
  * --INFO--
  *
- * Function: FUN_8002fc3c
- * EN v1.0 Address: 0x8002FC3C
- * EN v1.0 Size: 2440b
+ * Function: ObjAnim_AdvanceCurrentMove
+ * EN v1.0 Address: 0x8002FA48
+ * EN v1.0 Size: 2236b
  * EN v1.1 Address: 0x8002FB40
  * EN v1.1 Size: 2236b
  * JP Address: TODO
@@ -297,7 +221,7 @@ undefined4 FUN_8002f6ac(double param_1,int param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8002fc3c(double param_1,double param_2)
+undefined4 ObjAnim_AdvanceCurrentMove(double param_1,double param_2)
 {
   double dVar1;
   char cVar2;
@@ -609,9 +533,9 @@ undefined4 FUN_8002fc3c(double param_1,double param_2)
 /*
  * --INFO--
  *
- * Function: FUN_800305c4
- * EN v1.0 Address: 0x800305C4
- * EN v1.0 Size: 52b
+ * Function: ObjAnim_SetMoveProgress
+ * EN v1.0 Address: 0x80030304
+ * EN v1.0 Size: 48b
  * EN v1.1 Address: 0x800303FC
  * EN v1.1 Size: 48b
  * JP Address: TODO
@@ -619,7 +543,7 @@ undefined4 FUN_8002fc3c(double param_1,double param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_800305c4(double param_1,int param_2)
+undefined4 ObjAnim_SetMoveProgress(double param_1,int param_2)
 {
   double dVar1;
 
@@ -634,9 +558,9 @@ undefined4 FUN_800305c4(double param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_800305f8
- * EN v1.0 Address: 0x800305F8
- * EN v1.0 Size: 1160b
+ * Function: ObjAnim_SetCurrentMove
+ * EN v1.0 Address: 0x80030334
+ * EN v1.0 Size: 852b
  * EN v1.1 Address: 0x8003042C
  * EN v1.1 Size: 852b
  * JP Address: TODO
@@ -644,10 +568,11 @@ undefined4 FUN_800305c4(double param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800305f8(double param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,uint param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+void ObjAnim_SetCurrentMove(double param_1,double param_2,double param_3,undefined8 param_4,
+                            undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                            undefined8 param_8,undefined4 param_9,undefined4 param_10,
+                            uint param_11,undefined4 param_12,undefined4 param_13,
+                            undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
   short sVar1;
   uint uVar2;

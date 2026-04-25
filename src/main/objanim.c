@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/unknown/autos/placeholder_8002F604.h"
 
 extern undefined4 FUN_8001786c();
 extern undefined4 FUN_800723a0();
@@ -440,4 +441,80 @@ Object_ObjAnimSetMove(double param_1,double param_2,double param_3,undefined8 pa
     state->speed = (float)(dVar7 * (double)state->segmentLength);
   }
   return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: ObjAnim_GetPrimaryEventCountdown
+ * EN v1.0 Address: 0x8002F50C
+ * EN v1.0 Size: 32b
+ * EN v1.1 Address: 0x8002F604
+ * EN v1.1 Size: 32b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+undefined2 ObjAnim_GetPrimaryEventCountdown(int objAnim)
+{
+  return ObjAnim_GetPrimaryState((ObjAnimComponent *)objAnim)->eventCountdown;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: ObjAnim_WriteStateWord
+ * EN v1.0 Address: 0x8002F52C
+ * EN v1.0 Size: 72b
+ * EN v1.1 Address: 0x8002F624
+ * EN v1.1 Size: 72b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void ObjAnim_WriteStateWord(int objAnim,int stateIndex,short wordIndex,undefined2 value)
+{
+  ObjAnimBank *bank;
+  ObjAnimState *state;
+
+  bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
+  if (bank == (ObjAnimBank *)0x0) {
+    return;
+  }
+  if (stateIndex == 0) {
+    state = bank->primaryState;
+  }
+  else {
+    state = bank->secondaryState;
+  }
+  *(undefined2 *)((u8 *)state + wordIndex * 2 + 0x58) = value;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: ObjAnim_SetPrimaryEventStepFrames
+ * EN v1.0 Address: 0x8002F574
+ * EN v1.0 Size: 96b
+ * EN v1.1 Address: 0x8002F66C
+ * EN v1.1 Size: 96b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void ObjAnim_SetPrimaryEventStepFrames(int objAnim,uint frameCount)
+{
+  ObjAnimBank *bank;
+  ObjAnimState *state;
+
+  bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
+  if (bank != (ObjAnimBank *)0x0) {
+    state = bank->primaryState;
+    state->eventStep = (short)(int)(FLOAT_803df574 /
+                                   (float)((double)CONCAT44(0x43300000,frameCount ^ 0x80000000) -
+                                          DOUBLE_803df580));
+  }
 }
