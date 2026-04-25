@@ -172,6 +172,8 @@ extern f32 FLOAT_803e009c;
 extern f32 FLOAT_803e00a0;
 extern f32 FLOAT_803e00a4;
 extern f32 FLOAT_803e00a8;
+extern u8 lbl_8039AB58[];
+extern s16 lbl_8030F8C8[];
 extern char sExpgfxAddToTableUsageOverflow[];
 extern char sExpgfxExpTabIsFull[];
 extern char sExpgfxInvalidTabIndex[];
@@ -180,6 +182,9 @@ extern char sExpgfxScaleOverflow[];
 extern char sExpgfxNoTexture[];
 
 #define EXPGFX_SLOT_TABLE_INDEX_OFFSET 0x8A
+
+typedef void (*ExpgfxReleaseSlotFn)(uint slotPoolBase,int poolIndex,int slotIndex,int freeTexture,
+                                    int clearActive);
 
 /*
  * Retail warning strings call this structure "exptab". The key fields are
@@ -779,9 +784,9 @@ int expgfx_addToTable(int textureOrResource,int key0,int key1,s16 slotType)
 /*
  * --INFO--
  *
- * Function: FUN_8009bf6c
- * EN v1.0 Address: 0x8009BF6C
- * EN v1.0 Size: 96b
+ * Function: fn_8009E004
+ * EN v1.0 Address: 0x8009E004
+ * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x8009E290
  * EN v1.1 Size: 48b
  * JP Address: TODO
@@ -789,10 +794,9 @@ int expgfx_addToTable(int textureOrResource,int key0,int key1,s16 slotType)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8009bf6c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void fn_8009E004(void)
 {
-  FUN_8009c11c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+  fn_8009EED8();
   return;
 }
 
@@ -889,9 +893,9 @@ void expgfx_queueLightmapSources(void)
 /*
  * --INFO--
  *
- * Function: FUN_8009c0bc
- * EN v1.0 Address: 0x8009C0BC
- * EN v1.0 Size: 96b
+ * Function: fn_8009EEB8
+ * EN v1.0 Address: 0x8009EEB8
+ * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x8009F144
  * EN v1.1 Size: 32b
  * JP Address: TODO
@@ -899,19 +903,18 @@ void expgfx_queueLightmapSources(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8009c0bc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void fn_8009EEB8(void)
 {
-  FUN_8009c11c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+  fn_8009EED8();
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8009c11c
- * EN v1.0 Address: 0x8009C11C
- * EN v1.0 Size: 4b
+ * Function: fn_8009EED8
+ * EN v1.0 Address: 0x8009EED8
+ * EN v1.0 Size: 260b
  * EN v1.1 Address: 0x8009F164
  * EN v1.1 Size: 260b
  * JP Address: TODO
@@ -919,17 +922,65 @@ void FUN_8009c0bc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8009c11c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+#pragma scheduling off
+void fn_8009EED8(int sourceId)
 {
+  char *poolActiveCounts;
+  ExpgfxTableEntry *tableEntries;
+  ExpgfxSlot *slot;
+  int *poolSourceIds;
+  s16 *poolSlotTypeIds;
+  u8 *poolFrameFlags;
+  uint *slotPoolBases;
+  s16 invalidSlotType;
+  int poolIndex;
+  int slotIndex;
+
+  if (sourceId != 0) {
+    poolIndex = 0;
+    tableEntries = (ExpgfxTableEntry *)(lbl_8039AB58 + 0x980);
+    slotPoolBases = (uint *)(lbl_8039AB58 + 0x1200);
+    poolSourceIds = (int *)(lbl_8039AB58 + 0xed0);
+    poolActiveCounts = (char *)(lbl_8039AB58 + 0x1070);
+    poolSlotTypeIds = lbl_8030F8C8;
+    poolFrameFlags = lbl_8030F968;
+    do {
+      slot = (ExpgfxSlot *)*slotPoolBases;
+      if (sourceId == *poolSourceIds) {
+        slotIndex = 0;
+        invalidSlotType = -1;
+        do {
+          if ((slot != (ExpgfxSlot *)0x0) &&
+              (tableEntries[Expgfx_GetSlotTableIndex(slot)].key0 == sourceId)) {
+            ((ExpgfxReleaseSlotFn)expgfx_release)(*slotPoolBases,poolIndex,slotIndex,0,1);
+          }
+          slot = slot + 1;
+          if (*poolActiveCounts == '\0') {
+            *poolSlotTypeIds = invalidSlotType;
+          }
+          slotIndex = slotIndex + 1;
+        } while (slotIndex < EXPGFX_SLOTS_PER_POOL);
+        *poolSourceIds = 0;
+        *poolFrameFlags = 0;
+      }
+      slotPoolBases = slotPoolBases + 1;
+      poolSourceIds = poolSourceIds + 1;
+      poolActiveCounts = poolActiveCounts + 1;
+      poolSlotTypeIds = poolSlotTypeIds + 1;
+      poolFrameFlags = poolFrameFlags + 1;
+      poolIndex = poolIndex + 1;
+    } while (poolIndex < EXPGFX_POOL_COUNT);
+  }
+  return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
  *
- * Function: FUN_8009c120
- * EN v1.0 Address: 0x8009C120
- * EN v1.0 Size: 4b
+ * Function: fn_8009EFDC
+ * EN v1.0 Address: 0x8009EFDC
+ * EN v1.0 Size: 464b
  * EN v1.1 Address: 0x8009F268
  * EN v1.1 Size: 464b
  * JP Address: TODO
@@ -937,8 +988,7 @@ void FUN_8009c11c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8009c120(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void fn_8009EFDC(void)
 {
 }
 

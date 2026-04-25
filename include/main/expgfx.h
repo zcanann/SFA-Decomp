@@ -17,17 +17,13 @@ void expgfx_initSlotQuad(undefined8 param_1,double param_2,undefined8 param_3,un
 void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_4,double param_5,
                  double param_6,undefined8 param_7,undefined8 param_8);
 int expgfx_addToTable(int textureOrResource,int key0,int key1,s16 slotType);
-void FUN_8009bf6c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void fn_8009E004(void);
 void expgfx_processCurrentSourceBounds(void);
 void FUN_8009c0b4(void);
 void expgfx_queueLightmapSources(void);
-void FUN_8009c0bc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-void FUN_8009c11c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-void FUN_8009c120(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void fn_8009EEB8(void);
+void fn_8009EED8();
+void fn_8009EFDC(void);
 void expgfx_updateFrameState(int sourceMode,int sourceId);
 void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double param_4,undefined8 param_5,
                       undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,
