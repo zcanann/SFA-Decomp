@@ -53,6 +53,7 @@ typedef struct ObjHitReactEffectPos {
  * EN v1.0 Address: 0x800353A4
  * EN v1.0 Size: 652b
  */
+#pragma scheduling off
 u8 objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,float *cooldown)
 {
   ObjAnimComponent *objAnim;
@@ -124,7 +125,9 @@ u8 objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,flo
   }
   return reactionState;
 }
+#pragma scheduling reset
 
+#pragma scheduling off
 void fn_80035630(int count)
 {
   int obj;
@@ -156,3 +159,4 @@ void fn_80035630(int count)
     }
   }
 }
+#pragma scheduling reset

@@ -78,7 +78,12 @@ typedef struct ObjAnimEventTable {
 } ObjAnimEventTable;
 
 typedef struct ObjAnimEventList {
-  u8 pad00[0x12];
+  f32 rootDeltaX;
+  f32 rootDeltaY;
+  f32 rootDeltaZ;
+  s16 rootYaw;
+  s16 rootPitch;
+  s16 rootRoll;
   u8 resetFlag;
   u8 triggeredIds[8];
   u8 triggerCount;
