@@ -4,9 +4,9 @@
 
 #include "dolphin/si/__si.h"
 
-extern u32 XPatchBits;
-extern u32 AnalogMode;
-extern PADStatus Origin[4];
+extern u32 lbl_803DC58C;
+extern u32 lbl_803DC590;
+extern PADStatus lbl_803AE1C0[4];
 
 typedef struct PADClampExtents {
     u8 minTrigger;
@@ -19,16 +19,16 @@ typedef struct PADClampExtents {
     s8 xySubstick;
 } PADClampExtents;
 
-extern PADClampExtents lbl_803DD1E8;
+extern PADClampExtents lbl_803DC580;
 
 #define PAD_CLAMP_RAD_STICK    56
 #define PAD_CLAMP_RAD_SUBSTICK 44
 
 // prototypes
-static void ClampStick(s8* px, s8* py, s8 max, s8 xy, s8 min);
+void ClampStick(s8* px, s8* py, s8 max, s8 xy, s8 min);
 void ClampCircle(s32 chan);
 
-static void ClampStick(s8* px, s8* py, s8 max, s8 xy, s8 min) {
+void ClampStick(s8* px, s8* py, s8 max, s8 xy, s8 min) {
     int x = *px;
     int y = *py;
     int signX;
@@ -88,26 +88,26 @@ void PADClamp(PADStatus * status) {
 
     for (i = 0; i < 4; i++, status++) {
         if (status->err == PAD_ERR_NONE) {
-            ClampStick(&status->stickX, &status->stickY, lbl_803DD1E8.maxStick, lbl_803DD1E8.xyStick, lbl_803DD1E8.minStick);
+            ClampStick(&status->stickX, &status->stickY, lbl_803DC580.maxStick, lbl_803DC580.xyStick, lbl_803DC580.minStick);
             ClampStick(
-                &status->substickX, &status->substickY, lbl_803DD1E8.maxSubstick, lbl_803DD1E8.xySubstick,
-                lbl_803DD1E8.minSubstick
+                &status->substickX, &status->substickY, lbl_803DC580.maxSubstick, lbl_803DC580.xySubstick,
+                lbl_803DC580.minSubstick
             );
-            if (status->triggerLeft <= lbl_803DD1E8.minTrigger) {
+            if (status->triggerLeft <= lbl_803DC580.minTrigger) {
                 status->triggerLeft = 0;
             } else {
-                if (lbl_803DD1E8.maxTrigger < status->triggerLeft) {
-                    status->triggerLeft = lbl_803DD1E8.maxTrigger;
+                if (lbl_803DC580.maxTrigger < status->triggerLeft) {
+                    status->triggerLeft = lbl_803DC580.maxTrigger;
                 }
-                status->triggerLeft -= lbl_803DD1E8.minTrigger;
+                status->triggerLeft -= lbl_803DC580.minTrigger;
             }
-            if (status->triggerRight <= lbl_803DD1E8.minTrigger) {
+            if (status->triggerRight <= lbl_803DC580.minTrigger) {
                 status->triggerRight = 0;
             } else {
-                if (lbl_803DD1E8.maxTrigger < status->triggerRight) {
-                    status->triggerRight = lbl_803DD1E8.maxTrigger;
+                if (lbl_803DC580.maxTrigger < status->triggerRight) {
+                    status->triggerRight = lbl_803DC580.maxTrigger;
                 }
-                status->triggerRight -= lbl_803DD1E8.minTrigger;
+                status->triggerRight -= lbl_803DC580.minTrigger;
             }
         }
     }
@@ -117,8 +117,8 @@ void ClampCircle(s32 chan) {
     PADStatus* origin;
     u32 chanBit = PAD_CHAN0_BIT >> chan;
 
-    origin = &Origin[chan];
-    switch (AnalogMode & 0x00000700u) {
+    origin = &lbl_803AE1C0[chan];
+    switch (lbl_803DC590 & 0x00000700u) {
     case 0x00000000u:
     case 0x00000500u:
     case 0x00000600u:
@@ -149,7 +149,7 @@ void ClampCircle(s32 chan) {
     origin->substickX -= 128;
     origin->substickY -= 128;
 
-    if (XPatchBits & chanBit) {
+    if (lbl_803DC58C & chanBit) {
         if (64 < origin->stickX && (SIGetType(chan) & 0xFFFF0000) == SI_GC_CONTROLLER) {
             origin->stickX = 0;
         }
