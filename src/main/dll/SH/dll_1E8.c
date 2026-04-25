@@ -1,132 +1,155 @@
 #include "ghidra_import.h"
+#include "main/dll/SH/dll_1E7.h"
 #include "main/dll/SH/dll_1E8.h"
 
 extern undefined4 FUN_80006824();
-extern double FUN_80017708();
-extern int FUN_80017730();
+extern uint FUN_80017758();
 extern uint FUN_80017760();
-extern int FUN_80017a98();
-extern int FUN_800575b4();
-extern undefined4 FUN_800723a0();
+extern undefined4 FUN_80242fc0();
 
+extern undefined4 DAT_803dc070;
+extern undefined4* DAT_803dd6d8;
 extern f64 DOUBLE_803e60c0;
+extern f64 DOUBLE_803e60d8;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803e60b0;
-extern f32 FLOAT_803e60b4;
-extern f32 FLOAT_803e60b8;
-extern f32 FLOAT_803e60bc;
+extern f32 FLOAT_803e60c8;
+extern f32 FLOAT_803e60cc;
+extern f32 FLOAT_803e60d0;
+extern char sSHthorntailSourceFile[];
+extern char sThorntailEnteredInvalidState[];
 
 /*
  * --INFO--
  *
- * Function: SHthorntail_updateTailSwing
+ * Function: SHthorntail_updateState
  * EN v1.0 Address: 0x801D5174
- * EN v1.0 Size: 216b
- * EN v1.1 Address: 0x801D5470
- * EN v1.1 Size: 232b
+ * EN v1.0 Size: 920b
+ * EN v1.1 Address: 0x801D5764
+ * EN v1.1 Size: 920b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
+void SHthorntail_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                             undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                             undefined8 param_7,undefined8 param_8,SHthorntailObject *obj,
+                             SHthorntailRuntime *runtime,
+                             undefined4 param_11,undefined4 param_12,undefined4 param_13,
+                             undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
-  byte bVar1;
+  SHthorntailConfig *config;
+  int iVar1;
+  uint uVar2;
   
-  bVar1 = runtime->tailSwingState;
-  if (bVar1 == 1) {
-    runtime->tailSwingTimer = runtime->tailSwingTimer - FLOAT_803dc074;
-    if (runtime->tailSwingTimer <= FLOAT_803e60b0) {
-      FUN_80006824(objectId,0xa8);
-      runtime->tailSwingState = 2;
+  config = obj->config;
+  switch(runtime->behaviorState) {
+  case 0:
+    uVar2 = FUN_80017758((double)FLOAT_803e60c8,(double)FLOAT_803e60cc,
+                         &runtime->proximityAlertState);
+    if (uVar2 != 0) {
+      FUN_80006824((uint)obj,0x410);
     }
-  }
-  else if (bVar1 == 0) {
-    runtime->tailSwingTimer = runtime->tailSwingTimer - FLOAT_803dc074;
-    if (runtime->tailSwingTimer <= FLOAT_803e60b0) {
-      FUN_80006824(objectId,0xa9);
-      runtime->tailSwingState = 1;
-      runtime->tailSwingTimer = FLOAT_803e60b4;
+    runtime->idleTimer = runtime->idleTimer - FLOAT_803dc074;
+    if (runtime->idleTimer <= FLOAT_803e60d0) {
+      runtime->behaviorState = 1;
     }
-  }
-  else if ((bVar1 < 3) && ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0)) {
-    runtime->tailSwingState = 0;
-    runtime->tailSwingTimer = FLOAT_803e60b8;
-  }
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: SHthorntail_chooseNextState
- * EN v1.0 Address: 0x801D524C
- * EN v1.0 Size: 452b
- * EN v1.1 Address: 0x801D5558
- * EN v1.1 Size: 524b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-uint SHthorntail_chooseNextState(short *obj,SHthorntailRuntime *runtime,SHthorntailConfig *config)
-{
-  short sVar1;
-  int iVar2;
-  uint uVar3;
-  double dVar4;
-  
-  if (config->leashRadiusByte == '\0') {
-    uVar3 = 7;
-  }
-  else {
-    iVar2 = FUN_80017a98();
-    dVar4 = FUN_80017708((float *)(obj + 0xc),(float *)(iVar2 + 0x18));
-    if ((double)FLOAT_803e60bc <= dVar4) {
-      dVar4 = FUN_80017708((float *)(obj + 0xc),(float *)&config->homePos);
-      if ((double)(float)((double)CONCAT44(0x43300000,
-                                           (uint)config->leashRadiusByte *
-                                           (uint)config->leashRadiusByte ^ 0x80000000) -
-                         DOUBLE_803e60c0) < dVar4) {
-        iVar2 = FUN_80017730();
-        sVar1 = (short)iVar2 - *obj;
-        if (0x8000 < sVar1) {
-          sVar1 = sVar1 + 1;
-        }
-        if (sVar1 < -0x8000) {
-          sVar1 = sVar1 + -1;
-        }
-        iVar2 = (int)sVar1;
-        if (iVar2 < 0) {
-          iVar2 = -iVar2;
-        }
-        if (0x20 < iVar2) {
-          FUN_80017730();
-          FUN_800723a0();
-          if (('\x01' < runtime->behaviorState) && (runtime->behaviorState < '\x06')) {
-            return 6;
-          }
-          return 7;
-        }
-      }
-      iVar2 = FUN_800575b4((double)(*(float *)(obj + 0x54) * *(float *)(obj + 4)),(float *)(obj + 6));
-      if (iVar2 == 0) {
-        uVar3 = 7;
-      }
-      else if ((runtime->behaviorState < '\x02') || ('\x05' < runtime->behaviorState)) {
-        uVar3 = 2;
+    break;
+  case 1:
+    runtime->idleTimer = runtime->idleTimer - FLOAT_803dc074;
+    if (runtime->idleTimer <= FLOAT_803e60b0) {
+      iVar1 = (**(code **)(*DAT_803dd6d8 + 0x24))(0);
+      if (iVar1 == 0) {
+        uVar2 = SHthorntail_chooseNextState((short *)obj,runtime,config);
+        runtime->behaviorState = (char)uVar2;
       }
       else {
-        uVar3 = FUN_80017760(3,5);
-        uVar3 = uVar3 & 0xff;
+        runtime->behaviorState = 0xb;
       }
     }
-    else if ((runtime->behaviorState < '\x02') || ('\x05' < runtime->behaviorState)) {
-      uVar3 = 7;
+    break;
+  case 2:
+  case 3:
+  case 4:
+  case 5:
+  case 6:
+    if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
+      iVar1 = (**(code **)(*DAT_803dd6d8 + 0x24))(0);
+      if (iVar1 == 0) {
+        uVar2 = SHthorntail_chooseNextState((short *)obj,runtime,config);
+        runtime->behaviorState = (char)uVar2;
+      }
+      else {
+        runtime->behaviorState = 0xb;
+      }
     }
-    else {
-      uVar3 = 6;
+    break;
+  case 7:
+    if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
+      runtime->behaviorState = 8;
+      uVar2 = FUN_80017760(500,800);
+      runtime->comboTimer = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) -
+                                    DOUBLE_803e60c0);
+      uVar2 = FUN_80017760(1,3);
+      runtime->comboRepeatCount = (char)uVar2;
     }
+    break;
+  case 8:
+    runtime->comboTimer = runtime->comboTimer -
+                          (float)((double)CONCAT44(0x43300000,(uint)DAT_803dc070) -
+                                  DOUBLE_803e60d8);
+    if (runtime->comboTimer <= FLOAT_803e60b0) {
+      if (runtime->comboRepeatCount < '\x01') {
+        runtime->behaviorState = 10;
+      }
+      else {
+        runtime->behaviorState = 9;
+      }
+    }
+    break;
+  case 9:
+    if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
+      runtime->behaviorState = 8;
+      uVar2 = FUN_80017760(500,800);
+      runtime->comboTimer = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) -
+                                    DOUBLE_803e60c0);
+      runtime->comboRepeatCount = runtime->comboRepeatCount + -1;
+    }
+    break;
+  case 10:
+    if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
+      runtime->behaviorState = 0;
+      uVar2 = FUN_80017760(1000,2000);
+      runtime->idleTimer = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) -
+                                   DOUBLE_803e60c0);
+    }
+    break;
+  case 0xb:
+    if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
+      runtime->tailSwingState = 2;
+      runtime->behaviorState = 0xc;
+    }
+    break;
+  case 0xc:
+    SHthorntail_updateTailSwing((uint)obj,runtime);
+    if (((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) &&
+       (iVar1 = (**(code **)(*DAT_803dd6d8 + 0x24))(0), iVar1 == 0)) {
+      runtime->behaviorState = 0xd;
+    }
+    break;
+  case 0xd:
+    if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
+      runtime->behaviorState = 0;
+      uVar2 = FUN_80017760(1000,2000);
+      runtime->idleTimer = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) -
+                                   DOUBLE_803e60c0);
+    }
+    break;
+  default:
+    FUN_80242fc0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                 sSHthorntailSourceFile,0x6cd,sThorntailEnteredInvalidState,param_12,param_13,
+                 param_14,param_15,param_16);
   }
-  return uVar3;
+  return;
 }
