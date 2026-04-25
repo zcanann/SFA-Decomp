@@ -21,7 +21,8 @@ typedef struct LaserObject {
 
 #define LASER_OBJECT_STATUS_08 0x08
 
-void laser_getExtraSizeUnsupported(void);
+int laser_getExtraSizeUnsupported(void);
+int laser_func08(void);
 void laser_freeUnsupported(void);
 void laser_renderUnsupported(void);
 void laser_hitDetectUnsupported(void);
@@ -29,8 +30,15 @@ void laser_updateUnsupported(void);
 void laser_initUnsupported(void);
 void laser_releaseUnsupported(void);
 void laser_initialiseUnsupported(void);
+int laserObj_getExtraSize(void);
+int laserObj_func08(void);
+void laserObj_free(void);
+void laserObj_render(void);
+void laserObj_hitDetect(void);
 void laserObj_update(int param_1);
 void laserObj_init(undefined2 *param_1,int param_2);
+void laserObj_release(void);
+void laserObj_initialise(void);
 undefined4
 laser_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
              undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
