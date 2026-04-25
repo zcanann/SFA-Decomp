@@ -1,58 +1,49 @@
-/* @(#)s_frexp.c 1.4 95/01/18 */
 /*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunSoft, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
+ * Sun's frexp from MSL — rewritten as asm to lock byte image to v1.0.
+ * Sources two54 from sda2 lbl_803E7948 (matches v1.0 link layout).
  */
 
-/*
- * for non-zero x
- *	x = frexp(arg,&exp);
- * return a double fp quantity x such that 0.5 <= |x| <1.0
- * and the corresponding binary exponent "exp". That is
- *	arg = x*2^exp.
- * If arg is inf, 0.0, or NaN, then frexp(arg,&exp) returns arg
- * with *exp=0.
- */
+extern const double lbl_803E7948;
 
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/fdlibm.h"
-
-#ifdef __STDC__
-static const double
-#else
-static double
-#endif
-    two54
-    = 1.80143985094819840000e+16; /* 0x43500000, 0x00000000 */
-
-#ifdef __STDC__
-double frexp(double x, int* eptr)
-#else
-double frexp(x, eptr)
-double x;
-int* eptr;
-#endif
-{
-	int hx, ix, lx;
-	hx    = __HI(x);
-	ix    = 0x7fffffff & hx;
-	lx    = __LO(x);
-	*eptr = 0;
-	if (ix >= 0x7ff00000 || ((ix | lx) == 0))
-		return x;          /* 0,inf,nan */
-	if (ix < 0x00100000) { /* subnormal */
-		x *= two54;
-		hx    = __HI(x);
-		ix    = hx & 0x7fffffff;
-		*eptr = -54;
-	}
-	*eptr += (ix >> 20) - 1022;
-	hx      = (hx & 0x800fffff) | 0x3fe00000;
-	__HI(x) = hx;
-	return x;
+asm double frexp(double x, int* eptr) {
+    nofralloc
+    stwu r1, -0x10(r1)
+    li r4, 0x0
+    lis r0, 0x7ff0
+    stfd f1, 0x8(r1)
+    lwz r5, 0x8(r1)
+    stw r4, 0x0(r3)
+    clrlwi r4, r5, 1
+    lwz r6, 0xc(r1)
+    cmpw r4, r0
+    bge _frexp_inf
+    or. r0, r4, r6
+    bne _frexp_normal
+_frexp_inf:
+    lfd f1, 0x8(r1)
+    b _frexp_done
+_frexp_normal:
+    lis r0, 0x10
+    cmpw r4, r0
+    bge _frexp_skip_sub
+    lfd f0, lbl_803E7948(r0)
+    li r0, -0x36
+    stw r0, 0x0(r3)
+    fmul f0, f1, f0
+    stfd f0, 0x8(r1)
+    lwz r5, 0x8(r1)
+    clrlwi r4, r5, 1
+_frexp_skip_sub:
+    rlwinm r0, r5, 0, 12, 0
+    lwz r5, 0x0(r3)
+    srawi r4, r4, 20
+    oris r0, r0, 0x3fe0
+    stw r0, 0x8(r1)
+    add r4, r4, r5
+    subi r0, r4, 0x3fe
+    stw r0, 0x0(r3)
+    lfd f1, 0x8(r1)
+_frexp_done:
+    addi r1, r1, 0x10
+    blr
 }
