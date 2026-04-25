@@ -1648,11 +1648,11 @@ dolphin/gx/GXDisplayList.c:
 	.text       start:0x8025D490 end:0x8025D514
 
 dolphin/gx/GXPerf.c:
-	.text       start:0x8025D514 end:0x8025E4D4
+	.text       start:0x8025D514 end:0x8025DE80
 	.data       start:0x8032F618 end:0x8032F79C
 
 dolphin/card/CARDBios.c:
-	.text       start:0x8025E4D4 end:0x8025EFCC
+	.text       start:0x8025DE80 end:0x8025EFCC
 	.data       start:0x8032F79C end:0x8032F79C
 	.bss        start:0x803AF550 end:0x803AF550
 
