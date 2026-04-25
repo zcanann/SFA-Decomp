@@ -48,16 +48,16 @@
  * - 0x3D: unnamed (s8)
  *
  * EN descriptor slot map:
- * - descriptor=0x80323130 lbl_80323130 (slots=10, mask=1101111111)
- * - slot 00: 0x8019AFF4 fn_8019AFF4 stub=blr ref=initialise (stub)
- * - slot 01: 0x8019AFF0 fn_8019AFF0 stub=blr ref=release (stub)
- * - slot 03: 0x8019AE20 fn_8019AE20 ref=init
- * - slot 04: 0x8019AE1C fn_8019AE1C stub=blr ref=update (stub)
- * - slot 05: 0x8019A92C fn_8019A92C ref=hitDetect
- * - slot 06: 0x8019A928 fn_8019A928 stub=blr ref=render (stub)
- * - slot 07: 0x8019A88C fn_8019A88C ref=free
- * - slot 08: 0x8019A884 fn_8019A884 stub=const 0
- * - slot 09: 0x8019A87C fn_8019A87C stub=const 172 ref=getExtraSize (stub)
+ * - descriptor=0x80323130 gTriggerObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x8019AFF4 trigger_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x8019AFF0 trigger_release stub=blr ref=release (stub)
+ * - slot 03: 0x8019AE20 trigger_init ref=init
+ * - slot 04: 0x8019AE1C trigger_update stub=blr ref=update (stub)
+ * - slot 05: 0x8019A92C trigger_hitDetect ref=hitDetect
+ * - slot 06: 0x8019A928 trigger_render stub=blr ref=render (stub)
+ * - slot 07: 0x8019A88C trigger_free ref=free
+ * - slot 08: 0x8019A884 trigger_func08 stub=const 0
+ * - slot 09: 0x8019A87C trigger_getExtraSize stub=const 172 ref=getExtraSize (stub)
  */
 
 #if 0
