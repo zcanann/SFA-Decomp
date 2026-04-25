@@ -569,10 +569,10 @@ undefined4 ObjAnim_SetMoveProgress(f32 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjAnim_SetCurrentMove(double param_1,double param_2,double param_3,undefined8 param_4,
+void ObjAnim_SetCurrentMove(double moveProgress,double param_2,double param_3,undefined8 param_4,
                             undefined8 param_5,undefined8 param_6,undefined8 param_7,
                             undefined8 param_8,undefined4 param_9,undefined4 param_10,
-                            uint param_11,undefined4 param_12,undefined4 param_13,
+                            uint flags,undefined4 param_12,undefined4 param_13,
                             undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
   short sVar1;
@@ -582,24 +582,24 @@ void ObjAnim_SetCurrentMove(double param_1,double param_2,double param_3,undefin
   int iVar5;
   int iVar6;
   int iVar7;
-  double dVar8;
+  double clampedProgress;
   undefined8 uVar10;
 
   uVar10 = FUN_80286840();
   iVar5 = (int)((ulonglong)uVar10 >> 0x20);
   uVar2 = (uint)uVar10;
-  dVar8 = param_1;
-  if ((double)FLOAT_803df560 < dVar8) {
-    dVar8 = (double)FLOAT_803df560;
+  clampedProgress = moveProgress;
+  if ((double)FLOAT_803df560 < clampedProgress) {
+    clampedProgress = (double)FLOAT_803df560;
   }
-  if (dVar8 < (double)FLOAT_803df570) {
-    dVar8 = (double)FLOAT_803df570;
+  if (clampedProgress < (double)FLOAT_803df570) {
+    clampedProgress = (double)FLOAT_803df570;
   }
-  *(float *)(iVar5 + 0x98) = (float)dVar8;
+  *(float *)(iVar5 + 0x98) = (float)clampedProgress;
   piVar3 = *(int **)(*(int *)(iVar5 + 0x7c) + *(char *)(iVar5 + 0xad) * 4);
   if ((piVar3 != (int *)0x0) && (iVar7 = *piVar3, *(short *)(iVar7 + 0xec) != 0)) {
     iVar6 = piVar3[0xb];
-    *(char *)(iVar6 + 99) = (char)param_11;
+    *(char *)(iVar6 + 99) = (char)flags;
     *(undefined2 *)(iVar6 + 0x46) = *(undefined2 *)(iVar6 + 0x44);
     *(undefined4 *)(iVar6 + 8) = *(undefined4 *)(iVar6 + 4);
     *(undefined4 *)(iVar6 + 0x18) = *(undefined4 *)(iVar6 + 0x14);
@@ -648,24 +648,24 @@ void ObjAnim_SetCurrentMove(double param_1,double param_2,double param_3,undefin
     *(int *)(iVar6 + 0x34) = iVar5 + 6;
     *(byte *)(iVar6 + 0x60) = *(byte *)(iVar5 + 1) & 0xf0;
     *(float *)(iVar6 + 0x14) =
-         (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(*(int *)(iVar6 + 0x34) + 1)) -
-                DOUBLE_803df568);
+         (double)CONCAT44(0x43300000,(uint)*(byte *)(*(int *)(iVar6 + 0x34) + 1)) -
+         DOUBLE_803df568;
     if (*(char *)(iVar6 + 0x60) == '\0') {
       *(float *)(iVar6 + 0x14) = *(float *)(iVar6 + 0x14) - FLOAT_803df560;
     }
     uVar2 = *(u8 *)(iVar5 + 1) & 0xf;
-    if ((uVar2 == 0) || ((param_11 & 0x10) != 0)) {
+    if ((uVar2 == 0) || ((flags & 0x10) != 0)) {
       *(undefined2 *)(iVar6 + 0x58) = 0;
     }
     else {
       *(undefined4 *)(iVar6 + 0x10) = *(undefined4 *)(iVar6 + 0xc);
       *(short *)(iVar6 + 0x5e) =
            (short)(int)(FLOAT_803df574 /
-                       (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803df580));
+                       ((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803df580));
       *(undefined2 *)(iVar6 + 0x58) = 0x4000;
     }
     *(float *)(iVar6 + 0xc) = FLOAT_803df570;
-    *(float *)(iVar6 + 4) = (float)(dVar8 * (double)*(float *)(iVar6 + 0x14));
+    *(float *)(iVar6 + 4) = (float)(clampedProgress * (double)*(float *)(iVar6 + 0x14));
   }
   FUN_8028688c();
 }
