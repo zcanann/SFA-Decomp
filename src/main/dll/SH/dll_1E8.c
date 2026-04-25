@@ -156,9 +156,10 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntime *runtime)
 {
-  uint randomTime;
+  int randomTime;
   int eventIsSet;
 
   runtime->impactSfxTable = &gSHthorntailRootControlMode3LocomotionDefaultImpactSfxTable;
@@ -195,8 +196,7 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntim
         if (runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE3_WAIT) {
           runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
           randomTime = fn_800221A0(1000,2000);
-          runtime->idleTimer =
-              (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
+          runtime->idleTimer = (float)randomTime;
         }
         runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5PlayerImpactSfxTable;
       }
@@ -223,3 +223,4 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntim
   }
   SHthorntail_updateState(obj,runtime);
 }
+#pragma scheduling reset
