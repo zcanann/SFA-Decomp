@@ -333,7 +333,7 @@ config.libs = [
         [
             Object(NonMatching, "dolphin/os/OS.c"),
             Object(NonMatching, "dolphin/os/OSAddress.c"),
-            Object(NonMatching, "dolphin/os/OSAlarm.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/os/OSAlarm.c"),
             Object(NonMatching, "dolphin/os/OSAlloc.c"),
             Object(NonMatching, "dolphin/os/OSArena.c"),
             Object(NonMatching, "dolphin/os/OSAudioSystem.c"),
@@ -352,10 +352,10 @@ config.libs = [
             Object(NonMatching, "dolphin/os/OSResetSW.c"),
             Object(NonMatching, "dolphin/os/OSRtc.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSStopwatch.c"),
-            Object(NonMatching, "dolphin/os/OSSync.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/os/OSSync.c"),
             Object(NonMatching, "dolphin/os/OSThread.c", extra_cflags=["-use_lmw_stmw", "on"]),
-            Object(NonMatching, "dolphin/os/OSTime.c"),
-            Object(NonMatching, "dolphin/os/__ppc_eabi_init.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/os/OSTime.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/os/__ppc_eabi_init.c"),
         ],
     ),
     DolphinLib(
@@ -488,7 +488,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXStubs.c"),
             Object(NonMatching, "dolphin/gx/GXTev.c"),
             Object(NonMatching, "dolphin/gx/GXTransform.c"),
-            Object(NonMatching, "dolphin/gx/GXGeometry.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/gx/GXGeometry.c"),
             Object(NonMatching, "dolphin/gx/GXVerifRAS.c"),
             Object(NonMatching, "dolphin/gx/GXVerifXF.c"),
             Object(NonMatching, "dolphin/gx/GXVerify.c"),
@@ -544,7 +544,7 @@ config.libs = [
         "thp",
         [
             Object(NonMatching, "dolphin/thp/THPDec.c", mw_version="GC/1.2.5"),
-            Object(NonMatching, "dolphin/thp/THPAudio.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/thp/THPAudio.c"),
         ],
     ),
     {
@@ -559,7 +559,7 @@ config.libs = [
     DolphinLib(
         "odenotstub",
         [
-            Object(NonMatching, "dolphin/odenotstub/odenotstub.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/odenotstub/odenotstub.c"),
         ],
     ),
     {
@@ -600,7 +600,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/flush_cache.c"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/mem_TRK.c"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/targimpl.c"),
-            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/targsupp.s"),
+            Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/targsupp.s"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/mpc_7xx_603e.c"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/main_TRK.c"),
