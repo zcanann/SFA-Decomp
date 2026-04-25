@@ -3,12 +3,19 @@
 
 extern uint FUN_80017690();
 extern undefined4 FUN_800178b8();
+extern undefined4 FUN_8000a380();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
+extern void fn_800200E8(int eventId,int value);
+extern undefined4 fn_8003B8F4(double scale);
+extern undefined4 fn_8004350C(int param_1,int param_2,int param_3);
+extern undefined4 fn_800887F8(int param_1);
 
+extern undefined4 *lbl_803DCA54;
 extern undefined4 DAT_8032a7b8;
 extern undefined4 DAT_8032a7bc;
 extern undefined4 DAT_8032a7c0;
+extern f32 lbl_803E64D8;
 extern f32 FLOAT_803e7144;
 extern f32 FLOAT_803e7164;
 extern f32 FLOAT_803e7168;
@@ -110,4 +117,55 @@ void fire_updateState(void)
   }
   FUN_8028688c();
   return;
+}
+
+int fireObj_getExtraSize(void)
+{
+  return 4;
+}
+
+int fireObj_func08(void)
+{
+  return 0;
+}
+
+void fireObj_free(void)
+{
+}
+
+void fireObj_render(void)
+{
+  fn_8003B8F4((double)lbl_803E64D8);
+  return;
+}
+
+void fireObj_hitDetect(void)
+{
+}
+
+void fireObj_update(int obj)
+{
+  ((void (*)(int,int,int))*(void **)(*lbl_803DCA54 + 0x48))(0,obj,0xffffffff);
+  return;
+}
+
+void fireObj_init(int obj)
+{
+  *(void (**)(void))(obj + 0xbc) = fire_updateState;
+  fn_8004350C(0,0,1);
+  *(u16 *)(obj + 0xb0) |= 0x2000;
+  fn_800887F8(0);
+  fn_800200E8(0x90d,1);
+  fn_800200E8(0x90e,1);
+  fn_800200E8(0x90f,1);
+  FUN_8000a380(3,2,0x2ee);
+  return;
+}
+
+void fireObj_release(void)
+{
+}
+
+void fireObj_initialise(void)
+{
 }

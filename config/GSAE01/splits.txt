@@ -1403,13 +1403,13 @@ main/dll/zBomb.c:
 	.text       start:0x80208B70 end:0x8020930C
 
 main/dll/fire.c:
-	.text       start:0x8020930C end:0x8020930C
+	.text       start:0x8020930C end:0x80209810
 
 main/textblock.c:
-	.text       start:0x8020930C end:0x8020930C
+	.text       start:0x80209810 end:0x802098B4
 
 main/dll/CF/laser.c:
-	.text       start:0x8020930C end:0x80209FE0
+	.text       start:0x802098B4 end:0x80209FE0
 
 main/unknown/autos/placeholder_80209FE0.c:
 	.text       start:0x80209FE0 end:0x8024034C
