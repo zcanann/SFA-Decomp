@@ -2297,10 +2297,10 @@ dolphin/MSL_C/PPCEABI/bare/H/misc_io.c:
 	.text       start:0x8028F920 end:0x8028F920
 
 dolphin/MSL_C/PPCEABI/bare/H/printf.c:
-	.text       start:0x8028F920 end:0x80291D00
+	.text       start:0x8028F920 end:0x802915E4
 
 dolphin/MSL_C/PPCEABI/bare/H/string.c:
-	.text       start:0x80291D00 end:0x80291FF4
+	.text       start:0x802915E4 end:0x802918C0
 
 dolphin/MSL_C/PPCEABI/bare/H/wchar_io.c:
 	.text       start:0x80291FF4 end:0x802920A4
