@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "dolphin/os.h"
 #include "main/dll/CAM/camcontrol.h"
 #include "main/unknown/autos/placeholder_8002F604.h"
 
@@ -26,8 +27,12 @@ extern double FUN_80183544();
 extern int FUN_80286838();
 extern undefined4 FUN_80286884();
 extern double FUN_80293900();
+extern void fn_8001F71C(void *dst,int fileId,int offset,int size);
+extern void fn_80023800(void *ptr);
+extern void *fn_80023CC8(int size,int heap,int flags);
+extern void fn_800E84D8(s16 actionNo);
 
-extern undefined4 gCamcontrolHandlers;
+extern void *gCamcontrolHandlers[20];
 extern undefined4* DAT_803dd738;
 extern undefined4 gCamcontrolTargetChanged;
 extern short* gCamcontrolTargetReticle;
@@ -43,8 +48,9 @@ extern void *gCamcontrolQueuedActionData;
 extern int gCamcontrolQueuedActionSource;
 extern undefined4 gCamcontrolCurrentActionId;
 extern undefined4 gCamcontrolCurrentHandler;
-extern undefined4 gCamcontrolHandlerCount;
+extern u8 gCamcontrolHandlerCount;
 extern short* gCamcontrolState;
+extern char lbl_80319B14[];
 extern f64 DOUBLE_803e22d0;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803de14c;
@@ -352,69 +358,62 @@ void camcontrol_getRelativePosition(double param_1,int param_2,float *param_3,fl
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void camcontrol_loadTriggeredCamAction(undefined8 param_1,double param_2,double param_3,
-                                      undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                                      undefined8 param_7,undefined8 param_8,int param_9,
-                                      uint param_10,char param_11,undefined4 param_12,
-                                      undefined4 param_13,undefined4 param_14,undefined4 param_15,
-                                      undefined4 param_16)
+void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char triggerMode)
 {
   uint uVar1;
   int iVar2;
-  undefined4 *puVar3;
-  undefined4 uVar4;
+  void **handlerEntry;
+  int blendFrames;
   CamcontrolTriggeredAction *camAction;
-  undefined8 uVar6;
   uint local_28;
   undefined local_24;
   uint local_20;
   byte local_1c;
   
-  if (param_9 == 2) {
-    local_28 = param_10 & 0x7f;
-    local_24 = (undefined)(param_10 & 0x80);
-    if ((param_10 & 0x80) == 0) {
-      uVar4 = 0x78;
+  if (triggerType == 2) {
+    local_28 = actionNo & 0x7f;
+    local_24 = (undefined)(actionNo & 0x80);
+    if ((actionNo & 0x80) == 0) {
+      blendFrames = 0x78;
     }
     else {
-      uVar4 = 0;
+      blendFrames = 0;
     }
-    camcontrol_queueCamAction(0x47,1,0,8,(uint)&local_28,uVar4,0xff);
+    camcontrol_queueCamAction(0x47,1,0,8,(uint)&local_28,blendFrames,0xff);
     return;
   }
-  if (param_9 < 2) {
-    if ((param_9 != 0) && (-1 < param_9)) {
-      local_20 = param_10 & 0x7f;
-      local_1c = (byte)param_10 & 0x80;
-      *(undefined *)(gCamcontrolState + 0x139) = 1;
-      if ((param_10 & 0x80) == 0) {
-        uVar4 = 0x78;
+  if (triggerType < 2) {
+    if ((triggerType != 0) && (-1 < triggerType)) {
+      local_20 = actionNo & 0x7f;
+      local_1c = (byte)actionNo & 0x80;
+      *(undefined *)((int)gCamcontrolState + 0x139) = 1;
+      if ((actionNo & 0x80) == 0) {
+        blendFrames = 0x78;
       }
       else {
-        uVar4 = 0;
+        blendFrames = 0;
       }
-      camcontrol_queueCamAction(0x48,1,0,8,(uint)&local_20,uVar4,0xff);
+      camcontrol_queueCamAction(0x48,1,0,8,(uint)&local_20,blendFrames,0xff);
       return;
     }
   }
   else {
-    if (param_9 == 4) {
-      camcontrol_queueCamAction(param_10 + 0x42,1,0,0,0,0x78,0xff);
+    if (triggerType == 4) {
+      camcontrol_queueCamAction(actionNo + 0x42,1,0,0,0,0x78,0xff);
       return;
     }
-    if (param_9 < 4) {
+    if (triggerType < 4) {
       camcontrol_queueCamAction(0x42,0,1,0,0,0x78,0xff);
       return;
     }
   }
-  if (param_10 == 0) {
-    uVar6 = FUN_800723a0();
-    camAction = (CamcontrolTriggeredAction *)FUN_80017830(0x10,0xf);
+  if (actionNo == 0) {
+    OSReport(lbl_80319B14,actionNo);
+    camAction = (CamcontrolTriggeredAction *)fn_80023CC8(0x10,0xf,0);
     if (camAction != (CamcontrolTriggeredAction *)0x0) {
-      FUN_80017640(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,camAction,0xb,0,
-                   0x10,param_13,param_14,param_15,param_16);
-      camAction->triggerMode = param_11;
-      FUN_800e8794(1);
+      fn_8001F71C(camAction,0xb,0,0x10);
+      camAction->triggerMode = triggerMode;
+      fn_800E84D8(1);
       if ((((gCamcontrolCurrentActionId == 0x42) || (gCamcontrolCurrentActionId == 0x4b)) ||
           (gCamcontrolCurrentActionId == 0x48)) || (gCamcontrolCurrentActionId == 0x47)) {
         if (camAction->actionKind == 1) {
@@ -426,36 +425,30 @@ void camcontrol_loadTriggeredCamAction(undefined8 param_1,double param_2,double 
       }
       else {
         iVar2 = 0;
-        puVar3 = &gCamcontrolHandlers;
+        handlerEntry = gCamcontrolHandlers;
         for (uVar1 = (uint)gCamcontrolHandlerCount; uVar1 != 0; uVar1 = uVar1 - 1) {
-          if (*(short *)*puVar3 == 0x42) {
-            iVar2 = (&gCamcontrolHandlers)[iVar2];
+          if (*(short *)*handlerEntry == 0x42) {
+            iVar2 = (int)gCamcontrolHandlers[iVar2];
             goto LAB_80103090;
           }
-          puVar3 = puVar3 + 1;
+          handlerEntry = handlerEntry + 1;
           iVar2 = iVar2 + 1;
         }
         iVar2 = 0;
 LAB_80103090:
         (**(code **)(**(int **)(iVar2 + 4) + 0x10))(camAction,0x10);
       }
-      FUN_80017814((uint)camAction);
+      fn_80023800(camAction);
     }
   }
   else {
-    if (param_10 == 0) {
-      camAction = (CamcontrolTriggeredAction *)0x0;
-    }
-    else {
-      camAction = (CamcontrolTriggeredAction *)FUN_80017830(0x10,0xf);
-      if (camAction != (CamcontrolTriggeredAction *)0x0) {
-        FUN_80017640(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,camAction,0xb,
-                     (param_10 - 1) * 0x10,0x10,param_13,param_14,param_15,param_16);
-      }
+    camAction = (CamcontrolTriggeredAction *)fn_80023CC8(0x10,0xf,0);
+    if (camAction != (CamcontrolTriggeredAction *)0x0) {
+      fn_8001F71C(camAction,0xb,(actionNo - 1) * 0x10,0x10);
     }
     if (camAction != (CamcontrolTriggeredAction *)0x0) {
-      camAction->triggerMode = param_11;
-      FUN_800e8794((short)param_10);
+      camAction->triggerMode = triggerMode;
+      fn_800E84D8((short)actionNo);
       if (((gCamcontrolCurrentActionId == 0x42) || (gCamcontrolCurrentActionId == 0x4b)) ||
          ((gCamcontrolCurrentActionId == 0x48 || (gCamcontrolCurrentActionId == 0x47)))) {
         if (camAction->actionKind == 1) {
@@ -467,20 +460,20 @@ LAB_80103090:
       }
       else {
         iVar2 = 0;
-        puVar3 = &gCamcontrolHandlers;
+        handlerEntry = gCamcontrolHandlers;
         for (uVar1 = (uint)gCamcontrolHandlerCount; uVar1 != 0; uVar1 = uVar1 - 1) {
-          if (*(short *)*puVar3 == 0x42) {
-            iVar2 = (&gCamcontrolHandlers)[iVar2];
+          if (*(short *)*handlerEntry == 0x42) {
+            iVar2 = (int)gCamcontrolHandlers[iVar2];
             goto LAB_80102f3c;
           }
-          puVar3 = puVar3 + 1;
+          handlerEntry = handlerEntry + 1;
           iVar2 = iVar2 + 1;
         }
         iVar2 = 0;
 LAB_80102f3c:
         (**(code **)(**(int **)(iVar2 + 4) + 0x10))(camAction,0x10);
       }
-      FUN_80017814((uint)camAction);
+      fn_80023800(camAction);
     }
   }
   return;
@@ -499,27 +492,18 @@ LAB_80102f3c:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int camcontrol_loadCamAction(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                             undefined8 param_5,undefined8 param_6,undefined8 param_7,
-                             undefined8 param_8,int param_9)
+void *camcontrol_loadCamAction(int actionNo)
 {
-  int iVar1;
-  undefined4 in_r7;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
+  void *camAction;
   
-  if (param_9 == 0) {
-    iVar1 = 0;
+  if (actionNo == 0) {
+    return 0;
   }
-  else {
-    iVar1 = FUN_80017830(0x10,0xf);
-    if (iVar1 != 0) {
-      FUN_80017640(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,0xb,
-                   (param_9 + -1) * 0x10,0x10,in_r7,in_r8,in_r9,in_r10);
-    }
+  camAction = fn_80023CC8(0x10,0xf,0);
+  if (camAction != 0) {
+    fn_8001F71C(camAction,0xb,(actionNo + -1) * 0x10,0x10);
   }
-  return iVar1;
+  return camAction;
 }
 
 /*
