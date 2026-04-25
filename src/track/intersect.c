@@ -213,8 +213,8 @@ extern undefined4* lbl_803DCA98;
 extern undefined4 lbl_803DCFF0;
 extern undefined4 lbl_803DCFF8;
 extern u8 lbl_803DCFF9;
-extern undefined4 lbl_803DD000;
-extern undefined4 lbl_803DD002;
+extern u16 lbl_803DD000;
+extern u16 lbl_803DD002;
 extern f64 DOUBLE_803dfab0;
 extern f64 DOUBLE_803dfad0;
 extern f64 DOUBLE_803dfb80;
@@ -682,47 +682,49 @@ void fn_8006FCCC(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 fn_8006FDF8(int param_1,int param_2,int param_3)
+#pragma peephole off
+#pragma scheduling off
+int fn_8006FDF8(int x, int y, int id)
 {
-  bool bVar1;
-  undefined2 *puVar2;
-  int iVar3;
-  uint uVar4;
-  
-  bVar1 = false;
-  if ((((-1 < param_1) && (param_1 < 0x280)) && (-1 < param_2)) && (param_2 < 0x1e0)) {
-    bVar1 = true;
-  }
-  if (!bVar1) {
-    return 0;
-  }
-  if (param_1 < 0x10) {
-    param_1 = 0x10;
-  }
-  if (param_2 < 6) {
-    param_2 = 6;
-  }
-  uVar4 = (uint)lbl_803DD000;
-  if (uVar4 < 0x14) {
-    (&lbl_803966D0)[uVar4 * 6] = (short)param_1;
-    (&DAT_80397332)[uVar4 * 6] = (short)param_2;
-    (&DAT_80397338)[uVar4 * 3] = param_3;
-    lbl_803DD000 = lbl_803DD000 + 1;
-  }
-  iVar3 = 0;
-  puVar2 = &lbl_803965E0;
-  uVar4 = (uint)lbl_803DD002;
-  while( true ) {
-    if (uVar4 == 0) {
-      return 0;
+    bool ok;
+    u8* row;
+    int* found;
+    int i;
+    u32 n;
+
+    ok = false;
+    if (x >= 0 && x < 0x280 && y >= 0 && y < 0x1E0) {
+        ok = true;
     }
-    if (param_3 == *(int *)(puVar2 + 4)) break;
-    puVar2 = puVar2 + 6;
-    iVar3 = iVar3 + 1;
-    uVar4 = uVar4 - 1;
-  }
-  return (&DAT_80397244)[iVar3 * 3];
+    if (!ok) {
+        return 0;
+    }
+    if (x < 0x10) x = 0x10;
+    if (y < 6) y = 6;
+    n = (u32)lbl_803DD000;
+    if (n < 0x14) {
+        u8* slot = (u8*)&lbl_803966D0 + n * 0xC;
+        *(u16*)(slot + 0x0) = (u16)x;
+        *(u16*)(slot + 0x2) = (u16)y;
+        *(int*)(slot + 0x8) = id;
+        lbl_803DD000++;
+    }
+    i = 0;
+    row = (u8*)&lbl_803965E0;
+    n = (u32)lbl_803DD002;
+    while (n != 0) {
+        if (id == *(int*)(row + 0x8)) {
+            found = (int*)((u8*)&lbl_803965E0 + i * 0xC);
+            return found[1];
+        }
+        row += 0xC;
+        i++;
+        n--;
+    }
+    return 0;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--

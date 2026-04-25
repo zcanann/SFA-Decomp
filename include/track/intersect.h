@@ -11,7 +11,7 @@ void fn_8006F500(void);
 void fn_8006F950(undefined4 param_1,undefined4 param_2,undefined param_3,uint param_4);
 void fn_8006FC00(int param_1);
 void fn_8006FCCC(void);
-undefined4 fn_8006FDF8(int param_1,int param_2,int param_3);
+int fn_8006FDF8(int x, int y, int id);
 uint fn_8006FED4(void);
 void fn_8006FEF8(u32 param_1);
 void fn_8006FF00(void);
