@@ -42,7 +42,7 @@ extern f32 FLOAT_803e4420;
 /*
  * --INFO--
  *
- * Function: FUN_8017adb4
+ * Function: pressureswitchfb_update
  * EN v1.0 Address: 0x8017ADB4
  * EN v1.0 Size: 1540b
  * EN v1.1 Address: 0x8017B2F8
@@ -52,7 +52,7 @@ extern f32 FLOAT_803e4420;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017adb4(void)
+void pressureswitchfb_update(void)
 {
   char cVar1;
   float fVar2;

@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_8017adb4(void);
+void pressureswitchfb_update(void);
 void FUN_8017b3b8(short *param_1,int param_2);
 void FUN_8017b3bc(undefined4 param_1,undefined4 param_2,int param_3);
 void FUN_8017b6bc(int param_1);

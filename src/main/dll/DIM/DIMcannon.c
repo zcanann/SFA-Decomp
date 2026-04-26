@@ -129,7 +129,7 @@ extern f32 FLOAT_803e54ac;
 /*
  * --INFO--
  *
- * Function: FUN_801ae100
+ * Function: imicepillar_render
  * EN v1.0 Address: 0x801AE100
  * EN v1.0 Size: 132b
  * EN v1.1 Address: 0x801AE134
@@ -139,7 +139,7 @@ extern f32 FLOAT_803e54ac;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ae100(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void imicepillar_render(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {

@@ -35,7 +35,7 @@ extern f32 FLOAT_803e5b4c;
 /*
  * --INFO--
  *
- * Function: FUN_801c3bb0
+ * Function: dfsh_objcreator_update
  * EN v1.0 Address: 0x801C3BB0
  * EN v1.0 Size: 740b
  * EN v1.1 Address: 0x801C3CC4
@@ -45,7 +45,7 @@ extern f32 FLOAT_803e5b4c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c3bb0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void dfsh_objcreator_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
 {

@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801ae100(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void imicepillar_render(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9);
 void FUN_801ae184(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
