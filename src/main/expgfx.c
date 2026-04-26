@@ -326,7 +326,7 @@ void expgfx_release(uint slotPoolBase,int poolIndex,int slotIndex,int freeTextur
     slot = (ExpgfxSlot *)(slotPoolBase + slotIndex * EXPGFX_SLOT_SIZE);
     slot->behaviorFlags = 0;
     if (freeTexture == 0) {
-      tableTextureResources = (u32 *)(expgfxBase + 0x988);
+      tableTextureResources = (u32 *)(expgfxBase + EXPGFX_EXPTAB_TEXTURE_RESOURCE_OFFSET);
       tableIndex = ((uint)slot->encodedTableIndex >> 1) * 4;
       if (tableTextureResources[tableIndex] != 0) {
         lbl_803DD258 = 1;
@@ -334,7 +334,7 @@ void expgfx_release(uint slotPoolBase,int poolIndex,int slotIndex,int freeTextur
         lbl_803DD258 = 0;
       }
       tableIndex = ((uint)slot->encodedTableIndex >> 1) * 4;
-      refCount = (u16 *)(expgfxBase + 0x98c + tableIndex * sizeof(u32));
+      refCount = (u16 *)(expgfxBase + EXPGFX_EXPTAB_REFCOUNT_OFFSET + tableIndex * sizeof(u32));
       if (*refCount == 0) {
         fn_801378A8(sExpgfxMismatchInAddRemove);
       }
@@ -342,7 +342,7 @@ void expgfx_release(uint slotPoolBase,int poolIndex,int slotIndex,int freeTextur
         (*refCount)--;
         if (*refCount == 0) {
           tableTextureResources[tableIndex] = 0;
-          *(u32 *)(expgfxBase + 0x980 + tableIndex * sizeof(u32)) = 0;
+          *(u32 *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableIndex * sizeof(u32)) = 0;
         }
       }
     }
@@ -397,17 +397,17 @@ void expgfx_initialise(void)
     slotIndex = 0;
     do {
       if ((1 << slotIndex & *poolActiveMasks) != 0) {
-        if ((((ExpgfxTableEntry *)(expgfxBase + 0x980))[Expgfx_GetSlotTableIndex(slot)].
+        if ((((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))[Expgfx_GetSlotTableIndex(slot)].
              textureOrResource != 0) &&
-            (((ExpgfxTableEntry *)(expgfxBase + 0x980))[Expgfx_GetSlotTableIndex(slot)].
+            (((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))[Expgfx_GetSlotTableIndex(slot)].
              textureOrResource != 0)) {
           lbl_803DD258 = 1;
-          fn_80054308((void *)((ExpgfxTableEntry *)(expgfxBase + 0x980))
+          fn_80054308((void *)((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))
                           [Expgfx_GetSlotTableIndex(slot)].textureOrResource);
           lbl_803DD258 = 0;
         }
         tableIndex = Expgfx_GetSlotTableIndex(slot);
-        tableEntry = &((ExpgfxTableEntry *)(expgfxBase + 0x980))[tableIndex];
+        tableEntry = &((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))[tableIndex];
         if (tableEntry->refCount != 0) {
           tableEntry->refCount = tableEntry->refCount + -1;
           if (tableEntry->refCount == 0) {
@@ -1117,7 +1117,7 @@ void expgfx_releaseSourceSlots(int sourceId)
 
   if (sourceId != 0) {
     poolIndex = 0;
-    tableEntries = (ExpgfxTableEntry *)(lbl_8039AB58 + 0x980);
+    tableEntries = (ExpgfxTableEntry *)(lbl_8039AB58 + EXPGFX_EXPTAB_OFFSET);
     slotPoolBases = (uint *)(lbl_8039AB58 + 0x1200);
     poolSourceIds = (int *)(lbl_8039AB58 + 0xed0);
     poolActiveCounts = (char *)(lbl_8039AB58 + 0x1070);
@@ -1201,15 +1201,15 @@ void expgfx_resetAllPools(void)
     do {
       activeBit = 1 << slotIndex;
       if ((*poolActiveMasks & activeBit) != 0) {
-        if (((ExpgfxTableEntry *)(expgfxBase + 0x980))[Expgfx_GetSlotTableIndex(slot)].
+        if (((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))[Expgfx_GetSlotTableIndex(slot)].
             textureOrResource != 0) {
           lbl_803DD258 = 1;
-          fn_80054308((void *)((ExpgfxTableEntry *)(expgfxBase + 0x980))
+          fn_80054308((void *)((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))
                           [Expgfx_GetSlotTableIndex(slot)].textureOrResource);
           lbl_803DD258 = 0;
         }
         tableEntry =
-            (ExpgfxTableEntry *)(expgfxBase + 0x980 + (Expgfx_GetSlotTableIndex(slot) << 4));
+            (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + (Expgfx_GetSlotTableIndex(slot) << 4));
         if (tableEntry->refCount != 0) {
           tableEntry->refCount = tableEntry->refCount - 1;
           if (tableEntry->refCount == 0) {
