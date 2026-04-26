@@ -171,6 +171,7 @@ void fireObj_update(FireObject *obj)
   return;
 }
 
+#pragma scheduling off
 void fireObj_init(FireObject *obj)
 {
   obj->stateCallback = fire_updateState;
@@ -183,6 +184,7 @@ void fireObj_init(FireObject *obj)
   fn_8000A380(3,2,0x2ee);
   return;
 }
+#pragma scheduling reset
 
 void fireObj_release(void)
 {
