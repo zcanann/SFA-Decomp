@@ -6,7 +6,6 @@
 extern int fn_8000B5D0(int obj,u16 volumeId);
 extern void fn_8000BB18(int obj,u16 volumeId);
 extern void fn_80013E2C(void *handle);
-extern void *fn_80013EC8(u32 effectId,u32 count);
 extern int *fn_8002E0FC(undefined *param_1,undefined *param_2);
 extern int fn_80036770(int obj,undefined4 *param_2,int *sphereIndex,uint *param_4,float *hitPos,
                        undefined *param_6,float *param_7);
@@ -47,6 +46,15 @@ typedef struct ObjHitReactEffectPos {
   f32 scale;
 } ObjHitReactEffectPos;
 
+typedef struct ObjHitReactEffectVTable {
+  code pad00;
+  code spawn;
+} ObjHitReactEffectVTable;
+
+typedef struct ObjHitReactEffectHandle {
+  ObjHitReactEffectVTable *vtable;
+} ObjHitReactEffectHandle;
+
 typedef struct ObjHitReactState {
   int activeHit;
   u8 pad04[0x58 - 0x04];
@@ -59,6 +67,8 @@ typedef struct ObjHitReactState {
 #define OBJHITREACT_STATE_ACTIVE 0x01
 #define OBJHITREACT_STATE_RESET_PENDING 0x08
 
+extern ObjHitReactEffectHandle *fn_80013EC8(u32 effectId,u32 count);
+
 /*
  * --INFO--
  *
@@ -67,12 +77,12 @@ typedef struct ObjHitReactState {
  * EN v1.0 Size: 652b
  */
 #pragma scheduling off
-u8 objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,float *cooldown)
+int objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,float *cooldown)
 {
   ObjAnimComponent *objAnim;
   ObjAnimDef *animDef;
   int collisionType;
-  int *effectHandle;
+  ObjHitReactEffectHandle *effectHandle;
   bool volumeActive;
   ObjHitReactEntry *reactEntry;
   undefined4 effectOrigin[4];
@@ -112,18 +122,18 @@ u8 objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,flo
     }
     reactEntry = (ObjHitReactEntry *)((u8 *)entries + sphereIndex * sizeof(ObjHitReactEntry));
     if (collisionType != 0x11) {
-      if ((reactEntry->clearVolumeA != -1) &&
+      if ((reactEntry->clearVolumeA > -1) &&
           (volumeActive = fn_8000B5D0(obj,(u16)reactEntry->clearVolumeA), !volumeActive)) {
         fn_8000BB18(obj,(u16)reactEntry->clearVolumeA);
       }
-      if ((reactEntry->clearVolumeB != -1) &&
+      if ((reactEntry->clearVolumeB > -1) &&
           (volumeActive = fn_8000B5D0(obj,(u16)reactEntry->clearVolumeB), !volumeActive)) {
         fn_8000BB18(obj,(u16)reactEntry->clearVolumeB);
       }
       if (reactEntry->hitFxMode == 1) {
-        effectHandle = (int *)fn_80013EC8(0x5a,1);
-        (**(code **)(*effectHandle + 4))(0,1,&effectPos,0x401,-1,effectOrigin);
-        if (effectHandle != (int *)0x0) {
+        effectHandle = fn_80013EC8(0x5a,1);
+        effectHandle->vtable->spawn(0,1,&effectPos,0x401,-1,effectOrigin);
+        if (effectHandle != (ObjHitReactEffectHandle *)0x0) {
           fn_80013E2C(effectHandle);
         }
       }
@@ -131,7 +141,7 @@ u8 objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,flo
         fn_8009A1DC((double)lbl_803DE964,obj,(undefined2 *)&effectPos.x,1,0);
       }
     }
-    if (((reactionState & 0xff) == 0) && (reactEntry->reactionAnim != -1)) {
+    if (((reactionState & 0xff) == 0) && (reactEntry->reactionAnim > -1)) {
       ObjAnim_SetCurrentMove((double)lbl_803DE910,obj,(int)reactEntry->reactionAnim,0);
       *cooldown = reactEntry->cooldown;
       reactionState = 1;
