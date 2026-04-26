@@ -44,6 +44,12 @@ typedef struct ObjHitReactEffectHandle {
 
 #define OBJHITREACT_STATE_ACTIVE 0x01
 #define OBJHITREACT_STATE_RESET_PENDING 0x08
+#define OBJHITREACT_COLLISION_SKIP_REACTION 0x11
+#define OBJHITREACT_HIT_FX_MODE_EFFECT 1
+#define OBJHITREACT_HIT_EFFECT_ID 0x5A
+#define OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS 0x401
+#define OBJHITREACT_MAX_RESET_OBJECTS 0x32
+#define OBJHITREACT_RESET_FRAME_COUNT 0x400
 
 extern ObjHitReactEffectHandle *fn_80013EC8(u32 effectId,u32 count);
 
@@ -99,7 +105,7 @@ int objHitReact_update(int obj,ObjHitReactEntry *entries,u32 entryCount,u32 reac
       sphereIndex = 0;
     }
     reactEntry = &entries[sphereIndex];
-    if (collisionType != 0x11) {
+    if (collisionType != OBJHITREACT_COLLISION_SKIP_REACTION) {
       if ((reactEntry->clearVolumeA > -1) &&
           (volumeActive = fn_8000B5D0(obj,(u16)reactEntry->clearVolumeA), !volumeActive)) {
         fn_8000BB18(obj,(u16)reactEntry->clearVolumeA);
@@ -108,9 +114,9 @@ int objHitReact_update(int obj,ObjHitReactEntry *entries,u32 entryCount,u32 reac
           (volumeActive = fn_8000B5D0(obj,(u16)reactEntry->clearVolumeB), !volumeActive)) {
         fn_8000BB18(obj,(u16)reactEntry->clearVolumeB);
       }
-      if (reactEntry->hitFxMode == 1) {
-        effectHandle = fn_80013EC8(0x5a,1);
-        effectHandle->vtable->spawn(0,1,&effectPos,0x401,-1,effectOrigin);
+      if (reactEntry->hitFxMode == OBJHITREACT_HIT_FX_MODE_EFFECT) {
+        effectHandle = fn_80013EC8(OBJHITREACT_HIT_EFFECT_ID,1);
+        effectHandle->vtable->spawn(0,1,&effectPos,OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,-1,effectOrigin);
         if (effectHandle != (ObjHitReactEffectHandle *)0x0) {
           fn_80013E2C(effectHandle);
         }
@@ -152,7 +158,7 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
       if (stateActive != 0) {
         resetPending = hitState->resetFlags & OBJHITREACT_STATE_RESET_PENDING;
         if (resetPending != 0) {
-          if (gObjHitReactResetObjectCount < 0x32) {
+          if (gObjHitReactResetObjectCount < OBJHITREACT_MAX_RESET_OBJECTS) {
             resetObjectCount = gObjHitReactResetObjectCount;
             resetObjects = gObjHitReactResetObjects;
             gObjHitReactResetObjectCount = resetObjectCount + 1;
@@ -160,7 +166,7 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
           }
           hitState->activeHit = 0;
           hitState->flags = (s16)(hitState->flags & ~OBJHITREACT_STATE_RESET_PENDING);
-          hitState->resetFrameCount = 0x400;
+          hitState->resetFrameCount = OBJHITREACT_RESET_FRAME_COUNT;
         }
       }
     }
