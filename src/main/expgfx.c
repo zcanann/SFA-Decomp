@@ -205,19 +205,6 @@ extern char sExpgfxNoTexture[];
 
 #define EXPGFX_SLOT_TABLE_INDEX_OFFSET 0x8A
 
-/*
- * Retail warning strings call this structure "exptab". The key fields are
- * still only partially understood, but the table's role and lifetime rules
- * are stable enough to stop treating it as raw integer arrays.
- */
-typedef struct ExpgfxTableEntry {
-  int key0;
-  int key1;
-  int textureOrResource;
-  u16 refCount;
-  s16 slotType;
-} ExpgfxTableEntry;
-
 extern ExpgfxTableEntry gExpgfxTableEntries[];
 
 typedef struct ExpgfxResourceEntry {

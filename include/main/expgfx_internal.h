@@ -44,6 +44,19 @@ typedef struct ExpgfxCurrentSource {
 } ExpgfxCurrentSource;
 
 /*
+ * Retail warning strings call this structure "exptab". The key fields are
+ * still only partially understood, but the table's role and lifetime rules
+ * are stable enough to stop treating it as raw integer arrays.
+ */
+typedef struct ExpgfxTableEntry {
+  int key0;
+  int key1;
+  int textureOrResource;
+  u16 refCount;
+  s16 slotType;
+} ExpgfxTableEntry;
+
+/*
  * Some spawn requests materialize an inline attached-source block after the
  * fixed config prefix. That state can seed source vectors, source positions,
  * and inherited velocity for the spawned effect.
