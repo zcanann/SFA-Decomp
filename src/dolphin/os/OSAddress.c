@@ -3,8 +3,9 @@
 /*
  * Target bytes at this split are not the real OSPhysicalToCached / etc.
  * address-conversion helpers (those live inline as macros in <dolphin/os.h>).
- * The symbols here are 6 tiny sdata getter/setter stubs against two s16s
- * and one u8 — kept to preserve the exact byte image at these addresses.
+ * The target object appears to be unrelated leftover main-text bytes under
+ * SDK-exported names, so this file stays as tiny sdata getter/setter stubs
+ * against two s16s and one u8 until the surrounding split is recovered.
  */
 
 extern s16 lbl_803DDCEC;
