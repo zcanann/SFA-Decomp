@@ -71,6 +71,7 @@ void proximitymine_free(ProximityMineObject *obj)
   return;
 }
 
+#pragma scheduling off
 void proximitymine_render(ProximityMineObject *obj,undefined4 param_2,undefined4 param_3,
                           undefined4 param_4,undefined4 param_5)
 {
@@ -121,3 +122,4 @@ void proximitymine_hitDetect(ProximityMineObject *obj)
   }
   return;
 }
+#pragma scheduling reset
