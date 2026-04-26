@@ -84,10 +84,7 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
 
     extra = obj->extra;
     if ((int)mapData->scale != 0) {
-        obj->scale =
-            lbl_803E6BA8 * (float)((double)CONCAT44(0x43300000, (int)mapData->scale ^ 0x80000000) -
-                                   lbl_803E6BA0) *
-            *(float *)((int)obj->model + 4);
+        obj->scale = lbl_803E6BA8 * (float)mapData->scale * *(float *)((int)obj->model + 4);
     }
     if (mapData->gameBit == -1) {
         extra->flags = extra->flags & 0xbf | 0x40;
