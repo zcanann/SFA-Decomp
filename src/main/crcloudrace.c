@@ -46,10 +46,15 @@ void crcloudrace_free(void)
   return;
 }
 
+#pragma peephole off
+#pragma scheduling off
 void crcloudrace_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,
                         undefined4 param_4,undefined4 param_5,char visible)
 {
-  if (visible != 0) {
+  int draw;
+
+  draw = visible;
+  if (draw != 0) {
     fn_8003B8F4((double)lbl_803E6748);
   }
   return;
@@ -77,8 +82,7 @@ void crcloudrace_update(CrCloudRaceObject *obj)
     obj->unkF4 = 1;
   }
   fn_802107CC(obj);
-  eventActive = state->flags & 0xfe;
-  state->flags = eventActive;
+  state->flags &= ~1;
   fn_801D7ED4(state->effect,1,-1,-1,0xe24,0xe8);
   fn_801D7ED4(state->effect,2,-1,-1,0xe24,0x38);
   return;
@@ -96,6 +100,9 @@ void crcloudrace_init(CrCloudRaceObject *obj)
   fn_8000A380(3,2,1000);
   return;
 }
+
+#pragma scheduling reset
+#pragma peephole reset
 
 void crcloudrace_release(void)
 {
