@@ -1205,7 +1205,7 @@ void fn_80072DFC(undefined4 param_1,undefined4 param_2,int param_3)
  *
  * Three-tex-coord-gen ind+direct TEV setup. Loads the active env-mtx
  * (lbl_80396820) for tex0, scales tex1 by lbl_803DEF2C through a 3x4
- * matrix from fn_80247318, and stamps an indirect tex matrix from local
+ * matrix from PSMTXScale, and stamps an indirect tex matrix from local
  * stack data. Two TEV stages: stage 0 K-modulates the texture by alpha,
  * stage 1 modulates by the second texture. Uses ind tex stage 0 to warp
  * tex coord 0 by tex1.
@@ -1231,7 +1231,6 @@ void fn_8007366C(u8 alpha)
     extern void fn_8006C5E4(int* out);
     extern void fn_8006C5CC(int* out);
     extern void fn_8004C2E4(int handle, int slot);
-    extern void fn_80247318(f32* mtx, f32 a, f32 b, f32 c);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
     GXColor c;
@@ -1251,7 +1250,7 @@ void fn_8007366C(u8 alpha)
     a = a * lbl_803DEF28;
     fn_8006C5E4(&handle1);
     fn_8004C2E4(handle1, 1);
-    fn_80247318((f32*)tex_mtx, lbl_803DEF2C, lbl_803DEF2C, lbl_803DEF2C);
+    PSMTXScale((f32(*)[4])tex_mtx, lbl_803DEF2C, lbl_803DEF2C, lbl_803DEF2C);
     tex_mtx[0][3] = a;
     GXLoadTexMtxImm(tex_mtx, 0x21, 1);
     GXSetTexCoordGen2(1, 1, 0, 0x21, 0, 0x7D);
@@ -3348,7 +3347,6 @@ void fn_8007AD10(f32 alpha)
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
     extern void fn_8006C6F0(int);
-    extern void fn_80246E54(f32* mtx);
     extern void fn_8000FB00(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
@@ -3358,7 +3356,7 @@ void fn_8007AD10(f32 alpha)
     fn_8006C6F0(0);
     GXSetTevKColor(0, lbl_803DB6A0);
     GXSetTevKAlphaSel(0, 0x1C);
-    fn_80246E54((f32*)mtx);
+    PSMTXIdentity(mtx);
     GXLoadTexMtxImm(mtx, 0x24, 1);
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
     GXClearVtxDesc();

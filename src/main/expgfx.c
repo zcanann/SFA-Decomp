@@ -55,7 +55,7 @@ extern void fn_801378A8(char *message,...);
 extern double FUN_80136594();
 extern undefined4 FUN_802420e0();
 extern undefined4 FUN_802475e4();
-extern void fn_80247494(int matrix,float *src,float *dst);
+extern void __PSMTXMultVecAB(int matrix,float *src,float *dst);
 extern undefined4 FUN_80247bf8();
 extern undefined4 FUN_80247ef8();
 extern undefined4 FUN_802570dc();
@@ -1048,7 +1048,7 @@ void expgfx_queueStandalonePools(void)
           queuePosition[2] =
               lbl_803DF358 * (poolBounds->minZ + poolBounds->maxZ) - lbl_803DCDDC;
         }
-        fn_80247494(currentMatrix,queuePosition,queuePosition);
+        __PSMTXMultVecAB(currentMatrix,queuePosition,queuePosition);
         if (*poolSourceIds != 0) {
           queuePosition[2] = queuePosition[2] - (float)(*poolSlotTypeIds & 0x21);
         }
