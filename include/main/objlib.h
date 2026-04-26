@@ -4,14 +4,14 @@
 #include "ghidra_import.h"
 
 void FUN_800356f0(int param_1);
-int FUN_800357a8(ushort *param_1,uint param_2);
+int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2);
 void FUN_8003582c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,undefined4 param_10,undefined4 param_11,int param_12,int param_13,
                  int param_14,undefined4 param_15,undefined4 param_16);
 void FUN_8003597c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4,int param_5);
-void FUN_80035ae4(int param_1,int param_2,int param_3);
-void FUN_80035b70(int param_1,undefined param_2);
+void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3);
+void ObjHits_SetTargetMask(int param_1,undefined param_2);
 void FUN_80035b84(int param_1,undefined2 param_2);
 void FUN_80035d58(int param_1,undefined2 param_2,short param_3,short param_4);
 void FUN_80035fa8(int param_1);
@@ -39,9 +39,9 @@ int FUN_800368c4(int param_1,undefined4 *param_2,int *param_3,uint *param_4,unde
 int FUN_800369d0(int param_1,undefined4 *param_2,int *param_3,uint *param_4);
 void FUN_80036a98(undefined4 param_1,undefined4 param_2,undefined4 param_3,int param_4,
                  undefined4 param_5,int param_6,undefined4 param_7,undefined4 param_8);
-void FUN_80036b6c(void);
-undefined4 FUN_80036ca0(undefined4 *param_1);
-void FUN_80036cb0(void);
+void ObjHits_ResetWorkBuffers(void);
+undefined4 ObjHitReact_GetResetObjects(undefined4 *param_1);
+void ObjHits_InitWorkBuffers(void);
 uint FUN_80036d5c(int param_1,int param_2);
 void FUN_80036dcc(undefined4 param_1,undefined4 param_2,float *param_3);
 void FUN_80036edc(undefined4 param_1,undefined4 param_2,float *param_3);

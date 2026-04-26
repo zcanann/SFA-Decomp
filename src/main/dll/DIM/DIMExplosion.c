@@ -12,7 +12,7 @@ extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern int FUN_80017af8();
-extern undefined4 FUN_80035ae4();
+extern undefined4 ObjHitbox_SetStateIndex();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
 extern uint FUN_80286840();
@@ -365,7 +365,7 @@ void FUN_801b1c30(int param_1)
     if (cVar1 < '\x01') {
       if (-1 < cVar1) {
         if (*(char *)(*(int *)(param_1 + 0x54) + 0xb0) != '\x01') {
-          FUN_80035ae4(param_1,*(int *)(param_1 + 0x54),1);
+          ObjHitbox_SetStateIndex(param_1,*(int *)(param_1 + 0x54),1);
         }
         bVar2 = false;
         iVar4 = 0;
@@ -383,14 +383,14 @@ void FUN_801b1c30(int param_1)
         if (bVar2) {
           FUN_80017698((int)*(short *)(iVar5 + 0x1e),1);
           if (*(char *)(*(int *)(param_1 + 0x54) + 0xb0) != '\x02') {
-            FUN_80035ae4(param_1,*(int *)(param_1 + 0x54),2);
+            ObjHitbox_SetStateIndex(param_1,*(int *)(param_1 + 0x54),2);
           }
           *pcVar6 = '\x02';
         }
       }
     }
     else if ((cVar1 < '\x03') && (*(char *)(*(int *)(param_1 + 0x54) + 0xb0) != '\x02')) {
-      FUN_80035ae4(param_1,*(int *)(param_1 + 0x54),2);
+      ObjHitbox_SetStateIndex(param_1,*(int *)(param_1 + 0x54),2);
     }
   }
   return;

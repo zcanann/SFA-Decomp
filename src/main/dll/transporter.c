@@ -20,7 +20,7 @@ extern int FUN_80017a98();
 extern undefined8 FUN_80017ac8();
 extern undefined4 FUN_80017ad0();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_80035b70();
+extern undefined4 ObjHits_SetTargetMask();
 extern undefined4 FUN_80035fa8();
 extern undefined4 FUN_80035fe8();
 extern undefined4 FUN_800360d4();
@@ -1501,7 +1501,7 @@ void FUN_80177874(int param_1,int param_2)
   **(float **)(param_1 + 0xb8) =
        (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_2 + 0x1a) ^ 0x80000000) -
               DOUBLE_803e42a8);
-  FUN_80035b70(param_1,1);
+  ObjHits_SetTargetMask(param_1,1);
   return;
 }
 

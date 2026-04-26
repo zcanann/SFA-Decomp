@@ -59,7 +59,7 @@ extern uint FUN_80017ae8();
 extern undefined4 FUN_80017b00();
 extern undefined8 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_80035b70();
+extern undefined4 ObjHits_SetTargetMask();
 extern undefined4 FUN_80035b84();
 extern undefined4 FUN_80035fa8();
 extern undefined4 FUN_80035fe8();

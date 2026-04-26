@@ -35,7 +35,7 @@ extern undefined4 FUN_80017a40();
 extern undefined4 FUN_80017a50();
 extern undefined4 FUN_80017a98();
 extern undefined4 FUN_80036864();
-extern undefined4 FUN_80036ca0();
+extern undefined4 ObjHitReact_GetResetObjects();
 extern void* FUN_80037134();
 extern undefined4 FUN_80044400();
 extern undefined4 FUN_80044fc4();

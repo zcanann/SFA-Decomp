@@ -15,7 +15,7 @@ extern undefined4 FUN_80017a4c();
 extern undefined4 FUN_80017a98();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_80035b70();
+extern undefined4 ObjHits_SetTargetMask();
 extern int FUN_800368c4();
 extern void* FUN_80037134();
 extern undefined4 FUN_80037180();

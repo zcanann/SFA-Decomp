@@ -137,7 +137,7 @@ void FUN_800356f0(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_800357a8
+ * Function: ObjHitbox_AllocRotatedBounds
  * EN v1.0 Address: 0x800357A8
  * EN v1.0 Size: 132b
  * EN v1.1 Address: 0x800357E8
@@ -147,7 +147,7 @@ void FUN_800356f0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800357a8(ushort *param_1,uint param_2)
+int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2)
 {
   uint uVar1;
   
@@ -263,7 +263,7 @@ void FUN_8003597c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
 /*
  * --INFO--
  *
- * Function: FUN_80035ae4
+ * Function: ObjHitbox_SetStateIndex
  * EN v1.0 Address: 0x80035AE4
  * EN v1.0 Size: 140b
  * EN v1.1 Address: 0x800359CC
@@ -273,7 +273,7 @@ void FUN_8003597c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80035ae4(int param_1,int param_2,int param_3)
+void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
 {
   int iVar1;
   int *piVar2;
@@ -306,7 +306,7 @@ void FUN_80035ae4(int param_1,int param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_80035b70
+ * Function: ObjHits_SetTargetMask
  * EN v1.0 Address: 0x80035B70
  * EN v1.0 Size: 20b
  * EN v1.1 Address: 0x80035A58
@@ -316,7 +316,7 @@ void FUN_80035ae4(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80035b70(int param_1,undefined param_2)
+void ObjHits_SetTargetMask(int param_1,undefined param_2)
 {
   if (*(int *)(param_1 + 0x54) == 0) {
     return;
@@ -1299,7 +1299,7 @@ void FUN_80036a98(undefined4 param_1,undefined4 param_2,undefined4 param_3,int p
 /*
  * --INFO--
  *
- * Function: FUN_80036b6c
+ * Function: ObjHits_ResetWorkBuffers
  * EN v1.0 Address: 0x80036B6C
  * EN v1.0 Size: 308b
  * EN v1.1 Address: 0x80036AE8
@@ -1309,7 +1309,7 @@ void FUN_80036a98(undefined4 param_1,undefined4 param_2,undefined4 param_3,int p
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80036b6c(void)
+void ObjHits_ResetWorkBuffers(void)
 {
   int iVar1;
   int iVar2;
@@ -1355,7 +1355,7 @@ void FUN_80036b6c(void)
 /*
  * --INFO--
  *
- * Function: FUN_80036ca0
+ * Function: ObjHitReact_GetResetObjects
  * EN v1.0 Address: 0x80036CA0
  * EN v1.0 Size: 16b
  * EN v1.1 Address: 0x80036BF4
@@ -1365,7 +1365,7 @@ void FUN_80036b6c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80036ca0(undefined4 *param_1)
+undefined4 ObjHitReact_GetResetObjects(undefined4 *param_1)
 {
   *param_1 = DAT_803dd860;
   return DAT_803dd864;
@@ -1374,7 +1374,7 @@ undefined4 FUN_80036ca0(undefined4 *param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80036cb0
+ * Function: ObjHits_InitWorkBuffers
  * EN v1.0 Address: 0x80036CB0
  * EN v1.0 Size: 172b
  * EN v1.1 Address: 0x80036C04
@@ -1384,7 +1384,7 @@ undefined4 FUN_80036ca0(undefined4 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80036cb0(void)
+void ObjHits_InitWorkBuffers(void)
 {
   DAT_803dd864 = FUN_80017830(200,0xe);
   DAT_803dd85c = FUN_80017830(3000,0xe);
