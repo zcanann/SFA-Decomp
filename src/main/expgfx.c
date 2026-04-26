@@ -1689,12 +1689,12 @@ void fn_8009FCDC(void)
   asm {
     bl expgfx_initialise
   }
-  poolActiveMasks = (u32 *)(expgfxBase + 0x10c0);
-  poolActiveCounts = expgfxBase + 0x1070;
+  poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
+  poolActiveCounts = expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET;
   poolSlotTypeIds = lbl_8030F8C8;
   poolFrameFlags = lbl_8030F968;
-  poolSourceModes = expgfxBase + 0xe80;
-  poolSourceIds = (u32 *)(expgfxBase + 0xed0);
+  poolSourceModes = expgfxBase + EXPGFX_POOL_SOURCE_MODES_OFFSET;
+  poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
   groupIndex = 10;
   do {
     poolActiveMasks[0] = 0;
@@ -1759,7 +1759,7 @@ void fn_8009FCDC(void)
   *(u32 *)(expgfxBase + 0x1018) = 0;
   lbl_803DD258 = 1;
   resourceIndex = 0;
-  resourceEntry = (ExpgfxResourceEntry *)expgfxBase;
+  resourceEntry = (ExpgfxResourceEntry *)(expgfxBase + EXPGFX_RESOURCE_TABLE_OFFSET);
   do {
     if (resourceEntry->resource != (void *)0x0) {
       fn_80054308(resourceEntry->resource);
@@ -1770,7 +1770,7 @@ void fn_8009FCDC(void)
     resourceEntry->wordC = 0;
     resourceEntry = resourceEntry + 1;
     resourceIndex = resourceIndex + 1;
-  } while (resourceIndex < 0x20);
+  } while (resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT);
   lbl_803DD258 = 0;
   return;
 }
