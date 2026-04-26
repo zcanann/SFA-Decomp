@@ -11,7 +11,6 @@ extern void OSPanic(const char *file,int line,const char *msg,...);
 extern u8 lbl_803DB410;
 extern f32 lbl_803DB414;
 extern undefined4* lbl_803DCAAC;
-extern undefined4* lbl_803DCA58;
 extern f32 lbl_803E5418;
 extern f64 lbl_803E5428;
 extern f32 lbl_803E5430;
@@ -20,6 +19,13 @@ extern f32 lbl_803E5438;
 extern f64 lbl_803E5440;
 extern char sSHthorntailSourceFile[];
 extern char sThorntailEnteredInvalidState[];
+
+typedef struct SHthorntailAnimationInterface {
+  u8 pad00[0x24];
+  int (*isTailSwingQueued)(int);
+} SHthorntailAnimationInterface;
+
+extern SHthorntailAnimationInterface **lbl_803DCA58;
 
 /*
  * --INFO--
@@ -54,7 +60,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_IDLE_COUNTDOWN:
     runtime->idleTimer = runtime->idleTimer - lbl_803DB414;
     if (runtime->idleTimer <= lbl_803E5418) {
-      iVar1 = (**(code **)(*lbl_803DCA58 + 0x24))(0);
+      iVar1 = (*lbl_803DCA58)->isTailSwingQueued(0);
       if (iVar1 != 0) {
         runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_READY;
       }
@@ -70,7 +76,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_MOVE_5:
   case SHTHORNTAIL_STATE_TURN_HOME:
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
-      iVar1 = (**(code **)(*lbl_803DCA58 + 0x24))(0);
+      iVar1 = (*lbl_803DCA58)->isTailSwingQueued(0);
       if (iVar1 != 0) {
         runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_READY;
       }
@@ -125,7 +131,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_TAIL_SWING:
     SHthorntail_updateTailSwing((uint)obj,runtime);
     if (((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) &&
-       (iVar1 = (**(code **)(*lbl_803DCA58 + 0x24))(0), iVar1 == 0)) {
+       (iVar1 = (*lbl_803DCA58)->isTailSwingQueued(0), iVar1 == 0)) {
       runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_RECOVER;
     }
     break;
