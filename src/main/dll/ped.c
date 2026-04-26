@@ -20,7 +20,7 @@ extern f32 FLOAT_803e5e94;
 /*
  * --INFO--
  *
- * Function: FUN_801cdbec
+ * Function: treebird_init
  * EN v1.0 Address: 0x801CDBEC
  * EN v1.0 Size: 304b
  * EN v1.1 Address: 0x801CDC2C
@@ -30,7 +30,7 @@ extern f32 FLOAT_803e5e94;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801cdbec(undefined2 *param_1,int param_2)
+void treebird_init(undefined2 *param_1,int param_2)
 {
   int *piVar1;
   int *piVar2;

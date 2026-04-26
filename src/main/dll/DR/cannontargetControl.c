@@ -82,7 +82,7 @@ extern f32 FLOAT_803e4fd0;
 /*
  * --INFO--
  *
- * Function: FUN_801a1a60
+ * Function: gunpowderbarrel_hitDetect
  * EN v1.0 Address: 0x801A1A60
  * EN v1.0 Size: 920b
  * EN v1.1 Address: 0x801A1A78
@@ -92,7 +92,7 @@ extern f32 FLOAT_803e4fd0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801a1a60(uint param_1)
+void gunpowderbarrel_hitDetect(uint param_1)
 {
   float fVar1;
   float fVar2;
@@ -652,7 +652,7 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
             }
             FUN_8003735c(uVar2,0x16);
           }
-          FUN_801a1a60(uVar2);
+          gunpowderbarrel_hitDetect(uVar2);
         }
         if (*(char *)(iVar12 + 0x4a) < '\0') {
           *(byte *)(uVar2 + 0xaf) = *(byte *)(uVar2 + 0xaf) | 8;
@@ -754,7 +754,7 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
       FUN_80035d58(uVar2,8,-2,0x19);
       FUN_800360f0(uVar2);
       FUN_80036080(uVar2);
-      FUN_801a1a60(uVar2);
+      gunpowderbarrel_hitDetect(uVar2);
       FUN_801a1230(uVar2,'\0');
     }
   }

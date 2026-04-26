@@ -588,7 +588,7 @@ void FUN_80162ec0(short *param_1)
 /*
  * --INFO--
  *
- * Function: FUN_801631c0
+ * Function: cannonclaw_release
  * EN v1.0 Address: 0x801631C0
  * EN v1.0 Size: 96b
  * EN v1.1 Address: 0x80162F5C
@@ -598,7 +598,7 @@ void FUN_80162ec0(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801631c0(int param_1)
+void cannonclaw_release(int param_1)
 {
   undefined4 uVar1;
   

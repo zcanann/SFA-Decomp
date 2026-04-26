@@ -83,7 +83,7 @@ extern f32 FLOAT_803e3bf0;
 /*
  * --INFO--
  *
- * Function: FUN_801630ec
+ * Function: cannonclaw_update
  * EN v1.0 Address: 0x801630EC
  * EN v1.0 Size: 668b
  * EN v1.1 Address: 0x801630F0
@@ -93,7 +93,7 @@ extern f32 FLOAT_803e3bf0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801630ec(short *param_1)
+void cannonclaw_update(short *param_1)
 {
   undefined4 uVar1;
   int iVar2;

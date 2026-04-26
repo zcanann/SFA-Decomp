@@ -25,7 +25,7 @@ extern undefined4 FUN_800381f8();
 extern undefined4 FUN_8003b56c();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800810f4();
-extern undefined4 FUN_801aa560();
+extern undefined4 ccqueen_render();
 extern int FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern undefined4 FUN_80293f90();
@@ -784,6 +784,6 @@ void FUN_801aa480(int param_1)
  */
 undefined4 FUN_801aa4a4(void)
 {
-  FUN_801aa560();
+  ccqueen_render();
   return 0;
 }

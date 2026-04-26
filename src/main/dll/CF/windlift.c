@@ -122,7 +122,7 @@ extern f32 FLOAT_803e471c;
 /*
  * --INFO--
  *
- * Function: FUN_80184930
+ * Function: scarab_update
  * EN v1.0 Address: 0x80184930
  * EN v1.0 Size: 292b
  * EN v1.1 Address: 0x80184D4C
@@ -132,7 +132,7 @@ extern f32 FLOAT_803e471c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80184930(void)
+void scarab_update(void)
 {
   int iVar1;
   int iVar2;

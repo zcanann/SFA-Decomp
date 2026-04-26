@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801aa560(void);
+void ccqueen_render(void);
 void FUN_801aa684(int param_1);
 void FUN_801aa6d8(int param_1);
 void FUN_801aa700(int param_1);

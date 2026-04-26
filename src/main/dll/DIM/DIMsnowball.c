@@ -117,7 +117,7 @@ extern f32 FLOAT_803e5368;
 /*
  * --INFO--
  *
- * Function: FUN_801aa560
+ * Function: ccqueen_render
  * EN v1.0 Address: 0x801AA560
  * EN v1.0 Size: 292b
  * EN v1.1 Address: 0x801AA584
@@ -127,7 +127,7 @@ extern f32 FLOAT_803e5368;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801aa560(void)
+void ccqueen_render(void)
 {
   char cVar1;
   uint uVar2;

@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801630ec(short *param_1);
+void cannonclaw_update(short *param_1);
 void FUN_80163388(int param_1,undefined4 param_2,int param_3);
 void FUN_8016338c(void);
 void FUN_801633ac(void);
