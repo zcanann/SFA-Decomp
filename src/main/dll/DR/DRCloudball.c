@@ -6,8 +6,8 @@ extern undefined4 FUN_80006ba8();
 extern int FUN_80017730();
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
-extern undefined4 FUN_80037008();
-extern undefined4 FUN_80037bd4();
+extern undefined4 ObjGroup_FindNearestObject();
+extern undefined4 ObjMsg_SendToObject();
 extern undefined4 FUN_800400b0();
 extern undefined4 FUN_8011e800();
 extern undefined4 FUN_8011e85c();
@@ -68,14 +68,14 @@ void spscarab_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,un
     if ((char)*(byte *)(iVar6 + 0x97) < '\0') {
       *(undefined2 *)(iVar6 + 0x88) = 0xffff;
       iVar2 = FUN_80017a98();
-      FUN_80037bd4(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar2,0x7000a,
+      ObjMsg_SendToObject(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar2,0x7000a,
                    (uint)puVar1,iVar6 + 0x88,in_r7,in_r8,in_r9,in_r10);
       *(byte *)(iVar6 + 0x97) = *(byte *)(iVar6 + 0x97) & 0x7f;
       *(byte *)(iVar6 + 0x97) = *(byte *)(iVar6 + 0x97) & 0xbf | 0x40;
     }
     else {
       if (*(int *)(iVar6 + 0x90) == 0) {
-        uVar3 = FUN_80037008(9,puVar1,local_28);
+        uVar3 = ObjGroup_FindNearestObject(9,puVar1,local_28);
         *(undefined4 *)(iVar6 + 0x90) = uVar3;
         iVar2 = *(int *)(iVar6 + 0x90);
         if (iVar2 != 0) {

@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_80006b14();
 extern uint FUN_80017690();
-extern undefined4 FUN_80037008();
+extern undefined4 ObjGroup_FindNearestObject();
 extern undefined4 FUN_800388b4();
 extern undefined4 FUN_8003b818();
 extern int FUN_80286840();
@@ -230,7 +230,7 @@ void FUN_801ce008(int param_1)
     }
   }
   else {
-    uVar1 = FUN_80037008(4,param_1,local_18);
+    uVar1 = ObjGroup_FindNearestObject(4,param_1,local_18);
     *(undefined4 *)(psVar3 + 4) = uVar1;
     if (*(int *)(psVar3 + 4) == 0) {
       *(char *)((int)psVar3 + 7) = *(char *)((int)psVar3 + 7) + -1;

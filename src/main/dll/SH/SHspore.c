@@ -16,7 +16,7 @@ extern undefined4 FUN_80017a6c();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern undefined4 ObjHits_DisableObject();
-extern undefined4 FUN_80037ce0();
+extern undefined4 ObjMsg_AllocQueue();
 extern int FUN_80038470();
 extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
@@ -91,7 +91,7 @@ void FUN_801d4364(int param_1)
     FUN_800175d0((double)FLOAT_803e6020,(double)FLOAT_803e6024,(int)piVar2);
   }
   *(int **)(iVar3 + 0x270) = piVar2;
-  FUN_80037ce0(param_1,2);
+  ObjMsg_AllocQueue(param_1,2);
   uVar1 = FUN_80017760(0xfffffe00,0x200);
   *(short *)(iVar3 + 0x2ae) = (short)uVar1;
   return;

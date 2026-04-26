@@ -29,11 +29,11 @@ extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHit();
-extern int FUN_80037008();
+extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern int fn_80037B60();
-extern undefined4 FUN_8003817c();
-extern undefined4 FUN_800381f8();
+extern undefined4 ObjLink_DetachChild();
+extern undefined4 ObjLink_AttachChild();
 extern int FUN_80038470();
 extern int FUN_800384ec();
 extern undefined4 FUN_8003b280();
@@ -156,7 +156,7 @@ void ccqueen_render(void)
     puVar4 = ObjGroup_GetObjects(0x3f,aiStack_38);
     dVar9 = (double)FLOAT_803e52b0;
     for (bVar7 = 0; bVar7 < 4; bVar7 = bVar7 + 1) {
-      iVar5 = FUN_80037008(5,puVar4[bVar7],(float *)0x0);
+      iVar5 = ObjGroup_FindNearestObject(5,puVar4[bVar7],(float *)0x0);
       dVar8 = FUN_80017708((float *)(puVar4[bVar7] + 0x18),(float *)(iVar5 + 0x18));
       if (dVar9 < dVar8) {
         cVar1 = cVar1 + '\x01';
@@ -388,7 +388,7 @@ undefined4 FUN_801aa8a4(int param_1,undefined4 param_2,int param_3)
                    (double)*(float *)(param_1 + 0x20),(double)FLOAT_803e5308,param_1);
       }
       else if (((bVar1 < 2) && (bVar1 != 0)) && (*(int *)(param_1 + 200) != 0)) {
-        FUN_8003817c(param_1,*piVar3);
+        ObjLink_DetachChild(param_1,*piVar3);
       }
     }
   }
@@ -419,7 +419,7 @@ void FUN_801aa984(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   iVar1 = *piVar2;
   if (iVar1 != 0) {
     if (*(int *)(param_9 + 200) != 0) {
-      param_1 = FUN_8003817c(param_9,iVar1);
+      param_1 = ObjLink_DetachChild(param_9,iVar1);
     }
     if (param_10 == 0) {
       FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,*piVar2);
@@ -692,7 +692,7 @@ LAB_801ab118:
         iVar8 = FUN_80017ae4(dVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar5,5
                              ,0xff,0xffffffff,in_r7,in_r8,in_r9,in_r10);
         *piVar10 = iVar8;
-        FUN_800381f8((int)psVar2,*piVar10,0);
+        ObjLink_AttachChild((int)psVar2,*piVar10,0);
       }
       iVar8 = FUN_80017a98();
       piVar10[1] = iVar8;
@@ -853,7 +853,7 @@ LAB_801ab118:
   case 0xe:
     if (*piVar10 != 0) {
       if (*(int *)(psVar2 + 100) != 0) {
-        dVar11 = (double)FUN_8003817c((int)psVar2,*piVar10);
+        dVar11 = (double)ObjLink_DetachChild((int)psVar2,*piVar10);
       }
       FUN_80017ac8(dVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,*piVar10);
       *piVar10 = 0;

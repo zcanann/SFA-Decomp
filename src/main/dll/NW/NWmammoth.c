@@ -19,7 +19,7 @@ extern int ObjHits_GetPriorityHit();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
-extern undefined4 FUN_80037ce0();
+extern undefined4 ObjMsg_AllocQueue();
 extern int FUN_800620e8();
 extern int FUN_800632f4();
 extern undefined4 FUN_80081118();

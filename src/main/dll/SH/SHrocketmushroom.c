@@ -12,7 +12,7 @@ extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjHits_GetPriorityHit();
 extern int ObjMsg_Pop();
-extern undefined4 FUN_80037bd4();
+extern undefined4 ObjMsg_SendToObject();
 extern undefined4 FUN_800810f4();
 extern undefined4 FUN_801d2e30();
 extern undefined4 FUN_80293f90();
@@ -279,7 +279,7 @@ void FUN_801d3a9c(double param_1,undefined8 param_2,double param_3,undefined8 pa
     iVar7 = FUN_80017a98();
     if (iVar5 == iVar7) {
       *puVar8 = 0x18e;
-      FUN_80037bd4(param_1,dVar9,param_3,dVar10,dVar11,param_6,param_7,param_8,iVar5,0x7000a,
+      ObjMsg_SendToObject(param_1,dVar9,param_3,dVar10,dVar11,param_6,param_7,param_8,iVar5,0x7000a,
                    (uint)param_9,(uint)puVar8,in_r7,in_r8,in_r9,in_r10);
       *(byte *)(puVar8 + 0x158) = *(byte *)(puVar8 + 0x158) & 0xbf | 0x40;
     }

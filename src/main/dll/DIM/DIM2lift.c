@@ -15,7 +15,7 @@ extern uint FUN_80017ae8();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined8 ObjHits_DisableObject();
-extern undefined4 FUN_80037bd4();
+extern undefined4 ObjMsg_SendToObject();
 extern undefined4 FUN_801bc6cc();
 
 extern undefined4 DAT_803265a0;
@@ -302,7 +302,7 @@ FUN_801ba9ec(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) & 0x7f;
     iVar1 = FUN_80017a98();
-    FUN_80037bd4(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,0xe0000,param_9
+    ObjMsg_SendToObject(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,0xe0000,param_9
                  ,0,param_13,param_14,param_15,param_16);
     FUN_80017698((int)*(short *)(iVar2 + 0x3f4),0);
     uVar3 = FUN_80017698((int)*(short *)(iVar2 + 0x3f2),1);

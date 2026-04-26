@@ -31,7 +31,7 @@ extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 FUN_8002fc3c();
-extern int FUN_80037008();
+extern int ObjGroup_FindNearestObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int FUN_80039520();
@@ -253,7 +253,7 @@ void FUN_801b3f2c(int param_1)
   float local_18 [4];
   
   local_18[0] = FLOAT_803e55a8;
-  iVar1 = FUN_80037008(10,param_1,local_18);
+  iVar1 = ObjGroup_FindNearestObject(10,param_1,local_18);
   *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
   uVar2 = FUN_80017690(0x3e3);
   if (uVar2 == 0) {

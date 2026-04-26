@@ -14,7 +14,7 @@ extern undefined4 ObjHits_MarkObjectPositionDirty();
 extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
-extern int FUN_80037008();
+extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_8008112c();
@@ -165,7 +165,7 @@ void FUN_801a136c(undefined4 param_1,undefined4 param_2,short param_3)
   uVar2 = FUN_80286840();
   local_68[0] = FLOAT_803e4f78;
   iVar3 = FUN_80017a98();
-  iVar4 = FUN_80037008(0x1e,uVar2,local_68);
+  iVar4 = ObjGroup_FindNearestObject(0x1e,uVar2,local_68);
   if (iVar4 != 0) {
     fVar1 = *(float *)(iVar4 + 0x10) - *(float *)(iVar3 + 0x10);
     if (fVar1 < FLOAT_803e4f58) {
@@ -300,7 +300,7 @@ void FUN_801a1654(undefined8 param_1,double param_2,double param_3,undefined8 pa
       iVar6 = *(int *)(uVar1 + 0x4c);
       iVar2 = 0;
       if (*(short *)(iVar6 + 0x1a) == 0) {
-        iVar2 = FUN_80037008(0x3a,uVar1,(float *)0x0);
+        iVar2 = ObjGroup_FindNearestObject(0x3a,uVar1,(float *)0x0);
       }
       else {
         piVar3 = ObjGroup_GetObjects(0x3a,&local_58);

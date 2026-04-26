@@ -13,7 +13,7 @@ extern uint FUN_80017ae8();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 ObjHits_EnableObject();
-extern undefined4 FUN_80037008();
+extern undefined4 ObjGroup_FindNearestObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800810ec();
 extern undefined4 FUN_801c7390();
@@ -236,7 +236,7 @@ void FUN_801c8484(short *param_1)
   local_34 = -1;
   local_38[0] = 0;
   if (DAT_803de848 == 0) {
-    DAT_803de848 = FUN_80037008(0xb,param_1,&local_30);
+    DAT_803de848 = ObjGroup_FindNearestObject(0xb,param_1,&local_30);
   }
   if ((DAT_803de848 != 0) && (*(short *)(DAT_803de848 + 0x44) != 0)) {
     (**(code **)(**(int **)(DAT_803de848 + 0x68) + 0x28))(&local_34,local_38);

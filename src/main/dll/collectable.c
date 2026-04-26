@@ -38,12 +38,12 @@ extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjHits_SyncObjectPosition();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern int ObjHits_GetPriorityHit();
-extern undefined4 FUN_80037008();
+extern undefined4 ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern undefined8 FUN_8003817c();
-extern undefined8 FUN_800381f8();
+extern undefined8 ObjLink_DetachChild();
+extern undefined8 ObjLink_AttachChild();
 extern undefined4 FUN_80038730();
 extern undefined4 FUN_800388b4();
 extern undefined4 FUN_80038f38();
@@ -633,7 +633,7 @@ void FUN_801457a4(undefined8 param_1,double param_2,double param_3,undefined8 pa
                                ,4,0xff,0xffffffff,*(uint **)(uVar3 + 0x30),param_14,param_15,
                                param_16);
           piVar11[499] = iVar8;
-          uVar12 = FUN_800381f8(uVar3,piVar11[499],3);
+          uVar12 = ObjLink_AttachChild(uVar3,piVar11[499],3);
         }
       }
     }
@@ -919,7 +919,7 @@ void FUN_801460b8(undefined8 param_1,double param_2,double param_3,undefined8 pa
         uVar10 = FUN_80017ae4(dVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar9,
                               4,0xff,0xffffffff,*(uint **)(iVar6 + 0x30),in_r8,in_r9,in_r10);
         *(undefined4 *)(iVar13 + 0x7b0) = uVar10;
-        dVar14 = (double)FUN_800381f8(iVar6,*(int *)(iVar13 + 0x7b0),
+        dVar14 = (double)ObjLink_AttachChild(iVar6,*(int *)(iVar13 + 0x7b0),
                                       *(byte *)(iVar13 + 0x7bc) >> 4 & 3);
       }
     }
@@ -985,7 +985,7 @@ void FUN_801460b8(undefined8 param_1,double param_2,double param_3,undefined8 pa
         uVar10 = FUN_80017ae4(dVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar9,
                               4,0xff,0xffffffff,*(uint **)(iVar6 + 0x30),in_r8,in_r9,in_r10);
         *(undefined4 *)(iVar13 + 0x7a8) = uVar10;
-        FUN_800381f8(iVar6,*(int *)(iVar13 + 0x7a8),(ushort)(*(byte *)(iVar13 + 0x7bc) >> 6));
+        ObjLink_AttachChild(iVar6,*(int *)(iVar13 + 0x7a8),(ushort)(*(byte *)(iVar13 + 0x7bc) >> 6));
       }
     }
     else if (*(int *)(iVar13 + 0x7a8) != 0) {
@@ -1099,7 +1099,7 @@ void FUN_801468f0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   uVar5 = FUN_80135d54(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar2,
                        (int *)(iVar2 + 0x7b8));
   if (*(int *)(iVar2 + 0x7cc) != 0) {
-    uVar5 = FUN_8003817c(param_9,*(int *)(iVar2 + 0x7cc));
+    uVar5 = ObjLink_DetachChild(param_9,*(int *)(iVar2 + 0x7cc));
     uVar5 = FUN_80017ac8(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                          *(int *)(iVar2 + 0x7cc));
   }
@@ -1581,7 +1581,7 @@ void FUN_80147314(undefined8 param_1,double param_2,double param_3,undefined8 pa
           *(undefined4 *)(iVar4 + 0x20) = *(undefined4 *)(iVar6 + 0x10);
         }
         local_64 = FLOAT_803e323c;
-        DAT_803de6d4 = FUN_80037008(4,iVar4,(float *)&local_64);
+        DAT_803de6d4 = ObjGroup_FindNearestObject(4,iVar4,(float *)&local_64);
         *(float *)(iVar4 + 0x18) = (float)dVar9;
         *(float *)(iVar4 + 0x1c) = (float)dVar8;
         *(float *)(iVar4 + 0x20) = (float)dVar7;
@@ -1670,7 +1670,7 @@ void FUN_801476cc(undefined8 param_1,double param_2,double param_3,undefined8 pa
      (*(char *)(param_9 + 0x36) != '\0')) {
     iVar4 = *(int *)(param_9 + 200);
     if (iVar4 != 0) {
-      uVar5 = FUN_8003817c(param_9,iVar4);
+      uVar5 = ObjLink_DetachChild(param_9,iVar4);
       param_1 = FUN_80017ac8(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4);
     }
     uVar1 = FUN_80017ae8();
@@ -1683,7 +1683,7 @@ void FUN_801476cc(undefined8 param_1,double param_2,double param_3,undefined8 pa
       iVar3 = FUN_80017ae4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,4,
                            *(undefined *)(param_9 + 0xac),0xffffffff,*(uint **)(param_9 + 0x30),
                            in_r8,in_r9,in_r10);
-      FUN_800381f8(param_9,iVar3,0);
+      ObjLink_AttachChild(param_9,iVar3,0);
       *(undefined2 *)(param_10 + 0x2b4) = *(undefined2 *)(param_10 + 0x2b6);
     }
   }

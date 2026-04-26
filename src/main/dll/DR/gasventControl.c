@@ -13,7 +13,7 @@ extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjGroup_AddObject();
-extern undefined4 FUN_80037ce0();
+extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_8003b818();
 extern int FUN_8005af70();
 extern int FUN_8005b398();
@@ -71,7 +71,7 @@ void blasted_init(int param_1,int param_2)
   (**(code **)(*DAT_803dd740 + 4))(param_1,iVar1,5);
   ObjGroup_AddObject(param_1,0x19);
   ObjGroup_AddObject(param_1,0x16);
-  FUN_80037ce0(param_1,8);
+  ObjMsg_AllocQueue(param_1,8);
   *(undefined4 *)(param_1 + 0xf8) = 0;
   *(undefined2 *)(iVar1 + 0x44) = 0;
   *(undefined2 *)(iVar1 + 0x46) = 0;

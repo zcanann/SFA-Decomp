@@ -3,7 +3,7 @@
 
 extern uint FUN_80017690();
 extern double FUN_80017714();
-extern int FUN_80037008();
+extern int ObjGroup_FindNearestObject();
 extern int FUN_8005b024();
 
 extern f32 FLOAT_803e30bc;
@@ -37,7 +37,7 @@ undefined FUN_8013dc88(int param_1,int param_2)
   if ((bool)uVar4) {
     *(byte *)(param_2 + 0x58) = (bVar1 - 1) * '\x02' & 0x1e | *(byte *)(param_2 + 0x58) & 0xe1;
   }
-  iVar2 = FUN_80037008(0x53,param_1,local_18);
+  iVar2 = ObjGroup_FindNearestObject(0x53,param_1,local_18);
   if (iVar2 == 0) {
     if ((*(char *)(param_2 + 0xd) != '\x03') &&
        ((*(ushort *)(*(int *)(param_2 + 4) + 0xb0) & 0x1000) != 0)) {

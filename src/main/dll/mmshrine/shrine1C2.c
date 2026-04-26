@@ -25,7 +25,7 @@ extern undefined4 FUN_8002fc3c();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
-extern undefined4 FUN_80037ce0();
+extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_8003b818();
 extern undefined8 FUN_80080f28();
 extern undefined4 FUN_8008111c();

@@ -15,7 +15,7 @@ extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_ClearSourceMask();
 extern undefined4 ObjHits_SetSourceMask();
-extern undefined4 FUN_80037bd4();
+extern undefined4 ObjMsg_SendToObject();
 extern undefined8 FUN_80081118();
 extern undefined2 ediblemushroom_update();
 extern undefined4 FUN_80293f90();
@@ -335,7 +335,7 @@ void FUN_801d083c(undefined8 param_1,undefined8 param_2,double param_3,undefined
         *(undefined2 *)((int)param_10 + 0x13e) = 0;
         param_10[0x50] = FLOAT_803e5f44;
         param_12 = param_10 + 0x4f;
-        FUN_80037bd4(uVar5,dVar6,param_3,param_4,param_5,param_6,param_7,param_8,iVar2,0x7000a,
+        ObjMsg_SendToObject(uVar5,dVar6,param_3,param_4,param_5,param_6,param_7,param_8,iVar2,0x7000a,
                      (uint)param_9,(uint)param_12,param_13,param_14,param_15,param_16);
         if ((int)*(short *)(param_11 + 0x1a) != 0xffffffff) {
           FUN_80017698((int)*(short *)(param_11 + 0x1a),1);

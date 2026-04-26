@@ -17,8 +17,8 @@ extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 ObjHits_SyncObjectPosition();
-extern int FUN_80037008();
-extern undefined4 FUN_800381f8();
+extern int ObjGroup_FindNearestObject();
+extern undefined4 ObjLink_AttachChild();
 extern undefined4 FUN_80039468();
 extern undefined4 FUN_80039580();
 extern int FUN_800da5f0();
@@ -1282,7 +1282,7 @@ FUN_80144030(undefined8 param_1,double param_2,double param_3,undefined8 param_4
         iVar2 = FUN_80017ae4(dVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar4,4,
                              0xff,0xffffffff,*(uint **)(param_9 + 0x30),in_r8,in_r9,in_r10);
         param_10[0x1ee] = iVar2;
-        FUN_800381f8(param_9,param_10[0x1ee],*(byte *)(param_10 + 0x1ef) >> 2 & 3);
+        ObjLink_AttachChild(param_9,param_10[0x1ee],*(byte *)(param_10 + 0x1ef) >> 2 & 3);
         fVar1 = FLOAT_803e306c;
         param_10[0x1f0] = (int)FLOAT_803e306c;
         param_10[0x1f1] = (int)fVar1;
@@ -1630,7 +1630,7 @@ void FUN_80144dc0(void)
   uVar8 = 1;
   uVar7 = 3;
   local_38[0] = FLOAT_803e31b4;
-  iVar2 = FUN_80037008(0x4d,psVar1,local_38);
+  iVar2 = ObjGroup_FindNearestObject(0x4d,psVar1,local_38);
   if ((iVar2 != 0) && ((*(ushort *)(iVar2 + 0xb0) & 0x800) != 0)) {
     uVar8 = 0;
   }

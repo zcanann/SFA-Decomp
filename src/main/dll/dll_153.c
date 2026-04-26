@@ -15,7 +15,7 @@ extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern undefined4 FUN_80037bd4();
+extern undefined4 ObjMsg_SendToObject();
 extern int FUN_800384ec();
 extern undefined4 FUN_80081120();
 extern undefined4 FUN_8011e868();
@@ -332,7 +332,7 @@ void dll153_updateExploderState
         if (*(char *)(puVar15 + 3) != '\0') {
           puVar15[5] = 0;
           *(undefined4 *)(puVar15 + 10) = 0;
-          FUN_80037bd4(dVar17,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(int)puVar7,
+          ObjMsg_SendToObject(dVar17,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(int)puVar7,
                        0x100010,uVar6,CONCAT22(puVar15[1],*puVar15),in_r7,in_r8,in_r9,in_r10);
         }
       }

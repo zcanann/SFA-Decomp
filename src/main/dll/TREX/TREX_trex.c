@@ -26,8 +26,8 @@ extern int FUN_80017b00();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305c4();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_8003817c();
-extern undefined4 FUN_800381f8();
+extern undefined4 ObjLink_DetachChild();
+extern undefined4 ObjLink_AttachChild();
 extern undefined4 FUN_800388b4();
 extern int FUN_8003964c();
 extern undefined4 FUN_8003b818();
@@ -729,7 +729,7 @@ undefined4 FUN_801e514c(uint param_1,undefined4 param_2,int param_3)
 void FUN_801e521c(int param_1)
 {
   if (**(int **)(param_1 + 0xb8) != 0) {
-    FUN_8003817c(param_1,**(int **)(param_1 + 0xb8));
+    ObjLink_DetachChild(param_1,**(int **)(param_1 + 0xb8));
   }
   return;
 }
@@ -767,7 +767,7 @@ void FUN_801e524c(undefined8 param_1,double param_2,double param_3,undefined8 pa
       iVar3 = *(int *)(iVar1 + local_18 * 4);
       if (*(short *)(iVar3 + 0x46) == 0x121) {
         *piVar4 = iVar3;
-        FUN_800381f8(param_9,*piVar4,1);
+        ObjLink_AttachChild(param_9,*piVar4,1);
         local_18 = local_14[0];
       }
     }

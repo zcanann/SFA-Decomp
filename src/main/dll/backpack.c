@@ -21,9 +21,9 @@ extern int ObjHits_GetPriorityHit();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
-extern undefined8 FUN_80037844();
-extern undefined4 FUN_80037bd4();
-extern undefined4 FUN_80037ce0();
+extern undefined8 ObjMsg_SendToObjects();
+extern undefined4 ObjMsg_SendToObject();
+extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80081110();
 extern undefined4 FUN_80163bbc();
@@ -369,7 +369,7 @@ void FUN_8016437c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       *(undefined2 *)(iVar7 + 0x298) = 0x195;
       *(undefined2 *)(iVar7 + 0x29a) = 0;
       *(float *)(iVar7 + 0x29c) = FLOAT_803e3c30;
-      FUN_80037bd4(dVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4,0x7000a,
+      ObjMsg_SendToObject(dVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4,0x7000a,
                    (uint)param_9,iVar7 + 0x298,in_r7,in_r8,in_r9,in_r10);
       *(undefined *)(iVar7 + 0x278) = 4;
     }
@@ -709,7 +709,7 @@ void FUN_8016531c(int param_1,int param_2)
   ObjGroup_AddObject(param_1,3);
   ObjGroup_AddObject(param_1,0x31);
   ObjHits_DisableObject(param_1);
-  FUN_80037ce0(param_1,1);
+  ObjMsg_AllocQueue(param_1,1);
   if (*(short *)(param_1 + 0x46) == 0x4ba) {
     *(byte *)(iVar2 + 0x27a) = *(byte *)(iVar2 + 0x27a) | 0x10;
   }
@@ -815,7 +815,7 @@ FUN_80165570(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   }
   dVar3 = (double)*(float *)(param_9 + 0x98);
   if ((double)FLOAT_803e3c8c == dVar3) {
-    uVar4 = FUN_80037844(dVar3,dVar5,dVar6,param_4,param_5,param_6,param_7,param_8,0,3,param_9,
+    uVar4 = ObjMsg_SendToObjects(dVar3,dVar5,dVar6,param_4,param_5,param_6,param_7,param_8,0,3,param_9,
                          0xe0000,param_9,param_14,param_15,param_16);
     FUN_80017ac8(uVar4,dVar5,dVar6,param_4,param_5,param_6,param_7,param_8,param_9);
   }

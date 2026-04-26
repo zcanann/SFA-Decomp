@@ -15,8 +15,8 @@ extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 ObjHits_RecordObjectHit();
-extern undefined4 FUN_8003817c();
-extern undefined4 FUN_800381f8();
+extern undefined4 ObjLink_DetachChild();
+extern undefined4 ObjLink_AttachChild();
 extern int FUN_80039520();
 extern undefined4 FUN_800810f0();
 extern undefined4 FUN_80081108();
@@ -470,7 +470,7 @@ void FUN_80152cf0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if (*(int *)(psVar1 + 100) != 0) {
       FUN_80017ac8((double)(float)puVar10[0xcb],param_2,param_3,param_4,param_5,param_6,param_7,
                    param_8,*(int *)(psVar1 + 100));
-      FUN_8003817c((int)psVar1,*(int *)(psVar1 + 100));
+      ObjLink_DetachChild((int)psVar1,*(int *)(psVar1 + 100));
       psVar1[100] = 0;
       psVar1[0x65] = 0;
     }
@@ -601,7 +601,7 @@ void FUN_80152cf0(undefined8 param_1,double param_2,double param_3,undefined8 pa
         uVar4 = 1;
       }
       *(undefined4 *)(iVar2 + 0xf4) = uVar4;
-      FUN_800381f8((int)psVar1,iVar2,(ushort)(cVar7 != '\0'));
+      ObjLink_AttachChild((int)psVar1,iVar2,(ushort)(cVar7 != '\0'));
     }
     else {
       iVar12 = FUN_80039520(*(int *)(psVar1 + 100),0);

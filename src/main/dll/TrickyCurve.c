@@ -8,7 +8,7 @@ extern undefined8 FUN_80017698();
 extern undefined4 FUN_80017748();
 extern undefined4 FUN_80017760();
 extern int FUN_80017a98();
-extern undefined4 FUN_80037bd4();
+extern undefined4 ObjMsg_SendToObject();
 extern undefined4 TrickyCurve_updateCooldownTrigger();
 extern uint FUN_80286838();
 extern uint FUN_8028683c();
@@ -164,7 +164,7 @@ void TrickyCurve_updateBurstTrigger(void)
     }
     else {
       uVar11 = FUN_80017698(0x468,1);
-      FUN_80037bd4(uVar11,dVar12,dVar13,dVar14,in_f5,in_f6,in_f7,in_f8,iVar5,0x60004,uVar4,2,in_r7,
+      ObjMsg_SendToObject(uVar11,dVar12,dVar13,dVar14,in_f5,in_f6,in_f7,in_f8,iVar5,0x60004,uVar4,2,in_r7,
                    in_r8,in_r9,in_r10);
       (**(code **)(*DAT_803dd708 + 8))(uVar4,0x399,&local_38,2,0xffffffff,0);
       FUN_80006824(uVar4,0x1c9);
@@ -387,7 +387,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
       }
       uVar4 = FUN_80017690(0x1d9);
       if (uVar4 == 0) {
-        FUN_80037bd4(dVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,0x60004,
+        ObjMsg_SendToObject(dVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,0x60004,
                      uVar2,1,in_r7,in_r8,in_r9,in_r10);
         (**(code **)(*DAT_803dd708 + 8))(uVar2,0x5ed,&local_78,2,0xffffffff,0);
         iVar3 = 9;
@@ -399,7 +399,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
       }
       else {
         uVar11 = FUN_80017698(0x468,1);
-        FUN_80037bd4(uVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,0x60004,
+        ObjMsg_SendToObject(uVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,0x60004,
                      uVar2,0,in_r7,in_r8,in_r9,in_r10);
         (**(code **)(*DAT_803dd708 + 8))(uVar2,0x5ed,&local_78,2,0xffffffff,0);
         iVar3 = 9;

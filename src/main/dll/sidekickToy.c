@@ -15,7 +15,7 @@ extern int FUN_8002f6ac();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
-extern int FUN_80037008();
+extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern undefined8 FUN_8003b06c();
 extern undefined8 FUN_8003b280();
@@ -1154,7 +1154,7 @@ void FUN_8014c78c(undefined4 param_1,undefined4 param_2,int param_3,int *param_4
     }
   }
   else {
-    iVar7 = FUN_80037008(3,puVar2,&local_48);
+    iVar7 = ObjGroup_FindNearestObject(3,puVar2,&local_48);
     *param_4 = iVar7;
     if (iVar7 != 0) {
       local_30 = (longlong)(int)local_48;

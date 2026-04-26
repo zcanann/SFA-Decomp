@@ -17,10 +17,10 @@ extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80017af0();
 extern int FUN_80017b00();
-extern int FUN_80037008();
+extern int ObjGroup_FindNearestObject();
 extern int ObjMsg_Pop();
-extern undefined4 FUN_80037bd4();
-extern undefined4 FUN_80037ce0();
+extern undefined4 ObjMsg_SendToObject();
+extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80040da0();
 extern undefined4 FUN_80041c10();
@@ -312,7 +312,7 @@ code_r0x80199a48:
           else if (bVar16 < 2) {
             if (bVar16 == 0) {
 LAB_80199dec:
-              iVar10 = FUN_80037008(0xf,psVar7,(float *)0x0);
+              iVar10 = ObjGroup_FindNearestObject(0xf,psVar7,(float *)0x0);
               dVar22 = extraout_f1_00;
               if (iVar10 != 0) {
                 dVar22 = (double)(**(code **)(*DAT_803dd6d4 + 0x48))(pbVar21[3],iVar10,0xffffffff);
@@ -578,10 +578,10 @@ LAB_80199ef0:
           if (iVar10 != 0) {
             bVar16 = pbVar21[2];
             if (bVar16 == 2) {
-              iVar13 = FUN_80037008(0x32,iVar10,(float *)0x0);
+              iVar13 = ObjGroup_FindNearestObject(0x32,iVar10,(float *)0x0);
               dVar22 = extraout_f1_02;
               if (iVar13 == 0) {
-                iVar13 = FUN_80037008(0x31,iVar10,(float *)0x0);
+                iVar13 = ObjGroup_FindNearestObject(0x31,iVar10,(float *)0x0);
                 dVar22 = extraout_f1_03;
               }
               if (iVar13 != 0) {
@@ -652,7 +652,7 @@ LAB_80199ef0:
           dVar22 = (double)FUN_80040da0();
           break;
         case 0x2f:
-          iVar10 = FUN_80037008(0x4c,psVar7,(float *)0x0);
+          iVar10 = ObjGroup_FindNearestObject(0x4c,psVar7,(float *)0x0);
           dVar22 = extraout_f1_01;
           if (iVar10 != 0) {
             dVar22 = (double)FUN_8020a908(iVar10,(uint)pbVar21[3] * 0x3c);
@@ -773,7 +773,7 @@ void FUN_8019ae30(undefined8 param_1,double param_2,double param_3,undefined8 pa
         }
         else {
           param_11 = local_28;
-          iVar6 = FUN_80037008(uVar7 - 1,iVar4,param_11);
+          iVar6 = ObjGroup_FindNearestObject(uVar7 - 1,iVar4,param_11);
           uVar12 = extraout_f1_00;
           if (iVar6 == 0) {
             bVar3 = false;
@@ -1078,7 +1078,7 @@ LAB_8019b350:
               DAT_803de789 = DAT_803de789 + '\x01';
               (&DAT_803ad43c)[iVar3 * 4] = (short)local_18;
             }
-            FUN_80037bd4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,local_14,
+            ObjMsg_SendToObject(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,local_14,
                          0xf0003,param_9,0,0xf0004,in_r8,in_r9,in_r10);
           }
         }
@@ -1161,6 +1161,6 @@ LAB_8019b31c:
  */
 void FUN_8019bc2c(int param_1)
 {
-  FUN_80037ce0(param_1,10);
+  ObjMsg_AllocQueue(param_1,10);
   return;
 }

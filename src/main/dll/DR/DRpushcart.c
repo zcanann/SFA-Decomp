@@ -24,7 +24,7 @@ extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 FUN_8002fc3c();
-extern undefined4 FUN_80037008();
+extern undefined4 ObjGroup_FindNearestObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_80039520();
 extern undefined4 FUN_8003b280();
@@ -562,7 +562,7 @@ void FUN_801e80b0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   *(undefined4 *)(param_9 + 4) = *(undefined4 *)(*(int *)(param_9 + 0x28) + 4);
   if (*(int *)(iVar4 + 0x9b4) == 0) {
-    uVar2 = FUN_80037008(9,param_9,local_18);
+    uVar2 = ObjGroup_FindNearestObject(9,param_9,local_18);
     *(undefined4 *)(iVar4 + 0x9b4) = uVar2;
   }
   uVar3 = FUN_80294d20(iVar1);

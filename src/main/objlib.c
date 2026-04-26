@@ -1436,7 +1436,7 @@ uint ObjGroup_ContainsObject(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80036dcc
+ * Function: ObjGroup_FindNearestObjectToPoint
  * EN v1.0 Address: 0x80036DCC
  * EN v1.0 Size: 272b
  * EN v1.1 Address: 0x80036D78
@@ -1446,7 +1446,7 @@ uint ObjGroup_ContainsObject(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80036dcc(undefined4 param_1,undefined4 param_2,float *param_3)
+void ObjGroup_FindNearestObjectToPoint(undefined4 param_1,undefined4 param_2,float *param_3)
 {
   byte bVar1;
   int iVar2;
@@ -1488,7 +1488,7 @@ void FUN_80036dcc(undefined4 param_1,undefined4 param_2,float *param_3)
 /*
  * --INFO--
  *
- * Function: FUN_80036edc
+ * Function: ObjGroup_FindNearestObjectForObject
  * EN v1.0 Address: 0x80036EDC
  * EN v1.0 Size: 300b
  * EN v1.1 Address: 0x80036E58
@@ -1498,7 +1498,7 @@ void FUN_80036dcc(undefined4 param_1,undefined4 param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80036edc(undefined4 param_1,undefined4 param_2,float *param_3)
+void ObjGroup_FindNearestObjectForObject(undefined4 param_1,undefined4 param_2,float *param_3)
 {
   byte bVar1;
   float fVar2;
@@ -1543,7 +1543,7 @@ void FUN_80036edc(undefined4 param_1,undefined4 param_2,float *param_3)
 /*
  * --INFO--
  *
- * Function: FUN_80037008
+ * Function: ObjGroup_FindNearestObject
  * EN v1.0 Address: 0x80037008
  * EN v1.0 Size: 300b
  * EN v1.1 Address: 0x80036F50
@@ -1553,7 +1553,7 @@ void FUN_80036edc(undefined4 param_1,undefined4 param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80037008(undefined4 param_1,undefined4 param_2,float *param_3)
+void ObjGroup_FindNearestObject(undefined4 param_1,undefined4 param_2,float *param_3)
 {
   byte bVar1;
   float fVar2;
@@ -1865,7 +1865,7 @@ undefined4 ObjMsg_Pop(int param_1,uint *param_2,uint *param_3,uint *param_4)
 /*
  * --INFO--
  *
- * Function: FUN_8003762c
+ * Function: ObjMsg_SendToNearbyObjects
  * EN v1.0 Address: 0x8003762C
  * EN v1.0 Size: 536b
  * EN v1.1 Address: 0x80037694
@@ -1875,7 +1875,7 @@ undefined4 ObjMsg_Pop(int param_1,uint *param_2,uint *param_3,uint *param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003762c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void ObjMsg_SendToNearbyObjects(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,uint param_11,uint param_12,uint param_13,
                  undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -1923,7 +1923,7 @@ void FUN_8003762c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_80037844
+ * Function: ObjMsg_SendToObjects
  * EN v1.0 Address: 0x80037844
  * EN v1.0 Size: 912b
  * EN v1.1 Address: 0x800377D0
@@ -1933,7 +1933,7 @@ void FUN_8003762c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80037844(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void ObjMsg_SendToObjects(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,uint param_11,uint param_12,uint param_13,
                  undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -2004,7 +2004,7 @@ void FUN_80037844(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_80037bd4
+ * Function: ObjMsg_SendToObject
  * EN v1.0 Address: 0x80037BD4
  * EN v1.0 Size: 268b
  * EN v1.1 Address: 0x800379BC
@@ -2014,7 +2014,7 @@ void FUN_80037844(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80037bd4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+uint ObjMsg_SendToObject(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,uint param_10,uint param_11,uint param_12,undefined4 param_13,
                  undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -2042,7 +2042,7 @@ uint FUN_80037bd4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_80037ce0
+ * Function: ObjMsg_AllocQueue
  * EN v1.0 Address: 0x80037CE0
  * EN v1.0 Size: 112b
  * EN v1.1 Address: 0x80037A5C
@@ -2052,7 +2052,7 @@ uint FUN_80037bd4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80037ce0(int param_1,int param_2)
+void ObjMsg_AllocQueue(int param_1,int param_2)
 {
   undefined4 *puVar1;
   
@@ -2218,7 +2218,7 @@ void FUN_80037fa8(undefined4 param_1,undefined4 param_2,uint param_3,uint param_
 /*
  * --INFO--
  *
- * Function: FUN_8003817c
+ * Function: ObjLink_DetachChild
  * EN v1.0 Address: 0x8003817C
  * EN v1.0 Size: 124b
  * EN v1.1 Address: 0x80037DA8
@@ -2228,7 +2228,7 @@ void FUN_80037fa8(undefined4 param_1,undefined4 param_2,uint param_3,uint param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003817c(int param_1,int param_2)
+void ObjLink_DetachChild(int param_1,int param_2)
 {
   uint uVar1;
   int iVar2;
@@ -2255,7 +2255,7 @@ void FUN_8003817c(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_800381f8
+ * Function: ObjLink_AttachChild
  * EN v1.0 Address: 0x800381F8
  * EN v1.0 Size: 64b
  * EN v1.1 Address: 0x80037E24
@@ -2265,7 +2265,7 @@ void FUN_8003817c(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800381f8(int param_1,int param_2,ushort param_3)
+void ObjLink_AttachChild(int param_1,int param_2,ushort param_3)
 {
   byte bVar1;
   

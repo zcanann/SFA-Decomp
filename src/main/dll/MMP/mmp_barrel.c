@@ -9,7 +9,7 @@ extern int FUN_80017830();
 extern int FUN_80017a90();
 extern undefined4 FUN_80017a98();
 extern int FUN_80017af0();
-extern int FUN_80037008();
+extern int ObjGroup_FindNearestObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_8003b818();

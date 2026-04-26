@@ -27,8 +27,8 @@ extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
-extern undefined4 FUN_80037bd4();
-extern undefined4 FUN_80037ce0();
+extern undefined4 ObjMsg_SendToObject();
+extern undefined4 ObjMsg_AllocQueue();
 extern int FUN_800384ec();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
@@ -748,7 +748,7 @@ void FUN_8018c928(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
          (dVar6 = FUN_80017708((float *)(param_9 + 0x18),(float *)(iVar2 + 0x18)),
          dVar6 < (double)FLOAT_803e49a8)) {
         *puVar5 = 0xcbe;
-        FUN_80037bd4(dVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar2,0x7000a,
+        ObjMsg_SendToObject(dVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar2,0x7000a,
                      param_9,(uint)puVar5,in_r7,in_r8,in_r9,in_r10);
         *(byte *)(puVar5 + 0x2e) = *(byte *)(puVar5 + 0x2e) & 0xbf | 0x40;
         FUN_80017698(0xe97,1);

@@ -47,15 +47,15 @@ extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
 extern uint ObjGroup_ContainsObject();
-extern int FUN_80036edc();
-extern int FUN_80037008();
+extern int ObjGroup_FindNearestObjectForObject();
+extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
-extern undefined4 FUN_80037844();
-extern undefined4 FUN_80037bd4();
-extern undefined4 FUN_80037ce0();
+extern undefined4 ObjMsg_SendToObjects();
+extern undefined4 ObjMsg_SendToObject();
+extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_800388b4();
 extern int FUN_80038a34();
 extern void* FUN_80039518();
@@ -489,7 +489,7 @@ void FUN_801feb30(void)
         if ((uVar6 & 0x100) == 0) {
           *(ushort *)(*(int *)(psVar3 + 0x2a) + 0x60) =
                *(ushort *)(*(int *)(psVar3 + 0x2a) + 0x60) & 0xfffe;
-          FUN_80037bd4(dVar12,dVar14,dVar15,in_f4,in_f5,in_f6,in_f7,in_f8,iVar4,0x100008,
+          ObjMsg_SendToObject(dVar12,dVar14,dVar15,in_f4,in_f5,in_f6,in_f7,in_f8,iVar4,0x100008,
                        (uint)psVar3,0x38000,in_r7,in_r8,in_r9,in_r10);
           *(byte *)((int)psVar3 + 0xaf) = *(byte *)((int)psVar3 + 0xaf) | 8;
         }
@@ -509,7 +509,7 @@ void FUN_801feb30(void)
         runtimeState->queuedEvent.queuedConditionId = -1;
         runtimeState->queuedEvent.queuedConditionValue = 0;
         runtimeState->queuedEvent.queuedConditionScale = FLOAT_803e6e64;
-        FUN_80037bd4(uVar13,dVar14,dVar15,in_f4,in_f5,in_f6,in_f7,in_f8,iVar5,0x7000a,(uint)psVar3,
+        ObjMsg_SendToObject(uVar13,dVar14,dVar15,in_f4,in_f5,in_f6,in_f7,in_f8,iVar5,0x7000a,(uint)psVar3,
                      (uint)&runtimeState->queuedEvent,in_r7,in_r8,in_r9,in_r10);
         psVar3[0x7c] = 0;
         psVar3[0x7d] = 0;
@@ -669,7 +669,7 @@ void FUN_801feb30(void)
           runtimeState->queuedEvent.queuedConditionId = -1;
           runtimeState->queuedEvent.queuedConditionValue = 0;
           runtimeState->queuedEvent.queuedConditionScale = FLOAT_803e6e64;
-          FUN_80037bd4(uVar13,dVar14,dVar15,in_f4,in_f5,in_f6,in_f7,in_f8,iVar4,0x7000a,(uint)psVar3
+          ObjMsg_SendToObject(uVar13,dVar14,dVar15,in_f4,in_f5,in_f6,in_f7,in_f8,iVar4,0x7000a,(uint)psVar3
                        ,(uint)&runtimeState->queuedEvent,in_r7,in_r8,in_r9,in_r10);
         }
         else {
@@ -720,7 +720,7 @@ void FUN_801ff8b8(short *param_1)
   int iVar1;
   
   FUN_801fe540(param_1,*(undefined4 **)(param_1 + 0x5c));
-  FUN_80037ce0((int)param_1,8);
+  ObjMsg_AllocQueue((int)param_1,8);
   iVar1 = *(int *)(param_1 + 0x32);
   if (iVar1 != 0) {
     *(uint *)(iVar1 + 0x30) = *(uint *)(iVar1 + 0x30) | 0x4008;
@@ -985,7 +985,7 @@ void FUN_801ffec4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       }
       else if ((*(int *)(iVar9 + 0x30) != 0) &&
               (uVar2 = ObjGroup_ContainsObject(*(int *)(iVar5 + 0x2d0),*(int *)(iVar9 + 0x30)), uVar2 == 0)) {
-        uVar3 = FUN_80036edc(*(undefined4 *)(iVar9 + 0x30),iVar4,(float *)0x0);
+        uVar3 = ObjGroup_FindNearestObjectForObject(*(undefined4 *)(iVar9 + 0x30),iVar4,(float *)0x0);
         *(undefined4 *)(iVar5 + 0x2d0) = uVar3;
         if (*(int *)(iVar5 + 0x2d0) == 0) {
           *(undefined *)(iVar9 + 0x34) = 1;
@@ -1029,7 +1029,7 @@ void FUN_801ffec4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       *(undefined4 *)(iVar5 + 0x2d0) = *(undefined4 *)(iVar9 + 0x30);
     }
     else if (((iVar8 < 1) && (-1 < iVar8)) && (*(int *)(iVar9 + 0x30) != 0)) {
-      uVar3 = FUN_80036edc(*(int *)(iVar9 + 0x30),iVar4,local_28);
+      uVar3 = ObjGroup_FindNearestObjectForObject(*(int *)(iVar9 + 0x30),iVar4,local_28);
       *(undefined4 *)(iVar5 + 0x2d0) = uVar3;
     }
     if (*(int *)(iVar5 + 0x2d0) != 0) {
@@ -1085,7 +1085,7 @@ void FUN_8020019c(void)
         puVar8 = puVar8 + -1;
         iVar1 = iVar1 + -1;
         if (iVar1 < 0) break;
-        iVar5 = FUN_80036edc(*puVar8,iVar2,&local_28);
+        iVar5 = ObjGroup_FindNearestObjectForObject(*puVar8,iVar2,&local_28);
         if (iVar5 != 0) {
           iVar7 = iVar5;
         }
@@ -1120,7 +1120,7 @@ void FUN_8020019c(void)
       *(undefined4 *)(iVar2 + 0x14) = *(undefined4 *)(iVar7 + 0x10);
     }
     if (*(int *)(puVar8[8] + 4) != 0) {
-      uVar4 = FUN_80036edc(*(int *)(puVar8[8] + 4),iVar2,&local_28);
+      uVar4 = ObjGroup_FindNearestObjectForObject(*(int *)(puVar8[8] + 4),iVar2,&local_28);
       *(undefined4 *)(iVar6 + 0x2d0) = uVar4;
     }
     if (*(int *)(iVar6 + 0x2d0) != 0) {
@@ -1271,7 +1271,7 @@ FUN_80200558(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     *(undefined4 *)(iVar1 + 0x18) = *(undefined4 *)(param_10 + 0x2d0);
     *(undefined2 *)(iVar1 + 0x1c) = 0x24;
     *(undefined4 *)(iVar1 + 0x2c) = 0;
-    FUN_80037bd4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+    ObjMsg_SendToObject(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  *(int *)(iVar1 + 0x18),0x11,param_9,0x12,param_13,param_14,param_15,param_16);
     FUN_80006824(param_9,0x1eb);
   }
@@ -1515,7 +1515,7 @@ void FUN_80200974(undefined8 param_1,double param_2,double param_3,undefined8 pa
       local_28 = FLOAT_803e6f40;
       local_20 = FLOAT_803e6fb8;
       in_r6 = 0x11;
-      FUN_80037bd4(dVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+      ObjMsg_SendToObject(dVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                    *(int *)(iVar9 + 0x18),0x11,(uint)puVar2,0x11,in_r7,in_r8,in_r9,in_r10);
       (**(code **)(**(int **)(*(int *)(iVar9 + 0x18) + 0x68) + 0x24))
                 (*(int *)(iVar9 + 0x18),&local_28);
@@ -1618,7 +1618,7 @@ void FUN_80200c9c(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(short *)(iVar9 + 0x1c) = (short)uVar8;
     *(undefined4 *)(iVar9 + 0x2c) = 0;
     in_r6 = 0x12;
-    FUN_80037bd4(uVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+    ObjMsg_SendToObject(uVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  *(int *)(iVar9 + 0x18),0x11,uVar3,0x12,in_r7,in_r8,in_r9,in_r10);
     FUN_80006824(uVar3,0x1eb);
   }
@@ -1722,7 +1722,7 @@ void FUN_80200f4c(undefined8 param_1,double param_2,double param_3,undefined8 pa
     uVar9 = ObjGroup_RemoveObject(uVar2,3);
     if (*(int *)(iVar5 + 0x18) != 0) {
       in_r6 = 0x10;
-      FUN_80037bd4(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+      ObjMsg_SendToObject(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                    *(int *)(iVar5 + 0x18),0x11,uVar2,0x10,in_r7,in_r8,in_r9,in_r10);
       *(undefined2 *)(iVar5 + 0x1c) = 0xffff;
       *(undefined4 *)(iVar5 + 0x18) = 0;
@@ -1792,7 +1792,7 @@ FUN_80201260(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   if (*(char *)(param_10 + 0x27a) != '\0') {
     *(undefined4 *)(param_10 + 0x2d0) = 0;
     if (*(int *)(iVar4 + 0x18) != 0) {
-      FUN_80037bd4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+      ObjMsg_SendToObject(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                    *(int *)(iVar4 + 0x18),0x11,param_9,0x10,param_13,param_14,param_15,param_16);
       *(undefined4 *)(iVar4 + 0x18) = 0;
     }
@@ -2026,7 +2026,7 @@ void FUN_802019d8(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(undefined2 *)(iVar5 + 0x402) = 0;
     *(byte *)(iVar5 + 0x404) = *(byte *)(iVar5 + 0x404) | *(byte *)(iVar3 + 0x2b);
     if (*(int *)(iVar4 + 0x18) != 0) {
-      FUN_80037bd4(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+      ObjMsg_SendToObject(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                    *(int *)(iVar4 + 0x18),0x11,uVar1,0x13,in_r7,in_r8,in_r9,in_r10);
       *(undefined4 *)(iVar4 + 0x18) = 0;
       *(undefined2 *)(iVar4 + 0x1c) = 0xffff;
@@ -2163,7 +2163,7 @@ void FUN_80201df4(undefined4 param_1,undefined4 param_2,float *param_3,int param
   dVar7 = dVar10;
   for (iVar4 = 0; iVar4 < param_4; iVar4 = iVar4 + 1) {
     local_78 = (float)dVar11;
-    iVar3 = FUN_80036edc(*puVar6,psVar2,&local_78);
+    iVar3 = ObjGroup_FindNearestObjectForObject(*puVar6,psVar2,&local_78);
     if (iVar3 != 0) {
       if (local_78 == FLOAT_803e6f40) goto LAB_80203278;
       fVar1 = FLOAT_803e6f60 - local_78 / FLOAT_803e6ff4;
@@ -2447,11 +2447,11 @@ void FUN_802026cc(undefined4 param_1,undefined4 param_2,int param_3)
                     ((double)(float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e6f78),uVar1
                      ,param_3,0x8000);
   if ((iVar2 == 0) && ((*(byte *)(iVar3 + 0x404) & 0x10) != 0)) {
-    iVar2 = FUN_80037008(0x24,uVar1,&local_30);
+    iVar2 = ObjGroup_FindNearestObject(0x24,uVar1,&local_30);
   }
   if ((((iVar2 == 0) && ((*(byte *)(iVar3 + 0x404) & 0x10) != 0)) &&
       ((*(byte *)(iVar3 + 0x404) & 2) == 0)) && ((*(byte *)(iVar4 + 0x2b) & 2) != 0)) {
-    iVar2 = FUN_80037008(0x24,uVar1,(float *)0x0);
+    iVar2 = ObjGroup_FindNearestObject(0x24,uVar1,(float *)0x0);
   }
   if ((iVar2 == 0) || ((*(byte *)(iVar3 + 0x404) & 2) != 0)) {
     iVar2 = FUN_80017a98();
@@ -2685,7 +2685,7 @@ void FUN_80202b70(undefined8 param_1,double param_2,double param_3,double param_
           while (iVar11 = ObjMsg_Pop(uVar2,local_48,local_48 + 2,local_48 + 1), iVar11 != 0) {
             if ((local_48[0] == 0x11) && (*(short *)(iVar10 + 0x1c) != -1)) {
               uVar3 = 0x14;
-              FUN_80037bd4(dVar13,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+              ObjMsg_SendToObject(dVar13,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                            *(int *)(iVar10 + 0x18),0x11,uVar2,0x14,in_r7,in_r8,in_r9,in_r10);
               *(undefined4 *)(iVar10 + 0x18) = 0;
               *(undefined2 *)(iVar10 + 0x1c) = 0xffff;
@@ -2852,7 +2852,7 @@ void FUN_80203360(undefined8 param_1,double param_2,double param_3,undefined8 pa
   uVar4 = FUN_80017690((int)*(short *)(iVar7 + 0x1e));
   if ((uVar4 != 0) || (DAT_803de960 != 0)) {
     piVar5 = ObjGroup_GetObjects(0x24,local_28);
-    FUN_80037844(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,3,uVar2,0x11,0,
+    ObjMsg_SendToObjects(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,3,uVar2,0x11,0,
                  param_14,param_15,param_16);
     while (iVar6 = local_28[0] + -1, bVar1 = local_28[0] != 0, local_28[0] = iVar6, bVar1) {
       iVar6 = *piVar5;
@@ -3039,7 +3039,7 @@ void FUN_8020368c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     uVar3 = FUN_80017690(0x5e5);
     if (uVar3 != 0) {
       *puVar7 = 300;
-      FUN_80037bd4(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar2,0x60005,uVar1
+      ObjMsg_SendToObject(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar2,0x60005,uVar1
                    ,0,in_r7,in_r8,in_r9,in_r10);
     }
   }
@@ -3128,7 +3128,7 @@ void FUN_802039e8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     uVar3 = FUN_80017690(0x5e5);
     if (uVar3 != 0) {
       *puVar6 = 300;
-      FUN_80037bd4(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar2,0x60005,uVar1
+      ObjMsg_SendToObject(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar2,0x60005,uVar1
                    ,1,in_r7,in_r8,in_r9,in_r10);
     }
   }

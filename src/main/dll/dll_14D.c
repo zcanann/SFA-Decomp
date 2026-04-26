@@ -4,7 +4,7 @@
 extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
 extern uint FUN_80017760();
-extern undefined4 FUN_80037008();
+extern undefined4 ObjGroup_FindNearestObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
 
@@ -37,7 +37,7 @@ void FUN_8017eff0(undefined2 *param_1)
   iVar5 = *(int *)(param_1 + 0x26);
   pbVar4 = *(byte **)(param_1 + 0x5c);
   if (*(int *)(pbVar4 + 4) == 0) {
-    uVar2 = FUN_80037008((uint)*(byte *)(iVar5 + 0x1c),param_1,local_18);
+    uVar2 = ObjGroup_FindNearestObject((uint)*(byte *)(iVar5 + 0x1c),param_1,local_18);
     *(undefined4 *)(pbVar4 + 4) = uVar2;
     if (*(int *)(pbVar4 + 4) == 0) {
       return;

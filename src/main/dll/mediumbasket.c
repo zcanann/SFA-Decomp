@@ -23,7 +23,7 @@ extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern undefined8 FUN_80037844();
+extern undefined8 ObjMsg_SendToObjects();
 extern uint FUN_8003882c();
 extern undefined4 FUN_800388b4();
 extern undefined4 FUN_8006fb00();
@@ -663,7 +663,7 @@ FUN_8015bc20(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
   
   if (*(char *)(param_10 + 0x27b) == '\0') {
     if (*(char *)(param_10 + 0x346) != '\0') {
-      uVar1 = FUN_80037844(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,3,
+      uVar1 = ObjMsg_SendToObjects(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,3,
                            param_9,0xe0000,param_9,in_r8,in_r9,in_r10);
       if (*(int *)(param_9 + 0x4c) == 0) {
         FUN_80017ac8(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9);

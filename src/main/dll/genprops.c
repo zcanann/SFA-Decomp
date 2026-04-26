@@ -66,12 +66,12 @@ extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined8 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
-extern undefined4 FUN_80037008();
+extern undefined4 ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern undefined8 FUN_8003817c();
-extern undefined4 FUN_800381f8();
+extern undefined8 ObjLink_DetachChild();
+extern undefined4 ObjLink_AttachChild();
 extern uint FUN_80038b0c();
 extern undefined4 FUN_8003b540();
 extern undefined4 FUN_8003b818();
@@ -1018,7 +1018,7 @@ void FUN_8016c0a0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   if ((*(short *)(param_9 + 0x46) == 0x774) && (*(char *)(param_9 + 0xeb) != '\0')) {
     FUN_80017ac8(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  *(int *)(param_9 + 200));
-    FUN_8003817c(param_9,*(int *)(param_9 + 200));
+    ObjLink_DetachChild(param_9,*(int *)(param_9 + 200));
   }
   if (param_10 != 0) {
     FUN_8007f7b4();
@@ -1161,7 +1161,7 @@ void FUN_8016c388(undefined8 param_1,double param_2,double param_3,undefined8 pa
           if (*(char *)(param_9 + 0xeb) != '\0') {
             FUN_80017ac8(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                          *(int *)(param_9 + 200));
-            uVar12 = FUN_8003817c(param_9,*(int *)(param_9 + 200));
+            uVar12 = ObjLink_DetachChild(param_9,*(int *)(param_9 + 200));
           }
         }
         else if (((bVar1 < 0xb) && (9 < bVar1)) && (uVar3 = FUN_80017ae8(), (uVar3 & 0xff) != 0)) {
@@ -1170,7 +1170,7 @@ void FUN_8016c388(undefined8 param_1,double param_2,double param_3,undefined8 pa
           uVar8 = 0;
           iVar7 = FUN_80017ae4(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar4
                                ,4,0xff,0xffffffff,(uint *)0x0,in_r8,in_r9,in_r10);
-          FUN_800381f8(param_9,iVar7,0);
+          ObjLink_AttachChild(param_9,iVar7,0);
           FUN_800305f8((double)FLOAT_803e3ec4,param_2,param_3,param_4,param_5,param_6,param_7,
                        param_8,iVar7,0,0,uVar6,uVar8,in_r8,in_r9,in_r10);
           param_2 = (double)FLOAT_803dc074;

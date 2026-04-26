@@ -7,7 +7,7 @@ extern undefined4 FUN_80006b94();
 extern undefined4 FUN_80017698();
 extern undefined4 FUN_800305f8();
 extern int ObjHits_GetPriorityHit();
-extern undefined4 FUN_80037bd4();
+extern undefined4 ObjMsg_SendToObject();
 extern undefined4 FUN_80081120();
 
 extern undefined4* DAT_803dd708;
@@ -119,7 +119,7 @@ void FUN_801be520(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       }
       uVar5 = (**(code **)(*DAT_803dd70c + 0x14))(param_9,param_10,1);
       *(undefined2 *)(param_10 + 0x270) = 1;
-      FUN_80037bd4(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,local_30,0xe0001,
+      ObjMsg_SendToObject(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,local_30,0xe0001,
                    param_9,0,uVar3,uVar4,iVar2,in_r10);
     }
   }

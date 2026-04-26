@@ -4,7 +4,7 @@
 extern undefined4 FUN_80017698();
 extern void* ObjGroup_GetObjects();
 extern int ObjMsg_Pop();
-extern undefined4 FUN_80037bd4();
+extern undefined4 ObjMsg_SendToObject();
 
 extern undefined4* DAT_803dd708;
 extern f32 FLOAT_803e6348;
@@ -117,7 +117,7 @@ FUN_801dfa28(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
           iVar4 = iVar3 + 1;
         }
         if (iVar5 != 0) {
-          FUN_80037bd4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar5,
+          ObjMsg_SendToObject(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar5,
                        0x130002,param_9,0,param_13,param_14,param_15,param_16);
         }
       }
@@ -134,7 +134,7 @@ FUN_801dfa28(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
             iVar4 = iVar3 + 1;
           }
           if (iVar5 != 0) {
-            FUN_80037bd4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar5,
+            ObjMsg_SendToObject(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar5,
                          0x130001,param_9,0,param_13,param_14,param_15,param_16);
           }
         }
@@ -151,7 +151,7 @@ FUN_801dfa28(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
           iVar4 = iVar3 + 1;
         }
         if (iVar5 != 0) {
-          FUN_80037bd4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar5,
+          ObjMsg_SendToObject(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar5,
                        0x130003,param_9,0,param_13,param_14,param_15,param_16);
         }
       }

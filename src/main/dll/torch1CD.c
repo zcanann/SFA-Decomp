@@ -10,7 +10,7 @@ extern undefined8 FUN_80017698();
 extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern undefined4 FUN_80037ce0();
+extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80055ef0();
 extern undefined4 FUN_801caeb0();

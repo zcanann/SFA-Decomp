@@ -16,7 +16,7 @@ extern undefined4 FUN_80017ac8();
 extern int FUN_80017af8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern undefined4 FUN_80037008();
+extern undefined4 ObjGroup_FindNearestObject();
 extern int FUN_800384ec();
 extern int FUN_80039520();
 extern undefined4 FUN_8003a1c4();

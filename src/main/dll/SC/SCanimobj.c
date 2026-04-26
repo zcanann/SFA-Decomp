@@ -15,7 +15,7 @@ extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined8 FUN_8002fc3c();
 extern int ObjHits_GetPriorityHitWithPosition();
-extern undefined8 FUN_8003817c();
+extern undefined8 ObjLink_DetachChild();
 extern undefined4 FUN_800388b4();
 extern undefined4 FUN_80039468();
 extern undefined4 FUN_8003b818();
@@ -108,7 +108,7 @@ void FUN_801d769c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   piVar2 = *(int **)(param_9 + 0xb8);
   iVar1 = *piVar2;
   if ((iVar1 != 0) && (param_10 == 0)) {
-    uVar3 = FUN_8003817c(param_9,iVar1);
+    uVar3 = ObjLink_DetachChild(param_9,iVar1);
     FUN_80017ac8(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8,*piVar2);
   }
   return;

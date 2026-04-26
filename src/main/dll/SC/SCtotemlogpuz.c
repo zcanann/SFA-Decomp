@@ -7,8 +7,8 @@ extern uint FUN_80017690();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_800305f8();
-extern int FUN_80037008();
-extern undefined8 FUN_8003817c();
+extern int ObjGroup_FindNearestObject();
+extern undefined8 ObjLink_DetachChild();
 extern int FUN_80038a34();
 extern undefined4 FUN_80038f38();
 extern undefined4 FUN_80039468();
@@ -66,7 +66,7 @@ void FUN_801d7c14(undefined8 param_1,undefined8 param_2,double param_3,undefined
   
   piVar9 = *(int **)(param_9 + 0x5c);
   if (*piVar9 != 0) {
-    uVar10 = FUN_8003817c((int)param_9,*piVar9);
+    uVar10 = ObjLink_DetachChild((int)param_9,*piVar9);
     FUN_80017ac8(uVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,*piVar9);
     *piVar9 = 0;
   }
@@ -96,7 +96,7 @@ void FUN_801d7c14(undefined8 param_1,undefined8 param_2,double param_3,undefined
     }
   }
   if ((*(byte *)((int)piVar9 + 0xd5) >> 6 & 1) == 0) {
-    iVar4 = FUN_80037008(8,param_9,(float *)0x0);
+    iVar4 = ObjGroup_FindNearestObject(8,param_9,(float *)0x0);
   }
   else {
     iVar4 = FUN_80017a98();

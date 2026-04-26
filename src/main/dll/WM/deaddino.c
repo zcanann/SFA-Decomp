@@ -7,8 +7,8 @@ extern undefined8 FUN_80017ac8();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 FUN_80017b00();
-extern undefined8 FUN_8003817c();
-extern undefined4 FUN_800381f8();
+extern undefined8 ObjLink_DetachChild();
+extern undefined4 ObjLink_AttachChild();
 extern undefined4 FUN_8003b818();
 extern undefined8 FUN_8020a8d0();
 
@@ -223,12 +223,12 @@ void FUN_801dd244(undefined8 param_1,double param_2,double param_3,undefined8 pa
                                ,5,*(undefined *)(param_9 + 0x56),0xffffffff,
                                *(uint **)(param_9 + 0x18),in_r8,in_r9,in_r10);
           *(ushort *)(iVar6 + 6) = *(ushort *)(iVar6 + 6) | 0x4000;
-          FUN_800381f8((int)param_9,iVar6,0);
+          ObjLink_AttachChild((int)param_9,iVar6,0);
           uVar10 = FUN_80006824((uint)param_9,0x10f);
         }
       }
       else if ((bVar1 < 3) && (iVar6 = *(int *)(param_9 + 100), iVar6 != 0)) {
-        uVar10 = FUN_8003817c((int)param_9,iVar6);
+        uVar10 = ObjLink_DetachChild((int)param_9,iVar6);
         uVar10 = FUN_80017ac8(uVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar6);
       }
     }

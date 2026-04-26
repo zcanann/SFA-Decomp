@@ -28,8 +28,8 @@ extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
 extern undefined8 ObjGroup_RemoveObject();
-extern undefined8 FUN_80037844();
-extern undefined4 FUN_80037bd4();
+extern undefined8 ObjMsg_SendToObjects();
+extern undefined4 ObjMsg_SendToObject();
 extern undefined4 FUN_80039520();
 extern undefined4 FUN_8003b280();
 extern undefined4 FUN_8003b540();
@@ -639,7 +639,7 @@ FUN_8015e0d0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
   fVar1 = FLOAT_803e3a60;
   if (*(char *)(param_10 + 0x27b) == '\0') {
     if (*(char *)(param_10 + 0x346) != '\0') {
-      uVar3 = FUN_80037844(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,3,
+      uVar3 = ObjMsg_SendToObjects(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,3,
                            param_9,0xe0000,param_9,in_r8,in_r9,in_r10);
       if (*(int *)(param_9 + 0x4c) == 0) {
         FUN_80017ac8(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9);
@@ -2114,7 +2114,7 @@ FUN_80160aa4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
   
   if (*(char *)(param_10 + 0x27b) == '\0') {
     iVar1 = FUN_80017a98();
-    FUN_80037bd4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,0xe0000,
+    ObjMsg_SendToObject(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,0xe0000,
                  param_9,0,param_13,param_14,param_15,param_16);
     if (*(int *)(param_9 + 0x4c) == 0) {
       FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9);

@@ -36,11 +36,11 @@ extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
-extern undefined4 FUN_80037008();
+extern undefined4 ObjGroup_FindNearestObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
-extern undefined4 FUN_80037bd4();
-extern undefined4 FUN_80037ce0();
+extern undefined4 ObjMsg_SendToObject();
+extern undefined4 ObjMsg_AllocQueue();
 extern uint FUN_80038a34();
 extern int FUN_8003964c();
 extern undefined4 FUN_80053ba4();
@@ -2460,7 +2460,7 @@ LAB_801128c4:
         if (local_2c == 1) goto LAB_801128c4;
       }
       else if ((int)local_2c < 5) {
-        FUN_80037bd4(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,local_28[0],5,
+        ObjMsg_SendToObject(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,local_28[0],5,
                      uVar1,0,puVar4,uVar5,uVar6,uVar7);
       }
       goto LAB_80112944;
@@ -2620,7 +2620,7 @@ void FUN_80111aec(void)
         *(char *)(iVar7 + 0x34f) = (char)iVar6;
       }
       uVar17 = FUN_8000680c(uVar4,0x10);
-      FUN_80037bd4(uVar17,dVar15,dVar16,in_f4,in_f5,in_f6,in_f7,in_f8,local_3c,0xe0001,uVar4,0,
+      ObjMsg_SendToObject(uVar17,dVar15,dVar16,in_f4,in_f5,in_f6,in_f7,in_f8,local_3c,0xe0001,uVar4,0,
                    pfVar8,puVar9,pfVar10,iVar11);
     }
   }
@@ -2744,7 +2744,7 @@ void FUN_80111e84(undefined8 param_1,double param_2,double param_3,undefined8 pa
               *(undefined4 *)(iVar4 + 0x20) = *(undefined4 *)(iVar7 + 0x10);
             }
             local_68 = FLOAT_803e28d8;
-            DAT_803de25c = FUN_80037008(4,iVar4,&local_68);
+            DAT_803de25c = ObjGroup_FindNearestObject(4,iVar4,&local_68);
             *(float *)(iVar4 + 0x18) = (float)dVar10;
             *(float *)(iVar4 + 0x1c) = (float)dVar9;
             *(float *)(iVar4 + 0x20) = (float)dVar8;

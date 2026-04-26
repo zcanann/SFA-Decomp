@@ -2,7 +2,7 @@
 #include "main/dll/DB/DBwaterflow.h"
 
 extern uint FUN_80017690();
-extern undefined4 FUN_80037ce0();
+extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_8003b818();
 
 extern undefined4* DAT_803dd6d4;
@@ -110,7 +110,7 @@ void FUN_801dfab8(int param_1)
  */
 void FUN_801dfae0(int param_1)
 {
-  FUN_80037ce0(param_1,2);
+  ObjMsg_AllocQueue(param_1,2);
   return;
 }
 

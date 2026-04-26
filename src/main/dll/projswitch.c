@@ -25,7 +25,7 @@ extern undefined4 ObjHits_EnableObject();
 extern uint ObjGroup_ContainsObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern undefined8 FUN_8003817c();
+extern undefined8 ObjLink_DetachChild();
 extern undefined4 FUN_8003b818();
 extern int FUN_8005b220();
 extern int FUN_8005b398();
@@ -314,7 +314,7 @@ void FUN_8014d600(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   for (iVar6 = 0; iVar6 < (int)(uint)bVar1; iVar6 = iVar6 + 1) {
     iVar7 = *(int *)(iVar3 + 200);
     if ((iVar7 != 0) &&
-       ((uVar8 = FUN_8003817c(iVar3,iVar7), (int)uVar9 == 0 ||
+       ((uVar8 = ObjLink_DetachChild(iVar3,iVar7), (int)uVar9 == 0 ||
         ((*(ushort *)(iVar7 + 0xb0) & 0x10) == 0)))) {
       FUN_80017ac8(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar7);
     }

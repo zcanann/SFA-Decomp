@@ -16,7 +16,7 @@ extern int FUN_80017a98();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
-extern int FUN_80037008();
+extern int ObjGroup_FindNearestObject();
 extern int FUN_800384ec();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
@@ -231,7 +231,7 @@ void FUN_8018af74(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
       iVar1 = FUN_80017a98();
       FUN_80294d1c(iVar1,1);
-      iVar1 = FUN_80037008(4,param_9,&local_3c);
+      iVar1 = ObjGroup_FindNearestObject(4,param_9,&local_3c);
       if (iVar1 == 0) {
         (**(code **)(*DAT_803dd6d4 + 0x7c))((int)*(short *)(iVar2 + 0x1a),0,0);
         (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_9,0xffffffff);

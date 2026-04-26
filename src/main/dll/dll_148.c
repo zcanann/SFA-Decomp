@@ -12,7 +12,7 @@ extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern int FUN_80037008();
+extern int ObjGroup_FindNearestObject();
 extern undefined4 ObjGroup_AddObject();
 extern int FUN_80039520();
 extern undefined4 FUN_8003b818();
@@ -105,7 +105,7 @@ void pressureswitchfb_update(void)
       *pcVar15 = '\0';
     }
     local_58 = FLOAT_803e43f0;
-    iVar8 = FUN_80037008(5,uVar6,&local_58);
+    iVar8 = ObjGroup_FindNearestObject(5,uVar6,&local_58);
     if (iVar8 != 0) {
       *pcVar15 = '\x05';
     }

@@ -12,9 +12,9 @@ extern uint FUN_80017a98();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern int FUN_80037008();
+extern int ObjGroup_FindNearestObject();
 extern int ObjMsg_Pop();
-extern undefined4 FUN_80037ce0();
+extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80135814();
 extern undefined4 FUN_801cbdb8();
@@ -116,7 +116,7 @@ void FUN_801cbd88(void)
     (**(code **)(*DAT_803dd6f0 + 0x38))(3,psVar8[4] & 0xff);
   }
   if (psVar8[1] < 1) {
-    iVar7 = FUN_80037008(0xe,uVar2,local_5c);
+    iVar7 = ObjGroup_FindNearestObject(0xe,uVar2,local_5c);
     if (((iVar7 != 0) && (local_5c[0] < FLOAT_803e5e28)) && (FLOAT_803e5e2c < local_5c[0])) {
       dVar9 = (double)(*(float *)(iVar7 + 0x14) - *(float *)(uVar2 + 0x14));
       if (dVar9 <= (double)FLOAT_803e5e30) {

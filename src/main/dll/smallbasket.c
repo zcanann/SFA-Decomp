@@ -34,8 +34,8 @@ extern undefined4 ObjHits_SetHitVolumeMasks();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern int FUN_80037008();
-extern undefined4 FUN_800381f8();
+extern int ObjGroup_FindNearestObject();
+extern undefined4 ObjLink_AttachChild();
 extern undefined8 FUN_800388b4();
 extern int FUN_80038a34();
 extern uint FUN_800620e8();
@@ -536,7 +536,7 @@ void FUN_8015750c(undefined8 param_1,undefined8 param_2,double param_3,undefined
     iVar7 = FUN_80294c14(uVar6);
     if (iVar7 != 0) {
       local_120 = FLOAT_803e37e0;
-      iVar7 = FUN_80037008(0x30,puVar3,&local_120);
+      iVar7 = ObjGroup_FindNearestObject(0x30,puVar3,&local_120);
       if (iVar7 != 0) {
         iVar7 = FUN_80038a34(puVar3,iVar7,&local_120);
         sVar8 = (short)iVar7;
@@ -869,7 +869,7 @@ void FUN_801581cc(undefined8 param_1,double param_2,double param_3,undefined8 pa
     iVar3 = FUN_80017ae4(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,5,0xff
                          ,0xffffffff,(uint *)0x0,uVar4,in_r9,in_r10);
     if (iVar3 != 0) {
-      FUN_800381f8(param_9,iVar3,0);
+      ObjLink_AttachChild(param_9,iVar3,0);
       FUN_8020a404(iVar3);
       *(ushort *)(iVar3 + 6) = *(ushort *)(iVar3 + 6) | 0x4000;
     }

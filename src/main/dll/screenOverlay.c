@@ -10,7 +10,7 @@ extern undefined4 FUN_8001771c();
 extern int FUN_80017a98();
 extern undefined4 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHit();
-extern undefined4 FUN_80037ce0();
+extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_80039520();
 extern undefined4 FUN_8003b56c();
 extern undefined4 FUN_8003b818();
@@ -65,7 +65,7 @@ void FUN_8017a38c(int param_1)
   (**(code **)(*DAT_803dd728 + 0x20))(param_1,iVar1);
   ObjHits_DisableObject(param_1);
   *(undefined *)(iVar1 + 0x25b) = 0;
-  FUN_80037ce0(param_1,1);
+  ObjMsg_AllocQueue(param_1,1);
   FUN_80017698(0x3f8,0);
   return;
 }

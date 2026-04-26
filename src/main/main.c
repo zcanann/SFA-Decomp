@@ -21,7 +21,7 @@ extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
-extern int FUN_80037008();
+extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
@@ -404,7 +404,7 @@ void FUN_801fdae0(int param_1)
     iVar2 = FUN_80017a90();
     if ((iVar2 != 0) &&
        ((local_18[0] = FLOAT_803e6df0, (*(byte *)((int)psVar4 + 5) >> 6 & 1) != 0 ||
-        (iVar3 = FUN_80037008(5,param_1,local_18), iVar3 == 0)))) {
+        (iVar3 = ObjGroup_FindNearestObject(5,param_1,local_18), iVar3 == 0)))) {
       if ((*(byte *)(param_1 + 0xaf) & 4) != 0) {
         (**(code **)(**(int **)(iVar2 + 0x68) + 0x28))(iVar2,param_1,1,4);
       }

@@ -12,7 +12,7 @@ extern undefined4 FUN_80017754();
 extern uint FUN_80017760();
 extern undefined4 FUN_80017778();
 extern int FUN_80017a98();
-extern undefined4 FUN_80037008();
+extern undefined4 ObjGroup_FindNearestObject();
 extern int FUN_80039520();
 extern int FUN_800620e8();
 extern undefined4 FUN_800e8630();
@@ -82,7 +82,7 @@ FUN_80174a80(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
   fVar2 = FLOAT_803e41dc;
   if (uVar5 == 0) {
     if (*(int *)(param_10 + 0xbc) == 0) {
-      uVar6 = FUN_80037008(0x11,param_9,local_38);
+      uVar6 = ObjGroup_FindNearestObject(0x11,param_9,local_38);
       *(undefined4 *)(param_10 + 0xbc) = uVar6;
     }
     if (*(int *)(param_10 + 0xbc) == 0) {

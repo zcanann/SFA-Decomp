@@ -34,7 +34,7 @@ extern undefined4 ObjHits_MarkObjectPositionDirty();
 extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern undefined4 FUN_80037bd4();
+extern undefined4 ObjMsg_SendToObject();
 extern undefined4 FUN_80042b9c();
 extern uint FUN_80053078();
 extern undefined4 FUN_8005d018();
@@ -3330,7 +3330,7 @@ int FUN_800eafb4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
       }
     }
     if (*(char *)(puVar11 + 3) != '\0') {
-      FUN_80037bd4(dVar13,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar5,0x100008,
+      ObjMsg_SendToObject(dVar13,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar5,0x100008,
                    param_9,CONCAT22(puVar11[1],*puVar11),in_r7,in_r8,in_r9,in_r10);
     }
   }

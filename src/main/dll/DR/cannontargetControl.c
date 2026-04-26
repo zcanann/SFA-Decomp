@@ -16,14 +16,14 @@ extern undefined4 ObjHits_DisableObject();
 extern undefined8 ObjHits_EnableObject();
 extern undefined4 ObjHits_RefreshObjectState();
 extern undefined4 ObjHits_AddContactObject();
-extern int FUN_80037008();
+extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern int FUN_80037d50();
-extern undefined4 FUN_8003817c();
-extern undefined4 FUN_800381f8();
+extern undefined4 ObjLink_DetachChild();
+extern undefined4 ObjLink_AttachChild();
 extern undefined4 FUN_8003b818();
 extern int FUN_8005b398();
 extern int FUN_80061a78();
@@ -247,7 +247,7 @@ void FUN_801a1df8(int param_1,int param_2)
   (**(code **)(*DAT_803dd740 + 0x10))();
   if (((*(int *)(iVar2 + 0x10) != 0) && (param_2 == 0)) &&
      (iVar1 = FUN_80037d50(*(int *)(iVar2 + 0x10)), iVar1 != 0)) {
-    FUN_8003817c(param_1,*(int *)(iVar2 + 0x10));
+    ObjLink_DetachChild(param_1,*(int *)(iVar2 + 0x10));
     *(undefined4 *)(iVar2 + 0x10) = 0;
   }
   ObjGroup_RemoveObject(param_1,0x19);
@@ -408,7 +408,7 @@ void FUN_801a1fb8(int *param_1)
   iVar6 = param_1[0x2e];
   iVar4 = FUN_80037d50(*(int *)(iVar6 + 0x10));
   if ((iVar4 == 0) && (*(int *)(iVar6 + 0x10) != 0)) {
-    FUN_8003817c((int)param_1,*(int *)(iVar6 + 0x10));
+    ObjLink_DetachChild((int)param_1,*(int *)(iVar6 + 0x10));
     *(undefined4 *)(iVar6 + 0x10) = 0;
   }
   if (((*(char *)(iVar6 + 0x17) == '\0') &&
@@ -537,17 +537,17 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
       }
       if (*(int *)(uVar2 + 200) == 0) {
         local_4c[0] = FLOAT_803e4fd0;
-        iVar5 = FUN_80037008(0x4c,uVar2,local_4c);
+        iVar5 = ObjGroup_FindNearestObject(0x4c,uVar2,local_4c);
         *(int *)(iVar12 + 0x10) = iVar5;
         if (((iVar5 != 0) && (uVar4 = FUN_8020a914(*(int *)(iVar12 + 0x10)), uVar4 != 0)) &&
            (*(int *)(*(int *)(iVar12 + 0x10) + 0xc4) == 0)) {
-          FUN_800381f8(uVar2,*(int *)(iVar12 + 0x10),0);
+          ObjLink_AttachChild(uVar2,*(int *)(iVar12 + 0x10),0);
         }
       }
       else {
         iVar5 = FUN_80037d50(*(int *)(iVar12 + 0x10));
         if ((iVar5 == 0) && (*(int *)(iVar12 + 0x10) != 0)) {
-          FUN_8003817c(uVar2,*(int *)(iVar12 + 0x10));
+          ObjLink_DetachChild(uVar2,*(int *)(iVar12 + 0x10));
           *(undefined4 *)(iVar12 + 0x10) = 0;
         }
       }
@@ -692,7 +692,7 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
           }
           iVar5 = 0;
           if (*(short *)(iVar10 + 0x1a) == 0) {
-            iVar5 = FUN_80037008(0x3a,uVar2,(float *)0x0);
+            iVar5 = ObjGroup_FindNearestObject(0x3a,uVar2,(float *)0x0);
           }
           else {
             piVar6 = ObjGroup_GetObjects(0x3a,&local_58);

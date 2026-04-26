@@ -11,10 +11,10 @@ extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern int FUN_80017b00();
 extern undefined4 ObjHits_DisableObject();
-extern undefined4 FUN_80037008();
+extern undefined4 ObjGroup_FindNearestObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern undefined4 FUN_80037bd4();
+extern undefined4 ObjMsg_SendToObject();
 extern undefined4 FUN_8003b818();
 extern int FUN_800632d8();
 extern undefined4 FUN_80081118();
@@ -486,7 +486,7 @@ void FUN_8017d730(int param_1)
       }
     }
     iVar1 = FUN_80017a98();
-    FUN_80037008(0x10,param_1,local_20);
+    ObjGroup_FindNearestObject(0x10,param_1,local_20);
     uVar2 = FUN_80294db4(iVar1);
     if (((uVar2 & 0x4000) == 0) || (local_20[0] <= FLOAT_803e445c)) {
       (**(code **)(*DAT_803dd740 + 0x24))(uVar4,1);
@@ -696,7 +696,7 @@ void FUN_8017de58(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(undefined2 *)(iVar3 + 0x5c) = 0xffff;
       *(undefined2 *)(iVar3 + 0x5e) = 0;
       *(float *)(iVar3 + 0x60) = FLOAT_803e4460;
-      FUN_80037bd4(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,0x7000a,
+      ObjMsg_SendToObject(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,0x7000a,
                    param_9,iVar3 + 0x5c,in_r7,in_r8,in_r9,in_r10);
       FUN_80017698(0x90f,1);
       *(byte *)(iVar3 + 0x5a) = *(byte *)(iVar3 + 0x5a) | 4;

@@ -9,7 +9,7 @@ extern uint FUN_80017760();
 extern undefined4 FUN_80017a88();
 extern int FUN_80017a98();
 extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 FUN_80037bd4();
+extern undefined4 ObjMsg_SendToObject();
 extern int FUN_800384ec();
 extern undefined4 FUN_8003b56c();
 extern undefined4 FUN_8003b818();
@@ -382,7 +382,7 @@ void FUN_80172b40(undefined8 param_1,double param_2,double param_3,undefined8 pa
 LAB_80172e44:
         uVar5 = FUN_80017690(0x90f);
         if (uVar5 == 0) {
-          FUN_80037bd4(dVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,0x7000a,
+          ObjMsg_SendToObject(dVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,0x7000a,
                        uVar2,(uint)(pfVar6 + 0x12),in_r7,in_r8,in_r9,in_r10);
           FUN_80017698(0x90f,1);
         }
@@ -396,7 +396,7 @@ LAB_80172e44:
           if (sVar1 == 0xb) {
             uVar5 = FUN_80017690(0x90e);
             if (uVar5 == 0) {
-              FUN_80037bd4(dVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,
+              ObjMsg_SendToObject(dVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,
                            0x7000a,uVar2,(uint)(pfVar6 + 0x12),in_r7,in_r8,in_r9,in_r10);
               FUN_80017698(0x90e,1);
             }
@@ -413,7 +413,7 @@ LAB_80172eec:
         if (iVar4 != 0) {
           uVar10 = FUN_80017698(0xa7b,1);
           *(undefined2 *)(pfVar6 + 0x12) = *(undefined2 *)(iVar7 + 0x1e);
-          FUN_80037bd4(uVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,0x7000a,
+          ObjMsg_SendToObject(uVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,0x7000a,
                        uVar2,(uint)(pfVar6 + 0x12),in_r7,in_r8,in_r9,in_r10);
           *(byte *)((int)pfVar6 + 0x37) = *(byte *)((int)pfVar6 + 0x37) | 1;
           if (*(int *)(uVar2 + 100) != 0) {
@@ -429,7 +429,7 @@ LAB_80172eec:
       }
       uVar5 = FUN_80017690(0x9a8);
       if (uVar5 == 0) {
-        FUN_80037bd4(dVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,0x7000a,
+        ObjMsg_SendToObject(dVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,0x7000a,
                      uVar2,(uint)(pfVar6 + 0x12),in_r7,in_r8,in_r9,in_r10);
         FUN_80017698(0x9a8,1);
       }

@@ -4,7 +4,7 @@
 extern uint FUN_80017690();
 extern uint FUN_80017760();
 extern undefined4 FUN_80017a78();
-extern undefined4 FUN_80037ce0();
+extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_80039520();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
@@ -105,7 +105,7 @@ void FUN_8017ec94(undefined2 *param_1,int param_2)
     puVar6[2] = FLOAT_803e44d0;
     *(undefined *)((int)puVar6 + 0x3a) = 6;
   }
-  FUN_80037ce0((int)param_1,2);
+  ObjMsg_AllocQueue((int)param_1,2);
   return;
 }
 

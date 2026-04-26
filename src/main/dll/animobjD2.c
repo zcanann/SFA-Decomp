@@ -12,7 +12,7 @@ extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern void* ObjGroup_GetObjects();
-extern undefined4 FUN_800381f8();
+extern undefined4 ObjLink_AttachChild();
 extern undefined4 FUN_80039468();
 extern int FUN_801365c4();
 extern undefined4 FUN_80139a4c();
@@ -257,7 +257,7 @@ void FUN_8013e0d0(undefined8 param_1,double param_2,double param_3,undefined8 pa
                                      puVar4,4,0xff,0xffffffff,*(uint **)(uVar2 + 0x30),param_14,
                                      param_15,param_16);
                 puVar10[0x1ee] = uVar5;
-                FUN_800381f8(uVar2,puVar10[0x1ee],*(byte *)(puVar10 + 0x1ef) >> 2 & 3);
+                ObjLink_AttachChild(uVar2,puVar10[0x1ee],*(byte *)(puVar10 + 0x1ef) >> 2 & 3);
                 fVar1 = FLOAT_803e306c;
                 puVar10[0x1f0] = FLOAT_803e306c;
                 puVar10[0x1f1] = fVar1;

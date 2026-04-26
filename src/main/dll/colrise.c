@@ -3,7 +3,7 @@
 
 extern void* FUN_80017624();
 extern undefined4 FUN_80017698();
-extern undefined4 FUN_80037ce0();
+extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 dbsh_shrine_update();
 
 extern undefined4* DAT_803dd72c;

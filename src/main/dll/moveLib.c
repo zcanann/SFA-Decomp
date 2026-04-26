@@ -18,7 +18,7 @@ extern undefined4 FUN_8002f6ac();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern int FUN_80036dcc();
+extern int ObjGroup_FindNearestObjectToPoint();
 extern undefined4 FUN_800388b4();
 extern void* FUN_80039518();
 extern undefined4 FUN_8003964c();
@@ -673,7 +673,7 @@ undefined4 FUN_80114274(undefined4 param_1,undefined2 *param_2)
     *(undefined4 *)(param_2 + 6) = *(undefined4 *)(iVar1 + 8);
     *(undefined4 *)(param_2 + 8) = *(undefined4 *)(iVar1 + 0xc);
     *(undefined4 *)(param_2 + 10) = *(undefined4 *)(iVar1 + 0x10);
-    iVar2 = FUN_80036dcc(8,param_2 + 6,local_28);
+    iVar2 = ObjGroup_FindNearestObjectToPoint(8,param_2 + 6,local_28);
     if (iVar2 == 0) {
       *param_2 = (short)((int)*(char *)(iVar1 + 0x2c) << 8);
     }

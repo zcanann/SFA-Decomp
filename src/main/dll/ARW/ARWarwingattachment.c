@@ -23,8 +23,8 @@ extern undefined8 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
 extern void* ObjGroup_GetObjects();
-extern undefined4 FUN_80037bd4();
-extern undefined8 FUN_80037ce0();
+extern undefined4 ObjMsg_SendToObject();
+extern undefined8 ObjMsg_AllocQueue();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80053754();
 extern int FUN_8005398c();
@@ -308,7 +308,7 @@ void FUN_801f0dec(undefined8 param_1,double param_2,double param_3,undefined8 pa
   undefined8 uVar5;
   
   piVar4 = *(int **)(param_9 + 0x5c);
-  uVar5 = FUN_80037ce0((int)param_9,2);
+  uVar5 = ObjMsg_AllocQueue((int)param_9,2);
   *param_9 = (short)((int)*(char *)(param_10 + 0x18) << 8);
   if (*(short *)(param_10 + 0x1c) == 0) {
     uVar3 = 0x50;
@@ -721,7 +721,7 @@ void FUN_801f1634(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       *(undefined *)(puVar12 + 3) = 0;
     }
     if (*(char *)(puVar12 + 3) != '\0') {
-      FUN_80037bd4(uVar13,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar5,0x100008,
+      ObjMsg_SendToObject(uVar13,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar5,0x100008,
                    param_9,CONCAT22(puVar12[1],*puVar12),in_r7,in_r8,in_r9,in_r10);
     }
   }

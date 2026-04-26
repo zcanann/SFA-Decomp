@@ -9,7 +9,7 @@ extern int FUN_80017a98();
 extern int FUN_80017af8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern undefined4 FUN_80036edc();
+extern undefined4 ObjGroup_FindNearestObjectForObject();
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
@@ -261,7 +261,7 @@ void FUN_801d00d0(undefined2 *param_1)
     *(undefined4 *)(param_1 + 8) = *(undefined4 *)(*piVar5 + 0x10);
     *(undefined4 *)(param_1 + 10) = *(undefined4 *)(*piVar5 + 0x14);
     *param_1 = *(undefined2 *)*piVar5;
-    FUN_80036edc(0x3c,param_1,&local_18);
+    ObjGroup_FindNearestObjectForObject(0x3c,param_1,&local_18);
     if (*(byte *)(*piVar5 + 0x36) < 0xc0) {
       ObjHits_DisableObject((int)param_1);
       psVar1 = (short *)FUN_80017a98();

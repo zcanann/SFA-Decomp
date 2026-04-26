@@ -41,16 +41,16 @@ extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern int ObjHits_GetPriorityHit();
-extern int FUN_80037008();
+extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
-extern undefined8 FUN_80037844();
-extern undefined4 FUN_80037bd4();
-extern undefined4 FUN_80037ce0();
+extern undefined8 ObjMsg_SendToObjects();
+extern undefined4 ObjMsg_SendToObject();
+extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_80037d74();
-extern undefined4 FUN_8003817c();
+extern undefined4 ObjLink_DetachChild();
 extern int FUN_800384ec();
 extern undefined4 FUN_800388b4();
 extern int FUN_80038a34();
@@ -692,7 +692,7 @@ void FUN_8019b904(undefined8 param_1,double param_2,undefined8 param_3,undefined
     if (((bVar2 & 0x80) == 0) || (param_12 == 0)) {
       if (dVar10 <= dVar11) {
         if (param_13 == 0) {
-          FUN_80037bd4(dVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar7,0x10,
+          ObjMsg_SendToObject(dVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar7,0x10,
                        uVar5,param_12,iVar8,uVar9,param_15,param_16);
           *(byte *)(param_11 + 0x10) = *(byte *)(param_11 + 0x10) & 0xe;
           *(float *)(param_11 + 0xc) = FLOAT_803e4e04;
@@ -725,14 +725,14 @@ void FUN_8019b904(undefined8 param_1,double param_2,undefined8 param_3,undefined
           if (param_12 == 0) {
             *(byte *)(param_11 + 0x10) = *(byte *)(param_11 + 0x10) | 0x40;
             *(byte *)(param_11 + 0x10) = *(byte *)(param_11 + 0x10) & 0xdf;
-            FUN_80037bd4(dVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar7,0xf,
+            ObjMsg_SendToObject(dVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar7,0xf,
                          uVar5,((int)(*(byte *)(param_11 + 0x10) & 0xe0) >> 4) << 8 | param_14,iVar8
                          ,uVar9,param_15,param_16);
             *(byte *)(param_11 + 0x10) = *(byte *)(param_11 + 0x10) & 0x7f;
           }
           else {
             if ((double)FLOAT_803e4e14 < dVar13) {
-              FUN_80037bd4(dVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar7,0xf,
+              ObjMsg_SendToObject(dVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar7,0xf,
                            uVar5,((int)(*(byte *)(param_11 + 0x10) & 0xe0) >> 4) << 8 | param_14,
                            iVar8,uVar9,param_15,param_16);
             }
@@ -814,7 +814,7 @@ void FUN_8019b904(undefined8 param_1,double param_2,undefined8 param_3,undefined
           if ((dVar13 < (double)FLOAT_803e4e0c) && (param_12 != 0)) {
             *(float *)(param_11 + 0xc) = FLOAT_803e4e04;
             *(undefined *)(param_11 + 0x11) = 0;
-            FUN_80037bd4(dVar10,dVar12,dVar11,param_4,param_5,param_6,param_7,param_8,iVar7,0x10,
+            ObjMsg_SendToObject(dVar10,dVar12,dVar11,param_4,param_5,param_6,param_7,param_8,iVar7,0x10,
                          uVar5,param_12,iVar8,uVar9,param_15,param_16);
             *(byte *)(param_11 + 0x10) = *(byte *)(param_11 + 0x10) | 0x80;
             if (param_13 != 0) {
@@ -1056,7 +1056,7 @@ FUN_8019c318(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
   while (iVar1 = ObjMsg_Pop(param_9,&local_24,local_20,&local_28), iVar1 != 0) {
     if (local_24 == 0x110001) {
       if ((*psVar3 == 0x54) && (0xaf < *(short *)(param_11 + 0x58))) {
-        FUN_80037bd4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,local_20[0],
+        ObjMsg_SendToObject(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,local_20[0],
                      0x110001,param_9,0,param_13,param_14,param_15,param_16);
       }
     }
@@ -1067,13 +1067,13 @@ FUN_8019c318(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
     }
     else if (local_24 == 0x110003) {
       if ((*psVar3 == 0x56) && (0xaf < *(short *)(param_11 + 0x58))) {
-        FUN_80037bd4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,local_20[0],
+        ObjMsg_SendToObject(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,local_20[0],
                      0x110003,param_9,0,param_13,param_14,param_15,param_16);
       }
     }
     else if ((((int)local_24 < 0x110003) && (*psVar3 == 0x55)) &&
             (0xaf < *(short *)(param_11 + 0x58))) {
-      FUN_80037bd4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,local_20[0],
+      ObjMsg_SendToObject(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,local_20[0],
                    0x110002,param_9,0,param_13,param_14,param_15,param_16);
     }
   }
@@ -1252,25 +1252,25 @@ void FUN_8019c7cc(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   if (*(short *)((int)pfVar9 + 0x36) == 0) {
     in_r7 = 0;
-    uVar14 = FUN_80037844(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0xdc,5,
+    uVar14 = ObjMsg_SendToObjects(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0xdc,5,
                           (uint)psVar2,0x110004,0,in_r8,in_r9,in_r10);
   }
   uVar4 = FUN_80017690(0x54);
   if ((uVar4 != 0) && (*(short *)(pfVar9 + 0xc) == 0)) {
     in_r7 = 0;
-    uVar14 = FUN_80037844(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0xda,4,
+    uVar14 = ObjMsg_SendToObjects(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0xda,4,
                           (uint)psVar2,0x110001,0,in_r8,in_r9,in_r10);
   }
   uVar4 = FUN_80017690(0x55);
   if ((uVar4 != 0) && (*(short *)((int)pfVar9 + 0x32) == 0)) {
     in_r7 = 0;
-    uVar14 = FUN_80037844(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0xda,4,
+    uVar14 = ObjMsg_SendToObjects(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0xda,4,
                           (uint)psVar2,0x110002,0,in_r8,in_r9,in_r10);
   }
   uVar4 = FUN_80017690(0x56);
   if ((uVar4 != 0) && (*(short *)(pfVar9 + 0xd) == 0)) {
     in_r7 = 0;
-    FUN_80037844(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0xda,4,(uint)psVar2,
+    ObjMsg_SendToObjects(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0xda,4,(uint)psVar2,
                  0x110003,0,in_r8,in_r9,in_r10);
   }
   *(undefined *)((int)pfVar9 + 0x53) = 0;
@@ -1530,7 +1530,7 @@ void FUN_8019d1cc(undefined2 *param_1,int param_2)
     *(undefined *)((int)param_1 + 0xad) = 1;
     *(undefined4 *)(iVar1 + 0x158) = 0;
   }
-  FUN_80037ce0((int)param_1,2);
+  ObjMsg_AllocQueue((int)param_1,2);
   return;
 }
 
@@ -1777,7 +1777,7 @@ void FUN_8019d874(undefined4 param_1,undefined4 param_2,int param_3)
       uStack_34 = (int)*(short *)(iVar13 + 0x18) ^ 0x80000000;
       local_38 = 0x43300000;
       local_48[0] = (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e4eb8);
-      iVar4 = FUN_80037008(3,puVar5,local_48);
+      iVar4 = ObjGroup_FindNearestObject(3,puVar5,local_48);
       if (iVar4 != 0) {
         bVar14 = true;
       }
@@ -2432,7 +2432,7 @@ void FUN_8019e77c(int param_1)
     FUN_80017520(*(uint **)(param_1 + 0xb8));
   }
   if (*(int *)(param_1 + 0xc4) != 0) {
-    FUN_8003817c(*(int *)(param_1 + 0xc4),param_1);
+    ObjLink_DetachChild(*(int *)(param_1 + 0xc4),param_1);
   }
   return;
 }
@@ -2639,7 +2639,7 @@ void FUN_8019ec44(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   undefined4 in_r9;
   undefined4 in_r10;
   
-  FUN_80037844(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x3e,0,param_9,
+  ObjMsg_SendToObjects(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x3e,0,param_9,
                0x40001,0,in_r8,in_r9,in_r10);
   return;
 }
@@ -3092,7 +3092,7 @@ void FUN_8019f1dc(void)
     iVar5 = *(int *)(uVar1 + 0x4c);
     iVar2 = 0;
     if (*(short *)(iVar5 + 0x1a) == 0) {
-      iVar2 = FUN_80037008(0x3a,uVar1,(float *)0x0);
+      iVar2 = ObjGroup_FindNearestObject(0x3a,uVar1,(float *)0x0);
     }
     else {
       piVar3 = ObjGroup_GetObjects(0x3a,&local_68);

@@ -29,7 +29,7 @@ extern undefined4 ObjHits_AddContactObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
-extern undefined4 FUN_80037ce0();
+extern undefined4 ObjMsg_AllocQueue();
 extern int FUN_800386bc();
 extern undefined4 FUN_800388b4();
 extern undefined4 FUN_8003b540();

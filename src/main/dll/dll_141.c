@@ -18,8 +18,8 @@ extern undefined4 FUN_80017ac8();
 extern undefined4 ObjHits_DisableObject();
 extern void* ObjGroup_GetObjects();
 extern int ObjMsg_Pop();
-extern undefined4 FUN_80037bd4();
-extern undefined4 FUN_80037ce0();
+extern undefined4 ObjMsg_SendToObject();
+extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_80039520();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800723a0();
@@ -275,7 +275,7 @@ void FUN_801732a4(undefined8 param_1,double param_2,double param_3,undefined8 pa
         uVar7 = FUN_80017690(0x90d);
         if (uVar7 == 0) {
           *(undefined2 *)(iVar8 + 0x280) = 0xffff;
-          FUN_80037bd4(dVar9,dVar10,param_3,param_4,param_5,param_6,param_7,param_8,iVar5,0x7000a,
+          ObjMsg_SendToObject(dVar9,dVar10,param_3,param_4,param_5,param_6,param_7,param_8,iVar5,0x7000a,
                        (uint)psVar4,iVar8 + 0x280,in_r7,in_r8,in_r9,in_r10);
           ObjHits_DisableObject((int)psVar4);
           FUN_80017698(0x90d,1);
@@ -447,7 +447,7 @@ LAB_80174324:
   else {
     *(float *)(iVar5 + 0x26c) = FLOAT_803e4194;
   }
-  FUN_80037ce0(param_1,1);
+  ObjMsg_AllocQueue(param_1,1);
   return;
 }
 

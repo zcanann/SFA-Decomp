@@ -7,9 +7,9 @@ extern undefined4 FUN_80017ac8();
 extern undefined8 ObjHits_DisableObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
-extern undefined4 FUN_80037bd4();
-extern undefined4 FUN_80037ce0();
-extern undefined4 FUN_8003817c();
+extern undefined4 ObjMsg_SendToObject();
+extern undefined4 ObjMsg_AllocQueue();
+extern undefined4 ObjLink_DetachChild();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800810f4();
 extern undefined4 FUN_80081118();
@@ -120,7 +120,7 @@ void collectible_init(undefined8 param_1,undefined8 param_2,double param_3,undef
             if (*(char *)(iVar4 + 0x3e) == '\0') {
               *(undefined2 *)(iVar4 + 0x48) = 0xffff;
               iVar3 = FUN_80017a98();
-              FUN_80037bd4(uVar6,dVar7,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,0x7000a
+              ObjMsg_SendToObject(uVar6,dVar7,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,0x7000a
                            ,(uint)param_9,iVar4 + 0x48,in_r7,in_r8,in_r9,in_r10);
             }
           }
@@ -196,7 +196,7 @@ void FUN_80173364(short *param_1,int param_2)
 void FUN_80173368(int param_1)
 {
   if (*(int *)(param_1 + 0xc4) != 0) {
-    FUN_8003817c(*(int *)(param_1 + 0xc4),param_1);
+    ObjLink_DetachChild(*(int *)(param_1 + 0xc4),param_1);
   }
   (**(code **)(*DAT_803dd6f8 + 0x18))(param_1);
   return;

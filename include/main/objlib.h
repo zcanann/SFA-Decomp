@@ -43,9 +43,9 @@ void ObjHits_ResetWorkBuffers(void);
 undefined4 ObjHitReact_GetResetObjects(undefined4 *param_1);
 void ObjHits_InitWorkBuffers(void);
 uint ObjGroup_ContainsObject(int param_1,int param_2);
-void FUN_80036dcc(undefined4 param_1,undefined4 param_2,float *param_3);
-void FUN_80036edc(undefined4 param_1,undefined4 param_2,float *param_3);
-void FUN_80037008(undefined4 param_1,undefined4 param_2,float *param_3);
+void ObjGroup_FindNearestObjectToPoint(undefined4 param_1,undefined4 param_2,float *param_3);
+void ObjGroup_FindNearestObjectForObject(undefined4 param_1,undefined4 param_2,float *param_3);
+void ObjGroup_FindNearestObject(undefined4 param_1,undefined4 param_2,float *param_3);
 undefined4 * ObjGroup_GetObjects(int param_1,int *param_2);
 void ObjGroup_RemoveObject(int param_1,int param_2);
 int ObjGroup_GetObjectGroup(int param_1);
@@ -53,26 +53,26 @@ void ObjGroup_AddObject(int param_1,int param_2);
 void ObjGroup_ClearAll(void);
 undefined4 ObjMsg_Peek(int param_1,int *param_2,int *param_3,int *param_4);
 undefined4 ObjMsg_Pop(int param_1,uint *param_2,uint *param_3,uint *param_4);
-void FUN_8003762c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void ObjMsg_SendToNearbyObjects(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,uint param_11,uint param_12,uint param_13,
                  undefined4 param_14,undefined4 param_15,undefined4 param_16);
-void FUN_80037844(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void ObjMsg_SendToObjects(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,uint param_11,uint param_12,uint param_13,
                  undefined4 param_14,undefined4 param_15,undefined4 param_16);
-uint FUN_80037bd4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+uint ObjMsg_SendToObject(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,uint param_10,uint param_11,uint param_12,undefined4 param_13,
                  undefined4 param_14,undefined4 param_15,undefined4 param_16);
-void FUN_80037ce0(int param_1,int param_2);
+void ObjMsg_AllocQueue(int param_1,int param_2);
 undefined4 FUN_80037d50(int param_1);
 bool FUN_80037d74(int param_1);
 int fn_80037B60(int param_1,float *param_2,undefined4 *param_3,float *param_4);
 void FUN_80037fa8(undefined4 param_1,undefined4 param_2,uint param_3,uint param_4,uint param_5,
                  uint param_6,float *param_7);
-void FUN_8003817c(int param_1,int param_2);
-void FUN_800381f8(int param_1,int param_2,ushort param_3);
+void ObjLink_DetachChild(int param_1,int param_2);
+void ObjLink_AttachChild(int param_1,int param_2,ushort param_3);
 void FUN_80038238(void);
 void FUN_80038318(int param_1);
 undefined4 FUN_800383c0(int param_1,int param_2,undefined4 param_3);

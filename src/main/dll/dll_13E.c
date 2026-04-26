@@ -8,7 +8,7 @@ extern undefined4 FUN_80017a98();
 extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined8 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern undefined4 FUN_80037bd4();
+extern undefined4 ObjMsg_SendToObject();
 extern undefined4 FUN_8011e824();
 extern uint FUN_80294bec();
 extern uint FUN_80294ce8();
@@ -132,7 +132,7 @@ void sidekickball_update(undefined8 param_1,double param_2,double param_3,undefi
         }
       }
       if (*(char *)(param_10 + 0x2ca) != '\0') {
-        FUN_80037bd4(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(int)puVar4,
+        ObjMsg_SendToObject(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(int)puVar4,
                      0x100010,param_9,0,param_13,param_14,param_15,param_16);
       }
     }
