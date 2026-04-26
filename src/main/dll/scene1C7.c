@@ -17,7 +17,7 @@ extern f32 FLOAT_803e5d70;
 /*
  * --INFO--
  *
- * Function: FUN_801c91b0
+ * Function: dbsh_shrine_update
  * EN v1.0 Address: 0x801C91B0
  * EN v1.0 Size: 384b
  * EN v1.1 Address: 0x801C9470
@@ -27,7 +27,7 @@ extern f32 FLOAT_803e5d70;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c91b0(undefined4 param_1,undefined4 param_2,int param_3)
+void dbsh_shrine_update(undefined4 param_1,undefined4 param_2,int param_3)
 {
   byte bVar1;
   int iVar2;

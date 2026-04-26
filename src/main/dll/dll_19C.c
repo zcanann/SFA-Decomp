@@ -63,7 +63,7 @@ extern f32 FLOAT_803e5b30;
 /*
  * --INFO--
  *
- * Function: FUN_801c2e68
+ * Function: dfsh_shrine_render
  * EN v1.0 Address: 0x801C2E68
  * EN v1.0 Size: 716b
  * EN v1.1 Address: 0x801C2EC8
@@ -73,7 +73,7 @@ extern f32 FLOAT_803e5b30;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c2e68(ushort *param_1)
+void dfsh_shrine_render(ushort *param_1)
 {
   int iVar1;
   uint uVar2;
@@ -311,7 +311,7 @@ void FUN_801c33b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     FUN_80006728(uVar13,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar6,0x222,
                  0,in_r7,in_r8,in_r9,in_r10);
   }
-  FUN_801c2e68(param_9);
+  dfsh_shrine_render(param_9);
   if (DAT_803dcbc8 != '\0') {
     *(undefined4 *)(param_9 + 0xc) = *(undefined4 *)(param_9 + 6);
     *(undefined4 *)(param_9 + 0xe) = *(undefined4 *)(param_9 + 8);

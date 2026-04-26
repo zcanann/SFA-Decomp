@@ -29,7 +29,7 @@ extern f32 FLOAT_803e6700;
 /*
  * --INFO--
  *
- * Function: FUN_801e8ee0
+ * Function: spscarab_update
  * EN v1.0 Address: 0x801E8EE0
  * EN v1.0 Size: 1176b
  * EN v1.1 Address: 0x801E8FA0
@@ -39,7 +39,7 @@ extern f32 FLOAT_803e6700;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e8ee0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void spscarab_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   undefined2 *puVar1;

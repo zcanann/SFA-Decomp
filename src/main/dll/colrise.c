@@ -4,7 +4,7 @@
 extern void* FUN_80017624();
 extern undefined4 FUN_80017698();
 extern undefined4 FUN_80037ce0();
-extern undefined4 FUN_801c91b0();
+extern undefined4 dbsh_shrine_update();
 
 extern undefined4* DAT_803dd72c;
 
