@@ -183,6 +183,8 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
   short sVar1;
   int iVar2;
   uint uVar3;
+  s16 facingAngle;
+  s8 behaviorState;
   f32 distanceSq;
 
   obj = (short *)object;
@@ -192,12 +194,23 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
   else {
     iVar2 = fn_8002B9EC();
     distanceSq = fn_8002166C((Vec *)(obj + 0xc),(Vec *)(iVar2 + 0x18));
-    if (lbl_803E5424 <= distanceSq) {
+    if (distanceSq < lbl_803E5424) {
+      behaviorState = runtime->behaviorState;
+      if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
+          (behaviorState <= SHTHORNTAIL_STATE_MOVE_5)) {
+        uVar3 = SHTHORNTAIL_STATE_TURN_HOME;
+      }
+      else {
+        uVar3 = SHTHORNTAIL_STATE_CLOSE_ATTACK;
+      }
+    }
+    else {
       distanceSq = fn_8002166C((Vec *)(obj + 0xc),&config->homePos);
       if ((float)(s32)(config->leashRadiusByte * config->leashRadiusByte) < distanceSq) {
         iVar2 = fn_800217C0(*(float *)(obj + 6) - config->homePos.x,
                             *(float *)(obj + 10) - config->homePos.z);
-        sVar1 = (short)iVar2 - *obj;
+        facingAngle = *obj;
+        sVar1 = (short)iVar2 - facingAngle;
         if (0x8000 < sVar1) {
           sVar1 = sVar1 + 1;
         }
@@ -211,9 +224,10 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
         if (0x20 < iVar2) {
           iVar2 = fn_800217C0(*(float *)(obj + 6) - config->homePos.x,
                               *(float *)(obj + 10) - config->homePos.z);
-          OSReport(lbl_80327470,(u16)iVar2,*obj);
-          if ((SHTHORNTAIL_STATE_IDLE_COUNTDOWN < runtime->behaviorState) &&
-              (runtime->behaviorState < SHTHORNTAIL_STATE_TURN_HOME)) {
+          OSReport(lbl_80327470,(u16)iVar2,facingAngle);
+          behaviorState = runtime->behaviorState;
+          if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
+              (behaviorState <= SHTHORNTAIL_STATE_MOVE_5)) {
             return SHTHORNTAIL_STATE_TURN_HOME;
           }
           return SHTHORNTAIL_STATE_CLOSE_ATTACK;
@@ -223,21 +237,17 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
       if (iVar2 == 0) {
         uVar3 = SHTHORNTAIL_STATE_CLOSE_ATTACK;
       }
-      else if ((runtime->behaviorState < SHTHORNTAIL_STATE_MOVE_2) ||
-               (SHTHORNTAIL_STATE_MOVE_5 < runtime->behaviorState)) {
-        uVar3 = SHTHORNTAIL_STATE_MOVE_2;
-      }
       else {
-        uVar3 = fn_800221A0(SHTHORNTAIL_STATE_MOVE_3,SHTHORNTAIL_STATE_MOVE_5);
-        uVar3 = uVar3 & 0xff;
+        behaviorState = runtime->behaviorState;
+        if ((behaviorState < SHTHORNTAIL_STATE_MOVE_2) ||
+            (SHTHORNTAIL_STATE_MOVE_5 < behaviorState)) {
+          uVar3 = SHTHORNTAIL_STATE_MOVE_2;
+        }
+        else {
+          uVar3 = fn_800221A0(SHTHORNTAIL_STATE_MOVE_3,SHTHORNTAIL_STATE_MOVE_5);
+          uVar3 = uVar3 & 0xff;
+        }
       }
-    }
-    else if ((runtime->behaviorState < SHTHORNTAIL_STATE_MOVE_2) ||
-             (SHTHORNTAIL_STATE_MOVE_5 < runtime->behaviorState)) {
-      uVar3 = SHTHORNTAIL_STATE_CLOSE_ATTACK;
-    }
-    else {
-      uVar3 = SHTHORNTAIL_STATE_TURN_HOME;
     }
   }
   return uVar3;

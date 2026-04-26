@@ -2,11 +2,11 @@
 #include "main/dll/SH/SHroot.h"
 #include "main/dll/SH/SHthorntail.h"
 
-extern int fn_8000BB18();
-extern uint GameBit_Get();
-extern undefined4 GameBit_Set();
+extern void fn_8000BB18(uint objectId,u16 volumeId);
+extern uint GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId,int value);
 extern int fn_800221A0(int min,int max);
-extern uint fn_80038024();
+extern int fn_80038024(int obj);
 extern int fn_801D4CD0(SHthorntailObject *obj);
 
 extern undefined4* lbl_803DCAAC;
@@ -30,6 +30,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
 {
   int eventIsSet;
   uint triggerIsSet;
+  uint triggerEventId;
   int randomTime;
 
   runtime->impactSfxTable = gSHthorntailLevelControlMode0DefaultImpactSfxTable;
@@ -55,7 +56,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
       runtime->behaviorState = SHTHORNTAIL_STATE_EVENT_PAUSE;
       return;
     }
-    if (runtime->behaviorState == SHTHORNTAIL_STATE_EVENT_PAUSE) {
+    if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_EVENT_PAUSE) {
       fn_8000BB18(0,0x409);
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
       randomTime = fn_800221A0(1000,2000);
@@ -64,9 +65,9 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
     runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
     break;
   case SHTHORNTAIL_LOCOMOTION_7:
-    if (runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE2_EVENT) {
-      GameBit_Get(0x1a0);
-      triggerIsSet = GameBit_Get();
+    if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE2_EVENT) {
+      triggerEventId = GameBit_Get(0x1a0);
+      triggerIsSet = GameBit_Get(triggerEventId);
       if (triggerIsSet == 0) {
         return;
       }
