@@ -1105,7 +1105,7 @@ void expgfx_releaseSourceSlots(int sourceId)
 /*
  * --INFO--
  *
- * Function: fn_8009EFDC
+ * Function: expgfx_resetAllPools
  * EN v1.0 Address: 0x8009EFDC
  * EN v1.0 Size: 464b
  * EN v1.1 Address: 0x8009F268
@@ -1116,7 +1116,7 @@ void expgfx_releaseSourceSlots(int sourceId)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_8009EFDC(void)
+void expgfx_resetAllPools(void)
 {
   ExpgfxTableEntry *tableEntry;
   ExpgfxSlot *slot;

@@ -20,7 +20,7 @@ void fn_8009E13C();
 void fn_8009ECE4(void);
 void fn_8009EEB8(void);
 void expgfx_releaseSourceSlots();
-void fn_8009EFDC(void);
+void expgfx_resetAllPools(void);
 void expgfx_updateFrameState(int sourceMode,int sourceId);
 void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double param_4,undefined8 param_5,
                       undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,
