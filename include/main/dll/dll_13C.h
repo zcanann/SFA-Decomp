@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_80169cc4(void);
+void kaldachompspit_init(void);
 void FUN_80169d38(undefined8 param_1,undefined8 param_2,undefined8 param_3,double param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9);
@@ -22,7 +22,7 @@ void FUN_8016aba8(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  uint param_9);
 void FUN_8016ae64(double param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5
                  ,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9);
-void FUN_8016b0a4(int param_1);
+void pollenfragment_init(int param_1);
 void FUN_8016b174(int param_1);
 void FUN_8016b1dc(void);
 void FUN_8016b228(undefined8 param_1,double param_2,double param_3,undefined8 param_4,

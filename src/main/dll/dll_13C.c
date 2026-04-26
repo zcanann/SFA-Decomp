@@ -104,7 +104,7 @@ extern f32 FLOAT_803e3e18;
 /*
  * --INFO--
  *
- * Function: FUN_80169cc4
+ * Function: kaldachompspit_init
  * EN v1.0 Address: 0x80169CC4
  * EN v1.0 Size: 116b
  * EN v1.1 Address: 0x80169CF8
@@ -114,7 +114,7 @@ extern f32 FLOAT_803e3e18;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80169cc4(void)
+void kaldachompspit_init(void)
 {
   int iVar1;
   int iVar2;
@@ -724,7 +724,7 @@ void FUN_8016ae64(double param_1,double param_2,double param_3,undefined8 param_
 /*
  * --INFO--
  *
- * Function: FUN_8016b0a4
+ * Function: pollenfragment_init
  * EN v1.0 Address: 0x8016B0A4
  * EN v1.0 Size: 208b
  * EN v1.1 Address: 0x8016ACA4
@@ -734,7 +734,7 @@ void FUN_8016ae64(double param_1,double param_2,double param_3,undefined8 param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016b0a4(int param_1)
+void pollenfragment_init(int param_1)
 {
   uint uVar1;
   int iVar2;
