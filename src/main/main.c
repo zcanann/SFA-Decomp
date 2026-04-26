@@ -767,13 +767,13 @@ void FUN_801fe324(undefined2 *param_1,int param_2)
   state->primarySequenceId = *(short *)(param_2 + 0x1e);
   state->secondarySequenceId = *(short *)(param_2 + 0x20);
   state->sequenceLatched = 0;
-  *param_1 = (short)((int)*(char *)(param_2 + 0x18) << 8);
+  *param_1 = (short)((int)*(char *)(param_2 + 0x18) << LASEROBJ_MODE_WORD_SHIFT);
   uVar1 = FUN_80017690((int)state->primarySequenceId);
   if (uVar1 != 0) {
     state->sequenceLatched = 1;
     obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_DISABLED;
   }
-  obj->objectFlags = obj->objectFlags | 0x6000;
+  obj->objectFlags = obj->objectFlags | LASER_OBJECT_FLAGS_SEQUENCE_CONTROL;
   return;
 }
 
