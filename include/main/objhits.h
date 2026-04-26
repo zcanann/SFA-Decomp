@@ -9,16 +9,17 @@ typedef struct ObjHitsSweepEntry {
   int obj;
 } ObjHitsSweepEntry;
 
-void FUN_80030688(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
-                 undefined4 param_5,int *param_6,int *param_7,int *param_8,float *param_9);
-void FUN_80030c34(undefined4 param_1,undefined4 param_2,int *param_3,int *param_4,int *param_5,
-                 float *param_6);
-void FUN_8003113c(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
-                 undefined4 param_5,int param_6,int param_7,undefined4 param_8,int param_9,
-                 float *param_10);
-void FUN_80031510(undefined8 param_1,undefined8 param_2,double param_3,undefined4 param_4,
-                 undefined4 param_5,int param_6,int param_7,undefined4 param_8,int param_9,
-                 float *param_10);
+void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double param_3,
+                                   undefined4 param_4,undefined4 param_5,int *param_6,
+                                   int *param_7,int *param_8,float *param_9);
+void ObjHits_CollectSkeletonHits3D(undefined4 param_1,undefined4 param_2,int *param_3,
+                                   int *param_4,int *param_5,float *param_6);
+void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double param_3,
+                                    undefined4 param_4,undefined4 param_5,int param_6,
+                                    int param_7,undefined4 param_8,int param_9,float *param_10);
+void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double param_3,
+                                    undefined4 param_4,undefined4 param_5,int param_6,
+                                    int param_7,undefined4 param_8,int param_9,float *param_10);
 float *ObjHits_ProjectPointToTaperedCapsuleXZ(double param_1,double param_2,double param_3,
                                               double param_4,double param_5,float *param_6,
                                               float *param_7,float *param_8,float *param_9);

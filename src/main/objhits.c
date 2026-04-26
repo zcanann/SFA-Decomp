@@ -79,7 +79,7 @@ extern undefined4 uRam803dd854;
 /*
  * --INFO--
  *
- * Function: FUN_80030688
+ * Function: ObjHits_CollectSkeletonHitsXZ
  * EN v1.0 Address: 0x80030688
  * EN v1.0 Size: 1452b
  * EN v1.1 Address: 0x80030780
@@ -89,8 +89,9 @@ extern undefined4 uRam803dd854;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80030688(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
-                 undefined4 param_5,int *param_6,int *param_7,int *param_8,float *param_9)
+void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double param_3,
+                                   undefined4 param_4,undefined4 param_5,int *param_6,
+                                   int *param_7,int *param_8,float *param_9)
 {
   double dVar1;
   float fVar2;
@@ -299,7 +300,7 @@ void FUN_80030688(undefined8 param_1,double param_2,double param_3,undefined4 pa
 /*
  * --INFO--
  *
- * Function: FUN_80030c34
+ * Function: ObjHits_CollectSkeletonHits3D
  * EN v1.0 Address: 0x80030C34
  * EN v1.0 Size: 1288b
  * EN v1.1 Address: 0x80030BE4
@@ -309,8 +310,8 @@ void FUN_80030688(undefined8 param_1,double param_2,double param_3,undefined4 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80030c34(undefined4 param_1,undefined4 param_2,int *param_3,int *param_4,int *param_5,
-                 float *param_6)
+void ObjHits_CollectSkeletonHits3D(undefined4 param_1,undefined4 param_2,int *param_3,
+                                   int *param_4,int *param_5,float *param_6)
 {
   float fVar1;
   float fVar2;
@@ -493,7 +494,7 @@ void FUN_80030c34(undefined4 param_1,undefined4 param_2,int *param_3,int *param_
 /*
  * --INFO--
  *
- * Function: FUN_8003113c
+ * Function: ObjHits_CalcSkeletonResponseXZ
  * EN v1.0 Address: 0x8003113C
  * EN v1.0 Size: 980b
  * EN v1.1 Address: 0x80030FC0
@@ -503,9 +504,9 @@ void FUN_80030c34(undefined4 param_1,undefined4 param_2,int *param_3,int *param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003113c(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
-                 undefined4 param_5,int param_6,int param_7,undefined4 param_8,int param_9,
-                 float *param_10)
+void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double param_3,
+                                    undefined4 param_4,undefined4 param_5,int param_6,
+                                    int param_7,undefined4 param_8,int param_9,float *param_10)
 {
   int iVar1;
   float fVar2;
@@ -679,7 +680,7 @@ void FUN_8003113c(undefined8 param_1,double param_2,double param_3,undefined4 pa
 /*
  * --INFO--
  *
- * Function: FUN_80031510
+ * Function: ObjHits_CalcSkeletonResponse3D
  * EN v1.0 Address: 0x80031510
  * EN v1.0 Size: 928b
  * EN v1.1 Address: 0x800314A0
@@ -689,9 +690,9 @@ void FUN_8003113c(undefined8 param_1,double param_2,double param_3,undefined4 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80031510(undefined8 param_1,undefined8 param_2,double param_3,undefined4 param_4,
-                 undefined4 param_5,int param_6,int param_7,undefined4 param_8,int param_9,
-                 float *param_10)
+void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double param_3,
+                                    undefined4 param_4,undefined4 param_5,int param_6,
+                                    int param_7,undefined4 param_8,int param_9,float *param_10)
 {
   float fVar1;
   int iVar2;
@@ -2624,12 +2625,13 @@ static void ObjHits_CheckSkeletonPairInner(undefined4 param_1, undefined4 param_
         local_38 = local_5c;
         local_34 = local_58;
         local_68 = 0;
-        FUN_80030688((double)(float)((double)CONCAT44(0x43300000, uStack_2c) - DOUBLE_803df5c0),
-                     (double)(local_5c + (float)((double)CONCAT44(0x43300000, uStack_24) -
-                                                 DOUBLE_803df5c0)),
-                     (double)(local_5c + (float)((double)CONCAT44(0x43300000, uStack_1c) -
-                                                 DOUBLE_803df5c0)),
-                     (undefined4)&local_60, piVar8[5], piVar8, param_3, &local_68, &local_64);
+        ObjHits_CollectSkeletonHitsXZ(
+            (double)(float)((double)CONCAT44(0x43300000, uStack_2c) - DOUBLE_803df5c0),
+            (double)(local_5c +
+                     (float)((double)CONCAT44(0x43300000, uStack_24) - DOUBLE_803df5c0)),
+            (double)(local_5c +
+                     (float)((double)CONCAT44(0x43300000, uStack_1c) - DOUBLE_803df5c0)),
+            (undefined4)&local_60, piVar8[5], piVar8, param_3, &local_68, &local_64);
         if (local_68 != 0) {
           dVar11 = (double)((*(float *)(iVar7 + 0xa8) * *(float *)(iVar7 + 8)) /
                             (*(float *)(iVar5 + 0xa8) * *(float *)(iVar7 + 8)));
@@ -2639,9 +2641,10 @@ static void ObjHits_CheckSkeletonPairInner(undefined4 param_1, undefined4 param_
           if ((dVar10 <= dVar11) && (dVar10 = dVar11, (double)FLOAT_803df598 < dVar11)) {
             dVar10 = (double)FLOAT_803df598;
           }
-          FUN_8003113c((double)(float)((double)CONCAT44(0x43300000, uStack_1c) - DOUBLE_803df5c0),
-                       dVar10, (double)local_64, (undefined4)&local_3c, iVar7, (int)param_3,
-                       piVar8[5], *piVar8, local_68, &local_48);
+          ObjHits_CalcSkeletonResponseXZ(
+              (double)(float)((double)CONCAT44(0x43300000, uStack_1c) - DOUBLE_803df5c0),dVar10,
+              (double)local_64,(undefined4)&local_3c,iVar7,(int)param_3,piVar8[5],*piVar8,
+              local_68,&local_48);
           fVar2 = FLOAT_803df5d8;
           if ((FLOAT_803df5d8 <= local_48) && (fVar2 = local_48, FLOAT_803df5dc < local_48)) {
             fVar2 = FLOAT_803df5dc;
@@ -2670,7 +2673,8 @@ static void ObjHits_CheckSkeletonPairInner(undefined4 param_1, undefined4 param_
       local_38 = local_50;
       local_34 = local_4c;
       local_68 = 0;
-      FUN_80030c34((undefined4)&local_54, piVar8[5], piVar8, param_3, &local_68, &local_64);
+      ObjHits_CollectSkeletonHits3D((undefined4)&local_54, piVar8[5], piVar8, param_3, &local_68,
+                                    &local_64);
       if (local_68 != 0) {
         dVar11 = (double)((*(float *)(iVar7 + 0xa8) * *(float *)(iVar7 + 8)) /
                           (*(float *)(iVar5 + 0xa8) * *(float *)(iVar5 + 8)));
@@ -2680,9 +2684,10 @@ static void ObjHits_CheckSkeletonPairInner(undefined4 param_1, undefined4 param_
         if ((dVar10 <= dVar11) && (dVar10 = dVar11, (double)FLOAT_803df598 < dVar11)) {
           dVar10 = (double)FLOAT_803df598;
         }
-        FUN_80031510((double)(float)((double)CONCAT44(0x43300000, uStack_2c) - DOUBLE_803df5c0),
-                     dVar10, (double)local_64, (undefined4)&local_3c, iVar7, (int)param_3,
-                     piVar8[5], *piVar8, local_68, &local_48);
+        ObjHits_CalcSkeletonResponse3D(
+            (double)(float)((double)CONCAT44(0x43300000, uStack_2c) - DOUBLE_803df5c0),dVar10,
+            (double)local_64,(undefined4)&local_3c,iVar7,(int)param_3,piVar8[5],*piVar8,
+            local_68,&local_48);
         fVar2 = FLOAT_803df5d8;
         if ((FLOAT_803df5d8 <= local_48) && (fVar2 = local_48, FLOAT_803df5dc < local_48)) {
           fVar2 = FLOAT_803df5dc;
