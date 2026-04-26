@@ -19,8 +19,21 @@ extern undefined4 fn_8003B8F4(double scale);
 extern undefined4 fn_8004350C(int param_1,int param_2,int param_3);
 extern undefined4 fn_800887F8(int param_1);
 
-extern undefined4 *lbl_803DCA54;
-extern undefined4 *lbl_803DCAAC;
+typedef struct FireObjectInterface {
+  u8 pad00[0x48];
+  void (*refresh)(int param_1,FireObject *obj,int param_3);
+} FireObjectInterface;
+
+typedef struct FireEventInterface {
+  u8 pad00[0x40];
+  int (*getMode)(int mapId);
+  void (*triggerEvent)(int eventId,int value);
+  u8 pad48[0x50 - 0x48];
+  void (*setAnimEvent)(int animId,int eventId,int value);
+} FireEventInterface;
+
+extern FireObjectInterface **lbl_803DCA54;
+extern FireEventInterface **lbl_803DCAAC;
 extern f32 lbl_803E64D8;
 
 /*
@@ -36,14 +49,14 @@ extern f32 lbl_803E64D8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 fire_updateState(int obj,undefined4 param_2,u8 *stateList)
+undefined4 fire_updateState(FireObject *obj,undefined4 param_2,u8 *stateList)
 {
   int stateIndex;
   int mode;
   u8 state;
   undefined4 anim;
 
-  mode = (u8)(*(code *)(*lbl_803DCAAC + 0x40))((int)*(s8 *)(obj + 0xac));
+  mode = (u8)(*lbl_803DCAAC)->getMode((int)obj->mapId);
   fn_8000DA58(0,0x48b);
   for (stateIndex = 0; stateIndex < (int)(uint)stateList[0x8b]; stateIndex++) {
     state = stateList[stateIndex + 0x81];
@@ -52,12 +65,12 @@ undefined4 fire_updateState(int obj,undefined4 param_2,u8 *stateList)
       if (mode != 2) {
         if (mode < 2) {
           if (-1 < mode) {
-            (*(code *)(*lbl_803DCAAC + 0x50))(7,0,0);
-            (*(code *)(*lbl_803DCAAC + 0x50))(7,2,0);
-            (*(code *)(*lbl_803DCAAC + 0x50))(7,3,0);
-            (*(code *)(*lbl_803DCAAC + 0x50))(7,7,0);
-            (*(code *)(*lbl_803DCAAC + 0x50))(7,10,0);
-            (*(code *)(*lbl_803DCAAC + 0x50))(10,7,0);
+            (*lbl_803DCAAC)->setAnimEvent(7,0,0);
+            (*lbl_803DCAAC)->setAnimEvent(7,2,0);
+            (*lbl_803DCAAC)->setAnimEvent(7,3,0);
+            (*lbl_803DCAAC)->setAnimEvent(7,7,0);
+            (*lbl_803DCAAC)->setAnimEvent(7,10,0);
+            (*lbl_803DCAAC)->setAnimEvent(10,7,0);
             GameBit_Set(0x1ed,1);
             fn_80042F78(0x17);
             anim = fn_800481B0(0x17);
@@ -90,21 +103,21 @@ undefined4 fire_updateState(int obj,undefined4 param_2,u8 *stateList)
       else {
         GameBit_Set(0x405,0);
         if (GameBit_Get(0xff) != 0) {
-          (*(code *)(*lbl_803DCAAC + 0x44))(0xb,3);
-          (*(code *)(*lbl_803DCAAC + 0x50))(0xb,8,1);
-          (*(code *)(*lbl_803DCAAC + 0x50))(0xb,9,1);
+          (*lbl_803DCAAC)->triggerEvent(0xb,3);
+          (*lbl_803DCAAC)->setAnimEvent(0xb,8,1);
+          (*lbl_803DCAAC)->setAnimEvent(0xb,9,1);
           fn_800552E8(0x22,0);
         }
         else if (GameBit_Get(0xbfd) != 0) {
-          (*(code *)(*lbl_803DCAAC + 0x44))(0xb,2);
-          (*(code *)(*lbl_803DCAAC + 0x50))(0xb,5,1);
-          (*(code *)(*lbl_803DCAAC + 0x50))(0xb,6,1);
+          (*lbl_803DCAAC)->triggerEvent(0xb,2);
+          (*lbl_803DCAAC)->setAnimEvent(0xb,5,1);
+          (*lbl_803DCAAC)->setAnimEvent(0xb,6,1);
           fn_800552E8(0x20,0);
         }
         else if (GameBit_Get(0xc6e) != 0) {
-          (*(code *)(*lbl_803DCAAC + 0x44))(0xb,4);
-          (*(code *)(*lbl_803DCAAC + 0x50))(0xb,8,1);
-          (*(code *)(*lbl_803DCAAC + 0x50))(0xb,9,1);
+          (*lbl_803DCAAC)->triggerEvent(0xb,4);
+          (*lbl_803DCAAC)->setAnimEvent(0xb,8,1);
+          (*lbl_803DCAAC)->setAnimEvent(0xb,9,1);
           fn_800552E8(0x22,0);
         }
       }
@@ -152,17 +165,17 @@ void fireObj_hitDetect(void)
 {
 }
 
-void fireObj_update(int obj)
+void fireObj_update(FireObject *obj)
 {
-  ((void (*)(int,int,int))*(void **)(*lbl_803DCA54 + 0x48))(0,obj,0xffffffff);
+  (*lbl_803DCA54)->refresh(0,obj,0xffffffff);
   return;
 }
 
-void fireObj_init(int obj)
+void fireObj_init(FireObject *obj)
 {
-  *(undefined4 (**)(int,undefined4,u8 *))(obj + 0xbc) = fire_updateState;
+  obj->stateCallback = fire_updateState;
   fn_8004350C(0,0,1);
-  *(u16 *)(obj + 0xb0) |= 0x2000;
+  obj->flags |= 0x2000;
   fn_800887F8(0);
   GameBit_Set(0x90d,1);
   GameBit_Set(0x90e,1);
