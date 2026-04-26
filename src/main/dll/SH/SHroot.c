@@ -17,7 +17,6 @@ extern void fn_8006EF38(double scaleX,double scaleY,int obj,int joint,int pointC
 extern int fn_80114BB0();
 extern int fn_801D4CD0(SHthorntailObject *obj);
 
-extern s32 lbl_803DBFF8;
 extern f32 lbl_803DB414;
 extern f32 lbl_803E5418;
 extern f32 lbl_803E5424;
@@ -290,9 +289,9 @@ void sh_thorntail_free(SHthorntailObject *obj)
 {
   u32 activeConfigToken;
 
-  activeConfigToken = (u32)lbl_803DBFF8;
+  activeConfigToken = (u32)gSHthorntailActiveConfigToken;
   if (activeConfigToken == (u32)obj->config->configToken) {
-    lbl_803DBFF8 = SHTHORNTAIL_CONFIG_TOKEN_NONE;
+    gSHthorntailActiveConfigToken = SHTHORNTAIL_CONFIG_TOKEN_NONE;
   }
   fn_80036FA4((int)obj,0x4d);
 }
