@@ -1,20 +1,20 @@
-/*
- * Manual recovery stub based on claimed split coverage and the surrounding
- * DF/SC/SH corridor.
- *
- * This file is intentionally not wired into the build yet.
- *
- * Current EN split:
- * - main/dll/DF/dll_199.c
- * - 0x801C2828-0x801C282C
- *
- * Nearby corridor context:
- * - previous split: main/dll/DF/dll_198.c
- * - next split: main/dll/DF/DFlantern.c
- */
+#include "ghidra_import.h"
+#include "main/dll/DF/dll_199.h"
 
 /*
- * No function names were promoted here yet.
- * Start from the current EN split window and the surrounding corridor.
+ * --INFO--
+ *
+ * Function: dfsh_door2speci_func08
+ * EN v1.0 Address: 0x801C2824
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x801C2824
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
  */
-
+int dfsh_door2speci_func08(void)
+{
+  return 0;
+}
