@@ -34,7 +34,7 @@ extern f32 FLOAT_803df588;
 void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,uint moveId,s16 eventState)
 {
   float frameValue;
-  uint frameType;
+  int frameType;
   int moveData;
   int moveIndex;
   u64 frameBits;
@@ -65,7 +65,7 @@ void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,ui
     moveData = (int)animDef->moveData[state->blendCacheSlot];
   }
   state->frameCmd = (u8 *)(moveData + 6);
-  frameType = *(u8 *)(moveData + 1) & 0xf0;
+  frameType = *(s8 *)(moveData + 1) & 0xf0;
   if (frameType != state->frameType) {
     state->eventState = 0;
   }
