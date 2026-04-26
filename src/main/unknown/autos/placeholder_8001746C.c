@@ -76,7 +76,7 @@ extern undefined4 FUN_80032430();
 extern undefined4 ObjHits_Update();
 extern undefined8 FUN_800356f0();
 extern uint ObjHitbox_AllocRotatedBounds();
-extern uint FUN_8003597c();
+extern uint ObjHitReact_InitState();
 extern uint ObjHits_AllocObjectState();
 extern undefined8 FUN_80036a98();
 extern undefined4 ObjHits_ResetWorkBuffers();

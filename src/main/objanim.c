@@ -1,12 +1,15 @@
 #include "ghidra_import.h"
 #include "dolphin/os.h"
+#include "main/objHitReact.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 
 extern undefined4 FUN_800723a0();
-extern void fn_80024E7C(int animId,int moveIndex,undefined4 cache,ObjAnimDef *animDef);
-extern void fn_8002C6C8(int objAnim,int objType,uint *eventTable,u32 moveId,int param_5);
-extern void fn_80035774(int objAnim,int *bank,int objType,int hitState,u32 moveId,int param_6);
+extern void ObjAnim_LoadCachedMove(int animId,int moveIndex,u8 *cache,ObjAnimDef *animDef);
+extern void ObjAnim_LoadMoveEvents(int objAnim,int objType,ObjAnimEventTable *eventTable,u32 moveId,
+                                   int async);
+extern void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
+                                        ObjHitReactState *hitState,u32 moveId,int async);
 
 extern char gObjAnimSetBlendMoveMissingAnimWarning[];
 extern f64 lbl_803DE8E8;
@@ -57,8 +60,8 @@ void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,ui
         OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
         moveIndex = 0;
       }
-      fn_80024E7C((int)animDef->blendMoveIds[moveIndex],(int)(s16)moveIndex,
-                  (undefined4)state->blendMoveCache[state->blendCacheSlot],animDef);
+      ObjAnim_LoadCachedMove((int)animDef->blendMoveIds[moveIndex],(int)(s16)moveIndex,
+                             state->blendMoveCache[state->blendCacheSlot],animDef);
       state->lastBlendMoveIndex = (s16)moveIndex;
     }
     moveData = (int)state->blendMoveCache[state->blendCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET;
@@ -269,7 +272,7 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
     if ((events != (ObjAnimEventList *)0) && (events->resetFlag = 0, objAnim->eventTable != 0)) {
       eventTable = objAnim->eventTable;
       events->triggerCount = 0;
-      iVar11 = eventTable->packedCount >> 1;
+      iVar11 = eventTable->byteCount >> 1;
       if (iVar11 != 0) {
         iVar1 = (int)(lbl_803DE8F8 * fVar4);
         iVar2 = (int)(lbl_803DE8F8 * objAnim->activeMoveProgress);
@@ -409,8 +412,8 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
         OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
         iVar3 = 0;
       }
-      fn_80024E7C((int)animDef->blendMoveIds[iVar3],(int)(s16)iVar3,
-                  (undefined4)state->moveCache[state->moveCacheSlot],animDef);
+      ObjAnim_LoadCachedMove((int)animDef->blendMoveIds[iVar3],(int)(s16)iVar3,
+                             state->moveCache[state->moveCacheSlot],animDef);
     }
     iVar6 = (int)state->moveCache[state->moveCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET;
   }
@@ -1094,7 +1097,7 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
   int moveIndex;
   int moveData;
   f32 clampedProgress;
-  int hitState;
+  ObjHitReactState *hitState;
 
   objAnim = (ObjAnimComponent *)objAnimArg;
   clampedProgress = (float)moveProgress;
@@ -1126,12 +1129,12 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
   state->prevEventState = state->eventState;
   state->eventState = 0;
   state->lastBlendMoveIndex = -1;
-  hitState = (int)objAnim->hitReactState;
-  if ((hitState != 0) && (*(int *)(hitState + 8) != 0)) {
-    fn_80035774(objAnimArg,(int *)bank,(int)objAnim->objType,hitState,moveId,0);
+  hitState = objAnim->hitReactState;
+  if ((hitState != (ObjHitReactState *)0x0) && (hitState->entries != (ObjHitReactEntry *)0x0)) {
+    ObjHitReact_LoadMoveEntries(objAnimArg,bank,(int)objAnim->objType,hitState,moveId,0);
   }
   if (objAnim->eventTable != (ObjAnimEventTable *)0x0) {
-    fn_8002C6C8(objAnimArg,(int)objAnim->objType,(uint *)objAnim->eventTable,moveId,0);
+    ObjAnim_LoadMoveEvents(objAnimArg,(int)objAnim->objType,objAnim->eventTable,moveId,0);
   }
   previousMove = objAnim->currentMove;
   moveChanged = previousMove != moveId;
@@ -1152,8 +1155,8 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
         OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
         moveIndex = 0;
       }
-      fn_80024E7C((int)animDef->blendMoveIds[moveIndex],(int)(s16)moveIndex,
-                  (undefined4)state->moveCache[state->moveCacheSlot],animDef);
+      ObjAnim_LoadCachedMove((int)animDef->blendMoveIds[moveIndex],(int)(s16)moveIndex,
+                             state->moveCache[state->moveCacheSlot],animDef);
     }
     moveData = (int)state->moveCache[state->moveCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET;
   }

@@ -166,7 +166,7 @@ int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8003582c
+ * Function: ObjHitReact_LoadMoveEntries
  * EN v1.0 Address: 0x8003582C
  * EN v1.0 Size: 336b
  * EN v1.1 Address: 0x8003586C
@@ -176,10 +176,11 @@ int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003582c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,undefined4 param_10,undefined4 param_11,int param_12,int param_13,
-                 int param_14,undefined4 param_15,undefined4 param_16)
+void ObjHitReact_LoadMoveEntries(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                                 undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                                 undefined8 param_8,int param_9,undefined4 param_10,
+                                 undefined4 param_11,int param_12,int param_13,int param_14,
+                                 undefined4 param_15,undefined4 param_16)
 {
   short sVar1;
   short *psVar2;
@@ -217,7 +218,7 @@ void FUN_8003582c(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8003597c
+ * Function: ObjHitReact_InitState
  * EN v1.0 Address: 0x8003597C
  * EN v1.0 Size: 360b
  * EN v1.1 Address: 0x80035920
@@ -227,7 +228,7 @@ void FUN_8003582c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003597c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4,int param_5)
+void ObjHitReact_InitState(undefined4 param_1,undefined4 param_2,int param_3,uint param_4,int param_5)
 {
   uint uVar1;
   undefined4 in_r9;
@@ -253,8 +254,8 @@ void FUN_8003597c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
     if ((*(byte *)(param_3 + 0x62) & 0x30) != 0) {
       *(undefined *)(param_3 + 0xaf) = 2;
     }
-    FUN_8003582c(uVar2,in_f2,in_f3,in_f4,in_f5,in_f6,in_f7,in_f8,param_5,(int)uVar3,
-                 (int)((ulonglong)uVar3 >> 0x20),param_3,0,1,in_r9,in_r10);
+    ObjHitReact_LoadMoveEntries(uVar2,in_f2,in_f3,in_f4,in_f5,in_f6,in_f7,in_f8,param_5,(int)uVar3,
+                                (int)((ulonglong)uVar3 >> 0x20),param_3,0,1,in_r9,in_r10);
   }
   FUN_8028688c();
   return;

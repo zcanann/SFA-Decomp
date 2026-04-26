@@ -34,7 +34,10 @@ typedef struct ObjAnimDef {
   u8 pad00[2];
   u16 flags;
   u16 modNo;
-  u8 pad06[0x58 - 6];
+  u8 pad06[0x20 - 6];
+  s16 *eventMoveTable;
+  s16 *hitReactMoveTable;
+  u8 pad28[0x58 - 0x28];
   ObjAnimHitReactRow *hitReactTable;
   u8 pad5C[0x64 - 0x5C];
   u8 **moveData;
@@ -102,7 +105,7 @@ typedef struct ObjAnimComponent {
 } ObjAnimComponent;
 
 typedef struct ObjAnimEventTable {
-  s32 packedCount;
+  s32 byteCount;
   s16 *entries;
 } ObjAnimEventTable;
 
