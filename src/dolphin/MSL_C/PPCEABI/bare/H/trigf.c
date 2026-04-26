@@ -1,6 +1,6 @@
 #include <PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/math.h>
 
-extern float fn_8029471C(float);
+extern float __fabsf(float);
 
 static void __sinit_trigf_c(void);
 
@@ -101,7 +101,7 @@ _cos_1:
     fmadds f0, f4, f6, f0
     fmadds f31, f5, f6, f0
     fmr f1, f31
-    bl fn_8029471C
+    bl __fabsf
     lfs f0, lbl_803E7E40(r0)
     fcmpo cr0, f1, f0
     bge _cos_2
@@ -212,7 +212,7 @@ _sin_1:
     fmadds f0, f4, f6, f0
     fmadds f31, f5, f6, f0
     fmr f1, f31
-    bl fn_8029471C
+    bl __fabsf
     lfs f0, lbl_803E7E40(r0)
     fcmpo cr0, f1, f0
     bge _sin_2

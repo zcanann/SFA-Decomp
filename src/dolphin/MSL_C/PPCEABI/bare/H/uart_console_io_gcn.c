@@ -50,7 +50,7 @@ _f465c_0:
     blr
 }
 
-asm int fn_80294684(int handle, void* buf, u32* count) {
+asm int __write_console(int handle, void* buf, u32* count) {
     nofralloc
     mflr r0
     li r3, 0
@@ -96,7 +96,7 @@ _f4684_end:
     blr
 }
 
-asm float fn_8029471C(float x) {
+asm float __fabsf(float x) {
     nofralloc
     fabs f1, f1
     blr
