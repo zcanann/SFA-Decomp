@@ -73,7 +73,7 @@ extern f32 FLOAT_803e4b78;
 /*
  * --INFO--
  *
- * Function: FUN_8018efe0
+ * Function: fxemit_init
  * EN v1.0 Address: 0x8018EFE0
  * EN v1.0 Size: 376b
  * EN v1.1 Address: 0x8018F020
@@ -83,7 +83,7 @@ extern f32 FLOAT_803e4b78;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018efe0(undefined4 param_1,undefined4 param_2,int param_3)
+void fxemit_init(undefined4 param_1,undefined4 param_2,int param_3)
 {
   short *psVar1;
   int iVar2;

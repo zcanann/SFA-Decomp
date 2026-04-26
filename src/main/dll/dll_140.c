@@ -12,7 +12,7 @@ extern undefined4 FUN_800360d4();
 extern undefined4 FUN_800360f0();
 extern int FUN_800384ec();
 extern undefined4 FUN_8003b818();
-extern undefined4 FUN_801797a4();
+extern undefined4 sidekickball_update();
 extern undefined4 FUN_80179eb0();
 extern uint countLeadingZeros();
 
@@ -158,7 +158,7 @@ void FUN_80179b34(double param_1,double param_2,double param_3,undefined8 param_
       FUN_80179eb0(param_9);
     }
     else if (bVar2 == 0) {
-      FUN_801797a4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(uint)param_9,
+      sidekickball_update(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(uint)param_9,
                    iVar8,param_11,param_12,param_13,param_14,param_15,param_16);
       goto LAB_80179e98;
     }

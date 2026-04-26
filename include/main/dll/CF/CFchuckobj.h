@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_8018efe0(undefined4 param_1,undefined4 param_2,int param_3);
+void fxemit_init(undefined4 param_1,undefined4 param_2,int param_3);
 void FUN_8018f158(undefined4 param_1);
 void FUN_8018f1b4(short *param_1);
 void FUN_8018f4fc(undefined2 *param_1,int param_2);

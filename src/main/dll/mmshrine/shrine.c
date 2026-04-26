@@ -39,7 +39,7 @@ extern f32 FLOAT_803e5be8;
 /*
  * --INFO--
  *
- * Function: FUN_801c52d8
+ * Function: mmsh_shrine_init
  * EN v1.0 Address: 0x801C52D8
  * EN v1.0 Size: 216b
  * EN v1.1 Address: 0x801C533C
@@ -49,7 +49,7 @@ extern f32 FLOAT_803e5be8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c52d8(int param_1)
+void mmsh_shrine_init(int param_1)
 {
   uint *puVar1;
   
@@ -78,7 +78,7 @@ void FUN_801c52d8(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_801c53b0
+ * Function: mmsh_scales_free
  * EN v1.0 Address: 0x801C53B0
  * EN v1.0 Size: 152b
  * EN v1.1 Address: 0x801C5418
@@ -88,7 +88,7 @@ void FUN_801c52d8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c53b0(void)
+void mmsh_scales_free(void)
 {
   int iVar1;
   char in_r8;

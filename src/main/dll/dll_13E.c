@@ -26,7 +26,7 @@ extern f32 FLOAT_803e433c;
 /*
  * --INFO--
  *
- * Function: FUN_801797a4
+ * Function: sidekickball_update
  * EN v1.0 Address: 0x801797A4
  * EN v1.0 Size: 820b
  * EN v1.1 Address: 0x80179864
@@ -36,7 +36,7 @@ extern f32 FLOAT_803e433c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801797a4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void sidekickball_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,int param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)

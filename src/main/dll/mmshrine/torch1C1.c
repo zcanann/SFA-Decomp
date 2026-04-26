@@ -35,7 +35,7 @@ extern f32 FLOAT_803e5c60;
 /*
  * --INFO--
  *
- * Function: FUN_801c5ed8
+ * Function: ecsh_shrine_func0B
  * EN v1.0 Address: 0x801C5ED8
  * EN v1.0 Size: 80b
  * EN v1.1 Address: 0x801C5EE0
@@ -45,7 +45,7 @@ extern f32 FLOAT_803e5c60;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c5ed8(int param_1,int param_2)
+void ecsh_shrine_func0B(int param_1,int param_2)
 {
   FUN_800360f0(param_1);
   *(undefined4 *)(param_1 + 0xf4) = 0;
