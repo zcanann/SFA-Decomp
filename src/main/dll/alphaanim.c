@@ -18,7 +18,7 @@ extern undefined4* DAT_803dd6d4;
 /*
  * --INFO--
  *
- * Function: FUN_8017c178
+ * Function: doorlock_init
  * EN v1.0 Address: 0x8017C178
  * EN v1.0 Size: 184b
  * EN v1.1 Address: 0x8017C250
@@ -28,7 +28,7 @@ extern undefined4* DAT_803dd6d4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8017c178(int param_1,undefined4 param_2,int param_3)
+undefined4 doorlock_init(int param_1,undefined4 param_2,int param_3)
 {
   int iVar1;
   

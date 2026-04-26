@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-undefined4 FUN_8017c178(int param_1,undefined4 param_2,int param_3);
+undefined4 doorlock_init(int param_1,undefined4 param_2,int param_3);
 void FUN_8017c230(int param_1);
 void FUN_8017c254(int param_1);
 void FUN_8017c29c(int param_1);

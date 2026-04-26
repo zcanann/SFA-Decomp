@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_80184180(ushort *param_1);
+void largecrate_init(ushort *param_1);
 void largecrate_release(void);
 void largecrate_initialise(void);
 

@@ -35,7 +35,7 @@ extern f32 FLOAT_803e4678;
 /*
  * --INFO--
  *
- * Function: FUN_80184180
+ * Function: largecrate_init
  * EN v1.0 Address: 0x80184180
  * EN v1.0 Size: 1468b
  * EN v1.1 Address: 0x801841F4
@@ -45,7 +45,7 @@ extern f32 FLOAT_803e4678;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80184180(ushort *param_1)
+void largecrate_init(ushort *param_1)
 {
   ushort uVar1;
   float fVar2;

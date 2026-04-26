@@ -40,7 +40,7 @@ extern f32 FLOAT_803e4138;
 /*
  * --INFO--
  *
- * Function: FUN_80172f14
+ * Function: collectible_init
  * EN v1.0 Address: 0x80172F14
  * EN v1.0 Size: 1104b
  * EN v1.1 Address: 0x801730D0
@@ -50,9 +50,9 @@ extern f32 FLOAT_803e4138;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80172f14(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9)
+void collectible_init(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+                      undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                      short *param_9)
 {
   float fVar1;
   uint uVar2;
