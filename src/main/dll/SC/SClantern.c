@@ -2,7 +2,7 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 
-extern undefined4 fn_8000BAE0();
+extern undefined4 Sfx_PlayAtPositionFromObject();
 extern undefined4 Sfx_PlayFromObject();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 fn_80296554();
@@ -67,7 +67,7 @@ void SHthorntail_init(void)
   if ((pointIndex != 0) &&
       (ObjPath_GetPointWorldPosition((int)obj,pointIndex - 1,&local_28,&local_24,local_20,0),
        ((obj[0x50] != 0x1b || (lbl_803E5498 <= *(float *)(obj + 0x4c)))))) {
-    fn_8000BAE0((double)local_28,(double)local_24,(double)local_20[0],obj,0x415);
+    Sfx_PlayAtPositionFromObject((double)local_28,(double)local_24,(double)local_20[0],obj,0x415);
   }
   FUN_80286888(advanceResult);
 }
