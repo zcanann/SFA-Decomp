@@ -47,6 +47,15 @@ typedef struct ObjHitReactEffectPos {
   f32 scale;
 } ObjHitReactEffectPos;
 
+typedef struct ObjHitReactState {
+  int activeHit;
+  u8 pad04[0x58 - 0x04];
+  s16 resetFrameCount;
+  u8 pad5A[0x60 - 0x5A];
+  s16 flags;
+  u8 resetFlags;
+} ObjHitReactState;
+
 /*
  * --INFO--
  *
@@ -130,10 +139,10 @@ u8 objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,flo
 #pragma scheduling reset
 
 #pragma scheduling off
-void fn_80035630(int count)
+void ObjHitReact_ResetActiveObjects(int objectCount)
 {
   int obj;
-  int hitState;
+  ObjHitReactState *hitState;
   int *objectList;
   int resetObjectCount;
   undefined local_14[4];
@@ -141,23 +150,23 @@ void fn_80035630(int count)
 
   objectList = fn_8002E0FC(local_18,local_14);
   gObjHitReactResetObjectCount = 0;
-  if (count > 0) {
-    while (count != 0) {
+  if (objectCount > 0) {
+    while (objectCount != 0) {
       obj = *objectList;
-      hitState = *(int *)(obj + 0x54);
-      if (((hitState != 0) && ((*(short *)(hitState + 0x60) & 1) != 0)) &&
-         ((*(byte *)(hitState + 0x62) & 8) != 0)) {
+      hitState = *(ObjHitReactState **)(obj + 0x54);
+      if (((hitState != (ObjHitReactState *)0x0) && ((hitState->flags & 1) != 0)) &&
+         ((hitState->resetFlags & 8) != 0)) {
         if (gObjHitReactResetObjectCount < 0x32) {
           resetObjectCount = gObjHitReactResetObjectCount;
           gObjHitReactResetObjectCount = resetObjectCount + 1;
           gObjHitReactResetObjects[resetObjectCount] = obj;
         }
-        *(int *)hitState = 0;
-        *(short *)(hitState + 0x60) = (short)(*(short *)(hitState + 0x60) & ~8);
-        *(undefined2 *)(hitState + 0x58) = 0x400;
+        hitState->activeHit = 0;
+        hitState->flags = hitState->flags & ~8;
+        hitState->resetFrameCount = 0x400;
       }
       objectList = objectList + 1;
-      count = count + -1;
+      objectCount = objectCount + -1;
     }
   }
 }

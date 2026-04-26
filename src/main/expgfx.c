@@ -1350,7 +1350,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
     if (30000 < DAT_803dded0) {
       DAT_803dded0 = 0;
     }
-    puVar18[0x13] = DAT_803dded0;
+    slot->sequenceId = DAT_803dded0;
     slot->behaviorFlags = spawnConfig->behaviorFlags;
     slot->renderFlags = spawnConfig->renderFlags;
     slot->stateBits = slot->stateBits & 0xf3;
