@@ -108,7 +108,7 @@ extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
-extern int FUN_80037d50();
+extern int Obj_IsObjectAlive();
 extern undefined8 ObjLink_DetachChild();
 extern undefined8 ObjLink_AttachChild();
 extern undefined4 ObjPath_GetPointWorldPositionArray();

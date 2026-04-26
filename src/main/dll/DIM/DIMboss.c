@@ -43,7 +43,7 @@ extern undefined4 FUN_80286880();
 extern undefined4 fn_8000FACC();
 extern undefined4 fn_80013E2C();
 extern undefined4 fn_8001F384();
-extern undefined4 fn_8002CBC4();
+extern undefined4 Obj_FreeObject();
 extern undefined4 fn_8002B9EC();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 fn_8003B8F4();
@@ -429,7 +429,7 @@ void dimboss_free(int param_1)
   ObjGroup_RemoveObject(param_1,3);
   pvVar2 = *(void **)(param_1 + 0xc8);
   if (pvVar2 != 0) {
-    fn_8002CBC4(pvVar2);
+    Obj_FreeObject(pvVar2);
     *(undefined4 *)(param_1 + 0xc8) = 0;
   }
   (*(code *)(*lbl_803DCAB8 + 0x40))(param_1,iVar1,0x20);

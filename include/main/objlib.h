@@ -68,7 +68,7 @@ uint ObjMsg_SendToObject(undefined8 param_1,undefined8 param_2,undefined8 param_
                  int param_9,uint param_10,uint param_11,uint param_12,undefined4 param_13,
                  undefined4 param_14,undefined4 param_15,undefined4 param_16);
 void ObjMsg_AllocQueue(int param_1,int param_2);
-undefined4 FUN_80037d50(int param_1);
+undefined4 Obj_IsObjectAlive(int param_1);
 bool FUN_80037d74(int param_1);
 int ObjHits_PollPriorityHitWithCooldown(int param_1,float *param_2,undefined4 *param_3,float *param_4);
 void ObjHits_PollPriorityHitEffectWithCooldown(undefined4 param_1,undefined4 param_2,uint param_3,uint param_4,uint param_5,

@@ -4,7 +4,7 @@
 extern undefined4 fn_8001CB3C(int param_1);
 extern undefined4 GameBit_Get(int eventId);
 extern undefined4 fn_800221A0(int param_1, int param_2);
-extern undefined4 fn_8002CBC4(int param_1);
+extern undefined4 Obj_FreeObject(int param_1);
 extern undefined4 ObjHits_EnableObject(FirePipeObject *obj);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
@@ -64,7 +64,7 @@ void firepipe_free(FirePipeObject *obj)
     i = 0;
     iter = (undefined4 *)extra;
     while (i < (int)(uint)extra->effectCount) {
-        fn_8002CBC4(*iter);
+        Obj_FreeObject(*iter);
         iter = iter + 1;
         i++;
     }

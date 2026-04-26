@@ -2066,7 +2066,7 @@ void ObjMsg_AllocQueue(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80037d50
+ * Function: Obj_IsObjectAlive
  * EN v1.0 Address: 0x80037D50
  * EN v1.0 Size: 36b
  * EN v1.1 Address: 0x80037AD4
@@ -2076,7 +2076,7 @@ void ObjMsg_AllocQueue(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80037d50(int param_1)
+undefined4 Obj_IsObjectAlive(int param_1)
 {
   undefined4 uVar1;
   

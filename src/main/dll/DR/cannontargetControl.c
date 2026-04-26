@@ -21,7 +21,7 @@ extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
-extern int FUN_80037d50();
+extern int Obj_IsObjectAlive();
 extern undefined4 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
 extern undefined4 FUN_8003b818();
@@ -246,7 +246,7 @@ void FUN_801a1df8(int param_1,int param_2)
   iVar2 = *(int *)(param_1 + 0xb8);
   (**(code **)(*DAT_803dd740 + 0x10))();
   if (((*(int *)(iVar2 + 0x10) != 0) && (param_2 == 0)) &&
-     (iVar1 = FUN_80037d50(*(int *)(iVar2 + 0x10)), iVar1 != 0)) {
+     (iVar1 = Obj_IsObjectAlive(*(int *)(iVar2 + 0x10)), iVar1 != 0)) {
     ObjLink_DetachChild(param_1,*(int *)(iVar2 + 0x10));
     *(undefined4 *)(iVar2 + 0x10) = 0;
   }
@@ -406,7 +406,7 @@ void FUN_801a1fb8(int *param_1)
   char local_17;
   
   iVar6 = param_1[0x2e];
-  iVar4 = FUN_80037d50(*(int *)(iVar6 + 0x10));
+  iVar4 = Obj_IsObjectAlive(*(int *)(iVar6 + 0x10));
   if ((iVar4 == 0) && (*(int *)(iVar6 + 0x10) != 0)) {
     ObjLink_DetachChild((int)param_1,*(int *)(iVar6 + 0x10));
     *(undefined4 *)(iVar6 + 0x10) = 0;
@@ -545,7 +545,7 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
         }
       }
       else {
-        iVar5 = FUN_80037d50(*(int *)(iVar12 + 0x10));
+        iVar5 = Obj_IsObjectAlive(*(int *)(iVar12 + 0x10));
         if ((iVar5 == 0) && (*(int *)(iVar12 + 0x10) != 0)) {
           ObjLink_DetachChild(uVar2,*(int *)(iVar12 + 0x10));
           *(undefined4 *)(iVar12 + 0x10) = 0;

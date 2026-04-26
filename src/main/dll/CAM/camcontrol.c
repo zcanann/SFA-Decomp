@@ -11,7 +11,7 @@ extern uint FUN_80006c00();
 extern undefined4 FUN_80017640();
 extern undefined4 FUN_80017814();
 extern int FUN_80017830();
-extern int FUN_80037d50();
+extern int Obj_IsObjectAlive();
 extern undefined8 FUN_800723a0();
 extern undefined4 FUN_80081100();
 extern undefined4 FUN_800e8794();
@@ -186,7 +186,7 @@ void camcontrol_updateTargetFeedback(void)
       ObjAnim_SetMoveProgress((double)FLOAT_803e22b0,(int)psVar6);
     }
   }
-  iVar11 = FUN_80037d50(*(int *)(gCamcontrolState + 0x128));
+  iVar11 = Obj_IsObjectAlive(*(int *)(gCamcontrolState + 0x128));
   if (iVar11 == 0) {
     *(undefined4 *)(gCamcontrolState + 0x128) = 0;
   }
