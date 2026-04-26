@@ -6,7 +6,7 @@
 extern GXData* gx;
 #define __GXData gx
 
-extern const f32 GX_F32_256;
+extern const f32 lbl_803E7678;
 
 static inline u32 __GXGetNumXfbLines(u32 efbHt, u32 iScale) {
     u32 count;
@@ -149,7 +149,7 @@ u32 GXSetDispCopyYScale(f32 vscale) {
 
     ASSERTMSGLINE(1559, vscale >= 1.0f, "GXSetDispCopyYScale: Vertical scale must be >= 1.0");
 
-    iScale = (u32)(GX_F32_256 / vscale) & 0x1FF;
+    iScale = (u32)(lbl_803E7678 / vscale) & 0x1FF;
     reg = 0;
     SET_REG_FIELD(1566, reg, 9, 0, iScale);
     SET_REG_FIELD(1566, reg, 8, 24, 0x4E);
