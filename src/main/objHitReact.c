@@ -63,11 +63,11 @@ int objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,fl
   ObjHitReactEffectHandle *effectHandle;
   bool volumeActive;
   ObjHitReactEntry *reactEntry;
-  float hitNormalY;
-  undefined local_24[4];
-  float local_28;
-  ObjHitReactEffectPos effectPos;
   undefined4 effectOrigin[4];
+  ObjHitReactEffectPos effectPos;
+  float local_28;
+  undefined local_24[4];
+  float hitNormalY;
   int sphereIndex;
 
   objAnim = (ObjAnimComponent *)obj;
