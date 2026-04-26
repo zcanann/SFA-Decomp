@@ -25,7 +25,7 @@ extern undefined4 FUN_801d4814();
 
 extern undefined4 DAT_80327a58;
 extern u32 lbl_80326E98[][4];
-extern char lbl_80327470[];
+extern char sSHthorntailAngleYawDebug[];
 extern undefined4 DAT_80327a64;
 extern undefined4 DAT_803dcc30;
 extern undefined4 DAT_803dcc34;
@@ -229,7 +229,7 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
         if (0x20 < iVar2) {
           iVar2 = fn_800217C0(*(float *)(obj + 6) - config->homePos.x,
                               *(float *)(obj + 10) - config->homePos.z);
-          OSReport(lbl_80327470,(u16)iVar2,facingAngle);
+          OSReport(sSHthorntailAngleYawDebug,(u16)iVar2,facingAngle);
           behaviorState = runtime->behaviorState;
           if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
               (behaviorState <= SHTHORNTAIL_STATE_MOVE_5)) {
