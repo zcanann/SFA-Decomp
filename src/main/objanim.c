@@ -16,23 +16,6 @@ extern f32 FLOAT_803df574;
 extern f32 FLOAT_803df578;
 extern f32 FLOAT_803df588;
 
-static inline s32 ObjAnim_ResolveMoveIndex(ObjAnimDef *animDef, u32 moveId) {
-  s32 moveIndex = animDef->moveBaseTable[(s32)moveId >> 8] + (moveId & 0xFF);
-
-  if (moveIndex >= animDef->moveCount) {
-    moveIndex = animDef->moveCount - 1;
-  }
-  if (moveIndex < 0) {
-    moveIndex = 0;
-  }
-  return moveIndex;
-}
-
-static inline f64 ObjAnim_U32AsDouble(u32 value) {
-  u64 bits = CONCAT44(0x43300000, value);
-  return *(f64 *)&bits;
-}
-
 /*
  * --INFO--
  *
