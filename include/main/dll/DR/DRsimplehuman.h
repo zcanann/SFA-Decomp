@@ -11,5 +11,6 @@ void FUN_801e983c(undefined8 param_1,double param_2,double param_3,double param_
                  ,undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9,
                  undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13,
                  undefined4 param_14,undefined4 param_15,undefined4 param_16);
+void spitembeam_init(int obj);
 
 #endif /* MAIN_DLL_DR_DRSIMPLEHUMAN_H_ */

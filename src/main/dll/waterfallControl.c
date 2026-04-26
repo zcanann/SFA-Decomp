@@ -286,3 +286,42 @@ int tumbleweed_getExtraSize(void)
 {
   return 0x2a4;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: tumbleweed_func0E
+ * EN v1.0 Address: 0x80163F98
+ * EN v1.0 Size: 24b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int tumbleweed_func0E(int obj)
+{
+  return *(byte *)(*(int *)(obj + 0xb8) + 0x278) == 6;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: tumbleweed_func0B
+ * EN v1.0 Address: 0x80164060
+ * EN v1.0 Size: 16b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void tumbleweed_func0B(int obj,float x,float y)
+{
+  int extra = *(int *)(obj + 0xb8);
+
+  *(float *)(extra + 0x288) = x;
+  *(float *)(extra + 0x28c) = y;
+}

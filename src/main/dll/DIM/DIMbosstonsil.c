@@ -149,3 +149,23 @@ void DIMboss_update(undefined8 param_1,double param_2,double param_3,undefined8 
   }
   return;
 }
+
+extern void fn_801BDAF4(void);
+
+/*
+ * --INFO--
+ *
+ * Function: dimboss_initialise
+ * EN v1.0 Address: 0x801BDAD4
+ * EN v1.0 Size: 32b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dimboss_initialise(void)
+{
+  fn_801BDAF4();
+}

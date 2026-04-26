@@ -241,3 +241,24 @@ void FUN_801ce008(int param_1)
   }
   return;
 }
+
+extern void fn_801CDC78(void);
+
+/*
+ * --INFO--
+ *
+ * Function: nw_geyser_init
+ * EN v1.0 Address: 0x801CDE50
+ * EN v1.0 Size: 32b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void nw_geyser_init(int obj)
+{
+  *(ushort *)(obj + 0xb0) = (ushort)(*(ushort *)(obj + 0xb0) | 0x6000);
+  *(void **)(obj + 0xbc) = fn_801CDC78;
+}

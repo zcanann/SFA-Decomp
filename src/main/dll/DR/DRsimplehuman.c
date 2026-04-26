@@ -246,3 +246,21 @@ void FUN_801e983c(undefined8 param_1,double param_2,double param_3,double param_
                  undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
 }
+
+/*
+ * --INFO--
+ *
+ * Function: spitembeam_init
+ * EN v1.0 Address: 0x801E9900
+ * EN v1.0 Size: 20b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void spitembeam_init(int obj)
+{
+  *(ushort *)(obj + 0xb0) = (ushort)(*(ushort *)(obj + 0xb0) | 0x6000);
+}

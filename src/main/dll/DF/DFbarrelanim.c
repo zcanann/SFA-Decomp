@@ -164,6 +164,27 @@ void dfropenode_func12(int obj, float value)
 /*
  * --INFO--
  *
+ * Function: dfropenode_func13
+ * EN v1.0 Address: 0x801C1688
+ * EN v1.0 Size: 16b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfropenode_func13(int obj)
+{
+  int value = 0;
+  int extra = *(int *)(obj + 0xb8);
+
+  *(int *)extra = value;
+}
+
+/*
+ * --INFO--
+ *
  * Function: dfropenode_func0F
  * EN v1.0 Address: 0x801C167C
  * EN v1.0 Size: 12b

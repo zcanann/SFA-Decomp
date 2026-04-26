@@ -12,5 +12,6 @@ void FUN_80174024(int param_1);
 void FUN_8017437c(int param_1,int param_2);
 undefined4 FUN_801743f0(uint param_1,int param_2);
 void FUN_80174524(int param_1,int param_2);
+void effectbox_free(void);
 
 #endif /* MAIN_DLL_DLL_141_H_ */

@@ -568,3 +568,42 @@ undefined4 FUN_80175468(short *param_1,short *param_2,int param_3)
   }
   return 0;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: pushable_render2
+ * EN v1.0 Address: 0x80175520
+ * EN v1.0 Size: 16b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int pushable_render2(int obj)
+{
+  return *(ushort *)(*(int *)(obj + 0xb8) + 0x100) & 1;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: pushable_modelMtxFn
+ * EN v1.0 Address: 0x80175530
+ * EN v1.0 Size: 28b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void pushable_modelMtxFn(int obj,int modelNo)
+{
+  int extra = *(int *)(obj + 0xb8);
+  uint flags = *(uint *)(extra + 0xa8);
+
+  *(uint *)(extra + 0xa8) = flags | (1 << modelNo);
+}

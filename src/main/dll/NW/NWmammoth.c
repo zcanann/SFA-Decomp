@@ -276,6 +276,24 @@ int enemymushroom_getExtraSize(void)
 /*
  * --INFO--
  *
+ * Function: enemymushroom_func08
+ * EN v1.0 Address: 0x801D1D60
+ * EN v1.0 Size: 20b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int enemymushroom_func08(int obj)
+{
+  return (*(byte *)(*(int *)(obj + 0x4c) + 0x1f) << 0xb) | 0x400;
+}
+
+/*
+ * --INFO--
+ *
  * Function: enemymushroom_hitDetect
  * EN v1.0 Address: 0x801D1E20
  * EN v1.0 Size: 4b

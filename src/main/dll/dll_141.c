@@ -746,3 +746,23 @@ void FUN_80174524(int param_1,int param_2)
   }
   return;
 }
+
+extern void fn_8002B758(void);
+
+/*
+ * --INFO--
+ *
+ * Function: effectbox_free
+ * EN v1.0 Address: 0x80173F90
+ * EN v1.0 Size: 32b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void effectbox_free(void)
+{
+  fn_8002B758();
+}

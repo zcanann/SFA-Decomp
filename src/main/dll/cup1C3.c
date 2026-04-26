@@ -375,6 +375,26 @@ int dbsh_symbol_getExtraSize(void)
   return 0x24;
 }
 
+extern void fn_8001467C(void);
+
+/*
+ * --INFO--
+ *
+ * Function: dbsh_symbol_free
+ * EN v1.0 Address: 0x801C9C3C
+ * EN v1.0 Size: 32b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dbsh_symbol_free(void)
+{
+  fn_8001467C();
+}
+
 /*
  * --INFO--
  *
