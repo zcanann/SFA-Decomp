@@ -956,7 +956,7 @@ void fn_8009E034(int sourceId,int sourceMode)
                            (double)(poolBounds->minZ - lbl_803DCDDC),
                            (double)(poolBounds->maxZ - lbl_803DCDDC),boundsTemplate);
       if ((uVar1 & 0xff) != 0) {
-        fn_8009E13C(*slotPoolBases,poolIndex);
+        expgfx_renderPool(*slotPoolBases,poolIndex);
       }
     }
     poolActiveCounts = poolActiveCounts + 1;
@@ -974,7 +974,7 @@ void fn_8009E034(int sourceId,int sourceMode)
 /*
  * --INFO--
  *
- * Function: fn_8009E13C
+ * Function: expgfx_renderPool
  * EN v1.0 Address: 0x8009E13C
  * EN v1.0 Size: 2984b
  * EN v1.1 Address: 0x8009E3C8
@@ -984,7 +984,7 @@ void fn_8009E034(int sourceId,int sourceMode)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8009E13C(uint slotPoolBase,int poolIndex)
+void expgfx_renderPool(uint slotPoolBase,int poolIndex)
 {
 }
 

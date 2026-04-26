@@ -16,7 +16,7 @@ void fn_8009E024(void);
 void fn_8009E028(void);
 int fn_8009E02C(void);
 void fn_8009E034();
-void fn_8009E13C();
+void expgfx_renderPool(uint slotPoolBase,int poolIndex);
 void fn_8009ECE4(void);
 void fn_8009EEB8(void);
 void expgfx_releaseSourceSlots();

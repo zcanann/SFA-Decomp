@@ -2642,7 +2642,7 @@ void lightmap_flushQueuedRenderPackets(void)
       FUN_8005d85c(*piVar6,piVar6[1],afStack_70);
       break;
     case 7:
-      fn_8009E13C();
+      expgfx_renderPool(*piVar6,piVar6[1]);
       break;
     case 8:
       FUN_8006f09c();
