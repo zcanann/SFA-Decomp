@@ -44,7 +44,7 @@ extern undefined4 FUN_80286880();
 extern undefined4 fn_8000FACC();
 extern undefined4 fn_80013E2C();
 extern undefined4 fn_8001F384();
-extern undefined4 fn_800200E8();
+extern undefined4 GameBit_Set();
 extern undefined4 fn_8002CBC4();
 extern undefined4 fn_80036FA4();
 extern undefined4 fn_8003B8F4();
@@ -420,12 +420,12 @@ void dimboss_free(int param_1)
   void *pvVar2;
 
   iVar1 = *(int *)(param_1 + 0xb8);
-  fn_800200E8(0xefd,0);
-  fn_800200E8(0xc1e,1);
-  fn_800200E8(0xc1f,0);
-  fn_800200E8(0xc20,0);
-  fn_800200E8(0xd8f,0);
-  fn_800200E8(0x3e2,0);
+  GameBit_Set(0xefd,0);
+  GameBit_Set(0xc1e,1);
+  GameBit_Set(0xc1f,0);
+  GameBit_Set(0xc20,0);
+  GameBit_Set(0xd8f,0);
+  GameBit_Set(0x3e2,0);
   *(byte *)(param_1 + 0xaf) = (byte)((uint)*(byte *)(param_1 + 0xaf) & 0xffffff7f);
   fn_8000FACC();
   fn_80036FA4(param_1,3);

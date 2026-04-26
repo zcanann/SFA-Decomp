@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 
 extern int fn_8000B4D0(u8 *obj,int param_2,int param_3);
-extern int fn_8001FFB4(int eventId);
+extern int GameBit_Get(int eventId);
 extern u32 fn_800221A0(int min,int max);
 extern void fn_80023800(u32 handle);
 extern u8 *fn_8002B9EC(void);
@@ -73,7 +73,7 @@ void dfplightni_render(u8 *obj)
   if (obj != 0) {
     state = dfplightni_getState(obj);
     if (state->timer >= lbl_803E64E0) {
-      eventActive = fn_8001FFB4(0x5e5);
+      eventActive = GameBit_Get(0x5e5);
       if (state->effectHandle != 0) {
         fn_8008F904(state->effectHandle);
       }
@@ -111,7 +111,7 @@ void dfplightni_update(u8 *obj)
     playerObj = fn_8002B9EC();
     if (playerObj != 0) {
       state->timer += lbl_803DB414;
-      eventActive = fn_8001FFB4(state->eventId);
+      eventActive = GameBit_Get(state->eventId);
       if ((eventActive != 0) && (state->timer < lbl_803E64E0)) {
         state->timer = lbl_803E64F8;
       }
@@ -145,7 +145,7 @@ void dfplightni_update(u8 *obj)
         }
         radiusX = (double)state->radiusX;
         radiusY = (double)state->radiusY;
-        eventBlocked = fn_8001FFB4(0xe57);
+        eventBlocked = GameBit_Get(0xe57);
         if (eventBlocked == 0) {
           fn_8000B4D0(obj,0x4c3,2);
           if (eventActive == 0) {

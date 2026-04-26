@@ -5,7 +5,7 @@ extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern void fn_8001467C(void);
-extern int fn_8001FFB4(int eventId);
+extern int GameBit_Get(int eventId);
 extern void TrickyCurve_activateEffectHandleRing(void);
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
@@ -143,7 +143,7 @@ void sfxplayer_init(int obj,int config)
   gSfxplayerEffectHandles[6] = 0;
   gSfxplayerEffectHandles[7] = 0;
   fn_8001467C();
-  if (fn_8001FFB4(*(s16 *)state) != 0) {
+  if (GameBit_Get(*(s16 *)state) != 0) {
     *(u8 *)(state + 8) = *(u8 *)(state + 8) | 0x20;
   }
   *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x6000;

@@ -2,8 +2,8 @@
 
 extern void fn_80008B74(void *obj,void *target,int animId,int flags);
 extern void fn_8000A380(int param_1,int param_2,int param_3);
-extern int fn_8001FFB4(int eventId);
-extern void fn_800200E8(int eventId,int value);
+extern int GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId,int value);
 extern void fn_8003B8F4(double scale);
 extern void fn_8004350C(int param_1,int param_2,int param_3);
 extern void fn_8008016C(void *timer);
@@ -67,11 +67,11 @@ void crcloudrace_update(CrCloudRaceObject *obj)
 
   state = obj->state;
   if (obj->unkF8 == 0) {
-    eventActive = fn_8001FFB4(0xdcb);
+    eventActive = GameBit_Get(0xdcb);
     if (eventActive != 0) {
       fn_80008B74(obj,obj,0x174,0);
       fn_80008B74(obj,obj,0x1e1,0);
-      fn_800200E8(0xdcb,0);
+      GameBit_Set(0xdcb,0);
       fn_8004350C(0,0,1);
     }
     obj->unkF4 = 1;
@@ -92,7 +92,7 @@ void crcloudrace_init(CrCloudRaceObject *obj)
   obj->callback = fn_80210980;
   state->phase = 2;
   fn_8008016C(state->timer);
-  fn_800200E8(0xe24,1);
+  GameBit_Set(0xe24,1);
   fn_8000A380(3,2,1000);
   return;
 }

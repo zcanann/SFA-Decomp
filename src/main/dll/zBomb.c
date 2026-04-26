@@ -2,8 +2,8 @@
 #include "main/dll/zBomb.h"
 
 extern undefined4 FUN_8000a380();
-extern int fn_8001FFB4(int eventId);
-extern void fn_800200E8(int eventId,int value);
+extern int GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId,int value);
 extern void FUN_80026e00(int param_1,int param_2,float *param_3);
 extern undefined4 FUN_80097734();
 
@@ -75,11 +75,11 @@ void dfptargetblock_update(int param_1)
   }
   else {
     if (state->completionSfxReady == '\0') {
-      uVar3 = fn_8001FFB4((int)state->completionSfxId);
+      uVar3 = GameBit_Get((int)state->completionSfxId);
       state->completionSfxReady = uVar3;
     }
     if (state->stateSfxReady == '\0') {
-      uVar3 = fn_8001FFB4((int)state->stateSfxId);
+      uVar3 = GameBit_Get((int)state->stateSfxId);
       state->stateSfxReady = uVar3;
     }
     fVar2 = FLOAT_803e64ac;
@@ -101,7 +101,7 @@ void dfptargetblock_update(int param_1)
           if (*(float *)(param_1 + 0x10) <= fVar2) {
             *(float *)(param_1 + 0x10) = fVar2;
             state->mode = DFPTARGETBLOCK_MODE_SETTLED;
-            fn_800200E8((int)state->completionSfxId,1);
+            GameBit_Set((int)state->completionSfxId,1);
           }
         }
       }
@@ -177,9 +177,9 @@ void dfptargetblock_init(int param_1,int param_2)
     *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) - FLOAT_803e64ac;
     state->completionSfxId = *(short *)(param_2 + 0x1e);
     state->stateSfxId = *(short *)(param_2 + 0x20);
-    uVar5 = fn_8001FFB4((int)state->completionSfxId);
+    uVar5 = GameBit_Get((int)state->completionSfxId);
     state->completionSfxReady = uVar5;
-    uVar5 = fn_8001FFB4((int)state->stateSfxId);
+    uVar5 = GameBit_Get((int)state->stateSfxId);
     state->stateSfxReady = uVar5;
     if (state->completionSfxReady != '\0') {
       *(float *)(param_1 + 0xc) = *(float *)(param_1 + 0xc) + FLOAT_803e64d0;

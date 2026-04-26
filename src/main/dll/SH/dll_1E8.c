@@ -3,7 +3,7 @@
 #include "main/dll/SH/dll_1E8.h"
 
 extern void fn_8000BB18(SHthorntailObject *obj,u16 volumeId);
-extern int fn_8001FFB4(int eventId);
+extern int GameBit_Get(int eventId);
 extern u32 fn_8002208C(f32 *state,f32 min,f32 max);
 extern int fn_800221A0(int min,int max);
 extern void OSPanic(const char *file,int line,const char *msg,...);
@@ -168,13 +168,13 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntim
     runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion1ImpactSfxTable;
     break;
   case SHTHORNTAIL_LOCOMOTION_2:
-    eventIsSet = fn_8001FFB4(0xc2);
+    eventIsSet = GameBit_Get(0xc2);
     if (eventIsSet != 6) {
       runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion2ImpactSfxTable;
     }
     break;
   case SHTHORNTAIL_LOCOMOTION_3:
-    eventIsSet = fn_8001FFB4(0x193);
+    eventIsSet = GameBit_Get(0x193);
     if (eventIsSet == 0) {
       runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion3ImpactSfxTable;
     }
@@ -183,11 +183,11 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntim
     runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion4ImpactSfxTable;
     break;
   case SHTHORNTAIL_LOCOMOTION_5:
-    eventIsSet = fn_8001FFB4(0x23c);
+    eventIsSet = GameBit_Get(0x23c);
     if (eventIsSet == 0) {
-      eventIsSet = fn_8001FFB4(0x5bd);
+      eventIsSet = GameBit_Get(0x5bd);
       if (eventIsSet == 0) {
-        eventIsSet = fn_8001FFB4(0x23d);
+        eventIsSet = GameBit_Get(0x23d);
         if (eventIsSet == 0) {
           runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5IdleImpactSfxTable;
           runtime->behaviorState = SHTHORNTAIL_STATE_ROOT_MODE3_WAIT;
@@ -207,13 +207,13 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntim
     }
     break;
   case SHTHORNTAIL_LOCOMOTION_6:
-    eventIsSet = fn_8001FFB4(0x13f);
+    eventIsSet = GameBit_Get(0x13f);
     if (eventIsSet == 0) {
       runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion6ImpactSfxTable;
     }
     break;
   case SHTHORNTAIL_LOCOMOTION_7:
-    eventIsSet = fn_8001FFB4(0x199);
+    eventIsSet = GameBit_Get(0x199);
     if (eventIsSet == 0) {
       runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion7ImpactSfxTable;
     }

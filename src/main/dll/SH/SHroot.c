@@ -4,8 +4,8 @@
 
 extern void fn_8000BB18(SHthorntailObject *obj,u16 volumeId);
 extern void fn_8000B7BC(int obj,u16 volumeId);
-extern int fn_8001FFB4(int eventId);
-extern void fn_800200E8(int eventId,int value);
+extern int GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId,int value);
 extern f32 fn_8002166C(int posA,int posB);
 extern u32 fn_800221A0(int min,int max);
 extern int fn_8002B9EC();
@@ -48,21 +48,21 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
   playerObj = fn_8002B9EC();
   closeToPlayer = (double)fn_8002166C(objectId + 0x18,playerObj + 0x18) < (double)lbl_803E5424;
   if (config->impactSfxVariant == 0) {
-    playerObj = fn_8001FFB4(0x13e);
+    playerObj = GameBit_Get(0x13e);
     if (playerObj == 0) {
       playerObj = fn_80038024(objectId);
       if (playerObj != 0) {
         runtime->behaviorFlags = runtime->behaviorFlags | 4;
-        fn_800200E8(0xcd5,1);
+        GameBit_Set(0xcd5,1);
       }
     }
     else {
-      playerObj = fn_8001FFB4(0x168);
+      playerObj = GameBit_Get(0x168);
       if (playerObj == 0) {
         playerObj = fn_80038024(objectId);
         if (playerObj != 0) {
           runtime->behaviorFlags = runtime->behaviorFlags | 4;
-          fn_800200E8(0xcd6,1);
+          GameBit_Set(0xcd6,1);
         }
       }
       else {
@@ -73,7 +73,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
     }
   }
   else {
-    playerObj = fn_8001FFB4(0x1ab);
+    playerObj = GameBit_Get(0x1ab);
     if (playerObj != 0) {
       closeToPlayer = FALSE;
     }
@@ -151,7 +151,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
         gSHthorntailLevelControlMode0DefaultImpactSfxTable + 0x10 + config->impactSfxVariant * 2;
     break;
   case SHTHORNTAIL_LOCOMOTION_2:
-    eventIsSet = fn_8001FFB4(0x9e);
+    eventIsSet = GameBit_Get(0x9e);
     if (eventIsSet == 0) {
       runtime->impactSfxTable =
           gSHthorntailLevelControlMode0DefaultImpactSfxTable + 0x1c +
@@ -164,7 +164,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
     }
     break;
   case SHTHORNTAIL_LOCOMOTION_3:
-    eventIsSet = fn_8001FFB4(0x193);
+    eventIsSet = GameBit_Get(0x193);
     if (eventIsSet == 0) {
       runtime->impactSfxTable =
           gSHthorntailLevelControlMode0DefaultImpactSfxTable + 0x34 +
@@ -177,7 +177,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
     }
     break;
   case SHTHORNTAIL_LOCOMOTION_5:
-    eventIsSet = fn_8001FFB4(0x23d);
+    eventIsSet = GameBit_Get(0x23d);
     if (eventIsSet == 0) {
       runtime->impactSfxTable =
           gSHthorntailLevelControlMode0DefaultImpactSfxTable + 0x4c +
@@ -196,7 +196,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
       randomTime = fn_800221A0(1000,2000);
       runtime->idleTimer = (float)randomTime;
     }
-    eventIsSet = fn_8001FFB4(0x13f);
+    eventIsSet = GameBit_Get(0x13f);
     if (eventIsSet == 0) {
       runtime->impactSfxTable = &gSHthorntailLevelControlMode0Locomotion6ImpactSfxTable;
     }

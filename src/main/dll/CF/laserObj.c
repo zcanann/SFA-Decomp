@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/CF/laser.h"
 
-extern int fn_8001FFB4(int eventId);
-extern void fn_800200E8(int eventId,int value);
+extern int GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId,int value);
 extern void fn_80041018(int obj);
 
 extern undefined4* lbl_803DCA68;
@@ -39,7 +39,7 @@ void laserObj_update(int param_1)
 
   obj = (LaserObject *)param_1;
   if ((obj->state->sequenceLatched == '\0') &&
-     (uVar1 = fn_8001FFB4((int)obj->state->secondarySequenceId), uVar1 != 0)) {
+     (uVar1 = GameBit_Get((int)obj->state->secondarySequenceId), uVar1 != 0)) {
     obj->statusFlags = (u8)(obj->statusFlags & ~LASER_OBJECT_STATUS_08);
   }
   else {
@@ -52,8 +52,8 @@ void laserObj_update(int param_1)
       if ((mode < 2) && (mode >= 1)) {
         state = obj->state;
         if ((*(code *)(*lbl_803DCA68 + 0x20))(0x2e8) != 0) {
-          fn_800200E8((int)state->primarySequenceId,1);
-          fn_800200E8((int)state->secondarySequenceId,0);
+          GameBit_Set((int)state->primarySequenceId,1);
+          GameBit_Set((int)state->secondarySequenceId,0);
           state->sequenceLatched = 1;
           obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_08);
         }
@@ -62,8 +62,8 @@ void laserObj_update(int param_1)
     else {
       state = obj->state;
       if ((*(code *)(*lbl_803DCA68 + 0x20))(0x83c) != 0) {
-        fn_800200E8((int)state->primarySequenceId,1);
-        fn_800200E8((int)state->secondarySequenceId,0);
+        GameBit_Set((int)state->primarySequenceId,1);
+        GameBit_Set((int)state->secondarySequenceId,0);
         state->sequenceLatched = 1;
         obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_08);
         (*(code *)(*lbl_803DCAAC + 0x44))(7,8);
@@ -84,7 +84,7 @@ void laserObj_init(LaserObject *obj,int param_2)
   state->secondarySequenceId = *(short *)(param_2 + 0x20);
   state->sequenceLatched = 0;
   obj->modeWord = (s16)(*(s8 *)(param_2 + 0x18) << 8);
-  uVar1 = fn_8001FFB4((int)state->primarySequenceId);
+  uVar1 = GameBit_Get((int)state->primarySequenceId);
   if (uVar1 != 0) {
     state->sequenceLatched = 1;
     obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_08);

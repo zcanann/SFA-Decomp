@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 
-extern int fn_8001FFB4(int eventId);
+extern int GameBit_Get(int eventId);
 extern void fn_80035DF4(u8 *obj,int param_2,int param_3,int param_4);
 
 extern undefined4 *lbl_803DCA54;
@@ -46,7 +46,7 @@ void dfppowersl_render(u8 *obj)
   powerSl = obj;
   if ((u32)powerSl != 0) {
     state = dfppowersl_getState(powerSl);
-    if (fn_8001FFB4(state->eventId) == 0) {
+    if (GameBit_Get(state->eventId) == 0) {
       ((DfpPowerSlSpawnFn)(*(u32 *)(*lbl_803DCA88 + 8)))(powerSl,state->spawnObjectId,0,4,
                                                          0xffffffff,0);
       ((DfpPowerSlSpawnFn)(*(u32 *)(*lbl_803DCA88 + 8)))(powerSl,state->spawnObjectId,0,1,

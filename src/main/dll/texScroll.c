@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/texScroll.h"
 
-extern void fn_800200E8(int eventId,int value);
+extern void GameBit_Set(int eventId,int value);
 extern void fn_80036FA4(int obj,int param_2);
 
 /*
@@ -51,7 +51,7 @@ undefined4 fn_8017AC2C(int obj,undefined4 param_2,int stateParam)
     *(f32 *)(obj + 0x14) = *(f32 *)(config + 8);
     *(f32 *)(obj + 0x10) = *(f32 *)(runtime + 0x7c);
     *(f32 *)(obj + 0x14) = *(f32 *)(config + 0x10);
-    fn_800200E8(*(s16 *)(config + 0x1a),0);
+    GameBit_Set(*(s16 *)(config + 0x1a),0);
     *(u8 *)(stateParam + 0x80) = 0;
   }
   objType = *(s16 *)(obj + 0x46);

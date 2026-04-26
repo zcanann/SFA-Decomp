@@ -2,8 +2,8 @@
 
 extern void *fn_8002B9EC(void);
 extern void fn_8000BB18(void *obj,u16 volumeId);
-extern int fn_8001FFB4(int eventId);
-extern void fn_800200E8(int eventId,int value);
+extern int GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId,int value);
 extern void fn_80035DF4(void *obj,int animObjId,int frame,int flags);
 extern void fn_80035F00(void *obj);
 extern void fn_80035F20(void *obj);
@@ -98,7 +98,7 @@ void crfueltank_hitDetect(CrFuelTankObject *obj)
       obj->fadeTimer = 0xfa;
       obj->triggered = 1;
       if (def->hitEvent != -1) {
-        fn_800200E8(def->hitEvent,1);
+        GameBit_Set(def->hitEvent,1);
       }
       obj->posX = hitObj->posX;
       obj->posY = lbl_803E6760 + hitObj->posY;
@@ -142,7 +142,7 @@ void crfueltank_init(CrFuelTankObject *obj,CrFuelTankDef *def)
   fn_80035F20(obj);
   fn_80035DF4(obj,0x1d,crfueltank_animFrame(def),0);
   fn_8008016C(state->timer);
-  if ((def->hitEvent != -1) && (fn_8001FFB4(def->hitEvent) != 0)) {
+  if ((def->hitEvent != -1) && (GameBit_Get(def->hitEvent) != 0)) {
     fn_80080178(state->timer,0x708);
     fn_80035F00(obj);
     obj->flags = (s16)(obj->flags | 0x4000);

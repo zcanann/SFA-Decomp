@@ -3,8 +3,8 @@
 #include "main/dll/SH/SHthorntail.h"
 
 extern int fn_8000BB18();
-extern int fn_8001FFB4();
-extern undefined4 fn_800200E8();
+extern int GameBit_Get();
+extern undefined4 GameBit_Set();
 extern int fn_800221A0(int min,int max);
 extern int fn_80038024();
 extern int fn_801D4CD0(SHthorntailObject *obj);
@@ -64,8 +64,8 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
     break;
   case SHTHORNTAIL_LOCOMOTION_7:
     if (runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE2_EVENT) {
-      fn_8001FFB4(0x1a0);
-      eventIsSet = fn_8001FFB4();
+      GameBit_Get(0x1a0);
+      eventIsSet = GameBit_Get();
       if (eventIsSet == 0) {
         return;
       }
@@ -75,12 +75,12 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
       runtime->idleTimer = (float)randomTime;
     }
     else {
-      eventIsSet = fn_8001FFB4(0x1a0);
+      eventIsSet = GameBit_Get(0x1a0);
       if ((eventIsSet == 0) && (eventIsSet = fn_80038024((int)obj), eventIsSet != 0)) {
         runtime->behaviorFlags = runtime->behaviorFlags | 4;
         runtime->behaviorState = SHTHORNTAIL_STATE_ROOT_MODE2_EVENT;
         (**(code **)(*lbl_803DCAAC + 0x50))((int)obj->animObjId,3,1);
-        fn_800200E8(0x199,1);
+        GameBit_Set(0x199,1);
         return;
       }
     }

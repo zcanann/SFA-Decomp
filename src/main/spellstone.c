@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 
 extern f32 fn_80021704(void *posA,void *posB);
-extern void fn_800200E8(int eventId,int value);
-extern int fn_8001FFB4(int eventId);
+extern void GameBit_Set(int eventId,int value);
+extern int GameBit_Get(int eventId);
 extern void *fn_8002B9EC(void);
 extern void fn_8002CE88(void *obj);
 extern void fn_80035F00(void *obj);
@@ -111,15 +111,15 @@ void spellstone_update(SpellStoneObject *obj)
     obj->rotX += 0x100;
     obj->rotZ = 0;
   }
-  eventActive = fn_8001FFB4(def->completeEvent);
+  eventActive = GameBit_Get(def->completeEvent);
   if (eventActive != 0) {
-    fn_800200E8(*(&lbl_803DC228 + def->eventIndex),1);
+    GameBit_Set(*(&lbl_803DC228 + def->eventIndex),1);
     obj->flags |= 0x4000;
     fn_8002CE88(obj);
     (*(code *)(*lbl_803DCAAC + 0x44))(0x1d,2);
   }
   else {
-    eventActive = fn_8001FFB4(def->activeEvent);
+    eventActive = GameBit_Get(def->activeEvent);
     if (eventActive != 0) {
       obj->flags |= 0x4000;
       fn_8002CE88(obj);
@@ -127,7 +127,7 @@ void spellstone_update(SpellStoneObject *obj)
     if (state->state == 2) {
       playerObj = fn_8002B9EC();
       if (fn_80021704(&obj->unk18,(u8 *)playerObj + 0x18) < lbl_803E6758) {
-        fn_800200E8(def->completeEvent,1);
+        GameBit_Set(def->completeEvent,1);
       }
     }
     if (state->state == 0) {

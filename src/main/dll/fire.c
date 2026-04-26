@@ -14,8 +14,8 @@ extern undefined4 fn_80043560(undefined4 param_1,int param_2);
 extern undefined4 fn_800437BC(undefined4 param_1,uint param_2);
 extern undefined4 fn_800481B0(int param_1);
 extern undefined4 fn_800552E8(int param_1,int param_2);
-extern uint fn_8001FFB4(int eventId);
-extern void fn_800200E8(int eventId,int value);
+extern uint GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId,int value);
 extern undefined4 fn_8003B8F4(double scale);
 extern undefined4 fn_8004350C(int param_1,int param_2,int param_3);
 extern undefined4 fn_800887F8(int param_1);
@@ -66,7 +66,7 @@ undefined4 fire_updateState(int obj,undefined4 param_2,u8 *stateList)
             (*(code *)(*lbl_803DCAAC + 0x50))(7,7,0);
             (*(code *)(*lbl_803DCAAC + 0x50))(7,10,0);
             (*(code *)(*lbl_803DCAAC + 0x50))(10,7,0);
-            fn_800200E8(0x1ed,1);
+            GameBit_Set(0x1ed,1);
             fn_80042F78(0x17);
             anim = fn_800481B0(0x17);
             fn_80043560(anim,0);
@@ -96,20 +96,20 @@ undefined4 fire_updateState(int obj,undefined4 param_2,u8 *stateList)
         }
       }
       else {
-        fn_800200E8(0x405,0);
-        if (fn_8001FFB4(0xff) != 0) {
+        GameBit_Set(0x405,0);
+        if (GameBit_Get(0xff) != 0) {
           (*(code *)(*lbl_803DCAAC + 0x44))(0xb,3);
           (*(code *)(*lbl_803DCAAC + 0x50))(0xb,8,1);
           (*(code *)(*lbl_803DCAAC + 0x50))(0xb,9,1);
           fn_800552E8(0x22,0);
         }
-        else if (fn_8001FFB4(0xbfd) != 0) {
+        else if (GameBit_Get(0xbfd) != 0) {
           (*(code *)(*lbl_803DCAAC + 0x44))(0xb,2);
           (*(code *)(*lbl_803DCAAC + 0x50))(0xb,5,1);
           (*(code *)(*lbl_803DCAAC + 0x50))(0xb,6,1);
           fn_800552E8(0x20,0);
         }
-        else if (fn_8001FFB4(0xc6e) != 0) {
+        else if (GameBit_Get(0xc6e) != 0) {
           (*(code *)(*lbl_803DCAAC + 0x44))(0xb,4);
           (*(code *)(*lbl_803DCAAC + 0x50))(0xb,8,1);
           (*(code *)(*lbl_803DCAAC + 0x50))(0xb,9,1);
@@ -172,9 +172,9 @@ void fireObj_init(int obj)
   fn_8004350C(0,0,1);
   *(u16 *)(obj + 0xb0) |= 0x2000;
   fn_800887F8(0);
-  fn_800200E8(0x90d,1);
-  fn_800200E8(0x90e,1);
-  fn_800200E8(0x90f,1);
+  GameBit_Set(0x90d,1);
+  GameBit_Set(0x90e,1);
+  GameBit_Set(0x90f,1);
   FUN_8000a380(3,2,0x2ee);
   return;
 }
