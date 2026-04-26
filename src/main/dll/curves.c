@@ -1,11 +1,11 @@
 #include "ghidra_import.h"
 #include "main/dll/curves.h"
+#include <string.h>
 
-extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_800068f4();
 extern undefined4 FUN_800068f8();
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern double FUN_80017714();
 extern int FUN_80017730();
 extern undefined4 FUN_8001774c();
@@ -3950,11 +3950,20 @@ void FUN_800e65c8(uint *param_1,byte param_2,uint param_3,uint param_4,undefined
  */
 void curves_clear(uint *param_1,undefined param_2,uint param_3,undefined param_4)
 {
-  FUN_800033a8((int)param_1,0,0x268);
-  *(undefined *)((int)param_1 + 0x25b) = param_4;
-  *param_1 = param_3 | 0x4000000;
-  *(undefined *)((int)param_1 + 0x262) = param_2;
-  *(undefined *)(param_1 + 0x96) = 5;
+  uint *curve;
+  undefined flagsByte;
+  uint flags;
+  undefined subtype;
+
+  curve = param_1;
+  flagsByte = param_2;
+  flags = param_3;
+  subtype = param_4;
+  memset(curve,0,0x268);
+  *(undefined *)((int)curve + 0x25b) = subtype;
+  *curve = flags | 0x4000000;
+  *(undefined *)((int)curve + 0x262) = flagsByte;
+  *(undefined *)(curve + 0x96) = 5;
   return;
 }
 
@@ -3976,14 +3985,14 @@ uint FUN_800e6680(char param_1,uint param_2)
   uint uVar1;
   
   if (param_1 == '\0') {
-    uVar1 = FUN_80017690(param_2);
+    uVar1 = GameBit_Get(param_2);
   }
   else {
-    uVar1 = FUN_80017690(0xbfd);
-    if ((((uVar1 == 0) && (uVar1 = FUN_80017690(0xff), uVar1 == 0)) &&
-        (uVar1 = FUN_80017690(0xba8), uVar1 == 0)) &&
-       (((uVar1 = FUN_80017690(0xc85), uVar1 == 0 && (uVar1 = FUN_80017690(0xc6e), uVar1 == 0)) &&
-        (uVar1 = FUN_80017690(0x174), uVar1 == 0)))) {
+    uVar1 = GameBit_Get(0xbfd);
+    if ((((uVar1 == 0) && (uVar1 = GameBit_Get(0xff), uVar1 == 0)) &&
+        (uVar1 = GameBit_Get(0xba8), uVar1 == 0)) &&
+       (((uVar1 = GameBit_Get(0xc85), uVar1 == 0 && (uVar1 = GameBit_Get(0xc6e), uVar1 == 0)) &&
+        (uVar1 = GameBit_Get(0x174), uVar1 == 0)))) {
       uVar1 = 0;
     }
     else {

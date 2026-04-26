@@ -5,7 +5,7 @@ extern undefined4 FUN_80006820();
 extern undefined4 FUN_80006824();
 extern undefined8 FUN_80006bb4();
 extern uint FUN_80006c00();
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern uint FUN_80017760();
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
@@ -280,13 +280,13 @@ FUN_801d71dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
       FUN_80042bec(uVar1,0);
       uVar1 = FUN_80044404(7);
       FUN_80042bec(uVar1,1);
-      uVar2 = FUN_80017690(0xbfd);
+      uVar2 = GameBit_Get(0xbfd);
       if (uVar2 == 0) {
-        uVar2 = FUN_80017690(0xff);
+        uVar2 = GameBit_Get(0xff);
         if (uVar2 == 0) {
-          uVar2 = FUN_80017690(0xc6e);
+          uVar2 = GameBit_Get(0xc6e);
           if (uVar2 == 0) {
-            uVar2 = FUN_80017690(0xc85);
+            uVar2 = GameBit_Get(0xc85);
             if (uVar2 != 0) {
               (**(code **)(*DAT_803dd72c + 0x44))(0x42,2);
             }

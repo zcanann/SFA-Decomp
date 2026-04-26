@@ -4,7 +4,7 @@
 extern undefined4 FUN_800067bc();
 extern undefined8 FUN_800068c4();
 extern undefined8 FUN_80006b84();
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern undefined8 FUN_80017698();
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_8003b818();
@@ -87,11 +87,11 @@ laser_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     else if (cVar1 == '\x02') {
       if (bVar4 == 2) {
         FUN_80017698(0x405,0);
-        uVar3 = FUN_80017690(0xff);
+        uVar3 = GameBit_Get(0xff);
         if (uVar3 == 0) {
-          uVar3 = FUN_80017690(0xbfd);
+          uVar3 = GameBit_Get(0xbfd);
           if (uVar3 == 0) {
-            uVar3 = FUN_80017690(0xc6e);
+            uVar3 = GameBit_Get(0xc6e);
             if (uVar3 != 0) {
               (**(code **)(*DAT_803dd72c + 0x44))(0xb,4);
               (**(code **)(*DAT_803dd72c + 0x50))(0xb,8,1);
