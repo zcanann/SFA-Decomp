@@ -71,7 +71,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
       else {
         triggerIsSet = fn_80038024(objectId);
         if (triggerIsSet != 0) {
-          runtime->behaviorFlags = runtime->behaviorFlags | 4;
+          runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING;
           GameBit_Set(0xcd6,1);
         }
       }
@@ -79,7 +79,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
     else {
       triggerIsSet = fn_80038024(objectId);
       if (triggerIsSet != 0) {
-        runtime->behaviorFlags = runtime->behaviorFlags | 4;
+        runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING;
         GameBit_Set(0xcd5,1);
       }
     }

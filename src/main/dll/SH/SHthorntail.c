@@ -81,7 +81,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
       triggerIsSet = GameBit_Get(0x1a0);
       if ((triggerIsSet == 0) &&
           (objectTriggerIsSet = fn_80038024((int)obj), objectTriggerIsSet != 0)) {
-        runtime->behaviorFlags = runtime->behaviorFlags | 4;
+        runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING;
         runtime->behaviorState = SHTHORNTAIL_STATE_ROOT_MODE2_EVENT;
         (*lbl_803DCAAC)->setAnimEvent((int)obj->animObjId,3,1);
         GameBit_Set(0x199,1);
