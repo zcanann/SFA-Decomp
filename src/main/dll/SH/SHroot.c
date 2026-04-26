@@ -23,8 +23,7 @@ extern f32 lbl_803E5418;
 extern f32 lbl_803E5424;
 extern f64 lbl_803E5428;
 extern f32 lbl_803E5438;
-extern f64 DOUBLE_803e60c0;
-extern f32 FLOAT_803e60e0;
+extern f32 lbl_803E5448;
 
 /*
  * --INFO--
@@ -69,7 +68,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
       }
       else {
         runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_FREEZE_MOTION;
-        runtime->hitReactState = 0;
+        runtime->freezeFrameCounter = 0;
         closeToPlayer = FALSE;
       }
     }
@@ -80,7 +79,25 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
       closeToPlayer = FALSE;
     }
   }
-  if (runtime->behaviorState == SHTHORNTAIL_STATE_TAIL_SWING_READY) {
+  switch((s8)runtime->behaviorState) {
+  case SHTHORNTAIL_STATE_IDLE:
+    if (!closeToPlayer) {
+      runtime->idleTimer = lbl_803E5438;
+      runtime->behaviorState = SHTHORNTAIL_STATE_IDLE_COUNTDOWN;
+    }
+    break;
+  case SHTHORNTAIL_STATE_IDLE_COUNTDOWN:
+    if (closeToPlayer) {
+      runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
+    }
+    else {
+      runtime->idleTimer = runtime->idleTimer - lbl_803DB414;
+      if (runtime->idleTimer <= lbl_803E5418) {
+        runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_READY;
+      }
+    }
+    break;
+  case SHTHORNTAIL_STATE_TAIL_SWING_READY:
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
       if (closeToPlayer) {
         runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_RECOVER;
@@ -90,40 +107,23 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
         runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING;
       }
     }
-  }
-  else if (runtime->behaviorState < SHTHORNTAIL_STATE_TAIL_SWING_READY) {
-    if (runtime->behaviorState == SHTHORNTAIL_STATE_IDLE_COUNTDOWN) {
-      if (closeToPlayer) {
-        runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      }
-      else {
-        runtime->idleTimer = runtime->idleTimer - lbl_803DB414;
-        if (runtime->idleTimer <= lbl_803E5418) {
-          runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_READY;
-        }
-      }
-    }
-    else if ((runtime->behaviorState < SHTHORNTAIL_STATE_IDLE_COUNTDOWN) &&
-             ((s8)runtime->behaviorState > -1) && !closeToPlayer) {
-      runtime->idleTimer = lbl_803E5438;
-      runtime->behaviorState = SHTHORNTAIL_STATE_IDLE_COUNTDOWN;
-    }
-  }
-  else if (runtime->behaviorState == SHTHORNTAIL_STATE_TAIL_SWING_RECOVER) {
-    if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
-      runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      randomTime = fn_800221A0(1000,2000);
-      runtime->idleTimer =
-          (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
-    }
-  }
-  else if (runtime->behaviorState < SHTHORNTAIL_STATE_TAIL_SWING_RECOVER) {
+    break;
+  case SHTHORNTAIL_STATE_TAIL_SWING:
     if (closeToPlayer) {
       runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_RECOVER;
     }
     else {
       SHthorntail_updateTailSwing(objectId,runtime);
     }
+    break;
+  case SHTHORNTAIL_STATE_TAIL_SWING_RECOVER:
+    if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
+      runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
+      randomTime = fn_800221A0(1000,2000);
+      runtime->idleTimer =
+          (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
+    }
+    break;
   }
 }
 
@@ -237,7 +237,7 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
     uVar1 = fn_800221A0(1000,2000);
     runtime->idleTimer = (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) -
-                                 DOUBLE_803e60c0);
+                                 lbl_803E5428);
     runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_IMPACT_PENDING;
     runtime->behaviorFlags = runtime->behaviorFlags | (SHTHORNTAIL_FLAG_LEVELCONTROL_READY |
                                                        SHTHORNTAIL_FLAG_FREEZE_MOTION);
@@ -253,7 +253,7 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4
     fn_8003B310((int)obj,(int)runtime->collisionShapeState);
   }
   runtime->activeMoveValid = 0;
-  fn_8006EF38((double)FLOAT_803e60e0,(double)FLOAT_803e60e0,(int)obj,param_3 + 0xf0,8,
+  fn_8006EF38((double)lbl_803E5448,(double)lbl_803E5448,(int)obj,param_3 + 0xf0,8,
               (int)runtime->renderPathPoints,(int)runtime->moveScratch);
   return 0;
 }
