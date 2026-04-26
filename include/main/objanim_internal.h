@@ -11,6 +11,11 @@ typedef struct ObjAnimHitReactRow {
   u8 pad17;
 } ObjAnimHitReactRow;
 
+#define OBJANIM_DEF_FLAG_CACHED_MOVES 0x40
+#define OBJANIM_CACHED_MOVE_DATA_OFFSET 0x80
+#define OBJANIM_FRAME_CMD_OFFSET 6
+#define OBJANIM_EVENT_COUNTDOWN_RESET 0x4000
+
 /*
  * Shared state used by the object-animation helpers around main/objanim.c.
  * These names are still partially provisional, but the layouts are stable

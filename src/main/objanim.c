@@ -48,7 +48,7 @@ void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,ui
   if (moveIndex < 0) {
     moveIndex = 0;
   }
-  if ((animDef->flags & 0x40) != 0) {
+  if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (state->lastBlendMoveIndex != moveIndex) {
       state->blendCacheSlot = (u16)state->blendToggle;
       state->prevBlendCacheSlot = (u16)(1 - state->blendToggle);
@@ -60,13 +60,13 @@ void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,ui
                   (undefined4)state->blendMoveCache[state->blendCacheSlot],animDef);
       state->lastBlendMoveIndex = (s16)moveIndex;
     }
-    moveData = (int)state->blendMoveCache[state->blendCacheSlot] + 0x80;
+    moveData = (int)state->blendMoveCache[state->blendCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET;
   }
   else {
     state->blendCacheSlot = (u16)moveIndex;
     moveData = (int)animDef->moveData[state->blendCacheSlot];
   }
-  state->frameCmd = (u8 *)(moveData + 6);
+  state->frameCmd = (u8 *)(moveData + OBJANIM_FRAME_CMD_OFFSET);
   frameType = *(s8 *)(moveData + 1) & 0xf0;
   if (frameType != state->frameType) {
     state->eventState = 0;
@@ -400,7 +400,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   moveChanged = sVar1 != moveId;
   objAnim->activeMove = (s16)moveId;
   iVar3 = ObjAnim_ResolveMoveIndex(animDef, moveId);
-  if ((animDef->flags & 0x40) != 0) {
+  if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (moveChanged != 0) {
       state->blendToggle = '\x01' - state->blendToggle;
       state->moveCacheSlot = (u16)state->blendToggle;
@@ -411,13 +411,13 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
       fn_80024E7C((int)animDef->blendMoveIds[iVar3],(int)(s16)iVar3,
                   (undefined4)state->moveCache[state->moveCacheSlot],animDef);
     }
-    iVar6 = (int)state->moveCache[state->moveCacheSlot] + 0x80;
+    iVar6 = (int)state->moveCache[state->moveCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET;
   }
   else {
     state->moveCacheSlot = (u16)iVar3;
     iVar6 = (int)animDef->moveData[state->moveCacheSlot];
   }
-  state->frameData = (u8 *)(iVar6 + 6);
+  state->frameData = (u8 *)(iVar6 + OBJANIM_FRAME_CMD_OFFSET);
   state->frameType = *(s8 *)(iVar6 + 1) & 0xf0;
   state->segmentLength =
        ObjAnim_U32AsDouble((uint)state->frameData[1]) - lbl_803DE8E8;
@@ -430,7 +430,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
     state->eventStep =
          (short)(int)(lbl_803DE8F4 /
                       (float)(ObjAnim_U32AsDouble(uVar2 ^ 0x80000000) - lbl_803DE900));
-    state->eventCountdown = 0x4000;
+    state->eventCountdown = OBJANIM_EVENT_COUNTDOWN_RESET;
   }
   state->step = lbl_803DE8F0;
   state->speed = clampedProgress * state->segmentLength;
@@ -576,11 +576,12 @@ undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnimArg,float *ph
       in_f7 = (double)((float)((double)CONCAT44(0x43300000,(uint)*(ushort *)(iVar18 + 0x5a)) -
                               lbl_803DE8E8) / lbl_803DE8F4);
       in_f8 = (double)(float)((double)lbl_803DE8E0 - in_f7);
-      if ((*(ushort *)(iVar17 + 2) & 0x40) == 0) {
+      if ((*(ushort *)(iVar17 + 2) & OBJANIM_DEF_FLAG_CACHED_MOVES) == 0) {
         iVar13 = *(int *)(*(int *)(iVar17 + 100) + (uint)*(ushort *)(iVar18 + 0x48) * 4);
       }
       else {
-        iVar13 = *(int *)(iVar18 + (uint)*(ushort *)(iVar18 + 0x48) * 4 + 0x24) + 0x80;
+        iVar13 = *(int *)(iVar18 + (uint)*(ushort *)(iVar18 + 0x48) * 4 + 0x24) +
+                 OBJANIM_CACHED_MOVE_DATA_OFFSET;
       }
       if (*(short *)(iVar13 + 4) != 0) {
         pfVar16 = (float *)(iVar13 + *(short *)(iVar13 + 4));
@@ -595,11 +596,12 @@ undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnimArg,float *ph
         }
       }
     }
-    if ((*(ushort *)(iVar17 + 2) & 0x40) == 0) {
+    if ((*(ushort *)(iVar17 + 2) & OBJANIM_DEF_FLAG_CACHED_MOVES) == 0) {
       iVar17 = *(int *)(*(int *)(iVar17 + 100) + (uint)*(ushort *)(iVar18 + 0x44) * 4);
     }
     else {
-      iVar17 = *(int *)(iVar18 + (uint)*(ushort *)(iVar18 + 0x44) * 4 + 0x1c) + 0x80;
+      iVar17 = *(int *)(iVar18 + (uint)*(ushort *)(iVar18 + 0x44) * 4 + 0x1c) +
+               OBJANIM_CACHED_MOVE_DATA_OFFSET;
     }
     if (*(short *)(iVar17 + 4) != 0) {
       pfVar16 = (float *)(iVar17 + *(short *)(iVar17 + 4));
@@ -909,7 +911,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
           }
         }
       }
-      if ((*(ushort *)(*piVar22 + 2) & 0x40) == 0) {
+      if ((*(ushort *)(*piVar22 + 2) & OBJANIM_DEF_FLAG_CACHED_MOVES) == 0) {
         iVar23 = *(int *)(*(int *)(*piVar22 + 100) + (uint)*(ushort *)(iVar24 + 0x44) * 4);
       }
       else {
@@ -938,7 +940,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
         if (*(ushort *)(iVar24 + 0x5a) != 0) {
           local_30 = (double)CONCAT44(0x43300000,(uint)*(ushort *)(iVar24 + 0x5a));
           fVar11 = (float)(local_30 - lbl_803DE8E8) / lbl_803DE8F4;
-          if ((*(ushort *)(*piVar22 + 2) & 0x40) == 0) {
+          if ((*(ushort *)(*piVar22 + 2) & OBJANIM_DEF_FLAG_CACHED_MOVES) == 0) {
             iVar24 = *(int *)(*(int *)(*piVar22 + 100) + (uint)*(ushort *)(iVar24 + 0x48) * 4);
           }
           else {
@@ -1141,7 +1143,7 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
   if (moveIndex < 0) {
     moveIndex = 0;
   }
-  if ((animDef->flags & 0x40) != 0) {
+  if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (moveChanged != 0) {
       state->blendToggle = '\x01' - state->blendToggle;
       state->moveCacheSlot = (u16)state->blendToggle;
@@ -1152,13 +1154,13 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
       fn_80024E7C((int)animDef->blendMoveIds[moveIndex],(int)(s16)moveIndex,
                   (undefined4)state->moveCache[state->moveCacheSlot],animDef);
     }
-    moveData = (int)state->moveCache[state->moveCacheSlot] + 0x80;
+    moveData = (int)state->moveCache[state->moveCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET;
   }
   else {
     state->moveCacheSlot = (u16)moveIndex;
     moveData = (int)animDef->moveData[state->moveCacheSlot];
   }
-  state->frameData = (u8 *)(moveData + 6);
+  state->frameData = (u8 *)(moveData + OBJANIM_FRAME_CMD_OFFSET);
   state->frameType = *(s8 *)(moveData + 1) & 0xf0;
   state->segmentLength =
        ObjAnim_U32AsDouble((uint)state->frameData[1]) - lbl_803DE8E8;
@@ -1171,7 +1173,7 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
     state->eventStep =
          (short)(int)(lbl_803DE8F4 /
                       (float)(ObjAnim_U32AsDouble(frameStep ^ 0x80000000) - lbl_803DE900));
-    state->eventCountdown = 0x4000;
+    state->eventCountdown = OBJANIM_EVENT_COUNTDOWN_RESET;
   }
   else {
     state->eventCountdown = 0;
