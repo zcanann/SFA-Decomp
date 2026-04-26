@@ -4,12 +4,12 @@
 #include "dolphin/os/__os.h"
 #include "dolphin/card/__card.h"
 
-extern u16 lbl_803DD270;
-extern u32 lbl_8032F9A0[8];
-extern u32 lbl_8032F9C0[8];
+extern u16 lbl_803DC608;
+extern u32 lbl_8032ED40[8];
+extern u32 lbl_8032ED60[8];
 
-#define SectorSizeTable lbl_8032F9A0
-#define LatencyTable lbl_8032F9C0
+#define SectorSizeTable lbl_8032ED40
+#define LatencyTable lbl_8032ED60
 
 // prototypes
 static s32 DoMount(s32 chan);
@@ -18,7 +18,7 @@ static void DoUnmount(s32 chan, s32 result);
 static BOOL IsCard(u32 id) {
     u32 size;
     s32 sectorSize;
-    if (id & (0xFFFF0000) && (id != 0x80000004 || lbl_803DD270 == 0xFFFF)) {
+    if (id & (0xFFFF0000) && (id != 0x80000004 || lbl_803DC608 == 0xFFFF)) {
         return FALSE;
     }
 
@@ -195,7 +195,7 @@ static s32 DoMount(s32 chan) {
             vendorID = *(u16*)sram->flashID[chan];
             __OSUnlockSramEx(FALSE);
 
-            if (lbl_803DD270 == 0xFFFF || vendorID != lbl_803DD270) {
+            if (lbl_803DC608 == 0xFFFF || vendorID != lbl_803DC608) {
                 result = CARD_RESULT_WRONGDEVICE;
                 goto error;
             }
