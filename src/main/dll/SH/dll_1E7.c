@@ -104,7 +104,7 @@ int fn_801D4CD0(SHthorntailObject *obj)
          ((*objects)->config->configToken == lbl_80326E98[groupIndex][3]))) {
       fn_8014C66C(*objects,obj);
       if ((fn_800216D0(&(*objects)->pos,&obj->pos) < lbl_803E5414) &&
-          (GameBit_Get(*(s16 *)&(*objects)->config->controlMode) == 0)) {
+          (GameBit_Get(SHthorntail_GetLinkedGameBit((*objects)->config)) == 0)) {
         eventIsSet = 1;
       }
       matchCount++;

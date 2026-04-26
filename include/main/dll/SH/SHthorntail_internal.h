@@ -139,6 +139,10 @@ extern u8 gSHthorntailRootControlMode3Locomotion8ImpactSfxTable;
 
 STATIC_ASSERT(sizeof(SHthorntailRuntime) == SHTHORNTAIL_EXTRA_STATE_BYTES);
 
+static inline s16 SHthorntail_GetLinkedGameBit(SHthorntailConfig *config) {
+  return *(s16 *)&config->controlMode;
+}
+
 void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime);
 uint SHthorntail_chooseNextState(SHthorntailObject *obj,SHthorntailRuntime *runtime,
                                  SHthorntailConfig *config);
