@@ -19,7 +19,7 @@ extern f32 FLOAT_803e48b0;
 /*
  * --INFO--
  *
- * Function: FUN_8018aa60
+ * Function: treasurechest_update
  * EN v1.0 Address: 0x8018AA60
  * EN v1.0 Size: 788b
  * EN v1.1 Address: 0x8018AA94
@@ -29,7 +29,7 @@ extern f32 FLOAT_803e48b0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018aa60(short *param_1,int param_2)
+void treasurechest_update(short *param_1,int param_2)
 {
   byte bVar2;
   uint uVar1;

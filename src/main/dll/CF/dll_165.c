@@ -19,7 +19,7 @@ extern f32 FLOAT_803e489c;
 /*
  * --INFO--
  *
- * Function: FUN_8018a53c
+ * Function: staffactivated_init
  * EN v1.0 Address: 0x8018A53C
  * EN v1.0 Size: 684b
  * EN v1.1 Address: 0x8018A7DC
@@ -29,9 +29,9 @@ extern f32 FLOAT_803e489c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018a53c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9)
+void staffactivated_init(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                         undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                         undefined8 param_8,uint param_9)
 {
   int iVar1;
   byte bVar3;
