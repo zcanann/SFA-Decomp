@@ -37,8 +37,12 @@ extern f32 FLOAT_803df58c;
  * PAL Size: TODO
  */
 #pragma scheduling off
-undefined4 ObjAnim_SampleRootCurvePhase(double param_1,int param_2,float *param_3)
+undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnimArg,float *phaseOut)
 {
+  ObjAnimComponent *objAnim;
+  ObjAnimBank *bank;
+  ObjAnimDef *animDef;
+  ObjAnimState *state;
   float fVar1;
   float fVar2;
   float fVar3;
@@ -62,11 +66,15 @@ undefined4 ObjAnim_SampleRootCurvePhase(double param_1,int param_2,float *param_
   double in_f8;
   undefined8 local_20;
 
-  piVar12 = *(int **)(*(int *)(param_2 + 0x7c) + *(char *)(param_2 + 0xad) * 4);
-  iVar17 = *piVar12;
-  if (*(short *)(iVar17 + 0xec) != 0) {
-    iVar18 = piVar12[0xb];
-    fVar5 = *(float *)(param_2 + 8);
+  objAnim = (ObjAnimComponent *)objAnimArg;
+  bank = ObjAnim_GetActiveBank(objAnim);
+  piVar12 = (int *)bank;
+  animDef = bank->animDef;
+  iVar17 = (int)animDef;
+  if (animDef->moveCount != 0) {
+    state = bank->secondaryState;
+    iVar18 = (int)state;
+    fVar5 = *(float *)(objAnimArg + 8);
     pfVar15 = (float *)0x0;
     if (*(ushort *)(iVar18 + 0x5a) != 0) {
       in_f7 = (double)((float)((double)CONCAT44(0x43300000,(uint)*(ushort *)(iVar18 + 0x5a)) -
@@ -113,7 +121,7 @@ undefined4 ObjAnim_SampleRootCurvePhase(double param_1,int param_2,float *param_
         if (sVar6 != 0) {
           fVar4 = (float)((double)CONCAT44(0x43300000,uVar10 ^ 0x80000000) - DOUBLE_803df580);
           fVar8 = FLOAT_803df560 / fVar4;
-          fVar4 = fVar4 * *(float *)(param_2 + 0x98);
+          fVar4 = fVar4 * *(float *)(objAnimArg + 0x98);
           uVar11 = (uint)fVar4;
           fVar4 = fVar4 - (float)((double)CONCAT44(0x43300000,uVar11 ^ 0x80000000) - DOUBLE_803df580
                                  );
@@ -147,7 +155,7 @@ undefined4 ObjAnim_SampleRootCurvePhase(double param_1,int param_2,float *param_
                                                   (int)*(short *)((int)pfVar14 + iVar17 + 4) ^
                                                   0x80000000) - DOUBLE_803df580))));
           }
-          fVar5 = (float)(param_1 * (double)(fVar5 / *(float *)(*(int *)(param_2 + 0x50) + 4))) +
+          fVar5 = (float)(distance * (double)(fVar5 / *(float *)(*(int *)(objAnimArg + 0x50) + 4))) +
                   fVar4 * (fVar2 - fVar1) + fVar1;
           fVar4 = -(fVar8 * fVar4 - fVar8);
           bVar9 = false;
@@ -196,8 +204,8 @@ undefined4 ObjAnim_SampleRootCurvePhase(double param_1,int param_2,float *param_
               bVar9 = true;
             }
           } while (!bVar9);
-          if (param_3 != (float *)0x0) {
-            *param_3 = fVar4;
+          if (phaseOut != (float *)0x0) {
+            *phaseOut = fVar4;
           }
           return 1;
         }
@@ -223,9 +231,13 @@ undefined4 ObjAnim_SampleRootCurvePhase(double param_1,int param_2,float *param_
  * PAL Size: TODO
  */
 #pragma scheduling off
-undefined4 ObjAnim_AdvanceCurrentMove(double param_1,double param_2,int iVar19,
+undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnimArg,
                                       ObjAnimEventList *events)
 {
+  ObjAnimComponent *objAnim;
+  ObjAnimBank *bank;
+  ObjAnimDef *animDef;
+  ObjAnimState *state;
   double dVar1;
   char cVar2;
   float fVar3;
@@ -264,18 +276,23 @@ undefined4 ObjAnim_AdvanceCurrentMove(double param_1,double param_2,int iVar19,
   pfVar20 = (float *)events;
   dVar31 = (double)FLOAT_803df58c;
   uVar18 = 0;
-  if ((dVar31 <= param_1) && (dVar31 = param_1, (double)FLOAT_803df560 < param_1)) {
+  if ((dVar31 <= moveStepScale) &&
+     (dVar31 = moveStepScale, (double)FLOAT_803df560 < moveStepScale)) {
     dVar31 = (double)FLOAT_803df560;
   }
-  piVar22 = *(int **)(*(int *)(iVar19 + 0x7c) + *(char *)(iVar19 + 0xad) * 4);
-  if ((*(short *)(*piVar22 + 0xec) != 0) && (iVar24 = piVar22[0xb], iVar24 != 0)) {
+  objAnim = (ObjAnimComponent *)objAnimArg;
+  bank = ObjAnim_GetActiveBank(objAnim);
+  piVar22 = (int *)bank;
+  animDef = bank->animDef;
+  if ((animDef->moveCount != 0) &&
+     (state = bank->secondaryState, iVar24 = (int)state, iVar24 != 0)) {
     *(float *)(iVar24 + 0xc) = (float)(dVar31 * (double)*(float *)(iVar24 + 0x14));
     if (*(short *)(iVar24 + 0x58) != 0) {
       if ((*(byte *)(iVar24 + 99) & 8) != 0) {
         *(undefined4 *)(iVar24 + 0x10) = *(undefined4 *)(iVar24 + 0xc);
       }
       *(float *)(iVar24 + 8) =
-           (float)((double)*(float *)(iVar24 + 0x10) * param_2 + (double)*(float *)(iVar24 + 8));
+           (float)((double)*(float *)(iVar24 + 0x10) * deltaTime + (double)*(float *)(iVar24 + 8));
       fVar4 = FLOAT_803df570;
       fVar3 = *(float *)(iVar24 + 0x18);
       if (*(char *)(iVar24 + 0x61) == '\0') {
@@ -301,7 +318,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double param_1,double param_2,int iVar19,
       if ((*(byte *)(iVar24 + 99) & 2) == 0) {
         uVar15 = (uint)-(float)((double)(float)((double)CONCAT44(0x43300000,
                                                                  (uint)*(ushort *)(iVar24 + 0x5e)) -
-                                               DOUBLE_803df568) * param_2 -
+                                               DOUBLE_803df568) * deltaTime -
                                (double)(float)((double)CONCAT44(0x43300000,
                                                                 *(ushort *)(iVar24 + 0x58) ^
                                                                 0x80000000) - DOUBLE_803df580));
@@ -318,31 +335,31 @@ undefined4 ObjAnim_AdvanceCurrentMove(double param_1,double param_2,int iVar19,
         *(undefined2 *)(iVar24 + 0x5c) = 0;
       }
     }
-    fVar4 = *(float *)(iVar19 + 0x98);
-    fVar3 = (float)(dVar31 * param_2);
-    *(float *)(iVar19 + 0x98) = fVar4 + fVar3;
+    fVar4 = *(float *)(objAnimArg + 0x98);
+    fVar3 = (float)(dVar31 * deltaTime);
+    *(float *)(objAnimArg + 0x98) = fVar4 + fVar3;
     fVar6 = FLOAT_803df570;
     fVar5 = FLOAT_803df560;
-    if (*(float *)(iVar19 + 0x98) < FLOAT_803df560) {
-      if (*(float *)(iVar19 + 0x98) < FLOAT_803df570) {
+    if (*(float *)(objAnimArg + 0x98) < FLOAT_803df560) {
+      if (*(float *)(objAnimArg + 0x98) < FLOAT_803df570) {
         if (*(char *)(iVar24 + 0x60) == '\0') {
-          *(float *)(iVar19 + 0x98) = FLOAT_803df570;
+          *(float *)(objAnimArg + 0x98) = FLOAT_803df570;
         }
         else {
-          while (*(float *)(iVar19 + 0x98) < fVar6) {
-            *(float *)(iVar19 + 0x98) = *(float *)(iVar19 + 0x98) + fVar5;
+          while (*(float *)(objAnimArg + 0x98) < fVar6) {
+            *(float *)(objAnimArg + 0x98) = *(float *)(objAnimArg + 0x98) + fVar5;
           }
         }
         uVar18 = 1;
       }
     }
     else if (*(char *)(iVar24 + 0x60) == '\0') {
-      *(float *)(iVar19 + 0x98) = FLOAT_803df560;
+      *(float *)(objAnimArg + 0x98) = FLOAT_803df560;
       uVar18 = 1;
     }
     else {
-      while (fVar5 <= *(float *)(iVar19 + 0x98)) {
-        *(float *)(iVar19 + 0x98) = *(float *)(iVar19 + 0x98) - fVar5;
+      while (fVar5 <= *(float *)(objAnimArg + 0x98)) {
+        *(float *)(objAnimArg + 0x98) = *(float *)(objAnimArg + 0x98) - fVar5;
       }
       uVar18 = 1;
     }
@@ -352,12 +369,12 @@ undefined4 ObjAnim_AdvanceCurrentMove(double param_1,double param_2,int iVar19,
       pfVar20[2] = FLOAT_803df570;
       pfVar20[1] = fVar5;
       *pfVar20 = fVar5;
-      if (*(int *)(iVar19 + 0x60) != 0) {
+      if (*(int *)(objAnimArg + 0x60) != 0) {
         *(undefined *)((int)pfVar20 + 0x1b) = 0;
-        iVar23 = **(int **)(iVar19 + 0x60) >> 1;
+        iVar23 = **(int **)(objAnimArg + 0x60) >> 1;
         if (iVar23 != 0) {
           iVar30 = (int)(FLOAT_803df578 * fVar4);
-          iVar26 = (int)(FLOAT_803df578 * *(float *)(iVar19 + 0x98));
+          iVar26 = (int)(FLOAT_803df578 * *(float *)(objAnimArg + 0x98));
           bVar29 = iVar26 < iVar30;
           if (fVar3 < FLOAT_803df570) {
             bVar29 = bVar29 | 2;
@@ -365,7 +382,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double param_1,double param_2,int iVar19,
           iVar25 = 0;
           iVar21 = 0;
           while ((iVar25 < iVar23 && (*(char *)((int)pfVar20 + 0x1b) < '\b'))) {
-            uVar16 = (uint)*(short *)(*(int *)(*(int *)(iVar19 + 0x60) + 4) + iVar21);
+            uVar16 = (uint)*(short *)(*(int *)(*(int *)(objAnimArg + 0x60) + 4) + iVar21);
             uVar15 = uVar16 & 0x1ff;
             uVar16 = uVar16 >> 9 & 0x7f;
             if (uVar16 != 0x7f) {
@@ -409,14 +426,14 @@ undefined4 ObjAnim_AdvanceCurrentMove(double param_1,double param_2,int iVar19,
         *(undefined *)((int)pfVar20 + 0x12) = 1;
         pfVar27 = (float *)(iVar23 + *(short *)(iVar23 + 4));
         fVar5 = *pfVar27;
-        fVar6 = *(float *)(iVar19 + 8);
+        fVar6 = *(float *)(objAnimArg + 8);
         iVar23 = (int)*(short *)(pfVar27 + 1);
         psVar28 = (short *)((int)pfVar27 + 6);
         local_30 = (double)CONCAT44(0x43300000,iVar23 - 1U ^ 0x80000000);
         fVar7 = (float)(local_30 - DOUBLE_803df580) * fVar4;
         uVar15 = (uint)fVar7;
         dVar31 = (double)CONCAT44(0x43300000,uVar15 ^ 0x80000000) - DOUBLE_803df580;
-        fVar8 = (float)(local_30 - DOUBLE_803df580) * *(float *)(iVar19 + 0x98);
+        fVar8 = (float)(local_30 - DOUBLE_803df580) * *(float *)(objAnimArg + 0x98);
         uVar16 = (uint)fVar8;
         dVar1 = (double)CONCAT44(0x43300000,uVar16 ^ 0x80000000) - DOUBLE_803df580;
         iVar30 = 0;
@@ -487,7 +504,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double param_1,double param_2,int iVar19,
             }
             fVar12 = (fVar8 - (float)dVar1) * (fVar14 - fVar12) + fVar12;
             if (fVar3 <= FLOAT_803df570) {
-              if (fVar4 < *(float *)(iVar19 + 0x98)) {
+              if (fVar4 < *(float *)(objAnimArg + 0x98)) {
                 local_20 = (double)CONCAT44(0x43300000,(int)psVar28[iVar23] ^ 0x80000000);
                 fVar12 = -(fVar13 * (float)(local_20 - DOUBLE_803df580) - fVar12);
                 if (iVar30 != 0) {
@@ -497,7 +514,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double param_1,double param_2,int iVar19,
                 }
               }
             }
-            else if (*(float *)(iVar19 + 0x98) < fVar4) {
+            else if (*(float *)(objAnimArg + 0x98) < fVar4) {
               local_20 = (double)CONCAT44(0x43300000,(int)psVar28[iVar23] ^ 0x80000000);
               fVar12 = fVar13 * (float)(local_20 - DOUBLE_803df580) + fVar12;
               if (iVar30 != 0) {
