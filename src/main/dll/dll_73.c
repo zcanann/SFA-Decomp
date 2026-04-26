@@ -1,20 +1,19 @@
-/*
- * Manual recovery stub based on claimed split coverage and the surrounding
- * early anonymous corridor.
- *
- * This file is intentionally not wired into the build yet.
- *
- * Current EN split:
- * - main/dll/dll_73.c
- * - 0x801008C8-0x801008CC
- *
- * Nearby corridor context:
- * - previous split: main/dll/dll_72.c
- * - next split: main/dll/dll_74.c
- */
+#include "ghidra_import.h"
+#include "main/dll/dll_73.h"
 
 /*
- * No function names were promoted here yet.
- * Start from the current EN split window and the surrounding corridor.
+ * --INFO--
+ *
+ * Function: fn_801008C8
+ * EN v1.0 Address: 0x801008C8
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801008C8
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
  */
-
+void fn_801008C8(void)
+{
+}
