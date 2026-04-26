@@ -756,18 +756,16 @@ void FUN_801fe1c4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801fe324(undefined2 *param_1,int param_2)
+void FUN_801fe324(LaserObject *obj,LaserObjectMapData *mapData)
 {
-  LaserObject *obj;
   LaserState *state;
   uint uVar1;
   
-  obj = (LaserObject *)param_1;
   state = obj->state;
-  state->primarySequenceId = *(short *)(param_2 + 0x1e);
-  state->secondarySequenceId = *(short *)(param_2 + 0x20);
+  state->primarySequenceId = mapData->primarySequenceId;
+  state->secondarySequenceId = mapData->secondarySequenceId;
   state->sequenceLatched = 0;
-  *param_1 = (short)((int)*(char *)(param_2 + 0x18) << LASEROBJ_MODE_WORD_SHIFT);
+  obj->modeWord = (s16)(mapData->modeIndex << LASEROBJ_MODE_WORD_SHIFT);
   uVar1 = FUN_80017690((int)state->primarySequenceId);
   if (uVar1 != 0) {
     state->sequenceLatched = 1;
