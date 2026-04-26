@@ -608,8 +608,8 @@ void expgfx_initSlotQuad(void *slotPtr)
   slot = (ExpgfxSlot *)slotPtr;
   tableEntry = Expgfx_GetTableEntry(Expgfx_GetSlotTableIndex(slot));
   texture = tableEntry->textureOrResource;
-  slot->stateBits = slot->stateBits & 0xfe;
-  slot->stateBits = slot->stateBits & 0xfd | 2;
+  slot->stateBits = slot->stateBits & ~EXPGFX_SLOT_STATE_FRAME_PARITY;
+  slot->stateBits = slot->stateBits & ~EXPGFX_SLOT_STATE_QUAD_READY | EXPGFX_SLOT_STATE_QUAD_READY;
   behaviorFlags = slot->behaviorFlags;
   if ((behaviorFlags & 0x8000000) == 0) {
     quadTemplate = (s16 *)(staticDataBase + 0x168);
@@ -1406,7 +1406,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
     slot->sequenceId = DAT_803dded0;
     slot->behaviorFlags = spawnConfig->behaviorFlags;
     slot->renderFlags = spawnConfig->renderFlags;
-    slot->stateBits = slot->stateBits & 0xf3;
+    slot->stateBits = slot->stateBits & ~EXPGFX_SLOT_STATE_INIT_PHASE_MASK;
     iVar6 = FUN_80081134(dVar19,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                          (int)spawnConfig->tableKeyType,uVar9,uVar12,uVar14,piVar16,param_14,
                          param_15,param_16);
@@ -1530,7 +1530,9 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
             slot->sourceVecY = spawnConfig->sourceVecY;
             slot->sourceVecX = spawnConfig->sourceVecX;
           }
-          slot->stateBits = DAT_803dded2 & 1 | slot->stateBits & 0xfe;
+          slot->stateBits =
+              DAT_803dded2 & EXPGFX_SLOT_STATE_FRAME_PARITY |
+              slot->stateBits & ~EXPGFX_SLOT_STATE_FRAME_PARITY;
           if ((slot->renderFlags & EXPGFX_RENDER_BACKDATE_MOTION) != 0) {
             slot->renderFlags = slot->renderFlags ^ EXPGFX_RENDER_BACKDATE_MOTION;
             dVar21 = DOUBLE_803dffe0;
