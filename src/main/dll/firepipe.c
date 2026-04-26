@@ -5,10 +5,10 @@ extern undefined4 fn_8001CB3C(int param_1);
 extern undefined4 GameBit_Get(int eventId);
 extern undefined4 fn_800221A0(int param_1, int param_2);
 extern undefined4 fn_8002CBC4(int param_1);
-extern undefined4 fn_80035F20(int param_1);
-extern undefined4 fn_80036FA4(int param_1, int param_2);
-extern undefined4 fn_80037200(int param_1, int param_2);
-extern undefined4 fn_8003B8F4(double scale, int param_1, int param_2, int param_3, int param_4, int param_5);
+extern undefined4 fn_80035F20(FirePipeObject *obj);
+extern undefined4 fn_80036FA4(FirePipeObject *obj, int param_2);
+extern undefined4 fn_80037200(FirePipeObject *obj, int param_2);
+extern undefined4 fn_8003B8F4(int param_1, int param_2, int param_3, int param_4, int param_5, double scale);
 extern undefined4 fn_800604B4(void);
 extern undefined4 fn_8008016C(int param_1);
 extern undefined4 fn_80080178(int param_1, int param_2);
@@ -20,40 +20,63 @@ extern f32 lbl_803E6B78;
 extern f64 lbl_803E6BA0;
 extern f32 lbl_803E6BA8;
 
+typedef struct {
+    u8 bit7 : 1;
+    u8 bit6 : 1;
+    u8 bit5 : 1;
+    u8 bit4 : 1;
+    u8 bit3 : 1;
+    u8 bit2 : 1;
+    u8 bit1 : 1;
+    u8 bit0 : 1;
+} FirePipeBitFlags;
+
 int firepipe_getExtraSize(void)
 {
     return 0x44;
 }
 
+#pragma peephole off
+#pragma scheduling off
 undefined4 firepipe_stateCallback(void)
 {
     fn_8021FAEC();
     return 0;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 int firepipe_func08(void)
 {
     return 1;
 }
 
+#pragma peephole off
+#pragma scheduling off
 void firepipe_free(FirePipeObject *obj)
 {
-    FirePipeExtra *extra;
-    int *iter;
     int i;
+    undefined4 *iter;
+    FirePipeExtra *extra;
 
     extra = obj->extra;
-    fn_80036FA4((int)obj, 0x4a);
-    iter = extra->effectObjs;
-    for (i = 0; i < (int)(uint)extra->effectCount; i++) {
+    fn_80036FA4(obj, 0x4a);
+    i = 0;
+    iter = (undefined4 *)extra;
+    while (i < (int)(uint)extra->effectCount) {
         fn_8002CBC4(*iter);
         iter = iter + 1;
+        i++;
     }
-    if (extra->subObj != 0) {
+    if ((uint)extra->subObj != 0) {
         fn_8001CB3C((int)&extra->subObj);
     }
 }
+#pragma scheduling reset
+#pragma peephole reset
 
+#pragma peephole off
+#pragma scheduling off
 void firepipe_render(FirePipeObject *obj, int param_2, int param_3, int param_4, int param_5, char param_6)
 {
     FirePipeExtra *extra;
@@ -61,57 +84,75 @@ void firepipe_render(FirePipeObject *obj, int param_2, int param_3, int param_4,
 
     extra = obj->extra;
     subObj = extra->subObj;
-    if (subObj != 0 && *(byte *)(subObj + 0x2f8) != 0 && *(byte *)(subObj + 0x4c) != 0) {
+    if ((uint)subObj != 0 && *(byte *)(subObj + 0x2f8) != 0 && *(byte *)(subObj + 0x4c) != 0) {
         fn_800604B4();
     }
-    if (param_6 != '\0' && ((extra->flags >> 1) & 1) != 0) {
-        fn_8003B8F4((double)lbl_803E6B78, (int)obj, param_2, param_3, param_4, param_5);
+    if (param_6 != '\0' && (uint)((extra->flags >> 1) & 1) != 0) {
+        fn_8003B8F4((int)obj, param_2, param_3, param_4, param_5, (double)lbl_803E6B78);
     }
 }
+#pragma scheduling reset
+#pragma peephole reset
 
+#pragma peephole off
+#pragma scheduling off
 void firepipe_update(FirePipeObject *obj)
 {
     obj->statusFlags = (u8)(obj->statusFlags | 8);
     fn_8021FAEC();
 }
+#pragma scheduling reset
+#pragma peephole reset
 
+static inline f64 firepipe_u32AsDouble(u32 value)
+{
+    u64 bits = CONCAT44(0x43300000, value);
+    return *(f64 *)&bits;
+}
+
+#pragma peephole off
 void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
 {
+    FirePipeExtra *extra;
+    int iVar7;
+    int iVar8;
     short sVar1;
     short sVar5;
-    FirePipeExtra *extra;
     undefined4 uVar3;
 
     extra = obj->extra;
     if ((int)mapData->scale != 0) {
-        obj->scale = lbl_803E6BA8 * (float)mapData->scale * *(float *)((int)obj->model + 4);
+        obj->scale =
+            lbl_803E6BA8 *
+            (float)(firepipe_u32AsDouble((u32)((int)mapData->scale ^ 0x80000000)) -
+                    lbl_803E6BA0) * *(float *)(*(int *)((int)obj + 0x50) + 4);
     }
-    if (mapData->gameBit == -1) {
-        extra->flags = extra->flags & 0xbf | 0x40;
+    if (mapData->gameBit != -1) {
+        uVar3 = GameBit_Get((int)mapData->gameBit);
+        ((FirePipeBitFlags *)&extra->flags)->bit6 = (u8)uVar3;
     }
     else {
-        uVar3 = GameBit_Get((int)mapData->gameBit);
-        extra->flags = (byte)((uVar3 & 0xff) << 6) & 0x40 | extra->flags & 0xbf;
+        ((FirePipeBitFlags *)&extra->flags)->bit6 = 1;
     }
     obj->callback = firepipe_stateCallback;
     {
-        int iVar7 = (int)obj->objectDef;
-        FirePipeExtra *iVar8 = obj->extra;
-        fn_8008016C((int)iVar8->cycleTimer);
+        iVar7 = (int)obj->objectDef;
+        iVar8 = (int)obj->extra;
+        fn_8008016C(iVar8 + 0x24);
         sVar5 = *(short *)(iVar7 + 0x1a);
         if (sVar5 != 0) {
             sVar1 = *(short *)(iVar7 + 0x20);
             if (sVar1 == 0) {
-                fn_80080178((int)iVar8->cycleTimer, (int)(short)(sVar5 * 0x3c));
+                fn_80080178(iVar8 + 0x24, (int)(short)(sVar5 * 0x3c));
             }
             else if (sVar1 < 0) {
                 sVar5 = fn_800221A0(1, sVar5 * 0x3c);
-                fn_80080178((int)iVar8->cycleTimer, (int)sVar5);
+                fn_80080178(iVar8 + 0x24, (int)sVar5);
             }
             else {
-                fn_80080178((int)iVar8->cycleTimer, (int)(short)(sVar1 * 0x3c));
+                fn_80080178(iVar8 + 0x24, (int)(short)(sVar1 * 0x3c));
                 if (*(short *)(iVar7 + 0x1a) <= *(short *)(iVar7 + 0x20)) {
-                    iVar8->flags = iVar8->flags & 0xbf;
+                    ((FirePipeBitFlags *)(iVar8 + 0x41))->bit6 = 0;
                 }
             }
         }
@@ -123,7 +164,7 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
                 if (sVar5 == 0x6f9) {
                     extra->effectType = 10;
                     extra->effectMode = 1;
-                    extra->effectScale = lbl_803DC340;
+                    *(undefined4 *)&extra->effectScale = *(undefined4 *)&lbl_803DC340;
                     goto done_switch;
                 }
             }
@@ -131,60 +172,61 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
                 if (sVar5 == 0x731) {
                     extra->effectType = 0xd;
                     extra->effectMode = 2;
-                    extra->effectScale = lbl_803E6B74;
+                    *(undefined4 *)&extra->effectScale = *(undefined4 *)&lbl_803E6B74;
                     goto done_switch;
                 }
                 if (sVar5 < 0x731) {
                     if (0x72f < sVar5) {
                         extra->effectType = 0xc;
                         extra->effectMode = 2;
-                        extra->effectScale = lbl_803E6B74;
+                        *(undefined4 *)&extra->effectScale = *(undefined4 *)&lbl_803E6B74;
                         goto done_switch;
                     }
                 }
                 else if (sVar5 < 0x733) {
                     extra->effectType = 0xe;
                     extra->effectMode = 2;
-                    extra->effectScale = lbl_803E6B74;
+                    *(undefined4 *)&extra->effectScale = *(undefined4 *)&lbl_803E6B74;
                     goto done_switch;
                 }
             }
         }
         extra->effectType = 9;
         extra->effectMode = 0;
-        extra->effectScale = -lbl_803DC340;
+        {
+            f32 neg = -lbl_803DC340;
+            *(undefined4 *)&extra->effectScale = *(undefined4 *)&neg;
+        }
         extra->clearVolumeA = 0x32c;
         extra->clearVolumeB = 0x32e;
     done_switch:
-        {
-            int zero = 0;
-            extra->effectObjs[0] = zero;
-            extra->effectObjs[1] = zero;
-            extra->effectObjs[2] = zero;
-            extra->effectObjs[3] = zero;
-            extra->effectObjs[4] = zero;
-            extra->effectObjs[5] = zero;
-            extra->effectObjs[6] = zero;
-            extra->effectObjs[7] = zero;
-            extra->effectCount = zero;
-        }
+        extra->effectObjs[0] = 0;
+        extra->effectObjs[1] = 0;
+        extra->effectObjs[2] = 0;
+        extra->effectObjs[3] = 0;
+        extra->effectObjs[4] = 0;
+        extra->effectObjs[5] = 0;
+        extra->effectObjs[6] = 0;
+        extra->effectObjs[7] = 0;
+        extra->effectCount = 0;
         obj->resetTimer = 0;
         obj->modeX = (short)((int)mapData->modeX << 8);
         obj->modeY = (ushort)mapData->modeY << 8;
-        fn_80035F20((int)obj);
-        extra->flags = extra->flags & 0xef;
+        fn_80035F20(obj);
+        ((FirePipeBitFlags *)&extra->flags)->bit4 = 0;
         extra->activeSpawn = 0;
         uVar3 = GameBit_Get((int)mapData->gameBit);
         {
             uint clz = countLeadingZeros(uVar3);
-            extra->flags = (byte)((clz >> 5 & 0xff) << 7) | extra->flags & 0x7f;
+            ((FirePipeBitFlags *)&extra->flags)->bit7 = (u8)(clz >> 5);
         }
-        extra->flags = ((mapData->flags & 1) == 0) << 1 | extra->flags & 0xfd;
-        extra->flags = (mapData->flags & 2) == 0 | extra->flags & 0xfe;
-        fn_8008016C((int)extra->emitTimer);
-        fn_80080178((int)extra->emitTimer, 0x14);
-        fn_80037200((int)obj, 0x4a);
-        extra->flags = extra->flags & 0xfb;
+        ((FirePipeBitFlags *)&extra->flags)->bit1 = (mapData->flags & 1) == 0;
+        ((FirePipeBitFlags *)&extra->flags)->bit0 = (mapData->flags & 2) == 0;
+        fn_8008016C((int)&extra->cycleTimer);
+        fn_80080178((int)&extra->cycleTimer, 0x14);
+        fn_80037200(obj, 0x4a);
+        ((FirePipeBitFlags *)&extra->flags)->bit2 = 0;
         extra->subObj = 0;
     }
 }
+#pragma peephole reset
