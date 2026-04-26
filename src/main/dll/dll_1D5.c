@@ -25,8 +25,8 @@ extern int FUN_801ce424();
 extern undefined4 FUN_801ce638();
 extern undefined4 FUN_801cefbc();
 
-extern undefined DAT_80327400;
-extern undefined DAT_80327414;
+extern ObjHitReactEntry DAT_80327400;
+extern ObjHitReactEntry DAT_80327414;
 extern undefined4 DAT_80327468;
 extern undefined4 DAT_80327498;
 extern undefined4 DAT_803274f4;
@@ -182,10 +182,10 @@ void FUN_801cf1a0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   undefined4 in_r10;
   int iVar5;
   int iVar6;
-  undefined *puVar7;
+  ObjHitReactEntry *hitReactEntries;
   double dVar8;
   
-  puVar7 = &DAT_80327400;
+  hitReactEntries = &DAT_80327400;
   iVar6 = *(int *)(param_9 + 0x5c);
   iVar5 = *(int *)(param_9 + 0x26);
   if ((*(byte *)(iVar6 + 0x43c) & 0x20) != 0) {
@@ -208,10 +208,11 @@ void FUN_801cf1a0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   if (((&DAT_803274f4)[*(byte *)(iVar6 + 0x408)] & 8) == 0) {
     if (((&DAT_803274f4)[*(byte *)(iVar6 + 0x408)] & 2) != 0) {
-      puVar7 = &DAT_80327414;
+      hitReactEntries = &DAT_80327414;
     }
     in_r7 = (float *)(iVar6 + 0x50);
-    uVar3 = objHitReact_update((int)param_9,puVar7,1,(uint)*(byte *)(iVar6 + 0x3d4),in_r7);
+    uVar3 = objHitReact_update((int)param_9,hitReactEntries,1,(uint)*(byte *)(iVar6 + 0x3d4),
+                               in_r7);
     *(undefined *)(iVar6 + 0x3d4) = uVar3;
     if (*(char *)(iVar6 + 0x3d4) != '\0') {
       FUN_8003a1c4((int)param_9,iVar6 + 0x40c);

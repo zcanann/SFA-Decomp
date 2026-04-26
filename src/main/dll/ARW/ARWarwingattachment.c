@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/ARW/ARWarwingattachment.h"
+#include "main/objHitReact.h"
 #include "main/objanim.h"
 
 extern undefined4 FUN_8000680c();
@@ -18,7 +19,6 @@ extern undefined4 FUN_80017a78();
 extern int FUN_80017a90();
 extern uint FUN_80017a98();
 extern undefined4 FUN_80017ac8();
-extern char objHitReact_update();
 extern undefined8 FUN_800360d4();
 extern undefined4 FUN_800360f0();
 extern int FUN_800369d0();

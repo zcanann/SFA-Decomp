@@ -55,7 +55,7 @@ extern ObjHitReactEffectHandle *fn_80013EC8(u32 effectId,u32 count);
  * EN v1.0 Size: 652b
  */
 #pragma scheduling off
-int objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,float *cooldown)
+int objHitReact_update(int obj,ObjHitReactEntry *entries,u32 entryCount,u32 reactionState,float *cooldown)
 {
   ObjAnimComponent *objAnim;
   ObjAnimDef *animDef;
@@ -98,7 +98,7 @@ int objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,fl
       OSReport(sObjHitReactSphereOverflowString);
       sphereIndex = 0;
     }
-    reactEntry = (ObjHitReactEntry *)((u8 *)entries + sphereIndex * sizeof(ObjHitReactEntry));
+    reactEntry = &entries[sphereIndex];
     if (collisionType != 0x11) {
       if ((reactEntry->clearVolumeA > -1) &&
           (volumeActive = fn_8000B5D0(obj,(u16)reactEntry->clearVolumeA), !volumeActive)) {

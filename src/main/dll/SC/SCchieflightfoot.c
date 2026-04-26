@@ -30,8 +30,8 @@ extern undefined4 FUN_80286888();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 
-extern undefined DAT_80327b78;
-extern undefined DAT_80327d6c;
+extern ObjHitReactEntry DAT_80327b78;
+extern ObjHitReactEntry DAT_80327d6c;
 extern s16 DAT_80327f60[];
 extern f32 DAT_80327f84[];
 extern u8 DAT_80327fc8[];
@@ -87,7 +87,7 @@ void sh_thorntail_update(SHthorntailObject *obj)
   short *psVar2;
   char cVar3;
   undefined uVar4;
-  undefined *puVar5;
+  ObjHitReactEntry *hitReactEntries;
   int iVar6;
   uint uVar7;
   float *pfVar8;
@@ -141,15 +141,15 @@ void sh_thorntail_update(SHthorntailObject *obj)
   }
   runtime->behaviorFlags = runtime->behaviorFlags & 0xf7;
   if ((DAT_80327fc8[runtime->behaviorState] & 2) == 0) {
-    puVar5 = &DAT_80327b78;
+    hitReactEntries = &DAT_80327b78;
   }
   else {
-    puVar5 = &DAT_80327d6c;
+    hitReactEntries = &DAT_80327d6c;
   }
   iVar6 = 0x19;
   uVar7 = (uint)runtime->hitReactState;
   pfVar8 = (float *)runtime->hitReactScratch;
-  cVar3 = objHitReact_update((int)psVar2,puVar5,0x19,uVar7,pfVar8);
+  cVar3 = objHitReact_update((int)psVar2,hitReactEntries,0x19,uVar7,pfVar8);
   runtime->hitReactState = cVar3;
   if (cVar3 == '\0') {
     uVar4 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(psVar2 + 0x56));
