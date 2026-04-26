@@ -40,22 +40,22 @@ void laserObj_update(int param_1)
   obj = (LaserObject *)param_1;
   if ((obj->state->sequenceLatched == '\0') &&
      (uVar1 = fn_8001FFB4((int)obj->state->secondarySequenceId), uVar1 != 0)) {
-    obj->statusFlags &= ~LASER_OBJECT_STATUS_08;
+    obj->statusFlags = (u8)(obj->statusFlags & ~LASER_OBJECT_STATUS_08);
   }
   else {
-    obj->statusFlags |= LASER_OBJECT_STATUS_08;
+    obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_08);
   }
   fn_80041018(param_1);
   if ((obj->statusFlags & 1) != 0) {
     mode = (u8)(*(code *)(*lbl_803DCAAC + 0x40))((int)obj->modeIndex);
     if (mode != 2) {
-      if ((mode < 2) && (mode != 0)) {
+      if ((mode < 2) && (mode >= 1)) {
         state = obj->state;
         if ((*(code *)(*lbl_803DCA68 + 0x20))(0x2e8) != 0) {
           fn_800200E8((int)state->primarySequenceId,1);
           fn_800200E8((int)state->secondarySequenceId,0);
           state->sequenceLatched = 1;
-          obj->statusFlags |= LASER_OBJECT_STATUS_08;
+          obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_08);
         }
       }
     }
@@ -65,7 +65,7 @@ void laserObj_update(int param_1)
         fn_800200E8((int)state->primarySequenceId,1);
         fn_800200E8((int)state->secondarySequenceId,0);
         state->sequenceLatched = 1;
-        obj->statusFlags |= LASER_OBJECT_STATUS_08;
+        obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_08);
         (*(code *)(*lbl_803DCAAC + 0x44))(7,8);
         (*(code *)(*lbl_803DCAAC + 0x44))(0xd,2);
       }
@@ -83,13 +83,13 @@ void laserObj_init(LaserObject *obj,int param_2)
   state->primarySequenceId = *(short *)(param_2 + 0x1e);
   state->secondarySequenceId = *(short *)(param_2 + 0x20);
   state->sequenceLatched = 0;
-  obj->modeWord = *(s8 *)(param_2 + 0x18) << 8;
+  obj->modeWord = (s16)(*(s8 *)(param_2 + 0x18) << 8);
   uVar1 = fn_8001FFB4((int)state->primarySequenceId);
   if (uVar1 != 0) {
     state->sequenceLatched = 1;
-    obj->statusFlags |= LASER_OBJECT_STATUS_08;
+    obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_08);
   }
-  obj->objectFlags |= 0x6000;
+  obj->objectFlags = (u16)(obj->objectFlags | 0x6000);
   return;
 }
 
