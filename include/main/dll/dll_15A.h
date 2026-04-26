@@ -11,5 +11,8 @@ FUN_801833e4(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 undefined4 FUN_80183c74(int param_1);
 void FUN_80183cb8(void);
 void FUN_80183cf4(void);
+int largecrate_getExtraSize(void);
+int largecrate_func08(void);
+void largecrate_hitDetect(void);
 
 #endif /* MAIN_DLL_DLL_15A_H_ */

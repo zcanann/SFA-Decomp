@@ -4,5 +4,8 @@
 #include "ghidra_import.h"
 
 void FUN_8018aa60(short *param_1,int param_2);
+void treasurechest_release(void);
+void treasurechest_initialise(void);
+int magiccavebottom_getExtraSize(void);
 
 #endif /* MAIN_DLL_CF_DLL_166_H_ */

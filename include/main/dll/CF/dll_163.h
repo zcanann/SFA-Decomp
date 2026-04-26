@@ -11,5 +11,7 @@ undefined4 FUN_8018a54c(int param_1);
 void FUN_8018a558(int param_1,undefined4 param_2);
 undefined FUN_8018a56c(int param_1);
 void FUN_8018a578(int param_1);
+int staffactivated_getExtraSize(void);
+int staffactivated_func08(void);
 
 #endif /* MAIN_DLL_CF_DLL_163_H_ */

@@ -503,3 +503,56 @@ void FUN_8017308c(void)
   FUN_8028688c();
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: collectible_getExtraSize
+ * EN v1.0 Address: 0x80172E34
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x80172D70
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int collectible_getExtraSize(void)
+{
+  return 0x2b8;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: collectible_func08
+ * EN v1.0 Address: 0x80172E3C
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x80172D78
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int collectible_func08(void)
+{
+  return 0x13;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: collectible_hitDetect
+ * EN v1.0 Address: 0x80172F90
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80172ECC
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void collectible_hitDetect(void)
+{
+}

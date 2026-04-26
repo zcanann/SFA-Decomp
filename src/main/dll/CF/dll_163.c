@@ -341,3 +341,39 @@ void FUN_8018a578(int param_1)
   FUN_80037180(param_1,0x41);
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: staffactivated_getExtraSize
+ * EN v1.0 Address: 0x8018A22C
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x8018A438
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int staffactivated_getExtraSize(void)
+{
+  return 0x24;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: staffactivated_func08
+ * EN v1.0 Address: 0x8018A234
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x8018A440
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int staffactivated_func08(void)
+{
+  return 0x40;
+}

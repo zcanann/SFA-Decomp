@@ -10,5 +10,8 @@ void FUN_80172b40(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_80173040(int param_1);
 void FUN_8017308c(void);
+int collectible_getExtraSize(void);
+int collectible_func08(void);
+void collectible_hitDetect(void);
 
 #endif /* MAIN_DLL_GFXEMIT_H_ */

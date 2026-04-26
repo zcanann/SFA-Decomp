@@ -121,3 +121,55 @@ LAB_8018ab40:
   }
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: treasurechest_release
+ * EN v1.0 Address: 0x8018ADB4
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8018AF9C
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void treasurechest_release(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: treasurechest_initialise
+ * EN v1.0 Address: 0x8018ADB8
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8018AFA0
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void treasurechest_initialise(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: magiccavebottom_getExtraSize
+ * EN v1.0 Address: 0x8018ADBC
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x8018AFA4
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int magiccavebottom_getExtraSize(void)
+{
+  return 1;
+}

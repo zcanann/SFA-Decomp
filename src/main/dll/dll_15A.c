@@ -359,3 +359,56 @@ LAB_801841d8:
   FUN_80286884();
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: largecrate_getExtraSize
+ * EN v1.0 Address: 0x80183B44
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x80183F3C
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int largecrate_getExtraSize(void)
+{
+  return 0x2c;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: largecrate_func08
+ * EN v1.0 Address: 0x80183B4C
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x80183F44
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int largecrate_func08(void)
+{
+  return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: largecrate_hitDetect
+ * EN v1.0 Address: 0x80183C98
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80184090
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void largecrate_hitDetect(void)
+{
+}

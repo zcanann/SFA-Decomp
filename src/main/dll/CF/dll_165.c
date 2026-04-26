@@ -119,3 +119,39 @@ void FUN_8018a53c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: treasurechest_getExtraSize
+ * EN v1.0 Address: 0x8018A9B4
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x8018ABD4
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int treasurechest_getExtraSize(void)
+{
+  return 1;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: treasurechest_func08
+ * EN v1.0 Address: 0x8018A9BC
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x8018ABDC
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int treasurechest_func08(void)
+{
+  return 0;
+}

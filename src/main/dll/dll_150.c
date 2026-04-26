@@ -390,3 +390,21 @@ LAB_8018272c:
   FUN_80286888();
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: smallbasket_getExtraSize
+ * EN v1.0 Address: 0x80182594
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x8018291C
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int smallbasket_getExtraSize(void)
+{
+  return 0x24;
+}
