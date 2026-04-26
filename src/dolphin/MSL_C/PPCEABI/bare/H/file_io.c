@@ -3,12 +3,13 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/FILE_POS.h"
 
 extern void fn_8028D574(void*);
+extern unsigned int __flush_all(void);
 
 int fflush(FILE* file) {
     unsigned long pos;
 
     if (file == NULL) {
-        return fn_8028DADC();
+        return __flush_all();
     }
     if (file->file_state.error != 0 || file->file_mode.file_kind == __closed_file) {
         return -1;
