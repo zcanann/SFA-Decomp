@@ -1940,8 +1940,8 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
                        (char)unaff_r26);
           FUN_800365a4(iVar14,iVar15,*(char *)(iVar24 + 0x6c),*(undefined *)(iVar24 + 0x6d),
                        (char)unaff_r27);
-          FUN_800339fc(-(double)local_1bc,(double)FLOAT_803df590,-(double)local_1c0,iVar14,iVar15,0)
-          ;
+          ObjHits_ApplyPairResponse(-(double)local_1bc,(double)FLOAT_803df590,-(double)local_1c0,
+                                    iVar14,iVar15,0);
         }
       }
       else {
@@ -2152,7 +2152,7 @@ void FUN_800339b4(undefined4 param_1)
 /*
  * --INFO--
  *
- * Function: FUN_800339fc
+ * Function: ObjHits_ApplyPairResponse
  * EN v1.0 Address: 0x800339FC
  * EN v1.0 Size: 1496b
  * EN v1.1 Address: 0x80033A8C
@@ -2162,8 +2162,8 @@ void FUN_800339b4(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800339fc(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
-                 undefined4 param_5,int param_6)
+void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
+                               undefined4 param_5,int param_6)
 {
   float fVar1;
   short *psVar2;
@@ -2535,8 +2535,8 @@ void ObjHits_DetectObjectPair(void)
           dVar24 = dVar24 / dVar16;
         }
         fVar2 = (float)(dVar17 - dVar18);
-        FUN_800339fc((double)((float)dVar20 * fVar2),(double)((float)dVar19 * fVar2),
-                     (double)((float)dVar24 * fVar2),iVar10,iVar12,0);
+        ObjHits_ApplyPairResponse((double)((float)dVar20 * fVar2),(double)((float)dVar19 * fVar2),
+                                  (double)((float)dVar24 * fVar2),iVar10,iVar12,0);
       }
     }
   }
@@ -2653,7 +2653,7 @@ static void ObjHits_CheckSkeletonPairInner(undefined4 param_1, undefined4 param_
           local_48 = fVar2;
           local_44 = fVar3;
           local_40 = fVar4;
-          FUN_800339fc((double)fVar2, (double)fVar3, (double)fVar4, iVar5, iVar7, 0);
+          ObjHits_ApplyPairResponse((double)fVar2, (double)fVar3, (double)fVar4, iVar5, iVar7, 0);
         }
       }
     } else {
@@ -2694,7 +2694,7 @@ static void ObjHits_CheckSkeletonPairInner(undefined4 param_1, undefined4 param_
         local_48 = fVar2;
         local_44 = fVar3;
         local_40 = fVar4;
-        FUN_800339fc((double)fVar2, (double)fVar3, (double)fVar4, iVar5, iVar7, 0);
+        ObjHits_ApplyPairResponse((double)fVar2, (double)fVar3, (double)fVar4, iVar5, iVar7, 0);
       }
     }
   }
