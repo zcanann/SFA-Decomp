@@ -88,9 +88,9 @@ extern unsigned int lbl_802C2A00;
 extern void* memset(void*, int, unsigned int);
 extern void __sys_free(void*);
 
-asm void fn_8028D8A4(void* a, void** out_b);
-asm void fn_8028D960(void* p);
-asm void fn_8028D6A8(void* table, void* p);
+asm void SubBlock_merge_next(void* subBlock, void** start);
+asm void Block_link(void* block, void* subBlock);
+asm void deallocate_from_fixed_pools(void* poolObj, void* ptr, unsigned long size);
 
 asm void fn_8028D574(void* p) {
     nofralloc
@@ -129,14 +129,14 @@ _f574_chk:
     bgt _f574_big
     mr r3, r31
     mr r4, r30
-    bl fn_8028D6A8
+    bl deallocate_from_fixed_pools
     b _f574_end
 _f574_big:
     lwz r0, -0x4(r30)
     subi r4, r30, 0x8
     clrrwi r30, r0, 1
     mr r3, r30
-    bl fn_8028D960
+    bl Block_link
     lwz r3, 0x10(r30)
     li r5, 0
     rlwinm. r0, r3, 0, 30, 30
@@ -182,7 +182,7 @@ _f574_end:
     blr
 }
 
-asm void fn_8028D6A8(void* table, void* p) {
+asm void deallocate_from_fixed_pools(void* poolObj, void* ptr, unsigned long size) {
     nofralloc
     stwu r1, -0x10(r1)
     mflr r0
@@ -280,7 +280,7 @@ _f6a8_l4:
     subi r4, r3, 0x8
     clrrwi r30, r0, 1
     mr r3, r30
-    bl fn_8028D960
+    bl Block_link
     lwz r3, 0x10(r30)
     li r5, 0
     rlwinm. r0, r3, 0, 30, 30
@@ -326,7 +326,7 @@ _f6a8_done:
     blr
 }
 
-asm void fn_8028D8A4(void* a, void** out_b) {
+asm void SubBlock_merge_next(void* subBlock, void** start) {
     nofralloc
     lwz r6, 0(r3)
     clrrwi r8, r6, 3
