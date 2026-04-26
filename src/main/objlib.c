@@ -1259,7 +1259,7 @@ int ObjHits_GetPriorityHit(int param_1,undefined4 *param_2,int *param_3,uint *pa
 /*
  * --INFO--
  *
- * Function: FUN_80036a98
+ * Function: ObjHitReact_UpdateResetObjects
  * EN v1.0 Address: 0x80036A98
  * EN v1.0 Size: 212b
  * EN v1.1 Address: 0x80036A3C
@@ -1269,8 +1269,9 @@ int ObjHits_GetPriorityHit(int param_1,undefined4 *param_2,int *param_3,uint *pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80036a98(undefined4 param_1,undefined4 param_2,undefined4 param_3,int param_4,
-                 undefined4 param_5,int param_6,undefined4 param_7,undefined4 param_8)
+void ObjHitReact_UpdateResetObjects(undefined4 param_1,undefined4 param_2,undefined4 param_3,
+                                    int param_4,undefined4 param_5,int param_6,
+                                    undefined4 param_7,undefined4 param_8)
 {
   short *psVar1;
   int iVar2;

@@ -38,8 +38,9 @@ void ObjHits_AddContactObject(int param_1,int param_2);
 int ObjHits_GetPriorityHitWithPosition(int param_1,undefined4 *param_2,int *param_3,uint *param_4,undefined4 *param_5,
                 undefined4 *param_6,undefined4 *param_7);
 int ObjHits_GetPriorityHit(int param_1,undefined4 *param_2,int *param_3,uint *param_4);
-void FUN_80036a98(undefined4 param_1,undefined4 param_2,undefined4 param_3,int param_4,
-                 undefined4 param_5,int param_6,undefined4 param_7,undefined4 param_8);
+void ObjHitReact_UpdateResetObjects(undefined4 param_1,undefined4 param_2,undefined4 param_3,
+                                    int param_4,undefined4 param_5,int param_6,
+                                    undefined4 param_7,undefined4 param_8);
 void ObjHits_ResetWorkBuffers(void);
 undefined4 ObjHitReact_GetResetObjects(undefined4 *param_1);
 void ObjHits_InitWorkBuffers(void);
