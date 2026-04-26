@@ -6,7 +6,7 @@ extern void fn_8000BB18(uint objectId,u16 volumeId);
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern int fn_800221A0(int min,int max);
-extern int fn_80038024(int obj);
+extern int ObjTrigger_IsSet(int obj);
 extern int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj);
 
 extern SHthorntailEventInterface **lbl_803DCAAC;
@@ -80,7 +80,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
     else {
       triggerIsSet = GameBit_Get(0x1a0);
       if ((triggerIsSet == 0) &&
-          (objectTriggerIsSet = fn_80038024((int)obj), objectTriggerIsSet != 0)) {
+          (objectTriggerIsSet = ObjTrigger_IsSet((int)obj), objectTriggerIsSet != 0)) {
         runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING;
         runtime->behaviorState = SHTHORNTAIL_STATE_ROOT_MODE2_EVENT;
         (*lbl_803DCAAC)->setAnimEvent((int)obj->animObjId,3,1);

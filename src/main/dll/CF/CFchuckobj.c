@@ -18,7 +18,7 @@ extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern int FUN_800384ec();
+extern int ObjTrigger_IsSet();
 extern undefined4 FUN_800810f8();
 extern undefined4 FUN_8011e868();
 extern undefined4 FUN_8018e0a8();
@@ -1071,7 +1071,7 @@ void FUN_801905c4(int param_1)
     uVar1 = (uint)*(short *)(iVar3 + 0x20);
     if (((uVar1 == 0xffffffff) ||
         ((uVar1 = FUN_80017690(uVar1), uVar1 != 0 && ((*(byte *)(param_1 + 0xaf) & 4) != 0)))) &&
-       (iVar3 = FUN_800384ec(param_1), iVar3 != 0)) {
+       (iVar3 = ObjTrigger_IsSet(param_1), iVar3 != 0)) {
       (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
       *(int *)(param_1 + 0xf4) = (int)*(short *)(iVar4 + 8);
       *(undefined *)(iVar4 + 0xd) = 1;

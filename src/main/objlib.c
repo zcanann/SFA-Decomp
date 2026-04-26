@@ -2416,7 +2416,7 @@ undefined4 ObjContact_AddCallback(int param_1,int param_2,undefined4 param_3)
 /*
  * --INFO--
  *
- * Function: FUN_80038470
+ * Function: ObjTrigger_IsSetById
  * EN v1.0 Address: 0x80038470
  * EN v1.0 Size: 124b
  * EN v1.1 Address: 0x8003809C
@@ -2426,7 +2426,7 @@ undefined4 ObjContact_AddCallback(int param_1,int param_2,undefined4 param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80038470(int param_1,short param_2)
+undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
 {
   int iVar1;
   
@@ -2445,7 +2445,7 @@ undefined4 FUN_80038470(int param_1,short param_2)
 /*
  * --INFO--
  *
- * Function: FUN_800384ec
+ * Function: ObjTrigger_IsSet
  * EN v1.0 Address: 0x800384EC
  * EN v1.0 Size: 172b
  * EN v1.1 Address: 0x8003811C
@@ -2455,7 +2455,7 @@ undefined4 FUN_80038470(int param_1,short param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_800384ec(int param_1)
+undefined4 ObjTrigger_IsSet(int param_1)
 {
   uint uVar1;
   int iVar2;

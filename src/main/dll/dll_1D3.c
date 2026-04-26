@@ -17,7 +17,7 @@ extern int FUN_80017af8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjGroup_FindNearestObject();
-extern int FUN_800384ec();
+extern int ObjTrigger_IsSet();
 extern int FUN_80039520();
 extern undefined4 FUN_8003a1c4();
 extern undefined4 fn_8003A328();

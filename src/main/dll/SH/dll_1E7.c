@@ -16,7 +16,7 @@ extern uint FUN_80017758();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjGroup_FindNearestObject();
-extern int FUN_800384ec();
+extern int ObjTrigger_IsSet();
 extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
 extern undefined4 FUN_8003b444();

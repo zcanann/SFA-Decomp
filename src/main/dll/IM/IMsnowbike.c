@@ -13,8 +13,8 @@ extern uint FUN_80017690();
 extern undefined8 FUN_80017698();
 extern undefined4 FUN_80017a6c();
 extern int FUN_80017a98();
-extern int FUN_80038470();
-extern int FUN_800384ec();
+extern int ObjTrigger_IsSetById();
+extern int ObjTrigger_IsSet();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80053b3c();
 extern undefined8 FUN_80080f14();
@@ -206,7 +206,7 @@ void FUN_801d8f80(int param_1)
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
     bVar1 = *pbVar6;
     if (bVar1 == 2) {
-      iVar3 = FUN_800384ec(param_1);
+      iVar3 = ObjTrigger_IsSet(param_1);
       if (iVar3 != 0) {
         FUN_80017698(0x886,1);
       }
@@ -220,9 +220,9 @@ void FUN_801d8f80(int param_1)
       else {
         FUN_80017a6c(param_1,0,0,0,'\0','\x04');
       }
-      iVar3 = FUN_80038470(param_1,0xc7c);
+      iVar3 = ObjTrigger_IsSetById(param_1,0xc7c);
       if (iVar3 == 0) {
-        iVar3 = FUN_800384ec(param_1);
+        iVar3 = ObjTrigger_IsSet(param_1);
         if (iVar3 != 0) {
           FUN_80017698(0xc7e,1);
         }

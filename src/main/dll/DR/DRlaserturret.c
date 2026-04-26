@@ -16,7 +16,7 @@ extern int FUN_80017a98();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern int FUN_800384ec();
+extern int ObjTrigger_IsSet();
 extern int FUN_800632f4();
 extern undefined4 FUN_8011e800();
 extern undefined4 FUN_8011eb38();
@@ -481,7 +481,7 @@ void FUN_801e719c(undefined8 param_1,double param_2,double param_3,undefined8 pa
            FLOAT_803e6688 * (float)((double)CONCAT44(0x43300000,local_24[2]) - DOUBLE_803e6698);
     }
     *(short *)(iVar10 + 0x9ca) = (short)uVar7;
-    iVar6 = FUN_800384ec((int)puVar5);
+    iVar6 = ObjTrigger_IsSet((int)puVar5);
     if (iVar6 != 0) {
       uVar7 = FUN_80017760(0,2);
       (**(code **)(*DAT_803dd6d4 + 0x48))(uVar7,puVar5,0xffffffff);

@@ -16,7 +16,7 @@ extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjMsg_SendToObject();
-extern int FUN_800384ec();
+extern int ObjTrigger_IsSet();
 extern undefined4 FUN_80081120();
 extern undefined4 FUN_8011e868();
 extern undefined4 FUN_80181b50();
@@ -222,7 +222,7 @@ void dll153_updateExploderState
         uVar14 = 0;
         uVar9 = FUN_80006ba0(0);
         if ((((uVar9 & 0x100) == 0) && (*(int *)(uVar6 + 0xf8) == 0)) &&
-           (iVar8 = FUN_800384ec(uVar6), iVar8 != 0)) {
+           (iVar8 = ObjTrigger_IsSet(uVar6), iVar8 != 0)) {
           *puVar15 = 0x8000;
           puVar15[1] = 0;
           dVar17 = (double)ObjHits_DisableObject(uVar6);

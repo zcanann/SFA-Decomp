@@ -17,7 +17,7 @@ extern int ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
                                       void *eventList);
 extern undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,u32 flags);
 extern undefined4 ObjGroup_AddObject();
-extern int FUN_800384ec();
+extern int ObjTrigger_IsSet();
 extern void ObjPath_GetPointWorldPosition(SHthorntailObject *obj,int pointIndex,f32 *x,f32 *y,f32 *z,int param_6);
 extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
@@ -248,7 +248,7 @@ void sh_thorntail_update(SHthorntailObject *obj)
       FUN_8003b1a4((int)psVar2,(int)runtime->collisionShapeState);
     }
     runtime->behaviorFlags = runtime->behaviorFlags & 0xfd;
-    if (((runtime->behaviorFlags & 4) == 0) && (iVar6 = FUN_800384ec((int)psVar2), iVar6 != 0)) {
+    if (((runtime->behaviorFlags & 4) == 0) && (iVar6 = ObjTrigger_IsSet((int)psVar2), iVar6 != 0)) {
       uVar7 = FUN_80017760(1,(uint)*runtime->impactSfxTable);
       runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_IMPACT_PENDING;
       (**(code **)(*DAT_803dd6d4 + 0x48))

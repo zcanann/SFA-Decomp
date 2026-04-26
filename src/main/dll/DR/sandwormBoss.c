@@ -51,7 +51,7 @@ extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_80037d74();
 extern undefined4 ObjLink_DetachChild();
-extern int FUN_800384ec();
+extern int ObjTrigger_IsSet();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern int Obj_GetYawDeltaToObject();
 extern undefined4 FUN_80038f38();
@@ -2353,7 +2353,7 @@ void FUN_8019e54c(uint param_1)
       if (uVar1 == 0) {
         FUN_800392ec(param_1,(undefined *)(piVar6 + 0xd),0x297);
       }
-      iVar2 = FUN_800384ec(param_1);
+      iVar2 = ObjTrigger_IsSet(param_1);
       if (iVar2 == 0) {
         FUN_80038f38(param_1,(char *)(piVar6 + 0xd));
         uStack_1c = (uint)DAT_803dc070;

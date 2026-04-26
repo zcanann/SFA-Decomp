@@ -29,7 +29,7 @@ extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
-extern int FUN_800384ec();
+extern int ObjTrigger_IsSet();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
 extern undefined4 FUN_80048000();
@@ -245,7 +245,7 @@ void FUN_8018bf58(int param_1)
   float *pfVar3;
   
   pfVar3 = *(float **)(param_1 + 0xb8);
-  iVar1 = FUN_800384ec(param_1);
+  iVar1 = ObjTrigger_IsSet(param_1);
   if ((iVar1 != 0) && (cVar2 = FUN_80132034(), cVar2 == '\0')) {
     *pfVar3 = FLOAT_803e4918;
   }
@@ -323,7 +323,7 @@ void FUN_8018c048(int param_1)
   }
   FUN_80017a64(param_1,(ushort)*(byte *)(pfVar4 + 1));
   FUN_80017a78(param_1,(uint)*(byte *)(pfVar4 + 1));
-  iVar1 = FUN_800384ec(param_1);
+  iVar1 = ObjTrigger_IsSet(param_1);
   if ((iVar1 != 0) && (cVar3 = FUN_80132034(), cVar3 == '\0')) {
     *pfVar4 = FLOAT_803e4920;
   }

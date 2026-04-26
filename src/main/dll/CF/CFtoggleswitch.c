@@ -17,7 +17,7 @@ extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern int ObjGroup_FindNearestObject();
-extern int FUN_800384ec();
+extern int ObjTrigger_IsSet();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
 extern undefined4 FUN_80041ff8();
@@ -340,7 +340,7 @@ void FUN_8018b258(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if ((*(byte *)((int)param_9 + 0xaf) & 4) != 0) {
       FUN_8011e868(0x19);
     }
-    iVar2 = FUN_800384ec((int)param_9);
+    iVar2 = ObjTrigger_IsSet((int)param_9);
     if (iVar2 == 0) {
       FUN_800400b0();
     }

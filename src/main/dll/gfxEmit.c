@@ -10,7 +10,7 @@ extern undefined4 FUN_80017a88();
 extern int FUN_80017a98();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjMsg_SendToObject();
-extern int FUN_800384ec();
+extern int ObjTrigger_IsSet();
 extern undefined4 FUN_8003b56c();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800810f4();
@@ -409,7 +409,7 @@ LAB_80172e44:
         }
         else if (sVar1 == 0x2da) goto LAB_80172e44;
 LAB_80172eec:
-        iVar4 = FUN_800384ec(uVar2);
+        iVar4 = ObjTrigger_IsSet(uVar2);
         if (iVar4 != 0) {
           uVar10 = FUN_80017698(0xa7b,1);
           *(undefined2 *)(pfVar6 + 0x12) = *(undefined2 *)(iVar7 + 0x1e);

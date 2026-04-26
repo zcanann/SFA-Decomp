@@ -10,7 +10,7 @@ extern undefined4 FUN_80017ac8();
 extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern int FUN_800384ec();
+extern int ObjTrigger_IsSet();
 extern undefined4 FUN_8003b818();
 extern undefined4 sidekickball_update();
 extern undefined4 FUN_80179eb0();
@@ -166,7 +166,7 @@ void FUN_80179b34(double param_1,double param_2,double param_3,undefined8 param_
     uVar7 = 0;
     uVar3 = FUN_80006ba0(0);
     if ((((uVar3 & 0x100) == 0) && (*(int *)(param_9 + 0x7c) == 0)) &&
-       (iVar4 = FUN_800384ec((int)param_9), iVar4 != 0)) {
+       (iVar4 = ObjTrigger_IsSet((int)param_9), iVar4 != 0)) {
       ObjHits_DisableObject((int)param_9);
       uVar7 = 1;
     }

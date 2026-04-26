@@ -38,7 +38,7 @@ extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_80037fa8();
 extern undefined4 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
-extern int FUN_800384ec();
+extern int ObjTrigger_IsSet();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80041ff8();
@@ -1625,7 +1625,7 @@ void FUN_80189a90(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   bVar1 = *(byte *)((int)pfVar7 + 0x16);
   if (bVar1 == 1) {
-    iVar2 = FUN_800384ec(param_9);
+    iVar2 = ObjTrigger_IsSet(param_9);
     if (iVar2 != 0) {
       *(undefined *)((int)pfVar7 + 0x16) = 2;
       FUN_8011d9b4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
@@ -1633,7 +1633,7 @@ void FUN_80189a90(undefined8 param_1,double param_2,double param_3,undefined8 pa
     FUN_80037fa8(param_9,8,0xb4,0xf0,0xff,0x6f,pfVar7);
   }
   else if (bVar1 == 0) {
-    iVar2 = FUN_800384ec(param_9);
+    iVar2 = ObjTrigger_IsSet(param_9);
     if (iVar2 != 0) {
       iVar8 = *(int *)(param_9 + 0x4c);
       iVar2 = ObjGroup_FindNearestObject(0xf,param_9,(float *)0x0);

@@ -13,7 +13,7 @@ extern undefined4 ObjGroup_FindNearestObjectForObject();
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern int FUN_80038470();
+extern int ObjTrigger_IsSetById();
 extern undefined4 FUN_80135c9c();
 extern double FUN_8014cbcc();
 extern undefined4 FUN_8014ccac();
@@ -319,11 +319,11 @@ undefined4 FUN_801d025c(int param_1)
   undefined4 uVar3;
   
   iVar1 = FUN_80017af8(*(int *)(&DAT_80327638 + (uint)*(byte *)(param_1 + 0xe) * 4));
-  iVar2 = FUN_80038470(iVar1,0x1ee);
+  iVar2 = ObjTrigger_IsSetById(iVar1,0x1ee);
   if (iVar2 == 0) {
     if (*(byte *)(param_1 + 0xe) != 0) {
       iVar1 = FUN_80017af8((int)(&PTR_LAB_80327634)[*(byte *)(param_1 + 0xe)]);
-      iVar2 = FUN_80038470(iVar1,0x1ee);
+      iVar2 = ObjTrigger_IsSetById(iVar1,0x1ee);
       if (iVar2 != 0) {
         (**(code **)(*DAT_803dd6d4 + 0x48))(0,iVar1,0xffffffff);
         *(undefined *)(param_1 + 4) = 9;

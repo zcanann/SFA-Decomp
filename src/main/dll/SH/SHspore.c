@@ -17,7 +17,7 @@ extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjMsg_AllocQueue();
-extern int FUN_80038470();
+extern int ObjTrigger_IsSetById();
 extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
 extern undefined4 FUN_8003b444();
@@ -127,7 +127,7 @@ void FUN_801d4524(undefined2 *param_1)
     else {
       *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) & 0xef;
     }
-    iVar2 = FUN_80038470((int)param_1,0x66c);
+    iVar2 = ObjTrigger_IsSetById((int)param_1,0x66c);
     if (iVar2 == 0) {
       if (((*(byte *)((int)param_1 + 0xaf) & 4) != 0) && (uVar1 = FUN_80017690(0x196), uVar1 == 0))
       {

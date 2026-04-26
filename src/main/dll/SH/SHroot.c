@@ -10,7 +10,7 @@ extern f32 fn_8002166C(int posA,int posB);
 extern u32 fn_800221A0(int min,int max);
 extern int fn_8002B9EC();
 extern undefined8 ObjGroup_RemoveObject();
-extern int fn_80038024();
+extern int ObjTrigger_IsSet();
 extern void fn_8003B310(int obj,int collisionShapeState);
 extern void fn_8006EF38(double scaleX,double scaleY,int obj,int joint,int pointCount,int pathPoints,
                         int scratch);
@@ -69,7 +69,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
         closeToPlayer = FALSE;
       }
       else {
-        triggerIsSet = fn_80038024(objectId);
+        triggerIsSet = ObjTrigger_IsSet(objectId);
         if (triggerIsSet != 0) {
           runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING;
           GameBit_Set(0xcd6,1);
@@ -77,7 +77,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
       }
     }
     else {
-      triggerIsSet = fn_80038024(objectId);
+      triggerIsSet = ObjTrigger_IsSet(objectId);
       if (triggerIsSet != 0) {
         runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING;
         GameBit_Set(0xcd5,1);

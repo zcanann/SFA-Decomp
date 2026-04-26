@@ -12,8 +12,8 @@ extern undefined4 FUN_80017a98();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined8 ObjGroup_RemoveObject();
-extern int FUN_80038470();
-extern int FUN_800384ec();
+extern int ObjTrigger_IsSetById();
+extern int ObjTrigger_IsSet();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003a1c4();
 extern undefined4 FUN_8003b280();
@@ -286,7 +286,7 @@ LAB_801cf840:
                iVar6 + 0x16c);
   FUN_801ce340(param_9,iVar6,(byte)(&DAT_803274f4)[*(byte *)(iVar6 + 0x408)] & 4);
   *(byte *)(iVar6 + 0x43c) = *(byte *)(iVar6 + 0x43c) & 0xfb;
-  if (((*(byte *)(iVar6 + 0x43c) & 0x10) == 0) && (iVar5 = FUN_800384ec((int)param_9), iVar5 != 0))
+  if (((*(byte *)(iVar6 + 0x43c) & 0x10) == 0) && (iVar5 = ObjTrigger_IsSet((int)param_9), iVar5 != 0))
   {
     uVar4 = FUN_80017760(1,(uint)**(byte **)(iVar6 + 0x48));
     *(byte *)(iVar6 + 0x43c) = *(byte *)(iVar6 + 0x43c) | 4;

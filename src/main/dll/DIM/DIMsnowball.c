@@ -34,8 +34,8 @@ extern void* ObjGroup_GetObjects();
 extern int ObjHits_PollPriorityHitWithCooldown();
 extern undefined4 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
-extern int FUN_80038470();
-extern int FUN_800384ec();
+extern int ObjTrigger_IsSetById();
+extern int ObjTrigger_IsSet();
 extern undefined4 FUN_8003b280();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80048000();
@@ -812,7 +812,7 @@ LAB_801ab118:
   case 0xc:
     uVar4 = FUN_80017690(9);
     if (uVar4 == 0) {
-      iVar8 = FUN_800384ec((int)psVar2);
+      iVar8 = ObjTrigger_IsSet((int)psVar2);
       if (iVar8 == 0) {
         if ((*(byte *)((int)piVar10 + 0x11) & 2) != 0) {
           *(undefined *)(piVar10 + 4) = 0xd;
@@ -949,7 +949,7 @@ void FUN_801aba9c(uint param_1)
       *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xef;
     }
     pfVar5 = *(float **)(param_1 + 0xb8);
-    iVar2 = FUN_800384ec(param_1);
+    iVar2 = ObjTrigger_IsSet(param_1);
     if ((iVar2 != 0) && (cVar3 = FUN_80132034(), cVar3 == '\0')) {
       *pfVar5 = FLOAT_803e5358;
     }
@@ -1024,7 +1024,7 @@ void FUN_801abcac(int param_1,int param_2)
   }
   else {
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xef;
-    iVar3 = FUN_80038470(param_1,0xa9);
+    iVar3 = ObjTrigger_IsSetById(param_1,0xa9);
     if (iVar3 != 0) {
       (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
       FUN_80017680(0xa9);
@@ -1068,7 +1068,7 @@ void FUN_801abda4(int param_1,int param_2)
   uVar1 = FUN_80017690((int)*(short *)(param_2 + 4));
   if (uVar1 == 0) {
     FUN_80017a78(param_1,1);
-    iVar2 = FUN_800384ec(param_1);
+    iVar2 = ObjTrigger_IsSet(param_1);
     if (iVar2 != 0) {
       (**(code **)(*DAT_803dd6d4 + 0x48))(1,param_1,0xffffffff);
       FUN_80017688(0xa9);
