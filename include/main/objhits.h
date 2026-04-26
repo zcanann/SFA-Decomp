@@ -40,9 +40,10 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
                            int param_11,undefined4 param_12,undefined4 param_13,uint param_14,
                            uint param_15,undefined4 param_16);
 void FUN_80033358(void);
-void FUN_8003335c(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int param_11,int param_12);
+void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
+                                   undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                   undefined8 param_7,undefined8 param_8,undefined4 param_9,
+                                   undefined4 param_10,int param_11,int param_12);
 void FUN_800339b4(undefined4 param_1);
 void FUN_800339fc(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,int param_6);

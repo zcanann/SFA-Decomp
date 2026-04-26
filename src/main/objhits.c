@@ -1982,7 +1982,7 @@ void FUN_80033358(void)
 /*
  * --INFO--
  *
- * Function: FUN_8003335c
+ * Function: ObjHits_CheckObjectHitVolumes
  * EN v1.0 Address: 0x8003335C
  * EN v1.0 Size: 1624b
  * EN v1.1 Address: 0x800334C4
@@ -1992,9 +1992,10 @@ void FUN_80033358(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003335c(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int param_11,int param_12)
+void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
+                                   undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                   undefined8 param_7,undefined8 param_8,undefined4 param_9,
+                                   undefined4 param_10,int param_11,int param_12)
 {
   int iVar1;
   char cVar2;
@@ -3100,8 +3101,9 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
                      ((*(ushort *)(*(int *)(candidateAttachedObj + 0x54) + 0x60) & 1) == 0))) {
                   candidateAttachedObj = 0;
                 }
-                FUN_8003335c((double)FLOAT_803dc074, param_2, param_3, param_4, param_5, param_6,
-                             param_7, param_8, obj, candidateObj, attachedObj, candidateAttachedObj);
+                ObjHits_CheckObjectHitVolumes((double)FLOAT_803dc074, param_2, param_3, param_4,
+                                              param_5, param_6, param_7, param_8, obj, candidateObj,
+                                              attachedObj, candidateAttachedObj);
               }
             }
           }
