@@ -727,7 +727,7 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
 /*
  * --INFO--
  *
- * Function: fn_8009DF0C
+ * Function: expgfx_updateSourceFrameFlags
  * EN v1.0 Address: 0x8009DF0C
  * EN v1.0 Size: 248b
  * EN v1.1 Address: TODO
@@ -738,7 +738,7 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
  * PAL Size: TODO
  */
 #pragma scheduling off
-int fn_8009DF0C(void *sourceObject)
+int expgfx_updateSourceFrameFlags(void *sourceObject)
 {
   u32 bit;
   s32 highBit;
