@@ -11,7 +11,7 @@ extern undefined4 FUN_80294964();
 /*
  * --INFO--
  *
- * Function: FUN_801d16ec
+ * Function: ediblemushroom_update
  * EN v1.0 Address: 0x801D16EC
  * EN v1.0 Size: 768b
  * EN v1.1 Address: 0x801D188C
@@ -21,7 +21,7 @@ extern undefined4 FUN_80294964();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d16ec(void)
+void ediblemushroom_update(void)
 {
   int *piVar1;
   int iVar2;

@@ -17,7 +17,7 @@ extern undefined4 FUN_8003601c();
 extern undefined4 FUN_80036030();
 extern undefined4 FUN_80037bd4();
 extern undefined8 FUN_80081118();
-extern undefined2 FUN_801d16ec();
+extern undefined2 ediblemushroom_update();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 
@@ -102,7 +102,7 @@ void FUN_801d083c(undefined8 param_1,undefined8 param_2,double param_3,undefined
         }
         else {
           if ((*(byte *)((int)param_10 + 0x137) & 2) == 0) {
-            uVar4 = FUN_801d16ec();
+            uVar4 = ediblemushroom_update();
             *(undefined2 *)(param_10 + 0x4c) = uVar4;
           }
           else {
@@ -190,7 +190,7 @@ void FUN_801d083c(undefined8 param_1,undefined8 param_2,double param_3,undefined
           FUN_80006824((uint)param_9,0xa0);
           if (dVar7 < (double)FLOAT_803e5f30) {
             if ((*(byte *)((int)param_10 + 0x137) & 2) == 0) {
-              uVar4 = FUN_801d16ec();
+              uVar4 = ediblemushroom_update();
               *(undefined2 *)(param_10 + 0x4c) = uVar4;
             }
             else {
@@ -214,7 +214,7 @@ void FUN_801d083c(undefined8 param_1,undefined8 param_2,double param_3,undefined
           }
           else {
             if ((*(byte *)((int)param_10 + 0x137) & 2) == 0) {
-              uVar4 = FUN_801d16ec();
+              uVar4 = ediblemushroom_update();
               *(undefined2 *)(param_10 + 0x4c) = uVar4;
             }
             else {
@@ -260,7 +260,7 @@ void FUN_801d083c(undefined8 param_1,undefined8 param_2,double param_3,undefined
        ((*(byte *)((int)param_10 + 0x137) & 1) == 0)) {
       if ((double)FLOAT_803e5f30 <= dVar7) {
         if ((*(byte *)((int)param_10 + 0x137) & 2) == 0) {
-          uVar4 = FUN_801d16ec();
+          uVar4 = ediblemushroom_update();
           *(undefined2 *)(param_10 + 0x4c) = uVar4;
         }
         else {

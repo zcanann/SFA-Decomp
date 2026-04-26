@@ -12,7 +12,7 @@ extern undefined4 DAT_803ddb38;
 /*
  * --INFO--
  *
- * Function: FUN_801916a0
+ * Function: transporter_init
  * EN v1.0 Address: 0x801916A0
  * EN v1.0 Size: 72b
  * EN v1.1 Address: 0x80191A28
@@ -22,7 +22,7 @@ extern undefined4 DAT_803ddb38;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801916a0(int param_1)
+void transporter_init(int param_1)
 {
   uint uVar1;
   int iVar2;

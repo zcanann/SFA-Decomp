@@ -44,7 +44,7 @@ extern f32 FLOAT_803e5f8c;
 /*
  * --INFO--
  *
- * Function: FUN_801d1978
+ * Function: ediblemushroom_init
  * EN v1.0 Address: 0x801D1978
  * EN v1.0 Size: 60b
  * EN v1.1 Address: 0x801D1B54
@@ -54,7 +54,7 @@ extern f32 FLOAT_803e5f8c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d1978(int param_1)
+void ediblemushroom_init(int param_1)
 {
   FUN_80037180(param_1,0x47);
   FUN_80037180(param_1,0x31);

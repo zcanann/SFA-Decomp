@@ -29,7 +29,7 @@ extern f32 FLOAT_803e5f14;
 /*
  * --INFO--
  *
- * Function: FUN_801cff20
+ * Function: nw_levcontrol_update
  * EN v1.0 Address: 0x801CFF20
  * EN v1.0 Size: 228b
  * EN v1.1 Address: 0x801D049C
@@ -39,9 +39,9 @@ extern f32 FLOAT_803e5f14;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801cff20(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9)
+void nw_levcontrol_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                          undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                          undefined8 param_8,int param_9)
 {
   char cVar1;
   undefined8 extraout_f1;
