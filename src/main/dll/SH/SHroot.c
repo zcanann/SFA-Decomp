@@ -42,39 +42,41 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
 {
   int playerObj;
   int randomTime;
-  BOOL closeToPlayer;
+  uint closeToPlayer;
+  uint gameBit;
+  int triggerIsSet;
 
   runtime->impactSfxTable = &gSHthorntailLevelControlMode1ImpactSfxTable;
   playerObj = fn_8002B9EC();
   closeToPlayer = (double)fn_8002166C(objectId + 0x18,playerObj + 0x18) < (double)lbl_803E5424;
   if (config->impactSfxVariant == 0) {
-    playerObj = GameBit_Get(0x13e);
-    if (playerObj == 0) {
-      playerObj = fn_80038024(objectId);
-      if (playerObj != 0) {
-        runtime->behaviorFlags = runtime->behaviorFlags | 4;
-        GameBit_Set(0xcd5,1);
-      }
-    }
-    else {
-      playerObj = GameBit_Get(0x168);
-      if (playerObj == 0) {
-        playerObj = fn_80038024(objectId);
-        if (playerObj != 0) {
-          runtime->behaviorFlags = runtime->behaviorFlags | 4;
-          GameBit_Set(0xcd6,1);
-        }
-      }
-      else {
+    gameBit = GameBit_Get(0x13e);
+    if (gameBit != 0) {
+      gameBit = GameBit_Get(0x168);
+      if (gameBit != 0) {
         runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_FREEZE_MOTION;
         runtime->freezeFrameCounter = 0;
         closeToPlayer = FALSE;
       }
+      else {
+        triggerIsSet = fn_80038024(objectId);
+        if (triggerIsSet != 0) {
+          runtime->behaviorFlags = runtime->behaviorFlags | 4;
+          GameBit_Set(0xcd6,1);
+        }
+      }
+    }
+    else {
+      triggerIsSet = fn_80038024(objectId);
+      if (triggerIsSet != 0) {
+        runtime->behaviorFlags = runtime->behaviorFlags | 4;
+        GameBit_Set(0xcd5,1);
+      }
     }
   }
   else {
-    playerObj = GameBit_Get(0x1ab);
-    if (playerObj != 0) {
+    gameBit = GameBit_Get(0x1ab);
+    if (gameBit != 0) {
       closeToPlayer = FALSE;
     }
   }
@@ -228,9 +230,12 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4
   SHthorntailRuntime *runtime;
   int randomTime;
   int iVar2;
+  uint levelControlReady;
+  uint impactPending;
 
   runtime = obj->runtime;
-  if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_LEVELCONTROL_READY) == 0) {
+  levelControlReady = runtime->behaviorFlags & SHTHORNTAIL_FLAG_LEVELCONTROL_READY;
+  if (levelControlReady == 0) {
     fn_8000B7BC((int)obj,0x7f);
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
     randomTime = fn_800221A0(1000,2000);
@@ -241,12 +246,13 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4
     runtime->freezeFrameCounter = 0;
     obj->statusFlags = obj->statusFlags | SHTHORNTAIL_OBJECT_STATUS_08;
   }
-  if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_IMPACT_PENDING) != 0) {
+  impactPending = runtime->behaviorFlags & SHTHORNTAIL_FLAG_IMPACT_PENDING;
+  if (impactPending != 0) {
     iVar2 = fn_80114BB0((int)obj,param_3,(int)runtime,0,0);
     if (iVar2 != 0) {
       return 0;
     }
-    *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & 0xffbf;
+    *(short *)(param_3 + 0x6e) = *(short *)(param_3 + 0x6e) & 0xffbf;
     fn_8003B310((int)obj,(int)runtime->collisionShapeState);
   }
   runtime->activeMoveValid = 0;
