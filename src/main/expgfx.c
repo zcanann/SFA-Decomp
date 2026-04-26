@@ -803,7 +803,7 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
  */
 void fn_8009E004(void)
 {
-  fn_8009EED8();
+  expgfx_releaseSourceSlots();
   return;
 }
 
@@ -1032,14 +1032,14 @@ void fn_8009ECE4(void)
  */
 void fn_8009EEB8(void)
 {
-  fn_8009EED8();
+  expgfx_releaseSourceSlots();
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: fn_8009EED8
+ * Function: expgfx_releaseSourceSlots
  * EN v1.0 Address: 0x8009EED8
  * EN v1.0 Size: 260b
  * EN v1.1 Address: 0x8009F164
@@ -1050,7 +1050,7 @@ void fn_8009EEB8(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_8009EED8(int sourceId)
+void expgfx_releaseSourceSlots(int sourceId)
 {
   char *poolActiveCounts;
   ExpgfxTableEntry *tableEntries;
