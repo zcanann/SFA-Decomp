@@ -193,7 +193,6 @@ extern u8 lbl_8030F898[];
 extern u8 lbl_8039AB58[];
 extern u32 lbl_8039BA28[];
 extern u32 lbl_8039BB68[];
-extern u32 lbl_8039BD58;
 extern s16 lbl_8030F8C8[];
 extern int lbl_803DD258;
 extern char sExpgfxAddToTableUsageOverflow[];
@@ -1663,7 +1662,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
 /*
  * --INFO--
  *
- * Function: fn_8009FCDC
+ * Function: expgfx_resetPoolResources
  * EN v1.0 Address: 0x8009FCDC
  * EN v1.0 Size: 416b
  * EN v1.1 Address: TODO
@@ -1674,7 +1673,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_8009FCDC(void)
+void expgfx_resetPoolResources(void)
 {
   ExpgfxResourceEntry *resourceEntry;
   u8 *expgfxBase;
@@ -1781,7 +1780,7 @@ void fn_8009FCDC(void)
 /*
  * --INFO--
  *
- * Function: fn_8009FE7C
+ * Function: expgfx_releaseSlotPoolHandles
  * EN v1.0 Address: 0x8009FE7C
  * EN v1.0 Size: 84b
  * EN v1.1 Address: TODO
@@ -1791,7 +1790,7 @@ void fn_8009FCDC(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8009FE7C(void)
+void expgfx_releaseSlotPoolHandles(void)
 {
   u32 *slotPoolBases;
   int poolIndex;
@@ -1800,7 +1799,7 @@ void fn_8009FE7C(void)
     bl expgfx_initialise
   }
   poolIndex = 0;
-  slotPoolBases = &lbl_8039BD58;
+  slotPoolBases = &gExpgfxSlotPoolBases;
   do {
     fn_80023800(*slotPoolBases);
     slotPoolBases = slotPoolBases + 1;
