@@ -1,11 +1,10 @@
 #include "ghidra_import.h"
 #include "main/dll/fire.h"
 
-extern uint FUN_80017690();
 extern undefined4 FUN_800178b8();
-extern undefined4 FUN_8000a380();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
+extern undefined4 fn_8000A380(int param_1,int param_2,int param_3);
 extern undefined4 fn_8000DA58(int param_1,int param_2);
 extern undefined4 fn_80014948(int param_1);
 extern undefined4 fn_80041E3C(int param_1);
@@ -22,14 +21,7 @@ extern undefined4 fn_800887F8(int param_1);
 
 extern undefined4 *lbl_803DCA54;
 extern undefined4 *lbl_803DCAAC;
-extern undefined4 DAT_8032a7b8;
-extern undefined4 DAT_8032a7bc;
-extern undefined4 DAT_8032a7c0;
 extern f32 lbl_803E64D8;
-extern f32 FLOAT_803e7144;
-extern f32 FLOAT_803e7164;
-extern f32 FLOAT_803e7168;
-extern f32 FLOAT_803e716c;
 
 /*
  * --INFO--
@@ -175,7 +167,7 @@ void fireObj_init(int obj)
   GameBit_Set(0x90d,1);
   GameBit_Set(0x90e,1);
   GameBit_Set(0x90f,1);
-  FUN_8000a380(3,2,0x2ee);
+  fn_8000A380(3,2,0x2ee);
   return;
 }
 
