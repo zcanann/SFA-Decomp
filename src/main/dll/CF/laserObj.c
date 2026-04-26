@@ -5,8 +5,19 @@ extern int GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern void fn_80041018(int obj);
 
-extern undefined4* lbl_803DCA68;
-extern undefined4* lbl_803DCAAC;
+typedef struct LaserTriggerInterface {
+  u8 pad00[0x20];
+  int (*isEventReady)(int eventId);
+} LaserTriggerInterface;
+
+typedef struct LaserEventInterface {
+  u8 pad00[0x40];
+  int (*getMode)(int mapId);
+  void (*triggerEvent)(int eventId,int value);
+} LaserEventInterface;
+
+extern LaserTriggerInterface **lbl_803DCA68;
+extern LaserEventInterface **lbl_803DCAAC;
 
 int laserObj_getExtraSize(void)
 {
@@ -35,6 +46,7 @@ void laserObj_update(int param_1)
   LaserObject *obj;
   LaserState *state;
   uint uVar1;
+  int eventReady;
   int mode;
 
   obj = (LaserObject *)param_1;
@@ -47,28 +59,30 @@ void laserObj_update(int param_1)
   }
   fn_80041018(param_1);
   if ((obj->statusFlags & 1) != 0) {
-    mode = (u8)(*(code *)(*lbl_803DCAAC + 0x40))((int)obj->modeIndex);
-    if (mode != 2) {
-      if ((mode < 2) && (mode >= 1)) {
+    mode = (u8)(*lbl_803DCAAC)->getMode((int)obj->modeIndex);
+    switch (mode) {
+      case 1:
         state = obj->state;
-        if ((*(code *)(*lbl_803DCA68 + 0x20))(0x2e8) != 0) {
+        eventReady = (*lbl_803DCA68)->isEventReady(0x2e8);
+        if (eventReady != 0) {
           GameBit_Set((int)state->primarySequenceId,1);
           GameBit_Set((int)state->secondarySequenceId,0);
           state->sequenceLatched = 1;
           obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_08);
         }
-      }
-    }
-    else {
-      state = obj->state;
-      if ((*(code *)(*lbl_803DCA68 + 0x20))(0x83c) != 0) {
-        GameBit_Set((int)state->primarySequenceId,1);
-        GameBit_Set((int)state->secondarySequenceId,0);
-        state->sequenceLatched = 1;
-        obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_08);
-        (*(code *)(*lbl_803DCAAC + 0x44))(7,8);
-        (*(code *)(*lbl_803DCAAC + 0x44))(0xd,2);
-      }
+        break;
+      case 2:
+        state = obj->state;
+        eventReady = (*lbl_803DCA68)->isEventReady(0x83c);
+        if (eventReady != 0) {
+          GameBit_Set((int)state->primarySequenceId,1);
+          GameBit_Set((int)state->secondarySequenceId,0);
+          state->sequenceLatched = 1;
+          obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_08);
+          (*lbl_803DCAAC)->triggerEvent(7,8);
+          (*lbl_803DCAAC)->triggerEvent(0xd,2);
+        }
+        break;
     }
   }
   return;
