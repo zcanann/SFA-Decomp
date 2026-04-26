@@ -229,3 +229,38 @@ void FUN_801847e8(ushort *param_1,int param_2,char param_3,float *param_4)
   }
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: scarab_getExtraSize
+ * EN v1.0 Address: 0x801847E8
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x80184918
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int scarab_getExtraSize(void)
+{
+  return 0x34;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: scarab_free
+ * EN v1.0 Address: 0x801847F0
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80184920
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void scarab_free(void)
+{
+}

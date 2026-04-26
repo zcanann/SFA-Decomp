@@ -220,3 +220,37 @@ void FUN_801733c0(int param_1)
   FUN_8003b818(param_1);
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: collectible_release
+ * EN v1.0 Address: 0x8017321C
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80173378
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void collectible_release(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: collectible_initialise
+ * EN v1.0 Address: 0x80173220
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8017337C
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void collectible_initialise(void)
+{
+}

@@ -6,5 +6,7 @@
 void FUN_801845fc(undefined2 *param_1,int param_2);
 void FUN_80184600(void);
 void FUN_801847e8(ushort *param_1,int param_2,char param_3,float *param_4);
+int scarab_getExtraSize(void);
+void scarab_free(void);
 
 #endif /* MAIN_DLL_CF_CFGUARDIAN_H_ */

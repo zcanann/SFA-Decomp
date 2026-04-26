@@ -9,5 +9,7 @@ void FUN_80172f14(undefined8 param_1,undefined8 param_2,double param_3,undefined
 void FUN_80173364(short *param_1,int param_2);
 void FUN_80173368(int param_1);
 void FUN_801733c0(int param_1);
+void collectible_release(void);
+void collectible_initialise(void);
 
 #endif /* MAIN_DLL_DLL_13F_H_ */

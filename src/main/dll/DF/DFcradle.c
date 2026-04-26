@@ -404,3 +404,72 @@ void FUN_801c0a18(uint param_1)
   }
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: dimbossfire_release
+ * EN v1.0 Address: 0x801C0A58
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801C0B30
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dimbossfire_release(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dimbossfire_initialise
+ * EN v1.0 Address: 0x801C0A5C
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801C0B34
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dimbossfire_initialise(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: ccriverflow_getExtraSize
+ * EN v1.0 Address: 0x801C0A60
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x801C0B38
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int ccriverflow_getExtraSize(void)
+{
+  return 1;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: ccriverflow_render
+ * EN v1.0 Address: 0x801C0A9C
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801C0B88
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void ccriverflow_render(void)
+{
+}

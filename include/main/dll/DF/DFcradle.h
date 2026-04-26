@@ -12,5 +12,9 @@ void FUN_801c08d4(void);
 void FUN_801c0908(int param_1);
 void FUN_801c09b0(int param_1);
 void FUN_801c0a18(uint param_1);
+void dimbossfire_release(void);
+void dimbossfire_initialise(void);
+int ccriverflow_getExtraSize(void);
+void ccriverflow_render(void);
 
 #endif /* MAIN_DLL_DF_DFCRADLE_H_ */
