@@ -10,7 +10,6 @@ extern void OSPanic(const char *file,int line,const char *msg,...);
 
 extern u8 lbl_803DB410;
 extern f32 lbl_803DB414;
-extern undefined4* lbl_803DCAAC;
 extern f32 lbl_803E5418;
 extern f64 lbl_803E5428;
 extern f32 lbl_803E5430;
@@ -25,7 +24,13 @@ typedef struct SHthorntailAnimationInterface {
   int (*isTailSwingQueued)(int);
 } SHthorntailAnimationInterface;
 
+typedef struct SHthorntailEventInterface {
+  u8 pad00[0x44];
+  void (*triggerEvent)(int,int);
+} SHthorntailEventInterface;
+
 extern SHthorntailAnimationInterface **lbl_803DCA58;
+extern SHthorntailEventInterface **lbl_803DCAAC;
 
 /*
  * --INFO--
@@ -192,23 +197,23 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntim
     eventIsSet = GameBit_Get(0x23c);
     if (eventIsSet == 0) {
       eventIsSet = GameBit_Get(0x5bd);
-      if (eventIsSet == 0) {
+      if (eventIsSet != 0) {
+        (*lbl_803DCAAC)->triggerEvent(0x1d,3);
+        runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5EventImpactSfxTable;
+      }
+      else {
         eventIsSet = GameBit_Get(0x23d);
         if (eventIsSet == 0) {
           runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5IdleImpactSfxTable;
           runtime->behaviorState = SHTHORNTAIL_STATE_ROOT_MODE3_WAIT;
           return;
         }
-        if (runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE3_WAIT) {
+        if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE3_WAIT) {
           runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
           randomTime = fn_800221A0(1000,2000);
           runtime->idleTimer = (float)randomTime;
         }
         runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5PlayerImpactSfxTable;
-      }
-      else {
-        (*(code *)(*lbl_803DCAAC + 0x44))(0x1d,3);
-        runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5EventImpactSfxTable;
       }
     }
     break;
