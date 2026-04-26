@@ -228,7 +228,13 @@ typedef struct ExpgfxResourceEntry {
 } ExpgfxResourceEntry;
 
 typedef struct ExpgfxSlot {
-  u8 pad00[0x26];
+  u8 pad00[0x06];
+  s16 lifetimeFrame;
+  u8 pad08[0x0F - 0x08];
+  u8 initialStateByte;
+  u8 pad10[0x16 - 0x10];
+  s16 lifetimeFrameLimit;
+  u8 pad18[0x26 - 0x18];
   s16 sequenceId;
   u8 pad28[0x40 - 0x28];
   s16 sourceVecX;
@@ -1417,10 +1423,10 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
           slot->velocityX = spawnConfig->velocityX;
           slot->velocityY = spawnConfig->velocityY;
           slot->velocityZ = spawnConfig->velocityZ;
-          *(undefined *)((int)puVar18 + 0xf) = spawnConfig->initialStateByte;
+          slot->initialStateByte = spawnConfig->initialStateByte;
           puVar18[0x1b] = (short)spawnWords[1];
-          puVar18[3] = (short)spawnWords[2];
-          puVar18[0xb] = (short)spawnWords[2];
+          slot->lifetimeFrame = (short)spawnWords[2];
+          slot->lifetimeFrameLimit = (short)spawnWords[2];
           if ((double)FLOAT_803dffd4 < (double)spawnConfig->scale) {
             FUN_80135810((double)spawnConfig->scale,param_2,param_3,param_4,param_5,param_6,param_7,
                          param_8,sExpgfxScaleOverflow,puVar10,iVar13,iVar15,piVar16,param_14,
@@ -1441,7 +1447,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
               uVar4 = (undefined2)(int)dVar19;
               slot->scaleCounter = uVar4;
               dVar20 = DOUBLE_803dffe0;
-              local_48 = (double)CONCAT44(0x43300000,(int)(short)puVar18[0xb] ^ 0x80000000);
+              local_48 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrameLimit ^ 0x80000000);
               iVar7 = (int)(dVar21 / (double)(float)(local_48 - DOUBLE_803dffe0));
               local_50 = (double)(longlong)iVar7;
               slot->scaleFrames = (short)iVar7;
@@ -1453,7 +1459,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
           else {
             slot->scaleCounter = 0;
             dVar20 = DOUBLE_803dffe0;
-            local_50 = (double)CONCAT44(0x43300000,(int)(short)puVar18[0xb] ^ 0x80000000);
+            local_50 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrameLimit ^ 0x80000000);
             iVar7 = (int)(dVar21 / (double)(float)(local_50 - DOUBLE_803dffe0));
             local_48 = (double)(longlong)iVar7;
             slot->scaleFrames = (short)iVar7;
@@ -1475,81 +1481,81 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
             slot->renderFlags = slot->renderFlags ^ 8;
             dVar21 = DOUBLE_803dffe0;
             param_4 = (double)FLOAT_803e009c;
-            local_38 = (double)CONCAT44(0x43300000,(int)(short)puVar18[3] ^ 0x80000000);
-            *(float *)(puVar18 + 0x2c) =
-                 *(float *)(puVar18 + 0x38) *
+            local_38 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame ^ 0x80000000);
+            *(float *)&slot->posX =
+                 slot->velocityX *
                  (float)(param_4 * (double)(float)(local_38 - DOUBLE_803dffe0)) +
-                 *(float *)(puVar18 + 0x2c);
-            local_40 = (double)CONCAT44(0x43300000,(int)(short)puVar18[3] ^ 0x80000000);
-            *(float *)(puVar18 + 0x2e) =
-                 *(float *)(puVar18 + 0x3a) * (float)(param_4 * (double)(float)(local_40 - dVar21))
-                 + *(float *)(puVar18 + 0x2e);
-            param_2 = (double)*(float *)(puVar18 + 0x3c);
-            local_48 = (double)CONCAT44(0x43300000,(int)(short)puVar18[3] ^ 0x80000000);
-            *(float *)(puVar18 + 0x30) =
+                 *(float *)&slot->posX;
+            local_40 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame ^ 0x80000000);
+            *(float *)&slot->posY =
+                 slot->velocityY * (float)(param_4 * (double)(float)(local_40 - dVar21)) +
+                 *(float *)&slot->posY;
+            param_2 = (double)slot->velocityZ;
+            local_48 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame ^ 0x80000000);
+            *(float *)&slot->posZ =
                  (float)(param_2 * (double)(float)(param_4 * (double)(float)(local_48 - dVar21)) +
-                        (double)*(float *)(puVar18 + 0x30));
+                        (double)*(float *)&slot->posZ);
             dVar20 = (double)FLOAT_803e00a0;
-            *(float *)(puVar18 + 0x38) = (float)((double)*(float *)(puVar18 + 0x38) * dVar20);
-            *(float *)(puVar18 + 0x3a) = (float)((double)*(float *)(puVar18 + 0x3a) * dVar20);
-            *(float *)(puVar18 + 0x3c) = (float)((double)*(float *)(puVar18 + 0x3c) * dVar20);
+            slot->velocityX = (float)((double)slot->velocityX * dVar20);
+            slot->velocityY = (float)((double)slot->velocityY * dVar20);
+            slot->velocityZ = (float)((double)slot->velocityZ * dVar20);
           }
           if ((slot->renderFlags & 0x10) != 0) {
             iVar7 = FUN_80017a98();
             slot->renderFlags = slot->renderFlags ^ 0x10;
             dVar19 = DOUBLE_803dffe0;
-            if ((*(uint *)(puVar18 + 0x3e) & 1) == 0) {
+            if ((slot->behaviorFlags & 1) == 0) {
               dVar21 = (double)(*(float *)(iVar7 + 0x18) -
-                               (*(float *)(puVar18 + 0x32) +
+                               (*(float *)&slot->startPosX +
                                *(float *)&attachedSource->sourcePosYBits));
               param_2 = (double)*(float *)(iVar7 + 0x20);
               fVar1 = (float)(param_2 -
-                             (double)(*(float *)(puVar18 + 0x36) +
+                             (double)(*(float *)&slot->startPosZ +
                                      *(float *)&attachedSource->sourcePosWBits));
               dVar20 = (double)(float)(dVar21 * dVar21 + (double)(fVar1 * fVar1));
               if (((dVar20 < (double)FLOAT_803e00a4) &&
                   (dVar20 = (double)FLOAT_803dffdc, dVar20 != (double)*(float *)(iVar7 + 0x24))) &&
                  (dVar20 != (double)*(float *)(iVar7 + 0x2c))) {
-                local_38 = (double)CONCAT44(0x43300000,(int)(short)puVar18[3] << 1 ^ 0x80000000);
-                *(float *)(puVar18 + 0x38) =
-                     *(float *)(puVar18 + 0x38) -
+                local_38 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame << 1 ^ 0x80000000);
+                slot->velocityX =
+                     slot->velocityX -
                      (float)(dVar21 / (double)(float)(local_38 - DOUBLE_803dffe0));
-                local_40 = (double)CONCAT44(0x43300000,(int)(short)puVar18[3] << 1 ^ 0x80000000);
-                *(float *)(puVar18 + 0x3a) =
-                     *(float *)(puVar18 + 0x3a) -
+                local_40 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame << 1 ^ 0x80000000);
+                slot->velocityY =
+                     slot->velocityY -
                      ((FLOAT_803e00a8 + *(float *)(iVar7 + 0x1c)) -
-                     (*(float *)(puVar18 + 0x34) + *(float *)&attachedSource->sourcePosZBits)) /
+                     (*(float *)&slot->startPosY + *(float *)&attachedSource->sourcePosZBits)) /
                      (float)(local_40 - dVar19);
-                dVar21 = (double)*(float *)(puVar18 + 0x3c);
+                dVar21 = (double)slot->velocityZ;
                 param_2 = (double)*(float *)(iVar7 + 0x20);
-                dVar20 = (double)(float)(param_2 - (double)(*(float *)(puVar18 + 0x36) +
+                dVar20 = (double)(float)(param_2 - (double)(*(float *)&slot->startPosZ +
                                                 *(float *)&attachedSource->sourcePosWBits));
-                local_48 = (double)CONCAT44(0x43300000,(int)(short)puVar18[3] << 1 ^ 0x80000000);
-                *(float *)(puVar18 + 0x3c) =
+                local_48 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame << 1 ^ 0x80000000);
+                slot->velocityZ =
                      (float)(dVar21 - (double)(float)(dVar20 / (double)(float)(local_48 - dVar19)));
                 param_4 = dVar19;
               }
             }
             else {
-              param_2 = (double)(*(float *)(iVar7 + 0x18) - *(float *)(puVar18 + 0x32));
-              fVar1 = *(float *)(iVar7 + 0x20) - *(float *)(puVar18 + 0x36);
+              param_2 = (double)(*(float *)(iVar7 + 0x18) - *(float *)&slot->startPosX);
+              fVar1 = *(float *)(iVar7 + 0x20) - *(float *)&slot->startPosZ;
               dVar20 = (double)(float)(param_2 * param_2 + (double)(fVar1 * fVar1));
               if (((dVar20 < (double)FLOAT_803e00a4) &&
                   (dVar20 = (double)FLOAT_803dffdc, dVar20 != (double)*(float *)(iVar7 + 0x24))) &&
                  (dVar20 != (double)*(float *)(iVar7 + 0x2c))) {
-                local_38 = (double)CONCAT44(0x43300000,(int)(short)puVar18[3] << 1 ^ 0x80000000);
-                *(float *)(puVar18 + 0x38) =
-                     *(float *)(puVar18 + 0x38) +
+                local_38 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame << 1 ^ 0x80000000);
+                slot->velocityX =
+                     slot->velocityX +
                      (float)(param_2 / (double)(float)(local_38 - DOUBLE_803dffe0));
-                local_40 = (double)CONCAT44(0x43300000,(int)(short)puVar18[3] << 1 ^ 0x80000000);
-                *(float *)(puVar18 + 0x3a) =
-                     *(float *)(puVar18 + 0x3a) +
-                     ((FLOAT_803e00a8 + *(float *)(iVar7 + 0x1c)) - *(float *)(puVar18 + 0x34)) /
+                local_40 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame << 1 ^ 0x80000000);
+                slot->velocityY =
+                     slot->velocityY +
+                     ((FLOAT_803e00a8 + *(float *)(iVar7 + 0x1c)) - *(float *)&slot->startPosY) /
                      (float)(local_40 - dVar19);
-                param_2 = (double)*(float *)(puVar18 + 0x3c);
-                dVar20 = (double)(*(float *)(iVar7 + 0x20) - *(float *)(puVar18 + 0x36));
-                local_48 = (double)CONCAT44(0x43300000,(int)(short)puVar18[3] << 1 ^ 0x80000000);
-                *(float *)(puVar18 + 0x3c) =
+                param_2 = (double)slot->velocityZ;
+                dVar20 = (double)(*(float *)(iVar7 + 0x20) - *(float *)&slot->startPosZ);
+                local_48 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame << 1 ^ 0x80000000);
+                slot->velocityZ =
                      (float)(param_2 + (double)(float)(dVar20 / (double)(float)(local_48 - dVar19)));
                 dVar21 = dVar19;
               }
@@ -1560,8 +1566,8 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
             DAT_803ddef8 = DAT_803ddef4 / DAT_803ddef0;
           }
           slot->colorByte0 = (char)((uint)spawnConfig->colorByte0Hi >> 8);
-          *(char *)((int)puVar18 + 0x8d) = (char)((uint)spawnConfig->colorByte1Hi >> 8);
-          slot->colorByte1 = (char)((uint)spawnConfig->colorByte2Hi >> 8);
+          slot->colorByte1 = (char)((uint)spawnConfig->colorByte1Hi >> 8);
+          slot->colorByte2 = (char)((uint)spawnConfig->colorByte2Hi >> 8);
           if ((spawnConfig->renderFlags & 0x20U) != 0) {
             *(char *)((int)puVar18 + 0x1f) = (char)(spawnConfig->overrideColor0 >> 8);
             *(char *)((int)puVar18 + 0x2f) = (char)(spawnConfig->overrideColor1 >> 8);
@@ -1578,7 +1584,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
           puVar18[0x15] = 0;
           puVar18[0x1c] = 0;
           puVar18[0x1d] = 0;
-          if ((*(uint *)(puVar18 + 0x40) & 2) != 0) {
+          if ((slot->renderFlags & 2) != 0) {
             expgfx_initSlotQuad(puVar18);
           }
           pbVar11 = &gExpgfxPoolSourceModes + local_56[0];
@@ -1587,8 +1593,8 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
             *pbVar11 = *pbVar11 + 1;
           }
           (&gExpgfxPoolBoundsTemplateIds)[local_56[0]] = param_12;
-          FUN_802420e0((uint)puVar18,EXPGFX_SLOT_SIZE);
-          DAT_803ddeec = puVar18;
+          FUN_802420e0((uint)slot,EXPGFX_SLOT_SIZE);
+          DAT_803ddeec = (undefined2 *)slot;
         }
       }
     }
