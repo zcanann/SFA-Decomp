@@ -701,15 +701,13 @@ void FUN_801fe1c0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801fe1c4(int param_1)
+void FUN_801fe1c4(LaserObject *obj)
 {
-  LaserObject *obj;
   LaserState *state;
   uint uVar1;
   byte bVar3;
   int iVar2;
   
-  obj = (LaserObject *)param_1;
   state = obj->state;
   if ((state->sequenceLatched == '\0') &&
      (uVar1 = FUN_80017690((int)state->primarySequenceId), uVar1 != 0)) {

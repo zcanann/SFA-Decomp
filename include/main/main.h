@@ -24,7 +24,7 @@ void FUN_801fe080(int param_1);
 void FUN_801fe084(int param_1,int param_2);
 void FUN_801fe194(void);
 void FUN_801fe1c0(void);
-void FUN_801fe1c4(int param_1);
+void FUN_801fe1c4(LaserObject *obj);
 void FUN_801fe324(LaserObject *obj,LaserObjectMapData *mapData);
 void FUN_801fe3b0(int param_1);
 void FUN_801fe540(short *param_1,undefined4 *param_2);
