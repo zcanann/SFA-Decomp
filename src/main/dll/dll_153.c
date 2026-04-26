@@ -13,8 +13,8 @@ extern int FUN_80017a98();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_80036080();
-extern undefined4 FUN_800360d4();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_80037bd4();
 extern int FUN_800384ec();
 extern undefined4 FUN_80081120();
@@ -139,7 +139,7 @@ void dll153_updateExploderState
         dVar17 = dVar4;
       }
       if (puVar15[5] != 0) {
-        dVar17 = (double)FUN_800360d4(uVar6);
+        dVar17 = (double)ObjHits_DisableObject(uVar6);
         puVar15[5] = puVar15[5] - (ushort)DAT_803dc070;
         if ((short)puVar15[5] < 1) {
           if (*(int *)(puVar15 + 0xc) == 0) {
@@ -172,7 +172,7 @@ void dll153_updateExploderState
           if (FLOAT_803e462c < *(float *)(uVar6 + 0x28)) {
             *(float *)(uVar6 + 0x28) = FLOAT_803e4630 * FLOAT_803dc074 + *(float *)(uVar6 + 0x28);
           }
-          FUN_800360f0(uVar6);
+          ObjHits_EnableObject(uVar6);
         }
         *(float *)(uVar6 + 0xc) =
              *(float *)(uVar6 + 0x24) * FLOAT_803dc074 + *(float *)(uVar6 + 0xc);
@@ -191,7 +191,7 @@ void dll153_updateExploderState
             puVar15[5] = 500;
             *(undefined *)((int)puVar15 + 9) = 0;
             *(undefined4 *)(uVar6 + 0xf8) = 0;
-            FUN_800360f0(uVar6);
+            ObjHits_EnableObject(uVar6);
             *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) & 0xf7;
             dVar17 = (double)ObjHits_ClearHitVolumes(uVar6);
           }
@@ -225,7 +225,7 @@ void dll153_updateExploderState
            (iVar8 = FUN_800384ec(uVar6), iVar8 != 0)) {
           *puVar15 = 0x8000;
           puVar15[1] = 0;
-          dVar17 = (double)FUN_800360d4(uVar6);
+          dVar17 = (double)ObjHits_DisableObject(uVar6);
           uVar14 = 1;
         }
         *(undefined *)((int)puVar15 + 5) = uVar14;
@@ -233,7 +233,7 @@ void dll153_updateExploderState
           *(undefined *)(puVar15 + 3) = 1;
         }
         if (*(int *)(uVar6 + 0xf8) == 0) {
-          dVar17 = (double)FUN_800360f0(uVar6);
+          dVar17 = (double)ObjHits_EnableObject(uVar6);
           if ((*(char *)(puVar15 + 0x10) == '\0') ||
              (bVar10 = FUN_80294c20((int)puVar7), bVar10 != 0)) {
             *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) & 0xef;
@@ -247,7 +247,7 @@ void dll153_updateExploderState
         *(undefined4 *)(uVar6 + 0x88) = *(undefined4 *)(uVar6 + 0x14);
       }
       else {
-        FUN_800360d4(uVar6);
+        ObjHits_DisableObject(uVar6);
         *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) | 8;
         uVar9 = FUN_80294db4((int)puVar7);
         if ((uVar9 & 0x4000) == 0) {
@@ -303,7 +303,7 @@ void dll153_updateExploderState
               *(float *)(uVar6 + 0x24) = FLOAT_803e45d0;
               *(float *)(uVar6 + 0x28) = fVar3;
               *(float *)(uVar6 + 0x2c) = fVar3;
-              FUN_800360f0(uVar6);
+              ObjHits_EnableObject(uVar6);
               *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) & 0xf7;
               dVar17 = (double)ObjHits_ClearHitVolumes(uVar6);
             }
@@ -352,7 +352,7 @@ void dll153_updateExploderState
           puVar15[5] = 500;
           *(undefined *)((int)puVar15 + 9) = 0;
           *(undefined4 *)(uVar6 + 0xf8) = 0;
-          FUN_800360f0(uVar6);
+          ObjHits_EnableObject(uVar6);
           *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) & 0xf7;
           ObjHits_ClearHitVolumes(uVar6);
         }
@@ -389,7 +389,7 @@ void dll153_updateExploderState
         if (bVar2) {
           *(undefined4 *)(puVar15 + 10) = 0;
           puVar15[5] = 0;
-          FUN_800360f0(uVar6);
+          ObjHits_EnableObject(uVar6);
           FUN_80036080(uVar6);
           *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) & 0xf7;
           *(ushort *)(uVar6 + 6) = *(ushort *)(uVar6 + 6) & 0xbfff;

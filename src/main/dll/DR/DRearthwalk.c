@@ -14,7 +14,7 @@ extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
 extern uint FUN_80017ae8();
 extern undefined4 FUN_800305c4();
-extern undefined4 FUN_800360d4();
+extern undefined4 ObjHits_DisableObject();
 extern undefined4 FUN_80037008();
 extern int FUN_800384ec();
 extern undefined4 FUN_800387ec();
@@ -511,7 +511,7 @@ void FUN_801da5d4(int param_1,undefined *param_2,int param_3)
   int iVar3;
   
   iVar1 = FUN_80017a98();
-  FUN_800360d4(param_1);
+  ObjHits_DisableObject(param_1);
   *(ushort *)(param_1 + 6) = *(ushort *)(param_1 + 6) | 0x4000;
   *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
   if (param_3 != 0) {

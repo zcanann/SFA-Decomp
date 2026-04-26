@@ -707,7 +707,7 @@ void FUN_80036080(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_800360d4
+ * Function: ObjHits_DisableObject
  * EN v1.0 Address: 0x800360D4
  * EN v1.0 Size: 28b
  * EN v1.1 Address: 0x80035FF8
@@ -717,7 +717,7 @@ void FUN_80036080(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800360d4(int param_1)
+void ObjHits_DisableObject(int param_1)
 {
   int iVar1;
   
@@ -732,7 +732,7 @@ void FUN_800360d4(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_800360f0
+ * Function: ObjHits_EnableObject
  * EN v1.0 Address: 0x800360F0
  * EN v1.0 Size: 84b
  * EN v1.1 Address: 0x80036018
@@ -742,7 +742,7 @@ void FUN_800360d4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800360f0(int param_1)
+void ObjHits_EnableObject(int param_1)
 {
   int iVar1;
   
@@ -766,7 +766,7 @@ void FUN_800360f0(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80036144
+ * Function: ObjHits_IsObjectEnabled
  * EN v1.0 Address: 0x80036144
  * EN v1.0 Size: 16b
  * EN v1.1 Address: 0x80036074
@@ -776,7 +776,7 @@ void FUN_800360f0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-ushort FUN_80036144(int param_1)
+ushort ObjHits_IsObjectEnabled(int param_1)
 {
   return *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & 1;
 }
@@ -784,7 +784,7 @@ ushort FUN_80036144(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80036154
+ * Function: ObjHits_SyncObjectPosition
  * EN v1.0 Address: 0x80036154
  * EN v1.0 Size: 64b
  * EN v1.1 Address: 0x80036084
@@ -794,7 +794,7 @@ ushort FUN_80036144(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80036154(int param_1)
+void ObjHits_SyncObjectPosition(int param_1)
 {
   int iVar1;
   

@@ -7,7 +7,7 @@ extern int FUN_80017730();
 extern undefined4 FUN_80017748();
 extern uint FUN_80017760();
 extern undefined4 FUN_8002f6ac();
-extern undefined4 FUN_80036154();
+extern undefined4 ObjHits_SyncObjectPosition();
 extern char fn_8004B394();
 extern undefined4 FUN_80046cd0();
 extern undefined4 FUN_80061a80();

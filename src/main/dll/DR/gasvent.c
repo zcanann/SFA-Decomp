@@ -12,7 +12,7 @@ extern undefined4 ObjHits_ClearFlags();
 extern undefined4 ObjHits_SetFlags();
 extern undefined4 FUN_8003606c();
 extern undefined4 FUN_80036080();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_EnableObject();
 extern int FUN_800369d0();
 extern int FUN_80037008();
 extern void* FUN_80037134();
@@ -76,7 +76,7 @@ void FUN_801a1230(int param_1,char param_2)
     *(byte *)(iVar2 + 0x49) = *(byte *)(iVar2 + 0x49) & 0xfd;
     ObjHits_SetFlags(param_1,0x480);
     ObjHits_ClearSourceMask(param_1,1);
-    FUN_800360f0(param_1);
+    ObjHits_EnableObject(param_1);
     FUN_80036080(param_1);
   }
   return;
@@ -330,7 +330,7 @@ void FUN_801a1654(undefined8 param_1,double param_2,double param_3,undefined8 pa
     ObjHits_ClearFlags(uVar1,0x80);
     ObjHits_SetSourceMask(uVar1,1);
     FUN_80035d58(uVar1,0x14,-5,0x14);
-    FUN_800360f0(uVar1);
+    ObjHits_EnableObject(uVar1);
     FUN_8003606c(uVar1);
     ObjHits_SetHitVolumeSlot(uVar1,5,4,0);
     FUN_80006824(uVar1,0xd1);

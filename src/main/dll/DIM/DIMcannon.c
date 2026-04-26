@@ -35,8 +35,8 @@ extern int FUN_80017af8();
 extern int FUN_80017b00();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_800360d4();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
 extern void* FUN_80037134();
 extern undefined4 FUN_800388b4();
 extern int FUN_80039520();
@@ -1476,7 +1476,7 @@ void FUN_801b0388(undefined2 *param_1,uint param_2,uint param_3)
   dVar3 = (double)FUN_80294964();
   *(float *)(param_1 + 0x16) = (float)(dVar4 * -dVar3);
   param_1[3] = param_1[3] & 0xbfff;
-  FUN_800360f0((int)param_1);
+  ObjHits_EnableObject((int)param_1);
   *(byte *)(piVar2 + 4) = *(byte *)(piVar2 + 4) & 0xef;
   return;
 }
@@ -1637,7 +1637,7 @@ void FUN_801b05b0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       }
     }
     else {
-      FUN_800360d4((int)param_9);
+      ObjHits_DisableObject((int)param_9);
     }
   }
   return;
@@ -1734,7 +1734,7 @@ void FUN_801b0a1c(undefined8 param_1,undefined8 param_2,double param_3,undefined
     iVar2 = FUN_80017af8(piVar4[3]);
     *piVar4 = iVar2;
     *(byte *)(piVar4 + 4) = *(byte *)(piVar4 + 4) | 0x10;
-    FUN_800360d4((int)param_9);
+    ObjHits_DisableObject((int)param_9);
     param_9[0x58] = param_9[0x58] | 0x2000;
     piVar3 = FUN_80017624((int)param_9,'\x01');
     piVar4[1] = (int)piVar3;

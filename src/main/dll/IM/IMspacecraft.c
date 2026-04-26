@@ -22,8 +22,8 @@ extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80035b84();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_800360d4();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
 extern int FUN_800369d0();
 extern void* FUN_80037134();
 extern undefined4 FUN_80037180();
@@ -484,7 +484,7 @@ void FUN_801a5dcc(void)
     if (local_68 == 0) {
       puVar7[2] = 0;
       FUN_80017698((int)*(short *)(iVar6 + 0x1e),1);
-      FUN_800360d4((int)puVar2);
+      ObjHits_DisableObject((int)puVar2);
     }
     iVar3 = FUN_80039520((int)puVar2,0);
     if (iVar3 != 0) {
@@ -537,7 +537,7 @@ void FUN_801a6264(undefined2 *param_1,int param_2,int param_3)
   }
   *(float *)(param_1 + 4) = *(float *)(*(int *)(param_1 + 0x28) + 4) * fVar1;
   puVar4[1] = 0;
-  FUN_800360d4((int)param_1);
+  ObjHits_DisableObject((int)param_1);
   *(byte *)(puVar4 + 4) = *(byte *)(puVar4 + 4) & 0x7f;
   if (param_3 == 0) {
     *(undefined *)(param_1 + 0x1b) = 0;
@@ -818,11 +818,11 @@ void FUN_801a66f8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     }
   }
   if (*(char *)((int)pfVar7 + 0x116) == '\0') {
-    FUN_800360d4((int)param_9);
+    ObjHits_DisableObject((int)param_9);
     ObjHits_SetHitVolumeSlot((int)param_9,*(undefined *)((int)pfVar7 + 0x116),0,0);
   }
   else {
-    FUN_800360f0((int)param_9);
+    ObjHits_EnableObject((int)param_9);
     ObjHits_SetHitVolumeSlot((int)param_9,*(undefined *)((int)pfVar7 + 0x116),1,0);
   }
   return;

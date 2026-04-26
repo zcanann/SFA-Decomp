@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 
 extern void fn_8002B884(void *obj,int enabled);
-extern void fn_80035F00(void *obj);
-extern void fn_80035F20(void *obj);
+extern void ObjHits_DisableObject(void *obj);
+extern void ObjHits_EnableObject(void *obj);
 extern void fn_8008016C(void *timer);
 extern void fn_80080178(void *timer,int duration);
 
@@ -60,7 +60,7 @@ void proximitymine_init(ProximityMineObject *obj,ProximityMineDef *def)
     def->mode = 2;
   }
   obj->angle = 0;
-  fn_80035F00(obj);
+  ObjHits_DisableObject(obj);
   state->mode = 0;
   fn_8008016C(state->renderTimer);
   fn_8008016C(state->resetTimer);
@@ -94,7 +94,7 @@ void proximitymine_init(ProximityMineObject *obj,ProximityMineDef *def)
   else if (mode < 3) {
     fn_8008016C(state->lifespanTimer);
     state->mode = 3;
-    fn_80035F20(obj);
+    ObjHits_EnableObject(obj);
     doubleBits = CONCAT44(0x43300000,(s32)def->parameter ^ 0x80000000);
     state->triggerDistance = (float)((double)doubleBits - lbl_803E6790);
     fn_8008016C(state->bounceTimer);

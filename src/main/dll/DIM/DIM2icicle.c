@@ -28,7 +28,7 @@ extern undefined8 FUN_80017698();
 extern uint FUN_80017760();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_EnableObject();
 extern int FUN_800369d0();
 extern undefined4 FUN_80037bd4();
 extern uint FUN_8003882c();

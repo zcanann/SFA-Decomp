@@ -37,8 +37,8 @@ extern undefined4 FUN_8002f6ac();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_800360d4();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
 extern int FUN_800368c4();
 extern int FUN_800369d0();
 extern int FUN_80037008();
@@ -1971,7 +1971,7 @@ void FUN_8019dcb8(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(float *)(iVar10 + 0x30) = FLOAT_803e4ef8;
   }
   if (*(short *)(uVar4 + 0xb4) < 0) goto LAB_8019fe8c;
-  FUN_800360f0(uVar4);
+  ObjHits_EnableObject(uVar4);
   uVar5 = FUN_80017690(0x50);
   uVar6 = FUN_80017690(0x48);
   if (((*(byte *)(iVar10 + 0x38) & 2) != 0) && (uVar7 = FUN_80017690(0x4d), uVar7 != 0)) {
@@ -2184,7 +2184,7 @@ void FUN_8019e218(void)
   else {
     *(byte *)(iVar1 + 0xaf) = *(byte *)(iVar1 + 0xaf) | 8;
     *(ushort *)(iVar1 + 6) = *(ushort *)(iVar1 + 6) | 0x4000;
-    FUN_800360d4(iVar1);
+    ObjHits_DisableObject(iVar1);
     FUN_80017ad0(iVar1);
   }
   FUN_8028688c();
@@ -2589,7 +2589,7 @@ void babycloudrunner_func08(int param_1)
   puVar1 = *(undefined4 **)(param_1 + 0xb8);
   *puVar1 = 0;
   puVar1[1] = 0;
-  FUN_800360f0(param_1);
+  ObjHits_EnableObject(param_1);
   *(undefined *)(param_1 + 0x36) = 0x80;
   return;
 }

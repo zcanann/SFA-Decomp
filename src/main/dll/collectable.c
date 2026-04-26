@@ -33,9 +33,9 @@ extern undefined4 FUN_8002f6ac();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305c4();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_800360d4();
-extern undefined4 FUN_800360f0();
-extern undefined4 FUN_80036154();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
+extern undefined4 ObjHits_SyncObjectPosition();
 extern int FUN_800368c4();
 extern int FUN_800369d0();
 extern undefined4 FUN_80037008();
@@ -520,7 +520,7 @@ void FUN_801457a4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   piVar11 = *(int **)(uVar3 + 0xb8);
   uVar12 = extraout_f1;
   if ((piVar11[0x15] & 0x200U) == 0) {
-    FUN_800360d4(uVar3);
+    ObjHits_DisableObject(uVar3);
     FUN_8000680c(uVar3,0x7f);
     if ((piVar11[0x15] & 0x800U) != 0) {
       piVar11[0x15] = piVar11[0x15] & 0xfffff7ff;
@@ -1367,7 +1367,7 @@ void FUN_80146fa4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     }
     *(uint *)(param_10 + 0x2e8) = *(uint *)(param_10 + 0x2e8) | 4;
     FUN_800067e8(param_9,1099,2);
-    FUN_800360f0(param_9);
+    ObjHits_EnableObject(param_9);
   }
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) == 0) {
     *(char *)(param_9 + 0x36) = (char)(int)(FLOAT_803e3210 * *(float *)(param_9 + 0x98));

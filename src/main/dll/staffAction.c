@@ -14,7 +14,7 @@ extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_800305f8();
 extern undefined4 FUN_800339b4();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_EnableObject();
 extern undefined8 FUN_80037180();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8003b870();
@@ -82,7 +82,7 @@ FUN_801659b8(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   *(undefined *)((int)param_10 + 0x34d) = 1;
   if (*(char *)((int)param_10 + 0x27a) != '\0') {
     *(float *)(iVar3 + 0x60) = FLOAT_803e3c9c;
-    FUN_800360f0((int)param_9);
+    ObjHits_EnableObject((int)param_9);
     dVar4 = (double)FUN_80293bc4();
     *(float *)(param_9 + 0x12) = (float)(-(double)*(float *)(iVar3 + 0x60) * dVar4);
     *(float *)(param_9 + 0x14) = FLOAT_803e3c74;
@@ -202,7 +202,7 @@ FUN_80165e74(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   *(undefined *)((int)param_10 + 0x34d) = 1;
   if (*(char *)((int)param_10 + 0x27a) != '\0') {
     *(float *)(iVar1 + 0x60) = FLOAT_803e3c9c;
-    FUN_800360f0((int)param_9);
+    ObjHits_EnableObject((int)param_9);
     dVar2 = (double)FUN_80293bc4();
     *(float *)(param_9 + 0x12) = (float)(-(double)*(float *)(iVar1 + 0x60) * dVar2);
     *(float *)(param_9 + 0x14) = FLOAT_803e3c74;

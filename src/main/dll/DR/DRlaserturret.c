@@ -14,8 +14,8 @@ extern undefined4 FUN_80017698();
 extern uint FUN_80017760();
 extern int FUN_80017a98();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_800360d4();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
 extern int FUN_800384ec();
 extern int FUN_800632f4();
 extern undefined4 FUN_8011e800();
@@ -229,7 +229,7 @@ undefined4 FUN_801e6ddc(int param_1)
   iVar2 = *(int *)(param_1 + 0xb8);
   *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
   *(undefined *)(iVar2 + 0x9d6) = 0;
-  FUN_800360d4(param_1);
+  ObjHits_DisableObject(param_1);
   iVar2 = *(int *)(iVar2 + 0x9b4);
   (**(code **)(**(int **)(iVar2 + 0x68) + 0x54))(iVar2,local_10,&local_14,&local_18);
   local_14 = local_14 - local_10[0];
@@ -288,7 +288,7 @@ FUN_801e6f2c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     FUN_800305f8((double)FLOAT_803e6674,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  param_9,0,0,param_12,param_13,param_14,param_15,param_16);
   }
-  FUN_800360f0((int)param_9);
+  ObjHits_EnableObject((int)param_9);
   *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) & 0xf7;
   uVar2 = FUN_80017690(0x617);
   if (uVar2 == 0) {

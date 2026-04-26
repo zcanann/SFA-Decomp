@@ -13,7 +13,7 @@ extern undefined4 FUN_80017754();
 extern uint FUN_80017760();
 extern undefined4 FUN_80017778();
 extern undefined4 FUN_80017b00();
-extern ushort FUN_80036144();
+extern ushort ObjHits_IsObjectEnabled();
 extern undefined4 FUN_80036864();
 extern undefined4 FUN_80061fc8();
 extern int FUN_800620e8();
@@ -2948,7 +2948,7 @@ void FUN_800e514c(void)
       *(undefined4 *)(puVar5 + 0xe) = *(undefined4 *)(puVar5 + 8);
       *(undefined4 *)(puVar5 + 0x10) = *(undefined4 *)(puVar5 + 10);
     }
-    else if ((*(int *)(iVar6 + 0x58) == 0) || (uVar8 = FUN_80036144(iVar6), uVar8 == 0)) {
+    else if ((*(int *)(iVar6 + 0x58) == 0) || (uVar8 = ObjHits_IsObjectEnabled(iVar6), uVar8 == 0)) {
       FUN_800068f8((double)*(float *)(puVar5 + 6),(double)*(float *)(puVar5 + 8),
                    (double)*(float *)(puVar5 + 10),(float *)(puVar5 + 0xc),(float *)(puVar5 + 0xe),
                    (float *)(puVar5 + 0x10),*(int *)(puVar5 + 0x18));
@@ -3415,7 +3415,7 @@ void FUN_800e58b8(void)
         *(undefined4 *)(puVar4 + 0xe) = *(undefined4 *)(puVar4 + 8);
         *(undefined4 *)(puVar4 + 0x10) = *(undefined4 *)(puVar4 + 10);
       }
-      else if ((*(int *)(iVar11 + 0x58) == 0) || (uVar6 = FUN_80036144(iVar11), uVar6 == 0)) {
+      else if ((*(int *)(iVar11 + 0x58) == 0) || (uVar6 = ObjHits_IsObjectEnabled(iVar11), uVar6 == 0)) {
         FUN_800068f8((double)*(float *)(puVar4 + 6),(double)*(float *)(puVar4 + 8),
                      (double)*(float *)(puVar4 + 10),(float *)(puVar4 + 0xc),(float *)(puVar4 + 0xe)
                      ,(float *)(puVar4 + 0x10),*(int *)(puVar4 + 0x18));
@@ -3652,7 +3652,7 @@ LAB_800e7350:
     *(undefined4 *)(puVar4 + 8) = *(undefined4 *)(puVar4 + 0xe);
     *(undefined4 *)(puVar4 + 10) = *(undefined4 *)(puVar4 + 0x10);
   }
-  else if ((*(int *)(iVar11 + 0x58) == 0) || (uVar6 = FUN_80036144(iVar11), uVar6 == 0)) {
+  else if ((*(int *)(iVar11 + 0x58) == 0) || (uVar6 = ObjHits_IsObjectEnabled(iVar11), uVar6 == 0)) {
     FUN_800068f4((double)*(float *)(puVar4 + 0xc),(double)*(float *)(puVar4 + 0xe),
                  (double)*(float *)(puVar4 + 0x10),(float *)(puVar4 + 6),(float *)(puVar4 + 8),
                  (float *)(puVar4 + 10),*(int *)(puVar4 + 0x18));
@@ -3778,7 +3778,7 @@ void FUN_800e61a4(void)
       *(undefined4 *)(puVar12 + 0xe) = *(undefined4 *)(puVar12 + 8);
       *(undefined4 *)(puVar12 + 0x10) = *(undefined4 *)(puVar12 + 10);
     }
-    else if ((*(int *)(iVar13 + 0x58) == 0) || (uVar14 = FUN_80036144(iVar13), uVar14 == 0)) {
+    else if ((*(int *)(iVar13 + 0x58) == 0) || (uVar14 = ObjHits_IsObjectEnabled(iVar13), uVar14 == 0)) {
       FUN_800068f8((double)*(float *)(puVar12 + 6),(double)*(float *)(puVar12 + 8),
                    (double)*(float *)(puVar12 + 10),(float *)(puVar12 + 0xc),
                    (float *)(puVar12 + 0xe),(float *)(puVar12 + 0x10),*(int *)(puVar12 + 0x18));

@@ -5,7 +5,7 @@ extern undefined4 fn_8001CB3C(int param_1);
 extern undefined4 GameBit_Get(int eventId);
 extern undefined4 fn_800221A0(int param_1, int param_2);
 extern undefined4 fn_8002CBC4(int param_1);
-extern undefined4 fn_80035F20(FirePipeObject *obj);
+extern undefined4 ObjHits_EnableObject(FirePipeObject *obj);
 extern undefined4 fn_80036FA4(FirePipeObject *obj, int param_2);
 extern undefined4 fn_80037200(FirePipeObject *obj, int param_2);
 extern undefined4 fn_8003B8F4(int param_1, int param_2, int param_3, int param_4, int param_5, double scale);
@@ -212,7 +212,7 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
         obj->resetTimer = 0;
         obj->modeX = (short)((int)mapData->modeX << 8);
         obj->modeY = (ushort)mapData->modeY << 8;
-        fn_80035F20(obj);
+        ObjHits_EnableObject(obj);
         ((FirePipeBitFlags *)&extra->flags)->bit4 = 0;
         extra->activeSpawn = 0;
         uVar3 = GameBit_Get((int)mapData->gameBit);

@@ -14,7 +14,7 @@ extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_800360d4();
+extern undefined4 ObjHits_DisableObject();
 extern int FUN_800369d0();
 extern undefined4 FUN_80037180();
 extern undefined4 FUN_8003735c();
@@ -162,7 +162,7 @@ void FUN_801d1b50(undefined8 param_1,double param_2,double param_3,undefined8 pa
       while (iVar2 = FUN_80037584((int)puVar1,&local_38,(uint *)0x0,(uint *)0x0), iVar2 != 0) {
         if (local_38 == 0x7000b) {
           puVar1[3] = puVar1[3] | 0x4000;
-          FUN_800360d4((int)puVar1);
+          ObjHits_DisableObject((int)puVar1);
           FUN_80017688((int)*(short *)(pfVar7 + 0x4d));
           FUN_80017698(0x12e,0);
           if (puVar1[0x23] == 0x658) {

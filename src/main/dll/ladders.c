@@ -16,7 +16,7 @@ extern int FUN_80017b00();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 FUN_80035d58();
-extern undefined4 FUN_800360d4();
+extern undefined4 ObjHits_DisableObject();
 extern void* FUN_80037134();
 extern int fn_80037B60();
 extern undefined4 FUN_8003b818();
@@ -271,7 +271,7 @@ void FUN_801633e4(undefined8 param_1,double param_2,double param_3,undefined8 pa
        (uVar2 = FUN_80017690((int)*(short *)(*(int *)(iVar1 + 0x4c) + 0x1a)), uVar2 != 0)) {
       *(undefined4 *)(param_9 + 0xf4) = 1;
       *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
-      FUN_800360d4(param_9);
+      ObjHits_DisableObject(param_9);
     }
   }
   return;

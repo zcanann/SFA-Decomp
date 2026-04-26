@@ -5,7 +5,7 @@ extern undefined4 FUN_80006824();
 extern undefined4 FUN_80017698();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_800360d4();
+extern undefined4 ObjHits_DisableObject();
 extern undefined4 FUN_801695e8();
 
 extern undefined4 DAT_80321050;
@@ -100,7 +100,7 @@ FUN_80167db0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
   else {
     *(undefined *)(*(int *)(iVar1 + 0x40c) + 0x4b) = 0;
     (**(code **)(*DAT_803dd70c + 0x14))(param_9,param_10,7);
-    FUN_800360d4(param_9);
+    ObjHits_DisableObject(param_9);
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
     *(ushort *)(iVar1 + 0x400) = *(ushort *)(iVar1 + 0x400) | 0x20;
     *(float *)(iVar1 + 1000) = FLOAT_803e3d10;

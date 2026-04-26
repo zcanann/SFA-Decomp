@@ -14,7 +14,7 @@ extern undefined8 FUN_80017698();
 extern double FUN_80017714();
 extern int FUN_80017a98();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_800360d4();
+extern undefined4 ObjHits_DisableObject();
 extern int FUN_800368c4();
 extern int FUN_80037008();
 extern int FUN_800384ec();
@@ -115,7 +115,7 @@ void magiccavebottom_update(undefined4 param_1,undefined4 param_2,int param_3)
     }
     else if (bVar1 < 5) {
       *(ushort *)(iVar2 + 6) = *(ushort *)(iVar2 + 6) | 0x4000;
-      FUN_800360d4(iVar2);
+      ObjHits_DisableObject(iVar2);
     }
   }
   FUN_8028688c();
@@ -242,7 +242,7 @@ void FUN_8018af74(undefined8 param_1,double param_2,double param_3,undefined8 pa
       }
       FUN_80017698((int)*(short *)(iVar2 + 0x1e),1);
       *pbVar3 = *pbVar3 & 0x7f | 0x80;
-      FUN_800360d4(param_9);
+      ObjHits_DisableObject(param_9);
     }
     *pbVar3 = *pbVar3 & 0xbf;
     local_38 = DAT_802c2a30;

@@ -4,7 +4,7 @@
 extern undefined4 FUN_800033a8();
 extern uint FUN_80017760();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_800360d4();
+extern undefined4 ObjHits_DisableObject();
 extern undefined4 FUN_8003b818();
 
 extern undefined4* DAT_803dd70c;
@@ -76,7 +76,7 @@ void FUN_80167764(undefined8 param_1,double param_2,double param_3,undefined8 pa
   *(undefined2 *)(iVar8 + 0x402) = 0;
   *(undefined *)(iVar8 + 0x405) = 0;
   *(undefined *)(iVar8 + 0x25f) = 0;
-  FUN_800360d4(param_9);
+  ObjHits_DisableObject(param_9);
   fVar1 = FLOAT_803e3c8c;
   *(float *)(iVar7 + 4) = FLOAT_803e3c8c;
   *(float *)(iVar7 + 0x18) = fVar1;

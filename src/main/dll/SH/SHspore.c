@@ -15,7 +15,7 @@ extern uint FUN_80017760();
 extern undefined4 FUN_80017a6c();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
-extern undefined4 FUN_800360d4();
+extern undefined4 ObjHits_DisableObject();
 extern undefined4 FUN_80037ce0();
 extern int FUN_80038470();
 extern undefined4 FUN_8003b1a4();
@@ -71,7 +71,7 @@ void FUN_801d4364(int param_1)
   *(float *)(iVar3 + 0x274) = FLOAT_803e6088;
   *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x6000;
   *(float *)(param_1 + 0x28) = FLOAT_803e608c;
-  FUN_800360d4(param_1);
+  ObjHits_DisableObject(param_1);
   uVar1 = FUN_80017760(0,0xffff);
   *(short *)(iVar3 + 0x2ac) = (short)uVar1;
   uStack_1c = FUN_80017760(0,1000);

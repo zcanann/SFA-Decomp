@@ -4,7 +4,7 @@
 extern uint FUN_80017690();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
-extern undefined8 FUN_800360d4();
+extern undefined8 ObjHits_DisableObject();
 extern undefined4 FUN_8003735c();
 extern int FUN_80037584();
 extern undefined4 FUN_80037bd4();
@@ -130,7 +130,7 @@ void collectible_init(undefined8 param_1,undefined8 param_2,double param_3,undef
           if (iVar3 != 0) {
             *(ushort *)(iVar3 + 0x60) = *(ushort *)(iVar3 + 0x60) | 0x100;
           }
-          FUN_800360d4((int)param_9);
+          ObjHits_DisableObject((int)param_9);
           if (((int)*(short *)(iVar4 + 0x10) != 0xffffffff) &&
              (uVar2 = FUN_80017690((int)*(short *)(iVar4 + 0x10)), uVar2 == 0)) {
             param_9[0x7a] = 0;
@@ -154,7 +154,7 @@ void collectible_init(undefined8 param_1,undefined8 param_2,double param_3,undef
     *(float *)(iVar4 + 8) = (float)(dVar7 - (double)FLOAT_803dc074);
     if ((double)*(float *)(iVar4 + 8) <= dVar5) {
       *(float *)(iVar4 + 8) = fVar1;
-      uVar6 = FUN_800360d4((int)param_9);
+      uVar6 = ObjHits_DisableObject((int)param_9);
       if ((param_9[3] & 0x2000U) != 0) {
         FUN_80017ac8(uVar6,dVar7,param_3,param_4,param_5,param_6,param_7,param_8,(int)param_9);
       }

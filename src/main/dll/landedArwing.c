@@ -2,7 +2,7 @@
 #include "main/dll/landedArwing.h"
 
 extern int FUN_80017a98();
-extern undefined4 FUN_800360d4();
+extern undefined4 ObjHits_DisableObject();
 extern undefined4 FUN_801660c0();
 extern undefined4 FUN_801661ec();
 extern undefined4 FUN_8016693c();
@@ -43,7 +43,7 @@ undefined4 FUN_8016558c(short *param_1,int param_2)
   if (*(char *)(param_2 + 0x27a) != '\0') {
     *(undefined2 *)(iVar4 + 0x8e) = 0x3c;
     *(float *)(iVar4 + 0x60) = FLOAT_803e3c94;
-    FUN_800360d4((int)param_1);
+    ObjHits_DisableObject((int)param_1);
   }
   if ((*(char *)(iVar4 + 0x90) == '\x06') ||
      ((((iVar2 != 0 && (*(float *)(iVar4 + 0x48) <= *(float *)(iVar2 + 0x18))) &&

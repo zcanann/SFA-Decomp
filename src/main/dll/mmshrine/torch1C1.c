@@ -9,7 +9,7 @@ extern undefined4 FUN_80017710();
 extern uint FUN_80017730();
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_80037180();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8008111c();
@@ -47,7 +47,7 @@ extern f32 FLOAT_803e5c60;
  */
 void ecsh_shrine_func0B(int param_1,int param_2)
 {
-  FUN_800360f0(param_1);
+  ObjHits_EnableObject(param_1);
   *(undefined4 *)(param_1 + 0xf4) = 0;
   *(uint *)(param_1 + 0xf8) =
        CONCAT22(*(undefined2 *)(param_2 + 0x1c),*(undefined2 *)(param_2 + 0x1a));

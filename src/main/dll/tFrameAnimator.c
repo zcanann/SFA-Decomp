@@ -4,7 +4,7 @@
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80017a08();
 extern undefined4 FUN_80017a88();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_800723a0();
 extern undefined4 FUN_80135814();
 extern undefined4 FUN_80247eb8();
@@ -61,7 +61,7 @@ undefined4 FUN_80179eb0(ushort *param_1)
   
   iVar5 = *(int *)(param_1 + 0x5c);
   dVar10 = (double)FLOAT_803e4348;
-  FUN_800360f0((int)param_1);
+  ObjHits_EnableObject((int)param_1);
   fVar2 = *(float *)(iVar5 + 0x2b4) - *(float *)(param_1 + 8);
   if (fVar2 < FLOAT_803e4334) {
     fVar2 = -fVar2;

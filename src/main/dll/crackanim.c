@@ -7,7 +7,7 @@ extern undefined4 FUN_80017a78();
 extern int FUN_80017a98();
 extern undefined8 FUN_80017ac8();
 extern undefined4 FUN_8002fc3c();
-extern undefined8 FUN_800360d4();
+extern undefined8 ObjHits_DisableObject();
 extern int FUN_800369d0();
 extern int FUN_80037584();
 extern undefined4 FUN_80039520();
@@ -104,7 +104,7 @@ void appleontree_update(undefined8 param_1,double param_2,double param_3,undefin
         iVar3 = *(int *)(puVar2 + 0x5c);
         if ((puVar2[3] & 0x2000) == 0) {
           if (*(int *)(puVar2 + 0x2a) != 0) {
-            uVar9 = FUN_800360d4((int)puVar2);
+            uVar9 = ObjHits_DisableObject((int)puVar2);
           }
           *(byte *)(iVar3 + 0x5a) = *(byte *)(iVar3 + 0x5a) | 2;
         }
@@ -149,7 +149,7 @@ void appleontree_update(undefined8 param_1,double param_2,double param_3,undefin
           iVar7 = iVar7 + 1;
         } while (iVar7 < 8);
         if (*(int *)(puVar2 + 0x2a) != 0) {
-          FUN_800360d4((int)puVar2);
+          ObjHits_DisableObject((int)puVar2);
         }
         *(byte *)(iVar8 + 0x5a) = *(byte *)(iVar8 + 0x5a) | 2;
         *(float *)(iVar8 + 8) = FLOAT_803dc074;
@@ -187,7 +187,7 @@ void appleontree_update(undefined8 param_1,double param_2,double param_3,undefin
           iVar7 = iVar7 + 1;
         } while (iVar7 < 8);
         if (*(int *)(puVar2 + 0x2a) != 0) {
-          FUN_800360d4((int)puVar2);
+          ObjHits_DisableObject((int)puVar2);
         }
         *(byte *)(iVar8 + 0x5a) = *(byte *)(iVar8 + 0x5a) | 2;
         *(float *)(iVar8 + 8) = FLOAT_803dc074;
@@ -297,7 +297,7 @@ void appleontree_update(undefined8 param_1,double param_2,double param_3,undefin
         iVar7 = *(int *)(puVar2 + 0x5c);
         if ((puVar2[3] & 0x2000) == 0) {
           if (*(int *)(puVar2 + 0x2a) != 0) {
-            FUN_800360d4((int)puVar2);
+            ObjHits_DisableObject((int)puVar2);
           }
           *(byte *)(iVar7 + 0x5a) = *(byte *)(iVar7 + 0x5a) | 2;
         }
@@ -319,7 +319,7 @@ void appleontree_update(undefined8 param_1,double param_2,double param_3,undefin
         iVar7 = *(int *)(puVar2 + 0x5c);
         if ((puVar2[3] & 0x2000) == 0) {
           if (*(int *)(puVar2 + 0x2a) != 0) {
-            FUN_800360d4((int)puVar2);
+            ObjHits_DisableObject((int)puVar2);
           }
           *(byte *)(iVar7 + 0x5a) = *(byte *)(iVar7 + 0x5a) | 2;
         }

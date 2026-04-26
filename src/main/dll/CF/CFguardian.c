@@ -6,7 +6,7 @@ extern uint FUN_80017690();
 extern int FUN_80017730();
 extern undefined4 FUN_80017748();
 extern uint FUN_80017760();
-extern undefined4 FUN_800360d4();
+extern undefined4 ObjHits_DisableObject();
 extern byte FUN_80063a68();
 extern undefined4 FUN_80063a74();
 extern void trackDolphin_buildSweptBounds(uint *boundsOut,float *startPoints,float *endPoints,

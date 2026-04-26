@@ -21,7 +21,7 @@ extern uint FUN_80017760();
 extern int FUN_80017a90();
 extern undefined4 FUN_80017ac8();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_800360d4();
+extern undefined4 ObjHits_DisableObject();
 extern undefined4 FUN_80037180();
 extern undefined4 FUN_8003735c();
 extern undefined4 FUN_8003b818();
@@ -265,7 +265,7 @@ void FUN_801b0c9c(uint param_1)
           FUN_800175cc((double)FLOAT_803e54bc,*piVar7,'\0');
         }
         if (*(char *)(piVar7 + 7) < '\x01') {
-          FUN_800360d4(param_1);
+          ObjHits_DisableObject(param_1);
           *(undefined *)((int)piVar7 + 0x1a) = 1;
           *(undefined *)((int)piVar7 + 0x1d) = 1;
           FUN_80017698((int)*(short *)(iVar6 + 0x1e),1);

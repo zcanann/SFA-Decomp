@@ -15,7 +15,7 @@ extern undefined4 FUN_80017a88();
 extern undefined4 FUN_80017a90();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_800360d4();
+extern undefined4 ObjHits_DisableObject();
 extern void* FUN_80037134();
 extern int FUN_80037584();
 extern undefined4 FUN_80037bd4();
@@ -111,7 +111,7 @@ void FUN_801732a4(undefined8 param_1,double param_2,double param_3,undefined8 pa
       iVar6 = *(int *)(*(int *)(psVar4 + 0x28) + 0x18);
       (**(code **)(*DAT_803dd6f8 + 0x18))(psVar4);
       FUN_80081118((double)FLOAT_803e4148,psVar4,(uint)*(byte *)(iVar8 + 0x27c),0x28);
-      FUN_800360d4((int)psVar4);
+      ObjHits_DisableObject((int)psVar4);
       FUN_80006824((uint)psVar4,*(ushort *)(iVar8 + 0x274));
       FUN_80006810((int)psVar4,0x56);
       FUN_80294d40(iVar5,(int)*(char *)(iVar6 + 0xb));
@@ -277,7 +277,7 @@ void FUN_801732a4(undefined8 param_1,double param_2,double param_3,undefined8 pa
           *(undefined2 *)(iVar8 + 0x280) = 0xffff;
           FUN_80037bd4(dVar9,dVar10,param_3,param_4,param_5,param_6,param_7,param_8,iVar5,0x7000a,
                        (uint)psVar4,iVar8 + 0x280,in_r7,in_r8,in_r9,in_r10);
-          FUN_800360d4((int)psVar4);
+          ObjHits_DisableObject((int)psVar4);
           FUN_80017698(0x90d,1);
           *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 0x20;
         }
@@ -285,7 +285,7 @@ void FUN_801732a4(undefined8 param_1,double param_2,double param_3,undefined8 pa
           iVar6 = *(int *)(*(int *)(psVar4 + 0x28) + 0x18);
           (**(code **)(*DAT_803dd6f8 + 0x18))(psVar4);
           FUN_80081118((double)FLOAT_803e4148,psVar4,(uint)*(byte *)(iVar8 + 0x27c),0x28);
-          FUN_800360d4((int)psVar4);
+          ObjHits_DisableObject((int)psVar4);
           FUN_80006824((uint)psVar4,*(ushort *)(iVar8 + 0x274));
           FUN_80006810((int)psVar4,0x56);
           FUN_80294d40(iVar5,(int)*(char *)(iVar6 + 0xb));
@@ -366,7 +366,7 @@ void FUN_80173b84(int param_1,int param_2)
     *(byte *)(iVar5 + 0x27a) = *(byte *)(iVar5 + 0x27a) | 1;
     *(undefined *)(param_1 + 0x36) = 1;
     if (*(int *)(param_1 + 0x54) != 0) {
-      FUN_800360d4(param_1);
+      ObjHits_DisableObject(param_1);
     }
     iVar4 = FUN_80017a98();
     fVar2 = FLOAT_803e418c;

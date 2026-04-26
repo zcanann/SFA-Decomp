@@ -12,7 +12,7 @@ extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_80036080();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_80037008();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800810ec();
@@ -257,12 +257,12 @@ void FUN_801c8484(short *param_1)
     if ((local_34 == 1) && (puVar3[9] == 1)) {
       *(float *)(param_1 + 6) = (float)puVar3[3] * FLOAT_803dc074 + *(float *)(param_1 + 6);
       *(float *)(param_1 + 10) = (float)puVar3[5] * FLOAT_803dc074 + *(float *)(param_1 + 10);
-      FUN_800360f0((int)param_1);
+      ObjHits_EnableObject((int)param_1);
       ObjHits_SetHitVolumeSlot((int)param_1,10,1,0);
       FUN_80036080((int)param_1);
     }
     else {
-      FUN_800360f0((int)param_1);
+      ObjHits_EnableObject((int)param_1);
       ObjHits_SetHitVolumeSlot((int)param_1,0,0,0);
       FUN_80036080((int)param_1);
     }

@@ -21,8 +21,8 @@ extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 FUN_80035b84();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_800360d4();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
 extern void* FUN_80037134();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800810ec();
@@ -335,7 +335,7 @@ void FUN_801c0a18(uint param_1)
       *pbVar5 = *pbVar5 & 0xfe;
       ObjHits_SetHitVolumeSlot(param_1,9,1,0);
       FUN_80035b84(param_1,0xf);
-      FUN_800360f0(param_1);
+      ObjHits_EnableObject(param_1);
       if ((*(ushort *)(param_1 + 0xb0) & 0x800) != 0) {
         iVar3 = 0;
         do {
@@ -399,7 +399,7 @@ void FUN_801c0a18(uint param_1)
       }
       ObjHits_SetHitVolumeSlot(param_1,0,0,0);
       FUN_80035b84(param_1,0);
-      FUN_800360d4(param_1);
+      ObjHits_DisableObject(param_1);
     }
   }
   return;

@@ -26,8 +26,8 @@ extern undefined4 FUN_80035d58();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined8 FUN_8003606c();
-extern undefined8 FUN_800360d4();
-extern undefined4 FUN_800360f0();
+extern undefined8 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
 extern int FUN_800369d0();
 extern undefined4 FUN_8003735c();
 extern int FUN_80037584();
@@ -292,7 +292,7 @@ void FUN_80184a54(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     cVar1 = *(char *)(pfVar16 + 9);
     if (cVar1 == '\0') {
       if (*(int *)(puVar10 + 0x2a) != 0) {
-        FUN_800360f0((int)puVar10);
+        ObjHits_EnableObject((int)puVar10);
       }
       *(float *)(puVar10 + 6) =
            *(float *)(puVar10 + 0x12) * FLOAT_803dc074 + *(float *)(puVar10 + 6);
@@ -594,7 +594,7 @@ void FUN_80184a54(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
             *(undefined2 *)(pfVar16 + 5) = 0;
           }
           if (*(int *)(puVar10 + 0x2a) != 0) {
-            FUN_800360d4((int)puVar10);
+            ObjHits_DisableObject((int)puVar10);
           }
           FUN_80006824((uint)puVar10,*(ushort *)((int)pfVar16 + 0x1e));
           FUN_80081118((double)FLOAT_803e4698,puVar10,(int)*(short *)(pfVar16 + 8),0x28);
@@ -760,7 +760,7 @@ void FUN_80185a48(double param_1,undefined8 param_2,undefined8 param_3,undefined
   *(undefined *)(iVar6 + 0x21) = 0;
   *(undefined4 *)(param_9 + 0xf8) = 0;
   *(undefined4 *)(param_9 + 0xf4) = 2;
-  FUN_800360f0(param_9);
+  ObjHits_EnableObject(param_9);
   uVar7 = FUN_8003606c(param_9);
   *(undefined2 *)(iVar6 + 0x1e) = 0;
   if (param_1 < (double)*(float *)(iVar6 + 8)) {
@@ -771,7 +771,7 @@ void FUN_80185a48(double param_1,undefined8 param_2,undefined8 param_3,undefined
   local_20 = (longlong)(int)*(float *)(iVar6 + 8);
   FUN_80035d58(param_9,(short)(int)*(float *)(iVar6 + 8),-5,10);
   ObjHits_SetHitVolumeSlot(param_9,0xe,1,0);
-  FUN_800360f0(param_9);
+  ObjHits_EnableObject(param_9);
   return;
 }
 
@@ -938,7 +938,7 @@ void FUN_80185dc4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     if (*piVar8 < 1) {
       *piVar8 = 0;
       *(undefined2 *)(piVar8 + 4) = 0;
-      FUN_800360f0((int)puVar2);
+      ObjHits_EnableObject((int)puVar2);
       *(byte *)((int)puVar2 + 0xaf) = *(byte *)((int)puVar2 + 0xaf) & 0xf7;
       puVar2[0x7a] = 0;
       puVar2[0x7b] = 0;
@@ -976,7 +976,7 @@ void FUN_80185dc4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         *(undefined2 *)((int)piVar8 + 0x1e) = 600;
       }
       if (*(int *)(puVar2 + 0x7c) == 0) {
-        FUN_800360f0((int)puVar2);
+        ObjHits_EnableObject((int)puVar2);
         *(byte *)((int)puVar2 + 0xaf) = *(byte *)((int)puVar2 + 0xaf) & 0xf7;
       }
       *(undefined4 *)(puVar2 + 0x40) = *(undefined4 *)(puVar2 + 6);
@@ -984,7 +984,7 @@ void FUN_80185dc4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       *(undefined4 *)(puVar2 + 0x44) = *(undefined4 *)(puVar2 + 10);
     }
     else {
-      uVar11 = FUN_800360d4((int)puVar2);
+      uVar11 = ObjHits_DisableObject((int)puVar2);
       *(undefined4 *)(*(int *)(puVar2 + 0x2a) + 0x10) = *(undefined4 *)(puVar2 + 6);
       *(undefined4 *)(*(int *)(puVar2 + 0x2a) + 0x14) = *(undefined4 *)(puVar2 + 8);
       *(undefined4 *)(*(int *)(puVar2 + 0x2a) + 0x18) = *(undefined4 *)(puVar2 + 10);
@@ -1049,7 +1049,7 @@ void FUN_80185dc4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       if (FLOAT_803e4708 < *(float *)(puVar2 + 0x14)) {
         *(float *)(puVar2 + 0x14) = FLOAT_803e470c * FLOAT_803dc074 + *(float *)(puVar2 + 0x14);
       }
-      FUN_800360f0((int)puVar2);
+      ObjHits_EnableObject((int)puVar2);
     }
     if ((*(char *)(*(int *)(puVar2 + 0x2a) + 0xad) != '\0') &&
        (*(char *)((int)piVar8 + 0x23) == '\x01')) {
@@ -1092,7 +1092,7 @@ void FUN_80185dc4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       *(undefined *)((int)piVar8 + 0x23) = 0;
       puVar2[0x7c] = 0;
       puVar2[0x7d] = 0;
-      FUN_800360f0((int)puVar2);
+      ObjHits_EnableObject((int)puVar2);
       *(byte *)((int)puVar2 + 0xaf) = *(byte *)((int)puVar2 + 0xaf) & 0xf7;
       ObjHits_ClearHitVolumes((int)puVar2);
     }

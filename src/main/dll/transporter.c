@@ -23,8 +23,8 @@ extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_SetTargetMask();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_800360d4();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_80036864();
 extern undefined4 FUN_80037180();
 extern undefined4 FUN_8003735c();
@@ -924,7 +924,7 @@ LAB_80176c2c:
         uVar3 = FUN_80017690(0x272);
         if (uVar3 != 0) {
           FUN_80017ad0(param_9);
-          FUN_800360d4(param_9);
+          ObjHits_DisableObject(param_9);
           *(ushort *)(param_9 + 6) = *(ushort *)(param_9 + 6) | 0x4000;
         }
       }
@@ -1470,7 +1470,7 @@ void FUN_80177710(ushort *param_1)
       FUN_80017748(&local_28,(float *)(param_1 + 0x12));
       FUN_800388b4(puVar4,0,(float *)(param_1 + 6),(undefined4 *)(param_1 + 8),
                    (float *)(param_1 + 10),0);
-      FUN_800360f0((int)param_1);
+      ObjHits_EnableObject((int)param_1);
     }
     *(undefined4 *)(param_1 + 0x40) = *(undefined4 *)(param_1 + 6);
     *(undefined4 *)(param_1 + 0x42) = *(undefined4 *)(param_1 + 8);

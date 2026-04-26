@@ -11,7 +11,7 @@ extern undefined4 FUN_80017a7c();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_8003735c();
 extern undefined4 FUN_80037ce0();
 extern undefined4 FUN_8003b818();
@@ -89,7 +89,7 @@ void blasted_init(int param_1,int param_2)
   *(byte *)(iVar1 + 0x48) =
        (*(char *)(param_2 + 0x19) < '\x01') << 7 | *(byte *)(iVar1 + 0x48) & 0x7f;
   *(byte *)(iVar1 + 0x48) = (*(short *)(param_2 + 0x1c) != 0) << 6 | *(byte *)(iVar1 + 0x48) & 0xbf;
-  FUN_800360f0(param_1);
+  ObjHits_EnableObject(param_1);
   *(float *)(iVar1 + 0x2c) =
        (float)((double)CONCAT44(0x43300000,
                                 (int)*(short *)(*(int *)(param_1 + 0x54) + 0x5a) ^ 0x80000000) -

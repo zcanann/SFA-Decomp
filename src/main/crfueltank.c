@@ -5,8 +5,8 @@ extern void fn_8000BB18(void *obj,u16 volumeId);
 extern int GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern void ObjHits_SetHitVolumeSlot(void *obj,int animObjId,int frame,int flags);
-extern void fn_80035F00(void *obj);
-extern void fn_80035F20(void *obj);
+extern void ObjHits_DisableObject(void *obj);
+extern void ObjHits_EnableObject(void *obj);
 extern int fn_80080150(void *timer);
 extern void fn_8008016C(void *timer);
 extern void fn_80080178(void *timer,int duration);
@@ -93,7 +93,7 @@ void crfueltank_hitDetect(CrFuelTankObject *obj)
   if ((obj->collider != NULL) && (obj->collider->hitObj != NULL)) {
     hitObj = obj->collider->hitObj;
     if (hitObj->objType == 0x38c) {
-      fn_80035F00(obj);
+      ObjHits_DisableObject(obj);
       fn_8000BB18(fn_8002B9EC(),0xee);
       obj->fadeTimer = 0xfa;
       obj->triggered = 1;
@@ -117,7 +117,7 @@ void crfueltank_update(CrFuelTankObject *obj)
   state = obj->state;
   if (fn_80080150(state->timer) != 0) {
     if (fn_800801A8(state->timer) != 0) {
-      fn_80035F20(obj);
+      ObjHits_EnableObject(obj);
       obj->flags = (s16)(obj->flags & 0xbfff);
       obj->fadeTimer = 0xff;
     }
@@ -139,12 +139,12 @@ void crfueltank_init(CrFuelTankObject *obj,CrFuelTankDef *def)
   CrFuelTankState *state;
 
   state = obj->state;
-  fn_80035F20(obj);
+  ObjHits_EnableObject(obj);
   ObjHits_SetHitVolumeSlot(obj,0x1d,crfueltank_animFrame(def),0);
   fn_8008016C(state->timer);
   if ((def->hitEvent != -1) && (GameBit_Get(def->hitEvent) != 0)) {
     fn_80080178(state->timer,0x708);
-    fn_80035F00(obj);
+    ObjHits_DisableObject(obj);
     obj->flags = (s16)(obj->flags | 0x4000);
     obj->fadeTimer = 0;
   }

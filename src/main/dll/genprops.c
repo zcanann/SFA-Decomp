@@ -63,8 +63,8 @@ extern undefined4 ObjHits_SetTargetMask();
 extern undefined4 FUN_80035b84();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined8 FUN_800360d4();
-extern undefined4 FUN_800360f0();
+extern undefined8 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
 extern int FUN_800368c4();
 extern undefined4 FUN_80037008();
 extern void* FUN_80037134();
@@ -485,7 +485,7 @@ void FUN_8016b3c4(uint param_1)
   }
   if ((*(char *)(param_1 + 0x36) == -1) || (*(char *)(iVar3 + 0xc) != '\0')) {
     ObjHits_SetHitVolumeSlot(param_1,5,1,0);
-    FUN_800360f0(param_1);
+    ObjHits_EnableObject(param_1);
     if ((*(int *)(*(int *)(param_1 + 0x54) + 0x50) == 0) ||
        (iVar1 = FUN_80017a98(), *(int *)(*(int *)(param_1 + 0x54) + 0x50) != iVar1)) {
       if ((*(float *)(param_1 + 0x10) <= *(float *)(iVar3 + 4)) && (*(char *)(param_1 + 0x36) == -1)
@@ -526,7 +526,7 @@ void FUN_8016b3c4(uint param_1)
         FUN_80017ac8(uVar5,dVar6,dVar7,in_f4,in_f5,in_f6,in_f7,in_f8,*piVar4);
         *piVar4 = 0;
       }
-      FUN_800360d4(param_1);
+      ObjHits_DisableObject(param_1);
     }
   }
   return;
@@ -563,7 +563,7 @@ void FUN_8016b7d4(undefined2 *param_1)
   float local_18 [4];
   
   piVar5 = *(int **)(param_1 + 0x5c);
-  FUN_800360d4((int)param_1);
+  ObjHits_DisableObject((int)param_1);
   *(undefined *)(param_1 + 0x1b) = 0xff;
   fVar1 = FLOAT_803e3e60;
   *(float *)(param_1 + 0x12) = FLOAT_803e3e60;
@@ -675,7 +675,7 @@ void FUN_8016ba18(undefined2 *param_1)
   pfVar1 = *(float **)(param_1 + 0x5c);
   FUN_800632d8((double)*(float *)(param_1 + 6),(double)*(float *)(param_1 + 8),
                (double)*(float *)(param_1 + 10),param_1,local_18,0);
-  FUN_800360d4((int)param_1);
+  ObjHits_DisableObject((int)param_1);
   *(undefined *)(param_1 + 0x1b) = 0xff;
   param_1[1] = 0x4000;
   *param_1 = 0;
@@ -2976,7 +2976,7 @@ void FUN_8016f29c(int param_1)
                        0);
         }
       }
-      FUN_800360f0(param_1);
+      ObjHits_EnableObject(param_1);
     }
     else {
       puVar2[0xe] = (uint)FLOAT_803e3ff0;
@@ -3095,7 +3095,7 @@ void FUN_8016f3d8(undefined8 param_1,double param_2,double param_3,double param_
           *puVar6 = 0;
         }
         FUN_80037180((int)param_9,2);
-        FUN_800360d4((int)param_9);
+        ObjHits_DisableObject((int)param_9);
       }
       fVar1 = FLOAT_803e3fc8;
       if ((float)puVar6[0xe] == FLOAT_803e3fc8) {
@@ -3235,7 +3235,7 @@ void FUN_8016fc50(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   if (iVar1 == 2) {
     iVar1 = FUN_8007f764((float *)(iVar4 + 4));
     if (iVar1 == 0) {
-      FUN_800360f0((int)param_9);
+      ObjHits_EnableObject((int)param_9);
       ObjHits_SetHitVolumeSlot((int)param_9,(char)*(undefined4 *)(&DAT_80321618 + *(char *)(iVar3 + 0x19) * 0xc)
                    ,1,0);
       FUN_80017a88((double)(*(float *)(param_9 + 0x12) * FLOAT_803dc074),
@@ -3249,7 +3249,7 @@ void FUN_8016fc50(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                                       DOUBLE_803e4030))));
     }
     else {
-      uVar5 = FUN_800360d4((int)param_9);
+      uVar5 = ObjHits_DisableObject((int)param_9);
       FUN_8020a3f8(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(int)param_9);
     }
   }
@@ -3295,7 +3295,7 @@ void FUN_8016fe58(int param_1,int param_2)
   *(float *)(param_1 + 0x28) = FLOAT_803e4024;
   *(ushort *)(param_1 + 6) = *(ushort *)(param_1 + 6) | 0x4000;
   *(undefined4 *)(iVar1 + 0x10) = 1;
-  FUN_800360d4(param_1);
+  ObjHits_DisableObject(param_1);
   return;
 }
 
@@ -4259,11 +4259,11 @@ void FUN_80171354(int param_1,int param_2)
   if (param_2 == 0) {
     uVar1 = FUN_80017690((int)*(short *)(iVar2 + 0x10));
     if (uVar1 == 0) {
-      FUN_800360f0(param_1);
+      ObjHits_EnableObject(param_1);
     }
   }
   else {
-    FUN_800360d4(param_1);
+    ObjHits_DisableObject(param_1);
   }
   return;
 }
@@ -4300,7 +4300,7 @@ void FUN_801713ac(undefined8 param_1,double param_2,double param_3,undefined8 pa
   FUN_80017a90();
   FUN_80017a98();
   FUN_80017a90();
-  uVar7 = FUN_800360d4(param_9);
+  uVar7 = ObjHits_DisableObject(param_9);
   if ((*(ushort *)(param_9 + 6) & 0x2000) != 0) {
     *(float *)(iVar6 + 8) = FLOAT_803e40e8;
     if (*(int *)(param_9 + 100) != 0) {

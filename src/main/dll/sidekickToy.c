@@ -14,7 +14,7 @@ extern int FUN_80017a98();
 extern int FUN_8002f6ac();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_800360d4();
+extern undefined4 ObjHits_DisableObject();
 extern int FUN_80037008();
 extern void* FUN_80037134();
 extern undefined8 FUN_8003b06c();

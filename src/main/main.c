@@ -18,8 +18,8 @@ extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80017ad0();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_800360d4();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
 extern int FUN_800369d0();
 extern int FUN_80037008();
 extern void* FUN_80037134();
@@ -820,7 +820,7 @@ LAB_801fe91c:
       if ((runtimeState->behaviorFlags & 0x20) == 0) {
         FUN_80037180(param_1,0x24);
       }
-      FUN_800360d4(param_1);
+      ObjHits_DisableObject(param_1);
       runtimeState->state = 0xb;
       *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
     }
@@ -859,7 +859,7 @@ LAB_801fe8ac:
 LAB_801fe8b8:
     runtimeState->state = 5;
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
-    FUN_800360f0(param_1);
+    ObjHits_EnableObject(param_1);
   }
   goto LAB_801fe91c;
 }

@@ -11,7 +11,7 @@ extern undefined4 FUN_80017a98();
 extern int FUN_80017af8();
 extern undefined4 FUN_800305f8();
 extern undefined4 FUN_80035b84();
-extern undefined4 FUN_800360d4();
+extern undefined4 ObjHits_DisableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8008112c();
 extern undefined8 FUN_80286840();
@@ -93,7 +93,7 @@ void FUN_80169360(undefined8 param_1,double param_2,double param_3,undefined8 pa
   uVar7 = FUN_80017a98();
   *(undefined4 *)(iVar10 + 0x2d0) = uVar7;
   *(undefined *)(iVar10 + 0x25f) = 0;
-  FUN_800360d4(iVar2);
+  ObjHits_DisableObject(iVar2);
   uVar3 = FUN_80017760(300,600);
   puVar9[0xd] = (float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - DOUBLE_803e3d08);
   uVar3 = FUN_80017760(0,499);

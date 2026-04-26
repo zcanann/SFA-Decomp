@@ -14,7 +14,7 @@ extern int FUN_80017a98();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 FUN_800360d4();
+extern undefined4 ObjHits_DisableObject();
 extern undefined4 FUN_800365a4();
 extern int FUN_800368c4();
 extern undefined4 FUN_80081120();
@@ -263,7 +263,7 @@ void dll1E1_updateTrickyState
         }
         break;
       case 10:
-        FUN_800360d4((int)puVar3);
+        ObjHits_DisableObject((int)puVar3);
         *pfVar14 = *pfVar14 + FLOAT_803dc074;
         param_2 = (double)*pfVar14;
         local_30 = (double)CONCAT44(0x43300000,(int)*(short *)(pfVar14 + 0xd) ^ 0x80000000);

@@ -10,8 +10,8 @@ extern uint FUN_80017760();
 extern undefined4 FUN_80017a28();
 extern undefined4 FUN_80017a3c();
 extern int FUN_80017a98();
-extern undefined4 FUN_800360d4();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
 extern int FUN_800368c4();
 extern undefined4 FUN_80081120();
 extern undefined4 FUN_801835c4();
@@ -91,7 +91,7 @@ void largecrate_init(ushort *param_1)
   iVar5 = (**(code **)(*DAT_803dd72c + 0x68))(*(undefined4 *)(iVar12 + 0x14));
   fVar2 = FLOAT_803e4650;
   if (iVar5 == 0) {
-    FUN_800360d4((int)param_1);
+    ObjHits_DisableObject((int)param_1);
   }
   else if ((float)puVar11[1] <= FLOAT_803e4650) {
     dVar15 = (double)FLOAT_803e4674;
@@ -104,7 +104,7 @@ void largecrate_init(ushort *param_1)
     }
     *(char *)(param_1 + 0x1b) = (char)iVar5;
     if (*(short *)(puVar11 + 2) != 0) {
-      FUN_800360d4((int)param_1);
+      ObjHits_DisableObject((int)param_1);
       sVar3 = *(short *)(puVar11 + 2);
       uVar1 = (ushort)DAT_803dc070;
       *(ushort *)(puVar11 + 2) = sVar3 - uVar1;
@@ -203,7 +203,7 @@ void largecrate_init(ushort *param_1)
       if ((double)FLOAT_803e4668 < dVar13) {
         puVar11[1] = (uint)FLOAT_803e4650;
         *(undefined2 *)(puVar11 + 2) = 0;
-        FUN_800360f0((int)param_1);
+        ObjHits_EnableObject((int)param_1);
         *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) & 0xf7;
         param_1[3] = param_1[3] & 0xbfff;
       }

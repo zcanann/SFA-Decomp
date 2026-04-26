@@ -27,7 +27,7 @@ extern uint FUN_80017ae8();
 extern int FUN_80017af8();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_800360d4();
+extern undefined4 ObjHits_DisableObject();
 extern int FUN_800369d0();
 extern int FUN_80037008();
 extern void* FUN_80037134();
@@ -320,7 +320,7 @@ void FUN_801aa750(int param_1)
   else {
     *(ushort *)(param_1 + 6) = *(ushort *)(param_1 + 6) | 0x4000;
     *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x8000;
-    FUN_800360d4(param_1);
+    ObjHits_DisableObject(param_1);
   }
   return;
 }
@@ -860,7 +860,7 @@ LAB_801ab118:
     }
     psVar2[3] = psVar2[3] | 0x4000;
     psVar2[0x58] = psVar2[0x58] | 0x8000;
-    FUN_800360d4((int)psVar2);
+    ObjHits_DisableObject((int)psVar2);
     goto LAB_801ab9cc;
   }
   if ((*(byte *)(piVar10 + 4) < 5) || (10 < *(byte *)(piVar10 + 4))) {

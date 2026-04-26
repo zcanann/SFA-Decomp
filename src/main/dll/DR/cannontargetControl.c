@@ -12,8 +12,8 @@ extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_8003606c();
 extern undefined4 FUN_80036080();
-extern undefined4 FUN_800360d4();
-extern undefined8 FUN_800360f0();
+extern undefined4 ObjHits_DisableObject();
+extern undefined8 ObjHits_EnableObject();
 extern undefined4 FUN_80036200();
 extern undefined4 FUN_80036864();
 extern int FUN_80037008();
@@ -116,7 +116,7 @@ void gunpowderbarrel_hitDetect(uint param_1)
       if ((*(char *)(iVar5 + 0x16) == '\0') &&
          (((*(byte *)(iVar5 + 0x49) & 2) != 0 || (FLOAT_803e4fa4 < *(float *)(iVar5 + 0x24))))) {
         ObjHits_SetHitVolumeSlot(param_1,0xe,1,0);
-        FUN_800360f0(param_1);
+        ObjHits_EnableObject(param_1);
       }
       if (-1 < *(char *)(iVar5 + 0x4a)) {
         *(float *)(iVar5 + 0x24) = -(FLOAT_803e4fa8 * FLOAT_803dc074 - *(float *)(iVar5 + 0x24));
@@ -604,7 +604,7 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
           FUN_801a1654(uVar13,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
         }
         else {
-          uVar13 = FUN_800360f0(uVar2);
+          uVar13 = ObjHits_EnableObject(uVar2);
           FUN_801a1654(uVar13,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
           *(undefined *)(uVar2 + 0x36) = 0xff;
           if (*(char *)(iVar12 + 0x15) != '\0') {
@@ -708,7 +708,7 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
           }
           if (iVar5 == 0) {
             FUN_80017ad0(uVar2);
-            FUN_800360d4(uVar2);
+            ObjHits_DisableObject(uVar2);
             *(ushort *)(uVar2 + 6) = *(ushort *)(uVar2 + 6) | 0x4000;
             FUN_8007f718((float *)(iVar12 + 0x18),0x3c);
           }
@@ -723,12 +723,12 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
               FUN_8007f718((float *)(iVar12 + 0x1c),0x5a);
               FUN_8020a470(iVar5,uVar2,0x46);
               ObjHits_ClearHitVolumes(uVar2);
-              FUN_800360d4(uVar2);
+              ObjHits_DisableObject(uVar2);
               *(ushort *)(uVar2 + 6) = *(ushort *)(uVar2 + 6) | 0x4000;
             }
             else {
               FUN_80017ad0(uVar2);
-              FUN_800360d4(uVar2);
+              ObjHits_DisableObject(uVar2);
               *(ushort *)(uVar2 + 6) = *(ushort *)(uVar2 + 6) | 0x4000;
             }
           }
@@ -752,7 +752,7 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(ushort *)(uVar2 + 6) = *(ushort *)(uVar2 + 6) & 0xbfff;
       ObjHits_ClearHitVolumes(uVar2);
       FUN_80035d58(uVar2,8,-2,0x19);
-      FUN_800360f0(uVar2);
+      ObjHits_EnableObject(uVar2);
       FUN_80036080(uVar2);
       gunpowderbarrel_hitDetect(uVar2);
       FUN_801a1230(uVar2,'\0');

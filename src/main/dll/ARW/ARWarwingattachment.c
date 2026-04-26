@@ -19,8 +19,8 @@ extern undefined4 FUN_80017a78();
 extern int FUN_80017a90();
 extern uint FUN_80017a98();
 extern undefined4 FUN_80017ac8();
-extern undefined8 FUN_800360d4();
-extern undefined4 FUN_800360f0();
+extern undefined8 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
 extern int FUN_800369d0();
 extern void* FUN_80037134();
 extern undefined4 FUN_80037bd4();
@@ -668,7 +668,7 @@ void FUN_801f1634(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       *(undefined *)(puVar12 + 3) = 1;
     }
     if (*(int *)(param_9 + 0xf8) == 0) {
-      FUN_800360f0(param_9);
+      ObjHits_EnableObject(param_9);
       *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) & 0xf7;
       *(float *)(param_9 + 0x28) = -(FLOAT_803e6a1c * FLOAT_803dc074 - *(float *)(param_9 + 0x28));
       *(float *)(param_9 + 0x10) =
@@ -706,7 +706,7 @@ void FUN_801f1634(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     }
   }
   else {
-    uVar13 = FUN_800360d4(param_9);
+    uVar13 = ObjHits_DisableObject(param_9);
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
     uVar7 = FUN_80006c00(0);
     if ((uVar7 & 0x100) != 0) {

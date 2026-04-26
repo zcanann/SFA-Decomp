@@ -14,7 +14,7 @@ extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined8 FUN_800360d4();
+extern undefined8 ObjHits_DisableObject();
 extern undefined4 FUN_80037bd4();
 extern undefined4 FUN_801bc6cc();
 
@@ -298,7 +298,7 @@ FUN_801ba9ec(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
     *(undefined4 *)(param_10 + 0x2d0) = 0;
     *(undefined *)(param_10 + 0x25f) = 0;
     *(undefined *)(param_10 + 0x349) = 0;
-    uVar3 = FUN_800360d4(param_9);
+    uVar3 = ObjHits_DisableObject(param_9);
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) & 0x7f;
     iVar1 = FUN_80017a98();

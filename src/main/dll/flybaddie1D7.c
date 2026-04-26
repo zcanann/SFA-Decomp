@@ -7,8 +7,8 @@ extern double FUN_80017714();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern int FUN_80017af8();
-extern undefined4 FUN_800360d4();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_80036edc();
 extern void* FUN_80037134();
 extern undefined4 FUN_80037180();
@@ -263,12 +263,12 @@ void FUN_801d00d0(undefined2 *param_1)
     *param_1 = *(undefined2 *)*piVar5;
     FUN_80036edc(0x3c,param_1,&local_18);
     if (*(byte *)(*piVar5 + 0x36) < 0xc0) {
-      FUN_800360d4((int)param_1);
+      ObjHits_DisableObject((int)param_1);
       psVar1 = (short *)FUN_80017a98();
       FUN_80294da0(psVar1,(int)param_1);
     }
     else {
-      FUN_800360f0((int)param_1);
+      ObjHits_EnableObject((int)param_1);
     }
     if ((*(byte *)(*piVar5 + 0x36) < 0xc0) || (local_18 < FLOAT_803e5f0c)) {
       param_1[0x58] = param_1[0x58] | 0x100;

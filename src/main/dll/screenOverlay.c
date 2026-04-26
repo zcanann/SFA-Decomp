@@ -8,7 +8,7 @@ extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
 extern undefined4 FUN_8001771c();
 extern int FUN_80017a98();
-extern undefined4 FUN_800360d4();
+extern undefined4 ObjHits_DisableObject();
 extern int FUN_800369d0();
 extern undefined4 FUN_80037ce0();
 extern undefined4 FUN_80039520();
@@ -63,7 +63,7 @@ void FUN_8017a38c(int param_1)
   (**(code **)(*DAT_803dd728 + 8))(iVar1,1,&DAT_80321b80,iVar1 + 0x268,1);
   (**(code **)(*DAT_803dd728 + 0xc))(iVar1,1,&DAT_80321b80,iVar1 + 0x268,local_18);
   (**(code **)(*DAT_803dd728 + 0x20))(param_1,iVar1);
-  FUN_800360d4(param_1);
+  ObjHits_DisableObject(param_1);
   *(undefined *)(iVar1 + 0x25b) = 0;
   FUN_80037ce0(param_1,1);
   FUN_80017698(0x3f8,0);

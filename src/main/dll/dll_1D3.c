@@ -14,8 +14,8 @@ extern uint FUN_80017760();
 extern int FUN_80017a90();
 extern undefined4 FUN_80017ac8();
 extern int FUN_80017af8();
-extern undefined4 FUN_800360d4();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_80037008();
 extern int FUN_800384ec();
 extern int FUN_80039520();
@@ -149,14 +149,14 @@ void FUN_801ce188(uint param_1)
     FUN_800068d0(param_1,0x372);
     FUN_800068d0(param_1,0x373);
     (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
-    FUN_800360f0(param_1);
+    ObjHits_EnableObject(param_1);
   }
   else {
     *(undefined2 *)(param_1 + 6) = 0x4000;
     *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x8000;
     FUN_800068cc();
     FUN_800068cc();
-    FUN_800360d4(param_1);
+    ObjHits_DisableObject(param_1);
     FUN_80017698(0x398,1);
   }
   return;

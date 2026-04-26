@@ -11,7 +11,7 @@ extern undefined4 FUN_80017754();
 extern uint FUN_80017760();
 extern undefined4 FUN_80017778();
 extern int FUN_80017b00();
-extern undefined4 FUN_800360d4();
+extern undefined4 ObjHits_DisableObject();
 extern uint FUN_801e2184();
 extern undefined4 FUN_801ef1e0();
 extern undefined4 FUN_80286840();
@@ -736,7 +736,7 @@ LAB_801e1380:
          pfVar12[0xd] + pfVar12[0x10] + (*(float *)((int)fVar11 + 0x14) - pfVar12[3]);
     if ('\x06' < *(char *)((int)pfVar12 + 0x2b)) {
       if (*(short *)(pfVar12 + 0x1b) == 0) {
-        FUN_800360d4((int)puVar7);
+        ObjHits_DisableObject((int)puVar7);
         (**(code **)(*DAT_803dd6cc + 8))(0x41,1);
       }
       *(ushort *)(pfVar12 + 0x1b) = *(short *)(pfVar12 + 0x1b) + (ushort)DAT_803dc070;

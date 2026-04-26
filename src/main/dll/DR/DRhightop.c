@@ -18,9 +18,9 @@ extern undefined4 FUN_80017778();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_80036080();
-extern undefined4 FUN_800360d4();
-extern undefined4 FUN_800360f0();
-extern ushort FUN_80036144();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
+extern ushort ObjHits_IsObjectEnabled();
 extern int FUN_800369d0();
 extern undefined4 FUN_80053c20();
 extern int FUN_8005b398();
@@ -489,7 +489,7 @@ void FUN_801eb990(undefined2 *param_1)
     *(undefined2 *)(iVar3 + 0x40c) = uVar1;
     *(float *)(iVar3 + 0x430) = FLOAT_803e680c;
   }
-  FUN_800360f0((int)param_1);
+  ObjHits_EnableObject((int)param_1);
   (**(code **)(*DAT_803dd728 + 0x20))(param_1,iVar3 + 0x178);
   *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x10) = *(undefined4 *)(param_1 + 6);
   *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x14) = *(undefined4 *)(param_1 + 8);
@@ -549,7 +549,7 @@ void FUN_801eba80(int param_1,int param_2)
   uint uStack_14;
   
   iVar4 = *(int *)(param_1 + 0x54);
-  uVar3 = FUN_80036144(param_1);
+  uVar3 = ObjHits_IsObjectEnabled(param_1);
   if (uVar3 != 0) {
     if ((*(byte *)(param_2 + 0x428) >> 1 & 1) == 0) {
       ObjHits_SetHitVolumeSlot(param_1,0x15,1,0);

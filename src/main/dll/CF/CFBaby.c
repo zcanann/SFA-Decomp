@@ -27,8 +27,8 @@ extern undefined4 FUN_80035d58();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined8 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_8003606c();
-extern undefined4 FUN_800360d4();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_800365a4();
 extern int FUN_800369d0();
 extern int FUN_80037008();
@@ -502,7 +502,7 @@ void FUN_80187bf4(uint param_1)
     if (pbVar6[1] == 0) {
       ObjHits_SetHitVolumeSlot(param_1,9,1,0);
     }
-    FUN_800360f0(param_1);
+    ObjHits_EnableObject(param_1);
     if (*(short *)(param_1 + 0x46) == 0x102) {
       iVar5 = FUN_8012efc4();
       if (iVar5 == -1) {
@@ -527,7 +527,7 @@ void FUN_80187bf4(uint param_1)
       *pbVar6 = *pbVar6 & 0xfe;
       *pbVar6 = *pbVar6 | 2;
       FUN_80017ad0(param_1);
-      FUN_800360d4(param_1);
+      ObjHits_DisableObject(param_1);
     }
   }
   if ((*pbVar6 & 1) != 0) {
@@ -600,7 +600,7 @@ void FUN_80187ee0(undefined2 *param_1,int param_2)
   if (((int)*(short *)(param_2 + 0x1e) != 0xffffffff) &&
      (uVar1 = FUN_80017690((int)*(short *)(param_2 + 0x1e)), uVar1 != 0)) {
     FUN_80017ad0((int)param_1);
-    FUN_800360d4((int)param_1);
+    ObjHits_DisableObject((int)param_1);
     *(undefined *)(param_1 + 0x1b) = 0;
     *pbVar2 = *pbVar2 | 2;
   }
@@ -691,7 +691,7 @@ void FUN_801880e0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   bVar1 = *(byte *)(iVar5 + 10);
   if (bVar1 == 1) {
     ObjHits_ClearHitVolumes(param_9);
-    FUN_800360d4(param_9);
+    ObjHits_DisableObject(param_9);
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
     *(undefined *)(iVar5 + 10) = 2;
     *(float *)(iVar5 + 0xc) = FLOAT_803e47dc;
@@ -727,7 +727,7 @@ void FUN_801880e0(undefined8 param_1,double param_2,double param_3,undefined8 pa
            FLOAT_803e47e0 < *(float *)(iVar5 + 0xc))) &&
           (iVar4 = FUN_800575b4((double)(*(float *)(param_9 + 0xa8) * *(float *)(param_9 + 8)),
                                 (float *)(param_9 + 0xc)), iVar4 == 0)) {
-    FUN_800360f0(param_9);
+    ObjHits_EnableObject(param_9);
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) & 0xf7;
     *(undefined *)(iVar5 + 10) = 0;
   }

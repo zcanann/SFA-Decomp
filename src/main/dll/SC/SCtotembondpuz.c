@@ -3,7 +3,7 @@
 
 extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_801d7698();
 
 /*

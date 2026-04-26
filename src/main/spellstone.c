@@ -5,8 +5,8 @@ extern void GameBit_Set(int eventId,int value);
 extern int GameBit_Get(int eventId);
 extern void *fn_8002B9EC(void);
 extern void fn_8002CE88(void *obj);
-extern void fn_80035F00(void *obj);
-extern void fn_80035F20(void *obj);
+extern void ObjHits_DisableObject(void *obj);
+extern void ObjHits_EnableObject(void *obj);
 extern void fn_80036FA4(void *obj,int animObjId);
 extern void fn_80037200(void *obj,int animObjId);
 extern void fn_8003B8F4(double scale);
@@ -137,7 +137,7 @@ void spellstone_update(SpellStoneObject *obj)
       }
     }
     if (state->state == 0) {
-      fn_80035F00(obj);
+      ObjHits_DisableObject(obj);
       if (obj->followTarget != NULL) {
         obj->posX = *(f32 *)((u8 *)obj->followTarget + 0xc);
         obj->posY = *(f32 *)((u8 *)obj->followTarget + 0x10);
@@ -145,7 +145,7 @@ void spellstone_update(SpellStoneObject *obj)
       }
     }
     else {
-      fn_80035F20(obj);
+      ObjHits_EnableObject(obj);
     }
   }
   return;

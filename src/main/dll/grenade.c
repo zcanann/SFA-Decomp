@@ -16,7 +16,7 @@ extern undefined4 FUN_80017a6c();
 extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern undefined4 FUN_80036154();
+extern undefined4 ObjHits_SyncObjectPosition();
 extern int FUN_80037008();
 extern undefined4 FUN_800381f8();
 extern undefined4 FUN_80039468();
@@ -633,7 +633,7 @@ void FUN_8014289c(undefined8 param_1,undefined8 param_2,double param_3,undefined
     *(undefined4 *)(param_9 + 0xc) = *(undefined4 *)(puVar7 + 0xc);
     *(undefined4 *)(param_9 + 0xe) = *(undefined4 *)(puVar7 + 0xe);
     *(undefined4 *)(param_9 + 0x10) = *(undefined4 *)(puVar7 + 0x10);
-    FUN_80036154((int)param_9);
+    ObjHits_SyncObjectPosition((int)param_9);
     *param_9 = *puVar7;
     *(undefined *)((int)param_10 + 9) = 0;
     fVar2 = FLOAT_803e306c;

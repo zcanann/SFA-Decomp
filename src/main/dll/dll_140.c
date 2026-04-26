@@ -8,8 +8,8 @@ extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80036080();
-extern undefined4 FUN_800360d4();
-extern undefined4 FUN_800360f0();
+extern undefined4 ObjHits_DisableObject();
+extern undefined4 ObjHits_EnableObject();
 extern int FUN_800384ec();
 extern undefined4 FUN_8003b818();
 extern undefined4 sidekickball_update();
@@ -46,7 +46,7 @@ void FUN_80179a2c(double param_1,double param_2,double param_3,int param_4)
   *(float *)(param_4 + 0x24) = (float)param_1;
   *(float *)(param_4 + 0x28) = (float)param_2;
   *(float *)(param_4 + 0x2c) = (float)param_3;
-  FUN_800360f0(param_4);
+  ObjHits_EnableObject(param_4);
   FUN_80036080(param_4);
   *(undefined *)(iVar1 + 0x25b) = 1;
   *(undefined4 *)(iVar1 + 0x2b0) = *(undefined4 *)(param_4 + 0xc);
@@ -167,7 +167,7 @@ void FUN_80179b34(double param_1,double param_2,double param_3,undefined8 param_
     uVar3 = FUN_80006ba0(0);
     if ((((uVar3 & 0x100) == 0) && (*(int *)(param_9 + 0x7c) == 0)) &&
        (iVar4 = FUN_800384ec((int)param_9), iVar4 != 0)) {
-      FUN_800360d4((int)param_9);
+      ObjHits_DisableObject((int)param_9);
       uVar7 = 1;
     }
     *(undefined *)(iVar8 + 0x2c9) = uVar7;
