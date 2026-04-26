@@ -4,8 +4,8 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 
-extern int fn_8000B5D0(int obj,u16 volumeId);
-extern void fn_8000BB18(int obj,u16 volumeId);
+extern int Sfx_IsPlayingFromObject(int obj,u16 sfxId);
+extern void Sfx_PlayFromObject(int obj,u16 sfxId);
 extern void fn_80013E2C(void *handle);
 extern int *fn_8002E0FC(undefined *param_1,undefined *param_2);
 extern int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *param_2,int *sphereIndex,uint *param_4,float *hitPos,
@@ -67,7 +67,7 @@ int objHitReact_update(int obj,ObjHitReactEntry *entries,u32 entryCount,u32 reac
   ObjAnimDef *animDef;
   int collisionType;
   ObjHitReactEffectHandle *effectHandle;
-  bool volumeActive;
+  bool sfxActive;
   ObjHitReactEntry *reactEntry;
   undefined4 effectOrigin[4];
   ObjHitReactEffectPos effectPos;
@@ -106,13 +106,13 @@ int objHitReact_update(int obj,ObjHitReactEntry *entries,u32 entryCount,u32 reac
     }
     reactEntry = &entries[sphereIndex];
     if (collisionType != OBJHITREACT_COLLISION_SKIP_REACTION) {
-      if ((reactEntry->clearVolumeA > -1) &&
-          (volumeActive = fn_8000B5D0(obj,(u16)reactEntry->clearVolumeA), !volumeActive)) {
-        fn_8000BB18(obj,(u16)reactEntry->clearVolumeA);
+      if ((reactEntry->hitSfxA > -1) &&
+          (sfxActive = Sfx_IsPlayingFromObject(obj,(u16)reactEntry->hitSfxA), !sfxActive)) {
+        Sfx_PlayFromObject(obj,(u16)reactEntry->hitSfxA);
       }
-      if ((reactEntry->clearVolumeB > -1) &&
-          (volumeActive = fn_8000B5D0(obj,(u16)reactEntry->clearVolumeB), !volumeActive)) {
-        fn_8000BB18(obj,(u16)reactEntry->clearVolumeB);
+      if ((reactEntry->hitSfxB > -1) &&
+          (sfxActive = Sfx_IsPlayingFromObject(obj,(u16)reactEntry->hitSfxB), !sfxActive)) {
+        Sfx_PlayFromObject(obj,(u16)reactEntry->hitSfxB);
       }
       if (reactEntry->hitFxMode == OBJHITREACT_HIT_FX_MODE_EFFECT) {
         effectHandle = fn_80013EC8(OBJHITREACT_HIT_EFFECT_ID,1);

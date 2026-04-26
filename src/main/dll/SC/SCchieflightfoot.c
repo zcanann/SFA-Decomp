@@ -5,7 +5,7 @@
 #include "main/dll/SC/SCchieflightfoot.h"
 #include "main/objHitReact.h"
 
-extern undefined4 fn_8000BB18();
+extern undefined4 Sfx_PlayFromObject();
 extern double FUN_80017708();
 extern int FUN_80017730();
 extern uint FUN_80017760();
@@ -223,12 +223,12 @@ void sh_thorntail_update(SHthorntailObject *obj)
     for (iVar6 = 0; iVar6 < local_45; iVar6 = iVar6 + 1) {
       if (*(char *)((int)pfVar8 + 0x13) == '\0') {
         if (DAT_80327fdc[runtime->behaviorState] != 0) {
-          fn_8000BB18((uint)psVar2,DAT_80327fdc[runtime->behaviorState]);
+          Sfx_PlayFromObject((uint)psVar2,DAT_80327fdc[runtime->behaviorState]);
         }
       }
       else if ((*(char *)((int)pfVar8 + 0x13) == '\a') &&
               (DAT_80328000[runtime->behaviorState] != 0)) {
-        fn_8000BB18((uint)psVar2,(ushort)DAT_80328000[runtime->behaviorState]);
+        Sfx_PlayFromObject((uint)psVar2,(ushort)DAT_80328000[runtime->behaviorState]);
       }
       pfVar8 = (float *)((int)pfVar8 + 1);
     }

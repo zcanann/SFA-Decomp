@@ -18,8 +18,8 @@ typedef struct ObjHitReactState {
 } ObjHitReactState;
 
 struct ObjHitReactEntry {
-  s16 clearVolumeA;
-  s16 clearVolumeB;
+  s16 hitSfxA;
+  s16 hitSfxB;
   s16 reactionAnim;
   u8 pad06[2];
   s8 hitFxMode;

@@ -2,8 +2,8 @@
 #include "main/dll/SH/SHroot.h"
 #include "main/dll/SH/SHthorntail.h"
 
-extern void fn_8000BB18(SHthorntailObject *obj,u16 volumeId);
-extern void fn_8000B7BC(int obj,u16 volumeId);
+extern void Sfx_PlayFromObject(SHthorntailObject *obj,u16 volumeId);
+extern void Sfx_StopObjectSounds(int obj,u16 volumeId);
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern f32 fn_8002166C(int posA,int posB);
@@ -206,7 +206,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
       return;
     }
     if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_EVENT_PAUSE) {
-      fn_8000BB18(0,0x409);
+      Sfx_PlayFromObject(0,0x409);
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
       randomTime = fn_800221A0(1000,2000);
       runtime->idleTimer = (float)randomTime;
@@ -248,7 +248,7 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4
   runtime = obj->runtime;
   levelControlReady = runtime->behaviorFlags & SHTHORNTAIL_FLAG_LEVELCONTROL_READY;
   if (levelControlReady == 0) {
-    fn_8000B7BC((int)obj,0x7f);
+    Sfx_StopObjectSounds((int)obj,0x7f);
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
     randomTime = fn_800221A0(1000,2000);
     runtime->idleTimer = (float)randomTime;

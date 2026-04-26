@@ -2,7 +2,7 @@
 #include "main/dll/SH/SHroot.h"
 #include "main/dll/SH/SHthorntail.h"
 
-extern void fn_8000BB18(uint objectId,u16 volumeId);
+extern void Sfx_PlayFromObject(uint objectId,u16 volumeId);
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern int fn_800221A0(int min,int max);
@@ -58,7 +58,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
       return;
     }
     if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_EVENT_PAUSE) {
-      fn_8000BB18(0,0x409);
+      Sfx_PlayFromObject(0,0x409);
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
       randomTime = fn_800221A0(1000,2000);
       runtime->idleTimer = (float)randomTime;

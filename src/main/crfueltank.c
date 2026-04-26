@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 
 extern void *fn_8002B9EC(void);
-extern void fn_8000BB18(void *obj,u16 volumeId);
+extern void Sfx_PlayFromObject(void *obj,u16 volumeId);
 extern int GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern void ObjHits_SetHitVolumeSlot(void *obj,int animObjId,int frame,int flags);
@@ -94,7 +94,7 @@ void crfueltank_hitDetect(CrFuelTankObject *obj)
     hitObj = obj->collider->hitObj;
     if (hitObj->objType == 0x38c) {
       ObjHits_DisableObject(obj);
-      fn_8000BB18(fn_8002B9EC(),0xee);
+      Sfx_PlayFromObject(fn_8002B9EC(),0xee);
       obj->fadeTimer = 0xfa;
       obj->triggered = 1;
       if (def->hitEvent != -1) {

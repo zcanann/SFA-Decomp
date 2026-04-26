@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/SH/dll_1E7.h"
 
-extern void fn_8000BB18(uint objectId,u16 volumeId);
+extern void Sfx_PlayFromObject(uint objectId,u16 volumeId);
 extern f32 fn_8002166C(Vec *a,Vec *b);
 extern f32 fn_800216D0(Vec *a,Vec *b);
 extern s16 fn_800217C0(f32 deltaX,f32 deltaZ);
@@ -141,7 +141,7 @@ void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_TAIL_SWING_READY:
     runtime->tailSwingTimer = runtime->tailSwingTimer - lbl_803DB414;
     if (runtime->tailSwingTimer <= lbl_803E5418) {
-      fn_8000BB18(objectId,0xa9);
+      Sfx_PlayFromObject(objectId,0xa9);
       runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_WINDUP;
       runtime->tailSwingTimer = lbl_803E541C;
     }
@@ -149,7 +149,7 @@ void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_TAIL_SWING_WINDUP:
     runtime->tailSwingTimer = runtime->tailSwingTimer - lbl_803DB414;
     if (runtime->tailSwingTimer <= lbl_803E5418) {
-      fn_8000BB18(objectId,0xa8);
+      Sfx_PlayFromObject(objectId,0xa8);
       runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_ACTIVE;
     }
     break;

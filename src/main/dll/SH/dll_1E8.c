@@ -2,7 +2,7 @@
 #include "main/dll/SH/dll_1E7.h"
 #include "main/dll/SH/dll_1E8.h"
 
-extern void fn_8000BB18(SHthorntailObject *obj,u16 volumeId);
+extern void Sfx_PlayFromObject(SHthorntailObject *obj,u16 volumeId);
 extern uint GameBit_Get(int eventId);
 extern u32 fn_8002208C(f32 *state,f32 min,f32 max);
 extern int fn_800221A0(int min,int max);
@@ -44,7 +44,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_IDLE:
     iVar2 = fn_8002208C(&runtime->proximityAlertState,lbl_803E5430,lbl_803E5434);
     if (iVar2 != 0) {
-      fn_8000BB18(obj,SHTHORNTAIL_ALERT_VOLUME_ID);
+      Sfx_PlayFromObject(obj,SHTHORNTAIL_ALERT_VOLUME_ID);
     }
     runtime->idleTimer = runtime->idleTimer - lbl_803DB414;
     if (runtime->idleTimer <= lbl_803E5438) {
