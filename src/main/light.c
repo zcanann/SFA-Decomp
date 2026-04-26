@@ -1036,3 +1036,12 @@ void FUN_801fd408(undefined2 *param_1,int param_2)
 void FUN_801fd40c(undefined4 param_1)
 {
 }
+
+void FUN_801fc374(undefined4 param_1)
+{
+}
+
+int FUN_801fc4f4(void)
+{
+  return 4;
+}
