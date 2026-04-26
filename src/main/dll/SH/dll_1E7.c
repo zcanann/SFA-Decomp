@@ -133,7 +133,7 @@ int fn_801D4CD0(SHthorntailObject *obj)
 #pragma scheduling off
 void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
 {
-  int tailSwingState;
+  u8 tailSwingState;
   uint moveComplete;
 
   tailSwingState = runtime->tailSwingState;
@@ -153,12 +153,14 @@ void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
       runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_ACTIVE;
     }
     break;
-  default:
+  case SHTHORNTAIL_TAIL_SWING_ACTIVE:
     moveComplete = runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE;
-    if ((tailSwingState < SHTHORNTAIL_TAIL_SWING_STATE_COUNT) && (moveComplete != 0)) {
+    if (moveComplete != 0) {
       runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_READY;
       runtime->tailSwingTimer = lbl_803E5420;
     }
+    break;
+  default:
     break;
   }
   return;
