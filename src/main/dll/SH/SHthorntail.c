@@ -7,7 +7,7 @@ extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern int fn_800221A0(int min,int max);
 extern int fn_80038024(int obj);
-extern int fn_801D4CD0(SHthorntailObject *obj);
+extern int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj);
 
 extern SHthorntailEventInterface **lbl_803DCAAC;
 extern f64 lbl_803E5428;
@@ -28,7 +28,7 @@ extern f64 lbl_803E5428;
 #pragma scheduling off
 void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntime *runtime)
 {
-  int eventIsSet;
+  int linkedEventPending;
   int objectTriggerIsSet;
   uint triggerIsSet;
   uint triggerEventId;
@@ -52,8 +52,8 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
     runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
     break;
   case SHTHORNTAIL_LOCOMOTION_6:
-    eventIsSet = fn_801D4CD0(obj);
-    if (eventIsSet != 0) {
+    linkedEventPending = SHthorntail_HasNearbyPendingEventObject(obj);
+    if (linkedEventPending != 0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_EVENT_PAUSE;
       return;
     }

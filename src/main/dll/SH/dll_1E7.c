@@ -54,7 +54,7 @@ extern f32 FLOAT_803e60b8;
 /*
  * --INFO--
  *
- * Function: fn_801D4CD0
+ * Function: SHthorntail_HasNearbyPendingEventObject
  * EN v1.0 Address: 0x801D4CD0
  * EN v1.0 Size: 432b
  * EN v1.1 Address: 0x801D4D8C
@@ -64,7 +64,7 @@ extern f32 FLOAT_803e60b8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int fn_801D4CD0(SHthorntailObject *obj)
+int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj)
 {
   SHthorntailObject **objects;
   u32 configToken;
@@ -72,9 +72,9 @@ int fn_801D4CD0(SHthorntailObject *obj)
   int index;
   s8 groupIndex;
   s8 matchCount;
-  int eventIsSet;
+  int linkedEventPending;
 
-  eventIsSet = 0;
+  linkedEventPending = 0;
   groupIndex = -1;
   matchCount = 0;
   configToken = obj->config->configToken;
@@ -105,7 +105,7 @@ int fn_801D4CD0(SHthorntailObject *obj)
       fn_8014C66C(*objects,obj);
       if ((fn_800216D0(&(*objects)->pos,&obj->pos) < lbl_803E5414) &&
           (GameBit_Get(SHthorntail_GetLinkedGameBit((*objects)->config)) == 0)) {
-        eventIsSet = 1;
+        linkedEventPending = 1;
       }
       matchCount++;
       if (matchCount == 3) {
@@ -114,7 +114,7 @@ int fn_801D4CD0(SHthorntailObject *obj)
     }
     objects++;
   }
-  return eventIsSet;
+  return linkedEventPending;
 }
 
 /*

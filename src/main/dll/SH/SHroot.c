@@ -15,7 +15,7 @@ extern void fn_8003B310(int obj,int collisionShapeState);
 extern void fn_8006EF38(double scaleX,double scaleY,int obj,int joint,int pointCount,int pathPoints,
                         int scratch);
 extern int fn_80114BB0();
-extern int fn_801D4CD0(SHthorntailObject *obj);
+extern int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj);
 
 extern f32 lbl_803DB414;
 extern f32 lbl_803E5418;
@@ -153,7 +153,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
 void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRuntime *runtime,
                                          SHthorntailConfig *config)
 {
-  int eventIsSet;
+  int linkedEventPending;
   uint gameBit;
   int randomTime;
   u8 *levelControlTables;
@@ -200,8 +200,8 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
     }
     break;
   case SHTHORNTAIL_LOCOMOTION_6:
-    eventIsSet = fn_801D4CD0(obj);
-    if (eventIsSet != 0) {
+    linkedEventPending = SHthorntail_HasNearbyPendingEventObject(obj);
+    if (linkedEventPending != 0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_EVENT_PAUSE;
       return;
     }
