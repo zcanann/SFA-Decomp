@@ -499,7 +499,7 @@ config.libs = [
         "card",
         [
             Object(NonMatching, "dolphin/card/CARDBios.c"),
-            Object(NonMatching, "dolphin/card/CARDUnlock.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/card/CARDUnlock.c"),
             Object(MatchingFor("GSAE01"), "dolphin/card/CARDRdwr.c"),
             Object(MatchingFor("GSAE01"), "dolphin/card/CARDBlock.c"),
             Object(MatchingFor("GSAE01"), "dolphin/card/CARDDir.c"),

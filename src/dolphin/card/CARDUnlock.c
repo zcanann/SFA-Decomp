@@ -3,8 +3,8 @@
 
 #include "dolphin/card/__card.h"
 
-extern u8 __CARDUnlockData[352];
-extern unsigned long int __CARDUnlockNext;
+extern u8 lbl_8032EBE0[352];
+extern unsigned long int lbl_803DC600;
 
 typedef struct DecodeParameters {
     u8* inputAddr;
@@ -17,12 +17,12 @@ static void InitCallback(void* task);
 static void DoneCallback(void* task);
 
 static int CARDRand(void) {
-    __CARDUnlockNext = __CARDUnlockNext * 1103515245 + 12345;
-    return (int)((unsigned int)(__CARDUnlockNext / 65536) % 32768);
+    lbl_803DC600 = lbl_803DC600 * 1103515245 + 12345;
+    return (int)((unsigned int)(lbl_803DC600 / 65536) % 32768);
 }
 
 static void CARDSrand(unsigned int seed) {
-    __CARDUnlockNext = seed;
+    lbl_803DC600 = seed;
 }
 
 static u32 GetInitVal(void) {
@@ -258,7 +258,7 @@ s32 __CARDUnlock(s32 chan, u8 flashID[12]) {
     DCFlushRange(param, sizeof(DecodeParameters));
 
     task->priority = 255;
-    task->iram_mmem_addr = (u16*)OSPhysicalToCached(__CARDUnlockData);
+    task->iram_mmem_addr = (u16*)OSPhysicalToCached(lbl_8032EBE0);
     task->iram_length = 0x160;
     task->iram_addr = 0;
     task->dsp_init_vector = 0x10;
