@@ -3,7 +3,7 @@
 #include "main/dll/SH/dll_1E8.h"
 
 extern void fn_8000BB18(SHthorntailObject *obj,u16 volumeId);
-extern int GameBit_Get(int eventId);
+extern uint GameBit_Get(int eventId);
 extern u32 fn_8002208C(f32 *state,f32 min,f32 max);
 extern int fn_800221A0(int min,int max);
 extern void OSPanic(const char *file,int line,const char *msg,...);
@@ -160,7 +160,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
 void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntime *runtime)
 {
   int randomTime;
-  int eventIsSet;
+  uint eventIsSet;
 
   runtime->impactSfxTable = &gSHthorntailRootControlMode3LocomotionDefaultImpactSfxTable;
   switch(runtime->locomotionMode) {
