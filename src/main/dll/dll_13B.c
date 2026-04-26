@@ -15,6 +15,8 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8008112c();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
+extern undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnim,int moveId,u32 flags);
+extern void fn_8003B8F4(double scale);
 
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd70c;
@@ -33,6 +35,9 @@ extern f32 FLOAT_803e3d68;
 extern f32 FLOAT_803e3d6c;
 extern f32 FLOAT_803e3d70;
 extern f32 FLOAT_803e3d78;
+extern f32 lbl_803DB414;
+extern f32 lbl_803E30D0;
+extern f32 lbl_803E30D4;
 
 /*
  * --INFO--
@@ -107,6 +112,81 @@ void FUN_80169360(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   FUN_8028688c();
   return;
+}
+
+int kaldachompme_getExtraSize(void)
+{
+  return 0x10;
+}
+
+int kaldachompme_func08(void)
+{
+  return 0;
+}
+
+void kaldachompme_free(void)
+{
+}
+
+void kaldachompme_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
+                         undefined4 param_5,char renderFlag)
+{
+  if (renderFlag != '\0') {
+    fn_8003B8F4((double)lbl_803E30D0);
+  }
+}
+
+void kaldachompme_hitDetect(void)
+{
+}
+
+void kaldachompme_update(int obj)
+{
+  float *extra;
+  float current;
+  float target;
+  float step;
+
+  extra = *(float **)(obj + 0xb8);
+  current = extra[0];
+  target = extra[2];
+  if (current != target) {
+    step = extra[1];
+    if (step > lbl_803E30D4) {
+      if (current < target) {
+        extra[0] = current + step * lbl_803DB414;
+      }
+      else {
+        extra[0] = target;
+      }
+    }
+    else {
+      if (current > target) {
+        extra[0] = current + step * lbl_803DB414;
+      }
+      else {
+        extra[0] = target;
+      }
+    }
+  }
+  ObjAnim_SetCurrentMove((double)extra[0],obj,(uint)*(byte *)((int)extra + 0xc),0);
+}
+
+void kaldachompme_init(int obj,int params)
+{
+  *(s16 *)(obj + 4) = (s16)(*(u8 *)(params + 0x18) << 8);
+  *(s16 *)(obj + 2) = (s16)(*(u8 *)(params + 0x19) << 8);
+  *(s16 *)(obj + 0) = (s16)(*(u8 *)(params + 0x1a) << 8);
+  *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x2000);
+  ObjAnim_SetCurrentMove((double)lbl_803E30D4,obj,0,0);
+}
+
+void kaldachompme_release(void)
+{
+}
+
+void kaldachompme_initialise(void)
+{
 }
 
 /*

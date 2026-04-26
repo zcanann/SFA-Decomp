@@ -592,7 +592,7 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
   ObjAnimState *state;
   s16 previousMove;
   u8 moveChanged;
-  u32 frameStep;
+  int frameStep;
   int moveIndex;
   int moveData;
   f32 clampedProgress;
@@ -663,13 +663,13 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
     moveData = (int)animDef->moveData[state->moveCacheSlot];
   }
   state->frameData = (u8 *)(moveData + 6);
-  state->frameType = *(u8 *)(moveData + 1) & 0xf0;
+  state->frameType = *(s8 *)(moveData + 1) & 0xf0;
   state->segmentLength =
        ObjAnim_U32AsDouble((uint)state->frameData[1]) - DOUBLE_803df568;
   if (state->frameType == 0) {
     state->segmentLength = state->segmentLength - FLOAT_803df560;
   }
-  frameStep = *(u8 *)(moveData + 1) & 0xf;
+  frameStep = *(s8 *)(moveData + 1) & 0xf;
   if ((frameStep != 0) && ((flags & 0x10) == 0)) {
     state->savedStep = state->step;
     state->eventStep =
