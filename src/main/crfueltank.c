@@ -4,7 +4,7 @@ extern void *fn_8002B9EC(void);
 extern void fn_8000BB18(void *obj,u16 volumeId);
 extern int GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
-extern void fn_80035DF4(void *obj,int animObjId,int frame,int flags);
+extern void ObjHits_SetHitVolumeSlot(void *obj,int animObjId,int frame,int flags);
 extern void fn_80035F00(void *obj);
 extern void fn_80035F20(void *obj);
 extern int fn_80080150(void *timer);
@@ -128,7 +128,7 @@ void crfueltank_update(CrFuelTankObject *obj)
       fn_80080178(state->timer,0x708);
     }
     else {
-      fn_80035DF4(obj,0x1d,crfueltank_animFrame(def),0);
+      ObjHits_SetHitVolumeSlot(obj,0x1d,crfueltank_animFrame(def),0);
     }
   }
   return;
@@ -140,7 +140,7 @@ void crfueltank_init(CrFuelTankObject *obj,CrFuelTankDef *def)
 
   state = obj->state;
   fn_80035F20(obj);
-  fn_80035DF4(obj,0x1d,crfueltank_animFrame(def),0);
+  ObjHits_SetHitVolumeSlot(obj,0x1d,crfueltank_animFrame(def),0);
   fn_8008016C(state->timer);
   if ((def->hitEvent != -1) && (GameBit_Get(def->hitEvent) != 0)) {
     fn_80080178(state->timer,0x708);

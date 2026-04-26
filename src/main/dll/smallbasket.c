@@ -30,8 +30,8 @@ extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_80035fc4();
-extern undefined4 FUN_80035fe8();
+extern undefined4 ObjHits_SetHitVolumeMasks();
+extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_800360d4();
 extern undefined4 FUN_800360f0();
 extern int FUN_80037008();
@@ -681,7 +681,7 @@ void FUN_80157b68(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(float *)(param_9 + 0x12) = FLOAT_803e37b0;
     *(float *)(param_9 + 0x14) = fVar1;
     *(float *)(param_9 + 0x16) = fVar1;
-    FUN_80035fe8((int)param_9,9,1,-1);
+    ObjHits_SetHitVolumeSlot((int)param_9,9,1,-1);
     dVar6 = (double)(*(float *)(param_9 + 10) - *(float *)(*(int *)(param_10 + 0x29c) + 0x14));
     uVar5 = FUN_80017730();
     fVar1 = (float)((double)CONCAT44(0x43300000,(uVar5 & 0xffff) - (uint)*param_9 ^ 0x80000000) -

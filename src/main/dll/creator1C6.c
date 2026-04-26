@@ -6,7 +6,7 @@ extern uint FUN_80017730();
 extern uint FUN_80017760();
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
-extern undefined4 FUN_80035fe8();
+extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_80036080();
 extern undefined4 FUN_800360f0();
 extern undefined4 FUN_80037008();
@@ -78,7 +78,7 @@ void FUN_801c8ebc(int param_1,int param_2)
     DAT_803de848 = FUN_80037008(0xb,param_1,local_18);
   }
   FUN_800360f0(param_1);
-  FUN_80035fe8(param_1,0,0,0);
+  ObjHits_SetHitVolumeSlot(param_1,0,0,0);
   FUN_80036080(param_1);
   return;
 }

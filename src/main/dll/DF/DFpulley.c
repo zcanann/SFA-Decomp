@@ -4,7 +4,7 @@
 extern uint FUN_80017690();
 extern uint FUN_80017760();
 extern undefined4 FUN_80035b84();
-extern undefined4 FUN_80035fe8();
+extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_800360d4();
 extern undefined4 FUN_80037180();
 extern undefined4 FUN_8003735c();
@@ -33,7 +33,7 @@ void FUN_801c0e60(int param_1,undefined4 param_2,int param_3)
   int iVar2;
   
   iVar2 = *(int *)(param_1 + 0xb8);
-  FUN_80035fe8(param_1,0,0,0);
+  ObjHits_SetHitVolumeSlot(param_1,0,0,0);
   FUN_80035b84(param_1,0);
   FUN_800360d4(param_1);
   if (param_3 == 0) {

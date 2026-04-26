@@ -10,8 +10,8 @@ extern undefined4 FUN_8001771c();
 extern undefined4 FUN_80017748();
 extern uint FUN_80017760();
 extern int FUN_80017a98();
-extern undefined4 FUN_80035fa8();
-extern undefined4 FUN_80035fe8();
+extern undefined4 ObjHits_ClearHitVolumes();
+extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_80036080();
 extern undefined4 FUN_800360d4();
 extern undefined4 FUN_800360f0();
@@ -168,7 +168,7 @@ void dll153_updateExploderState
       if (*(char *)((int)puVar15 + 9) == '\x01') {
         puVar15[9] = puVar15[9] - (ushort)DAT_803dc070;
         if (*(char *)((int)puVar15 + 9) == '\x01') {
-          FUN_80035fe8(uVar6,0xe,1,0);
+          ObjHits_SetHitVolumeSlot(uVar6,0xe,1,0);
           if (FLOAT_803e462c < *(float *)(uVar6 + 0x28)) {
             *(float *)(uVar6 + 0x28) = FLOAT_803e4630 * FLOAT_803dc074 + *(float *)(uVar6 + 0x28);
           }
@@ -193,7 +193,7 @@ void dll153_updateExploderState
             *(undefined4 *)(uVar6 + 0xf8) = 0;
             FUN_800360f0(uVar6);
             *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) & 0xf7;
-            dVar17 = (double)FUN_80035fa8(uVar6);
+            dVar17 = (double)ObjHits_ClearHitVolumes(uVar6);
           }
         }
         else {
@@ -215,7 +215,7 @@ void dll153_updateExploderState
           fVar3 = FLOAT_803e45d0;
           *(float *)(uVar6 + 0x24) = FLOAT_803e45d0;
           *(float *)(uVar6 + 0x2c) = fVar3;
-          dVar17 = (double)FUN_80035fa8(uVar6);
+          dVar17 = (double)ObjHits_ClearHitVolumes(uVar6);
         }
       }
       else if (*(char *)((int)puVar15 + 5) == '\0') {
@@ -305,7 +305,7 @@ void dll153_updateExploderState
               *(float *)(uVar6 + 0x2c) = fVar3;
               FUN_800360f0(uVar6);
               *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) & 0xf7;
-              dVar17 = (double)FUN_80035fa8(uVar6);
+              dVar17 = (double)ObjHits_ClearHitVolumes(uVar6);
             }
           }
           else {
@@ -354,7 +354,7 @@ void dll153_updateExploderState
           *(undefined4 *)(uVar6 + 0xf8) = 0;
           FUN_800360f0(uVar6);
           *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) & 0xf7;
-          FUN_80035fa8(uVar6);
+          ObjHits_ClearHitVolumes(uVar6);
         }
       }
       if (((short)puVar15[7] < 1) && (*(char *)((int)puVar15 + 5) != '\0')) {

@@ -17,8 +17,8 @@ extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_80035fa8();
-extern undefined4 FUN_80035fe8();
+extern undefined4 ObjHits_ClearHitVolumes();
+extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_80039520();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80053bf0();
@@ -270,7 +270,7 @@ void FUN_8018d110(void)
     if (*piVar9 != 0) {
       FUN_800175cc((double)FLOAT_803e4a10,*piVar9,'\0');
     }
-    FUN_80035fa8(uVar4);
+    ObjHits_ClearHitVolumes(uVar4);
     piVar9[1] = (int)((float)piVar9[1] - FLOAT_803dc074);
     if (FLOAT_803e4a14 < (float)piVar9[1]) {
       uVar7 = 0;
@@ -290,7 +290,7 @@ void FUN_8018d110(void)
     if (*piVar9 != 0) {
       FUN_800175cc((double)FLOAT_803e4a10,*piVar9,'\x01');
     }
-    FUN_80035fe8(uVar4,0x1f,1,0);
+    ObjHits_SetHitVolumeSlot(uVar4,0x1f,1,0);
     piVar9[2] = (int)((float)piVar9[2] - FLOAT_803dc074);
     fVar2 = (float)piVar9[2];
     bVar1 = fVar2 <= FLOAT_803e4a14;

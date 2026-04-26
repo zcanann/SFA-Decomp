@@ -21,7 +21,7 @@ extern undefined4 FUN_80017a44();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80035b84();
-extern undefined4 FUN_80035fe8();
+extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_800360d4();
 extern undefined4 FUN_800360f0();
 extern int FUN_800369d0();
@@ -819,11 +819,11 @@ void FUN_801a66f8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   if (*(char *)((int)pfVar7 + 0x116) == '\0') {
     FUN_800360d4((int)param_9);
-    FUN_80035fe8((int)param_9,*(undefined *)((int)pfVar7 + 0x116),0,0);
+    ObjHits_SetHitVolumeSlot((int)param_9,*(undefined *)((int)pfVar7 + 0x116),0,0);
   }
   else {
     FUN_800360f0((int)param_9);
-    FUN_80035fe8((int)param_9,*(undefined *)((int)pfVar7 + 0x116),1,0);
+    ObjHits_SetHitVolumeSlot((int)param_9,*(undefined *)((int)pfVar7 + 0x116),1,0);
   }
   return;
 }

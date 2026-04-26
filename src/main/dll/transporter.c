@@ -21,8 +21,8 @@ extern undefined8 FUN_80017ac8();
 extern undefined4 FUN_80017ad0();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_SetTargetMask();
-extern undefined4 FUN_80035fa8();
-extern undefined4 FUN_80035fe8();
+extern undefined4 ObjHits_ClearHitVolumes();
+extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_800360d4();
 extern undefined4 FUN_800360f0();
 extern undefined4 FUN_80036864();
@@ -1453,7 +1453,7 @@ void FUN_80177710(ushort *param_1)
     else {
       uVar2 = 3;
     }
-    FUN_80035fe8((int)param_1,0x10,uVar2,0);
+    ObjHits_SetHitVolumeSlot((int)param_1,0x10,uVar2,0);
     *pfVar3 = *pfVar3 - FLOAT_803dc074;
     local_1c = FLOAT_803e429c;
     if (*pfVar3 <= FLOAT_803e429c) {
@@ -1580,7 +1580,7 @@ FUN_801778e0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
     *(float *)(param_10 + 8) = -(fVar1 * *(float *)(param_9 + 0x28) - pfVar5[1]);
     *(float *)(param_10 + 0xc) = -(fVar1 * *(float *)(param_9 + 0x2c) - pfVar5[2]);
     if (*(char *)(param_10 + 0x11) == '\0') {
-      FUN_80035fa8(param_9);
+      ObjHits_ClearHitVolumes(param_9);
     }
     else {
       *(char *)(param_10 + 0x11) = *(char *)(param_10 + 0x11) + -1;

@@ -18,7 +18,7 @@ extern int FUN_80017830();
 extern undefined4 FUN_80017a88();
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
-extern undefined4 FUN_80035fe8();
+extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_800360d4();
 extern undefined4 FUN_800360f0();
 extern int FUN_800368c4();
@@ -296,7 +296,7 @@ void FUN_8014e3a8(ushort *param_1)
           FUN_80017698((int)*(short *)(iVar3 + 0x20),1);
         }
       }
-      FUN_80035fe8((int)param_1,10,1,0);
+      ObjHits_SetHitVolumeSlot((int)param_1,10,1,0);
       FUN_800360f0((int)param_1);
     }
     else {

@@ -17,7 +17,7 @@ extern undefined4 FUN_80017a98();
 extern undefined4 FUN_8002f6ac();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_80035fe8();
+extern undefined4 ObjHits_SetHitVolumeSlot();
 extern int FUN_80036dcc();
 extern undefined4 FUN_800388b4();
 extern void* FUN_80039518();
@@ -93,7 +93,7 @@ void FUN_80113504(double param_1,int param_2,uint *param_3,char param_4)
   *param_3 = *param_3 | 0x8000;
   *(undefined2 *)(param_3 + 0xcc) = 0;
   if (*(int *)(param_2 + 0x54) != 0) {
-    FUN_80035fe8(param_2,0,0,-1);
+    ObjHits_SetHitVolumeSlot(param_2,0,0,-1);
   }
   if (param_4 != -1) {
     *(char *)((int)param_3 + 0x25f) = param_4;

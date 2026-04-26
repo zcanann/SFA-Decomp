@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 
 extern int GameBit_Get(int eventId);
-extern void fn_80035DF4(u8 *obj,int param_2,int param_3,int param_4);
+extern void ObjHits_SetHitVolumeSlot(u8 *obj,int param_2,int param_3,int param_4);
 
 extern undefined4 *lbl_803DCA54;
 extern undefined4 *lbl_803DCA78;
@@ -87,7 +87,7 @@ void dfppowersl_init(u8 *obj,u8 *params)
     state->spawnObjectId = *(s16 *)(params + 0x1c);
     state->eventId = *(s16 *)(params + 0x20);
     *(s16 *)obj = *(s8 *)(params + 0x18) << 8;
-    fn_80035DF4(obj,0x13,1,0);
+    ObjHits_SetHitVolumeSlot(obj,0x13,1,0);
   }
   return;
 }

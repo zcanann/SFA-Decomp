@@ -30,7 +30,7 @@ extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 FUN_80035b84();
-extern undefined4 FUN_80035fe8();
+extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_800360d4();
 extern undefined8 FUN_800360f0();
 extern int FUN_800369d0();
@@ -193,12 +193,12 @@ void FUN_80169d38(undefined8 param_1,undefined8 param_2,undefined8 param_3,doubl
     dVar9 = dVar8;
     FUN_80017a88(dVar10,dVar8,dVar6,(int)param_9);
     if (param_9[0x23] == 0x869) {
-      FUN_80035fe8((int)param_9,0x1f,1,0);
+      ObjHits_SetHitVolumeSlot((int)param_9,0x1f,1,0);
       *param_9 = *param_9 + 0x100;
       param_9[1] = param_9[1] + 0x800;
     }
     else {
-      FUN_80035fe8((int)param_9,10,1,0);
+      ObjHits_SetHitVolumeSlot((int)param_9,10,1,0);
       iVar2 = FUN_80017730();
       *param_9 = (short)iVar2 + -0x8000;
       dVar8 = dVar9;
@@ -448,7 +448,7 @@ void FUN_8016a708(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     FUN_80293900((double)(float)(dVar5 * dVar5 + (double)(float)(dVar2 * dVar2)));
     iVar1 = FUN_80017730();
     param_9[1] = 0x4000 - (short)iVar1;
-    FUN_80035fe8((int)param_9,10,1,0);
+    ObjHits_SetHitVolumeSlot((int)param_9,10,1,0);
     FUN_800360f0((int)param_9);
     if ((*(int *)(*(int *)(param_9 + 0x2a) + 0x50) == 0) ||
        ((iVar1 = FUN_80017a98(), *(int *)(*(int *)(param_9 + 0x2a) + 0x50) != iVar1 &&
@@ -618,7 +618,7 @@ void FUN_8016aba8(undefined8 param_1,double param_2,double param_3,undefined8 pa
     param_2 = (double)(*(float *)(param_9 + 0x28) * FLOAT_803dc074);
     param_3 = (double)(*(float *)(param_9 + 0x2c) * FLOAT_803dc074);
     FUN_80017a88((double)(*(float *)(param_9 + 0x24) * FLOAT_803dc074),param_2,param_3,param_9);
-    FUN_80035fe8(param_9,0x16,1,0);
+    ObjHits_SetHitVolumeSlot(param_9,0x16,1,0);
     FUN_80035b84(param_9,7);
     param_1 = FUN_800360f0(param_9);
     if ((*(int *)(*(int *)(param_9 + 0x54) + 0x50) != 0) &&
@@ -1033,7 +1033,7 @@ void FUN_8016b428(undefined8 param_1,undefined8 param_2,undefined8 param_3,doubl
       dVar7 = (double)(*(float *)(param_9 + 0x14) * FLOAT_803dc074);
       dVar8 = (double)(*(float *)(param_9 + 0x16) * FLOAT_803dc074);
       FUN_80017a88((double)(*(float *)(param_9 + 0x12) * FLOAT_803dc074),dVar7,dVar8,(int)param_9);
-      FUN_80035fe8((int)param_9,0x16,1,0);
+      ObjHits_SetHitVolumeSlot((int)param_9,0x16,1,0);
       FUN_800360f0((int)param_9);
       iVar3 = *(int *)(*(int *)(param_9 + 0x2a) + 0x50);
       if (((iVar3 != 0) && (*(ushort *)(iVar3 + 0x46) != param_9[0x23])) && (iVar3 != *piVar5)) {

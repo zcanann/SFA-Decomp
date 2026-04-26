@@ -13,8 +13,8 @@ extern undefined4 FUN_80017a88();
 extern int FUN_80017a98();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_8003601c();
-extern undefined4 FUN_80036030();
+extern undefined4 ObjHits_ClearSourceMask();
+extern undefined4 ObjHits_SetSourceMask();
 extern undefined4 FUN_80037bd4();
 extern undefined8 FUN_80081118();
 extern undefined2 ediblemushroom_update();
@@ -293,7 +293,7 @@ void FUN_801d083c(undefined8 param_1,undefined8 param_2,double param_3,undefined
     }
     break;
   case '\t':
-    FUN_8003601c((int)param_9,1);
+    ObjHits_ClearSourceMask((int)param_9,1);
     FUN_800068c4((uint)param_9,0x9b);
     if (param_10[0x49] <= FLOAT_803e5f20) {
       uStack_2c = FUN_80017760(0xf0,300);
@@ -345,7 +345,7 @@ void FUN_801d083c(undefined8 param_1,undefined8 param_2,double param_3,undefined
       }
     }
     else {
-      FUN_80036030((int)param_9,1);
+      ObjHits_SetSourceMask((int)param_9,1);
       (**(code **)(*DAT_803dd6f8 + 0x14))(param_9);
       *(undefined *)((int)param_10 + 0x136) = 0;
       *(byte *)((int)param_10 + 0x137) = *(byte *)((int)param_10 + 0x137) & 0xef;

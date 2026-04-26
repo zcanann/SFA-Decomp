@@ -27,7 +27,7 @@ extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern undefined4 FUN_80035fa8();
+extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined8 FUN_800360d4();
 extern ushort FUN_80036144();
 extern undefined4 FUN_800365a4();
@@ -1501,7 +1501,7 @@ void FUN_80181b50(undefined8 param_1,double param_2,double param_3,undefined8 pa
       fVar1 = FLOAT_803e45d0;
       *(float *)(puVar2 + 0x12) = FLOAT_803e45d0;
       *(float *)(puVar2 + 0x16) = fVar1;
-      FUN_80035fa8((int)puVar2);
+      ObjHits_ClearHitVolumes((int)puVar2);
       if (DAT_803dca08 != 0) {
         FUN_800360d4((int)puVar2);
       }

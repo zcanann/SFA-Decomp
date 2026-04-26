@@ -11,7 +11,7 @@ extern int FUN_80017830();
 extern undefined4 FUN_80017a88();
 extern int FUN_80017a98();
 extern undefined4 FUN_800305c4();
-extern undefined4 FUN_80035fe8();
+extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_800360d4();
 extern undefined4 FUN_800360f0();
 extern int FUN_800368c4();

@@ -10,7 +10,7 @@ extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
 extern int FUN_80017a98();
 extern int FUN_80017b00();
-extern undefined4 FUN_80035fe8();
+extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_80037180();
 extern undefined4 FUN_8003735c();
 extern int FUN_8003751c();
@@ -100,7 +100,7 @@ void FUN_80178370(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   dVar3 = (double)*pfVar2;
   if (dVar3 <= (double)FLOAT_803e42c8) {
     if (((double)FLOAT_803e42cc < dVar3) && (*(char *)((int)pfVar2 + 0x11) == '\0')) {
-      FUN_80035fe8(param_9,0x1a,1,0);
+      ObjHits_SetHitVolumeSlot(param_9,0x1a,1,0);
     }
   }
   else {

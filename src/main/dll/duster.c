@@ -10,7 +10,7 @@ extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_80035fe8();
+extern undefined4 ObjHits_SetHitVolumeSlot();
 extern char FUN_800620e8();
 extern double FUN_8014d2a4();
 extern undefined4 FUN_8014d164();
@@ -550,7 +550,7 @@ void FUN_80155e00(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   else if ((*(short *)(*(int *)(param_10 + 0x29c) + 0x44) == 1) &&
           (uVar2 = FUN_80294c18(*(int *)(param_10 + 0x29c)), uVar2 != 0)) {
-    FUN_80035fe8((int)param_9,10,1,0);
+    ObjHits_SetHitVolumeSlot((int)param_9,10,1,0);
     sVar1 = *(short *)(param_9 + 0x28);
     if (sVar1 == 3) {
       FUN_8015536c((double)FLOAT_803e3698,(short *)param_9,param_10,0x19);
@@ -997,7 +997,7 @@ void FUN_80156eb8(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   *(undefined *)(*(int *)(param_9 + 0x2a) + 0x70) = 0;
   uVar4 = 0;
-  FUN_80035fe8((int)param_9,10,1,0);
+  ObjHits_SetHitVolumeSlot((int)param_9,10,1,0);
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
     FUN_80006824((uint)param_9,0x261);
   }
@@ -1103,7 +1103,7 @@ void FUN_80157220(undefined8 param_1,double param_2,double param_3,undefined8 pa
   iVar5 = *(int *)(param_9 + 0x26);
   *(undefined *)(*(int *)(param_9 + 0x2a) + 0x70) = 0;
   uVar4 = 0;
-  FUN_80035fe8((int)param_9,10,1,0);
+  ObjHits_SetHitVolumeSlot((int)param_9,10,1,0);
   if ((param_10[0xb7] & 0x40000000) != 0) {
     FUN_80006824((uint)param_9,0x261);
   }

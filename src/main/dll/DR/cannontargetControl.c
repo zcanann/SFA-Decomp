@@ -8,8 +8,8 @@ extern undefined4 FUN_80017a88();
 extern undefined4 FUN_80017a98();
 extern undefined4 FUN_80017ad0();
 extern undefined4 FUN_80035d58();
-extern undefined4 FUN_80035fa8();
-extern undefined4 FUN_80035fe8();
+extern undefined4 ObjHits_ClearHitVolumes();
+extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_8003606c();
 extern undefined4 FUN_80036080();
 extern undefined4 FUN_800360d4();
@@ -115,7 +115,7 @@ void gunpowderbarrel_hitDetect(uint param_1)
     else {
       if ((*(char *)(iVar5 + 0x16) == '\0') &&
          (((*(byte *)(iVar5 + 0x49) & 2) != 0 || (FLOAT_803e4fa4 < *(float *)(iVar5 + 0x24))))) {
-        FUN_80035fe8(param_1,0xe,1,0);
+        ObjHits_SetHitVolumeSlot(param_1,0xe,1,0);
         FUN_800360f0(param_1);
       }
       if (-1 < *(char *)(iVar5 + 0x4a)) {
@@ -722,7 +722,7 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
               FUN_8007f6e4((undefined4 *)(iVar12 + 0x1c));
               FUN_8007f718((float *)(iVar12 + 0x1c),0x5a);
               FUN_8020a470(iVar5,uVar2,0x46);
-              FUN_80035fa8(uVar2);
+              ObjHits_ClearHitVolumes(uVar2);
               FUN_800360d4(uVar2);
               *(ushort *)(uVar2 + 6) = *(ushort *)(uVar2 + 6) | 0x4000;
             }
@@ -750,7 +750,7 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(undefined *)(iVar12 + 0x16) = 0;
       *(byte *)(iVar12 + 0x49) = *(byte *)(iVar12 + 0x49) | 1;
       *(ushort *)(uVar2 + 6) = *(ushort *)(uVar2 + 6) & 0xbfff;
-      FUN_80035fa8(uVar2);
+      ObjHits_ClearHitVolumes(uVar2);
       FUN_80035d58(uVar2,8,-2,0x19);
       FUN_800360f0(uVar2);
       FUN_80036080(uVar2);

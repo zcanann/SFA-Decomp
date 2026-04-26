@@ -10,7 +10,7 @@ extern uint FUN_80017760();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_8002fc3c();
-extern undefined8 FUN_80035fe8();
+extern undefined8 ObjHits_SetHitVolumeSlot();
 extern int FUN_800369d0();
 extern undefined4 FUN_80039520();
 extern double FUN_80293900();
@@ -151,7 +151,7 @@ void cfccrate_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,un
   }
   else if (sVar1 == 0x71b) {
     *(ushort *)(iVar8 + 0x36) = *(short *)(iVar8 + 0x36) - (ushort)DAT_803dc070;
-    uVar9 = FUN_80035fe8((int)param_9,0x13,1,0);
+    uVar9 = ObjHits_SetHitVolumeSlot((int)param_9,0x13,1,0);
     if (*(short *)(iVar8 + 0x36) < 1) {
       FUN_80017ac8(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(int)param_9);
     }

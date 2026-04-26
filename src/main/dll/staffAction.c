@@ -13,7 +13,7 @@ extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_800305f8();
 extern undefined4 FUN_800339b4();
-extern undefined4 FUN_80035fe8();
+extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_800360f0();
 extern undefined8 FUN_80037180();
 extern undefined4 FUN_8003b818();
@@ -93,7 +93,7 @@ FUN_801659b8(undefined8 param_1,double param_2,double param_3,undefined8 param_4
                  param_9,0,0,param_12,param_13,param_14,param_15,param_16);
     *(float *)(iVar3 + 0x44) = FLOAT_803e3ca0;
   }
-  FUN_80035fe8((int)param_9,9,1,-1);
+  ObjHits_SetHitVolumeSlot((int)param_9,9,1,-1);
   *(undefined *)(*(int *)(param_9 + 0x2a) + 0x6c) = 9;
   *(undefined *)(*(int *)(param_9 + 0x2a) + 0x6d) = 1;
   FUN_800339b4(param_9);
@@ -213,7 +213,7 @@ FUN_80165e74(undefined8 param_1,double param_2,double param_3,undefined8 param_4
                  param_9,0,0,param_12,param_13,param_14,param_15,param_16);
     *(float *)(iVar1 + 0x44) = FLOAT_803e3c74;
   }
-  FUN_80035fe8((int)param_9,9,1,-1);
+  ObjHits_SetHitVolumeSlot((int)param_9,9,1,-1);
   *(undefined *)(*(int *)(param_9 + 0x2a) + 0x6c) = 9;
   *(undefined *)(*(int *)(param_9 + 0x2a) + 0x6d) = 1;
   FUN_800339b4(param_9);

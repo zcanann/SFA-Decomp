@@ -13,7 +13,7 @@ extern undefined4 FUN_80017a68();
 extern int FUN_80017a98();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_80035fa8();
+extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 FUN_800360d4();
 extern undefined4 FUN_800365a4();
 extern int FUN_800368c4();
@@ -97,7 +97,7 @@ void dll1E1_updateTrickyState
   pfVar14 = *(float **)(puVar3 + 0x5c);
   iVar4 = FUN_80017a98();
   iVar13 = *(int *)(puVar3 + 0x26);
-  FUN_80035fa8((int)puVar3);
+  ObjHits_ClearHitVolumes((int)puVar3);
   *(byte *)((int)puVar3 + 0xaf) = *(byte *)((int)puVar3 + 0xaf) | 8;
   *(byte *)((int)pfVar14 + 0x37) = *(byte *)((int)pfVar14 + 0x37) | 4;
   bVar7 = FUN_80017a34((int)puVar3);

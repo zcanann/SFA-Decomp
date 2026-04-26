@@ -36,7 +36,7 @@ extern int FUN_80017b00();
 extern undefined4 FUN_8002f6ac();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_80035fe8();
+extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_800360d4();
 extern undefined4 FUN_800360f0();
 extern int FUN_800368c4();
@@ -2537,7 +2537,7 @@ void FUN_8019e964(undefined8 param_1,double param_2,undefined8 param_3,undefined
       FUN_800175d0((double)FLOAT_803dcac0,param_2,*piVar4);
     }
   }
-  FUN_80035fe8((int)param_9,0x17,0,0);
+  ObjHits_SetHitVolumeSlot((int)param_9,0x17,0,0);
   local_48 = DAT_80323888;
   local_44 = DAT_8032388c;
   local_40 = DAT_80323890;

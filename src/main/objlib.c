@@ -488,7 +488,7 @@ void FUN_80035d58(int param_1,undefined2 param_2,short param_3,short param_4)
 /*
  * --INFO--
  *
- * Function: FUN_80035fa8
+ * Function: ObjHits_ClearHitVolumes
  * EN v1.0 Address: 0x80035FA8
  * EN v1.0 Size: 28b
  * EN v1.1 Address: 0x80035EA4
@@ -498,7 +498,7 @@ void FUN_80035d58(int param_1,undefined2 param_2,short param_3,short param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80035fa8(int param_1)
+void ObjHits_ClearHitVolumes(int param_1)
 {
   int iVar1;
   
@@ -513,7 +513,7 @@ void FUN_80035fa8(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80035fc4
+ * Function: ObjHits_SetHitVolumeMasks
  * EN v1.0 Address: 0x80035FC4
  * EN v1.0 Size: 36b
  * EN v1.1 Address: 0x80035EC0
@@ -523,7 +523,7 @@ void FUN_80035fa8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80035fc4(int param_1,undefined param_2,undefined param_3,int param_4)
+void ObjHits_SetHitVolumeMasks(int param_1,undefined param_2,undefined param_3,int param_4)
 {
   int iVar1;
   
@@ -541,7 +541,7 @@ void FUN_80035fc4(int param_1,undefined param_2,undefined param_3,int param_4)
 /*
  * --INFO--
  *
- * Function: FUN_80035fe8
+ * Function: ObjHits_SetHitVolumeSlot
  * EN v1.0 Address: 0x80035FE8
  * EN v1.0 Size: 52b
  * EN v1.1 Address: 0x80035EEC
@@ -551,7 +551,7 @@ void FUN_80035fc4(int param_1,undefined param_2,undefined param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80035fe8(int param_1,undefined param_2,undefined param_3,int param_4)
+void ObjHits_SetHitVolumeSlot(int param_1,undefined param_2,undefined param_3,int param_4)
 {
   int iVar1;
   int iVar2;
@@ -574,7 +574,7 @@ void FUN_80035fe8(int param_1,undefined param_2,undefined param_3,int param_4)
 /*
  * --INFO--
  *
- * Function: FUN_8003601c
+ * Function: ObjHits_ClearSourceMask
  * EN v1.0 Address: 0x8003601C
  * EN v1.0 Size: 20b
  * EN v1.1 Address: 0x80035F28
@@ -584,7 +584,7 @@ void FUN_80035fe8(int param_1,undefined param_2,undefined param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003601c(int param_1,byte param_2)
+void ObjHits_ClearSourceMask(int param_1,byte param_2)
 {
   *(byte *)(*(int *)(param_1 + 0x54) + 0xb4) = *(byte *)(*(int *)(param_1 + 0x54) + 0xb4) & ~param_2
   ;
@@ -594,7 +594,7 @@ void FUN_8003601c(int param_1,byte param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80036030
+ * Function: ObjHits_SetSourceMask
  * EN v1.0 Address: 0x80036030
  * EN v1.0 Size: 20b
  * EN v1.1 Address: 0x80035F40
@@ -604,7 +604,7 @@ void FUN_8003601c(int param_1,byte param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80036030(int param_1,byte param_2)
+void ObjHits_SetSourceMask(int param_1,byte param_2)
 {
   *(byte *)(*(int *)(param_1 + 0x54) + 0xb4) = *(byte *)(*(int *)(param_1 + 0x54) + 0xb4) | param_2;
   return;
@@ -613,7 +613,7 @@ void FUN_80036030(int param_1,byte param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80036044
+ * Function: ObjHits_ClearFlags
  * EN v1.0 Address: 0x80036044
  * EN v1.0 Size: 20b
  * EN v1.1 Address: 0x80035F54
@@ -623,7 +623,7 @@ void FUN_80036030(int param_1,byte param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80036044(int param_1,ushort param_2)
+void ObjHits_ClearFlags(int param_1,ushort param_2)
 {
   *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
        *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & ~param_2;
@@ -633,7 +633,7 @@ void FUN_80036044(int param_1,ushort param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80036058
+ * Function: ObjHits_SetFlags
  * EN v1.0 Address: 0x80036058
  * EN v1.0 Size: 20b
  * EN v1.1 Address: 0x80035F6C
@@ -643,7 +643,7 @@ void FUN_80036044(int param_1,ushort param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80036058(int param_1,ushort param_2)
+void ObjHits_SetFlags(int param_1,ushort param_2)
 {
   *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
        *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) | param_2;

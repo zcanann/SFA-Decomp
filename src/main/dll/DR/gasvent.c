@@ -5,11 +5,11 @@ extern undefined4 FUN_80006824();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern undefined4 FUN_80035d58();
-extern undefined4 FUN_80035fe8();
-extern undefined4 FUN_8003601c();
-extern undefined4 FUN_80036030();
-extern undefined4 FUN_80036044();
-extern undefined4 FUN_80036058();
+extern undefined4 ObjHits_SetHitVolumeSlot();
+extern undefined4 ObjHits_ClearSourceMask();
+extern undefined4 ObjHits_SetSourceMask();
+extern undefined4 ObjHits_ClearFlags();
+extern undefined4 ObjHits_SetFlags();
 extern undefined4 FUN_8003606c();
 extern undefined4 FUN_80036080();
 extern undefined4 FUN_800360f0();
@@ -65,7 +65,7 @@ void FUN_801a1230(int param_1,char param_2)
     *(undefined *)(iVar1 + 0x6b) = *(undefined *)(*(int *)(param_1 + 0x50) + 100);
     *(byte *)(iVar2 + 0x4a) = *(byte *)(iVar2 + 0x4a) & 0x7f;
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
-    FUN_80036044(param_1,0x400);
+    ObjHits_ClearFlags(param_1,0x400);
     *(byte *)(iVar2 + 0x49) = *(byte *)(iVar2 + 0x49) | 1;
   }
   else {
@@ -74,8 +74,8 @@ void FUN_801a1230(int param_1,char param_2)
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
     *(byte *)(iVar2 + 0x4a) = *(byte *)(iVar2 + 0x4a) & 0x7f | 0x80;
     *(byte *)(iVar2 + 0x49) = *(byte *)(iVar2 + 0x49) & 0xfd;
-    FUN_80036058(param_1,0x480);
-    FUN_8003601c(param_1,1);
+    ObjHits_SetFlags(param_1,0x480);
+    ObjHits_ClearSourceMask(param_1,1);
     FUN_800360f0(param_1);
     FUN_80036080(param_1);
   }
@@ -327,12 +327,12 @@ void FUN_801a1654(undefined8 param_1,double param_2,double param_3,undefined8 pa
         *(float *)(uVar1 + 0x14) = (float)dVar9;
       }
     }
-    FUN_80036044(uVar1,0x80);
-    FUN_80036030(uVar1,1);
+    ObjHits_ClearFlags(uVar1,0x80);
+    ObjHits_SetSourceMask(uVar1,1);
     FUN_80035d58(uVar1,0x14,-5,0x14);
     FUN_800360f0(uVar1);
     FUN_8003606c(uVar1);
-    FUN_80035fe8(uVar1,5,4,0);
+    ObjHits_SetHitVolumeSlot(uVar1,5,4,0);
     FUN_80006824(uVar1,0xd1);
     *(float *)(uVar1 + 0x10) = *(float *)(uVar1 + 0x10) + FLOAT_803e4fa0;
     FUN_8008112c((double)FLOAT_803e4f58,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
