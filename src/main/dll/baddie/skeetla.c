@@ -12,7 +12,7 @@ extern int FUN_80017a98();
 extern int FUN_80017b00();
 extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
-extern int fn_80037B60();
+extern int ObjHits_PollPriorityHitWithCooldown();
 extern undefined4 FUN_80039468();
 extern undefined4 FUN_800469d0();
 extern undefined4 FUN_80046a00();
@@ -184,7 +184,7 @@ void FUN_8013939c(uint param_1)
     }
   }
   *(int *)(iVar3 + 0x360) = local_34;
-  iVar2 = fn_80037B60(param_1,(float *)(iVar3 + 0x370),&local_34,afStack_20);
+  iVar2 = ObjHits_PollPriorityHitWithCooldown(param_1,(float *)(iVar3 + 0x370),&local_34,afStack_20);
   *(int *)(iVar3 + 0x368) = iVar2;
   switch(*(undefined4 *)(iVar3 + 0x368)) {
   case 1:

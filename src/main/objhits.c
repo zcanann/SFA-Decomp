@@ -16,7 +16,7 @@ extern int FUN_80017970();
 extern undefined4 FUN_80017b00();
 extern undefined4 ObjHits_RecordObjectHit();
 extern undefined4 ObjHits_RecordPositionHit();
-extern undefined4 FUN_80038238();
+extern undefined4 ObjContact_DispatchCallbacks();
 extern byte FUN_80063a68();
 extern undefined4 FUN_80063a74();
 extern void trackDolphin_buildSweptBounds(uint *boundsOut,float *startPoints,float *endPoints,
@@ -2221,7 +2221,7 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
   psVar2 = (short *)((ulonglong)uVar10 >> 0x20);
   psVar4 = (short *)uVar10;
   dVar8 = extraout_f1;
-  FUN_80038238();
+  ObjContact_DispatchCallbacks();
   puVar6 = *(undefined4 **)(psVar2 + 0x2a);
   puVar5 = *(undefined4 **)(psVar4 + 0x2a);
   *(ushort *)(puVar6 + 0x18) = *(ushort *)(puVar6 + 0x18) | 8;

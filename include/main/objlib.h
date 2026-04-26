@@ -68,14 +68,14 @@ uint ObjMsg_SendToObject(undefined8 param_1,undefined8 param_2,undefined8 param_
 void ObjMsg_AllocQueue(int param_1,int param_2);
 undefined4 FUN_80037d50(int param_1);
 bool FUN_80037d74(int param_1);
-int fn_80037B60(int param_1,float *param_2,undefined4 *param_3,float *param_4);
+int ObjHits_PollPriorityHitWithCooldown(int param_1,float *param_2,undefined4 *param_3,float *param_4);
 void FUN_80037fa8(undefined4 param_1,undefined4 param_2,uint param_3,uint param_4,uint param_5,
                  uint param_6,float *param_7);
 void ObjLink_DetachChild(int param_1,int param_2);
 void ObjLink_AttachChild(int param_1,int param_2,ushort param_3);
-void FUN_80038238(void);
-void FUN_80038318(int param_1);
-undefined4 FUN_800383c0(int param_1,int param_2,undefined4 param_3);
+void ObjContact_DispatchCallbacks(void);
+void ObjContact_RemoveObjectCallbacks(int param_1);
+undefined4 ObjContact_AddCallback(int param_1,int param_2,undefined4 param_3);
 undefined4 FUN_80038470(int param_1,short param_2);
 undefined4 FUN_800384ec(int param_1);
 void FUN_80038598(undefined4 param_1,undefined4 param_2,float *param_3);

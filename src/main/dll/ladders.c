@@ -18,7 +18,7 @@ extern undefined4 FUN_800305f8();
 extern undefined4 FUN_80035d58();
 extern undefined4 ObjHits_DisableObject();
 extern void* ObjGroup_GetObjects();
-extern int fn_80037B60();
+extern int ObjHits_PollPriorityHitWithCooldown();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800810e8();
 extern undefined4 FUN_8016157c();

@@ -6,7 +6,7 @@ extern undefined4 FUN_80017784();
 extern undefined4 FUN_80017788();
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
-extern int FUN_800383c0();
+extern int ObjContact_AddCallback();
 extern int FUN_80038598();
 extern int FUN_800620e8();
 extern undefined4 FUN_80081120();
@@ -138,7 +138,7 @@ void FUN_8016702c(void)
       iVar8 = (**(code **)(*DAT_803dd738 + 0x30))(piVar2,iVar7,0);
       if (iVar8 != 0) {
         if (((*(byte *)((int)piVar6 + 0x92) >> 1 & 1) == 0) &&
-           (iVar8 = FUN_800383c0((int)piVar2,iVar3,FUN_8016793c), iVar8 != 0)) {
+           (iVar8 = ObjContact_AddCallback((int)piVar2,iVar3,FUN_8016793c), iVar8 != 0)) {
           *(byte *)((int)piVar6 + 0x92) = *(byte *)((int)piVar6 + 0x92) & 0xfd | 2;
         }
         FUN_8002fc3c((double)(float)piVar6[0x11],(double)FLOAT_803dc074);

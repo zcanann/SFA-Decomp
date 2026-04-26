@@ -2121,7 +2121,7 @@ bool FUN_80037d74(int param_1)
 /*
  * --INFO--
  *
- * Function: fn_80037B60
+ * Function: ObjHits_PollPriorityHitWithCooldown
  * EN v1.0 Address: 0x80037DD4
  * EN v1.0 Size: 468b
  * EN v1.1 Address: 0x80037B60
@@ -2131,7 +2131,7 @@ bool FUN_80037d74(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int fn_80037B60(int param_1,float *param_2,undefined4 *param_3,float *param_4)
+int ObjHits_PollPriorityHitWithCooldown(int param_1,float *param_2,undefined4 *param_3,float *param_4)
 {
   int iVar1;
   
@@ -2282,7 +2282,7 @@ void ObjLink_AttachChild(int param_1,int param_2,ushort param_3)
 /*
  * --INFO--
  *
- * Function: FUN_80038238
+ * Function: ObjContact_DispatchCallbacks
  * EN v1.0 Address: 0x80038238
  * EN v1.0 Size: 224b
  * EN v1.1 Address: 0x80037E6C
@@ -2292,7 +2292,7 @@ void ObjLink_AttachChild(int param_1,int param_2,ushort param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80038238(void)
+void ObjContact_DispatchCallbacks(void)
 {
   bool bVar1;
   int *piVar2;
@@ -2328,7 +2328,7 @@ void FUN_80038238(void)
 /*
  * --INFO--
  *
- * Function: FUN_80038318
+ * Function: ObjContact_RemoveObjectCallbacks
  * EN v1.0 Address: 0x80038318
  * EN v1.0 Size: 168b
  * EN v1.1 Address: 0x80037F3C
@@ -2338,7 +2338,7 @@ void FUN_80038238(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80038318(int param_1)
+void ObjContact_RemoveObjectCallbacks(int param_1)
 {
   int *piVar1;
   int iVar2;
@@ -2370,7 +2370,7 @@ void FUN_80038318(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_800383c0
+ * Function: ObjContact_AddCallback
  * EN v1.0 Address: 0x800383C0
  * EN v1.0 Size: 176b
  * EN v1.1 Address: 0x80037FE8
@@ -2380,7 +2380,7 @@ void FUN_80038318(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_800383c0(int param_1,int param_2,undefined4 param_3)
+undefined4 ObjContact_AddCallback(int param_1,int param_2,undefined4 param_3)
 {
   int iVar1;
   int *piVar2;

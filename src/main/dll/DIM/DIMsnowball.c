@@ -31,7 +31,7 @@ extern undefined4 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHit();
 extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
-extern int fn_80037B60();
+extern int ObjHits_PollPriorityHitWithCooldown();
 extern undefined4 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
 extern int FUN_80038470();
@@ -876,7 +876,7 @@ LAB_801ab118:
   }
   else {
     pfVar7 = local_54 + 2;
-    iVar8 = fn_80037B60((int)psVar2,(float *)&DAT_803de7b8,(undefined4 *)0x0,pfVar7);
+    iVar8 = ObjHits_PollPriorityHitWithCooldown((int)psVar2,(float *)&DAT_803de7b8,(undefined4 *)0x0,pfVar7);
     if (iVar8 != 0) {
       dVar11 = FUN_80017708((float *)(psVar2 + 0xc),(float *)(piVar10[1] + 0x18));
       if (dVar11 < (double)FLOAT_803e5328) {

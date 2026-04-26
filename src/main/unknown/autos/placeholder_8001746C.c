@@ -86,7 +86,7 @@ extern undefined8 ObjGroup_RemoveObject();
 extern int ObjGroup_GetObjectGroup();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 ObjGroup_ClearAll();
-extern undefined4 FUN_80038318();
+extern undefined4 ObjContact_RemoveObjectCallbacks();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800404cc();
 extern undefined8 FUN_80040d88();
