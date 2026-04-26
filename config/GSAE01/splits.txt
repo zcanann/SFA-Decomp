@@ -23,10 +23,7 @@ main/unknown/autos/placeholder_8001746C.c:
 	.text       start:0x80017434 end:0x8002EB54
 
 main/objanim.c:
-	.text       start:0x8002EB54 end:0x8002F5D4
-
-main/unknown/autos/placeholder_8002F604.c:
-	.text       start:0x8002F5D4 end:0x80030688
+	.text       start:0x8002EB54 end:0x80030688
 
 main/objhits.c:
 	.text       start:0x80030688 end:0x800353A4
