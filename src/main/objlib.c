@@ -23,7 +23,7 @@ extern undefined4 FUN_80017a54();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac0();
 extern int FUN_80017b00();
-extern undefined4 FUN_80032470();
+extern void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2);
 extern undefined4 FUN_80045328();
 extern undefined4 FUN_80053ab4();
 extern int * fn_8005B11C();
@@ -157,8 +157,8 @@ int FUN_800357a8(ushort *param_1,uint param_2)
     *(undefined *)(*(int *)(param_1 + 0x2c) + 0x10c) = 0;
     *(undefined *)(*(int *)(param_1 + 0x2c) + 0x10d) = 10;
     *(undefined *)(*(int *)(param_1 + 0x2c) + 0x10f) = 0;
-    FUN_80032470(param_1,1);
-    FUN_80032470(param_1,1);
+    ObjHitbox_UpdateRotatedBounds(param_1,1);
+    ObjHitbox_UpdateRotatedBounds(param_1,1);
   }
   return uVar1 + 0x110;
 }
@@ -1290,7 +1290,7 @@ void FUN_80036a98(undefined4 param_1,undefined4 param_2,undefined4 param_3,int p
   }
   iVar3 = 0;
   for (iVar2 = 0; iVar2 < DAT_803dd860; iVar2 = iVar2 + 1) {
-    FUN_80032470(*(ushort **)(DAT_803dd864 + iVar3),1);
+    ObjHitbox_UpdateRotatedBounds(*(ushort **)(DAT_803dd864 + iVar3),1);
     iVar3 = iVar3 + 4;
   }
   return;

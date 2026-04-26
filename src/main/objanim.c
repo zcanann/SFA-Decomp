@@ -508,14 +508,12 @@ void ObjAnim_WriteStateWord(int objAnim,int stateIndex,short wordIndex,int value
 void ObjAnim_SetCurrentEventStepFrames(int objAnim,uint frameCount)
 {
   ObjAnimBank *bank;
-  u32 biasedFrameCount;
 
   bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
   if (bank != (ObjAnimBank *)0x0) {
-    biasedFrameCount = frameCount ^ 0x80000000;
     bank->currentState->eventStep =
         (short)(int)(lbl_803DE8F4 /
-                    (ObjAnim_U32AsDouble(biasedFrameCount) - lbl_803DE900));
+                    (ObjAnim_U32AsDouble(frameCount ^ 0x80000000) - lbl_803DE900));
   }
 }
 #pragma scheduling reset

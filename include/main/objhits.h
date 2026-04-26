@@ -33,7 +33,7 @@ uint FUN_800321a8(double param_1,double param_2,double param_3,double param_4,fl
                  float *param_11);
 void ObjHits_SortSweepEntries(int sweepPtrs,int entryCount);
 void FUN_80032430(void);
-void FUN_80032470(ushort *param_1,int param_2);
+void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2);
 u8 FUN_8003251c(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                 undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,

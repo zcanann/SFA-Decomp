@@ -1274,7 +1274,7 @@ void FUN_80032430(void)
 /*
  * --INFO--
  *
- * Function: FUN_80032470
+ * Function: ObjHitbox_UpdateRotatedBounds
  * EN v1.0 Address: 0x80032470
  * EN v1.0 Size: 172b
  * EN v1.1 Address: 0x80032508
@@ -1284,7 +1284,7 @@ void FUN_80032430(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80032470(ushort *param_1,int param_2)
+void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2)
 {
   int iVar1;
   ushort local_28;
