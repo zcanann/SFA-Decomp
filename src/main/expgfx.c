@@ -311,6 +311,71 @@ static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void) {
 /*
  * --INFO--
  *
+ * Function: expgfx_release
+ * EN v1.0 Address: 0x8009B0E0
+ * EN v1.0 Size: 372b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void expgfx_release(uint slotPoolBase,int poolIndex,int slotIndex,int freeTexture,int clearActive)
+{
+  u8 *expgfxBase;
+  u32 *poolActiveMask;
+  char *poolActiveCount;
+  ExpgfxSlot *slot;
+  uint activeMask;
+  uint tableIndex;
+  u16 *refCount;
+  u32 *tableTextureResources;
+
+  expgfxBase = lbl_8039AB58;
+  activeMask = 1 << slotIndex;
+  poolActiveMask = (u32 *)(expgfxBase + 0x10c0 + poolIndex * sizeof(u32));
+  if ((activeMask & *poolActiveMask) != 0) {
+    slot = (ExpgfxSlot *)(slotPoolBase + slotIndex * EXPGFX_SLOT_SIZE);
+    slot->behaviorFlags = 0;
+    if (freeTexture == 0) {
+      tableTextureResources = (u32 *)(expgfxBase + 0x988);
+      tableIndex = ((uint)slot->encodedTableIndex >> 1) * 4;
+      if (tableTextureResources[tableIndex] != 0) {
+        lbl_803DD258 = 1;
+        fn_80054308((void *)tableTextureResources[((uint)slot->encodedTableIndex >> 1) * 4]);
+        lbl_803DD258 = 0;
+      }
+      tableIndex = ((uint)slot->encodedTableIndex >> 1) * 4;
+      refCount = (u16 *)(expgfxBase + 0x98c + tableIndex * sizeof(u32));
+      if (*refCount == 0) {
+        fn_801378A8(sExpgfxMismatchInAddRemove);
+      }
+      else {
+        (*refCount)--;
+        if (*refCount == 0) {
+          tableTextureResources[tableIndex] = 0;
+          *(u32 *)(expgfxBase + 0x980 + tableIndex * sizeof(u32)) = 0;
+        }
+      }
+    }
+    slot->sequenceId = -1;
+    if ((clearActive & 0xff) != 0) {
+      DCFlushRange(slot,EXPGFX_SLOT_SIZE);
+    }
+    *poolActiveMask &= ~activeMask;
+    poolActiveCount = (char *)(expgfxBase + 0x1070 + poolIndex);
+    (*poolActiveCount)--;
+    if (*poolActiveCount == '\0') {
+      lbl_8030F8C8[poolIndex] = -1;
+    }
+  }
+  return;
+}
+
+/*
+ * --INFO--
+ *
  * Function: expgfx_initialise
  * EN v1.0 Address: 0x8009B254
  * EN v1.0 Size: 360b

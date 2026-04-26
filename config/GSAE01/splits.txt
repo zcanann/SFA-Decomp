@@ -77,10 +77,10 @@ dolphin/os/OSAddress.c:
 	.text       start:0x80080E58 end:0x80080E58
 
 main/unknown/autos/placeholder_80080E58.c:
-	.text       start:0x80080E58 end:0x8009B254
+	.text       start:0x80080E58 end:0x8009B0E0
 
 main/expgfx.c:
-	.text       start:0x8009B254 end:0x8009FED0
+	.text       start:0x8009B0E0 end:0x8009FED0
 
 main/dll/modgfx.c:
 	.text       start:0x8009FED0 end:0x800C291C
