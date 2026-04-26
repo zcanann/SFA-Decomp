@@ -2709,7 +2709,7 @@ void ObjHits_CheckSkeletonPair(undefined4 param_1,undefined4 param_2,int *param_
 /*
  * --INFO--
  *
- * Function: FUN_80034934
+ * Function: ObjHits_CheckTrackContact
  * EN v1.0 Address: 0x80034934
  * EN v1.0 Size: 1088b
  * EN v1.1 Address: 0x800349A8
@@ -2719,7 +2719,7 @@ void ObjHits_CheckSkeletonPair(undefined4 param_1,undefined4 param_2,int *param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80034934(void)
+void ObjHits_CheckTrackContact(void)
 {
   uint uVar1;
   uint uVar2;
@@ -2987,8 +2987,8 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
       for (currentIndex = 1; currentIndex < slotCount; currentIndex++) {
         obj = (*entrySlot)->obj;
         if (((*(ushort *)(*(int *)(obj + 0x54) + 0x60) & 0x200) != 0) &&
-            (FUN_80034934(), *(int *)(obj + 0xc8) != 0)) {
-          FUN_80034934();
+            (ObjHits_CheckTrackContact(), *(int *)(obj + 0xc8) != 0)) {
+          ObjHits_CheckTrackContact();
         }
         entrySlot++;
       }
