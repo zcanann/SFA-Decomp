@@ -3,6 +3,8 @@
 
 #include "ghidra_import.h"
 
+typedef struct ObjHitReactState ObjHitReactState;
+
 /*
  * Shared state used by the object-animation helpers around main/objanim.c.
  * These names are still partially provisional, but the layouts are stable
@@ -63,7 +65,7 @@ typedef struct ObjAnimComponent {
   s16 objType;
   u8 pad48[0x50 - 0x48];
   void *modelInstance;
-  void *hitReactState;
+  ObjHitReactState *hitReactState;
   u8 pad58[0x60 - 0x58];
   struct ObjAnimEventTable *eventTable;
   u8 pad64[0x7C - 0x64];

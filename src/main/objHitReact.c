@@ -55,15 +55,6 @@ typedef struct ObjHitReactEffectHandle {
   ObjHitReactEffectVTable *vtable;
 } ObjHitReactEffectHandle;
 
-typedef struct ObjHitReactState {
-  int activeHit;
-  u8 pad04[0x58 - 0x04];
-  s16 resetFrameCount;
-  u8 pad5A[0x60 - 0x5A];
-  s16 flags;
-  u8 resetFlags;
-} ObjHitReactState;
-
 #define OBJHITREACT_STATE_ACTIVE 0x01
 #define OBJHITREACT_STATE_RESET_PENDING 0x08
 
@@ -168,7 +159,7 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
   gObjHitReactResetObjectCount = 0;
   while (objectCount > 0) {
     obj = *objectList;
-    hitState = *(ObjHitReactState **)(obj + 0x54);
+    hitState = ((ObjAnimComponent *)obj)->hitReactState;
     if (hitState != (ObjHitReactState *)0x0) {
       stateActive = hitState->flags & OBJHITREACT_STATE_ACTIVE;
       if (stateActive != 0) {
