@@ -192,17 +192,19 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntim
       }
       else {
         eventIsSet = GameBit_Get(0x23d);
-        if (eventIsSet == 0) {
+        if (eventIsSet != 0) {
+          if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE3_WAIT) {
+            runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
+            randomTime = fn_800221A0(1000,2000);
+            runtime->idleTimer = (float)randomTime;
+          }
+          runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5PlayerImpactSfxTable;
+        }
+        else {
           runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5IdleImpactSfxTable;
           runtime->behaviorState = SHTHORNTAIL_STATE_ROOT_MODE3_WAIT;
           return;
         }
-        if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE3_WAIT) {
-          runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-          randomTime = fn_800221A0(1000,2000);
-          runtime->idleTimer = (float)randomTime;
-        }
-        runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5PlayerImpactSfxTable;
       }
     }
     break;
