@@ -50,7 +50,7 @@ extern undefined4 gCamcontrolCurrentActionId;
 extern undefined4 gCamcontrolCurrentHandler;
 extern u8 gCamcontrolHandlerCount;
 extern short* gCamcontrolState;
-extern char lbl_80319B14[];
+extern char sCamcontrolTriggeredCamActionLoadWarning[];
 extern f64 DOUBLE_803e22d0;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803de14c;
@@ -410,7 +410,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char trigge
     }
   }
   if (actionNo == 0) {
-    OSReport(lbl_80319B14,actionNo);
+    OSReport(sCamcontrolTriggeredCamActionLoadWarning,actionNo);
     camAction = (CamcontrolTriggeredAction *)fn_80023CC8(0x10,0xf,0);
     if (camAction != (CamcontrolTriggeredAction *)0x0) {
       fn_8001F71C(camAction,0xb,0,0x10);
