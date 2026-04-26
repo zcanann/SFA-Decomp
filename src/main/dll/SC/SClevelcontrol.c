@@ -20,6 +20,7 @@ extern f32 lbl_803E5448;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void sh_thorntail_render(SHthorntailObject *obj)
 {
   SHthorntailRuntime *runtime;
@@ -32,7 +33,8 @@ void sh_thorntail_render(SHthorntailObject *obj)
   do {
     fn_8003842C(obj,pointIndex,&runtime->renderPathPoints[0].x,&runtime->renderPathPoints[0].y,
                 &runtime->renderPathPoints[0].z,0);
-    pointIndex = pointIndex + 1;
     runtime = (SHthorntailRuntime *)((int)runtime + sizeof(Vec));
+    pointIndex = pointIndex + 1;
   } while (pointIndex < SHTHORNTAIL_RENDER_PATH_POINT_COUNT);
 }
+#pragma scheduling reset
