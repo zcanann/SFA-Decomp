@@ -109,3 +109,74 @@ void FUN_801be44c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   *(undefined4 *)(param_9 + 0xc0) = *(undefined4 *)(param_11 + 0x3e0);
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: dimbosstonsil_func11
+ * EN v1.0 Address: 0x801BE86C
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dimbosstonsil_func11(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dimbosstonsil_setScale
+ * EN v1.0 Address: 0x801BE870
+ * EN v1.0 Size: 12b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dimbosstonsil_setScale(int obj)
+{
+  return *(short *)(*(int *)(obj + 0xb8) + 0x274);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dimbosstonsil_getExtraSize
+ * EN v1.0 Address: 0x801BE87C
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dimbosstonsil_getExtraSize(void)
+{
+  return 0x410;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dimbosstonsil_func08
+ * EN v1.0 Address: 0x801BE884
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dimbosstonsil_func08(void)
+{
+  return 0x4b;
+}

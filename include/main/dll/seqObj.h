@@ -15,5 +15,7 @@ void FUN_8014ffa8(undefined8 param_1,double param_2,undefined8 param_3,undefined
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,uint param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
+void wispbaddie_release(void);
+void wispbaddie_initialise(void);
 
 #endif /* MAIN_DLL_SEQOBJ_H_ */

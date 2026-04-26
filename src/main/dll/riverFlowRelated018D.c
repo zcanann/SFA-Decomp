@@ -32,3 +32,20 @@ void FUN_801bec70(int param_1)
   }
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: dimbosstonsil_release
+ * EN v1.0 Address: 0x801BEE60
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dimbosstonsil_release(void)
+{
+}

@@ -232,3 +232,57 @@ void FUN_80163e44(short *param_1,int param_2)
   }
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: tumbleweed_func0F
+ * EN v1.0 Address: 0x80163F8C
+ * EN v1.0 Size: 12b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void tumbleweed_func0F(int obj, int value)
+{
+  *(int *)(*(int *)(obj + 0xb8) + 0x284) = value;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: tumbleweed_setScale
+ * EN v1.0 Address: 0x80164070
+ * EN v1.0 Size: 12b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int tumbleweed_setScale(int obj)
+{
+  return *(byte *)(*(int *)(obj + 0xb8) + 0x278);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: tumbleweed_getExtraSize
+ * EN v1.0 Address: 0x8016407C
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int tumbleweed_getExtraSize(void)
+{
+  return 0x2a4;
+}

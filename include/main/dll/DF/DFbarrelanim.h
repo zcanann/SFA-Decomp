@@ -6,5 +6,7 @@
 void FUN_801c1238(void);
 void FUN_801c1450(void);
 void FUN_801c1454(int param_1,int param_2,int param_3);
+void dfropenode_func12(int obj,float value);
+int dfropenode_func0F(int obj);
 
 #endif /* MAIN_DLL_DF_DFBARRELANIM_H_ */

@@ -175,3 +175,39 @@ void FUN_801c1cd8(undefined8 param_1,double param_2,double param_3,undefined4 pa
   FUN_80286884();
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: dfropenode_getExtraSize
+ * EN v1.0 Address: 0x801C1E9C
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dfropenode_getExtraSize(void)
+{
+  return 0x34;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfropenode_func08
+ * EN v1.0 Address: 0x801C1EA4
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dfropenode_func08(void)
+{
+  return 0;
+}

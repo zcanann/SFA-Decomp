@@ -362,3 +362,21 @@ void FUN_801a1654(undefined8 param_1,double param_2,double param_3,undefined8 pa
   FUN_80286884();
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: gunpowderbarrel_getExtraSize
+ * EN v1.0 Address: 0x801A1894
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int gunpowderbarrel_getExtraSize(void)
+{
+  return 0x58;
+}

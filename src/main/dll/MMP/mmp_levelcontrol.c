@@ -516,3 +516,39 @@ void FUN_80194b10(undefined4 param_1,undefined4 param_2,int param_3)
   FUN_8028687c();
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: wallanimator_getExtraSize
+ * EN v1.0 Address: 0x8019469C
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int wallanimator_getExtraSize(void)
+{
+  return 8;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: xyzanimator_getExtraSize
+ * EN v1.0 Address: 0x80194B5C
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int xyzanimator_getExtraSize(void)
+{
+  return 0x50;
+}

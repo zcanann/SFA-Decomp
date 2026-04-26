@@ -142,3 +142,39 @@ void FUN_801c1454(int param_1,int param_2,int param_3)
   }
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: dfropenode_func12
+ * EN v1.0 Address: 0x801C1618
+ * EN v1.0 Size: 12b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfropenode_func12(int obj, float value)
+{
+  *(float *)(*(int *)(obj + 0xb8) + 0x14) = value;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfropenode_func0F
+ * EN v1.0 Address: 0x801C167C
+ * EN v1.0 Size: 12b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dfropenode_func0F(int obj)
+{
+  return *(short *)(*(int *)(obj + 0xb8) + 0x18);
+}
