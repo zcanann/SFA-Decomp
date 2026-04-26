@@ -72,7 +72,7 @@ extern undefined4 FUN_80006c8c();
 extern int FUN_80006c98();
 extern void* FUN_80006c9c();
 extern int FUN_80006ca4();
-extern undefined4 FUN_80032430();
+extern undefined4 ObjHits_TickPriorityHitCooldowns();
 extern undefined4 ObjHits_Update();
 extern undefined8 FUN_800356f0();
 extern uint ObjHitbox_AllocRotatedBounds();

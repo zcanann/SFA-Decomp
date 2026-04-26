@@ -1248,7 +1248,7 @@ void ObjHits_SortSweepEntries(int sweepPtrs,int entryCount)
 /*
  * --INFO--
  *
- * Function: FUN_80032430
+ * Function: ObjHits_TickPriorityHitCooldowns
  * EN v1.0 Address: 0x80032430
  * EN v1.0 Size: 64b
  * EN v1.1 Address: 0x800324C8
@@ -1258,7 +1258,7 @@ void ObjHits_SortSweepEntries(int sweepPtrs,int entryCount)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80032430(void)
+void ObjHits_TickPriorityHitCooldowns(void)
 {
   int iVar1;
   short sVar2;
