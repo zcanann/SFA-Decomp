@@ -44,7 +44,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_IDLE:
     iVar2 = fn_8002208C(&runtime->proximityAlertState,lbl_803E5430,lbl_803E5434);
     if (iVar2 != 0) {
-      fn_8000BB18(obj,0x410);
+      fn_8000BB18(obj,SHTHORNTAIL_ALERT_VOLUME_ID);
     }
     runtime->idleTimer = runtime->idleTimer - lbl_803DB414;
     if (runtime->idleTimer <= lbl_803E5438) {
@@ -83,9 +83,9 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_CLOSE_ATTACK:
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_CLOSE_ATTACK_WAIT;
-      iVar2 = fn_800221A0(500,800);
+      iVar2 = fn_800221A0(SHTHORNTAIL_CLOSE_ATTACK_WAIT_MIN,SHTHORNTAIL_CLOSE_ATTACK_WAIT_MAX);
       runtime->comboTimer = (float)iVar2;
-      iVar2 = fn_800221A0(1,3);
+      iVar2 = fn_800221A0(SHTHORNTAIL_CLOSE_ATTACK_REPEAT_MIN,SHTHORNTAIL_CLOSE_ATTACK_REPEAT_MAX);
       runtime->comboRepeatCount = (s8)iVar2;
     }
     break;
@@ -104,7 +104,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_CLOSE_ATTACK_REPEAT:
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_CLOSE_ATTACK_WAIT;
-      iVar2 = fn_800221A0(500,800);
+      iVar2 = fn_800221A0(SHTHORNTAIL_CLOSE_ATTACK_WAIT_MIN,SHTHORNTAIL_CLOSE_ATTACK_WAIT_MAX);
       runtime->comboTimer = (float)iVar2;
       runtime->comboRepeatCount = runtime->comboRepeatCount + -1;
     }
@@ -112,7 +112,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_CLOSE_ATTACK_RECOVER:
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      iVar2 = fn_800221A0(1000,2000);
+      iVar2 = fn_800221A0(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
       runtime->idleTimer = (float)iVar2;
     }
     break;
@@ -132,12 +132,13 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_TAIL_SWING_RECOVER:
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      iVar2 = fn_800221A0(1000,2000);
+      iVar2 = fn_800221A0(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
       runtime->idleTimer = (float)iVar2;
     }
     break;
   default:
-    OSPanic(sSHthorntailSourceFile,0x6cd,sThorntailEnteredInvalidState);
+    OSPanic(sSHthorntailSourceFile,SHTHORNTAIL_INVALID_STATE_PANIC_LINE,
+            sThorntailEnteredInvalidState);
   }
   return;
 }
@@ -168,13 +169,13 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntim
     runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion1ImpactSfxTable;
     break;
   case SHTHORNTAIL_LOCOMOTION_2:
-    eventIsSet = GameBit_Get(0xc2);
+    eventIsSet = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION2_GAMEBIT);
     if (eventIsSet != 6) {
       runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion2ImpactSfxTable;
     }
     break;
   case SHTHORNTAIL_LOCOMOTION_3:
-    eventIsSet = GameBit_Get(0x193);
+    eventIsSet = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION3_GAMEBIT);
     if (eventIsSet == 0) {
       runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion3ImpactSfxTable;
     }
@@ -183,19 +184,20 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntim
     runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion4ImpactSfxTable;
     break;
   case SHTHORNTAIL_LOCOMOTION_5:
-    eventIsSet = GameBit_Get(0x23c);
+    eventIsSet = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION5_GATE_GAMEBIT);
     if (eventIsSet == 0) {
-      eventIsSet = GameBit_Get(0x5bd);
+      eventIsSet = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION5_EVENT_GAMEBIT);
       if (eventIsSet != 0) {
-        (*lbl_803DCAAC)->triggerEvent(0x1d,3);
+        (*lbl_803DCAAC)->triggerEvent(SHTHORNTAIL_ROOT_MODE3_TRIGGER_EVENT,
+                                      SHTHORNTAIL_ROOT_MODE3_TRIGGER_ARG);
         runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5EventImpactSfxTable;
       }
       else {
-        eventIsSet = GameBit_Get(0x23d);
+        eventIsSet = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION5_PLAYER_GAMEBIT);
         if (eventIsSet != 0) {
           if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE3_WAIT) {
             runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-            randomTime = fn_800221A0(1000,2000);
+            randomTime = fn_800221A0(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
             runtime->idleTimer = (float)randomTime;
           }
           runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5PlayerImpactSfxTable;
@@ -209,13 +211,13 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntim
     }
     break;
   case SHTHORNTAIL_LOCOMOTION_6:
-    eventIsSet = GameBit_Get(0x13f);
+    eventIsSet = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION6_GAMEBIT);
     if (eventIsSet == 0) {
       runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion6ImpactSfxTable;
     }
     break;
   case SHTHORNTAIL_LOCOMOTION_7:
-    eventIsSet = GameBit_Get(0x199);
+    eventIsSet = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION7_GAMEBIT);
     if (eventIsSet == 0) {
       runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion7ImpactSfxTable;
     }
