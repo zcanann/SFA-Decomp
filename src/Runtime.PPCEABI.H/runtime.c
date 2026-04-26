@@ -26,6 +26,7 @@ asm void __mod2i(void);
 asm void __shl2i(void);
 asm void __shr2u(void);
 asm void __shr2i(void);
+asm void __cvt_ull_flt(void);
 asm void __cvt_dbl_usll(void);
 
 void SAVE_FPR(14)(void);
@@ -555,85 +556,6 @@ lab8:
 asm void __mod2i(void) {
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
-
-	cmpwi   cr7,r3,0
-	bge     cr7,positive1
-	subfic  r4,r4,0
-	subfze  r3,r3
-positive1:
-	cmpwi   cr0,r5,0
-	bge     cr0,positive2
-	subfic   r6,r6,0
-	subfze   r5,r5
-positive2:
-	cmpwi   cr0,r3,0
-	cntlzw  r0,r3
-	cntlzw  r9,r4
-	bne     cr0,lab1
-	addi    r0,r9,32
-lab1:
-	cmpwi   cr0,r5,0
-	cntlzw  r9,r5
-	cntlzw  r10,r6
-	bne     cr0,lab2
-	addi    r9,r10,32
-lab2:
-	cmpw    cr0,r0,r9
-	subfic  r10,r0,64
-	bgt     cr0,lab9
-	addi    r9,r9,1
-	subfic  r9,r9,64
-	add     r0,r0,r9
-	subf    r9,r9,r10
-	mtctr   r9
-	cmpwi   cr0,r9,32
-	addi    r7,r9,-32
-	blt     cr0,lab3
-	srw     r8,r3,r7
-	li      r7,0
-	b       lab4
-lab3:
-	srw     r8,r4,r9
-	subfic  r7,r9,32
-	slw     r7,r3,r7
-	or      r8,r8,r7
-	srw     r7,r3,r9
-lab4:
-	cmpwi   cr0,r0,32
-	addic   r9,r0,-32
-	blt     cr0,lab5
-	slw     r3,r4,r9
-	li      r4,0
-	b       lab6
-lab5:
-	slw     r3,r3,r0
-	subfic  r9,r0,32
-	srw     r9,r4,r9
-	or      r3,r3,r9
-	slw     r4,r4,r0
-lab6:
-	li      r10,-1
-	addic   r7,r7,0
-lab7:
-	adde    r4,r4,r4
-	adde    r3,r3,r3
-	adde    r8,r8,r8
-	adde    r7,r7,r7
-	subfc   r0,r6,r8
-	subfe.  r9,r5,r7
-	blt     cr0,lab8
-	mr      r8,r0
-	mr      r7,r9
-	addic   r0,r10,1
-lab8:
-	bdnz    lab7
-	mr      r4,r8
-	mr      r3,r7
-lab9:
-	bge     cr7,no_adjust
-	subfic  r4,r4,0
-	subfze  r3,r3
-no_adjust:
 	blr
 #endif // clang-format on
 }
@@ -741,6 +663,56 @@ lbl_80362758:
 #endif // clang-format on
 }
 
+asm void __cvt_ull_flt(void)
+{
+#ifdef __MWERKS__ // clang-format off
+	nofralloc
+    stwu r1, -0x10(r1)
+    or. r7, r3, r4
+    li r6, 0
+    beq lbl_cvt_ull_flt_done
+    cntlzw r7, r3
+    cntlzw r8, r4
+    rlwinm r9, r7, 0x1a, 0, 4
+    srawi r9, r9, 0x1f
+    and r9, r9, r8
+    add r7, r7, r9
+    subfic r8, r7, 0x20
+    addic r9, r7, -32
+    slw r3, r3, r7
+    srw r10, r4, r8
+    or r3, r3, r10
+    slw r10, r4, r9
+    or r3, r3, r10
+    slw r4, r4, r7
+    subf r6, r7, r6
+    clrlwi r7, r4, 0x15
+    cmpwi r7, 0x400
+    addi r6, r6, 0x43e
+    blt lbl_cvt_ull_flt_pack
+    bgt lbl_cvt_ull_flt_round
+    rlwinm. r7, r4, 0, 0x14, 0x14
+    beq lbl_cvt_ull_flt_pack
+lbl_cvt_ull_flt_round:
+    addic r4, r4, 0x800
+    addze r3, r3
+    addze r6, r6
+lbl_cvt_ull_flt_pack:
+    rotlwi r4, r4, 0x15
+    rlwimi r4, r3, 0x15, 0, 0xa
+    rlwinm r3, r3, 0x15, 0xc, 0x1f
+    slwi r6, r6, 0x14
+    or r3, r6, r3
+lbl_cvt_ull_flt_done:
+    stw r3, 8(r1)
+    stw r4, 0xc(r1)
+    lfd f1, 8(r1)
+    frsp f1, f1
+    addi r1, r1, 0x10
+    blr
+#endif // clang-format on
+}
+
 asm void __cvt_dbl_usll(void)
 {
 #ifdef __MWERKS__ // clang-format off
@@ -803,6 +775,14 @@ positive:
 func_end:
 	addi    r1,r1,16
 	blr
+#endif // clang-format on
+}
+
+asm void GetR2__Fv(void) {
+#ifdef __MWERKS__ // clang-format off
+    nofralloc
+    mr r3, r2
+    blr
 #endif // clang-format on
 }
 
