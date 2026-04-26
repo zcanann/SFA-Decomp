@@ -9,6 +9,6 @@ void sh_thorntail_update(undefined8 param_1,double param_2,double param_3,undefi
                          undefined8 param_5,undefined8 param_6,undefined8 param_7,
                          undefined8 param_8);
 void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config);
-void fn_801D6914(SHthorntailObject *obj);
+void SHthorntail_updateDustEffects(SHthorntailObject *obj);
 
 #endif /* MAIN_DLL_SC_SCCHIEFLIGHTFOOT_H_ */

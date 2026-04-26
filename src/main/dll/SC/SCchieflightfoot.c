@@ -371,7 +371,7 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
 /*
  * --INFO--
  *
- * Function: fn_801D6914
+ * Function: SHthorntail_updateDustEffects
  * EN v1.0 Address: 0x801D6914
  * EN v1.0 Size: 752b
  * EN v1.1 Address: TODO
@@ -381,7 +381,7 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801D6914(SHthorntailObject *obj)
+void SHthorntail_updateDustEffects(SHthorntailObject *obj)
 {
   SHthorntailRuntime *runtime;
   undefined4 playerObj;
