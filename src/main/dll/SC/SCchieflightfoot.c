@@ -5,7 +5,7 @@
 #include "main/dll/SC/SCchieflightfoot.h"
 #include "main/objHitReact.h"
 
-extern undefined4 FUN_80006824();
+extern undefined4 fn_8000BB18();
 extern double FUN_80017708();
 extern int FUN_80017730();
 extern uint FUN_80017760();
@@ -22,7 +22,7 @@ extern void fn_8003842C(SHthorntailObject *obj,int pointIndex,f32 *x,f32 *y,f32 
 extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
 extern int FUN_800575b4();
-extern undefined4 FUN_8006ef38();
+extern undefined4 fn_8006EF38();
 extern undefined4 fn_80114F64();
 extern undefined4 fn_8011507C();
 extern void fn_80115094(SHthorntailObject *obj,SHthorntailRuntime *runtime);
@@ -223,16 +223,16 @@ void sh_thorntail_update(SHthorntailObject *obj)
     for (iVar6 = 0; iVar6 < local_45; iVar6 = iVar6 + 1) {
       if (*(char *)((int)pfVar8 + 0x13) == '\0') {
         if (DAT_80327fdc[runtime->behaviorState] != 0) {
-          FUN_80006824((uint)psVar2,DAT_80327fdc[runtime->behaviorState]);
+          fn_8000BB18((uint)psVar2,DAT_80327fdc[runtime->behaviorState]);
         }
       }
       else if ((*(char *)((int)pfVar8 + 0x13) == '\a') &&
               (DAT_80328000[runtime->behaviorState] != 0)) {
-        FUN_80006824((uint)psVar2,(ushort)DAT_80328000[runtime->behaviorState]);
+        fn_8000BB18((uint)psVar2,(ushort)DAT_80328000[runtime->behaviorState]);
       }
       pfVar8 = (float *)((int)pfVar8 + 1);
     }
-    FUN_8006ef38((double)lbl_803E5448,(double)lbl_803E5448,psVar2,local_60,8,
+    fn_8006EF38((double)lbl_803E5448,(double)lbl_803E5448,psVar2,local_60,8,
                  (int)runtime->renderPathPoints,(int)runtime->moveScratch);
     if ((DAT_80327fc8[runtime->behaviorState] & 4) == 0) {
       runtime->movementControlFlags = runtime->movementControlFlags | 1;
