@@ -161,3 +161,124 @@ void FUN_801e8ee0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   FUN_8028688c();
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: spscarab_release
+ * EN v1.0 Address: 0x801E9320
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void spscarab_release(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: spscarab_initialise
+ * EN v1.0 Address: 0x801E9324
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void spscarab_initialise(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: spdrape_getExtraSize
+ * EN v1.0 Address: 0x801E9328
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int spdrape_getExtraSize(void)
+{
+  return 0x18;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: spdrape_func08
+ * EN v1.0 Address: 0x801E9330
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int spdrape_func08(void)
+{
+  return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: spdrape_free
+ * EN v1.0 Address: 0x801E9338
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void spdrape_free(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: spdrape_render
+ * EN v1.0 Address: 0x801E933C
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void spdrape_render(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: spdrape_hitDetect
+ * EN v1.0 Address: 0x801E9340
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void spdrape_hitDetect(void)
+{
+}

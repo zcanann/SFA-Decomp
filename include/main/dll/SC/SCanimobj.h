@@ -14,5 +14,8 @@ void FUN_801d769c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 void FUN_801d7768(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                  undefined4 param_5,char param_6);
 void FUN_801d7844(uint param_1);
+void warpstone_release(void);
+void warpstone_initialise(void);
+int sh_levelcontrol_getExtraSize(void);
 
 #endif /* MAIN_DLL_SC_SCANIMOBJ_H_ */

@@ -117,6 +117,58 @@ void FUN_801d769c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
+ * Function: warpstone_release
+ * EN v1.0 Address: 0x801D7BA0
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void warpstone_release(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: warpstone_initialise
+ * EN v1.0 Address: 0x801D7BA4
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void warpstone_initialise(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: sh_levelcontrol_getExtraSize
+ * EN v1.0 Address: 0x801D7BA8
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int sh_levelcontrol_getExtraSize(void)
+{
+  return 0x14;
+}
+
+/*
+ * --INFO--
+ *
  * Function: FUN_801d7768
  * EN v1.0 Address: 0x801D7768
  * EN v1.0 Size: 220b

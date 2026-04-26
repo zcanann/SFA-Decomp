@@ -64,6 +64,76 @@ void FUN_801dd21c(int param_1)
 /*
  * --INFO--
  *
+ * Function: sc_totempuzzle_getExtraSize
+ * EN v1.0 Address: 0x801DD424
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int sc_totempuzzle_getExtraSize(void)
+{
+  return 0x14;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: sc_totempuzzle_func08
+ * EN v1.0 Address: 0x801DD42C
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int sc_totempuzzle_func08(void)
+{
+  return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: sc_totempuzzle_free
+ * EN v1.0 Address: 0x801DD434
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void sc_totempuzzle_free(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: sc_totempuzzle_hitDetect
+ * EN v1.0 Address: 0x801DD468
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void sc_totempuzzle_hitDetect(void)
+{
+}
+
+/*
+ * --INFO--
+ *
  * Function: FUN_801dd244
  * EN v1.0 Address: 0x801DD244
  * EN v1.0 Size: 980b

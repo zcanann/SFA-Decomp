@@ -329,3 +329,39 @@ FUN_801d71dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
   }
   return 0;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: warpstone_getExtraSize
+ * EN v1.0 Address: 0x801D7468
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int warpstone_getExtraSize(void)
+{
+  return 0xd8;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: warpstone_func08
+ * EN v1.0 Address: 0x801D7470
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int warpstone_func08(void)
+{
+  return 0x48;
+}
