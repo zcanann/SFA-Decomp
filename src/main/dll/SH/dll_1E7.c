@@ -135,28 +135,33 @@ int fn_801D4CD0(SHthorntailObject *obj)
 #pragma scheduling off
 void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
 {
-  byte bVar1;
+  int tailSwingState;
+  uint moveComplete;
 
-  bVar1 = runtime->tailSwingState;
-  if (bVar1 == SHTHORNTAIL_TAIL_SWING_WINDUP) {
-    runtime->tailSwingTimer = runtime->tailSwingTimer - lbl_803DB414;
-    if (runtime->tailSwingTimer <= lbl_803E5418) {
-      fn_8000BB18(objectId,0xa8);
-      runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_ACTIVE;
-    }
-  }
-  else if (bVar1 == SHTHORNTAIL_TAIL_SWING_READY) {
+  tailSwingState = runtime->tailSwingState;
+  switch(tailSwingState) {
+  case SHTHORNTAIL_TAIL_SWING_READY:
     runtime->tailSwingTimer = runtime->tailSwingTimer - lbl_803DB414;
     if (runtime->tailSwingTimer <= lbl_803E5418) {
       fn_8000BB18(objectId,0xa9);
       runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_WINDUP;
       runtime->tailSwingTimer = lbl_803E541C;
     }
-  }
-  else if ((bVar1 < SHTHORNTAIL_TAIL_SWING_STATE_COUNT) &&
-           ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0)) {
-    runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_READY;
-    runtime->tailSwingTimer = lbl_803E5420;
+    break;
+  case SHTHORNTAIL_TAIL_SWING_WINDUP:
+    runtime->tailSwingTimer = runtime->tailSwingTimer - lbl_803DB414;
+    if (runtime->tailSwingTimer <= lbl_803E5418) {
+      fn_8000BB18(objectId,0xa8);
+      runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_ACTIVE;
+    }
+    break;
+  default:
+    moveComplete = runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE;
+    if ((tailSwingState < SHTHORNTAIL_TAIL_SWING_STATE_COUNT) && (moveComplete != 0)) {
+      runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_READY;
+      runtime->tailSwingTimer = lbl_803E5420;
+    }
+    break;
   }
   return;
 }
