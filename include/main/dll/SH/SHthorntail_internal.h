@@ -63,6 +63,18 @@ typedef struct SHthorntailObject {
   SHthorntailRuntime *runtime;
 } SHthorntailObject;
 
+typedef struct SHthorntailAnimationInterface {
+  u8 pad00[0x24];
+  int (*isTailSwingQueued)(int);
+} SHthorntailAnimationInterface;
+
+typedef struct SHthorntailEventInterface {
+  u8 pad00[0x44];
+  void (*triggerEvent)(int,int);
+  u8 pad48[0x50 - 0x48];
+  void (*setAnimEvent)(int,int,int);
+} SHthorntailEventInterface;
+
 #define SHTHORNTAIL_FLAG_MOVE_COMPLETE 0x01
 #define SHTHORNTAIL_FLAG_IMPACT_PENDING 0x02
 #define SHTHORNTAIL_FLAG_LEVELCONTROL_READY 0x08

@@ -9,7 +9,7 @@ extern int fn_800221A0(int min,int max);
 extern int fn_80038024(int obj);
 extern int fn_801D4CD0(SHthorntailObject *obj);
 
-extern undefined4* lbl_803DCAAC;
+extern SHthorntailEventInterface **lbl_803DCAAC;
 extern f64 lbl_803E5428;
 
 /*
@@ -71,7 +71,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
       if (triggerIsSet == 0) {
         return;
       }
-      (**(code **)(*lbl_803DCAAC + 0x50))((int)obj->animObjId,3,0);
+      (*lbl_803DCAAC)->setAnimEvent((int)obj->animObjId,3,0);
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
       randomTime = fn_800221A0(1000,2000);
       runtime->idleTimer = (float)randomTime;
@@ -81,7 +81,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
       if ((triggerIsSet == 0) && (triggerIsSet = fn_80038024((int)obj), triggerIsSet != 0)) {
         runtime->behaviorFlags = runtime->behaviorFlags | 4;
         runtime->behaviorState = SHTHORNTAIL_STATE_ROOT_MODE2_EVENT;
-        (**(code **)(*lbl_803DCAAC + 0x50))((int)obj->animObjId,3,1);
+        (*lbl_803DCAAC)->setAnimEvent((int)obj->animObjId,3,1);
         GameBit_Set(0x199,1);
         return;
       }

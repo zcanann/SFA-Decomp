@@ -18,17 +18,6 @@ extern f32 lbl_803E5438;
 extern f64 lbl_803E5440;
 extern char sSHthorntailSourceFile[];
 extern char sThorntailEnteredInvalidState[];
-
-typedef struct SHthorntailAnimationInterface {
-  u8 pad00[0x24];
-  int (*isTailSwingQueued)(int);
-} SHthorntailAnimationInterface;
-
-typedef struct SHthorntailEventInterface {
-  u8 pad00[0x44];
-  void (*triggerEvent)(int,int);
-} SHthorntailEventInterface;
-
 extern SHthorntailAnimationInterface **lbl_803DCA58;
 extern SHthorntailEventInterface **lbl_803DCAAC;
 
