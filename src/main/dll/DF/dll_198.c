@@ -188,3 +188,21 @@ LAB_801c2808:
   FUN_80286884();
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: dfsh_door2speci_getExtraSize
+ * EN v1.0 Address: 0x801C281C
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x801C29EC
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dfsh_door2speci_getExtraSize(void)
+{
+  return 6;
+}

@@ -12,7 +12,7 @@ extern f32 FLOAT_803e5abc;
 /*
  * --INFO--
  *
- * Function: FUN_801c1f5c
+ * Function: dfropenode_render
  * EN v1.0 Address: 0x801C1F5C
  * EN v1.0 Size: 996b
  * EN v1.1 Address: 0x801C21A4
@@ -22,7 +22,7 @@ extern f32 FLOAT_803e5abc;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_801c1f5c(int param_1)
+undefined4 dfropenode_render(int param_1)
 {
   double dVar1;
   float fVar2;
@@ -113,4 +113,21 @@ undefined4 FUN_801c1f5c(int param_1)
     piVar8[4] = (int)((float)piVar8[4] + fVar2);
   }
   return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfropenode_hitDetect
+ * EN v1.0 Address: 0x801C2274
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801C245C
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfropenode_hitDetect(void)
+{
 }
