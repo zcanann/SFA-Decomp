@@ -21,7 +21,7 @@ extern int FUN_80017a98();
 extern void* FUN_80017aa4();
 extern uint FUN_80017ae8();
 extern undefined4 FUN_80035d58();
-extern undefined4 FUN_80037fa8();
+extern undefined4 ObjHits_PollPriorityHitEffectWithCooldown();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80048000();
 extern undefined4 FUN_8004800c();
@@ -189,7 +189,7 @@ LAB_801db270:
       }
     }
   }
-  FUN_80037fa8(param_9,8,0xff,0xff,0x78,0x129,(float *)&DAT_803de878);
+  ObjHits_PollPriorityHitEffectWithCooldown(param_9,8,0xff,0xff,0x78,0x129,(float *)&DAT_803de878);
   return;
 }
 
@@ -227,7 +227,7 @@ void FUN_801db57c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  */
 void FUN_801db580(undefined4 param_1)
 {
-  FUN_80037fa8(param_1,8,0xff,0xff,0x78,0x280,(float *)&DAT_803de880);
+  ObjHits_PollPriorityHitEffectWithCooldown(param_1,8,0xff,0xff,0x78,0x280,(float *)&DAT_803de880);
   return;
 }
 

@@ -12,7 +12,7 @@ extern uint FUN_80017ae8();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305c4();
 extern int ObjGroup_FindNearestObject();
-extern undefined4 FUN_80037fa8();
+extern undefined4 ObjHits_PollPriorityHitEffectWithCooldown();
 extern undefined4 FUN_80039520();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
@@ -75,7 +75,7 @@ void FUN_801899b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
         uVar1 = FUN_80017760(0xffffff38,200);
         *(short *)(iVar3 + 4) = (short)uVar1;
       }
-      FUN_80037fa8(iVar3,8,0xb4,0xf0,0xff,0x6f,(float *)(iVar4 + 0x20));
+      ObjHits_PollPriorityHitEffectWithCooldown(iVar3,8,0xb4,0xf0,0xff,0x6f,(float *)(iVar4 + 0x20));
     }
     else {
       *(undefined2 *)(iVar3 + 2) = 0;
@@ -245,7 +245,7 @@ void FUN_80189e0c(uint param_1,int param_2)
        ((0x3f < *(int *)(param_2 + 0x10) && (*(int *)(param_2 + 0x14) < 0x40)))) {
       FUN_80006824(param_1,0x374);
     }
-    FUN_80037fa8(param_1,8,0xb4,0xf0,0xff,0x6f,(float *)(param_2 + 0x20));
+    ObjHits_PollPriorityHitEffectWithCooldown(param_1,8,0xb4,0xf0,0xff,0x6f,(float *)(param_2 + 0x20));
     *(undefined4 *)(param_2 + 0x10) = *(undefined4 *)(param_2 + 0x14);
     local_18 = (double)CONCAT44(0x43300000,*(uint *)(param_2 + 0x14) ^ 0x80000000);
     FUN_800305c4((double)((float)(local_18 - DOUBLE_803e4868) / FLOAT_803e4864),param_1);

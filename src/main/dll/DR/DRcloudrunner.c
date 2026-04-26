@@ -18,7 +18,7 @@ extern undefined4 FUN_800305f8();
 extern undefined4 FUN_80035d58();
 extern undefined4 ObjHits_RecordObjectHit();
 extern int ObjHits_GetPriorityHitWithPosition();
-extern int FUN_80037fa8();
+extern int ObjHits_PollPriorityHitEffectWithCooldown();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b56c();
 extern undefined4 FUN_8003b818();
@@ -445,6 +445,6 @@ void FUN_801dca0c(uint param_1)
     }
   }
   FUN_8002fc3c((double)*(float *)(puVar5 + 2),(double)FLOAT_803dc074);
-  FUN_80037fa8(param_1,8,0xff,0xff,0x78,0x129,(float *)&DAT_803de888);
+  ObjHits_PollPriorityHitEffectWithCooldown(param_1,8,0xff,0xff,0x78,0x129,(float *)&DAT_803de888);
   return;
 }

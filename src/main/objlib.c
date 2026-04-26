@@ -2156,7 +2156,7 @@ int ObjHits_PollPriorityHitWithCooldown(int param_1,float *param_2,undefined4 *p
 /*
  * --INFO--
  *
- * Function: FUN_80037fa8
+ * Function: ObjHits_PollPriorityHitEffectWithCooldown
  * EN v1.0 Address: 0x80037FA8
  * EN v1.0 Size: 468b
  * EN v1.1 Address: 0x80037C38
@@ -2166,7 +2166,7 @@ int ObjHits_PollPriorityHitWithCooldown(int param_1,float *param_2,undefined4 *p
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80037fa8(undefined4 param_1,undefined4 param_2,uint param_3,uint param_4,uint param_5,
+void ObjHits_PollPriorityHitEffectWithCooldown(undefined4 param_1,undefined4 param_2,uint param_3,uint param_4,uint param_5,
                  uint param_6,float *param_7)
 {
   uint uVar1;

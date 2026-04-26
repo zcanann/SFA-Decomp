@@ -71,7 +71,7 @@ void ObjMsg_AllocQueue(int param_1,int param_2);
 undefined4 FUN_80037d50(int param_1);
 bool FUN_80037d74(int param_1);
 int ObjHits_PollPriorityHitWithCooldown(int param_1,float *param_2,undefined4 *param_3,float *param_4);
-void FUN_80037fa8(undefined4 param_1,undefined4 param_2,uint param_3,uint param_4,uint param_5,
+void ObjHits_PollPriorityHitEffectWithCooldown(undefined4 param_1,undefined4 param_2,uint param_3,uint param_4,uint param_5,
                  uint param_6,float *param_7);
 void ObjLink_DetachChild(int param_1,int param_2);
 void ObjLink_AttachChild(int param_1,int param_2,ushort param_3);

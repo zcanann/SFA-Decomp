@@ -167,7 +167,7 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 ObjMsg_SendToObject();
 extern int FUN_80037d50();
-extern int FUN_80037fa8();
+extern int ObjHits_PollPriorityHitEffectWithCooldown();
 extern undefined4 ObjLink_DetachChild();
 extern undefined8 ObjLink_AttachChild();
 extern int ObjTrigger_IsSetById();
