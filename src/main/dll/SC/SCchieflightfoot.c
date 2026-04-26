@@ -404,54 +404,52 @@ void SHthorntail_updateDustEffects(SHthorntailObject *obj)
   local_34 = 0xc0e;
   local_36 = 1;
   if ((runtime->dustEffectFlags & 4) != 0) {
-    if (lbl_803E5468 <= runtime->dustEffectTimer) {
-      if (lbl_803E5470 <= runtime->dustEffectTimer) {
-        if (lbl_803E5480 <= runtime->dustEffectTimer) {
-          if (lbl_803E5488 <= runtime->dustEffectTimer) {
-            runtime->dustEffectTimer = lbl_803E5460;
-            runtime->dustEffectFlags = runtime->dustEffectFlags & 0xfb;
-          }
-        }
-        else {
-          uStack_1c = fn_800221A0(0,0x1e0);
-          uStack_1c = uStack_1c ^ 0x80000000;
-          local_20 = 0x43300000;
-          if ((float)((double)CONCAT44(0x43300000,uStack_1c) - lbl_803E5490) <
-              runtime->dustEffectTimer * lbl_803E546C) {
-            (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
-          }
-          if ((runtime->dustEffectFlags & 2) != 0) {
-            runtime->dustEffectFlags = runtime->dustEffectFlags & 0xfd;
-            local_32 = 0x46;
-            local_30 = lbl_803E5484;
-            for (burstCount = 0xf; burstCount != 0; burstCount = burstCount + -1) {
-              (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7d2,&local_38,2,0xffffffff,0);
-            }
-          }
-        }
-      }
-      else {
-        uStack_1c = fn_800221A0(0,0x1e0);
-        uStack_1c = uStack_1c ^ 0x80000000;
-        local_20 = 0x43300000;
-        if ((float)((double)CONCAT44(0x43300000,uStack_1c) - lbl_803E5490) <
-            runtime->dustEffectTimer / lbl_803E5474) {
-          (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
-        }
-        local_32 = 0x28;
-        local_38 = 0;
-        local_30 = lbl_803E5478 * ((runtime->dustEffectTimer - lbl_803E5468) / lbl_803E547C);
-        (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7d2,&local_38,2,0xffffffff,0);
-        runtime->dustEffectFlags = runtime->dustEffectFlags | 2;
-      }
-    }
-    else {
+    if (runtime->dustEffectTimer < lbl_803E5468) {
       uStack_1c = fn_800221A0(0,0x1e0);
       uStack_1c = uStack_1c ^ 0x80000000;
       local_20 = 0x43300000;
       if ((float)((double)CONCAT44(0x43300000,uStack_1c) - lbl_803E5490) <
           runtime->dustEffectTimer * lbl_803E546C) {
         (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
+      }
+    }
+    else if (runtime->dustEffectTimer < lbl_803E5470) {
+      uStack_1c = fn_800221A0(0,0x1e0);
+      uStack_1c = uStack_1c ^ 0x80000000;
+      local_20 = 0x43300000;
+      if ((float)((double)CONCAT44(0x43300000,uStack_1c) - lbl_803E5490) <
+          runtime->dustEffectTimer / lbl_803E5474) {
+        (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
+      }
+      local_32 = 0x28;
+      local_38 = 0;
+      local_30 = lbl_803E5478 * ((runtime->dustEffectTimer - lbl_803E5468) / lbl_803E547C);
+      (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7d2,&local_38,2,0xffffffff,0);
+      runtime->dustEffectFlags = runtime->dustEffectFlags | 2;
+    }
+    else if (runtime->dustEffectTimer < lbl_803E5480) {
+      uStack_1c = fn_800221A0(0,0x1e0);
+      uStack_1c = uStack_1c ^ 0x80000000;
+      local_20 = 0x43300000;
+      if ((float)((double)CONCAT44(0x43300000,uStack_1c) - lbl_803E5490) <
+          runtime->dustEffectTimer * lbl_803E546C) {
+        (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
+      }
+      if ((runtime->dustEffectFlags & 2) != 0) {
+        runtime->dustEffectFlags = runtime->dustEffectFlags & 0xfd;
+        local_32 = 0x46;
+        local_30 = lbl_803E5484;
+        for (burstCount = 0xf; burstCount != 0; burstCount = burstCount + -1) {
+          (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7d2,&local_38,2,0xffffffff,0);
+        }
+      }
+    }
+    else {
+      if (runtime->dustEffectTimer < lbl_803E5488) {
+      }
+      else {
+        runtime->dustEffectTimer = lbl_803E5460;
+        runtime->dustEffectFlags = runtime->dustEffectFlags & 0xfb;
       }
     }
     runtime->dustEffectTimer = runtime->dustEffectTimer + lbl_803DB414;
