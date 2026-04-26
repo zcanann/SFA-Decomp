@@ -2573,9 +2573,9 @@ void lightmap_flushQueuedRenderPackets(void)
   for (iVar5 = 0; iVar5 < DAT_803ddab0; iVar5 = iVar5 + 1) {
     switch(piVar6[3]) {
     case 0:
-      fn_8009E034();
+      expgfx_renderSourcePools(*piVar6,0);
       lightmap_renderQueuedObject((ushort *)*piVar6);
-      fn_8009E034();
+      expgfx_renderSourcePools(*piVar6,1);
       break;
     case 1:
       iVar3 = *piVar6;

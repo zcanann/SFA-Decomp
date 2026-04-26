@@ -914,7 +914,7 @@ int fn_8009E02C(void)
 /*
  * --INFO--
  *
- * Function: fn_8009E034
+ * Function: expgfx_renderSourcePools
  * EN v1.0 Address: 0x8009E034
  * EN v1.0 Size: 264b
  * EN v1.1 Address: 0x8009E2C0
@@ -925,7 +925,7 @@ int fn_8009E02C(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_8009E034(int sourceId,int sourceMode)
+void expgfx_renderSourcePools(int sourceId,int sourceMode)
 {
   ExpgfxBounds *boundsTemplate;
   ExpgfxBounds *poolBounds;
