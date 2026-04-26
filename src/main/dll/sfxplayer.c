@@ -4,6 +4,9 @@
 extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
+extern void fn_8001467C(void);
+extern int fn_8001FFB4(int eventId);
+extern void TrickyCurve_activateEffectHandleRing(void);
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
 
@@ -105,4 +108,77 @@ void sfxplayer_update(undefined8 param_1,double param_2,double param_3,undefined
   }
   FUN_8028688c();
   return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: sfxplayer_init
+ * EN v1.0 Address: 0x80207FBC
+ * EN v1.0 Size: 212b
+ * EN v1.1 Address: 0x8020816C
+ * EN v1.1 Size: 212b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void sfxplayer_init(int obj,int config)
+{
+  int state;
+
+  state = *(int *)(obj + 0xb8);
+  *(s16 *)obj = (s16)((s8)*(u8 *)(config + 0x18) << 8);
+  *(void (**)(void))(obj + 0xbc) = TrickyCurve_activateEffectHandleRing;
+  *(u8 *)(state + 6) = *(u8 *)(config + 0x19);
+  *(s16 *)state = *(s16 *)(config + 0x1e);
+  *(s16 *)(state + 2) = *(s16 *)(config + 0x20);
+  *(s16 *)(state + 4) = 1;
+  gSfxplayerEffectHandles[0] = 0;
+  gSfxplayerEffectHandles[1] = 0;
+  gSfxplayerEffectHandles[2] = 0;
+  gSfxplayerEffectHandles[3] = 0;
+  gSfxplayerEffectHandles[4] = 0;
+  gSfxplayerEffectHandles[5] = 0;
+  gSfxplayerEffectHandles[6] = 0;
+  gSfxplayerEffectHandles[7] = 0;
+  fn_8001467C();
+  if (fn_8001FFB4(*(s16 *)state) != 0) {
+    *(u8 *)(state + 8) = *(u8 *)(state + 8) | 0x20;
+  }
+  *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x6000;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: sfxplayer_release
+ * EN v1.0 Address: 0x80208090
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80208240
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void sfxplayer_release(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: sfxplayer_initialise
+ * EN v1.0 Address: 0x80208094
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80208244
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void sfxplayer_initialise(void)
+{
 }
