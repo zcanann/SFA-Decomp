@@ -25,17 +25,6 @@ extern f32 lbl_803DE964;
 extern int gObjHitReactResetObjectCount;
 extern int *gObjHitReactResetObjects;
 
-typedef struct ObjHitReactEntry {
-  s16 clearVolumeA;
-  s16 clearVolumeB;
-  s16 reactionAnim;
-  u8 pad06[2];
-  s8 hitFxMode;
-  u8 pad09[3];
-  f32 cooldown;
-  u8 pad10[4];
-} ObjHitReactEntry;
-
 typedef struct ObjHitReactEffectPos {
   s16 x;
   s16 y;
