@@ -5,6 +5,12 @@
 
 typedef struct ObjHitReactState ObjHitReactState;
 
+typedef struct ObjAnimHitReactRow {
+  u8 pad00[0x16];
+  s8 entryIndex;
+  u8 pad17;
+} ObjAnimHitReactRow;
+
 /*
  * Shared state used by the object-animation helpers around main/objanim.c.
  * These names are still partially provisional, but the layouts are stable
@@ -14,7 +20,9 @@ typedef struct ObjAnimDef {
   u8 pad00[2];
   u16 flags;
   u16 modNo;
-  u8 pad06[0x64 - 6];
+  u8 pad06[0x58 - 6];
+  ObjAnimHitReactRow *hitReactTable;
+  u8 pad5C[0x64 - 0x5C];
   u8 **moveData;
   u8 pad68[4];
   s16 *blendMoveIds;
@@ -130,7 +138,7 @@ static inline ObjAnimState *ObjAnim_GetCurrentState(ObjAnimComponent *objAnim) {
 }
 
 static inline s32 ObjAnim_GetHitReactEntryIndex(ObjAnimDef *animDef, s32 sphereIndex) {
-  return *(s8 *)((u8 *)animDef + 0x58 + sphereIndex * 0x18 + 0x16);
+  return animDef->hitReactTable[sphereIndex].entryIndex;
 }
 
 #endif /* MAIN_OBJANIM_INTERNAL_H_ */
