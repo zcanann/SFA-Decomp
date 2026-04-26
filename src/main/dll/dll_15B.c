@@ -214,3 +214,37 @@ void FUN_80184180(ushort *param_1)
   }
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: largecrate_release
+ * EN v1.0 Address: 0x801843B8
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80184514
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void largecrate_release(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: largecrate_initialise
+ * EN v1.0 Address: 0x801843BC
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80184518
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void largecrate_initialise(void)
+{
+}
