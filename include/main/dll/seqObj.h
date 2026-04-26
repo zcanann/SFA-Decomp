@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_8014f9e8(int param_1,undefined4 *param_2);
+void wispbaddie_update(int param_1,undefined4 *param_2);
 void FUN_8014fd38(int param_1);
 void FUN_8014fd80(uint param_1);
 void FUN_8014fd84(uint param_1,int param_2,int param_3);

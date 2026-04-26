@@ -32,7 +32,7 @@ extern f32 FLOAT_803e5d74;
 /*
  * --INFO--
  *
- * Function: FUN_801c9544
+ * Function: dbsh_shrine_init
  * EN v1.0 Address: 0x801C9544
  * EN v1.0 Size: 164b
  * EN v1.1 Address: 0x801C9604
@@ -42,7 +42,7 @@ extern f32 FLOAT_803e5d74;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c9544(int param_1)
+void dbsh_shrine_init(int param_1)
 {
   uint uVar1;
   uint *puVar2;

@@ -68,7 +68,7 @@ extern void* PTR_DAT_8031fdc4;
 /*
  * --INFO--
  *
- * Function: FUN_8014f9e8
+ * Function: wispbaddie_update
  * EN v1.0 Address: 0x8014F9E8
  * EN v1.0 Size: 848b
  * EN v1.1 Address: 0x8014FAB4
@@ -78,7 +78,7 @@ extern void* PTR_DAT_8031fdc4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8014f9e8(int param_1,undefined4 *param_2)
+void wispbaddie_update(int param_1,undefined4 *param_2)
 {
   float fVar1;
   int iVar2;

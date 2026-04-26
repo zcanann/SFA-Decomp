@@ -475,7 +475,7 @@ void FUN_801e7d3c(undefined4 param_1,undefined4 param_2,int param_3,undefined4 p
 /*
  * --INFO--
  *
- * Function: FUN_801e7fec
+ * Function: shopkeeper_render
  * EN v1.0 Address: 0x801E7FEC
  * EN v1.0 Size: 40b
  * EN v1.1 Address: 0x801E85B4
@@ -485,7 +485,7 @@ void FUN_801e7d3c(undefined4 param_1,undefined4 param_2,int param_3,undefined4 p
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e7fec(int param_1)
+void shopkeeper_render(int param_1)
 {
   FUN_80006ac8(*(uint *)(*(int *)(param_1 + 0xb8) + 0x9b0));
   return;

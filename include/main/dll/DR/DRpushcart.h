@@ -13,7 +13,7 @@ void FUN_801e7be4(undefined8 param_1,double param_2,double param_3,undefined8 pa
 double FUN_801e7be8(ushort *param_1,int param_2,int param_3);
 void FUN_801e7d3c(undefined4 param_1,undefined4 param_2,int param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8);
-void FUN_801e7fec(int param_1);
+void shopkeeper_render(int param_1);
 void FUN_801e8014(short *param_1);
 void FUN_801e80b0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,

@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_8018adf0(undefined4 param_1,undefined4 param_2,int param_3);
+void magiccavebottom_update(undefined4 param_1,undefined4 param_2,int param_3);
 void FUN_8018aee4(void);
 void FUN_8018af08(int param_1);
 void FUN_8018af28(int param_1);

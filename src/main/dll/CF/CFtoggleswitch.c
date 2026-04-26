@@ -75,7 +75,7 @@ extern f32 FLOAT_803e4904;
 /*
  * --INFO--
  *
- * Function: FUN_8018adf0
+ * Function: magiccavebottom_update
  * EN v1.0 Address: 0x8018ADF0
  * EN v1.0 Size: 244b
  * EN v1.1 Address: 0x8018AE14
@@ -85,7 +85,7 @@ extern f32 FLOAT_803e4904;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018adf0(undefined4 param_1,undefined4 param_2,int param_3)
+void magiccavebottom_update(undefined4 param_1,undefined4 param_2,int param_3)
 {
   byte bVar1;
   int iVar2;
