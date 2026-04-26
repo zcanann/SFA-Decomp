@@ -23,51 +23,51 @@
   "map_hints": [],
   "functions": [
     {
-      "function_start": "0x8002EC4C",
-      "function_name": "fn_8002EC4C",
+      "function_start": "0x8002EB54",
+      "function_name": "ObjAnim_SetBlendMove",
       "xrefs": [
         {
-          "xref_address": "0x8002ECF8",
-          "pair_address": "0x8002ECFC",
-          "target_address": "0x802CB928",
+          "xref_address": "0x8002EC00",
+          "pair_address": "0x8002EC04",
+          "target_address": "0x802CAD50",
           "target_text": "<objanim.c -- setBlendMove> WARNING tried to load anim -1 from cache modno %d",
           "pair_kind": "lis/addi",
-          "function_name": "fn_8002EC4C"
+          "function_name": "ObjAnim_SetBlendMove"
         }
       ]
     },
     {
-      "function_start": "0x8002F334",
-      "function_name": "fn_8002F334",
+      "function_start": "0x8002F23C",
+      "function_name": "Object_ObjAnimSetMove",
       "xrefs": [
         {
-          "xref_address": "0x8002F4A8",
-          "pair_address": "0x8002F4AC",
-          "target_address": "0x802CB928",
+          "xref_address": "0x8002F3B0",
+          "pair_address": "0x8002F3B4",
+          "target_address": "0x802CAD50",
           "target_text": "<objanim.c -- setBlendMove> WARNING tried to load anim -1 from cache modno %d",
           "pair_kind": "lis/addi",
-          "function_name": "fn_8002F334"
+          "function_name": "Object_ObjAnimSetMove"
         }
       ]
     },
     {
-      "function_start": "0x8003042C",
-      "function_name": "fn_8003042C",
+      "function_start": "0x80030334",
+      "function_name": "ObjAnim_SetCurrentMove",
       "xrefs": [
         {
-          "xref_address": "0x80030608",
-          "pair_address": "0x8003060C",
-          "target_address": "0x802CB928",
+          "xref_address": "0x80030510",
+          "pair_address": "0x80030514",
+          "target_address": "0x802CAD50",
           "target_text": "<objanim.c -- setBlendMove> WARNING tried to load anim -1 from cache modno %d",
           "pair_kind": "lis/addi",
-          "function_name": "fn_8003042C"
+          "function_name": "ObjAnim_SetCurrentMove"
         }
       ]
     }
   ],
   "strings": [
     {
-      "address": "0x802CB928",
+      "address": "0x802CAD50",
       "text": "<objanim.c -- setBlendMove> WARNING tried to load anim -1 from cache modno %d",
       "tags": [
         "source",

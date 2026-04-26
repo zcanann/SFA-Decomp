@@ -23,23 +23,23 @@
   "map_hints": [],
   "functions": [
     {
-      "function_start": "0x801D5764",
-      "function_name": "fn_801D5764",
+      "function_start": "0x801D5174",
+      "function_name": "SHthorntail_updateState",
       "xrefs": [
         {
-          "xref_address": "0x801D5AC8",
-          "pair_address": "0x801D5ACC",
-          "target_address": "0x803280C8",
+          "xref_address": "0x801D54D8",
+          "pair_address": "0x801D54DC",
+          "target_address": "0x80327488",
           "target_text": "SHthorntail.c",
           "pair_kind": "lis/addi",
-          "function_name": "fn_801D5764"
+          "function_name": "SHthorntail_updateState"
         }
       ]
     }
   ],
   "strings": [
     {
-      "address": "0x803280C8",
+      "address": "0x80327488",
       "text": "SHthorntail.c",
       "tags": [
         "source"

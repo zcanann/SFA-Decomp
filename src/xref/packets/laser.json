@@ -23,23 +23,23 @@
   "map_hints": [],
   "functions": [
     {
-      "function_start": "0x802096AC",
-      "function_name": "fn_802096AC",
+      "function_start": "0x80209074",
+      "function_name": "laser_initUnsupported",
       "xrefs": [
         {
-          "xref_address": "0x802096B8",
-          "pair_address": "0x802096BC",
-          "target_address": "0x8032A860",
+          "xref_address": "0x80209080",
+          "pair_address": "0x80209084",
+          "target_address": "0x80329C20",
           "target_text": "<laser.c Init>No Longer supported ",
           "pair_kind": "lis/addi",
-          "function_name": "fn_802096AC"
+          "function_name": "laser_initUnsupported"
         }
       ]
     }
   ],
   "strings": [
     {
-      "address": "0x8032A860",
+      "address": "0x80329C20",
       "text": "<laser.c Init>No Longer supported ",
       "tags": [
         "source",

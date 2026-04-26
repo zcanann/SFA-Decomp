@@ -23,23 +23,23 @@
   "map_hints": [],
   "functions": [
     {
-      "function_start": "0x8003549C",
-      "function_name": "fn_8003549C",
+      "function_start": "0x800353A4",
+      "function_name": "objHitReact_update",
       "xrefs": [
         {
-          "xref_address": "0x800355DC",
-          "pair_address": "0x800355E0",
-          "target_address": "0x802CB9D4",
+          "xref_address": "0x800354E4",
+          "pair_address": "0x800354E8",
+          "target_address": "0x802CADFC",
           "target_text": "objHitReact.c: sphere overflow! %d",
           "pair_kind": "lis/addi",
-          "function_name": "fn_8003549C"
+          "function_name": "objHitReact_update"
         }
       ]
     }
   ],
   "strings": [
     {
-      "address": "0x802CB9D4",
+      "address": "0x802CADFC",
       "text": "objHitReact.c: sphere overflow! %d",
       "tags": [
         "source",

@@ -1,7 +1,7 @@
 {
-  "key": "camcontrol",
+  "key": "hcurves",
   "labels": [
-    "camcontrol.c"
+    "Hcurves.c"
   ],
   "categories": [
     "source"
@@ -24,27 +24,26 @@
   "functions": [],
   "strings": [
     {
-      "address": "0x80319B12",
-      "text": "/D<camcontrol.c>  failed to load triggered camaction actionno %d",
+      "address": "0x803116BB",
+      "text": "Hcurves.c: MAX_ROMCURVES exceeded!!",
       "tags": [
-        "source",
-        "warning"
+        "source"
       ]
     }
   ],
   "neighbor_strings": [
     {
-      "address": "0x80319A5F",
-      "text": "X<projdfp1r Do>No Longer supported ",
+      "address": "0x8030FDB8",
+      "text": "<projgfx release Do>No Longer supported ",
       "tags": [
         "warning"
       ]
     },
     {
-      "address": "0x8031A32C",
-      "text": "starfox.thp",
+      "address": "0x80319397",
+      "text": "P<projdummy Do>No Longer supported ",
       "tags": [
-        "file"
+        "warning"
       ]
     }
   ]

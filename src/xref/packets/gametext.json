@@ -36,37 +36,37 @@
   "map_hints": [],
   "functions": [
     {
-      "function_start": "0x80019C5C",
-      "function_name": "fn_80019C5C",
+      "function_start": "0x80019C24",
+      "function_name": "fn_80019C24",
       "xrefs": [
         {
-          "xref_address": "0x80019DA0",
-          "pair_address": "0x80019DA4",
-          "target_address": "0x802CA9F4",
+          "xref_address": "0x80019D68",
+          "pair_address": "0x80019D6C",
+          "target_address": "0x802C9E70",
           "target_text": "gametext/%s/%s.bin",
           "pair_kind": "lis/addi",
-          "function_name": "fn_80019C5C"
+          "function_name": "fn_80019C24"
         }
       ]
     },
     {
-      "function_start": "0x8001A6A4",
-      "function_name": "fn_8001A6A4",
+      "function_start": "0x8001A66C",
+      "function_name": "fn_8001A66C",
       "xrefs": [
         {
-          "xref_address": "0x8001A8C4",
-          "pair_address": "0x8001A8C8",
-          "target_address": "0x802CA9F4",
+          "xref_address": "0x8001A88C",
+          "pair_address": "0x8001A890",
+          "target_address": "0x802C9E70",
           "target_text": "gametext/%s/%s.bin",
           "pair_kind": "lis/addi",
-          "function_name": "fn_8001A6A4"
+          "function_name": "fn_8001A66C"
         }
       ]
     }
   ],
   "strings": [
     {
-      "address": "0x802CA9F4",
+      "address": "0x802C9E70",
       "text": "gametext/%s/%s.bin",
       "tags": [
         "file"
@@ -75,8 +75,8 @@
   ],
   "neighbor_strings": [
     {
-      "address": "0x802CAA47",
-      "text": "`gametext/Sequences/%d_%s.bin",
+      "address": "0x802C9EC3",
+      "text": "(gametext/Sequences/%d_%s.bin",
       "tags": [
         "file"
       ]

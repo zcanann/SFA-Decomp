@@ -24,7 +24,7 @@
   "functions": [],
   "strings": [
     {
-      "address": "0x803DD1C8",
+      "address": "0x803DC560",
       "text": "dvdfs.c",
       "tags": [
         "source"
@@ -33,7 +33,7 @@
   ],
   "neighbor_strings": [
     {
-      "address": "0x803DC108",
+      "address": "0x803DB4A8",
       "text": "SFX.bin",
       "tags": [
         "file"

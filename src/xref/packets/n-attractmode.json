@@ -24,7 +24,7 @@
   "functions": [],
   "strings": [
     {
-      "address": "0x8031AFDC",
+      "address": "0x8031A38C",
       "text": "n_attractmode.c",
       "tags": [
         "source"
@@ -33,14 +33,14 @@
   ],
   "neighbor_strings": [
     {
-      "address": "0x8031AF88",
+      "address": "0x8031A338",
       "text": "^^^^^^^^^^^^^^^^  malloc for movie failed",
       "tags": [
         "warning"
       ]
     },
     {
-      "address": "0x8031B4B4",
+      "address": "0x8031A864",
       "text": "/savegame/save%d.bin",
       "tags": [
         "file"

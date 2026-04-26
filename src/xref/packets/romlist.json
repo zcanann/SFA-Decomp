@@ -40,31 +40,31 @@
   "map_hints": [],
   "functions": [
     {
-      "function_start": "0x800484A4",
-      "function_name": "fn_800484A4",
+      "function_start": "0x80048328",
+      "function_name": "fn_80048328",
       "xrefs": [
         {
-          "xref_address": "0x800484E4",
-          "pair_address": "0x800484E8",
-          "target_address": "0x802CD0DC",
+          "xref_address": "0x80048368",
+          "pair_address": "0x8004836C",
+          "target_address": "0x802CC524",
           "target_text": "%s.romlist.zlb",
           "pair_kind": "lis/addi",
-          "function_name": "fn_800484A4"
+          "function_name": "fn_80048328"
         },
         {
-          "xref_address": "0x80048580",
-          "pair_address": "0x80048584",
-          "target_address": "0x802CD0DC",
+          "xref_address": "0x80048404",
+          "pair_address": "0x80048408",
+          "target_address": "0x802CC524",
           "target_text": "%s.romlist.zlb",
           "pair_kind": "lis/addi",
-          "function_name": "fn_800484A4"
+          "function_name": "fn_80048328"
         }
       ]
     }
   ],
   "strings": [
     {
-      "address": "0x802CD0DC",
+      "address": "0x802CC524",
       "text": "%s.romlist.zlb",
       "tags": [
         "file"

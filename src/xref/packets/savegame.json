@@ -36,23 +36,23 @@
   "map_hints": [],
   "functions": [
     {
-      "function_start": "0x8011B0FC",
-      "function_name": "fn_8011B0FC",
+      "function_start": "0x8011AE24",
+      "function_name": "fn_8011AE24",
       "xrefs": [
         {
-          "xref_address": "0x8011B28C",
-          "pair_address": "0x8011B290",
-          "target_address": "0x8031B4B4",
+          "xref_address": "0x8011AFB4",
+          "pair_address": "0x8011AFB8",
+          "target_address": "0x8031A864",
           "target_text": "/savegame/save%d.bin",
           "pair_kind": "lis/addi",
-          "function_name": "fn_8011B0FC"
+          "function_name": "fn_8011AE24"
         }
       ]
     }
   ],
   "strings": [
     {
-      "address": "0x8031B4B4",
+      "address": "0x8031A864",
       "text": "/savegame/save%d.bin",
       "tags": [
         "file"

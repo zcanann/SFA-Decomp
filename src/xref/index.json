@@ -1,28 +1,7 @@
 {
   "generated_by": "python tools/xref/asset_clusters.py --materialize-all",
-  "cluster_count": 16,
+  "cluster_count": 15,
   "clusters": [
-    {
-      "key": "expgfx",
-      "labels": [
-        "expgfx.c"
-      ],
-      "categories": [
-        "source"
-      ],
-      "direct_xref_count": 6,
-      "direct_function_count": 4,
-      "source_string_count": 5,
-      "packet_path": "src/xref/packets/expgfx.json",
-      "doc_path": "docs/xref/packets/expgfx.md",
-      "orig_summary": "none",
-      "map_summary": "none",
-      "top_strings": [
-        "expgfx.c: mismatch in add/remove in exptab",
-        "expgfx.c: addToTable usage overflow",
-        "expgfx.c: exptab is FULL"
-      ]
-    },
     {
       "key": "textblock",
       "labels": [
@@ -31,8 +10,8 @@
       "categories": [
         "source"
       ],
-      "direct_xref_count": 3,
-      "direct_function_count": 3,
+      "direct_xref_count": 6,
+      "direct_function_count": 6,
       "source_string_count": 2,
       "packet_path": "src/xref/packets/textblock.json",
       "doc_path": "docs/xref/packets/textblock.md",
@@ -40,7 +19,7 @@
       "map_summary": "none",
       "top_strings": [
         "<textblock.c Init>No Longer supported ",
-        "H<textblock.c Init>No Longer supported "
+        "<textblock.c Init>No Longer supported "
       ]
     },
     {
@@ -63,6 +42,27 @@
       ]
     },
     {
+      "key": "expgfx",
+      "labels": [
+        "expgfx.c"
+      ],
+      "categories": [
+        "source"
+      ],
+      "direct_xref_count": 4,
+      "direct_function_count": 2,
+      "source_string_count": 5,
+      "packet_path": "src/xref/packets/expgfx.json",
+      "doc_path": "docs/xref/packets/expgfx.md",
+      "orig_summary": "none",
+      "map_summary": "none",
+      "top_strings": [
+        "@expgfx.c: mismatch in add/remove in exptab",
+        "expgfx.c: addToTable usage overflow",
+        "expgfx.c: exptab is FULL"
+      ]
+    },
+    {
       "key": "gametext",
       "labels": [
         "gametext"
@@ -79,26 +79,6 @@
       "map_summary": "none",
       "top_strings": [
         "gametext/%s/%s.bin"
-      ]
-    },
-    {
-      "key": "dimboss",
-      "labels": [
-        "DIMBoss.c"
-      ],
-      "categories": [
-        "source"
-      ],
-      "direct_xref_count": 2,
-      "direct_function_count": 1,
-      "source_string_count": 2,
-      "packet_path": "src/xref/packets/dimboss.json",
-      "doc_path": "docs/xref/packets/dimboss.md",
-      "orig_summary": "none",
-      "map_summary": "none",
-      "top_strings": [
-        "<DIMBoss.c> freeing assets for DIMBoss",
-        "<DIMBoss.c> loading assets for DIMTop"
       ]
     },
     {
@@ -121,22 +101,23 @@
       ]
     },
     {
-      "key": "lactions",
+      "key": "dimboss",
       "labels": [
-        "LACTIONS.bin"
+        "DIMBoss.c"
       ],
       "categories": [
-        "file"
+        "source"
       ],
-      "direct_xref_count": 2,
+      "direct_xref_count": 1,
       "direct_function_count": 1,
-      "source_string_count": 0,
-      "packet_path": "src/xref/packets/lactions.json",
-      "doc_path": "docs/xref/packets/lactions.md",
-      "orig_summary": "root files=1",
+      "source_string_count": 2,
+      "packet_path": "src/xref/packets/dimboss.json",
+      "doc_path": "docs/xref/packets/dimboss.md",
+      "orig_summary": "none",
       "map_summary": "none",
       "top_strings": [
-        "LACTIONS.bin"
+        "@<DIMBoss.c> freeing assets for DIMBoss",
+        "<DIMBoss.c> loading assets for DIMTop"
       ]
     },
     {
@@ -197,44 +178,6 @@
       ]
     },
     {
-      "key": "curves",
-      "labels": [
-        "curves.c"
-      ],
-      "categories": [
-        "source"
-      ],
-      "direct_xref_count": 1,
-      "direct_function_count": 1,
-      "source_string_count": 1,
-      "packet_path": "src/xref/packets/curves.json",
-      "doc_path": "docs/xref/packets/curves.md",
-      "orig_summary": "none",
-      "map_summary": "none",
-      "top_strings": [
-        "curves.c: MAX_ROMCURVES exceeded!!"
-      ]
-    },
-    {
-      "key": "camcontrol",
-      "labels": [
-        "camcontrol.c"
-      ],
-      "categories": [
-        "source"
-      ],
-      "direct_xref_count": 1,
-      "direct_function_count": 1,
-      "source_string_count": 1,
-      "packet_path": "src/xref/packets/camcontrol.json",
-      "doc_path": "docs/xref/packets/camcontrol.md",
-      "orig_summary": "none",
-      "map_summary": "none",
-      "top_strings": [
-        "<camcontrol.c>  failed to load triggered camaction actionno %d"
-      ]
-    },
-    {
       "key": "savegame",
       "labels": [
         "savegame"
@@ -292,6 +235,25 @@
       ]
     },
     {
+      "key": "hcurves",
+      "labels": [
+        "Hcurves.c"
+      ],
+      "categories": [
+        "source"
+      ],
+      "direct_xref_count": 0,
+      "direct_function_count": 0,
+      "source_string_count": 1,
+      "packet_path": "src/xref/packets/hcurves.json",
+      "doc_path": "docs/xref/packets/hcurves.md",
+      "orig_summary": "none",
+      "map_summary": "none",
+      "top_strings": [
+        "Hcurves.c: MAX_ROMCURVES exceeded!!"
+      ]
+    },
+    {
       "key": "dvdfs",
       "labels": [
         "dvdfs.c"
@@ -308,6 +270,25 @@
       "map_summary": "none",
       "top_strings": [
         "dvdfs.c"
+      ]
+    },
+    {
+      "key": "camcontrol",
+      "labels": [
+        "camcontrol.c"
+      ],
+      "categories": [
+        "source"
+      ],
+      "direct_xref_count": 0,
+      "direct_function_count": 0,
+      "source_string_count": 1,
+      "packet_path": "src/xref/packets/camcontrol.json",
+      "doc_path": "docs/xref/packets/camcontrol.md",
+      "orig_summary": "none",
+      "map_summary": "none",
+      "top_strings": [
+        "/D<camcontrol.c>  failed to load triggered camaction actionno %d"
       ]
     }
   ]

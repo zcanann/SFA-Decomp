@@ -6,8 +6,8 @@
   "categories": [
     "source"
   ],
-  "direct_xref_count": 3,
-  "direct_function_count": 3,
+  "direct_xref_count": 6,
+  "direct_function_count": 6,
   "source_string_count": 2,
   "orig": {
     "root_file_count": 0,
@@ -23,51 +23,93 @@
   "map_hints": [],
   "functions": [
     {
-      "function_start": "0x80209624",
-      "function_name": "fn_80209624",
+      "function_start": "0x80208FEC",
+      "function_name": "laser_freeUnsupported",
       "xrefs": [
         {
-          "xref_address": "0x80209630",
-          "pair_address": "0x80209634",
-          "target_address": "0x8032A838",
+          "xref_address": "0x80208FF8",
+          "pair_address": "0x80208FFC",
+          "target_address": "0x80329BF8",
           "target_text": "<textblock.c Init>No Longer supported ",
           "pair_kind": "lis/addi",
-          "function_name": "fn_80209624"
+          "function_name": "laser_freeUnsupported"
         }
       ]
     },
     {
-      "function_start": "0x80209650",
-      "function_name": "fn_80209650",
+      "function_start": "0x80209018",
+      "function_name": "laser_renderUnsupported",
       "xrefs": [
         {
-          "xref_address": "0x8020965C",
-          "pair_address": "0x80209660",
-          "target_address": "0x8032A838",
+          "xref_address": "0x80209024",
+          "pair_address": "0x80209028",
+          "target_address": "0x80329BF8",
           "target_text": "<textblock.c Init>No Longer supported ",
           "pair_kind": "lis/addi",
-          "function_name": "fn_80209650"
+          "function_name": "laser_renderUnsupported"
         }
       ]
     },
     {
-      "function_start": "0x80209680",
-      "function_name": "fn_80209680",
+      "function_start": "0x80209048",
+      "function_name": "laser_updateUnsupported",
       "xrefs": [
         {
-          "xref_address": "0x8020968C",
-          "pair_address": "0x80209690",
-          "target_address": "0x8032A838",
+          "xref_address": "0x80209054",
+          "pair_address": "0x80209058",
+          "target_address": "0x80329BF8",
           "target_text": "<textblock.c Init>No Longer supported ",
           "pair_kind": "lis/addi",
-          "function_name": "fn_80209680"
+          "function_name": "laser_updateUnsupported"
+        }
+      ]
+    },
+    {
+      "function_start": "0x80209820",
+      "function_name": "textblockObj_freeUnsupported",
+      "xrefs": [
+        {
+          "xref_address": "0x8020982C",
+          "pair_address": "0x80209830",
+          "target_address": "0x80329CF0",
+          "target_text": "<textblock.c Init>No Longer supported ",
+          "pair_kind": "lis/addi",
+          "function_name": "textblockObj_freeUnsupported"
+        }
+      ]
+    },
+    {
+      "function_start": "0x80209854",
+      "function_name": "textblockObj_updateUnsupported",
+      "xrefs": [
+        {
+          "xref_address": "0x80209860",
+          "pair_address": "0x80209864",
+          "target_address": "0x80329CF0",
+          "target_text": "<textblock.c Init>No Longer supported ",
+          "pair_kind": "lis/addi",
+          "function_name": "textblockObj_updateUnsupported"
+        }
+      ]
+    },
+    {
+      "function_start": "0x80209880",
+      "function_name": "textblockObj_initUnsupported",
+      "xrefs": [
+        {
+          "xref_address": "0x8020988C",
+          "pair_address": "0x80209890",
+          "target_address": "0x80329CF0",
+          "target_text": "<textblock.c Init>No Longer supported ",
+          "pair_kind": "lis/addi",
+          "function_name": "textblockObj_initUnsupported"
         }
       ]
     }
   ],
   "strings": [
     {
-      "address": "0x8032A838",
+      "address": "0x80329BF8",
       "text": "<textblock.c Init>No Longer supported ",
       "tags": [
         "source",
@@ -75,29 +117,13 @@
       ]
     },
     {
-      "address": "0x8032A92F",
-      "text": "H<textblock.c Init>No Longer supported ",
+      "address": "0x80329CF0",
+      "text": "<textblock.c Init>No Longer supported ",
       "tags": [
         "source",
         "warning"
       ]
     }
   ],
-  "neighbor_strings": [
-    {
-      "address": "0x8032A860",
-      "text": "<laser.c Init>No Longer supported ",
-      "tags": [
-        "source",
-        "warning"
-      ]
-    },
-    {
-      "address": "0x8032A990",
-      "text": "<platform1 draw>No Longer supported ",
-      "tags": [
-        "warning"
-      ]
-    }
-  ]
+  "neighbor_strings": []
 }

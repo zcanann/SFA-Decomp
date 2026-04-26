@@ -33,23 +33,23 @@
   "map_hints": [],
   "functions": [
     {
-      "function_start": "0x80044548",
-      "function_name": "fn_80044548",
+      "function_start": "0x800443CC",
+      "function_name": "fn_800443CC",
       "xrefs": [
         {
-          "xref_address": "0x80044564",
-          "pair_address": "0x80044568",
-          "target_address": "0x802CBB20",
+          "xref_address": "0x800443E8",
+          "pair_address": "0x800443EC",
+          "target_address": "0x802CAF48",
           "target_text": "AUDIO.tab",
           "pair_kind": "lis/addi",
-          "function_name": "fn_80044548"
+          "function_name": "fn_800443CC"
         }
       ]
     }
   ],
   "strings": [
     {
-      "address": "0x802CBB20",
+      "address": "0x802CAF48",
       "text": "AUDIO.tab",
       "tags": [
         "file"
@@ -58,7 +58,7 @@
   ],
   "neighbor_strings": [
     {
-      "address": "0x802CBB2C",
+      "address": "0x802CAF54",
       "text": "AUDIO.bin",
       "tags": [
         "file"
