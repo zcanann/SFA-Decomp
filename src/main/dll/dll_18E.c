@@ -9,7 +9,7 @@ extern undefined4 FUN_80017a98();
 extern undefined4 FUN_800388b4();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8005fe14();
-extern undefined4 FUN_801be44c();
+extern undefined4 dll_DIM_BossGutSpik_update();
 
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd708;
@@ -108,8 +108,8 @@ void FUN_801beee0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         uVar6 = extraout_f1;
         uVar2 = FUN_80017a98();
         *(undefined4 *)(iVar5 + 0x2d0) = uVar2;
-        FUN_801be44c(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,0,iVar5,
-                     iVar5);
+        dll_DIM_BossGutSpik_update(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                                    param_9,0,iVar5,iVar5);
         if (DAT_803de810 != 0) {
           FUN_80017584(DAT_803de810,local_d,&local_e,&local_f,&uStack_10);
           FUN_80017548(DAT_803de810,local_d[0],local_e,local_f,0xc0);

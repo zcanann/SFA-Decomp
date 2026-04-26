@@ -13,7 +13,7 @@ extern uint FUN_80017760();
 extern undefined4 FUN_80080f70();
 extern undefined8 FUN_80080f7c();
 extern undefined4 FUN_80080f80();
-extern undefined4 FUN_801be44c();
+extern undefined4 dll_DIM_BossGutSpik_update();
 extern uint FUN_80286840();
 extern undefined4 FUN_8028688c();
 
@@ -152,8 +152,8 @@ void FUN_801be8f8(undefined8 param_1,double param_2,double param_3,undefined8 pa
       }
       else {
         *(undefined2 *)(param_11 + 0x6e) = 0;
-        FUN_801be44c(uVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar3,param_11,
-                     iVar9,iVar9);
+        dll_DIM_BossGutSpik_update(uVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                                    uVar3,param_11,iVar9,iVar9);
         if (*(char *)(iVar9 + 0x405) == '\x01') {
           *(undefined2 *)(iVar9 + 0x270) = 0;
           (**(code **)(*DAT_803dd70c + 8))

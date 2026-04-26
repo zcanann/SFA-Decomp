@@ -26,7 +26,7 @@ extern f32 FLOAT_803e5958;
 /*
  * --INFO--
  *
- * Function: FUN_801be44c
+ * Function: dll_DIM_BossGutSpik_update
  * EN v1.0 Address: 0x801BE44C
  * EN v1.0 Size: 804b
  * EN v1.1 Address: 0x801BE750
@@ -36,9 +36,10 @@ extern f32 FLOAT_803e5958;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801be44c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9,undefined4 param_10,int param_11,int param_12)
+void dll_DIM_BossGutSpik_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                                undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                undefined8 param_7,undefined8 param_8,uint param_9,
+                                undefined4 param_10,int param_11,int param_12)
 {
   double dVar1;
   double dVar2;
