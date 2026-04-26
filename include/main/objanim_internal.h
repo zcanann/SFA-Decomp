@@ -59,7 +59,12 @@ typedef struct ObjAnimBank {
 } ObjAnimBank;
 
 typedef struct ObjAnimComponent {
-  u8 pad00[0x60];
+  u8 pad00[0x46];
+  s16 objType;
+  u8 pad48[0x50 - 0x48];
+  void *modelInstance;
+  void *hitReactState;
+  u8 pad58[0x60 - 0x58];
   struct ObjAnimEventTable *eventTable;
   u8 pad64[0x7C - 0x64];
   ObjAnimBank **banks;

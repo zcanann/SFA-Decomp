@@ -628,12 +628,12 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
   state->prevEventState = state->eventState;
   state->eventState = 0;
   state->lastBlendMoveIndex = -1;
-  hitState = *(int *)(objAnimArg + 0x54);
+  hitState = (int)objAnim->hitReactState;
   if ((hitState != 0) && (*(int *)(hitState + 8) != 0)) {
-    fn_80035774(objAnimArg,(int *)bank,(int)*(s16 *)(objAnimArg + 0x46),hitState,moveId,0);
+    fn_80035774(objAnimArg,(int *)bank,(int)objAnim->objType,hitState,moveId,0);
   }
   if (objAnim->eventTable != (ObjAnimEventTable *)0x0) {
-    fn_8002C6C8(objAnimArg,(int)*(s16 *)(objAnimArg + 0x46),(uint *)objAnim->eventTable,moveId,0);
+    fn_8002C6C8(objAnimArg,(int)objAnim->objType,(uint *)objAnim->eventTable,moveId,0);
   }
   previousMove = objAnim->currentMove;
   moveChanged = previousMove != moveId;
