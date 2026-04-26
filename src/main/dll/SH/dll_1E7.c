@@ -67,7 +67,6 @@ extern f32 FLOAT_803e60b8;
 int fn_801D4CD0(SHthorntailObject *obj)
 {
   SHthorntailObject **objects;
-  SHthorntailObject *otherObj;
   u32 configToken;
   int count;
   int index;
@@ -99,14 +98,13 @@ int fn_801D4CD0(SHthorntailObject *obj)
   }
   objects = fn_80036F50(3,&count);
   for (index = 0; index < count; index++) {
-    otherObj = *objects;
-    if ((otherObj->objType == 0x4d7) &&
-        ((otherObj->config->configToken == lbl_80326E98[groupIndex][1]) ||
-         (otherObj->config->configToken == lbl_80326E98[groupIndex][2]) ||
-         (otherObj->config->configToken == lbl_80326E98[groupIndex][3]))) {
-      fn_8014C66C(otherObj,obj);
-      if ((fn_800216D0(&otherObj->pos,&obj->pos) < lbl_803E5414) &&
-          (GameBit_Get(*(s16 *)&otherObj->config->controlMode) == 0)) {
+    if (((*objects)->objType == 0x4d7) &&
+        (((*objects)->config->configToken == lbl_80326E98[groupIndex][1]) ||
+         ((*objects)->config->configToken == lbl_80326E98[groupIndex][2]) ||
+         ((*objects)->config->configToken == lbl_80326E98[groupIndex][3]))) {
+      fn_8014C66C(*objects,obj);
+      if ((fn_800216D0(&(*objects)->pos,&obj->pos) < lbl_803E5414) &&
+          (GameBit_Get(*(s16 *)&(*objects)->config->controlMode) == 0)) {
         eventIsSet = 1;
       }
       matchCount++;
