@@ -326,30 +326,30 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
 
   runtime = obj->runtime;
   local_28[0] = lbl_803E5410;
-  *(short *)obj = (ushort)config->initialFacingByte << 8;
-  if (config->controlMode == SHTHORNTAIL_CONTROL_MODE_ROOT_2) {
+  *(short *)obj = (short)((int)config->initialFacingByte << 8);
+  switch (config->controlMode) {
+  case SHTHORNTAIL_CONTROL_MODE_LEVEL_0:
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
     randomTime = fn_800221A0(1000,2000);
     runtime->idleTimer =
         (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
-  }
-  else if (config->controlMode < SHTHORNTAIL_CONTROL_MODE_ROOT_2) {
-    if (config->controlMode == SHTHORNTAIL_CONTROL_MODE_LEVEL_0) {
-      runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      randomTime = fn_800221A0(1000,2000);
-      runtime->idleTimer =
-          (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
-    }
-    else {
-      runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_ACTIVE;
-      runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING;
-    }
-  }
-  else if (config->controlMode < 4) {
+    break;
+  case SHTHORNTAIL_CONTROL_MODE_LEVEL_1:
+    runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_ACTIVE;
+    runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING;
+    break;
+  case SHTHORNTAIL_CONTROL_MODE_ROOT_2:
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
     randomTime = fn_800221A0(1000,2000);
     runtime->idleTimer =
         (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
+    break;
+  case SHTHORNTAIL_CONTROL_MODE_ROOT_3:
+    runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
+    randomTime = fn_800221A0(1000,2000);
+    runtime->idleTimer =
+        (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
+    break;
   }
   uStack_1c = config->initScale;
   local_20 = 0x43300000;
