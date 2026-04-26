@@ -1291,7 +1291,7 @@ LAB_80181668:
                                  (double)FLOAT_803e4598)) {
       if ((puVar1[0x50] == 1) && (FLOAT_803e45a8 < pfVar12[0x43])) {
         ObjAnim_SetCurrentMove((double)FLOAT_803e4588,(int)puVar1,0,0);
-        ObjAnim_SetPrimaryEventStepFrames((int)puVar1,0x3c);
+        ObjAnim_SetCurrentEventStepFrames((int)puVar1,0x3c);
         pfVar12[0x43] = FLOAT_803e4588;
       }
       pfVar12[0x46] = (FLOAT_803e45ac * pfVar12[0x45]) / pfVar12[0x44];
@@ -1299,7 +1299,7 @@ LAB_80181668:
     else {
       if ((puVar1[0x50] == 0) && (FLOAT_803e45a8 < pfVar12[0x43])) {
         ObjAnim_SetCurrentMove((double)FLOAT_803e4588,(int)puVar1,1,0);
-        ObjAnim_SetPrimaryEventStepFrames((int)puVar1,0x3c);
+        ObjAnim_SetCurrentEventStepFrames((int)puVar1,0x3c);
         pfVar12[0x43] = FLOAT_803e4588;
       }
       pfVar12[0x46] = FLOAT_803e45ac;
@@ -1308,7 +1308,7 @@ LAB_80181668:
   else {
     if ((puVar1[0x50] == 0) && (FLOAT_803e459c < pfVar12[0x43])) {
       ObjAnim_SetCurrentMove((double)FLOAT_803e4588,(int)puVar1,1,0);
-      ObjAnim_SetPrimaryEventStepFrames((int)puVar1,0x3c);
+      ObjAnim_SetCurrentEventStepFrames((int)puVar1,0x3c);
       pfVar12[0x43] = FLOAT_803e4588;
     }
     pfVar12[0x46] = FLOAT_803e45a0;

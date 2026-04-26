@@ -109,7 +109,7 @@ void Object_ObjAnimSetPrimaryBlendMove(int objAnim,uint moveId,int eventState)
 
   bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
   if (bank->animDef->moveCount != 0) {
-    ObjAnim_SetBlendMove(objAnim,bank->animDef,bank->primaryState,moveId,eventState);
+    ObjAnim_SetBlendMove(objAnim,bank->animDef,bank->activeState,moveId,eventState);
   }
   return;
 }
@@ -133,7 +133,7 @@ void Object_ObjAnimSetSecondaryBlendMove(int objAnim,uint moveId,int eventState)
 
   bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
   if (bank->animDef->moveCount != 0) {
-    ObjAnim_SetBlendMove(objAnim,bank->animDef,bank->secondaryState,moveId,eventState);
+    ObjAnim_SetBlendMove(objAnim,bank->animDef,bank->currentState,moveId,eventState);
   }
   return;
 }
@@ -187,7 +187,7 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
     uVar7 = 0;
   }
   else {
-    state = bank->primaryState;
+    state = bank->activeState;
     iVar11 = (int)state;
     state->step = moveStepScale * state->segmentLength;
     if (state->eventCountdown != 0) {
@@ -383,7 +383,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   if (animDef->moveCount == 0) {
     return 0;
   }
-  state = bank->primaryState;
+  state = bank->activeState;
   state->flags = (s8)flags;
   state->prevMoveCacheSlot = state->moveCacheSlot;
   state->progress = state->speed;
@@ -441,7 +441,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
 /*
  * --INFO--
  *
- * Function: ObjAnim_GetPrimaryEventCountdown
+ * Function: ObjAnim_GetCurrentEventCountdown
  * EN v1.0 Address: 0x8002F50C
  * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x8002F604
@@ -452,9 +452,9 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
  * PAL Size: TODO
  */
 #pragma scheduling off
-undefined2 ObjAnim_GetPrimaryEventCountdown(int objAnim)
+undefined2 ObjAnim_GetCurrentEventCountdown(int objAnim)
 {
-  return ObjAnim_GetSecondaryState((ObjAnimComponent *)objAnim)->eventCountdown;
+  return ObjAnim_GetCurrentState((ObjAnimComponent *)objAnim)->eventCountdown;
 }
 
 /*
@@ -482,10 +482,10 @@ void ObjAnim_WriteStateWord(int objAnim,int stateIndex,short wordIndex,int value
   }
   stateWord = value;
   if (stateIndex != 0) {
-    state = bank->primaryState;
+    state = bank->activeState;
   }
   else {
-    state = bank->secondaryState;
+    state = bank->currentState;
   }
   state = (ObjAnimState *)((u8 *)state + wordIndex * 2);
   state->eventCountdown = stateWord;
@@ -494,7 +494,7 @@ void ObjAnim_WriteStateWord(int objAnim,int stateIndex,short wordIndex,int value
 /*
  * --INFO--
  *
- * Function: ObjAnim_SetPrimaryEventStepFrames
+ * Function: ObjAnim_SetCurrentEventStepFrames
  * EN v1.0 Address: 0x8002F574
  * EN v1.0 Size: 96b
  * EN v1.1 Address: 0x8002F66C
@@ -504,7 +504,7 @@ void ObjAnim_WriteStateWord(int objAnim,int stateIndex,short wordIndex,int value
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjAnim_SetPrimaryEventStepFrames(int objAnim,uint frameCount)
+void ObjAnim_SetCurrentEventStepFrames(int objAnim,uint frameCount)
 {
   ObjAnimBank *bank;
   u32 biasedFrameCount;
@@ -512,7 +512,7 @@ void ObjAnim_SetPrimaryEventStepFrames(int objAnim,uint frameCount)
   bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
   if (bank != (ObjAnimBank *)0x0) {
     biasedFrameCount = frameCount ^ 0x80000000;
-    bank->secondaryState->eventStep =
+    bank->currentState->eventStep =
         (short)(int)(lbl_803DE8F4 /
                     (ObjAnim_U32AsDouble(biasedFrameCount) - lbl_803DE900));
   }
@@ -568,7 +568,7 @@ undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnimArg,float *ph
   animDef = bank->animDef;
   iVar17 = (int)animDef;
   if (animDef->moveCount != 0) {
-    state = bank->secondaryState;
+    state = bank->currentState;
     iVar18 = (int)state;
     fVar5 = *(float *)(objAnimArg + 8);
     pfVar15 = (float *)0x0;
@@ -781,7 +781,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
   piVar22 = (int *)bank;
   animDef = bank->animDef;
   if ((animDef->moveCount != 0) &&
-     (state = bank->secondaryState, iVar24 = (int)state, iVar24 != 0)) {
+     (state = bank->currentState, iVar24 = (int)state, iVar24 != 0)) {
     *(float *)(iVar24 + 0xc) = (float)(dVar31 * (double)*(float *)(iVar24 + 0x14));
     if (*(short *)(iVar24 + 0x58) != 0) {
       if ((*(byte *)(iVar24 + 99) & 8) != 0) {
@@ -1111,7 +1111,7 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
   if (animDef->moveCount == 0) {
     return 0;
   }
-  state = bank->secondaryState;
+  state = bank->currentState;
   state->flags = (s8)flags;
   state->prevMoveCacheSlot = state->moveCacheSlot;
   state->progress = state->speed;

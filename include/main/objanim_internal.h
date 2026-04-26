@@ -56,8 +56,8 @@ typedef struct ObjAnimState {
 typedef struct ObjAnimBank {
   ObjAnimDef *animDef;
   u8 pad04[0x2C - 4];
-  ObjAnimState *secondaryState;
-  ObjAnimState *primaryState;
+  ObjAnimState *currentState;
+  ObjAnimState *activeState;
 } ObjAnimBank;
 
 typedef struct ObjAnimComponent {
@@ -121,12 +121,12 @@ static inline ObjAnimDef *ObjAnim_GetAnimDef(ObjAnimComponent *objAnim) {
   return ObjAnim_GetActiveBank(objAnim)->animDef;
 }
 
-static inline ObjAnimState *ObjAnim_GetPrimaryState(ObjAnimComponent *objAnim) {
-  return ObjAnim_GetActiveBank(objAnim)->primaryState;
+static inline ObjAnimState *ObjAnim_GetActiveState(ObjAnimComponent *objAnim) {
+  return ObjAnim_GetActiveBank(objAnim)->activeState;
 }
 
-static inline ObjAnimState *ObjAnim_GetSecondaryState(ObjAnimComponent *objAnim) {
-  return ObjAnim_GetActiveBank(objAnim)->secondaryState;
+static inline ObjAnimState *ObjAnim_GetCurrentState(ObjAnimComponent *objAnim) {
+  return ObjAnim_GetActiveBank(objAnim)->currentState;
 }
 
 static inline s32 ObjAnim_GetHitReactEntryIndex(ObjAnimDef *animDef, s32 sphereIndex) {
