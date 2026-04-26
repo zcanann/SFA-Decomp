@@ -4259,7 +4259,7 @@ void fn_8007E54C(u8 kind)
 {
     extern void fn_80017434(int);
     extern int fn_80014F40(void);
-    extern void fn_800234EC(int);
+    extern void mm_debugPrintMemory(int);
     extern void fn_8004A868(void);
     extern int fn_8001FD88(int**);
     extern void** lbl_803DCA4C;
@@ -4273,7 +4273,7 @@ void fn_8007E54C(u8 kind)
     extern void fn_80076D78(int, int, int, void*, int, int);
     extern void fn_80019908(int, int, int, int);
     extern void fn_80016810(int, int, int);
-    extern void fn_80019C24(void);
+    extern void gametext_load(void);
     extern void fn_8004A43C(int, int);
 
     int saved;
@@ -4287,7 +4287,7 @@ void fn_8007E54C(u8 kind)
     fn_80017434(0);
     for (frame = 0; frame < 0x3C; frame++) {
         fn_80014F40();
-        fn_800234EC(0);
+        mm_debugPrintMemory(0);
         fn_8004A868();
         count = fn_8001FD88(&buttons) & 0xFF;
         if (count != 0) {
@@ -4311,7 +4311,7 @@ void fn_8007E54C(u8 kind)
         } else {
             fn_80016810(0x56C, 0, 0xC8);
         }
-        fn_80019C24();
+        gametext_load();
         fn_8004A43C(1, 0);
     }
 }

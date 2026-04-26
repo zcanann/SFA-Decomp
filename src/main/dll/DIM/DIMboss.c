@@ -45,7 +45,7 @@ extern undefined4 fn_8000FACC();
 extern undefined4 fn_80013E2C();
 extern undefined4 fn_8001F384();
 extern undefined4 GameBit_Set();
-extern undefined4 fn_8002CBC4();
+extern undefined4 obj_freeObject();
 extern undefined4 fn_80036FA4();
 extern undefined4 fn_8003B8F4();
 extern undefined4 fn_80055000();
@@ -431,7 +431,7 @@ void dimboss_free(int param_1)
   fn_80036FA4(param_1,3);
   pvVar2 = *(void **)(param_1 + 0xc8);
   if (pvVar2 != 0) {
-    fn_8002CBC4(pvVar2);
+    obj_freeObject(pvVar2);
     *(undefined4 *)(param_1 + 0xc8) = 0;
   }
   (*(code *)(*lbl_803DCAB8 + 0x40))(param_1,iVar1,0x20);
