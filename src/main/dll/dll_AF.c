@@ -1,23 +1,19 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_AF.h"
 
-extern undefined4 FUN_800723a0();
-
 /*
  * --INFO--
  *
- * Function: FUN_80100894
+ * Function: fn_80100894
  * EN v1.0 Address: 0x80100894
- * EN v1.0 Size: 36b
+ * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80100894
- * EN v1.1 Size: 48b
+ * EN v1.1 Size: 4b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80100894(void)
+void fn_80100894(void)
 {
-  FUN_800723a0();
-  return 0xffffffff;
 }
