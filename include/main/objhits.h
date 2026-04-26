@@ -19,12 +19,15 @@ void FUN_8003113c(undefined8 param_1,double param_2,double param_3,undefined4 pa
 void FUN_80031510(undefined8 param_1,undefined8 param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,int param_6,int param_7,undefined4 param_8,int param_9,
                  float *param_10);
-float * FUN_800318b0(double param_1,double param_2,double param_3,double param_4,double param_5,
-                    float *param_6,float *param_7,float *param_8,float *param_9);
-float * FUN_80031b70(double param_1,double param_2,double param_3,double param_4,double param_5,
-                    float *param_6,float *param_7,float *param_8,float *param_9);
-float * FUN_80031e4c(double param_1,double param_2,double param_3,double param_4,float *param_5,
-                    float *param_6,float *param_7,float *param_8);
+float *ObjHits_ProjectPointToTaperedCapsuleXZ(double param_1,double param_2,double param_3,
+                                              double param_4,double param_5,float *param_6,
+                                              float *param_7,float *param_8,float *param_9);
+float *ObjHits_ProjectPointToTaperedCapsule3D(double param_1,double param_2,double param_3,
+                                              double param_4,double param_5,float *param_6,
+                                              float *param_7,float *param_8,float *param_9);
+float *ObjHits_CalcTaperedCapsuleNormal(double param_1,double param_2,double param_3,
+                                        double param_4,float *param_5,float *param_6,
+                                        float *param_7,float *param_8);
 uint ObjHits_TestTaperedCapsuleXZ(double param_1,double param_2,double param_3,double param_4,
                                   float *param_5,float *param_6,float *param_7,float *param_8,
                                   float *param_9,float *param_10,float *param_11);

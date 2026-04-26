@@ -589,20 +589,20 @@ void FUN_8003113c(undefined8 param_1,double param_2,double param_3,undefined4 pa
   local_c0 = FLOAT_803df590;
   local_bc = FLOAT_803df590;
   iVar5 = *(int *)(param_9 + 0x40) * 4;
-  pfVar4 = FUN_80031e4c((double)*(float *)(param_9 + 0x2c),
-                        (double)*(float *)(*(int *)(param_7 + 4) + iVar5),
-                        (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(param_9 + 0x44) * 4),
-                        (double)*(float *)(*(int *)(param_7 + 0xc) + iVar5),&local_e8,
-                        (float *)(param_9 + 8),(float *)(param_9 + 0x14),afStack_b8);
+  pfVar4 = ObjHits_CalcTaperedCapsuleNormal(
+      (double)*(float *)(param_9 + 0x2c),(double)*(float *)(*(int *)(param_7 + 4) + iVar5),
+      (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(param_9 + 0x44) * 4),
+      (double)*(float *)(*(int *)(param_7 + 0xc) + iVar5),&local_e8,(float *)(param_9 + 8),
+      (float *)(param_9 + 0x14),afStack_b8);
   FUN_80017784(pfVar4);
   dVar8 = (double)FLOAT_803df590;
   for (iVar5 = param_6; *(int *)(iVar5 + 0x40) != -1; iVar5 = iVar5 + 0x48) {
     iVar1 = *(int *)(iVar5 + 0x40) * 4;
-    pfVar4 = FUN_800318b0(dVar7,(double)*(float *)(iVar5 + 0x2c),
-                          (double)*(float *)(*(int *)(param_7 + 4) + iVar1),
-                          (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(iVar5 + 0x44) * 4),
-                          (double)*(float *)(*(int *)(param_7 + 0xc) + iVar1),&local_e8,
-                          (float *)(iVar5 + 8),(float *)(iVar5 + 0x14),afStack_a0);
+    pfVar4 = ObjHits_ProjectPointToTaperedCapsuleXZ(
+        dVar7,(double)*(float *)(iVar5 + 0x2c),(double)*(float *)(*(int *)(param_7 + 4) + iVar1),
+        (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(iVar5 + 0x44) * 4),
+        (double)*(float *)(*(int *)(param_7 + 0xc) + iVar1),&local_e8,(float *)(iVar5 + 8),
+        (float *)(iVar5 + 0x14),afStack_a0);
     if (param_3 <= dVar8) {
       *(float *)(iVar5 + 0x3c) = (float)dVar8;
     }
@@ -616,11 +616,11 @@ void FUN_8003113c(undefined8 param_1,double param_2,double param_3,undefined4 pa
     local_78 = local_78 + pfVar4[1];
     local_74 = local_74 + pfVar4[2];
     iVar1 = *(int *)(iVar5 + 0x40) * 4;
-    pfVar4 = FUN_80031e4c((double)*(float *)(iVar5 + 0x2c),
-                          (double)*(float *)(*(int *)(param_7 + 4) + iVar1),
-                          (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(iVar5 + 0x44) * 4),
-                          (double)*(float *)(*(int *)(param_7 + 0xc) + iVar1),pfVar3,
-                          (float *)(iVar5 + 8),(float *)(iVar5 + 0x14),afStack_b8);
+    pfVar4 = ObjHits_CalcTaperedCapsuleNormal(
+        (double)*(float *)(iVar5 + 0x2c),(double)*(float *)(*(int *)(param_7 + 4) + iVar1),
+        (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(iVar5 + 0x44) * 4),
+        (double)*(float *)(*(int *)(param_7 + 0xc) + iVar1),pfVar3,(float *)(iVar5 + 8),
+        (float *)(iVar5 + 0x14),afStack_b8);
     FUN_80017784(pfVar4);
     local_c4 = local_c4 + *pfVar4;
     local_c0 = local_c0 + pfVar4[1];
@@ -657,11 +657,11 @@ void FUN_8003113c(undefined8 param_1,double param_2,double param_3,undefined4 pa
   local_a4 = FLOAT_803df590;
   for (; *(int *)(param_6 + 0x40) != -1; param_6 = param_6 + 0x48) {
     iVar5 = *(int *)(param_6 + 0x40) * 4;
-    pfVar4 = FUN_800318b0(dVar7,(double)*(float *)(param_6 + 0x2c),
-                          (double)*(float *)(*(int *)(param_7 + 4) + iVar5),
-                          (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(param_6 + 0x44) * 4),
-                          (double)*(float *)(*(int *)(param_7 + 0xc) + iVar5),&local_7c,
-                          (float *)(param_6 + 8),(float *)(param_6 + 0x14),afStack_a0);
+    pfVar4 = ObjHits_ProjectPointToTaperedCapsuleXZ(
+        dVar7,(double)*(float *)(param_6 + 0x2c),(double)*(float *)(*(int *)(param_7 + 4) + iVar5),
+        (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(param_6 + 0x44) * 4),
+        (double)*(float *)(*(int *)(param_7 + 0xc) + iVar5),&local_7c,(float *)(param_6 + 8),
+        (float *)(param_6 + 0x14),afStack_a0);
     *pfVar4 = *pfVar4 * *(float *)(param_6 + 0x3c);
     pfVar4[1] = pfVar4[1] * *(float *)(param_6 + 0x3c);
     pfVar4[2] = pfVar4[2] * *(float *)(param_6 + 0x3c);
@@ -766,20 +766,20 @@ void FUN_80031510(undefined8 param_1,undefined8 param_2,double param_3,undefined
   local_b0 = FLOAT_803df590;
   local_ac = FLOAT_803df590;
   iVar5 = *(int *)(param_9 + 0x40) * 4;
-  pfVar4 = FUN_80031e4c((double)*(float *)(param_9 + 0x2c),
-                        (double)*(float *)(*(int *)(param_7 + 4) + iVar5),
-                        (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(param_9 + 0x44) * 4),
-                        (double)*(float *)(*(int *)(param_7 + 0xc) + iVar5),&local_d8,
-                        (float *)(param_9 + 8),(float *)(param_9 + 0x14),afStack_a8);
+  pfVar4 = ObjHits_CalcTaperedCapsuleNormal(
+      (double)*(float *)(param_9 + 0x2c),(double)*(float *)(*(int *)(param_7 + 4) + iVar5),
+      (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(param_9 + 0x44) * 4),
+      (double)*(float *)(*(int *)(param_7 + 0xc) + iVar5),&local_d8,(float *)(param_9 + 8),
+      (float *)(param_9 + 0x14),afStack_a8);
   FUN_80017784(pfVar4);
   dVar8 = (double)FLOAT_803df590;
   for (iVar5 = param_6; *(int *)(iVar5 + 0x40) != -1; iVar5 = iVar5 + 0x48) {
     iVar2 = *(int *)(iVar5 + 0x40) * 4;
-    pfVar4 = FUN_80031b70(dVar7,(double)*(float *)(iVar5 + 0x2c),
-                          (double)*(float *)(*(int *)(param_7 + 4) + iVar2),
-                          (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(iVar5 + 0x44) * 4),
-                          (double)*(float *)(*(int *)(param_7 + 0xc) + iVar2),&local_d8,
-                          (float *)(iVar5 + 8),(float *)(iVar5 + 0x14),afStack_90);
+    pfVar4 = ObjHits_ProjectPointToTaperedCapsule3D(
+        dVar7,(double)*(float *)(iVar5 + 0x2c),(double)*(float *)(*(int *)(param_7 + 4) + iVar2),
+        (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(iVar5 + 0x44) * 4),
+        (double)*(float *)(*(int *)(param_7 + 0xc) + iVar2),&local_d8,(float *)(iVar5 + 8),
+        (float *)(iVar5 + 0x14),afStack_90);
     if (param_3 <= dVar8) {
       *(float *)(iVar5 + 0x3c) = (float)dVar8;
     }
@@ -793,11 +793,11 @@ void FUN_80031510(undefined8 param_1,undefined8 param_2,double param_3,undefined
     local_68 = local_68 + pfVar4[1];
     local_64 = local_64 + pfVar4[2];
     iVar2 = *(int *)(iVar5 + 0x40) * 4;
-    pfVar4 = FUN_80031e4c((double)*(float *)(iVar5 + 0x2c),
-                          (double)*(float *)(*(int *)(param_7 + 4) + iVar2),
-                          (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(iVar5 + 0x44) * 4),
-                          (double)*(float *)(*(int *)(param_7 + 0xc) + iVar2),pfVar3,
-                          (float *)(iVar5 + 8),(float *)(iVar5 + 0x14),afStack_a8);
+    pfVar4 = ObjHits_CalcTaperedCapsuleNormal(
+        (double)*(float *)(iVar5 + 0x2c),(double)*(float *)(*(int *)(param_7 + 4) + iVar2),
+        (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(iVar5 + 0x44) * 4),
+        (double)*(float *)(*(int *)(param_7 + 0xc) + iVar2),pfVar3,(float *)(iVar5 + 8),
+        (float *)(iVar5 + 0x14),afStack_a8);
     FUN_80017784(pfVar4);
     local_b4 = local_b4 + *pfVar4;
     local_b0 = local_b0 + pfVar4[1];
@@ -832,11 +832,11 @@ void FUN_80031510(undefined8 param_1,undefined8 param_2,double param_3,undefined
   local_94 = FLOAT_803df590;
   for (; *(int *)(param_6 + 0x40) != -1; param_6 = param_6 + 0x48) {
     iVar5 = *(int *)(param_6 + 0x40) * 4;
-    pfVar4 = FUN_80031b70(dVar7,(double)*(float *)(param_6 + 0x2c),
-                          (double)*(float *)(*(int *)(param_7 + 4) + iVar5),
-                          (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(param_6 + 0x44) * 4),
-                          (double)*(float *)(*(int *)(param_7 + 0xc) + iVar5),&local_6c,
-                          (float *)(param_6 + 8),(float *)(param_6 + 0x14),afStack_90);
+    pfVar4 = ObjHits_ProjectPointToTaperedCapsule3D(
+        dVar7,(double)*(float *)(param_6 + 0x2c),(double)*(float *)(*(int *)(param_7 + 4) + iVar5),
+        (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(param_6 + 0x44) * 4),
+        (double)*(float *)(*(int *)(param_7 + 0xc) + iVar5),&local_6c,(float *)(param_6 + 8),
+        (float *)(param_6 + 0x14),afStack_90);
     *pfVar4 = *pfVar4 * *(float *)(param_6 + 0x3c);
     pfVar4[1] = pfVar4[1] * *(float *)(param_6 + 0x3c);
     pfVar4[2] = pfVar4[2] * *(float *)(param_6 + 0x3c);
@@ -854,7 +854,7 @@ void FUN_80031510(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_800318b0
+ * Function: ObjHits_ProjectPointToTaperedCapsuleXZ
  * EN v1.0 Address: 0x800318B0
  * EN v1.0 Size: 704b
  * EN v1.1 Address: 0x8003194C
@@ -864,8 +864,9 @@ void FUN_80031510(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-float * FUN_800318b0(double param_1,double param_2,double param_3,double param_4,double param_5,
-                    float *param_6,float *param_7,float *param_8,float *param_9)
+float *ObjHits_ProjectPointToTaperedCapsuleXZ(double param_1,double param_2,double param_3,
+                                              double param_4,double param_5,float *param_6,
+                                              float *param_7,float *param_8,float *param_9)
 {
   float fVar1;
   float local_78;
@@ -928,7 +929,7 @@ float * FUN_800318b0(double param_1,double param_2,double param_3,double param_4
 /*
  * --INFO--
  *
- * Function: FUN_80031b70
+ * Function: ObjHits_ProjectPointToTaperedCapsule3D
  * EN v1.0 Address: 0x80031B70
  * EN v1.0 Size: 732b
  * EN v1.1 Address: 0x80031C28
@@ -938,8 +939,9 @@ float * FUN_800318b0(double param_1,double param_2,double param_3,double param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-float * FUN_80031b70(double param_1,double param_2,double param_3,double param_4,double param_5,
-                    float *param_6,float *param_7,float *param_8,float *param_9)
+float *ObjHits_ProjectPointToTaperedCapsule3D(double param_1,double param_2,double param_3,
+                                              double param_4,double param_5,float *param_6,
+                                              float *param_7,float *param_8,float *param_9)
 {
   float fVar1;
   float local_78;
@@ -1001,7 +1003,7 @@ float * FUN_80031b70(double param_1,double param_2,double param_3,double param_4
 /*
  * --INFO--
  *
- * Function: FUN_80031e4c
+ * Function: ObjHits_CalcTaperedCapsuleNormal
  * EN v1.0 Address: 0x80031E4C
  * EN v1.0 Size: 540b
  * EN v1.1 Address: 0x80031F24
@@ -1011,8 +1013,9 @@ float * FUN_80031b70(double param_1,double param_2,double param_3,double param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-float * FUN_80031e4c(double param_1,double param_2,double param_3,double param_4,float *param_5,
-                    float *param_6,float *param_7,float *param_8)
+float *ObjHits_CalcTaperedCapsuleNormal(double param_1,double param_2,double param_3,
+                                        double param_4,float *param_5,float *param_6,
+                                        float *param_7,float *param_8)
 {
   float fVar1;
   double dVar2;
