@@ -654,8 +654,8 @@ LAB_8009ba84:
   *(float *)&slot->posX = slot->velocityX * frameStep + *(float *)&slot->posX;
   *(float *)&slot->posY = slot->velocityY * frameStep + *(float *)&slot->posY;
   *(float *)&slot->posZ = slot->velocityZ * frameStep + *(float *)&slot->posZ;
-  if ((slot->behaviorFlags & 0x100000) == 0) {
-    if ((slot->renderFlags & 0x2000) != 0) {
+  if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) == 0) {
+    if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0) {
       slot->scaleCounter =
            (short)(int)-(Expgfx_U16AsDouble((u16)slot->scaleFrames) * frameStep -
                          Expgfx_U16AsDouble((u16)slot->scaleCounter));
@@ -1390,7 +1390,8 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
     if ((int)uVar3 < EXPGFX_POOL_COUNT) {
       (&gExpgfxPoolSourceIds)[uVar3] = (int)spawnConfig->attachedSource;
     }
-    if (((int)uVar3 < EXPGFX_POOL_COUNT) && ((spawnConfig->behaviorFlags & 0x40000U) != 0)) {
+    if (((int)uVar3 < EXPGFX_POOL_COUNT) &&
+        ((spawnConfig->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) != 0)) {
       uVar2 = uVar3 & 1;
       uVar12 = (&DAT_8039c7c8)[uVar2 * 2];
       uVar14 = (&DAT_8039c7cc)[uVar2 * 2];
@@ -1448,7 +1449,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
           slot->sourceVecY = spawnConfig->sourceVecY;
           slot->sourceVecX = spawnConfig->sourceVecX;
         }
-        else if ((slot->behaviorFlags & 0x200000) != 0) {
+        else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_ATTACHED_SOURCE) != 0) {
           slot->sourcePosY = attachedSource->sourcePosYBits;
           slot->sourcePosZ = attachedSource->sourcePosZBits;
           slot->sourcePosW = attachedSource->sourcePosWBits;
@@ -1456,7 +1457,8 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
           slot->sourceVecZ = attachedSource->sourceVecZ;
           slot->sourceVecY = attachedSource->sourceVecY;
           slot->sourceVecX = attachedSource->sourceVecX;
-          if (((slot->behaviorFlags & 2) != 0) || ((slot->behaviorFlags & 4) != 0)) {
+          if (((slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_A) != 0) ||
+              ((slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_B) != 0)) {
             spawnConfig->velocityX = spawnConfig->velocityX + attachedSource->velocityX;
             spawnConfig->velocityY = spawnConfig->velocityY + attachedSource->velocityY;
             dVar19 = (double)spawnConfig->velocityZ;
@@ -1500,8 +1502,8 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
           dVar20 = (double)FLOAT_803dffd0;
           dVar19 = dVar20 * (double)spawnConfig->scale;
           dVar21 = (double)(float)dVar19;
-          if ((slot->behaviorFlags & 0x100000) == 0) {
-            if ((slot->renderFlags & 0x2000) == 0) {
+          if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) == 0) {
+            if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) == 0) {
               local_38 = (double)(longlong)(int)dVar19;
               slot->scaleCounter = (short)(int)dVar19;
               slot->scaleTarget = slot->scaleCounter;
@@ -1531,8 +1533,8 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
             local_40 = (double)(longlong)(int)dVar19;
             slot->scaleTarget = (short)(int)dVar19;
           }
-          if (((slot->behaviorFlags & 0x20000) != 0) ||
-             ((slot->behaviorFlags & 0x4000000) != 0)) {
+          if (((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0) ||
+             ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_B) != 0)) {
             slot->sourcePosY = spawnConfig->sourcePosYBits;
             slot->sourcePosZ = spawnConfig->sourcePosZBits;
             slot->sourcePosW = spawnConfig->sourcePosWBits;
@@ -1542,8 +1544,8 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
             slot->sourceVecX = spawnConfig->sourceVecX;
           }
           slot->stateBits = DAT_803dded2 & 1 | slot->stateBits & 0xfe;
-          if ((slot->renderFlags & 8) != 0) {
-            slot->renderFlags = slot->renderFlags ^ 8;
+          if ((slot->renderFlags & EXPGFX_RENDER_BACKDATE_MOTION) != 0) {
+            slot->renderFlags = slot->renderFlags ^ EXPGFX_RENDER_BACKDATE_MOTION;
             dVar21 = DOUBLE_803dffe0;
             param_4 = (double)FLOAT_803e009c;
             local_38 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame ^ 0x80000000);
@@ -1565,9 +1567,9 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
             slot->velocityY = (float)((double)slot->velocityY * dVar20);
             slot->velocityZ = (float)((double)slot->velocityZ * dVar20);
           }
-          if ((slot->renderFlags & 0x10) != 0) {
+          if ((slot->renderFlags & EXPGFX_RENDER_AIM_AT_ACTOR) != 0) {
             iVar7 = FUN_80017a98();
-            slot->renderFlags = slot->renderFlags ^ 0x10;
+            slot->renderFlags = slot->renderFlags ^ EXPGFX_RENDER_AIM_AT_ACTOR;
             dVar19 = DOUBLE_803dffe0;
             if ((slot->behaviorFlags & 1) == 0) {
               dVar21 = (double)(*(float *)(iVar7 + 0x18) -
@@ -1633,7 +1635,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
           slot->colorByte0 = (char)((uint)spawnConfig->colorByte0Hi >> 8);
           slot->colorByte1 = (char)((uint)spawnConfig->colorByte1Hi >> 8);
           slot->colorByte2 = (char)((uint)spawnConfig->colorByte2Hi >> 8);
-          if ((spawnConfig->renderFlags & 0x20U) != 0) {
+          if ((spawnConfig->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS) != 0) {
             *(char *)((int)puVar18 + 0x1f) = (char)(spawnConfig->overrideColor0 >> 8);
             *(char *)((int)puVar18 + 0x2f) = (char)(spawnConfig->overrideColor1 >> 8);
             *(char *)((int)puVar18 + 0x3f) = (char)(spawnConfig->overrideColor2 >> 8);
@@ -1649,12 +1651,13 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
           puVar18[0x15] = 0;
           puVar18[0x1c] = 0;
           puVar18[0x1d] = 0;
-          if ((slot->renderFlags & 2) != 0) {
+          if ((slot->renderFlags & EXPGFX_RENDER_INIT_QUAD) != 0) {
             expgfx_initSlotQuad(puVar18);
           }
           pbVar11 = &gExpgfxPoolSourceModes + local_56[0];
-          *pbVar11 = (spawnConfig->behaviorFlags & 0x20000000U) != 0;
-          if ((*pbVar11 != 0) && ((spawnConfig->behaviorFlags & 0x40000U) == 0)) {
+          *pbVar11 = (spawnConfig->behaviorFlags & EXPGFX_BEHAVIOR_SOURCE_MODE_FLAG) != 0;
+          if ((*pbVar11 != 0) &&
+              ((spawnConfig->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) == 0)) {
             *pbVar11 = *pbVar11 + 1;
           }
           (&gExpgfxPoolBoundsTemplateIds)[local_56[0]] = param_12;
