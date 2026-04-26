@@ -363,7 +363,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   ObjAnimState *state;
   short sVar1;
   u8 moveChanged;
-  uint uVar2;
+  int uVar2;
   int iVar3;
   int iVar6;
   float clampedProgress;
@@ -416,13 +416,13 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
     iVar6 = (int)animDef->moveData[state->moveCacheSlot];
   }
   state->frameData = (u8 *)(iVar6 + 6);
-  state->frameType = *(u8 *)(iVar6 + 1) & 0xf0;
+  state->frameType = *(s8 *)(iVar6 + 1) & 0xf0;
   state->segmentLength =
        ObjAnim_U32AsDouble((uint)state->frameData[1]) - DOUBLE_803df568;
   if (state->frameType == 0) {
     state->segmentLength = state->segmentLength - FLOAT_803df560;
   }
-  uVar2 = *(u8 *)(iVar6 + 1) & 0xf;
+  uVar2 = *(s8 *)(iVar6 + 1) & 0xf;
   if (uVar2 != 0) {
     state->savedStep = state->step;
     state->eventStep =
