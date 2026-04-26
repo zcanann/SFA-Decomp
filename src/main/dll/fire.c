@@ -165,11 +165,13 @@ void fireObj_hitDetect(void)
 {
 }
 
+#pragma scheduling off
 void fireObj_update(FireObject *obj)
 {
   (*lbl_803DCA54)->refresh(0,obj,0xffffffff);
   return;
 }
+#pragma scheduling reset
 
 #pragma scheduling off
 void fireObj_init(FireObject *obj)
