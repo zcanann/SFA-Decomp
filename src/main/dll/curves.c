@@ -256,7 +256,7 @@ LAB_800e23ec:
 /*
  * --INFO--
  *
- * Function: FUN_800e1eec
+ * Function: curves_distanceToNearestOfType16
  * EN v1.0 Address: 0x800E1EEC
  * EN v1.0 Size: 420b
  * EN v1.1 Address: 0x800E2498
@@ -266,7 +266,7 @@ LAB_800e23ec:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800e1eec(double param_1,double param_2,double param_3,int param_4)
+int curves_distanceToNearestOfType16(double param_1,double param_2,double param_3,int param_4)
 {
   float fVar1;
   float fVar2;

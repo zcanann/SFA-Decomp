@@ -8,7 +8,7 @@ FUN_800e1b24(double param_1,double param_2,double param_3,uint *param_4,float *p
             float *param_6,float *param_7);
 undefined4 FUN_800e1b2c(double param_1,undefined8 param_2,double param_3,int param_4,int param_5);
 void FUN_800e1c00(undefined8 param_1,double param_2,double param_3);
-int FUN_800e1eec(double param_1,double param_2,double param_3,int param_4);
+int curves_distanceToNearestOfType16(double param_1,double param_2,double param_3,int param_4);
 void FUN_800e2090(undefined4 param_1,undefined4 param_2,uint param_3,int *param_4);
 void FUN_800e2590(undefined4 param_1,undefined4 param_2,int param_3,int *param_4);
 int RomCurve_getRandomLinkedOfTypes(int param_1,int param_2,int param_3,int *param_4);
