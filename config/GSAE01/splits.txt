@@ -1463,7 +1463,13 @@ main/proximitymine_init.c:
 	.text       start:0x80211A10 end:0x80211C24
 
 main/unknown/autos/placeholder_80211C24.c:
-	.text       start:0x80211C24 end:0x8024034C
+	.text       start:0x80211C24 end:0x80220130
+
+main/dll/firepipe.c:
+	.text       start:0x80220130 end:0x80220608
+
+main/unknown/autos/placeholder_80220608.c:
+	.text       start:0x80220608 end:0x8024034C
 
 dolphin/base/PPCArch.c:
 	.text       start:0x8024034C end:0x802403D8

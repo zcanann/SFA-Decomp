@@ -1210,6 +1210,8 @@ config.libs = [
             Object(NonMatching, "main/unknown/autos/placeholder_802113F8.c"),
             Object(NonMatching, "main/proximitymine_init.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_80211C24.c"),
+            Object(NonMatching, "main/dll/firepipe.c"),
+            Object(NonMatching, "main/unknown/autos/placeholder_80220608.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8026CBEC.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8026DFE4.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8026E848.c"),
