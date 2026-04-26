@@ -746,9 +746,9 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
         (entry->key0 == key0)) && (entry->key1 == key1)) {
       entry = &gExpgfxTableEntries[tableIndex];
       refCount = entry->refCount;
-      if (refCount >= 0xffff) {
+      if (refCount >= EXPGFX_EXPTAB_REFCOUNT_MAX) {
         fn_801378A8(sExpgfxAddToTableUsageOverflow);
-        return -1;
+        return EXPGFX_INVALID_TABLE_INDEX;
       }
       entry->refCount = refCount + 1;
       return (int)(short)tableIndex;
@@ -772,7 +772,7 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
   }
 
   fn_801378A8(sExpgfxExpTabIsFull);
-  return -1;
+  return EXPGFX_INVALID_TABLE_INDEX;
 }
 #pragma scheduling reset
 
@@ -1697,7 +1697,7 @@ void fn_8009FCDC(void)
   poolFrameFlags = lbl_8030F968;
   poolSourceModes = expgfxBase + EXPGFX_POOL_SOURCE_MODES_OFFSET;
   poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
-  groupIndex = 10;
+  groupIndex = EXPGFX_POOL_GROUP_COUNT;
   do {
     poolActiveMasks[0] = 0;
     poolActiveCounts[0] = 0;
