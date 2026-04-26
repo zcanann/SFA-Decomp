@@ -41,7 +41,8 @@ typedef struct SHthorntailRuntime {
   u8 moveScratch[0x89F - 0x644];
   u8 activeMoveValid;
   u8 pad8A0[0x8AC - 0x8A0];
-  u8 collisionShapeState[0x8E0 - 0x8AC];
+  u8 hitReactScratch[0x8B0 - 0x8AC];
+  u8 collisionShapeState[0x8E0 - 0x8B0];
   Vec renderPathPoints[4];
   float proximityAlertState;
 } SHthorntailRuntime;

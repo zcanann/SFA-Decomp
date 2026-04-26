@@ -154,7 +154,7 @@ void sh_thorntail_update(undefined8 param_1,double param_2,double param_3,undefi
   }
   iVar6 = 0x19;
   uVar7 = (uint)runtime->hitReactState;
-  pfVar8 = (float *)runtime->collisionShapeState;
+  pfVar8 = (float *)runtime->hitReactScratch;
   cVar3 = objHitReact_update((int)psVar2,puVar5,0x19,uVar7,pfVar8);
   runtime->hitReactState = cVar3;
   if (cVar3 == '\0') {
