@@ -243,9 +243,10 @@ void FUN_80030688(undefined8 param_1,double param_2,double param_3,undefined4 pa
             }
             *(undefined *)(*(int *)(iVar9 + 0x18) + uVar13) = 0;
             *(undefined *)(*(int *)(iVar9 + 0x18) + iVar12) = 0;
-            uVar8 = FUN_80032068(dVar20,dVar18,dVar19,
-                                 (double)*(float *)(*(int *)(iVar9 + 0xc) + iVar6),pfVar5,&local_c4,
-                                 &local_dc,&local_d0,&local_e0,&local_e4,&local_e8);
+            uVar8 = ObjHits_TestTaperedCapsuleXZ(dVar20,dVar18,dVar19,
+                                                 (double)*(float *)(*(int *)(iVar9 + 0xc) + iVar6),
+                                                 pfVar5,&local_c4,&local_dc,&local_d0,&local_e0,
+                                                 &local_e4,&local_e8);
             if (uVar8 != 0) {
               *(undefined *)(*(int *)(iVar9 + 0x18) + uVar13) = 1;
               *(undefined *)(*(int *)(iVar9 + 0x18) + iVar12) = 1;
@@ -439,8 +440,8 @@ void FUN_80030c34(undefined4 param_1,undefined4 param_2,int *param_3,int *param_
           local_bc = (local_b0 - local_a4) * local_b4;
           local_b8 = (local_ac - local_a0) * local_b4;
           local_b4 = (local_a8 - local_9c) * local_b4;
-          uVar7 = FUN_800321a8(dVar20,dVar17,dVar18,dVar19,pfVar4,&local_a4,&local_bc,&local_b0,
-                               &local_c0,&local_c4,&local_c8);
+          uVar7 = ObjHits_TestTaperedCapsule3D(dVar20,dVar17,dVar18,dVar19,pfVar4,&local_a4,
+                                               &local_bc,&local_b0,&local_c0,&local_c4,&local_c8);
           if (uVar7 != 0) {
             *(undefined *)(*(int *)(iVar8 + 0x18) + uVar12) = 1;
             *(undefined *)(*(int *)(iVar8 + 0x18) + iVar11) = 1;
@@ -1080,7 +1081,7 @@ float * FUN_80031e4c(double param_1,double param_2,double param_3,double param_4
 /*
  * --INFO--
  *
- * Function: FUN_80032068
+ * Function: ObjHits_TestTaperedCapsuleXZ
  * EN v1.0 Address: 0x80032068
  * EN v1.0 Size: 320b
  * EN v1.1 Address: 0x80032188
@@ -1090,9 +1091,9 @@ float * FUN_80031e4c(double param_1,double param_2,double param_3,double param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80032068(double param_1,double param_2,double param_3,double param_4,float *param_5,
-                 float *param_6,float *param_7,float *param_8,float *param_9,float *param_10,
-                 float *param_11)
+uint ObjHits_TestTaperedCapsuleXZ(double param_1,double param_2,double param_3,double param_4,
+                                  float *param_5,float *param_6,float *param_7,float *param_8,
+                                  float *param_9,float *param_10,float *param_11)
 {
   float fVar1;
   float fVar2;
@@ -1129,7 +1130,7 @@ uint FUN_80032068(double param_1,double param_2,double param_3,double param_4,fl
 /*
  * --INFO--
  *
- * Function: FUN_800321a8
+ * Function: ObjHits_TestTaperedCapsule3D
  * EN v1.0 Address: 0x800321A8
  * EN v1.0 Size: 388b
  * EN v1.1 Address: 0x8003229C
@@ -1139,9 +1140,9 @@ uint FUN_80032068(double param_1,double param_2,double param_3,double param_4,fl
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_800321a8(double param_1,double param_2,double param_3,double param_4,float *param_5,
-                 float *param_6,float *param_7,float *param_8,float *param_9,float *param_10,
-                 float *param_11)
+uint ObjHits_TestTaperedCapsule3D(double param_1,double param_2,double param_3,double param_4,
+                                  float *param_5,float *param_6,float *param_7,float *param_8,
+                                  float *param_9,float *param_10,float *param_11)
 {
   float fVar1;
   float fVar2;
