@@ -41,46 +41,44 @@ void laserObj_hitDetect(void)
 {
 }
 
-void laserObj_update(int param_1)
+void laserObj_update(LaserObject *obj)
 {
-  LaserObject *obj;
   LaserState *state;
   uint uVar1;
   int eventReady;
   int mode;
 
-  obj = (LaserObject *)param_1;
   if ((obj->state->sequenceLatched == '\0') &&
      (uVar1 = GameBit_Get((int)obj->state->secondarySequenceId), uVar1 != 0)) {
-    obj->statusFlags = (u8)(obj->statusFlags & ~LASER_OBJECT_STATUS_08);
+    obj->statusFlags = (u8)(obj->statusFlags & ~LASER_OBJECT_STATUS_DISABLED);
   }
   else {
-    obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_08);
+    obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_DISABLED);
   }
-  fn_80041018(param_1);
-  if ((obj->statusFlags & 1) != 0) {
+  fn_80041018((int)obj);
+  if ((obj->statusFlags & LASER_OBJECT_STATUS_ACTIVE) != 0) {
     mode = (u8)(*lbl_803DCAAC)->getMode((int)obj->modeIndex);
     switch (mode) {
-      case 1:
+      case LASEROBJ_MODE_SEQUENCE_A:
         state = obj->state;
-        eventReady = (*lbl_803DCA68)->isEventReady(0x2e8);
+        eventReady = (*lbl_803DCA68)->isEventReady(LASEROBJ_SEQUENCE_A_EVENT);
         if (eventReady != 0) {
           GameBit_Set((int)state->primarySequenceId,1);
           GameBit_Set((int)state->secondarySequenceId,0);
           state->sequenceLatched = 1;
-          obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_08);
+          obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_DISABLED);
         }
         break;
-      case 2:
+      case LASEROBJ_MODE_SEQUENCE_B:
         state = obj->state;
-        eventReady = (*lbl_803DCA68)->isEventReady(0x83c);
+        eventReady = (*lbl_803DCA68)->isEventReady(LASEROBJ_SEQUENCE_B_EVENT);
         if (eventReady != 0) {
           GameBit_Set((int)state->primarySequenceId,1);
           GameBit_Set((int)state->secondarySequenceId,0);
           state->sequenceLatched = 1;
-          obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_08);
-          (*lbl_803DCAAC)->triggerEvent(7,8);
-          (*lbl_803DCAAC)->triggerEvent(0xd,2);
+          obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_DISABLED);
+          (*lbl_803DCAAC)->triggerEvent(LASEROBJ_SEQUENCE_B_TRIGGER_A,8);
+          (*lbl_803DCAAC)->triggerEvent(LASEROBJ_SEQUENCE_B_TRIGGER_B,2);
         }
         break;
     }
@@ -101,7 +99,7 @@ void laserObj_init(LaserObject *obj,LaserObjectMapData *mapData)
   uVar1 = GameBit_Get((int)state->primarySequenceId);
   if (uVar1 != 0) {
     state->sequenceLatched = 1;
-    obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_08);
+    obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_DISABLED);
   }
   obj->objectFlags = (u16)(obj->objectFlags | 0x6000);
   return;

@@ -28,7 +28,16 @@ typedef struct LaserObject {
   LaserState *state;
 } LaserObject;
 
-#define LASER_OBJECT_STATUS_08 0x08
+#define LASER_OBJECT_STATUS_ACTIVE 0x01
+#define LASER_OBJECT_STATUS_DISABLED 0x08
+
+#define LASEROBJ_MODE_SEQUENCE_A 1
+#define LASEROBJ_MODE_SEQUENCE_B 2
+
+#define LASEROBJ_SEQUENCE_A_EVENT 0x2e8
+#define LASEROBJ_SEQUENCE_B_EVENT 0x83c
+#define LASEROBJ_SEQUENCE_B_TRIGGER_A 7
+#define LASEROBJ_SEQUENCE_B_TRIGGER_B 0xd
 
 int laser_getExtraSizeUnsupported(void);
 int laser_func08(void);
@@ -44,7 +53,7 @@ int laserObj_func08(void);
 void laserObj_free(void);
 void laserObj_render(void);
 void laserObj_hitDetect(void);
-void laserObj_update(int param_1);
+void laserObj_update(LaserObject *obj);
 void laserObj_init(LaserObject *obj,LaserObjectMapData *mapData);
 void laserObj_release(void);
 void laserObj_initialise(void);

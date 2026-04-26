@@ -713,10 +713,10 @@ void FUN_801fe1c4(int param_1)
   state = obj->state;
   if ((state->sequenceLatched == '\0') &&
      (uVar1 = FUN_80017690((int)state->primarySequenceId), uVar1 != 0)) {
-    obj->statusFlags = obj->statusFlags & ~LASER_OBJECT_STATUS_08;
+    obj->statusFlags = obj->statusFlags & ~LASER_OBJECT_STATUS_DISABLED;
   }
   else {
-    obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_08;
+    obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_DISABLED;
   }
   FUN_800400b0();
   if ((obj->statusFlags & 1) != 0) {
@@ -727,7 +727,7 @@ void FUN_801fe1c4(int param_1)
         FUN_80017698((int)state->primarySequenceId,1);
         FUN_80017698((int)state->secondarySequenceId,0);
         state->sequenceLatched = 1;
-        obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_08;
+        obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_DISABLED;
       }
     }
     else if ((bVar3 < 2) && (bVar3 != 0)) {
@@ -736,7 +736,7 @@ void FUN_801fe1c4(int param_1)
         FUN_80017698((int)state->primarySequenceId,1);
         FUN_80017698((int)state->secondarySequenceId,0);
         state->sequenceLatched = 1;
-        obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_08;
+        obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_DISABLED;
       }
     }
   }
@@ -771,7 +771,7 @@ void FUN_801fe324(undefined2 *param_1,int param_2)
   uVar1 = FUN_80017690((int)state->primarySequenceId);
   if (uVar1 != 0) {
     state->sequenceLatched = 1;
-    obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_08;
+    obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_DISABLED;
   }
   obj->objectFlags = obj->objectFlags | 0x6000;
   return;
