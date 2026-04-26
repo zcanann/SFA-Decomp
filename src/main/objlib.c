@@ -2477,7 +2477,7 @@ undefined4 ObjTrigger_IsSet(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80038598
+ * Function: ObjList_FindNearestObjectByDefNo
  * EN v1.0 Address: 0x80038598
  * EN v1.0 Size: 292b
  * EN v1.1 Address: 0x800381D8
@@ -2487,7 +2487,7 @@ undefined4 ObjTrigger_IsSet(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80038598(undefined4 param_1,undefined4 param_2,float *param_3)
+void ObjList_FindNearestObjectByDefNo(undefined4 param_1,undefined4 param_2,float *param_3)
 {
   int iVar1;
   int iVar2;
@@ -2623,7 +2623,7 @@ void ObjPath_GetPointLocalPosition(int param_1,int param_2,undefined4 *param_3,u
 /*
  * --INFO--
  *
- * Function: FUN_800387ec
+ * Function: ObjPath_GetPointLocalMtx
  * EN v1.0 Address: 0x800387EC
  * EN v1.0 Size: 64b
  * EN v1.1 Address: 0x80038428
@@ -2633,7 +2633,7 @@ void ObjPath_GetPointLocalPosition(int param_1,int param_2,undefined4 *param_3,u
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800387ec(int param_1,int param_2,float *param_3)
+void ObjPath_GetPointLocalMtx(int param_1,int param_2,float *param_3)
 {
   int iVar1;
   ushort local_18;
@@ -2660,7 +2660,7 @@ void FUN_800387ec(int param_1,int param_2,float *param_3)
 /*
  * --INFO--
  *
- * Function: FUN_8003882c
+ * Function: ObjPath_GetPointModelMtx
  * EN v1.0 Address: 0x8003882C
  * EN v1.0 Size: 136b
  * EN v1.1 Address: 0x80038498
@@ -2670,7 +2670,7 @@ void FUN_800387ec(int param_1,int param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003882c(int param_1,int param_2)
+void ObjPath_GetPointModelMtx(int param_1,int param_2)
 {
   int *piVar1;
   int iVar2;

@@ -60,7 +60,7 @@ extern undefined8 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
 extern undefined4 ObjPath_GetPointWorldPositionArray();
 extern undefined4 ObjPath_GetPointLocalPosition();
-extern undefined4 FUN_8003882c();
+extern undefined4 ObjPath_GetPointModelMtx();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_80038f38();
 extern undefined4 FUN_80039468();

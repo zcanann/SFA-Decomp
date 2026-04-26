@@ -112,7 +112,7 @@ extern int FUN_80037d50();
 extern undefined8 ObjLink_DetachChild();
 extern undefined8 ObjLink_AttachChild();
 extern undefined4 ObjPath_GetPointWorldPositionArray();
-extern uint FUN_8003882c();
+extern uint ObjPath_GetPointModelMtx();
 extern undefined8 ObjPath_GetPointWorldPosition();
 extern int Obj_GetYawDeltaToObject();
 extern undefined4 FUN_80038bac();

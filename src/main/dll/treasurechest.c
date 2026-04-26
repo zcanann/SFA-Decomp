@@ -7,7 +7,7 @@ extern undefined4 FUN_80017788();
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
 extern int ObjContact_AddCallback();
-extern int FUN_80038598();
+extern int ObjList_FindNearestObjectByDefNo();
 extern int FUN_800620e8();
 extern undefined4 FUN_80081120();
 extern undefined4 FUN_8016793c();
@@ -117,7 +117,7 @@ void FUN_8016702c(void)
   local_90 = FLOAT_803e3ccc;
   if ((*piVar6 == 0) && (*(undefined *)(piVar6 + 0x24) = 6, *(byte *)((int)piVar6 + 0x92) >> 4 != 0)
      ) {
-    iVar4 = FUN_80038598(piVar2,0x4ad,&local_90);
+    iVar4 = ObjList_FindNearestObjectByDefNo(piVar2,0x4ad,&local_90);
     *piVar6 = iVar4;
     if (iVar4 != 0) {
       (**(code **)(**(int **)(*piVar6 + 0x68) + 0x20))(*piVar6,piVar6 + 0x12,(int)piVar6 + 0x91);

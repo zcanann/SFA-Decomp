@@ -24,7 +24,7 @@ extern undefined4 ObjHits_EnableObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjMsg_SendToObjects();
-extern uint FUN_8003882c();
+extern uint ObjPath_GetPointModelMtx();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8006fb00();
 extern undefined4 FUN_8014d3d0();
@@ -1665,7 +1665,7 @@ void FUN_8015de40(short *param_1,int param_2)
   uint uStack_24;
   
   iVar3 = *(int *)(param_2 + 0x40c);
-  uVar2 = FUN_8003882c((int)param_1,1);
+  uVar2 = ObjPath_GetPointModelMtx((int)param_1,1);
   FUN_80003494((uint)afStack_74,uVar2,0x40);
   local_3c = FLOAT_803e39ac;
   local_40 = FLOAT_803e39ac;

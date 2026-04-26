@@ -20,7 +20,7 @@ extern int ObjHits_GetPriorityHitWithPosition();
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern undefined4 FUN_8003882c();
+extern undefined4 ObjPath_GetPointModelMtx();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8004036c();
@@ -479,7 +479,7 @@ void FUN_801ef200(int param_1)
 {
   undefined4 uVar1;
   
-  uVar1 = FUN_8003882c(param_1,3);
+  uVar1 = ObjPath_GetPointModelMtx(param_1,3);
   FUN_8004036c(uVar1);
   return;
 }

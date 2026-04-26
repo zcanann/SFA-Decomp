@@ -78,13 +78,13 @@ void ObjContact_RemoveObjectCallbacks(int param_1);
 undefined4 ObjContact_AddCallback(int param_1,int param_2,undefined4 param_3);
 undefined4 ObjTrigger_IsSetById(int param_1,short param_2);
 undefined4 ObjTrigger_IsSet(int param_1);
-void FUN_80038598(undefined4 param_1,undefined4 param_2,float *param_3);
+void ObjList_FindNearestObjectByDefNo(undefined4 param_1,undefined4 param_2,float *param_3);
 undefined4 ObjList_ContainsObject(int param_1);
 void ObjPath_GetPointWorldPositionArray(undefined4 param_1,undefined4 param_2,int param_3,float *param_4);
 void ObjPath_GetPointLocalPosition(int param_1,int param_2,undefined4 *param_3,undefined4 *param_4,
                  undefined4 *param_5);
-void FUN_800387ec(int param_1,int param_2,float *param_3);
-void FUN_8003882c(int param_1,int param_2);
+void ObjPath_GetPointLocalMtx(int param_1,int param_2,float *param_3);
+void ObjPath_GetPointModelMtx(int param_1,int param_2);
 void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *param_3,undefined4 *param_4,
                  float *param_5,int param_6);
 int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3);

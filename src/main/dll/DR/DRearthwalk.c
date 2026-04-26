@@ -17,8 +17,8 @@ extern undefined4 FUN_800305c4();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
-extern undefined4 FUN_800387ec();
-extern undefined4 FUN_8003882c();
+extern undefined4 ObjPath_GetPointLocalMtx();
+extern undefined4 ObjPath_GetPointModelMtx();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8004036c();
@@ -187,17 +187,17 @@ void FUN_801d9cc4(void)
   if (in_r8 != '\0') {
     if (*pcVar10 == '\x03') {
       FUN_80017a50(puVar5,afStack_b0,'\0');
-      pfVar7 = (float *)FUN_8003882c(iVar6,0);
+      pfVar7 = (float *)ObjPath_GetPointModelMtx(iVar6,0);
       FUN_80247734(pfVar7,afStack_e0);
       FUN_80247618(afStack_e0,afStack_b0,(float *)(pcVar10 + 8));
       *pcVar10 = '\x05';
     }
     if (*pcVar10 == '\x04') {
-      FUN_800387ec(iVar6,0,(float *)(pcVar10 + 8));
+      ObjPath_GetPointLocalMtx(iVar6,0,(float *)(pcVar10 + 8));
       *pcVar10 = '\x05';
     }
     if (*pcVar10 == '\x05') {
-      pfVar7 = (float *)FUN_8003882c(iVar6,0);
+      pfVar7 = (float *)ObjPath_GetPointModelMtx(iVar6,0);
       FUN_80247618(pfVar7,(float *)(pcVar10 + 8),afStack_b0);
       FUN_8004036c(afStack_b0);
       FUN_80040a88((int)puVar5);

@@ -31,7 +31,7 @@ extern int FUN_80017a98();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
 extern undefined4 ObjMsg_SendToObject();
-extern uint FUN_8003882c();
+extern uint ObjPath_GetPointModelMtx();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_80053c98();
 extern undefined4 FUN_80080f70();
@@ -305,7 +305,7 @@ void FUN_801bb848(void)
     } while (iVar6 < 0xf);
   }
   if ((DAT_803de800 & 0x10) != 0) {
-    uVar5 = FUN_8003882c(iVar3,0xb);
+    uVar5 = ObjPath_GetPointModelMtx(iVar3,0xb);
     FUN_80003494((uint)afStack_b4,uVar5,0x30);
     local_a8 = FLOAT_803e5870;
     local_98 = FLOAT_803e5870;
@@ -352,7 +352,7 @@ void FUN_801bb848(void)
   *(undefined2 *)((int)piVar7 + 0x4e) = 0;
   *(undefined2 *)(piVar7 + 0x13) = 0;
   ObjPath_GetPointWorldPosition(iVar3,0xc,(float *)(piVar7 + 0x16),piVar7 + 0x17,(float *)(piVar7 + 0x18),1);
-  uVar5 = FUN_8003882c(iVar3,0);
+  uVar5 = ObjPath_GetPointModelMtx(iVar3,0);
   FUN_80003494((uint)(piVar7 + 0x19),uVar5,0x30);
   fVar1 = FLOAT_803e5870;
   piVar7[0x1c] = (int)FLOAT_803e5870;
