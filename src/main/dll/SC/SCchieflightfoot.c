@@ -9,7 +9,7 @@ extern undefined4 FUN_80006824();
 extern double FUN_80017708();
 extern int FUN_80017730();
 extern uint FUN_80017760();
-extern undefined4 fn_800221A0();
+extern uint fn_800221A0(int min,int max);
 extern undefined4 fn_8002B588();
 extern undefined4 fn_8002B9EC();
 extern undefined4 fn_8002CEC0();
@@ -46,15 +46,14 @@ extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd728;
 extern undefined4* DAT_803dd72c;
 extern undefined4* lbl_803DCAA8;
+extern f32 lbl_803DB414;
 extern f64 lbl_803E5428;
 extern f64 lbl_803E5440;
+extern f32 lbl_803E5418;
+extern f32 lbl_803E5448;
+extern f32 lbl_803E544C;
+extern f32 lbl_803E5450;
 extern f32 lbl_803E545C;
-extern f64 DOUBLE_803e60c0;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e60b0;
-extern f32 FLOAT_803e60e0;
-extern f32 FLOAT_803e60e4;
-extern f32 FLOAT_803e60e8;
 extern f32 lbl_803E5460;
 extern f32 lbl_803E5464;
 extern f32 lbl_803E5468;
@@ -133,17 +132,17 @@ void sh_thorntail_update(undefined8 param_1,double param_2,double param_3,undefi
   iVar9 = (int)config;
   dVar11 = extraout_f1;
   if (runtime->behaviorState == '\f') {
-    if (runtime->effectTimer <= FLOAT_803e60b0) {
+    if (runtime->effectTimer <= lbl_803E5418) {
       if ((psVar2[0x58] & 0x800U) != 0) {
         FUN_800388b4(psVar2,4,&fStack_6c,&uStack_68,&fStack_64,0);
         in_r8 = 0;
         in_r9 = *DAT_803dd708;
         (**(code **)(in_r9 + 8))(psVar2,0x7f0,auStack_78,0x200001,0xffffffff);
       }
-      runtime->effectTimer = FLOAT_803e60e8;
+      runtime->effectTimer = lbl_803E5450;
     }
     dVar11 = (double)runtime->effectTimer;
-    runtime->effectTimer = (float)(dVar11 - (double)FLOAT_803dc074);
+    runtime->effectTimer = (float)(dVar11 - (double)lbl_803DB414);
   }
   runtime->behaviorFlags = runtime->behaviorFlags & 0xf7;
   if (((&DAT_80327fc8)[runtime->behaviorState] & 2) == 0) {
@@ -193,13 +192,13 @@ void sh_thorntail_update(undefined8 param_1,double param_2,double param_3,undefi
       }
     }
     if ((int)psVar2[0x50] != (int)*(short *)(&DAT_80327f60 + runtime->behaviorState * 2)) {
-      FUN_800305f8((double)FLOAT_803e60b0,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+      FUN_800305f8((double)lbl_803E5418,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                    psVar2,(int)*(short *)(&DAT_80327f60 + runtime->behaviorState * 2),0,uVar7,
                    pfVar8,in_r8,in_r9,in_r10);
       runtime->storedFacingAngle = *psVar2;
     }
     iVar6 = FUN_8002fc3c((double)*(float *)(&DAT_80327f84 + runtime->behaviorState * 4),
-                         (double)FLOAT_803dc074);
+                         (double)lbl_803DB414);
     if (iVar6 == 0) {
       runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_MOVE_COMPLETE;
     }
@@ -239,7 +238,7 @@ void sh_thorntail_update(undefined8 param_1,double param_2,double param_3,undefi
       }
       pfVar8 = (float *)((int)pfVar8 + 1);
     }
-    FUN_8006ef38((double)FLOAT_803e60e0,(double)FLOAT_803e60e0,psVar2,local_60,8,
+    FUN_8006ef38((double)lbl_803E5448,(double)lbl_803E5448,psVar2,local_60,8,
                  (int)runtime->renderPathPoints,(int)runtime->moveScratch);
     if (((&DAT_80327fc8)[runtime->behaviorState] & 4) == 0) {
       runtime->movementControlFlags = runtime->movementControlFlags | 1;
@@ -265,7 +264,7 @@ void sh_thorntail_update(undefined8 param_1,double param_2,double param_3,undefi
       dVar11 = FUN_80017708((float *)(psVar2 + 0xc),(float *)&config->homePos);
       uStack_34 = (uint)config->leashRadiusByte * (uint)config->leashRadiusByte ^ 0x80000000;
       local_38 = 0x43300000;
-      if (((double)(float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e60c0) < dVar11) &&
+      if (((double)(float)((double)CONCAT44(0x43300000,uStack_34) - lbl_803E5428) < dVar11) &&
          (iVar9 = FUN_800575b4((double)(*(float *)(psVar2 + 0x54) * *(float *)(psVar2 + 4)),
                                (float *)(psVar2 + 6)), iVar9 == 0)) {
         iVar9 = FUN_80017730();
@@ -275,10 +274,10 @@ void sh_thorntail_update(undefined8 param_1,double param_2,double param_3,undefi
     runtime->activeMoveValid = 1;
     if (gSHthorntailActiveConfigToken == SHTHORNTAIL_CONFIG_TOKEN_NONE) {
       gSHthorntailActiveConfigToken = config->configToken;
-      *(float *)(psVar2 + 0x14) = -(FLOAT_803e60e4 * FLOAT_803dc074 - *(float *)(psVar2 + 0x14));
-      (**(code **)(*DAT_803dd728 + 0x10))((double)FLOAT_803dc074,psVar2,(int)runtime->moveScratch);
+      *(float *)(psVar2 + 0x14) = -(lbl_803E544C * lbl_803DB414 - *(float *)(psVar2 + 0x14));
+      (**(code **)(*DAT_803dd728 + 0x10))((double)lbl_803DB414,psVar2,(int)runtime->moveScratch);
       (**(code **)(*DAT_803dd728 + 0x14))(psVar2,(int)runtime->moveScratch);
-      (**(code **)(*DAT_803dd728 + 0x18))((double)FLOAT_803dc074,psVar2,(int)runtime->moveScratch);
+      (**(code **)(*DAT_803dd728 + 0x18))((double)lbl_803DB414,psVar2,(int)runtime->moveScratch);
       psVar2[1] = *(short *)(iVar10 + 0x7dc);
       psVar2[2] = *(short *)(iVar10 + 0x7de);
     }
@@ -290,10 +289,10 @@ void sh_thorntail_update(undefined8 param_1,double param_2,double param_3,undefi
         (**(code **)(*DAT_803dd728 + 0x20))(psVar2,(int)runtime->moveScratch);
       }
       else {
-        *(float *)(psVar2 + 0x14) = -(FLOAT_803e60e4 * FLOAT_803dc074 - *(float *)(psVar2 + 0x14));
-        (**(code **)(*DAT_803dd728 + 0x10))((double)FLOAT_803dc074,psVar2,(int)runtime->moveScratch);
+        *(float *)(psVar2 + 0x14) = -(lbl_803E544C * lbl_803DB414 - *(float *)(psVar2 + 0x14));
+        (**(code **)(*DAT_803dd728 + 0x10))((double)lbl_803DB414,psVar2,(int)runtime->moveScratch);
         (**(code **)(*DAT_803dd728 + 0x14))(psVar2,(int)runtime->moveScratch);
-        (**(code **)(*DAT_803dd728 + 0x18))((double)FLOAT_803dc074,psVar2,(int)runtime->moveScratch);
+        (**(code **)(*DAT_803dd728 + 0x18))((double)lbl_803DB414,psVar2,(int)runtime->moveScratch);
         psVar2[1] = *(short *)(iVar10 + 0x7dc);
         psVar2[2] = *(short *)(iVar10 + 0x7de);
       }
@@ -330,14 +329,14 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
   *(short *)obj = (ushort)config->initialFacingByte << 8;
   if (config->controlMode == SHTHORNTAIL_CONTROL_MODE_ROOT_2) {
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-    randomTime = FUN_80017760(1000,2000);
+    randomTime = fn_800221A0(1000,2000);
     runtime->idleTimer =
         (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
   }
   else if (config->controlMode < SHTHORNTAIL_CONTROL_MODE_ROOT_2) {
     if (config->controlMode == SHTHORNTAIL_CONTROL_MODE_LEVEL_0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      randomTime = FUN_80017760(1000,2000);
+      randomTime = fn_800221A0(1000,2000);
       runtime->idleTimer =
           (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
     }
@@ -348,7 +347,7 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
   }
   else if (config->controlMode < 4) {
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-    randomTime = FUN_80017760(1000,2000);
+    randomTime = fn_800221A0(1000,2000);
     runtime->idleTimer =
         (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
   }
@@ -455,6 +454,6 @@ void SHthorntail_updateDustEffects(SHthorntailObject *obj)
         (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
       }
     }
-    runtime->dustEffectTimer = runtime->dustEffectTimer + FLOAT_803dc074;
+    runtime->dustEffectTimer = runtime->dustEffectTimer + lbl_803DB414;
   }
 }

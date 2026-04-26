@@ -291,7 +291,10 @@ int sh_thorntail_getExtraSize(void)
  */
 void sh_thorntail_free(SHthorntailObject *obj)
 {
-  if (lbl_803DBFF8 == obj->config->configToken) {
+  u32 activeConfigToken;
+
+  activeConfigToken = (u32)lbl_803DBFF8;
+  if (activeConfigToken == (u32)obj->config->configToken) {
     lbl_803DBFF8 = SHTHORNTAIL_CONFIG_TOKEN_NONE;
   }
   fn_80036FA4((int)obj,0x4d);
