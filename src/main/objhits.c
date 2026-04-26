@@ -2548,7 +2548,7 @@ LAB_800344f4:
 /*
  * --INFO--
  *
- * Function: fn_8003454C
+ * Function: ObjHits_CheckSkeletonPair
  * EN v1.0 Address: 0x800344B0
  * EN v1.0 Size: 1120b
  * EN v1.1 Address: 0x8003454C
@@ -2558,8 +2558,8 @@ LAB_800344f4:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-static void objhits_FUN_8003454c_inner(undefined4 param_1, undefined4 param_2, int *param_3,
-                                       int recursionDepth) {
+static void ObjHits_CheckSkeletonPairInner(undefined4 param_1, undefined4 param_2, int *param_3,
+                                           int recursionDepth) {
   byte bVar1;
   float fVar2;
   float fVar3;
@@ -2604,7 +2604,7 @@ static void objhits_FUN_8003454c_inner(undefined4 param_1, undefined4 param_2, i
     if ((bVar1 & 1) == 0) {
       if ((bVar1 & 2) == 0) {
         if (((bVar1 & 0x20) != 0) && (recursionDepth < 1)) {
-          objhits_FUN_8003454c_inner(iVar7, iVar5, param_3, recursionDepth + 1);
+          ObjHits_CheckSkeletonPairInner(iVar7, iVar5, param_3, recursionDepth + 1);
         }
       } else {
         local_60 = *(float *)(iVar7 + 0x18) - FLOAT_803dda58;
@@ -2701,9 +2701,9 @@ static void objhits_FUN_8003454c_inner(undefined4 param_1, undefined4 param_2, i
   FUN_8028688c();
 }
 
-void fn_8003454C(undefined4 param_1,undefined4 param_2,int *param_3)
+void ObjHits_CheckSkeletonPair(undefined4 param_1,undefined4 param_2,int *param_3)
 {
-  objhits_FUN_8003454c_inner(param_1, param_2, param_3, 0);
+  ObjHits_CheckSkeletonPairInner(param_1, param_2, param_3, 0);
 }
 
 /*
@@ -3077,10 +3077,10 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
                     ObjHits_DetectObjectPair();
                   }
                 } else {
-                  fn_8003454C(obj, candidateObj, aiStack_e58);
+                  ObjHits_CheckSkeletonPair(obj, candidateObj, aiStack_e58);
                 }
               } else {
-                fn_8003454C(candidateObj, obj, aiStack_e58);
+                ObjHits_CheckSkeletonPair(candidateObj, obj, aiStack_e58);
               }
             }
             if (dVar17 < (double)(*(float *)(objState + 0x34) + *(float *)(attachedState + 0x34))) {
