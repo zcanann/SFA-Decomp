@@ -559,7 +559,7 @@ void FUN_8017fd40(undefined8 param_1,double param_2,double param_3,undefined8 pa
              *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) | 1;
       }
       ObjAnim_AdvanceCurrentMove((double)(float)piVar8[2],(double)FLOAT_803dc074,(int)param_9,
-                                 (float *)0x0);
+                                 (ObjAnimEventList *)0x0);
     }
     else {
       iVar7 = FUN_800368c4((int)param_9,&uStack_40,&iStack_48,&uStack_44,&local_30,&uStack_2c,
@@ -992,7 +992,8 @@ void FUN_80180a0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
     }
     if ((*(short *)(pfVar10 + 2) == 0) && (*(short *)((int)pfVar10 + 10) == 0)) {
       dVar13 = (double)FLOAT_803dc074;
-      iVar9 = ObjAnim_AdvanceCurrentMove((double)*pfVar10,dVar13,(int)puVar2,(float *)0x0);
+      iVar9 = ObjAnim_AdvanceCurrentMove((double)*pfVar10,dVar13,(int)puVar2,
+                                         (ObjAnimEventList *)0x0);
       if ((iVar9 == 0) && (*(char *)((int)pfVar10 + 0x1a) == '\0')) {
         *(float *)(puVar2 + 6) = *(float *)(puVar2 + 0x12) * FLOAT_803dc074 + *(float *)(puVar2 + 6)
         ;
@@ -1367,7 +1368,7 @@ LAB_80181668:
     }
   }
   ObjAnim_AdvanceCurrentMove((double)pfVar12[0x46],(double)FLOAT_803dc074,(int)puVar1,
-                             (float *)0x0);
+                             (ObjAnimEventList *)0x0);
   pfVar12[0x43] = pfVar12[0x43] + FLOAT_803dc074;
 LAB_80181980:
   FUN_80286884();

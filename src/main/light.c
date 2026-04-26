@@ -680,7 +680,7 @@ void FUN_801fc75c(undefined8 param_1,undefined8 param_2,double param_3,undefined
   }
   if (*(char *)(psVar3 + 1) < '\0') {
     dVar4 = (double)FLOAT_803dc074;
-    ObjAnim_AdvanceCurrentMove((double)FLOAT_803e6db0,dVar4,param_9,(float *)0x0);
+    ObjAnim_AdvanceCurrentMove((double)FLOAT_803e6db0,dVar4,param_9,(ObjAnimEventList *)0x0);
     if ((*(byte *)(psVar3 + 1) >> 6 & 1) == 0) {
       if (FLOAT_803e6db4 <= *(float *)(param_9 + 0x98)) {
         FUN_80247eb8((float *)(puVar1 + 6),(float *)(param_9 + 0xc),afStack_28);

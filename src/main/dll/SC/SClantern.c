@@ -1,9 +1,10 @@
 #include "main/dll/SC/SClantern.h"
+#include "main/objanim_internal.h"
 
 extern undefined4 fn_8000BAE0();
 extern undefined4 fn_8000BB18();
 extern undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnim,
-                                             float *events);
+                                             ObjAnimEventList *events);
 extern undefined4 fn_8003842C();
 extern undefined4 fn_80296554();
 extern undefined4 FUN_8028683c();
@@ -44,7 +45,7 @@ void SHthorntail_init(void)
   lbl_803AD048[0x1b] = 0;
   lbl_803AD048[0x12] = 0;
   advanceResult = ObjAnim_AdvanceCurrentMove((double)FLOAT_803db414,(double)FLOAT_803db414,(int)obj,
-                                             (float *)lbl_803AD048);
+                                             (ObjAnimEventList *)lbl_803AD048);
   if (lbl_803AD048[0x12] != 0) {
     *obj = *obj + *(short *)(lbl_803AD048 + 0xe);
   }

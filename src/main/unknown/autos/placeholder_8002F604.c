@@ -223,7 +223,8 @@ undefined4 ObjAnim_SampleRootCurvePhase(double param_1,int param_2,float *param_
  * PAL Size: TODO
  */
 #pragma scheduling off
-undefined4 ObjAnim_AdvanceCurrentMove(double param_1,double param_2,int iVar19,float *pfVar20)
+undefined4 ObjAnim_AdvanceCurrentMove(double param_1,double param_2,int iVar19,
+                                      ObjAnimEventList *events)
 {
   double dVar1;
   char cVar2;
@@ -258,7 +259,9 @@ undefined4 ObjAnim_AdvanceCurrentMove(double param_1,double param_2,int iVar19,f
   undefined8 local_38;
   undefined8 local_30;
   undefined8 local_20;
+  float *pfVar20;
 
+  pfVar20 = (float *)events;
   dVar31 = (double)FLOAT_803df58c;
   uVar18 = 0;
   if ((dVar31 <= param_1) && (dVar31 = param_1, (double)FLOAT_803df560 < param_1)) {

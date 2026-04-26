@@ -214,7 +214,8 @@ void FUN_801f0cf0(int param_1)
     FUN_80006ba8(0,0x100);
     FUN_80017698(0x9ad,1);
   }
-  ObjAnim_AdvanceCurrentMove((double)FLOAT_803e699c,(double)FLOAT_803dc074,param_1,(float *)0x0);
+  ObjAnim_AdvanceCurrentMove((double)FLOAT_803e699c,(double)FLOAT_803dc074,param_1,
+                             (ObjAnimEventList *)0x0);
   return;
 }
 
@@ -868,7 +869,7 @@ void FUN_801f1ac0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     local_18 = 0x43300000;
     ObjAnim_AdvanceCurrentMove((double)FLOAT_803e6a34,
                                (double)(float)((double)CONCAT44(0x43300000,uStack_14) -
-                                               DOUBLE_803e6a38),param_9,(float *)0x0);
+                                               DOUBLE_803e6a38),param_9,(ObjAnimEventList *)0x0);
   }
   else {
     if (*(short *)(param_9 + 0xa0) != 2) {
@@ -878,7 +879,7 @@ void FUN_801f1ac0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     local_18 = 0x43300000;
     ObjAnim_AdvanceCurrentMove((double)FLOAT_803e6a34,
                                (double)(float)((double)CONCAT44(0x43300000,uStack_14) -
-                                               DOUBLE_803e6a38),param_9,(float *)0x0);
+                                               DOUBLE_803e6a38),param_9,(ObjAnimEventList *)0x0);
   }
   if (((*(byte *)(param_9 + 0xaf) & 1) == 0) || (uVar1 = FUN_80017690(0x2fb), uVar1 != 0)) {
     if (((*(byte *)(param_9 + 0xaf) & 1) != 0) &&
@@ -996,7 +997,8 @@ void FUN_801f1d3c(undefined8 param_1,undefined8 param_2,double param_3,undefined
       }
       else if (uVar3 == 0xd) {
         dVar7 = (double)FLOAT_803dc074;
-        iVar4 = ObjAnim_AdvanceCurrentMove((double)pfVar5[3],dVar7,(int)param_9,(float *)0x0);
+        iVar4 = ObjAnim_AdvanceCurrentMove((double)pfVar5[3],dVar7,(int)param_9,
+                                           (ObjAnimEventList *)0x0);
         if (iVar4 != 0) {
           local_50 = (double)CONCAT44(0x43300000,(int)param_9[0x50] ^ 0x80000000);
           iVar4 = (uint)*(byte *)((int)pfVar5 + 0x23) * 0x14;
@@ -1055,7 +1057,7 @@ void FUN_801f1d3c(undefined8 param_1,undefined8 param_2,double param_3,undefined
         *(float *)(param_9 + 10) =
              *(float *)(param_9 + 0x16) * FLOAT_803dc074 + *(float *)(param_9 + 10);
         ObjAnim_AdvanceCurrentMove((double)pfVar5[3],(double)FLOAT_803dc074,(int)param_9,
-                                   (float *)0x0);
+                                   (ObjAnimEventList *)0x0);
       }
     }
   }
@@ -1100,7 +1102,7 @@ void FUN_801f23c0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   ObjAnim_AdvanceCurrentMove((double)FLOAT_803e6a34,
                              (double)(float)((double)CONCAT44(0x43300000,(uint)DAT_803dc070) -
-                                             DOUBLE_803e6a38),param_9,(float *)0x0);
+                                             DOUBLE_803e6a38),param_9,(ObjAnimEventList *)0x0);
   *(undefined *)(iVar3 + 0x24) = 1;
   if (*(char *)(iVar3 + 0x24) == '\0') {
     if ((*(byte *)(param_9 + 0xaf) & 1) != 0) {
