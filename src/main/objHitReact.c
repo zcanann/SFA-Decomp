@@ -74,11 +74,11 @@ int objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,fl
   ObjHitReactEffectHandle *effectHandle;
   bool volumeActive;
   ObjHitReactEntry *reactEntry;
-  undefined4 effectOrigin[4];
-  ObjHitReactEffectPos effectPos;
-  float local_28;
-  undefined local_24[4];
   float hitNormalY;
+  undefined local_24[4];
+  float local_28;
+  ObjHitReactEffectPos effectPos;
+  undefined4 effectOrigin[4];
   int sphereIndex;
 
   objAnim = (ObjAnimComponent *)obj;
@@ -100,10 +100,10 @@ int objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,fl
     animDef = ObjAnim_GetAnimDef(objAnim);
     local_28 = local_28 + lbl_803DCDD8;
     hitNormalY = hitNormalY + lbl_803DCDDC;
+    effectPos.scale = lbl_803DE918;
     effectPos.x = 0;
     effectPos.y = 0;
     effectPos.z = 0;
-    effectPos.scale = lbl_803DE918;
     sphereIndex = ObjAnim_GetHitReactEntryIndex(animDef,sphereIndex);
     if ((int)(entryCount & 0xff) <= sphereIndex) {
       OSReport(sObjHitReactSphereOverflowString);
