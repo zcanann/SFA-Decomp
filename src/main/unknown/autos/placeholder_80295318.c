@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/DB/DBbonedust.h"
+#include "main/objanim.h"
 #include "main/unknown/autos/placeholder_80295318.h"
 
 extern undefined4 FUN_80003494();
@@ -87,10 +88,6 @@ extern undefined4 fn_8002EE10();
 extern undefined4 fn_8002EE64();
 extern undefined4 fn_8002EEB8();
 extern undefined4 fn_8002F304();
-extern undefined4 Object_ObjAnimSetMove();
-extern short ObjAnim_GetPrimaryEventCountdown();
-extern undefined4 ObjAnim_WriteStateWord();
-extern undefined4 ObjAnim_SetPrimaryEventStepFrames();
 extern int FUN_8002f6ac();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305c4();

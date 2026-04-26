@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/ARW/ARWarwingattachment.h"
-#include "main/unknown/autos/placeholder_8002F604.h"
+#include "main/objanim.h"
 
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006820();

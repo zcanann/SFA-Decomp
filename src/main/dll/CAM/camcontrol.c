@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "dolphin/os.h"
 #include "main/dll/CAM/camcontrol.h"
-#include "main/unknown/autos/placeholder_8002F604.h"
+#include "main/objanim.h"
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006824();

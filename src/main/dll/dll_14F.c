@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_14F.h"
-#include "main/unknown/autos/placeholder_8002F604.h"
+#include "main/objanim.h"
 
 extern bool FUN_800067f0();
 extern bool FUN_800067f8();

@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_13B.h"
+#include "main/objanim.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b14();
@@ -15,7 +16,6 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8008112c();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
-extern undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnim,int moveId,u32 flags);
 extern void fn_8003B8F4(double scale);
 
 extern undefined4* DAT_803dd708;

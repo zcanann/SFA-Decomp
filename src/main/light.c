@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 #include "main/light.h"
-#include "main/unknown/autos/placeholder_8002F604.h"
+#include "main/objanim.h"
 
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();

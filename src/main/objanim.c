@@ -2,7 +2,6 @@
 #include "dolphin/os.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
-#include "main/unknown/autos/placeholder_8002F604.h"
 
 extern undefined4 FUN_800723a0();
 extern void fn_80024E7C(int animId,int moveIndex,undefined4 cache,ObjAnimDef *animDef);

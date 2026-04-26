@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/df_partfx.h"
 #include "main/objanim.h"
-#include "main/unknown/autos/placeholder_8002F604.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006950();

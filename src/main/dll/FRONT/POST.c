@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/FRONT/POST.h"
+#include "main/objanim.h"
 
-extern undefined4 ObjAnim_SetPrimaryEventStepFrames();
 extern undefined4 FUN_800305f8();
 extern int FUN_80038a34();
 extern undefined4 FUN_80038bb0();

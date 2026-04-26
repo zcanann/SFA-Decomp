@@ -1,10 +1,9 @@
 #include "main/dll/SC/SClantern.h"
+#include "main/objanim.h"
 #include "main/objanim_internal.h"
 
 extern undefined4 fn_8000BAE0();
 extern undefined4 fn_8000BB18();
-extern undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnim,
-                                             ObjAnimEventList *events);
 extern undefined4 fn_8003842C();
 extern undefined4 fn_80296554();
 extern undefined4 FUN_8028683c();

@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "dolphin/os.h"
 #include "main/objHitReact.h"
+#include "main/objanim.h"
 #include "main/objanim_internal.h"
 
 extern int fn_8000B5D0(int obj,u16 volumeId);
@@ -10,9 +11,6 @@ extern int *fn_8002E0FC(undefined *param_1,undefined *param_2);
 extern int fn_80036770(int obj,undefined4 *param_2,int *sphereIndex,uint *param_4,float *hitPos,
                        undefined *param_6,float *param_7);
 extern void fn_8009A1DC(double param_1,int obj,undefined2 *pos,u32 count,int *param_5);
-extern int ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnim,
-                                      ObjAnimEventList *events);
-extern undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnim,int moveId,u32 flags);
 
 extern undefined4 lbl_802C1B00[4];
 extern char sObjHitReactHitstateFrameString[];

@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/objanim.h"
 #include "main/unknown/autos/placeholder_80209FE0.h"
 
 extern undefined4 ABS();
@@ -140,7 +141,6 @@ extern uint FUN_80017ae8();
 extern int FUN_80017af8();
 extern int FUN_80017b00();
 extern undefined4 fn_8002EE64();
-extern undefined4 ObjAnim_SetPrimaryEventStepFrames();
 extern undefined4 FUN_8002f6ac();
 extern int FUN_8002fc3c();
 extern undefined8 FUN_800305f8();
