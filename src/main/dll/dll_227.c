@@ -36,7 +36,7 @@ extern f32 FLOAT_803e595c;
 /*
  * --INFO--
  *
- * Function: FUN_801be8f8
+ * Function: dimbosstonsil_render
  * EN v1.0 Address: 0x801BE8F8
  * EN v1.0 Size: 1296b
  * EN v1.1 Address: 0x801BEA00
@@ -46,9 +46,9 @@ extern f32 FLOAT_803e595c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801be8f8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int param_11)
+void dimbosstonsil_render(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                          undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                          undefined8 param_8,undefined4 param_9,undefined4 param_10,int param_11)
 {
   byte bVar1;
   short sVar2;

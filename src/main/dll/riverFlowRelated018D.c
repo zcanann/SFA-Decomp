@@ -10,7 +10,7 @@ extern undefined4 DAT_803de810;
 /*
  * --INFO--
  *
- * Function: FUN_801bec70
+ * Function: dimbosstonsil_init
  * EN v1.0 Address: 0x801BEC70
  * EN v1.0 Size: 112b
  * EN v1.1 Address: 0x801BEE40
@@ -20,7 +20,7 @@ extern undefined4 DAT_803de810;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bec70(int param_1)
+void dimbosstonsil_init(int param_1)
 {
   undefined4 uVar1;
   
