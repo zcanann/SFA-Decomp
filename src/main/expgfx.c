@@ -991,7 +991,7 @@ void expgfx_renderPool(uint slotPoolBase,int poolIndex)
 /*
  * --INFO--
  *
- * Function: fn_8009ECE4
+ * Function: expgfx_queueStandalonePools
  * EN v1.0 Address: 0x8009ECE4
  * EN v1.0 Size: 468b
  * EN v1.1 Address: 0x8009EF70
@@ -1002,7 +1002,7 @@ void expgfx_renderPool(uint slotPoolBase,int poolIndex)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_8009ECE4(void)
+void expgfx_queueStandalonePools(void)
 {
   ExpgfxBounds *boundsTemplate;
   ExpgfxBounds *poolBounds;

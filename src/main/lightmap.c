@@ -1335,7 +1335,7 @@ void FUN_8005c24c(void)
     FUN_8003b878(0,0,0,0,*piVar5,1);
     piVar5 = piVar5 + 1;
   }
-  fn_8009ECE4();
+  expgfx_queueStandalonePools();
   FUN_8005bdbc();
   FUN_8005bdbc();
   if (DAT_803ddab0 == 1000) {
