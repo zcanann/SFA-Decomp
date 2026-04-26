@@ -39,11 +39,7 @@ extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
 extern undefined4 FUN_80294964();
 
-extern int DAT_802cb978;
-extern undefined4 DAT_802cb97c;
-extern undefined4 DAT_802cb980;
-extern undefined4 DAT_802cb984;
-extern undefined4 DAT_802cb988;
+extern int gObjHitsActiveHitVolumeObjects[5];
 extern undefined4* DAT_80341558;
 extern int DAT_8034155c;
 extern undefined4 DAT_80341b98;
@@ -2143,14 +2139,14 @@ void ObjHits_RegisterActiveHitVolumeObject(undefined4 param_1)
   int iVar2;
   
   iVar2 = 0;
-  for (piVar1 = &DAT_802cb978; (iVar2 < 5 && (*piVar1 != 0)); piVar1 = piVar1 + 1) {
+  for (piVar1 = gObjHitsActiveHitVolumeObjects; (iVar2 < 5 && (*piVar1 != 0)); piVar1 = piVar1 + 1) {
     iVar2 = iVar2 + 1;
   }
   if (iVar2 == 5) {
-    DAT_802cb978 = param_1;
+    gObjHitsActiveHitVolumeObjects[0] = param_1;
     return;
   }
-  (&DAT_802cb978)[iVar2] = param_1;
+  gObjHitsActiveHitVolumeObjects[iVar2] = param_1;
   return;
 }
 
@@ -3028,11 +3024,11 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
         }
         entrySlot++;
       }
-      DAT_802cb978 = 0;
-      DAT_802cb97c = 0;
-      DAT_802cb980 = 0;
-      DAT_802cb984 = 0;
-      DAT_802cb988 = 0;
+      gObjHitsActiveHitVolumeObjects[0] = 0;
+      gObjHitsActiveHitVolumeObjects[1] = 0;
+      gObjHitsActiveHitVolumeObjects[2] = 0;
+      gObjHitsActiveHitVolumeObjects[3] = 0;
+      gObjHitsActiveHitVolumeObjects[4] = 0;
       FUN_8028686c();
       return;
     }

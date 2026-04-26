@@ -45,11 +45,7 @@ extern undefined4 FUN_802949e8();
 extern byte FUN_80294c20();
 extern int FUN_80294d6c();
 
-extern undefined4 DAT_802cb978;
-extern undefined4 DAT_802cb97c;
-extern undefined4 DAT_802cb980;
-extern undefined4 DAT_802cb984;
-extern undefined4 DAT_802cb988;
+extern int gObjHitsActiveHitVolumeObjects[5];
 extern int DAT_80343558;
 extern byte DAT_80343958;
 extern char DAT_80343959;
@@ -1395,11 +1391,11 @@ void ObjHits_InitWorkBuffers(void)
   DAT_803dd848 = FUN_80017830(0x400,0xe);
   iRam803dd84c = FUN_80017830(0x400,0xe);
   FLOAT_803dd868 = FLOAT_803df594;
-  DAT_802cb978 = 0;
-  DAT_802cb97c = 0;
-  DAT_802cb980 = 0;
-  DAT_802cb984 = 0;
-  DAT_802cb988 = 0;
+  gObjHitsActiveHitVolumeObjects[0] = 0;
+  gObjHitsActiveHitVolumeObjects[1] = 0;
+  gObjHitsActiveHitVolumeObjects[2] = 0;
+  gObjHitsActiveHitVolumeObjects[3] = 0;
+  gObjHitsActiveHitVolumeObjects[4] = 0;
   return;
 }
 
