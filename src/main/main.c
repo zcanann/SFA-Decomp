@@ -22,10 +22,10 @@ extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
 extern int FUN_80037008();
-extern void* FUN_80037134();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
-extern int FUN_80037584();
+extern void* ObjGroup_GetObjects();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Pop();
 extern int FUN_80039520();
 extern undefined4 FUN_8003b56c();
 extern undefined4 FUN_8003b818();
@@ -811,14 +811,14 @@ LAB_801fe91c:
   while( true ) {
     while( true ) {
       do {
-        iVar2 = FUN_80037584(param_1,&local_30,(uint *)&local_38,&local_34);
+        iVar2 = ObjMsg_Pop(param_1,&local_30,(uint *)&local_38,&local_34);
         if (iVar2 == 0) {
           return;
         }
       } while (local_30 != 0x11);
       if (local_34 != 0x12) break;
       if ((runtimeState->behaviorFlags & 0x20) == 0) {
-        FUN_80037180(param_1,0x24);
+        ObjGroup_RemoveObject(param_1,0x24);
       }
       ObjHits_DisableObject(param_1);
       runtimeState->state = 0xb;
@@ -837,7 +837,7 @@ LAB_801fe91c:
       }
       FUN_80017ad0(param_1);
       *(ushort *)(param_1 + 6) = *(ushort *)(param_1 + 6) | 0x4000;
-      FUN_80037180(param_1,0x24);
+      ObjGroup_RemoveObject(param_1,0x24);
     }
   }
   goto LAB_801fe8b8;
@@ -855,7 +855,7 @@ code_r0x801fe7fc:
     local_2c[0] = *local_38;
     FUN_80017748(local_2c,(float *)(param_1 + 0x24));
 LAB_801fe8ac:
-    FUN_8003735c(param_1,0x24);
+    ObjGroup_AddObject(param_1,0x24);
 LAB_801fe8b8:
     runtimeState->state = 5;
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
@@ -947,7 +947,7 @@ void FUN_801fe540(short *param_1,undefined4 *param_2)
   }
   runtimeState->state = uVar2;
   if (runtimeState->state == 5) {
-    FUN_8003735c((int)param_1,0x24);
+    ObjGroup_AddObject((int)param_1,0x24);
   }
   fVar1 = FLOAT_803e6e60;
   *(float *)(param_1 + 0x12) = FLOAT_803e6e60;
@@ -1124,7 +1124,7 @@ void FUN_801fe924(void)
   pfVar5 = (float *)uVar13;
   dVar11 = (double)FLOAT_803e6e60;
   dVar9 = dVar11;
-  puVar4 = FUN_80037134(0x14,(int *)local_78);
+  puVar4 = ObjGroup_GetObjects(0x14,(int *)local_78);
   dVar12 = (double)FLOAT_803e6e80;
   for (iVar6 = 0; fVar1 = FLOAT_803e6e98, iVar6 < (int)local_78[0]; iVar6 = iVar6 + 1) {
     AnimBehaviorObject *obj;
@@ -1196,6 +1196,6 @@ void FUN_801fe924(void)
  */
 void FUN_801feb6c(int param_1)
 {
-  FUN_80037180(param_1,0x24);
+  ObjGroup_RemoveObject(param_1,0x24);
   return;
 }

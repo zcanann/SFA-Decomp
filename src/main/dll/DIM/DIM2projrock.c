@@ -24,8 +24,8 @@ extern undefined4 FUN_80017af8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_AddContactObject();
 extern int ObjHits_GetPriorityHit();
-extern void* FUN_80037134();
-extern undefined4 FUN_80037180();
+extern void* ObjGroup_GetObjects();
+extern undefined8 ObjGroup_RemoveObject();
 extern int FUN_80039520();
 extern undefined4 FUN_8003b818();
 extern undefined8 FUN_80047fdc();
@@ -168,7 +168,7 @@ void FUN_801b8860(undefined8 param_1,double param_2,double param_3,undefined8 pa
       uVar4 = *(byte *)((int)puVar11 + 0x9a7) & 1;
       *(undefined2 *)((int)puVar11 + 0x99e) = *(undefined2 *)(puVar11 + 0x268);
       *(byte *)((int)puVar11 + 0x9a7) = *(byte *)((int)puVar11 + 0x9a7) & 0xfe;
-      piVar6 = FUN_80037134(0x2f,local_28);
+      piVar6 = ObjGroup_GetObjects(0x2f,local_28);
       iVar10 = 0;
       iVar5 = uVar4 * 2;
       bVar1 = (byte)uVar4;
@@ -183,8 +183,8 @@ void FUN_801b8860(undefined8 param_1,double param_2,double param_3,undefined8 pa
             *(undefined4 *)(iVar3 + 0x10) = puVar11[2];
             *(undefined4 *)(iVar3 + 0x14) = *(undefined4 *)(iVar12 + 0x14);
             (**(code **)(**(int **)(piVar6[iVar10] + 0x68) + 4))(piVar6[iVar10],iVar3,1);
-            FUN_80037180(piVar6[iVar10],0x2f);
-            FUN_80037134(0x2f,local_28);
+            ObjGroup_RemoveObject(piVar6[iVar10],0x2f);
+            ObjGroup_GetObjects(0x2f,local_28);
             iVar3 = 0;
             if (0 < local_28[0]) {
               if ((8 < local_28[0]) && (uVar4 = local_28[0] - 1U >> 3, 0 < local_28[0] + -8)) {

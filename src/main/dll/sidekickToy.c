@@ -16,7 +16,7 @@ extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern int FUN_80037008();
-extern void* FUN_80037134();
+extern void* ObjGroup_GetObjects();
 extern undefined8 FUN_8003b06c();
 extern undefined8 FUN_8003b280();
 extern ushort FUN_800632f4();
@@ -1102,7 +1102,7 @@ void FUN_8014c78c(undefined4 param_1,undefined4 param_2,int param_3,int *param_4
   iVar7 = 0;
   if ((uVar10 & 1) == 0) {
     local_48 = (float)extraout_f1 * (float)extraout_f1;
-    puVar4 = FUN_80037134(3,&local_44);
+    puVar4 = ObjGroup_GetObjects(3,&local_44);
     if (local_44 != 0) {
       for (iVar6 = 0; iVar6 < local_44; iVar6 = iVar6 + 1) {
         dVar9 = FUN_80017714((float *)(puVar2 + 0xc),(float *)(puVar4[iVar6] + 0x18));

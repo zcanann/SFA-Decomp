@@ -32,8 +32,8 @@ extern undefined4 FUN_80017830();
 extern int FUN_80017a98();
 extern undefined4 ObjHits_MarkObjectPositionDirty();
 extern undefined4 ObjHits_SyncObjectPositionIfDirty();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_80037bd4();
 extern undefined4 FUN_80042b9c();
 extern uint FUN_80053078();
@@ -3185,7 +3185,7 @@ void FUN_800eaf2c(int param_1,int param_2)
  */
 void FUN_800eaf90(int param_1)
 {
-  FUN_80037180(param_1,0x10);
+  ObjGroup_RemoveObject(param_1,0x10);
   return;
 }
 
@@ -3352,7 +3352,7 @@ int FUN_800eafb4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
  */
 void FUN_800eb410(int param_1,int param_2)
 {
-  FUN_8003735c(param_1,0x10);
+  ObjGroup_AddObject(param_1,0x10);
   *(undefined2 *)(param_2 + 2) = 0;
   *(undefined *)(param_2 + 5) = 0;
   *(undefined *)(param_2 + 4) = 0;

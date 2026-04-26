@@ -22,7 +22,7 @@ extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
-extern undefined4 FUN_80037180();
+extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8008111c();
 extern undefined4 FUN_80081120();
@@ -162,7 +162,7 @@ void FUN_8014e248(int param_1)
   uint *puVar2;
   
   puVar2 = *(uint **)(param_1 + 0xb8);
-  FUN_80037180(param_1,3);
+  ObjGroup_RemoveObject(param_1,3);
   FUN_80006810(param_1,0x236);
   uVar1 = *puVar2;
   if (uVar1 != 0) {
@@ -523,7 +523,7 @@ void FUN_8014ed98(int param_1)
   uint *puVar2;
   
   puVar2 = *(uint **)(param_1 + 0xb8);
-  FUN_80037180(param_1,3);
+  ObjGroup_RemoveObject(param_1,3);
   uVar1 = *puVar2;
   if (uVar1 != 0) {
     FUN_80017814(uVar1);

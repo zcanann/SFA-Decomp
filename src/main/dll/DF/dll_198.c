@@ -7,8 +7,8 @@ extern undefined4 FUN_80006930();
 extern uint FUN_80017690();
 extern uint FUN_80017760();
 extern undefined4 FUN_80017814();
-extern void* FUN_80037134();
-extern undefined4 FUN_80037180();
+extern void* ObjGroup_GetObjects();
+extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_8004812c();
 extern void fn_8005D108();
 extern undefined4 FUN_8005d370();
@@ -51,14 +51,14 @@ void FUN_801c2278(int param_1)
   int local_18 [3];
   
   piVar3 = *(int **)(param_1 + 0xb8);
-  FUN_80037180(param_1,0x17);
+  ObjGroup_RemoveObject(param_1,0x17);
   uVar1 = piVar3[0xb];
   if ((uVar1 != 0) && (uVar1 != 0)) {
     FUN_80017814(uVar1);
   }
   iVar4 = *piVar3;
   if (iVar4 != 0) {
-    piVar3 = FUN_80037134(0x17,local_18);
+    piVar3 = ObjGroup_GetObjects(0x17,local_18);
     for (iVar2 = 0; iVar2 < local_18[0]; iVar2 = iVar2 + 1) {
       if (*piVar3 == iVar4) {
         (**(code **)(**(int **)(iVar4 + 0x68) + 0x44))(iVar4);

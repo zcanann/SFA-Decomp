@@ -16,9 +16,9 @@ extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHit();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
-extern int FUN_80037584();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Pop();
 extern undefined4 FUN_80037ce0();
 extern int FUN_800620e8();
 extern int FUN_800632f4();
@@ -56,8 +56,8 @@ extern f32 FLOAT_803e5f8c;
  */
 void ediblemushroom_init(int param_1)
 {
-  FUN_80037180(param_1,0x47);
-  FUN_80037180(param_1,0x31);
+  ObjGroup_RemoveObject(param_1,0x47);
+  ObjGroup_RemoveObject(param_1,0x31);
   return;
 }
 
@@ -159,7 +159,7 @@ void FUN_801d1b50(undefined8 param_1,double param_2,double param_3,undefined8 pa
   bVar4 = FUN_80017a34((int)puVar1);
   if (bVar4 == 0) {
     if (*(char *)((int)pfVar7 + 0x136) == '\b') {
-      while (iVar2 = FUN_80037584((int)puVar1,&local_38,(uint *)0x0,(uint *)0x0), iVar2 != 0) {
+      while (iVar2 = ObjMsg_Pop((int)puVar1,&local_38,(uint *)0x0,(uint *)0x0), iVar2 != 0) {
         if (local_38 == 0x7000b) {
           puVar1[3] = puVar1[3] | 0x4000;
           ObjHits_DisableObject((int)puVar1);

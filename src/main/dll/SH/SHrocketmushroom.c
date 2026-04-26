@@ -11,7 +11,7 @@ extern undefined4 FUN_80017ac8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjHits_GetPriorityHit();
-extern int FUN_80037584();
+extern int ObjMsg_Pop();
 extern undefined4 FUN_80037bd4();
 extern undefined4 FUN_800810f4();
 extern undefined4 FUN_801d2e30();
@@ -167,7 +167,7 @@ void FUN_801d3a9c(double param_1,undefined8 param_2,double param_3,undefined8 pa
   
   puVar8 = *(undefined2 **)(param_9 + 0x5c);
   if ((*(byte *)(puVar8 + 0x158) >> 6 & 1) != 0) {
-    while (iVar5 = FUN_80037584((int)param_9,local_20,&uStack_24,(uint *)0x0), iVar5 != 0) {
+    while (iVar5 = ObjMsg_Pop((int)param_9,local_20,&uStack_24,(uint *)0x0), iVar5 != 0) {
       if (local_20[0] == 0x7000b) {
         FUN_80017688(0x66c);
         FUN_80006824((uint)param_9,0xa7);

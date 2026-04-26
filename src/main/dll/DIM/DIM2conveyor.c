@@ -7,8 +7,8 @@ extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
 extern uint FUN_80017760();
 extern int ObjHits_GetPriorityHit();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_80037ce0();
 extern undefined4 FUN_8003b818();
 extern int FUN_800480a0();
@@ -256,7 +256,7 @@ undefined4 FUN_801b3af4(int param_1,undefined4 param_2,int param_3)
  */
 void dimdismountpoint_func08(int param_1)
 {
-  FUN_80037180(param_1,0xf);
+  ObjGroup_RemoveObject(param_1,0xf);
   return;
 }
 

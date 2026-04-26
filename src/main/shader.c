@@ -34,7 +34,7 @@ extern undefined8 FUN_80017ac8();
 extern undefined4 FUN_80017ae4();
 extern int FUN_80017b00();
 extern undefined4 FUN_80017b10();
-extern void* FUN_80037134();
+extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_80040d88();
 extern undefined8 FUN_80040d94();
 extern int FUN_80042830();
@@ -439,7 +439,7 @@ void FUN_80055d10(void)
   int local_1c [7];
   
   FUN_80286840();
-  piVar2 = FUN_80037134(6,local_1c);
+  piVar2 = ObjGroup_GetObjects(6,local_1c);
   psVar3 = FUN_800069a8();
   FUN_800068d8(psVar3);
   DAT_803872c4 = 0;

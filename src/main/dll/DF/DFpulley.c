@@ -6,8 +6,8 @@ extern uint FUN_80017760();
 extern undefined4 FUN_80035b84();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 
 extern f64 DOUBLE_803e5a60;
 extern f64 DOUBLE_803e5a70;
@@ -62,7 +62,7 @@ void FUN_801c0e60(int param_1,undefined4 param_2,int param_3)
 void FUN_801c0f04(int param_1)
 {
   if (**(char **)(param_1 + 0xb8) != '\0') {
-    FUN_80037180(param_1,0x14);
+    ObjGroup_RemoveObject(param_1,0x14);
   }
   return;
 }
@@ -92,12 +92,12 @@ void FUN_801c0f38(int param_1)
     if (uVar1 == 0) {
       if (*pcVar2 == '\0') {
         *pcVar2 = '\x01';
-        FUN_8003735c(param_1,0x14);
+        ObjGroup_AddObject(param_1,0x14);
       }
     }
     else if (*pcVar2 != '\0') {
       *pcVar2 = '\0';
-      FUN_80037180(param_1,0x14);
+      ObjGroup_RemoveObject(param_1,0x14);
     }
   }
   return;
@@ -119,7 +119,7 @@ void FUN_801c0f38(int param_1)
 void FUN_801c0fd0(short *param_1,int param_2)
 {
   if (*(short *)(param_2 + 0x1c) == -1) {
-    FUN_8003735c((int)param_1,0x14);
+    ObjGroup_AddObject((int)param_1,0x14);
     **(undefined **)(param_1 + 0x5c) = 1;
   }
   *param_1 = (ushort)*(byte *)(param_2 + 0x18) << 8;

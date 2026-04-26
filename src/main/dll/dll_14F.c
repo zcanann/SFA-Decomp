@@ -34,10 +34,10 @@ extern undefined4 ObjHits_RecordObjectHit();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_80037008();
-extern void* FUN_80037134();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
-extern int FUN_80037584();
+extern void* ObjGroup_GetObjects();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Pop();
 extern undefined4 FUN_80037bd4();
 extern undefined4 FUN_80037ce0();
 extern undefined8 FUN_8003817c();
@@ -398,8 +398,8 @@ void FUN_8017fbe0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   undefined8 uVar2;
   
   piVar1 = *(int **)(param_9 + 0xb8);
-  FUN_80037180(param_9,0x34);
-  FUN_80037180(param_9,0x3e);
+  ObjGroup_RemoveObject(param_9,0x34);
+  ObjGroup_RemoveObject(param_9,0x3e);
   if ((*(char *)(param_9 + 0xeb) != '\0') && (uVar2 = FUN_8003817c(param_9,*piVar1), param_10 == 0))
   {
     FUN_80017ac8(uVar2,param_2,param_3,param_4,param_5,param_6,param_7,param_8,*piVar1);
@@ -613,7 +613,7 @@ void FUN_801804a0(short *param_1,int param_2)
 void FUN_801804a4(int param_1)
 {
   if (*(char *)(*(int *)(param_1 + 0xb8) + 1) != '\0') {
-    FUN_80037180(param_1,0x4b);
+    ObjGroup_RemoveObject(param_1,0x4b);
   }
   return;
 }
@@ -920,7 +920,7 @@ void FUN_80180a0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
   pfVar10 = *(float **)(puVar2 + 0x5c);
   iVar9 = *(int *)(puVar2 + 0x26);
   iVar3 = FUN_80017a98();
-  while (iVar4 = FUN_80037584((int)puVar2,&local_48,(uint *)0x0,(uint *)0x0), iVar4 != 0) {
+  while (iVar4 = ObjMsg_Pop((int)puVar2,&local_48,(uint *)0x0,(uint *)0x0), iVar4 != 0) {
     if (local_48 == 0x7000b) {
       FUN_80006824((uint)puVar2,0x4e);
       (**(code **)(*DAT_803dd708 + 8))(puVar2,0x51a,0,1,0xffffffff,0);
@@ -1468,7 +1468,7 @@ void FUN_80181b50(undefined8 param_1,double param_2,double param_3,undefined8 pa
           }
           goto LAB_80181c38;
         }
-        piVar4 = FUN_80037134(0x10,&local_48);
+        piVar4 = ObjGroup_GetObjects(0x10,&local_48);
         for (iVar3 = 0; iVar3 < local_48; iVar3 = iVar3 + 1) {
           uVar5 = ObjHits_IsObjectEnabled(*piVar4);
           if (uVar5 != 0) {

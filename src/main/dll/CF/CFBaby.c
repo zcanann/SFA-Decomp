@@ -32,9 +32,9 @@ extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjHits_RecordObjectHit();
 extern int ObjHits_GetPriorityHit();
 extern int FUN_80037008();
-extern void* FUN_80037134();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern void* ObjGroup_GetObjects();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_80037fa8();
 extern undefined4 FUN_8003817c();
 extern undefined4 FUN_800381f8();
@@ -145,7 +145,7 @@ void FUN_80187524(int param_1,int param_2)
   undefined4 *puVar3;
   
   puVar3 = *(undefined4 **)(param_1 + 0xb8);
-  FUN_8003735c(param_1,0x30);
+  ObjGroup_AddObject(param_1,0x30);
   fVar1 = FLOAT_803e4750;
   puVar3[1] = FLOAT_803e4750;
   puVar3[5] = fVar1;
@@ -295,7 +295,7 @@ void FUN_801878f8(int param_1)
   if (iVar1 != 0) {
     FUN_8013651c(iVar1);
   }
-  FUN_80037180(param_1,0xf);
+  ObjGroup_RemoveObject(param_1,0xf);
   return;
 }
 
@@ -400,7 +400,7 @@ void FUN_80187b14(undefined8 param_1,double param_2,double param_3,undefined8 pa
  */
 void FUN_80187b18(int param_1)
 {
-  FUN_80037180(param_1,0x31);
+  ObjGroup_RemoveObject(param_1,0x31);
   return;
 }
 
@@ -586,7 +586,7 @@ void FUN_80187ee0(undefined2 *param_1,int param_2)
   undefined8 local_28;
   
   pbVar2 = *(byte **)(param_1 + 0x5c);
-  FUN_8003735c((int)param_1,0x31);
+  ObjGroup_AddObject((int)param_1,0x31);
   *param_1 = (short)((int)*(char *)(param_2 + 0x18) << 8);
   local_28 = (double)CONCAT44(0x43300000,(int)*(short *)(param_2 + 0x1a) ^ 0x80000000);
   *(float *)(param_1 + 4) = FLOAT_803e47b8 * ((float)(local_28 - DOUBLE_803e47d0) / FLOAT_803e47bc);
@@ -1033,7 +1033,7 @@ void FUN_80188890(short *param_1)
   sVar1 = param_1[0x23];
   if (((sVar1 == 0x7a1) || (sVar1 == 0x7a2)) || (sVar1 == 0x7a3)) {
     pfVar7 = *(float **)(param_1 + 0x5c);
-    piVar5 = FUN_80037134(2,&local_38);
+    piVar5 = ObjGroup_GetObjects(2,&local_38);
     for (; local_38 != 0; local_38 = local_38 + -1) {
       dVar8 = (double)FUN_8001771c((float *)(*piVar5 + 0x18),(float *)(param_1 + 0xc));
       if (dVar8 < (double)pfVar7[6]) {

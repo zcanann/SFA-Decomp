@@ -18,7 +18,7 @@ extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80017af0();
 extern int FUN_80017b00();
 extern int FUN_80037008();
-extern int FUN_80037584();
+extern int ObjMsg_Pop();
 extern undefined4 FUN_80037bd4();
 extern undefined4 FUN_80037ce0();
 extern undefined4 FUN_8003b818();
@@ -1050,7 +1050,7 @@ void FUN_8019b86c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 LAB_8019b350:
   do {
     while( true ) {
-      iVar3 = FUN_80037584(param_9,local_10,&local_14,&local_18);
+      iVar3 = ObjMsg_Pop(param_9,local_10,&local_14,&local_18);
       if (iVar3 == 0) {
         return;
       }

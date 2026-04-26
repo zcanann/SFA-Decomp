@@ -37,8 +37,8 @@ extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined4 FUN_80037008();
-extern undefined4 FUN_8003735c();
-extern int FUN_80037584();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Pop();
 extern undefined4 FUN_80037bd4();
 extern undefined4 FUN_80037ce0();
 extern uint FUN_80038a34();
@@ -2429,7 +2429,7 @@ LAB_80112944:
   do {
     while( true ) {
       while( true ) {
-        iVar2 = FUN_80037584(uVar1,&local_2c,local_28,&local_30);
+        iVar2 = ObjMsg_Pop(uVar1,&local_2c,local_28,&local_30);
         if (iVar2 == 0) goto LAB_80112964;
         if (local_2c != 0xb) break;
         *(char *)(iVar3 + 0x34e) = (char)local_30;

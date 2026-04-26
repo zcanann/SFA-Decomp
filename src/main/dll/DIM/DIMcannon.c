@@ -37,7 +37,7 @@ extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern void* FUN_80037134();
+extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_800388b4();
 extern int FUN_80039520();
 extern undefined4 FUN_8003b818();
@@ -308,7 +308,7 @@ void FUN_801ae378(undefined8 param_1,double param_2,double param_3,undefined8 pa
     }
   }
   if (*piVar8 == 0) {
-    puVar6 = FUN_80037134(10,&local_2c);
+    puVar6 = ObjGroup_GetObjects(10,&local_2c);
     if (*(short *)(param_9 + 0x46) == 0x170) {
       param_12 = 0x16f;
     }

@@ -18,9 +18,9 @@ extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
-extern int FUN_80037584();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Pop();
 extern undefined8 FUN_80037844();
 extern undefined4 FUN_80037bd4();
 extern undefined4 FUN_80037ce0();
@@ -166,8 +166,8 @@ void FUN_8016425c(int param_1)
       (**(code **)(**(int **)(iVar3 + 0x68) + 0x20))(iVar3,param_1);
     }
   }
-  FUN_80037180(param_1,3);
-  FUN_80037180(param_1,0x31);
+  ObjGroup_RemoveObject(param_1,3);
+  ObjGroup_RemoveObject(param_1,0x31);
   return;
 }
 
@@ -377,7 +377,7 @@ void FUN_8016437c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     (**(code **)(*DAT_803dd728 + 0x18))((double)FLOAT_803dc074,param_9,iVar7);
   }
   else if (cVar1 == '\x04') {
-    while (iVar4 = FUN_80037584((int)param_9,&local_88,(uint *)0x0,(uint *)0x0), iVar4 != 0) {
+    while (iVar4 = ObjMsg_Pop((int)param_9,&local_88,(uint *)0x0,(uint *)0x0), iVar4 != 0) {
       if (local_88 == 0x7000b) {
         FUN_80017688(0x194);
         FUN_80006824((uint)param_9,0x49);
@@ -706,8 +706,8 @@ void FUN_8016531c(int param_1,int param_2)
   uVar1 = FUN_80017760(0xfffffed4,300);
   *(float *)(iVar2 + 0x2a0) =
        FLOAT_803e3c4c + (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - DOUBLE_803e3c08);
-  FUN_8003735c(param_1,3);
-  FUN_8003735c(param_1,0x31);
+  ObjGroup_AddObject(param_1,3);
+  ObjGroup_AddObject(param_1,0x31);
   ObjHits_DisableObject(param_1);
   FUN_80037ce0(param_1,1);
   if (*(short *)(param_1 + 0x46) == 0x4ba) {

@@ -12,7 +12,7 @@ extern uint FUN_80017ae8();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern undefined4 FUN_80037180();
+extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_800388b4();
 extern undefined4 FUN_80039520();
 extern undefined4 FUN_8003b540();
@@ -550,7 +550,7 @@ void FUN_801692e8(int param_1)
   undefined4 uVar1;
   
   uVar1 = *(undefined4 *)(param_1 + 0xb8);
-  FUN_80037180(param_1,3);
+  ObjGroup_RemoveObject(param_1,3);
   (**(code **)(*DAT_803dd738 + 0x40))(param_1,uVar1,0x20);
   return;
 }

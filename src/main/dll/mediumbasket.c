@@ -21,8 +21,8 @@ extern undefined4 FUN_800339b4();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern undefined8 FUN_80037844();
 extern uint FUN_8003882c();
 extern undefined4 FUN_800388b4();
@@ -306,7 +306,7 @@ void FUN_8015b2cc(void)
 void FUN_8015b2d0(short *param_1,int param_2)
 {
   if (*(char *)(param_2 + 0x33b) == '\0') {
-    FUN_8003735c((int)param_1,0x50);
+    ObjGroup_AddObject((int)param_1,0x50);
     *(undefined *)(param_2 + 0x33b) = 1;
   }
   ObjHits_SetHitVolumeSlot((int)param_1,10,1,0);
@@ -331,7 +331,7 @@ void FUN_8015b2d0(short *param_1,int param_2)
 void FUN_8015b34c(short *param_1,int param_2)
 {
   if (*(char *)(param_2 + 0x33b) != '\0') {
-    FUN_80037180((int)param_1,0x50);
+    ObjGroup_RemoveObject((int)param_1,0x50);
     *(undefined *)(param_2 + 0x33b) = 0;
   }
   *param_1 = (short)(int)-(FLOAT_803e3970 * FLOAT_803dc074 -

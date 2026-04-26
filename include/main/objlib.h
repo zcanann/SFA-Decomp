@@ -42,17 +42,17 @@ void FUN_80036a98(undefined4 param_1,undefined4 param_2,undefined4 param_3,int p
 void ObjHits_ResetWorkBuffers(void);
 undefined4 ObjHitReact_GetResetObjects(undefined4 *param_1);
 void ObjHits_InitWorkBuffers(void);
-uint FUN_80036d5c(int param_1,int param_2);
+uint ObjGroup_ContainsObject(int param_1,int param_2);
 void FUN_80036dcc(undefined4 param_1,undefined4 param_2,float *param_3);
 void FUN_80036edc(undefined4 param_1,undefined4 param_2,float *param_3);
 void FUN_80037008(undefined4 param_1,undefined4 param_2,float *param_3);
-undefined4 * FUN_80037134(int param_1,int *param_2);
-void FUN_80037180(int param_1,int param_2);
-int FUN_800372f8(int param_1);
-void FUN_8003735c(int param_1,int param_2);
-void FUN_800374e4(void);
-undefined4 FUN_8003751c(int param_1,int *param_2,int *param_3,int *param_4);
-undefined4 FUN_80037584(int param_1,uint *param_2,uint *param_3,uint *param_4);
+undefined4 * ObjGroup_GetObjects(int param_1,int *param_2);
+void ObjGroup_RemoveObject(int param_1,int param_2);
+int ObjGroup_GetObjectGroup(int param_1);
+void ObjGroup_AddObject(int param_1,int param_2);
+void ObjGroup_ClearAll(void);
+undefined4 ObjMsg_Peek(int param_1,int *param_2,int *param_3,int *param_4);
+undefined4 ObjMsg_Pop(int param_1,uint *param_2,uint *param_3,uint *param_4);
 void FUN_8003762c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,uint param_11,uint param_12,uint param_13,

@@ -44,9 +44,9 @@ extern undefined8 FUN_80017ac8();
 extern undefined4 FUN_80017ae4();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern uint FUN_80036d5c();
+extern uint ObjGroup_ContainsObject();
 extern int FUN_80037008();
-extern void* FUN_80037134();
+extern void* ObjGroup_GetObjects();
 extern undefined8 FUN_8003817c();
 extern undefined4 FUN_800381f8();
 extern undefined4 FUN_80039468();
@@ -3334,7 +3334,7 @@ void FUN_801365c4(void)
   fStack_14 = (float)in_ps30_1;
   uVar10 = FUN_80286834();
   dVar9 = extraout_f1;
-  piVar2 = FUN_80037134(3,local_48);
+  piVar2 = ObjGroup_GetObjects(3,local_48);
   dVar9 = (double)(float)(dVar9 * dVar9);
   for (iVar7 = 0; iVar7 < local_48[0]; iVar7 = iVar7 + 1) {
     iVar3 = FUN_801113c0(*piVar2);
@@ -3357,7 +3357,7 @@ void FUN_801365c4(void)
     else {
       uVar6 = FUN_80017690((int)*(short *)(iVar3 + 0x1a));
     }
-    uVar4 = FUN_80036d5c(*piVar2,0x31);
+    uVar4 = ObjGroup_ContainsObject(*piVar2,0x31);
     if ((((((uVar4 == 0) && ((double)FLOAT_803e306c < dVar8)) && (uVar5 == 0)) &&
          ((uVar6 != 0 && (*(short *)(*piVar2 + 0x46) != 0x851)))) &&
         (iVar3 = (**(code **)(*DAT_803dd72c + 0x68))(*(undefined4 *)(iVar3 + 0x14)), iVar3 != 0)) &&

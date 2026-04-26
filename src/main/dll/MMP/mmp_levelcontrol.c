@@ -8,8 +8,8 @@ extern undefined4 FUN_80017748();
 extern uint FUN_80017760();
 extern int FUN_80017a90();
 extern int FUN_80037008();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
 extern int FUN_8005af70();
@@ -290,8 +290,8 @@ void FUN_801946b8(void)
  */
 void FUN_80194874(int param_1)
 {
-  FUN_80037180(param_1,0x23);
-  FUN_80037180(param_1,0x31);
+  ObjGroup_RemoveObject(param_1,0x23);
+  ObjGroup_RemoveObject(param_1,0x31);
   return;
 }
 
@@ -389,8 +389,8 @@ void FUN_801949ec(undefined2 *param_1,int param_2)
   
   puVar2 = *(undefined4 **)(param_1 + 0x5c);
   *param_1 = *(undefined2 *)(param_2 + 0x24);
-  FUN_8003735c((int)param_1,0x23);
-  FUN_8003735c((int)param_1,0x31);
+  ObjGroup_AddObject((int)param_1,0x23);
+  ObjGroup_AddObject((int)param_1,0x31);
   uVar1 = FUN_80017690((int)*(short *)(param_2 + 0x18));
   if (uVar1 != 0) {
     *(byte *)(puVar2 + 1) = *(byte *)(puVar2 + 1) & 0x7f | 0x80;

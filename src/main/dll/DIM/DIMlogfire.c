@@ -18,8 +18,8 @@ extern int FUN_80017ae4();
 extern undefined4 FUN_80017b00();
 extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_80037008();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern undefined8 FUN_8003817c();
 extern undefined4 FUN_800381f8();
 extern undefined4 FUN_8003b56c();
@@ -473,7 +473,7 @@ undefined4 FUN_801a9c3c(int param_1,int param_2)
  */
 void FUN_801a9d30(int param_1)
 {
-  FUN_80037180(param_1,0x2e);
+  ObjGroup_RemoveObject(param_1,0x2e);
   return;
 }
 
@@ -707,7 +707,7 @@ void FUN_801aa378(short *param_1,int param_2)
  */
 void FUN_801aa37c(int param_1)
 {
-  FUN_80037180(param_1,0x3f);
+  ObjGroup_RemoveObject(param_1,0x3f);
   return;
 }
 
@@ -765,7 +765,7 @@ void FUN_801aa3a0(int param_1)
  */
 void FUN_801aa480(int param_1)
 {
-  FUN_8003735c(param_1,0x3f);
+  ObjGroup_AddObject(param_1,0x3f);
   return;
 }
 

@@ -10,8 +10,8 @@ extern int FUN_80017a90();
 extern undefined4 FUN_80017a98();
 extern int FUN_80017af0();
 extern int FUN_80037008();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
 extern int FUN_800480a0();
@@ -440,7 +440,7 @@ void FUN_80192ab4(int param_1)
       FUN_80017814(DAT_803de76c);
     }
   }
-  FUN_80037180(param_1,0x1b);
+  ObjGroup_RemoveObject(param_1,0x1b);
   return;
 }
 
@@ -505,7 +505,7 @@ void FUN_80192b50(int param_1,int param_2)
   if (DAT_803de768 == '\0') {
     FUN_801927b8();
   }
-  FUN_8003735c(param_1,0x1b);
+  ObjGroup_AddObject(param_1,0x1b);
   DAT_803de768 = DAT_803de768 + '\x01';
   return;
 }
@@ -1057,7 +1057,7 @@ void FUN_80193800(void)
   if (uVar6 != 0) {
     FUN_80017814(uVar6);
   }
-  FUN_80037180(iVar1,0x31);
+  ObjGroup_RemoveObject(iVar1,0x31);
   FUN_8028686c();
   return;
 }
@@ -1137,7 +1137,7 @@ void FUN_80193950(int param_1,int param_2)
            (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_2 + 0x20)) - DOUBLE_803e4c38);
       *(byte *)(iVar3 + 0x2d) = *(byte *)(iVar3 + 0x2d) | 2;
     }
-    FUN_8003735c(param_1,0x31);
+    ObjGroup_AddObject(param_1,0x31);
     if (1 < *(byte *)(param_2 + 0x21)) {
       *(undefined *)(param_2 + 0x21) = 0;
     }

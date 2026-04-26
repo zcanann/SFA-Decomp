@@ -24,7 +24,7 @@ extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern int FUN_80017a98();
 extern int ObjHits_GetPriorityHit();
-extern void* FUN_80037134();
+extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_80053bf0();
 extern undefined4 FUN_800810d8();
 extern undefined4 FUN_80101980();
@@ -503,7 +503,7 @@ void FUN_80108d58(undefined8 param_1,double param_2,double param_3)
   uVar10 = FUN_8028683c();
   dVar9 = (double)FLOAT_803e24f8;
   dVar8 = extraout_f1;
-  piVar4 = FUN_80037134(7,local_68);
+  piVar4 = ObjGroup_GetObjects(7,local_68);
   for (iVar6 = 0; iVar6 < local_68[0]; iVar6 = iVar6 + 1) {
     iVar5 = *piVar4;
     if ((((int)*(short *)(iVar5 + 0x44) == (int)uVar10) &&

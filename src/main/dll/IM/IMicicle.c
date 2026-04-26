@@ -18,8 +18,8 @@ extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern undefined8 FUN_80017ac8();
 extern int FUN_80017af8();
-extern undefined8 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern int FUN_80038a34();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80041ff8();
@@ -114,7 +114,7 @@ void FUN_801a39d0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   
   iVar2 = -1;
   iVar3 = *(int *)(param_9 + 0xb8);
-  uVar5 = FUN_80037180(param_9,0x21);
+  uVar5 = ObjGroup_RemoveObject(param_9,0x21);
   if (param_10 == 0) {
     iVar3 = iVar3 + -4;
     while( true ) {
@@ -228,7 +228,7 @@ void FUN_801a3cc4(undefined2 *param_1,int param_2)
   int iVar5;
   int iVar6;
   
-  FUN_8003735c((int)param_1,0x21);
+  ObjGroup_AddObject((int)param_1,0x21);
   iVar5 = *(int *)(param_1 + 0x5c);
   cVar1 = *(char *)(param_2 + 0x18);
   if (cVar1 == '\0') {
@@ -708,7 +708,7 @@ void FUN_801a45d0(short *param_1,undefined4 *param_2)
  */
 void cflevelcontrol_free(int param_1)
 {
-  FUN_80037180(param_1,0x1e);
+  ObjGroup_RemoveObject(param_1,0x1e);
   return;
 }
 
@@ -750,7 +750,7 @@ void FUN_801a45f8(int param_1)
  */
 void FUN_801a4620(undefined2 *param_1,int param_2)
 {
-  FUN_8003735c((int)param_1,0x1e);
+  ObjGroup_AddObject((int)param_1,0x1e);
   *param_1 = (short)((int)*(char *)(param_2 + 0x18) << 8);
   return;
 }

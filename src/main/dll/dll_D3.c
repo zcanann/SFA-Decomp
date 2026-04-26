@@ -2,7 +2,7 @@
 #include "main/dll/dll_D3.h"
 
 extern undefined4 FUN_80017710();
-extern void* FUN_80037134();
+extern void* ObjGroup_GetObjects();
 extern int FUN_80294c54();
 
 extern f32 FLOAT_803e3088;
@@ -32,7 +32,7 @@ int FUN_8013f100(int param_1,int param_2)
   iVar1 = *(int *)(param_2 + 0x24);
   if (*(short *)(iVar1 + 0x46) != 0x6a3) {
     iVar1 = FUN_80294c54(*(int *)(param_2 + 4));
-    if ((iVar1 != 0) && (piVar2 = FUN_80037134(3,local_38), 0 < local_38[0])) {
+    if ((iVar1 != 0) && (piVar2 = ObjGroup_GetObjects(3,local_38), 0 < local_38[0])) {
       do {
         if (*piVar2 == iVar1) {
           dVar3 = (double)FUN_80017710((float *)(param_1 + 0x18),(float *)(iVar1 + 0x18));

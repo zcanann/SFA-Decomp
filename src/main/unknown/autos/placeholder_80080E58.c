@@ -100,7 +100,7 @@ extern undefined4 FUN_80017b00();
 extern int FUN_8002f6ac();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern void* FUN_80037134();
+extern void* ObjGroup_GetObjects();
 extern undefined8 FUN_8003762c();
 extern undefined8 FUN_80037844();
 extern undefined4 FUN_80037bd4();

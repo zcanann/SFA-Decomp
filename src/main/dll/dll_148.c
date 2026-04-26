@@ -13,7 +13,7 @@ extern int FUN_80017a98();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int FUN_80037008();
-extern undefined4 FUN_8003735c();
+extern undefined4 ObjGroup_AddObject();
 extern int FUN_80039520();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80135814();

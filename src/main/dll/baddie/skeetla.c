@@ -11,7 +11,7 @@ extern uint FUN_80017760();
 extern int FUN_80017a98();
 extern int FUN_80017b00();
 extern int FUN_80037008();
-extern void* FUN_80037134();
+extern void* ObjGroup_GetObjects();
 extern int fn_80037B60();
 extern undefined4 FUN_80039468();
 extern undefined4 FUN_800469d0();
@@ -1043,7 +1043,7 @@ void FUN_8013a804(undefined4 param_1,undefined4 param_2,float *param_3)
   fStack_14 = (float)in_ps30_1;
   uVar8 = FUN_8028683c();
   uVar1 = (undefined4)((ulonglong)uVar8 >> 0x20);
-  piVar2 = FUN_80037134(0x40,local_50);
+  piVar2 = ObjGroup_GetObjects(0x40,local_50);
   dVar6 = (double)FLOAT_803e3114;
   dVar7 = DOUBLE_803e3090;
   for (iVar5 = 0; iVar5 < local_50[0]; iVar5 = iVar5 + 1) {

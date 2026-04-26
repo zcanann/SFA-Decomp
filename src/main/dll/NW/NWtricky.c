@@ -4,7 +4,7 @@
 extern uint FUN_80017760();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjHits_RefreshObjectState();
-extern undefined4 FUN_80037180();
+extern undefined8 ObjGroup_RemoveObject();
 
 extern undefined4* DAT_803dd6f8;
 extern f64 DOUBLE_803e5fa0;
@@ -76,6 +76,6 @@ void FUN_801d1e24(undefined2 *param_1,undefined4 *param_2,int param_3)
 void FUN_801d1fb8(int param_1)
 {
   (**(code **)(*DAT_803dd6f8 + 0x14))();
-  FUN_80037180(param_1,3);
+  ObjGroup_RemoveObject(param_1,3);
   return;
 }

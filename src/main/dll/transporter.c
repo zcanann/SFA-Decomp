@@ -26,9 +26,9 @@ extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjHits_AddContactObject();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
-extern int FUN_80037584();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Pop();
 extern undefined4 FUN_80037ce0();
 extern int FUN_800386bc();
 extern undefined4 FUN_800388b4();
@@ -153,7 +153,7 @@ void FUN_801755cc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   
   iVar2 = *(int *)(param_9 + 0xb8);
   local_28 = (undefined4 *)0x0;
-  while (iVar1 = FUN_80037584(param_9,&local_24,local_20,(uint *)&local_28), iVar1 != 0) {
+  while (iVar1 = ObjMsg_Pop(param_9,&local_24,local_20,(uint *)&local_28), iVar1 != 0) {
     if (local_24 == 0x40001) {
       if (*(short *)(param_9 + 0x46) == 0x21e) {
         *(undefined4 *)(iVar2 + 0xf0) = *local_28;
@@ -540,7 +540,7 @@ void FUN_80175ed4(int param_1)
     DAT_803de738 = DAT_803de738 + 1;
     *(undefined4 *)(&DAT_803ad340 + iVar2) = *(undefined4 *)(iVar3 + 0x14);
   }
-  FUN_80037180(param_1,5);
+  ObjGroup_RemoveObject(param_1,5);
   return;
 }
 

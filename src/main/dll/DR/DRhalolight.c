@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_80017698();
 extern undefined4 FUN_80017814();
-extern undefined4 FUN_80037180();
+extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_800388b4();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_801e9c00();
@@ -110,7 +110,7 @@ void FUN_801ed104(int param_1)
   int iVar3;
   
   iVar1 = *(int *)(param_1 + 0xb8);
-  FUN_80037180(param_1,10);
+  ObjGroup_RemoveObject(param_1,10);
   iVar2 = 0;
   iVar3 = iVar1;
   do {

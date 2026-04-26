@@ -25,9 +25,9 @@ extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
-extern void* FUN_80037134();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern void* ObjGroup_GetObjects();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern int FUN_80039520();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8008112c();
@@ -461,7 +461,7 @@ void FUN_801a5dcc(void)
     if (iVar3 != 0x51) {
       FUN_800068c4((uint)puVar2,0x423);
     }
-    piVar5 = FUN_80037134(0x4e,&local_68);
+    piVar5 = ObjGroup_GetObjects(0x4e,&local_68);
     uVar4 = puVar7[3];
     uVar1 = (ushort)puVar7[1];
     local_54 = FLOAT_803e50ec;
@@ -627,11 +627,11 @@ void FUN_801a662c(int param_1)
   int local_18 [4];
   
   iVar2 = *(int *)(param_1 + 0xb8);
-  piVar1 = FUN_80037134(0x2f,local_18);
+  piVar1 = ObjGroup_GetObjects(0x2f,local_18);
   if (0 < local_18[0]) {
     do {
       if (*piVar1 == param_1) {
-        FUN_80037180(param_1,0x2f);
+        ObjGroup_RemoveObject(param_1,0x2f);
         break;
       }
       piVar1 = piVar1 + 1;
@@ -712,7 +712,7 @@ void FUN_801a66f8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       *(undefined *)((int)pfVar7 + 0x116) = 0;
       *(undefined *)(pfVar7 + 0x45) = 3;
       pfVar7[0x44] = pfVar7[0x44] - fVar2;
-      FUN_8003735c((int)param_9,0x2f);
+      ObjGroup_AddObject((int)param_9,0x2f);
       DAT_803de7a0 = DAT_803de7a0 + -1;
     }
   }

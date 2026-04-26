@@ -16,7 +16,7 @@ extern undefined4 fn_8002CEC0();
 extern int ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnimArg,
                                       void *eventList);
 extern undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,u32 flags);
-extern undefined4 fn_80037200();
+extern undefined4 ObjGroup_AddObject();
 extern int FUN_800384ec();
 extern void fn_8003842C(SHthorntailObject *obj,int pointIndex,f32 *x,f32 *y,f32 *z,int param_6);
 extern undefined4 FUN_8003b1a4();
@@ -358,7 +358,7 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
   *(code **)((int)obj + 0xbc) = (code *)SHthorntail_updateLevelControlState;
   fn_80114F64((int)obj,(int)runtime,0xffffdc72,0x2aaa,3);
   fn_8011507C((int)runtime,400,0x78);
-  fn_80037200((int)obj,0x4d);
+  ObjGroup_AddObject((int)obj,0x4d);
 }
 
 /*

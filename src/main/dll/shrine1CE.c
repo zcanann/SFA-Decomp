@@ -13,7 +13,7 @@ extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern int FUN_80037008();
-extern int FUN_80037584();
+extern int ObjMsg_Pop();
 extern undefined4 FUN_80037ce0();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80135814();
@@ -82,7 +82,7 @@ void FUN_801cbd88(void)
   local_5c[0] = FLOAT_803e5e24;
   iVar7 = *(int *)(iVar1 + 0xb8);
   local_64[1] = 0;
-  while (iVar3 = FUN_80037584(iVar1,local_64,&uStack_68,local_64 + 1), iVar3 != 0) {
+  while (iVar3 = ObjMsg_Pop(iVar1,local_64,&uStack_68,local_64 + 1), iVar3 != 0) {
     if (local_64[0] == 0x30006) {
       *(undefined2 *)(iVar7 + 6) = 0x10;
     }

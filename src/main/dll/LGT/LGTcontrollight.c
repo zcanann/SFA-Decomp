@@ -2,7 +2,7 @@
 #include "main/dll/LGT/LGTcontrollight.h"
 
 extern undefined4 FUN_80017698();
-extern undefined4 FUN_8003735c();
+extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_80042b9c();
 extern undefined4 FUN_80042bec();
 extern int FUN_80044404();
@@ -29,7 +29,7 @@ void FUN_801f4c28(int param_1)
   undefined uVar2;
   float *pfVar3;
   
-  FUN_8003735c(param_1,9);
+  ObjGroup_AddObject(param_1,9);
   iVar1 = FUN_80044404(0xb);
   FUN_80042b9c(iVar1,0,0);
   pfVar3 = *(float **)(param_1 + 0xb8);

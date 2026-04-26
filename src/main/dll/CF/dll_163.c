@@ -9,7 +9,7 @@ extern int FUN_80017a98();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern undefined4 FUN_80037180();
+extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_8013651c();
 extern int FUN_80286834();
 extern undefined4 FUN_80286880();
@@ -338,7 +338,7 @@ undefined FUN_8018a56c(int param_1)
  */
 void FUN_8018a578(int param_1)
 {
-  FUN_80037180(param_1,0x41);
+  ObjGroup_RemoveObject(param_1,0x41);
   return;
 }
 

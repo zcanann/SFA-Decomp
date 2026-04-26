@@ -27,7 +27,7 @@ extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
-extern undefined8 FUN_80037180();
+extern undefined8 ObjGroup_RemoveObject();
 extern undefined8 FUN_80037844();
 extern undefined4 FUN_80037bd4();
 extern undefined4 FUN_80039520();
@@ -295,7 +295,7 @@ void FUN_8015da00(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   
   uVar1 = *(undefined4 *)(param_9 + 0xb8);
   FUN_800069b8();
-  uVar2 = FUN_80037180(param_9,3);
+  uVar2 = ObjGroup_RemoveObject(param_9,3);
   if (*(int *)(param_9 + 200) != 0) {
     FUN_80017ac8(uVar2,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  *(int *)(param_9 + 200));
@@ -1312,7 +1312,7 @@ void FUN_8015f5dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   undefined8 uVar2;
   
   uVar1 = *(undefined4 *)(param_9 + 0xb8);
-  uVar2 = FUN_80037180(param_9,3);
+  uVar2 = ObjGroup_RemoveObject(param_9,3);
   if (*(int *)(param_9 + 200) != 0) {
     FUN_80017ac8(uVar2,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  *(int *)(param_9 + 200));
@@ -2375,7 +2375,7 @@ void FUN_80161130(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   undefined8 uVar2;
   
   uVar1 = *(undefined4 *)(param_9 + 0xb8);
-  uVar2 = FUN_80037180(param_9,3);
+  uVar2 = ObjGroup_RemoveObject(param_9,3);
   if (*(int *)(param_9 + 200) != 0) {
     FUN_80017ac8(uVar2,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  *(int *)(param_9 + 200));

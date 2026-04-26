@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/SC/SClightfoot.h"
 
-extern undefined4 FUN_80037180();
+extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_800388b4();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_801149bc();
@@ -24,7 +24,7 @@ void SHthorntail_free(SHthorntailObject *obj)
   if (gSHthorntailActiveConfigToken == obj->config->configToken) {
     gSHthorntailActiveConfigToken = SHTHORNTAIL_CONFIG_TOKEN_NONE;
   }
-  FUN_80037180((int)obj,0x4d);
+  ObjGroup_RemoveObject((int)obj,0x4d);
   return;
 }
 

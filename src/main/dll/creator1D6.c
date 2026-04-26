@@ -5,7 +5,7 @@ extern undefined4 FUN_8000680c();
 extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
 extern int FUN_80017a90();
-extern undefined4 FUN_8003735c();
+extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_801ce244();
 
 extern undefined4 DAT_80327428;

@@ -16,8 +16,8 @@ extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern int FUN_800384ec();
 extern undefined4 FUN_800810f8();
 extern undefined4 FUN_8011e868();
@@ -776,7 +776,7 @@ void FUN_8018ffbc(int param_1)
   if (uVar1 != 0) {
     FUN_80017814(uVar1);
   }
-  FUN_80037180(param_1,0x1c);
+  ObjGroup_RemoveObject(param_1,0x1c);
   return;
 }
 
@@ -846,7 +846,7 @@ void FUN_80190008(int param_1,int param_2)
          (float)((double)CONCAT44(0x43300000,uStack_c) - DOUBLE_803e4b28) / FLOAT_803e4b1c;
     (**(code **)(*DAT_803dd71c + 0x8c))((double)FLOAT_803e4b20,iVar1,param_1,local_18,0xffffffff);
   }
-  FUN_8003735c(param_1,0x1c);
+  ObjGroup_AddObject(param_1,0x1c);
   return;
 }
 

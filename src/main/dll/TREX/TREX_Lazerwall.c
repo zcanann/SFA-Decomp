@@ -7,8 +7,8 @@ extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
 extern uint FUN_80017760();
 extern int FUN_80017a98();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_8003b818();
 extern undefined8 FUN_80080f14();
 extern undefined4 FUN_80080f28();
@@ -113,7 +113,7 @@ void FUN_801e6874(int param_1,int param_2,undefined4 param_3)
 void FUN_801e68c8(int param_1)
 {
   FUN_80080f28(7,'\0');
-  FUN_80037180(param_1,9);
+  ObjGroup_RemoveObject(param_1,9);
   FUN_800067c0((int *)0x90,0);
   FUN_80017698(0xefe,0);
   return;
@@ -219,7 +219,7 @@ void FUN_801e6bec(int param_1)
   int iVar3;
   
   *(undefined *)(*(int *)(param_1 + 0xb8) + 1) = 0xff;
-  FUN_8003735c(param_1,9);
+  ObjGroup_AddObject(param_1,9);
   iVar3 = 0;
   puVar2 = &DAT_80328c10;
   do {

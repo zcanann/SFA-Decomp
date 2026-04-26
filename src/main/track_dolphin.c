@@ -36,7 +36,7 @@ extern undefined4 FUN_80017a50();
 extern undefined4 FUN_80017a98();
 extern undefined4 ObjHits_AddContactObject();
 extern undefined4 ObjHitReact_GetResetObjects();
-extern void* FUN_80037134();
+extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_80044400();
 extern undefined4 FUN_80044fc4();
 extern undefined4 FUN_80045328();

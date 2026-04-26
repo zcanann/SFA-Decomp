@@ -8,8 +8,8 @@ extern uint FUN_80017760();
 extern undefined4 FUN_80017814();
 extern int FUN_80017830();
 extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_8003b818();
 extern int FUN_800480a0();
 extern int fn_80056800();
@@ -94,7 +94,7 @@ void FUN_80195008(int param_1,int param_2)
   if (*(uint *)(iVar5 + 0xc) != 0) {
     FUN_80017814(*(uint *)(iVar5 + 0xc));
   }
-  FUN_80037180(param_1,0x51);
+  ObjGroup_RemoveObject(param_1,0x51);
   return;
 }
 
@@ -292,7 +292,7 @@ void FUN_801954f4(int param_1)
   int iVar2;
   
   iVar2 = *(int *)(param_1 + 0xb8);
-  FUN_8003735c(param_1,0x51);
+  ObjGroup_AddObject(param_1,0x51);
   iVar1 = *(int *)(*(int *)(param_1 + 0x4c) + 0x14);
   if (iVar1 == 0x49cb7) {
 LAB_80196824:
@@ -337,7 +337,7 @@ LAB_80196824:
  */
 void FUN_801955a4(int param_1)
 {
-  FUN_80037180(param_1,0x1a);
+  ObjGroup_RemoveObject(param_1,0x1a);
   return;
 }
 
@@ -437,7 +437,7 @@ void FUN_80195704(int param_1,int param_2)
   iVar2 = *(int *)(param_1 + 0xb8);
   uVar1 = FUN_80017690((int)*(short *)(param_2 + 0x32));
   *(bool *)(iVar2 + 2) = uVar1 != 0;
-  FUN_8003735c(param_1,0x1a);
+  ObjGroup_AddObject(param_1,0x1a);
   return;
 }
 

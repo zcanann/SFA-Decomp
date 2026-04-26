@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_8003735c();
+extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_80037ce0();
 extern undefined4 FUN_8003b818();
 
@@ -35,7 +35,7 @@ void FUN_801e34c0(int param_1)
   int iVar1;
   
   iVar1 = *(int *)(param_1 + 0xb8);
-  FUN_8003735c(param_1,3);
+  ObjGroup_AddObject(param_1,3);
   FUN_80037ce0(param_1,10);
   *(undefined *)(iVar1 + 4) = 4;
   *(float *)(iVar1 + 0xc) = *(float *)(iVar1 + 0xc) + FLOAT_803e64c8;

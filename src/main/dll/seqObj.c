@@ -15,7 +15,7 @@ extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
-extern undefined4 FUN_80037180();
+extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_8014d3d0();
 extern undefined4 FUN_8014d4c8();
 extern undefined4 FUN_80151844();
@@ -176,7 +176,7 @@ void FUN_8014fd38(int param_1)
   uint *puVar2;
   
   puVar2 = *(uint **)(param_1 + 0xb8);
-  FUN_80037180(param_1,3);
+  ObjGroup_RemoveObject(param_1,3);
   uVar1 = *puVar2;
   if (uVar1 != 0) {
     FUN_80017814(uVar1);

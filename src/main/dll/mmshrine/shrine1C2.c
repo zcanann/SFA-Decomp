@@ -22,9 +22,9 @@ extern int FUN_80017a98();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 FUN_8002fc3c();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
-extern int FUN_80037584();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Pop();
 extern undefined4 FUN_80037ce0();
 extern undefined4 FUN_8003b818();
 extern undefined8 FUN_80080f28();
@@ -170,7 +170,7 @@ void ecsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefin
   }
   auStack_34[1] = 0;
   do {
-    iVar11 = FUN_80037584((int)param_9,auStack_34,&uStack_38,auStack_34 + 1);
+    iVar11 = ObjMsg_Pop((int)param_9,auStack_34,&uStack_38,auStack_34 + 1);
   } while (iVar11 != 0);
   FUN_801d8308(iVar12 + 0x34,2,-1,-1,0xb9d,(int *)0xd);
   FUN_801d8480(iVar12 + 0x34,1,-1,-1,0xcbb,(int *)0x8);
@@ -806,7 +806,7 @@ void FUN_801c74f0(int param_1)
     *puVar2 = 0;
   }
   FUN_80006b4c();
-  FUN_80037180(param_1,0xb);
+  ObjGroup_RemoveObject(param_1,0xb);
   FUN_800067c0((int *)0xd8,0);
   FUN_800067c0((int *)0xd9,0);
   FUN_800067c0((int *)0x8,0);

@@ -11,9 +11,9 @@ extern uint FUN_80017690();
 extern uint FUN_80017760();
 extern undefined4 FUN_80017814();
 extern int FUN_80017a98();
-extern void* FUN_80037134();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern void* ObjGroup_GetObjects();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_80048000();
 extern undefined4 FUN_8004800c();
 extern int FUN_8007f7c0();
@@ -274,7 +274,7 @@ void FUN_80197e14(int param_1)
   uint *puVar1;
   
   puVar1 = *(uint **)(param_1 + 0xb8);
-  FUN_80037180(param_1,0x48);
+  ObjGroup_RemoveObject(param_1,0x48);
   if (*puVar1 != 0) {
     FUN_80017814(*puVar1);
   }
@@ -354,7 +354,7 @@ void FUN_80197e84(void)
     if ((float)puVar7[6] <= FLOAT_803e4d20) {
       local_20 = (double)CONCAT44(0x43300000,(uint)*(byte *)(iVar5 + 0x23) * 0x3c ^ 0x80000000);
       puVar7[6] = (uint)((float)puVar7[6] + (float)(local_20 - DOUBLE_803e4d30));
-      piVar3 = FUN_80037134(0x48,local_28);
+      piVar3 = ObjGroup_GetObjects(0x48,local_28);
       iVar6 = 0;
       piVar4 = piVar3;
       iVar5 = local_28[0];
@@ -430,7 +430,7 @@ void FUN_80198230(int param_1,int param_2)
   int iVar3;
   
   iVar3 = *(int *)(param_1 + 0xb8);
-  FUN_8003735c(param_1,0x48);
+  ObjGroup_AddObject(param_1,0x48);
   *(byte *)(iVar3 + 0x24) = *(byte *)(param_2 + 0x21) & 0xf | *(byte *)(iVar3 + 0x24) & 0xf0;
   fVar1 = FLOAT_803e4d38;
   *(float *)(iVar3 + 0x10) = FLOAT_803e4d38;

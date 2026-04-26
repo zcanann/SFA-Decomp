@@ -2,7 +2,7 @@
 #include "main/dll/riverFlowRelated018D.h"
 
 extern undefined4 FUN_80017620();
-extern undefined4 FUN_80037180();
+extern undefined8 ObjGroup_RemoveObject();
 
 extern undefined4* DAT_803dd738;
 extern undefined4 DAT_803de810;
@@ -25,7 +25,7 @@ void dimbosstonsil_init(int param_1)
   undefined4 uVar1;
   
   uVar1 = *(undefined4 *)(param_1 + 0xb8);
-  FUN_80037180(param_1,3);
+  ObjGroup_RemoveObject(param_1,3);
   (**(code **)(*DAT_803dd738 + 0x40))(param_1,uVar1,1);
   if (DAT_803de810 != 0) {
     FUN_80017620(DAT_803de810);

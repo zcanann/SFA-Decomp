@@ -12,7 +12,7 @@ extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
 extern uint FUN_80017760();
 extern int FUN_80017a98();
-extern undefined4 FUN_80037180();
+extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_8003b818();
 extern undefined8 FUN_80080f28();
 extern undefined4 FUN_8008111c();
@@ -54,7 +54,7 @@ void dbsh_shrine_init(int param_1)
     *puVar2 = 0;
   }
   FUN_80006b4c();
-  FUN_80037180(param_1,0xb);
+  ObjGroup_RemoveObject(param_1,0xb);
   FUN_800067c0((int *)0xd8,0);
   FUN_800067c0((int *)0xd9,0);
   FUN_800067c0((int *)0x8,0);

@@ -16,7 +16,7 @@ extern undefined4 fn_8002843C();
 extern int fn_8002B588();
 extern undefined4 FUN_80017a98();
 extern undefined4 FUN_80017ac8();
-extern undefined8 FUN_80037180();
+extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_8003b818();
 extern undefined8 FUN_80040da0();
 extern undefined8 fn_80043034();
@@ -45,7 +45,7 @@ extern undefined4 fn_80013E2C();
 extern undefined4 fn_8001F384();
 extern undefined4 fn_8002CBC4();
 extern undefined4 fn_8002B9EC();
-extern undefined4 fn_80036FA4();
+extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 fn_8003B8F4();
 extern undefined4 fn_80055000();
 extern undefined4 fn_800604B4();
@@ -426,7 +426,7 @@ void dimboss_free(int param_1)
   GameBit_Set(0x3e2,0);
   *(byte *)(param_1 + 0xaf) = (byte)((uint)*(byte *)(param_1 + 0xaf) & 0xffffff7f);
   fn_8000FACC();
-  fn_80036FA4(param_1,3);
+  ObjGroup_RemoveObject(param_1,3);
   pvVar2 = *(void **)(param_1 + 0xc8);
   if (pvVar2 != 0) {
     fn_8002CBC4(pvVar2);

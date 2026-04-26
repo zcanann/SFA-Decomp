@@ -23,9 +23,9 @@ extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
-extern void* FUN_80037134();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern void* ObjGroup_GetObjects();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80042b9c();
 extern int FUN_80044404();
@@ -1201,7 +1201,7 @@ void FUN_801a8b20(int param_1,char param_2)
  */
 void FUN_801a8b64(int param_1)
 {
-  FUN_80037180(param_1,4);
+  ObjGroup_RemoveObject(param_1,4);
   (**(code **)(*DAT_803dd740 + 0x10))(param_1);
   return;
 }
@@ -1291,7 +1291,7 @@ void FUN_801a8c18(int param_1,int param_2)
   *(undefined4 *)(iVar4 + 0x10) = uVar2;
   (**(code **)(*DAT_803dd740 + 4))(param_1,*(undefined4 *)(param_1 + 0xb8),0x32);
   (**(code **)(*DAT_803dd740 + 0x2c))(iVar4,1);
-  FUN_8003735c(param_1,4);
+  ObjGroup_AddObject(param_1,4);
   *(undefined4 *)(iVar4 + 0x18) = *(undefined4 *)(param_1 + 0xc);
   *(undefined4 *)(iVar4 + 0x1c) = *(undefined4 *)(param_1 + 0x10);
   *(undefined4 *)(iVar4 + 0x20) = *(undefined4 *)(param_1 + 0x14);

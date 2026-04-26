@@ -30,8 +30,8 @@ extern int FUN_80017af8();
 extern int FUN_80017b00();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_RecordObjectHit();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern int FUN_80039520();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80042b9c();
@@ -663,7 +663,7 @@ void FUN_801b7314(int param_1,undefined4 param_2,float *param_3,float *param_4)
  */
 void FUN_801b7478(int param_1)
 {
-  FUN_80037180(param_1,0x16);
+  ObjGroup_RemoveObject(param_1,0x16);
   return;
 }
 
@@ -774,7 +774,7 @@ void FUN_801b7604(undefined2 *param_1,int param_2)
   pfVar1[1] = (float)(dVar3 * dVar2);
   pfVar1[3] = FLOAT_803e56f8;
   pfVar1[4] = 0.0;
-  FUN_8003735c((int)param_1,0x16);
+  ObjGroup_AddObject((int)param_1,0x16);
   param_1[0x58] = param_1[0x58] | 0x2000;
   if (*(int *)(param_2 + 0x14) == 0x49b23) {
     FUN_80017698(0xc5c,1);

@@ -5,8 +5,8 @@ extern undefined4 FUN_80006824();
 extern int FUN_80017730();
 extern uint FUN_80017760();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_80037134();
-extern undefined4 FUN_80037180();
+extern void* ObjGroup_GetObjects();
+extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8008111c();
 extern double FUN_80293900();
@@ -521,7 +521,7 @@ void FUN_80162ec0(short *param_1)
   int local_2c [7];
   
   iVar7 = *(int *)(param_1 + 0x5c);
-  pfVar4 = (float *)FUN_80037134(0x17,local_2c);
+  pfVar4 = (float *)ObjGroup_GetObjects(0x17,local_2c);
   if (local_2c[0] != 0) {
     pfVar8 = *(float **)(iVar7 + 0x40c);
     pfVar8[0xd] = 0.0;
@@ -603,7 +603,7 @@ void cannonclaw_release(int param_1)
   undefined4 uVar1;
   
   uVar1 = *(undefined4 *)(param_1 + 0xb8);
-  FUN_80037180(param_1,3);
+  ObjGroup_RemoveObject(param_1,3);
   (**(code **)(*DAT_803dd738 + 0x40))(param_1,uVar1,0);
   return;
 }

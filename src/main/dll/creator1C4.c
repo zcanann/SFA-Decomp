@@ -14,7 +14,7 @@ extern undefined4 FUN_80017698();
 extern uint FUN_80017760();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
-extern void* FUN_80037134();
+extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_80042b9c();
 extern int FUN_80044404();
 extern undefined8 FUN_80080f28();
@@ -202,7 +202,7 @@ void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefin
           }
           else {
             *(undefined *)(iVar13 + 0x14) = 7;
-            puVar11 = FUN_80037134(0x10,local_38);
+            puVar11 = ObjGroup_GetObjects(0x10,local_38);
             for (; local_38[0] != 0; local_38[0] = local_38[0] + -1) {
               dVar15 = (double)FUN_80017ac8(dVar15,dVar16,param_3,param_4,param_5,param_6,param_7,
                                             param_8,puVar11[local_38[0] + -1]);

@@ -67,9 +67,9 @@ extern undefined8 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined4 FUN_80037008();
-extern void* FUN_80037134();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern void* ObjGroup_GetObjects();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern undefined8 FUN_8003817c();
 extern undefined4 FUN_800381f8();
 extern uint FUN_80038b0c();
@@ -703,7 +703,7 @@ void FUN_8016ba18(undefined2 *param_1)
  */
 void staticCamera_free(int param_1)
 {
-  FUN_80037180(param_1,7);
+  ObjGroup_RemoveObject(param_1,7);
   return;
 }
 
@@ -756,7 +756,7 @@ void staticCamera_init(short *param_1,int param_2,int param_3)
        (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_2 + 0x1a)) - DOUBLE_803e3e88);
   puVar1[1] = 0;
   if (param_3 == 0) {
-    FUN_8003735c((int)param_1,7);
+    ObjGroup_AddObject((int)param_1,7);
   }
   return;
 }
@@ -902,7 +902,7 @@ void FUN_8016bda8(void)
        (uVar6 = FUN_80017690((int)*(short *)(iVar10 + 0x20)), uVar6 != 0)) &&
       (((int)*(short *)(iVar10 + 0x1e) == 0xffffffff ||
        (uVar6 = FUN_80017690((int)*(short *)(iVar10 + 0x1e)), uVar6 == 0)))) &&
-     (puVar7 = FUN_80037134(3,(int *)local_24), 0 < (int)local_24[0])) {
+     (puVar7 = ObjGroup_GetObjects(3,(int *)local_24), 0 < (int)local_24[0])) {
     iVar9 = CONCAT22(*(undefined2 *)(iVar10 + 0x1c),*(undefined2 *)(iVar10 + 0x1a));
     for (uVar6 = 0; (int)(uVar6 & 0xffff) < (int)local_24[0]; uVar6 = uVar6 + 1) {
       uVar3 = uVar6 & 0xffff;
@@ -2861,7 +2861,7 @@ void FUN_8016f038(int param_1)
     FUN_80017620(**(uint **)(param_1 + 0xb8));
   }
   (**(code **)(*DAT_803dd6f8 + 0x18))(param_1);
-  FUN_80037180(param_1,2);
+  ObjGroup_RemoveObject(param_1,2);
   return;
 }
 
@@ -2995,7 +2995,7 @@ void FUN_8016f29c(int param_1)
         *puVar2 = 0;
       }
     }
-    FUN_80037180(param_1,2);
+    ObjGroup_RemoveObject(param_1,2);
   }
   return;
 }
@@ -3094,7 +3094,7 @@ void FUN_8016f3d8(undefined8 param_1,double param_2,double param_3,double param_
           FUN_80017620(*puVar6);
           *puVar6 = 0;
         }
-        FUN_80037180((int)param_9,2);
+        ObjGroup_RemoveObject((int)param_9,2);
         ObjHits_DisableObject((int)param_9);
       }
       fVar1 = FLOAT_803e3fc8;
@@ -3931,7 +3931,7 @@ void FUN_80170e70(int param_1)
   FUN_80006b0c(DAT_803de734);
   DAT_803de730 = (undefined4*)0x0;
   DAT_803de734 = (undefined4*)0x0;
-  FUN_80037180(param_1,0x3e);
+  ObjGroup_RemoveObject(param_1,0x3e);
   return;
 }
 
@@ -4151,7 +4151,7 @@ void sideload_update(undefined8 param_1,double param_2,double param_3,undefined8
  */
 void FUN_8017121c(int param_1)
 {
-  FUN_80037180(param_1,0x40);
+  ObjGroup_RemoveObject(param_1,0x40);
   return;
 }
 
@@ -4171,7 +4171,7 @@ void FUN_8017121c(int param_1)
 void FUN_80171240(int param_1,int param_2)
 {
   *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0xe000;
-  FUN_8003735c(param_1,0x40);
+  ObjGroup_AddObject(param_1,0x40);
   if (*(int *)(param_1 + 0x54) != 0) {
     FUN_80035b84(param_1,(short)((int)(uint)*(ushort *)(param_2 + 0x18) >> 3));
   }

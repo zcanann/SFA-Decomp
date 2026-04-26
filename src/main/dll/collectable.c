@@ -39,9 +39,9 @@ extern undefined4 ObjHits_SyncObjectPosition();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_80037008();
-extern void* FUN_80037134();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern void* ObjGroup_GetObjects();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern undefined8 FUN_8003817c();
 extern undefined8 FUN_800381f8();
 extern undefined4 FUN_80038730();
@@ -324,7 +324,7 @@ int FUN_80145120(int param_1,int param_2)
   int local_38 [2];
   
   iVar3 = 0;
-  piVar1 = FUN_80037134(0x4b,local_38);
+  piVar1 = ObjGroup_GetObjects(0x4b,local_38);
   dVar4 = FUN_80017708((float *)(*(int *)(param_2 + 4) + 0x18),(float *)(param_1 + 0x18));
   if ((((double)FLOAT_803e31c8 <= dVar4) || (FLOAT_803e306c < *(float *)(param_2 + 0x71c))) &&
      (iVar2 = FUN_800575b4((double)FLOAT_803e3190,(float *)(param_1 + 0xc)), iVar2 == 0)) {
@@ -1071,7 +1071,7 @@ void FUN_801468f0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   FUN_80046f44((uint *)(iVar2 + 0x658));
   FUN_80046f44((uint *)(iVar2 + 0x688));
   FUN_80046f44((uint *)(iVar2 + 0x6b8));
-  FUN_80037180(param_9,1);
+  ObjGroup_RemoveObject(param_9,1);
   (**(code **)(*DAT_803dd6f8 + 0x14))(param_9);
   if ((param_10 == 0) && ((*(uint *)(iVar2 + 0x54) & 0x800) != 0)) {
     *(uint *)(iVar2 + 0x54) = *(uint *)(iVar2 + 0x54) & 0xfffff7ff;
@@ -1226,7 +1226,7 @@ void FUN_80146db8(int param_1)
     }
   }
   if ((*(byte *)(iVar4 + 0x58) >> 5 & 1) != 0) {
-    piVar2 = FUN_80037134(0x51,local_18);
+    piVar2 = ObjGroup_GetObjects(0x51,local_18);
     for (iVar3 = 0; iVar3 < local_18[0]; iVar3 = iVar3 + 1) {
       dVar5 = FUN_80194a70(*piVar2,3);
       if (*(int *)(iVar4 + 0x5c) == -1) {

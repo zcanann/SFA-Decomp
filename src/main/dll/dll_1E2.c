@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_1E2.h"
 
-extern undefined4 FUN_8003735c();
+extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_801d1e24();
 
 extern f32 FLOAT_803e5f94;
@@ -43,6 +43,6 @@ void FUN_801d2c54(undefined2 *param_1,int param_2,int param_3)
   if (param_3 == 0) {
     FUN_801d1e24(param_1,pfVar3,0);
   }
-  FUN_8003735c((int)param_1,3);
+  ObjGroup_AddObject((int)param_1,3);
   return;
 }

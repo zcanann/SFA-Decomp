@@ -23,7 +23,7 @@ extern undefined4 FUN_80035b84();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern void* FUN_80037134();
+extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800810ec();
 
@@ -109,7 +109,7 @@ void FUN_801c0564(undefined8 param_1,double param_2,double param_3,undefined8 pa
   uVar1 = FUN_80017ae8();
   if (((uVar1 & 0xff) != 0) && (uVar1 = FUN_80017690(0x26b), uVar1 != 0)) {
     FUN_80017698(0x26b,0);
-    piVar2 = FUN_80037134(4,local_28);
+    piVar2 = ObjGroup_GetObjects(4,local_28);
     iVar4 = 0;
     if (0 < local_28[0]) {
       do {

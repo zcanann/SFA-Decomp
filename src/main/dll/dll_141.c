@@ -16,8 +16,8 @@ extern undefined4 FUN_80017a90();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 ObjHits_DisableObject();
-extern void* FUN_80037134();
-extern int FUN_80037584();
+extern void* ObjGroup_GetObjects();
+extern int ObjMsg_Pop();
 extern undefined4 FUN_80037bd4();
 extern undefined4 FUN_80037ce0();
 extern undefined4 FUN_80039520();
@@ -106,7 +106,7 @@ void FUN_801732a4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   psVar4 = (short *)FUN_80286840();
   iVar5 = FUN_80017a98();
   iVar8 = *(int *)(psVar4 + 0x5c);
-  while (iVar6 = FUN_80037584((int)psVar4,local_24,(uint *)0x0,(uint *)0x0), iVar6 != 0) {
+  while (iVar6 = ObjMsg_Pop((int)psVar4,local_24,(uint *)0x0,(uint *)0x0), iVar6 != 0) {
     if (local_24[0] == 0x7000b) {
       iVar6 = *(int *)(*(int *)(psVar4 + 0x28) + 0x18);
       (**(code **)(*DAT_803dd6f8 + 0x18))(psVar4);
@@ -585,7 +585,7 @@ void FUN_80174024(int param_1)
       unaff_r31 = local_e4;
       local_e8 = 1;
     }
-    else if ((bVar1 < 3) && (unaff_r31 = FUN_80037134(5,&local_e8), unaff_r31 == (int *)0x0)) {
+    else if ((bVar1 < 3) && (unaff_r31 = ObjGroup_GetObjects(5,&local_e8), unaff_r31 == (int *)0x0)) {
       return;
     }
     dVar18 = -dVar16;

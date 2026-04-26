@@ -17,9 +17,9 @@ extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_SetTargetMask();
 extern int ObjHits_GetPriorityHitWithPosition();
-extern void* FUN_80037134();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern void* ObjGroup_GetObjects();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_8003882c();
 extern undefined4 FUN_800388b4();
 extern undefined4 FUN_8003b818();
@@ -513,7 +513,7 @@ void FUN_801ef228(int param_1)
   }
   FUN_80006b0c(*(undefined **)(iVar1 + 0x14));
   *(undefined4 *)(iVar1 + 0x14) = 0;
-  FUN_80037180(param_1,10);
+  ObjGroup_RemoveObject(param_1,10);
   return;
 }
 
@@ -603,7 +603,7 @@ void FUN_801ef3f8(ushort *param_1,undefined4 param_2,int param_3,undefined4 para
     cVar5 = FUN_80006bc8(0);
     *(int *)(iVar7 + 0x74) = (int)cVar5;
     if (*(int *)(iVar7 + 0x10) == 0) {
-      puVar4 = FUN_80037134(3,local_38);
+      puVar4 = ObjGroup_GetObjects(3,local_38);
       for (iVar6 = 0; iVar6 < local_38[0]; iVar6 = iVar6 + 1) {
         param_3 = puVar4[iVar6];
         if (*(short *)(param_3 + 0x46) == 0x8e) {

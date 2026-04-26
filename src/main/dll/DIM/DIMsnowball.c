@@ -30,7 +30,7 @@ extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHit();
 extern int FUN_80037008();
-extern void* FUN_80037134();
+extern void* ObjGroup_GetObjects();
 extern int fn_80037B60();
 extern undefined4 FUN_8003817c();
 extern undefined4 FUN_800381f8();
@@ -153,7 +153,7 @@ void ccqueen_render(void)
   cVar1 = '\0';
   uVar3 = FUN_80017690(0x1c0);
   if (uVar3 != 0) {
-    puVar4 = FUN_80037134(0x3f,aiStack_38);
+    puVar4 = ObjGroup_GetObjects(0x3f,aiStack_38);
     dVar9 = (double)FLOAT_803e52b0;
     for (bVar7 = 0; bVar7 < 4; bVar7 = bVar7 + 1) {
       iVar5 = FUN_80037008(5,puVar4[bVar7],(float *)0x0);

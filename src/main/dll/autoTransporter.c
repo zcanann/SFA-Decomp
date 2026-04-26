@@ -11,10 +11,10 @@ extern undefined4 FUN_80017698();
 extern int FUN_80017a98();
 extern int FUN_80017b00();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
-extern int FUN_8003751c();
-extern int FUN_80037584();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Peek();
+extern int ObjMsg_Pop();
 extern undefined4 FUN_8003762c();
 extern undefined4 FUN_80037bd4();
 extern undefined4 FUN_80037ce0();
@@ -225,7 +225,7 @@ void FUN_80178560(undefined8 param_1,undefined8 param_2,double param_3,undefined
   else {
     uVar7 = FUN_80017690((uint)pfVar13[4]);
   }
-  iVar8 = FUN_8003751c(uVar4,(int *)local_70,(int *)0x0,(int *)0x0);
+  iVar8 = ObjMsg_Peek(uVar4,(int *)local_70,(int *)0x0,(int *)0x0);
   if (iVar8 != 0) {
     if (local_70[0] == 0x30003) {
       *(undefined *)(pfVar13 + 8) = 0;
@@ -363,7 +363,7 @@ void FUN_80178560(undefined8 param_1,undefined8 param_2,double param_3,undefined
         }
       }
       else {
-        iVar5 = FUN_80037584(uVar4,local_70,(uint *)0x0,(uint *)0x0);
+        iVar5 = ObjMsg_Pop(uVar4,local_70,(uint *)0x0,(uint *)0x0);
         if (((iVar5 != 0) && ((int)local_70[0] < 10)) && (7 < (int)local_70[0])) {
           FUN_80037bd4(dVar15,dVar16,param_3,param_4,param_5,param_6,param_7,param_8,unaff_r25,
                        local_70[0],uVar4,0,param_13,param_14,param_15,param_16);
@@ -409,7 +409,7 @@ void FUN_80178560(undefined8 param_1,undefined8 param_2,double param_3,undefined
     *(byte *)(param_11 + 0x90) = *(byte *)(param_11 + 0x90) | 1;
   }
   do {
-    iVar5 = FUN_80037584(uVar4,local_70,(uint *)0x0,(uint *)0x0);
+    iVar5 = ObjMsg_Pop(uVar4,local_70,(uint *)0x0,(uint *)0x0);
   } while (iVar5 != 0);
   iVar5 = 0;
   do {
@@ -590,7 +590,7 @@ void FUN_801797bc(int param_1)
   if ((sVar1 != 0) && (bVar2 = FUN_800067f8(param_1,sVar1), bVar2)) {
     FUN_80006810(param_1,*(short *)(iVar3 + 0x1c));
   }
-  FUN_80037180(param_1,0xe);
+  ObjGroup_RemoveObject(param_1,0xe);
   return;
 }
 

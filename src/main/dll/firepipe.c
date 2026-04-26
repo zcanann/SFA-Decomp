@@ -6,8 +6,8 @@ extern undefined4 GameBit_Get(int eventId);
 extern undefined4 fn_800221A0(int param_1, int param_2);
 extern undefined4 fn_8002CBC4(int param_1);
 extern undefined4 ObjHits_EnableObject(FirePipeObject *obj);
-extern undefined4 fn_80036FA4(FirePipeObject *obj, int param_2);
-extern undefined4 fn_80037200(FirePipeObject *obj, int param_2);
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern undefined4 fn_8003B8F4(int param_1, int param_2, int param_3, int param_4, int param_5, double scale);
 extern undefined4 fn_800604B4(void);
 extern undefined4 fn_8008016C(int param_1);
@@ -60,7 +60,7 @@ void firepipe_free(FirePipeObject *obj)
     FirePipeExtra *extra;
 
     extra = obj->extra;
-    fn_80036FA4(obj, 0x4a);
+    ObjGroup_RemoveObject(obj, 0x4a);
     i = 0;
     iter = (undefined4 *)extra;
     while (i < (int)(uint)extra->effectCount) {
@@ -224,7 +224,7 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
         ((FirePipeBitFlags *)&extra->flags)->bit0 = (mapData->flags & 2) == 0;
         fn_8008016C((int)&extra->cycleTimer);
         fn_80080178((int)&extra->cycleTimer, 0x14);
-        fn_80037200(obj, 0x4a);
+        ObjGroup_AddObject(obj, 0x4a);
         ((FirePipeBitFlags *)&extra->flags)->bit2 = 0;
         extra->subObj = 0;
     }

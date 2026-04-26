@@ -7,7 +7,7 @@ extern uint FUN_80017760();
 extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern void* FUN_80037134();
+extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 
@@ -100,7 +100,7 @@ void FUN_801ef3a8(undefined8 param_1,double param_2,double param_3,undefined8 pa
       if (*(int *)(puVar2 + 0x7c) == 0) {
         uVar3 = FUN_80017690(0x78);
         bVar1 = uVar3 == 0;
-        piVar4 = FUN_80037134(3,&local_88);
+        piVar4 = ObjGroup_GetObjects(3,&local_88);
         iVar6 = 0;
         while ((iVar6 < local_88 && (bVar1))) {
           if (*(short *)(*piVar4 + 0x46) == 0x139) {

@@ -11,7 +11,7 @@ extern uint FUN_80017760();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern void* FUN_80037134();
+extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_80039468();
 extern int FUN_800da5f0();
 extern int FUN_800db47c();
@@ -96,7 +96,7 @@ undefined4 FUN_8013ffbc(int param_1)
   int local_28 [2];
   
   iVar4 = 0;
-  piVar1 = FUN_80037134(3,local_28);
+  piVar1 = ObjGroup_GetObjects(3,local_28);
   for (sVar5 = 0; sVar5 < local_28[0]; sVar5 = sVar5 + 1) {
     dVar6 = FUN_80017708((float *)(*piVar1 + 0x18),(float *)(param_1 + 0x71c));
     if (iVar4 == 0) {

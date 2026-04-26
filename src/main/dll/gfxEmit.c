@@ -8,7 +8,7 @@ extern undefined4 FUN_80017710();
 extern uint FUN_80017760();
 extern undefined4 FUN_80017a88();
 extern int FUN_80017a98();
-extern undefined4 FUN_80037180();
+extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_80037bd4();
 extern int FUN_800384ec();
 extern undefined4 FUN_8003b56c();
@@ -462,7 +462,7 @@ LAB_80172f50:
 void FUN_80173040(int param_1)
 {
   (**(code **)(*DAT_803dd6f8 + 0x18))();
-  FUN_80037180(param_1,4);
+  ObjGroup_RemoveObject(param_1,4);
   return;
 }
 

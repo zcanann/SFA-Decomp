@@ -18,7 +18,7 @@ extern undefined4 FUN_80017748();
 extern uint FUN_80017760();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80037180();
+extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80061a80();
 extern double FUN_80293900();
@@ -266,7 +266,7 @@ void FUN_80186f88(int param_1,int param_2)
   if (((param_2 == 0) && (*puVar1 != 0)) && (*(byte *)(puVar1 + 0x1c) >> 6 != 1)) {
     DAT_803de758 = 0;
   }
-  FUN_80037180(param_1,0x30);
+  ObjGroup_RemoveObject(param_1,0x30);
   (**(code **)(*DAT_803dd6f8 + 0x18))(param_1);
   return;
 }

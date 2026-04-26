@@ -42,10 +42,10 @@ extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern int ObjHits_GetPriorityHit();
 extern int FUN_80037008();
-extern void* FUN_80037134();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
-extern int FUN_80037584();
+extern void* ObjGroup_GetObjects();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Pop();
 extern undefined8 FUN_80037844();
 extern undefined4 FUN_80037bd4();
 extern undefined4 FUN_80037ce0();
@@ -860,7 +860,7 @@ void FUN_8019bfb0(int param_1)
   if ((iVar1 == 0) || (dVar2 = FUN_80294c6c(iVar1), (double)FLOAT_803e4e04 == dVar2)) {
     FUN_800067c0((int *)0xbd,0);
   }
-  FUN_80037180(param_1,0x49);
+  ObjGroup_RemoveObject(param_1,0x49);
   return;
 }
 
@@ -1021,7 +1021,7 @@ void FUN_8019c038(int param_1,int param_2)
     piVar5 = piVar5 + 0x2a;
     iVar3 = iVar3 + -1;
   } while (iVar3 != 0);
-  FUN_8003735c(param_1,0x49);
+  ObjGroup_AddObject(param_1,0x49);
   return;
 }
 
@@ -1053,7 +1053,7 @@ FUN_8019c318(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
   
   psVar3 = *(short **)(param_9 + 0xb8);
   local_28 = 0;
-  while (iVar1 = FUN_80037584(param_9,&local_24,local_20,&local_28), iVar1 != 0) {
+  while (iVar1 = ObjMsg_Pop(param_9,&local_24,local_20,&local_28), iVar1 != 0) {
     if (local_24 == 0x110001) {
       if ((*psVar3 == 0x54) && (0xaf < *(short *)(param_11 + 0x58))) {
         FUN_80037bd4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,local_20[0],
@@ -1222,7 +1222,7 @@ void FUN_8019c7cc(undefined8 param_1,double param_2,double param_3,undefined8 pa
   local_58 = 0;
   FUN_80017a98();
   uVar14 = FUN_800069bc();
-  while (iVar3 = FUN_80037584((int)psVar2,&local_54,&local_50,&local_58), iVar3 != 0) {
+  while (iVar3 = ObjMsg_Pop((int)psVar2,&local_54,&local_50,&local_58), iVar3 != 0) {
     if (local_54 == 0x110003) {
       pfVar9[2] = *(float *)(local_50 + 0xc);
       pfVar9[6] = FLOAT_803e4e70;
@@ -1848,8 +1848,8 @@ LAB_8019f118:
  */
 void FUN_8019dc4c(int param_1)
 {
-  FUN_80037180(param_1,0x20);
-  FUN_80037180(param_1,3);
+  ObjGroup_RemoveObject(param_1,0x20);
+  ObjGroup_RemoveObject(param_1,3);
   return;
 }
 
@@ -2060,7 +2060,7 @@ void FUN_8019dcb8(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(undefined *)(iVar10 + 0x36) = 0;
     *(undefined *)(param_11 + 0x56) = 0;
     do {
-      iVar9 = FUN_80037584(uVar4,&uStack_34,auStack_30,&local_38);
+      iVar9 = ObjMsg_Pop(uVar4,&uStack_34,auStack_30,&local_38);
     } while (iVar9 != 0);
     if (*(char *)(param_11 + 0x80) == '\x01') {
       FUN_800066e0(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar4,uVar4,0x18,0
@@ -2329,7 +2329,7 @@ void FUN_8019e54c(uint param_1)
   
   piVar6 = *(int **)(param_1 + 0xb8);
   if ((piVar6 != (int *)0x0) && (uVar1 = FUN_80017690(0x50), uVar1 == 0)) {
-    iVar2 = FUN_80037584(param_1,&uStack_34,auStack_28,&uStack_38);
+    iVar2 = ObjMsg_Pop(param_1,&uStack_34,auStack_28,&uStack_38);
     if (iVar2 != 0) {
       *piVar6 = 0;
     }
@@ -2695,7 +2695,7 @@ undefined4 FUN_8019ed60(int param_1,undefined4 param_2,int param_3)
   uVar1 = FUN_80017690((int)*(short *)(iVar3 + 0x18));
   if (uVar1 == 0) {
     if (*(short *)(param_1 + 0x46) != 0x127) {
-      while (iVar2 = FUN_80037584(param_1,local_20,&uStack_24,&local_28), iVar2 != 0) {
+      while (iVar2 = ObjMsg_Pop(param_1,local_20,&uStack_24,&local_28), iVar2 != 0) {
         if (local_20[0] == 0xa0005) {
           FUN_80017698((int)*(short *)(iVar3 + 0x18),1);
         }
@@ -2839,7 +2839,7 @@ void FUN_8019efac(undefined8 param_1,double param_2,double param_3,undefined8 pa
  */
 void FUN_8019efb0(int param_1)
 {
-  FUN_80037180(param_1,0x4e);
+  ObjGroup_RemoveObject(param_1,0x4e);
   return;
 }
 
@@ -2892,7 +2892,7 @@ void FUN_8019f00c(int param_1)
     uVar1 = countLeadingZeros(uVar1);
     *pcVar3 = (char)(uVar1 >> 5);
     if ((uVar1 >> 5 & 0xff) != 0) {
-      FUN_8003735c(param_1,0x4e);
+      ObjGroup_AddObject(param_1,0x4e);
     }
     if (*(char *)(param_1 + 0x36) != '\0') {
       *(char *)(param_1 + 0x36) = *(char *)(param_1 + 0x36) + -1;
@@ -2904,7 +2904,7 @@ void FUN_8019f00c(int param_1)
     uVar1 = countLeadingZeros(uVar1);
     *pcVar3 = (char)(uVar1 >> 5);
     if ((uVar1 >> 5 & 0xff) == 0) {
-      FUN_80037180(param_1,0x4e);
+      ObjGroup_RemoveObject(param_1,0x4e);
     }
     if (*(char *)(param_1 + 0x36) != -1) {
       *(char *)(param_1 + 0x36) = *(char *)(param_1 + 0x36) + '\x01';
@@ -3095,7 +3095,7 @@ void FUN_8019f1dc(void)
       iVar2 = FUN_80037008(0x3a,uVar1,(float *)0x0);
     }
     else {
-      piVar3 = FUN_80037134(0x3a,&local_68);
+      piVar3 = ObjGroup_GetObjects(0x3a,&local_68);
       piVar6 = piVar3;
       for (iVar7 = 0; iVar7 < local_68; iVar7 = iVar7 + 1) {
         iVar4 = FUN_8020a468(*piVar6);

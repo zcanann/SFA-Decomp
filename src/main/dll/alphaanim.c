@@ -4,8 +4,8 @@
 extern undefined4 FUN_80006ba8();
 extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern int FUN_80038470();
 extern int FUN_800384ec();
 extern undefined4 FUN_8003b818();
@@ -61,7 +61,7 @@ undefined4 doorlock_init(int param_1,undefined4 param_2,int param_3)
  */
 void FUN_8017c230(int param_1)
 {
-  FUN_80037180(param_1,0xf);
+  ObjGroup_RemoveObject(param_1,0xf);
   return;
 }
 
@@ -309,7 +309,7 @@ FUN_8017c608(undefined8 param_1,double param_2,double param_3,undefined8 param_4
  */
 void seqObject_free(int param_1)
 {
-  FUN_80037180(param_1,0xf);
+  ObjGroup_RemoveObject(param_1,0xf);
   return;
 }
 
@@ -477,7 +477,7 @@ undefined4 FUN_8017ca44(int param_1,undefined4 param_2,int param_3)
  */
 void seqObj2_free(int param_1)
 {
-  FUN_80037180(param_1,0xf);
+  ObjGroup_RemoveObject(param_1,0xf);
   return;
 }
 

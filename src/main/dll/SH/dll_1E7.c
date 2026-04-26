@@ -7,7 +7,7 @@ extern f32 fn_800216D0(Vec *a,Vec *b);
 extern s16 fn_800217C0(f32 deltaX,f32 deltaZ);
 extern int fn_800221A0(int min,int max);
 extern int fn_8002B9EC(void);
-extern SHthorntailObject **fn_80036F50(int group,int *countOut);
+extern SHthorntailObject **ObjGroup_GetObjects(int group,int *countOut);
 extern int fn_8005A10C(Vec *pos,f32 radius);
 extern void fn_8014C66C(SHthorntailObject *obj,SHthorntailObject *other);
 extern void OSReport(const char *msg,...);
@@ -96,7 +96,7 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj)
   else if (configToken == lbl_80326E98[5][0]) {
     groupIndex = 5;
   }
-  objects = fn_80036F50(3,&count);
+  objects = ObjGroup_GetObjects(3,&count);
   for (index = 0; index < count; index++) {
     if (((*objects)->objType == 0x4d7) &&
         (((*objects)->config->configToken == lbl_80326E98[groupIndex][1]) ||

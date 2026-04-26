@@ -17,7 +17,7 @@ extern int FUN_80017a98();
 extern undefined4 FUN_8002f6ac();
 extern undefined FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_8003735c();
+extern undefined4 ObjGroup_AddObject();
 extern int FUN_800620e8();
 extern undefined4 FUN_800810f4();
 extern undefined4 FUN_80081118();

@@ -2,8 +2,8 @@
 #include "main/dll/DB/DBpointmum.h"
 
 extern undefined4 FUN_80017698();
-extern void* FUN_80037134();
-extern int FUN_80037584();
+extern void* ObjGroup_GetObjects();
+extern int ObjMsg_Pop();
 extern undefined4 FUN_80037bd4();
 
 extern undefined4* DAT_803dd708;
@@ -103,10 +103,10 @@ FUN_801dfa28(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
       param_1 = (**(code **)(param_15 + 8))(param_9,0x85,&local_48,1);
     }
   }
-  while (iVar4 = FUN_80037584(param_9,&local_50,&uStack_4c,&uStack_54), iVar4 != 0) {
+  while (iVar4 = ObjMsg_Pop(param_9,&local_50,&uStack_4c,&uStack_54), iVar4 != 0) {
     if ((*(byte *)(param_11 + 0x90) & 0x80) == 0) {
       if (local_50 == 0xf000c) {
-        puVar2 = FUN_80037134(3,&local_58);
+        puVar2 = ObjGroup_GetObjects(3,&local_58);
         iVar4 = 0;
         while (iVar4 < local_58) {
           iVar3 = iVar4;
@@ -123,7 +123,7 @@ FUN_801dfa28(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
       }
       else if ((int)local_50 < 0xf000c) {
         if (0xf000a < (int)local_50) {
-          puVar2 = FUN_80037134(3,&local_58);
+          puVar2 = ObjGroup_GetObjects(3,&local_58);
           iVar4 = 0;
           while (iVar4 < local_58) {
             iVar3 = iVar4;
@@ -140,7 +140,7 @@ FUN_801dfa28(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
         }
       }
       else if ((int)local_50 < 0xf000e) {
-        puVar2 = FUN_80037134(3,&local_58);
+        puVar2 = ObjGroup_GetObjects(3,&local_58);
         iVar4 = 0;
         while (iVar4 < local_58) {
           iVar3 = iVar4;

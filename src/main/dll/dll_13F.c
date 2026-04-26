@@ -5,8 +5,8 @@ extern uint FUN_80017690();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined8 ObjHits_DisableObject();
-extern undefined4 FUN_8003735c();
-extern int FUN_80037584();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Pop();
 extern undefined4 FUN_80037bd4();
 extern undefined4 FUN_80037ce0();
 extern undefined4 FUN_8003817c();
@@ -91,7 +91,7 @@ void collectible_init(undefined8 param_1,undefined8 param_2,double param_3,undef
       if ((dVar7 == dVar5) ||
          (*(float *)(iVar4 + 0x44) = (float)(dVar7 - (double)FLOAT_803dc074),
          dVar5 < (double)*(float *)(iVar4 + 0x44))) {
-        while (iVar3 = FUN_80037584((int)param_9,&local_18,auStack_14,(uint *)0x0), iVar3 != 0) {
+        while (iVar3 = ObjMsg_Pop((int)param_9,&local_18,auStack_14,(uint *)0x0), iVar3 != 0) {
           if (local_18 == 0x7000b) {
             dVar5 = (double)FUN_801713ac(dVar5,dVar7,param_3,param_4,param_5,param_6,param_7,param_8
                                          ,(uint)param_9);

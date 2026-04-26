@@ -2,7 +2,7 @@
 #include "main/dll/texScroll.h"
 
 extern void GameBit_Set(int eventId,int value);
-extern void fn_80036FA4(int obj,int param_2);
+extern undefined8 ObjGroup_RemoveObject();
 
 /*
  * --INFO--
@@ -95,5 +95,5 @@ int pressureswitchfb_getExtraSize(void)
  */
 void pressureswitchfb_free(int obj)
 {
-  fn_80036FA4(obj,0x53);
+  ObjGroup_RemoveObject(obj,0x53);
 }

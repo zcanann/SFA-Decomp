@@ -9,7 +9,7 @@ extern undefined8 FUN_80017ac8();
 extern undefined4 FUN_8002fc3c();
 extern undefined8 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHit();
-extern int FUN_80037584();
+extern int ObjMsg_Pop();
 extern undefined4 FUN_80039520();
 extern undefined4 FUN_80081118();
 extern undefined4 FUN_8017db40();
@@ -94,7 +94,7 @@ void appleontree_update(undefined8 param_1,double param_2,double param_3,undefin
   local_78 = 0;
   uVar9 = extraout_f1;
   if ((*(byte *)(iVar8 + 0x5a) & 4) != 0) {
-    while (iVar3 = FUN_80037584((int)puVar2,&local_78,(uint *)0x0,(uint *)0x0), iVar3 != 0) {
+    while (iVar3 = ObjMsg_Pop((int)puVar2,&local_78,(uint *)0x0,(uint *)0x0), iVar3 != 0) {
       if (local_78 == 0x7000b) {
         iVar3 = FUN_80017a98();
         FUN_80294d60(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,

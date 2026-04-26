@@ -46,13 +46,13 @@ extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
-extern uint FUN_80036d5c();
+extern uint ObjGroup_ContainsObject();
 extern int FUN_80036edc();
 extern int FUN_80037008();
-extern void* FUN_80037134();
-extern undefined8 FUN_80037180();
-extern undefined4 FUN_8003735c();
-extern int FUN_80037584();
+extern void* ObjGroup_GetObjects();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Pop();
 extern undefined4 FUN_80037844();
 extern undefined4 FUN_80037bd4();
 extern undefined4 FUN_80037ce0();
@@ -500,7 +500,7 @@ void FUN_801feb30(void)
       }
       else {
         iVar5 = FUN_80017a98();
-        FUN_80037180((int)psVar3,0x24);
+        ObjGroup_RemoveObject((int)psVar3,0x24);
         runtimeState->state = 3;
         FUN_80017698(0x3c4,1);
         FUN_80017698(0x86d,1);
@@ -606,7 +606,7 @@ void FUN_801feb30(void)
     case 0xc:
       uVar6 = FUN_80017690((int)config->readyConditionId);
       if (uVar6 != 0) {
-        FUN_8003735c((int)psVar3,0x24);
+        ObjGroup_AddObject((int)psVar3,0x24);
         runtimeState->state = 5;
       }
       break;
@@ -660,7 +660,7 @@ void FUN_801feb30(void)
             dVar12 < (double)FLOAT_803e6efc)) {
         if ((runtimeState->behaviorFlags & 1) == 0) {
           iVar4 = FUN_80017a98();
-          FUN_80037180((int)psVar3,0x24);
+          ObjGroup_RemoveObject((int)psVar3,0x24);
           runtimeState->state = 3;
           FUN_80017698(0x3c4,1);
           FUN_80017698(0x86d,1);
@@ -984,7 +984,7 @@ void FUN_801ffec4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         *(undefined *)(iVar9 + 0x34) = 1;
       }
       else if ((*(int *)(iVar9 + 0x30) != 0) &&
-              (uVar2 = FUN_80036d5c(*(int *)(iVar5 + 0x2d0),*(int *)(iVar9 + 0x30)), uVar2 == 0)) {
+              (uVar2 = ObjGroup_ContainsObject(*(int *)(iVar5 + 0x2d0),*(int *)(iVar9 + 0x30)), uVar2 == 0)) {
         uVar3 = FUN_80036edc(*(undefined4 *)(iVar9 + 0x30),iVar4,(float *)0x0);
         *(undefined4 *)(iVar5 + 0x2d0) = uVar3;
         if (*(int *)(iVar5 + 0x2d0) == 0) {
@@ -1719,7 +1719,7 @@ void FUN_80200f4c(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(undefined *)(iVar4 + 0x349) = 0;
     *(byte *)(uVar2 + 0xaf) = *(byte *)(uVar2 + 0xaf) | 8;
     ObjHits_DisableObject(uVar2);
-    uVar9 = FUN_80037180(uVar2,3);
+    uVar9 = ObjGroup_RemoveObject(uVar2,3);
     if (*(int *)(iVar5 + 0x18) != 0) {
       in_r6 = 0x10;
       FUN_80037bd4(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
@@ -2481,7 +2481,7 @@ void FUN_802026cc(undefined4 param_1,undefined4 param_2,int param_3)
               (uVar1,param_3,iVar3 + 0x35c,(int)*(short *)(iVar3 + 0x3f4),0,0,0,8,0xffffffff);
     *(int *)(param_3 + 0x2d0) = iVar2;
     *(undefined *)(param_3 + 0x349) = 0;
-    FUN_8003735c(uVar1,3);
+    ObjGroup_AddObject(uVar1,3);
     *(undefined2 *)(iVar3 + 0x402) = 1;
   }
   FUN_80286888();
@@ -2511,7 +2511,7 @@ void FUN_802028f0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   
   iVar2 = *(int *)(param_9 + 0xb8);
   iVar1 = *(int *)(iVar2 + 0x40c);
-  FUN_80037180(param_9,3);
+  ObjGroup_RemoveObject(param_9,3);
   uVar3 = FUN_80006ac8(*(uint *)(iVar1 + 0x24));
   if (*(int *)(param_9 + 200) != 0) {
     FUN_80017ac8(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
@@ -2682,7 +2682,7 @@ void FUN_80202b70(undefined8 param_1,double param_2,double param_3,double param_
           local_48[0] = 0;
           local_48[1] = 0;
           iVar10 = *(int *)(*(int *)(uVar2 + 0xb8) + 0x40c);
-          while (iVar11 = FUN_80037584(uVar2,local_48,local_48 + 2,local_48 + 1), iVar11 != 0) {
+          while (iVar11 = ObjMsg_Pop(uVar2,local_48,local_48 + 2,local_48 + 1), iVar11 != 0) {
             if ((local_48[0] == 0x11) && (*(short *)(iVar10 + 0x1c) != -1)) {
               uVar3 = 0x14;
               FUN_80037bd4(dVar13,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
@@ -2734,7 +2734,7 @@ void FUN_80202b70(undefined8 param_1,double param_2,double param_3,double param_
       uVar7 = 0x26;
       iVar10 = *DAT_803dd738;
       (**(code **)(iVar10 + 0x58))((double)FLOAT_803e6f94,uVar2,iVar11,iVar12);
-      FUN_8003735c(uVar2,3);
+      ObjGroup_AddObject(uVar2,3);
       *(undefined2 *)(iVar12 + 0x402) = 0;
       FUN_800305f8((double)FLOAT_803e6f40,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                    uVar2,8,0x10,uVar3,uVar5,uVar6,uVar7,iVar10);
@@ -2851,13 +2851,13 @@ void FUN_80203360(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   uVar4 = FUN_80017690((int)*(short *)(iVar7 + 0x1e));
   if ((uVar4 != 0) || (DAT_803de960 != 0)) {
-    piVar5 = FUN_80037134(0x24,local_28);
+    piVar5 = ObjGroup_GetObjects(0x24,local_28);
     FUN_80037844(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,3,uVar2,0x11,0,
                  param_14,param_15,param_16);
     while (iVar6 = local_28[0] + -1, bVar1 = local_28[0] != 0, local_28[0] = iVar6, bVar1) {
       iVar6 = *piVar5;
       piVar5 = piVar5 + 1;
-      FUN_80037180(iVar6,0x24);
+      ObjGroup_RemoveObject(iVar6,0x24);
     }
   }
   FUN_80286888();
@@ -2879,7 +2879,7 @@ void FUN_80203360(undefined8 param_1,double param_2,double param_3,undefined8 pa
  */
 void FUN_802035a8(int param_1)
 {
-  FUN_80037180(param_1,0x1e);
+  ObjGroup_RemoveObject(param_1,0x1e);
   return;
 }
 
@@ -3180,7 +3180,7 @@ undefined4 FUN_80203c7c(int param_1)
  */
 void FUN_80203cdc(int param_1)
 {
-  FUN_80037180(param_1,9);
+  ObjGroup_RemoveObject(param_1,9);
   return;
 }
 

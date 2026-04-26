@@ -36,8 +36,8 @@ extern undefined4 FUN_800339b4();
 extern undefined4 FUN_80035b84();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_EnableObject();
-extern undefined8 FUN_80037180();
-extern int FUN_80037584();
+extern undefined8 ObjGroup_RemoveObject();
+extern int ObjMsg_Pop();
 extern undefined4 FUN_8003b818();
 extern int FUN_8005b398();
 extern undefined4 FUN_8005fe14();
@@ -283,7 +283,7 @@ void FUN_801bf488(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   if (uVar1 != 0) {
     FUN_80017620(uVar1);
   }
-  uVar3 = FUN_80037180(param_9,3);
+  uVar3 = ObjGroup_RemoveObject(param_9,3);
   if (*(int *)(param_9 + 200) != 0) {
     FUN_80017ac8(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  *(int *)(param_9 + 200));
@@ -365,7 +365,7 @@ void FUN_801bf5ec(ushort *param_1)
       -1 < iVar1)))) {
     local_68 = 0;
     do {
-      iVar1 = FUN_80037584((int)param_1,&uStack_64,&uStack_60,&local_68);
+      iVar1 = ObjMsg_Pop((int)param_1,&uStack_64,&uStack_60,&local_68);
     } while (iVar1 != 0);
     pfVar4 = *(float **)(iVar5 + 0x40c);
     if ((*pfVar4 < FLOAT_803e5968) && (pfVar4[4] < FLOAT_803e596c)) {

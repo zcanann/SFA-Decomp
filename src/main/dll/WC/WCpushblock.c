@@ -10,7 +10,7 @@ extern undefined4 FUN_80017a14();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern undefined4 FUN_8003735c();
+extern undefined4 ObjGroup_AddObject();
 extern undefined8 FUN_800388b4();
 extern undefined4 FUN_80053754();
 extern undefined4 FUN_8005398c();

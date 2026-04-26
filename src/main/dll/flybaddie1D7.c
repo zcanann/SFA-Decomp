@@ -10,9 +10,9 @@ extern int FUN_80017af8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_80036edc();
-extern void* FUN_80037134();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern void* ObjGroup_GetObjects();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern int FUN_80038470();
 extern undefined4 FUN_80135c9c();
 extern double FUN_8014cbcc();
@@ -126,7 +126,7 @@ void FUN_801cfd68(void)
             FUN_80135c9c(iVar1,0x152,0x1000);
           }
         }
-        piVar4 = FUN_80037134(3,&local_38);
+        piVar4 = ObjGroup_GetObjects(3,&local_38);
         for (iVar8 = 0; iVar8 < local_38; iVar8 = iVar8 + 1) {
           if (*(short *)(*piVar4 + 0x46) == 0x13a) {
             dVar11 = FUN_80017714((float *)(*piVar4 + 0x18),(float *)(iVar2 + 0x18));
@@ -142,7 +142,7 @@ void FUN_801cfd68(void)
         }
       }
       else {
-        piVar4 = FUN_80037134(3,&local_38);
+        piVar4 = ObjGroup_GetObjects(3,&local_38);
         for (iVar1 = 0; iVar1 < local_38; iVar1 = iVar1 + 1) {
           if (*(short *)(*piVar4 + 0x46) == 0x13a) {
             FUN_8014ccac(*piVar4,iVar2);
@@ -173,7 +173,7 @@ void FUN_801cfd68(void)
  */
 void FUN_801d0084(int param_1)
 {
-  FUN_80037180(param_1,0x3d);
+  ObjGroup_RemoveObject(param_1,0x3d);
   return;
 }
 
@@ -209,7 +209,7 @@ void FUN_801d00a8(int param_1)
  */
 void FUN_801d00ac(int param_1)
 {
-  FUN_80037180(param_1,0x3c);
+  ObjGroup_RemoveObject(param_1,0x3c);
   return;
 }
 
@@ -239,7 +239,7 @@ void FUN_801d00d0(undefined2 *param_1)
   local_18 = FLOAT_803e5f08;
   piVar5 = *(int **)(param_1 + 0x5c);
   if (*piVar5 == 0) {
-    puVar2 = FUN_80037134(0x3d,local_14);
+    puVar2 = ObjGroup_GetObjects(0x3d,local_14);
     iVar4 = 0;
     puVar3 = puVar2;
     if (0 < local_14[0]) {
@@ -295,7 +295,7 @@ void FUN_801d00d0(undefined2 *param_1)
  */
 void FUN_801d0238(int param_1)
 {
-  FUN_8003735c(param_1,0x3c);
+  ObjGroup_AddObject(param_1,0x3c);
   return;
 }
 

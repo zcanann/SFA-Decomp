@@ -11,7 +11,7 @@ extern undefined4 FUN_80017a6c();
 extern undefined4 FUN_80017a98();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_80037180();
+extern undefined8 ObjGroup_RemoveObject();
 extern int FUN_80038470();
 extern int FUN_800384ec();
 extern undefined4 FUN_800388b4();
@@ -96,7 +96,7 @@ void FUN_801cf0b4(int param_1)
   int iVar1;
   
   iVar1 = *(int *)(param_1 + 0xb8);
-  FUN_80037180(param_1,0x4d);
+  ObjGroup_RemoveObject(param_1,0x4d);
   if ((*(byte *)(iVar1 + 0x43c) & 0x40) != 0) {
     (**(code **)(*DAT_803dd6e8 + 100))();
   }

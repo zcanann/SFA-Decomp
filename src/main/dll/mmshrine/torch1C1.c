@@ -10,7 +10,7 @@ extern uint FUN_80017730();
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 ObjHits_EnableObject();
-extern undefined4 FUN_80037180();
+extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8008111c();
 extern int FUN_8028683c();
@@ -267,7 +267,7 @@ void FUN_801c6358(int param_1)
     FUN_80017620(uVar1);
     *puVar2 = 0;
   }
-  FUN_80037180(param_1,0xb);
+  ObjGroup_RemoveObject(param_1,0xb);
   FUN_80017698(0xefa,0);
   FUN_80017698(0xcbb,1);
   FUN_80017698(0xa7f,1);

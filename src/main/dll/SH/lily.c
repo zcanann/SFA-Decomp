@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_80017690();
 extern double FUN_80017714();
-extern void* FUN_80037134();
+extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_8014ccac();
 extern int FUN_80286834();
 extern undefined4 FUN_80286880();
@@ -67,7 +67,7 @@ void FUN_801d5174(void)
   else if (iVar2 == DAT_80327b28) {
     cVar8 = '\x05';
   }
-  piVar3 = FUN_80037134(3,local_28);
+  piVar3 = ObjGroup_GetObjects(3,local_28);
   iVar2 = (int)cVar8;
   for (iVar7 = 0; iVar7 < local_28[0]; iVar7 = iVar7 + 1) {
     iVar4 = *piVar3;

@@ -1405,7 +1405,7 @@ void ObjHits_InitWorkBuffers(void)
 /*
  * --INFO--
  *
- * Function: FUN_80036d5c
+ * Function: ObjGroup_ContainsObject
  * EN v1.0 Address: 0x80036D5C
  * EN v1.0 Size: 112b
  * EN v1.1 Address: 0x80036D04
@@ -1415,7 +1415,7 @@ void ObjHits_InitWorkBuffers(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80036d5c(int param_1,int param_2)
+uint ObjGroup_ContainsObject(int param_1,int param_2)
 {
   int *piVar1;
   uint uVar2;
@@ -1598,7 +1598,7 @@ void FUN_80037008(undefined4 param_1,undefined4 param_2,float *param_3)
 /*
  * --INFO--
  *
- * Function: FUN_80037134
+ * Function: ObjGroup_GetObjects
  * EN v1.0 Address: 0x80037134
  * EN v1.0 Size: 76b
  * EN v1.1 Address: 0x80037048
@@ -1608,7 +1608,7 @@ void FUN_80037008(undefined4 param_1,undefined4 param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 * FUN_80037134(int param_1,int *param_2)
+undefined4 * ObjGroup_GetObjects(int param_1,int *param_2)
 {
   if ((-1 < param_1) && (param_1 < 0x54)) {
     *param_2 = (uint)(byte)(&DAT_80343959)[param_1] - (uint)(byte)(&DAT_80343958)[param_1];
@@ -1621,7 +1621,7 @@ undefined4 * FUN_80037134(int param_1,int *param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80037180
+ * Function: ObjGroup_RemoveObject
  * EN v1.0 Address: 0x80037180
  * EN v1.0 Size: 376b
  * EN v1.1 Address: 0x8003709C
@@ -1631,7 +1631,7 @@ undefined4 * FUN_80037134(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80037180(int param_1,int param_2)
+void ObjGroup_RemoveObject(int param_1,int param_2)
 {
   byte *bucketStarts;
   char *bucketEnds;
@@ -1669,7 +1669,7 @@ void FUN_80037180(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_800372f8
+ * Function: ObjGroup_GetObjectGroup
  * EN v1.0 Address: 0x800372F8
  * EN v1.0 Size: 100b
  * EN v1.1 Address: 0x8003728C
@@ -1679,7 +1679,7 @@ void FUN_80037180(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800372f8(int param_1)
+int ObjGroup_GetObjectGroup(int param_1)
 {
   uint uVar1;
   int iVar2;
@@ -1715,7 +1715,7 @@ int FUN_800372f8(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8003735c
+ * Function: ObjGroup_AddObject
  * EN v1.0 Address: 0x8003735C
  * EN v1.0 Size: 392b
  * EN v1.1 Address: 0x800372F8
@@ -1725,7 +1725,7 @@ int FUN_800372f8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003735c(int param_1,int param_2)
+void ObjGroup_AddObject(int param_1,int param_2)
 {
   byte *bucketStarts;
   char *bucketEnds;
@@ -1766,7 +1766,7 @@ void FUN_8003735c(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_800374e4
+ * Function: ObjGroup_ClearAll
  * EN v1.0 Address: 0x800374E4
  * EN v1.0 Size: 56b
  * EN v1.1 Address: 0x80037544
@@ -1776,7 +1776,7 @@ void FUN_8003735c(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800374e4(void)
+void ObjGroup_ClearAll(void)
 {
   FUN_800033a8(-0x7fcbc6a8,0,0x55);
   DAT_803dd870 = 0;
@@ -1786,7 +1786,7 @@ void FUN_800374e4(void)
 /*
  * --INFO--
  *
- * Function: FUN_8003751c
+ * Function: ObjMsg_Peek
  * EN v1.0 Address: 0x8003751C
  * EN v1.0 Size: 104b
  * EN v1.1 Address: 0x8003757C
@@ -1796,7 +1796,7 @@ void FUN_800374e4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8003751c(int param_1,int *param_2,int *param_3,int *param_4)
+undefined4 ObjMsg_Peek(int param_1,int *param_2,int *param_3,int *param_4)
 {
   int *piVar1;
   
@@ -1822,7 +1822,7 @@ undefined4 FUN_8003751c(int param_1,int *param_2,int *param_3,int *param_4)
 /*
  * --INFO--
  *
- * Function: FUN_80037584
+ * Function: ObjMsg_Pop
  * EN v1.0 Address: 0x80037584
  * EN v1.0 Size: 168b
  * EN v1.1 Address: 0x800375E4
@@ -1832,7 +1832,7 @@ undefined4 FUN_8003751c(int param_1,int *param_2,int *param_3,int *param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80037584(int param_1,uint *param_2,uint *param_3,uint *param_4)
+undefined4 ObjMsg_Pop(int param_1,uint *param_2,uint *param_3,uint *param_4)
 {
   uint uVar1;
   uint *puVar2;

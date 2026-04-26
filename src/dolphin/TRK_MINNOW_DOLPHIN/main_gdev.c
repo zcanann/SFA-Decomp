@@ -9,7 +9,7 @@
  * Asm-only to preserve the exact byte image.
  */
 
-extern void fn_80036F50(void);
+extern void* ObjGroup_GetObjects();
 extern int fn_80014B68(int a, int b);
 extern int fn_8006EEA0(int a, int b);
 extern void fn_8000BB38(void);
@@ -77,7 +77,7 @@ _f8e_2:
 _f8e_3:
     li r3, 0x13
     addi r5, r1, 0x8
-    bl fn_80036F50
+    bl ObjGroup_GetObjects
     cmplwi r3, 0x0
     beq _f8e_4
     lbz r0, 0xaf(r3)

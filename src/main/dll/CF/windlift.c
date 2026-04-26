@@ -29,8 +29,8 @@ extern undefined8 ObjHits_MarkObjectPositionDirty();
 extern undefined8 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
-extern undefined4 FUN_8003735c();
-extern int FUN_80037584();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Pop();
 extern undefined4 FUN_80037bd4();
 extern undefined4 FUN_80037ce0();
 extern undefined4 FUN_80038a34();
@@ -266,7 +266,7 @@ void FUN_80184a54(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   pfVar16 = *(float **)(puVar10 + 0x5c);
   iVar11 = FUN_80017a98();
   if ((*(byte *)(pfVar16 + 10) & 1) != 0) {
-    while (iVar12 = FUN_80037584((int)puVar10,&local_160,(uint *)0x0,(uint *)0x0), iVar12 != 0) {
+    while (iVar12 = ObjMsg_Pop((int)puVar10,&local_160,(uint *)0x0,(uint *)0x0), iVar12 != 0) {
       if (local_160 == 0x7000b) {
         local_168 = DAT_803e4688;
         FUN_80294d28(iVar11,(uint)*(byte *)((int)&local_168 + (uint)*(byte *)((int)pfVar16 + 0x27)))

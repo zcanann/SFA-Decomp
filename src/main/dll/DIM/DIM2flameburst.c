@@ -32,8 +32,8 @@ extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 FUN_8002fc3c();
 extern int FUN_80037008();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern int FUN_80039520();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8003f9f8();
@@ -201,7 +201,7 @@ bool FUN_801b3e28(int param_1)
  */
 void FUN_801b3ec0(int param_1)
 {
-  FUN_80037180(param_1,0x13);
+  ObjGroup_RemoveObject(param_1,0x13);
   return;
 }
 
@@ -294,7 +294,7 @@ void FUN_801b4020(undefined2 *param_1,int param_2)
   float *pfVar1;
   double dVar2;
   
-  FUN_8003735c((int)param_1,0x13);
+  ObjGroup_AddObject((int)param_1,0x13);
   *param_1 = (short)((int)*(char *)(param_2 + 0x18) << 8);
   pfVar1 = *(float **)(param_1 + 0x5c);
   dVar2 = (double)FUN_80293f90();

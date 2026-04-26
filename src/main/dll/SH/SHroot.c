@@ -9,7 +9,7 @@ extern void GameBit_Set(int eventId,int value);
 extern f32 fn_8002166C(int posA,int posB);
 extern u32 fn_800221A0(int min,int max);
 extern int fn_8002B9EC();
-extern void fn_80036FA4(int obj,u16 volumeId);
+extern undefined8 ObjGroup_RemoveObject();
 extern int fn_80038024();
 extern void fn_8003B310(int obj,int collisionShapeState);
 extern void fn_8006EF38(double scaleX,double scaleY,int obj,int joint,int pointCount,int pathPoints,
@@ -312,5 +312,5 @@ void sh_thorntail_free(SHthorntailObject *obj)
   if (activeConfigToken == (u32)obj->config->configToken) {
     gSHthorntailActiveConfigToken = SHTHORNTAIL_CONFIG_TOKEN_NONE;
   }
-  fn_80036FA4((int)obj,0x4d);
+  ObjGroup_RemoveObject((int)obj,0x4d);
 }

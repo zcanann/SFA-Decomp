@@ -2,7 +2,7 @@
 #include "main/dll/baddie/MMP_critterspit.h"
 
 extern double FUN_80017708();
-extern void* FUN_80037134();
+extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_80139a4c();
 extern int FUN_8013b368();
 extern int FUN_8013dc88();
@@ -82,7 +82,7 @@ void FUN_8013db3c(undefined8 param_1,undefined8 param_2,double param_3,undefined
     *(undefined *)(iVar6 + 0xd) = 0xff;
   }
   else {
-    piVar5 = FUN_80037134(0x4b,local_48);
+    piVar5 = ObjGroup_GetObjects(0x4b,local_48);
     dVar10 = (double)FLOAT_803e3154;
     for (iVar4 = 0; iVar4 < local_48[0]; iVar4 = iVar4 + 1) {
       dVar8 = FUN_80017708((float *)(*(int *)(iVar6 + 4) + 0x18),(float *)(*piVar5 + 0x18));

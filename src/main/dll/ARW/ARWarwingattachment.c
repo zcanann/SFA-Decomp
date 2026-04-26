@@ -22,7 +22,7 @@ extern undefined4 FUN_80017ac8();
 extern undefined8 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
-extern void* FUN_80037134();
+extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_80037bd4();
 extern undefined8 FUN_80037ce0();
 extern undefined4 FUN_8003b818();
@@ -134,7 +134,7 @@ void FUN_801f0b50(int param_1)
   if ((((cVar1 != '\b') && (cVar1 < '\b')) && (cVar1 == '\0')) &&
      (((*(int *)(param_1 + 0xf4) == 0 && (uVar4 = FUN_80017690(0xa4), uVar4 == 0)) &&
       (uVar4 = FUN_80017690(0x78), uVar4 == 0)))) {
-    piVar5 = FUN_80037134(6,local_18);
+    piVar5 = ObjGroup_GetObjects(6,local_18);
     bVar2 = false;
     if (0 < local_18[0]) {
       do {

@@ -28,9 +28,9 @@ extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHit();
-extern undefined4 FUN_80037180();
-extern undefined4 FUN_8003735c();
-extern int FUN_80037584();
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
+extern int ObjMsg_Pop();
 extern undefined4 FUN_800388b4();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80042bec();
@@ -474,7 +474,7 @@ void FUN_801e1f70(int param_1,int param_2)
     FUN_80053754();
     DAT_803de89c = 0;
   }
-  FUN_80037180(param_1,3);
+  ObjGroup_RemoveObject(param_1,3);
   if ((*(char *)(iVar1 + 0x80) != '\0') && (param_2 == 0)) {
     *(undefined *)(iVar1 + 0x80) = 0;
   }
@@ -837,7 +837,7 @@ void FUN_801e2708(int param_1,int param_2)
  */
 void FUN_801e27a0(int param_1)
 {
-  FUN_80037180(param_1,3);
+  ObjGroup_RemoveObject(param_1,3);
   return;
 }
 
@@ -992,7 +992,7 @@ void FUN_801e2940(undefined8 param_1,double param_2,double param_3,undefined8 pa
       }
     }
     puVar8 = &uStack_70;
-    iVar4 = FUN_80037584(uVar1,&local_88,auStack_68,puVar8);
+    iVar4 = ObjMsg_Pop(uVar1,&local_88,auStack_68,puVar8);
     if (iVar4 != 0) {
       if (local_88 == 0x130002) {
         iVar11 = 1;

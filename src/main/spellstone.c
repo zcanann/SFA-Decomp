@@ -7,8 +7,8 @@ extern void *fn_8002B9EC(void);
 extern void fn_8002CE88(void *obj);
 extern void ObjHits_DisableObject(void *obj);
 extern void ObjHits_EnableObject(void *obj);
-extern void fn_80036FA4(void *obj,int animObjId);
-extern void fn_80037200(void *obj,int animObjId);
+extern undefined8 ObjGroup_RemoveObject();
+extern undefined4 ObjGroup_AddObject();
 extern void fn_8003B8F4(double scale);
 extern int fn_80210BE8(void);
 
@@ -82,7 +82,7 @@ int spellstone_func08(void)
 
 void spellstone_free(SpellStoneObject *obj)
 {
-  fn_80036FA4(obj,0x1e);
+  ObjGroup_RemoveObject(obj,0x1e);
   return;
 }
 
@@ -156,7 +156,7 @@ void spellstone_init(SpellStoneObject *obj)
   SpellStoneState *state;
 
   state = obj->state;
-  fn_80037200(obj,0x1e);
+  ObjGroup_AddObject(obj,0x1e);
   state->state = 1;
   obj->callback = fn_80210BE8;
   return;
