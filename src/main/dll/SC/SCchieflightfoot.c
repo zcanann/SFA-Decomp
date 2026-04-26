@@ -18,14 +18,14 @@ extern int ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
 extern undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,u32 flags);
 extern undefined4 fn_80037200();
 extern int FUN_800384ec();
-extern undefined4 FUN_800388b4();
+extern void fn_8003842C(SHthorntailObject *obj,int pointIndex,f32 *x,f32 *y,f32 *z,int param_6);
 extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
 extern int FUN_800575b4();
 extern undefined4 FUN_8006ef38();
 extern undefined4 fn_80114F64();
 extern undefined4 fn_8011507C();
-extern undefined4 FUN_801150ac();
+extern void fn_80115094(SHthorntailObject *obj,SHthorntailRuntime *runtime);
 extern undefined4 FUN_80286888();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
@@ -42,7 +42,6 @@ extern undefined4 lbl_80326F28;
 extern undefined4 lbl_803E5410;
 extern undefined4* lbl_803DCA88;
 extern undefined4* DAT_803dd6d4;
-extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd728;
 extern undefined4* DAT_803dd72c;
 extern undefined4* lbl_803DCAA8;
@@ -105,7 +104,7 @@ void sh_thorntail_update(SHthorntailObject *obj)
   double in_ps31_1;
   undefined auStack_78 [12];
   float fStack_6c;
-  undefined4 uStack_68;
+  float fStack_68;
   float fStack_64;
   float local_60 [2];
   float local_58;
@@ -130,9 +129,9 @@ void sh_thorntail_update(SHthorntailObject *obj)
   if (runtime->behaviorState == '\f') {
     if (runtime->effectTimer <= lbl_803E5418) {
       if ((psVar2[0x58] & 0x800U) != 0) {
-        FUN_800388b4(psVar2,4,&fStack_6c,&uStack_68,&fStack_64,0);
+        fn_8003842C(obj,4,&fStack_6c,&fStack_68,&fStack_64,0);
         in_r8 = 0;
-        in_r9 = *DAT_803dd708;
+        in_r9 = *lbl_803DCA88;
         (**(code **)(in_r9 + 8))(psVar2,0x7f0,auStack_78,0x200001,0xffffffff);
       }
       runtime->effectTimer = lbl_803E5450;
@@ -241,7 +240,7 @@ void sh_thorntail_update(SHthorntailObject *obj)
     else {
       runtime->movementControlFlags = runtime->movementControlFlags & 0xfe;
     }
-    FUN_801150ac();
+    fn_80115094(obj,runtime);
     if ((DAT_80327fc8[runtime->behaviorState] & 2) == 0) {
       FUN_8003b280((int)psVar2,(int)runtime->collisionShapeState);
     }
