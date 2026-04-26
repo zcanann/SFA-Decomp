@@ -170,7 +170,7 @@ void FUN_801b3a28(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_801b3a60
+ * Function: dimbridgecogmai_release
  * EN v1.0 Address: 0x801B3A60
  * EN v1.0 Size: 144b
  * EN v1.1 Address: 0x801B3B7C
@@ -180,7 +180,7 @@ void FUN_801b3a28(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801b3a60(int param_1)
+void dimbridgecogmai_release(int param_1)
 {
   int iVar1;
   
@@ -244,7 +244,7 @@ undefined4 FUN_801b3af4(int param_1,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_801b3b58
+ * Function: dimdismountpoint_func08
  * EN v1.0 Address: 0x801B3B58
  * EN v1.0 Size: 36b
  * EN v1.1 Address: 0x801B3D94
@@ -254,7 +254,7 @@ undefined4 FUN_801b3af4(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801b3b58(int param_1)
+void dimdismountpoint_func08(int param_1)
 {
   FUN_80037180(param_1,0xf);
   return;

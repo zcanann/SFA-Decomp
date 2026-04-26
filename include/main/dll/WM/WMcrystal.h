@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801dd46c(void);
+void sc_totempuzzle_update(void);
 void FUN_801dd6b8(int param_1);
 void FUN_801dd6e0(undefined2 *param_1);
 void FUN_801dd6e4(undefined2 *param_1,int param_2);

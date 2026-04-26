@@ -49,7 +49,7 @@ extern f32 FLOAT_803e62c8;
 /*
  * --INFO--
  *
- * Function: FUN_801dd46c
+ * Function: sc_totempuzzle_update
  * EN v1.0 Address: 0x801DD46C
  * EN v1.0 Size: 588b
  * EN v1.1 Address: 0x801DD798
@@ -59,7 +59,7 @@ extern f32 FLOAT_803e62c8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801dd46c(void)
+void sc_totempuzzle_update(void)
 {
   bool bVar1;
   undefined2 *puVar2;
