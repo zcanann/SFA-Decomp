@@ -2,17 +2,18 @@
 #include "main/dll/SH/SHroot.h"
 #include "main/dll/SH/SHthorntail.h"
 
-extern int fn_8000BB18();
-extern undefined4 fn_8000B7BC();
+extern void fn_8000BB18(SHthorntailObject *obj,u16 volumeId);
+extern void fn_8000B7BC(int obj,u16 volumeId);
 extern int fn_8001FFB4(int eventId);
-extern undefined4 fn_800200E8();
-extern f32 fn_8002166C();
-extern undefined4 fn_800221A0();
+extern void fn_800200E8(int eventId,int value);
+extern f32 fn_8002166C(int posA,int posB);
+extern u32 fn_800221A0(int min,int max);
 extern int fn_8002B9EC();
-extern undefined4 fn_80036FA4();
+extern void fn_80036FA4(int obj,u16 volumeId);
 extern int fn_80038024();
-extern undefined4 fn_8003B310();
-extern undefined4 fn_8006EF38();
+extern void fn_8003B310(int obj,int collisionShapeState);
+extern void fn_8006EF38(double scaleX,double scaleY,int obj,int joint,int pointCount,int pathPoints,
+                        int scratch);
 extern int fn_80114BB0();
 extern int fn_801D4CD0();
 
@@ -224,15 +225,15 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 SHthorntail_updateLevelControlState(int obj,undefined4 param_2,int param_3)
+undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4 param_2,int param_3)
 {
   SHthorntailRuntime *runtime;
   uint uVar1;
   int iVar2;
 
-  runtime = *(SHthorntailRuntime **)(obj + 0xb8);
+  runtime = obj->runtime;
   if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_LEVELCONTROL_READY) == 0) {
-    fn_8000B7BC(obj,0x7f);
+    fn_8000B7BC((int)obj,0x7f);
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
     uVar1 = fn_800221A0(1000,2000);
     runtime->idleTimer = (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) -
@@ -241,18 +242,18 @@ undefined4 SHthorntail_updateLevelControlState(int obj,undefined4 param_2,int pa
     runtime->behaviorFlags = runtime->behaviorFlags | (SHTHORNTAIL_FLAG_LEVELCONTROL_READY |
                                                        SHTHORNTAIL_FLAG_FREEZE_MOTION);
     runtime->freezeFrameCounter = 0;
-    *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) | 8;
+    obj->statusFlags = obj->statusFlags | SHTHORNTAIL_OBJECT_STATUS_08;
   }
   if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_IMPACT_PENDING) != 0) {
-    iVar2 = fn_80114BB0(obj,param_3,(int)runtime,0,0);
+    iVar2 = fn_80114BB0((int)obj,param_3,(int)runtime,0,0);
     if (iVar2 != 0) {
       return 0;
     }
     *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & 0xffbf;
-    fn_8003B310(obj,(int)runtime->collisionShapeState);
+    fn_8003B310((int)obj,(int)runtime->collisionShapeState);
   }
   runtime->activeMoveValid = 0;
-  fn_8006EF38((double)FLOAT_803e60e0,(double)FLOAT_803e60e0,obj,param_3 + 0xf0,8,
+  fn_8006EF38((double)FLOAT_803e60e0,(double)FLOAT_803e60e0,(int)obj,param_3 + 0xf0,8,
               (int)runtime->renderPathPoints,(int)runtime->moveScratch);
   return 0;
 }

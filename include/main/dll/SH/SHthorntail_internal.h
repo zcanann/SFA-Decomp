@@ -51,7 +51,10 @@ typedef struct SHthorntailObject {
   SHthorntailConfig *config;
   u8 pad50[0xAC - 0x50];
   s8 animObjId;
-  u8 padAD[0xB8 - 0xAD];
+  u8 padAD[0xAF - 0xAD];
+  u8 statusFlags;
+  u16 objectFlags;
+  u8 padB2[0xB8 - 0xB2];
   SHthorntailRuntime *runtime;
 } SHthorntailObject;
 
@@ -59,6 +62,7 @@ typedef struct SHthorntailObject {
 #define SHTHORNTAIL_FLAG_IMPACT_PENDING 0x02
 #define SHTHORNTAIL_FLAG_LEVELCONTROL_READY 0x08
 #define SHTHORNTAIL_FLAG_FREEZE_MOTION 0x10
+#define SHTHORNTAIL_OBJECT_STATUS_08 0x08
 #define SHTHORNTAIL_STATE_IDLE 0x00
 #define SHTHORNTAIL_STATE_IDLE_COUNTDOWN 0x01
 #define SHTHORNTAIL_STATE_MOVE_2 0x02

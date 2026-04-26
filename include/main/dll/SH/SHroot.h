@@ -9,7 +9,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
                                          SHthorntailConfig *config);
 void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRuntime *runtime,
                                          SHthorntailConfig *config);
-undefined4 SHthorntail_updateLevelControlState(int obj,undefined4 param_2,int param_3);
+undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4 param_2,int param_3);
 int sh_thorntail_getExtraSize(void);
 void sh_thorntail_free(SHthorntailObject *obj);
 
