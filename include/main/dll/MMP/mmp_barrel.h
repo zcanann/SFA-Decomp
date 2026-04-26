@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801923c4(undefined2 *param_1,int param_2);
+void waveanimator_func0B(undefined2 *param_1,int param_2);
 void FUN_80192488(void);
 void FUN_80192618(int param_1);
 void FUN_80192640(int param_1);

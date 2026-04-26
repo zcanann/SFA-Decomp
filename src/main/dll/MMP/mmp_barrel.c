@@ -84,7 +84,7 @@ extern f32 FLOAT_803e4c5c;
 /*
  * --INFO--
  *
- * Function: FUN_801923c4
+ * Function: waveanimator_func0B
  * EN v1.0 Address: 0x801923C4
  * EN v1.0 Size: 196b
  * EN v1.1 Address: 0x801923CC
@@ -94,7 +94,7 @@ extern f32 FLOAT_803e4c5c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801923c4(undefined2 *param_1,int param_2)
+void waveanimator_func0B(undefined2 *param_1,int param_2)
 {
   uint uVar1;
   undefined4 *puVar2;

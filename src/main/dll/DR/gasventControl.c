@@ -52,7 +52,7 @@ extern f32 FLOAT_803e5018;
 /*
  * --INFO--
  *
- * Function: FUN_801a2af8
+ * Function: blasted_init
  * EN v1.0 Address: 0x801A2AF8
  * EN v1.0 Size: 448b
  * EN v1.1 Address: 0x801A2B9C
@@ -62,7 +62,7 @@ extern f32 FLOAT_803e5018;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801a2af8(int param_1,int param_2)
+void blasted_init(int param_1,int param_2)
 {
   int iVar1;
   

@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801a2af8(int param_1,int param_2);
+void blasted_init(int param_1,int param_2);
 undefined4 FUN_801a2cb8(int param_1,uint param_2);
 void FUN_801a2dc4(int param_1);
 void FUN_801a2dfc(void);
