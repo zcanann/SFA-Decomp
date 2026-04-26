@@ -696,7 +696,7 @@ void FUN_801a45d0(short *param_1,undefined4 *param_2)
 /*
  * --INFO--
  *
- * Function: FUN_801a45d4
+ * Function: cflevelcontrol_free
  * EN v1.0 Address: 0x801A45D4
  * EN v1.0 Size: 36b
  * EN v1.1 Address: 0x801A4880
@@ -706,7 +706,7 @@ void FUN_801a45d0(short *param_1,undefined4 *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801a45d4(int param_1)
+void cflevelcontrol_free(int param_1)
 {
   FUN_80037180(param_1,0x1e);
   return;

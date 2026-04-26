@@ -759,7 +759,7 @@ void FUN_801883bc(short *param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8018843c
+ * Function: infopoint_hitDetect
  * EN v1.0 Address: 0x8018843C
  * EN v1.0 Size: 52b
  * EN v1.1 Address: 0x801884A0
@@ -769,7 +769,7 @@ void FUN_801883bc(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018843c(void)
+void infopoint_hitDetect(void)
 {
   (**(code **)(*DAT_803dd6f8 + 0x18))();
   return;

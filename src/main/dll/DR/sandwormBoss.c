@@ -2572,7 +2572,7 @@ void FUN_8019e964(undefined8 param_1,double param_2,undefined8 param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_8019ebbc
+ * Function: babycloudrunner_func08
  * EN v1.0 Address: 0x8019EBBC
  * EN v1.0 Size: 68b
  * EN v1.1 Address: 0x801A0A24
@@ -2582,7 +2582,7 @@ void FUN_8019e964(undefined8 param_1,double param_2,undefined8 param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8019ebbc(int param_1)
+void babycloudrunner_func08(int param_1)
 {
   undefined4 *puVar1;
   
@@ -2597,7 +2597,7 @@ void FUN_8019ebbc(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8019ec00
+ * Function: babycloudrunner_render
  * EN v1.0 Address: 0x8019EC00
  * EN v1.0 Size: 68b
  * EN v1.1 Address: 0x801A0A70
@@ -2607,7 +2607,7 @@ void FUN_8019ebbc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8019ec00(undefined4 param_1,undefined4 param_2,int param_3)
+undefined4 babycloudrunner_render(undefined4 param_1,undefined4 param_2,int param_3)
 {
   uint uVar1;
   

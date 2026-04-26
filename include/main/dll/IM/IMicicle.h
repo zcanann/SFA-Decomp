@@ -17,7 +17,7 @@ void FUN_801a44f8(int param_1);
 void FUN_801a4520(int param_1);
 void FUN_801a45cc(short *param_1,int param_2);
 void FUN_801a45d0(short *param_1,undefined4 *param_2);
-void FUN_801a45d4(int param_1);
+void cflevelcontrol_free(int param_1);
 void FUN_801a45f8(int param_1);
 void FUN_801a4620(undefined2 *param_1,int param_2);
 void FUN_801a466c(int param_1);

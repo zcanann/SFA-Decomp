@@ -27,7 +27,7 @@ void FUN_801880e0(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9);
 void FUN_801883bc(short *param_1,int param_2);
-void FUN_8018843c(void);
+void infopoint_hitDetect(void);
 void FUN_80188470(uint param_1);
 void FUN_80188668(undefined2 *param_1,int param_2);
 void FUN_8018866c(int param_1);
