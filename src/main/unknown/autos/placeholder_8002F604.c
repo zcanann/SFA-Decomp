@@ -606,7 +606,7 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
   else if (clampedProgress < lbl_803DE8F0) {
     clampedProgress = lbl_803DE8F0;
   }
-  objAnim->hitReactFrame = clampedProgress;
+  objAnim->currentMoveProgress = clampedProgress;
   bank = ObjAnim_GetActiveBank(objAnim);
   if (bank == (ObjAnimBank *)0x0) {
     return 0;

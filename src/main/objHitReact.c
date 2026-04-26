@@ -89,7 +89,7 @@ int objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,fl
   effectOrigin[2] = lbl_802C1B00[2];
   effectOrigin[3] = lbl_802C1B00[3];
   if ((reactionState & 0xff) != 0) {
-    OSReport(sObjHitReactHitstateFrameString,objAnim->hitReactFrame);
+    OSReport(sObjHitReactHitstateFrameString,objAnim->currentMoveProgress);
     collisionType = ObjAnim_AdvanceCurrentMove((double)*cooldown,(double)lbl_803DB414,obj,
                                                (ObjAnimEventList *)0x0);
     if (collisionType != 0) {
