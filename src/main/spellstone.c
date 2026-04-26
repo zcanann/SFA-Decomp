@@ -48,23 +48,26 @@ typedef struct SpellStoneObject {
   void *followTarget;
 } SpellStoneObject;
 
+#pragma peephole off
+#pragma scheduling off
+
 int spellstone_getState(SpellStoneObject *obj)
 {
-  return obj->state->state == 2;
+  return obj->state->state != 2;
 }
 
 int spellstone_setState(SpellStoneObject *obj,int state)
 {
-  u8 oldState;
   SpellStoneState *extra;
+  u8 oldState;
 
   extra = obj->state;
   oldState = extra->state;
-  extra->state = state;
+  extra->state = (u8)state;
   if (state == 2) {
     obj->posY += lbl_803E6750;
   }
-  return oldState == 1;
+  return oldState != 1;
 }
 
 int spellstone_getExtraSize(void)
@@ -86,7 +89,10 @@ void spellstone_free(SpellStoneObject *obj)
 void spellstone_render(SpellStoneObject *obj,undefined4 param_2,undefined4 param_3,
                        undefined4 param_4,undefined4 param_5,char visible)
 {
-  if ((visible != 0) && (obj->state->state != 0)) {
+  SpellStoneState *state;
+
+  state = obj->state;
+  if ((visible != 0) && (state->state != 0)) {
     fn_8003B8F4((double)lbl_803E6754);
   }
   return;
@@ -114,14 +120,14 @@ void spellstone_update(SpellStoneObject *obj)
   eventActive = GameBit_Get(def->completeEvent);
   if (eventActive != 0) {
     GameBit_Set(*(&lbl_803DC228 + def->eventIndex),1);
-    obj->flags |= 0x4000;
+    obj->flags = (s16)(obj->flags | 0x4000);
     fn_8002CE88(obj);
     (*(code *)(*lbl_803DCAAC + 0x44))(0x1d,2);
   }
   else {
     eventActive = GameBit_Get(def->activeEvent);
     if (eventActive != 0) {
-      obj->flags |= 0x4000;
+      obj->flags = (s16)(obj->flags | 0x4000);
       fn_8002CE88(obj);
     }
     if (state->state == 2) {
@@ -165,3 +171,6 @@ void spellstone_initialise(void)
 {
   return;
 }
+
+#pragma scheduling reset
+#pragma peephole reset
