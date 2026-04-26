@@ -73,6 +73,24 @@ void SHkillermushroom_free(int param_1)
 /*
  * --INFO--
  *
+ * Function: bombplantspore_getExtraSize
+ * EN v1.0 Address: 0x801D3378
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int bombplantspore_getExtraSize(void)
+{
+  return 0x2b4;
+}
+
+/*
+ * --INFO--
+ *
  * Function: FUN_801d2c74
  * EN v1.0 Address: 0x801D2C74
  * EN v1.0 Size: 348b

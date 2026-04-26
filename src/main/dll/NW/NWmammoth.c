@@ -254,3 +254,38 @@ void FUN_801d1f04(undefined8 param_1,undefined8 param_2,double param_3,undefined
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
 }
+
+/*
+ * --INFO--
+ *
+ * Function: enemymushroom_getExtraSize
+ * EN v1.0 Address: 0x801D1D58
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int enemymushroom_getExtraSize(void)
+{
+  return 0x3c;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: enemymushroom_hitDetect
+ * EN v1.0 Address: 0x801D1E20
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void enemymushroom_hitDetect(void)
+{
+}

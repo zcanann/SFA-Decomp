@@ -106,6 +106,24 @@ void FUN_801cf0b4(int param_1)
 /*
  * --INFO--
  *
+ * Function: nw_tricky_getExtraSize
+ * EN v1.0 Address: 0x801CF7B8
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int nw_tricky_getExtraSize(void)
+{
+  return 8;
+}
+
+/*
+ * --INFO--
+ *
  * Function: FUN_801cf108
  * EN v1.0 Address: 0x801CF108
  * EN v1.0 Size: 152b

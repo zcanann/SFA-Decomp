@@ -10,5 +10,6 @@ void FUN_801d00ac(int param_1);
 void FUN_801d00d0(undefined2 *param_1);
 void FUN_801d0238(int param_1);
 undefined4 FUN_801d025c(int param_1);
+int nw_levcontrol_getExtraSize(void);
 
 #endif /* MAIN_DLL_FLYBADDIE1D7_H_ */

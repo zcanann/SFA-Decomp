@@ -10,5 +10,6 @@ void FUN_801cf108(int param_1);
 void FUN_801cf1a0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9);
+int nw_tricky_getExtraSize(void);
 
 #endif /* MAIN_DLL_DLL_1D5_H_ */

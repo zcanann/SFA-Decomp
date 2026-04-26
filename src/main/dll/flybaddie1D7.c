@@ -348,3 +348,21 @@ undefined4 FUN_801d025c(int param_1)
   }
   return uVar3;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: nw_levcontrol_getExtraSize
+ * EN v1.0 Address: 0x801CFEC4
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int nw_levcontrol_getExtraSize(void)
+{
+  return 0x14;
+}

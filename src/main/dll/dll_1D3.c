@@ -361,3 +361,21 @@ void FUN_801ce638(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                  undefined4 param_9,undefined4 param_10,int param_11)
 {
 }
+
+/*
+ * --INFO--
+ *
+ * Function: nw_mammoth_getExtraSize
+ * EN v1.0 Address: 0x801CEFB4
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int nw_mammoth_getExtraSize(void)
+{
+  return 0x48c;
+}

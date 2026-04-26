@@ -224,3 +224,21 @@ void FUN_801d0004(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   FUN_8028688c();
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: sh_tricky_getExtraSize
+ * EN v1.0 Address: 0x801D069C
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int sh_tricky_getExtraSize(void)
+{
+  return 1;
+}

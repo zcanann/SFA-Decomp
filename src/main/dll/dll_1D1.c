@@ -141,3 +141,21 @@ void FUN_801cd7dc(uint param_1)
   }
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: treebird_getExtraSize
+ * EN v1.0 Address: 0x801CDA48
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int treebird_getExtraSize(void)
+{
+  return 0xc;
+}

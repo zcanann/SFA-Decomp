@@ -75,3 +75,55 @@ void FUN_80206480(void)
   (**(code **)(*DAT_803dd6f8 + 0x18))();
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: chuka_release
+ * EN v1.0 Address: 0x8020646C
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void chuka_release(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: chuka_initialise
+ * EN v1.0 Address: 0x80206470
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void chuka_initialise(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfpfloorbar_getExtraSize
+ * EN v1.0 Address: 0x8020647C
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dfpfloorbar_getExtraSize(void)
+{
+  return 0xc;
+}

@@ -4,5 +4,6 @@
 #include "ghidra_import.h"
 
 void FUN_801cd7dc(uint param_1);
+int treebird_getExtraSize(void);
 
 #endif /* MAIN_DLL_DLL_1D1_H_ */

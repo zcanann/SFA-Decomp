@@ -329,3 +329,107 @@ void dll1E1_updateTrickyState
   FUN_8028688c();
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: enemymushroom_release
+ * EN v1.0 Address: 0x801D2864
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void enemymushroom_release(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: enemymushroom_initialise
+ * EN v1.0 Address: 0x801D2868
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void enemymushroom_initialise(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: bombplant_getExtraSize
+ * EN v1.0 Address: 0x801D2B34
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int bombplant_getExtraSize(void)
+{
+  return 0x18;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: bombplant_func08
+ * EN v1.0 Address: 0x801D2B3C
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int bombplant_func08(void)
+{
+  return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: bombplant_free
+ * EN v1.0 Address: 0x801D2B44
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void bombplant_free(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: bombplant_hitDetect
+ * EN v1.0 Address: 0x801D2B6C
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void bombplant_hitDetect(void)
+{
+}

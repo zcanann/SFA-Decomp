@@ -360,6 +360,24 @@ void FUN_801c9f84(uint param_1)
 /*
  * --INFO--
  *
+ * Function: dbsh_symbol_getExtraSize
+ * EN v1.0 Address: 0x801C9C34
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dbsh_symbol_getExtraSize(void)
+{
+  return 0x24;
+}
+
+/*
+ * --INFO--
+ *
  * Function: FUN_801ca0e0
  * EN v1.0 Address: 0x801CA0E0
  * EN v1.0 Size: 92b

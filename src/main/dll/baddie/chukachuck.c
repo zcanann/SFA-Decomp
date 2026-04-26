@@ -150,3 +150,20 @@ void dfpfloorbar_update(int param_1)
   }
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: dfpfloorbar_release
+ * EN v1.0 Address: 0x80206928
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfpfloorbar_release(void)
+{
+}

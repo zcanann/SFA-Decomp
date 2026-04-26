@@ -391,3 +391,21 @@ void FUN_801d083c(undefined8 param_1,undefined8 param_2,double param_3,undefined
                (double)(*(float *)(param_9 + 0x16) * FLOAT_803dc074),(int)param_9);
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: ediblemushroom_getExtraSize
+ * EN v1.0 Address: 0x801D155C
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int ediblemushroom_getExtraSize(void)
+{
+  return 0x144;
+}
