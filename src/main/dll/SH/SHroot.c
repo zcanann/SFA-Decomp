@@ -42,7 +42,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
                                          SHthorntailConfig *config)
 {
   int playerObj;
-  uint randomTime;
+  int randomTime;
   BOOL closeToPlayer;
 
   runtime->impactSfxTable = &gSHthorntailLevelControlMode1ImpactSfxTable;
@@ -120,8 +120,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
       randomTime = fn_800221A0(1000,2000);
-      runtime->idleTimer =
-          (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
+      runtime->idleTimer = (float)randomTime;
     }
     break;
   }
@@ -144,7 +143,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
                                          SHthorntailConfig *config)
 {
   int eventIsSet;
-  uint randomTime;
+  int randomTime;
 
   runtime->impactSfxTable = gSHthorntailLevelControlMode0DefaultImpactSfxTable;
   switch(runtime->locomotionMode) {
@@ -196,8 +195,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
       fn_8000BB18(0,0x409);
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
       randomTime = fn_800221A0(1000,2000);
-      runtime->idleTimer =
-          (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
+      runtime->idleTimer = (float)randomTime;
     }
     eventIsSet = fn_8001FFB4(0x13f);
     if (eventIsSet == 0) {
@@ -228,16 +226,15 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
 undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4 param_2,int param_3)
 {
   SHthorntailRuntime *runtime;
-  uint uVar1;
+  int randomTime;
   int iVar2;
 
   runtime = obj->runtime;
   if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_LEVELCONTROL_READY) == 0) {
     fn_8000B7BC((int)obj,0x7f);
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-    uVar1 = fn_800221A0(1000,2000);
-    runtime->idleTimer = (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) -
-                                 lbl_803E5428);
+    randomTime = fn_800221A0(1000,2000);
+    runtime->idleTimer = (float)randomTime;
     runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_IMPACT_PENDING;
     runtime->behaviorFlags = runtime->behaviorFlags | (SHTHORNTAIL_FLAG_LEVELCONTROL_READY |
                                                        SHTHORNTAIL_FLAG_FREEZE_MOTION);
