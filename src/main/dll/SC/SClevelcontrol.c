@@ -1,9 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/SC/SClevelcontrol.h"
 
-extern undefined4 fn_8003842C();
-extern undefined4 fn_8003B8F4();
-extern undefined4 fn_80114DEC();
+extern void fn_8003842C(SHthorntailObject *obj,int pointIndex,f32 *x,f32 *y,f32 *z,int param_6);
+extern void fn_8003B8F4(f32 scale);
+extern void fn_80114DEC(SHthorntailObject *obj,SHthorntailRuntime *runtime,int param_3);
 
 extern f32 lbl_803E5448;
 
@@ -22,16 +22,17 @@ extern f32 lbl_803E5448;
  */
 void sh_thorntail_render(SHthorntailObject *obj)
 {
+  SHthorntailRuntime *runtime;
   int pointIndex;
-  int runtime;
 
-  runtime = *(int *)((int)obj + 0xb8);
-  fn_8003B8F4((double)lbl_803E5448);
-  fn_80114DEC((int)obj,runtime,0);
+  runtime = obj->runtime;
+  fn_8003B8F4(lbl_803E5448);
+  fn_80114DEC(obj,runtime,0);
   pointIndex = 0;
   do {
-    fn_8003842C((int)obj,pointIndex,runtime + 0x8e0,runtime + 0x8e4,runtime + 0x8e8,0);
-    runtime = runtime + 0xc;
+    fn_8003842C(obj,pointIndex,&runtime->renderPathPoints[0].x,&runtime->renderPathPoints[0].y,
+                &runtime->renderPathPoints[0].z,0);
     pointIndex = pointIndex + 1;
+    runtime = (SHthorntailRuntime *)((int)runtime + sizeof(Vec));
   } while (pointIndex < SHTHORNTAIL_RENDER_PATH_POINT_COUNT);
 }
