@@ -2376,7 +2376,7 @@ void FUN_800339fc(undefined8 param_1,double param_2,double param_3,undefined4 pa
 /*
  * --INFO--
  *
- * Function: FUN_80033fd4
+ * Function: ObjHits_DetectObjectPair
  * EN v1.0 Address: 0x80033FD4
  * EN v1.0 Size: 1244b
  * EN v1.1 Address: 0x8003407C
@@ -2386,7 +2386,7 @@ void FUN_800339fc(undefined8 param_1,double param_2,double param_3,undefined4 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80033fd4(void)
+void ObjHits_DetectObjectPair(void)
 {
   byte bVar1;
   float fVar2;
@@ -3074,7 +3074,7 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
                                               candidateObj, obj, 0, 1, 0xffffffff, 0, 0);
                     }
                   } else if ((*(char *)(objState + 0x6a) != '\0') || (*(char *)(attachedState + 0x6a) != '\0')) {
-                    FUN_80033fd4();
+                    ObjHits_DetectObjectPair();
                   }
                 } else {
                   fn_8003454C(obj, candidateObj, aiStack_e58);
