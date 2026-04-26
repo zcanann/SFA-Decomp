@@ -14,7 +14,16 @@ typedef struct ObjAnimHitReactRow {
 #define OBJANIM_DEF_FLAG_CACHED_MOVES 0x40
 #define OBJANIM_CACHED_MOVE_DATA_OFFSET 0x80
 #define OBJANIM_FRAME_CMD_OFFSET 6
+#define OBJANIM_FRAME_TYPE_MASK 0xF0
+#define OBJANIM_FRAME_STEP_MASK 0x0F
 #define OBJANIM_EVENT_COUNTDOWN_RESET 0x4000
+#define OBJANIM_EVENT_FRAME_MASK 0x1FF
+#define OBJANIM_EVENT_ID_SHIFT 9
+#define OBJANIM_EVENT_ID_MASK 0x7F
+#define OBJANIM_EVENT_ID_NONE 0x7F
+#define OBJANIM_EVENT_TRIGGER_CAPACITY 8
+#define OBJANIM_MOVE_GROUP_SHIFT 8
+#define OBJANIM_MOVE_INDEX_MASK 0xFF
 
 /*
  * Shared state used by the object-animation helpers around main/objanim.c.
@@ -119,7 +128,9 @@ static inline f64 ObjAnim_U32AsDouble(u32 value) {
 }
 
 static inline s32 ObjAnim_ResolveMoveIndex(ObjAnimDef *animDef, u32 moveId) {
-  s32 moveIndex = animDef->moveBaseTable[(s32)moveId >> 8] + (moveId & 0xFF);
+  s32 moveIndex =
+      animDef->moveBaseTable[(s32)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
+      (moveId & OBJANIM_MOVE_INDEX_MASK);
 
   if (moveIndex >= animDef->moveCount) {
     moveIndex = animDef->moveCount - 1;

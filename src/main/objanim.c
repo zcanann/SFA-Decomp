@@ -41,7 +41,8 @@ void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,ui
   int moveIndex;
   u64 frameBits;
 
-  moveIndex = animDef->moveBaseTable[(s32)moveId >> 8] + (moveId & 0xff);
+  moveIndex = animDef->moveBaseTable[(s32)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
+              (moveId & OBJANIM_MOVE_INDEX_MASK);
   if (moveIndex >= animDef->moveCount) {
     moveIndex = animDef->moveCount - 1;
   }
@@ -67,7 +68,7 @@ void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,ui
     moveData = (int)animDef->moveData[state->blendCacheSlot];
   }
   state->frameCmd = (u8 *)(moveData + OBJANIM_FRAME_CMD_OFFSET);
-  frameType = *(s8 *)(moveData + 1) & 0xf0;
+  frameType = *(s8 *)(moveData + 1) & OBJANIM_FRAME_TYPE_MASK;
   if (frameType != state->frameType) {
     state->eventState = 0;
   }
@@ -278,11 +279,11 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
         }
         iVar12 = 0;
         iVar9 = 0;
-        while ((iVar12 < iVar11 && (events->triggerCount < 8))) {
+        while ((iVar12 < iVar11 && (events->triggerCount < OBJANIM_EVENT_TRIGGER_CAPACITY))) {
           eventWord = *(s16 *)((u8 *)eventTable->entries + iVar9);
-          eventFrame = eventWord & 0x1ff;
-          eventId = eventWord >> 9 & 0x7f;
-          if (eventId != 0x7f) {
+          eventFrame = eventWord & OBJANIM_EVENT_FRAME_MASK;
+          eventId = eventWord >> OBJANIM_EVENT_ID_SHIFT & OBJANIM_EVENT_ID_MASK;
+          if (eventId != OBJANIM_EVENT_ID_NONE) {
             if (((bVar13 == 0) && (iVar1 <= (int)eventFrame)) && ((int)eventFrame < iVar2)) {
               cVar3 = events->triggerCount;
               events->triggerCount = cVar3 + '\x01';
@@ -418,13 +419,13 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
     iVar6 = (int)animDef->moveData[state->moveCacheSlot];
   }
   state->frameData = (u8 *)(iVar6 + OBJANIM_FRAME_CMD_OFFSET);
-  state->frameType = *(s8 *)(iVar6 + 1) & 0xf0;
+  state->frameType = *(s8 *)(iVar6 + 1) & OBJANIM_FRAME_TYPE_MASK;
   state->segmentLength =
        ObjAnim_U32AsDouble((uint)state->frameData[1]) - lbl_803DE8E8;
   if (state->frameType == 0) {
     state->segmentLength = state->segmentLength - lbl_803DE8E0;
   }
-  uVar2 = *(s8 *)(iVar6 + 1) & 0xf;
+  uVar2 = *(s8 *)(iVar6 + 1) & OBJANIM_FRAME_STEP_MASK;
   if (uVar2 != 0) {
     state->savedStep = state->step;
     state->eventStep =
@@ -879,11 +880,12 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
           }
           iVar25 = 0;
           iVar21 = 0;
-          while ((iVar25 < iVar23 && (*(char *)((int)pfVar20 + 0x1b) < '\b'))) {
+          while ((iVar25 < iVar23 &&
+                  (*(char *)((int)pfVar20 + 0x1b) < OBJANIM_EVENT_TRIGGER_CAPACITY))) {
             uVar16 = (uint)*(short *)(*(int *)(*(int *)(objAnimArg + 0x60) + 4) + iVar21);
-            uVar15 = uVar16 & 0x1ff;
-            uVar16 = uVar16 >> 9 & 0x7f;
-            if (uVar16 != 0x7f) {
+            uVar15 = uVar16 & OBJANIM_EVENT_FRAME_MASK;
+            uVar16 = uVar16 >> OBJANIM_EVENT_ID_SHIFT & OBJANIM_EVENT_ID_MASK;
+            if (uVar16 != OBJANIM_EVENT_ID_NONE) {
               uVar17 = (undefined)uVar16;
               if (((bVar29 == 0) && (iVar30 <= (int)uVar15)) && ((int)uVar15 < iVar26)) {
                 cVar2 = *(char *)((int)pfVar20 + 0x1b);
@@ -1136,7 +1138,8 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
   previousMove = objAnim->currentMove;
   moveChanged = previousMove != moveId;
   objAnim->currentMove = (s16)moveId;
-  moveIndex = animDef->moveBaseTable[(s32)moveId >> 8] + (moveId & 0xff);
+  moveIndex = animDef->moveBaseTable[(s32)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
+              (moveId & OBJANIM_MOVE_INDEX_MASK);
   if (moveIndex >= animDef->moveCount) {
     moveIndex = animDef->moveCount - 1;
   }
@@ -1161,13 +1164,13 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
     moveData = (int)animDef->moveData[state->moveCacheSlot];
   }
   state->frameData = (u8 *)(moveData + OBJANIM_FRAME_CMD_OFFSET);
-  state->frameType = *(s8 *)(moveData + 1) & 0xf0;
+  state->frameType = *(s8 *)(moveData + 1) & OBJANIM_FRAME_TYPE_MASK;
   state->segmentLength =
        ObjAnim_U32AsDouble((uint)state->frameData[1]) - lbl_803DE8E8;
   if (state->frameType == 0) {
     state->segmentLength = state->segmentLength - lbl_803DE8E0;
   }
-  frameStep = *(s8 *)(moveData + 1) & 0xf;
+  frameStep = *(s8 *)(moveData + 1) & OBJANIM_FRAME_STEP_MASK;
   if ((frameStep != 0) && ((flags & 0x10) == 0)) {
     state->savedStep = state->step;
     state->eventStep =
