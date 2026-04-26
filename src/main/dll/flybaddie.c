@@ -217,3 +217,37 @@ void FUN_801c9680(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: dbsh_shrine_release
+ * EN v1.0 Address: 0x801C9658
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dbsh_shrine_release(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dbsh_shrine_initialise
+ * EN v1.0 Address: 0x801C965C
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dbsh_shrine_initialise(void)
+{
+}

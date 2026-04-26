@@ -84,6 +84,40 @@ void FUN_801c83d4(int param_1)
 /*
  * --INFO--
  *
+ * Function: ecsh_cup_release
+ * EN v1.0 Address: 0x801C8B60
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void ecsh_cup_release(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: ecsh_cup_initialise
+ * EN v1.0 Address: 0x801C8B64
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void ecsh_cup_initialise(void)
+{
+}
+
+/*
+ * --INFO--
+ *
  * Function: FUN_801c83fc
  * EN v1.0 Address: 0x801C83FC
  * EN v1.0 Size: 4b

@@ -283,3 +283,56 @@ void FUN_801c4f4c(undefined4 param_1,undefined4 param_2,int param_3)
   FUN_80286888();
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: mmsh_shrine_getExtraSize
+ * EN v1.0 Address: 0x801C4D78
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int mmsh_shrine_getExtraSize(void)
+{
+  return 0x28;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: mmsh_shrine_func08
+ * EN v1.0 Address: 0x801C4D80
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int mmsh_shrine_func08(void)
+{
+  return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: mmsh_shrine_hitDetect
+ * EN v1.0 Address: 0x801C4F1C
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void mmsh_shrine_hitDetect(void)
+{
+}

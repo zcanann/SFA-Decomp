@@ -324,3 +324,124 @@ void FUN_801c2f68(int param_1)
 void FUN_801c2f90(int param_1,int param_2)
 {
 }
+
+/*
+ * --INFO--
+ *
+ * Function: dfsh_door2speci_free
+ * EN v1.0 Address: 0x801C282C
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfsh_door2speci_free(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfsh_door2speci_hitDetect
+ * EN v1.0 Address: 0x801C2860
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfsh_door2speci_hitDetect(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfsh_door2speci_update
+ * EN v1.0 Address: 0x801C2864
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfsh_door2speci_update(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfsh_door2speci_release
+ * EN v1.0 Address: 0x801C290C
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfsh_door2speci_release(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfsh_door2speci_initialise
+ * EN v1.0 Address: 0x801C2910
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfsh_door2speci_initialise(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfsh_shrine_getExtraSize
+ * EN v1.0 Address: 0x801C2DC4
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dfsh_shrine_getExtraSize(void)
+{
+  return 0x20;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfsh_shrine_func08
+ * EN v1.0 Address: 0x801C2DCC
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dfsh_shrine_func08(void)
+{
+  return 0;
+}

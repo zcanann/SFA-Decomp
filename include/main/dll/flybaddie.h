@@ -8,5 +8,7 @@ void FUN_801c95e8(void);
 void FUN_801c9680(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9);
+void dbsh_shrine_release(void);
+void dbsh_shrine_initialise(void);
 
 #endif /* MAIN_DLL_FLYBADDIE_H_ */

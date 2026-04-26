@@ -154,3 +154,56 @@ void FUN_801c9018(ushort *param_1)
   }
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: dbsh_shrine_getExtraSize
+ * EN v1.0 Address: 0x801C9040
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dbsh_shrine_getExtraSize(void)
+{
+  return 0x18;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dbsh_shrine_func08
+ * EN v1.0 Address: 0x801C9048
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dbsh_shrine_func08(void)
+{
+  return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dbsh_shrine_hitDetect
+ * EN v1.0 Address: 0x801C91AC
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dbsh_shrine_hitDetect(void)
+{
+}

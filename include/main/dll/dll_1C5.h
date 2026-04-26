@@ -12,5 +12,7 @@ void FUN_801c8400(int param_1);
 void FUN_801c8428(void);
 void FUN_801c845c(int param_1);
 void FUN_801c8484(short *param_1);
+void ecsh_cup_release(void);
+void ecsh_cup_initialise(void);
 
 #endif /* MAIN_DLL_DLL_1C5_H_ */

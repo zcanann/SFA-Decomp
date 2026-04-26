@@ -13,5 +13,12 @@ void FUN_801c2d44(undefined8 param_1,double param_2,double param_3,undefined8 pa
 undefined4 FUN_801c2e58(int param_1);
 void FUN_801c2f68(int param_1);
 void FUN_801c2f90(int param_1,int param_2);
+void dfsh_door2speci_free(void);
+void dfsh_door2speci_hitDetect(void);
+void dfsh_door2speci_update(void);
+void dfsh_door2speci_release(void);
+void dfsh_door2speci_initialise(void);
+int dfsh_shrine_getExtraSize(void);
+int dfsh_shrine_func08(void);
 
 #endif /* MAIN_DLL_DF_DFLANTERN_H_ */

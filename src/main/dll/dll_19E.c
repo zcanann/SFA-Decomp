@@ -321,3 +321,37 @@ void FUN_801c43b0(int param_1)
   *piVar1 = 0;
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: dfsh_objcreator_release
+ * EN v1.0 Address: 0x801C3E34
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfsh_objcreator_release(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfsh_objcreator_initialise
+ * EN v1.0 Address: 0x801C3E38
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfsh_objcreator_initialise(void)
+{
+}

@@ -189,6 +189,59 @@ void FUN_801c61f4(undefined4 param_1,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
+ * Function: ecsh_shrine_getExtraSize
+ * EN v1.0 Address: 0x801C5F40
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int ecsh_shrine_getExtraSize(void)
+{
+  return 0x38;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: ecsh_shrine_func08
+ * EN v1.0 Address: 0x801C5F48
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int ecsh_shrine_func08(void)
+{
+  return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: ecsh_shrine_hitDetect
+ * EN v1.0 Address: 0x801C60B4
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void ecsh_shrine_hitDetect(void)
+{
+}
+
+/*
+ * --INFO--
+ *
  * Function: FUN_801c6358
  * EN v1.0 Address: 0x801C6358
  * EN v1.0 Size: 172b
