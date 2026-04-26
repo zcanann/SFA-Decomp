@@ -39,6 +39,9 @@ typedef struct LaserObject {
 #define LASEROBJ_SEQUENCE_B_TRIGGER_A 7
 #define LASEROBJ_SEQUENCE_B_TRIGGER_B 0xd
 
+#define LASEROBJ_MAIN_SEQUENCE_A_EVENT 0x123
+#define LASEROBJ_MAIN_SEQUENCE_B_EVENT 0x83b
+
 int laser_getExtraSizeUnsupported(void);
 int laser_func08(void);
 void laser_freeUnsupported(void);

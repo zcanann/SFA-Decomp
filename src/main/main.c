@@ -719,10 +719,10 @@ void FUN_801fe1c4(int param_1)
     obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_DISABLED;
   }
   FUN_800400b0();
-  if ((obj->statusFlags & 1) != 0) {
+  if ((obj->statusFlags & LASER_OBJECT_STATUS_ACTIVE) != 0) {
     bVar3 = (**(code **)(*DAT_803dd72c + 0x40))((int)obj->modeIndex);
-    if (bVar3 == 2) {
-      iVar2 = (**(code **)(*DAT_803dd6e8 + 0x20))(0x83b);
+    if (bVar3 == LASEROBJ_MODE_SEQUENCE_B) {
+      iVar2 = (**(code **)(*DAT_803dd6e8 + 0x20))(LASEROBJ_MAIN_SEQUENCE_B_EVENT);
       if (iVar2 != 0) {
         FUN_80017698((int)state->primarySequenceId,1);
         FUN_80017698((int)state->secondarySequenceId,0);
@@ -731,7 +731,7 @@ void FUN_801fe1c4(int param_1)
       }
     }
     else if ((bVar3 < 2) && (bVar3 != 0)) {
-      iVar2 = (**(code **)(*DAT_803dd6e8 + 0x20))(0x123);
+      iVar2 = (**(code **)(*DAT_803dd6e8 + 0x20))(LASEROBJ_MAIN_SEQUENCE_A_EVENT);
       if (iVar2 != 0) {
         FUN_80017698((int)state->primarySequenceId,1);
         FUN_80017698((int)state->secondarySequenceId,0);
