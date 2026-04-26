@@ -9,6 +9,14 @@ typedef struct LaserState {
   u8 sequenceLatched;
 } LaserState;
 
+typedef struct LaserObjectMapData {
+  u8 pad00[0x18];
+  s8 modeIndex;
+  u8 pad19[0x1E - 0x19];
+  s16 primarySequenceId;
+  s16 secondarySequenceId;
+} LaserObjectMapData;
+
 typedef struct LaserObject {
   s16 modeWord;
   u8 pad02[0xAC - 2];
@@ -37,7 +45,7 @@ void laserObj_free(void);
 void laserObj_render(void);
 void laserObj_hitDetect(void);
 void laserObj_update(int param_1);
-void laserObj_init(LaserObject *obj,int param_2);
+void laserObj_init(LaserObject *obj,LaserObjectMapData *mapData);
 void laserObj_release(void);
 void laserObj_initialise(void);
 undefined4

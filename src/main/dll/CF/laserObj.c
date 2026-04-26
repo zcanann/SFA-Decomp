@@ -74,16 +74,16 @@ void laserObj_update(int param_1)
   return;
 }
 
-void laserObj_init(LaserObject *obj,int param_2)
+void laserObj_init(LaserObject *obj,LaserObjectMapData *mapData)
 {
   LaserState *state;
   uint uVar1;
 
   state = obj->state;
-  state->primarySequenceId = *(short *)(param_2 + 0x1e);
-  state->secondarySequenceId = *(short *)(param_2 + 0x20);
+  state->primarySequenceId = mapData->primarySequenceId;
+  state->secondarySequenceId = mapData->secondarySequenceId;
   state->sequenceLatched = 0;
-  obj->modeWord = (s16)(*(s8 *)(param_2 + 0x18) << 8);
+  obj->modeWord = (s16)(mapData->modeIndex << 8);
   uVar1 = GameBit_Get((int)state->primarySequenceId);
   if (uVar1 != 0) {
     state->sequenceLatched = 1;
