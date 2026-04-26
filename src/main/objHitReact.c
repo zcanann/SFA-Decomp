@@ -56,6 +56,9 @@ typedef struct ObjHitReactState {
   u8 resetFlags;
 } ObjHitReactState;
 
+#define OBJHITREACT_STATE_ACTIVE 0x01
+#define OBJHITREACT_STATE_RESET_PENDING 0x08
+
 /*
  * --INFO--
  *
@@ -141,33 +144,40 @@ u8 objHitReact_update(int obj,void *entries,u32 entryCount,u32 reactionState,flo
 #pragma scheduling off
 void ObjHitReact_ResetActiveObjects(int objectCount)
 {
-  int obj;
   ObjHitReactState *hitState;
+  int obj;
   int *objectList;
+  int *resetObjects;
+  int stateActive;
+  int resetPending;
   int resetObjectCount;
   undefined local_14[4];
   undefined local_18[4];
 
   objectList = fn_8002E0FC(local_18,local_14);
   gObjHitReactResetObjectCount = 0;
-  if (objectCount > 0) {
-    while (objectCount != 0) {
-      obj = *objectList;
-      hitState = *(ObjHitReactState **)(obj + 0x54);
-      if (((hitState != (ObjHitReactState *)0x0) && ((hitState->flags & 1) != 0)) &&
-         ((hitState->resetFlags & 8) != 0)) {
-        if (gObjHitReactResetObjectCount < 0x32) {
-          resetObjectCount = gObjHitReactResetObjectCount;
-          gObjHitReactResetObjectCount = resetObjectCount + 1;
-          gObjHitReactResetObjects[resetObjectCount] = obj;
+  while (objectCount > 0) {
+    obj = *objectList;
+    hitState = *(ObjHitReactState **)(obj + 0x54);
+    if (hitState != (ObjHitReactState *)0x0) {
+      stateActive = hitState->flags & OBJHITREACT_STATE_ACTIVE;
+      if (stateActive != 0) {
+        resetPending = hitState->resetFlags & OBJHITREACT_STATE_RESET_PENDING;
+        if (resetPending != 0) {
+          if (gObjHitReactResetObjectCount < 0x32) {
+            resetObjectCount = gObjHitReactResetObjectCount;
+            resetObjects = gObjHitReactResetObjects;
+            gObjHitReactResetObjectCount = resetObjectCount + 1;
+            resetObjects[resetObjectCount] = obj;
+          }
+          hitState->activeHit = 0;
+          hitState->flags = (s16)(hitState->flags & ~OBJHITREACT_STATE_RESET_PENDING);
+          hitState->resetFrameCount = 0x400;
         }
-        hitState->activeHit = 0;
-        hitState->flags = hitState->flags & ~8;
-        hitState->resetFrameCount = 0x400;
       }
-      objectList = objectList + 1;
-      objectCount = objectCount + -1;
     }
+    objectList = objectList + 1;
+    objectCount = objectCount + -1;
   }
 }
 #pragma scheduling reset
