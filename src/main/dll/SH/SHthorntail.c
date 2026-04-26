@@ -29,6 +29,7 @@ extern f64 lbl_803E5428;
 void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntime *runtime)
 {
   int eventIsSet;
+  int objectTriggerIsSet;
   uint triggerIsSet;
   uint triggerEventId;
   int randomTime;
@@ -78,7 +79,8 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
     }
     else {
       triggerIsSet = GameBit_Get(0x1a0);
-      if ((triggerIsSet == 0) && (triggerIsSet = fn_80038024((int)obj), triggerIsSet != 0)) {
+      if ((triggerIsSet == 0) &&
+          (objectTriggerIsSet = fn_80038024((int)obj), objectTriggerIsSet != 0)) {
         runtime->behaviorFlags = runtime->behaviorFlags | 4;
         runtime->behaviorState = SHTHORNTAIL_STATE_ROOT_MODE2_EVENT;
         (*lbl_803DCAAC)->setAnimEvent((int)obj->animObjId,3,1);
