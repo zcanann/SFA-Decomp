@@ -1,6 +1,6 @@
 #ifndef MAIN_DLL_DLL_75_H_
 #define MAIN_DLL_DLL_75_H_
 
-#include "ghidra_import.h"
+void fn_80100900(void);
 
 #endif /* MAIN_DLL_DLL_75_H_ */
