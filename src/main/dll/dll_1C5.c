@@ -11,7 +11,7 @@ extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_80036080();
+extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_80037008();
 extern undefined4 FUN_8003b818();
@@ -259,12 +259,12 @@ void FUN_801c8484(short *param_1)
       *(float *)(param_1 + 10) = (float)puVar3[5] * FLOAT_803dc074 + *(float *)(param_1 + 10);
       ObjHits_EnableObject((int)param_1);
       ObjHits_SetHitVolumeSlot((int)param_1,10,1,0);
-      FUN_80036080((int)param_1);
+      ObjHits_SyncObjectPositionIfDirty((int)param_1);
     }
     else {
       ObjHits_EnableObject((int)param_1);
       ObjHits_SetHitVolumeSlot((int)param_1,0,0,0);
-      FUN_80036080((int)param_1);
+      ObjHits_SyncObjectPositionIfDirty((int)param_1);
     }
     fVar1 = FLOAT_803e5d00;
     if (local_34 == 6) {

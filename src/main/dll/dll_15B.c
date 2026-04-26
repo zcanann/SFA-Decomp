@@ -12,7 +12,7 @@ extern undefined4 FUN_80017a3c();
 extern int FUN_80017a98();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern int FUN_800368c4();
+extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined4 FUN_80081120();
 extern undefined4 FUN_801835c4();
 extern undefined4 FUN_801833e4();
@@ -141,7 +141,7 @@ void largecrate_init(ushort *param_1)
     if (((short)param_1[1] < 10) && (-10 < (short)param_1[1])) {
       param_1[1] = 0;
     }
-    iVar12 = FUN_800368c4((int)param_1,&uStack_3c,&local_40,&local_44,&local_2c,&uStack_28,&local_24
+    iVar12 = ObjHits_GetPriorityHitWithPosition((int)param_1,&uStack_3c,&local_40,&local_44,&local_2c,&uStack_28,&local_24
                          );
     if (iVar12 == 0x10) {
       FUN_80017a3c(param_1,300);

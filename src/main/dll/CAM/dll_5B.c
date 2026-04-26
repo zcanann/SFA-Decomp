@@ -23,7 +23,7 @@ extern uint FUN_80017730();
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern int FUN_80017a98();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHit();
 extern void* FUN_80037134();
 extern undefined4 FUN_80053bf0();
 extern undefined4 FUN_800810d8();

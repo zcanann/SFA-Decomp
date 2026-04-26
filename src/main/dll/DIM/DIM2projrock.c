@@ -22,8 +22,8 @@ extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 FUN_80017af8();
 extern undefined4 ObjHits_DisableObject();
-extern undefined4 FUN_80036864();
-extern int FUN_800369d0();
+extern undefined4 ObjHits_AddContactObject();
+extern int ObjHits_GetPriorityHit();
 extern void* FUN_80037134();
 extern undefined4 FUN_80037180();
 extern int FUN_80039520();
@@ -277,7 +277,7 @@ void FUN_801b8c88(uint param_1)
   int iVar2;
   int local_18 [5];
   
-  iVar2 = FUN_800369d0(param_1,local_18,(int *)0x0,(uint *)0x0);
+  iVar2 = ObjHits_GetPriorityHit(param_1,local_18,(int *)0x0,(uint *)0x0);
   if (iVar2 == 0xe) {
     iVar2 = FUN_80017a98();
     FUN_8001771c((float *)(param_1 + 0x18),(float *)(iVar2 + 0x18));
@@ -380,7 +380,7 @@ void FUN_801b8d0c(int *param_1)
     do {
       if ((float)param_1[4] < FLOAT_803e579c + *(float *)*puVar4) {
         param_1[4] = *(int *)local_90[iVar5];
-        FUN_80036864(*(int *)(local_90[iVar5] + 0x10),(int)param_1);
+        ObjHits_AddContactObject(*(int *)(local_90[iVar5] + 0x10),(int)param_1);
         *(undefined *)(pfVar6 + 1) = 1;
         break;
       }
@@ -728,7 +728,7 @@ void FUN_801b9914(uint param_1)
   if (bVar1 != 2) {
     if (bVar1 < 2) {
       if (bVar1 == 0) {
-        iVar6 = FUN_800369d0(param_1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
+        iVar6 = ObjHits_GetPriorityHit(param_1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
         if (iVar6 != 0xe) {
           return;
         }

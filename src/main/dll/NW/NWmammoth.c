@@ -15,7 +15,7 @@ extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_80037180();
 extern undefined4 FUN_8003735c();
 extern int FUN_80037584();
@@ -209,7 +209,7 @@ void FUN_801d1b50(undefined8 param_1,double param_2,double param_3,undefined8 pa
         }
       }
       pfVar5 = (float *)0x0;
-      iVar2 = FUN_800369d0((int)puVar1,local_34,(int *)0x0,(uint *)0x0);
+      iVar2 = ObjHits_GetPriorityHit((int)puVar1,local_34,(int *)0x0,(uint *)0x0);
       if (iVar2 != 0) {
         if (iVar2 == 0x10) {
           dVar8 = (double)FUN_80017a3c(puVar1,300);

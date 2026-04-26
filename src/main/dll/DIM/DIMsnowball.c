@@ -28,7 +28,7 @@ extern int FUN_80017af8();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHit();
 extern int FUN_80037008();
 extern void* FUN_80037134();
 extern int fn_80037B60();
@@ -865,7 +865,7 @@ LAB_801ab118:
   }
   if ((*(byte *)(piVar10 + 4) < 5) || (10 < *(byte *)(piVar10 + 4))) {
     pfVar7 = (float *)0x0;
-    iVar8 = FUN_800369d0((int)psVar2,&local_58,(int *)0x0,(uint *)0x0);
+    iVar8 = ObjHits_GetPriorityHit((int)psVar2,&local_58,(int *)0x0,(uint *)0x0);
     if ((iVar8 != 0) &&
        ((*(short *)(local_58 + 0x46) == 0x11 || (*(short *)(local_58 + 0x46) == 0x33)))) {
       pfVar7 = (float *)0x0;

@@ -24,7 +24,7 @@ extern undefined4 FUN_80035b84();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHit();
 extern void* FUN_80037134();
 extern undefined4 FUN_80037180();
 extern undefined4 FUN_8003735c();
@@ -787,7 +787,7 @@ void FUN_801a66f8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       iVar3 = (int)(dVar9 * dVar8 + (double)(float)(local_30 - DOUBLE_803e5120));
       local_38 = (double)(longlong)iVar3;
       param_9[1] = (short)iVar3;
-      iVar3 = FUN_800369d0((int)param_9,local_40,&iStack_44,&uStack_48);
+      iVar3 = ObjHits_GetPriorityHit((int)param_9,local_40,&iStack_44,&uStack_48);
       if ((((iVar5 != 0) || (iVar4 = FUN_80017a98(), local_40[0] == iVar4)) || (iVar3 - 0xeU < 2))
          || (iVar3 == 0x13)) {
         if (iVar5 == 0) {

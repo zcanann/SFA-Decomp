@@ -653,7 +653,7 @@ void ObjHits_SetFlags(int param_1,ushort param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8003606c
+ * Function: ObjHits_MarkObjectPositionDirty
  * EN v1.0 Address: 0x8003606C
  * EN v1.0 Size: 20b
  * EN v1.1 Address: 0x80035F84
@@ -663,7 +663,7 @@ void ObjHits_SetFlags(int param_1,ushort param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003606c(int param_1)
+void ObjHits_MarkObjectPositionDirty(int param_1)
 {
   *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) = *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) | 0x40
   ;
@@ -673,7 +673,7 @@ void FUN_8003606c(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80036080
+ * Function: ObjHits_SyncObjectPositionIfDirty
  * EN v1.0 Address: 0x80036080
  * EN v1.0 Size: 84b
  * EN v1.1 Address: 0x80035F9C
@@ -683,7 +683,7 @@ void FUN_8003606c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80036080(int param_1)
+void ObjHits_SyncObjectPositionIfDirty(int param_1)
 {
   int iVar1;
   
@@ -814,7 +814,7 @@ void ObjHits_SyncObjectPosition(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80036194
+ * Function: ObjHits_AllocObjectState
  * EN v1.0 Address: 0x80036194
  * EN v1.0 Size: 108b
  * EN v1.1 Address: 0x800360C4
@@ -824,7 +824,7 @@ void ObjHits_SyncObjectPosition(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_80036194(int param_1,uint param_2)
+int ObjHits_AllocObjectState(int param_1,uint param_2)
 {
   uint uVar1;
   int iVar2;
@@ -832,7 +832,7 @@ int FUN_80036194(int param_1,uint param_2)
   uVar1 = FUN_800177d4(param_2);
   *(uint *)(param_1 + 0x54) = uVar1;
   iVar2 = *(int *)(param_1 + 0x54);
-  FUN_80036200(param_1);
+  ObjHits_RefreshObjectState(param_1);
   *(undefined *)(iVar2 + 0xae) = 1;
   if ((*(byte *)(iVar2 + 0x62) & 0x30) != 0) {
     *(undefined *)(iVar2 + 0xaf) = 2;
@@ -843,7 +843,7 @@ int FUN_80036194(int param_1,uint param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80036200
+ * Function: ObjHits_RefreshObjectState
  * EN v1.0 Address: 0x80036200
  * EN v1.0 Size: 932b
  * EN v1.1 Address: 0x8003613C
@@ -853,7 +853,7 @@ int FUN_80036194(int param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80036200(int param_1)
+void ObjHits_RefreshObjectState(int param_1)
 {
   double dVar1;
   uint uVar2;
@@ -971,7 +971,7 @@ void FUN_80036200(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_800365a4
+ * Function: ObjHits_RecordObjectHit
  * EN v1.0 Address: 0x800365A4
  * EN v1.0 Size: 352b
  * EN v1.1 Address: 0x80036548
@@ -981,7 +981,7 @@ void FUN_80036200(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_800365a4(int param_1,int param_2,char param_3,undefined param_4,undefined param_5)
+undefined4 ObjHits_RecordObjectHit(int param_1,int param_2,char param_3,undefined param_4,undefined param_5)
 {
   int iVar1;
   int iVar2;
@@ -1032,7 +1032,7 @@ undefined4 FUN_800365a4(int param_1,int param_2,char param_3,undefined param_4,u
 /*
  * --INFO--
  *
- * Function: FUN_80036704
+ * Function: ObjHits_RecordPositionHit
  * EN v1.0 Address: 0x80036704
  * EN v1.0 Size: 352b
  * EN v1.1 Address: 0x800366B0
@@ -1043,7 +1043,7 @@ undefined4 FUN_800365a4(int param_1,int param_2,char param_3,undefined param_4,u
  * PAL Size: TODO
  */
 undefined4
-FUN_80036704(double param_1,double param_2,double param_3,int param_4,int param_5,char param_6,
+ObjHits_RecordPositionHit(double param_1,double param_2,double param_3,int param_4,int param_5,char param_6,
             undefined param_7,undefined param_8)
 {
   int iVar1;
@@ -1095,7 +1095,7 @@ FUN_80036704(double param_1,double param_2,double param_3,int param_4,int param_
 /*
  * --INFO--
  *
- * Function: FUN_80036864
+ * Function: ObjHits_AddContactObject
  * EN v1.0 Address: 0x80036864
  * EN v1.0 Size: 96b
  * EN v1.1 Address: 0x80036800
@@ -1105,7 +1105,7 @@ FUN_80036704(double param_1,double param_2,double param_3,int param_4,int param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80036864(int param_1,int param_2)
+void ObjHits_AddContactObject(int param_1,int param_2)
 {
   char cVar1;
   int iVar2;
@@ -1140,7 +1140,7 @@ void FUN_80036864(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_800368c4
+ * Function: ObjHits_GetPriorityHitWithPosition
  * EN v1.0 Address: 0x800368C4
  * EN v1.0 Size: 268b
  * EN v1.1 Address: 0x80036868
@@ -1150,7 +1150,7 @@ void FUN_80036864(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800368c4(int param_1,undefined4 *param_2,int *param_3,uint *param_4,undefined4 *param_5,
+int ObjHits_GetPriorityHitWithPosition(int param_1,undefined4 *param_2,int *param_3,uint *param_4,undefined4 *param_5,
                 undefined4 *param_6,undefined4 *param_7)
 {
   char cVar1;
@@ -1204,7 +1204,7 @@ int FUN_800368c4(int param_1,undefined4 *param_2,int *param_3,uint *param_4,unde
 /*
  * --INFO--
  *
- * Function: FUN_800369d0
+ * Function: ObjHits_GetPriorityHit
  * EN v1.0 Address: 0x800369D0
  * EN v1.0 Size: 200b
  * EN v1.1 Address: 0x80036974
@@ -1214,7 +1214,7 @@ int FUN_800368c4(int param_1,undefined4 *param_2,int *param_3,uint *param_4,unde
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800369d0(int param_1,undefined4 *param_2,int *param_3,uint *param_4)
+int ObjHits_GetPriorityHit(int param_1,undefined4 *param_2,int *param_3,uint *param_4)
 {
   char cVar1;
   int iVar2;
@@ -2139,10 +2139,10 @@ int fn_80037B60(int param_1,float *param_2,undefined4 *param_3,float *param_4)
   *param_2 = *param_2 - FLOAT_803dc074;
   if (*param_2 <= FLOAT_803df5f0) {
     if (param_4 == (float *)0x0) {
-      iVar1 = FUN_800369d0(param_1,param_3,(int *)0x0,(uint *)0x0);
+      iVar1 = ObjHits_GetPriorityHit(param_1,param_3,(int *)0x0,(uint *)0x0);
     }
     else {
-      iVar1 = FUN_800368c4(param_1,param_3,(int *)0x0,(uint *)0x0,(undefined4 *)param_4,
+      iVar1 = ObjHits_GetPriorityHitWithPosition(param_1,param_3,(int *)0x0,(uint *)0x0,(undefined4 *)param_4,
                            (undefined4 *)(param_4 + 1),(undefined4 *)(param_4 + 2));
       if (iVar1 != 0) {
         FUN_80053ab4(param_1,param_4);
@@ -2191,7 +2191,7 @@ void FUN_80037fa8(undefined4 param_1,undefined4 param_2,uint param_3,uint param_
   uVar4 = FUN_80286834();
   uVar1 = (uint)((ulonglong)uVar4 >> 0x20);
   *param_7 = *param_7 - FLOAT_803dc074;
-  iVar2 = FUN_800368c4((int)uVar1, (undefined4 *)&local_58, (int *)0x0, (uint *)0x0,
+  iVar2 = ObjHits_GetPriorityHitWithPosition((int)uVar1, (undefined4 *)&local_58, (int *)0x0, (uint *)0x0,
                        (undefined4 *)&local_38,
                        &uStack_34, (undefined4 *)local_30);
   if ((((*param_7 <= FLOAT_803df5f0) && (iVar2 != 0)) && ((*param_7 = FLOAT_803df5f8), (iVar2 != 0x1a))) &&

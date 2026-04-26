@@ -14,7 +14,7 @@ extern uint FUN_80017760();
 extern undefined4 FUN_80017778();
 extern undefined4 FUN_80017b00();
 extern ushort ObjHits_IsObjectEnabled();
-extern undefined4 FUN_80036864();
+extern undefined4 ObjHits_AddContactObject();
 extern undefined4 FUN_80061fc8();
 extern int FUN_800620e8();
 extern int FUN_800632f4();

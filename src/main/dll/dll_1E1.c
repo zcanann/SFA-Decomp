@@ -15,8 +15,8 @@ extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_DisableObject();
-extern undefined4 FUN_800365a4();
-extern int FUN_800368c4();
+extern undefined4 ObjHits_RecordObjectHit();
+extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined4 FUN_80081120();
 extern undefined4 FUN_801d1e24();
 extern undefined4 FUN_80286840();
@@ -175,7 +175,7 @@ void dll1E1_updateTrickyState
              dVar15 <= (double)pfVar14[0xb])) && (iVar5 = FUN_80294cb0(iVar4), iVar5 == 0)) &&
            ((bVar7 = FUN_80294ca8(iVar4), bVar7 == 0 && ((*(ushort *)(iVar4 + 0xb0) & 0x1000) == 0))
            )) {
-          FUN_800365a4(iVar4,(int)puVar3,'\x16',1,0);
+          ObjHits_RecordObjectHit(iVar4,(int)puVar3,'\x16',1,0);
           *(byte *)((int)pfVar14 + 0x37) = *(byte *)((int)pfVar14 + 0x37) | 1;
         }
         if (FLOAT_803e5fb4 < pfVar14[0xb]) {
@@ -218,7 +218,7 @@ void dll1E1_updateTrickyState
              dVar15 <= (double)pfVar14[0xb])) && (iVar5 = FUN_80294cb0(iVar4), iVar5 == 0)) &&
            ((bVar7 = FUN_80294ca8(iVar4), bVar7 == 0 && ((*(ushort *)(iVar4 + 0xb0) & 0x1000) == 0))
            )) {
-          FUN_800365a4(iVar4,(int)puVar3,'\x16',1,0);
+          ObjHits_RecordObjectHit(iVar4,(int)puVar3,'\x16',1,0);
           *(byte *)((int)pfVar14 + 0x37) = *(byte *)((int)pfVar14 + 0x37) | 1;
         }
         if ((*(byte *)((int)pfVar14 + 0x37) & 2) != 0) {
@@ -277,7 +277,7 @@ void dll1E1_updateTrickyState
       pfVar9 = &local_40;
       pfVar10 = &local_3c;
       pfVar11 = local_38;
-      iVar4 = FUN_800368c4((int)puVar3,&uStack_50,&iStack_54,puVar8,pfVar9,pfVar10,pfVar11);
+      iVar4 = ObjHits_GetPriorityHitWithPosition((int)puVar3,&uStack_50,&iStack_54,puVar8,pfVar9,pfVar10,pfVar11);
       local_40 = local_40 + FLOAT_803dda58;
       local_38[0] = local_38[0] + FLOAT_803dda5c;
       if ((iVar4 != 0) && ((*(byte *)((int)pfVar14 + 0x37) & 4) != 0)) {
@@ -317,7 +317,7 @@ void dll1E1_updateTrickyState
     }
   }
   else {
-    iVar4 = FUN_800368c4((int)puVar3,&uStack_50,&iStack_54,&uStack_58,&local_40,&local_3c,local_38);
+    iVar4 = ObjHits_GetPriorityHitWithPosition((int)puVar3,&uStack_50,&iStack_54,&uStack_58,&local_40,&local_3c,local_38);
     if ((iVar4 != 0) && (iVar4 != 0x10)) {
       local_40 = local_40 + FLOAT_803dda58;
       local_38[0] = local_38[0] + FLOAT_803dda5c;

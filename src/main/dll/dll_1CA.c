@@ -13,7 +13,7 @@ extern uint FUN_80017690();
 extern undefined8 FUN_80017698();
 extern undefined4 FUN_8001771c();
 extern int FUN_80017a98();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80042b9c();
 extern int FUN_80044404();
@@ -95,7 +95,7 @@ void FUN_801ca5b4(uint param_1)
   if (*(char *)((int)puVar5 + 0xb) == '\x01') {
     local_28 = FLOAT_803e5dd4;
     *(undefined *)((int)puVar5 + 0xe) = *(undefined *)(puVar5 + 3);
-    iVar1 = FUN_800369d0(param_1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
+    iVar1 = ObjHits_GetPriorityHit(param_1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
     if ((iVar1 != 0) || ((*(short *)(puVar5 + 2) != 0 && (*(short *)(puVar5 + 2) < 0x15)))) {
       *(char *)(puVar5 + 3) = '\x01' - *(char *)(puVar5 + 3);
       if (*(char *)(puVar5 + 3) != '\0') {

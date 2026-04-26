@@ -9,7 +9,7 @@ extern undefined4 FUN_80006b14();
 extern undefined4 FUN_80017620();
 extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8005fe14();
 extern undefined4 FUN_80081110();
@@ -174,7 +174,7 @@ void FUN_801f3a50(uint param_1)
   piVar4 = *(int **)(param_1 + 0xb8);
   if (*(char *)(piVar4 + 5) == '\x01') {
     *(undefined *)(piVar4 + 6) = *(undefined *)((int)piVar4 + 0x17);
-    iVar2 = FUN_800369d0(param_1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
+    iVar2 = ObjHits_GetPriorityHit(param_1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
     if (iVar2 != 0) {
       *(char *)((int)piVar4 + 0x17) = '\x01' - *(char *)((int)piVar4 + 0x17);
     }

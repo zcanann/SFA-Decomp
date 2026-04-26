@@ -8,7 +8,7 @@ extern int FUN_80017a98();
 extern undefined8 FUN_80017ac8();
 extern undefined4 FUN_8002fc3c();
 extern undefined8 ObjHits_DisableObject();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHit();
 extern int FUN_80037584();
 extern undefined4 FUN_80039520();
 extern undefined4 FUN_80081118();
@@ -125,7 +125,7 @@ void appleontree_update(undefined8 param_1,double param_2,double param_3,undefin
     dVar13 = (double)(float)(dVar11 / (double)*(float *)(iVar8 + 4));
     switch(*(undefined *)(iVar8 + 0x3a)) {
     case 0:
-      iVar3 = FUN_800369d0((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
+      iVar3 = ObjHits_GetPriorityHit((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
       if ((iVar3 == 0) &&
          (((int)*(short *)(iVar7 + 0x26) == 0xffffffff ||
           (uVar5 = FUN_80017690((int)*(short *)(iVar7 + 0x26)), uVar5 == 0)))) {
@@ -157,7 +157,7 @@ void appleontree_update(undefined8 param_1,double param_2,double param_3,undefin
       }
       break;
     case 1:
-      iVar3 = FUN_800369d0((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
+      iVar3 = ObjHits_GetPriorityHit((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
       if ((iVar3 == 0) &&
          (((int)*(short *)(iVar7 + 0x26) == 0xffffffff ||
           (uVar5 = FUN_80017690((int)*(short *)(iVar7 + 0x26)), uVar5 == 0)))) {
@@ -220,7 +220,7 @@ void appleontree_update(undefined8 param_1,double param_2,double param_3,undefin
         FUN_80017a78((int)puVar2,1);
         *(undefined *)(iVar8 + 0x3a) = 3;
       }
-      iVar8 = FUN_800369d0((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
+      iVar8 = ObjHits_GetPriorityHit((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
       if ((iVar8 != 0) ||
          (((int)*(short *)(iVar7 + 0x26) != 0xffffffff &&
           (uVar5 = FUN_80017690((int)*(short *)(iVar7 + 0x26)), uVar5 != 0)))) {
@@ -230,7 +230,7 @@ void appleontree_update(undefined8 param_1,double param_2,double param_3,undefin
     case 3:
       *(float *)(iVar8 + 8) = (float)(dVar11 - (double)FLOAT_803dc074);
       if (dVar13 <= (double)*(float *)(iVar8 + 0x1c)) {
-        iVar8 = FUN_800369d0((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
+        iVar8 = ObjHits_GetPriorityHit((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
         if ((iVar8 != 0) ||
            (((int)*(short *)(iVar7 + 0x26) != 0xffffffff &&
             (uVar5 = FUN_80017690((int)*(short *)(iVar7 + 0x26)), uVar5 != 0)))) {

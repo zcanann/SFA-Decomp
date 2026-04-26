@@ -5,7 +5,7 @@ extern undefined8 FUN_80006824();
 extern uint FUN_80006c00();
 extern undefined4 FUN_80017748();
 extern undefined4 FUN_80017a98();
-extern undefined4 FUN_80036080();
+extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined8 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_80037bd4();
@@ -123,7 +123,7 @@ void sidekickball_update(undefined8 param_1,double param_2,double param_3,undefi
           *(float *)(param_9 + 0x28) = fVar2;
           *(float *)(param_9 + 0x2c) = fVar1;
           ObjHits_EnableObject(param_9);
-          FUN_80036080(param_9);
+          ObjHits_SyncObjectPositionIfDirty(param_9);
           *(undefined *)(iVar6 + 0x25b) = 1;
           *(undefined4 *)(iVar6 + 0x2b0) = *(undefined4 *)(param_9 + 0xc);
           *(undefined4 *)(iVar6 + 0x2b4) = *(undefined4 *)(param_9 + 0x10);

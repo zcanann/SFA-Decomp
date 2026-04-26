@@ -25,7 +25,7 @@ extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern undefined4 FUN_80036864();
+extern undefined4 ObjHits_AddContactObject();
 extern undefined4 FUN_80037180();
 extern undefined4 FUN_8003735c();
 extern int FUN_80037584();
@@ -789,7 +789,7 @@ LAB_801767e4:
               local_128 = local_128 + fVar1;
               iVar7 = *(int *)(*(int *)(local_124 + iVar10) + 0x10);
               if (iVar7 != 0) {
-                FUN_80036864(iVar7,iVar4);
+                ObjHits_AddContactObject(iVar7,iVar4);
               }
               uVar12 = uVar12 + 1;
               bVar3 = true;

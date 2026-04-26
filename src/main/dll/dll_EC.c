@@ -4,7 +4,7 @@
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80017698();
 extern uint FUN_80017a98();
-extern undefined4 FUN_800365a4();
+extern undefined4 ObjHits_RecordObjectHit();
 extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern int FUN_80294d6c();
@@ -103,7 +103,7 @@ void TrickyCurve_updateCooldownTrigger(void)
       (**(code **)(*DAT_803dd708 + 8))(uVar5,0x397,0,2,0xffffffff,0);
     }
     else {
-      FUN_800365a4(uVar5,0,'\x14',2,0);
+      ObjHits_RecordObjectHit(uVar5,0,'\x14',2,0);
     }
     FUN_80006824(uVar5,0x1ca);
     psVar10[3] = 200;

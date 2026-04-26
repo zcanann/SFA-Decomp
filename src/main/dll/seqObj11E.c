@@ -14,7 +14,7 @@ extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern undefined4 FUN_800365a4();
+extern undefined4 ObjHits_RecordObjectHit();
 extern undefined4 FUN_8003817c();
 extern undefined4 FUN_800381f8();
 extern int FUN_80039520();
@@ -580,7 +580,7 @@ void FUN_80152cf0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if (((*(char *)(iVar12 + 0x2e) != -1) && (*(int *)(psVar1 + 100) != 0)) &&
        (bVar9 = FUN_8019e768(*(int *)(psVar1 + 100)), bVar9 != 0)) {
       iVar2 = FUN_80017a98();
-      FUN_800365a4(iVar2,(int)psVar1,'\x16',2,0);
+      ObjHits_RecordObjectHit(iVar2,(int)psVar1,'\x16',2,0);
       FUN_80152a30(dVar13,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(int)psVar1,0x3b2)
       ;
       FUN_80006824((uint)psVar1,0xe9);

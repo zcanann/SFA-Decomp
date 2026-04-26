@@ -14,7 +14,7 @@ extern int FUN_80017a54();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined8 FUN_8002fc3c();
-extern int FUN_800368c4();
+extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined8 FUN_8003817c();
 extern undefined4 FUN_800388b4();
 extern undefined4 FUN_80039468();
@@ -234,7 +234,7 @@ void FUN_801d7844(uint param_1)
   float local_14 [3];
   
   iVar3 = *(int *)(param_1 + 0xb8);
-  iVar1 = FUN_800368c4(param_1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0,&local_1c,&uStack_18,
+  iVar1 = ObjHits_GetPriorityHitWithPosition(param_1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0,&local_1c,&uStack_18,
                        local_14);
   if (iVar1 != 0) {
     local_1c = local_1c + FLOAT_803dda58;

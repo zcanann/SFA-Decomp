@@ -5,7 +5,7 @@ extern int GameBit_Get(int eventId);
 extern u32 fn_800221A0(int min,int max);
 extern void fn_80023800(u32 handle);
 extern u8 *fn_8002B9EC(void);
-extern int fn_8003687C(u8 *obj,int *out,int param_3,int param_4);
+extern int ObjHits_GetPriorityHit(u8 *obj,int *out,int param_3,int param_4);
 extern void fn_8008F904(u32 handle);
 extern int fn_8008FB20(double radiusX,double radiusY,float *start,float *end,int param_5,int param_6,int param_7);
 
@@ -234,7 +234,7 @@ undefined4 fn_80209F34(u8 *obj)
   if (obj == 0) {
     return 0;
   }
-  i = fn_8003687C(obj,&outObj,0,0);
+  i = ObjHits_GetPriorityHit(obj,&outObj,0,0);
   if (((u32)outObj != 0) && (i != 0)) {
     i = 1;
     do {

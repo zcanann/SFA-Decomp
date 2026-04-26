@@ -30,8 +30,8 @@ extern uint FUN_80017760();
 extern undefined8 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern int FUN_80017a98();
-extern undefined4 FUN_8003606c();
-extern undefined4 FUN_80036080();
+extern undefined4 ObjHits_MarkObjectPositionDirty();
+extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 FUN_80037180();
 extern undefined4 FUN_8003735c();
 extern undefined4 FUN_80037bd4();
@@ -3244,7 +3244,7 @@ int FUN_800eafb4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
       *(undefined *)(puVar11 + 3) = 1;
     }
     if (*(int *)(param_9 + 0xf8) == 0) {
-      FUN_80036080(param_9);
+      ObjHits_SyncObjectPositionIfDirty(param_9);
       *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) & 0xf7;
       if ((*(byte *)((int)puVar11 + 7) & 2) == 0) {
         *(float *)(param_9 + 0x28) = -(FLOAT_803e135c * FLOAT_803dc074 - *(float *)(param_9 + 0x28))
@@ -3302,7 +3302,7 @@ int FUN_800eafb4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
     }
   }
   else {
-    dVar13 = (double)FUN_8003606c(param_9);
+    dVar13 = (double)ObjHits_MarkObjectPositionDirty(param_9);
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
     uVar6 = FUN_80006c00(0);
     if ((uVar6 & 0x100) != 0) {

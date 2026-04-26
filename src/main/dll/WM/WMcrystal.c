@@ -11,7 +11,7 @@ extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern int FUN_80017b00();
-extern int FUN_800368c4();
+extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined4 FUN_80039520();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800810f8();

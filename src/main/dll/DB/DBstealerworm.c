@@ -27,7 +27,7 @@ extern int FUN_80017b00();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_80037180();
 extern undefined4 FUN_8003735c();
 extern int FUN_80037584();
@@ -748,7 +748,7 @@ void FUN_801e21b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(undefined4 *)(uVar1 + 0xf4) = 0;
     }
     if (((((((iVar3 == 1) &&
-            (iVar3 = FUN_800369d0(uVar1,&local_68,(int *)0x0,(uint *)0x0), iVar3 != 0)) &&
+            (iVar3 = ObjHits_GetPriorityHit(uVar1,&local_68,(int *)0x0,(uint *)0x0), iVar3 != 0)) &&
            (*(int *)(uVar1 + 0xf4) == 0)) &&
           ((local_68 != 0 && (iVar3 = FUN_80017a98(), local_68 != iVar3)))) &&
          ((*(short *)(local_68 + 0x46) != 0x69c &&
@@ -1004,7 +1004,7 @@ void FUN_801e2940(undefined8 param_1,double param_2,double param_3,undefined8 pa
     iVar4 = (**(code **)(**(int **)(iVar10 + 0x68) + 0x28))(iVar10);
     if (((1 < iVar4) && (*(int *)(uVar1 + 0xf8) < 1)) && ((iVar3 - 3U < 2 || (iVar3 == 5)))) {
       puVar8 = (uint *)0x0;
-      iVar4 = FUN_800369d0(uVar1,&local_6c,(int *)0x0,(uint *)0x0);
+      iVar4 = ObjHits_GetPriorityHit(uVar1,&local_6c,(int *)0x0,(uint *)0x0);
       if ((iVar4 != 0) && (*(short *)(local_6c + 0x46) != 0x114)) {
         puVar8 = (uint *)0x0;
         in_r7 = 0;

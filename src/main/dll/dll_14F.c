@@ -30,9 +30,9 @@ extern uint FUN_80017ae8();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined8 ObjHits_DisableObject();
 extern ushort ObjHits_IsObjectEnabled();
-extern undefined4 FUN_800365a4();
-extern int FUN_800368c4();
-extern int FUN_800369d0();
+extern undefined4 ObjHits_RecordObjectHit();
+extern int ObjHits_GetPriorityHitWithPosition();
+extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_80037008();
 extern void* FUN_80037134();
 extern undefined4 FUN_80037180();
@@ -562,7 +562,7 @@ void FUN_8017fd40(undefined8 param_1,double param_2,double param_3,undefined8 pa
                                  (ObjAnimEventList *)0x0);
     }
     else {
-      iVar7 = FUN_800368c4((int)param_9,&uStack_40,&iStack_48,&uStack_44,&local_30,&uStack_2c,
+      iVar7 = ObjHits_GetPriorityHitWithPosition((int)param_9,&uStack_40,&iStack_48,&uStack_44,&local_30,&uStack_2c,
                            local_28);
       if ((iVar7 != 0) && (iVar7 != 0x10)) {
         local_30 = local_30 + FLOAT_803dda58;
@@ -1031,7 +1031,7 @@ void FUN_80180a0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
           *(undefined2 *)((int)pfVar10 + 10) = 0xfa;
         }
       }
-      iVar9 = FUN_800369d0((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
+      iVar9 = ObjHits_GetPriorityHit((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
       if (iVar9 == 0xe) {
         *(undefined *)((int)pfVar10 + 0x19) = 1;
         FUN_80006824((uint)puVar2,0x4d);
@@ -1240,7 +1240,7 @@ LAB_801814d8:
     if (3 < bVar8) goto LAB_80181980;
   }
   uVar9 = 0;
-  iVar6 = FUN_800369d0((int)puVar1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
+  iVar6 = ObjHits_GetPriorityHit((int)puVar1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
   if (iVar6 == 0) {
     bVar8 = FUN_80294ca8(iVar2);
     if (bVar8 != 0) {
@@ -1451,7 +1451,7 @@ void FUN_80181b50(undefined8 param_1,double param_2,double param_3,undefined8 pa
   uVar13 = FUN_80286840();
   puVar2 = (ushort *)((ulonglong)uVar13 >> 0x20);
   pfVar10 = local_24;
-  iVar3 = FUN_800368c4((int)puVar2,&local_3c,&iStack_40,&uStack_44,&local_2c,&uStack_28,pfVar10);
+  iVar3 = ObjHits_GetPriorityHitWithPosition((int)puVar2,&local_3c,&iStack_40,&uStack_44,&local_2c,&uStack_28,pfVar10);
   if (iVar3 != 0) {
     if (iVar3 == 0x10) {
       FUN_80017a3c(puVar2,300);
@@ -1478,7 +1478,7 @@ void FUN_80181b50(undefined8 param_1,double param_2,double param_3,undefined8 pa
                 ) && (dVar11 = (double)FUN_80017710((float *)(*piVar4 + 0x18),
                                                     (float *)(puVar2 + 0xc)),
                      dVar11 < (double)FLOAT_803dca0c)) {
-              FUN_800365a4(*piVar4,local_3c,'\x05',1,0);
+              ObjHits_RecordObjectHit(*piVar4,local_3c,'\x05',1,0);
             }
           }
           piVar4 = piVar4 + 1;

@@ -14,7 +14,7 @@ extern undefined4 FUN_800305c4();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern int FUN_800368c4();
+extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined4 FUN_80037180();
 extern undefined4 FUN_8014d3d0();
 extern undefined4 FUN_8014d4c8();

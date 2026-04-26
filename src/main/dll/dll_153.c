@@ -12,7 +12,7 @@ extern uint FUN_80017760();
 extern int FUN_80017a98();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_80036080();
+extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_80037bd4();
@@ -390,7 +390,7 @@ void dll153_updateExploderState
           *(undefined4 *)(puVar15 + 10) = 0;
           puVar15[5] = 0;
           ObjHits_EnableObject(uVar6);
-          FUN_80036080(uVar6);
+          ObjHits_SyncObjectPositionIfDirty(uVar6);
           *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) & 0xf7;
           *(ushort *)(uVar6 + 6) = *(ushort *)(uVar6 + 6) & 0xbfff;
         }

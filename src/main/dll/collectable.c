@@ -36,8 +36,8 @@ extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjHits_SyncObjectPosition();
-extern int FUN_800368c4();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHitWithPosition();
+extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_80037008();
 extern void* FUN_80037134();
 extern undefined4 FUN_80037180();
@@ -232,7 +232,7 @@ void FUN_80144e40(int param_1,int param_2)
   if (*(float *)(param_2 + 0x720) < FLOAT_803e306c) {
     *(float *)(param_2 + 0x720) = FLOAT_803e306c;
   }
-  iVar2 = FUN_800369d0(param_1,local_18,(int *)0x0,(uint *)0x0);
+  iVar2 = ObjHits_GetPriorityHit(param_1,local_18,(int *)0x0,(uint *)0x0);
   if (((iVar2 != 0) && (*(int *)(local_18[0] + 0xc4) != 0)) &&
      (*(short *)(*(int *)(local_18[0] + 0xc4) + 0x44) == 1)) {
     fVar1 = *(float *)(param_2 + 0x720);

@@ -3,7 +3,7 @@
 
 extern uint FUN_80017760();
 extern undefined4 ObjHits_EnableObject();
-extern undefined4 FUN_80036200();
+extern undefined4 ObjHits_RefreshObjectState();
 extern undefined4 FUN_80037180();
 
 extern undefined4* DAT_803dd6f8;
@@ -56,7 +56,7 @@ void FUN_801d1e24(undefined2 *param_1,undefined4 *param_2,int param_3)
     param_2[4] = (float)param_2[1] / (float)param_2[2];
   }
   ObjHits_EnableObject((int)param_1);
-  FUN_80036200((int)param_1);
+  ObjHits_RefreshObjectState((int)param_1);
   return;
 }
 

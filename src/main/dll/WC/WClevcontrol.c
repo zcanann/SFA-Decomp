@@ -16,7 +16,7 @@ extern undefined4 FUN_80017a98();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_SetTargetMask();
-extern int FUN_800368c4();
+extern int ObjHits_GetPriorityHitWithPosition();
 extern void* FUN_80037134();
 extern undefined4 FUN_80037180();
 extern undefined4 FUN_8003735c();
@@ -389,7 +389,7 @@ void FUN_801eefd0(uint param_1,int param_2)
   undefined4 uStack_24;
   undefined4 auStack_20 [5];
   
-  iVar1 = FUN_800368c4(param_1,&local_38,(int *)0x0,(uint *)0x0,&uStack_28,&uStack_24,auStack_20);
+  iVar1 = ObjHits_GetPriorityHitWithPosition(param_1,&local_38,(int *)0x0,(uint *)0x0,&uStack_28,&uStack_24,auStack_20);
   if (((iVar1 != 0) && (bVar3 = FUN_80017a20(param_1), bVar3 == 0)) &&
      (*(short *)(local_38 + 0x46) != 0x119)) {
     FUN_80017a28(param_1,0xaf,200,0,0,1);

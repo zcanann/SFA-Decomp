@@ -20,7 +20,7 @@ extern undefined4 FUN_80017ad0();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHit();
 extern int FUN_80037008();
 extern void* FUN_80037134();
 extern undefined4 FUN_80037180();
@@ -155,7 +155,7 @@ void FUN_801fd398(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         (**(code **)(*DAT_803dd708 + 8))(param_9,0x391,0,4,0xffffffff,0);
       }
     }
-    iVar3 = FUN_800369d0(param_9,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
+    iVar3 = ObjHits_GetPriorityHit(param_9,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
     if ((short)iVar3 != 0) {
       uVar2 = FUN_80017690((int)*psVar4);
       FUN_80017698((int)*psVar4,1 - uVar2);

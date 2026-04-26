@@ -29,7 +29,7 @@ extern uint FUN_80017760();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern undefined4 ObjHits_EnableObject();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_80037bd4();
 extern uint FUN_8003882c();
 extern undefined4 FUN_800388b4();
@@ -630,7 +630,7 @@ void FUN_801bc6cc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   if (DAT_803de80c != 0) {
     DAT_803de80c = DAT_803de80c + -1;
   }
-  iVar4 = FUN_800369d0(uVar3,&local_40,&local_38,&uStack_3c);
+  iVar4 = ObjHits_GetPriorityHit(uVar3,&local_40,&local_38,&uStack_3c);
   if (iVar4 != 0) {
     uVar2 = DAT_803de800 & 0xffffffbf;
     if (*(short *)(iVar7 + 0x402) == 1) {

@@ -21,22 +21,22 @@ void ObjHits_ClearSourceMask(int param_1,byte param_2);
 void ObjHits_SetSourceMask(int param_1,byte param_2);
 void ObjHits_ClearFlags(int param_1,ushort param_2);
 void ObjHits_SetFlags(int param_1,ushort param_2);
-void FUN_8003606c(int param_1);
-void FUN_80036080(int param_1);
+void ObjHits_MarkObjectPositionDirty(int param_1);
+void ObjHits_SyncObjectPositionIfDirty(int param_1);
 void ObjHits_DisableObject(int param_1);
 void ObjHits_EnableObject(int param_1);
 ushort ObjHits_IsObjectEnabled(int param_1);
 void ObjHits_SyncObjectPosition(int param_1);
-int FUN_80036194(int param_1,uint param_2);
-void FUN_80036200(int param_1);
-undefined4 FUN_800365a4(int param_1,int param_2,char param_3,undefined param_4,undefined param_5);
+int ObjHits_AllocObjectState(int param_1,uint param_2);
+void ObjHits_RefreshObjectState(int param_1);
+undefined4 ObjHits_RecordObjectHit(int param_1,int param_2,char param_3,undefined param_4,undefined param_5);
 undefined4
-FUN_80036704(double param_1,double param_2,double param_3,int param_4,int param_5,char param_6,
+ObjHits_RecordPositionHit(double param_1,double param_2,double param_3,int param_4,int param_5,char param_6,
             undefined param_7,undefined param_8);
-void FUN_80036864(int param_1,int param_2);
-int FUN_800368c4(int param_1,undefined4 *param_2,int *param_3,uint *param_4,undefined4 *param_5,
+void ObjHits_AddContactObject(int param_1,int param_2);
+int ObjHits_GetPriorityHitWithPosition(int param_1,undefined4 *param_2,int *param_3,uint *param_4,undefined4 *param_5,
                 undefined4 *param_6,undefined4 *param_7);
-int FUN_800369d0(int param_1,undefined4 *param_2,int *param_3,uint *param_4);
+int ObjHits_GetPriorityHit(int param_1,undefined4 *param_2,int *param_3,uint *param_4);
 void FUN_80036a98(undefined4 param_1,undefined4 param_2,undefined4 param_3,int param_4,
                  undefined4 param_5,int param_6,undefined4 param_7,undefined4 param_8);
 void ObjHits_ResetWorkBuffers(void);

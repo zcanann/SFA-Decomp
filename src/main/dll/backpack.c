@@ -17,7 +17,7 @@ extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_80037180();
 extern undefined4 FUN_8003735c();
 extern int FUN_80037584();
@@ -251,7 +251,7 @@ void FUN_8016437c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     }
   }
   else if (cVar1 == '\x01') {
-    iVar4 = FUN_800369d0((int)param_9,&local_84,&iStack_7c,&uStack_80);
+    iVar4 = ObjHits_GetPriorityHit((int)param_9,&local_84,&iStack_7c,&uStack_80);
     if (iVar4 != 0) {
       ObjHits_EnableObject((int)param_9);
       *(undefined *)(iVar7 + 0x278) = 2;
@@ -325,7 +325,7 @@ void FUN_8016437c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     (**(code **)(*DAT_803dd728 + 0x18))((double)FLOAT_803dc074,param_9,iVar7);
     *(float *)(iVar7 + 0x2a0) = *(float *)(iVar7 + 0x2a0) - FLOAT_803dc074;
     if (FLOAT_803e3c00 <= *(float *)(iVar7 + 0x2a0)) {
-      iVar4 = FUN_800369d0((int)param_9,&local_84,&iStack_7c,&uStack_80);
+      iVar4 = ObjHits_GetPriorityHit((int)param_9,&local_84,&iStack_7c,&uStack_80);
       if ((iVar4 != 0) && (*(short *)(local_84 + 0x46) != param_9[0x23])) {
         if (param_9[0x23] == 0x4ba) {
           *(byte *)(iVar7 + 0x27a) = *(byte *)(iVar7 + 0x27a) | 3;
@@ -352,7 +352,7 @@ void FUN_8016437c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       *(float *)(iVar7 + 0x2a0) = *(float *)(iVar7 + 0x2a0) - FLOAT_803dc074;
       if (FLOAT_803e3c00 <= *(float *)(iVar7 + 0x2a0)) {
         if (FLOAT_803e3c00 < *(float *)(iVar7 + 0x270)) {
-          iVar4 = FUN_800369d0((int)param_9,&local_84,&iStack_7c,&uStack_80);
+          iVar4 = ObjHits_GetPriorityHit((int)param_9,&local_84,&iStack_7c,&uStack_80);
           if ((iVar4 != 0) && (*(short *)(local_84 + 0x46) != param_9[0x23])) {
             *(byte *)(iVar7 + 0x27a) = *(byte *)(iVar7 + 0x27a) | 7;
           }
@@ -542,7 +542,7 @@ void FUN_80164c58(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     local_40 = 0x43300000;
     FUN_80163e44(param_9,iVar5);
     (**(code **)(*DAT_803dd728 + 0x18))((double)FLOAT_803dc074,param_9,iVar5);
-    iVar4 = FUN_800369d0((int)param_9,&uStack_54,&iStack_4c,&uStack_50);
+    iVar4 = ObjHits_GetPriorityHit((int)param_9,&uStack_54,&iStack_4c,&uStack_50);
     if (iVar4 != 0) {
       FUN_80017698(0x642,1);
       *(byte *)(iVar5 + 0x27a) = *(byte *)(iVar5 + 0x27a) | 7;

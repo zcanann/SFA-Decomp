@@ -8,7 +8,7 @@ extern int fn_8000B5D0(int obj,u16 volumeId);
 extern void fn_8000BB18(int obj,u16 volumeId);
 extern void fn_80013E2C(void *handle);
 extern int *fn_8002E0FC(undefined *param_1,undefined *param_2);
-extern int fn_80036770(int obj,undefined4 *param_2,int *sphereIndex,uint *param_4,float *hitPos,
+extern int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *param_2,int *sphereIndex,uint *param_4,float *hitPos,
                        undefined *param_6,float *param_7);
 extern void fn_8009A1DC(double param_1,int obj,undefined2 *pos,u32 count,int *param_5);
 
@@ -90,7 +90,7 @@ int objHitReact_update(int obj,ObjHitReactEntry *entries,u32 entryCount,u32 reac
       reactionState = 0;
     }
   }
-  collisionType = fn_80036770(obj,0,&sphereIndex,0,&local_28,local_24,&hitNormalY);
+  collisionType = ObjHits_GetPriorityHitWithPosition(obj,0,&sphereIndex,0,&local_28,local_24,&hitNormalY);
   if (collisionType != 0) {
     animDef = ObjAnim_GetAnimDef(objAnim);
     local_28 = local_28 + lbl_803DCDD8;

@@ -9,7 +9,7 @@ extern undefined4 FUN_80006b54();
 extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
 extern undefined8 FUN_80017ac8();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 
@@ -111,7 +111,7 @@ void dfpstatue1_updateState(undefined8 param_1,undefined8 param_2,undefined8 par
       for (sVar6 = 0; sVar6 < 4; sVar6 = sVar6 + 1) {
         if (*piVar8 != 0) {
           local_28[0] = 0;
-          iVar3 = FUN_800369d0(piVar8[1],local_28,(int *)0x0,(uint *)0x0);
+          iVar3 = ObjHits_GetPriorityHit(piVar8[1],local_28,(int *)0x0,(uint *)0x0);
           if (((short)iVar3 == 0x13) &&
              ((cVar4 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(psVar1 + 0x56)),
               cVar4 == '\x01' || (*(int *)(local_28[0] + 0xf4) == (int)sVar6)))) {

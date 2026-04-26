@@ -65,7 +65,7 @@ extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined8 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern int FUN_800368c4();
+extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined4 FUN_80037008();
 extern void* FUN_80037134();
 extern undefined4 FUN_80037180();

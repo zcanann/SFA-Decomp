@@ -17,11 +17,11 @@ extern uint FUN_80017760();
 extern undefined4 FUN_80017778();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_80036080();
+extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern ushort ObjHits_IsObjectEnabled();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_80053c20();
 extern int FUN_8005b398();
 extern undefined4 FUN_800632e8();
@@ -556,9 +556,9 @@ void FUN_801eba80(int param_1,int param_2)
     }
     else {
       ObjHits_ClearHitVolumes(param_1);
-      FUN_80036080(param_1);
+      ObjHits_SyncObjectPositionIfDirty(param_1);
     }
-    iVar2 = FUN_800369d0(param_1,&local_38,&iStack_30,&uStack_34);
+    iVar2 = ObjHits_GetPriorityHit(param_1,&local_38,&iStack_30,&uStack_34);
     if (iVar2 == 0x15) {
       if (*(float *)(param_2 + 0x3e4) == FLOAT_803e6780) {
         FUN_80247ef8((float *)(param_1 + 0x24),afStack_2c);

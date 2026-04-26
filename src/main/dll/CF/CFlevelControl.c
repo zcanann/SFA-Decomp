@@ -11,7 +11,7 @@ extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_8002fc3c();
 extern undefined8 ObjHits_SetHitVolumeSlot();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_80039520();
 extern double FUN_80293900();
 
@@ -190,7 +190,7 @@ void cfccrate_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,un
       }
     }
     else if (sVar1 == 0x708) {
-      iVar5 = FUN_800369d0((int)param_9,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
+      iVar5 = ObjHits_GetPriorityHit((int)param_9,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
       if (iVar5 != 0) {
         FUN_80017698((int)*(short *)(iVar8 + 0x38),1);
       }

@@ -7,7 +7,7 @@ extern undefined4 FUN_80017698();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80036080();
+extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int FUN_800384ec();
@@ -47,7 +47,7 @@ void FUN_80179a2c(double param_1,double param_2,double param_3,int param_4)
   *(float *)(param_4 + 0x28) = (float)param_2;
   *(float *)(param_4 + 0x2c) = (float)param_3;
   ObjHits_EnableObject(param_4);
-  FUN_80036080(param_4);
+  ObjHits_SyncObjectPositionIfDirty(param_4);
   *(undefined *)(iVar1 + 0x25b) = 1;
   *(undefined4 *)(iVar1 + 0x2b0) = *(undefined4 *)(param_4 + 0xc);
   *(undefined4 *)(iVar1 + 0x2b4) = *(undefined4 *)(param_4 + 0x10);

@@ -8,7 +8,7 @@ extern undefined4 FUN_80017778();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern undefined4 FUN_80036200();
+extern undefined4 ObjHits_RefreshObjectState();
 
 extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e5ff8;
@@ -65,7 +65,7 @@ undefined4 FUN_801d2c54(uint param_1)
     pfVar3[1] = pfVar3[3];
     pfVar3[4] = pfVar3[1] / pfVar3[2];
     *pfVar3 = pfVar3[2];
-    FUN_80036200(param_1);
+    ObjHits_RefreshObjectState(param_1);
     *(undefined *)(pfVar3 + 5) = 0;
     *(byte *)((int)pfVar3 + 0x15) = *(byte *)((int)pfVar3 + 0x15) | 2;
   }

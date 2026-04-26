@@ -7,7 +7,7 @@ extern uint FUN_80017760();
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_80036080();
+extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_80037008();
 extern undefined4 FUN_80293f90();
@@ -79,7 +79,7 @@ void FUN_801c8ebc(int param_1,int param_2)
   }
   ObjHits_EnableObject(param_1);
   ObjHits_SetHitVolumeSlot(param_1,0,0,0);
-  FUN_80036080(param_1);
+  ObjHits_SyncObjectPositionIfDirty(param_1);
   return;
 }
 

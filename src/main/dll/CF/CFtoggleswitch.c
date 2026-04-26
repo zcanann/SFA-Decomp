@@ -15,7 +15,7 @@ extern double FUN_80017714();
 extern int FUN_80017a98();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
-extern int FUN_800368c4();
+extern int ObjHits_GetPriorityHitWithPosition();
 extern int FUN_80037008();
 extern int FUN_800384ec();
 extern undefined4 FUN_8003b818();
@@ -250,7 +250,7 @@ void FUN_8018af74(undefined8 param_1,double param_2,double param_3,undefined8 pa
     local_30 = DAT_802c2a38;
     local_2c = DAT_802c2a3c;
     local_44 = -1;
-    iVar2 = FUN_800368c4(param_9,&uStack_48,&local_44,&uStack_40,&local_1c,&uStack_18,local_14);
+    iVar2 = ObjHits_GetPriorityHitWithPosition(param_9,&uStack_48,&local_44,&uStack_40,&local_1c,&uStack_18,local_14);
     if ((iVar2 != 0) && (iVar2 != 0xe)) {
       local_1c = local_1c + FLOAT_803dda58;
       local_14[0] = local_14[0] + FLOAT_803dda5c;

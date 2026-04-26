@@ -3,7 +3,7 @@
 #include "main/timer.h"
 
 extern undefined4 FUN_80017a98();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHit();
 extern int FUN_800620e8();
 
 extern f32 FLOAT_803e6eb4;
@@ -30,7 +30,7 @@ void FUN_801feb30(int *param_1)
   
   obj = (AnimBehaviorObject *)param_1;
   runtimeState = obj->runtimeState;
-  iVar2 = FUN_800369d0((int)param_1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
+  iVar2 = ObjHits_GetPriorityHit((int)param_1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
   if ((iVar2 == 0x12) && (runtimeState->state != 4)) {
     FUN_80017a98();
   }

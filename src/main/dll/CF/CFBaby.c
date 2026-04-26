@@ -26,11 +26,11 @@ extern undefined4 FUN_80035b84();
 extern undefined4 FUN_80035d58();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined8 ObjHits_SetHitVolumeSlot();
-extern undefined4 FUN_8003606c();
+extern undefined4 ObjHits_MarkObjectPositionDirty();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern undefined4 FUN_800365a4();
-extern int FUN_800369d0();
+extern undefined4 ObjHits_RecordObjectHit();
+extern int ObjHits_GetPriorityHit();
 extern int FUN_80037008();
 extern void* FUN_80037134();
 extern undefined4 FUN_80037180();
@@ -451,7 +451,7 @@ void FUN_80187b64(int param_1)
   pbVar4 = *(byte **)(param_1 + 0xb8);
   iVar3 = *(int *)(param_1 + 0x4c);
   if (((*pbVar4 & 3) == 0) &&
-     (iVar1 = FUN_800369d0(param_1,(undefined4 *)0x0,(int *)0x0,auStack_18), iVar1 == 0x1a)) {
+     (iVar1 = ObjHits_GetPriorityHit(param_1,(undefined4 *)0x0,(int *)0x0,auStack_18), iVar1 == 0x1a)) {
     uVar2 = (uint)*(short *)(iVar3 + 0x1e);
     if (uVar2 != 0xffffffff) {
       FUN_80017698(uVar2,1);
@@ -606,7 +606,7 @@ void FUN_80187ee0(undefined2 *param_1,int param_2)
   }
   pbVar2[1] = *(byte *)(param_2 + 0x19);
   if (pbVar2[1] == 1) {
-    FUN_8003606c((int)param_1);
+    ObjHits_MarkObjectPositionDirty((int)param_1);
   }
   return;
 }
@@ -701,7 +701,7 @@ void FUN_801880e0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   else if (bVar1 == 0) {
     (**(code **)(*DAT_803dd740 + 8))(param_9,iVar5);
-    iVar4 = FUN_800369d0(param_9,(undefined4 *)0x0,(int *)0x0,auStack_18);
+    iVar4 = ObjHits_GetPriorityHit(param_9,(undefined4 *)0x0,(int *)0x0,auStack_18);
     if (iVar4 != 0) {
       (**(code **)(*DAT_803dd740 + 0x30))(param_9,iVar5);
       FUN_80006824(param_9,0x48);
@@ -895,11 +895,11 @@ void FUN_8018866c(int param_1)
       }
       else {
         if (FLOAT_803e4800 == *pfVar3) {
-          FUN_800365a4((int)pfVar3[1],param_1,'\x1c',0,1);
+          ObjHits_RecordObjectHit((int)pfVar3[1],param_1,'\x1c',0,1);
         }
         *pfVar3 = *pfVar3 + FLOAT_803dc074;
         if (FLOAT_803e4804 < *pfVar3) {
-          FUN_800365a4((int)pfVar3[1],param_1,'\x1c',1,1);
+          ObjHits_RecordObjectHit((int)pfVar3[1],param_1,'\x1c',1,1);
           *pfVar3 = *pfVar3 - FLOAT_803e4804;
         }
       }

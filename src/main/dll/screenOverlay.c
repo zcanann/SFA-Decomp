@@ -9,7 +9,7 @@ extern undefined4 FUN_80017698();
 extern undefined4 FUN_8001771c();
 extern int FUN_80017a98();
 extern undefined4 ObjHits_DisableObject();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_80037ce0();
 extern undefined4 FUN_80039520();
 extern undefined4 FUN_8003b56c();
@@ -243,7 +243,7 @@ void FUN_8017a77c(uint param_1)
   
   iVar4 = *(int *)(param_1 + 0x4c);
   pcVar6 = *(char **)(param_1 + 0xb8);
-  iVar2 = FUN_800369d0(param_1,local_28,(int *)0x0,(uint *)0x0);
+  iVar2 = ObjHits_GetPriorityHit(param_1,local_28,(int *)0x0,(uint *)0x0);
   if ((iVar2 == 0xe) || (iVar2 == 0xf)) {
     bVar1 = false;
     if ((*(short *)(local_28[0] + 0x46) == 0x14b) &&

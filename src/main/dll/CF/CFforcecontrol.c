@@ -22,7 +22,7 @@ extern undefined4 FUN_80017a64();
 extern undefined4 FUN_80017a78();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
-extern undefined4 FUN_800365a4();
+extern undefined4 ObjHits_RecordObjectHit();
 extern void* FUN_80037134();
 extern undefined4 FUN_80037180();
 extern undefined4 FUN_8003735c();
@@ -439,7 +439,7 @@ void FUN_8018c1a0(int param_1)
         pfVar5[1] = pfVar5[1] - FLOAT_803dc074;
         if (pfVar5[1] < fVar1) {
           pfVar5[1] = pfVar5[1] + FLOAT_803e494c;
-          FUN_800365a4(iVar3,param_1,'\x16',1,0);
+          ObjHits_RecordObjectHit(iVar3,param_1,'\x16',1,0);
         }
       }
     }

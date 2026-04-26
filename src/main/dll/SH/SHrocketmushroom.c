@@ -10,7 +10,7 @@ extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern undefined4 FUN_800369d0();
+extern undefined4 ObjHits_GetPriorityHit();
 extern int FUN_80037584();
 extern undefined4 FUN_80037bd4();
 extern undefined4 FUN_800810f4();
@@ -206,7 +206,7 @@ void FUN_801d3a9c(double param_1,undefined8 param_2,double param_3,undefined8 pa
       param_3 = DOUBLE_803e6070;
       param_1 = (double)FUN_800810f4((double)FLOAT_803e6048,dVar9,param_9,5,7,1,in_r7,0,0);
     }
-    FUN_800369d0((int)param_9,&uStack_28,(int *)0x0,(uint *)0x0);
+    ObjHits_GetPriorityHit((int)param_9,&uStack_28,(int *)0x0,(uint *)0x0);
     iVar5 = **(int **)(param_9 + 0x2a);
     if (-1 < *(char *)(puVar8 + 0x158)) {
       *(float *)(puVar8 + 0x142) = *(float *)(puVar8 + 0x142) - FLOAT_803dc074;

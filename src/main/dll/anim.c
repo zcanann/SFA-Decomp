@@ -45,7 +45,7 @@ extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHit();
 extern uint FUN_80036d5c();
 extern int FUN_80036edc();
 extern int FUN_80037008();
@@ -4003,7 +4003,7 @@ void FUN_802051e0(uint param_1)
   if (*(char *)((int)puVar4 + 9) == '\x01') {
     local_28 = FLOAT_803e7078;
     *(undefined *)(puVar4 + 3) = *(undefined *)((int)puVar4 + 10);
-    iVar1 = FUN_800369d0(param_1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
+    iVar1 = ObjHits_GetPriorityHit(param_1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
     if ((iVar1 != 0) &&
        (*(char *)((int)puVar4 + 10) = '\x01' - *(char *)((int)puVar4 + 10),
        *(char *)((int)puVar4 + 10) != '\0')) {

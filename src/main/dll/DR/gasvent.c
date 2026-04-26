@@ -10,10 +10,10 @@ extern undefined4 ObjHits_ClearSourceMask();
 extern undefined4 ObjHits_SetSourceMask();
 extern undefined4 ObjHits_ClearFlags();
 extern undefined4 ObjHits_SetFlags();
-extern undefined4 FUN_8003606c();
-extern undefined4 FUN_80036080();
+extern undefined4 ObjHits_MarkObjectPositionDirty();
+extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 ObjHits_EnableObject();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHit();
 extern int FUN_80037008();
 extern void* FUN_80037134();
 extern undefined4 FUN_80037180();
@@ -77,7 +77,7 @@ void FUN_801a1230(int param_1,char param_2)
     ObjHits_SetFlags(param_1,0x480);
     ObjHits_ClearSourceMask(param_1,1);
     ObjHits_EnableObject(param_1);
-    FUN_80036080(param_1);
+    ObjHits_SyncObjectPositionIfDirty(param_1);
   }
   return;
 }
@@ -289,7 +289,7 @@ void FUN_801a1654(undefined8 param_1,double param_2,double param_3,undefined8 pa
   fStack_24 = (float)in_ps29_1;
   uVar1 = FUN_80286838();
   iVar8 = *(int *)(uVar1 + 0xb8);
-  iVar2 = FUN_800369d0(uVar1,auStack_54,(int *)0x0,(uint *)0x0);
+  iVar2 = ObjHits_GetPriorityHit(uVar1,auStack_54,(int *)0x0,(uint *)0x0);
   if ((iVar2 != 0) ||
      ((*(char *)(*(int *)(uVar1 + 0x54) + 0xad) != '\0' && ((*(byte *)(iVar8 + 0x49) & 2) != 0)))) {
     *(char *)(iVar8 + 0x16) = *(char *)(iVar8 + 0x16) + '\x01';
@@ -331,7 +331,7 @@ void FUN_801a1654(undefined8 param_1,double param_2,double param_3,undefined8 pa
     ObjHits_SetSourceMask(uVar1,1);
     FUN_80035d58(uVar1,0x14,-5,0x14);
     ObjHits_EnableObject(uVar1);
-    FUN_8003606c(uVar1);
+    ObjHits_MarkObjectPositionDirty(uVar1);
     ObjHits_SetHitVolumeSlot(uVar1,5,4,0);
     FUN_80006824(uVar1,0xd1);
     *(float *)(uVar1 + 0x10) = *(float *)(uVar1 + 0x10) + FLOAT_803e4fa0;

@@ -25,10 +25,10 @@ extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_80035d58();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined8 FUN_8003606c();
+extern undefined8 ObjHits_MarkObjectPositionDirty();
 extern undefined8 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern int FUN_800369d0();
+extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_8003735c();
 extern int FUN_80037584();
 extern undefined4 FUN_80037bd4();
@@ -365,7 +365,7 @@ void FUN_80184a54(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
           FUN_801847e8(puVar10,0,'\0',afStack_b0);
         }
       }
-      iVar17 = FUN_800369d0((int)puVar10,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
+      iVar17 = ObjHits_GetPriorityHit((int)puVar10,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
       if (iVar17 == 0xe) {
         *(undefined2 *)((int)pfVar16 + 0x1a) = 0xfa;
         FUN_80006824((uint)puVar10,0x40);
@@ -621,7 +621,7 @@ void FUN_80184a54(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
             FUN_80006824((uint)puVar10,0x45);
           }
         }
-        iVar17 = FUN_800369d0((int)puVar10,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
+        iVar17 = ObjHits_GetPriorityHit((int)puVar10,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
         if (iVar17 == 0xe) {
           *(undefined2 *)((int)pfVar16 + 0x1a) = 0xfa;
           FUN_80006824((uint)puVar10,0x40);
@@ -629,7 +629,7 @@ void FUN_80184a54(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       }
       else if ((*(short *)((int)pfVar16 + 0x1a) != 0) &&
               ((puVar10[0x23] == 0x3d6 &&
-               (iVar17 = FUN_800369d0((int)puVar10,(undefined4 *)0x0,(int *)0x0,(uint *)0x0),
+               (iVar17 = ObjHits_GetPriorityHit((int)puVar10,(undefined4 *)0x0,(int *)0x0,(uint *)0x0),
                iVar17 == 0xe)))) {
         FUN_80006824((uint)puVar10,0x46);
         local_170 = DAT_803e4688;
@@ -761,7 +761,7 @@ void FUN_80185a48(double param_1,undefined8 param_2,undefined8 param_3,undefined
   *(undefined4 *)(param_9 + 0xf8) = 0;
   *(undefined4 *)(param_9 + 0xf4) = 2;
   ObjHits_EnableObject(param_9);
-  uVar7 = FUN_8003606c(param_9);
+  uVar7 = ObjHits_MarkObjectPositionDirty(param_9);
   *(undefined2 *)(iVar6 + 0x1e) = 0;
   if (param_1 < (double)*(float *)(iVar6 + 8)) {
     iVar2 = FUN_80017a98();
@@ -1033,7 +1033,7 @@ void FUN_80185dc4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     }
   }
   if ((*(char *)((int)piVar8 + 0x23) == '\0') && (*(char *)((int)piVar8 + 0x21) == '\0')) {
-    iVar7 = FUN_800369d0((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
+    iVar7 = ObjHits_GetPriorityHit((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
     if (iVar7 != 0) {
       iVar7 = *(int *)(puVar2 + 0x5c);
       local_58 = *(undefined4 *)(iVar7 + 8);

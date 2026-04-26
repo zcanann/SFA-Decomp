@@ -29,7 +29,7 @@ extern undefined4 FUN_80017ac8();
 extern int FUN_80017af8();
 extern int FUN_80017b00();
 extern undefined4 ObjHits_DisableObject();
-extern undefined4 FUN_800365a4();
+extern undefined4 ObjHits_RecordObjectHit();
 extern undefined4 FUN_80037180();
 extern undefined4 FUN_8003735c();
 extern int FUN_80039520();
@@ -959,7 +959,7 @@ void FUN_801b77a8(short *param_1)
         if (local_80 <=
             *(float *)(param_1 + 4) *
             (float)((double)CONCAT44(0x43300000,uStack_14) - DOUBLE_803e5730)) {
-          FUN_800365a4(iVar8,(int)param_1,'\v',4,0);
+          ObjHits_RecordObjectHit(iVar8,(int)param_1,'\v',4,0);
         }
       }
     }

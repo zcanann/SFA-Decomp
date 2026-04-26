@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 
 extern void fn_8001CB3C(void *handle);
-extern int fn_8003687C(void *obj,int param_2,int param_3,int param_4);
+extern int ObjHits_GetPriorityHit(void *obj,int param_2,int param_3,int param_4);
 extern void fn_8003B8F4(void *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                         undefined4 param_5,double scale);
 extern int fn_8005B2FC(double x,double y,double z);
@@ -107,7 +107,7 @@ void proximitymine_hitDetect(ProximityMineObject *obj)
   ProximityMineState *state;
 
   if (fn_80080150(obj->state->renderTimer) == 0) {
-    hit = fn_8003687C(obj,0,0,0);
+    hit = ObjHits_GetPriorityHit(obj,0,0,0);
     collider = obj->collider;
     if ((collider->hitFlag != 0) || (hit != 0) || (collider->hitObj != NULL)) {
       state = obj->state;
