@@ -1346,7 +1346,7 @@ void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8003251c
+ * Function: ObjHits_CheckHitVolumes
  * EN v1.0 Address: 0x8003251C
  * EN v1.0 Size: 3644b
  * EN v1.1 Address: 0x800326B8
@@ -1356,10 +1356,11 @@ void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-u8 FUN_8003251c(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
-                undefined4 param_13,uint param_14,uint param_15,undefined4 param_16)
+u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
+                           undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                           undefined8 param_8,undefined4 param_9,undefined4 param_10,
+                           int param_11,undefined4 param_12,undefined4 param_13,uint param_14,
+                           uint param_15,undefined4 param_16)
 {
   bool bVar1;
   float fVar2;
@@ -2048,14 +2049,16 @@ void FUN_8003335c(undefined8 param_1,double param_2,undefined8 param_3,undefined
     }
     uVar6 = *(uint *)(iVar5 + 0x48) >> 4;
     if (uVar6 != 0) {
-      cVar2 = FUN_8003251c(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,iVar3,
-                           iVar1,1,0,uVar6,*(uint *)(iVar5 + 0x4c) >> 4,in_r10);
+      cVar2 = ObjHits_CheckHitVolumes(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                                      iVar1,iVar3,iVar1,1,0,uVar6,
+                                      *(uint *)(iVar5 + 0x4c) >> 4,in_r10);
       uVar8 = extraout_f1_00;
     }
     if (((param_11 != 0) && (cVar2 == '\0')) && (uVar6 = *(uint *)(iVar5 + 0x48) & 0xf, uVar6 != 0))
     {
-      cVar2 = FUN_8003251c(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_11,
-                           iVar3,iVar1,1,0,uVar6,*(uint *)(iVar5 + 0x4c) & 0xf,in_r10);
+      cVar2 = ObjHits_CheckHitVolumes(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                                      param_11,iVar3,iVar1,1,0,uVar6,
+                                      *(uint *)(iVar5 + 0x4c) & 0xf,in_r10);
       uVar8 = extraout_f1_01;
     }
     if ((cVar2 == '\0') && (*(short *)(iVar1 + 0x44) == 1)) {
@@ -2096,14 +2099,16 @@ void FUN_8003335c(undefined8 param_1,double param_2,undefined8 param_3,undefined
     }
     uVar6 = *(uint *)(iVar4 + 0x48) >> 4;
     if (uVar6 != 0) {
-      cVar2 = FUN_8003251c(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,iVar1,
-                           iVar3,1,0,uVar6,*(uint *)(iVar4 + 0x4c) >> 4,in_r10);
+      cVar2 = ObjHits_CheckHitVolumes(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                                      iVar3,iVar1,iVar3,1,0,uVar6,
+                                      *(uint *)(iVar4 + 0x4c) >> 4,in_r10);
       uVar8 = extraout_f1_02;
     }
     if (((param_12 != 0) && (cVar2 == '\0')) && (uVar6 = *(uint *)(iVar4 + 0x48) & 0xf, uVar6 != 0))
     {
-      cVar2 = FUN_8003251c(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_12,
-                           iVar1,iVar3,1,0,uVar6,*(uint *)(iVar4 + 0x4c) & 0xf,in_r10);
+      cVar2 = ObjHits_CheckHitVolumes(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                                      param_12,iVar1,iVar3,1,0,uVar6,
+                                      *(uint *)(iVar4 + 0x4c) & 0xf,in_r10);
     }
     if ((cVar2 == '\0') && (*(short *)(iVar3 + 0x44) == 1)) {
       FUN_80033358();
@@ -3063,9 +3068,9 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
                 if ((*(byte *)(objState + 0x62) & 0x20) == 0) {
                   if ((*(byte *)(objState + 0x62) == 0x10) || (*(byte *)(attachedState + 0x62) == 0x10)) {
                     if ((*(char *)(objState + 0x6a) != '\0') || (*(char *)(attachedState + 0x6a) != '\0')) {
-                      FUN_8003251c((double)*(float *)(objState + 0x28), param_2, param_3, param_4,
-                                   param_5, param_6, param_7, param_8, obj, candidateObj, obj, 0, 1,
-                                   0xffffffff, 0, 0);
+                      ObjHits_CheckHitVolumes((double)*(float *)(objState + 0x28), param_2, param_3,
+                                              param_4, param_5, param_6, param_7, param_8, obj,
+                                              candidateObj, obj, 0, 1, 0xffffffff, 0, 0);
                     }
                   } else if ((*(char *)(objState + 0x6a) != '\0') || (*(char *)(attachedState + 0x6a) != '\0')) {
                     FUN_80033fd4();

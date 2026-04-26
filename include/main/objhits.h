@@ -34,10 +34,11 @@ uint FUN_800321a8(double param_1,double param_2,double param_3,double param_4,fl
 void ObjHits_SortSweepEntries(int sweepPtrs,int entryCount);
 void FUN_80032430(void);
 void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2);
-u8 FUN_8003251c(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
-                undefined4 param_13,uint param_14,uint param_15,undefined4 param_16);
+u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
+                           undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                           undefined8 param_8,undefined4 param_9,undefined4 param_10,
+                           int param_11,undefined4 param_12,undefined4 param_13,uint param_14,
+                           uint param_15,undefined4 param_16);
 void FUN_80033358(void);
 void FUN_8003335c(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
