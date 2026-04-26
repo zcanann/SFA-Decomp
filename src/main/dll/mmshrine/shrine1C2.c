@@ -105,7 +105,7 @@ extern f32 FLOAT_803e5cd0;
 /*
  * --INFO--
  *
- * Function: FUN_801c60b8
+ * Function: ecsh_shrine_update
  * EN v1.0 Address: 0x801C60B8
  * EN v1.0 Size: 3360b
  * EN v1.1 Address: 0x801C666C
@@ -115,7 +115,7 @@ extern f32 FLOAT_803e5cd0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c60b8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void ecsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9)
 {

@@ -547,7 +547,7 @@ void FUN_80175ed4(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80175fb8
+ * Function: pushable_render
  * EN v1.0 Address: 0x80175FB8
  * EN v1.0 Size: 236b
  * EN v1.1 Address: 0x80176464
@@ -557,7 +557,7 @@ void FUN_80175ed4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80175fb8(void)
+void pushable_render(void)
 {
   short sVar1;
   float fVar2;

@@ -36,7 +36,7 @@ extern f32 FLOAT_803e5cd8;
 /*
  * --INFO--
  *
- * Function: FUN_801c7724
+ * Function: gpsh_shrine_update
  * EN v1.0 Address: 0x801C7724
  * EN v1.0 Size: 2520b
  * EN v1.1 Address: 0x801C7CD8
@@ -46,7 +46,7 @@ extern f32 FLOAT_803e5cd8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c7724(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   float fVar1;

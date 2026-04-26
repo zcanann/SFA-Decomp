@@ -38,7 +38,7 @@ extern f32 FLOAT_803e4ab8;
 /*
  * --INFO--
  *
- * Function: FUN_8018d8dc
+ * Function: cfccrate_update
  * EN v1.0 Address: 0x8018D8DC
  * EN v1.0 Size: 2236b
  * EN v1.1 Address: 0x8018DE58
@@ -48,7 +48,7 @@ extern f32 FLOAT_803e4ab8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018d8dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void cfccrate_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9)
 {
