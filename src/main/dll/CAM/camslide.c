@@ -5,6 +5,8 @@ extern double FUN_800176f4();
 extern int FUN_80017730();
 extern undefined4 FUN_8001774c();
 extern undefined4 FUN_80017778();
+extern double fn_80021370(double param_1,double param_2,double param_3);
+extern uint fn_800217C0(double param_1);
 extern double FUN_80293900();
 extern undefined4 FUN_80293f90();
 extern double FUN_80294d08();
@@ -26,6 +28,10 @@ extern f32 FLOAT_803e2368;
 extern f32 FLOAT_803e236c;
 extern f32 FLOAT_803e2370;
 extern f32 FLOAT_803e2374;
+extern f64 DOUBLE_803e1698;
+extern f32 FLOAT_803e16a4;
+extern f64 DOUBLE_803e16f8;
+extern f32 FLOAT_803db414;
 
 /*
  * --INFO--
@@ -237,5 +243,43 @@ void camslide_update(int param_1,int param_2)
       *(byte *)(gCamcontrolModeSettings + 0x32) = *(byte *)(gCamcontrolModeSettings + 0x32) & 0xbf;
     }
   }
+  return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: firstperson_updatePitch
+ * EN v1.0 Address: 0x80104FC0
+ * EN v1.0 Size: 220b
+ * EN v1.1 Address: 0x8010525C
+ * EN v1.1 Size: 220b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void firstperson_updatePitch(double param_1,int param_2)
+{
+  uint uVar1;
+  double dVar2;
+
+  uVar1 = fn_800217C0((double)(*(float *)(param_2 + 0x1c) -
+                              (float)(param_1 + (double)gCamcontrolModeSettings[0x23])));
+  uVar1 = (uVar1 & 0xffff) - ((int)*(short *)(param_2 + 2) & 0xffffU);
+  if (0x8000 < (int)uVar1) {
+    uVar1 = uVar1 - 0xffff;
+  }
+  if ((int)uVar1 < -0x8000) {
+    uVar1 = uVar1 + 0xffff;
+  }
+  dVar2 = fn_80021370((double)(float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) -
+                                      DOUBLE_803e1698),
+                      (double)(FLOAT_803e16a4 /
+                              (float)((double)CONCAT44(0x43300000,
+                                                       (uint)*(byte *)(gCamcontrolModeSettings +
+                                                                      0x30)) - DOUBLE_803e16f8)),
+                      (double)FLOAT_803db414);
+  *(short *)(param_2 + 2) = *(short *)(param_2 + 2) + (short)(int)dVar2;
   return;
 }

@@ -3,7 +3,6 @@
 
 extern undefined4 FUN_800068f4();
 extern double FUN_800176f4();
-extern uint FUN_80017730();
 extern undefined4 camcontrol_getTargetPosition();
 extern double FUN_80247f54();
 extern double FUN_80293900();
@@ -22,43 +21,6 @@ extern f32 FLOAT_803e2388;
 extern f32 FLOAT_803e238c;
 extern f32 FLOAT_803e2390;
 extern f32 FLOAT_803e2394;
-
-/*
- * --INFO--
- *
- * Function: firstperson_updatePitch
- * EN v1.0 Address: 0x8010509C
- * EN v1.0 Size: 220b
- * EN v1.1 Address: 0x8010525C
- * EN v1.1 Size: 220b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void firstperson_updatePitch(int param_1)
-{
-  uint uVar1;
-  double dVar2;
-  
-  uVar1 = FUN_80017730();
-  uVar1 = (uVar1 & 0xffff) - (uint)*(ushort *)(param_1 + 2);
-  if (0x8000 < (int)uVar1) {
-    uVar1 = uVar1 - 0xffff;
-  }
-  if ((int)uVar1 < -0x8000) {
-    uVar1 = uVar1 + 0xffff;
-  }
-  dVar2 = FUN_800176f4((double)(float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) -
-                                      DOUBLE_803e2318),
-                       (double)(FLOAT_803e2324 /
-                               (float)((double)CONCAT44(0x43300000,
-                                                        (uint)*(byte *)(gCamcontrolModeSettings +
-                                                                       0xc2)) - DOUBLE_803e2378)),
-                       (double)FLOAT_803dc074);
-  *(short *)(param_1 + 2) = *(short *)(param_1 + 2) + (short)(int)dVar2;
-  return;
-}
 
 /*
  * --INFO--
