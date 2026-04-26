@@ -49,6 +49,7 @@ extern f32 lbl_803E64D8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 undefined4 fire_updateState(FireObject *obj,undefined4 param_2,u8 *stateList)
 {
   int stateIndex;
@@ -140,6 +141,7 @@ undefined4 fire_updateState(FireObject *obj,undefined4 param_2,u8 *stateList)
   }
   return 0;
 }
+#pragma scheduling reset
 
 int fireObj_getExtraSize(void)
 {
