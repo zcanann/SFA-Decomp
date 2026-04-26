@@ -17,7 +17,7 @@ extern undefined4 FUN_80017ac8();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_800339b4();
+extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
@@ -856,7 +856,7 @@ FUN_8015c1b4(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   iVar2 = *(int *)(param_9 + 0xb8);
   *(undefined *)(*(int *)(param_9 + 0x54) + 0x6e) = 10;
   *(undefined *)(*(int *)(param_9 + 0x54) + 0x6f) = 1;
-  FUN_800339b4(param_9);
+  ObjHits_RegisterActiveHitVolumeObject(param_9);
   if (*(byte *)(iVar2 + 0x406) < 0x33) {
     if (*(char *)(param_10 + 0x27a) != '\0') {
       FUN_800305f8((double)FLOAT_803e39ac,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
@@ -1131,7 +1131,7 @@ FUN_8015ca54(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   *(byte *)(*(int *)(iVar2 + 0x40c) + 0x44) = *(byte *)(*(int *)(iVar2 + 0x40c) + 0x44) | 4;
   *(undefined *)(*(int *)(param_9 + 0x54) + 0x6e) = 10;
   *(undefined *)(*(int *)(param_9 + 0x54) + 0x6f) = 1;
-  FUN_800339b4(param_9);
+  ObjHits_RegisterActiveHitVolumeObject(param_9);
   if (*(char *)(param_10 + 0x27a) != '\0') {
     uVar1 = FUN_80017760(0,2);
     DAT_803de6f9 = (undefined)uVar1;
@@ -1198,7 +1198,7 @@ FUN_8015cd2c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   *(byte *)(*(int *)(iVar2 + 0x40c) + 0x44) = *(byte *)(*(int *)(iVar2 + 0x40c) + 0x44) | 4;
   *(undefined *)(*(int *)(param_9 + 0x54) + 0x6e) = 10;
   *(undefined *)(*(int *)(param_9 + 0x54) + 0x6f) = 1;
-  FUN_800339b4(param_9);
+  ObjHits_RegisterActiveHitVolumeObject(param_9);
   if (*(char *)(param_10 + 0x27a) != '\0') {
     uVar1 = FUN_80017760(0,1);
     if (uVar1 == 0) {
@@ -1311,7 +1311,7 @@ FUN_8015d19c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   iVar1 = *(int *)(*(int *)(param_9 + 0xb8) + 0x40c);
   *(undefined *)(*(int *)(param_9 + 0x54) + 0x6e) = 10;
   *(undefined *)(*(int *)(param_9 + 0x54) + 0x6f) = 1;
-  FUN_800339b4(param_9);
+  ObjHits_RegisterActiveHitVolumeObject(param_9);
   if (*(char *)(param_10 + 0x27a) != '\0') {
     *(undefined *)(param_10 + 0x346) = 0;
   }
@@ -1461,7 +1461,7 @@ FUN_8015d6ec(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   *(undefined *)(param_10 + 0x25f) = 1;
   *(undefined *)(*(int *)(param_9 + 0x54) + 0x6e) = 9;
   *(undefined *)(*(int *)(param_9 + 0x54) + 0x6f) = 1;
-  FUN_800339b4(param_9);
+  ObjHits_RegisterActiveHitVolumeObject(param_9);
   if (*(char *)(param_10 + 0x27a) != '\0') {
     FUN_800305f8((double)FLOAT_803e39ac,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  param_9,8,0,param_12,param_13,param_14,param_15,param_16);

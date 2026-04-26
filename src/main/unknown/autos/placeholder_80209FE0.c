@@ -144,7 +144,7 @@ extern undefined4 fn_8002EE64();
 extern undefined4 FUN_8002f6ac();
 extern int FUN_8002fc3c();
 extern undefined8 FUN_800305f8();
-extern undefined8 FUN_800339b4();
+extern undefined8 ObjHits_RegisterActiveHitVolumeObject();
 extern char objHitReact_update();
 extern undefined4 ObjHitbox_SetStateIndex();
 extern undefined4 ObjHits_SetTargetMask();

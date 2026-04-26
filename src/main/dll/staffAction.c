@@ -12,7 +12,7 @@ extern undefined4 FUN_80017a88();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_800339b4();
+extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_EnableObject();
 extern undefined8 ObjGroup_RemoveObject();
@@ -96,7 +96,7 @@ FUN_801659b8(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   ObjHits_SetHitVolumeSlot((int)param_9,9,1,-1);
   *(undefined *)(*(int *)(param_9 + 0x2a) + 0x6c) = 9;
   *(undefined *)(*(int *)(param_9 + 0x2a) + 0x6d) = 1;
-  FUN_800339b4(param_9);
+  ObjHits_RegisterActiveHitVolumeObject(param_9);
   (**(code **)(*DAT_803dd728 + 0x18))((double)FLOAT_803dc074,param_9,param_10 + 1);
   if (*(char *)(iVar3 + 0x90) == '\x06') {
     if ((*(byte *)(iVar3 + 0x92) & 1) == 0) {
@@ -216,7 +216,7 @@ FUN_80165e74(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   ObjHits_SetHitVolumeSlot((int)param_9,9,1,-1);
   *(undefined *)(*(int *)(param_9 + 0x2a) + 0x6c) = 9;
   *(undefined *)(*(int *)(param_9 + 0x2a) + 0x6d) = 1;
-  FUN_800339b4(param_9);
+  ObjHits_RegisterActiveHitVolumeObject(param_9);
   (**(code **)(*DAT_803dd728 + 0x18))((double)FLOAT_803dc074,param_9,param_10 + 1);
   if (*(char *)((int)param_10 + 0x27a) != '\0') {
     if (*(char *)(iVar1 + 0x90) == '\x06') {

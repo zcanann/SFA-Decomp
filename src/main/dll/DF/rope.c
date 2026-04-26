@@ -32,7 +32,7 @@ extern undefined4 FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_800339b4();
+extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
 extern undefined4 FUN_80035b84();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_EnableObject();
@@ -396,7 +396,7 @@ void FUN_801bf5ec(ushort *param_1)
     FUN_8002fc3c((double)FLOAT_803e59b8,(double)FLOAT_803dc074);
     *(undefined *)(*(int *)(param_1 + 0x2a) + 0x6e) = 9;
     *(undefined *)(*(int *)(param_1 + 0x2a) + 0x6f) = 1;
-    FUN_800339b4(param_1);
+    ObjHits_RegisterActiveHitVolumeObject(param_1);
     iVar1 = *(int *)(iVar5 + 0x40c);
     iVar5 = *(int *)(iVar1 + 0x18);
     if (((iVar5 != 0) && (*(char *)(iVar5 + 0x2f8) != '\0')) && (*(char *)(iVar5 + 0x4c) != '\0')) {

@@ -10,7 +10,7 @@ extern undefined4 FUN_80017a50();
 extern int FUN_80017a54();
 extern undefined4 FUN_80017a90();
 extern undefined4 FUN_80017a98();
-extern undefined8 FUN_800339b4();
+extern undefined8 ObjHits_RegisterActiveHitVolumeObject();
 extern undefined4 FUN_80080f70();
 extern undefined4 FUN_80080f7c();
 extern undefined4 FUN_80080f80();
@@ -70,7 +70,7 @@ void DIMboss_update(undefined8 param_1,double param_2,double param_3,undefined8 
         *(float *)(iVar5 + 0xac) = FLOAT_803e5870;
       }
     }
-    uVar6 = FUN_800339b4(param_9);
+    uVar6 = ObjHits_RegisterActiveHitVolumeObject(param_9);
     if (*(int *)(param_9 + 0x7c) == 0) {
       *(undefined4 *)(param_9 + 6) = *(undefined4 *)(iVar3 + 8);
       *(undefined4 *)(param_9 + 8) = *(undefined4 *)(iVar3 + 0xc);

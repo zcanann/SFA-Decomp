@@ -45,7 +45,7 @@ extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern int FUN_8002f6ac();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_800339b4();
+extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
 extern undefined objHitReact_update();
 extern undefined4 ObjHits_MarkObjectPositionDirty();
 extern undefined4 ObjHits_SyncObjectPositionIfDirty();

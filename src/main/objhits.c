@@ -2127,7 +2127,7 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
 /*
  * --INFO--
  *
- * Function: FUN_800339b4
+ * Function: ObjHits_RegisterActiveHitVolumeObject
  * EN v1.0 Address: 0x800339B4
  * EN v1.0 Size: 72b
  * EN v1.1 Address: 0x80033A34
@@ -2137,7 +2137,7 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800339b4(undefined4 param_1)
+void ObjHits_RegisterActiveHitVolumeObject(undefined4 param_1)
 {
   int *piVar1;
   int iVar2;
