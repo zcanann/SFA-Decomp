@@ -47,7 +47,11 @@ typedef struct SHthorntailRuntime {
 } SHthorntailRuntime;
 
 typedef struct SHthorntailObject {
-  u8 pad00[0x4C];
+  u8 pad00[0x18];
+  Vec pos;
+  u8 pad24[0x46 - 0x24];
+  s16 objType;
+  u8 pad48[0x4C - 0x48];
   SHthorntailConfig *config;
   u8 pad50[0xAC - 0x50];
   s8 animObjId;

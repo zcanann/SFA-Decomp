@@ -3,10 +3,13 @@
 
 extern void fn_8000BB18(uint objectId,u16 volumeId);
 extern f32 fn_8002166C(Vec *a,Vec *b);
+extern f32 fn_800216D0(Vec *a,Vec *b);
 extern s16 fn_800217C0(f32 deltaX,f32 deltaZ);
 extern int fn_800221A0(int min,int max);
 extern int fn_8002B9EC(void);
+extern SHthorntailObject **fn_80036F50(int group,int *countOut);
 extern int fn_8005A10C(Vec *pos,f32 radius);
+extern void fn_8014C66C(SHthorntailObject *obj,SHthorntailObject *other);
 extern void OSReport(const char *msg,...);
 extern uint FUN_80017690();
 extern uint FUN_80017758();
@@ -21,6 +24,7 @@ extern undefined4 FUN_801d4810();
 extern undefined4 FUN_801d4814();
 
 extern undefined4 DAT_80327a58;
+extern u32 lbl_80326E98[][4];
 extern char lbl_80327470[];
 extern undefined4 DAT_80327a64;
 extern undefined4 DAT_803dcc30;
@@ -34,6 +38,7 @@ extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd72c;
 extern f32 lbl_803DB414;
 extern f32 lbl_803E5418;
+extern f32 lbl_803E5414;
 extern f32 lbl_803E541C;
 extern f32 lbl_803E5420;
 extern f32 lbl_803E5424;
@@ -49,9 +54,9 @@ extern f32 FLOAT_803e60b8;
 /*
  * --INFO--
  *
- * Function: FUN_801d4cd0
+ * Function: fn_801D4CD0
  * EN v1.0 Address: 0x801D4CD0
- * EN v1.0 Size: 4b
+ * EN v1.0 Size: 432b
  * EN v1.1 Address: 0x801D4D8C
  * EN v1.1 Size: 1280b
  * JP Address: TODO
@@ -59,11 +64,59 @@ extern f32 FLOAT_803e60b8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d4cd0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+int fn_801D4CD0(SHthorntailObject *obj)
 {
+  SHthorntailObject **objects;
+  SHthorntailObject *otherObj;
+  u32 configToken;
+  int count;
+  int index;
+  s8 groupIndex;
+  s8 matchCount;
+  int eventIsSet;
+
+  eventIsSet = 0;
+  groupIndex = -1;
+  matchCount = 0;
+  configToken = obj->config->configToken;
+  if (configToken == lbl_80326E98[0][0]) {
+    groupIndex = 0;
+  }
+  else if (configToken == lbl_80326E98[1][0]) {
+    groupIndex = 1;
+  }
+  else if (configToken == lbl_80326E98[2][0]) {
+    groupIndex = 2;
+  }
+  else if (configToken == lbl_80326E98[3][0]) {
+    groupIndex = 3;
+  }
+  else if (configToken == lbl_80326E98[4][0]) {
+    groupIndex = 4;
+  }
+  else if (configToken == lbl_80326E98[5][0]) {
+    groupIndex = 5;
+  }
+  objects = fn_80036F50(3,&count);
+  for (index = 0; index < count; index++) {
+    otherObj = *objects;
+    if ((otherObj->objType == 0x4d7) &&
+        ((otherObj->config->configToken == lbl_80326E98[groupIndex][1]) ||
+         (otherObj->config->configToken == lbl_80326E98[groupIndex][2]) ||
+         (otherObj->config->configToken == lbl_80326E98[groupIndex][3]))) {
+      fn_8014C66C(otherObj,obj);
+      if ((fn_800216D0(&otherObj->pos,&obj->pos) < lbl_803E5414) &&
+          (fn_8001FFB4(*(s16 *)&otherObj->config->controlMode) == 0)) {
+        eventIsSet = 1;
+      }
+      matchCount++;
+      if (matchCount == 3) {
+        break;
+      }
+    }
+    objects++;
+  }
+  return eventIsSet;
 }
 
 /*

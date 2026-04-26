@@ -15,7 +15,7 @@ extern void fn_8003B310(int obj,int collisionShapeState);
 extern void fn_8006EF38(double scaleX,double scaleY,int obj,int joint,int pointCount,int pathPoints,
                         int scratch);
 extern int fn_80114BB0();
-extern int fn_801D4CD0();
+extern int fn_801D4CD0(SHthorntailObject *obj);
 
 extern s32 lbl_803DBFF8;
 extern f32 lbl_803DB414;
@@ -187,7 +187,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
     }
     break;
   case SHTHORNTAIL_LOCOMOTION_6:
-    eventIsSet = fn_801D4CD0();
+    eventIsSet = fn_801D4CD0(obj);
     if (eventIsSet != 0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_EVENT_PAUSE;
       return;

@@ -7,7 +7,7 @@ extern int fn_8001FFB4();
 extern undefined4 fn_800200E8();
 extern int fn_800221A0(int min,int max);
 extern int fn_80038024();
-extern int fn_801D4CD0();
+extern int fn_801D4CD0(SHthorntailObject *obj);
 
 extern undefined4* lbl_803DCAAC;
 extern f64 lbl_803E5428;
@@ -49,7 +49,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
     runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
     break;
   case SHTHORNTAIL_LOCOMOTION_6:
-    eventIsSet = fn_801D4CD0();
+    eventIsSet = fn_801D4CD0(obj);
     if (eventIsSet != 0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_EVENT_PAUSE;
       return;
