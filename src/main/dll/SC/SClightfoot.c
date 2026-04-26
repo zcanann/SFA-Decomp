@@ -2,7 +2,7 @@
 #include "main/dll/SC/SClightfoot.h"
 
 extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_801149bc();
 
@@ -53,7 +53,7 @@ void SHthorntail_render(SHthorntailObject *obj)
   pathPoint = runtime->renderPathPoints;
   pointIndex = 0;
   do {
-    FUN_800388b4((short *)obj,pointIndex,&pathPoint->x,(undefined4 *)&pathPoint->y,&pathPoint->z,0);
+    ObjPath_GetPointWorldPosition((short *)obj,pointIndex,&pathPoint->x,(undefined4 *)&pathPoint->y,&pathPoint->z,0);
     pathPoint = pathPoint + 1;
     pointIndex = pointIndex + 1;
   } while (pointIndex < SHTHORNTAIL_RENDER_PATH_POINT_COUNT);

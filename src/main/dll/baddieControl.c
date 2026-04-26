@@ -41,7 +41,7 @@ extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
-extern uint FUN_80038a34();
+extern uint Obj_GetYawDeltaToObject();
 extern int FUN_8003964c();
 extern undefined4 FUN_80053ba4();
 extern undefined4 FUN_80053bb0();

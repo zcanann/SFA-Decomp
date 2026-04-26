@@ -19,7 +19,7 @@ extern undefined4 ObjGroup_FindNearestObject();
 extern int FUN_800384ec();
 extern undefined4 FUN_800387ec();
 extern undefined4 FUN_8003882c();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8004036c();
 extern undefined4 FUN_80040a88();
@@ -205,8 +205,8 @@ void FUN_801d9cc4(void)
     else {
       FUN_8003b818((int)puVar5);
     }
-    FUN_800388b4(puVar5,0,&local_ec,&local_e8,&local_e4,0);
-    FUN_800388b4(puVar5,1,&local_f8,&local_f4,&local_f0,0);
+    ObjPath_GetPointWorldPosition(puVar5,0,&local_ec,&local_e8,&local_e4,0);
+    ObjPath_GetPointWorldPosition(puVar5,1,&local_f8,&local_f4,&local_f0,0);
     dVar16 = (double)(local_f8 - local_ec);
     dVar15 = (double)(local_f4 - local_e8);
     dVar14 = (double)(local_f0 - local_e4);

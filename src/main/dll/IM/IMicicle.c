@@ -20,7 +20,7 @@ extern undefined8 FUN_80017ac8();
 extern int FUN_80017af8();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern int FUN_80038a34();
+extern int Obj_GetYawDeltaToObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80041ff8();
 extern undefined4 FUN_80042b9c();
@@ -807,7 +807,7 @@ void FUN_801a4694(ushort *param_1)
   uVar4 = 0xff;
   uVar2 = FUN_80017690((int)*(short *)(iVar5 + 0x20));
   if (uVar2 != 0) {
-    iVar3 = FUN_80038a34(param_1,iVar1,(float *)0x0);
+    iVar3 = Obj_GetYawDeltaToObject(param_1,iVar1,(float *)0x0);
     iVar3 = (int)(short)iVar3;
     if (iVar3 < 0) {
       iVar3 = -iVar3;

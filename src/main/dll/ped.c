@@ -4,7 +4,7 @@
 extern undefined4 FUN_80006b14();
 extern uint FUN_80017690();
 extern undefined4 ObjGroup_FindNearestObject();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b818();
 extern int FUN_80286840();
 extern undefined4 FUN_8028688c();
@@ -183,7 +183,7 @@ void FUN_801cdf84(int param_1)
   iVar1 = *(int *)(param_1 + 0xb8);
   FUN_8003b818(param_1);
   if (*(int *)(iVar1 + 8) != 0) {
-    FUN_800388b4(param_1,0,local_10,&local_14,&local_18,0);
+    ObjPath_GetPointWorldPosition(param_1,0,local_10,&local_14,&local_18,0);
     *(float *)(*(int *)(iVar1 + 8) + 0xc) = local_10[0];
     *(undefined4 *)(*(int *)(iVar1 + 8) + 0x10) = local_14;
     *(float *)(*(int *)(iVar1 + 8) + 0x14) = local_18;

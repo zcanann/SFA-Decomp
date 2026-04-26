@@ -32,7 +32,7 @@ extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
 extern undefined4 ObjMsg_SendToObject();
 extern uint FUN_8003882c();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_80053c98();
 extern undefined4 FUN_80080f70();
 extern undefined4 FUN_80080f7c();
@@ -273,7 +273,7 @@ void FUN_801bb848(void)
     }
   }
   if ((DAT_803de800 & 0x200) != 0) {
-    FUN_800388b4(iVar3,7,&DAT_803ad5e8,&DAT_803ad5ec,&DAT_803ad5f0,0);
+    ObjPath_GetPointWorldPosition(iVar3,7,&DAT_803ad5e8,&DAT_803ad5ec,&DAT_803ad5f0,0);
     iVar6 = 0;
     do {
       (**(code **)(*DAT_803dd708 + 8))(iVar3,0x4b7,&DAT_803ad5dc,0x200001,0xffffffff,0);
@@ -281,7 +281,7 @@ void FUN_801bb848(void)
     } while (iVar6 < 0xf);
   }
   if ((DAT_803de800 & 0x400) != 0) {
-    FUN_800388b4(iVar3,8,&DAT_803ad5e8,&DAT_803ad5ec,&DAT_803ad5f0,0);
+    ObjPath_GetPointWorldPosition(iVar3,8,&DAT_803ad5e8,&DAT_803ad5ec,&DAT_803ad5f0,0);
     iVar6 = 0;
     do {
       (**(code **)(*DAT_803dd708 + 8))(iVar3,0x4b7,&DAT_803ad5dc,0x200001,0xffffffff,0);
@@ -289,7 +289,7 @@ void FUN_801bb848(void)
     } while (iVar6 < 0xf);
   }
   if ((DAT_803de800 & 0x800) != 0) {
-    FUN_800388b4(iVar3,9,&DAT_803ad5e8,&DAT_803ad5ec,&DAT_803ad5f0,0);
+    ObjPath_GetPointWorldPosition(iVar3,9,&DAT_803ad5e8,&DAT_803ad5ec,&DAT_803ad5f0,0);
     iVar6 = 0;
     do {
       (**(code **)(*DAT_803dd708 + 8))(iVar3,0x4b7,&DAT_803ad5dc,0x200001,0xffffffff,0);
@@ -297,7 +297,7 @@ void FUN_801bb848(void)
     } while (iVar6 < 0xf);
   }
   if ((DAT_803de800 & 0x1000) != 0) {
-    FUN_800388b4(iVar3,10,&DAT_803ad5e8,&DAT_803ad5ec,&DAT_803ad5f0,0);
+    ObjPath_GetPointWorldPosition(iVar3,10,&DAT_803ad5e8,&DAT_803ad5ec,&DAT_803ad5f0,0);
     iVar6 = 0;
     do {
       (**(code **)(*DAT_803dd708 + 8))(iVar3,0x4b7,&DAT_803ad5dc,0x200001,0xffffffff,0);
@@ -329,7 +329,7 @@ void FUN_801bb848(void)
       DAT_803ad5d4 = (float)((double)DAT_803ad5ec / dVar10);
       DAT_803ad5d8 = (float)dVar11;
       FUN_80247bf8(afStack_b4,&DAT_803ad5d0,&DAT_803ad5d0);
-      FUN_800388b4(iVar3,0xb,&DAT_803ad5e8,&DAT_803ad5ec,&DAT_803ad5f0,1);
+      ObjPath_GetPointWorldPosition(iVar3,0xb,&DAT_803ad5e8,&DAT_803ad5ec,&DAT_803ad5f0,1);
       (**(code **)(*DAT_803dd708 + 8))(iVar3,0x4b8,&DAT_803ad5dc,0x200001,0xffffffff,&DAT_803ad5d0);
       iVar6 = iVar6 + 1;
     } while (iVar6 < 5);
@@ -341,9 +341,9 @@ void FUN_801bb848(void)
   *(undefined2 *)(piVar7 + 8) = 0;
   *(undefined2 *)((int)piVar7 + 0x1e) = 0;
   *(undefined2 *)(piVar7 + 7) = 0;
-  FUN_800388b4(iVar3,0xd,(float *)(piVar7 + 10),piVar7 + 0xb,(float *)(piVar7 + 0xc),1);
-  FUN_800388b4(iVar3,0xd,(float *)(piVar7 + 4),piVar7 + 5,(float *)(piVar7 + 6),0);
-  FUN_800388b4(iVar3,0xb,(float *)(piVar7 + 0x10),piVar7 + 0x11,(float *)(piVar7 + 0x12),0);
+  ObjPath_GetPointWorldPosition(iVar3,0xd,(float *)(piVar7 + 10),piVar7 + 0xb,(float *)(piVar7 + 0xc),1);
+  ObjPath_GetPointWorldPosition(iVar3,0xd,(float *)(piVar7 + 4),piVar7 + 5,(float *)(piVar7 + 6),0);
+  ObjPath_GetPointWorldPosition(iVar3,0xb,(float *)(piVar7 + 0x10),piVar7 + 0x11,(float *)(piVar7 + 0x12),0);
   piVar7[0x16] = (int)FLOAT_803e5870;
   piVar7[0x17] = (int)FLOAT_803e58e0;
   piVar7[0x18] = (int)FLOAT_803e5860;
@@ -351,7 +351,7 @@ void FUN_801bb848(void)
   *(undefined2 *)(piVar7 + 0x14) = 0;
   *(undefined2 *)((int)piVar7 + 0x4e) = 0;
   *(undefined2 *)(piVar7 + 0x13) = 0;
-  FUN_800388b4(iVar3,0xc,(float *)(piVar7 + 0x16),piVar7 + 0x17,(float *)(piVar7 + 0x18),1);
+  ObjPath_GetPointWorldPosition(iVar3,0xc,(float *)(piVar7 + 0x16),piVar7 + 0x17,(float *)(piVar7 + 0x18),1);
   uVar5 = FUN_8003882c(iVar3,0);
   FUN_80003494((uint)(piVar7 + 0x19),uVar5,0x30);
   fVar1 = FLOAT_803e5870;

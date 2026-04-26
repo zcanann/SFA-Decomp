@@ -33,7 +33,7 @@ extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
-extern undefined4 FUN_80038a34();
+extern undefined4 Obj_GetYawDeltaToObject();
 extern undefined4 FUN_8003b540();
 extern undefined4 FUN_8003b818();
 extern int FUN_800575b4();
@@ -965,7 +965,7 @@ void FUN_80185dc4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       if (((puVar5 != puVar2) && ((*(byte *)((int)puVar2 + 0xaf) & 1) != 0)) &&
          (*(int *)(puVar2 + 0x7c) == 0)) {
         FUN_80006ba8(0,0x100);
-        FUN_80038a34(puVar2,(int)puVar3,&fStack_98);
+        Obj_GetYawDeltaToObject(puVar2,(int)puVar3,&fStack_98);
         *(undefined2 *)(piVar8 + 3) = 0x8000;
         *(undefined2 *)((int)piVar8 + 0xe) = 0;
         uVar6 = 1;

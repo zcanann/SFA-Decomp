@@ -9,7 +9,7 @@ extern uint GameBit_Get(int eventId);
 extern uint FUN_80017760();
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_80041ff8();
 extern undefined4 FUN_80042b9c();
 extern undefined4 FUN_80042bec();
@@ -190,7 +190,7 @@ void FUN_801d7034(void)
     puVar3 = puVar3 + 1;
   }
   if ((iVar4 != 0) &&
-     ((FUN_800388b4(psVar1,iVar4 + -1,&local_28,&local_24,local_20,0), psVar1[0x50] != 0x1b ||
+     ((ObjPath_GetPointWorldPosition(psVar1,iVar4 + -1,&local_28,&local_24,local_20,0), psVar1[0x50] != 0x1b ||
       (FLOAT_803e6130 <= *(float *)(psVar1 + 0x4c))))) {
     FUN_80006820((double)local_28,(double)local_24,(double)local_20[0],(uint)psVar1,0x415);
   }

@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_1DF.h"
 
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b818();
 
 /*
@@ -25,7 +25,7 @@ void FUN_801d1e24(int param_1)
   iVar1 = *(int *)(param_1 + 0xb8);
   if (in_r8 != '\0') {
     FUN_8003b818(param_1);
-    FUN_800388b4(param_1,0,(float *)(iVar1 + 0x20),(undefined4 *)(iVar1 + 0x24),
+    ObjPath_GetPointWorldPosition(param_1,0,(float *)(iVar1 + 0x20),(undefined4 *)(iVar1 + 0x24),
                  (float *)(iVar1 + 0x28),0);
   }
   return;

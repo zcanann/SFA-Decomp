@@ -19,7 +19,7 @@ extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern int ObjGroup_FindNearestObjectToPoint();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern void* FUN_80039518();
 extern undefined4 FUN_8003964c();
 extern undefined4 FUN_8003a9c8();
@@ -1099,8 +1099,8 @@ void FUN_801149bc(short *param_1,int param_2,int param_3)
   if (*(char *)(param_2 + 0x601) != '\0') {
     puVar3 = FUN_80039518();
     FUN_8003ac24((int)param_1,puVar3,(uint)*(byte *)(param_2 + 0x610));
-    FUN_800388b4(param_1,param_3,&local_30,&local_2c,&local_28,0);
-    FUN_800388b4(param_1,param_3 + 1,&local_24,&uStack_20,local_1c,0);
+    ObjPath_GetPointWorldPosition(param_1,param_3,&local_30,&local_2c,&local_28,0);
+    ObjPath_GetPointWorldPosition(param_1,param_3 + 1,&local_24,&uStack_20,local_1c,0);
     fVar2 = FLOAT_803e294c;
     fVar1 = FLOAT_803e2948;
     *(float *)(param_2 + 4) = (FLOAT_803e2948 * local_30 + local_24) * FLOAT_803e294c;
@@ -1115,7 +1115,7 @@ void FUN_801149bc(short *param_1,int param_2,int param_3)
     FUN_80017748(&local_38,(float *)(param_2 + 4));
     *(undefined *)(param_2 + 0x601) = 0;
   }
-  FUN_800388b4(param_1,param_3,&local_30,&local_2c,&local_28,0);
+  ObjPath_GetPointWorldPosition(param_1,param_3,&local_30,&local_2c,&local_28,0);
   *(float *)(param_2 + 0x10) = local_30;
   *(undefined4 *)(param_2 + 0x14) = local_2c;
   *(float *)(param_2 + 0x18) = local_28;

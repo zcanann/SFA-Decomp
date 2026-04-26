@@ -47,7 +47,7 @@ extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 ObjLink_DetachChild();
-extern undefined4 FUN_800387ac();
+extern undefined4 ObjPath_GetPointLocalPosition();
 extern int FUN_80039520();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();

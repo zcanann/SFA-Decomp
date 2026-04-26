@@ -39,7 +39,7 @@ extern undefined4 FUN_80037fa8();
 extern undefined4 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
 extern int FUN_800384ec();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80041ff8();
 extern undefined4 FUN_800427c8();
@@ -1229,7 +1229,7 @@ void FUN_80188d34(void)
   if (*(char *)(iVar4 + 0x1a) != '\0') {
     for (bVar3 = 0; bVar3 < 5; bVar3 = bVar3 + 1) {
       iVar1 = (uint)bVar3 * 8;
-      FUN_800388b4(iVar2,(uint)(byte)(&DAT_8032267c)[iVar1],&local_2c,&local_28,local_24,0);
+      ObjPath_GetPointWorldPosition(iVar2,(uint)(byte)(&DAT_8032267c)[iVar1],&local_2c,&local_28,local_24,0);
       local_2c = local_2c - *(float *)(iVar2 + 0xc);
       local_28 = local_28 - *(float *)(iVar2 + 0x10);
       local_24[0] = local_24[0] - *(float *)(iVar2 + 0x14);
@@ -1239,21 +1239,21 @@ void FUN_80188d34(void)
     }
   }
   if (*(float *)(iVar4 + 0xc) != FLOAT_803e4830) {
-    FUN_800388b4(iVar2,6,&local_2c,&local_28,local_24,0);
+    ObjPath_GetPointWorldPosition(iVar2,6,&local_2c,&local_28,local_24,0);
     local_2c = local_2c - *(float *)(iVar2 + 0xc);
     local_28 = local_28 - *(float *)(iVar2 + 0x10);
     local_24[0] = local_24[0] - *(float *)(iVar2 + 0x14);
     FUN_80081108((double)FLOAT_803e4834,(double)*(float *)(iVar4 + 0xc));
   }
   if (*(float *)(iVar4 + 8) != FLOAT_803e4830) {
-    FUN_800388b4(iVar2,8,&local_2c,&local_28,local_24,0);
+    ObjPath_GetPointWorldPosition(iVar2,8,&local_2c,&local_28,local_24,0);
     local_2c = local_2c - *(float *)(iVar2 + 0xc);
     local_28 = local_28 - *(float *)(iVar2 + 0x10);
     local_24[0] = local_24[0] - *(float *)(iVar2 + 0x14);
     FUN_80081108((double)FLOAT_803e4834,(double)*(float *)(iVar4 + 8));
   }
   if (*(float *)(iVar4 + 4) != FLOAT_803e4830) {
-    FUN_800388b4(iVar2,7,&local_2c,&local_28,local_24,0);
+    ObjPath_GetPointWorldPosition(iVar2,7,&local_2c,&local_28,local_24,0);
     local_2c = local_2c - *(float *)(iVar2 + 0xc);
     local_28 = local_28 - *(float *)(iVar2 + 0x10);
     local_24[0] = local_24[0] - *(float *)(iVar2 + 0x14);

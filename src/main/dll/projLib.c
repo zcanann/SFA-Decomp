@@ -5,7 +5,7 @@ extern undefined4 FUN_8001771c();
 extern uint FUN_80017760();
 extern undefined4 FUN_80017a98();
 extern int ObjGroup_FindNearestObject();
-extern int FUN_80038a34();
+extern int Obj_GetYawDeltaToObject();
 extern undefined4 FUN_80038bb0();
 extern void* FUN_80039518();
 extern undefined4 FUN_8003a420();
@@ -198,7 +198,7 @@ void FUN_801150ac(void)
           }
         }
         if (iVar9 != 0) {
-          iVar4 = FUN_80038a34(puVar5,iVar9,(float *)0x0);
+          iVar4 = Obj_GetYawDeltaToObject(puVar5,iVar9,(float *)0x0);
           sVar11 = (short)iVar4;
         }
         if ((*(byte *)(iVar10 + 0x611) & 0x10) != 0) {

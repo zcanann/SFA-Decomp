@@ -44,8 +44,8 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjLink_DetachChild();
 extern undefined8 ObjLink_AttachChild();
-extern undefined4 FUN_80038730();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPositionArray();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_80038f38();
 extern undefined8 FUN_80039468();
 extern int FUN_8003964c();
@@ -1141,12 +1141,12 @@ void FUN_80146c14(void)
     iVar5 = 0;
     iVar3 = iVar4;
     do {
-      FUN_800388b4(puVar2,iVar5 + 4,(float *)(iVar3 + 0x3d8),(undefined4 *)(iVar3 + 0x3dc),
+      ObjPath_GetPointWorldPosition(puVar2,iVar5 + 4,(float *)(iVar3 + 0x3d8),(undefined4 *)(iVar3 + 0x3dc),
                    (float *)(iVar3 + 0x3e0),0);
       iVar3 = iVar3 + 0xc;
       iVar5 = iVar5 + 1;
     } while (iVar5 < 4);
-    FUN_800388b4(puVar2,8,(float *)(iVar4 + 0x408),(undefined4 *)(iVar4 + 0x40c),
+    ObjPath_GetPointWorldPosition(puVar2,8,(float *)(iVar4 + 0x408),(undefined4 *)(iVar4 + 0x40c),
                  (float *)(iVar4 + 0x410),0);
     iVar3 = FUN_8003964c((int)puVar2,0);
     *(undefined2 *)(iVar4 + 0x414) = *(undefined2 *)(iVar3 + 2);
@@ -1171,7 +1171,7 @@ void FUN_80146c14(void)
       }
     }
     FUN_801367b4(puVar2,iVar6);
-    FUN_80038730(puVar2,4,4,(float *)(iVar6 + 0x7d8));
+    ObjPath_GetPointWorldPositionArray(puVar2,4,4,(float *)(iVar6 + 0x7d8));
     *(float *)(iVar6 + 0x838) = *(float *)(iVar6 + 0x838) - FLOAT_803dc074;
     if (FLOAT_803e306c < *(float *)(iVar6 + 0x838)) {
       FUN_8008111c((double)FLOAT_803e31cc,(double)FLOAT_803e3078,puVar2,6,(int *)0x0);
@@ -1970,7 +1970,7 @@ void FUN_80147d2c(int param_1,int param_2)
     *(uint *)(param_2 + 0x2dc) = *(uint *)(param_2 + 0x2dc) | 0x100000;
   }
   if ((*(uint *)(param_2 + 0x2e4) & 0x200000) != 0) {
-    FUN_80038730(param_1,2,2,afStack_20);
+    ObjPath_GetPointWorldPositionArray(param_1,2,2,afStack_20);
     FUN_8006dca8((double)*(float *)(param_2 + 0x310),(double)FLOAT_803e3200,param_1,
                  (uint)*(ushort *)(param_2 + 0x2f8),7,(int)afStack_20,param_2 + 4);
   }

@@ -35,7 +35,7 @@ extern undefined4 ObjHits_DisableObject();
 extern undefined8 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHit();
 extern int ObjGroup_FindNearestObject();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8005fe14();
 extern uint FUN_8007f6c8();
@@ -961,7 +961,7 @@ void FUN_8016b428(undefined8 param_1,undefined8 param_2,undefined8 param_3,doubl
           local_60 = *(float *)(iVar3 + 0x20);
         }
         else {
-          FUN_800388b4(iVar3,0,&local_68,&local_64,&local_60,0);
+          ObjPath_GetPointWorldPosition(iVar3,0,&local_68,&local_64,&local_60,0);
         }
         FUN_80247eb8(&local_68,(float *)(param_9 + 0xc),&local_50);
         FUN_80247f54(&local_50);

@@ -31,7 +31,7 @@ extern int ObjHits_GetPriorityHit();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80042bec();
 extern undefined4 FUN_80044404();
@@ -721,7 +721,7 @@ void FUN_801e21b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if ((2 < iVar2) && (*(char *)(uVar1 + 0xad) == '\x01')) {
       local_5c = FLOAT_803e64b0;
       local_5e = 0xc0a;
-      FUN_800388b4(uVar1,0,&local_58,&local_54,local_50,0);
+      ObjPath_GetPointWorldPosition(uVar1,0,&local_58,&local_54,local_50,0);
       local_58 = local_58 - *(float *)(uVar1 + 0x18);
       local_54 = local_54 - *(float *)(uVar1 + 0x1c);
       local_50[0] = local_50[0] - *(float *)(uVar1 + 0x20);
@@ -883,7 +883,7 @@ void FUN_801e27c4(int param_1)
       }
       local_20 = FLOAT_803e64d4;
       local_22 = 0xc0a;
-      FUN_800388b4(param_1,0xd,&local_1c,&local_18,local_14,0);
+      ObjPath_GetPointWorldPosition(param_1,0xd,&local_1c,&local_18,local_14,0);
       local_1c = local_1c - *(float *)(param_1 + 0x18);
       local_18 = local_18 - *(float *)(param_1 + 0x1c);
       local_14[0] = local_14[0] - *(float *)(param_1 + 0x20);

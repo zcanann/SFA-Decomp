@@ -21,7 +21,7 @@ extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_8003882c();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8004036c();
 extern undefined4 FUN_80053754();
@@ -539,7 +539,7 @@ void FUN_801ef2c0(int param_1)
   pfVar1 = *(float **)(param_1 + 0xb8);
   if (in_r8 == -1) {
     FUN_8003b818(param_1);
-    FUN_800388b4(param_1,3,pfVar1,pfVar1 + 1,pfVar1 + 2,0);
+    ObjPath_GetPointWorldPosition(param_1,3,pfVar1,pfVar1 + 1,pfVar1 + 2,0);
     if (*(int *)(param_1 + 0x30) != 0) {
       *pfVar1 = *pfVar1 - FLOAT_803dda58;
       pfVar1[2] = pfVar1[2] - FLOAT_803dda5c;
@@ -554,7 +554,7 @@ void FUN_801ef2c0(int param_1)
   }
   else {
     FUN_8003b818(param_1);
-    FUN_800388b4(param_1,3,pfVar1,pfVar1 + 1,pfVar1 + 2,0);
+    ObjPath_GetPointWorldPosition(param_1,3,pfVar1,pfVar1 + 1,pfVar1 + 2,0);
     if (*(int *)(param_1 + 0x30) != 0) {
       *pfVar1 = *pfVar1 - FLOAT_803dda58;
       pfVar1[2] = pfVar1[2] - FLOAT_803dda5c;

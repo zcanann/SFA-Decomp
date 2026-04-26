@@ -52,8 +52,8 @@ extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_80037d74();
 extern undefined4 ObjLink_DetachChild();
 extern int FUN_800384ec();
-extern undefined4 FUN_800388b4();
-extern int FUN_80038a34();
+extern undefined4 ObjPath_GetPointWorldPosition();
+extern int Obj_GetYawDeltaToObject();
 extern undefined4 FUN_80038f38();
 extern undefined4 FUN_800392ec();
 extern undefined4 FUN_80039468();
@@ -1617,7 +1617,7 @@ void FUN_8019d4d4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   uVar4 = 0;
   uVar5 = 3;
   FUN_8003add8(param_9,param_10,param_11 + 0x3c,0x28,0,3);
-  iVar2 = FUN_80038a34(param_9,param_10,(float *)0x0);
+  iVar2 = Obj_GetYawDeltaToObject(param_9,param_10,(float *)0x0);
   sVar1 = (short)(iVar2 >> 3);
   *param_9 = *param_9 + sVar1;
   if (param_12 != 0) {
@@ -1793,7 +1793,7 @@ void FUN_8019d874(undefined4 param_1,undefined4 param_2,int param_3)
     case 0:
     case 8:
       *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & 0xfffd;
-      uVar7 = FUN_80038a34(puVar5,iVar6,(float *)0x0);
+      uVar7 = Obj_GetYawDeltaToObject(puVar5,iVar6,(float *)0x0);
       FUN_8003add8(puVar5,iVar6,iVar12 + 0x3c,0x28,0,3);
       *puVar5 = *puVar5 + ((short)uVar7 >> 3) + (ushort)((short)uVar7 < 0 && (uVar7 & 7) != 0);
       if (bVar14) {
@@ -1806,7 +1806,7 @@ void FUN_8019d874(undefined4 param_1,undefined4 param_2,int param_3)
     case 5:
       *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & 0xfffd;
       iVar13 = FUN_80017a90();
-      uVar7 = FUN_80038a34(puVar5,iVar13,(float *)0x0);
+      uVar7 = Obj_GetYawDeltaToObject(puVar5,iVar13,(float *)0x0);
       uVar8 = FUN_80017a90();
       FUN_8003add8(puVar5,uVar8,iVar12 + 0x3c,0x28,0,3);
       *puVar5 = *puVar5 + ((short)uVar7 >> 3) + (ushort)((short)uVar7 < 0 && (uVar7 & 7) != 0);
@@ -2267,7 +2267,7 @@ void FUN_8019e408(void)
             iVar3 = FUN_80057690(iVar3);
             if (iVar3 != 0) {
               FUN_8003b818(*piVar4);
-              FUN_800388b4(*piVar4,0,(float *)(iVar1 + 0xc),(undefined4 *)(iVar1 + 0x10),
+              ObjPath_GetPointWorldPosition(*piVar4,0,(float *)(iVar1 + 0xc),(undefined4 *)(iVar1 + 0x10),
                            (float *)(iVar1 + 0x14),0);
             }
             FUN_8003b818(iVar1);

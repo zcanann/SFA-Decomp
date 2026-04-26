@@ -6,7 +6,7 @@ extern undefined4 FUN_80017584();
 extern undefined4 FUN_800175ec();
 extern uint FUN_80017760();
 extern undefined4 FUN_80017a98();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8005fe14();
 extern undefined4 dll_DIM_BossGutSpik_update();

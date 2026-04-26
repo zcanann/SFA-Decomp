@@ -27,7 +27,7 @@ extern int FUN_80017a98();
 extern undefined4 FUN_8002f6ac();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern int FUN_80038a34();
+extern int Obj_GetYawDeltaToObject();
 extern int FUN_8003964c();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80045c4c();

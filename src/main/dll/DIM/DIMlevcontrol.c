@@ -17,7 +17,7 @@ extern double FUN_80017708();
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
 extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern int FUN_8003964c();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8011e800();
@@ -297,7 +297,7 @@ void FUN_801b2c40(undefined2 *param_1)
     *param_1 = (short)((int)*(char *)(*(int *)(param_1 + 0x26) + 0x28) << 8);
     FUN_8003b818((int)param_1);
     *param_1 = uVar1;
-    FUN_800388b4(param_1,0,(float *)(iVar2 + 0x8c),(undefined4 *)(iVar2 + 0x90),
+    ObjPath_GetPointWorldPosition(param_1,0,(float *)(iVar2 + 0x8c),(undefined4 *)(iVar2 + 0x90),
                  (float *)(iVar2 + 0x94),0);
   }
   return;

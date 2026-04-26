@@ -56,8 +56,8 @@ extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObjects();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
-extern undefined4 FUN_800388b4();
-extern int FUN_80038a34();
+extern undefined4 ObjPath_GetPointWorldPosition();
+extern int Obj_GetYawDeltaToObject();
 extern void* FUN_80039518();
 extern undefined4 FUN_8003964c();
 extern undefined4 FUN_8003b540();
@@ -1522,7 +1522,7 @@ void FUN_80200974(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(undefined4 *)(iVar9 + 0x18) = 0;
       *(undefined2 *)(iVar9 + 0x1c) = 0xffff;
     }
-    iVar4 = FUN_80038a34(puVar2,*(int *)(iVar5 + 0x2d0),(float *)0x0);
+    iVar4 = Obj_GetYawDeltaToObject(puVar2,*(int *)(iVar5 + 0x2d0),(float *)0x0);
     *puVar2 = *puVar2 + (short)iVar4;
     *(undefined *)(iVar5 + 0x34d) = 0x11;
     if (*(char *)(iVar5 + 0x27a) != '\0') {
@@ -2231,7 +2231,7 @@ FUN_80202004(double param_1,double param_2,undefined8 param_3,double param_4,ush
   float local_48 [5];
   
   iVar3 = *(int *)(param_5 + 0x5c);
-  iVar1 = FUN_80038a34(param_5,param_6,local_48);
+  iVar1 = Obj_GetYawDeltaToObject(param_5,param_6,local_48);
   if ((double)FLOAT_803e6f40 == param_4) {
     uVar2 = 0;
   }
@@ -2286,7 +2286,7 @@ FUN_80202130(double param_1,double param_2,undefined8 param_3,double param_4,ush
   
   iVar2 = *(int *)(param_5 + 0x5c);
   if ((param_5 != (ushort *)0x0) && (param_6 != 0)) {
-    iVar1 = FUN_80038a34(param_5,param_6,local_58);
+    iVar1 = Obj_GetYawDeltaToObject(param_5,param_6,local_58);
     if ((double)FLOAT_803e6f40 != param_4) {
       if ((double)local_58[0] < param_1) {
         dVar3 = (double)(*(float *)(param_5 + 8) - *(float *)(param_6 + 0x10));
@@ -2562,7 +2562,7 @@ void FUN_802029ec(void)
     }
     iVar2 = *(int *)(iVar3 + 0x18);
     if ((iVar2 != 0) && (*(int *)(iVar2 + 0x50) != 0)) {
-      FUN_800388b4(iVar1,3,(float *)(iVar2 + 0xc),(undefined4 *)(iVar2 + 0x10),
+      ObjPath_GetPointWorldPosition(iVar1,3,(float *)(iVar2 + 0xc),(undefined4 *)(iVar2 + 0x10),
                    (float *)(iVar2 + 0x14),0);
       FUN_8003b818(*(int *)(iVar3 + 0x18));
     }

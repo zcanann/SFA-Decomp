@@ -13,7 +13,7 @@ extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_80039520();
 extern undefined4 FUN_8003b540();
 extern undefined4 FUN_8003b818();
@@ -585,9 +585,9 @@ void FUN_80169348(void)
       FUN_8008111c((double)FLOAT_803e3d10,(double)*(float *)(iVar2 + 1000),iVar1,3,(int *)0x0);
     }
     iVar2 = *(int *)(iVar2 + 0x40c);
-    FUN_800388b4(iVar1,2,(float *)(iVar2 + 0x10),(undefined4 *)(iVar2 + 0x14),
+    ObjPath_GetPointWorldPosition(iVar1,2,(float *)(iVar2 + 0x10),(undefined4 *)(iVar2 + 0x14),
                  (float *)(iVar2 + 0x18),0);
-    FUN_800388b4(iVar1,1,(float *)(iVar2 + 0x28),(undefined4 *)(iVar2 + 0x2c),
+    ObjPath_GetPointWorldPosition(iVar1,1,(float *)(iVar2 + 0x28),(undefined4 *)(iVar2 + 0x2c),
                  (float *)(iVar2 + 0x30),0);
   }
   FUN_80286888();

@@ -3,7 +3,7 @@
 #include "main/objanim.h"
 
 extern undefined4 FUN_800305f8();
-extern int FUN_80038a34();
+extern int Obj_GetYawDeltaToObject();
 extern undefined4 FUN_80038bb0();
 extern void* FUN_80039518();
 extern short FUN_8003a420();
@@ -56,7 +56,7 @@ void FUN_80115650(undefined8 param_1,double param_2,double param_3,undefined8 pa
   if ((*(int *)(iVar7 + 0x54) != 0) && ((*(byte *)(*(int *)(iVar7 + 0x54) + 0x62) & 2) != 0)) {
     param_2 = (double)FLOAT_803e295c;
   }
-  iVar4 = FUN_80038a34(puVar2,iVar7,(float *)0x0);
+  iVar4 = Obj_GetYawDeltaToObject(puVar2,iVar7,(float *)0x0);
   sVar11 = (short)iVar4;
   if ((*(byte *)(param_12 + 0x611) & 0x10) != 0) {
     FUN_80038bb0('\0',1);

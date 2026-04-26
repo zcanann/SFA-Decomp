@@ -28,7 +28,7 @@ extern undefined4 FUN_800305c4();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern int FUN_8003964c();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8005335c();
@@ -1399,7 +1399,7 @@ void FUN_801e60cc(uint param_1)
     local_2c = FLOAT_803e6620;
     local_28 = FLOAT_803e6624;
     local_24[0] = FLOAT_803e6620;
-    FUN_800388b4(param_1,0,&local_2c,&local_28,local_24,1);
+    ObjPath_GetPointWorldPosition(param_1,0,&local_2c,&local_28,local_24,1);
     if (*(int *)(param_1 + 0x30) == 0) {
       fVar1 = *(float *)(param_1 + 0xc);
       fVar2 = *(float *)(param_1 + 0x10);

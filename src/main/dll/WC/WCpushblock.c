@@ -11,7 +11,7 @@ extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 ObjGroup_AddObject();
-extern undefined8 FUN_800388b4();
+extern undefined8 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_80053754();
 extern undefined4 FUN_8005398c();
 extern undefined4 FUN_800e65c8();
@@ -174,7 +174,7 @@ void FUN_801ee198(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(undefined *)(puVar2 + 2) = 2;
     *(undefined *)((int)puVar2 + 5) = 1;
     uVar3 = 0;
-    uVar4 = FUN_800388b4(param_9,4,(float *)(puVar2 + 4),(undefined4 *)(puVar2 + 6),
+    uVar4 = ObjPath_GetPointWorldPosition(param_9,4,(float *)(puVar2 + 4),(undefined4 *)(puVar2 + 6),
                          (float *)(puVar2 + 8),0);
     puVar2 = (undefined2 *)
              FUN_80017ae4(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,5,

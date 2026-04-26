@@ -25,7 +25,7 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjMsg_SendToObjects();
 extern uint FUN_8003882c();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8006fb00();
 extern undefined4 FUN_8014d3d0();
 extern undefined8 FUN_8014d4c8();
@@ -1679,11 +1679,11 @@ void FUN_8015de40(short *param_1,int param_2)
     dVar4 = (double)fVar1;
   }
   if (*(short *)(param_2 + 0x274) == 4) {
-    FUN_800388b4(param_1,0,(float *)(iVar3 + 0x2c),(undefined4 *)(iVar3 + 0x30),
+    ObjPath_GetPointWorldPosition(param_1,0,(float *)(iVar3 + 0x2c),(undefined4 *)(iVar3 + 0x30),
                  (float *)(iVar3 + 0x34),0);
   }
   else {
-    FUN_800388b4(param_1,2,(float *)(iVar3 + 0x2c),(undefined4 *)(iVar3 + 0x30),
+    ObjPath_GetPointWorldPosition(param_1,2,(float *)(iVar3 + 0x2c),(undefined4 *)(iVar3 + 0x30),
                  (float *)(iVar3 + 0x34),0);
   }
   *(float *)(iVar3 + 0x30) = FLOAT_803e3a28 + *(float *)(param_1 + 8);
@@ -1702,7 +1702,7 @@ void FUN_8015de40(short *param_1,int param_2)
   local_80 = FLOAT_803e39ac;
   local_7c = FLOAT_803e3a38;
   local_78 = FLOAT_803e3a3c;
-  FUN_800388b4(param_1,0,&local_80,&local_7c,&local_78,1);
+  ObjPath_GetPointWorldPosition(param_1,0,&local_80,&local_7c,&local_78,1);
   if ((*(byte *)(iVar3 + 0x44) & 2) != 0) {
     local_98 = FLOAT_803e3a40;
     local_94 = FLOAT_803e3a44;

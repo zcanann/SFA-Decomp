@@ -38,7 +38,7 @@ extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern void* ObjGroup_GetObjects();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern int FUN_80039520();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80057690();
@@ -207,7 +207,7 @@ void FUN_801ae184(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
           *(char *)((int)puVar3 + 0x37) = *(char *)(puVar8 + 8);
         }
         FUN_8003b818((int)puVar3);
-        FUN_800388b4(puVar3,1,(float *)(puVar8 + 5),puVar8 + 6,(float *)(puVar8 + 7),0);
+        ObjPath_GetPointWorldPosition(puVar3,1,(float *)(puVar8 + 5),puVar8 + 6,(float *)(puVar8 + 7),0);
         *(undefined *)((int)puVar3 + 0x37) = uVar1;
       }
     }

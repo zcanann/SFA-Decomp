@@ -14,7 +14,7 @@ extern undefined4 FUN_800305f8();
 extern undefined8 ObjGroup_RemoveObject();
 extern int FUN_80038470();
 extern int FUN_800384ec();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003a1c4();
 extern undefined4 FUN_8003b280();
 extern undefined4 FUN_8003b818();
@@ -145,12 +145,12 @@ void FUN_801cf108(int param_1)
   iVar2 = 0;
   iVar3 = iVar1;
   do {
-    FUN_800388b4(param_1,iVar2,(float *)(iVar3 + 0x45c),(undefined4 *)(iVar3 + 0x460),
+    ObjPath_GetPointWorldPosition(param_1,iVar2,(float *)(iVar3 + 0x45c),(undefined4 *)(iVar3 + 0x460),
                  (float *)(iVar3 + 0x464),0);
     iVar3 = iVar3 + 0xc;
     iVar2 = iVar2 + 1;
   } while (iVar2 < 4);
-  FUN_800388b4(param_1,4,(float *)(iVar1 + 0xc),(undefined4 *)(iVar1 + 0x10),(float *)(iVar1 + 0x14)
+  ObjPath_GetPointWorldPosition(param_1,4,(float *)(iVar1 + 0xc),(undefined4 *)(iVar1 + 0x10),(float *)(iVar1 + 0x14)
                ,0);
   return;
 }

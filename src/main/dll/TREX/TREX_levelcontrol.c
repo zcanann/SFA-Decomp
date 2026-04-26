@@ -17,7 +17,7 @@ extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern int FUN_80017b00();
 extern int ObjHits_GetPriorityHit();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8008112c();
 extern uint FUN_8028683c();
 extern undefined4 FUN_80286888();
@@ -298,7 +298,7 @@ void FUN_801e34c0(undefined8 param_1,double param_2,double param_3,undefined8 pa
       }
       local_60 = FLOAT_803e6540;
       local_68[3] = 0xc0a;
-      FUN_800388b4(uVar3,0,&local_5c,&local_58,local_54,0);
+      ObjPath_GetPointWorldPosition(uVar3,0,&local_5c,&local_58,local_54,0);
       local_5c = local_5c - *(float *)(uVar3 + 0x18);
       local_58 = local_58 - *(float *)(uVar3 + 0x1c);
       local_54[0] = local_54[0] - *(float *)(uVar3 + 0x20);
@@ -309,7 +309,7 @@ void FUN_801e34c0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     else if (cVar1 < '\x05') {
       local_60 = FLOAT_803e6540;
       local_68[3] = 0xc0a;
-      FUN_800388b4(uVar3,0,&local_5c,&local_58,local_54,0);
+      ObjPath_GetPointWorldPosition(uVar3,0,&local_5c,&local_58,local_54,0);
       local_5c = local_5c - *(float *)(uVar3 + 0x18);
       local_58 = local_58 - *(float *)(uVar3 + 0x1c);
       local_54[0] = local_54[0] - *(float *)(uVar3 + 0x20);

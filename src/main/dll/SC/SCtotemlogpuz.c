@@ -9,7 +9,7 @@ extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_800305f8();
 extern int ObjGroup_FindNearestObject();
 extern undefined8 ObjLink_DetachChild();
-extern int FUN_80038a34();
+extern int Obj_GetYawDeltaToObject();
 extern undefined4 FUN_80038f38();
 extern undefined4 FUN_80039468();
 extern undefined4 FUN_8003964c();
@@ -120,7 +120,7 @@ void FUN_801d7c14(undefined8 param_1,undefined8 param_2,double param_3,undefined
   }
   if (iVar2 != 0) {
     *(byte *)((int)piVar9 + 0xd5) = *(byte *)((int)piVar9 + 0xd5) & 0xef;
-    iVar2 = FUN_80038a34(param_9,iVar4,(float *)0x0);
+    iVar2 = Obj_GetYawDeltaToObject(param_9,iVar4,(float *)0x0);
     iVar4 = (int)(short)((short)iVar2 - DAT_803de870);
     iVar2 = iVar4 + -0x8000;
     if (iVar2 < 0) {

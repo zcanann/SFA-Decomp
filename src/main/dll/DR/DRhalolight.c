@@ -4,7 +4,7 @@
 extern undefined4 FUN_80017698();
 extern undefined4 FUN_80017814();
 extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_801e9c00();
 extern undefined4 FUN_801ecdec();
@@ -148,12 +148,12 @@ void FUN_801ed188(void)
   FUN_801e9c00();
   if (in_r8 == -1) {
     FUN_8003b818(iVar1);
-    FUN_800388b4(iVar1,0,(float *)(iVar2 + 1000),(undefined4 *)(iVar2 + 0x3ec),
+    ObjPath_GetPointWorldPosition(iVar1,0,(float *)(iVar2 + 1000),(undefined4 *)(iVar2 + 0x3ec),
                  (float *)(iVar2 + 0x3f0),0);
   }
   else {
     FUN_8003b818(iVar1);
-    FUN_800388b4(iVar1,0,(float *)(iVar2 + 1000),(undefined4 *)(iVar2 + 0x3ec),
+    ObjPath_GetPointWorldPosition(iVar1,0,(float *)(iVar2 + 1000),(undefined4 *)(iVar2 + 0x3ec),
                  (float *)(iVar2 + 0x3f0),0);
   }
   FUN_80286884();

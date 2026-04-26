@@ -4,7 +4,7 @@
 
 extern undefined4 fn_8000BAE0();
 extern undefined4 fn_8000BB18();
-extern undefined4 fn_8003842C();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 fn_80296554();
 extern undefined4 FUN_8028683c();
 extern undefined4 FUN_80286888();
@@ -65,7 +65,7 @@ void SHthorntail_init(void)
     event++;
   }
   if ((pointIndex != 0) &&
-      (fn_8003842C((int)obj,pointIndex - 1,&local_28,&local_24,local_20,0),
+      (ObjPath_GetPointWorldPosition((int)obj,pointIndex - 1,&local_28,&local_24,local_20,0),
        ((obj[0x50] != 0x1b || (lbl_803E5498 <= *(float *)(obj + 0x4c)))))) {
     fn_8000BAE0((double)local_28,(double)local_24,(double)local_20[0],obj,0x415);
   }

@@ -42,7 +42,7 @@ extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
 extern undefined8 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
-extern undefined4 FUN_800388b4();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
 extern int FUN_800575b4();
@@ -431,7 +431,7 @@ void FUN_8017fccc(int param_1)
     FUN_8003b818(param_1);
     iVar1 = *piVar2;
     if ((iVar1 != 0) && (*(int *)(iVar1 + 0xc4) != 0)) {
-      FUN_800388b4(param_1,0,(float *)(iVar1 + 0xc),(undefined4 *)(iVar1 + 0x10),
+      ObjPath_GetPointWorldPosition(param_1,0,(float *)(iVar1 + 0xc),(undefined4 *)(iVar1 + 0x10),
                    (float *)(iVar1 + 0x14),0);
     }
   }

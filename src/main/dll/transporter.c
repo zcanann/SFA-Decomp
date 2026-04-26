@@ -30,8 +30,8 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_AllocQueue();
-extern int FUN_800386bc();
-extern undefined4 FUN_800388b4();
+extern int ObjList_ContainsObject();
+extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b540();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80053c98();
@@ -1317,7 +1317,7 @@ void FUN_8017726c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     }
     break;
   case 1:
-    FUN_800386bc(*(int *)(iVar4 + 0xf4));
+    ObjList_ContainsObject(*(int *)(iVar4 + 0xf4));
     break;
   case 3:
     iVar10 = FUN_80017a98();
@@ -1334,7 +1334,7 @@ void FUN_8017726c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     }
     iVar10 = *(int *)(iVar4 + 0xf4);
     if (iVar10 != 0) {
-      iVar6 = FUN_800386bc(iVar10);
+      iVar6 = ObjList_ContainsObject(iVar10);
       fVar2 = FLOAT_803e4284;
       if (iVar6 == 0) break;
       fVar1 = *(float *)(iVar10 + 0x14);
@@ -1468,7 +1468,7 @@ void FUN_80177710(ushort *param_1)
       local_26 = puVar4[1];
       local_28 = *puVar4;
       FUN_80017748(&local_28,(float *)(param_1 + 0x12));
-      FUN_800388b4(puVar4,0,(float *)(param_1 + 6),(undefined4 *)(param_1 + 8),
+      ObjPath_GetPointWorldPosition(puVar4,0,(float *)(param_1 + 6),(undefined4 *)(param_1 + 8),
                    (float *)(param_1 + 10),0);
       ObjHits_EnableObject((int)param_1);
     }

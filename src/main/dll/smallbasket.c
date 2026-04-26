@@ -36,8 +36,8 @@ extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjGroup_FindNearestObject();
 extern undefined4 ObjLink_AttachChild();
-extern undefined8 FUN_800388b4();
-extern int FUN_80038a34();
+extern undefined8 ObjPath_GetPointWorldPosition();
+extern int Obj_GetYawDeltaToObject();
 extern uint FUN_800620e8();
 extern byte FUN_8014c78c();
 extern undefined4 FUN_8014cfac();
@@ -538,7 +538,7 @@ void FUN_8015750c(undefined8 param_1,undefined8 param_2,double param_3,undefined
       local_120 = FLOAT_803e37e0;
       iVar7 = ObjGroup_FindNearestObject(0x30,puVar3,&local_120);
       if (iVar7 != 0) {
-        iVar7 = FUN_80038a34(puVar3,iVar7,&local_120);
+        iVar7 = Obj_GetYawDeltaToObject(puVar3,iVar7,&local_120);
         sVar8 = (short)iVar7;
         if (sVar8 < -300) {
           sVar8 = -300;
@@ -852,7 +852,7 @@ void FUN_801581cc(undefined8 param_1,double param_2,double param_3,undefined8 pa
   if ((uVar1 & 0xff) != 0) {
     puVar2 = FUN_80017aa4(0x24,0x710);
     uVar4 = 0;
-    uVar5 = FUN_800388b4(param_9,0,(float *)(puVar2 + 4),(undefined4 *)(puVar2 + 6),
+    uVar5 = ObjPath_GetPointWorldPosition(param_9,0,(float *)(puVar2 + 4),(undefined4 *)(puVar2 + 6),
                          (float *)(puVar2 + 8),0);
     *(undefined *)(puVar2 + 2) = 1;
     *(undefined *)((int)puVar2 + 5) = 4;
@@ -907,7 +907,7 @@ void FUN_80158344(undefined8 param_1,double param_2,double param_3,undefined8 pa
   if ((uVar1 & 0xff) != 0) {
     puVar2 = FUN_80017aa4(0x24,0x869);
     uVar4 = 0;
-    uVar5 = FUN_800388b4(param_9,0,(float *)(puVar2 + 4),(undefined4 *)(puVar2 + 6),
+    uVar5 = ObjPath_GetPointWorldPosition(param_9,0,(float *)(puVar2 + 4),(undefined4 *)(puVar2 + 6),
                          (float *)(puVar2 + 8),0);
     *(undefined *)(puVar2 + 2) = 1;
     *(undefined *)((int)puVar2 + 5) = 4;

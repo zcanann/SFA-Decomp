@@ -2539,7 +2539,7 @@ void FUN_80038598(undefined4 param_1,undefined4 param_2,float *param_3)
 /*
  * --INFO--
  *
- * Function: FUN_800386bc
+ * Function: ObjList_ContainsObject
  * EN v1.0 Address: 0x800386BC
  * EN v1.0 Size: 116b
  * EN v1.1 Address: 0x80038300
@@ -2549,7 +2549,7 @@ void FUN_80038598(undefined4 param_1,undefined4 param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_800386bc(int param_1)
+undefined4 ObjList_ContainsObject(int param_1)
 {
   int *piVar1;
   int local_18;
@@ -2571,7 +2571,7 @@ undefined4 FUN_800386bc(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80038730
+ * Function: ObjPath_GetPointWorldPositionArray
  * EN v1.0 Address: 0x80038730
  * EN v1.0 Size: 124b
  * EN v1.1 Address: 0x80038378
@@ -2581,14 +2581,14 @@ undefined4 FUN_800386bc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80038730(undefined4 param_1,undefined4 param_2,int param_3,float *param_4)
+void ObjPath_GetPointWorldPositionArray(undefined4 param_1,undefined4 param_2,int param_3,float *param_4)
 {
   int iVar1;
   undefined8 uVar2;
   
   uVar2 = FUN_80286840();
   for (iVar1 = 0; iVar1 < param_3; iVar1 = iVar1 + 1) {
-    FUN_800388b4((int)((ulonglong)uVar2 >> 0x20), (int)uVar2 + iVar1, param_4,
+    ObjPath_GetPointWorldPosition((int)((ulonglong)uVar2 >> 0x20), (int)uVar2 + iVar1, param_4,
                  (undefined4 *)(param_4 + 1), param_4 + 2, 0);
     param_4 = param_4 + 3;
   }
@@ -2598,7 +2598,7 @@ void FUN_80038730(undefined4 param_1,undefined4 param_2,int param_3,float *param
 /*
  * --INFO--
  *
- * Function: FUN_800387ac
+ * Function: ObjPath_GetPointLocalPosition
  * EN v1.0 Address: 0x800387AC
  * EN v1.0 Size: 64b
  * EN v1.1 Address: 0x800383E8
@@ -2608,7 +2608,7 @@ void FUN_80038730(undefined4 param_1,undefined4 param_2,int param_3,float *param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800387ac(int param_1,int param_2,undefined4 *param_3,undefined4 *param_4,
+void ObjPath_GetPointLocalPosition(int param_1,int param_2,undefined4 *param_3,undefined4 *param_4,
                  undefined4 *param_5)
 {
   int iVar1;
@@ -2690,7 +2690,7 @@ void FUN_8003882c(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_800388b4
+ * Function: ObjPath_GetPointWorldPosition
  * EN v1.0 Address: 0x800388B4
  * EN v1.0 Size: 384b
  * EN v1.1 Address: 0x80038524
@@ -2700,7 +2700,7 @@ void FUN_8003882c(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800388b4(undefined4 param_1,undefined4 param_2,float *param_3,undefined4 *param_4,
+void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *param_3,undefined4 *param_4,
                  float *param_5,int param_6)
 {
   ushort *puVar1;
@@ -2781,7 +2781,7 @@ void FUN_800388b4(undefined4 param_1,undefined4 param_2,float *param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_80038a34
+ * Function: Obj_GetYawDeltaToObject
  * EN v1.0 Address: 0x80038A34
  * EN v1.0 Size: 216b
  * EN v1.1 Address: 0x800386E0
@@ -2791,7 +2791,7 @@ void FUN_800388b4(undefined4 param_1,undefined4 param_2,float *param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_80038a34(ushort *param_1,int param_2,float *param_3)
+int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3)
 {
   int iVar1;
   double dVar2;
