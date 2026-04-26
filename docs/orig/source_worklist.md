@@ -28,67 +28,43 @@ What was still missing was one answer to the practical question:
     - `seed-only`
     - `no-en-xrefs`
 
-## Highest-leverage findings
+## Current highest-leverage findings
 
-### 1. Two retail-backed DLL files are ready for first-pass splits now
+The current symbol map has absorbed the earlier clean `split-now` wins. A fresh
+`python tools/orig/source_worklist.py` run now reports no remaining clean
+split-now candidates; the useful work is in one shrink job and four packet /
+ownership jobs.
 
-- `DIMBoss.c` -> `dll/DIM/DIMboss.c`
-  - current EN seed: `0x801BD0E8-0x801BD7F4`
-  - best near-fit window: `0x801BD0E8-0x801BDA04`
-  - debug target size: `0x900`
-  - result: strong `split-now`
-
-- `SHthorntail.c` -> `dll/SH/SHthorntail.c`
-  - current EN seed: `0x801D5764-0x801D5AFC`
-  - current seed is already the best fit
-  - debug target size: `0x3B8`
-  - result: strong `split-now`
-
-These are the cleanest retail-backed DLL skeletons in the current repo.
-
-### 2. Three files want expansion before they should be named as final boundaries
-
-- `laser.c`
-  - retail label: `Init`
-  - current EN seed: `0x802096AC-0x802096D8`
-  - suggested expansion: `0x802093B4-0x80209D38`
-  - note: shares the tiny retail island with `textblock.c`
-
-- `camcontrol.c`
-  - current EN seed: `0x80102D3C-0x80103130`
-  - suggested expansion: `0x801024E8-0x80103648`
-
-- `curves.c`
-  - current EN seed: `0x800E556C-0x800E56A4`
-  - suggested expansion: `0x800E1DA8-0x800E8118`
-  - important because the source-order corridor already ties it to `modgfx.c`, `modelfx.c`, `dim_partfx.c`, `df_partfx.c`, `objfsa.c`, then `gameplay.c`
-
-This is the main value of the worklist: it stops these from being treated as vague retail names and turns them into explicit expansion jobs.
-
-### 3. `objanim.c` is still real, but the current EN seed is too wide
+### 1. `objanim.c` is still real, but the current EN seed is too wide
 
 - `objanim.c` -> `main/objanim.c`
 - retail label: `setBlendMove`
-- current EN seed: `0x8002EC4C-0x80030780`
+- current EN seed: `0x8002EB54-0x80030688`
 - debug target size: `0x3A8`
-- best compact candidate from the current pass: `0x8002EC4C-0x8002F604`
+- best compact candidate from the current pass: `0x8002EB54-0x8002F50C`
 
 This is not yet a clean split-now file. It is a shrink-first target.
 
-### 4. `textblock.c`, `expgfx.c`, and `objHitReact.c` are better handled as packets first
-
-- `textblock.c`
-  - retail label: `Init`
-  - shares one tiny EN island with `laser.c`
-  - best handled as a shared-island packet before final file boundaries are asserted
+### 2. `expgfx.c`, `laser.c`, `SHthorntail.c`, and `objHitReact.c` are packet work
 
 - `expgfx.c`
+  - current EN seed: `0x8009DDEC-0x8009FCDC`
   - strongest retail xref density among the unsized cases
-  - no exact debug split in the current bundle
-  - best handled as one corridor packet spanning the neighborhood between early render/object files and the `modgfx.c` / `modelfx.c` / `objfsa.c` corridor
+  - still best handled as a corridor packet before a final file boundary is claimed
+
+- `laser.c`
+  - retail label: `Init`
+  - current EN seed: `0x80209074-0x802090A0`
+  - suggested ownership packet: `0x80209074-0x802099A8`
+  - overlaps existing `laser_unsupported.c`, `laserObj.c`, `fire.c`, `textblock.c`, and adjacent object stubs
+
+- `SHthorntail.c`
+  - current EN seed: `0x801D5174-0x801D550C`
+  - remains a near-fit retail anchor, but the current owner is `dll_1E8.c`
+  - handle as an ownership packet before moving the source boundary
 
 - `objHitReact.c`
-  - compact retail seed with one direct xref
+  - current EN seed: `0x800353A4-0x80035630`
   - sits between `objhits.c` and the `objlib.c` / `objprint.c` corridor
   - best handled as a corridor packet before a final narrow file boundary is claimed
 
