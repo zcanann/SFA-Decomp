@@ -20,7 +20,7 @@
  * EN slot map with reference-only names by slot index:
  * - slot 00: 0x802090A4 laser_initialiseUnsupported stub=blr ref=initialise (stub)
  * - slot 01: 0x802090A0 laser_releaseUnsupported stub=blr ref=release (stub)
- * - slot 03: 0x80209074 laser_initUnsupported ref=init
+ * - slot 03: 0x80209074 laser_init ref=init
  * - slot 04: 0x80209048 laser_updateUnsupported ref=update
  * - slot 05: 0x80209044 laser_hitDetectUnsupported stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80209018 laser_renderUnsupported ref=render

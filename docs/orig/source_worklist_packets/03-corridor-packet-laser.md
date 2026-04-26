@@ -18,13 +18,13 @@
 - Suggested window overlaps existing split owners `main/dll/CF/laser_unsupported.c`, `main/dll/CF/laserObj.c`, `main/dll/fire.c`, `main/textblock.c`, ... (+2 more); treat this as an ownership packet instead of a clean boundary move.
 
 ## EN Xref Functions
-- `laser_initUnsupported@0x80209074-0x802090A0`
+- `laser_init@0x80209074-0x802090A0`
 
 ## Current Seed Functions
-- `laser_initUnsupported@0x80209074-0x802090A0` size=`0x2C`
+- `laser_init@0x80209074-0x802090A0` size=`0x2C`
 
 ## Suggested Inspection Window
-- `laser_initUnsupported@0x80209074-0x802090A0` size=`0x2C`
+- `laser_init@0x80209074-0x802090A0` size=`0x2C`
 - `laser_releaseUnsupported@0x802090A0-0x802090A4` size=`0x4`
 - `laser_initialiseUnsupported@0x802090A4-0x802090A8` size=`0x4`
 - `laserObj_getExtraSize@0x802090A8-0x802090B0` size=`0x8`

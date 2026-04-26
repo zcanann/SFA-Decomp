@@ -24,7 +24,7 @@
   "functions": [
     {
       "function_start": "0x80209074",
-      "function_name": "laser_initUnsupported",
+      "function_name": "laser_init",
       "xrefs": [
         {
           "xref_address": "0x80209080",
@@ -32,7 +32,7 @@
           "target_address": "0x80329C20",
           "target_text": "<laser.c Init>No Longer supported ",
           "pair_kind": "lis/addi",
-          "function_name": "laser_initUnsupported"
+          "function_name": "laser_init"
         }
       ]
     }

@@ -52,7 +52,7 @@ void laser_freeUnsupported(void);
 void laser_renderUnsupported(void);
 void laser_hitDetectUnsupported(void);
 void laser_updateUnsupported(void);
-void laser_initUnsupported(void);
+void laser_init(void);
 void laser_releaseUnsupported(void);
 void laser_initialiseUnsupported(void);
 int laserObj_getExtraSize(void);

@@ -38,7 +38,7 @@ void laser_updateUnsupported(void)
   return;
 }
 
-void laser_initUnsupported(void)
+void laser_init(void)
 {
   OSReport(sLaserInitNoLongerSupported);
   return;
