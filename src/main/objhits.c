@@ -76,12 +76,6 @@ extern char s_HIT_VOLUMES__an_object_has_too_m_802cb98c[];
 extern undefined4 uRam803dd84c;
 extern undefined4 uRam803dd854;
 
-typedef struct ObjHitsSweepEntry {
-  float minX;
-  float maxX;
-  int obj;
-} ObjHitsSweepEntry;
-
 /*
  * --INFO--
  *
@@ -1193,7 +1187,7 @@ uint FUN_800321a8(double param_1,double param_2,double param_3,double param_4,fl
 /*
  * --INFO--
  *
- * Function: FUN_8003232c
+ * Function: ObjHits_SortSweepEntries
  * EN v1.0 Address: 0x8003232C
  * EN v1.0 Size: 260b
  * EN v1.1 Address: 0x800323E0
@@ -1203,7 +1197,7 @@ uint FUN_800321a8(double param_1,double param_2,double param_3,double param_4,fl
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003232c(int param_1,int param_2)
+void ObjHits_SortSweepEntries(int sweepPtrs,int entryCount)
 {
   int iVar1;
   int iVar2;
@@ -1215,27 +1209,27 @@ void FUN_8003232c(int param_1,int param_2)
   int iVar8;
   int iVar9;
   
-  iVar1 = (param_2 + -1) / 9 + (param_2 + -1 >> 0x1f);
+  iVar1 = (entryCount + -1) / 9 + (entryCount + -1 >> 0x1f);
   for (iVar9 = 1; iVar9 <= iVar1 - (iVar1 >> 0x1f); iVar9 = iVar9 * 3 + 1) {
   }
   for (; 0 < iVar9; iVar9 = iVar9 / 3) {
     iVar6 = iVar9 + 1;
     iVar1 = iVar6 * 4;
-    piVar4 = (int *)(param_1 + iVar1);
-    iVar2 = param_2 - iVar6;
-    if (iVar6 < param_2) {
+    piVar4 = (int *)(sweepPtrs + iVar1);
+    iVar2 = entryCount - iVar6;
+    if (iVar6 < entryCount) {
       do {
         iVar8 = *piVar4;
-        piVar3 = (int *)(param_1 + iVar1);
+        piVar3 = (int *)(sweepPtrs + iVar1);
         iVar7 = iVar6;
         while ((iVar9 < iVar7 &&
-               (iVar5 = *(int *)(param_1 + (iVar7 - iVar9) * 4),
+               (iVar5 = *(int *)(sweepPtrs + (iVar7 - iVar9) * 4),
                *(float *)(iVar8 + 4) < *(float *)(iVar5 + 4)))) {
           *piVar3 = iVar5;
           piVar3 = piVar3 + -iVar9;
           iVar7 = iVar7 - iVar9;
         }
-        *(int *)(param_1 + iVar7 * 4) = iVar8;
+        *(int *)(sweepPtrs + iVar7 * 4) = iVar8;
         piVar4 = piVar4 + 1;
         iVar6 = iVar6 + 1;
         iVar1 = iVar1 + 4;
@@ -2893,7 +2887,7 @@ void FUN_80034934(void)
 /*
  * --INFO--
  *
- * Function: fn_80034DD4
+ * Function: ObjHits_Update
  * EN v1.0 Address: 0x80034D74
  * EN v1.0 Size: 2112b
  * EN v1.1 Address: 0x80034DD4
@@ -2903,8 +2897,8 @@ void FUN_80034934(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80034DD4(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
+                    undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   int attachedObj;
   ObjHitsSweepEntry *candidateEntry;
@@ -2977,7 +2971,7 @@ void fn_80034DD4(undefined8 param_1,double param_2,undefined8 param_3,undefined8
       objectCount--;
     } while (objectCount != 0);
   }
-  FUN_8003232c((int)&DAT_80341558, slotCount);
+  ObjHits_SortSweepEntries((int)&DAT_80341558, slotCount);
   currentIndex = 1;
   slotIndex = 1;
   entrySlot = (ObjHitsSweepEntry **)&DAT_8034155c;

@@ -73,7 +73,7 @@ extern int FUN_80006c98();
 extern void* FUN_80006c9c();
 extern int FUN_80006ca4();
 extern undefined4 FUN_80032430();
-extern undefined4 fn_80034DD4();
+extern undefined4 ObjHits_Update();
 extern undefined8 FUN_800356f0();
 extern uint FUN_800357a8();
 extern uint FUN_8003597c();

@@ -3,6 +3,12 @@
 
 #include "ghidra_import.h"
 
+typedef struct ObjHitsSweepEntry {
+  float minX;
+  float maxX;
+  int obj;
+} ObjHitsSweepEntry;
+
 void FUN_80030688(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,int *param_6,int *param_7,int *param_8,float *param_9);
 void FUN_80030c34(undefined4 param_1,undefined4 param_2,int *param_3,int *param_4,int *param_5,
@@ -25,7 +31,7 @@ uint FUN_80032068(double param_1,double param_2,double param_3,double param_4,fl
 uint FUN_800321a8(double param_1,double param_2,double param_3,double param_4,float *param_5,
                  float *param_6,float *param_7,float *param_8,float *param_9,float *param_10,
                  float *param_11);
-void FUN_8003232c(int param_1,int param_2);
+void ObjHits_SortSweepEntries(int sweepPtrs,int entryCount);
 void FUN_80032430(void);
 void FUN_80032470(ushort *param_1,int param_2);
 u8 FUN_8003251c(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
@@ -42,7 +48,7 @@ void FUN_800339fc(undefined8 param_1,double param_2,double param_3,undefined4 pa
 void FUN_80033fd4(void);
 void fn_8003454C(undefined4 param_1,undefined4 param_2,int *param_3);
 void FUN_80034934(void);
-void fn_80034DD4(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
+                    undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 
 #endif /* MAIN_OBJHITS_H_ */
