@@ -9,6 +9,10 @@ extern double FUN_80293900();
 
 extern undefined4* DAT_803dd6d0;
 extern undefined4* gCamcontrolModeSettings;
+extern f64 DOUBLE_803e1698;
+extern f64 DOUBLE_803e16f8;
+extern f32 FLOAT_803e1710;
+extern f32 FLOAT_803e1714;
 extern f64 DOUBLE_803e2318;
 extern f64 DOUBLE_803e2378;
 extern f32 FLOAT_803dc074;
@@ -183,13 +187,13 @@ void firstperson_loadSettings(int param_1)
   gCamcontrolModeSettings[0x19] = gCamcontrolModeSettings[7];
   gCamcontrolModeSettings[0x15] = gCamcontrolModeSettings[5];
   gCamcontrolModeSettings[0x13] = gCamcontrolModeSettings[4];
-  dVar2 = DOUBLE_803e2318;
+  dVar2 = DOUBLE_803e1698;
   fVar1 = (float)((double)CONCAT44(0x43300000,(int)*(char *)(param_1 + 5) ^ 0x80000000) -
-                 DOUBLE_803e2318);
+                 DOUBLE_803e1698);
   gCamcontrolModeSettings[0x23] = fVar1;
   gCamcontrolModeSettings[0x25] = fVar1;
-  dVar3 = DOUBLE_803e2378;
-  fVar1 = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 6)) - DOUBLE_803e2378);
+  dVar3 = DOUBLE_803e16f8;
+  fVar1 = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 6)) - DOUBLE_803e16f8);
   gCamcontrolModeSettings[2] = fVar1;
   gCamcontrolModeSettings[0x26] = fVar1;
   gCamcontrolModeSettings[0x10] = fVar1;
@@ -213,20 +217,20 @@ void firstperson_loadSettings(int param_1)
   gCamcontrolModeSettings[7] = fVar1;
   gCamcontrolModeSettings[0x1a] = fVar1;
   if (*(byte *)(param_1 + 0xb) == 0) {
-    gCamcontrolModeSettings[0x14] = FLOAT_803e2394;
+    gCamcontrolModeSettings[0x14] = FLOAT_803e1714;
   }
   else {
     fVar1 = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 0xb)) - dVar3) /
-            FLOAT_803e2390;
+            FLOAT_803e1710;
     gCamcontrolModeSettings[4] = fVar1;
     gCamcontrolModeSettings[0x14] = fVar1;
   }
   if (*(byte *)(param_1 + 0xc) == 0) {
-    gCamcontrolModeSettings[0x16] = FLOAT_803e2394;
+    gCamcontrolModeSettings[0x16] = FLOAT_803e1714;
   }
   else {
-    fVar1 = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 0xc)) - DOUBLE_803e2378) /
-            FLOAT_803e2390;
+    fVar1 = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 0xc)) - DOUBLE_803e16f8) /
+            FLOAT_803e1710;
     gCamcontrolModeSettings[5] = fVar1;
     gCamcontrolModeSettings[0x16] = fVar1;
   }
