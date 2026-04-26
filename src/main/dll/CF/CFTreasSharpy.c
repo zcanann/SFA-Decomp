@@ -187,3 +187,90 @@ void FUN_8018e0a8(void)
   FUN_8028688c();
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: cfccrate_release
+ * EN v1.0 Address: 0x8018E6BC
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8018E69C
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void cfccrate_release(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: cfccrate_initialise
+ * EN v1.0 Address: 0x8018E6C0
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8018E6A0
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void cfccrate_initialise(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fxemit_getExtraSize
+ * EN v1.0 Address: 0x8018EC20
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x8018ED50
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int fxemit_getExtraSize(void)
+{
+  return 0x20;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fxemit_func08
+ * EN v1.0 Address: 0x8018EC28
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x8018ED58
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int fxemit_func08(void)
+{
+  return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fxemit_hitDetect
+ * EN v1.0 Address: 0x8018EC90
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x8018EDC0
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fxemit_hitDetect(void)
+{
+}

@@ -304,6 +304,76 @@ void FUN_801a1ec4(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
 /*
  * --INFO--
  *
+ * Function: blasted_getExtraSize
+ * EN v1.0 Address: 0x801A24A8
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x801A2690
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int blasted_getExtraSize(void)
+{
+  return 0x14;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: blasted_func08
+ * EN v1.0 Address: 0x801A24B0
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x801A2698
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int blasted_func08(void)
+{
+  return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: blasted_free
+ * EN v1.0 Address: 0x801A24B8
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801A26A0
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void blasted_free(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: blasted_hitDetect
+ * EN v1.0 Address: 0x801A24FC
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801A26E4
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void blasted_hitDetect(void)
+{
+}
+
+/*
+ * --INFO--
+ *
  * Function: FUN_801a1fb8
  * EN v1.0 Address: 0x801A1FB8
  * EN v1.0 Size: 920b

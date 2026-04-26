@@ -315,3 +315,38 @@ LAB_8019182c:
     iVar7 = iVar7 + 1;
   } while( true );
 }
+
+/*
+ * --INFO--
+ *
+ * Function: transporter_getExtraSize
+ * EN v1.0 Address: 0x801914A0
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x80191640
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int transporter_getExtraSize(void)
+{
+  return 0x10;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: transporter_render
+ * EN v1.0 Address: 0x801914A8
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x80191648
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void transporter_render(void)
+{
+}

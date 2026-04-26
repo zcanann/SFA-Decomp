@@ -11,5 +11,8 @@ void FUN_801b0ae8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 void FUN_801b0be8(void);
 void FUN_801b0c9c(uint param_1);
 void FUN_801b0fd4(int param_1,int param_2);
+int dimsnowball_getExtraSize(void);
+int dimsnowball_func08(void);
+void dimsnowball_free(void);
 
 #endif /* MAIN_DLL_DIM_DIMLAVASMASH_H_ */

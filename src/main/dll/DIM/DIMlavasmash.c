@@ -328,3 +328,56 @@ LAB_801b10e4:
 void FUN_801b0fd4(int param_1,int param_2)
 {
 }
+
+/*
+ * --INFO--
+ *
+ * Function: dimsnowball_getExtraSize
+ * EN v1.0 Address: 0x801B0DD4
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x801B0F50
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dimsnowball_getExtraSize(void)
+{
+  return 0x10;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dimsnowball_func08
+ * EN v1.0 Address: 0x801B0DDC
+ * EN v1.0 Size: 8b
+ * EN v1.1 Address: 0x801B0F58
+ * EN v1.1 Size: 8b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int dimsnowball_func08(void)
+{
+  return 2;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dimsnowball_free
+ * EN v1.0 Address: 0x801B0DE4
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x801B0F60
+ * EN v1.1 Size: 4b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dimsnowball_free(void)
+{
+}
