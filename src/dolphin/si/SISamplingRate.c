@@ -1,6 +1,5 @@
 #include <dolphin.h>
-#include <dolphin/si.h>
-
+#include <dolphin/os.h>
 #include "dolphin/os/__os.h"
 
 #define LATENCY 8
@@ -47,7 +46,7 @@ void SISetSamplingRate(u32 msec) {
     BOOL progressive;
     BOOL enabled;
 
-    ASSERTMSGLINE(377, 0 <= msec && msec <= 11, "SISetSamplingRate(): out of rage (0 <= msec <= 11)");
+    ASSERTMSGLINE(374, 0 <= msec && msec <= 11, "SISetSamplingRate(): out of rage (0 <= msec <= 11)");
     if (msec > 11) {
         msec = 11;
     }
@@ -55,19 +54,19 @@ void SISetSamplingRate(u32 msec) {
     SamplingRate = msec;
 
     switch (VIGetTvFormat()) {
-    case VI_NTSC:
-    case VI_MPAL:
-    case VI_EURGB60:
-        xy = XYNTSC;
-        break;
-    case VI_PAL:
-        xy = XYPAL;
-        break;
-    default:
-        OSReport("SISetSamplingRate: unknown TV format. Use default.");
-        msec = 0;
-        xy = XYNTSC;
-        break;
+        case VI_NTSC:
+        case VI_MPAL:
+        case VI_EURGB60:
+            xy = XYNTSC;
+            break;
+        case VI_PAL:
+            xy = XYPAL;
+            break;
+        default:
+            OSReport("SISetSamplingRate: unknown TV format. Use default.");
+            msec = 0;
+            xy = XYNTSC;
+            break;
     }
 
     progressive = __VIRegs[VI_CLOCK_SEL] & 1;
@@ -87,39 +86,39 @@ void __SITestSamplingRate(u32 tvmode) {
     XY* xy;
 
     switch (tvmode) {
-    case VI_NTSC:
-    case VI_MPAL:
-        xy = XYNTSC;
-        for (msec = 0; msec <= 11; msec++) {
-            line = xy[msec].line;
-            count = xy[msec].count;
-            OSReport("%2d[msec]: count %3d, line %3d, last %3d, diff0 %2d.%03d, diff1 %2d.%03d\n",
-                msec, count, line, line * (count - 1) + LATENCY, (line * 636) / 10000, (line * 636) % 10000,
-                ((263 - line * (count - 1)) * 636) / 10000, ((263 - line * (count - 1)) * 636) % 10000);
-            ASSERTLINE(446, line * (count - 1) + LATENCY < 263);
-            
-            if (msec != 0) {
-                ASSERTLINE(449, 636 * line < msec * 10000);
-                ASSERTLINE(450, 636 * (263 - line * (count - 1)) < msec * 10000);
+        case VI_NTSC:
+        case VI_MPAL:
+            xy = XYNTSC;
+            for (msec = 0; msec <= 11; msec++) {
+                line = xy[msec].line;
+                count = xy[msec].count;
+                OSReport("%2d[msec]: count %3d, line %3d, last %3d, diff0 %2d.%03d, diff1 %2d.%03d\n",
+                    msec, count, line, line * (count - 1) + LATENCY, (line * 636) / 10000, (line * 636) % 10000,
+                    ((263 - line * (count - 1)) * 636) / 10000, ((263 - line * (count - 1)) * 636) % 10000);
+                ASSERTLINE(443, line * (count - 1) + LATENCY < 263);
+                
+                if (msec != 0) {
+                    ASSERTLINE(446, 636 * line < msec * 10000);
+                    ASSERTLINE(447, 636 * (263 - line * (count - 1)) < msec * 10000);
+                }
             }
-        }
-    break;
-    case VI_PAL:
-        xy = XYPAL;
-        for (msec = 0; msec <= 11; msec++) {
-            line = xy[msec].line;
-            count = xy[msec].count;
-            OSReport("%2d[msec]: count %3d, line %3d, last %3d, diff0 %2d.%03d, diff1 %2d.%03d\n",
-                msec, count, line, line * (count - 1) + LATENCY, (line * 640) / 10000, (line * 640) % 10000,
-                ((313 - line * (count - 1)) * 640) / 10000, ((313 - line * (count - 1)) * 640) % 10000);
-            ASSERTLINE(470, line * (count - 1) + LATENCY < 313);
-            
-            if (msec != 0) {
-                ASSERTLINE(473, 640 * line < msec * 10000);
-                ASSERTLINE(474, 640 * (313 - line * (count - 1)) < msec * 10000);
-            }
-        }
         break;
+        case VI_PAL:
+            xy = XYPAL;
+            for (msec = 0; msec <= 11; msec++) {
+                line = xy[msec].line;
+                count = xy[msec].count;
+                OSReport("%2d[msec]: count %3d, line %3d, last %3d, diff0 %2d.%03d, diff1 %2d.%03d\n",
+                    msec, count, line, line * (count - 1) + LATENCY, (line * 640) / 10000, (line * 640) % 10000,
+                    ((313 - line * (count - 1)) * 640) / 10000, ((313 - line * (count - 1)) * 640) % 10000);
+                ASSERTLINE(467, line * (count - 1) + LATENCY < 313);
+                
+                if (msec != 0) {
+                    ASSERTLINE(470, 640 * line < msec * 10000);
+                    ASSERTLINE(471, 640 * (313 - line * (count - 1)) < msec * 10000);
+                }
+            }
+            break;
     }
 }
 #endif

@@ -1,27 +1,21 @@
+#include <dolphin.h>
+#include <dolphin/os.h>
 #include <dolphin/si.h>
-#include <dolphin/vi.h>
-
 #include "dolphin/os/__os.h"
 
 #define ROUND(n, a) (((u32)(n) + (a)-1) & ~((a)-1))
 
-#ifdef DEBUG
-const char* __SIVersion = "<< Dolphin SDK - SI\tdebug build: Apr  5 2004 03:55:31 (0x2301) >>";
-#else
-const char* __SIVersion = "<< Dolphin SDK - SI\trelease build: Sep  5 2002 05:33:08 (0x2301) >>";
-#endif
-
 static SIControl Si = {
-    /* chan */       -1,
-    /* poll */        0,
-    /* inputBytes */  0,
-    /* input */       NULL,
-    /* callback */    NULL
+    /* chan */      -1,
+    /* poll */       0,
+    /* inputBytes*/  0,
+    /* input */      NULL,
+    /* callback */   NULL
 };
 
 static SIPacket Packet[4];
-static OSAlarm Alarm[4];
-static u32 Type[4] = { SI_ERROR_NO_RESPONSE, SI_ERROR_NO_RESPONSE, SI_ERROR_NO_RESPONSE, SI_ERROR_NO_RESPONSE };
+static struct OSAlarm Alarm[4];
+static u32 Type[4] = { 0x08, 0x08, 0x08, 0x08 };
 char SITypeStrings[] =
     "No response\0"
     "N64 controller\0\0"
@@ -33,7 +27,7 @@ char SITypeStrings[] =
     "Wireless receiver\0\0\0"
     "WaveBird controller\0"
     "Keyboard\0\0\0\0"
-    "Steering\0\0\0\0\0\0\0";
+    "Steering\0\0\0";
 static OSTime TypeTime[4];
 static OSTime XferTime[4];
 static SITypeCallback TypeCallback[4][4];
@@ -41,24 +35,18 @@ static __OSInterruptHandler RDSTHandler[4];
 static BOOL InputBufferValid[4];
 static u32 InputBuffer[4][2];
 static volatile u32 InputBufferVcount[4];
-typedef union FloatPair {
-    u64 align;
-    f32 values[2];
-} FloatPair;
-FloatPair Unit01 = { 0x000000003F800000ULL };
 
 u32 __PADFixBits;
 
-// prototypes
 static u32 CompleteTransfer();
-static void SITransferNext(s32 chan);
-static void SIInterruptHandler(__OSInterrupt interrupt, OSContext* context);
+static inline void SITransferNext(s32 chan);
+static void SIInterruptHandler(s16 interrupt, OSContext* context);
 static int __SITransfer(s32 chan, void* output, u32 outputBytes, void* input, u32 inputBytes, SICallback callback);
-static void AlarmHandler(OSAlarm* alarm, OSContext* context);
+static void AlarmHandler(struct OSAlarm* alarm, struct OSContext* context);
 static void GetTypeCallback(s32 chan, u32 error, OSContext* context);
 static int SIGetResponseRaw(s32 chan);
 
-BOOL SIBusy(void) {
+BOOL SIBusy() {
     return (Si.chan != -1) ? TRUE : FALSE;
 }
 
@@ -66,7 +54,7 @@ BOOL SIIsChanBusy(s32 chan) {
     return Packet[chan].chan != -1 || Si.chan == chan;
 }
 
-static void SIClearTCInterrupt(void) {
+static inline void SIClearTCInterrupt(void) {
     u32 reg;
 
     reg = __SIRegs[SI_COMCSR_IDX];
@@ -75,7 +63,7 @@ static void SIClearTCInterrupt(void) {
     __SIRegs[SI_COMCSR_IDX] = reg;
 }
 
-static u32 CompleteTransfer(void) {
+static u32 CompleteTransfer() {
     u32 sr;
     u32 i;
     u32 rLen;
@@ -89,15 +77,15 @@ static u32 CompleteTransfer(void) {
         XferTime[Si.chan] = __OSGetSystemTime();
         input = Si.input;
         rLen = Si.inputBytes / sizeof(u32);
-        for (i = 0; i < rLen; i++) {
+        for(i = 0; i < rLen; i++) {
             *((u32*)input)++ = __SIRegs[i+0x20];
         }
         
         rLen = Si.inputBytes & 3;
         if (rLen != 0) {
             temp = __SIRegs[i + 32];
-            for (i = 0; i < rLen; i++) {
-                *(input++) = temp >> ((3 - i) * 8);
+            for(i = 0; i < rLen; i++) {
+                *(input++) = temp >> ((3 - i)* 8);
             }
         }
 
@@ -122,11 +110,11 @@ static u32 CompleteTransfer(void) {
     return sr;
 }
 
-static void SITransferNext(s32 chan) {
+static inline void SITransferNext(s32 chan) {
     int i;
     SIPacket* packet;
 
-    for (i = 0; i < 4; i++) {
+    for(i = 0; i < 4; i++) {
         chan++;
         chan %= 4;
         packet = &Packet[chan];
@@ -143,9 +131,7 @@ static void SITransferNext(s32 chan) {
     }
 }
 
-#define CHAN_NONE -1
-
-static void SIInterruptHandler(__OSInterrupt interrupt, OSContext* context) {
+static void SIInterruptHandler(s16 interrupt, OSContext* context) {
     u32 reg;
     s32 chan;
     u32 sr;
@@ -156,7 +142,7 @@ static void SIInterruptHandler(__OSInterrupt interrupt, OSContext* context) {
 
     reg = __SIRegs[SI_COMCSR_IDX];
     if ((reg & (SI_COMCSR_TCINT_MASK | SI_COMCSR_TCINTMSK_MASK)) == (SI_COMCSR_TCINT_MASK | SI_COMCSR_TCINTMSK_MASK)) {
-        ASSERTLINE(376, Si.chan != CHAN_NONE);
+        ASSERTLINE(366, Si.chan != CHAN_NONE);
 
         chan = Si.chan;
         sr = CompleteTransfer();
@@ -289,17 +275,14 @@ BOOL SIUnregisterPollingHandler(__OSInterruptHandler handler) {
     return FALSE;
 }
 
-void SIInit(void) {
+void SIInit() {
     Packet[0].chan = Packet[1].chan = Packet[2].chan = Packet[3].chan = -1;
     Si.poll = 0;
     SISetSamplingRate(0);
-
     do {} while(__SIRegs[SI_COMCSR_IDX] & SI_COMCSR_TSTART_MASK);
-
     __SIRegs[SI_COMCSR_IDX] = SI_COMCSR_TCINT_MASK;
     __OSSetInterruptHandler(0x14, SIInterruptHandler);
     __OSUnmaskInterrupts(0x800);
-
     SIGetType(0);
     SIGetType(1);
     SIGetType(2);
@@ -307,7 +290,7 @@ void SIInit(void) {
 }
 
 static int __SITransfer(s32 chan, void* output, u32 outputBytes, void* input, u32 inputBytes, SICallback callback) {
-    BOOL enabled;
+    int enabled;
     u32 rLen;
     u32 i;
     u32 sr;
@@ -329,17 +312,16 @@ static int __SITransfer(s32 chan, void* output, u32 outputBytes, void* input, u3
         } f;
     } comcsr;
 
-    ASSERTMSGLINE(627, (chan >= 0) && (chan < 4), "SITransfer(): invalid channel.");
-    ASSERTMSGLINE(629, (outputBytes != 0) && (outputBytes <= 128), "SITransfer(): output size is out of range (must be 1 to 128).");
-    ASSERTMSGLINE(631, (inputBytes != 0) && (inputBytes <= 128), "SITransfer(): input size is out of range (must be 1 to 128).");
+    ASSERTMSGLINE(615, (chan >= 0) && (chan < 4), "SITransfer(): invalid channel.");
+    ASSERTMSGLINE(617, (outputBytes != 0) && (outputBytes <= 128), "SITransfer(): output size is out of range (must be 1 to 128).");
+    ASSERTMSGLINE(619, (inputBytes != 0) && (inputBytes <= 128), "SITransfer(): input size is out of range (must be 1 to 128).");
 
     enabled = OSDisableInterrupts();
     if (Si.chan != -1) {
         OSRestoreInterrupts(enabled);
         return 0;
     }
-
-    ASSERTLINE(641, (__SIRegs[SI_COMCSR_IDX] & (SI_COMCSR_TSTART_MASK | SI_COMCSR_TCINT_MASK)) == 0);
+    ASSERTLINE(629, (__SIRegs[SI_COMCSR_IDX] & (SI_COMCSR_TSTART_MASK | SI_COMCSR_TCINT_MASK)) == 0);
     sr = __SIRegs[SI_STATUS_IDX];
     sr &= (0x0F000000 >> (chan* 8));
     __SIRegs[SI_STATUS_IDX] = sr;
@@ -351,7 +333,7 @@ static int __SITransfer(s32 chan, void* output, u32 outputBytes, void* input, u3
 
     rLen = ROUND(outputBytes, 4) / 4;
     for (i = 0; i < rLen; i++) {
-        __SIRegs[i + 0x20] = ((u32*)output)[i];
+        __SIRegs[i+0x20] = ((u32*)output)[i];
     }
     
     comcsr.val = __SIRegs[SI_COMCSR_IDX];
@@ -365,19 +347,6 @@ static int __SITransfer(s32 chan, void* output, u32 outputBytes, void* input, u3
     __SIRegs[SI_COMCSR_IDX] = comcsr.val;
     OSRestoreInterrupts(enabled);
     return 1;
-}
-
-u32 SISync(void) {
-    BOOL enabled;
-    u32 sr;
-
-    do {} while(__SIRegs[SI_COMCSR_IDX] & SI_COMCSR_TSTART_MASK);
-
-    enabled = OSDisableInterrupts();
-    sr = CompleteTransfer();
-    SITransferNext(4);
-    OSRestoreInterrupts(enabled);
-    return sr;
 }
 
 u32 SIGetStatus(s32 chan) {
@@ -401,26 +370,21 @@ u32 SIGetStatus(s32 chan) {
 }
 
 void SISetCommand(s32 chan, u32 command) {
-    ASSERTMSGLINE(752, (chan >= 0) && (chan < 4), "SISetCommand(): invalid channel.");
+    ASSERTMSGLINE(740, (chan >= 0) && (chan < 4), "SISetCommand(): invalid channel.");
     __SIRegs[chan* 3] = command;
 }
 
-u32 SIGetCommand(s32 chan) {
-    ASSERTMSGLINE(770, (chan >= 0) && (chan < 4), "SIGetCommand(): invalid channel.");
-    return __SIRegs[chan* 3];
-}
-
-void SITransferCommands(void) {
+void SITransferCommands() {
     __SIRegs[SI_STATUS_IDX] = SI_COMCSR_TCINT_MASK;
 }
 
 u32 SISetXY(u32 x, u32 y) {
     u32 poll;
-    BOOL enabled;
+    int enabled;
 
-    ASSERTMSGLINE(803, x >= 8, "SISetXY(): x is out of range (8 <= x <= 1023).");
-    ASSERTMSGLINE(804, x <= 1023, "SISetXY(): x is out of range (8 <= x <= 1023).");
-    ASSERTMSGLINE(805, y <= 255, "SISetXY(): y is out of range (0 <= y <= 255).");
+    ASSERTMSGLINE(791, x >= 8, "SISetXY(): x is out of range (8 <= x <= 1023).");
+    ASSERTMSGLINE(792, x <= 1023, "SISetXY(): x is out of range (8 <= x <= 1023).");
+    ASSERTMSGLINE(793, y <= 255, "SISetXY(): y is out of range (0 <= y <= 255).");
 
     poll = x << 0x10;
     poll |= y << 8;
@@ -428,16 +392,16 @@ u32 SISetXY(u32 x, u32 y) {
     Si.poll &= 0xFC0000FF;
     Si.poll |= poll;
     poll = Si.poll;
-    __SIRegs[0x30 / 4] = poll;
+    __SIRegs[0x30/4] = poll;
     OSRestoreInterrupts(enabled);
     return poll;
 }
 
 u32 SIEnablePolling(u32 poll) {
-    BOOL enabled;
+    int enabled;
     u32 en;
 
-    ASSERTMSGLINE(834, (poll & 0x0FFFFFFF) == 0, "SIEnablePolling(): invalid chan bit(s).");
+    ASSERTMSGLINE(822, (poll & 0x0FFFFFFF) == 0, "SIEnablePolling(): invalid chan bit(s).");
     if (poll == 0) {
         return Si.poll;
     }
@@ -445,7 +409,7 @@ u32 SIEnablePolling(u32 poll) {
     enabled = OSDisableInterrupts();
     poll = poll >> 24;
     en = poll & 0xF0;
-    ASSERTLINE(865, en);
+    ASSERTLINE(853, en);
     poll &= ((en >> 4) | 0x03FFFFF0);
     poll &= 0xFC0000FF;
     
@@ -453,25 +417,24 @@ u32 SIEnablePolling(u32 poll) {
     Si.poll |= poll;
     poll = Si.poll;
     SITransferCommands();
-    __SIRegs[0x30 / 4] = poll;
+    __SIRegs[0x30/4] = poll;
     OSRestoreInterrupts(enabled);
     return poll;
 }
 
 u32 SIDisablePolling(u32 poll) {
-    BOOL enabled;
+    int enabled;
 
-    ASSERTMSGLINE(908, (poll & 0x0FFFFFFF) == 0, "SIDisablePolling(): invalid chan bit(s).");
+    ASSERTMSGLINE(896, (poll & 0x0FFFFFFF) == 0, "SIDisablePolling(): invalid chan bit(s).");
     if (poll == 0) {
         return Si.poll;
     }
-
     enabled = OSDisableInterrupts();
     poll = poll >> 24;
     poll &= 0xF0;
-    ASSERTLINE(921, poll);
+    ASSERTLINE(909, poll);
     poll = Si.poll & ~poll;
-    __SIRegs[0x30 / 4] = poll;
+    __SIRegs[0x30/4] = poll;
     Si.poll = poll;
     OSRestoreInterrupts(enabled);
     return poll;
@@ -495,7 +458,7 @@ BOOL SIGetResponse(s32 chan, void* data) {
     BOOL rc;
     BOOL enabled;
 
-    ASSERTMSGLINE(971, ((chan >= 0) && (chan < 4)), "SIGetResponse(): invalid channel.");
+    ASSERTMSGLINE(959, ((chan >= 0) && (chan < 4)), "SIGetResponse(): invalid channel.");
     enabled = OSDisableInterrupts();
     SIGetResponseRaw(chan);
     rc = InputBufferValid[chan];
@@ -515,11 +478,11 @@ static void AlarmHandler(OSAlarm* alarm, OSContext* context) {
     SIPacket* packet;
 
     chan = (s32)(alarm - Alarm);
-    ASSERTLINE(1002, 0 <= chan && chan < SI_MAX_CHAN);
+    ASSERTLINE(990, 0 <= chan && chan < SI_MAX_CHAN);
 
     packet = &Packet[chan];
     if (packet->chan != -1) {
-        ASSERTLINE(1006, packet->fire <= __OSGetSystemTime());
+        ASSERTLINE(994, packet->fire <= __OSGetSystemTime());
 
         if (__SITransfer(packet->chan, packet->output, packet->outputBytes, packet->input, packet->inputBytes, packet->callback)) {
             packet->chan = -1;
@@ -568,7 +531,7 @@ BOOL SITransfer(s32 chan, void* output, u32 outputBytes, void* input, u32 inputB
     return TRUE;
 }
 
-static void CallTypeAndStatusCallback(s32 chan, u32 type) {
+static inline void CallTypeAndStatusCallback(s32 chan, u32 type) {
     SITypeCallback callback;
     int i;
 
@@ -588,9 +551,9 @@ static void GetTypeCallback(s32 chan, u32 error, OSContext* context) {
     int fix;
     u32 id;
     
-    ASSERTLINE(1137, 0 <= chan && chan < SI_MAX_CHAN);
+    ASSERTLINE(1125, 0 <= chan && chan < SI_MAX_CHAN);
     
-    ASSERTLINE(1139, (Type[chan] & 0xff) == SI_ERROR_BUSY);
+    ASSERTLINE(1127, (Type[chan] & 0xff) == SI_ERROR_BUSY);
     Type[chan] &= ~SI_ERROR_BUSY;
     Type[chan] |= error;
     TypeTime[chan] = __OSGetSystemTime();
@@ -654,7 +617,7 @@ u32 SIGetType(s32 chan) {
     OSTime diff;
 
     enabled = OSDisableInterrupts();
-    ASSERTLINE(1243, 0 <= chan && chan < SI_MAX_CHAN);
+    ASSERTLINE(1231, 0 <= chan && chan < SI_MAX_CHAN);
     type = Type[chan];
     diff = __OSGetSystemTime() - TypeTime[chan];
     if ((Si.poll & (0x80 >> chan)) != 0) {
@@ -704,78 +667,11 @@ u32 SIGetTypeAsync(s32 chan, SITypeCallback callback) {
             }
         }
 
-        ASSERTLINE(1324, i < SI_MAX_TYPE);
+        ASSERTLINE(1312, i < SI_MAX_TYPE);
     } else {
         (*callback)(chan, type);
     }
 
     OSRestoreInterrupts(enabled);
     return type;
-}
-
-u32 SIDecodeType(u32 type) {
-    u32 error;
-
-    error = type & 0xFF;
-    type &= ~0xFF;
-
-    if (error & SI_ERROR_NO_RESPONSE) {
-        return SI_ERROR_NO_RESPONSE;
-    }
-
-    if (error & (SI_ERROR_UNKNOWN | SI_ERROR_COLLISION | SI_ERROR_OVER_RUN | SI_ERROR_UNDER_RUN)) {
-        return SI_ERROR_UNKNOWN;
-    }
-
-    if (error != 0) {
-        ASSERTLINE(1371, error == SI_ERROR_BUSY);
-        return SI_ERROR_BUSY;
-    }
-
-    if ((type & SI_TYPE_MASK) == SI_TYPE_N64) {
-        switch (type & 0xFFFF0000) {
-        case SI_N64_MIC:
-        case SI_N64_KEYBOARD:
-        case SI_GBA:
-        case SI_N64_MOUSE:
-        case SI_N64_CONTROLLER:
-            return type & 0xFFFF0000;
-        default:
-            return SI_ERROR_UNKNOWN;
-        }
-    }
-
-    if ((type & SI_TYPE_MASK) != SI_TYPE_DOLPHIN) {
-        return SI_ERROR_UNKNOWN;
-    }
-
-    switch (type & 0xFFFF0000) {
-    case SI_GC_STEERING:
-    case SI_GC_CONTROLLER:
-        return type & 0xFFFF0000;
-    }
-
-    if ((type & 0xFFE00000) == SI_GC_KEYBOARD) {
-        return SI_GC_KEYBOARD;
-    }
-
-    if ((type & SI_GC_WIRELESS) != 0 && (type & SI_WIRELESS_IR) == 0) {
-        if ((type & SI_GC_WAVEBIRD) == SI_GC_WAVEBIRD) {
-            return SI_GC_WAVEBIRD;
-        }
-
-        if ((type & SI_WIRELESS_STATE) == 0) {
-            return SI_GC_RECEIVER;
-        }
-    }
-
-    if ((type & SI_GC_CONTROLLER) == SI_GC_CONTROLLER) {
-        return SI_GC_CONTROLLER;
-    }
-
-    return SI_ERROR_UNKNOWN;
-}
-
-u32 SIProbe(s32 chan) {
-    return SIDecodeType(SIGetType(chan));
 }
