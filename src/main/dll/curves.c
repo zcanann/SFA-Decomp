@@ -1274,33 +1274,35 @@ LAB_800e3878:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 RomCurve_getById(uint param_1,int *param_2)
+undefined4 RomCurve_getById(uint curveId,int *outIndex)
 {
-  int iVar1;
-  int iVar2;
-  int iVar3;
+  int high;
+  int low;
+  int mid;
+  int curve;
   
-  *param_2 = -1;
-  if ((int)param_1 < 0) {
+  *outIndex = -1;
+  if ((int)curveId < 0) {
     return 0;
   }
-  iVar1 = DAT_803de0f0 + -1;
-  iVar2 = 0;
-  while( true ) {
-    while( true ) {
-      if (iVar1 < iVar2) {
-        *param_2 = -1;
-        return 0;
-      }
-      iVar3 = iVar1 + iVar2 >> 1;
-      if (param_1 <= *(uint *)((&DAT_803a2448)[iVar3] + 0x14)) break;
-      iVar2 = iVar3 + 1;
+  high = DAT_803de0f0 + -1;
+  low = 0;
+  while (low <= high) {
+    mid = high + low >> 1;
+    curve = (&DAT_803a2448)[mid];
+    if (curveId > *(uint *)(curve + 0x14)) {
+      low = mid + 1;
     }
-    if (*(uint *)((&DAT_803a2448)[iVar3] + 0x14) <= param_1) break;
-    iVar1 = iVar3 + -1;
+    else if (curveId < *(uint *)(curve + 0x14)) {
+      high = mid + -1;
+    }
+    else {
+      *outIndex = mid;
+      return curve;
+    }
   }
-  *param_2 = iVar3;
-  return (&DAT_803a2448)[iVar3];
+  *outIndex = -1;
+  return 0;
 }
 
 /*

@@ -16,7 +16,7 @@ double curves_distXZ(double param_1,double param_2,uint param_3);
 double RomCurve_distanceToObject(int param_1,uint param_2);
 void curves_find(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 *param_6,undefined4 *param_7,undefined4 *param_8);
-undefined4 RomCurve_getById(uint param_1,int *param_2);
+undefined4 RomCurve_getById(uint curveId,int *outIndex);
 void FUN_800e31dc(undefined4 param_1,undefined4 param_2,int param_3,int param_4,int param_5);
 int FUN_800e3ad4(int param_1);
 void FUN_800e3cec(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4);
