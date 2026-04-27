@@ -835,31 +835,31 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
         *(undefined2 *)(iVar24 + 0x5c) = 0;
       }
     }
-    fVar4 = *(float *)(objAnimArg + 0x98);
+    fVar4 = objAnim->currentMoveProgress;
     fVar3 = (float)(dVar31 * deltaTime);
-    *(float *)(objAnimArg + 0x98) = fVar4 + fVar3;
+    objAnim->currentMoveProgress = fVar4 + fVar3;
     fVar6 = lbl_803DE8F0;
     fVar5 = lbl_803DE8E0;
-    if (*(float *)(objAnimArg + 0x98) < lbl_803DE8E0) {
-      if (*(float *)(objAnimArg + 0x98) < lbl_803DE8F0) {
+    if (objAnim->currentMoveProgress < lbl_803DE8E0) {
+      if (objAnim->currentMoveProgress < lbl_803DE8F0) {
         if (*(char *)(iVar24 + 0x60) == '\0') {
-          *(float *)(objAnimArg + 0x98) = lbl_803DE8F0;
+          objAnim->currentMoveProgress = lbl_803DE8F0;
         }
         else {
-          while (*(float *)(objAnimArg + 0x98) < fVar6) {
-            *(float *)(objAnimArg + 0x98) = *(float *)(objAnimArg + 0x98) + fVar5;
+          while (objAnim->currentMoveProgress < fVar6) {
+            objAnim->currentMoveProgress = objAnim->currentMoveProgress + fVar5;
           }
         }
         uVar18 = 1;
       }
     }
     else if (*(char *)(iVar24 + 0x60) == '\0') {
-      *(float *)(objAnimArg + 0x98) = lbl_803DE8E0;
+      objAnim->currentMoveProgress = lbl_803DE8E0;
       uVar18 = 1;
     }
     else {
-      while (fVar5 <= *(float *)(objAnimArg + 0x98)) {
-        *(float *)(objAnimArg + 0x98) = *(float *)(objAnimArg + 0x98) - fVar5;
+      while (fVar5 <= objAnim->currentMoveProgress) {
+        objAnim->currentMoveProgress = objAnim->currentMoveProgress - fVar5;
       }
       uVar18 = 1;
     }
@@ -874,7 +874,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
         iVar23 = **(int **)(objAnimArg + 0x60) >> 1;
         if (iVar23 != 0) {
           iVar30 = (int)(lbl_803DE8F8 * fVar4);
-          iVar26 = (int)(lbl_803DE8F8 * *(float *)(objAnimArg + 0x98));
+          iVar26 = (int)(lbl_803DE8F8 * objAnim->currentMoveProgress);
           bVar29 = iVar26 < iVar30;
           if (fVar3 < lbl_803DE8F0) {
             bVar29 = bVar29 | 2;
@@ -934,7 +934,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
         fVar7 = (float)(local_30 - lbl_803DE900) * fVar4;
         uVar15 = (uint)fVar7;
         dVar31 = (double)CONCAT44(0x43300000,uVar15 ^ 0x80000000) - lbl_803DE900;
-        fVar8 = (float)(local_30 - lbl_803DE900) * *(float *)(objAnimArg + 0x98);
+        fVar8 = (float)(local_30 - lbl_803DE900) * objAnim->currentMoveProgress;
         uVar16 = (uint)fVar8;
         dVar1 = (double)CONCAT44(0x43300000,uVar16 ^ 0x80000000) - lbl_803DE900;
         iVar30 = 0;
@@ -1005,7 +1005,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
             }
             fVar12 = (fVar8 - (float)dVar1) * (fVar14 - fVar12) + fVar12;
             if (fVar3 <= lbl_803DE8F0) {
-              if (fVar4 < *(float *)(objAnimArg + 0x98)) {
+              if (fVar4 < objAnim->currentMoveProgress) {
                 local_20 = (double)CONCAT44(0x43300000,(int)psVar28[iVar23] ^ 0x80000000);
                 fVar12 = -(fVar13 * (float)(local_20 - lbl_803DE900) - fVar12);
                 if (iVar30 != 0) {
@@ -1015,7 +1015,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
                 }
               }
             }
-            else if (*(float *)(objAnimArg + 0x98) < fVar4) {
+            else if (objAnim->currentMoveProgress < fVar4) {
               local_20 = (double)CONCAT44(0x43300000,(int)psVar28[iVar23] ^ 0x80000000);
               fVar12 = fVar13 * (float)(local_20 - lbl_803DE900) + fVar12;
               if (iVar30 != 0) {
@@ -1060,15 +1060,18 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 ObjAnim_SetMoveProgress(f32 param_1,int param_2)
+undefined4 ObjAnim_SetMoveProgress(f32 moveProgress,int objAnimArg)
 {
-  if (param_1 > lbl_803DE908) {
-    param_1 = lbl_803DE908;
+  ObjAnimComponent *objAnim;
+
+  objAnim = (ObjAnimComponent *)objAnimArg;
+  if (moveProgress > lbl_803DE908) {
+    moveProgress = lbl_803DE908;
   }
-  else if (param_1 < lbl_803DE8F0) {
-    param_1 = lbl_803DE8F0;
+  else if (moveProgress < lbl_803DE8F0) {
+    moveProgress = lbl_803DE8F0;
   }
-  *(float *)(param_2 + 0x98) = param_1;
+  objAnim->currentMoveProgress = moveProgress;
   return 0;
 }
 
