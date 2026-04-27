@@ -319,7 +319,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__start.s"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__mem.s"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/mem_TRK.s"),
-            Object(NonMatching, "Runtime.PPCEABI.H/__exception.s"),
+            Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__exception.s"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__va_arg.c"),
             Object(Matching, "Runtime.PPCEABI.H/global_destructor_chain.c"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/runtime.c"),
