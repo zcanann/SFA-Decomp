@@ -490,9 +490,9 @@ void GXSetChanCtrl(GXChannelID chan, GXBool enable, GXColorSrc amb_src, GXColorS
     SET_REG_FIELD(778, reg, 1, 12, (light_mask & GX_LIGHT5) != 0);
     SET_REG_FIELD(779, reg, 1, 13, (light_mask & GX_LIGHT6) != 0);
     SET_REG_FIELD(780, reg, 1, 14, (light_mask & GX_LIGHT7) != 0);
-    SET_REG_FIELD(782, reg, 2, 7, (attn_fn == GX_AF_NONE) ? GX_DF_NONE : diff_fn);
-    SET_REG_FIELD(783, reg, 1, 9, (attn_fn != GX_AF_SPEC));
-    SET_REG_FIELD(784, reg, 1, 10, (attn_fn != GX_AF_NONE));
+    SET_REG_FIELD(782, reg, 2, 7, (attn_fn == GX_AF_SPEC) ? GX_DF_NONE : diff_fn);
+    SET_REG_FIELD(783, reg, 1, 9, (attn_fn != GX_AF_NONE));
+    SET_REG_FIELD(784, reg, 1, 10, (attn_fn != GX_AF_SPEC));
 
     GX_WRITE_XF_REG(idx + 14, reg);
     __GXData->bpSentNot = 1;
