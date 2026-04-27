@@ -71,6 +71,33 @@ extern undefined4* lbl_803DCAB8;
 extern undefined4 lbl_803DDB88;
 extern f32 lbl_803E4C44;
 
+typedef struct DIMbossEffect {
+  u8 pad00[0x4C];
+  u8 visible;
+  u8 pad4D[0x2F8 - 0x4D];
+  u8 active;
+} DIMbossEffect;
+
+typedef struct DIMbossRuntime {
+  u8 pad000[0x274];
+  s16 scale;
+  u8 pad276[0x402 - 0x276];
+  s16 phase;
+  u8 pad404[0x40C - 0x404];
+  DIMbossEffect **effect;
+} DIMbossRuntime;
+
+typedef struct DIMbossObject {
+  u8 pad00[0xAF];
+  u8 objectFlags;
+  u8 padB0[0xB8 - 0xB0];
+  DIMbossRuntime *runtime;
+  u8 padBC[0xC8 - 0xBC];
+  void *childObject;
+  u8 padCC[0xF4 - 0xCC];
+  int renderPause;
+} DIMbossObject;
+
 /*
  * --INFO--
  *
@@ -357,9 +384,9 @@ void dimboss_func11(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dimboss_setScale(int param_1)
+int dimboss_setScale(DIMbossObject *obj)
 {
-  return (int)*(short *)(*(int *)(param_1 + 0xb8) + 0x274);
+  return obj->runtime->scale;
 }
 
 /*
@@ -412,34 +439,35 @@ int dimboss_func08(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void dimboss_free(int param_1)
+void dimboss_free(DIMbossObject *obj)
 {
-  int iVar1;
-  void *pvVar2;
+  DIMbossRuntime *runtime;
+  void *childObject;
+  void *effect;
 
-  iVar1 = *(int *)(param_1 + 0xb8);
+  runtime = obj->runtime;
   GameBit_Set(0xefd,0);
   GameBit_Set(0xc1e,1);
   GameBit_Set(0xc1f,0);
   GameBit_Set(0xc20,0);
   GameBit_Set(0xd8f,0);
   GameBit_Set(0x3e2,0);
-  *(byte *)(param_1 + 0xaf) = (byte)((uint)*(byte *)(param_1 + 0xaf) & 0xffffff7f);
+  obj->objectFlags &= ~0x80;
   fn_8000FACC();
-  ObjGroup_RemoveObject(param_1,3);
-  pvVar2 = *(void **)(param_1 + 0xc8);
-  if (pvVar2 != 0) {
-    Obj_FreeObject(pvVar2);
-    *(undefined4 *)(param_1 + 0xc8) = 0;
+  ObjGroup_RemoveObject(obj,3);
+  childObject = obj->childObject;
+  if (childObject != NULL) {
+    Obj_FreeObject(childObject);
+    obj->childObject = NULL;
   }
-  (*(code *)(*lbl_803DCAB8 + 0x40))(param_1,iVar1,0x20);
+  (*(code *)(*lbl_803DCAB8 + 0x40))(obj,runtime,0x20);
   if (lbl_803DDB88 != 0) {
     fn_80013E2C(lbl_803DDB88);
   }
   lbl_803DDB88 = 0;
-  pvVar2 = **(void ***)(iVar1 + 0x40c);
-  if (pvVar2 != 0) {
-    fn_8001F384(pvVar2);
+  effect = *runtime->effect;
+  if (effect != NULL) {
+    fn_8001F384(effect);
   }
   fn_80055000();
 }
@@ -457,32 +485,35 @@ void dimboss_free(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimboss_render(int param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
+void dimboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                     undefined4 param_5,char shouldRender)
 {
-  int iVar1;
+  DIMbossRuntime *runtime;
+  DIMbossEffect *effect;
+  int visible;
 
-  iVar1 = *(int *)(param_1 + 0xb8);
-  if (shouldRender == '\0') {
+  runtime = obj->runtime;
+  visible = shouldRender;
+  if (visible == 0) {
     return;
   }
-  if (*(int *)(param_1 + 0xf4) != 0) {
+  if (obj->renderPause != 0) {
     return;
   }
-  if (*(short *)(iVar1 + 0x402) == 3) {
+  if (runtime->phase == 3) {
     return;
   }
   fn_8003B8F4((double)lbl_803E4C44);
-  fn_801BB598(param_1,iVar1);
-  fn_80114DEC(param_1,lbl_803AC9DC,0);
-  iVar1 = **(int **)(iVar1 + 0x40c);
-  if (iVar1 == 0) {
+  fn_801BB598(obj,runtime);
+  fn_80114DEC(obj,lbl_803AC9DC,0);
+  effect = *runtime->effect;
+  if (effect == NULL) {
     return;
   }
-  if (*(byte *)(iVar1 + 0x2f8) == 0) {
+  if (effect->active == 0) {
     return;
   }
-  if (*(byte *)(iVar1 + 0x4c) != 0) {
+  if (effect->visible != 0) {
     fn_800604B4();
   }
 }
@@ -500,9 +531,8 @@ void dimboss_render(int param_1,undefined4 param_2,undefined4 param_3,undefined4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimboss_hitDetect(int param_1)
+void dimboss_hitDetect(DIMbossObject *obj)
 {
-  (*(code *)(*(int *)lbl_803DCA8C + 0xc))(param_1,*(undefined4 *)(param_1 + 0xb8),
-                                           lbl_803AD018);
+  (*(code *)(*(int *)lbl_803DCA8C + 0xc))(obj,obj->runtime,lbl_803AD018);
 }
 #pragma scheduling reset
