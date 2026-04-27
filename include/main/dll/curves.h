@@ -28,6 +28,7 @@ int RomCurve_getRandomBlockedLink(int param_1,int param_2);
 int RomCurve_getRandomUnblockedLink(int param_1,int param_2);
 void FUN_800e4628(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,int param_6);
+void curves_remove(int curve);
 void curves_addCurveDef(int param_1);
 void curves_countRandomPoints(void);
 void FUN_800e49c0(int param_1,uint *param_2);
