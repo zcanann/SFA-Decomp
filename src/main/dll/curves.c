@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "dolphin/os.h"
 #include "main/dll/curves.h"
 #include <string.h>
 
@@ -82,6 +83,10 @@ extern f32 FLOAT_803e1334;
 extern f32 FLOAT_803e1338;
 extern f32 FLOAT_803e133c;
 extern f32 FLOAT_803e1340;
+extern char lbl_803116BC[];
+
+#define ROMCURVE_MAX_CURVES 0x514
+#define ROMCURVE_ID_OFFSET 0x14
 
 /*
  * --INFO--
@@ -2381,8 +2386,37 @@ void FUN_800e4628(undefined8 param_1,double param_2,double param_3,undefined4 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void curves_addCurveDef(int param_1)
+void curves_addCurveDef(int curve)
 {
+  int count;
+  int insertIndex;
+  int *slot;
+  int remaining;
+
+  count = DAT_803de0f0;
+  if (count == ROMCURVE_MAX_CURVES) {
+    OSReport(lbl_803116BC);
+    return;
+  }
+
+  insertIndex = 0;
+  slot = &DAT_803a2448;
+  while ((insertIndex < count) &&
+         (*(uint *)(curve + ROMCURVE_ID_OFFSET) > *(uint *)(*slot + ROMCURVE_ID_OFFSET))) {
+    slot = slot + 1;
+    insertIndex = insertIndex + 1;
+  }
+
+  slot = &DAT_803a2448 + count;
+  remaining = count - insertIndex;
+  while (remaining > 0) {
+    *slot = slot[-1];
+    slot = slot + -1;
+    remaining = remaining + -1;
+  }
+
+  DAT_803de0f0 = DAT_803de0f0 + 1;
+  (&DAT_803a2448)[insertIndex] = curve;
 }
 
 /*
