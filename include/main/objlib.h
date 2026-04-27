@@ -55,10 +55,7 @@ void ObjGroup_AddObject(int param_1,int param_2);
 void ObjGroup_ClearAll(void);
 undefined4 ObjMsg_Peek(void *obj,uint *outMessage,uint *outSender,uint *outParam);
 undefined4 ObjMsg_Pop(void *obj,uint *outMessage,uint *outSender,uint *outParam);
-void ObjMsg_SendToNearbyObjects(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,uint param_11,uint param_12,uint param_13,
-                 undefined4 param_14,undefined4 param_15,undefined4 param_16);
+void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sender,uint message,uint param);
 void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint param);
 uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param);
 void ObjMsg_AllocQueue(void *obj,int capacity);
