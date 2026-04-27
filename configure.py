@@ -332,7 +332,7 @@ config.libs = [
         "os",
         [
             Object(NonMatching, "dolphin/os/OS.c"),
-            Object(NonMatching, "dolphin/os/OSAddress.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/os/OSAddress.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSAlarm.c"),
             Object(NonMatching, "dolphin/os/OSAlloc.c"),
             Object(NonMatching, "dolphin/os/OSArena.c"),
@@ -410,7 +410,7 @@ config.libs = [
     DolphinLib(
         "dsp",
         [
-            Object(NonMatching, "dolphin/dsp/dsp.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/dsp/dsp.c"),
             Object(NonMatching, "dolphin/dsp/dsp_task.c"),
             Object(MatchingFor("GSAE01"), "dolphin/dsp/dsp_debug.c"),
         ],
