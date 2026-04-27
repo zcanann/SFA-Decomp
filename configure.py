@@ -474,7 +474,7 @@ config.libs = [
         [
             Object(NonMatching, "dolphin/gx/GXInit.c"),
             Object(NonMatching, "dolphin/gx/GXFifo.c"),
-            Object(NonMatching, "dolphin/gx/GXMisc.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/gx/GXMisc.c"),
             Object(NonMatching, "dolphin/gx/GXLight.c"),
             Object(NonMatching, "dolphin/gx/GXTexture.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXBump.c"),
@@ -483,7 +483,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXFrameBuf.c"),
             Object(NonMatching, "dolphin/gx/GXDraw.c"),
             Object(NonMatching, "dolphin/gx/GXPerf.c"),
-            Object(NonMatching, "dolphin/gx/GXPixel.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/gx/GXPixel.c"),
             Object(NonMatching, "dolphin/gx/GXSave.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXStubs.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXTev.c"),
