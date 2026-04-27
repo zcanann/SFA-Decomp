@@ -8,29 +8,17 @@
 extern GXData* gx;
 
 typedef struct {
-    GXData gxData;
-    u32 pad;
-} GXSavedGXDataBlock;
-
-typedef struct {
     __GXFifoObj DisplayListFifo;
-    GXSavedGXDataBlock __savedGXdataBlock;
+    GXData savedGXdata;
+    u32 pad;
 } GXDisplayListBss;
 
-typedef struct {
-    volatile __GXFifoObj* OldCPUFifo;
-    u32 OldCPUFifoPad0;
-    u32 OldCPUFifoPad1;
-    u32 OldCPUFifoPad2;
-} GXDisplayListSbss;
+GXDisplayListBss lbl_803AECC0;
+extern volatile __GXFifoObj* lbl_803DE0F0;
 
-GXDisplayListBss lbl_803AF920;
-GXDisplayListSbss lbl_803DED70;
-
-#define DisplayListFifo (lbl_803AF920.DisplayListFifo)
-#define OldCPUFifo (lbl_803DED70.OldCPUFifo)
-#define __savedGXdataBlock (lbl_803AF920.__savedGXdataBlock)
-#define __savedGXdata (__savedGXdataBlock.gxData)
+#define DisplayListFifo (lbl_803AECC0.DisplayListFifo)
+#define __savedGXdata (lbl_803AECC0.savedGXdata)
+#define OldCPUFifo lbl_803DE0F0
 
 void GXBeginDisplayList(void* list, u32 size) {
     __GXFifoObj* CPUFifo = (__GXFifoObj*)GXGetCPUFifo();
