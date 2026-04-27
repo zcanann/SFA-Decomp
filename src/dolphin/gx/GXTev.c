@@ -4,6 +4,7 @@
 #include "dolphin/gx/__gx.h"
 
 extern GXData* gx;
+extern int lbl_8032EA88[];
 #define __GXData gx
 
 void GXSetTevOp(GXTevStageID id, GXTevMode mode) {
@@ -274,10 +275,6 @@ void GXSetTevSwapModeTable(GXTevSwapSel table, GXTevColorChan red, GXTevColorCha
     __GXData->bpSentNot = 0;
 }
 
-void GXSetTevClampMode(void) {
-    ASSERTMSGLINE(0x3F4, 0, "GXSetTevClampMode: not available on this hardware");
-}
-
 void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1) {
     u32 reg = 0;
 
@@ -333,7 +330,6 @@ void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map, GXCha
     u32* ptref;
     u32 tmap;
     u32 tcoord;
-    static int c2r[] = { 0, 1, 0, 1, 0, 1, 7, 5, 6 };
 
     CHECK_GXBEGIN(0x46B, "GXSetTevOrder");
     ASSERTMSGLINE(0x46C, stage < 16, "GXSetTevOrder: Invalid Tev Stage Index");
@@ -358,12 +354,12 @@ void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map, GXCha
     if (stage & 1) {
         SET_REG_FIELD(0x486, *ptref, 3, 12, tmap);
         SET_REG_FIELD(0x487, *ptref, 3, 15, tcoord);
-        SET_REG_FIELD(0x489, *ptref, 3, 19, (color == GX_COLOR_NULL) ? 7 : c2r[color]);
+        SET_REG_FIELD(0x489, *ptref, 3, 19, (color == GX_COLOR_NULL) ? 7 : lbl_8032EA88[color]);
         SET_REG_FIELD(0x48B, *ptref, 1, 18, (map != GX_TEXMAP_NULL && !(map & 0x100)));
     } else {
         SET_REG_FIELD(0x48E, *ptref, 3, 0, tmap);
         SET_REG_FIELD(0x48F, *ptref, 3, 3, tcoord);
-        SET_REG_FIELD(0x491, *ptref, 3, 7, (color == GX_COLOR_NULL) ? 7 : c2r[color]);
+        SET_REG_FIELD(0x491, *ptref, 3, 7, (color == GX_COLOR_NULL) ? 7 : lbl_8032EA88[color]);
         SET_REG_FIELD(0x493, *ptref, 1, 6, (map != GX_TEXMAP_NULL && !(map & 0x100)));
     }
 
