@@ -314,9 +314,9 @@ void expgfx_release(uint slotPoolBase,int poolIndex,int slotIndex,int freeTextur
   char *poolActiveCount;
   ExpgfxSlot *slot;
   uint activeMask;
-  uint tableIndex;
+  uint tableOffset;
   u16 *refCount;
-  u32 *tableTextureResources;
+  u8 *tableTextureResources;
 
   expgfxBase = lbl_8039AB58;
   activeMask = 1 << slotIndex;
@@ -326,23 +326,23 @@ void expgfx_release(uint slotPoolBase,int poolIndex,int slotIndex,int freeTextur
     slot = (ExpgfxSlot *)(slotPoolBase + slotIndex * EXPGFX_SLOT_SIZE);
     slot->behaviorFlags = 0;
     if (freeTexture == 0) {
-      tableTextureResources = (u32 *)(expgfxBase + EXPGFX_EXPTAB_TEXTURE_RESOURCE_OFFSET);
-      tableIndex = ((uint)slot->encodedTableIndex >> 1) * 4;
-      if (tableTextureResources[tableIndex] != 0) {
+      tableTextureResources = expgfxBase + EXPGFX_EXPTAB_TEXTURE_RESOURCE_OFFSET;
+      tableOffset = Expgfx_GetSlotTableIndex(slot) << 4;
+      if (*(u32 *)(tableTextureResources + tableOffset) != 0) {
         lbl_803DD258 = 1;
-        fn_80054308((void *)tableTextureResources[((uint)slot->encodedTableIndex >> 1) * 4]);
+        fn_80054308(*(void **)(tableTextureResources + (Expgfx_GetSlotTableIndex(slot) << 4)));
         lbl_803DD258 = 0;
       }
-      tableIndex = ((uint)slot->encodedTableIndex >> 1) * 4;
-      refCount = (u16 *)(expgfxBase + EXPGFX_EXPTAB_REFCOUNT_OFFSET + tableIndex * sizeof(u32));
+      tableOffset = Expgfx_GetSlotTableIndex(slot) << 4;
+      refCount = (u16 *)(expgfxBase + EXPGFX_EXPTAB_REFCOUNT_OFFSET + tableOffset);
       if (*refCount == 0) {
         fn_801378A8(sExpgfxMismatchInAddRemove);
       }
       else {
         (*refCount)--;
         if (*refCount == 0) {
-          tableTextureResources[tableIndex] = 0;
-          *(u32 *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableIndex * sizeof(u32)) = 0;
+          *(u32 *)(tableTextureResources + tableOffset) = 0;
+          *(u32 *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableOffset) = 0;
         }
       }
     }
@@ -1222,7 +1222,7 @@ void expgfx_resetAllPools(void)
         else {
           fn_801378A8((char *)(staticDataBase + 0x358));
         }
-        *(s16 *)((u8 *)slot + 0x26) = -1;
+        slot->sequenceId = -1;
         *poolActiveMasks = *poolActiveMasks & ~activeBit;
       }
       slot = slot + 1;
