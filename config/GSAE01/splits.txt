@@ -1681,13 +1681,6 @@ main/unknown/autos/placeholder_8032EDD0.c:
 	.data       start:0x8032EDD0 end:0x8032F218
 	.sdata      start:0x803DC5B8 end:0x803DC5C8
 
-main/unknown/autos/placeholder_8032F218.c:
-	.data       start:0x8032F218 end:0x8032F618
-	.sdata2     start:0x803E8368 end:0x803E8390
-
-main/unknown/autos/placeholder_8032F618.c:
-	.data       start:0x8032F618 end:0x8032F79C
-
 main/unknown/autos/placeholder_803AEA38.c:
 	.bss        start:0x803AEA38 end:0x803AECC0
 
@@ -1734,7 +1727,14 @@ dolphin/gx/GXDisplayList.c:
 
 dolphin/gx/GXTransform.c:
 	.text       start:0x8025CF48 end:0x8025D514
-	.sdata2     start:0x803E83E8 end:0x803E83F4
+	.sdata2     start:0x803E7750 end:0x803E775C
+
+main/unknown/autos/placeholder_8032F218.c:
+	.data       start:0x8032F218 end:0x8032F618
+	.sdata2     start:0x803E8368 end:0x803E8390
+
+main/unknown/autos/placeholder_8032F618.c:
+	.data       start:0x8032F618 end:0x8032F79C
 
 dolphin/gx/GXPerf.c:
 	.text       start:0x8025D514 end:0x8025DE80

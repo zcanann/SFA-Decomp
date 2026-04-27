@@ -9,10 +9,6 @@ extern GXData* gx;
 
 extern u32 __cvt_fp2unsigned(f64 d);
 
-extern const f32 lbl_803E83E8;
-extern const f32 lbl_803E83EC;
-extern const f32 lbl_803E83F0;
-
 void GXSetProjection(const Mtx44 mtx, GXProjectionType type) {
     u32 reg;
 
@@ -213,15 +209,15 @@ void GXSetViewportJitter(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz,
     CHECK_GXBEGIN(903, "GXSetViewport");  // not the correct function name
 
     if (field == 0) {
-        top -= lbl_803E83E8;
+        top -= 0.5f;
     }
 
-    sx = wd * lbl_803E83E8;
-    sy = -ht * lbl_803E83E8;
-    ox = lbl_803E83EC + (left + (wd * lbl_803E83E8));
-    oy = lbl_803E83EC + (top + (ht * lbl_803E83E8));
-    zmin = lbl_803E83F0 * nearz;
-    zmax = lbl_803E83F0 * farz;
+    sx = wd / 2.0f;
+    sy = -ht / 2.0f;
+    ox = 342.0f + (left + (wd / 2.0f));
+    oy = 342.0f + (top + (ht / 2.0f));
+    zmin = 1.6777215e7f * nearz;
+    zmax = 1.6777215e7f * farz;
     sz = zmax - zmin;
     oz = zmax;
     __GXData->vpLeft = left;
@@ -246,10 +242,6 @@ void GXSetViewportJitter(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz,
     GX_WRITE_XF_REG_F(31, oz);
     __GXData->bpSentNot = 1;
 }
-
-const f32 lbl_803E83E8 = 0.5f;
-const f32 lbl_803E83EC = 342.0f;
-const f32 lbl_803E83F0 = 1.6777215e7f;
 
 #pragma dont_inline reset
 #pragma fp_contract on
