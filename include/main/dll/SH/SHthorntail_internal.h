@@ -24,7 +24,7 @@ typedef struct SHthorntailRuntime {
   u8 padD5[0x611 - 0xD5];
   u8 movementControlFlags;
   u8 pad612[0x624 - 0x612];
-  s8 behaviorState;
+  u8 behaviorState;
   u8 behaviorFlags;
   u8 locomotionMode;
   u8 tailSwingState;
