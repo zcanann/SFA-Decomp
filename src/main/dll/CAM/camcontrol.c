@@ -85,6 +85,9 @@ typedef struct CamcontrolCurrentHandler {
 } CamcontrolCurrentHandler;
 
 extern CamcontrolCurrentHandler *lbl_803DD51C;
+extern int lbl_803DD4EC;
+extern int lbl_803DD4F0;
+extern int lbl_803DD4F4;
 
 typedef struct CamcontrolTriggeredAction {
   u8 actionKind;
@@ -560,9 +563,8 @@ void camcontrol_releaseCurrentHandler(void)
  */
 void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2)
 {
-  if (gCamcontrolSavedActionId != -1) {
-    camcontrol_queueCamAction(gCamcontrolSavedActionId,gCamcontrolSavedActionFlags,
-                              (char)gCamcontrolSavedActionMode,0,0,param_1,param_2);
+  if (lbl_803DD4F4 != -1) {
+    camcontrol_queueCamAction(lbl_803DD4F4,lbl_803DD4F0,lbl_803DD4EC,0,0,param_1,param_2);
   }
   return;
 }
