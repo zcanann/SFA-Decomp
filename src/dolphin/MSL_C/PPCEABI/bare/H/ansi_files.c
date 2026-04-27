@@ -19,7 +19,7 @@ void __close_all(void)
         if (prev->is_dynamically_allocated) {
             fn_8028D574(prev);
         } else {
-            prev->file_mode.file_kind = __unavailable_file;
+            prev->file_mode.file_kind = __strinFile;
             if (file != NULL && file->is_dynamically_allocated) {
                 prev->next_file_struct = NULL;
             }
