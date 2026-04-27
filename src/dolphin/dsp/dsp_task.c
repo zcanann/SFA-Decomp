@@ -15,6 +15,12 @@ typedef struct DSPTaskStrings {
 } DSPTaskStrings;
 
 extern const DSPTaskStrings sDSPTaskStrings;
+#define DSP_BOOTING_TASK_MSG sDSPTaskStrings.bootingTask
+#define IRAM_MMEM_ADDR_MSG sDSPTaskStrings.iramMmemAddr
+#define IRAM_DSP_ADDR_MSG sDSPTaskStrings.iramDspAddr
+#define IRAM_LENGTH_MSG sDSPTaskStrings.iramLength
+#define DRAM_MMEM_ADDR_MSG sDSPTaskStrings.dramMmemAddr
+#define START_VECTOR_MSG sDSPTaskStrings.startVector
 
 extern DSPTaskInfo* __DSP_curr_task;
 extern DSPTaskInfo* __DSP_first_task;
@@ -283,12 +289,12 @@ void __DSP_boot_task(DSPTaskInfo* task) {
     while (DSPCheckMailToDSP() != 0)
         ;
 
-    __DSP_debug_printf("DSP is booting task: 0x%08X\n", (u32)task);
-    __DSP_debug_printf("__DSP_boot_task()  : IRAM MMEM ADDR: 0x%08X\n", (u32)task->iram_mmem_addr);
-    __DSP_debug_printf("__DSP_boot_task()  : IRAM DSP ADDR : 0x%08X\n", task->iram_addr);
-    __DSP_debug_printf("__DSP_boot_task()  : IRAM LENGTH   : 0x%08X\n", task->iram_length);
-    __DSP_debug_printf("__DSP_boot_task()  : DRAM MMEM ADDR: 0x%08X\n", task->dram_length);
-    __DSP_debug_printf("__DSP_boot_task()  : Start Vector  : 0x%08X\n", task->dsp_init_vector);
+    __DSP_debug_printf(DSP_BOOTING_TASK_MSG, (u32)task);
+    __DSP_debug_printf(IRAM_MMEM_ADDR_MSG, (u32)task->iram_mmem_addr);
+    __DSP_debug_printf(IRAM_DSP_ADDR_MSG, task->iram_addr);
+    __DSP_debug_printf(IRAM_LENGTH_MSG, task->iram_length);
+    __DSP_debug_printf(DRAM_MMEM_ADDR_MSG, task->dram_length);
+    __DSP_debug_printf(START_VECTOR_MSG, task->dsp_init_vector);
 }
 
 void __DSP_add_task(DSPTaskInfo* task) {
