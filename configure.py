@@ -432,7 +432,7 @@ config.libs = [
     DolphinLib(
         "si",
         [
-            Object(NonMatching, "dolphin/si/SIBios.c", extra_cflags=["-str", "reuse,pool,readonly"]),
+            Object(MatchingFor("GSAE01"), "dolphin/si/SIBios.c", extra_cflags=["-str", "reuse,pool,readonly"]),
             Object(NonMatching, "dolphin/si/SISamplingRate.c"),
         ],
     ),

@@ -1644,6 +1644,7 @@ dolphin/si/SIBios.c:
 	.data       start:0x8032EDD0 end:0x8032EDD0
 	.bss        start:0x803AECC0 end:0x803AECC0
 	.sbss       start:0x803DE080 end:0x803DE088
+	.sdata2     start:0x803DED08 end:0x803DED0C
 
 dolphin/si/SISamplingRate.c:
 	.text       start:0x80253080 end:0x80253188
