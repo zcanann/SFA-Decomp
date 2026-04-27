@@ -8,22 +8,22 @@
 extern GXData* gx;
 #define __GXData gx
 
-const f32 lbl_803E8318 = 0.0f;
-const f32 lbl_803E831C = 90.0f;
-const f32 lbl_803E8320 = 3.1415927f;
-const f32 lbl_803E8324 = 180.0f;
-const f32 lbl_803E8328 = -1000.0f;
-const f32 lbl_803E832C = 1000.0f;
-const f32 lbl_803E8330 = 1.0f;
-const f32 lbl_803E8334 = 2.0f;
-const f32 lbl_803E8338 = -1.0f;
-const f32 lbl_803E833C = -4.0f;
-const f32 lbl_803E8340 = 4.0f;
-const f32 lbl_803E8344 = -2.0f;
-const f32 lbl_803E8348 = 0.5f;
-const double lbl_803E8350 = 0.5;
-const double lbl_803E8358 = 3.0;
-const f32 lbl_803E8360[2] = {1048576.0f, 0.0f};
+extern const f32 lbl_803E8318;
+extern const f32 lbl_803E831C;
+extern const f32 lbl_803E8320;
+extern const f32 lbl_803E8324;
+extern const f32 lbl_803E8328;
+extern const f32 lbl_803E832C;
+extern const f32 lbl_803E8330;
+extern const f32 lbl_803E8334;
+extern const f32 lbl_803E8338;
+extern const f32 lbl_803E833C;
+extern const f32 lbl_803E8340;
+extern const f32 lbl_803E8344;
+extern const f32 lbl_803E8348;
+extern const double lbl_803E8350;
+extern const double lbl_803E8358;
+extern const f32 lbl_803E8360[2];
 
 extern f32 cosf(f32);
 
