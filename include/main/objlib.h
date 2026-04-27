@@ -53,8 +53,8 @@ void ObjGroup_RemoveObject(int param_1,int param_2);
 int ObjGroup_GetObjectGroup(int param_1);
 void ObjGroup_AddObject(int param_1,int param_2);
 void ObjGroup_ClearAll(void);
-undefined4 ObjMsg_Peek(int param_1,int *param_2,int *param_3,int *param_4);
-undefined4 ObjMsg_Pop(int param_1,uint *param_2,uint *param_3,uint *param_4);
+undefined4 ObjMsg_Peek(void *obj,uint *outMessage,uint *outSender,uint *outParam);
+undefined4 ObjMsg_Pop(void *obj,uint *outMessage,uint *outSender,uint *outParam);
 void ObjMsg_SendToNearbyObjects(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,uint param_11,uint param_12,uint param_13,
@@ -67,7 +67,7 @@ uint ObjMsg_SendToObject(undefined8 param_1,undefined8 param_2,undefined8 param_
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,uint param_10,uint param_11,uint param_12,undefined4 param_13,
                  undefined4 param_14,undefined4 param_15,undefined4 param_16);
-void ObjMsg_AllocQueue(int param_1,int param_2);
+void ObjMsg_AllocQueue(void *obj,int capacity);
 undefined4 Obj_IsObjectAlive(int param_1);
 bool FUN_80037d74(int param_1);
 int ObjHits_PollPriorityHitWithCooldown(int param_1,float *param_2,undefined4 *param_3,float *param_4);

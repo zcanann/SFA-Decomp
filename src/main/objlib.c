@@ -86,6 +86,18 @@ extern int iRam803dd84c;
 extern int iRam803dd854;
 extern char s_objmsg___x___overflow_in_object___802cba20[];
 
+typedef struct ObjMsgEntry {
+  uint message;
+  uint sender;
+  uint param;
+} ObjMsgEntry;
+
+typedef struct ObjMsgQueue {
+  uint count;
+  uint capacity;
+  ObjMsgEntry entries[1];
+} ObjMsgQueue;
+
 /*
  * --INFO--
  *
@@ -1794,23 +1806,23 @@ void ObjGroup_ClearAll(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 ObjMsg_Peek(int param_1,int *param_2,int *param_3,int *param_4)
+undefined4 ObjMsg_Peek(void *obj,uint *outMessage,uint *outSender,uint *outParam)
 {
-  int *piVar1;
+  ObjMsgQueue *queue;
   
-  if (param_1 == 0) {
+  if (obj == (void *)0x0) {
     return 0;
   }
-  piVar1 = *(int **)(param_1 + 0xdc);
-  if ((piVar1 != (int *)0x0) && (*piVar1 != 0)) {
-    if (param_2 != (int *)0x0) {
-      *param_2 = piVar1[2];
+  queue = *(ObjMsgQueue **)((byte *)obj + 0xdc);
+  if ((queue != (ObjMsgQueue *)0x0) && (queue->count != 0)) {
+    if (outMessage != (uint *)0x0) {
+      *outMessage = queue->entries[0].message;
     }
-    if (param_3 != (int *)0x0) {
-      *param_3 = piVar1[3];
+    if (outSender != (uint *)0x0) {
+      *outSender = queue->entries[0].sender;
     }
-    if (param_4 != (int *)0x0) {
-      *param_4 = piVar1[4];
+    if (outParam != (uint *)0x0) {
+      *outParam = queue->entries[0].param;
     }
     return 1;
   }
@@ -1830,30 +1842,30 @@ undefined4 ObjMsg_Peek(int param_1,int *param_2,int *param_3,int *param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 ObjMsg_Pop(int param_1,uint *param_2,uint *param_3,uint *param_4)
+undefined4 ObjMsg_Pop(void *obj,uint *outMessage,uint *outSender,uint *outParam)
 {
-  uint uVar1;
-  uint *puVar2;
+  uint i;
+  ObjMsgQueue *queue;
   
-  if (param_1 == 0) {
+  if (obj == (void *)0x0) {
     return 0;
   }
-  puVar2 = *(uint **)(param_1 + 0xdc);
-  if ((puVar2 != (uint *)0x0) && (*puVar2 != 0)) {
-    *puVar2 = *puVar2 - 1;
-    if (param_2 != (uint *)0x0) {
-      *param_2 = puVar2[2];
+  queue = *(ObjMsgQueue **)((byte *)obj + 0xdc);
+  if ((queue != (ObjMsgQueue *)0x0) && (queue->count != 0)) {
+    queue->count = queue->count - 1;
+    if (outMessage != (uint *)0x0) {
+      *outMessage = queue->entries[0].message;
     }
-    if (param_3 != (uint *)0x0) {
-      *param_3 = puVar2[3];
+    if (outSender != (uint *)0x0) {
+      *outSender = queue->entries[0].sender;
     }
-    if (param_4 != (uint *)0x0) {
-      *param_4 = puVar2[4];
+    if (outParam != (uint *)0x0) {
+      *outParam = queue->entries[0].param;
     }
-    for (uVar1 = 0; uVar1 < *puVar2; uVar1 = uVar1 + 1) {
-      puVar2[uVar1 * 3 + 2] = puVar2[uVar1 * 3 + 5];
-      puVar2[uVar1 * 3 + 3] = puVar2[uVar1 * 3 + 6];
-      puVar2[uVar1 * 3 + 4] = puVar2[uVar1 * 3 + 7];
+    for (i = 0; i < queue->count; i = i + 1) {
+      queue->entries[i].message = queue->entries[i + 1].message;
+      queue->entries[i].sender = queue->entries[i + 1].sender;
+      queue->entries[i].param = queue->entries[i + 1].param;
     }
     return 1;
   }
@@ -2050,15 +2062,18 @@ uint ObjMsg_SendToObject(undefined8 param_1,undefined8 param_2,undefined8 param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjMsg_AllocQueue(int param_1,int param_2)
+void ObjMsg_AllocQueue(void *obj,int capacity)
 {
-  undefined4 *puVar1;
+  int queueBytes;
+  ObjMsgQueue *queue;
   
-  if (((param_2 != 0) && (param_1 != 0)) && (*(int *)(param_1 + 0xdc) == 0)) {
-    puVar1 = (undefined4 *)FUN_80017830((param_2 * 3 + 2) * 4,0xe);
-    *puVar1 = 0;
-    puVar1[1] = param_2;
-    *(undefined4 **)(param_1 + 0xdc) = puVar1;
+  if (((capacity != 0) && (obj != (void *)0x0)) &&
+      (*(ObjMsgQueue **)((byte *)obj + 0xdc) == (ObjMsgQueue *)0x0)) {
+    queueBytes = (capacity * 3 + 2) * 4;
+    queue = (ObjMsgQueue *)FUN_80017830(queueBytes,0xe,0);
+    queue->count = 0;
+    queue->capacity = capacity;
+    *(ObjMsgQueue **)((byte *)obj + 0xdc) = queue;
   }
   return;
 }
