@@ -4,8 +4,8 @@
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b14();
-extern uint FUN_80006ba0();
-extern undefined4 FUN_80006ba8();
+extern uint fn_80014B24(int index);
+extern void fn_80014B3C(int index,uint flags);
 extern undefined4 FUN_80017640();
 extern undefined4 FUN_80017700();
 extern undefined4 FUN_80017704();
@@ -20,7 +20,7 @@ extern undefined4 FUN_80017830();
 extern undefined4 FUN_80017970();
 extern undefined4 FUN_80017a50();
 extern undefined4 FUN_80017a54();
-extern int FUN_80017a98();
+extern void *fn_8002B9EC(void);
 extern undefined4 FUN_80017ac0();
 extern int FUN_80017b00();
 extern void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2);
@@ -43,7 +43,7 @@ extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 extern undefined4 FUN_802949e8();
 extern byte FUN_80294c20();
-extern int FUN_80294d6c();
+extern int fn_80296BA0(void *obj);
 
 extern int gObjHitsActiveHitVolumeObjects[5];
 extern int DAT_80343558;
@@ -52,7 +52,13 @@ extern char DAT_80343959;
 extern int DAT_803439b0;
 extern undefined4 DAT_803439b4;
 extern undefined4 DAT_803439b8;
-extern undefined4* DAT_803dd6e8;
+typedef struct ObjTriggerInterface {
+  u8 pad00[0x1c];
+  int (*isCurrentTriggerClear)(void);
+  int (*isTriggerSet)(int eventId);
+} ObjTriggerInterface;
+
+extern ObjTriggerInterface **lbl_803DCA68;
 extern undefined4 DAT_803dd848;
 extern undefined4 DAT_803dd850;
 extern undefined4 DAT_803dd858;
@@ -2109,7 +2115,7 @@ bool FUN_80037d74(int param_1)
   int iVar1;
   byte bVar2;
   
-  iVar1 = FUN_80017a98();
+  iVar1 = (int)fn_8002B9EC();
   bVar2 = FUN_80294c20(iVar1);
   if (bVar2 == 0) {
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xef;
@@ -2431,14 +2437,21 @@ undefined4 ObjContact_AddCallback(int param_1,int param_2,undefined4 param_3)
 undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
 {
   int iVar1;
+  int triggerFlags;
+  int flagEnabled;
+  int flagBlocked;
   
-  if ((((*(byte *)(param_1 + 0xaf) & 4) != 0) && ((*(byte *)(param_1 + 0xaf) & 0x10) == 0)) &&
-     (iVar1 = (**(code **)(*DAT_803dd6e8 + 0x20))((int)param_2), iVar1 != 0)) {
-    iVar1 = FUN_80017a98();
-    iVar1 = FUN_80294d6c(iVar1);
-    if (iVar1 == -1) {
-      FUN_80006ba8(0,0x100);
-      return 1;
+  triggerFlags = *(byte *)(param_1 + 0xaf);
+  flagEnabled = triggerFlags & 4;
+  if (flagEnabled != 0) {
+    flagBlocked = triggerFlags & 0x10;
+    iVar1 = (int)param_2;
+    if ((flagBlocked == 0) && (iVar1 = (*lbl_803DCA68)->isTriggerSet(iVar1), iVar1 != 0)) {
+      iVar1 = fn_80296BA0(fn_8002B9EC());
+      if (iVar1 == -1) {
+        fn_80014B3C(0,0x100);
+        return 1;
+      }
     }
   }
   return 0;
@@ -2459,18 +2472,28 @@ undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
  */
 undefined4 ObjTrigger_IsSet(int param_1)
 {
-  uint uVar1;
-  int iVar2;
+  uint flags;
+  int iVar1;
+  int triggerFlags;
+  int flagEnabled;
+  int flagBlocked;
   
-  if ((((*(int *)(*(int *)(param_1 + 0x50) + 0x40) != 0) &&
-       (uVar1 = FUN_80006ba0(0), (uVar1 & 0x100) == 0)) && ((*(byte *)(param_1 + 0xaf) & 1) != 0))
-     && (((*(byte *)(param_1 + 0xaf) & 8) == 0 &&
-         (iVar2 = (**(code **)(*DAT_803dd6e8 + 0x1c))(), iVar2 == 0)))) {
-    iVar2 = FUN_80017a98();
-    iVar2 = FUN_80294d6c(iVar2);
-    if ((iVar2 == -1) || (iVar2 == 0x40)) {
-      FUN_80006ba8(0,0x100);
-      return 1;
+  if (*(int *)(*(int *)(param_1 + 0x50) + 0x40) == 0) {
+    return 0;
+  }
+  flags = fn_80014B24(0);
+  if ((flags & 0x100) == 0) {
+    triggerFlags = *(byte *)(param_1 + 0xaf);
+    flagEnabled = triggerFlags & 1;
+    if (flagEnabled != 0) {
+      flagBlocked = triggerFlags & 8;
+      if ((flagBlocked == 0) && (iVar1 = (*lbl_803DCA68)->isCurrentTriggerClear(), iVar1 == 0)) {
+        iVar1 = fn_80296BA0(fn_8002B9EC());
+        if ((iVar1 == -1) || (iVar1 == 0x40)) {
+          fn_80014B3C(0,0x100);
+          return 1;
+        }
+      }
     }
   }
   return 0;
