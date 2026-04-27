@@ -70,6 +70,22 @@ extern f32 FLOAT_803e22f8;
 extern f32 FLOAT_803e22fc;
 extern f32 FLOAT_803e2300;
 
+typedef struct CamcontrolHandlerVTable {
+  u8 pad00[0x10];
+  void (*release)(void);
+} CamcontrolHandlerVTable;
+
+typedef struct CamcontrolHandler {
+  CamcontrolHandlerVTable *vtable;
+} CamcontrolHandler;
+
+typedef struct CamcontrolCurrentHandler {
+  u8 pad00[4];
+  CamcontrolHandler *handler;
+} CamcontrolCurrentHandler;
+
+extern CamcontrolCurrentHandler *lbl_803DD51C;
+
 typedef struct CamcontrolTriggeredAction {
   u8 actionKind;
   u8 pad01[0xC];
@@ -523,8 +539,8 @@ void *camcontrol_loadCamAction(int actionNo)
  */
 void camcontrol_releaseCurrentHandler(void)
 {
-  if (gCamcontrolCurrentHandler != 0) {
-    (**(code **)(**(int **)(gCamcontrolCurrentHandler + 4) + 0x10))();
+  if (lbl_803DD51C != NULL) {
+    lbl_803DD51C->handler->vtable->release();
   }
   return;
 }

@@ -48,14 +48,15 @@ extern undefined4 DAT_80341ba4;
 extern undefined4 DAT_80342e58;
 extern undefined4 DAT_803dd848;
 extern undefined4 DAT_803dd850;
-extern undefined4 DAT_803dd85c;
+extern int *lbl_803DCBDC;
 extern f64 DOUBLE_803df5a8;
 extern f64 DOUBLE_803df5c0;
 extern f64 DOUBLE_803df5d0;
+extern f32 lbl_803DB414;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803dc078;
 extern f32 FLOAT_803dc0b0;
-extern f32 FLOAT_803dd868;
+extern f32 lbl_803DCBE8;
 extern f32 FLOAT_803dda58;
 extern f32 FLOAT_803dda5c;
 extern f32 FLOAT_803df590;
@@ -1262,13 +1263,13 @@ void ObjHits_TickPriorityHitCooldowns(void)
   sVar2 = 0;
   iVar1 = 0;
   do {
-    if (*(int *)(DAT_803dd85c + iVar1) != 0) {
-      *(int *)(DAT_803dd85c + iVar1) = *(int *)(DAT_803dd85c + iVar1) + -1;
+    if (*(int *)((int)lbl_803DCBDC + iVar1) != 0) {
+      *(int *)((int)lbl_803DCBDC + iVar1) = *(int *)((int)lbl_803DCBDC + iVar1) + -1;
     }
     iVar1 = iVar1 + 0x3c;
     sVar2 = sVar2 + 1;
   } while (sVar2 < 0x32);
-  FLOAT_803dd868 = FLOAT_803dc074;
+  lbl_803DCBE8 = lbl_803DB414;
   return;
 }
 
