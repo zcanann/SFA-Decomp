@@ -1485,13 +1485,12 @@ dolphin/os/OSAlarm.c:
 
 dolphin/os/OSAlloc.c:
 	.text       start:0x802413E0 end:0x802416F0
-	.sdata      start:0x803DC538 end:0x803DC53C
+	.sdata      start:0x803DC530 end:0x803DC534
 	.sbss       start:0x803DDE10 end:0x803DDE20
-	.sdata2     start:0x803DEA90 end:0x803DEAA0
 
 dolphin/os/OSArena.c:
 	.text       start:0x802416F0 end:0x80241710
-	.sdata      start:0x803DC540 end:0x803DC544
+	.sdata      start:0x803DC538 end:0x803DC53C
 	.sbss       start:0x803DDE20 end:0x803DDE24
 
 dolphin/os/OSAudioSystem.c:
