@@ -6,9 +6,7 @@
 #include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
 #include "PowerPC_EABI_Support/MetroTRK/trk.h"
 
-BOOL IsTRKConnected;
-
-extern void* jumptable_80332F34[];
+extern BOOL IsTRKConnected;
 
 BOOL GetTRKConnected()
 {
@@ -20,8 +18,8 @@ void SetTRKConnected(BOOL connected)
 	IsTRKConnected = connected;
 }
 
-static void TRKMessageIntoReply(TRKBuffer* buffer, u8 ackCmd,
-                                DSReplyError errSentInAck)
+static inline void TRKMessageIntoReply(TRKBuffer* buffer, u8 ackCmd,
+                                       DSReplyError errSentInAck)
 {
 	TRKResetBuffer(buffer, 1);
 
@@ -29,7 +27,7 @@ static void TRKMessageIntoReply(TRKBuffer* buffer, u8 ackCmd,
 	TRKAppendBuffer1_ui8(buffer, errSentInAck);
 }
 
-DSError TRKSendACK(TRKBuffer* buffer)
+static inline DSError TRKSendACK(TRKBuffer* buffer)
 {
 	DSError err;
 	int ackTries;
@@ -205,50 +203,49 @@ DSError TRKDoReadMemory(TRKBuffer* buffer)
 
 	if (msg_length > 0x800) {
 		error = TRKStandardACK(buffer, DSMSG_ReplyACK, DSREPLY_ParameterError);
-	} else {
-		TRKMessageIntoReply(buffer, DSMSG_ReplyACK, DSREPLY_NoError);
+		return error;
+	}
 
-		if (error == DS_NoError) {
-			length = (u32)msg_length;
-			error = TRKTargetAccessMemory(tmpBuffer, msg_start, &length,
-			                              (msg_options & DSMSGMEMORY_Userview)
-			                                  ? MEMACCESS_UserMemory
-			                                  : MEMACCESS_DebuggerMemory,
-			                              TRUE);
-			msg_length = (u16)length;
-		}
+	TRKMessageIntoReply(buffer, DSMSG_ReplyACK, DSREPLY_NoError);
 
+	if (error == DS_NoError) {
+		length = (u32)msg_length;
+		error = TRKTargetAccessMemory(tmpBuffer, msg_start, &length,
+		                              (msg_options & DSMSGMEMORY_Userview)
+		                                  ? MEMACCESS_UserMemory
+		                                  : MEMACCESS_DebuggerMemory,
+		                              TRUE);
+		msg_length = (u16)length;
 		if (error == DS_NoError)
 			error = TRKAppendBuffer1_ui16(buffer, msg_length);
-
 		if (error == DS_NoError)
 			error = TRKAppendBuffer(buffer, tmpBuffer, length);
+	}
 
-		if (error != DS_NoError) {
-			switch (error) {
-			case DS_CWDSException:
-				replyError = DSREPLY_CWDSException;
-				break;
-			case DS_InvalidMemory:
-				replyError = DSREPLY_InvalidMemoryRange;
-				break;
-			case DS_InvalidProcessID:
-				replyError = DSREPLY_InvalidProcessID;
-				break;
-			case DS_InvalidThreadID:
-				replyError = DSREPLY_InvalidThreadID;
-				break;
-			case DS_OSError:
-				replyError = DSREPLY_OSError;
-				break;
-			default:
-				replyError = DSREPLY_CWDSError;
-				break;
-			}
-			error = TRKStandardACK(buffer, DSMSG_ReplyACK, replyError);
-		} else {
-			error = TRKSendACK(buffer);
+	if (error != DS_NoError) {
+		switch (error) {
+		case DS_CWDSException:
+			replyError = DSREPLY_CWDSException;
+			break;
+		case DS_InvalidMemory:
+			replyError = DSREPLY_InvalidMemoryRange;
+			break;
+		case DS_InvalidProcessID:
+			replyError = DSREPLY_InvalidProcessID;
+			break;
+		case DS_InvalidThreadID:
+			replyError = DSREPLY_InvalidThreadID;
+			break;
+		case DS_OSError:
+			replyError = DSREPLY_OSError;
+			break;
+		default:
+			replyError = DSREPLY_CWDSError;
+			break;
 		}
+		error = TRKStandardACK(buffer, DSMSG_ReplyACK, replyError);
+	} else {
+		error = TRKSendACK(buffer);
 	}
 
 	return error;
