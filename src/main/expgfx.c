@@ -854,9 +854,9 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8009E004(void)
+void fn_8009E004(u32 sourceId)
 {
-  expgfx_releaseSourceSlots();
+  expgfx_releaseSourceSlots(sourceId);
   return;
 }
 
@@ -1083,9 +1083,9 @@ void expgfx_queueStandalonePools(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8009EEB8(void)
+void fn_8009EEB8(u32 sourceId)
 {
-  expgfx_releaseSourceSlots();
+  expgfx_releaseSourceSlots(sourceId);
   return;
 }
 
@@ -1103,12 +1103,12 @@ void fn_8009EEB8(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void expgfx_releaseSourceSlots(int sourceId)
+void expgfx_releaseSourceSlots(u32 sourceId)
 {
   char *poolActiveCounts;
-  ExpgfxTableEntry *tableEntries;
   ExpgfxSlot *slot;
-  int *poolSourceIds;
+  u8 *expgfxBase;
+  u32 *poolSourceIds;
   s16 *poolSlotTypeIds;
   u8 *poolFrameFlags;
   uint *slotPoolBases;
@@ -1116,12 +1116,12 @@ void expgfx_releaseSourceSlots(int sourceId)
   int poolIndex;
   int slotIndex;
 
+  expgfxBase = lbl_8039AB58;
   if (sourceId != 0) {
     poolIndex = 0;
-    tableEntries = (ExpgfxTableEntry *)(lbl_8039AB58 + EXPGFX_EXPTAB_OFFSET);
-    slotPoolBases = (uint *)(lbl_8039AB58 + EXPGFX_SLOT_POOL_BASES_OFFSET);
-    poolSourceIds = (int *)(lbl_8039AB58 + EXPGFX_POOL_SOURCE_IDS_OFFSET);
-    poolActiveCounts = (char *)(lbl_8039AB58 + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
+    slotPoolBases = (uint *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
+    poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
+    poolActiveCounts = (char *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
     poolSlotTypeIds = lbl_8030F8C8;
     poolFrameFlags = lbl_8030F968;
     do {
@@ -1131,7 +1131,8 @@ void expgfx_releaseSourceSlots(int sourceId)
         invalidSlotType = -1;
         do {
           if ((slot != (ExpgfxSlot *)0x0) &&
-              (tableEntries[Expgfx_GetSlotTableIndex(slot)].key0 == sourceId)) {
+              (((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))
+                   [Expgfx_GetSlotTableIndex(slot)].key0 == sourceId)) {
             expgfx_release(*slotPoolBases,poolIndex,slotIndex,0,1);
           }
           slot = slot + 1;
