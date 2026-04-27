@@ -553,12 +553,14 @@ lab8:
 #endif // clang-format on
 }
 
+#pragma force_active on
 asm void __mod2i(void) {
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
 	blr
 #endif // clang-format on
 }
+#pragma force_active reset
 
 asm void __shl2i(void) {
 #ifdef __MWERKS__ // clang-format off
