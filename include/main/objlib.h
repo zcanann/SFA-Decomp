@@ -63,10 +63,7 @@ void ObjMsg_SendToObjects(undefined8 param_1,undefined8 param_2,undefined8 param
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,uint param_11,uint param_12,uint param_13,
                  undefined4 param_14,undefined4 param_15,undefined4 param_16);
-uint ObjMsg_SendToObject(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,uint param_10,uint param_11,uint param_12,undefined4 param_13,
-                 undefined4 param_14,undefined4 param_15,undefined4 param_16);
+uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param);
 void ObjMsg_AllocQueue(void *obj,int capacity);
 undefined4 Obj_IsObjectAlive(int param_1);
 bool FUN_80037d74(int param_1);

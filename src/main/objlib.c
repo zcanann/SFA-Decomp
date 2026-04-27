@@ -2024,27 +2024,32 @@ void ObjMsg_SendToObjects(undefined8 param_1,undefined8 param_2,undefined8 param
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint ObjMsg_SendToObject(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,uint param_10,uint param_11,uint param_12,undefined4 param_13,
-                 undefined4 param_14,undefined4 param_15,undefined4 param_16)
+uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param)
 {
-  uint uVar1;
-  uint *puVar2;
+  uint count;
+  void *dstObj;
+  void *senderObj;
+  ObjMsgQueue *queue;
+  ObjMsgEntry *entry;
   
-  if ((param_9 != 0) && (puVar2 = *(uint **)(param_9 + 0xdc), puVar2 != (uint *)0x0)) {
-    uVar1 = *puVar2;
-    if (uVar1 < puVar2[1]) {
-      puVar2[uVar1 * 3 + 2] = param_10;
-      puVar2[uVar1 * 3 + 3] = param_11;
-      puVar2[uVar1 * 3 + 4] = param_12;
-      *puVar2 = *puVar2 + 1;
-      return *puVar2;
+  dstObj = obj;
+  senderObj = sender;
+  if (dstObj != (void *)0x0) {
+    queue = *(ObjMsgQueue **)((byte *)dstObj + 0xdc);
+    if (queue != (ObjMsgQueue *)0x0) {
+      count = queue->count;
+      if (count < queue->capacity) {
+        entry = &queue->entries[count];
+        entry->message = message;
+        entry->sender = (uint)senderObj;
+        entry->param = param;
+        queue->count = queue->count + 1;
+        return queue->count;
+      }
+      FUN_80135810(s_objmsg___x___overflow_in_object___802cba20,message,
+                   (int)*(short *)((byte *)dstObj + 0x44),(int)*(short *)((byte *)dstObj + 0x46),
+                   (int)*(short *)((byte *)senderObj + 0x46));
     }
-    FUN_80135810(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                 s_objmsg___x___overflow_in_object___802cba20,param_10,
-                 (int)*(short *)(param_9 + 0x44),(int)*(short *)(param_9 + 0x46),
-                 (int)*(short *)(param_11 + 0x46),param_9,param_15,param_16);
   }
   return 0;
 }
