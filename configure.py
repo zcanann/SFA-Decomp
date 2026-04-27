@@ -474,7 +474,8 @@ config.libs = [
     DolphinLib(
         "gx",
         [
-            Object(NonMatching, "dolphin/gx/GXInit.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/gx/GXInit.c"),
+            Object(NonMatching, "main/unknown/autos/placeholder_803AEA38.c"),
             Object(NonMatching, "dolphin/gx/GXFifo.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXMisc.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXLight.c"),

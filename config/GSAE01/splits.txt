@@ -1614,7 +1614,6 @@ dolphin/dvd/dvderror.c:
 
 dolphin/dvd/fstload.c:
 	.text       start:0x8024BD00 end:0x8024BF40
-	.data       start:0x8032E958 end:0x8032E958
 	.bss        start:0x803ADFF8 end:0x803AE068
 	.sdata      start:0x803DC570 end:0x803DC580
 	.sbss       start:0x803DDF50 end:0x803DDF60
@@ -1622,7 +1621,6 @@ dolphin/dvd/fstload.c:
 dolphin/vi/vi.c:
 	.text       start:0x8024BF40 end:0x8024D9B8
 	.data       start:0x8032E958 end:0x8032EBE0
-	.bss        start:0x803AECC0 end:0x803AECC0
 	.sdata      start:0x803DC588 end:0x803DC590
 	.sbss       start:0x803DDF60 end:0x803DDFB0
 
@@ -1655,7 +1653,6 @@ dolphin/dsp/dsp_task.c:
 dolphin/si/SIBios.c:
 	.text       start:0x802519A0 end:0x80253080
 	.data       start:0x8032EDD0 end:0x8032EDD0
-	.bss        start:0x803AECC0 end:0x803AECC0
 	.sbss       start:0x803DE080 end:0x803DE088
 	.sdata2     start:0x803DED08 end:0x803DED0C
 
@@ -1663,6 +1660,19 @@ dolphin/si/SISamplingRate.c:
 	.text       start:0x80253080 end:0x80253188
 	.data       start:0x8032EDD0 end:0x8032EDD0
 	.sbss       start:0x803DE090 end:0x803DE094
+
+dolphin/exi/EXIBios.c:
+	.text       start:0x80253188 end:0x80254A5C
+
+dolphin/exi/EXIUart.c:
+	.text       start:0x80254A5C end:0x80254CCC
+
+dolphin/gx/GXInit.c:
+	.text       start:0x80254CCC end:0x80255DBC
+	.bss        start:0x803AE4C0 end:0x803AEA38
+	.sdata      start:0x803DC5A8 end:0x803DC5AC
+	.sbss       start:0x803DE0A8 end:0x803DE0B8
+	.sdata2     start:0x803E7658 end:0x803E7678
 
 main/unknown/autos/placeholder_8032EDD0.c:
 	.data       start:0x8032EDD0 end:0x8032F218
@@ -1675,14 +1685,8 @@ main/unknown/autos/placeholder_8032F218.c:
 main/unknown/autos/placeholder_8032F618.c:
 	.data       start:0x8032F618 end:0x8032F79C
 
-dolphin/exi/EXIBios.c:
-	.text       start:0x80253188 end:0x80254A5C
-
-dolphin/exi/EXIUart.c:
-	.text       start:0x80254A5C end:0x80254CCC
-
-dolphin/gx/GXInit.c:
-	.text       start:0x80254CCC end:0x80255DBC
+main/unknown/autos/placeholder_803AEA38.c:
+	.bss        start:0x803AEA38 end:0x803AECC0
 
 dolphin/gx/GXFifo.c:
 	.text       start:0x80255DBC end:0x80256820
