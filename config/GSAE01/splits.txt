@@ -2303,12 +2303,13 @@ dolphin/TRK_MINNOW_DOLPHIN/dispatch.c:
 	.data       start:0x80332230 end:0x803322B8
 	.bss        start:0x803D82E8 end:0x803D82F0
 
-main/unknown/autos/placeholder_80332EF0.c:
-	.data       start:0x80332EF0 end:0x80332F48
-
 dolphin/TRK_MINNOW_DOLPHIN/msghndlr.c:
 	.text       start:0x80287DF8 end:0x8028A658
-	.bss        start:0x803D8888 end:0x803D8888
+	.data       start:0x803322B8 end:0x803322F0
+	.bss        start:0x803D82F0 end:0x803D82F8
+
+main/unknown/autos/placeholder_80332EF0.c:
+	.data       start:0x80332EF0 end:0x80332F48
 
 dolphin/TRK_MINNOW_DOLPHIN/support.c:
 	.text       start:0x8028A658 end:0x8028AEF4

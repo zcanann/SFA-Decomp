@@ -217,7 +217,7 @@ DSError TRKDoReadMemory(TRKBuffer* buffer)
 		                              TRUE);
 		msg_length = (u16)length;
 		if (error == DS_NoError)
-			error = TRKAppendBuffer1_ui16(buffer, msg_length);
+			error = TRKAppendBuffer1_ui16(buffer, *(volatile u16*)&msg_length);
 		if (error == DS_NoError)
 			error = TRKAppendBuffer(buffer, tmpBuffer, length);
 	}

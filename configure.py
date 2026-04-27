@@ -600,7 +600,7 @@ config.libs = [
                 mw_version="GC/1.3.2",
             ),
             Object(NonMatching, "main/unknown/autos/placeholder_80332EF0.c"),
-            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/msghndlr.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/msghndlr.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/support.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/mutex_TRK.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/notify.c"),
