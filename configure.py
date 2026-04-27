@@ -350,7 +350,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/os/OSReboot.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSReset.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSResetSW.c"),
-            Object(NonMatching, "dolphin/os/OSRtc.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/os/OSRtc.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSStopwatch.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSSync.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSThread.c", extra_cflags=["-use_lmw_stmw", "on"]),
