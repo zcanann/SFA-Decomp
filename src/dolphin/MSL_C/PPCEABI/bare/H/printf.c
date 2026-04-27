@@ -1218,6 +1218,7 @@ void* __StringWrite(void* pCtrl, const char* pBuffer, size_t char_num)
 int vsprintf(char *s, const char *format, va_list arg)
 {
     int end;
+    int len;
     __OutStrCtrl osc;
 
     osc.CharStr = s;
@@ -1227,7 +1228,11 @@ int vsprintf(char *s, const char *format, va_list arg)
     end = __pformatter(&__StringWrite, &osc, format, arg);
 
     if (s != NULL) {
-        s[(end < (size_t)-1) ? end : -2] = '\0';
+        len = -2;
+        if (end < (size_t)-1) {
+            len = end;
+        }
+        s[len] = '\0';
     }
 
     return end;
@@ -1248,6 +1253,7 @@ int vprintf(const char* format, va_list arg)
 int sprintf(char* s, const char* format, ...)
 {
     int end;
+    int len;
     va_list args;
     __OutStrCtrl osc;
 
@@ -1260,7 +1266,11 @@ int sprintf(char* s, const char* format, ...)
     end = __pformatter(&__StringWrite, &osc, format, args);
 
     if (s != NULL) {
-        s[(end < (size_t)-1) ? end : -2] = '\0';
+        len = -2;
+        if (end < (size_t)-1) {
+            len = end;
+        }
+        s[len] = '\0';
     }
 
     return end;
