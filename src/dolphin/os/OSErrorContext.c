@@ -3,7 +3,7 @@
 
 extern void DBPrintf(char*, ...);
 void OSSwitchFPUContext(__OSException exception, OSContext* context);
-extern volatile OSContext* __OSFPUContext;
+extern volatile OSContext* __OSFPUContext AT_ADDRESS(OS_BASE_CACHED | 0x00D8);
 
 static char _oscontext_msg[] = "FPU-unavailable handler installed\n";
 
