@@ -20,9 +20,9 @@ gTRKInterruptVectorTableEnd:
 .fn __TRK_reset, global
 stwu r1, -0x20(r1)
 mflr r0
-lis r3, lc_base@ha
+lis r3, lbl_803D8878@ha
 stw r0, 0x24(r1)
-addi r3, r3, lc_base@l
+addi r3, r3, lbl_803D8878@l
 stmw r27, 0xc(r1)
 lwz r3, 0x0(r3)
 cmplwi r3, 0x44
@@ -52,9 +52,9 @@ li r0, 0x1
 slw r0, r0, r28
 and. r0, r29, r0
 beq .L_8000554C
-lis r3, lc_base@ha
+lis r3, lbl_803D8878@ha
 lwz r6, 0x0(r31)
-addi r3, r3, lc_base@l
+addi r3, r3, lbl_803D8878@l
 lwz r3, 0x0(r3)
 cmplw r6, r3
 blt .L_80005520
