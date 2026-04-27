@@ -331,7 +331,7 @@ config.libs = [
     DolphinLib(
         "os",
         [
-            Object(NonMatching, "dolphin/os/OS.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/os/OS.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSAddress.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSAlarm.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSAlloc.c"),
