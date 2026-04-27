@@ -1514,7 +1514,7 @@ dolphin/os/OSError.c:
 
 main/unknown/autos/placeholder_8032CCC4.c:
 	.data       start:0x8032CCC4 end:0x8032D7D8
-	.bss        start:0x803AD3B4 end:0x803AD3E0
+	.bss        start:0x803AD3B4 end:0x803AD3C0
 
 dolphin/os/OSExec.c:
 	.text       start:0x80242C10 end:0x80242C10
@@ -1541,6 +1541,8 @@ dolphin/os/OSMutex.c:
 
 dolphin/os/OSReboot.c:
 	.text       start:0x80244554 end:0x8024476C
+	.bss        start:0x803AD3C0 end:0x803AD3E0
+	.sbss       start:0x803DDE50 end:0x803DDE60
 
 dolphin/os/OSReset.c:
 	.text       start:0x8024476C end:0x80244B50
