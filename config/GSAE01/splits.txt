@@ -1476,7 +1476,7 @@ dolphin/base/PPCArch.c:
 
 dolphin/os/OS.c:
 	.text       start:0x802403D8 end:0x80240D34
-	.bss        start:0x803ADF80 end:0x803ADFD0
+	.bss        start:0x803AD320 end:0x803AD370
 	.sbss       start:0x803DDDD8 end:0x803DDE08
 
 dolphin/os/OSAlarm.c:
@@ -1541,7 +1541,7 @@ dolphin/os/OSResetSW.c:
 
 dolphin/os/OSRtc.c:
 	.text       start:0x80244EDC end:0x80245A2C
-	.bss        start:0x803AE038 end:0x803AE068
+	.bss        start:0x803AD3E0 end:0x803AD438
 
 dolphin/os/OSStopwatch.c:
 	.text       start:0x80245A2C end:0x80245BA4
@@ -1551,7 +1551,7 @@ dolphin/os/OSSync.c:
 
 dolphin/os/OSThread.c:
 	.text       start:0x80245C50 end:0x80246C50
-	.bss        start:0x803AE068 end:0x803AEA38
+	.bss        start:0x803AD438 end:0x803ADE20
 	.sbss       start:0x803DDE88 end:0x803DDE98
 
 dolphin/os/OSTime.c:
@@ -1581,6 +1581,7 @@ dolphin/mtx/psmtx.c:
 
 dolphin/dvd/dvdlow.c:
 	.text       start:0x80247A1C end:0x80248870
+	.bss        start:0x803ADE20 end:0x803ADEF0
 
 dolphin/dvd/dvdfs.c:
 	.text       start:0x80248870 end:0x802491C4
@@ -1592,9 +1593,11 @@ dolphin/dvd/dvdFatal.c:
 
 dolphin/dvd/dvd.c:
 	.text       start:0x802491F4 end:0x8024B970
+	.bss        start:0x803ADF00 end:0x803ADFD8
 
 dolphin/dvd/dvdqueue.c:
 	.text       start:0x8024B970 end:0x8024BB68
+	.bss        start:0x803ADFD8 end:0x803ADFF8
 
 dolphin/dvd/dvderror.c:
 	.text       start:0x8024BB68 end:0x8024BD00
@@ -1602,8 +1605,8 @@ dolphin/dvd/dvderror.c:
 dolphin/dvd/fstload.c:
 	.text       start:0x8024BD00 end:0x8024BF40
 	.data       start:0x8032E958 end:0x8032E958
-	.bss        start:0x803AEA38 end:0x803AEA80
-	.sdata      start:0x803DC578 end:0x803DC588
+	.bss        start:0x803ADFF8 end:0x803AE068
+	.sdata      start:0x803DC570 end:0x803DC580
 	.sbss       start:0x803DDF50 end:0x803DDF60
 
 dolphin/vi/vi.c:
