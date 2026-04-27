@@ -559,7 +559,7 @@ config.libs = [
         "cflags": cflags_base,
         "progress_category": "sdk",
         "objects": [
-            Object(NonMatching, "dolphin/OdemuExi2/DebuggerDriver.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/OdemuExi2/DebuggerDriver.c"),
         ],
     },
     DolphinLib(

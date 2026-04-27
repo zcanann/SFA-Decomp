@@ -2233,13 +2233,15 @@ main/unknown/autos/placeholder_80285220.c:
 	.text       start:0x8028504C end:0x80285768
 
 main/unknown/autos/placeholder_802857B0.c:
-	.text       start:0x80285768 end:0x80285B14
-
-main/unknown/autos/placeholder_80285B64.c:
-	.text       start:0x80285B14 end:0x80285B14
+	.text       start:0x80285768 end:0x80285A48
 
 dolphin/OdemuExi2/DebuggerDriver.c:
-	.text       start:0x80285B14 end:0x80285EA4
+	.text       start:0x80285A48 end:0x80285EA4
+	.sdata      start:0x803DC630 end:0x803DC638
+	.sbss       start:0x803DE3C8 end:0x803DE3E0
+
+main/unknown/autos/placeholder_80285B64.c:
+	.text       start:0x80285EA4 end:0x80285EA4
 
 Runtime.PPCEABI.H/__va_arg.c:
 	.text       start:0x80285EA4 end:0x80285F6C
