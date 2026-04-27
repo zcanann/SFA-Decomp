@@ -158,71 +158,33 @@ UARTError TRKWriteUARTN(const void* bytes, u32 length)
 }
 
 #pragma dont_inline on
-asm UARTError TRKReadUARTPoll(register s8* byte) {
-    nofralloc
-    stwu r1, -0x20(r1)
-    mflr r0
-    lis r4, gUARTBuffer@ha
-    stw r0, 0x24(r1)
-    stw r31, 0x1c(r1)
-    mr r31, r3
-    stw r30, 0x18(r1)
-    addi r30, r4, gUARTBuffer@l
-    stw r29, 0x14(r1)
-    li r29, 0x4
-    lwz r3, 0x4(r30)
-    lwz r0, 0x8(r30)
-    cmpw r3, r0
-    blt lbl_rup_check_buf
-    lis r3, gDBCommTable@ha
-    li r0, 0
-    addi r3, r3, gDBCommTable@l
-    stw r0, 0x4(r30)
-    lwz r12, 0x8(r3)
-    mtctr r12
-    bctrl
-    cmpwi r3, 0
-    stw r3, 0x8(r30)
-    ble lbl_rup_check_buf
-    cmpwi r3, 0x110a
-    ble lbl_rup_after_cap
-    li r0, 0x110a
-    stw r0, 0x8(r30)
-lbl_rup_after_cap:
-    lis r4, gDBCommTable@ha
-    addi r3, r30, 0x10
-    addi r5, r4, gDBCommTable@l
-    lwz r4, 0x8(r30)
-    lwz r12, 0xc(r5)
-    mtctr r12
-    bctrl
-    neg r0, r3
-    or r0, r0, r3
-    srawi. r0, r0, 31
-    mr r29, r0
-    beq lbl_rup_check_buf
-    li r0, 0
-    stw r0, 0x8(r30)
-lbl_rup_check_buf:
-    lwz r3, 0x4(r30)
-    lwz r0, 0x8(r30)
-    cmpw r3, r0
-    bge lbl_rup_epilogue
-    addi r0, r3, 1
-    add r3, r30, r3
-    stw r0, 0x4(r30)
-    li r29, 0
-    lbz r0, 0x10(r3)
-    stb r0, 0x0(r31)
-lbl_rup_epilogue:
-    lwz r0, 0x24(r1)
-    mr r3, r29
-    lwz r31, 0x1c(r1)
-    lwz r30, 0x18(r1)
-    lwz r29, 0x14(r1)
-    mtlr r0
-    addi r1, r1, 0x20
-    blr
+UARTError TRKReadUARTPoll(register s8* byte) {
+    UARTError error;
+
+    error = UART_NoData;
+
+    if (gUARTBuffer.readPos >= gUARTBuffer.readLen) {
+        gUARTBuffer.readPos = 0;
+        gUARTBuffer.readLen = gDBCommTable.peek_func();
+
+        if (gUARTBuffer.readLen > 0) {
+            if (gUARTBuffer.readLen > 0x110A) {
+                gUARTBuffer.readLen = 0x110A;
+            }
+
+            error = gDBCommTable.read_func(gUARTBuffer.readData, gUARTBuffer.readLen) != 0 ? -1 : UART_NoError;
+            if (error != UART_NoError) {
+                gUARTBuffer.readLen = 0;
+            }
+        }
+    }
+
+    if (gUARTBuffer.readPos < gUARTBuffer.readLen) {
+        *byte = gUARTBuffer.readData[gUARTBuffer.readPos++];
+        error = UART_NoError;
+    }
+
+    return error;
 }
 #pragma dont_inline reset
 
@@ -233,70 +195,27 @@ UARTError WriteUART1(s8 byte)
 }
 
 #pragma dont_inline on
-asm UARTError WriteUARTFlush(void) {
-    nofralloc
-    stwu r1, -0x10(r1)
-    mflr r0
-    lis r3, gUARTBuffer@ha
-    lis r5, gUARTWriteBuffer@ha
-    stw r0, 0x14(r1)
-    addi r4, r3, gUARTBuffer@l
-    addi r0, r5, gUARTWriteBuffer@l
-    li r3, 0
-    lwz r4, 0(r4)
-    li r7, 0
-    cmpwi r4, 0x800
-    add r8, r0, r4
-    subfic r6, r4, 0x800
-    bge lbl_flush_store
-    srwi. r5, r6, 3
-    mr r0, r6
-    mtctr r5
-    beq lbl_flush_byte_setup
-lbl_flush_block:
-    stb r7, 0(r8)
-    stb r7, 1(r8)
-    stb r7, 2(r8)
-    stb r7, 3(r8)
-    stb r7, 4(r8)
-    stb r7, 5(r8)
-    stb r7, 6(r8)
-    stb r7, 7(r8)
-    addi r8, r8, 8
-    bdnz lbl_flush_block
-    andi. r6, r6, 7
-    beq lbl_flush_after_memset
-lbl_flush_byte_setup:
-    mtctr r6
-lbl_flush_byte:
-    stb r7, 0(r8)
-    addi r8, r8, 1
-    bdnz lbl_flush_byte
-lbl_flush_after_memset:
-    add r4, r4, r0
-lbl_flush_store:
-    lis r5, gUARTBuffer@ha
-    cmpwi r4, 0
-    stw r4, gUARTBuffer@l(r5)
-    beq lbl_flush_exit
-    lis r3, gDBCommTable@ha
-    lis r5, gUARTWriteBuffer@ha
-    addi r3, r3, gDBCommTable@l
-    lwz r12, 0x10(r3)
-    addi r3, r5, gUARTWriteBuffer@l
-    mtctr r12
-    bctrl
-    neg r5, r3
-    lis r4, gUARTBuffer@ha
-    li r0, 0
-    or r3, r5, r3
-    stw r0, gUARTBuffer@l(r4)
-    srawi r3, r3, 31
-lbl_flush_exit:
-    lwz r0, 0x14(r1)
-    mtlr r0
-    addi r1, r1, 0x10
-    blr
+UARTError WriteUARTFlush(void) {
+    s32 length;
+    int writeErr;
+
+    length = gUARTBuffer.writeLen;
+
+    if (length < 0x800) {
+        memset(&gUARTWriteBuffer[length], 0, 0x800 - length);
+        length = 0x800;
+    }
+
+    gUARTBuffer.writeLen = length;
+
+    if (length == 0) {
+        return UART_NoError;
+    }
+
+    writeErr = gDBCommTable.write_func(gUARTWriteBuffer, length);
+    gUARTBuffer.writeLen = 0;
+
+    return writeErr == 0 ? UART_NoError : -1;
 }
 #pragma dont_inline reset
 

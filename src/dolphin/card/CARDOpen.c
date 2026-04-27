@@ -2,7 +2,7 @@
 
 #include "dolphin/card/__card.h"
 
-extern DVDDiskID lbl_803AF400;
+extern DVDDiskID __CARDDiskNone;
 
 BOOL __CARDCompareFileName(CARDDir* ent, const char* fileName) {
     char* entName = (char*)ent->fileName;
@@ -26,7 +26,7 @@ s32 __CARDAccess(CARDControl* card, CARDDir* ent) {
     if (ent->gameName[0] == 0xFF)
         return CARD_RESULT_NOFILE;
 
-    if (card->diskID == &lbl_803AF400
+    if (card->diskID == &__CARDDiskNone
      || (memcmp(ent, card->diskID, sizeof(ent->gameName)) == 0
       && memcmp(ent->company, card->diskID->company, sizeof(ent->company)) == 0))
         return CARD_RESULT_READY;

@@ -214,16 +214,6 @@ void OSSetProgressiveMode(u32 on) {
     __OSUnlockSram(TRUE);
 }
 
-u8 OSGetLanguage(void) {
-    OSSram* sram;
-    u8 language;
-
-    sram = __OSLockSram();
-    language = sram->language;
-    __OSUnlockSram(FALSE);
-    return language;
-}
-
 u16 OSGetWirelessID(s32 chan) {
     OSSramEx* sram;
     u16 id;

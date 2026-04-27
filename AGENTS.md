@@ -82,7 +82,7 @@ This repo starts from very little. Expect to do naming, struct recovery, type cl
 ## Minimal Loop
 1. Pick a target with real leverage.
 2. Recover the surrounding dependency cluster, not just the leaf symbol.
-3. Build with `ninja` (if anything goes wrong, consider running configure.py -v GSAE01). Always timeout ninja to 30s, it will never take longer, and sometimes bad linker changes can hang forever.
+3. Build the strict hash target with `python configure.py --matching` followed by `ninja` (if anything goes wrong, consider running `python configure.py -v GSAE01 --matching`). Always timeout ninja to 30s; plain non-matching `ninja` can stop at `main.dol` and miss the checksum target that CI runs.
 4. Run objdiff and judge net progress.
 5. If stuck, change angle quickly: adjacent code, data, assets, references, or tooling.
 6. Commit real progress directly to the main working branch for this phase and push to main. No PR flow is required right now.

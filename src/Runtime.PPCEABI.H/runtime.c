@@ -778,14 +778,6 @@ func_end:
 #endif // clang-format on
 }
 
-asm void GetR2__Fv(void) {
-#ifdef __MWERKS__ // clang-format off
-    nofralloc
-    mr r3, r2
-    blr
-#endif // clang-format on
-}
-
 #ifdef __cplusplus
 }
 #endif

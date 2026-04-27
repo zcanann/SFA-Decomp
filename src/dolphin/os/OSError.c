@@ -4,12 +4,12 @@
 
 #include "dolphin/os/__os.h"
 
-int vsprintf(const char* format, va_list arg);
+int vprintf(const char* format, va_list arg);
 extern void DBPrintf(char*, ...);
 extern volatile OSContext* __OSFPUContext AT_ADDRESS(OS_BASE_CACHED | 0x00D8);
 void OSSwitchFPUContext(__OSException exception, OSContext* context);
 
-OSErrorHandler __OSErrorTable[17];
+OSErrorHandler __OSErrorTable[OS_ERROR_MAX];
 
 #define FPSCR_ENABLE (FPSCR_VE | FPSCR_OE | FPSCR_UE | FPSCR_ZE | FPSCR_XE)
 u32 __OSFpscrEnableBits = FPSCR_ENABLE;
@@ -21,7 +21,7 @@ void OSPanic(const char* file, int line, const char* msg, ...) {
 
     OSDisableInterrupts();
     va_start(marker, msg);
-    vsprintf(msg, marker);
+    vprintf(msg, marker);
     va_end(marker);
     OSReport(" in \"%s\" on line %d.\n", file, line);
 
@@ -98,28 +98,4 @@ void __OSUnhandledException(__OSException exception, OSContext* context, u32 dsi
     OSReport("\nLast interrupt (%d): SRR0 = 0x%08x  TB = 0x%016llx\n", __OSLastInterrupt,
              __OSLastInterruptSrr0, __OSLastInterruptTime);
     PPCHalt();
-}
-
-static const char _oscontext_msg[] = "FPU-unavailable handler installed\n";
-
-asm void __OSContextInit(void) {
-    nofralloc
-    mflr r0
-    stw r0, 0x4(r1)
-    stwu r1, -0x8(r1)
-    lis r3, OSSwitchFPUContext@ha
-    addi r4, r3, OSSwitchFPUContext@l
-    li r3, 0x7
-    bl __OSSetExceptionHandler
-    li r0, 0x0
-    crxor 6, 6, 6
-    lis r4, 0x8000
-    lis r3, _oscontext_msg@ha
-    stw r0, 0xd8(r4)
-    addi r3, r3, _oscontext_msg@l
-    bl DBPrintf
-    lwz r0, 0xc(r1)
-    addi r1, r1, 0x8
-    mtlr r0
-    blr
 }

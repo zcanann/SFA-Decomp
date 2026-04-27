@@ -9,15 +9,10 @@
 extern GXData* gx;
 #define __GXData gx
 
-extern GXDrawSyncCallback TokenCB_803DED58;
-extern GXDrawDoneCallback DrawDoneCB_803DED5C;
-extern u8 DrawDone_803DED60;
-extern OSThreadQueue FinishQueue_803DED64;
-
-#define TokenCB TokenCB_803DED58
-#define DrawDoneCB DrawDoneCB_803DED5C
-#define DrawDone DrawDone_803DED60
-#define FinishQueue FinishQueue_803DED64
+static GXDrawSyncCallback TokenCB;
+static GXDrawDoneCallback DrawDoneCB;
+static u8 DrawDone;
+static OSThreadQueue FinishQueue;
 
 void GXSetMisc(GXMiscToken token, u32 val) {
     if (token == GX_MT_XF_FLUSH) {
@@ -80,7 +75,7 @@ static void __GXAbortWait(u32 clocks) {
     } while (time1 - time0 <= (clocks / 4));
 }
 
-static void __GXAbortWaitPECopyDone(void) {
+void __GXAbortWaitPECopyDone(void) {
     OSTime time0;
     OSTime time1;
 

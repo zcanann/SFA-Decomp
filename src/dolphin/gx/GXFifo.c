@@ -8,14 +8,14 @@
 extern GXData* gx;
 #define __GXData gx
 
-extern __GXFifoObj* CPUFifo;
-extern __GXFifoObj* GPFifo;
-extern OSThread* __GXCurrentThread;
-extern GXBool CPGPLinked;
-extern BOOL GXOverflowSuspendInProgress;
-extern GXBreakPtCallback BreakPointCB;
-extern u32 __GXOverflowCount;
-extern void* __GXCurrentBP;
+u32 __GXOverflowCount;
+static void* __GXCurrentBP;
+GXBreakPtCallback BreakPointCB;
+BOOL GXOverflowSuspendInProgress;
+GXBool CPGPLinked;
+OSThread* __GXCurrentThread;
+__GXFifoObj* GPFifo;
+__GXFifoObj* CPUFifo;
 
 #if DEBUG
 static BOOL IsWGPipeRedirected;

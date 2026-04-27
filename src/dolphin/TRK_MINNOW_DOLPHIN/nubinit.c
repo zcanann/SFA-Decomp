@@ -8,97 +8,50 @@
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/nubinit.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/serpoll.h"
 
-BOOL gTRKBigEndian;
+extern BOOL gTRKBigEndian;
 
-asm DSError TRKInitializeNub(void) {
-    nofralloc
-    stwu r1, -0x20(r1)
-    mflr r0
-    li r5, 0x12
-    li r4, 0x34
-    stw r0, 0x24(r1)
-    li r3, 0x56
-    li r0, 0x78
-    li r6, 0x1
-    stb r5, 0x8(r1)
-    lis r5, gTRKBigEndian@ha
-    stw r31, 0x1c(r1)
-    li r31, 0x0
-    stw r30, 0x18(r1)
-    stb r4, 0x9(r1)
-    stb r3, 0xa(r1)
-    stb r0, 0xb(r1)
-    lwz r3, 0x8(r1)
-    stwu r6, gTRKBigEndian@l(r5)
-    subis r0, r3, 0x1234
-    cmplwi r0, 0x5678
-    bne _tin_0
-    stw r6, 0x0(r5)
-    b _tin_2
-_tin_0:
-    subis r0, r3, 0x7856
-    cmplwi r0, 0x3412
-    bne _tin_1
-    stw r31, 0x0(r5)
-    b _tin_2
-_tin_1:
-    mr r31, r6
-_tin_2:
-    cmpwi r31, 0x0
-    bne _tin_3
-    bl usr_put_initialize
-_tin_3:
-    cmpwi r31, 0x0
-    bne _tin_4
-    bl TRKInitializeEventQueue
-    mr r31, r3
-_tin_4:
-    cmpwi r31, 0x0
-    bne _tin_5
-    bl TRKInitializeMessageBuffers
-    mr r31, r3
-_tin_5:
-    cmpwi r31, 0x0
-    bne _tin_6
-    bl TRKInitializeDispatcher
-    mr r31, r3
-_tin_6:
-    cmpwi r31, 0x0
-    bne _tin_7
-    lis r3, gTRKInputPendingPtr@ha
-    lis r5, 0x1
-    addi r6, r3, gTRKInputPendingPtr@l
-    li r4, 0x1
-    subi r3, r5, 0x1f00
-    li r5, 0x0
-    bl TRKInitializeIntDrivenUART
-    lis r4, gTRKInputPendingPtr@ha
-    mr r0, r3
-    addi r3, r4, gTRKInputPendingPtr@l
-    lwz r3, 0x0(r3)
-    mr r30, r0
-    bl TRKTargetSetInputPendingPtr
-    cmpwi r30, 0x0
-    beq _tin_7
-    mr r31, r30
-_tin_7:
-    cmpwi r31, 0x0
-    bne _tin_8
-    bl TRKInitializeSerialHandler
-    mr r31, r3
-_tin_8:
-    cmpwi r31, 0x0
-    bne _tin_9
-    bl TRKInitializeTarget
-    mr r31, r3
-_tin_9:
-    lwz r0, 0x24(r1)
-    mr r3, r31
-    lwz r31, 0x1c(r1)
-    lwz r30, 0x18(r1)
-    mtlr r0
-    addi r1, r1, 0x20
-    blr
+DSError TRKInitializeNub(void) {
+    DSError error;
+    DSError uartError;
+    u8 endianCheck[4];
+
+    error = DS_NoError;
+    endianCheck[0] = 0x12;
+    endianCheck[1] = 0x34;
+    endianCheck[2] = 0x56;
+    endianCheck[3] = 0x78;
+    gTRKBigEndian = TRUE;
+
+    if (*(u32*)endianCheck == 0x12345678) {
+        gTRKBigEndian = TRUE;
+    } else if (*(u32*)endianCheck == 0x78563412) {
+        gTRKBigEndian = error;
+    } else {
+        error = DS_StepError;
+    }
+
+    if (error == DS_NoError)
+        usr_put_initialize();
+    if (error == DS_NoError)
+        error = TRKInitializeEventQueue();
+    if (error == DS_NoError)
+        error = TRKInitializeMessageBuffers();
+    if (error == DS_NoError)
+        error = TRKInitializeDispatcher();
+    if (error == DS_NoError) {
+        uartError = TRKInitializeIntDrivenUART(0xE100, 1, 0, &gTRKInputPendingPtr);
+        TRKTargetSetInputPendingPtr(gTRKInputPendingPtr);
+
+        if (uartError != DS_NoError) {
+            error = uartError;
+        }
+    }
+    if (error == DS_NoError)
+        error = TRKInitializeSerialHandler();
+    if (error == DS_NoError)
+        error = TRKInitializeTarget();
+
+    return error;
 }
 
 DSError TRKTerminateNub(void) {
@@ -107,6 +60,6 @@ DSError TRKTerminateNub(void) {
 }
 
 void TRKNubWelcome(void) {
-    TRK_board_display("MetroTRK for GAMECUBE v2.6");
+    TRK_board_display("MetroTRK for GAMECUBE v0.9");
     return;
 }

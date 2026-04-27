@@ -8,22 +8,22 @@
 extern GXData* gx;
 #define __GXData gx
 
-const f32 lbl_803E8318 = 0.0f;
-const f32 lbl_803E831C = 90.0f;
-const f32 lbl_803E8320 = 3.1415927f;
-const f32 lbl_803E8324 = 180.0f;
-const f32 lbl_803E8328 = -1000.0f;
-const f32 lbl_803E832C = 1000.0f;
-const f32 lbl_803E8330 = 1.0f;
-const f32 lbl_803E8334 = 2.0f;
-const f32 lbl_803E8338 = -1.0f;
-const f32 lbl_803E833C = -4.0f;
-const f32 lbl_803E8340 = 4.0f;
-const f32 lbl_803E8344 = -2.0f;
-const f32 lbl_803E8348 = 0.5f;
-const double lbl_803E8350 = 0.5;
-const double lbl_803E8358 = 3.0;
-const f32 lbl_803E8360[2] = {1048576.0f, 0.0f};
+extern const f32 lbl_803E8318;
+extern const f32 lbl_803E831C;
+extern const f32 lbl_803E8320;
+extern const f32 lbl_803E8324;
+extern const f32 lbl_803E8328;
+extern const f32 lbl_803E832C;
+extern const f32 lbl_803E8330;
+extern const f32 lbl_803E8334;
+extern const f32 lbl_803E8338;
+extern const f32 lbl_803E833C;
+extern const f32 lbl_803E8340;
+extern const f32 lbl_803E8344;
+extern const f32 lbl_803E8348;
+extern const double lbl_803E8350;
+extern const double lbl_803E8358;
+extern const f32 lbl_803E8360[2];
 
 extern f32 cosf(f32);
 
@@ -302,35 +302,6 @@ static inline u32 ConvLightID2Num(GXLightID id) {
     }
 }
 
-static inline void PushLight(const register GXLightObj* lt_obj, register void* dest) {
-    register u32 zero, color;
-    register f32 a0_a1, a2_k0, k1_k2;
-    register f32 px_py, pz_dx, dy_dz;
-#ifdef __MWERKS__  // clang-format off
-	asm {
-		lwz     color, 12(lt_obj)
-		xor     zero, zero, zero
-		psq_l   a0_a1, 16(lt_obj), 0, 0
-		psq_l   a2_k0, 24(lt_obj), 0, 0
-		psq_l   k1_k2, 32(lt_obj), 0, 0
-		psq_l   px_py, 40(lt_obj), 0, 0
-		psq_l   pz_dx, 48(lt_obj), 0, 0
-		psq_l   dy_dz, 56(lt_obj), 0, 0
-
-		stw     zero,  0(dest)
-		stw     zero,  0(dest)
-		stw     zero,  0(dest)
-		stw     color, 0(dest)
-		psq_st  a0_a1, 0(dest), 0, 0
-		psq_st  a2_k0, 0(dest), 0, 0
-		psq_st  k1_k2, 0(dest), 0, 0
-		psq_st  px_py, 0(dest), 0, 0
-		psq_st  pz_dx, 0(dest), 0, 0
-		psq_st  dy_dz, 0(dest), 0, 0
-	}
-#endif  // clang-format on
-}
-
 void GXLoadLightObjImm(const GXLightObj* lt_obj, GXLightID light) {
     u32 addr;
     u32 idx;
@@ -492,133 +463,43 @@ void GXSetNumChans(u8 nChans) {
     __GXData->dirtyState |= 4;
 }
 
-asm void GXSetChanCtrl(GXChannelID chan, GXBool enable, GXColorSrc amb_src, GXColorSrc mat_src, u32 light_mask, GXDiffuseFn diff_fn, GXAttnFn attn_fn) {
-    nofralloc
-    stwu r1, -0x38(r1)
-    cmpwi r3, 0x4
-    stw r31, 0x34(r1)
-    stw r30, 0x30(r1)
-    stw r29, 0x2c(r1)
-    stw r28, 0x28(r1)
-    bne _gscc_0
-    li r11, 0x0
-    b _gscc_2
-_gscc_0:
-    cmpwi r3, 0x5
-    bne _gscc_1
-    li r11, 0x1
-    b _gscc_2
-_gscc_1:
-    mr r11, r3
-_gscc_2:
-    clrlslwi r4, r4, 24, 1
-    or r10, r4, r6
-    clrlwi r0, r7, 31
-    neg r6, r0
-    subic r4, r6, 0x1
-    rlwinm r0, r7, 0, 30, 30
-    neg r12, r0
-    subfe r6, r4, r6
-    subic r4, r12, 0x1
-    subfe r4, r4, r12
-    rlwinm r0, r7, 0, 29, 29
-    neg r28, r0
-    subic r0, r28, 0x1
-    rlwinm r12, r7, 0, 28, 28
-    subfe r0, r0, r28
-    neg r29, r12
-    subic r28, r29, 0x1
-    rlwinm r12, r7, 0, 27, 27
-    neg r30, r12
-    subfe r28, r28, r29
-    subic r29, r30, 0x1
-    rlwinm r12, r7, 0, 26, 26
-    neg r31, r12
-    subfe r29, r29, r30
-    subic r30, r31, 0x1
-    rlwinm r12, r7, 0, 25, 25
-    subfe r30, r30, r31
-    neg r31, r12
-    subic r12, r31, 0x1
-    rlwinm r10, r10, 0, 26, 24
-    slwi r5, r5, 6
-    or r5, r10, r5
-    rlwinm r10, r5, 0, 30, 28
-    slwi r5, r6, 2
-    or r5, r10, r5
-    rlwinm r5, r5, 0, 29, 27
-    slwi r4, r4, 3
-    or r4, r5, r4
-    rlwinm r4, r4, 0, 28, 26
-    slwi r0, r0, 4
-    or r0, r4, r0
-    rlwinm r4, r0, 0, 27, 25
-    slwi r0, r28, 5
-    or r0, r4, r0
-    rlwinm r4, r0, 0, 21, 19
-    slwi r0, r29, 11
-    or r0, r4, r0
-    rlwinm r4, r0, 0, 20, 18
-    slwi r0, r30, 12
-    or r0, r4, r0
-    rlwinm r7, r7, 0, 24, 24
-    subfe r31, r12, r31
-    neg r12, r7
-    subic r7, r12, 0x1
-    rlwinm r4, r0, 0, 19, 17
-    slwi r0, r31, 13
-    or r0, r4, r0
-    subfe r7, r7, r12
-    rlwinm r4, r0, 0, 18, 16
-    slwi r0, r7, 14
-    cmpwi r9, 0x0
-    or r6, r4, r0
-    bne _gscc_3
-    li r8, 0x0
-_gscc_3:
-    subfic r5, r9, 0x2
-    lwz r4, gx(r13)
-    subic r0, r5, 0x1
-    subfe r10, r0, r5
-    neg r5, r9
-    subic r0, r5, 0x1
-    subfe r7, r0, r5
-    rlwinm r5, r6, 0, 25, 22
-    slwi r0, r8, 7
-    or r8, r5, r0
-    li r6, 0x10
-    lis r5, 0xcc01
-    stb r6, -0x8000(r5)
-    addi r0, r11, 0x100e
-    rlwinm r9, r8, 0, 23, 21
-    slwi r8, r10, 9
-    stw r0, -0x8000(r5)
-    or r0, r9, r8
-    rlwinm r8, r0, 0, 22, 20
-    slwi r0, r7, 10
-    or r7, r8, r0
-    stw r7, -0x8000(r5)
-    li r0, 0x1
-    cmpwi r3, 0x4
-    sth r0, 0x2(r4)
-    bne _gscc_4
-    stb r6, -0x8000(r5)
-    li r0, 0x1010
-    stw r0, -0x8000(r5)
-    stw r7, -0x8000(r5)
-    b _gscc_5
-_gscc_4:
-    cmpwi r3, 0x5
-    bne _gscc_5
-    stb r6, -0x8000(r5)
-    li r0, 0x1011
-    stw r0, -0x8000(r5)
-    stw r7, -0x8000(r5)
-_gscc_5:
-    lwz r31, 0x34(r1)
-    lwz r30, 0x30(r1)
-    lwz r29, 0x2c(r1)
-    lwz r28, 0x28(r1)
-    addi r1, r1, 0x38
-    blr
+void GXSetChanCtrl(GXChannelID chan, GXBool enable, GXColorSrc amb_src, GXColorSrc mat_src, u32 light_mask,
+                   GXDiffuseFn diff_fn, GXAttnFn attn_fn) {
+    u32 reg;
+    u32 idx;
+
+    CHECK_GXBEGIN(760, "GXSetChanCtrl");
+
+    if (chan == GX_COLOR0A0) {
+        idx = GX_COLOR0;
+    } else if (chan == GX_COLOR1A1) {
+        idx = GX_COLOR1;
+    } else {
+        idx = chan;
+    }
+
+    reg = 0;
+    SET_REG_FIELD(770, reg, 1, 1, enable);
+    SET_REG_FIELD(771, reg, 1, 0, mat_src);
+    SET_REG_FIELD(772, reg, 1, 6, amb_src);
+    SET_REG_FIELD(773, reg, 1, 2, (light_mask & GX_LIGHT0) != 0);
+    SET_REG_FIELD(774, reg, 1, 3, (light_mask & GX_LIGHT1) != 0);
+    SET_REG_FIELD(775, reg, 1, 4, (light_mask & GX_LIGHT2) != 0);
+    SET_REG_FIELD(776, reg, 1, 5, (light_mask & GX_LIGHT3) != 0);
+    SET_REG_FIELD(777, reg, 1, 11, (light_mask & GX_LIGHT4) != 0);
+    SET_REG_FIELD(778, reg, 1, 12, (light_mask & GX_LIGHT5) != 0);
+    SET_REG_FIELD(779, reg, 1, 13, (light_mask & GX_LIGHT6) != 0);
+    SET_REG_FIELD(780, reg, 1, 14, (light_mask & GX_LIGHT7) != 0);
+    SET_REG_FIELD(782, reg, 2, 7, (attn_fn == GX_AF_NONE) ? GX_DF_NONE : diff_fn);
+    SET_REG_FIELD(783, reg, 1, 9, (attn_fn != GX_AF_SPEC));
+    SET_REG_FIELD(784, reg, 1, 10, (attn_fn != GX_AF_NONE));
+
+    GX_WRITE_XF_REG(idx + 14, reg);
+    __GXData->bpSentNot = 1;
+
+    if (chan == GX_COLOR0A0) {
+        GX_WRITE_XF_REG(16, reg);
+    } else if (chan == GX_COLOR1A1) {
+        GX_WRITE_XF_REG(17, reg);
+    }
 }
