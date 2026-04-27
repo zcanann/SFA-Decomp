@@ -6,7 +6,7 @@
 #include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
 #include "PowerPC_EABI_Support/MetroTRK/trk.h"
 
-extern BOOL IsTRKConnected;
+BOOL IsTRKConnected;
 
 BOOL GetTRKConnected()
 {
