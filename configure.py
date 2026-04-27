@@ -325,7 +325,7 @@ config.libs = [
             Object(NonMatching, "Runtime.PPCEABI.H/runtime.c"),
             Object(NonMatching, "Runtime.PPCEABI.H/__init_cpp_exceptions.cpp"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/fragment.s"),
-            Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/GCN_mem_alloc.c"),
+            Object(NonMatching, "Runtime.PPCEABI.H/GCN_mem_alloc.c"),
         ],
     },
     DolphinLib(
@@ -622,7 +622,7 @@ config.libs = [
     DolphinLib(
         "MSL_C",
         [
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/abort_exit.c"),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/abort_exit.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/alloc.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c", mw_version="GC/1.3"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/ansi_fp.c", mw_version="GC/1.3"),
@@ -630,7 +630,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/direct_io.c", mw_version="GC/1.3", extra_cflags=["-use_lmw_stmw", "on"]),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/file_io.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/FILE_POS.c", mw_version="GC/1.3"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/mbstring.c"),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/mbstring.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/mem.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/mem_funcs.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/misc_io.c"),
@@ -643,7 +643,7 @@ config.libs = [
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_ldexp.c", mw_version="GC/1.3"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_modf.c", mw_version="GC/1.3"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/gamecube.c"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c"),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/rand.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/math_ppc.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_cos.c"),
