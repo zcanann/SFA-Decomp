@@ -1634,6 +1634,7 @@ dolphin/pad/Pad.c:
 
 dolphin/ai/ai.c:
 	.text       start:0x8024F6B8 end:0x8024FFA0
+	.sbss       start:0x803DDFD8 end:0x803DE018
 
 dolphin/ar/ar.c:
 	.text       start:0x8024FFA0 end:0x80250B2C

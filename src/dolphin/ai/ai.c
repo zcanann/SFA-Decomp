@@ -5,16 +5,17 @@
 
 #include "dolphin/gx/__gx.h"
 
-extern AISCallback __AIS_Callback_803DEC58;
-extern AIDCallback __AID_Callback_803DEC5C;
-extern u8* __CallbackStack_803DEC60;
-extern u8* __OldStack_803DEC64;
-extern BOOL __AI_init_flag_803DEC68;
-extern OSTime bound_32KHz_803DEC70;
-extern OSTime bound_48KHz_803DEC78;
-extern OSTime min_wait;
-extern OSTime max_wait;
-extern OSTime buffer;
+static AISCallback __AIS_Callback;
+static AIDCallback __AID_Callback;
+static u8* __CallbackStack;
+static u8* __OldStack;
+static BOOL __AI_init_flag;
+static volatile BOOL __AID_Active;
+static OSTime bound_32KHz;
+static OSTime bound_48KHz;
+static OSTime min_wait;
+static OSTime max_wait;
+static OSTime buffer;
 
 typedef struct {
     OSTime t_start;
@@ -39,9 +40,9 @@ AIDCallback AIRegisterDMACallback(AIDCallback callback) {
     AIDCallback old_callback;
     BOOL old;
 
-    old_callback = __AID_Callback_803DEC5C;
+    old_callback = __AID_Callback;
     old = OSDisableInterrupts();
-    __AID_Callback_803DEC5C = callback;
+    __AID_Callback = callback;
     OSRestoreInterrupts(old);
     return old_callback;
 }
@@ -179,9 +180,9 @@ u8 AIGetStreamVolRight(void)
 }
 
 void AIInit(u8* stack) {
-    if (__AI_init_flag_803DEC68 != TRUE) {
-        bound_32KHz_803DEC70 = OSNanosecondsToTicks(31524);
-        bound_48KHz_803DEC78 = OSNanosecondsToTicks(42024);
+    if (__AI_init_flag != TRUE) {
+        bound_32KHz = OSNanosecondsToTicks(31524);
+        bound_48KHz = OSNanosecondsToTicks(42024);
         min_wait = OSNanosecondsToTicks(42000);
         max_wait = OSNanosecondsToTicks(63000);
         buffer = OSNanosecondsToTicks(3000);
@@ -194,9 +195,9 @@ void AIInit(u8* stack) {
 #if DEBUG
         OSReport("AIInit(): DSP is 32KHz\n");
 #endif
-        __AIS_Callback_803DEC58 = NULL;
-        __AID_Callback_803DEC5C = NULL;
-        __CallbackStack_803DEC60 = stack;
+        __AIS_Callback = NULL;
+        __AID_Callback = NULL;
+        __CallbackStack = stack;
         if (stack) {
             ASSERTMSGLINE(1107, ((u32)stack & 7) == 0, "AIInit: stack must be 8-byte aligned");
         }
@@ -204,12 +205,12 @@ void AIInit(u8* stack) {
         __OSUnmaskInterrupts(0x04000000);
         __OSSetInterruptHandler(8, __AISHandler);
         __OSUnmaskInterrupts(0x800000);
-        __AI_init_flag_803DEC68 = TRUE;
+        __AI_init_flag = TRUE;
     }
 }
 
 void AIReset(void) {
-    __AI_init_flag_803DEC68 = FALSE;
+    __AI_init_flag = FALSE;
 }
 
 void __AISHandler(__OSInterrupt interrupt, OSContext* context) {
@@ -218,8 +219,8 @@ void __AISHandler(__OSInterrupt interrupt, OSContext* context) {
     __AIRegs[0] |= 8;
     OSClearContext(&exceptionContext);
     OSSetCurrentContext(&exceptionContext);
-    if (__AIS_Callback_803DEC58) {
-        __AIS_Callback_803DEC58(__AIRegs[2]);
+    if (__AIS_Callback) {
+        __AIS_Callback(__AIRegs[2]);
     }
     OSClearContext(&exceptionContext);
     OSSetCurrentContext(context);
@@ -234,11 +235,11 @@ void __AIDHandler(__OSInterrupt interrupt, OSContext* context) {
     __DSPRegs[5] = tmp;
     OSClearContext(&exceptionContext);
     OSSetCurrentContext(&exceptionContext);
-    if (__AID_Callback_803DEC5C) {
-        if (__CallbackStack_803DEC60) {
-            __AICallbackStackSwitch(__AID_Callback_803DEC5C);
+    if (__AID_Callback) {
+        if (__CallbackStack) {
+            __AICallbackStackSwitch(__AID_Callback);
         } else {
-            __AID_Callback_803DEC5C();
+            __AID_Callback();
         }
     }
     OSClearContext(&exceptionContext);
@@ -252,17 +253,17 @@ asm void __AICallbackStackSwitch(register void* cb) {
     stwu r1, -0x18(r1)
     stw r31, 0x14(r1)
     mr r31, r3
-    lis r5, __OldStack_803DEC64@ha
-    addi r5, r5, __OldStack_803DEC64@l
+    lis r5, __OldStack@ha
+    addi r5, r5, __OldStack@l
     stw r1, 0x0(r5)
-    lis r5, __CallbackStack_803DEC60@ha
-    addi r5, r5, __CallbackStack_803DEC60@l
+    lis r5, __CallbackStack@ha
+    addi r5, r5, __CallbackStack@l
     lwz r1, 0x0(r5)
     subi r1, r1, 0x8
     mtlr r31
     blrl
-    lis r5, __OldStack_803DEC64@ha
-    addi r5, r5, __OldStack_803DEC64@l
+    lis r5, __OldStack@ha
+    addi r5, r5, __OldStack@l
     lwz r1, 0x0(r5)
     lwz r0, 0x1c(r1)
     lwz r31, 0x14(r1)
@@ -309,11 +310,11 @@ void __AI_SRC_INIT(void) {
         diff = rising_48khz - rising_32khz;
         SET_REG_FIELD(0, __AIRegs[0], 1, 1, 0);
         SET_REG_FIELD(0, __AIRegs[0], 1, 0, AI_STREAM_STOP);
-        if (diff < bound_32KHz_803DEC70 - buffer) {
+        if (diff < bound_32KHz - buffer) {
             temp = min_wait;
             done = 1;
             Init_Cnt++;
-        } else if (diff >= bound_32KHz_803DEC70 + buffer && diff < bound_48KHz_803DEC78 - buffer) {
+        } else if (diff >= bound_32KHz + buffer && diff < bound_48KHz - buffer) {
             temp = max_wait;
             done = 1;
             Init_Cnt++;
