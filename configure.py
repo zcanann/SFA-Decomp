@@ -337,7 +337,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/os/OSAlloc.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSArena.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSAudioSystem.c"),
-            Object(NonMatching, "dolphin/os/OSCache.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/os/OSCache.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSContext.c"),
             Object(NonMatching, "dolphin/os/OSError.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSExec.c"),
