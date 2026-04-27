@@ -2227,13 +2227,13 @@ Runtime.PPCEABI.H/global_destructor_chain.c:
 	.sbss       start:0x803DE3E0 end:0x803DE3E4
 
 Runtime.PPCEABI.H/runtime.c:
-	.text       start:0x80285FB4 end:0x802866E0
+	.text       start:0x80285FB4 end:0x802866D8
 
 Runtime.PPCEABI.H/__init_cpp_exceptions.cpp:
-	.text       start:0x802866E0 end:0x80286754
+	.text       start:0x802866D8 end:0x80286754
 	.ctors      start:0x802C1880 end:0x802C1884
 	.dtors      start:0x802C18A0 end:0x802C18A8
-	.sdata      start:0x803DC640 end:0x803DC648
+	.sdata      start:0x803DC638 end:0x803DC640
 
 Runtime.PPCEABI.H/fragment.s:
 	.text       start:0x80286754 end:0x802867BC
