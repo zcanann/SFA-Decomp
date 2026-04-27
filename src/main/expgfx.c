@@ -120,7 +120,7 @@ extern undefined4 DAT_803ddef0;
 extern undefined4 DAT_803ddef4;
 extern undefined4 DAT_803ddef8;
 extern undefined4 DAT_cc008000;
-extern undefined lbl_8030F968[];
+extern u8 lbl_8030F968[];
 extern undefined4* lbl_803DCA88;
 extern u8 lbl_803DC7B0;
 extern u8 lbl_803DD253;
@@ -1276,7 +1276,7 @@ void expgfx_resetAllPools(void)
 void expgfx_updateFrameState(int sourceMode,int sourceId)
 {
   int iVar1;
-  byte bVar2;
+  int poolIndex;
   f32 frameStep;
   f32 frameValue;
   
@@ -1302,10 +1302,10 @@ void expgfx_updateFrameState(int sourceMode,int sourceId)
     lbl_803DC7B0 = 1;
     fn_8009B9C8((u8)sourceMode,sourceId,0);
     lbl_803DC7B0 = 0;
-    bVar2 = EXPGFX_POOL_COUNT;
-    while (bVar2 != 0) {
-      bVar2 = bVar2 - 1;
-      lbl_8030F968[bVar2] = 0;
+    poolIndex = EXPGFX_POOL_COUNT;
+    while ((u8)poolIndex > 0) {
+      poolIndex--;
+      lbl_8030F968[(u8)poolIndex] = 0;
     }
     (*(code *)(*lbl_803DCA88 + 0xc))(0);
     lbl_803DD254 = 1;
