@@ -13,18 +13,31 @@ extern void fn_80080178(void *timer,int duration);
 extern f32 lbl_803E6768;
 extern f32 lbl_803E6778;
 
+typedef struct ProximityMineEffect {
+  u8 unk0[0x4c];
+  u8 visible;
+  u8 unk4D[0x2f8 - 0x4d];
+  u8 active;
+} ProximityMineEffect;
+
 typedef struct ProximityMineState {
   void *targetObj;
-  void *effectHandle;
-  f32 float8;
-  f32 velocityY;
+  ProximityMineEffect *effectHandle;
+  f32 triggerDistance;
+  f32 verticalStep;
   u8 unk10[4];
   u8 renderTimer[4];
-  u8 unk18[4];
+  u8 launchTimer[4];
   u8 resetTimer[4];
-  u8 unk20[0xc];
+  u8 bounceTimer[4];
+  u8 initTimer[4];
+  u8 lifespanTimer[4];
   u8 mode;
-  u8 unk2D[7];
+  u8 unk2D;
+  u8 flashMode;
+  u8 unk2F;
+  u8 effectVisible;
+  u8 unk31[3];
 } ProximityMineState;
 
 typedef struct ProximityMineCollider {
@@ -77,7 +90,7 @@ void proximitymine_render(ProximityMineObject *obj,undefined4 param_2,undefined4
                           undefined4 param_4,undefined4 param_5)
 {
   int sector;
-  void *effect;
+  ProximityMineEffect *effect;
   ProximityMineState *state;
 
   state = obj->state;
@@ -87,14 +100,14 @@ void proximitymine_render(ProximityMineObject *obj,undefined4 param_2,undefined4
   }
   if (fn_80080150(state->renderTimer) == 0) {
     sector = fn_8005B2FC((double)obj->posX,(double)obj->posY,(double)obj->posZ);
-    if (sector != -1) {
-      effect = state->effectHandle;
-      if ((effect != NULL) && (*(u8 *)((u8 *)effect + 0x2f8) != 0) &&
-          (*(u8 *)((u8 *)effect + 0x4c) != 0)) {
-        fn_800604B4(effect);
-      }
-      fn_8003B8F4(obj,param_2,param_3,param_4,param_5,(double)lbl_803E6778);
+    if (sector == -1) {
+      return;
     }
+    effect = state->effectHandle;
+    if ((effect != NULL) && (effect->active != 0) && (effect->visible != 0)) {
+      fn_800604B4(effect);
+    }
+    fn_8003B8F4(obj,param_2,param_3,param_4,param_5,(double)lbl_803E6778);
   }
   return;
 }
@@ -103,13 +116,15 @@ void proximitymine_hitDetect(ProximityMineObject *obj)
 {
   f32 zeroVelocity;
   int hit;
+  int hitFlag;
   ProximityMineCollider *collider;
   ProximityMineState *state;
 
   if (fn_80080150(obj->state->renderTimer) == 0) {
     hit = ObjHits_GetPriorityHit(obj,0,0,0);
     collider = obj->collider;
-    if ((collider->hitFlag != 0) || (hit != 0) || (collider->hitObj != NULL)) {
+    hitFlag = collider->hitFlag;
+    if ((hitFlag != 0) || (hit != 0) || (collider->hitObj != NULL)) {
       state = obj->state;
       zeroVelocity = lbl_803E6768;
       obj->velocityY = zeroVelocity;
