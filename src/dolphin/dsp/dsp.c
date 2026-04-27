@@ -57,9 +57,9 @@ void DSPInit(void) {
     __DSPRegs[5] = tmp = tmp & ~0xAC;
 
     __DSP_tmp_task = NULL;
+    __DSP_curr_task = NULL;
     __DSP_first_task = NULL;
     __DSP_last_task = NULL;
-    __DSP_curr_task = NULL;
     __DSP_init_flag = 1;
 
     OSRestoreInterrupts(old);
@@ -101,7 +101,7 @@ DSPTaskInfo* DSPAddTask(DSPTaskInfo* task) {
     task->flags = 1;
     OSRestoreInterrupts(old);
 
-    if (task == __DSP_curr_task) {
+    if (task == __DSP_last_task) {
         __DSP_boot_task(task);
     }
 
