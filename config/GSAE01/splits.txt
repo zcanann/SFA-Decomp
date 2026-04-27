@@ -2256,11 +2256,11 @@ dolphin/TRK_MINNOW_DOLPHIN/msg.c:
 dolphin/TRK_MINNOW_DOLPHIN/msgbuf.c:
 	.text       start:0x80286ED8 end:0x80287904
 	.rodata     start:0x802C2958 end:0x802C2978
-	.bss        start:0x803D6920 end:0x803D8888
+	.bss        start:0x803D6920 end:0x803D82D0
 
 dolphin/TRK_MINNOW_DOLPHIN/serpoll.c:
 	.text       start:0x80287904 end:0x80287CD0
-	.bss        start:0x803D8888 end:0x803D8888
+	.bss        start:0x803D82D0 end:0x803D82E8
 
 dolphin/TRK_MINNOW_DOLPHIN/usr_put.c:
 	.text       start:0x80287CD0 end:0x80287D5C

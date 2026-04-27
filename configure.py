@@ -585,8 +585,8 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/nubevent.c"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/nubinit.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/msg.c"),
-            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/msgbuf.c"),
-            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/serpoll.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/msgbuf.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/serpoll.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/usr_put.c"),
             Object(
                 NonMatching,
