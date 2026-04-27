@@ -595,7 +595,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/serpoll.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/usr_put.c"),
             Object(
-                NonMatching,
+                MatchingFor("GSAE01"),
                 "dolphin/TRK_MINNOW_DOLPHIN/dispatch.c",
                 mw_version="GC/1.3.2",
             ),
