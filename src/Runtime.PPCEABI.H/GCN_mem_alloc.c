@@ -13,11 +13,12 @@ void __sys_free(void* p) {
         void* arenaLo = OSGetArenaLo();
         void* arenaHi = OSGetArenaHi();
         void* heapLo = OSInitAlloc(arenaLo, arenaHi, 1);
-        void* heapHi = (void*)((u32)arenaHi & ~0x1F);
+        void* heapHi;
 
         OSSetArenaLo(heapLo);
-        OSCreateHeap((void*)(((u32)heapLo + 0x1F) & ~0x1F), heapHi);
-        OSSetCurrentHeap(0);
+        heapLo = (void*)(((u32)heapLo + 0x1F) & ~0x1F);
+        heapHi = (void*)((u32)arenaHi & ~0x1F);
+        OSSetCurrentHeap(OSCreateHeap(heapLo, heapHi));
         OSSetArenaLo(heapHi);
         lbl_803DE3E8 = 1;
     }
