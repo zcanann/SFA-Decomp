@@ -2272,8 +2272,8 @@ dolphin/TRK_MINNOW_DOLPHIN/usr_put.c:
 
 dolphin/TRK_MINNOW_DOLPHIN/dispatch.c:
 	.text       start:0x80287D5C end:0x80287DF8
-	.data       start:0x80332C78 end:0x80332EF0
-	.bss        start:0x803D8888 end:0x803D8888
+	.data       start:0x80332230 end:0x803322B8
+	.bss        start:0x803D82E8 end:0x803D82F0
 
 dolphin/TRK_MINNOW_DOLPHIN/msghndlr.c:
 	.text       start:0x80287DF8 end:0x8028A658
