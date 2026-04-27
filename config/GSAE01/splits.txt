@@ -1765,6 +1765,9 @@ dolphin/card/CARDNet.c:
 
 dolphin/thp/THPDec.c:
 	.text       start:0x802644AC end:0x8026B9EC
+	.rodata     start:0x802C2628 end:0x802C26B8
+	.bss        start:0x803AF420 end:0x803AF550
+	.sbss       start:0x803DE100 end:0x803DE218
 
 dolphin/thp/THPAudio.c:
 	.text       start:0x8026B9EC end:0x8026BF1C
