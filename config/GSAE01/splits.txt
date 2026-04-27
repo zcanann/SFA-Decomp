@@ -1495,7 +1495,6 @@ dolphin/os/OSArena.c:
 
 dolphin/os/OSAudioSystem.c:
 	.text       start:0x80241710 end:0x802419A4
-	.data       start:0x8032CE48 end:0x8032CE48
 
 dolphin/os/OSCache.c:
 	.text       start:0x802419A4 end:0x80242060
@@ -1503,8 +1502,19 @@ dolphin/os/OSCache.c:
 dolphin/os/OSContext.c:
 	.text       start:0x80242060 end:0x80242880
 
+dolphin/os/OSErrorContext.c:
+	.text       start:0x80242880 end:0x802428C8
+	.data       start:0x8032C984 end:0x8032C9A8
+
 dolphin/os/OSError.c:
-	.text       start:0x80242880 end:0x80242C10
+	.text       start:0x802428C8 end:0x80242C10
+	.data       start:0x8032C9A8 end:0x8032CCC4
+	.bss        start:0x803AD370 end:0x803AD3B4
+	.sdata      start:0x803DC53C end:0x803DC548
+
+main/unknown/autos/placeholder_8032CCC4.c:
+	.data       start:0x8032CCC4 end:0x8032D7D8
+	.bss        start:0x803AD3B4 end:0x803AD3E0
 
 dolphin/os/OSExec.c:
 	.text       start:0x80242C10 end:0x80242C10
