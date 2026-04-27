@@ -8,7 +8,7 @@
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/nubinit.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/serpoll.h"
 
-BOOL gTRKBigEndian;
+extern BOOL gTRKBigEndian;
 
 DSError TRKInitializeNub(void) {
     DSError error;
@@ -25,7 +25,7 @@ DSError TRKInitializeNub(void) {
     if (*(u32*)endianCheck == 0x12345678) {
         gTRKBigEndian = TRUE;
     } else if (*(u32*)endianCheck == 0x78563412) {
-        gTRKBigEndian = FALSE;
+        gTRKBigEndian = error;
     } else {
         error = DS_StepError;
     }
@@ -60,6 +60,6 @@ DSError TRKTerminateNub(void) {
 }
 
 void TRKNubWelcome(void) {
-    TRK_board_display("MetroTRK for GAMECUBE v2.6");
+    TRK_board_display("MetroTRK for GAMECUBE v0.9");
     return;
 }
