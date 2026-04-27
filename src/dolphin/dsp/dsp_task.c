@@ -5,7 +5,15 @@
 
 #include "dolphin/dsp/__dsp.h"
 
-extern const char sDSPTaskStrings[];
+char sDSPTaskStrings[0x140] =
+    "DSP is booting task: 0x%08X\n\0\0\0\0"
+    "__DSP_boot_task()  : IRAM MMEM ADDR: 0x%08X\n\0\0\0\0"
+    "__DSP_boot_task()  : IRAM DSP ADDR : 0x%08X\n\0\0\0\0"
+    "__DSP_boot_task()  : IRAM LENGTH   : 0x%08X\n\0\0\0\0"
+    "__DSP_boot_task()  : DRAM MMEM ADDR: 0x%08X\n\0\0\0\0"
+    "__DSP_boot_task()  : Start Vector  : 0x%08X\n\0\0\0\0"
+    "__DSP_add_task() : Added task    : 0x%08X\n\0";
+
 #define DSP_BOOTING_TASK_MSG (sDSPTaskStrings + 0x00)
 #define IRAM_MMEM_ADDR_MSG (sDSPTaskStrings + 0x20)
 #define IRAM_DSP_ADDR_MSG (sDSPTaskStrings + 0x50)
@@ -13,12 +21,12 @@ extern const char sDSPTaskStrings[];
 #define DRAM_MMEM_ADDR_MSG (sDSPTaskStrings + 0xB0)
 #define START_VECTOR_MSG (sDSPTaskStrings + 0xE0)
 
-extern DSPTaskInfo* __DSP_curr_task;
-extern DSPTaskInfo* __DSP_first_task;
-extern DSPTaskInfo* __DSP_last_task;
-extern DSPTaskInfo* __DSP_tmp_task;
-extern DSPTaskInfo* __DSP_rude_task;
-extern int __DSP_rude_task_pending;
+DSPTaskInfo* __DSP_curr_task;
+DSPTaskInfo* __DSP_last_task;
+DSPTaskInfo* __DSP_first_task;
+DSPTaskInfo* __DSP_tmp_task;
+DSPTaskInfo* __DSP_rude_task;
+int __DSP_rude_task_pending;
 
 void __DSPHandler(__OSInterrupt intr, OSContext* context) {
     u8 unused[4];

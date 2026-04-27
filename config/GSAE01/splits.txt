@@ -1597,7 +1597,6 @@ dolphin/dvd/dvdlow.c:
 
 dolphin/dvd/dvdfs.c:
 	.text       start:0x80248870 end:0x802491C4
-	.data       start:0x8032E478 end:0x8032E958
 	.sdata      start:0x803DC568 end:0x803DC570
 
 dolphin/dvd/dvdFatal.c:
@@ -1622,7 +1621,6 @@ dolphin/dvd/fstload.c:
 
 dolphin/vi/vi.c:
 	.text       start:0x8024BF40 end:0x8024D9B8
-	.data       start:0x8032E958 end:0x8032EBE0
 	.sdata      start:0x803DC588 end:0x803DC590
 	.sbss       start:0x803DDF60 end:0x803DDFB0
 
@@ -1651,16 +1649,18 @@ dolphin/dsp/dsp_debug.c:
 
 dolphin/dsp/dsp_task.c:
 	.text       start:0x8025111C end:0x802519A0
+	.data       start:0x8032E100 end:0x8032E240
+	.sbss       start:0x803DE068 end:0x803DE080
 
 dolphin/si/SIBios.c:
 	.text       start:0x802519A0 end:0x80253080
-	.data       start:0x8032EDD0 end:0x8032EDD0
+	.data       start:0x8032E240 end:0x8032E310
 	.sbss       start:0x803DE080 end:0x803DE088
 	.sdata2     start:0x803DED08 end:0x803DED0C
 
 dolphin/si/SISamplingRate.c:
 	.text       start:0x80253080 end:0x80253188
-	.data       start:0x8032EDD0 end:0x8032EDD0
+	.data       start:0x8032E310 end:0x8032E3A8
 	.sbss       start:0x803DE090 end:0x803DE094
 
 dolphin/exi/EXIBios.c:
@@ -1677,10 +1677,6 @@ dolphin/gx/GXInit.c:
 	.sbss       start:0x803DE0A8 end:0x803DE0B8
 	.sdata2     start:0x803E7658 end:0x803E7678
 
-main/unknown/autos/placeholder_8032EDD0.c:
-	.data       start:0x8032EDD0 end:0x8032F218
-	.sdata      start:0x803DC5B8 end:0x803DC5C8
-
 main/unknown/autos/placeholder_803AEA38.c:
 	.bss        start:0x803AEA38 end:0x803AECC0
 
@@ -1690,6 +1686,7 @@ dolphin/gx/GXFifo.c:
 
 dolphin/gx/GXAttr.c:
 	.text       start:0x80256820 end:0x80258228
+	.data       start:0x8032E3A8 end:0x8032E61C
 
 dolphin/gx/GXMisc.c:
 	.text       start:0x80258228 end:0x802587FC
@@ -1699,21 +1696,26 @@ dolphin/gx/GXGeometry.c:
 
 dolphin/gx/GXFrameBuf.c:
 	.text       start:0x80258BDC end:0x80259670
+	.data       start:0x8032E620 end:0x8032E750
 
 dolphin/gx/GXLight.c:
 	.text       start:0x80259670 end:0x8025A088
+	.data       start:0x8032E750 end:0x8032E770
 
 dolphin/gx/GXTexture.c:
 	.text       start:0x8025A088 end:0x8025B1E8
+	.data       start:0x8032E770 end:0x8032EA88
 
 dolphin/gx/GXBump.c:
 	.text       start:0x8025B1E8 end:0x8025B89C
 
 dolphin/gx/GXTev.c:
 	.text       start:0x8025B89C end:0x8025C2D4
+	.data       start:0x8032EA88 end:0x8032EAB0
 
 dolphin/gx/GXPixel.c:
 	.text       start:0x8025C2D4 end:0x8025CA1C
+	.data       start:0x8032EAB0 end:0x8032EAD0
 
 dolphin/gx/GXDraw.c:
 	.text       start:0x8025CA1C end:0x8025CD38
@@ -1729,15 +1731,20 @@ dolphin/gx/GXTransform.c:
 	.text       start:0x8025CF48 end:0x8025D514
 	.sdata2     start:0x803E7750 end:0x803E775C
 
+dolphin/gx/GXPerf.c:
+	.text       start:0x8025D514 end:0x8025DE80
+	.data       start:0x8032EAD0 end:0x8032EBC0
+
+main/unknown/autos/placeholder_8032EDD0.c:
+	.data       start:0x8032EDD0 end:0x8032F218
+	.sdata      start:0x803DC5B8 end:0x803DC5C8
+
 main/unknown/autos/placeholder_8032F218.c:
 	.data       start:0x8032F218 end:0x8032F618
 	.sdata2     start:0x803E8368 end:0x803E8390
 
 main/unknown/autos/placeholder_8032F618.c:
 	.data       start:0x8032F618 end:0x8032F79C
-
-dolphin/gx/GXPerf.c:
-	.text       start:0x8025D514 end:0x8025DE80
 
 dolphin/card/CARDBios.c:
 	.text       start:0x8025DE80 end:0x8025EFCC

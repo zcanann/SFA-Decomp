@@ -413,7 +413,7 @@ config.libs = [
         "dsp",
         [
             Object(MatchingFor("GSAE01"), "dolphin/dsp/dsp.c"),
-            Object(NonMatching, "dolphin/dsp/dsp_task.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/dsp/dsp_task.c"),
             Object(MatchingFor("GSAE01"), "dolphin/dsp/dsp_debug.c"),
         ],
     ),
