@@ -608,7 +608,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/mem_TRK.c"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/targimpl.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/targsupp.s"),
-            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_80332F78.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/mpc_7xx_603e.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/main_TRK.c"),
