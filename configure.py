@@ -498,7 +498,7 @@ config.libs = [
     DolphinLib(
         "card",
         [
-            Object(NonMatching, "dolphin/card/CARDBios.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/card/CARDBios.c"),
             Object(MatchingFor("GSAE01"), "dolphin/card/CARDUnlock.c"),
             Object(MatchingFor("GSAE01"), "dolphin/card/CARDRdwr.c"),
             Object(MatchingFor("GSAE01"), "dolphin/card/CARDBlock.c"),

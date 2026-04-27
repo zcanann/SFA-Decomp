@@ -2,15 +2,6 @@
 
 #include "dolphin/card/__card.h"
 
-#if DEBUG
-const char* __CARDVersion = "<< Dolphin SDK - CARD\tdebug build: Apr  5 2004 03:56:53 (0x2301) >>";
-u32 __CARDFreq = 0;
-#else
-extern const char gCARDVersionString[];
-const char* __CARDVersion = gCARDVersionString;
-u32 __CARDFreq = EXI_FREQ_16M;
-#endif
-
 CARDControl __CARDBlock[2];
 
 u16 __CARDEncode;
@@ -24,7 +15,7 @@ static s32 Retry(s32 chan);
 static void UnlockedCallback(s32 chan, s32 result);
 BOOL OnReset(BOOL f);
 
-static OSResetFunctionInfo ResetFunctionInfo = {OnReset, 127};
+extern OSResetFunctionInfo lbl_8032EBC0;
 
 void __CARDDefaultApiCallback(s32 chan, s32 result) {}
 
@@ -503,7 +494,7 @@ void CARDInit(void) {
     }
     __CARDSetDiskID((void*)OSPhysicalToCached(0));
 
-    OSRegisterResetFunction(&ResetFunctionInfo);
+    OSRegisterResetFunction(&lbl_8032EBC0);
 }
 
 void __CARDSetDiskID(const DVDDiskID* id) {
