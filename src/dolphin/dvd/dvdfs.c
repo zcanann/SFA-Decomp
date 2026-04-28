@@ -9,18 +9,19 @@ typedef struct FSTEntry {
     /* 0x08 */ unsigned int nextEntryOrLength;
 } FSTEntry;
 
-extern OSBootInfo* BootInfo_803DEB68;
-extern FSTEntry* FstStart_803DEB6C;
-extern char* FstStringStart_803DEB70;
-extern u32 MaxEntryNum_803DEB74;
-extern u32 sDvdfsCurrentDirEntry;
-extern const char lbl_8032E488[];
-__declspec(section ".sdata") extern const char lbl_803DD1C8[];
+extern OSBootInfo* BootInfo_803DDEE8;
+extern FSTEntry* FstStart_803DDEEC;
+extern char* FstStringStart_803DDEF0;
+extern u32 MaxEntryNum_803DDEF4;
+extern u32 lbl_803DDEF8;
+extern const char lbl_8032D830[];
+__declspec(section ".sdata") extern const char lbl_803DC560[];
 
-#define BootInfo BootInfo_803DEB68
-#define FstStart FstStart_803DEB6C
-#define FstStringStart FstStringStart_803DEB70
-#define MaxEntryNum MaxEntryNum_803DEB74
+#define BootInfo BootInfo_803DDEE8
+#define FstStart FstStart_803DDEEC
+#define FstStringStart FstStringStart_803DDEF0
+#define MaxEntryNum MaxEntryNum_803DDEF4
+#define sDvdfsCurrentDirEntry lbl_803DDEF8
 
 // prototypes
 static BOOL isSame(const char* path, const char* string);
@@ -350,11 +351,11 @@ static void cbForReadSync(s32 result, DVDCommandBlock* block) {
 
 BOOL DVDPrepareStreamAsync(DVDFileInfo* fileInfo, u32 length, u32 offset, DVDCallback callback) {
     u32 start;
-    const char* const msgs = lbl_8032E488;
+    const char* const msgs = lbl_8032D830;
 
     start = fileInfo->startAddr + offset;
     if (OFFSET(start, 32768)) {
-        OSPanic(lbl_803DD1C8, 1186, msgs + 0x1C8, fileInfo->startAddr, offset);
+        OSPanic(lbl_803DC560, 1186, msgs + 0x1C8, fileInfo->startAddr, offset);
     }
 
     if (length == 0) {
@@ -362,11 +363,11 @@ BOOL DVDPrepareStreamAsync(DVDFileInfo* fileInfo, u32 length, u32 offset, DVDCal
     }
 
     if (OFFSET(length, 32768)) {
-        OSPanic(lbl_803DD1C8, 1196, msgs + 0x230, length);
+        OSPanic(lbl_803DC560, 1196, msgs + 0x230, length);
     }
 
     if (!(offset < fileInfo->length) || offset + length > fileInfo->length) {
-        OSPanic(lbl_803DD1C8, 1204, msgs + 0x288, offset, length);
+        OSPanic(lbl_803DC560, 1204, msgs + 0x288, offset, length);
     }
 
     fileInfo->callback = callback;

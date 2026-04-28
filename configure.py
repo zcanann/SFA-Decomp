@@ -568,6 +568,7 @@ config.libs = [
         "cflags": cflags_base,
         "progress_category": "sdk",
         "objects": [
+            Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_803DC630.s"),
             Object(NonMatching, "dolphin/OdemuExi2/DebuggerDriver.c"),
         ],
     },
