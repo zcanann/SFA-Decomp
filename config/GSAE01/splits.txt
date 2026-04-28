@@ -2338,6 +2338,12 @@ dolphin/TRK_MINNOW_DOLPHIN/msghndlr.c:
 main/unknown/autos/placeholder_80332EF0.s:
 	.data       start:0x80332EF0 end:0x80332F48
 
+main/unknown/autos/placeholder_80332F48.s:
+	.data       start:0x80332F48 end:0x80332F78
+
+main/unknown/autos/placeholder_80332F78.s:
+	.data       start:0x80332F78 end:0x80332FC0
+
 dolphin/TRK_MINNOW_DOLPHIN/support.c:
 	.text       start:0x8028A658 end:0x8028AEF4
 
@@ -2356,10 +2362,6 @@ dolphin/TRK_MINNOW_DOLPHIN/mem_TRK.c:
 dolphin/TRK_MINNOW_DOLPHIN/targimpl.c:
 	.text       start:0x8028B0D8 end:0x8028C970
 	.rodata     start:0x802C2978 end:0x802C2A00
-	.data       start:0x80332F48 end:0x80332F78
-
-main/unknown/autos/placeholder_80332F78.s:
-	.data       start:0x80332F78 end:0x80332FC0
 
 dolphin/TRK_MINNOW_DOLPHIN/targsupp.s: comment:0
 	.text       start:0x8028C970 end:0x8028C990

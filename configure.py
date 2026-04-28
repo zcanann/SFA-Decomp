@@ -621,6 +621,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/flush_cache.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/mem_TRK.c"),
             Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/targimpl.c"),
+            Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_80332F48.s"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/targsupp.s"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk.c"),
             Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_80332F78.s"),
