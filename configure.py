@@ -254,6 +254,13 @@ cflags_runtime = [
     "-inline auto",
 ]
 
+cflags_msl = [
+    *cflags_base,
+    "-char signed",
+    "-use_lmw_stmw on",
+    "-str reuse,pool,readonly",
+]
+
 # REL flags
 cflags_rel = [
     *cflags_base,
@@ -637,7 +644,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/direct_io.c", mw_version="GC/1.3", extra_cflags=["-use_lmw_stmw", "on"]),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/file_io.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/FILE_POS.c", mw_version="GC/1.3"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/mbstring.c"),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/mbstring.c", mw_version="GC/1.3.2r", cflags=cflags_msl),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/mem.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/mem_funcs.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/misc_io.c"),
