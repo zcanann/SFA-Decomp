@@ -8,23 +8,6 @@
 extern GXData* gx;
 #define __GXData gx
 
-extern const f32 lbl_803E8318;
-extern const f32 lbl_803E831C;
-extern const f32 lbl_803E8320;
-extern const f32 lbl_803E8324;
-extern const f32 lbl_803E8328;
-extern const f32 lbl_803E832C;
-extern const f32 lbl_803E8330;
-extern const f32 lbl_803E8334;
-extern const f32 lbl_803E8338;
-extern const f32 lbl_803E833C;
-extern const f32 lbl_803E8340;
-extern const f32 lbl_803E8344;
-extern const f32 lbl_803E8348;
-extern const double lbl_803E8350;
-extern const double lbl_803E8358;
-extern const f32 lbl_803E8360[2];
-
 extern f32 cosf(f32);
 
 static inline float sqrtf(float x) {
@@ -137,24 +120,24 @@ void GXInitLightSpot(GXLightObj* lt_obj, f32 cutoff, GXSpotFn spot_func) {
         d = u * u;
         a1 = 2.0f / d;
         a0 = (cr * (cr - 2.0f)) / d;
-        a2 = lbl_803E8338 / d;
+        a2 = -1.0f / d;
         break;
     }
     case GX_SP_RING1: {
         f32 u = 1.0f - cr;
         d = u * u;
-        a0 = (lbl_803E833C * cr) / d;
-        a1 = (lbl_803E8340 * (1.0f + cr)) / d;
-        a2 = lbl_803E833C / d;
+        a0 = (-4.0f * cr) / d;
+        a1 = (4.0f * (1.0f + cr)) / d;
+        a2 = -4.0f / d;
         break;
     }
     case GX_SP_RING2: {
         f32 u = 1.0f - cr;
-        f32 two_cr = lbl_803E8334 * cr;
+        f32 two_cr = 2.0f * cr;
         d = u * u;
         a0 = 1.0f - (two_cr * cr) / d;
-        a1 = (lbl_803E8340 * cr) / d;
-        a2 = lbl_803E8344 / d;
+        a1 = (4.0f * cr) / d;
+        a2 = -2.0f / d;
         break;
     }
     case GX_SP_OFF:
