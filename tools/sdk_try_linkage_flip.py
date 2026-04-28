@@ -2,14 +2,17 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
+import time
 from dataclasses import dataclass
 from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CONFIGURE = REPO_ROOT / "configure.py"
+LOCK_FILE = REPO_ROOT / "build" / ".sdk_try_linkage_flip.lock"
 
 
 @dataclass(frozen=True)
@@ -18,6 +21,34 @@ class FlipResult:
     ok: bool
     stage: str
     detail: str
+
+
+class ConfigureLock:
+    def __init__(self, timeout: int) -> None:
+        self.timeout = timeout
+        self.fd: int | None = None
+
+    def __enter__(self) -> None:
+        deadline = time.monotonic() + self.timeout
+        LOCK_FILE.parent.mkdir(parents=True, exist_ok=True)
+        while True:
+            try:
+                self.fd = os.open(str(LOCK_FILE), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+                os.write(self.fd, str(os.getpid()).encode("ascii"))
+                return
+            except FileExistsError:
+                if time.monotonic() >= deadline:
+                    raise TimeoutError(f"timed out waiting for {LOCK_FILE}")
+                time.sleep(0.25)
+
+    def __exit__(self, exc_type, exc, tb) -> None:
+        if self.fd is not None:
+            os.close(self.fd)
+            self.fd = None
+        try:
+            LOCK_FILE.unlink()
+        except FileNotFoundError:
+            pass
 
 
 def object_suffix(source: str) -> str:
@@ -110,6 +141,7 @@ def main() -> None:
     parser.add_argument("sources", nargs="+", help="Source paths as they appear in configure.py")
     parser.add_argument("-v", "--version", default="GSAE01", help="Target version (default: GSAE01)")
     parser.add_argument("--ninja-timeout", type=int, default=30, help="ninja timeout in seconds (default: 30)")
+    parser.add_argument("--lock-timeout", type=int, default=120, help="configure.py lock timeout in seconds (default: 120)")
     parser.add_argument("--keep-first-pass", action="store_true", help="Leave configure.py changed for the first passing source")
     parser.add_argument(
         "--require-active-unit",
@@ -118,12 +150,16 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    for source in args.sources:
-        result = try_flip(source, args.version, args.ninja_timeout, args.keep_first_pass, args.require_active_unit)
-        status = "PASS" if result.ok else "FAIL"
-        print(f"{status} stage={result.stage} path={result.source} detail={result.detail}")
-        if result.ok and args.keep_first_pass:
-            break
+    try:
+        with ConfigureLock(args.lock_timeout):
+            for source in args.sources:
+                result = try_flip(source, args.version, args.ninja_timeout, args.keep_first_pass, args.require_active_unit)
+                status = "PASS" if result.ok else "FAIL"
+                print(f"{status} stage={result.stage} path={result.source} detail={result.detail}")
+                if result.ok and args.keep_first_pass:
+                    break
+    except TimeoutError as err:
+        raise SystemExit(str(err)) from err
 
 
 if __name__ == "__main__":
