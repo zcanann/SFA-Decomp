@@ -489,7 +489,7 @@ config.libs = [
             Object(NonMatching, "dolphin/gx/GXDraw.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8032F618.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXPerf.c"),
-            Object(NonMatching, "dolphin/gx/GXPixel.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/gx/GXPixel.c"),
             Object(NonMatching, "dolphin/gx/GXSave.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXStubs.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXTev.c"),

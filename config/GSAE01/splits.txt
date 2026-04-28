@@ -1720,6 +1720,7 @@ dolphin/gx/GXTev.c:
 dolphin/gx/GXPixel.c:
 	.text       start:0x8025C2D4 end:0x8025CA1C
 	.data       start:0x8032EAB0 end:0x8032EAD0
+	.sdata2     start:0x803E7700 end:0x803E7730
 
 dolphin/gx/GXDraw.c:
 	.text       start:0x8025CA1C end:0x8025CD38
