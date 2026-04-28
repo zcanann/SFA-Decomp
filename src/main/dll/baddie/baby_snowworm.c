@@ -906,3 +906,67 @@ void fn_8012E250(void)
 void FUN_8012e2a4()
 {
 }
+
+/* ===== EN v1.0 retargeted leaves ==========================================
+ * The FUN_xxx stubs above are still at stale pre-v1.0 addresses and produce
+ * empty bodies. The fn_xxx helpers below are hand-ported against the live
+ * v1.0 asm at build/GSAE01/asm/main/dll/baddie/baby_snowworm.s and pair by
+ * name in objdiff regardless of their physical offset within the .o.
+ */
+
+/* Narrowly-typed sbss aliases for the byte/halfword cells these helpers
+ * touch. Symbol widths come from config/GSAE01/symbols.txt. */
+extern u8  lbl_803DD759;
+extern u16 lbl_803DD774;
+extern u16 lbl_803DD776;
+extern u8  lbl_803DD77E;
+extern s8  lbl_803DD7A8;
+extern s8  lbl_803DD7D4;
+extern u8  lbl_803DD840;
+extern s16 lbl_803DD8BA;
+
+/* EN v1.0 0x8012DDA4  size: 8b   lbz + blr getter for the u8 at lbl_803DD759. */
+u8 fn_8012DDA4(void)
+{
+    return lbl_803DD759;
+}
+
+/* EN v1.0 0x8012DDAC  size: 12b  Read the u16 cell at lbl_803DD776 narrowed
+ * to its low byte (lhz; clrlwi r3,r0,24; blr). */
+u8 fn_8012DDAC(void)
+{
+    return (u8)lbl_803DD776;
+}
+
+/* EN v1.0 0x8012EA44  size: 12b  Signed-byte getter for lbl_803DD7A8
+ * (lbz; extsb; blr). */
+s32 fn_8012EA44(void)
+{
+    return lbl_803DD7A8;
+}
+
+/* EN v1.0 0x8012EA50  size: 12b  Companion setter; clears lbl_803DD7A8. */
+void fn_8012EA50(void)
+{
+    lbl_803DD7A8 = 0;
+}
+
+/* EN v1.0 0x8012EB24  size: 12b  Latch the u8 flag at lbl_803DD840 to 1. */
+void fn_8012EB24(void)
+{
+    lbl_803DD840 = 1;
+}
+
+/* EN v1.0 0x8012EB68  size: 8b   Signed-halfword getter for lbl_803DD8BA
+ * (lha; blr). */
+s16 fn_8012EB68(void)
+{
+    return lbl_803DD8BA;
+}
+
+/* EN v1.0 0x8012EB70  size: 12b  Signed-byte getter for lbl_803DD7D4
+ * (lbz; extsb; blr). */
+s32 fn_8012EB70(void)
+{
+    return lbl_803DD7D4;
+}
