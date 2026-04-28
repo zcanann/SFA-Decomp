@@ -65,7 +65,7 @@ enum {
 const char printf_stringBase0[] = "\0-INF\0-inf\0INF\0inf\0-NAN\0-nan\0NAN\0nan";
 static wchar_t printf_wstringBase0[] = L"";
 
-static const char* parse_format_80291840(const char *format_string, va_list *arg, print_format *format) {
+const char* parse_format_80291840(const char *format_string, va_list *arg, print_format *format) {
     print_format f;
     const char* s = format_string;
     int c;
@@ -305,7 +305,7 @@ static const char* parse_format_80291840(const char *format_string, va_list *arg
     return ((const char*)s + 1);
 }
 
-static char* long2str_80291620(long num, char* buff, print_format format)
+char* long2str_80291620(long num, char* buff, print_format format)
 {
     unsigned long unsigned_num, base;
     char* p;
@@ -410,7 +410,7 @@ static char* long2str_80291620(long num, char* buff, print_format format)
     return p;
 }
 
-static char* longlong2str_80291344(long long num, char* pBuf, print_format fmt)
+char* longlong2str_80291344(long long num, char* pBuf, print_format fmt)
 {
     unsigned long long unsigned_num, base;
     char* p;
@@ -513,7 +513,7 @@ static char* longlong2str_80291344(long long num, char* pBuf, print_format fmt)
     return p;
 }
 
-static char * double2hex(long double num, char * buff, print_format format)  {
+char * double2hex(long double num, char * buff, print_format format)  {
     char *p;
     unsigned char *q;
     unsigned char temp_r7;
@@ -687,7 +687,7 @@ static void round_decimal(decimal* dec, int new_length)
     dec->sig.length = new_length;
 }
 
-static char* float2str(long double num, char *buff, print_format format) {
+char* float2str(long double num, char *buff, print_format format) {
     decimal dec;
     decform form;
     char* p;
@@ -919,7 +919,7 @@ static char* float2str(long double num, char *buff, print_format format) {
     return p;
 }
 
-static int __pformatter(void *(*WriteProc)(void*, const char*, size_t), void *WriteProcArg, const char * format_str, va_list arg) {
+int __pformatter(void *(*WriteProc)(void*, const char*, size_t), void *WriteProcArg, const char * format_str, va_list arg) {
     int num_chars, chars_written, field_width;
     const char* format_ptr;
     const char* curr_format;
