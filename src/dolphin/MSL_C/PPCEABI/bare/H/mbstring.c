@@ -6,8 +6,8 @@ extern const unsigned long lbl_803E7938;
 int unicode_to_UTF8(char* s, wchar_t wchar);
 
 size_t wcstombs(char* s, const wchar_t* pwcs, size_t n) {
-    int chars_written = 0;
-    register int result;
+    size_t result;
+    size_t chars_written = 0;
     char temp[3];
     wchar_t* source;
 
