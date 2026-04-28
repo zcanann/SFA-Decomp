@@ -332,7 +332,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/runtime.c"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__init_cpp_exceptions.cpp"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/fragment.s"),
-            Object(NonMatching, "Runtime.PPCEABI.H/GCN_mem_alloc.c"),
+            Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/GCN_mem_alloc.c"),
         ],
     },
     DolphinLib(
