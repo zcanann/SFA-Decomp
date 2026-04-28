@@ -1688,6 +1688,7 @@ dolphin/gx/GXFifo.c:
 dolphin/gx/GXAttr.c:
 	.text       start:0x80256820 end:0x80258228
 	.data       start:0x8032E3A8 end:0x8032E61C
+	.sdata      start:0x803DC5B0 end:0x803DC5C0
 
 dolphin/gx/GXMisc.c:
 	.text       start:0x80258228 end:0x802587FC
@@ -1738,7 +1739,7 @@ dolphin/gx/GXPerf.c:
 
 main/unknown/autos/placeholder_8032EDD0.c:
 	.data       start:0x8032EDD0 end:0x8032F218
-	.sdata      start:0x803DC5B8 end:0x803DC5C8
+	.sdata      start:0x803DC5C0 end:0x803DC5C8
 
 main/unknown/autos/placeholder_8032F218.c:
 	.data       start:0x8032F218 end:0x8032F618
