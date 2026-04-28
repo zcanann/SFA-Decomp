@@ -398,6 +398,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_803DC568.s"),
             Object(NonMatching, "dolphin/dvd/dvdfs.c", extra_cflags=["-use_lmw_stmw", "on"]),
             Object(NonMatching, "dolphin/dvd/dvd.c", extra_cflags=["-str", "pool"]),
+            Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_803ADF00.s"),
             Object(MatchingFor("GSAE01"), "dolphin/dvd/dvdqueue.c"),
             Object(MatchingFor("GSAE01"), "dolphin/dvd/dvderror.c"),
             Object(MatchingFor("GSAE01"), "dolphin/dvd/fstload.c"),

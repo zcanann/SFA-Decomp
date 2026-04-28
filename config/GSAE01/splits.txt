@@ -1569,6 +1569,9 @@ dolphin/os/OSThread.c:
 main/unknown/autos/placeholder_803ADE20.s:
 	.bss        start:0x803ADE20 end:0x803ADEF0
 
+main/unknown/autos/placeholder_803ADF00.s:
+	.bss        start:0x803ADF00 end:0x803ADFD8
+
 dolphin/os/OSTime.c:
 	.text       start:0x80246C50 end:0x80246CD4
 
@@ -1608,7 +1611,6 @@ dolphin/dvd/dvdFatal.c:
 
 dolphin/dvd/dvd.c:
 	.text       start:0x802491F4 end:0x8024B970
-	.bss        start:0x803ADF00 end:0x803ADFD8
 
 dolphin/dvd/dvdqueue.c:
 	.text       start:0x8024B970 end:0x8024BB68
