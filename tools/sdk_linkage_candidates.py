@@ -19,7 +19,26 @@ class Candidate:
     data_percent: float | None
     text_size: int
     bad_symbols: int
+    active_unit: bool
     error: str | None = None
+
+
+def object_suffix(source: str) -> str:
+    return str(Path(source).with_suffix(".o")).replace("\\", "/")
+
+
+def has_active_unit(version: str, source: str) -> bool:
+    config_path = REPO_ROOT / "build" / version / "config.json"
+    if not config_path.is_file():
+        return False
+
+    units = json.loads(config_path.read_text()).get("units", [])
+    suffix = f"/obj/{object_suffix(source)}"
+    for unit in units:
+        obj = unit.get("object", "").replace("\\", "/")
+        if obj.endswith(suffix):
+            return True
+    return False
 
 
 def parse_nonmatching_objects(configure: Path) -> list[str]:
@@ -61,6 +80,10 @@ def bad_symbol_count(diff: dict) -> int:
 
 
 def diff_candidate(args: argparse.Namespace, source: str) -> Candidate | None:
+    active_unit = has_active_unit(args.version, source)
+    if args.active_only and not active_unit:
+        return None
+
     src_obj = object_path(REPO_ROOT, args.version, "src", source)
     base_obj = object_path(REPO_ROOT, args.version, "obj", source)
     if not src_obj.exists() or not base_obj.exists():
@@ -80,7 +103,7 @@ def diff_candidate(args: argparse.Namespace, source: str) -> Candidate | None:
     ]
     proc = subprocess.run(cmd, cwd=REPO_ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     if proc.returncode != 0:
-        return Candidate(source, None, None, 0, 0, proc.stderr.strip())
+        return Candidate(source, None, None, 0, 0, active_unit, proc.stderr.strip())
 
     diff = json.loads(proc.stdout)
     return Candidate(
@@ -89,6 +112,7 @@ def diff_candidate(args: argparse.Namespace, source: str) -> Candidate | None:
         data_percent=section_min(diff, {"SECTION_DATA", "SECTION_RODATA", "SECTION_BSS"}),
         text_size=text_size(diff),
         bad_symbols=bad_symbol_count(diff),
+        active_unit=active_unit,
     )
 
 
@@ -103,6 +127,7 @@ def main() -> None:
     parser.add_argument("-v", "--version", default="GSAE01", help="Target version (default: GSAE01)")
     parser.add_argument("--min-code", type=float, default=0.0, help="Minimum code match percent to print")
     parser.add_argument("--limit", type=int, default=50, help="Maximum rows to print")
+    parser.add_argument("--active-only", action="store_true", help="Only print candidates present in the build config")
     parser.add_argument("--show-errors", action="store_true", help="Print objdiff failures")
     args = parser.parse_args()
 
@@ -131,6 +156,7 @@ def main() -> None:
             f"data={format_percent(candidate.data_percent)} "
             f"text=0x{candidate.text_size:X} "
             f"bad-symbols={candidate.bad_symbols:2d} "
+            f"active={'yes' if candidate.active_unit else 'no '} "
             f"path={candidate.path}"
         )
         printed += 1
