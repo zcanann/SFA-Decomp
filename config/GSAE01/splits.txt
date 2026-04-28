@@ -1512,15 +1512,14 @@ dolphin/os/OSError.c:
 	.bss        start:0x803AD370 end:0x803AD3B4
 	.sdata      start:0x803DC53C end:0x803DC548
 
-main/unknown/autos/placeholder_8032CCC4.c:
-	.data       start:0x8032CCC4 end:0x8032D7D8
-	.bss        start:0x803AD3B4 end:0x803AD3C0
-
 dolphin/os/OSExec.c:
 	.text       start:0x80242C10 end:0x80242C10
 
 dolphin/os/OSFont.c:
 	.text       start:0x80242C10 end:0x8024377C
+	.data       start:0x8032CCC8 end:0x8032D7D2
+	.sdata      start:0x803DC548 end:0x803DC54A
+	.sbss       start:0x803DDE28 end:0x803DDE38
 
 dolphin/os/OSInterrupt.c:
 	.text       start:0x8024377C end:0x80243FE8

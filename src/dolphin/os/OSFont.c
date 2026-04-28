@@ -347,10 +347,10 @@ static void ReadROM(void* buf, int length, int offset) {
     }
 }
 
-extern const u32 lbl_803E82A8;
-extern const u32 lbl_803E82AC;
+extern const u32 lbl_803E7610;
+extern const u32 lbl_803E7614;
 
-static asm u32 ReadFont_802436FC(void* img, u16 encode, void* fontData) {
+asm u32 ReadFont_802436FC(void* img, u16 encode, void* fontData) {
     nofralloc
     mflr r0
     stw r0, 0x4(r1)
@@ -439,9 +439,9 @@ _rf_10:
     clrlwi r0, r4, 16
     cmplwi r0, 0x1
     bne _rf_11
-    lwz r4, lbl_803E82A8(r13)
+    lwz r4, lbl_803E7610(r2)
     li r3, 0x54
-    lwz r0, lbl_803E82AC(r13)
+    lwz r0, lbl_803E7614(r2)
     stw r4, 0x1c(r1)
     stw r0, 0x20(r1)
     bl GetFontCode
@@ -567,104 +567,6 @@ _rf_11:
     lwz r30, 0x38(r1)
     lwz r29, 0x34(r1)
     addi r1, r1, 0x40
-    mtlr r0
-    blr
-}
-
-static asm char* ParseStringS_80243D34(const char* string, int* pfontCode) {
-    nofralloc
-    mflr r0
-    stw r0, 0x4(r1)
-    stwu r1, -0x18(r1)
-    stw r31, 0x14(r1)
-    addi r31, r4, 0x0
-    stw r30, 0x10(r1)
-    mr r30, r3
-    lbz r0, 0x0(r3)
-    cmplwi r0, 0x0
-    mr r3, r0
-    bne _ps_0
-    mr r3, r30
-    b _ps_13
-_ps_0:
-    lhz r0, FontEncode_803DD1B0(r13)
-    addi r30, r30, 0x1
-    cmplwi r0, 0x1
-    bgt _ps_1
-    b _ps_7
-_ps_1:
-    lis r4, 0x8000
-    lwz r0, 0xcc(r4)
-    cmpwi r0, 0x0
-    beq _ps_2
-    blt _ps_5
-    b _ps_5
-_ps_2:
-    lis r4, 0xcc00
-    lhz r0, 0x206e(r4)
-    rlwinm. r0, r0, 0, 30, 30
-    beq _ps_3
-    li r0, 0x1
-    b _ps_4
-_ps_3:
-    li r0, 0x0
-_ps_4:
-    sth r0, FontEncode_803DD1B0(r13)
-    b _ps_6
-_ps_5:
-    li r0, 0x0
-    sth r0, FontEncode_803DD1B0(r13)
-_ps_6:
-    lhz r0, FontEncode_803DD1B0(r13)
-_ps_7:
-    clrlwi r0, r0, 16
-    cmplwi r0, 0x1
-    bne _ps_12
-    clrlwi r0, r3, 24
-    cmplwi r0, 0x81
-    li r4, 0x1
-    li r5, 0x0
-    blt _ps_8
-    cmplwi r0, 0x9f
-    bgt _ps_8
-    mr r5, r4
-_ps_8:
-    cmpwi r5, 0x0
-    bne _ps_10
-    clrlwi r0, r3, 24
-    cmplwi r0, 0xe0
-    li r5, 0x0
-    blt _ps_9
-    cmplwi r0, 0xfc
-    bgt _ps_9
-    li r5, 0x1
-_ps_9:
-    cmpwi r5, 0x0
-    bne _ps_10
-    li r4, 0x0
-_ps_10:
-    cmpwi r4, 0x0
-    beq _ps_12
-    lbz r4, 0x0(r30)
-    extsb. r0, r4
-    beq _ps_12
-    clrlslwi r0, r3, 16, 8
-    or r3, r0, r4
-    addi r30, r30, 0x1
-_ps_12:
-    cmplwi r31, 0x0
-    beq _ps_14
-    bl GetFontCode
-    lwz r4, FixedPitch(r13)
-    lbzx r0, r4, r3
-    stw r0, 0x0(r31)
-_ps_14:
-    mr r3, r30
-_ps_13:
-    lwz r0, 0x1c(r1)
-    lwz r31, 0x14(r1)
-    lwz r30, 0x10(r1)
-    addi r1, r1, 0x18
     mtlr r0
     blr
 }
@@ -886,3 +788,100 @@ _gft_19:
     blr
 }
 
+asm char* ParseStringS_80243D34(const char* string, int* pfontCode) {
+    nofralloc
+    mflr r0
+    stw r0, 0x4(r1)
+    stwu r1, -0x18(r1)
+    stw r31, 0x14(r1)
+    addi r31, r4, 0x0
+    stw r30, 0x10(r1)
+    mr r30, r3
+    lbz r0, 0x0(r3)
+    cmplwi r0, 0x0
+    mr r3, r0
+    bne _ps_0
+    mr r3, r30
+    b _ps_13
+_ps_0:
+    lhz r0, FontEncode_803DD1B0(r13)
+    addi r30, r30, 0x1
+    cmplwi r0, 0x1
+    bgt _ps_1
+    b _ps_7
+_ps_1:
+    lis r4, 0x8000
+    lwz r0, 0xcc(r4)
+    cmpwi r0, 0x0
+    beq _ps_2
+    blt _ps_5
+    b _ps_5
+_ps_2:
+    lis r4, 0xcc00
+    lhz r0, 0x206e(r4)
+    rlwinm. r0, r0, 0, 30, 30
+    beq _ps_3
+    li r0, 0x1
+    b _ps_4
+_ps_3:
+    li r0, 0x0
+_ps_4:
+    sth r0, FontEncode_803DD1B0(r13)
+    b _ps_6
+_ps_5:
+    li r0, 0x0
+    sth r0, FontEncode_803DD1B0(r13)
+_ps_6:
+    lhz r0, FontEncode_803DD1B0(r13)
+_ps_7:
+    clrlwi r0, r0, 16
+    cmplwi r0, 0x1
+    bne _ps_12
+    clrlwi r0, r3, 24
+    cmplwi r0, 0x81
+    li r4, 0x1
+    li r5, 0x0
+    blt _ps_8
+    cmplwi r0, 0x9f
+    bgt _ps_8
+    mr r5, r4
+_ps_8:
+    cmpwi r5, 0x0
+    bne _ps_10
+    clrlwi r0, r3, 24
+    cmplwi r0, 0xe0
+    li r5, 0x0
+    blt _ps_9
+    cmplwi r0, 0xfc
+    bgt _ps_9
+    li r5, 0x1
+_ps_9:
+    cmpwi r5, 0x0
+    bne _ps_10
+    li r4, 0x0
+_ps_10:
+    cmpwi r4, 0x0
+    beq _ps_12
+    lbz r4, 0x0(r30)
+    extsb. r0, r4
+    beq _ps_12
+    clrlslwi r0, r3, 16, 8
+    or r3, r0, r4
+    addi r30, r30, 0x1
+_ps_12:
+    cmplwi r31, 0x0
+    beq _ps_14
+    bl GetFontCode
+    lwz r4, FixedPitch(r13)
+    lbzx r0, r4, r3
+    stw r0, 0x0(r31)
+_ps_14:
+    mr r3, r30
+_ps_13:
+    lwz r0, 0x1c(r1)
+    lwz r31, 0x14(r1)
+    lwz r30, 0x10(r1)
+    addi r1, r1, 0x18
+    mtlr r0
+    blr
+}
