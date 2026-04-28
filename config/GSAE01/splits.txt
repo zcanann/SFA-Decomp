@@ -1626,12 +1626,14 @@ dolphin/dvd/fstload.c:
 	.sdata      start:0x803DC570 end:0x803DC580
 	.sbss       start:0x803DDF50 end:0x803DDF60
 
+main/unknown/autos/placeholder_803DDF60.s:
+	.sbss       start:0x803DDF60 end:0x803DDFB0
+
 main/unknown/autos/placeholder_803DC588.s:
 	.sdata      start:0x803DC588 end:0x803DC590
 
 dolphin/vi/vi.c:
 	.text       start:0x8024BF40 end:0x8024D9B8
-	.sbss       start:0x803DDF60 end:0x803DDFB0
 
 dolphin/pad/Padclamp.c:
 	.text       start:0x8024D9B8 end:0x8024DD94
