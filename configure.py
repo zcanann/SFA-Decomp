@@ -546,6 +546,7 @@ config.libs = [
         ],
         "progress_category": "sdk",
         "objects": [
+            Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_803DC588.s"),
             Object(NonMatching, "dolphin/vi/vi.c"),
             Object(NonMatching, "dolphin/vi/gpioexi.c"),
             Object(NonMatching, "dolphin/vi/i2c.c"),
