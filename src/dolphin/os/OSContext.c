@@ -8,6 +8,7 @@
 volatile OSContext* __OSCurrentContext AT_ADDRESS(OS_BASE_CACHED | 0x00D4);
 volatile OSContext* __OSFPUContext AT_ADDRESS(OS_BASE_CACHED | 0x00D8);
 extern char lbl_8032C7D0[];
+extern char lbl_8032C984[];
 
 static asm void __OSLoadFPUContext(register u32 dummy, register OSContext* fpucontext) {
     nofralloc
@@ -482,4 +483,10 @@ _restoreAndExit:
     lwz     r3, OS_CONTEXT_R3(context)
     lwz     r4, OS_CONTEXT_R4(context)
     rfi
+}
+
+void __OSContextInit(void) {
+    __OSSetExceptionHandler(__OS_EXCEPTION_FLOATING_POINT, OSSwitchFPUContext);
+    __OSFPUContext = NULL;
+    DBPrintf(lbl_8032C984);
 }

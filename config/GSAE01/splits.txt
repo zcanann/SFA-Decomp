@@ -13,6 +13,9 @@ Sections:
 	.sdata2     type:rodata align:32
 	.sbss2      type:bss align:64
 
+main/unknown/autos/placeholder_8032C984.s:
+	.data       start:0x8032C984 end:0x8032C9A8
+
 main/unknown/autos/placeholder_800066E0.c:
 	.text       start:0x800066E0 end:0x800173E4
 
@@ -1500,11 +1503,7 @@ dolphin/os/OSCache.c:
 	.text       start:0x802419A4 end:0x80242060
 
 dolphin/os/OSContext.c:
-	.text       start:0x80242060 end:0x80242880
-
-dolphin/os/OSErrorContext.c:
-	.text       start:0x80242880 end:0x802428C8
-	.data       start:0x8032C984 end:0x8032C9A8
+	.text       start:0x80242060 end:0x802428C8
 
 dolphin/os/OSError.c:
 	.text       start:0x802428C8 end:0x80242C10
