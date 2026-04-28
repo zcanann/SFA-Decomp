@@ -36,7 +36,7 @@ static BOOL InputBufferValid[4];
 static u32 InputBuffer[4][2];
 static volatile u32 InputBufferVcount[4];
 
-u32 __PADFixBits;
+u32 lbl_803DE088;
 
 static u32 CompleteTransfer();
 static inline void SITransferNext(s32 chan);
@@ -560,8 +560,8 @@ static void GetTypeCallback(s32 chan, u32 error, OSContext* context) {
 
     type = Type[chan];
     chanBit = 0x80000000 >> chan;
-    fix = __PADFixBits & chanBit;
-    __PADFixBits &= ~chanBit;
+    fix = lbl_803DE088 & chanBit;
+    lbl_803DE088 &= ~chanBit;
 
     if ((error & 0xF) != 0 || (type & 0x18000000) != 0x08000000 || (type & 0x80000000) == 0 || (type & 0x04000000) != 0) {
         OSSetWirelessID(chan, 0);

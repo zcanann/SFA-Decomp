@@ -434,7 +434,7 @@ config.libs = [
     DolphinLib(
         "si",
         [
-            Object(NonMatching, "dolphin/si/SIBios.c", extra_cflags=["-inline", "all", "-char", "signed"]),
+            Object(MatchingFor("GSAE01"), "dolphin/si/SIBios.c", extra_cflags=["-inline", "all", "-char", "signed"]),
             Object(MatchingFor("GSAE01"), "dolphin/si/SISamplingRate.c", extra_cflags=["-inline", "all", "-char", "signed"]),
         ],
     ),
