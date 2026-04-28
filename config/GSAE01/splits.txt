@@ -1578,6 +1578,9 @@ dolphin/mtx/mtx.c:
 	.text       start:0x80246E54 end:0x80247574
 	.sdata      start:0x803DC550 end:0x803DC558
 
+main/unknown/autos/placeholder_803DC568.s:
+	.sdata      start:0x803DC568 end:0x803DC570
+
 dolphin/mtx/mtxvec.c:
 	.text       start:0x80247574 end:0x802475C8
 
@@ -1596,7 +1599,6 @@ dolphin/dvd/dvdlow.c:
 
 dolphin/dvd/dvdfs.c:
 	.text       start:0x80248870 end:0x802491C4
-	.sdata      start:0x803DC568 end:0x803DC570
 
 dolphin/dvd/dvdFatal.c:
 	.text       start:0x802491C4 end:0x802491F4

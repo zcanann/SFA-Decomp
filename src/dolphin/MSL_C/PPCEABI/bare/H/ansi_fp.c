@@ -392,8 +392,8 @@ _s2d_8:
 
 static const char* const unused = "179769313486231580793729011405303420";
 
-extern const char lbl_802C3198[];
-extern void* jumptable_80333120[];
+extern const char lbl_802C2A18[];
+extern void* jumptable_803324C0[];
 
 asm void __two_exp(decimal* result, long exp) {
     nofralloc
@@ -409,135 +409,135 @@ asm void __two_exp(decimal* result, long exp) {
     addi r0, r30, 0x40
     cmplwi r0, 0x48
     bgt _te_0
-    lis r4, jumptable_80333120@ha
+    lis r4, jumptable_803324C0@ha
     slwi r0, r0, 2
-    addi r4, r4, jumptable_80333120@l
+    addi r4, r4, jumptable_803324C0@l
     lwzx r0, r4, r0
     mtctr r0
     bctr
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, -0x14
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0x25
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, -0x10
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0x53
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, -0xa
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0x7a
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, -0x5
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0x92
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, -0x3
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0x9f
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, -0x3
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0xa6
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, -0x2
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0xac
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, -0x2
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0xb2
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, -0x2
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0xb7
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, -0x1
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0xbb
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, -0x1
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0xbf
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, -0x1
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0xc2
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, 0x0
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0xc4
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, 0x0
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0xc6
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, 0x0
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0xc8
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, 0x0
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0xca
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, 0x1
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0xcc
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, 0x1
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0xcf
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, 0x1
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0xd2
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, 0x2
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0xd5
     bl __str2dec
     b _te_2
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     li r5, 0x2
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     addi r4, r4, 0xd9
     bl __str2dec
     b _te_2
@@ -578,9 +578,9 @@ _te_0:
     lhz r0, 0x28(r31)
     sth r0, 0x88(r1)
     ble _te_1
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     addi r3, r1, 0x34
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     li r5, 0x0
     addi r4, r4, 0xc6
     bl __str2dec
@@ -590,9 +590,9 @@ _te_0:
     bl __timesdec
     b _te_2
 _te_1:
-    lis r4, lbl_802C3198@ha
+    lis r4, lbl_802C2A18@ha
     addi r3, r1, 0x8
-    addi r4, r4, lbl_802C3198@l
+    addi r4, r4, lbl_802C2A18@l
     li r5, -0x1
     addi r4, r4, 0xc2
     bl __str2dec
@@ -796,14 +796,14 @@ done:
     z->sig.length = (unsigned char)(i - ib + 1);
 }
 
-extern const double lbl_803E85C8;
+extern const double lbl_803E7930;
 extern void __cvt_dbl_usll(double);
 
 asm void __num2dec_internal(decimal* d, double x) {
     nofralloc
     stwu r1, -0xb0(r1)
     mflr r0
-    lfd f0, lbl_803E85C8(r2)
+    lfd f0, lbl_803E7930(r2)
     stw r0, 0xb4(r1)
     fcmpu cr0, f0, f1
     stfd f31, 0xa8(r1)
