@@ -1744,13 +1744,6 @@ dolphin/gx/GXPerf.c:
 main/unknown/autos/placeholder_8032EDD0.c:
 	.data       start:0x8032EDD0 end:0x8032F218
 
-main/unknown/autos/placeholder_8032F218.c:
-	.data       start:0x8032F218 end:0x8032F618
-	.sdata2     start:0x803E8368 end:0x803E8390
-
-main/unknown/autos/placeholder_8032F618.c:
-	.data       start:0x8032F618 end:0x8032F79C
-
 dolphin/card/CARDBios.c:
 	.text       start:0x8025DE80 end:0x8025EFCC
 	.bss        start:0x803AF1E0 end:0x803AF420
@@ -1803,6 +1796,14 @@ dolphin/thp/THPDec.c:
 	.rodata     start:0x802C2628 end:0x802C26B8
 	.bss        start:0x803AF420 end:0x803AF550
 	.sbss       start:0x803DE100 end:0x803DE218
+	.sdata2     start:0x803E7760 end:0x803E777C
+
+main/unknown/autos/placeholder_8032F218.c:
+	.data       start:0x8032F218 end:0x8032F618
+	.sdata2     start:0x803E8368 end:0x803E8390
+
+main/unknown/autos/placeholder_8032F618.c:
+	.data       start:0x8032F618 end:0x8032F79C
 
 dolphin/thp/THPAudio.c:
 	.text       start:0x8026B9EC end:0x8026BF1C
