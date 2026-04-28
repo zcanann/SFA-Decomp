@@ -96,8 +96,8 @@ def summarize_failure(output: str) -> str:
     for needle in (
         "multiply-defined:",
         "undefined:",
-        "FAILED:",
         "computed checksum",
+        "FAILED:",
         "Linker Error:",
         "Compiler:",
     ):
