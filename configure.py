@@ -480,7 +480,7 @@ config.libs = [
             Object(NonMatching, "dolphin/gx/GXMisc.c"),
             Object(NonMatching, "dolphin/gx/GXLight.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8032F218.c"),
-            Object(NonMatching, "dolphin/gx/GXTexture.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/gx/GXTexture.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXBump.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8032EDD0.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXAttr.c"),
