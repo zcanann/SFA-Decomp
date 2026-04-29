@@ -3525,6 +3525,21 @@ s16 fn_80138F90(u8* obj) { return *(s16*)(*(u8**)(obj + 0xb8) + 0x414); }
 /* EN v1.0 0x80138F9C  size: 12b  Returns obj->_b8 + 0x408. */
 void* fn_80138F9C(u8* obj) { return (void*)(*(u8**)(obj + 0xb8) + 0x408); }
 
+/* EN v1.0 0x80135BC4  size: 8b   titlescreen_getExtraSize -> 56. */
+int titlescreen_getExtraSize(void) { return 56; }
+
+/* EN v1.0 0x80135CC4  size: 4b   titlescreen_hitDetect (empty stub). */
+void titlescreen_hitDetect(void) {}
+
+/* EN v1.0 0x80135BCC  size: 36b  titlescreen_func08: returns 74 if
+ * obj->_46 (s16) is in [1917, 1920], else returns 0. */
+int titlescreen_func08(u8* obj)
+{
+    s16 v = *(s16*)(obj + 0x46);
+    if (v >= 1917 && v < 1921) return 74;
+    return 0;
+}
+
 extern void* lbl_803DD960;
 extern void* lbl_803DD974;
 extern void* lbl_803DD96C;
