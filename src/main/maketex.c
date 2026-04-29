@@ -1230,3 +1230,6 @@ void fn_8007FDF8(void) { lbl_803DB700 = 0x3; }
 
 /* lbl = N (byte) */
 void fn_800801F8(void) { lbl_803DD08C = 0x0; }
+
+extern f32 lbl_803DEFA0;
+void fn_8008016C(f32 *p) { *p = lbl_803DEFA0; }
