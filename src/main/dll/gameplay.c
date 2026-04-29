@@ -13057,3 +13057,6 @@ u8 fn_800E87C4(void) { return lbl_803DD488; }
 #pragma scheduling off
 void fn_800EA920(int x) { ObjGroup_RemoveObject(x, 0x10); }
 #pragma scheduling reset
+
+/* lbl = N (byte) */
+void fn_800E878C(void) { lbl_803DD488 = 0x0; }

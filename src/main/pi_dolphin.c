@@ -5297,3 +5297,6 @@ void FUN_8004c178(int param_1,float *param_2)
 /* sda21 accessors. */
 extern u8 lbl_803DCD28;
 u8 fn_8004C248(void) { return lbl_803DCD28; }
+
+/* lbl = N (byte) */
+void fn_8004C204(void) { lbl_803DCD28 = 0x0; }
