@@ -1014,6 +1014,12 @@ extern s16 lbl_803DD8CA;
 extern u16 lbl_803DD8D0;
 extern u8  lbl_803A9440[0x18];
 
+extern s8  lbl_803DBA90;
+extern u8  lbl_803DBA91;
+extern void fn_8000A518(s32, s32);
+extern int  fn_800E88B4(u8, u8, int, s32);
+extern int  fn_800E8AAC(void);
+
 /* EN v1.0 0x8012DD7C  size: 40b  Cancel/clear helper. Stores the new u8
  * state byte and, when the caller resets it to 0, also clears the active
  * tween halfwords and drops the active-id sentinel to -1. */
@@ -1112,6 +1118,30 @@ void fn_8012EA5C(s32 id, s32 _unused_a, s32 _unused_b, s32 do_input_disable)
     } else {
         lbl_803DD7A9 = 0;
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* EN v1.0 0x80129698  size: 196b  Pickup-pickup state hook: latches the
+ * resulting object id from fn_800E88B4 into lbl_803DBA91, and on the
+ * "post-collect" mode codes (1 or 2) optionally fires off the cleanup
+ * trio (fn_8000A518 / fn_800206E8 / fn_80020628) when no slot was active
+ * yet, then commits the new u8 active-id to lbl_803DBA90. The third arg
+ * funnels through `c == 0xa` as a branchless boolean. Always returns 1. */
+#pragma scheduling off
+#pragma peephole off
+int fn_80129698(s8 a, int b, u8 c, int mode)
+{
+    lbl_803DBA91 = (u8)fn_800E88B4(a, c == 0xa, b, fn_800E8AAC());
+    if ((u8)mode == 2 || (u8)mode == 1) {
+        if (lbl_803DBA90 == -1) {
+            fn_8000A518(0x23, 1);
+            fn_800206E8(1);
+            fn_80020628(0xff);
+        }
+        lbl_803DBA90 = a;
+    }
+    return 1;
 }
 #pragma peephole reset
 #pragma scheduling reset
