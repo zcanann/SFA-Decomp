@@ -1011,7 +1011,7 @@ extern u16 lbl_803DBA70;
 extern u8  lbl_803DD7A9;
 extern u8  lbl_803DD8C8;
 extern s16 lbl_803DD8CA;
-extern u16 lbl_803DD8D0;
+extern s16 lbl_803DD8D0;
 extern u8  lbl_803A9440[0x18];
 
 extern s8  lbl_803DBA90;
@@ -1028,6 +1028,12 @@ extern u8    lbl_8031B050[9];
 extern u8  lbl_803DD77A;
 extern u8  lbl_803DD77B;
 extern s32 lbl_803DBA60;
+extern f32 lbl_803DD8CC;
+extern u32 lbl_803DD8A4;
+extern f32 lbl_803DB414;
+extern void  fn_80014B0C(void);
+extern void* fn_80019570(u16);
+
 typedef struct BabySnowwormBitTableEntry {
     u8  _0[0x16];   /* 0x00 */
     u16 bit_id;     /* 0x16 */
@@ -1322,6 +1328,94 @@ int fn_80129698(s8 a, int b, u8 c, int mode)
         lbl_803DBA90 = a;
     }
     return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* EN v1.0 0x8012E880  size: 452b  Per-frame death-FX state machine.
+ *
+ * 1. While the dying byte at lbl_803DD7A8 is non-zero, hold the FX
+ *    progress halfword at 0xff and (when lbl_803DD8C8 is also set)
+ *    dispatch vtable+0x5c on the singleton with (0x41, 1) to fire
+ *    the worm-death emitter.
+ *    Otherwise, decrement the progress by 8 * lbl_803DB410 per frame
+ *    and clamp to >= 0.
+ *
+ * 2. When the progress halfword bottoms out, drop the active u16 slot
+ *    at lbl_803DBA70 to 0xFFFF and return.
+ *
+ * 3. If no anim id is queued (lbl_803DD8CA == -1), poll the digital
+ *    pad's confirm bit (mask 0x100) and stash the result in
+ *    lbl_803A9440[3]. When lbl_803A9440[2] == 1, run the same teardown
+ *    as fn_8012BE84's commit path: clear input gate flag, drop bit 9
+ *    from lbl_803DD8A4, clear the dying byte, and (if lbl_803DD7A9 is
+ *    set) call fn_800206E8(0) + clear the input-disable flag. If after
+ *    all that the dying byte is still non-zero, run fn_80014B0C to do
+ *    the late frame-side flush.
+ *
+ * 4. Otherwise, advance the float counter at lbl_803DD8CC. When it
+ *    falls to zero or below, wrap around to (f32)lbl_803DD8CA, bump
+ *    the index counter at lbl_803A9440[1], and (if it overshoots the
+ *    queue length from fn_80019570(slot_id)->_2) clamp it back one
+ *    step and clear the dying byte.
+ */
+#pragma scheduling off
+#pragma peephole off
+void fn_8012E880(void)
+{
+    fn_8002B9EC();
+    if ((s8)lbl_803DD7A8 != 0) {
+        if (lbl_803DD8C8 != 0) {
+            (*(void(**)(s32, s32))((char*)*lbl_803DCA50 + 0x5c))(0x41, 1);
+        }
+        lbl_803DD8D0 = 0xff;
+    } else {
+        s32 step = (u32)lbl_803DB410 << 3;
+        lbl_803DD8D0 = (s16)(lbl_803DD8D0 - step);
+        if (lbl_803DD8D0 < 0) lbl_803DD8D0 = 0;
+    }
+
+    if (lbl_803DD8D0 == 0) {
+        lbl_803DBA70 = 0xFFFF;
+        return;
+    }
+
+    if (lbl_803DD8CA == -1) {
+        s8 dd = 0;
+        if ((fn_80014E70(0) & 0x100) != 0) {
+            dd = 1;
+        }
+        ((s32*)lbl_803A9440)[3] = dd;
+        if (((s32*)lbl_803A9440)[2] == 1) {
+            fn_80014B3C(0, 0x100);
+            lbl_803DD8A4 &= ~0x100u;
+            lbl_803DD7A8 = 0;
+            if (lbl_803DD7A9 != 0) {
+                fn_800206E8(0);
+                lbl_803DD7A9 = 0;
+            }
+        }
+        if ((s8)lbl_803DD7A8 != 0) {
+            fn_80014B0C();
+        }
+        return;
+    }
+
+    {
+        f32 cur = lbl_803DD8CC - lbl_803DB414;
+        lbl_803DD8CC = cur;
+        if (cur <= 0.0f) {
+            lbl_803DD8CC = (f32)(s32)(s16)lbl_803DD8CA;
+            ((s32*)lbl_803A9440)[1]++;
+            {
+                u16* end = (u16*)fn_80019570(lbl_803DBA70);
+                if (((s32*)lbl_803A9440)[1] >= (s32)end[1]) {
+                    ((s32*)lbl_803A9440)[1] = (s32)end[1] - 1;
+                    lbl_803DD7A8 = 0;
+                }
+            }
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
