@@ -2454,7 +2454,10 @@ dolphin/MSL_C/PPCEABI/bare/H/s_ldexp.c:
 	.text       start:0x802919FC end:0x80291BC0
 
 dolphin/MSL_C/PPCEABI/bare/H/s_modf.c:
-	.text       start:0x80291BC0 end:0x80291F44
+	.text       start:0x80291BC0 end:0x80291CBC
+
+dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.c:
+	.text       start:0x80291CBC end:0x80291F44
 
 dolphin/MSL_C/PPCEABI/bare/H/k_sin.c:
 	.text       start:0x80291F44 end:0x802923C4
