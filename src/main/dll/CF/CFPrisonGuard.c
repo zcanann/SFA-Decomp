@@ -299,3 +299,6 @@ byte FUN_8018a0d0(int param_1)
 {
   return *(byte *)(*(int *)(param_1 + 0xb8) + 0x1d) >> 5 & 1;
 }
+
+/* chained byte bit-extract. */
+u32 fn_80189C58(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x1d) >> 5) & 1; }
