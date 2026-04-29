@@ -1821,10 +1821,6 @@ main/unknown/autos/placeholder_8032F218.s:
 main/unknown/autos/placeholder_8032F618.s:
 	.data       start:0x8032F618 end:0x8032F79C
 
-main/unknown/autos/placeholder_803DC630.s:
-	.sdata      start:0x803DC630 end:0x803DC638
-	.sbss       start:0x803DE3C8 end:0x803DE3E0
-
 dolphin/thp/THPAudio.c:
 	.text       start:0x8026B9EC end:0x8026BF1C
 
@@ -2266,13 +2262,12 @@ main/unknown/autos/placeholder_8028521C.c:
 main/unknown/autos/placeholder_80285220.c:
 	extab       start:0x80005CB0 end:0x80005CB8
 	extabindex  start:0x80006698 end:0x800066A4
-	.text       start:0x8028504C end:0x80285768
-
-main/unknown/autos/placeholder_802857B0.c:
-	.text       start:0x80285768 end:0x80285A48
+	.text       start:0x8028504C end:0x80285424
 
 dolphin/OdemuExi2/DebuggerDriver.c:
-	.text       start:0x80285A48 end:0x80285EA4
+	.text       start:0x80285424 end:0x80285EA4
+	.sdata      start:0x803DC630 end:0x803DC638
+	.sbss       start:0x803DE3C8 end:0x803DE3E0
 
 main/unknown/autos/placeholder_80285B64.c:
 	.text       start:0x80285EA4 end:0x80285EA4

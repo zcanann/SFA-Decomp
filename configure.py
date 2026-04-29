@@ -571,8 +571,7 @@ config.libs = [
         "cflags": cflags_base,
         "progress_category": "sdk",
         "objects": [
-            Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_803DC630.s"),
-            Object(NonMatching, "dolphin/OdemuExi2/DebuggerDriver.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/OdemuExi2/DebuggerDriver.c"),
         ],
     },
     DolphinLib(
@@ -758,7 +757,6 @@ config.libs = [
             Object(NonMatching, "main/unknown/autos/placeholder_80284E78.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_80285010.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8028521C.c"),
-            Object(NonMatching, "main/unknown/autos/placeholder_802857B0.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_80295318.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_802BBC10.c"),
             Object(NonMatching, "main/objanim.c"),

@@ -2,16 +2,17 @@
 #include "dolphin/os.h"
 #include <dolphin/hw_regs.h>
 
-__OSInterruptHandler lbl_803DE3C8;
-void (*lbl_803DE3CC)(u32, OSContext*);
-
-u32 lbl_803DE3D0;
-
-s32 lbl_803DE3D4;
+u8 lbl_803DE3DC;
 
 u8* lbl_803DE3D8;
 
-u8 lbl_803DE3DC;
+s32 lbl_803DE3D4;
+
+u32 lbl_803DE3D0;
+
+void (*lbl_803DE3CC)(u32, OSContext*);
+
+__OSInterruptHandler lbl_803DE3C8;
 
 u8 lbl_803DC630[8] = { 0x80 };
 
@@ -25,12 +26,12 @@ u8 lbl_803DC630[8] = { 0x80 };
 
 #define ROUND_UP(x, align) (((x) + (align)-1) & (-(align)))
 
-void DBGEXIInit() {
+inline static void DBGEXIInit() {
     __OSMaskInterrupts(0x18000);
     __EXIRegs[10] = 0;
 }
 
-static u32 DBGEXISelect(u32 v) {
+inline static u32 DBGEXISelect(u32 v) {
     u32 regs = __EXIRegs[10];
     regs &= 0x405;
     regs |= 0x80 | (v << 4);
@@ -38,12 +39,12 @@ static u32 DBGEXISelect(u32 v) {
     return TRUE;
 }
 
-BOOL DBGEXIDeselect(void) {
+inline static BOOL DBGEXIDeselect(void) {
     __EXIRegs[10] &= 0x405;
     return TRUE;
 }
 
-static BOOL DBGEXISync() {
+inline static BOOL DBGEXISync() {
     while (__EXIRegs[13] & 1)
         ;
 
@@ -81,7 +82,7 @@ static BOOL DBGEXIImm(void* buffer, s32 bytecounter, u32 write) {
     return TRUE;
 }
 
-static BOOL DBGWriteMailbox(u32 p1) {
+inline static BOOL DBGWriteMailbox(u32 p1) {
     BOOL error = FALSE;
     u32 value;
 
@@ -194,7 +195,7 @@ static BOOL _DBGReadStatus(u32* p1) {
 
     return !error;
 }
-static BOOL DBGReadStatus(u32* p1) {
+inline static BOOL DBGReadStatus(u32* p1) {
     return _DBGReadStatus(p1);
 }
 
