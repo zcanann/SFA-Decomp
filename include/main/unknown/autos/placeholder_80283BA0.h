@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_80283ba0(int param_1);
+void fn_80283BA0(u8 index);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80283BA0_H_ */

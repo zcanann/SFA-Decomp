@@ -66,6 +66,9 @@ extern undefined4 DAT_803bef8a;
 extern undefined4 DAT_803befae;
 extern undefined4 DAT_803befd2;
 extern undefined4 DAT_803d4900;
+extern u8 lbl_803DE370;
+extern u32 lbl_803DE348;
+extern u8 *lbl_803DE344;
 
 /*
  * --INFO--
@@ -100,4 +103,43 @@ void FUN_80282fe0(int param_1)
 uint FUN_80282fe4(uint param_1)
 {
     return 0;
+}
+
+void fn_80283244(u8 value)
+{
+    lbl_803DE370 = value;
+}
+
+u8 fn_8028324C(void)
+{
+    return lbl_803DE370;
+}
+
+#pragma peephole off
+int fn_80283254(int slot)
+{
+    u8 *entry;
+    int active;
+
+    slot *= 0xf4;
+    entry = lbl_803DE344;
+    entry += slot;
+    active = entry[0xec];
+    return active != 0;
+}
+#pragma peephole reset
+
+void fn_80283274(u32 value)
+{
+    lbl_803DE348 = value;
+}
+
+void fn_8028327C(int slot, u32 value)
+{
+    u8 *entry;
+
+    slot *= 0xf4;
+    entry = lbl_803DE344;
+    entry += slot;
+    *(u32 *)(entry + 0x1c) = value;
 }
