@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_80006b14();
 
-extern undefined4* DAT_803dd6f8;
+extern undefined4* lbl_803DCA78;
 extern f64 DOUBLE_803e7088;
 extern f32 FLOAT_803e7078;
 extern f32 FLOAT_803e707c;
@@ -60,7 +60,7 @@ void chuka_init(undefined2 *param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80206480
+ * Function: dfpfloorbar_free
  * EN v1.0 Address: 0x80206480
  * EN v1.0 Size: 52b
  * EN v1.1 Address: 0x80206590
@@ -70,11 +70,19 @@ void chuka_init(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80206480(void)
+typedef void (*DfpFloorbarFreeFn)(void *obj);
+
+#pragma scheduling off
+void dfpfloorbar_free(int *obj)
 {
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
+  int *extra;
+
+  extra = (int *)obj[0x2e];
+  ((DfpFloorbarFreeFn)(*(u32 *)(*lbl_803DCA78 + 0x18)))(obj);
+  extra[2] = 0;
   return;
 }
+#pragma scheduling reset
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 int fn_80206474(void) { return 0; }
