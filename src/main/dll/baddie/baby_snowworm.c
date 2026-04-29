@@ -971,6 +971,22 @@ s32 fn_8012EB70(void)
     return lbl_803DD7D4;
 }
 
+/* fn_8012EB08 (28b, 3 x s16 setter via extsh+sth pattern) and fn_8012EB30
+ * (56b, slot-table reset loop) — both cases MWCC -O4,p will not emit:
+ *   - fn_8012EB08: target emits extsh-before-sth triples; MWCC strips
+ *     the extsh since sth ignores upper bits (same issue called out in
+ *     wall_crawler's fn_8012EF40 attempt).
+ *   - fn_8012EB30: target loads the .data array address with
+ *     `lis r3,@ha; addi r4,r3,@l`; MWCC routes via r0 with an extra mr
+ *     and that ripples into the post-loop register choice. */
+
+/* fn_8012EA5C declared at end of file (needs externs declared below). */
+
+/* fn_8012DDB8 (32b, u16 = param ? 1 : 0) — close but MWCC inserts an
+ * extra `clrlwi r0,r0,16` to narrow the int ternary result before the
+ * sth, even with peephole/scheduling off. Target skips that mask
+ * because sth ignores upper bits. Skipped. */
+
 /* Wider sbss/sdata extents touched by the larger v1.0 leaves below. */
 extern u8    lbl_803DB410;
 extern s32   lbl_803DBA5C;
@@ -988,6 +1004,15 @@ extern void fn_8000FB00(void);
 extern void fn_8000FC3C(f32);
 extern void fn_80020628(s32);
 extern void fn_800206E8(s32);
+extern void fn_80016C48(void* arg);
+extern void fn_800173C8(s32);
+
+extern u16 lbl_803DBA70;
+extern u8  lbl_803DD7A9;
+extern u8  lbl_803DD8C8;
+extern s16 lbl_803DD8CA;
+extern u16 lbl_803DD8D0;
+extern u8  lbl_803A9440[0x18];
 
 /* EN v1.0 0x8012DD7C  size: 40b  Cancel/clear helper. Stores the new u8
  * state byte and, when the caller resets it to 0, also clears the active
@@ -1055,4 +1080,38 @@ void fn_8012DF14(void)
     fn_800206E8(1);
     fn_80020628(0xff);
 }
+#pragma scheduling reset
+
+/* EN v1.0 0x8012EA5C  size: 172b  Spawn/queue helper for the snowworm
+ * death FX. If `id == -1` or the active slot u16 at lbl_803DBA70 is
+ * already occupied, do nothing. Otherwise: ping the death sound, latch
+ * the dying-state bytes (lbl_803DD7A8 / lbl_803DD8C8), publish the new
+ * id into lbl_803DBA70 (u16-narrowed), drop the lookahead halfword
+ * (lbl_803DD8CA = -1) and the FX progress halfword (lbl_803DD8D0 = 0),
+ * then post the work item at lbl_803A9440 to the global handler queue.
+ * When `do_input_disable` is non-zero, also disable player input and
+ * fade alpha to 0xFF, marking lbl_803DD7A9 = 1 to remember the input
+ * was suppressed. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8012EA5C(s32 id, s32 _unused_a, s32 _unused_b, s32 do_input_disable)
+{
+    if (id == -1) return;
+    if (lbl_803DBA70 != 0xFFFF) return;
+    fn_800173C8(0x7c);
+    lbl_803DD7A8 = 1;
+    lbl_803DD8D0 = 0;
+    lbl_803DBA70 = (u16)id;
+    lbl_803DD8CA = -1;
+    lbl_803DD8C8 = 1;
+    fn_80016C48(lbl_803A9440);
+    if (do_input_disable != 0) {
+        fn_800206E8(1);
+        fn_80020628(0xff);
+        lbl_803DD7A9 = 1;
+    } else {
+        lbl_803DD7A9 = 0;
+    }
+}
+#pragma peephole reset
 #pragma scheduling reset
