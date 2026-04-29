@@ -375,6 +375,8 @@ extern void   fn_8001467C(void);
  * vtable+0x4c on the singleton at lbl_803DCAAC with the s8 obj+0xac;
  * when the call returns 0 also fires fn_800887F8(0); always tails into
  * fn_8001467C. */
+#pragma scheduling off
+#pragma peephole off
 void nw_levcontrol_free(u8* obj)
 {
     int ret = (*(int(**)(s8, int))((char*)*lbl_803DCAAC + 0x4c))((s8)obj[0xac], 0);
@@ -383,3 +385,5 @@ void nw_levcontrol_free(u8* obj)
     }
     fn_8001467C();
 }
+#pragma peephole reset
+#pragma scheduling reset
