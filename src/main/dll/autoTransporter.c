@@ -723,3 +723,7 @@ extern void fn_8003B8F4(f32);
 #pragma peephole off
 void doorf4_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E3680); }
 #pragma peephole reset
+
+#pragma scheduling off
+int fn_801793A4(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x274) == 0; }
+#pragma scheduling reset

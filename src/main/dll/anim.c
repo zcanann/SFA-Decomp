@@ -4170,3 +4170,7 @@ void doorswitch_free(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 void doorswitch_update(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 void doorswitch_init(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 #pragma scheduling reset
+
+#pragma scheduling off
+int fn_801FF9B4(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x8) == 0; }
+#pragma scheduling reset
