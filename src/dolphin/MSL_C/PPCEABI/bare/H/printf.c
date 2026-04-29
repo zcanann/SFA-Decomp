@@ -65,858 +65,96 @@ enum {
 const char printf_stringBase0[] = "\0-INF\0-inf\0INF\0inf\0-NAN\0-nan\0NAN\0nan";
 static wchar_t printf_wstringBase0[] = L"";
 
-const char* parse_format_80291840(const char *format_string, va_list *arg, print_format *format) {
-    print_format f;
-    const char* s = format_string;
-    int c;
-    int flag_found;
-    f.justification_options = right_justification;
-    f.sign_options = only_minus;
-    f.precision_specified = 0;
-    f.alternate_form = 0;
-    f.argument_options = normal_argument;
-    f.field_width = 0;
-    f.precision = 0;
+const char* parse_format_80291840(const char *format_string, va_list *arg, print_format *format);
+char* long2str_80291620(long num, char* buff, print_format format);
+char* longlong2str_80291344(long long num, char* pBuf, print_format fmt);
+char * double2hex(long double num, char * buff, print_format format);
+static void round_decimal(decimal* dec, int new_length);
+char* float2str(long double num, char *buff, print_format format);
+int __pformatter(void *(*WriteProc)(void*, const char*, size_t), void *WriteProcArg, const char * format_str, va_list arg);
+void* __FileWrite(void* pFile, const char* pBuffer, size_t char_num);
+void* __StringWrite(void* pCtrl, const char* pBuffer, size_t char_num);
+int vsprintf(char *s, const char *format, va_list arg);
+int vprintf(const char* format, va_list arg);
+int sprintf(char* s, const char* format, ...);
 
-    if ((c = *++s) == '%') {
-        f.conversion_char = c;
-        *format = f;
-        return ((const char*)s + 1);
-    }
-
-    for (;;) {
-        flag_found = 1;
-
-        switch (c) {
-            case '-':
-                f.justification_options = left_justification;
-                break;
-            case '+':
-                f.sign_options = sign_always;
-                break;
-            case ' ':
-                if (f.sign_options != sign_always) {
-                    f.sign_options = space_holder;
-                }
-                break;
-            case '#':
-                f.alternate_form = 1;
-                break;
-            case '0':
-                if (f.justification_options != left_justification) {
-                    f.justification_options = zero_fill;
-                }
-                break;
-            default:
-                flag_found = 0;
-                break;
-        }
-
-        if (flag_found) {
-            c = *++s;
-        }
-        else {
-            break;
-        }
-    }
-
-    if (c == '*') {
-        if ((f.field_width = va_arg(*arg, int)) < 0) {
-            f.justification_options = left_justification;
-            f.field_width = -f.field_width;
-        }
-
-        c = *++s;
-    }
-    else {
-        while (isdigit(c)) {
-            f.field_width = (f.field_width * 10) + (c - '0');
-            c = *++s;
-        }
-    }
-
-    if (f.field_width > 509) {
-        f.conversion_char = 0xFF;
-        *format = f;
-        return ((const char*)s + 1);
-    }
-
-    if (c == '.') {
-        f.precision_specified = 1;
-
-        if ((c = *++s) == '*') {
-            if ((f.precision = va_arg(*arg, int)) < 0) {
-                f.precision_specified = 0;
-            }
-
-            c = *++s;
-        }
-        else {
-            while (isdigit(c)) {
-                f.precision = (f.precision * 10) + (c - '0');
-                c = *++s;
-            }
-        }
-    }
-
-    flag_found = 1;
-
-    switch (c) {
-        case 'h':
-            f.argument_options = short_argument;
-
-            if (s[1] == 'h') {
-                f.argument_options = char_argument;
-                c = *++s;
-            }
-
-            break;
-
-        case 'l':
-            f.argument_options = long_argument;
-
-            if (s[1] == 'l') {
-                f.argument_options = long_long_argument;
-                c = *++s;
-            }
-
-            break;
-
-        case 'L':
-            f.argument_options = long_double_argument;
-            break;
-        default:
-            flag_found = 0;
-            break;
-    }
-
-    if (flag_found) {
-        c = *++s;
-    }
-
-    f.conversion_char = c;
-
-    switch (c) {
-        case 'd':
-        case 'i':
-        case 'u':
-        case 'o':
-        case 'x':
-        case 'X':
-            if (f.argument_options == long_double_argument) {
-                f.conversion_char = 0xFF;
-                break;
-            }
-
-            if (!f.precision_specified) {
-                f.precision = 1;
-            }
-            else if (f.justification_options == zero_fill) {
-                f.justification_options = right_justification;
-            }
-            break;
-
-        case 'f':
-        case 'F':
-            if (f.argument_options == short_argument || f.argument_options == long_long_argument) {
-                f.conversion_char = 0xFF;
-                break;
-            }
-
-            if (!f.precision_specified) {
-                f.precision = 6;
-            }
-            break;
-
-        case 'a':
-        case 'A':
-            if (!f.precision_specified) {
-                f.precision = 0xD;
-            }
-
-            if (f.argument_options == short_argument || f.argument_options == long_long_argument || f.argument_options == char_argument) {
-                f.conversion_char = 0xFF;
-            }
-
-            break;
-
-        case 'g':
-        case 'G':
-            if (!f.precision) {
-                f.precision = 1;
-            }
-
-        case 'e':
-        case 'E':
-            if (f.argument_options == short_argument || f.argument_options == long_long_argument || f.argument_options == char_argument) {
-                f.conversion_char = 0xFF;
-                break;
-            }
-
-            if (!f.precision_specified) {
-                f.precision = 6;
-            }
-            break;
-
-        case 'p':
-            f.conversion_char = 'x';
-            f.alternate_form = 1;
-            f.argument_options = long_argument;
-            f.precision = 8;
-            break;
-
-        case 'c':
-            if (f.argument_options == long_argument) {
-                f.argument_options = wchar_argument;
-            }
-            else {
-                if (f.precision_specified || f.argument_options != normal_argument) {
-                    f.conversion_char = 0xFF;
-                }
-            }
-
-            break;
-
-        case 's':
-            if (f.argument_options == long_argument) {
-                f.argument_options = wchar_argument;
-            }
-            else {
-                if (f.argument_options != normal_argument) {
-                    f.conversion_char = 0xFF;
-                }
-            }
-
-            break;
-
-        case 'n':
-            if (f.argument_options == long_double_argument) {
-                f.conversion_char = 0xFF;
-            }
-
-            break;
-
-        default:
-            f.conversion_char = 0xFF;
-            break;
-    }
-
-    *format = f;
-    return ((const char*)s + 1);
-}
-
-char* long2str_80291620(long num, char* buff, print_format format)
+int sprintf(char* s, const char* format, ...)
 {
-    unsigned long unsigned_num, base;
-    char* p;
-    int n, digits;
-    int minus    = 0;
-    unsigned_num = num;
-    minus        = 0;
+    int end;
+    int len;
+    va_list args;
+    __OutStrCtrl osc;
 
-    p      = buff;
-    *--p   = 0;
-    digits = 0;
+    va_start(args, format);
 
-    if (!num && !format.precision
-        && !(format.alternate_form && format.conversion_char == 'o')) {
-        return p;
-    }
+    osc.CharStr = s;
+    osc.MaxCharCount = (size_t)-1;
+    osc.CharsWritten = 0;
 
-    switch (format.conversion_char) {
-    case 'd':
-    case 'i':
-        base = 10;
+    end = __pformatter(&__StringWrite, &osc, format, args);
 
-        if (num < 0) {
-            unsigned_num = -unsigned_num;
-            minus        = 1;
+    if (s != NULL) {
+        len = -2;
+        if (end < (size_t)-1) {
+            len = end;
         }
-        break;
-
-    case 'o':
-        base                 = 8;
-        format.sign_options = only_minus;
-        break;
-
-    case 'u':
-        base                 = 10;
-        format.sign_options = only_minus;
-        break;
-
-    case 'x':
-    case 'X':
-        base                 = 16;
-        format.sign_options = only_minus;
-        break;
+        s[len] = '\0';
     }
 
-    do {
-        n = unsigned_num % base;
-        unsigned_num /= base;
-
-        if (n < 10) {
-            n += '0';
-        } else {
-            n -= 10;
-
-            if (format.conversion_char == 'x') {
-                n += 'a';
-            } else {
-                n += 'A';
-            }
-        }
-
-        *--p = n;
-        ++digits;
-    } while (unsigned_num != 0);
-
-    if (base == 8 && format.alternate_form && *p != '0') {
-        *--p = '0';
-        ++digits;
-    }
-
-    if (format.justification_options == zero_fill) {
-        format.precision = format.field_width;
-
-        if (minus || format.sign_options != only_minus)
-            --format.precision;
-
-        if (base == 16 && format.alternate_form)
-            format.precision -= 2;
-    }
-
-    if (buff - p + format.precision > 509)
-        return (0);
-
-    while (digits < format.precision) {
-        *--p = '0';
-        ++digits;
-    }
-
-    if (base == 16 && format.alternate_form) {
-        *--p = format.conversion_char;
-        *--p = '0';
-    }
-
-    if (minus) {
-        *--p = '-';
-    } else if (format.sign_options == sign_always) {
-        *--p = '+';
-    } else if (format.sign_options == space_holder) {
-        *--p = ' ';
-    }
-
-    return p;
+    return end;
 }
 
-char* longlong2str_80291344(long long num, char* pBuf, print_format fmt)
+int vsprintf(char *s, const char *format, va_list arg)
 {
-    unsigned long long unsigned_num, base;
-    char* p;
-    int n, digits;
-    int minus    = 0;
-    unsigned_num = num;
-    minus        = 0;
-    p            = pBuf;
-    *--p         = 0;
-    digits       = 0;
+    int end;
+    int len;
+    __OutStrCtrl osc;
 
-    if (!num && !fmt.precision
-        && !(fmt.alternate_form && fmt.conversion_char == 'o')) {
-        return p;
-    }
+    osc.CharStr = s;
+    osc.MaxCharCount = (size_t)-1;
+    osc.CharsWritten = 0;
 
-    switch (fmt.conversion_char) {
-    case 'd':
-    case 'i':
-        base = 10;
+    end = __pformatter(&__StringWrite, &osc, format, arg);
 
-        if (num < 0) {
-            unsigned_num = -unsigned_num;
-            minus        = 1;
+    if (s != NULL) {
+        len = -2;
+        if (end < (size_t)-1) {
+            len = end;
         }
-        break;
-    case 'o':
-        base              = 8;
-        fmt.sign_options = only_minus;
-        break;
-    case 'u':
-        base              = 10;
-        fmt.sign_options = only_minus;
-        break;
-    case 'x':
-    case 'X':
-        base              = 16;
-        fmt.sign_options = only_minus;
-        break;
+        s[len] = '\0';
     }
 
-    do {
-        n = unsigned_num % base;
-        unsigned_num /= base;
-
-        if (n < 10) {
-            n += '0';
-        } else {
-            n -= 10;
-            if (fmt.conversion_char == 'x') {
-                n += 'a';
-            } else {
-                n += 'A';
-            }
-        }
-
-        *--p = n;
-        ++digits;
-    } while (unsigned_num != 0);
-
-    if (base == 8 && fmt.alternate_form && *p != '0') {
-        *--p = '0';
-        ++digits;
-    }
-
-    if (fmt.justification_options == zero_fill) {
-        fmt.precision = fmt.field_width;
-
-        if (minus || fmt.sign_options != only_minus) {
-            --fmt.precision;
-        }
-
-        if (base == 16 && fmt.alternate_form) {
-            fmt.precision -= 2;
-        }
-    }
-
-    if (pBuf - p + fmt.precision > 509) {
-        return 0;
-    }
-
-    while (digits < fmt.precision) {
-        *--p = '0';
-        ++digits;
-    }
-
-    if (base == 16 && fmt.alternate_form) {
-        *--p = fmt.conversion_char;
-        *--p = '0';
-    }
-
-    if (minus) {
-        *--p = '-';
-    } else if (fmt.sign_options == sign_always) {
-        *--p = '+';
-    } else if (fmt.sign_options == space_holder) {
-        *--p = ' ';
-    }
-
-    return p;
+    return end;
 }
 
-char * double2hex(long double num, char * buff, print_format format)  {
-    char *p;
-    unsigned char *q;
-    unsigned char temp_r7;
-    char working_byte;
-    long double ld;
-    long exp;
-    print_format exp_format;
-    int hex_precision;
-    decform form;
-    decimal dec;
-
-    p = buff;
-    ld = num;
-
-    if (format.precision > 509) {
-        return 0;
-    }
-
-    form.style = (char) 0;
-    form.digits = 0x20;
-    __num2dec(&form, num, &dec);
-
-    if (*dec.sig.text == 'I') {
-        if (*(short*) &ld & 0x8000) {
-            p = buff - 5;
-            if (format.conversion_char == 'A') strcpy(p, printf_stringBase0 + PRINTF_STR_NEG_INF);
-            else strcpy(p, printf_stringBase0 + PRINTF_STR_NEG_inf);
-        }
-        else {
-            p = buff - 4;
-            if (format.conversion_char == 'A') strcpy(p, printf_stringBase0 + PRINTF_STR_INF);
-            else strcpy(p, printf_stringBase0 + PRINTF_STR_inf);
-        }
-
-        return p;
-    }
-    if (*dec.sig.text == 'N') {
-        if (*(unsigned char*) &num & 0x80) {
-            p = buff - 5;
-            if (format.conversion_char == 'A') strcpy(p, printf_stringBase0 + PRINTF_STR_NEG_NAN);
-            else strcpy(p, printf_stringBase0 + PRINTF_STR_NEG_nan);
-        }
-        else {
-            p = buff - 4;
-            if (format.conversion_char == 'A') strcpy(p, printf_stringBase0 + PRINTF_STR_NAN);
-            else strcpy(p, printf_stringBase0 + PRINTF_STR_nan);
-        }
-
-        return p;
-    }
-
-    exp_format.justification_options = right_justification;
-    exp_format.sign_options = sign_always;
-    exp_format.precision_specified = 0;
-    exp_format.alternate_form = 0;
-    exp_format.argument_options = normal_argument;
-    exp_format.field_width = 0;
-    exp_format.precision = 1;
-    exp_format.conversion_char = 'd';
-
-    exp = (short) ((*(short*) &ld & 0x7FFF) >> 4) - 0x3FF;
-    p = long2str_80291620(exp, buff, exp_format);
-    if (format.conversion_char == 'a')
-        *--p = 'p';
-    else
-        *--p = 'P';
-    q = (unsigned char*) &num;
-
-    for (hex_precision = format.precision; hex_precision >= 1; hex_precision--) {
-        temp_r7 = *(q + (hex_precision / 2 + 1));
-        if (hex_precision % 2) {
-            working_byte = temp_r7 & 0xF;
-        } else {
-            working_byte = (temp_r7 >> 4);
-        }
-
-        if (working_byte < 10) {
-            working_byte += '0';
-        }
-        else
-            if (format.conversion_char == 'a') {
-                working_byte += 'a' - 10;
-            }
-            else {
-                working_byte += 'A' - 10;
-            }
-
-        *--p = working_byte;
-    }
-
-    if (TARGET_FLOAT_IMPLICIT_J_BIT){
-        if (format.precision || format.alternate_form) {
-            *--p = '.';
-        }
-        *--p = '1';
-    }
-
-    if (format.conversion_char == 'a') {
-        *--p = 'x';
-    }
-    else {
-        *--p = 'X';
-    }
-
-    *--p = '0';
-
-    if (*((short*) &ld) & 0x8000) {
-        *--p = '-';
-    }
-    else if (format.sign_options == sign_always) {
-        *--p = '+';
-    }
-    else if (format.sign_options == space_holder) {
-        *--p = ' ';
-    }
-
-    return p;
-}
-
-static void round_decimal(decimal* dec, int new_length)
+int vprintf(const char* format, va_list arg)
 {
-    char c;
-    char* p;
-    int carry;
+    int ret;
 
-    if (new_length < 0) {
-    return_zero:
-        dec->exp        = 0;
-        dec->sig.length = 1;
-        *dec->sig.text  = '0';
-        return;
+    if (fwide(stdout, -1) >= 0) {
+        return -1;
     }
 
-    if (new_length >= dec->sig.length) {
-        return;
-    }
-
-    p = (char*)dec->sig.text + new_length + 1;
-    c = *--p - '0';
-
-    if (c == 5) {
-        char* q = &((char*)dec->sig.text)[dec->sig.length];
-
-        while (--q > p && *q == '0')
-            ;
-        carry = (q == p) ? p[-1] & 1 : 1;
-    } else {
-        carry = (c > 5);
-    }
-
-    while (new_length != 0) {
-        c = *--p - '0' + carry;
-
-        if ((carry = (c > 9)) != 0 || c == 0) {
-            --new_length;
-        } else {
-            *p = c + '0';
-            break;
-        }
-    }
-
-    if (carry != 0) {
-        dec->exp += 1;
-        dec->sig.length = 1;
-        *dec->sig.text  = '1';
-        return;
-    } else if (new_length == 0) {
-        goto return_zero;
-    }
-
-    dec->sig.length = new_length;
+    ret = __pformatter(&__FileWrite, (void*)stdout, format, arg);
+    return ret;
 }
 
-char* float2str(long double num, char *buff, print_format format) {
-    decimal dec;
-    decform form;
-    char* p;
-    char* q;
-    int n, digits, sign;
-    int int_digits, frac_digits;
+void* __StringWrite(void* pCtrl, const char* pBuffer, size_t char_num)
+{
+    size_t chars;
+    __OutStrCtrl* ctrl = (__OutStrCtrl*)pCtrl;
 
-    if (format.precision > 509) {
-        return 0;
-    }
+    chars = ((ctrl->CharsWritten + char_num) <= ctrl->MaxCharCount)
+                ? char_num
+                : ctrl->MaxCharCount - ctrl->CharsWritten;
+    memcpy(ctrl->CharStr + ctrl->CharsWritten, pBuffer, chars);
+    ctrl->CharsWritten += chars;
+    return (void*) 1;
+}
 
-    form.style = 0;
-    form.digits = 0x20;
-    __num2dec(&form, num, &dec);
-    p = (char*)dec.sig.text + dec.sig.length;
-
-    while (dec.sig.length > 1 && *--p == '0') {
-        --dec.sig.length;
-        ++dec.exp;
-    }
-
-    switch (*dec.sig.text) {
-        case '0':
-            dec.exp = 0;
-            break;
-        case 'I':
-            if (num < printf_double_zero) {
-                p = buff - 5;
-
-                if (isupper(format.conversion_char)) {
-                    strcpy(p, printf_stringBase0 + PRINTF_STR_NEG_INF);
-                }
-                else {
-                    strcpy(p, printf_stringBase0 + PRINTF_STR_NEG_inf);
-                }
-            }
-            else {
-                p = buff - 4;
-                if (isupper(format.conversion_char)) {
-                    strcpy(p, printf_stringBase0 + PRINTF_STR_INF);
-                }
-                else {
-                    strcpy(p, printf_stringBase0 + PRINTF_STR_inf);
-                }
-            }
-
-            return p;
-
-        case 'N':
-            if (dec.sign) {
-                p = buff - 5;
-
-                if (isupper(format.conversion_char)) {
-                    strcpy(p, printf_stringBase0 + PRINTF_STR_NEG_NAN);
-                }
-                else {
-                    strcpy(p, printf_stringBase0 + PRINTF_STR_NEG_nan);
-                }
-            }
-            else {
-                p = buff - 4;
-                if (isupper(format.conversion_char)) {
-                    strcpy(p, printf_stringBase0 + PRINTF_STR_NAN);
-                }
-                else {
-                    strcpy(p, printf_stringBase0 + PRINTF_STR_nan);
-                }
-            }
-
-            return p;
-    }
-
-    dec.exp += dec.sig.length - 1;
-    p = buff;
-    *--p = 0;
-
-    switch (format.conversion_char)
-    {
-        case 'g':
-        case 'G':
-
-            if (dec.sig.length > format.precision) {
-                round_decimal(&dec, format.precision);
-            }
-
-            if (dec.exp < -4 || dec.exp >= format.precision)
-            {
-                if (format.alternate_form) {
-                    --format.precision;
-                }
-                else {
-                    format.precision = dec.sig.length - 1;
-                }
-
-                if (format.conversion_char == 'g') {
-                    format.conversion_char = 'e';
-                }
-                else {
-                    format.conversion_char = 'E';
-                }
-
-                goto e_format;
-            }
-
-            if (format.alternate_form) {
-                format.precision -= dec.exp + 1;
-            }
-            else {
-                if ((format.precision = dec.sig.length - (dec.exp + 1)) < 0) {
-                    format.precision = 0;
-                }
-            }
-
-            goto f_format;
-
-        case 'e':
-        case 'E':
-        e_format:
-
-            if (dec.sig.length > format.precision + 1) {
-                round_decimal(&dec, format.precision + 1);
-            }
-
-            n = dec.exp;
-            sign = '+';
-
-            if (n < 0) {
-                n = -n;
-                sign = '-';
-            }
-
-            for (digits = 0; n || digits < 2; ++digits) {
-                *--p = n % 10 + '0';
-                n /= 10;
-            }
-
-            *--p = sign;
-            *--p = format.conversion_char;
-
-            if (buff - p + format.precision > 509) {
-                return 0;
-            }
-
-            if (dec.sig.length < format.precision + 1) {
-                for (n = format.precision + 1 - dec.sig.length + 1; --n;) {
-                    *--p = '0';
-                }
-            }
-
-            for (n = dec.sig.length, q = (char*)dec.sig.text + dec.sig.length; --n;) {
-                *--p = *--q;
-            }
-
-            if (format.precision || format.alternate_form) {
-                *--p = '.';
-            }
-
-            *--p = *dec.sig.text;
-
-            if (dec.sign)
-                *--p = '-';
-            else if (format.sign_options == sign_always)
-                *--p = '+';
-            else if (format.sign_options == space_holder)
-                *--p = ' ';
-
-            break;
-
-        case 'f':
-        case 'F':
-        f_format:
-
-            if ((frac_digits = -dec.exp + dec.sig.length - 1) < 0)
-                frac_digits = 0;
-
-            if (frac_digits > format.precision) {
-                round_decimal(&dec, dec.sig.length - (frac_digits - format.precision));
-
-                if ((frac_digits = -dec.exp + dec.sig.length - 1) < 0)
-                    frac_digits = 0;
-            }
-
-            if ((int_digits = dec.exp + 1) < 0)
-                int_digits = 0;
-
-            if (int_digits + frac_digits > 509)
-                return 0;
-
-            q = (char*) dec.sig.text + dec.sig.length;
-
-            for (digits = 0; digits < (format.precision - frac_digits); ++digits)
-                *--p = '0';
-
-            for (digits = 0; digits < frac_digits && digits < dec.sig.length; ++digits)
-                *--p = *--q;
-
-            for (; digits < frac_digits; ++digits)
-                *--p = '0';
-
-            if (format.precision || format.alternate_form)
-                *--p = '.';
-
-            if (int_digits) {
-                for (digits = 0; digits < int_digits - dec.sig.length; ++digits) {
-                    *--p = '0';
-                }
-
-                for (; digits < int_digits; ++digits) {
-                    *--p = *--q;
-                }
-            }
-            else {
-                *--p = '0';
-            }
-
-            if (dec.sign) {
-                *--p = '-';
-            }
-            else if (format.sign_options == sign_always) {
-                *--p = '+';
-            }
-            else if (format.sign_options == space_holder) {
-                *--p = ' ';
-            }
-
-            break;
-    }
-
-    return p;
+void* __FileWrite(void* pFile, const char* pBuffer, size_t char_num)
+{
+    return (fwrite(pBuffer, 1, char_num, (FILE*)pFile) == char_num ? pFile : 0);
 }
 
 int __pformatter(void *(*WriteProc)(void*, const char*, size_t), void *WriteProcArg, const char * format_str, va_list arg) {
@@ -1197,81 +435,856 @@ int __pformatter(void *(*WriteProc)(void*, const char*, size_t), void *WriteProc
     return chars_written;
 }
 
-void* __FileWrite(void* pFile, const char* pBuffer, size_t char_num)
-{
-    return (fwrite(pBuffer, 1, char_num, (FILE*)pFile) == char_num ? pFile : 0);
+char* float2str(long double num, char *buff, print_format format) {
+    decimal dec;
+    decform form;
+    char* p;
+    char* q;
+    int n, digits, sign;
+    int int_digits, frac_digits;
+
+    if (format.precision > 509) {
+        return 0;
+    }
+
+    form.style = 0;
+    form.digits = 0x20;
+    __num2dec(&form, num, &dec);
+    p = (char*)dec.sig.text + dec.sig.length;
+
+    while (dec.sig.length > 1 && *--p == '0') {
+        --dec.sig.length;
+        ++dec.exp;
+    }
+
+    switch (*dec.sig.text) {
+        case '0':
+            dec.exp = 0;
+            break;
+        case 'I':
+            if (num < printf_double_zero) {
+                p = buff - 5;
+
+                if (isupper(format.conversion_char)) {
+                    strcpy(p, printf_stringBase0 + PRINTF_STR_NEG_INF);
+                }
+                else {
+                    strcpy(p, printf_stringBase0 + PRINTF_STR_NEG_inf);
+                }
+            }
+            else {
+                p = buff - 4;
+                if (isupper(format.conversion_char)) {
+                    strcpy(p, printf_stringBase0 + PRINTF_STR_INF);
+                }
+                else {
+                    strcpy(p, printf_stringBase0 + PRINTF_STR_inf);
+                }
+            }
+
+            return p;
+
+        case 'N':
+            if (dec.sign) {
+                p = buff - 5;
+
+                if (isupper(format.conversion_char)) {
+                    strcpy(p, printf_stringBase0 + PRINTF_STR_NEG_NAN);
+                }
+                else {
+                    strcpy(p, printf_stringBase0 + PRINTF_STR_NEG_nan);
+                }
+            }
+            else {
+                p = buff - 4;
+                if (isupper(format.conversion_char)) {
+                    strcpy(p, printf_stringBase0 + PRINTF_STR_NAN);
+                }
+                else {
+                    strcpy(p, printf_stringBase0 + PRINTF_STR_nan);
+                }
+            }
+
+            return p;
+    }
+
+    dec.exp += dec.sig.length - 1;
+    p = buff;
+    *--p = 0;
+
+    switch (format.conversion_char)
+    {
+        case 'g':
+        case 'G':
+
+            if (dec.sig.length > format.precision) {
+                round_decimal(&dec, format.precision);
+            }
+
+            if (dec.exp < -4 || dec.exp >= format.precision)
+            {
+                if (format.alternate_form) {
+                    --format.precision;
+                }
+                else {
+                    format.precision = dec.sig.length - 1;
+                }
+
+                if (format.conversion_char == 'g') {
+                    format.conversion_char = 'e';
+                }
+                else {
+                    format.conversion_char = 'E';
+                }
+
+                goto e_format;
+            }
+
+            if (format.alternate_form) {
+                format.precision -= dec.exp + 1;
+            }
+            else {
+                if ((format.precision = dec.sig.length - (dec.exp + 1)) < 0) {
+                    format.precision = 0;
+                }
+            }
+
+            goto f_format;
+
+        case 'e':
+        case 'E':
+        e_format:
+
+            if (dec.sig.length > format.precision + 1) {
+                round_decimal(&dec, format.precision + 1);
+            }
+
+            n = dec.exp;
+            sign = '+';
+
+            if (n < 0) {
+                n = -n;
+                sign = '-';
+            }
+
+            for (digits = 0; n || digits < 2; ++digits) {
+                *--p = n % 10 + '0';
+                n /= 10;
+            }
+
+            *--p = sign;
+            *--p = format.conversion_char;
+
+            if (buff - p + format.precision > 509) {
+                return 0;
+            }
+
+            if (dec.sig.length < format.precision + 1) {
+                for (n = format.precision + 1 - dec.sig.length + 1; --n;) {
+                    *--p = '0';
+                }
+            }
+
+            for (n = dec.sig.length, q = (char*)dec.sig.text + dec.sig.length; --n;) {
+                *--p = *--q;
+            }
+
+            if (format.precision || format.alternate_form) {
+                *--p = '.';
+            }
+
+            *--p = *dec.sig.text;
+
+            if (dec.sign)
+                *--p = '-';
+            else if (format.sign_options == sign_always)
+                *--p = '+';
+            else if (format.sign_options == space_holder)
+                *--p = ' ';
+
+            break;
+
+        case 'f':
+        case 'F':
+        f_format:
+
+            if ((frac_digits = -dec.exp + dec.sig.length - 1) < 0)
+                frac_digits = 0;
+
+            if (frac_digits > format.precision) {
+                round_decimal(&dec, dec.sig.length - (frac_digits - format.precision));
+
+                if ((frac_digits = -dec.exp + dec.sig.length - 1) < 0)
+                    frac_digits = 0;
+            }
+
+            if ((int_digits = dec.exp + 1) < 0)
+                int_digits = 0;
+
+            if (int_digits + frac_digits > 509)
+                return 0;
+
+            q = (char*) dec.sig.text + dec.sig.length;
+
+            for (digits = 0; digits < (format.precision - frac_digits); ++digits)
+                *--p = '0';
+
+            for (digits = 0; digits < frac_digits && digits < dec.sig.length; ++digits)
+                *--p = *--q;
+
+            for (; digits < frac_digits; ++digits)
+                *--p = '0';
+
+            if (format.precision || format.alternate_form)
+                *--p = '.';
+
+            if (int_digits) {
+                for (digits = 0; digits < int_digits - dec.sig.length; ++digits) {
+                    *--p = '0';
+                }
+
+                for (; digits < int_digits; ++digits) {
+                    *--p = *--q;
+                }
+            }
+            else {
+                *--p = '0';
+            }
+
+            if (dec.sign) {
+                *--p = '-';
+            }
+            else if (format.sign_options == sign_always) {
+                *--p = '+';
+            }
+            else if (format.sign_options == space_holder) {
+                *--p = ' ';
+            }
+
+            break;
+    }
+
+    return p;
 }
 
-void* __StringWrite(void* pCtrl, const char* pBuffer, size_t char_num)
+static void round_decimal(decimal* dec, int new_length)
 {
-    size_t chars;
-    __OutStrCtrl* ctrl = (__OutStrCtrl*)pCtrl;
+    char c;
+    char* p;
+    int carry;
 
-    chars = ((ctrl->CharsWritten + char_num) <= ctrl->MaxCharCount)
-                ? char_num
-                : ctrl->MaxCharCount - ctrl->CharsWritten;
-    memcpy(ctrl->CharStr + ctrl->CharsWritten, pBuffer, chars);
-    ctrl->CharsWritten += chars;
-    return (void*) 1;
-}
+    if (new_length < 0) {
+    return_zero:
+        dec->exp        = 0;
+        dec->sig.length = 1;
+        *dec->sig.text  = '0';
+        return;
+    }
 
-int vsprintf(char *s, const char *format, va_list arg)
-{
-    int end;
-    int len;
-    __OutStrCtrl osc;
+    if (new_length >= dec->sig.length) {
+        return;
+    }
 
-    osc.CharStr = s;
-    osc.MaxCharCount = (size_t)-1;
-    osc.CharsWritten = 0;
+    p = (char*)dec->sig.text + new_length + 1;
+    c = *--p - '0';
 
-    end = __pformatter(&__StringWrite, &osc, format, arg);
+    if (c == 5) {
+        char* q = &((char*)dec->sig.text)[dec->sig.length];
 
-    if (s != NULL) {
-        len = -2;
-        if (end < (size_t)-1) {
-            len = end;
+        while (--q > p && *q == '0')
+            ;
+        carry = (q == p) ? p[-1] & 1 : 1;
+    } else {
+        carry = (c > 5);
+    }
+
+    while (new_length != 0) {
+        c = *--p - '0' + carry;
+
+        if ((carry = (c > 9)) != 0 || c == 0) {
+            --new_length;
+        } else {
+            *p = c + '0';
+            break;
         }
-        s[len] = '\0';
     }
 
-    return end;
-}
-
-int vprintf(const char* format, va_list arg)
-{
-    int ret;
-
-    if (fwide(stdout, -1) >= 0) {
-        return -1;
+    if (carry != 0) {
+        dec->exp += 1;
+        dec->sig.length = 1;
+        *dec->sig.text  = '1';
+        return;
+    } else if (new_length == 0) {
+        goto return_zero;
     }
 
-    ret = __pformatter(&__FileWrite, (void*)stdout, format, arg);
-    return ret;
+    dec->sig.length = new_length;
 }
 
-int sprintf(char* s, const char* format, ...)
-{
-    int end;
-    int len;
-    va_list args;
-    __OutStrCtrl osc;
+char * double2hex(long double num, char * buff, print_format format)  {
+    char *p;
+    unsigned char *q;
+    unsigned char temp_r7;
+    char working_byte;
+    long double ld;
+    long exp;
+    print_format exp_format;
+    int hex_precision;
+    decform form;
+    decimal dec;
 
-    va_start(args, format);
+    p = buff;
+    ld = num;
 
-    osc.CharStr = s;
-    osc.MaxCharCount = (size_t)-1;
-    osc.CharsWritten = 0;
+    if (format.precision > 509) {
+        return 0;
+    }
 
-    end = __pformatter(&__StringWrite, &osc, format, args);
+    form.style = (char) 0;
+    form.digits = 0x20;
+    __num2dec(&form, num, &dec);
 
-    if (s != NULL) {
-        len = -2;
-        if (end < (size_t)-1) {
-            len = end;
+    if (*dec.sig.text == 'I') {
+        if (*(short*) &ld & 0x8000) {
+            p = buff - 5;
+            if (format.conversion_char == 'A') strcpy(p, printf_stringBase0 + PRINTF_STR_NEG_INF);
+            else strcpy(p, printf_stringBase0 + PRINTF_STR_NEG_inf);
         }
-        s[len] = '\0';
+        else {
+            p = buff - 4;
+            if (format.conversion_char == 'A') strcpy(p, printf_stringBase0 + PRINTF_STR_INF);
+            else strcpy(p, printf_stringBase0 + PRINTF_STR_inf);
+        }
+
+        return p;
+    }
+    if (*dec.sig.text == 'N') {
+        if (*(unsigned char*) &num & 0x80) {
+            p = buff - 5;
+            if (format.conversion_char == 'A') strcpy(p, printf_stringBase0 + PRINTF_STR_NEG_NAN);
+            else strcpy(p, printf_stringBase0 + PRINTF_STR_NEG_nan);
+        }
+        else {
+            p = buff - 4;
+            if (format.conversion_char == 'A') strcpy(p, printf_stringBase0 + PRINTF_STR_NAN);
+            else strcpy(p, printf_stringBase0 + PRINTF_STR_nan);
+        }
+
+        return p;
     }
 
-    return end;
+    exp_format.justification_options = right_justification;
+    exp_format.sign_options = sign_always;
+    exp_format.precision_specified = 0;
+    exp_format.alternate_form = 0;
+    exp_format.argument_options = normal_argument;
+    exp_format.field_width = 0;
+    exp_format.precision = 1;
+    exp_format.conversion_char = 'd';
+
+    exp = (short) ((*(short*) &ld & 0x7FFF) >> 4) - 0x3FF;
+    p = long2str_80291620(exp, buff, exp_format);
+    if (format.conversion_char == 'a')
+        *--p = 'p';
+    else
+        *--p = 'P';
+    q = (unsigned char*) &num;
+
+    for (hex_precision = format.precision; hex_precision >= 1; hex_precision--) {
+        temp_r7 = *(q + (hex_precision / 2 + 1));
+        if (hex_precision % 2) {
+            working_byte = temp_r7 & 0xF;
+        } else {
+            working_byte = (temp_r7 >> 4);
+        }
+
+        if (working_byte < 10) {
+            working_byte += '0';
+        }
+        else
+            if (format.conversion_char == 'a') {
+                working_byte += 'a' - 10;
+            }
+            else {
+                working_byte += 'A' - 10;
+            }
+
+        *--p = working_byte;
+    }
+
+    if (TARGET_FLOAT_IMPLICIT_J_BIT){
+        if (format.precision || format.alternate_form) {
+            *--p = '.';
+        }
+        *--p = '1';
+    }
+
+    if (format.conversion_char == 'a') {
+        *--p = 'x';
+    }
+    else {
+        *--p = 'X';
+    }
+
+    *--p = '0';
+
+    if (*((short*) &ld) & 0x8000) {
+        *--p = '-';
+    }
+    else if (format.sign_options == sign_always) {
+        *--p = '+';
+    }
+    else if (format.sign_options == space_holder) {
+        *--p = ' ';
+    }
+
+    return p;
+}
+
+char* longlong2str_80291344(long long num, char* pBuf, print_format fmt)
+{
+    unsigned long long unsigned_num, base;
+    char* p;
+    int n, digits;
+    int minus    = 0;
+    unsigned_num = num;
+    minus        = 0;
+    p            = pBuf;
+    *--p         = 0;
+    digits       = 0;
+
+    if (!num && !fmt.precision
+        && !(fmt.alternate_form && fmt.conversion_char == 'o')) {
+        return p;
+    }
+
+    switch (fmt.conversion_char) {
+    case 'd':
+    case 'i':
+        base = 10;
+
+        if (num < 0) {
+            unsigned_num = -unsigned_num;
+            minus        = 1;
+        }
+        break;
+    case 'o':
+        base              = 8;
+        fmt.sign_options = only_minus;
+        break;
+    case 'u':
+        base              = 10;
+        fmt.sign_options = only_minus;
+        break;
+    case 'x':
+    case 'X':
+        base              = 16;
+        fmt.sign_options = only_minus;
+        break;
+    }
+
+    do {
+        n = unsigned_num % base;
+        unsigned_num /= base;
+
+        if (n < 10) {
+            n += '0';
+        } else {
+            n -= 10;
+            if (fmt.conversion_char == 'x') {
+                n += 'a';
+            } else {
+                n += 'A';
+            }
+        }
+
+        *--p = n;
+        ++digits;
+    } while (unsigned_num != 0);
+
+    if (base == 8 && fmt.alternate_form && *p != '0') {
+        *--p = '0';
+        ++digits;
+    }
+
+    if (fmt.justification_options == zero_fill) {
+        fmt.precision = fmt.field_width;
+
+        if (minus || fmt.sign_options != only_minus) {
+            --fmt.precision;
+        }
+
+        if (base == 16 && fmt.alternate_form) {
+            fmt.precision -= 2;
+        }
+    }
+
+    if (pBuf - p + fmt.precision > 509) {
+        return 0;
+    }
+
+    while (digits < fmt.precision) {
+        *--p = '0';
+        ++digits;
+    }
+
+    if (base == 16 && fmt.alternate_form) {
+        *--p = fmt.conversion_char;
+        *--p = '0';
+    }
+
+    if (minus) {
+        *--p = '-';
+    } else if (fmt.sign_options == sign_always) {
+        *--p = '+';
+    } else if (fmt.sign_options == space_holder) {
+        *--p = ' ';
+    }
+
+    return p;
+}
+
+char* long2str_80291620(long num, char* buff, print_format format)
+{
+    unsigned long unsigned_num, base;
+    char* p;
+    int n, digits;
+    int minus    = 0;
+    unsigned_num = num;
+    minus        = 0;
+
+    p      = buff;
+    *--p   = 0;
+    digits = 0;
+
+    if (!num && !format.precision
+        && !(format.alternate_form && format.conversion_char == 'o')) {
+        return p;
+    }
+
+    switch (format.conversion_char) {
+    case 'd':
+    case 'i':
+        base = 10;
+
+        if (num < 0) {
+            unsigned_num = -unsigned_num;
+            minus        = 1;
+        }
+        break;
+
+    case 'o':
+        base                 = 8;
+        format.sign_options = only_minus;
+        break;
+
+    case 'u':
+        base                 = 10;
+        format.sign_options = only_minus;
+        break;
+
+    case 'x':
+    case 'X':
+        base                 = 16;
+        format.sign_options = only_minus;
+        break;
+    }
+
+    do {
+        n = unsigned_num % base;
+        unsigned_num /= base;
+
+        if (n < 10) {
+            n += '0';
+        } else {
+            n -= 10;
+
+            if (format.conversion_char == 'x') {
+                n += 'a';
+            } else {
+                n += 'A';
+            }
+        }
+
+        *--p = n;
+        ++digits;
+    } while (unsigned_num != 0);
+
+    if (base == 8 && format.alternate_form && *p != '0') {
+        *--p = '0';
+        ++digits;
+    }
+
+    if (format.justification_options == zero_fill) {
+        format.precision = format.field_width;
+
+        if (minus || format.sign_options != only_minus)
+            --format.precision;
+
+        if (base == 16 && format.alternate_form)
+            format.precision -= 2;
+    }
+
+    if (buff - p + format.precision > 509)
+        return (0);
+
+    while (digits < format.precision) {
+        *--p = '0';
+        ++digits;
+    }
+
+    if (base == 16 && format.alternate_form) {
+        *--p = format.conversion_char;
+        *--p = '0';
+    }
+
+    if (minus) {
+        *--p = '-';
+    } else if (format.sign_options == sign_always) {
+        *--p = '+';
+    } else if (format.sign_options == space_holder) {
+        *--p = ' ';
+    }
+
+    return p;
+}
+
+const char* parse_format_80291840(const char *format_string, va_list *arg, print_format *format) {
+    print_format f;
+    const char* s = format_string;
+    int c;
+    int flag_found;
+    f.justification_options = right_justification;
+    f.sign_options = only_minus;
+    f.precision_specified = 0;
+    f.alternate_form = 0;
+    f.argument_options = normal_argument;
+    f.field_width = 0;
+    f.precision = 0;
+
+    if ((c = *++s) == '%') {
+        f.conversion_char = c;
+        *format = f;
+        return ((const char*)s + 1);
+    }
+
+    for (;;) {
+        flag_found = 1;
+
+        switch (c) {
+            case '-':
+                f.justification_options = left_justification;
+                break;
+            case '+':
+                f.sign_options = sign_always;
+                break;
+            case ' ':
+                if (f.sign_options != sign_always) {
+                    f.sign_options = space_holder;
+                }
+                break;
+            case '#':
+                f.alternate_form = 1;
+                break;
+            case '0':
+                if (f.justification_options != left_justification) {
+                    f.justification_options = zero_fill;
+                }
+                break;
+            default:
+                flag_found = 0;
+                break;
+        }
+
+        if (flag_found) {
+            c = *++s;
+        }
+        else {
+            break;
+        }
+    }
+
+    if (c == '*') {
+        if ((f.field_width = va_arg(*arg, int)) < 0) {
+            f.justification_options = left_justification;
+            f.field_width = -f.field_width;
+        }
+
+        c = *++s;
+    }
+    else {
+        while (isdigit(c)) {
+            f.field_width = (f.field_width * 10) + (c - '0');
+            c = *++s;
+        }
+    }
+
+    if (f.field_width > 509) {
+        f.conversion_char = 0xFF;
+        *format = f;
+        return ((const char*)s + 1);
+    }
+
+    if (c == '.') {
+        f.precision_specified = 1;
+
+        if ((c = *++s) == '*') {
+            if ((f.precision = va_arg(*arg, int)) < 0) {
+                f.precision_specified = 0;
+            }
+
+            c = *++s;
+        }
+        else {
+            while (isdigit(c)) {
+                f.precision = (f.precision * 10) + (c - '0');
+                c = *++s;
+            }
+        }
+    }
+
+    flag_found = 1;
+
+    switch (c) {
+        case 'h':
+            f.argument_options = short_argument;
+
+            if (s[1] == 'h') {
+                f.argument_options = char_argument;
+                c = *++s;
+            }
+
+            break;
+
+        case 'l':
+            f.argument_options = long_argument;
+
+            if (s[1] == 'l') {
+                f.argument_options = long_long_argument;
+                c = *++s;
+            }
+
+            break;
+
+        case 'L':
+            f.argument_options = long_double_argument;
+            break;
+        default:
+            flag_found = 0;
+            break;
+    }
+
+    if (flag_found) {
+        c = *++s;
+    }
+
+    f.conversion_char = c;
+
+    switch (c) {
+        case 'd':
+        case 'i':
+        case 'u':
+        case 'o':
+        case 'x':
+        case 'X':
+            if (f.argument_options == long_double_argument) {
+                f.conversion_char = 0xFF;
+                break;
+            }
+
+            if (!f.precision_specified) {
+                f.precision = 1;
+            }
+            else if (f.justification_options == zero_fill) {
+                f.justification_options = right_justification;
+            }
+            break;
+
+        case 'f':
+        case 'F':
+            if (f.argument_options == short_argument || f.argument_options == long_long_argument) {
+                f.conversion_char = 0xFF;
+                break;
+            }
+
+            if (!f.precision_specified) {
+                f.precision = 6;
+            }
+            break;
+
+        case 'a':
+        case 'A':
+            if (!f.precision_specified) {
+                f.precision = 0xD;
+            }
+
+            if (f.argument_options == short_argument || f.argument_options == long_long_argument || f.argument_options == char_argument) {
+                f.conversion_char = 0xFF;
+            }
+
+            break;
+
+        case 'g':
+        case 'G':
+            if (!f.precision) {
+                f.precision = 1;
+            }
+
+        case 'e':
+        case 'E':
+            if (f.argument_options == short_argument || f.argument_options == long_long_argument || f.argument_options == char_argument) {
+                f.conversion_char = 0xFF;
+                break;
+            }
+
+            if (!f.precision_specified) {
+                f.precision = 6;
+            }
+            break;
+
+        case 'p':
+            f.conversion_char = 'x';
+            f.alternate_form = 1;
+            f.argument_options = long_argument;
+            f.precision = 8;
+            break;
+
+        case 'c':
+            if (f.argument_options == long_argument) {
+                f.argument_options = wchar_argument;
+            }
+            else {
+                if (f.precision_specified || f.argument_options != normal_argument) {
+                    f.conversion_char = 0xFF;
+                }
+            }
+
+            break;
+
+        case 's':
+            if (f.argument_options == long_argument) {
+                f.argument_options = wchar_argument;
+            }
+            else {
+                if (f.argument_options != normal_argument) {
+                    f.conversion_char = 0xFF;
+                }
+            }
+
+            break;
+
+        case 'n':
+            if (f.argument_options == long_double_argument) {
+                f.conversion_char = 0xFF;
+            }
+
+            break;
+
+        default:
+            f.conversion_char = 0xFF;
+            break;
+    }
+
+    *format = f;
+    return ((const char*)s + 1);
 }

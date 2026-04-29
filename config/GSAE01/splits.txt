@@ -2335,15 +2335,6 @@ dolphin/TRK_MINNOW_DOLPHIN/msghndlr.c:
 	.data       start:0x803322B8 end:0x803322F0
 	.bss        start:0x803D82F0 end:0x803D82F8
 
-main/unknown/autos/placeholder_80332EF0.s:
-	.data       start:0x80332EF0 end:0x80332F48
-
-main/unknown/autos/placeholder_80332F48.s:
-	.data       start:0x80332F48 end:0x80332F78
-
-main/unknown/autos/placeholder_80332F78.s:
-	.data       start:0x80332F78 end:0x80332FC0
-
 dolphin/TRK_MINNOW_DOLPHIN/support.c:
 	.text       start:0x8028A658 end:0x8028AEF4
 
@@ -2429,6 +2420,18 @@ dolphin/MSL_C/PPCEABI/bare/H/misc_io.c:
 
 dolphin/MSL_C/PPCEABI/bare/H/printf.c:
 	.text       start:0x8028F688 end:0x802915E4
+	.rodata     start:0x802C2AF8 end:0x802C2B20
+	.data       start:0x803327E8 end:0x80332A18
+	.sdata      start:0x803DC640 end:0x803DC648
+
+main/unknown/autos/placeholder_80332EF0.s:
+	.data       start:0x80332EF0 end:0x80332F48
+
+main/unknown/autos/placeholder_80332F48.s:
+	.data       start:0x80332F48 end:0x80332F78
+
+main/unknown/autos/placeholder_80332F78.s:
+	.data       start:0x80332F78 end:0x80332FC0
 
 dolphin/MSL_C/PPCEABI/bare/H/string.c:
 	.text       start:0x802915E4 end:0x802918C0
