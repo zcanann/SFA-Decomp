@@ -963,16 +963,17 @@ s32 fn_8012EB70(void)
     return lbl_803DD7D4;
 }
 
-/* fn_8012EB08 (28b, 3 x s16 setter via extsh+sth pattern) and fn_8012EB30
- * (56b, slot-table reset loop) — both stuck. fn_8012EB08: target emits
- * extsh-before-sth triples; MWCC strips the extsh since sth ignores
- * upper bits. fn_8012EB30: target loads the .data array address with
- * `lis r3,@ha; addi r4,r3,@l` (using r3 as scratch), but MWCC routes
- * via r0 with an extra mr (`lis r4; addi r0,r4,@l; mr r4,r0`) and
- * the resulting reg pressure ripples into the post-loop register
- * choice (target uses r0 for both -1 and 0 final stores; MWCC reuses
- * r3 from the loop body). Tried typed struct array, scheduling/peephole
- * pragmas — no change. */
+/* fn_8012EB08 (28b, 3 x s16 setter via extsh+sth pattern) — stuck.
+ * Target emits extsh-before-sth triples; MWCC strips the extsh since
+ * sth ignores upper bits. */
+
+/* fn_8012EB30 (56b) — stuck. Target loads .data array address with
+ * `lis r3,@ha; addi r4,r3,@l` (using r3 as scratch), MWCC routes via
+ * r0 with extra mr (`lis r4; addi r0,r4,@l; mr r4,r0`). The reg
+ * pressure ripples into the post-loop register choice (target uses r0
+ * for both -1 and 0 final stores; MWCC reuses r3 from the loop body).
+ * Tried typed struct array, raw u8 array, scheduling/peephole pragmas,
+ * block-scoped cursor — no change. */
 
 /* fn_8012EA5C declared at end of file (needs externs declared below). */
 
@@ -1528,4 +1529,5 @@ void fn_8012E880(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
 
