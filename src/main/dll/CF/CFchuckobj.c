@@ -1095,3 +1095,14 @@ LAB_801910d0:
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fxemit_release(void) {}
+void fxemit_initialise(void) {}
+void areafxemit_hitDetect(void) {}
+void areafxemit_release(void) {}
+void areafxemit_initialise(void) {}
+void lfxemitter_render(void) {}
+void lfxemitter_hitDetect(void) {}
+void lfxemitter_release(void) {}

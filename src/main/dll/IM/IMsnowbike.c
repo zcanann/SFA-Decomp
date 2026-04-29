@@ -240,3 +240,10 @@ void FUN_801d8f80(int param_1)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void warpstonelift_free(void) {}
+void warpstonelift_hitDetect(void) {}
+void warpstonelift_release(void) {}
+void warpstonelift_initialise(void) {}

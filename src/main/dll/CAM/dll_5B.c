@@ -704,3 +704,14 @@ void FUN_80109110(undefined4 param_1,undefined4 param_2,uint param_3)
   FUN_8028688c();
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_80109740(void) {}
+void fn_80109744(void) {}
+void fn_80109748(void) {}
+void fn_80109AFC(void) {}
+void fn_80109B00(void) {}
+void fn_80109C14(void) {}
+void fn_8010A0FC(void) {}
+void fn_8010A100(void) {}

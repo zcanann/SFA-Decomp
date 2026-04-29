@@ -836,3 +836,13 @@ void FUN_801e8658(int param_1)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void shopkeeper_hitDetect(void) {}
+void shopkeeper_release(void) {}
+void shopitem_hitDetect(void) {}
+void shopitem_release(void) {}
+void shopitem_initialise(void) {}
+void spscarab_render(void) {}
+void spscarab_hitDetect(void) {}

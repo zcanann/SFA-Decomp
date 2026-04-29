@@ -210,3 +210,7 @@ void camcontrol_releasePathState(void)
   gCamcontrolPathState = 0;
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_801070CC(void) {}

@@ -2077,3 +2077,7 @@ void FUN_8015a6c0(uint param_1,int param_2)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_8015AD5C(void) {}

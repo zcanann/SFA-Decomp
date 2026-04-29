@@ -565,3 +565,12 @@ void sfxplayer_updateEffectHandlePositions(short *param_1)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void TrickyCurve_render(void) {}
+void TrickyCurve_hitDetect(void) {}
+void TrickyCurve_release(void) {}
+void TrickyCurve_initialise(void) {}
+void sfxplayer_render(void) {}
+void sfxplayer_hitDetect(void) {}

@@ -1593,3 +1593,13 @@ FUN_801778e0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
   }
   return uVar3;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void invhit_hitDetect(void) {}
+void invhit_release(void) {}
+void invhit_initialise(void) {}
+void iceblast_free(void) {}
+void iceblast_hitDetect(void) {}
+void iceblast_release(void) {}
+void iceblast_initialise(void) {}

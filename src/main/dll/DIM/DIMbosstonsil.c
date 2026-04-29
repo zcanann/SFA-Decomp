@@ -169,3 +169,12 @@ void dimboss_initialise(void)
 {
   fn_801BDAF4();
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void dimboss_release(void) {}
+void dimbossgut_free(void) {}
+void dimbossgut_hitDetect(void) {}
+void dimbossgut_update(void) {}
+void dimbossgut_release(void) {}
+void dimbossgut_initialise(void) {}

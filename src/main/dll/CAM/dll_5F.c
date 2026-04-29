@@ -294,3 +294,9 @@ void FUN_8010bd7c(undefined4 param_1,undefined4 param_2,undefined4 *param_3,unde
                  undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)
 {
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_8010BF00(void) {}
+void fn_8010BF04(void) {}
+void fn_8010C064(void) {}

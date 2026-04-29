@@ -2298,3 +2298,24 @@ void FUN_800fa9c0(int param_1,int param_2,int param_3,uint param_4,undefined4 pa
   (**(code **)(*DAT_803dd6fc + 8))(&local_368,0,6,&DAT_80318748,4,&DAT_80318784,0x3c,0);
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_800FA9F0(void) {}
+void fn_800FA9F4(void) {}
+void fn_800FADA0(void) {}
+void fn_800FADA4(void) {}
+void fn_800FB070(void) {}
+void fn_800FB074(void) {}
+void fn_800FB420(void) {}
+void fn_800FB424(void) {}
+void fn_800FB718(void) {}
+void fn_800FB71C(void) {}
+void fn_800FBA38(void) {}
+void fn_800FBA3C(void) {}
+void fn_800FBDE8(void) {}
+void fn_800FBDEC(void) {}
+void fn_800FC200(void) {}
+void fn_800FC204(void) {}
+void fn_800FC5B0(void) {}
+void fn_800FC5B4(void) {}

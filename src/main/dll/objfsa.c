@@ -4264,3 +4264,20 @@ LAB_800e1c9c:
     param_4 = 0;
   } while( true );
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_800D9DC4(void) {}
+void fn_800D9DC8(void) {}
+void fn_800D9EAC(void) {}
+void fn_800D9EB0(void) {}
+void fn_800D9EB4(void) {}
+void fn_800D9EC4(void) {}
+void fn_800D9EC8(void) {}
+void fn_800D9ED4(void) {}
+void fn_800D9ED8(void) {}
+void fn_800D9EDC(void) {}
+void fn_800D9EE0(void) {}
+void fn_800D9EE4(void) {}
+void fn_800DD640(void) {}
+void fn_800DD644(void) {}

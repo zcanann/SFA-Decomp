@@ -461,3 +461,7 @@ void FUN_80169c04(int param_1)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void kaldachompspit_hitDetect(void) {}

@@ -1617,3 +1617,18 @@ void FUN_801b6130(int param_1)
 void FUN_801b63c0(void)
 {
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void explosion_hitDetect(void) {}
+void dimwooddoor2_free(void) {}
+void dimwooddoor2_hitDetect(void) {}
+void dimwooddoor2_release(void) {}
+void dimwooddoor2_initialise(void) {}
+void fn_801B5A9C(void) {}
+void fn_801B5D40(void) {}
+void fn_801B5D44(void) {}
+void dimmagicbridge_free(void) {}
+void dimmagicbridge_hitDetect(void) {}
+void dimmagicbridge_release(void) {}
+void dimmagicbridge_initialise(void) {}

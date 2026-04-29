@@ -203,3 +203,7 @@ void FUN_8010b428(void)
   DAT_803de1d8 = 0;
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_8010B3F4(void) {}

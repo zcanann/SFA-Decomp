@@ -2691,3 +2691,9 @@ void FUN_8005e1d8(undefined4 param_1,undefined4 param_2,int param_3)
   DAT_803ddab0 = DAT_803ddab0 + 1;
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_8005C7E8(void) {}
+void fn_8005D148(void) {}
+void fn_8005D14C(void) {}

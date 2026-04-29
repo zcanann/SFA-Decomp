@@ -593,3 +593,12 @@ void FUN_8014ede4(uint param_1,int param_2,int param_3)
   *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x2000;
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void hagabon_release(void) {}
+void hagabon_initialise(void) {}
+void swarmbaddie_hitDetect(void) {}
+void swarmbaddie_release(void) {}
+void swarmbaddie_initialise(void) {}
+void wispbaddie_hitDetect(void) {}

@@ -110,3 +110,20 @@ void FUN_801916e8(int param_1)
 void FUN_80191730(short *param_1,int param_2)
 {
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void cflightwall_free(void) {}
+void cflightwall_hitDetect(void) {}
+void cflightwall_update(void) {}
+void cflightwall_release(void) {}
+void cflightwall_initialise(void) {}
+void barrelpad_free(void) {}
+void barrelpad_hitDetect(void) {}
+void barrelpad_release(void) {}
+void barrelpad_initialise(void) {}
+void cf_doorlight_free(void) {}
+void cf_doorlight_render(void) {}
+void cf_doorlight_hitDetect(void) {}
+void cf_doorlight_release(void) {}
+void cf_doorlight_initialise(void) {}

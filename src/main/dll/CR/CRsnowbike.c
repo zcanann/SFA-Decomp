@@ -749,3 +749,11 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void sc_levelcontrol_hitDetect(void) {}
+void sc_levelcontrol_release(void) {}
+void sc_levelcontrol_initialise(void) {}
+void sc_musictree_free(void) {}
+void sc_musictree_hitDetect(void) {}

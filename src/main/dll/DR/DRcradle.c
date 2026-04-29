@@ -321,3 +321,8 @@ void FUN_801ecdec(undefined4 param_1,int param_2)
   *(float *)(param_2 + 0x3e0) = FLOAT_803e6784;
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_801ECA5C(void) {}
+void fn_801ECA60(void) {}

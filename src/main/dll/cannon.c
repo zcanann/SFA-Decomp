@@ -424,3 +424,7 @@ LAB_8014149c:
   FUN_80286888();
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_8014128C(void) {}

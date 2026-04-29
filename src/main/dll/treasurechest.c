@@ -210,3 +210,12 @@ void FUN_8016702c(void)
   FUN_8028688c();
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_80167588(void) {}
+void skeetlawall_free(void) {}
+void skeetlawall_hitDetect(void) {}
+void skeetlawall_update(void) {}
+void skeetlawall_release(void) {}
+void skeetlawall_initialise(void) {}

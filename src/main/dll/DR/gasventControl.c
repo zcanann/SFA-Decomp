@@ -546,3 +546,12 @@ void FUN_801a35f8(int param_1,int param_2,int param_3)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void blasted_release(void) {}
+void blasted_initialise(void) {}
+void explodable_render(void) {}
+void cfforcefield_free(void) {}
+void cfforcefield_render(void) {}
+void cfforcefield_hitDetect(void) {}

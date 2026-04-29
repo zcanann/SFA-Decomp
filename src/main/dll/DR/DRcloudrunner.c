@@ -448,3 +448,15 @@ void FUN_801dca0c(uint param_1)
   ObjHits_PollPriorityHitEffectWithCooldown(param_1,8,0xff,0xff,0x78,0x129,(float *)&DAT_803de888);
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void sc_musictree_release(void) {}
+void sc_musictree_initialise(void) {}
+void sc_totempole_free(void) {}
+void sc_totempole_hitDetect(void) {}
+void sc_totempole_release(void) {}
+void sc_totempole_initialise(void) {}
+void sc_cloudrunnera_hitDetect(void) {}
+void sc_cloudrunnera_release(void) {}
+void sc_cloudrunnera_initialise(void) {}

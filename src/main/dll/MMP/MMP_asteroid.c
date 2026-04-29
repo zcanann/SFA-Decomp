@@ -958,3 +958,18 @@ void FUN_80196384(int param_1)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void explodeanimator_render(void) {}
+void explodeanimator_hitDetect(void) {}
+void explodeanimator_release(void) {}
+void explodeanimator_initialise(void) {}
+void dimbossicesmash_hitDetect(void) {}
+void dimbossicesmash_release(void) {}
+void dimbossicesmash_initialise(void) {}
+void texframeanimator_free(void) {}
+void texframeanimator_hitDetect(void) {}
+void texframeanimator_release(void) {}
+void texframeanimator_initialise(void) {}
+void fogcontrol_hitDetect(void) {}

@@ -806,3 +806,12 @@ void FUN_8018cbcc(int param_1)
   FUN_80017660(param_1);
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void deathseq_render(void) {}
+void deathseq_hitDetect(void) {}
+void deathseq_release(void) {}
+void deathseq_initialise(void) {}
+void fn_8018CD74(void) {}
+void fn_8018CDA8(void) {}

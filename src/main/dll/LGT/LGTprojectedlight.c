@@ -346,3 +346,12 @@ void FUN_801f4be0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   pfVar3[6] = (float)((int)pfVar3[6] + 1);
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_801F48B8(void) {}
+void fn_801F48BC(void) {}
+void fn_801F4BC8(void) {}
+void fn_801F4BCC(void) {}
+void fn_801F4BFC(void) {}
+void fn_801F4C00(void) {}

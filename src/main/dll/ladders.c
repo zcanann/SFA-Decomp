@@ -571,3 +571,12 @@ void FUN_80163b8c(int param_1)
   *(undefined *)(*(int *)(param_1 + 0xb8) + 0x278) = 7;
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void cannonclaw_release(void) {}
+void cannonclaw_initialise(void) {}
+void tumbleweedbush_free(void) {}
+void tumbleweedbush_hitDetect(void) {}
+void tumbleweedbush_release(void) {}
+void tumbleweedbush_initialise(void) {}

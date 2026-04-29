@@ -979,3 +979,7 @@ void FUN_8016725c(void)
   FUN_80286888();
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_80166F28(void) {}

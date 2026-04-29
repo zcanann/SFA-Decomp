@@ -854,3 +854,13 @@ void FUN_801c75a4(void)
   FUN_80286888();
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void ecsh_shrine_release(void) {}
+void ecsh_shrine_initialise(void) {}
+void ecsh_creator_free(void) {}
+void ecsh_creator_hitDetect(void) {}
+void ecsh_creator_release(void) {}
+void ecsh_creator_initialise(void) {}
+void gpsh_shrine_hitDetect(void) {}

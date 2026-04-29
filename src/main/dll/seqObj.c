@@ -503,3 +503,7 @@ void wispbaddie_release(void)
 void wispbaddie_initialise(void)
 {
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_8014FF20(void) {}

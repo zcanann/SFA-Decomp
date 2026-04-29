@@ -711,3 +711,14 @@ void FUN_801ef984(int param_1)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_801EED7C(void) {}
+void fn_801EEDA8(void) {}
+void fn_801EEDD4(void) {}
+void fn_801EF020(void) {}
+void fn_801EF358(void) {}
+void fn_801EF35C(void) {}
+void fn_801EF370(void) {}
+void fn_801EF3A4(void) {}

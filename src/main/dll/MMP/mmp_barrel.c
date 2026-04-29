@@ -1268,3 +1268,17 @@ void FUN_80193ba8(int param_1)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void waveanimator_update(void) {}
+void waveanimator_release(void) {}
+void waveanimator_initialise(void) {}
+void alphaanimator_hitDetect(void) {}
+void alphaanimator_release(void) {}
+void alphaanimator_initialise(void) {}
+void visanimator_free(void) {}
+void visanimator_render(void) {}
+void visanimator_hitDetect(void) {}
+void visanimator_release(void) {}
+void visanimator_initialise(void) {}

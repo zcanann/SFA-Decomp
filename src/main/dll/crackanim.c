@@ -333,3 +333,7 @@ switchD_8017e864_caseD_7:
   FUN_8028688c();
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_8017EC20(void) {}

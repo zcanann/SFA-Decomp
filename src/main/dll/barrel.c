@@ -663,3 +663,9 @@ void FUN_80163308(int param_1)
   (**(code **)(*DAT_803dd70c + 0xc))(param_1,*(undefined4 *)(param_1 + 0xb8),&DAT_803ad270);
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void grimble_release(void) {}
+void cannonclaw_free(void) {}
+void cannonclaw_hitDetect(void) {}

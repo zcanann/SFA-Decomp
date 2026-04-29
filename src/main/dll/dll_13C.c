@@ -1059,3 +1059,17 @@ void FUN_8016b428(undefined8 param_1,undefined8 param_2,undefined8 param_3,doubl
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void kaldachompspit_release(void) {}
+void kaldachompspit_initialise(void) {}
+void pinponspike_render(void) {}
+void pinponspike_hitDetect(void) {}
+void pinponspike_release(void) {}
+void pinponspike_initialise(void) {}
+void pollen_release(void) {}
+void pollen_initialise(void) {}
+void pollenfragment_release(void) {}
+void pollenfragment_initialise(void) {}
+void mikabomb_hitDetect(void) {}

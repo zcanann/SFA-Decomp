@@ -3941,3 +3941,7 @@ void FUN_80064384(int param_1)
   DAT_803ddc00 = (char)param_1;
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_80062A50(void) {}

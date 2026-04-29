@@ -462,3 +462,11 @@ void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,un
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void dimcannon_hitDetect(void) {}
+void dimcannon_release(void) {}
+void dimcannon_initialise(void) {}
+void dimlavasmash_free(void) {}
+void dimlavasmash_hitDetect(void) {}

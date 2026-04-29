@@ -972,3 +972,12 @@ void FUN_800fd2b4(int param_1,int param_2,short *param_3,uint param_4)
   (**(code **)(*DAT_803dd6fc + 8))(&local_388,0,0x15,&DAT_80318a50,0x18,&DAT_80318b24,0x154,0);
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_800FCF34(void) {}
+void fn_800FCF38(void) {}
+void fn_800FD2AC(void) {}
+void fn_800FD2B0(void) {}
+void fn_800FD73C(void) {}
+void fn_800FD740(void) {}

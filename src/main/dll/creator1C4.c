@@ -280,3 +280,18 @@ void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefin
   FUN_80286880();
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void gpsh_shrine_release(void) {}
+void gpsh_shrine_initialise(void) {}
+void gpsh_objcreator_free(void) {}
+void gpsh_objcreator_hitDetect(void) {}
+void gpsh_objcreator_release(void) {}
+void gpsh_objcreator_initialise(void) {}
+void gpsh_scene_free(void) {}
+void gpsh_scene_hitDetect(void) {}
+void gpsh_scene_update(void) {}
+void gpsh_scene_release(void) {}
+void gpsh_scene_initialise(void) {}
+void ecsh_cup_hitDetect(void) {}

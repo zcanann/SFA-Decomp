@@ -1164,3 +1164,13 @@ void FUN_8019bc2c(int param_1)
   ObjMsg_AllocQueue(param_1,10);
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_8019A3AC(void) {}
+void fn_8019A8A0(void) {}
+void fn_8019AA74(void) {}
+void fn_8019AA78(void) {}
+void cloudprisoncontrol_free(void) {}
+void cloudprisoncontrol_hitDetect(void) {}
+void cloudprisoncontrol_release(void) {}

@@ -4066,3 +4066,10 @@ void gameplay_setDebugOptionEnabled(uint param_1,char param_2)
   gGameplayEnabledDebugOptions = gGameplayEnabledDebugOptions & ~uVar1;
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_800E542C(void) {}
+void fn_800E5430(void) {}
+void fn_800E7D98(void) {}
+void fn_800E7D9C(void) {}

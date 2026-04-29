@@ -121,3 +121,14 @@ void FUN_8010daf8(undefined2 *param_1,undefined4 param_2,undefined2 *param_3)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_8010DACC(void) {}
+void fn_8010DAD0(void) {}
+void fn_8010DAD4(void) {}
+void fn_8010DAD8(void) {}
+void fn_8010DADC(void) {}
+void fn_8010DB74(void) {}
+void fn_8010DB78(void) {}
+void fn_8010DD24(void) {}

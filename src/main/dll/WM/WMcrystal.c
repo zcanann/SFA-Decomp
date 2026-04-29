@@ -382,3 +382,11 @@ void FUN_801ddb3c(int param_1)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void sc_totempuzzle_release(void) {}
+void sc_totempuzzle_initialise(void) {}
+void sc_totembond_hitDetect(void) {}
+void sc_totembond_release(void) {}
+void sc_totembond_initialise(void) {}

@@ -533,3 +533,14 @@ void FUN_801c3b00(int param_1)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void dfsh_shrine_hitDetect(void) {}
+void dfsh_shrine_release(void) {}
+void dfsh_shrine_initialise(void) {}
+void fn_801C370C(void) {}
+void fn_801C3B60(void) {}
+void fn_801C3B64(void) {}
+void dfsh_objcreator_free(void) {}
+void dfsh_objcreator_hitDetect(void) {}

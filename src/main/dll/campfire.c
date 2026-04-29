@@ -707,3 +707,9 @@ void FUN_80169430(undefined8 param_1,double param_2,double param_3,double param_
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void kaldachom_func0B(void) {}
+void kaldachom_hitDetect(void) {}
+void kaldachom_release(void) {}

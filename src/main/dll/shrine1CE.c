@@ -392,3 +392,15 @@ void FUN_801cc868(undefined8 param_1,double param_2,double param_3,undefined8 pa
   (**(code **)(*DAT_803dd6f8 + 0x18))(param_9);
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_801CC724(void) {}
+void fn_801CC728(void) {}
+void fn_801CC73C(void) {}
+void fn_801CC770(void) {}
+void fn_801CC990(void) {}
+void fn_801CC994(void) {}
+void fn_801CCA2C(void) {}
+void fn_801CCF9C(void) {}
+void fn_801CCFA0(void) {}

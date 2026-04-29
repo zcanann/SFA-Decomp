@@ -355,3 +355,8 @@ void dfsh_objcreator_release(void)
 void dfsh_objcreator_initialise(void)
 {
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_801C3EB0(void) {}
+void fn_801C3EB4(void) {}

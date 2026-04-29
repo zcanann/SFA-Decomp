@@ -958,3 +958,12 @@ undefined4 FUN_8017e3c0(double param_1,undefined2 *param_2,int param_3)
   }
   return uVar4;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_8017D374(void) {}
+void fn_8017D378(void) {}
+void wm_column_hitDetect(void) {}
+void wm_column_release(void) {}
+void wm_column_initialise(void) {}
+void appleontree_setScale(void) {}

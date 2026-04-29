@@ -766,3 +766,9 @@ void effectbox_free(void)
 {
   fn_8002B758();
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void effectbox_hitDetect(void) {}
+void effectbox_release(void) {}
+void effectbox_initialise(void) {}

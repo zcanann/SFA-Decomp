@@ -705,3 +705,9 @@ uint FUN_801799c0(int param_1)
   uVar1 = countLeadingZeros((uint)*(byte *)(*(int *)(param_1 + 0xb8) + 0x274));
   return uVar1 >> 5;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void doorf4_hitDetect(void) {}
+void doorf4_release(void) {}
+void doorf4_initialise(void) {}

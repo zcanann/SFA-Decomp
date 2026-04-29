@@ -646,3 +646,7 @@ LAB_8018bc44:
   FUN_80286888();
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void trickyguardspot_render(void) {}

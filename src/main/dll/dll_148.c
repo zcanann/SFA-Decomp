@@ -546,3 +546,11 @@ void FUN_8017b858(undefined2 *param_1)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void mmp_bridge_free(void) {}
+void mmp_bridge_render(void) {}
+void mmp_bridge_hitDetect(void) {}
+void mmp_bridge_release(void) {}
+void mmp_bridge_initialise(void) {}

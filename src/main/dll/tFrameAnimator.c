@@ -177,3 +177,18 @@ LAB_8017a09c:
   *(undefined4 *)(iVar5 + 0x2b8) = *(undefined4 *)(param_1 + 10);
   return 3;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void area_free(void) {}
+void area_render(void) {}
+void area_hitDetect(void) {}
+void area_update(void) {}
+void area_release(void) {}
+void area_initialise(void) {}
+void levelname_free(void) {}
+void levelname_render(void) {}
+void levelname_hitDetect(void) {}
+void levelname_release(void) {}
+void levelname_initialise(void) {}
+void fn_8017A388(void) {}

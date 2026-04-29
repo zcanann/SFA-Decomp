@@ -291,3 +291,8 @@ void FUN_80107ee4(int param_1,int param_2)
 void FUN_80108074(short *param_1)
 {
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_80108008(void) {}
+void fn_8010800C(void) {}

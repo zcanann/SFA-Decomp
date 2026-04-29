@@ -371,3 +371,13 @@ void FUN_801b3ba4(int param_1)
 void FUN_801b3d1c(short *param_1,int param_2)
 {
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void dimlavasmash_release(void) {}
+void dimlavasmash_initialise(void) {}
+void dimbridgecogmai_hitDetect(void) {}
+void dimbridgecogmai_initialise(void) {}
+void dimdismountpoint_hitDetect(void) {}
+void dimdismountpoint_release(void) {}
+void dimdismountpoint_initialise(void) {}

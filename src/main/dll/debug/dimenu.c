@@ -597,3 +597,16 @@ void FUN_8011dc40(uint param_1)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_8011CF78(void) {}
+void fn_8011D48C(void) {}
+void fn_8011D51C(void) {}
+void fn_8011D520(void) {}
+void fn_8011D854(void) {}
+void fn_8011D858(void) {}
+void fn_8011D900(void) {}
+void fn_8011D904(void) {}
+void fn_8011D910(void) {}
+void fn_8011D914(void) {}

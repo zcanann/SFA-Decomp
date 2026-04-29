@@ -75,3 +75,12 @@ void FUN_801cf818(void)
   FUN_80017698(0x4e4,1);
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void nw_animice_render(void) {}
+void nw_animice_hitDetect(void) {}
+void nw_animice_update(void) {}
+void nw_animice_release(void) {}
+void nw_animice_initialise(void) {}
+void nw_ice_render(void) {}

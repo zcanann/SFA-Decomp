@@ -787,3 +787,13 @@ undefined4 FUN_801aa4a4(void)
   ccqueen_render();
   return 0;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void animsharpclaw_hitDetect(void) {}
+void animsharpclaw_release(void) {}
+void animsharpclaw_initialise(void) {}
+void fn_801A970C(void) {}
+void fn_801A9E6C(void) {}
+void fn_801A9E70(void) {}
+void ccgasvent_render(void) {}

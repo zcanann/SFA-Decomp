@@ -483,3 +483,12 @@ void FUN_801caeb0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   FUN_8028688c();
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_801CA710(void) {}
+void fn_801CA714(void) {}
+void nwsh_levcon_hitDetect(void) {}
+void nwsh_levcon_release(void) {}
+void nwsh_levcon_initialise(void) {}
+void fn_801CAD7C(void) {}

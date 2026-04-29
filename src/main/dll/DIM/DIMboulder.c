@@ -1028,3 +1028,16 @@ FUN_801addec(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   }
   return 0;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void imicemountain_free(void) {}
+void imicemountain_hitDetect(void) {}
+void crrockfall_free(void) {}
+void crrockfall_hitDetect(void) {}
+void magiclight_hitDetect(void) {}
+void magiclight_release(void) {}
+void magiclight_initialise(void) {}
+void fn_801AE0E4(void) {}
+void fn_801AE0E8(void) {}
+void imicepillar_free(void) {}

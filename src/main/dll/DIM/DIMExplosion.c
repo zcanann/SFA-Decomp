@@ -522,3 +522,18 @@ void FUN_801b1d3c(void)
   FUN_8028688c();
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void dimsnowball1c2_free(void) {}
+void dimsnowball1c2_hitDetect(void) {}
+void dimsnowball1c2_release(void) {}
+void dimsnowball1c2_initialise(void) {}
+void dimgate_free(void) {}
+void dimgate_hitDetect(void) {}
+void dimgate_release(void) {}
+void dimgate_initialise(void) {}
+void dimbarrier_free(void) {}
+void dimbarrier_hitDetect(void) {}
+void dimbarrier_release(void) {}
+void dimbarrier_initialise(void) {}

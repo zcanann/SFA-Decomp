@@ -351,3 +351,15 @@ void FUN_801c5a5c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void mmsh_shrine_release(void) {}
+void mmsh_shrine_initialise(void) {}
+void mmsh_scales_hitDetect(void) {}
+void mmsh_scales_release(void) {}
+void mmsh_scales_initialise(void) {}
+void mmsh_waterspike_free(void) {}
+void mmsh_waterspike_hitDetect(void) {}
+void mmsh_waterspike_release(void) {}
+void mmsh_waterspike_initialise(void) {}

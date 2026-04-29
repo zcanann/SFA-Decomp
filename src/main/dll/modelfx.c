@@ -1045,3 +1045,21 @@ LAB_800c826c:
   FUN_80286888();
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_800C4858(void) {}
+void fn_800C485C(void) {}
+void fn_800C4860(void) {}
+void fn_800C56D0(void) {}
+void fn_800C56D4(void) {}
+void fn_800C56D8(void) {}
+void fn_800C56DC(void) {}
+void fn_800C65A4(void) {}
+void fn_800C65A8(void) {}
+void fn_800C65AC(void) {}
+void fn_800C65B0(void) {}
+void fn_800C7FF8(void) {}
+void fn_800C7FFC(void) {}
+void fn_800C8000(void) {}
+void fn_800C8004(void) {}

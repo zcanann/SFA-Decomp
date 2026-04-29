@@ -327,3 +327,12 @@ void FUN_8018d110(void)
   FUN_8028688c();
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_8018CEDC(void) {}
+void fn_8018CEE0(void) {}
+void kt_torch_free(void) {}
+void kt_torch_hitDetect(void) {}
+void kt_torch_release(void) {}
+void kt_torch_initialise(void) {}

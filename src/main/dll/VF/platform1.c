@@ -440,3 +440,12 @@ LAB_801df0e4:
   DAT_803de890 = 2;
   goto LAB_801df3c4;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void sc_totemstrength_free(void) {}
+void sc_totemstrength_hitDetect(void) {}
+void sc_totemstrength_release(void) {}
+void sc_totemstrength_initialise(void) {}
+void paymentkiosk_free(void) {}
+void paymentkiosk_hitDetect(void) {}

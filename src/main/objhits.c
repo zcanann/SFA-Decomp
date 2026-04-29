@@ -3121,3 +3121,7 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
     slotIndex++;
   } while (true);
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_800333C8(void) {}

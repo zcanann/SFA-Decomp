@@ -49,3 +49,7 @@ void FUN_8011b5d4(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_8011B864(void) {}

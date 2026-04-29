@@ -566,3 +566,14 @@ void seqObj2_update(int param_1)
 void seqObj2_init(short *param_1,int param_2)
 {
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void seqobj2_render(void) {}
+void seqobj2_hitDetect(void) {}
+void fn_8017CBD4(void) {}
+void fn_8017CBD8(void) {}
+void immultiseq_hitDetect(void) {}
+void immultiseq_release(void) {}
+void immultiseq_initialise(void) {}
+void fn_8017D0D0(void) {}

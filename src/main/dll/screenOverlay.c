@@ -292,3 +292,8 @@ void FUN_8017a77c(uint param_1)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_8017A8E4(void) {}
+void fn_8017A8E8(void) {}

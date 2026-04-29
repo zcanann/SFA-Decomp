@@ -264,3 +264,13 @@ void spitembeam_init(int obj)
 {
   *(ushort *)(obj + 0xb0) = (ushort)(*(ushort *)(obj + 0xb0) | 0x6000);
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void spdrape_release(void) {}
+void spdrape_initialise(void) {}
+void spitembeam_free(void) {}
+void spitembeam_render(void) {}
+void spitembeam_hitDetect(void) {}
+void spitembeam_release(void) {}
+void spitembeam_initialise(void) {}

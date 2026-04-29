@@ -48,3 +48,8 @@ extern f32 FLOAT_803e5b90;
 void FUN_801c3eb8(uint param_1)
 {
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_801C465C(void) {}
+void fn_801C4660(void) {}

@@ -156,3 +156,15 @@ void FUN_801920b8(int param_1)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void texscroll2_free(void) {}
+void texscroll2_hitDetect(void) {}
+void texscroll2_release(void) {}
+void texscroll2_initialise(void) {}
+void texscroll_free(void) {}
+void texscroll_hitDetect(void) {}
+void texscroll_update(void) {}
+void texscroll_release(void) {}
+void texscroll_initialise(void) {}

@@ -1165,3 +1165,8 @@ void FUN_80114b10(int param_1,undefined4 *param_2,undefined2 param_3,undefined2 
   FUN_80003494((int)param_2 + 0x5da,0x8031ad30,(uint)*(byte *)(param_2 + 0x184) << 1);
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_80113F84(void) {}
+void fn_80113F88(void) {}

@@ -136,3 +136,16 @@ void dfpstatue1_updateState(undefined8 param_1,undefined8 param_2,undefined8 par
   FUN_8028688c();
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void dfpstatue1_free(void) {}
+void dfpstatue1_render(void) {}
+void dfpstatue1_hitDetect(void) {}
+void dfpstatue1_release(void) {}
+void dfpstatue1_initialise(void) {}
+void dfperchwitch_free(void) {}
+void dfperchwitch_render(void) {}
+void dfperchwitch_hitDetect(void) {}
+void dfperchwitch_release(void) {}
+void dfperchwitch_initialise(void) {}
