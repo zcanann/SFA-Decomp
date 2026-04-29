@@ -3954,3 +3954,10 @@ extern u8 lbl_803DB658;
 extern u8 lbl_803DCF4E;
 void fn_800628CC(void) { lbl_803DB658 = 0x1; }
 void fn_80065678(void) { lbl_803DCF4E = 0x1; }
+
+/* arr indexing: obj->arr + idx*size */
+#pragma scheduling off
+void* fn_800606EC(int *obj, int idx) { return (char*)((int**)obj)[0x50/4] + idx * 0x14; }
+void* fn_800606FC(int *obj, int idx) { return (char*)((int**)obj)[0x68/4] + idx * 0x1c; }
+void* fn_8006070C(int *obj, int idx) { return (char*)((int**)obj)[0x64/4] + idx * 0x44; }
+#pragma scheduling reset
