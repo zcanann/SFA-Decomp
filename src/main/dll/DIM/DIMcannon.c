@@ -1946,3 +1946,11 @@ void imspacethruster_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 void imspacering_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E47B8); }
 void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4810); }
 #pragma peephole reset
+
+/* if (o->_X == K) return A; else return B;  pattern. */
+#pragma peephole off
+#pragma scheduling off
+int lavaball1be_getExtraSize(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1fa) return 0x0; return 0x14; }
+int lavaball1be_func08(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1fa) return 0x0; return 0x2; }
+#pragma scheduling reset
+#pragma peephole reset

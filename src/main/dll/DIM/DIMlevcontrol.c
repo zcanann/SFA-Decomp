@@ -474,3 +474,11 @@ void dimlavasmash_hitDetect(void) {}
 /* 8b "li r3, N; blr" returners. */
 int dimlavasmash_getExtraSize(void) { return 0x3; }
 int dimlavasmash_func08(void) { return 0x0; }
+
+/* if (o->_X == K) return A; else return B; */
+#pragma peephole off
+#pragma scheduling off
+int dimcannon_getExtraSize(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1d6) return 0xc; return 0xb4; }
+int dimcannon_func08(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1d6) return 0x0; return 0x0; }
+#pragma scheduling reset
+#pragma peephole reset

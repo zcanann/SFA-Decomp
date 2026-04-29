@@ -1063,3 +1063,10 @@ extern void fn_8003B8F4(f32);
 #pragma peephole off
 void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E46D8); }
 #pragma peephole reset
+
+/* if (o->_X == K) return A; else return B; */
+#pragma peephole off
+#pragma scheduling off
+int magiclight_getExtraSize(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x172) return 0x0; return 0x14; }
+#pragma scheduling reset
+#pragma peephole reset

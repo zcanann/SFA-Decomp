@@ -1506,3 +1506,10 @@ void fn_801F1638(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 void fn_801F1F30(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5D90); }
 void fn_801F2EAC(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5DC8); }
 #pragma peephole reset
+
+/* if (o->_X == K) return A; else return B; */
+#pragma peephole off
+#pragma scheduling off
+int fn_801F1BD0(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x146) return 0x2; return 0x0; }
+#pragma scheduling reset
+#pragma peephole reset

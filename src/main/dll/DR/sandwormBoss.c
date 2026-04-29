@@ -3200,3 +3200,10 @@ void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s
 #pragma scheduling off
 int spiritdoorspirit_free(int x) { return ObjGroup_RemoveObject(x, 0x4e); }
 #pragma scheduling reset
+
+/* if (o->_X == K) return A; else return B; */
+#pragma peephole off
+#pragma scheduling off
+int cfprisoncage_func08(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x128) return 0x8; return 0x0; }
+#pragma scheduling reset
+#pragma peephole reset
