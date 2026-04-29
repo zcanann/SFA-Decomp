@@ -792,3 +792,48 @@ void FUN_80131cc4(undefined8 param_1,double param_2,double param_3,undefined8 pa
 void FUN_80131de4(void)
 {
 }
+
+/* ===== EN v1.0 retargeted leaves ========================================= */
+
+/* EN v1.0 0x80131570  size: 12b  Read bit 0x10 from obj->_4. */
+int fn_80131570(u8* obj)
+{
+    return obj[4] & 0x10;
+}
+
+/* EN v1.0 0x8013157C  size: 20b  Set obj->_c (s16) = val and obj->_6 = 2.
+ * Logic-only — target has `extsh r0,r4; sth r0,0xc(r3)` but MWCC -O4
+ * strips the redundant extsh before sth (same family as fn_8012EB08 /
+ * fn_8012FB90). */
+void fn_8013157C(u8* obj, int val)
+{
+    *(s16*)(obj + 0xc) = (s16)val;
+    obj[6] = 2;
+}
+
+/* EN v1.0 0x80131590  size: 8b   s16 getter for obj->_c. */
+s16 fn_80131590(u8* obj)
+{
+    return *(s16*)(obj + 0xc);
+}
+
+/* EN v1.0 0x8013160C  size: 12b  Read bit 0x01 from obj->_4. */
+int fn_8013160C(u8* obj)
+{
+    return obj[4] & 0x01;
+}
+
+/* EN v1.0 0x80132008  size: 8b   Trivial 0-returner. */
+int fn_80132008(void) { return 0; }
+
+/* EN v1.0 0x80132010  size: 4b   Empty no-op. */
+void fn_80132010(void) {}
+
+/* EN v1.0 0x80132014  size: 8b   Trivial 0-returner. */
+int fn_80132014(void) { return 0; }
+
+/* EN v1.0 0x8013201C  size: 4b   Empty no-op. */
+void fn_8013201C(void) {}
+
+/* EN v1.0 0x80132020  size: 4b   Empty no-op. */
+void fn_80132020(void) {}
