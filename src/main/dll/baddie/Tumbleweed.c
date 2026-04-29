@@ -3598,6 +3598,31 @@ int fn_80138F14(u8* obj)
     return 0;
 }
 
+extern u8    lbl_803A9FE4[0x34];
+extern f32   lbl_803E22F8;
+extern f32   lbl_803E2344;
+extern f32   lbl_803E2348;
+extern f32   lbl_803E234C;
+extern f32   lbl_803E2350;
+extern f32   lbl_803E2318;
+extern f32   lbl_803DD9C8;
+extern f32   lbl_803DD9B4;
+extern f32   lbl_803DD9B0;
+extern void  PSMTXTrans(void*, f32, f32, f32);
+
+/* EN v1.0 0x80135820  size: 136b  Set up the title-screen translation
+ * matrix at lbl_803A9FE4 and derive the three normalized cursor
+ * positions from the supplied (a, b) coordinates. */
+#pragma scheduling off
+void fn_80135820(f32 a, f32 b)
+{
+    PSMTXTrans(lbl_803A9FE4, a, b, lbl_803E22F8);
+    lbl_803DD9C8 = (lbl_803E2344 - b) / lbl_803E2348;
+    lbl_803DD9B4 = (a - lbl_803E234C) / lbl_803E2350;
+    lbl_803DD9B0 = lbl_803E2318 - lbl_803DD9C8;
+}
+#pragma scheduling reset
+
 extern void* lbl_803DD960;
 extern void* lbl_803DD974;
 extern void* lbl_803DD96C;
