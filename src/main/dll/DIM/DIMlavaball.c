@@ -1318,3 +1318,27 @@ void FUN_801a8d70(void)
   (**(code **)(*DAT_803dd6f8 + 0x18))();
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_801A6C20(void) {}
+void fn_801A6C24(void) {}
+void fn_801A6D6C(void) {}
+void fn_801A6DA0(void) {}
+void fn_801A6F44(void) {}
+void fn_801A6F48(void) {}
+void mmp_asteroid_re_free(void) {}
+void mmp_asteroid_re_hitDetect(void) {}
+void mmp_asteroid_re_release(void) {}
+void mmp_asteroid_re_initialise(void) {}
+void mmp_moonrock_hitDetect(void) {}
+void mmp_moonrock_release(void) {}
+void mmp_moonrock_initialise(void) {}
+void mmp_trenchfx_hitDetect(void) {}
+void mmp_trenchfx_release(void) {}
+void mmp_trenchfx_initialise(void) {}
+void mmp_gyservent_free(void) {}
+void mmp_gyservent_render(void) {}
+void mmp_gyservent_hitDetect(void) {}
+void mmp_gyservent_release(void) {}
+void mmp_gyservent_initialise(void) {}

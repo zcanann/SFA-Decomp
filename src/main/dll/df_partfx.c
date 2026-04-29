@@ -1599,3 +1599,35 @@ void FUN_800d8e9c(uint param_1,int param_2,int param_3,int param_4,int param_5)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_800D7544(void) {}
+void fn_800D7F5C(void) {}
+void fn_800D7F60(void) {}
+void fn_800D7F64(void) {}
+void fn_800D7F70(void) {}
+void fn_800D7F84(void) {}
+void fn_800D7F88(void) {}
+void fn_800D7F8C(void) {}
+void fn_800D7F98(void) {}
+void fn_800D7F9C(void) {}
+void fn_800D7FA0(void) {}
+void fn_800D7FA4(void) {}
+void fn_800D7FA8(void) {}
+void fn_800D7FAC(void) {}
+void fn_800D7FB0(void) {}
+void fn_800D7FB4(void) {}
+void fn_800D7FB8(void) {}
+void fn_800D7FBC(void) {}
+void fn_800D7FC0(void) {}
+void fn_800D7FCC(void) {}
+void fn_800D7FD8(void) {}
+void fn_800D7FE4(void) {}
+void fn_800D7FF8(void) {}
+void fn_800D7FFC(void) {}
+void fn_800D8000(void) {}
+void fn_800D800C(void) {}
+void fn_800D8018(void) {}
+void fn_800D801C(void) {}
+void fn_800D8BB0(void) {}

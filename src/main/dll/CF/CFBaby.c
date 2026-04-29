@@ -1684,3 +1684,20 @@ void FUN_80189a90(undefined8 param_1,double param_2,double param_3,undefined8 pa
 void FUN_80189e94(int param_1,int param_2)
 {
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void flammablevine_release(void) {}
+void flammablevine_initialise(void) {}
+void fn_80187C6C(void) {}
+void fn_80187F28(void) {}
+void fn_80187F2C(void) {}
+void fn_80187F78(void) {}
+void fn_80187F7C(void) {}
+void coldwatercontrol_func07(void) {}
+void coldwatercontrol_func08(void) {}
+void infopoint_free(void) {}
+void infopoint_release(void) {}
+void infopoint_initialise(void) {}
+void decoration11a_free(void) {}
+void decoration11a_update(void) {}

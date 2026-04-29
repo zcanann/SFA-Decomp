@@ -71,3 +71,28 @@ void FUN_80100550(double param_1,undefined4 param_2,undefined param_3,int param_
   (**(code **)(*DAT_803dd6fc + 0x58))();
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_80100580(void) {}
+void fn_80100584(void) {}
+void fn_801005B8(void) {}
+void fn_801005BC(void) {}
+void fn_801005F0(void) {}
+void fn_801005F4(void) {}
+void fn_80100628(void) {}
+void fn_8010062C(void) {}
+void fn_80100660(void) {}
+void fn_80100664(void) {}
+void fn_80100698(void) {}
+void fn_8010069C(void) {}
+void fn_801006D0(void) {}
+void fn_801006D4(void) {}
+void fn_80100708(void) {}
+void fn_8010070C(void) {}
+void fn_80100740(void) {}
+void fn_80100744(void) {}
+void fn_80100778(void) {}
+void fn_8010077C(void) {}
+void fn_801007B0(void) {}
+void fn_801007B4(void) {}

@@ -1274,3 +1274,27 @@ void FUN_801a5420(undefined2 *param_1,int param_2,int param_3)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void cfforcefield_release(void) {}
+void cfforcefield_initialise(void) {}
+void slidingdoor_free(void) {}
+void slidingdoor_hitDetect(void) {}
+void slidingdoor_release(void) {}
+void slidingdoor_initialise(void) {}
+void attractor_hitDetect(void) {}
+void attractor_update(void) {}
+void attractor_release(void) {}
+void attractor_initialise(void) {}
+void cfmagicwall_free(void) {}
+void cfmagicwall_hitDetect(void) {}
+void cfmagicwall_release(void) {}
+void cfmagicwall_initialise(void) {}
+void cflevelcontrol_hitDetect(void) {}
+void cflevelcontrol_release(void) {}
+void cflevelcontrol_initialise(void) {}
+void exploded_free(void) {}
+void exploded_hitDetect(void) {}
+void exploded_release(void) {}
+void exploded_initialise(void) {}

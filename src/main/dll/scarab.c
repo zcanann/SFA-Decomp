@@ -2924,3 +2924,18 @@ FUN_80161ea0(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   }
   return uVar3;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_8015DAC4(void) {}
+void fn_8015F090(void) {}
+void fn_8015F4FC(void) {}
+void chukchuk_free(void) {}
+void chukchuk_hitDetect(void) {}
+void chukchuk_release(void) {}
+void chukchuk_initialise(void) {}
+void iceball_hitDetect(void) {}
+void iceball_release(void) {}
+void iceball_initialise(void) {}
+void fn_80160CB4(void) {}
+void fn_801610A0(void) {}

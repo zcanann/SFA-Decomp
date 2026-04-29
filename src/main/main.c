@@ -1199,3 +1199,19 @@ void FUN_801feb6c(int param_1)
   ObjGroup_RemoveObject(param_1,0x24);
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_801FD4A0(void) {}
+void fn_801FD4A4(void) {}
+void fn_801FDA20(void) {}
+void fn_801FDA9C(void) {}
+void fn_801FDBB4(void) {}
+void fn_801FDBB8(void) {}
+void fn_801FDC20(void) {}
+void fn_801FDC24(void) {}
+void fn_801FDEFC(void) {}
+void fn_801FDF00(void) {}
+void fn_801FDF04(void) {}
+void fn_801FE110(void) {}
+void fn_801FE114(void) {}

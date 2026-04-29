@@ -3122,3 +3122,41 @@ void FUN_8019f1dc(void)
   FUN_80286888();
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void cfguardian_release(void) {}
+void cfguardian_initialise(void) {}
+void windlift_hitDetect(void) {}
+void windlift_release(void) {}
+void windlift_initialise(void) {}
+void cfpowerbase_free(void) {}
+void cfpowerbase_hitDetect(void) {}
+void cfpowerbase_release(void) {}
+void cfpowerbase_initialise(void) {}
+void cfmaincrystal_hitDetect(void) {}
+void cfmaincrystal_release(void) {}
+void cfmaincrystal_initialise(void) {}
+void babycloudrunner_hitDetect(void) {}
+void babycloudrunner_release(void) {}
+void babycloudrunner_initialise(void) {}
+void cfprisonguard_free(void) {}
+void cfprisonguard_release(void) {}
+void cfprisonguard_initialise(void) {}
+void cfprisonuncle_free(void) {}
+void cfprisonuncle_hitDetect(void) {}
+void cfprisonuncle_release(void) {}
+void cfprisonuncle_initialise(void) {}
+void gcrobotlightbea_render(void) {}
+void gcrobotlightbea_release(void) {}
+void gcrobotlightbea_initialise(void) {}
+void cfperch_render(void) {}
+void cfperch_hitDetect(void) {}
+void cfperch_release(void) {}
+void cfperch_initialise(void) {}
+void cfprisoncage_free(void) {}
+void cfprisoncage_release(void) {}
+void cfprisoncage_initialise(void) {}
+void spiritdoorspirit_hitDetect(void) {}
+void spiritdoorspirit_release(void) {}
+void spiritdoorspirit_initialise(void) {}

@@ -2396,3 +2396,32 @@ void FUN_800fda2c(int param_1,undefined2 param_2,int param_3,uint param_4,undefi
   (**(code **)(*DAT_803dd6fc + 8))(&local_378,0,0xe,&DAT_80319c78,0xc,&DAT_80319d04,0x586,0);
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_800FDA90(void) {}
+void fn_800FDA94(void) {}
+void fn_800FDE10(void) {}
+void fn_800FDE14(void) {}
+void fn_800FE238(void) {}
+void fn_800FE23C(void) {}
+void fn_800FE5A0(void) {}
+void fn_800FE5A4(void) {}
+void fn_800FE920(void) {}
+void fn_800FE924(void) {}
+void fn_800FEC6C(void) {}
+void fn_800FEC70(void) {}
+void fn_800FEC7C(void) {}
+void fn_800FEC80(void) {}
+void fn_800FEFFC(void) {}
+void fn_800FF000(void) {}
+void fn_800FF698(void) {}
+void fn_800FF69C(void) {}
+void fn_800FFB3C(void) {}
+void fn_800FFB40(void) {}
+void fn_800FFEFC(void) {}
+void fn_800FFF00(void) {}
+void fn_801002B8(void) {}
+void fn_801002BC(void) {}
+void fn_80100548(void) {}
+void fn_8010054C(void) {}

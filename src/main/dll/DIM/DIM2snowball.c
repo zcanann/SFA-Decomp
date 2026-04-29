@@ -1148,3 +1148,29 @@ void FUN_801b7fd0(undefined2 *param_1,int param_2)
   param_1[0x58] = param_1[0x58] | 0x2000;
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_801B6B54(void) {}
+void fn_801B6B88(void) {}
+void fn_801B6B8C(void) {}
+void fn_801B6C24(void) {}
+void fn_801B6C28(void) {}
+void dim_tricky_free(void) {}
+void dim_tricky_hitDetect(void) {}
+void dim2conveyor_hitDetect(void) {}
+void dim2conveyor_release(void) {}
+void dim2conveyor_initialise(void) {}
+void fn_801B765C(void) {}
+void fn_801B7D40(void) {}
+void fn_801B7D44(void) {}
+void dim2snowball_free(void) {}
+void dim2snowball_hitDetect(void) {}
+void dim2snowball_release(void) {}
+void dim2snowball_initialise(void) {}
+void dim2pathgenerator_free(void) {}
+void dim2pathgenerator_render(void) {}
+void dim2pathgenerator_hitDetect(void) {}
+void dim2pathgenerator_release(void) {}
+void dim2pathgenerator_initialise(void) {}
+void fn_801B87A8(void) {}

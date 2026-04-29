@@ -1630,3 +1630,40 @@ void FUN_801e6558(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_801E45A4(void) {}
+void fn_801E45A8(void) {}
+void fn_801E4AB8(void) {}
+void fn_801E4ABC(void) {}
+void fn_801E4BD4(void) {}
+void fn_801E4BD8(void) {}
+void fn_801E4F0C(void) {}
+void fn_801E4F10(void) {}
+void fn_801E4F60(void) {}
+void fn_801E4F70(void) {}
+void fn_801E5058(void) {}
+void fn_801E505C(void) {}
+void fn_801E5094(void) {}
+void fn_801E50C8(void) {}
+void fn_801E5194(void) {}
+void fn_801E5198(void) {}
+void fn_801E5278(void) {}
+void fn_801E55B0(void) {}
+void fn_801E55B4(void) {}
+void fn_801E569C(void) {}
+void fn_801E59A4(void) {}
+void fn_801E59A8(void) {}
+void fn_801E5DD4(void) {}
+void fn_801E5E08(void) {}
+void fn_801E5F6C(void) {}
+void fn_801E5F70(void) {}
+void fn_801E5F84(void) {}
+void fn_801E5FF8(void) {}
+void fn_801E6044(void) {}
+void fn_801E6048(void) {}
+void fn_801E604C(void) {}
+void shop_hitDetect(void) {}
+void shop_release(void) {}
+void shop_initialise(void) {}

@@ -1140,3 +1140,24 @@ void FUN_801ba45c(int param_1)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_801B8B68(void) {}
+void fn_801B8B6C(void) {}
+void fn_801B8B80(void) {}
+void fn_801B8BB4(void) {}
+void fn_801B8F74(void) {}
+void fn_801B8F78(void) {}
+void dim2icefloe_free(void) {}
+void dim2icefloe_hitDetect(void) {}
+void dim2icefloe_release(void) {}
+void dim2icefloe_initialise(void) {}
+void dim2icicle_free(void) {}
+void dim2icicle_hitDetect(void) {}
+void dim2icicle_release(void) {}
+void dim2icicle_initialise(void) {}
+void fn_801B9CC4(void) {}
+void fn_801B9CF8(void) {}
+void fn_801B9EC4(void) {}
+void fn_801B9EC8(void) {}

@@ -704,3 +704,22 @@ void FUN_801c004c(undefined8 param_1,undefined8 param_2,double param_3,undefined
   FUN_80017958(iVar2,FUN_80017954);
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void dimbossgut2_func11(void) {}
+void dimbossgut2_hitDetect(void) {}
+void dimbossgut2_release(void) {}
+void dimbossgut2_initialise(void) {}
+void dimbossspit_hitDetect(void) {}
+void dimbossspit_release(void) {}
+void dimbossspit_initialise(void) {}
+void magicmaker_free(void) {}
+void magicmaker_hitDetect(void) {}
+void magicmaker_init(void) {}
+void magicmaker_release(void) {}
+void magicmaker_initialise(void) {}
+void dimbosscrackpar_hitDetect(void) {}
+void dimbosscrackpar_release(void) {}
+void dimbosscrackpar_initialise(void) {}
+void dimbossfire_hitDetect(void) {}

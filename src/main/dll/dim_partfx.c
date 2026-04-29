@@ -2329,3 +2329,29 @@ void FUN_800c9a2c(uint param_1,float *param_2,char *param_3)
 void FUN_800c9c68(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
 {
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_800C9134(void) {}
+void fn_800C9138(void) {}
+void fn_800C913C(void) {}
+void fn_800CA3BC(void) {}
+void fn_800CA3C0(void) {}
+void fn_800CA3C4(void) {}
+void fn_800CA3C8(void) {}
+void fn_800CA920(void) {}
+void fn_800CA924(void) {}
+void fn_800CA928(void) {}
+void fn_800CA92C(void) {}
+void fn_800CB684(void) {}
+void fn_800CB688(void) {}
+void fn_800CB68C(void) {}
+void fn_800CCF50(void) {}
+void fn_800CCF54(void) {}
+void fn_800CCF58(void) {}
+void fn_800CD424(void) {}
+void fn_800CD428(void) {}
+void fn_800CD42C(void) {}
+void fn_800D5524(void) {}
+void fn_800D5528(void) {}
+void fn_800D552C(void) {}

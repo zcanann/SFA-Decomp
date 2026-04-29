@@ -1885,3 +1885,31 @@ void FUN_801b0df4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void imicepillar_hitDetect(void) {}
+void imicepillar_update(void) {}
+void imicepillar_init(void) {}
+void imicepillar_release(void) {}
+void imicepillar_initialise(void) {}
+void imanimspacecraft_modelMtxFn(void) {}
+void imanimspacecraft_hitDetect(void) {}
+void imanimspacecraft_release(void) {}
+void imanimspacecraft_initialise(void) {}
+void imspacethruster_hitDetect(void) {}
+void imspacethruster_release(void) {}
+void imspacethruster_initialise(void) {}
+void imspacering_free(void) {}
+void imspacering_hitDetect(void) {}
+void imspacering_release(void) {}
+void imspacering_initialise(void) {}
+void imspaceringgen_hitDetect(void) {}
+void imspaceringgen_release(void) {}
+void imspaceringgen_initialise(void) {}
+void lavaball1be_hitDetect(void) {}
+void lavaball1be_release(void) {}
+void lavaball1be_initialise(void) {}
+void lavaball1bf_hitDetect(void) {}
+void lavaball1bf_release(void) {}
+void lavaball1bf_initialise(void) {}

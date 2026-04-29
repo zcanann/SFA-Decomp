@@ -3073,3 +3073,36 @@ undefined4 FUN_801127c4(int param_1,int param_2,char param_3)
   }
   return uVar1;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_8010E514(void) {}
+void fn_8010E518(void) {}
+void fn_8010F2F0(void) {}
+void fn_8010F2F4(void) {}
+void fn_8010F2F8(void) {}
+void fn_8010F538(void) {}
+void fn_8010F53C(void) {}
+void fn_8010FA4C(void) {}
+void fn_8010FA50(void) {}
+void fn_8010FA54(void) {}
+void fn_8010FC6C(void) {}
+void fn_8010FC70(void) {}
+void fn_8010FC74(void) {}
+void fn_8010FC78(void) {}
+void fn_801101DC(void) {}
+void fn_801101E0(void) {}
+void fn_801101E4(void) {}
+void fn_801106AC(void) {}
+void fn_801106B0(void) {}
+void fn_801106B4(void) {}
+void fn_80110C78(void) {}
+void fn_80110C7C(void) {}
+void fn_80110C80(void) {}
+void fn_80110E28(void) {}
+void fn_80110E2C(void) {}
+void fn_80110EC0(void) {}
+void fn_801115DC(void) {}
+void fn_801115E0(void) {}
+void fn_80111D0C(void) {}
+void fn_80111D10(void) {}

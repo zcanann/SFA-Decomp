@@ -4070,3 +4070,44 @@ void FUN_802051e0(uint param_1)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_801FF87C(void) {}
+void fn_801FF880(void) {}
+void fn_801FF968(void) {}
+void fn_801FF96C(void) {}
+void fn_801FF970(void) {}
+void fn_801FF974(void) {}
+void fn_801FF9A8(void) {}
+void fn_801FF9AC(void) {}
+void fn_801FF9B0(void) {}
+void fn_801FF9D8(void) {}
+void fn_801FFA18(void) {}
+void fn_801FFE10(void) {}
+void fn_801FFE14(void) {}
+void fn_80203C54(void) {}
+void fn_80203F80(void) {}
+void fn_80204090(void) {}
+void fn_80204094(void) {}
+void fn_802045DC(void) {}
+void fn_802045E0(void) {}
+void fn_8020492C(void) {}
+void fn_802049D4(void) {}
+void fn_80204B4C(void) {}
+void fn_80204B50(void) {}
+void fn_80204BF4(void) {}
+void fn_802050BC(void) {}
+void fn_802050C0(void) {}
+void doorswitch_render(void) {}
+void doorswitch_hitDetect(void) {}
+void doorswitch_release(void) {}
+void doorswitch_initialise(void) {}
+void fn_8020541C(void) {}
+void fn_80205450(void) {}
+void fn_802057C4(void) {}
+void fn_802057C8(void) {}
+void fn_80205A90(void) {}
+void fn_80205F38(void) {}
+void fn_80205F3C(void) {}
+void chuka_render(void) {}

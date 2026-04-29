@@ -1200,3 +1200,20 @@ void FUN_80186748(int param_1)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_80185B70(void) {}
+void fn_80186464(void) {}
+void fn_80186468(void) {}
+void fn_8018647C(void) {}
+void fn_80186480(void) {}
+void fn_80186484(void) {}
+void fn_80186488(void) {}
+void fn_8018648C(void) {}
+void fn_80186490(void) {}
+void fn_80186494(void) {}
+void portalspelldoor_free(void) {}
+void portalspelldoor_hitDetect(void) {}
+void portalspelldoor_release(void) {}
+void portalspelldoor_initialise(void) {}

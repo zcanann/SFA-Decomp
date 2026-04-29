@@ -254,3 +254,22 @@ void FUN_801df788(int param_1)
   }
   return;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void paymentkiosk_release(void) {}
+void paymentkiosk_initialise(void) {}
+void fn_801DF85C(void) {}
+void fn_801DF890(void) {}
+void fn_801DF92C(void) {}
+void fn_801DF930(void) {}
+void fn_801DF944(void) {}
+void fn_801DF978(void) {}
+void fn_801DF97C(void) {}
+void fn_801DF9A4(void) {}
+void fn_801DF9A8(void) {}
+void fn_801DF9CC(void) {}
+void fn_801DFA00(void) {}
+void fn_801DFA04(void) {}
+void fn_801DFA20(void) {}
+void fn_801DFA24(void) {}

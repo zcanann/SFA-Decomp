@@ -1045,3 +1045,27 @@ int FUN_801fc4f4(void)
 {
   return 4;
 }
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void fn_801FBAC0(void) {}
+void fn_801FBAC4(void) {}
+void fn_801FBDE4(void) {}
+void fn_801FC370(void) {}
+void fn_801FC374(void) {}
+void fn_801FC558(void) {}
+void fn_801FC6EC(void) {}
+void fn_801FC6F0(void) {}
+void fn_801FC974(void) {}
+void fn_801FC9A8(void) {}
+void fn_801FCCE0(void) {}
+void fn_801FCCE4(void) {}
+void fn_801FCD64(void) {}
+void fn_801FCD68(void) {}
+void fn_801FD134(void) {}
+void fn_801FD138(void) {}
+void fn_801FD1A8(void) {}
+void fn_801FD1AC(void) {}
+void fn_801FD268(void) {}
+void fn_801FD26C(void) {}
+void fn_801FD388(void) {}
