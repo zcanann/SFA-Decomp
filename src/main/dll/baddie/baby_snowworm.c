@@ -972,13 +972,15 @@ s32 fn_8012EB70(void)
 }
 
 /* fn_8012EB08 (28b, 3 x s16 setter via extsh+sth pattern) and fn_8012EB30
- * (56b, slot-table reset loop) — both cases MWCC -O4,p will not emit:
- *   - fn_8012EB08: target emits extsh-before-sth triples; MWCC strips
- *     the extsh since sth ignores upper bits (same issue called out in
- *     wall_crawler's fn_8012EF40 attempt).
- *   - fn_8012EB30: target loads the .data array address with
- *     `lis r3,@ha; addi r4,r3,@l`; MWCC routes via r0 with an extra mr
- *     and that ripples into the post-loop register choice. */
+ * (56b, slot-table reset loop) — both stuck. fn_8012EB08: target emits
+ * extsh-before-sth triples; MWCC strips the extsh since sth ignores
+ * upper bits. fn_8012EB30: target loads the .data array address with
+ * `lis r3,@ha; addi r4,r3,@l` (using r3 as scratch), but MWCC routes
+ * via r0 with an extra mr (`lis r4; addi r0,r4,@l; mr r4,r0`) and
+ * the resulting reg pressure ripples into the post-loop register
+ * choice (target uses r0 for both -1 and 0 final stores; MWCC reuses
+ * r3 from the loop body). Tried typed struct array, scheduling/peephole
+ * pragmas — no change. */
 
 /* fn_8012EA5C declared at end of file (needs externs declared below). */
 
@@ -1009,8 +1011,10 @@ extern void fn_800173C8(s32);
 
 extern u16 lbl_803DBA70;
 extern u8  lbl_803DD7A9;
+extern u8  lbl_803DD8B8;
 extern u8  lbl_803DD8C8;
 extern s16 lbl_803DD8CA;
+extern s16 lbl_803DD8C2;
 extern s16 lbl_803DD8D0;
 extern u8  lbl_803A9440[0x18];
 
@@ -1532,3 +1536,4 @@ void fn_8012E880(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
