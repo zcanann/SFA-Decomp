@@ -1954,3 +1954,7 @@ int lavaball1be_getExtraSize(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1fa
 int lavaball1be_func08(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1fa) return 0x0; return 0x2; }
 #pragma scheduling reset
 #pragma peephole reset
+
+/* chained byte mask. */
+u32 imanimspacecraft_func0B(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x3) & 0x4; }
+u32 lavaball1be_func11(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x10) & 0x10; }

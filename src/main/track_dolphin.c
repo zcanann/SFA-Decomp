@@ -3961,3 +3961,8 @@ void* fn_800606EC(int *obj, int idx) { return (char*)((int**)obj)[0x50/4] + idx 
 void* fn_800606FC(int *obj, int idx) { return (char*)((int**)obj)[0x68/4] + idx * 0x1c; }
 void* fn_8006070C(int *obj, int idx) { return (char*)((int**)obj)[0x64/4] + idx * 0x44; }
 #pragma scheduling reset
+
+/* arr indexing pow2. */
+#pragma scheduling off
+void* fn_800606DC(int *obj, int idx) { return (char*)((int**)obj)[0x4c/4] + idx * 8; }
+#pragma scheduling reset
