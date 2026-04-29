@@ -715,3 +715,12 @@ void fn_80109B00(void) {}
 void fn_80109C14(void) {}
 void fn_8010A0FC(void) {}
 void fn_8010A100(void) {}
+
+/* fn_X(lbl); lbl = 0; */
+extern u32 lbl_803DD550;
+extern void fn_80023800(u32);
+extern u32 lbl_803DD558;
+#pragma scheduling off
+void fn_8010974C(void) { fn_80023800(lbl_803DD550); lbl_803DD550 = 0; }
+void fn_80109C18(void) { fn_80023800(lbl_803DD558); lbl_803DD558 = 0; }
+#pragma scheduling reset

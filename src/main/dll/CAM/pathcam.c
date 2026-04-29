@@ -277,3 +277,10 @@ void pathcam_loadSettings(undefined2 *param_1,int param_2,int param_3)
   *(undefined *)(param_1 + 0x9f) = 1;
   return;
 }
+
+/* fn_X(lbl); lbl = 0; */
+extern u32 lbl_803DD530;
+extern void fn_80023800(u32);
+#pragma scheduling off
+void camcontrol_releaseModeSettings(void) { fn_80023800(lbl_803DD530); lbl_803DD530 = 0; }
+#pragma scheduling reset

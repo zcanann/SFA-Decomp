@@ -1521,3 +1521,10 @@ int fn_801F160C(int p1, int p2, void* p3) { *(s16*)((char*)p3 + 0x6e) = -1; *(u8
 int fn_801F2E80(int p1, int p2, void* p3) { *(s16*)((char*)p3 + 0x6e) = -1; *(u8*)((char*)p3 + 0x56) = 0; return 0; }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* fn_X(lbl); lbl = 0; */
+extern u32 lbl_803DDC80;
+extern void fn_80013E2C(u32);
+#pragma scheduling off
+void fn_801F15B4(void) { fn_80013E2C(lbl_803DDC80); lbl_803DDC80 = 0; }
+#pragma scheduling reset

@@ -207,3 +207,10 @@ void FUN_8010b428(void)
 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_8010B3F4(void) {}
+
+/* fn_X(lbl); lbl = 0; */
+extern u32 lbl_803DD560;
+extern void fn_80023800(u32);
+#pragma scheduling off
+void fn_8010B3F8(void) { fn_80023800(lbl_803DD560); lbl_803DD560 = 0; }
+#pragma scheduling reset

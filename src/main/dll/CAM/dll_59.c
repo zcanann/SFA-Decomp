@@ -50,3 +50,10 @@ void FUN_8010747c(undefined4 param_1,undefined4 param_2,short *param_3)
 /* Trivial 4b 0-arg blr leaves. */
 void fn_80107AE4(void) {}
 void fn_80107AE8(void) {}
+
+/* fn_X(lbl); lbl = 0; */
+extern u32 lbl_803DD540;
+extern void fn_80023800(u32);
+#pragma scheduling off
+void fn_80107B20(void) { fn_80023800(lbl_803DD540); lbl_803DD540 = 0; }
+#pragma scheduling reset
