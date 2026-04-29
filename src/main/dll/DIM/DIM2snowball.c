@@ -1220,5 +1220,5 @@ void dim_tricky_render(void) { fn_8003B8F4(lbl_803E4A38); }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-int dim2conveyor_free(int x) { return ObjGroup_RemoveObject(x, 0x16); }
+void dim2conveyor_free(int x) { ObjGroup_RemoveObject(x, 0x16); }
 #pragma scheduling reset

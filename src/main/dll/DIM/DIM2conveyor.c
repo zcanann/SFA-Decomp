@@ -396,6 +396,6 @@ void dimbridgecogmai_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-int dimbridgecogmai_free(int x) { return ObjGroup_RemoveObject(x, 0xf); }
-int dimdismountpoint_free(int x) { return ObjGroup_RemoveObject(x, 0x13); }
+void dimbridgecogmai_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
+void dimdismountpoint_free(int x) { ObjGroup_RemoveObject(x, 0x13); }
 #pragma scheduling reset

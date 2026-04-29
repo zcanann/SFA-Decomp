@@ -660,5 +660,5 @@ int deathgas_getExtraSize(void) { return 0x10; }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-int trickyguardspot_free(int x) { return ObjGroup_RemoveObject(x, 0x1e); }
+void trickyguardspot_free(int x) { ObjGroup_RemoveObject(x, 0x1e); }
 #pragma scheduling reset

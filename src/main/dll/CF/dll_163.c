@@ -391,5 +391,5 @@ void staffactivated_render(void) { fn_8003B8F4(lbl_803E3BBC); }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-int staffactivated_free(int x) { return ObjGroup_RemoveObject(x, 0x41); }
+void staffactivated_free(int x) { ObjGroup_RemoveObject(x, 0x41); }
 #pragma scheduling reset
