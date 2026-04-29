@@ -4,18 +4,27 @@ extern int InitializeUART(u32);
 extern int WriteUARTN(void* buf, u32 n);
 
 extern u8 lbl_803326E8[];
-extern u32 lbl_803DE418;
+extern s32 lbl_803DE418;
 
-void PPCMtdec(u32 newDec) {
-    (void)newDec;
+asm void PPCMtdec(register u32 newDec) {
+    nofralloc
+    mtdec r3
+    blr
 }
 
-void PPCHalt(void) {
+asm void PPCHalt(void) {
+    nofralloc
+    sync
+loop:
+    nop
+    li r3, 0
+    nop
+    b loop
 }
 
-u8 fn_8029465C(int x) {
+int tolower(int x) {
     if (x == -1) {
-        return 0xFF;
+        return -1;
     }
 
     return lbl_803326E8[(u8)x];
@@ -44,11 +53,22 @@ int __write_console(int handle, void* buf, u32* count) {
     return 0;
 }
 
-float __fabsf(float x) {
-    return x < 0.0f ? -x : x;
+asm float __fabsf(register float x) {
+    nofralloc
+    fabs f1, f1
+    blr
 }
 
-float fn_80294724(float x, int n) {
-    (void)n;
-    return (float)(int)x;
+float fn_80294724(float x) {
+    int n = (int)x;
+    float truncated = (float)n;
+
+    if (truncated != x && ((*(u32*)&x & 0x7F800000) < 0x4B800000)) {
+        if (*(u32*)&x & 0x80000000) {
+            n--;
+        }
+        truncated = (float)n;
+    }
+
+    return truncated;
 }
