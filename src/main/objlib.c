@@ -333,7 +333,7 @@ void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
  */
 void ObjHits_SetTargetMask(int param_1,undefined param_2)
 {
-  if (*(int *)(param_1 + 0x54) == 0) {
+  if (*(u32 *)(param_1 + 0x54) == 0) {
     return;
   }
   *(undefined *)(*(int *)(param_1 + 0x54) + 0xb5) = param_2;

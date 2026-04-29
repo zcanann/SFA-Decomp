@@ -1259,7 +1259,7 @@ void ObjHits_TickPriorityHitCooldowns(void)
 {
   int iVar1;
   short sVar2;
-  
+
   sVar2 = 0;
   iVar1 = 0;
   do {
