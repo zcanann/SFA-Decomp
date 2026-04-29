@@ -3485,3 +3485,111 @@ LAB_801396fc:
   FUN_80286888();
   return;
 }
+
+/* ===== EN v1.0 retargeted leaves ========================================= */
+
+extern u32 lbl_803DD938;
+extern u8  lbl_803DD988;
+extern u32 lbl_803DD9B8;
+extern u32 lbl_803DD9BC;
+extern u8  lbl_803DD9AB;
+
+/* 4-byte and 8-byte trivial leaves. */
+void fn_80134040(void) {}
+void fn_80134098(void) {}
+void fn_8013409C(void) {}
+void fn_801347A0(void) {}
+void fn_80137DF4(void) {}
+int  fn_80134044(void) { return 0; }
+u8   fn_80134BBC(u8* obj) { return *obj; }
+
+/* EN v1.0 0x801334D4  size: 12b  u16-narrow getter for lbl_803DD938. */
+u16 fn_801334D4(void) { return (u16)lbl_803DD938; }
+
+/* EN v1.0 0x801344F0  size: 12b  u8 setter writing arg low byte to
+ * lbl_803DD988. */
+void fn_801344F0(int val) { lbl_803DD988 = (u8)val; }
+
+/* EN v1.0 0x80135814  size: 12b  Two-word setter for state pair. */
+void fn_80135814(u32 a, u32 b) { lbl_803DD9BC = a; lbl_803DD9B8 = b; }
+
+/* EN v1.0 0x801368D4  size: 12b  Clear lbl_803DD9AB to 0. */
+void fn_801368D4(void) { lbl_803DD9AB = 0; }
+
+/* EN v1.0 0x80138F78  size: 12b  obj->_b8->_14 (f32). */
+f32 fn_80138F78(u8* obj) { return *(f32*)(*(u8**)(obj + 0xb8) + 0x14); }
+/* EN v1.0 0x80138F84  size: 12b  obj->_b8->_24 (u32). */
+u32 fn_80138F84(u8* obj) { return *(u32*)(*(u8**)(obj + 0xb8) + 0x24); }
+/* EN v1.0 0x80138F90  size: 12b  obj->_b8->_414 (s16). */
+s16 fn_80138F90(u8* obj) { return *(s16*)(*(u8**)(obj + 0xb8) + 0x414); }
+/* EN v1.0 0x80138F9C  size: 12b  Returns obj->_b8 + 0x408. */
+void* fn_80138F9C(u8* obj) { return (void*)(*(u8**)(obj + 0xb8) + 0x408); }
+
+extern void* lbl_803DD960;
+extern void* lbl_803DD974;
+extern void* lbl_803DD96C;
+extern u8    lbl_803DD970;
+extern s32   lbl_803DD940;
+extern u8    lbl_803DD990;
+extern u8    lbl_803DD991;
+extern u8    lbl_803DBC08;
+extern u8    lbl_803DBC09;
+extern f32   lbl_803E2408;
+extern void* fn_80054D54(s32);
+extern void  fn_80054308(void*);
+extern void* fn_80019570_t(u32);
+
+/* EN v1.0 0x80133F40  size: 48b  Acquire a 0xBE5-byte buffer via
+ * fn_80054D54 into lbl_803DD940; reset frame counter at lbl_803DD938. */
+void fn_80133F40(void)
+{
+    lbl_803DD940 = (s32)fn_80054D54(0xBE5);
+    lbl_803DD938 = 340;
+}
+
+/* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960
+ * via fn_80054308. */
+void fn_8013404C(void)
+{
+    fn_80054308(lbl_803DD960);
+}
+
+/* EN v1.0 0x80134070  size: 40b  Acquire 0x47A-byte buffer into
+ * lbl_803DD960. */
+void fn_80134070(void)
+{
+    lbl_803DD960 = fn_80054D54(0x47A);
+}
+
+/* EN v1.0 0x80134364  size: 36b  Release lbl_803DD974 buffer. */
+void fn_80134364(void)
+{
+    fn_80054308(lbl_803DD974);
+}
+
+/* EN v1.0 0x801368A4  size: 32b  Two-byte state push: if arg differs
+ * from lbl_803DD991, save old to lbl_803DBC09 and set new. */
+void fn_801368A4(s8 arg)
+{
+    s8 cur = (s8)lbl_803DD991;
+    if (arg == cur) return;
+    lbl_803DBC09 = (u8)cur;
+    lbl_803DD991 = (u8)arg;
+}
+
+/* EN v1.0 0x801368C4  size: 16b  Two-byte state push (no equality
+ * check): copy lbl_803DD990 to lbl_803DBC08 and write new value. */
+void fn_801368C4(u8 arg)
+{
+    lbl_803DBC08 = lbl_803DD990;
+    lbl_803DD990 = arg;
+}
+
+/* EN v1.0 0x80138EF8  size: 28b  Set bit 0x80000000 of obj->_b8->_54
+ * and store lbl_803E2408 into obj->_b8->_808. */
+void fn_80138EF8(u8* obj)
+{
+    u8* b = *(u8**)(obj + 0xb8);
+    *(u32*)(b + 0x54) |= 0x80000000;
+    *(f32*)(b + 0x808) = lbl_803E2408;
+}
