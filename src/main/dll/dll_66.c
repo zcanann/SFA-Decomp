@@ -96,3 +96,30 @@ void fn_80100778(void) {}
 void fn_8010077C(void) {}
 void fn_801007B0(void) {}
 void fn_801007B4(void) {}
+
+/* OSReport-stub returns. */
+extern void OSReport(const char *fmt, ...);
+extern char lbl_80319398[];
+extern char lbl_803193E0[];
+extern char lbl_80319430[];
+extern char lbl_80319480[];
+extern char lbl_803194C8[];
+extern char lbl_80319518[];
+extern char lbl_80319568[];
+extern char lbl_803195B8[];
+extern char lbl_80319608[];
+extern char lbl_80319658[];
+extern char lbl_803196A8[];
+#pragma scheduling off
+int fn_80100550(void) { OSReport(lbl_80319398); return -1; }
+int fn_80100588(void) { OSReport(lbl_803193E0); return -1; }
+int fn_801005C0(void) { OSReport(lbl_80319430); return -1; }
+int fn_801005F8(void) { OSReport(lbl_80319480); return -1; }
+int fn_80100630(void) { OSReport(lbl_803194C8); return -1; }
+int fn_80100668(void) { OSReport(lbl_80319518); return -1; }
+int fn_801006A0(void) { OSReport(lbl_80319568); return -1; }
+int fn_801006D8(void) { OSReport(lbl_803195B8); return -1; }
+int fn_80100710(void) { OSReport(lbl_80319608); return -1; }
+int fn_80100748(void) { OSReport(lbl_80319658); return -1; }
+int fn_80100780(void) { OSReport(lbl_803196A8); return -1; }
+#pragma scheduling reset

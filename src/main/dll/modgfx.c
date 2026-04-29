@@ -4516,3 +4516,12 @@ extern void OSReport(const char *fmt, ...);
 #pragma scheduling off
 void fn_800A3AC0(void) { OSReport(lbl_8030FDB8); }
 #pragma scheduling reset
+
+/* OSReport-stub returns. */
+extern void OSReport(const char *fmt, ...);
+extern char lbl_8030FD5C[];
+extern char lbl_8030FD88[];
+#pragma scheduling off
+int fn_800A3A40(void) { OSReport(lbl_8030FD5C); return 0x0; }
+int fn_800A3A70(void) { OSReport(lbl_8030FD88); return 0x0; }
+#pragma scheduling reset
