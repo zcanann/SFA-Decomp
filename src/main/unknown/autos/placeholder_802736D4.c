@@ -36,3 +36,6 @@ extern f32 FLOAT_803e8480;
 void FUN_80272f70(void)
 {
 }
+
+/* Pattern wrappers. */
+void fn_802737E8(void) {}

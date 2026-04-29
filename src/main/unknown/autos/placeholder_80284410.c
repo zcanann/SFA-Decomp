@@ -39,3 +39,6 @@ void FUN_80284224(int param_1,uint param_2,int param_3,uint param_4,undefined4 p
 void FUN_80284228(uint param_1)
 {
 }
+
+/* Pattern wrappers. */
+void fn_80284444(void) {}

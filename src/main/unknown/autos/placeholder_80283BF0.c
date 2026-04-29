@@ -22,3 +22,6 @@ extern undefined4 DAT_803defc4;
 void FUN_80283bd4(int param_1,uint *param_2,byte param_3)
 {
 }
+
+/* Pattern wrappers. */
+void fn_80283D58(void) {}

@@ -261,3 +261,6 @@ void FUN_80272ee4(uint param_1,byte *param_2)
 void FUN_80272ee8(uint param_1,int param_2)
 {
 }
+
+/* Pattern wrappers. */
+void fn_80272F6C(void) {}

@@ -1303,3 +1303,23 @@ void FUN_802bb82c(undefined8 param_1,undefined8 param_2,double param_3,undefined
 void FUN_802bb830(undefined2 *param_1,int param_2)
 {
 }
+
+/* Pattern wrappers. */
+int fn_802BC0D0(void) { return 0x0; }
+int fn_802BCCFC(void) { return 0x0; }
+void fn_802BDE04(void) {}
+int fn_802BDE08(void) { return 0x0; }
+int fn_802BDF7C(void) { return 0x0; }
+int fn_802BDFC0(void) { return 0x0; }
+int fn_802BE008(void) { return 0x0; }
+int fn_802BE010(void) { return 0x14fc; }
+int fn_802BE018(void) { return 0x43; }
+int fn_802BF728(void) { return 0x0; }
+void fn_802C0CEC(void) {}
+int fn_802C0CF0(void) { return 0x0; }
+int fn_802C0DB0(void) { return 0x0; }
+int fn_802C0E98(void) { return 0x0; }
+int fn_802C0EFC(void) { return 0x0; }
+int fn_802C0F04(void) { return 0xbc8; }
+int fn_802C0F0C(void) { return 0x43; }
+void fn_802C1800(void) {}

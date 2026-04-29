@@ -5623,3 +5623,9 @@ undefined4 FUN_80006ca4(void)
 {
     return 0;
 }
+
+/* Pattern wrappers. */
+int fn_80008B6C(void) { return -0x1; }
+int fn_8000A378(void) { return 0x64; }
+void fn_8000CF54(void) {}
+void fn_80014F3C(void) {}

@@ -54,3 +54,6 @@ FUN_80280c34(double param_1,double param_2,double param_3,double param_4,double 
 {
     return 0;
 }
+
+/* Pattern wrappers. */
+void fn_80281040(void) {}

@@ -4525,3 +4525,6 @@ extern char lbl_8030FD88[];
 int fn_800A3A40(void) { OSReport(lbl_8030FD5C); return 0x0; }
 int fn_800A3A70(void) { OSReport(lbl_8030FD88); return 0x0; }
 #pragma scheduling reset
+
+/* Pattern wrappers. */
+int fn_800A3AB4(void) { return -0x1; }

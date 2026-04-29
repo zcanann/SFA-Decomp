@@ -90,3 +90,6 @@ void FUN_80283e08(int param_1,uint param_2)
 void FUN_80283e0c(int param_1,char param_2)
 {
 }
+
+/* Pattern wrappers. */
+void fn_80283F34(void) {}

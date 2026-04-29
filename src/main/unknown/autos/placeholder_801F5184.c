@@ -1225,3 +1225,101 @@ void FUN_801f506c(uint param_1)
 void FUN_801f5070(uint param_1)
 {
 }
+
+/* Pattern wrappers. */
+int fn_801F53C8(void) { return 0x88; }
+int fn_801F53D0(void) { return 0x0; }
+void fn_801F5420(void) {}
+void fn_801F5424(void) {}
+void fn_801F5684(void) {}
+void fn_801F5688(void) {}
+void fn_801F568C(void) {}
+int fn_801F5AEC(void) { return 0x18; }
+int fn_801F5AF4(void) { return 0x0; }
+void fn_801F5AFC(void) {}
+void fn_801F6544(void) {}
+void fn_801F6548(void) {}
+int fn_801F6A40(void) { return 0x10; }
+int fn_801F6A48(void) { return 0x0; }
+void fn_801F6A50(void) {}
+void fn_801F6A84(void) {}
+void fn_801F6E84(void) {}
+void fn_801F6E88(void) {}
+int fn_801F72F0(void) { return 0x10; }
+int fn_801F72F8(void) { return 0x0; }
+void fn_801F73D0(void) {}
+void fn_801F7C48(void) {}
+void fn_801F7C4C(void) {}
+int fn_801F7C50(void) { return 0x2; }
+int fn_801F7C58(void) { return 0x0; }
+void fn_801F7C60(void) {}
+void fn_801F7CEC(void) {}
+void fn_801F7CF0(void) {}
+void fn_801F7D2C(void) {}
+void fn_801F7D30(void) {}
+int fn_801F7D34(void) { return 0x1c; }
+int fn_801F7D3C(void) { return 0x0; }
+void fn_801F7D44(void) {}
+void fn_801F7D78(void) {}
+void fn_801F7FEC(void) {}
+void fn_801F7FF0(void) {}
+int fn_801F80B8(void) { return 0x29c; }
+int fn_801F80C0(void) { return 0x0; }
+void fn_801F9434(void) {}
+void fn_801F9438(void) {}
+int fn_801F974C(void) { return 0x6c; }
+int fn_801F9754(void) { return 0x0; }
+void fn_801F975C(void) {}
+void fn_801F9784(void) {}
+void fn_801F9788(void) {}
+void fn_801F97FC(void) {}
+void fn_801F9800(void) {}
+int fn_801F993C(void) { return 0x1c; }
+int fn_801F9944(void) { return 0x0; }
+void fn_801F9990(void) {}
+void fn_801F9994(void) {}
+void fn_801F9D68(void) {}
+int fn_801F9D78(void) { return 0xa; }
+int fn_801F9D80(void) { return 0x0; }
+void fn_801F9D88(void) {}
+void fn_801F9D98(void) {}
+void fn_801FA220(void) {}
+void fn_801FA224(void) {}
+int fn_801FA228(void) { return 0xc; }
+int fn_801FA230(void) { return 0x0; }
+void fn_801FA2F0(void) {}
+void fn_801FA6F4(void) {}
+void fn_801FA6F8(void) {}
+int fn_801FA6FC(void) { return 0x4; }
+int fn_801FA704(void) { return 0x0; }
+void fn_801FA73C(void) {}
+void fn_801FA740(void) {}
+void fn_801FA868(void) {}
+void fn_801FA86C(void) {}
+int fn_801FA870(void) { return 0xc; }
+int fn_801FA878(void) { return 0x0; }
+void fn_801FA8B0(void) {}
+void fn_801FA8B4(void) {}
+void fn_801FAC64(void) {}
+void fn_801FAC68(void) {}
+int fn_801FAC6C(void) { return 0x4; }
+int fn_801FAC74(void) { return 0x0; }
+void fn_801FACAC(void) {}
+void fn_801FACB0(void) {}
+void fn_801FAFE4(void) {}
+void fn_801FAFE8(void) {}
+int fn_801FAFEC(void) { return 0x0; }
+int fn_801FAFF4(void) { return 0x8; }
+int fn_801FAFFC(void) { return 0x0; }
+void fn_801FB034(void) {}
+void fn_801FB038(void) {}
+void fn_801FB218(void) {}
+void fn_801FB21C(void) {}
+int fn_801FB728(void) { return 0x20; }
+int fn_801FB730(void) { return 0x0; }
+void fn_801FB9A4(void) {}
+void fn_801FB9A8(void) {}
+int fn_801FB9AC(void) { return 0x2; }
+int fn_801FB9B4(void) { return 0x0; }
+void fn_801FB9EC(void) {}
+void fn_801FB9F0(void) {}

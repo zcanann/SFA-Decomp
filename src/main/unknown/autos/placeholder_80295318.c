@@ -5532,3 +5532,10 @@ undefined4 FUN_80295194(int param_1)
 {
     return 0;
 }
+
+/* Pattern wrappers. */
+void fn_802960E4(void) {}
+int fn_80297498(void) { return 0x0; }
+int fn_80297824(void) { return 0x0; }
+void fn_802B9780(void) {}
+int fn_802B9784(void) { return 0x0; }

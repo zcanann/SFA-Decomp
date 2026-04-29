@@ -6986,3 +6986,14 @@ void FUN_80017b20(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
+
+/* Pattern wrappers. */
+void fn_8001F678(void) {}
+void fn_8001F67C(void) {}
+void fn_8001FEE4(void) {}
+int fn_800202BC(void) { return 0x1; }
+int fn_8002969C(void) { return 0x0; }
+int fn_8002A5B8(void) { return 0x0; }
+void fn_8002A5D4(void) {}
+void fn_8002A5D8(void) {}
+void fn_8002B85C(void) {}

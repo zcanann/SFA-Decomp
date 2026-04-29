@@ -1660,3 +1660,6 @@ void fn_800D895C(int unused1, int unused2, u32 a, u32 b) { lbl_803DD43C = a; lbl
 /* misc 8b leaves */
 extern f32 lbl_803DD420;
 f32 fn_800D7A84(void) { return lbl_803DD420; }
+
+/* Pattern wrappers. */
+int fn_800D8010(void) { return -0x1; }
