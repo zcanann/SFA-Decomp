@@ -584,3 +584,6 @@ void tumbleweedbush_initialise(void) {}
 /* 8b "li r3, N; blr" returners. */
 int tumbleweedbush_getExtraSize(void) { return 0x54; }
 int tumbleweedbush_func08(void) { return 0x0; }
+
+/* 16b chained patterns. */
+void fn_80163980(int *obj) { *((u8*)((int**)obj)[0xb8/4] + 0x278) = 0x7; }

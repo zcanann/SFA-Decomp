@@ -1134,3 +1134,6 @@ u32 fn_801E2570(void) { return lbl_803DDC40; }
 
 /* Pattern wrappers. */
 u8 fn_801E1DF4(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x79); }
+
+/* 16b chained patterns. */
+s32 fn_801E1E64(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x2b); }

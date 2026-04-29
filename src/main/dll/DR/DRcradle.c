@@ -335,3 +335,7 @@ int fn_801ECE38(void) { return 0x3; }
 
 /* Pattern wrappers. */
 u8 fn_801ECE00(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x420); }
+
+/* 16b chained patterns. */
+s32 fn_801ECBC4(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x422); }
+s32 fn_801ECD88(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x421); }

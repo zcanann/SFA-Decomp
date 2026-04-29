@@ -820,3 +820,6 @@ LAB_801e1614:
   FUN_8028688c();
   return;
 }
+
+/* 16b chained patterns. */
+s32 fn_801E12DC(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x70); }

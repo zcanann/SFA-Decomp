@@ -1614,3 +1614,6 @@ int invhit_func08(void) { return 0x0; }
 int iceblast_getExtraSize(void) { return 0x4; }
 int iceblast_func08(void) { return 0x0; }
 int flameblast_getExtraSize(void) { return 0x14; }
+
+/* 16b chained patterns. */
+void fn_8017804C(int *obj) { *((u8*)((int**)obj)[0xb8/4] + 0x10) = 0x1; }

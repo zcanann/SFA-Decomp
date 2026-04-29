@@ -1690,3 +1690,7 @@ int shop_getExtraSize(void) { return 0x5; }
 int shop_func08(void) { return 0x0; }
 int fn_801E66DC(void) { return 0x0; }
 int fn_801E66E4(void) { return 0x0; }
+
+/* 16b chained patterns. */
+s32 shop_getStateField1(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x1); }
+s32 shop_setScale(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x0); }

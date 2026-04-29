@@ -1191,3 +1191,6 @@ int dim2pathgenerator_getExtraSize(void) { return 0x9a8; }
 int dim2pathgenerator_func08(void) { return 0x0; }
 int fn_801B8798(void) { return 0x8; }
 int fn_801B87A0(void) { return 0x0; }
+
+/* 16b chained patterns. */
+void dim_tricky_init(int *obj) { *((u8*)((int**)obj)[0xb8/4] + 0x0) = 0x0; }
