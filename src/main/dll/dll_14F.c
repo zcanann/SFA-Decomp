@@ -1517,3 +1517,11 @@ int fn_8017F8FC(void) { return 0x10; }
 int fn_8017FF40(void) { return 0x64; }
 int duster_getExtraSize(void) { return 0x20; }
 int curvefish_getExtraSize(void) { return 0x120; }
+
+/* state encode: ((obj->_X)->_Y << shift) | const. */
+u32 fn_8017F904(int *obj) { return (*((u8*)((int**)obj)[0x4c/4] + 0x1c) << 11) | 0x400; }
+
+/* obj->u16_X |= MASK */
+#pragma peephole off
+void fn_801804B4(u16 *obj) { u32 v; v = *(u16*)((char*)obj + 0xb0); v |= 0x4000; *(u16*)((char*)obj + 0xb0) = (u16)v; }
+#pragma peephole reset

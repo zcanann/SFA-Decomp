@@ -4077,3 +4077,8 @@ void fn_800E7D9C(void) {}
 /* Pattern wrappers. */
 extern u32 lbl_803DD478;
 void fn_800E5420(void) { lbl_803DD478 = 0x0; }
+
+/* *p1 = lbl1; *p2 = lbl2; (u32) */
+extern u32 lbl_803DD474;
+extern u32 lbl_803DD470;
+void fn_800E36E4(u32 *p1, u32 *p2) { *p1 = lbl_803DD474; *p2 = lbl_803DD470; }

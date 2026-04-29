@@ -5300,3 +5300,8 @@ u8 fn_8004C248(void) { return lbl_803DCD28; }
 
 /* lbl = N (byte) */
 void fn_8004C204(void) { lbl_803DCD28 = 0x0; }
+
+/* *p1 = lbl1; *p2 = lbl2; (f32) */
+extern f32 lbl_803DCD44;
+extern f32 lbl_803DCD40;
+void fn_8004C234(f32 *p1, f32 *p2) { *p1 = lbl_803DCD44; *p2 = lbl_803DCD40; }

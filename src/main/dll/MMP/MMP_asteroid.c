@@ -997,3 +997,6 @@ void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #pragma scheduling off
 int explodeanimator_free(int x) { return ObjGroup_RemoveObject(x, 0x1a); }
 #pragma scheduling reset
+
+/* state encode: ((obj->_X)->_Y << shift) | const. */
+u32 dimbossicesmash_func08(int *obj) { return (*((u8*)((int**)obj)[0x4c/4] + 0x18) << 11) | 0x400; }

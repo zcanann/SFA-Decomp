@@ -199,3 +199,8 @@ int area_func08(void) { return 0x0; }
 int levelname_getExtraSize(void) { return 0x18; }
 int levelname_func08(void) { return 0x0; }
 int fn_8017A350(void) { return 0x8; }
+
+/* obj->u16_X |= MASK */
+#pragma peephole off
+void area_init(u16 *obj) { u32 v; v = *(u16*)((char*)obj + 0xb0); v |= 0xa000; *(u16*)((char*)obj + 0xb0) = (u16)v; }
+#pragma peephole reset
