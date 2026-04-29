@@ -32,6 +32,7 @@ ARCallback ARRegisterDMACallback(ARCallback callback)
     return oldCb;
 }
 
+#if SDK_REVISION >= 1
 u32 ARGetDMAStatus()
 {
     BOOL enabled;
@@ -41,6 +42,7 @@ u32 ARGetDMAStatus()
     OSRestoreInterrupts(enabled);
     return val;
 }
+#endif
 
 void ARStartDMA(u32 type, u32 mainmem_addr, u32 aram_addr, u32 length)
 {
@@ -58,6 +60,7 @@ void ARStartDMA(u32 type, u32 mainmem_addr, u32 aram_addr, u32 length)
     OSRestoreInterrupts(enabled);
 }
 
+#if SDK_REVISION >= 1
 u32 ARAlloc(u32 length)
 {
     u32 tmp;
@@ -73,7 +76,9 @@ u32 ARAlloc(u32 length)
 
     return tmp;
 }
+#endif
 
+#if SDK_REVISION >= 1
 u32 ARFree(u32 *length)
 {
     BOOL old;
@@ -94,11 +99,14 @@ u32 ARFree(u32 *length)
 
     return __AR_StackPointer;
 }
+#endif
 
+#if SDK_REVISION >= 1
 BOOL ARCheckInit()
 {
     return __AR_init_flag;
 }
+#endif
 
 u32 ARInit(u32 *stack_index_addr, u32 num_entries)
 {
@@ -134,7 +142,9 @@ u32 ARInit(u32 *stack_index_addr, u32 num_entries)
     return __AR_StackPointer;
 }
 
+#if SDK_REVISION >= 1
 void ARSetSize(void) { }
+#endif
 
 u32 ARGetBaseAddress(void)
 {
@@ -169,7 +179,7 @@ static void __ARHandler(__OSInterrupt interrupt, OSContext *context)
 
 #define RoundUP32(x) (((u32)(x) + 32 - 1) & ~(32 - 1))
 
-void __ARClearInterrupt(void)
+static inline void __ARClearInterrupt(void)
 {
 
     u16 tmp;
@@ -177,18 +187,19 @@ void __ARClearInterrupt(void)
     tmp = (u16)((tmp & ~(0x00000080 | 0x00000008)) | 0x00000020);
     __DSPRegs[5] = tmp;
 }
+#if SDK_REVISION >= 1
 u16 __ARGetInterruptStatus(void)
 {
     return ((u16)(__DSPRegs[5] & 0x0200));
 }
+#endif
 
-static void __ARWaitForDMA(void)
+static inline void __ARWaitForDMA(void)
 {
 
     while (__DSPRegs[5] & 0x0200) { }
 }
-
-static void __ARWriteDMA(u32 mmem_addr, u32 aram_addr, u32 length)
+static inline void __ARWriteDMA(u32 mmem_addr, u32 aram_addr, u32 length)
 {
 
     __DSPRegs[16] = (u16)((__DSPRegs[16] & ~0x03ff) | (u16)(mmem_addr >> 16));
@@ -206,8 +217,7 @@ static void __ARWriteDMA(u32 mmem_addr, u32 aram_addr, u32 length)
 
     __ARClearInterrupt();
 }
-
-static void __ARReadDMA(u32 mmem_addr, u32 aram_addr, u32 length)
+static inline void __ARReadDMA(u32 mmem_addr, u32 aram_addr, u32 length)
 {
 
     __DSPRegs[16] = (u16)((__DSPRegs[16] & ~0x03ff) | (u16)(mmem_addr >> 16));

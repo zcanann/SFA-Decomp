@@ -1648,6 +1648,7 @@ dolphin/ai/ai.c:
 
 dolphin/ar/ar.c:
 	.text       start:0x8024FFA0 end:0x80250B2C
+	.sbss       start:0x803DE018 end:0x803DE038
 
 dolphin/ar/arq.c:
 	.text       start:0x80250B2C end:0x80250EC0

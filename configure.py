@@ -415,7 +415,7 @@ config.libs = [
     DolphinLib(
         "ar",
         [
-            Object(NonMatching, "dolphin/ar/ar.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/ar/ar.c"),
             Object(MatchingFor("GSAE01"), "dolphin/ar/arq.c"),
         ],
     ),
