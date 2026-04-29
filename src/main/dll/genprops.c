@@ -4498,3 +4498,6 @@ void fn_801719F8(void) { fn_8003B8F4(lbl_803E3420); }
 void fn_8016B8A8(int x) { ObjGroup_RemoveObject(x, 0x7); }
 void fn_80171C80(int x) { ObjGroup_RemoveObject(x, 0x40); }
 #pragma scheduling reset
+
+/* misc 8b leaves */
+int collectible_setScale(int *obj) { return *(int*)((char*)obj + 0xf4); }

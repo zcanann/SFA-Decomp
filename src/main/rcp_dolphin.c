@@ -2352,3 +2352,6 @@ extern u8 lbl_803DCDF6;
 extern u8 lbl_803DCDF4;
 void fn_80054FA4(void) { lbl_803DCDF6 = 0x0; }
 void fn_80055070(void) { lbl_803DCDF4 = 0x0; }
+
+/* misc 8b leaves */
+void fn_800541A4(s16 *p, s16 v) { *(s16*)((char*)p + 0x14) = v; }

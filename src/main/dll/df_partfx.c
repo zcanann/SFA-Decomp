@@ -1656,3 +1656,7 @@ void fn_800D7538(void) { lbl_803DD410 = 0x0; }
 extern u32 lbl_803DD43C;
 extern u32 lbl_803DD438;
 void fn_800D895C(int unused1, int unused2, u32 a, u32 b) { lbl_803DD43C = a; lbl_803DD438 = b; }
+
+/* misc 8b leaves */
+extern f32 lbl_803DD420;
+f32 fn_800D7A84(void) { return lbl_803DD420; }

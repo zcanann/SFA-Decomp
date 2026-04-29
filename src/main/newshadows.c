@@ -2763,3 +2763,7 @@ void fn_8006C5E4(u32 *p) { *p = lbl_803DCFE0; }
 extern f32 lbl_803DCFAC;
 extern f32 lbl_803DCFA8;
 void fn_8006CABC(f32 *p1, f32 *p2) { *p1 = lbl_803DCFAC; *p2 = lbl_803DCFA8; }
+
+/* misc 8b leaves */
+extern f32 lbl_803DCFA4;
+f32 fn_8006C670(void) { return lbl_803DCFA4; }

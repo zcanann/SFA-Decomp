@@ -13063,3 +13063,6 @@ void fn_800E878C(void) { lbl_803DD488 = 0x0; }
 
 /* 12b 3-insn patterns. */
 s32 fn_800EA914(u8 *obj) { return *(s8*)(obj + 0x5); }
+
+/* misc 8b leaves */
+u8 fn_800EA900(u8 *p) { return p[8]; }

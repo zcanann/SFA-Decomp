@@ -3106,3 +3106,7 @@ void fn_801115DC(void) {}
 void fn_801115E0(void) {}
 void fn_80111D0C(void) {}
 void fn_80111D10(void) {}
+
+/* misc 8b leaves */
+extern f32 lbl_803DB9D8;
+f32 fn_801115E4(void) { return lbl_803DB9D8; }
