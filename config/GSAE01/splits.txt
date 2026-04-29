@@ -1567,12 +1567,6 @@ dolphin/os/OSThread.c:
 	.bss        start:0x803AD438 end:0x803ADE20
 	.sbss       start:0x803DDE88 end:0x803DDE98
 
-main/unknown/autos/placeholder_803ADE20.s:
-	.bss        start:0x803ADE20 end:0x803ADEF0
-
-main/unknown/autos/placeholder_803ADF00.s:
-	.bss        start:0x803ADF00 end:0x803ADFD8
-
 dolphin/os/OSTime.c:
 	.text       start:0x80246C50 end:0x80246CD4
 
@@ -1585,6 +1579,9 @@ dolphin/db/db.c:
 dolphin/mtx/mtx.c:
 	.text       start:0x80246E54 end:0x80247574
 	.sdata      start:0x803DC550 end:0x803DC558
+
+main/unknown/autos/placeholder_803ADE20.s:
+	.sdata      start:0x803DC558 end:0x803DC560
 
 dolphin/mtx/mtxvec.c:
 	.text       start:0x80247574 end:0x802475C8
@@ -1600,6 +1597,11 @@ dolphin/mtx/psmtx.c:
 
 dolphin/dvd/dvdlow.c:
 	.text       start:0x80247A1C end:0x80248870
+	.bss        start:0x803ADE20 end:0x803ADEF0
+	.sbss       start:0x803DDEA0 end:0x803DDEE8
+
+main/unknown/autos/placeholder_803ADF00.s:
+	.bss        start:0x803ADF00 end:0x803ADFD8
 
 dolphin/dvd/dvdfs.c:
 	.text       start:0x80248870 end:0x802491C4

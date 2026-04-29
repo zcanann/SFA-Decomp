@@ -393,7 +393,7 @@ config.libs = [
     DolphinLib(
         "dvd",
         [
-            Object(NonMatching, "dolphin/dvd/dvdlow.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/dvd/dvdlow.c"),
             Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_803ADE20.s"),
             Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_803DC568.s"),
             Object(MatchingFor("GSAE01"), "dolphin/dvd/dvdfs.c", extra_cflags=["-use_lmw_stmw", "on"]),

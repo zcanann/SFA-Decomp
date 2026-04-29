@@ -6,7 +6,7 @@
 
 #define DVD_WATYPE_MAX 2
 
-static BOOL FirstRead = TRUE;
+extern BOOL FirstRead;
 static volatile BOOL StopAtNextInt = FALSE;
 static u32 LastLength = 0;
 static DVDLowCallback Callback = NULL;
@@ -45,7 +45,6 @@ static DVDBuffer Curr;
 
 // prototypes
 static void Read(void* address, u32 length, u32 offset, DVDLowCallback callback);
-static void SetBreakAlarm(OSTime timeout);
 
 void __DVDInitWA(void) {
 	NextCommandNumber = 0;
@@ -54,7 +53,7 @@ void __DVDInitWA(void) {
 	OSInitAlarm();
 }
 
-static BOOL ProcessNextCommand(void) {
+static inline BOOL ProcessNextCommand(void) {
 	s32 n = NextCommandNumber;
 
     ASSERTLINE(310, n < 3);
@@ -197,7 +196,7 @@ static void AlarmHandlerForTimeout(OSAlarm* alarm, OSContext* context) {
 	OSSetCurrentContext(context);
 }
 
-static void SetTimeoutAlarm(OSTime timeout) {
+static inline void SetTimeoutAlarm(OSTime timeout) {
 	OSCreateAlarm(&AlarmForTimeout);
 	OSSetAlarm(&AlarmForTimeout, timeout, AlarmHandlerForTimeout);
 }
@@ -223,7 +222,7 @@ static void Read(void* address, u32 length, u32 offset, DVDLowCallback callback)
 	}
 }
 
-static BOOL AudioBufferOn(void) {
+static inline BOOL AudioBufferOn(void) {
 	DVDDiskID* id;
 
     id = DVDGetCurrentDiskID();
@@ -234,7 +233,7 @@ static BOOL AudioBufferOn(void) {
     return FALSE;
 }
 
-static BOOL HitCache(DVDBuffer* curr, DVDBuffer* prev) {
+static inline BOOL HitCache(DVDBuffer* curr, DVDBuffer* prev) {
 	u32 blockNumOfPrevEnd = (prev->offset + prev->length - 1) >> 15;
 	u32 blockNumOfCurrStart = (curr->offset >> 15);
 	u32 cacheBlockSize = AudioBufferOn() ? 5 : 15;
@@ -245,7 +244,7 @@ static BOOL HitCache(DVDBuffer* curr, DVDBuffer* prev) {
 	return FALSE;
 }
 
-static void DoJustRead(void* addr, u32 length, u32 offset, DVDLowCallback callback) {
+static inline void DoJustRead(void* addr, u32 length, u32 offset, DVDLowCallback callback) {
 	CommandList[0].command = -1;
 	NextCommandNumber = 0;
 	Read(addr, length, offset, callback);
@@ -272,7 +271,7 @@ static void SeekTwiceBeforeRead(void* addr, u32 length, u32 offset, DVDLowCallba
 	DVDLowSeek(newOffset, callback);
 }
 
-static void WaitBeforeRead(void* addr, u32 length, u32 offset, DVDLowCallback callback, OSTime wait) {
+static inline void WaitBeforeRead(void* addr, u32 length, u32 offset, DVDLowCallback callback, OSTime wait) {
 	CommandList[0].command = 1;
 	CommandList[0].address = addr;
 	CommandList[0].length = length;
@@ -453,39 +452,6 @@ void DVDLowReset(void) {
 	LastResetEnd = __OSGetSystemTime();
 }
 
-DVDLowCallback DVDLowSetResetCoverCallback(DVDLowCallback callback) {
-	DVDLowCallback old;
-    BOOL enabled;
-
-    enabled = OSDisableInterrupts();
-    old = ResetCoverCallback;
-    ResetCoverCallback = callback;
-    OSRestoreInterrupts(enabled);
-    return old;
-}
-
-static void DoBreak(void) {
-    u32 statusReg;
-
-    statusReg = __DIRegs[0];
-    statusReg |= 0x40 | 1;
-	__DIRegs[0] = statusReg;
-    Breaking = TRUE;
-}
-
-static void AlarmHandlerForBreak(OSAlarm* alarm, OSContext* context) {
-	if (__DIRegs[6] < LastLength) {
-        DoBreak();
-    } else {
-        SetBreakAlarm(OSMillisecondsToTicks(20));
-    }
-}
-
-static void SetBreakAlarm(OSTime timeout) {
-	OSCreateAlarm(&AlarmForBreak);
-    OSSetAlarm(&AlarmForBreak, timeout, AlarmHandlerForBreak);
-}
-
 BOOL DVDLowBreak(void) {
 	StopAtNextInt = TRUE;
 	Breaking = TRUE;
@@ -500,18 +466,6 @@ DVDLowCallback DVDLowClearCallback(void) {
 	return old;
 }
 
-u32 DVDLowGetCoverStatus(void) {
-	if ((__OSGetSystemTime() - LastResetEnd) <  OSMillisecondsToTicks(100)) {
-        return 0;
-    }
-
-    if (__DIRegs[1] & 1) {
-        return 1;
-    }
-
-    return 2;
-}
-
 void __DVDLowSetWAType(u32 type, s32 seekLoc) {
 	BOOL enabled;
 
@@ -520,15 +474,4 @@ void __DVDLowSetWAType(u32 type, s32 seekLoc) {
 	WorkAroundType = type;
 	WorkAroundSeekLocation = seekLoc;
 	OSRestoreInterrupts(enabled);
-}
-
-int __DVDLowTestAlarm(const OSAlarm* alarm) {
-	if (alarm == &AlarmForBreak) {
-        return 1;
-    }
-    if (alarm == &AlarmForTimeout) {
-        return 1;
-    }
-
-    return 0;
 }
