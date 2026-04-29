@@ -1,6 +1,8 @@
-#include <dolphin.h>
 #include <dolphin/db.h>
-#include <dolphin/os.h>
+#include <dolphin/os/OSCache.h>
+#include <dolphin/os/OSContext.h>
+#include <dolphin/os/OSError.h>
+#include <dolphin/PPCArch.h>
 
 #include "dolphin/os/__os.h"
 
@@ -9,8 +11,12 @@
 #endif
 
 #define HID2 920
+#define OS_CACHED_REGION_PREFIX 0x8000
 
 // prototypes
+extern BOOL OSDisableInterrupts(void);
+extern BOOL OSRestoreInterrupts(BOOL level);
+extern void OSReport(const char* msg, ...);
 void DMAErrorHandler(OSError error, OSContext* context, ...);
 
 static struct {
@@ -68,6 +74,7 @@ static struct {
 };
 
 #ifdef __GEKKO__
+#if SDK_REVISION >= 1
 asm void DCFlashInvalidate(void) {
     nofralloc
     mfspr r3, HID0
@@ -75,6 +82,7 @@ asm void DCFlashInvalidate(void) {
     mtspr HID0, r3
     blr
 }
+#endif
 
 asm void DCEnable(void) {
     nofralloc
@@ -85,6 +93,7 @@ asm void DCEnable(void) {
     blr
 }
 
+#if SDK_REVISION >= 1
 asm void DCDisable(void) {
     nofralloc
     sync
@@ -140,6 +149,7 @@ asm void DCBlockInvalidate(register void* addr) {
     dcbi r0, addr
     blr
 }
+#endif
 
 asm void DCInvalidateRange(register void* addr, register u32 nBytes) {
     nofralloc
@@ -260,6 +270,7 @@ asm void DCZeroRange(register void* addr, register u32 nBytes) {
   blr
 }
 
+#if SDK_REVISION >= 1
 asm void DCTouchRange(register void* addr, register u32 nBytes) {
     nofralloc
     cmplwi nBytes, 0
@@ -279,6 +290,7 @@ asm void DCTouchRange(register void* addr, register u32 nBytes) {
 
     blr
 }
+#endif
 
 asm void ICInvalidateRange(register void* addr, register u32 nBytes) {
     nofralloc
@@ -319,6 +331,7 @@ asm void ICEnable(void) {
     blr
 }
 
+#if SDK_REVISION >= 1
 asm void ICDisable(void) {
     nofralloc
     isync
@@ -356,6 +369,7 @@ asm void ICSync(void) {
     isync
     blr
 }
+#endif
 
 #define LC_LINES    512
 #define CACHE_LINES 1024
@@ -445,6 +459,7 @@ asm void LCDisable(void) {
     blr
 }
 
+#if SDK_REVISION >= 1
 asm void LCAllocOneTag(register BOOL invalidate, register void* tag) {
     nofralloc
     cmpwi invalidate, 0
@@ -477,6 +492,7 @@ asm void LCAllocTags(register BOOL invalidate, register void* startTag, register
     mtlr r6
     blr
 }
+#endif
 
 asm void LCLoadBlocks(register void* destTag, register void* srcAddr, register u32 numBlocks) {
     nofralloc
@@ -505,6 +521,7 @@ asm void LCStoreBlocks(register void* destAddr, register void* srcTag, register 
 }
 #endif
 
+#if SDK_REVISION >= 1
 void LCAlloc(void* addr, u32 nBytes) {
     u32 numBlocks = nBytes >> 5;
     u32 hid2 = PPCMfhid2();
@@ -530,7 +547,9 @@ void LCAllocNoInvalidate(void* addr, u32 nBytes) {
     }
     LCAllocTags(FALSE, addr, numBlocks);
 }
+#endif
 
+#if SDK_REVISION >= 1
 u32 LCLoadData(void* destAddr, void* srcAddr, u32 nBytes) {
     u32 numBlocks = (nBytes + 31) / 32;
     u32 numTransactions = (numBlocks + 128 - 1) / 128;
@@ -552,6 +571,7 @@ u32 LCLoadData(void* destAddr, void* srcAddr, u32 nBytes) {
 
     return numTransactions;
 }
+#endif
 
 u32 LCStoreData(void* destAddr, void* srcAddr, u32 nBytes) {
     u32 numBlocks = (nBytes + 31) / 32;
@@ -576,12 +596,14 @@ u32 LCStoreData(void* destAddr, void* srcAddr, u32 nBytes) {
 }
 
 #ifdef __GEKKO__
+#if SDK_REVISION >= 1
 asm u32 LCQueueLength(void) {
     nofralloc
     mfspr   r4, HID2
     rlwinm  r3, r4, 8, 28, 31
     blr
 }
+#endif
 
 asm void LCQueueWait(register u32 len) {
     nofralloc
@@ -595,6 +617,7 @@ asm void LCQueueWait(register u32 len) {
 }
 #endif
 
+#if SDK_REVISION >= 1
 void LCFlushQueue() {
     union {
         u32 val;
@@ -613,23 +636,9 @@ void LCFlushQueue() {
     PPCMtdmaL(dmaL.val);
     PPCSync();
 }
+#endif
 
-static void L2Init(void) {
-    u32 oldMSR;
-    oldMSR = PPCMfmsr();
-    __sync();
-    PPCMtmsr(MSR_IR | MSR_DR);
-    __sync();
-    L2Disable();
-    L2GlobalInvalidate();
-    PPCMtmsr(oldMSR);
-}
-
-void L2Enable(void) { 
-    PPCMtl2cr((PPCMfl2cr() | L2CR_L2E) & ~L2CR_L2I);
-}
-
-void L2Disable(void) {
+static inline void L2Disable(void) {
     __sync();
     PPCMtl2cr(PPCMfl2cr() & ~0x80000000);
     __sync();
@@ -646,6 +655,7 @@ void L2GlobalInvalidate(void) {
     }
 }
 
+#if SDK_REVISION >= 1
 void L2SetDataOnly(BOOL dataOnly) {
     if (dataOnly) {
         PPCMtl2cr(PPCMfl2cr() | 0x400000);
@@ -653,7 +663,9 @@ void L2SetDataOnly(BOOL dataOnly) {
     }
     PPCMtl2cr(PPCMfl2cr() & 0xFFBFFFFF);
 }
+#endif
 
+#if SDK_REVISION >= 1
 void L2SetWriteThrough(BOOL writeThrough) {
     if (writeThrough) {
         PPCMtl2cr(PPCMfl2cr() | 0x80000);
@@ -661,6 +673,7 @@ void L2SetWriteThrough(BOOL writeThrough) {
     }
     PPCMtl2cr(PPCMfl2cr() & 0xFFF7FFFF);
 }
+#endif
 
 void DMAErrorHandler(OSError error, OSContext* context, ...) {
     u32 hid2 = PPCMfhid2();
@@ -694,6 +707,21 @@ void DMAErrorHandler(OSError error, OSContext* context, ...) {
 
     // write hid2 back to clear the error bits
     PPCMthid2(hid2);
+}
+
+static inline void L2Init(void) {
+    u32 oldMSR;
+    oldMSR = PPCMfmsr();
+    __sync();
+    PPCMtmsr(MSR_IR | MSR_DR);
+    __sync();
+    L2Disable();
+    L2GlobalInvalidate();
+    PPCMtmsr(oldMSR);
+}
+
+static inline void L2Enable(void) {
+    PPCMtl2cr((PPCMfl2cr() | L2CR_L2E) & ~L2CR_L2I);
 }
 
 void __OSCacheInit() {
