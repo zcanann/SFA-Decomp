@@ -1020,6 +1020,11 @@ extern void fn_8000A518(s32, s32);
 extern int  fn_800E88B4(u8, u8, int, s32);
 extern int  fn_800E8AAC(void);
 
+extern void* fn_8002B9EC(void);
+extern int   fn_80295BC8(void);
+extern u8    fn_8005AFAC(f32, f32);
+extern u8    lbl_8031B050[9];
+
 /* EN v1.0 0x8012DD7C  size: 40b  Cancel/clear helper. Stores the new u8
  * state byte and, when the caller resets it to 0, also clears the active
  * tween halfwords and drops the active-id sentinel to -1. */
@@ -1118,6 +1123,40 @@ void fn_8012EA5C(s32 id, s32 _unused_a, s32 _unused_b, s32 do_input_disable)
     } else {
         lbl_803DD7A9 = 0;
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* EN v1.0 0x8012B6BC  size: 192b  Snowworm "should-spawn" gate: 9-entry
+ * table lookup with the same shape as the previously-matched
+ * fn_8012B9F8. Returns 1 if the candidate slot is OK to spawn into,
+ * 0 if any of the table entries match the slot's lookup byte. */
+#pragma scheduling off
+#pragma peephole off
+int fn_8012B6BC(void)
+{
+    void* s;
+    void* inner;
+    u8 lookup;
+    u8 i;
+    u8 is_zero;
+
+    s = fn_8002B9EC();
+    if (s == NULL) return 0;
+    is_zero = fn_80295BC8() == 0;
+    if (is_zero) return 0;
+    inner = *(void**)((char*)s + 0x30);
+    if (inner != NULL) {
+        lookup = *((u8*)inner + 0xac);
+    } else {
+        lookup = (u8)fn_8005AFAC(*(f32*)((char*)s + 0xc), *(f32*)((char*)s + 0x14));
+    }
+    for (i = 0; i < 9; i++) {
+        if (lookup == lbl_8031B050[i]) {
+            return 0;
+        }
+    }
+    return 1;
 }
 #pragma peephole reset
 #pragma scheduling reset
