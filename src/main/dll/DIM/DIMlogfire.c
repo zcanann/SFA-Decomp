@@ -824,3 +824,8 @@ void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void fn_801A95A4(int x) { ObjGroup_RemoveObject(x, 0x2e); }
 int ccgasvent_free(int x) { return ObjGroup_RemoveObject(x, 0x3f); }
 #pragma scheduling reset
+
+/* call(x, N) wrappers. */
+#pragma scheduling off
+void ccgasvent_init(int x) { ObjGroup_AddObject(x, 0x3f); }
+#pragma scheduling reset

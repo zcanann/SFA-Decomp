@@ -1191,3 +1191,8 @@ extern void fn_8003B8F4(f32);
 #pragma peephole off
 void cloudprisoncontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4108); }
 #pragma peephole reset
+
+/* call(x, N) wrappers. */
+#pragma scheduling off
+void cloudprisoncontrol_init(int x) { ObjMsg_AllocQueue(x, 0xa); }
+#pragma scheduling reset

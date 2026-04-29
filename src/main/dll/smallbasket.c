@@ -2081,3 +2081,8 @@ void FUN_8015a6c0(uint param_1,int param_2)
 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_8015AD5C(void) {}
+
+/* call(x, N) wrappers. */
+#pragma scheduling off
+void fn_801598B8(int x) { Sfx_StopFromObject(x, 0x3e8); }
+#pragma scheduling reset
