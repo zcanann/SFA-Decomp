@@ -2956,3 +2956,14 @@ extern u8 lbl_803DCC3C;
 void fn_8003B950(u32 x) { lbl_803DCC10 = x; }
 u8 fn_8003BB74(void) { return lbl_803DCC3C; }
 void fn_8003BB7C(u8 x) { lbl_803DCC3C = x; }
+
+extern s16 lbl_803DCC18, lbl_803DCC16, lbl_803DCC14;
+extern u8 lbl_803DCC08;
+#pragma scheduling off
+void fn_8003B608(s16 a, s16 b, s16 c) {
+    lbl_803DCC18 = a;
+    lbl_803DCC16 = b;
+    lbl_803DCC14 = c;
+    lbl_803DCC08 = 1;
+}
+#pragma scheduling reset
