@@ -4157,3 +4157,7 @@ void fn_80205420(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 void fn_80203F2C(int x) { ObjGroup_RemoveObject(x, 0x1e); }
 void fn_802045B8(int x) { ObjGroup_RemoveObject(x, 0x9); }
 #pragma scheduling reset
+
+/* plain forwarder. */
+extern void fn_80203C78(void);
+void fn_80203C58(void) { fn_80203C78(); }

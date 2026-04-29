@@ -2963,3 +2963,9 @@ extern f32 lbl_803E2E50;
 void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E2E30); }
 void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E2E50); }
 #pragma peephole reset
+
+/* plain forwarder. */
+extern void fn_8015DAE8(void);
+extern void fn_8000FACC(void);
+void fn_8015DAC8(void) { fn_8015DAE8(); }
+void iceball_free(void) { fn_8000FACC(); }

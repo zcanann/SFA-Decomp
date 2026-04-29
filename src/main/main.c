@@ -1232,3 +1232,7 @@ int fn_801FE9E0(void) { return 0x8; }
 #pragma scheduling off
 void fn_801FE9E8(int x) { ObjGroup_RemoveObject(x, 0x24); }
 #pragma scheduling reset
+
+/* plain forwarder. */
+extern void fn_801FD6B4(void);
+void fn_801FDAA0(void) { fn_801FD6B4(); }

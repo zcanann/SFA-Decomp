@@ -676,3 +676,7 @@ int grimble_getExtraSize(void) { return 0x46c; }
 int grimble_func08(void) { return 0x59; }
 int cannonclaw_getExtraSize(void) { return 0x0; }
 int cannonclaw_func08(void) { return 0x0; }
+
+/* plain forwarder. */
+extern void fn_80162FC0(void);
+void grimble_initialise(void) { fn_80162FC0(); }
