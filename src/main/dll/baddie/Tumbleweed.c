@@ -3540,6 +3540,64 @@ int titlescreen_func08(u8* obj)
     return 0;
 }
 
+extern void* lbl_803DD9D4;
+extern void* lbl_803A9F98[0x13];
+extern u8    lbl_803DD992;
+extern f32   lbl_803DD968;
+extern f32   lbl_803E22A8;
+extern u8    lbl_803DD970;
+extern void* lbl_803DD974;
+extern void* lbl_803DD96C;
+extern void* fn_80019570(s32);
+extern void* fn_80054D54(s32);
+extern void  fn_80054308(void*);
+
+/* EN v1.0 0x801368E0  size: 124b  titlescreen_release: free the main
+ * buffer at lbl_803DD9D4 and walk the 19-slot table at lbl_803A9F98
+ * releasing each non-null entry, then clear the busy byte at
+ * lbl_803DD992. */
+void titlescreen_release(void)
+{
+    int i = 0;
+    void** p;
+    fn_80054308(lbl_803DD9D4);
+    lbl_803DD9D4 = NULL;
+    p = lbl_803A9F98;
+    while (i < 19) {
+        if (*p != NULL) {
+            fn_80054308(*p);
+            *p = NULL;
+        }
+        p++;
+        i++;
+    }
+    lbl_803DD992 = 0;
+}
+
+/* EN v1.0 0x80134388  size: 68b  Acquire two buffers and prime the
+ * float at lbl_803DD968. */
+#pragma scheduling off
+void fn_80134388(void)
+{
+    lbl_803DD974 = fn_80054D54(0xC5);
+    lbl_803DD96C = fn_80019570(0x1FD);
+    lbl_803DD970 = 0;
+    lbl_803DD968 = lbl_803E22A8;
+}
+#pragma scheduling reset
+
+/* EN v1.0 0x80138F14  size: 100b  GameBit-gated bit toggle on
+ * obj->_b8->_54: requires GameBit_Get(0x4E4); sets bit 0x10000 then
+ * checks bit 0x10. Returns 1 only when the post-OR check passes. */
+int fn_80138F14(u8* obj)
+{
+    u8* b = *(u8**)(obj + 0xb8);
+    if (GameBit_Get(0x4E4) == 0) return 0;
+    *(u32*)(b + 0x54) |= 0x10000;
+    if ((*(u32*)(b + 0x54) & 0x10) != 0) return 1;
+    return 0;
+}
+
 extern void* lbl_803DD960;
 extern void* lbl_803DD974;
 extern void* lbl_803DD96C;
@@ -3550,9 +3608,6 @@ extern u8    lbl_803DD991;
 extern u8    lbl_803DBC08;
 extern u8    lbl_803DBC09;
 extern f32   lbl_803E2408;
-extern void* fn_80054D54(s32);
-extern void  fn_80054308(void*);
-extern void* fn_80019570_t(u32);
 
 /* EN v1.0 0x80133F40  size: 48b  Acquire a 0xBE5-byte buffer via
  * fn_80054D54 into lbl_803DD940; reset frame counter at lbl_803DD938. */
