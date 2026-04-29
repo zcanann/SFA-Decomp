@@ -861,3 +861,110 @@ LAB_8012fca8:
   FUN_80286884();
   return;
 }
+
+/* ===== EN v1.0 retargeted leaves ==========================================
+ * Hand-ported helpers below pair by name in objdiff against the live v1.0
+ * asm at build/GSAE01/asm/main/dll/baddie/wall_crawler.s. The legacy
+ * FUN_xxxx scaffold above is at pre-v1.0 addresses and produces no
+ * matches; new fn_xxxxxxxx helpers are appended in batches. */
+
+extern s8  lbl_803DD8B8;
+extern s16 lbl_803DD8C0;
+extern s16 lbl_803DD8C2;
+
+/* EN v1.0 0x8012EBC8  size: 8b   s16 getter for lbl_803DD8C0. */
+s16 fn_8012EBC8(void)
+{
+    return lbl_803DD8C0;
+}
+
+/* EN v1.0 0x8012EBD0  size: 36b  Match-and-consume helper. If the s32
+ * argument equals the active id at lbl_803DD8C2, clear the busy flag
+ * lbl_803DD8B8 and return 1; else return 0. */
+#pragma scheduling off
+int fn_8012EBD0(s32 id)
+{
+    if (id == lbl_803DD8C2) {
+        lbl_803DD8B8 = 0;
+        return 1;
+    }
+    return 0;
+}
+#pragma scheduling reset
+
+/* EN v1.0 0x8012EBF4  size: 32b  Sign-of-active-id predicate. Returns 1
+ * when the current id at lbl_803DD8C2 is non-negative, 0 otherwise. */
+int fn_8012EBF4(void)
+{
+    return (lbl_803DD8C2 < 0) ? 0 : 1;
+}
+
+/* EN v1.0 0x8012EB7C  size: 76b  Linear search through a 4-byte array
+ * for the active id at lbl_803DD8C2. On hit, clears the busy flag at
+ * lbl_803DD8B8 and returns the matched value; on miss returns -1. */
+#pragma scheduling off
+#pragma peephole off
+s32 fn_8012EB7C(s32* arr, int count)
+{
+    int i;
+    for (i = 0; i < count; i++) {
+        if (lbl_803DD8C2 == arr[i]) {
+            lbl_803DD8B8 = 0;
+            return arr[i];
+        }
+    }
+    return -1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u8  lbl_803DD7B9;
+extern s16 lbl_803DD88C;
+extern u8  lbl_803DBA72;
+extern s8  lbl_803DD7B4;
+
+/* EN v1.0 0x8012EF30  size: 16b  Latch helper: set busy byte
+ * lbl_803DD7B9 and stash s16 arg in lbl_803DD88C. */
+void fn_8012EF30(s16 val)
+{
+    lbl_803DD7B9 = 1;
+    lbl_803DD88C = val;
+}
+
+/* EN v1.0 0x8012FB88  size: 8b  u8 setter for lbl_803DBA72. */
+void fn_8012FB88(u8 val)
+{
+    lbl_803DBA72 = val;
+}
+
+/* EN v1.0 0x8012FB90  size: 12b  s8 setter for lbl_803DD7B4. Target
+ * emits `extsb r0,r3; stb r0` triple but MWCC -O4 strips the redundant
+ * extsb regardless of source-level cast (same family as the
+ * fn_8012EB08 / fn_8012EFA8 stuck pattern). */
+void fn_8012FB90(int val)
+{
+    lbl_803DD7B4 = (s8)val;
+}
+
+extern u8 lbl_803DD77E;
+extern u8 lbl_803DD7C5;
+extern u8 lbl_803DD793;
+extern void fn_8012D96C(void);
+extern void fn_8012DD14(void);
+extern void fn_8012DF68(void);
+extern void fn_8012E880(void);
+
+/* EN v1.0 0x8012FB2C  size: 92b  Per-frame state advance dispatcher.
+ * Gated on the lbl_803DD7C5 enable flag — when zero, fast-returns 0.
+ * Otherwise: optionally runs fn_8012D96C (if lbl_803DD77E set), runs
+ * fn_8012DD14, optionally runs fn_8012DF68 (if lbl_803DD793 set),
+ * runs fn_8012E880, returns 0. */
+int fn_8012FB2C(void)
+{
+    if (lbl_803DD7C5 == 0) return 0;
+    if (lbl_803DD77E != 0) fn_8012D96C();
+    fn_8012DD14();
+    if (lbl_803DD793 != 0) fn_8012DF68();
+    fn_8012E880();
+    return 0;
+}
