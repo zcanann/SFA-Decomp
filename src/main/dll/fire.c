@@ -176,11 +176,14 @@ void fireObj_update(FireObject *obj)
 #pragma scheduling reset
 
 #pragma scheduling off
+#pragma peephole off
 void fireObj_init(FireObject *obj)
 {
+  u32 v;
   obj->stateCallback = fire_updateState;
   fn_8004350C(0,0,1);
-  obj->flags |= 0x2000;
+  v = obj->flags | 0x2000;
+  obj->flags = (u16)v;
   fn_800887F8(0);
   GameBit_Set(0x90d,1);
   GameBit_Set(0x90e,1);
@@ -188,6 +191,7 @@ void fireObj_init(FireObject *obj)
   fn_8000A380(3,2,0x2ee);
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 void fireObj_release(void)
