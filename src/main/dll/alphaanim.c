@@ -598,3 +598,11 @@ void seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 
 void immultiseq_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E37A8); }
 void fn_8017D0A0(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E37B0); }
 #pragma peephole reset
+
+/* ObjGroup_RemoveObject(x, N) wrappers. */
+#pragma scheduling off
+int seqobject_free(int x) { return ObjGroup_RemoveObject(x, 0xf); }
+int seqobj2_free(int x) { return ObjGroup_RemoveObject(x, 0xf); }
+int immultiseq_free(int x) { return ObjGroup_RemoveObject(x, 0xf); }
+int fn_8017D07C(int x) { return ObjGroup_RemoveObject(x, 0xf); }
+#pragma scheduling reset

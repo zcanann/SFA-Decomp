@@ -1211,3 +1211,14 @@ void fn_801B762C(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 void dim2snowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4AA0); }
 void fn_801B87AC(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4AD8); }
 #pragma peephole reset
+
+/* render-with-fn(lbl) (no visibility check). */
+extern f32 lbl_803E4A38;
+#pragma scheduling off
+void dim_tricky_render(void) { fn_8003B8F4(lbl_803E4A38); }
+#pragma scheduling reset
+
+/* ObjGroup_RemoveObject(x, N) wrappers. */
+#pragma scheduling off
+int dim2conveyor_free(int x) { return ObjGroup_RemoveObject(x, 0x16); }
+#pragma scheduling reset

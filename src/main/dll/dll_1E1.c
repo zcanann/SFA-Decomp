@@ -433,3 +433,10 @@ void bombplant_free(void)
 void bombplant_hitDetect(void)
 {
 }
+
+/* render-with-fn(lbl) (no visibility check). */
+extern f32 lbl_803E5370;
+extern void fn_8003B8F4(f32);
+#pragma scheduling off
+void bombplant_render(void) { fn_8003B8F4(lbl_803E5370); }
+#pragma scheduling reset

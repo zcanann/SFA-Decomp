@@ -4484,3 +4484,17 @@ void fn_8016B8CC(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 void baddieinterestp_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E3220); }
 void fn_80171320(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E33F0); }
 #pragma peephole reset
+
+/* render-with-fn(lbl) (no visibility check). */
+extern f32 lbl_803E3388;
+extern f32 lbl_803E3420;
+#pragma scheduling off
+void flamethrowerspe_render(void) { fn_8003B8F4(lbl_803E3388); }
+void fn_801719F8(void) { fn_8003B8F4(lbl_803E3420); }
+#pragma scheduling reset
+
+/* ObjGroup_RemoveObject(x, N) wrappers. */
+#pragma scheduling off
+int fn_8016B8A8(int x) { return ObjGroup_RemoveObject(x, 0x7); }
+int fn_80171C80(int x) { return ObjGroup_RemoveObject(x, 0x40); }
+#pragma scheduling reset

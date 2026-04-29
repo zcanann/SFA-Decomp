@@ -1224,3 +1224,10 @@ int cclightfoot_getExtraSize(void) { return 0x18; }
 int ccsharpclawpad_getExtraSize(void) { return 0x4; }
 int ccpedstal_getExtraSize(void) { return 0x8; }
 int cclevcontrol_getExtraSize(void) { return 0x10; }
+
+/* render-with-fn(lbl) (no visibility check). */
+extern f32 lbl_803E46CC;
+extern void fn_8003B8F4(f32);
+#pragma scheduling off
+void cclevcontrol_render(void) { fn_8003B8F4(lbl_803E46CC); }
+#pragma scheduling reset

@@ -3195,3 +3195,8 @@ void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s3
 void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4210); }
 void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E42B0); }
 #pragma peephole reset
+
+/* ObjGroup_RemoveObject(x, N) wrappers. */
+#pragma scheduling off
+int spiritdoorspirit_free(int x) { return ObjGroup_RemoveObject(x, 0x4e); }
+#pragma scheduling reset

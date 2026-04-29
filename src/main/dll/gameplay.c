@@ -13052,3 +13052,8 @@ int fn_800F07DC(void) { return 0x0; }
 /* sda21 accessors. */
 extern u8 lbl_803DD488;
 u8 fn_800E87C4(void) { return lbl_803DD488; }
+
+/* ObjGroup_RemoveObject(x, N) wrappers. */
+#pragma scheduling off
+int fn_800EA920(int x) { return ObjGroup_RemoveObject(x, 0x10); }
+#pragma scheduling reset

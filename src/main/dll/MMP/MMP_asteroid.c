@@ -992,3 +992,8 @@ extern f32 lbl_803E4060;
 void dimbossicesmash_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4048); }
 void texframeanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4060); }
 #pragma peephole reset
+
+/* ObjGroup_RemoveObject(x, N) wrappers. */
+#pragma scheduling off
+int explodeanimator_free(int x) { return ObjGroup_RemoveObject(x, 0x1a); }
+#pragma scheduling reset

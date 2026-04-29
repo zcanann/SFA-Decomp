@@ -455,3 +455,10 @@ int sc_totemstrength_getExtraSize(void) { return 0x34; }
 int sc_totemstrength_func08(void) { return 0x0; }
 int paymentkiosk_getExtraSize(void) { return 0x3; }
 int paymentkiosk_func08(void) { return 0x1; }
+
+/* render-with-fn(lbl) (no visibility check). */
+extern f32 lbl_803E567C;
+extern void fn_8003B8F4(f32);
+#pragma scheduling off
+void sc_totemstrength_render(void) { fn_8003B8F4(lbl_803E567C); }
+#pragma scheduling reset

@@ -365,3 +365,9 @@ int warpstone_func08(void)
 {
   return 0x48;
 }
+
+/* void f() { fn_X(N); } pattern. */
+extern void fn_80014948(s32);
+#pragma scheduling off
+void fn_801D70B4(void) { fn_80014948(0x1); }
+#pragma scheduling reset

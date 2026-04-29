@@ -1227,3 +1227,8 @@ int fn_801FDEEC(void) { return 0x6; }
 int fn_801FDEF4(void) { return 0x0; }
 int fn_801FE9D8(void) { return 0x124; }
 int fn_801FE9E0(void) { return 0x8; }
+
+/* ObjGroup_RemoveObject(x, N) wrappers. */
+#pragma scheduling off
+int fn_801FE9E8(int x) { return ObjGroup_RemoveObject(x, 0x24); }
+#pragma scheduling reset

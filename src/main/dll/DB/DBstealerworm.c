@@ -1146,3 +1146,8 @@ extern f32 lbl_803E5868;
 void fn_801E2580(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5810); }
 void fn_801E32D0(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5868); }
 #pragma peephole reset
+
+/* ObjGroup_RemoveObject(x, N) wrappers. */
+#pragma scheduling off
+int fn_801E2B38(int x) { return ObjGroup_RemoveObject(x, 0x3); }
+#pragma scheduling reset

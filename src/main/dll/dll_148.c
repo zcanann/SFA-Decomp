@@ -560,3 +560,16 @@ int fn_8017B8DC(void) { return 0x8; }
 int mmp_bridge_getExtraSize(void) { return 0x0; }
 int mmp_bridge_func08(void) { return 0x0; }
 int doorlock_getExtraSize(void) { return 0x1; }
+
+/* render-with-fn(lbl) (no visibility check). */
+extern f32 lbl_803E3780;
+extern void fn_8003B8F4(f32);
+#pragma scheduling off
+void fn_8017B8E4(void) { fn_8003B8F4(lbl_803E3780); }
+#pragma scheduling reset
+
+/* ObjGroup_RemoveObject(x, N) wrappers. */
+extern int ObjGroup_RemoveObject(int x, int n);
+#pragma scheduling off
+int doorlock_free(int x) { return ObjGroup_RemoveObject(x, 0xf); }
+#pragma scheduling reset

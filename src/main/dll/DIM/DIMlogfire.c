@@ -818,3 +818,9 @@ extern f32 lbl_803E4620;
 void animsharpclaw_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E45C8); }
 void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4620); }
 #pragma peephole reset
+
+/* ObjGroup_RemoveObject(x, N) wrappers. */
+#pragma scheduling off
+int fn_801A95A4(int x) { return ObjGroup_RemoveObject(x, 0x2e); }
+int ccgasvent_free(int x) { return ObjGroup_RemoveObject(x, 0x3f); }
+#pragma scheduling reset

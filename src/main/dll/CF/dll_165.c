@@ -155,3 +155,10 @@ int treasurechest_func08(void)
 {
   return 0;
 }
+
+/* render-with-fn(lbl) (no visibility check). */
+extern f32 lbl_803E3C20;
+extern void fn_8003B8F4(f32);
+#pragma scheduling off
+void treasurechest_render(void) { fn_8003B8F4(lbl_803E3C20); }
+#pragma scheduling reset

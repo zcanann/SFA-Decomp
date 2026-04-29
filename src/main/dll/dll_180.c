@@ -135,3 +135,12 @@ int barrelpad_getExtraSize(void) { return 0x0; }
 int barrelpad_func08(void) { return 0x0; }
 int cf_doorlight_getExtraSize(void) { return 0x18; }
 int cf_doorlight_func08(void) { return 0x0; }
+
+/* render-with-fn(lbl) (no visibility check). */
+extern f32 lbl_803E3EE8;
+extern void fn_8003B8F4(f32);
+extern f32 lbl_803E3F00;
+#pragma scheduling off
+void cflightwall_render(void) { fn_8003B8F4(lbl_803E3EE8); }
+void barrelpad_render(void) { fn_8003B8F4(lbl_803E3F00); }
+#pragma scheduling reset

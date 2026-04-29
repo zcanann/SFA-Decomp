@@ -1726,3 +1726,8 @@ void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { 
 void infopoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E3B70); }
 void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E3B78); }
 #pragma peephole reset
+
+/* ObjGroup_RemoveObject(x, N) wrappers. */
+#pragma scheduling off
+int flammablevine_free(int x) { return ObjGroup_RemoveObject(x, 0x31); }
+#pragma scheduling reset

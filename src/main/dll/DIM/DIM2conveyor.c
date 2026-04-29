@@ -393,3 +393,9 @@ extern void fn_8003B8F4(f32);
 #pragma peephole off
 void dimbridgecogmai_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4900); }
 #pragma peephole reset
+
+/* ObjGroup_RemoveObject(x, N) wrappers. */
+#pragma scheduling off
+int dimbridgecogmai_free(int x) { return ObjGroup_RemoveObject(x, 0xf); }
+int dimdismountpoint_free(int x) { return ObjGroup_RemoveObject(x, 0x13); }
+#pragma scheduling reset

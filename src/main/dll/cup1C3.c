@@ -525,3 +525,10 @@ void fn_801CA104(void) {}
 /* 8b "li r3, N; blr" returners. */
 int fn_801C9E54(void) { return 0x10; }
 int fn_801C9E5C(void) { return 0x1; }
+
+/* render-with-fn(lbl) (no visibility check). */
+extern f32 lbl_803E5104;
+extern void fn_8003B8F4(f32);
+#pragma scheduling off
+void dbsh_symbol_render(void) { fn_8003B8F4(lbl_803E5104); }
+#pragma scheduling reset
