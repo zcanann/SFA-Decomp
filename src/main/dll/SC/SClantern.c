@@ -85,12 +85,14 @@ void SHthorntail_init(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 undefined4 fn_801D6D58(void)
 {
   undefined4 playerObj;
 
-  (**(code **)(*lbl_803DCAAC + 0x74))();
+  (*(code *)(*lbl_803DCAAC + 0x74))();
   playerObj = fn_8002B9EC();
   fn_80296554(playerObj,0xff);
   return 2;
 }
+#pragma scheduling reset
