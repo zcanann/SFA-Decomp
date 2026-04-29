@@ -1513,3 +1513,11 @@ void fn_801F2EAC(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 int fn_801F1BD0(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x146) return 0x2; return 0x0; }
 #pragma scheduling reset
 #pragma peephole reset
+
+/* init pattern: short=-1; byte=0; return 0; */
+#pragma scheduling off
+#pragma peephole off
+int fn_801F160C(int p1, int p2, void* p3) { *(s16*)((char*)p3 + 0x6e) = -1; *(u8*)((char*)p3 + 0x56) = 0; return 0; }
+int fn_801F2E80(int p1, int p2, void* p3) { *(s16*)((char*)p3 + 0x6e) = -1; *(u8*)((char*)p3 + 0x56) = 0; return 0; }
+#pragma peephole reset
+#pragma scheduling reset

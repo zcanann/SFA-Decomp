@@ -596,3 +596,8 @@ extern void fn_8003B8F4(f32);
 #pragma peephole off
 void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E2F44); }
 #pragma peephole reset
+
+/* byte-to-short shift8 pattern. */
+#pragma peephole off
+void cannonclaw_init(s16 *dst, void* src) { s8 v = *((s8*)src + 0x28); s16 t = v << 8; *dst = t; }
+#pragma peephole reset
