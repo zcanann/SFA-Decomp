@@ -4507,3 +4507,8 @@ int collectible_setScale(int *obj) { return *(int*)((char*)obj + 0xf4); }
 void fn_8016E81C(int *obj) { s32 v = 0x0; *(s32*)((char*)((int**)obj)[0xb8/4] + 0x48) = v; }
 void flamethrowerspe_func0B(int *obj) { s32 v = 0x1; *(s32*)((char*)((int**)obj)[0xb8/4] + 0x10) = v; }
 #pragma scheduling reset
+
+extern void fn_8016CEE8(int *obj, int x);
+#pragma scheduling off
+void fn_8016EB50(int *obj) { fn_8016CEE8(obj, *(int*)((char*)obj + 0xc4)); }
+#pragma scheduling reset

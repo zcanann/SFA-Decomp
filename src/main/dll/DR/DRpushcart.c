@@ -854,3 +854,8 @@ int shopitem_getExtraSize(void) { return 0xec; }
 int shopitem_func08(void) { return 0x0; }
 int spscarab_getExtraSize(void) { return 0x14; }
 int spscarab_func08(void) { return 0x0; }
+
+extern void fn_8000DB90(int x, int y);
+#pragma scheduling off
+void spscarab_free(int x) { fn_8000DB90(x, 0x406); }
+#pragma scheduling reset

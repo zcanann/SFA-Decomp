@@ -13073,3 +13073,8 @@ extern void fn_80023800(u32);
 #pragma scheduling off
 void fn_800EA04C(void) { if (lbl_803DD49C != 0) fn_80023800(lbl_803DD49C); }
 #pragma scheduling reset
+
+extern void* fn_800E8044(void);
+#pragma scheduling off
+u8 fn_800EA2BC(void) { u8 *p = (u8*)fn_800E8044(); return p[5]; }
+#pragma scheduling reset

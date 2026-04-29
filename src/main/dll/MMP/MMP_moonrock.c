@@ -1034,3 +1034,8 @@ void fn_80197E04(void) {}
 /* 8b "li r3, N; blr" returners. */
 int fn_80197DA8(void) { return 0x8; }
 int fn_80198194(void) { return 0x8; }
+
+extern void fn_80197E08(int *obj);
+#pragma scheduling off
+int fn_80197DB0(int *obj) { fn_80197E08(obj); return 0; }
+#pragma scheduling reset
