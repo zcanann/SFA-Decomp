@@ -731,3 +731,8 @@ extern u32 lbl_803DD518;
 extern u32 lbl_803DD524;
 u32 fn_801030B0(void) { return lbl_803DD518; }
 u32 fn_801030B8(void) { return lbl_803DD524; }
+
+/* 12b 3-insn patterns. */
+void fn_801028DC(int x) { *(int*)((char*)((int*)lbl_803DD524) + 0x120) = x; }
+int fn_801028FC(void) { return *(int*)((char*)((int*)lbl_803DD524) + 0x124); }
+int fn_80102908(void) { return *(int*)((char*)((int*)lbl_803DD524) + 0x11c); }

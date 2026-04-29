@@ -13060,3 +13060,6 @@ void fn_800EA920(int x) { ObjGroup_RemoveObject(x, 0x10); }
 
 /* lbl = N (byte) */
 void fn_800E878C(void) { lbl_803DD488 = 0x0; }
+
+/* 12b 3-insn patterns. */
+s32 fn_800EA914(u8 *obj) { return *(s8*)(obj + 0x5); }
