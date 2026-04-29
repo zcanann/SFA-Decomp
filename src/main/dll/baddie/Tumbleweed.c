@@ -3593,3 +3593,68 @@ void fn_80138EF8(u8* obj)
     *(u32*)(b + 0x54) |= 0x80000000;
     *(f32*)(b + 0x808) = lbl_803E2408;
 }
+
+extern void* lbl_803DD984;
+extern void* lbl_803DD980;
+extern void* lbl_803DD93C;
+extern void* lbl_803DD92C;
+extern f32   lbl_803DD97C;
+extern f32   lbl_803E22E0;
+extern u8    lbl_803DD993;
+extern u8    lbl_803DD9AA;
+extern s16   lbl_803DD994;
+extern s16   lbl_803DD996;
+extern s16   lbl_803DD998;
+extern s16   lbl_803DD9A8;
+extern int   fn_80014940(void);
+
+/* EN v1.0 0x80134808  size: 44b  Release two buffer slots in sequence:
+ * fn_80054308(lbl_803DD984) then fn_80054308(lbl_803DD980). */
+void fn_80134808(void)
+{
+    fn_80054308(lbl_803DD984);
+    fn_80054308(lbl_803DD980);
+}
+
+/* EN v1.0 0x80134834  size: 60b  Acquire two buffer slots and prime
+ * the float at lbl_803DD97C with the constant from lbl_803E22E0. */
+void fn_80134834(void)
+{
+    lbl_803DD984 = fn_80054D54(0x4FA);
+    lbl_803DD980 = fn_80054D54(0x5E3);
+    lbl_803DD97C = lbl_803E22E0;
+}
+
+/* EN v1.0 0x80134BC4  size: 32b  Reset the per-frame state group:
+ * latch lbl_803DD993 = 1 and zero five halfword/byte counters. */
+void fn_80134BC4(void)
+{
+    lbl_803DD993 = 1;
+    lbl_803DD994 = 0;
+    lbl_803DD996 = 0;
+    lbl_803DD9A8 = 0;
+    lbl_803DD998 = 0;
+    lbl_803DD9AA = 0;
+}
+
+/* EN v1.0 0x80134BE8  size: 60b  Predicate. Returns 1 when the value
+ * from fn_80014940 is in {2..6} or equals 7, else 0. */
+int fn_80134BE8(void)
+{
+    int x = fn_80014940();
+    if ((u32)(x - 2) <= 4) return 1;
+    if (x == 7) return 1;
+    return 0;
+}
+
+/* EN v1.0 0x80133934  size: 52b  Release-and-clear pair: when
+ * lbl_803DD93C is non-null, release via fn_80054308 and zero both
+ * lbl_803DD93C and lbl_803DD92C. */
+void fn_80133934(void)
+{
+    if (lbl_803DD93C != NULL) {
+        fn_80054308(lbl_803DD93C);
+        lbl_803DD93C = NULL;
+        lbl_803DD92C = NULL;
+    }
+}
