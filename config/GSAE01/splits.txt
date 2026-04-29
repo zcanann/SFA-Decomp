@@ -2389,6 +2389,9 @@ dolphin/MSL_C/PPCEABI/bare/H/abort_exit.c:
 
 dolphin/MSL_C/PPCEABI/bare/H/alloc.c:
 	.text       start:0x8028D574 end:0x8028DADC
+	.rodata     start:0x802C2A00 end:0x802C2A18
+	.bss        start:0x803DABB8 end:0x803DABF0
+	.sbss       start:0x803DE400 end:0x803DE408
 
 dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c:
 	.text       start:0x8028DADC end:0x8028DBE4

@@ -1,7 +1,4 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/alloc.h"
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/ansi_files.h"
-#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/critical_regions.h"
-#include "string.h"
 
 typedef struct Block {
     struct Block* prev;
@@ -46,7 +43,7 @@ typedef struct __mem_pool {
     void* reserved[14];
 } __mem_pool;
 
-typedef long tag_word;
+typedef signed long tag_word;
 
 typedef struct block_header {
     tag_word tag;
@@ -83,18 +80,11 @@ typedef struct mem_pool_obj {
 
 } mem_pool_obj;
 
+mem_pool_obj __malloc_pool;
 static int initialized = 0;
 
 static SubBlock* SubBlock_merge_prev(SubBlock*, SubBlock**);
 static void SubBlock_merge_next(SubBlock*, SubBlock**);
-static Block* link_new_block(__mem_pool_obj* pool_obj, unsigned long size);
-static void Block_construct(Block* block, unsigned long size);
-static SubBlock* Block_subBlock(Block* block, unsigned long requested_size);
-static void* allocate_from_var_pools(__mem_pool_obj* pool_obj, unsigned long size);
-static void* soft_allocate_from_var_pools(__mem_pool_obj* pool_obj, unsigned long size, unsigned long* available_size);
-static void deallocate_from_var_pools(__mem_pool_obj* pool_obj, void* ptr);
-static void* allocate_from_fixed_pools(__mem_pool_obj* pool_obj, unsigned long size);
-static void deallocate_from_fixed_pools(__mem_pool_obj* pool_obj, void* ptr, unsigned long size);
 
 static const unsigned long fix_pool_sizes[] = {4, 12, 20, 36, 52, 68};
 
@@ -103,20 +93,18 @@ static const unsigned long fix_pool_sizes[] = {4, 12, 20, 36, 52, 68};
 #define Block_size(ths) ((ths)->size & 0xFFFFFFF8)
 #define Block_start(ths) (*(SubBlock**)((char*)(ths) + Block_size((ths)) - sizeof(unsigned long)))
 
-#define SubBlock_set_free(ths) do {                                                                \
-    unsigned long this_size = SubBlock_size((ths));                                                \
-    (ths)->size &= ~0x2;                                                                           \
-    *(unsigned long*)((char*)(ths) + this_size) &= ~0x4;                                           \
-    *(unsigned long*)((char*)(ths) + this_size - sizeof(unsigned long)) = this_size;               \
-} while(0)
+#define SubBlock_set_free(ths) \
+    unsigned long this_size = SubBlock_size((ths)); \
+    (ths)->size &= ~0x2; \
+    *(unsigned long*)((char*)(ths) + this_size) &= ~0x4; \
+    *(unsigned long*)((char*)(ths) + this_size - sizeof(unsigned long)) = this_size
 
 #define SubBlock_is_free(ths) !((ths)->size & 2)
-#define SubBlock_set_size(ths, sz) do {                                                            \
-    (ths)->size &= ~0xFFFFFFF8;                                                                    \
-    (ths)->size |= (sz) & 0xFFFFFFF8;                                                              \
-    if (SubBlock_is_free((ths)))                                                                   \
-        *(unsigned long*)((char*)(ths) + (sz) - sizeof(unsigned long)) = (sz);                    \
-} while(0)
+#define SubBlock_set_size(ths, sz) \
+    (ths)->size &= ~0xFFFFFFF8; \
+    (ths)->size |= (sz) & 0xFFFFFFF8; \
+    if (SubBlock_is_free((ths))) \
+        *(unsigned long*)((char*)(ths) + (sz) - sizeof(unsigned long)) = (sz)
 
 #define SubBlock_from_pointer(ptr) ((SubBlock*)((char*)(ptr)-8))
 #define FixSubBlock_from_pointer(ptr) ((FixSubBlock*)((char*)(ptr)-4))
@@ -125,18 +113,39 @@ static const unsigned long fix_pool_sizes[] = {4, 12, 20, 36, 52, 68};
 #define FixSubBlock_size(ths) (FixBlock_client_size((ths)->block_))
 
 #define classify(ptr) (*(unsigned long*)((char*)(ptr) - sizeof(unsigned long)) & 1)
-#define __msize_inline(ptr)                                                                        \
-    (!classify(ptr) ? FixSubBlock_size(FixSubBlock_from_pointer(ptr)) :                            \
-                      SubBlock_size(SubBlock_from_pointer(ptr)) - 8)
+#define __msize_inline(ptr) \
+    (!classify(ptr) ? FixSubBlock_size(FixSubBlock_from_pointer(ptr)) : SubBlock_size(SubBlock_from_pointer(ptr)) - 8)
 
-#define Block_empty(ths)                                                                           \
-    (_sb = (SubBlock*)((char*)(ths) + 16)),                                                        \
-        SubBlock_is_free(_sb) && SubBlock_size(_sb) == Block_size((ths)) - 24
+#define Block_empty(ths) \
+    (_sb = (SubBlock*)((char*)(ths) + 16)), SubBlock_is_free(_sb) && SubBlock_size(_sb) == Block_size((ths)) - 24
 
-void __sys_free(void*);
-void* __sys_alloc(unsigned long size);
+void Block_subBlock() {}
 
-static inline SubBlock* SubBlock_merge_prev(SubBlock* ths, SubBlock** start) {
+void Block_link(Block* ths, SubBlock* sb)
+{
+    SubBlock** st;
+    SubBlock_set_free(sb);
+    st = &Block_start(ths);
+
+    if (*st != 0) {
+        sb->prev = (*st)->prev;
+        sb->prev->next = sb;
+        sb->next = *st;
+        (*st)->prev = sb;
+        *st = sb;
+        *st = SubBlock_merge_prev(*st, st);
+        SubBlock_merge_next(*st, st);
+    } else {
+        *st = sb;
+        sb->prev = sb;
+        sb->next = sb;
+    }
+    if (ths->max_size < SubBlock_size(*st))
+        ths->max_size = SubBlock_size(*st);
+}
+
+static SubBlock* SubBlock_merge_prev(SubBlock* ths, SubBlock** start)
+{
     unsigned long prevsz;
     SubBlock* p;
 
@@ -156,170 +165,44 @@ static inline SubBlock* SubBlock_merge_prev(SubBlock* ths, SubBlock** start) {
     return ths;
 }
 
-static asm void SubBlock_merge_next(SubBlock* pBlock, SubBlock** pStart) {
-    nofralloc
-    lwz r6, 0x0(r3)
-    clrrwi r8, r6, 3
-    add r5, r3, r8
-    lwz r7, 0x0(r5)
-    rlwinm. r0, r7, 0, 30, 30
-    bnelr
-    clrlwi r0, r6, 29
-    clrrwi r6, r7, 3
-    stw r0, 0x0(r3)
-    add r7, r8, r6
-    clrrwi r0, r7, 3
-    lwz r6, 0x0(r3)
-    or r0, r6, r0
-    stw r0, 0x0(r3)
-    lwz r0, 0x0(r3)
-    rlwinm. r0, r0, 0, 30, 30
-    bne _smn_1
-    subi r0, r7, 0x4
-    stwx r7, r3, r0
-_smn_1:
-    lwz r0, 0x0(r3)
-    rlwinm. r0, r0, 0, 30, 30
-    bne _smn_2
-    lwzx r6, r3, r7
-    li r0, -0x5
-    and r0, r6, r0
-    stwx r0, r3, r7
-    b _smn_3
-_smn_2:
-    lwzx r0, r3, r7
-    ori r0, r0, 0x4
-    stwx r0, r3, r7
-_smn_3:
-    lwz r3, 0x0(r4)
-    cmplw r3, r5
-    bne _smn_4
-    lwz r0, 0xc(r3)
-    stw r0, 0x0(r4)
-_smn_4:
-    lwz r0, 0x0(r4)
-    cmplw r0, r5
-    bne _smn_5
-    li r0, 0x0
-    stw r0, 0x0(r4)
-_smn_5:
-    lwz r0, 0x8(r5)
-    lwz r3, 0xc(r5)
-    stw r0, 0x8(r3)
-    lwz r0, 0xc(r5)
-    lwz r3, 0x8(r5)
-    stw r0, 0xc(r3)
-    blr
+static void SubBlock_merge_next(SubBlock* pBlock, SubBlock** pStart)
+{
+    SubBlock* next_sub_block;
+    unsigned long this_cur_size;
+
+    next_sub_block = (SubBlock*)((char*)pBlock + (pBlock->size & 0xFFFFFFF8));
+
+    if (!(next_sub_block->size & 2)) {
+        this_cur_size = (pBlock->size & 0xFFFFFFF8) + (next_sub_block->size & 0xFFFFFFF8);
+
+        pBlock->size &= ~0xFFFFFFF8;
+        pBlock->size |= this_cur_size & 0xFFFFFFF8;
+
+        if (!(pBlock->size & 2)) {
+            *(unsigned long*)((char*)(pBlock) + (this_cur_size)-4) = (this_cur_size);
+        }
+
+        if (!(pBlock->size & 2)) {
+            *(unsigned long*)((char*)pBlock + this_cur_size) &= ~4;
+        } else {
+            *(unsigned long*)((char*)pBlock + this_cur_size) |= 4;
+        }
+
+        if (*pStart == next_sub_block) {
+            *pStart = (*pStart)->next;
+        }
+
+        if (*pStart == next_sub_block) {
+            *pStart = 0;
+        }
+
+        next_sub_block->next->prev = next_sub_block->prev;
+        next_sub_block->prev->next = next_sub_block->next;
+    }
 }
 
-asm void Block_link(Block* ths, SubBlock* sb) {
-	nofralloc
-	stwu r1, -0x10(r1)
-	mflr r0
-	li r5, -0x3
-	stw r0, 0x14(r1)
-	li r0, -0x5
-	stw r31, 0xc(r1)
-	stw r30, 0x8(r1)
-	mr r30, r3
-	lwz r6, 0x0(r4)
-	and r3, r6, r5
-	clrrwi r6, r6, 3
-	stw r3, 0x0(r4)
-	add r5, r4, r6
-	lwz r3, 0x0(r5)
-	and r0, r3, r0
-	stw r0, 0x0(r5)
-	stw r6, -0x4(r5)
-	lwz r0, 0xc(r30)
-	clrrwi r3, r0, 3
-	subi r31, r3, 0x4
-	add r31, r30, r31
-	lwz r3, 0x0(r31)
-	cmplwi r3, 0x0
-	beq _bl_5
-	lwz r0, 0x8(r3)
-	stw r0, 0x8(r4)
-	lwz r3, 0x8(r4)
-	stw r4, 0xc(r3)
-	lwz r0, 0x0(r31)
-	stw r0, 0xc(r4)
-	lwz r3, 0x0(r31)
-	stw r4, 0x8(r3)
-	stw r4, 0x0(r31)
-	lwz r6, 0x0(r31)
-	lwz r0, 0x0(r6)
-	rlwinm. r0, r0, 0, 29, 29
-	bne _bl_3
-	lwz r5, -0x4(r6)
-	rlwinm. r0, r5, 0, 30, 30
-	beq _bl_0
-	mr r4, r6
-	b _bl_4
-_bl_0:
-	subf r4, r5, r6
-	lwz r0, 0x0(r4)
-	clrlwi r0, r0, 29
-	stw r0, 0x0(r4)
-	lwz r0, 0x0(r6)
-	lwz r3, 0x0(r4)
-	clrrwi r0, r0, 3
-	add r0, r5, r0
-	clrrwi r0, r0, 3
-	or r0, r3, r0
-	stw r0, 0x0(r4)
-	lwz r0, 0x0(r4)
-	rlwinm. r0, r0, 0, 30, 30
-	bne _bl_1
-	lwz r0, 0x0(r6)
-	clrrwi r0, r0, 3
-	add r3, r5, r0
-	subi r0, r3, 0x4
-	stwx r3, r4, r0
-_bl_1:
-	lwz r3, 0x0(r31)
-	cmplw r3, r6
-	bne _bl_2
-	lwz r0, 0xc(r3)
-	stw r0, 0x0(r31)
-_bl_2:
-	lwz r0, 0x8(r6)
-	lwz r3, 0xc(r6)
-	stw r0, 0x8(r3)
-	lwz r5, 0xc(r6)
-	lwz r3, 0x8(r5)
-	stw r5, 0xc(r3)
-	b _bl_4
-_bl_3:
-	mr r4, r6
-_bl_4:
-	stw r4, 0x0(r31)
-	mr r4, r31
-	lwz r3, 0x0(r31)
-	bl SubBlock_merge_next
-	b _bl_6
-_bl_5:
-	stw r4, 0x0(r31)
-	stw r4, 0x8(r4)
-	stw r4, 0xc(r4)
-_bl_6:
-	lwz r3, 0x0(r31)
-	lwz r4, 0x8(r30)
-	lwz r0, 0x0(r3)
-	clrrwi r0, r0, 3
-	cmplw r4, r0
-	bge _bl_7
-	stw r0, 0x8(r30)
-_bl_7:
-	lwz r0, 0x14(r1)
-	lwz r31, 0xc(r1)
-	lwz r30, 0x8(r1)
-	mtlr r0
-	addi r1, r1, 0x10
-	blr
-}
-
-static inline Block* __unlink(__mem_pool_obj* pool_obj, Block* bp) {
+static Block* __unlink(__mem_pool_obj* pool_obj, Block* bp)
+{
     Block* result = bp->next;
     if (result == bp) {
         result = 0;
@@ -339,290 +222,12 @@ static inline Block* __unlink(__mem_pool_obj* pool_obj, Block* bp) {
     return result;
 }
 
-inline void __init_pool_obj(__mem_pool* pool_obj) {
-    memset(pool_obj, 0, sizeof(__mem_pool_obj));
-}
+void allocate_from_var_pools() {}
 
-static __mem_pool protopool_803DB818;
-static unsigned char init_803DF080 = 0;
+void soft_allocate_from_var_pools() {}
 
-static inline __mem_pool* get_malloc_pool(void) {
-    if (!init_803DF080) {
-        __init_pool_obj(&protopool_803DB818);
-        init_803DF080 = 1;
-    }
-
-    return &protopool_803DB818;
-}
-
-static void Block_construct(Block* block, unsigned long size) {
-    SubBlock* sb;
-
-    block->size = size | 3;
-    *(unsigned long*)((char*)block + size - 8) = block->size;
-    sb = (SubBlock*)((char*)block + 16);
-    sb->block = (Block*)((unsigned long)block | 1);
-    size -= 24;
-    sb->size = size;
-    *(unsigned long*)((char*)sb + size - sizeof(unsigned long)) = size;
-    block->max_size = size;
-    *(SubBlock**)((char*)block + (block->size & 0xFFFFFFF8UL) - 4) = 0;
-    Block_link(block, sb);
-}
-
-extern const unsigned long lbl_802C3180[6];
-extern void fn_80286F20(void*);
-
-static asm SubBlock* Block_subBlock(Block* block, unsigned long requested_size) {
-    nofralloc
-    stwu r1, -0x10(r1)
-    mflr r0
-    lis r6, lbl_802C3180@ha
-    stw r0, 0x14(r1)
-    stw r31, 0xc(r1)
-    mr r31, r3
-    addi r3, r6, lbl_802C3180@l
-    li r6, 0x0
-    stw r30, 0x8(r1)
-    b _bsb_1
-_bsb_0:
-    addi r3, r3, 0x4
-    addi r6, r6, 0x1
-_bsb_1:
-    lwz r0, 0x0(r3)
-    cmplw r5, r0
-    bgt _bsb_0
-    subi r7, r4, 0x4
-    slwi r4, r6, 3
-    lwz r3, 0x0(r7)
-    addi r4, r4, 0x4
-    add r4, r31, r4
-    lwz r0, 0xc(r3)
-    cmplwi r0, 0x0
-    bne _bsb_3
-    lwz r5, 0x4(r4)
-    cmplw r5, r3
-    beq _bsb_3
-    lwz r0, 0x0(r4)
-    cmplw r0, r3
-    bne _bsb_2
-    lwz r0, 0x0(r5)
-    stw r0, 0x4(r4)
-    lwz r5, 0x0(r4)
-    lwz r0, 0x0(r5)
-    stw r0, 0x0(r4)
-    b _bsb_3
-_bsb_2:
-    lwz r0, 0x4(r3)
-    lwz r5, 0x0(r3)
-    stw r0, 0x4(r5)
-    lwz r0, 0x0(r3)
-    lwz r5, 0x4(r3)
-    stw r0, 0x0(r5)
-    lwz r0, 0x4(r4)
-    stw r0, 0x4(r3)
-    lwz r5, 0x4(r3)
-    lwz r0, 0x0(r5)
-    stw r0, 0x0(r3)
-    lwz r5, 0x0(r3)
-    stw r3, 0x4(r5)
-    lwz r5, 0x4(r3)
-    stw r3, 0x0(r5)
-    stw r3, 0x4(r4)
-_bsb_3:
-    lwz r0, 0xc(r3)
-    stw r0, 0x4(r7)
-    stw r7, 0xc(r3)
-    lwz r5, 0x10(r3)
-    subic. r0, r5, 0x1
-    stw r0, 0x10(r3)
-    bne _bsb_12
-    lwz r0, 0x4(r4)
-    cmplw r0, r3
-    bne _bsb_4
-    lwz r0, 0x4(r3)
-    stw r0, 0x4(r4)
-_bsb_4:
-    lwz r0, 0x0(r4)
-    cmplw r0, r3
-    bne _bsb_5
-    lwz r0, 0x0(r3)
-    stw r0, 0x0(r4)
-_bsb_5:
-    lwz r0, 0x4(r3)
-    lwz r5, 0x0(r3)
-    stw r0, 0x4(r5)
-    lwz r0, 0x0(r3)
-    lwz r5, 0x4(r3)
-    stw r0, 0x0(r5)
-    lwz r0, 0x4(r4)
-    cmplw r0, r3
-    bne _bsb_6
-    li r0, 0x0
-    stw r0, 0x4(r4)
-_bsb_6:
-    lwz r0, 0x0(r4)
-    cmplw r0, r3
-    bne _bsb_7
-    li r0, 0x0
-    stw r0, 0x0(r4)
-_bsb_7:
-    lwz r0, -0x4(r3)
-    subi r4, r3, 0x8
-    clrrwi r30, r0, 1
-    mr r3, r30
-    bl Block_link
-    lwz r3, 0x10(r30)
-    li r5, 0x0
-    rlwinm. r0, r3, 0, 30, 30
-    bne _bsb_8
-    lwz r0, 0xc(r30)
-    clrrwi r4, r3, 3
-    clrrwi r3, r0, 3
-    subi r0, r3, 0x18
-    cmplw r4, r0
-    bne _bsb_8
-    li r5, 0x1
-_bsb_8:
-    cmpwi r5, 0x0
-    beq _bsb_12
-    lwz r4, 0x4(r30)
-    cmplw r4, r30
-    bne _bsb_9
-    li r4, 0x0
-_bsb_9:
-    lwz r0, 0x0(r31)
-    cmplw r0, r30
-    bne _bsb_10
-    stw r4, 0x0(r31)
-_bsb_10:
-    cmplwi r4, 0x0
-    beq _bsb_11
-    lwz r0, 0x0(r30)
-    stw r0, 0x0(r4)
-    lwz r3, 0x0(r4)
-    stw r4, 0x4(r3)
-_bsb_11:
-    li r0, 0x0
-    mr r3, r30
-    stw r0, 0x4(r30)
-    stw r0, 0x0(r30)
-    bl fn_80286F20
-_bsb_12:
-    lwz r0, 0x14(r1)
-    lwz r31, 0xc(r1)
-    lwz r30, 0x8(r1)
-    mtlr r0
-    addi r1, r1, 0x10
-    blr
-}
-
-static Block* link_new_block(__mem_pool_obj* pool_obj, unsigned long size) {
-    Block* block;
-    unsigned long aligned_size;
-
-    aligned_size = (size + 0x1FUL) & 0xFFFFFFF8;
-    if (aligned_size < 0x10000) {
-        aligned_size = 0x10000;
-    }
-
-    block = (Block*)__sys_alloc(aligned_size);
-    if (block == 0) {
-        return 0;
-    }
-
-    Block_construct(block, aligned_size);
-    if (pool_obj->start_ != 0) {
-        block->prev = pool_obj->start_->prev;
-        block->prev->next = block;
-        block->next = pool_obj->start_;
-        pool_obj->start_->prev = block;
-        pool_obj->start_ = block;
-    } else {
-        pool_obj->start_ = block;
-        block->prev = block;
-        block->next = block;
-    }
-    return block;
-}
-
-static void* allocate_from_var_pools(__mem_pool_obj* pool_obj, unsigned long size) {
-    Block* block;
-    Block* current_block;
-    void* result;
-    unsigned long aligned_size;
-
-    aligned_size = (size + 0xFUL) & 0xFFFFFFF8UL;
-    if (aligned_size < 0x50UL) {
-        aligned_size = 0x50UL;
-    }
-
-    if (pool_obj->start_ != 0) {
-        block = pool_obj->start_;
-    } else {
-        block = link_new_block(pool_obj, aligned_size);
-    }
-
-    current_block = block;
-    if (current_block == 0) {
-        result = 0;
-    } else {
-        do {
-            if ((aligned_size <= current_block->max_size) &&
-                ((result = Block_subBlock(current_block, aligned_size)) != 0)) {
-                pool_obj->start_ = current_block;
-                goto done;
-            }
-            current_block = current_block->next;
-        } while (current_block != pool_obj->start_);
-
-        current_block = link_new_block(pool_obj, aligned_size);
-        if (current_block == 0) {
-            result = 0;
-        } else {
-            result = Block_subBlock(current_block, aligned_size);
-done:
-            result = (char*)result + 8;
-        }
-    }
-
-    return result;
-}
-
-static void* soft_allocate_from_var_pools(__mem_pool_obj* pool_obj, unsigned long size, unsigned long* available_size) {
-    Block* current_block;
-    SubBlock* result;
-
-    size = (size + 0xFU) & 0xFFFFFFF8;
-    if (size < 0x50) {
-        size = 0x50;
-    }
-    *available_size = 0;
-    current_block = pool_obj->start_;
-    if (current_block == 0) {
-        return 0;
-    }
-
-    do {
-        if (size <= current_block->max_size) {
-            result = Block_subBlock(current_block, size);
-            if (result != 0) {
-                pool_obj->start_ = current_block;
-                goto found;
-            }
-        }
-        if ((8 < current_block->max_size) && (*available_size < current_block->max_size - 8)) {
-            *available_size = current_block->max_size - 8;
-        }
-        current_block = current_block->next;
-    } while (current_block != pool_obj->start_);
-
-    return 0;
-found:
-    return (char*)result + 8;
-}
-
-static void deallocate_from_var_pools(__mem_pool_obj* pool_obj, void* ptr) {
+static void deallocate_from_var_pools(__mem_pool_obj* pool_obj, void* ptr)
+{
     SubBlock* sb = SubBlock_from_pointer(ptr);
     SubBlock* _sb;
 
@@ -635,111 +240,29 @@ static void deallocate_from_var_pools(__mem_pool_obj* pool_obj, void* ptr) {
     }
 }
 
-static void* allocate_from_fixed_pools(__mem_pool_obj* pool_obj, unsigned long size) {
-    unsigned long i = 0;
-    FixStart* fs;
+void FixBlock_construct() {}
 
-    while (size > fix_pool_sizes[i]) {
-        ++i;
-    }
-
-    fs = &pool_obj->fix_start[i];
-
-    if ((fs->head_ == 0) || (fs->head_->start_ == 0)) {
-        const unsigned long* pool_sizes = fix_pool_sizes;
-        unsigned long n = 0xFEC / (pool_sizes[i] + 4);
-        unsigned long max_n;
-        void* block;
-        unsigned long max_free_size;
-        unsigned long msize;
-        unsigned long fix_size;
-        unsigned long sub_size;
-        unsigned long num_subblocks;
-        FixBlock* b;
-        FixBlock* head;
-        FixBlock* tail;
-        FixSubBlock* p;
-        unsigned long k;
-
-        if (n > 0x100) {
-            n = 0x100;
-        }
-
-        max_n = n;
-
-        while (n >= 10) {
-            block = soft_allocate_from_var_pools(pool_obj, n * (pool_sizes[i] + 4) + 0x14, &max_free_size);
-            if (block != 0) {
-                break;
-            }
-
-            if (max_free_size > 0x14) {
-                n = (max_free_size - 0x14) / (pool_sizes[i] + 4);
-            } else {
-                n = 0;
-            }
-        }
-
-        if ((block == 0) && (n < max_n)) {
-            block = allocate_from_var_pools(pool_obj, max_n * (pool_sizes[i] + 4) + 0x14);
-            if (block == 0) {
-                return 0;
-            }
-        }
-
-        msize = __msize_inline(block);
-
-        if (fs->head_ == 0) {
-            fs->head_ = (FixBlock*)block;
-            fs->tail_ = (FixBlock*)block;
-        }
-
-        fix_size = pool_sizes[i];
-        sub_size = fix_size + 4;
-        b = (FixBlock*)block;
-        head = fs->head_;
-        tail = fs->tail_;
-        num_subblocks = (msize - 0x14) / sub_size;
-        p = (FixSubBlock*)((char*)b + 0x14);
-        b->prev_ = tail;
-        b->next_ = head;
-        tail->next_ = b;
-        head->prev_ = b;
-        b->client_size_ = fix_size;
-
-        {
-            char* cp = (char*)p;
-            char* np;
-            for (k = 0; k < num_subblocks - 1; ++k) {
-                np = cp + sub_size;
-                ((FixSubBlock*)cp)->block_ = b;
-                ((FixSubBlock*)cp)->next_ = (FixSubBlock*)np;
-                cp = np;
-            }
-            ((FixSubBlock*)cp)->block_ = b;
-            ((FixSubBlock*)cp)->next_ = 0;
-        }
-        b->start_ = p;
-        b->n_allocated_ = 0;
-        fs->head_ = b;
-    }
-
-    {
-        FixSubBlock* p = fs->head_->start_;
-
-        fs->head_->start_ = p->next_;
-        ++fs->head_->n_allocated_;
-
-        if (fs->head_->start_ == 0) {
-            fs->head_ = fs->head_->next_;
-            fs->tail_ = fs->tail_->next_;
-        }
-
-        return (char*)p + 4;
-    }
+void __init_pool_obj(__mem_pool* pool_obj)
+{
+    memset(pool_obj, 0, sizeof(__mem_pool_obj));
 }
 
-static void deallocate_from_fixed_pools(__mem_pool_obj* pool_obj, void* ptr, unsigned long size) {
+static __mem_pool* get_malloc_pool(void)
+{
+    static __mem_pool protopool;
+    static unsigned char init = 0;
+    if (!init) {
+        __init_pool_obj(&protopool);
+        init = 1;
+    }
+
+    return &protopool;
+}
+
+void allocate_from_fixed_pools() {}
+
+void deallocate_from_fixed_pools(__mem_pool_obj* pool_obj, void* ptr, unsigned long size)
+{
     unsigned long i = 0;
     FixSubBlock* p;
     FixBlock* b;
@@ -795,26 +318,22 @@ static void deallocate_from_fixed_pools(__mem_pool_obj* pool_obj, void* ptr, uns
     }
 }
 
-void* __pool_alloc(__mem_pool* pool, unsigned long size) {
-    __mem_pool_obj* pool_obj;
+void __pool_allocate_resize() {}
 
-    if (size == 0) {
-        return 0;
-    }
+void __msize() {}
 
-    if (size > 0xFFFFFFCFUL) {
-        return 0;
-    }
+void __pool_alloc() {}
 
-    pool_obj = (__mem_pool_obj*)pool;
-    if (size <= 68) {
-        return allocate_from_fixed_pools(pool_obj, size);
-    }
+void __allocate_size() {}
 
-    return allocate_from_var_pools(pool_obj, size);
-}
+void __allocate() {}
 
-void __pool_free(__mem_pool* pool, void* ptr) {
+void __allocate_resize() {}
+
+void __allocate_expand() {}
+
+void __pool_free(__mem_pool* pool, void* ptr)
+{
     __mem_pool_obj* pool_obj;
     unsigned long size;
 
@@ -832,103 +351,21 @@ void __pool_free(__mem_pool* pool, void* ptr) {
     }
 }
 
-void* malloc(size_t size) {
-    void* ptr;
+void __pool_realloc() {}
 
-    __begin_critical_region(malloc_pool_access);
-    ptr = __pool_alloc(get_malloc_pool(), size);
-    __end_critical_region(malloc_pool_access);
-    return ptr;
+void __pool_alloc_clear() {}
+
+void malloc() {}
+
+void free(void* ptr)
+{
+    __pool_free(get_malloc_pool(), ptr);
 }
 
-extern void fn_80286F20(void*);
+void realloc() {}
 
-asm void free(void* ptr) {
-    nofralloc
-    stwu r1, -0x10(r1)
-    mflr r0
-    stw r0, 0x14(r1)
-    stw r31, 0xc(r1)
-    stw r30, 0x8(r1)
-    mr r30, r3
-    lbz r0, init_803DF080(r13)
-    cmplwi r0, 0x0
-    bne _fr_1
-    lis r3, protopool_803DB818@ha
-    li r4, 0x0
-    addi r3, r3, protopool_803DB818@l
-    li r5, 0x34
-    bl memset
-    li r0, 0x1
-    stb r0, init_803DF080(r13)
-_fr_1:
-    cmplwi r30, 0x0
-    lis r3, protopool_803DB818@ha
-    addi r31, r3, protopool_803DB818@l
-    beq _fr_7
-    lwz r3, -0x4(r30)
-    clrlwi. r0, r3, 31
-    bne _fr_2
-    lwz r5, 0x8(r3)
-    b _fr_3
-_fr_2:
-    lwz r0, -0x8(r30)
-    clrrwi r3, r0, 3
-    subi r5, r3, 0x8
-_fr_3:
-    cmplwi r5, 0x44
-    bgt _fr_4
-    mr r3, r31
-    mr r4, r30
-    bl Block_subBlock
-    b _fr_7
-_fr_4:
-    lwz r0, -0x4(r30)
-    subi r4, r30, 0x8
-    clrrwi r30, r0, 1
-    mr r3, r30
-    bl Block_link
-    lwz r3, 0x10(r30)
-    li r5, 0x0
-    rlwinm. r0, r3, 0, 30, 30
-    bne _fr_5
-    lwz r0, 0xc(r30)
-    clrrwi r4, r3, 3
-    clrrwi r3, r0, 3
-    subi r0, r3, 0x18
-    cmplw r4, r0
-    bne _fr_5
-    li r5, 0x1
-_fr_5:
-    cmpwi r5, 0x0
-    beq _fr_7
-    lwz r4, 0x4(r30)
-    cmplw r4, r30
-    bne _fr_a
-    li r4, 0x0
-_fr_a:
-    lwz r0, 0x0(r31)
-    cmplw r0, r30
-    bne _fr_b
-    stw r4, 0x0(r31)
-_fr_b:
-    cmplwi r4, 0x0
-    beq _fr_6
-    lwz r0, 0x0(r30)
-    stw r0, 0x0(r4)
-    lwz r3, 0x0(r4)
-    stw r4, 0x4(r3)
-_fr_6:
-    li r0, 0x0
-    mr r3, r30
-    stw r0, 0x4(r30)
-    stw r0, 0x0(r30)
-    bl fn_80286F20
-_fr_7:
-    lwz r0, 0x14(r1)
-    lwz r31, 0xc(r1)
-    lwz r30, 0x8(r1)
-    mtlr r0
-    addi r1, r1, 0x10
-    blr
-}
+void calloc() {}
+
+void __pool_free_all() {}
+
+void __malloc_free_all() {}

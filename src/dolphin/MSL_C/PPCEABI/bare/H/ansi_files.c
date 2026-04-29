@@ -3,7 +3,6 @@
 extern FILE __files[4];
 int fclose(FILE*);
 int fflush(FILE*);
-void fn_8028D574(void* p);
 
 unsigned int __flush_all(void)
 {
@@ -33,7 +32,7 @@ void __close_all(void)
         prev = file;
         file = file->next_file_struct;
         if (prev->is_dynamically_allocated) {
-            fn_8028D574(prev);
+            free(prev);
         } else {
             prev->file_mode.file_kind = __strinFile;
             if (file != NULL && file->is_dynamically_allocated) {

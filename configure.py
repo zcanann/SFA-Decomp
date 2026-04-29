@@ -645,7 +645,13 @@ config.libs = [
         "MSL_C",
         [
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/abort_exit.c", mw_version="GC/1.3"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/alloc.c"),
+            Object(
+                MatchingFor("GSAE01"),
+                "dolphin/MSL_C/PPCEABI/bare/H/alloc.c",
+                mw_version="GC/1.3",
+                cflags=cflags_msl,
+                extra_cflags=["-common", "off", "-inline", "auto,deferred"],
+            ),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c", mw_version="GC/1.3"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/ansi_fp.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/buffer_io.c", mw_version="GC/1.3"),

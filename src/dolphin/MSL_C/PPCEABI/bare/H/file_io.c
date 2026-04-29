@@ -2,7 +2,6 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/buffer_io.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/FILE_POS.h"
 
-extern void fn_8028D574(void*);
 extern unsigned int __flush_all(void);
 
 int fflush(FILE* file) {
@@ -57,7 +56,7 @@ int fclose(FILE* file) {
     file->file_mode.file_kind = __closed_file;
     file->handle = NULL;
     if (file->file_state.free_buffer) {
-        fn_8028D574(file->buffer);
+        free(file->buffer);
     }
     return (flush_result || close_result) ? -1 : 0;
 }
