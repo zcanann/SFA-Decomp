@@ -3615,6 +3615,37 @@ extern void  Obj_FreeObject(void*);
 extern void* lbl_803DD93C;
 extern void* lbl_803DD940;
 
+extern f32   lbl_803E23B8;
+extern f32   lbl_803DD9D8;
+extern f32   lbl_803DD9DC;
+extern u8    lbl_803DD9E0;
+extern u8    lbl_803DD9E1;
+extern void* lbl_803DDA1C;
+extern void* lbl_803DDA20;
+extern void* lbl_803DDA24;
+extern void* lbl_803DBC14;
+extern u8    lbl_803AA018[0x1100];
+extern void  fn_8006FED4(void);
+
+/* EN v1.0 0x80137998  size: 104b  Title-screen system init. Calls
+ * fn_8006FED4, primes the two float counters, clears two state bytes,
+ * acquires three sized buffers (605/1/2 bytes) and primes the
+ * lbl_803DBC14 cursor to the start of the 0x1100-byte arena. */
+#pragma scheduling off
+void fn_80137998(void)
+{
+    fn_8006FED4();
+    lbl_803DD9D8 = lbl_803E23B8;
+    lbl_803DD9DC = lbl_803E23B8;
+    lbl_803DD9E0 = 0;
+    lbl_803DD9E1 = 0;
+    lbl_803DDA24 = fn_80054D54(0x25D);
+    lbl_803DDA20 = fn_80054D54(1);
+    lbl_803DDA1C = fn_80054D54(2);
+    lbl_803DBC14 = lbl_803AA018;
+}
+#pragma scheduling reset
+
 /* EN v1.0 0x80133EA4  size: 156b  Two-step shutdown helper. Releases
  * the buffers at lbl_803DD93C and lbl_803DD940 (the first only if
  * non-null), then walks the 2-slot live-objects table at lbl_803DBBC8
