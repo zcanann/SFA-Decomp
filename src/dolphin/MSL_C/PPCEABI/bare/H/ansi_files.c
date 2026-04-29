@@ -2,7 +2,23 @@
 
 extern FILE __files[4];
 int fclose(FILE*);
+int fflush(FILE*);
 void fn_8028D574(void* p);
+
+unsigned int __flush_all(void)
+{
+    unsigned int retval = 0;
+    FILE* file = __files;
+
+    while (file != NULL) {
+        if (file->file_mode.file_kind && fflush(file)) {
+            retval = -1;
+        }
+        file = file->next_file_struct;
+    }
+
+    return retval;
+}
 
 void __close_all(void)
 {
