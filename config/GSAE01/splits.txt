@@ -2386,10 +2386,12 @@ dolphin/TRK_MINNOW_DOLPHIN/mslsupp.c:
 	.text       start:0x8028D368 end:0x8028D4A8
 
 dolphin/MSL_C/PPCEABI/bare/H/abort_exit.c:
-	.text       start:0x8028D4A8 end:0x8028D960
+	.text       start:0x8028D4A8 end:0x8028D574
+	.bss        start:0x803DAAB8 end:0x803DABB8
+	.sbss       start:0x803DE3F0 end:0x803DE400
 
 dolphin/MSL_C/PPCEABI/bare/H/alloc.c:
-	.text       start:0x8028D960 end:0x8028DADC
+	.text       start:0x8028D574 end:0x8028DADC
 
 dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c:
 	.text       start:0x8028DADC end:0x8028DBE4
