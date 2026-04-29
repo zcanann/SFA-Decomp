@@ -159,3 +159,11 @@ int fn_80208494(void) { return 0x0; }
 /* plain forwarder.  Logic-only (~55%): existing dfpstatue1_updateState
  * signature has 8 args, but expected `bl` calls it with no setup. */
 void dfpstatue1_update(void) { dfpstatue1_updateState(0,0.0,0.0,0,0,0,0,0); }
+
+/* OSReport(string) wrappers. */
+extern char sDfperchwitchInitNoLongerSupported[];
+extern void OSReport(const char *fmt, ...);
+#pragma scheduling off
+void dfperchwitch_update(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
+void dfperchwitch_init(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
+#pragma scheduling reset

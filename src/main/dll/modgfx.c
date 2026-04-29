@@ -4509,3 +4509,10 @@ extern s16 lbl_803DD288;
 extern s16 lbl_803DD28A;
 s16 fn_8009FFF0(void) { return lbl_803DD288; }
 void fn_800A01B0(s16 x) { lbl_803DD28A = x; }
+
+/* OSReport(literal) wrapper. */
+extern char lbl_8030FDB8[];
+extern void OSReport(const char *fmt, ...);
+#pragma scheduling off
+void fn_800A3AC0(void) { OSReport(lbl_8030FDB8); }
+#pragma scheduling reset

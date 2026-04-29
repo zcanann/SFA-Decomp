@@ -4161,3 +4161,12 @@ void fn_802045B8(int x) { ObjGroup_RemoveObject(x, 0x9); }
 /* plain forwarder. */
 extern void fn_80203C78(void);
 void fn_80203C58(void) { fn_80203C78(); }
+
+/* OSReport(string) wrappers. */
+extern char sDoorswitchInitNoLongerSupported[];
+extern void OSReport(const char *fmt, ...);
+#pragma scheduling off
+void doorswitch_free(void) { OSReport(sDoorswitchInitNoLongerSupported); }
+void doorswitch_update(void) { OSReport(sDoorswitchInitNoLongerSupported); }
+void doorswitch_init(void) { OSReport(sDoorswitchInitNoLongerSupported); }
+#pragma scheduling reset
