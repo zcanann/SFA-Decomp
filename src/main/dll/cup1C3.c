@@ -521,3 +521,7 @@ void FUN_801ca13c(int param_1)
 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_801CA104(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801C9E54(void) { return 0x10; }
+int fn_801C9E5C(void) { return 0x1; }

@@ -355,3 +355,7 @@ void fn_801F4BC8(void) {}
 void fn_801F4BCC(void) {}
 void fn_801F4BFC(void) {}
 void fn_801F4C00(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801F4B4C(void) { return 0x8; }
+int fn_801F4B54(void) { return 0x9; }

@@ -4436,3 +4436,32 @@ void fn_80171A20(void) {}
 void fn_80171BA4(void) {}
 void fn_80171BA8(void) {}
 void fn_80171D10(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int mikabombshadow_getExtraSize(void) { return 0x4; }
+int mikabombshadow_func08(void) { return 0x0; }
+int fn_8016B898(void) { return 0x8; }
+int fn_8016B8A0(void) { return 0x0; }
+int gcbaddieshield_getExtraSize(void) { return 0x8; }
+int gcbaddieshield_func08(void) { return 0x0; }
+int baddieinterestp_getExtraSize(void) { return 0x0; }
+int baddieinterestp_func08(void) { return 0x0; }
+int animatedobj_getExtraSize(void) { return 0x140; }
+int dim2roofrub_getExtraSize(void) { return 0x140; }
+int depthoffieldpoint_getExtraSize(void) { return 0x3; }
+int staff_getExtraSize(void) { return 0xc0; }
+int staff_func08(void) { return 0x9; }
+int fireball_getExtraSize(void) { return 0x74; }
+int fireball_func08(void) { return 0x0; }
+int flamethrowerspe_getExtraSize(void) { return 0x14; }
+int flamethrowerspe_func08(void) { return 0x0; }
+int shield_getExtraSize(void) { return 0x60; }
+int shield_func08(void) { return 0x0; }
+int fn_80171300(void) { return 0x0; }
+int fn_8017130C(void) { return 0x0; }
+int fn_80171314(void) { return 0x0; }
+int fn_801713FC(void) { return 0xc; }
+int fn_80171404(void) { return 0x2; }
+int fn_801719E4(void) { return 0x40; }
+int fn_801719EC(void) { return 0x10; }
+int fn_80171C78(void) { return 0x1; }

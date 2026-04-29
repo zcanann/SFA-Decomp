@@ -824,3 +824,6 @@ FUN_80165570(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   }
   return 0;
 }
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801650D0(void) { return 0x0; }

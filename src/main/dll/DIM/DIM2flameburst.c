@@ -1632,3 +1632,13 @@ void dimmagicbridge_free(void) {}
 void dimmagicbridge_hitDetect(void) {}
 void dimmagicbridge_release(void) {}
 void dimmagicbridge_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int explosion_getExtraSize(void) { return 0xa60; }
+int dimwooddoor2_getExtraSize(void) { return 0xc; }
+int dimwooddoor2_func08(void) { return 0x0; }
+int fn_801B5A28(void) { return 0xc; }
+int fn_801B5A30(void) { return 0x0; }
+int dimmagicbridge_getExtraSize(void) { return 0x68; }
+int dimmagicbridge_func08(void) { return 0x0; }
+int dim_levelcontrol_getExtraSize(void) { return 0x10; }

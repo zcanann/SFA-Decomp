@@ -1174,3 +1174,20 @@ void dim2pathgenerator_hitDetect(void) {}
 void dim2pathgenerator_release(void) {}
 void dim2pathgenerator_initialise(void) {}
 void fn_801B87A8(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801B6B44(void) { return 0x0; }
+int fn_801B6B4C(void) { return 0x0; }
+int dim_tricky_getExtraSize(void) { return 0x1; }
+int dim_tricky_func08(void) { return 0x0; }
+int dimtruthhornice_getExtraSize(void) { return 0x8; }
+int dim2conveyor_getExtraSize(void) { return 0x14; }
+int dim2conveyor_func08(void) { return 0x0; }
+int fn_801B75B8(void) { return 0x20; }
+int fn_801B75C0(void) { return 0x0; }
+int dim2snowball_getExtraSize(void) { return 0xb0; }
+int dim2snowball_func08(void) { return 0x0; }
+int dim2pathgenerator_getExtraSize(void) { return 0x9a8; }
+int dim2pathgenerator_func08(void) { return 0x0; }
+int fn_801B8798(void) { return 0x8; }
+int fn_801B87A0(void) { return 0x0; }

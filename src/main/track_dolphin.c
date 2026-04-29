@@ -3945,3 +3945,6 @@ void FUN_80064384(int param_1)
 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_80062A50(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_80060B90(void) { return 0x0; }

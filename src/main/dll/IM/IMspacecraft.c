@@ -836,3 +836,11 @@ void fn_801A5D84(void) {}
 void fn_801A6050(void) {}
 void fn_801A6628(void) {}
 void fn_801A6774(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801A57E8(void) { return 0x14; }
+int fn_801A57F0(void) { return 0x0; }
+int fn_801A5F70(void) { return 0x118; }
+int fn_801A5F78(void) { return 0x0; }
+int fn_801A66FC(void) { return 0x0; }
+int fn_801A6704(void) { return 0x0; }

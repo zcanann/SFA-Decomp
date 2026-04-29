@@ -1631,3 +1631,15 @@ void fn_800D800C(void) {}
 void fn_800D8018(void) {}
 void fn_800D801C(void) {}
 void fn_800D8BB0(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_800D7F68(void) { return 0x0; }
+int fn_800D7F74(void) { return 0x7f; }
+int fn_800D7F7C(void) { return 0x0; }
+int fn_800D7F90(void) { return 0x0; }
+int fn_800D7FC4(void) { return 0x0; }
+int fn_800D7FD0(void) { return 0x0; }
+int fn_800D7FDC(void) { return 0x0; }
+int fn_800D7FE8(void) { return 0x0; }
+int fn_800D7FF0(void) { return 0x0; }
+int fn_800D8004(void) { return 0x0; }

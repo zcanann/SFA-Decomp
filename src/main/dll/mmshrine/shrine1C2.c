@@ -864,3 +864,9 @@ void ecsh_creator_hitDetect(void) {}
 void ecsh_creator_release(void) {}
 void ecsh_creator_initialise(void) {}
 void gpsh_shrine_hitDetect(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int ecsh_creator_getExtraSize(void) { return 0xa; }
+int ecsh_creator_func08(void) { return 0x0; }
+int gpsh_shrine_getExtraSize(void) { return 0x18; }
+int gpsh_shrine_func08(void) { return 0x0; }

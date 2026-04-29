@@ -1041,3 +1041,14 @@ void magiclight_initialise(void) {}
 void fn_801AE0E4(void) {}
 void fn_801AE0E8(void) {}
 void imicepillar_free(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int imicemountain_getExtraSize(void) { return 0x14; }
+int imicemountain_func08(void) { return 0x0; }
+int crrockfall_getExtraSize(void) { return 0x14; }
+int crrockfall_func08(void) { return 0x0; }
+int magiclight_func08(void) { return 0x0; }
+int fn_801ADB70(void) { return 0x24; }
+int fn_801ADB78(void) { return 0x3; }
+int imicepillar_getExtraSize(void) { return 0x4; }
+int imicepillar_func08(void) { return 0x0; }

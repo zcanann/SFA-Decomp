@@ -967,3 +967,8 @@ void wm_column_hitDetect(void) {}
 void wm_column_release(void) {}
 void wm_column_initialise(void) {}
 void appleontree_setScale(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int wm_column_getExtraSize(void) { return 0xa; }
+int wm_column_func08(void) { return 0x0; }
+int appleontree_getExtraSize(void) { return 0x64; }

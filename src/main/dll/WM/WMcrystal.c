@@ -390,3 +390,7 @@ void sc_totempuzzle_initialise(void) {}
 void sc_totembond_hitDetect(void) {}
 void sc_totembond_release(void) {}
 void sc_totembond_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int sc_totembond_getExtraSize(void) { return 0x28; }
+int sc_totembond_func08(void) { return 0x0; }

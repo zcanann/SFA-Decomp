@@ -757,3 +757,9 @@ void sc_levelcontrol_release(void) {}
 void sc_levelcontrol_initialise(void) {}
 void sc_musictree_free(void) {}
 void sc_musictree_hitDetect(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int sc_levelcontrol_getExtraSize(void) { return 0x24; }
+int sc_levelcontrol_func08(void) { return 0x0; }
+int sc_musictree_getExtraSize(void) { return 0x50; }
+int sc_musictree_func08(void) { return 0x0; }

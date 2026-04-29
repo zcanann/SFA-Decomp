@@ -4281,3 +4281,6 @@ void fn_800D9EE0(void) {}
 void fn_800D9EE4(void) {}
 void fn_800DD640(void) {}
 void fn_800DD644(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_800D9ECC(void) { return 0x0; }

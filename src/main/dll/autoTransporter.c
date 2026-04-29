@@ -711,3 +711,8 @@ uint FUN_801799c0(int param_1)
 void doorf4_hitDetect(void) {}
 void doorf4_release(void) {}
 void doorf4_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int doorf4_getExtraSize(void) { return 0x24; }
+int doorf4_func08(void) { return 0x1; }
+int sidekickball_getExtraSize(void) { return 0x2cc; }

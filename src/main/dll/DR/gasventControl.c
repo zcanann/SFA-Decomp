@@ -555,3 +555,8 @@ void explodable_render(void) {}
 void cfforcefield_free(void) {}
 void cfforcefield_render(void) {}
 void cfforcefield_hitDetect(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int explodable_getExtraSize(void) { return 0x6e8; }
+int cfforcefield_getExtraSize(void) { return 0x8; }
+int cfforcefield_func08(void) { return 0x0; }

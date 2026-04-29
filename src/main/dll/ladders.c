@@ -580,3 +580,7 @@ void tumbleweedbush_free(void) {}
 void tumbleweedbush_hitDetect(void) {}
 void tumbleweedbush_release(void) {}
 void tumbleweedbush_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int tumbleweedbush_getExtraSize(void) { return 0x54; }
+int tumbleweedbush_func08(void) { return 0x0; }

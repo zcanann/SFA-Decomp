@@ -713,3 +713,7 @@ void FUN_80169430(undefined8 param_1,double param_2,double param_3,double param_
 void kaldachom_func0B(void) {}
 void kaldachom_hitDetect(void) {}
 void kaldachom_release(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int kaldachom_getExtraSize(void) { return 0x45c; }
+int kaldachom_func08(void) { return 0x49; }

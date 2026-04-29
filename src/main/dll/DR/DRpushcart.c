@@ -846,3 +846,11 @@ void shopitem_release(void) {}
 void shopitem_initialise(void) {}
 void spscarab_render(void) {}
 void spscarab_hitDetect(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int shopkeeper_getExtraSize(void) { return 0x9d8; }
+int shopkeeper_func08(void) { return 0x0; }
+int shopitem_getExtraSize(void) { return 0xec; }
+int shopitem_func08(void) { return 0x0; }
+int spscarab_getExtraSize(void) { return 0x14; }
+int spscarab_func08(void) { return 0x0; }

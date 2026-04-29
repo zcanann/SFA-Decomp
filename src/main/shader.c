@@ -2279,3 +2279,7 @@ void FUN_80057fd0(void)
   FUN_8028688c();
   return;
 }
+
+/* 8b "li r3, N; blr" returners. */
+int fn_80056694(void) { return 0x0; }
+int fn_8005669C(void) { return 0x0; }

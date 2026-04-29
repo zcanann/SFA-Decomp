@@ -1215,3 +1215,15 @@ void fn_801FDF00(void) {}
 void fn_801FDF04(void) {}
 void fn_801FE110(void) {}
 void fn_801FE114(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801FD4E4(void) { return 0x8; }
+int fn_801FDA08(void) { return 0x1; }
+int fn_801FDA10(void) { return 0x18; }
+int fn_801FDA18(void) { return 0x0; }
+int fn_801FDBBC(void) { return 0x14; }
+int fn_801FDBC4(void) { return 0x0; }
+int fn_801FDEEC(void) { return 0x6; }
+int fn_801FDEF4(void) { return 0x0; }
+int fn_801FE9D8(void) { return 0x124; }
+int fn_801FE9E0(void) { return 0x8; }

@@ -1667,3 +1667,26 @@ void fn_801E604C(void) {}
 void shop_hitDetect(void) {}
 void shop_release(void) {}
 void shop_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801E45AC(void) { return 0x24; }
+int fn_801E45B4(void) { return 0x0; }
+int fn_801E4B94(void) { return 0x8; }
+int fn_801E4B9C(void) { return 0x0; }
+int fn_801E4F50(void) { return 0x2; }
+int fn_801E4F58(void) { return 0x1; }
+int fn_801E5084(void) { return 0x0; }
+int fn_801E508C(void) { return 0x0; }
+int fn_801E519C(void) { return 0x2; }
+int fn_801E51A4(void) { return 0x0; }
+int fn_801E55B8(void) { return 0x140; }
+int fn_801E55C0(void) { return 0xb; }
+int fn_801E59AC(void) { return 0x1; }
+int fn_801E5DC4(void) { return 0x0; }
+int fn_801E5DCC(void) { return 0x0; }
+int fn_801E5F74(void) { return 0x1; }
+int fn_801E5F7C(void) { return 0x0; }
+int shop_getExtraSize(void) { return 0x5; }
+int shop_func08(void) { return 0x0; }
+int fn_801E66DC(void) { return 0x0; }
+int fn_801E66E4(void) { return 0x0; }

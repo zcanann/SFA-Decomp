@@ -335,3 +335,9 @@ void FUN_801e34c0(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /* Trivial 4b 0-arg blr leaves. */
 void fn_801E4280(void) {}
 void fn_801E4284(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801E3D30(void) { return 0x24; }
+int fn_801E3D38(void) { return 0x0; }
+int fn_801E4288(void) { return 0x18; }
+int fn_801E4290(void) { return 0x0; }

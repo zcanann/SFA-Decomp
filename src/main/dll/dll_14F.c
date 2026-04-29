@@ -1511,3 +1511,9 @@ LAB_80181c38:
   FUN_8028688c();
   return;
 }
+
+/* 8b "li r3, N; blr" returners. */
+int fn_8017F8FC(void) { return 0x10; }
+int fn_8017FF40(void) { return 0x64; }
+int duster_getExtraSize(void) { return 0x20; }
+int curvefish_getExtraSize(void) { return 0x120; }

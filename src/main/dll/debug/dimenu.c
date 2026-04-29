@@ -610,3 +610,6 @@ void fn_8011D900(void) {}
 void fn_8011D904(void) {}
 void fn_8011D910(void) {}
 void fn_8011D914(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_8011D908(void) { return 0x0; }

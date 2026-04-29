@@ -274,3 +274,7 @@ void spitembeam_render(void) {}
 void spitembeam_hitDetect(void) {}
 void spitembeam_release(void) {}
 void spitembeam_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int spitembeam_getExtraSize(void) { return 0x0; }
+int spitembeam_func08(void) { return 0x0; }

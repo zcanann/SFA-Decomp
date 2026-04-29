@@ -669,3 +669,10 @@ void FUN_80163308(int param_1)
 void grimble_release(void) {}
 void cannonclaw_free(void) {}
 void cannonclaw_hitDetect(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801627EC(void) { return 0x0; }
+int grimble_getExtraSize(void) { return 0x46c; }
+int grimble_func08(void) { return 0x59; }
+int cannonclaw_getExtraSize(void) { return 0x0; }
+int cannonclaw_func08(void) { return 0x0; }

@@ -275,3 +275,7 @@ void fn_801CB7B8(void) {}
 void fn_801CB7EC(void) {}
 void fn_801CBA90(void) {}
 void fn_801CBA94(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801CB7A8(void) { return 0x4; }
+int fn_801CB7B0(void) { return 0x0; }

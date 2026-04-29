@@ -253,3 +253,7 @@ void FUN_801f3a50(uint param_1)
 void fn_801F3C24(void) {}
 void fn_801F3C28(void) {}
 void fn_801F3C78(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801F3C2C(void) { return 0x1c; }
+int fn_801F3C34(void) { return 0x0; }

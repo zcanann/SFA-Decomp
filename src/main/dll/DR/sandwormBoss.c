@@ -3160,3 +3160,25 @@ void cfprisoncage_initialise(void) {}
 void spiritdoorspirit_hitDetect(void) {}
 void spiritdoorspirit_release(void) {}
 void spiritdoorspirit_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int cfguardian_getExtraSize(void) { return 0xa9c; }
+int cfguardian_func08(void) { return 0x41; }
+int windlift_getExtraSize(void) { return 0x178; }
+int windlift_func08(void) { return 0x0; }
+int cfpowerbase_getExtraSize(void) { return 0x6; }
+int cfpowerbase_func08(void) { return 0x1; }
+int cfmaincrystal_getExtraSize(void) { return 0x160; }
+int cfmaincrystal_func08(void) { return 0x1; }
+int babycloudrunner_getExtraSize(void) { return 0x248; }
+int cfprisonguard_getExtraSize(void) { return 0x3c; }
+int cfprisonguard_func08(void) { return 0x49; }
+int cfprisonuncle_getExtraSize(void) { return 0xa8; }
+int cfprisonuncle_func08(void) { return 0x9; }
+int gcrobotlightbea_getExtraSize(void) { return 0xc; }
+int gcrobotlightbea_func08(void) { return 0x0; }
+int cfperch_getExtraSize(void) { return 0x0; }
+int cfperch_func08(void) { return 0x0; }
+int cfprisoncage_getExtraSize(void) { return 0x0; }
+int spiritdoorspirit_getExtraSize(void) { return 0x1; }
+int spiritdoorspirit_func08(void) { return 0x0; }

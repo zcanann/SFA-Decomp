@@ -1480,3 +1480,18 @@ void fn_801F316C(void) {}
 void fn_801F33AC(void) {}
 void fn_801F33B0(void) {}
 void fn_801F34A8(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801F1624(void) { return 0x8; }
+int fn_801F162C(void) { return 0x0; }
+int fn_801F1BC8(void) { return 0x8; }
+int fn_801F1F1C(void) { return 0x4; }
+int fn_801F1F24(void) { return 0x0; }
+int fn_801F2B8C(void) { return 0x28; }
+int fn_801F2B94(void) { return 0x1; }
+int fn_801F2E98(void) { return 0x4; }
+int fn_801F2EA0(void) { return 0x0; }
+int fn_801F30DC(void) { return 0x10; }
+int fn_801F30E4(void) { return 0x1; }
+int fn_801F33B4(void) { return 0x1c; }
+int fn_801F33BC(void) { return 0x1; }

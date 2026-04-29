@@ -1218,3 +1218,9 @@ void FUN_801ac060(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                  uint param_9)
 {
 }
+
+/* 8b "li r3, N; blr" returners. */
+int cclightfoot_getExtraSize(void) { return 0x18; }
+int ccsharpclawpad_getExtraSize(void) { return 0x4; }
+int ccpedstal_getExtraSize(void) { return 0x8; }
+int cclevcontrol_getExtraSize(void) { return 0x10; }

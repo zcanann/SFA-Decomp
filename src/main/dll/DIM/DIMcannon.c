@@ -1913,3 +1913,19 @@ void lavaball1be_initialise(void) {}
 void lavaball1bf_hitDetect(void) {}
 void lavaball1bf_release(void) {}
 void lavaball1bf_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int imanimspacecraft_getExtraSize(void) { return 0x4; }
+int imanimspacecraft_func08(void) { return 0x0; }
+int imspacethruster_getExtraSize(void) { return 0xc; }
+int imspacethruster_func08(void) { return 0x0; }
+int imspacering_getExtraSize(void) { return 0x0; }
+int imspacering_func08(void) { return 0x0; }
+int imspaceringgen_getExtraSize(void) { return 0xc; }
+int imspaceringgen_func08(void) { return 0x0; }
+int linkb_levcontrol_getExtraSize(void) { return 0x10; }
+int link_levcontrol_getExtraSize(void) { return 0x10; }
+int lavaball1bf_getExtraSize(void) { return 0x1c; }
+int lavaball1bf_func08(void) { return 0x0; }
+int dimlogfire_getExtraSize(void) { return 0x24; }
+int dimlogfire_func08(void) { return 0x1; }

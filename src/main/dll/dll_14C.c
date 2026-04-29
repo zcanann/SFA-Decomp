@@ -158,3 +158,7 @@ void FUN_8017f0d4(int param_1)
 void fn_8017EF64(void) {}
 void fn_8017EF68(void) {}
 void fn_8017EF7C(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_8017EF6C(void) { return 0x8; }
+int fn_8017EF74(void) { return 0x0; }

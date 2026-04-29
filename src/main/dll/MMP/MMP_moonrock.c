@@ -1030,3 +1030,7 @@ void FUN_80198e08(void)
 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_80197E04(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_80197DA8(void) { return 0x8; }
+int fn_80198194(void) { return 0x8; }

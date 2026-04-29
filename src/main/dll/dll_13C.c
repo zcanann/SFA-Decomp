@@ -1073,3 +1073,13 @@ void pollen_initialise(void) {}
 void pollenfragment_release(void) {}
 void pollenfragment_initialise(void) {}
 void mikabomb_hitDetect(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int pinponspike_getExtraSize(void) { return 0x0; }
+int pinponspike_func08(void) { return 0x0; }
+int pollen_getExtraSize(void) { return 0x14; }
+int pollen_func08(void) { return 0x0; }
+int pollenfragment_getExtraSize(void) { return 0x28; }
+int pollenfragment_func08(void) { return 0x0; }
+int mikabomb_getExtraSize(void) { return 0x10; }
+int mikabomb_func08(void) { return 0x0; }

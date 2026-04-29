@@ -723,3 +723,16 @@ void dimbosscrackpar_hitDetect(void) {}
 void dimbosscrackpar_release(void) {}
 void dimbosscrackpar_initialise(void) {}
 void dimbossfire_hitDetect(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int dimbossgut2_setScale(void) { return 0x0; }
+int dimbossgut2_getExtraSize(void) { return 0x42c; }
+int dimbossgut2_func08(void) { return 0x49; }
+int dimbossspit_getExtraSize(void) { return 0x8; }
+int dimbossspit_func08(void) { return 0x0; }
+int magicmaker_getExtraSize(void) { return 0x0; }
+int magicmaker_func08(void) { return 0x0; }
+int dimbosscrackpar_getExtraSize(void) { return 0x0; }
+int dimbosscrackpar_func08(void) { return 0x0; }
+int dimbossfire_getExtraSize(void) { return 0x14; }
+int dimbossfire_func08(void) { return 0x0; }

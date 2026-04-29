@@ -492,3 +492,9 @@ void nwsh_levcon_hitDetect(void) {}
 void nwsh_levcon_release(void) {}
 void nwsh_levcon_initialise(void) {}
 void fn_801CAD7C(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int nwsh_levcon_getExtraSize(void) { return 0x0; }
+int nwsh_levcon_func08(void) { return 0x0; }
+int fn_801CACD4(void) { return 0x14; }
+int fn_801CACDC(void) { return 0x0; }

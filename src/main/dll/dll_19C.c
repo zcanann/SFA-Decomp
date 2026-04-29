@@ -544,3 +544,9 @@ void fn_801C3B60(void) {}
 void fn_801C3B64(void) {}
 void dfsh_objcreator_free(void) {}
 void dfsh_objcreator_hitDetect(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801C3618(void) { return 0x14c; }
+int fn_801C3620(void) { return 0x8; }
+int dfsh_objcreator_getExtraSize(void) { return 0x4; }
+int dfsh_objcreator_func08(void) { return 0x0; }

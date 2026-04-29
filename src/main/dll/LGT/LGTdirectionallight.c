@@ -347,3 +347,7 @@ void FUN_801f416c(short *param_1)
 void fn_801F3F10(void) {}
 void fn_801F3F14(void) {}
 void fn_801F44B0(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801F441C(void) { return 0x1c; }
+int fn_801F4424(void) { return 0x0; }

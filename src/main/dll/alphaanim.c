@@ -577,3 +577,13 @@ void immultiseq_hitDetect(void) {}
 void immultiseq_release(void) {}
 void immultiseq_initialise(void) {}
 void fn_8017D0D0(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int seqobject_getExtraSize(void) { return 0x3; }
+int seqobject_func08(void) { return 0x0; }
+int seqobj2_getExtraSize(void) { return 0x1; }
+int seqobj2_func08(void) { return 0x0; }
+int immultiseq_getExtraSize(void) { return 0x2; }
+int immultiseq_func08(void) { return 0x0; }
+int fn_8017D06C(void) { return 0x2; }
+int fn_8017D074(void) { return 0x0; }

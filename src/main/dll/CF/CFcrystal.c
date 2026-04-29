@@ -441,3 +441,7 @@ void FUN_8018705c(uint param_1)
 void fn_80186BC4(void) {}
 void fn_801871C0(void) {}
 void fn_801871C4(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801873C8(void) { return 0x24; }
+int fn_801873D0(void) { return 0x8; }

@@ -537,3 +537,12 @@ void dimbarrier_free(void) {}
 void dimbarrier_hitDetect(void) {}
 void dimbarrier_release(void) {}
 void dimbarrier_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int dimsnowball1c2_func08(void) { return 0x0; }
+int fn_801B15D8(void) { return 0x0; }
+int dimgate_getExtraSize(void) { return 0x1; }
+int dimgate_func08(void) { return 0x0; }
+int dimicewall_getExtraSize(void) { return 0x2; }
+int dimbarrier_getExtraSize(void) { return 0x4; }
+int dimbarrier_func08(void) { return 0x0; }

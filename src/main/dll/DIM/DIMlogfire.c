@@ -797,3 +797,15 @@ void fn_801A970C(void) {}
 void fn_801A9E6C(void) {}
 void fn_801A9E70(void) {}
 void ccgasvent_render(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int animsharpclaw_getExtraSize(void) { return 0x140; }
+int animsharpclaw_func08(void) { return 0xb; }
+int fn_801A9484(void) { return 0x2; }
+int fn_801A948C(void) { return 0x0; }
+int fn_801A9494(void) { return 0x0; }
+int fn_801A9594(void) { return 0x18; }
+int fn_801A959C(void) { return 0x1; }
+int ccgasvent_getExtraSize(void) { return 0x1; }
+int ccgasventcontrol_getExtraSize(void) { return 0x10; }
+int ccqueen_getExtraSize(void) { return 0x654; }

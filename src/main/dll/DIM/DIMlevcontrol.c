@@ -470,3 +470,7 @@ void dimcannon_release(void) {}
 void dimcannon_initialise(void) {}
 void dimlavasmash_free(void) {}
 void dimlavasmash_hitDetect(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int dimlavasmash_getExtraSize(void) { return 0x3; }
+int dimlavasmash_func08(void) { return 0x0; }

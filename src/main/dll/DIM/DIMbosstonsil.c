@@ -178,3 +178,7 @@ void dimbossgut_hitDetect(void) {}
 void dimbossgut_update(void) {}
 void dimbossgut_release(void) {}
 void dimbossgut_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int dimbossgut_getExtraSize(void) { return 0x0; }
+int dimbossgut_func08(void) { return 0x0; }

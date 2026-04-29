@@ -295,3 +295,11 @@ void gpsh_scene_update(void) {}
 void gpsh_scene_release(void) {}
 void gpsh_scene_initialise(void) {}
 void ecsh_cup_hitDetect(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int gpsh_objcreator_getExtraSize(void) { return 0x8; }
+int gpsh_objcreator_func08(void) { return 0x0; }
+int gpsh_scene_getExtraSize(void) { return 0x0; }
+int gpsh_scene_func08(void) { return 0x0; }
+int ecsh_cup_getExtraSize(void) { return 0x30; }
+int ecsh_cup_func08(void) { return 0x0; }

@@ -1811,3 +1811,7 @@ void FUN_8015e21c(uint param_1,int param_2,int param_3)
   *(undefined4 *)(param_1 + 0xc0) = *(undefined4 *)(param_2 + 0x3e0);
   return;
 }
+
+/* 8b "li r3, N; blr" returners. */
+int fn_8015D628(void) { return 0x458; }
+int fn_8015D630(void) { return 0x49; }

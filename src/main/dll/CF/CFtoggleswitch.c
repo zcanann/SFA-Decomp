@@ -650,3 +650,10 @@ LAB_8018bc44:
 
 /* Trivial 4b 0-arg blr leaves. */
 void trickyguardspot_render(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int magiccavetop_getExtraSize(void) { return 0xc; }
+int trickyguardspot_getExtraSize(void) { return 0x8; }
+int infotext_getExtraSize(void) { return 0x4; }
+int cctestinfot_getExtraSize(void) { return 0x8; }
+int deathgas_getExtraSize(void) { return 0x10; }

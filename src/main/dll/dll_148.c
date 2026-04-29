@@ -554,3 +554,9 @@ void mmp_bridge_render(void) {}
 void mmp_bridge_hitDetect(void) {}
 void mmp_bridge_release(void) {}
 void mmp_bridge_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_8017B8DC(void) { return 0x8; }
+int mmp_bridge_getExtraSize(void) { return 0x0; }
+int mmp_bridge_func08(void) { return 0x0; }
+int doorlock_getExtraSize(void) { return 0x1; }

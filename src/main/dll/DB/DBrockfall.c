@@ -273,3 +273,11 @@ void fn_801DFA00(void) {}
 void fn_801DFA04(void) {}
 void fn_801DFA20(void) {}
 void fn_801DFA24(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801DF84C(void) { return 0x1; }
+int fn_801DF854(void) { return 0x0; }
+int fn_801DF934(void) { return 0x0; }
+int fn_801DF93C(void) { return 0x0; }
+int fn_801DF9BC(void) { return 0x0; }
+int fn_801DF9C4(void) { return 0x0; }

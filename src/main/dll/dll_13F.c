@@ -254,3 +254,6 @@ void collectible_release(void)
 void collectible_initialise(void)
 {
 }
+
+/* 8b "li r3, N; blr" returners. */
+int fn_80173224(void) { return 0x288; }

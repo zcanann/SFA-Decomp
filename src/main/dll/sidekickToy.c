@@ -1615,3 +1615,7 @@ double FUN_8014d2a4(double param_1,double param_2,double param_3,double param_4,
   }
   return dVar4;
 }
+
+/* 8b "li r3, N; blr" returners. */
+int fn_8014D154(void) { return 0x370; }
+int fn_8014D15C(void) { return 0x14b; }

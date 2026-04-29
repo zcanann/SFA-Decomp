@@ -465,3 +465,7 @@ void FUN_80169c04(int param_1)
 
 /* Trivial 4b 0-arg blr leaves. */
 void kaldachompspit_hitDetect(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int kaldachompspit_getExtraSize(void) { return 0x4; }
+int kaldachompspit_func08(void) { return 0x0; }

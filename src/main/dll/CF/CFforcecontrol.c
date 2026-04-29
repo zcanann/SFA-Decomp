@@ -815,3 +815,10 @@ void deathseq_release(void) {}
 void deathseq_initialise(void) {}
 void fn_8018CD74(void) {}
 void fn_8018CDA8(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fuelcell_getExtraSize(void) { return 0x60; }
+int deathseq_getExtraSize(void) { return 0x24; }
+int deathseq_func08(void) { return 0x0; }
+int fn_8018CD64(void) { return 0x0; }
+int fn_8018CD6C(void) { return 0x13; }

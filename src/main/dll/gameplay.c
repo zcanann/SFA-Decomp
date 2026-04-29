@@ -13044,3 +13044,7 @@ void fn_800F416C(void) {}
 void fn_800F4170(void) {}
 void fn_800F4724(void) {}
 void fn_800F4728(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_800EFD34(void) { return 0x0; }
+int fn_800F07DC(void) { return 0x0; }

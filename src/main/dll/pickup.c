@@ -2425,3 +2425,6 @@ void fn_801002B8(void) {}
 void fn_801002BC(void) {}
 void fn_80100548(void) {}
 void fn_8010054C(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_800FEC74(void) { return 0x0; }

@@ -299,3 +299,7 @@ void FUN_801cc230(int param_1)
 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_801CBD84(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801CBD14(void) { return 0x18; }
+int fn_801CBD1C(void) { return 0x0; }

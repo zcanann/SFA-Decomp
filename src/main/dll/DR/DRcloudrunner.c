@@ -460,3 +460,9 @@ void sc_totempole_initialise(void) {}
 void sc_cloudrunnera_hitDetect(void) {}
 void sc_cloudrunnera_release(void) {}
 void sc_cloudrunnera_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int sc_totempole_getExtraSize(void) { return 0x8; }
+int sc_totempole_func08(void) { return 0x0; }
+int sc_cloudrunnera_getExtraSize(void) { return 0x140; }
+int sc_cloudrunnera_func08(void) { return 0xb; }

@@ -4111,3 +4111,29 @@ void fn_80205A90(void) {}
 void fn_80205F38(void) {}
 void fn_80205F3C(void) {}
 void chuka_render(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801FF958(void) { return 0x8; }
+int fn_801FF960(void) { return 0x0; }
+int fn_801FF9C8(void) { return 0xc; }
+int fn_801FF9D0(void) { return 0x0; }
+int fn_8020342C(void) { return 0x460; }
+int fn_80203434(void) { return 0x49; }
+int fn_80203F1C(void) { return 0xc; }
+int fn_80203F24(void) { return 0x0; }
+int fn_802045A8(void) { return 0xc; }
+int fn_802045B0(void) { return 0x0; }
+int fn_80204970(void) { return 0x1c; }
+int fn_80204978(void) { return 0x0; }
+int fn_80204B54(void) { return 0x0; }
+int fn_80204B5C(void) { return 0x10; }
+int fn_80204B64(void) { return 0x0; }
+int doorswitch_getExtraSize(void) { return 0x0; }
+int fn_802050CC(void) { return 0x0; }
+int fn_8020540C(void) { return 0x10; }
+int fn_80205414(void) { return 0x0; }
+int fn_802057CC(void) { return 0x10; }
+int fn_802057D4(void) { return 0x1; }
+int fn_80205F40(void) { return 0x0; }
+int chuka_getExtraSize(void) { return 0xc; }
+int fn_80205F50(void) { return 0x0; }

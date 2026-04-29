@@ -1217,3 +1217,13 @@ void portalspelldoor_free(void) {}
 void portalspelldoor_hitDetect(void) {}
 void portalspelldoor_release(void) {}
 void portalspelldoor_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801859C4(void) { return 0x2c; }
+int fn_801859CC(void) { return 0x0; }
+int fn_8018646C(void) { return 0x0; }
+int fn_80186474(void) { return 0x0; }
+int portalspelldoor_getExtraSize(void) { return 0x10; }
+int portalspelldoor_func08(void) { return 0x0; }
+int fn_80186ADC(void) { return 0x74; }
+int fn_80186AE4(void) { return 0x0; }

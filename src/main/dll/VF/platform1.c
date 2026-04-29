@@ -449,3 +449,9 @@ void sc_totemstrength_release(void) {}
 void sc_totemstrength_initialise(void) {}
 void paymentkiosk_free(void) {}
 void paymentkiosk_hitDetect(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int sc_totemstrength_getExtraSize(void) { return 0x34; }
+int sc_totemstrength_func08(void) { return 0x0; }
+int paymentkiosk_getExtraSize(void) { return 0x3; }
+int paymentkiosk_func08(void) { return 0x1; }

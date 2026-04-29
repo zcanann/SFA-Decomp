@@ -326,3 +326,9 @@ void FUN_801ecdec(undefined4 param_1,int param_2)
 /* Trivial 4b 0-arg blr leaves. */
 void fn_801ECA5C(void) {}
 void fn_801ECA60(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801ECDD0(void) { return 0x2; }
+int fn_801ECDD8(void) { return 0x0; }
+int fn_801ECE30(void) { return 0x59c; }
+int fn_801ECE38(void) { return 0x3; }

@@ -973,3 +973,13 @@ void texframeanimator_hitDetect(void) {}
 void texframeanimator_release(void) {}
 void texframeanimator_initialise(void) {}
 void fogcontrol_hitDetect(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int explodeanimator_getExtraSize(void) { return 0x4; }
+int explodeanimator_func08(void) { return 0x0; }
+int dimbossicesmash_getExtraSize(void) { return 0x2a0; }
+int texframeanimator_getExtraSize(void) { return 0x18; }
+int texframeanimator_func08(void) { return 0x0; }
+int fogcontrol_getExtraSize(void) { return 0x8; }
+int fogcontrol_func08(void) { return 0x0; }
+int lightning_getExtraSize(void) { return 0x28; }

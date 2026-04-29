@@ -1342,3 +1342,15 @@ void mmp_gyservent_render(void) {}
 void mmp_gyservent_hitDetect(void) {}
 void mmp_gyservent_release(void) {}
 void mmp_gyservent_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801A6D5C(void) { return 0x2; }
+int fn_801A6D64(void) { return 0x0; }
+int mmp_asteroid_re_getExtraSize(void) { return 0x1c; }
+int mmp_asteroid_re_func08(void) { return 0x0; }
+int mmp_moonrock_getExtraSize(void) { return 0x30; }
+int mmp_moonrock_func08(void) { return 0x0; }
+int mmp_trenchfx_getExtraSize(void) { return 0x30; }
+int mmp_trenchfx_func08(void) { return 0x0; }
+int mmp_gyservent_getExtraSize(void) { return 0x0; }
+int mmp_gyservent_func08(void) { return 0x0; }

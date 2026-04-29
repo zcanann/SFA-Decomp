@@ -772,3 +772,7 @@ void effectbox_free(void)
 void effectbox_hitDetect(void) {}
 void effectbox_release(void) {}
 void effectbox_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int effectbox_getExtraSize(void) { return 0x0; }
+int effectbox_func08(void) { return 0x0; }

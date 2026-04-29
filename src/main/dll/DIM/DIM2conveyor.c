@@ -381,3 +381,8 @@ void dimbridgecogmai_initialise(void) {}
 void dimdismountpoint_hitDetect(void) {}
 void dimdismountpoint_release(void) {}
 void dimdismountpoint_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int dimbridgecogmai_getExtraSize(void) { return 0x1; }
+int dimbridgecogmai_func08(void) { return 0x0; }
+int dimdismountpoint_getExtraSize(void) { return 0x10; }

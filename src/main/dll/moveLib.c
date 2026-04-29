@@ -1170,3 +1170,7 @@ void FUN_80114b10(int param_1,undefined4 *param_2,undefined2 param_3,undefined2 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_80113F84(void) {}
 void fn_80113F88(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_80113D5C(void) { return 0x0; }
+int fn_80113F8C(void) { return 0x0; }

@@ -1298,3 +1298,14 @@ void exploded_free(void) {}
 void exploded_hitDetect(void) {}
 void exploded_release(void) {}
 void exploded_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int slidingdoor_getExtraSize(void) { return 0x1; }
+int slidingdoor_func08(void) { return 0x0; }
+int attractor_getExtraSize(void) { return 0x0; }
+int attractor_func08(void) { return 0x0; }
+int cfmagicwall_getExtraSize(void) { return 0x0; }
+int cfmagicwall_func08(void) { return 0x0; }
+int cflevelcontrol_getExtraSize(void) { return 0x10; }
+int cflevelcontrol_func08(void) { return 0x0; }
+int exploded_getExtraSize(void) { return 0x6c; }

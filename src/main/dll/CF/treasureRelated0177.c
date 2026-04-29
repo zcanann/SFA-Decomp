@@ -336,3 +336,11 @@ void kt_torch_free(void) {}
 void kt_torch_hitDetect(void) {}
 void kt_torch_release(void) {}
 void kt_torch_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int campfire_getExtraSize(void) { return 0x14; }
+int campfire_func08(void) { return 0x1; }
+int kt_torch_getExtraSize(void) { return 0x0; }
+int kt_torch_func08(void) { return 0x0; }
+int cfccrate_getExtraSize(void) { return 0x4c; }
+int cfccrate_func08(void) { return 0x1; }

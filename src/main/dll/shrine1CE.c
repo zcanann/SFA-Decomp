@@ -404,3 +404,11 @@ void fn_801CC994(void) {}
 void fn_801CCA2C(void) {}
 void fn_801CCF9C(void) {}
 void fn_801CCFA0(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801CC72C(void) { return 0x8; }
+int fn_801CC734(void) { return 0x0; }
+int fn_801CC998(void) { return 0x38; }
+int fn_801CC9A0(void) { return 0x0; }
+int fn_801CCFA4(void) { return 0x10; }
+int fn_801CCFAC(void) { return 0x1; }

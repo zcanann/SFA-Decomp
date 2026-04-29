@@ -219,3 +219,7 @@ void skeetlawall_hitDetect(void) {}
 void skeetlawall_update(void) {}
 void skeetlawall_release(void) {}
 void skeetlawall_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int skeetlawall_getExtraSize(void) { return 0x7; }
+int skeetlawall_func08(void) { return 0x0; }

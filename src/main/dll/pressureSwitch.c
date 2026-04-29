@@ -602,3 +602,11 @@ void swarmbaddie_hitDetect(void) {}
 void swarmbaddie_release(void) {}
 void swarmbaddie_initialise(void) {}
 void wispbaddie_hitDetect(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int hagabon_getExtraSize(void) { return 0x28; }
+int hagabon_func08(void) { return 0xb; }
+int swarmbaddie_getExtraSize(void) { return 0x24; }
+int swarmbaddie_func08(void) { return 0x9; }
+int wispbaddie_getExtraSize(void) { return 0x2c; }
+int wispbaddie_func08(void) { return 0x9; }

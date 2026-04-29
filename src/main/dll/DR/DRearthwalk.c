@@ -678,3 +678,6 @@ void FUN_801da868(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   return;
 }
+
+/* 8b "li r3, N; blr" returners. */
+int sh_beacon_getExtraSize(void) { return 0x18; }

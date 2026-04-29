@@ -1976,3 +1976,6 @@ void FUN_80147d2c(int param_1,int param_2)
   }
   return;
 }
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801461D4(void) { return 0x83c; }

@@ -2355,3 +2355,6 @@ void fn_800CD42C(void) {}
 void fn_800D5524(void) {}
 void fn_800D5528(void) {}
 void fn_800D552C(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_800D6108(void) { return 0x1; }

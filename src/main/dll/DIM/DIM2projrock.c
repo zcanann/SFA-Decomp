@@ -1161,3 +1161,14 @@ void fn_801B9CC4(void) {}
 void fn_801B9CF8(void) {}
 void fn_801B9EC4(void) {}
 void fn_801B9EC8(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801B8B70(void) { return 0x8; }
+int fn_801B8B78(void) { return 0x0; }
+int dim2icefloe_getExtraSize(void) { return 0xbc; }
+int dim2icefloe_func08(void) { return 0x0; }
+int dim2icicle_getExtraSize(void) { return 0xc; }
+int dim2icicle_func08(void) { return 0x0; }
+int dim2lavacontrol_getExtraSize(void) { return 0x10; }
+int fn_801B9CB4(void) { return 0x28; }
+int fn_801B9CBC(void) { return 0x0; }

@@ -722,3 +722,15 @@ void fn_801EF358(void) {}
 void fn_801EF35C(void) {}
 void fn_801EF370(void) {}
 void fn_801EF3A4(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801EEDAC(void) { return 0x0; }
+int fn_801EEDD8(void) { return 0x2; }
+int fn_801EEDFC(void) { return 0x0; }
+int fn_801EEE04(void) { return 0x0; }
+int fn_801EEE2C(void) { return 0x0; }
+int fn_801EEE34(void) { return 0x0; }
+int fn_801EEE3C(void) { return 0x84; }
+int fn_801EEE44(void) { return 0x43; }
+int fn_801EF360(void) { return 0x8; }
+int fn_801EF368(void) { return 0x0; }

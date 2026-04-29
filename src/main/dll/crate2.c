@@ -149,3 +149,9 @@ void dfperchwitch_render(void) {}
 void dfperchwitch_hitDetect(void) {}
 void dfperchwitch_release(void) {}
 void dfperchwitch_initialise(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int dfpstatue1_getExtraSize(void) { return 0xa; }
+int fn_802083B0(void) { return 0x0; }
+int dfperchwitch_getExtraSize(void) { return 0x0; }
+int fn_80208494(void) { return 0x0; }

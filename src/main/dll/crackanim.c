@@ -337,3 +337,7 @@ switchD_8017e864_caseD_7:
 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_8017EC20(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_8017EC10(void) { return 0x8; }
+int fn_8017EC18(void) { return 0x0; }

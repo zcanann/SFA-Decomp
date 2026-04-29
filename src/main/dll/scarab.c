@@ -2939,3 +2939,14 @@ void iceball_release(void) {}
 void iceball_initialise(void) {}
 void fn_80160CB4(void) {}
 void fn_801610A0(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_8015EF58(void) { return 0x41c; }
+int fn_8015EF60(void) { return 0x49; }
+int chukchuk_getExtraSize(void) { return 0x18; }
+int chukchuk_func08(void) { return 0x0; }
+int iceball_getExtraSize(void) { return 0x2; }
+int iceball_func08(void) { return 0x0; }
+int fn_8016052C(void) { return 0x6; }
+int fn_80160CC4(void) { return 0x410; }
+int fn_80160CCC(void) { return 0x14b; }

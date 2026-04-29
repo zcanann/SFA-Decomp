@@ -84,3 +84,9 @@ void nw_animice_update(void) {}
 void nw_animice_release(void) {}
 void nw_animice_initialise(void) {}
 void nw_ice_render(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_801CFB24(void) { return 0x0; }
+int nw_animice_getExtraSize(void) { return 0x0; }
+int nw_animice_func08(void) { return 0x0; }
+int nw_ice_getExtraSize(void) { return 0x4; }

@@ -4500,3 +4500,6 @@ void fn_800C11C8(void) {}
 void fn_800C2910(void) {}
 void fn_800C2914(void) {}
 void fn_800C2918(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int fn_800A3AA0(void) { return 0x0; }

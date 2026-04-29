@@ -1701,3 +1701,17 @@ void infopoint_release(void) {}
 void infopoint_initialise(void) {}
 void decoration11a_free(void) {}
 void decoration11a_update(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int flammablevine_getExtraSize(void) { return 0x14; }
+int flammablevine_func08(void) { return 0x0; }
+int fn_80187BA0(void) { return 0x10; }
+int fn_80187BA8(void) { return 0x0; }
+int fn_80187F30(void) { return 0x0; }
+int fn_80187F38(void) { return 0xc; }
+int fn_80187F40(void) { return 0x0; }
+int coldwatercontrol_getExtraSize(void) { return 0x8; }
+int infopoint_getExtraSize(void) { return 0x20; }
+int infopoint_func08(void) { return 0x0; }
+int decoration11a_getExtraSize(void) { return 0x1c; }
+int landed_arwing_getExtraSize(void) { return 0x1c; }
