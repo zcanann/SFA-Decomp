@@ -1070,3 +1070,8 @@ void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { 
 int magiclight_getExtraSize(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x172) return 0x0; return 0x14; }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern void Obj_FreeObject(int*);
+#pragma scheduling off
+void fn_801ADB80(int *obj) { int *p = (int*)obj[0xc8/4]; if (p != NULL) Obj_FreeObject(p); }
+#pragma scheduling reset

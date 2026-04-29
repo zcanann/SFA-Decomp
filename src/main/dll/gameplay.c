@@ -13066,3 +13066,10 @@ s32 fn_800EA914(u8 *obj) { return *(s8*)(obj + 0x5); }
 
 /* misc 8b leaves */
 u8 fn_800EA900(u8 *p) { return p[8]; }
+
+/* if (lbl) fn(lbl); */
+extern u32 lbl_803DD49C;
+extern void fn_80023800(u32);
+#pragma scheduling off
+void fn_800EA04C(void) { if (lbl_803DD49C != 0) fn_80023800(lbl_803DD49C); }
+#pragma scheduling reset

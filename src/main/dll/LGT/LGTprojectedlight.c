@@ -359,3 +359,8 @@ void fn_801F4C00(void) {}
 /* 8b "li r3, N; blr" returners. */
 int fn_801F4B4C(void) { return 0x8; }
 int fn_801F4B54(void) { return 0x9; }
+
+extern void ObjLink_DetachChild(int *parent, int *child);
+#pragma scheduling off
+void fn_801F4B5C(int *obj) { int *p = (int*)obj[0xc8/4]; if (p != NULL) ObjLink_DetachChild(obj, p); }
+#pragma scheduling reset
