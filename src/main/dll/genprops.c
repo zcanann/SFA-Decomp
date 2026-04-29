@@ -4501,3 +4501,9 @@ void fn_80171C80(int x) { ObjGroup_RemoveObject(x, 0x40); }
 
 /* misc 8b leaves */
 int collectible_setScale(int *obj) { return *(int*)((char*)obj + 0xf4); }
+
+/* misc 16b 4-insn patterns. */
+#pragma scheduling off
+void fn_8016E81C(int *obj) { s32 v = 0x0; *(s32*)((char*)((int**)obj)[0xb8/4] + 0x48) = v; }
+void flamethrowerspe_func0B(int *obj) { s32 v = 0x1; *(s32*)((char*)((int**)obj)[0xb8/4] + 0x10) = v; }
+#pragma scheduling reset

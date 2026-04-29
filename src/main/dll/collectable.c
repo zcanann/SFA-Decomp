@@ -1979,3 +1979,9 @@ void FUN_80147d2c(int param_1,int param_2)
 
 /* 8b "li r3, N; blr" returners. */
 int fn_801461D4(void) { return 0x83c; }
+
+/* misc 16b 4-insn patterns. */
+#pragma scheduling off
+u8 fn_801459C0(int *obj) { return *((u8*)((int**)obj)[0xb8/4][0x0/4] + 0x1); }
+u8 fn_801459D0(int *obj) { return *((u8*)((int**)obj)[0xb8/4][0x0/4] + 0x0); }
+#pragma scheduling reset
