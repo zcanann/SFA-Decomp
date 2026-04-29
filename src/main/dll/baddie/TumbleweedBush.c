@@ -823,8 +823,8 @@ int fn_8013160C(u8* obj)
     return obj[4] & 0x01;
 }
 
-/* EN v1.0 0x80132008  size: 8b   Trivial 0-returner. */
-int fn_80132008(void) { return 0; }
+/* EN v1.0 0x80132008  size: 8b   Trivial 1-returner. */
+int fn_80132008(void) { return 1; }
 
 /* EN v1.0 0x80132010  size: 4b   Empty no-op. */
 void fn_80132010(void) {}
