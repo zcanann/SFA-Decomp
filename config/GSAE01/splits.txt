@@ -1688,14 +1688,12 @@ dolphin/gx/GXInit.c:
 	.sbss       start:0x803DE0A8 end:0x803DE0B8
 	.sdata2     start:0x803E7658 end:0x803E7678
 
-main/unknown/autos/placeholder_803DE0B8.s:
-	.sbss       start:0x803DE0B8 end:0x803DE0D8
-
 main/unknown/autos/placeholder_803AEA38.s:
 	.bss        start:0x803AEA38 end:0x803AECC0
 
 dolphin/gx/GXFifo.c:
 	.text       start:0x80255DBC end:0x80256820
+	.sbss       start:0x803DE0B8 end:0x803DE0D8
 
 dolphin/gx/GXAttr.c:
 	.text       start:0x80256820 end:0x80258228
