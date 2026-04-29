@@ -3646,6 +3646,31 @@ void fn_80137998(void)
 }
 #pragma scheduling reset
 
+extern int  fn_8000B578(u8*, int);
+extern void fn_800393F8(u8*, u8*, int, int, int, int);
+
+/* EN v1.0 0x80138920  size: 192b  Drop-anim trigger guard. Returns 1
+ * (and dispatches the drop anim via fn_800393F8) only when:
+ *   - bit 0x40 of obj->_b8->_58 is set,
+ *   - the target halfword obj->_a0 is OUTSIDE the [41, 47] window,
+ *   - fn_8000B578(obj, 16) returns 0. */
+#pragma scheduling off
+#pragma peephole off
+int fn_80138920(u8* obj, int arg1, int arg2)
+{
+    u8* b = *(u8**)(obj + 0xb8);
+    if ((b[0x58] & 0x40) == 0) return 0;
+    {
+        s16 v = *(s16*)(obj + 0xa0);
+        if (v < 48 && v >= 41) return 0;
+    }
+    if (fn_8000B578(obj, 16) != 0) return 0;
+    fn_800393F8(obj, b + 936, arg1, arg2, -1, 0);
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* EN v1.0 0x80133EA4  size: 156b  Two-step shutdown helper. Releases
  * the buffers at lbl_803DD93C and lbl_803DD940 (the first only if
  * non-null), then walks the 2-slot live-objects table at lbl_803DBBC8
