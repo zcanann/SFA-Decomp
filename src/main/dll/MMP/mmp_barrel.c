@@ -1297,4 +1297,6 @@ int visanimator_func08(void) { return 0x0; }
 u8 groundanimator_modelMtxFn(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x2b); }
 
 /* 16b chained patterns. */
-void alphaanimator_init(int *obj) { *((u8*)((int**)obj)[0xb8/4] + 0x19) = -0x1; }
+#pragma scheduling off
+void alphaanimator_init(int *obj) { s8 v = -1; *((s8*)((int**)obj)[0xb8/4] + 0x19) = v; }
+#pragma scheduling reset

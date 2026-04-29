@@ -1193,4 +1193,6 @@ int fn_801B8798(void) { return 0x8; }
 int fn_801B87A0(void) { return 0x0; }
 
 /* 16b chained patterns. */
-void dim_tricky_init(int *obj) { *((u8*)((int**)obj)[0xb8/4] + 0x0) = 0x0; }
+#pragma scheduling off
+void dim_tricky_init(int *obj) { u8 v = 0x0; *((u8*)((int**)obj)[0xb8/4] + 0x0) = v; }
+#pragma scheduling reset

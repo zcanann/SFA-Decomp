@@ -1616,4 +1616,6 @@ int iceblast_func08(void) { return 0x0; }
 int flameblast_getExtraSize(void) { return 0x14; }
 
 /* 16b chained patterns. */
-void fn_8017804C(int *obj) { *((u8*)((int**)obj)[0xb8/4] + 0x10) = 0x1; }
+#pragma scheduling off
+void fn_8017804C(int *obj) { u8 v = 0x1; *((u8*)((int**)obj)[0xb8/4] + 0x10) = v; }
+#pragma scheduling reset
