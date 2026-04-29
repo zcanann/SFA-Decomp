@@ -1034,6 +1034,16 @@ extern f32 lbl_803DB414;
 extern void  fn_80014B0C(void);
 extern void* fn_80019570(u16);
 
+extern void* lbl_803A9410[6];
+extern void* lbl_8031BF90[6];
+extern s16 lbl_803DD784;
+extern s16 lbl_803DD786;
+extern s16 lbl_803DD78C;
+extern s32  fn_8002BDF4(s32 size, void* type);
+extern void* fn_8002DF90(s32, s32, s32, s32, s32);
+extern void fn_8002AC30(void*, s32, s32, s32, s32, s32);
+extern void fn_80014B18(s32);
+
 typedef struct BabySnowwormBitTableEntry {
     u8  _0[0x16];   /* 0x00 */
     u16 bit_id;     /* 0x16 */
@@ -1328,6 +1338,64 @@ int fn_80129698(s8 a, int b, u8 c, int mode)
         lbl_803DBA90 = a;
     }
     return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* EN v1.0 0x8012C558  size: 340b  Snowworm scene shutdown / setup.
+ * Logic-only — MWCC parallelizes the two .bss address loads (slot
+ * cursor and type cursor) via `addi r0,r3,@lo; mr rN,r0` per address
+ * instead of the clean `lis r3,@ha; addi rN,r3,@lo` pair-per-address
+ * that retail emits. Pragmas don't disable the routing.
+ *
+ * Walks 6 candidate slots (lbl_803A9410[i]) but only acts on the first
+ * 4. For each empty slot, allocates a 0x20-byte block via
+ * fn_8002BDF4(0x20, lbl_8031BF90[i]) and chains it through fn_8002DF90
+ * to install the 0x7447 magic header + zero out the float fields. The
+ * one-shot guard at +0x4c (sentinel > 0x90000000) gets cleared.
+ *
+ * After the slot pass, clears the three halfword counters at
+ * lbl_803DD784/_786/_78C, asks the global tag system to register tag
+ * id 0xf via fn_80014B18, runs fn_8002AC30(obj2, 0, 0, 0, 0, 0) when
+ * the object handle from fn_8002B9EC was non-null, then plays the
+ * scene-down trio: fn_8000A518(0x23, 1) plus two SFX kicks (0x3e5 and
+ * 0xff) on object 0.
+ */
+#pragma scheduling off
+#pragma peephole off
+void fn_8012C558(void)
+{
+    void* obj = fn_8002B9EC();
+    int   i;
+    void**slot = lbl_803A9410;
+    void**type = lbl_8031BF90;
+
+    for (i = 0; i < 6; i++) {
+        if (i < 4 && *slot == NULL) {
+            *slot = fn_8002DF90(fn_8002BDF4(0x20, *type), 4, -1, -1, 0);
+            ((f32*)*slot)[3] = 0.0f;
+            ((f32*)*slot)[4] = -5.0f;
+            ((f32*)*slot)[5] = -5.0f;
+            *(s16*)*slot    = 0x7447;
+            ((f32*)*slot)[2] = 0.0f;
+            {
+                void* p = *slot;
+                if (((u32*)p)[0x13] > 0x90000000U) ((u32*)p)[0x13] = 0;
+            }
+        }
+        slot++;
+        type++;
+    }
+    lbl_803DD786 = 0;
+    lbl_803DD784 = 0;
+    lbl_803DD78C = 0;
+    fn_80014B18(0xf);
+    if (obj != NULL) {
+        fn_8002AC30(fn_8002B9EC(), 0, 0, 0, 0, 0);
+    }
+    fn_8000A518(0x23, 1);
+    Sfx_PlayFromObject(0, 0x3e5);
+    Sfx_PlayFromObject(0, 0xff);
 }
 #pragma peephole reset
 #pragma scheduling reset
