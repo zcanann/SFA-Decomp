@@ -2697,3 +2697,10 @@ void FUN_8005e1d8(undefined4 param_1,undefined4 param_2,int param_3)
 void fn_8005C7E8(void) {}
 void fn_8005D148(void) {}
 void fn_8005D14C(void) {}
+
+/* return (lbl & 1<<bit). */
+extern u32 lbl_803DCDE8;
+u32 fn_8005CD48(void) { return lbl_803DCDE8 & 0x10000; }
+u32 fn_8005CDB0(void) { return lbl_803DCDE8 & 0x8; }
+u32 fn_8005CDBC(void) { return lbl_803DCDE8 & 0x80; }
+u32 fn_8005CDC8(void) { return lbl_803DCDE8 & 0x10; }
