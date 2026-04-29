@@ -1,12 +1,13 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_802836F4.h"
 
-extern uint synthGetVoiceSlotChannelScale();
+extern u8 *lbl_803DE344;
+extern u8 lbl_803DE370;
 
 /*
  * --INFO--
  *
- * Function: FUN_802836e8
+ * Function: fn_802836E8
  * EN v1.0 Address: 0x802836E8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802836F4
@@ -16,6 +17,16 @@ extern uint synthGetVoiceSlotChannelScale();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802836e8(uint *param_1,int param_2)
+#pragma scheduling off
+void fn_802836E8(int slot)
 {
+  u8 *entry;
+  u32 offset;
+
+  slot *= 0xf4;
+  entry = lbl_803DE344 + slot;
+  offset = lbl_803DE370 << 2;
+  entry += offset;
+  *(u32 *)(entry + 0x24) |= 0x40;
 }
+#pragma scheduling reset

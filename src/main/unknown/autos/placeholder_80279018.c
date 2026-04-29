@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_80271a90();
 
-extern undefined4* DAT_803def54;
+extern u32 *lbl_803DE2F4;
 extern undefined4 DAT_803def58;
 extern undefined4 DAT_803def60;
 extern undefined4 DAT_803def64;
@@ -11,7 +11,7 @@ extern undefined4 DAT_803def64;
 /*
  * --INFO--
  *
- * Function: FUN_80279004
+ * Function: fn_80279004
  * EN v1.0 Address: 0x80279004
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80279018
@@ -21,8 +21,23 @@ extern undefined4 DAT_803def64;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80279004(int *param_1,int param_2)
+u32 *fn_80279004(u32 key)
 {
+  u32 *node;
+  u32 value;
+
+  node = lbl_803DE2F4;
+  while (node != NULL) {
+    value = node[2];
+    if (value == key) {
+      return node;
+    }
+    if (value > key) {
+      break;
+    }
+    node = (u32 *)node[0];
+  }
+  return NULL;
 }
 
 /*
