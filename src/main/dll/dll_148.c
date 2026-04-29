@@ -569,7 +569,6 @@ void fn_8017B8E4(void) { fn_8003B8F4(lbl_803E3780); }
 #pragma scheduling reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-extern int ObjGroup_RemoveObject(int x, int n);
 #pragma scheduling off
 int doorlock_free(int x) { return ObjGroup_RemoveObject(x, 0xf); }
 #pragma scheduling reset

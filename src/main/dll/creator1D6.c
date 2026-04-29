@@ -92,7 +92,6 @@ int nw_animice_func08(void) { return 0x0; }
 int nw_ice_getExtraSize(void) { return 0x4; }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-extern int ObjGroup_RemoveObject(int x, int n);
 #pragma scheduling off
 int nw_animice_free(int x) { return ObjGroup_RemoveObject(x, 0x3d); }
 int nw_ice_free(int x) { return ObjGroup_RemoveObject(x, 0x3c); }

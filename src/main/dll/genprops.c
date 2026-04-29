@@ -4495,6 +4495,6 @@ void fn_801719F8(void) { fn_8003B8F4(lbl_803E3420); }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-int fn_8016B8A8(int x) { return ObjGroup_RemoveObject(x, 0x7); }
-int fn_80171C80(int x) { return ObjGroup_RemoveObject(x, 0x40); }
+void fn_8016B8A8(int x) { ObjGroup_RemoveObject(x, 0x7); }
+void fn_80171C80(int x) { ObjGroup_RemoveObject(x, 0x40); }
 #pragma scheduling reset

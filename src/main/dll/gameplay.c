@@ -13055,5 +13055,5 @@ u8 fn_800E87C4(void) { return lbl_803DD488; }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-int fn_800EA920(int x) { return ObjGroup_RemoveObject(x, 0x10); }
+void fn_800EA920(int x) { ObjGroup_RemoveObject(x, 0x10); }
 #pragma scheduling reset

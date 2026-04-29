@@ -4154,6 +4154,6 @@ void fn_80205420(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-int fn_80203F2C(int x) { return ObjGroup_RemoveObject(x, 0x1e); }
-int fn_802045B8(int x) { return ObjGroup_RemoveObject(x, 0x9); }
+void fn_80203F2C(int x) { ObjGroup_RemoveObject(x, 0x1e); }
+void fn_802045B8(int x) { ObjGroup_RemoveObject(x, 0x9); }
 #pragma scheduling reset

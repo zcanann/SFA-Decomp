@@ -659,7 +659,6 @@ int cctestinfot_getExtraSize(void) { return 0x8; }
 int deathgas_getExtraSize(void) { return 0x10; }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-extern int ObjGroup_RemoveObject(int x, int n);
 #pragma scheduling off
 int trickyguardspot_free(int x) { return ObjGroup_RemoveObject(x, 0x1e); }
 #pragma scheduling reset

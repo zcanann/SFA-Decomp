@@ -1230,5 +1230,5 @@ int fn_801FE9E0(void) { return 0x8; }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-int fn_801FE9E8(int x) { return ObjGroup_RemoveObject(x, 0x24); }
+void fn_801FE9E8(int x) { ObjGroup_RemoveObject(x, 0x24); }
 #pragma scheduling reset
