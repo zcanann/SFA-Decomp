@@ -93,7 +93,9 @@ int pressureswitchfb_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void pressureswitchfb_free(int obj)
 {
   ObjGroup_RemoveObject(obj,0x53);
 }
+#pragma scheduling reset
