@@ -1137,3 +1137,12 @@ u8 fn_801E1DF4(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x79); }
 
 /* 16b chained patterns. */
 s32 fn_801E1E64(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x2b); }
+
+/* render-with-fn_8003B8F4 pattern. */
+extern f32 lbl_803E5810;
+extern void fn_8003B8F4(f32);
+extern f32 lbl_803E5868;
+#pragma peephole off
+void fn_801E2580(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5810); }
+void fn_801E32D0(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5868); }
+#pragma peephole reset

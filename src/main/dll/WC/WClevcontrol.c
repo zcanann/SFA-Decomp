@@ -734,3 +734,10 @@ int fn_801EEE3C(void) { return 0x84; }
 int fn_801EEE44(void) { return 0x43; }
 int fn_801EF360(void) { return 0x8; }
 int fn_801EF368(void) { return 0x0; }
+
+/* render-with-fn_8003B8F4 pattern. */
+extern f32 lbl_803E5CC8;
+extern void fn_8003B8F4(f32);
+#pragma peephole off
+void fn_801EF374(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5CC8); }
+#pragma peephole reset

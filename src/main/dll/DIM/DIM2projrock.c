@@ -1172,3 +1172,18 @@ int dim2icicle_func08(void) { return 0x0; }
 int dim2lavacontrol_getExtraSize(void) { return 0x10; }
 int fn_801B9CB4(void) { return 0x28; }
 int fn_801B9CBC(void) { return 0x0; }
+
+/* render-with-fn_8003B8F4 pattern. */
+extern f32 lbl_803E4B08;
+extern void fn_8003B8F4(f32);
+extern f32 lbl_803E4B30;
+extern f32 lbl_803E4B68;
+extern f32 lbl_803E4B90;
+extern f32 lbl_803E4B98;
+#pragma peephole off
+void fn_801B8B84(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4B08); }
+void dim2icefloe_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4B30); }
+void dim2icicle_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4B68); }
+void dim2lavacontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4B90); }
+void fn_801B9CC8(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4B98); }
+#pragma peephole reset

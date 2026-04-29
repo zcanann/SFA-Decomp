@@ -1933,3 +1933,16 @@ int dimlogfire_func08(void) { return 0x1; }
 /* Pattern wrappers. */
 extern u32 lbl_803DDB48;
 void imspaceringgen_free(void) { lbl_803DDB48 = 0x0; }
+
+/* render-with-fn_8003B8F4 pattern. */
+extern f32 lbl_803E4780;
+extern void fn_8003B8F4(f32);
+extern f32 lbl_803E4788;
+extern f32 lbl_803E47B8;
+extern f32 lbl_803E4810;
+#pragma peephole off
+void imanimspacecraft_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4780); }
+void imspacethruster_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4788); }
+void imspacering_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E47B8); }
+void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4810); }
+#pragma peephole reset

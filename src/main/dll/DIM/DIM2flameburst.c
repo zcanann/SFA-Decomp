@@ -1642,3 +1642,16 @@ int fn_801B5A30(void) { return 0x0; }
 int dimmagicbridge_getExtraSize(void) { return 0x68; }
 int dimmagicbridge_func08(void) { return 0x0; }
 int dim_levelcontrol_getExtraSize(void) { return 0x10; }
+
+/* render-with-fn_8003B8F4 pattern. */
+extern f32 lbl_803E49D0;
+extern void fn_8003B8F4(f32);
+extern f32 lbl_803E49E8;
+extern f32 lbl_803E4A18;
+extern f32 lbl_803E4A20;
+#pragma peephole off
+void dimwooddoor2_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E49D0); }
+void fn_801B5A6C(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E49E8); }
+void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4A18); }
+void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4A20); }
+#pragma peephole reset

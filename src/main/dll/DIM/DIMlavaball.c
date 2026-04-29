@@ -1354,3 +1354,12 @@ int mmp_trenchfx_getExtraSize(void) { return 0x30; }
 int mmp_trenchfx_func08(void) { return 0x0; }
 int mmp_gyservent_getExtraSize(void) { return 0x0; }
 int mmp_gyservent_func08(void) { return 0x0; }
+
+/* render-with-fn_8003B8F4 pattern. */
+extern f32 lbl_803E44D0;
+extern void fn_8003B8F4(f32);
+extern f32 lbl_803E44F8;
+#pragma peephole off
+void fn_801A6D70(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E44D0); }
+void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E44F8); }
+#pragma peephole reset

@@ -3182,3 +3182,16 @@ int cfperch_func08(void) { return 0x0; }
 int cfprisoncage_getExtraSize(void) { return 0x0; }
 int spiritdoorspirit_getExtraSize(void) { return 0x1; }
 int spiritdoorspirit_func08(void) { return 0x0; }
+
+/* render-with-fn_8003B8F4 pattern. */
+extern f32 lbl_803E4190;
+extern void fn_8003B8F4(f32);
+extern f32 lbl_803E41D0;
+extern f32 lbl_803E4210;
+extern f32 lbl_803E42B0;
+#pragma peephole off
+void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4190); }
+void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E41D0); }
+void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4210); }
+void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E42B0); }
+#pragma peephole reset

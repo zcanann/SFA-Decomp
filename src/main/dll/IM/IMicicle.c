@@ -1312,3 +1312,18 @@ int exploded_getExtraSize(void) { return 0x6c; }
 
 /* Pattern wrappers. */
 u8 exploded_setScale(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x69); }
+
+/* render-with-fn_8003B8F4 pattern. */
+extern f32 lbl_803E43BC;
+extern void fn_8003B8F4(f32);
+extern f32 lbl_803E43D0;
+extern f32 lbl_803E43D8;
+extern f32 lbl_803E43E8;
+extern f32 lbl_803E43F4;
+#pragma peephole off
+void slidingdoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E43BC); }
+void attractor_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E43D0); }
+void cfmagicwall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E43D8); }
+void cflevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E43E8); }
+void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E43F4); }
+#pragma peephole reset

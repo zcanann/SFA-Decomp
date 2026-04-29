@@ -2954,3 +2954,12 @@ int fn_80160CCC(void) { return 0x14b; }
 /* Pattern wrappers. */
 s16 fn_8015EF4C(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
 s16 fn_80160CB8(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
+
+/* render-with-fn_8003B8F4 pattern. */
+extern f32 lbl_803E2E30;
+extern void fn_8003B8F4(f32);
+extern f32 lbl_803E2E50;
+#pragma peephole off
+void chukchuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E2E30); }
+void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E2E50); }
+#pragma peephole reset

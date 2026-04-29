@@ -1196,3 +1196,18 @@ int fn_801B87A0(void) { return 0x0; }
 #pragma scheduling off
 void dim_tricky_init(int *obj) { u8 v = 0x0; *((u8*)((int**)obj)[0xb8/4] + 0x0) = v; }
 #pragma scheduling reset
+
+/* render-with-fn_8003B8F4 pattern. */
+extern f32 lbl_803E4A30;
+extern void fn_8003B8F4(f32);
+extern f32 lbl_803E4A58;
+extern f32 lbl_803E4A78;
+extern f32 lbl_803E4AA0;
+extern f32 lbl_803E4AD8;
+#pragma peephole off
+void fn_801B6B58(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4A30); }
+void dim2conveyor_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4A58); }
+void fn_801B762C(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4A78); }
+void dim2snowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4AA0); }
+void fn_801B87AC(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4AD8); }
+#pragma peephole reset

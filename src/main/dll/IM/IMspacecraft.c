@@ -848,3 +848,12 @@ int fn_801A6704(void) { return 0x0; }
 /* Pattern wrappers. */
 extern s16 lbl_803DDB20;
 void fn_801A662C(void) { lbl_803DDB20 = 0x0; }
+
+/* render-with-fn_8003B8F4 pattern. */
+extern f32 lbl_803E4440;
+extern void fn_8003B8F4(f32);
+extern f32 lbl_803E44C4;
+#pragma peephole off
+void fn_801A5828(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4440); }
+void fn_801A6744(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E44C4); }
+#pragma peephole reset

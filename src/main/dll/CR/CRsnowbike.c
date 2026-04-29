@@ -766,3 +766,10 @@ int sc_musictree_func08(void) { return 0x0; }
 
 /* Pattern wrappers. */
 u8 sc_levelcontrol_func11(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x1d); }
+
+/* render-with-fn_8003B8F4 pattern. */
+extern f32 lbl_803E5554;
+extern void fn_8003B8F4(f32);
+#pragma peephole off
+void sc_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5554); }
+#pragma peephole reset

@@ -1694,3 +1694,18 @@ int fn_801E66E4(void) { return 0x0; }
 /* 16b chained patterns. */
 s32 shop_getStateField1(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x1); }
 s32 shop_setScale(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x0); }
+
+/* render-with-fn_8003B8F4 pattern. */
+extern f32 lbl_803E58E8;
+extern void fn_8003B8F4(f32);
+extern f32 lbl_803E5920;
+extern f32 lbl_803E5978;
+extern f32 lbl_803E59A8;
+extern f32 lbl_803E59C8;
+#pragma peephole off
+void fn_801E4610(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E58E8); }
+void fn_801E5098(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5920); }
+void fn_801E59FC(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5978); }
+void fn_801E5DD8(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E59A8); }
+void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E59C8); }
+#pragma peephole reset

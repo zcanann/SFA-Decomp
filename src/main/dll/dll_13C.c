@@ -1083,3 +1083,12 @@ int pollenfragment_getExtraSize(void) { return 0x28; }
 int pollenfragment_func08(void) { return 0x0; }
 int mikabomb_getExtraSize(void) { return 0x10; }
 int mikabomb_func08(void) { return 0x0; }
+
+/* render-with-fn_8003B8F4 pattern. */
+extern f32 lbl_803E3138;
+extern void fn_8003B8F4(f32);
+extern f32 lbl_803E31C0;
+#pragma peephole off
+void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E3138); }
+void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E31C0); }
+#pragma peephole reset

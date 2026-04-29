@@ -279,3 +279,10 @@ void fn_801CBA94(void) {}
 /* 8b "li r3, N; blr" returners. */
 int fn_801CB7A8(void) { return 0x4; }
 int fn_801CB7B0(void) { return 0x0; }
+
+/* render-with-fn_8003B8F4 pattern. */
+extern f32 lbl_803E5180;
+extern void fn_8003B8F4(f32);
+#pragma peephole off
+void fn_801CB7BC(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5180); }
+#pragma peephole reset

@@ -1495,3 +1495,14 @@ int fn_801F30DC(void) { return 0x10; }
 int fn_801F30E4(void) { return 0x1; }
 int fn_801F33B4(void) { return 0x1c; }
 int fn_801F33BC(void) { return 0x1; }
+
+/* render-with-fn_8003B8F4 pattern. */
+extern f32 lbl_803E5D58;
+extern void fn_8003B8F4(f32);
+extern f32 lbl_803E5D90;
+extern f32 lbl_803E5DC8;
+#pragma peephole off
+void fn_801F1638(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5D58); }
+void fn_801F1F30(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5D90); }
+void fn_801F2EAC(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5DC8); }
+#pragma peephole reset

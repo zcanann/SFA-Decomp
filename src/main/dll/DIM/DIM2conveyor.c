@@ -386,3 +386,10 @@ void dimdismountpoint_initialise(void) {}
 int dimbridgecogmai_getExtraSize(void) { return 0x1; }
 int dimbridgecogmai_func08(void) { return 0x0; }
 int dimdismountpoint_getExtraSize(void) { return 0x10; }
+
+/* render-with-fn_8003B8F4 pattern. */
+extern f32 lbl_803E4900;
+extern void fn_8003B8F4(f32);
+#pragma peephole off
+void dimbridgecogmai_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4900); }
+#pragma peephole reset

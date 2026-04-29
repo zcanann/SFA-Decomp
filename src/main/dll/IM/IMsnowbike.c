@@ -252,3 +252,10 @@ void warpstonelift_initialise(void) {}
 int warpstonelift_getExtraSize(void) { return 0x1; }
 int warpstonelift_func08(void) { return 0x0; }
 int sh_staff_getExtraSize(void) { return 0x74; }
+
+/* render-with-fn_8003B8F4 pattern. */
+extern f32 lbl_803E54C8;
+extern void fn_8003B8F4(f32);
+#pragma peephole off
+void warpstonelift_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E54C8); }
+#pragma peephole reset

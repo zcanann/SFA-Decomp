@@ -1227,3 +1227,10 @@ int portalspelldoor_getExtraSize(void) { return 0x10; }
 int portalspelldoor_func08(void) { return 0x0; }
 int fn_80186ADC(void) { return 0x74; }
 int fn_80186AE4(void) { return 0x0; }
+
+/* render-with-fn_8003B8F4 pattern. */
+extern f32 lbl_803E3A88;
+extern void fn_8003B8F4(f32);
+#pragma peephole off
+void portalspelldoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E3A88); }
+#pragma peephole reset
