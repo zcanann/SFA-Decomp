@@ -10,7 +10,7 @@ int kaldachompme_getExtraSize(void);
 int kaldachompme_func08(void);
 void kaldachompme_free(void);
 void kaldachompme_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-                         undefined4 param_5,char renderFlag);
+                         undefined4 param_5,s8 renderFlag);
 void kaldachompme_hitDetect(void);
 void kaldachompme_update(int obj);
 void kaldachompme_init(int obj,int params);

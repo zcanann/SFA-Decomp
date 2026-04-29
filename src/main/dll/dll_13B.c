@@ -128,13 +128,16 @@ void kaldachompme_free(void)
 {
 }
 
+#pragma peephole off
 void kaldachompme_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-                         undefined4 param_5,char renderFlag)
+                         undefined4 param_5,s8 renderFlag)
 {
-  if (renderFlag != '\0') {
-    fn_8003B8F4((double)lbl_803E30D0);
+  s32 v = renderFlag;
+  if (v != 0) {
+    fn_8003B8F4(lbl_803E30D0);
   }
 }
+#pragma peephole reset
 
 void kaldachompme_hitDetect(void)
 {

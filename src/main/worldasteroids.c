@@ -49,14 +49,16 @@ void worldasteroids_free(void)
   return;
 }
 
+#pragma peephole off
 void worldasteroids_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,
-                           undefined4 param_4,undefined4 param_5,char visible)
+                           undefined4 param_4,undefined4 param_5,s8 visible)
 {
-  if (visible != 0) {
-    fn_8003B8F4((double)lbl_803E65D0);
+  s32 v = visible;
+  if (v != 0) {
+    fn_8003B8F4(lbl_803E65D0);
   }
-  return;
 }
+#pragma peephole reset
 
 void worldasteroids_hitDetect(void)
 {
