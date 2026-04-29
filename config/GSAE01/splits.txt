@@ -2401,6 +2401,9 @@ dolphin/MSL_C/PPCEABI/bare/H/ansi_fp.c:
 	.rodata     start:0x802C2A18 end:0x802C2AF8
 	.data       start:0x803324C0 end:0x803325E4
 
+dolphin/MSL_C/PPCEABI/bare/H/ctype.c:
+	.data       start:0x803325E8 end:0x803327E8
+
 dolphin/MSL_C/PPCEABI/bare/H/buffer_io.c:
 	.text       start:0x8028E7FC end:0x8028E8F4
 
