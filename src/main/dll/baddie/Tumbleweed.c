@@ -3610,6 +3610,35 @@ extern f32   lbl_803DD9B4;
 extern f32   lbl_803DD9B0;
 extern void  PSMTXTrans(void*, f32, f32, f32);
 
+extern void* lbl_803DBBC8[2];
+extern void  Obj_FreeObject(void*);
+extern void* lbl_803DD93C;
+extern void* lbl_803DD940;
+
+/* EN v1.0 0x80133EA4  size: 156b  Two-step shutdown helper. Releases
+ * the buffers at lbl_803DD93C and lbl_803DD940 (the first only if
+ * non-null), then walks the 2-slot live-objects table at lbl_803DBBC8
+ * tearing down each non-null entry via Obj_FreeObject. Both buffer
+ * pointers are zeroed at the end. */
+void fn_80133EA4(void)
+{
+    int i;
+    void** slots;
+    if (lbl_803DD93C != NULL) fn_80054308(lbl_803DD93C);
+    fn_80054308(lbl_803DD940);
+    slots = lbl_803DBBC8;
+    i = 0;
+    while (i < 2) {
+        if (slots[i] != NULL) {
+            Obj_FreeObject(slots[i]);
+            slots[i] = NULL;
+        }
+        i++;
+    }
+    lbl_803DD93C = NULL;
+    lbl_803DD940 = NULL;
+}
+
 /* EN v1.0 0x80135820  size: 136b  Set up the title-screen translation
  * matrix at lbl_803A9FE4 and derive the three normalized cursor
  * positions from the supplied (a, b) coordinates. */
@@ -3627,7 +3656,7 @@ extern void* lbl_803DD960;
 extern void* lbl_803DD974;
 extern void* lbl_803DD96C;
 extern u8    lbl_803DD970;
-extern s32   lbl_803DD940;
+/* lbl_803DD940 declared later as void* */
 extern u8    lbl_803DD990;
 extern u8    lbl_803DD991;
 extern u8    lbl_803DBC08;
@@ -3638,7 +3667,7 @@ extern f32   lbl_803E2408;
  * fn_80054D54 into lbl_803DD940; reset frame counter at lbl_803DD938. */
 void fn_80133F40(void)
 {
-    lbl_803DD940 = (s32)fn_80054D54(0xBE5);
+    lbl_803DD940 = fn_80054D54(0xBE5);
     lbl_803DD938 = 340;
 }
 
