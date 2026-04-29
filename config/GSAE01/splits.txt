@@ -2353,6 +2353,7 @@ dolphin/TRK_MINNOW_DOLPHIN/mem_TRK.c:
 dolphin/TRK_MINNOW_DOLPHIN/targimpl.c:
 	.text       start:0x8028B0D8 end:0x8028C970
 	.rodata     start:0x802C2978 end:0x802C2A00
+	.data       start:0x803322F0 end:0x80332320
 
 dolphin/TRK_MINNOW_DOLPHIN/targsupp.s: comment:0
 	.text       start:0x8028C970 end:0x8028C990
