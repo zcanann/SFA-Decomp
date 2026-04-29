@@ -1125,3 +1125,9 @@ int fn_801E2B30(void) { return 0x1; }
 int fn_801E32BC(void) { return 0x0; }
 int fn_801E32C4(void) { return 0x0; }
 int fn_801E341C(void) { return 0x10; }
+
+/* sda21 accessors. */
+extern u32 lbl_803DDC20;
+extern u32 lbl_803DDC40;
+u32 fn_801E1DA8(void) { return lbl_803DDC20; }
+u32 fn_801E2570(void) { return lbl_803DDC40; }

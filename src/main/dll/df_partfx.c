@@ -1643,3 +1643,7 @@ int fn_800D7FDC(void) { return 0x0; }
 int fn_800D7FE8(void) { return 0x0; }
 int fn_800D7FF0(void) { return 0x0; }
 int fn_800D8004(void) { return 0x0; }
+
+/* sda21 accessors. */
+extern u8 lbl_803DD42D;
+u8 fn_800D7A7C(void) { return lbl_803DD42D; }

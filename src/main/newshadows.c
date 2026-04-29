@@ -2722,3 +2722,15 @@ void FUN_8006dca8(undefined8 param_1,double param_2,undefined4 param_3,undefined
   FUN_8028688c();
   return;
 }
+
+/* sda21 accessors. */
+extern u32 lbl_803DCFD4;
+extern u32 lbl_803DCF7C;
+extern u32 lbl_803DCF94;
+extern u32 lbl_803DCF98;
+extern u32 lbl_803DCF90;
+u32 fn_8006C5C4(void) { return lbl_803DCFD4; }
+u32 fn_8006C73C(void) { return lbl_803DCF7C; }
+u32 fn_8006C744(void) { return lbl_803DCF94; }
+u32 fn_8006C74C(void) { return lbl_803DCF98; }
+u32 fn_8006C754(void) { return lbl_803DCF90; }

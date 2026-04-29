@@ -2949,3 +2949,10 @@ undefined4 FUN_8003c1f8(int param_1,int *param_2,int param_3)
 void FUN_8003cb48(undefined4 param_1,undefined4 param_2,int param_3)
 {
 }
+
+/* sda21 accessors. */
+extern u32 lbl_803DCC10;
+extern u8 lbl_803DCC3C;
+void fn_8003B950(u32 x) { lbl_803DCC10 = x; }
+u8 fn_8003BB74(void) { return lbl_803DCC3C; }
+void fn_8003BB7C(u8 x) { lbl_803DCC3C = x; }

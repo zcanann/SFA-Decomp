@@ -1208,3 +1208,18 @@ void FUN_8007fb80(undefined4 param_1,undefined4 param_2,short param_3,undefined4
                  undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)
 {
 }
+
+/* sda21 accessors. */
+extern u8 lbl_803DD08C;
+extern u32 lbl_803DD0FC;
+extern s16 lbl_803DD06E;
+extern s16 lbl_803DD06C;
+extern u8 lbl_803DD080;
+u8 fn_80080204(void) { return lbl_803DD08C; }
+u32 fn_80080234(void) { return lbl_803DD0FC; }
+void fn_80080B9C(s16 x) { lbl_803DD06E = x; }
+s16 fn_80080BA4(void) { return lbl_803DD06E; }
+void fn_80080BAC(s16 x) { lbl_803DD06C = x; }
+s16 fn_80080BB4(void) { return lbl_803DD06C; }
+void fn_80080BBC(u8 x) { lbl_803DD080 = x; }
+u8 fn_80080BC4(void) { return lbl_803DD080; }

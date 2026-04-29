@@ -13048,3 +13048,7 @@ void fn_800F4728(void) {}
 /* 8b "li r3, N; blr" returners. */
 int fn_800EFD34(void) { return 0x0; }
 int fn_800F07DC(void) { return 0x0; }
+
+/* sda21 accessors. */
+extern u8 lbl_803DD488;
+u8 fn_800E87C4(void) { return lbl_803DD488; }

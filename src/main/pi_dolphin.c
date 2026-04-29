@@ -5293,3 +5293,7 @@ void FUN_8004c174(int param_1,char param_2)
 void FUN_8004c178(int param_1,float *param_2)
 {
 }
+
+/* sda21 accessors. */
+extern u8 lbl_803DCD28;
+u8 fn_8004C248(void) { return lbl_803DCD28; }

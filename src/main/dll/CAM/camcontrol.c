@@ -725,3 +725,9 @@ void camcontrol_updateState(undefined8 param_1,double param_2,double param_3,und
   }
   return;
 }
+
+/* sda21 accessors. */
+extern u32 lbl_803DD518;
+extern u32 lbl_803DD524;
+u32 fn_801030B0(void) { return lbl_803DD518; }
+u32 fn_801030B8(void) { return lbl_803DD524; }

@@ -2332,3 +2332,17 @@ LAB_80055824:
   }
   return uVar10;
 }
+
+/* sda21 accessors. */
+extern u32 lbl_803DCE38;
+extern u8 lbl_803DCDFA;
+extern u8 lbl_803DCDF9;
+extern u8 lbl_803DCDF8;
+extern u8 lbl_803DCDF7;
+u32 fn_80054F64(void) { return lbl_803DCE38; }
+void fn_80054F6C(u32 x) { lbl_803DCE38 = x; }
+u8 fn_8005509C(void) { return lbl_803DCDFA; }
+void fn_800550A4(u8 x) { lbl_803DCDFA = x; }
+void fn_800550AC(u8 x) { lbl_803DCDF9 = x; }
+void fn_800550B4(u8 x) { lbl_803DCDF8 = x; }
+u8 fn_800550BC(void) { return lbl_803DCDF7; }

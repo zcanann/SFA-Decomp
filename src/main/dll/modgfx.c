@@ -4503,3 +4503,9 @@ void fn_800C2918(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int fn_800A3AA0(void) { return 0x0; }
+
+/* sda21 accessors. */
+extern s16 lbl_803DD288;
+extern s16 lbl_803DD28A;
+s16 fn_8009FFF0(void) { return lbl_803DD288; }
+void fn_800A01B0(s16 x) { lbl_803DD28A = x; }
