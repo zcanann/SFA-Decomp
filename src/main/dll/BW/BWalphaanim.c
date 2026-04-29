@@ -282,3 +282,35 @@ void FUN_801ed428(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   return;
 }
+
+extern void fn_80054308(u32);
+extern u32 fn_80054D54(int);
+extern u32 lbl_803DDC60;
+
+#pragma scheduling off
+void fn_801EE020(void) {
+    if (lbl_803DDC60 != 0) {
+        fn_80054308(lbl_803DDC60);
+        lbl_803DDC60 = 0;
+    }
+}
+void fn_801EE054(void) {
+    if (lbl_803DDC60 == 0) {
+        lbl_803DDC60 = fn_80054D54(0x186);
+    }
+}
+#pragma scheduling reset
+
+#pragma peephole off
+void fn_801EE088(int *obj) {
+    int *p = (int*)obj[0xb8/4];
+    *(f32*)((char*)p + 0x4c) = *(f32*)((char*)obj + 0xc);
+    *(f32*)((char*)p + 0x50) = *(f32*)((char*)obj + 0x10);
+    *(f32*)((char*)p + 0x54) = *(f32*)((char*)obj + 0x14);
+    {
+        s32 v = *(s16*)obj - 0x4000;
+        *(s16*)((char*)p + 0x2c) = (s16)v;
+    }
+    *(s16*)((char*)p + 0x2e) = *(s16*)((char*)obj + 4);
+}
+#pragma peephole reset
