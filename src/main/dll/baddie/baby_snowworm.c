@@ -970,3 +970,89 @@ s32 fn_8012EB70(void)
 {
     return lbl_803DD7D4;
 }
+
+/* Wider sbss/sdata extents touched by the larger v1.0 leaves below. */
+extern u8    lbl_803DB410;
+extern s32   lbl_803DBA5C;
+extern f32   lbl_803DBAA4;
+extern void**lbl_803DCA50;     /* (*vtable)[] dispatcher singleton */
+extern u8    lbl_803DD75B;
+extern u8    lbl_803DD77F;
+extern s32   lbl_803DD7E0;
+
+extern void fn_8000F458(s32);
+extern void fn_8000F564(void);
+extern void fn_8000F780(void);
+extern void fn_8000FAD8(void);
+extern void fn_8000FB00(void);
+extern void fn_8000FC3C(f32);
+extern void fn_80020628(s32);
+extern void fn_800206E8(s32);
+
+/* EN v1.0 0x8012DD7C  size: 40b  Cancel/clear helper. Stores the new u8
+ * state byte and, when the caller resets it to 0, also clears the active
+ * tween halfwords and drops the active-id sentinel to -1. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8012DD7C(u8 param)
+{
+    lbl_803DD77E = param;
+    if (param != 0) return;
+    lbl_803DD774 = 0;
+    lbl_803DD776 = 0;
+    lbl_803DBA5C = -1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* EN v1.0 0x8012DD14  size: 104b  Tween advance: when the active counter
+ * lbl_803DD774 is non-zero, add the per-frame step lbl_803DB410. The
+ * direction toggle in lbl_803DD77F gates the "approaching peak" half of
+ * the trajectory. Once the counter overshoots 0xFF it resets to 0 and
+ * the active-id sentinel lbl_803DBA5C is dropped to -1. */
+#pragma scheduling off
+void fn_8012DD14(void)
+{
+    if (lbl_803DD774 == 0) return;
+    if (lbl_803DD77F != 0 && lbl_803DD774 < 0x7f) {
+        lbl_803DD774 += lbl_803DB410;
+    } else if (lbl_803DD77F == 0) {
+        lbl_803DD774 += lbl_803DB410;
+    }
+    if (lbl_803DD774 > 0xff) {
+        lbl_803DD774 = 0;
+        lbl_803DBA5C = -1;
+    }
+}
+#pragma scheduling reset
+
+/* EN v1.0 0x80129C74  size: 72b  Render-block teardown for the snowworm
+ * scene: drops to layer 0, optionally tears the cached effect down, and
+ * issues the close/restore pair before returning to the parent renderer. */
+#pragma scheduling off
+void fn_80129C74(void)
+{
+    fn_8000F458(0);
+    if (lbl_803DD7E0 != 0) {
+        fn_8000FAD8();
+    }
+    fn_8000F564();
+    fn_8000FC3C(lbl_803DBAA4);
+    fn_8000FB00();
+    fn_8000F780();
+}
+#pragma scheduling reset
+
+/* EN v1.0 0x8012DF14  size: 84b  Death sequence trigger: latches the
+ * "dead/cleanup" byte at lbl_803DD75B and dispatches vtable slot +0x24
+ * on the singleton at lbl_803DCA50 with the worm-death event id 0x94,
+ * then runs the standard player-input-disable + alpha-fade-to-FF pair. */
+#pragma scheduling off
+void fn_8012DF14(void)
+{
+    lbl_803DD75B = 1;
+    (*(void(**)(s32, s32, s32))((char*)*lbl_803DCA50 + 0x24))(1, 0x94, 1);
+    fn_800206E8(1);
+    fn_80020628(0xff);
+}
+#pragma scheduling reset
