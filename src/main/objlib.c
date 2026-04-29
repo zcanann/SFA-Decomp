@@ -2925,3 +2925,11 @@ void FUN_80038bb0(char param_1,int param_2)
   DAT_803dd880 = (byte)(param_2 << 7) | DAT_803dd880 & 0x7f;
   return;
 }
+
+extern u8 lbl_803DCC00;
+#pragma scheduling off
+void fn_80038F1C(int a, u8 b) {
+    if ((u8)a != 0) return;
+    lbl_803DCC00 = (u8)((lbl_803DCC00 & ~0x80) | ((b & 1) << 7));
+}
+#pragma scheduling reset
