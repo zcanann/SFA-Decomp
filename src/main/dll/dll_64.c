@@ -23,5 +23,5 @@
 extern char lbl_80319860[];
 extern void OSReport(const char *fmt, ...);
 #pragma scheduling off
-int fn_801008D0(void) { OSReport(lbl_80319860); return -1; }
+int fn_801008D0(void) { OSReport(lbl_80319860); return 0; }
 #pragma scheduling reset
