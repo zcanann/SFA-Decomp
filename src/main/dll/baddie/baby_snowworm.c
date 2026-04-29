@@ -1025,6 +1025,17 @@ extern int   fn_80295BC8(void);
 extern u8    fn_8005AFAC(f32, f32);
 extern u8    lbl_8031B050[9];
 
+extern u8  lbl_803DD77A;
+extern u8  lbl_803DD77B;
+extern s32 lbl_803DBA60;
+typedef struct BabySnowwormBitTableEntry {
+    u8  _0[0x16];   /* 0x00 */
+    u16 bit_id;     /* 0x16 */
+    u8  _18[0x4];   /* 0x18 */
+} BabySnowwormBitTableEntry;       /* sizeof = 0x1c */
+extern BabySnowwormBitTableEntry lbl_8031B074[5];
+extern u32 GameBit_Get(u32);
+
 extern u8  lbl_803DD780;
 extern u8  lbl_803DD788;
 extern u32 fn_80014E70(s32);
@@ -1131,6 +1142,64 @@ void fn_8012EA5C(s32 id, s32 _unused_a, s32 _unused_b, s32 do_input_disable)
     } else {
         lbl_803DD7A9 = 0;
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* EN v1.0 0x8012DDD8  size: 316b  State setter with bit-flag dispatch.
+ * Args: (s32 fade_target, u8 idx, u8 flags, u8 q).
+ *   flags & 0x08 : commit `idx` to lbl_803DD77A and consult the bit
+ *                  table at lbl_8031B074 (stride 0x1c, halfword field
+ *                  at +0x16) — if the GameBit reads 0, override idx
+ *                  to 5 before the rest of the work runs.
+ *   flags & 0x04 : full reset path — clear lbl_803DD774 and return.
+ *   flags & 0x02 : "mirror past peak" path — flip the active counter
+ *                  back to the [0xd9, 0xff] range and clear the
+ *                  direction byte at lbl_803DD77F.
+ *   flags & 0x01 : set the direction byte at lbl_803DD77F to 1.
+ * Default tail: store the (clamped) idx into the active-id slot
+ * lbl_803DBA5C, ensure the active counter starts at >=1, and
+ * latch the s32 fade_target at lbl_803DBA60. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8012DDD8(s32 fade_target, u8 idx, u8 flags, u8 q)
+{
+    if (flags & 0x08) {
+        lbl_803DD77A = idx;
+        if (GameBit_Get(lbl_8031B074[idx].bit_id) == 0) {
+            idx = 5;
+        }
+    }
+    lbl_803DD77B = q;
+    if (flags & 0x04) {
+        lbl_803DD774 = 0;
+        return;
+    }
+    if (flags & 0x02) {
+        u16 cur = lbl_803DD774;
+        if (cur == 0) return;
+        if (cur < 0x7f) {
+            cur = (u16)(0xff - cur);
+            lbl_803DD774 = cur;
+        }
+        cur = lbl_803DD774;
+        if (cur < 0xd9) cur = 0xd9;
+        lbl_803DD774 = (u16)cur;
+        lbl_803DD77F = 0;
+        return;
+    }
+    if (flags & 0x01) {
+        lbl_803DD77F = 1;
+    }
+    lbl_803DBA5C = idx;
+    if (lbl_803DD774 != 0) {
+        if (lbl_803DD774 > 0x7f) {
+            lbl_803DD774 = (u16)(0xff - lbl_803DD774);
+        }
+    } else {
+        lbl_803DD774 = 1;
+    }
+    lbl_803DBA60 = fade_target;
 }
 #pragma peephole reset
 #pragma scheduling reset
