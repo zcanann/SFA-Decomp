@@ -433,3 +433,24 @@ void FUN_80117318(undefined param_1)
   (**(code **)(*DAT_803dd720 + 0x18))();
   return;
 }
+
+extern void fn_8013046C(void);
+extern void fn_80130464(int);
+extern void fn_8007D960(int);
+#pragma scheduling off
+void fn_80116F14(void) {
+    fn_8013046C();
+    fn_80130464(1);
+    fn_8007D960(1);
+}
+#pragma scheduling reset
+
+extern u8 lbl_803DD614, lbl_803DD615;
+extern undefined4* lbl_803DCAA0;
+#pragma scheduling off
+void fn_80116F44(int a) {
+    lbl_803DD614 = (u8)a;
+    lbl_803DD615 = 0xff;
+    (*(code *)(*lbl_803DCAA0 + 0x18))();
+}
+#pragma scheduling reset
