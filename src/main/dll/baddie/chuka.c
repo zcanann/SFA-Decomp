@@ -151,15 +151,17 @@ void dfpfloorbar_render(int p1, int p2, int p3, int p4, int p5, s8 p6)
 #pragma peephole reset
 
 /* EN v1.0 0x80206500  size: 44b   if (b->_8 && (b->_8->_6 & 0x40)) clear. */
+#pragma scheduling off
+#pragma peephole off
 void dfpfloorbar_hitDetect(int *obj)
 {
-    int *b;
-    int *x;
-    b = (int *)obj[0x2e];
-    x = (int *)b[2];
-    if (x != NULL) {
-        if ((*(s16 *)((char *)x + 6) & 0x40) != 0) {
-            b[2] = 0;
-        }
-    }
+    int **b = (int **)obj[0x2e];
+    int *x = b[2];
+    s32 v;
+    if (x == NULL) return;
+    v = *(s16 *)((char *)x + 6) & 0x40;
+    if (v == 0) return;
+    b[2] = NULL;
 }
+#pragma peephole reset
+#pragma scheduling reset
