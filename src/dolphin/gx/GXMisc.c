@@ -9,10 +9,15 @@
 extern GXData* gx;
 #define __GXData gx
 
-static GXDrawSyncCallback TokenCB;
-static GXDrawDoneCallback DrawDoneCB;
-static u8 DrawDone;
-static OSThreadQueue FinishQueue;
+extern GXDrawSyncCallback __CARDEncode;
+extern GXDrawDoneCallback lbl_803DE0DC;
+extern u8 lbl_803DE0E0;
+extern OSThreadQueue lbl_803DE0E4;
+
+#define TokenCB __CARDEncode
+#define DrawDoneCB lbl_803DE0DC
+#define DrawDone lbl_803DE0E0
+#define FinishQueue lbl_803DE0E4
 
 void GXSetMisc(GXMiscToken token, u32 val) {
     if (token == GX_MT_XF_FLUSH) {
@@ -65,7 +70,8 @@ void GXResetWriteGatherPipe(void) {
     PPCMtwpar(OSUncachedToPhysical((void*)GXFIFO_ADDR));
 }
 
-static void __GXAbortWait(u32 clocks) {
+#if SDK_REVISION >= 1
+static inline void __GXAbortWait(u32 clocks) {
     OSTime time0;
     OSTime time1;
 
@@ -74,6 +80,7 @@ static void __GXAbortWait(u32 clocks) {
         time1 = OSGetTime();
     } while (time1 - time0 <= (clocks / 4));
 }
+#endif
 
 void __GXAbortWaitPECopyDone(void) {
     OSTime time0;
@@ -94,6 +101,7 @@ void __GXAbortWaitPECopyDone(void) {
     __GXCleanGPFifo();
 }
 
+#if SDK_REVISION >= 1
 void __GXAbort(void) {
     if (__GXData->abtWaitPECopy && GXGetGPFifo() != (GXFifoObj*)NULL) {
         __GXAbortWaitPECopyDone();
@@ -104,7 +112,9 @@ void __GXAbort(void) {
     __PIRegs[0x18 / 4] = 0;
     __GXAbortWait(20);
 }
+#endif
 
+#if SDK_REVISION >= 1
 void GXAbortFrame(void) {
     __GXAbort();
 
@@ -115,6 +125,7 @@ void GXAbortFrame(void) {
         GXFlush();
     }
 }
+#endif
 
 void GXSetDrawSync(u16 token) {
     BOOL enabled;
@@ -138,6 +149,7 @@ u16 GXReadDrawSync(void) {
     return token;
 }
 
+#if SDK_REVISION >= 1
 void GXSetDrawDone(void) {
     u32 reg;
     BOOL enabled;
@@ -150,7 +162,9 @@ void GXSetDrawDone(void) {
     DrawDone = 0;
     OSRestoreInterrupts(enabled);
 }
+#endif
 
+#if SDK_REVISION >= 1
 void GXWaitDrawDone(void) {
     BOOL enabled;
 
@@ -162,12 +176,15 @@ void GXWaitDrawDone(void) {
     }
     OSRestoreInterrupts(enabled);
 }
+#endif
 
+#if SDK_REVISION >= 1
 void GXDrawDone(void) {
     CHECK_GXBEGIN(566, "GXDrawDone");
     GXSetDrawDone();
     GXWaitDrawDone();
 }
+#endif
 
 void GXPixModeSync(void) {
     CHECK_GXBEGIN(601, "GXPixModeSync");
@@ -273,6 +290,7 @@ void GXPokeZMode(GXBool compare_enable, GXCompare func, GXBool update_enable) {
     pe_reg[0] = (u16)reg;
 }
 
+#if SDK_REVISION >= 1
 void GXPeekARGB(u16 x, u16 y, u32* color) {
     u32 addr = (u32)OSPhysicalToUncached(0x08000000);
 
@@ -281,7 +299,9 @@ void GXPeekARGB(u16 x, u16 y, u32* color) {
     SET_REG_FIELD(793, addr, 2, 22, 0);
     *color = *(u32*)addr;
 }
+#endif
 
+#if SDK_REVISION >= 1
 void GXPokeARGB(u16 x, u16 y, u32 color) {
     u32 addr = (u32)OSPhysicalToUncached(0x08000000);
 
@@ -290,6 +310,7 @@ void GXPokeARGB(u16 x, u16 y, u32 color) {
     SET_REG_FIELD(0x323, addr, 2, 22, 0);
     *(u32*)addr = color;
 }
+#endif
 
 void GXPeekZ(u16 x, u16 y, u32* z) {
     u32 addr;
@@ -301,6 +322,7 @@ void GXPeekZ(u16 x, u16 y, u32* z) {
     *z = *(u32*)addr;
 }
 
+#if SDK_REVISION >= 1
 void GXPokeZ(u16 x, u16 y, u32 z) {
     u32 addr = (u32)OSPhysicalToUncached(0x08000000);
 
@@ -309,7 +331,9 @@ void GXPokeZ(u16 x, u16 y, u32 z) {
     SET_REG_FIELD(823, addr, 2, 22, 1);
     *(u32*)addr = z;
 }
+#endif
 
+#if SDK_REVISION >= 1
 GXDrawSyncCallback GXSetDrawSyncCallback(GXDrawSyncCallback cb) {
     GXDrawSyncCallback oldcb;
     BOOL enabled;
@@ -320,6 +344,7 @@ GXDrawSyncCallback GXSetDrawSyncCallback(GXDrawSyncCallback cb) {
     OSRestoreInterrupts(enabled);
     return oldcb;
 }
+#endif
 
 static void GXTokenInterruptHandler(__OSInterrupt interrupt, OSContext* context) {
     u16 token;
@@ -341,6 +366,7 @@ static void GXTokenInterruptHandler(__OSInterrupt interrupt, OSContext* context)
     *peReg = reg;
 }
 
+#if SDK_REVISION >= 1
 GXDrawDoneCallback GXSetDrawDoneCallback(GXDrawDoneCallback cb) {
     GXDrawDoneCallback oldcb;
     BOOL enabled;
@@ -351,6 +377,7 @@ GXDrawDoneCallback GXSetDrawDoneCallback(GXDrawDoneCallback cb) {
     OSRestoreInterrupts(enabled);
     return oldcb;
 }
+#endif
 
 static void GXFinishInterruptHandler(__OSInterrupt interrupt, OSContext* context) {
     OSContext exceptionContext;
@@ -388,6 +415,7 @@ void __GXPEInit(void) {
     GX_SET_PE_REG(5, reg);
 }
 
+#if SDK_REVISION >= 1
 u32 GXCompressZ16(u32 z24, GXZFmt16 zfmt) {
     u32 z16;
     u32 z24n;
@@ -451,7 +479,9 @@ u32 GXCompressZ16(u32 z24, GXZFmt16 zfmt) {
     }
     return z16;
 }
+#endif
 
+#if SDK_REVISION >= 1
 u32 GXDecompressZ16(u32 z16, GXZFmt16 zfmt) {
     u32 z24;
     u32 cb1;
@@ -500,3 +530,4 @@ u32 GXDecompressZ16(u32 z16, GXZFmt16 zfmt) {
     }
     return z24;
 }
+#endif

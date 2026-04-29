@@ -487,7 +487,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXInit.c"),
             Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_803AEA38.s"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXFifo.c"),
-            Object(NonMatching, "dolphin/gx/GXMisc.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/gx/GXMisc.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXLight.c"),
             Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_8032F218.s"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXTexture.c"),
