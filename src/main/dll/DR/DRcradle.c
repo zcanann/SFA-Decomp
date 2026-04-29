@@ -332,3 +332,6 @@ int fn_801ECDD0(void) { return 0x2; }
 int fn_801ECDD8(void) { return 0x0; }
 int fn_801ECE30(void) { return 0x59c; }
 int fn_801ECE38(void) { return 0x3; }
+
+/* Pattern wrappers. */
+u8 fn_801ECE00(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x420); }

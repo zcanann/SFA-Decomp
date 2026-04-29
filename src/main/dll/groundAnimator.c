@@ -972,3 +972,6 @@ void appleontree_setScale(void) {}
 int wm_column_getExtraSize(void) { return 0xa; }
 int wm_column_func08(void) { return 0x0; }
 int appleontree_getExtraSize(void) { return 0x64; }
+
+/* Pattern wrappers. */
+u8 appleontree_modelMtxFn(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x3a); }

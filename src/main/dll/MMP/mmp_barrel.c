@@ -1292,3 +1292,6 @@ int groundanimator_getExtraSize(void) { return 0x30; }
 int hitanimator_getExtraSize(void) { return 0x4; }
 int visanimator_getExtraSize(void) { return 0x5; }
 int visanimator_func08(void) { return 0x0; }
+
+/* Pattern wrappers. */
+u8 groundanimator_modelMtxFn(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x2b); }

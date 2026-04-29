@@ -613,3 +613,7 @@ void fn_8011D914(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int fn_8011D908(void) { return 0x0; }
+
+/* Pattern wrappers. */
+extern u8 lbl_803DD728;
+void fn_8011D8F4(void) { lbl_803DD728 = 0x28; }

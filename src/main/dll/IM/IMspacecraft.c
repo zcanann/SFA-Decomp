@@ -844,3 +844,7 @@ int fn_801A5F70(void) { return 0x118; }
 int fn_801A5F78(void) { return 0x0; }
 int fn_801A66FC(void) { return 0x0; }
 int fn_801A6704(void) { return 0x0; }
+
+/* Pattern wrappers. */
+extern s16 lbl_803DDB20;
+void fn_801A662C(void) { lbl_803DDB20 = 0x0; }

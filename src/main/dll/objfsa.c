@@ -4288,3 +4288,7 @@ int fn_800D9ECC(void) { return 0x0; }
 /* sda21 accessors. */
 extern u32 lbl_803DD430;
 void fn_800D9668(u32 x) { lbl_803DD430 = x; }
+
+/* Pattern wrappers. */
+extern u32 lbl_803DD458;
+void fn_800D9EB8(void) { lbl_803DD458 = 0x3; }

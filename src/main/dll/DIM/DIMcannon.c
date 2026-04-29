@@ -1929,3 +1929,7 @@ int lavaball1bf_getExtraSize(void) { return 0x1c; }
 int lavaball1bf_func08(void) { return 0x0; }
 int dimlogfire_getExtraSize(void) { return 0x24; }
 int dimlogfire_func08(void) { return 0x1; }
+
+/* Pattern wrappers. */
+extern u32 lbl_803DDB48;
+void imspaceringgen_free(void) { lbl_803DDB48 = 0x0; }

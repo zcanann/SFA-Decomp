@@ -4137,3 +4137,6 @@ int fn_802057D4(void) { return 0x1; }
 int fn_80205F40(void) { return 0x0; }
 int chuka_getExtraSize(void) { return 0xc; }
 int fn_80205F50(void) { return 0x0; }
+
+/* Pattern wrappers. */
+s16 fn_80203420(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }

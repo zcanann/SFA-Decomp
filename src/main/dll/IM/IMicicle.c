@@ -1309,3 +1309,6 @@ int cfmagicwall_func08(void) { return 0x0; }
 int cflevelcontrol_getExtraSize(void) { return 0x10; }
 int cflevelcontrol_func08(void) { return 0x0; }
 int exploded_getExtraSize(void) { return 0x6c; }
+
+/* Pattern wrappers. */
+u8 exploded_setScale(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x69); }

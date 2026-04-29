@@ -4465,3 +4465,8 @@ int fn_80171404(void) { return 0x2; }
 int fn_801719E4(void) { return 0x40; }
 int fn_801719EC(void) { return 0x10; }
 int fn_80171C78(void) { return 0x1; }
+
+/* Pattern wrappers. */
+s16 staff_func13(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x88); }
+u8 fn_8016F16C(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x71); }
+u8 fn_80171D8C(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x1e); }

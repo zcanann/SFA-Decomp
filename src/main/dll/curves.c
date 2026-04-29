@@ -4073,3 +4073,7 @@ void fn_800E542C(void) {}
 void fn_800E5430(void) {}
 void fn_800E7D98(void) {}
 void fn_800E7D9C(void) {}
+
+/* Pattern wrappers. */
+extern u32 lbl_803DD478;
+void fn_800E5420(void) { lbl_803DD478 = 0x0; }

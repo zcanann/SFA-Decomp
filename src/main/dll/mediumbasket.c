@@ -1815,3 +1815,6 @@ void FUN_8015e21c(uint param_1,int param_2,int param_3)
 /* 8b "li r3, N; blr" returners. */
 int fn_8015D628(void) { return 0x458; }
 int fn_8015D630(void) { return 0x49; }
+
+/* Pattern wrappers. */
+s16 fn_8015D61C(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }

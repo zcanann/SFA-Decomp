@@ -717,3 +717,6 @@ void kaldachom_release(void) {}
 /* 8b "li r3, N; blr" returners. */
 int kaldachom_getExtraSize(void) { return 0x45c; }
 int kaldachom_func08(void) { return 0x49; }
+
+/* Pattern wrappers. */
+s16 kaldachom_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }

@@ -1223,3 +1223,7 @@ void fn_80080BAC(s16 x) { lbl_803DD06C = x; }
 s16 fn_80080BB4(void) { return lbl_803DD06C; }
 void fn_80080BBC(u8 x) { lbl_803DD080 = x; }
 u8 fn_80080BC4(void) { return lbl_803DD080; }
+
+/* Pattern wrappers. */
+extern u32 lbl_803DB700;
+void fn_8007FDF8(void) { lbl_803DB700 = 0x3; }

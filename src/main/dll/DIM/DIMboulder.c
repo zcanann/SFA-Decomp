@@ -1052,3 +1052,7 @@ int fn_801ADB70(void) { return 0x24; }
 int fn_801ADB78(void) { return 0x3; }
 int imicepillar_getExtraSize(void) { return 0x4; }
 int imicepillar_func08(void) { return 0x0; }
+
+/* Pattern wrappers. */
+extern u32 lbl_803DDB40;
+void crrockfall_initialise(void) { lbl_803DDB40 = 0x0; }

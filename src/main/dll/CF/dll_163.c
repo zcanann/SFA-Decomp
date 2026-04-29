@@ -377,3 +377,7 @@ int staffactivated_func08(void)
 {
   return 0x40;
 }
+
+/* Pattern wrappers. */
+u32 fn_8018A200(int *obj) { return *(u32*)((char*)((int**)obj)[0xb8/4] + 0x14); }
+u8 fn_8018A220(int *obj) { return *(u8*)((char*)((int**)obj)[0x4c/4] + 0x1c); }

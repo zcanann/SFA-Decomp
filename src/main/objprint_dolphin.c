@@ -4409,3 +4409,8 @@ extern u32 lbl_803DCC74;
 void fn_800412D4(u32 x) { lbl_803DCC24 = x; }
 void fn_80041D28(u8 x) { lbl_803DCC29 = x; }
 u32 fn_800430A4(void) { return lbl_803DCC74; }
+
+/* Pattern wrappers. */
+extern u32 lbl_803DCC70;
+void fn_80041E24(void) { lbl_803DCC70 = 0x0; }
+void fn_80041E30(void) { lbl_803DCC70 = 0x1; }

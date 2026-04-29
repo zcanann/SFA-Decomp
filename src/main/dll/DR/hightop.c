@@ -1180,3 +1180,7 @@ int fn_8019A300(void) { return 0xac; }
 int fn_8019A308(void) { return 0x0; }
 int cloudprisoncontrol_getExtraSize(void) { return 0x0; }
 int cloudprisoncontrol_func08(void) { return 0x0; }
+
+/* Pattern wrappers. */
+extern u8 lbl_803DBE08;
+void cloudprisoncontrol_initialise(void) { lbl_803DBE08 = 0x1; }

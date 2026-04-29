@@ -763,3 +763,6 @@ int sc_levelcontrol_getExtraSize(void) { return 0x24; }
 int sc_levelcontrol_func08(void) { return 0x0; }
 int sc_musictree_getExtraSize(void) { return 0x50; }
 int sc_musictree_func08(void) { return 0x0; }
+
+/* Pattern wrappers. */
+u8 sc_levelcontrol_func11(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x1d); }

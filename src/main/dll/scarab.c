@@ -2950,3 +2950,7 @@ int iceball_func08(void) { return 0x0; }
 int fn_8016052C(void) { return 0x6; }
 int fn_80160CC4(void) { return 0x410; }
 int fn_80160CCC(void) { return 0x14b; }
+
+/* Pattern wrappers. */
+s16 fn_8015EF4C(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
+s16 fn_80160CB8(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }

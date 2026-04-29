@@ -3948,3 +3948,9 @@ void fn_80062A50(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int fn_80060B90(void) { return 0x0; }
+
+/* Pattern wrappers. */
+extern u8 lbl_803DB658;
+extern u8 lbl_803DCF4E;
+void fn_800628CC(void) { lbl_803DB658 = 0x1; }
+void fn_80065678(void) { lbl_803DCF4E = 0x1; }

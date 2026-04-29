@@ -2346,3 +2346,9 @@ void fn_800550A4(u8 x) { lbl_803DCDFA = x; }
 void fn_800550AC(u8 x) { lbl_803DCDF9 = x; }
 void fn_800550B4(u8 x) { lbl_803DCDF8 = x; }
 u8 fn_800550BC(void) { return lbl_803DCDF7; }
+
+/* Pattern wrappers. */
+extern u8 lbl_803DCDF6;
+extern u8 lbl_803DCDF4;
+void fn_80054FA4(void) { lbl_803DCDF6 = 0x0; }
+void fn_80055070(void) { lbl_803DCDF4 = 0x0; }

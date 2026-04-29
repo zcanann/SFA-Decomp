@@ -1131,3 +1131,6 @@ extern u32 lbl_803DDC20;
 extern u32 lbl_803DDC40;
 u32 fn_801E1DA8(void) { return lbl_803DDC20; }
 u32 fn_801E2570(void) { return lbl_803DDC40; }
+
+/* Pattern wrappers. */
+u8 fn_801E1DF4(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x79); }

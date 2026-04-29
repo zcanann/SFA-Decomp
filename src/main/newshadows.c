@@ -2734,3 +2734,27 @@ u32 fn_8006C73C(void) { return lbl_803DCF7C; }
 u32 fn_8006C744(void) { return lbl_803DCF94; }
 u32 fn_8006C74C(void) { return lbl_803DCF98; }
 u32 fn_8006C754(void) { return lbl_803DCF90; }
+
+/* Pattern wrappers. */
+extern u32 lbl_803DCFC4;
+extern u32 lbl_803DCFC8;
+extern u32 lbl_803DCFB0;
+extern u32 lbl_803DCFB4;
+extern u32 lbl_803DCFB8;
+extern u32 lbl_803DCFBC;
+extern u32 lbl_803DCFC0;
+extern u32 lbl_803DCF9C;
+extern u32 lbl_803DCFD8;
+extern u32 lbl_803DCFDC;
+extern u32 lbl_803DCFE0;
+void fn_8006C4F8(u32 *p) { *p = lbl_803DCFC4; }
+void fn_8006C504(u32 *p) { *p = lbl_803DCFC8; }
+void fn_8006C510(u32 *p) { *p = lbl_803DCFB0; }
+void fn_8006C51C(u32 *p) { *p = lbl_803DCFB4; }
+void fn_8006C528(u32 *p) { *p = lbl_803DCFB8; }
+void fn_8006C534(u32 *p) { *p = lbl_803DCFBC; }
+void fn_8006C540(u32 *p) { *p = lbl_803DCFC0; }
+void fn_8006C5B8(u32 *p) { *p = lbl_803DCF9C; }
+void fn_8006C5CC(u32 *p) { *p = lbl_803DCFD8; }
+void fn_8006C5D8(u32 *p) { *p = lbl_803DCFDC; }
+void fn_8006C5E4(u32 *p) { *p = lbl_803DCFE0; }
