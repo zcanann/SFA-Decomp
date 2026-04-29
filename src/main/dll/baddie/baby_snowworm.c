@@ -1025,6 +1025,14 @@ extern int   fn_80295BC8(void);
 extern u8    fn_8005AFAC(f32, f32);
 extern u8    lbl_8031B050[9];
 
+extern u8  lbl_803DD780;
+extern u8  lbl_803DD788;
+extern u32 fn_80014E70(s32);
+extern void fn_80014B78(s32, u8*, u8*);
+extern void fn_80014B3C(s32, u32);
+extern int  Sfx_PlayFromObject(s32, s32);
+extern int  GameBit_Set(u32, u32);
+
 /* EN v1.0 0x8012DD7C  size: 40b  Cancel/clear helper. Stores the new u8
  * state byte and, when the caller resets it to 0, also clears the active
  * tween halfwords and drops the active-id sentinel to -1. */
@@ -1122,6 +1130,70 @@ void fn_8012EA5C(s32 id, s32 _unused_a, s32 _unused_b, s32 do_input_disable)
         lbl_803DD7A9 = 1;
     } else {
         lbl_803DD7A9 = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* EN v1.0 0x8012BE84  size: 380b  Pause-menu input poll. While the
+ * "freeze" byte at lbl_803DD780 is clear, polls the digital pad via
+ * fn_80014E70 / fn_80014B78. The byte read into buf[0] is the d-pad
+ * direction (1 = right, -1 = left, 0 = neutral) and lbl_803DD75B
+ * tracks the current selection (1 = right entry, 2 = left entry). On
+ * confirm (button mask 0x100), commits the selection by setting the
+ * GameBit (0x2b3 for right, 0x781 for left) and starts the unpause
+ * sequence; on cancel (0x200), aborts the menu. Both commit paths
+ * share the same teardown: clear lbl_803DD75B, drop input gate, run
+ * vtable+0x24(3, 0x80, 1) on the singleton, kick the 0x3c countdown,
+ * and play the matching SFX (0x418 / 0x419).
+ *
+ * Logic verified against retail asm; doesn't byte-match yet. Open
+ * issue: MWCC swaps r30/r31 between prev_state and buttons relative
+ * to retail (target r31=prev, r30=buttons; MWCC picks r30=prev,
+ * r31=buttons regardless of declaration order tried so far). The
+ * stack frame matches retail's 0x20 layout via the buf[16] trick. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8012BE84(void)
+{
+    u32 buttons;
+    u8  prev_state;
+    u8  buf[16];
+
+    prev_state = lbl_803DD75B;
+    if (lbl_803DD780 != 0) return;
+
+    buttons = (u16)fn_80014E70(0);
+    fn_80014B78(0, &buf[1], &buf[0]);
+    if ((s8)buf[0] == 1) {
+        lbl_803DD75B = 1;
+    }
+    if ((s8)buf[0] == -1) {
+        lbl_803DD75B = 2;
+    }
+    if (lbl_803DD75B != prev_state) {
+        Sfx_PlayFromObject(0, 0xf3);
+    }
+    if ((buttons & 0x100) != 0) {
+        fn_80014B3C(0, 0x100);
+        if (lbl_803DD75B == 1) {
+            GameBit_Set(0x2b3, 1);
+        } else {
+            GameBit_Set(0x781, 1);
+        }
+        lbl_803DD75B = 0;
+        fn_800206E8(0);
+        (*(void(**)(s32, s32, s32))((char*)*lbl_803DCA50 + 0x24))(3, 0x80, 1);
+        lbl_803DD788 = 0x3c;
+        Sfx_PlayFromObject(0, 0x418);
+    }
+    if ((buttons & 0x200) != 0) {
+        fn_80014B3C(0, 0x200);
+        lbl_803DD75B = 0;
+        fn_800206E8(0);
+        (*(void(**)(s32, s32, s32))((char*)*lbl_803DCA50 + 0x24))(3, 0x80, 1);
+        lbl_803DD788 = 0x3c;
+        Sfx_PlayFromObject(0, 0x419);
     }
 }
 #pragma peephole reset
