@@ -837,3 +837,33 @@ void fn_8013201C(void) {}
 
 /* EN v1.0 0x80132020  size: 4b   Empty no-op. */
 void fn_80132020(void) {}
+
+extern u8  lbl_8031C1B4[0x30];
+extern s16 lbl_8031C2A8[6];
+extern u8  lbl_803A9DB8[0x18];
+extern void fn_80023800(void);
+extern void fn_8001BDD4(int);
+
+/* EN v1.0 0x80131540  size: 48b  Toggle bit 0x20 of obj->_4. */
+void fn_80131540(u8* obj, int flag)
+{
+    if (flag != 0) {
+        obj[4] = (u8)(obj[4] & ~0x20);
+    } else {
+        obj[4] = (u8)(obj[4] | 0x20);
+    }
+}
+
+/* EN v1.0 0x80131CF4  size: 32b  Wrapper for fn_80023800. */
+void fn_80131CF4(void)
+{
+    fn_80023800();
+}
+
+/* EN v1.0 0x80131FE0  size: 40b  Zero 6 u32s at lbl_803A9DB8. */
+void fn_80131FE0(void)
+{
+    u32* p = (u32*)lbl_803A9DB8;
+    p[0] = 0; p[1] = 0; p[2] = 0;
+    p[3] = 0; p[4] = 0; p[5] = 0;
+}
