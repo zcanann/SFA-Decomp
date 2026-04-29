@@ -1655,3 +1655,10 @@ void fn_801B5A6C(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4A18); }
 void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4A20); }
 #pragma peephole reset
+
+/* conditional init/free pair. */
+extern u32 lbl_803DDB78;
+extern void fn_80013E2C(u32);
+#pragma scheduling off
+void fn_801B5A38(void) { if (lbl_803DDB78 != 0) { fn_80013E2C(lbl_803DDB78); lbl_803DDB78 = 0; } }
+#pragma scheduling reset
