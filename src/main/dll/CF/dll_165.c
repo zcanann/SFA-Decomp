@@ -162,3 +162,9 @@ extern void fn_8003B8F4(f32);
 #pragma scheduling off
 void treasurechest_render(void) { fn_8003B8F4(lbl_803E3C20); }
 #pragma scheduling reset
+
+extern u32 lbl_803DDAE0;
+extern void fn_80013E2C(u32);
+#pragma scheduling off
+void treasurechest_free(void) { fn_80013E2C(lbl_803DDAE0); }
+#pragma scheduling reset
