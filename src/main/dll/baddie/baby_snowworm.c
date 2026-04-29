@@ -1000,7 +1000,7 @@ extern void fn_8000FC3C(f32);
 extern void fn_80020628(s32);
 extern void fn_800206E8(s32);
 extern void fn_80016C48(void* arg);
-extern void fn_800173C8(s32);
+extern void* fn_800173C8(s32);
 
 extern u16 lbl_803DBA70;
 extern u8  lbl_803DD7A9;
@@ -1057,6 +1057,16 @@ extern f32 lbl_803E2044;  /*  43.0f  (FOV value) */
 
 extern s8  lbl_803DBA64;
 extern void fn_8006B558(void*);
+
+extern u8  lbl_803A89B0[0x198];
+extern u32 lbl_8033BE40[5];
+extern int   fn_80019B14(void);
+extern void  fn_80019B1C(int, s32);
+extern void* fn_800191C4(s32, s32);
+extern void  fn_8001984C(u16, u16, s32);
+extern void  fn_800163C4(void*, s32, s32, s32, s32*, s32*, s32*, s32*);
+extern void  fn_80019804(s32);
+extern void  fn_8001618C(void*, s32);
 
 typedef struct BabySnowwormBitTableEntry {
     u8  _0[0x16];   /* 0x00 */
@@ -1580,6 +1590,109 @@ void fn_80129DB4(void)
     fn_8000FB00();
     fn_8000F564();
     fn_8000F780();
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* EN v1.0 0x8012D77C  size: 496b  Title-card overlay draw routine.
+ * Logic-only — MWCC's register allocator picks different non-volatile
+ * registers for saved / sprite / alpha / target than retail does
+ * (target uses r31=sprite, r30=alpha, r29=handle, r28=saved, r27=
+ * target, but MWCC swaps several around regardless of declaration
+ * order, scheduling/peephole pragmas, or intermediate var tricks).
+ *
+ * Gated on (lbl_803DD774 != 0) && (lbl_803DD776 == 0). Saves the
+ * current sprite-batch state via fn_80019B14, sets sub-batch via
+ * fn_80019B1C(lbl_803DD77B, 3), grabs a slot handle from
+ * fn_800191C4(lbl_803DBA60, lbl_803DBA5C), and looks up sprite 0x49.
+ *
+ * Copies the 5-u32 transform block from the singleton at
+ * lbl_803A89B0+0x13c..+0x14c into the global mtx scratch at
+ * lbl_8033BE40 (offsets 0x0..0x10).
+ *
+ * Computes the per-frame fade alpha r30 and target_y r27 from the
+ * counter at lbl_803DD774 by mirroring around 0x7f, then scales:
+ *   alpha  = clamp((mirror) * 0xf, 0, 0xff)
+ *   target = clamp(((mirror) - 0x14) << 4, 0, 0x10e)
+ *
+ * Issues fn_8001984C(sprite->_2, sprite->_a, 1) to enable, then
+ * fn_800163C4(handle, 0x49, 0, 0, &v[3..0]) to read the sprite's
+ * current bbox into stack slots 0x14..0x8. Calls fn_80019804(1).
+ *
+ * Computes blit_x = clamp((v[0x10] - v[0x14] + 0x28), 0, target_y);
+ * stores blit_x & 0xfffe at sprite+0x8, and 0x140 - (blit_x>>1) at
+ * sprite+0x14. Re-issues fn_8001984C with subbatch 2 and runs
+ * fn_80019908(0xff, 0xff, 0xff, alpha) to commit the colour, also
+ * latches alpha into sprite+0x1e.
+ *
+ * Tail: fn_8001618C(handle, 0x49); fn_80019804(2); fn_80019B1C with
+ * the saved state to restore the batch.
+ */
+#pragma scheduling off
+#pragma peephole off
+void fn_8012D77C(void)
+{
+    s16   target;
+    int   saved;
+    void* handle;
+    s16   alpha;
+    void* sprite;
+    s16   cur;
+    s16   mirrored;
+    s32   v[4];
+
+    if (lbl_803DD774 == 0) return;
+    if (lbl_803DD776 != 0) return;
+
+    saved = fn_80019B14();
+    fn_80019B1C(lbl_803DD77B, 3);
+    handle = fn_800191C4(lbl_803DBA60, lbl_803DBA5C);
+    sprite = fn_800173C8(0x49);
+
+    lbl_8033BE40[0] = *(u32*)((u8*)lbl_803A89B0 + 0x13c);
+    lbl_8033BE40[1] = *(u32*)((u8*)lbl_803A89B0 + 0x140);
+    lbl_8033BE40[2] = *(u32*)((u8*)lbl_803A89B0 + 0x144);
+    lbl_8033BE40[3] = *(u32*)((u8*)lbl_803A89B0 + 0x148);
+    lbl_8033BE40[4] = *(u32*)((u8*)lbl_803A89B0 + 0x14c);
+
+    cur = (s16)lbl_803DD774;
+    mirrored = cur;
+    if (lbl_803DD774 > 0x7f) {
+        mirrored = (s16)(0xff - cur);
+    }
+    alpha = (s16)(mirrored * 0xf);
+    if (alpha > 0xff) alpha = 0xff;
+
+    target = cur;
+    if (lbl_803DD774 > 0x7f) {
+        target = (s16)(0xff - cur);
+    }
+    target = (s16)(target - 0x14);
+    if (target < 0) target = 0;
+    target = (s16)(target << 4);
+    if (target > 0x10e) target = 0x10e;
+
+    fn_8001984C(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 1);
+    fn_800163C4(handle, 0x49, 0, 0, &v[3], &v[2], &v[1], &v[0]);
+    fn_80019804(1);
+
+    {
+        s16 width = (s16)(v[2] - v[3]);
+        s16 calc  = (s16)(width + 0x28);
+        s16 blit_x;
+        if (calc >= target) blit_x = target;
+        else                blit_x = calc;
+        if (blit_x < 0) blit_x = 0;
+        *(s16*)((u8*)sprite + 0x8)  = (s16)(blit_x & 0xfffe);
+        *(s16*)((u8*)sprite + 0x14) = (s16)(0x140 - (blit_x >> 1));
+    }
+
+    fn_8001984C(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 2);
+    fn_80019908(0xff, 0xff, 0xff, (u8)alpha);
+    *(u8*)((u8*)sprite + 0x1e) = (u8)alpha;
+    fn_8001618C(handle, 0x49);
+    fn_80019804(2);
+    fn_80019B1C(saved, 3);
 }
 #pragma peephole reset
 #pragma scheduling reset
