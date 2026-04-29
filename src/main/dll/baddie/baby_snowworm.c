@@ -3,36 +3,28 @@
  * hand-decompiled function-by-function.
  *
  * Owner: main/dll/baddie/baby_snowworm.c
- * Text span: 0x80128260-0x8012EBBC (32 functions, ~27KB)
+ * Text span (EN v1.0): 0x80128120-0x8012EB7C (40 functions, 27228 b)
  *
- * Matching (100% retail bytes): 7 / 32
- *   fn_8012E0E0 / fn_8012E0E8            : sbss byte/halfword getters
- *   fn_8012E0B8                          : state-reset helper
- *   fn_8012E050                          : counter-advance
- *   fn_80129FB0                          : audio call sequence
- *   fn_8012E250                          : vtable dispatch stub
- *   fn_8012B9F8                          : 9-entry table lookup
+ * Matching (100% retail bytes) at 2026-04-29: 16 / 40 (1704 b, 6.3%)
+ * The legacy FUN_xxxxxx stubs above the v1.0 helper block are at the
+ * pre-retargeting addresses and produce no matches; they remain in
+ * place as scaffolding while individual functions get ported. New
+ * matched/in-progress fn_xxxxxxxx helpers live below the FUN_ block,
+ * appended in batches.
  *
- * The remaining 25 are stubs from the Ghidra bulk import and need
- * hand-porting. Several candidates were attempted and reverted
- * because MWCC -O4,p's CSE/scheduler picks a different register
- * allocation or frame layout than retail:
- *   fn_8012E0F4    : 32b if/else->0/1 store; MWCC always emits
- *                    branchless cntlzw/srwi instead of target's
- *                    explicit cmplwi/beq/li/b/li.
- *   fn_8012E114    : 316b state setter; CSE of (u8)arg1 between
- *                    the store and the table-index path.
- *   fn_8012C1C0    : 380b input-poll handler; stack packs a
- *                    char + char[15] into 16 bytes tight in retail,
- *                    MWCC pads to 4-byte alignment (0x30 vs 0x20).
- *   fn_801299D4    : 196b state mutator; retail keeps arg0 in r28
- *                    unchanged for the final stb; MWCC inserts
- *                    extsb r0, r28 regardless of char/u8/s8 typing.
- *   fn_8012BAFC-style call wrappers     : li const moved above
- *                    stw r0, 0x14(r1) in the prologue by the
- *                    scheduler; #pragma scheduling off fixes this
- *                    class (see fn_802BBAFC / fn_802BB754 already in
- *                    TRK stubs).
+ * Logic-only (correct semantics, byte-divergent): fn_8012BE84,
+ * fn_8012C558, fn_80129CBC. See inline notes per function for the
+ * specific MWCC quirk that blocks each one.
+ *
+ * Known-stuck (verified, don't retry without new ideas):
+ *   fn_8012EB08 (28b)  : extsh-before-sth triple; MWCC strips the
+ *                        redundant extsh.
+ *   fn_8012EB30 (56b)  : .data array address routes via r0+mr instead
+ *                        of clean lis/addi pair using r3 as scratch.
+ *   fn_8012DDB8 (32b)  : u16 = param ? 1 : 0 picks up an extra
+ *                        clrlwi r0,r0,16 narrowing before sth.
+ *   fn_8012BE84 (380b) : MWCC swaps r30/r31 between prev_state and
+ *                        buttons relative to retail.
  */
 
 #include "ghidra_import.h"
