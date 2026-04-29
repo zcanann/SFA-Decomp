@@ -4387,3 +4387,52 @@ LAB_801725bc:
   *(undefined4 *)(param_9 + 0xf4) = 1;
   return;
 }
+
+/* Trivial 4b 0-arg blr leaves. */
+void mikabomb_release(void) {}
+void mikabomb_initialise(void) {}
+void mikabombshadow_free(void) {}
+void mikabombshadow_hitDetect(void) {}
+void mikabombshadow_release(void) {}
+void mikabombshadow_initialise(void) {}
+void fn_8016B8FC(void) {}
+void fn_8016B900(void) {}
+void fn_8016B994(void) {}
+void fn_8016B998(void) {}
+void gcbaddieshield_free(void) {}
+void gcbaddieshield_hitDetect(void) {}
+void gcbaddieshield_release(void) {}
+void gcbaddieshield_initialise(void) {}
+void baddieinterestp_free(void) {}
+void baddieinterestp_hitDetect(void) {}
+void baddieinterestp_init(void) {}
+void baddieinterestp_release(void) {}
+void baddieinterestp_initialise(void) {}
+void staff_func0F(void) {}
+void staff_func0E(void) {}
+void staff_func0B(void) {}
+void staff_setScale(void) {}
+void staff_render(void) {}
+void staff_hitDetect(void) {}
+void fireball_release(void) {}
+void fireball_initialise(void) {}
+void flamethrowerspe_modelMtxFn(void) {}
+void flamethrowerspe_free(void) {}
+void flamethrowerspe_hitDetect(void) {}
+void flamethrowerspe_release(void) {}
+void flamethrowerspe_initialise(void) {}
+void shield_hitDetect(void) {}
+void shield_release(void) {}
+void shield_initialise(void) {}
+void fn_80171308(void) {}
+void fn_8017131C(void) {}
+void fn_80171518(void) {}
+void fn_801719D8(void) {}
+void fn_801719DC(void) {}
+void fn_801719E0(void) {}
+void fn_801719F4(void) {}
+void fn_80171A1C(void) {}
+void fn_80171A20(void) {}
+void fn_80171BA4(void) {}
+void fn_80171BA8(void) {}
+void fn_80171D10(void) {}
