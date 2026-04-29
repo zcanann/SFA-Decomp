@@ -28,3 +28,10 @@
  * No function names were promoted here yet.
  * Start from the estimated window and nearby anchors above.
  */
+
+
+extern char lbl_80319A18[];
+extern void OSReport(const char *fmt, ...);
+#pragma scheduling off
+int fn_80100A20(void) { OSReport(lbl_80319A18); return -1; }
+#pragma scheduling reset

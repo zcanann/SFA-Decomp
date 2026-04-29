@@ -18,3 +18,10 @@
  * Start from the current EN split window and the surrounding corridor.
  */
 
+
+
+extern char lbl_80319940[];
+extern void OSReport(const char *fmt, ...);
+#pragma scheduling off
+int fn_80100978(void) { OSReport(lbl_80319940); return -1; }
+#pragma scheduling reset
