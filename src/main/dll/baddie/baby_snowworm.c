@@ -1044,6 +1044,19 @@ extern void* fn_8002DF90(s32, s32, s32, s32, s32);
 extern void fn_8002AC30(void*, s32, s32, s32, s32, s32);
 extern void fn_80014B18(s32);
 
+extern void* lbl_803DCCF0;
+extern void  fn_8000F4E0(s32, s32, s32);
+extern void  fn_8000F510(f32, f32, f32);
+extern int   fn_8000FAC4(void);
+extern void  fn_8000FACC(void);
+extern f32   fn_8000FC34(void);
+extern void  GXSetViewport(f32, f32, f32, f32, f32, f32);
+
+extern f32 lbl_803E1E3C;  /*  0.0f */
+extern f32 lbl_803E1E68;  /*  1.0f */
+extern f32 lbl_803E1F34;  /*  320.0f */
+extern f32 lbl_803E2024;  /*  240.0f */
+
 typedef struct BabySnowwormBitTableEntry {
     u8  _0[0x16];   /* 0x00 */
     u16 bit_id;     /* 0x16 */
@@ -1341,6 +1354,38 @@ int fn_80129698(s8 a, int b, u8 c, int mode)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* EN v1.0 0x80129CBC  size: 248b  Render block setup with explicit
+ * viewport sized to (320 x 240) centered on the supplied (x, y).
+ * Caches FOV via fn_8000FC34, replaces it with arg0, activates render
+ * layer 1, captures depth bias, snaps clip planes (0,0,0), restores
+ * ZBuf window 0x8000, then calls GXSetViewport with width/height
+ * from the global render obj at lbl_803DCCF0 (offsets 0x4, 0x8).
+ *
+ * Logic-only — MWCC schedules the s32->f32 magic conversion for the
+ * GXSetViewport width/height differently from retail (interleaves
+ * vs fetch-all-then-process). The float constant pool entry for the
+ * 0x4330_00000000 / 2^52 magic also lands on @408 instead of being
+ * unified with retail's lbl_803E1E88 reference. Pragmas don't fix
+ * either subtlety in this configuration. */
+void fn_80129CBC(f32 fov, f32 x, f32 y)
+{
+    lbl_803DBAA4 = fn_8000FC34();
+    fn_8000FC3C(fov);
+    fn_8000F458(1);
+    lbl_803DD7E0 = fn_8000FAC4();
+    fn_8000FACC();
+    fn_8000F510(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
+    fn_8000F4E0(0x8000, 0, 0);
+    fn_8000F564();
+    fn_8000FB00();
+    {
+        u16* obj = (u16*)lbl_803DCCF0;
+        GXSetViewport(x - lbl_803E1F34, y - lbl_803E2024,
+                      (f32)(s32)obj[2], (f32)(s32)obj[4],
+                      lbl_803E1E3C, lbl_803E1E68);
+    }
+}
 
 /* EN v1.0 0x8012C558  size: 340b  Snowworm scene shutdown / setup.
  * Logic-only — MWCC parallelizes the two .bss address loads (slot
