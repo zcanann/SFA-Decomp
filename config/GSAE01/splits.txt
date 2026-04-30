@@ -1694,9 +1694,6 @@ dolphin/gx/GXInit.c:
 	.sbss       start:0x803DE0A8 end:0x803DE0B8
 	.sdata2     start:0x803E7658 end:0x803E7678
 
-main/unknown/autos/placeholder_803AEA38.s:
-	.bss        start:0x803AEA38 end:0x803AECC0
-
 dolphin/gx/GXFifo.c:
 	.text       start:0x80255DBC end:0x80256820
 	.sbss       start:0x803DE0B8 end:0x803DE0D8
@@ -1739,8 +1736,16 @@ dolphin/gx/GXPixel.c:
 	.data       start:0x8032EAB0 end:0x8032EAD0
 	.sdata2     start:0x803E7700 end:0x803E7730
 
+main/unknown/autos/placeholder_803E7730.s:
+	.sdata2     start:0x803E7730 end:0x803E7738
+
 dolphin/gx/GXDraw.c:
 	.text       start:0x8025CA1C end:0x8025CD38
+	.bss        start:0x803AEA38 end:0x803AECC0
+	.sdata2     start:0x803E7738 end:0x803E7748
+
+main/unknown/autos/placeholder_803E7748.s:
+	.sdata2     start:0x803E7748 end:0x803E7750
 
 dolphin/gx/GXStubs.c:
 	.text       start:0x8025CD38 end:0x8025CD3C

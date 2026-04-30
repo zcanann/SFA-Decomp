@@ -3,6 +3,9 @@
 float cosf(float);
 float sinf(float);
 
+extern const f32 lbl_803E7730;
+extern const f32 lbl_803E7748;
+
 static GXVtxDescList vcd[27];
 static GXVtxAttrFmtList vat[27];
 
@@ -32,10 +35,10 @@ void GXDrawTorus(f32 rc, u8 numc, u8 numt) {
     f32 x;
     f32 y;
     f32 z;
-    f32 twopi = 6.2831855f;
+    f32 twopi = lbl_803E7748;
     f32 rt;
 
-    rt = 1.0f - rc;
+    rt = lbl_803E7730 - rc;
     GXGetVtxDesc(GX_VA_TEX0, &ttype);
     GetVertState();
     if (ttype != GX_NONE) {
