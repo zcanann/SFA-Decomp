@@ -430,7 +430,7 @@ config.libs = [
     DolphinLib(
         "ax",
         [
-            Object(NonMatching, "dolphin/ax/AX.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/ax/AX.c"),
             Object(NonMatching, "dolphin/ax/AXAlloc.c"),
             Object(NonMatching, "dolphin/ax/AXAux.c"),
             Object(NonMatching, "dolphin/ax/AXCL.c"),
