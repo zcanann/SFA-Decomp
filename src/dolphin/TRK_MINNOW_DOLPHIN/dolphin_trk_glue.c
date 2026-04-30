@@ -2,9 +2,7 @@
 #include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
 #include "OdemuExi2/odemuexi/DebuggerDriver.h"
 #include "amcstubs/AmcExi2Stubs.h"
-#include "dolphin/base/PPCArch.h"
 #include "PowerPC_EABI_Support/MetroTRK/trk.h"
-#include "string.h"
 
 typedef struct UARTInlineBuffer {
     s32 writeLen;
@@ -14,11 +12,8 @@ typedef struct UARTInlineBuffer {
     u8  readData[0x110C];
 } UARTInlineBuffer;
 
-static UARTInlineBuffer gUARTBuffer;
-static u8 gUARTWriteBuffer[0x110C];
-
-volatile u8 TRK_Use_BBA = 0;
-BOOL _MetroTRK_Has_Framing = FALSE;
+extern UARTInlineBuffer lbl_803D8888;
+extern u8 lbl_803D99A4[0x110C];
 int ddh_cc_initinterrupts(void);
 int ddh_cc_initialize(void*, __OSInterruptHandler);
 int ddh_cc_shutdown(void);
@@ -50,6 +45,8 @@ int udp_cc_pre_continue(void);
 int udp_cc_post_stop(void);
 
 DBCommTable gDBCommTable = {};
+
+void TRKEXICallBack(__OSInterrupt param_0, OSContext* ctx);
 
 asm void TRKLoadContext(OSContext* ctx, u32)
 {
@@ -94,10 +91,90 @@ lbl_80371C20:
 #endif // clang-format on
 }
 
-void TRKEXICallBack(__OSInterrupt param_0, OSContext* ctx)
+void TRKUARTInterruptHandler() { }
+
+void TRK_board_display(char* str) { OSReport(str); }
+
+void UnreserveEXI2Port(void) { gDBCommTable.close_func(); }
+
+void ReserveEXI2Port(void) { gDBCommTable.open_func(); }
+
+inline int TRKPollUART(void) { return gDBCommTable.peek_func(); }
+
+inline UARTError TRKReadUARTN(void* bytes, u32 length)
 {
-    OSEnableScheduler();
-    TRKLoadContext(ctx, 0x500);
+    int readErr = gDBCommTable.read_func(bytes, length);
+    return readErr == 0 ? 0 : -1;
+}
+
+inline UARTError TRKWriteUARTN(const void* bytes, u32 length)
+{
+    int writeErr = gDBCommTable.write_func(bytes, length);
+    return writeErr == 0 ? 0 : -1;
+}
+
+UARTError TRKReadUARTPoll(s8* byte)
+{
+    UARTError error = UART_NoData;
+    UARTInlineBuffer* uart = &lbl_803D8888;
+    s32 cnt;
+
+    if (uart->readPos >= uart->readLen) {
+        uart->readPos = 0;
+        cnt = uart->readLen = TRKPollUART();
+
+        if (cnt > 0) {
+            if (cnt > 0x110A) {
+                uart->readLen = 0x110A;
+            }
+
+            error = TRKReadUARTN(uart->readData, uart->readLen);
+            if (error != UART_NoError) {
+                uart->readLen = 0;
+            }
+        }
+    }
+
+    if (uart->readPos < uart->readLen) {
+        *byte = uart->readData[uart->readPos++];
+        error = UART_NoError;
+    }
+
+    return error;
+}
+
+UARTError WriteUART1(u8 byte)
+{
+    lbl_803D99A4[lbl_803D8888.writeLen++] = byte;
+    return UART_NoError;
+}
+
+UARTError WriteUARTFlush(void)
+{
+    UARTError error = UART_NoError;
+
+    while (lbl_803D8888.writeLen < 0x800) {
+        lbl_803D99A4[lbl_803D8888.writeLen] = 0;
+        lbl_803D8888.writeLen++;
+    }
+
+    if (lbl_803D8888.writeLen != 0) {
+        error = TRKWriteUARTN(lbl_803D99A4, lbl_803D8888.writeLen);
+        lbl_803D8888.writeLen = 0;
+    }
+
+    return error;
+}
+
+void EnableEXI2Interrupts(void)
+{
+    gDBCommTable.init_interrupts_func();
+}
+
+DSError TRKInitializeIntDrivenUART(u32 param_0, u32 param_1, u32 param_2, void* param_3)
+{
+    gDBCommTable.initialize_func(param_3, TRKEXICallBack);
+    return DS_NoError;
 }
 
 int InitMetroTRKCommTable(int hwId)
@@ -129,110 +206,8 @@ int InitMetroTRKCommTable(int hwId)
     return result;
 }
 
-DSError TRKInitializeIntDrivenUART(u32 param_0, u32 param_1, u32 param_2, void* param_3)
+void TRKEXICallBack(__OSInterrupt param_0, OSContext* ctx)
 {
-    gDBCommTable.initialize_func(param_3, TRKEXICallBack);
-    return DS_NoError;
+    OSEnableScheduler();
+    TRKLoadContext(ctx, 0x500);
 }
-
-void EnableEXI2Interrupts(void)
-{
-    gDBCommTable.init_interrupts_func();
-}
-
-int TRKPollUART(void)
-{
-    return gDBCommTable.peek_func();
-}
-
-UARTError TRKReadUARTN(void* bytes, u32 length)
-{
-    int readErr = gDBCommTable.read_func(bytes, length);
-    return readErr == 0 ? 0 : -1;
-}
-
-UARTError TRKWriteUARTN(const void* bytes, u32 length)
-{
-    int writeErr = gDBCommTable.write_func(bytes, length);
-    return writeErr == 0 ? 0 : -1;
-}
-
-#pragma dont_inline on
-UARTError TRKReadUARTPoll(register s8* byte) {
-    UARTError error;
-
-    error = UART_NoData;
-
-    if (gUARTBuffer.readPos >= gUARTBuffer.readLen) {
-        gUARTBuffer.readPos = 0;
-        gUARTBuffer.readLen = gDBCommTable.peek_func();
-
-        if (gUARTBuffer.readLen > 0) {
-            if (gUARTBuffer.readLen > 0x110A) {
-                gUARTBuffer.readLen = 0x110A;
-            }
-
-            error = gDBCommTable.read_func(gUARTBuffer.readData, gUARTBuffer.readLen) != 0 ? -1 : UART_NoError;
-            if (error != UART_NoError) {
-                gUARTBuffer.readLen = 0;
-            }
-        }
-    }
-
-    if (gUARTBuffer.readPos < gUARTBuffer.readLen) {
-        *byte = gUARTBuffer.readData[gUARTBuffer.readPos++];
-        error = UART_NoError;
-    }
-
-    return error;
-}
-#pragma dont_inline reset
-
-UARTError WriteUART1(s8 byte)
-{
-    gUARTWriteBuffer[gUARTBuffer.writeLen++] = byte;
-    return UART_NoError;
-}
-
-#pragma dont_inline on
-UARTError WriteUARTFlush(void) {
-    s32 length;
-    int writeErr;
-
-    length = gUARTBuffer.writeLen;
-
-    if (length < 0x800) {
-        memset(&gUARTWriteBuffer[length], 0, 0x800 - length);
-        length = 0x800;
-    }
-
-    gUARTBuffer.writeLen = length;
-
-    if (length == 0) {
-        return UART_NoError;
-    }
-
-    writeErr = gDBCommTable.write_func(gUARTWriteBuffer, length);
-    gUARTBuffer.writeLen = 0;
-
-    return writeErr == 0 ? UART_NoError : -1;
-}
-#pragma dont_inline reset
-
-void ReserveEXI2Port(void) { gDBCommTable.open_func(); }
-
-void UnreserveEXI2Port(void) { gDBCommTable.close_func(); }
-
-void TRK_board_display(char* str) { OSReport(str); }
-
-void InitializeProgramEndTrap(void)
-{
-    static const u32 EndofProgramInstruction = 0x00454E44;
-    register u8* ppcHalt = (u8*)PPCHalt;
-
-    TRK_memcpy(ppcHalt + 4, &EndofProgramInstruction, 4);
-    ICInvalidateRange(ppcHalt + 4, 4);
-    DCFlushRange(ppcHalt + 4, 4);
-}
-
-void TRKUARTInterruptHandler() { }
