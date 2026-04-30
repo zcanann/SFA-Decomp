@@ -58,10 +58,12 @@ void WriteFPSCR(f64*);
 void ReadFPSCR(f64*);
 
 static u16 TRK_saved_exceptionID_803D8F58 = 0;
-TRKState gTRKState;
-Default_PPC gTRKSaveState;
-ProcessorState_PPC gTRKCPUState;
-u128 TRKvalue128_temp;
+extern TRKState gTRKState;
+extern Default_PPC gTRKSaveState;
+extern ProcessorState_PPC gTRKCPUState;
+extern u128 lbl_803D8864;
+
+#define TRKvalue128_temp lbl_803D8864
 
 // Instruction macros
 #define INSTR_NOP                                0x60000000
