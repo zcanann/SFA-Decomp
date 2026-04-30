@@ -31,8 +31,8 @@ static f64 ZeroF;
 static f32 ZeroPS[2];
 static BOOL AreWeInitialized = FALSE;
 static __OSExceptionHandler *OSExceptionTable;
-OSTime __OSStartTime;
-BOOL __OSInIPL;
+extern OSTime __OSStartTime;
+extern BOOL __OSInIPL;
 
 extern u8 __ArenaHi[];
 extern u8 __ArenaLo[];
@@ -152,8 +152,8 @@ u32 OSGetConsoleType()
     return BootInfo->consoleType;
 }
 
-void *__OSSavedRegionStart;
-void *__OSSavedRegionEnd;
+extern void *__OSSavedRegionStart;
+extern void *__OSSavedRegionEnd;
 
 extern u32 BOOT_REGION_START : 0x812FDFF0; //(*(u32 *)0x812fdff0)
 extern u32 BOOT_REGION_END : 0x812FDFEC; //(*(u32 *)0x812fdfec)
