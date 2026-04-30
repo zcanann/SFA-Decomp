@@ -43,12 +43,10 @@ static u32 RecalibrateBits;
 static u32 WaitingBits;
 static u32 CheckingBits;
 static u32 PendingBits;
-static u32 BarrelBits;
 
 static u32 Type[4];
 static PADStatus Origin[4];
 
-u32 PrintDebugPalCaution_message;
 extern u32 __PADSpec;
 
 // prototypes
@@ -80,7 +78,6 @@ BOOL __PADDisableRumble(BOOL disable);
 typedef void (*SPECCallback)(s32, PADStatus*, u32*);
 static SPECCallback MakeStatus = SPEC2_MakeStatus;
 
-static u32 CmdTypeAndStatus;
 static u32 CmdReadOrigin = 0x41000000;
 static u32 CmdCalibrate = 0x42000000;
 static u32 CmdProbeDevice[4];
