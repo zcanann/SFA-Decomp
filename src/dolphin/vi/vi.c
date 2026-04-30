@@ -117,7 +117,14 @@ static u16 taps[25] = {
 };
 
 static SomeVIStruct HorVer;
-static u32 FBSet;
+VITiming* lbl_803DDFBC;
+void (*lbl_803DDFB8)(s16, s16);
+u32 lbl_803DDFB4;
+u32 lbl_803DDFB0;
+
+#define FBSet lbl_803DDFB0
+#define PositionCallback lbl_803DDFB8
+#define timingExtra lbl_803DDFBC
 
 // prototypes
 static u32 getCurrentFieldEvenOdd(void);
@@ -663,10 +670,8 @@ static void setVerticalRegs(u16 dispPosY, u16 dispSizeY, u8 equ, u16 acv, u16 pr
 }
 
 static void PrintDebugPalCaution(void) {
-    static u32 message;
-
-    if (message == 0) {
-        message = 1;
+    if (lbl_803DDFB4 == 0) {
+        lbl_803DDFB4 = 1;
         OSReport("***************************************\n");
         OSReport(" ! ! ! C A U T I O N ! ! !             \n");
         OSReport("This TV format \"DEBUG_PAL\" is only for \n");
@@ -1021,9 +1026,6 @@ u32 VIGetDTVStatus(void) {
     OSRestoreInterrupts(enabled);
     return dtvStatus & 1;
 }
-
-static void (*PositionCallback)(s16, s16);
-static VITiming* timingExtra;
 
 VITiming* __VISetExtraTiming(VITiming* t) {
     VITiming* old = timingExtra;
