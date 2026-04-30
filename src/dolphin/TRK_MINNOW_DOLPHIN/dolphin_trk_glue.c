@@ -91,14 +91,6 @@ lbl_80371C20:
 #endif // clang-format on
 }
 
-void TRKUARTInterruptHandler() { }
-
-void TRK_board_display(char* str) { OSReport(str); }
-
-void UnreserveEXI2Port(void) { gDBCommTable.close_func(); }
-
-void ReserveEXI2Port(void) { gDBCommTable.open_func(); }
-
 inline int TRKPollUART(void) { return gDBCommTable.peek_func(); }
 
 inline UARTError TRKReadUARTN(void* bytes, u32 length)
@@ -111,6 +103,75 @@ inline UARTError TRKWriteUARTN(const void* bytes, u32 length)
 {
     int writeErr = gDBCommTable.write_func(bytes, length);
     return writeErr == 0 ? 0 : -1;
+}
+
+void TRKEXICallBack(__OSInterrupt param_0, OSContext* ctx)
+{
+    OSEnableScheduler();
+    TRKLoadContext(ctx, 0x500);
+}
+
+int InitMetroTRKCommTable(int hwId)
+{
+    int result;
+
+    if (hwId == HARDWARE_GDEV) {
+        result = Hu_IsStub();
+
+        gDBCommTable.initialize_func      = (DBCommInitFunc)DBInitComm;
+        gDBCommTable.init_interrupts_func = (DBCommFunc)DBInitInterrupts;
+        gDBCommTable.peek_func            = (DBCommFunc)DBQueryData;
+        gDBCommTable.read_func            = (DBCommReadFunc)DBRead;
+        gDBCommTable.write_func           = (DBCommWriteFunc)DBWrite;
+        gDBCommTable.open_func            = (DBCommFunc)DBOpen;
+        gDBCommTable.close_func           = (DBCommFunc)DBClose;
+    } else {
+        result = AMC_IsStub();
+
+        gDBCommTable.initialize_func      = (DBCommInitFunc)EXI2_Init;
+        gDBCommTable.init_interrupts_func = (DBCommFunc)EXI2_EnableInterrupts;
+        gDBCommTable.peek_func            = (DBCommFunc)EXI2_Poll;
+        gDBCommTable.read_func            = (DBCommReadFunc)EXI2_ReadN;
+        gDBCommTable.write_func           = (DBCommWriteFunc)EXI2_WriteN;
+        gDBCommTable.open_func            = (DBCommFunc)EXI2_Reserve;
+        gDBCommTable.close_func           = (DBCommFunc)EXI2_Unreserve;
+    }
+
+    return result;
+}
+
+DSError TRKInitializeIntDrivenUART(u32 param_0, u32 param_1, u32 param_2, void* param_3)
+{
+    gDBCommTable.initialize_func(param_3, TRKEXICallBack);
+    return DS_NoError;
+}
+
+void EnableEXI2Interrupts(void)
+{
+    gDBCommTable.init_interrupts_func();
+}
+
+UARTError WriteUARTFlush(void)
+{
+    UARTError error = UART_NoError;
+
+    while (lbl_803D8888.writeLen < 0x800) {
+        lbl_803D99A4[lbl_803D8888.writeLen] = 0;
+        lbl_803D8888.writeLen++;
+    }
+
+    if (lbl_803D8888.writeLen != 0) {
+        error = TRKWriteUARTN(lbl_803D99A4, lbl_803D8888.writeLen);
+        lbl_803D8888.writeLen = 0;
+    }
+
+    return error;
+}
+
+UARTError WriteUART1(u8 byte)
+{
+    lbl_803D99A4[lbl_803D8888.writeLen++] = byte;
+    return UART_NoError;
 }
 
 UARTError TRKReadUARTPoll(s8* byte)
@@ -143,71 +204,10 @@ UARTError TRKReadUARTPoll(s8* byte)
     return error;
 }
 
-UARTError WriteUART1(u8 byte)
-{
-    lbl_803D99A4[lbl_803D8888.writeLen++] = byte;
-    return UART_NoError;
-}
+void ReserveEXI2Port(void) { gDBCommTable.open_func(); }
 
-UARTError WriteUARTFlush(void)
-{
-    UARTError error = UART_NoError;
+void UnreserveEXI2Port(void) { gDBCommTable.close_func(); }
 
-    while (lbl_803D8888.writeLen < 0x800) {
-        lbl_803D99A4[lbl_803D8888.writeLen] = 0;
-        lbl_803D8888.writeLen++;
-    }
+void TRK_board_display(char* str) { OSReport(str); }
 
-    if (lbl_803D8888.writeLen != 0) {
-        error = TRKWriteUARTN(lbl_803D99A4, lbl_803D8888.writeLen);
-        lbl_803D8888.writeLen = 0;
-    }
-
-    return error;
-}
-
-void EnableEXI2Interrupts(void)
-{
-    gDBCommTable.init_interrupts_func();
-}
-
-DSError TRKInitializeIntDrivenUART(u32 param_0, u32 param_1, u32 param_2, void* param_3)
-{
-    gDBCommTable.initialize_func(param_3, TRKEXICallBack);
-    return DS_NoError;
-}
-
-int InitMetroTRKCommTable(int hwId)
-{
-    int result;
-
-    if (hwId == HARDWARE_GDEV) {
-        result = Hu_IsStub();
-
-        gDBCommTable.initialize_func      = (DBCommInitFunc)DBInitComm;
-        gDBCommTable.init_interrupts_func = (DBCommFunc)DBInitInterrupts;
-        gDBCommTable.peek_func            = (DBCommFunc)DBQueryData;
-        gDBCommTable.read_func            = (DBCommReadFunc)DBRead;
-        gDBCommTable.write_func           = (DBCommWriteFunc)DBWrite;
-        gDBCommTable.open_func            = (DBCommFunc)DBOpen;
-        gDBCommTable.close_func           = (DBCommFunc)DBClose;
-    } else {
-        result = AMC_IsStub();
-
-        gDBCommTable.initialize_func      = (DBCommInitFunc)EXI2_Init;
-        gDBCommTable.init_interrupts_func = (DBCommFunc)EXI2_EnableInterrupts;
-        gDBCommTable.peek_func            = (DBCommFunc)EXI2_Poll;
-        gDBCommTable.read_func            = (DBCommReadFunc)EXI2_ReadN;
-        gDBCommTable.write_func           = (DBCommWriteFunc)EXI2_WriteN;
-        gDBCommTable.open_func            = (DBCommFunc)EXI2_Reserve;
-        gDBCommTable.close_func           = (DBCommFunc)EXI2_Unreserve;
-    }
-
-    return result;
-}
-
-void TRKEXICallBack(__OSInterrupt param_0, OSContext* ctx)
-{
-    OSEnableScheduler();
-    TRKLoadContext(ctx, 0x500);
-}
+void TRKUARTInterruptHandler() { }
