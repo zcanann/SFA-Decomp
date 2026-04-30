@@ -3,13 +3,9 @@
 float cosf(float);
 float sinf(float);
 
-static struct {
-    GXVtxDescList vcd[27];
-    GXVtxAttrFmtList vat[27];
-} lbl_803AEA38;
+static GXVtxDescList vcd[27];
+static GXVtxAttrFmtList vat[27];
 
-#define vcd lbl_803AEA38.vcd
-#define vat lbl_803AEA38.vat
 
 static inline void GetVertState(void) {
     GXGetVtxDescv(vcd);

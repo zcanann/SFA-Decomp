@@ -496,7 +496,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXAttr.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXDisplayList.c", extra_cflags=["-sdata", "16"]),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXFrameBuf.c"),
-            Object(NonMatching, "dolphin/gx/GXDraw.c"),
+            Object(NonMatching, "dolphin/gx/GXDraw.c", extra_cflags=["-fp_contract", "off"]),
             Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_8032F618.s"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXPerf.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXPixel.c"),
