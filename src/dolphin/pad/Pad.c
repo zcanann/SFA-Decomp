@@ -47,7 +47,7 @@ static u32 PendingBits;
 static u32 Type[4];
 static PADStatus Origin[4];
 
-extern u32 __PADSpec;
+u32 __PADSpec;
 
 // prototypes
 static void PADTypeAndStatusCallback(s32 chan, u32 type);

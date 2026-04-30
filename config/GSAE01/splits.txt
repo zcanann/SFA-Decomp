@@ -1638,13 +1638,14 @@ dolphin/vi/vi.c:
 	.text       start:0x8024BF40 end:0x8024D9B8
 	.data       start:0x8032DDF0 end:0x8032E0B8
 	.bss        start:0x803AE068 end:0x803AE1B0
-	.sbss       start:0x803DDF60 end:0x803DDFC0
+	.sbss       start:0x803DDF60 end:0x803DDFB0
 
 dolphin/pad/Padclamp.c:
 	.text       start:0x8024D9B8 end:0x8024DD94
 
 dolphin/pad/Pad.c:
 	.text       start:0x8024DD94 end:0x8024F6B8
+	.sbss       start:0x803DDFB0 end:0x803DDFD8
 
 dolphin/ai/ai.c:
 	.text       start:0x8024F6B8 end:0x8024FFA0
