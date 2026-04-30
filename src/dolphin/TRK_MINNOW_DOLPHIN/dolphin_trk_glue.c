@@ -44,7 +44,7 @@ int udp_cc_close(void);
 int udp_cc_pre_continue(void);
 int udp_cc_post_stop(void);
 
-DBCommTable gDBCommTable = {};
+extern DBCommTable gDBCommTable;
 
 void TRKEXICallBack(__OSInterrupt param_0, OSContext* ctx);
 
