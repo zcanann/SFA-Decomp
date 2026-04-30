@@ -451,7 +451,7 @@ config.libs = [
     DolphinLib(
         "pad",
         [
-            Object(NonMatching, "dolphin/pad/Pad.c"),
+            Object(NonMatching, "dolphin/pad/Pad.c", extra_cflags=["-DVERSION_GCCP01"]),
             Object(MatchingFor("GSAE01"), "dolphin/pad/Padclamp.c"),
         ],
     ),
