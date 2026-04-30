@@ -55,12 +55,13 @@ u32 __PADSpec;
 static void PADTypeAndStatusCallback(s32 chan, u32 type);
 static u16 GetWirelessID(s32 chan);
 static void SetWirelessID(s32 chan, u16 id);
-static void DoReset();
-static void PADEnable(s32 chan);
+static inline void DoReset(void);
+static inline void PADEnable(s32 chan);
 static void ProbeWireless(s32 chan);
 static void PADProbeCallback(s32 chan, u32 error, OSContext *context);
-static void PADDisable(s32 chan);
-static void UpdateOrigin(s32 chan);
+static inline void PADDisable(s32 chan);
+static inline void UpdateOrigin(s32 chan);
+void ClampCircle(s32 chan);
 static void PADOriginCallback(s32 chan, u32 error, OSContext *context);
 static void PADFixCallback(s32 unused, u32 error, struct OSContext *context);
 static void PADResetCallback(s32 unused, u32 error, struct OSContext *context);
@@ -91,7 +92,7 @@ static OSResetFunctionInfo ResetFunctionInfo = {
     NULL,
 };
 
-static void PADEnable(s32 chan) {
+static inline void PADEnable(s32 chan) {
     u32 cmd;
     u32 chanBit;
     u32 data[2];
@@ -104,7 +105,7 @@ static void PADEnable(s32 chan) {
     SIEnablePolling(EnabledBits);
 }
 
-static void PADDisable(s32 chan) {
+static inline void PADDisable(s32 chan) {
     BOOL enabled;
     u32 chanBit;
 
@@ -119,7 +120,7 @@ static void PADDisable(s32 chan) {
     OSRestoreInterrupts(enabled);
 }
 
-static void DoReset() {
+static inline void DoReset(void) {
     u32 chanBit;
 
     ResettingChan = __cntlzw(ResettingBits);
@@ -133,7 +134,7 @@ static void DoReset() {
     }
 }
 
-static void UpdateOrigin(s32 chan) {
+static inline void UpdateOrigin(s32 chan) {
     PADStatus* origin;
     u32 chanBit = PAD_CHAN0_BIT >> chan;
 
@@ -182,7 +183,7 @@ static void PADOriginCallback(s32 chan, u32 error, OSContext* context) {
 
     if (!(error & (SI_ERROR_UNDER_RUN | SI_ERROR_OVER_RUN | SI_ERROR_NO_RESPONSE | SI_ERROR_COLLISION)))
     {
-        UpdateOrigin(ResettingChan);
+        ClampCircle(ResettingChan);
         PADEnable(ResettingChan);
     }
 
@@ -194,7 +195,7 @@ static void PADOriginUpdateCallback(s32 chan, u32 error, OSContext* context) {
     if (!(EnabledBits & (PAD_CHAN0_BIT >> chan)))
         return;
     if (!(error & (SI_ERROR_UNDER_RUN | SI_ERROR_OVER_RUN | SI_ERROR_NO_RESPONSE | SI_ERROR_COLLISION)))
-        UpdateOrigin(chan);
+        ClampCircle(chan);
     if (error & SI_ERROR_NO_RESPONSE) {
         PADDisable(chan);
     }
