@@ -1600,22 +1600,20 @@ dolphin/dvd/dvdlow.c:
 	.bss        start:0x803ADE20 end:0x803ADEF0
 	.sbss       start:0x803DDEA0 end:0x803DDEE8
 
-main/unknown/autos/placeholder_803ADF00.s:
-	.bss        start:0x803ADF00 end:0x803ADFD8
-
 dolphin/dvd/dvdfs.c:
 	.text       start:0x80248870 end:0x802491C4
 	.data       start:0x8032D830 end:0x8032DC20
 	.sdata      start:0x803DC560 end:0x803DC568
-
-main/unknown/autos/placeholder_803DC568.s:
-	.sdata      start:0x803DC568 end:0x803DC570
 
 dolphin/dvd/dvdFatal.c:
 	.text       start:0x802491C4 end:0x802491F4
 
 dolphin/dvd/dvd.c:
 	.text       start:0x802491F4 end:0x8024B970
+	.data       start:0x8032DC20 end:0x8032DD38
+	.bss        start:0x803ADF00 end:0x803ADFD8
+	.sdata      start:0x803DC568 end:0x803DC570
+	.sbss       start:0x803DDF08 end:0x803DDF50
 
 dolphin/dvd/dvdqueue.c:
 	.text       start:0x8024B970 end:0x8024BB68
