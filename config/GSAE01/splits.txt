@@ -2438,6 +2438,9 @@ dolphin/MSL_C/PPCEABI/bare/H/printf.c:
 	.data       start:0x803327E8 end:0x80332A18
 	.sdata      start:0x803DC640 end:0x803DC648
 
+dolphin/MSL_C/PPCEABI/bare/H/common_float_tables.c:
+	.data       start:0x80332A28 end:0x80332C78
+
 main/unknown/autos/placeholder_80332EF0.s:
 	.data       start:0x80332EF0 end:0x80332F48
 
