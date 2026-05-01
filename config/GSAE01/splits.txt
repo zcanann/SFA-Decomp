@@ -2488,8 +2488,20 @@ dolphin/MSL_C/PPCEABI/bare/H/s_floor.c:
 dolphin/MSL_C/PPCEABI/bare/H/s_sin.c:
 	.text       start:0x80294204 end:0x80294640
 
+dolphin/base/PPCArch_weak.c:
+	.text       start:0x80294640 end:0x8029465C
+
+dolphin/MSL_C/PPCEABI/bare/H/ctype_funcs.c:
+	.text       start:0x8029465C end:0x80294684
+
 dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c:
-	.text       start:0x80294640 end:0x802947CC
+	.text       start:0x80294684 end:0x8029471C
+
+dolphin/MSL_C/PPCEABI/bare/H/hyperbolicsf.c:
+	.text       start:0x8029471C end:0x80294724
+
+dolphin/MSL_C/PPCEABI/bare/H/floorf.c:
+	.text       start:0x80294724 end:0x802947CC
 
 dolphin/MSL_C/PPCEABI/bare/H/trigf.c:
 	.text       start:0x802947CC end:0x80294BB8
