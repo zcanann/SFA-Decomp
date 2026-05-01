@@ -20,24 +20,19 @@ extern char _db_stack_end[];
 extern char *__OSResetSWInterruptHandler[];
 
 vu16 __OSDeviceCode : (OS_BASE_CACHED | 0x30E6);
-extern DVDDriveInfo DriveInfo_803AD320;
-#define DriveInfo DriveInfo_803AD320
-#define DriveBlock (*(DVDCommandBlock*)((u8*)&DriveInfo_803AD320 + sizeof(DVDDriveInfo)))
+static DVDDriveInfo DriveInfo ATTRIBUTE_ALIGN(32);
+static DVDCommandBlock DriveBlock;
 
-extern OSBootInfo *BootInfo_803DDDD8;
-extern u32 *BI2DebugFlag_803DDDDC;
-extern u32 *BI2DebugFlagHolder_803DDDE0;
-extern BOOL __OSIsGcam;
-extern BOOL AreWeInitialized_803DDDE8;
-extern __OSExceptionHandler *OSExceptionTable_803DDDEC;
-#define BootInfo BootInfo_803DDDD8
-#define BI2DebugFlag BI2DebugFlag_803DDDDC
-#define BI2DebugFlagHolder BI2DebugFlagHolder_803DDDE0
-#define AreWeInitialized AreWeInitialized_803DDDE8
-#define OSExceptionTable OSExceptionTable_803DDDEC
-
-extern OSTime __OSStartTime;
-extern BOOL __OSInIPL;
+static OSBootInfo *BootInfo;
+static u32 *BI2DebugFlag;
+static u32 *BI2DebugFlagHolder;
+__declspec(weak) BOOL __OSIsGcam = FALSE;
+static f64 ZeroF;
+static f32 ZeroPS[2];
+static BOOL AreWeInitialized = FALSE;
+static __OSExceptionHandler *OSExceptionTable;
+OSTime __OSStartTime;
+BOOL __OSInIPL;
 
 extern u8 __ArenaHi[];
 extern u8 __ArenaLo[];
@@ -61,6 +56,94 @@ void OSDefaultExceptionHandler(__OSException exception, OSContext *context);
 extern BOOL __DBIsExceptionMarked(__OSException);
 static void OSExceptionInit(void);
 
+/* clang-format off */
+asm void __OSFPRInit(void)
+{
+    nofralloc
+
+    mfmsr   r3
+    ori     r3, r3, 0x2000
+    mtmsr   r3
+
+    mfspr   r3, 0x398
+    rlwinm. r3, r3, 3, 31, 31
+    beq     SkipPairedSingles
+
+    lis     r3, ZeroPS@ha
+    addi    r3, r3, ZeroPS@l
+    psq_l   fp0, 0(r3), 0, 0
+    ps_mr   fp1, fp0
+    ps_mr   fp2, fp0
+    ps_mr   fp3, fp0
+    ps_mr   fp4, fp0
+    ps_mr   fp5, fp0
+    ps_mr   fp6, fp0
+    ps_mr   fp7, fp0
+    ps_mr   fp8, fp0
+    ps_mr   fp9, fp0
+    ps_mr   fp10, fp0
+    ps_mr   fp11, fp0
+    ps_mr   fp12, fp0
+    ps_mr   fp13, fp0
+    ps_mr   fp14, fp0
+    ps_mr   fp15, fp0
+    ps_mr   fp16, fp0
+    ps_mr   fp17, fp0
+    ps_mr   fp18, fp0
+    ps_mr   fp19, fp0
+    ps_mr   fp20, fp0
+    ps_mr   fp21, fp0
+    ps_mr   fp22, fp0
+    ps_mr   fp23, fp0
+    ps_mr   fp24, fp0
+    ps_mr   fp25, fp0
+    ps_mr   fp26, fp0
+    ps_mr   fp27, fp0
+    ps_mr   fp28, fp0
+    ps_mr   fp29, fp0
+    ps_mr   fp30, fp0
+    ps_mr   fp31, fp0
+
+SkipPairedSingles:
+    lfd     fp0, ZeroF
+    fmr     fp1, fp0
+    fmr     fp2, fp0
+    fmr     fp3, fp0
+    fmr     fp4, fp0
+    fmr     fp5, fp0
+    fmr     fp6, fp0
+    fmr     fp7, fp0
+    fmr     fp8, fp0
+    fmr     fp9, fp0
+    fmr     fp10, fp0
+    fmr     fp11, fp0
+    fmr     fp12, fp0
+    fmr     fp13, fp0
+    fmr     fp14, fp0
+    fmr     fp15, fp0
+    fmr     fp16, fp0
+    fmr     fp17, fp0
+    fmr     fp18, fp0
+    fmr     fp19, fp0
+    fmr     fp20, fp0
+    fmr     fp21, fp0
+    fmr     fp22, fp0
+    fmr     fp23, fp0
+    fmr     fp24, fp0
+    fmr     fp25, fp0
+    fmr     fp26, fp0
+    fmr     fp27, fp0
+    fmr     fp28, fp0
+    fmr     fp29, fp0
+    fmr     fp30, fp0
+    fmr     fp31, fp0
+
+    mtfsf   0xFF, fp0
+
+    blr
+}
+/* clang-format on */
+
 u32 OSGetConsoleType()
 {
     if (BootInfo == NULL || BootInfo->consoleType == 0) {
@@ -69,8 +152,8 @@ u32 OSGetConsoleType()
     return BootInfo->consoleType;
 }
 
-extern void *__OSSavedRegionStart;
-extern void *__OSSavedRegionEnd;
+void *__OSSavedRegionStart;
+void *__OSSavedRegionEnd;
 
 extern u32 BOOT_REGION_START : 0x812FDFF0; //(*(u32 *)0x812fdff0)
 extern u32 BOOT_REGION_END : 0x812FDFEC; //(*(u32 *)0x812fdfec)
@@ -126,7 +209,6 @@ void OSInit(void)
     BI2Debug *DebugInfo;
     void *debugArenaLo;
     u32 inputConsoleType;
-    DVDDriveInfo *driveInfo = &DriveInfo;
 
     // check if we've already done all this or not
     if ((BOOL)AreWeInitialized == FALSE) { // fantastic name
@@ -274,8 +356,8 @@ void OSInit(void)
                 __OSDeviceCode = 0x9000;
                 return;
             }
-            DCInvalidateRange(driveInfo, sizeof(DriveInfo));
-            DVDInquiryAsync((DVDCommandBlock*)((u8*)driveInfo + sizeof(DVDDriveInfo)), driveInfo, InquiryCallback);
+            DCInvalidateRange(&DriveInfo, sizeof(DriveInfo));
+            DVDInquiryAsync(&DriveBlock, &DriveInfo, InquiryCallback);
         }
     }
 }

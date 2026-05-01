@@ -13,10 +13,6 @@ Sections:
 	.sdata2     type:rodata align:32
 	.sbss2      type:bss align:64
 
-main/unknown/autos/placeholder_803AD320.s:
-	.bss        start:0x803AD320 end:0x803AD370
-	.sbss       start:0x803DDDD8 end:0x803DDE08
-
 main/unknown/autos/placeholder_800066E0.c:
 	.text       start:0x800066E0 end:0x800173E4
 
@@ -1481,6 +1477,8 @@ dolphin/base/PPCArch.c:
 dolphin/os/OS.c:
 	.text       start:0x802403D8 end:0x80240D34
 	.data       start:0x8032C360 end:0x8032C520
+	.bss        start:0x803AD320 end:0x803AD370
+	.sbss       start:0x803DDDD8 end:0x803DDE08
 
 dolphin/os/OSAlarm.c:
 	.text       start:0x80240D34 end:0x802413E0
