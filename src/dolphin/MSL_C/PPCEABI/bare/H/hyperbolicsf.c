@@ -1,5 +1,6 @@
-asm float fabsf__Ff(register float x) {
-    nofralloc
-    fabs f1, f1
-    blr
+extern float __fabsf(float);
+
+float fabsf__Ff(float x)
+{
+    return __fabsf(x);
 }
