@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_80282fe0(int param_1);
+void snd_handle_irq(void);
 int hwInit(u32 value, u8 valueA, u8 valueB, u32 flags);
 void hwExit(void);
 void fn_80283244(u8 value);

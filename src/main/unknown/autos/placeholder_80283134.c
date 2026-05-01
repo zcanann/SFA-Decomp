@@ -66,7 +66,9 @@ extern undefined4 DAT_803bef8a;
 extern undefined4 DAT_803befae;
 extern undefined4 DAT_803befd2;
 extern undefined4 DAT_803d4900;
+extern u8 lbl_803DE238;
 extern u8 lbl_803DE370;
+extern u8 lbl_803DE37D;
 extern u8 lbl_803DE37E;
 extern u8 lbl_803DE37F;
 extern u32 lbl_803DE348;
@@ -75,6 +77,7 @@ extern u8 *lbl_803DE344;
 extern void hwSetSRCType(int slot, u32 value);
 extern void hwSetPolyPhaseFilter(int slot, u32 value);
 extern void hwSetITDMode(int slot, u32 value);
+void hwSetTimeOffset(u8 value);
 extern void fn_8027BDE0(void);
 extern void fn_80284878(void);
 extern void fn_80284998(void);
@@ -86,6 +89,17 @@ extern u32 fn_8028478C(void *callback, u32 flags, u32 value);
 extern u32 fn_8027BA04(u32 valueA, u32 valueB, u32 enabled);
 extern u32 fn_802848D8(u32 flags);
 extern void fn_80284858(void);
+extern void fn_802737E8(void);
+extern void fn_80284B2C(void);
+extern void fn_802848AC(void);
+extern void fn_802849CC(void);
+extern void fn_80284B4C(void);
+extern void fn_8027F14C(void);
+extern void fn_8026EC44(u32 value);
+extern void fn_80271498(u32 value);
+extern void fn_80280C30(void);
+extern void fn_80272F70(void);
+extern void fn_8027B25C(void);
 
 /*
  * --INFO--
@@ -100,8 +114,68 @@ extern void fn_80284858(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void snd_handle_irq(int param_1)
+void snd_handle_irq(void)
 {
+    u32 offset;
+    u32 i;
+    u8 *entry;
+
+    if (lbl_803DE238 == 0) {
+        return;
+    }
+
+    fn_802737E8();
+    fn_80284B2C();
+    fn_802848AC();
+    fn_802849CC();
+    fn_80284B4C();
+    fn_80284B2C();
+    fn_8027F14C();
+    fn_80284B4C();
+    fn_80284B2C();
+
+    lbl_803DE37E = (lbl_803DE37E + 1) % 3;
+    lbl_803DE37F ^= 1;
+
+    offset = 0;
+    i = 0;
+    while ((u8)i < lbl_803DE37D) {
+        entry = lbl_803DE344;
+        *(u32 *)(entry + offset + 0x24) = 0;
+        entry = lbl_803DE344;
+        *(u32 *)(entry + offset + 0x28) = 0;
+        entry = lbl_803DE344;
+        *(u32 *)(entry + offset + 0x2c) = 0;
+        entry = lbl_803DE344;
+        *(u32 *)(entry + offset + 0x30) = 0;
+        entry = lbl_803DE344;
+        *(u32 *)(entry + offset + 0x34) = 0;
+        offset += 0xf4;
+        i++;
+    }
+
+    fn_80284B4C();
+
+    i = 0;
+    while ((u8)i < 5) {
+        fn_80284B2C();
+        hwSetTimeOffset(i);
+        fn_8026EC44(0x100);
+        fn_80271498(0x100);
+        fn_80284B4C();
+        i++;
+    }
+
+    fn_80284B2C();
+    hwSetTimeOffset(0);
+    fn_80280C30();
+    fn_80284B4C();
+    fn_80284B2C();
+    fn_80272F70();
+    fn_80284B4C();
+    fn_80284B2C();
+    fn_8027B25C();
+    fn_80284B4C();
 }
 
 /*
