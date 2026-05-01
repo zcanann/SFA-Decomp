@@ -207,14 +207,24 @@ class BoundaryConflict:
     symbol_end: int
 
 
-def current_build_object_path(version: str, source: Path) -> Path | None:
+def current_build_object_path(version: str, source: Path, build_ninja: Path) -> Path | None:
     try:
         relative_source = source.resolve().relative_to((Path.cwd() / "src").resolve())
     except ValueError:
         return None
 
     candidate = Path("build") / version / "src" / relative_source.with_suffix(".o")
-    return candidate if candidate.is_file() else None
+    if not candidate.is_file():
+        return None
+
+    try:
+        ninja_text = build_ninja.read_text(encoding="utf-8", errors="ignore")
+    except OSError:
+        return None
+
+    normalized_ninja = ninja_text.replace("\\", "/")
+    normalized_candidate = candidate.as_posix()
+    return candidate if normalized_candidate in normalized_ninja else None
 
 
 def section_size_diffs(
@@ -1142,7 +1152,7 @@ def analyze_source(
         text_size=text_size,
         compiled_functions=compiled_functions,
     )
-    built_object_path = current_build_object_path(version, source)
+    built_object_path = current_build_object_path(version, source, build_resolution.build_ninja)
     built_sections: tuple[ObjectSection, ...] = ()
     built_symbols: tuple[ObjectSymbol, ...] = ()
     if built_object_path is not None:
