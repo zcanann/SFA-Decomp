@@ -1,6 +1,8 @@
 typedef signed short s16;
 typedef unsigned int u32;
 
+extern double __fabs(double);
+
 static const float min_exp2_arg = -127.0f;
 static const float zero = 0.0f;
 static const float one = 1.0f;
@@ -13,12 +15,10 @@ static const float log2e = 1.4426950216293335f;
 static const float small_int_limit = 65536.0f;
 static const float large_int_limit = 8388608.0f;
 
-asm float fn_80291CBC(register float x)
+float fn_80291CBC(float x)
 {
-    nofralloc
-    fabs f0, f1
-    frsp f1, f0
-    blr
+    double y = __fabs(x);
+    return y;
 }
 
 asm float fn_80291CC8(register s16* p)
