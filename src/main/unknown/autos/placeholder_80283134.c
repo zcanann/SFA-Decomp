@@ -73,6 +73,12 @@ extern u8 *lbl_803DE344;
 extern void hwSetSRCType(int slot, u32 value);
 extern void hwSetPolyPhaseFilter(int slot, u32 value);
 extern void hwSetITDMode(int slot, u32 value);
+extern void fn_8027BDE0(void);
+extern void fn_80284878(void);
+extern void fn_80284998(void);
+extern void fn_80284AB8(void);
+extern void fn_80284ABC(void);
+extern void fn_80284AF4(void);
 
 /*
  * --INFO--
@@ -107,6 +113,16 @@ void snd_handle_irq(int param_1)
 uint hwInit(uint param_1)
 {
     return 0;
+}
+
+void hwExit(void)
+{
+    fn_80284AF4();
+    fn_80284998();
+    fn_8027BDE0();
+    fn_80284878();
+    fn_80284ABC();
+    fn_80284AB8();
 }
 
 void hwSetTimeOffset(u8 value)
