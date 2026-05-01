@@ -25,15 +25,19 @@ loop:
 int tolower(int x) {
     if (x == -1) {
         return -1;
+    } else {
+        return lbl_803326E8[(u8)x];
     }
-
-    return lbl_803326E8[(u8)x];
 }
 
-int __write_console(int handle, void* buf, u32* count) {
+int __write_console(int handle, void* buf, u32* count, void* idle_fn) {
     int result = 0;
+    u8 unused[8];
 
     (void)handle;
+    (void)idle_fn;
+    (void)unused;
+
     if (!lbl_803DE418) {
         result = InitializeUART(0xE100);
         if (result == 0) {
