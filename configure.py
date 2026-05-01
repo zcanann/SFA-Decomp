@@ -684,7 +684,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/s_frexp.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/s_ldexp.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/s_modf.c", mw_version="GC/1.3"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.c", mw_version="GC/1.3"),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/gamecube.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/rand.c"),
