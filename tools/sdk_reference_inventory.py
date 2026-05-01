@@ -44,6 +44,10 @@ SDK_ROOTS = {
 TEXT_RE = re.compile(r"\s*\.text\s+start:(0x[0-9A-Fa-f]+)\s+end:(0x[0-9A-Fa-f]+)")
 CANONICAL_EXTENSIONS = {".c", ".cpp", ".cp", ".cxx"}
 CONFIG_OBJECT_EXTENSIONS = "c|cpp|cp|cxx|s|S"
+OBJECT_PATH_RE = re.compile(
+    rf'Object\((?:.|\n)*?"([^"]+\.(?:{CONFIG_OBJECT_EXTENSIONS}))"',
+    re.MULTILINE,
+)
 PATH_ALIASES = {
     "dolphin/dvd/dvdfatal.c": "dolphin/dvd/dvdFatal.c",
     "dolphin/pad/PadClamp.c": "dolphin/pad/Padclamp.c",
@@ -135,10 +139,7 @@ def load_configured_objects() -> tuple[set[str], set[str]]:
     configure_path = ROOT / "configure.py"
     exact_paths: set[str] = set()
     canonical_paths: set[str] = set()
-    for match in re.finditer(
-        rf'Object\([^\n]*?,\s*"([^"]+\.(?:{CONFIG_OBJECT_EXTENSIONS}))"\)',
-        configure_path.read_text(),
-    ):
+    for match in OBJECT_PATH_RE.finditer(configure_path.read_text()):
         path = match.group(1)
         exact_paths.add(path)
         canonical_paths.add(canonicalize_sdk_path(path))
