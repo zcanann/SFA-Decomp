@@ -2,6 +2,11 @@
 #include "main/unknown/autos/placeholder_80283DA0.h"
 
 extern undefined4 DAT_803defc4;
+extern u32 lbl_803BD150[];
+extern f32 lbl_803E78E8;
+extern u32 __cvt_fp2unsigned(double value);
+extern void fn_80284224(undefined4 value);
+extern void fn_80284444(void);
 
 /*
  * --INFO--
@@ -16,8 +21,9 @@ extern undefined4 DAT_803defc4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void hwExitStream(int param_1,undefined4 param_2,undefined4 param_3)
+u32 hwExitStream(u32 value)
 {
+    return __cvt_fp2unsigned((double)((lbl_803E78E8 * (f32)value) / (f32)lbl_803BD150[0]));
 }
 
 /*
@@ -33,9 +39,9 @@ void hwExitStream(int param_1,undefined4 param_2,undefined4 param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined hwGetStreamPlayBuffer(int param_1)
+void hwGetStreamPlayBuffer(undefined4 unused, undefined4 value)
 {
-    return 0;
+    fn_80284224(value);
 }
 
 /*
@@ -51,9 +57,9 @@ undefined hwGetStreamPlayBuffer(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined hwTransAddr(int param_1)
+void hwTransAddr(void)
 {
-    return 0;
+    fn_80284444();
 }
 
 /*
