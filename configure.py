@@ -339,7 +339,7 @@ config.libs = [
         "os",
         [
             Object(NonMatching, "dolphin/os/OS.c"),
-            Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_803AD320.s"),
+            Object(NonMatching, "main/unknown/autos/placeholder_803AD320.s"),
             Object(NonMatching, "dolphin/os/OSAddress.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSAlarm.c"),
             Object(MatchingFor("GSAE01"), "dolphin/os/OSAlloc.c"),
