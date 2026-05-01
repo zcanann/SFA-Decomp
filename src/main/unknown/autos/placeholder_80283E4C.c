@@ -5,6 +5,10 @@ extern undefined4 DAT_803dd280;
 extern undefined4 DAT_803dd288;
 extern undefined4 DAT_803defc4;
 extern undefined4 DAT_803deff0;
+extern u32 lbl_803DE334;
+extern u8 *lbl_803DE344;
+extern u32 lbl_803DE374;
+extern u32 lbl_803DE378;
 
 /*
  * --INFO--
@@ -93,3 +97,42 @@ void FUN_80283e0c(int param_1,char param_2)
 
 /* Pattern wrappers. */
 void fn_80283F34(void) {}
+
+void fn_80283F38(u32 *values)
+{
+  u32 first;
+  u32 second;
+
+  second = values[1];
+  first = values[0];
+  lbl_803DE374 = first;
+  lbl_803DE378 = second;
+}
+
+void fn_80283F4C(void)
+{
+  lbl_803DE334 = 0;
+}
+
+int fn_80283F58(int slot)
+{
+  u8 *entry;
+
+  slot *= 0xf4;
+  entry = lbl_803DE344;
+  entry += slot;
+  if (entry[0xec] == 0) {
+    return -1;
+  }
+  return *(int *)(entry + 0xe8);
+}
+
+int fn_80283F80(int slot)
+{
+  u8 *entry;
+
+  slot *= 0xf4;
+  entry = lbl_803DE344;
+  entry += slot;
+  return entry[0xec] == 1;
+}
