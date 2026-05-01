@@ -242,6 +242,8 @@ def main() -> int:
             spec = resolve_reference_spec(label)
             try:
                 reference_window = select_reference_window(spec, candidate.path)
+            except FileNotFoundError:
+                continue
             except SystemExit:
                 continue
             reference_label = label
