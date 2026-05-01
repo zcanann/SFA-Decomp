@@ -6,13 +6,13 @@ extern int WriteUARTN(void* buf, u32 n);
 extern u8 lbl_803326E8[];
 extern s32 lbl_803DE418;
 
-asm void PPCMtdec(register u32 newDec) {
+__declspec(weak) asm void PPCMtdec(register u32 newDec) {
     nofralloc
     mtdec r3
     blr
 }
 
-asm void PPCHalt(void) {
+__declspec(weak) asm void PPCHalt(void) {
     nofralloc
     sync
 loop:
