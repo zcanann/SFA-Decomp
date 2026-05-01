@@ -7,9 +7,12 @@ typedef struct Vec3f {
 } Vec3f;
 
 extern float fn_80293954(float x);
+extern float lbl_803E7BF8;
 
 void fn_80292C74(void* v_in, void* v_out, float s);
 float fn_80292C9C(void* v);
+void fn_80291CE4(u16* p, float x);
+float fn_80291CC8(u16* p);
 
 float fn_80292B44(float x, float y) {
     (void)y;
@@ -34,9 +37,9 @@ float fn_80292C9C(void* v) {
     return vec->z * vec->z + (vec->x * vec->x + vec->y * vec->y);
 }
 
-float fn_80292CC4(short* p, float x) {
-    if (p != NULL) {
-        *p = 0;
-    }
-    return x;
+float fn_80292CC4(u16* p, float x) {
+    float scaled = lbl_803E7BF8 * __fabsf(x);
+    fn_80291CE4(p, scaled);
+    *p = (*p + 1) & 0xFFFE;
+    return scaled - fn_80291CC8(p);
 }
