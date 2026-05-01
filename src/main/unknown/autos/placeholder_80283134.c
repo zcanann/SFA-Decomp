@@ -70,6 +70,10 @@ extern u8 lbl_803DE370;
 extern u32 lbl_803DE348;
 extern u8 *lbl_803DE344;
 
+extern void hwSetSRCType(int slot, u32 value);
+extern void hwSetPolyPhaseFilter(int slot, u32 value);
+extern void hwSetITDMode(int slot, u32 value);
+
 /*
  * --INFO--
  *
@@ -142,4 +146,106 @@ void hwSetPriority(int slot, u32 value)
     entry = lbl_803DE344;
     entry += slot;
     *(u32 *)(entry + 0x1c) = value;
+}
+
+void hwInitSamplePlayback(int slot, u16 value70, u32 *values, u32 resetAdsr, u32 priority, u32 value18, u32 resetSrc, u32 itdMode)
+{
+    u8 *entry;
+    u32 offset;
+    u32 inputOffset;
+    u32 flags;
+    u32 i;
+    u32 zero;
+    u32 valueA;
+    u32 valueB;
+    u32 *dst;
+
+    zero = 0;
+    inputOffset = 0;
+    flags = 0;
+    i = 0;
+    offset = slot * 0xf4;
+
+    while ((u8)i <= lbl_803DE370) {
+        entry = lbl_803DE344;
+        entry += inputOffset;
+        entry += offset;
+        flags |= *(u32 *)(entry + 0x24) & 0x20;
+        *(u32 *)(entry + 0x24) = zero;
+        inputOffset += 4;
+        i++;
+    }
+
+    entry = lbl_803DE344;
+    entry += offset;
+    *(u32 *)(entry + 0x24) = flags;
+    entry = lbl_803DE344;
+    entry += offset;
+    *(u32 *)(entry + 0x1c) = priority;
+    entry = lbl_803DE344;
+    entry += offset;
+    *(u32 *)(entry + 0x18) = value18;
+    entry = lbl_803DE344;
+    entry += offset;
+    *(u32 *)(entry + 0xf0) = zero;
+    entry = lbl_803DE344;
+    entry += offset;
+    *(u16 *)(entry + 0x70) = value70;
+
+    entry = lbl_803DE344;
+    entry += offset;
+    dst = (u32 *)(entry + 0x74);
+    valueA = values[0];
+    valueB = values[1];
+    dst[0] = valueA;
+    dst[1] = valueB;
+    valueA = values[2];
+    valueB = values[3];
+    dst[2] = valueA;
+    dst[3] = valueB;
+    valueA = values[4];
+    valueB = values[5];
+    dst[4] = valueA;
+    dst[5] = valueB;
+    valueA = values[6];
+    valueB = values[7];
+    dst[6] = valueA;
+    dst[7] = valueB;
+
+    if (resetAdsr != 0) {
+        entry = lbl_803DE344;
+        entry += offset;
+        *(u8 *)(entry + 0xa4) = zero;
+        entry = lbl_803DE344;
+        entry += offset;
+        *(u32 *)(entry + 0xb8) = zero;
+        entry = lbl_803DE344;
+        entry += offset;
+        *(u32 *)(entry + 0xbc) = zero;
+        entry = lbl_803DE344;
+        entry += offset;
+        *(u16 *)(entry + 0xc0) = 0x7fff;
+        entry = lbl_803DE344;
+        entry += offset;
+        *(u32 *)(entry + 0xc4) = zero;
+    }
+
+    entry = lbl_803DE344;
+    entry += offset;
+    *(u8 *)(entry + 0xe4) = 0xff;
+    entry = lbl_803DE344;
+    entry += offset;
+    *(u8 *)(entry + 0xe5) = 0xff;
+    entry = lbl_803DE344;
+    entry += offset;
+    *(u8 *)(entry + 0xe6) = 0xff;
+    entry = lbl_803DE344;
+    entry += offset;
+    *(u8 *)(entry + 0xe7) = 0xff;
+
+    if (resetSrc != 0) {
+        hwSetSRCType(slot, 0);
+        hwSetPolyPhaseFilter(slot, 1);
+    }
+    hwSetITDMode(slot, itdMode);
 }
