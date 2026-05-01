@@ -67,6 +67,8 @@ extern undefined4 DAT_803befae;
 extern undefined4 DAT_803befd2;
 extern undefined4 DAT_803d4900;
 extern u8 lbl_803DE370;
+extern u8 lbl_803DE37E;
+extern u8 lbl_803DE37F;
 extern u32 lbl_803DE348;
 extern u8 *lbl_803DE344;
 
@@ -79,6 +81,11 @@ extern void fn_80284998(void);
 extern void fn_80284AB8(void);
 extern void fn_80284ABC(void);
 extern void fn_80284AF4(void);
+extern void fn_80284A8C(void);
+extern u32 fn_8028478C(void *callback, u32 flags, u32 value);
+extern u32 fn_8027BA04(u32 valueA, u32 valueB, u32 enabled);
+extern u32 fn_802848D8(u32 flags);
+extern void fn_80284858(void);
 
 /*
  * --INFO--
@@ -110,9 +117,22 @@ void snd_handle_irq(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint hwInit(uint param_1)
+int hwInit(u32 value, u8 valueA, u8 valueB, u32 flags)
 {
-    return 0;
+    fn_80284A8C();
+    lbl_803DE37F = 0;
+    lbl_803DE37E = 0;
+    lbl_803DE348 = 0;
+
+    if (fn_8028478C(snd_handle_irq, flags, value) != 0 &&
+        fn_8027BA04(valueA, valueB, (flags & 1) != 0) != 0 &&
+        fn_802848D8(flags) != 0) {
+        fn_80284ABC();
+        fn_80284858();
+        return 0;
+    }
+
+    return -1;
 }
 
 void hwExit(void)

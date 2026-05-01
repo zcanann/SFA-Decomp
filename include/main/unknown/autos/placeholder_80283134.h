@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 
 void FUN_80282fe0(int param_1);
-uint FUN_80282fe4(uint param_1);
+int hwInit(u32 value, u8 valueA, u8 valueB, u32 flags);
 void hwExit(void);
 void fn_80283244(u8 value);
 u8 fn_8028324C(void);
