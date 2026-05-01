@@ -73,6 +73,7 @@ TOP16_MASK_OPCODES = {
 }
 TOP16_LOW2_MASK_OPCODES = {56, 57, 60, 61}
 SDK_ROOTS = {
+    "MSL_C",
     "TRK_MINNOW_DOLPHIN",
     "OdemuExi2",
     "ai",
@@ -108,6 +109,26 @@ PATH_ALIASES = {
     "dolphin/pad/padclamp.c": "dolphin/pad/Padclamp.c",
     "dolphin/mtx/mtx44vec.c": "dolphin/mtx/mtxvec.c",
 }
+
+
+def normalize_msl_path(path: str) -> str | None:
+    parts = path.split("/")
+    if path.startswith("MSL_C.PPCEABI.bare.H/"):
+        return "dolphin/MSL_C/PPCEABI/bare/H/" + path.rsplit("/", 1)[1]
+
+    for marker in (
+        "MSL_C/PPCEABI/bare/H/",
+        "MSL_C/MSL_Common_Embedded/Math/Double_precision/",
+        "MSL_C/MSL_Common_Embedded/Math/Single_precision/",
+        "MSL_C/MSL_Common_Embedded/",
+    ):
+        if marker in path:
+            return "dolphin/MSL_C/PPCEABI/bare/H/" + path.rsplit("/", 1)[1]
+
+    if len(parts) == 2 and parts[0] == "MSL":
+        return "dolphin/MSL_C/PPCEABI/bare/H/" + parts[1]
+
+    return None
 
 
 @dataclass(frozen=True)
@@ -363,6 +384,9 @@ def parse_int(value: str) -> int:
 
 def normalize_path(value: str) -> str:
     path = value.replace("\\", "/").strip()
+    msl_path = normalize_msl_path(path)
+    if msl_path is not None:
+        path = msl_path
     for prefix in ("SDK/", "Dolphin/", "dolphin/"):
         if path.startswith(prefix):
             path = path[len(prefix) :]

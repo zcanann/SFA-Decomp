@@ -14,6 +14,7 @@ from typing import Iterable
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_VERSION = "GSAE01"
 SDK_ROOTS = {
+    "MSL_C",
     "TRK_MINNOW_DOLPHIN",
     "OdemuExi2",
     "ai",
@@ -57,6 +58,26 @@ PATH_ALIASES = {
 }
 
 
+def normalize_msl_path(path: str) -> str | None:
+    parts = path.split("/")
+    if path.startswith("MSL_C.PPCEABI.bare.H/"):
+        return "dolphin/MSL_C/PPCEABI/bare/H/" + path.rsplit("/", 1)[1]
+
+    for marker in (
+        "MSL_C/PPCEABI/bare/H/",
+        "MSL_C/MSL_Common_Embedded/Math/Double_precision/",
+        "MSL_C/MSL_Common_Embedded/Math/Single_precision/",
+        "MSL_C/MSL_Common_Embedded/",
+    ):
+        if marker in path:
+            return "dolphin/MSL_C/PPCEABI/bare/H/" + path.rsplit("/", 1)[1]
+
+    if len(parts) == 2 and parts[0] == "MSL":
+        return "dolphin/MSL_C/PPCEABI/bare/H/" + parts[1]
+
+    return None
+
+
 @dataclass(frozen=True)
 class RefSpec:
     project: str
@@ -94,6 +115,9 @@ def parse_refspec(value: str) -> RefSpec:
 
 def normalize_sdk_path(raw_path: str) -> str | None:
     path = raw_path.replace("\\", "/")
+    msl_path = normalize_msl_path(path)
+    if msl_path is not None:
+        return msl_path
     for prefix in ("SDK/", "Dolphin/", "dolphin/"):
         if path.startswith(prefix):
             path = path[len(prefix) :]
