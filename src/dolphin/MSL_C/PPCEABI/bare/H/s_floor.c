@@ -22,10 +22,11 @@ float floor(float x) {
         u32 u;
     } bits;
     int n;
-    double y = tan(&n, x);
+    double y;
     double y2;
 
     bits.f = x;
+    y = tan(&n, bits.f);
     n += (bits.u >> 29) & 4;
     y2 = y * y;
 
