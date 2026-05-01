@@ -77,6 +77,10 @@ def flip_config(config_text: str, source: str) -> str:
     return new_text
 
 
+def write_config(config_text: str) -> None:
+    CONFIGURE.write_text(config_text, newline="\n")
+
+
 def run_step(command: list[str], timeout: int) -> subprocess.CompletedProcess[str] | None:
     try:
         return subprocess.run(
@@ -110,21 +114,26 @@ def summarize_failure(output: str) -> str:
 def try_flip(source: str, version: str, ninja_timeout: int, keep: bool, require_active_unit: bool) -> FlipResult:
     original = CONFIGURE.read_text()
     try:
-        CONFIGURE.write_text(flip_config(original, source))
+        write_config(flip_config(original, source))
 
         configured = run_step(["python", "configure.py", "--matching"], timeout=120)
         if configured is None:
+            write_config(original)
             return FlipResult(source, False, "configure", "timeout")
         if configured.returncode != 0:
+            write_config(original)
             return FlipResult(source, False, "configure", summarize_failure(configured.stdout))
         active_unit = has_active_unit(source, version)
         if require_active_unit and not active_unit:
+            write_config(original)
             return FlipResult(source, False, "active-unit", "not present in build config")
 
         built = run_step(["ninja"], timeout=ninja_timeout)
         if built is None:
+            write_config(original)
             return FlipResult(source, False, "ninja", f"timeout>{ninja_timeout}s")
         if built.returncode != 0:
+            write_config(original)
             return FlipResult(source, False, "ninja", summarize_failure(built.stdout))
 
         active_detail = "active-unit" if active_unit else "no-active-unit"
@@ -133,7 +142,7 @@ def try_flip(source: str, version: str, ninja_timeout: int, keep: bool, require_
         return FlipResult(source, True, "ninja", f"ok {active_detail}")
     finally:
         if not keep:
-            CONFIGURE.write_text(original)
+            write_config(original)
 
 
 def main() -> None:
