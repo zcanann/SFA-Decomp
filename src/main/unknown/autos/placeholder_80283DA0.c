@@ -2,11 +2,16 @@
 #include "main/unknown/autos/placeholder_80283DA0.h"
 
 extern undefined4 DAT_803defc4;
+extern u32 lbl_803BD150[];
+extern f32 lbl_803E78E8;
+extern u32 __cvt_fp2unsigned(double value);
+extern void fn_80284224(undefined4 value);
+extern void fn_80284444(void);
 
 /*
  * --INFO--
  *
- * Function: FUN_80283d5c
+ * Function: hwExitStream
  * EN v1.0 Address: 0x80283D5C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80283DA0
@@ -16,14 +21,15 @@ extern undefined4 DAT_803defc4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80283d5c(int param_1,undefined4 param_2,undefined4 param_3)
+u32 hwExitStream(u32 value)
 {
+    return __cvt_fp2unsigned((double)((lbl_803E78E8 * (f32)value) / (f32)lbl_803BD150[0]));
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80283d60
+ * Function: hwGetStreamPlayBuffer
  * EN v1.0 Address: 0x80283D60
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80283DC0
@@ -33,15 +39,15 @@ void FUN_80283d5c(int param_1,undefined4 param_2,undefined4 param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined FUN_80283d60(int param_1)
+void hwGetStreamPlayBuffer(undefined4 unused, undefined4 value)
 {
-    return 0;
+    fn_80284224(value);
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80283d68
+ * Function: hwTransAddr
  * EN v1.0 Address: 0x80283D68
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80283DD4
@@ -51,9 +57,9 @@ undefined FUN_80283d60(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined FUN_80283d68(int param_1)
+void hwTransAddr(void)
 {
-    return 0;
+    fn_80284444();
 }
 
 /*

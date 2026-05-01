@@ -10,7 +10,7 @@ extern u8 lbl_803DE370;
 /*
  * --INFO--
  *
- * Function: fn_8028343C
+ * Function: hwBreak
  * EN v1.0 Address: 0x8028343C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80283488
@@ -21,7 +21,7 @@ extern u8 lbl_803DE370;
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_8028343C(int slot)
+void hwBreak(int slot)
 {
   u8 *entry;
   u32 offset;

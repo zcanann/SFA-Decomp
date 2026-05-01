@@ -7,7 +7,7 @@ extern u8 lbl_803DE370;
 /*
  * --INFO--
  *
- * Function: fn_802836E8
+ * Function: hwKeyOff
  * EN v1.0 Address: 0x802836E8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802836F4
@@ -18,7 +18,7 @@ extern u8 lbl_803DE370;
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_802836E8(int slot)
+void hwKeyOff(int slot)
 {
   u8 *entry;
   u32 offset;

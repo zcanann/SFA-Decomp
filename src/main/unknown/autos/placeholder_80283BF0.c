@@ -9,7 +9,7 @@ extern undefined4 DAT_803defc4;
 /*
  * --INFO--
  *
- * Function: FUN_80283bd4
+ * Function: hwRemoveInput
  * EN v1.0 Address: 0x80283BD4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80283BF0
@@ -19,9 +19,9 @@ extern undefined4 DAT_803defc4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80283bd4(int param_1,uint *param_2,byte param_3)
+void hwRemoveInput(int param_1,uint *param_2,byte param_3)
 {
 }
 
 /* Pattern wrappers. */
-void fn_80283D58(void) {}
+void hwInitStream(void) {}

@@ -5,11 +5,18 @@ extern undefined4 DAT_803dd280;
 extern undefined4 DAT_803dd288;
 extern undefined4 DAT_803defc4;
 extern undefined4 DAT_803deff0;
+extern void fn_8028420C(void);
+extern void* fn_80284468(void* ptr, u32 size);
+extern void fn_80284558(void* ptr, u32 size);
+extern u32 lbl_803DE334;
+extern u8 *lbl_803DE344;
+extern u32 lbl_803DE374;
+extern u32 lbl_803DE378;
 
 /*
  * --INFO--
  *
- * Function: FUN_80283dfc
+ * Function: hwSaveSample
  * EN v1.0 Address: 0x80283DFC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80283E4C
@@ -19,8 +26,30 @@ extern undefined4 DAT_803deff0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80283dfc(int param_1)
+void hwSaveSample(u32 **sample, void **ptr)
 {
+  u32 header;
+  s32 type;
+  u32 size;
+  u32 adjusted;
+
+  header = (*sample)[1];
+  type = header >> 24;
+  size = header & 0xffffff;
+  if (type != 3) {
+    if (type < 3) {
+      if (type >= 2) {
+        size <<= 1;
+        goto save;
+      }
+    } else if (type >= 6) {
+      goto save;
+    }
+    adjusted = size + 0xd;
+    size = (adjusted / 7) & ~7;
+  }
+save:
+  *ptr = fn_80284468(*ptr, size);
 }
 
 /*
@@ -43,7 +72,7 @@ void FUN_80283e00(int param_1,ushort param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80283e04
+ * Function: hwRemoveSample
  * EN v1.0 Address: 0x80283E04
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80283EEC
@@ -53,14 +82,36 @@ void FUN_80283e00(int param_1,ushort param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80283e04(int param_1,uint param_2)
+void hwRemoveSample(u32 *sample, void *ptr)
 {
+  u32 header;
+  s32 type;
+  u32 size;
+  u32 adjusted;
+
+  header = sample[1];
+  type = header >> 24;
+  size = header & 0xffffff;
+  if (type != 3) {
+    if (type < 3) {
+      if (type >= 2) {
+        size <<= 1;
+        goto remove;
+      }
+    } else if (type >= 6) {
+      goto remove;
+    }
+    adjusted = size + 0xd;
+    size = (adjusted / 7) & ~7;
+  }
+remove:
+  fn_80284558(ptr, size);
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80283e08
+ * Function: hwSyncSampleMem
  * EN v1.0 Address: 0x80283E08
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80283F18
@@ -70,8 +121,9 @@ void FUN_80283e04(int param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80283e08(int param_1,uint param_2)
+void hwSyncSampleMem(void)
 {
+  fn_8028420C();
 }
 
 /*
@@ -92,4 +144,43 @@ void FUN_80283e0c(int param_1,char param_2)
 }
 
 /* Pattern wrappers. */
-void fn_80283F34(void) {}
+void hwFrameDone(void) {}
+
+void sndSetHooks(u32 *values)
+{
+  u32 first;
+  u32 second;
+
+  first = values[0];
+  second = values[1];
+  lbl_803DE374 = first;
+  lbl_803DE378 = second;
+}
+
+void hwDisableHRTF(void)
+{
+  lbl_803DE334 = 0;
+}
+
+int hwGetVirtualSampleID(int slot)
+{
+  u8 *entry;
+
+  slot *= 0xf4;
+  entry = lbl_803DE344;
+  entry += slot;
+  if (entry[0xec] == 0) {
+    return -1;
+  }
+  return *(int *)(entry + 0xe8);
+}
+
+int hwVoiceInStartup(int slot)
+{
+  u8 *entry;
+
+  slot *= 0xf4;
+  entry = lbl_803DE344;
+  entry += slot;
+  return entry[0xec] == 1;
+}
