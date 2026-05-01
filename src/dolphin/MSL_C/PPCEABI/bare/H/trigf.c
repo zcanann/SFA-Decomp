@@ -3,7 +3,7 @@
 #define __epsilon 3.45266983e-4f
 #define __HI(x) (((s32*)&x)[0])
 
-extern float __fabsf(float x);
+extern float fabsf__Ff(float x);
 extern const float __sincos_on_quadrant[];
 extern const float __sincos_poly[];
 
@@ -51,7 +51,7 @@ float cosf(float x)
     y = x - n * 2 + __four_over_pi_m1[0] * x + __four_over_pi_m1[1] * x + __four_over_pi_m1[2] * x + __four_over_pi_m1[3] * x;
     n &= 3;
 
-    if (__fabsf(y) < __epsilon) {
+    if (fabsf__Ff(y) < __epsilon) {
         n <<= 1;
         return __sincos_on_quadrant[n + 1] - y * __sincos_on_quadrant[n];
     }
@@ -84,7 +84,7 @@ float sinf(float x)
     y = x - n * 2 + __four_over_pi_m1[0] * x + __four_over_pi_m1[1] * x + __four_over_pi_m1[2] * x + __four_over_pi_m1[3] * x;
     n &= 3;
 
-    if (__fabsf(y) < __epsilon) {
+    if (fabsf__Ff(y) < __epsilon) {
         n <<= 1;
         return __sincos_on_quadrant[n] + (__sincos_on_quadrant[n + 1] * y * __sincos_poly[9]);
     }

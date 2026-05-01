@@ -53,7 +53,7 @@ int __write_console(int handle, void* buf, u32* count) {
     return 0;
 }
 
-asm float __fabsf(register float x) {
+asm float fabsf__Ff(register float x) {
     nofralloc
     fabs f1, f1
     blr

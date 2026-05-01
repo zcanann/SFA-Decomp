@@ -1764,6 +1764,12 @@ dolphin/gx/GXPerf.c:
 main/unknown/autos/placeholder_8032EDD0.s:
 	.data       start:0x8032EDD0 end:0x8032F218
 
+main/unknown/autos/placeholder_8032F218.s:
+	.data       start:0x8032F218 end:0x8032F618
+
+main/unknown/autos/placeholder_8032F618.s:
+	.data       start:0x8032F618 end:0x8032F79C
+
 dolphin/card/CARDBios.c:
 	.text       start:0x8025DE80 end:0x8025EFCC
 	.bss        start:0x803AF1E0 end:0x803AF420
@@ -1817,13 +1823,6 @@ dolphin/thp/THPDec.c:
 	.bss        start:0x803AF420 end:0x803AF550
 	.sbss       start:0x803DE100 end:0x803DE218
 	.sdata2     start:0x803E7760 end:0x803E777C
-
-main/unknown/autos/placeholder_8032F218.s:
-	.data       start:0x8032F218 end:0x8032F618
-	.sdata2     start:0x803E8368 end:0x803E8390
-
-main/unknown/autos/placeholder_8032F618.s:
-	.data       start:0x8032F618 end:0x8032F79C
 
 dolphin/thp/THPAudio.c:
 	.text       start:0x8026B9EC end:0x8026BF1C
@@ -2438,18 +2437,6 @@ dolphin/MSL_C/PPCEABI/bare/H/printf.c:
 	.data       start:0x803327E8 end:0x80332A18
 	.sdata      start:0x803DC640 end:0x803DC648
 
-dolphin/MSL_C/PPCEABI/bare/H/common_float_tables.c:
-	.data       start:0x80332A28 end:0x80332C78
-
-main/unknown/autos/placeholder_80332EF0.s:
-	.data       start:0x80332EF0 end:0x80332F48
-
-main/unknown/autos/placeholder_80332F48.s:
-	.data       start:0x80332F48 end:0x80332F78
-
-main/unknown/autos/placeholder_80332F78.s:
-	.data       start:0x80332F78 end:0x80332FC0
-
 dolphin/MSL_C/PPCEABI/bare/H/string.c:
 	.text       start:0x802915E4 end:0x802918C0
 
@@ -2507,6 +2494,24 @@ dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c:
 dolphin/MSL_C/PPCEABI/bare/H/trigf.c:
 	.text       start:0x802947CC end:0x80294BB8
 	.ctors      start:0x802C1884 end:0x802C1888
+	.rodata     start:0x802C2B20 end:0x802C2B30
+	.data       start:0x80332A18 end:0x80332A28
+	.sdata2     start:0x803E7E38 end:0x803E7E50
+
+main/unknown/autos/placeholder_803E8368.s:
+	.sdata2     start:0x803E8368 end:0x803E8390
+
+dolphin/MSL_C/PPCEABI/bare/H/common_float_tables.c:
+	.data       start:0x80332A28 end:0x80332C78
+
+main/unknown/autos/placeholder_80332EF0.s:
+	.data       start:0x80332EF0 end:0x80332F48
+
+main/unknown/autos/placeholder_80332F48.s:
+	.data       start:0x80332F48 end:0x80332F78
+
+main/unknown/autos/placeholder_80332F78.s:
+	.data       start:0x80332F78 end:0x80332FC0
 
 dolphin/MSL_C/PPCEABI/bare/H/e_pow.c:
 	.text       start:0x80294BB8 end:0x80295334
