@@ -7,7 +7,7 @@ extern float fabsf__Ff(float x);
 extern const float __sincos_on_quadrant[];
 extern const float __sincos_poly[];
 
-static void __sinit_trigf_c(void);
+void __sinit_trigf_c(void);
 float sinf(float x);
 float cosf(float x);
 float sin__Ff(float x);
@@ -104,7 +104,7 @@ float sinf(float x)
     return z * __sincos_on_quadrant[n + 1];
 }
 
-static void __sinit_trigf_c(void)
+void __sinit_trigf_c(void)
 {
     __four_over_pi_m1[0] = tmp_float[0];
     __four_over_pi_m1[1] = tmp_float[1];
