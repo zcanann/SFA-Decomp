@@ -702,7 +702,7 @@ config.libs = [
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_floor.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_sin.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/common_float_tables.c", mw_version="GC/1.3"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/trigf.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/trigf.c", mw_version="GC/1.2.5"),
         ],
     ),
     {
