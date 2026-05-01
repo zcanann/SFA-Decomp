@@ -7,7 +7,7 @@ extern undefined4 DAT_803dd278;
 /*
  * --INFO--
  *
- * Function: FUN_8028348c
+ * Function: hwSetADSR
  * EN v1.0 Address: 0x8028348C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802835C0
@@ -17,7 +17,7 @@ extern undefined4 DAT_803dd278;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_8028348c(void)
+uint hwSetADSR(void)
 {
     return 0;
 }

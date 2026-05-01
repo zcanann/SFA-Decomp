@@ -73,7 +73,7 @@ extern u8 *lbl_803DE344;
 /*
  * --INFO--
  *
- * Function: FUN_80282fe0
+ * Function: snd_handle_irq
  * EN v1.0 Address: 0x80282FE0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80283134
@@ -83,14 +83,14 @@ extern u8 *lbl_803DE344;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80282fe0(int param_1)
+void snd_handle_irq(int param_1)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80282fe4
+ * Function: hwInit
  * EN v1.0 Address: 0x80282FE4
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80283418
@@ -100,23 +100,23 @@ void FUN_80282fe0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80282fe4(uint param_1)
+uint hwInit(uint param_1)
 {
     return 0;
 }
 
-void fn_80283244(u8 value)
+void hwSetTimeOffset(u8 value)
 {
     lbl_803DE370 = value;
 }
 
-u8 fn_8028324C(void)
+u8 hwGetTimeOffset(void)
 {
     return lbl_803DE370;
 }
 
 #pragma peephole off
-int fn_80283254(int slot)
+int hwIsActive(int slot)
 {
     u8 *entry;
     int active;
@@ -129,12 +129,12 @@ int fn_80283254(int slot)
 }
 #pragma peephole reset
 
-void fn_80283274(u32 value)
+void hwSetMesgCallback(u32 value)
 {
     lbl_803DE348 = value;
 }
 
-void fn_8028327C(int slot, u32 value)
+void hwSetPriority(int slot, u32 value)
 {
     u8 *entry;
 

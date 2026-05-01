@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: FUN_802836ac
+ * Function: hwStart
  * EN v1.0 Address: 0x802836AC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802836E4
@@ -14,6 +14,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802836ac(int *param_1)
+void hwStart(int *param_1)
 {
 }

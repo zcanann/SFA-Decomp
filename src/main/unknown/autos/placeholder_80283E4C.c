@@ -13,7 +13,7 @@ extern u32 lbl_803DE378;
 /*
  * --INFO--
  *
- * Function: FUN_80283dfc
+ * Function: hwSaveSample
  * EN v1.0 Address: 0x80283DFC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80283E4C
@@ -23,7 +23,7 @@ extern u32 lbl_803DE378;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80283dfc(int param_1)
+void hwSaveSample(int param_1)
 {
 }
 
@@ -47,7 +47,7 @@ void FUN_80283e00(int param_1,ushort param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80283e04
+ * Function: hwRemoveSample
  * EN v1.0 Address: 0x80283E04
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80283EEC
@@ -57,14 +57,14 @@ void FUN_80283e00(int param_1,ushort param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80283e04(int param_1,uint param_2)
+void hwRemoveSample(int param_1,uint param_2)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80283e08
+ * Function: hwSyncSampleMem
  * EN v1.0 Address: 0x80283E08
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80283F18
@@ -74,7 +74,7 @@ void FUN_80283e04(int param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80283e08(int param_1,uint param_2)
+void hwSyncSampleMem(int param_1,uint param_2)
 {
 }
 
@@ -96,25 +96,25 @@ void FUN_80283e0c(int param_1,char param_2)
 }
 
 /* Pattern wrappers. */
-void fn_80283F34(void) {}
+void hwFrameDone(void) {}
 
-void fn_80283F38(u32 *values)
+void sndSetHooks(u32 *values)
 {
   u32 first;
   u32 second;
 
-  second = values[1];
   first = values[0];
+  second = values[1];
   lbl_803DE374 = first;
   lbl_803DE378 = second;
 }
 
-void fn_80283F4C(void)
+void hwDisableHRTF(void)
 {
   lbl_803DE334 = 0;
 }
 
-int fn_80283F58(int slot)
+int hwGetVirtualSampleID(int slot)
 {
   u8 *entry;
 
@@ -127,7 +127,7 @@ int fn_80283F58(int slot)
   return *(int *)(entry + 0xe8);
 }
 
-int fn_80283F80(int slot)
+int hwVoiceInStartup(int slot)
 {
   u8 *entry;
 
