@@ -8,12 +8,17 @@ float fn_80294724(float x) {
     if (*(s32*)&diff != 0) {
         bits = *(u32*)&x;
         if ((s32)(bits & 0x7F800000) < 0x4B800000) {
-            if ((s32)bits < 0) {
-                return (float)(n - 1);
-            }
+            goto small;
+        }
 
+        return x;
+small:
+        if (bits & 0x80000000) {
+            --n;
             return (float)n;
         }
+
+        return (float)n;
     }
 
     return x;
