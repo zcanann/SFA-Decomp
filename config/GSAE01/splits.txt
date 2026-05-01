@@ -1480,6 +1480,7 @@ dolphin/base/PPCArch.c:
 
 dolphin/os/OS.c:
 	.text       start:0x802403D8 end:0x80240D34
+	.data       start:0x8032C360 end:0x8032C520
 
 dolphin/os/OSAlarm.c:
 	.text       start:0x80240D34 end:0x802413E0

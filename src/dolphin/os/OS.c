@@ -30,14 +30,11 @@ extern u32 *BI2DebugFlagHolder_803DDDE0;
 extern BOOL __OSIsGcam;
 extern BOOL AreWeInitialized_803DDDE8;
 extern __OSExceptionHandler *OSExceptionTable_803DDDEC;
-extern char OSStringBase_8032C360[];
-
 #define BootInfo BootInfo_803DDDD8
 #define BI2DebugFlag BI2DebugFlag_803DDDDC
 #define BI2DebugFlagHolder BI2DebugFlagHolder_803DDDE0
 #define AreWeInitialized AreWeInitialized_803DDDE8
 #define OSExceptionTable OSExceptionTable_803DDDEC
-#define OS_EXCEPTION_LOCATIONS ((u32 *)(OSStringBase_8032C360 + 0xE8))
 
 extern OSTime __OSStartTime;
 extern BOOL __OSInIPL;
@@ -129,7 +126,6 @@ void OSInit(void)
     BI2Debug *DebugInfo;
     void *debugArenaLo;
     u32 inputConsoleType;
-    char *stringBase = OSStringBase_8032C360;
     DVDDriveInfo *driveInfo = &DriveInfo;
 
     // check if we've already done all this or not
@@ -214,9 +210,9 @@ void OSInit(void)
         }
 
         // begin OS reporting
-        OSReport(stringBase + 0x00);
-        OSReport(stringBase + 0x20, stringBase + 0x38, stringBase + 0x44);
-        OSReport(stringBase + 0x50);
+        OSReport("\nDolphin OS $Revision: 54 $.\n");
+        OSReport("Kernel built : %s %s\n", "Jun  5 2002", "02:09:12");
+        OSReport("Console Type : ");
 
         // this is a function in the same file, but it doesn't seem to match
         // inputConsoleType = OSGetConsoleType();
@@ -234,32 +230,32 @@ void OSInit(void)
         // consoleTypeSwitchHi = inputConsoleType & 0xF0000000;
         inputConsoleType = OSGetConsoleType();
         if ((inputConsoleType & 0x10000000) == OS_CONSOLE_RETAIL) { // check "first" byte
-            OSReport(stringBase + 0x60, inputConsoleType);
+            OSReport("Retail %d\n", inputConsoleType);
         }
         else {
             switch (inputConsoleType) { // if "first" byte is 2, check "the rest"
                 case OS_CONSOLE_EMULATOR:
-                    OSReport(stringBase + 0x6C);
+                    OSReport("Mac Emulator\n");
                     break;
                 case OS_CONSOLE_PC_EMULATOR:
-                    OSReport(stringBase + 0x7C);
+                    OSReport("PC Emulator\n");
                     break;
                 case OS_CONSOLE_ARTHUR:
-                    OSReport(stringBase + 0x8C);
+                    OSReport("EPPC Arthur\n");
                     break;
                 case OS_CONSOLE_MINNOW:
-                    OSReport(stringBase + 0x9C);
+                    OSReport("EPPC Minnow\n");
                     break;
                 default:
-                    OSReport(stringBase + 0xAC, ((u32)inputConsoleType - 0x10000000) - 3);
+                    OSReport("Development HW%d\n", ((u32)inputConsoleType - 0x10000000) - 3);
                     break;
             }
         }
 
         // report memory size
-        OSReport(stringBase + 0xC0, (u32)BootInfo->memorySize >> 0x14U);
+        OSReport("Memory %d MB\n", (u32)BootInfo->memorySize >> 0x14U);
         // report heap bounds
-        OSReport(stringBase + 0xD0, OSGetArenaLo(), OSGetArenaHi());
+        OSReport("Arena : 0x%x - 0x%x\n", OSGetArenaLo(), OSGetArenaHi());
         // report OS version
 
         // if location of debug flag exists, and flag is >= 2, enable MetroTRKInterrupts
@@ -283,6 +279,24 @@ void OSInit(void)
         }
     }
 }
+
+static u32 __OSExceptionLocations[] = {
+    0x00000100,
+    0x00000200,
+    0x00000300,
+    0x00000400,
+    0x00000500,
+    0x00000600,
+    0x00000700,
+    0x00000800,
+    0x00000900,
+    0x00000C00,
+    0x00000D00,
+    0x00000F00,
+    0x00001300,
+    0x00001400,
+    0x00001700,
+};
 
 // dummy entry points to the OS Exception vector
 void __OSEVStart(void);
@@ -313,7 +327,6 @@ static void OSExceptionInit(void)
     // Address range of the actual code to be copied.
     u8 *handlerStart;
     u32 handlerSize;
-    char *stringBase = OSStringBase_8032C360;
 
     // Install the first level exception vector.
     opCodeAddr = (u32 *)__OSEVSetNumber;
@@ -325,7 +338,7 @@ static void OSExceptionInit(void)
     destAddr = (void *)OSPhysicalToCached(OS_DBJUMPPOINT_ADDR);
     if (*(u32 *)destAddr == 0) // Lomem should be zero cleared only once by BS2
     {
-        DBPrintf(stringBase + 0x124);
+        DBPrintf("Installing OSDBIntegrator\n");
         memcpy(destAddr, (void *)__OSDBINTSTART, (u32)__OSDBINTEND - (u32)__OSDBINTSTART);
         DCFlushRangeNoSync(destAddr, (u32)__OSDBINTEND - (u32)__OSDBINTSTART);
         __sync();
@@ -336,7 +349,7 @@ static void OSExceptionInit(void)
     for (exception = 0; exception < 15; exception++) {
         if (BI2DebugFlag && (*BI2DebugFlag >= 2) && __DBIsExceptionMarked(exception)) {
             // this DBPrintf is suspicious.
-            DBPrintf(stringBase + 0x140, exception);
+            DBPrintf(">>> OSINIT: exception %d commandeered by TRK\n", exception);
             continue;
         }
 
@@ -346,7 +359,7 @@ static void OSExceptionInit(void)
 
         // Modify opcodes at __DBVECTOR if necessary
         if (__DBIsExceptionMarked(exception)) {
-            DBPrintf(stringBase + 0x170, exception);
+            DBPrintf(">>> OSINIT: exception %d vectored to debugger\n", exception);
             memcpy((void *)__DBVECTOR, (void *)__OSDBINTEND, (u32)__OSDBJUMPEND - (u32)__OSDBINTEND);
         }
         else {
@@ -360,7 +373,7 @@ static void OSExceptionInit(void)
         }
 
         // Install the modified handler.
-        destAddr = (void *)OSPhysicalToCached(OS_EXCEPTION_LOCATIONS[(u32)exception]);
+        destAddr = (void *)OSPhysicalToCached(__OSExceptionLocations[(u32)exception]);
         memcpy(destAddr, handlerStart, handlerSize);
         DCFlushRangeNoSync(destAddr, handlerSize);
         __sync();
@@ -379,7 +392,7 @@ static void OSExceptionInit(void)
     // downloading the text segments
     *opCodeAddr = oldOpCode;
 
-    DBPrintf(stringBase + 0x1A0);
+    DBPrintf("Exceptions initialized...\n");
 }
 
 static asm void __OSDBIntegrator(void)
