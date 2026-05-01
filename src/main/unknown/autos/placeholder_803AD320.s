@@ -1,5 +1,8 @@
 .include "macros.inc"
 
+.global OSStringBase_8032C360
+.set OSStringBase_8032C360, 0x8032C360
+
 .section .bss, "wa", @nobits
 
 .balign 8
