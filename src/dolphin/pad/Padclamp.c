@@ -4,9 +4,9 @@
 
 #include "dolphin/si/__si.h"
 
-extern u32 lbl_803DC58C;
-extern u32 lbl_803DC590;
-extern PADStatus lbl_803AE1C0[4];
+extern u32 XPatchBits;
+extern u32 AnalogMode;
+extern PADStatus Origin[4];
 
 typedef struct PADClampExtents {
     u8 minTrigger;
@@ -117,8 +117,8 @@ void ClampCircle(s32 chan) {
     PADStatus* origin;
     u32 chanBit = PAD_CHAN0_BIT >> chan;
 
-    origin = &lbl_803AE1C0[chan];
-    switch (lbl_803DC590 & 0x00000700u) {
+    origin = &Origin[chan];
+    switch (AnalogMode & 0x00000700u) {
     case 0x00000000u:
     case 0x00000500u:
     case 0x00000600u:
@@ -149,7 +149,7 @@ void ClampCircle(s32 chan) {
     origin->substickX -= 128;
     origin->substickY -= 128;
 
-    if (lbl_803DC58C & chanBit) {
+    if (XPatchBits & chanBit) {
         if (64 < origin->stickX && (SIGetType(chan) & 0xFFFF0000) == SI_GC_CONTROLLER) {
             origin->stickX = 0;
         }

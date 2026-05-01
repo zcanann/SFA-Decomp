@@ -6,12 +6,16 @@
 
 #include "dolphin/si/__si.h"
 
+extern u32 lbl_803DE088;
+
+#if !defined(VERSION_GCCP01)
 #if DEBUG
 static const char s___PADVersion[] = "<< Dolphin SDK - PAD\tdebug build: Apr  5 2004 03:56:05 (0x2301) >>";
 #else
 extern const char s___PADVersion[];
 #endif
 const char* __PADVersion = s___PADVersion;
+#endif
 
 #define PAD_ALL                                                                                                        \
     (                      \
@@ -32,8 +36,8 @@ const char* __PADVersion = s___PADVersion;
     )
 
 static s32 ResettingChan = 0x20;
-static u32 XPatchBits = PAD_CHAN0_BIT | PAD_CHAN1_BIT | PAD_CHAN2_BIT | PAD_CHAN3_BIT;
-static u32 AnalogMode = 0x300;
+u32 XPatchBits = PAD_CHAN0_BIT | PAD_CHAN1_BIT | PAD_CHAN2_BIT | PAD_CHAN3_BIT;
+u32 AnalogMode = 0x300;
 static u32 Spec = PAD_SPEC_5;
 
 static BOOL Initialized;
@@ -45,7 +49,7 @@ static u32 CheckingBits;
 static u32 PendingBits;
 
 static u32 Type[4];
-static PADStatus Origin[4];
+PADStatus Origin[4];
 
 u32 __PADSpec;
 
@@ -66,11 +70,13 @@ static void PADResetCallback(s32 unused, u32 error, struct OSContext *context);
 static void PADReceiveCheckCallback(s32 chan, u32 error);
 void SPEC0_MakeStatus(s32 chan, PADStatus *status, u32 data[2]);
 void SPEC1_MakeStatus(s32 chan, PADStatus *status, u32 data[2]);
-static s8 ClampS8(s8 var, s8 org);
-static u8 ClampU8(u8 var, u8 org);
+static inline s8 ClampS8(s8 var, s8 org);
+static inline u8 ClampU8(u8 var, u8 org);
 void SPEC2_MakeStatus(s32 chan, PADStatus *status, u32 data[2]);
 BOOL OnReset2(BOOL f);
+#ifndef VERSION_GCCP01
 void __PADDisableXPatch(void);
+#endif
 #ifndef VERSION_GCCP01
 BOOL __PADDisableRumble(BOOL disable);
 #endif
@@ -80,7 +86,7 @@ static SPECCallback MakeStatus = SPEC2_MakeStatus;
 
 static u32 CmdReadOrigin = 0x41000000;
 static u32 CmdCalibrate = 0x42000000;
-static u32 CmdProbeDevice[4];
+u32 CmdProbeDevice[4];
 
 static OSResetFunctionInfo ResetFunctionInfo = {
     OnReset2,
@@ -365,7 +371,7 @@ BOOL PADInit() {
 
     Initialized = TRUE;
 
-    if (__PADFixBits != 0) {
+    if (lbl_803DE088 != 0) {
         OSTime time = OSGetTime();
         __OSWirelessPadFixMode
             = (u16)((((time)&0xffff) + ((time >> 16) & 0xffff) + ((time >> 32) & 0xffff) + ((time >> 48) & 0xffff))
@@ -490,6 +496,7 @@ typedef struct XY {
     u8 count;
 } XY;
 
+#ifndef VERSION_GCCP01
 void PADSetSamplingRate(u32 msec) {
     SISetSamplingRate(msec);
 }
@@ -529,6 +536,7 @@ void PADControlAllMotors(const u32* commandArray) {
 
     OSRestoreInterrupts(enabled);
 }
+#endif
 
 void PADControlMotor(s32 chan, u32 command) {
     BOOL enabled;
@@ -569,9 +577,11 @@ void PADSetSpec(u32 spec) {
     Spec = spec;
 }
 
+#ifndef VERSION_GCCP01
 u32 PADGetSpec(void) {
     return Spec;
 }
+#endif
 
 void SPEC0_MakeStatus(s32 chan, PADStatus* status, u32 data[2]) {
     status->button = 0;
@@ -628,7 +638,7 @@ void SPEC1_MakeStatus(s32 chan, PADStatus* status, u32 data[2]) {
     status->substickY -= 128;
 }
 
-static s8 ClampS8(s8 var, s8 org) {
+static inline s8 ClampS8(s8 var, s8 org) {
     if (0 < org) {
         s8 min = (s8)(-128 + org);
         if (var < min)
@@ -641,7 +651,7 @@ static s8 ClampS8(s8 var, s8 org) {
     return var -= org;
 }
 
-static u8 ClampU8(u8 var, u8 org) {
+static inline u8 ClampU8(u8 var, u8 org) {
     if (var < org)
         var = org;
     return var -= org;
@@ -715,6 +725,7 @@ void SPEC2_MakeStatus(s32 chan, PADStatus* status, u32 data[2]) {
 
 }
 
+#ifndef VERSION_GCCP01
 int PADGetType(s32 chan, u32* type) {
     u32 chanBit;
 
@@ -725,11 +736,17 @@ int PADGetType(s32 chan, u32* type) {
     }
     return 1;
 }
+#endif
 
+#ifdef VERSION_GCCP01
+inline BOOL PADSync(void) {
+#else
 BOOL PADSync(void) {
+#endif
     return ResettingBits == 0 && (s32)ResettingChan == 32 && !SIBusy();
 }
 
+#ifndef VERSION_GCCP01
 void PADSetAnalogMode(u32 mode) {
     BOOL enabled;
     u32 mask;
@@ -747,6 +764,7 @@ void PADSetAnalogMode(u32 mode) {
     SIDisablePolling(mask);
     OSRestoreInterrupts(enabled);
 }
+#endif
 
 static void (*SamplingCallback)();
 
@@ -770,9 +788,11 @@ BOOL OnReset2(BOOL final) {
     return TRUE;
 }
 
+#ifndef VERSION_GCCP01
 void __PADDisableXPatch(void) {
     XPatchBits = 0;
 }
+#endif
 
 static void SamplingHandler(__OSInterrupt interrupt, OSContext* context) {
     OSContext exceptionContext;

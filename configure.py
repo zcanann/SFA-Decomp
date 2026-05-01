@@ -449,8 +449,8 @@ config.libs = [
     DolphinLib(
         "pad",
         [
-            Object(NonMatching, "dolphin/pad/Pad.c", extra_cflags=["-DVERSION_GCCP01"]),
             Object(MatchingFor("GSAE01"), "dolphin/pad/Padclamp.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/pad/Pad.c", extra_cflags=["-DVERSION_GCCP01"]),
         ],
     ),
     DolphinLib(
@@ -549,7 +549,6 @@ config.libs = [
         ],
         "progress_category": "sdk",
         "objects": [
-            Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_803DC588.s"),
             Object(MatchingFor("GSAE01"), "dolphin/vi/vi.c"),
             Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_803DDF60.s"),
             Object(NonMatching, "dolphin/vi/gpioexi.c"),
