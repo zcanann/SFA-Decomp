@@ -689,7 +689,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/ctype_funcs.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c", mw_version="GC/1.2.5"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/hyperbolicsf.c"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/floorf.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/floorf.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/rand.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/math_ppc.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_cos.c"),

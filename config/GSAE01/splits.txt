@@ -2502,6 +2502,7 @@ dolphin/MSL_C/PPCEABI/bare/H/hyperbolicsf.c:
 
 dolphin/MSL_C/PPCEABI/bare/H/floorf.c:
 	.text       start:0x80294724 end:0x802947CC
+	.sdata2     start:0x803E7E30 end:0x803E7E38
 
 dolphin/MSL_C/PPCEABI/bare/H/trigf.c:
 	.text       start:0x802947CC end:0x80294BB8
