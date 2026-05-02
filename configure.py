@@ -633,8 +633,8 @@ config.libs = [
                 extra_cflags=["-sdata", "8", "-sdata2", "8"],
             ),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/MWCriticalSection_gc.c"),
-            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/main.c"),
-            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/main_gdev.c"),
+            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/main.c", progress_category="game"),
+            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/main_gdev.c", progress_category="game"),
         ],
     },
     DolphinLib(
