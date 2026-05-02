@@ -100,6 +100,8 @@ def make_parser() -> argparse.ArgumentParser:
     parser.add_argument("--reference", action="append", type=parse_reference_spec)
     parser.add_argument("--include-game-classified", action="store_true")
     parser.add_argument("--min-score", type=float, default=0.70)
+    parser.add_argument("--only-owner-match", action="store_true")
+    parser.add_argument("--hide-no-hit", action="store_true")
     parser.add_argument("--limit", type=int, default=80)
     parser.add_argument("--target-range-start", type=lambda value: int(value, 0), default=0x80003100)
     parser.add_argument("--target-range-end", type=lambda value: int(value, 0), default=0x80300000)
@@ -133,6 +135,11 @@ def main() -> int:
                 min_average_function_size=0,
             )
         hit = hits[0] if hits else None
+        if hit is None:
+            if args.hide_no_hit:
+                continue
+        elif args.only_owner_match and path not in split_owner(args.version, hit.target.start, hit.target.end):
+            continue
         rows.append((obj, path, canonical_path, len(windows), hit))
 
     rows.sort(
