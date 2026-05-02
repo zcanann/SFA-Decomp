@@ -1577,14 +1577,14 @@ dolphin/db/db.c:
 	.text       start:0x80246D68 end:0x80246E54
 
 dolphin/mtx/mtx.c:
-	.text       start:0x80246E54 end:0x80247574
+	.text       start:0x80246E54 end:0x80247494
 	.sdata      start:0x803DC550 end:0x803DC558
 
 dolphin/dvd/DVDLowFirstRead.c:
 	.sdata      start:0x803DC558 end:0x803DC560
 
 dolphin/mtx/mtxvec.c:
-	.text       start:0x80247574 end:0x802475C8
+	.text       start:0x80247494 end:0x802475C8
 
 dolphin/mtx/mtx44.c:
 	.text       start:0x802475C8 end:0x80247730
