@@ -16,16 +16,16 @@ typedef struct DecodeParameters {
 static void InitCallback(void* task);
 static void DoneCallback(void* task);
 
-static int CARDRand(void) {
+static inline int CARDRand(void) {
     lbl_803DC600 = lbl_803DC600 * 1103515245 + 12345;
     return (int)((unsigned int)(lbl_803DC600 / 65536) % 32768);
 }
 
-static void CARDSrand(unsigned int seed) {
+static inline void CARDSrand(unsigned int seed) {
     lbl_803DC600 = seed;
 }
 
-static u32 GetInitVal(void) {
+static inline u32 GetInitVal(void) {
     u32 tmp;
     u32 tick;
 
@@ -37,7 +37,7 @@ static u32 GetInitVal(void) {
     return tmp;
 }
 
-static u32 exnor_1st(u32 data, u32 rshift) {
+static inline u32 exnor_1st(u32 data, u32 rshift) {
     u32 wk;
     u32 w;
     u32 i;
@@ -50,7 +50,7 @@ static u32 exnor_1st(u32 data, u32 rshift) {
     return w;
 }
 
-static u32 exnor(u32 data, u32 lshift) {
+static inline u32 exnor(u32 data, u32 lshift) {
     u32 wk;
     u32 w;
     u32 i;
