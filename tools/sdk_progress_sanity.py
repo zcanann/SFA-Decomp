@@ -45,6 +45,15 @@ INLINE_ASM_CAVEATS = {
         "donor rand/srand only; SFA unit also carries reciprocal/trig helper code"
     ),
 }
+SDK_PLACEHOLDER_CAVEATS = {
+    "main/unknown/autos/placeholder_8032C984": (
+        "OSContext FPU-unavailable string; splitting to OSErrorContext.c compiles but changes "
+        "__OSContextInit prologue scheduling"
+    ),
+    "main/unknown/autos/placeholder_803D8888": (
+        "MetroTRK BSS aggregate; lbl_803D8888 is used as a UART buffer that overlaps later labels"
+    ),
+}
 
 
 @dataclass(frozen=True)
@@ -243,6 +252,10 @@ def main() -> int:
         print("\nsdk-category-deltas")
         if report_only:
             print("  report-sdk-not-path-sdk=" + ", ".join(report_only))
+            for path in report_only:
+                caveat = SDK_PLACEHOLDER_CAVEATS.get(path)
+                if caveat:
+                    print(f"    note {path}: {caveat}")
         if path_only:
             print("  path-sdk-not-report-sdk=" + ", ".join(path_only))
 
