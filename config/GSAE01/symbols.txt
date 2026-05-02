@@ -10023,6 +10023,7 @@ __init_cpp_exceptions_reference = .ctors:0x802C1880; // type:object size:0x4 sco
 _dtors = .dtors:0x802C18A0; // type:label scope:global data:4byte
 __destroy_global_chain_reference = .dtors:0x802C18A0; // type:object size:0x4 scope:global
 __fini_cpp_exceptions_reference = .dtors:0x802C18A4; // type:object size:0x4 scope:global
+__destroy_global_chain_reference = .dtors:0x802C18A8; // type:object size:0x4 scope:local
 lbl_802C18C0 = .rodata:0x802C18C0; // type:object size:0x164
 lbl_802C1A24 = .rodata:0x802C1A24; // type:object size:0x44
 lbl_802C1A68 = .rodata:0x802C1A68; // type:object size:0x20 data:4byte
