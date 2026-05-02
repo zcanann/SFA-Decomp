@@ -484,7 +484,7 @@ config.libs = [
     DolphinLib(
         "gx",
         [
-            Object(MatchingFor("GSAE01"), "dolphin/gx/GXInit.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/gx/GXInit.c", extra_cflags=["-opt", "nopeephole"]),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXFifo.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXMisc.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXLight.c"),

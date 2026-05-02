@@ -17,29 +17,12 @@ u16 *__peReg;
 u16 *__cpReg;
 u32 *__piReg;
 
-// clang-format off
-asm BOOL IsWriteGatherBufferEmpty(void)
-{
-    sync
-    mfspr r3, WPAR
-    andi. r3, r3, 1
-}
-// clang-format on
-
-static void EnableWriteGatherPipe(void)
+static inline void EnableWriteGatherPipe(void)
 {
     u32 hid2 = PPCMfhid2();
 
     PPCMtwpar(OSUncachedToPhysical((void *)GXFIFO_ADDR));
     hid2 |= 0x40000000;
-    PPCMthid2(hid2);
-}
-
-static void DisableWriteGatherPipe(void)
-{
-    u32 hid2 = PPCMfhid2();
-
-    hid2 &= ~0x40000000;
     PPCMthid2(hid2);
 }
 
