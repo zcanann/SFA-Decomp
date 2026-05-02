@@ -80,10 +80,7 @@ typedef struct mem_pool_obj {
 
 } mem_pool_obj;
 
-mem_pool_obj __malloc_pool;
-static int initialized = 0;
-
-static SubBlock* SubBlock_merge_prev(SubBlock*, SubBlock**);
+static inline SubBlock* SubBlock_merge_prev(SubBlock*, SubBlock**);
 static void SubBlock_merge_next(SubBlock*, SubBlock**);
 
 static const unsigned long fix_pool_sizes[] = {4, 12, 20, 36, 52, 68};
@@ -119,8 +116,6 @@ static const unsigned long fix_pool_sizes[] = {4, 12, 20, 36, 52, 68};
 #define Block_empty(ths) \
     (_sb = (SubBlock*)((char*)(ths) + 16)), SubBlock_is_free(_sb) && SubBlock_size(_sb) == Block_size((ths)) - 24
 
-void Block_subBlock() {}
-
 void Block_link(Block* ths, SubBlock* sb)
 {
     SubBlock** st;
@@ -144,7 +139,7 @@ void Block_link(Block* ths, SubBlock* sb)
         ths->max_size = SubBlock_size(*st);
 }
 
-static SubBlock* SubBlock_merge_prev(SubBlock* ths, SubBlock** start)
+static inline SubBlock* SubBlock_merge_prev(SubBlock* ths, SubBlock** start)
 {
     unsigned long prevsz;
     SubBlock* p;
@@ -201,7 +196,7 @@ static void SubBlock_merge_next(SubBlock* pBlock, SubBlock** pStart)
     }
 }
 
-static Block* __unlink(__mem_pool_obj* pool_obj, Block* bp)
+static inline Block* __unlink(__mem_pool_obj* pool_obj, Block* bp)
 {
     Block* result = bp->next;
     if (result == bp) {
@@ -222,11 +217,7 @@ static Block* __unlink(__mem_pool_obj* pool_obj, Block* bp)
     return result;
 }
 
-void allocate_from_var_pools() {}
-
-void soft_allocate_from_var_pools() {}
-
-static void deallocate_from_var_pools(__mem_pool_obj* pool_obj, void* ptr)
+static inline void deallocate_from_var_pools(__mem_pool_obj* pool_obj, void* ptr)
 {
     SubBlock* sb = SubBlock_from_pointer(ptr);
     SubBlock* _sb;
@@ -240,26 +231,22 @@ static void deallocate_from_var_pools(__mem_pool_obj* pool_obj, void* ptr)
     }
 }
 
-void FixBlock_construct() {}
-
-void __init_pool_obj(__mem_pool* pool_obj)
+static inline void __init_pool_obj(__mem_pool* pool_obj)
 {
     memset(pool_obj, 0, sizeof(__mem_pool_obj));
 }
 
-static __mem_pool* get_malloc_pool(void)
+static inline __mem_pool* get_malloc_pool(void)
 {
     static __mem_pool protopool;
-    static unsigned char init = 0;
-    if (!init) {
+    static unsigned char init[8];
+    if (!init[0]) {
         __init_pool_obj(&protopool);
-        init = 1;
+        init[0] = 1;
     }
 
     return &protopool;
 }
-
-void allocate_from_fixed_pools() {}
 
 void deallocate_from_fixed_pools(__mem_pool_obj* pool_obj, void* ptr, unsigned long size)
 {
@@ -318,21 +305,7 @@ void deallocate_from_fixed_pools(__mem_pool_obj* pool_obj, void* ptr, unsigned l
     }
 }
 
-void __pool_allocate_resize() {}
-
-void __msize() {}
-
-void __pool_alloc() {}
-
-void __allocate_size() {}
-
-void __allocate() {}
-
-void __allocate_resize() {}
-
-void __allocate_expand() {}
-
-void __pool_free(__mem_pool* pool, void* ptr)
+static inline void __pool_free(__mem_pool* pool, void* ptr)
 {
     __mem_pool_obj* pool_obj;
     unsigned long size;
@@ -351,21 +324,7 @@ void __pool_free(__mem_pool* pool, void* ptr)
     }
 }
 
-void __pool_realloc() {}
-
-void __pool_alloc_clear() {}
-
-void malloc() {}
-
 void free(void* ptr)
 {
     __pool_free(get_malloc_pool(), ptr);
 }
-
-void realloc() {}
-
-void calloc() {}
-
-void __pool_free_all() {}
-
-void __malloc_free_all() {}
