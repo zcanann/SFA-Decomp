@@ -1734,7 +1734,7 @@ dolphin/gx/GXPixel.c:
 	.data       start:0x8032EAB0 end:0x8032EAD0
 	.sdata2     start:0x803E7700 end:0x803E7730
 
-main/unknown/autos/placeholder_803E7730.s:
+dolphin/gx/GXDrawTorusRadius.c:
 	.sdata2     start:0x803E7730 end:0x803E7738
 
 dolphin/gx/GXDraw.c:
@@ -1742,7 +1742,7 @@ dolphin/gx/GXDraw.c:
 	.bss        start:0x803AEA38 end:0x803AECC0
 	.sdata2     start:0x803E7738 end:0x803E7748
 
-main/unknown/autos/placeholder_803E7748.s:
+dolphin/gx/GXDrawTorusAngle.c:
 	.sdata2     start:0x803E7748 end:0x803E7750
 
 dolphin/gx/GXStubs.c:
