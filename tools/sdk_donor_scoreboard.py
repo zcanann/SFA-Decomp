@@ -15,6 +15,7 @@ from sdk_dol_match import (
     collect_reference_raw_windows,
     discover_reference_hits,
     load_target_text_splits,
+    normalize_path,
     parse_int,
     parse_reference_spec,
     target_dol_path_for_version,
@@ -94,6 +95,11 @@ def make_parser() -> argparse.ArgumentParser:
     parser.add_argument("--limit-per-reference", type=int, default=3, help="Candidate target windows kept per reference.")
     parser.add_argument("--hit-limit", type=int, default=200, help="Maximum total hits to score.")
     parser.add_argument("--top-hits", type=int, default=20, help="Number of strongest hits to print.")
+    parser.add_argument(
+        "--only-owner-mismatch",
+        action="store_true",
+        help="Only print hits whose reference source path is not wholly owned by the matching target split.",
+    )
     return parser
 
 
@@ -113,6 +119,17 @@ def split_owner(version: str, start: int, end: int) -> str:
     if len(owners) == 1:
         return owners[0]
     return "crosses:" + ",".join(owners)
+
+
+def reference_owner_path(source_path: str) -> str:
+    return normalize_path(source_path.split("::", 1)[0])
+
+
+def owner_matches_reference(owner: str, source_path: str) -> bool:
+    if owner == "unassigned":
+        return False
+    owner_paths = owner.removeprefix("crosses:").split(",")
+    return reference_owner_path(source_path) in {normalize_path(path) for path in owner_paths}
 
 
 def main() -> int:
@@ -161,6 +178,15 @@ def main() -> int:
         min_largest_function=args.min_function_size if args.discover_functions else 0,
         min_average_function_size=0,
     )
+    if args.only_owner_mismatch:
+        hits = [
+            hit
+            for hit in hits
+            if not owner_matches_reference(
+                split_owner(args.version, hit.target.start, hit.target.end),
+                hit.reference.source_path,
+            )
+        ]
 
     stats: dict[str, DonorStats] = defaultdict(DonorStats)
     for hit in hits:
@@ -179,6 +205,8 @@ def main() -> int:
     )
     if args.only_unassigned:
         print("mode=unassigned-only")
+    if args.only_owner_mismatch:
+        print("mode=owner-mismatch-only")
 
     print("donors:")
     for label, stat in sorted(
@@ -197,9 +225,11 @@ def main() -> int:
     print("top hits:")
     for index, hit in enumerate(hits[: args.top_hits], 1):
         owner = split_owner(args.version, hit.target.start, hit.target.end)
+        owner_match = owner_matches_reference(owner, hit.reference.source_path)
         print(
             f"  {index:2d}. score={hit.overall_score * 100:.2f} {verdict_for_hit(hit)} "
-            f"target=0x{hit.target.start:08X}-0x{hit.target.end:08X} owner={owner}"
+            f"target=0x{hit.target.start:08X}-0x{hit.target.end:08X} "
+            f"owner-match={'yes' if owner_match else 'no'} owner={owner}"
         )
         print(f"      ref={hit.reference.game} {hit.reference.source_path}")
 
