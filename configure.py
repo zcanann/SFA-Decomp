@@ -549,7 +549,6 @@ config.libs = [
         "progress_category": "sdk",
         "objects": [
             Object(MatchingFor("GSAE01"), "dolphin/vi/vi.c"),
-            Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_803DDF60.s"),
             Object(NonMatching, "dolphin/vi/gpioexi.c"),
             Object(NonMatching, "dolphin/vi/i2c.c"),
             Object(NonMatching, "dolphin/vi/initphilips.c"),
