@@ -131,15 +131,15 @@ float fn_8029454C(float x) {
 }
 
 float fn_802945E0(float x) {
-    union {
-        float f;
-        u32 u;
-    } bits, mantissa;
+    u32 bits;
+    float mantissa;
+    float tail;
     s16 exponent;
 
-    bits.f = x;
-    exponent = (s16)(((bits.u >> 23) & 0xFF) - 128);
-    mantissa.u = (bits.u & 0x7FFFFF) | 0x3F800000;
+    bits = *(u32*)&x;
+    exponent = (s16)(((bits >> 23) & 0xFF) - 128);
+    *(u32*)&mantissa = (bits & 0x7FFFFF) | 0x3F800000;
 
-    return mantissa.f + fn_80291E08(&exponent);
+    tail = fn_80291E08(&exponent);
+    return mantissa + tail;
 }
