@@ -7,7 +7,7 @@ static OSFontHeader* FontData;
 static u8* SheetImage;
 static u8* WidthTable;
 static int CharsInSheet;
-static u16 FontEncode_803DD1B0 = 0xFFFF;
+static u16 fontEncode = 0xFFFF;
 
 // prototypes
 static u16 HankakuToCode[]
@@ -310,13 +310,13 @@ static void Decode(u8* s, u8* d) {
 }
 
 u16 OSGetFontEncode(void) {
-    if (FontEncode_803DD1B0 <= OS_FONT_ENCODE_SJIS) {
-        return FontEncode_803DD1B0;
+    if (fontEncode <= OS_FONT_ENCODE_SJIS) {
+        return fontEncode;
     }
 
     switch (*(int*)OSPhysicalToCached(0xCC)) {
     case VI_NTSC:
-        FontEncode_803DD1B0 = (__VIRegs[VI_DTV_STAT] & 2) ? OS_FONT_ENCODE_SJIS : OS_FONT_ENCODE_ANSI;
+        fontEncode = (__VIRegs[VI_DTV_STAT] & 2) ? OS_FONT_ENCODE_SJIS : OS_FONT_ENCODE_ANSI;
         break;
     case VI_PAL:
     case VI_MPAL:
@@ -324,10 +324,10 @@ u16 OSGetFontEncode(void) {
     case VI_DEBUG_PAL:
     case VI_EURGB60:
     default:
-        FontEncode_803DD1B0 = OS_FONT_ENCODE_ANSI;
+        fontEncode = OS_FONT_ENCODE_ANSI;
     }
 
-    return FontEncode_803DD1B0;
+    return fontEncode;
 }
 
 static void ReadROM(void* buf, int length, int offset) {
@@ -398,7 +398,7 @@ _rf_3:
     addi r4, r29, 0x0
     bl Decode
     stw r29, FontData(r13)
-    lhz r4, FontEncode_803DD1B0(r13)
+    lhz r4, fontEncode(r13)
     lhz r0, 0x22(r29)
     cmplwi r4, 0x1
     add r0, r29, r0
@@ -426,13 +426,13 @@ _rf_5:
 _rf_6:
     li r0, 0x0
 _rf_7:
-    sth r0, FontEncode_803DD1B0(r13)
+    sth r0, fontEncode(r13)
     b _rf_9
 _rf_8:
     li r0, 0x0
-    sth r0, FontEncode_803DD1B0(r13)
+    sth r0, fontEncode(r13)
 _rf_9:
-    lhz r4, FontEncode_803DD1B0(r13)
+    lhz r4, fontEncode(r13)
 _rf_10:
     clrlwi r0, r4, 16
     cmplwi r0, 0x1
@@ -587,7 +587,7 @@ asm char* OSGetFontTexel(const char* string, void* image, s32 pos, s32 stride, s
     mr r3, r28
     b _gft_19
 _gft_0:
-    lhz r0, FontEncode_803DD1B0(r13)
+    lhz r0, fontEncode(r13)
     addi r28, r28, 0x1
     cmplwi r0, 0x1
     bgt _gft_1
@@ -609,13 +609,13 @@ _gft_2:
 _gft_3:
     li r0, 0x0
 _gft_4:
-    sth r0, FontEncode_803DD1B0(r13)
+    sth r0, fontEncode(r13)
     b _gft_6
 _gft_5:
     li r0, 0x0
-    sth r0, FontEncode_803DD1B0(r13)
+    sth r0, fontEncode(r13)
 _gft_6:
-    lhz r0, FontEncode_803DD1B0(r13)
+    lhz r0, fontEncode(r13)
 _gft_7:
     clrlwi r0, r0, 16
     cmplwi r0, 0x1
@@ -802,7 +802,7 @@ asm char* OSGetFontWidth(const char* string, s32* width) {
     mr r3, r30
     b _ps_13
 _ps_0:
-    lhz r0, FontEncode_803DD1B0(r13)
+    lhz r0, fontEncode(r13)
     addi r30, r30, 0x1
     cmplwi r0, 0x1
     bgt _ps_1
@@ -824,13 +824,13 @@ _ps_2:
 _ps_3:
     li r0, 0x0
 _ps_4:
-    sth r0, FontEncode_803DD1B0(r13)
+    sth r0, fontEncode(r13)
     b _ps_6
 _ps_5:
     li r0, 0x0
-    sth r0, FontEncode_803DD1B0(r13)
+    sth r0, fontEncode(r13)
 _ps_6:
-    lhz r0, FontEncode_803DD1B0(r13)
+    lhz r0, fontEncode(r13)
 _ps_7:
     clrlwi r0, r0, 16
     cmplwi r0, 0x1
