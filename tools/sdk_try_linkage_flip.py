@@ -70,7 +70,7 @@ def has_active_unit(source: str, version: str) -> bool:
 
 
 def flip_config(config_text: str, source: str) -> str:
-    pattern = re.compile(rf'Object\(NonMatching,\s*"{re.escape(source)}"')
+    pattern = re.compile(rf'Object\(\s*NonMatching\s*,\s*"{re.escape(source)}"', re.DOTALL)
     new_text, count = pattern.subn(f'Object(MatchingFor("GSAE01"), "{source}"', config_text, count=1)
     if count != 1:
         raise ValueError(f"could not find NonMatching object for {source}")
@@ -114,7 +114,10 @@ def summarize_failure(output: str) -> str:
 def try_flip(source: str, version: str, ninja_timeout: int, keep: bool, require_active_unit: bool) -> FlipResult:
     original = CONFIGURE.read_text()
     try:
-        write_config(flip_config(original, source))
+        try:
+            write_config(flip_config(original, source))
+        except ValueError as err:
+            return FlipResult(source, False, "configure", str(err))
 
         configured = run_step(["python", "configure.py", "--matching"], timeout=120)
         if configured is None:
