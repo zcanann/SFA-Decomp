@@ -58,7 +58,6 @@
     } while(0);
 
 static OSResetFunctionQueue ResetFunctionQueue;
-u32 lbl_803DDE68;
 extern u32 bootThisDol_803DEAE8;
 #define bootThisDol bootThisDol_803DEAE8
 
