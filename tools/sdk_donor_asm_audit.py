@@ -58,6 +58,7 @@ class DonorSource:
     project: str
     path: Path
     asm_count: int
+    state: str | None
 
 
 @dataclass(frozen=True)
@@ -93,6 +94,24 @@ def active_sdk_sources(version: str) -> list[Path]:
     return sorted(sources)
 
 
+@lru_cache(maxsize=None)
+def donor_object_states(project: str) -> dict[str, str]:
+    configure_path = ROOT / "reference_projects" / project / "configure.py"
+    if not configure_path.is_file():
+        return {}
+    text = configure_path.read_text(encoding="utf-8", errors="ignore")
+    states: dict[str, str] = {}
+    for match in re.finditer(r"Object\(\s*([^,\n]+),\s*\"([^\"]+)\"", text):
+        state = match.group(1).strip()
+        rel = normalize_path(match.group(2))
+        states[rel] = state
+    return states
+
+
+def is_matching_state(state: str | None) -> bool:
+    return state == "Matching" or (state is not None and state.startswith("MatchingFor"))
+
+
 def donor_source_index(projects: tuple[str, ...]) -> dict[str, list[DonorSource]]:
     index: dict[str, list[DonorSource]] = {}
     for project in projects:
@@ -100,6 +119,7 @@ def donor_source_index(projects: tuple[str, ...]) -> dict[str, list[DonorSource]
         src_root = root / "src"
         if not src_root.is_dir():
             continue
+        object_states = donor_object_states(project)
         for path in src_root.rglob("*"):
             if path.suffix not in {".c", ".cpp", ".cp"}:
                 continue
@@ -108,7 +128,12 @@ def donor_source_index(projects: tuple[str, ...]) -> dict[str, list[DonorSource]
             if not normalized.startswith(("dolphin/", "Runtime.PPCEABI.H/")):
                 continue
             index.setdefault(normalized, []).append(
-                DonorSource(project=project, path=path, asm_count=asm_count(path))
+                DonorSource(
+                    project=project,
+                    path=path,
+                    asm_count=asm_count(path),
+                    state=object_states.get(normalized),
+                )
             )
     return index
 
@@ -144,14 +169,18 @@ def signature_summary(rel: str, args: argparse.Namespace) -> SignatureSummary | 
     ]
     raw_references = []
     for spec in references:
-        raw_references.extend(
-            collect_reference_raw_windows(
-                spec,
-                (rel,),
-                min_functions=args.signature_min_functions,
-                min_span=args.signature_min_span,
-            )
-        )
+        for reference in collect_reference_raw_windows(
+            spec,
+            (rel,),
+            min_functions=args.signature_min_functions,
+            min_span=args.signature_min_span,
+        ):
+            if (
+                (args.signature_only_matching_donor or args.only_matching_donor)
+                and not is_matching_state(donor_object_states(spec.project).get(normalize_path(reference.source_path)))
+            ):
+                continue
+            raw_references.append(reference)
     if not raw_references:
         return None
 
@@ -199,6 +228,7 @@ def make_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--path-contains", action="append", default=[], help="Case-insensitive source filter")
     parser.add_argument("--only-clean-donor", action="store_true", help="Only print rows with a donor asm_count of zero")
+    parser.add_argument("--only-matching-donor", action="store_true", help="Only consider donors marked Matching/MatchingFor")
     parser.add_argument("--only-with-donor", action="store_true", help="Suppress active asm files with no donor source")
     parser.add_argument("--show-signatures", action="store_true", help="Annotate each row with the best DOL signature hit")
     parser.add_argument(
@@ -208,6 +238,7 @@ def make_parser() -> argparse.ArgumentParser:
         help="Reference project/config for signature annotations in project:config form.",
     )
     parser.add_argument("--signature-min-score", type=float, default=0.70)
+    parser.add_argument("--signature-only-matching-donor", action="store_true")
     parser.add_argument("--signature-min-functions", type=int, default=2)
     parser.add_argument("--signature-min-span", type=lambda value: int(value, 0), default=0x20)
     parser.add_argument("--signature-range-start", type=lambda value: int(value, 0), default=0x80003100)
@@ -232,6 +263,8 @@ def main() -> int:
         if local_asm == 0:
             continue
         donors = tuple(sorted(donor_index.get(rel, ()), key=lambda donor: (donor.asm_count, donor.project)))
+        if args.only_matching_donor:
+            donors = tuple(donor for donor in donors if is_matching_state(donor.state))
         if args.only_with_donor and not donors:
             continue
         if args.only_clean_donor and not any(donor.asm_count == 0 for donor in donors):
@@ -244,7 +277,9 @@ def main() -> int:
     for _no_donor, min_donor_asm, _neg_local_asm, rel, local_asm, donors in rows[: args.limit]:
         donor_label = "none"
         if donors:
-            donor_label = ", ".join(f"{donor.project}:{donor.asm_count}" for donor in donors[:5])
+            donor_label = ", ".join(
+                f"{donor.project}:{donor.asm_count}:{donor.state or '?'}" for donor in donors[:5]
+            )
             if len(donors) > 5:
                 donor_label += f", ... ({len(donors)} total)"
         if donors and min_donor_asm == 0:
