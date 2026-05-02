@@ -719,7 +719,12 @@ config.libs = [
                 extra_cflags=["-O0", "-opt", "functions", "-inline", "auto", *msl_math_extra],
             ),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/extras.c"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_tan.c", extra_cflags=msl_math_extra),
+            Object(
+                NonMatching,
+                "dolphin/MSL_C/PPCEABI/bare/H/k_tan.c",
+                cflags=msl_math_o0_cflags,
+                extra_cflags=["-O0", "-opt", "functions", "-inline", "auto", *msl_math_extra],
+            ),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_rem_pio2.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.c", extra_cflags=msl_math_extra),
             Object(
