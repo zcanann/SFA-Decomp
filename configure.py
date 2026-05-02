@@ -714,7 +714,7 @@ config.libs = [
         "cflags": cflags_base,
         "progress_category": "game",
         "objects": [
-            Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_803E8368.s"),
+            Object(MatchingFor("GSAE01"), "main/audio/synth_constants.c"),
             Object(NonMatching, "main/audio/synth_callback.c"),
             Object(NonMatching, "main/audio/synth_channel.c"),
             Object(NonMatching, "main/audio/synth_handle.c"),
