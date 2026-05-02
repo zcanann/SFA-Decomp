@@ -17,7 +17,7 @@ from sdk_dol_match import normalize_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ASM_RE = re.compile(r"\basm\b|__asm|GLOBAL_ASM|#pragma\s+asm")
+ASM_RE = re.compile(r"\b(?:asm|ASM)\b|__asm|GLOBAL_ASM|#pragma\s+asm")
 DEFAULT_REFERENCES = (
     "animal_crossing",
     "final_fantasy_crystal_chronicles",
