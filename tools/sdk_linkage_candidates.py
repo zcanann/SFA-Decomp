@@ -41,11 +41,46 @@ def has_active_unit(version: str, source: str) -> bool:
     return False
 
 
-def parse_nonmatching_objects(configure: Path) -> list[str]:
+def object_blocks(text: str) -> list[str]:
+    blocks: list[str] = []
+    for match in re.finditer(r"Object\(\s*NonMatching\s*,", text):
+        start = match.start()
+        depth = 0
+        in_string = False
+        escape = False
+        for index in range(start, len(text)):
+            char = text[index]
+            if in_string:
+                if escape:
+                    escape = False
+                elif char == "\\":
+                    escape = True
+                elif char == '"':
+                    in_string = False
+                continue
+
+            if char == '"':
+                in_string = True
+            elif char == "(":
+                depth += 1
+            elif char == ")":
+                depth -= 1
+                if depth == 0:
+                    blocks.append(text[start : index + 1])
+                    break
+    return blocks
+
+
+def parse_nonmatching_objects(configure: Path, include_game_classified: bool = False) -> list[str]:
     text = configure.read_text()
     paths: list[str] = []
-    for match in re.finditer(r'Object\(NonMatching,\s*"([^"]+)"', text):
+    for block in object_blocks(text):
+        match = re.search(r'Object\(\s*NonMatching\s*,\s*"([^"]+)"', block, re.DOTALL)
+        if not match:
+            continue
         path = match.group(1)
+        if not include_game_classified and re.search(r'progress_category\s*=\s*"game"', block):
+            continue
         if path.startswith(SDK_PREFIXES):
             paths.append(path)
     return paths
@@ -129,9 +164,17 @@ def main() -> None:
     parser.add_argument("--limit", type=int, default=50, help="Maximum rows to print")
     parser.add_argument("--active-only", action="store_true", help="Only print candidates present in the build config")
     parser.add_argument("--show-errors", action="store_true", help="Print objdiff failures")
+    parser.add_argument(
+        "--include-game-classified",
+        action="store_true",
+        help="Also include SDK-looking paths whose Object entry is explicitly progress_category='game'",
+    )
     args = parser.parse_args()
 
-    sources = parse_nonmatching_objects(REPO_ROOT / "configure.py")
+    sources = parse_nonmatching_objects(
+        REPO_ROOT / "configure.py",
+        include_game_classified=args.include_game_classified,
+    )
     candidates = [c for source in sources if (c := diff_candidate(args, source)) is not None]
     candidates.sort(
         key=lambda c: (
