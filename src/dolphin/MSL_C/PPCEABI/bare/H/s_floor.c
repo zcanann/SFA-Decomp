@@ -17,17 +17,12 @@ extern double lbl_803E7E10;
 double tan(int* out_n, float x);
 
 float floor(float x) {
-    union {
-        float f;
-        u32 u;
-    } bits;
     int n;
     double y;
     double y2;
 
-    bits.f = x;
-    y = tan(&n, bits.f);
-    n += (bits.u >> 29) & 4;
+    y = tan(&n, x);
+    n += (*(u32*)&x >> 29) & 4;
     y2 = y * y;
 
     switch (n & 6) {
