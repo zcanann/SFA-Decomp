@@ -19,7 +19,7 @@ extern float lbl_803E7CAC;
 
 extern float fn_80291E08(s16* p);
 
-float __kernel_tan(float x) {
+float sqrtf_8029312c(float x) {
     float guess;
     float half;
 
@@ -35,7 +35,7 @@ float __kernel_tan(float x) {
     return lbl_803E7C70;
 }
 
-float fn_80293900(float x) {
+float sqrtf_802931A0(float x) {
     float guess;
     float half;
 
@@ -49,7 +49,7 @@ float fn_80293900(float x) {
     return lbl_803E7C70;
 }
 
-float fn_80293954(float x) {
+float invSqrt(float x) {
     float guess;
     float half;
 
@@ -59,7 +59,7 @@ float fn_80293954(float x) {
     return guess;
 }
 
-float fn_80293994(int angle) {
+float angleFn_80293234(int angle) {
     s16 reduced = (s16)(angle << 2);
     float x = fn_80291E08(&reduced);
     float x2 = x * x;

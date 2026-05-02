@@ -4,7 +4,7 @@ extern void *fn_80023CC8(int size, int heap, int flags);
 extern void fn_80023800(void *ptr);
 extern void fn_8000E034(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, s32 param);
 extern s16 fn_800217C0(f32 dx, f32 dz);
-extern f32 fn_80293900(f32 x);
+extern f32 sqrtf_802931A0(f32 x);
 extern f32 fn_80293E80(f32 x);
 extern float sin(float x);
 extern void fn_80055070(void);
@@ -111,7 +111,7 @@ void fn_8010DB7C(f32 *param_1, f32 *param_2, f32 *param_3, f32 *param_4) {
 
     dx = param_1[6] - pfVar2[0];
     dz = param_1[8] - pfVar2[2];
-    dist = fn_80293900(dz * dz + dx * dx);
+    dist = sqrtf_802931A0(dz * dz + dx * dx);
     angle = (u16)fn_800217C0(dx, dz);
 
     {

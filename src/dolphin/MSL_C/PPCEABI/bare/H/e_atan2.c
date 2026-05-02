@@ -6,7 +6,7 @@ typedef struct Vec3f {
     float z;
 } Vec3f;
 
-extern float fn_80293954(float x);
+extern float invSqrt(float x);
 extern float fn_80291E08(s16* p);
 extern float lbl_803E7AB8;
 extern float lbl_803E7BC8;
@@ -52,7 +52,7 @@ float fn_80292B44(float x, float y) {
 }
 
 void fn_80292C30(void* v_in, void* v_out) {
-    float scale = fn_80293954(fn_80292C9C(v_in));
+    float scale = invSqrt(fn_80292C9C(v_in));
     fn_80292C74(v_in, v_out, scale);
 }
 

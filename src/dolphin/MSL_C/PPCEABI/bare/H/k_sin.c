@@ -33,7 +33,7 @@ extern double lbl_803E7AA0;
 extern double lbl_803E7AA8;
 extern double lbl_803E7AB0;
 
-extern float __kernel_tan(float x);
+extern float sqrtf_8029312c(float x);
 extern float fn_80292DEC(float x);
 
 float __kernel_sin(float x) {
@@ -48,7 +48,7 @@ float __kernel_sin(float x) {
     }
 
     y = lbl_803E79C0 - lbl_803E79C0 * ax;
-    t = __kernel_tan(y);
+    t = sqrtf_8029312c(y);
     p = t * (lbl_803E79D4 * y + lbl_803E79D0);
     if (x >= lbl_803E79C4) {
         return lbl_803E79C8 - lbl_803E79CC * p;
@@ -68,7 +68,7 @@ float fn_80291FF4(float x) {
     }
 
     y = lbl_803E79C0 - lbl_803E79C0 * ax;
-    t = __kernel_tan(y);
+    t = sqrtf_8029312c(y);
     p = t * (lbl_803E79D4 * y + lbl_803E79D0);
     if (x >= lbl_803E79C4) {
         return lbl_803E79CC * p;
@@ -89,7 +89,7 @@ float fn_802920A4(float x) {
     }
 
     y = lbl_803E79C0 - lbl_803E79C0 * ax;
-    t = __kernel_tan(y);
+    t = sqrtf_8029312c(y);
     p = t
         * (((((lbl_803E79FC * y + lbl_803E79F8) * y + lbl_803E79F4) * y + lbl_803E79F0) * y
             + lbl_803E79EC) * y + lbl_803E79D8);

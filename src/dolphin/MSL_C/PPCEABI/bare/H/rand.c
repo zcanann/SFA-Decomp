@@ -81,7 +81,7 @@ void fn_80292E20(int q, float* sin_out, float* cos_out) {
     STORE_SINCOS(q, sin_value, cos_value, sin_out, cos_out);
 }
 
-void fn_80292F14(int q, float* sin_out, float* cos_out) {
+void angleToVec2(int q, float* sin_out, float* cos_out) {
     s16 angle = q << 2;
     float x = fn_80291E08(&angle);
     float x2 = x * x;
