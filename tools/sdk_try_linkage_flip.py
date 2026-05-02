@@ -153,16 +153,27 @@ def main() -> None:
     parser.add_argument("--lock-timeout", type=int, default=120, help="configure.py lock timeout in seconds (default: 120)")
     parser.add_argument("--keep-first-pass", action="store_true", help="Leave configure.py changed for the first passing source")
     parser.add_argument(
+        "--allow-inactive-unit",
+        action="store_true",
+        help="Allow a passing ninja run even when the object is not present in the generated build config.",
+    )
+    parser.add_argument(
         "--require-active-unit",
         action="store_true",
-        help="Fail flips whose object is not present in the generated build config",
+        help=argparse.SUPPRESS,
     )
     args = parser.parse_args()
 
     try:
         with ConfigureLock(args.lock_timeout):
             for source in args.sources:
-                result = try_flip(source, args.version, args.ninja_timeout, args.keep_first_pass, args.require_active_unit)
+                result = try_flip(
+                    source,
+                    args.version,
+                    args.ninja_timeout,
+                    args.keep_first_pass,
+                    not args.allow_inactive_unit or args.require_active_unit,
+                )
                 status = "PASS" if result.ok else "FAIL"
                 print(f"{status} stage={result.stage} path={result.source} detail={result.detail}")
                 if result.ok and args.keep_first_pass:
