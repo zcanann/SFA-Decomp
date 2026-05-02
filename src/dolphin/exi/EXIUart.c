@@ -32,7 +32,7 @@ u32 InitializeUART(u32 baudRate) {
     return 0;
 }
 
-static int QueueLength(void) {
+static inline int QueueLength(void) {
     u32 cmd;
 
     if (!EXISelect(Chan, Dev, EXI_FREQ_8M)) {
