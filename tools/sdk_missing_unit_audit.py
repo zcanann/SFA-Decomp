@@ -228,6 +228,11 @@ def best_whole_window_evidence(
 
 def audit_candidate(args: argparse.Namespace, dol_path: Path, candidate: Candidate) -> Evidence:
     search_ranges = target_search_ranges(args.version, candidate.path, args.corridor_gap)
+    global_range = (args.range_start, args.range_end)
+    if args.global_search:
+        search_ranges = [global_range]
+    elif args.global_fallback and not search_ranges:
+        search_ranges = [global_range]
     if not search_ranges:
         return Evidence(note="no-corridor")
 
@@ -384,6 +389,10 @@ def make_parser() -> argparse.ArgumentParser:
     parser.add_argument("--path-contains", action="append", default=[], help="Case-insensitive path filter")
     parser.add_argument("--inventory-only", action="store_true", help="Only print inventory rows; do not run probes")
     parser.add_argument("--corridor-gap", type=parse_int, default=DEFAULT_CORRIDOR_GAP)
+    parser.add_argument("--global-fallback", action="store_true", help="Search the full target range when no SDK corridor exists")
+    parser.add_argument("--global-search", action="store_true", help="Search the full target range instead of nearby SDK corridors")
+    parser.add_argument("--range-start", type=parse_int, default=0x80003100, help="Global search start address")
+    parser.add_argument("--range-end", type=parse_int, default=0x80300000, help="Global search end address")
     parser.add_argument("--cluster-gap", type=parse_int, default=0x200)
     parser.add_argument("--min-function-size", type=parse_int, default=0x20)
     parser.add_argument("--min-anchor-score", type=float, default=0.60)
