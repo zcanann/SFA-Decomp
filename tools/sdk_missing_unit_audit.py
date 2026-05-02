@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -123,6 +124,7 @@ def build_candidates(
     references: list[RefSpec],
     min_refs: int,
     max_span: int | None,
+    min_funcs: int,
     include_covered: bool,
     require_source: bool,
     path_filters: tuple[str, ...],
@@ -147,6 +149,8 @@ def build_candidates(
         funcs = [unit.text_funcs for unit in per_ref.values()]
         observed_max_span = max(sizes)
         if max_span is not None and observed_max_span > max_span:
+            continue
+        if max(funcs) < min_funcs:
             continue
 
         has_source = source_exists(canonical_path)
@@ -327,6 +331,19 @@ def range_text(value: tuple[int, int] | None) -> str:
     return "none" if value is None else f"0x{value[0]:08X}-0x{value[1]:08X}"
 
 
+def print_inventory_summary(candidates: list[Candidate]) -> None:
+    print(
+        "inventory-summary "
+        f"total={len(candidates)} "
+        f"src={sum(1 for candidate in candidates if candidate.source_exists)} "
+        f"cfg={sum(1 for candidate in candidates if candidate.configured)} "
+        f"active={sum(1 for candidate in candidates if candidate.active)} "
+        f"covered={sum(1 for candidate in candidates if candidate.covered)} "
+        f"single-func={sum(1 for candidate in candidates if candidate.max_funcs == 1)} "
+        f"multi-func={sum(1 for candidate in candidates if candidate.max_funcs > 1)}"
+    )
+
+
 def print_candidate(candidate: Candidate, evidence: Evidence | None = None) -> None:
     if evidence is None:
         print(
@@ -382,6 +399,7 @@ def make_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--min-refs", type=int, default=2, help="Minimum donor projects containing the unit")
     parser.add_argument("--max-span", type=parse_int, default=0x1800, help="Maximum observed donor .text span")
+    parser.add_argument("--min-funcs", type=int, default=1, help="Minimum observed donor function count")
     parser.add_argument("--limit", type=int, default=40, help="Maximum inventory rows to consider")
     parser.add_argument("--probe-limit", type=int, default=20, help="Maximum rows to run target signature probes for")
     parser.add_argument("--include-covered", action="store_true", help="Include units already covered by target splits")
@@ -418,6 +436,7 @@ def main() -> int:
         references=references,
         min_refs=args.min_refs,
         max_span=args.max_span,
+        min_funcs=args.min_funcs,
         include_covered=args.include_covered,
         require_source=args.require_source,
         path_filters=tuple(args.path_contains),
@@ -425,8 +444,10 @@ def main() -> int:
 
     print(
         f"donor-missing-candidates={len(candidates)} "
-        f"refs={len(references)} min-refs={args.min_refs} max-span=0x{args.max_span:X}"
+        f"refs={len(references)} min-refs={args.min_refs} "
+        f"min-funcs={args.min_funcs} max-span=0x{args.max_span:X}"
     )
+    print_inventory_summary(candidates)
     if not candidates:
         return 0
 
@@ -436,12 +457,17 @@ def main() -> int:
         return 0
 
     dol_path = target_dol_path_for_version(args.version)
+    classifications: Counter[str] = Counter()
     for index, candidate in enumerate(candidates):
         if index >= args.probe_limit:
             print_candidate(candidate)
             continue
         evidence = audit_candidate(args, dol_path, candidate)
+        classifications[classify(candidate, evidence)] += 1
         print_candidate(candidate, evidence)
+    if classifications:
+        summary = " ".join(f"{name}={count}" for name, count in sorted(classifications.items()))
+        print(f"classification-summary probed={sum(classifications.values())} {summary}")
     return 0
 
 
