@@ -12609,6 +12609,7 @@ InputBufferVcount = .bss:0x803AE3E0; // type:object size:0x10 scope:local data:4
 cmdFixDevice$311 = .bss:0x803AE3F0; // type:object size:0x10 scope:local data:4byte
 Ecb = .bss:0x803AE400; // type:object size:0xC0 scope:local data:4byte
 gxData = .bss:0x803AE4C0; // type:object size:0x4F8 scope:local
+FifoObj = .bss:0x803AE9B8; // type:object size:0x80 scope:global data:4byte
 vcd = .bss:0x803AEA38; // type:object size:0xD8 scope:local align:4
 vat = .bss:0x803AEB10; // type:object size:0x1B0 scope:local align:4
 lbl_803AECC0 = .bss:0x803AECC0; // type:object size:0x520 data:4byte
