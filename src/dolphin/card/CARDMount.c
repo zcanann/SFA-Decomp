@@ -5,11 +5,28 @@
 #include "dolphin/card/__card.h"
 
 extern u16 lbl_803DC608;
-extern u32 lbl_8032ED40[8];
-extern u32 lbl_8032ED60[8];
 
-#define SectorSizeTable lbl_8032ED40
-#define LatencyTable lbl_8032ED60
+static u32 SectorSizeTable[8] = {
+    0x2000,
+    0x4000,
+    0x8000,
+    0x10000,
+    0x20000,
+    0x40000,
+    0,
+    0,
+};
+
+static u32 LatencyTable[8] = {
+    4,
+    8,
+    16,
+    32,
+    64,
+    128,
+    256,
+    512,
+};
 
 // prototypes
 static s32 DoMount(s32 chan);
