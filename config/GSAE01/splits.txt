@@ -2517,13 +2517,13 @@ main/audio/synth_constants.c:
 dolphin/MSL_C/PPCEABI/bare/H/common_float_tables.c:
 	.data       start:0x80332A28 end:0x80332C78
 
-main/unknown/autos/placeholder_80332EF0.s:
+dolphin/TRK_MINNOW_DOLPHIN/msghndlr_tables.c:
 	.data       start:0x80332EF0 end:0x80332F48
 
-main/unknown/autos/placeholder_80332F48.s:
+dolphin/TRK_MINNOW_DOLPHIN/targimpl_tables.c:
 	.data       start:0x80332F48 end:0x80332F78
 
-main/unknown/autos/placeholder_80332F78.s:
+dolphin/TRK_MINNOW_DOLPHIN/mpc_7xx_603e_tables.c:
 	.data       start:0x80332F78 end:0x80332FC0
 
 dolphin/MSL_C/PPCEABI/bare/H/e_pow.c:
