@@ -212,7 +212,7 @@ void GXSetGPFifo(GXFifoObj* fifo) {
     GX_SET_CP_REG(21, (u32)realFifo->hiWatermark >> 16);
     GX_SET_CP_REG(23, (u32)realFifo->loWatermark >> 16);
 
-    { asm { sync; } }
+    __sync();
 
     if (CPUFifo == GPFifo) {
         CPGPLinked = GX_TRUE;
@@ -603,7 +603,7 @@ volatile void* GXRedirectWriteGatherPipe(void* ptr) {
     reg &= 0xFBFFFFFF;
     GX_SET_PI_REG(5, reg);
 
-    { asm { sync; } }
+    __sync();
     OSRestoreInterrupts(enabled);
     return (volatile void*)GXFIFO_ADDR;
 }
@@ -625,7 +625,7 @@ void GXRestoreWriteGatherPipe(void) {
         GXWGFifo.u8 = 0;
     }
 
-    { asm { sync; } }
+    __sync();
     while (PPCMfwpar() & 1) {}
     PPCMtwpar((u32)OSUncachedToPhysical((void*)GXFIFO_ADDR));
     GX_SET_PI_REG(3, (u32)CPUFifo->base & 0x3FFFFFFF);
@@ -639,7 +639,7 @@ void GXRestoreWriteGatherPipe(void) {
         __GXFifoLink(1);
     }
 
-    { asm { sync; } }
+    __sync();
     OSRestoreInterrupts(enabled);
 }
 #endif
