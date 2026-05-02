@@ -6,7 +6,7 @@
 
 #define DVD_WATYPE_MAX 2
 
-extern BOOL FirstRead;
+extern BOOL FirstRead_803DC558;
 static volatile BOOL StopAtNextInt = FALSE;
 static u32 LastLength = 0;
 static DVDLowCallback Callback = NULL;
@@ -83,7 +83,7 @@ void __DVDInterruptHandler(__OSInterrupt interrupt, OSContext* context) {
 
 	if (LastCommandWasRead) {
 		LastReadFinished = __OSGetSystemTime();
-		FirstRead = FALSE;
+		FirstRead_803DC558 = FALSE;
 		Prev.addr = Curr.addr;
 		Prev.length = Curr.length;
 		Prev.offset = Curr.offset;
@@ -301,7 +301,7 @@ BOOL DVDLowRead(void* addr, u32 length, u32 offset, DVDLowCallback callback) {
 	if (WorkAroundType == 0) {
 		DoJustRead(addr, length, offset, callback);
 	} else if (WorkAroundType == 1) {
-		if (FirstRead) {
+		if (FirstRead_803DC558) {
 			SeekTwiceBeforeRead(addr, length, offset, callback);
 		} else {
 			if (!HitCache(&Curr, &Prev)) {
