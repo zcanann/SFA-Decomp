@@ -4,15 +4,15 @@
 #include "TRK_MINNOW_DOLPHIN/Os/dolphin/targcont.h"
 #include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
 
-void TRKHandleRequestEvent(TRKEvent* event)
+static inline void TRKHandleRequestEvent(TRKEvent* event)
 {
 	TRKBuffer* buffer = TRKGetBuffer(event->msgBufID);
 	TRKDispatchMessage(buffer);
 }
 
-void TRKHandleSupportEvent(TRKEvent* event) { TRKTargetSupportRequest(); }
+static inline void TRKHandleSupportEvent(TRKEvent* event) { TRKTargetSupportRequest(); }
 
-void TRKIdle()
+static inline void TRKIdle()
 {
 	if (TRKTargetStopped() == FALSE) {
 		TRKTargetContinue();
