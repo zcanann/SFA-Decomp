@@ -1,5 +1,4 @@
 #include "dolphin/mtx.h"
-#include "math.h"
 
 extern const float lbl_803E7648;  // 0.5f
 extern const float lbl_803E764C;  // 3.0f
