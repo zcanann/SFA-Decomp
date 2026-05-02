@@ -79,7 +79,7 @@ float fn_80293994(int angle) {
     }
 }
 
-float fn_8029333C(int angle) {
+float fcos16(int angle) {
     s16 reduced = (s16)(angle << 2);
     float x = fn_80291E08(&reduced);
     float x2 = x * x;

@@ -151,7 +151,7 @@ float fn_80293EAC(int angle) {
     }
 }
 
-float fn_80293854(int angle) {
+float fsin16(int angle) {
     s16 reduced = angle << 2;
     float y = fn_80291E08(&reduced);
     float y2 = y * y;
