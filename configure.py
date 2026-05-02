@@ -699,7 +699,12 @@ config.libs = [
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/rand.c", mw_version="GC/1.1", extra_cflags=msl_math_extra),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/math_ppc.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_cos.c", extra_cflags=msl_math_extra),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_sin.c", extra_cflags=msl_math_extra),
+            Object(
+                NonMatching,
+                "dolphin/MSL_C/PPCEABI/bare/H/k_sin.c",
+                cflags=msl_math_o0_cflags,
+                extra_cflags=["-O0", "-opt", "functions", "-inline", "auto", *msl_math_extra],
+            ),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_cos.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_atan.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_sqrt.c", extra_cflags=msl_math_extra),
