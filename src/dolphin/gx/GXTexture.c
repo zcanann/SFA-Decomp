@@ -54,7 +54,7 @@ u8 GXTexImage3Ids[8] = {0x94, 0x95, 0x96, 0x97, 0xB4, 0xB5, 0xB6, 0xB7};
 u8 GXTexTlutIds[8] = {0x98, 0x99, 0x9A, 0x9B, 0xB8, 0xB9, 0xBA, 0xBB};
 u8 GX2HWFiltConv[6] = {0x00, 0x04, 0x01, 0x05, 0x02, 0x06};
 
-void __GXGetTexTileShift_8025A7EC(GXTexFmt fmt, u32* rowTileS, u32* colTileS) {
+void __GXGetTexTileShift(GXTexFmt fmt, u32* rowTileS, u32* colTileS) {
     switch (fmt) {
     case GX_TF_I4:
     case 0x8:
@@ -111,7 +111,7 @@ u32 GXGetTexBufferSize(u16 width, u16 height, u32 format, GXBool mipmap, u8 max_
     ASSERTMSGLINEV(460, width <= 1024, "%s: width too large", "GXGetTexBufferSize");
     ASSERTMSGLINEV(461, height <= 1024, "%s: height too large", "GXGetTexBufferSize");
 
-    __GXGetTexTileShift_8025A7EC(format, &tileShiftX, &tileShiftY);
+    __GXGetTexTileShift(format, &tileShiftX, &tileShiftY);
     if (format == GX_TF_RGBA8 || format == GX_TF_Z24X8) {
         tileBytes = 64;
     } else {
@@ -148,7 +148,7 @@ void __GetImageTileCount(GXTexFmt fmt, u16 wd, u16 ht, u32* rowTiles, u32* colTi
     u32 texRowShift;
     u32 texColShift;
 
-    __GXGetTexTileShift_8025A7EC(fmt, &texRowShift, &texColShift);
+    __GXGetTexTileShift(fmt, &texRowShift, &texColShift);
     if (wd == 0) {
         wd = 1;
     }
