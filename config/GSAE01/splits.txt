@@ -1769,6 +1769,7 @@ dolphin/card/CARDBios.c:
 
 dolphin/card/CARDUnlock.c:
 	.text       start:0x8025EFCC end:0x8026022C
+	.data       start:0x8032EBE0 end:0x8032ED40
 
 dolphin/card/CARDRdwr.c:
 	.text       start:0x8026022C end:0x802604AC
