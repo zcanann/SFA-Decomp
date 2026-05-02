@@ -34,6 +34,7 @@ from sdk_reference_inventory import (
 
 ROOT = Path(__file__).resolve().parents[1]
 SDK_PREFIXES = ("dolphin/", "Runtime.PPCEABI.H/")
+SOURCE_SUFFIX_RE = re.compile(r"\.(?:c|cpp|cp|cxx|s|S)$")
 INLINE_ASM_CAVEATS = {
     "dolphin/os/OSFont.c": (
         "close Sunshine/AC donor, but SFA's current parser/source shape still misses the strict hash"
@@ -67,6 +68,29 @@ def active_sdk_units(version: str) -> tuple[set[str], int]:
             active.add(canonicalize_sdk_path(name))
     _report_total, report_complete = progress_report_counts(version) or (len(active), 0)
     return active, report_complete
+
+
+def report_sdk_units(version: str) -> set[str]:
+    report_path = ROOT / "build" / version / "report.json"
+    if not report_path.is_file():
+        return set()
+    report = json.loads(report_path.read_text())
+    return {
+        normalize_report_unit_name(unit.get("name", ""))
+        for unit in report.get("units", [])
+        if "sdk" in unit.get("metadata", {}).get("progress_categories", [])
+    }
+
+
+def normalize_report_unit_name(name: str) -> str:
+    path = name.replace("\\", "/")
+    if path.startswith("main/"):
+        path = path[len("main/") :]
+    return path
+
+
+def unit_basename(path: str) -> str:
+    return SOURCE_SUFFIX_RE.sub("", path)
 
 
 def configured_sdk_objects() -> set[str]:
@@ -197,6 +221,8 @@ def main() -> int:
     args = parser.parse_args()
 
     active, active_complete = active_sdk_units(args.version)
+    report_sdk = report_sdk_units(args.version)
+    active_basenames = {unit_basename(path) for path in active}
     configured = configured_sdk_objects()
     splits = target_sdk_splits(args.version)
     report_counts = progress_report_counts(args.version)
@@ -210,6 +236,15 @@ def main() -> int:
         f"build-active-sdk-objects={len(active)} configured-sdk-objects={len(configured)} "
         f"split-backed={len(splits)} dormant-configured={len(configured - active - splits)}"
     )
+
+    report_only = sorted(report_sdk - active_basenames)
+    path_only = sorted(active_basenames - report_sdk)
+    if report_only or path_only:
+        print("\nsdk-category-deltas")
+        if report_only:
+            print("  report-sdk-not-path-sdk=" + ", ".join(report_only))
+        if path_only:
+            print("  path-sdk-not-report-sdk=" + ", ".join(path_only))
 
     print("\nactive-nonmatching-near-misses")
     for row in linkage_rows(args.version, args.limit, args.path_contains):
