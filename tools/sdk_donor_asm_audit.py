@@ -248,6 +248,16 @@ def make_parser() -> argparse.ArgumentParser:
     parser.add_argument("--only-with-donor", action="store_true", help="Suppress active asm files with no donor source")
     parser.add_argument("--show-signatures", action="store_true", help="Annotate each row with the best DOL signature hit")
     parser.add_argument(
+        "--require-signature",
+        action="store_true",
+        help="Only print rows whose best donor signature has a target hit. Implies --show-signatures.",
+    )
+    parser.add_argument(
+        "--require-owner-match",
+        action="store_true",
+        help="Only print rows whose best donor signature lands in the same target split owner. Implies --require-signature.",
+    )
+    parser.add_argument(
         "--signature-reference",
         action="append",
         type=parse_reference_spec,
@@ -266,6 +276,10 @@ def make_parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     args = make_parser().parse_args()
+    if args.require_owner_match:
+        args.require_signature = True
+    if args.require_signature:
+        args.show_signatures = True
     projects = tuple(args.reference_project or DEFAULT_REFERENCES)
     donor_index = donor_source_index(projects)
     filters = tuple(value.lower() for value in args.path_contains)
@@ -289,8 +303,18 @@ def main() -> int:
         rows.append((min_donor_asm is None, min_donor_asm if min_donor_asm is not None else 9999, -local_asm, rel, local_asm, donors))
 
     rows.sort()
-    print(f"active-sdk-asm-sources={len(rows)} donor-projects={len(projects)} version={args.version}")
-    for _no_donor, min_donor_asm, _neg_local_asm, rel, local_asm, donors in rows[: args.limit]:
+    output_rows = []
+    for row in rows:
+        signature = signature_summary(row[3], args) if args.show_signatures else None
+        if args.require_signature and signature is None:
+            continue
+        if args.require_owner_match and signature is not None and not signature.owner_matches:
+            continue
+        output_rows.append((row, signature))
+
+    print(f"active-sdk-asm-sources={len(output_rows)} donor-projects={len(projects)} version={args.version}")
+    for row, signature in output_rows[: args.limit]:
+        _no_donor, min_donor_asm, _neg_local_asm, rel, local_asm, donors = row
         donor_label = "none"
         if donors:
             donor_label = ", ".join(
@@ -309,7 +333,6 @@ def main() -> int:
         if donors:
             print(f"  best={relative(donors[0].path)}")
         if args.show_signatures:
-            signature = signature_summary(rel, args)
             if signature is None:
                 print("  signature=none")
             else:
