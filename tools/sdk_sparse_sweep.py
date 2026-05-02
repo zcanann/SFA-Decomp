@@ -14,6 +14,7 @@ if __package__ in (None, ""):
 from dolphin_sdk_symbols import load_splits
 from sdk_dol_match import (
     ReferenceSpec,
+    describe_target_split_overlap,
     load_dol,
     normalize_path,
     select_reference_window,
@@ -210,6 +211,11 @@ def make_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Only include candidates not already covered by configure.py",
     )
+    parser.add_argument(
+        "--only-unassigned",
+        action="store_true",
+        help="Only accept sparse target clusters that are not already owned by split ranges.",
+    )
     return parser
 
 
@@ -260,7 +266,7 @@ def main() -> int:
                 reference_window=reference_window,
                 target_range_start=search_range[0],
                 target_range_end=search_range[1],
-                only_unassigned=False,
+                only_unassigned=args.only_unassigned,
                 coarse_limit=args.coarse_limit,
                 limit_per_reference=args.limit_per_reference,
                 limit=1,
@@ -294,6 +300,7 @@ def main() -> int:
                 f"order={best.order_ratio * 100:.2f} "
                 f"{sparse_verdict_for_cluster(best)}"
             )
+            print(f"  {describe_target_split_overlap(args.version, best.start, best.end)}")
         printed += 1
         if printed >= args.limit:
             break
