@@ -10020,6 +10020,7 @@ fn_802C1800 = .text:0x802C1800; // type:function size:0x4
 fn_802C1804 = .text:0x802C1804; // type:function size:0x78
 _ctors = .ctors:0x802C1880; // type:label scope:global data:4byte
 __init_cpp_exceptions_reference = .ctors:0x802C1880; // type:object size:0x4 scope:global
+__sinit_trigf_c_reference = .ctors:0x802C1884; // type:object size:0x4 scope:local
 _dtors = .dtors:0x802C18A0; // type:label scope:global data:4byte
 __destroy_global_chain_reference = .dtors:0x802C18A0; // type:object size:0x4 scope:global
 __fini_cpp_exceptions_reference = .dtors:0x802C18A4; // type:object size:0x4 scope:global
