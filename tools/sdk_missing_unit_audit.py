@@ -96,6 +96,11 @@ def sdk_report_count(version: str) -> tuple[int, int] | None:
     return len(sdk_units), sum(1 for unit in sdk_units if unit.get("metadata", {}).get("complete"))
 
 
+def configured_object_count() -> int:
+    _configured_objects, configured_canonical = load_configured_objects()
+    return sum(1 for path in configured_canonical if path.startswith("dolphin/"))
+
+
 def load_active_objects(version: str) -> set[str]:
     config_path = Path("build") / version / "config.json"
     if not config_path.is_file():
@@ -428,8 +433,12 @@ def main() -> int:
     references = args.reference or [parse_refspec(value) for value in DEFAULT_REFERENCES]
 
     sdk_count = sdk_report_count(args.version)
+    configured_count = configured_object_count()
     if sdk_count is not None:
-        print(f"configured-sdk-units={sdk_count[0]} complete={sdk_count[1]} version={args.version}")
+        print(
+            f"active-sdk-units={sdk_count[0]} complete={sdk_count[1]} "
+            f"configured-sdk-objects={configured_count} version={args.version}"
+        )
 
     candidates = build_candidates(
         version=args.version,
