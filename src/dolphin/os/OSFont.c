@@ -350,7 +350,7 @@ static void ReadROM(void* buf, int length, int offset) {
 extern const u32 lbl_803E7610;
 extern const u32 lbl_803E7614;
 
-asm u32 ReadFont_802436FC(void* img, u16 encode, void* fontData) {
+asm u32 OSLoadFont(OSFontHeader* fontData, void* tmp) {
     nofralloc
     mflr r0
     stw r0, 0x4(r1)
@@ -788,7 +788,7 @@ _gft_19:
     blr
 }
 
-asm char* ParseStringS_80243D34(const char* string, int* pfontCode) {
+asm char* OSGetFontWidth(const char* string, s32* width) {
     nofralloc
     mflr r0
     stw r0, 0x4(r1)
