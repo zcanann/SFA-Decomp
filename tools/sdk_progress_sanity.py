@@ -34,6 +34,16 @@ from sdk_reference_inventory import (
 
 ROOT = Path(__file__).resolve().parents[1]
 SDK_PREFIXES = ("dolphin/", "Runtime.PPCEABI.H/")
+INLINE_ASM_CAVEATS = {
+    "dolphin/os/OSFont.c": (
+        "close Sunshine/AC donor, but SFA's current parser/source shape still misses the strict hash"
+    ),
+    "dolphin/TRK_MINNOW_DOLPHIN/MWTrace.c": "FFCC donor is an empty stub; SFA target has a real trace recorder",
+    "dolphin/gx/GXInit.c": "tiny WPAR helper likely still needs inline mfspr shape",
+    "dolphin/MSL_C/PPCEABI/bare/H/rand.c": (
+        "donor rand/srand only; SFA unit also carries reciprocal/trig helper code"
+    ),
+}
 
 
 @dataclass(frozen=True)
@@ -120,7 +130,7 @@ def donor_backed_dormant(version: str, limit: int, path_filter: str | None) -> l
     return rows[:limit]
 
 
-def clean_donor_asm_rows(version: str, limit: int, path_filter: str | None) -> list[tuple[str, int, str]]:
+def clean_donor_asm_rows(version: str, limit: int, path_filter: str | None) -> list[tuple[str, int, str, str | None]]:
     index = donor_source_index(
         (
             "animal_crossing",
@@ -135,7 +145,7 @@ def clean_donor_asm_rows(version: str, limit: int, path_filter: str | None) -> l
         )
     )
     active, _complete = active_sdk_units(version)
-    rows: list[tuple[str, int, str]] = []
+    rows: list[tuple[str, int, str, str | None]] = []
     for source in sorted(active):
         if not source.endswith((".c", ".cpp", ".cp")):
             continue
@@ -154,7 +164,14 @@ def clean_donor_asm_rows(version: str, limit: int, path_filter: str | None) -> l
         ]
         if donors:
             best = min(donors, key=lambda donor: (donor.project, donor.path.as_posix()))
-            rows.append((source, local_asm, f"{best.project}:{best.path.relative_to(ROOT).as_posix()}"))
+            rows.append(
+                (
+                    source,
+                    local_asm,
+                    f"{best.project}:{best.path.relative_to(ROOT).as_posix()}",
+                    INLINE_ASM_CAVEATS.get(source),
+                )
+            )
     rows.sort(key=lambda row: (-row[1], row[0]))
     return rows[:limit]
 
@@ -206,8 +223,9 @@ def main() -> int:
         print(f"  refs={refs:2d} max-text=0x{span:X} max-funcs={funcs} path={path}")
 
     print("\ninline-asm-with-clean-matching-donor")
-    for path, count, donor in clean_donor_asm_rows(args.version, args.limit, args.path_contains):
-        print(f"  asm={count:2d} path={path} donor={donor}")
+    for path, count, donor, caveat in clean_donor_asm_rows(args.version, args.limit, args.path_contains):
+        suffix = f" note={caveat}" if caveat else ""
+        print(f"  asm={count:2d} path={path} donor={donor}{suffix}")
 
     return 0
 
