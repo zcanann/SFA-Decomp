@@ -13,14 +13,6 @@ void __destroy_global_chain(void) {
     }
 }
 
-void* __register_global_object(void* object, void* destructor, void* regmem) {
-    ((DestructorChain*)regmem)->next = __global_destructor_chain;
-    ((DestructorChain*)regmem)->destructor = destructor;
-    ((DestructorChain*)regmem)->object = object;
-    __global_destructor_chain = (DestructorChain*)regmem;
-    return object;
-}
-
 /* clang-format off */
 static __declspec(section ".dtors") void* const __destroy_global_chain_reference = __destroy_global_chain;
 /* clang-format on */
