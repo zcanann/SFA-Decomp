@@ -262,6 +262,7 @@ cflags_msl = [
 ]
 
 msl_math_extra = ["-schedule", "off"]
+msl_math_o0_cflags = [flag for flag in cflags_base if flag != "-O4,p"]
 
 # REL flags
 cflags_rel = [
@@ -706,13 +707,28 @@ config.libs = [
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_fmod.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_pow.c", extra_cflags=msl_math_extra),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_atan2.c", extra_cflags=msl_math_extra),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_tan.c", extra_cflags=msl_math_extra),
+            Object(
+                NonMatching,
+                "dolphin/MSL_C/PPCEABI/bare/H/s_tan.c",
+                cflags=msl_math_o0_cflags,
+                extra_cflags=["-O0", "-opt", "functions", "-inline", "auto", *msl_math_extra],
+            ),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/extras.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_tan.c", extra_cflags=msl_math_extra),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_rem_pio2.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.c", extra_cflags=msl_math_extra),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_floor.c", extra_cflags=msl_math_extra),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_sin.c", extra_cflags=msl_math_extra),
+            Object(
+                NonMatching,
+                "dolphin/MSL_C/PPCEABI/bare/H/s_floor.c",
+                cflags=msl_math_o0_cflags,
+                extra_cflags=["-O0", "-opt", "functions", "-inline", "auto", *msl_math_extra],
+            ),
+            Object(
+                NonMatching,
+                "dolphin/MSL_C/PPCEABI/bare/H/s_sin.c",
+                cflags=msl_math_o0_cflags,
+                extra_cflags=["-O0", "-opt", "functions", "-inline", "auto", *msl_math_extra],
+            ),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/w_acos.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/w_atan2.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/w_fmod.c"),
