@@ -261,6 +261,8 @@ cflags_msl = [
     "-str reuse,pool,readonly",
 ]
 
+msl_math_extra = ["-schedule", "off"]
+
 # REL flags
 cflags_rel = [
     *cflags_base,
@@ -685,7 +687,7 @@ config.libs = [
             Object(
                 NonMatching,
                 "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.c",
-                extra_cflags=["-inline", "off"],
+                extra_cflags=["-inline", "off", *msl_math_extra],
             ),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/gamecube.c"),
             Object(MatchingFor("GSAE01"), "dolphin/base/PPCArch_weak.c"),
@@ -693,24 +695,24 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c", mw_version="GC/1.2.5"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/hyperbolicsf.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/floorf.c"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/rand.c", mw_version="GC/1.1"),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/rand.c", mw_version="GC/1.1", extra_cflags=msl_math_extra),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/math_ppc.c"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_cos.c"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_sin.c"),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_cos.c", extra_cflags=msl_math_extra),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_sin.c", extra_cflags=msl_math_extra),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_cos.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_atan.c"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_sqrt.c"),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_sqrt.c", extra_cflags=msl_math_extra),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_acos.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_fmod.c"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_pow.c"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_atan2.c"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_tan.c"),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_pow.c", extra_cflags=msl_math_extra),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_atan2.c", extra_cflags=msl_math_extra),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_tan.c", extra_cflags=msl_math_extra),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/extras.c"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_tan.c"),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_tan.c", extra_cflags=msl_math_extra),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_rem_pio2.c"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.c"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_floor.c"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_sin.c"),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.c", extra_cflags=msl_math_extra),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_floor.c", extra_cflags=msl_math_extra),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/s_sin.c", extra_cflags=msl_math_extra),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/w_acos.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/w_atan2.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/w_fmod.c"),
