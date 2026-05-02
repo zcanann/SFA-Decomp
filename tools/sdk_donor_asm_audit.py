@@ -15,6 +15,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from sdk_dol_match import (
+    SDK_ROOTS,
     collect_reference_raw_windows,
     discover_reference_hits,
     load_target_text_splits,
@@ -112,6 +113,21 @@ def is_matching_state(state: str | None) -> bool:
     return state == "Matching" or (state is not None and state.startswith("MatchingFor"))
 
 
+def normalize_source_rel(rel: str) -> str:
+    normalized = normalize_path(rel)
+    if normalized.startswith(("dolphin/", "Runtime.PPCEABI.H/")):
+        return normalized
+
+    parts = rel.replace("\\", "/").split("/")
+    lowered = [part.lower() for part in parts]
+    for index, part in enumerate(lowered):
+        if part == "dolphin" and index + 1 < len(parts):
+            return normalize_path("/".join(parts[index:]))
+        if parts[index] in SDK_ROOTS and index + 1 < len(parts):
+            return normalize_path("/".join(parts[index:]))
+    return normalized
+
+
 def donor_source_index(projects: tuple[str, ...]) -> dict[str, list[DonorSource]]:
     index: dict[str, list[DonorSource]] = {}
     for project in projects:
@@ -124,7 +140,7 @@ def donor_source_index(projects: tuple[str, ...]) -> dict[str, list[DonorSource]
             if path.suffix not in {".c", ".cpp", ".cp"}:
                 continue
             rel = path.relative_to(src_root).as_posix()
-            normalized = normalize_path(rel)
+            normalized = normalize_source_rel(rel)
             if not normalized.startswith(("dolphin/", "Runtime.PPCEABI.H/")):
                 continue
             index.setdefault(normalized, []).append(
