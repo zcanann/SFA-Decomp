@@ -3,12 +3,10 @@
 
 #include "dolphin/os/__os.h"
 
-typedef char* (*ParseStringCallback)(u16, const char*, OSFontHeader**, int*);
-
-static OSFontHeader* FontDataAnsi;
-static OSFontHeader* FontDataSjis;
-static int FixedPitch;
-static ParseStringCallback ParseString;
+static OSFontHeader* FontData;
+static u8* SheetImage;
+static u8* WidthTable;
+static int CharsInSheet;
 static u16 FontEncode_803DD1B0 = 0xFFFF;
 
 // prototypes
@@ -361,7 +359,7 @@ asm u32 OSLoadFont(OSFontHeader* fontData, void* tmp) {
     addi r30, r4, 0x0
     stw r29, 0x34(r1)
     addi r29, r3, 0x0
-    stw r0, FontDataSjis(r13)
+    stw r0, SheetImage(r13)
     bl OSGetFontEncode
     clrlwi r0, r3, 16
     cmplwi r0, 0x1
@@ -399,16 +397,16 @@ _rf_3:
     addi r3, r30, 0x0
     addi r4, r29, 0x0
     bl Decode
-    stw r29, FontDataAnsi(r13)
+    stw r29, FontData(r13)
     lhz r4, FontEncode_803DD1B0(r13)
     lhz r0, 0x22(r29)
     cmplwi r4, 0x1
     add r0, r29, r0
-    stw r0, FixedPitch(r13)
+    stw r0, WidthTable(r13)
     lhz r3, 0x1a(r29)
     lhz r0, 0x1c(r29)
     mullw r0, r3, r0
-    stw r0, ParseString(r13)
+    stw r0, CharsInSheet(r13)
     bgt _rf_4
     b _rf_10
 _rf_4:
@@ -445,8 +443,8 @@ _rf_10:
     stw r4, 0x1c(r1)
     stw r0, 0x20(r1)
     bl GetFontCode
-    lwz r5, ParseString(r13)
-    lwz r12, FontDataAnsi(r13)
+    lwz r5, CharsInSheet(r13)
+    lwz r12, FontData(r13)
     divw r10, r3, r5
     lhz r6, 0x1c(r1)
     lhz r0, 0x1e(r12)
@@ -496,7 +494,7 @@ _rf_10:
     sth r6, 0x0(r9)
     addi r10, r5, 0x5
     addi r9, r5, 0x6
-    lwz r7, FontDataAnsi(r13)
+    lwz r7, FontData(r13)
     addi r6, r5, 0x7
     lhz r5, 0x1e(r1)
     lhz r7, 0x1e(r7)
@@ -518,7 +516,7 @@ _rf_10:
     add r8, r8, r7
     add r8, r8, r3
     sth r5, 0x0(r8)
-    lwz r7, FontDataAnsi(r13)
+    lwz r7, FontData(r13)
     lhz r5, 0x20(r1)
     lhz r7, 0x1e(r7)
     srawi r7, r7, 3
@@ -539,7 +537,7 @@ _rf_10:
     add r8, r8, r7
     add r8, r8, r3
     sth r5, 0x0(r8)
-    lwz r5, FontDataAnsi(r13)
+    lwz r5, FontData(r13)
     lhz r5, 0x1e(r5)
     srawi r5, r5, 3
     addze r5, r5
@@ -654,12 +652,12 @@ _gft_10:
     or r3, r0, r4
     addi r28, r28, 0x1
 _gft_11:
-    lwz r4, FontDataAnsi(r13)
+    lwz r4, FontData(r13)
     addi r25, r4, 0x2c
     bl GetFontCode
-    lwz r6, ParseString(r13)
+    lwz r6, CharsInSheet(r13)
     slwi r0, r24, 2
-    lwz r12, FontDataAnsi(r13)
+    lwz r12, FontData(r13)
     srawi r0, r0, 3
     divw r11, r3, r6
     lwz r4, 0x14(r12)
@@ -763,19 +761,19 @@ _gft_15:
     or r8, r23, r8
     stb r8, 0x0(r9)
 _gft_16:
-    lwz r9, FontDataAnsi(r13)
+    lwz r9, FontData(r13)
     lhz r8, 0x10(r9)
     cmpw r12, r8
     blt _gft_13
     addi r27, r27, 0x1
 _gft_17:
-    lwz r4, FontDataAnsi(r13)
+    lwz r4, FontData(r13)
     lhz r0, 0x12(r4)
     cmpw r27, r0
     blt _gft_12
     cmplwi r31, 0x0
     beq _gft_18
-    lwz r4, FixedPitch(r13)
+    lwz r4, WidthTable(r13)
     lbzx r0, r4, r3
     stw r0, 0x0(r31)
 _gft_18:
@@ -872,7 +870,7 @@ _ps_12:
     cmplwi r31, 0x0
     beq _ps_14
     bl GetFontCode
-    lwz r4, FixedPitch(r13)
+    lwz r4, WidthTable(r13)
     lbzx r0, r4, r3
     stw r0, 0x0(r31)
 _ps_14:
