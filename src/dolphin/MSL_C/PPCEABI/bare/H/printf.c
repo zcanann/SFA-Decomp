@@ -65,9 +65,9 @@ enum {
 const char printf_stringBase0[] = "\0-INF\0-inf\0INF\0inf\0-NAN\0-nan\0NAN\0nan";
 static wchar_t printf_wstringBase0[] = L"";
 
-const char* parse_format_80291840(const char *format_string, va_list *arg, print_format *format);
-char* long2str_80291620(long num, char* buff, print_format format);
-char* longlong2str_80291344(long long num, char* pBuf, print_format fmt);
+const char* parse_format(const char *format_string, va_list *arg, print_format *format);
+char* long2str(long num, char* buff, print_format format);
+char* longlong2str(long long num, char* pBuf, print_format fmt);
 char * double2hex(long double num, char * buff, print_format format);
 static void round_decimal(decimal* dec, int new_length);
 char* float2str(long double num, char *buff, print_format format);
@@ -193,7 +193,7 @@ int __pformatter(void *(*WriteProc)(void*, const char*, size_t), void *WriteProc
         }
 
         format_ptr = curr_format;
-        format_ptr = parse_format_80291840(format_ptr, (va_list*)arg, &format);
+        format_ptr = parse_format(format_ptr, (va_list*)arg, &format);
 
         switch (format.conversion_char) {
             case 'd':
@@ -217,12 +217,12 @@ int __pformatter(void *(*WriteProc)(void*, const char*, size_t), void *WriteProc
                 }
 
                 if (format.argument_options == long_long_argument) {
-                    if (!(buff_ptr = longlong2str_80291344(long_long_num, buff + 512, format))) {
+                    if (!(buff_ptr = longlong2str(long_long_num, buff + 512, format))) {
                         goto conversion_error;
                     }
                 }
                 else {
-                    if (!(buff_ptr = long2str_80291620(long_num, buff + 512, format))) {
+                    if (!(buff_ptr = long2str(long_num, buff + 512, format))) {
                         goto conversion_error;
                     }
                 }
@@ -253,12 +253,12 @@ int __pformatter(void *(*WriteProc)(void*, const char*, size_t), void *WriteProc
                 }
 
                 if (format.argument_options == long_long_argument) {
-                    if (!(buff_ptr = longlong2str_80291344(long_long_num, buff + 512, format))) {
+                    if (!(buff_ptr = longlong2str(long_long_num, buff + 512, format))) {
                         goto conversion_error;
                     }
                 }
                 else {
-                    if (!(buff_ptr = long2str_80291620(long_num, buff + 512, format))) {
+                    if (!(buff_ptr = long2str(long_num, buff + 512, format))) {
                         goto conversion_error;
                     }
                 }
@@ -783,7 +783,7 @@ char * double2hex(long double num, char * buff, print_format format)  {
     exp_format.conversion_char = 'd';
 
     exp = (short) ((*(short*) &ld & 0x7FFF) >> 4) - 0x3FF;
-    p = long2str_80291620(exp, buff, exp_format);
+    p = long2str(exp, buff, exp_format);
     if (format.conversion_char == 'a')
         *--p = 'p';
     else
@@ -841,7 +841,7 @@ char * double2hex(long double num, char * buff, print_format format)  {
     return p;
 }
 
-char* longlong2str_80291344(long long num, char* pBuf, print_format fmt)
+char* longlong2str(long long num, char* pBuf, print_format fmt)
 {
     unsigned long long unsigned_num, base;
     char* p;
@@ -944,7 +944,7 @@ char* longlong2str_80291344(long long num, char* pBuf, print_format fmt)
     return p;
 }
 
-char* long2str_80291620(long num, char* buff, print_format format)
+char* long2str(long num, char* buff, print_format format)
 {
     unsigned long unsigned_num, base;
     char* p;
@@ -1049,7 +1049,7 @@ char* long2str_80291620(long num, char* buff, print_format format)
     return p;
 }
 
-const char* parse_format_80291840(const char *format_string, va_list *arg, print_format *format) {
+const char* parse_format(const char *format_string, va_list *arg, print_format *format) {
     print_format f;
     const char* s = format_string;
     int c;
