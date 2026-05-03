@@ -380,7 +380,6 @@ u32 OSLoadFont(OSFontHeader* fontData, void* tmp) {
         if (OSGetFontEncode() == OS_FONT_ENCODE_SJIS) {
             u8* image;
             u8* ptr;
-            u16 glyph[4];
             int fontCode;
             int sheet;
             int numChars;
@@ -388,6 +387,7 @@ u32 OSLoadFont(OSFontHeader* fontData, void* tmp) {
             int column;
             int x;
             int y;
+            u16 glyph[4];
 
             *(u32*)&glyph[0] = lbl_803E7610;
             *(u32*)&glyph[2] = lbl_803E7614;
