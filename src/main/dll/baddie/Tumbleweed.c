@@ -3678,13 +3678,13 @@ int fn_80138920(u8* obj, int arg1, int arg2)
  * pointers are zeroed at the end. */
 void fn_80133EA4(void)
 {
-    int i;
+    u8 i;
     void** slots;
     if (lbl_803DD93C != NULL) fn_80054308(lbl_803DD93C);
     fn_80054308(lbl_803DD940);
     slots = lbl_803DBBC8;
     i = 0;
-    while (i < 2) {
+    while ((u32)i < 2) {
         if (slots[i] != NULL) {
             Obj_FreeObject(slots[i]);
             slots[i] = NULL;
