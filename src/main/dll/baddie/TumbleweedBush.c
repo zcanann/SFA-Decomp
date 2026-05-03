@@ -845,6 +845,7 @@ extern void fn_80023800(void);
 extern void fn_8001BDD4(int);
 
 /* EN v1.0 0x80131540  size: 48b  Toggle bit 0x20 of obj->_4. */
+#pragma peephole off
 void fn_80131540(u8* obj, int flag)
 {
     if (flag != 0) {
@@ -853,6 +854,7 @@ void fn_80131540(u8* obj, int flag)
         obj[4] = (u8)(obj[4] | 0x20);
     }
 }
+#pragma peephole reset
 
 /* EN v1.0 0x80131CF4  size: 32b  Wrapper for fn_80023800. */
 void fn_80131CF4(void)

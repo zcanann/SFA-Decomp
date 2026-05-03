@@ -30,6 +30,7 @@ int dfppowersl_getExtraSize(void)
   return sizeof(DfpPowerSlState);
 }
 
+#pragma scheduling off
 void dfppowersl_free(u8 *obj)
 {
   if (obj != 0) {
@@ -37,6 +38,7 @@ void dfppowersl_free(u8 *obj)
   }
   return;
 }
+#pragma scheduling reset
 
 void dfppowersl_render(u8 *obj)
 {
