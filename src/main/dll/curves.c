@@ -3984,24 +3984,28 @@ void FUN_800e65c8(uint *param_1,byte param_2,uint param_3,uint param_4,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void curves_clear(uint *param_1,undefined param_2,uint param_3,undefined param_4)
+#pragma scheduling off
+#pragma peephole off
+void curves_clear(uint *param_1,int param_2,uint param_3,int param_4)
 {
   uint *curve;
-  undefined flagsByte;
+  int flagsByte;
   uint flags;
-  undefined subtype;
+  int subtype;
 
   curve = param_1;
   flagsByte = param_2;
   flags = param_3;
   subtype = param_4;
   memset(curve,0,0x268);
-  *(undefined *)((int)curve + 0x25b) = subtype;
+  *(s8 *)((int)curve + 0x25b) = (s8)subtype;
   *curve = flags | 0x4000000;
-  *(undefined *)((int)curve + 0x262) = flagsByte;
-  *(undefined *)(curve + 0x96) = 5;
+  *(u8 *)((int)curve + 0x262) = (u8)flagsByte;
+  *(u8 *)(curve + 0x96) = 5;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
