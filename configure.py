@@ -395,7 +395,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/mtx/vec.c"),
             Object(MatchingFor("GSAE01"), "dolphin/mtx/mtx44.c"),
             Object(NonMatching, "dolphin/mtx/mtx44vec.c"),
-            Object(MatchingFor("GSAE01"), "dolphin/mtx/psmtx.c"),
+            Object(NonMatching, "dolphin/mtx/psmtx.c"),
         ],
     ),
     DolphinLib(
@@ -693,7 +693,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/s_frexp.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/s_ldexp.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/s_modf.c", mw_version="GC/1.3"),
-            Object(MatchingFor("GSAE01"), "dolphin/base/PPCArch_weak.c"),
+            Object(NonMatching, "dolphin/base/PPCArch_weak.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/ctype_funcs.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c", mw_version="GC/1.2.5"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/hyperbolicsf.c"),
