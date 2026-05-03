@@ -2542,7 +2542,7 @@ dolphin/TRK_MINNOW_DOLPHIN/targimpl_tables.c:
 dolphin/TRK_MINNOW_DOLPHIN/mpc_7xx_603e_tables.c:
 	.data       start:0x80332F78 end:0x80332FC0
 
-dolphin/MSL_C/PPCEABI/bare/H/exponentialsf.c:
+dolphin/MSL_C/PPCEABI/bare/H/e_pow.c:
 	.text       start:0x80294BB8 end:0x80295334
 
 main/unknown/autos/placeholder_80295318.c:
