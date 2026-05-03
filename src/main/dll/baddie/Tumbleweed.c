@@ -3736,10 +3736,12 @@ void fn_8013404C(void)
 
 /* EN v1.0 0x80134070  size: 40b  Acquire 0x47A-byte buffer into
  * lbl_803DD960. */
+#pragma scheduling off
 void fn_80134070(void)
 {
     lbl_803DD960 = fn_80054D54(0x47A);
 }
+#pragma scheduling reset
 
 /* EN v1.0 0x80134364  size: 36b  Release lbl_803DD974 buffer. */
 void fn_80134364(void)
