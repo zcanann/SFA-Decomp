@@ -2485,8 +2485,12 @@ main/unknown/autos/placeholder_80292B44.c:
 main/unknown/autos/placeholder_80292D3C.c:
 	.text       start:0x80292D3C end:0x80292DC0
 
+dolphin/MSL_C/PPCEABI/bare/H/rand.c:
+	.text       start:0x80292DC0 end:0x80292DEC
+	.sbss       start:0x803DE410 end:0x803DE414
+
 main/unknown/autos/placeholder_80292DC0.c:
-	.text       start:0x80292DC0 end:0x8029312C
+	.text       start:0x80292DEC end:0x8029312C
 
 main/unknown/autos/placeholder_8029312C_math.c:
 	.text       start:0x8029312C end:0x80293464

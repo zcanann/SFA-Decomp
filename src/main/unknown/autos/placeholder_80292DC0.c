@@ -1,6 +1,5 @@
 #include "dolphin.h"
 
-extern u32 lbl_803DE410;
 extern float lbl_803E7C18;
 extern float lbl_803E7C20;
 extern float lbl_803E7C24;
@@ -24,15 +23,6 @@ extern float lbl_803E7C68;
 extern float lbl_803E7C6C;
 
 float fn_80291E08(s16* p);
-
-u32 rand(void) {
-    lbl_803DE410 = lbl_803DE410 * 0x19660D + 0x3C6EF35F;
-    return lbl_803DE410;
-}
-
-void srand(u32 seed) {
-    lbl_803DE410 = seed;
-}
 
 float fn_80292DEC(float x) {
     float estimate;
