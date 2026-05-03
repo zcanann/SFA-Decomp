@@ -50,8 +50,8 @@ LINKAGE_CAVEATS = {
 }
 SDK_PLACEHOLDER_CAVEATS = {
     "main/unknown/autos/placeholder_8032C984": (
-        "OSContext FPU-unavailable string; local-static OSErrorContext.c matches the init prologue "
-        "but shifts .data/.bss, while extern data preserves layout but changes prologue scheduling"
+        "OSContext FPU-unavailable string; kept as a separate data split so donor OSContext code "
+        "can link without shifting .data/.bss layout"
     ),
     "main/unknown/autos/placeholder_803D8888": (
         "MetroTRK BSS aggregate; lbl_803D8888 is used as a UART buffer that overlaps later labels"
