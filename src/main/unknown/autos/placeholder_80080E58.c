@@ -3922,9 +3922,9 @@ void fn_8008D970(void) {}
 int fn_8008DCA8(void) { return 0x0; }
 void fn_8008ED20(void) {}
 void fn_80090270(void) {}
-void fn_80094494(void) {}
-void fn_80094498(void) {}
-void fn_8009449C(void) {}
+void __kill_critical_regions(void) {}
+void __begin_critical_region(void) {}
+void __end_critical_region(void) {}
 void fn_800944A0(void) {}
 void fn_800944A4(void) {}
 void fn_80094F5C(void) {}
