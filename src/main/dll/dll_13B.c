@@ -143,11 +143,12 @@ void kaldachompme_hitDetect(void)
 {
 }
 
+#pragma scheduling off
 void kaldachompme_update(int obj)
 {
   float *extra;
-  float current;
   float target;
+  float current;
   float step;
 
   extra = *(float **)(obj + 0xb8);
@@ -174,6 +175,7 @@ void kaldachompme_update(int obj)
   }
   ObjAnim_SetCurrentMove((double)extra[0],obj,(uint)*(byte *)((int)extra + 0xc),0);
 }
+#pragma scheduling reset
 
 void kaldachompme_init(int obj,int params)
 {

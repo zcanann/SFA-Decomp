@@ -513,10 +513,12 @@ LAB_80102f3c:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void *camcontrol_loadCamAction(int actionNo)
 {
   void *camAction;
-  
+
   if (actionNo == 0) {
     return 0;
   }
@@ -526,6 +528,8 @@ void *camcontrol_loadCamAction(int actionNo)
   }
   return camAction;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

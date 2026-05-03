@@ -566,25 +566,29 @@ void ObjHits_SetHitVolumeMasks(int param_1,undefined param_2,undefined param_3,i
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_SetHitVolumeSlot(int param_1,undefined param_2,undefined param_3,int param_4)
+#pragma scheduling off
+#pragma peephole off
+void ObjHits_SetHitVolumeSlot(u32 param_1,int param_2,int param_3,int param_4)
 {
   int iVar1;
-  int iVar2;
-  
-  iVar2 = *(int *)(param_1 + 0x54);
+  u32 iVar2;
+
+  iVar2 = *(u32 *)(param_1 + 0x54);
   if (iVar2 == 0) {
     return;
   }
-  *(undefined *)(iVar2 + 0x6e) = param_2;
-  *(undefined *)(iVar2 + 0x6f) = param_3;
+  *(s8 *)(iVar2 + 0x6e) = (s8)param_2;
+  *(s8 *)(iVar2 + 0x6f) = (s8)param_3;
   if (param_4 == -1) {
     return;
   }
-  iVar1 = 1 << param_4 + 4;
+  iVar1 = 1 << (param_4 + 4);
   *(int *)(iVar2 + 0x48) = iVar1;
   *(int *)(iVar2 + 0x4c) = iVar1;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -698,26 +702,30 @@ void ObjHits_MarkObjectPositionDirty(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_SyncObjectPositionIfDirty(int param_1)
+#pragma peephole off
+void ObjHits_SyncObjectPositionIfDirty(u32 param_1)
 {
-  int iVar1;
-  
-  iVar1 = *(int *)(param_1 + 0x54);
+  u32 iVar1;
+  s16 flags;
+
+  iVar1 = *(u32 *)(param_1 + 0x54);
   if (iVar1 == 0) {
     return;
   }
-  if ((*(ushort *)(iVar1 + 0x60) & 0x40) == 0) {
+  flags = *(s16 *)(iVar1 + 0x60);
+  if ((flags & 0x40) == 0) {
     return;
   }
-  *(ushort *)(iVar1 + 0x60) = *(ushort *)(iVar1 + 0x60) & 0xffbf;
-  *(undefined4 *)(iVar1 + 0x10) = *(undefined4 *)(param_1 + 0xc);
-  *(undefined4 *)(iVar1 + 0x14) = *(undefined4 *)(param_1 + 0x10);
-  *(undefined4 *)(iVar1 + 0x18) = *(undefined4 *)(param_1 + 0x14);
-  *(undefined4 *)(iVar1 + 0x1c) = *(undefined4 *)(param_1 + 0x18);
-  *(undefined4 *)(iVar1 + 0x20) = *(undefined4 *)(param_1 + 0x1c);
-  *(undefined4 *)(iVar1 + 0x24) = *(undefined4 *)(param_1 + 0x20);
+  *(s16 *)(iVar1 + 0x60) = (s16)(flags & ~0x40);
+  *(f32 *)(iVar1 + 0x10) = *(f32 *)(param_1 + 0xc);
+  *(f32 *)(iVar1 + 0x14) = *(f32 *)(param_1 + 0x10);
+  *(f32 *)(iVar1 + 0x18) = *(f32 *)(param_1 + 0x14);
+  *(f32 *)(iVar1 + 0x1c) = *(f32 *)(param_1 + 0x18);
+  *(f32 *)(iVar1 + 0x20) = *(f32 *)(param_1 + 0x1c);
+  *(f32 *)(iVar1 + 0x24) = *(f32 *)(param_1 + 0x20);
   return;
 }
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -732,17 +740,19 @@ void ObjHits_SyncObjectPositionIfDirty(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_DisableObject(int param_1)
+#pragma peephole off
+void ObjHits_DisableObject(u32 param_1)
 {
-  int iVar1;
-  
-  iVar1 = *(int *)(param_1 + 0x54);
+  u32 iVar1;
+
+  iVar1 = *(u32 *)(param_1 + 0x54);
   if (iVar1 == 0) {
     return;
   }
-  *(ushort *)(iVar1 + 0x60) = *(ushort *)(iVar1 + 0x60) & 0xfffe;
+  *(s16 *)(iVar1 + 0x60) = (s16)(*(s16 *)(iVar1 + 0x60) & ~1);
   return;
 }
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -757,26 +767,30 @@ void ObjHits_DisableObject(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_EnableObject(int param_1)
+#pragma peephole off
+void ObjHits_EnableObject(u32 param_1)
 {
-  int iVar1;
-  
-  iVar1 = *(int *)(param_1 + 0x54);
+  u32 iVar1;
+  s16 flags;
+
+  iVar1 = *(u32 *)(param_1 + 0x54);
   if (iVar1 == 0) {
     return;
   }
-  if ((*(ushort *)(iVar1 + 0x60) & 1) != 0) {
+  flags = *(s16 *)(iVar1 + 0x60);
+  if ((flags & 1) != 0) {
     return;
   }
-  *(ushort *)(iVar1 + 0x60) = *(ushort *)(iVar1 + 0x60) | 1;
-  *(undefined4 *)(iVar1 + 0x10) = *(undefined4 *)(param_1 + 0xc);
-  *(undefined4 *)(iVar1 + 0x14) = *(undefined4 *)(param_1 + 0x10);
-  *(undefined4 *)(iVar1 + 0x18) = *(undefined4 *)(param_1 + 0x14);
-  *(undefined4 *)(iVar1 + 0x1c) = *(undefined4 *)(param_1 + 0x18);
-  *(undefined4 *)(iVar1 + 0x20) = *(undefined4 *)(param_1 + 0x1c);
-  *(undefined4 *)(iVar1 + 0x24) = *(undefined4 *)(param_1 + 0x20);
+  *(s16 *)(iVar1 + 0x60) = (s16)(flags | 1);
+  *(f32 *)(iVar1 + 0x10) = *(f32 *)(param_1 + 0xc);
+  *(f32 *)(iVar1 + 0x14) = *(f32 *)(param_1 + 0x10);
+  *(f32 *)(iVar1 + 0x18) = *(f32 *)(param_1 + 0x14);
+  *(f32 *)(iVar1 + 0x1c) = *(f32 *)(param_1 + 0x18);
+  *(f32 *)(iVar1 + 0x20) = *(f32 *)(param_1 + 0x1c);
+  *(f32 *)(iVar1 + 0x24) = *(f32 *)(param_1 + 0x20);
   return;
 }
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -809,20 +823,20 @@ ushort ObjHits_IsObjectEnabled(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_SyncObjectPosition(int param_1)
+void ObjHits_SyncObjectPosition(u32 param_1)
 {
-  int iVar1;
-  
-  iVar1 = *(int *)(param_1 + 0x54);
+  u32 iVar1;
+
+  iVar1 = *(u32 *)(param_1 + 0x54);
   if (iVar1 == 0) {
     return;
   }
-  *(undefined4 *)(iVar1 + 0x10) = *(undefined4 *)(param_1 + 0xc);
-  *(undefined4 *)(iVar1 + 0x14) = *(undefined4 *)(param_1 + 0x10);
-  *(undefined4 *)(iVar1 + 0x18) = *(undefined4 *)(param_1 + 0x14);
-  *(undefined4 *)(iVar1 + 0x1c) = *(undefined4 *)(param_1 + 0x18);
-  *(undefined4 *)(iVar1 + 0x20) = *(undefined4 *)(param_1 + 0x1c);
-  *(undefined4 *)(iVar1 + 0x24) = *(undefined4 *)(param_1 + 0x20);
+  *(f32 *)(iVar1 + 0x10) = *(f32 *)(param_1 + 0xc);
+  *(f32 *)(iVar1 + 0x14) = *(f32 *)(param_1 + 0x10);
+  *(f32 *)(iVar1 + 0x18) = *(f32 *)(param_1 + 0x14);
+  *(f32 *)(iVar1 + 0x1c) = *(f32 *)(param_1 + 0x18);
+  *(f32 *)(iVar1 + 0x20) = *(f32 *)(param_1 + 0x1c);
+  *(f32 *)(iVar1 + 0x24) = *(f32 *)(param_1 + 0x20);
   return;
 }
 
@@ -1792,12 +1806,17 @@ void ObjGroup_AddObject(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+extern void* memset(void* dst, int val, u32 n);
+extern u8 lbl_80342CF8[0x58];
+extern u8 lbl_803DCBF0;
+#pragma scheduling off
 void ObjGroup_ClearAll(void)
 {
-  FUN_800033a8(-0x7fcbc6a8,0,0x55);
-  DAT_803dd870 = 0;
+  memset(lbl_80342CF8, 0, 0x55);
+  lbl_803DCBF0 = 0;
   return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2086,16 +2105,20 @@ void ObjMsg_AllocQueue(void *obj,int capacity)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 Obj_IsObjectAlive(int param_1)
+#pragma scheduling off
+#pragma peephole off
+undefined4 Obj_IsObjectAlive(u32 param_1)
 {
   undefined4 uVar1;
-  
+
   uVar1 = 0;
   if ((param_1 != 0) && ((*(ushort *)(param_1 + 0xb0) & 0x40) == 0)) {
     uVar1 = 1;
   }
   return uVar1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

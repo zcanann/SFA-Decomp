@@ -3659,7 +3659,7 @@ extern void fn_800393F8(u8*, u8*, int, int, int, int);
 int fn_80138920(u8* obj, int arg1, int arg2)
 {
     u8* b = *(u8**)(obj + 0xb8);
-    if ((b[0x58] & 0x40) == 0) return 0;
+    if ((u32)((b[0x58] >> 6) & 1) != 0u) return 0;
     {
         s16 v = *(s16*)(obj + 0xa0);
         if (v < 48 && v >= 41) return 0;
@@ -3678,13 +3678,13 @@ int fn_80138920(u8* obj, int arg1, int arg2)
  * pointers are zeroed at the end. */
 void fn_80133EA4(void)
 {
-    int i;
+    u8 i;
     void** slots;
     if (lbl_803DD93C != NULL) fn_80054308(lbl_803DD93C);
     fn_80054308(lbl_803DD940);
     slots = lbl_803DBBC8;
     i = 0;
-    while (i < 2) {
+    while ((u32)i < 2) {
         if (slots[i] != NULL) {
             Obj_FreeObject(slots[i]);
             slots[i] = NULL;
@@ -3721,11 +3721,13 @@ extern f32   lbl_803E2408;
 
 /* EN v1.0 0x80133F40  size: 48b  Acquire a 0xBE5-byte buffer via
  * fn_80054D54 into lbl_803DD940; reset frame counter at lbl_803DD938. */
+#pragma scheduling off
 void fn_80133F40(void)
 {
     lbl_803DD940 = fn_80054D54(0xBE5);
     lbl_803DD938 = 340;
 }
+#pragma scheduling reset
 
 /* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960
  * via fn_80054308. */
@@ -3736,10 +3738,12 @@ void fn_8013404C(void)
 
 /* EN v1.0 0x80134070  size: 40b  Acquire 0x47A-byte buffer into
  * lbl_803DD960. */
+#pragma scheduling off
 void fn_80134070(void)
 {
     lbl_803DD960 = fn_80054D54(0x47A);
 }
+#pragma scheduling reset
 
 /* EN v1.0 0x80134364  size: 36b  Release lbl_803DD974 buffer. */
 void fn_80134364(void)
@@ -3798,15 +3802,18 @@ void fn_80134808(void)
 
 /* EN v1.0 0x80134834  size: 60b  Acquire two buffer slots and prime
  * the float at lbl_803DD97C with the constant from lbl_803E22E0. */
+#pragma scheduling off
 void fn_80134834(void)
 {
     lbl_803DD984 = fn_80054D54(0x4FA);
     lbl_803DD980 = fn_80054D54(0x5E3);
     lbl_803DD97C = lbl_803E22E0;
 }
+#pragma scheduling reset
 
 /* EN v1.0 0x80134BC4  size: 32b  Reset the per-frame state group:
  * latch lbl_803DD993 = 1 and zero five halfword/byte counters. */
+#pragma scheduling off
 void fn_80134BC4(void)
 {
     lbl_803DD993 = 1;
@@ -3816,14 +3823,16 @@ void fn_80134BC4(void)
     lbl_803DD998 = 0;
     lbl_803DD9AA = 0;
 }
+#pragma scheduling reset
 
 /* EN v1.0 0x80134BE8  size: 60b  Predicate. Returns 1 when the value
  * from fn_80014940 is in {2..6} or equals 7, else 0. */
 int fn_80134BE8(void)
 {
     int x = fn_80014940();
-    if ((u32)(x - 2) <= 4) return 1;
-    if (x == 7) return 1;
+    if ((u32)(x - 2) <= 4 || x == 7) {
+        return 1;
+    }
     return 0;
 }
 
