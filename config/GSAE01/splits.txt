@@ -1507,7 +1507,7 @@ dolphin/os/OSCache.c:
 	.text       start:0x802419A4 end:0x80242060
 	.data       start:0x8032C5A0 end:0x8032C7D0
 
-main/unknown/autos/placeholder_8032C984.s:
+main/unknown/autos/placeholder_8032C984.c:
 	.data       start:0x8032C984 end:0x8032C9A8
 
 dolphin/os/OSContext.c:
@@ -2381,7 +2381,7 @@ dolphin/TRK_MINNOW_DOLPHIN/main_TRK.c:
 	.text       start:0x8028CE48 end:0x8028CE8C
 	.bss        start:0x803D8888 end:0x803D8888
 
-main/unknown/autos/placeholder_803D8888.s:
+main/unknown/autos/placeholder_803D8888.c:
 	.bss        start:0x803D8888 end:0x803DAAB0
 
 dolphin/TRK_MINNOW_DOLPHIN/dolphin_trk_glue.c:
@@ -2557,14 +2557,14 @@ main/unknown/autos/placeholder_802BB4B0.c:
 main/unknown/autos/placeholder_802BBC10.c:
 	.text       start:0x802BB720 end:0x802C187C
 
-Runtime.PPCEABI.H/__start.s: comment:0
+Runtime.PPCEABI.H/__start.c: comment:0
 	.init       start:0x80003100 end:0x800033A8
 
-Runtime.PPCEABI.H/__mem.s: comment:0
+Runtime.PPCEABI.H/__mem.c: comment:0
 	.init       start:0x800033A8 end:0x800034E4
 
-Runtime.PPCEABI.H/mem_TRK.s: comment:0
+Runtime.PPCEABI.H/mem_TRK.c: comment:0
 	.init       start:0x800034E4 end:0x80003538
 
-Runtime.PPCEABI.H/__exception.s: comment:0
+Runtime.PPCEABI.H/__exception.c: comment:0
 	.init       start:0x80003538 end:0x80005570
