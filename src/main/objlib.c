@@ -566,25 +566,29 @@ void ObjHits_SetHitVolumeMasks(int param_1,undefined param_2,undefined param_3,i
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_SetHitVolumeSlot(int param_1,undefined param_2,undefined param_3,int param_4)
+#pragma scheduling off
+#pragma peephole off
+void ObjHits_SetHitVolumeSlot(u32 param_1,int param_2,int param_3,int param_4)
 {
   int iVar1;
-  int iVar2;
-  
-  iVar2 = *(int *)(param_1 + 0x54);
+  u32 iVar2;
+
+  iVar2 = *(u32 *)(param_1 + 0x54);
   if (iVar2 == 0) {
     return;
   }
-  *(undefined *)(iVar2 + 0x6e) = param_2;
-  *(undefined *)(iVar2 + 0x6f) = param_3;
+  *(s8 *)(iVar2 + 0x6e) = (s8)param_2;
+  *(s8 *)(iVar2 + 0x6f) = (s8)param_3;
   if (param_4 == -1) {
     return;
   }
-  iVar1 = 1 << param_4 + 4;
+  iVar1 = 1 << (param_4 + 4);
   *(int *)(iVar2 + 0x48) = iVar1;
   *(int *)(iVar2 + 0x4c) = iVar1;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
