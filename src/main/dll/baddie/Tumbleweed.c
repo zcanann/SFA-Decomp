@@ -3802,15 +3802,18 @@ void fn_80134808(void)
 
 /* EN v1.0 0x80134834  size: 60b  Acquire two buffer slots and prime
  * the float at lbl_803DD97C with the constant from lbl_803E22E0. */
+#pragma scheduling off
 void fn_80134834(void)
 {
     lbl_803DD984 = fn_80054D54(0x4FA);
     lbl_803DD980 = fn_80054D54(0x5E3);
     lbl_803DD97C = lbl_803E22E0;
 }
+#pragma scheduling reset
 
 /* EN v1.0 0x80134BC4  size: 32b  Reset the per-frame state group:
  * latch lbl_803DD993 = 1 and zero five halfword/byte counters. */
+#pragma scheduling off
 void fn_80134BC4(void)
 {
     lbl_803DD993 = 1;
@@ -3820,6 +3823,7 @@ void fn_80134BC4(void)
     lbl_803DD998 = 0;
     lbl_803DD9AA = 0;
 }
+#pragma scheduling reset
 
 /* EN v1.0 0x80134BE8  size: 60b  Predicate. Returns 1 when the value
  * from fn_80014940 is in {2..6} or equals 7, else 0. */
