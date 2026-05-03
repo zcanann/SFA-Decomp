@@ -75,7 +75,7 @@ float angleFn(int angle) {
         case 0x8000:
             return -(x * (lbl_803E7C90 * x2 + lbl_803E7C8C));
         default:
-            return lbl_803E7C80 - x2 * (lbl_803E7C88 * x2 + lbl_803E7C84);
+            return -(x2 * (lbl_803E7C88 * x2 + lbl_803E7C84) + lbl_803E7C80);
     }
 }
 
@@ -95,6 +95,6 @@ float fcos16(int angle) {
         case 0x8000:
             return -(x * ((lbl_803E7C9C * x2 + lbl_803E7C98) * x2 + lbl_803E7C94));
         default:
-            return lbl_803E7CA0 - x2 * ((lbl_803E7CAC * x2 + lbl_803E7CA8) * x2 + lbl_803E7CA4);
+            return -(x2 * ((lbl_803E7CAC * x2 + lbl_803E7CA8) * x2 + lbl_803E7CA4) + lbl_803E7CA0);
     }
 }
