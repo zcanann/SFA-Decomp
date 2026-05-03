@@ -709,7 +709,12 @@ config.libs = [
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_sqrt.c", extra_cflags=msl_math_extra),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_acos.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_fmod.c"),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_pow.c", extra_cflags=msl_math_extra),
+            Object(
+                NonMatching,
+                "dolphin/MSL_C/PPCEABI/bare/H/e_pow.c",
+                mw_version="GC/1.3.2",
+                extra_cflags=msl_math_extra,
+            ),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_atan2.c", extra_cflags=msl_math_extra),
             Object(
                 NonMatching,
