@@ -805,11 +805,15 @@ int fn_80131570(u8* obj)
  * Logic-only — target has `extsh r0,r4; sth r0,0xc(r3)` but MWCC -O4
  * strips the redundant extsh before sth (same family as fn_8012EB08 /
  * fn_8012FB90). */
+#pragma scheduling off
+#pragma peephole off
 void fn_8013157C(u8* obj, int val)
 {
     *(s16*)(obj + 0xc) = (s16)val;
     obj[6] = 2;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* EN v1.0 0x80131590  size: 8b   s16 getter for obj->_c. */
 s16 fn_80131590(u8* obj)
