@@ -127,25 +127,27 @@ float fn_80292248(float x) {
     float ax = __fabsf(x);
     double y;
     double z;
-    double p;
     float result;
 
     if (ax <= lbl_803E79D8) {
         y = x * x;
-        p = ((((((((((((((lbl_803E7AA8 * y + lbl_803E7AA0) * y + lbl_803E7A98) * y + lbl_803E7A90) * y
-                       + lbl_803E7A88) * y + lbl_803E7A80) * y + lbl_803E7A78) * y + lbl_803E7A70) * y
-                    + lbl_803E7A68) * y + lbl_803E7A60) * y + lbl_803E7A58) * y + lbl_803E7A50) * y
-                 + lbl_803E7A48) * y + lbl_803E7A40) * y + lbl_803E7A38) * y + lbl_803E7A30;
-        return (float)(x * p);
+        return (float)(x * (((((((((((((((lbl_803E7AA8 * y + lbl_803E7AA0) * y + lbl_803E7A98) * y
+                                       + lbl_803E7A90) * y + lbl_803E7A88) * y + lbl_803E7A80) * y
+                                    + lbl_803E7A78) * y + lbl_803E7A70) * y + lbl_803E7A68) * y
+                                 + lbl_803E7A60) * y + lbl_803E7A58) * y + lbl_803E7A50) * y
+                              + lbl_803E7A48) * y + lbl_803E7A40) * y + lbl_803E7A38) * y
+                           + lbl_803E7A30));
     }
 
     y = lbl_803E7AB0 / ax;
     z = y * y;
-    p = ((((((((((((((lbl_803E7AA8 * z + lbl_803E7AA0) * z + lbl_803E7A98) * z + lbl_803E7A90) * z
-                   + lbl_803E7A88) * z + lbl_803E7A80) * z + lbl_803E7A78) * z + lbl_803E7A70) * z
-                + lbl_803E7A68) * z + lbl_803E7A60) * z + lbl_803E7A58) * z + lbl_803E7A50) * z
-             + lbl_803E7A48) * z + lbl_803E7A40) * z + lbl_803E7A38) * z + lbl_803E7A30;
-    result = (float)(lbl_803E79E0 - y * p);
+    result = (float)(lbl_803E79E0
+                     - y * (((((((((((((((lbl_803E7AA8 * z + lbl_803E7AA0) * z + lbl_803E7A98) * z
+                                        + lbl_803E7A90) * z + lbl_803E7A88) * z + lbl_803E7A80) * z
+                                     + lbl_803E7A78) * z + lbl_803E7A70) * z + lbl_803E7A68) * z
+                                  + lbl_803E7A60) * z + lbl_803E7A58) * z + lbl_803E7A50) * z
+                               + lbl_803E7A48) * z + lbl_803E7A40) * z + lbl_803E7A38) * z
+                            + lbl_803E7A30));
     if (x >= lbl_803E79C4) {
         return result;
     }
