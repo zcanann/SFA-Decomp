@@ -3,7 +3,7 @@
 extern u32 fn_800221A0(int min,int max);
 extern u8 *fn_8002E0B4(int objectId);
 extern void fn_8003B8F4(double scale);
-extern f32 angleFn_80293234(int angle);
+extern f32 angleFn(int angle);
 extern f32 fn_80293EAC(int angle);
 
 extern f32 lbl_803E65D0;
@@ -81,12 +81,12 @@ void worldasteroids_update(s16 *obj)
   obj[2] += state->velocityZ;
   state->orbitAngle += 0x9c4 / state->orbitRadius;
   orbitCos = fn_80293EAC(3000);
-  orbitSin = angleFn_80293234((u16)state->orbitAngle);
+  orbitSin = angleFn((u16)state->orbitAngle);
   radius = (float)worldasteroids_s32AsDouble(state->orbitRadius);
   orbitScale = radius * orbitSin;
   *(f32 *)(obj + 6) = orbitScale * orbitCos + *(f32 *)(anchor + 0xc);
-  orbitSin = angleFn_80293234(3000);
-  orbitScale = angleFn_80293234((u16)state->orbitAngle) *
+  orbitSin = angleFn(3000);
+  orbitScale = angleFn((u16)state->orbitAngle) *
                (float)worldasteroids_s32AsDouble(state->orbitRadius);
   *(f32 *)(obj + 8) =
       orbitScale * orbitSin + (*(f32 *)(anchor + 0x10) +
@@ -107,20 +107,20 @@ void worldasteroids_init(u8 *obj)
 
   state = worldasteroids_getState(obj);
   baseAngle = fn_800221A0(-0x7fff,0x7fff);
-  orbitShape = angleFn_80293234((u16)baseAngle);
+  orbitShape = angleFn((u16)baseAngle);
   if (orbitShape < lbl_803E65E0) {
-    orbitShape = -angleFn_80293234((u16)baseAngle);
+    orbitShape = -angleFn((u16)baseAngle);
   }
   else {
-    orbitShape = angleFn_80293234((u16)baseAngle);
+    orbitShape = angleFn((u16)baseAngle);
   }
   fn_800221A0(0,(int)(lbl_803E65E8 * orbitShape + lbl_803E65E4));
-  orbitShape = angleFn_80293234((u16)baseAngle);
+  orbitShape = angleFn((u16)baseAngle);
   if (orbitShape < lbl_803E65E0) {
-    orbitShape = -angleFn_80293234((u16)baseAngle);
+    orbitShape = -angleFn((u16)baseAngle);
   }
   else {
-    orbitShape = angleFn_80293234((u16)baseAngle);
+    orbitShape = angleFn((u16)baseAngle);
   }
   radiusSeed = (int)(lbl_803E65EC * orbitShape);
   randomValue = fn_800221A0(-300,300);
@@ -132,7 +132,7 @@ void worldasteroids_init(u8 *obj)
   randomValue = fn_800221A0(-0x7fff,0x7fff);
   state->orbitAngle = randomValue;
   state->orbitRadius =
-      (s16)(int)((float)worldasteroids_s32AsDouble(radiusSeed) * angleFn_80293234((u16)baseAngle) +
+      (s16)(int)((float)worldasteroids_s32AsDouble(radiusSeed) * angleFn((u16)baseAngle) +
                  lbl_803E65F0);
   state->heightOffset =
       (s16)(int)((float)worldasteroids_s32AsDouble(radiusSeed) * fn_80293EAC((u16)baseAngle));

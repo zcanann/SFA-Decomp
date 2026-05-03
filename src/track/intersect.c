@@ -8,7 +8,7 @@ extern Mtx lbl_803967C0;
 extern Mtx lbl_80396820;
 extern Mtx lbl_80396850;
 extern f32 lbl_803DFB10;
-extern f32 sqrtf_802931A0(f32 x);
+extern f32 sqrtf(f32 x);
 
 extern undefined4 ABS();
 extern undefined4 FUN_80006820();
@@ -826,7 +826,7 @@ void fn_800701A4(f32* x, f32* y, f32* z)
     f32 scale;
     f32 len;
 
-    len = sqrtf_802931A0(*z * *z + (*x * *x + *y * *y));
+    len = sqrtf(*z * *z + (*x * *x + *y * *y));
     scale = lbl_803DFB10 / len;
     *x = *x * scale;
     *y = *y * scale;

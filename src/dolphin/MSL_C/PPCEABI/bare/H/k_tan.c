@@ -35,7 +35,7 @@ float sqrtf_8029312c(float x) {
     return lbl_803E7C70;
 }
 
-float sqrtf_802931A0(float x) {
+float sqrtf(float x) {
     float guess;
     float half;
 
@@ -59,7 +59,7 @@ float invSqrt(float x) {
     return guess;
 }
 
-float angleFn_80293234(int angle) {
+float angleFn(int angle) {
     s16 reduced = (s16)(angle << 2);
     float x = fn_80291E08(&reduced);
     float x2 = x * x;
