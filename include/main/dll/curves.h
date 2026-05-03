@@ -50,6 +50,6 @@ void FUN_800e65c8(uint *param_1,byte param_2,uint param_3,uint param_4,undefined
                  undefined param_6);
 void curves_clear(uint *param_1,undefined param_2,uint param_3,undefined param_4);
 uint FUN_800e6680(char param_1,uint param_2);
-void gameplay_setDebugOptionEnabled(uint param_1,char param_2);
+void gameplay_setDebugOptionEnabled(uint param_1,u8 param_2);
 
 #endif /* MAIN_DLL_CURVES_H_ */

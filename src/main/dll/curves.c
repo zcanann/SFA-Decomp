@@ -4051,21 +4051,25 @@ uint FUN_800e6680(char param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void gameplay_setDebugOptionEnabled(uint param_1,char param_2)
+extern u8 lbl_803A31C4[];
+#pragma peephole off
+void gameplay_setDebugOptionEnabled(uint param_1,u8 param_2)
 {
   uint uVar1;
-  
+  u8* base = lbl_803A31C4;
+
   uVar1 = 1 << (param_1 & 0xff);
-  if ((gGameplayRegisteredDebugOptions & uVar1) == 0) {
+  if ((*(u32*)(base + 0x10) & uVar1) == 0) {
     return;
   }
-  if (param_2 != '\0') {
-    gGameplayEnabledDebugOptions = gGameplayEnabledDebugOptions | uVar1;
+  if (param_2 != 0) {
+    *(u32*)(base + 0x14) = *(u32*)(base + 0x14) | uVar1;
     return;
   }
-  gGameplayEnabledDebugOptions = gGameplayEnabledDebugOptions & ~uVar1;
+  *(u32*)(base + 0x14) = *(u32*)(base + 0x14) & ~uVar1;
   return;
 }
+#pragma peephole reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
