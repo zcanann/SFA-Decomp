@@ -84,6 +84,7 @@ void crfueltank_render(void)
   return;
 }
 
+#pragma scheduling off
 void crfueltank_hitDetect(CrFuelTankObject *obj)
 {
   CrFuelTankDef *def;
@@ -107,6 +108,7 @@ void crfueltank_hitDetect(CrFuelTankObject *obj)
   }
   return;
 }
+#pragma scheduling reset
 
 void crfueltank_update(CrFuelTankObject *obj)
 {
