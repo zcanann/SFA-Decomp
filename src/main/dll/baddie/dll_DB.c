@@ -731,7 +731,7 @@ extern u8  lbl_803DD8F8;
 extern u8  lbl_803DD8F9;
 extern s16 lbl_803DD90C;
 extern s16 lbl_803DD90E;
-extern u8  lbl_803DD912;
+extern s8  lbl_803DD912;
 extern u8  lbl_803A9458[0x960];
 
 void fn_8012FDB8(u8 v) { lbl_803DD789 = v; }
