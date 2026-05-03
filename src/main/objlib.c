@@ -2434,13 +2434,14 @@ undefined4 ObjContact_AddCallback(int param_1,int param_2,undefined4 param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
 undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
 {
   int iVar1;
   int triggerFlags;
   int flagEnabled;
   int flagBlocked;
-  
+
   triggerFlags = *(byte *)(param_1 + 0xaf);
   flagEnabled = triggerFlags & 4;
   if (flagEnabled != 0) {
@@ -2456,6 +2457,7 @@ undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
   }
   return 0;
 }
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -2470,6 +2472,7 @@ undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
 undefined4 ObjTrigger_IsSet(int param_1)
 {
   uint flags;
@@ -2477,7 +2480,7 @@ undefined4 ObjTrigger_IsSet(int param_1)
   int triggerFlags;
   int flagEnabled;
   int flagBlocked;
-  
+
   if (*(int *)(*(int *)(param_1 + 0x50) + 0x40) == 0) {
     return 0;
   }
@@ -2498,6 +2501,7 @@ undefined4 ObjTrigger_IsSet(int param_1)
   }
   return 0;
 }
+#pragma peephole reset
 
 /*
  * --INFO--
