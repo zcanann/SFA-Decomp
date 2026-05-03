@@ -1800,7 +1800,7 @@ main/unknown/autos/placeholder_8032EDD0.s:
 dolphin/gx/GXTextureTables.c:
 	.data       start:0x8032F218 end:0x8032F618
 
-main/unknown/autos/placeholder_8032F618.s:
+main/unknown/autos/placeholder_8032F618.c:
 	.data       start:0x8032F618 end:0x8032F79C
 
 dolphin/card/CARDFormat.c:

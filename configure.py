@@ -497,7 +497,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXDrawTorusRadius.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXDraw.c", extra_cflags=["-fp_contract", "off"]),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXDrawTorusAngle.c"),
-            Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_8032F618.s", progress_category="game"),
+            Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_8032F618.c", progress_category="game"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXPerf.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXPixel.c"),
             Object(NonMatching, "dolphin/gx/GXSave.c"),
