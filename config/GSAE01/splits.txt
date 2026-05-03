@@ -2302,8 +2302,9 @@ Runtime.PPCEABI.H/__init_cpp_exceptions.cpp:
 	.dtors      start:0x802C18A0 end:0x802C18A8
 	.sdata      start:0x803DC638 end:0x803DC640
 
-Runtime.PPCEABI.H/fragment.s:
+Runtime.PPCEABI.H/fragment.c:
 	.text       start:0x80286754 end:0x802867BC
+	.bss        start:0x803D68E0 end:0x803D68EC
 
 Runtime.PPCEABI.H/GCN_mem_alloc.c:
 	.text       start:0x802867BC end:0x8028685C

@@ -334,7 +334,7 @@ config.libs = [
             Object(Matching, "Runtime.PPCEABI.H/global_destructor_chain.c"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/runtime.c"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__init_cpp_exceptions.cpp"),
-            Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/fragment.s"),
+            Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/fragment.c"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/GCN_mem_alloc.c"),
         ],
     },
