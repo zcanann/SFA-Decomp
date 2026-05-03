@@ -2296,19 +2296,23 @@ void ObjLink_DetachChild(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void ObjLink_AttachChild(int param_1,int param_2,ushort param_3)
 {
-  byte bVar1;
-  
-  bVar1 = *(byte *)(param_1 + 0xeb);
-  *(byte *)(param_1 + 0xeb) = bVar1 + 1;
-  *(int *)(param_1 + (uint)bVar1 * 4 + 200) = param_2;
+  u8 bVar1;
+  u8* base;
+
+  bVar1 = *(u8 *)(param_1 + 0xeb);
+  *(u8 *)(param_1 + 0xeb) = bVar1 + 1;
+  base = (u8*)(param_1 + bVar1 * 4);
+  *(int *)(base + 200) = param_2;
   *(int *)(param_2 + 0xc4) = param_1;
-  *(ushort *)(param_2 + 0xb0) = *(ushort *)(param_2 + 0xb0) & 0xfff8;
-  *(ushort *)(param_2 + 0xb0) = *(ushort *)(param_2 + 0xb0) | param_3;
-  *(undefined *)(param_2 + 0xe5) = 0;
+  *(u16 *)(param_2 + 0xb0) = (u16)(*(u16 *)(param_2 + 0xb0) & 0xfff8);
+  *(u16 *)(param_2 + 0xb0) = (u16)(*(u16 *)(param_2 + 0xb0) | param_3);
+  *(u8 *)(param_2 + 0xe5) = 0;
   return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
