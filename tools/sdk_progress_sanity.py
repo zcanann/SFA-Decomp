@@ -42,8 +42,10 @@ INLINE_ASM_CAVEATS = {
     ),
     "dolphin/TRK_MINNOW_DOLPHIN/MWTrace.c": "FFCC donor is an empty stub; SFA target has a real trace recorder",
     "dolphin/gx/GXInit.c": "tiny WPAR helper likely still needs inline mfspr shape",
+}
+LINKAGE_CAVEATS = {
     "dolphin/MSL_C/PPCEABI/bare/H/rand.c": (
-        "donor rand/srand only; SFA unit also carries reciprocal/trig helper code"
+        "split owns rand/srand and seed; direct donor LCG is one register-allocation mismatch from linkage"
     ),
 }
 SDK_PLACEHOLDER_CAVEATS = {
@@ -373,6 +375,9 @@ def main() -> int:
             f"  code={fmt_percent(row.code_percent)} data={fmt_percent(row.data_percent)} "
             f"text=0x{row.text_size:X} bad={row.bad_symbols:2d} path={row.path}"
         )
+        caveat = LINKAGE_CAVEATS.get(row.path)
+        if caveat:
+            print(f"    note {row.path}: {caveat}")
 
     print("\ndormant-donor-backed-configured")
     for path, refs, span, funcs in donor_backed_dormant(args.version, args.limit, args.path_contains):
