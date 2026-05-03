@@ -448,9 +448,11 @@ void fn_80116F14(void) {
 extern u8 lbl_803DD614, lbl_803DD615;
 extern undefined4* lbl_803DCAA0;
 #pragma scheduling off
+#pragma peephole off
 void fn_80116F44(int a) {
     lbl_803DD614 = (u8)a;
     lbl_803DD615 = 0xff;
     (*(code *)(*lbl_803DCAA0 + 0x18))();
 }
+#pragma peephole reset
 #pragma scheduling reset
