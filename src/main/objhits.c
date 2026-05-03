@@ -2138,13 +2138,14 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void ObjHits_RegisterActiveHitVolumeObject(undefined4 param_1)
 {
-  int *piVar1;
+  u32 *piVar1;
   int iVar2;
-  
+
   iVar2 = 0;
-  for (piVar1 = gObjHitsActiveHitVolumeObjects; (iVar2 < 5 && (*piVar1 != 0)); piVar1 = piVar1 + 1) {
+  for (piVar1 = (u32*)gObjHitsActiveHitVolumeObjects; (iVar2 < 5 && (*piVar1 != 0)); piVar1 = piVar1 + 1) {
     iVar2 = iVar2 + 1;
   }
   if (iVar2 == 5) {
@@ -2154,6 +2155,7 @@ void ObjHits_RegisterActiveHitVolumeObject(undefined4 param_1)
   gObjHitsActiveHitVolumeObjects[iVar2] = param_1;
   return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
