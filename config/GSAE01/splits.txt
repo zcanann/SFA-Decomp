@@ -1794,7 +1794,7 @@ dolphin/card/CARDMount.c:
 	.text       start:0x80261A7C end:0x8026253C
 	.data       start:0x8032ED40 end:0x8032ED80
 
-main/unknown/autos/placeholder_8032EDD0.s:
+main/unknown/autos/placeholder_8032EDD0.c:
 	.data       start:0x8032EDD0 end:0x8032F218
 
 dolphin/gx/GXTextureTables.c:

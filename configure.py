@@ -490,7 +490,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXTextureTables.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXTexture.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXBump.c"),
-            Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_8032EDD0.s", progress_category="game"),
+            Object(MatchingFor("GSAE01"), "main/unknown/autos/placeholder_8032EDD0.c", progress_category="game"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXAttr.c"),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXDisplayList.c", extra_cflags=["-sdata", "16"]),
             Object(MatchingFor("GSAE01"), "dolphin/gx/GXFrameBuf.c"),
