@@ -94,6 +94,18 @@ def matching_reference_windows(path: str, references) -> list:
     return windows
 
 
+def reference_span(window) -> int:
+    return window.end - window.start
+
+
+def display_verdict(version: str, path: str, hit, donor_windows: list) -> str:
+    owner = split_owner(version, hit.target.start, hit.target.end)
+    max_span = max((reference_span(window) for window in donor_windows), default=0)
+    if max_span <= 0x40 and path not in owner:
+        return "tiny-shape-mirage"
+    return verdict_for_hit(hit)
+
+
 def make_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("-v", "--version", default="GSAE01")
@@ -167,7 +179,7 @@ def main() -> int:
         owner_matches = path in owner
         alias_note = "" if canonical_path == path else f" canonical={canonical_path}"
         print(
-            f"{verdict_for_hit(hit):15s} score={hit.overall_score * 100:6.2f} "
+            f"{display_verdict(args.version, path, hit, windows):17s} score={hit.overall_score * 100:6.2f} "
             f"active={'yes' if active else 'no '} split={'yes' if split else 'no '} "
             f"owner-match={'yes' if owner_matches else 'no '} donors={donor_windows:2d} "
             f"category={category:4s} path={path}{alias_note}"
