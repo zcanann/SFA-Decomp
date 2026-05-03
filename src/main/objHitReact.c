@@ -136,6 +136,7 @@ int objHitReact_update(int obj,ObjHitReactEntry *entries,u32 entryCount,u32 reac
 #pragma scheduling reset
 
 #pragma scheduling off
+#pragma peephole off
 void ObjHitReact_ResetActiveObjects(int objectCount)
 {
   ObjHitReactState *hitState;
@@ -159,8 +160,8 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
         resetPending = hitState->resetFlags & OBJHITREACT_STATE_RESET_PENDING;
         if (resetPending != 0) {
           if (gObjHitReactResetObjectCount < OBJHITREACT_MAX_RESET_OBJECTS) {
-            resetObjectCount = gObjHitReactResetObjectCount;
             resetObjects = gObjHitReactResetObjects;
+            resetObjectCount = gObjHitReactResetObjectCount;
             gObjHitReactResetObjectCount = resetObjectCount + 1;
             resetObjects[resetObjectCount] = obj;
           }
@@ -174,4 +175,5 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
     objectCount = objectCount + -1;
   }
 }
+#pragma peephole reset
 #pragma scheduling reset
