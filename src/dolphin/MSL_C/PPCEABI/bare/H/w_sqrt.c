@@ -1,6 +1,5 @@
-int __ieee754_sqrt(void);
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/fdlibm.h"
 
-void sqrt(void)
-{
-	__ieee754_sqrt();
+double sqrt(double x) {
+    return __ieee754_sqrt(x);
 }
