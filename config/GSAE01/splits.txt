@@ -2272,7 +2272,7 @@ main/unknown/autos/placeholder_8028503C.c:
 main/unknown/autos/placeholder_8028521C.c:
 	.text       start:0x8028504C end:0x8028504C
 
-main/unknown/autos/placeholder_80285220.c:
+dolphin/axfx/reverb_std_callback.c:
 	extab       start:0x80005CB0 end:0x80005CB8
 	extabindex  start:0x80006698 end:0x800066A4
 	.text       start:0x8028504C end:0x80285424
