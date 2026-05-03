@@ -2546,7 +2546,7 @@ main/unknown/autos/placeholder_80295318.c:
 dolphin/TRK_MINNOW_DOLPHIN/main.c:
 	.text       start:0x802BACC0 end:0x802BB008
 
-main/unknown/autos/placeholder_802BB008.c:
+dolphin/TRK_MINNOW_DOLPHIN/CircleBuffer.c:
 	.text       start:0x802BB008 end:0x802BB164
 
 dolphin/TRK_MINNOW_DOLPHIN/main_gdev.c:

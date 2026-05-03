@@ -1,35 +1,156 @@
-int ddh_cc_initinterrupts(void* a, void* b, void* c) {
-    (void)a;
-    (void)b;
-    (void)c;
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/CircleBuffer.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/MWTrace.h"
+#include "OdemuExi2/odemuexi/DebuggerDriver.h"
+#include <dolphin/amc/AmcExi2Comm.h>
+
+#define DDH_ERR_NOT_INITIALIZED -0x2711
+#define DDH_ERR_ALREADY_INITIALIZED -0x2715
+#define DDH_ERR_READ_ERROR -0x2719
+
+#define DDH_BUF_SIZE 0x800
+
+typedef struct DdhRecvCB {
+    CircleBuffer cb;
+    u32 reserved;
+} DdhRecvCB;
+
+typedef struct DdhInitFlag {
+    BOOL value;
+    u32 reserved;
+} DdhInitFlag;
+
+static DdhRecvCB gRecvCB ATTRIBUTE_ALIGN(8);
+static u8 gRecvBuf[DDH_BUF_SIZE];
+static DdhInitFlag gIsInitialized ATTRIBUTE_ALIGN(8);
+
+static const char ddh_cc_write_not_initialized[] = "cc not initialized\n";
+static const char ddh_cc_write_output_data[] = "cc_write : Output data 0x%08x %ld bytes\n";
+static const char ddh_cc_write_sending[] = "cc_write sending %ld bytes\n";
+static const char ddh_cc_expected_packet_size[] = "Expected packet size : 0x%08x (%ld)\n";
+static const char ddh_cc_read_error[] = "cc_read : error reading bytes from EXI2 %ld\n";
+static const char ddh_cc_initialize_calling_exi2_init[] = "CALLING EXI2_Init\n";
+static const char ddh_cc_initialize_done_calling_exi2_init[] = "DONE CALLING EXI2_Init\n";
+
+int ddh_cc_initialize(void* inputPendingPtrRef, EXICallback monitorCallback) {
+    MWTRACE(1, (char*)ddh_cc_initialize_calling_exi2_init);
+    EXI2_Init(inputPendingPtrRef, monitorCallback);
+    MWTRACE(1, (char*)ddh_cc_initialize_done_calling_exi2_init);
+    CircleBufferInitialize(&gRecvCB.cb, gRecvBuf, DDH_BUF_SIZE);
     return 0;
 }
 
-void fn_802BB648(void* obj, float x) {
-    (void)obj;
-    (void)x;
-}
-
-void fn_802BB718(void) {
-}
-
-int fn_802BB71C(void) {
+int ddh_cc_shutdown(void) {
     return 0;
 }
 
-void fn_802BB724(void* a, float* out) {
-    (void)a;
-    if (out != 0) {
-        *out = 0.0f;
+int ddh_cc_open(void) {
+    if (gIsInitialized.value != 0) {
+        return DDH_ERR_ALREADY_INITIALIZED;
     }
+
+    gIsInitialized.value = TRUE;
+    return 0;
 }
 
-void fn_802BB754(void* a, float* out, int* flag) {
-    (void)a;
-    if (out != 0) {
-        *out = 0.0f;
+int ddh_cc_close(void) {
+    return 0;
+}
+
+int ddh_cc_read(u8* data, int size) {
+    u8 buff[DDH_BUF_SIZE];
+    int originalDataSize;
+    u32 result;
+    int expectedDataSize;
+    int poll;
+
+    result = 0;
+    if (!gIsInitialized.value) {
+        return DDH_ERR_NOT_INITIALIZED;
     }
-    if (flag != 0) {
-        *flag = 0;
+
+    MWTRACE(1, (char*)ddh_cc_expected_packet_size, size, size);
+    originalDataSize = expectedDataSize = size;
+
+    while ((u32)CBGetBytesAvailableForRead(&gRecvCB.cb) < expectedDataSize) {
+        result = 0;
+        poll = EXI2_Poll();
+
+        if (poll != 0) {
+            result = EXI2_ReadN(buff, poll);
+            if (result == 0) {
+                CircleBufferWriteBytes(&gRecvCB.cb, buff, poll);
+            }
+        }
     }
+
+    if (result == 0) {
+        CircleBufferReadBytes(&gRecvCB.cb, data, originalDataSize);
+    } else {
+        MWTRACE(8, (char*)ddh_cc_read_error, result);
+    }
+
+    return result;
+}
+
+int ddh_cc_write(const u8* bytes, int length) {
+    int exi2Len;
+    int nCopy;
+    u32 bytesAddr;
+
+    bytesAddr = (u32)bytes;
+    nCopy = length;
+
+    if (gIsInitialized.value == FALSE) {
+        MWTRACE(8, (char*)ddh_cc_write_not_initialized);
+        return DDH_ERR_NOT_INITIALIZED;
+    }
+
+    MWTRACE(8, (char*)ddh_cc_write_output_data, bytes, length);
+
+    while (nCopy > 0) {
+        MWTRACE(1, (char*)ddh_cc_write_sending, nCopy);
+        exi2Len = EXI2_WriteN((const void*)bytesAddr, nCopy);
+
+        if (exi2Len == AMC_EXI_NO_ERROR) {
+            break;
+        }
+
+        bytesAddr += exi2Len;
+        nCopy -= exi2Len;
+    }
+
+    return 0;
+}
+
+int ddh_cc_pre_continue(void) {
+    EXI2_Unreserve();
+    return 0;
+}
+
+int ddh_cc_post_stop(void) {
+    EXI2_Reserve();
+    return 0;
+}
+
+int ddh_cc_peek(void) {
+    int poll;
+    u8 buff[DDH_BUF_SIZE];
+
+    poll = EXI2_Poll();
+    if (poll <= 0) {
+        return 0;
+    }
+
+    if (EXI2_ReadN(buff, poll) == 0) {
+        CircleBufferWriteBytes(&gRecvCB.cb, buff, poll);
+    } else {
+        return DDH_ERR_READ_ERROR;
+    }
+
+    return poll;
+}
+
+int ddh_cc_initinterrupts(void) {
+    EXI2_EnableInterrupts();
+    return 0;
 }
