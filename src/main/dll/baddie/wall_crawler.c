@@ -925,11 +925,13 @@ extern s8  lbl_803DD7B4;
 
 /* EN v1.0 0x8012EF30  size: 16b  Latch helper: set busy byte
  * lbl_803DD7B9 and stash s16 arg in lbl_803DD88C. */
+#pragma scheduling off
 void fn_8012EF30(s16 val)
 {
     lbl_803DD7B9 = 1;
     lbl_803DD88C = val;
 }
+#pragma scheduling reset
 
 /* EN v1.0 0x8012FB88  size: 8b  u8 setter for lbl_803DBA72. */
 void fn_8012FB88(u8 val)
