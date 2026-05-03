@@ -2,6 +2,7 @@ typedef signed short s16;
 typedef unsigned int u32;
 
 extern double __fabs(double);
+extern float __fabsf(float);
 
 static const float min_exp2_arg = -127.0f;
 static const float zero = 0.0f;
@@ -83,7 +84,8 @@ float fn_80291D00(float x)
 
 float fn_80291DD8(float x)
 {
-    return fn_80291D00(log2e * x);
+    volatile float y = x;
+    return fn_80291D00(log2e * y);
 }
 
 asm float fn_80291E08(register s16* p)
@@ -117,7 +119,7 @@ float fn_80291E40(float x)
     s16 short_value;
     int int_value;
 
-    abs_x = fn_80291CBC(x);
+    abs_x = __fabsf(x);
     if (abs_x < small_int_limit) {
         fn_80291CE4(&short_value, abs_x);
         rounded = fn_80291CC8(&short_value);
