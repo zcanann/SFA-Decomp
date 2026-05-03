@@ -51,6 +51,7 @@ int dfplightni_getExtraSize(void)
   return sizeof(DfpLightniState);
 }
 
+#pragma scheduling off
 void dfplightni_free(u8 *obj)
 {
   DfpLightniState *state;
@@ -64,6 +65,7 @@ void dfplightni_free(u8 *obj)
   }
   return;
 }
+#pragma scheduling reset
 
 void dfplightni_render(u8 *obj)
 {
