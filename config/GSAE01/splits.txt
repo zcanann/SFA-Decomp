@@ -2543,14 +2543,8 @@ dolphin/MSL_C/PPCEABI/bare/H/e_pow.c:
 main/unknown/autos/placeholder_80295318.c:
 	.text       start:0x80295334 end:0x802BACC0
 
-dolphin/TRK_MINNOW_DOLPHIN/main.c:
-	.text       start:0x802BACC0 end:0x802BB008
-
-dolphin/TRK_MINNOW_DOLPHIN/CircleBuffer.c:
-	.text       start:0x802BB008 end:0x802BB164
-
-dolphin/TRK_MINNOW_DOLPHIN/main_gdev.c:
-	.text       start:0x802BB164 end:0x802BB4B0
+main/unknown/autos/placeholder_802BACC0.c:
+	.text       start:0x802BACC0 end:0x802BB4B0
 
 main/unknown/autos/placeholder_802BB4B0.c:
 	.text       start:0x802BB4B0 end:0x802BB720
