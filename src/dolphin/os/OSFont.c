@@ -569,221 +569,71 @@ _rf_11:
     blr
 }
 
-asm char* OSGetFontTexel(const char* string, void* image, s32 pos, s32 stride, s32* width) {
-    nofralloc
-    mflr r0
-    stw r0, 0x4(r1)
-    stwu r1, -0x60(r1)
-    stmw r17, 0x24(r1)
-    mr r28, r3
-    addi r29, r4, 0x0
-    addi r30, r5, 0x0
-    addi r24, r6, 0x0
-    addi r31, r7, 0x0
-    lbz r0, 0x0(r3)
-    cmplwi r0, 0x0
-    mr r3, r0
-    bne _gft_0
-    mr r3, r28
-    b _gft_19
-_gft_0:
-    lhz r0, fontEncode(r13)
-    addi r28, r28, 0x1
-    cmplwi r0, 0x1
-    bgt _gft_1
-    b _gft_7
-_gft_1:
-    lis r4, 0x8000
-    lwz r0, 0xcc(r4)
-    cmpwi r0, 0x0
-    beq _gft_2
-    blt _gft_5
-    b _gft_5
-_gft_2:
-    lis r4, 0xcc00
-    lhz r0, 0x206e(r4)
-    rlwinm. r0, r0, 0, 30, 30
-    beq _gft_3
-    li r0, 0x1
-    b _gft_4
-_gft_3:
-    li r0, 0x0
-_gft_4:
-    sth r0, fontEncode(r13)
-    b _gft_6
-_gft_5:
-    li r0, 0x0
-    sth r0, fontEncode(r13)
-_gft_6:
-    lhz r0, fontEncode(r13)
-_gft_7:
-    clrlwi r0, r0, 16
-    cmplwi r0, 0x1
-    bne _gft_11
-    clrlwi r0, r3, 24
-    cmplwi r0, 0x81
-    li r4, 0x1
-    li r5, 0x0
-    blt _gft_8
-    cmplwi r0, 0x9f
-    bgt _gft_8
-    mr r5, r4
-_gft_8:
-    cmpwi r5, 0x0
-    bne _gft_10
-    clrlwi r0, r3, 24
-    cmplwi r0, 0xe0
-    li r5, 0x0
-    blt _gft_9
-    cmplwi r0, 0xfc
-    bgt _gft_9
-    li r5, 0x1
-_gft_9:
-    cmpwi r5, 0x0
-    bne _gft_10
-    li r4, 0x0
-_gft_10:
-    cmpwi r4, 0x0
-    beq _gft_11
-    lbz r4, 0x0(r28)
-    extsb. r0, r4
-    beq _gft_11
-    clrlslwi r0, r3, 16, 8
-    or r3, r0, r4
-    addi r28, r28, 0x1
-_gft_11:
-    lwz r4, FontData(r13)
-    addi r25, r4, 0x2c
-    bl GetFontCode
-    lwz r6, CharsInSheet(r13)
-    slwi r0, r24, 2
-    lwz r12, FontData(r13)
-    srawi r0, r0, 3
-    divw r11, r3, r6
-    lwz r4, 0x14(r12)
-    lwz r5, 0x24(r12)
-    lhz r9, 0x1a(r12)
-    lhz r7, 0x12(r12)
-    mullw r8, r11, r6
-    lhz r6, 0x10(r12)
-    subf r17, r8, r3
-    divw r10, r17, r9
-    mullw r8, r10, r9
-    mullw r4, r11, r4
-    subf r11, r8, r17
-    addze r0, r0
-    mullw r10, r10, r7
-    mullw r11, r11, r6
-    add r24, r12, r5
-    srwi r4, r4, 1
-    add r24, r24, r4
-    slwi r7, r0, 5
-    li r27, 0x0
-    b _gft_17
-_gft_12:
-    add r4, r10, r27
-    srawi r0, r4, 3
-    addze r0, r0
-    srawi r8, r4, 3
-    addze r8, r8
-    slwi r8, r8, 3
-    subfc r8, r8, r4
-    srawi r4, r27, 3
-    addze r4, r4
-    mullw r5, r4, r7
-    srawi r6, r27, 3
-    addze r6, r6
-    slwi r6, r6, 3
-    subfc r6, r6, r27
-    slwi r4, r8, 1
-    add r5, r29, r5
-    slwi r6, r6, 2
-    li r12, 0x0
-    b _gft_16
-_gft_13:
-    lhz r9, 0x1e(r9)
-    add r21, r11, r12
-    add r8, r30, r12
-    srawi r9, r9, 3
-    addze r9, r9
-    slwi r9, r9, 5
-    srawi r18, r9, 1
-    addze r18, r18
-    srawi r19, r21, 3
-    addze r19, r19
-    srawi r9, r21, 3
-    addze r9, r9
-    slwi r9, r9, 3
-    subfc r9, r9, r21
-    srawi r20, r9, 2
-    addze r20, r20
-    srawi r26, r21, 2
-    addze r26, r26
-    slwi r26, r26, 2
-    subfc r26, r26, r21
-    srawi r21, r8, 3
-    addze r21, r21
-    srawi r9, r8, 3
-    addze r9, r9
-    slwi r9, r9, 3
-    mullw r18, r18, r0
-    subfc r9, r9, r8
-    srawi r22, r9, 1
-    addze r22, r22
-    srawi r23, r8, 1
-    addze r23, r23
-    slwi r9, r21, 5
-    slwi r23, r23, 1
-    add r9, r5, r9
-    add r9, r9, r6
-    add r17, r24, r18
-    slwi r21, r19, 4
-    add r17, r17, r21
-    add r17, r17, r4
-    subfc. r23, r23, r8
-    add r17, r17, r20
-    add r9, r9, r22
-    beq _gft_14
-    li r18, 0xf
-    b _gft_15
-_gft_14:
-    li r18, 0xf0
-_gft_15:
-    slwi r8, r26, 1
-    lbz r26, 0x0(r17)
-    subfic r8, r8, 0x6
-    lbz r23, 0x0(r9)
-    sraw r8, r26, r8
-    clrlwi r8, r8, 30
-    lbzx r8, r25, r8
-    addi r12, r12, 0x1
-    and r8, r8, r18
-    or r8, r23, r8
-    stb r8, 0x0(r9)
-_gft_16:
-    lwz r9, FontData(r13)
-    lhz r8, 0x10(r9)
-    cmpw r12, r8
-    blt _gft_13
-    addi r27, r27, 0x1
-_gft_17:
-    lwz r4, FontData(r13)
-    lhz r0, 0x12(r4)
-    cmpw r27, r0
-    blt _gft_12
-    cmplwi r31, 0x0
-    beq _gft_18
-    lwz r4, WidthTable(r13)
-    lbzx r0, r4, r3
-    stw r0, 0x0(r31)
-_gft_18:
-    mr r3, r28
-_gft_19:
-    lmw r17, 0x24(r1)
-    lwz r0, 0x64(r1)
-    addi r1, r1, 0x60
-    mtlr r0
-    blr
+char* OSGetFontTexel(const char* string, void* image, s32 pos, s32 stride, s32* width) {
+    u16 code;
+    u8* src;
+    u8* dst;
+    int fontCode;
+    int sheet;
+    int numChars;
+    int row;
+    int column;
+    int x;
+    int y;
+    int offsetSrc;
+    int offsetDst;
+    u8* colorIndex;
+    u8* imageSrc;
+
+    code = *string;
+    if (code == 0) {
+        return (char*)string;
+    }
+
+    string++;
+    if (OSGetFontEncode() == OS_FONT_ENCODE_SJIS) {
+        if (IsSjisLeadByte(code) && ((s8)*string != 0)) {
+            code = (code << 8) | *string++;
+        }
+    }
+    colorIndex = &FontData->c0;
+
+    fontCode = GetFontCode(code);
+
+    sheet = fontCode / CharsInSheet;
+    numChars = fontCode - (sheet * CharsInSheet);
+    row = numChars / FontData->sheetColumn;
+    column = numChars - (row * FontData->sheetColumn);
+    row *= FontData->cellHeight;
+    column *= FontData->cellWidth;
+    imageSrc = (u8*)FontData + FontData->sheetImage;
+    imageSrc += (sheet * FontData->sheetSize) / 2;
+
+    for (y = 0; y < FontData->cellHeight; y++) {
+        for (x = 0; x < FontData->cellWidth; x++) {
+            src = imageSrc + (((FontData->sheetWidth / 8) * 32) / 2) * ((row + y) / 8);
+            src += ((column + x) / 8) * 16;
+            src += ((row + y) % 8) * 2;
+            src += ((column + x) % 8) / 4;
+
+            offsetSrc = (column + x) % 4;
+
+            dst = (u8*)image + ((y / 8) * (((stride * 4) / 8) * 32));
+            dst += ((pos + x) / 8) * 32;
+            dst += (y % 8) * 4;
+            dst += ((pos + x) % 8) / 2;
+
+            offsetDst = (pos + x) % 2;
+
+            *dst |= colorIndex[(*src >> (6 - (offsetSrc * 2))) & 3] & (offsetDst != 0 ? 0x0F : 0xF0);
+        }
+    }
+
+    if (width != NULL) {
+        *width = WidthTable[fontCode];
+    }
+
+    return (char*)string;
 }
 
 char* OSGetFontWidth(const char* string, s32* width) {
