@@ -59,7 +59,7 @@ void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sende
 void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint param);
 uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param);
 void ObjMsg_AllocQueue(void *obj,int capacity);
-undefined4 Obj_IsObjectAlive(int param_1);
+undefined4 Obj_IsObjectAlive(u32 param_1);
 bool FUN_80037d74(int param_1);
 int ObjHits_PollPriorityHitWithCooldown(int param_1,float *param_2,undefined4 *param_3,float *param_4);
 void ObjHits_PollPriorityHitEffectWithCooldown(undefined4 param_1,undefined4 param_2,uint param_3,uint param_4,uint param_5,

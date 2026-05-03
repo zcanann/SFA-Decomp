@@ -3721,11 +3721,13 @@ extern f32   lbl_803E2408;
 
 /* EN v1.0 0x80133F40  size: 48b  Acquire a 0xBE5-byte buffer via
  * fn_80054D54 into lbl_803DD940; reset frame counter at lbl_803DD938. */
+#pragma scheduling off
 void fn_80133F40(void)
 {
     lbl_803DD940 = fn_80054D54(0xBE5);
     lbl_803DD938 = 340;
 }
+#pragma scheduling reset
 
 /* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960
  * via fn_80054308. */

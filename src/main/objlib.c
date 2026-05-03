@@ -2086,16 +2086,20 @@ void ObjMsg_AllocQueue(void *obj,int capacity)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 Obj_IsObjectAlive(int param_1)
+#pragma scheduling off
+#pragma peephole off
+undefined4 Obj_IsObjectAlive(u32 param_1)
 {
   undefined4 uVar1;
-  
+
   uVar1 = 0;
   if ((param_1 != 0) && ((*(ushort *)(param_1 + 0xb0) & 0x40) == 0)) {
     uVar1 = 1;
   }
   return uVar1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
