@@ -34,21 +34,14 @@ void srand(u32 seed) {
     lbl_803DE410 = seed;
 }
 
-asm float fn_80292DEC(register float x) {
-    nofralloc
-    stwu r1, -24(r1)
-    stfd f31, 16(r1)
-    fres f31, f1
-    lfs f0, lbl_803E7C18(r2)
-    fnmsubs f0, f1, f31, f0
-    fmuls f31, f31, f0
-    lfs f0, lbl_803E7C18(r2)
-    fnmsubs f0, f1, f31, f0
-    fmuls f31, f31, f0
-    fmr f1, f31
-    lfd f31, 16(r1)
-    addi r1, r1, 24
-    blr
+float fn_80292DEC(float x) {
+    float estimate;
+
+    estimate = __fres(x);
+    estimate *= lbl_803E7C18 - x * estimate;
+    estimate *= lbl_803E7C18 - x * estimate;
+
+    return estimate;
 }
 
 #define STORE_SINCOS(q, sin_value, cos_value, sin_out, cos_out) \
