@@ -1,5 +1,5 @@
-typedef signed short s16;
-typedef unsigned int u32;
+#include "dolphin/types.h"
+#include "dolphin/os/OSFastCast.h"
 
 extern double __fabs(double);
 extern float __fabsf(float);
@@ -22,28 +22,14 @@ float fn_80291CBC(float x)
     return y;
 }
 
-asm float fn_80291CC8(register s16* p)
+float fn_80291CC8(s16* p)
 {
-    nofralloc
-    stwu r1, -24(r1)
-    stfd f31, 16(r1)
-    psq_l f31, 0(r3), 1, 3
-    fmr f1, f31
-    lfd f31, 16(r1)
-    addi r1, r1, 24
-    blr
+    return __OSu16tof32((u16*)p);
 }
 
-asm void fn_80291CE4(register s16* p, register float x)
+void fn_80291CE4(s16* p, float x)
 {
-    nofralloc
-    stwu r1, -24(r1)
-    stfd f31, 16(r1)
-    fmr f31, f1
-    psq_st f31, 0(r3), 1, 3
-    lfd f31, 16(r1)
-    addi r1, r1, 24
-    blr
+    OSf32tou16(&x, (u16*)p);
 }
 
 float fn_80291E08(s16* p);
@@ -88,28 +74,14 @@ float fn_80291DD8(float x)
     return fn_80291D00(log2e * y);
 }
 
-asm float fn_80291E08(register s16* p)
+float fn_80291E08(s16* p)
 {
-    nofralloc
-    stwu r1, -24(r1)
-    stfd f31, 16(r1)
-    psq_l f31, 0(r3), 1, 5
-    fmr f1, f31
-    lfd f31, 16(r1)
-    addi r1, r1, 24
-    blr
+    return __OSs16tof32(p);
 }
 
-asm void fn_80291E24(register s16* p, register float x)
+void fn_80291E24(s16* p, float x)
 {
-    nofralloc
-    stwu r1, -24(r1)
-    stfd f31, 16(r1)
-    fmr f31, f1
-    psq_st f31, 0(r3), 1, 5
-    lfd f31, 16(r1)
-    addi r1, r1, 24
-    blr
+    OSf32tos16(&x, p);
 }
 
 float fn_80291E40(float x)
