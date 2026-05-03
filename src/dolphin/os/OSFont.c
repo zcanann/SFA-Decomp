@@ -366,58 +366,6 @@ static inline u32 ReadFont(void* img) {
     return GetFontSize(img);
 }
 
-static inline void PatchSjisGlyph(void) {
-    u16 glyph[4];
-    int fontCode;
-    int sheet;
-    int numChars;
-    int row;
-    int column;
-    int x;
-    int y;
-    int rowPitch;
-    u8* imageSrc;
-    u8* dst;
-
-    *(u32*)&glyph[0] = lbl_803E7610;
-    *(u32*)&glyph[2] = lbl_803E7614;
-
-    fontCode = GetFontCode(0x54);
-    sheet = fontCode / CharsInSheet;
-    numChars = fontCode - (sheet * CharsInSheet);
-    row = numChars / FontData->sheetColumn;
-    column = numChars - (row * FontData->sheetColumn);
-    y = row * FontData->cellHeight;
-    x = column * FontData->cellWidth;
-    rowPitch = ((FontData->sheetWidth / 8) * 32) / 2;
-    imageSrc = (u8*)FontData + FontData->sheetImage;
-    imageSrc += (sheet * FontData->sheetSize) / 2;
-
-    dst = imageSrc + rowPitch * ((y + 4) / 8);
-    dst += (x / 8) * 16;
-    dst += ((y + 4) % 8) * 2;
-    dst += (x % 8) / 4;
-    *(u16*)dst = glyph[0];
-
-    dst = imageSrc + rowPitch * ((y + 5) / 8);
-    dst += (x / 8) * 16;
-    dst += ((y + 5) % 8) * 2;
-    dst += (x % 8) / 4;
-    *(u16*)dst = glyph[1];
-
-    dst = imageSrc + rowPitch * ((y + 6) / 8);
-    dst += (x / 8) * 16;
-    dst += ((y + 6) % 8) * 2;
-    dst += (x % 8) / 4;
-    *(u16*)dst = glyph[2];
-
-    dst = imageSrc + rowPitch * ((y + 7) / 8);
-    dst += (x / 8) * 16;
-    dst += ((y + 7) % 8) * 2;
-    dst += (x % 8) / 4;
-    *(u16*)dst = glyph[3];
-}
-
 u32 OSLoadFont(OSFontHeader* fontData, void* tmp) {
     u32 size;
 
@@ -430,7 +378,39 @@ u32 OSLoadFont(OSFontHeader* fontData, void* tmp) {
         CharsInSheet = FontData->sheetColumn * FontData->sheetRow;
 
         if (OSGetFontEncode() == OS_FONT_ENCODE_SJIS) {
-            PatchSjisGlyph();
+            u8* image;
+            u8* ptr;
+            u16 glyph[4];
+            int fontCode;
+            int sheet;
+            int numChars;
+            int row;
+            int column;
+            int x;
+            int y;
+
+            *(u32*)&glyph[0] = lbl_803E7610;
+            *(u32*)&glyph[2] = lbl_803E7614;
+
+            fontCode = GetFontCode(0x54);
+            sheet = fontCode / CharsInSheet;
+            numChars = fontCode - (sheet * CharsInSheet);
+            row = numChars / FontData->sheetColumn;
+            column = numChars - (row * FontData->sheetColumn);
+            row *= FontData->cellHeight;
+            column *= FontData->cellWidth;
+            image = (u8*)FontData + FontData->sheetImage;
+            image += (sheet * FontData->sheetSize) / 2;
+
+            for (y = 4; y < 8; y++) {
+                x = 0;
+                ptr = image + (((FontData->sheetWidth / 8) * 32) / 2) * ((row + y) / 8);
+                ptr += ((column + x) / 8) * 16;
+                ptr += ((row + y) % 8) * 2;
+                ptr += ((column + x) % 8) / 4;
+
+                *(u16*)ptr = glyph[y - 4];
+            }
         }
     }
 
