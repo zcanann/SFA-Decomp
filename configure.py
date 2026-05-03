@@ -699,7 +699,7 @@ config.libs = [
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/e_fmod.c"),
             Object(
                 NonMatching,
-                "dolphin/MSL_C/PPCEABI/bare/H/e_pow.c",
+                "dolphin/MSL_C/PPCEABI/bare/H/exponentialsf.c",
                 mw_version="GC/1.3.2",
                 extra_cflags=msl_math_extra,
             ),
