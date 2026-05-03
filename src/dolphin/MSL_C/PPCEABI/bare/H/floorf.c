@@ -1,6 +1,6 @@
-#include "dolphin.h"
+#include "dolphin/types.h"
 
-float fn_80294724(float x) {
+float floorf(float x) {
     int n = (int)x;
     float diff = (float)n - x;
     u32 bits;
