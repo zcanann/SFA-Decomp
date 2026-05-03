@@ -16,7 +16,7 @@ void ObjHits_SetTargetMask(int param_1,undefined param_2);
 void FUN_80035b84(int param_1,undefined2 param_2);
 void FUN_80035d58(int param_1,undefined2 param_2,short param_3,short param_4);
 void ObjHits_ClearHitVolumes(int param_1);
-void ObjHits_SetHitVolumeMasks(int param_1,undefined param_2,undefined param_3,int param_4);
+void ObjHits_SetHitVolumeMasks(int param_1,int param_2,int param_3,int param_4);
 void ObjHits_SetHitVolumeSlot(u32 param_1,int param_2,int param_3,int param_4);
 void ObjHits_ClearSourceMask(int param_1,int param_2);
 void ObjHits_SetSourceMask(int param_1,byte param_2);
