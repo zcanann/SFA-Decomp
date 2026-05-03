@@ -784,7 +784,7 @@ config.libs = [
             Object(NonMatching, "main/unknown/autos/placeholder_8001746C.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8002F604.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_80080E58.c"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/gamecube.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/gamecube.c", progress_category="sdk"),
             Object(NonMatching, "main/unknown/autos/placeholder_800944A0.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_801175B4.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_801F5184.c"),
