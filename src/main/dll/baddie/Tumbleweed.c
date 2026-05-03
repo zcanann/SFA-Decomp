@@ -3659,7 +3659,7 @@ extern void fn_800393F8(u8*, u8*, int, int, int, int);
 int fn_80138920(u8* obj, int arg1, int arg2)
 {
     u8* b = *(u8**)(obj + 0xb8);
-    if ((b[0x58] & 0x40) == 0) return 0;
+    if ((u32)((b[0x58] >> 6) & 1) != 0u) return 0;
     {
         s16 v = *(s16*)(obj + 0xa0);
         if (v < 48 && v >= 41) return 0;
