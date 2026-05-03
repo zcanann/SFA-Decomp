@@ -10,7 +10,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char trigge
 void *camcontrol_loadCamAction(int actionNo);
 void camcontrol_releaseCurrentHandler(void);
 void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2);
-void camcontrol_queueCamAction(undefined4 param_1,undefined4 param_2,undefined param_3,int param_4,
+void camcontrol_queueCamAction(undefined4 param_1,undefined4 param_2,int param_3,int param_4,
                                uint param_5,undefined4 param_6,undefined param_7);
 void camcontrol_updateState(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                             undefined8 param_5,undefined8 param_6,undefined8 param_7,

@@ -565,6 +565,7 @@ void camcontrol_releaseCurrentHandler(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2)
 {
   if (lbl_803DD4F4 != -1) {
@@ -572,6 +573,7 @@ void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2)
   }
   return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -586,7 +588,7 @@ void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void camcontrol_queueCamAction(undefined4 param_1,undefined4 param_2,undefined param_3,int param_4,
+void camcontrol_queueCamAction(undefined4 param_1,undefined4 param_2,int param_3,int param_4,
                                uint param_5,undefined4 param_6,undefined param_7)
 {
   int iVar1;
