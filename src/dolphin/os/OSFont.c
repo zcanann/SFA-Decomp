@@ -375,7 +375,6 @@ static inline void PatchSjisGlyph(void) {
     int column;
     int x;
     int y;
-    int i;
     int rowPitch;
     u8* imageSrc;
     u8* dst;
@@ -394,13 +393,29 @@ static inline void PatchSjisGlyph(void) {
     imageSrc = (u8*)FontData + FontData->sheetImage;
     imageSrc += (sheet * FontData->sheetSize) / 2;
 
-    for (i = 0; i < 4; i++) {
-        dst = imageSrc + rowPitch * ((y + 4 + i) / 8);
-        dst += (x / 8) * 16;
-        dst += ((y + 4 + i) % 8) * 2;
-        dst += (x % 8) / 4;
-        *(u16*)dst = glyph[i];
-    }
+    dst = imageSrc + rowPitch * ((y + 4) / 8);
+    dst += (x / 8) * 16;
+    dst += ((y + 4) % 8) * 2;
+    dst += (x % 8) / 4;
+    *(u16*)dst = glyph[0];
+
+    dst = imageSrc + rowPitch * ((y + 5) / 8);
+    dst += (x / 8) * 16;
+    dst += ((y + 5) % 8) * 2;
+    dst += (x % 8) / 4;
+    *(u16*)dst = glyph[1];
+
+    dst = imageSrc + rowPitch * ((y + 6) / 8);
+    dst += (x / 8) * 16;
+    dst += ((y + 6) % 8) * 2;
+    dst += (x % 8) / 4;
+    *(u16*)dst = glyph[2];
+
+    dst = imageSrc + rowPitch * ((y + 7) / 8);
+    dst += (x / 8) * 16;
+    dst += ((y + 7) % 8) * 2;
+    dst += (x % 8) / 4;
+    *(u16*)dst = glyph[3];
 }
 
 u32 OSLoadFont(OSFontHeader* fontData, void* tmp) {
