@@ -1079,5 +1079,10 @@ void fn_801ADB80(int *obj) { int *p = (int*)obj[0xc8/4]; if (p != NULL) Obj_Free
 /* conditional init/free pair. */
 extern void fn_80013E2C(u32);
 #pragma scheduling off
-void crrockfall_release(void) { if (lbl_803DDB40 != 0) { fn_80013E2C(lbl_803DDB40); lbl_803DDB40 = 0; } }
+void crrockfall_release(void) {
+    if (lbl_803DDB40 != 0) {
+        fn_80013E2C(lbl_803DDB40);
+    }
+    lbl_803DDB40 = 0;
+}
 #pragma scheduling reset

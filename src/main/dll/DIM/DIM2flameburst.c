@@ -1660,5 +1660,10 @@ void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 extern u32 lbl_803DDB78;
 extern void fn_80013E2C(u32);
 #pragma scheduling off
-void fn_801B5A38(void) { if (lbl_803DDB78 != 0) { fn_80013E2C(lbl_803DDB78); lbl_803DDB78 = 0; } }
+void fn_801B5A38(void) {
+    if (lbl_803DDB78 != 0) {
+        fn_80013E2C(lbl_803DDB78);
+    }
+    lbl_803DDB78 = 0;
+}
 #pragma scheduling reset
