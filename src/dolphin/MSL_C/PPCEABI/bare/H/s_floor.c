@@ -48,13 +48,13 @@ float floor(float x) {
                                       * y2
                                   + lbl_803E7DB0)));
         default:
-            return (float)(lbl_803E7DE0
-                           - y2
+            return (float)(-(y2
                                  * (((((lbl_803E7E10 * y2 + lbl_803E7E08) * y2 + lbl_803E7E00) * y2
                                       + lbl_803E7DF8)
                                          * y2
                                      + lbl_803E7DF0)
                                         * y2
-                                    + lbl_803E7DE8));
+                                    + lbl_803E7DE8)
+                             + lbl_803E7DE0));
     }
 }
