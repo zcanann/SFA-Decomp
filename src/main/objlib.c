@@ -603,12 +603,14 @@ void ObjHits_SetHitVolumeSlot(u32 param_1,int param_2,int param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_ClearSourceMask(int param_1,byte param_2)
+#pragma peephole off
+void ObjHits_ClearSourceMask(int param_1,int param_2)
 {
-  *(byte *)(*(int *)(param_1 + 0x54) + 0xb4) = *(byte *)(*(int *)(param_1 + 0x54) + 0xb4) & ~param_2
-  ;
+  u8* p = (u8*)(*(int *)(param_1 + 0x54) + 0xb4);
+  *p = (u8)(*p & ~param_2);
   return;
 }
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -642,12 +644,14 @@ void ObjHits_SetSourceMask(int param_1,byte param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_ClearFlags(int param_1,ushort param_2)
+#pragma peephole off
+void ObjHits_ClearFlags(int param_1,int param_2)
 {
-  *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
-       *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & ~param_2;
+  s16* p = (s16*)(*(int *)(param_1 + 0x54) + 0x60);
+  *p = (s16)(*p & ~param_2);
   return;
 }
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -662,12 +666,14 @@ void ObjHits_ClearFlags(int param_1,ushort param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_SetFlags(int param_1,ushort param_2)
+#pragma peephole off
+void ObjHits_SetFlags(int param_1,int param_2)
 {
-  *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
-       *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) | param_2;
+  s16* p = (s16*)(*(int *)(param_1 + 0x54) + 0x60);
+  *p = (s16)(*p | param_2);
   return;
 }
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -682,12 +688,14 @@ void ObjHits_SetFlags(int param_1,ushort param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
 void ObjHits_MarkObjectPositionDirty(int param_1)
 {
-  *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) = *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) | 0x40
-  ;
+  s16* p = (s16*)(*(int *)(param_1 + 0x54) + 0x60);
+  *p = (s16)(*p | 0x40);
   return;
 }
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -807,7 +815,7 @@ void ObjHits_EnableObject(u32 param_1)
  */
 ushort ObjHits_IsObjectEnabled(int param_1)
 {
-  return *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & 1;
+  return *(s16 *)(*(int *)(param_1 + 0x54) + 0x60) & 1;
 }
 
 /*
