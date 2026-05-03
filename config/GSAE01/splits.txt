@@ -2538,10 +2538,10 @@ dolphin/TRK_MINNOW_DOLPHIN/mpc_7xx_603e_tables.c:
 	.data       start:0x80332F78 end:0x80332FC0
 
 dolphin/MSL_C/PPCEABI/bare/H/exponentialsf.c:
-	.text       start:0x80294BB8 end:0x8029560C
+	.text       start:0x80294BB8 end:0x80295334
 
 main/unknown/autos/placeholder_80295318.c:
-	.text       start:0x8029560C end:0x802BACC0
+	.text       start:0x80295334 end:0x802BACC0
 
 main/unknown/autos/placeholder_802BACC0.c:
 	.text       start:0x802BACC0 end:0x802BB4B0
