@@ -439,6 +439,7 @@ int dimboss_func08(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void dimboss_free(DIMbossObject *obj)
 {
   DIMbossRuntime *runtime;
@@ -471,6 +472,7 @@ void dimboss_free(DIMbossObject *obj)
   }
   fn_80055000();
 }
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -485,6 +487,7 @@ void dimboss_free(DIMbossObject *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
 void dimboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                     undefined4 param_5,char shouldRender)
 {
@@ -517,6 +520,7 @@ void dimboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
     fn_800604B4();
   }
 }
+#pragma peephole reset
 
 /*
  * --INFO--
