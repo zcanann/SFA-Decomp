@@ -630,7 +630,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/target_options.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/mslsupp.c"),
             Object(
-                MatchingFor("GSAE01"),
+                NonMatching,
                 "dolphin/TRK_MINNOW_DOLPHIN/MWTrace.c",
                 mw_version="GC/1.2.5n",
                 extra_cflags=["-sdata", "8", "-sdata2", "8"],
