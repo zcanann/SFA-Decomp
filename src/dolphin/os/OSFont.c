@@ -348,225 +348,74 @@ static void ReadROM(void* buf, int length, int offset) {
 extern const u32 lbl_803E7610;
 extern const u32 lbl_803E7614;
 
-asm u32 OSLoadFont(OSFontHeader* fontData, void* tmp) {
-    nofralloc
-    mflr r0
-    stw r0, 0x4(r1)
-    li r0, 0x0
-    stwu r1, -0x40(r1)
-    stw r31, 0x3c(r1)
-    stw r30, 0x38(r1)
-    addi r30, r4, 0x0
-    stw r29, 0x34(r1)
-    addi r29, r3, 0x0
-    stw r0, SheetImage(r13)
-    bl OSGetFontEncode
-    clrlwi r0, r3, 16
-    cmplwi r0, 0x1
-    bne _rf_0
-    lis r4, 0x5
-    lis r5, 0x1b
-    addi r3, r30, 0x0
-    subi r4, r4, 0x3000
-    subi r5, r5, 0x100
-    bl ReadROM
-    b _rf_1
-_rf_0:
-    lis r4, 0x20
-    addi r3, r30, 0x0
-    subi r5, r4, 0x3100
-    li r4, 0x3000
-    bl ReadROM
-_rf_1:
-    lbz r0, 0x0(r30)
-    cmplwi r0, 0x59
-    bne _rf_2
-    lbz r0, 0x1(r30)
-    cmplwi r0, 0x61
-    bne _rf_2
-    lbz r0, 0x2(r30)
-    cmplwi r0, 0x79
-    bne _rf_2
-    lwz r31, 0x4(r30)
-    b _rf_3
-_rf_2:
-    li r31, 0x0
-_rf_3:
-    cmplwi r31, 0x0
-    beq _rf_11
-    addi r3, r30, 0x0
-    addi r4, r29, 0x0
-    bl Decode
-    stw r29, FontData(r13)
-    lhz r4, fontEncode(r13)
-    lhz r0, 0x22(r29)
-    cmplwi r4, 0x1
-    add r0, r29, r0
-    stw r0, WidthTable(r13)
-    lhz r3, 0x1a(r29)
-    lhz r0, 0x1c(r29)
-    mullw r0, r3, r0
-    stw r0, CharsInSheet(r13)
-    bgt _rf_4
-    b _rf_10
-_rf_4:
-    lis r3, 0x8000
-    lwz r0, 0xcc(r3)
-    cmpwi r0, 0x0
-    beq _rf_5
-    blt _rf_8
-    b _rf_8
-_rf_5:
-    lis r3, 0xcc00
-    lhz r0, 0x206e(r3)
-    rlwinm. r0, r0, 0, 30, 30
-    beq _rf_6
-    li r0, 0x1
-    b _rf_7
-_rf_6:
-    li r0, 0x0
-_rf_7:
-    sth r0, fontEncode(r13)
-    b _rf_9
-_rf_8:
-    li r0, 0x0
-    sth r0, fontEncode(r13)
-_rf_9:
-    lhz r4, fontEncode(r13)
-_rf_10:
-    clrlwi r0, r4, 16
-    cmplwi r0, 0x1
-    bne _rf_11
-    lwz r4, lbl_803E7610(r2)
-    li r3, 0x54
-    lwz r0, lbl_803E7614(r2)
-    stw r4, 0x1c(r1)
-    stw r0, 0x20(r1)
-    bl GetFontCode
-    lwz r5, CharsInSheet(r13)
-    lwz r12, FontData(r13)
-    divw r10, r3, r5
-    lhz r6, 0x1c(r1)
-    lhz r0, 0x1e(r12)
-    lwz r4, 0x14(r12)
-    lwz r11, 0x24(r12)
-    mullw r8, r10, r5
-    lhz r9, 0x1a(r12)
-    lhz r5, 0x12(r12)
-    lhz r7, 0x10(r12)
-    subf r30, r8, r3
-    divw r8, r30, r9
-    mullw r3, r8, r9
-    mullw r5, r8, r5
-    srawi r0, r0, 3
-    subf r3, r3, r30
-    addze r0, r0
-    slwi r0, r0, 5
-    srawi r9, r0, 1
-    mullw r10, r10, r4
-    mullw r3, r3, r7
-    addze r9, r9
-    addi r0, r5, 0x4
-    srawi r4, r0, 3
-    addze r4, r4
-    srawi r8, r3, 3
-    addze r8, r8
-    srawi r7, r0, 3
-    addze r7, r7
-    slwi r7, r7, 3
-    subfc r7, r7, r0
-    srawi r0, r3, 3
-    addze r0, r0
-    slwi r0, r0, 3
-    subfc r0, r0, r3
-    srawi r3, r0, 2
-    mullw r0, r9, r4
-    add r4, r12, r11
-    srwi r9, r10, 1
-    add r4, r4, r9
-    add r9, r4, r0
-    slwi r0, r8, 4
-    add r9, r9, r0
-    slwi r7, r7, 1
-    add r9, r9, r7
-    addze r3, r3
-    add r9, r9, r3
-    sth r6, 0x0(r9)
-    addi r10, r5, 0x5
-    addi r9, r5, 0x6
-    lwz r7, FontData(r13)
-    addi r6, r5, 0x7
-    lhz r5, 0x1e(r1)
-    lhz r7, 0x1e(r7)
-    srawi r7, r7, 3
-    addze r7, r7
-    slwi r7, r7, 5
-    srawi r8, r7, 1
-    addze r8, r8
-    srawi r7, r10, 3
-    addze r7, r7
-    mullw r8, r8, r7
-    srawi r7, r10, 3
-    addze r7, r7
-    slwi r7, r7, 3
-    add r8, r4, r8
-    subfc r7, r7, r10
-    add r8, r8, r0
-    slwi r7, r7, 1
-    add r8, r8, r7
-    add r8, r8, r3
-    sth r5, 0x0(r8)
-    lwz r7, FontData(r13)
-    lhz r5, 0x20(r1)
-    lhz r7, 0x1e(r7)
-    srawi r7, r7, 3
-    addze r7, r7
-    slwi r7, r7, 5
-    srawi r8, r7, 1
-    addze r8, r8
-    srawi r7, r9, 3
-    addze r7, r7
-    mullw r8, r8, r7
-    srawi r7, r9, 3
-    addze r7, r7
-    slwi r7, r7, 3
-    add r8, r4, r8
-    subfc r7, r7, r9
-    add r8, r8, r0
-    slwi r7, r7, 1
-    add r8, r8, r7
-    add r8, r8, r3
-    sth r5, 0x0(r8)
-    lwz r5, FontData(r13)
-    lhz r5, 0x1e(r5)
-    srawi r5, r5, 3
-    addze r5, r5
-    slwi r5, r5, 5
-    srawi r7, r5, 1
-    addze r7, r7
-    srawi r5, r6, 3
-    addze r5, r5
-    mullw r5, r7, r5
-    add r7, r4, r5
-    srawi r5, r6, 3
-    lhz r4, 0x22(r1)
-    addze r5, r5
-    slwi r5, r5, 3
-    subfc r5, r5, r6
-    add r7, r7, r0
-    slwi r0, r5, 1
-    add r7, r7, r0
-    add r7, r7, r3
-    sth r4, 0x0(r7)
-_rf_11:
-    mr r3, r31
-    lwz r0, 0x44(r1)
-    lwz r31, 0x3c(r1)
-    lwz r30, 0x38(r1)
-    lwz r29, 0x34(r1)
-    addi r1, r1, 0x40
-    mtlr r0
-    blr
+static u32 GetFontSize(u8* buf) {
+    if (buf[0] == 'Y' && buf[1] == 'a' && buf[2] == 'y') {
+        return *(u32*)(buf + 4);
+    }
+
+    return 0;
+}
+
+static void PatchSjisGlyph(void) {
+    u16 glyph[4];
+    int fontCode;
+    int sheet;
+    int numChars;
+    int row;
+    int column;
+    int x;
+    int y;
+    int i;
+    int rowPitch;
+    u8* imageSrc;
+    u8* dst;
+
+    *(u32*)&glyph[0] = lbl_803E7610;
+    *(u32*)&glyph[2] = lbl_803E7614;
+
+    fontCode = GetFontCode(0x54);
+    sheet = fontCode / CharsInSheet;
+    numChars = fontCode - (sheet * CharsInSheet);
+    row = numChars / FontData->sheetColumn;
+    column = numChars - (row * FontData->sheetColumn);
+    y = row * FontData->cellHeight;
+    x = column * FontData->cellWidth;
+    rowPitch = ((FontData->sheetWidth / 8) * 32) / 2;
+    imageSrc = (u8*)FontData + FontData->sheetImage;
+    imageSrc += (sheet * FontData->sheetSize) / 2;
+
+    for (i = 0; i < 4; i++) {
+        dst = imageSrc + rowPitch * ((y + 4 + i) / 8);
+        dst += (x / 8) * 16;
+        dst += ((y + 4 + i) % 8) * 2;
+        dst += (x % 8) / 4;
+        *(u16*)dst = glyph[i];
+    }
+}
+
+u32 OSLoadFont(OSFontHeader* fontData, void* tmp) {
+    u32 size;
+
+    SheetImage = NULL;
+    if (OSGetFontEncode() == OS_FONT_ENCODE_SJIS) {
+        ReadROM(tmp, OS_FONT_ROM_SIZE_SJIS, 0x1AFF00);
+    } else {
+        ReadROM(tmp, OS_FONT_ROM_SIZE_ANSI, 0x1FCF00);
+    }
+
+    size = GetFontSize(tmp);
+    if (size != 0) {
+        Decode(tmp, (u8*)fontData);
+        FontData = fontData;
+        WidthTable = (u8*)FontData + FontData->widthTable;
+        CharsInSheet = FontData->sheetColumn * FontData->sheetRow;
+
+        if (OSGetFontEncode() == OS_FONT_ENCODE_SJIS) {
+            PatchSjisGlyph();
+        }
+    }
+
+    return size;
 }
 
 char* OSGetFontTexel(const char* string, void* image, s32 pos, s32 stride, s32* width) {
