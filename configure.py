@@ -254,6 +254,8 @@ cflags_runtime = [
     "-inline auto",
 ]
 
+cflags_runtime_125 = [flag for flag in cflags_runtime if flag != "-gccinc"]
+
 cflags_msl = [
     *cflags_base,
     "-char signed",
@@ -326,7 +328,12 @@ config.libs = [
         "cflags": cflags_runtime,
         "progress_category": "sdk",  # str | List[str]
         "objects": [
-            Object(NonMatching, "Runtime.PPCEABI.H/__start.c"),
+            Object(
+                MatchingFor("GSAE01"),
+                "Runtime.PPCEABI.H/__start.c",
+                mw_version="GC/1.2.5n",
+                cflags=cflags_runtime_125,
+            ),
             Object(NonMatching, "Runtime.PPCEABI.H/__mem.c"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/mem_TRK.c"),
             Object(NonMatching, "Runtime.PPCEABI.H/__exception.c"),
