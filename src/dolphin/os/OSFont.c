@@ -348,7 +348,7 @@ static void ReadROM(void* buf, int length, int offset) {
 extern const u32 lbl_803E7610;
 extern const u32 lbl_803E7614;
 
-static u32 GetFontSize(u8* buf) {
+static inline u32 GetFontSize(u8* buf) {
     if (buf[0] == 'Y' && buf[1] == 'a' && buf[2] == 'y') {
         return *(u32*)(buf + 4);
     }
@@ -356,7 +356,17 @@ static u32 GetFontSize(u8* buf) {
     return 0;
 }
 
-static void PatchSjisGlyph(void) {
+static inline u32 ReadFont(void* img) {
+    if (OSGetFontEncode() == OS_FONT_ENCODE_SJIS) {
+        ReadROM(img, OS_FONT_ROM_SIZE_SJIS, 0x1AFF00);
+    } else {
+        ReadROM(img, OS_FONT_ROM_SIZE_ANSI, 0x1FCF00);
+    }
+
+    return GetFontSize(img);
+}
+
+static inline void PatchSjisGlyph(void) {
     u16 glyph[4];
     int fontCode;
     int sheet;
@@ -397,13 +407,7 @@ u32 OSLoadFont(OSFontHeader* fontData, void* tmp) {
     u32 size;
 
     SheetImage = NULL;
-    if (OSGetFontEncode() == OS_FONT_ENCODE_SJIS) {
-        ReadROM(tmp, OS_FONT_ROM_SIZE_SJIS, 0x1AFF00);
-    } else {
-        ReadROM(tmp, OS_FONT_ROM_SIZE_ANSI, 0x1FCF00);
-    }
-
-    size = GetFontSize(tmp);
+    size = ReadFont(tmp);
     if (size != 0) {
         Decode(tmp, (u8*)fontData);
         FontData = fontData;
@@ -434,15 +438,15 @@ char* OSGetFontTexel(const char* string, void* image, s32 pos, s32 stride, s32* 
     u8* colorIndex;
     u8* imageSrc;
 
-    code = *string;
+    code = *(u8*)string;
     if (code == 0) {
         return (char*)string;
     }
 
     string++;
     if (OSGetFontEncode() == OS_FONT_ENCODE_SJIS) {
-        if (IsSjisLeadByte(code) && ((s8)*string != 0)) {
-            code = (code << 8) | *string++;
+        if (IsSjisLeadByte(code) && (*(u8*)string != 0)) {
+            code = (code << 8) | *(u8*)string++;
         }
     }
     colorIndex = &FontData->c0;
@@ -487,31 +491,16 @@ char* OSGetFontTexel(const char* string, void* image, s32 pos, s32 stride, s32* 
 
 char* OSGetFontWidth(const char* string, s32* width) {
     u16 code;
-    u16 encode;
 
-    code = *string;
+    code = *(u8*)string;
     if (code == 0) {
         return (char*) string;
     }
 
     string++;
-    encode = fontEncode;
-    if (encode > OS_FONT_ENCODE_SJIS) {
-        switch (*(int*) OSPhysicalToCached(0xCC)) {
-        case VI_NTSC:
-            fontEncode = (__VIRegs[VI_DTV_STAT] & 2) ? OS_FONT_ENCODE_SJIS : OS_FONT_ENCODE_ANSI;
-            break;
-        default:
-            fontEncode = OS_FONT_ENCODE_ANSI;
-            break;
-        }
-
-        encode = fontEncode;
-    }
-
-    if (encode == OS_FONT_ENCODE_SJIS) {
-        if (IsSjisLeadByte(code) && ((s8) *string != 0)) {
-            code = (code << 8) | *string++;
+    if (OSGetFontEncode() == OS_FONT_ENCODE_SJIS) {
+        if (IsSjisLeadByte(code) && (*(u8*)string != 0)) {
+            code = (code << 8) | *(u8*)string++;
         }
     }
 
