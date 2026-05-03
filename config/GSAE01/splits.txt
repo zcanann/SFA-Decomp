@@ -71,7 +71,13 @@ main/unknown/autos/placeholder_80080E28.s:
 	.text       start:0x80080E28 end:0x80080E58
 
 main/unknown/autos/placeholder_80080E58.c:
-	.text       start:0x80080E58 end:0x8009B0E0
+	.text       start:0x80080E58 end:0x80094494
+
+dolphin/MSL_C/PPCEABI/bare/H/gamecube.c:
+	.text       start:0x80094494 end:0x800944A0
+
+main/unknown/autos/placeholder_800944A0.c:
+	.text       start:0x800944A0 end:0x8009B0E0
 
 main/expgfx.c:
 	.text       start:0x8009B0E0 end:0x8009FED0
