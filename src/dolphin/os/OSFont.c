@@ -460,7 +460,7 @@ char* OSGetFontTexel(const char* string, void* image, s32 pos, s32 stride, s32* 
 
     string++;
     if (OSGetFontEncode() == OS_FONT_ENCODE_SJIS) {
-        if (IsSjisLeadByte(code) && (*(u8*)string != 0)) {
+        if (IsSjisLeadByte(code) && (*(s8*)string != 0)) {
             code = (code << 8) | *(u8*)string++;
         }
     }
@@ -514,7 +514,7 @@ char* OSGetFontWidth(const char* string, s32* width) {
 
     string++;
     if (OSGetFontEncode() == OS_FONT_ENCODE_SJIS) {
-        if (IsSjisLeadByte(code) && (*(u8*)string != 0)) {
+        if (IsSjisLeadByte(code) && (*(s8*)string != 0)) {
             code = (code << 8) | *(u8*)string++;
         }
     }
