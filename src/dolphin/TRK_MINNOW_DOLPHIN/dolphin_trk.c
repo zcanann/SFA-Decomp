@@ -3,8 +3,7 @@
 #include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk_glue.h"
 #include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
 
-extern u32 lbl_803D8878;
-#define lc_base lbl_803D8878
+extern u32 lc_base;
 extern u32 _db_stack_addr;
 
 asm void InitMetroTRK()
