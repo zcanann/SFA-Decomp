@@ -1274,6 +1274,7 @@ void expgfx_resetAllPools(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void expgfx_updateFrameState(int sourceMode,int sourceId)
 {
   int iVar1;
@@ -1283,9 +1284,7 @@ void expgfx_updateFrameState(int sourceMode,int sourceId)
   
   iVar1 = fn_80008B4C(-1);
   if ((short)iVar1 != 1) {
-    frameValue = lbl_803DD25C;
-    frameStep = lbl_803DB414;
-    frameValue = frameValue + frameStep;
+    frameValue = lbl_803DD25C + (frameStep = lbl_803DB414);
     lbl_803DD25C = frameValue;
     if (frameValue >= lbl_803DF418) {
       lbl_803DD25C = lbl_803DF35C;
@@ -1313,6 +1312,7 @@ void expgfx_updateFrameState(int sourceMode,int sourceId)
   }
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
