@@ -163,9 +163,11 @@ void dfpfloorbar_render(int p1, int p2, int p3, int p4, int p5, s8 p6)
 #pragma peephole off
 void dfpfloorbar_hitDetect(int *obj)
 {
-    int **b = (int **)obj[0x2e];
-    int *x = b[2];
+    int *x;
+    int **b;
     s32 v;
+    b = (int **)obj[0x2e];
+    x = b[2];
     if (x == NULL) return;
     v = *(s16 *)((char *)x + 6) & 0x40;
     if (v == 0) return;
