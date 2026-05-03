@@ -62,7 +62,6 @@ static inline void PADEnable(s32 chan);
 static void ProbeWireless(s32 chan);
 static void PADProbeCallback(s32 chan, u32 error, OSContext *context);
 static inline void PADDisable(s32 chan);
-static inline void UpdateOrigin(s32 chan);
 void ClampCircle(s32 chan);
 static void PADOriginCallback(s32 chan, u32 error, OSContext *context);
 static void PADFixCallback(s32 unused, u32 error, struct OSContext *context);
@@ -137,7 +136,7 @@ static inline void DoReset(void) {
     }
 }
 
-static inline void UpdateOrigin(s32 chan) {
+void ClampCircle(s32 chan) {
     PADStatus* origin;
     u32 chanBit = PAD_CHAN0_BIT >> chan;
 

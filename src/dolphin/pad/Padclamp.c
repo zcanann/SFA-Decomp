@@ -1,13 +1,5 @@
 #include <dolphin.h>
 #include <dolphin/pad.h>
-#include <dolphin/si.h>
-
-#include "dolphin/si/__si.h"
-
-extern u32 XPatchBits;
-extern u32 AnalogMode;
-extern PADStatus Origin[4];
-
 typedef struct PADClampExtents {
     u8 minTrigger;
     u8 maxTrigger;
@@ -26,7 +18,6 @@ extern PADClampExtents lbl_803DC580;
 
 // prototypes
 void ClampStick(s8* px, s8* py, s8 max, s8 xy, s8 min);
-void ClampCircle(s32 chan);
 
 void ClampStick(s8* px, s8* py, s8 max, s8 xy, s8 min) {
     int x = *px;
@@ -113,45 +104,3 @@ void PADClamp(PADStatus * status) {
     }
 }
 
-void ClampCircle(s32 chan) {
-    PADStatus* origin;
-    u32 chanBit = PAD_CHAN0_BIT >> chan;
-
-    origin = &Origin[chan];
-    switch (AnalogMode & 0x00000700u) {
-    case 0x00000000u:
-    case 0x00000500u:
-    case 0x00000600u:
-    case 0x00000700u:
-        origin->triggerLeft &= ~15;
-        origin->triggerRight &= ~15;
-        origin->analogA &= ~15;
-        origin->analogB &= ~15;
-        break;
-    case 0x00000100u:
-        origin->substickX &= ~15;
-        origin->substickY &= ~15;
-        origin->analogA &= ~15;
-        origin->analogB &= ~15;
-        break;
-    case 0x00000200u:
-        origin->substickX &= ~15;
-        origin->substickY &= ~15;
-        origin->triggerLeft &= ~15;
-        origin->triggerRight &= ~15;
-        break;
-    case 0x00000300u: break;
-    case 0x00000400u: break;
-    }
-
-    origin->stickX -= 128;
-    origin->stickY -= 128;
-    origin->substickX -= 128;
-    origin->substickY -= 128;
-
-    if (XPatchBits & chanBit) {
-        if (64 < origin->stickX && (SIGetType(chan) & 0xFFFF0000) == SI_GC_CONTROLLER) {
-            origin->stickX = 0;
-        }
-    }
-}

@@ -1643,10 +1643,10 @@ dolphin/vi/vi.c:
 	.sbss       start:0x803DDF60 end:0x803DDFB0
 
 dolphin/pad/Padclamp.c:
-	.text       start:0x8024D9B8 end:0x8024DD94
+	.text       start:0x8024D9B8 end:0x8024DBF0
 
 dolphin/pad/Pad.c:
-	.text       start:0x8024DD94 end:0x8024F6B8
+	.text       start:0x8024DBF0 end:0x8024F6B8
 	.data       start:0x8032E0B8 end:0x8032E0C8
 	.bss        start:0x803AE1B0 end:0x803AE200
 	.sdata      start:0x803DC588 end:0x803DC5A8
