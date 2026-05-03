@@ -1255,6 +1255,8 @@ void ObjHits_SortSweepEntries(int sweepPtrs,int entryCount)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHits_TickPriorityHitCooldowns(void)
 {
   int iVar1;
@@ -1267,11 +1269,13 @@ void ObjHits_TickPriorityHitCooldowns(void)
       *(int *)((int)lbl_803DCBDC + iVar1) = *(int *)((int)lbl_803DCBDC + iVar1) + -1;
     }
     iVar1 = iVar1 + 0x3c;
-    sVar2 = sVar2 + 1;
+    sVar2++;
   } while (sVar2 < 0x32);
   lbl_803DCBE8 = lbl_803DB414;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
