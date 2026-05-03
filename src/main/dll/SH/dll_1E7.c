@@ -131,10 +131,11 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
 {
   u8 tailSwingState;
-  uint moveComplete;
+  int moveComplete;
 
   tailSwingState = runtime->tailSwingState;
   switch(tailSwingState) {
@@ -165,6 +166,7 @@ void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
   }
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
