@@ -377,9 +377,10 @@ extern void   fn_8001467C(void);
  * fn_8001467C. */
 #pragma scheduling off
 #pragma peephole off
-void nw_levcontrol_free(u8* obj)
+void nw_levcontrol_free(s8* obj)
 {
-    int ret = (*(int(**)(s8, int))((char*)*lbl_803DCAAC + 0x4c))((s8)obj[0xac], 0);
+    s8 v = obj[0xac];
+    int ret = (*(int(**)(s32, int))((char*)*lbl_803DCAAC + 0x4c))((s32)v, 0);
     if ((u8)ret == 0) {
         fn_800887F8(0);
     }
