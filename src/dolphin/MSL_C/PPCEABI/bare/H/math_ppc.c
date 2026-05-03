@@ -1,17 +1,12 @@
-float acosf(float x) {
-    return x;
+double acos(double);
+double pow(double, double);
+
+float acosf(float x)
+{
+    return (float)acos(x);
 }
 
-void fn_80292918(void) {
-}
-
-void fn_8029293C(void) {
-}
-
-void fn_80292960(void) {
-}
-
-float powf(float x, float y) {
-    (void)y;
-    return x;
+float powf(float x, float y)
+{
+    return (float)pow(x, y);
 }
