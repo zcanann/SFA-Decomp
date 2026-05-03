@@ -545,7 +545,7 @@ config.libs = [
             Object(NonMatching, "dolphin/axfx/delay.c"),
             Object(NonMatching, "dolphin/axfx/reverb_hi.c"),
             Object(NonMatching, "dolphin/axfx/reverb_hi_4ch.c"),
-            Object(MatchingFor("GSAE01"), "dolphin/axfx/reverb_std_callback.c", extra_cflags=["-Cpp_exceptions", "on"]),
+            Object(NonMatching, "dolphin/axfx/reverb_std_callback.c", extra_cflags=["-Cpp_exceptions", "on"]),
             Object(NonMatching, "dolphin/axfx/reverb_std.c"),
         ],
     ),
