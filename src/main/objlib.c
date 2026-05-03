@@ -1792,12 +1792,17 @@ void ObjGroup_AddObject(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+extern void* memset(void* dst, int val, u32 n);
+extern u8 lbl_80342CF8[0x58];
+extern u8 lbl_803DCBF0;
+#pragma scheduling off
 void ObjGroup_ClearAll(void)
 {
-  FUN_800033a8(-0x7fcbc6a8,0,0x55);
-  DAT_803dd870 = 0;
+  memset(lbl_80342CF8, 0, 0x55);
+  lbl_803DCBF0 = 0;
   return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
