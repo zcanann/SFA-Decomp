@@ -50,7 +50,7 @@ float sin(float x) {
         case 2:
             return -(y * ((lbl_803E7D7C * y2 + lbl_803E7D78) * y2 + lbl_803E7D74));
         case 4:
-            return lbl_803E7D80 - y2 * ((lbl_803E7D8C * y2 + lbl_803E7D88) * y2 + lbl_803E7D84);
+            return -(y2 * ((lbl_803E7D8C * y2 + lbl_803E7D88) * y2 + lbl_803E7D84) + lbl_803E7D80);
         default:
             return y * ((lbl_803E7D7C * y2 + lbl_803E7D78) * y2 + lbl_803E7D74);
     }
@@ -68,8 +68,8 @@ float fn_802942EC(float x) {
         case 2:
             return -(y * (((lbl_803E7D9C * y2 + lbl_803E7D98) * y2 + lbl_803E7D94) * y2 + lbl_803E7D90));
         case 4:
-            return lbl_803E7D80
-                   - y2 * (((lbl_803E7DAC * y2 + lbl_803E7DA8) * y2 + lbl_803E7DA4) * y2 + lbl_803E7DA0);
+            return -(y2 * (((lbl_803E7DAC * y2 + lbl_803E7DA8) * y2 + lbl_803E7DA4) * y2 + lbl_803E7DA0)
+                     + lbl_803E7D80);
         default:
             return y * (((lbl_803E7D9C * y2 + lbl_803E7D98) * y2 + lbl_803E7D94) * y2 + lbl_803E7D90);
     }
@@ -96,14 +96,14 @@ float fn_802943F4(float x) {
                                       * y2
                                   + lbl_803E7DB0)));
         case 4:
-            return (float)(lbl_803E7DE0
-                           - y2
+            return (float)(-(y2
                                  * (((((lbl_803E7E10 * y2 + lbl_803E7E08) * y2 + lbl_803E7E00) * y2
                                       + lbl_803E7DF8)
                                          * y2
                                      + lbl_803E7DF0)
                                         * y2
-                                    + lbl_803E7DE8));
+                                    + lbl_803E7DE8)
+                             + lbl_803E7DE0));
         default:
             return (float)(y * (((((lbl_803E7DD8 * y2 + lbl_803E7DD0) * y2 + lbl_803E7DC8) * y2
                                   + lbl_803E7DC0)
