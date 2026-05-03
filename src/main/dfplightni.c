@@ -227,6 +227,8 @@ void dfplightni_init(u8 *obj,u8 *params)
   return;
 }
 
+#pragma scheduling off
+#pragma peephole off
 undefined4 fn_80209F34(u8 *obj)
 {
   int i;
@@ -245,3 +247,5 @@ undefined4 fn_80209F34(u8 *obj)
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
