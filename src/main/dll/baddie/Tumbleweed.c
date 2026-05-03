@@ -3830,8 +3830,9 @@ void fn_80134BC4(void)
 int fn_80134BE8(void)
 {
     int x = fn_80014940();
-    if ((u32)(x - 2) <= 4) return 1;
-    if (x == 7) return 1;
+    if ((u32)(x - 2) <= 4 || x == 7) {
+        return 1;
+    }
     return 0;
 }
 
