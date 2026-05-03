@@ -741,7 +741,11 @@ s32  fn_8012FECC(void) { return lbl_803DD8F0; }
 void fn_8012FED8(s8 v) { lbl_803DD8E8 = v; }
 void fn_8012FEE4(void) {}
 void fn_80130028(s8 v) { lbl_803DD8F4 = v; }
-void fn_801300E8(s16 v) { lbl_803DD8F2 = v; lbl_803DD8F0 = 0; lbl_803DD8F4 = -1; }
+#pragma scheduling off
+#pragma peephole off
+void fn_801300E8(int v) { lbl_803DD8F2 = (s16)v; lbl_803DD8F0 = 0; lbl_803DD8F4 = -1; }
+#pragma peephole reset
+#pragma scheduling reset
 void fn_80130104(void) {}
 void fn_80130464(u8 v) { lbl_803DD8F8 = v; }
 void fn_8013046C(void) { lbl_803DD8F9 = 0; }
