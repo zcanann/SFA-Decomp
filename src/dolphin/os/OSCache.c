@@ -19,60 +19,6 @@ extern BOOL OSRestoreInterrupts(BOOL level);
 extern void OSReport(const char* msg, ...);
 void DMAErrorHandler(OSError error, OSContext* context, ...);
 
-static struct {
-    char l2InvalidateShouldNeverHappen[0x29];
-    unsigned char pad0[0x3];
-    char machineCheckReceived[0x18];
-    char hid2Srr1Fmt[0x1B];
-    unsigned char pad1[0x1];
-    char machineCheckNotDmaLockedCacheRelated[0x30];
-    char dmaErrorOccurredWhileProcessingDma[0x3C];
-    char dmaErrorsDetectedAndCleared[0x37];
-    unsigned char pad2[0x1];
-    char requestedLockedCacheTagAlreadyInCache[0x3F];
-    unsigned char pad2b[0x1];
-    char dmaAttemptedToAccessNormalCache[0x29];
-    unsigned char pad3[0x3];
-    char dmaMissedInDataCache[0x1D];
-    unsigned char pad4[0x3];
-    char dmaQueueOverflowed[0x19];
-    unsigned char pad5[0x3];
-    char l1ICachesInitialized[0x19];
-    unsigned char pad6[0x3];
-    char l1DCachesInitialized[0x19];
-    unsigned char pad7[0x3];
-    char l2CacheInitialized[0x16];
-    unsigned char pad8[0x2];
-    char lockedCacheMachineCheckHandlerInstalled[0x2E];
-    unsigned char pad9[0x6];
-} s_osCacheData = {
-    ">>> L2 INVALIDATE : SHOULD NEVER HAPPEN\n",
-    {0x00, 0x00, 0x00},
-    "Machine check received\n",
-    "HID2 = 0x%x   SRR1 = 0x%x\n",
-    {0x00},
-    "Machine check was not DMA/locked cache related\n",
-    "DMAErrorHandler(): An error occurred while processing DMA.\n",
-    "The following errors have been detected and cleared :\n",
-    {0x00},
-    "\t- Requested a locked cache tag that was already in the cache\n",
-    {0x00},
-    "\t- DMA attempted to access normal cache\n",
-    {0x00, 0x00, 0x00},
-    "\t- DMA missed in data cache\n",
-    {0x00, 0x00, 0x00},
-    "\t- DMA queue overflowed\n",
-    {0x00, 0x00, 0x00},
-    "L1 i-caches initialized\n",
-    {0x00, 0x00, 0x00},
-    "L1 d-caches initialized\n",
-    {0x00, 0x00, 0x00},
-    "L2 cache initialized\n",
-    {0x00, 0x00},
-    "Locked cache machine check handler installed\n",
-    {0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-};
-
 #ifdef __GEKKO__
 #if SDK_REVISION >= 1
 asm void DCFlashInvalidate(void) {
@@ -651,7 +597,7 @@ void L2GlobalInvalidate(void) {
 
     PPCMtl2cr(PPCMfl2cr() & ~0x00200000);
     while (PPCMfl2cr() & 0x00000001u) {
-        DBPrintf(s_osCacheData.l2InvalidateShouldNeverHappen);
+        DBPrintf(">>> L2 INVALIDATE : SHOULD NEVER HAPPEN\n");
     }
 }
 
@@ -678,31 +624,31 @@ void L2SetWriteThrough(BOOL writeThrough) {
 void DMAErrorHandler(OSError error, OSContext* context, ...) {
     u32 hid2 = PPCMfhid2();
 
-    OSReport(s_osCacheData.machineCheckReceived);
-    OSReport(s_osCacheData.hid2Srr1Fmt, hid2, context->srr1);
+    OSReport("Machine check received\n");
+    OSReport("HID2 = 0x%x   SRR1 = 0x%x\n", hid2, context->srr1);
     if (!(hid2 & (HID2_DCHERR | HID2_DNCERR | HID2_DCMERR | HID2_DQOERR)) || !(context->srr1 & SRR1_DMA_BIT)) {
-        OSReport(s_osCacheData.machineCheckNotDmaLockedCacheRelated);
+        OSReport("Machine check was not DMA/locked cache related\n");
         OSDumpContext(context);
         PPCHalt();
     }
 
-    OSReport(s_osCacheData.dmaErrorOccurredWhileProcessingDma);
-    OSReport(s_osCacheData.dmaErrorsDetectedAndCleared);
+    OSReport("DMAErrorHandler(): An error occurred while processing DMA.\n");
+    OSReport("The following errors have been detected and cleared :\n");
 
     if (hid2 & HID2_DCHERR) {
-        OSReport(s_osCacheData.requestedLockedCacheTagAlreadyInCache);
+        OSReport("\t- Requested a locked cache tag that was already in the cache\n");
     }
 
     if (hid2 & HID2_DNCERR) {
-        OSReport(s_osCacheData.dmaAttemptedToAccessNormalCache);
+        OSReport("\t- DMA attempted to access normal cache\n");
     }
 
     if (hid2 & HID2_DCMERR) {
-        OSReport(s_osCacheData.dmaMissedInDataCache);
+        OSReport("\t- DMA missed in data cache\n");
     }
 
     if (hid2 & HID2_DQOERR) {
-        OSReport(s_osCacheData.dmaQueueOverflowed);
+        OSReport("\t- DMA queue overflowed\n");
     }
 
     // write hid2 back to clear the error bits
@@ -727,20 +673,20 @@ static inline void L2Enable(void) {
 void __OSCacheInit() {
     if (!(PPCMfhid0() & HID0_ICE)) {
         ICEnable();
-        DBPrintf(s_osCacheData.l1ICachesInitialized);
+        DBPrintf("L1 i-caches initialized\n");
     }
 
     if (!(PPCMfhid0() & HID0_DCE)) {
         DCEnable();
-        DBPrintf(s_osCacheData.l1DCachesInitialized);
+        DBPrintf("L1 d-caches initialized\n");
     }
 
     if (!(PPCMfl2cr() & L2CR_L2E)) {
         L2Init();
         L2Enable();
-        DBPrintf(s_osCacheData.l2CacheInitialized);
+        DBPrintf("L2 cache initialized\n");
     }
 
     OSSetErrorHandler(OS_ERROR_MACHINE_CHECK, DMAErrorHandler);
-    DBPrintf(s_osCacheData.lockedCacheMachineCheckHandlerInstalled);
+    DBPrintf("Locked cache machine check handler installed\n");
 }
