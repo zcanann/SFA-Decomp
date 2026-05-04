@@ -44,6 +44,8 @@ static inline u32 float_bits(float value)
     return *(u32*)&value;
 }
 
+#define bit_float(bits) (*(float*)&(bits))
+
 static inline float int_float(s32 value)
 {
     struct {
@@ -53,7 +55,7 @@ static inline float int_float(s32 value)
 
     cvt.hi = 0x43300000;
     cvt.lo = value ^ 0x80000000;
-    return (float)(*(double*)&cvt - lbl_803E7E60);
+    return (float)*(double*)&cvt - (float)lbl_803E7E60;
 }
 
 static inline int classify_float(float value)
@@ -115,7 +117,7 @@ static inline float log2_kernel(float x, float* table)
         high_bits = (bits & 0x007F0000) | 0x3F800000;
         full_bits = fraction | 0x3F800000;
 
-        if ((bits & 0x00010000) != 0) {
+        if ((bits & 0x00008000) != 0) {
             ++index;
             high_bits += 0x10000;
         }
@@ -134,6 +136,8 @@ static inline float log2_kernel(float x, float* table)
 
     return (int_float(exponent) + lbl_803E7E54) + table[index];
 }
+
+#undef bit_float
 
 static inline float exp2_kernel(float x, float* table)
 {
@@ -169,6 +173,8 @@ static inline float exp2_kernel(float x, float* table)
 
     return scale * (lbl_803E7E58 + poly);
 }
+
+#define float_bits(value) (*(u32*)&(value))
 
 float __ieee754_pow(float x, float y)
 {
