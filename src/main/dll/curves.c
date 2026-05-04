@@ -2049,6 +2049,8 @@ LAB_800e4bc4:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int RomCurve_getNearestAdjacentLink(double param_1,double param_2,double param_3,int param_4,
                                     int param_5)
 {
@@ -2128,6 +2130,8 @@ LAB_800e4d74:
     }
   } while( true );
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
