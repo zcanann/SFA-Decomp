@@ -9,7 +9,8 @@ extern void ObjHits_DisableObject(void *obj);
 extern void ObjHits_EnableObject(void *obj);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern void fn_8003B8F4(double scale);
+extern void fn_8003B8F4(void *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
+                        undefined4 param_5,double scale);
 extern int fn_80210BE8(void);
 
 extern s16 lbl_803DC228;
@@ -93,7 +94,7 @@ void spellstone_render(SpellStoneObject *obj,undefined4 param_2,undefined4 param
 
   state = obj->state;
   if ((visible != 0) && (state->state != 0)) {
-    fn_8003B8F4((double)lbl_803E6754);
+    fn_8003B8F4(obj,param_2,param_3,param_4,param_5,(double)lbl_803E6754);
   }
   return;
 }

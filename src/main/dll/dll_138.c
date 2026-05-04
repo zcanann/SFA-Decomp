@@ -600,6 +600,7 @@ int pushable_render2(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void pushable_modelMtxFn(int obj,int modelNo)
 {
   int extra = *(int *)(obj + 0xb8);
@@ -607,3 +608,4 @@ void pushable_modelMtxFn(int obj,int modelNo)
 
   *(uint *)(extra + 0xa8) = flags | (1 << modelNo);
 }
+#pragma scheduling reset

@@ -82,6 +82,8 @@ void fn_8010DAD4(void) {}
 void fn_8010DAD8(void) {}
 void fn_8010DADC(void) {}
 
+#pragma scheduling off
+#pragma peephole off
 void fn_8010DAE0(f32 *param_1, undefined4 param_2, f32 *param_3) {
     if (param_3 != (f32 *)0) {
         param_1[6] = param_3[6];
@@ -96,6 +98,8 @@ void fn_8010DAE0(f32 *param_1, undefined4 param_2, f32 *param_3) {
         param_1[45] = param_3[45];
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void fn_8010DB74(void) {}
 void fn_8010DB78(void) {}

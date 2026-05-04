@@ -538,13 +538,15 @@ void ObjHits_ClearHitVolumes(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_SetHitVolumeMasks(int param_1,undefined param_2,undefined param_3,int param_4)
+#pragma scheduling off
+#pragma peephole off
+void ObjHits_SetHitVolumeMasks(int param_1,int param_2,int param_3,int param_4)
 {
   int iVar1;
-  
+
   iVar1 = *(int *)(param_1 + 0x54);
-  *(undefined *)(iVar1 + 0x6e) = param_2;
-  *(undefined *)(iVar1 + 0x6f) = param_3;
+  *(s8 *)(iVar1 + 0x6e) = (s8)param_2;
+  *(s8 *)(iVar1 + 0x6f) = (s8)param_3;
   if (param_4 == 0) {
     return;
   }
@@ -552,6 +554,8 @@ void ObjHits_SetHitVolumeMasks(int param_1,undefined param_2,undefined param_3,i
   *(int *)(iVar1 + 0x4c) = param_4 << 4;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -603,12 +607,14 @@ void ObjHits_SetHitVolumeSlot(u32 param_1,int param_2,int param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_ClearSourceMask(int param_1,byte param_2)
+#pragma peephole off
+void ObjHits_ClearSourceMask(int param_1,int param_2)
 {
-  *(byte *)(*(int *)(param_1 + 0x54) + 0xb4) = *(byte *)(*(int *)(param_1 + 0x54) + 0xb4) & ~param_2
-  ;
+  u8* p = (u8*)(*(int *)(param_1 + 0x54) + 0xb4);
+  *p = (u8)(*p & ~param_2);
   return;
 }
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -642,12 +648,14 @@ void ObjHits_SetSourceMask(int param_1,byte param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_ClearFlags(int param_1,ushort param_2)
+#pragma peephole off
+void ObjHits_ClearFlags(int param_1,int param_2)
 {
-  *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
-       *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & ~param_2;
+  s16* p = (s16*)(*(int *)(param_1 + 0x54) + 0x60);
+  *p = (s16)(*p & ~param_2);
   return;
 }
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -662,12 +670,14 @@ void ObjHits_ClearFlags(int param_1,ushort param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_SetFlags(int param_1,ushort param_2)
+#pragma peephole off
+void ObjHits_SetFlags(int param_1,int param_2)
 {
-  *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
-       *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) | param_2;
+  s16* p = (s16*)(*(int *)(param_1 + 0x54) + 0x60);
+  *p = (s16)(*p | param_2);
   return;
 }
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -682,12 +692,14 @@ void ObjHits_SetFlags(int param_1,ushort param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
 void ObjHits_MarkObjectPositionDirty(int param_1)
 {
-  *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) = *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) | 0x40
-  ;
+  s16* p = (s16*)(*(int *)(param_1 + 0x54) + 0x60);
+  *p = (s16)(*p | 0x40);
   return;
 }
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -807,7 +819,7 @@ void ObjHits_EnableObject(u32 param_1)
  */
 ushort ObjHits_IsObjectEnabled(int param_1)
 {
-  return *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & 1;
+  return *(s16 *)(*(int *)(param_1 + 0x54) + 0x60) & 1;
 }
 
 /*
@@ -2296,19 +2308,23 @@ void ObjLink_DetachChild(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void ObjLink_AttachChild(int param_1,int param_2,ushort param_3)
 {
-  byte bVar1;
-  
-  bVar1 = *(byte *)(param_1 + 0xeb);
-  *(byte *)(param_1 + 0xeb) = bVar1 + 1;
-  *(int *)(param_1 + (uint)bVar1 * 4 + 200) = param_2;
+  u8 bVar1;
+  u8* base;
+
+  bVar1 = *(u8 *)(param_1 + 0xeb);
+  *(u8 *)(param_1 + 0xeb) = bVar1 + 1;
+  base = (u8*)(param_1 + bVar1 * 4);
+  *(int *)(base + 200) = param_2;
   *(int *)(param_2 + 0xc4) = param_1;
-  *(ushort *)(param_2 + 0xb0) = *(ushort *)(param_2 + 0xb0) & 0xfff8;
-  *(ushort *)(param_2 + 0xb0) = *(ushort *)(param_2 + 0xb0) | param_3;
-  *(undefined *)(param_2 + 0xe5) = 0;
+  *(u16 *)(param_2 + 0xb0) = (u16)(*(u16 *)(param_2 + 0xb0) & 0xfff8);
+  *(u16 *)(param_2 + 0xb0) = (u16)(*(u16 *)(param_2 + 0xb0) | param_3);
+  *(u8 *)(param_2 + 0xe5) = 0;
   return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--

@@ -723,7 +723,7 @@ config.libs = [
     ),
     {
         "lib": "main",
-        "mw_version": config.linker_version,
+        "mw_version": "GC/2.0",
         "cflags": cflags_base,
         "progress_category": "game",
         "objects": [

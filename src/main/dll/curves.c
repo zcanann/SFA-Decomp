@@ -3984,24 +3984,28 @@ void FUN_800e65c8(uint *param_1,byte param_2,uint param_3,uint param_4,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void curves_clear(uint *param_1,undefined param_2,uint param_3,undefined param_4)
+#pragma scheduling off
+#pragma peephole off
+void curves_clear(uint *param_1,int param_2,uint param_3,int param_4)
 {
   uint *curve;
-  undefined flagsByte;
+  int flagsByte;
   uint flags;
-  undefined subtype;
+  int subtype;
 
   curve = param_1;
   flagsByte = param_2;
   flags = param_3;
   subtype = param_4;
   memset(curve,0,0x268);
-  *(undefined *)((int)curve + 0x25b) = subtype;
+  *(s8 *)((int)curve + 0x25b) = (s8)subtype;
   *curve = flags | 0x4000000;
-  *(undefined *)((int)curve + 0x262) = flagsByte;
-  *(undefined *)(curve + 0x96) = 5;
+  *(u8 *)((int)curve + 0x262) = (u8)flagsByte;
+  *(u8 *)(curve + 0x96) = 5;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4051,21 +4055,25 @@ uint FUN_800e6680(char param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void gameplay_setDebugOptionEnabled(uint param_1,char param_2)
+extern u8 lbl_803A31C4[];
+#pragma peephole off
+void gameplay_setDebugOptionEnabled(uint param_1,u8 param_2)
 {
   uint uVar1;
-  
+  u8* base = lbl_803A31C4;
+
   uVar1 = 1 << (param_1 & 0xff);
-  if ((gGameplayRegisteredDebugOptions & uVar1) == 0) {
+  if ((*(u32*)(base + 0x10) & uVar1) == 0) {
     return;
   }
-  if (param_2 != '\0') {
-    gGameplayEnabledDebugOptions = gGameplayEnabledDebugOptions | uVar1;
+  if (param_2 != 0) {
+    *(u32*)(base + 0x14) = *(u32*)(base + 0x14) | uVar1;
     return;
   }
-  gGameplayEnabledDebugOptions = gGameplayEnabledDebugOptions & ~uVar1;
+  *(u32*)(base + 0x14) = *(u32*)(base + 0x14) & ~uVar1;
   return;
 }
+#pragma peephole reset
 
 
 /* Trivial 4b 0-arg blr leaves. */

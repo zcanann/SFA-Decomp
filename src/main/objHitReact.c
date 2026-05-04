@@ -61,6 +61,7 @@ extern ObjHitReactEffectHandle *fn_80013EC8(u32 effectId,u32 count);
  * EN v1.0 Size: 652b
  */
 #pragma scheduling off
+#pragma peephole off
 int objHitReact_update(int obj,ObjHitReactEntry *entries,u32 entryCount,u32 reactionState,float *cooldown)
 {
   ObjAnimComponent *objAnim;
@@ -133,6 +134,7 @@ int objHitReact_update(int obj,ObjHitReactEntry *entries,u32 entryCount,u32 reac
   }
   return reactionState;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
