@@ -2049,6 +2049,8 @@ LAB_800e4bc4:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int RomCurve_getNearestAdjacentLink(double param_1,double param_2,double param_3,int param_4,
                                     int param_5)
 {
@@ -2128,6 +2130,8 @@ LAB_800e4d74:
     }
   } while( true );
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2215,6 +2219,8 @@ double RomCurve_distanceToSegment(double param_1,double param_2,double param_3,f
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int RomCurve_getRandomBlockedLink(int param_1,int param_2)
 {
   uint uVar1;
@@ -2222,7 +2228,7 @@ int RomCurve_getRandomBlockedLink(int param_1,int param_2)
   int iVar3;
   int iVar4;
   int local_18 [6];
-  
+
   iVar4 = 0;
   iVar2 = *(int *)(param_1 + 0x1c);
   if (((-1 < iVar2) && ((*(byte *)(param_1 + 0x1b) & 1) != 0)) && (iVar2 != param_2)) {
@@ -2256,6 +2262,8 @@ int RomCurve_getRandomBlockedLink(int param_1,int param_2)
   }
   return iVar2;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2270,6 +2278,8 @@ int RomCurve_getRandomBlockedLink(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int RomCurve_getRandomUnblockedLink(int param_1,int param_2)
 {
   uint uVar1;
@@ -2277,7 +2287,7 @@ int RomCurve_getRandomUnblockedLink(int param_1,int param_2)
   int iVar3;
   int iVar4;
   int local_18 [6];
-  
+
   iVar4 = 0;
   iVar2 = *(int *)(param_1 + 0x1c);
   if (((-1 < iVar2) && ((*(byte *)(param_1 + 0x1b) & 1) == 0)) && (iVar2 != param_2)) {
@@ -2311,6 +2321,8 @@ int RomCurve_getRandomUnblockedLink(int param_1,int param_2)
   }
   return iVar2;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2398,6 +2410,8 @@ void FUN_800e4628(undefined8 param_1,double param_2,double param_3,undefined4 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void curves_addCurveDef(int curve)
 {
   int count;
@@ -2430,6 +2444,8 @@ void curves_addCurveDef(int curve)
   DAT_803de0f0 = DAT_803de0f0 + 1;
   (&DAT_803a2448)[insertIndex] = curve;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

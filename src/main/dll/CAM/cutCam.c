@@ -167,6 +167,8 @@ void camcontrol_resetState(undefined8 param_1,double param_2,double param_3,unde
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4
 camcontrol_traceMove(double param_1,float *param_2,float *param_3,float *param_4,int param_5,
                      undefined param_6,char param_7,char param_8)
@@ -175,7 +177,7 @@ camcontrol_traceMove(double param_1,float *param_2,float *param_3,float *param_4
   undefined4 uVar1;
   float local_40 [3];
   uint auStack_34 [9];
-  
+
   if (param_4 == (float *)0x0) {
     param_4 = local_40;
   }
@@ -202,6 +204,8 @@ camcontrol_traceMove(double param_1,float *param_2,float *param_3,float *param_4
   }
   return uVar1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
