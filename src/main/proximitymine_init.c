@@ -49,6 +49,8 @@ typedef struct ProximityMineDef {
   s16 parameter;
 } ProximityMineDef;
 
+#pragma scheduling off
+#pragma peephole off
 void proximitymine_init(ProximityMineObject *obj,ProximityMineDef *def)
 {
   u64 doubleBits;
@@ -106,6 +108,8 @@ void proximitymine_init(ProximityMineObject *obj,ProximityMineDef *def)
   state->effectHandle = NULL;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void proximitymine_release(void)
 {
