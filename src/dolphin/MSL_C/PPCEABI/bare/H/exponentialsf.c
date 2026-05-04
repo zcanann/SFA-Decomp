@@ -219,23 +219,21 @@ float __ieee754_pow(float x, float y)
         return exp2_kernel(y * log_value, table);
     }
 
-    if (classify_float(x) == 1) {
-        return x;
-    }
-
-    switch (classify_float(y)) {
-    case 3:
-        return lbl_803E7E58;
-    case 1:
-    case 2:
-        return lbl_803DC648;
-    case 4:
-    case 5:
-        if ((float_bits(x) & 0x80000000) != 0) {
-            return lbl_803DC64C;
+    if (classify_float(x) != 1) {
+        switch (classify_float(y)) {
+        case 3:
+            return lbl_803E7E58;
+        case 1:
+        case 2:
+            return lbl_803DC648;
+        case 4:
+        case 5:
+            if ((float_bits(x) & 0x80000000) != 0) {
+                return lbl_803DC64C;
+            }
+            return lbl_803E7E50;
         }
-        return lbl_803E7E50;
     }
 
-    return lbl_803E7E50;
+    return x;
 }
