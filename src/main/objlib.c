@@ -161,10 +161,12 @@ void FUN_800356f0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2)
 {
   uint uVar1;
-  
+
   uVar1 = FUN_800177d4(param_2);
   *(uint *)(param_1 + 0x2c) = uVar1;
   if (*(int *)(param_1 + 0x2c) != 0) {
@@ -176,6 +178,8 @@ int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2)
   }
   return uVar1 + 0x110;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -288,12 +292,14 @@ void ObjHitReact_InitState(undefined4 param_1,undefined4 param_2,int param_3,uin
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
 {
   int iVar1;
   int *piVar2;
   short sVar3;
-  
+
   iVar1 = (int)*(char *)(*(int *)(param_1 + 0x50) + 0x55);
   if (param_3 < iVar1) {
     if (param_3 < 0) {
@@ -317,6 +323,8 @@ void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
   *(char *)(param_2 + 0xb0) = (char)param_3;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -865,11 +873,13 @@ void ObjHits_SyncObjectPosition(u32 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int ObjHits_AllocObjectState(int param_1,uint param_2)
 {
   uint uVar1;
   int iVar2;
-  
+
   uVar1 = FUN_800177d4(param_2);
   *(uint *)(param_1 + 0x54) = uVar1;
   iVar2 = *(int *)(param_1 + 0x54);
@@ -880,6 +890,8 @@ int ObjHits_AllocObjectState(int param_1,uint param_2)
   }
   return uVar1 + 0xb8;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1146,13 +1158,15 @@ ObjHits_RecordPositionHit(double param_1,double param_2,double param_3,int param
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHits_AddContactObject(int param_1,int param_2)
 {
   char cVar1;
   int iVar2;
   int iVar3;
   int iVar4;
-  
+
   iVar4 = *(int *)(param_1 + 0x58);
   if (iVar4 == 0) {
     return;
@@ -1177,6 +1191,8 @@ void ObjHits_AddContactObject(int param_1,int param_2)
   *(int *)(iVar2 + cVar1 * 4 + 0x100) = param_2;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1255,6 +1271,8 @@ int ObjHits_GetPriorityHitWithPosition(int param_1,undefined4 *param_2,int *para
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int ObjHits_GetPriorityHit(int param_1,undefined4 *param_2,int *param_3,uint *param_4)
 {
   char cVar1;
@@ -1263,7 +1281,7 @@ int ObjHits_GetPriorityHit(int param_1,undefined4 *param_2,int *param_3,uint *pa
   int iVar4;
   char cVar5;
   char cVar6;
-  
+
   iVar3 = *(int *)(param_1 + 0x54);
   if (iVar3 == 0) {
     return 0;
@@ -1299,6 +1317,8 @@ int ObjHits_GetPriorityHit(int param_1,undefined4 *param_2,int *param_3,uint *pa
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1881,11 +1901,13 @@ undefined4 ObjMsg_Peek(void *obj,uint *outMessage,uint *outSender,uint *outParam
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4 ObjMsg_Pop(void *obj,uint *outMessage,uint *outSender,uint *outParam)
 {
   uint i;
   ObjMsgQueue *queue;
-  
+
   if (obj == (void *)0x0) {
     return 0;
   }
@@ -1910,6 +1932,8 @@ undefined4 ObjMsg_Pop(void *obj,uint *outMessage,uint *outSender,uint *outParam)
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2047,6 +2071,8 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param)
 {
   uint count;
@@ -2054,7 +2080,7 @@ uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param)
   void *senderObj;
   ObjMsgQueue *queue;
   ObjMsgEntry *entry;
-  
+
   dstObj = obj;
   senderObj = sender;
   if (dstObj != (void *)0x0) {
@@ -2076,6 +2102,8 @@ uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param)
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2090,11 +2118,13 @@ uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjMsg_AllocQueue(void *obj,int capacity)
 {
   int queueBytes;
   ObjMsgQueue *queue;
-  
+
   if (((capacity != 0) && (obj != (void *)0x0)) &&
       (*(ObjMsgQueue **)((byte *)obj + 0xdc) == (ObjMsgQueue *)0x0)) {
     queueBytes = (capacity * 3 + 2) * 4;
@@ -2105,6 +2135,8 @@ void ObjMsg_AllocQueue(void *obj,int capacity)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2343,6 +2375,8 @@ void ObjLink_AttachChild(int param_1,int param_2,ushort param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjContact_DispatchCallbacks(void)
 {
   bool bVar1;
@@ -2353,7 +2387,7 @@ void ObjContact_DispatchCallbacks(void)
   uint uVar6;
   uint uVar7;
   undefined8 uVar8;
-  
+
   uVar8 = FUN_8028683c();
   iVar3 = (int)((ulonglong)uVar8 >> 0x20);
   iVar4 = (int)uVar8;
@@ -2375,6 +2409,8 @@ void ObjContact_DispatchCallbacks(void)
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2395,7 +2431,7 @@ void ObjContact_RemoveObjectCallbacks(int param_1)
   int iVar2;
   int iVar3;
   int iVar4;
-  
+
   piVar1 = &DAT_803439b0;
   iVar3 = DAT_803dd878;
   while (iVar4 = iVar3 + -1, 0 < iVar3) {
@@ -2436,7 +2472,7 @@ undefined4 ObjContact_AddCallback(int param_1,int param_2,undefined4 param_3)
   int iVar1;
   int *piVar2;
   int iVar3;
-  
+
   iVar1 = DAT_803dd878;
   if ((param_1 == 0) || (param_2 == 0)) {
     return 0;
@@ -2622,12 +2658,14 @@ void ObjList_FindNearestObjectByDefNo(undefined4 param_1,undefined4 param_2,floa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4 ObjList_ContainsObject(int param_1)
 {
   int *piVar1;
   int local_18;
   int local_14 [4];
-  
+
   piVar1 = (int *)FUN_80017b00(local_14,&local_18);
   local_14[0] = 0;
   while( true ) {
@@ -2640,6 +2678,8 @@ undefined4 ObjList_ContainsObject(int param_1)
   }
   return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2654,11 +2694,13 @@ undefined4 ObjList_ContainsObject(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjPath_GetPointWorldPositionArray(undefined4 param_1,undefined4 param_2,int param_3,float *param_4)
 {
   int iVar1;
   undefined8 uVar2;
-  
+
   uVar2 = FUN_80286840();
   for (iVar1 = 0; iVar1 < param_3; iVar1 = iVar1 + 1) {
     ObjPath_GetPointWorldPosition((int)((ulonglong)uVar2 >> 0x20), (int)uVar2 + iVar1, param_4,
@@ -2667,6 +2709,8 @@ void ObjPath_GetPointWorldPositionArray(undefined4 param_1,undefined4 param_2,in
   }
   FUN_8028688c();
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2743,11 +2787,13 @@ void ObjPath_GetPointLocalMtx(int param_1,int param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjPath_GetPointModelMtx(int param_1,int param_2)
 {
   int *piVar1;
   int iVar2;
-  
+
   piVar1 = (int *)FUN_80017a54(param_1);
   iVar2 = (int)*(char *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) + param_2 * 0x18 +
                          (int)*(char *)(param_1 + 0xad) + 0x12);
@@ -2759,6 +2805,8 @@ void ObjPath_GetPointModelMtx(int param_1,int param_2)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2864,12 +2912,14 @@ void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3)
 {
   int iVar1;
   double dVar2;
   double dVar3;
-  
+
   dVar3 = (double)(*(float *)(param_1 + 6) - *(float *)(param_2 + 0xc));
   dVar2 = (double)(*(float *)(param_1 + 10) - *(float *)(param_2 + 0x14));
   iVar1 = FUN_80017730();
@@ -2886,6 +2936,8 @@ int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3)
   }
   return (int)(short)iVar1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

@@ -179,6 +179,8 @@ void kaldachompme_update(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void kaldachompme_init(int obj,int params)
 {
   *(s16 *)(obj + 4) = (s16)(*(u8 *)(params + 0x18) << 8);
@@ -187,6 +189,8 @@ void kaldachompme_init(int obj,int params)
   *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x2000);
   ObjAnim_SetCurrentMove((double)lbl_803E30D4,obj,0,0);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void kaldachompme_release(void)
 {
