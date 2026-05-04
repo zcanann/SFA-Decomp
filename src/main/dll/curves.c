@@ -1024,6 +1024,8 @@ LAB_800e33ac:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 double curves_distXZ(double param_1,double param_2,uint param_3)
 {
   float fVar1;
@@ -1033,7 +1035,7 @@ double curves_distXZ(double param_1,double param_2,uint param_3)
   int iVar5;
   int iVar6;
   double dVar7;
-  
+
   if ((int)param_3 < 0) {
     iVar6 = 0;
   }
@@ -1064,6 +1066,8 @@ LAB_800e3628:
   }
   return dVar7;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1279,13 +1283,15 @@ LAB_800e3878:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4 RomCurve_getById(uint curveId,int *outIndex)
 {
   int high;
   int low;
   int mid;
   int curve;
-  
+
   *outIndex = -1;
   if ((int)curveId < 0) {
     return 0;
@@ -1309,6 +1315,8 @@ undefined4 RomCurve_getById(uint curveId,int *outIndex)
   *outIndex = -1;
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
