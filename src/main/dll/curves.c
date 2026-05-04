@@ -46,6 +46,7 @@ extern undefined4 FUN_80294964();
 extern uint countLeadingZeros();
 
 extern int DAT_803a2448;
+extern int lbl_803A17E8[];
 extern undefined4 DAT_803a3898;
 extern undefined4 gGameplayRegisteredDebugOptions;
 extern undefined4 gGameplayEnabledDebugOptions;
@@ -2426,14 +2427,14 @@ void curves_addCurveDef(int curve)
   }
 
   insertIndex = 0;
-  slot = &DAT_803a2448;
+  slot = lbl_803A17E8;
   while ((insertIndex < count) &&
          (*(uint *)(curve + ROMCURVE_ID_OFFSET) > *(uint *)(*slot + ROMCURVE_ID_OFFSET))) {
     slot = slot + 1;
     insertIndex = insertIndex + 1;
   }
 
-  slot = &DAT_803a2448 + count;
+  slot = lbl_803A17E8 + count;
   remaining = count - insertIndex;
   while (remaining > 0) {
     *slot = slot[-1];
@@ -2442,7 +2443,7 @@ void curves_addCurveDef(int curve)
   }
 
   lbl_803DD478 = lbl_803DD478 + 1;
-  (&DAT_803a2448)[insertIndex] = curve;
+  lbl_803A17E8[insertIndex] = curve;
 }
 #pragma peephole reset
 #pragma scheduling reset
