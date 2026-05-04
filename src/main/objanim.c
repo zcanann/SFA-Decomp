@@ -49,7 +49,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
   if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (state->lastBlendMoveIndex != moveIndex) {
       state->blendCacheSlot = (u16)state->blendToggle;
-      state->prevBlendCacheSlot = (u16)(1 - state->blendToggle);
+      state->prevBlendCacheSlot = (u16)(OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle);
       if (animDef->blendMoveIds[moveIndex] == -1) {
         OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
         moveIndex = 0;
@@ -402,7 +402,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   moveIndex = ObjAnim_ResolveMoveIndex(animDef,moveId);
   if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (moveChanged != 0) {
-      state->blendToggle = '\x01' - state->blendToggle;
+      state->blendToggle = OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle;
       state->moveCacheSlot = (u16)state->blendToggle;
       if (animDef->blendMoveIds[moveIndex] == -1) {
         OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
@@ -1147,7 +1147,7 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
   moveIndex = ObjAnim_ResolveMoveIndex(animDef,moveId);
   if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (moveChanged != 0) {
-      state->blendToggle = '\x01' - state->blendToggle;
+      state->blendToggle = OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle;
       state->moveCacheSlot = (u16)state->blendToggle;
       if (animDef->blendMoveIds[moveIndex] == -1) {
         OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
@@ -1170,7 +1170,7 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
     state->segmentLength = state->segmentLength - lbl_803DE8E0;
   }
   frameStep = *(s8 *)(moveData + 1) & OBJANIM_FRAME_STEP_MASK;
-  if ((frameStep != 0) && ((flags & 0x10) == 0)) {
+  if ((frameStep != 0) && ((flags & OBJANIM_SET_MOVE_FLAG_SKIP_EVENT_COUNTDOWN) == 0)) {
     state->savedStep = state->step;
     state->eventStep =
          (short)(int)(lbl_803DE8F4 /
