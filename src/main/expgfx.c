@@ -465,125 +465,126 @@ void expgfx_initialise(void)
 int expgfx_reserveSlot(short *poolIndexOut,undefined2 *slotIndexOut,short slotType,
                        int preferredPoolIndex,uint sourceId)
 {
-  bool bVar1;
-  short sVar2;
+  bool foundPool;
+  short poolIndex;
   u8 *expgfxBase;
   char *poolActiveCounts;
-  char *pcVar3;
-  int iVar4;
-  char *pcVar5;
-  short *psVar6;
-  uint *puVar7;
-  int *piVar8;
-  int iVar9;
-  int iVar10;
+  char *emptyPoolScan;
+  int scanPoolIndex;
+  char *activeCountBatch;
+  short *slotTypeBatch;
+  uint *poolActiveMask;
+  int *sourceIdBatch;
+  int batchCount;
+  int freeSlotIndex;
 
-  sVar2 = -1;
-  bVar1 = false;
-  iVar4 = 0;
+  poolIndex = -1;
+  foundPool = false;
+  scanPoolIndex = 0;
   expgfxBase = lbl_8039AB58;
-  piVar8 = (int *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
-  psVar6 = gExpgfxStaticPoolSlotTypeIds;
+  sourceIdBatch = (int *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
+  slotTypeBatch = gExpgfxStaticPoolSlotTypeIds;
   poolActiveCounts = (char *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
-  pcVar3 = poolActiveCounts;
-  iVar9 = 0x10;
-  pcVar5 = pcVar3;
+  emptyPoolScan = poolActiveCounts;
+  batchCount = EXPGFX_POOL_SEARCH_BATCH_COUNT;
+  activeCountBatch = emptyPoolScan;
   do {
-    if (((sourceId == *piVar8) && (slotType == *psVar6)) && (*pcVar5 < EXPGFX_SLOTS_PER_POOL)) {
-      sVar2 = (short)iVar4;
-      bVar1 = true;
+    if (((sourceId == *sourceIdBatch) && (slotType == *slotTypeBatch)) &&
+        (*activeCountBatch < EXPGFX_SLOTS_PER_POOL)) {
+      poolIndex = (short)scanPoolIndex;
+      foundPool = true;
       break;
     }
-    if (((sourceId == piVar8[1]) && (slotType == psVar6[1])) &&
-        (pcVar5[1] < EXPGFX_SLOTS_PER_POOL)) {
-      sVar2 = (short)(iVar4 + 1);
-      bVar1 = true;
-      iVar4 = iVar4 + 1;
+    if (((sourceId == sourceIdBatch[1]) && (slotType == slotTypeBatch[1])) &&
+        (activeCountBatch[1] < EXPGFX_SLOTS_PER_POOL)) {
+      poolIndex = (short)(scanPoolIndex + 1);
+      foundPool = true;
+      scanPoolIndex = scanPoolIndex + 1;
       break;
     }
-    if (((sourceId == piVar8[2]) && (slotType == psVar6[2])) &&
-        (pcVar5[2] < EXPGFX_SLOTS_PER_POOL)) {
-      sVar2 = (short)(iVar4 + 2);
-      bVar1 = true;
-      iVar4 = iVar4 + 2;
+    if (((sourceId == sourceIdBatch[2]) && (slotType == slotTypeBatch[2])) &&
+        (activeCountBatch[2] < EXPGFX_SLOTS_PER_POOL)) {
+      poolIndex = (short)(scanPoolIndex + 2);
+      foundPool = true;
+      scanPoolIndex = scanPoolIndex + 2;
       break;
     }
-    if (((sourceId == piVar8[3]) && (slotType == psVar6[3])) &&
-        (pcVar5[3] < EXPGFX_SLOTS_PER_POOL)) {
-      sVar2 = (short)(iVar4 + 3);
-      bVar1 = true;
-      iVar4 = iVar4 + 3;
+    if (((sourceId == sourceIdBatch[3]) && (slotType == slotTypeBatch[3])) &&
+        (activeCountBatch[3] < EXPGFX_SLOTS_PER_POOL)) {
+      poolIndex = (short)(scanPoolIndex + 3);
+      foundPool = true;
+      scanPoolIndex = scanPoolIndex + 3;
       break;
     }
-    if (((sourceId == piVar8[4]) && (slotType == psVar6[4])) &&
-        (pcVar5[4] < EXPGFX_SLOTS_PER_POOL)) {
-      sVar2 = (short)(iVar4 + 4);
-      bVar1 = true;
-      iVar4 = iVar4 + 4;
+    if (((sourceId == sourceIdBatch[4]) && (slotType == slotTypeBatch[4])) &&
+        (activeCountBatch[4] < EXPGFX_SLOTS_PER_POOL)) {
+      poolIndex = (short)(scanPoolIndex + 4);
+      foundPool = true;
+      scanPoolIndex = scanPoolIndex + 4;
       break;
     }
-    piVar8 = piVar8 + 5;
-    psVar6 = psVar6 + 5;
-    pcVar5 = pcVar5 + 5;
-    iVar4 = iVar4 + 5;
-    iVar9 = iVar9 + -1;
-  } while (iVar9 != 0);
-  if (bVar1) {
-    iVar9 = 0;
-    puVar7 = (uint *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET) + sVar2;
-    iVar10 = EXPGFX_SLOTS_PER_POOL;
+    sourceIdBatch = sourceIdBatch + EXPGFX_POOL_SEARCH_BATCH_SIZE;
+    slotTypeBatch = slotTypeBatch + EXPGFX_POOL_SEARCH_BATCH_SIZE;
+    activeCountBatch = activeCountBatch + EXPGFX_POOL_SEARCH_BATCH_SIZE;
+    scanPoolIndex = scanPoolIndex + EXPGFX_POOL_SEARCH_BATCH_SIZE;
+    batchCount = batchCount + -1;
+  } while (batchCount != 0);
+  if (foundPool) {
+    freeSlotIndex = 0;
+    poolActiveMask = (uint *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET) + poolIndex;
+    batchCount = EXPGFX_SLOTS_PER_POOL;
     do {
-      if ((1 << iVar9 & *puVar7) == 0) {
-        *slotIndexOut = (short)iVar9;
-        *poolIndexOut = sVar2;
-        *puVar7 = *puVar7 | 1 << iVar9;
-        poolActiveCounts[sVar2] = poolActiveCounts[sVar2] + '\x01';
+      if ((1 << freeSlotIndex & *poolActiveMask) == 0) {
+        *slotIndexOut = (short)freeSlotIndex;
+        *poolIndexOut = poolIndex;
+        *poolActiveMask = *poolActiveMask | 1 << freeSlotIndex;
+        poolActiveCounts[poolIndex] = poolActiveCounts[poolIndex] + '\x01';
         return 1;
       }
-      iVar9 = iVar9 + 1;
-      iVar10 = iVar10 + -1;
-    } while (iVar10 != 0);
+      freeSlotIndex = freeSlotIndex + 1;
+      batchCount = batchCount + -1;
+    } while (batchCount != 0);
   }
-  bVar1 = false;
+  foundPool = false;
   if (preferredPoolIndex != -1) {
     if ((preferredPoolIndex != -1) &&
-        (iVar4 = preferredPoolIndex, poolActiveCounts[preferredPoolIndex] < EXPGFX_SLOTS_PER_POOL)) {
-      sVar2 = (short)preferredPoolIndex;
-      bVar1 = true;
+        (scanPoolIndex = preferredPoolIndex, poolActiveCounts[preferredPoolIndex] < EXPGFX_SLOTS_PER_POOL)) {
+      poolIndex = (short)preferredPoolIndex;
+      foundPool = true;
     }
   }
   else {
-    iVar4 = 0;
-    iVar9 = EXPGFX_POOL_COUNT - 1;
+    scanPoolIndex = 0;
+    batchCount = EXPGFX_POOL_COUNT - 1;
     do {
-      if (*pcVar3 < '\x01') {
-        sVar2 = (short)iVar4;
-        bVar1 = true;
-        poolActiveCounts[iVar4] = 0;
+      if (*emptyPoolScan < '\x01') {
+        poolIndex = (short)scanPoolIndex;
+        foundPool = true;
+        poolActiveCounts[scanPoolIndex] = 0;
         break;
       }
-      pcVar3 = pcVar3 + 1;
-      iVar4 = iVar4 + 1;
-      iVar9 = iVar9 + -1;
-    } while (iVar9 != 0);
+      emptyPoolScan = emptyPoolScan + 1;
+      scanPoolIndex = scanPoolIndex + 1;
+      batchCount = batchCount + -1;
+    } while (batchCount != 0);
   }
-  if (bVar1) {
-    iVar9 = 0;
-    puVar7 = (uint *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET) + sVar2;
-    iVar10 = EXPGFX_SLOTS_PER_POOL;
+  if (foundPool) {
+    freeSlotIndex = 0;
+    poolActiveMask = (uint *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET) + poolIndex;
+    batchCount = EXPGFX_SLOTS_PER_POOL;
     do {
-      if ((1 << iVar9 & *puVar7) == 0) {
-        *slotIndexOut = (short)iVar9;
-        *poolIndexOut = sVar2;
-        *puVar7 = *puVar7 | 1 << iVar9;
-        gExpgfxStaticPoolSlotTypeIds[iVar4] = slotType;
-        ((char *)(lbl_8039AB58 + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET))[sVar2] =
-            ((char *)(lbl_8039AB58 + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET))[sVar2] + '\x01';
+      if ((1 << freeSlotIndex & *poolActiveMask) == 0) {
+        *slotIndexOut = (short)freeSlotIndex;
+        *poolIndexOut = poolIndex;
+        *poolActiveMask = *poolActiveMask | 1 << freeSlotIndex;
+        gExpgfxStaticPoolSlotTypeIds[scanPoolIndex] = slotType;
+        ((char *)(lbl_8039AB58 + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET))[poolIndex] =
+            ((char *)(lbl_8039AB58 + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET))[poolIndex] + '\x01';
         return 1;
       }
-      iVar9 = iVar9 + 1;
-      iVar10 = iVar10 + -1;
-    } while (iVar10 != 0);
+      freeSlotIndex = freeSlotIndex + 1;
+      batchCount = batchCount + -1;
+    } while (batchCount != 0);
   }
   return 0xffffffff;
 }
