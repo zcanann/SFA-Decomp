@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 
-extern void *fn_80023CC8(int size, int heap, int flags);
+extern void *mmAlloc(int size, int heap, int flags);
 extern void fn_80023800(void *ptr);
 extern void fn_8000E034(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, s32 param);
 extern s16 fn_800217C0(f32 dx, f32 dz);
@@ -37,7 +37,7 @@ void fn_8010D810(undefined4 param_1, int param_2, s8 *param_3) {
     int iVar2;
 
     if (lbl_803DD578 == (f32 *)0) {
-        lbl_803DD578 = (f32 *)fn_80023CC8(0x38, 0xf, 0);
+        lbl_803DD578 = (f32 *)mmAlloc(0x38, 0xf, 0);
     }
     switch (param_2) {
     case 2:

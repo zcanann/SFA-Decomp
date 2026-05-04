@@ -3651,7 +3651,7 @@ void OSReport(const char* msg, ...)
 int fn_8007D72C(void)
 {
     extern int fn_8007DE0C(int);
-    extern void* fn_80023CC8(int, int, int);
+    extern void* mmAlloc(int, int, int);
     extern void fn_80023800(void*);
     extern void fn_8007FDF8(void);
     extern void* lbl_803DD040;
@@ -3665,7 +3665,7 @@ int fn_8007D72C(void)
     if (fn_8007DE0C(0) == 0) {
         return 0;
     }
-    lbl_803DD040 = fn_80023CC8(0xA000, -1, 0);
+    lbl_803DD040 = mmAlloc(0xA000, -1, 0);
     if (lbl_803DD040 == 0) {
         lbl_803DB700 = 8;
         return 0;
@@ -3818,7 +3818,7 @@ extern u8 lbl_803DD058;
 #pragma peephole off
 int fn_8007D99C(void)
 {
-    extern void* fn_80023CC8();
+    extern void* mmAlloc();
     extern s32 CARDMount();
     extern s32 CARDCheck();
     extern s32 CARDDelete();
@@ -3836,7 +3836,7 @@ int fn_8007D99C(void)
         if (fn_8007DE0C(0) == 0) {
             return 0;
         }
-        lbl_803DD040 = fn_80023CC8(0xA000, -1, 0);
+        lbl_803DD040 = mmAlloc(0xA000, -1, 0);
         if (lbl_803DD040 == 0) {
             lbl_803DB700 = 8;
             return 0;
