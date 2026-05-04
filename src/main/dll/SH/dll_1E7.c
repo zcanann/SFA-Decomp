@@ -191,13 +191,13 @@ void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
 uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *runtime,
                                  SHthorntailConfig *config)
 {
-  short *obj;
   short sVar1;
   int iVar2;
   uint uVar3;
   s16 facingAngle;
   s8 behaviorState;
   f32 distanceSq;
+  short *obj;
 
   obj = (short *)object;
   if (config->leashRadiusByte != '\0') {
@@ -215,16 +215,16 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
       return uVar3;
     }
     distanceSq = fn_8002166C((Vec *)(obj + 0xc),&config->homePos);
-    if ((float)(s32)(config->leashRadiusByte * config->leashRadiusByte) < distanceSq) {
+    if (distanceSq > (float)(s32)(config->leashRadiusByte * config->leashRadiusByte)) {
       iVar2 = fn_800217C0(*(float *)(obj + 6) - config->homePos.x,
                           *(float *)(obj + 10) - config->homePos.z);
       facingAngle = *obj;
       sVar1 = (short)iVar2 - (u16)facingAngle;
       if (0x8000 < sVar1) {
-        sVar1 = sVar1 + 1;
+        sVar1 = sVar1 - 0xFFFF;
       }
       if (sVar1 < -0x8000) {
-        sVar1 = sVar1 + -1;
+        sVar1 = sVar1 + 0xFFFF;
       }
       iVar2 = (int)sVar1;
       if (iVar2 < 0) {
@@ -248,13 +248,13 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
     }
     else {
       behaviorState = runtime->behaviorState;
-      if ((behaviorState < SHTHORNTAIL_STATE_MOVE_2) ||
-          (SHTHORNTAIL_STATE_MOVE_5 < behaviorState)) {
-        uVar3 = SHTHORNTAIL_STATE_MOVE_2;
-      }
-      else {
+      if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
+          (behaviorState <= SHTHORNTAIL_STATE_MOVE_5)) {
         uVar3 = fn_800221A0(SHTHORNTAIL_STATE_MOVE_3,SHTHORNTAIL_STATE_MOVE_5);
         uVar3 = uVar3 & 0xff;
+      }
+      else {
+        uVar3 = SHTHORNTAIL_STATE_MOVE_2;
       }
     }
     return uVar3;
