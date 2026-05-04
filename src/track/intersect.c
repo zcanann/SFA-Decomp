@@ -1233,14 +1233,14 @@ void fn_8007366C(u8 alpha)
     extern void fn_8004C2E4(int handle, int slot);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
-    GXColor c;
-    int handle2;
-    f32 b;
-    f32 a;
     int handle1;
+    int handle2;
+    f32 a;
+    f32 b;
+    GXColor c;
     f32 ind_mtx[2][3];
-    Mtx mtx;
     Mtx tex_mtx;
+    Mtx mtx;
 
     fn_8000F54C();
     fn_8006C6F0(0);
@@ -1263,7 +1263,6 @@ void fn_8007366C(u8 alpha)
     GXSetIndTexOrder(0, 1, 1);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, ind_mtx, -3);
-    *(int*)&c = 0;
     GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
     mtx[0][0] = lbl_803DEF30;
     mtx[0][1] = lbl_803DEEDC;
@@ -3165,9 +3164,9 @@ void fn_80079A24(u8 r, u8 g, u8 b, u8 a)
 #pragma scheduling off
 void fn_80079A64(f32 sx, f32 sy, u8 a, u8 flag)
 {
-    extern u32 gSynthCurrentVoiceSlotIndex;
+    extern u32 lbl_803DEEA0;
     extern u32 lbl_803DEEA4;
-    extern u32 gSynthNextHandle;
+    extern u32 lbl_803DEEA8;
     extern f32 lbl_803DEEDC;
     extern f32 gSynthDelayedActionWord0;
     extern f32 lbl_803DEEE4;
@@ -3182,18 +3181,18 @@ void fn_80079A64(f32 sx, f32 sy, u8 a, u8 flag)
     extern void fn_8000FB00(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
+    int handle;
     GXColor c0, c1, c2;
     Mtx mtx;
-    int handle;
 
-    *(u32*)&c0 = gSynthCurrentVoiceSlotIndex;
+    *(u32*)&c0 = lbl_803DEEA0;
     *(u32*)&c1 = lbl_803DEEA4;
-    *(u32*)&c2 = gSynthNextHandle;
+    *(u32*)&c2 = lbl_803DEEA8;
     fn_8006C540(&handle);
     fn_8004C2E4(handle, 0);
     {
-        f32 zero = lbl_803DEEDC;
         f32 dec = gSynthDelayedActionWord0;
+        f32 zero = lbl_803DEEDC;
         f32 inv_sx = dec / sx;
         f32 inv_sy = dec / sy;
         mtx[0][0] = inv_sx;
