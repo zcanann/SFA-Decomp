@@ -23,7 +23,7 @@ extern undefined4 DAT_80328734;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd72c;
 extern undefined4 DAT_803de890;
-extern f32 FLOAT_803e6310;
+extern f32 lbl_803E6310;
 
 /*
  * --INFO--
@@ -80,8 +80,8 @@ void FUN_801df45c(undefined2 *param_1)
           *param_1 = 0xd700;
           state->currentTrackOffset = 0xffffd700;
           state->prevTrackOffset = state->currentTrackOffset;
-          fVar4 = FLOAT_803e6310;
-          state->motionValue0 = FLOAT_803e6310;
+          fVar4 = lbl_803E6310;
+          state->motionValue0 = lbl_803E6310;
           state->offsetVelocity = fVar4;
           state->transitionStep = 1;
           state->flags = state->flags & ~PLATFORM1_TRIGGER_FLAG_01;

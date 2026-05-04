@@ -24,14 +24,14 @@ extern undefined4* DAT_803dd738;
 extern undefined4 DAT_803de810;
 extern undefined4 DAT_803de828;
 extern undefined4 DAT_803de830;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803de81c;
-extern f32 FLOAT_803de820;
-extern f32 FLOAT_803e5928;
-extern f32 FLOAT_803e5950;
-extern f32 FLOAT_803e5954;
-extern f32 FLOAT_803e5958;
-extern f32 FLOAT_803e595c;
+extern f32 lbl_803DC074;
+extern f32 lbl_803DE81C;
+extern f32 lbl_803DE820;
+extern f32 lbl_803E5928;
+extern f32 lbl_803E5950;
+extern f32 lbl_803E5954;
+extern f32 lbl_803E5958;
+extern f32 lbl_803E595C;
 
 /*
  * --INFO--
@@ -100,8 +100,8 @@ void dimbosstonsil_render(undefined8 param_1,double param_2,double param_3,undef
       else if (bVar1 < 3) {
         if (bVar1 == 1) {
           FUN_80080f80(7,1,0);
-          param_2 = (double)FLOAT_803e595c;
-          param_3 = (double)FLOAT_803e5950;
+          param_2 = (double)lbl_803E595C;
+          param_3 = (double)lbl_803E5950;
           FUN_80080f70(param_2,param_2,param_3,7);
           uVar5 = 0x7f;
           uVar6 = 0x28;
@@ -116,19 +116,19 @@ void dimbosstonsil_render(undefined8 param_1,double param_2,double param_3,undef
       }
       else if (bVar1 == 5) {
         if (DAT_803de810 != 0) {
-          FUN_800175cc((double)FLOAT_803e5950,DAT_803de810,'\0');
+          FUN_800175cc((double)lbl_803E5950,DAT_803de810,'\0');
         }
       }
       else if ((bVar1 < 5) && (DAT_803de810 != 0)) {
-        FUN_800175cc((double)FLOAT_803e5950,DAT_803de810,'\x01');
+        FUN_800175cc((double)lbl_803E5950,DAT_803de810,'\x01');
       }
     }
-    if (FLOAT_803de81c <= FLOAT_803de820) {
+    if (lbl_803DE81C <= lbl_803DE820) {
       FUN_80006824(uVar3,0x189);
-      FLOAT_803de81c = FLOAT_803de81c + FLOAT_803e5954;
-      FUN_80006b94((double)FLOAT_803e5958);
+      lbl_803DE81C = lbl_803DE81C + lbl_803E5954;
+      FUN_80006b94((double)lbl_803E5958);
     }
-    FLOAT_803de820 = FLOAT_803de820 + FLOAT_803dc074;
+    lbl_803DE820 = lbl_803DE820 + lbl_803DC074;
     if (*(short *)(uVar3 + 0xb4) != -1) {
       iVar7 = (**(code **)(*DAT_803dd738 + 0x30))(uVar3,iVar9,1);
       if (iVar7 == 0) goto LAB_801bee08;
@@ -143,7 +143,7 @@ void dimbosstonsil_render(undefined8 param_1,double param_2,double param_3,undef
         iVar8 = (**(code **)(*DAT_803dd738 + 0x34))
                           (uVar3,param_11,iVar9,&DAT_803de830,&DAT_803de828,0);
         if (iVar8 != 0) {
-          (**(code **)(*DAT_803dd738 + 0x2c))((double)FLOAT_803e5928,uVar3,iVar9,1);
+          (**(code **)(*DAT_803dd738 + 0x2c))((double)lbl_803E5928,uVar3,iVar9,1);
         }
       }
       else if ((bVar1 == 0) || (2 < bVar1)) {
@@ -157,7 +157,7 @@ void dimbosstonsil_render(undefined8 param_1,double param_2,double param_3,undef
         if (*(char *)(iVar9 + 0x405) == '\x01') {
           *(undefined2 *)(iVar9 + 0x270) = 0;
           (**(code **)(*DAT_803dd70c + 8))
-                    ((double)FLOAT_803e5950,(double)FLOAT_803e5950,uVar3,iVar9,&DAT_803de830,
+                    ((double)lbl_803E5950,(double)lbl_803E5950,uVar3,iVar9,&DAT_803de830,
                      &DAT_803de828);
           *(undefined *)(param_11 + 0x56) = 0;
         }

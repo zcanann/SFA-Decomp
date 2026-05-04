@@ -5,7 +5,7 @@ extern undefined4 FUN_80017710();
 extern void* ObjGroup_GetObjects();
 extern int FUN_80294c54();
 
-extern f32 FLOAT_803e3088;
+extern f32 lbl_803E3088;
 
 /*
  * --INFO--
@@ -40,7 +40,7 @@ int FUN_8013f100(int param_1,int param_2)
                                        (float *)(*(int *)(param_2 + 4) + 0x18));
           dVar5 = (double)FUN_80017710((float *)(iVar1 + 0x18),
                                        (float *)(*(int *)(param_2 + 4) + 0x18));
-          if ((float)(dVar3 + dVar4) < (float)((double)FLOAT_803e3088 * dVar5)) {
+          if ((float)(dVar3 + dVar4) < (float)((double)lbl_803E3088 * dVar5)) {
             return iVar1;
           }
           break;

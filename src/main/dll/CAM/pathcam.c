@@ -10,14 +10,14 @@ extern undefined4* DAT_803dd6d0;
 extern float* gCamcontrolModeSettings;
 extern f64 DOUBLE_803e2318;
 extern f64 DOUBLE_803e2378;
-extern f32 FLOAT_803e2350;
-extern f32 FLOAT_803e2354;
-extern f32 FLOAT_803e235c;
-extern f32 FLOAT_803e2370;
-extern f32 FLOAT_803e2390;
-extern f32 FLOAT_803e2394;
-extern f32 FLOAT_803e23b4;
-extern f32 FLOAT_803e23b8;
+extern f32 lbl_803E2350;
+extern f32 lbl_803E2354;
+extern f32 lbl_803E235C;
+extern f32 lbl_803E2370;
+extern f32 lbl_803E2390;
+extern f32 lbl_803E2394;
+extern f32 lbl_803E23B4;
+extern f32 lbl_803E23B8;
 
 /*
  * --INFO--
@@ -88,7 +88,7 @@ void pathcam_loadSettings(undefined2 *param_1,int param_2,int param_3)
       *(undefined2 *)(gCamcontrolModeSettings + 0x21) = 0x3c;
     }
     else {
-      gCamcontrolModeSettings[0x25] = FLOAT_803e2370;
+      gCamcontrolModeSettings[0x25] = lbl_803E2370;
       dVar4 = DOUBLE_803e2378;
       uStack_2c = (uint)*(byte *)(param_3 + 6);
       local_30 = 0x43300000;
@@ -117,20 +117,20 @@ void pathcam_loadSettings(undefined2 *param_1,int param_2,int param_3)
       gCamcontrolModeSettings[0x1a] = (float)((double)CONCAT44(0x43300000,uStack_14) - dVar4);
       uVar5 = (uint)*(byte *)(param_3 + 0xb);
       if (uVar5 == 0) {
-        gCamcontrolModeSettings[0x14] = FLOAT_803e2394;
+        gCamcontrolModeSettings[0x14] = lbl_803E2394;
       }
       else {
         gCamcontrolModeSettings[0x14] =
-             (float)((double)CONCAT44(0x43300000,uVar5) - dVar4) / FLOAT_803e2390;
+             (float)((double)CONCAT44(0x43300000,uVar5) - dVar4) / lbl_803E2390;
         uStack_14 = uVar5;
       }
       uVar5 = (uint)*(byte *)(param_3 + 0xc);
       if (uVar5 == 0) {
-        gCamcontrolModeSettings[0x16] = FLOAT_803e2394;
+        gCamcontrolModeSettings[0x16] = lbl_803E2394;
       }
       else {
         gCamcontrolModeSettings[0x16] =
-             (float)((double)CONCAT44(0x43300000,uVar5) - DOUBLE_803e2378) / FLOAT_803e2390;
+             (float)((double)CONCAT44(0x43300000,uVar5) - DOUBLE_803e2378) / lbl_803E2390;
         uStack_14 = uVar5;
       }
       local_18 = 0x43300000;
@@ -184,24 +184,24 @@ void pathcam_loadSettings(undefined2 *param_1,int param_2,int param_3)
         gCamcontrolModeSettings[3] = fVar2;
         gCamcontrolModeSettings[0x12] = fVar2;
       }
-      fVar2 = FLOAT_803e2370;
-      gCamcontrolModeSettings[0x23] = FLOAT_803e2370;
+      fVar2 = lbl_803E2370;
+      gCamcontrolModeSettings[0x23] = lbl_803E2370;
       gCamcontrolModeSettings[0x25] = fVar2;
-      fVar2 = FLOAT_803e2394;
-      gCamcontrolModeSettings[4] = FLOAT_803e2394;
+      fVar2 = lbl_803E2394;
+      gCamcontrolModeSettings[4] = lbl_803E2394;
       gCamcontrolModeSettings[0x14] = fVar2;
-      fVar2 = FLOAT_803e23b4;
-      gCamcontrolModeSettings[0x15] = FLOAT_803e23b4;
+      fVar2 = lbl_803E23B4;
+      gCamcontrolModeSettings[0x15] = lbl_803E23B4;
       gCamcontrolModeSettings[5] = fVar2;
       gCamcontrolModeSettings[0x16] = fVar2;
-      fVar2 = FLOAT_803e23b8;
-      gCamcontrolModeSettings[6] = FLOAT_803e23b8;
+      fVar2 = lbl_803E23B8;
+      gCamcontrolModeSettings[6] = lbl_803E23B8;
       gCamcontrolModeSettings[0x18] = fVar2;
-      fVar2 = FLOAT_803e235c;
-      gCamcontrolModeSettings[7] = FLOAT_803e235c;
+      fVar2 = lbl_803E235C;
+      gCamcontrolModeSettings[7] = lbl_803E235C;
       gCamcontrolModeSettings[0x1a] = fVar2;
-      gCamcontrolModeSettings[9] = FLOAT_803e2350;
-      gCamcontrolModeSettings[8] = FLOAT_803e2354;
+      gCamcontrolModeSettings[9] = lbl_803E2350;
+      gCamcontrolModeSettings[8] = lbl_803E2354;
       *(undefined *)((int)gCamcontrolModeSettings + 0xc1) = 1;
       gCamcontrolModeSettings[0x1c] = *(float *)(param_1 + 0x5a);
       camcontrol_getTargetPosition((int)param_1,psVar7,(float *)(param_1 + 0xc),param_1 + 1);

@@ -19,8 +19,8 @@ extern int gCamcontrolQueuedActionSource;
 extern undefined4 gCamcontrolCurrentActionId;
 extern undefined4* gCamcontrolState;
 extern f64 DOUBLE_803e22d0;
-extern f32 FLOAT_803e22ac;
-extern f32 FLOAT_803e22b0;
+extern f32 lbl_803E22AC;
+extern f32 lbl_803E22B0;
 
 /*
  * --INFO--
@@ -43,22 +43,22 @@ void camcontrol_applyQueuedAction(void)
   
   if (gCamcontrolQueuedActionPending != '\0') {
     if ((int)gCamcontrolQueuedActionBlendFrames < 2) {
-      *(float *)(gCamcontrolState + 0x7a) = FLOAT_803e22b0;
+      *(float *)(gCamcontrolState + 0x7a) = lbl_803E22B0;
       *(undefined *)((int)gCamcontrolState + 0x13f) = 0;
     }
     else {
-      fVar1 = FLOAT_803e22ac /
+      fVar1 = lbl_803E22AC /
               (float)((double)CONCAT44(0x43300000,gCamcontrolQueuedActionBlendFrames ^ 0x80000000) -
                      DOUBLE_803e22d0);
-      if ((fVar1 <= FLOAT_803e22b0) || (FLOAT_803e22ac < fVar1)) {
-        fVar1 = FLOAT_803e22ac;
+      if ((fVar1 <= lbl_803E22B0) || (lbl_803E22AC < fVar1)) {
+        fVar1 = lbl_803E22AC;
       }
-      *(float *)(gCamcontrolState + 0x7a) = FLOAT_803e22ac;
+      *(float *)(gCamcontrolState + 0x7a) = lbl_803E22AC;
       *(float *)(gCamcontrolState + 0x7c) = fVar1;
       *(undefined *)((int)gCamcontrolState + 0x13f) = gCamcontrolQueuedActionMode;
     }
     puVar2 = FUN_800069a8();
-    if (FLOAT_803e22ac == *(float *)(gCamcontrolState + 0x7a)) {
+    if (lbl_803E22AC == *(float *)(gCamcontrolState + 0x7a)) {
       *(undefined4 *)(gCamcontrolState + 0x86) = *(undefined4 *)(puVar2 + 6);
       *(undefined4 *)(gCamcontrolState + 0x88) = *(undefined4 *)(puVar2 + 8);
       *(undefined4 *)(gCamcontrolState + 0x8a) = *(undefined4 *)(puVar2 + 10);

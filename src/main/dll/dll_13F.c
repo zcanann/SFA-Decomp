@@ -27,15 +27,15 @@ extern undefined4* DAT_803dd728;
 extern undefined4 DAT_803e40d8;
 extern undefined4 DAT_803e40dc;
 extern f64 DOUBLE_803e40e0;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e40e8;
-extern f32 FLOAT_803e40ec;
-extern f32 FLOAT_803e40f0;
-extern f32 FLOAT_803e40f4;
-extern f32 FLOAT_803e412c;
-extern f32 FLOAT_803e4130;
-extern f32 FLOAT_803e4134;
-extern f32 FLOAT_803e4138;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E40E8;
+extern f32 lbl_803E40EC;
+extern f32 lbl_803E40F0;
+extern f32 lbl_803E40F4;
+extern f32 lbl_803E412C;
+extern f32 lbl_803E4130;
+extern f32 lbl_803E4134;
+extern f32 lbl_803E4138;
 
 /*
  * --INFO--
@@ -70,9 +70,9 @@ void collectible_init(undefined8 param_1,undefined8 param_2,double param_3,undef
   
   iVar4 = *(int *)(param_9 + 0x5c);
   *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) | 8;
-  fVar1 = FLOAT_803e40f4;
+  fVar1 = lbl_803E40F4;
   dVar7 = (double)*(float *)(iVar4 + 8);
-  dVar5 = (double)FLOAT_803e40f4;
+  dVar5 = (double)lbl_803E40F4;
   if (dVar7 == dVar5) {
     if ((int)*(short *)(iVar4 + 0x14) != 0xffffffff) {
       uVar2 = FUN_80017690((int)*(short *)(iVar4 + 0x14));
@@ -84,12 +84,12 @@ void collectible_init(undefined8 param_1,undefined8 param_2,double param_3,undef
         in_r7 = 0x14;
         in_r8 = 0;
         in_r9 = 0;
-        FUN_800810f4((double)FLOAT_803e40ec,(double)FLOAT_803e40f0,param_9,5,6,1,0x14,0,0);
+        FUN_800810f4((double)lbl_803E40EC,(double)lbl_803E40F0,param_9,5,6,1,0x14,0,0);
       }
       dVar7 = (double)*(float *)(iVar4 + 0x44);
-      dVar5 = (double)FLOAT_803e40f4;
+      dVar5 = (double)lbl_803E40F4;
       if ((dVar7 == dVar5) ||
-         (*(float *)(iVar4 + 0x44) = (float)(dVar7 - (double)FLOAT_803dc074),
+         (*(float *)(iVar4 + 0x44) = (float)(dVar7 - (double)lbl_803DC074),
          dVar5 < (double)*(float *)(iVar4 + 0x44))) {
         while (iVar3 = ObjMsg_Pop((int)param_9,&local_18,auStack_14,(uint *)0x0), iVar3 != 0) {
           if (local_18 == 0x7000b) {
@@ -140,18 +140,18 @@ void collectible_init(undefined8 param_1,undefined8 param_2,double param_3,undef
       }
       else {
         if ((param_9[3] & 0x2000U) != 0) {
-          *(float *)(iVar4 + 8) = FLOAT_803e40e8;
+          *(float *)(iVar4 + 8) = lbl_803E40E8;
           if (*(int *)(param_9 + 0x32) != 0) {
             *(undefined4 *)(*(int *)(param_9 + 0x32) + 0x30) = 0x1000;
           }
-          FUN_80081118((double)FLOAT_803e40ec,param_9,0xff,0x28);
+          FUN_80081118((double)lbl_803E40EC,param_9,0xff,0x28);
         }
-        *(float *)(iVar4 + 0x44) = FLOAT_803e40f4;
+        *(float *)(iVar4 + 0x44) = lbl_803E40F4;
       }
     }
   }
   else {
-    *(float *)(iVar4 + 8) = (float)(dVar7 - (double)FLOAT_803dc074);
+    *(float *)(iVar4 + 8) = (float)(dVar7 - (double)lbl_803DC074);
     if ((double)*(float *)(iVar4 + 8) <= dVar5) {
       *(float *)(iVar4 + 8) = fVar1;
       uVar6 = ObjHits_DisableObject((int)param_9);

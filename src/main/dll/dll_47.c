@@ -78,11 +78,11 @@ extern undefined4 DAT_803de34d;
 extern undefined4 DAT_803de34e;
 extern undefined4 DAT_803de34f;
 extern f64 DOUBLE_803e29f8;
-extern f32 FLOAT_803e29e4;
-extern f32 FLOAT_803e29e8;
-extern f32 FLOAT_803e29ec;
-extern f32 FLOAT_803e29f0;
-extern f32 FLOAT_803e29f4;
+extern f32 lbl_803E29E4;
+extern f32 lbl_803E29E8;
+extern f32 lbl_803E29EC;
+extern f32 lbl_803E29F0;
+extern f32 lbl_803E29F4;
 extern undefined4* PTR_DAT_8031b40c;
 extern undefined4* PTR_DAT_8031b418;
 extern undefined4* PTR_DAT_8031b43c;
@@ -543,17 +543,17 @@ void FUN_8011afa4(undefined8 param_1,undefined8 param_2,double param_3,undefined
   iVar5 = DAT_803dc65b * 0xc;
   FUN_800174d4(FUN_801348c0);
   dVar15 = (double)(**(code **)(*DAT_803dd6cc + 0x18))();
-  uVar1 = (uint)((double)FLOAT_803e29e4 - dVar15);
+  uVar1 = (uint)((double)lbl_803E29E4 - dVar15);
   if ((uVar1 & 0xff) < 0x80) {
     local_38 = (double)CONCAT44(0x43300000,(uVar1 & 0xff) * 0x86 ^ 0x80000000);
     param_3 = (double)(float)(local_38 - DOUBLE_803e29f8);
-    dVar15 = -(double)(float)(param_3 * (double)FLOAT_803e29f0 - (double)FLOAT_803e29ec);
-    FUN_80134830((double)FLOAT_803e29e8,dVar15);
+    dVar15 = -(double)(float)(param_3 * (double)lbl_803E29F0 - (double)lbl_803E29EC);
+    FUN_80134830((double)lbl_803E29E8,dVar15);
     uVar14 = 0;
   }
   else {
-    dVar15 = (double)FLOAT_803e29f4;
-    FUN_80134830((double)FLOAT_803e29e8,dVar15);
+    dVar15 = (double)lbl_803E29F4;
+    FUN_80134830((double)lbl_803E29E8,dVar15);
     uVar14 = (uVar1 & 0x7f) << 1;
   }
   uVar2 = countLeadingZeros(3 - DAT_803dc65b);

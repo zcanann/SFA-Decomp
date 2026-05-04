@@ -11,20 +11,20 @@ extern undefined4* DAT_803dd6d0;
 extern undefined4* gCamcontrolModeSettings;
 extern f64 DOUBLE_803e1698;
 extern f64 DOUBLE_803e16f8;
-extern f32 FLOAT_803e1710;
-extern f32 FLOAT_803e1714;
+extern f32 lbl_803E1710;
+extern f32 lbl_803E1714;
 extern f64 DOUBLE_803e2318;
 extern f64 DOUBLE_803e2378;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e2314;
-extern f32 FLOAT_803e2324;
-extern f32 FLOAT_803e232c;
-extern f32 FLOAT_803e2380;
-extern f32 FLOAT_803e2384;
-extern f32 FLOAT_803e2388;
-extern f32 FLOAT_803e238c;
-extern f32 FLOAT_803e2390;
-extern f32 FLOAT_803e2394;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E2314;
+extern f32 lbl_803E2324;
+extern f32 lbl_803E232C;
+extern f32 lbl_803E2380;
+extern f32 lbl_803E2384;
+extern f32 lbl_803E2388;
+extern f32 lbl_803E238C;
+extern f32 lbl_803E2390;
+extern f32 lbl_803E2394;
 
 /*
  * --INFO--
@@ -55,14 +55,14 @@ void firstperson_updatePosition(int param_1,short *param_2)
             ((double)gCamcontrolModeSettings[0x23],param_1,&local_2c,&local_30,&local_34,&local_38,
              1);
   local_38 = local_34 * local_34 + local_2c * local_2c + local_30 * local_30;
-  if ((double)FLOAT_803e232c < (double)local_38) {
+  if ((double)lbl_803E232C < (double)local_38) {
     dVar3 = FUN_80293900((double)local_38);
     local_38 = (float)dVar3;
   }
-  if (local_38 < FLOAT_803e2314) {
-    local_38 = FLOAT_803e2314;
+  if (local_38 < lbl_803E2314) {
+    local_38 = lbl_803E2314;
   }
-  if (FLOAT_803e2380 * gCamcontrolModeSettings[1] < local_38) {
+  if (lbl_803E2380 * gCamcontrolModeSettings[1] < local_38) {
     camcontrol_getTargetPosition(param_1,param_2,(float *)(param_1 + 0x18),(short *)(param_1 + 2));
     FUN_800068f4((double)*(float *)(param_1 + 0x18),(double)*(float *)(param_1 + 0x1c),
                  (double)*(float *)(param_1 + 0x20),(float *)(param_1 + 0xc),
@@ -74,12 +74,12 @@ void firstperson_updatePosition(int param_1,short *param_2)
               ((double)gCamcontrolModeSettings[0x23],param_1,&local_2c,&local_30,&local_34,
                &local_38,1);
     local_38 = local_34 * local_34 + local_2c * local_2c + local_30 * local_30;
-    if ((double)FLOAT_803e232c < (double)local_38) {
+    if ((double)lbl_803E232C < (double)local_38) {
       dVar3 = FUN_80293900((double)local_38);
       local_38 = (float)dVar3;
     }
-    if (local_38 < FLOAT_803e2314) {
-      local_38 = FLOAT_803e2314;
+    if (local_38 < lbl_803E2314) {
+      local_38 = lbl_803E2314;
     }
   }
   fVar1 = gCamcontrolModeSettings[1];
@@ -102,14 +102,14 @@ void firstperson_updatePosition(int param_1,short *param_2)
   dVar5 = (double)*(float *)(param_1 + 0xc);
   dVar3 = (double)*(float *)(param_1 + 0x14);
   if (((-1 < *(char *)((int)gCamcontrolModeSettings + 0xc6)) && (fVar1 != local_38)) &&
-     (FLOAT_803e232c != gCamcontrolModeSettings[4])) {
-    if (local_38 < FLOAT_803e2324) {
-      local_38 = FLOAT_803e2324;
+     (lbl_803E232C != gCamcontrolModeSettings[4])) {
+    if (local_38 < lbl_803E2324) {
+      local_38 = lbl_803E2324;
     }
     dVar4 = FUN_800176f4((double)(local_38 - fVar1),(double)gCamcontrolModeSettings[4],
-                         (double)FLOAT_803dc074);
+                         (double)lbl_803DC074);
     fVar1 = (float)((double)(float)((double)local_38 + dVar4) / (double)local_38);
-    if (FLOAT_803e232c < fVar1) {
+    if (lbl_803E232C < fVar1) {
       dVar5 = (double)(*(float *)(param_2 + 6) + local_2c / fVar1);
       dVar3 = (double)(*(float *)(param_2 + 10) + local_34 / fVar1);
     }
@@ -119,22 +119,22 @@ void firstperson_updatePosition(int param_1,short *param_2)
   dVar3 = FUN_80293900((double)(local_2c * local_2c + local_34 * local_34));
   local_38 = (float)dVar3;
   fVar1 = (float)dVar3;
-  if (FLOAT_803e232c < fVar1) {
+  if (lbl_803E232C < fVar1) {
     local_2c = local_2c / fVar1;
     local_34 = local_34 / fVar1;
   }
   dVar3 = FUN_80247f54((float *)(param_2 + 0x12));
-  fVar1 = (float)(dVar3 * (double)(FLOAT_803e2384 * FLOAT_803dc074));
-  if (fVar1 < FLOAT_803e2324) {
-    fVar1 = FLOAT_803e2324;
+  fVar1 = (float)(dVar3 * (double)(lbl_803E2384 * lbl_803DC074));
+  if (fVar1 < lbl_803E2324) {
+    fVar1 = lbl_803E2324;
   }
-  fVar2 = FLOAT_803e232c;
-  if ((FLOAT_803e232c <= local_38) && (fVar2 = local_38, fVar1 < local_38)) {
+  fVar2 = lbl_803E232C;
+  if ((lbl_803E232C <= local_38) && (fVar2 = local_38, fVar1 < local_38)) {
     fVar2 = fVar1;
   }
-  local_38 = FLOAT_803e232c;
-  if ((FLOAT_803e232c <= fVar2) && (local_38 = fVar2, FLOAT_803e2388 < fVar2)) {
-    local_38 = FLOAT_803e2388;
+  local_38 = lbl_803E232C;
+  if ((lbl_803E232C <= fVar2) && (local_38 = fVar2, lbl_803E2388 < fVar2)) {
+    local_38 = lbl_803E2388;
   }
   *(float *)(param_1 + 0xc) = local_2c * local_38 + *(float *)(param_1 + 0xc);
   *(float *)(param_1 + 0x14) = local_34 * local_38 + *(float *)(param_1 + 0x14);
@@ -143,12 +143,12 @@ void firstperson_updatePosition(int param_1,short *param_2)
     local_34 = *(float *)(param_1 + 0x14) - *(float *)(param_2 + 10);
     dVar3 = FUN_80293900((double)(local_2c * local_2c + local_34 * local_34));
     fVar1 = (float)dVar3;
-    if (fVar1 < FLOAT_803e238c * *gCamcontrolModeSettings) {
-      if (FLOAT_803e232c < fVar1) {
+    if (fVar1 < lbl_803E238C * *gCamcontrolModeSettings) {
+      if (lbl_803E232C < fVar1) {
         local_2c = local_2c / fVar1;
         local_34 = local_34 / fVar1;
       }
-      fVar1 = FLOAT_803e238c * *gCamcontrolModeSettings;
+      fVar1 = lbl_803E238C * *gCamcontrolModeSettings;
       *(float *)(param_1 + 0xc) = fVar1 * local_2c + *(float *)(param_2 + 6);
       *(float *)(param_1 + 0x14) = fVar1 * local_34 + *(float *)(param_2 + 10);
     }
@@ -217,20 +217,20 @@ void firstperson_loadSettings(int param_1)
   gCamcontrolModeSettings[7] = fVar1;
   gCamcontrolModeSettings[0x1a] = fVar1;
   if (*(byte *)(param_1 + 0xb) == 0) {
-    gCamcontrolModeSettings[0x14] = FLOAT_803e1714;
+    gCamcontrolModeSettings[0x14] = lbl_803E1714;
   }
   else {
     fVar1 = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 0xb)) - dVar3) /
-            FLOAT_803e1710;
+            lbl_803E1710;
     gCamcontrolModeSettings[4] = fVar1;
     gCamcontrolModeSettings[0x14] = fVar1;
   }
   if (*(byte *)(param_1 + 0xc) == 0) {
-    gCamcontrolModeSettings[0x16] = FLOAT_803e1714;
+    gCamcontrolModeSettings[0x16] = lbl_803E1714;
   }
   else {
     fVar1 = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 0xc)) - DOUBLE_803e16f8) /
-            FLOAT_803e1710;
+            lbl_803E1710;
     gCamcontrolModeSettings[5] = fVar1;
     gCamcontrolModeSettings[0x16] = fVar1;
   }

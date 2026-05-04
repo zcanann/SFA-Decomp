@@ -6,8 +6,8 @@ extern double FUN_80017714();
 extern int ObjGroup_FindNearestObject();
 extern int FUN_8005b024();
 
-extern f32 FLOAT_803e30bc;
-extern f32 FLOAT_803e3154;
+extern f32 lbl_803E30BC;
+extern f32 lbl_803E3154;
 
 /*
  * --INFO--
@@ -31,7 +31,7 @@ undefined FUN_8013dc88(int param_1,int param_2)
   double dVar5;
   float local_18 [3];
   
-  local_18[0] = FLOAT_803e30bc;
+  local_18[0] = lbl_803E30BC;
   bVar1 = *(byte *)(param_2 + 0x58) >> 1 & 0xf;
   uVar4 = bVar1 != 0;
   if ((bool)uVar4) {
@@ -57,7 +57,7 @@ undefined FUN_8013dc88(int param_1,int param_2)
     }
     if (((bool)uVar4 == true) &&
        (dVar5 = FUN_80017714((float *)(*(int *)(param_2 + 4) + 0x18),(float *)(param_1 + 0x18)),
-       dVar5 < (double)FLOAT_803e3154)) {
+       dVar5 < (double)lbl_803E3154)) {
       uVar4 = 2;
     }
   }

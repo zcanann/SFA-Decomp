@@ -29,9 +29,9 @@ extern undefined4* DAT_803dd6cc;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd72c;
 extern f64 DOUBLE_803e5cc8;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e5cd4;
-extern f32 FLOAT_803e5cd8;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E5CD4;
+extern f32 lbl_803E5CD8;
 
 /*
  * --INFO--
@@ -127,14 +127,14 @@ void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefin
     FUN_801d8308(iVar13 + 0x13,2,-1,-1,0xdd2,(int *)0xb);
     FUN_801d8480(iVar13 + 0x13,1,-1,-1,0xcbb,(int *)0x8);
     FUN_801d8308(iVar13 + 0x13,4,-1,-1,0xcbb,(int *)0xc4);
-    fVar1 = FLOAT_803e5cd4;
+    fVar1 = lbl_803E5CD4;
     dVar15 = (double)*(float *)(iVar13 + 4);
-    dVar16 = (double)FLOAT_803e5cd4;
+    dVar16 = (double)lbl_803E5CD4;
     if (dVar15 <= dVar16) {
       switch(*(undefined *)(iVar13 + 0x14)) {
       case 0:
         puVar2[3] = puVar2[3] & 0xbfff;
-        fVar1 = *(float *)(iVar13 + 8) - FLOAT_803dc074;
+        fVar1 = *(float *)(iVar13 + 8) - lbl_803DC074;
         *(float *)(iVar13 + 8) = fVar1;
         if ((double)fVar1 <= dVar16) {
           FUN_80006824((uint)puVar2,0x343);
@@ -191,7 +191,7 @@ void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefin
           *(undefined *)(iVar13 + 0x14) = 6;
           FUN_80006b4c();
           FUN_80017698(0xdd2,0);
-          *(float *)(iVar13 + 4) = FLOAT_803e5cd8;
+          *(float *)(iVar13 + 4) = lbl_803E5CD8;
           (**(code **)(*DAT_803dd6cc + 8))(0x1e,1);
           FUN_80006824(0,0x7e);
         }
@@ -207,7 +207,7 @@ void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefin
               dVar15 = (double)FUN_80017ac8(dVar15,dVar16,param_3,param_4,param_5,param_6,param_7,
                                             param_8,puVar11[local_38[0] + -1]);
             }
-            *(float *)(iVar13 + 4) = FLOAT_803e5cd8;
+            *(float *)(iVar13 + 4) = lbl_803E5CD8;
             (**(code **)(*DAT_803dd6cc + 8))(0x1e,1);
           }
         }
@@ -256,7 +256,7 @@ void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefin
         *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0xfd;
         break;
       case 5:
-        *(float *)(iVar13 + 4) = FLOAT_803e5cd8;
+        *(float *)(iVar13 + 4) = lbl_803E5CD8;
         (**(code **)(*DAT_803dd6cc + 0xc))(0x1e,1);
         *(undefined *)(iVar13 + 0x14) = 1;
         puVar2[3] = puVar2[3] | 0x4000;
@@ -271,7 +271,7 @@ void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefin
       }
     }
     else {
-      *(float *)(iVar13 + 4) = (float)(dVar15 - (double)FLOAT_803dc074);
+      *(float *)(iVar13 + 4) = (float)(dVar15 - (double)lbl_803DC074);
       if ((double)*(float *)(iVar13 + 4) <= dVar16) {
         *(float *)(iVar13 + 4) = fVar1;
       }

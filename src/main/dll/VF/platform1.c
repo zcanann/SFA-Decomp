@@ -25,23 +25,23 @@ extern undefined4* DAT_803dd6d0;
 extern undefined4* DAT_803dd6d4;
 extern undefined4 DAT_803de890;
 extern f64 DOUBLE_803e6340;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e6300;
-extern f32 FLOAT_803e6304;
-extern f32 FLOAT_803e6308;
-extern f32 FLOAT_803e630c;
-extern f32 FLOAT_803e6310;
-extern f32 FLOAT_803e6314;
-extern f32 FLOAT_803e6318;
-extern f32 FLOAT_803e631c;
-extern f32 FLOAT_803e6320;
-extern f32 FLOAT_803e6324;
-extern f32 FLOAT_803e6328;
-extern f32 FLOAT_803e632c;
-extern f32 FLOAT_803e6330;
-extern f32 FLOAT_803e6334;
-extern f32 FLOAT_803e6338;
-extern f32 FLOAT_803e633c;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E6300;
+extern f32 lbl_803E6304;
+extern f32 lbl_803E6308;
+extern f32 lbl_803E630C;
+extern f32 lbl_803E6310;
+extern f32 lbl_803E6314;
+extern f32 lbl_803E6318;
+extern f32 lbl_803E631C;
+extern f32 lbl_803E6320;
+extern f32 lbl_803E6324;
+extern f32 lbl_803E6328;
+extern f32 lbl_803E632C;
+extern f32 lbl_803E6330;
+extern f32 lbl_803E6334;
+extern f32 lbl_803E6338;
+extern f32 lbl_803E633C;
 
 /*
  * --INFO--
@@ -191,7 +191,7 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
       local_104[0] = local_108;
     }
   }
-  for (iVar4 = 0; fVar1 = FLOAT_803e6300, iVar4 < (int)(uint)*(byte *)(param_11 + 0x8b);
+  for (iVar4 = 0; fVar1 = lbl_803E6300, iVar4 < (int)(uint)*(byte *)(param_11 + 0x8b);
       iVar4 = iVar4 + 1) {
     bVar7 = *(byte *)(param_11 + iVar4 + 0x81);
     if (bVar7 == 3) {
@@ -221,7 +221,7 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
     }
     else if (bVar7 == 5) {
       if (state->linkedObject != 0) {
-        *(float *)(uVar3 + 0x98) = FLOAT_803e6300;
+        *(float *)(uVar3 + 0x98) = lbl_803E6300;
         *(float *)(state->linkedObject + 0x98) = fVar1;
         FUN_800305f8((double)*(float *)(uVar3 + 0x98),param_2,param_3,param_4,param_5,param_6,
                      param_7,param_8,uVar3,0x401,0,param_12,param_13,param_14,param_15,param_16);
@@ -269,16 +269,16 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
     *(undefined2 *)(param_11 + 0x6e) = 0xffff;
     *(undefined *)(param_11 + 0x56) = 0;
     FUN_800068c4(uVar2,0x3af);
-    dVar13 = (double)FLOAT_803e6304;
-    dVar14 = (double)FLOAT_803e630c;
-    dVar15 = (double)FLOAT_803e6308;
-    dVar16 = (double)FLOAT_803e6310;
-    dVar17 = (double)FLOAT_803e631c;
-    dVar18 = (double)FLOAT_803e6318;
-    dVar19 = (double)FLOAT_803e6314;
-    dVar20 = (double)FLOAT_803e6324;
-    dVar21 = (double)FLOAT_803e6328;
-    dVar22 = (double)FLOAT_803e6334;
+    dVar13 = (double)lbl_803E6304;
+    dVar14 = (double)lbl_803E630C;
+    dVar15 = (double)lbl_803E6308;
+    dVar16 = (double)lbl_803E6310;
+    dVar17 = (double)lbl_803E631C;
+    dVar18 = (double)lbl_803E6318;
+    dVar19 = (double)lbl_803E6314;
+    dVar20 = (double)lbl_803E6324;
+    dVar21 = (double)lbl_803E6328;
+    dVar22 = (double)lbl_803E6334;
     dVar12 = DOUBLE_803e6340;
     for (iVar4 = 0; iVar4 < (int)(uint)DAT_803dc070; iVar4 = iVar4 + 1) {
       if (state->linkedObject == 0) goto LAB_801df3c4;
@@ -293,7 +293,7 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
       dVar10 = (double)(float)((double)(float)(dVar17 * dVar10 + dVar18) * dVar11 + dVar19);
       uVar6 = FUN_80006bf8(0);
       if (((uVar6 & 0x100) != 0) && (bVar7 = FUN_80006b44(), bVar7 == 0)) {
-        state->offsetVelocity = (int)((float)state->offsetVelocity - FLOAT_803e6320);
+        state->offsetVelocity = (int)((float)state->offsetVelocity - lbl_803E6320);
       }
       if ((double)(float)state->offsetVelocity < dVar20) {
         state->offsetVelocity = (int)(float)dVar20;
@@ -332,36 +332,36 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
       }
       if ((double)(float)state->offsetVelocity < dVar21) {
         state->offsetVelocity =
-            (int)(float)((double)FLOAT_803e6330 * dVar10 + (double)(float)state->offsetVelocity);
+            (int)(float)((double)lbl_803E6330 * dVar10 + (double)(float)state->offsetVelocity);
       }
       local_f0 = (double)CONCAT44(0x43300000,state->prevTrackOffset ^ 0x80000000);
       uStack_f4 = state->currentTrackOffset ^ 0x80000000;
       local_f8 = 0x43300000;
       iVar5 = FUN_8002fc3c((double)(float)((double)((float)(local_f0 - dVar12) -
                                                    (float)((double)CONCAT44(0x43300000,uStack_f4) -
-                                                          dVar12)) / dVar22),(double)FLOAT_803dc074)
+                                                          dVar12)) / dVar22),(double)lbl_803DC074)
       ;
-      if ((iVar5 != 0) && (*(float *)(uVar3 + 0x98) < FLOAT_803e6310)) {
-        *(float *)(uVar3 + 0x98) = FLOAT_803e6314 + *(float *)(uVar3 + 0x98);
+      if ((iVar5 != 0) && (*(float *)(uVar3 + 0x98) < lbl_803E6310)) {
+        *(float *)(uVar3 + 0x98) = lbl_803E6314 + *(float *)(uVar3 + 0x98);
       }
       local_f0 = (double)CONCAT44(0x43300000,state->currentTrackOffset ^ 0x80000000);
       uStack_f4 = state->prevTrackOffset ^ 0x80000000;
       local_f8 = 0x43300000;
       iVar5 = FUN_8002fc3c((double)(float)((double)((float)(local_f0 - dVar12) -
                                                    (float)((double)CONCAT44(0x43300000,uStack_f4) -
-                                                          dVar12)) / dVar22),(double)FLOAT_803dc074)
+                                                          dVar12)) / dVar22),(double)lbl_803DC074)
       ;
       if (iVar5 != 0) {
         fVar1 = *(float *)(state->linkedObject + 0x98);
-        if (fVar1 < FLOAT_803e6310) {
-          *(float *)(state->linkedObject + 0x98) = FLOAT_803e6314 + fVar1;
+        if (fVar1 < lbl_803E6310) {
+          *(float *)(state->linkedObject + 0x98) = lbl_803E6314 + fVar1;
         }
       }
       state->prevTrackOffset = state->currentTrackOffset;
     }
-    state->playerSfxTimer = (int)((float)state->playerSfxTimer - FLOAT_803dc074);
-    if ((double)(float)state->playerSfxTimer < (double)FLOAT_803e6310) {
-      if ((double)FLOAT_803e6310 <= in_f19) {
+    state->playerSfxTimer = (int)((float)state->playerSfxTimer - lbl_803DC074);
+    if ((double)(float)state->playerSfxTimer < (double)lbl_803E6310) {
+      if ((double)lbl_803E6310 <= in_f19) {
         uVar6 = FUN_80017760(0x78,0xf0);
         local_f0 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
         state->playerSfxTimer = (int)(float)(local_f0 - DOUBLE_803e6340);
@@ -373,9 +373,9 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
       }
       FUN_80006824(uVar3,0x13a);
     }
-    state->platformSfxTimer = (int)((float)state->platformSfxTimer - FLOAT_803dc074);
-    if ((double)(float)state->platformSfxTimer < (double)FLOAT_803e6310) {
-      if (in_f19 <= (double)FLOAT_803e6310) {
+    state->platformSfxTimer = (int)((float)state->platformSfxTimer - lbl_803DC074);
+    if ((double)(float)state->platformSfxTimer < (double)lbl_803E6310) {
+      if (in_f19 <= (double)lbl_803E6310) {
         uVar3 = FUN_80017760(0x78,0xf0);
         local_f0 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
         state->platformSfxTimer = (int)(float)(local_f0 - DOUBLE_803e6340);
@@ -387,15 +387,15 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
       }
       FUN_80006824(uVar2,0x4a3);
     }
-    if (in_f19 < (double)FLOAT_803e6310) {
+    if (in_f19 < (double)lbl_803E6310) {
       in_f19 = -in_f19;
     }
-    iVar4 = (int)((double)FLOAT_803e6338 * in_f19);
+    iVar4 = (int)((double)lbl_803E6338 * in_f19);
     local_f0 = (double)(longlong)iVar4;
     if (100 < iVar4) {
       iVar4 = 100;
     }
-    FUN_80006818((double)FLOAT_803e633c,uVar2,0x3af,(byte)iVar4);
+    FUN_80006818((double)lbl_803E633C,uVar2,0x3af,(byte)iVar4);
   }
 LAB_801df3c4:
   FUN_8028688c();
@@ -412,7 +412,7 @@ LAB_801defcc:
   goto LAB_801defcc;
 LAB_801defd8:
   dVar12 = FUN_80006b34();
-  local_f0 = (double)(longlong)(int)(dVar12 / (double)FLOAT_803e632c);
+  local_f0 = (double)(longlong)(int)(dVar12 / (double)lbl_803E632C);
   FUN_801de914();
   FUN_8011e800(0);
   if (0 < state->loopSfxHandle) {

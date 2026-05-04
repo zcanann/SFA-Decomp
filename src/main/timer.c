@@ -6,7 +6,7 @@ extern undefined4 FUN_80017a98();
 extern int ObjHits_GetPriorityHit();
 extern int FUN_800620e8();
 
-extern f32 FLOAT_803e6eb4;
+extern f32 lbl_803E6EB4;
 
 /*
  * --INFO--
@@ -37,9 +37,9 @@ void FUN_801feb30(int *param_1)
   if (runtimeState->state != 9) {
     iVar2 = FUN_800620e8(param_1 + 0x20,param_1 + 3,(float *)0x1,(int *)0x0,param_1,8,0xffffffff,
                          0xff,0);
-    fVar1 = FLOAT_803e6eb4;
+    fVar1 = lbl_803E6EB4;
     if (iVar2 != 0) {
-      param_1[9] = (int)-(FLOAT_803e6eb4 * (float)param_1[9] - (float)param_1[9]);
+      param_1[9] = (int)-(lbl_803E6EB4 * (float)param_1[9] - (float)param_1[9]);
       param_1[0xb] = (int)-(fVar1 * (float)param_1[0xb] - (float)param_1[0xb]);
     }
   }

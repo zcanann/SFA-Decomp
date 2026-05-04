@@ -11,11 +11,11 @@ extern undefined4 FUN_80294964();
 extern undefined4 DAT_803dcd18;
 extern undefined4 DAT_803dcd1c;
 extern f64 DOUBLE_803e6768;
-extern f32 FLOAT_803e6738;
-extern f32 FLOAT_803e6754;
-extern f32 FLOAT_803e6758;
-extern f32 FLOAT_803e675c;
-extern f32 FLOAT_803e6770;
+extern f32 lbl_803E6738;
+extern f32 lbl_803E6754;
+extern f32 lbl_803E6758;
+extern f32 lbl_803E675C;
+extern f32 lbl_803E6770;
 
 /*
  * --INFO--
@@ -57,7 +57,7 @@ void FUN_801e9c04(int param_1)
   
   iVar4 = *(int *)(param_1 + 0xf4);
   iVar3 = *(int *)(param_1 + 0x4c);
-  local_18[0] = FLOAT_803e6770;
+  local_18[0] = lbl_803E6770;
   if (iVar4 == 0) {
     uVar1 = ObjGroup_FindNearestObject(9,param_1,local_18);
     *(undefined4 *)(param_1 + 0xf4) = uVar1;

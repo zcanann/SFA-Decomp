@@ -13,12 +13,12 @@ extern undefined4 FUN_80286884();
 extern double FUN_80293900();
 
 extern undefined4* DAT_803dd6e8;
-extern f32 FLOAT_803e6784;
-extern f32 FLOAT_803e6828;
-extern f32 FLOAT_803e682c;
-extern f32 FLOAT_803e6830;
-extern f32 FLOAT_803e6840;
-extern f32 FLOAT_803e6850;
+extern f32 lbl_803E6784;
+extern f32 lbl_803E6828;
+extern f32 lbl_803E682C;
+extern f32 lbl_803E6830;
+extern f32 lbl_803E6840;
+extern f32 lbl_803E6850;
 
 /*
  * --INFO--
@@ -40,13 +40,13 @@ double FUN_801ecf94(int param_1,undefined4 *param_2)
   double dVar3;
   
   iVar1 = *(int *)(param_1 + 0xb8);
-  *param_2 = FLOAT_803e6850;
+  *param_2 = lbl_803E6850;
   dVar2 = FUN_80293900((double)(*(float *)(iVar1 + 0x49c) * *(float *)(iVar1 + 0x49c) +
                                *(float *)(iVar1 + 0x494) * *(float *)(iVar1 + 0x494) +
                                *(float *)(iVar1 + 0x498) * *(float *)(iVar1 + 0x498)));
-  dVar3 = (double)(float)(dVar2 * (double)FLOAT_803e6840);
-  if ((double)FLOAT_803e6784 < (double)(float)(dVar2 * (double)FLOAT_803e6840)) {
-    dVar3 = (double)FLOAT_803e6784;
+  dVar3 = (double)(float)(dVar2 * (double)lbl_803E6840);
+  if ((double)lbl_803E6784 < (double)(float)(dVar2 * (double)lbl_803E6840)) {
+    dVar3 = (double)lbl_803E6784;
   }
   return dVar3;
 }
@@ -74,12 +74,12 @@ void FUN_801ed014(int param_1,int param_2)
     FUN_80017698((int)*(short *)(iVar1 + 0x448),1);
     FUN_801ecdec(param_1,iVar1);
     if ((*(byte *)(iVar1 + 0x428) >> 5 & 1) != 0) {
-      *(float *)(iVar1 + 0x4b8) = FLOAT_803e6828;
-      *(float *)(iVar1 + 0x4c0) = FLOAT_803e6784;
-      *(float *)(iVar1 + 0x4bc) = FLOAT_803e682c;
+      *(float *)(iVar1 + 0x4b8) = lbl_803E6828;
+      *(float *)(iVar1 + 0x4c0) = lbl_803E6784;
+      *(float *)(iVar1 + 0x4bc) = lbl_803E682C;
       if (*(char *)(iVar1 + 0x421) == '\x02') {
         (**(code **)(*DAT_803dd6e8 + 0x58))((int)*(float *)(iVar1 + 0x4b8),0x5cd);
-        (**(code **)(*DAT_803dd6e8 + 0x68))((double)FLOAT_803e6830);
+        (**(code **)(*DAT_803dd6e8 + 0x68))((double)lbl_803E6830);
       }
     }
     if (*(short *)(param_1 + 0x46) == 0x72) {

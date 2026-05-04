@@ -13,12 +13,12 @@ extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
-extern f32 FLOAT_803e5e60;
-extern f32 FLOAT_803e5e64;
-extern f32 FLOAT_803e5e68;
-extern f32 FLOAT_803e5e6c;
-extern f32 FLOAT_803e5e70;
-extern f32 FLOAT_803e5e74;
+extern f32 lbl_803E5E60;
+extern f32 lbl_803E5E64;
+extern f32 lbl_803E5E68;
+extern f32 lbl_803E5E6C;
+extern f32 lbl_803E5E70;
+extern f32 lbl_803E5E74;
 
 /*
  * --INFO--
@@ -147,19 +147,19 @@ void FUN_801cd484(int param_1)
     local_34 = *(float *)(puVar2 + 8) - *(float *)(param_1 + 0x10);
     local_30 = *(float *)(puVar2 + 10) - *(float *)(param_1 + 0x14);
     dVar6 = FUN_80293900((double)(local_30 * local_30 + local_38 * local_38 + local_34 * local_34));
-    if ((double)FLOAT_803e5e60 < dVar6) {
-      fVar1 = (float)((double)FLOAT_803e5e64 / dVar6);
+    if ((double)lbl_803E5E60 < dVar6) {
+      fVar1 = (float)((double)lbl_803E5E64 / dVar6);
       local_38 = local_38 * fVar1;
       dVar12 = (double)local_38;
       local_34 = local_34 * fVar1;
       dVar11 = (double)local_34;
       local_30 = local_30 * fVar1;
       dVar10 = (double)local_30;
-      dVar6 = (double)FLOAT_803e5e68;
+      dVar6 = (double)lbl_803E5E68;
       local_44 = (float)(dVar6 * dVar12) + *(float *)(param_1 + 0xc);
       local_40 = (float)(dVar6 * dVar11) + *(float *)(param_1 + 0x10);
       local_3c = (float)(dVar6 * dVar10) + *(float *)(param_1 + 0x14);
-      dVar6 = (double)FLOAT_803e5e6c;
+      dVar6 = (double)lbl_803E5E6C;
       dVar9 = (double)(float)(dVar6 * dVar12);
       dVar8 = (double)(float)(dVar6 * dVar11);
       local_50 = (float)(dVar9 + (double)*(float *)(puVar2 + 6));
@@ -176,9 +176,9 @@ void FUN_801cd484(int param_1)
     }
     if (*(short *)(iVar5 + 4) < 1) {
       if (*(char *)(iVar5 + 10) != '\0') {
-        local_20 = FLOAT_803e5e70;
-        local_1c = FLOAT_803e5e74;
-        local_18 = FLOAT_803e5e70;
+        local_20 = lbl_803E5E70;
+        local_1c = lbl_803E5E74;
+        local_18 = lbl_803E5E70;
         (**(code **)(*DAT_803dd708 + 8))(param_1,0x1f7,auStack_2c,0x12,0xffffffff,0);
       }
       uVar4 = FUN_80017760(0xfffffff6,10);

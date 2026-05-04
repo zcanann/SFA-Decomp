@@ -4,7 +4,7 @@
 extern double FUN_80293900();
 
 extern f64 DOUBLE_803e5a88;
-extern f32 FLOAT_803e5ab0;
+extern f32 lbl_803E5AB0;
 
 /*
  * --INFO--
@@ -38,7 +38,7 @@ void FUN_801c1eac(double param_1,double param_2,int param_3)
   *(float *)(iVar1 + 0x1c) = (float)(param_2 * dVar5 + (double)*(float *)(iVar1 + 0x1c));
   iVar3 = **(int **)(iVar4 + 0x2c) + iVar3;
   *(float *)(iVar3 + 0x1c) =
-       (float)(param_2 * (double)(float)((double)FLOAT_803e5ab0 - dVar5) +
+       (float)(param_2 * (double)(float)((double)lbl_803E5AB0 - dVar5) +
               (double)*(float *)(iVar3 + 0x1c));
   return;
 }

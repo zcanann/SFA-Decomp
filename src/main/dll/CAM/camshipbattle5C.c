@@ -9,10 +9,10 @@ extern undefined4 FUN_8028688c();
 
 extern undefined4* DAT_803dd71c;
 extern f64 DOUBLE_803e2520;
-extern f32 FLOAT_803e2508;
-extern f32 FLOAT_803e2510;
-extern f32 FLOAT_803e2514;
-extern f32 FLOAT_803e2518;
+extern f32 lbl_803E2508;
+extern f32 lbl_803E2510;
+extern f32 lbl_803E2514;
+extern f32 lbl_803E2518;
 extern char sPathcamErrorNeedAtLeastTwoControlPoints[];
 
 /*
@@ -190,10 +190,10 @@ void pathcam_buildWindowSamples(undefined4 param_1,undefined4 param_2,float *par
     } while (iVar8 != 0);
     iVar18 = 0;
     do {
-      fVar5 = FLOAT_803e2518;
-      fVar4 = FLOAT_803e2514;
-      fVar3 = FLOAT_803e2510;
-      fVar2 = FLOAT_803e2508;
+      fVar5 = lbl_803E2518;
+      fVar4 = lbl_803E2514;
+      fVar3 = lbl_803E2510;
+      fVar2 = lbl_803E2508;
       pfVar7 = param_5;
       if ((iVar18 != 0) && (pfVar7 = param_7, iVar18 == 1)) {
         pfVar7 = param_6;

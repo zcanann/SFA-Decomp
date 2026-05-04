@@ -19,12 +19,12 @@ extern double FUN_80293900();
 extern uint countLeadingZeros();
 
 extern undefined4 DAT_803dc070;
-extern f32 FLOAT_803e290c;
-extern f32 FLOAT_803e2910;
-extern f32 FLOAT_803e2924;
-extern f32 FLOAT_803e2950;
-extern f32 FLOAT_803e2954;
-extern f32 FLOAT_803e2958;
+extern f32 lbl_803E290C;
+extern f32 lbl_803E2910;
+extern f32 lbl_803E2924;
+extern f32 lbl_803E2950;
+extern f32 lbl_803E2954;
+extern f32 lbl_803E2958;
 
 /*
  * --INFO--
@@ -110,7 +110,7 @@ void FUN_801150ac(void)
   uVar13 = FUN_80286840();
   puVar5 = (ushort *)((ulonglong)uVar13 >> 0x20);
   iVar10 = (int)uVar13;
-  local_48 = FLOAT_803e290c;
+  local_48 = lbl_803E290C;
   sVar11 = 0;
   puVar6 = FUN_80039518();
   FUN_80017a98();
@@ -146,14 +146,14 @@ void FUN_801150ac(void)
           local_40 = *(float *)(iVar10 + 0x14) - *(float *)(iVar9 + 0x10);
           local_3c = *(float *)(iVar10 + 0x18) - *(float *)(iVar9 + 0x14);
           dVar12 = FUN_80293900((double)(local_44 * local_44 + local_3c * local_3c));
-          if (dVar12 <= (double)FLOAT_803e2954) {
-            fVar1 = (float)(dVar12 - (double)FLOAT_803e2958) / FLOAT_803e2950;
-            fVar2 = FLOAT_803e2910;
-            if ((FLOAT_803e2910 <= fVar1) && (fVar2 = fVar1, FLOAT_803e2924 < fVar1)) {
-              fVar2 = FLOAT_803e2924;
+          if (dVar12 <= (double)lbl_803E2954) {
+            fVar1 = (float)(dVar12 - (double)lbl_803E2958) / lbl_803E2950;
+            fVar2 = lbl_803E2910;
+            if ((lbl_803E2910 <= fVar1) && (fVar2 = fVar1, lbl_803E2924 < fVar1)) {
+              fVar2 = lbl_803E2924;
             }
-            fVar2 = FLOAT_803e2924 - fVar2;
-            fVar1 = FLOAT_803e2924 - fVar2;
+            fVar2 = lbl_803E2924 - fVar2;
+            fVar1 = lbl_803E2924 - fVar2;
             *(float *)(iVar10 + 0x10) =
                  *(float *)(iVar10 + 0x10) * fVar1 + *(float *)(puVar5 + 6) * fVar2;
             *(float *)(iVar10 + 0x18) =

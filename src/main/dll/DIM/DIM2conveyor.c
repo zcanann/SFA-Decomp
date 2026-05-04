@@ -24,7 +24,7 @@ extern uint countLeadingZeros();
 
 extern undefined4* DAT_803dd6d4;
 extern void* DAT_803de7d0;
-extern f32 FLOAT_803e5550;
+extern f32 lbl_803E5550;
 
 /*
  * --INFO--

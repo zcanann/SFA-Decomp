@@ -7,16 +7,16 @@ extern undefined4 DAT_80319f2c;
 extern undefined4 DAT_80319f68;
 extern undefined4 DAT_80319f94;
 extern undefined4* DAT_803dd6fc;
-extern f32 FLOAT_803e2280;
-extern f32 FLOAT_803e2284;
-extern f32 FLOAT_803e2288;
-extern f32 FLOAT_803e228c;
-extern f32 FLOAT_803e2290;
-extern f32 FLOAT_803e2294;
-extern f32 FLOAT_803e2298;
-extern f32 FLOAT_803e229c;
-extern f32 FLOAT_803e22a0;
-extern f32 FLOAT_803e22a4;
+extern f32 lbl_803E2280;
+extern f32 lbl_803E2284;
+extern f32 lbl_803E2288;
+extern f32 lbl_803E228C;
+extern f32 lbl_803E2290;
+extern f32 lbl_803E2294;
+extern f32 lbl_803E2298;
+extern f32 lbl_803E229C;
+extern f32 lbl_803E22A0;
+extern f32 lbl_803E22A4;
 
 /*
  * --INFO--
@@ -37,10 +37,10 @@ void FUN_80100550(double param_1,undefined4 param_2,undefined param_3,int param_
   float fVar1;
   double dVar2;
   
-  fVar1 = FLOAT_803e2280;
+  fVar1 = lbl_803E2280;
   if (param_4 != 0) {
     param_1 = (double)*(float *)(param_4 + 8);
-    fVar1 = (float)(param_1 / (double)FLOAT_803e2284);
+    fVar1 = (float)(param_1 / (double)lbl_803E2284);
   }
   dVar2 = (double)fVar1;
   (**(code **)(*DAT_803dd6fc + 0x34))(param_1,param_2,param_3,0x15,1,0);
@@ -48,24 +48,24 @@ void FUN_80100550(double param_1,undefined4 param_2,undefined param_3,int param_
   (**(code **)(*DAT_803dd6fc + 0x54))(param_5);
   (**(code **)(*DAT_803dd6fc + 0x38))();
   (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)FLOAT_803e2288,(double)FLOAT_803e228c,(double)FLOAT_803e228c,4,0x15,
+            ((double)lbl_803E2288,(double)lbl_803E228C,(double)lbl_803E228C,4,0x15,
              &DAT_80319f68);
   (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)FLOAT_803e2290,(double)FLOAT_803e2294,(double)FLOAT_803e2290,2,0x15,
+            ((double)lbl_803E2290,(double)lbl_803E2294,(double)lbl_803E2290,2,0x15,
              &DAT_80319f68);
   (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)FLOAT_803e228c,(double)FLOAT_803e2298,(double)FLOAT_803e228c,0x400000,0,0);
+            ((double)lbl_803E228C,(double)lbl_803E2298,(double)lbl_803E228C,0x400000,0,0);
   (**(code **)(*DAT_803dd6fc + 0x40))();
   (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)FLOAT_803e229c,(double)FLOAT_803e228c,(double)FLOAT_803e228c,4,7,&DAT_80319f2c)
+            ((double)lbl_803E229C,(double)lbl_803E228C,(double)lbl_803E228C,4,7,&DAT_80319f2c)
   ;
   (**(code **)(*DAT_803dd6fc + 0x40))();
   (**(code **)(*DAT_803dd6fc + 0x3c))
-            ((double)FLOAT_803e22a0,(double)FLOAT_803e228c,(double)FLOAT_803e228c,4,7,&DAT_80319f2c)
+            ((double)lbl_803E22A0,(double)lbl_803E228C,(double)lbl_803E228C,4,7,&DAT_80319f2c)
   ;
-  (**(code **)(*DAT_803dd6fc + 0x3c))(dVar2,(double)FLOAT_803e22a4,dVar2,2,0x15,&DAT_80319f68);
+  (**(code **)(*DAT_803dd6fc + 0x3c))(dVar2,(double)lbl_803E22A4,dVar2,2,0x15,&DAT_80319f68);
   (**(code **)(*DAT_803dd6fc + 0x40))();
-  dVar2 = (double)FLOAT_803e228c;
+  dVar2 = (double)lbl_803E228C;
   (**(code **)(*DAT_803dd6fc + 0x3c))(dVar2,dVar2,dVar2,4,7,&DAT_80319f2c);
   (**(code **)(*DAT_803dd6fc + 0x50))(param_4,&DAT_80319db8,0x15,&DAT_80319e8c,0x18,0x3e9,0);
   (**(code **)(*DAT_803dd6fc + 0x58))();

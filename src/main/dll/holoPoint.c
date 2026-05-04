@@ -4,9 +4,9 @@
 extern undefined4 FUN_8003b818();
 
 extern f64 DOUBLE_803e4b90;
-extern f32 FLOAT_803e4b80;
-extern f32 FLOAT_803e4b84;
-extern f32 FLOAT_803e4b88;
+extern f32 lbl_803E4B80;
+extern f32 lbl_803E4B84;
+extern f32 lbl_803E4B88;
 
 /*
  * --INFO--
@@ -48,9 +48,9 @@ void FUN_80191f74(short *param_1,int param_2)
   if (*(byte *)(param_2 + 0x1b) != 0) {
     *(float *)(param_1 + 4) =
          (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_2 + 0x1b)) - DOUBLE_803e4b90) /
-         FLOAT_803e4b84;
-    if (*(float *)(param_1 + 4) == FLOAT_803e4b88) {
-      *(float *)(param_1 + 4) = FLOAT_803e4b80;
+         lbl_803E4B84;
+    if (*(float *)(param_1 + 4) == lbl_803E4B88) {
+      *(float *)(param_1 + 4) = lbl_803E4B80;
     }
     *(float *)(param_1 + 4) = *(float *)(param_1 + 4) * *(float *)(*(int *)(param_1 + 0x28) + 4);
   }

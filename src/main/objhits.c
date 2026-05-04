@@ -53,22 +53,22 @@ extern f64 DOUBLE_803df5a8;
 extern f64 DOUBLE_803df5c0;
 extern f64 DOUBLE_803df5d0;
 extern f32 lbl_803DB414;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803dc078;
-extern f32 FLOAT_803dc0b0;
+extern f32 lbl_803DC074;
+extern f32 lbl_803DC078;
+extern f32 lbl_803DC0B0;
 extern f32 lbl_803DCBE8;
-extern f32 FLOAT_803dda58;
-extern f32 FLOAT_803dda5c;
-extern f32 FLOAT_803df590;
-extern f32 FLOAT_803df598;
-extern f32 FLOAT_803df59c;
-extern f32 FLOAT_803df5a0;
-extern f32 FLOAT_803df5b0;
-extern f32 FLOAT_803df5b4;
-extern f32 FLOAT_803df5b8;
-extern f32 FLOAT_803df5d8;
-extern f32 FLOAT_803df5dc;
-extern f32 FLOAT_803df5e0;
+extern f32 lbl_803DDA58;
+extern f32 lbl_803DDA5C;
+extern f32 lbl_803DF590;
+extern f32 lbl_803DF598;
+extern f32 lbl_803DF59C;
+extern f32 lbl_803DF5A0;
+extern f32 lbl_803DF5B0;
+extern f32 lbl_803DF5B4;
+extern f32 lbl_803DF5B8;
+extern f32 lbl_803DF5D8;
+extern f32 lbl_803DF5DC;
+extern f32 lbl_803DF5E0;
 extern char s_HIT_VOLUMES__an_object_has_too_m_802cb98c[];
 extern undefined4 uRam803dd84c;
 extern undefined4 uRam803dd854;
@@ -179,14 +179,14 @@ void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double para
     iVar14 = *(int *)(iVar9 + 4);
     dVar21 = (double)(float)(extraout_f1 + extraout_f1);
     *param_8 = (int)param_7;
-    *param_9 = FLOAT_803df590;
+    *param_9 = lbl_803DF590;
     dVar20 = extraout_f1;
     iVar6 = FUN_80017970(param_6,0);
     local_c4 = *(float *)(iVar6 + 0xc);
     local_c0 = *(float *)(iVar6 + 0x1c);
     local_bc = *(float *)(iVar6 + 0x2c);
     dVar17 = FUN_80293900((double)((local_bc - pfVar5[2]) * (local_bc - pfVar5[2]) +
-                                  (local_c4 - *pfVar5) * (local_c4 - *pfVar5) + FLOAT_803df590));
+                                  (local_c4 - *pfVar5) * (local_c4 - *pfVar5) + lbl_803DF590));
     dVar17 = (double)(float)(dVar17 - dVar20);
     dVar23 = (double)(*pfVar5 + *pfVar5);
     dVar22 = (double)(pfVar5[2] + pfVar5[2]);
@@ -228,13 +228,13 @@ void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double para
           }
           fVar2 = (float)(dVar21 + (double)(*(float *)(*(int *)(iVar9 + 0xc) + iVar6) + (float)dVar1
                                            ));
-          if (fVar4 * fVar4 + fVar3 * fVar3 + FLOAT_803df590 < fVar2 * fVar2) {
+          if (fVar4 * fVar4 + fVar3 * fVar3 + lbl_803DF590 < fVar2 * fVar2) {
             local_dc = local_d0 - local_c4;
             local_d8 = local_cc - local_c0;
             local_d4 = local_c8 - local_bc;
             fVar3 = *(float *)(*(int *)(iVar9 + 0xc) + iVar6);
-            if (fVar3 != FLOAT_803df590) {
-              fVar3 = FLOAT_803df598 / fVar3;
+            if (fVar3 != lbl_803DF590) {
+              fVar3 = lbl_803DF598 / fVar3;
               local_dc = local_dc * fVar3;
               local_d8 = local_d8 * fVar3;
               local_d4 = local_d4 * fVar3;
@@ -250,14 +250,14 @@ void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double para
               *(undefined *)(*(int *)(iVar9 + 0x18) + iVar12) = 1;
               dVar18 = FUN_80293900((double)local_e4);
               param_7[0xc] = (int)(float)(dVar20 + (double)(float)(dVar18 - (double)local_e8));
-              if (FLOAT_803df590 == (float)param_7[0xc]) {
-                param_7[0xc] = (int)FLOAT_803df5a0;
+              if (lbl_803DF590 == (float)param_7[0xc]) {
+                param_7[0xc] = (int)lbl_803DF5A0;
               }
               fVar3 = (float)param_7[0xc];
-              if (fVar3 <= FLOAT_803df590) {
+              if (fVar3 <= lbl_803DF590) {
                 fVar3 = -fVar3;
               }
-              param_7[0xf] = (int)(FLOAT_803df598 / fVar3);
+              param_7[0xf] = (int)(lbl_803DF598 / fVar3);
               *param_9 = *param_9 + (float)param_7[0xf];
               if ((float)param_7[0xc] < *(float *)(*param_8 + 0x30)) {
                 *param_8 = (int)param_7;
@@ -387,14 +387,14 @@ void ObjHits_CollectSkeletonHits3D(undefined4 param_1,undefined4 param_2,int *pa
     iVar13 = *(int *)(iVar8 + 4);
     dVar21 = (double)(float)(extraout_f1 + extraout_f1);
     *param_5 = (int)param_4;
-    *param_6 = FLOAT_803df590;
+    *param_6 = lbl_803DF590;
     dVar20 = extraout_f1;
     iVar5 = FUN_80017970(param_3,0);
     local_a4 = *(float *)(iVar5 + 0xc);
     local_a0 = *(float *)(iVar5 + 0x1c);
     local_9c = *(float *)(iVar5 + 0x2c);
     dVar16 = FUN_80293900((double)((local_9c - pfVar4[2]) * (local_9c - pfVar4[2]) +
-                                  (local_a4 - *pfVar4) * (local_a4 - *pfVar4) + FLOAT_803df590));
+                                  (local_a4 - *pfVar4) * (local_a4 - *pfVar4) + lbl_803DF590));
     dVar16 = (double)(float)(dVar16 - dVar20);
     dVar23 = (double)(*pfVar4 + *pfVar4);
     dVar22 = (double)(pfVar4[2] + pfVar4[2]);
@@ -432,9 +432,9 @@ void ObjHits_CollectSkeletonHits3D(undefined4 param_1,undefined4 param_2,int *pa
         }
         fVar1 = (float)(dVar21 + (double)(*(float *)(*(int *)(iVar8 + 0xc) + iVar5) + (float)dVar19)
                        );
-        if (fVar3 * fVar3 + fVar2 * fVar2 + FLOAT_803df590 < fVar1 * fVar1) {
+        if (fVar3 * fVar3 + fVar2 * fVar2 + lbl_803DF590 < fVar1 * fVar1) {
           dVar19 = (double)*(float *)(*(int *)(iVar8 + 0xc) + iVar5);
-          local_b4 = (float)((double)FLOAT_803df598 / dVar19);
+          local_b4 = (float)((double)lbl_803DF598 / dVar19);
           local_bc = (local_b0 - local_a4) * local_b4;
           local_b8 = (local_ac - local_a0) * local_b4;
           local_b4 = (local_a8 - local_9c) * local_b4;
@@ -445,14 +445,14 @@ void ObjHits_CollectSkeletonHits3D(undefined4 param_1,undefined4 param_2,int *pa
             *(undefined *)(*(int *)(iVar8 + 0x18) + iVar11) = 1;
             dVar17 = FUN_80293900((double)local_c4);
             param_4[0xc] = (int)(float)(dVar20 + (double)(float)(dVar17 - (double)local_c8));
-            if (FLOAT_803df590 == (float)param_4[0xc]) {
-              param_4[0xc] = (int)FLOAT_803df5a0;
+            if (lbl_803DF590 == (float)param_4[0xc]) {
+              param_4[0xc] = (int)lbl_803DF5A0;
             }
             fVar2 = (float)param_4[0xc];
-            if (fVar2 <= FLOAT_803df590) {
+            if (fVar2 <= lbl_803DF590) {
               fVar2 = -fVar2;
             }
-            param_4[0xf] = (int)(FLOAT_803df598 / fVar2);
+            param_4[0xf] = (int)(lbl_803DF598 / fVar2);
             *param_6 = *param_6 + (float)param_4[0xf];
             if ((float)param_4[0xc] < *(float *)(*param_5 + 0x30)) {
               *param_5 = (int)param_4;
@@ -580,12 +580,12 @@ void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double par
   local_e8 = *pfVar3 - local_dc;
   local_e4 = pfVar3[1] - local_d8;
   local_e0 = pfVar3[2] - local_d4;
-  local_7c = FLOAT_803df590;
-  local_78 = FLOAT_803df590;
-  local_74 = FLOAT_803df590;
-  local_c4 = FLOAT_803df590;
-  local_c0 = FLOAT_803df590;
-  local_bc = FLOAT_803df590;
+  local_7c = lbl_803DF590;
+  local_78 = lbl_803DF590;
+  local_74 = lbl_803DF590;
+  local_c4 = lbl_803DF590;
+  local_c0 = lbl_803DF590;
+  local_bc = lbl_803DF590;
   iVar5 = *(int *)(param_9 + 0x40) * 4;
   pfVar4 = ObjHits_CalcTaperedCapsuleNormal(
       (double)*(float *)(param_9 + 0x2c),(double)*(float *)(*(int *)(param_7 + 4) + iVar5),
@@ -593,7 +593,7 @@ void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double par
       (double)*(float *)(*(int *)(param_7 + 0xc) + iVar5),&local_e8,(float *)(param_9 + 8),
       (float *)(param_9 + 0x14),afStack_b8);
   FUN_80017784(pfVar4);
-  dVar8 = (double)FLOAT_803df590;
+  dVar8 = (double)lbl_803DF590;
   for (iVar5 = param_6; *(int *)(iVar5 + 0x40) != -1; iVar5 = iVar5 + 0x48) {
     iVar1 = *(int *)(iVar5 + 0x40) * 4;
     pfVar4 = ObjHits_ProjectPointToTaperedCapsuleXZ(
@@ -626,21 +626,21 @@ void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double par
   }
   FUN_80017784(&local_c4);
   local_d0 = local_7c - local_e8;
-  local_cc = FLOAT_803df590;
+  local_cc = lbl_803DF590;
   local_c8 = local_74 - local_e0;
   dVar8 = (double)FUN_8001778c(&local_d0);
   local_d0 = local_7c - *pfVar3;
-  local_cc = FLOAT_803df590;
+  local_cc = lbl_803DF590;
   local_c8 = local_74 - pfVar3[2];
   FUN_80017784(&local_dc);
   if (dVar6 <= dVar8) {
-    local_ac = FLOAT_803df590;
-    local_a8 = FLOAT_803df590;
-    local_a4 = FLOAT_803df590;
+    local_ac = lbl_803DF590;
+    local_a8 = lbl_803DF590;
+    local_a4 = lbl_803DF590;
   }
   else {
     fVar2 = (float)(DOUBLE_803df5a8 +
-                   (double)((float)((double)FLOAT_803df598 - param_2) * FLOAT_803df5b0)) *
+                   (double)((float)((double)lbl_803DF598 - param_2) * lbl_803DF5B0)) *
             (float)(dVar6 - dVar8);
     local_dc = local_dc * fVar2;
     local_d8 = local_d8 * fVar2;
@@ -650,9 +650,9 @@ void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double par
   local_7c = local_7c + local_ac;
   local_78 = local_78 + local_a8;
   local_74 = local_74 + local_a4;
-  local_ac = FLOAT_803df590;
-  local_a8 = FLOAT_803df590;
-  local_a4 = FLOAT_803df590;
+  local_ac = lbl_803DF590;
+  local_a8 = lbl_803DF590;
+  local_a4 = lbl_803DF590;
   for (; *(int *)(param_6 + 0x40) != -1; param_6 = param_6 + 0x48) {
     iVar5 = *(int *)(param_6 + 0x40) * 4;
     pfVar4 = ObjHits_ProjectPointToTaperedCapsuleXZ(
@@ -668,7 +668,7 @@ void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double par
     local_a4 = local_a4 + pfVar4[2];
   }
   *param_10 = local_ac - *pfVar3;
-  param_10[1] = FLOAT_803df590;
+  param_10[1] = lbl_803DF590;
   param_10[2] = local_a4 - pfVar3[2];
   FUN_80286880();
   return;
@@ -757,12 +757,12 @@ void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double
   local_d8 = *pfVar3 - local_cc;
   local_d4 = pfVar3[1] - local_c8;
   local_d0 = pfVar3[2] - local_c4;
-  local_6c = FLOAT_803df590;
-  local_68 = FLOAT_803df590;
-  local_64 = FLOAT_803df590;
-  local_b4 = FLOAT_803df590;
-  local_b0 = FLOAT_803df590;
-  local_ac = FLOAT_803df590;
+  local_6c = lbl_803DF590;
+  local_68 = lbl_803DF590;
+  local_64 = lbl_803DF590;
+  local_b4 = lbl_803DF590;
+  local_b0 = lbl_803DF590;
+  local_ac = lbl_803DF590;
   iVar5 = *(int *)(param_9 + 0x40) * 4;
   pfVar4 = ObjHits_CalcTaperedCapsuleNormal(
       (double)*(float *)(param_9 + 0x2c),(double)*(float *)(*(int *)(param_7 + 4) + iVar5),
@@ -770,7 +770,7 @@ void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double
       (double)*(float *)(*(int *)(param_7 + 0xc) + iVar5),&local_d8,(float *)(param_9 + 8),
       (float *)(param_9 + 0x14),afStack_a8);
   FUN_80017784(pfVar4);
-  dVar8 = (double)FLOAT_803df590;
+  dVar8 = (double)lbl_803DF590;
   for (iVar5 = param_6; *(int *)(iVar5 + 0x40) != -1; iVar5 = iVar5 + 0x48) {
     iVar2 = *(int *)(iVar5 + 0x40) * 4;
     pfVar4 = ObjHits_ProjectPointToTaperedCapsule3D(
@@ -811,9 +811,9 @@ void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double
   local_b8 = local_64 - pfVar3[2];
   FUN_80017784(&local_cc);
   if (dVar6 <= dVar8) {
-    local_9c = FLOAT_803df590;
-    local_98 = FLOAT_803df590;
-    local_94 = FLOAT_803df590;
+    local_9c = lbl_803DF590;
+    local_98 = lbl_803DF590;
+    local_94 = lbl_803DF590;
   }
   else {
     fVar1 = (float)(dVar6 - dVar8);
@@ -825,9 +825,9 @@ void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double
   local_6c = local_6c + local_9c;
   local_68 = local_68 + local_98;
   local_64 = local_64 + local_94;
-  local_9c = FLOAT_803df590;
-  local_98 = FLOAT_803df590;
-  local_94 = FLOAT_803df590;
+  local_9c = lbl_803DF590;
+  local_98 = lbl_803DF590;
+  local_94 = lbl_803DF590;
   for (; *(int *)(param_6 + 0x40) != -1; param_6 = param_6 + 0x48) {
     iVar5 = *(int *)(param_6 + 0x40) * 4;
     pfVar4 = ObjHits_ProjectPointToTaperedCapsule3D(
@@ -874,16 +874,16 @@ float *ObjHits_ProjectPointToTaperedCapsuleXZ(double param_1,double param_2,doub
   float local_68;
   float local_64;
   
-  fVar1 = FLOAT_803df590;
-  if ((double)FLOAT_803df590 <= param_2) {
+  fVar1 = lbl_803DF590;
+  if ((double)lbl_803DF590 <= param_2) {
     if (param_2 <= param_5) {
-      local_64 = (float)((double)FLOAT_803df598 / param_5);
+      local_64 = (float)((double)lbl_803DF598 / param_5);
       local_6c = (*param_8 - *param_7) * local_64;
       local_68 = (param_8[1] - param_7[1]) * local_64;
       local_64 = (param_8[2] - param_7[2]) * local_64;
       FUN_80017780(param_2,param_7,&local_6c,&local_78);
       *param_9 = *param_6 - local_78;
-      param_9[1] = FLOAT_803df590;
+      param_9[1] = lbl_803DF590;
       param_9[2] = param_6[2] - local_70;
       FUN_80017784(param_9);
       fVar1 = (float)(param_4 - param_3) * (float)(param_2 / param_5) + (float)(param_3 + param_1);
@@ -949,9 +949,9 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(double param_1,double param_2,doub
   float local_68;
   float local_64;
   
-  if ((double)FLOAT_803df590 <= param_2) {
+  if ((double)lbl_803DF590 <= param_2) {
     if (param_2 <= param_5) {
-      local_64 = (float)((double)FLOAT_803df598 / param_5);
+      local_64 = (float)((double)lbl_803DF598 / param_5);
       local_6c = (*param_8 - *param_7) * local_64;
       local_68 = (param_8[1] - param_7[1]) * local_64;
       local_64 = (param_8[2] - param_7[2]) * local_64;
@@ -1030,7 +1030,7 @@ float *ObjHits_CalcTaperedCapsuleNormal(double param_1,double param_2,double par
   float local_54;
   float local_50;
   
-  if ((double)FLOAT_803df590 < param_1) {
+  if ((double)lbl_803DF590 < param_1) {
     if (param_1 < param_4) {
       dVar3 = (double)(float)(param_3 - param_2);
       dVar2 = (double)(float)(dVar3 * (double)(float)(param_1 / param_4));
@@ -1043,7 +1043,7 @@ float *ObjHits_CalcTaperedCapsuleNormal(double param_1,double param_2,double par
       local_60 = param_5[1] - local_84;
       local_5c = param_5[2] - local_80;
       FUN_80017784(&local_64);
-      if (dVar3 == (double)FLOAT_803df590) {
+      if (dVar3 == (double)lbl_803DF590) {
         *param_8 = local_64;
         param_8[1] = local_60;
         param_8[2] = local_5c;
@@ -1054,7 +1054,7 @@ float *ObjHits_CalcTaperedCapsuleNormal(double param_1,double param_2,double par
         local_50 = (float)((double)local_50 * param_1);
         FUN_80017780(dVar2,&local_58,&local_64,afStack_70);
         FUN_80017784(afStack_70);
-        fVar1 = (float)((double)FLOAT_803df598 / param_1);
+        fVar1 = (float)((double)lbl_803DF598 / param_1);
         local_58 = local_58 * fVar1;
         local_54 = local_54 * fVar1;
         local_50 = local_50 * fVar1;
@@ -1113,7 +1113,7 @@ uint ObjHits_TestTaperedCapsuleXZ(double param_1,double param_2,double param_3,d
     *param_11 = fVar1;
     return ((uint)(byte)((*param_10 <= fVar1 * fVar1) << 1) << 0x1c) >> 0x1d;
   }
-  if (dVar3 < (double)FLOAT_803df590) {
+  if (dVar3 < (double)lbl_803DF590) {
     *param_10 = (float)(dVar4 * dVar4 + (double)(float)(dVar5 * dVar5));
     fVar1 = (float)(param_1 + param_2);
     *param_11 = fVar1;
@@ -1168,7 +1168,7 @@ uint ObjHits_TestTaperedCapsule3D(double param_1,double param_2,double param_3,d
     *param_11 = fVar1;
     return ((uint)(byte)((*param_10 <= fVar1 * fVar1) << 1) << 0x1c) >> 0x1d;
   }
-  if (dVar4 < (double)FLOAT_803df590) {
+  if (dVar4 < (double)lbl_803DF590) {
     *param_10 = (float)(dVar7 * dVar7 +
                        (double)(float)(dVar5 * dVar5 + (double)(float)(dVar6 * dVar6)));
     fVar1 = (float)(param_1 + param_2);
@@ -1319,7 +1319,7 @@ void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2)
     else {
       local_24 = 0;
     }
-    local_20 = FLOAT_803df598;
+    local_20 = lbl_803DF598;
     local_1c = -*(float *)(param_1 + 0xc);
     local_18 = -*(float *)(param_1 + 0xe);
     local_14 = -*(float *)(param_1 + 0x10);
@@ -1337,7 +1337,7 @@ void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2)
     else {
       local_24 = 0;
     }
-    local_20 = FLOAT_803df598;
+    local_20 = lbl_803DF598;
     local_1c = *(float *)(param_1 + 0xc);
     local_18 = *(float *)(param_1 + 0xe);
     local_14 = *(float *)(param_1 + 0x10);
@@ -1601,10 +1601,10 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
       uStack_1d4 = (int)*(short *)(iVar25 + 100) ^ 0x80000000;
       local_1d8 = 0x43300000;
       fVar2 = (float)((double)CONCAT44(0x43300000,uStack_1d4) - DOUBLE_803df5c0);
-      dVar32 = (double)FLOAT_803dda58;
+      dVar32 = (double)lbl_803DDA58;
       local_214 = (float)((double)*(float *)(iVar14 + 0x18) - dVar32);
       local_210 = *(undefined4 *)(iVar14 + 0x1c);
-      param_2 = (double)FLOAT_803dda5c;
+      param_2 = (double)lbl_803DDA5C;
       local_20c = (float)((double)*(float *)(iVar14 + 0x20) - param_2);
       local_1f4 = (float)((double)*(float *)(iVar25 + 0x1c) - dVar32);
       local_1f0 = *(undefined4 *)(iVar25 + 0x20);
@@ -1642,10 +1642,10 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
       uStack_1d4 = (int)*(short *)(iVar24 + 100) ^ 0x80000000;
       local_1d8 = 0x43300000;
       fVar2 = (float)((double)CONCAT44(0x43300000,uStack_1d4) - DOUBLE_803df5c0);
-      dVar32 = (double)FLOAT_803dda58;
+      dVar32 = (double)lbl_803DDA58;
       local_204 = (float)((double)*(float *)(iVar15 + 0x18) - dVar32);
       local_200 = *(undefined4 *)(iVar15 + 0x1c);
-      param_2 = (double)FLOAT_803dda5c;
+      param_2 = (double)lbl_803DDA5C;
       local_1fc = (float)((double)*(float *)(iVar15 + 0x20) - param_2);
       local_1e8 = local_218;
       local_1e4 = (float)((double)*(float *)(iVar25 + 0x1c) - dVar32);
@@ -1677,7 +1677,7 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
     dVar32 = FUN_80293900((double)(float)(dVar39 * dVar39 +
                                          (double)(float)(dVar41 * dVar41 +
                                                         (double)(float)(dVar40 * dVar40))));
-    if (dVar32 <= (double)(FLOAT_803df5b4 + (float)(dVar44 + dVar42))) {
+    if (dVar32 <= (double)(lbl_803DF5B4 + (float)(dVar44 + dVar42))) {
       uVar22 = 0;
       uVar23 = 0;
       uVar20 = 0;
@@ -1719,7 +1719,7 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
         } while (uVar31 != 0);
       }
       local_1a4 = (float *)&DAT_80342e58;
-      local_1c4 = FLOAT_803df5b8;
+      local_1c4 = lbl_803DF5B8;
       iVar16 = 1;
       while (iVar16 != 0) {
         iVar16 = 0;
@@ -1746,11 +1746,11 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
               in_f18 = (double)(float)(in_f19 * in_f19 +
                                       (double)(float)(in_f21 * in_f21 +
                                                      (double)(float)(in_f20 * in_f20)));
-              if (in_f18 <= (double)FLOAT_803df590) {
+              if (in_f18 <= (double)lbl_803DF590) {
                 bVar1 = true;
               }
               else {
-                local_1c8 = (float)((double)FLOAT_803df598 / in_f18);
+                local_1c8 = (float)((double)lbl_803DF598 / in_f18);
               }
             }
             local_1ac = (float)(dVar42 - dVar43);
@@ -1793,7 +1793,7 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
                       dVar39 = (double)(float)(dVar44 - (double)pfVar30[3]);
                       dVar32 = (double)(float)(dVar39 * dVar39 + dVar32);
                       if (dVar32 < in_f22) {
-                        dVar40 = (double)FLOAT_803df590;
+                        dVar40 = (double)lbl_803DF590;
                         unaff_r26 = 1;
                       }
                     }
@@ -1828,11 +1828,11 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
                     dVar35 = (double)(float)(dVar36 * in_f19 +
                                             (double)(float)(dVar38 * in_f21 +
                                                            (double)(float)(dVar37 * in_f20)));
-                    if ((dVar35 <= (double)FLOAT_803df590) || (dVar33 <= (double)FLOAT_803df590)) {
+                    if ((dVar35 <= (double)lbl_803DF590) || (dVar33 <= (double)lbl_803DF590)) {
                       dVar33 = (double)(float)(dVar35 * dVar35 - (double)(float)(in_f18 * dVar33));
-                      if (((double)FLOAT_803df590 <= dVar33) &&
+                      if (((double)lbl_803DF590 <= dVar33) &&
                          ((dVar34 = (double)(float)(in_f18 + dVar35),
-                          (double)FLOAT_803df590 <= dVar34 ||
+                          (double)lbl_803DF590 <= dVar34 ||
                           ((double)(float)(dVar34 * dVar34) <= dVar33)))) {
                         unaff_r26 = 1;
                         dVar32 = FUN_80293900(dVar33);
@@ -1853,7 +1853,7 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
                                                          (double)(float)(dVar41 * dVar41 +
                                                                         (double)(float)(dVar40 * 
                                                   dVar40))));
-                    if ((double)FLOAT_803df590 < in_f22) {
+                    if ((double)lbl_803DF590 < in_f22) {
                       dVar41 = (double)(float)(dVar41 / in_f22);
                       dVar40 = (double)(float)(dVar40 / in_f22);
                       dVar39 = (double)(float)(dVar39 / in_f22);
@@ -1863,10 +1863,10 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
                     pfVar29[3] = (float)(dVar40 * dVar33);
                     pfVar29[4] = (float)(dVar39 * dVar33);
                   }
-                  else if ((double)FLOAT_803df590 < dVar32) {
+                  else if ((double)lbl_803DF590 < dVar32) {
                     dVar33 = FUN_80293900(in_f22);
                     dVar32 = FUN_80293900(dVar32);
-                    in_f22 = (double)FLOAT_803df590;
+                    in_f22 = (double)lbl_803DF590;
                     if (in_f22 < dVar33) {
                       in_f22 = (double)(float)((double)(float)(dVar33 - dVar32) / dVar33);
                     }
@@ -1941,12 +1941,12 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
         }
       }
       if ((cVar18 == '\0') || (local_1a8 == 0)) {
-        if ((cVar19 != '\0') && ((FLOAT_803df590 < local_1c4 && (iVar14 == param_11)))) {
+        if ((cVar19 != '\0') && ((lbl_803DF590 < local_1c4 && (iVar14 == param_11)))) {
           ObjHits_RecordObjectHit(iVar15,iVar14,*(char *)(local_198 + 0x6c),*(undefined *)(local_198 + 0x6d),
                        (char)unaff_r26);
           ObjHits_RecordObjectHit(iVar14,iVar15,*(char *)(iVar24 + 0x6c),*(undefined *)(iVar24 + 0x6d),
                        (char)unaff_r27);
-          ObjHits_ApplyPairResponse(-(double)local_1bc,(double)FLOAT_803df590,-(double)local_1c0,
+          ObjHits_ApplyPairResponse(-(double)local_1bc,(double)lbl_803DF590,-(double)local_1c0,
                                     iVar14,iVar15,0);
         }
       }
@@ -2339,7 +2339,7 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
     dVar9 = (double)((float)((double)CONCAT44(0x43300000,uStack_74) - DOUBLE_803df5d0) *
                      (float)(dVar8 * dVar8) +
                     (float)((double)CONCAT44(0x43300000,uStack_6c) - DOUBLE_803df5d0) *
-                    (FLOAT_803df598 - (float)(dVar8 * dVar8)));
+                    (lbl_803DF598 - (float)(dVar8 * dVar8)));
     uStack_64 = uVar3 ^ 0x80000000;
     local_68 = 0x43300000;
     dVar8 = (double)FUN_80294964();
@@ -2350,16 +2350,16 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
     dVar8 = (double)((float)((double)CONCAT44(0x43300000,uStack_5c) - DOUBLE_803df5d0) *
                      (float)(dVar8 * dVar8) +
                     (float)((double)CONCAT44(0x43300000,uStack_54) - DOUBLE_803df5d0) *
-                    (FLOAT_803df598 - (float)(dVar8 * dVar8)));
-    if ((double)(float)(dVar8 * (double)FLOAT_803dc0b0) <= dVar9) {
-      if (dVar8 < (double)(float)(dVar9 * (double)FLOAT_803dc0b0)) {
-        dVar8 = (double)FLOAT_803df590;
+                    (lbl_803DF598 - (float)(dVar8 * dVar8)));
+    if ((double)(float)(dVar8 * (double)lbl_803DC0B0) <= dVar9) {
+      if (dVar8 < (double)(float)(dVar9 * (double)lbl_803DC0B0)) {
+        dVar8 = (double)lbl_803DF590;
       }
     }
     else {
-      dVar9 = (double)FLOAT_803df590;
+      dVar9 = (double)lbl_803DF590;
     }
-    dVar7 = (double)FLOAT_803df590;
+    dVar7 = (double)lbl_803DF590;
     if (dVar7 < (double)(float)(dVar9 + dVar8)) {
       dVar7 = (double)(float)(dVar8 / (double)(float)(dVar9 + dVar8));
     }
@@ -2369,7 +2369,7 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
     FUN_800068f8((double)*(float *)(psVar2 + 6),(double)*(float *)(psVar2 + 8),
                  (double)*(float *)(psVar2 + 10),(float *)(psVar2 + 0xc),(float *)(psVar2 + 0xe),
                  (float *)(psVar2 + 0x10),*(int *)(psVar2 + 0x18));
-    fVar1 = (float)((double)FLOAT_803df598 - dVar7);
+    fVar1 = (float)((double)lbl_803DF598 - dVar7);
     *(float *)(psVar4 + 6) = local_90 * fVar1 + *(float *)(psVar4 + 6);
     *(float *)(psVar4 + 8) = local_94 * fVar1 + *(float *)(psVar4 + 8);
     *(float *)(psVar4 + 10) = local_98 * fVar1 + *(float *)(psVar4 + 10);
@@ -2441,7 +2441,7 @@ void ObjHits_DetectObjectPair(void)
   bVar9 = false;
   bVar1 = *(byte *)(iVar14 + 0x62);
   if (((bVar1 & 2) != 0) || ((*(byte *)(iVar15 + 0x62) & 2) != 0)) {
-    if (dVar22 <= (double)FLOAT_803df590) {
+    if (dVar22 <= (double)lbl_803DF590) {
       dVar22 = dVar20;
       if ((bVar1 & 2) != 0) {
         local_b0 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar14 + 0x5e) ^ 0x80000000);
@@ -2473,12 +2473,12 @@ void ObjHits_DetectObjectPair(void)
       }
       if ((float)(dVar17 + dVar22) < (float)dVar18) goto LAB_800344f4;
     }
-    dVar22 = (double)FLOAT_803df590;
+    dVar22 = (double)lbl_803DF590;
     bVar9 = true;
   }
   dVar18 = (double)(float)(dVar21 * dVar21 +
                           (double)(float)(dVar23 * dVar23 + (double)(float)(dVar22 * dVar22)));
-  if (dVar18 != (double)FLOAT_803df590) {
+  if (dVar18 != (double)lbl_803DF590) {
     dVar18 = FUN_80293900(dVar18);
   }
   iVar11 = (int)((double)CONCAT44(0x43300000,(int)dVar18 ^ 0x80000000) - DOUBLE_803df5c0);
@@ -2504,21 +2504,21 @@ void ObjHits_DetectObjectPair(void)
     fVar7 = *(float *)(iVar10 + 0x20) - fVar4;
     fVar6 = *(float *)(iVar10 + 0x1c) - fVar3;
     if (bVar9) {
-      fVar6 = FLOAT_803df590;
+      fVar6 = lbl_803DF590;
     }
     fVar8 = fVar7 * fVar7 + fVar5 * fVar5 + fVar6 * fVar6;
-    if (FLOAT_803df598 < fVar8) {
+    if (lbl_803DF598 < fVar8) {
       fVar8 = (fVar7 * (*(float *)(iVar12 + 0x20) - fVar4) +
               fVar5 * (*(float *)(iVar12 + 0x18) - fVar2) +
               fVar6 * (*(float *)(iVar12 + 0x1c) - fVar3)) / fVar8;
-      if ((FLOAT_803df590 <= fVar8) && (fVar8 <= FLOAT_803df598)) {
+      if ((lbl_803DF590 <= fVar8) && (fVar8 <= lbl_803DF598)) {
         fVar4 = (fVar8 * fVar7 + fVar4) - *(float *)(iVar12 + 0x20);
         fVar5 = (fVar8 * fVar5 + fVar2) - *(float *)(iVar12 + 0x18);
         fVar2 = (fVar8 * fVar6 + fVar3) - *(float *)(iVar12 + 0x1c);
         dVar18 = FUN_80293900((double)(fVar4 * fVar4 + fVar5 * fVar5 + fVar2 * fVar2));
       }
     }
-    if ((dVar18 < dVar17) && ((double)FLOAT_803df590 < dVar18)) {
+    if ((dVar18 < dVar17) && ((double)lbl_803DF590 < dVar18)) {
       ObjHits_RecordObjectHit(iVar12,iVar10,*(char *)(iVar15 + 0x6c),*(undefined *)(iVar15 + 0x6d),0);
       ObjHits_RecordObjectHit(iVar10,iVar12,*(char *)(iVar14 + 0x6c),*(undefined *)(iVar14 + 0x6d),0);
       if (((*(ushort *)(iVar14 + 0x60) & 2) == 0) && ((*(ushort *)(iVar15 + 0x60) & 2) == 0)) {
@@ -2526,13 +2526,13 @@ void ObjHits_DetectObjectPair(void)
         dVar24 = (double)(*(float *)(iVar14 + 0x24) - *(float *)(iVar15 + 0x24));
         fVar2 = *(float *)(iVar14 + 0x20) - *(float *)(iVar15 + 0x20);
         if (bVar9) {
-          fVar2 = FLOAT_803df590;
+          fVar2 = lbl_803DF590;
         }
         dVar19 = (double)fVar2;
         dVar16 = FUN_80293900((double)(float)(dVar24 * dVar24 +
                                              (double)(float)(dVar20 * dVar20 +
                                                             (double)(float)(dVar19 * dVar19))));
-        if (dVar16 <= (double)FLOAT_803df590) {
+        if (dVar16 <= (double)lbl_803DF590) {
           dVar20 = dVar23 / dVar18;
           dVar19 = dVar22 / dVar18;
           dVar24 = dVar21 / dVar18;
@@ -2615,9 +2615,9 @@ static void ObjHits_CheckSkeletonPairInner(undefined4 param_1, undefined4 param_
           ObjHits_CheckSkeletonPairInner(iVar7, iVar5, param_3, recursionDepth + 1);
         }
       } else {
-        local_60 = *(float *)(iVar7 + 0x18) - FLOAT_803dda58;
+        local_60 = *(float *)(iVar7 + 0x18) - lbl_803DDA58;
         local_5c = *(float *)(iVar7 + 0x1c);
-        local_58 = *(float *)(iVar7 + 0x20) - FLOAT_803dda5c;
+        local_58 = *(float *)(iVar7 + 0x20) - lbl_803DDA5C;
         uStack_2c = (int)*(short *)(iVar9 + 0x5a) ^ 0x80000000;
         local_30 = 0x43300000;
         uStack_24 = (int)*(short *)(iVar9 + 0x5e) ^ 0x80000000;
@@ -2640,25 +2640,25 @@ static void ObjHits_CheckSkeletonPairInner(undefined4 param_1, undefined4 param_
                             (*(float *)(iVar5 + 0xa8) * *(float *)(iVar7 + 8)));
           uStack_1c = (int)*(short *)(iVar9 + 0x5a) ^ 0x80000000;
           local_20 = 0x43300000;
-          dVar10 = (double)FLOAT_803df590;
-          if ((dVar10 <= dVar11) && (dVar10 = dVar11, (double)FLOAT_803df598 < dVar11)) {
-            dVar10 = (double)FLOAT_803df598;
+          dVar10 = (double)lbl_803DF590;
+          if ((dVar10 <= dVar11) && (dVar10 = dVar11, (double)lbl_803DF598 < dVar11)) {
+            dVar10 = (double)lbl_803DF598;
           }
           ObjHits_CalcSkeletonResponseXZ(
               (double)(float)((double)CONCAT44(0x43300000, uStack_1c) - DOUBLE_803df5c0),dVar10,
               (double)local_64,(undefined4)&local_3c,iVar7,(int)param_3,piVar8[5],*piVar8,
               local_68,&local_48);
-          fVar2 = FLOAT_803df5d8;
-          if ((FLOAT_803df5d8 <= local_48) && (fVar2 = local_48, FLOAT_803df5dc < local_48)) {
-            fVar2 = FLOAT_803df5dc;
+          fVar2 = lbl_803DF5D8;
+          if ((lbl_803DF5D8 <= local_48) && (fVar2 = local_48, lbl_803DF5DC < local_48)) {
+            fVar2 = lbl_803DF5DC;
           }
-          fVar3 = FLOAT_803df5d8;
-          if ((FLOAT_803df5d8 <= local_44) && (fVar3 = local_44, FLOAT_803df5dc < local_44)) {
-            fVar3 = FLOAT_803df5dc;
+          fVar3 = lbl_803DF5D8;
+          if ((lbl_803DF5D8 <= local_44) && (fVar3 = local_44, lbl_803DF5DC < local_44)) {
+            fVar3 = lbl_803DF5DC;
           }
-          fVar4 = FLOAT_803df5d8;
-          if ((FLOAT_803df5d8 <= local_40) && (fVar4 = local_40, FLOAT_803df5dc < local_40)) {
-            fVar4 = FLOAT_803df5dc;
+          fVar4 = lbl_803DF5D8;
+          if ((lbl_803DF5D8 <= local_40) && (fVar4 = local_40, lbl_803DF5DC < local_40)) {
+            fVar4 = lbl_803DF5DC;
           }
           local_48 = fVar2;
           local_44 = fVar3;
@@ -2667,9 +2667,9 @@ static void ObjHits_CheckSkeletonPairInner(undefined4 param_1, undefined4 param_
         }
       }
     } else {
-      local_54 = *(float *)(iVar7 + 0x18) - FLOAT_803dda58;
+      local_54 = *(float *)(iVar7 + 0x18) - lbl_803DDA58;
       local_50 = *(float *)(iVar7 + 0x1c);
-      local_4c = *(float *)(iVar7 + 0x20) - FLOAT_803dda5c;
+      local_4c = *(float *)(iVar7 + 0x20) - lbl_803DDA5C;
       uStack_2c = (int)*(short *)(iVar9 + 0x5a) ^ 0x80000000;
       local_30 = 0x43300000;
       local_3c = local_54;
@@ -2683,25 +2683,25 @@ static void ObjHits_CheckSkeletonPairInner(undefined4 param_1, undefined4 param_
                           (*(float *)(iVar5 + 0xa8) * *(float *)(iVar5 + 8)));
         uStack_2c = (int)*(short *)(iVar9 + 0x5a) ^ 0x80000000;
         local_30 = 0x43300000;
-        dVar10 = (double)FLOAT_803df590;
-        if ((dVar10 <= dVar11) && (dVar10 = dVar11, (double)FLOAT_803df598 < dVar11)) {
-          dVar10 = (double)FLOAT_803df598;
+        dVar10 = (double)lbl_803DF590;
+        if ((dVar10 <= dVar11) && (dVar10 = dVar11, (double)lbl_803DF598 < dVar11)) {
+          dVar10 = (double)lbl_803DF598;
         }
         ObjHits_CalcSkeletonResponse3D(
             (double)(float)((double)CONCAT44(0x43300000, uStack_2c) - DOUBLE_803df5c0),dVar10,
             (double)local_64,(undefined4)&local_3c,iVar7,(int)param_3,piVar8[5],*piVar8,
             local_68,&local_48);
-        fVar2 = FLOAT_803df5d8;
-        if ((FLOAT_803df5d8 <= local_48) && (fVar2 = local_48, FLOAT_803df5dc < local_48)) {
-          fVar2 = FLOAT_803df5dc;
+        fVar2 = lbl_803DF5D8;
+        if ((lbl_803DF5D8 <= local_48) && (fVar2 = local_48, lbl_803DF5DC < local_48)) {
+          fVar2 = lbl_803DF5DC;
         }
-        fVar3 = FLOAT_803df5d8;
-        if ((FLOAT_803df5d8 <= local_44) && (fVar3 = local_44, FLOAT_803df5dc < local_44)) {
-          fVar3 = FLOAT_803df5dc;
+        fVar3 = lbl_803DF5D8;
+        if ((lbl_803DF5D8 <= local_44) && (fVar3 = local_44, lbl_803DF5DC < local_44)) {
+          fVar3 = lbl_803DF5DC;
         }
-        fVar4 = FLOAT_803df5d8;
-        if ((FLOAT_803df5d8 <= local_40) && (fVar4 = local_40, FLOAT_803df5dc < local_40)) {
-          fVar4 = FLOAT_803df5dc;
+        fVar4 = lbl_803DF5D8;
+        if ((lbl_803DF5D8 <= local_40) && (fVar4 = local_40, lbl_803DF5DC < local_40)) {
+          fVar4 = lbl_803DF5DC;
         }
         local_48 = fVar2;
         local_44 = fVar3;
@@ -2789,8 +2789,8 @@ void ObjHits_CheckTrackContact(void)
       uStack_2c = (uint)*(byte *)(*(int *)(iVar23 + 0x50) + 0x8f);
       local_30 = 0x43300000;
       local_60[0] = (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803df5d0);
-      if (local_60[0] < FLOAT_803df59c) {
-        local_60[0] = FLOAT_803df59c;
+      if (local_60[0] < lbl_803DF59C) {
+        local_60[0] = lbl_803DF59C;
       }
       local_50[0] = 0xff;
       local_50[4] = 7;
@@ -2815,12 +2815,12 @@ void ObjHits_CheckTrackContact(void)
           uVar7 = (uint)*(ushort *)(iVar18 + 0x14);
           if (uVar7 == 0) {
             if (iVar23 < 4) {
-              *(float *)((int)local_e8 + iVar16) = FLOAT_803dda58 + (float)puVar8[1];
+              *(float *)((int)local_e8 + iVar16) = lbl_803DDA58 + (float)puVar8[1];
               *(undefined4 *)((int)local_e8 + iVar16 + 4) = puVar8[2];
-              *(float *)((int)local_e8 + iVar16 + 8) = FLOAT_803dda5c + (float)puVar8[3];
-              *(float *)((int)local_130 + iVar16) = FLOAT_803dda58 + *(float *)(iVar10 + 4);
+              *(float *)((int)local_e8 + iVar16 + 8) = lbl_803DDA5C + (float)puVar8[3];
+              *(float *)((int)local_130 + iVar16) = lbl_803DDA58 + *(float *)(iVar10 + 4);
               *(undefined4 *)((int)local_130 + iVar16 + 4) = *(undefined4 *)(iVar10 + 8);
-              *(float *)((int)local_130 + iVar16 + 8) = FLOAT_803dda5c + *(float *)(iVar10 + 0xc);
+              *(float *)((int)local_130 + iVar16 + 8) = lbl_803DDA5C + *(float *)(iVar10 + 0xc);
               *(undefined4 *)((int)local_60 + iVar15) = *puVar8;
               local_50[iVar23] = 0xff;
               local_50[iVar23 + 4] = 7;
@@ -2838,13 +2838,13 @@ void ObjHits_CheckTrackContact(void)
               uVar1 = ((int)(uVar7 & 0xf000) >> 0xc) + iVar11 & 0xffff;
               if (iVar23 < 4) {
                 puVar17 = puVar13 + uVar1 * 4;
-                *pfVar22 = FLOAT_803dda58 + (float)puVar17[1];
+                *pfVar22 = lbl_803DDA58 + (float)puVar17[1];
                 pfVar22[1] = (float)puVar17[2];
-                pfVar22[2] = FLOAT_803dda5c + (float)puVar17[3];
+                pfVar22[2] = lbl_803DDA5C + (float)puVar17[3];
                 iVar18 = iVar14 + uVar1 * 0x10;
-                *pfVar21 = FLOAT_803dda58 + *(float *)(iVar18 + 4);
+                *pfVar21 = lbl_803DDA58 + *(float *)(iVar18 + 4);
                 pfVar21[1] = *(float *)(iVar18 + 8);
-                pfVar21[2] = FLOAT_803dda5c + *(float *)(iVar18 + 0xc);
+                pfVar21[2] = lbl_803DDA5C + *(float *)(iVar18 + 0xc);
                 *(undefined4 *)(puVar20 + 0x40) = *puVar17;
                 puVar19[0x50] = 0xff;
                 puVar19[0x54] = 7;
@@ -2952,8 +2952,8 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
   sweepPtrs = (ObjHitsSweepEntry **)&DAT_80341558;
   sweepEntries = (ObjHitsSweepEntry *)&DAT_80341b98;
   nextEntry = (ObjHitsSweepEntry *)&DAT_80341ba4;
-  sweepEntries->maxX = FLOAT_803df5e0;
-  sweepEntries->minX = FLOAT_803df5e0;
+  sweepEntries->maxX = lbl_803DF5E0;
+  sweepEntries->minX = lbl_803DF5E0;
   sweepPtrs[0] = sweepEntries;
   slotCount = 1;
   entrySlot = (ObjHitsSweepEntry **)&DAT_8034155c;
@@ -3026,8 +3026,8 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
         if ((((*(char *)(objState + 0x71) != '\0') || ((*(ushort *)(objState + 0x60) & 8) != 0)) &&
             ((*(ushort *)(objState + 0x60) & 0x40) == 0)) &&
             ((*(ushort *)(objState + 0x60) & 0x4000) == 0)) {
-          *(float *)(obj + 0x24) = FLOAT_803dc078 * (*(float *)(obj + 0xc) - *(float *)(obj + 0x80));
-          *(float *)(obj + 0x2c) = FLOAT_803dc078 * (*(float *)(obj + 0x14) - *(float *)(obj + 0x88));
+          *(float *)(obj + 0x24) = lbl_803DC078 * (*(float *)(obj + 0xc) - *(float *)(obj + 0x80));
+          *(float *)(obj + 0x2c) = lbl_803DC078 * (*(float *)(obj + 0x14) - *(float *)(obj + 0x88));
         }
         entrySlot++;
       }
@@ -3062,12 +3062,12 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
         attachedState = *(int *)(candidateObj + 0x54);
         if ((slotIndex != candidateIndex) && (*(int *)(obj + 0x30) != candidateObj)) {
           dVar17 = (double)(*(float *)(obj + 0x20) - *(float *)(candidateObj + 0x20));
-          if (dVar17 <= (double)FLOAT_803df590) {
+          if (dVar17 <= (double)lbl_803DF590) {
             dVar17 = -dVar17;
           }
           if (dVar17 < (double)(*(float *)(objState + 0x2c) + *(float *)(attachedState + 0x2c))) {
             dVar17 = (double)(*(float *)(obj + 0x1c) - *(float *)(candidateObj + 0x1c));
-            if (dVar17 <= (double)FLOAT_803df590) {
+            if (dVar17 <= (double)lbl_803DF590) {
               dVar17 = -dVar17;
             }
             canOverlap = dVar17 < (double)(*(float *)(objState + 0x28) + *(float *)(attachedState + 0x28));
@@ -3097,7 +3097,7 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
             }
             if (dVar17 < (double)(*(float *)(objState + 0x34) + *(float *)(attachedState + 0x34))) {
               param_2 = (double)(*(float *)(obj + 0x1c) - *(float *)(candidateObj + 0x1c));
-              if (param_2 <= (double)FLOAT_803df590) {
+              if (param_2 <= (double)lbl_803DF590) {
                 param_2 = -param_2;
               }
               canHit = param_2 < (double)(*(float *)(objState + 0x30) + *(float *)(attachedState + 0x30));
@@ -3113,7 +3113,7 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
                      ((*(ushort *)(*(int *)(candidateAttachedObj + 0x54) + 0x60) & 1) == 0))) {
                   candidateAttachedObj = 0;
                 }
-                ObjHits_CheckObjectHitVolumes((double)FLOAT_803dc074, param_2, param_3, param_4,
+                ObjHits_CheckObjectHitVolumes((double)lbl_803DC074, param_2, param_3, param_4,
                                               param_5, param_6, param_7, param_8, obj, candidateObj,
                                               attachedObj, candidateAttachedObj);
               }

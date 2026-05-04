@@ -20,10 +20,10 @@ extern undefined4 DAT_803ad3fc;
 extern undefined4* DAT_803dd6fc;
 extern undefined4 DAT_803de740;
 extern f64 DOUBLE_803e4600;
-extern f32 FLOAT_803e45d0;
-extern f32 FLOAT_803e45e8;
-extern f32 FLOAT_803e45f0;
-extern f32 FLOAT_803e460c;
+extern f32 lbl_803E45D0;
+extern f32 lbl_803E45E8;
+extern f32 lbl_803E45F0;
+extern f32 lbl_803E460C;
 
 /*
  * --INFO--
@@ -111,8 +111,8 @@ void FUN_801826e8(void)
           *(int *)(iVar5 + 0x10) = piVar2[0x20];
           *(int *)(iVar5 + 0x14) = piVar2[0x21];
           *(int *)(iVar5 + 0x18) = piVar2[0x22];
-          fVar1 = FLOAT_803e45d0;
-          piVar2[9] = (int)FLOAT_803e45d0;
+          fVar1 = lbl_803E45D0;
+          piVar2[9] = (int)lbl_803E45D0;
           piVar2[10] = (int)fVar1;
           piVar2[0xb] = (int)fVar1;
         }
@@ -124,8 +124,8 @@ void FUN_801826e8(void)
           *(int *)(iVar5 + 0x10) = piVar2[0x20];
           *(int *)(iVar5 + 0x14) = piVar2[0x21];
           *(int *)(iVar5 + 0x18) = piVar2[0x22];
-          fVar1 = FLOAT_803e45d0;
-          piVar2[9] = (int)FLOAT_803e45d0;
+          fVar1 = lbl_803E45D0;
+          piVar2[9] = (int)lbl_803E45D0;
           piVar2[10] = (int)fVar1;
           piVar2[0xb] = (int)fVar1;
         }
@@ -137,8 +137,8 @@ void FUN_801826e8(void)
     *(int *)(iVar5 + 0x10) = piVar2[0x20];
     *(int *)(iVar5 + 0x14) = piVar2[0x21];
     *(int *)(iVar5 + 0x18) = piVar2[0x22];
-    fVar1 = FLOAT_803e45d0;
-    piVar2[9] = (int)FLOAT_803e45d0;
+    fVar1 = lbl_803E45D0;
+    piVar2[9] = (int)lbl_803E45D0;
     piVar2[10] = (int)fVar1;
     piVar2[0xb] = (int)fVar1;
   }
@@ -174,12 +174,12 @@ void FUN_801829e4(int param_1)
   *(undefined *)(iVar2 + 6) = 0;
   *(undefined *)(iVar2 + 5) = 0;
   *(undefined *)(iVar2 + 9) = 1;
-  *(float *)(param_1 + 0x28) = FLOAT_803e45f0;
-  *(float *)(param_1 + 0x2c) = FLOAT_803e460c;
-  local_1c = FLOAT_803e45d0;
-  local_18 = FLOAT_803e45d0;
-  local_14 = FLOAT_803e45d0;
-  local_20 = FLOAT_803e45e8;
+  *(float *)(param_1 + 0x28) = lbl_803E45F0;
+  *(float *)(param_1 + 0x2c) = lbl_803E460C;
+  local_1c = lbl_803E45D0;
+  local_18 = lbl_803E45D0;
+  local_14 = lbl_803E45D0;
+  local_20 = lbl_803E45E8;
   local_28[2] = 0;
   local_28[1] = 0;
   local_28[0] = *puVar1;

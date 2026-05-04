@@ -8,16 +8,16 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800810f8();
 
 extern f64 DOUBLE_803e4bc0;
-extern f32 FLOAT_803e4b98;
-extern f32 FLOAT_803e4b9c;
-extern f32 FLOAT_803e4ba0;
-extern f32 FLOAT_803e4ba4;
-extern f32 FLOAT_803e4ba8;
-extern f32 FLOAT_803e4bac;
-extern f32 FLOAT_803e4bb0;
-extern f32 FLOAT_803e4bb4;
-extern f32 FLOAT_803e4bb8;
-extern f32 FLOAT_803e4bbc;
+extern f32 lbl_803E4B98;
+extern f32 lbl_803E4B9C;
+extern f32 lbl_803E4BA0;
+extern f32 lbl_803E4BA4;
+extern f32 lbl_803E4BA8;
+extern f32 lbl_803E4BAC;
+extern f32 lbl_803E4BB0;
+extern f32 lbl_803E4BB4;
+extern f32 lbl_803E4BB8;
+extern f32 lbl_803E4BBC;
 
 /*
  * --INFO--
@@ -59,18 +59,18 @@ void FUN_80191f74(int param_1)
   float local_4;
   
   if (*(short *)(param_1 + 0x46) == 0x79) {
-    local_c = FLOAT_803e4b9c;
-    local_8 = FLOAT_803e4ba0;
-    local_4 = FLOAT_803e4b9c;
-    FUN_800810f8((double)FLOAT_803e4ba4,(double)FLOAT_803e4ba8,(double)FLOAT_803e4ba8,
-                 (double)FLOAT_803e4bac,param_1,5,5,2,0x19,(int)auStack_18,0);
+    local_c = lbl_803E4B9C;
+    local_8 = lbl_803E4BA0;
+    local_4 = lbl_803E4B9C;
+    FUN_800810f8((double)lbl_803E4BA4,(double)lbl_803E4BA8,(double)lbl_803E4BA8,
+                 (double)lbl_803E4BAC,param_1,5,5,2,0x19,(int)auStack_18,0);
   }
   else if (*(short *)(param_1 + 0x46) == 0x748) {
-    local_c = FLOAT_803e4b9c;
-    local_8 = FLOAT_803e4bb0;
-    local_4 = FLOAT_803e4b9c;
-    FUN_800810f8((double)FLOAT_803e4bb4,(double)FLOAT_803e4bb8,(double)FLOAT_803e4bb8,
-                 (double)FLOAT_803e4bac,param_1,5,5,2,5,(int)auStack_18,0);
+    local_c = lbl_803E4B9C;
+    local_8 = lbl_803E4BB0;
+    local_4 = lbl_803E4B9C;
+    FUN_800810f8((double)lbl_803E4BB4,(double)lbl_803E4BB8,(double)lbl_803E4BB8,
+                 (double)lbl_803E4BAC,param_1,5,5,2,5,(int)auStack_18,0);
   }
   return;
 }
@@ -96,9 +96,9 @@ void FUN_80192000(short *param_1,int param_2)
   if (*(byte *)(param_2 + 0x1b) != 0) {
     *(float *)(param_1 + 4) =
          (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_2 + 0x1b)) - DOUBLE_803e4bc0) /
-         FLOAT_803e4bbc;
-    if (*(float *)(param_1 + 4) == FLOAT_803e4b9c) {
-      *(float *)(param_1 + 4) = FLOAT_803e4b98;
+         lbl_803E4BBC;
+    if (*(float *)(param_1 + 4) == lbl_803E4B9C) {
+      *(float *)(param_1 + 4) = lbl_803E4B98;
     }
     *(float *)(param_1 + 4) = *(float *)(param_1 + 4) * *(float *)(*(int *)(param_1 + 0x28) + 4);
   }

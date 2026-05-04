@@ -22,9 +22,9 @@ extern undefined4 FUN_8028688c();
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd72c;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e5f10;
-extern f32 FLOAT_803e5f14;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E5F10;
+extern f32 lbl_803E5F14;
 
 /*
  * --INFO--
@@ -86,11 +86,11 @@ void FUN_801d0004(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   iVar1 = FUN_80286840();
   pfVar10 = *(float **)(iVar1 + 0xb8);
   psVar2 = (short *)FUN_80017a98();
-  if ((double)FLOAT_803e5f10 < (double)*pfVar10) {
+  if ((double)lbl_803E5F10 < (double)*pfVar10) {
     FUN_80006c88((double)*pfVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x435);
-    *pfVar10 = *pfVar10 - FLOAT_803dc074;
-    if (*pfVar10 < FLOAT_803e5f10) {
-      *pfVar10 = FLOAT_803e5f10;
+    *pfVar10 = *pfVar10 - lbl_803DC074;
+    if (*pfVar10 < lbl_803E5F10) {
+      *pfVar10 = lbl_803E5F10;
     }
   }
   cVar7 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(iVar1 + 0xac));
@@ -181,7 +181,7 @@ void FUN_801d0004(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         if (((uint)fVar6 & 1) == 0) {
           if (((uint)fVar6 & 4) == 0) {
             dVar12 = FUN_80006b3c();
-            dVar11 = (double)FLOAT_803e5f14;
+            dVar11 = (double)lbl_803E5F14;
             FUN_80006b4c();
             FUN_80006b54(0x15,(uint)*(byte *)((int)pfVar10 + 5) + (int)(dVar12 / dVar11));
             FUN_80006b50();

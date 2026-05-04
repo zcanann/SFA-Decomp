@@ -34,16 +34,16 @@ extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e54b0;
 extern f64 DOUBLE_803e54d8;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e54ac;
-extern f32 FLOAT_803e54b8;
-extern f32 FLOAT_803e54bc;
-extern f32 FLOAT_803e54c0;
-extern f32 FLOAT_803e54c4;
-extern f32 FLOAT_803e54c8;
-extern f32 FLOAT_803e54cc;
-extern f32 FLOAT_803e54d0;
-extern f32 FLOAT_803e54d4;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E54AC;
+extern f32 lbl_803E54B8;
+extern f32 lbl_803E54BC;
+extern f32 lbl_803E54C0;
+extern f32 lbl_803E54C4;
+extern f32 lbl_803E54C8;
+extern f32 lbl_803E54CC;
+extern f32 lbl_803E54D0;
+extern f32 lbl_803E54D4;
 
 /*
  * --INFO--
@@ -68,7 +68,7 @@ void FUN_801b0924(short *param_1,int param_2)
   *(float *)(iVar2 + 0x10) =
        (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_2 + 0x18) ^ 0x80000000) -
               DOUBLE_803e54b0);
-  *(float *)(iVar2 + 0xc) = FLOAT_803e54ac;
+  *(float *)(iVar2 + 0xc) = lbl_803E54AC;
   *(ushort *)(iVar2 + 0x14) = (ushort)*(byte *)(param_2 + 0x1d);
   uVar1 = FUN_80017690((int)*(short *)(param_2 + 0x22));
   *(char *)(iVar2 + 0x18) = (char)uVar1;
@@ -236,33 +236,33 @@ void FUN_801b0c9c(uint param_1)
     if (bVar2 < 3) {
       if (bVar2 == 1) {
         if (*piVar7 != 0) {
-          FUN_800175cc((double)FLOAT_803e54bc,*piVar7,'\x01');
+          FUN_800175cc((double)lbl_803E54BC,*piVar7,'\x01');
         }
         FUN_80006824(param_1,0x72);
-        piVar7[4] = (int)((float)piVar7[4] - FLOAT_803dc074);
-        if (FLOAT_803e54c0 < (float)piVar7[4]) {
+        piVar7[4] = (int)((float)piVar7[4] - lbl_803DC074);
+        if (lbl_803E54C0 < (float)piVar7[4]) {
           uVar5 = 0;
         }
         else {
           uVar5 = 7;
-          piVar7[4] = (int)((float)piVar7[4] + FLOAT_803e54c4);
+          piVar7[4] = (int)((float)piVar7[4] + lbl_803E54C4);
         }
-        piVar7[5] = (int)((float)piVar7[5] - FLOAT_803dc074);
+        piVar7[5] = (int)((float)piVar7[5] - lbl_803DC074);
         fVar3 = (float)piVar7[5];
-        bVar1 = fVar3 <= FLOAT_803e54c0;
+        bVar1 = fVar3 <= lbl_803E54C0;
         if (bVar1) {
-          piVar7[5] = (int)(fVar3 + FLOAT_803e54b8);
+          piVar7[5] = (int)(fVar3 + lbl_803E54B8);
         }
-        local_28 = FLOAT_803e54c0;
-        local_24 = FLOAT_803e54c4;
-        local_20 = FLOAT_803e54c0;
+        local_28 = lbl_803E54C0;
+        local_24 = lbl_803E54C4;
+        local_20 = lbl_803E54C0;
         FUN_80081110(param_1,2,uVar5,(uint)bVar1,&local_28);
         ObjHits_SetHitVolumeSlot(param_1,0x1f,1,0);
         goto LAB_801b10e4;
       }
       if (bVar2 != 0) {
         if (*piVar7 != 0) {
-          FUN_800175cc((double)FLOAT_803e54bc,*piVar7,'\0');
+          FUN_800175cc((double)lbl_803E54BC,*piVar7,'\0');
         }
         if (*(char *)(piVar7 + 7) < '\x01') {
           ObjHits_DisableObject(param_1);

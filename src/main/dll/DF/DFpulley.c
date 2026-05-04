@@ -11,8 +11,8 @@ extern undefined4 ObjGroup_AddObject();
 
 extern f64 DOUBLE_803e5a60;
 extern f64 DOUBLE_803e5a70;
-extern f32 FLOAT_803e5a68;
-extern f32 FLOAT_803e5a6c;
+extern f32 lbl_803E5A68;
+extern f32 lbl_803E5A6C;
 
 /*
  * --INFO--
@@ -126,9 +126,9 @@ void FUN_801c0fd0(short *param_1,int param_2)
   *(undefined4 *)(param_1 + 4) = *(undefined4 *)(*(int *)(param_1 + 0x28) + 4);
   *(float *)(param_1 + 4) =
        (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_2 + 0x19)) - DOUBLE_803e5a70) *
-       FLOAT_803e5a68 + *(float *)(param_1 + 4);
-  if (*(float *)(param_1 + 4) < FLOAT_803e5a6c) {
-    *(float *)(param_1 + 4) = FLOAT_803e5a6c;
+       lbl_803E5A68 + *(float *)(param_1 + 4);
+  if (*(float *)(param_1 + 4) < lbl_803E5A6C) {
+    *(float *)(param_1 + 4) = lbl_803E5A6C;
   }
   if (*(char *)(param_2 + 0x1a) == '\0') {
     *(undefined *)(param_2 + 0x1a) = 0xff;

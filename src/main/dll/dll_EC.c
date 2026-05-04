@@ -11,8 +11,8 @@ extern int FUN_80294d6c();
 
 extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e70d8;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e70d0;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E70D0;
 
 /*
  * --INFO--
@@ -51,42 +51,42 @@ void TrickyCurve_updateCooldownTrigger(void)
   fVar1 = *(float *)(uVar5 + 0xc) - *(float *)(iVar4 + 0xc);
   fVar2 = *(float *)(uVar5 + 0x10) - *(float *)(iVar4 + 0x10);
   fVar3 = *(float *)(uVar5 + 0x14) - *(float *)(iVar4 + 0x14);
-  if (fVar1 <= FLOAT_803e70d0) {
+  if (fVar1 <= lbl_803E70D0) {
     local_28 = (double)CONCAT44(0x43300000,(int)*psVar10 ^ 0x80000000);
     if (-(float)(local_28 - DOUBLE_803e70d8) < fVar1) {
       iVar6 = 1;
       cVar9 = '\x01';
     }
   }
-  if (FLOAT_803e70d0 < fVar1) {
+  if (lbl_803E70D0 < fVar1) {
     local_28 = (double)CONCAT44(0x43300000,(int)*psVar10 ^ 0x80000000);
     if (fVar1 < (float)(local_28 - DOUBLE_803e70d8)) {
       iVar6 = iVar6 + 1;
       cVar9 = cVar9 + -1;
     }
   }
-  if (fVar3 <= FLOAT_803e70d0) {
+  if (fVar3 <= lbl_803E70D0) {
     local_28 = (double)CONCAT44(0x43300000,(int)psVar10[1] ^ 0x80000000);
     if (-(float)(local_28 - DOUBLE_803e70d8) < fVar3) {
       iVar6 = iVar6 + 1;
       cVar7 = '\x01';
     }
   }
-  if (FLOAT_803e70d0 < fVar3) {
+  if (lbl_803E70D0 < fVar3) {
     local_28 = (double)CONCAT44(0x43300000,(int)psVar10[1] ^ 0x80000000);
     if (fVar3 < (float)(local_28 - DOUBLE_803e70d8)) {
       iVar6 = iVar6 + 1;
       cVar7 = cVar7 + -1;
     }
   }
-  if (fVar2 <= FLOAT_803e70d0) {
+  if (fVar2 <= lbl_803E70D0) {
     local_28 = (double)CONCAT44(0x43300000,(int)psVar10[2] ^ 0x80000000);
     if (-(float)(local_28 - DOUBLE_803e70d8) < fVar2) {
       iVar6 = iVar6 + 1;
       cVar8 = '\x01';
     }
   }
-  if (FLOAT_803e70d0 < fVar2) {
+  if (lbl_803E70D0 < fVar2) {
     local_28 = (double)CONCAT44(0x43300000,(int)psVar10[2] ^ 0x80000000);
     if (fVar2 < (float)(local_28 - DOUBLE_803e70d8)) {
       iVar6 = iVar6 + 1;
@@ -94,7 +94,7 @@ void TrickyCurve_updateCooldownTrigger(void)
     }
   }
   if (-1 < psVar10[3]) {
-    psVar10[3] = psVar10[3] - (short)(int)FLOAT_803dc074;
+    psVar10[3] = psVar10[3] - (short)(int)lbl_803DC074;
   }
   if ((iVar6 == 3) && (psVar10[3] < 1)) {
     iVar4 = FUN_80294d6c(uVar5);

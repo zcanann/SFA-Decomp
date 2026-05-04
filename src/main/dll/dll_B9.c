@@ -6,7 +6,7 @@ extern double FUN_800069f8();
 
 extern undefined4 gCamcontrolState;
 extern f64 DOUBLE_803e22e0;
-extern f32 FLOAT_803e22ac;
+extern f32 lbl_803E22AC;
 
 /*
  * --INFO--
@@ -28,8 +28,8 @@ void FUN_80101980(uint param_1,undefined param_2)
   double dVar3;
   
   FUN_800069a8();
-  fVar1 = FLOAT_803e22ac;
-  *(float *)(gCamcontrolState + 0xf4) = FLOAT_803e22ac;
+  fVar1 = lbl_803E22AC;
+  *(float *)(gCamcontrolState + 0xf4) = lbl_803E22AC;
   *(float *)(gCamcontrolState + 0xf8) =
        fVar1 / (float)((double)CONCAT44(0x43300000,param_1 & 0xff) - DOUBLE_803e22e0);
   *(undefined *)(gCamcontrolState + 0x13f) = param_2;

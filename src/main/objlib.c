@@ -70,24 +70,24 @@ extern undefined4 DAT_803dd878;
 extern undefined4 DAT_803dd880;
 extern f64 DOUBLE_803df5c0;
 extern f64 DOUBLE_803df640;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803dd868;
-extern f32 FLOAT_803dda58;
-extern f32 FLOAT_803dda5c;
-extern f32 FLOAT_803df594;
-extern f32 FLOAT_803df5e8;
-extern f32 FLOAT_803df5f0;
-extern f32 FLOAT_803df5f4;
-extern f32 FLOAT_803df5f8;
-extern f32 FLOAT_803df5fc;
-extern f32 FLOAT_803df618;
-extern f32 FLOAT_803df61c;
-extern f32 FLOAT_803df620;
-extern f32 FLOAT_803df624;
-extern f32 FLOAT_803df628;
-extern f32 FLOAT_803df630;
-extern f32 FLOAT_803df634;
-extern f32 FLOAT_803df638;
+extern f32 lbl_803DC074;
+extern f32 lbl_803DD868;
+extern f32 lbl_803DDA58;
+extern f32 lbl_803DDA5C;
+extern f32 lbl_803DF594;
+extern f32 lbl_803DF5E8;
+extern f32 lbl_803DF5F0;
+extern f32 lbl_803DF5F4;
+extern f32 lbl_803DF5F8;
+extern f32 lbl_803DF5FC;
+extern f32 lbl_803DF618;
+extern f32 lbl_803DF61C;
+extern f32 lbl_803DF620;
+extern f32 lbl_803DF624;
+extern f32 lbl_803DF628;
+extern f32 lbl_803DF630;
+extern f32 lbl_803DF634;
+extern f32 lbl_803DF638;
 extern int iRam803dd84c;
 extern int iRam803dd854;
 extern char s_objmsg___x___overflow_in_object___802cba20[];
@@ -1435,7 +1435,7 @@ void ObjHits_InitWorkBuffers(void)
   iRam803dd854 = FUN_80017830(0x400,0xe);
   DAT_803dd848 = FUN_80017830(0x400,0xe);
   iRam803dd84c = FUN_80017830(0x400,0xe);
-  FLOAT_803dd868 = FLOAT_803df594;
+  lbl_803DD868 = lbl_803DF594;
   gObjHitsActiveHitVolumeObjects[0] = 0;
   gObjHitsActiveHitVolumeObjects[1] = 0;
   gObjHitsActiveHitVolumeObjects[2] = 0;
@@ -1556,7 +1556,7 @@ void ObjGroup_FindNearestObjectForObject(undefined4 param_1,undefined4 param_2,f
   iVar3 = (int)((ulonglong)lVar9 >> 0x20);
   iVar5 = 0;
   if ((-1 < lVar9) && (lVar9 < 0x5400000000)) {
-    fVar2 = FLOAT_803df5e8;
+    fVar2 = lbl_803DF5E8;
     if (param_3 != (float *)0x0) {
       fVar2 = *param_3 * *param_3;
     }
@@ -1611,7 +1611,7 @@ void ObjGroup_FindNearestObject(undefined4 param_1,undefined4 param_2,float *par
   iVar3 = (int)((ulonglong)lVar9 >> 0x20);
   iVar5 = 0;
   if ((-1 < lVar9) && (lVar9 < 0x5400000000)) {
-    fVar2 = FLOAT_803df5e8;
+    fVar2 = lbl_803DF5E8;
     if (param_3 != (float *)0x0) {
       fVar2 = *param_3 * *param_3;
     }
@@ -2179,8 +2179,8 @@ int ObjHits_PollPriorityHitWithCooldown(int param_1,float *param_2,undefined4 *p
   int iVar1;
   
   iVar1 = 0;
-  *param_2 = *param_2 - FLOAT_803dc074;
-  if (*param_2 <= FLOAT_803df5f0) {
+  *param_2 = *param_2 - lbl_803DC074;
+  if (*param_2 <= lbl_803DF5F0) {
     if (param_4 == (float *)0x0) {
       iVar1 = ObjHits_GetPriorityHit(param_1,param_3,(int *)0x0,(uint *)0x0);
     }
@@ -2192,7 +2192,7 @@ int ObjHits_PollPriorityHitWithCooldown(int param_1,float *param_2,undefined4 *p
       }
     }
     if (iVar1 != 0) {
-      *param_2 = FLOAT_803df5f4;
+      *param_2 = lbl_803DF5F4;
     }
   }
   return iVar1;
@@ -2233,15 +2233,15 @@ void ObjHits_PollPriorityHitEffectWithCooldown(undefined4 param_1,undefined4 par
   
   uVar4 = FUN_80286834();
   uVar1 = (uint)((ulonglong)uVar4 >> 0x20);
-  *param_7 = *param_7 - FLOAT_803dc074;
+  *param_7 = *param_7 - lbl_803DC074;
   iVar2 = ObjHits_GetPriorityHitWithPosition((int)uVar1, (undefined4 *)&local_58, (int *)0x0, (uint *)0x0,
                        (undefined4 *)&local_38,
                        &uStack_34, (undefined4 *)local_30);
-  if ((((*param_7 <= FLOAT_803df5f0) && (iVar2 != 0)) && ((*param_7 = FLOAT_803df5f8), (iVar2 != 0x1a))) &&
+  if ((((*param_7 <= lbl_803DF5F0) && (iVar2 != 0)) && ((*param_7 = lbl_803DF5F8), (iVar2 != 0x1a))) &&
       (iVar2 != 5)) {
-    local_38 = local_38 + FLOAT_803dda58;
-    local_30[0] = local_30[0] + FLOAT_803dda5c;
-    local_3c = FLOAT_803df5fc;
+    local_38 = local_38 + lbl_803DDA58;
+    local_30[0] = local_30[0] + lbl_803DDA5C;
+    local_3c = lbl_803DF5FC;
     local_40 = 0;
     local_42 = 0;
     local_44 = 0;
@@ -2579,7 +2579,7 @@ void ObjList_FindNearestObjectByDefNo(undefined4 param_1,undefined4 param_2,floa
   *param_3 = *param_3 * *param_3;
   if ((int)uVar7 == -1) {
     piVar4 = (int *)(iVar2 + local_34[0] * 4);
-    dVar5 = (double)FLOAT_803df5f0;
+    dVar5 = (double)lbl_803DF5F0;
     for (iVar2 = local_34[0]; iVar2 < local_38; iVar2 = iVar2 + 1) {
       dVar6 = FUN_80017714((float *)(iVar1 + 0x18),(float *)(*piVar4 + 0x18));
       if ((dVar6 != dVar5) && (dVar6 < (double)*param_3)) {
@@ -2720,7 +2720,7 @@ void ObjPath_GetPointLocalMtx(int param_1,int param_2,float *param_3)
   local_18 = *(ushort *)(iVar1 + 0xc);
   local_16 = *(undefined2 *)(iVar1 + 0xe);
   local_14 = *(undefined2 *)(iVar1 + 0x10);
-  local_10 = FLOAT_803df5fc;
+  local_10 = lbl_803DF5FC;
   FUN_80017700(&local_18,param_3);
   return;
 }
@@ -2837,9 +2837,9 @@ void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *
       FUN_8001774c(afStack_100,(int)&local_118);
       FUN_80017704(afStack_100,afStack_90);
       FUN_80247618(pfVar3,afStack_90,afStack_c0);
-      *param_3 = local_b4 + FLOAT_803dda58;
+      *param_3 = local_b4 + lbl_803DDA58;
       *param_4 = local_a4;
-      *param_5 = local_94 + FLOAT_803dda5c;
+      *param_5 = local_94 + lbl_803DDA5C;
     }
   }
   FUN_80286884();

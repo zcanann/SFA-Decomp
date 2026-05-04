@@ -6,9 +6,9 @@ extern undefined4 FUN_80286884();
 extern double FUN_80293900();
 
 extern f64 DOUBLE_803e5a88;
-extern f32 FLOAT_803e5a94;
-extern f32 FLOAT_803e5ab0;
-extern f32 FLOAT_803e5ab4;
+extern f32 lbl_803E5A94;
+extern f32 lbl_803E5AB0;
+extern f32 lbl_803E5AB4;
 
 /*
  * --INFO--
@@ -32,14 +32,14 @@ double FUN_801c1bf0(double param_1,double param_2,double param_3,double param_4,
   
   dVar2 = (double)(float)(param_4 - param_1);
   dVar3 = (double)(float)(param_6 - param_3);
-  dVar1 = (double)FLOAT_803e5a94;
+  dVar1 = (double)lbl_803E5A94;
   if ((dVar1 != dVar2) || (dVar1 != dVar3)) {
     dVar1 = (double)((float)(dVar2 * (double)(float)((double)*param_7 - param_1) +
                             (double)(float)(dVar3 * (double)(float)((double)*param_9 - param_3))) /
                     (float)(dVar2 * dVar2 + (double)(float)(dVar3 * dVar3)));
   }
-  if ((double)FLOAT_803e5a94 <= dVar1) {
-    if (dVar1 < (double)FLOAT_803e5ab0) {
+  if ((double)lbl_803E5A94 <= dVar1) {
+    if (dVar1 < (double)lbl_803E5AB0) {
       *param_7 = (float)(dVar1 * dVar2 + param_1);
       *param_8 = (float)(dVar1 * (double)(float)(param_5 - param_2) + param_2);
       *param_9 = (float)(dVar1 * dVar3 + param_3);
@@ -132,13 +132,13 @@ void FUN_801c1cd8(undefined8 param_1,double param_2,double param_3,undefined4 pa
        ((double)(float)piVar6[1] <= extraout_f1)) &&
       ((extraout_f1 <= (double)(float)piVar6[2] && ((double)(float)piVar6[3] <= param_3)))) &&
      (param_3 <= (double)(float)piVar6[4])) {
-    *pfVar1 = FLOAT_803e5ab4;
+    *pfVar1 = lbl_803E5AB4;
     dVar10 = (double)(float)(extraout_f1 - (double)*(float *)(iVar4 + 0xc));
     dVar11 = (double)(float)(param_2 - (double)*(float *)(iVar4 + 0x10));
     dVar12 = (double)(float)(param_3 - (double)*(float *)(iVar4 + 0x14));
     iVar5 = 0;
     iVar4 = 0;
-    dVar9 = (double)FLOAT_803e5a94;
+    dVar9 = (double)lbl_803E5A94;
     for (uVar3 = 0; (int)uVar3 < (int)(*(byte *)(piVar6[0xb] + 8) - 1); uVar3 = uVar3 + 1) {
       local_80[0] = (float)dVar10;
       local_84 = (float)dVar11;
@@ -146,7 +146,7 @@ void FUN_801c1cd8(undefined8 param_1,double param_2,double param_3,undefined4 pa
       pfVar2 = (float *)(*(int *)piVar6[0xb] + iVar4);
       dVar7 = FUN_801c1bf0((double)*pfVar2,(double)pfVar2[1],(double)pfVar2[2],(double)pfVar2[0xd],
                            (double)pfVar2[0xe],(double)pfVar2[0xf],local_80,&local_84,&local_88);
-      if (((dVar9 <= dVar7) && (dVar7 < (double)FLOAT_803e5ab0)) &&
+      if (((dVar9 <= dVar7) && (dVar7 < (double)lbl_803E5AB0)) &&
          (dVar8 = FUN_80293900((double)((float)((double)local_88 - dVar12) *
                                         (float)((double)local_88 - dVar12) +
                                        (float)((double)local_80[0] - dVar10) *

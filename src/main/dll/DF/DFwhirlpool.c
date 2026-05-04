@@ -5,9 +5,9 @@ extern int FUN_80017730();
 extern double FUN_80293900();
 
 extern f64 DOUBLE_803e5a88;
-extern f32 FLOAT_803e5a94;
-extern f32 FLOAT_803e5ab8;
-extern f32 FLOAT_803e5abc;
+extern f32 lbl_803E5A94;
+extern f32 lbl_803E5AB8;
+extern f32 lbl_803E5ABC;
 
 /*
  * --INFO--
@@ -68,7 +68,7 @@ undefined4 dfropenode_render(int param_1)
     iVar5 = piVar8[0xb];
     dVar1 = (double)CONCAT44(0x43300000,*(byte *)(iVar5 + 8) - 1 ^ 0x80000000) - DOUBLE_803e5a88;
     iVar7 = *(int *)(iVar5 + 4);
-    *(float *)(iVar5 + 0x38) = FLOAT_803e5ab8;
+    *(float *)(iVar5 + 0x38) = lbl_803E5AB8;
     iVar5 = 0;
     while( true ) {
       iVar3 = *(byte *)((int *)piVar8[0xb] + 2) - 1;
@@ -95,7 +95,7 @@ undefined4 dfropenode_render(int param_1)
       piVar8[3] = piVar8[4];
       piVar8[4] = (int)fVar2;
     }
-    if ((float)piVar8[5] != FLOAT_803e5a94) {
+    if ((float)piVar8[5] != lbl_803E5A94) {
       fVar2 = (float)piVar8[5] - *(float *)(iVar6 + 0x10);
       iVar6 = 0;
       for (iVar5 = 0; iVar5 < (int)(*(byte *)((int *)piVar8[0xb] + 2) - 1); iVar5 = iVar5 + 1) {
@@ -106,8 +106,8 @@ undefined4 dfropenode_render(int param_1)
         iVar6 = iVar6 + 0x34;
       }
     }
-    fVar2 = FLOAT_803e5abc;
-    piVar8[1] = (int)((float)piVar8[1] - FLOAT_803e5abc);
+    fVar2 = lbl_803E5ABC;
+    piVar8[1] = (int)((float)piVar8[1] - lbl_803E5ABC);
     piVar8[3] = (int)((float)piVar8[3] - fVar2);
     piVar8[2] = (int)((float)piVar8[2] + fVar2);
     piVar8[4] = (int)((float)piVar8[4] + fVar2);

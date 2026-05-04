@@ -28,16 +28,16 @@ extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e4408;
 extern f64 DOUBLE_803e4428;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e43f0;
-extern f32 FLOAT_803e43f4;
-extern f32 FLOAT_803e43f8;
-extern f32 FLOAT_803e43fc;
-extern f32 FLOAT_803e4400;
-extern f32 FLOAT_803e4410;
-extern f32 FLOAT_803e4418;
-extern f32 FLOAT_803e441c;
-extern f32 FLOAT_803e4420;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E43F0;
+extern f32 lbl_803E43F4;
+extern f32 lbl_803E43F8;
+extern f32 lbl_803E43FC;
+extern f32 lbl_803E4400;
+extern f32 lbl_803E4410;
+extern f32 lbl_803E4418;
+extern f32 lbl_803E441C;
+extern f32 lbl_803E4420;
 
 /*
  * --INFO--
@@ -104,7 +104,7 @@ void pressureswitchfb_update(void)
     if ((char)(cVar1 + -1) < '\0') {
       *pcVar15 = '\0';
     }
-    local_58 = FLOAT_803e43f0;
+    local_58 = lbl_803E43F0;
     iVar8 = ObjGroup_FindNearestObject(5,uVar6,&local_58);
     if (iVar8 != 0) {
       *pcVar15 = '\x05';
@@ -166,7 +166,7 @@ void pressureswitchfb_update(void)
       if (((byte)pcVar15[0x84] >> 4 & 1) == 0) {
         if (*(float *)(uVar6 + 0x10) < *(float *)(pcVar15 + 0x7c)) {
           *(float *)(uVar6 + 0x10) =
-               *(float *)(pcVar15 + 0x80) * FLOAT_803dc074 + *(float *)(uVar6 + 0x10);
+               *(float *)(pcVar15 + 0x80) * lbl_803DC074 + *(float *)(uVar6 + 0x10);
           if (*(float *)(uVar6 + 0x10) <= *(float *)(pcVar15 + 0x7c)) {
             bVar4 = true;
           }
@@ -203,7 +203,7 @@ void pressureswitchfb_update(void)
                 (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e4408);
         fVar2 = *(float *)(uVar6 + 0x10);
         if (fVar3 <= fVar2) {
-          *(float *)(uVar6 + 0x10) = -(*(float *)(pcVar15 + 0x80) * FLOAT_803dc074 - fVar2);
+          *(float *)(uVar6 + 0x10) = -(*(float *)(pcVar15 + 0x80) * lbl_803DC074 - fVar2);
           if (fVar3 <= *(float *)(uVar6 + 0x10)) {
             bVar4 = true;
           }
@@ -220,7 +220,7 @@ void pressureswitchfb_update(void)
           }
         }
         else {
-          *(float *)(uVar6 + 0x10) = *(float *)(pcVar15 + 0x80) * FLOAT_803dc074 + fVar2;
+          *(float *)(uVar6 + 0x10) = *(float *)(pcVar15 + 0x80) * lbl_803DC074 + fVar2;
           if (fVar3 < *(float *)(uVar6 + 0x10)) {
             *(float *)(uVar6 + 0x10) = fVar3;
           }
@@ -236,7 +236,7 @@ void pressureswitchfb_update(void)
       }
       else {
         *(float *)(uVar6 + 0x10) =
-             *(float *)(pcVar15 + 0x80) * FLOAT_803dc074 + *(float *)(uVar6 + 0x10);
+             *(float *)(pcVar15 + 0x80) * lbl_803DC074 + *(float *)(uVar6 + 0x10);
         if (*(float *)(uVar6 + 0x10) <= *(float *)(pcVar15 + 0x7c)) {
           bVar4 = true;
         }
@@ -249,11 +249,11 @@ void pressureswitchfb_update(void)
        (pcVar15[0x84] < '\0')) {
       iVar8 = FUN_80017a98();
       dVar18 = (double)FUN_8001771c((float *)(uVar6 + 0x18),(float *)(iVar8 + 0x18));
-      if (dVar18 < (double)FLOAT_803e43f4) {
-        local_48 = FLOAT_803e43f8;
-        local_44 = FLOAT_803e43fc;
-        local_40 = FLOAT_803e43f8;
-        local_4c = FLOAT_803e4400;
+      if (dVar18 < (double)lbl_803E43F4) {
+        local_48 = lbl_803E43F8;
+        local_44 = lbl_803E43FC;
+        local_40 = lbl_803E43F8;
+        local_4c = lbl_803E4400;
         local_4e = 0x12;
         local_50 = 10;
         iVar8 = 0;
@@ -502,8 +502,8 @@ void FUN_8017b7ac(int param_1)
   if (uVar1 != 0) {
     iVar2 = FUN_80039520(param_1,0);
     if (iVar2 != 0) {
-      *(short *)(iVar2 + 8) = *(short *)(iVar2 + 8) + (short)((int)FLOAT_803dc074 << 3);
-      if (0x131e < (int)*(short *)(iVar2 + 8) + (int)FLOAT_803dc074 * 8) {
+      *(short *)(iVar2 + 8) = *(short *)(iVar2 + 8) + (short)((int)lbl_803DC074 << 3);
+      if (0x131e < (int)*(short *)(iVar2 + 8) + (int)lbl_803DC074 * 8) {
         *(undefined2 *)(iVar2 + 8) = 0x131f;
       }
       FUN_80135814();

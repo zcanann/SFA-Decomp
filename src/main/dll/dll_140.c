@@ -17,11 +17,11 @@ extern undefined4 FUN_80179eb0();
 extern uint countLeadingZeros();
 
 extern undefined4* DAT_803dd728;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e4334;
-extern f32 FLOAT_803e433c;
-extern f32 FLOAT_803e4340;
-extern f32 FLOAT_803e4344;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E4334;
+extern f32 lbl_803E433C;
+extern f32 lbl_803E4340;
+extern f32 lbl_803E4344;
 
 /*
  * --INFO--
@@ -42,7 +42,7 @@ void FUN_80179a2c(double param_1,double param_2,double param_3,int param_4)
   
   iVar1 = *(int *)(param_4 + 0xb8);
   *(undefined *)(iVar1 + 0x274) = 3;
-  *(float *)(iVar1 + 0x26c) = FLOAT_803e4334;
+  *(float *)(iVar1 + 0x26c) = lbl_803E4334;
   *(float *)(param_4 + 0x24) = (float)param_1;
   *(float *)(param_4 + 0x28) = (float)param_2;
   *(float *)(param_4 + 0x2c) = (float)param_3;
@@ -140,10 +140,10 @@ void FUN_80179b34(double param_1,double param_2,double param_3,undefined8 param_
   }
   cVar1 = *(char *)(iVar8 + 0x274);
   if (((cVar1 == '\x03') || (cVar1 == '\x02')) || (cVar1 == '\x01')) {
-    *(float *)(iVar8 + 0x26c) = *(float *)(iVar8 + 0x26c) + FLOAT_803dc074;
+    *(float *)(iVar8 + 0x26c) = *(float *)(iVar8 + 0x26c) + lbl_803DC074;
     param_1 = (double)*(float *)(iVar8 + 0x26c);
-    if ((double)FLOAT_803e4340 <= param_1) {
-      *(float *)(iVar8 + 0x26c) = FLOAT_803e4334;
+    if ((double)lbl_803E4340 <= param_1) {
+      *(float *)(iVar8 + 0x26c) = lbl_803E4334;
       *(undefined *)(iVar8 + 0x274) = 5;
     }
   }
@@ -178,21 +178,21 @@ void FUN_80179b34(double param_1,double param_2,double param_3,undefined8 param_
     }
   }
   else if (bVar2 == 5) {
-    *(float *)(iVar8 + 0x26c) = *(float *)(iVar8 + 0x26c) + FLOAT_803dc074;
+    *(float *)(iVar8 + 0x26c) = *(float *)(iVar8 + 0x26c) + lbl_803DC074;
     dVar10 = (double)*(float *)(iVar8 + 0x26c);
-    dVar9 = (double)FLOAT_803e433c;
+    dVar9 = (double)lbl_803E433C;
     if (dVar9 <= dVar10) {
       FUN_80017ac8(dVar9,dVar10,param_3,param_4,param_5,param_6,param_7,param_8,(int)param_9);
       return;
     }
     *(char *)(param_9 + 0x1b) =
-         -1 - (char)(int)((double)(float)((double)FLOAT_803e4344 * dVar10) / dVar9);
+         -1 - (char)(int)((double)(float)((double)lbl_803E4344 * dVar10) / dVar9);
   }
 LAB_80179e98:
   if (*(char *)(*(int *)(param_9 + 0x5c) + 0x25b) == '\x01') {
-    (**(code **)(*DAT_803dd728 + 0x10))((double)FLOAT_803dc074,param_9,iVar8);
+    (**(code **)(*DAT_803dd728 + 0x10))((double)lbl_803DC074,param_9,iVar8);
     (**(code **)(*DAT_803dd728 + 0x14))(param_9,iVar8);
-    (**(code **)(*DAT_803dd728 + 0x18))((double)FLOAT_803dc074,param_9,iVar8);
+    (**(code **)(*DAT_803dd728 + 0x18))((double)lbl_803DC074,param_9,iVar8);
   }
   else {
     (**(code **)(*DAT_803dd728 + 0x20))(param_9);

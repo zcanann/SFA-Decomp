@@ -19,16 +19,16 @@ extern undefined4 FUN_80286888();
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e6a98;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e6a84;
-extern f32 FLOAT_803e6a88;
-extern f32 FLOAT_803e6a8c;
-extern f32 FLOAT_803e6a90;
-extern f32 FLOAT_803e6aa0;
-extern f32 FLOAT_803e6aa4;
-extern f32 FLOAT_803e6aa8;
-extern f32 FLOAT_803e6aac;
-extern f32 FLOAT_803e6ab4;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E6A84;
+extern f32 lbl_803E6A88;
+extern f32 lbl_803E6A8C;
+extern f32 lbl_803E6A90;
+extern f32 lbl_803E6AA0;
+extern f32 lbl_803E6AA4;
+extern f32 lbl_803E6AA8;
+extern f32 lbl_803E6AAC;
+extern f32 lbl_803E6AB4;
 
 /*
  * --INFO--
@@ -54,7 +54,7 @@ void FUN_801f37cc(int param_1,int param_2)
   
   iVar1 = *(int *)(param_1 + 0xb8);
   if ((int)*(short *)(param_2 + 0x1a) == 0) {
-    *(float *)(iVar1 + 4) = FLOAT_803e6a84;
+    *(float *)(iVar1 + 4) = lbl_803E6A84;
   }
   else {
     uStack_c = (int)*(short *)(param_2 + 0x1a) ^ 0x80000000;
@@ -68,23 +68,23 @@ void FUN_801f37cc(int param_1,int param_2)
     *(short *)(iVar1 + 10) = *(short *)(param_2 + 0x1c);
   }
   *(undefined *)(iVar1 + 0xc) = *(undefined *)(param_2 + 0x19);
-  local_18 = FLOAT_803e6a88;
+  local_18 = lbl_803E6A88;
   if (*(char *)(iVar1 + 0xc) == '\0') {
     piVar2 = (int *)FUN_80006b14(0x69);
-    *(float *)(param_1 + 8) = *(float *)(param_1 + 8) * FLOAT_803e6a8c;
+    *(float *)(param_1 + 8) = *(float *)(param_1 + 8) * lbl_803E6A8C;
     (**(code **)(*piVar2 + 4))(param_1,1,auStack_28,0x10004,0xffffffff,0);
   }
   else if (*(char *)(iVar1 + 0xc) == '\x7f') {
     piVar2 = (int *)FUN_80006b14(0x69);
-    *(float *)(param_1 + 8) = *(float *)(param_1 + 8) * FLOAT_803e6a8c;
+    *(float *)(param_1 + 8) = *(float *)(param_1 + 8) * lbl_803E6A8C;
     (**(code **)(*piVar2 + 4))(param_1,2,auStack_28,0x10004,0xffffffff,0);
   }
   else {
     piVar2 = (int *)FUN_80006b14(99);
-    *(float *)(param_1 + 8) = *(float *)(param_1 + 8) * FLOAT_803e6a8c;
+    *(float *)(param_1 + 8) = *(float *)(param_1 + 8) * lbl_803E6A8C;
     (**(code **)(*piVar2 + 4))(param_1,2,auStack_28,0x10004,0xffffffff,0);
   }
-  *(float *)(param_1 + 8) = *(float *)(param_1 + 8) * FLOAT_803e6a90;
+  *(float *)(param_1 + 8) = *(float *)(param_1 + 8) * lbl_803E6A90;
   FUN_80006b0c((undefined *)piVar2);
   *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x2000;
   return;
@@ -194,30 +194,30 @@ void FUN_801f3a50(uint param_1)
     }
   }
   if ((*(char *)((int)piVar4 + 0x17) != '\0') && ((*(ushort *)(param_1 + 0xb0) & 0x800) != 0)) {
-    piVar4[1] = (int)((float)piVar4[1] - FLOAT_803dc074);
-    if (FLOAT_803e6aa4 < (float)piVar4[1]) {
+    piVar4[1] = (int)((float)piVar4[1] - lbl_803DC074);
+    if (lbl_803E6AA4 < (float)piVar4[1]) {
       uVar3 = 0;
     }
     else {
       uVar3 = (uint)*(byte *)((int)piVar4 + 0x16);
-      piVar4[1] = (int)((float)piVar4[1] + FLOAT_803e6aa8);
+      piVar4[1] = (int)((float)piVar4[1] + lbl_803E6AA8);
     }
     if ((*(char *)((int)piVar4 + 0x15) != '\0') || (*(char *)((int)piVar4 + 0x16) != '\0')) {
-      local_38 = FLOAT_803e6aa4;
+      local_38 = lbl_803E6AA4;
       if (*(short *)(param_1 + 0x46) == 0x717) {
-        local_34 = FLOAT_803e6aa4;
+        local_34 = lbl_803E6AA4;
       }
       else {
-        local_34 = FLOAT_803e6aac;
+        local_34 = lbl_803E6AAC;
       }
-      local_30 = FLOAT_803e6aa4;
+      local_30 = lbl_803E6AA4;
       FUN_80081110(param_1,(uint)*(byte *)((int)piVar4 + 0x15),uVar3,0,&local_38);
     }
     if ((*(char *)((int)piVar4 + 0x19) != '\0') &&
-       (piVar4[3] = (int)((float)piVar4[3] - FLOAT_803dc074), (float)piVar4[3] <= FLOAT_803e6aa4)) {
-      local_24 = FLOAT_803e6aa0;
+       (piVar4[3] = (int)((float)piVar4[3] - lbl_803DC074), (float)piVar4[3] <= lbl_803E6AA4)) {
+      local_24 = lbl_803E6AA0;
       (**(code **)(*DAT_803dd708 + 8))(param_1,0x7cb,auStack_2c,2,0xffffffff,0);
-      piVar4[3] = (int)((float)piVar4[3] + FLOAT_803e6ab4);
+      piVar4[3] = (int)((float)piVar4[3] + lbl_803E6AB4);
     }
   }
   iVar2 = *piVar4;

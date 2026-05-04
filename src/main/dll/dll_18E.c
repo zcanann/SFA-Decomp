@@ -17,8 +17,8 @@ extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd738;
 extern undefined4 DAT_803de810;
 extern undefined4 DAT_803de830;
-extern f32 FLOAT_803de824;
-extern f32 FLOAT_803e5960;
+extern f32 lbl_803DE824;
+extern f32 lbl_803E5960;
 
 /*
  * --INFO--
@@ -97,7 +97,7 @@ void FUN_801beee0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     }
     else {
       if ((*(ushort *)(iVar5 + 0x400) & 2) != 0) {
-        FLOAT_803de824 = FLOAT_803e5960;
+        lbl_803DE824 = lbl_803E5960;
         (**(code **)(*DAT_803dd738 + 0x28))
                   (param_9,iVar5,iVar5 + 0x35c,(int)*(short *)(iVar5 + 0x3f4),iVar5 + 0x405,0,0,0,1)
         ;

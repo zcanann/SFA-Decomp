@@ -6,10 +6,10 @@ extern undefined4 FUN_80053ba4();
 
 extern undefined4* DAT_803dd6d0;
 extern undefined4 DAT_803de1e0;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e2540;
-extern f32 FLOAT_803e2544;
-extern f32 FLOAT_803e2548;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E2540;
+extern f32 lbl_803E2544;
+extern f32 lbl_803E2548;
 
 /*
  * --INFO--
@@ -42,10 +42,10 @@ void camdrakor_computeTargetOffset
   iVar9 = *(int *)(iVar7 + 0x74);
   if (*(char *)(iVar7 + 0xe4) != *(char *)(DAT_803de1e0 + 0x14)) {
     *(char *)(DAT_803de1e0 + 0x13) = *(char *)(DAT_803de1e0 + 0x14);
-    *(float *)(DAT_803de1e0 + 0x18) = FLOAT_803e2540;
+    *(float *)(DAT_803de1e0 + 0x18) = lbl_803E2540;
   }
-  fVar1 = FLOAT_803e2544;
-  if (*(float *)(DAT_803de1e0 + 0x18) <= FLOAT_803e2544) {
+  fVar1 = lbl_803E2544;
+  if (*(float *)(DAT_803de1e0 + 0x18) <= lbl_803E2544) {
     *param_2 = *(float *)(iVar9 + (uint)*(byte *)(iVar7 + 0xe4) * 0x18 + 0xc) -
                *(float *)(iVar6 + 0x18);
     *param_3 = *(float *)(iVar9 + (uint)*(byte *)(iVar7 + 0xe4) * 0x18 + 0x10) - *param_5;
@@ -54,7 +54,7 @@ void camdrakor_computeTargetOffset
   }
   else {
     *(float *)(DAT_803de1e0 + 0x18) =
-         -(FLOAT_803e2548 * FLOAT_803dc074 - *(float *)(DAT_803de1e0 + 0x18));
+         -(lbl_803E2548 * lbl_803DC074 - *(float *)(DAT_803de1e0 + 0x18));
     if (*(float *)(DAT_803de1e0 + 0x18) < fVar1) {
       *(float *)(DAT_803de1e0 + 0x18) = fVar1;
       *(undefined *)(DAT_803de1e0 + 0x13) = *(undefined *)(iVar7 + 0xe4);

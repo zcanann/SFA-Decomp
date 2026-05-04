@@ -9,7 +9,7 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
 
 extern undefined4* DAT_803dd6d4;
-extern f32 FLOAT_803e44e4;
+extern f32 lbl_803E44E4;
 
 /*
  * --INFO--
@@ -33,7 +33,7 @@ void FUN_8017eff0(undefined2 *param_1)
   int iVar5;
   float local_18 [3];
   
-  local_18[0] = FLOAT_803e44e4;
+  local_18[0] = lbl_803E44E4;
   iVar5 = *(int *)(param_1 + 0x26);
   pbVar4 = *(byte **)(param_1 + 0x5c);
   if (*(int *)(pbVar4 + 4) == 0) {

@@ -20,9 +20,9 @@ extern undefined4* DAT_803dd714;
 extern undefined4* DAT_803dd72c;
 extern undefined4 DAT_803de8f0;
 extern undefined4 DAT_803de8f4;
-extern f32 FLOAT_803e6984;
-extern f32 FLOAT_803e6988;
-extern f32 FLOAT_803e698c;
+extern f32 lbl_803E6984;
+extern f32 lbl_803E6988;
+extern f32 lbl_803E698C;
 
 /*
  * --INFO--
@@ -212,9 +212,9 @@ void FUN_801f0718(short *param_1)
       }
       uVar1 = FUN_80017690(0xa4);
       if (uVar1 == 0) {
-        *(float *)(psVar2 + 6) = FLOAT_803e6984;
-        *(float *)(psVar2 + 8) = FLOAT_803e6988;
-        *(float *)(psVar2 + 10) = FLOAT_803e698c;
+        *(float *)(psVar2 + 6) = lbl_803E6984;
+        *(float *)(psVar2 + 8) = lbl_803E6988;
+        *(float *)(psVar2 + 10) = lbl_803E698C;
         FUN_80061a80(psVar2,param_1,0);
         FUN_80294d74((int)psVar2);
         param_1[0x7c] = 0;

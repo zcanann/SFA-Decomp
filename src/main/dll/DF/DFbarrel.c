@@ -8,7 +8,7 @@ extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 
 extern f64 DOUBLE_803e5a88;
-extern f32 FLOAT_803e5a78;
+extern f32 lbl_803E5A78;
 
 /*
  * --INFO--
@@ -46,12 +46,12 @@ void FUN_801c0fd8(undefined4 param_1,undefined4 param_2,float *param_3,float *pa
   double dVar18;
   
   uVar13 = FUN_8028682c();
-  fVar1 = FLOAT_803e5a78 * *param_3;
-  fVar2 = FLOAT_803e5a78 * param_3[1];
-  fVar3 = FLOAT_803e5a78 * param_3[2];
-  fVar4 = FLOAT_803e5a78 * *param_4;
-  fVar5 = FLOAT_803e5a78 * param_4[1];
-  fVar6 = FLOAT_803e5a78 * param_4[2];
+  fVar1 = lbl_803E5A78 * *param_3;
+  fVar2 = lbl_803E5A78 * param_3[1];
+  fVar3 = lbl_803E5A78 * param_3[2];
+  fVar4 = lbl_803E5A78 * *param_4;
+  fVar5 = lbl_803E5A78 * param_4[1];
+  fVar6 = lbl_803E5A78 * param_4[2];
   FUN_80003494((uint)param_5,uVar13,0x60);
   iVar14 = 0;
   psVar15 = param_5;

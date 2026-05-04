@@ -10,7 +10,7 @@ extern undefined4 DAT_803dc5f0;
 extern undefined4 gCamcontrolTargetReticle;
 extern undefined4 gCamcontrolTargetState;
 extern undefined4 gCamcontrolState;
-extern f32 FLOAT_803e22a8;
+extern f32 lbl_803E22A8;
 
 /*
  * --INFO--
@@ -92,7 +92,7 @@ LAB_80100e04:
     }
     *(undefined2 *)(iVar1 + 2) = 0;
     *(undefined2 *)(iVar1 + 4) = 0;
-    *(float *)(iVar1 + 8) = FLOAT_803e22a8;
+    *(float *)(iVar1 + 8) = lbl_803E22A8;
     *(undefined *)(iVar1 + 0x37) = *(undefined *)(iVar1 + 0x36);
     FUN_8003b818(iVar1);
   }

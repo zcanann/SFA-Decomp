@@ -9,10 +9,10 @@ extern undefined4 FUN_8016693c();
 extern undefined4 FUN_80166e9c();
 
 extern undefined4 DAT_803dc070;
-extern f32 FLOAT_803e3c74;
-extern f32 FLOAT_803e3c8c;
-extern f32 FLOAT_803e3c94;
-extern f32 FLOAT_803e3c98;
+extern f32 lbl_803E3C74;
+extern f32 lbl_803E3C8C;
+extern f32 lbl_803E3C94;
+extern f32 lbl_803E3C98;
 
 /*
  * --INFO--
@@ -42,7 +42,7 @@ undefined4 FUN_8016558c(short *param_1,int param_2)
   *(undefined *)(param_2 + 0x34d) = 1;
   if (*(char *)(param_2 + 0x27a) != '\0') {
     *(undefined2 *)(iVar4 + 0x8e) = 0x3c;
-    *(float *)(iVar4 + 0x60) = FLOAT_803e3c94;
+    *(float *)(iVar4 + 0x60) = lbl_803E3C94;
     ObjHits_DisableObject((int)param_1);
   }
   if ((*(char *)(iVar4 + 0x90) == '\x06') ||
@@ -52,19 +52,19 @@ undefined4 FUN_8016558c(short *param_1,int param_2)
       (((*(float *)(iVar2 + 0x1c) <= *(float *)(iVar4 + 0x58) ||
         (*(float *)(iVar4 + 0x54) <= *(float *)(iVar2 + 0x20))) &&
        (*(float *)(iVar2 + 0x20) <= *(float *)(iVar4 + 0x50))))))) {
-    dVar5 = -(double)(FLOAT_803e3c98 * (*(float *)(iVar2 + 0xc) - *(float *)(param_1 + 6)) -
+    dVar5 = -(double)(lbl_803E3C98 * (*(float *)(iVar2 + 0xc) - *(float *)(param_1 + 6)) -
                      *(float *)(param_1 + 6));
-    dVar6 = -(double)(FLOAT_803e3c98 * (*(float *)(iVar2 + 0x10) - *(float *)(param_1 + 8)) -
+    dVar6 = -(double)(lbl_803E3C98 * (*(float *)(iVar2 + 0x10) - *(float *)(param_1 + 8)) -
                      *(float *)(param_1 + 8));
-    dVar7 = -(double)(FLOAT_803e3c98 * (*(float *)(iVar2 + 0x14) - *(float *)(param_1 + 10)) -
+    dVar7 = -(double)(lbl_803E3C98 * (*(float *)(iVar2 + 0x14) - *(float *)(param_1 + 10)) -
                      *(float *)(param_1 + 10));
-    fVar1 = FLOAT_803e3c8c;
+    fVar1 = lbl_803E3C8C;
   }
   else {
     dVar5 = (double)*(float *)(param_1 + 6);
     dVar6 = (double)*(float *)(param_1 + 8);
     dVar7 = (double)*(float *)(param_1 + 10);
-    fVar1 = FLOAT_803e3c74;
+    fVar1 = lbl_803E3C74;
   }
   FUN_80166e9c(dVar5,dVar6,dVar7,(double)fVar1,(int)param_1);
   if (*(char *)(iVar4 + 0x90) == '\x06') {

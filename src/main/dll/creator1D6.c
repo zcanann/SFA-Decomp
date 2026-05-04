@@ -14,9 +14,9 @@ extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd71c;
 extern undefined4* DAT_803dd728;
 extern undefined4 DAT_803e5ea0;
-extern f32 FLOAT_803e5ee4;
-extern f32 FLOAT_803e5eec;
-extern f32 FLOAT_803e5ef0;
+extern f32 lbl_803E5EE4;
+extern f32 lbl_803E5EEC;
+extern f32 lbl_803E5EF0;
 
 /*
  * --INFO--

@@ -13,9 +13,9 @@ extern undefined4 DAT_803dc674;
 extern undefined4 DAT_803de324;
 extern undefined4 DAT_803de328;
 extern undefined4 DAT_803de330;
-extern f32 FLOAT_803e29d8;
-extern f32 FLOAT_803e29dc;
-extern f32 FLOAT_803e29e0;
+extern f32 lbl_803E29D8;
+extern f32 lbl_803E29DC;
+extern f32 lbl_803E29E0;
 extern char s__3d__02d__02d_8031b4a4[];
 
 /*
@@ -44,9 +44,9 @@ void FUN_80119fac(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   double dVar6;
   undefined auStack_18 [20];
   
-  FUN_800709e8((double)FLOAT_803e29d8,(double)FLOAT_803e29dc,DAT_803a92e4,param_10,0x100);
-  dVar6 = (double)FLOAT_803e29dc;
-  FUN_800709e8((double)FLOAT_803e29e0,dVar6,DAT_803a92e8,param_10,0x100);
+  FUN_800709e8((double)lbl_803E29D8,(double)lbl_803E29DC,DAT_803a92e4,param_10,0x100);
+  dVar6 = (double)lbl_803E29DC;
+  FUN_800709e8((double)lbl_803E29E0,dVar6,DAT_803a92e8,param_10,0x100);
   FUN_80017484(0xff,0xff,0xff,(byte)param_10);
   DAT_803de330 = DAT_803de328;
   uVar3 = 0;

@@ -28,14 +28,14 @@ extern undefined4* DAT_803dd6f0;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern f64 DOUBLE_803e5e40;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e5e24;
-extern f32 FLOAT_803e5e28;
-extern f32 FLOAT_803e5e2c;
-extern f32 FLOAT_803e5e30;
-extern f32 FLOAT_803e5e34;
-extern f32 FLOAT_803e5e38;
-extern f32 FLOAT_803e5e4c;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E5E24;
+extern f32 lbl_803E5E28;
+extern f32 lbl_803E5E2C;
+extern f32 lbl_803E5E30;
+extern f32 lbl_803E5E34;
+extern f32 lbl_803E5E38;
+extern f32 lbl_803E5E4C;
 
 /*
  * --INFO--
@@ -79,7 +79,7 @@ void FUN_801cbd88(void)
   iVar1 = FUN_80286834();
   psVar8 = *(short **)(iVar1 + 0xb8);
   uVar2 = FUN_80017a98();
-  local_5c[0] = FLOAT_803e5e24;
+  local_5c[0] = lbl_803E5E24;
   iVar7 = *(int *)(iVar1 + 0xb8);
   local_64[1] = 0;
   while (iVar3 = ObjMsg_Pop(iVar1,local_64,&uStack_68,local_64 + 1), iVar3 != 0) {
@@ -117,11 +117,11 @@ void FUN_801cbd88(void)
   }
   if (psVar8[1] < 1) {
     iVar7 = ObjGroup_FindNearestObject(0xe,uVar2,local_5c);
-    if (((iVar7 != 0) && (local_5c[0] < FLOAT_803e5e28)) && (FLOAT_803e5e2c < local_5c[0])) {
+    if (((iVar7 != 0) && (local_5c[0] < lbl_803E5E28)) && (lbl_803E5E2C < local_5c[0])) {
       dVar9 = (double)(*(float *)(iVar7 + 0x14) - *(float *)(uVar2 + 0x14));
-      if (dVar9 <= (double)FLOAT_803e5e30) {
-        if (dVar9 < (double)FLOAT_803e5e30) {
-          dVar9 = (double)(float)(dVar9 * (double)FLOAT_803e5e34);
+      if (dVar9 <= (double)lbl_803E5E30) {
+        if (dVar9 < (double)lbl_803E5E30) {
+          dVar9 = (double)(float)(dVar9 * (double)lbl_803E5E34);
         }
         if (psVar8[4] != 0x1e) {
           psVar8[4] = 0x1e;
@@ -129,7 +129,7 @@ void FUN_801cbd88(void)
         uStack_54 = (int)psVar8[4] ^ 0x80000000;
         local_5c[1] = 176.0;
         uVar6 = (uint)((float)((double)CONCAT44(0x43300000,uStack_54) - DOUBLE_803e5e40) *
-                      ((float)(dVar9 - (double)FLOAT_803e5e2c) / FLOAT_803e5e38));
+                      ((float)(dVar9 - (double)lbl_803E5E2C) / lbl_803E5E38));
         local_50 = (longlong)(int)uVar6;
         if ((short)uVar6 < 1) {
           uVar6 = 1;
@@ -138,7 +138,7 @@ void FUN_801cbd88(void)
         uStack_44 = (int)psVar8[2] ^ 0x80000000;
         local_48 = 0x43300000;
         uVar6 = (uint)((float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e5e40) *
-                      ((FLOAT_803e5e38 - (float)(dVar9 - (double)FLOAT_803e5e2c)) / FLOAT_803e5e38))
+                      ((lbl_803E5E38 - (float)(dVar9 - (double)lbl_803E5E2C)) / lbl_803E5E38))
         ;
         local_40 = (double)(longlong)(int)uVar6;
         if ((short)uVar6 < 1) {
@@ -180,8 +180,8 @@ void FUN_801cbd88(void)
         *(char *)(psVar8 + 9) = *(char *)(psVar8 + 9) + '\x01';
         FUN_80017698(0x1d8,0);
       }
-      local_40 = (double)(longlong)(int)FLOAT_803dc074;
-      psVar8[7] = psVar8[7] - (short)(int)FLOAT_803dc074;
+      local_40 = (double)(longlong)(int)lbl_803DC074;
+      psVar8[7] = psVar8[7] - (short)(int)lbl_803DC074;
       FUN_80135814();
       if (psVar8[7] < 1) {
         FUN_80017698(0x1d4,1);
@@ -344,7 +344,7 @@ void FUN_801cc600(undefined8 param_1,double param_2,double param_3,undefined8 pa
      (uVar1 = FUN_80017ae8(), (uVar1 & 0xff) != 0)) {
     puVar3 = FUN_80017aa4(0x18,0x248);
     *(undefined4 *)(puVar3 + 4) = *(undefined4 *)(iVar5 + 8);
-    dVar6 = (double)FLOAT_803e5e4c;
+    dVar6 = (double)lbl_803E5E4C;
     *(float *)(puVar3 + 6) = (float)(dVar6 + (double)*(float *)(iVar5 + 0xc));
     *(undefined4 *)(puVar3 + 8) = *(undefined4 *)(iVar5 + 0x10);
     *puVar3 = 0x248;

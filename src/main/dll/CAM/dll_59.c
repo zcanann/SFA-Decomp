@@ -19,15 +19,15 @@ extern undefined4 FUN_80294964();
 extern undefined4* DAT_803dd6d0;
 extern undefined4* gCamcontrolPathState;
 extern f64 DOUBLE_803e23d0;
-extern f32 FLOAT_803e23c0;
-extern f32 FLOAT_803e23c4;
-extern f32 FLOAT_803e23d8;
-extern f32 FLOAT_803e23dc;
-extern f32 FLOAT_803e23e8;
-extern f32 FLOAT_803e23ec;
-extern f32 FLOAT_803e23f0;
-extern f32 FLOAT_803e23f4;
-extern f32 FLOAT_803e23f8;
+extern f32 lbl_803E23C0;
+extern f32 lbl_803E23C4;
+extern f32 lbl_803E23D8;
+extern f32 lbl_803E23DC;
+extern f32 lbl_803E23E8;
+extern f32 lbl_803E23EC;
+extern f32 lbl_803E23F0;
+extern f32 lbl_803E23F4;
+extern f32 lbl_803E23F8;
 
 /*
  * --INFO--

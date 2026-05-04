@@ -23,13 +23,13 @@ extern undefined1 DAT_803de370;
 extern undefined4 DAT_803de374;
 extern f64 DOUBLE_803e2a20;
 extern f64 DOUBLE_803e2a28;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803de360;
-extern f32 FLOAT_803e2a00;
-extern f32 FLOAT_803e2a04;
-extern f32 FLOAT_803e2a08;
-extern f32 FLOAT_803e2a0c;
-extern f32 FLOAT_803e2a10;
+extern f32 lbl_803DC074;
+extern f32 lbl_803DE360;
+extern f32 lbl_803E2A00;
+extern f32 lbl_803E2A04;
+extern f32 lbl_803E2A08;
+extern f32 lbl_803E2A0C;
+extern f32 lbl_803E2A10;
 
 /*
  * --INFO--
@@ -79,10 +79,10 @@ void FUN_8011b868(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   
   local_67 = 0;
   FUN_800174d4(FUN_801348bc);
-  FUN_80134830((double)FLOAT_803e2a00,(double)FLOAT_803e2a04);
-  dVar7 = (double)FLOAT_803de360;
+  FUN_80134830((double)lbl_803E2A00,(double)lbl_803E2A04);
+  dVar7 = (double)lbl_803DE360;
   local_60 = (double)CONCAT44(0x43300000,DAT_803de35c);
-  iVar5 = (int)((float)(dVar7 + (double)(float)(local_60 - DOUBLE_803e2a20)) - FLOAT_803e2a08);
+  iVar5 = (int)((float)(dVar7 + (double)(float)(local_60 - DOUBLE_803e2a20)) - lbl_803E2A08);
   local_58 = (double)(longlong)iVar5;
   FUN_80134824(iVar5,0);
   FUN_80133c3c(0xff,1,1);
@@ -98,24 +98,24 @@ void FUN_8011b868(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     puVar4 = puVar4 + 1;
   }
   local_58 = (double)CONCAT44(0x43300000,(uint)DAT_803de358);
-  uStack_4c = (uint)((float)(local_58 - DOUBLE_803e2a20) + FLOAT_803dc074);
+  uStack_4c = (uint)((float)(local_58 - DOUBLE_803e2a20) + lbl_803DC074);
   local_60 = (double)(longlong)(int)uStack_4c;
   DAT_803de358 = (ushort)uStack_4c;
   uStack_4c = uStack_4c & 0xffff;
   local_50 = 0x43300000;
   dVar7 = (double)FUN_80293f90();
-  iVar5 = (int)((double)FLOAT_803e2a10 * dVar7 + (double)FLOAT_803e2a0c);
+  iVar5 = (int)((double)lbl_803E2A10 * dVar7 + (double)lbl_803E2A0C);
   local_48 = (longlong)iVar5;
   uStack_3c = (uint)DAT_803de358;
   local_40 = 0x43300000;
   dVar7 = (double)FUN_80293f90();
-  iVar1 = (int)((double)FLOAT_803e2a10 * dVar7 + (double)FLOAT_803e2a0c);
+  iVar1 = (int)((double)lbl_803E2A10 * dVar7 + (double)lbl_803E2A0C);
   local_38 = (longlong)iVar1;
   uStack_2c = (uint)DAT_803de358;
   local_30 = 0x43300000;
   dVar7 = (double)FUN_80293f90();
-  dVar8 = (double)FLOAT_803e2a10;
-  iVar2 = (int)(dVar8 * dVar7 + (double)FLOAT_803e2a0c);
+  dVar8 = (double)lbl_803E2A10;
+  iVar2 = (int)(dVar8 * dVar7 + (double)lbl_803E2A0C);
   local_28 = (longlong)iVar2;
   uVar3 = 0xff;
   uVar6 = FUN_80017484((byte)iVar2,(byte)iVar1,(byte)iVar5,0xff);
@@ -125,7 +125,7 @@ void FUN_8011b868(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                        in_r8,in_r9,in_r10);
   uStack_1c = (&DAT_803a92f0)[iVar1] + 0x8a ^ 0x80000000;
   local_20 = 0x43300000;
-  iVar5 = (int)((float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e2a28) - FLOAT_803de360);
+  iVar5 = (int)((float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e2a28) - lbl_803DE360);
   local_18 = (longlong)iVar5;
   FUN_80006c64(uVar3,0x56,iVar5,0);
   dVar7 = (double)FUN_800174d4(0);
