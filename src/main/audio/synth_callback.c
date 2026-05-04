@@ -212,13 +212,13 @@ u32 synthAssignHandle(s32 voiceIndex) {
 #pragma peephole off
 u32 synthResolveHandle(u32 handle) {
     SynthVoice* voice;
-    for (voice = gSynthAllocatedVoices; voice != 0; voice = voice->next) {
+    for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next) {
         if (voice->handle == (handle & 0x7FFFFFFF)) {
             return voice->slotIndex | (handle & 0x80000000);
         }
     }
 
-    for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next) {
+    for (voice = gSynthAllocatedVoices; voice != 0; voice = voice->next) {
         if (voice->handle == (handle & 0x7FFFFFFF)) {
             return voice->slotIndex | (handle & 0x80000000);
         }
