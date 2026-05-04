@@ -35,6 +35,7 @@ extern f32 lbl_803DE90C;
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 #pragma dont_inline on
 void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,uint moveId,s16 eventState)
 {
@@ -91,6 +92,7 @@ void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,ui
   return;
 }
 #pragma dont_inline reset
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -107,6 +109,7 @@ void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,ui
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void Object_ObjAnimSetPrimaryBlendMove(int objAnim,uint moveId,int eventState)
 {
   ObjAnimBank *bank;
@@ -141,6 +144,7 @@ void Object_ObjAnimSetSecondaryBlendMove(int objAnim,uint moveId,int eventState)
   }
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -157,6 +161,7 @@ void Object_ObjAnimSetSecondaryBlendMove(int objAnim,uint moveId,int eventState)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,int eventsArg)
 {
   ObjAnimComponent *objAnim;
@@ -316,6 +321,7 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
   }
   return uVar7;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -360,6 +366,7 @@ undefined4 Object_ObjAnimSetMoveProgress(f32 param_1,int param_2)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 undefined4
 Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
 {
@@ -440,6 +447,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   state->speed = clampedProgress * state->segmentLength;
   return 0;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -456,6 +464,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 undefined2 ObjAnim_GetCurrentEventCountdown(int objAnim)
 {
   return ObjAnim_GetCurrentState((ObjAnimComponent *)objAnim)->eventCountdown;
@@ -519,6 +528,7 @@ void ObjAnim_SetCurrentEventStepFrames(int objAnim,uint frameCount)
                     (ObjAnim_U32AsDouble(frameCount ^ 0x80000000) - lbl_803DE900));
   }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -535,6 +545,7 @@ void ObjAnim_SetCurrentEventStepFrames(int objAnim,uint frameCount)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnimArg,float *phaseOut)
 {
   ObjAnimComponent *objAnim;
@@ -715,6 +726,7 @@ undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnimArg,float *ph
   }
   return 0;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -731,6 +743,7 @@ undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnimArg,float *ph
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnimArg,
                                       ObjAnimEventList *events)
 {
@@ -1045,6 +1058,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
   }
   return uVar18;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
