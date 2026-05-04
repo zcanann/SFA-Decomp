@@ -25,6 +25,7 @@ extern uint fn_800430AC();
 extern undefined4 fn_8004350C();
 extern undefined4 fn_80043560();
 extern undefined8 fn_800437BC();
+extern undefined4 fn_80041E3C();
 extern undefined8 fn_800443CC();
 extern undefined4 fn_800481B0();
 extern undefined8 fn_800481D4();
@@ -32,13 +33,12 @@ extern undefined4 fn_8004A43C();
 extern undefined8 fn_8004A868();
 extern undefined4 FUN_80053b3c();
 extern undefined4 FUN_8005fe14();
-extern undefined8 FUN_800723a0();
 extern undefined8 fn_80114BB0();
 extern undefined4 FUN_801149bc();
 extern undefined4 FUN_801bb848();
-extern undefined4 FUN_801bbed0();
-extern undefined8 FUN_801bcc94();
-extern undefined4 FUN_80286880();
+extern undefined4 fn_801BBB44();
+extern undefined8 fn_801BC7E4();
+extern void OSReport(const char *msg, ...);
 
 extern undefined4 fn_8000FACC();
 extern undefined4 fn_80013E2C();
@@ -70,6 +70,8 @@ extern int lbl_803DCA8C;
 extern undefined4* lbl_803DCAB8;
 extern undefined4 lbl_803DDB88;
 extern f32 lbl_803E4C44;
+extern char lbl_80325B44[];
+extern char lbl_80325B6C[];
 
 typedef struct DIMbossEffect {
   u8 pad00[0x4C];
@@ -111,11 +113,7 @@ typedef struct DIMbossObject {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMboss_updateState(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                         undefined8 param_5,undefined8 param_6,undefined8 param_7,
-                         undefined8 param_8,undefined4 param_9,undefined4 param_10,int param_11,
-                         undefined4 param_12,undefined4 param_13,int param_14,int param_15,
-                         undefined4 param_16)
+void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,int param_3)
 {
   byte bVar1;
   bool bVar2;
@@ -130,25 +128,21 @@ void DIMboss_updateState(undefined8 param_1,double param_2,double param_3,undefi
   int iVar11;
   int iVar12;
   undefined4 *puVar13;
-  undefined8 uVar14;
-  undefined8 extraout_f1;
-  undefined8 extraout_f1_00;
   
-  puVar3 = (undefined4 *)fn_8002B9EC();
+  puVar3 = (undefined4 *)param_1;
   puVar13 = (undefined4 *)puVar3[0x2e];
   iVar12 = puVar3[0x13];
-  FUN_80017a98();
+  fn_8002B9EC();
   iVar11 = puVar13[0x103];
   *(undefined2 *)((int)puVar13 + 0x402) = 0;
-  uVar14 = (**(code **)(*lbl_803DCAAC + 0x50))(0x1c,5,0);
+  (**(code **)(*lbl_803DCAAC + 0x50))(0x1c,5,0);
   if (puVar3[0x3d] == 0) {
     puVar7 = lbl_803AC9DC;
     puVar8 = (undefined4 *)0x1;
     puVar9 = (undefined4 *)0x1;
-    uVar14 = fn_80114BB0(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar3,
-                         param_11,(float *)lbl_803AC9DC,1,1,param_14,param_15,param_16);
-    for (iVar10 = 0; iVar10 < (int)(uint)*(byte *)(param_11 + 0x8b); iVar10 = iVar10 + 1) {
-      switch(*(undefined *)(param_11 + iVar10 + 0x81)) {
+    fn_80114BB0(puVar3,param_3,(float *)lbl_803AC9DC,1,1);
+    for (iVar10 = 0; iVar10 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar10 = iVar10 + 1) {
+      switch(*(undefined *)(param_3 + iVar10 + 0x81)) {
       case 1:
         (**(code **)(*lbl_803DCAB4 + 0xc))(puVar3,0x800,0,100,0);
         (**(code **)(*lbl_803DCAB4 + 0xc))(puVar3,0x800,0,100,0);
@@ -156,19 +150,16 @@ void DIMboss_updateState(undefined8 param_1,double param_2,double param_3,undefi
         puVar7 = (undefined4 *)0x0;
         puVar8 = (undefined4 *)0x64;
         puVar9 = (undefined4 *)0x0;
-        param_14 = *lbl_803DCAB4;
-        (**(code **)(param_14 + 0xc))(puVar3,0x7ff);
+        (**(code **)(*lbl_803DCAB4 + 0xc))(puVar3,0x7ff,0,100,0);
         iVar4 = fn_8002B588((int)puVar3);
-        uVar14 = fn_8002843C(iVar4);
+        fn_8002843C(iVar4);
         fn_8000A518((int *)0x27,1);
         break;
       case 2:
         *(undefined2 *)((int)puVar13 + 0x402) = 1;
         *(byte *)((int)puVar3 + 0xaf) = *(byte *)((int)puVar3 + 0xaf) & 0xf7;
         *(byte *)((int)puVar3 + 0xaf) = *(byte *)((int)puVar3 + 0xaf) | 0x80;
-        puVar7 = (undefined4 *)0x0;
-        puVar8 = (undefined4 *)*lbl_803DCAAC;
-        uVar14 = (*(code *)puVar8[0x14])(0x1c,0);
+        (**(code **)(*lbl_803DCAAC + 0x50))(0x1c,0,0);
         break;
       case 6:
         lbl_803DDB80 = lbl_803DDB80 | 0x40004;
@@ -205,89 +196,81 @@ void DIMboss_updateState(undefined8 param_1,double param_2,double param_3,undefi
       case 0x11:
         *(undefined4 *)(iVar11 + 0xb0) = 10;
         GameBit_Set(0x123,1);
-        uVar14 = GameBit_Set(0x17,1);
+        GameBit_Set(0x17,1);
         fn_8000A518((int *)0x27,0);
         fn_8000A518((int *)0x36,0);
         fn_8000A518((int *)0xee,0);
         break;
       case 0x12:
-        puVar8 = (undefined4 *)0x3c;
-        puVar9 = (undefined4 *)*DAT_803dd6d4;
-        puVar7 = puVar3;
-        uVar14 = (*(code *)puVar9[0x14])(0x49,4);
+        (**(code **)(*DAT_803dd6d4 + 0x50))(0x49,4,puVar3,0x3c);
         break;
       case 0x13:
-        puVar7 = (undefined4 *)0x1;
-        puVar8 = (undefined4 *)*lbl_803DCAAC;
-        uVar14 = (*(code *)puVar8[0x14])(0x1c,2);
+        (**(code **)(*lbl_803DCAAC + 0x50))(0x1c,2,1);
         break;
       case 0x14:
-        puVar7 = (undefined4 *)0x0;
-        puVar8 = (undefined4 *)*lbl_803DCAAC;
-        uVar14 = (*(code *)puVar8[0x14])(0x1c,2);
+        (**(code **)(*lbl_803DCAAC + 0x50))(0x1c,2,0);
         break;
       case 0x15:
-        FUN_800723a0();
-        uVar14 = fn_80043074();
-        puVar7 = (undefined4 *)0x1;
+        OSReport(lbl_80325B44);
+        fn_80043074();
         fn_8004350C(0,0,1);
-        fn_800481B0(0x1c);
-        uVar14 = fn_800437BC(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        fn_800481B0(0x1b);
-        fn_800437BC(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        uVar14 = FUN_80040da0();
+        uVar5 = fn_800481B0(0x1c);
+        fn_800437BC(uVar5,0x3ff);
+        uVar5 = fn_800481B0(0x1b);
+        fn_800437BC(uVar5,0x20000000);
+        fn_80041E3C(0);
         break;
       case 0x16:
-        uVar14 = FUN_800723a0();
+        OSReport(lbl_80325B6C);
         uVar5 = fn_800481B0(0x13);
         fn_80043560(uVar5,0);
         fn_800481B0(0x13);
-        uVar14 = fn_800443CC(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        fn_800481B0(0x13);
-        uVar14 = fn_800443CC(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        fn_800481B0(0x13);
-        uVar14 = fn_800443CC(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        fn_800481B0(0x13);
-        uVar14 = fn_800443CC(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        fn_800481B0(0x13);
-        uVar14 = fn_800443CC(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        fn_800481B0(0x13);
-        uVar14 = fn_800443CC(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        fn_800481B0(0x13);
-        uVar14 = fn_800443CC(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        fn_800481B0(0x13);
-        uVar14 = fn_800443CC(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        fn_800481B0(0x13);
-        uVar14 = fn_800443CC(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        fn_800481B0(0x13);
-        uVar14 = fn_800443CC(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        fn_800481B0(0x13);
-        uVar14 = fn_800443CC(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        fn_800481B0(0x13);
-        uVar14 = fn_800443CC(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        fn_800481B0(0x13);
-        uVar14 = fn_800443CC(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        fn_800481B0(0x13);
-        fn_800443CC(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        fn_800443CC(uVar5,0x20);
+        uVar5 = fn_800481B0(0x13);
+        fn_800443CC(uVar5,0x21);
+        uVar5 = fn_800481B0(0x13);
+        fn_800443CC(uVar5,0x23);
+        uVar5 = fn_800481B0(0x13);
+        fn_800443CC(uVar5,0x24);
+        uVar5 = fn_800481B0(0x13);
+        fn_800443CC(uVar5,0x30);
+        uVar5 = fn_800481B0(0x13);
+        fn_800443CC(uVar5,0x2f);
+        uVar5 = fn_800481B0(0x13);
+        fn_800443CC(uVar5,0x2b);
+        uVar5 = fn_800481B0(0x13);
+        fn_800443CC(uVar5,0x2a);
+        uVar5 = fn_800481B0(0x13);
+        fn_800443CC(uVar5,0x26);
+        uVar5 = fn_800481B0(0x13);
+        fn_800443CC(uVar5,0x25);
+        uVar5 = fn_800481B0(0x13);
+        fn_800443CC(uVar5,0x1a);
+        uVar5 = fn_800481B0(0x13);
+        fn_800443CC(uVar5,0x1b);
+        uVar5 = fn_800481B0(0x13);
+        fn_800443CC(uVar5,0xe);
+        uVar5 = fn_800481B0(0x13);
+        fn_800443CC(uVar5,0xd);
         bVar2 = false;
         while (uVar6 = fn_800430AC(0), (uVar6 & 0xffefffff) != 0) {
-          uVar14 = fn_80014F40();
+          fn_80014F40();
           fn_800202CC();
           if (bVar2) {
-            uVar14 = fn_8004A868();
+            fn_8004A868();
           }
-          uVar14 = fn_800481D4(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-          fn_80015624(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+          fn_800481D4();
+          fn_80015624();
           if (bVar2) {
-            uVar14 = fn_800234EC();
-            fn_80019C24(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-            fn_8004A43C('\x01');
+            fn_800234EC(0);
+            fn_80019C24();
+            fn_8004A43C(1,0);
           }
           if (DAT_803dd5d0 != '\0') {
             bVar2 = true;
           }
         }
-        uVar14 = fn_80043034();
+        fn_80043034();
         break;
       case 0x17:
         lbl_803DDB80 = lbl_803DDB80 | 0x80000;
@@ -304,53 +287,43 @@ void DIMboss_updateState(undefined8 param_1,double param_2,double param_3,undefi
       if (puVar3[0x32] != 0) {
         *(undefined4 *)(puVar3[0x32] + 0x30) = puVar3[0xc];
       }
-      uVar14 = extraout_f1;
       if (((int)*(short *)((int)puVar13 + 0x3f6) != 0xffffffff) &&
-         (uVar6 = GameBit_Get((int)*(short *)((int)puVar13 + 0x3f6)), uVar6 != 0)) {
+          (uVar6 = GameBit_Get((int)*(short *)((int)puVar13 + 0x3f6)), uVar6 != 0)) {
         puVar7 = (undefined4 *)*DAT_803dd6d4;
-        uVar14 = (*(code *)puVar7[0x16])(param_11,(int)*(short *)(iVar12 + 0x2c));
+        (*(code *)puVar7[0x16])(param_3,(int)*(short *)(iVar12 + 0x2c));
         *(undefined2 *)((int)puVar13 + 0x3f6) = 0xffff;
       }
       bVar1 = *(byte *)((int)puVar13 + 0x405);
       if (bVar1 == 1) {
-        puVar8 = &DAT_803adc78;
-        puVar9 = &DAT_803adc60;
-        param_14 = 0;
-        param_15 = *DAT_803dd738;
-        puVar7 = puVar13;
-        iVar11 = (**(code **)(param_15 + 0x34))(puVar3,param_11);
-        uVar14 = extraout_f1_00;
+        iVar11 = (**(code **)(*DAT_803dd738 + 0x34))
+                          (puVar3,param_3,puVar13,&DAT_803adc78,&DAT_803adc60,0);
         if (iVar11 != 0) {
           puVar7 = (undefined4 *)0x1;
           puVar8 = (undefined4 *)*DAT_803dd738;
-          uVar14 = (*(code *)puVar8[0xb])((double)lbl_803E5908,puVar3,puVar13);
+          (*(code *)puVar8[0xb])((double)lbl_803E5908,puVar3,puVar13);
         }
       }
       else if ((bVar1 != 0) && (bVar1 < 3)) {
-        *(undefined2 *)(param_11 + 0x6e) = 0;
+        *(undefined2 *)(param_3 + 0x6e) = 0;
         puVar7 = puVar13;
         puVar8 = puVar13;
-        uVar14 = FUN_801bcc94(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar3,
-                              param_11,(int)puVar13,(int)puVar13);
+        fn_801BC7E4(puVar3,param_3,(int)puVar13,(int)puVar13);
         if (*(char *)((int)puVar13 + 0x405) == '\x01') {
           *(undefined2 *)(puVar13 + 0x9c) = 0;
-          param_2 = (double)lbl_803E58DC;
           puVar7 = &DAT_803adc78;
           puVar8 = &DAT_803adc60;
           puVar9 = (undefined4 *)*DAT_803dd70c;
-          uVar14 = (*(code *)puVar9[2])(puVar3,puVar13);
-          *(undefined *)(param_11 + 0x56) = 0;
+          (*(code *)puVar9[2])(puVar3,puVar13);
+          *(undefined *)(param_3 + 0x56) = 0;
         }
       }
     }
-    FUN_801bbed0(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar3,puVar13,
-                 puVar7,puVar8,puVar9,param_14,param_15,param_16);
+    fn_801BBB44(puVar3,puVar13);
     if (*(short *)(puVar3 + 0x2d) == -1) {
       *(ushort *)(puVar13 + 0x100) = *(ushort *)(puVar13 + 0x100) | 2;
     }
   }
 LAB_801bd7dc:
-  FUN_80286880();
   return;
 }
 
