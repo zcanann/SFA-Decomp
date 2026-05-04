@@ -162,8 +162,8 @@ void dfptargetblock_init(int param_1,int param_2)
         bVar2 = false;
         cVar1 = state->floorPointCount;
         for (iVar6 = 0; iVar6 < cVar1; iVar6 = iVar6 + 1) {
-          iVar4 = (int)&state->floorPoints[iVar6];
-          if ((point.x == *(float *)iVar4) && (point.z == *(float *)(iVar4 + 8))) {
+          iVar4 = (int)state + iVar6 * 12;
+          if ((point.x == *(float *)(iVar4 + 4)) && (point.z == *(float *)(iVar4 + 12))) {
             bVar2 = true;
             iVar6 = (int)cVar1;
           }

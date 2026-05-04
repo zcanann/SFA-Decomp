@@ -152,39 +152,25 @@ void dfplightni_update(u8 *obj)
         radiusY = (double)state->radiusY;
         eventBlocked = GameBit_Get(0xe57);
         if (eventBlocked == 0) {
+          double clampX;
+          double clampY;
           fn_8000B4D0(obj,0x4c3,2);
           if (eventActive == 0) {
-            if (radiusY < (double)lbl_803E6500) {
-              radiusY = (double)lbl_803E6500;
-            }
-            if ((double)lbl_803E6504 < radiusY) {
-              radiusY = (double)lbl_803E6504;
-            }
-            if (radiusX < (double)lbl_803E6500) {
-              radiusX = (double)lbl_803E6500;
-            }
-            if ((double)lbl_803E6504 < radiusX) {
-              radiusX = (double)lbl_803E6504;
-            }
+            clampY = (radiusY < (double)lbl_803E6500) ? (double)lbl_803E6500
+                       : ((double)lbl_803E6504 < radiusY) ? (double)lbl_803E6504 : radiusY;
+            clampX = (radiusX < (double)lbl_803E6500) ? (double)lbl_803E6500
+                       : ((double)lbl_803E6504 < radiusX) ? (double)lbl_803E6504 : radiusX;
             state->effectHandle =
-                fn_8008FB20(radiusX,radiusY,start,end,state->delayFrames,
+                fn_8008FB20(clampX,clampY,start,end,state->delayFrames,
                             state->angleIndex * 0xc & 0xff,0);
           }
           else {
-            if (radiusY < (double)lbl_803E6500) {
-              radiusY = (double)lbl_803E6500;
-            }
-            if ((double)lbl_803E6504 < radiusY) {
-              radiusY = (double)lbl_803E6504;
-            }
-            if (radiusX < (double)lbl_803E6500) {
-              radiusX = (double)lbl_803E6500;
-            }
-            if ((double)lbl_803E6504 < radiusX) {
-              radiusX = (double)lbl_803E6504;
-            }
+            clampY = (radiusY < (double)lbl_803E6500) ? (double)lbl_803E6500
+                       : ((double)lbl_803E6504 < radiusY) ? (double)lbl_803E6504 : radiusY;
+            clampX = (radiusX < (double)lbl_803E6500) ? (double)lbl_803E6500
+                       : ((double)lbl_803E6504 < radiusX) ? (double)lbl_803E6504 : radiusX;
             state->effectHandle =
-                fn_8008FB20(radiusX,radiusY,start,end,10,state->angleIndex * 0xc & 0xff,0);
+                fn_8008FB20(clampX,clampY,start,end,10,state->angleIndex * 0xc & 0xff,0);
           }
         }
         state->timer = lbl_803E64E0;

@@ -3815,6 +3815,7 @@ extern void fn_8007E77C(void);
 extern u8 lbl_803DD058;
 
 #pragma scheduling off
+#pragma peephole off
 int fn_8007D99C(void)
 {
     extern void* fn_80023CC8();
@@ -3867,6 +3868,7 @@ int fn_8007D99C(void)
     } while (lbl_803DD058 != 0);
     return 0;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -4288,7 +4290,7 @@ void fn_8007E54C(u8 kind)
         fn_800234EC(0);
         fn_8004A868();
         count = fn_8001FD88(&buttons) & 0xFF;
-        if (count != 0) {
+        if ((u32)count != 0) {
             draw = (void (*)(int, int, int))((void**)*lbl_803DCA4C)[1];
             draw(0, 0, 0);
             fn_80076510(0x280, 0x1E0, lbl_803DEF98, lbl_803DEF98);
