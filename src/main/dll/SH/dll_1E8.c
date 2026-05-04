@@ -18,7 +18,6 @@ extern f32 lbl_803E5438;
 extern f64 lbl_803E5440;
 extern char sSHthorntailSourceFile[];
 extern char sThorntailEnteredInvalidState[];
-extern SHthorntailAnimationInterface **lbl_803DCA58;
 extern SHthorntailEventInterface **lbl_803DCAAC;
 
 /*
@@ -57,7 +56,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_IDLE_COUNTDOWN:
     runtime->idleTimer = runtime->idleTimer - lbl_803DB414;
     if (runtime->idleTimer <= lbl_803E5418) {
-      tailSwingQueued = (*lbl_803DCA58)->isTailSwingQueued(0);
+      tailSwingQueued = (*gSHthorntailAnimationInterface)->isTailSwingQueued(0);
       if (tailSwingQueued != 0) {
         runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_READY;
       }
@@ -73,7 +72,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_MOVE_5:
   case SHTHORNTAIL_STATE_TURN_HOME:
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
-      tailSwingQueued = (*lbl_803DCA58)->isTailSwingQueued(0);
+      tailSwingQueued = (*gSHthorntailAnimationInterface)->isTailSwingQueued(0);
       if (tailSwingQueued != 0) {
         runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_READY;
       }
@@ -128,7 +127,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_TAIL_SWING:
     SHthorntail_updateTailSwing((uint)obj,runtime);
     if (((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) &&
-       (tailSwingQueued = (*lbl_803DCA58)->isTailSwingQueued(0), tailSwingQueued == 0)) {
+       (tailSwingQueued = (*gSHthorntailAnimationInterface)->isTailSwingQueued(0), tailSwingQueued == 0)) {
       runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_RECOVER;
     }
     break;

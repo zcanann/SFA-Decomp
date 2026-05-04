@@ -157,6 +157,7 @@ extern u8 gSHthorntailRootControlMode3Locomotion5PlayerImpactSfxTable;
 extern u8 gSHthorntailRootControlMode3Locomotion6ImpactSfxTable;
 extern u8 gSHthorntailRootControlMode3Locomotion7ImpactSfxTable;
 extern u8 gSHthorntailRootControlMode3Locomotion8ImpactSfxTable;
+extern SHthorntailAnimationInterface **gSHthorntailAnimationInterface;
 
 STATIC_ASSERT(sizeof(SHthorntailRuntime) == SHTHORNTAIL_EXTRA_STATE_BYTES);
 
