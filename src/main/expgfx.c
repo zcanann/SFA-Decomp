@@ -462,7 +462,8 @@ void expgfx_initialise(void)
  */
 #pragma scheduling off
 #pragma peephole off
-int expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,int param_4,uint param_5)
+int expgfx_reserveSlot(short *poolIndexOut,undefined2 *slotIndexOut,short slotType,
+                       int preferredPoolIndex,uint sourceId)
 {
   bool bVar1;
   short sVar2;
@@ -488,33 +489,33 @@ int expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,int para
   iVar9 = 0x10;
   pcVar5 = pcVar3;
   do {
-    if (((param_5 == *piVar8) && (param_3 == *psVar6)) && (*pcVar5 < EXPGFX_SLOTS_PER_POOL)) {
+    if (((sourceId == *piVar8) && (slotType == *psVar6)) && (*pcVar5 < EXPGFX_SLOTS_PER_POOL)) {
       sVar2 = (short)iVar4;
       bVar1 = true;
       break;
     }
-    if (((param_5 == piVar8[1]) && (param_3 == psVar6[1])) &&
+    if (((sourceId == piVar8[1]) && (slotType == psVar6[1])) &&
         (pcVar5[1] < EXPGFX_SLOTS_PER_POOL)) {
       sVar2 = (short)(iVar4 + 1);
       bVar1 = true;
       iVar4 = iVar4 + 1;
       break;
     }
-    if (((param_5 == piVar8[2]) && (param_3 == psVar6[2])) &&
+    if (((sourceId == piVar8[2]) && (slotType == psVar6[2])) &&
         (pcVar5[2] < EXPGFX_SLOTS_PER_POOL)) {
       sVar2 = (short)(iVar4 + 2);
       bVar1 = true;
       iVar4 = iVar4 + 2;
       break;
     }
-    if (((param_5 == piVar8[3]) && (param_3 == psVar6[3])) &&
+    if (((sourceId == piVar8[3]) && (slotType == psVar6[3])) &&
         (pcVar5[3] < EXPGFX_SLOTS_PER_POOL)) {
       sVar2 = (short)(iVar4 + 3);
       bVar1 = true;
       iVar4 = iVar4 + 3;
       break;
     }
-    if (((param_5 == piVar8[4]) && (param_3 == psVar6[4])) &&
+    if (((sourceId == piVar8[4]) && (slotType == psVar6[4])) &&
         (pcVar5[4] < EXPGFX_SLOTS_PER_POOL)) {
       sVar2 = (short)(iVar4 + 4);
       bVar1 = true;
@@ -533,8 +534,8 @@ int expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,int para
     iVar10 = EXPGFX_SLOTS_PER_POOL;
     do {
       if ((1 << iVar9 & *puVar7) == 0) {
-        *param_2 = (short)iVar9;
-        *param_1 = sVar2;
+        *slotIndexOut = (short)iVar9;
+        *poolIndexOut = sVar2;
         *puVar7 = *puVar7 | 1 << iVar9;
         poolActiveCounts[sVar2] = poolActiveCounts[sVar2] + '\x01';
         return 1;
@@ -544,10 +545,10 @@ int expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,int para
     } while (iVar10 != 0);
   }
   bVar1 = false;
-  if (param_4 != -1) {
-    if ((param_4 != -1) &&
-        (iVar4 = param_4, poolActiveCounts[param_4] < EXPGFX_SLOTS_PER_POOL)) {
-      sVar2 = (short)param_4;
+  if (preferredPoolIndex != -1) {
+    if ((preferredPoolIndex != -1) &&
+        (iVar4 = preferredPoolIndex, poolActiveCounts[preferredPoolIndex] < EXPGFX_SLOTS_PER_POOL)) {
+      sVar2 = (short)preferredPoolIndex;
       bVar1 = true;
     }
   }
@@ -572,10 +573,10 @@ int expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,int para
     iVar10 = EXPGFX_SLOTS_PER_POOL;
     do {
       if ((1 << iVar9 & *puVar7) == 0) {
-        *param_2 = (short)iVar9;
-        *param_1 = sVar2;
+        *slotIndexOut = (short)iVar9;
+        *poolIndexOut = sVar2;
         *puVar7 = *puVar7 | 1 << iVar9;
-        gExpgfxStaticPoolSlotTypeIds[iVar4] = param_3;
+        gExpgfxStaticPoolSlotTypeIds[iVar4] = slotType;
         ((char *)(lbl_8039AB58 + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET))[sVar2] =
             ((char *)(lbl_8039AB58 + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET))[sVar2] + '\x01';
         return 1;
@@ -624,15 +625,16 @@ void expgfx_initSlotQuad(void *slotPtr)
   slot->stateBits = slot->stateBits & ~EXPGFX_SLOT_STATE_FRAME_PARITY;
   slot->stateBits = slot->stateBits & ~EXPGFX_SLOT_STATE_QUAD_READY | EXPGFX_SLOT_STATE_QUAD_READY;
   behaviorFlags = slot->behaviorFlags;
-  if ((behaviorFlags & 0x8000000) == 0) {
+  if ((behaviorFlags & EXPGFX_BEHAVIOR_USE_QUAD_TEMPLATE_A) == 0) {
     quadTemplate = (s16 *)(staticDataBase + EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET);
   }
   else {
     quadTemplate = (s16 *)(staticDataBase + EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET);
   }
-  if ((behaviorFlags & 0x40000000) != 0) {
+  if ((behaviorFlags & EXPGFX_BEHAVIOR_BOUNCE_LOW_Y_VELOCITY) != 0) {
     if (slot->velocityY < lbl_803DF3B4) {
-      if (((behaviorFlags & 0x1000000) == 0) || (lbl_803DF3B4 <= slot->velocityY)) {
+      if (((behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) == 0) ||
+          (lbl_803DF3B4 <= slot->velocityY)) {
         slot->velocityY = -(lbl_803DF3BC * lbl_803DB414 - slot->velocityY);
       }
       else {
@@ -641,8 +643,10 @@ void expgfx_initSlotQuad(void *slotPtr)
       goto LAB_8009ba84;
     }
   }
-  if (((behaviorFlags & 0x1000000) == 0) || (slot->velocityY <= lbl_803DF3C0)) {
-    if (((behaviorFlags & 8) != 0) && (lbl_803DF3C0 < slot->velocityY)) {
+  if (((behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) == 0) ||
+      (slot->velocityY <= lbl_803DF3C0)) {
+    if (((behaviorFlags & EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY) != 0) &&
+        (lbl_803DF3C0 < slot->velocityY)) {
       slot->velocityY = lbl_803DF3BC * lbl_803DB414 + slot->velocityY;
     }
   }
@@ -674,11 +678,11 @@ LAB_8009ba84:
     if (texture != 0) {
       tex1S = 0x80;
       tex0S = 0x80;
-      if ((slot->behaviorFlags & 0x80) != 0) {
+      if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX1_T) != 0) {
         tex1T = 0x80;
         tex1S = 0;
       }
-      if ((slot->behaviorFlags & 0x40) != 0) {
+      if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX0_T) != 0) {
         tex0T = 0x80;
         tex0S = 0;
       }
