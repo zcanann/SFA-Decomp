@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void fn_802836E8(int slot);
+void hwKeyOff(int slot);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802836F4_H_ */

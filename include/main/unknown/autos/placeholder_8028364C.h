@@ -3,10 +3,10 @@
 
 #include "ghidra_import.h"
 
-void fn_8028363C(int slot, u32 valueA, u32 valueB);
-u8 fn_8028365C(int slot);
-u8 fn_80283670(int slot);
-u16 fn_80283684(int slot);
-void fn_80283698(int slot, u8 value);
+void hwSetVirtualSampleLoopBuffer(int slot, u32 valueA, u32 valueB);
+u8 hwGetVirtualSampleState(int slot);
+u8 hwGetSampleType(int slot);
+u16 hwGetSampleID(int slot);
+void hwSetStreamLoopPS(int slot, u8 value);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8028364C_H_ */

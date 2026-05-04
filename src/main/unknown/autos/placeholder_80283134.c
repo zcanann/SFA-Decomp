@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_80283134.h"
+#include "main/unknown/autos/placeholder_80284988.h"
 
 extern undefined4 DAT_803be6f6;
 extern undefined4 DAT_803be71a;
@@ -81,8 +82,6 @@ void hwSetTimeOffset(u8 value);
 extern void fn_8027BDE0(void);
 extern void fn_80284878(void);
 extern void fn_80284998(void);
-extern void fn_80284AB8(void);
-extern void fn_80284ABC(void);
 extern void fn_80284AF4(void);
 extern void fn_80284A8C(void);
 extern u32 fn_8028478C(void *callback, u32 flags, u32 value);
@@ -90,10 +89,8 @@ extern u32 fn_8027BA04(u32 valueA, u32 valueB, u32 enabled);
 extern u32 fn_802848D8(u32 flags);
 extern void fn_80284858(void);
 extern void fn_802737E8(void);
-extern void fn_80284B2C(void);
 extern void fn_802848AC(void);
 extern void fn_802849CC(void);
-extern void fn_80284B4C(void);
 extern void fn_8027F14C(void);
 extern void fn_8026EC44(u32 value);
 extern void fn_80271498(u32 value);
