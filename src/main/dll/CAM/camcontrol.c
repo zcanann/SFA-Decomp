@@ -336,12 +336,14 @@ LAB_80102ab4:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void camcontrol_getRelativePosition(double param_1,int param_2,float *param_3,float *param_4,
                                     float *param_5,float *param_6,int param_7)
 {
   int iVar1;
   double dVar2;
-  
+
   iVar1 = *(int *)(gCamcontrolState + 0xa4);
   if (param_7 == 0) {
     *param_3 = *(float *)(param_2 + 0x18) - *(float *)(iVar1 + 0x18);
@@ -365,6 +367,8 @@ void camcontrol_getRelativePosition(double param_1,int param_2,float *param_3,fl
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -590,12 +594,14 @@ void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void camcontrol_queueCamAction(undefined4 param_1,undefined4 param_2,int param_3,int param_4,
                                uint param_5,undefined4 param_6,undefined param_7)
 {
   int iVar1;
   undefined extraout_r4;
-  
+
   iVar1 = FUN_80286838();
   if (gCamcontrolQueuedActionData != (void *)0x0) {
     FUN_80017814((uint)gCamcontrolQueuedActionData);
@@ -619,6 +625,8 @@ void camcontrol_queueCamAction(undefined4 param_1,undefined4 param_2,int param_3
   FUN_80286884();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
