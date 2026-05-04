@@ -2567,5 +2567,5 @@ Runtime.PPCEABI.H/__mem.c: comment:0
 Runtime.PPCEABI.H/mem_TRK.c: comment:0
 	.init       start:0x800034E4 end:0x80003538
 
-Runtime.PPCEABI.H/__exception.c: comment:0
+dolphin/TRK_MINNOW_DOLPHIN/__exception.s: comment:0
 	.init       start:0x80003538 end:0x80005570
