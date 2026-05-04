@@ -98,12 +98,12 @@ void FUN_80115650(undefined8 param_1,double param_2,double param_3,undefined8 pa
       if ((0 < sVar11) && ((int)(short)puVar2[0x50] != (int)param_14[1])) {
         FUN_800305f8((double)FLOAT_803e2910,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                      puVar2,(int)param_14[1],0,iVar4,psVar8,uVar9,iVar10,param_16);
-        ObjAnim_SetCurrentEventStepFrames((int)puVar2,0x1e);
+        ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)puVar2,0x1e);
       }
       if ((sVar11 < 0) && ((int)(short)puVar2[0x50] != (int)*param_14)) {
         FUN_800305f8((double)FLOAT_803e2910,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                      puVar2,(int)*param_14,0,iVar4,psVar8,uVar9,iVar10,param_16);
-        ObjAnim_SetCurrentEventStepFrames((int)puVar2,0x1e);
+        ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)puVar2,0x1e);
       }
       if (sVar6 == 0) {
         iVar7 = (int)sVar11;

@@ -494,7 +494,7 @@ void FUN_8017fd40(undefined8 param_1,double param_2,double param_3,undefined8 pa
             piVar8[1] = (int)lbl_803E44F4;
             piVar8[2] = (int)fVar1;
             ObjAnim_SetCurrentMove(dVar9,(int)param_9,0,0);
-            ObjAnim_SetMoveProgress((double)lbl_803E44F4,(int)param_9);
+            ObjAnim_SetMoveProgress((double)lbl_803E44F4,(ObjAnimComponent *)param_9);
           }
           *(char *)(param_9 + 0x1b) = (char)iVar7;
         }
@@ -532,7 +532,7 @@ void FUN_8017fd40(undefined8 param_1,double param_2,double param_3,undefined8 pa
           if (param_9[0x50] != 0) {
             ObjAnim_SetCurrentMove((double)(float)piVar8[1],(int)param_9,0,0);
           }
-          ObjAnim_SetMoveProgress((double)(float)piVar8[1],(int)param_9);
+          ObjAnim_SetMoveProgress((double)(float)piVar8[1],(ObjAnimComponent *)param_9);
         }
         else if (-1 < cVar2) {
           FUN_8017fa10(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar7
@@ -1291,7 +1291,7 @@ LAB_80181668:
                                  (double)lbl_803E4598)) {
       if ((puVar1[0x50] == 1) && (lbl_803E45A8 < pfVar12[0x43])) {
         ObjAnim_SetCurrentMove((double)lbl_803E4588,(int)puVar1,0,0);
-        ObjAnim_SetCurrentEventStepFrames((int)puVar1,0x3c);
+        ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)puVar1,0x3c);
         pfVar12[0x43] = lbl_803E4588;
       }
       pfVar12[0x46] = (lbl_803E45AC * pfVar12[0x45]) / pfVar12[0x44];
@@ -1299,7 +1299,7 @@ LAB_80181668:
     else {
       if ((puVar1[0x50] == 0) && (lbl_803E45A8 < pfVar12[0x43])) {
         ObjAnim_SetCurrentMove((double)lbl_803E4588,(int)puVar1,1,0);
-        ObjAnim_SetCurrentEventStepFrames((int)puVar1,0x3c);
+        ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)puVar1,0x3c);
         pfVar12[0x43] = lbl_803E4588;
       }
       pfVar12[0x46] = lbl_803E45AC;
@@ -1308,7 +1308,7 @@ LAB_80181668:
   else {
     if ((puVar1[0x50] == 0) && (lbl_803E459C < pfVar12[0x43])) {
       ObjAnim_SetCurrentMove((double)lbl_803E4588,(int)puVar1,1,0);
-      ObjAnim_SetCurrentEventStepFrames((int)puVar1,0x3c);
+      ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)puVar1,0x3c);
       pfVar12[0x43] = lbl_803E4588;
     }
     pfVar12[0x46] = lbl_803E45A0;

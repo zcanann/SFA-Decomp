@@ -799,7 +799,7 @@ void FUN_801fcbf4(undefined2 *param_1,int param_2)
   *psVar2 = *(short *)(param_2 + 0x1e);
   uVar1 = FUN_80017690((int)*psVar2);
   if (uVar1 != 0) {
-    ObjAnim_SetMoveProgress((double)lbl_803E6DB4,(int)param_1);
+    ObjAnim_SetMoveProgress((double)lbl_803E6DB4,(ObjAnimComponent *)param_1);
     *(byte *)(psVar2 + 1) = *(byte *)(psVar2 + 1) & 0x7f | 0x80;
     *(byte *)(psVar2 + 1) = *(byte *)(psVar2 + 1) & 0xbf | 0x40;
     param_1[3] = param_1[3] | 0x4000;

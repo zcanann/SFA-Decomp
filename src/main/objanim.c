@@ -338,11 +338,8 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 Object_ObjAnimSetMoveProgress(f32 param_1,int param_2)
+undefined4 Object_ObjAnimSetMoveProgress(f32 param_1,ObjAnimComponent *objAnim)
 {
-  ObjAnimComponent *objAnim;
-
-  objAnim = (ObjAnimComponent *)param_2;
   if (param_1 > lbl_803DE908) {
     param_1 = lbl_803DE908;
   }
@@ -466,9 +463,9 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
  */
 #pragma scheduling off
 #pragma peephole off
-undefined2 ObjAnim_GetCurrentEventCountdown(int objAnim)
+undefined2 ObjAnim_GetCurrentEventCountdown(ObjAnimComponent *objAnim)
 {
-  return ObjAnim_GetCurrentState((ObjAnimComponent *)objAnim)->eventCountdown;
+  return ObjAnim_GetCurrentState(objAnim)->eventCountdown;
 }
 
 /*
@@ -484,13 +481,13 @@ undefined2 ObjAnim_GetCurrentEventCountdown(int objAnim)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjAnim_WriteStateWord(int objAnim,int stateIndex,short wordIndex,int value)
+void ObjAnim_WriteStateWord(ObjAnimComponent *objAnim,int stateIndex,short wordIndex,int value)
 {
   ObjAnimBank *bank;
   ObjAnimState *state;
   u16 stateWord;
 
-  bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
+  bank = ObjAnim_GetActiveBank(objAnim);
   if (bank == (ObjAnimBank *)0x0) {
     return;
   }
@@ -518,11 +515,11 @@ void ObjAnim_WriteStateWord(int objAnim,int stateIndex,short wordIndex,int value
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjAnim_SetCurrentEventStepFrames(int objAnim,uint frameCount)
+void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,uint frameCount)
 {
   ObjAnimBank *bank;
 
-  bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
+  bank = ObjAnim_GetActiveBank(objAnim);
   if (bank != (ObjAnimBank *)0x0) {
     bank->currentState->eventStep =
         (short)(int)(lbl_803DE8F4 /
@@ -1077,11 +1074,8 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 ObjAnim_SetMoveProgress(f32 moveProgress,int objAnimArg)
+undefined4 ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
 {
-  ObjAnimComponent *objAnim;
-
-  objAnim = (ObjAnimComponent *)objAnimArg;
   if (moveProgress > lbl_803DE908) {
     moveProgress = lbl_803DE908;
   }
