@@ -104,6 +104,8 @@ void fn_8010DAE0(f32 *param_1, undefined4 param_2, f32 *param_3) {
 void fn_8010DB74(void) {}
 void fn_8010DB78(void) {}
 
+#pragma scheduling off
+#pragma peephole off
 void fn_8010DB7C(f32 *param_1, f32 *param_2, f32 *param_3, f32 *param_4) {
     f32 *pfVar2 = lbl_803DD584;
     f32 dx;
@@ -138,6 +140,8 @@ void fn_8010DB7C(f32 *param_1, f32 *param_2, f32 *param_3, f32 *param_4) {
     *param_3 = (param_1[7] + lbl_803DD584[12]) - lbl_803E19D8 * ((lbl_803E19DC + param_1[7]) - pfVar2[1]);
     *param_4 = sinVal * dist + dz;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void fn_8010DD24(void) {}
 
