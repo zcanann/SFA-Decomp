@@ -585,8 +585,8 @@ undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnimArg,float *ph
     iVar18 = (int)state;
     fVar5 = *(float *)(objAnimArg + 8);
     pfVar15 = (float *)0x0;
-    if (*(ushort *)(iVar18 + 0x5a) != 0) {
-      in_f7 = (double)((float)((double)CONCAT44(0x43300000,(uint)*(ushort *)(iVar18 + 0x5a)) -
+    if (state->eventState != 0) {
+      in_f7 = (double)((float)((double)CONCAT44(0x43300000,(uint)state->eventState) -
                               lbl_803DE8E8) / lbl_803DE8F4);
       in_f8 = (double)(float)((double)lbl_803DE8E0 - in_f7);
       if ((*(ushort *)(iVar17 + 2) & OBJANIM_DEF_FLAG_CACHED_MOVES) == 0) {
@@ -633,7 +633,7 @@ undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnimArg,float *ph
         if (sVar6 != 0) {
           fVar4 = (float)((double)CONCAT44(0x43300000,uVar10 ^ 0x80000000) - lbl_803DE900);
           fVar8 = lbl_803DE8E0 / fVar4;
-          fVar4 = fVar4 * *(float *)(objAnimArg + 0x98);
+          fVar4 = fVar4 * objAnim->currentMoveProgress;
           uVar11 = (uint)fVar4;
           fVar4 = fVar4 - (float)((double)CONCAT44(0x43300000,uVar11 ^ 0x80000000) - lbl_803DE900
                                  );
