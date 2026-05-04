@@ -96,7 +96,7 @@ extern int iRam803dd854;
 
 #define gObjHitsResetObjectCount DAT_803dd860
 #define gObjHitsResetObjects DAT_803dd864
-extern char lbl_802CAE48[];
+extern char sObjMsgOverflowInObjectWarning[];
 
 typedef struct ObjMsgEntry {
   uint message;
@@ -2016,7 +2016,7 @@ void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sende
         entry->param = param;
         queue->count = queue->count + 1;
       } else {
-        fn_801378A8(lbl_802CAE48,message,
+        fn_801378A8(sObjMsgOverflowInObjectWarning,message,
                      (int)*(short *)((byte *)obj + 0x44),(int)*(short *)((byte *)obj + 0x46),
                      (int)*(short *)((byte *)sender + 0x46));
       }
@@ -2070,7 +2070,7 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
           entry->param = param;
           queue->count = queue->count + 1;
         } else {
-          fn_801378A8(lbl_802CAE48,message,
+          fn_801378A8(sObjMsgOverflowInObjectWarning,message,
                        (int)*(short *)((byte *)obj + 0x44),(int)*(short *)((byte *)obj + 0x46),
                        (int)*(short *)((byte *)sender + 0x46));
         }
@@ -2092,7 +2092,7 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
           entry->param = param;
           queue->count = queue->count + 1;
         } else {
-          fn_801378A8(lbl_802CAE48,message,
+          fn_801378A8(sObjMsgOverflowInObjectWarning,message,
                        (int)*(short *)((byte *)obj + 0x44),(int)*(short *)((byte *)obj + 0x46),
                        (int)*(short *)((byte *)sender + 0x46));
         }
@@ -2143,7 +2143,7 @@ uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param)
       queue->count = queue->count + 1;
       return queue->count;
     }
-    fn_801378A8(lbl_802CAE48,message,
+    fn_801378A8(sObjMsgOverflowInObjectWarning,message,
                  (int)*(short *)((byte *)dstObj + 0x44),(int)*(short *)((byte *)dstObj + 0x46),
                  (int)*(short *)((byte *)senderObj + 0x46));
   }
