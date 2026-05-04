@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 
-extern int GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void ObjHits_SetHitVolumeSlot(u8 *obj,int param_2,int param_3,int param_4);
 
 extern undefined4 *lbl_803DCA54;
@@ -40,6 +40,8 @@ void dfppowersl_free(u8 *obj)
 }
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void dfppowersl_render(u8 *obj)
 {
   u8 *powerSl;
@@ -58,6 +60,11 @@ void dfppowersl_render(u8 *obj)
   return;
 }
 
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
 void dfppowersl_update(u8 *obj)
 {
   u8 *powerSl;
@@ -72,6 +79,11 @@ void dfppowersl_update(u8 *obj)
   return;
 }
 
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
 void dfppowersl_init(u8 *obj,u8 *params)
 {
   DfpPowerSlState *state;
@@ -93,3 +105,5 @@ void dfppowersl_init(u8 *obj,u8 *params)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
