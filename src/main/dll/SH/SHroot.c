@@ -53,7 +53,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
                                          SHthorntailConfig *config)
 {
   int playerObj;
-  int randomTime;
+  int randomIdleWait;
   uint closeToPlayer;
   uint gameBit;
   int triggerIsSet;
@@ -135,8 +135,8 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
   case SHTHORNTAIL_STATE_TAIL_SWING_RECOVER:
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      randomTime = fn_800221A0(1000,2000);
-      runtime->idleTimer = (float)randomTime;
+      randomIdleWait = fn_800221A0(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
+      runtime->idleTimer = (float)randomIdleWait;
     }
     break;
   }
@@ -164,7 +164,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
 {
   int linkedEventPending;
   uint gameBit;
-  int randomTime;
+  int randomIdleWait;
   u8 *levelControlTables;
 
   levelControlTables = lbl_80326E98;
@@ -217,8 +217,8 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
     if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_EVENT_PAUSE) {
       Sfx_PlayFromObject(0,SHTHORNTAIL_EVENT_RESUME_VOLUME_ID);
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      randomTime = fn_800221A0(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
-      runtime->idleTimer = (float)randomTime;
+      randomIdleWait = fn_800221A0(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
+      runtime->idleTimer = (float)randomIdleWait;
     }
     gameBit = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION6_GAMEBIT);
     if (gameBit == 0) {
@@ -253,8 +253,8 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
 undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4 param_2,int param_3)
 {
   SHthorntailRuntime *runtime;
-  int randomTime;
-  int iVar2;
+  int randomIdleWait;
+  int impactHandled;
   int levelControlReady;
   int impactPending;
 
@@ -263,8 +263,8 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4
   if (levelControlReady == 0) {
     Sfx_StopObjectChannel((int)obj,0x7f);
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-    randomTime = fn_800221A0(1000,2000);
-    runtime->idleTimer = (float)randomTime;
+    randomIdleWait = fn_800221A0(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
+    runtime->idleTimer = (float)randomIdleWait;
     runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING;
     runtime->behaviorFlags = runtime->behaviorFlags | (SHTHORNTAIL_FLAG_LEVELCONTROL_READY |
                                                        SHTHORNTAIL_FLAG_FREEZE_MOTION);
@@ -273,8 +273,8 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4
   }
   impactPending = (int)(runtime->behaviorFlags & SHTHORNTAIL_FLAG_IMPACT_PENDING);
   if (impactPending != 0) {
-    iVar2 = fn_80114BB0((int)obj,param_3,(int)runtime,0,0);
-    if (iVar2 != 0) {
+    impactHandled = fn_80114BB0((int)obj,param_3,(int)runtime,0,0);
+    if (impactHandled != 0) {
       return 0;
     }
     *(short *)(param_3 + 0x6e) = *(short *)(param_3 + 0x6e) & ~0x40;
