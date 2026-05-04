@@ -113,7 +113,8 @@ static inline float log2_kernel(float x, float* table)
 
     bits = float_bits(x);
     exponent = (bits >> 23) - 0x80;
-    fraction = bits & 0x007FFFFF;
+    fraction = bits;
+    fraction &= 0x007FFFFF;
     index = fraction >> 16;
     log_c0_bits = lbl_803DC658;
     log_c1_bits = lbl_803DC65C;
