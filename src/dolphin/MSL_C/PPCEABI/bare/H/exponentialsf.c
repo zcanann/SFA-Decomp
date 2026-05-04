@@ -78,14 +78,12 @@ static inline int classify_float(float value)
         return 4;
     }
 
-    if (exponent <= 0) {
-        if (exponent == 0) {
-            fraction = bits & 0x007FFFFF;
-            if (fraction != 0) {
-                return 5;
-            }
-            return 3;
+    if (exponent == 0) {
+        fraction = bits & 0x007FFFFF;
+        if (fraction != 0) {
+            return 5;
         }
+        return 3;
     }
 
     return 4;
