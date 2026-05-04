@@ -176,11 +176,8 @@ float __ieee754_pow(float x, float y)
 {
     float log_value;
     float* table;
-    volatile float x_float;
     int int_y;
 
-    x_float = x;
-    x = x_float;
     table = (float*)lbl_80332C78;
 
     if (x > lbl_803E7E50) {
