@@ -257,8 +257,12 @@ extern void fn_801CDC78(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void nw_geyser_init(int obj)
 {
   *(ushort *)(obj + 0xb0) = (ushort)(*(ushort *)(obj + 0xb0) | 0x6000);
   *(void **)(obj + 0xbc) = fn_801CDC78;
 }
+#pragma peephole reset
+#pragma scheduling reset
