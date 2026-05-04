@@ -4,7 +4,7 @@
 extern undefined4 FUN_8000a380();
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
-extern void FUN_80026e00(int param_1,int param_2,float *param_3);
+extern void fn_80026E00(int param_1,int param_2,float *param_3);
 extern undefined4 FUN_80097734();
 
 extern undefined4* DAT_803dcaa8;
@@ -154,13 +154,13 @@ void dfptargetblock_init(int param_1,int param_2)
   else {
     dVar11 = (double)lbl_803E64CC;
     for (iVar8 = 0; iVar8 < (int)(uint)*(ushort *)(iVar7 + 0xe4); iVar8 = iVar8 + 1) {
-      FUN_80026e00(iVar7,iVar8,&point.x);
+      fn_80026E00(iVar7,iVar8,&point.x);
       if ((double)point.y < dVar11) {
         dVar11 = (double)point.y;
       }
     }
     for (iVar8 = 0; iVar8 < (int)(uint)*(ushort *)(iVar7 + 0xe4); iVar8 = iVar8 + 1) {
-      FUN_80026e00(iVar7,iVar8,&point.x);
+      fn_80026E00(iVar7,iVar8,&point.x);
       if ((double)point.y == dVar11) {
         bVar2 = false;
         cVar1 = state->floorPointCount;
