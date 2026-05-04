@@ -334,7 +334,7 @@ config.libs = [
                 mw_version="GC/1.2.5n",
                 cflags=cflags_runtime_125,
             ),
-            Object(NonMatching, "Runtime.PPCEABI.H/__mem.c"),
+            Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__mem.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/mem_TRK.c"),
             Object(NonMatching, "Runtime.PPCEABI.H/__exception.c"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__va_arg.c"),
