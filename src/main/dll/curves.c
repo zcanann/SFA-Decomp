@@ -1024,6 +1024,8 @@ LAB_800e33ac:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 double curves_distXZ(double param_1,double param_2,uint param_3)
 {
   float fVar1;
@@ -1033,7 +1035,7 @@ double curves_distXZ(double param_1,double param_2,uint param_3)
   int iVar5;
   int iVar6;
   double dVar7;
-  
+
   if ((int)param_3 < 0) {
     iVar6 = 0;
   }
@@ -1064,6 +1066,8 @@ LAB_800e3628:
   }
   return dVar7;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1078,6 +1082,8 @@ LAB_800e3628:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 double RomCurve_distanceToObject(int param_1,uint param_2)
 {
   float fVar1;
@@ -1088,7 +1094,7 @@ double RomCurve_distanceToObject(int param_1,uint param_2)
   int iVar6;
   int iVar7;
   double dVar8;
-  
+
   if ((int)param_2 < 0) {
     iVar7 = 0;
   }
@@ -1120,6 +1126,8 @@ LAB_800e36d8:
   }
   return dVar8;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1279,13 +1287,15 @@ LAB_800e3878:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4 RomCurve_getById(uint curveId,int *outIndex)
 {
   int high;
   int low;
   int mid;
   int curve;
-  
+
   *outIndex = -1;
   if ((int)curveId < 0) {
     return 0;
@@ -1309,6 +1319,8 @@ undefined4 RomCurve_getById(uint curveId,int *outIndex)
   *outIndex = -1;
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4056,6 +4068,7 @@ uint FUN_800e6680(char param_1,uint param_2)
  * PAL Size: TODO
  */
 extern u8 lbl_803A31C4[];
+#pragma scheduling off
 #pragma peephole off
 void gameplay_setDebugOptionEnabled(uint param_1,u8 param_2)
 {
@@ -4074,6 +4087,7 @@ void gameplay_setDebugOptionEnabled(uint param_1,u8 param_2)
   return;
 }
 #pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */

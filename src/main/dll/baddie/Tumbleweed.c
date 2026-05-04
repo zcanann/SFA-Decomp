@@ -3558,6 +3558,8 @@ extern void  fn_80054308(void*);
  * buffer at lbl_803DD9D4 and walk the 19-slot table at lbl_803A9F98
  * releasing each non-null entry, then clear the busy byte at
  * lbl_803DD992. */
+#pragma scheduling off
+#pragma peephole off
 void titlescreen_release(void)
 {
     int i = 0;
@@ -3575,6 +3577,8 @@ void titlescreen_release(void)
     }
     lbl_803DD992 = 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* EN v1.0 0x80134388  size: 68b  Acquire two buffers and prime the
  * float at lbl_803DD968. */

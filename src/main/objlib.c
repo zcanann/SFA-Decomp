@@ -1207,6 +1207,8 @@ void ObjHits_AddContactObject(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int ObjHits_GetPriorityHitWithPosition(int param_1,undefined4 *param_2,int *param_3,uint *param_4,undefined4 *param_5,
                 undefined4 *param_6,undefined4 *param_7)
 {
@@ -1216,7 +1218,7 @@ int ObjHits_GetPriorityHitWithPosition(int param_1,undefined4 *param_2,int *para
   int iVar4;
   char cVar5;
   char cVar6;
-  
+
   iVar3 = *(int *)(param_1 + 0x54);
   if (iVar3 != 0) {
     iVar2 = (int)*(char *)(iVar3 + 0x71);
@@ -1257,6 +1259,8 @@ int ObjHits_GetPriorityHitWithPosition(int param_1,undefined4 *param_2,int *para
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1446,6 +1450,8 @@ undefined4 ObjHitReact_GetResetObjects(undefined4 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHits_InitWorkBuffers(void)
 {
   DAT_803dd864 = FUN_80017830(200,0xe);
@@ -1463,6 +1469,8 @@ void ObjHits_InitWorkBuffers(void)
   gObjHitsActiveHitVolumeObjects[4] = 0;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1693,6 +1701,8 @@ undefined4 * ObjGroup_GetObjects(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjGroup_RemoveObject(int param_1,int param_2)
 {
   byte *bucketStarts;
@@ -1701,7 +1711,7 @@ void ObjGroup_RemoveObject(int param_1,int param_2)
   int index;
   int limit;
   int *entries;
-  
+
   if ((param_2 < 0) || (0x53 < param_2)) {
     return;
   }
@@ -1727,6 +1737,8 @@ void ObjGroup_RemoveObject(int param_1,int param_2)
     param_2++;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1787,6 +1799,8 @@ int ObjGroup_GetObjectGroup(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjGroup_AddObject(int param_1,int param_2)
 {
   byte *bucketStarts;
@@ -1796,7 +1810,7 @@ void ObjGroup_AddObject(int param_1,int param_2)
   int insertIndex;
   int limit;
   int *entries;
-  
+
   if ((param_2 < 0) || (0x53 < param_2)) {
     return;
   }
@@ -1824,6 +1838,8 @@ void ObjGroup_AddObject(int param_1,int param_2)
     param_2++;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1948,6 +1964,8 @@ undefined4 ObjMsg_Pop(void *obj,uint *outMessage,uint *outSender,uint *outParam)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sender,uint message,uint param)
 {
   int *objects;
@@ -1958,7 +1976,7 @@ void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sende
   int objectIndex;
   int objectCount;
   void *obj;
-  
+
   objects = (int *)FUN_80017b00(&objectIndex,&objectCount);
   maskedFlags = flags & 0xffff;
   for (; objectIndex < objectCount; objectIndex = objectIndex + 1) {
@@ -1984,6 +2002,8 @@ void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sende
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
