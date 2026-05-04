@@ -2253,28 +2253,28 @@ bool FUN_80037d74(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int ObjHits_PollPriorityHitWithCooldown(int param_1,float *param_2,undefined4 *param_3,float *param_4)
+int ObjHits_PollPriorityHitWithCooldown(int obj,float *cooldown,undefined4 *outHitObject,float *outHitPos)
 {
-  int iVar1;
+  int collisionType;
   
-  iVar1 = 0;
-  *param_2 = *param_2 - lbl_803DC074;
-  if (*param_2 <= lbl_803DF5F0) {
-    if (param_4 == (float *)0x0) {
-      iVar1 = ObjHits_GetPriorityHit(param_1,param_3,(int *)0x0,(uint *)0x0);
+  collisionType = 0;
+  *cooldown = *cooldown - lbl_803DC074;
+  if (*cooldown <= lbl_803DF5F0) {
+    if (outHitPos == (float *)0x0) {
+      collisionType = ObjHits_GetPriorityHit(obj,outHitObject,(int *)0x0,(uint *)0x0);
     }
     else {
-      iVar1 = ObjHits_GetPriorityHitWithPosition(param_1,param_3,(int *)0x0,(uint *)0x0,param_4,
-                           param_4 + 1,param_4 + 2);
-      if (iVar1 != 0) {
-        FUN_80053ab4(param_1,param_4);
+      collisionType = ObjHits_GetPriorityHitWithPosition(obj,outHitObject,(int *)0x0,(uint *)0x0,outHitPos,
+                           outHitPos + 1,outHitPos + 2);
+      if (collisionType != 0) {
+        FUN_80053ab4(obj,outHitPos);
       }
     }
-    if (iVar1 != 0) {
-      *param_2 = lbl_803DF5F4;
+    if (collisionType != 0) {
+      *cooldown = lbl_803DF5F4;
     }
   }
-  return iVar1;
+  return collisionType;
 }
 
 /*
@@ -2290,48 +2290,48 @@ int ObjHits_PollPriorityHitWithCooldown(int param_1,float *param_2,undefined4 *p
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_PollPriorityHitEffectWithCooldown(undefined4 param_1,undefined4 param_2,uint param_3,uint param_4,uint param_5,
-                 uint param_6,float *param_7)
+void ObjHits_PollPriorityHitEffectWithCooldown(undefined4 obj,undefined4 hitFxMode,uint colorR,uint colorG,uint colorB,
+                 uint sfxId,float *cooldown)
 {
-  uint uVar1;
-  int iVar2;
-  int *piVar3;
-  undefined8 uVar4;
-  int local_58;
-  uint local_54;
-  uint local_50;
-  uint local_4c;
-  uint local_48;
-  undefined2 local_44;
-  undefined2 local_42;
-  undefined2 local_40;
-  float local_3c;
-  float local_38;
-  undefined4 uStack_34;
-  float local_30[12];
+  uint currentObj;
+  int collisionType;
+  int *effectHandle;
+  undefined8 currentObjPair;
+  int hitObject;
+  uint effectObjId;
+  uint effectColorR;
+  uint effectColorG;
+  uint effectColorB;
+  undefined2 effectPosX;
+  undefined2 effectPosY;
+  undefined2 effectPosZ;
+  float effectScale;
+  float hitPosX;
+  float hitPosY;
+  float hitPosZ;
   
-  uVar4 = FUN_80286834();
-  uVar1 = (uint)((ulonglong)uVar4 >> 0x20);
-  *param_7 = *param_7 - lbl_803DC074;
-  iVar2 = ObjHits_GetPriorityHitWithPosition((int)uVar1, (undefined4 *)&local_58, (int *)0x0, (uint *)0x0,
-                       &local_38,
-                       (float *)&uStack_34, local_30);
-  if ((((*param_7 <= lbl_803DF5F0) && (iVar2 != 0)) && ((*param_7 = lbl_803DF5F8), (iVar2 != 0x1a))) &&
-      (iVar2 != 5)) {
-    local_38 = local_38 + lbl_803DDA58;
-    local_30[0] = local_30[0] + lbl_803DDA5C;
-    local_3c = lbl_803DF5FC;
-    local_40 = 0;
-    local_42 = 0;
-    local_44 = 0;
-    piVar3 = (int *)FUN_80006b14(0x5a);
-    local_54 = (uint)uVar4 & 0xff;
-    local_50 = param_3 & 0xff;
-    local_4c = param_4 & 0xff;
-    local_48 = param_5 & 0xff;
-    (**(code **)(*piVar3 + 4))(0, 1, &local_44, 0x401, 0xffffffff, &local_54);
-    if ((((param_6 & 0xffff) != 0) && (local_58 != 0)) && (*(short *)(local_58 + 0x46) == 0x69)) {
-      FUN_80006824((int)uVar1, (ushort)param_6);
+  currentObjPair = FUN_80286834();
+  currentObj = (uint)((ulonglong)currentObjPair >> 0x20);
+  *cooldown = *cooldown - lbl_803DC074;
+  collisionType = ObjHits_GetPriorityHitWithPosition((int)currentObj, (undefined4 *)&hitObject,
+                       (int *)0x0, (uint *)0x0, &hitPosX, &hitPosY, &hitPosZ);
+  if ((((*cooldown <= lbl_803DF5F0) && (collisionType != 0)) &&
+      ((*cooldown = lbl_803DF5F8), (collisionType != 0x1a))) && (collisionType != 5)) {
+    hitPosX = hitPosX + lbl_803DDA58;
+    hitPosZ = hitPosZ + lbl_803DDA5C;
+    effectScale = lbl_803DF5FC;
+    effectPosZ = 0;
+    effectPosY = 0;
+    effectPosX = 0;
+    effectHandle = (int *)FUN_80006b14(OBJHITREACT_HIT_EFFECT_ID);
+    effectObjId = (uint)currentObjPair & 0xff;
+    effectColorR = colorR & 0xff;
+    effectColorG = colorG & 0xff;
+    effectColorB = colorB & 0xff;
+    (**(code **)(*effectHandle + 4))(0, 1, &effectPosX, OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,
+                                     0xffffffff, &effectObjId);
+    if ((((sfxId & 0xffff) != 0) && (hitObject != 0)) && (*(short *)(hitObject + 0x46) == 0x69)) {
+      FUN_80006824((int)currentObj, (ushort)sfxId);
     }
   }
   FUN_80286880();
