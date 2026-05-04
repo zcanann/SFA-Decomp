@@ -1450,6 +1450,8 @@ undefined4 ObjHitReact_GetResetObjects(undefined4 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHits_InitWorkBuffers(void)
 {
   DAT_803dd864 = FUN_80017830(200,0xe);
@@ -1467,6 +1469,8 @@ void ObjHits_InitWorkBuffers(void)
   gObjHitsActiveHitVolumeObjects[4] = 0;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1697,6 +1701,8 @@ undefined4 * ObjGroup_GetObjects(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjGroup_RemoveObject(int param_1,int param_2)
 {
   byte *bucketStarts;
@@ -1705,7 +1711,7 @@ void ObjGroup_RemoveObject(int param_1,int param_2)
   int index;
   int limit;
   int *entries;
-  
+
   if ((param_2 < 0) || (0x53 < param_2)) {
     return;
   }
@@ -1731,6 +1737,8 @@ void ObjGroup_RemoveObject(int param_1,int param_2)
     param_2++;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1791,6 +1799,8 @@ int ObjGroup_GetObjectGroup(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjGroup_AddObject(int param_1,int param_2)
 {
   byte *bucketStarts;
@@ -1800,7 +1810,7 @@ void ObjGroup_AddObject(int param_1,int param_2)
   int insertIndex;
   int limit;
   int *entries;
-  
+
   if ((param_2 < 0) || (0x53 < param_2)) {
     return;
   }
@@ -1828,6 +1838,8 @@ void ObjGroup_AddObject(int param_1,int param_2)
     param_2++;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
