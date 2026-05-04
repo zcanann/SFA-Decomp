@@ -126,8 +126,6 @@ extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
 extern f32 lbl_803E42B8;
 extern f32 lbl_803E42BC;
-extern char s_PUSHPULL_OBJECT__hitpoint_overfl_803219e0[];
-
 /*
  * --INFO--
  *
