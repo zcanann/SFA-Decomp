@@ -1199,6 +1199,8 @@ uint ObjHits_TestTaperedCapsule3D(double param_1,double param_2,double param_3,d
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHits_SortSweepEntries(int sweepPtrs,int entryCount)
 {
   int iVar1;
@@ -1210,7 +1212,7 @@ void ObjHits_SortSweepEntries(int sweepPtrs,int entryCount)
   int iVar7;
   int iVar8;
   int iVar9;
-  
+
   iVar1 = (entryCount + -1) / 9 + (entryCount + -1 >> 0x1f);
   for (iVar9 = 1; iVar9 <= iVar1 - (iVar1 >> 0x1f); iVar9 = iVar9 * 3 + 1) {
   }
@@ -1241,6 +1243,8 @@ void ObjHits_SortSweepEntries(int sweepPtrs,int entryCount)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
