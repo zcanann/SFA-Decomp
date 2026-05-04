@@ -4274,8 +4274,8 @@ void fn_8007E54C(u8 kind)
     extern void fn_80019C24(void);
     extern void fn_8004A43C(int, int);
 
-    int saved;
     int* buttons;
+    int saved;
     int frame;
     int j;
     int count;
