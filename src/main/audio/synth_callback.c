@@ -106,6 +106,8 @@ SynthCallbackLink* synthAllocCallback(s32 triggerValue, u8 controllerIndex) {
 s32 synthUpdateCallbacks(void) {
     s32 listIndex;
     SynthCallbackLink* callback;
+    SynthCallbackLink* next;
+    SynthCallbackLink* completed;
 
     for (listIndex = 0; listIndex < SYNTH_CALLBACK_ACTIVE_LIST_COUNT; listIndex++) {
         callback = gSynthCurrentVoice->callbackLists[listIndex];
@@ -115,13 +117,15 @@ s32 synthUpdateCallbacks(void) {
             }
 
             synthTriggerCallback(callback->callbackId);
-            gSynthCurrentVoice->callbackLists[listIndex] = callback->next;
-            if (gSynthCurrentVoice->callbackLists[listIndex] != 0) {
+            next = callback->next;
+            gSynthCurrentVoice->callbackLists[listIndex] = next;
+            if (next != 0) {
                 gSynthCurrentVoice->callbackLists[listIndex]->prev = 0;
             }
 
-            callback->next = gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX];
-            if (gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX] != 0) {
+            completed = gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX];
+            callback->next = completed;
+            if (completed != 0) {
                 gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX]->prev = callback;
             }
             gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX] = callback;
@@ -136,6 +140,7 @@ void synthFlushCallbacks(void) {
     s32 listIndex;
     SynthCallbackLink* callback;
     SynthCallbackLink* next;
+    SynthCallbackLink* completed;
 
     for (listIndex = 0; listIndex < SYNTH_CALLBACK_ACTIVE_LIST_COUNT; listIndex++) {
         callback = gSynthCurrentVoice->callbackLists[listIndex];
@@ -147,8 +152,9 @@ void synthFlushCallbacks(void) {
                 next->prev = 0;
             }
 
-            callback->next = gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX];
-            if (gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX] != 0) {
+            completed = gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX];
+            callback->next = completed;
+            if (completed != 0) {
                 gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX]->prev = callback;
             }
             gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX] = callback;
@@ -158,8 +164,6 @@ void synthFlushCallbacks(void) {
 }
 
 void synthFreeCallback(SynthCallbackLink* callback) {
-    SynthCallbackLink* freeCallback;
-
     if (callback->next != 0) {
         callback->next->prev = callback->prev;
     }
@@ -170,10 +174,12 @@ void synthFreeCallback(SynthCallbackLink* callback) {
         gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX] = callback->next;
     }
 
-    freeCallback = gSynthFreeCallbacks;
-    callback->next = freeCallback;
-    if (freeCallback != 0) {
-        freeCallback->prev = callback;
+    {
+        SynthCallbackLink* freeCallback = gSynthFreeCallbacks;
+        callback->next = freeCallback;
+        if (freeCallback != 0) {
+            gSynthFreeCallbacks->prev = callback;
+        }
     }
 
     callback->prev = 0;
