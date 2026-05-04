@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "dolphin/os.h"
 #include "main/dll/CF/laser.h"
+#include "main/textblock.h"
 
-extern char sTextBlockInitNoLongerSupported[];
 extern char sLaserInitNoLongerSupported[];
 
 int laser_getExtraSizeUnsupported(void)

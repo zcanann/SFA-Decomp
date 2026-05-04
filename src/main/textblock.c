@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
 #include "dolphin/os.h"
-
-extern char sTextBlockNoLongerSupported[];
+#include "main/textblock.h"
 
 int textblockObj_getExtraSize(void)
 {
