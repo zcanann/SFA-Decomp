@@ -61,7 +61,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
       }
       else {
         iVar2 = SHthorntail_chooseNextState(obj,runtime,obj->config);
-        runtime->behaviorState = (s8)iVar2;
+        runtime->behaviorState = iVar2;
       }
     }
     break;
@@ -77,7 +77,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
       }
       else {
         iVar2 = SHthorntail_chooseNextState(obj,runtime,obj->config);
-        runtime->behaviorState = (s8)iVar2;
+        runtime->behaviorState = iVar2;
       }
     }
     break;
