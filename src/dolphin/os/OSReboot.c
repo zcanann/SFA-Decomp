@@ -25,31 +25,20 @@ typedef struct {
 static AppLoaderStruct lbl_803AD3C0 ATTRIBUTE_ALIGN(32);
 
 #pragma dont_inline on
-static asm void Run(register void* entryPoint) {
-    nofralloc
-    mflr r0
-    stw r0, 4(r1)
-    stwu r1, -0x18(r1)
-    stw r31, 0x14(r1)
-    mr r31, r3
-    bl OSDisableInterrupts
-    bl ICFlashInvalidate
-    sync
-    isync
-    mtlr r31
-    blr
+static asm void myFunc() {
 }
 
-#pragma force_active on
-static asm void fn_80244C78(void) {
-    nofralloc
-    lwz r0, 0x1c(r1)
-    lwz r31, 0x14(r1)
-    addi r1, r1, 0x18
-    mtlr r0
-    blr
+static void Run(register void (*addr)()) {
+    OSDisableInterrupts();
+    ICFlashInvalidate();
+
+    asm {
+        sync
+        isync
+        mtlr addr
+        blr
+    }
 }
-#pragma force_active reset
 #pragma dont_inline reset
 
 static void Callback(s32 result, DVDCommandBlock* block) {
