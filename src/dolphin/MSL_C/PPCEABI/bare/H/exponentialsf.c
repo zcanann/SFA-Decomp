@@ -61,25 +61,31 @@ static inline float int_float(s32 value)
 static inline int classify_float(float value)
 {
     u32 bits;
-    u32 exponent;
+    s32 exponent;
     u32 fraction;
 
     bits = float_bits(value);
     exponent = bits & 0x7F800000;
-    fraction = bits & 0x007FFFFF;
 
-    if (exponent == 0x7F800000) {
-        if (fraction != 0) {
-            return 1;
+    if (exponent >= 0x7F800000) {
+        if (exponent == 0x7F800000) {
+            fraction = bits & 0x007FFFFF;
+            if (fraction != 0) {
+                return 1;
+            }
+            return 2;
         }
-        return 2;
+        return 4;
     }
 
-    if (exponent == 0) {
-        if (fraction != 0) {
-            return 5;
+    if (exponent <= 0) {
+        if (exponent == 0) {
+            fraction = bits & 0x007FFFFF;
+            if (fraction != 0) {
+                return 5;
+            }
+            return 3;
         }
-        return 3;
     }
 
     return 4;
@@ -184,7 +190,7 @@ float __ieee754_pow(float x, float y)
             return lbl_803DC648;
         }
 
-        if (int_y & 1) {
+        if (int_y - (int_y / 2) * 2 != 0) {
             log_value = log2_kernel(-x, table);
             return -exp2_kernel(y * log_value, table);
         }
