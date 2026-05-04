@@ -85,7 +85,7 @@ static inline int classify_float(float value)
     return 4;
 }
 
-static inline float log2_kernel(float x)
+static inline float log2_kernel(float x, float* table)
 {
     u32 bits;
     u32 fraction;
@@ -119,22 +119,21 @@ static inline float log2_kernel(float x)
         result = lbl_803DC650[1] * delta + result;
         result = lbl_803DC650[0] * delta + result;
         result = delta + result;
-        result = ((float*)lbl_80332C78)[index] + result;
+        result = table[index] + result;
         result = (int_float(exponent) + lbl_803E7E54) + result;
         return result;
     }
 
-    return (int_float(exponent) + lbl_803E7E54) + ((float*)lbl_80332C78)[index];
+    return (int_float(exponent) + lbl_803E7E54) + table[index];
 }
 
-static inline float exp2_kernel(float x)
+static inline float exp2_kernel(float x, float* table)
 {
     int exponent;
     u32 bits;
     float fraction;
     float scale;
     float poly;
-    float* table;
 
     exponent = (int)x;
     fraction = x - int_float(exponent);
@@ -149,7 +148,6 @@ static inline float exp2_kernel(float x)
 
     bits = (exponent + 127) << 23;
     scale = bit_float(bits);
-    table = (float*)lbl_80332C78;
 
     poly = fraction * table[137] + table[136];
     poly = fraction * poly + table[135];
@@ -167,13 +165,17 @@ static inline float exp2_kernel(float x)
 float __ieee754_pow(float x, float y)
 {
     float log_value;
+    float* table;
+    volatile float x_float;
     int int_y;
 
-    x = (float)x;
+    x_float = x;
+    x = x_float;
+    table = (float*)lbl_80332C78;
 
     if (x > lbl_803E7E50) {
-        log_value = log2_kernel(x);
-        return exp2_kernel(y * log_value);
+        log_value = log2_kernel(x, table);
+        return exp2_kernel(y * log_value, table);
     }
 
     if (x < lbl_803E7E50) {
@@ -183,12 +185,12 @@ float __ieee754_pow(float x, float y)
         }
 
         if (int_y & 1) {
-            log_value = log2_kernel(-x);
-            return -exp2_kernel(y * log_value);
+            log_value = log2_kernel(-x, table);
+            return -exp2_kernel(y * log_value, table);
         }
 
-        log_value = log2_kernel(-x);
-        return exp2_kernel(y * log_value);
+        log_value = log2_kernel(-x, table);
+        return exp2_kernel(y * log_value, table);
     }
 
     if (classify_float(x) == 1) {

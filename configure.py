@@ -707,8 +707,8 @@ config.libs = [
             Object(
                 NonMatching,
                 "dolphin/MSL_C/PPCEABI/bare/H/exponentialsf.c",
-                mw_version="GC/1.3.2",
-                extra_cflags=msl_math_extra,
+                mw_version="GC/1.1",
+                extra_cflags=["-opt", "nopeephole"],
             ),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/extras.c"),
             Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/k_rem_pio2.c"),
