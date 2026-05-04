@@ -12,7 +12,7 @@ extern undefined4 fn_8002B9EC();
 
 extern undefined lbl_803AD048[];
 extern undefined4* lbl_803DCAAC;
-extern f32 FLOAT_803db414;
+extern f32 lbl_803DB414;
 extern f32 lbl_803E5498;
 
 /*
@@ -28,22 +28,21 @@ extern f32 lbl_803E5498;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SHthorntail_init(void)
+#pragma scheduling off
+#pragma peephole off
+void SHthorntail_init(short *obj)
 {
-  short *obj;
   undefined4 advanceResult;
   undefined *event;
   int pointIndex;
   int i;
   float local_28;
   float local_24;
-  float local_20[8];
-
-  obj = (short *)FUN_8028683c();
+  float local_20;
   pointIndex = 0;
   lbl_803AD048[0x1b] = 0;
   lbl_803AD048[0x12] = 0;
-  advanceResult = ObjAnim_AdvanceCurrentMove((double)FLOAT_803db414,(double)FLOAT_803db414,(int)obj,
+  advanceResult = ObjAnim_AdvanceCurrentMove((double)lbl_803DB414,(double)lbl_803DB414,(int)obj,
                                              (ObjAnimEventList *)lbl_803AD048);
   if (lbl_803AD048[0x12] != 0) {
     *obj = *obj + *(short *)(lbl_803AD048 + 0xe);
@@ -65,12 +64,14 @@ void SHthorntail_init(void)
     event++;
   }
   if ((pointIndex != 0) &&
-      (ObjPath_GetPointWorldPosition((int)obj,pointIndex - 1,&local_28,&local_24,local_20,0),
+      (ObjPath_GetPointWorldPosition((int)obj,pointIndex - 1,&local_28,&local_24,&local_20,0),
        ((obj[0x50] != 0x1b || (lbl_803E5498 <= *(float *)(obj + 0x4c)))))) {
-    Sfx_PlayAtPositionFromObject((double)local_28,(double)local_24,(double)local_20[0],obj,0x415);
+    Sfx_PlayAtPositionFromObject((double)local_28,(double)local_24,(double)local_20,obj,0x415);
   }
   FUN_80286888(advanceResult);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
