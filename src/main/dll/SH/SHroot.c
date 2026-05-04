@@ -60,7 +60,10 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
 
   runtime->impactSfxTable = &gSHthorntailLevelControlMode1ImpactSfxTable;
   playerObj = fn_8002B9EC();
-  closeToPlayer = (double)fn_8002166C(objectId + 0x18,playerObj + 0x18) < (double)lbl_803E5424;
+  {
+    int cmp = (double)fn_8002166C(objectId + 0x18,playerObj + 0x18) < (double)lbl_803E5424;
+    closeToPlayer = cmp;
+  }
   if (config->impactSfxVariant == 0) {
     gameBit = GameBit_Get(0x13e);
     if (gameBit != 0) {
