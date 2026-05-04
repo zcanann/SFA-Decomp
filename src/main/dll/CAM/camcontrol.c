@@ -327,10 +327,12 @@ LAB_80102ab4:
   return;
 }
 
+#pragma scheduling off
 int fn_801028C0(void)
 {
   return *(float *)((char *)lbl_803DD524 + 0xf4) > lbl_803E1630;
 }
+#pragma scheduling reset
 
 void fn_801028DC(int x)
 {
