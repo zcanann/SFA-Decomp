@@ -1233,14 +1233,14 @@ void fn_8007366C(u8 alpha)
     extern void fn_8004C2E4(int handle, int slot);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
-    GXColor c;
-    int handle2;
-    f32 b;
-    f32 a;
     int handle1;
+    int handle2;
+    f32 a;
+    f32 b;
+    GXColor c;
     f32 ind_mtx[2][3];
-    Mtx mtx;
     Mtx tex_mtx;
+    Mtx mtx;
 
     fn_8000F54C();
     fn_8006C6F0(0);
@@ -1263,7 +1263,6 @@ void fn_8007366C(u8 alpha)
     GXSetIndTexOrder(0, 1, 1);
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, ind_mtx, -3);
-    *(int*)&c = 0;
     GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
     mtx[0][0] = lbl_803DEF30;
     mtx[0][1] = lbl_803DEEDC;
@@ -1617,29 +1616,29 @@ void fn_80075684(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 
     GXBegin(GX_QUADS, GX_VTXFMT1, 4);
 
     GXWGFifo.u8 = 0x3C;
-    GXWGFifo.s16 = (s32)fx1;
-    GXWGFifo.s16 = (s32)fy1;
+    GXWGFifo.s16 = (s16)fx1;
+    GXWGFifo.s16 = (s16)fy1;
     GXWGFifo.s16 = -8;
     GXWGFifo.f32 = lbl_803DEEDC;
     GXWGFifo.f32 = lbl_803DEEDC;
 
     GXWGFifo.u8 = 0x3C;
-    GXWGFifo.s16 = (s32)fx2;
-    GXWGFifo.s16 = (s32)fy2;
+    GXWGFifo.s16 = (s16)fx2;
+    GXWGFifo.s16 = (s16)fy2;
     GXWGFifo.s16 = -8;
     GXWGFifo.f32 = lbl_803DEEDC;
     GXWGFifo.f32 = lbl_803DEEDC;
 
     GXWGFifo.u8 = 0x3C;
-    GXWGFifo.s16 = (s32)fx3;
-    GXWGFifo.s16 = (s32)fy3;
+    GXWGFifo.s16 = (s16)fx3;
+    GXWGFifo.s16 = (s16)fy3;
     GXWGFifo.s16 = -8;
     GXWGFifo.f32 = lbl_803DEEDC;
     GXWGFifo.f32 = lbl_803DEEDC;
 
     GXWGFifo.u8 = 0x3C;
-    GXWGFifo.s16 = (s32)fx4;
-    GXWGFifo.s16 = (s32)fy4;
+    GXWGFifo.s16 = (s16)fx4;
+    GXWGFifo.s16 = (s16)fy4;
     GXWGFifo.s16 = -8;
     GXWGFifo.f32 = lbl_803DEEDC;
     GXWGFifo.f32 = lbl_803DEEDC;
@@ -1717,22 +1716,22 @@ void fn_80075A1C(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
     GXBegin(GX_TRIANGLES, GX_VTXFMT1, 3);
 
     GXWGFifo.u8 = 0x3C;
-    GXWGFifo.s16 = (s32)fx1;
-    GXWGFifo.s16 = (s32)fy1;
+    GXWGFifo.s16 = (s16)fx1;
+    GXWGFifo.s16 = (s16)fy1;
     GXWGFifo.s16 = -8;
     GXWGFifo.f32 = lbl_803DFB5C;
     GXWGFifo.f32 = lbl_803DFB5C;
 
     GXWGFifo.u8 = 0x3C;
-    GXWGFifo.s16 = (s32)fx2;
-    GXWGFifo.s16 = (s32)fy2;
+    GXWGFifo.s16 = (s16)fx2;
+    GXWGFifo.s16 = (s16)fy2;
     GXWGFifo.s16 = -8;
     GXWGFifo.f32 = lbl_803DFB5C;
     GXWGFifo.f32 = lbl_803DFB5C;
 
     GXWGFifo.u8 = 0x3C;
-    GXWGFifo.s16 = (s32)fx3;
-    GXWGFifo.s16 = (s32)fy3;
+    GXWGFifo.s16 = (s16)fx3;
+    GXWGFifo.s16 = (s16)fy3;
     GXWGFifo.s16 = -8;
     GXWGFifo.f32 = lbl_803DFB5C;
     GXWGFifo.f32 = lbl_803DFB5C;
@@ -1951,20 +1950,20 @@ void fn_80076510(int x, int y, f32 sx, f32 sy)
     sy = lbl_803DEF2C * sy;
     GXBegin(GX_QUADS, GX_VTXFMT1, 4);
 
-    GXWGFifo.s16 = (s32)sx;
-    GXWGFifo.s16 = (s32)sy;
+    GXWGFifo.s16 = (s16)sx;
+    GXWGFifo.s16 = (s16)sy;
     GXWGFifo.s16 = -0x18C;
 
-    GXWGFifo.s16 = (s32)(sx + (f32)((u32)x * 4));
-    GXWGFifo.s16 = (s32)sy;
+    GXWGFifo.s16 = (s16)(sx + (f32)((u32)x * 4));
+    GXWGFifo.s16 = (s16)sy;
     GXWGFifo.s16 = -0x18C;
 
-    GXWGFifo.s16 = (s32)(sx + (f32)((u32)x * 4));
-    GXWGFifo.s16 = (s32)(sy + (f32)((u32)y * 4));
+    GXWGFifo.s16 = (s16)(sx + (f32)((u32)x * 4));
+    GXWGFifo.s16 = (s16)(sy + (f32)((u32)y * 4));
     GXWGFifo.s16 = -0x18C;
 
-    GXWGFifo.s16 = (s32)sx;
-    GXWGFifo.s16 = (s32)(sy + (f32)((u32)y * 4));
+    GXWGFifo.s16 = (s16)sx;
+    GXWGFifo.s16 = (s16)(sy + (f32)((u32)y * 4));
     GXWGFifo.s16 = -0x18C;
 
     fn_8000FB00();
@@ -2015,6 +2014,8 @@ void fn_8007681C(undefined8 param_1,double param_2,undefined4 param_3,undefined4
 void fn_80076D78(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
 {
     extern f32 lbl_803DEF2C;
+    extern f32 lbl_803DEEDC;
+    extern f32 lbl_803DEEE4;
     extern u8 lbl_803DB679;
     extern Mtx lbl_80396880;
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
@@ -2022,7 +2023,6 @@ void fn_80076D78(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
     extern void fn_8004C264(s16* obj, int slot);
     extern void fn_8000FB00(void);
     extern void GXSetZMode();
-    f32 sx, sy;
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
@@ -2045,12 +2045,12 @@ void fn_80076D78(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
     GXSetTevAlphaOp(0, 0, 0, 2, 1, 0);
     if (((u32*)obj)[0x14] != 0) {
         GXSetTevKAlphaSel(1, 0x1C);
-        GXSetTevOrder(1, 0, 0, 0xFF);
+        GXSetTevOrder(0, 0, 1, 0xFF);
         GXSetTevColorIn(1, 0xF, 0xF, 0xF, 0);
         GXSetTevAlphaIn(1, 7, 4, 6, 7);
         GXSetTevSwapMode(1, 0, 0);
         GXSetTevColorOp(1, 0, 0, 0, 1, 0);
-        GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+        GXSetTevAlphaOp(1, 0, 0, 2, 1, 0);
         GXSetNumTevStages(2);
     } else {
         GXSetNumTevStages(1);
@@ -2079,39 +2079,37 @@ void fn_80076D78(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
     }
     {
         s32 w, h;
-        w = ((((u16)obj[5]) << 2) * (s32)scale) >> 8;
-        h = ((((u16)obj[6]) << 2) * (s32)scale) >> 8;
-        sx = (f32)x * lbl_803DEF2C;
-        sy = (f32)y * lbl_803DEF2C;
+        w = ((((u16*)obj)[5] << 2) * (s32)scale) / 256;
+        h = ((((u16*)obj)[6] << 2) * (s32)scale) / 256;
         GXBegin(GX_QUADS, GX_VTXFMT1, 4);
 
         GXWGFifo.u8 = 0x3C;
-        GXWGFifo.s16 = (s32)((f32)((u32)x) * lbl_803DEF2C);
-        GXWGFifo.s16 = (s32)((f32)((u32)y) * lbl_803DEF2C);
+        GXWGFifo.s16 = (s16)(x << 2);
+        GXWGFifo.s16 = (s16)(y << 2);
         GXWGFifo.s16 = -8;
-        GXWGFifo.f32 = 0.0f;
-        GXWGFifo.f32 = 0.0f;
+        GXWGFifo.f32 = lbl_803DEEDC;
+        GXWGFifo.f32 = lbl_803DEEDC;
 
         GXWGFifo.u8 = 0x3C;
-        GXWGFifo.s16 = (s32)((f32)((u32)(x + w)) * lbl_803DEF2C);
-        GXWGFifo.s16 = (s32)((f32)((u32)y) * lbl_803DEF2C);
+        GXWGFifo.s16 = (s16)((x + w) << 2);
+        GXWGFifo.s16 = (s16)(y << 2);
         GXWGFifo.s16 = -8;
-        GXWGFifo.f32 = 1.0f;
-        GXWGFifo.f32 = 0.0f;
+        GXWGFifo.f32 = lbl_803DEEE4;
+        GXWGFifo.f32 = lbl_803DEEDC;
 
         GXWGFifo.u8 = 0x3C;
-        GXWGFifo.s16 = (s32)((f32)((u32)(x + w)) * lbl_803DEF2C);
-        GXWGFifo.s16 = (s32)((f32)((u32)(y + h)) * lbl_803DEF2C);
+        GXWGFifo.s16 = (s16)((x + w) << 2);
+        GXWGFifo.s16 = (s16)((y + h) << 2);
         GXWGFifo.s16 = -8;
-        GXWGFifo.f32 = 1.0f;
-        GXWGFifo.f32 = 1.0f;
+        GXWGFifo.f32 = lbl_803DEEE4;
+        GXWGFifo.f32 = lbl_803DEEE4;
 
         GXWGFifo.u8 = 0x3C;
-        GXWGFifo.s16 = (s32)((f32)((u32)x) * lbl_803DEF2C);
-        GXWGFifo.s16 = (s32)((f32)((u32)(y + h)) * lbl_803DEF2C);
+        GXWGFifo.s16 = (s16)(x << 2);
+        GXWGFifo.s16 = (s16)((y + h) << 2);
         GXWGFifo.s16 = -8;
-        GXWGFifo.f32 = 0.0f;
-        GXWGFifo.f32 = 1.0f;
+        GXWGFifo.f32 = lbl_803DEEDC;
+        GXWGFifo.f32 = lbl_803DEEE4;
     }
     fn_8000FB00();
 }
@@ -2144,6 +2142,8 @@ void fn_80076D78(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
 void fn_8007719C(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
 {
     extern f32 lbl_803DEF2C;
+    extern f32 lbl_803DEEDC;
+    extern f32 lbl_803DEEE4;
     extern u8 lbl_803DB679;
     extern Mtx lbl_80396880;
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
@@ -2174,7 +2174,7 @@ void fn_8007719C(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
     GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
     if (((u32*)obj)[0x14] != 0) {
         GXSetTevKAlphaSel(1, 0x1C);
-        GXSetTevOrder(1, 1, 1, 0xFF);
+        GXSetTevOrder(1, 0, 1, 0xFF);
         GXSetTevDirect(1);
         GXSetTevColorIn(1, 0xF, 0xF, 0xF, 0);
         GXSetTevAlphaIn(1, 7, 4, 6, 7);
@@ -2203,39 +2203,39 @@ void fn_8007719C(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
         lbl_803DD01A = 1;
     }
     GXSetBlendMode(1, 4, 5, 5);
-    w = ((((u16)obj[5]) << 2) * (s32)scale) >> 8;
-    h = ((((u16)obj[6]) << 2) * (s32)scale) >> 8;
-    sx = sx * lbl_803DEF2C;
-    sy = sy * lbl_803DEF2C;
+    w = ((((u16*)obj)[5] << 2) * (s32)scale) / 256;
+    h = ((((u16*)obj)[6] << 2) * (s32)scale) / 256;
+    sx = lbl_803DEF2C * sx;
+    sy = lbl_803DEF2C * sy;
     GXBegin(GX_QUADS, GX_VTXFMT1, 4);
 
     GXWGFifo.u8 = 0x3C;
-    GXWGFifo.s16 = (s32)sx;
-    GXWGFifo.s16 = (s32)sy;
+    GXWGFifo.s16 = (s16)sx;
+    GXWGFifo.s16 = (s16)sy;
     GXWGFifo.s16 = -8;
-    GXWGFifo.f32 = 0.0f;
-    GXWGFifo.f32 = 0.0f;
+    GXWGFifo.f32 = lbl_803DEEDC;
+    GXWGFifo.f32 = lbl_803DEEDC;
 
     GXWGFifo.u8 = 0x3C;
-    GXWGFifo.s16 = (s32)(sx + (f32)((u32)w));
-    GXWGFifo.s16 = (s32)sy;
+    GXWGFifo.s16 = (s16)(sx + (f32)(u32)w);
+    GXWGFifo.s16 = (s16)sy;
     GXWGFifo.s16 = -8;
-    GXWGFifo.f32 = 1.0f;
-    GXWGFifo.f32 = 0.0f;
+    GXWGFifo.f32 = lbl_803DEEE4;
+    GXWGFifo.f32 = lbl_803DEEDC;
 
     GXWGFifo.u8 = 0x3C;
-    GXWGFifo.s16 = (s32)(sx + (f32)((u32)w));
-    GXWGFifo.s16 = (s32)(sy + (f32)((u32)h));
+    GXWGFifo.s16 = (s16)(sx + (f32)(u32)w);
+    GXWGFifo.s16 = (s16)(sy + (f32)(u32)h);
     GXWGFifo.s16 = -8;
-    GXWGFifo.f32 = 1.0f;
-    GXWGFifo.f32 = 1.0f;
+    GXWGFifo.f32 = lbl_803DEEE4;
+    GXWGFifo.f32 = lbl_803DEEE4;
 
     GXWGFifo.u8 = 0x3C;
-    GXWGFifo.s16 = (s32)sx;
-    GXWGFifo.s16 = (s32)(sy + (f32)((u32)h));
+    GXWGFifo.s16 = (s16)sx;
+    GXWGFifo.s16 = (s16)(sy + (f32)(u32)h);
     GXWGFifo.s16 = -8;
-    GXWGFifo.f32 = 0.0f;
-    GXWGFifo.f32 = 1.0f;
+    GXWGFifo.f32 = lbl_803DEEDC;
+    GXWGFifo.f32 = lbl_803DEEE4;
 
     fn_8000FB00();
 }
@@ -3165,9 +3165,9 @@ void fn_80079A24(u8 r, u8 g, u8 b, u8 a)
 #pragma scheduling off
 void fn_80079A64(f32 sx, f32 sy, u8 a, u8 flag)
 {
-    extern u32 gSynthCurrentVoiceSlotIndex;
+    extern u32 lbl_803DEEA0;
     extern u32 lbl_803DEEA4;
-    extern u32 gSynthNextHandle;
+    extern u32 lbl_803DEEA8;
     extern f32 lbl_803DEEDC;
     extern f32 gSynthDelayedActionWord0;
     extern f32 lbl_803DEEE4;
@@ -3182,18 +3182,18 @@ void fn_80079A64(f32 sx, f32 sy, u8 a, u8 flag)
     extern void fn_8000FB00(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
+    int handle;
     GXColor c0, c1, c2;
     Mtx mtx;
-    int handle;
 
-    *(u32*)&c0 = gSynthCurrentVoiceSlotIndex;
+    *(u32*)&c0 = lbl_803DEEA0;
     *(u32*)&c1 = lbl_803DEEA4;
-    *(u32*)&c2 = gSynthNextHandle;
+    *(u32*)&c2 = lbl_803DEEA8;
     fn_8006C540(&handle);
     fn_8004C2E4(handle, 0);
     {
-        f32 zero = lbl_803DEEDC;
         f32 dec = gSynthDelayedActionWord0;
+        f32 zero = lbl_803DEEDC;
         f32 inv_sx = dec / sx;
         f32 inv_sy = dec / sy;
         mtx[0][0] = inv_sx;
@@ -3340,7 +3340,7 @@ void fn_8007A71C(uint param_1)
 #pragma scheduling off
 void fn_8007AD10(f32 alpha)
 {
-    extern f32 lbl_803DEF1C;
+    extern struct { f32 x, y; } lbl_803DEF1C;
     extern GXColor lbl_803DB6A0;
     extern Mtx lbl_80396880;
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
@@ -3352,7 +3352,7 @@ void fn_8007AD10(f32 alpha)
     extern void GXSetZCompLoc(u8);
     Mtx mtx;
 
-    lbl_803DB6A0.a = (s32)(*(f32*)((u8*)&lbl_803DEF1C + 4) * alpha);
+    lbl_803DB6A0.a = lbl_803DEF1C.y * alpha;
     fn_8006C6F0(0);
     GXSetTevKColor(0, lbl_803DB6A0);
     GXSetTevKAlphaSel(0, 0x1C);

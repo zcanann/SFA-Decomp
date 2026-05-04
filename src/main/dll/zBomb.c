@@ -5,7 +5,7 @@ extern undefined4 FUN_8000a380();
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern void fn_80026E00(int param_1,int param_2,float *param_3);
-extern undefined4 FUN_80097734();
+extern undefined4 fn_80097734();
 
 extern undefined4* DAT_803dcaa8;
 extern s32 lbl_80329B78[];
@@ -32,7 +32,7 @@ typedef struct DfpTargetBlockState {
   s16 stateSfxId;
   s16 completionSfxId;
   s8 floorPointCount;
-  s8 mode;
+  u8 mode;
   u8 stateSfxReady;
   u8 completionSfxReady;
 } DfpTargetBlockState;
@@ -56,24 +56,21 @@ typedef enum DfpTargetBlockMode {
 #pragma peephole off
 void dfptargetblock_update(int param_1)
 {
-  char cVar1;
+  u8 cVar1;
   float fVar2;
   undefined uVar3;
   int iVar4;
   DfpTargetBlockState *state;
-  undefined auStack_28[12];
-  float local_1c;
-  float local_18;
-  float local_14;
+  float buf[3];
 
   state = *(DfpTargetBlockState **)(param_1 + 0xb8);
   iVar4 = *(int *)(param_1 + 0x4c);
   if (*(short *)(param_1 + 0x46) == 0x4e0) {
-    local_1c = lbl_803E648C;
-    local_18 = lbl_803E64C4;
-    local_14 = lbl_803E648C;
-    FUN_80097734((double)lbl_803E64C8,(double)lbl_803E64C4,(double)lbl_803E64C4,
-                 (double)lbl_803E64B0,param_1,5,1,2,0x32,auStack_28,0);
+    buf[0] = lbl_803E648C;
+    buf[1] = lbl_803E64C4;
+    buf[2] = lbl_803E648C;
+    fn_80097734((double)lbl_803E64C8,(double)lbl_803E64C4,(double)lbl_803E64C4,
+                 (double)lbl_803E64B0,param_1,5,1,2,0x32,buf,0);
   }
   else {
     if (state->completionSfxReady == '\0') {
