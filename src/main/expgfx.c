@@ -203,6 +203,8 @@ extern char sExpgfxScaleOverflow[];
 extern char sExpgfxNoTexture[];
 
 #define EXPGFX_SLOT_TABLE_INDEX_OFFSET 0x8A
+#define gExpgfxTrackedPoolMaskHighWords DAT_8039c7c8
+#define gExpgfxTrackedPoolMaskLowWords DAT_8039c7cc
 
 extern ExpgfxTableEntry gExpgfxTableEntries[];
 
@@ -1403,21 +1405,23 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
     if (((int)uVar3 < EXPGFX_POOL_COUNT) &&
         ((spawnConfig->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) != 0)) {
       uVar2 = uVar3 & 1;
-      uVar12 = (&DAT_8039c7c8)[uVar2 * 2];
-      uVar14 = (&DAT_8039c7cc)[uVar2 * 2];
+      uVar12 = (&gExpgfxTrackedPoolMaskHighWords)[uVar2 * EXPGFX_TRACKED_POOL_MASK_WORD_STRIDE];
+      uVar14 = (&gExpgfxTrackedPoolMaskLowWords)[uVar2 * EXPGFX_TRACKED_POOL_MASK_WORD_STRIDE];
       uVar8 = 1 << ((int)uVar3 >> 1);
       uVar9 = uVar14 | uVar8;
-      (&DAT_8039c7cc)[uVar2 * 2] = uVar9;
-      (&DAT_8039c7c8)[uVar2 * 2] = uVar12 | (int)uVar8 >> 0x1f;
+      (&gExpgfxTrackedPoolMaskLowWords)[uVar2 * EXPGFX_TRACKED_POOL_MASK_WORD_STRIDE] = uVar9;
+      (&gExpgfxTrackedPoolMaskHighWords)[uVar2 * EXPGFX_TRACKED_POOL_MASK_WORD_STRIDE] =
+          uVar12 | (int)uVar8 >> 0x1f;
     }
     else {
       uVar2 = uVar3 & 1;
-      uVar12 = (&DAT_8039c7c8)[uVar2 * 2];
-      uVar14 = (&DAT_8039c7cc)[uVar2 * 2];
+      uVar12 = (&gExpgfxTrackedPoolMaskHighWords)[uVar2 * EXPGFX_TRACKED_POOL_MASK_WORD_STRIDE];
+      uVar14 = (&gExpgfxTrackedPoolMaskLowWords)[uVar2 * EXPGFX_TRACKED_POOL_MASK_WORD_STRIDE];
       uVar8 = ~(1 << ((int)uVar3 >> 1));
       uVar9 = uVar14 & uVar8;
-      (&DAT_8039c7cc)[uVar2 * 2] = uVar9;
-      (&DAT_8039c7c8)[uVar2 * 2] = uVar12 & (int)uVar8 >> 0x1f;
+      (&gExpgfxTrackedPoolMaskLowWords)[uVar2 * EXPGFX_TRACKED_POOL_MASK_WORD_STRIDE] = uVar9;
+      (&gExpgfxTrackedPoolMaskHighWords)[uVar2 * EXPGFX_TRACKED_POOL_MASK_WORD_STRIDE] =
+          uVar12 & (int)uVar8 >> 0x1f;
     }
     piVar16 = &DAT_8039b7b8 + (uVar3 & 1) * 2;
     slot = Expgfx_GetSlot(uVar3, local_58);
