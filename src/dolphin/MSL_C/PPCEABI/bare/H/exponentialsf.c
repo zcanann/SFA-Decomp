@@ -224,7 +224,7 @@ float __ieee754_pow(float x, float y)
         if ((float_bits(x) & 0x80000000) != 0) {
             return lbl_803DC64C;
         }
-        return x;
+        return lbl_803E7E50;
     }
 
     return lbl_803E7E50;
