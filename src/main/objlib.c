@@ -1158,13 +1158,15 @@ ObjHits_RecordPositionHit(double param_1,double param_2,double param_3,int param
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHits_AddContactObject(int param_1,int param_2)
 {
   char cVar1;
   int iVar2;
   int iVar3;
   int iVar4;
-  
+
   iVar4 = *(int *)(param_1 + 0x58);
   if (iVar4 == 0) {
     return;
@@ -1189,6 +1191,8 @@ void ObjHits_AddContactObject(int param_1,int param_2)
   *(int *)(iVar2 + cVar1 * 4 + 0x100) = param_2;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1267,6 +1271,8 @@ int ObjHits_GetPriorityHitWithPosition(int param_1,undefined4 *param_2,int *para
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int ObjHits_GetPriorityHit(int param_1,undefined4 *param_2,int *param_3,uint *param_4)
 {
   char cVar1;
@@ -1275,7 +1281,7 @@ int ObjHits_GetPriorityHit(int param_1,undefined4 *param_2,int *param_3,uint *pa
   int iVar4;
   char cVar5;
   char cVar6;
-  
+
   iVar3 = *(int *)(param_1 + 0x54);
   if (iVar3 == 0) {
     return 0;
@@ -1311,6 +1317,8 @@ int ObjHits_GetPriorityHit(int param_1,undefined4 *param_2,int *param_3,uint *pa
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2419,7 +2427,7 @@ void ObjContact_RemoveObjectCallbacks(int param_1)
   int iVar2;
   int iVar3;
   int iVar4;
-  
+
   piVar1 = &DAT_803439b0;
   iVar3 = DAT_803dd878;
   while (iVar4 = iVar3 + -1, 0 < iVar3) {
@@ -2460,7 +2468,7 @@ undefined4 ObjContact_AddCallback(int param_1,int param_2,undefined4 param_3)
   int iVar1;
   int *piVar2;
   int iVar3;
-  
+
   iVar1 = DAT_803dd878;
   if ((param_1 == 0) || (param_2 == 0)) {
     return 0;
@@ -2896,12 +2904,14 @@ void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3)
 {
   int iVar1;
   double dVar2;
   double dVar3;
-  
+
   dVar3 = (double)(*(float *)(param_1 + 6) - *(float *)(param_2 + 0xc));
   dVar2 = (double)(*(float *)(param_1 + 10) - *(float *)(param_2 + 0x14));
   iVar1 = FUN_80017730();
@@ -2918,6 +2928,8 @@ int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3)
   }
   return (int)(short)iVar1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
