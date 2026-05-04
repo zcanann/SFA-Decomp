@@ -3826,7 +3826,7 @@ int fn_8007D99C(void)
     extern void fn_80023800();
     extern void fn_8007FDF8();
     extern void* lbl_803DD040;
-    extern const char* lbl_803DB704;
+    extern const char* sMemoryCardFileName;
     extern volatile s32 lbl_803DB700;
     int res;
 
@@ -3847,7 +3847,7 @@ int fn_8007D99C(void)
             res = CARDCheck(0);
         }
         if (res == 0) {
-            res = CARDDelete(0, lbl_803DB704);
+            res = CARDDelete(0, sMemoryCardFileName);
         }
         CARDUnmount(0);
         fn_80023800(lbl_803DD040);
