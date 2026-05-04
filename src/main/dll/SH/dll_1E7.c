@@ -200,10 +200,7 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
   f32 distanceSq;
 
   obj = (short *)object;
-  if (config->leashRadiusByte == '\0') {
-    uVar3 = SHTHORNTAIL_STATE_CLOSE_ATTACK;
-  }
-  else {
+  if (config->leashRadiusByte != '\0') {
     iVar2 = fn_8002B9EC();
     distanceSq = fn_8002166C((Vec *)(obj + 0xc),(Vec *)(iVar2 + 0x18));
     if (distanceSq < lbl_803E5424) {
@@ -215,54 +212,54 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
       else {
         uVar3 = SHTHORNTAIL_STATE_CLOSE_ATTACK;
       }
+      return uVar3;
     }
-    else {
-      distanceSq = fn_8002166C((Vec *)(obj + 0xc),&config->homePos);
-      if ((float)(s32)(config->leashRadiusByte * config->leashRadiusByte) < distanceSq) {
+    distanceSq = fn_8002166C((Vec *)(obj + 0xc),&config->homePos);
+    if ((float)(s32)(config->leashRadiusByte * config->leashRadiusByte) < distanceSq) {
+      iVar2 = fn_800217C0(*(float *)(obj + 6) - config->homePos.x,
+                          *(float *)(obj + 10) - config->homePos.z);
+      facingAngle = *obj;
+      sVar1 = (short)iVar2 - (u16)facingAngle;
+      if (0x8000 < sVar1) {
+        sVar1 = sVar1 + 1;
+      }
+      if (sVar1 < -0x8000) {
+        sVar1 = sVar1 + -1;
+      }
+      iVar2 = (int)sVar1;
+      if (iVar2 < 0) {
+        iVar2 = -iVar2;
+      }
+      if (0x20 < iVar2) {
         iVar2 = fn_800217C0(*(float *)(obj + 6) - config->homePos.x,
                             *(float *)(obj + 10) - config->homePos.z);
-        facingAngle = *obj;
-        sVar1 = (short)iVar2 - facingAngle;
-        if (0x8000 < sVar1) {
-          sVar1 = sVar1 + 1;
-        }
-        if (sVar1 < -0x8000) {
-          sVar1 = sVar1 + -1;
-        }
-        iVar2 = (int)sVar1;
-        if (iVar2 < 0) {
-          iVar2 = -iVar2;
-        }
-        if (0x20 < iVar2) {
-          iVar2 = fn_800217C0(*(float *)(obj + 6) - config->homePos.x,
-                              *(float *)(obj + 10) - config->homePos.z);
-          OSReport(sSHthorntailAngleYawDebug,(u16)iVar2,facingAngle);
-          behaviorState = runtime->behaviorState;
-          if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
-              (behaviorState <= SHTHORNTAIL_STATE_MOVE_5)) {
-            return SHTHORNTAIL_STATE_TURN_HOME;
-          }
-          return SHTHORNTAIL_STATE_CLOSE_ATTACK;
-        }
-      }
-      iVar2 = fn_8005A10C((Vec *)(obj + 6),*(float *)(obj + 0x54) * *(float *)(obj + 4));
-      if (iVar2 == 0) {
-        uVar3 = SHTHORNTAIL_STATE_CLOSE_ATTACK;
-      }
-      else {
+        OSReport(sSHthorntailAngleYawDebug,(u16)iVar2,facingAngle);
         behaviorState = runtime->behaviorState;
-        if ((behaviorState < SHTHORNTAIL_STATE_MOVE_2) ||
-            (SHTHORNTAIL_STATE_MOVE_5 < behaviorState)) {
-          uVar3 = SHTHORNTAIL_STATE_MOVE_2;
+        if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
+            (behaviorState <= SHTHORNTAIL_STATE_MOVE_5)) {
+          return SHTHORNTAIL_STATE_TURN_HOME;
         }
-        else {
-          uVar3 = fn_800221A0(SHTHORNTAIL_STATE_MOVE_3,SHTHORNTAIL_STATE_MOVE_5);
-          uVar3 = uVar3 & 0xff;
-        }
+        return SHTHORNTAIL_STATE_CLOSE_ATTACK;
       }
     }
+    iVar2 = fn_8005A10C((Vec *)(obj + 6),*(float *)(obj + 0x54) * *(float *)(obj + 4));
+    if (iVar2 == 0) {
+      uVar3 = SHTHORNTAIL_STATE_CLOSE_ATTACK;
+    }
+    else {
+      behaviorState = runtime->behaviorState;
+      if ((behaviorState < SHTHORNTAIL_STATE_MOVE_2) ||
+          (SHTHORNTAIL_STATE_MOVE_5 < behaviorState)) {
+        uVar3 = SHTHORNTAIL_STATE_MOVE_2;
+      }
+      else {
+        uVar3 = fn_800221A0(SHTHORNTAIL_STATE_MOVE_3,SHTHORNTAIL_STATE_MOVE_5);
+        uVar3 = uVar3 & 0xff;
+      }
+    }
+    return uVar3;
   }
-  return uVar3;
+  return SHTHORNTAIL_STATE_CLOSE_ATTACK;
 }
 #pragma peephole reset
 #pragma scheduling reset
