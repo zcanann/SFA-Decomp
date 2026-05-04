@@ -59,6 +59,7 @@ extern f32 lbl_803DE154;
 extern f32 lbl_803DE158;
 extern f32 lbl_803DE15C;
 extern f32 lbl_803DE160;
+extern f32 lbl_803E1630;
 extern f32 lbl_803E22AC;
 extern f32 lbl_803E22B0;
 extern f32 lbl_803E22B4;
@@ -88,6 +89,8 @@ extern CamcontrolCurrentHandler *lbl_803DD51C;
 extern int lbl_803DD4EC;
 extern int lbl_803DD4F0;
 extern int lbl_803DD4F4;
+extern u32 lbl_803DD518;
+extern u32 lbl_803DD524;
 
 typedef struct CamcontrolTriggeredAction {
   u8 actionKind;
@@ -323,6 +326,32 @@ LAB_80102ab4:
   return;
 }
 
+int fn_801028C0(void)
+{
+  return *(float *)((char *)lbl_803DD524 + 0xf4) > lbl_803E1630;
+}
+
+void fn_801028DC(int x)
+{
+  *(int *)((char *)lbl_803DD524 + 0x120) = x;
+}
+
+void fn_801028E8(int x)
+{
+  *(int *)((char *)lbl_803DD524 + 0x11c) = x;
+  *(int *)((char *)lbl_803DD524 + 0x124) = x;
+}
+
+int fn_801028FC(void)
+{
+  return *(int *)((char *)lbl_803DD524 + 0x124);
+}
+
+int fn_80102908(void)
+{
+  return *(int *)((char *)lbl_803DD524 + 0x11c);
+}
+
 /*
  * --INFO--
  *
@@ -369,6 +398,43 @@ void camcontrol_getRelativePosition(double param_1,int param_2,float *param_3,fl
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+void camcontrol_initialise(float *dst,f32 numerator,f32 denominator,f32 minValue,f32 y,f32 z)
+{
+  f32 x;
+
+  x = numerator / denominator;
+  if (x < minValue) {
+    x = minValue;
+  }
+  dst[0] = x;
+  dst[1] = y;
+  dst[2] = lbl_803E1630;
+  dst[3] = z;
+}
+
+void fn_80102A2C(f32 x,f32 y,f32 z)
+{
+  *(float *)((char *)lbl_803DD524 + 0xc) += x;
+  *(float *)((char *)lbl_803DD524 + 0x10) += y;
+  *(float *)((char *)lbl_803DD524 + 0x14) += z;
+}
+
+void fn_80102A60(f32 x,f32 y,f32 z)
+{
+  *(u8 *)((char *)lbl_803DD524 + 0x13d) = 1;
+  *(float *)((char *)lbl_803DD524 + 0xdc) = x;
+  *(float *)((char *)lbl_803DD524 + 0xe0) = y;
+  *(float *)((char *)lbl_803DD524 + 0xe4) = z;
+}
+
+void camcontrol_release(void *obj)
+{
+  if (obj == *(void **)((char *)lbl_803DD524 + 0xa4)) {
+    return;
+  }
+  *(void **)((char *)lbl_803DD524 + 0xa4) = obj;
+}
 
 /*
  * --INFO--
@@ -743,12 +809,5 @@ void camcontrol_updateState(undefined8 param_1,double param_2,double param_3,und
 }
 
 /* sda21 accessors. */
-extern u32 lbl_803DD518;
-extern u32 lbl_803DD524;
 u32 fn_801030B0(void) { return lbl_803DD518; }
 u32 fn_801030B8(void) { return lbl_803DD524; }
-
-/* 12b 3-insn patterns. */
-void fn_801028DC(int x) { *(int*)((char*)((int*)lbl_803DD524) + 0x120) = x; }
-int fn_801028FC(void) { return *(int*)((char*)((int*)lbl_803DD524) + 0x124); }
-int fn_80102908(void) { return *(int*)((char*)((int*)lbl_803DD524) + 0x11c); }
