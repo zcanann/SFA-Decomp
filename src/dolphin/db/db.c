@@ -2,7 +2,7 @@
 #include <dolphin/os.h>
 
 extern int DBVerbose;
-extern const char lbl_8032D818[];
+extern const char sDBExceptionDestinationMessage[];
 
 extern void __DBExceptionStart();
 extern void __DBExceptionEnd();
@@ -18,7 +18,7 @@ void __DBExceptionDestinationAux(void) {
   u32* contextAddr = (void*)0x00C0;
   OSContext* context = (OSContext*)OSPhysicalToCached(*contextAddr);
 
-  OSReport(lbl_8032D818);
+  OSReport(sDBExceptionDestinationMessage);
   OSDumpContext(context);
   PPCHalt();
 }

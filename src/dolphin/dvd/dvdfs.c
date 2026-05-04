@@ -14,7 +14,7 @@ extern FSTEntry* FstStart_803DDEEC;
 extern char* FstStringStart_803DDEF0;
 extern u32 MaxEntryNum_803DDEF4;
 extern u32 lbl_803DDEF8;
-__declspec(section ".sdata") static const char lbl_803DC560[] = "dvdfs.c";
+__declspec(section ".sdata") static const char sDvdfsFileName[] = "dvdfs.c";
 
 #define BootInfo BootInfo_803DDEE8
 #define FstStart FstStart_803DDEEC
@@ -22,13 +22,13 @@ __declspec(section ".sdata") static const char lbl_803DC560[] = "dvdfs.c";
 #define MaxEntryNum MaxEntryNum_803DDEF4
 #define sDvdfsCurrentDirEntry lbl_803DDEF8
 
-static char lbl_8032D830[] =
+static char sDVDIllegalPathFormatMessage[] =
     "DVDConvertEntrynumToPath(possibly DVDOpen or DVDChangeDir or DVDOpenDir): "
     "specified directory or file (%s) doesn't match standard 8.3 format. This is a "
     "temporary restriction and will be removed soon\n";
-static char lbl_8032D8F8[] = "Warning: DVDOpen(): file '%s' was not found under %s.\n\0";
-static char lbl_8032D930[] = "DVDReadAsync(): specified area is out of the file  ";
-static char lbl_8032D964[] =
+static char sDVDOpenNotFoundWarningFormat[] = "Warning: DVDOpen(): file '%s' was not found under %s.\n\0";
+static char sDVDReadAsyncOutOfFileMessage[] = "DVDReadAsync(): specified area is out of the file  ";
+static char sDVDReadSeekStreamErrorMessages[] =
     "DVDRead(): specified area is out of the file  \0\0"
     "DVDSeek(): offset is out of the file  \0\0"
     "Warning: DVDOpenDir(): file '%s' was not found under %s.\n\0\0\0"
@@ -44,7 +44,7 @@ static char lbl_8032D964[] =
 #undef DVD_ASSERTMSGLINE
 #define DVD_ASSERTMSGLINE(line, cond, msg) \
     if (!(cond))                           \
-        OSPanic(lbl_803DC560, line, msg)
+        OSPanic(sDvdfsFileName, line, msg)
 
 // prototypes
 static inline BOOL isSame(const char* path, const char* string);
@@ -146,7 +146,7 @@ s32 DVDConvertPathToEntrynum(const char* pathPtr) {
                 illegal = TRUE;
         
             if (illegal)
-                OSPanic(lbl_803DC560, 376, lbl_8032D830, origPathPtr);
+                OSPanic(sDvdfsFileName, 376, sDVDIllegalPathFormatMessage, origPathPtr);
         } else {
             for (ptr = pathPtr; (*ptr != '\0') && (*ptr != '/'); ptr++)
                 ;
@@ -211,7 +211,7 @@ BOOL DVDOpen(const char* fileName, DVDFileInfo* fileInfo) {
     
     if (0 > entry) {
         DVDGetCurrentDir(currentDir, 128);
-        OSReport(lbl_8032D8F8, fileName, currentDir);
+        OSReport(sDVDOpenNotFoundWarningFormat, fileName, currentDir);
         return FALSE;
     }
     
@@ -303,8 +303,8 @@ BOOL DVDReadAsyncPrio(DVDFileInfo* fileInfo, void* addr, s32 length, s32 offset,
     ASSERTMSGLINE(743, !(length & 0x1F), "DVDReadAsync(): length must be  multiple of 32 byte  ");
     ASSERTMSGLINE(745, !(offset & 3), "DVDReadAsync(): offset must be multiple of 4 byte  ");
 
-    DVD_ASSERTMSGLINE(739, (0 <= offset) && (offset < fileInfo->length), lbl_8032D930);
-    DVD_ASSERTMSGLINE(745, (0 <= offset + length) && (offset + length < fileInfo->length + DVD_MIN_TRANSFER_SIZE), lbl_8032D930);
+    DVD_ASSERTMSGLINE(739, (0 <= offset) && (offset < fileInfo->length), sDVDReadAsyncOutOfFileMessage);
+    DVD_ASSERTMSGLINE(745, (0 <= offset + length) && (offset + length < fileInfo->length + DVD_MIN_TRANSFER_SIZE), sDVDReadAsyncOutOfFileMessage);
 
     fileInfo->callback = callback;
     DVDReadAbsAsyncPrio(&fileInfo->cb, addr, length, (s32)(fileInfo->startAddr + offset), cbForReadAsync, prio);
@@ -332,9 +332,9 @@ s32 DVDReadPrio(DVDFileInfo* fileInfo, void* addr, s32 length, s32 offset, s32 p
     BOOL enabled;
     s32 retVal;
 
-    DVD_ASSERTMSGLINE(809, (0 <= offset) && (offset < fileInfo->length), lbl_8032D964);
+    DVD_ASSERTMSGLINE(809, (0 <= offset) && (offset < fileInfo->length), sDVDReadSeekStreamErrorMessages);
     DVD_ASSERTMSGLINE(815, (0 <= offset + length) && (offset + length < fileInfo->length + DVD_MIN_TRANSFER_SIZE),
-                      lbl_8032D964);
+                      sDVDReadSeekStreamErrorMessages);
 
     block = &fileInfo->cb;
     result = DVDReadAbsAsyncPrio(block, addr, length, (s32)(fileInfo->startAddr + offset), cbForReadSync, prio);
@@ -372,11 +372,11 @@ static void cbForReadSync(s32 result, DVDCommandBlock* block) {
 
 BOOL DVDPrepareStreamAsync(DVDFileInfo* fileInfo, u32 length, u32 offset, DVDCallback callback) {
     u32 start;
-    const char* const msgs = lbl_8032D830;
+    const char* const msgs = sDVDIllegalPathFormatMessage;
 
     start = fileInfo->startAddr + offset;
     if (OFFSET(start, 32768)) {
-        OSPanic(lbl_803DC560, 1186, msgs + 0x1C8, fileInfo->startAddr, offset);
+        OSPanic(sDvdfsFileName, 1186, msgs + 0x1C8, fileInfo->startAddr, offset);
     }
 
     if (length == 0) {
@@ -384,11 +384,11 @@ BOOL DVDPrepareStreamAsync(DVDFileInfo* fileInfo, u32 length, u32 offset, DVDCal
     }
 
     if (OFFSET(length, 32768)) {
-        OSPanic(lbl_803DC560, 1196, msgs + 0x230, length);
+        OSPanic(sDvdfsFileName, 1196, msgs + 0x230, length);
     }
 
     if (!(offset < fileInfo->length) || offset + length > fileInfo->length) {
-        OSPanic(lbl_803DC560, 1204, msgs + 0x288, offset, length);
+        OSPanic(sDvdfsFileName, 1204, msgs + 0x288, offset, length);
     }
 
     fileInfo->callback = callback;
