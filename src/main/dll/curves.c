@@ -2406,6 +2406,8 @@ void FUN_800e4628(undefined8 param_1,double param_2,double param_3,undefined4 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void curves_addCurveDef(int curve)
 {
   int count;
@@ -2438,6 +2440,8 @@ void curves_addCurveDef(int curve)
   DAT_803de0f0 = DAT_803de0f0 + 1;
   (&DAT_803a2448)[insertIndex] = curve;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
