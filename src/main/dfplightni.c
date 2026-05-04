@@ -216,11 +216,11 @@ void dfplightni_init(u8 *obj,u8 *params)
       *(s16 *)(params + 0x1c) = 1;
     }
     randomValue = fn_800221A0(0,100);
-    state->triggerTime = lbl_803E6508 + (f32)(s32)randomValue;
-    state->radiusX = lbl_803E6504 *
-                     ((f32)(s32)*(s16 *)(params + 0x1a) / lbl_803E650C);
-    state->radiusY = lbl_803E6504 *
-                     ((f32)(s32)*(s16 *)(params + 0x1c) / lbl_803E650C);
+    state->triggerTime = (f32)(s32)randomValue + lbl_803E6508;
+    state->radiusX = ((f32)(s32)*(s16 *)(params + 0x1a) / lbl_803E650C) *
+                     lbl_803E6504;
+    state->radiusY = ((f32)(s32)*(s16 *)(params + 0x1c) / lbl_803E650C) *
+                     lbl_803E6504;
     state->angleIndex = *(s8 *)(params + 0x18);
     state->delayFrames = *(s8 *)(params + 0x19) * 10;
     state->eventId = *(s16 *)(params + 0x20);
