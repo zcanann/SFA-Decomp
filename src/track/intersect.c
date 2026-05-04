@@ -1950,20 +1950,20 @@ void fn_80076510(int x, int y, f32 sx, f32 sy)
     sy = lbl_803DEF2C * sy;
     GXBegin(GX_QUADS, GX_VTXFMT1, 4);
 
-    GXWGFifo.s16 = (s32)sx;
-    GXWGFifo.s16 = (s32)sy;
+    GXWGFifo.s16 = (s16)sx;
+    GXWGFifo.s16 = (s16)sy;
     GXWGFifo.s16 = -0x18C;
 
-    GXWGFifo.s16 = (s32)(sx + (f32)((u32)x * 4));
-    GXWGFifo.s16 = (s32)sy;
+    GXWGFifo.s16 = (s16)(sx + (f32)((u32)x * 4));
+    GXWGFifo.s16 = (s16)sy;
     GXWGFifo.s16 = -0x18C;
 
-    GXWGFifo.s16 = (s32)(sx + (f32)((u32)x * 4));
-    GXWGFifo.s16 = (s32)(sy + (f32)((u32)y * 4));
+    GXWGFifo.s16 = (s16)(sx + (f32)((u32)x * 4));
+    GXWGFifo.s16 = (s16)(sy + (f32)((u32)y * 4));
     GXWGFifo.s16 = -0x18C;
 
-    GXWGFifo.s16 = (s32)sx;
-    GXWGFifo.s16 = (s32)(sy + (f32)((u32)y * 4));
+    GXWGFifo.s16 = (s16)sx;
+    GXWGFifo.s16 = (s16)(sy + (f32)((u32)y * 4));
     GXWGFifo.s16 = -0x18C;
 
     fn_8000FB00();
