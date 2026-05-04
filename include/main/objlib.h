@@ -30,10 +30,10 @@ ushort ObjHits_IsObjectEnabled(int param_1);
 void ObjHits_SyncObjectPosition(u32 param_1);
 int ObjHits_AllocObjectState(int param_1,uint param_2);
 void ObjHits_RefreshObjectState(int param_1);
-undefined4 ObjHits_RecordObjectHit(int param_1,int param_2,char param_3,undefined param_4,undefined param_5);
+undefined4 ObjHits_RecordObjectHit(int obj,int hitObj,char priority,undefined hitVolume,undefined sphereIndex);
 undefined4
-ObjHits_RecordPositionHit(double param_1,double param_2,double param_3,int param_4,int param_5,char param_6,
-            undefined param_7,undefined param_8);
+ObjHits_RecordPositionHit(double hitPosX,double hitPosY,double hitPosZ,int obj,int hitObj,char priority,
+            undefined hitVolume,undefined sphereIndex);
 void ObjHits_AddContactObject(int param_1,int param_2);
 int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *outSphereIndex,
                 uint *outHitVolume,float *outHitPosX,float *outHitPosY,float *outHitPosZ);

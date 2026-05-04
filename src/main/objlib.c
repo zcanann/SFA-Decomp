@@ -108,6 +108,23 @@ typedef struct ObjMsgQueue {
   ObjMsgEntry entries[1];
 } ObjMsgQueue;
 
+typedef struct ObjHitsPriorityState {
+  u8 pad00[0x50];
+  int lastHitObject;
+  u8 pad54[0xc];
+  u16 flags;
+  u8 pad62[0xf];
+  s8 priorityHitCount;
+  s8 sphereIndices[3];
+  s8 priorities[3];
+  u8 hitVolumes[3];
+  u8 pad7b;
+  int hitObjects[3];
+  f32 hitPosX[3];
+  f32 hitPosY[3];
+  f32 hitPosZ[3];
+} ObjHitsPriorityState;
+
 /*
  * --INFO--
  *
@@ -1038,50 +1055,50 @@ void ObjHits_RefreshObjectState(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 ObjHits_RecordObjectHit(int param_1,int param_2,char param_3,undefined param_4,undefined param_5)
+undefined4 ObjHits_RecordObjectHit(int obj,int hitObj,char priority,undefined hitVolume,undefined sphereIndex)
 {
-  int iVar1;
-  int iVar2;
-  int iVar3;
+  int hitObjectSlot;
+  ObjHitsPriorityState *hitState;
+  int hitSlot;
   
-  if (param_3 == '\0') {
+  if (priority == '\0') {
     return 0;
   }
-  iVar2 = *(int *)(param_1 + 0x54);
-  if ((*(ushort *)(iVar2 + 0x60) & 1) == 0) {
+  hitState = *(ObjHitsPriorityState **)(obj + 0x54);
+  if ((hitState->flags & 1) == 0) {
     return 0;
   }
-  if ((param_2 != 0) && (*(int *)(param_2 + 0x54) != 0)) {
-    *(int *)(*(int *)(param_2 + 0x54) + 0x50) = param_1;
+  if ((hitObj != 0) && (*(int *)(hitObj + 0x54) != 0)) {
+    (*(ObjHitsPriorityState **)(hitObj + 0x54))->lastHitObject = obj;
   }
-  iVar3 = 0;
+  hitSlot = 0;
   while( true ) {
-    iVar1 = (int)*(char *)(iVar2 + 0x71);
-    if (iVar1 <= iVar3) break;
-    iVar1 = iVar2 + iVar3 * 4;
-    if (*(int *)(iVar1 + 0x7c) == param_2) {
-      iVar3 = iVar2 + iVar3;
-      if (param_3 < *(char *)(iVar3 + 0x75)) {
-        *(undefined *)(iVar3 + 0x72) = param_5;
-        *(char *)(iVar3 + 0x75) = param_3;
-        *(undefined *)(iVar3 + 0x78) = param_4;
-        *(undefined4 *)(iVar1 + 0x88) = *(undefined4 *)(param_1 + 0xc);
-        *(undefined4 *)(iVar1 + 0x94) = *(undefined4 *)(param_1 + 0x10);
-        *(undefined4 *)(iVar1 + 0xa0) = *(undefined4 *)(param_1 + 0x14);
+    hitObjectSlot = (int)hitState->priorityHitCount;
+    if (hitObjectSlot <= hitSlot) break;
+    hitObjectSlot = hitSlot * 4;
+    if (*(int *)((int)hitState->hitObjects + hitObjectSlot) == hitObj) {
+      hitSlot = (int)hitState + hitSlot;
+      if (priority < *(char *)(hitSlot + 0x75)) {
+        *(undefined *)(hitSlot + 0x72) = sphereIndex;
+        *(char *)(hitSlot + 0x75) = priority;
+        *(undefined *)(hitSlot + 0x78) = hitVolume;
+        *(undefined4 *)((int)hitState->hitPosX + hitObjectSlot) = *(undefined4 *)(obj + 0xc);
+        *(undefined4 *)((int)hitState->hitPosY + hitObjectSlot) = *(undefined4 *)(obj + 0x10);
+        *(undefined4 *)((int)hitState->hitPosZ + hitObjectSlot) = *(undefined4 *)(obj + 0x14);
       }
-      iVar3 = *(char *)(iVar2 + 0x71) + 1;
+      hitSlot = hitState->priorityHitCount + 1;
     }
-    iVar3 = iVar3 + 1;
+    hitSlot = hitSlot + 1;
   }
-  if ((iVar3 == iVar1) && (iVar1 < 3)) {
-    *(undefined *)(iVar2 + iVar1 + 0x72) = param_5;
-    *(char *)(iVar2 + *(char *)(iVar2 + 0x71) + 0x75) = param_3;
-    *(undefined *)(iVar2 + *(char *)(iVar2 + 0x71) + 0x78) = param_4;
-    *(int *)(iVar2 + *(char *)(iVar2 + 0x71) * 4 + 0x7c) = param_2;
-    *(undefined4 *)(iVar2 + *(char *)(iVar2 + 0x71) * 4 + 0x88) = *(undefined4 *)(param_1 + 0xc);
-    *(undefined4 *)(iVar2 + *(char *)(iVar2 + 0x71) * 4 + 0x94) = *(undefined4 *)(param_1 + 0x10);
-    *(undefined4 *)(iVar2 + *(char *)(iVar2 + 0x71) * 4 + 0xa0) = *(undefined4 *)(param_1 + 0x14);
-    *(char *)(iVar2 + 0x71) = *(char *)(iVar2 + 0x71) + '\x01';
+  if ((hitSlot == hitObjectSlot) && (hitObjectSlot < 3)) {
+    *(undefined *)((int)hitState->sphereIndices + hitObjectSlot) = sphereIndex;
+    *(char *)((int)hitState->priorities + hitState->priorityHitCount) = priority;
+    *(undefined *)((int)hitState->hitVolumes + hitState->priorityHitCount) = hitVolume;
+    *(int *)((int)hitState->hitObjects + hitState->priorityHitCount * 4) = hitObj;
+    *(undefined4 *)((int)hitState->hitPosX + hitState->priorityHitCount * 4) = *(undefined4 *)(obj + 0xc);
+    *(undefined4 *)((int)hitState->hitPosY + hitState->priorityHitCount * 4) = *(undefined4 *)(obj + 0x10);
+    *(undefined4 *)((int)hitState->hitPosZ + hitState->priorityHitCount * 4) = *(undefined4 *)(obj + 0x14);
+    hitState->priorityHitCount = hitState->priorityHitCount + '\x01';
   }
   return 1;
 }
@@ -1100,51 +1117,51 @@ undefined4 ObjHits_RecordObjectHit(int param_1,int param_2,char param_3,undefine
  * PAL Size: TODO
  */
 undefined4
-ObjHits_RecordPositionHit(double param_1,double param_2,double param_3,int param_4,int param_5,char param_6,
-            undefined param_7,undefined param_8)
+ObjHits_RecordPositionHit(double hitPosX,double hitPosY,double hitPosZ,int obj,int hitObj,char priority,
+            undefined hitVolume,undefined sphereIndex)
 {
-  int iVar1;
-  int iVar2;
-  int iVar3;
+  int hitObjectSlot;
+  int hitSlot;
+  ObjHitsPriorityState *hitState;
   
-  if (param_6 == '\0') {
+  if (priority == '\0') {
     return 0;
   }
-  iVar3 = *(int *)(param_4 + 0x54);
-  if ((*(ushort *)(iVar3 + 0x60) & 1) == 0) {
+  hitState = *(ObjHitsPriorityState **)(obj + 0x54);
+  if ((hitState->flags & 1) == 0) {
     return 0;
   }
-  if ((param_5 != 0) && (*(int *)(param_5 + 0x54) != 0)) {
-    *(int *)(*(int *)(param_5 + 0x54) + 0x50) = param_4;
+  if ((hitObj != 0) && (*(int *)(hitObj + 0x54) != 0)) {
+    (*(ObjHitsPriorityState **)(hitObj + 0x54))->lastHitObject = obj;
   }
-  iVar2 = 0;
+  hitSlot = 0;
   while( true ) {
-    iVar1 = (int)*(char *)(iVar3 + 0x71);
-    if (iVar1 <= iVar2) break;
-    iVar1 = iVar3 + iVar2 * 4;
-    if (*(int *)(iVar1 + 0x7c) == param_5) {
-      iVar2 = iVar3 + iVar2;
-      if (param_6 < *(char *)(iVar2 + 0x75)) {
-        *(undefined *)(iVar2 + 0x72) = param_8;
-        *(char *)(iVar2 + 0x75) = param_6;
-        *(undefined *)(iVar2 + 0x78) = param_7;
-        *(float *)(iVar1 + 0x88) = (float)param_1;
-        *(float *)(iVar1 + 0x94) = (float)param_2;
-        *(float *)(iVar1 + 0xa0) = (float)param_3;
+    hitObjectSlot = (int)hitState->priorityHitCount;
+    if (hitObjectSlot <= hitSlot) break;
+    hitObjectSlot = hitSlot * 4;
+    if (*(int *)((int)hitState->hitObjects + hitObjectSlot) == hitObj) {
+      hitSlot = (int)hitState + hitSlot;
+      if (priority < *(char *)(hitSlot + 0x75)) {
+        *(undefined *)(hitSlot + 0x72) = sphereIndex;
+        *(char *)(hitSlot + 0x75) = priority;
+        *(undefined *)(hitSlot + 0x78) = hitVolume;
+        *(float *)((int)hitState->hitPosX + hitObjectSlot) = (float)hitPosX;
+        *(float *)((int)hitState->hitPosY + hitObjectSlot) = (float)hitPosY;
+        *(float *)((int)hitState->hitPosZ + hitObjectSlot) = (float)hitPosZ;
       }
-      iVar2 = *(char *)(iVar3 + 0x71) + 1;
+      hitSlot = hitState->priorityHitCount + 1;
     }
-    iVar2 = iVar2 + 1;
+    hitSlot = hitSlot + 1;
   }
-  if ((iVar2 == iVar1) && (iVar1 < 3)) {
-    *(undefined *)(iVar3 + iVar1 + 0x72) = param_8;
-    *(char *)(iVar3 + *(char *)(iVar3 + 0x71) + 0x75) = param_6;
-    *(undefined *)(iVar3 + *(char *)(iVar3 + 0x71) + 0x78) = param_7;
-    *(int *)(iVar3 + *(char *)(iVar3 + 0x71) * 4 + 0x7c) = param_5;
-    *(float *)(iVar3 + *(char *)(iVar3 + 0x71) * 4 + 0x88) = (float)param_1;
-    *(float *)(iVar3 + *(char *)(iVar3 + 0x71) * 4 + 0x94) = (float)param_2;
-    *(float *)(iVar3 + *(char *)(iVar3 + 0x71) * 4 + 0xa0) = (float)param_3;
-    *(char *)(iVar3 + 0x71) = *(char *)(iVar3 + 0x71) + '\x01';
+  if ((hitSlot == hitObjectSlot) && (hitObjectSlot < 3)) {
+    *(undefined *)((int)hitState->sphereIndices + hitObjectSlot) = sphereIndex;
+    *(char *)((int)hitState->priorities + hitState->priorityHitCount) = priority;
+    *(undefined *)((int)hitState->hitVolumes + hitState->priorityHitCount) = hitVolume;
+    *(int *)((int)hitState->hitObjects + hitState->priorityHitCount * 4) = hitObj;
+    *(float *)((int)hitState->hitPosX + hitState->priorityHitCount * 4) = (float)hitPosX;
+    *(float *)((int)hitState->hitPosY + hitState->priorityHitCount * 4) = (float)hitPosY;
+    *(float *)((int)hitState->hitPosZ + hitState->priorityHitCount * 4) = (float)hitPosZ;
+    hitState->priorityHitCount = hitState->priorityHitCount + '\x01';
   }
   return 1;
 }
