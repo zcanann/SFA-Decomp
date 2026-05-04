@@ -124,25 +124,25 @@ void dfplightni_update(u8 *obj)
       if ((eventActive != 0) && (state->timer < lbl_803E64E0)) {
         state->timer = lbl_803E64F8;
       }
-      if ((state->triggerTime < state->timer) && (state->timer < lbl_803E64E0)) {
+      if ((state->timer > state->triggerTime) && (state->timer < lbl_803E64E0)) {
         start[0] = *(f32 *)(obj + 0xc);
         start[1] = *(f32 *)(obj + 0x10);
         start[2] = *(f32 *)(obj + 0x14);
-        if (eventActive == 0) {
-          randomX = fn_800221A0(-200,200);
-          end[0] = lbl_803E64FC * (f32)(s32)randomX + start[0];
-          randomY = fn_800221A0(100,300);
-          end[1] = lbl_803E64FC * (f32)(s32)randomY + *(f32 *)(obj + 0x10);
-          randomZ = fn_800221A0(-200,200);
-          end[2] = lbl_803E64FC * (f32)(s32)randomZ + start[2];
-        }
-        else {
+        if (eventActive != 0) {
           randomZ = fn_800221A0(-200,200);
           end[0] = lbl_803E64FC * (f32)(s32)randomZ + *(f32 *)(playerObj + 0xc);
           randomY = fn_800221A0(100,300);
           end[1] = lbl_803E64FC * (f32)(s32)randomY + *(f32 *)(playerObj + 0x10);
           randomX = fn_800221A0(-200,200);
           end[2] = lbl_803E64FC * (f32)(s32)randomX + *(f32 *)(playerObj + 0x14);
+        }
+        else {
+          randomX = fn_800221A0(-200,200);
+          end[0] = lbl_803E64FC * (f32)(s32)randomX + *(f32 *)(obj + 0xc);
+          randomY = fn_800221A0(100,300);
+          end[1] = lbl_803E64FC * (f32)(s32)randomY + *(f32 *)(obj + 0x10);
+          randomZ = fn_800221A0(-200,200);
+          end[2] = lbl_803E64FC * (f32)(s32)randomZ + *(f32 *)(obj + 0x14);
         }
         if (state->effectHandle != 0) {
           fn_80023800(state->effectHandle);
