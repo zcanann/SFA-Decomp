@@ -200,7 +200,7 @@ float __ieee754_pow(float x, float y)
             return lbl_803DC648;
         }
 
-        if (int_y - (int_y / 2) * 2 != 0) {
+        if (int_y % 2 != 0) {
             log_value = log2_kernel(-x, table);
             return -exp2_kernel(y * log_value, table);
         }
