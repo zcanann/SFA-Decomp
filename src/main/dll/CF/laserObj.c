@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/CF/laser.h"
 
-extern int GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern void fn_80041018(int obj);
 
@@ -41,6 +41,8 @@ void laserObj_hitDetect(void)
 {
 }
 
+#pragma scheduling off
+#pragma peephole off
 void laserObj_update(LaserObject *obj)
 {
   LaserState *state;
@@ -88,6 +90,11 @@ void laserObj_update(LaserObject *obj)
   return;
 }
 
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
 void laserObj_init(LaserObject *obj,LaserObjectMapData *mapData)
 {
   LaserState *state;
@@ -106,6 +113,8 @@ void laserObj_init(LaserObject *obj,LaserObjectMapData *mapData)
   obj->objectFlags = (u16)(obj->objectFlags | LASER_OBJECT_FLAGS_SEQUENCE_CONTROL);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void laserObj_release(void)
 {

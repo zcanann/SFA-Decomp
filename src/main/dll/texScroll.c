@@ -17,6 +17,8 @@ extern undefined8 ObjGroup_RemoveObject();
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4 fn_8017AC2C(int obj,undefined4 param_2,int stateParam)
 {
   s16 objType;
@@ -61,6 +63,8 @@ undefined4 fn_8017AC2C(int obj,undefined4 param_2,int stateParam)
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
