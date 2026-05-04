@@ -42,6 +42,7 @@ void hwSaveSample(u32 **sample, void **ptr)
         size <<= 1;
         goto save;
       }
+      if (type < 0) goto save;
     } else if (type >= 6) {
       goto save;
     }
@@ -98,6 +99,7 @@ void hwRemoveSample(u32 *sample, void *ptr)
         size <<= 1;
         goto remove;
       }
+      if (type < 0) goto remove;
     } else if (type >= 6) {
       goto remove;
     }
