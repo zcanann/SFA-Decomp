@@ -6,9 +6,9 @@
 
 extern u32 BOOT_REGION_START AT_ADDRESS(0x812FDFF0);
 extern u32 BOOT_REGION_END AT_ADDRESS(0x812FDFEC);
-extern u8 g_unk_800030E2 AT_ADDRESS(0x800030E2);
-extern u32 g_unk_817FFFF8 AT_ADDRESS(0x817FFFF8);
-extern u32 g_unk_817FFFFC AT_ADDRESS(0x817FFFFC);
+extern u8 OS_REBOOT_BOOL AT_ADDRESS(0x800030E2);
+extern u32 UNK_817FFFF8 AT_ADDRESS(0x817FFFF8);
+extern u32 UNK_817FFFFC AT_ADDRESS(0x817FFFFC);
 
 static void* SaveStart;
 static void* SaveEnd;
@@ -69,7 +69,7 @@ static inline void ReadApploader(DVDCommandBlock* dvdCmd, void* addr, u32 offset
         case 9:
         case 10:
         case 11:
-            __OSDoHotReset(g_unk_817FFFFC);
+            __OSDoHotReset(UNK_817FFFFC);
             continue;
         }
         break;
@@ -85,9 +85,9 @@ void __OSReboot(u32 resetCode, u32 bootDol) {
 
     OSDisableInterrupts();
 
-    g_unk_817FFFFC = 0;
-    g_unk_817FFFF8 = 0;
-    g_unk_800030E2 = TRUE;
+    UNK_817FFFFC = 0;
+    UNK_817FFFF8 = 0;
+    OS_REBOOT_BOOL = TRUE;
     BOOT_REGION_START = (u32)SaveStart;
     BOOT_REGION_END = (u32)SaveEnd;
     OSClearContext(&exceptionContext);
@@ -98,7 +98,7 @@ void __OSReboot(u32 resetCode, u32 bootDol) {
     __DVDPrepareResetAsync(Callback);
 
     if (!DVDCheckDisk()) {
-        __OSDoHotReset(g_unk_817FFFFC);
+        __OSDoHotReset(UNK_817FFFFC);
     }
 
     __OSMaskInterrupts(0xFFFFFFE0);
