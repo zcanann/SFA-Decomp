@@ -5,7 +5,7 @@ extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern void fn_8001467C(void);
-extern int GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void TrickyCurve_activateEffectHandleRing(void);
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
@@ -123,6 +123,8 @@ void sfxplayer_update(undefined8 param_1,double param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void sfxplayer_init(int obj,int config)
 {
   int state;
@@ -148,6 +150,8 @@ void sfxplayer_init(int obj,int config)
   }
   *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x6000;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
