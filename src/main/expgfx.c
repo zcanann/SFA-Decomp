@@ -260,7 +260,7 @@ static inline ExpgfxTableEntry *Expgfx_GetTableEntry(int tableIndex) {
 }
 
 static inline u8 Expgfx_GetSlotTableIndex(const ExpgfxSlot *slot) {
-  return (u8)((u32)slot->encodedTableIndex >> 1);
+  return ((u32)slot->encodedTableIndex >> 1) & 0x7F;
 }
 
 static inline void Expgfx_SetSlotTableIndex(ExpgfxSlot *slot, u8 tableIndex) {
