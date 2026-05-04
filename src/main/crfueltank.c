@@ -89,11 +89,13 @@ void crfueltank_render(void)
 void crfueltank_hitDetect(CrFuelTankObject *obj)
 {
   CrFuelTankDef *def;
+  CrFuelTankCollider *collider;
   CrFuelTankHitObj *hitObj;
 
+  collider = obj->collider;
   def = obj->def;
-  if ((obj->collider != NULL) && (obj->collider->hitObj != NULL)) {
-    hitObj = obj->collider->hitObj;
+  if ((collider != NULL) && (collider->hitObj != NULL)) {
+    hitObj = collider->hitObj;
     if (hitObj->objType == 0x38c) {
       ObjHits_DisableObject(obj);
       Sfx_PlayFromObject(fn_8002B9EC(),0xee);
