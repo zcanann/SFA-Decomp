@@ -28,19 +28,16 @@ static ApploaderHeader Header ATTRIBUTE_ALIGN(32);
 static asm void myFunc() {
 }
 
-static asm void Run(register void (*addr)()) {
-    nofralloc
-    mflr r0
-    stw r0, 0x4(r1)
-    stwu r1, -0x18(r1)
-    stw r31, 0x14(r1)
-    mr r31, addr
-    bl OSDisableInterrupts
-    bl ICFlashInvalidate
-    sync
-    isync
-    mtlr r31
-    blr
+static void Run(register void (*addr)()) {
+    OSDisableInterrupts();
+    ICFlashInvalidate();
+
+    asm {
+        sync
+        isync
+        mtlr addr
+        blr
+    }
 }
 #pragma dont_inline reset
 
