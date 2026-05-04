@@ -79,16 +79,12 @@ char* __OSPIErrors[8] = {
 
 // prototypes
 static void ExternalInterruptHandler(register __OSException exception, register OSContext* context);
-extern void __RAS_OSDisableInterrupts_begin(void);
-extern void __RAS_OSDisableInterrupts_end(void);
-
 asm BOOL OSDisableInterrupts(void) {
     nofralloc
-entry    __RAS_OSDisableInterrupts_begin
+
     mfmsr   r3
     rlwinm  r4, r3, 0, 17, 15
     mtmsr   r4
-entry    __RAS_OSDisableInterrupts_end
     rlwinm  r3, r3, 17, 31, 31
     blr
 }
