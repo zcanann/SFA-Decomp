@@ -161,10 +161,12 @@ void FUN_800356f0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2)
 {
   uint uVar1;
-  
+
   uVar1 = FUN_800177d4(param_2);
   *(uint *)(param_1 + 0x2c) = uVar1;
   if (*(int *)(param_1 + 0x2c) != 0) {
@@ -176,6 +178,8 @@ int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2)
   }
   return uVar1 + 0x110;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -288,12 +292,14 @@ void ObjHitReact_InitState(undefined4 param_1,undefined4 param_2,int param_3,uin
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
 {
   int iVar1;
   int *piVar2;
   short sVar3;
-  
+
   iVar1 = (int)*(char *)(*(int *)(param_1 + 0x50) + 0x55);
   if (param_3 < iVar1) {
     if (param_3 < 0) {
@@ -317,6 +323,8 @@ void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
   *(char *)(param_2 + 0xb0) = (char)param_3;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1885,11 +1893,13 @@ undefined4 ObjMsg_Peek(void *obj,uint *outMessage,uint *outSender,uint *outParam
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4 ObjMsg_Pop(void *obj,uint *outMessage,uint *outSender,uint *outParam)
 {
   uint i;
   ObjMsgQueue *queue;
-  
+
   if (obj == (void *)0x0) {
     return 0;
   }
@@ -1914,6 +1924,8 @@ undefined4 ObjMsg_Pop(void *obj,uint *outMessage,uint *outSender,uint *outParam)
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
