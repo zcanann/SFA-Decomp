@@ -2477,6 +2477,7 @@ undefined4 ObjContact_AddCallback(int param_1,int param_2,undefined4 param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 #pragma peephole off
 undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
 {
@@ -2489,8 +2490,7 @@ undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
   flagEnabled = triggerFlags & 4;
   if (flagEnabled != 0) {
     flagBlocked = triggerFlags & 0x10;
-    iVar1 = (int)param_2;
-    if ((flagBlocked == 0) && (iVar1 = (*lbl_803DCA68)->isTriggerSet(iVar1), iVar1 != 0)) {
+    if ((flagBlocked == 0) && (iVar1 = (*lbl_803DCA68)->isTriggerSet((int)param_2), iVar1 != 0)) {
       iVar1 = fn_80296BA0(fn_8002B9EC());
       if (iVar1 == -1) {
         fn_80014B3C(0,0x100);
@@ -2501,6 +2501,7 @@ undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
   return 0;
 }
 #pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
