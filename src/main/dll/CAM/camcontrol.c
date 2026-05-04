@@ -100,6 +100,17 @@ typedef struct CamcontrolTriggeredAction {
   u8 pad0E[2];
 } CamcontrolTriggeredAction;
 
+#define CAMCONTROL_ACTION_DEFAULT 0x42
+#define CAMCONTROL_ACTION_TRIGGERED 0x4B
+#define CAMCONTROL_ACTION_TRIGGER_TYPE1 0x48
+#define CAMCONTROL_ACTION_TRIGGER_TYPE2 0x47
+#define CAMCONTROL_ACTION_INDEX_MASK 0x7F
+#define CAMCONTROL_ACTION_FLAG_NO_BLEND 0x80
+#define CAMCONTROL_ACTION_RECORD_SIZE 0x10
+#define CAMCONTROL_ACTION_FILE_ID 0xB
+#define CAMCONTROL_DEFAULT_BLEND_FRAMES 0x78
+#define CAMCONTROL_QUEUE_SENTINEL 0xFF
+
 /*
  * --INFO--
  *
@@ -454,8 +465,8 @@ void camcontrol_release(void *obj)
  */
 void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char triggerMode)
 {
-  uint uVar1;
-  int iVar2;
+  uint handlerCount;
+  int handlerIndex;
   void **handlerEntry;
   int blendFrames;
   CamcontrolTriggeredAction *camAction;
@@ -465,107 +476,124 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char trigge
   byte local_1c;
   
   if (triggerType == 2) {
-    local_28 = actionNo & 0x7f;
-    local_24 = (undefined)(actionNo & 0x80);
-    if ((actionNo & 0x80) == 0) {
-      blendFrames = 0x78;
+    local_28 = actionNo & CAMCONTROL_ACTION_INDEX_MASK;
+    local_24 = (undefined)(actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND);
+    if ((actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND) == 0) {
+      blendFrames = CAMCONTROL_DEFAULT_BLEND_FRAMES;
     }
     else {
       blendFrames = 0;
     }
-    camcontrol_queueCamAction(0x47,1,0,8,(uint)&local_28,blendFrames,0xff);
+    camcontrol_queueCamAction(CAMCONTROL_ACTION_TRIGGER_TYPE2,1,0,8,(uint)&local_28,blendFrames,
+                              CAMCONTROL_QUEUE_SENTINEL);
     return;
   }
   if (triggerType < 2) {
     if ((triggerType != 0) && (-1 < triggerType)) {
-      local_20 = actionNo & 0x7f;
-      local_1c = (byte)actionNo & 0x80;
+      local_20 = actionNo & CAMCONTROL_ACTION_INDEX_MASK;
+      local_1c = (byte)actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND;
       *(undefined *)((int)gCamcontrolState + 0x139) = 1;
-      if ((actionNo & 0x80) == 0) {
-        blendFrames = 0x78;
+      if ((actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND) == 0) {
+        blendFrames = CAMCONTROL_DEFAULT_BLEND_FRAMES;
       }
       else {
         blendFrames = 0;
       }
-      camcontrol_queueCamAction(0x48,1,0,8,(uint)&local_20,blendFrames,0xff);
+      camcontrol_queueCamAction(CAMCONTROL_ACTION_TRIGGER_TYPE1,1,0,8,(uint)&local_20,blendFrames,
+                                CAMCONTROL_QUEUE_SENTINEL);
       return;
     }
   }
   else {
     if (triggerType == 4) {
-      camcontrol_queueCamAction(actionNo + 0x42,1,0,0,0,0x78,0xff);
+      camcontrol_queueCamAction(actionNo + CAMCONTROL_ACTION_DEFAULT,1,0,0,0,
+                                CAMCONTROL_DEFAULT_BLEND_FRAMES,CAMCONTROL_QUEUE_SENTINEL);
       return;
     }
     if (triggerType < 4) {
-      camcontrol_queueCamAction(0x42,0,1,0,0,0x78,0xff);
+      camcontrol_queueCamAction(CAMCONTROL_ACTION_DEFAULT,0,1,0,0,
+                                CAMCONTROL_DEFAULT_BLEND_FRAMES,CAMCONTROL_QUEUE_SENTINEL);
       return;
     }
   }
   if (actionNo == 0) {
     OSReport(sCamcontrolTriggeredCamActionLoadWarning,actionNo);
-    camAction = (CamcontrolTriggeredAction *)fn_80023CC8(0x10,0xf,0);
+    camAction = (CamcontrolTriggeredAction *)fn_80023CC8(CAMCONTROL_ACTION_RECORD_SIZE,0xf,0);
     if (camAction != (CamcontrolTriggeredAction *)0x0) {
-      fn_8001F71C(camAction,0xb,0,0x10);
+      fn_8001F71C(camAction,CAMCONTROL_ACTION_FILE_ID,0,CAMCONTROL_ACTION_RECORD_SIZE);
       camAction->triggerMode = triggerMode;
       fn_800E84D8(1);
-      if ((((gCamcontrolCurrentActionId == 0x42) || (gCamcontrolCurrentActionId == 0x4b)) ||
-          (gCamcontrolCurrentActionId == 0x48)) || (gCamcontrolCurrentActionId == 0x47)) {
+      if ((((gCamcontrolCurrentActionId == CAMCONTROL_ACTION_DEFAULT) ||
+           (gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGERED)) ||
+          (gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGER_TYPE1)) ||
+         (gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
         if (camAction->actionKind == 1) {
-          camcontrol_queueCamAction(0x4b,1,2,0x10,(uint)camAction,0,0xff);
+          camcontrol_queueCamAction(CAMCONTROL_ACTION_TRIGGERED,1,2,CAMCONTROL_ACTION_RECORD_SIZE,
+                                    (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
         }
         else {
-          camcontrol_queueCamAction(0x42,0,2,0x10,(uint)camAction,0,0xff);
+          camcontrol_queueCamAction(CAMCONTROL_ACTION_DEFAULT,0,2,CAMCONTROL_ACTION_RECORD_SIZE,
+                                    (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
         }
       }
       else {
-        iVar2 = 0;
+        handlerIndex = 0;
         handlerEntry = gCamcontrolHandlers;
-        for (uVar1 = (uint)gCamcontrolHandlerCount; uVar1 != 0; uVar1 = uVar1 - 1) {
-          if (*(short *)*handlerEntry == 0x42) {
-            iVar2 = (int)gCamcontrolHandlers[iVar2];
+        for (handlerCount = (uint)gCamcontrolHandlerCount; handlerCount != 0;
+             handlerCount = handlerCount - 1) {
+          if (*(short *)*handlerEntry == CAMCONTROL_ACTION_DEFAULT) {
+            handlerIndex = (int)gCamcontrolHandlers[handlerIndex];
             goto LAB_80103090;
           }
           handlerEntry = handlerEntry + 1;
-          iVar2 = iVar2 + 1;
+          handlerIndex = handlerIndex + 1;
         }
-        iVar2 = 0;
+        handlerIndex = 0;
 LAB_80103090:
-        (**(code **)(**(int **)(iVar2 + 4) + 0x10))(camAction,0x10);
+        (**(code **)(**(int **)(handlerIndex + 4) + 0x10))(camAction,
+                                                            CAMCONTROL_ACTION_RECORD_SIZE);
       }
       fn_80023800(camAction);
     }
   }
   else {
-    camAction = (CamcontrolTriggeredAction *)fn_80023CC8(0x10,0xf,0);
+    camAction = (CamcontrolTriggeredAction *)fn_80023CC8(CAMCONTROL_ACTION_RECORD_SIZE,0xf,0);
     if (camAction != (CamcontrolTriggeredAction *)0x0) {
-      fn_8001F71C(camAction,0xb,(actionNo - 1) * 0x10,0x10);
+      fn_8001F71C(camAction,CAMCONTROL_ACTION_FILE_ID,(actionNo - 1) * CAMCONTROL_ACTION_RECORD_SIZE,
+                  CAMCONTROL_ACTION_RECORD_SIZE);
     }
     if (camAction != (CamcontrolTriggeredAction *)0x0) {
       camAction->triggerMode = triggerMode;
       fn_800E84D8((short)actionNo);
-      if (((gCamcontrolCurrentActionId == 0x42) || (gCamcontrolCurrentActionId == 0x4b)) ||
-         ((gCamcontrolCurrentActionId == 0x48 || (gCamcontrolCurrentActionId == 0x47)))) {
+      if (((gCamcontrolCurrentActionId == CAMCONTROL_ACTION_DEFAULT) ||
+          (gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGERED)) ||
+         ((gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGER_TYPE1 ||
+          (gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGER_TYPE2)))) {
         if (camAction->actionKind == 1) {
-          camcontrol_queueCamAction(0x4b,1,2,0x10,(uint)camAction,0,0xff);
+          camcontrol_queueCamAction(CAMCONTROL_ACTION_TRIGGERED,1,2,CAMCONTROL_ACTION_RECORD_SIZE,
+                                    (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
         }
         else {
-          camcontrol_queueCamAction(0x42,0,2,0x10,(uint)camAction,0,0xff);
+          camcontrol_queueCamAction(CAMCONTROL_ACTION_DEFAULT,0,2,CAMCONTROL_ACTION_RECORD_SIZE,
+                                    (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
         }
       }
       else {
-        iVar2 = 0;
+        handlerIndex = 0;
         handlerEntry = gCamcontrolHandlers;
-        for (uVar1 = (uint)gCamcontrolHandlerCount; uVar1 != 0; uVar1 = uVar1 - 1) {
-          if (*(short *)*handlerEntry == 0x42) {
-            iVar2 = (int)gCamcontrolHandlers[iVar2];
+        for (handlerCount = (uint)gCamcontrolHandlerCount; handlerCount != 0;
+             handlerCount = handlerCount - 1) {
+          if (*(short *)*handlerEntry == CAMCONTROL_ACTION_DEFAULT) {
+            handlerIndex = (int)gCamcontrolHandlers[handlerIndex];
             goto LAB_80102f3c;
           }
           handlerEntry = handlerEntry + 1;
-          iVar2 = iVar2 + 1;
+          handlerIndex = handlerIndex + 1;
         }
-        iVar2 = 0;
+        handlerIndex = 0;
 LAB_80102f3c:
-        (**(code **)(**(int **)(iVar2 + 4) + 0x10))(camAction,0x10);
+        (**(code **)(**(int **)(handlerIndex + 4) + 0x10))(camAction,
+                                                            CAMCONTROL_ACTION_RECORD_SIZE);
       }
       fn_80023800(camAction);
     }
