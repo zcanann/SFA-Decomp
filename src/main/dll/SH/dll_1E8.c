@@ -61,7 +61,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
       }
       else {
         iVar2 = SHthorntail_chooseNextState(obj,runtime,obj->config);
-        runtime->behaviorState = iVar2;
+        runtime->behaviorState = (s8)iVar2;
       }
     }
     break;
@@ -77,7 +77,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
       }
       else {
         iVar2 = SHthorntail_chooseNextState(obj,runtime,obj->config);
-        runtime->behaviorState = iVar2;
+        runtime->behaviorState = (s8)iVar2;
       }
     }
     break;
@@ -94,7 +94,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
     runtime->comboTimer = runtime->comboTimer -
                           (float)lbl_803DB410;
     if (runtime->comboTimer <= lbl_803E5418) {
-      if (runtime->comboRepeatCount < '\x01') {
+      if ((s8)runtime->comboRepeatCount <= 0) {
         runtime->behaviorState = SHTHORNTAIL_STATE_CLOSE_ATTACK_RECOVER;
       }
       else {
@@ -107,7 +107,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
       runtime->behaviorState = SHTHORNTAIL_STATE_CLOSE_ATTACK_WAIT;
       iVar2 = fn_800221A0(SHTHORNTAIL_CLOSE_ATTACK_WAIT_MIN,SHTHORNTAIL_CLOSE_ATTACK_WAIT_MAX);
       runtime->comboTimer = (float)iVar2;
-      runtime->comboRepeatCount = runtime->comboRepeatCount + -1;
+      runtime->comboRepeatCount--;
     }
     break;
   case SHTHORNTAIL_STATE_CLOSE_ATTACK_RECOVER:
