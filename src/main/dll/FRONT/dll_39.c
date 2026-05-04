@@ -80,6 +80,10 @@ extern int iRam803de2bc;
 extern char s_Fail_to_prepare_8031afec[];
 extern char s_n_attractmode_c_8031afdc[];
 
+#define NATTRACTMODE_PREPARE_FAIL_LINE 0x33E
+#define sNAttractModeSourceFile s_n_attractmode_c_8031afdc
+#define sNAttractModeFailToPrepare s_Fail_to_prepare_8031afec
+
 /*
  * --INFO--
  *
@@ -441,8 +445,8 @@ void FUN_8011656c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                              ,uVar5,uVar6,uVar7,in_r9,in_r10);
         if (!bVar3) {
           FUN_80242fc0(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                       s_n_attractmode_c_8031afdc,0x33e,s_Fail_to_prepare_8031afec,uVar5,uVar6,uVar7
-                       ,in_r9,in_r10);
+                       sNAttractModeSourceFile,NATTRACTMODE_PREPARE_FAIL_LINE,
+                       sNAttractModeFailToPrepare,uVar5,uVar6,uVar7,in_r9,in_r10);
         }
         FUN_80118524();
         DAT_803de288 = 2;
