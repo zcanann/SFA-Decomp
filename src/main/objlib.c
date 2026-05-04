@@ -865,11 +865,13 @@ void ObjHits_SyncObjectPosition(u32 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int ObjHits_AllocObjectState(int param_1,uint param_2)
 {
   uint uVar1;
   int iVar2;
-  
+
   uVar1 = FUN_800177d4(param_2);
   *(uint *)(param_1 + 0x54) = uVar1;
   iVar2 = *(int *)(param_1 + 0x54);
@@ -880,6 +882,8 @@ int ObjHits_AllocObjectState(int param_1,uint param_2)
   }
   return uVar1 + 0xb8;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2047,6 +2051,8 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param)
 {
   uint count;
@@ -2054,7 +2060,7 @@ uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param)
   void *senderObj;
   ObjMsgQueue *queue;
   ObjMsgEntry *entry;
-  
+
   dstObj = obj;
   senderObj = sender;
   if (dstObj != (void *)0x0) {
@@ -2076,6 +2082,8 @@ uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param)
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
