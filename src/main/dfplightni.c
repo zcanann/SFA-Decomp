@@ -84,9 +84,7 @@ void dfplightni_render(u8 *obj)
         fn_8008F904(state->effectHandle);
       }
       if (eventActive != 0) {
-        if (state->timer >= lbl_803E64E0 +
-               (float)(dfplightni_u32AsDouble((u32)((int)state->delayFrames ^ 0x80000000)) -
-                       lbl_803E64F0)) {
+        if (state->timer >= lbl_803E64E0 + (f32)(s32)state->delayFrames) {
           state->timer = lbl_803E64E4;
         }
       }
