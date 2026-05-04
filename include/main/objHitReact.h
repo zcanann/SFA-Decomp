@@ -6,6 +6,27 @@
 typedef struct ObjHitReactEntry ObjHitReactEntry;
 typedef struct ObjAnimComponent ObjAnimComponent;
 
+typedef struct ObjHitReactEffectOrigin {
+  undefined4 m[4];
+} ObjHitReactEffectOrigin;
+
+typedef struct ObjHitReactEffectPos {
+  s16 x;
+  s16 y;
+  s16 z;
+  u8 pad06[2];
+  f32 scale;
+} ObjHitReactEffectPos;
+
+typedef struct ObjHitReactEffectVTable {
+  code pad00;
+  code spawn;
+} ObjHitReactEffectVTable;
+
+typedef struct ObjHitReactEffectHandle {
+  ObjHitReactEffectVTable *vtable;
+} ObjHitReactEffectHandle;
+
 typedef struct ObjHitReactMoveEntry {
   s16 moveId;
   s16 firstEntryIndex;

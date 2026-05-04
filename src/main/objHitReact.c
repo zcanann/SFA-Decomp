@@ -11,7 +11,6 @@ extern void fn_80013E2C(void *handle);
 extern int *fn_8002E0FC(undefined *param_1,undefined *param_2);
 extern void fn_8009A1DC(double param_1,int obj,undefined2 *pos,u32 count,int *param_5);
 
-typedef struct ObjHitReactEffectOrigin { undefined4 m[4]; } ObjHitReactEffectOrigin;
 extern ObjHitReactEffectOrigin lbl_802C1B00;
 extern char sObjHitReactHitstateFrameString[];
 extern char sObjHitReactSphereOverflowString[];
@@ -24,23 +23,6 @@ extern f32 lbl_803DE918;
 extern f32 lbl_803DE964;
 extern int gObjHitReactResetObjectCount;
 extern int *gObjHitReactResetObjects;
-
-typedef struct ObjHitReactEffectPos {
-  s16 x;
-  s16 y;
-  s16 z;
-  u8 pad06[2];
-  f32 scale;
-} ObjHitReactEffectPos;
-
-typedef struct ObjHitReactEffectVTable {
-  code pad00;
-  code spawn;
-} ObjHitReactEffectVTable;
-
-typedef struct ObjHitReactEffectHandle {
-  ObjHitReactEffectVTable *vtable;
-} ObjHitReactEffectHandle;
 
 extern ObjHitReactEffectHandle *fn_80013EC8(u32 effectId,u32 count);
 
