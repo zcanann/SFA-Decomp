@@ -35,9 +35,9 @@ undefined4
 ObjHits_RecordPositionHit(double param_1,double param_2,double param_3,int param_4,int param_5,char param_6,
             undefined param_7,undefined param_8);
 void ObjHits_AddContactObject(int param_1,int param_2);
-int ObjHits_GetPriorityHitWithPosition(int param_1,undefined4 *param_2,int *param_3,uint *param_4,undefined4 *param_5,
-                undefined4 *param_6,undefined4 *param_7);
-int ObjHits_GetPriorityHit(int param_1,undefined4 *param_2,int *param_3,uint *param_4);
+int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *outSphereIndex,
+                uint *outHitVolume,float *outHitPosX,float *outHitPosY,float *outHitPosZ);
+int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,uint *outHitVolume);
 void ObjHitReact_UpdateResetObjects(undefined4 param_1,undefined4 param_2,undefined4 param_3,
                                     int param_4,undefined4 param_5,int param_6,
                                     undefined4 param_7,undefined4 param_8);

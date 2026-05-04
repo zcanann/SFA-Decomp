@@ -1207,8 +1207,8 @@ void ObjHits_AddContactObject(int param_1,int param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-int ObjHits_GetPriorityHitWithPosition(int param_1,undefined4 *param_2,int *param_3,uint *param_4,undefined4 *param_5,
-                undefined4 *param_6,undefined4 *param_7)
+int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *outSphereIndex,
+                uint *outHitVolume,float *outHitPosX,float *outHitPosY,float *outHitPosZ)
 {
   char cVar1;
   int iVar2;
@@ -1217,7 +1217,7 @@ int ObjHits_GetPriorityHitWithPosition(int param_1,undefined4 *param_2,int *para
   char cVar5;
   char cVar6;
 
-  iVar3 = *(int *)(param_1 + 0x54);
+  iVar3 = *(int *)(obj + 0x54);
   if (iVar3 != 0) {
     iVar2 = (int)*(char *)(iVar3 + 0x71);
     if (iVar2 != 0) {
@@ -1236,20 +1236,20 @@ int ObjHits_GetPriorityHitWithPosition(int param_1,undefined4 *param_2,int *para
         } while (iVar2 != 0);
       }
       if (cVar5 != -1) {
-        if (param_2 != (undefined4 *)0x0) {
-          *param_2 = *(undefined4 *)(iVar3 + cVar5 * 4 + 0x7c);
+        if (outHitObject != (undefined4 *)0x0) {
+          *outHitObject = *(undefined4 *)(iVar3 + cVar5 * 4 + 0x7c);
         }
-        if (param_3 != (int *)0x0) {
-          *param_3 = (int)*(char *)(iVar3 + cVar5 + 0x72);
+        if (outSphereIndex != (int *)0x0) {
+          *outSphereIndex = (int)*(char *)(iVar3 + cVar5 + 0x72);
         }
-        if (param_4 != (uint *)0x0) {
-          *param_4 = (uint)*(byte *)(iVar3 + cVar5 + 0x78);
+        if (outHitVolume != (uint *)0x0) {
+          *outHitVolume = (uint)*(byte *)(iVar3 + cVar5 + 0x78);
         }
-        if (param_5 != (undefined4 *)0x0) {
+        if (outHitPosX != (float *)0x0) {
           iVar3 = iVar3 + cVar5 * 4;
-          *param_5 = *(undefined4 *)(iVar3 + 0x88);
-          *param_6 = *(undefined4 *)(iVar3 + 0x94);
-          *param_7 = *(undefined4 *)(iVar3 + 0xa0);
+          *outHitPosX = *(float *)(iVar3 + 0x88);
+          *outHitPosY = *(float *)(iVar3 + 0x94);
+          *outHitPosZ = *(float *)(iVar3 + 0xa0);
         }
         return (int)cVar6;
       }
@@ -2237,8 +2237,8 @@ int ObjHits_PollPriorityHitWithCooldown(int param_1,float *param_2,undefined4 *p
       iVar1 = ObjHits_GetPriorityHit(param_1,param_3,(int *)0x0,(uint *)0x0);
     }
     else {
-      iVar1 = ObjHits_GetPriorityHitWithPosition(param_1,param_3,(int *)0x0,(uint *)0x0,(undefined4 *)param_4,
-                           (undefined4 *)(param_4 + 1),(undefined4 *)(param_4 + 2));
+      iVar1 = ObjHits_GetPriorityHitWithPosition(param_1,param_3,(int *)0x0,(uint *)0x0,param_4,
+                           param_4 + 1,param_4 + 2);
       if (iVar1 != 0) {
         FUN_80053ab4(param_1,param_4);
       }
@@ -2287,8 +2287,8 @@ void ObjHits_PollPriorityHitEffectWithCooldown(undefined4 param_1,undefined4 par
   uVar1 = (uint)((ulonglong)uVar4 >> 0x20);
   *param_7 = *param_7 - lbl_803DC074;
   iVar2 = ObjHits_GetPriorityHitWithPosition((int)uVar1, (undefined4 *)&local_58, (int *)0x0, (uint *)0x0,
-                       (undefined4 *)&local_38,
-                       &uStack_34, (undefined4 *)local_30);
+                       &local_38,
+                       (float *)&uStack_34, local_30);
   if ((((*param_7 <= lbl_803DF5F0) && (iVar2 != 0)) && ((*param_7 = lbl_803DF5F8), (iVar2 != 0x1a))) &&
       (iVar2 != 5)) {
     local_38 = local_38 + lbl_803DDA58;

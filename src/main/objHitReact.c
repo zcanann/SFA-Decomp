@@ -3,13 +3,12 @@
 #include "main/objHitReact.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/objlib.h"
 
 extern int Sfx_IsPlayingFromObject(int obj,u16 sfxId);
 extern void Sfx_PlayFromObject(int obj,u16 sfxId);
 extern void fn_80013E2C(void *handle);
 extern int *fn_8002E0FC(undefined *param_1,undefined *param_2);
-extern int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *param_2,int *sphereIndex,uint *param_4,float *hitPos,
-                       undefined *param_6,float *param_7);
 extern void fn_8009A1DC(double param_1,int obj,undefined2 *pos,u32 count,int *param_5);
 
 extern undefined4 lbl_802C1B00[4];
@@ -72,9 +71,9 @@ int objHitReact_update(int obj,ObjHitReactEntry *entries,u32 entryCount,u32 reac
   ObjHitReactEntry *reactEntry;
   undefined4 effectOrigin[4];
   ObjHitReactEffectPos effectPos;
-  float local_28;
-  undefined local_24[4];
-  float hitNormalY;
+  float hitPosX;
+  float hitPosY;
+  float hitPosZ;
   int sphereIndex;
 
   objAnim = (ObjAnimComponent *)obj;
@@ -91,11 +90,11 @@ int objHitReact_update(int obj,ObjHitReactEntry *entries,u32 entryCount,u32 reac
       reactionState = 0;
     }
   }
-  collisionType = ObjHits_GetPriorityHitWithPosition(obj,0,&sphereIndex,0,&local_28,local_24,&hitNormalY);
+  collisionType = ObjHits_GetPriorityHitWithPosition(obj,0,&sphereIndex,0,&hitPosX,&hitPosY,&hitPosZ);
   if (collisionType != 0) {
     animDef = ObjAnim_GetAnimDef(objAnim);
-    local_28 = local_28 + lbl_803DCDD8;
-    hitNormalY = hitNormalY + lbl_803DCDDC;
+    hitPosX = hitPosX + lbl_803DCDD8;
+    hitPosZ = hitPosZ + lbl_803DCDDC;
     effectPos.scale = lbl_803DE918;
     effectPos.x = 0;
     effectPos.y = 0;
