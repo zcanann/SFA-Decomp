@@ -146,7 +146,8 @@ void sfxplayer_init(int obj,int config)
   gSfxplayerEffectHandles[7] = 0;
   fn_8001467C();
   if (GameBit_Get(*(s16 *)state) != 0) {
-    *(u8 *)(state + 8) = *(u8 *)(state + 8) | 0x20;
+    struct { u8 hi : 2; u8 mid : 1; u8 lo : 5; } *flags = (void *)(state + 8);
+    flags->mid = 1;
   }
   *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x6000;
 }
