@@ -2090,11 +2090,13 @@ uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjMsg_AllocQueue(void *obj,int capacity)
 {
   int queueBytes;
   ObjMsgQueue *queue;
-  
+
   if (((capacity != 0) && (obj != (void *)0x0)) &&
       (*(ObjMsgQueue **)((byte *)obj + 0xdc) == (ObjMsgQueue *)0x0)) {
     queueBytes = (capacity * 3 + 2) * 4;
@@ -2105,6 +2107,8 @@ void ObjMsg_AllocQueue(void *obj,int capacity)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
