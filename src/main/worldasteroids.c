@@ -28,10 +28,9 @@ static inline WorldAsteroidsState *worldasteroids_getState(u8 *obj)
   return *(WorldAsteroidsState **)(obj + 0xb8);
 }
 
-static inline f64 worldasteroids_s32AsDouble(s32 value)
+static inline f32 worldasteroids_s32AsFloat(s32 value)
 {
-  u64 bits = CONCAT44(0x43300000,(u32)(value ^ 0x80000000));
-  return *(f64 *)&bits - lbl_803E65D8;
+  return (f32)(s32)value;
 }
 
 int worldasteroids_getExtraSize(void)
@@ -84,18 +83,18 @@ void worldasteroids_update(s16 *obj)
   state->orbitAngle += 0x9c4 / state->orbitRadius;
   orbitCos = fn_80293EAC(3000);
   orbitSin = angleFn((u16)state->orbitAngle);
-  radius = (float)worldasteroids_s32AsDouble(state->orbitRadius);
+  radius = worldasteroids_s32AsFloat(state->orbitRadius);
   orbitScale = radius * orbitSin;
   *(f32 *)(obj + 6) = orbitScale * orbitCos + *(f32 *)(anchor + 0xc);
   orbitSin = angleFn(3000);
   orbitScale = angleFn((u16)state->orbitAngle) *
-               (float)worldasteroids_s32AsDouble(state->orbitRadius);
+               worldasteroids_s32AsFloat(state->orbitRadius);
   *(f32 *)(obj + 8) =
       orbitScale * orbitSin + (*(f32 *)(anchor + 0x10) +
-                               (float)worldasteroids_s32AsDouble(state->heightOffset));
+                               worldasteroids_s32AsFloat(state->heightOffset));
   orbitCos = fn_80293EAC((u16)state->orbitAngle);
   *(f32 *)(obj + 10) =
-      (float)worldasteroids_s32AsDouble(state->orbitRadius) * orbitCos + *(f32 *)(anchor + 0x14);
+      worldasteroids_s32AsFloat(state->orbitRadius) * orbitCos + *(f32 *)(anchor + 0x14);
   return;
 }
 
@@ -139,10 +138,10 @@ void worldasteroids_init(u8 *obj)
   randomValue = fn_800221A0(-0x7fff,0x7fff);
   state->orbitAngle = randomValue;
   state->orbitRadius =
-      (s16)(int)((float)worldasteroids_s32AsDouble(radiusSeed) * angleFn((u16)baseAngle) +
+      (s16)(int)(worldasteroids_s32AsFloat(radiusSeed) * angleFn((u16)baseAngle) +
                  lbl_803E65F0);
   state->heightOffset =
-      (s16)(int)((float)worldasteroids_s32AsDouble(radiusSeed) * fn_80293EAC((u16)baseAngle));
+      (s16)(int)(worldasteroids_s32AsFloat(radiusSeed) * fn_80293EAC((u16)baseAngle));
   return;
 }
 #pragma peephole reset
