@@ -11,7 +11,7 @@ extern undefined4 FUN_80017640();
 extern undefined4 FUN_80017700();
 extern undefined4 FUN_80017704();
 extern double FUN_80017714();
-extern float FUN_8001771c(float *param_1,float *param_2);
+extern float fn_80021704(float *param_1,float *param_2);
 extern int FUN_80017730();
 extern undefined4 FUN_8001774c();
 extern uint FUN_80017760();
@@ -23,12 +23,12 @@ extern undefined4 FUN_80017a50();
 extern undefined4 FUN_80017a54();
 extern void *fn_8002B9EC(void);
 extern undefined4 FUN_80017ac0();
-extern int FUN_80017b00();
+extern int fn_8002E0FC();
 extern void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2);
 extern undefined4 FUN_80045328();
 extern undefined4 FUN_80053ab4();
 extern int * fn_8005B11C();
-extern undefined8 FUN_80135810();
+extern void fn_801378A8(const char *fmt, ...);
 extern undefined4 FUN_80247618();
 extern double FUN_802480c0();
 extern undefined8 FUN_80286834();
@@ -94,7 +94,7 @@ extern int iRam803dd854;
 
 #define gObjHitsResetObjectCount DAT_803dd860
 #define gObjHitsResetObjects DAT_803dd864
-extern char s_objmsg___x___overflow_in_object___802cba20[];
+extern char lbl_802CAE48[];
 
 typedef struct ObjMsgEntry {
   uint message;
@@ -146,7 +146,7 @@ void FUN_800356f0(int param_1)
   undefined4 uStack_18;
   undefined4 auStack_14 [4];
   
-  piVar2 = (int *)FUN_80017b00(&uStack_18,auStack_14);
+  piVar2 = (int *)fn_8002E0FC(&uStack_18,auStack_14);
   gObjHitsResetObjectCount = 0;
   if (0 < param_1) {
     do {
@@ -1998,13 +1998,13 @@ void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sende
   int objectCount;
   void *obj;
 
-  objects = (int *)FUN_80017b00(&objectIndex,&objectCount);
+  objects = (int *)fn_8002E0FC(&objectIndex,&objectCount);
   maskedFlags = flags & 0xffff;
   for (; objectIndex < objectCount; objectIndex = objectIndex + 1) {
     obj = (void *)objects[objectIndex];
     if (((obj != sender) || ((maskedFlags & 1) == 0)) &&
         ((*(short *)((byte *)obj + 0x46) == (short)targetId || ((maskedFlags & 2) != 0))) &&
-        ((FUN_8001771c((float *)((byte *)sender + 0x18),(float *)((byte *)obj + 0x18)) < radius &&
+        ((fn_80021704((float *)((byte *)sender + 0x18),(float *)((byte *)obj + 0x18)) < radius &&
           (obj != (void *)0x0)) &&
          (queue = *(ObjMsgQueue **)((byte *)obj + 0xdc), queue != (ObjMsgQueue *)0x0))) {
       count = queue->count;
@@ -2015,7 +2015,7 @@ void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sende
         entry->param = param;
         queue->count = queue->count + 1;
       } else {
-        FUN_80135810(s_objmsg___x___overflow_in_object___802cba20,message,
+        fn_801378A8(lbl_802CAE48,message,
                      (int)*(short *)((byte *)obj + 0x44),(int)*(short *)((byte *)obj + 0x46),
                      (int)*(short *)((byte *)sender + 0x46));
       }
@@ -2039,6 +2039,8 @@ void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sende
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint param)
 {
   int *objects;
@@ -2050,7 +2052,7 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
   int objectCount;
   void *obj;
   
-  objects = (int *)FUN_80017b00(&objectIndex,&objectCount);
+  objects = (int *)fn_8002E0FC(&objectIndex,&objectCount);
   maskedFlags = flags & 0xffff;
   if ((maskedFlags & 4) != 0) {
     for (; objectIndex < objectCount; objectIndex = objectIndex + 1) {
@@ -2067,7 +2069,7 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
           entry->param = param;
           queue->count = queue->count + 1;
         } else {
-          FUN_80135810(s_objmsg___x___overflow_in_object___802cba20,message,
+          fn_801378A8(lbl_802CAE48,message,
                        (int)*(short *)((byte *)obj + 0x44),(int)*(short *)((byte *)obj + 0x46),
                        (int)*(short *)((byte *)sender + 0x46));
         }
@@ -2089,7 +2091,7 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
           entry->param = param;
           queue->count = queue->count + 1;
         } else {
-          FUN_80135810(s_objmsg___x___overflow_in_object___802cba20,message,
+          fn_801378A8(lbl_802CAE48,message,
                        (int)*(short *)((byte *)obj + 0x44),(int)*(short *)((byte *)obj + 0x46),
                        (int)*(short *)((byte *)sender + 0x46));
         }
@@ -2098,6 +2100,8 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2124,22 +2128,23 @@ uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param)
 
   dstObj = obj;
   senderObj = sender;
-  if (dstObj != (void *)0x0) {
-    queue = *(ObjMsgQueue **)((byte *)dstObj + 0xdc);
-    if (queue != (ObjMsgQueue *)0x0) {
-      count = queue->count;
-      if (count < queue->capacity) {
-        entry = &queue->entries[count];
-        entry->message = message;
-        entry->sender = (uint)senderObj;
-        entry->param = param;
-        queue->count = queue->count + 1;
-        return queue->count;
-      }
-      FUN_80135810(s_objmsg___x___overflow_in_object___802cba20,message,
-                   (int)*(short *)((byte *)dstObj + 0x44),(int)*(short *)((byte *)dstObj + 0x46),
-                   (int)*(short *)((byte *)senderObj + 0x46));
+  if (dstObj == (void *)0x0) {
+    return 0;
+  }
+  queue = *(ObjMsgQueue **)((byte *)dstObj + 0xdc);
+  if (queue != (ObjMsgQueue *)0x0) {
+    count = queue->count;
+    if (count < queue->capacity) {
+      entry = &queue->entries[count];
+      entry->message = message;
+      entry->sender = (uint)senderObj;
+      entry->param = param;
+      queue->count = queue->count + 1;
+      return queue->count;
     }
+    fn_801378A8(lbl_802CAE48,message,
+                 (int)*(short *)((byte *)dstObj + 0x44),(int)*(short *)((byte *)dstObj + 0x46),
+                 (int)*(short *)((byte *)senderObj + 0x46));
   }
   return 0;
 }
@@ -2659,7 +2664,7 @@ void ObjList_FindNearestObjectByDefNo(undefined4 param_1,undefined4 param_2,floa
   fStack_4 = (float)in_ps31_1;
   uVar7 = FUN_8028683c();
   iVar1 = (int)((ulonglong)uVar7 >> 0x20);
-  iVar2 = FUN_80017b00(local_34,&local_38);
+  iVar2 = fn_8002E0FC(local_34,&local_38);
   *param_3 = *param_3 * *param_3;
   if ((int)uVar7 == -1) {
     piVar4 = (int *)(iVar2 + local_34[0] * 4);
@@ -2709,7 +2714,7 @@ undefined4 ObjList_ContainsObject(int param_1)
   int local_18;
   int local_14 [4];
 
-  piVar1 = (int *)FUN_80017b00(local_14,&local_18);
+  piVar1 = (int *)fn_8002E0FC(local_14,&local_18);
   local_14[0] = 0;
   while( true ) {
     if (local_18 <= local_14[0]) {

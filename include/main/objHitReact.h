@@ -30,7 +30,7 @@ struct ObjHitReactEntry {
   s16 hitSfxB;
   s16 reactionAnim;
   u8 pad06[2];
-  s8 hitFxMode;
+  u8 hitFxMode;
   u8 pad09[3];
   f32 cooldown;
   u8 pad10[4];
