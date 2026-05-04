@@ -726,7 +726,7 @@ extern s16 lbl_803DD798;
 extern s8  lbl_803DD8F0;
 extern s16 lbl_803DD8F2;
 extern s8  lbl_803DD8F4;
-extern u8  lbl_803DD8E8;
+extern s8  lbl_803DD8E8;
 extern u8  lbl_803DD8F8;
 extern u8  lbl_803DD8F9;
 extern s16 lbl_803DD90C;
@@ -738,9 +738,13 @@ void fn_8012FDB8(u8 v) { lbl_803DD789 = v; }
 void fn_8012FDC0(void) { lbl_803DD788 = 60; }
 void fn_8012FDCC(s16 v) { lbl_803DD798 = v; }
 s32  fn_8012FECC(void) { return lbl_803DD8F0; }
-void fn_8012FED8(s8 v) { lbl_803DD8E8 = v; }
+#pragma peephole off
+void fn_8012FED8(int v) { lbl_803DD8E8 = (s8)v; }
+#pragma peephole reset
 void fn_8012FEE4(void) {}
-void fn_80130028(s8 v) { lbl_803DD8F4 = v; }
+#pragma peephole off
+void fn_80130028(int v) { lbl_803DD8F4 = (s8)v; }
+#pragma peephole reset
 #pragma scheduling off
 #pragma peephole off
 void fn_801300E8(int v) { lbl_803DD8F2 = (s16)v; lbl_803DD8F0 = 0; lbl_803DD8F4 = -1; }
@@ -754,5 +758,7 @@ u8   fn_801306D8(void) { return (u8)lbl_803DD90E; }
 void fn_8013082C(int idx, s8 v) { *(s8*)(lbl_803A9458 + idx * 60 + 0x1e) = v; }
 s32  fn_80130848(int idx) { return *(s8*)(lbl_803A9458 + idx * 60 + 0x1e); }
 void fn_80130864(u8 v) { lbl_803DD90C = v; }
-void fn_80130870(s8 v) { lbl_803DD912 = v; }
+#pragma peephole off
+void fn_80130870(int v) { lbl_803DD912 = (s8)v; }
+#pragma peephole reset
 s32  fn_8013087C(void) { return lbl_803DD912; }
