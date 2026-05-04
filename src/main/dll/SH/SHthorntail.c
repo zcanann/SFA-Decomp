@@ -59,33 +59,33 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
       return;
     }
     if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_EVENT_PAUSE) {
-      Sfx_PlayFromObject(0,0x409);
+      Sfx_PlayFromObject(0,SHTHORNTAIL_EVENT_RESUME_VOLUME_ID);
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      randomTime = fn_800221A0(1000,2000);
+      randomTime = fn_800221A0(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
       runtime->idleTimer = (float)randomTime;
     }
     runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
     break;
   case SHTHORNTAIL_LOCOMOTION_7:
     if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE2_EVENT) {
-      triggerEventId = GameBit_Get(0x1a0);
+      triggerEventId = GameBit_Get(SHTHORNTAIL_ROOT_MODE2_TRIGGER_SELECTOR_GAMEBIT);
       triggerIsSet = GameBit_Get(triggerEventId);
       if (triggerIsSet == 0) {
         return;
       }
-      (*lbl_803DCAAC)->setAnimEvent((int)obj->animObjId,3,0);
+      (*lbl_803DCAAC)->setAnimEvent((int)obj->animObjId,SHTHORNTAIL_ROOT_MODE2_TRIGGER_ANIM_EVENT,0);
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      randomTime = fn_800221A0(1000,2000);
+      randomTime = fn_800221A0(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
       runtime->idleTimer = (float)randomTime;
     }
     else {
-      triggerIsSet = GameBit_Get(0x1a0);
+      triggerIsSet = GameBit_Get(SHTHORNTAIL_ROOT_MODE2_TRIGGER_SELECTOR_GAMEBIT);
       if ((triggerIsSet == 0) &&
           (objectTriggerIsSet = ObjTrigger_IsSet((int)obj), objectTriggerIsSet != 0)) {
         runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING;
         runtime->behaviorState = SHTHORNTAIL_STATE_ROOT_MODE2_EVENT;
-        (*lbl_803DCAAC)->setAnimEvent((int)obj->animObjId,3,1);
-        GameBit_Set(0x199,1);
+        (*lbl_803DCAAC)->setAnimEvent((int)obj->animObjId,SHTHORNTAIL_ROOT_MODE2_TRIGGER_ANIM_EVENT,1);
+        GameBit_Set(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION7_GAMEBIT,1);
         return;
       }
     }

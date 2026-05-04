@@ -188,7 +188,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
     }
     break;
   case SHTHORNTAIL_LOCOMOTION_3:
-    gameBit = GameBit_Get(0x193);
+    gameBit = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION3_GAMEBIT);
     if (gameBit != 0) {
       runtime->impactSfxTable =
           levelControlTables + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC3_SET +
@@ -201,7 +201,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
     }
     break;
   case SHTHORNTAIL_LOCOMOTION_5:
-    gameBit = GameBit_Get(0x23d);
+    gameBit = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION5_PLAYER_GAMEBIT);
     if (gameBit == 0) {
       runtime->impactSfxTable =
           levelControlTables + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC5_CLEAR +
@@ -215,12 +215,12 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
       return;
     }
     if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_EVENT_PAUSE) {
-      Sfx_PlayFromObject(0,0x409);
+      Sfx_PlayFromObject(0,SHTHORNTAIL_EVENT_RESUME_VOLUME_ID);
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      randomTime = fn_800221A0(1000,2000);
+      randomTime = fn_800221A0(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
       runtime->idleTimer = (float)randomTime;
     }
-    gameBit = GameBit_Get(0x13f);
+    gameBit = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION6_GAMEBIT);
     if (gameBit == 0) {
       runtime->impactSfxTable = &gSHthorntailLevelControlMode0Locomotion6ImpactSfxTable;
     }
