@@ -58,6 +58,18 @@ static inline float int_float(s32 value)
     return (float)*(double*)&cvt - (float)lbl_803E7E60;
 }
 
+static inline float int_float_wide(s32 value)
+{
+    struct {
+        u32 hi;
+        u32 lo;
+    } cvt;
+
+    cvt.hi = 0x43300000;
+    cvt.lo = value ^ 0x80000000;
+    return (float)(*(double*)&cvt - lbl_803E7E60);
+}
+
 static inline int classify_float(float value)
 {
     u32 bits;
@@ -132,11 +144,11 @@ static inline float log2_kernel(float x, float* table)
         result = lbl_803DC650[0] * delta + result;
         result = delta + result;
         result = table[index] + result;
-        result = (int_float(exponent) + lbl_803E7E54) + result;
+        result = (int_float_wide(exponent) + lbl_803E7E54) + result;
         return result;
     }
 
-    return (int_float(exponent) + lbl_803E7E54) + table[index];
+    return (int_float_wide(exponent) + lbl_803E7E54) + table[index];
 }
 
 #undef bit_float
