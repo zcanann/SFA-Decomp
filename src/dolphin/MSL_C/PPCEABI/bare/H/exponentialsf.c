@@ -74,7 +74,7 @@ static inline int classify_float(float value)
 {
     u32 bits;
     s32 exponent;
-    u32 fraction;
+    s32 fraction;
 
     bits = float_bits(value);
     exponent = bits & 0x7F800000;
