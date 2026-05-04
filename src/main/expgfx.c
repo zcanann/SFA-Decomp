@@ -748,7 +748,7 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
   ExpgfxTableEntry *entryBase;
   int tableIndex;
   int freeIndex;
-  u16 refCount;
+  u32 refCount;
   
   tableIndex = 0;
   entryBase = Expgfx_GetTableEntry(0);
@@ -762,16 +762,15 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
         fn_801378A8(sExpgfxAddToTableUsageOverflow);
         return EXPGFX_INVALID_TABLE_INDEX;
       }
-      entry->refCount = refCount + 1;
+      entry->refCount++;
       return (int)(short)tableIndex;
     }
     entry = entry + 1;
   }
 
   freeIndex = 0;
-  entry = entryBase;
   for (; freeIndex < EXPGFX_POOL_COUNT; freeIndex++) {
-    if (entry->refCount == 0) {
+    if (entryBase->refCount == 0) {
       entry = &gExpgfxTableEntries[freeIndex];
       entry->refCount = 1;
       entry->textureOrResource = textureOrResource;
@@ -780,7 +779,7 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
       entry->slotType = slotType;
       return (int)(short)freeIndex;
     }
-    entry = entry + 1;
+    entryBase = entryBase + 1;
   }
 
   fn_801378A8(sExpgfxExpTabIsFull);
