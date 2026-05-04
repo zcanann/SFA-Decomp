@@ -2,14 +2,14 @@
 #include "main/dll/zBomb.h"
 
 extern undefined4 FUN_8000a380();
-extern int GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern void FUN_80026e00(int param_1,int param_2,float *param_3);
 extern undefined4 FUN_80097734();
 
 extern undefined4* DAT_803dcaa8;
 extern s32 lbl_80329B78[];
-extern f32 FLOAT_803db414;
+extern f32 lbl_803DB414;
 extern f32 FLOAT_803e648c;
 extern f32 FLOAT_803e6494;
 extern f32 FLOAT_803e64ac;
@@ -52,6 +52,8 @@ typedef enum DfpTargetBlockMode {
  * EN v1.0 Address: 0x80208B70
  * EN v1.0 Size: 524b
  */
+#pragma scheduling off
+#pragma peephole off
 void dfptargetblock_update(int param_1)
 {
   char cVar1;
@@ -87,7 +89,7 @@ void dfptargetblock_update(int param_1)
        (cVar1 = state->mode, cVar1 != DFPTARGETBLOCK_MODE_SETTLED)) {
       if ((cVar1 == DFPTARGETBLOCK_MODE_RAISING) || (cVar1 == DFPTARGETBLOCK_MODE_RESETTING)) {
         if (*(float *)(param_1 + 0x10) <= *(float *)(iVar4 + 0xc)) {
-          *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) + FLOAT_803db414;
+          *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) + lbl_803DB414;
           if (*(float *)(iVar4 + 0xc) <= *(float *)(param_1 + 0x10)) {
             *(float *)(param_1 + 0x10) = *(float *)(iVar4 + 0xc);
             state->mode = DFPTARGETBLOCK_MODE_ACTIVE;
@@ -96,7 +98,7 @@ void dfptargetblock_update(int param_1)
       }
       else if (cVar1 == DFPTARGETBLOCK_MODE_LOWERING) {
         if (*(float *)(iVar4 + 0xc) - FLOAT_803e64ac <= *(float *)(param_1 + 0x10)) {
-          *(float *)(param_1 + 0x10) = FLOAT_803e6494 * FLOAT_803db414 + *(float *)(param_1 + 0x10);
+          *(float *)(param_1 + 0x10) = FLOAT_803e6494 * lbl_803DB414 + *(float *)(param_1 + 0x10);
           fVar2 = *(float *)(iVar4 + 0xc) - fVar2;
           if (*(float *)(param_1 + 0x10) <= fVar2) {
             *(float *)(param_1 + 0x10) = fVar2;
@@ -106,9 +108,9 @@ void dfptargetblock_update(int param_1)
         }
       }
       else if (state->controlId != 0) {
-        (**(code **)(*DAT_803dcaa8 + 0x10))((double)FLOAT_803db414,param_1);
+        (**(code **)(*DAT_803dcaa8 + 0x10))((double)lbl_803DB414,param_1);
         (**(code **)(*DAT_803dcaa8 + 0x14))(param_1,state->controlId);
-        (**(code **)(*DAT_803dcaa8 + 0x18))((double)FLOAT_803db414,param_1,state->controlId);
+        (**(code **)(*DAT_803dcaa8 + 0x18))((double)lbl_803DB414,param_1,state->controlId);
       }
     }
   }
@@ -122,6 +124,11 @@ void dfptargetblock_update(int param_1)
  * EN v1.0 Address: 0x80208D7C
  * EN v1.0 Size: 600b
  */
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
 void dfptargetblock_init(int param_1,int param_2)
 {
   char cVar1;
@@ -189,6 +196,8 @@ void dfptargetblock_init(int param_1,int param_2)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void dfptargetblock_release(void)
 {
