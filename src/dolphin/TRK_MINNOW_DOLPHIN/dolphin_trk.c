@@ -1,10 +1,30 @@
 #include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk.h"
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/main_TRK.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/mem_TRK.h"
 #include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk_glue.h"
+#include "TRK_MINNOW_DOLPHIN/ppc/Generic/flush_cache.h"
 #include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
 
-extern u32 lc_base;
+static u32 lc_base;
 extern u32 _db_stack_addr;
+
+static u32 TRK_ISR_OFFSETS[15] = { PPC_SystemReset,
+	                               PPC_MachineCheck,
+	                               PPC_DataStorage,
+	                               PPC_InstructionStorage,
+	                               PPC_ExternalInterrupt,
+	                               PPC_Alignment,
+	                               PPC_Program,
+	                               PPC_FloatingPointUnavaiable,
+	                               PPC_Decrementer,
+	                               PPC_SystemCall,
+	                               PPC_Trace,
+	                               PPC_PerformanceMonitor,
+	                               PPC_InstructionAddressBreakpoint,
+	                               PPC_SystemManagementInterrupt,
+	                               PPC_ThermalManagementInterrupt };
+
+__declspec(section ".init") void __TRK_reset(void) { __TRK_copy_vectors(); }
 
 asm void InitMetroTRK()
 {
@@ -79,6 +99,29 @@ u32 TRKTargetTranslate(u32 param_0)
 	}
 
 	return param_0 & 0x3FFFFFFF | 0x80000000;
+}
+
+extern u8 gTRKInterruptVectorTable[];
+
+void TRK_copy_vector(u32 offset)
+{
+	void* destPtr = (void*)TRKTargetTranslate(offset);
+	TRK_memcpy(destPtr, gTRKInterruptVectorTable + offset, 0x100);
+	TRK_flush_cache(destPtr, 0x100);
+}
+
+void __TRK_copy_vectors(void)
+{
+	int i;
+	u32 mask;
+
+	mask = *(u32*)TRKTargetTranslate(0x44);
+
+	for (i = 0; i <= 14; ++i) {
+		if (mask & (1 << i)) {
+			TRK_copy_vector(TRK_ISR_OFFSETS[i]);
+		}
+	}
 }
 
 DSError TRKInitializeTarget()
