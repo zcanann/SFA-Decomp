@@ -19,10 +19,10 @@
  */
 
 
-extern char lbl_80319A60[];
+extern char sProjdfp1rDoNoLongerSupported[];
 extern void OSReport(const char *fmt, ...);
 #pragma scheduling off
 #pragma peephole off
-int fn_80100A58(void) { OSReport(lbl_80319A60); return -1; }
+int projdfp1r_doUnsupported(void) { OSReport(sProjdfp1rDoNoLongerSupported); return -1; }
 #pragma peephole reset
 #pragma scheduling reset

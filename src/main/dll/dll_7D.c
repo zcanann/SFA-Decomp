@@ -20,10 +20,10 @@
 
 
 
-extern char lbl_80319940[];
+extern char sProjteslaDoNoLongerSupported[];
 extern void OSReport(const char *fmt, ...);
 #pragma scheduling off
 #pragma peephole off
-int fn_80100978(void) { OSReport(lbl_80319940); return 0; }
+int projtesla_doUnsupported(void) { OSReport(sProjteslaDoNoLongerSupported); return 0; }
 #pragma peephole reset
 #pragma scheduling reset
