@@ -4,9 +4,9 @@ extern const float __one_over_F[];
 
 extern float lbl_803DC648;
 extern float lbl_803DC64C;
-extern float lbl_803DC650[];
-extern float lbl_803DC658;
-extern float lbl_803DC65C;
+__declspec(section ".sdata") extern float lbl_803DC650[];
+__declspec(section ".sdata") extern u32 lbl_803DC658;
+__declspec(section ".sdata") extern u32 lbl_803DC65C;
 extern const float lbl_803E7E50;
 extern const float lbl_803E7E54;
 extern const float lbl_803E7E58;
@@ -100,13 +100,17 @@ static inline float log2_kernel(float x, float* table)
     float result;
     float log_c0;
     float log_c1;
+    u32 log_c0_bits;
+    u32 log_c1_bits;
 
     bits = float_bits(x);
     fraction = bits & 0x007FFFFF;
     exponent = (bits >> 23) - 0x80;
     index = fraction >> 16;
-    log_c0 = lbl_803DC658;
-    log_c1 = lbl_803DC65C;
+    log_c0_bits = lbl_803DC658;
+    log_c1_bits = lbl_803DC65C;
+    log_c0 = bit_float(log_c0_bits);
+    log_c1 = bit_float(log_c1_bits);
 
     if ((bits & 0xFFFF) != 0) {
         u32 high_bits;
@@ -158,7 +162,8 @@ static inline float exp2_kernel(float x, float* table)
         return lbl_803E7E50;
     }
 
-    bits = (exponent + 127) << 23;
+    bits = exponent + 127;
+    bits <<= 23;
     scale = bit_float(bits);
 
     poly = fraction * table[137] + table[136];
