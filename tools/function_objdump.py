@@ -82,6 +82,8 @@ def main() -> None:
 
     objdump_path = repo_root / "build" / "binutils" / "powerpc-eabi-objdump.exe"
     if not objdump_path.is_file():
+        objdump_path = repo_root / "build" / "binutils" / "powerpc-eabi-objdump"
+    if not objdump_path.is_file():
         raise SystemExit(f"Missing objdump: {objdump_path}")
 
     unit = resolve_unit(load_units(config_path), args.unit)
