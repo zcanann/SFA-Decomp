@@ -421,6 +421,7 @@ void fn_80102A2C(f32 x,f32 y,f32 z)
   *(float *)((char *)lbl_803DD524 + 0x14) += z;
 }
 
+#pragma scheduling off
 void fn_80102A60(f32 x,f32 y,f32 z)
 {
   *(u8 *)((char *)lbl_803DD524 + 0x13d) = 1;
@@ -428,6 +429,7 @@ void fn_80102A60(f32 x,f32 y,f32 z)
   *(float *)((char *)lbl_803DD524 + 0xe0) = y;
   *(float *)((char *)lbl_803DD524 + 0xe4) = z;
 }
+#pragma scheduling reset
 
 void camcontrol_release(void *obj)
 {
