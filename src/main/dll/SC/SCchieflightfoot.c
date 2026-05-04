@@ -256,9 +256,7 @@ void sh_thorntail_update(SHthorntailObject *obj)
     }
     if (config->leashRadiusByte != '\0') {
       dVar11 = FUN_80017708((float *)(psVar2 + 0xc),(float *)&config->homePos);
-      uStack_34 = (uint)config->leashRadiusByte * (uint)config->leashRadiusByte ^ 0x80000000;
-      local_38 = 0x43300000;
-      if (((double)(float)((double)CONCAT44(0x43300000,uStack_34) - lbl_803E5428) < dVar11) &&
+      if (((double)(f32)(s32)((uint)config->leashRadiusByte * (uint)config->leashRadiusByte) < dVar11) &&
          (iVar9 = FUN_800575b4((double)(*(float *)(psVar2 + 0x54) * *(float *)(psVar2 + 4)),
                                (float *)(psVar2 + 6)), iVar9 == 0)) {
         iVar9 = FUN_80017730();
@@ -325,8 +323,7 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
   case SHTHORNTAIL_CONTROL_MODE_LEVEL_0:
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
     randomTime = fn_800221A0(1000,2000);
-    runtime->idleTimer =
-        (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
+    runtime->idleTimer = (f32)(s32)randomTime;
     break;
   case SHTHORNTAIL_CONTROL_MODE_LEVEL_1:
     runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_ACTIVE;
@@ -335,14 +332,12 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
   case SHTHORNTAIL_CONTROL_MODE_ROOT_2:
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
     randomTime = fn_800221A0(1000,2000);
-    runtime->idleTimer =
-        (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
+    runtime->idleTimer = (f32)(s32)randomTime;
     break;
   case SHTHORNTAIL_CONTROL_MODE_ROOT_3:
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
     randomTime = fn_800221A0(1000,2000);
-    runtime->idleTimer =
-        (float)((double)CONCAT44(0x43300000,randomTime ^ 0x80000000) - lbl_803E5428);
+    runtime->idleTimer = (f32)(s32)randomTime;
     break;
   }
   uStack_1c = config->initScale;
@@ -399,19 +394,13 @@ void SHthorntail_updateDustEffects(SHthorntailObject *obj)
   local_36 = 1;
   if ((runtime->dustEffectFlags & 4) != 0) {
     if (runtime->dustEffectTimer < lbl_803E5468) {
-      uStack_1c = fn_800221A0(0,0x1e0);
-      uStack_1c = uStack_1c ^ 0x80000000;
-      local_20 = 0x43300000;
-      if ((float)((double)CONCAT44(0x43300000,uStack_1c) - lbl_803E5490) <
+      if ((f32)(s32)fn_800221A0(0,0x1e0) <
           runtime->dustEffectTimer * lbl_803E546C) {
         (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
       }
     }
     else if (runtime->dustEffectTimer < lbl_803E5470) {
-      uStack_1c = fn_800221A0(0,0x1e0);
-      uStack_1c = uStack_1c ^ 0x80000000;
-      local_20 = 0x43300000;
-      if ((float)((double)CONCAT44(0x43300000,uStack_1c) - lbl_803E5490) <
+      if ((f32)(s32)fn_800221A0(0,0x1e0) <
           runtime->dustEffectTimer / lbl_803E5474) {
         (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
       }
@@ -422,10 +411,7 @@ void SHthorntail_updateDustEffects(SHthorntailObject *obj)
       runtime->dustEffectFlags = runtime->dustEffectFlags | 2;
     }
     else if (runtime->dustEffectTimer < lbl_803E5480) {
-      uStack_1c = fn_800221A0(0,0x1e0);
-      uStack_1c = uStack_1c ^ 0x80000000;
-      local_20 = 0x43300000;
-      if ((float)((double)CONCAT44(0x43300000,uStack_1c) - lbl_803E5490) <
+      if ((f32)(s32)fn_800221A0(0,0x1e0) <
           runtime->dustEffectTimer * lbl_803E546C) {
         (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
       }
