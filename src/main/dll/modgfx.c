@@ -4511,22 +4511,22 @@ s16 fn_8009FFF0(void) { return lbl_803DD288; }
 void fn_800A01B0(s16 x) { lbl_803DD28A = x; }
 
 /* OSReport(literal) wrapper. */
-extern char lbl_8030FDB8[];
+extern char sProjgfxReleaseDoNoLongerSupported[];
 extern void OSReport(const char *fmt, ...);
 #pragma scheduling off
 #pragma peephole off
-void fn_800A3AC0(void) { OSReport(lbl_8030FDB8); }
+void projgfx_release_doUnsupported(void) { OSReport(sProjgfxReleaseDoNoLongerSupported); }
 #pragma peephole reset
 #pragma scheduling reset
 
 /* OSReport-stub returns. */
 extern void OSReport(const char *fmt, ...);
-extern char lbl_8030FD5C[];
-extern char lbl_8030FD88[];
+extern char sProjgfxRayhitDoNoLongerSupported[];
+extern char sProjgfxSetzscaleDoNoLongerSupported[];
 #pragma scheduling off
 #pragma peephole off
-int fn_800A3A40(void) { OSReport(lbl_8030FD5C); return 0x0; }
-int fn_800A3A70(void) { OSReport(lbl_8030FD88); return 0x0; }
+int projgfx_rayhit_doUnsupported(void) { OSReport(sProjgfxRayhitDoNoLongerSupported); return 0x0; }
+int projgfx_setzscale_doUnsupported(void) { OSReport(sProjgfxSetzscaleDoNoLongerSupported); return 0x0; }
 #pragma peephole reset
 #pragma scheduling reset
 
