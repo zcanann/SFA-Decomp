@@ -20,10 +20,10 @@
 
 
 
-extern char lbl_80319788[];
+extern char sProjrobotfireDoNoLongerSupported[];
 extern void OSReport(const char *fmt, ...);
 #pragma scheduling off
 #pragma peephole off
-int fn_80100828(void) { OSReport(lbl_80319788); return -1; }
+int projrobotfire_doUnsupported(void) { OSReport(sProjrobotfireDoNoLongerSupported); return -1; }
 #pragma peephole reset
 #pragma scheduling reset

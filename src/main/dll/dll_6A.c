@@ -20,10 +20,10 @@
 
 
 
-extern char lbl_80319740[];
+extern char sProjenergise2DoNoLongerSupported[];
 extern void OSReport(const char *fmt, ...);
 #pragma scheduling off
 #pragma peephole off
-int fn_801007F0(void) { OSReport(lbl_80319740); return -1; }
+int projenergise2_doUnsupported(void) { OSReport(sProjenergise2DoNoLongerSupported); return -1; }
 #pragma peephole reset
 #pragma scheduling reset

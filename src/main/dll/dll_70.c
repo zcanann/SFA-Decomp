@@ -20,10 +20,10 @@
 
 
 
-extern char lbl_803197D0[];
+extern char sProjsquirt1DoNoLongerSupported[];
 extern void OSReport(const char *fmt, ...);
 #pragma scheduling off
 #pragma peephole off
-int fn_80100860(void) { OSReport(lbl_803197D0); return -1; }
+int projsquirt1_doUnsupported(void) { OSReport(sProjsquirt1DoNoLongerSupported); return -1; }
 #pragma peephole reset
 #pragma scheduling reset
