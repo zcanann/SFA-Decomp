@@ -2150,7 +2150,9 @@ void ObjHits_RegisterActiveHitVolumeObject(undefined4 param_1)
   int iVar2;
 
   iVar2 = 0;
-  for (piVar1 = (u32*)gObjHitsActiveHitVolumeObjects; (iVar2 < 5 && (*piVar1 != 0)); piVar1 = piVar1 + 1) {
+  piVar1 = (u32 *)gObjHitsActiveHitVolumeObjects;
+  while (iVar2 < 5 && *piVar1 != 0) {
+    piVar1 = piVar1 + 1;
     iVar2 = iVar2 + 1;
   }
   if (iVar2 == 5) {
