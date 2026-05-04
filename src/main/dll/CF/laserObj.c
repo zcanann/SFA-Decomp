@@ -5,17 +5,6 @@ extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern void fn_80041018(int obj);
 
-typedef struct LaserTriggerInterface {
-  u8 pad00[0x20];
-  int (*isEventReady)(int eventId);
-} LaserTriggerInterface;
-
-typedef struct LaserEventInterface {
-  u8 pad00[0x40];
-  int (*getMode)(int mapId);
-  void (*triggerEvent)(int eventId,int value);
-} LaserEventInterface;
-
 extern LaserTriggerInterface **lbl_803DCA68;
 extern LaserEventInterface **lbl_803DCAAC;
 
@@ -46,12 +35,13 @@ void laserObj_hitDetect(void)
 void laserObj_update(LaserObject *obj)
 {
   LaserState *state;
-  uint uVar1;
+  u32 secondarySequenceSet;
   int eventReady;
   int mode;
 
   if ((obj->state->sequenceLatched == '\0') &&
-     (uVar1 = GameBit_Get((int)obj->state->secondarySequenceId), uVar1 != 0)) {
+     (secondarySequenceSet = GameBit_Get((int)obj->state->secondarySequenceId),
+      secondarySequenceSet != 0)) {
     obj->statusFlags = (u8)(obj->statusFlags & ~LASER_OBJECT_STATUS_DISABLED);
   }
   else {
@@ -98,15 +88,15 @@ void laserObj_update(LaserObject *obj)
 void laserObj_init(LaserObject *obj,LaserObjectMapData *mapData)
 {
   LaserState *state;
-  uint uVar1;
+  u32 primarySequenceSet;
 
   state = obj->state;
   state->primarySequenceId = mapData->primarySequenceId;
   state->secondarySequenceId = mapData->secondarySequenceId;
   state->sequenceLatched = 0;
   obj->modeWord = (s16)(mapData->modeIndex << LASEROBJ_MODE_WORD_SHIFT);
-  uVar1 = GameBit_Get((int)state->primarySequenceId);
-  if (uVar1 != 0) {
+  primarySequenceSet = GameBit_Get((int)state->primarySequenceId);
+  if (primarySequenceSet != 0) {
     state->sequenceLatched = 1;
     obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_DISABLED);
   }

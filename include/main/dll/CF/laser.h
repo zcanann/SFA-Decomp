@@ -28,6 +28,17 @@ typedef struct LaserObject {
   LaserState *state;
 } LaserObject;
 
+typedef struct LaserTriggerInterface {
+  u8 pad00[0x20];
+  int (*isEventReady)(int eventId);
+} LaserTriggerInterface;
+
+typedef struct LaserEventInterface {
+  u8 pad00[0x40];
+  int (*getMode)(int mapId);
+  void (*triggerEvent)(int eventId,int value);
+} LaserEventInterface;
+
 #define LASER_OBJECT_STATUS_ACTIVE 0x01
 #define LASER_OBJECT_STATUS_DISABLED 0x08
 #define LASER_OBJECT_FLAGS_SEQUENCE_CONTROL 0x6000
@@ -45,6 +56,8 @@ typedef struct LaserObject {
 
 #define LASEROBJ_MAIN_SEQUENCE_A_EVENT 0x123
 #define LASEROBJ_MAIN_SEQUENCE_B_EVENT 0x83b
+
+extern char sLaserInitNoLongerSupported[];
 
 int laser_getExtraSizeUnsupported(void);
 int laser_func08(void);

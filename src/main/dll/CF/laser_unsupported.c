@@ -3,8 +3,6 @@
 #include "main/dll/CF/laser.h"
 #include "main/textblock.h"
 
-extern char sLaserInitNoLongerSupported[];
-
 int laser_getExtraSizeUnsupported(void)
 {
   return 0;
