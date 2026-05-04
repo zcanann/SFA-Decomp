@@ -800,41 +800,41 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
   animDef = bank->animDef;
   if ((animDef->moveCount != 0) &&
      (state = bank->currentState, iVar24 = (int)state, iVar24 != 0)) {
-    *(float *)(iVar24 + 0xc) = (float)(dVar31 * (double)*(float *)(iVar24 + 0x14));
-    if (*(short *)(iVar24 + 0x58) != 0) {
-      if ((*(byte *)(iVar24 + 99) & 8) != 0) {
-        *(undefined4 *)(iVar24 + 0x10) = *(undefined4 *)(iVar24 + 0xc);
+    state->step = (float)(dVar31 * (double)state->segmentLength);
+    if (state->eventCountdown != 0) {
+      if ((state->flags & 8) != 0) {
+        state->savedStep = state->step;
       }
-      *(float *)(iVar24 + 8) =
-           (float)((double)*(float *)(iVar24 + 0x10) * deltaTime + (double)*(float *)(iVar24 + 8));
+      state->progress =
+           (float)((double)state->savedStep * deltaTime + (double)state->progress);
       fVar4 = lbl_803DE8F0;
-      fVar3 = *(float *)(iVar24 + 0x18);
-      if (*(char *)(iVar24 + 0x61) == '\0') {
-        fVar4 = *(float *)(iVar24 + 8);
+      fVar3 = state->prevSegmentLength;
+      if (state->prevFrameType == '\0') {
+        fVar4 = state->progress;
         fVar5 = lbl_803DE8F0;
         if ((lbl_803DE8F0 <= fVar4) && (fVar5 = fVar4, fVar3 < fVar4)) {
           fVar5 = fVar3;
         }
-        *(float *)(iVar24 + 8) = fVar5;
+        state->progress = fVar5;
       }
       else {
-        if (*(float *)(iVar24 + 8) < lbl_803DE8F0) {
-          while (*(float *)(iVar24 + 8) < fVar4) {
-            *(float *)(iVar24 + 8) = *(float *)(iVar24 + 8) + fVar3;
+        if (state->progress < lbl_803DE8F0) {
+          while (state->progress < fVar4) {
+            state->progress = state->progress + fVar3;
           }
         }
-        if (fVar3 <= *(float *)(iVar24 + 8)) {
-          while (fVar3 <= *(float *)(iVar24 + 8)) {
-            *(float *)(iVar24 + 8) = *(float *)(iVar24 + 8) - fVar3;
+        if (fVar3 <= state->progress) {
+          while (fVar3 <= state->progress) {
+            state->progress = state->progress - fVar3;
           }
         }
       }
-      if ((*(byte *)(iVar24 + 99) & 2) == 0) {
+      if ((state->flags & 2) == 0) {
         uVar15 = (uint)-(float)((double)(float)((double)CONCAT44(0x43300000,
-                                                                 (uint)*(ushort *)(iVar24 + 0x5e)) -
+                                                                 (uint)state->eventStep) -
                                                lbl_803DE8E8) * deltaTime -
                                (double)(float)((double)CONCAT44(0x43300000,
-                                                                *(ushort *)(iVar24 + 0x58) ^
+                                                                state->eventCountdown ^
                                                                 0x80000000) - lbl_803DE900));
         fVar3 = lbl_803DE8F0;
         if ((-1 < (int)uVar15) &&
@@ -843,10 +843,10 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
           local_38 = (double)CONCAT44(0x43300000,uVar15);
           fVar3 = (float)(local_38 - lbl_803DE900);
         }
-        *(short *)(iVar24 + 0x58) = (short)(int)fVar3;
+        state->eventCountdown = (short)(int)fVar3;
       }
-      if (*(short *)(iVar24 + 0x58) == 0) {
-        *(undefined2 *)(iVar24 + 0x5c) = 0;
+      if (state->eventCountdown == 0) {
+        state->prevEventState = 0;
       }
     }
     fVar4 = objAnim->currentMoveProgress;
@@ -856,7 +856,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
     fVar5 = lbl_803DE8E0;
     if (objAnim->currentMoveProgress < lbl_803DE8E0) {
       if (objAnim->currentMoveProgress < lbl_803DE8F0) {
-        if (*(char *)(iVar24 + 0x60) == '\0') {
+        if (state->frameType == '\0') {
           objAnim->currentMoveProgress = lbl_803DE8F0;
         }
         else {
@@ -867,7 +867,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
         uVar18 = 1;
       }
     }
-    else if (*(char *)(iVar24 + 0x60) == '\0') {
+    else if (state->frameType == '\0') {
       objAnim->currentMoveProgress = lbl_803DE8E0;
       uVar18 = 1;
     }
