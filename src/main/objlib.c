@@ -62,7 +62,7 @@ extern ObjTriggerInterface **lbl_803DCA68;
 extern undefined4 DAT_803dd848;
 extern undefined4 DAT_803dd850;
 extern undefined4 DAT_803dd858;
-extern undefined4 DAT_803dd85c;
+extern undefined4 lbl_803DCBDC;
 extern undefined4 DAT_803dd860;
 extern undefined4 DAT_803dd864;
 extern undefined4 DAT_803dd870;
@@ -301,20 +301,18 @@ void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
   short sVar3;
 
   iVar1 = (int)*(char *)(*(int *)(param_1 + 0x50) + 0x55);
-  if (param_3 < iVar1) {
-    if (param_3 < 0) {
-      param_3 = 0;
-    }
-  }
-  else {
+  if (param_3 >= iVar1) {
     param_3 = iVar1 + -1;
+  }
+  else if (param_3 < 0) {
+    param_3 = 0;
   }
   if (*(char *)(param_2 + 0xb0) == param_3) {
     return;
   }
   iVar1 = 0;
   for (sVar3 = 0; sVar3 < 0x32; sVar3 = sVar3 + 1) {
-    piVar2 = (int *)(DAT_803dd85c + iVar1);
+    piVar2 = (int *)(lbl_803DCBDC + iVar1);
     if ((*piVar2 != 0) && (piVar2[2] == param_1)) {
       *piVar2 = 0;
     }
@@ -1385,22 +1383,22 @@ void ObjHits_ResetWorkBuffers(void)
   iVar1 = 0;
   iVar3 = 3;
   do {
-    *(undefined4 *)(DAT_803dd85c + iVar1) = 0;
-    *(undefined4 *)(DAT_803dd85c + iVar1 + 0x3c) = 0;
-    *(undefined4 *)(DAT_803dd85c + iVar1 + 0x78) = 0;
-    *(undefined4 *)(DAT_803dd85c + iVar1 + 0xb4) = 0;
-    *(undefined4 *)(DAT_803dd85c + iVar1 + 0xf0) = 0;
-    *(undefined4 *)(DAT_803dd85c + iVar1 + 300) = 0;
-    *(undefined4 *)(DAT_803dd85c + iVar1 + 0x168) = 0;
-    *(undefined4 *)(DAT_803dd85c + iVar1 + 0x1a4) = 0;
-    *(undefined4 *)(DAT_803dd85c + iVar1 + 0x1e0) = 0;
-    *(undefined4 *)(DAT_803dd85c + iVar1 + 0x21c) = 0;
-    *(undefined4 *)(DAT_803dd85c + iVar1 + 600) = 0;
-    *(undefined4 *)(DAT_803dd85c + iVar1 + 0x294) = 0;
-    *(undefined4 *)(DAT_803dd85c + iVar1 + 0x2d0) = 0;
-    *(undefined4 *)(DAT_803dd85c + iVar1 + 0x30c) = 0;
-    *(undefined4 *)(DAT_803dd85c + iVar1 + 0x348) = 0;
-    *(undefined4 *)(DAT_803dd85c + iVar1 + 900) = 0;
+    *(undefined4 *)(lbl_803DCBDC + iVar1) = 0;
+    *(undefined4 *)(lbl_803DCBDC + iVar1 + 0x3c) = 0;
+    *(undefined4 *)(lbl_803DCBDC + iVar1 + 0x78) = 0;
+    *(undefined4 *)(lbl_803DCBDC + iVar1 + 0xb4) = 0;
+    *(undefined4 *)(lbl_803DCBDC + iVar1 + 0xf0) = 0;
+    *(undefined4 *)(lbl_803DCBDC + iVar1 + 300) = 0;
+    *(undefined4 *)(lbl_803DCBDC + iVar1 + 0x168) = 0;
+    *(undefined4 *)(lbl_803DCBDC + iVar1 + 0x1a4) = 0;
+    *(undefined4 *)(lbl_803DCBDC + iVar1 + 0x1e0) = 0;
+    *(undefined4 *)(lbl_803DCBDC + iVar1 + 0x21c) = 0;
+    *(undefined4 *)(lbl_803DCBDC + iVar1 + 600) = 0;
+    *(undefined4 *)(lbl_803DCBDC + iVar1 + 0x294) = 0;
+    *(undefined4 *)(lbl_803DCBDC + iVar1 + 0x2d0) = 0;
+    *(undefined4 *)(lbl_803DCBDC + iVar1 + 0x30c) = 0;
+    *(undefined4 *)(lbl_803DCBDC + iVar1 + 0x348) = 0;
+    *(undefined4 *)(lbl_803DCBDC + iVar1 + 900) = 0;
     iVar1 = iVar1 + 0x3c0;
     iVar2 = iVar2 + 0x10;
     iVar3 = iVar3 + -1;
@@ -1409,7 +1407,7 @@ void ObjHits_ResetWorkBuffers(void)
   iVar1 = 0x32 - iVar2;
   if (iVar2 < 0x32) {
     do {
-      *(undefined4 *)(DAT_803dd85c + iVar3) = 0;
+      *(undefined4 *)(lbl_803DCBDC + iVar3) = 0;
       iVar3 = iVar3 + 0x3c;
       iVar1 = iVar1 + -1;
     } while (iVar1 != 0);
@@ -1455,7 +1453,7 @@ undefined4 ObjHitReact_GetResetObjects(undefined4 *param_1)
 void ObjHits_InitWorkBuffers(void)
 {
   DAT_803dd864 = FUN_80017830(200,0xe);
-  DAT_803dd85c = FUN_80017830(3000,0xe);
+  lbl_803DCBDC = FUN_80017830(3000,0xe);
   DAT_803dd858 = FUN_80017830(0x1900,0xe);
   DAT_803dd850 = FUN_80017830(0x400,0xe);
   iRam803dd854 = FUN_80017830(0x400,0xe);
