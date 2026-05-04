@@ -295,5 +295,7 @@ void fn_801DF9D0(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 
 /* call(x, N) wrappers. */
 #pragma scheduling off
+#pragma peephole off
 void fn_801DF980(int x) { ObjMsg_AllocQueue(x, 0x2); }
+#pragma peephole reset
 #pragma scheduling reset

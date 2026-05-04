@@ -48,6 +48,7 @@ void crcloudrace_free(void)
 
 #pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 void crcloudrace_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,
                         undefined4 param_4,undefined4 param_5,char visible)
 {
@@ -101,6 +102,7 @@ void crcloudrace_init(CrCloudRaceObject *obj)
   return;
 }
 
+#pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
 

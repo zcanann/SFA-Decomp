@@ -1194,5 +1194,7 @@ void cloudprisoncontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visibl
 
 /* call(x, N) wrappers. */
 #pragma scheduling off
+#pragma peephole off
 void cloudprisoncontrol_init(int x) { ObjMsg_AllocQueue(x, 0xa); }
+#pragma peephole reset
 #pragma scheduling reset

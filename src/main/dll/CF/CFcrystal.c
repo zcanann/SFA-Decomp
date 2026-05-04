@@ -456,5 +456,7 @@ void fn_80186B94(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3AF0;
 #pragma scheduling off
+#pragma peephole off
 void fn_8018741C(void) { fn_8003B8F4(lbl_803E3AF0); }
+#pragma peephole reset
 #pragma scheduling reset

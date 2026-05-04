@@ -587,7 +587,9 @@ int tumbleweedbush_func08(void) { return 0x0; }
 
 /* 16b chained patterns. */
 #pragma scheduling off
+#pragma peephole off
 void fn_80163980(int *obj) { u8 v = 0x7; *((u8*)((int**)obj)[0xb8/4] + 0x278) = v; }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* render-with-fn_8003B8F4 pattern. */

@@ -1822,12 +1822,14 @@ extern void* memset(void* dst, int val, u32 n);
 extern u8 lbl_80342CF8[0x58];
 extern u8 lbl_803DCBF0;
 #pragma scheduling off
+#pragma peephole off
 void ObjGroup_ClearAll(void)
 {
   memset(lbl_80342CF8, 0, 0x55);
   lbl_803DCBF0 = 0;
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -2309,6 +2311,7 @@ void ObjLink_DetachChild(int param_1,int param_2)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void ObjLink_AttachChild(int param_1,int param_2,ushort param_3)
 {
   u8 bVar1;
@@ -2324,6 +2327,7 @@ void ObjLink_AttachChild(int param_1,int param_2,ushort param_3)
   *(u8 *)(param_2 + 0xe5) = 0;
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -2971,8 +2975,10 @@ void FUN_80038bb0(char param_1,int param_2)
 
 extern u8 lbl_803DCC00;
 #pragma scheduling off
+#pragma peephole off
 void fn_80038F1C(int a, u8 b) {
     if ((u8)a != 0) return;
     lbl_803DCC00 = (u8)((lbl_803DCC00 & ~0x80) | ((b & 1) << 7));
 }
+#pragma peephole reset
 #pragma scheduling reset

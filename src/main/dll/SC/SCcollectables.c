@@ -369,5 +369,7 @@ int warpstone_func08(void)
 /* void f() { fn_X(N); } pattern. */
 extern void fn_80014948(s32);
 #pragma scheduling off
+#pragma peephole off
 void fn_801D70B4(void) { fn_80014948(0x1); }
+#pragma peephole reset
 #pragma scheduling reset

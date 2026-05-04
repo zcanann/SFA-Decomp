@@ -93,11 +93,15 @@ int nw_ice_getExtraSize(void) { return 0x4; }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
+#pragma peephole off
 void nw_animice_free(int x) { ObjGroup_RemoveObject(x, 0x3d); }
 void nw_ice_free(int x) { ObjGroup_RemoveObject(x, 0x3c); }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* call(x, N) wrappers. */
 #pragma scheduling off
+#pragma peephole off
 void nw_ice_init(int x) { ObjGroup_AddObject(x, 0x3c); }
+#pragma peephole reset
 #pragma scheduling reset

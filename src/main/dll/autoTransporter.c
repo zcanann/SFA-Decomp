@@ -725,5 +725,7 @@ void doorf4_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v =
 #pragma peephole reset
 
 #pragma scheduling off
+#pragma peephole off
 int fn_801793A4(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x274) == 0; }
+#pragma peephole reset
 #pragma scheduling reset

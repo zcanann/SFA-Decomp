@@ -1067,22 +1067,28 @@ void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { 
 /* if (o->_X == K) return A; else return B; */
 #pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 int magiclight_getExtraSize(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x172) return 0x0; return 0x14; }
+#pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
 
 extern void Obj_FreeObject(int*);
 #pragma scheduling off
+#pragma peephole off
 void fn_801ADB80(int *obj) { int *p = (int*)obj[0xc8/4]; if (p != NULL) Obj_FreeObject(p); }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* conditional init/free pair. */
 extern void fn_80013E2C(u32);
 #pragma scheduling off
+#pragma peephole off
 void crrockfall_release(void) {
     if (lbl_803DDB40 != 0) {
         fn_80013E2C(lbl_803DDB40);
     }
     lbl_803DDB40 = 0;
 }
+#pragma peephole reset
 #pragma scheduling reset

@@ -438,5 +438,7 @@ void bombplant_hitDetect(void)
 extern f32 lbl_803E5370;
 extern void fn_8003B8F4(f32);
 #pragma scheduling off
+#pragma peephole off
 void bombplant_render(void) { fn_8003B8F4(lbl_803E5370); }
+#pragma peephole reset
 #pragma scheduling reset

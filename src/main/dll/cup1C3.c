@@ -530,5 +530,7 @@ int fn_801C9E5C(void) { return 0x1; }
 extern f32 lbl_803E5104;
 extern void fn_8003B8F4(f32);
 #pragma scheduling off
+#pragma peephole off
 void dbsh_symbol_render(void) { fn_8003B8F4(lbl_803E5104); }
+#pragma peephole reset
 #pragma scheduling reset

@@ -386,10 +386,14 @@ u8 fn_8018A220(int *obj) { return *(u8*)((char*)((int**)obj)[0x4c/4] + 0x1c); }
 extern f32 lbl_803E3BBC;
 extern void fn_8003B8F4(f32);
 #pragma scheduling off
+#pragma peephole off
 void staffactivated_render(void) { fn_8003B8F4(lbl_803E3BBC); }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
+#pragma peephole off
 void staffactivated_free(int x) { ObjGroup_RemoveObject(x, 0x41); }
+#pragma peephole reset
 #pragma scheduling reset

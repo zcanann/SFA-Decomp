@@ -2139,6 +2139,7 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void ObjHits_RegisterActiveHitVolumeObject(undefined4 param_1)
 {
   u32 *piVar1;
@@ -2155,6 +2156,7 @@ void ObjHits_RegisterActiveHitVolumeObject(undefined4 param_1)
   gObjHitsActiveHitVolumeObjects[iVar2] = param_1;
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*

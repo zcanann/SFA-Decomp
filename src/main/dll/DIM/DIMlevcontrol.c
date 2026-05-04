@@ -478,7 +478,9 @@ int dimlavasmash_func08(void) { return 0x0; }
 /* if (o->_X == K) return A; else return B; */
 #pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 int dimcannon_getExtraSize(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1d6) return 0xc; return 0xb4; }
 int dimcannon_func08(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1d6) return 0x0; return 0x0; }
+#pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset

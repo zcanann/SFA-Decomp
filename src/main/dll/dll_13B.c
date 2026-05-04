@@ -144,6 +144,7 @@ void kaldachompme_hitDetect(void)
 }
 
 #pragma scheduling off
+#pragma peephole off
 void kaldachompme_update(int obj)
 {
   float *extra;
@@ -175,6 +176,7 @@ void kaldachompme_update(int obj)
   }
   ObjAnim_SetCurrentMove((double)extra[0],obj,(uint)*(byte *)((int)extra + 0xc),0);
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 void kaldachompme_init(int obj,int params)

@@ -87,6 +87,7 @@ void SHthorntail_init(short *obj)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 undefined4 fn_801D6D58(void)
 {
   undefined4 playerObj;
@@ -96,4 +97,5 @@ undefined4 fn_801D6D58(void)
   fn_80296554(playerObj,0xff);
   return 2;
 }
+#pragma peephole reset
 #pragma scheduling reset

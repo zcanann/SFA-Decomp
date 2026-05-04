@@ -262,5 +262,7 @@ int fn_80173224(void) { return 0x288; }
 extern f32 lbl_803E34B0;
 extern void fn_8003B8F4(f32);
 #pragma scheduling off
+#pragma peephole off
 void fn_80173280(void) { fn_8003B8F4(lbl_803E34B0); }
+#pragma peephole reset
 #pragma scheduling reset

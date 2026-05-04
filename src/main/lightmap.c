@@ -2708,9 +2708,11 @@ u32 fn_8005CDC8(void) { return lbl_803DCDE8 & 0x10; }
 /* return (lbl >> bit) & 1 via cntlzw-equivalent (rlwinm; neg; or; srwi). */
 extern u32 lbl_803DCDE8;
 #pragma scheduling off
+#pragma peephole off
 u32 fn_8005CE90(void) {
     u32 v = lbl_803DCDE8 & 0x40000;
     u32 t = ((u32)-(s32)v | v) >> 31;
     return t;
 }
+#pragma peephole reset
 #pragma scheduling reset

@@ -464,5 +464,7 @@ void FUN_8014d9e8(undefined8 param_1,undefined8 param_2,double param_3,undefined
 extern u32 lbl_803DDA50;
 extern void fn_80013E2C(u32);
 #pragma scheduling off
+#pragma peephole off
 void enemy_release(void) { if (lbl_803DDA50 != 0) { fn_80013E2C(lbl_803DDA50); lbl_803DDA50 = 0; } }
+#pragma peephole reset
 #pragma scheduling reset

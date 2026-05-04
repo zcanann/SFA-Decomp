@@ -362,10 +362,14 @@ int fn_801F4B54(void) { return 0x9; }
 
 extern void ObjLink_DetachChild(int *parent, int *child);
 #pragma scheduling off
+#pragma peephole off
 void fn_801F4B5C(int *obj) { int *p = (int*)obj[0xc8/4]; if (p != NULL) ObjLink_DetachChild(obj, p); }
+#pragma peephole reset
 #pragma scheduling reset
 
 extern void fn_801F4F88(int *obj);
 #pragma scheduling off
+#pragma peephole off
 int fn_801F4C04(int *obj) { fn_801F4F88(obj); return 0; }
+#pragma peephole reset
 #pragma scheduling reset

@@ -1950,8 +1950,10 @@ void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s3
 /* if (o->_X == K) return A; else return B;  pattern. */
 #pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 int lavaball1be_getExtraSize(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1fa) return 0x0; return 0x14; }
 int lavaball1be_func08(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1fa) return 0x0; return 0x2; }
+#pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
 

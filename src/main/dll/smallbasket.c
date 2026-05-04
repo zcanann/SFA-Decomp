@@ -2084,5 +2084,7 @@ void fn_8015AD5C(void) {}
 
 /* call(x, N) wrappers. */
 #pragma scheduling off
+#pragma peephole off
 void fn_801598B8(int x) { Sfx_StopFromObject(x, 0x3e8); }
+#pragma peephole reset
 #pragma scheduling reset

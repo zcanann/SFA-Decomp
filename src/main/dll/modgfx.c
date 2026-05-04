@@ -4514,7 +4514,9 @@ void fn_800A01B0(s16 x) { lbl_803DD28A = x; }
 extern char lbl_8030FDB8[];
 extern void OSReport(const char *fmt, ...);
 #pragma scheduling off
+#pragma peephole off
 void fn_800A3AC0(void) { OSReport(lbl_8030FDB8); }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* OSReport-stub returns. */
@@ -4522,8 +4524,10 @@ extern void OSReport(const char *fmt, ...);
 extern char lbl_8030FD5C[];
 extern char lbl_8030FD88[];
 #pragma scheduling off
+#pragma peephole off
 int fn_800A3A40(void) { OSReport(lbl_8030FD5C); return 0x0; }
 int fn_800A3A70(void) { OSReport(lbl_8030FD88); return 0x0; }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* Pattern wrappers. */

@@ -539,4 +539,5 @@ void dimboss_hitDetect(DIMbossObject *obj)
 {
   (*(code *)(*(int *)lbl_803DCA8C + 0xc))(obj,obj->runtime,lbl_803AD018);
 }
+#pragma peephole reset
 #pragma scheduling reset

@@ -601,6 +601,7 @@ int pushable_render2(int obj)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void pushable_modelMtxFn(int obj,int modelNo)
 {
   int extra = *(int *)(obj + 0xb8);
@@ -608,4 +609,5 @@ void pushable_modelMtxFn(int obj,int modelNo)
 
   *(uint *)(extra + 0xa8) = flags | (1 << modelNo);
 }
+#pragma peephole reset
 #pragma scheduling reset

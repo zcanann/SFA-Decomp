@@ -1298,7 +1298,9 @@ u8 groundanimator_modelMtxFn(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/
 
 /* 16b chained patterns. */
 #pragma scheduling off
+#pragma peephole off
 void alphaanimator_init(int *obj) { s8 v = -1; *((s8*)((int**)obj)[0xb8/4] + 0x19) = v; }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* render-with-fn_8003B8F4 pattern. */

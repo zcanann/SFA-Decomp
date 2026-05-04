@@ -27,6 +27,7 @@ int textblockObj_func08(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void textblockObj_freeUnsupported(void)
 {
   OSReport(sTextBlockNoLongerSupported);
@@ -78,6 +79,7 @@ void textblockObj_initUnsupported(void)
   OSReport(sTextBlockNoLongerSupported);
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 void textblockObj_release(void)

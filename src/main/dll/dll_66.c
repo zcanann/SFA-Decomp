@@ -111,6 +111,7 @@ extern char lbl_80319608[];
 extern char lbl_80319658[];
 extern char lbl_803196A8[];
 #pragma scheduling off
+#pragma peephole off
 int fn_80100550(void) { OSReport(lbl_80319398); return -1; }
 int fn_80100588(void) { OSReport(lbl_803193E0); return -1; }
 int fn_801005C0(void) { OSReport(lbl_80319430); return -1; }
@@ -122,4 +123,5 @@ int fn_801006D8(void) { OSReport(lbl_803195B8); return -1; }
 int fn_80100710(void) { OSReport(lbl_80319608); return -1; }
 int fn_80100748(void) { OSReport(lbl_80319658); return -1; }
 int fn_80100780(void) { OSReport(lbl_803196A8); return -1; }
+#pragma peephole reset
 #pragma scheduling reset

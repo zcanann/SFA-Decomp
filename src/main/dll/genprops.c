@@ -4489,14 +4489,18 @@ void fn_80171320(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 extern f32 lbl_803E3388;
 extern f32 lbl_803E3420;
 #pragma scheduling off
+#pragma peephole off
 void flamethrowerspe_render(void) { fn_8003B8F4(lbl_803E3388); }
 void fn_801719F8(void) { fn_8003B8F4(lbl_803E3420); }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
+#pragma peephole off
 void fn_8016B8A8(int x) { ObjGroup_RemoveObject(x, 0x7); }
 void fn_80171C80(int x) { ObjGroup_RemoveObject(x, 0x40); }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* misc 8b leaves */
@@ -4504,11 +4508,15 @@ int collectible_setScale(int *obj) { return *(int*)((char*)obj + 0xf4); }
 
 /* misc 16b 4-insn patterns. */
 #pragma scheduling off
+#pragma peephole off
 void fn_8016E81C(int *obj) { s32 v = 0x0; *(s32*)((char*)((int**)obj)[0xb8/4] + 0x48) = v; }
 void flamethrowerspe_func0B(int *obj) { s32 v = 0x1; *(s32*)((char*)((int**)obj)[0xb8/4] + 0x10) = v; }
+#pragma peephole reset
 #pragma scheduling reset
 
 extern void fn_8016CEE8(int *obj, int x);
 #pragma scheduling off
+#pragma peephole off
 void fn_8016EB50(int *obj) { fn_8016CEE8(obj, *(int*)((char*)obj + 0xc4)); }
+#pragma peephole reset
 #pragma scheduling reset

@@ -1510,7 +1510,9 @@ void fn_801F2EAC(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 /* if (o->_X == K) return A; else return B; */
 #pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 int fn_801F1BD0(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x146) return 0x2; return 0x0; }
+#pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -1526,5 +1528,7 @@ int fn_801F2E80(int p1, int p2, void* p3) { *(s16*)((char*)p3 + 0x6e) = -1; *(u8
 extern u32 lbl_803DDC80;
 extern void fn_80013E2C(u32);
 #pragma scheduling off
+#pragma peephole off
 void fn_801F15B4(void) { fn_80013E2C(lbl_803DDC80); lbl_803DDC80 = 0; }
+#pragma peephole reset
 #pragma scheduling reset

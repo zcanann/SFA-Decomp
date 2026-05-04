@@ -3957,12 +3957,16 @@ void fn_80065678(void) { lbl_803DCF4E = 0x1; }
 
 /* arr indexing: obj->arr + idx*size */
 #pragma scheduling off
+#pragma peephole off
 void* fn_800606EC(int *obj, int idx) { return (char*)((int**)obj)[0x50/4] + idx * 0x14; }
 void* fn_800606FC(int *obj, int idx) { return (char*)((int**)obj)[0x68/4] + idx * 0x1c; }
 void* fn_8006070C(int *obj, int idx) { return (char*)((int**)obj)[0x64/4] + idx * 0x44; }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* arr indexing pow2. */
 #pragma scheduling off
+#pragma peephole off
 void* fn_800606DC(int *obj, int idx) { return (char*)((int**)obj)[0x4c/4] + idx * 8; }
+#pragma peephole reset
 #pragma scheduling reset

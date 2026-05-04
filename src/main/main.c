@@ -1230,7 +1230,9 @@ int fn_801FE9E0(void) { return 0x8; }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
+#pragma peephole off
 void fn_801FE9E8(int x) { ObjGroup_RemoveObject(x, 0x24); }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* plain forwarder. */
@@ -1241,5 +1243,7 @@ void fn_801FDAA0(void) { fn_801FD6B4(); }
 extern u32 lbl_803DDCD8;
 extern void fn_80013E2C(u32);
 #pragma scheduling off
+#pragma peephole off
 void fn_801FDE8C(void) { fn_80013E2C(lbl_803DDCD8); lbl_803DDCD8 = 0; }
+#pragma peephole reset
 #pragma scheduling reset

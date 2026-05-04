@@ -13055,7 +13055,9 @@ u8 fn_800E87C4(void) { return lbl_803DD488; }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
+#pragma peephole off
 void fn_800EA920(int x) { ObjGroup_RemoveObject(x, 0x10); }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* lbl = N (byte) */
@@ -13071,15 +13073,21 @@ u8 fn_800EA900(u8 *p) { return p[8]; }
 extern u32 lbl_803DD49C;
 extern void fn_80023800(u32);
 #pragma scheduling off
+#pragma peephole off
 void fn_800EA04C(void) { if (lbl_803DD49C != 0) fn_80023800(lbl_803DD49C); }
+#pragma peephole reset
 #pragma scheduling reset
 
 extern void* fn_800E8044(void);
 #pragma scheduling off
+#pragma peephole off
 u8 fn_800EA2BC(void) { u8 *p = (u8*)fn_800E8044(); return p[5]; }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* conditional init/free pair. */
 #pragma scheduling off
+#pragma peephole off
 void fn_800E9CAC(void) { if (lbl_803DD49C != 0) { fn_80023800(lbl_803DD49C); lbl_803DD49C = 0; } }
+#pragma peephole reset
 #pragma scheduling reset

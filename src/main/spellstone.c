@@ -173,5 +173,5 @@ void spellstone_initialise(void)
   return;
 }
 
-#pragma scheduling reset
 #pragma peephole reset
+#pragma scheduling reset

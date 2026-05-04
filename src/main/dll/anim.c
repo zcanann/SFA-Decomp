@@ -4154,8 +4154,10 @@ void fn_80205420(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
+#pragma peephole off
 void fn_80203F2C(int x) { ObjGroup_RemoveObject(x, 0x1e); }
 void fn_802045B8(int x) { ObjGroup_RemoveObject(x, 0x9); }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* plain forwarder. */
@@ -4166,11 +4168,15 @@ void fn_80203C58(void) { fn_80203C78(); }
 extern char sDoorswitchInitNoLongerSupported[];
 extern void OSReport(const char *fmt, ...);
 #pragma scheduling off
+#pragma peephole off
 void doorswitch_free(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 void doorswitch_update(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 void doorswitch_init(void) { OSReport(sDoorswitchInitNoLongerSupported); }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
+#pragma peephole off
 int fn_801FF9B4(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x8) == 0; }
+#pragma peephole reset
 #pragma scheduling reset

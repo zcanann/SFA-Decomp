@@ -618,6 +618,8 @@ extern u32 lbl_803DD570;
 extern void fn_80023800(u32);
 extern u32 lbl_803DD578;
 #pragma scheduling off
+#pragma peephole off
 void fn_8010CEC4(void) { fn_80023800(lbl_803DD570); lbl_803DD570 = 0; }
 void fn_8010D340(void) { fn_80023800(lbl_803DD578); lbl_803DD578 = 0; }
+#pragma peephole reset
 #pragma scheduling reset

@@ -317,6 +317,7 @@ int sh_thorntail_getExtraSize(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void sh_thorntail_free(SHthorntailObject *obj)
 {
   u32 activeConfigToken;
@@ -327,4 +328,5 @@ void sh_thorntail_free(SHthorntailObject *obj)
   }
   ObjGroup_RemoveObject((int)obj,0x4d);
 }
+#pragma peephole reset
 #pragma scheduling reset

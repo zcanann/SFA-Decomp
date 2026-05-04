@@ -1194,7 +1194,9 @@ int fn_801B87A0(void) { return 0x0; }
 
 /* 16b chained patterns. */
 #pragma scheduling off
+#pragma peephole off
 void dim_tricky_init(int *obj) { u8 v = 0x0; *((u8*)((int**)obj)[0xb8/4] + 0x0) = v; }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* render-with-fn_8003B8F4 pattern. */
@@ -1215,10 +1217,14 @@ void fn_801B87AC(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E4A38;
 #pragma scheduling off
+#pragma peephole off
 void dim_tricky_render(void) { fn_8003B8F4(lbl_803E4A38); }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
+#pragma peephole off
 void dim2conveyor_free(int x) { ObjGroup_RemoveObject(x, 0x16); }
+#pragma peephole reset
 #pragma scheduling reset

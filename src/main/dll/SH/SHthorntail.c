@@ -26,6 +26,7 @@ extern f64 lbl_803E5428;
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntime *runtime)
 {
   int linkedEventPending;
@@ -94,4 +95,5 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
   }
   SHthorntail_updateState(obj,runtime);
 }
+#pragma peephole reset
 #pragma scheduling reset

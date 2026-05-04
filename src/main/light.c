@@ -1096,6 +1096,8 @@ void fn_801FC978(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 extern f32 lbl_803E611C;
 extern f32 lbl_803E6140;
 #pragma scheduling off
+#pragma peephole off
 void fn_801FC534(void) { fn_8003B8F4(lbl_803E611C); }
 void fn_801FD184(void) { fn_8003B8F4(lbl_803E6140); }
+#pragma peephole reset
 #pragma scheduling reset

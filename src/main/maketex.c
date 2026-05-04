@@ -1238,5 +1238,7 @@ void fn_8008016C(f32 *p) { *p = lbl_803DEFA0; }
 extern u32 lbl_803DB714;
 extern u32 lbl_803DB71C;
 #pragma scheduling off
+#pragma peephole off
 void fn_800801E8(void) { u32 v = -0x1; lbl_803DB714 = v; lbl_803DB71C = v; }
+#pragma peephole reset
 #pragma scheduling reset

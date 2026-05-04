@@ -1617,7 +1617,9 @@ int flameblast_getExtraSize(void) { return 0x14; }
 
 /* 16b chained patterns. */
 #pragma scheduling off
+#pragma peephole off
 void fn_8017804C(int *obj) { u8 v = 0x1; *((u8*)((int**)obj)[0xb8/4] + 0x10) = v; }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* render-with-fn(lbl) (no visibility check). */
@@ -1625,6 +1627,8 @@ extern f32 lbl_803E35E8;
 extern void fn_8003B8F4(f32);
 extern f32 lbl_803E3600;
 #pragma scheduling off
+#pragma peephole off
 void invhit_render(void) { fn_8003B8F4(lbl_803E35E8); }
 void iceblast_render(void) { fn_8003B8F4(lbl_803E3600); }
+#pragma peephole reset
 #pragma scheduling reset

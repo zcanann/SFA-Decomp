@@ -1330,7 +1330,9 @@ void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
+#pragma peephole off
 void attractor_free(int x) { ObjGroup_RemoveObject(x, 0x1e); }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* state encode: ((obj->_X)->_Y << shift) | const. */

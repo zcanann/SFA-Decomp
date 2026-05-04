@@ -3121,6 +3121,7 @@ extern u32 lbl_803DD5B8;
 extern u32 lbl_803DD5C0;
 extern u32 lbl_803DD5C8;
 #pragma scheduling off
+#pragma peephole off
 void fn_8010E588(void) { fn_80023800(lbl_803DD588); lbl_803DD588 = 0; }
 void fn_8010F2FC(void) { fn_80023800(lbl_803DD590); lbl_803DD590 = 0; }
 void fn_8010F720(void) { fn_80023800(lbl_803DD598); lbl_803DD598 = 0; }
@@ -3128,4 +3129,5 @@ void fn_8010FA58(void) { fn_80023800(lbl_803DD5A0); lbl_803DD5A0 = 0; }
 void fn_801101E8(void) { fn_80023800(lbl_803DD5B8); lbl_803DD5B8 = 0; }
 void fn_801106B8(void) { fn_80023800(lbl_803DD5C0); lbl_803DD5C0 = 0; }
 void fn_80110C84(void) { fn_80023800(lbl_803DD5C8); lbl_803DD5C8 = 0; }
+#pragma peephole reset
 #pragma scheduling reset

@@ -288,6 +288,7 @@ extern u32 fn_80054D54(int);
 extern u32 lbl_803DDC60;
 
 #pragma scheduling off
+#pragma peephole off
 void fn_801EE020(void) {
     if (lbl_803DDC60 != 0) {
         fn_80054308(lbl_803DDC60);
@@ -299,6 +300,7 @@ void fn_801EE054(void) {
         lbl_803DDC60 = fn_80054D54(0x186);
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma peephole off

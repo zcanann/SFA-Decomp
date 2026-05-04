@@ -73,6 +73,7 @@ void chuka_init(undefined2 *param_1,int param_2)
 typedef void (*DfpFloorbarFreeFn)(void *obj);
 
 #pragma scheduling off
+#pragma peephole off
 void dfpfloorbar_free(int *obj)
 {
   int *extra;
@@ -82,6 +83,7 @@ void dfpfloorbar_free(int *obj)
   extra[2] = 0;
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
