@@ -1616,29 +1616,29 @@ void fn_80075684(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 
     GXBegin(GX_QUADS, GX_VTXFMT1, 4);
 
     GXWGFifo.u8 = 0x3C;
-    GXWGFifo.s16 = (s32)fx1;
-    GXWGFifo.s16 = (s32)fy1;
+    GXWGFifo.s16 = (s16)fx1;
+    GXWGFifo.s16 = (s16)fy1;
     GXWGFifo.s16 = -8;
     GXWGFifo.f32 = lbl_803DEEDC;
     GXWGFifo.f32 = lbl_803DEEDC;
 
     GXWGFifo.u8 = 0x3C;
-    GXWGFifo.s16 = (s32)fx2;
-    GXWGFifo.s16 = (s32)fy2;
+    GXWGFifo.s16 = (s16)fx2;
+    GXWGFifo.s16 = (s16)fy2;
     GXWGFifo.s16 = -8;
     GXWGFifo.f32 = lbl_803DEEDC;
     GXWGFifo.f32 = lbl_803DEEDC;
 
     GXWGFifo.u8 = 0x3C;
-    GXWGFifo.s16 = (s32)fx3;
-    GXWGFifo.s16 = (s32)fy3;
+    GXWGFifo.s16 = (s16)fx3;
+    GXWGFifo.s16 = (s16)fy3;
     GXWGFifo.s16 = -8;
     GXWGFifo.f32 = lbl_803DEEDC;
     GXWGFifo.f32 = lbl_803DEEDC;
 
     GXWGFifo.u8 = 0x3C;
-    GXWGFifo.s16 = (s32)fx4;
-    GXWGFifo.s16 = (s32)fy4;
+    GXWGFifo.s16 = (s16)fx4;
+    GXWGFifo.s16 = (s16)fy4;
     GXWGFifo.s16 = -8;
     GXWGFifo.f32 = lbl_803DEEDC;
     GXWGFifo.f32 = lbl_803DEEDC;
@@ -1716,22 +1716,22 @@ void fn_80075A1C(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
     GXBegin(GX_TRIANGLES, GX_VTXFMT1, 3);
 
     GXWGFifo.u8 = 0x3C;
-    GXWGFifo.s16 = (s32)fx1;
-    GXWGFifo.s16 = (s32)fy1;
+    GXWGFifo.s16 = (s16)fx1;
+    GXWGFifo.s16 = (s16)fy1;
     GXWGFifo.s16 = -8;
     GXWGFifo.f32 = lbl_803DFB5C;
     GXWGFifo.f32 = lbl_803DFB5C;
 
     GXWGFifo.u8 = 0x3C;
-    GXWGFifo.s16 = (s32)fx2;
-    GXWGFifo.s16 = (s32)fy2;
+    GXWGFifo.s16 = (s16)fx2;
+    GXWGFifo.s16 = (s16)fy2;
     GXWGFifo.s16 = -8;
     GXWGFifo.f32 = lbl_803DFB5C;
     GXWGFifo.f32 = lbl_803DFB5C;
 
     GXWGFifo.u8 = 0x3C;
-    GXWGFifo.s16 = (s32)fx3;
-    GXWGFifo.s16 = (s32)fy3;
+    GXWGFifo.s16 = (s16)fx3;
+    GXWGFifo.s16 = (s16)fy3;
     GXWGFifo.s16 = -8;
     GXWGFifo.f32 = lbl_803DFB5C;
     GXWGFifo.f32 = lbl_803DFB5C;
@@ -3339,7 +3339,7 @@ void fn_8007A71C(uint param_1)
 #pragma scheduling off
 void fn_8007AD10(f32 alpha)
 {
-    extern f32 lbl_803DEF1C;
+    extern struct { f32 x, y; } lbl_803DEF1C;
     extern GXColor lbl_803DB6A0;
     extern Mtx lbl_80396880;
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
@@ -3351,7 +3351,7 @@ void fn_8007AD10(f32 alpha)
     extern void GXSetZCompLoc(u8);
     Mtx mtx;
 
-    lbl_803DB6A0.a = (s32)(*(f32*)((u8*)&lbl_803DEF1C + 4) * alpha);
+    lbl_803DB6A0.a = lbl_803DEF1C.y * alpha;
     fn_8006C6F0(0);
     GXSetTevKColor(0, lbl_803DB6A0);
     GXSetTevKAlphaSel(0, 0x1C);
