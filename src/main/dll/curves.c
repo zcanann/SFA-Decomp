@@ -2215,6 +2215,8 @@ double RomCurve_distanceToSegment(double param_1,double param_2,double param_3,f
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int RomCurve_getRandomBlockedLink(int param_1,int param_2)
 {
   uint uVar1;
@@ -2222,7 +2224,7 @@ int RomCurve_getRandomBlockedLink(int param_1,int param_2)
   int iVar3;
   int iVar4;
   int local_18 [6];
-  
+
   iVar4 = 0;
   iVar2 = *(int *)(param_1 + 0x1c);
   if (((-1 < iVar2) && ((*(byte *)(param_1 + 0x1b) & 1) != 0)) && (iVar2 != param_2)) {
@@ -2256,6 +2258,8 @@ int RomCurve_getRandomBlockedLink(int param_1,int param_2)
   }
   return iVar2;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2270,6 +2274,8 @@ int RomCurve_getRandomBlockedLink(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int RomCurve_getRandomUnblockedLink(int param_1,int param_2)
 {
   uint uVar1;
@@ -2277,7 +2283,7 @@ int RomCurve_getRandomUnblockedLink(int param_1,int param_2)
   int iVar3;
   int iVar4;
   int local_18 [6];
-  
+
   iVar4 = 0;
   iVar2 = *(int *)(param_1 + 0x1c);
   if (((-1 < iVar2) && ((*(byte *)(param_1 + 0x1b) & 1) == 0)) && (iVar2 != param_2)) {
@@ -2311,6 +2317,8 @@ int RomCurve_getRandomUnblockedLink(int param_1,int param_2)
   }
   return iVar2;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
