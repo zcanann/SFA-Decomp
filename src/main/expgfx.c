@@ -833,26 +833,26 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
       highBit = (s32)bit >> 0x1f;
       sourceMasks = &gExpgfxTrackedSourceFrameMasks[((u32)(poolIndex & 1)) * 2];
       if (((bit & sourceMasks[1]) | (highBit & sourceMasks[0])) != 0) {
-        *poolFrameFlags = 2;
-        if (aggregateState == 1) {
-          aggregateState = 3;
+        *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_B;
+        if (aggregateState == EXPGFX_SOURCE_FRAME_STATE_A) {
+          aggregateState = EXPGFX_SOURCE_FRAME_STATE_MIXED;
         }
         else {
-          aggregateState = 2;
+          aggregateState = EXPGFX_SOURCE_FRAME_STATE_B;
         }
       }
       else {
-        *poolFrameFlags = 1;
-        if (aggregateState == 2) {
-          aggregateState = 3;
+        *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_A;
+        if (aggregateState == EXPGFX_SOURCE_FRAME_STATE_B) {
+          aggregateState = EXPGFX_SOURCE_FRAME_STATE_MIXED;
         }
         else {
-          aggregateState = 1;
+          aggregateState = EXPGFX_SOURCE_FRAME_STATE_A;
         }
       }
     }
     else {
-      *poolFrameFlags = 0;
+      *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_NONE;
     }
     poolSourceIds = poolSourceIds + 1;
     poolFrameFlags = poolFrameFlags + 1;
@@ -1307,13 +1307,13 @@ void expgfx_resetAllPools(void)
 #pragma peephole off
 void expgfx_updateFrameState(int sourceMode,int sourceId)
 {
-  int iVar1;
+  int renderMode;
   int poolIndex;
   f32 frameStep;
   f32 frameValue;
   
-  iVar1 = fn_80008B4C(-1);
-  if ((short)iVar1 != 1) {
+  renderMode = fn_80008B4C(-1);
+  if ((short)renderMode != 1) {
     frameValue = lbl_803DD25C + (frameStep = lbl_803DB414);
     lbl_803DD25C = frameValue;
     if (frameValue >= lbl_803DF418) {
@@ -1335,7 +1335,7 @@ void expgfx_updateFrameState(int sourceMode,int sourceId)
     poolIndex = EXPGFX_POOL_COUNT;
     while ((u8)poolIndex > 0) {
       poolIndex--;
-      gExpgfxStaticPoolFrameFlags[(u8)poolIndex] = 0;
+      gExpgfxStaticPoolFrameFlags[(u8)poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
     }
     (*(code *)(*lbl_803DCA88 + 0xc))(0);
     lbl_803DD254 = 1;
