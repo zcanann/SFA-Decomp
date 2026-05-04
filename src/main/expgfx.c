@@ -1169,7 +1169,7 @@ void expgfx_releaseSourceSlots(u32 sourceId)
           slotIndex = slotIndex + 1;
         } while (slotIndex < EXPGFX_SLOTS_PER_POOL);
         *poolSourceIds = 0;
-        *poolFrameFlags = 0;
+        *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_NONE;
       }
       slotPoolBases = slotPoolBases + 1;
       poolSourceIds = poolSourceIds + 1;
@@ -1249,7 +1249,7 @@ void expgfx_resetAllPools(void)
           }
         }
         else {
-          fn_801378A8((char *)(staticDataBase + 0x358));
+          fn_801378A8(sExpgfxMismatchInAddRemove);
         }
         slot->sequenceId = -1;
         *poolActiveMasks = *poolActiveMasks & ~activeBit;
@@ -1260,7 +1260,7 @@ void expgfx_resetAllPools(void)
     *poolActiveCounts = 0;
     *poolSlotTypeIds = -1;
     *poolSourceIds = 0;
-    *poolFrameFlags = 0;
+    *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_NONE;
     DCFlushRange((void *)*slotPoolBases,EXPGFX_POOL_BYTES);
     slotPoolBases = slotPoolBases + 1;
     poolActiveMasks = poolActiveMasks + 1;
