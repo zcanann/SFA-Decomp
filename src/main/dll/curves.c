@@ -52,7 +52,7 @@ extern undefined4 gGameplayEnabledDebugOptions;
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803de0e8;
 extern undefined4 DAT_803de0ec;
-extern undefined4 DAT_803de0f0;
+extern undefined4 lbl_803DD478;
 extern undefined4 DAT_803de0f8;
 extern undefined4 DAT_803de0fc;
 extern f64 DOUBLE_803e12a8;
@@ -188,7 +188,7 @@ void FUN_800e1c00(undefined8 param_1,double param_2,double param_3)
     iVar9 = 0;
   }
   else {
-    iVar7 = DAT_803de0f0 + -1;
+    iVar7 = lbl_803DD478 + -1;
     iVar11 = 0;
     while (iVar11 <= iVar7) {
       iVar8 = iVar7 + iVar11 >> 1;
@@ -224,7 +224,7 @@ LAB_800e2324:
         iVar11 = 0;
       }
       else {
-        iVar8 = DAT_803de0f0 + -1;
+        iVar8 = lbl_803DD478 + -1;
         iVar7 = 0;
         while (iVar7 <= iVar8) {
           iVar6 = iVar8 + iVar7 >> 1;
@@ -931,7 +931,7 @@ int RomCurve_getRandomLinkedOfTypes(int param_1,int param_2,int param_3,int *par
         }
         else {
           iVar3 = 0;
-          iVar6 = DAT_803de0f0 + -1;
+          iVar6 = lbl_803DD478 + -1;
           while (iVar3 <= iVar6) {
             iVar4 = iVar6 + iVar3 >> 1;
             iVar8 = (&DAT_803a2448)[iVar4];
@@ -1040,7 +1040,7 @@ double curves_distXZ(double param_1,double param_2,uint param_3)
     iVar6 = 0;
   }
   else {
-    iVar5 = DAT_803de0f0 + -1;
+    iVar5 = lbl_803DD478 + -1;
     iVar4 = 0;
     while (iVar4 <= iVar5) {
       iVar3 = iVar5 + iVar4 >> 1;
@@ -1099,7 +1099,7 @@ double RomCurve_distanceToObject(int param_1,uint param_2)
     iVar7 = 0;
   }
   else {
-    iVar6 = DAT_803de0f0 + -1;
+    iVar6 = lbl_803DD478 + -1;
     iVar5 = 0;
     while (iVar5 <= iVar6) {
       iVar4 = iVar6 + iVar5 >> 1;
@@ -1207,7 +1207,7 @@ void curves_find(undefined8 param_1,double param_2,double param_3,undefined4 par
   piVar10 = &DAT_803a2448;
   dVar15 = extraout_f1;
   do {
-    if (DAT_803de0f0 <= iVar8) {
+    if (lbl_803DD478 <= iVar8) {
       FUN_80286874();
       return;
     }
@@ -1226,7 +1226,7 @@ void curves_find(undefined8 param_1,double param_2,double param_3,undefined4 par
             iVar6 = 0;
           }
           else {
-            iVar4 = DAT_803de0f0 + -1;
+            iVar4 = lbl_803DD478 + -1;
             iVar3 = 0;
             while (iVar3 <= iVar4) {
               iVar2 = iVar4 + iVar3 >> 1;
@@ -1300,7 +1300,7 @@ undefined4 RomCurve_getById(uint curveId,int *outIndex)
   if ((int)curveId < 0) {
     return 0;
   }
-  high = DAT_803de0f0 + -1;
+  high = lbl_803DD478 + -1;
   low = 0;
   while (low <= high) {
     mid = high + low >> 1;
@@ -1458,7 +1458,7 @@ void FUN_800e31dc(undefined4 param_1,undefined4 param_2,int param_3,int param_4,
         iVar3 = 0;
       }
       else {
-        iVar7 = DAT_803de0f0 + -1;
+        iVar7 = lbl_803DD478 + -1;
         iVar4 = 0;
         while (iVar4 <= iVar7) {
           iVar6 = iVar7 + iVar4 >> 1;
@@ -1602,7 +1602,7 @@ LAB_800e41e4:
         iVar3 = 0;
       }
       else {
-        iVar7 = DAT_803de0f0 + -1;
+        iVar7 = lbl_803DD478 + -1;
         iVar4 = 0;
         while (iVar4 <= iVar7) {
           iVar6 = iVar7 + iVar4 >> 1;
@@ -1778,7 +1778,7 @@ int FUN_800e3ad4(int param_1)
       param_1 = 0;
     }
     else {
-      iVar3 = DAT_803de0f0 + -1;
+      iVar3 = lbl_803DD478 + -1;
       iVar2 = 0;
       while (iVar2 <= iVar3) {
         iVar5 = iVar3 + iVar2 >> 1;
@@ -1846,7 +1846,7 @@ void FUN_800e3cec(undefined4 param_1,undefined4 param_2,float *param_3,float *pa
       iVar8 = 0;
     }
     else {
-      iVar7 = DAT_803de0f0 + -1;
+      iVar7 = lbl_803DD478 + -1;
       iVar5 = 0;
       while (iVar5 <= iVar7) {
         iVar6 = iVar7 + iVar5 >> 1;
@@ -1998,7 +1998,7 @@ void RomCurve_getAdjacentWindow(int param_1,int *param_2)
     iVar6 = 0;
   }
   else {
-    iVar4 = DAT_803de0f0 + -1;
+    iVar4 = lbl_803DD478 + -1;
     iVar3 = 0;
     while (iVar3 <= iVar4) {
       iVar2 = iVar4 + iVar3 >> 1;
@@ -2088,7 +2088,7 @@ int RomCurve_getNearestAdjacentLink(double param_1,double param_2,double param_3
         iVar5 = 0;
       }
       else {
-        iVar4 = DAT_803de0f0 + -1;
+        iVar4 = lbl_803DD478 + -1;
         iVar3 = 0;
         while (iVar3 <= iVar4) {
           iVar2 = iVar4 + iVar3 >> 1;
@@ -2374,7 +2374,7 @@ void FUN_800e4628(undefined8 param_1,double param_2,double param_3,undefined4 pa
   local_50 = (float)param_3;
   piVar5 = &DAT_803a2448;
   dVar8 = dVar7;
-  for (iVar4 = 0; iVar4 < DAT_803de0f0; iVar4 = iVar4 + 1) {
+  for (iVar4 = 0; iVar4 < lbl_803DD478; iVar4 = iVar4 + 1) {
     iVar3 = *piVar5;
     iVar2 = 0;
     do {
@@ -2419,7 +2419,7 @@ void curves_addCurveDef(int curve)
   int *slot;
   int remaining;
 
-  count = DAT_803de0f0;
+  count = lbl_803DD478;
   if (count == ROMCURVE_MAX_CURVES) {
     OSReport(lbl_803116BC);
     return;
@@ -2441,7 +2441,7 @@ void curves_addCurveDef(int curve)
     remaining = remaining + -1;
   }
 
-  DAT_803de0f0 = DAT_803de0f0 + 1;
+  lbl_803DD478 = lbl_803DD478 + 1;
   (&DAT_803a2448)[insertIndex] = curve;
 }
 #pragma peephole reset
