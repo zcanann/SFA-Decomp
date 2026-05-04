@@ -46,14 +46,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
   int moveIndex;
   u64 frameBits;
 
-  moveIndex = animDef->moveBaseTable[(s32)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
-              (moveId & OBJANIM_MOVE_INDEX_MASK);
-  if (moveIndex >= animDef->moveCount) {
-    moveIndex = animDef->moveCount - 1;
-  }
-  if (moveIndex < 0) {
-    moveIndex = 0;
-  }
+  moveIndex = ObjAnim_ResolveMoveIndex(animDef,moveId);
   if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (state->lastBlendMoveIndex != moveIndex) {
       state->blendCacheSlot = (u16)state->blendToggle;
@@ -338,15 +331,15 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 Object_ObjAnimSetMoveProgress(f32 param_1,ObjAnimComponent *objAnim)
+undefined4 Object_ObjAnimSetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
 {
-  if (param_1 > lbl_803DE908) {
-    param_1 = lbl_803DE908;
+  if (moveProgress > lbl_803DE908) {
+    moveProgress = lbl_803DE908;
   }
-  else if (param_1 < lbl_803DE8F0) {
-    param_1 = lbl_803DE8F0;
+  else if (moveProgress < lbl_803DE8F0) {
+    moveProgress = lbl_803DE8F0;
   }
-  objAnim->activeMoveProgress = param_1;
+  objAnim->activeMoveProgress = moveProgress;
   return 0;
 }
 
@@ -372,11 +365,11 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   ObjAnimBank *bank;
   ObjAnimDef *animDef;
   ObjAnimState *state;
-  short sVar1;
+  short previousMove;
   u8 moveChanged;
-  int uVar2;
-  int iVar3;
-  int iVar6;
+  int frameStep;
+  int moveIndex;
+  int moveData;
   float clampedProgress;
   objAnim = (ObjAnimComponent *)objAnimArg;
   clampedProgress = moveProgress;
@@ -405,40 +398,40 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   state->prevEventState = state->eventState;
   state->eventState = 0;
   state->lastBlendMoveIndex = -1;
-  sVar1 = objAnim->activeMove;
-  moveChanged = sVar1 != moveId;
+  previousMove = objAnim->activeMove;
+  moveChanged = previousMove != moveId;
   objAnim->activeMove = (s16)moveId;
-  iVar3 = ObjAnim_ResolveMoveIndex(animDef, moveId);
+  moveIndex = ObjAnim_ResolveMoveIndex(animDef,moveId);
   if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (moveChanged != 0) {
       state->blendToggle = '\x01' - state->blendToggle;
       state->moveCacheSlot = (u16)state->blendToggle;
-      if (animDef->blendMoveIds[iVar3] == -1) {
+      if (animDef->blendMoveIds[moveIndex] == -1) {
         OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
-        iVar3 = 0;
+        moveIndex = 0;
       }
-      ObjAnim_LoadCachedMove((int)animDef->blendMoveIds[iVar3],(int)(s16)iVar3,
+      ObjAnim_LoadCachedMove((int)animDef->blendMoveIds[moveIndex],(int)(s16)moveIndex,
                              state->moveCache[state->moveCacheSlot],animDef);
     }
-    iVar6 = (int)state->moveCache[state->moveCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET;
+    moveData = (int)state->moveCache[state->moveCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET;
   }
   else {
-    state->moveCacheSlot = (u16)iVar3;
-    iVar6 = (int)animDef->moveData[state->moveCacheSlot];
+    state->moveCacheSlot = (u16)moveIndex;
+    moveData = (int)animDef->moveData[state->moveCacheSlot];
   }
-  state->frameData = (u8 *)(iVar6 + OBJANIM_FRAME_CMD_OFFSET);
-  state->frameType = *(s8 *)(iVar6 + 1) & OBJANIM_FRAME_TYPE_MASK;
+  state->frameData = (u8 *)(moveData + OBJANIM_FRAME_CMD_OFFSET);
+  state->frameType = *(s8 *)(moveData + 1) & OBJANIM_FRAME_TYPE_MASK;
   state->segmentLength =
        ObjAnim_U32AsDouble((uint)state->frameData[1]) - lbl_803DE8E8;
   if (state->frameType == 0) {
     state->segmentLength = state->segmentLength - lbl_803DE8E0;
   }
-  uVar2 = *(s8 *)(iVar6 + 1) & OBJANIM_FRAME_STEP_MASK;
-  if (uVar2 != 0) {
+  frameStep = *(s8 *)(moveData + 1) & OBJANIM_FRAME_STEP_MASK;
+  if (frameStep != 0) {
     state->savedStep = state->step;
     state->eventStep =
          (short)(int)(lbl_803DE8F4 /
-                      (float)(ObjAnim_U32AsDouble(uVar2 ^ 0x80000000) - lbl_803DE900));
+                      (float)(ObjAnim_U32AsDouble(frameStep ^ 0x80000000) - lbl_803DE900));
     state->eventCountdown = OBJANIM_EVENT_COUNTDOWN_RESET;
   }
   state->step = lbl_803DE8F0;
@@ -1153,14 +1146,7 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
   previousMove = objAnim->currentMove;
   moveChanged = previousMove != moveId;
   objAnim->currentMove = (s16)moveId;
-  moveIndex = animDef->moveBaseTable[(s32)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
-              (moveId & OBJANIM_MOVE_INDEX_MASK);
-  if (moveIndex >= animDef->moveCount) {
-    moveIndex = animDef->moveCount - 1;
-  }
-  if (moveIndex < 0) {
-    moveIndex = 0;
-  }
+  moveIndex = ObjAnim_ResolveMoveIndex(animDef,moveId);
   if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (moveChanged != 0) {
       state->blendToggle = '\x01' - state->blendToggle;
