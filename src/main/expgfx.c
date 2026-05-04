@@ -307,6 +307,8 @@ static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void expgfx_release(uint slotPoolBase,int poolIndex,int slotIndex,int freeTexture,int clearActive)
 {
   u8 *expgfxBase;
@@ -360,6 +362,8 @@ void expgfx_release(uint slotPoolBase,int poolIndex,int slotIndex,int freeTextur
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -374,6 +378,8 @@ void expgfx_release(uint slotPoolBase,int poolIndex,int slotIndex,int freeTextur
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void expgfx_initialise(void)
 {
   ExpgfxTableEntry *tableEntry;
@@ -436,6 +442,8 @@ void expgfx_initialise(void)
   } while (poolIndex < EXPGFX_POOL_COUNT);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
