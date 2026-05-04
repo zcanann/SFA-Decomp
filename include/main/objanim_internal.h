@@ -13,6 +13,7 @@ typedef struct ObjAnimHitReactRow {
 
 #define OBJANIM_DEF_FLAG_CACHED_MOVES 0x40
 #define OBJANIM_CACHED_MOVE_DATA_OFFSET 0x80
+#define OBJANIM_MOVE_ROOT_CURVE_OFFSET 4
 #define OBJANIM_FRAME_CMD_OFFSET 6
 #define OBJANIM_FRAME_TYPE_MASK 0xF0
 #define OBJANIM_FRAME_STEP_MASK 0x0F
@@ -24,6 +25,10 @@ typedef struct ObjAnimHitReactRow {
 #define OBJANIM_EVENT_TRIGGER_CAPACITY 8
 #define OBJANIM_MOVE_GROUP_SHIFT 8
 #define OBJANIM_MOVE_INDEX_MASK 0xFF
+#define OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET 6
+#define OBJANIM_ROOT_CURVE_Z_AXIS_OFFSET 10
+#define OBJANIM_ROOT_CURVE_AXIS_COUNT 6
+#define OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT 3
 
 /*
  * Shared state used by the object-animation helpers around main/objanim.c.
@@ -77,6 +82,12 @@ typedef struct ObjAnimState {
   s8 flags;
   s16 lastBlendMoveIndex;
 } ObjAnimState;
+
+typedef struct ObjAnimRootCurve {
+  f32 scale;
+  s16 sampleCount;
+  s16 axisData[1];
+} ObjAnimRootCurve;
 
 typedef struct ObjAnimBank {
   ObjAnimDef *animDef;

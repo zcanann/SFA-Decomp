@@ -596,12 +596,13 @@ undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnimArg,float *ph
         iVar13 = *(int *)(iVar18 + (uint)*(ushort *)(iVar18 + 0x48) * 4 + 0x24) +
                  OBJANIM_CACHED_MOVE_DATA_OFFSET;
       }
-      if (*(short *)(iVar13 + 4) != 0) {
-        pfVar16 = (float *)(iVar13 + *(short *)(iVar13 + 4));
+      if (*(short *)(iVar13 + OBJANIM_MOVE_ROOT_CURVE_OFFSET) != 0) {
+        pfVar16 = (float *)(iVar13 + *(short *)(iVar13 + OBJANIM_MOVE_ROOT_CURVE_OFFSET));
         in_f6 = (double)(*pfVar16 * fVar5);
-        pfVar15 = (float *)((int)pfVar16 + 6);
+        pfVar15 = (float *)((int)pfVar16 + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
         if (((*(short *)pfVar15 == 0) && (pfVar15 = pfVar16 + 2, *(short *)pfVar15 == 0)) &&
-           (pfVar15 = (float *)((int)pfVar16 + 10), *(short *)pfVar15 == 0)) {
+           (pfVar15 = (float *)((int)pfVar16 + OBJANIM_ROOT_CURVE_Z_AXIS_OFFSET),
+           *(short *)pfVar15 == 0)) {
           pfVar15 = (float *)0x0;
         }
         if (pfVar15 != (float *)0x0) {
@@ -616,13 +617,13 @@ undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnimArg,float *ph
       iVar17 = *(int *)(iVar18 + (uint)*(ushort *)(iVar18 + 0x44) * 4 + 0x1c) +
                OBJANIM_CACHED_MOVE_DATA_OFFSET;
     }
-    if (*(short *)(iVar17 + 4) != 0) {
-      pfVar16 = (float *)(iVar17 + *(short *)(iVar17 + 4));
+    if (*(short *)(iVar17 + OBJANIM_MOVE_ROOT_CURVE_OFFSET) != 0) {
+      pfVar16 = (float *)(iVar17 + *(short *)(iVar17 + OBJANIM_MOVE_ROOT_CURVE_OFFSET));
       fVar7 = *pfVar16 * fVar5;
       uVar10 = (int)*(short *)(pfVar16 + 1) - 1;
-      pfVar14 = (float *)((int)pfVar16 + 6);
+      pfVar14 = (float *)((int)pfVar16 + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
       if ((*(short *)pfVar14 == 0) && (pfVar14 = pfVar16 + 2, *(short *)pfVar14 == 0)) {
-        pfVar14 = (float *)((int)pfVar16 + 10);
+        pfVar14 = (float *)((int)pfVar16 + OBJANIM_ROOT_CURVE_Z_AXIS_OFFSET);
       }
       if (*(short *)pfVar14 != 0) {
         sVar6 = *(short *)((int)pfVar14 + uVar10 * 2 + 2);
@@ -933,16 +934,16 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
       else {
         iVar23 = *(int *)(iVar24 + (uint)*(ushort *)(iVar24 + 0x44) * 4 + 0x1c) + 0x80;
       }
-      if (*(short *)(iVar23 + 4) == 0) {
+      if (*(short *)(iVar23 + OBJANIM_MOVE_ROOT_CURVE_OFFSET) == 0) {
         *(undefined *)((int)pfVar20 + 0x12) = 0;
       }
       else {
         *(undefined *)((int)pfVar20 + 0x12) = 1;
-        pfVar27 = (float *)(iVar23 + *(short *)(iVar23 + 4));
+        pfVar27 = (float *)(iVar23 + *(short *)(iVar23 + OBJANIM_MOVE_ROOT_CURVE_OFFSET));
         fVar5 = *pfVar27;
         fVar6 = *(float *)(objAnimArg + 8);
         iVar23 = (int)*(short *)(pfVar27 + 1);
-        psVar28 = (short *)((int)pfVar27 + 6);
+        psVar28 = (short *)((int)pfVar27 + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
         local_30 = (double)CONCAT44(0x43300000,iVar23 - 1U ^ 0x80000000);
         fVar7 = (float)(local_30 - lbl_803DE900) * fVar4;
         uVar15 = (uint)fVar7;
@@ -962,7 +963,8 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
           else {
             iVar24 = *(int *)(iVar24 + (uint)*(ushort *)(iVar24 + 0x48) * 4 + 0x24) + 0x80;
           }
-          iVar30 = iVar24 + *(short *)(iVar24 + 4) + 6;
+          iVar30 = iVar24 + *(short *)(iVar24 + OBJANIM_MOVE_ROOT_CURVE_OFFSET) +
+                   OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET;
           fVar13 = lbl_803DE8E0 - fVar11;
         }
         iVar26 = 0;
@@ -974,7 +976,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
             if (iVar30 != 0) {
               iVar30 = iVar30 + 2;
             }
-            if (iVar26 < 3) {
+            if (iVar26 < OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT) {
               *pfVar20 = lbl_803DE8F0;
             }
             else {
@@ -1038,7 +1040,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
               }
             }
             fVar12 = fVar12 - ((fVar7 - (float)dVar31) * (fVar10 - fVar9) + fVar9);
-            if (iVar26 < 3) {
+            if (iVar26 < OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT) {
               *pfVar20 = fVar12 * fVar5 * fVar6;
             }
             else {
@@ -1052,7 +1054,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
           pfVar20 = pfVar20 + 1;
           pfVar27 = (float *)((int)pfVar27 + 2);
           iVar26 = iVar26 + 1;
-        } while (iVar26 < 6);
+        } while (iVar26 < OBJANIM_ROOT_CURVE_AXIS_COUNT);
       }
     }
   }
