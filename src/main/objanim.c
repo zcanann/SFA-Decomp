@@ -36,7 +36,6 @@ extern f32 lbl_803DE90C;
  */
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimState *state,
                           uint moveId,s16 eventState)
 {
@@ -85,7 +84,6 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
   }
   return;
 }
-#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
