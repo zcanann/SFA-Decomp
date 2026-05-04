@@ -17,7 +17,7 @@ extern undefined4 DAT_80327af8;
 extern undefined4 DAT_80327b08;
 extern undefined4 DAT_80327b18;
 extern undefined4 DAT_80327b28;
-extern f32 FLOAT_803e60ac;
+extern f32 lbl_803E60AC;
 
 /*
  * --INFO--
@@ -76,7 +76,7 @@ void FUN_801d5174(void)
          (iVar5 == (&DAT_80327ae0)[iVar2 * 4])) || (iVar5 == (&DAT_80327ae4)[iVar2 * 4])))) {
       FUN_8014ccac(iVar4,iVar1);
       dVar9 = FUN_80017714((float *)(*piVar3 + 0x18),(float *)(iVar1 + 0x18));
-      if (dVar9 < (double)FLOAT_803e60ac) {
+      if (dVar9 < (double)lbl_803E60AC) {
         FUN_80017690((int)*(short *)(*(int *)(*piVar3 + 0x4c) + 0x18));
       }
       cVar6 = cVar6 + '\x01';

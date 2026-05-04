@@ -41,9 +41,9 @@ extern uint FUN_80294cb8();
 extern undefined4 FUN_802950c8();
 
 extern undefined4* DAT_803dd72c;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803dda58;
-extern f32 FLOAT_803dda5c;
+extern f32 lbl_803DC074;
+extern f32 lbl_803DDA58;
+extern f32 lbl_803DDA5C;
 
 /*
  * --INFO--
@@ -237,8 +237,8 @@ void FUN_801d7844(uint param_1)
   iVar1 = ObjHits_GetPriorityHitWithPosition(param_1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0,&local_1c,&uStack_18,
                        local_14);
   if (iVar1 != 0) {
-    local_1c = local_1c + FLOAT_803dda58;
-    local_14[0] = local_14[0] + FLOAT_803dda5c;
+    local_1c = local_1c + lbl_803DDA58;
+    local_14[0] = local_14[0] + lbl_803DDA5C;
     FUN_80081120(param_1,auStack_28,1,(int *)0x0);
     uVar2 = FUN_8007f66c(3);
     if (uVar2 == 0) {

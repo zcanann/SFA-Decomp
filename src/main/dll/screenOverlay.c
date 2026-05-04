@@ -24,10 +24,10 @@ extern undefined4* DAT_803dd728;
 extern f64 DOUBLE_803e4370;
 extern f64 DOUBLE_803e4388;
 extern f64 DOUBLE_803e43a8;
-extern f32 FLOAT_803e4334;
-extern f32 FLOAT_803e4378;
-extern f32 FLOAT_803e439c;
-extern f32 FLOAT_803e43a0;
+extern f32 lbl_803E4334;
+extern f32 lbl_803E4378;
+extern f32 lbl_803E439C;
+extern f32 lbl_803E43A0;
 
 /*
  * --INFO--
@@ -54,7 +54,7 @@ void FUN_8017a38c(int param_1)
   FUN_800033a8(iVar1,0,0x2cc);
   FUN_80017a98();
   *(undefined *)(iVar1 + 0x274) = 0;
-  *(float *)(iVar1 + 0x26c) = FLOAT_803e4334;
+  *(float *)(iVar1 + 0x26c) = lbl_803E4334;
   *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x2000;
   uStack_c = (int)*(short *)(*(int *)(param_1 + 0x54) + 0x5a) ^ 0x80000000;
   local_10 = 0x43300000;
@@ -136,7 +136,7 @@ void FUN_8017a56c(int param_1)
       *(undefined *)(iVar3 + 0x14) = 3;
     }
     dVar4 = (double)FUN_80293f90();
-    *(short *)(iVar3 + 0x12) = (short)(int)((double)FLOAT_803e4378 * dVar4) + 0xdc;
+    *(short *)(iVar3 + 0x12) = (short)(int)((double)lbl_803E4378 * dVar4) + 0xdc;
   }
   else if (bVar1 < 2) {
     if (bVar1 == 0) {
@@ -267,8 +267,8 @@ void FUN_8017a77c(uint param_1)
         FUN_80017698((int)*(short *)(pcVar6 + 2),1);
         if ((*(byte *)(iVar4 + 0x1e) & 3) == 2) {
           *(float *)(pcVar6 + 4) =
-               FLOAT_803e439c *
-               FLOAT_803e43a0 *
+               lbl_803E439C *
+               lbl_803E43A0 *
                (float)((double)CONCAT44(0x43300000,(int)*(short *)(iVar4 + 0x1a) ^ 0x80000000) -
                       DOUBLE_803e43a8);
         }

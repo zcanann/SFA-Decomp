@@ -67,18 +67,18 @@ extern undefined4* DAT_803dd72c;
 extern undefined4* DAT_803dd738;
 extern undefined4 DAT_803de700;
 extern f64 DOUBLE_803e3ba8;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e3b50;
-extern f32 FLOAT_803e3b54;
-extern f32 FLOAT_803e3bc0;
-extern f32 FLOAT_803e3bcc;
-extern f32 FLOAT_803e3bd0;
-extern f32 FLOAT_803e3bd8;
-extern f32 FLOAT_803e3be0;
-extern f32 FLOAT_803e3be4;
-extern f32 FLOAT_803e3be8;
-extern f32 FLOAT_803e3bec;
-extern f32 FLOAT_803e3bf0;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E3B50;
+extern f32 lbl_803E3B54;
+extern f32 lbl_803E3BC0;
+extern f32 lbl_803E3BCC;
+extern f32 lbl_803E3BD0;
+extern f32 lbl_803E3BD8;
+extern f32 lbl_803E3BE0;
+extern f32 lbl_803E3BE4;
+extern f32 lbl_803E3BE8;
+extern f32 lbl_803E3BEC;
+extern f32 lbl_803E3BF0;
 
 /*
  * --INFO--
@@ -109,7 +109,7 @@ void cannonclaw_update(short *param_1)
     }
     else {
       (**(code **)(*DAT_803dd70c + 8))
-                ((double)FLOAT_803e3b54,(double)FLOAT_803e3b54,param_1,iVar4,&DAT_803ad270,
+                ((double)lbl_803E3B54,(double)lbl_803E3B54,param_1,iVar4,&DAT_803ad270,
                  &DAT_803ad258);
       (**(code **)(**(int **)(*(int *)(iVar3 + 0x38) + 0x68) + 0x24))
                 ((double)*(float *)(iVar3 + 0x48),*(int *)(iVar3 + 0x38),param_1 + 6,param_1 + 8,
@@ -153,7 +153,7 @@ void cannonclaw_update(short *param_1)
     iVar3 = (**(code **)(*DAT_803dd72c + 0x68))(*(undefined4 *)(iVar2 + 0x14));
     if (iVar3 != 0) {
       (**(code **)(*DAT_803dd738 + 0x58))
-                ((double)FLOAT_803e3bc0,param_1,iVar2,iVar4,10,6,0x10e,0x36);
+                ((double)lbl_803E3BC0,param_1,iVar2,iVar4,10,6,0x10e,0x36);
       *(undefined2 *)(iVar4 + 0x270) = 1;
       *(undefined *)(iVar4 + 0x27b) = 1;
       *(undefined *)(param_1 + 0x1b) = 0;
@@ -263,10 +263,10 @@ void FUN_801633e4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   iVar1 = FUN_80017af8(0x1723);
   if (*(int *)(param_9 + 0xf4) == 0) {
     if (*(short *)(param_9 + 0xa0) != 0x208) {
-      FUN_800305f8((double)FLOAT_803e3bcc,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+      FUN_800305f8((double)lbl_803E3BCC,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                    param_9,0x208,0,param_12,param_13,param_14,param_15,param_16);
     }
-    FUN_8002fc3c((double)FLOAT_803e3bd0,(double)FLOAT_803dc074);
+    FUN_8002fc3c((double)lbl_803E3BD0,(double)lbl_803DC074);
     if ((iVar1 != 0) &&
        (uVar2 = FUN_80017690((int)*(short *)(*(int *)(iVar1 + 0x4c) + 0x1a)), uVar2 != 0)) {
       *(undefined4 *)(param_9 + 0xf4) = 1;
@@ -366,7 +366,7 @@ void FUN_80163544(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(undefined *)((int)puVar7 + 5) = *(undefined *)(iVar11 + 5);
       *(undefined *)(puVar7 + 3) = *(undefined *)(iVar11 + 6);
       *(undefined *)((int)puVar7 + 7) = *(undefined *)(iVar11 + 7);
-      *(float *)(puVar7 + 0xe) = FLOAT_803e3bd8;
+      *(float *)(puVar7 + 0xe) = lbl_803E3BD8;
       if (((*(byte *)(iVar12 + 0x4c) & 1) != 0) &&
          ((*(int *)(*(int *)(iVar4 + 0x4c) + 0x14) == 0x292c && (*(short *)(iVar12 + 0x4e) == 6))))
       {
@@ -470,7 +470,7 @@ void FUN_801638e8(undefined4 param_1,undefined4 param_2,int param_3)
   puVar3 = (ushort *)((ulonglong)uVar9 >> 0x20);
   iVar4 = (int)uVar9;
   pfVar8 = *(float **)(puVar3 + 0x5c);
-  *pfVar8 = FLOAT_803e3be0;
+  *pfVar8 = lbl_803E3BE0;
   *(ushort *)(pfVar8 + 2) = (ushort)*(byte *)(iVar4 + 0x1b) << 1;
   *(undefined *)(pfVar8 + 0x13) = *(undefined *)(iVar4 + 0x23);
   puVar3[2] = (*(byte *)(iVar4 + 0x18) - 0x7f) * 0x80;
@@ -478,8 +478,8 @@ void FUN_801638e8(undefined4 param_1,undefined4 param_2,int param_3)
   *puVar3 = (ushort)*(byte *)(iVar4 + 0x1a) << 8;
   *(undefined4 *)(puVar3 + 4) = *(undefined4 *)(iVar4 + 0x1c);
   fVar1 = *(float *)(puVar3 + 4);
-  FUN_80035d58((int)puVar3,(short)(int)(FLOAT_803e3be4 * fVar1),(short)(int)(FLOAT_803e3be8 * fVar1)
-               ,(short)(int)(FLOAT_803e3bec * fVar1));
+  FUN_80035d58((int)puVar3,(short)(int)(lbl_803E3BE4 * fVar1),(short)(int)(lbl_803E3BE8 * fVar1)
+               ,(short)(int)(lbl_803E3BEC * fVar1));
   uVar2 = puVar3[0x23];
   if (uVar2 != 0x4b9) {
     if ((short)uVar2 < 0x4b9) {
@@ -538,7 +538,7 @@ int FUN_80163ac8(float *param_1)
   double dVar6;
   int local_28 [2];
   
-  dVar6 = (double)FLOAT_803e3bf0;
+  dVar6 = (double)lbl_803E3BF0;
   iVar3 = 0;
   piVar1 = ObjGroup_GetObjects(0x31,local_28);
   for (iVar4 = 0; iVar4 < local_28[0]; iVar4 = iVar4 + 1) {
@@ -587,7 +587,9 @@ int tumbleweedbush_func08(void) { return 0x0; }
 
 /* 16b chained patterns. */
 #pragma scheduling off
+#pragma peephole off
 void fn_80163980(int *obj) { u8 v = 0x7; *((u8*)((int**)obj)[0xb8/4] + 0x278) = v; }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* render-with-fn_8003B8F4 pattern. */

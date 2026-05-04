@@ -18,12 +18,12 @@ extern double FUN_80247f54();
 extern undefined4 DAT_803de138;
 extern undefined4 gCamcontrolState;
 extern f64 DOUBLE_803e22d0;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803de148;
-extern f32 FLOAT_803e22ac;
-extern f32 FLOAT_803e22b0;
-extern f32 FLOAT_803e22e8;
-extern f32 FLOAT_803e22ec;
+extern f32 lbl_803DC074;
+extern f32 lbl_803DE148;
+extern f32 lbl_803E22AC;
+extern f32 lbl_803E22B0;
+extern f32 lbl_803E22E8;
+extern f32 lbl_803E22EC;
 
 /*
  * --INFO--
@@ -65,13 +65,13 @@ void camcontrol_applyState(short *param_1)
   if (*(char *)((int)param_1 + 0x143) < '\0') {
     FUN_80247eb8((float *)(param_1 + 0xc),(float *)(psVar3 + 6),&local_38);
     dVar5 = FUN_80247f54(&local_38);
-    if ((double)FLOAT_803e22b0 < dVar5) {
+    if ((double)lbl_803E22B0 < dVar5) {
       FUN_80247ef8(&local_38,&local_38);
     }
-    dVar6 = FUN_800176f4(dVar5,(double)FLOAT_803e22e8,(double)FLOAT_803dc074);
-    dVar5 = (double)FLOAT_803e22b0;
-    if ((dVar5 <= dVar6) && (dVar5 = dVar6, (double)(FLOAT_803e22ec * FLOAT_803dc074) < dVar6)) {
-      dVar5 = (double)(FLOAT_803e22ec * FLOAT_803dc074);
+    dVar6 = FUN_800176f4(dVar5,(double)lbl_803E22E8,(double)lbl_803DC074);
+    dVar5 = (double)lbl_803E22B0;
+    if ((dVar5 <= dVar6) && (dVar5 = dVar6, (double)(lbl_803E22EC * lbl_803DC074) < dVar6)) {
+      dVar5 = (double)(lbl_803E22EC * lbl_803DC074);
     }
     *(float *)(psVar3 + 6) = (float)(dVar5 * (double)local_38 + (double)*(float *)(psVar3 + 6));
     *(float *)(psVar3 + 8) = (float)(dVar5 * (double)local_34 + (double)*(float *)(psVar3 + 8));
@@ -82,29 +82,29 @@ void camcontrol_applyState(short *param_1)
     *(undefined4 *)(psVar3 + 8) = *(undefined4 *)(param_1 + 0xe);
     *(undefined4 *)(psVar3 + 10) = *(undefined4 *)(param_1 + 0x10);
   }
-  fVar2 = FLOAT_803e22b0;
-  FLOAT_803de148 = *(float *)(param_1 + 0x5a);
-  if (FLOAT_803e22b0 < *(float *)(param_1 + 0x7a)) {
+  fVar2 = lbl_803E22B0;
+  lbl_803DE148 = *(float *)(param_1 + 0x5a);
+  if (lbl_803E22B0 < *(float *)(param_1 + 0x7a)) {
     *(float *)(param_1 + 0x7a) =
-         -(*(float *)(param_1 + 0x7c) * FLOAT_803dc074 - *(float *)(param_1 + 0x7a));
+         -(*(float *)(param_1 + 0x7c) * lbl_803DC074 - *(float *)(param_1 + 0x7a));
     fVar1 = *(float *)(param_1 + 0x7a);
-    if ((fVar2 <= fVar1) && (fVar2 = fVar1, FLOAT_803e22ac < fVar1)) {
-      fVar2 = FLOAT_803e22ac;
+    if ((fVar2 <= fVar1) && (fVar2 = fVar1, lbl_803E22AC < fVar1)) {
+      fVar2 = lbl_803E22AC;
     }
     *(float *)(param_1 + 0x7a) = fVar2;
     if (*(char *)(gCamcontrolState + 0x139) == '\x02') {
       fVar2 = *(float *)(param_1 + 0x7a);
-      dVar5 = (double)(FLOAT_803e22ac - fVar2 * fVar2 * fVar2);
+      dVar5 = (double)(lbl_803E22AC - fVar2 * fVar2 * fVar2);
     }
     else if (*(char *)(gCamcontrolState + 0x139) == '\x01') {
-      dVar5 = (double)(FLOAT_803e22ac - *(float *)(param_1 + 0x7a) * *(float *)(param_1 + 0x7a));
+      dVar5 = (double)(lbl_803E22AC - *(float *)(param_1 + 0x7a) * *(float *)(param_1 + 0x7a));
     }
     else {
-      dVar5 = (double)(FLOAT_803e22ac - *(float *)(param_1 + 0x7a));
+      dVar5 = (double)(lbl_803E22AC - *(float *)(param_1 + 0x7a));
     }
-    dVar6 = (double)FLOAT_803e22b0;
-    if ((dVar6 <= dVar5) && (dVar6 = dVar5, (double)FLOAT_803e22ac < dVar5)) {
-      dVar6 = (double)FLOAT_803e22ac;
+    dVar6 = (double)lbl_803E22B0;
+    if ((dVar6 <= dVar5) && (dVar6 = dVar5, (double)lbl_803E22AC < dVar5)) {
+      dVar6 = (double)lbl_803E22AC;
     }
     if ((*(byte *)((int)param_1 + 0x13f) & 8) != 0) {
       *(float *)(psVar3 + 6) =
@@ -165,7 +165,7 @@ void camcontrol_applyState(short *param_1)
       psVar3[2] = param_1[0x85] - (short)iVar4;
     }
   }
-  FUN_80006a00((double)FLOAT_803de148);
+  FUN_80006a00((double)lbl_803DE148);
   FUN_800068d8(psVar3);
   FUN_80056a50((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
                (double)*(float *)(param_1 + 0x10),in_f4,in_f5,in_f6,in_f7,in_f8);
@@ -173,15 +173,15 @@ void camcontrol_applyState(short *param_1)
   DAT_803de138 = (short)iVar4;
   if ((int)DAT_803de138 != (int)*(char *)((int)param_1 + 0x13b)) {
     if ((int)DAT_803de138 < (int)*(char *)((int)param_1 + 0x13b)) {
-      local_20 = (double)(longlong)(int)FLOAT_803dc074;
-      DAT_803de138 = DAT_803de138 + (short)*(char *)(param_1 + 0x9e) * (short)(int)FLOAT_803dc074;
+      local_20 = (double)(longlong)(int)lbl_803DC074;
+      DAT_803de138 = DAT_803de138 + (short)*(char *)(param_1 + 0x9e) * (short)(int)lbl_803DC074;
       if ((int)*(char *)((int)param_1 + 0x13b) < (int)DAT_803de138) {
         DAT_803de138 = (short)*(char *)((int)param_1 + 0x13b);
       }
     }
     else {
-      local_20 = (double)(longlong)(int)FLOAT_803dc074;
-      DAT_803de138 = DAT_803de138 - (short)*(char *)(param_1 + 0x9e) * (short)(int)FLOAT_803dc074;
+      local_20 = (double)(longlong)(int)lbl_803DC074;
+      DAT_803de138 = DAT_803de138 - (short)*(char *)(param_1 + 0x9e) * (short)(int)lbl_803DC074;
       if ((int)DAT_803de138 < (int)*(char *)((int)param_1 + 0x13b)) {
         DAT_803de138 = (short)*(char *)((int)param_1 + 0x13b);
       }

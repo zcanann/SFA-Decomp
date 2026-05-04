@@ -16,7 +16,7 @@ extern undefined4 DAT_803276c4;
 extern undefined4 DAT_803276fc;
 extern undefined4 DAT_80327734;
 extern undefined4* DAT_803dd72c;
-extern f32 FLOAT_803e5f18;
+extern f32 lbl_803E5F18;
 
 /*
  * --INFO--
@@ -61,7 +61,7 @@ void FUN_801d083c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   else {
     *(undefined *)(pfVar3 + 1) = 0xc;
   }
-  *pfVar3 = FLOAT_803e5f18;
+  *pfVar3 = lbl_803E5F18;
   FUN_80080f18(&DAT_803276c4,&DAT_8032768c,&DAT_803276fc,&DAT_80327734);
   iVar2 = FUN_800e8b98();
   if (iVar2 == 0) {

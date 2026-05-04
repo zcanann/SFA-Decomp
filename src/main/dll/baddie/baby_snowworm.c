@@ -647,6 +647,7 @@ void FUN_80129d10()
 }
 
 #pragma scheduling off
+#pragma peephole off
 void fn_80129FB0(void)
 {
     fn_8000F478(0);
@@ -658,6 +659,7 @@ void fn_80129FB0(void)
     fn_8000FB20();
     fn_8000F7A0();
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 void FUN_80129ff8()
@@ -837,6 +839,7 @@ void FUN_8012dca8()
 }
 
 #pragma scheduling off
+#pragma peephole off
 void fn_8012E050(void)
 {
     if (lbl_803DE3F4 == 0) return;
@@ -850,6 +853,7 @@ void fn_8012E050(void)
         lbl_803DC6C4 = -1;
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -886,6 +890,7 @@ void FUN_8012e114()
 }
 
 #pragma scheduling off
+#pragma peephole off
 void fn_8012E250(void)
 {
     lbl_803DE3DB = 1;
@@ -893,6 +898,7 @@ void fn_8012E250(void)
     fn_800207AC(1);
     fn_800206EC(0xff);
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 void FUN_8012e2a4()
@@ -1106,6 +1112,7 @@ void fn_8012DD7C(u8 param)
  * the trajectory. Once the counter overshoots 0xFF it resets to 0 and
  * the active-id sentinel lbl_803DBA5C is dropped to -1. */
 #pragma scheduling off
+#pragma peephole off
 void fn_8012DD14(void)
 {
     if (lbl_803DD774 == 0) return;
@@ -1119,12 +1126,14 @@ void fn_8012DD14(void)
         lbl_803DBA5C = -1;
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x80129C74  size: 72b  Render-block teardown for the snowworm
  * scene: drops to layer 0, optionally tears the cached effect down, and
  * issues the close/restore pair before returning to the parent renderer. */
 #pragma scheduling off
+#pragma peephole off
 void fn_80129C74(void)
 {
     fn_8000F458(0);
@@ -1136,6 +1145,7 @@ void fn_80129C74(void)
     fn_8000FB00();
     fn_8000F780();
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x8012DF14  size: 84b  Death sequence trigger: latches the
@@ -1143,6 +1153,7 @@ void fn_80129C74(void)
  * on the singleton at lbl_803DCA50 with the worm-death event id 0x94,
  * then runs the standard player-input-disable + alpha-fade-to-FF pair. */
 #pragma scheduling off
+#pragma peephole off
 void fn_8012DF14(void)
 {
     lbl_803DD75B = 1;
@@ -1150,6 +1161,7 @@ void fn_8012DF14(void)
     fn_800206E8(1);
     fn_80020628(0xff);
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x8012EA5C  size: 172b  Spawn/queue helper for the snowworm

@@ -20,12 +20,12 @@ extern undefined4 DAT_803dcba8;
 extern undefined4 DAT_803dcbb0;
 extern undefined4 DAT_803dcbb8;
 extern undefined4 DAT_803dcbc0;
-extern f32 FLOAT_803e5a94;
-extern f32 FLOAT_803e5abc;
-extern f32 FLOAT_803e5ac0;
-extern f32 FLOAT_803e5ac8;
-extern f32 FLOAT_803e5acc;
-extern f32 FLOAT_803e5ad0;
+extern f32 lbl_803E5A94;
+extern f32 lbl_803E5ABC;
+extern f32 lbl_803E5AC0;
+extern f32 lbl_803E5AC8;
+extern f32 lbl_803E5ACC;
+extern f32 lbl_803E5AD0;
 
 /*
  * --INFO--
@@ -95,7 +95,7 @@ void FUN_801c282c(int param_1)
         sVar2 = sVar2 + -1;
       }
       *(short *)(piVar3 + 6) = sVar2;
-      dVar8 = (double)FLOAT_803e5a94;
+      dVar8 = (double)lbl_803E5A94;
       iVar6 = FUN_801c1740(dVar8,dVar8,dVar8,dVar9,dVar10,dVar12,dVar7,
                            (double)*(float *)(&DAT_803dcbb8 + (uint)*(byte *)(iVar6 + 0x1b) * 4));
       piVar3[0xb] = iVar6;
@@ -113,8 +113,8 @@ void FUN_801c282c(int param_1)
         piVar3[3] = piVar3[4];
         piVar3[4] = (int)fVar1;
       }
-      fVar1 = FLOAT_803e5abc;
-      piVar3[1] = (int)((float)piVar3[1] - FLOAT_803e5abc);
+      fVar1 = lbl_803E5ABC;
+      piVar3[1] = (int)((float)piVar3[1] - lbl_803E5ABC);
       piVar3[3] = (int)((float)piVar3[3] - fVar1);
       piVar3[2] = (int)((float)piVar3[2] + fVar1);
       piVar3[4] = (int)((float)piVar3[4] + fVar1);
@@ -124,7 +124,7 @@ void FUN_801c282c(int param_1)
       dVar7 = (double)*(float *)(iVar5 + 0xc);
       dVar9 = (double)*(float *)(iVar5 + 0x10);
       dVar10 = (double)*(float *)(iVar5 + 0x14);
-      dVar12 = (double)(float)((double)FLOAT_803e5ac0 + dVar13);
+      dVar12 = (double)(float)((double)lbl_803E5AC0 + dVar13);
       dVar8 = (double)(float)(dVar12 * (double)(float)(dVar11 - dVar10) +
                              (double)(float)(dVar13 * (double)(float)(dVar10 - dVar11) +
                                             (double)(float)(dVar9 * (double)(float)(dVar11 - dVar11)
@@ -140,7 +140,7 @@ void FUN_801c282c(int param_1)
       dVar7 = FUN_80293900((double)(float)(dVar9 * dVar9 +
                                           (double)(float)(dVar8 * dVar8 +
                                                          (double)(float)(dVar10 * dVar10))));
-      if ((double)FLOAT_803e5a94 < dVar7) {
+      if ((double)lbl_803E5A94 < dVar7) {
         dVar8 = (double)(float)(dVar8 / dVar7);
         dVar10 = (double)(float)(dVar10 / dVar7);
         dVar9 = (double)(float)(dVar9 / dVar7);
@@ -279,7 +279,7 @@ undefined4 FUN_801c2e58(int param_1)
     if (piVar2 != (int *)0x0) {
       *psVar4 = *psVar4 + (ushort)DAT_803dc070 * 800;
       dVar5 = (double)FUN_80294964();
-      *piVar2 = (int)-(FLOAT_803e5acc * (float)((double)FLOAT_803e5ad0 - dVar5) - FLOAT_803e5ac8);
+      *piVar2 = (int)-(lbl_803E5ACC * (float)((double)lbl_803E5AD0 - dVar5) - lbl_803E5AC8);
     }
   }
   return 0;

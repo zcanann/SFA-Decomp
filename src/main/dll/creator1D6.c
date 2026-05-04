@@ -14,9 +14,9 @@ extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd71c;
 extern undefined4* DAT_803dd728;
 extern undefined4 DAT_803e5ea0;
-extern f32 FLOAT_803e5ee4;
-extern f32 FLOAT_803e5eec;
-extern f32 FLOAT_803e5ef0;
+extern f32 lbl_803E5EE4;
+extern f32 lbl_803E5EEC;
+extern f32 lbl_803E5EF0;
 
 /*
  * --INFO--
@@ -93,11 +93,15 @@ int nw_ice_getExtraSize(void) { return 0x4; }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
+#pragma peephole off
 void nw_animice_free(int x) { ObjGroup_RemoveObject(x, 0x3d); }
 void nw_ice_free(int x) { ObjGroup_RemoveObject(x, 0x3c); }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* call(x, N) wrappers. */
 #pragma scheduling off
+#pragma peephole off
 void nw_ice_init(int x) { ObjGroup_AddObject(x, 0x3c); }
+#pragma peephole reset
 #pragma scheduling reset

@@ -31,6 +31,7 @@ int dfppowersl_getExtraSize(void)
 }
 
 #pragma scheduling off
+#pragma peephole off
 void dfppowersl_free(u8 *obj)
 {
   if (obj != 0) {
@@ -38,6 +39,7 @@ void dfppowersl_free(u8 *obj)
   }
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

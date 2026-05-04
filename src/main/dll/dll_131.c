@@ -12,11 +12,11 @@ extern undefined4* DAT_803dd738;
 extern f64 DOUBLE_803e3ce8;
 extern f64 DOUBLE_803e3d00;
 extern f64 DOUBLE_803e3d08;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e3c74;
-extern f32 FLOAT_803e3c8c;
-extern f32 FLOAT_803e3ce0;
-extern f32 FLOAT_803e3cf8;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E3C74;
+extern f32 lbl_803E3C8C;
+extern f32 lbl_803E3CE0;
+extern f32 lbl_803E3CF8;
 
 /*
  * --INFO--
@@ -54,16 +54,16 @@ void FUN_80167764(undefined8 param_1,double param_2,double param_3,undefined8 pa
   uVar3 = 1;
   uVar4 = 0x108;
   iVar6 = *DAT_803dd738;
-  (**(code **)(iVar6 + 0x58))((double)FLOAT_803e3ce0,param_9,param_10,iVar8);
+  (**(code **)(iVar6 + 0x58))((double)lbl_803E3CE0,param_9,param_10,iVar8);
   *(undefined4 *)(param_9 + 0xbc) = 0;
   iVar7 = *(int *)(iVar8 + 0x40c);
   FUN_800033a8(iVar7,0,0x94);
   *(undefined *)(iVar7 + 0x90) = 5;
   *(byte *)(iVar7 + 0x92) = *(byte *)(iVar7 + 0x92) & 0xf | 0x30;
-  fVar1 = FLOAT_803e3c74;
-  dVar9 = (double)FLOAT_803e3c74;
-  *(float *)(iVar7 + 0x7c) = FLOAT_803e3c74;
-  *(float *)(iVar7 + 0x80) = FLOAT_803e3c8c;
+  fVar1 = lbl_803E3C74;
+  dVar9 = (double)lbl_803E3C74;
+  *(float *)(iVar7 + 0x7c) = lbl_803E3C74;
+  *(float *)(iVar7 + 0x80) = lbl_803E3C8C;
   *(float *)(iVar7 + 0x84) = fVar1;
   *(float *)(iVar7 + 0x88) = -*(float *)(param_9 + 0x10);
   *(undefined4 *)(iVar7 + 0x70) = *(undefined4 *)(param_9 + 0xc);
@@ -77,8 +77,8 @@ void FUN_80167764(undefined8 param_1,double param_2,double param_3,undefined8 pa
   *(undefined *)(iVar8 + 0x405) = 0;
   *(undefined *)(iVar8 + 0x25f) = 0;
   ObjHits_DisableObject(param_9);
-  fVar1 = FLOAT_803e3c8c;
-  *(float *)(iVar7 + 4) = FLOAT_803e3c8c;
+  fVar1 = lbl_803E3C8C;
+  *(float *)(iVar7 + 4) = lbl_803E3C8C;
   *(float *)(iVar7 + 0x18) = fVar1;
   *(float *)(iVar7 + 0x2c) = fVar1;
   *(float *)(iVar7 + 0x40) = fVar1;
@@ -185,8 +185,8 @@ undefined4 FUN_80167ad4(int param_1,int param_2)
   iVar2 = *(int *)(param_1 + 0xb8);
   iVar3 = *(int *)(iVar2 + 0x40c);
   if ((*(short *)(param_2 + 0x274) == 2) &&
-     (*(float *)(iVar3 + 0x34) = *(float *)(iVar3 + 0x34) - FLOAT_803dc074,
-     *(float *)(iVar3 + 0x34) <= FLOAT_803e3cf8)) {
+     (*(float *)(iVar3 + 0x34) = *(float *)(iVar3 + 0x34) - lbl_803DC074,
+     *(float *)(iVar3 + 0x34) <= lbl_803E3CF8)) {
     *(undefined *)(param_2 + 0x346) = 1;
   }
   if ((*(char *)(param_2 + 0x346) != '\0') || (*(char *)(param_2 + 0x27b) != '\0')) {

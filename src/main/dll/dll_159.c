@@ -13,11 +13,11 @@ extern undefined4 ObjGroup_AddObject();
 extern undefined4 DAT_803de740;
 extern f64 DOUBLE_803e4648;
 extern f64 DOUBLE_803e4660;
-extern f32 FLOAT_803e4644;
-extern f32 FLOAT_803e4650;
-extern f32 FLOAT_803e4654;
-extern f32 FLOAT_803e4658;
-extern f32 FLOAT_803e465c;
+extern f32 lbl_803E4644;
+extern f32 lbl_803E4650;
+extern f32 lbl_803E4654;
+extern f32 lbl_803E4658;
+extern f32 lbl_803E465C;
 
 /*
  * --INFO--
@@ -95,7 +95,7 @@ void FUN_801833e4(undefined2 *param_1,int param_2)
  */
 double FUN_80183544(int param_1)
 {
-  return (double)(FLOAT_803e4644 -
+  return (double)(lbl_803E4644 -
                  (float)((double)CONCAT44(0x43300000,
                                           (uint)*(byte *)(*(int *)(param_1 + 0xb8) + 0x13)) -
                         DOUBLE_803e4648) /
@@ -134,18 +134,18 @@ void FUN_801835c4(uint param_1,int param_2)
                                    (int)*(short *)(*(int *)(param_1 + 0x30) + 4) +
                                    (uint)*(ushort *)(param_2 + 0x20) ^ 0x80000000) - DOUBLE_803e4660
                  ) / *(float *)(param_2 + 0x1c);
-    if (((((fVar1 <= FLOAT_803e4650) && (FLOAT_803e4650 <= *(float *)(param_1 + 0x24))) ||
-         ((FLOAT_803e4650 <= fVar1 && (*(float *)(param_1 + 0x24) <= FLOAT_803e4650)))) &&
+    if (((((fVar1 <= lbl_803E4650) && (lbl_803E4650 <= *(float *)(param_1 + 0x24))) ||
+         ((lbl_803E4650 <= fVar1 && (*(float *)(param_1 + 0x24) <= lbl_803E4650)))) &&
         ((((iVar4 = *(int *)(iVar4 + 0x14), iVar4 == 0x465d7 || (iVar4 - 0x465d5U < 2)) ||
           (iVar4 == 0x66)) || ((iVar4 == 0x465d0 || (iVar4 == 0x465d2)))))) &&
        ((dVar5 = (double)FUN_8001771c((float *)(iVar2 + 0x18),(float *)(param_1 + 0x18)),
-        dVar5 < (double)FLOAT_803e4654 && (uVar3 = FUN_80017690(0xa71), uVar3 == 0)))) {
+        dVar5 < (double)lbl_803E4654 && (uVar3 = FUN_80017690(0xa71), uVar3 == 0)))) {
       FUN_80006824(param_1,0x313);
     }
     *(float *)(param_1 + 0xc) = *(float *)(param_1 + 0xc) + *(float *)(param_1 + 0x24);
-    fVar1 = FLOAT_803e4658 + *(float *)(param_2 + 0x24);
+    fVar1 = lbl_803E4658 + *(float *)(param_2 + 0x24);
     if (*(float *)(param_1 + 0xc) <= fVar1) {
-      fVar1 = *(float *)(param_2 + 0x24) - FLOAT_803e465c;
+      fVar1 = *(float *)(param_2 + 0x24) - lbl_803E465C;
       if (*(float *)(param_1 + 0xc) < fVar1) {
         *(float *)(param_1 + 0xc) = fVar1;
       }
@@ -156,7 +156,7 @@ void FUN_801835c4(uint param_1,int param_2)
   }
   else {
     *(undefined4 *)(param_1 + 0xc) = *(undefined4 *)(param_2 + 0x24);
-    *(float *)(param_1 + 0x24) = FLOAT_803e4650;
+    *(float *)(param_1 + 0x24) = lbl_803E4650;
   }
   return;
 }

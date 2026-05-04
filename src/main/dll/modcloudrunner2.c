@@ -33,5 +33,7 @@
 extern char lbl_80319A18[];
 extern void OSReport(const char *fmt, ...);
 #pragma scheduling off
+#pragma peephole off
 int fn_80100A20(void) { OSReport(lbl_80319A18); return -1; }
+#pragma peephole reset
 #pragma scheduling reset

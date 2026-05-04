@@ -65,6 +65,8 @@ void worldasteroids_hitDetect(void)
   return;
 }
 
+#pragma scheduling off
+#pragma peephole off
 void worldasteroids_update(s16 *obj)
 {
   u8 *anchor;
@@ -97,6 +99,11 @@ void worldasteroids_update(s16 *obj)
   return;
 }
 
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
 void worldasteroids_init(u8 *obj)
 {
   int baseAngle;
@@ -138,6 +145,8 @@ void worldasteroids_init(u8 *obj)
       (s16)(int)((float)worldasteroids_s32AsDouble(radiusSeed) * fn_80293EAC((u16)baseAngle));
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void worldasteroids_release(void)
 {

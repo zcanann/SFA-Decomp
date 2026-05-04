@@ -9,8 +9,8 @@ extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 
 extern f64 DOUBLE_803e5a88;
-extern f32 FLOAT_803e5a90;
-extern f32 FLOAT_803e5a94;
+extern f32 lbl_803E5A90;
+extern f32 lbl_803E5A94;
 
 /*
  * --INFO--
@@ -49,7 +49,7 @@ void FUN_801c1238(void)
   fStack_4 = (float)in_ps31_1;
   puVar1 = (undefined4 *)FUN_80286840();
   pfVar5 = (float *)*puVar1;
-  dVar8 = (double)FLOAT_803e5a94;
+  dVar8 = (double)lbl_803E5A94;
   for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(puVar1 + 2); iVar3 = iVar3 + 1) {
     local_38 = (float)dVar8;
     local_3c = (float)dVar8;

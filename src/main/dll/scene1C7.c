@@ -12,7 +12,7 @@ extern undefined4 FUN_80286888();
 extern undefined4 FUN_80294ccc();
 
 extern undefined4* DAT_803dd72c;
-extern f32 FLOAT_803e5d70;
+extern f32 lbl_803E5D70;
 
 /*
  * --INFO--
@@ -61,13 +61,13 @@ void dbsh_shrine_update(undefined4 param_1,undefined4 param_2,int param_3)
       else if (bVar1 == 0xf) {
         *(ushort *)(iVar2 + 6) = *(ushort *)(iVar2 + 6) & 0xbfff;
         if (*piVar6 != 0) {
-          FUN_800175cc((double)FLOAT_803e5d70,*piVar6,'\0');
+          FUN_800175cc((double)lbl_803E5D70,*piVar6,'\0');
         }
       }
       else if ((bVar1 < 0xf) && (0xd < bVar1)) {
         *(ushort *)(iVar2 + 6) = *(ushort *)(iVar2 + 6) | 0x4000;
         if (*piVar6 != 0) {
-          FUN_800175cc((double)FLOAT_803e5d70,*piVar6,'\0');
+          FUN_800175cc((double)lbl_803E5D70,*piVar6,'\0');
         }
       }
     }

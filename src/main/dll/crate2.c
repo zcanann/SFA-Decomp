@@ -164,6 +164,8 @@ void dfpstatue1_update(void) { dfpstatue1_updateState(0,0.0,0.0,0,0,0,0,0); }
 extern char sDfperchwitchInitNoLongerSupported[];
 extern void OSReport(const char *fmt, ...);
 #pragma scheduling off
+#pragma peephole off
 void dfperchwitch_update(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
 void dfperchwitch_init(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
+#pragma peephole reset
 #pragma scheduling reset

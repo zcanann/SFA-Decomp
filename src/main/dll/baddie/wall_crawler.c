@@ -882,6 +882,7 @@ s16 fn_8012EBC8(void)
  * argument equals the active id at lbl_803DD8C2, clear the busy flag
  * lbl_803DD8B8 and return 1; else return 0. */
 #pragma scheduling off
+#pragma peephole off
 int fn_8012EBD0(s32 id)
 {
     if (id == lbl_803DD8C2) {
@@ -890,6 +891,7 @@ int fn_8012EBD0(s32 id)
     }
     return 0;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x8012EBF4  size: 32b  Sign-of-active-id predicate. Returns 1
@@ -926,11 +928,13 @@ extern s8  lbl_803DD7B4;
 /* EN v1.0 0x8012EF30  size: 16b  Latch helper: set busy byte
  * lbl_803DD7B9 and stash s16 arg in lbl_803DD88C. */
 #pragma scheduling off
+#pragma peephole off
 void fn_8012EF30(s16 val)
 {
     lbl_803DD7B9 = 1;
     lbl_803DD88C = val;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x8012FB88  size: 8b  u8 setter for lbl_803DBA72. */

@@ -26,11 +26,11 @@ extern undefined4* DAT_803dd6fc;
 extern void* DAT_803de838;
 extern f64 DOUBLE_803e5b38;
 extern f64 DOUBLE_803e5b40;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e5b30;
-extern f32 FLOAT_803e5b34;
-extern f32 FLOAT_803e5b48;
-extern f32 FLOAT_803e5b4c;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E5B30;
+extern f32 lbl_803E5B34;
+extern f32 lbl_803E5B48;
+extern f32 lbl_803E5B4C;
 
 /*
  * --INFO--
@@ -102,8 +102,8 @@ void dfsh_objcreator_update(undefined8 param_1,undefined8 param_2,undefined8 par
       *(undefined2 *)(param_9 + 0xb4) = 0xffff;
       FUN_80017ac8(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9);
     }
-    *(float *)(iVar7 + 0x148) = *(float *)(iVar7 + 0x148) - FLOAT_803dc074;
-    if (*(float *)(iVar7 + 0x148) < FLOAT_803e5b34) {
+    *(float *)(iVar7 + 0x148) = *(float *)(iVar7 + 0x148) - lbl_803DC074;
+    if (*(float *)(iVar7 + 0x148) < lbl_803E5B34) {
       iVar2 = FUN_80017a98();
       local_24[2] = FUN_80017760(0xb4,0xf0);
       local_24[2] = local_24[2] ^ 0x80000000;
@@ -144,8 +144,8 @@ void FUN_801c3e94(int param_1,int param_2)
     *(undefined2 *)(iVar4 + 0x6a) = *(undefined2 *)(param_2 + 0x1a);
     *(undefined2 *)(iVar4 + 0x6e) = 0xffff;
     *(float *)(iVar4 + 0x24) =
-         FLOAT_803e5b30 /
-         (FLOAT_803e5b30 +
+         lbl_803E5B30 /
+         (lbl_803E5B30 +
          (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_2 + 0x24)) - DOUBLE_803e5b38));
     *(undefined4 *)(iVar4 + 0x28) = 0xffffffff;
     iVar3 = *(int *)(param_1 + 0xf4);
@@ -173,7 +173,7 @@ void FUN_801c3e94(int param_1,int param_2)
       if (*(int *)(iVar4 + 0x140) != 0) {
         FUN_800175b0(*(int *)(iVar4 + 0x140),2);
         FUN_8001759c(*(int *)(iVar4 + 0x140),0x96,0x32,0xff,0xff);
-        FUN_800175d0((double)FLOAT_803e5b48,(double)FLOAT_803e5b4c,*(int *)(iVar4 + 0x140));
+        FUN_800175d0((double)lbl_803E5B48,(double)lbl_803E5B4C,*(int *)(iVar4 + 0x140));
       }
     }
     *(undefined *)(param_1 + 0x36) = 0;
@@ -251,7 +251,7 @@ void FUN_801c40c0(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(undefined4 *)(param_9 + 0x7c) = 1;
     }
     if (psVar4[1] != 0) {
-      *psVar4 = *psVar4 - psVar4[1] * (short)(int)FLOAT_803dc074;
+      *psVar4 = *psVar4 - psVar4[1] * (short)(int)lbl_803DC074;
     }
     uVar1 = FUN_80017ae8();
     if (((uVar1 & 0xff) != 0) && (*psVar4 < 1)) {

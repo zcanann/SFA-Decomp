@@ -26,15 +26,15 @@ extern undefined4 FUN_80286884();
 
 extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e4c88;
-extern f32 FLOAT_803e4c68;
-extern f32 FLOAT_803e4c6c;
-extern f32 FLOAT_803e4c70;
-extern f32 FLOAT_803e4c74;
-extern f32 FLOAT_803e4c78;
-extern f32 FLOAT_803e4c7c;
-extern f32 FLOAT_803e4c80;
-extern f32 FLOAT_803e4c94;
-extern f32 FLOAT_803e4c98;
+extern f32 lbl_803E4C68;
+extern f32 lbl_803E4C6C;
+extern f32 lbl_803E4C70;
+extern f32 lbl_803E4C74;
+extern f32 lbl_803E4C78;
+extern f32 lbl_803E4C7C;
+extern f32 lbl_803E4C80;
+extern f32 lbl_803E4C94;
+extern f32 lbl_803E4C98;
 
 /*
  * --INFO--
@@ -233,10 +233,10 @@ void FUN_801946b8(void)
   iVar5 = (int)uVar14;
   iVar8 = *(int *)(puVar3 + 0x26);
   iVar7 = 6;
-  dVar9 = (double)FLOAT_803e4c68;
-  dVar10 = (double)FLOAT_803e4c6c;
-  dVar11 = (double)FLOAT_803e4c70;
-  dVar12 = (double)FLOAT_803e4c74;
+  dVar9 = (double)lbl_803E4C68;
+  dVar10 = (double)lbl_803E4C6C;
+  dVar11 = (double)lbl_803E4C70;
+  dVar12 = (double)lbl_803E4C74;
   dVar13 = DOUBLE_803e4c88;
   do {
     uStack_7c = FUN_80017760(0xffffff9c,100);
@@ -263,10 +263,10 @@ void FUN_801946b8(void)
   } while (iVar7 != 0);
   puVar6 = *(uint **)(puVar3 + 0x5c);
   fVar1 = *(float *)(iVar5 + 0x10) - *(float *)(puVar3 + 8);
-  if (((FLOAT_803e4c78 <= fVar1) && (fVar1 <= FLOAT_803e4c7c)) &&
+  if (((lbl_803E4C78 <= fVar1) && (fVar1 <= lbl_803E4C7C)) &&
      (fVar1 = *(float *)(iVar5 + 0xc) - *(float *)(puVar3 + 6),
      fVar2 = *(float *)(iVar5 + 0x14) - *(float *)(puVar3 + 10),
-     fVar1 * fVar1 + fVar2 * fVar2 <= FLOAT_803e4c80)) {
+     fVar1 * fVar1 + fVar2 * fVar2 <= lbl_803E4C80)) {
     *puVar6 = *puVar6 + 0x3c;
     uStack_7c = *puVar6 ^ 0x80000000;
     local_80 = 0x43300000;
@@ -348,7 +348,7 @@ void FUN_801948d8(uint param_1)
         *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 0x10;
       }
       else {
-        local_18[0] = FLOAT_803e4c94;
+        local_18[0] = lbl_803E4C94;
         iVar1 = ObjGroup_FindNearestObject(5,param_1,local_18);
         if (iVar1 == 0) {
           *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xef;
@@ -417,7 +417,7 @@ double FUN_80194a70(int param_1,byte param_2)
   int iVar1;
   
   if ((param_1 == 0) || (iVar1 = *(int *)(param_1 + 0xb8), iVar1 == 0)) {
-    return (double)FLOAT_803e4c98;
+    return (double)lbl_803E4C98;
   }
   if (param_2 == 4) {
     return (double)*(float *)(iVar1 + 0x44);
@@ -441,7 +441,7 @@ double FUN_80194a70(int param_1,byte param_2)
       return (double)(*(float *)(param_1 + 0x14) + *(float *)(iVar1 + 0x48));
     }
   }
-  return (double)FLOAT_803e4c98;
+  return (double)lbl_803E4C98;
 }
 
 /*

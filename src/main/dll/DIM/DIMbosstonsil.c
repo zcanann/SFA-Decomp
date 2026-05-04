@@ -22,12 +22,12 @@ extern undefined4 FUN_801bcc94();
 extern undefined4 DAT_803ad60c;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd738;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e5870;
-extern f32 FLOAT_803e58dc;
-extern f32 FLOAT_803e58e4;
-extern f32 FLOAT_803e58e8;
-extern f32 FLOAT_803e58ec;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E5870;
+extern f32 lbl_803E58DC;
+extern f32 lbl_803E58E4;
+extern f32 lbl_803E58E8;
+extern f32 lbl_803E58EC;
 
 /*
  * --INFO--
@@ -62,12 +62,12 @@ void DIMboss_update(undefined8 param_1,double param_2,double param_3,undefined8 
   FUN_80017a98();
   iVar5 = *(int *)(iVar4 + 0x40c);
   if (*(int *)(param_9 + 0x7a) == 0) {
-    if ((double)FLOAT_803e5870 < (double)*(float *)(iVar5 + 0xac)) {
+    if ((double)lbl_803E5870 < (double)*(float *)(iVar5 + 0xac)) {
       FUN_80006c88((double)*(float *)(iVar5 + 0xac),param_2,param_3,param_4,param_5,param_6,param_7,
                    param_8,0x432);
-      *(float *)(iVar5 + 0xac) = *(float *)(iVar5 + 0xac) - FLOAT_803dc074;
-      if (*(float *)(iVar5 + 0xac) < FLOAT_803e5870) {
-        *(float *)(iVar5 + 0xac) = FLOAT_803e5870;
+      *(float *)(iVar5 + 0xac) = *(float *)(iVar5 + 0xac) - lbl_803DC074;
+      if (*(float *)(iVar5 + 0xac) < lbl_803E5870) {
+        *(float *)(iVar5 + 0xac) = lbl_803E5870;
       }
     }
     uVar6 = ObjHits_RegisterActiveHitVolumeObject(param_9);
@@ -95,7 +95,7 @@ void DIMboss_update(undefined8 param_1,double param_2,double param_3,undefined8 
           *(undefined2 *)(iVar4 + 0x402) = 1;
           *(undefined *)(iVar4 + 0x354) = 3;
           *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) & 0xf7;
-          *(float *)(iVar5 + 0xa4) = FLOAT_803e58dc;
+          *(float *)(iVar5 + 0xa4) = lbl_803E58DC;
           uVar6 = FUN_80017698(0x9e,1);
         }
         else {
@@ -119,7 +119,7 @@ void DIMboss_update(undefined8 param_1,double param_2,double param_3,undefined8 
           FUN_80006728(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0xdc,0,
                        in_r7,in_r8,in_r9,in_r10);
           FUN_80080f80(7,1,0);
-          FUN_80080f70((double)FLOAT_803e58e4,(double)FLOAT_803e58e8,(double)FLOAT_803e58ec,7);
+          FUN_80080f70((double)lbl_803E58E4,(double)lbl_803E58E8,(double)lbl_803E58EC,7);
           FUN_80080f7c(7,0xa0,0xa0,0xff,0x7f,0x28);
           *(byte *)(iVar5 + 0xb6) = *(byte *)(iVar5 + 0xb6) & 0x7f;
         }

@@ -17,9 +17,9 @@ extern undefined4 FUN_8028688c();
 extern undefined4* DAT_803dd6d0;
 extern undefined4 gCamcontrolModeSettings;
 extern undefined4 gCamcontrolPathState;
-extern f32 FLOAT_803e23c0;
-extern f32 FLOAT_803e23c4;
-extern f32 FLOAT_803e23c8;
+extern f32 lbl_803E23C0;
+extern f32 lbl_803E23C4;
+extern f32 lbl_803E23C8;
 
 /*
  * --INFO--
@@ -124,18 +124,18 @@ void camcontrol_samplePathState(undefined4 param_1,undefined4 param_2,undefined4
     *(float *)(gCamcontrolPathState + iVar1 + 0xbc) = local_154;
     iVar1 = iVar1 + 4;
   }
-  dVar3 = (double)FLOAT_803e23c0;
+  dVar3 = (double)lbl_803E23C0;
   if (dVar3 != (double)*(float *)(gCamcontrolPathState + 300)) {
     dVar3 = (double)(float)((double)*(float *)(gCamcontrolPathState + 0x128) /
                            (double)*(float *)(gCamcontrolPathState + 300));
   }
-  dVar4 = (double)FLOAT_803e23c4;
-  if ((dVar3 <= dVar4) && (dVar4 = dVar3, dVar3 < (double)FLOAT_803e23c0)) {
-    dVar4 = (double)FLOAT_803e23c0;
+  dVar4 = (double)lbl_803E23C4;
+  if ((dVar3 <= dVar4) && (dVar4 = dVar3, dVar3 < (double)lbl_803E23C0)) {
+    dVar4 = (double)lbl_803E23C0;
   }
   dVar3 = FUN_80006a30(dVar4,(float *)(gCamcontrolPathState + 0x10c),(float *)0x0);
-  if (dVar3 < (double)FLOAT_803e23c8) {
-    dVar3 = (double)FLOAT_803e23c8;
+  if (dVar3 < (double)lbl_803E23C8) {
+    dVar3 = (double)lbl_803E23C8;
   }
   FUN_80006a10(dVar3,(float *)(gCamcontrolPathState + 0x120));
   *(undefined4 *)((ulonglong)uVar5 >> 0x20) = *(undefined4 *)(gCamcontrolPathState + 0x188);

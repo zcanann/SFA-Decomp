@@ -43,13 +43,13 @@ extern f32 lbl_803E541C;
 extern f32 lbl_803E5420;
 extern f32 lbl_803E5424;
 extern f64 lbl_803E5428;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e6090;
-extern f32 FLOAT_803e609c;
-extern f32 FLOAT_803e60a0;
-extern f32 FLOAT_803e60b0;
-extern f32 FLOAT_803e60b4;
-extern f32 FLOAT_803e60b8;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E6090;
+extern f32 lbl_803E609C;
+extern f32 lbl_803E60A0;
+extern f32 lbl_803E60B0;
+extern f32 lbl_803E60B4;
+extern f32 lbl_803E60B8;
 
 /*
  * --INFO--

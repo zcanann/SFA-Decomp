@@ -24,14 +24,14 @@ extern undefined4* DAT_803dd72c;
 extern u8 gTrickyCurveBurstCounter;
 extern f64 DOUBLE_803e70d8;
 extern f64 DOUBLE_803e7108;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e70d0;
-extern f32 FLOAT_803e70e0;
-extern f32 FLOAT_803e70f0;
-extern f32 FLOAT_803e70f4;
-extern f32 FLOAT_803e70f8;
-extern f32 FLOAT_803e70fc;
-extern f32 FLOAT_803e7100;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E70D0;
+extern f32 lbl_803E70E0;
+extern f32 lbl_803E70F0;
+extern f32 lbl_803E70F4;
+extern f32 lbl_803E70F8;
+extern f32 lbl_803E70FC;
+extern f32 lbl_803E7100;
 
 /*
  * --INFO--
@@ -94,7 +94,7 @@ void TrickyCurve_updateBurstTrigger(void)
   fVar3 = *(float *)(iVar5 + 0x14) - *(float *)(uVar4 + 0x14);
   dVar13 = (double)fVar3;
   gTrickyCurveBurstCounter = gTrickyCurveBurstCounter + 1;
-  if (dVar12 <= (double)FLOAT_803e70d0) {
+  if (dVar12 <= (double)lbl_803E70D0) {
     uStack_1c = (int)*psVar10 ^ 0x80000000;
     local_20 = 0x43300000;
     if (-(double)(float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e70d8) < dVar12) {
@@ -102,7 +102,7 @@ void TrickyCurve_updateBurstTrigger(void)
       cVar9 = '\x01';
     }
   }
-  if ((double)FLOAT_803e70d0 < dVar12) {
+  if ((double)lbl_803E70D0 < dVar12) {
     uStack_1c = (int)*psVar10 ^ 0x80000000;
     local_20 = 0x43300000;
     if (dVar12 < (double)(float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e70d8)) {
@@ -110,7 +110,7 @@ void TrickyCurve_updateBurstTrigger(void)
       cVar9 = cVar9 + -1;
     }
   }
-  if (dVar13 <= (double)FLOAT_803e70d0) {
+  if (dVar13 <= (double)lbl_803E70D0) {
     uStack_1c = (int)psVar10[1] ^ 0x80000000;
     local_20 = 0x43300000;
     if (-(double)(float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e70d8) < dVar13) {
@@ -118,7 +118,7 @@ void TrickyCurve_updateBurstTrigger(void)
       cVar7 = '\x01';
     }
   }
-  if ((double)FLOAT_803e70d0 < dVar13) {
+  if ((double)lbl_803E70D0 < dVar13) {
     uStack_1c = (int)psVar10[1] ^ 0x80000000;
     local_20 = 0x43300000;
     if (dVar13 < (double)(float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e70d8)) {
@@ -126,7 +126,7 @@ void TrickyCurve_updateBurstTrigger(void)
       cVar7 = cVar7 + -1;
     }
   }
-  if (dVar14 <= (double)FLOAT_803e70d0) {
+  if (dVar14 <= (double)lbl_803E70D0) {
     uStack_1c = (int)psVar10[2] ^ 0x80000000;
     local_20 = 0x43300000;
     if (-(double)(float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e70d8) < dVar14) {
@@ -134,7 +134,7 @@ void TrickyCurve_updateBurstTrigger(void)
       cVar8 = '\x01';
     }
   }
-  if ((double)FLOAT_803e70d0 < dVar14) {
+  if ((double)lbl_803E70D0 < dVar14) {
     uStack_1c = (int)psVar10[2] ^ 0x80000000;
     local_20 = 0x43300000;
     if (dVar14 < (double)(float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e70d8)) {
@@ -143,7 +143,7 @@ void TrickyCurve_updateBurstTrigger(void)
     }
   }
   if (iVar6 == 3) {
-    local_30 = FLOAT_803e70e0;
+    local_30 = lbl_803E70E0;
     local_34 = 0;
     local_36 = 0;
     local_38 = 0;
@@ -205,30 +205,30 @@ void TrickyCurve_updateBoundsTrigger(int param_1)
   fVar1 = *(float *)(iVar4 + 0xc) - *(float *)(param_1 + 0xc);
   fVar2 = *(float *)(iVar4 + 0x10) - *(float *)(param_1 + 0x10);
   fVar3 = *(float *)(iVar4 + 0x14) - *(float *)(param_1 + 0x14);
-  if ((fVar1 <= FLOAT_803e70d0) &&
+  if ((fVar1 <= lbl_803E70D0) &&
      (-(float)((double)CONCAT44(0x43300000,(int)*psVar6 ^ 0x80000000) - DOUBLE_803e70d8) < fVar1)) {
     iVar5 = 1;
   }
-  if ((FLOAT_803e70d0 < fVar1) &&
+  if ((lbl_803E70D0 < fVar1) &&
      (fVar1 < (float)((double)CONCAT44(0x43300000,(int)*psVar6 ^ 0x80000000) - DOUBLE_803e70d8))) {
     iVar5 = iVar5 + 1;
   }
-  if ((fVar3 <= FLOAT_803e70d0) &&
+  if ((fVar3 <= lbl_803E70D0) &&
      (-(float)((double)CONCAT44(0x43300000,(int)psVar6[1] ^ 0x80000000) - DOUBLE_803e70d8) < fVar3))
   {
     iVar5 = iVar5 + 1;
   }
-  if ((FLOAT_803e70d0 < fVar3) &&
+  if ((lbl_803E70D0 < fVar3) &&
      (fVar3 < (float)((double)CONCAT44(0x43300000,(int)psVar6[1] ^ 0x80000000) - DOUBLE_803e70d8)))
   {
     iVar5 = iVar5 + 1;
   }
-  if ((fVar2 <= FLOAT_803e70d0) &&
+  if ((fVar2 <= lbl_803E70D0) &&
      (-(float)((double)CONCAT44(0x43300000,(int)psVar6[2] ^ 0x80000000) - DOUBLE_803e70d8) < fVar2))
   {
     iVar5 = iVar5 + 1;
   }
-  if ((FLOAT_803e70d0 < fVar2) &&
+  if ((lbl_803E70D0 < fVar2) &&
      (fVar2 < (float)((double)CONCAT44(0x43300000,(int)psVar6[2] ^ 0x80000000) - DOUBLE_803e70d8)))
   {
     iVar5 = iVar5 + 1;
@@ -320,7 +320,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
     if (uVar4 != 0) {
       dVar10 = (double)FUN_80017698((int)psVar9[5],0);
     }
-    if (dVar14 <= (double)FLOAT_803e70d0) {
+    if (dVar14 <= (double)lbl_803E70D0) {
       uStack_5c = (int)*psVar9 ^ 0x80000000;
       local_60 = 0x43300000;
       dVar10 = DOUBLE_803e70d8;
@@ -329,7 +329,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
         cVar7 = '\x01';
       }
     }
-    if ((double)FLOAT_803e70d0 < dVar14) {
+    if ((double)lbl_803E70D0 < dVar14) {
       uStack_5c = (int)*psVar9 ^ 0x80000000;
       local_60 = 0x43300000;
       dVar10 = DOUBLE_803e70d8;
@@ -338,7 +338,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
         cVar7 = cVar7 + -1;
       }
     }
-    if (dVar13 <= (double)FLOAT_803e70d0) {
+    if (dVar13 <= (double)lbl_803E70D0) {
       uStack_5c = (int)psVar9[1] ^ 0x80000000;
       local_60 = 0x43300000;
       dVar10 = DOUBLE_803e70d8;
@@ -347,7 +347,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
         cVar5 = '\x01';
       }
     }
-    if ((double)FLOAT_803e70d0 < dVar13) {
+    if ((double)lbl_803E70D0 < dVar13) {
       uStack_5c = (int)psVar9[1] ^ 0x80000000;
       local_60 = 0x43300000;
       dVar10 = DOUBLE_803e70d8;
@@ -356,7 +356,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
         cVar5 = cVar5 + -1;
       }
     }
-    if (dVar12 <= (double)FLOAT_803e70d0) {
+    if (dVar12 <= (double)lbl_803E70D0) {
       uStack_5c = (int)psVar9[2] ^ 0x80000000;
       local_60 = 0x43300000;
       dVar10 = DOUBLE_803e70d8;
@@ -365,7 +365,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
         cVar6 = '\x01';
       }
     }
-    if ((double)FLOAT_803e70d0 < dVar12) {
+    if ((double)lbl_803E70D0 < dVar12) {
       uStack_5c = (int)psVar9[2] ^ 0x80000000;
       local_60 = 0x43300000;
       dVar10 = DOUBLE_803e70d8;
@@ -378,7 +378,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
       local_6c = (float)dVar14;
       local_68 = (float)dVar12;
       local_64 = (float)dVar13;
-      local_70 = FLOAT_803e70e0;
+      local_70 = lbl_803E70E0;
       local_74 = 0;
       local_76 = 0;
       local_78 = 0;
@@ -513,37 +513,37 @@ void sfxplayer_updateEffectHandlePositions(short *param_1)
     if (cVar2 == '\x02') {
       uStack_1c = (uint)*(byte *)(iVar4 + 7);
       local_20 = 0x43300000;
-      iVar1 = (int)((FLOAT_803e70f0 +
+      iVar1 = (int)((lbl_803E70F0 +
                     (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e7108)) *
-                   FLOAT_803e70f4 * FLOAT_803dc074);
+                   lbl_803E70F4 * lbl_803DC074);
       local_18 = (longlong)iVar1;
       *param_1 = *param_1 + (short)iVar1;
     }
     else {
-      local_18 = (longlong)(int)(FLOAT_803e70f4 * FLOAT_803dc074);
-      *param_1 = *param_1 + (short)(int)(FLOAT_803e70f4 * FLOAT_803dc074);
+      local_18 = (longlong)(int)(lbl_803E70F4 * lbl_803DC074);
+      *param_1 = *param_1 + (short)(int)(lbl_803E70F4 * lbl_803DC074);
     }
   }
   if ((*(short *)(iVar4 + 4) != 0) && ((*(byte *)(iVar4 + 8) >> 4 & 1) != 0)) {
-    local_18 = (longlong)(int)FLOAT_803dc074;
-    *(short *)(iVar4 + 4) = *(short *)(iVar4 + 4) - (short)(int)FLOAT_803dc074;
+    local_18 = (longlong)(int)lbl_803DC074;
+    *(short *)(iVar4 + 4) = *(short *)(iVar4 + 4) - (short)(int)lbl_803DC074;
     if (*(short *)(iVar4 + 4) < 1) {
       *(undefined2 *)(iVar4 + 4) = 200;
     }
   }
-  local_2c = FLOAT_803e70f8;
-  local_28 = FLOAT_803e70f8;
-  local_24 = FLOAT_803e70f8;
-  local_30 = FLOAT_803e70f0;
+  local_2c = lbl_803E70F8;
+  local_28 = lbl_803E70F8;
+  local_24 = lbl_803E70F8;
+  local_30 = lbl_803E70F0;
   sVar5 = 0;
   local_38[2] = 0;
   local_38[1] = 0;
   piVar6 = gSfxplayerEffectHandles;
   for (sVar3 = 0; sVar3 < 4; sVar3 = sVar3 + 1) {
     if (*piVar6 != 0) {
-      *(float *)(*piVar6 + 0xc) = FLOAT_803e70f8;
-      *(float *)(*piVar6 + 0x10) = FLOAT_803e70fc;
-      *(float *)(*piVar6 + 0x14) = FLOAT_803e7100;
+      *(float *)(*piVar6 + 0xc) = lbl_803E70F8;
+      *(float *)(*piVar6 + 0x10) = lbl_803E70FC;
+      *(float *)(*piVar6 + 0x14) = lbl_803E7100;
       local_38[0] = *param_1 + sVar5;
       FUN_80017748(local_38,(float *)(*piVar6 + 0xc));
       *(float *)(*piVar6 + 0xc) = *(float *)(*piVar6 + 0xc) + *(float *)(param_1 + 6);
@@ -551,9 +551,9 @@ void sfxplayer_updateEffectHandlePositions(short *param_1)
       *(float *)(*piVar6 + 0x14) = *(float *)(*piVar6 + 0x14) + *(float *)(param_1 + 10);
     }
     if (piVar6[1] != 0) {
-      *(float *)(piVar6[1] + 0xc) = FLOAT_803e70f8;
-      *(float *)(piVar6[1] + 0x10) = FLOAT_803e70fc;
-      *(float *)(piVar6[1] + 0x14) = FLOAT_803e7100;
+      *(float *)(piVar6[1] + 0xc) = lbl_803E70F8;
+      *(float *)(piVar6[1] + 0x10) = lbl_803E70FC;
+      *(float *)(piVar6[1] + 0x14) = lbl_803E7100;
       local_38[0] = *param_1 + sVar5;
       FUN_80017748(local_38,(float *)(piVar6[1] + 0xc));
       *(float *)(piVar6[1] + 0xc) = *(float *)(piVar6[1] + 0xc) + *(float *)(param_1 + 6);

@@ -11,8 +11,8 @@ extern undefined4 FUN_800723a0();
 
 extern undefined4* DAT_803dd6d4;
 extern f64 DOUBLE_803e7118;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e7124;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E7124;
 
 typedef union DfpTargetBlockControlId {
   u32 value;
@@ -140,7 +140,7 @@ void dfptargetblock_updateAudioState(uint param_1)
   if ((int)state->specialSfxStopTimer != 0) {
     state->specialSfxStopTimer =
          (short)(int)((float)((double)CONCAT44(0x43300000,(int)state->specialSfxStopTimer ^ 0x80000000) -
-                             DOUBLE_803e7118) - FLOAT_803dc074);
+                             DOUBLE_803e7118) - lbl_803DC074);
     FUN_800068c4(param_1,0x458);
     if (state->specialSfxStopTimer < 1) {
       state->specialSfxStopTimer = 0;
@@ -280,14 +280,14 @@ void dfptargetblock_resolveCollision(int *param_1,int param_2)
     iVar4 = iVar4 + 0xc;
     iVar3 = iVar3 + 1;
   }
-  if (FLOAT_803e7124 != (float)param_1[9]) {
+  if (lbl_803E7124 != (float)param_1[9]) {
     param_1[3] = (int)((float)param_1[3] + (float)((double)local_90 - dVar5));
   }
-  if (FLOAT_803e7124 != (float)param_1[0xb]) {
+  if (lbl_803E7124 != (float)param_1[0xb]) {
     param_1[5] = (int)((float)param_1[5] + (float)((double)local_88 - dVar6));
   }
-  fVar1 = FLOAT_803e7124;
-  param_1[9] = (int)FLOAT_803e7124;
+  fVar1 = lbl_803E7124;
+  param_1[9] = (int)lbl_803E7124;
   param_1[10] = (int)fVar1;
   param_1[0xb] = (int)fVar1;
   FUN_80006824((uint)param_1,0x1d0);

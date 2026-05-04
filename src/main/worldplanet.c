@@ -21,6 +21,7 @@ int worldplanet_func08(void)
 
 #pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 void worldplanet_free(void)
 {
   fn_8012DD7C(0);
@@ -38,6 +39,7 @@ void worldplanet_render(undefined4 param_1,undefined4 param_2,undefined4 param_3
   }
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
 

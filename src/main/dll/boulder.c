@@ -13,9 +13,9 @@ extern undefined4 FUN_8028688c();
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd708;
-extern f32 FLOAT_803e6b30;
-extern f32 FLOAT_803e6b34;
-extern f32 FLOAT_803e6b38;
+extern f32 lbl_803E6B30;
+extern f32 lbl_803E6B34;
+extern f32 lbl_803E6B38;
 
 /*
  * --INFO--
@@ -69,7 +69,7 @@ void FUN_801f4ecc(undefined8 param_1,double param_2,double param_3,undefined8 pa
       (**(code **)(param_15 + 8))(uVar2,0x556,0,2,0xffffffff);
       FUN_80006824(uVar2,0x7b);
       dVar7 = (double)FUN_80006824(uVar2,0x7c);
-      *pfVar6 = FLOAT_803e6b30;
+      *pfVar6 = lbl_803E6B30;
       break;
     case 3:
       *(undefined *)(pfVar6 + 1) = 3;
@@ -78,7 +78,7 @@ void FUN_801f4ecc(undefined8 param_1,double param_2,double param_3,undefined8 pa
       (**(code **)(param_15 + 8))(uVar2,0x556,0,2,0xffffffff);
       FUN_80006824(uVar2,0x7b);
       dVar7 = (double)FUN_80006824(uVar2,0x7c);
-      *pfVar6 = FLOAT_803e6b34;
+      *pfVar6 = lbl_803E6B34;
       break;
     case 4:
       *(undefined *)(pfVar6 + 1) = 0;
@@ -96,7 +96,7 @@ void FUN_801f4ecc(undefined8 param_1,double param_2,double param_3,undefined8 pa
                              0xff,0xffffffff,(uint *)0x0,param_14,param_15,param_16);
         ObjLink_AttachChild(uVar2,iVar4,0);
         dVar7 = (double)*(float *)(*(int *)(uVar2 + 200) + 8);
-        *(float *)(*(int *)(uVar2 + 200) + 8) = (float)(dVar7 * (double)FLOAT_803e6b38);
+        *(float *)(*(int *)(uVar2 + 200) + 8) = (float)(dVar7 * (double)lbl_803E6B38);
       }
       break;
     case 6:

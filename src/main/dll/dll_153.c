@@ -36,21 +36,21 @@ extern undefined4* DAT_803dd72c;
 extern undefined4* DAT_803de740;
 extern f64 DOUBLE_803e4600;
 extern f64 DOUBLE_803e4638;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e45c8;
-extern f32 FLOAT_803e45d0;
-extern f32 FLOAT_803e45e8;
-extern f32 FLOAT_803e45f0;
-extern f32 FLOAT_803e460c;
-extern f32 FLOAT_803e4610;
-extern f32 FLOAT_803e4614;
-extern f32 FLOAT_803e4618;
-extern f32 FLOAT_803e461c;
-extern f32 FLOAT_803e4620;
-extern f32 FLOAT_803e4624;
-extern f32 FLOAT_803e4628;
-extern f32 FLOAT_803e462c;
-extern f32 FLOAT_803e4630;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E45C8;
+extern f32 lbl_803E45D0;
+extern f32 lbl_803E45E8;
+extern f32 lbl_803E45F0;
+extern f32 lbl_803E460C;
+extern f32 lbl_803E4610;
+extern f32 lbl_803E4614;
+extern f32 lbl_803E4618;
+extern f32 lbl_803E461C;
+extern f32 lbl_803E4620;
+extern f32 lbl_803E4624;
+extern f32 lbl_803E4628;
+extern f32 lbl_803E462C;
+extern f32 lbl_803E4630;
 
 /*
  * --INFO--
@@ -105,7 +105,7 @@ void dll153_updateExploderState
   uVar6 = FUN_80286840();
   puVar7 = (ushort *)FUN_80017a98();
   iVar16 = *(int *)(uVar6 + 0x4c);
-  local_48 = FLOAT_803e45e8;
+  local_48 = lbl_803E45E8;
   (**(code **)(*DAT_803dd6d8 + 0x18))(&local_48);
   puVar15 = *(undefined2 **)(uVar6 + 0xb8);
   iVar8 = (**(code **)(*DAT_803dd72c + 0x68))(*(undefined4 *)(iVar16 + 0x14));
@@ -120,15 +120,15 @@ void dll153_updateExploderState
       dVar17 = (double)FUN_801816f8(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,
                                     param_8,uVar6,puVar7,(int)puVar15,in_r6,in_r7,in_r8,in_r9,in_r10
                                    );
-      fVar3 = FLOAT_803e45d0;
-      *(float *)(uVar6 + 0x24) = FLOAT_803e45d0;
+      fVar3 = lbl_803E45D0;
+      *(float *)(uVar6 + 0x24) = lbl_803E45D0;
       *(float *)(uVar6 + 0x2c) = fVar3;
     }
     dVar4 = DOUBLE_803e4638;
     if (*(int *)(puVar15 + 10) == 0) {
       if (*(char *)((int)puVar15 + 5) != '\x02') {
-        param_3 = (double)FLOAT_803e4610;
-        param_2 = (double)FLOAT_803dc074;
+        param_3 = (double)lbl_803E4610;
+        param_2 = (double)lbl_803DC074;
         local_28 = (double)CONCAT44(0x43300000,(uint)*(byte *)(uVar6 + 0x36));
         iVar5 = (int)(param_3 * param_2 + (double)(float)(local_28 - DOUBLE_803e4638));
         local_20 = (double)(longlong)iVar5;
@@ -158,8 +158,8 @@ void dll153_updateExploderState
           *(undefined4 *)(uVar6 + 0x80) = *(undefined4 *)(iVar16 + 8);
           *(undefined4 *)(uVar6 + 0x84) = *(undefined4 *)(iVar16 + 0xc);
           *(undefined4 *)(uVar6 + 0x88) = *(undefined4 *)(iVar16 + 0x10);
-          fVar3 = FLOAT_803e45d0;
-          *(float *)(uVar6 + 0x24) = FLOAT_803e45d0;
+          fVar3 = lbl_803E45D0;
+          *(float *)(uVar6 + 0x24) = lbl_803E45D0;
           *(float *)(uVar6 + 0x28) = fVar3;
           *(float *)(uVar6 + 0x2c) = fVar3;
         }
@@ -169,24 +169,24 @@ void dll153_updateExploderState
         puVar15[9] = puVar15[9] - (ushort)DAT_803dc070;
         if (*(char *)((int)puVar15 + 9) == '\x01') {
           ObjHits_SetHitVolumeSlot(uVar6,0xe,1,0);
-          if (FLOAT_803e462c < *(float *)(uVar6 + 0x28)) {
-            *(float *)(uVar6 + 0x28) = FLOAT_803e4630 * FLOAT_803dc074 + *(float *)(uVar6 + 0x28);
+          if (lbl_803E462C < *(float *)(uVar6 + 0x28)) {
+            *(float *)(uVar6 + 0x28) = lbl_803E4630 * lbl_803DC074 + *(float *)(uVar6 + 0x28);
           }
           ObjHits_EnableObject(uVar6);
         }
         *(float *)(uVar6 + 0xc) =
-             *(float *)(uVar6 + 0x24) * FLOAT_803dc074 + *(float *)(uVar6 + 0xc);
+             *(float *)(uVar6 + 0x24) * lbl_803DC074 + *(float *)(uVar6 + 0xc);
         *(float *)(uVar6 + 0x10) =
-             *(float *)(uVar6 + 0x28) * FLOAT_803dc074 + *(float *)(uVar6 + 0x10);
+             *(float *)(uVar6 + 0x28) * lbl_803DC074 + *(float *)(uVar6 + 0x10);
         param_2 = (double)*(float *)(uVar6 + 0x2c);
         *(float *)(uVar6 + 0x14) =
-             (float)(param_2 * (double)FLOAT_803dc074 + (double)*(float *)(uVar6 + 0x14));
+             (float)(param_2 * (double)lbl_803DC074 + (double)*(float *)(uVar6 + 0x14));
         dVar17 = (double)FUN_801826e8();
-        fVar3 = FLOAT_803e45d0;
+        fVar3 = lbl_803E45D0;
         cVar1 = *(char *)(*(int *)(uVar6 + 0x54) + 0xad);
         if ((cVar1 == '\0') || (*(char *)((int)puVar15 + 9) != '\x01')) {
           if ((cVar1 != '\0') && (*(char *)((int)puVar15 + 9) == '\x02')) {
-            *(float *)(uVar6 + 0x24) = FLOAT_803e45d0;
+            *(float *)(uVar6 + 0x24) = lbl_803E45D0;
             *(float *)(uVar6 + 0x2c) = fVar3;
             puVar15[5] = 500;
             *(undefined *)((int)puVar15 + 9) = 0;
@@ -212,8 +212,8 @@ void dll153_updateExploderState
           *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) | 8;
           FUN_801816f8(uVar18,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar6,puVar7,
                        (int)puVar15,uVar11,uVar12,uVar13,iVar8,in_r10);
-          fVar3 = FLOAT_803e45d0;
-          *(float *)(uVar6 + 0x24) = FLOAT_803e45d0;
+          fVar3 = lbl_803E45D0;
+          *(float *)(uVar6 + 0x24) = lbl_803E45D0;
           *(float *)(uVar6 + 0x2c) = fVar3;
           dVar17 = (double)ObjHits_ClearHitVolumes(uVar6);
         }
@@ -279,15 +279,15 @@ void dll153_updateExploderState
             if (uVar9 == 0) {
               *(undefined *)((int)puVar15 + 5) = 0;
               *(undefined *)((int)puVar15 + 9) = 1;
-              *(float *)(uVar6 + 0x28) = FLOAT_803e4620 * *(float *)(iVar8 + 0x298) + FLOAT_803e461c
+              *(float *)(uVar6 + 0x28) = lbl_803E4620 * *(float *)(iVar8 + 0x298) + lbl_803E461C
               ;
-              param_2 = (double)FLOAT_803e4628;
+              param_2 = (double)lbl_803E4628;
               *(float *)(uVar6 + 0x2c) =
-                   (float)(param_2 * (double)*(float *)(iVar8 + 0x298) + (double)FLOAT_803e4624);
-              local_38 = FLOAT_803e45d0;
-              local_34 = FLOAT_803e45d0;
-              local_30 = FLOAT_803e45d0;
-              local_3c = FLOAT_803e45e8;
+                   (float)(param_2 * (double)*(float *)(iVar8 + 0x298) + (double)lbl_803E4624);
+              local_38 = lbl_803E45D0;
+              local_34 = lbl_803E45D0;
+              local_30 = lbl_803E45D0;
+              local_3c = lbl_803E45E8;
               local_44[2] = 0;
               local_44[1] = 0;
               local_44[0] = *puVar7;
@@ -299,8 +299,8 @@ void dll153_updateExploderState
             else {
               *(undefined *)((int)puVar15 + 5) = 0;
               *(undefined *)((int)puVar15 + 9) = 2;
-              fVar3 = FLOAT_803e45d0;
-              *(float *)(uVar6 + 0x24) = FLOAT_803e45d0;
+              fVar3 = lbl_803E45D0;
+              *(float *)(uVar6 + 0x24) = lbl_803E45D0;
               *(float *)(uVar6 + 0x28) = fVar3;
               *(float *)(uVar6 + 0x2c) = fVar3;
               ObjHits_EnableObject(uVar6);
@@ -311,14 +311,14 @@ void dll153_updateExploderState
           else {
             *(undefined *)((int)puVar15 + 5) = 0;
             *(undefined *)((int)puVar15 + 9) = 1;
-            *(float *)(uVar6 + 0x28) = FLOAT_803e4614 * *(float *)(iVar8 + 0x298) + FLOAT_803e45f0;
-            param_2 = (double)FLOAT_803e4618;
+            *(float *)(uVar6 + 0x28) = lbl_803E4614 * *(float *)(iVar8 + 0x298) + lbl_803E45F0;
+            param_2 = (double)lbl_803E4618;
             *(float *)(uVar6 + 0x2c) =
-                 (float)(param_2 * (double)*(float *)(iVar8 + 0x298) + (double)FLOAT_803e460c);
-            local_38 = FLOAT_803e45d0;
-            local_34 = FLOAT_803e45d0;
-            local_30 = FLOAT_803e45d0;
-            local_3c = FLOAT_803e45e8;
+                 (float)(param_2 * (double)*(float *)(iVar8 + 0x298) + (double)lbl_803E460C);
+            local_38 = lbl_803E45D0;
+            local_34 = lbl_803E45D0;
+            local_30 = lbl_803E45D0;
+            local_3c = lbl_803E45E8;
             local_44[2] = 0;
             local_44[1] = 0;
             local_44[0] = *puVar7;
@@ -343,11 +343,11 @@ void dll153_updateExploderState
       }
       else {
         dVar17 = FUN_80017708((float *)(uVar6 + 0x18),(float *)(iVar16 + 8));
-        fVar3 = FLOAT_803e45d0;
+        fVar3 = lbl_803E45D0;
         local_20 = (double)CONCAT44(0x43300000,
                                     (int)(short)puVar15[6] * (int)(short)puVar15[6] ^ 0x80000000);
         if ((double)(float)(local_20 - DOUBLE_803e4600) <= dVar17) {
-          *(float *)(uVar6 + 0x24) = FLOAT_803e45d0;
+          *(float *)(uVar6 + 0x24) = lbl_803E45D0;
           *(float *)(uVar6 + 0x2c) = fVar3;
           puVar15[5] = 500;
           *(undefined *)((int)puVar15 + 9) = 0;
@@ -377,13 +377,13 @@ void dll153_updateExploderState
     else {
       bVar2 = false;
       *(undefined *)(uVar6 + 0x36) = 0;
-      local_28 = (double)(longlong)(int)(FLOAT_803dc074 * local_48);
-      *(int *)(puVar15 + 10) = *(int *)(puVar15 + 10) - (int)(short)(int)(FLOAT_803dc074 * local_48)
+      local_28 = (double)(longlong)(int)(lbl_803DC074 * local_48);
+      *(int *)(puVar15 + 10) = *(int *)(puVar15 + 10) - (int)(short)(int)(lbl_803DC074 * local_48)
       ;
       if (*(int *)(puVar15 + 10) < 1) {
         iVar8 = FUN_80017a98();
         dVar17 = (double)FUN_8001771c((float *)(uVar6 + 0x18),(float *)(iVar8 + 0x18));
-        if (((double)FLOAT_803e45c8 < dVar17) && (puVar15[0xe] == -1)) {
+        if (((double)lbl_803E45C8 < dVar17) && (puVar15[0xe] == -1)) {
           bVar2 = true;
         }
         if (bVar2) {

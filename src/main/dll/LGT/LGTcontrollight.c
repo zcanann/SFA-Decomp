@@ -8,7 +8,7 @@ extern undefined4 FUN_80042bec();
 extern int FUN_80044404();
 
 extern undefined4* DAT_803dd72c;
-extern f32 FLOAT_803e6b28;
+extern f32 lbl_803E6B28;
 
 /*
  * --INFO--
@@ -35,7 +35,7 @@ void FUN_801f4c28(int param_1)
   pfVar3 = *(float **)(param_1 + 0xb8);
   *(undefined *)((int)pfVar3 + 0xb) = 0;
   *(undefined2 *)((int)pfVar3 + 6) = 0x1e;
-  *pfVar3 = FLOAT_803e6b28;
+  *pfVar3 = lbl_803E6B28;
   pfVar3[4] = 0.0;
   FUN_80042bec(0xf,0);
   uVar2 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(param_1 + 0xac));

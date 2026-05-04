@@ -11,17 +11,17 @@ extern undefined4* DAT_803dd738;
 extern undefined4 DAT_803de814;
 extern undefined4 DAT_803de828;
 extern undefined4 DAT_803de830;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803de818;
-extern f32 FLOAT_803de81c;
-extern f32 FLOAT_803de820;
-extern f32 FLOAT_803de824;
-extern f32 FLOAT_803e5928;
-extern f32 FLOAT_803e5934;
-extern f32 FLOAT_803e594c;
-extern f32 FLOAT_803e5950;
-extern f32 FLOAT_803e5954;
-extern f32 FLOAT_803e5958;
+extern f32 lbl_803DC074;
+extern f32 lbl_803DE818;
+extern f32 lbl_803DE81C;
+extern f32 lbl_803DE820;
+extern f32 lbl_803DE824;
+extern f32 lbl_803E5928;
+extern f32 lbl_803E5934;
+extern f32 lbl_803E594C;
+extern f32 lbl_803E5950;
+extern f32 lbl_803E5954;
+extern f32 lbl_803E5958;
 
 /*
  * --INFO--
@@ -44,22 +44,22 @@ void dll_DIM_BossGutSpik_update(undefined8 param_1,undefined8 param_2,undefined8
   double dVar1;
   double dVar2;
   
-  dVar2 = (double)FLOAT_803e5928;
+  dVar2 = (double)lbl_803E5928;
   *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) = *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) | 1;
   *(undefined *)(param_12 + 0x25f) = 1;
   (**(code **)(*DAT_803dd738 + 0x2c))(dVar2,param_9,param_12,1);
   (**(code **)(*DAT_803dd738 + 0x54))
             (param_9,param_12,param_11 + 0x35c,(int)*(short *)(param_11 + 0x3f4),param_11 + 0x405,0,
              0,0);
-  dVar1 = (double)FLOAT_803e5928;
-  if (dVar1 == (double)FLOAT_803de824) {
-    dVar2 = (double)(float)(dVar2 + (double)FLOAT_803e5954);
+  dVar1 = (double)lbl_803E5928;
+  if (dVar1 == (double)lbl_803DE824) {
+    dVar2 = (double)(float)(dVar2 + (double)lbl_803E5954);
   }
   else {
-    FLOAT_803de824 = (float)((double)FLOAT_803de824 - (double)FLOAT_803dc074);
-    dVar2 = (double)(FLOAT_803de824 * FLOAT_803e594c);
-    if (FLOAT_803de824 <= FLOAT_803e5950) {
-      FLOAT_803de824 = FLOAT_803e5928;
+    lbl_803DE824 = (float)((double)lbl_803DE824 - (double)lbl_803DC074);
+    dVar2 = (double)(lbl_803DE824 * lbl_803E594C);
+    if (lbl_803DE824 <= lbl_803E5950) {
+      lbl_803DE824 = lbl_803E5928;
       *(undefined *)(param_12 + 0x349) = 0;
       *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) =
            *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & 0xfffe;
@@ -73,23 +73,23 @@ void dll_DIM_BossGutSpik_update(undefined8 param_1,undefined8 param_2,undefined8
       }
     }
   }
-  if (FLOAT_803de81c <= FLOAT_803de820) {
+  if (lbl_803DE81C <= lbl_803DE820) {
     FUN_80006824(param_9,0x189);
-    if ((double)FLOAT_803e5954 < dVar2) {
-      dVar2 = (double)FLOAT_803e5954;
+    if ((double)lbl_803E5954 < dVar2) {
+      dVar2 = (double)lbl_803E5954;
     }
-    if (dVar2 < (double)FLOAT_803e5934) {
-      dVar2 = (double)FLOAT_803e5934;
+    if (dVar2 < (double)lbl_803E5934) {
+      dVar2 = (double)lbl_803E5934;
     }
-    FLOAT_803de81c = (float)((double)FLOAT_803de81c + dVar2);
-    FUN_80006b94((double)FLOAT_803e5958);
+    lbl_803DE81C = (float)((double)lbl_803DE81C + dVar2);
+    FUN_80006b94((double)lbl_803E5958);
   }
-  dVar2 = (double)FLOAT_803de820;
-  FLOAT_803de820 = (float)(dVar2 + (double)FLOAT_803dc074);
+  dVar2 = (double)lbl_803DE820;
+  lbl_803DE820 = (float)(dVar2 + (double)lbl_803DC074);
   FUN_801be520(dVar2,dVar1,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_12);
-  if ((FLOAT_803e5928 != FLOAT_803de818) &&
-     (FLOAT_803de818 = FLOAT_803de818 - FLOAT_803dc074, FLOAT_803de818 <= FLOAT_803e5928)) {
-    FLOAT_803de818 = FLOAT_803e5928;
+  if ((lbl_803E5928 != lbl_803DE818) &&
+     (lbl_803DE818 = lbl_803DE818 - lbl_803DC074, lbl_803DE818 <= lbl_803E5928)) {
+    lbl_803DE818 = lbl_803E5928;
     *(undefined *)(param_12 + 0x349) = 0;
     *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) =
          *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & 0xfffe;
@@ -105,7 +105,7 @@ void dll_DIM_BossGutSpik_update(undefined8 param_1,undefined8 param_2,undefined8
   *(undefined4 *)(param_11 + 0x3e0) = *(undefined4 *)(param_9 + 0xc0);
   *(undefined4 *)(param_9 + 0xc0) = 0;
   (**(code **)(*DAT_803dd70c + 8))
-            ((double)FLOAT_803dc074,(double)FLOAT_803dc074,param_9,param_12,&DAT_803de830,
+            ((double)lbl_803DC074,(double)lbl_803DC074,param_9,param_12,&DAT_803de830,
              &DAT_803de828);
   *(undefined4 *)(param_9 + 0xc0) = *(undefined4 *)(param_11 + 0x3e0);
   return;

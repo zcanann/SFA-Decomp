@@ -4,8 +4,8 @@
 extern double FUN_80293900();
 
 extern undefined4* DAT_803dd71c;
-extern f32 FLOAT_803e2508;
-extern f32 FLOAT_803e2528;
+extern f32 lbl_803E2508;
+extern f32 lbl_803E2528;
 
 /*
  * --INFO--
@@ -54,15 +54,15 @@ double FUN_8010aea8(double param_1,undefined8 param_2,double param_3,undefined4 
     dVar8 = (double)(*(float *)(local_98[1] + 0x10) - *(float *)(local_98[0] + 0x10));
     dVar9 = (double)(*(float *)(local_98[1] + 8) - *(float *)(local_98[0] + 8));
   }
-  dVar10 = (double)(FLOAT_803e2528 * (float)(dVar9 + dVar13));
-  dVar9 = (double)(FLOAT_803e2528 * (float)(dVar8 + dVar12));
+  dVar10 = (double)(lbl_803E2528 * (float)(dVar9 + dVar13));
+  dVar9 = (double)(lbl_803E2528 * (float)(dVar8 + dVar12));
   dVar8 = FUN_80293900((double)(float)(dVar10 * dVar10 + (double)(float)(dVar9 * dVar9)));
-  if ((double)FLOAT_803e2508 != dVar8) {
+  if ((double)lbl_803E2508 != dVar8) {
     dVar10 = (double)(float)(dVar10 / dVar8);
     dVar9 = (double)(float)(dVar9 / dVar8);
   }
   dVar8 = (double)(float)(dVar10 * dVar13 + (double)(float)(dVar9 * dVar12));
-  if ((double)FLOAT_803e2508 != dVar8) {
+  if ((double)lbl_803E2508 != dVar8) {
     dVar8 = (double)(float)(-(double)(-(float)(dVar10 * (double)*(float *)(local_98[1] + 8) +
                                               (double)(float)(dVar9 * (double)*(float *)(local_98[1]
                                                                                         + 0x10))) +
@@ -78,15 +78,15 @@ double FUN_8010aea8(double param_1,undefined8 param_2,double param_3,undefined4 
     fVar4 = (float)((double)*(float *)(local_98[3] + 0x10) - (double)*(float *)(local_98[2] + 0x10))
     ;
   }
-  dVar11 = (double)(FLOAT_803e2528 * (fVar3 + fVar1));
-  dVar10 = (double)(FLOAT_803e2528 * (fVar4 + fVar2));
+  dVar11 = (double)(lbl_803E2528 * (fVar3 + fVar1));
+  dVar10 = (double)(lbl_803E2528 * (fVar4 + fVar2));
   dVar9 = FUN_80293900((double)(float)(dVar11 * dVar11 + (double)(float)(dVar10 * dVar10)));
-  if ((double)FLOAT_803e2508 != dVar9) {
+  if ((double)lbl_803E2508 != dVar9) {
     dVar11 = (double)(float)(dVar11 / dVar9);
     dVar10 = (double)(float)(dVar10 / dVar9);
   }
   dVar9 = (double)(float)(dVar11 * dVar13 + (double)(float)(dVar10 * dVar12));
-  if ((double)FLOAT_803e2508 != dVar9) {
+  if ((double)lbl_803E2508 != dVar9) {
     dVar9 = (double)(float)(-(double)(-(float)(dVar11 * (double)*(float *)(local_98[2] + 8) +
                                               (double)(float)(dVar10 * (double)*(float *)(local_98[2
                                                   ] + 0x10))) +

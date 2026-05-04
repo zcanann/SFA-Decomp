@@ -62,8 +62,8 @@ extern undefined4* lbl_803DCAB4;
 extern undefined4* DAT_803dd738;
 extern undefined4 lbl_803DDB80;
 extern undefined4 DAT_803de808;
-extern f32 FLOAT_803e58dc;
-extern f32 FLOAT_803e5908;
+extern f32 lbl_803E58DC;
+extern f32 lbl_803E5908;
 extern undefined4 lbl_803AC9DC[];
 extern undefined4 lbl_803AD018[];
 extern int lbl_803DCA8C;
@@ -323,7 +323,7 @@ void DIMboss_updateState(undefined8 param_1,double param_2,double param_3,undefi
         if (iVar11 != 0) {
           puVar7 = (undefined4 *)0x1;
           puVar8 = (undefined4 *)*DAT_803dd738;
-          uVar14 = (*(code *)puVar8[0xb])((double)FLOAT_803e5908,puVar3,puVar13);
+          uVar14 = (*(code *)puVar8[0xb])((double)lbl_803E5908,puVar3,puVar13);
         }
       }
       else if ((bVar1 != 0) && (bVar1 < 3)) {
@@ -334,7 +334,7 @@ void DIMboss_updateState(undefined8 param_1,double param_2,double param_3,undefi
                               param_11,(int)puVar13,(int)puVar13);
         if (*(char *)((int)puVar13 + 0x405) == '\x01') {
           *(undefined2 *)(puVar13 + 0x9c) = 0;
-          param_2 = (double)FLOAT_803e58dc;
+          param_2 = (double)lbl_803E58DC;
           puVar7 = &DAT_803adc78;
           puVar8 = &DAT_803adc60;
           puVar9 = (undefined4 *)*DAT_803dd70c;
@@ -539,4 +539,5 @@ void dimboss_hitDetect(DIMbossObject *obj)
 {
   (*(code *)(*(int *)lbl_803DCA8C + 0xc))(obj,obj->runtime,lbl_803AD018);
 }
+#pragma peephole reset
 #pragma scheduling reset

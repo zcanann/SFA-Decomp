@@ -10,13 +10,13 @@ extern undefined4 FUN_80286868();
 
 extern undefined4 DAT_802c2ba4;
 extern f64 DOUBLE_803e6798;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e6780;
-extern f32 FLOAT_803e6784;
-extern f32 FLOAT_803e6788;
-extern f32 FLOAT_803e678c;
-extern f32 FLOAT_803e6790;
-extern f32 FLOAT_803e6794;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E6780;
+extern f32 lbl_803E6784;
+extern f32 lbl_803E6788;
+extern f32 lbl_803E678C;
+extern f32 lbl_803E6790;
+extern f32 lbl_803E6794;
 
 /*
  * --INFO--

@@ -52,6 +52,7 @@ int dfplightni_getExtraSize(void)
 }
 
 #pragma scheduling off
+#pragma peephole off
 void dfplightni_free(u8 *obj)
 {
   DfpLightniState *state;
@@ -65,6 +66,7 @@ void dfplightni_free(u8 *obj)
   }
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

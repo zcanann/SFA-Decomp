@@ -42,22 +42,22 @@ extern undefined4* gCamcontrolState;
 extern undefined4 DAT_803de1a0;
 extern undefined4* gCamcontrolModeSettings;
 extern f64 DOUBLE_803e2318;
-extern f32 FLOAT_803de1a4;
-extern f32 FLOAT_803e2304;
-extern f32 FLOAT_803e2308;
-extern f32 FLOAT_803e2314;
-extern f32 FLOAT_803e2320;
-extern f32 FLOAT_803e2324;
-extern f32 FLOAT_803e2328;
-extern f32 FLOAT_803e232c;
-extern f32 FLOAT_803e2330;
-extern f32 FLOAT_803e2334;
-extern f32 FLOAT_803e2338;
-extern f32 FLOAT_803e233c;
-extern f32 FLOAT_803e2340;
-extern f32 FLOAT_803e2344;
-extern f32 FLOAT_803e2348;
-extern f32 FLOAT_803e234c;
+extern f32 lbl_803DE1A4;
+extern f32 lbl_803E2304;
+extern f32 lbl_803E2308;
+extern f32 lbl_803E2314;
+extern f32 lbl_803E2320;
+extern f32 lbl_803E2324;
+extern f32 lbl_803E2328;
+extern f32 lbl_803E232C;
+extern f32 lbl_803E2330;
+extern f32 lbl_803E2334;
+extern f32 lbl_803E2338;
+extern f32 lbl_803E233C;
+extern f32 lbl_803E2340;
+extern f32 lbl_803E2344;
+extern f32 lbl_803E2348;
+extern f32 lbl_803E234C;
 
 /*
  * --INFO--
@@ -88,7 +88,7 @@ void camcontrol_setPosition(double param_1,double param_2,double param_3,undefin
   *(float *)(gCamcontrolState + 0xbc) = (float)param_2;
   *(float *)(gCamcontrolState + 0xc0) = (float)param_3;
   *(undefined4 *)(gCamcontrolState + 0xa4) = param_4;
-  *(float *)(gCamcontrolState + 0xb4) = FLOAT_803e2304;
+  *(float *)(gCamcontrolState + 0xb4) = lbl_803E2304;
   gCamcontrolTargetState = 0;
   return;
 }
@@ -250,7 +250,7 @@ undefined camcontrol_traceFromTarget(float *param_1,int param_2,float *param_3)
     local_84 = *(float *)(param_2 + 0x1c) + *(float *)(gCamcontrolModeSettings + 0x8c);
     local_80 = *(undefined4 *)(param_2 + 0x20);
   }
-  camcontrol_traceMove((double)FLOAT_803e2308,&local_88,param_1,param_3,(int)auStack_7c,3,'\x01',
+  camcontrol_traceMove((double)lbl_803E2308,&local_88,param_1,param_3,(int)auStack_7c,3,'\x01',
                        '\x01');
   return local_e;
 }
@@ -303,8 +303,8 @@ undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3
   dVar7 = (double)FUN_80294964();
   local_cc = *(float *)(gCamcontrolModeSettings + 4) * *(float *)(gCamcontrolModeSettings + 4) -
              *(float *)(gCamcontrolModeSettings + 8) * *(float *)(gCamcontrolModeSettings + 8);
-  if (local_cc < FLOAT_803e2314) {
-    local_cc = FLOAT_803e2314;
+  if (local_cc < lbl_803E2314) {
+    local_cc = lbl_803E2314;
   }
   dVar8 = FUN_80293900((double)local_cc);
   local_cc = (float)dVar8;
@@ -323,7 +323,7 @@ undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3
   local_b4 = fVar3;
   local_b8 = fVar1;
   local_bc = fVar2;
-  camcontrol_traceMove((double)FLOAT_803e2308,&local_bc,&local_c8,param_3,(int)auStack_b0,3,
+  camcontrol_traceMove((double)lbl_803E2308,&local_bc,&local_c8,param_3,(int)auStack_b0,3,
                        '\x01','\x01');
   (**(code **)(*DAT_803dd6d0 + 0x38))
             ((double)*(float *)(gCamcontrolModeSettings + 0x8c),param_1,auStack_d0,&local_d4,auStack_d8,
@@ -528,7 +528,7 @@ void FUN_80103e00(void)
       pfVar12[3] = local_1ac;
       pfVar12[4] = local_1a8;
       pfVar12[5] = fVar1;
-      iVar4 = camcontrol_traceMove((double)FLOAT_803e2320,&local_2e8,&local_1ac,(float *)0x0,
+      iVar4 = camcontrol_traceMove((double)lbl_803E2320,&local_2e8,&local_1ac,(float *)0x0,
                                    (int)auStack_234,7,'\0','\0');
       if (iVar4 != 0) {
         iVar6 = iVar7;
@@ -550,7 +550,7 @@ void FUN_80103e00(void)
       pfVar11[3] = local_1ac;
       pfVar11[4] = local_1a8;
       pfVar11[5] = fVar1;
-      iVar4 = camcontrol_traceMove((double)FLOAT_803e2320,&local_2e8,&local_1ac,(float *)0x0,
+      iVar4 = camcontrol_traceMove((double)lbl_803E2320,&local_2e8,&local_1ac,(float *)0x0,
                                    (int)auStack_234,7,'\0','\0');
       if (iVar4 != 0) {
         iVar5 = iVar7;
@@ -566,7 +566,7 @@ void FUN_80103e00(void)
   }
   else {
     for (iVar7 = 0; iVar7 <= iVar6; iVar7 = iVar7 + 1) {
-      iVar4 = camcontrol_traceMove((double)FLOAT_803e2320,pfVar10,local_288 + (iVar7 + 1) * 3,
+      iVar4 = camcontrol_traceMove((double)lbl_803E2320,pfVar10,local_288 + (iVar7 + 1) * 3,
                                    (float *)0x0,(int)auStack_234,7,'\0','\0');
       if (iVar4 == 0) {
         iVar6 = 6;
@@ -580,7 +580,7 @@ void FUN_80103e00(void)
   }
   else {
     for (iVar7 = 0; iVar7 <= iVar5; iVar7 = iVar7 + 1) {
-      iVar4 = camcontrol_traceMove((double)FLOAT_803e2320,pfVar9,local_2dc + (iVar7 + 1) * 3,
+      iVar4 = camcontrol_traceMove((double)lbl_803E2320,pfVar9,local_2dc + (iVar7 + 1) * 3,
                                    (float *)0x0,(int)auStack_234,7,'\0','\0');
       if (iVar4 == 0) {
         iVar5 = 6;
@@ -611,26 +611,26 @@ void FUN_80103e00(void)
       uStack_7c = -uStack_7c;
     }
     fVar1 = *(float *)(psVar3 + 0x62) * *(float *)(psVar3 + 0x62);
-    if (fVar1 < FLOAT_803e2324) {
-      fVar1 = FLOAT_803e2324;
+    if (fVar1 < lbl_803E2324) {
+      fVar1 = lbl_803E2324;
     }
     uStack_7c = uStack_7c ^ 0x80000000;
     local_80 = 0x43300000;
-    fVar1 = FLOAT_803e232c + fVar1 * FLOAT_803e2328 +
-            (float)((double)CONCAT44(0x43300000,uStack_7c) - DOUBLE_803e2318) / FLOAT_803e2330;
-    if (fVar1 < FLOAT_803e2334) {
-      fVar1 = FLOAT_803e2334;
+    fVar1 = lbl_803E232C + fVar1 * lbl_803E2328 +
+            (float)((double)CONCAT44(0x43300000,uStack_7c) - DOUBLE_803e2318) / lbl_803E2330;
+    if (fVar1 < lbl_803E2334) {
+      fVar1 = lbl_803E2334;
     }
-    if (FLOAT_803e2338 < fVar1) {
-      fVar1 = FLOAT_803e2338;
+    if (lbl_803E2338 < fVar1) {
+      fVar1 = lbl_803E2338;
     }
     if (iVar7 == -1) {
       fVar1 = -fVar1;
     }
-    fVar1 = fVar1 * FLOAT_803de1a4 + *(float *)(gCamcontrolModeSettings + 0x28);
-    fVar2 = FLOAT_803e233c;
-    if ((fVar1 <= FLOAT_803e233c) && (fVar2 = fVar1, fVar1 < FLOAT_803e2340)) {
-      fVar2 = FLOAT_803e2340;
+    fVar1 = fVar1 * lbl_803DE1A4 + *(float *)(gCamcontrolModeSettings + 0x28);
+    fVar2 = lbl_803E233C;
+    if ((fVar1 <= lbl_803E233C) && (fVar2 = fVar1, fVar1 < lbl_803E2340)) {
+      fVar2 = lbl_803E2340;
     }
     *(float *)(gCamcontrolModeSettings + 0x28) = fVar2;
   }

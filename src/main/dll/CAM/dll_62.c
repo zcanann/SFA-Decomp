@@ -12,11 +12,11 @@ extern undefined4* DAT_803dd6d0;
 extern undefined4* DAT_803de1f0;
 extern f64 DOUBLE_803e2610;
 extern f64 DOUBLE_803e2618;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e2620;
-extern f32 FLOAT_803e2624;
-extern f32 FLOAT_803e2628;
-extern f32 FLOAT_803e2634;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E2620;
+extern f32 lbl_803E2624;
+extern f32 lbl_803E2628;
+extern f32 lbl_803E2634;
 
 /*
  * --INFO--

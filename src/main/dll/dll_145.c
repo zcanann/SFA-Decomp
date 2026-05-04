@@ -7,7 +7,7 @@ extern undefined4 FUN_80039520();
 
 extern undefined4 DAT_803dc070;
 extern f64 DOUBLE_803e43b8;
-extern f32 FLOAT_803e43b0;
+extern f32 lbl_803E43B0;
 
 /*
  * --INFO--
@@ -53,8 +53,8 @@ void FUN_8017ab20(int param_1)
       *puVar5 = 0;
     }
   }
-  fVar1 = FLOAT_803e43b0;
-  if (FLOAT_803e43b0 < *(float *)(pcVar4 + 4)) {
+  fVar1 = lbl_803E43B0;
+  if (lbl_803E43B0 < *(float *)(pcVar4 + 4)) {
     *(float *)(pcVar4 + 4) =
          *(float *)(pcVar4 + 4) -
          (float)((double)CONCAT44(0x43300000,(uint)DAT_803dc070) - DOUBLE_803e43b8);

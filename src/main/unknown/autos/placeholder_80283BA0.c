@@ -18,8 +18,10 @@ extern void fn_8027F020(void *entry);
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void hwAddInput(u8 index)
 {
   fn_8027F020(lbl_803CC1E0 + index * 0xbc);
 }
+#pragma peephole reset
 #pragma scheduling reset

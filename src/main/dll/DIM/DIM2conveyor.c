@@ -24,7 +24,7 @@ extern uint countLeadingZeros();
 
 extern undefined4* DAT_803dd6d4;
 extern void* DAT_803de7d0;
-extern f32 FLOAT_803e5550;
+extern f32 lbl_803E5550;
 
 /*
  * --INFO--
@@ -396,6 +396,8 @@ void dimbridgecogmai_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
+#pragma peephole off
 void dimbridgecogmai_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 void dimdismountpoint_free(int x) { ObjGroup_RemoveObject(x, 0x13); }
+#pragma peephole reset
 #pragma scheduling reset

@@ -7,8 +7,8 @@ extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObject();
 
 extern undefined4* DAT_803dd708;
-extern f32 FLOAT_803e6348;
-extern f32 FLOAT_803e634c;
+extern f32 lbl_803E6348;
+extern f32 lbl_803E634C;
 
 /*
  * --INFO--
@@ -49,8 +49,8 @@ FUN_801dfa28(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
   float local_34;
   
   iVar5 = 0;
-  dVar6 = (double)FLOAT_803e6348;
-  dVar7 = (double)FLOAT_803e634c;
+  dVar6 = (double)lbl_803E6348;
+  dVar7 = (double)lbl_803E634C;
   for (iVar4 = 0; iVar4 < (int)(uint)*(byte *)(param_11 + 0x8b); iVar4 = iVar4 + 1) {
     local_3c = (float)dVar6;
     local_38 = (float)dVar6;

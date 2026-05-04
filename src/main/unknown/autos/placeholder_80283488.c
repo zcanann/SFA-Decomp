@@ -21,6 +21,7 @@ extern u8 lbl_803DE370;
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void hwBreak(int slot)
 {
   u8 *entry;
@@ -39,6 +40,7 @@ void hwBreak(int slot)
   entry += channel;
   *(u32 *)(entry + 0x24) |= 0x20;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*

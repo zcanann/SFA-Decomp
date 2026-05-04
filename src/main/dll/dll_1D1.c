@@ -19,7 +19,7 @@ extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
 extern undefined4 DAT_803de868;
-extern f32 FLOAT_803e5e78;
+extern f32 lbl_803E5E78;
 
 /*
  * --INFO--
@@ -58,7 +58,7 @@ void FUN_801cd7dc(uint param_1)
     *(ushort *)(puVar4 + 2) = *(short *)(puVar4 + 2) - (ushort)DAT_803dc070;
   }
   if (*(char *)((int)puVar4 + 0xb) == '\x01') {
-    local_18 = FLOAT_803e5e78;
+    local_18 = lbl_803E5E78;
     *(undefined *)((int)puVar4 + 0xe) = *(undefined *)(puVar4 + 3);
     iVar1 = ObjHits_GetPriorityHit(param_1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
     if ((iVar1 != 0) || ((*(short *)(puVar4 + 2) != 0 && (*(short *)(puVar4 + 2) < 0x15)))) {

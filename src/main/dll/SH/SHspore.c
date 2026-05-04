@@ -36,13 +36,13 @@ extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd728;
 extern f64 DOUBLE_803e6038;
-extern f32 FLOAT_803e6020;
-extern f32 FLOAT_803e6024;
-extern f32 FLOAT_803e6028;
-extern f32 FLOAT_803e6088;
-extern f32 FLOAT_803e608c;
-extern f32 FLOAT_803e6094;
-extern f32 FLOAT_803e6098;
+extern f32 lbl_803E6020;
+extern f32 lbl_803E6024;
+extern f32 lbl_803E6028;
+extern f32 lbl_803E6088;
+extern f32 lbl_803E608C;
+extern f32 lbl_803E6094;
+extern f32 lbl_803E6098;
 
 /*
  * --INFO--
@@ -68,9 +68,9 @@ void FUN_801d4364(int param_1)
   
   iVar3 = *(int *)(param_1 + 0xb8);
   local_28[0] = 5;
-  *(float *)(iVar3 + 0x274) = FLOAT_803e6088;
+  *(float *)(iVar3 + 0x274) = lbl_803E6088;
   *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x6000;
-  *(float *)(param_1 + 0x28) = FLOAT_803e608c;
+  *(float *)(param_1 + 0x28) = lbl_803E608C;
   ObjHits_DisableObject(param_1);
   uVar1 = FUN_80017760(0,0xffff);
   *(short *)(iVar3 + 0x2ac) = (short)uVar1;
@@ -78,7 +78,7 @@ void FUN_801d4364(int param_1)
   uStack_1c = uStack_1c ^ 0x80000000;
   local_20 = 0x43300000;
   *(float *)(iVar3 + 0x280) =
-       (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e6038) / FLOAT_803e6028;
+       (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e6038) / lbl_803E6028;
   (**(code **)(*DAT_803dd728 + 4))(iVar3 + 8,0,0x40002,1);
   (**(code **)(*DAT_803dd728 + 0xc))(iVar3 + 8,1,&DAT_803279d8,&DAT_803dcc28,local_28);
   (**(code **)(*DAT_803dd728 + 0x20))(param_1,iVar3 + 8);
@@ -88,7 +88,7 @@ void FUN_801d4364(int param_1)
     FUN_800175b0((int)piVar2,2);
     FUN_8001759c((int)piVar2,0xff,0,0xff,0);
     FUN_800175a0((int)piVar2,1);
-    FUN_800175d0((double)FLOAT_803e6020,(double)FLOAT_803e6024,(int)piVar2);
+    FUN_800175d0((double)lbl_803E6020,(double)lbl_803E6024,(int)piVar2);
   }
   *(int **)(iVar3 + 0x270) = piVar2;
   ObjMsg_AllocQueue(param_1,2);

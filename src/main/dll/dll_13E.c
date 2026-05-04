@@ -14,14 +14,14 @@ extern uint FUN_80294bec();
 extern uint FUN_80294ce8();
 
 extern undefined4* DAT_803dd728;
-extern f32 FLOAT_803e4320;
-extern f32 FLOAT_803e4324;
-extern f32 FLOAT_803e4328;
-extern f32 FLOAT_803e432c;
-extern f32 FLOAT_803e4330;
-extern f32 FLOAT_803e4334;
-extern f32 FLOAT_803e4338;
-extern f32 FLOAT_803e433c;
+extern f32 lbl_803E4320;
+extern f32 lbl_803E4324;
+extern f32 lbl_803E4328;
+extern f32 lbl_803E432C;
+extern f32 lbl_803E4330;
+extern f32 lbl_803E4334;
+extern f32 lbl_803E4338;
+extern f32 lbl_803E433C;
 
 /*
  * --INFO--
@@ -87,21 +87,21 @@ void sidekickball_update(undefined8 param_1,double param_2,double param_3,undefi
         if (uVar5 == 0) {
           *(undefined *)(param_10 + 0x2c9) = 0;
           *(undefined *)(param_10 + 0x2ca) = 0;
-          *(float *)(param_10 + 0x26c) = FLOAT_803e433c;
+          *(float *)(param_10 + 0x26c) = lbl_803E433C;
           *(undefined *)(param_10 + 0x274) = 5;
         }
         else {
           *(undefined *)(param_10 + 0x2c9) = 0;
           *(undefined *)(param_10 + 0x2c8) = 1;
-          fVar1 = FLOAT_803e4320;
+          fVar1 = lbl_803E4320;
           *(float *)(param_9 + 0x28) =
-               FLOAT_803e4320 * (FLOAT_803e4328 * *(float *)(iVar6 + 0x298) + FLOAT_803e4324);
+               lbl_803E4320 * (lbl_803E4328 * *(float *)(iVar6 + 0x298) + lbl_803E4324);
           *(float *)(param_9 + 0x2c) =
-               fVar1 * (FLOAT_803e4330 * *(float *)(iVar6 + 0x298) + FLOAT_803e432c);
-          local_28 = FLOAT_803e4334;
-          local_24 = FLOAT_803e4334;
-          local_20 = FLOAT_803e4334;
-          local_2c = FLOAT_803e4338;
+               fVar1 * (lbl_803E4330 * *(float *)(iVar6 + 0x298) + lbl_803E432C);
+          local_28 = lbl_803E4334;
+          local_24 = lbl_803E4334;
+          local_20 = lbl_803E4334;
+          local_2c = lbl_803E4338;
           local_34[2] = 0;
           local_34[1] = 0;
           if (*(short **)(puVar4 + 0x18) == (short *)0x0) {
@@ -118,7 +118,7 @@ void sidekickball_update(undefined8 param_1,double param_2,double param_3,undefi
           uVar3 = *(undefined4 *)(param_9 + 0x24);
           iVar6 = *(int *)(param_9 + 0xb8);
           *(undefined *)(iVar6 + 0x274) = 3;
-          *(float *)(iVar6 + 0x26c) = FLOAT_803e4334;
+          *(float *)(iVar6 + 0x26c) = lbl_803E4334;
           *(undefined4 *)(param_9 + 0x24) = uVar3;
           *(float *)(param_9 + 0x28) = fVar2;
           *(float *)(param_9 + 0x2c) = fVar1;
@@ -161,7 +161,7 @@ void FUN_80179ad8(int param_1)
   if ((cVar1 != '\x03') && (cVar1 != '\x02')) {
     return;
   }
-  *(float *)(*(int *)(param_1 + 0xb8) + 0x26c) = FLOAT_803e4334;
+  *(float *)(*(int *)(param_1 + 0xb8) + 0x26c) = lbl_803E4334;
   return;
 }
 
@@ -209,7 +209,7 @@ void FUN_80179b28(int param_1)
   int iVar1;
   
   iVar1 = *(int *)(param_1 + 0xb8);
-  *(float *)(iVar1 + 0x26c) = FLOAT_803e4334;
+  *(float *)(iVar1 + 0x26c) = lbl_803E4334;
   *(undefined *)(iVar1 + 0x274) = 0;
   ObjHits_DisableObject(param_1);
   *(undefined *)(iVar1 + 0x25b) = 0;

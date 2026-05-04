@@ -15,11 +15,11 @@ extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd718;
 extern f64 DOUBLE_803e5c08;
-extern f32 FLOAT_803e5c00;
-extern f32 FLOAT_803e5c10;
-extern f32 FLOAT_803e5c18;
-extern f32 FLOAT_803e5c1c;
-extern f32 FLOAT_803e5c20;
+extern f32 lbl_803E5C00;
+extern f32 lbl_803E5C10;
+extern f32 lbl_803E5C18;
+extern f32 lbl_803E5C1C;
+extern f32 lbl_803E5C20;
 
 /*
  * --INFO--
@@ -53,7 +53,7 @@ void FUN_801c5990(undefined8 param_1,undefined8 param_2,double param_3,undefined
   *(undefined2 *)(iVar5 + 0x6a) = *(undefined2 *)(param_10 + 0x1a);
   *(undefined2 *)(iVar5 + 0x6e) = 0xffff;
   dVar6 = DOUBLE_803e5c08;
-  dVar7 = (double)FLOAT_803e5c00;
+  dVar7 = (double)lbl_803E5C00;
   *(float *)(iVar5 + 0x24) =
        (float)(dVar7 / (double)(float)(dVar7 + (double)(float)((double)CONCAT44(0x43300000,
                                                                                 (uint)*(byte *)(
@@ -84,7 +84,7 @@ void FUN_801c5990(undefined8 param_1,undefined8 param_2,double param_3,undefined
                          0xffffffff,(uint *)0x0,in_r8,in_r9,in_r10);
     *(undefined4 *)(param_9 + 200) = uVar3;
     *(float *)(*(int *)(param_9 + 200) + 8) =
-         *(float *)(*(int *)(param_9 + 200) + 8) * FLOAT_803e5c10;
+         *(float *)(*(int *)(param_9 + 200) + 8) * lbl_803E5C10;
   }
   return;
 }
@@ -120,7 +120,7 @@ void FUN_801c5c2c(int param_1)
     FUN_80135814();
     iVar3 = FUN_800632f4((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0x10),
                          (double)*(float *)(param_1 + 0x14),param_1,local_28,0,0);
-    if ((iVar3 != 0) && (in_f31 = (double)FLOAT_803e5c18, 0 < iVar3)) {
+    if ((iVar3 != 0) && (in_f31 = (double)lbl_803E5C18, 0 < iVar3)) {
       do {
         if ((*(char *)((float *)*local_28[0] + 5) == '\x0e') &&
            (dVar6 = (double)(*(float *)*local_28[0] - *(float *)(param_1 + 0x10)), in_f31 < dVar6))
@@ -144,10 +144,10 @@ void FUN_801c5c2c(int param_1)
     if (*(int *)(param_1 + 0xf4) < 1) {
       uVar4 = FUN_80017760(0x3c,0xf0);
       *(uint *)(param_1 + 0xf4) = uVar4;
-      if ((double)FLOAT_803e5c1c == in_f31) {
+      if ((double)lbl_803E5C1C == in_f31) {
         (**(code **)(*DAT_803dd718 + 0x14))
                   ((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0x10),
-                   (double)*(float *)(param_1 + 0x14),(double)FLOAT_803e5c20,0,3);
+                   (double)*(float *)(param_1 + 0x14),(double)lbl_803E5C20,0,3);
       }
     }
   }

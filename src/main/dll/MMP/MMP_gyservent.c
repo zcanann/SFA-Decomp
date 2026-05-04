@@ -15,11 +15,11 @@ extern undefined4 FUN_80294964();
 
 extern f64 DOUBLE_803e4d68;
 extern f64 DOUBLE_803e4d88;
-extern f32 FLOAT_803e4d70;
-extern f32 FLOAT_803e4d74;
-extern f32 FLOAT_803e4d78;
-extern f32 FLOAT_803e4d7c;
-extern f32 FLOAT_803e4d80;
+extern f32 lbl_803E4D70;
+extern f32 lbl_803E4D74;
+extern f32 lbl_803E4D78;
+extern f32 lbl_803E4D7C;
+extern f32 lbl_803E4D80;
 
 /*
  * --INFO--
@@ -64,13 +64,13 @@ undefined4 FUN_80198fa4(int param_1,float *param_2)
   dVar6 = (double)(float)(dVar12 * dVar6 + (double)(float)(dVar10 * dVar7));
   fVar3 = (float)(dVar11 * dVar9 - (double)(float)(dVar6 * dVar8));
   fVar1 = (float)(dVar11 * dVar8 + (double)(float)(dVar6 * dVar9));
-  if (fVar2 < FLOAT_803e4d70) {
+  if (fVar2 < lbl_803E4D70) {
     fVar2 = -fVar2;
   }
-  if (fVar3 < FLOAT_803e4d70) {
+  if (fVar3 < lbl_803E4D70) {
     fVar3 = -fVar3;
   }
-  if (fVar1 < FLOAT_803e4d70) {
+  if (fVar1 < lbl_803E4D70) {
     fVar1 = -fVar1;
   }
   if ((((float)((double)CONCAT44(0x43300000,(uint)*(byte *)(iVar5 + 0x3a) << 1 ^ 0x80000000) -
@@ -150,7 +150,7 @@ void FUN_801991bc(void)
                                                   (double)(float)(dVar8 * (double)*(float *)(iVar5 +
                                                                                             0x2c))))
                    );
-  dVar6 = (double)FLOAT_803e4d70;
+  dVar6 = (double)lbl_803E4D70;
   if (dVar6 <= dVar16) {
     if (dVar6 <= dVar15) {
       cVar3 = -2;
@@ -229,16 +229,16 @@ void FUN_80199440(ushort *param_1,int param_2)
   local_20 = 0x43300000;
   *(float *)(param_1 + 4) =
        *(float *)(*(int *)(param_1 + 0x28) + 4) *
-       (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e4d88) * FLOAT_803e4d74;
+       (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e4d88) * lbl_803E4D74;
   local_bc = *param_1;
   local_ba = param_1[1];
   local_b8 = param_1[2];
-  local_b4 = FLOAT_803e4d78;
-  local_b0 = FLOAT_803e4d70;
-  local_ac = FLOAT_803e4d70;
-  local_a8 = FLOAT_803e4d70;
+  local_b4 = lbl_803E4D78;
+  local_b0 = lbl_803E4D70;
+  local_ac = lbl_803E4D70;
+  local_a8 = lbl_803E4D70;
   FUN_80017754(afStack_a4,&local_bc);
-  FUN_80017778((double)FLOAT_803e4d70,(double)FLOAT_803e4d70,(double)FLOAT_803e4d78,afStack_a4,
+  FUN_80017778((double)lbl_803E4D70,(double)lbl_803E4D70,(double)lbl_803E4D78,afStack_a4,
                &local_c0,&local_c4,&local_c8);
   *(float *)(iVar1 + 0xc) = local_c0;
   *(float *)(iVar1 + 0x10) = local_c4;
@@ -249,15 +249,15 @@ void FUN_80199440(ushort *param_1,int param_2)
   local_bc = -*param_1;
   local_ba = -param_1[1];
   local_b8 = 0;
-  local_b4 = FLOAT_803e4d78;
+  local_b4 = lbl_803E4D78;
   local_b0 = -*(float *)(param_1 + 0xc);
   local_ac = -*(float *)(param_1 + 0xe);
   local_a8 = -*(float *)(param_1 + 0x10);
   FUN_8001774c(afStack_60,(int)&local_bc);
   FUN_80017704(afStack_60,(undefined4 *)(iVar1 + 0x38));
-  *(float *)(iVar1 + 0x34) = FLOAT_803e4d7c * *(float *)(param_1 + 4);
+  *(float *)(iVar1 + 0x34) = lbl_803E4D7C * *(float *)(param_1 + 4);
   *(float *)(iVar1 + 4) =
-       FLOAT_803e4d80 * *(float *)(param_1 + 4) * FLOAT_803e4d80 * *(float *)(param_1 + 4);
+       lbl_803E4D80 * *(float *)(param_1 + 4) * lbl_803E4D80 * *(float *)(param_1 + 4);
   if (*(int *)(param_2 + 0x14) == 0x46a31) {
     FUN_800723a0();
   }
@@ -313,14 +313,14 @@ void FUN_8019959c(int param_1,undefined4 param_2,undefined4 param_3,undefined4 p
   dVar7 = (double)*(float *)(iVar5 + 4);
   if (dVar8 < dVar7) {
     dVar6 = dVar11;
-    if (dVar11 < (double)FLOAT_803e4d70) {
+    if (dVar11 < (double)lbl_803E4D70) {
       dVar6 = -dVar11;
     }
     if (dVar6 < dVar13) {
       bVar3 = false;
       if (dVar10 < dVar7) {
         dVar6 = dVar12;
-        if (dVar12 < (double)FLOAT_803e4d70) {
+        if (dVar12 < (double)lbl_803E4D70) {
           dVar6 = -dVar12;
         }
         if (dVar6 < dVar13) {
@@ -339,7 +339,7 @@ void FUN_8019959c(int param_1,undefined4 param_2,undefined4 param_3,undefined4 p
   bVar3 = false;
   if (dVar10 < dVar7) {
     dVar6 = dVar12;
-    if (dVar12 < (double)FLOAT_803e4d70) {
+    if (dVar12 < (double)lbl_803E4D70) {
       dVar6 = -dVar12;
     }
     if (dVar6 < dVar13) {

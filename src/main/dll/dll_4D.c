@@ -18,7 +18,7 @@ extern undefined4* DAT_803dd720;
 extern undefined4* DAT_803dd724;
 extern undefined4 DAT_803de384;
 extern undefined4 DAT_803de385;
-extern f32 FLOAT_803e2a50;
+extern f32 lbl_803E2A50;
 
 /*
  * --INFO--
@@ -78,7 +78,7 @@ void FUN_8011c5cc(int param_1,int param_2)
         }
         FUN_80006c20((char)(uVar2 >> 5));
         if (uVar1 != 0) {
-          FUN_80006b94((double)FLOAT_803e2a50);
+          FUN_80006b94((double)lbl_803E2A50);
         }
       }
     }

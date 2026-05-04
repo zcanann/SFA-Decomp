@@ -85,6 +85,7 @@ void crfueltank_render(void)
 }
 
 #pragma scheduling off
+#pragma peephole off
 void crfueltank_hitDetect(CrFuelTankObject *obj)
 {
   CrFuelTankDef *def;
@@ -108,6 +109,7 @@ void crfueltank_hitDetect(CrFuelTankObject *obj)
   }
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

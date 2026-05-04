@@ -17,20 +17,20 @@ extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803de838;
 extern f64 DOUBLE_803e5b98;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e5b58;
-extern f32 FLOAT_803e5b5c;
-extern f32 FLOAT_803e5b60;
-extern f32 FLOAT_803e5b64;
-extern f32 FLOAT_803e5b68;
-extern f32 FLOAT_803e5b6c;
-extern f32 FLOAT_803e5b78;
-extern f32 FLOAT_803e5b7c;
-extern f32 FLOAT_803e5b80;
-extern f32 FLOAT_803e5b84;
-extern f32 FLOAT_803e5b88;
-extern f32 FLOAT_803e5b8c;
-extern f32 FLOAT_803e5b90;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E5B58;
+extern f32 lbl_803E5B5C;
+extern f32 lbl_803E5B60;
+extern f32 lbl_803E5B64;
+extern f32 lbl_803E5B68;
+extern f32 lbl_803E5B6C;
+extern f32 lbl_803E5B78;
+extern f32 lbl_803E5B7C;
+extern f32 lbl_803E5B80;
+extern f32 lbl_803E5B84;
+extern f32 lbl_803E5B88;
+extern f32 lbl_803E5B8C;
+extern f32 lbl_803E5B90;
 
 /*
  * --INFO--

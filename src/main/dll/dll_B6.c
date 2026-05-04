@@ -13,9 +13,9 @@ extern int FUN_80294c98();
 extern undefined4 gCamcontrolTargetTypeMask;
 extern undefined4 gCamcontrolCurrentActionId;
 extern f64 DOUBLE_803e22d0;
-extern f32 FLOAT_803e22b0;
-extern f32 FLOAT_803e22c4;
-extern f32 FLOAT_803e22c8;
+extern f32 lbl_803E22B0;
+extern f32 lbl_803E22C4;
+extern f32 lbl_803E22C8;
 
 /*
  * --INFO--
@@ -104,13 +104,13 @@ void camcontrol_findBestTarget(undefined8 param_1,double param_2,undefined8 para
         iVar7 = uVar5 * 0x18;
         if ((int)uVar14 <=
             (int)(uint)*(byte *)(*(int *)(*(int *)((int)fVar13 + 0x50) + 0x40) + iVar7 + 0x11)) {
-          fVar1 = FLOAT_803e22b0;
+          fVar1 = lbl_803E22B0;
           if (((*(byte *)((int)fVar13 + 0xaf) & 0x80) == 0) &&
              ((*(byte *)(iVar4 + uVar5 * 5 + 4) & 0x80) == 0)) {
             fVar1 = *(float *)(extraout_r4 + 0x1c) -
                     *(float *)(*(int *)((int)fVar13 + 0x74) + iVar7 + 0x10);
           }
-          if ((FLOAT_803e22c4 < fVar1) && (fVar1 < FLOAT_803e22c8)) {
+          if ((lbl_803E22C4 < fVar1) && (fVar1 < lbl_803E22C8)) {
             iVar7 = *(int *)((int)fVar13 + 0x74) + iVar7;
             param_2 = (double)(*(float *)(extraout_r4 + 0x18) - *(float *)(iVar7 + 0xc));
             fVar1 = *(float *)(extraout_r4 + 0x20) - *(float *)(iVar7 + 0x14);
@@ -201,7 +201,7 @@ LAB_80101720:
        (*(byte *)(*(int *)(*(int *)((int)local_60[0] + 0x50) + 0x40) + iVar3 + 0x10) & 0x20) != 0))
     {
       local_8c = *(float *)(extraout_r4 + 0x18);
-      local_88 = FLOAT_803e22c8 + *(float *)(extraout_r4 + 0x1c);
+      local_88 = lbl_803E22C8 + *(float *)(extraout_r4 + 0x1c);
       local_84 = *(undefined4 *)(extraout_r4 + 0x20);
       local_98 = *(float *)(*(int *)((int)local_60[0] + 0x74) + iVar3);
       iVar3 = *(int *)((int)local_60[0] + 0x74) + iVar3;

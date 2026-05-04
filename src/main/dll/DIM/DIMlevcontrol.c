@@ -44,13 +44,13 @@ extern undefined4* DAT_803dd6e8;
 extern void* DAT_803de7d0;
 extern f64 DOUBLE_803e5558;
 extern f64 DOUBLE_803e5578;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803dcb5c;
-extern f32 FLOAT_803dcb60;
-extern f32 FLOAT_803dcb64;
-extern f32 FLOAT_803dcb70;
-extern f32 FLOAT_803e5584;
-extern f32 FLOAT_803e5588;
+extern f32 lbl_803DC074;
+extern f32 lbl_803DCB5C;
+extern f32 lbl_803DCB60;
+extern f32 lbl_803DCB64;
+extern f32 lbl_803DCB70;
+extern f32 lbl_803E5584;
+extern f32 lbl_803E5588;
 
 /*
  * --INFO--
@@ -116,7 +116,7 @@ void FUN_801b2550(undefined8 param_1,undefined8 param_2,double param_3,undefined
         cVar7 = FUN_80006bd0(0);
         uStack_2c = (int)cVar7 ^ 0x80000000;
         local_30 = 0x43300000;
-        iVar11 = (int)(-FLOAT_803dcb70 *
+        iVar11 = (int)(-lbl_803DCB70 *
                       (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e5558));
         local_28 = (double)(longlong)iVar11;
         if (iVar11 == 0) {
@@ -188,8 +188,8 @@ void FUN_801b2550(undefined8 param_1,undefined8 param_2,double param_3,undefined
         (**(code **)(*DAT_803dd6e8 + 0x5c))(*(undefined *)(iVar12 + 0xae));
         local_28 = (double)CONCAT44(0x43300000,(uint)*(byte *)(iVar12 + 0xae));
         dVar15 = (double)(float)(local_28 - DOUBLE_803e5578);
-        dVar14 = (double)FLOAT_803dcb64;
-        *(float *)(iVar12 + 0x98) = (float)(dVar15 * dVar14 + (double)FLOAT_803dcb60);
+        dVar14 = (double)lbl_803DCB64;
+        *(float *)(iVar12 + 0x98) = (float)(dVar15 * dVar14 + (double)lbl_803DCB60);
         uVar6 = FUN_80006bf8(0);
         if (((((uVar6 & 0x100) != 0) || (*(byte *)(iVar12 + 0xae) == DAT_803dcb68)) &&
             (*(short *)(iVar12 + 0xa4) < 1)) && (iVar5 = FUN_80294d38(iVar13), 0 < iVar5)) {
@@ -225,7 +225,7 @@ void FUN_801b2550(undefined8 param_1,undefined8 param_2,double param_3,undefined
           }
           FUN_8000680c((int)psVar4,2);
         }
-        FUN_8002fc3c((double)FLOAT_803dcb5c,(double)FLOAT_803dc074);
+        FUN_8002fc3c((double)lbl_803DCB5C,(double)lbl_803DC074);
       }
       else {
         *(byte *)(iVar12 + 0xb0) = *(char *)(iVar12 + 0xb0) - DAT_803dc070;
@@ -362,7 +362,7 @@ void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,un
           uStack_1c = *(short *)(iVar5 + 0x26) * DAT_803dcb78 ^ 0x80000000;
           local_20 = 0x43300000;
           if (dVar7 < (double)((float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e5558) /
-                              FLOAT_803e5584)) {
+                              lbl_803E5584)) {
             *(undefined *)(piVar6 + 0x2b) = 1;
           }
         }
@@ -418,7 +418,7 @@ void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,un
               FUN_801b2640(uVar8,dVar7,dVar9,dVar10,param_5,param_6,param_7,param_8);
               uStack_1c = *(short *)(iVar5 + 0x26) * DAT_803dcb74 ^ 0x80000000;
               local_20 = 0x43300000;
-              if ((float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e5558) / FLOAT_803e5584
+              if ((float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e5558) / lbl_803E5584
                   < (float)piVar6[4]) {
                 *(undefined *)(piVar6 + 0x2b) = 4;
               }
@@ -457,8 +457,8 @@ void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,un
       *(undefined2 *)(piVar6 + 0x29) = 0;
       *(undefined2 *)((int)piVar6 + 0xa6) = 0;
     }
-    FLOAT_803dcb5c = FLOAT_803e5588;
-    FUN_8002fc3c((double)FLOAT_803e5588,(double)FLOAT_803dc074);
+    lbl_803DCB5C = lbl_803E5588;
+    FUN_8002fc3c((double)lbl_803E5588,(double)lbl_803DC074);
   }
   return;
 }
@@ -478,7 +478,9 @@ int dimlavasmash_func08(void) { return 0x0; }
 /* if (o->_X == K) return A; else return B; */
 #pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 int dimcannon_getExtraSize(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1d6) return 0xc; return 0xb4; }
 int dimcannon_func08(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1d6) return 0x0; return 0x0; }
+#pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset

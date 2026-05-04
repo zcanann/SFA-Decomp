@@ -136,10 +136,10 @@ extern volatile f32 lbl_803DF418;
 extern f32 lbl_803DF358;
 extern f64 DOUBLE_803dffe0;
 extern f64 DOUBLE_803dfff8;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803dc3f0;
-extern f32 FLOAT_803dda58;
-extern f32 FLOAT_803dda5c;
+extern f32 lbl_803DC074;
+extern f32 lbl_803DC3F0;
+extern f32 lbl_803DDA58;
+extern f32 lbl_803DDA5C;
 extern f32 lbl_803DCDD8;
 extern f32 lbl_803DCDDC;
 extern f64 lbl_803DF378;
@@ -148,47 +148,47 @@ extern f32 lbl_803DF3B8;
 extern f32 lbl_803DF3BC;
 extern f32 lbl_803DF3C0;
 extern f32 lbl_803DF3C4;
-extern f32 FLOAT_803ddedc;
-extern f32 FLOAT_803ddee0;
-extern f32 FLOAT_803ddee4;
-extern f32 FLOAT_803dffd0;
-extern f32 FLOAT_803dffd4;
-extern f32 FLOAT_803dffd8;
-extern f32 FLOAT_803dffdc;
-extern f32 FLOAT_803e0004;
-extern f32 FLOAT_803e000c;
-extern f32 FLOAT_803e0010;
-extern f32 FLOAT_803e0030;
-extern f32 FLOAT_803e0034;
-extern f32 FLOAT_803e0038;
-extern f32 FLOAT_803e003c;
-extern f32 FLOAT_803e0040;
-extern f32 FLOAT_803e0044;
-extern f32 FLOAT_803e0048;
-extern f32 FLOAT_803e004c;
-extern f32 FLOAT_803e0050;
-extern f32 FLOAT_803e0054;
-extern f32 FLOAT_803e0058;
-extern f32 FLOAT_803e005c;
-extern f32 FLOAT_803e0060;
-extern f32 FLOAT_803e0064;
-extern f32 FLOAT_803e0068;
-extern f32 FLOAT_803e006c;
-extern f32 FLOAT_803e0070;
-extern f32 FLOAT_803e0074;
-extern f32 FLOAT_803e0078;
-extern f32 FLOAT_803e007c;
-extern f32 FLOAT_803e0080;
-extern f32 FLOAT_803e0084;
-extern f32 FLOAT_803e0088;
-extern f32 FLOAT_803e008c;
-extern f32 FLOAT_803e0090;
-extern f32 FLOAT_803e0094;
-extern f32 FLOAT_803e0098;
-extern f32 FLOAT_803e009c;
-extern f32 FLOAT_803e00a0;
-extern f32 FLOAT_803e00a4;
-extern f32 FLOAT_803e00a8;
+extern f32 lbl_803DDEDC;
+extern f32 lbl_803DDEE0;
+extern f32 lbl_803DDEE4;
+extern f32 lbl_803DFFD0;
+extern f32 lbl_803DFFD4;
+extern f32 lbl_803DFFD8;
+extern f32 lbl_803DFFDC;
+extern f32 lbl_803E0004;
+extern f32 lbl_803E000C;
+extern f32 lbl_803E0010;
+extern f32 lbl_803E0030;
+extern f32 lbl_803E0034;
+extern f32 lbl_803E0038;
+extern f32 lbl_803E003C;
+extern f32 lbl_803E0040;
+extern f32 lbl_803E0044;
+extern f32 lbl_803E0048;
+extern f32 lbl_803E004C;
+extern f32 lbl_803E0050;
+extern f32 lbl_803E0054;
+extern f32 lbl_803E0058;
+extern f32 lbl_803E005C;
+extern f32 lbl_803E0060;
+extern f32 lbl_803E0064;
+extern f32 lbl_803E0068;
+extern f32 lbl_803E006C;
+extern f32 lbl_803E0070;
+extern f32 lbl_803E0074;
+extern f32 lbl_803E0078;
+extern f32 lbl_803E007C;
+extern f32 lbl_803E0080;
+extern f32 lbl_803E0084;
+extern f32 lbl_803E0088;
+extern f32 lbl_803E008C;
+extern f32 lbl_803E0090;
+extern f32 lbl_803E0094;
+extern f32 lbl_803E0098;
+extern f32 lbl_803E009C;
+extern f32 lbl_803E00A0;
+extern f32 lbl_803E00A4;
+extern f32 lbl_803E00A8;
 extern u8 lbl_8030F898[];
 extern u8 lbl_8039AB58[];
 extern u32 gExpgfxTrackedPoolSourceIds[];
@@ -451,6 +451,7 @@ void expgfx_initialise(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 int expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,int param_4,uint param_5)
 {
   bool bVar1;
@@ -575,6 +576,7 @@ int expgfx_reserveSlot(short *param_1,undefined2 *param_2,short param_3,int para
   }
   return 0xffffffff;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -731,6 +733,7 @@ void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
 {
   ExpgfxTableEntry *entry;
@@ -775,6 +778,7 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
   fn_801378A8(sExpgfxExpTabIsFull);
   return EXPGFX_INVALID_TABLE_INDEX;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -791,6 +795,7 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 int expgfx_updateSourceFrameFlags(void *sourceObject)
 {
   u32 bit;
@@ -839,6 +844,7 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
   }
   return aggregateState;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -926,6 +932,7 @@ int fn_8009E02C(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void expgfx_renderSourcePools(int sourceId,int sourceMode)
 {
   ExpgfxBounds *boundsTemplate;
@@ -970,6 +977,7 @@ void expgfx_renderSourcePools(int sourceId,int sourceMode)
   } while (poolIndex < EXPGFX_POOL_COUNT);
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -1003,6 +1011,7 @@ void expgfx_renderPool(uint slotPoolBase,int poolIndex)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void expgfx_queueStandalonePools(void)
 {
   ExpgfxBounds *boundsTemplate;
@@ -1068,6 +1077,7 @@ void expgfx_queueStandalonePools(void)
   } while (poolIndex < EXPGFX_POOL_COUNT);
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -1103,6 +1113,7 @@ void fn_8009EEB8(u32 sourceId)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void expgfx_releaseSourceSlots(u32 sourceId)
 {
   char *poolActiveCounts;
@@ -1154,6 +1165,7 @@ void expgfx_releaseSourceSlots(u32 sourceId)
   }
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -1170,6 +1182,7 @@ void expgfx_releaseSourceSlots(u32 sourceId)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void expgfx_resetAllPools(void)
 {
   ExpgfxTableEntry *tableEntry;
@@ -1258,6 +1271,7 @@ void expgfx_resetAllPools(void)
   } while (resourceIndex < 0x20);
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -1483,12 +1497,12 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
           puVar18[0x1b] = (short)spawnWords[1];
           slot->lifetimeFrame = (short)spawnWords[2];
           slot->lifetimeFrameLimit = (short)spawnWords[2];
-          if ((double)FLOAT_803dffd4 < (double)spawnConfig->scale) {
+          if ((double)lbl_803DFFD4 < (double)spawnConfig->scale) {
             FUN_80135810((double)spawnConfig->scale,param_2,param_3,param_4,param_5,param_6,param_7,
                          param_8,sExpgfxScaleOverflow,puVar10,iVar13,iVar15,piVar16,param_14,
                          param_15,param_16);
           }
-          dVar20 = (double)FLOAT_803dffd0;
+          dVar20 = (double)lbl_803DFFD0;
           dVar19 = dVar20 * (double)spawnConfig->scale;
           dVar21 = (double)(float)dVar19;
           if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) == 0) {
@@ -1538,7 +1552,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
           if ((slot->renderFlags & EXPGFX_RENDER_BACKDATE_MOTION) != 0) {
             slot->renderFlags = slot->renderFlags ^ EXPGFX_RENDER_BACKDATE_MOTION;
             dVar21 = DOUBLE_803dffe0;
-            param_4 = (double)FLOAT_803e009c;
+            param_4 = (double)lbl_803E009C;
             local_38 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame ^ 0x80000000);
             *(float *)&slot->posX =
                  slot->velocityX *
@@ -1553,7 +1567,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
             *(float *)&slot->posZ =
                  (float)(param_2 * (double)(float)(param_4 * (double)(float)(local_48 - dVar21)) +
                         (double)*(float *)&slot->posZ);
-            dVar20 = (double)FLOAT_803e00a0;
+            dVar20 = (double)lbl_803E00A0;
             slot->velocityX = (float)((double)slot->velocityX * dVar20);
             slot->velocityY = (float)((double)slot->velocityY * dVar20);
             slot->velocityZ = (float)((double)slot->velocityZ * dVar20);
@@ -1571,8 +1585,8 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
                              (double)(*(float *)&slot->startPosZ +
                                      *(float *)&attachedSource->sourcePosWBits));
               dVar20 = (double)(float)(dVar21 * dVar21 + (double)(fVar1 * fVar1));
-              if (((dVar20 < (double)FLOAT_803e00a4) &&
-                  (dVar20 = (double)FLOAT_803dffdc, dVar20 != (double)*(float *)(iVar7 + 0x24))) &&
+              if (((dVar20 < (double)lbl_803E00A4) &&
+                  (dVar20 = (double)lbl_803DFFDC, dVar20 != (double)*(float *)(iVar7 + 0x24))) &&
                  (dVar20 != (double)*(float *)(iVar7 + 0x2c))) {
                 local_38 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame << 1 ^ 0x80000000);
                 slot->velocityX =
@@ -1581,7 +1595,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
                 local_40 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame << 1 ^ 0x80000000);
                 slot->velocityY =
                      slot->velocityY -
-                     ((FLOAT_803e00a8 + *(float *)(iVar7 + 0x1c)) -
+                     ((lbl_803E00A8 + *(float *)(iVar7 + 0x1c)) -
                      (*(float *)&slot->startPosY + *(float *)&attachedSource->sourcePosZBits)) /
                      (float)(local_40 - dVar19);
                 dVar21 = (double)slot->velocityZ;
@@ -1598,8 +1612,8 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
               param_2 = (double)(*(float *)(iVar7 + 0x18) - *(float *)&slot->startPosX);
               fVar1 = *(float *)(iVar7 + 0x20) - *(float *)&slot->startPosZ;
               dVar20 = (double)(float)(param_2 * param_2 + (double)(fVar1 * fVar1));
-              if (((dVar20 < (double)FLOAT_803e00a4) &&
-                  (dVar20 = (double)FLOAT_803dffdc, dVar20 != (double)*(float *)(iVar7 + 0x24))) &&
+              if (((dVar20 < (double)lbl_803E00A4) &&
+                  (dVar20 = (double)lbl_803DFFDC, dVar20 != (double)*(float *)(iVar7 + 0x24))) &&
                  (dVar20 != (double)*(float *)(iVar7 + 0x2c))) {
                 local_38 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame << 1 ^ 0x80000000);
                 slot->velocityX =
@@ -1608,7 +1622,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
                 local_40 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame << 1 ^ 0x80000000);
                 slot->velocityY =
                      slot->velocityY +
-                     ((FLOAT_803e00a8 + *(float *)(iVar7 + 0x1c)) - *(float *)&slot->startPosY) /
+                     ((lbl_803E00A8 + *(float *)(iVar7 + 0x1c)) - *(float *)&slot->startPosY) /
                      (float)(local_40 - dVar19);
                 param_2 = (double)slot->velocityZ;
                 dVar20 = (double)(*(float *)(iVar7 + 0x20) - *(float *)&slot->startPosZ);
@@ -1676,6 +1690,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void expgfx_resetPoolResources(void)
 {
   ExpgfxResourceEntry *resourceEntry;
@@ -1778,6 +1793,7 @@ void expgfx_resetPoolResources(void)
   lbl_803DD258 = 0;
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*

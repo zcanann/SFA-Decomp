@@ -2,23 +2,23 @@
 #include "main/dll/zBomb.h"
 
 extern undefined4 FUN_8000a380();
-extern int GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern void FUN_80026e00(int param_1,int param_2,float *param_3);
 extern undefined4 FUN_80097734();
 
 extern undefined4* DAT_803dcaa8;
 extern s32 lbl_80329B78[];
-extern f32 FLOAT_803db414;
-extern f32 FLOAT_803e648c;
-extern f32 FLOAT_803e6494;
-extern f32 FLOAT_803e64ac;
-extern f32 FLOAT_803e64b0;
-extern f32 FLOAT_803e64c4;
-extern f32 FLOAT_803e64c8;
-extern f32 FLOAT_803e64cc;
-extern f32 FLOAT_803e64d0;
-extern f32 FLOAT_803e64d4;
+extern f32 lbl_803DB414;
+extern f32 lbl_803E648C;
+extern f32 lbl_803E6494;
+extern f32 lbl_803E64AC;
+extern f32 lbl_803E64B0;
+extern f32 lbl_803E64C4;
+extern f32 lbl_803E64C8;
+extern f32 lbl_803E64CC;
+extern f32 lbl_803E64D0;
+extern f32 lbl_803E64D4;
 
 typedef struct DfpTargetBlockPoint {
   f32 x;
@@ -52,6 +52,8 @@ typedef enum DfpTargetBlockMode {
  * EN v1.0 Address: 0x80208B70
  * EN v1.0 Size: 524b
  */
+#pragma scheduling off
+#pragma peephole off
 void dfptargetblock_update(int param_1)
 {
   char cVar1;
@@ -67,11 +69,11 @@ void dfptargetblock_update(int param_1)
   state = *(DfpTargetBlockState **)(param_1 + 0xb8);
   iVar4 = *(int *)(param_1 + 0x4c);
   if (*(short *)(param_1 + 0x46) == 0x4e0) {
-    local_1c = FLOAT_803e648c;
-    local_18 = FLOAT_803e64c4;
-    local_14 = FLOAT_803e648c;
-    FUN_80097734((double)FLOAT_803e64c8,(double)FLOAT_803e64c4,(double)FLOAT_803e64c4,
-                 (double)FLOAT_803e64b0,param_1,5,1,2,0x32,auStack_28,0);
+    local_1c = lbl_803E648C;
+    local_18 = lbl_803E64C4;
+    local_14 = lbl_803E648C;
+    FUN_80097734((double)lbl_803E64C8,(double)lbl_803E64C4,(double)lbl_803E64C4,
+                 (double)lbl_803E64B0,param_1,5,1,2,0x32,auStack_28,0);
   }
   else {
     if (state->completionSfxReady == '\0') {
@@ -82,12 +84,12 @@ void dfptargetblock_update(int param_1)
       uVar3 = GameBit_Get((int)state->stateSfxId);
       state->stateSfxReady = uVar3;
     }
-    fVar2 = FLOAT_803e64ac;
+    fVar2 = lbl_803E64AC;
     if (((state->completionSfxReady == '\0') && (state->stateSfxReady != '\0')) &&
        (cVar1 = state->mode, cVar1 != DFPTARGETBLOCK_MODE_SETTLED)) {
       if ((cVar1 == DFPTARGETBLOCK_MODE_RAISING) || (cVar1 == DFPTARGETBLOCK_MODE_RESETTING)) {
         if (*(float *)(param_1 + 0x10) <= *(float *)(iVar4 + 0xc)) {
-          *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) + FLOAT_803db414;
+          *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) + lbl_803DB414;
           if (*(float *)(iVar4 + 0xc) <= *(float *)(param_1 + 0x10)) {
             *(float *)(param_1 + 0x10) = *(float *)(iVar4 + 0xc);
             state->mode = DFPTARGETBLOCK_MODE_ACTIVE;
@@ -95,8 +97,8 @@ void dfptargetblock_update(int param_1)
         }
       }
       else if (cVar1 == DFPTARGETBLOCK_MODE_LOWERING) {
-        if (*(float *)(iVar4 + 0xc) - FLOAT_803e64ac <= *(float *)(param_1 + 0x10)) {
-          *(float *)(param_1 + 0x10) = FLOAT_803e6494 * FLOAT_803db414 + *(float *)(param_1 + 0x10);
+        if (*(float *)(iVar4 + 0xc) - lbl_803E64AC <= *(float *)(param_1 + 0x10)) {
+          *(float *)(param_1 + 0x10) = lbl_803E6494 * lbl_803DB414 + *(float *)(param_1 + 0x10);
           fVar2 = *(float *)(iVar4 + 0xc) - fVar2;
           if (*(float *)(param_1 + 0x10) <= fVar2) {
             *(float *)(param_1 + 0x10) = fVar2;
@@ -106,9 +108,9 @@ void dfptargetblock_update(int param_1)
         }
       }
       else if (state->controlId != 0) {
-        (**(code **)(*DAT_803dcaa8 + 0x10))((double)FLOAT_803db414,param_1);
+        (**(code **)(*DAT_803dcaa8 + 0x10))((double)lbl_803DB414,param_1);
         (**(code **)(*DAT_803dcaa8 + 0x14))(param_1,state->controlId);
-        (**(code **)(*DAT_803dcaa8 + 0x18))((double)FLOAT_803db414,param_1,state->controlId);
+        (**(code **)(*DAT_803dcaa8 + 0x18))((double)lbl_803DB414,param_1,state->controlId);
       }
     }
   }
@@ -122,6 +124,11 @@ void dfptargetblock_update(int param_1)
  * EN v1.0 Address: 0x80208D7C
  * EN v1.0 Size: 600b
  */
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
 void dfptargetblock_init(int param_1,int param_2)
 {
   char cVar1;
@@ -145,7 +152,7 @@ void dfptargetblock_init(int param_1,int param_2)
     lbl_80329B78[2] = (int)*(float *)(param_1 + 0x14);
   }
   else {
-    dVar11 = (double)FLOAT_803e64cc;
+    dVar11 = (double)lbl_803E64CC;
     for (iVar8 = 0; iVar8 < (int)(uint)*(ushort *)(iVar7 + 0xe4); iVar8 = iVar8 + 1) {
       FUN_80026e00(iVar7,iVar8,&point.x);
       if ((double)point.y < dVar11) {
@@ -174,7 +181,7 @@ void dfptargetblock_init(int param_1,int param_2)
       }
     }
     state->mode = DFPTARGETBLOCK_MODE_RAISING;
-    *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) - FLOAT_803e64ac;
+    *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) - lbl_803E64AC;
     state->completionSfxId = *(short *)(param_2 + 0x1e);
     state->stateSfxId = *(short *)(param_2 + 0x20);
     uVar5 = GameBit_Get((int)state->completionSfxId);
@@ -182,13 +189,15 @@ void dfptargetblock_init(int param_1,int param_2)
     uVar5 = GameBit_Get((int)state->stateSfxId);
     state->stateSfxReady = uVar5;
     if (state->completionSfxReady != '\0') {
-      *(float *)(param_1 + 0xc) = *(float *)(param_1 + 0xc) + FLOAT_803e64d0;
-      *(float *)(param_1 + 0x14) = *(float *)(param_1 + 0x14) + FLOAT_803e64d4;
+      *(float *)(param_1 + 0xc) = *(float *)(param_1 + 0xc) + lbl_803E64D0;
+      *(float *)(param_1 + 0x14) = *(float *)(param_1 + 0x14) + lbl_803E64D4;
       state->mode = DFPTARGETBLOCK_MODE_SETTLED;
     }
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void dfptargetblock_release(void)
 {

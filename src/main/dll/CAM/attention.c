@@ -15,12 +15,12 @@ extern undefined4 FUN_8028688c();
 extern undefined4 DAT_803dc070;
 extern undefined4* gCamcontrolModeSettings;
 extern f64 DOUBLE_803e2318;
-extern f32 FLOAT_803e2308;
-extern f32 FLOAT_803e2324;
-extern f32 FLOAT_803e232c;
-extern f32 FLOAT_803e2334;
-extern f32 FLOAT_803e2350;
-extern f32 FLOAT_803e2354;
+extern f32 lbl_803E2308;
+extern f32 lbl_803E2324;
+extern f32 lbl_803E232C;
+extern f32 lbl_803E2334;
+extern f32 lbl_803E2350;
+extern f32 lbl_803E2354;
 
 /*
  * --INFO--
@@ -59,10 +59,10 @@ void camcontrol_updateModeSettings(int param_1)
     local_18 = 0x43300000;
     uStack_c = (int)*(short *)(gCamcontrolModeSettings + 0x21) ^ 0x80000000;
     local_10 = 0x43300000;
-    local_28 = FLOAT_803e232c;
-    local_24 = FLOAT_803e2324;
-    local_20 = FLOAT_803e232c;
-    local_1c = FLOAT_803e232c;
+    local_28 = lbl_803E232C;
+    local_24 = lbl_803E2324;
+    local_20 = lbl_803E232C;
+    local_1c = lbl_803E232C;
     dVar1 = FUN_80006a30((double)((float)((double)CONCAT44(0x43300000,uStack_14) - DOUBLE_803e2318)
                                  / (float)((double)CONCAT44(0x43300000,uStack_c) - DOUBLE_803e2318))
                          ,&local_28,(float *)0x0);
@@ -150,7 +150,7 @@ void camcontrol_updateVerticalBounds(undefined4 param_1,undefined4 param_2,undef
   iVar7 = (int)(uVar13 >> 0x20);
   uVar11 = *(undefined4 *)(iVar7 + 0xa4);
   if ((uVar13 & 1) != 0) {
-    *(float *)(iVar7 + 0x74) = FLOAT_803e2308;
+    *(float *)(iVar7 + 0x74) = lbl_803E2308;
     *(undefined *)(iVar7 + 0x84) = 0xff;
     *(undefined *)(iVar7 + 0x88) = param_3;
     uVar9 = FUN_800620e8(iVar7 + 0xb8,iVar7 + 0x18,(float *)0x1,(int *)0x0,(int *)0x0,0x10,
@@ -170,11 +170,11 @@ void camcontrol_updateVerticalBounds(undefined4 param_1,undefined4 param_2,undef
   if ((uVar13 & 2) != 0) {
     iVar8 = FUN_800632f4((double)*(float *)(iVar7 + 0x18),(double)*(float *)(iVar7 + 0x1c),
                          (double)*(float *)(iVar7 + 0x20),uVar11,&local_40,1,0x40);
-    *param_4 = FLOAT_803e2350;
-    fVar5 = FLOAT_803e2354;
-    *param_5 = FLOAT_803e2354;
-    fVar2 = FLOAT_803e2334;
-    fVar6 = FLOAT_803e232c;
+    *param_4 = lbl_803E2350;
+    fVar5 = lbl_803E2354;
+    *param_5 = lbl_803E2354;
+    fVar2 = lbl_803E2334;
+    fVar6 = lbl_803E232C;
     iVar10 = 0;
     iVar12 = iVar8;
     fVar3 = fVar5;
@@ -198,8 +198,8 @@ void camcontrol_updateVerticalBounds(undefined4 param_1,undefined4 param_2,undef
         iVar12 = iVar12 + -1;
       } while (iVar12 != 0);
     }
-    fVar6 = FLOAT_803e2334;
-    fVar3 = FLOAT_803e232c;
+    fVar6 = lbl_803E2334;
+    fVar3 = lbl_803E232C;
     iVar12 = 0;
     if (0 < iVar8) {
       do {

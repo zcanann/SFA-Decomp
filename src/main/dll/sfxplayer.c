@@ -13,7 +13,7 @@ extern undefined4 FUN_8028688c();
 extern undefined4* DAT_803dd72c;
 extern undefined4 DAT_803e70e8;
 extern undefined4 DAT_803e70ec;
-extern f32 FLOAT_803e7110;
+extern f32 lbl_803E7110;
 
 /*
  * --INFO--
@@ -82,7 +82,7 @@ void sfxplayer_update(undefined8 param_1,double param_2,double param_3,undefined
       *(undefined *)(puVar2 + 0x13) = 100;
       *(undefined *)((int)puVar2 + 0x27) = 0;
       *(undefined *)(puVar2 + 0x14) = 0;
-      *(float *)(puVar2 + 0x10) = FLOAT_803e7110;
+      *(float *)(puVar2 + 0x10) = lbl_803E7110;
       *(undefined *)((int)puVar2 + 0x29) = 0xd2;
       *(undefined *)(puVar2 + 0x15) = 0;
       uVar3 = FUN_80017ae4(extraout_f1_00,param_2,param_3,param_4,param_5,param_6,param_7,param_8,

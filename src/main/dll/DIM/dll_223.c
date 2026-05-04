@@ -65,12 +65,12 @@ extern undefined4* DAT_803dd738;
 extern undefined4 DAT_803de800;
 extern undefined4 DAT_803de804;
 extern undefined4 DAT_803de808;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e5870;
-extern f32 FLOAT_803e58c0;
-extern f32 FLOAT_803e5910;
-extern f32 FLOAT_803e5918;
-extern f32 FLOAT_803e5920;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E5870;
+extern f32 lbl_803E58C0;
+extern f32 lbl_803E5910;
+extern f32 lbl_803E5918;
+extern f32 lbl_803E5920;
 
 /*
  * --INFO--
@@ -145,7 +145,7 @@ void DIMbossgut_render(void)
   
   iVar1 = FUN_80286840();
   if (in_r8 != '\0') {
-    FUN_8002fc3c((double)FLOAT_803e5918,(double)FLOAT_803dc074);
+    FUN_8002fc3c((double)lbl_803E5918,(double)lbl_803DC074);
     FUN_8003b818(iVar1);
   }
   FUN_8028688c();

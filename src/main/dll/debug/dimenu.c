@@ -75,13 +75,13 @@ extern undefined4 DAT_803de3a8;
 extern undefined4 DAT_803de542;
 extern f64 DOUBLE_803e2a68;
 extern f64 DOUBLE_803e2a78;
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803e2a54;
-extern f32 FLOAT_803e2a58;
-extern f32 FLOAT_803e2a5c;
-extern f32 FLOAT_803e2a60;
-extern f32 FLOAT_803e2a64;
-extern f32 FLOAT_803e2a70;
+extern f32 lbl_803DC074;
+extern f32 lbl_803E2A54;
+extern f32 lbl_803E2A58;
+extern f32 lbl_803E2A5C;
+extern f32 lbl_803E2A60;
+extern f32 lbl_803E2A64;
+extern f32 lbl_803E2A70;
 extern undefined4* PTR_DAT_8031b928;
 
 /*
@@ -136,19 +136,19 @@ void FUN_8011cd58(undefined8 param_1,undefined8 param_2,double param_3,undefined
   cVar4 = FUN_801339f8();
   if (cVar4 == '\0') {
     dVar9 = (double)(**(code **)(*DAT_803dd6cc + 0x18))();
-    dVar8 = (double)FLOAT_803e2a54;
+    dVar8 = (double)lbl_803E2A54;
     FUN_800174d4(FUN_801348c0);
     uVar1 = (int)(dVar8 - dVar9) & 0xff;
     if (uVar1 < 0x80) {
       local_18 = (double)CONCAT44(0x43300000,uVar1 * 0x86 ^ 0x80000000);
       param_3 = (double)(float)(local_18 - DOUBLE_803e2a68);
-      dVar11 = -(double)(float)(param_3 * (double)FLOAT_803e2a60 - (double)FLOAT_803e2a5c);
-      FUN_80134830((double)FLOAT_803e2a58,dVar11);
+      dVar11 = -(double)(float)(param_3 * (double)lbl_803E2A60 - (double)lbl_803E2A5C);
+      FUN_80134830((double)lbl_803E2A58,dVar11);
       iVar5 = 0;
     }
     else {
-      dVar11 = (double)FLOAT_803e2a64;
-      FUN_80134830((double)FLOAT_803e2a58,dVar11);
+      dVar11 = (double)lbl_803E2A64;
+      FUN_80134830((double)lbl_803E2A58,dVar11);
       iVar5 = ((int)(dVar8 - dVar9) & 0x7fU) << 1;
     }
     FUN_80133c3c(iVar5,0,0);
@@ -432,8 +432,8 @@ FUN_8011d790(undefined8 param_1,double param_2,undefined8 param_3,undefined8 par
                                            param_8);
     }
     DAT_803de392 = (char)(int)((float)((double)CONCAT44(0x43300000,(int)DAT_803de392 ^ 0x80000000) -
-                                      DOUBLE_803e2a78) + FLOAT_803dc074);
-    if (FLOAT_803e2a70 <=
+                                      DOUBLE_803e2a78) + lbl_803DC074);
+    if (lbl_803E2A70 <=
         (float)((double)CONCAT44(0x43300000,(int)DAT_803de392 ^ 0x80000000) - DOUBLE_803e2a78)) {
       DAT_803de393 = '\0';
       DAT_8031b986 = DAT_8031b986 & 0xefff;
@@ -621,5 +621,7 @@ void fn_8011D8F4(void) { lbl_803DD728 = 0x28; }
 extern u32 lbl_803DD72C;
 extern void fn_80054308(u32);
 #pragma scheduling off
+#pragma peephole off
 void fn_8011D8D0(void) { fn_80054308(lbl_803DD72C); }
+#pragma peephole reset
 #pragma scheduling reset

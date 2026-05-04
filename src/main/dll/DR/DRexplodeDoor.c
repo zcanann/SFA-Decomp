@@ -24,10 +24,10 @@ extern undefined4 FUN_8028688c();
 extern undefined4 DAT_803de8e0;
 extern undefined4 DAT_803e677c;
 extern undefined4 DAT_cc008000;
-extern f32 FLOAT_803dda58;
-extern f32 FLOAT_803dda5c;
-extern f32 FLOAT_803e6780;
-extern f32 FLOAT_803e6784;
+extern f32 lbl_803DDA58;
+extern f32 lbl_803DDA5C;
+extern f32 lbl_803E6780;
+extern f32 lbl_803E6784;
 
 /*
  * --INFO--

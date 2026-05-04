@@ -19,13 +19,13 @@ extern undefined4* DAT_803dd6f0;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd72c;
 extern f64 DOUBLE_803e5e10;
-extern f32 FLOAT_803e5df4;
-extern f32 FLOAT_803e5df8;
-extern f32 FLOAT_803e5dfc;
-extern f32 FLOAT_803e5e00;
-extern f32 FLOAT_803e5e04;
-extern f32 FLOAT_803e5e08;
-extern f32 FLOAT_803e5e0c;
+extern f32 lbl_803E5DF4;
+extern f32 lbl_803E5DF8;
+extern f32 lbl_803E5DFC;
+extern f32 lbl_803E5E00;
+extern f32 lbl_803E5E04;
+extern f32 lbl_803E5E08;
+extern f32 lbl_803E5E0C;
 
 /*
  * --INFO--
@@ -72,7 +72,7 @@ void FUN_801cad80(undefined8 param_1,double param_2,undefined8 param_3,undefined
   iVar1 = FUN_80286834();
   psVar8 = *(short **)(iVar1 + 0xb8);
   iVar2 = FUN_80017a98();
-  local_5c[0] = FLOAT_803e5df4;
+  local_5c[0] = lbl_803E5DF4;
   *(undefined4 *)(iVar1 + 0x18) = *(undefined4 *)(iVar1 + 0xc);
   *(undefined4 *)(iVar1 + 0x1c) = *(undefined4 *)(iVar1 + 0x10);
   *(undefined4 *)(iVar1 + 0x20) = *(undefined4 *)(iVar1 + 0x14);
@@ -113,11 +113,11 @@ void FUN_801cad80(undefined8 param_1,double param_2,undefined8 param_3,undefined
   }
   if (psVar8[1] < 1) {
     iVar7 = ObjGroup_FindNearestObject(0xe,iVar2,local_5c);
-    if (((iVar7 != 0) && (local_5c[0] < FLOAT_803e5df8)) && (FLOAT_803e5dfc < local_5c[0])) {
+    if (((iVar7 != 0) && (local_5c[0] < lbl_803E5DF8)) && (lbl_803E5DFC < local_5c[0])) {
       dVar9 = (double)(*(float *)(iVar7 + 0x14) - *(float *)(iVar2 + 0x14));
-      if (dVar9 <= (double)FLOAT_803e5e00) {
-        if (dVar9 < (double)FLOAT_803e5e00) {
-          dVar9 = (double)(float)(dVar9 * (double)FLOAT_803e5e04);
+      if (dVar9 <= (double)lbl_803E5E00) {
+        if (dVar9 < (double)lbl_803E5E00) {
+          dVar9 = (double)(float)(dVar9 * (double)lbl_803E5E04);
         }
         if (psVar8[4] != 0x1e) {
           psVar8[4] = 0x1e;
@@ -125,7 +125,7 @@ void FUN_801cad80(undefined8 param_1,double param_2,undefined8 param_3,undefined
         uStack_54 = (int)psVar8[4] ^ 0x80000000;
         local_5c[1] = 176.0;
         uVar6 = (uint)((float)((double)CONCAT44(0x43300000,uStack_54) - DOUBLE_803e5e10) *
-                      ((float)(dVar9 - (double)FLOAT_803e5dfc) / FLOAT_803e5e08));
+                      ((float)(dVar9 - (double)lbl_803E5DFC) / lbl_803E5E08));
         local_50 = (longlong)(int)uVar6;
         if ((short)uVar6 < 1) {
           uVar6 = 1;
@@ -135,8 +135,8 @@ void FUN_801cad80(undefined8 param_1,double param_2,undefined8 param_3,undefined
         local_48 = 0x43300000;
         param_2 = (double)(float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e5e10);
         uVar6 = (uint)(param_2 *
-                      (double)((FLOAT_803e5e08 - (float)(dVar9 - (double)FLOAT_803e5dfc)) /
-                              FLOAT_803e5e08));
+                      (double)((lbl_803E5E08 - (float)(dVar9 - (double)lbl_803E5DFC)) /
+                              lbl_803E5E08));
         local_40 = (double)(longlong)(int)uVar6;
         if ((short)uVar6 < 1) {
           uVar6 = 1;
@@ -187,7 +187,7 @@ void FUN_801cad80(undefined8 param_1,double param_2,undefined8 param_3,undefined
       }
       break;
     case 3:
-      local_5c[0] = FLOAT_803e5e0c;
+      local_5c[0] = lbl_803E5E0C;
       iVar2 = ObjGroup_FindNearestObject(3,iVar1,local_5c);
       if (iVar2 != 0) {
         FUN_80017ac8(extraout_f1_00,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar2);
@@ -223,7 +223,7 @@ void FUN_801cad80(undefined8 param_1,double param_2,undefined8 param_3,undefined
       (**(code **)(*DAT_803dd6f0 + 0x18))(3,0x35,0x50,psVar8[4] & 0xff,0);
       psVar8[5] = 1;
       (**(code **)(*DAT_803dd6d4 + 0x48))(2,iVar1,0xffffffff);
-      local_5c[0] = FLOAT_803e5e0c;
+      local_5c[0] = lbl_803E5E0C;
       iVar2 = ObjGroup_FindNearestObject(3,iVar1,local_5c);
       if (iVar2 != 0) {
         FUN_80017ac8(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar2);

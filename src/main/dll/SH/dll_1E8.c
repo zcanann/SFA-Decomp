@@ -35,6 +35,7 @@ extern SHthorntailEventInterface **lbl_803DCAAC;
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
 {
   int iVar1;
@@ -142,6 +143,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   }
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -158,6 +160,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntime *runtime)
 {
   int randomTime;
@@ -227,4 +230,5 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntim
   }
   SHthorntail_updateState(obj,runtime);
 }
+#pragma peephole reset
 #pragma scheduling reset

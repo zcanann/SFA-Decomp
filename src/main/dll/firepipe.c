@@ -38,11 +38,13 @@ int firepipe_getExtraSize(void)
 
 #pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 undefined4 firepipe_stateCallback(void)
 {
     fn_8021FAEC();
     return 0;
 }
+#pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -53,6 +55,7 @@ int firepipe_func08(void)
 
 #pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 void firepipe_free(FirePipeObject *obj)
 {
     int i;
@@ -72,11 +75,13 @@ void firepipe_free(FirePipeObject *obj)
         fn_8001CB3C((int)&extra->subObj);
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 void firepipe_render(FirePipeObject *obj, int param_2, int param_3, int param_4, int param_5, char param_6)
 {
     FirePipeExtra *extra;
@@ -91,16 +96,19 @@ void firepipe_render(FirePipeObject *obj, int param_2, int param_3, int param_4,
         fn_8003B8F4((int)obj, param_2, param_3, param_4, param_5, (double)lbl_803E6B78);
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 void firepipe_update(FirePipeObject *obj)
 {
     obj->statusFlags = (u8)(obj->statusFlags | 8);
     fn_8021FAEC();
 }
+#pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
 

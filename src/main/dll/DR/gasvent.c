@@ -30,15 +30,15 @@ extern undefined4 FUN_8028688c();
 extern undefined4* DAT_803dd740;
 extern f64 DOUBLE_803e4f90;
 extern f64 DOUBLE_803e4f98;
-extern f32 FLOAT_803e4f58;
-extern f32 FLOAT_803e4f5c;
-extern f32 FLOAT_803e4f74;
-extern f32 FLOAT_803e4f78;
-extern f32 FLOAT_803e4f7c;
-extern f32 FLOAT_803e4f80;
-extern f32 FLOAT_803e4f84;
-extern f32 FLOAT_803e4f88;
-extern f32 FLOAT_803e4fa0;
+extern f32 lbl_803E4F58;
+extern f32 lbl_803E4F5C;
+extern f32 lbl_803E4F74;
+extern f32 lbl_803E4F78;
+extern f32 lbl_803E4F7C;
+extern f32 lbl_803E4F80;
+extern f32 lbl_803E4F84;
+extern f32 lbl_803E4F88;
+extern f32 lbl_803E4FA0;
 
 /*
  * --INFO--
@@ -163,34 +163,34 @@ void FUN_801a136c(undefined4 param_1,undefined4 param_2,short param_3)
   local_28 = (float)in_f29;
   fStack_24 = (float)in_ps29_1;
   uVar2 = FUN_80286840();
-  local_68[0] = FLOAT_803e4f78;
+  local_68[0] = lbl_803E4F78;
   iVar3 = FUN_80017a98();
   iVar4 = ObjGroup_FindNearestObject(0x1e,uVar2,local_68);
   if (iVar4 != 0) {
     fVar1 = *(float *)(iVar4 + 0x10) - *(float *)(iVar3 + 0x10);
-    if (fVar1 < FLOAT_803e4f58) {
+    if (fVar1 < lbl_803E4F58) {
       fVar1 = -fVar1;
     }
-    if (FLOAT_803e4f7c <= fVar1) {
+    if (lbl_803E4F7C <= fVar1) {
       dVar10 = (double)(*(float *)(iVar4 + 0xc) - *(float *)(uVar2 + 0xc));
       dVar9 = (double)(*(float *)(iVar4 + 0x10) - *(float *)(uVar2 + 0x10));
-      dVar7 = (double)FLOAT_803e4f58;
+      dVar7 = (double)lbl_803E4F58;
       if (dVar9 <= dVar7) {
         dVar8 = (double)(*(float *)(iVar4 + 0x14) - *(float *)(uVar2 + 0x14));
         if (dVar9 != dVar7) {
           dVar7 = (double)(float)((double)*(float *)(uVar2 + 0x28) / dVar9);
         }
         sVar6 = extraout_r4;
-        if ((double)FLOAT_803e4f74 <= dVar7) {
+        if ((double)lbl_803E4F74 <= dVar7) {
           FUN_80006824(uVar2,0xd2);
-          dVar7 = (double)FLOAT_803e4f74;
+          dVar7 = (double)lbl_803E4F74;
           *(float *)(uVar2 + 0x28) = (float)dVar9;
-          fVar1 = FLOAT_803e4f80;
-          *(float *)(iVar4 + 0xc) = *(float *)(iVar4 + 0xc) + FLOAT_803e4f80;
+          fVar1 = lbl_803E4F80;
+          *(float *)(iVar4 + 0xc) = *(float *)(iVar4 + 0xc) + lbl_803E4F80;
           *(float *)(iVar4 + 0x2c) = *(float *)(iVar4 + 0x2c) + fVar1;
-          if (FLOAT_803e4f84 < *(float *)(iVar4 + 0x2c)) {
+          if (lbl_803E4F84 < *(float *)(iVar4 + 0x2c)) {
             *(float *)(iVar4 + 0xc) = *(float *)(iVar4 + 0xc) - *(float *)(iVar4 + 0x2c);
-            *(float *)(iVar4 + 0x2c) = FLOAT_803e4f58;
+            *(float *)(iVar4 + 0x2c) = lbl_803E4F58;
           }
           *(undefined2 *)(uVar2 + 2) = 0;
           *(undefined2 *)(uVar2 + 4) = 0;
@@ -203,7 +203,7 @@ void FUN_801a136c(undefined4 param_1,undefined4 param_2,short param_3)
         if (uVar5 != 0) {
           if (uVar5 == 1) {
             local_60 = (double)CONCAT44(0x43300000,(uint)*(ushort *)(uVar2 + 2));
-            fVar1 = (float)((double)(FLOAT_803e4f88 - (float)(local_60 - DOUBLE_803e4f90)) * dVar7);
+            fVar1 = (float)((double)(lbl_803E4F88 - (float)(local_60 - DOUBLE_803e4f90)) * dVar7);
           }
           else {
             local_60 = (double)CONCAT44(0x43300000,(uint)*(ushort *)(uVar2 + 2));
@@ -219,7 +219,7 @@ void FUN_801a136c(undefined4 param_1,undefined4 param_2,short param_3)
         }
         uVar5 = (uint)param_3;
         if (uVar5 != 0) {
-          fVar1 = FLOAT_803e4f58;
+          fVar1 = lbl_803E4F58;
           if (uVar5 != 1) {
             local_60 = (double)CONCAT44(0x43300000,uVar5 ^ 0x80000000);
             fVar1 = (float)((double)CONCAT44(0x43300000,(uint)*(ushort *)(uVar2 + 4)) -
@@ -334,8 +334,8 @@ void FUN_801a1654(undefined8 param_1,double param_2,double param_3,undefined8 pa
     ObjHits_MarkObjectPositionDirty(uVar1);
     ObjHits_SetHitVolumeSlot(uVar1,5,4,0);
     FUN_80006824(uVar1,0xd1);
-    *(float *)(uVar1 + 0x10) = *(float *)(uVar1 + 0x10) + FLOAT_803e4fa0;
-    FUN_8008112c((double)FLOAT_803e4f58,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+    *(float *)(uVar1 + 0x10) = *(float *)(uVar1 + 0x10) + lbl_803E4FA0;
+    FUN_8008112c((double)lbl_803E4F58,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  uVar1,1,1,0,0,0,1,0);
     if (*(char *)(iVar8 + 0x15) != '\0') {
       (**(code **)(*DAT_803dd740 + 0x30))(uVar1,iVar8);
@@ -345,10 +345,10 @@ void FUN_801a1654(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(byte *)(iVar8 + 0x4a) = *(byte *)(iVar8 + 0x4a) & 0xdf;
     ObjGroup_RemoveObject(uVar1,0x19);
     if (*(int *)(uVar1 + 0x30) == 0) {
-      *(float *)(iVar8 + 0x34) = FLOAT_803e4f5c;
+      *(float *)(iVar8 + 0x34) = lbl_803E4F5C;
     }
     else {
-      *(float *)(iVar8 + 0x34) = FLOAT_803e4f5c;
+      *(float *)(iVar8 + 0x34) = lbl_803E4F5C;
     }
     iVar2 = FUN_80017a90();
     if (iVar2 != 0) {

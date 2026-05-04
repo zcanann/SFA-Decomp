@@ -8,14 +8,14 @@ extern undefined4 FUN_80286880();
 extern double FUN_80293900();
 
 extern f64 DOUBLE_803e5a88;
-extern f32 FLOAT_803e5a90;
-extern f32 FLOAT_803e5a94;
-extern f32 FLOAT_803e5a98;
-extern f32 FLOAT_803e5a9c;
-extern f32 FLOAT_803e5aa0;
-extern f32 FLOAT_803e5aa4;
-extern f32 FLOAT_803e5aa8;
-extern f32 FLOAT_803e5aac;
+extern f32 lbl_803E5A90;
+extern f32 lbl_803E5A94;
+extern f32 lbl_803E5A98;
+extern f32 lbl_803E5A9C;
+extern f32 lbl_803E5AA0;
+extern f32 lbl_803E5AA4;
+extern f32 lbl_803E5AA8;
+extern f32 lbl_803E5AAC;
 
 /*
  * --INFO--
