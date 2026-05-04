@@ -336,7 +336,7 @@ config.libs = [
             ),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__mem.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/mem_TRK.c"),
-            Object(NonMatching, "dolphin/TRK_MINNOW_DOLPHIN/__exception.s"),
+            Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/__exception.s"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__va_arg.c"),
             Object(Matching, "Runtime.PPCEABI.H/global_destructor_chain.c"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/runtime.c"),
