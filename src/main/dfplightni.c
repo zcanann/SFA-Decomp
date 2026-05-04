@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 
 extern int fn_8000B4D0(u8 *obj,int param_2,int param_3);
-extern int GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern u32 fn_800221A0(int min,int max);
 extern void fn_80023800(u32 handle);
 extern u8 *fn_8002B9EC(void);
@@ -67,6 +67,8 @@ void dfplightni_free(u8 *obj)
 }
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void dfplightni_render(u8 *obj)
 {
   DfpLightniState *state;
@@ -94,6 +96,11 @@ void dfplightni_render(u8 *obj)
   return;
 }
 
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
 void dfplightni_update(u8 *obj)
 {
   u8 *playerObj;
@@ -191,6 +198,11 @@ void dfplightni_update(u8 *obj)
   return;
 }
 
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
 void dfplightni_init(u8 *obj,u8 *params)
 {
   DfpLightniState *state;
@@ -226,6 +238,8 @@ void dfplightni_init(u8 *obj,u8 *params)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off

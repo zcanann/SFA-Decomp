@@ -2,7 +2,7 @@
 
 extern void *fn_8002B9EC(void);
 extern void Sfx_PlayFromObject(void *obj,u16 volumeId);
-extern int GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern void ObjHits_SetHitVolumeSlot(void *obj,int animObjId,int frame,int flags);
 extern void ObjHits_DisableObject(void *obj);
@@ -110,6 +110,8 @@ void crfueltank_hitDetect(CrFuelTankObject *obj)
 }
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void crfueltank_update(CrFuelTankObject *obj)
 {
   CrFuelTankDef *def;
@@ -120,7 +122,7 @@ void crfueltank_update(CrFuelTankObject *obj)
   if (fn_80080150(state->timer) != 0) {
     if (fn_800801A8(state->timer) != 0) {
       ObjHits_EnableObject(obj);
-      obj->flags = (s16)(obj->flags & 0xbfff);
+      obj->flags = (s16)(obj->flags & ~0x4000);
       obj->fadeTimer = 0xff;
     }
   }
@@ -135,7 +137,11 @@ void crfueltank_update(CrFuelTankObject *obj)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void crfueltank_init(CrFuelTankObject *obj,CrFuelTankDef *def)
 {
   CrFuelTankState *state;
@@ -152,6 +158,8 @@ void crfueltank_init(CrFuelTankObject *obj,CrFuelTankDef *def)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void crfueltank_release(void)
 {
