@@ -1,9 +1,6 @@
 #include "ghidra_import.h"
 #include "dolphin/os.h"
-
-extern char sPlatform1DrawNoLongerSupported[];
-extern char sPlatform1ControlNoLongerSupported[];
-extern char sPlatform1InitNoLongerSupported[];
+#include "main/dll/VF/platform1.h"
 
 int platform1_getExtraSize(void)
 {

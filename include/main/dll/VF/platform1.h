@@ -27,6 +27,19 @@ typedef struct Platform1State {
 #define PLATFORM1_FLAG_EXIT_NEGATIVE 0x08
 #define PLATFORM1_FLAG_EXIT_POSITIVE 0x10
 
+extern char sPlatform1DrawNoLongerSupported[];
+extern char sPlatform1ControlNoLongerSupported[];
+extern char sPlatform1InitNoLongerSupported[];
+
+int platform1_getExtraSize(void);
+int platform1_func08(void);
+void platform1_free(void);
+void platform1_renderUnsupported(void);
+void platform1_hitDetect(void);
+void platform1_updateUnsupported(void);
+void platform1_initUnsupported(void);
+void platform1_release(void);
+void platform1_initialise(void);
 void platform1_control(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                        undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                        undefined4 param_9,undefined4 param_10,int param_11,int param_12,
