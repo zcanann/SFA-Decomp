@@ -1019,7 +1019,7 @@ extern u8  lbl_803A9440[0x18];
 
 extern s8  lbl_803DBA90;
 extern u8  lbl_803DBA91;
-extern void fn_8000A518(s32, s32);
+extern void Music_Trigger(s32, s32);
 extern int  fn_800E88B4(u8, u8, int, s32);
 extern int  fn_800E8AAC(void);
 
@@ -1357,7 +1357,7 @@ int fn_8012B6BC(void)
 /* EN v1.0 0x80129698  size: 196b  Pickup-pickup state hook: latches the
  * resulting object id from fn_800E88B4 into lbl_803DBA91, and on the
  * "post-collect" mode codes (1 or 2) optionally fires off the cleanup
- * trio (fn_8000A518 / fn_800206E8 / fn_80020628) when no slot was active
+ * trio (Music_Trigger / fn_800206E8 / fn_80020628) when no slot was active
  * yet, then commits the new u8 active-id to lbl_803DBA90. The third arg
  * funnels through `c == 0xa` as a branchless boolean. Always returns 1. */
 #pragma scheduling off
@@ -1367,7 +1367,7 @@ int fn_80129698(s8 a, int b, u8 c, int mode)
     lbl_803DBA91 = (u8)fn_800E88B4(a, c == 0xa, b, fn_800E8AAC());
     if ((u8)mode == 2 || (u8)mode == 1) {
         if (lbl_803DBA90 == -1) {
-            fn_8000A518(0x23, 1);
+            Music_Trigger(0x23, 1);
             fn_800206E8(1);
             fn_80020628(0xff);
         }
@@ -1430,7 +1430,7 @@ void fn_80129CBC(f32 fov, f32 x, f32 y)
  * lbl_803DD784/_786/_78C, asks the global tag system to register tag
  * id 0xf via fn_80014B18, runs fn_8002AC30(obj2, 0, 0, 0, 0, 0) when
  * the object handle from fn_8002B9EC was non-null, then plays the
- * scene-down trio: fn_8000A518(0x23, 1) plus two SFX kicks (0x3e5 and
+ * scene-down trio: Music_Trigger(0x23, 1) plus two SFX kicks (0x3e5 and
  * 0xff) on object 0.
  */
 #pragma scheduling off
@@ -1465,7 +1465,7 @@ void fn_8012C558(void)
     if (obj != NULL) {
         fn_8002AC30(fn_8002B9EC(), 0, 0, 0, 0, 0);
     }
-    fn_8000A518(0x23, 1);
+    Music_Trigger(0x23, 1);
     Sfx_PlayFromObject(0, 0x3e5);
     Sfx_PlayFromObject(0, 0xff);
 }

@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIMboss.h"
 
-extern undefined4 fn_8000A518();
+extern void Music_Trigger(s32 triggerId, s32 mode);
 extern undefined4 FUN_800069b8();
 extern undefined4 FUN_80006b0c();
 extern undefined8 fn_80014F40();
@@ -153,7 +153,7 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,int param_3)
         (**(code **)(*lbl_803DCAB4 + 0xc))(puVar3,0x7ff,0,100,0);
         iVar4 = fn_8002B588((int)puVar3);
         fn_8002843C(iVar4);
-        fn_8000A518((int *)0x27,1);
+        Music_Trigger(0x27,1);
         break;
       case 2:
         *(undefined2 *)((int)puVar13 + 0x402) = 1;
@@ -170,7 +170,7 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,int param_3)
       case 8:
         iVar11 = puVar13[0x103];
         *(byte *)(iVar11 + 0xb6) = *(byte *)(iVar11 + 0xb6) & 0x7f | 0x80;
-        fn_8000A518((int *)0xee,0);
+        Music_Trigger(0xee,0);
         break;
       case 9:
         lbl_803DDB80 = lbl_803DDB80 | 0x40;
@@ -197,9 +197,9 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,int param_3)
         *(undefined4 *)(iVar11 + 0xb0) = 10;
         GameBit_Set(0x123,1);
         GameBit_Set(0x17,1);
-        fn_8000A518((int *)0x27,0);
-        fn_8000A518((int *)0x36,0);
-        fn_8000A518((int *)0xee,0);
+        Music_Trigger(0x27,0);
+        Music_Trigger(0x36,0);
+        Music_Trigger(0xee,0);
         break;
       case 0x12:
         (**(code **)(*DAT_803dd6d4 + 0x50))(0x49,4,puVar3,0x3c);
