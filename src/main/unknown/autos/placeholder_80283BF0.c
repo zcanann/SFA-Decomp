@@ -16,8 +16,8 @@ extern int lbl_803DE344;
  * EN v1.0 Address: 0x80283BD4
  * EN v1.0 Size: 52b
  */
-void hwRemoveInput(u8 idx) {
-    fn_8027F0C8(&lbl_803CC1E0[idx * 0x2f]);
+void hwRemoveInput(u32 idx) {
+    fn_8027F0C8(&lbl_803CC1E0[(idx & 0xff) * 0x2f]);
 }
 
 /*
@@ -28,13 +28,13 @@ void hwRemoveInput(u8 idx) {
  * EN v1.0 Size: 164b
  */
 int hwChangeStudio(int param_1) {
-    u8 mode;
+    int mode;
     u32 pos;
     u32 lowBits;
     int entry;
 
     entry = lbl_803DE344 + param_1 * 0xf4;
-    if (*(s8 *)(entry + 0xec) != 2) {
+    if (*(u8 *)(entry + 0xec) != 2) {
         return 0;
     }
     mode = *(u8 *)(entry + 0x90);
@@ -51,7 +51,7 @@ int hwChangeStudio(int param_1) {
     entry = lbl_803DE344 + param_1 * 0xf4;
     pos = *(u32 *)(entry + 0x20);
     lowBits = pos & 0xf;
-    entry = ((pos + *(int *)(entry + 0x78) * -2) >> 4) * 0xe;
+    entry = ((pos - 2 * *(int *)(entry + 0x78)) >> 4) * 0xe;
     if (lowBits < 2) {
         return entry;
     }
