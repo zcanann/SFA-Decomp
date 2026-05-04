@@ -2570,6 +2570,7 @@ undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 #pragma peephole off
 undefined4 ObjTrigger_IsSet(int param_1)
 {
@@ -2579,7 +2580,7 @@ undefined4 ObjTrigger_IsSet(int param_1)
   int flagEnabled;
   int flagBlocked;
 
-  if (*(int *)(*(int *)(param_1 + 0x50) + 0x40) == 0) {
+  if (*(uint *)(*(int *)(param_1 + 0x50) + 0x40) == 0) {
     return 0;
   }
   flags = fn_80014B24(0);
@@ -2600,6 +2601,7 @@ undefined4 ObjTrigger_IsSet(int param_1)
   return 0;
 }
 #pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
