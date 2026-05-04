@@ -149,7 +149,7 @@ void sh_thorntail_update(SHthorntailObject *obj)
   iVar6 = 0x19;
   uVar7 = (uint)runtime->hitReactState;
   pfVar8 = (float *)runtime->hitReactScratch;
-  cVar3 = objHitReact_update((int)psVar2,hitReactEntries,0x19,uVar7,pfVar8);
+  cVar3 = objHitReact_update((ObjAnimComponent *)psVar2,hitReactEntries,0x19,uVar7,pfVar8);
   runtime->hitReactState = cVar3;
   if (cVar3 == '\0') {
     uVar4 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(psVar2 + 0x56));

@@ -53,9 +53,11 @@ extern ObjHitReactEffectHandle *fn_80013EC8(u32 effectId,u32 count);
  */
 #pragma scheduling off
 #pragma peephole off
-int objHitReact_update(int obj,ObjHitReactEntry *entries,u32 entryCount,u32 reactionState,float *cooldown)
+int objHitReact_update(ObjAnimComponent *obj,ObjHitReactEntry *entries,u32 entryCount,
+                       u32 reactionState,float *cooldown)
 {
   ObjAnimComponent *objAnim;
+  int objHandle;
   ObjAnimDef *animDef;
   int collisionType;
   ObjHitReactEffectHandle *effectHandle;
@@ -65,18 +67,20 @@ int objHitReact_update(int obj,ObjHitReactEntry *entries,u32 entryCount,u32 reac
   ObjHitReactEffectOrigin effectOrigin;
   int sphereIndex;
 
-  objAnim = (ObjAnimComponent *)obj;
+  objAnim = obj;
+  objHandle = (int)obj;
   effectOrigin = lbl_802C1B00;
   if ((reactionState & 0xff) != 0) {
     OSReport(sObjHitReactHitstateFrameString,objAnim->currentMoveProgress);
-    collisionType = ObjAnim_AdvanceCurrentMove((double)*cooldown,(double)lbl_803DB414,obj,
+    collisionType = ObjAnim_AdvanceCurrentMove((double)*cooldown,(double)lbl_803DB414,objHandle,
                                                (ObjAnimEventList *)0x0);
     if (collisionType != 0) {
       OSReport(sObjHitReactResetString);
       reactionState = 0;
     }
   }
-  collisionType = ObjHits_GetPriorityHitWithPosition(obj,0,&sphereIndex,0,&hitPos[0],&hitPos[1],&hitPos[2]);
+  collisionType = ObjHits_GetPriorityHitWithPosition(objHandle,0,&sphereIndex,0,&hitPos[0],
+                                                     &hitPos[1],&hitPos[2]);
   if (collisionType != 0) {
     ObjAnimBank *bank = ObjAnim_GetActiveBank(objAnim);
     hitPos[0] = hitPos[0] + lbl_803DCDD8;
@@ -94,12 +98,12 @@ int objHitReact_update(int obj,ObjHitReactEntry *entries,u32 entryCount,u32 reac
     entries = &entries[sphereIndex];
     if (collisionType != OBJHITREACT_COLLISION_SKIP_REACTION) {
       if ((entries->hitSfxA > -1) &&
-          (sfxActive = Sfx_IsPlayingFromObject(obj,(u16)entries->hitSfxA), !sfxActive)) {
-        Sfx_PlayFromObject(obj,(u16)entries->hitSfxA);
+          (sfxActive = Sfx_IsPlayingFromObject(objHandle,(u16)entries->hitSfxA), !sfxActive)) {
+        Sfx_PlayFromObject(objHandle,(u16)entries->hitSfxA);
       }
       if ((entries->hitSfxB > -1) &&
-          (sfxActive = Sfx_IsPlayingFromObject(obj,(u16)entries->hitSfxB), !sfxActive)) {
-        Sfx_PlayFromObject(obj,(u16)entries->hitSfxB);
+          (sfxActive = Sfx_IsPlayingFromObject(objHandle,(u16)entries->hitSfxB), !sfxActive)) {
+        Sfx_PlayFromObject(objHandle,(u16)entries->hitSfxB);
       }
       if (entries->hitFxMode == OBJHITREACT_HIT_FX_MODE_EFFECT) {
         effectHandle = fn_80013EC8(OBJHITREACT_HIT_EFFECT_ID,1);
@@ -109,11 +113,11 @@ int objHitReact_update(int obj,ObjHitReactEntry *entries,u32 entryCount,u32 reac
         }
       }
       else {
-        fn_8009A1DC((double)lbl_803DE964,obj,(undefined2 *)&effectPos.x,1,0);
+        fn_8009A1DC((double)lbl_803DE964,objHandle,(undefined2 *)&effectPos.x,1,0);
       }
     }
     if (((reactionState & 0xff) == 0) && (entries->reactionAnim > -1)) {
-      ObjAnim_SetCurrentMove((double)lbl_803DE910,obj,(int)entries->reactionAnim,0);
+      ObjAnim_SetCurrentMove((double)lbl_803DE910,objHandle,(int)entries->reactionAnim,0);
       *cooldown = entries->cooldown;
       reactionState = 1;
     }

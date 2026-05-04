@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 
 typedef struct ObjHitReactEntry ObjHitReactEntry;
+typedef struct ObjAnimComponent ObjAnimComponent;
 
 typedef struct ObjHitReactMoveEntry {
   s16 moveId;
@@ -43,7 +44,8 @@ struct ObjHitReactEntry {
   u8 pad10[4];
 };
 
-int objHitReact_update(int obj,ObjHitReactEntry *entries,u32 entryCount,u32 reactionState,float *cooldown);
+int objHitReact_update(ObjAnimComponent *obj,ObjHitReactEntry *entries,u32 entryCount,
+                       u32 reactionState,float *cooldown);
 void ObjHitReact_ResetActiveObjects(int objectCount);
 
 #define objHitReactFn_80089890 objHitReact_update
