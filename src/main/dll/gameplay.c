@@ -1504,8 +1504,8 @@ void gameplay_applyPreviewSettingsForSlot(undefined8 param_1,double param_2,unde
 void gameplay_capturePreviewSettings(void)
 {
   FUN_80244e58(0,0);
-  DAT_803dc4f0 = (undefined)((int)(*(byte *)(DAT_803de110 + 0x21) & 0x60) >> 5);
-  *(byte *)(DAT_803de110 + 0x21) = *(byte *)(DAT_803de110 + 0x21) & 0x1f;
+  DAT_803dc4f0 = (undefined)((int)(*((byte *)DAT_803de110 + 0x21) & 0x60) >> 5);
+  *((byte *)DAT_803de110 + 0x21) = *((byte *)DAT_803de110 + 0x21) & 0x1f;
   (**(code **)(*DAT_803dd72c + 0x20))();
   return;
 }

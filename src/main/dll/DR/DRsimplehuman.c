@@ -260,10 +260,12 @@ void FUN_801e983c(undefined8 param_1,double param_2,double param_3,double param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
 void spitembeam_init(int obj)
 {
   *(ushort *)(obj + 0xb0) = (ushort)(*(ushort *)(obj + 0xb0) | 0x6000);
 }
+#pragma peephole reset
 
 
 /* Trivial 4b 0-arg blr leaves. */

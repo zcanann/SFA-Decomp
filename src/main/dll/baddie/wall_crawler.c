@@ -944,13 +944,13 @@ void fn_8012FB88(u8 val)
 }
 
 /* EN v1.0 0x8012FB90  size: 12b  s8 setter for lbl_803DD7B4. Target
- * emits `extsb r0,r3; stb r0` triple but MWCC -O4 strips the redundant
- * extsb regardless of source-level cast (same family as the
- * fn_8012EB08 / fn_8012EFA8 stuck pattern). */
+ * emits `extsb r0,r3; stb r0` triple. Forced via #pragma peephole off. */
+#pragma peephole off
 void fn_8012FB90(int val)
 {
     lbl_803DD7B4 = (s8)val;
 }
+#pragma peephole reset
 
 extern u8 lbl_803DD77E;
 extern u8 lbl_803DD7C5;

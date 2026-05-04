@@ -174,6 +174,7 @@ void dfropenode_func12(int obj, float value)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void dfropenode_func13(int obj)
 {
   int value = 0;
@@ -181,6 +182,7 @@ void dfropenode_func13(int obj)
 
   *(int *)extra = value;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--

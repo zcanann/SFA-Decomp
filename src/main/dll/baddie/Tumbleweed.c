@@ -3508,7 +3508,9 @@ u16 fn_801334D4(void) { return (u16)lbl_803DD938; }
 
 /* EN v1.0 0x801344F0  size: 12b  u8 setter writing arg low byte to
  * lbl_803DD988. */
+#pragma peephole off
 void fn_801344F0(int val) { lbl_803DD988 = (u8)val; }
+#pragma peephole reset
 
 /* EN v1.0 0x80135814  size: 12b  Two-word setter for state pair. */
 void fn_80135814(u32 a, u32 b) { lbl_803DD9BC = a; lbl_803DD9B8 = b; }
@@ -3765,9 +3767,9 @@ void fn_80134364(void)
  * from lbl_803DD991, save old to lbl_803DBC09 and set new. */
 void fn_801368A4(s8 arg)
 {
-    s8 cur = (s8)lbl_803DD991;
-    if (arg == cur) return;
-    lbl_803DBC09 = (u8)cur;
+    u8 cur = lbl_803DD991;
+    if (arg == (s8)cur) return;
+    lbl_803DBC09 = cur;
     lbl_803DD991 = (u8)arg;
 }
 

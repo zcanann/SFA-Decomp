@@ -24,7 +24,7 @@ typedef struct ProximityMineState {
   u8 bounceTimer[4];
   u8 initTimer[4];
   u8 lifespanTimer[4];
-  u8 mode;
+  s8 mode;
   u8 unk2D;
   u8 flashMode;
   u8 unk2F;
@@ -53,7 +53,6 @@ typedef struct ProximityMineDef {
 #pragma peephole off
 void proximitymine_init(ProximityMineObject *obj,ProximityMineDef *def)
 {
-  u64 doubleBits;
   s8 mode;
   ProximityMineState *state;
 
@@ -78,32 +77,30 @@ void proximitymine_init(ProximityMineObject *obj,ProximityMineDef *def)
   state->triggerDistance = lbl_803E6774;
   state->effectVisible = 0;
   mode = def->mode;
-  if (mode == 1) {
+  switch (mode) {
+  case 0:
+    fn_80080178(state->resetTimer,def->parameter);
+    state->mode = 2;
+    fn_8002B884(obj,1);
+    obj->height *= lbl_803E6798;
+    break;
+  case 1:
     fn_80080178(state->launchTimer,800);
     fn_80080178(state->resetTimer,800);
     obj->angle = def->parameter;
     state->mode = -1;
     obj->height *= lbl_803E6798;
-  }
-  else if (mode < 1) {
-    if (mode >= 0) {
-      fn_80080178(state->resetTimer,def->parameter);
-      state->mode = 2;
-      fn_8002B884(obj,1);
-      obj->height *= lbl_803E6798;
-    }
-  }
-  else if (mode < 3) {
+    break;
+  case 2:
     fn_8008016C(state->lifespanTimer);
     state->mode = 3;
     ObjHits_EnableObject(obj);
-    doubleBits = CONCAT44(0x43300000,(s32)def->parameter ^ 0x80000000);
-    state->triggerDistance = (float)((double)doubleBits - lbl_803E6790);
+    state->triggerDistance = (f32)(s32)def->parameter;
     fn_8008016C(state->bounceTimer);
+    break;
   }
-  doubleBits = CONCAT44(0x43300000,lbl_803DC230 ^ 0x80000000);
   state->verticalStep =
-      (lbl_803E679C * obj->height) / (float)((double)doubleBits - lbl_803E6790);
+      (lbl_803E679C * obj->height) / (f32)lbl_803DC230;
   state->targetObj = NULL;
   state->effectHandle = NULL;
   return;

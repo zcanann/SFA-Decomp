@@ -252,29 +252,29 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4
   SHthorntailRuntime *runtime;
   int randomTime;
   int iVar2;
-  uint levelControlReady;
-  uint impactPending;
+  int levelControlReady;
+  int impactPending;
 
   runtime = obj->runtime;
-  levelControlReady = runtime->behaviorFlags & SHTHORNTAIL_FLAG_LEVELCONTROL_READY;
+  levelControlReady = (int)(runtime->behaviorFlags & SHTHORNTAIL_FLAG_LEVELCONTROL_READY);
   if (levelControlReady == 0) {
     Sfx_StopObjectChannel((int)obj,0x7f);
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
     randomTime = fn_800221A0(1000,2000);
     runtime->idleTimer = (float)randomTime;
-    runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_IMPACT_PENDING;
+    runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING;
     runtime->behaviorFlags = runtime->behaviorFlags | (SHTHORNTAIL_FLAG_LEVELCONTROL_READY |
                                                        SHTHORNTAIL_FLAG_FREEZE_MOTION);
     runtime->freezeFrameCounter = 0;
     obj->statusFlags = obj->statusFlags | SHTHORNTAIL_OBJECT_STATUS_08;
   }
-  impactPending = runtime->behaviorFlags & SHTHORNTAIL_FLAG_IMPACT_PENDING;
+  impactPending = (int)(runtime->behaviorFlags & SHTHORNTAIL_FLAG_IMPACT_PENDING);
   if (impactPending != 0) {
     iVar2 = fn_80114BB0((int)obj,param_3,(int)runtime,0,0);
     if (iVar2 != 0) {
       return 0;
     }
-    *(short *)(param_3 + 0x6e) = *(short *)(param_3 + 0x6e) & 0xffbf;
+    *(short *)(param_3 + 0x6e) = *(short *)(param_3 + 0x6e) & ~0x40;
     fn_8003B310((int)obj,(int)runtime->collisionShapeState);
   }
   runtime->activeMoveValid = 0;

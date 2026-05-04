@@ -64,45 +64,39 @@ undefined4 fire_updateState(FireObject *obj,undefined4 param_2,u8 *stateList)
     state = stateList[stateIndex + 0x81];
     if (state == 1) {
       fn_80041E3C(0);
-      if (mode != 2) {
-        if (mode < 2) {
-          if (-1 < mode) {
-            (*lbl_803DCAAC)->setAnimEvent(7,0,0);
-            (*lbl_803DCAAC)->setAnimEvent(7,2,0);
-            (*lbl_803DCAAC)->setAnimEvent(7,3,0);
-            (*lbl_803DCAAC)->setAnimEvent(7,7,0);
-            (*lbl_803DCAAC)->setAnimEvent(7,10,0);
-            (*lbl_803DCAAC)->setAnimEvent(10,7,0);
-            GameBit_Set(0x1ed,1);
-            fn_80042F78(0x17);
-            anim = fn_800481B0(0x17);
-            fn_80043560(anim,0);
-          }
-        }
-        else if (mode < 4) {
-          fn_80042F78(7);
-          anim = fn_800481B0(7);
-          fn_80043560(anim,0);
-        }
-      }
-      else {
+      switch (mode) {
+      case 0:
+      case 1:
+        (*lbl_803DCAAC)->setAnimEvent(7,0,0);
+        (*lbl_803DCAAC)->setAnimEvent(7,2,0);
+        (*lbl_803DCAAC)->setAnimEvent(7,3,0);
+        (*lbl_803DCAAC)->setAnimEvent(7,7,0);
+        (*lbl_803DCAAC)->setAnimEvent(7,10,0);
+        (*lbl_803DCAAC)->setAnimEvent(10,7,0);
+        GameBit_Set(0x1ed,1);
+        fn_80042F78(0x17);
+        anim = fn_800481B0(0x17);
+        fn_80043560(anim,0);
+        break;
+      case 2:
         fn_80042F78(0xb);
         anim = fn_800481B0(0xb);
         fn_80043560(anim,0);
+        break;
+      case 3:
+        fn_80042F78(7);
+        anim = fn_800481B0(7);
+        fn_80043560(anim,0);
+        break;
       }
     }
     else if (state == 2) {
-      if (mode != 2) {
-        if (mode < 2) {
-          if (-1 < mode) {
-            fn_800552E8(2,0);
-          }
-        }
-        else if (mode < 4) {
-          fn_800552E8(0xf,0);
-        }
-      }
-      else {
+      switch (mode) {
+      case 0:
+      case 1:
+        fn_800552E8(2,0);
+        break;
+      case 2:
         GameBit_Set(0x405,0);
         if (GameBit_Get(0xff) != 0) {
           (*lbl_803DCAAC)->triggerEvent(0xb,3);
@@ -122,21 +116,25 @@ undefined4 fire_updateState(FireObject *obj,undefined4 param_2,u8 *stateList)
           (*lbl_803DCAAC)->setAnimEvent(0xb,9,1);
           fn_800552E8(0x22,0);
         }
+        break;
+      case 3:
+        fn_800552E8(0xf,0);
+        break;
       }
       fn_80014948(1);
     }
     else if (state == 3) {
-      if (mode != 3) {
-        if (mode < 3) {
-          if (-1 < mode) {
-            anim = fn_800481B0(7);
-            fn_800437BC(anim,0x20000000);
-          }
-        }
-      }
-      else {
+      switch (mode) {
+      case 0:
+      case 1:
+      case 2:
+        anim = fn_800481B0(7);
+        fn_800437BC(anim,0x20000000);
+        break;
+      case 3:
         anim = fn_800481B0(0xb);
         fn_800437BC(anim,0x20000000);
+        break;
       }
     }
   }

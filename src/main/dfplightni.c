@@ -84,9 +84,7 @@ void dfplightni_render(u8 *obj)
         fn_8008F904(state->effectHandle);
       }
       if (eventActive != 0) {
-        if (state->timer >= lbl_803E64E0 +
-               (float)(dfplightni_u32AsDouble((u32)((int)state->delayFrames ^ 0x80000000)) -
-                       lbl_803E64F0)) {
+        if (state->timer >= lbl_803E64E0 + (f32)(s32)state->delayFrames) {
           state->timer = lbl_803E64E4;
         }
       }
@@ -107,10 +105,10 @@ void dfplightni_update(u8 *obj)
 {
   u8 *playerObj;
   int eventActive;
-  int eventBlocked;
+  u32 eventBlocked;
   DfpLightniState *state;
-  double radiusY;
   double radiusX;
+  double radiusY;
   float start[3];
   float end[3];
   u32 randomZ;
@@ -126,29 +124,25 @@ void dfplightni_update(u8 *obj)
       if ((eventActive != 0) && (state->timer < lbl_803E64E0)) {
         state->timer = lbl_803E64F8;
       }
-      if ((state->triggerTime < state->timer) && (state->timer < lbl_803E64E0)) {
+      if ((state->timer > state->triggerTime) && (state->timer < lbl_803E64E0)) {
         start[0] = *(f32 *)(obj + 0xc);
         start[1] = *(f32 *)(obj + 0x10);
         start[2] = *(f32 *)(obj + 0x14);
-        if (eventActive == 0) {
-          randomX = fn_800221A0(-200,200) ^ 0x80000000;
-          end[0] = lbl_803E64FC * (float)(dfplightni_u32AsDouble(randomX) - lbl_803E64F0) + start[0];
-          randomY = fn_800221A0(100,300) ^ 0x80000000;
-          end[1] = lbl_803E64FC * (float)(dfplightni_u32AsDouble(randomY) - lbl_803E64F0) +
-                   *(f32 *)(obj + 0x10);
-          randomZ = fn_800221A0(-200,200) ^ 0x80000000;
-          end[2] = lbl_803E64FC * (float)(dfplightni_u32AsDouble(randomZ) - lbl_803E64F0) + start[2];
+        if (eventActive != 0) {
+          randomZ = fn_800221A0(-200,200);
+          end[0] = (f32)(s32)randomZ * lbl_803E64FC + *(f32 *)(playerObj + 0xc);
+          randomY = fn_800221A0(100,300);
+          end[1] = (f32)(s32)randomY * lbl_803E64FC + *(f32 *)(playerObj + 0x10);
+          randomX = fn_800221A0(-200,200);
+          end[2] = (f32)(s32)randomX * lbl_803E64FC + *(f32 *)(playerObj + 0x14);
         }
         else {
-          randomZ = fn_800221A0(-200,200) ^ 0x80000000;
-          end[0] = lbl_803E64FC * (float)(dfplightni_u32AsDouble(randomZ) - lbl_803E64F0) +
-                   *(f32 *)(playerObj + 0xc);
-          randomY = fn_800221A0(100,300) ^ 0x80000000;
-          end[1] = lbl_803E64FC * (float)(dfplightni_u32AsDouble(randomY) - lbl_803E64F0) +
-                   *(f32 *)(playerObj + 0x10);
-          randomX = fn_800221A0(-200,200) ^ 0x80000000;
-          end[2] = lbl_803E64FC * (float)(dfplightni_u32AsDouble(randomX) - lbl_803E64F0) +
-                   *(f32 *)(playerObj + 0x14);
+          randomX = fn_800221A0(-200,200);
+          end[0] = (f32)(s32)randomX * lbl_803E64FC + start[0];
+          randomY = fn_800221A0(100,300);
+          end[1] = (f32)(s32)randomY * lbl_803E64FC + *(f32 *)(obj + 0x10);
+          randomZ = fn_800221A0(-200,200);
+          end[2] = (f32)(s32)randomZ * lbl_803E64FC + start[2];
         }
         if (state->effectHandle != 0) {
           fn_80023800(state->effectHandle);
@@ -213,7 +207,7 @@ void dfplightni_init(u8 *obj,u8 *params)
   if (obj != 0) {
     state = dfplightni_getState(obj);
     randomValue = fn_800221A0(0,100);
-    state->timer = (float)(dfplightni_u32AsDouble(randomValue ^ 0x80000000) - lbl_803E64F0);
+    state->timer = (f32)(s32)randomValue;
     state->effectHandle = 0;
     if (*(s16 *)(params + 0x1a) <= 0) {
       *(s16 *)(params + 0x1a) = 1;
@@ -222,18 +216,11 @@ void dfplightni_init(u8 *obj,u8 *params)
       *(s16 *)(params + 0x1c) = 1;
     }
     randomValue = fn_800221A0(0,100);
-    state->triggerTime =
-        lbl_803E6508 + (float)(dfplightni_u32AsDouble(randomValue ^ 0x80000000) - lbl_803E64F0);
-    state->radiusX = lbl_803E6504 *
-                     ((float)(dfplightni_u32AsDouble((u32)((int)*(s16 *)(params + 0x1a) ^
-                                                           0x80000000)) -
-                              lbl_803E64F0) /
-                      lbl_803E650C);
-    state->radiusY = lbl_803E6504 *
-                     ((float)(dfplightni_u32AsDouble((u32)((int)*(s16 *)(params + 0x1c) ^
-                                                           0x80000000)) -
-                              lbl_803E64F0) /
-                      lbl_803E650C);
+    state->triggerTime = (f32)(s32)randomValue + lbl_803E6508;
+    state->radiusX = ((f32)(s32)*(s16 *)(params + 0x1a) / lbl_803E650C) *
+                     lbl_803E6504;
+    state->radiusY = ((f32)(s32)*(s16 *)(params + 0x1c) / lbl_803E650C) *
+                     lbl_803E6504;
     state->angleIndex = *(s8 *)(params + 0x18);
     state->delayFrames = *(s8 *)(params + 0x19) * 10;
     state->eventId = *(s16 *)(params + 0x20);
