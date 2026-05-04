@@ -9,11 +9,11 @@ extern undefined4 FUN_80006a8c();
 extern ushort FUN_80006be8();
 extern uint FUN_80006c00();
 extern uint FUN_80017730();
-extern char FUN_800620e8();
-extern undefined4 FUN_80063a68();
-extern undefined4 FUN_80063a74();
-extern void trackDolphin_buildSweptBounds(uint *boundsOut,float *startPoints,float *endPoints,
-                                          float *radii,int pointCount);
+extern u8 fn_800640CC(float *p1, float *p2, float *p3, int *p4, int *p5, int p6, int p7, int p8, int p9);
+extern void fn_80067958(int a, float *b, float *c, int d, int e, int f);
+extern void fn_800691C0(int a, void *b, int c, int d);
+extern void fn_8006961C(uint *boundsOut,float *startPoints,float *endPoints,
+                        float *radii,int pointCount);
 extern int FUN_8007f7c0();
 extern undefined4 FUN_80101980();
 extern undefined4 FUN_802473cc();
@@ -39,7 +39,7 @@ extern undefined4 DAT_803de188;
 extern undefined4 DAT_803de18c;
 extern undefined4 gCamcontrolCurrentActionId;
 extern undefined4* gCamcontrolState;
-extern undefined4 DAT_803de1a0;
+extern u8 lbl_803DD528;
 extern undefined4* gCamcontrolModeSettings;
 extern f64 DOUBLE_803e2318;
 extern f32 lbl_803DE1A4;
@@ -170,10 +170,10 @@ void camcontrol_resetState(undefined8 param_1,double param_2,double param_3,unde
 #pragma scheduling off
 #pragma peephole off
 undefined4
-camcontrol_traceMove(double param_1,float *param_2,float *param_3,float *param_4,int param_5,
-                     undefined param_6,char param_7,char param_8)
+camcontrol_traceMove(float param_1,float *param_2,float *param_3,float *param_4,int param_5,
+                     char param_6,u8 param_7,u8 param_8)
 {
-  char cVar2;
+  u8 cVar2;
   undefined4 uVar1;
   float local_40 [3];
   uint auStack_34 [9];
@@ -184,22 +184,22 @@ camcontrol_traceMove(double param_1,float *param_2,float *param_3,float *param_4
   *param_4 = *param_3;
   param_4[1] = param_3[1];
   param_4[2] = param_3[2];
-  *(float *)(param_5 + 0x40) = (float)param_1;
-  *(undefined *)(param_5 + 0x50) = 0xff;
+  *(float *)(param_5 + 0x40) = param_1;
+  *(s8 *)(param_5 + 0x50) = -1;
   *(undefined *)(param_5 + 0x54) = param_6;
   *(undefined2 *)(param_5 + 0x6c) = 0;
   cVar2 = '\0';
   if (param_8 != '\0') {
-    cVar2 = FUN_800620e8(param_2,param_4,(float *)0x1,(int *)0x0,(int *)0x0,0x10,0xffffffff,0xff,0);
+    cVar2 = fn_800640CC(param_2,param_4,(float *)0x1,(int *)0x0,(int *)0x0,0x10,0xffffffff,0xff,0);
   }
-  DAT_803de1a0 = cVar2;
+  lbl_803DD528 = cVar2;
   if (param_7 != '\0') {
-    trackDolphin_buildSweptBounds(auStack_34,param_2,param_4,(float *)(param_5 + 0x40),1);
-    FUN_80063a74(0,auStack_34,0x240,'\x01');
+    fn_8006961C(auStack_34,param_2,param_4,(float *)(param_5 + 0x40),1);
+    fn_800691C0(0,auStack_34,0x240,'\x01');
   }
-  FUN_80063a68();
+  fn_80067958(0, param_2, param_4, 1, param_5, 0);
   uVar1 = 0;
-  if ((DAT_803de1a0 == '\0') && (*(short *)(param_5 + 0x6c) == 0)) {
+  if ((lbl_803DD528 == '\0') && (*(short *)(param_5 + 0x6c) == 0)) {
     uVar1 = 1;
   }
   return uVar1;

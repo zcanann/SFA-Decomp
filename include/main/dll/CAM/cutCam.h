@@ -9,8 +9,8 @@ void camcontrol_resetState(undefined8 param_1,double param_2,double param_3,unde
                            undefined8 param_5,undefined8 param_6,undefined8 param_7,
                            undefined8 param_8);
 undefined4
-camcontrol_traceMove(double param_1,float *param_2,float *param_3,float *param_4,int param_5,
-                     undefined param_6,char param_7,char param_8);
+camcontrol_traceMove(float param_1,float *param_2,float *param_3,float *param_4,int param_5,
+                     char param_6,u8 param_7,u8 param_8);
 void FUN_80103884(void);
 undefined camcontrol_traceFromTarget(float *param_1,int param_2,float *param_3);
 undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3,short *param_4);
