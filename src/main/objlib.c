@@ -1235,21 +1235,21 @@ int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *out
 {
   char hitPriority;
   int hitCount;
-  int hitState;
+  ObjHitsPriorityState *hitState;
   int hitSlot;
   char bestHitSlot;
   char bestPriority;
 
-  hitState = *(int *)(obj + 0x54);
+  hitState = *(ObjHitsPriorityState **)(obj + 0x54);
   if (hitState != 0) {
-    hitCount = (int)*(char *)(hitState + 0x71);
+    hitCount = (int)hitState->priorityHitCount;
     if (hitCount != 0) {
       bestPriority = '\x7f';
       bestHitSlot = -1;
       hitSlot = 0;
       if (0 < hitCount) {
         do {
-          hitPriority = *(char *)(hitState + hitSlot + 0x75);
+          hitPriority = hitState->priorities[hitSlot];
           if (hitPriority < bestPriority) {
             bestHitSlot = (char)hitSlot;
             bestPriority = hitPriority;
@@ -1260,19 +1260,18 @@ int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *out
       }
       if (bestHitSlot != -1) {
         if (outHitObject != (undefined4 *)0x0) {
-          *outHitObject = *(undefined4 *)(hitState + bestHitSlot * 4 + 0x7c);
+          *outHitObject = *(undefined4 *)((int)hitState->hitObjects + bestHitSlot * 4);
         }
         if (outSphereIndex != (int *)0x0) {
-          *outSphereIndex = (int)*(char *)(hitState + bestHitSlot + 0x72);
+          *outSphereIndex = (int)hitState->sphereIndices[bestHitSlot];
         }
         if (outHitVolume != (uint *)0x0) {
-          *outHitVolume = (uint)*(byte *)(hitState + bestHitSlot + 0x78);
+          *outHitVolume = (uint)hitState->hitVolumes[bestHitSlot];
         }
         if (outHitPosX != (float *)0x0) {
-          hitState = hitState + bestHitSlot * 4;
-          *outHitPosX = *(float *)(hitState + 0x88);
-          *outHitPosY = *(float *)(hitState + 0x94);
-          *outHitPosZ = *(float *)(hitState + 0xa0);
+          *outHitPosX = *(float *)((int)hitState->hitPosX + bestHitSlot * 4);
+          *outHitPosY = *(float *)((int)hitState->hitPosY + bestHitSlot * 4);
+          *outHitPosZ = *(float *)((int)hitState->hitPosZ + bestHitSlot * 4);
         }
         return (int)bestPriority;
       }
@@ -1302,23 +1301,23 @@ int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,
 {
   char hitPriority;
   int hitCount;
-  int hitState;
+  ObjHitsPriorityState *hitState;
   int hitSlot;
   char bestHitSlot;
   char bestPriority;
 
-  hitState = *(int *)(obj + 0x54);
+  hitState = *(ObjHitsPriorityState **)(obj + 0x54);
   if (hitState == 0) {
     return 0;
   }
-  hitCount = (int)*(char *)(hitState + 0x71);
+  hitCount = (int)hitState->priorityHitCount;
   if (hitCount != 0) {
     bestPriority = '\x7f';
     bestHitSlot = -1;
     hitSlot = 0;
     if (0 < hitCount) {
       do {
-        hitPriority = *(char *)(hitState + hitSlot + 0x75);
+        hitPriority = hitState->priorities[hitSlot];
         if (hitPriority < bestPriority) {
           bestHitSlot = (char)hitSlot;
           bestPriority = hitPriority;
@@ -1329,13 +1328,13 @@ int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,
     }
     if (bestHitSlot != -1) {
       if (outHitObject != (undefined4 *)0x0) {
-        *outHitObject = *(undefined4 *)(hitState + bestHitSlot * 4 + 0x7c);
+        *outHitObject = *(undefined4 *)((int)hitState->hitObjects + bestHitSlot * 4);
       }
       if (outSphereIndex != (int *)0x0) {
-        *outSphereIndex = (int)*(char *)(hitState + bestHitSlot + 0x72);
+        *outSphereIndex = (int)hitState->sphereIndices[bestHitSlot];
       }
       if (outHitVolume != (uint *)0x0) {
-        *outHitVolume = (uint)*(byte *)(hitState + bestHitSlot + 0x78);
+        *outHitVolume = (uint)hitState->hitVolumes[bestHitSlot];
       }
       return (int)bestPriority;
     }
