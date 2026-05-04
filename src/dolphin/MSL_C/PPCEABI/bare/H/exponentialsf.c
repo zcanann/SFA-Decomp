@@ -98,8 +98,6 @@ static inline float log2_kernel(float x, float* table)
     u32 index;
     int exponent;
     float result;
-    float log_c0;
-    float log_c1;
     u32 log_c0_bits;
     u32 log_c1_bits;
 
@@ -109,14 +107,14 @@ static inline float log2_kernel(float x, float* table)
     index = fraction >> 16;
     log_c0_bits = lbl_803DC658;
     log_c1_bits = lbl_803DC65C;
-    log_c0 = bit_float(log_c0_bits);
-    log_c1 = bit_float(log_c1_bits);
 
     if ((bits & 0xFFFF) != 0) {
         u32 high_bits;
         u32 full_bits;
         float delta;
         float delta2;
+        float log_c0;
+        float log_c1;
 
         high_bits = (bits & 0x007F0000) | 0x3F800000;
         full_bits = fraction | 0x3F800000;
@@ -126,6 +124,8 @@ static inline float log2_kernel(float x, float* table)
             high_bits += 0x10000;
         }
 
+        log_c0 = bit_float(log_c0_bits);
+        log_c1 = bit_float(log_c1_bits);
         delta = (bit_float(full_bits) - bit_float(high_bits)) * __one_over_F[index];
         delta2 = delta * delta;
         result = delta * log_c1 + log_c0;
