@@ -70,8 +70,8 @@ extern int lbl_803DCA8C;
 extern undefined4* lbl_803DCAB8;
 extern undefined4 lbl_803DDB88;
 extern f32 lbl_803E4C44;
-extern char lbl_80325B44[];
-extern char lbl_80325B6C[];
+extern char sDIMBossFreeingAssetsForDIMBoss[];
+extern char sDIMBossLoadingAssetsForDIMTop[];
 
 typedef struct DIMbossEffect {
   u8 pad00[0x4C];
@@ -211,7 +211,7 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,int param_3)
         (**(code **)(*lbl_803DCAAC + 0x50))(0x1c,2,0);
         break;
       case 0x15:
-        OSReport(lbl_80325B44);
+        OSReport(sDIMBossFreeingAssetsForDIMBoss);
         fn_80043074();
         fn_8004350C(0,0,1);
         uVar5 = fn_800481B0(0x1c);
@@ -221,7 +221,7 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,int param_3)
         fn_80041E3C(0);
         break;
       case 0x16:
-        OSReport(lbl_80325B6C);
+        OSReport(sDIMBossLoadingAssetsForDIMTop);
         uVar5 = fn_800481B0(0x13);
         fn_80043560(uVar5,0);
         fn_800481B0(0x13);
