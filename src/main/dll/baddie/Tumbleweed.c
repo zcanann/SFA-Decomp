@@ -3562,10 +3562,11 @@ extern void  fn_80054308(void*);
 #pragma peephole off
 void titlescreen_release(void)
 {
-    int i = 0;
     void** p;
+    int i;
     fn_80054308(lbl_803DD9D4);
     lbl_803DD9D4 = NULL;
+    i = 0;
     p = lbl_803A9F98;
     while (i < 19) {
         if (*p != NULL) {
