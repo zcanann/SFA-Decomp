@@ -11,6 +11,8 @@ typedef struct ObjHitReactMoveEntry {
   s16 entryCount;
 } ObjHitReactMoveEntry;
 
+#define OBJHITREACT_MAX_RESET_OBJECTS 0x32
+
 typedef struct ObjHitReactState {
   int activeHit;
   s16 activeEntryCount;

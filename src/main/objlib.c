@@ -91,6 +91,9 @@ extern f32 lbl_803DF634;
 extern f32 lbl_803DF638;
 extern int iRam803dd84c;
 extern int iRam803dd854;
+
+#define gObjHitsResetObjectCount DAT_803dd860
+#define gObjHitsResetObjects DAT_803dd864
 extern char s_objmsg___x___overflow_in_object___802cba20[];
 
 typedef struct ObjMsgEntry {
@@ -127,16 +130,16 @@ void FUN_800356f0(int param_1)
   undefined4 auStack_14 [4];
   
   piVar2 = (int *)FUN_80017b00(&uStack_18,auStack_14);
-  DAT_803dd860 = 0;
+  gObjHitsResetObjectCount = 0;
   if (0 < param_1) {
     do {
       puVar3 = *(undefined4 **)(*piVar2 + 0x54);
       if (((puVar3 != (undefined4 *)0x0) && ((*(ushort *)(puVar3 + 0x18) & 1) != 0)) &&
          ((*(byte *)((int)puVar3 + 0x62) & 8) != 0)) {
-        if (DAT_803dd860 < 0x32) {
-          iVar1 = DAT_803dd860 * 4;
-          DAT_803dd860 = DAT_803dd860 + 1;
-          *(int *)(DAT_803dd864 + iVar1) = *piVar2;
+        if (gObjHitsResetObjectCount < OBJHITREACT_MAX_RESET_OBJECTS) {
+          iVar1 = gObjHitsResetObjectCount * 4;
+          gObjHitsResetObjectCount = gObjHitsResetObjectCount + 1;
+          *(int *)(gObjHitsResetObjects + iVar1) = *piVar2;
         }
         *puVar3 = 0;
         *(ushort *)(puVar3 + 0x18) = *(ushort *)(puVar3 + 0x18) & 0xfff7;
@@ -1347,8 +1350,8 @@ void ObjHitReact_UpdateResetObjects(undefined4 param_1,undefined4 param_2,undefi
   int iVar3;
   
   iVar3 = 0;
-  for (iVar2 = 0; iVar2 < DAT_803dd860; iVar2 = iVar2 + 1) {
-    psVar1 = *(short **)(DAT_803dd864 + iVar3);
+  for (iVar2 = 0; iVar2 < gObjHitsResetObjectCount; iVar2 = iVar2 + 1) {
+    psVar1 = *(short **)(gObjHitsResetObjects + iVar3);
     if (((*(uint *)(*(int *)(psVar1 + 0x28) + 0x44) & 0x40) == 0) &&
        (*(char *)(psVar1 + 0x57) != 'd')) {
       FUN_80017ac0(psVar1,*(int *)(psVar1 + 0x28),param_3,param_4,param_5,param_6,param_7,param_8);
@@ -1356,8 +1359,8 @@ void ObjHitReact_UpdateResetObjects(undefined4 param_1,undefined4 param_2,undefi
     iVar3 = iVar3 + 4;
   }
   iVar3 = 0;
-  for (iVar2 = 0; iVar2 < DAT_803dd860; iVar2 = iVar2 + 1) {
-    ObjHitbox_UpdateRotatedBounds(*(ushort **)(DAT_803dd864 + iVar3),1);
+  for (iVar2 = 0; iVar2 < gObjHitsResetObjectCount; iVar2 = iVar2 + 1) {
+    ObjHitbox_UpdateRotatedBounds(*(ushort **)(gObjHitsResetObjects + iVar3),1);
     iVar3 = iVar3 + 4;
   }
   return;
@@ -1407,15 +1410,15 @@ void ObjHits_ResetWorkBuffers(void)
     iVar3 = iVar3 + -1;
   } while (iVar3 != 0);
   iVar3 = iVar2 * 0x3c;
-  iVar1 = 0x32 - iVar2;
-  if (iVar2 < 0x32) {
+  iVar1 = OBJHITREACT_MAX_RESET_OBJECTS - iVar2;
+  if (iVar2 < OBJHITREACT_MAX_RESET_OBJECTS) {
     do {
       *(undefined4 *)(lbl_803DCBDC + iVar3) = 0;
       iVar3 = iVar3 + 0x3c;
       iVar1 = iVar1 + -1;
     } while (iVar1 != 0);
   }
-  DAT_803dd860 = 0;
+  gObjHitsResetObjectCount = 0;
   return;
 }
 
@@ -1434,8 +1437,8 @@ void ObjHits_ResetWorkBuffers(void)
  */
 undefined4 ObjHitReact_GetResetObjects(undefined4 *param_1)
 {
-  *param_1 = DAT_803dd860;
-  return DAT_803dd864;
+  *param_1 = gObjHitsResetObjectCount;
+  return gObjHitsResetObjects;
 }
 
 /*
@@ -1455,7 +1458,7 @@ undefined4 ObjHitReact_GetResetObjects(undefined4 *param_1)
 #pragma peephole off
 void ObjHits_InitWorkBuffers(void)
 {
-  DAT_803dd864 = FUN_80017830(200,0xe);
+  gObjHitsResetObjects = FUN_80017830(OBJHITREACT_MAX_RESET_OBJECTS * sizeof(int),0xe);
   lbl_803DCBDC = FUN_80017830(3000,0xe);
   DAT_803dd858 = FUN_80017830(0x1900,0xe);
   DAT_803dd850 = FUN_80017830(0x400,0xe);

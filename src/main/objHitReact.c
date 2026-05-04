@@ -47,7 +47,6 @@ typedef struct ObjHitReactEffectHandle {
 #define OBJHITREACT_HIT_FX_MODE_EFFECT 1
 #define OBJHITREACT_HIT_EFFECT_ID 0x5A
 #define OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS 0x401
-#define OBJHITREACT_MAX_RESET_OBJECTS 0x32
 #define OBJHITREACT_RESET_FRAME_COUNT 0x400
 
 extern ObjHitReactEffectHandle *fn_80013EC8(u32 effectId,u32 count);
