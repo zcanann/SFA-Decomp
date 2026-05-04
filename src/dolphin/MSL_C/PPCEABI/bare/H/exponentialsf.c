@@ -34,8 +34,6 @@ u32 lbl_80332C78[] = {
     0x3956A4B8, 0x37D5E715,
 };
 
-#pragma inline_max_size(10000)
-
 static inline float bit_float(u32 bits)
 {
     return *(float*)&bits;
