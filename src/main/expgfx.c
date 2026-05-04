@@ -807,6 +807,7 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
 #pragma peephole off
 int expgfx_updateSourceFrameFlags(void *sourceObject)
 {
+  ExpgfxSourceObject *source;
   u32 bit;
   s32 highBit;
   u32 *sourceMasks;
@@ -816,12 +817,13 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
   int poolIndex;
 
   aggregateState = 0;
+  source = (ExpgfxSourceObject *)sourceObject;
   lbl_803DD253 = 0;
   poolIndex = 0;
   poolSourceIds = gExpgfxTrackedPoolSourceIds;
   poolFrameFlags = gExpgfxStaticPoolFrameFlags;
   while ((s16)poolIndex < EXPGFX_POOL_COUNT) {
-    if ((*(s16 *)((u8 *)sourceObject + 0x46) == 0xd4) || (*poolSourceIds == (u32)sourceObject)) {
+    if ((source->objType == 0xd4) || (*poolSourceIds == (u32)sourceObject)) {
       bit = 1 << ((s16)poolIndex >> 1);
       highBit = (s32)bit >> 0x1f;
       sourceMasks = &gExpgfxTrackedSourceFrameMasks[((u32)(poolIndex & 1)) * 2];

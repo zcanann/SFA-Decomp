@@ -68,6 +68,11 @@ typedef struct ExpgfxCurrentSource {
   int sourceMode;
 } ExpgfxCurrentSource;
 
+typedef struct ExpgfxSourceObject {
+  u8 pad00[0x46];
+  s16 objType;
+} ExpgfxSourceObject;
+
 /*
  * Retail warning strings call this structure "exptab". The key fields are
  * still only partially understood, but the table's role and lifetime rules
