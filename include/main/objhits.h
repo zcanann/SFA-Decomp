@@ -3,6 +3,10 @@
 
 #include "ghidra_import.h"
 
+#define OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT 5
+
+extern int gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT];
+
 typedef struct ObjHitsSweepEntry {
   float minX;
   float maxX;
@@ -48,7 +52,7 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
                                    undefined8 param_4,undefined8 param_5,undefined8 param_6,
                                    undefined8 param_7,undefined8 param_8,undefined4 param_9,
                                    undefined4 param_10,int param_11,int param_12);
-void ObjHits_RegisterActiveHitVolumeObject(undefined4 param_1);
+void ObjHits_RegisterActiveHitVolumeObject(int obj);
 void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                                undefined4 param_5,int param_6);
 void ObjHits_DetectObjectPair(void);

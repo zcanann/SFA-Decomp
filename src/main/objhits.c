@@ -39,7 +39,6 @@ extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
 extern undefined4 FUN_80294964();
 
-extern int gObjHitsActiveHitVolumeObjects[5];
 extern undefined4* DAT_80341558;
 extern int DAT_8034155c;
 extern undefined4 DAT_80341b98;
@@ -2144,22 +2143,22 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
  */
 #pragma scheduling off
 #pragma peephole off
-void ObjHits_RegisterActiveHitVolumeObject(undefined4 param_1)
+void ObjHits_RegisterActiveHitVolumeObject(int obj)
 {
   u32 *piVar1;
   int iVar2;
 
   iVar2 = 0;
   piVar1 = (u32 *)gObjHitsActiveHitVolumeObjects;
-  while (iVar2 < 5 && *piVar1 != 0) {
+  while (iVar2 < OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT && *piVar1 != 0) {
     piVar1 = piVar1 + 1;
     iVar2 = iVar2 + 1;
   }
-  if (iVar2 == 5) {
-    gObjHitsActiveHitVolumeObjects[0] = param_1;
+  if (iVar2 == OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT) {
+    gObjHitsActiveHitVolumeObjects[0] = obj;
     return;
   }
-  gObjHitsActiveHitVolumeObjects[iVar2] = param_1;
+  gObjHitsActiveHitVolumeObjects[iVar2] = obj;
   return;
 }
 #pragma peephole reset

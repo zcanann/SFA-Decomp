@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/objHitReact.h"
+#include "main/objhits.h"
 #include "main/objlib.h"
 
 extern undefined4 FUN_800033a8();
@@ -46,7 +47,6 @@ extern undefined4 FUN_802949e8();
 extern byte FUN_80294c20();
 extern int fn_80296BA0(void *obj);
 
-extern int gObjHitsActiveHitVolumeObjects[5];
 extern int DAT_80343558;
 extern byte DAT_80343958;
 extern char DAT_80343959;
