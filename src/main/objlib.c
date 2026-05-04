@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/objHitReact.h"
 #include "main/objlib.h"
 
 extern undefined4 FUN_800033a8();
@@ -200,31 +201,33 @@ void ObjHitReact_LoadMoveEntries(undefined8 param_1,double param_2,double param_
                                  undefined4 param_11,int param_12,int param_13,int param_14,
                                  undefined4 param_15,undefined4 param_16)
 {
-  short sVar1;
-  short *psVar2;
+  ObjHitReactMoveEntry *moveEntry;
+  ObjHitReactMoveEntry *moveEntryTable;
+  ObjHitReactState *hitState;
+  s16 firstEntryIndex;
   int iVar3;
-  short *psVar4;
   
-  psVar4 = *(short **)(*(int *)(param_9 + 0x50) + 0x24);
-  *(undefined2 *)(param_12 + 4) = 0;
-  if (psVar4 != (short *)0x0) {
+  moveEntryTable = *(ObjHitReactMoveEntry **)(*(int *)(param_9 + 0x50) + 0x24);
+  hitState = (ObjHitReactState *)param_12;
+  hitState->activeEntryCount = 0;
+  if (moveEntryTable != (ObjHitReactMoveEntry *)0x0) {
     iVar3 = 0;
-    for (psVar2 = psVar4; *psVar2 != -1; psVar2 = psVar2 + 3) {
-      if (param_13 == *psVar2) {
-        sVar1 = psVar4[iVar3 + 1];
-        *(short *)(param_12 + 4) = psVar4[iVar3 + 2];
-        if (*(short *)(param_12 + 6) < *(short *)(param_12 + 4)) {
-          *(short *)(param_12 + 4) = *(short *)(param_12 + 6);
+    for (moveEntry = moveEntryTable; moveEntry->moveId != -1; moveEntry = moveEntry + 1) {
+      if (param_13 == moveEntry->moveId) {
+        firstEntryIndex = moveEntryTable[iVar3].firstEntryIndex;
+        hitState->activeEntryCount = moveEntryTable[iVar3].entryCount;
+        if (hitState->entryCapacity < hitState->activeEntryCount) {
+          hitState->activeEntryCount = hitState->entryCapacity;
         }
         if (param_14 == 0) {
           FUN_80017640(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                       *(undefined4 *)(param_12 + 8),0x41,(int)sVar1,(int)*(short *)(param_12 + 4),
+                       hitState->entries,0x41,(int)firstEntryIndex,(int)hitState->activeEntryCount,
                        param_13,0,param_15,param_16);
           return;
         }
         FUN_80045328(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x41,
-                     *(undefined4 *)(param_12 + 8),(int)sVar1,(int)*(short *)(param_12 + 4),param_13
-                     ,param_14,param_15,param_16);
+                     hitState->entries,(int)firstEntryIndex,(int)hitState->activeEntryCount,
+                     param_13,param_14,param_15,param_16);
         return;
       }
       iVar3 = iVar3 + 3;

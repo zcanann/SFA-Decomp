@@ -5,6 +5,12 @@
 
 typedef struct ObjHitReactEntry ObjHitReactEntry;
 
+typedef struct ObjHitReactMoveEntry {
+  s16 moveId;
+  s16 firstEntryIndex;
+  s16 entryCount;
+} ObjHitReactMoveEntry;
+
 typedef struct ObjHitReactState {
   int activeHit;
   s16 activeEntryCount;
