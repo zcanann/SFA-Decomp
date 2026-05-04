@@ -26,7 +26,7 @@ extern double FUN_8014cbcc();
 extern double FUN_80183544();
 extern int FUN_80286838();
 extern undefined4 FUN_80286884();
-extern double FUN_80293900();
+extern f32 sqrtf(f32 x);
 extern void fn_8001F71C(void *dst,int fileId,int offset,int size);
 extern void fn_80023800(void *ptr);
 extern void *fn_80023CC8(int size,int heap,int flags);
@@ -60,6 +60,7 @@ extern f32 lbl_803DE158;
 extern f32 lbl_803DE15C;
 extern f32 lbl_803DE160;
 extern f32 lbl_803E1630;
+extern f32 lbl_803E1680;
 extern f32 lbl_803E22AC;
 extern f32 lbl_803E22B0;
 extern f32 lbl_803E22B4;
@@ -367,31 +368,29 @@ int fn_80102908(void)
  */
 #pragma scheduling off
 #pragma peephole off
-void camcontrol_getRelativePosition(double param_1,int param_2,float *param_3,float *param_4,
+void camcontrol_getRelativePosition(f32 param_1,int param_2,float *param_3,float *param_4,
                                     float *param_5,float *param_6,int param_7)
 {
   int iVar1;
-  double dVar2;
 
-  iVar1 = *(int *)(gCamcontrolState + 0xa4);
-  if (param_7 == 0) {
-    *param_3 = *(float *)(param_2 + 0x18) - *(float *)(iVar1 + 0x18);
-    *param_4 = *(float *)(param_2 + 0x1c) - (float)((double)*(float *)(iVar1 + 0x1c) + param_1);
-    *param_5 = *(float *)(param_2 + 0x20) - *(float *)(iVar1 + 0x20);
+  iVar1 = *(int *)((char *)lbl_803DD524 + 0xa4);
+  if (param_7 != 0) {
+    *param_3 = *(float *)(param_2 + 0xc) - *(float *)(iVar1 + 0xc);
+    *param_4 = *(float *)(param_2 + 0x10) - (*(float *)(iVar1 + 0x10) + param_1);
+    *param_5 = *(float *)(param_2 + 0x14) - *(float *)(iVar1 + 0x14);
   }
   else {
-    *param_3 = *(float *)(param_2 + 0xc) - *(float *)(iVar1 + 0xc);
-    *param_4 = *(float *)(param_2 + 0x10) - (float)((double)*(float *)(iVar1 + 0x10) + param_1);
-    *param_5 = *(float *)(param_2 + 0x14) - *(float *)(iVar1 + 0x14);
+    *param_3 = *(float *)(param_2 + 0x18) - *(float *)(iVar1 + 0x18);
+    *param_4 = *(float *)(param_2 + 0x1c) - (*(float *)(iVar1 + 0x1c) + param_1);
+    *param_5 = *(float *)(param_2 + 0x20) - *(float *)(iVar1 + 0x20);
   }
   if (param_6 != (float *)0x0) {
     *param_6 = *param_3 * *param_3 + *param_5 * *param_5;
-    if ((double)lbl_803E22B0 < (double)*param_6) {
-      dVar2 = FUN_80293900((double)*param_6);
-      *param_6 = (float)dVar2;
+    if (*param_6 > lbl_803E1630) {
+      *param_6 = sqrtf(*param_6);
     }
-    if (*param_6 < lbl_803E2300) {
-      *param_6 = lbl_803E2300;
+    if (*param_6 < lbl_803E1680) {
+      *param_6 = lbl_803E1680;
     }
   }
   return;
