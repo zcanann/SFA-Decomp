@@ -2646,12 +2646,14 @@ void ObjList_FindNearestObjectByDefNo(undefined4 param_1,undefined4 param_2,floa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4 ObjList_ContainsObject(int param_1)
 {
   int *piVar1;
   int local_18;
   int local_14 [4];
-  
+
   piVar1 = (int *)FUN_80017b00(local_14,&local_18);
   local_14[0] = 0;
   while( true ) {
@@ -2664,6 +2666,8 @@ undefined4 ObjList_ContainsObject(int param_1)
   }
   return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2678,11 +2682,13 @@ undefined4 ObjList_ContainsObject(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjPath_GetPointWorldPositionArray(undefined4 param_1,undefined4 param_2,int param_3,float *param_4)
 {
   int iVar1;
   undefined8 uVar2;
-  
+
   uVar2 = FUN_80286840();
   for (iVar1 = 0; iVar1 < param_3; iVar1 = iVar1 + 1) {
     ObjPath_GetPointWorldPosition((int)((ulonglong)uVar2 >> 0x20), (int)uVar2 + iVar1, param_4,
@@ -2691,6 +2697,8 @@ void ObjPath_GetPointWorldPositionArray(undefined4 param_1,undefined4 param_2,in
   }
   FUN_8028688c();
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
