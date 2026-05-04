@@ -2533,6 +2533,10 @@ main/audio/synth_constants.c:
 dolphin/MSL_C/PPCEABI/bare/H/common_float_tables.c:
 	.data       start:0x80332A28 end:0x80332C78
 
+dolphin/MSL_C/PPCEABI/bare/H/exponentialsf.c:
+	.text       start:0x80294BB8 end:0x80295334
+	.data       start:0x80332C78 end:0x80332EC0
+
 dolphin/TRK_MINNOW_DOLPHIN/msghndlr_tables.c:
 	.data       start:0x80332EF0 end:0x80332F48
 
@@ -2541,9 +2545,6 @@ dolphin/TRK_MINNOW_DOLPHIN/targimpl_tables.c:
 
 dolphin/TRK_MINNOW_DOLPHIN/mpc_7xx_603e_tables.c:
 	.data       start:0x80332F78 end:0x80332FC0
-
-dolphin/MSL_C/PPCEABI/bare/H/e_pow.c:
-	.text       start:0x80294BB8 end:0x80295334
 
 main/unknown/autos/placeholder_80295318.c:
 	.text       start:0x80295334 end:0x802BACC0
