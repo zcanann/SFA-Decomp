@@ -135,4 +135,15 @@ void FUN_80204f20(undefined4 param_1);
 void FUN_80204f7c(int param_1);
 void FUN_802051e0(uint param_1);
 
+extern char sDoorswitchInitNoLongerSupported[];
+
+int doorswitch_getExtraSize(void);
+void doorswitch_free(void);
+void doorswitch_render(void);
+void doorswitch_hitDetect(void);
+void doorswitch_update(void);
+void doorswitch_init(void);
+void doorswitch_release(void);
+void doorswitch_initialise(void);
+
 #endif /* MAIN_DLL_ANIM_H_ */

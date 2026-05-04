@@ -4165,7 +4165,6 @@ extern void fn_80203C78(void);
 void fn_80203C58(void) { fn_80203C78(); }
 
 /* OSReport(string) wrappers. */
-extern char sDoorswitchInitNoLongerSupported[];
 extern void OSReport(const char *fmt, ...);
 #pragma scheduling off
 #pragma peephole off

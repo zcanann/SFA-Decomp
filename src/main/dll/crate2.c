@@ -161,7 +161,6 @@ int fn_80208494(void) { return 0x0; }
 void dfpstatue1_update(void) { dfpstatue1_updateState(0,0.0,0.0,0,0,0,0,0); }
 
 /* OSReport(string) wrappers. */
-extern char sDfperchwitchInitNoLongerSupported[];
 extern void OSReport(const char *fmt, ...);
 #pragma scheduling off
 #pragma peephole off
