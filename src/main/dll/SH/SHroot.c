@@ -173,27 +173,27 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
     break;
   case SHTHORNTAIL_LOCOMOTION_2:
     gameBit = GameBit_Get(0x9e);
-    if (gameBit == 0) {
+    if (gameBit != 0) {
       runtime->impactSfxTable =
-          levelControlTables + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC2_CLEAR +
+          levelControlTables + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC2_SET +
           config->impactSfxVariant * 2;
     }
     else {
       runtime->impactSfxTable =
-          levelControlTables + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC2_SET +
+          levelControlTables + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC2_CLEAR +
           config->impactSfxVariant * 2;
     }
     break;
   case SHTHORNTAIL_LOCOMOTION_3:
     gameBit = GameBit_Get(0x193);
-    if (gameBit == 0) {
+    if (gameBit != 0) {
       runtime->impactSfxTable =
-          levelControlTables + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC3_CLEAR +
+          levelControlTables + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC3_SET +
           config->impactSfxVariant * 2;
     }
     else {
       runtime->impactSfxTable =
-          levelControlTables + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC3_SET +
+          levelControlTables + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC3_CLEAR +
           config->impactSfxVariant * 2;
     }
     break;
