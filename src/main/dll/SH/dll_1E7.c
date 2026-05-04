@@ -191,49 +191,49 @@ void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
 uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *runtime,
                                  SHthorntailConfig *config)
 {
-  short sVar1;
-  int iVar2;
-  uint uVar3;
+  short angleDelta;
+  int value;
+  uint nextState;
   s16 facingAngle;
   s8 behaviorState;
   f32 distanceSq;
-  short *obj;
+  short *objWords;
 
-  obj = (short *)object;
+  objWords = (short *)object;
   if (config->leashRadiusByte != '\0') {
-    iVar2 = fn_8002B9EC();
-    distanceSq = fn_8002166C((Vec *)(obj + 0xc),(Vec *)(iVar2 + 0x18));
+    value = fn_8002B9EC();
+    distanceSq = fn_8002166C((Vec *)(objWords + 0xc),(Vec *)(value + 0x18));
     if (distanceSq < lbl_803E5424) {
       behaviorState = runtime->behaviorState;
       if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
           (behaviorState <= SHTHORNTAIL_STATE_MOVE_5)) {
-        uVar3 = SHTHORNTAIL_STATE_TURN_HOME;
+        nextState = SHTHORNTAIL_STATE_TURN_HOME;
       }
       else {
-        uVar3 = SHTHORNTAIL_STATE_CLOSE_ATTACK;
+        nextState = SHTHORNTAIL_STATE_CLOSE_ATTACK;
       }
-      return uVar3;
+      return nextState;
     }
-    distanceSq = fn_8002166C((Vec *)(obj + 0xc),&config->homePos);
+    distanceSq = fn_8002166C((Vec *)(objWords + 0xc),&config->homePos);
     if (distanceSq > (float)(s32)(config->leashRadiusByte * config->leashRadiusByte)) {
-      iVar2 = fn_800217C0(*(float *)(obj + 6) - config->homePos.x,
-                          *(float *)(obj + 10) - config->homePos.z);
-      facingAngle = *obj;
-      sVar1 = (short)iVar2 - (u16)facingAngle;
-      if (0x8000 < sVar1) {
-        sVar1 = sVar1 - 0xFFFF;
+      value = fn_800217C0(*(float *)(objWords + 6) - config->homePos.x,
+                          *(float *)(objWords + 10) - config->homePos.z);
+      facingAngle = *objWords;
+      angleDelta = (short)value - (u16)facingAngle;
+      if (0x8000 < angleDelta) {
+        angleDelta = angleDelta - 0xFFFF;
       }
-      if (sVar1 < -0x8000) {
-        sVar1 = sVar1 + 0xFFFF;
+      if (angleDelta < -0x8000) {
+        angleDelta = angleDelta + 0xFFFF;
       }
-      iVar2 = (int)sVar1;
-      if (iVar2 < 0) {
-        iVar2 = -iVar2;
+      value = (int)angleDelta;
+      if (value < 0) {
+        value = -value;
       }
-      if (0x20 < iVar2) {
-        iVar2 = fn_800217C0(*(float *)(obj + 6) - config->homePos.x,
-                            *(float *)(obj + 10) - config->homePos.z);
-        OSReport(sSHthorntailAngleYawDebug,(u16)iVar2,facingAngle);
+      if (0x20 < value) {
+        value = fn_800217C0(*(float *)(objWords + 6) - config->homePos.x,
+                            *(float *)(objWords + 10) - config->homePos.z);
+        OSReport(sSHthorntailAngleYawDebug,(u16)value,facingAngle);
         behaviorState = runtime->behaviorState;
         if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
             (behaviorState <= SHTHORNTAIL_STATE_MOVE_5)) {
@@ -242,22 +242,23 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
         return SHTHORNTAIL_STATE_CLOSE_ATTACK;
       }
     }
-    iVar2 = fn_8005A10C((Vec *)(obj + 6),*(float *)(obj + 0x54) * *(float *)(obj + 4));
-    if (iVar2 == 0) {
-      uVar3 = SHTHORNTAIL_STATE_CLOSE_ATTACK;
+    value = fn_8005A10C((Vec *)(objWords + 6),
+                        *(float *)(objWords + 0x54) * *(float *)(objWords + 4));
+    if (value == 0) {
+      nextState = SHTHORNTAIL_STATE_CLOSE_ATTACK;
     }
     else {
       behaviorState = runtime->behaviorState;
       if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
           (behaviorState <= SHTHORNTAIL_STATE_MOVE_5)) {
-        uVar3 = fn_800221A0(SHTHORNTAIL_STATE_MOVE_3,SHTHORNTAIL_STATE_MOVE_5);
-        uVar3 = uVar3 & 0xff;
+        nextState = fn_800221A0(SHTHORNTAIL_STATE_MOVE_3,SHTHORNTAIL_STATE_MOVE_5);
+        nextState = nextState & 0xff;
       }
       else {
-        uVar3 = SHTHORNTAIL_STATE_MOVE_2;
+        nextState = SHTHORNTAIL_STATE_MOVE_2;
       }
     }
-    return uVar3;
+    return nextState;
   }
   return SHTHORNTAIL_STATE_CLOSE_ATTACK;
 }
