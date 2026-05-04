@@ -2375,6 +2375,8 @@ void ObjLink_AttachChild(int param_1,int param_2,ushort param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjContact_DispatchCallbacks(void)
 {
   bool bVar1;
@@ -2385,7 +2387,7 @@ void ObjContact_DispatchCallbacks(void)
   uint uVar6;
   uint uVar7;
   undefined8 uVar8;
-  
+
   uVar8 = FUN_8028683c();
   iVar3 = (int)((ulonglong)uVar8 >> 0x20);
   iVar4 = (int)uVar8;
@@ -2407,6 +2409,8 @@ void ObjContact_DispatchCallbacks(void)
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2783,11 +2787,13 @@ void ObjPath_GetPointLocalMtx(int param_1,int param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjPath_GetPointModelMtx(int param_1,int param_2)
 {
   int *piVar1;
   int iVar2;
-  
+
   piVar1 = (int *)FUN_80017a54(param_1);
   iVar2 = (int)*(char *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) + param_2 * 0x18 +
                          (int)*(char *)(param_1 + 0xad) + 0x12);
@@ -2799,6 +2805,8 @@ void ObjPath_GetPointModelMtx(int param_1,int param_2)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
