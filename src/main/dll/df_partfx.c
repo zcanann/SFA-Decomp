@@ -1423,10 +1423,10 @@ void FUN_800d85f4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     }
     dVar4 = (double)*(float *)(param_10 + 0x284);
     if (dVar4 <= (double)lbl_803E11F0) {
-      Object_ObjAnimSetSecondaryBlendMove((int)param_9,param_11,(short)uVar2);
+      Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)param_9,param_11,(short)uVar2);
     }
     else {
-      Object_ObjAnimSetSecondaryBlendMove((int)param_9,param_12,(short)uVar2);
+      Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)param_9,param_12,(short)uVar2);
     }
   }
   return;

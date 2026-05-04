@@ -5,11 +5,13 @@
 
 typedef struct ObjAnimDef ObjAnimDef;
 typedef struct ObjAnimState ObjAnimState;
+typedef struct ObjAnimComponent ObjAnimComponent;
 typedef struct ObjAnimEventList ObjAnimEventList;
 
-void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,uint moveId,s16 eventState);
-void Object_ObjAnimSetPrimaryBlendMove(int objAnim,uint moveId,int eventState);
-void Object_ObjAnimSetSecondaryBlendMove(int objAnim,uint moveId,int eventState);
+void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimState *state,
+                          uint moveId,s16 eventState);
+void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int eventState);
+void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int eventState);
 undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim,int events);
 undefined4 Object_ObjAnimSetMoveProgress(f32 moveProgress,int objAnim);
 undefined4 Object_ObjAnimSetMove(f32 moveProgress,int objAnim,int moveId,int flags);

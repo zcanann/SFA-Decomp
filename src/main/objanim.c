@@ -37,7 +37,8 @@ extern f32 lbl_803DE90C;
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,uint moveId,s16 eventState)
+void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimState *state,
+                          uint moveId,s16 eventState)
 {
   float frameValue;
   int frameType;
@@ -110,11 +111,11 @@ void ObjAnim_SetBlendMove(int objAnim,ObjAnimDef *animDef,ObjAnimState *state,ui
  */
 #pragma scheduling off
 #pragma peephole off
-void Object_ObjAnimSetPrimaryBlendMove(int objAnim,uint moveId,int eventState)
+void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int eventState)
 {
   ObjAnimBank *bank;
 
-  bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
+  bank = ObjAnim_GetActiveBank(objAnim);
   if (bank->animDef->moveCount != 0) {
     ObjAnim_SetBlendMove(objAnim,bank->animDef,bank->activeState,moveId,eventState);
   }
@@ -134,11 +135,11 @@ void Object_ObjAnimSetPrimaryBlendMove(int objAnim,uint moveId,int eventState)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void Object_ObjAnimSetSecondaryBlendMove(int objAnim,uint moveId,int eventState)
+void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int eventState)
 {
   ObjAnimBank *bank;
 
-  bank = ObjAnim_GetActiveBank((ObjAnimComponent *)objAnim);
+  bank = ObjAnim_GetActiveBank(objAnim);
   if (bank->animDef->moveCount != 0) {
     ObjAnim_SetBlendMove(objAnim,bank->animDef,bank->currentState,moveId,eventState);
   }
