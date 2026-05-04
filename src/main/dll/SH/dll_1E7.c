@@ -64,6 +64,8 @@ extern f32 FLOAT_803e60b8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj)
 {
   SHthorntailObject **objects;
@@ -116,6 +118,8 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj)
   }
   return linkedEventPending;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -183,6 +187,7 @@ void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *runtime,
                                  SHthorntailConfig *config)
 {
@@ -259,4 +264,5 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
   }
   return uVar3;
 }
+#pragma peephole reset
 #pragma scheduling reset
