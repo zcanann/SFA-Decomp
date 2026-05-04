@@ -10,9 +10,9 @@ extern u8 g_unk_800030E2 AT_ADDRESS(0x800030E2);
 extern u32 g_unk_817FFFF8 AT_ADDRESS(0x817FFFF8);
 extern u32 g_unk_817FFFFC AT_ADDRESS(0x817FFFFC);
 
-static void* lbl_803DDE50;
-static void* lbl_803DDE54;
-static volatile BOOL lbl_803DDE58[2];
+static void* SaveStart;
+static void* SaveEnd;
+static volatile BOOL Prepared[2];
 
 typedef struct {
     char date[16];
@@ -20,9 +20,9 @@ typedef struct {
     u32 size;
     u32 rebootSize;
     u32 reserved2;
-} AppLoaderStruct;
+} ApploaderHeader;
 
-static AppLoaderStruct lbl_803AD3C0 ATTRIBUTE_ALIGN(32);
+static ApploaderHeader Header ATTRIBUTE_ALIGN(32);
 
 #pragma dont_inline on
 static asm void myFunc() {
@@ -44,11 +44,11 @@ static void Run(register void (*addr)()) {
 static void Callback(s32 result, DVDCommandBlock* block) {
     (void)result;
     (void)block;
-    lbl_803DDE58[0] = TRUE;
+    Prepared[0] = TRUE;
 }
 
 static inline void ReadApploader(DVDCommandBlock* dvdCmd, void* addr, u32 offset, u32 numBytes) {
-    while (lbl_803DDE58[0] == FALSE) { }
+    while (Prepared[0] == FALSE) { }
     DVDReadAbsAsyncForBS(dvdCmd, addr, numBytes, offset + 0x2440, NULL);
 
     while (TRUE) {
@@ -88,8 +88,8 @@ void __OSReboot(u32 resetCode, u32 bootDol) {
     g_unk_817FFFFC = 0;
     g_unk_817FFFF8 = 0;
     g_unk_800030E2 = TRUE;
-    BOOT_REGION_START = (u32)lbl_803DDE50;
-    BOOT_REGION_END = (u32)lbl_803DDE54;
+    BOOT_REGION_START = (u32)SaveStart;
+    BOOT_REGION_END = (u32)SaveEnd;
     OSClearContext(&exceptionContext);
     OSSetCurrentContext(&exceptionContext);
     DVDInit();
@@ -108,10 +108,10 @@ void __OSReboot(u32 resetCode, u32 bootDol) {
 
     offset = 0;
     numBytes = 32;
-    ReadApploader(&dvdCmd, (void*)&lbl_803AD3C0, offset, numBytes);
+    ReadApploader(&dvdCmd, (void*)&Header, offset, numBytes);
 
-    offset = lbl_803AD3C0.size + 0x20;
-    numBytes = OSRoundUp32B(lbl_803AD3C0.rebootSize);
+    offset = Header.size + 0x20;
+    numBytes = OSRoundUp32B(Header.rebootSize);
     ReadApploader(&dvdCmd2, OS_BOOTROM_ADDR, offset, numBytes);
 
     ICInvalidateRange(OS_BOOTROM_ADDR, numBytes);
@@ -119,6 +119,6 @@ void __OSReboot(u32 resetCode, u32 bootDol) {
 }
 
 void OSSetSaveRegion(void* start, void* end) {
-    lbl_803DDE50 = start;
-    lbl_803DDE54 = end;
+    SaveStart = start;
+    SaveEnd = end;
 }
