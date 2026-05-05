@@ -1277,7 +1277,7 @@ void fn_8012DDD8(s32 fade_target, u8 idx, u8 flags, u8 q)
 #pragma peephole off
 void fn_8012BE84(void)
 {
-    u32 buttons;
+    s32 buttons;
     u8  prev_state;
     u8  buf[16];
 
