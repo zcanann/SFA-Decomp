@@ -54,7 +54,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
 {
   int playerObj;
   int randomIdleWait;
-  uint closeToPlayer;
+  u8 closeToPlayer;
   uint gameBit;
   int triggerIsSet;
 
