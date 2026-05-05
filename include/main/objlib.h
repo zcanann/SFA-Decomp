@@ -39,11 +39,9 @@ void ObjHits_AddContactObject(int param_1,int param_2);
 int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *outSphereIndex,
                 uint *outHitVolume,float *outHitPosX,float *outHitPosY,float *outHitPosZ);
 int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,uint *outHitVolume);
-void ObjHitReact_UpdateResetObjects(undefined4 param_1,undefined4 param_2,undefined4 param_3,
-                                    int param_4,undefined4 param_5,int param_6,
-                                    undefined4 param_7,undefined4 param_8);
+void ObjHitReact_UpdateResetObjects(void);
 void ObjHits_ResetWorkBuffers(void);
-undefined4 ObjHitReact_GetResetObjects(undefined4 *param_1);
+int *ObjHitReact_GetResetObjects(undefined4 *param_1);
 void ObjHits_InitWorkBuffers(void);
 uint ObjGroup_ContainsObject(int obj,int group);
 void ObjGroup_FindNearestObjectToPoint(undefined4 param_1,undefined4 param_2,float *param_3);

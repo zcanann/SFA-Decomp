@@ -116,6 +116,8 @@ typedef struct ObjAnimComponent {
   s16 activeMove;
   u8 padA4[0xAD - 0xA4];
   s8 bankIndex;
+  s8 activeHitboxMode;
+  s8 resetHitboxMode;
 } ObjAnimComponent;
 
 typedef struct ObjAnimEventTable {

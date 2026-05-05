@@ -27,7 +27,7 @@ extern undefined4 FUN_80017970();
 extern undefined4 FUN_80017a50();
 extern undefined4 FUN_80017a54();
 extern void *Obj_GetPlayerObject(void);
-extern undefined4 FUN_80017ac0();
+extern void Obj_UpdateObject(ObjAnimComponent *obj,void *modelInstance);
 extern int ObjList_GetObjects();
 extern void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2);
 extern undefined4 FUN_80045328();
@@ -69,8 +69,8 @@ extern undefined4 DAT_803dd848;
 extern undefined4 DAT_803dd850;
 extern undefined4 DAT_803dd858;
 extern undefined4 lbl_803DCBDC;
-extern undefined4 DAT_803dd860;
-extern undefined4 DAT_803dd864;
+extern int gObjHitReactResetObjectCount;
+extern int *gObjHitReactResetObjects;
 extern u8 gObjGroupObjectCount;
 extern undefined4 DAT_803dd878;
 extern undefined4 DAT_803dd880;
@@ -97,8 +97,8 @@ extern f32 lbl_803DF638;
 extern int iRam803dd84c;
 extern int iRam803dd854;
 
-#define gObjHitsResetObjectCount DAT_803dd860
-#define gObjHitsResetObjects DAT_803dd864
+#define gObjHitsResetObjectCount gObjHitReactResetObjectCount
+#define gObjHitsResetObjects gObjHitReactResetObjects
 extern char sObjMsgOverflowInObjectWarning[];
 
 typedef struct ObjMsgEntry {
@@ -1338,26 +1338,24 @@ int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHitReact_UpdateResetObjects(undefined4 param_1,undefined4 param_2,undefined4 param_3,
-                                    int param_4,undefined4 param_5,int param_6,
-                                    undefined4 param_7,undefined4 param_8)
+void ObjHitReact_UpdateResetObjects(void)
 {
-  short *psVar1;
+  ObjAnimComponent *obj;
   int iVar2;
   int iVar3;
   
   iVar3 = 0;
   for (iVar2 = 0; iVar2 < gObjHitsResetObjectCount; iVar2 = iVar2 + 1) {
-    psVar1 = *(short **)(gObjHitsResetObjects + iVar3);
-    if (((*(uint *)(*(int *)(psVar1 + 0x28) + 0x44) & 0x40) == 0) &&
-       (*(char *)(psVar1 + 0x57) != 'd')) {
-      FUN_80017ac0(psVar1,*(int *)(psVar1 + 0x28),param_3,param_4,param_5,param_6,param_7,param_8);
+    obj = *(ObjAnimComponent **)((int)gObjHitsResetObjects + iVar3);
+    if (((*(uint *)((int)obj->modelInstance + 0x44) & 0x40) == 0) &&
+       (obj->activeHitboxMode != 'd')) {
+      Obj_UpdateObject(obj,obj->modelInstance);
     }
     iVar3 = iVar3 + 4;
   }
   iVar3 = 0;
   for (iVar2 = 0; iVar2 < gObjHitsResetObjectCount; iVar2 = iVar2 + 1) {
-    ObjHitbox_UpdateRotatedBounds(*(ushort **)(gObjHitsResetObjects + iVar3),1);
+    ObjHitbox_UpdateRotatedBounds(*(ushort **)((int)gObjHitsResetObjects + iVar3),1);
     iVar3 = iVar3 + 4;
   }
   return;
@@ -1432,7 +1430,7 @@ void ObjHits_ResetWorkBuffers(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 ObjHitReact_GetResetObjects(undefined4 *param_1)
+int *ObjHitReact_GetResetObjects(undefined4 *param_1)
 {
   *param_1 = gObjHitsResetObjectCount;
   return gObjHitsResetObjects;
@@ -1455,7 +1453,7 @@ undefined4 ObjHitReact_GetResetObjects(undefined4 *param_1)
 #pragma peephole off
 void ObjHits_InitWorkBuffers(void)
 {
-  gObjHitsResetObjects = FUN_80017830(OBJHITREACT_MAX_RESET_OBJECTS * sizeof(int),0xe);
+  gObjHitsResetObjects = (int *)FUN_80017830(OBJHITREACT_MAX_RESET_OBJECTS * sizeof(int),0xe);
   lbl_803DCBDC = FUN_80017830(3000,0xe);
   DAT_803dd858 = FUN_80017830(0x1900,0xe);
   DAT_803dd850 = FUN_80017830(0x400,0xe);
