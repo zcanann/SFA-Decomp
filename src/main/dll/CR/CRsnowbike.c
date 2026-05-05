@@ -272,26 +272,27 @@ void FUN_801db5b8(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_801db670(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_801db670(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   byte bVar2;
+  byte eventId;
   uint uVar1;
   int iVar3;
   int iVar4;
   
   iVar4 = *(int *)(param_1 + 0xb8);
-  *(undefined *)(param_3 + 0x56) = 0;
-  for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar3 = iVar3 + 1) {
-    bVar2 = *(byte *)(param_3 + iVar3 + 0x81);
-    if (bVar2 == 2) {
+  *(undefined *)((int)animUpdate + 0x56) = 0;
+  for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1) {
+    eventId = animUpdate->eventIds[iVar3];
+    if (eventId == 2) {
       FUN_801db7b4(param_1,5);
     }
-    else if (bVar2 < 2) {
-      if (bVar2 != 0) {
+    else if (eventId < 2) {
+      if (eventId != 0) {
         FUN_801db7b4(param_1,7);
       }
     }
-    else if (bVar2 < 4) {
+    else if (eventId < 4) {
       *(byte *)(iVar4 + 0x1f) = *(byte *)(iVar4 + 0x1f) | 2;
     }
   }
