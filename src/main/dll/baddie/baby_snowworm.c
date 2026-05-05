@@ -1044,7 +1044,7 @@ extern s16 lbl_803DD786;
 extern s16 lbl_803DD78C;
 extern s32  fn_8002BDF4(s32 size, void* type);
 extern void* fn_8002DF90(s32, s32, s32, s32, s32);
-extern void fn_8002AC30(void*, s32, s32, s32, s32, s32);
+extern void Obj_SetModelColorFadeRecursive(void*, s32, s32, s32, s32, s32);
 extern void fn_80014B18(s32);
 
 extern void* lbl_803DCCF0;
@@ -1428,7 +1428,7 @@ void fn_80129CBC(f32 fov, f32 x, f32 y)
  *
  * After the slot pass, clears the three halfword counters at
  * lbl_803DD784/_786/_78C, asks the global tag system to register tag
- * id 0xf via fn_80014B18, runs fn_8002AC30(obj2, 0, 0, 0, 0, 0) when
+ * id 0xf via fn_80014B18, runs Obj_SetModelColorFadeRecursive(obj2, 0, 0, 0, 0, 0) when
  * the object handle from fn_8002B9EC was non-null, then plays the
  * scene-down trio: Music_Trigger(0x23, 1) plus two SFX kicks (0x3e5 and
  * 0xff) on object 0.
@@ -1463,7 +1463,7 @@ void fn_8012C558(void)
     lbl_803DD78C = 0;
     fn_80014B18(0xf);
     if (obj != NULL) {
-        fn_8002AC30(fn_8002B9EC(), 0, 0, 0, 0, 0);
+        Obj_SetModelColorFadeRecursive(fn_8002B9EC(), 0, 0, 0, 0, 0);
     }
     Music_Trigger(0x23, 1);
     Sfx_PlayFromObject(0, 0x3e5);
