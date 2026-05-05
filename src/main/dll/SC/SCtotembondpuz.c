@@ -1,24 +1,23 @@
 #include "ghidra_import.h"
 #include "main/dll/SC/SCtotembondpuz.h"
 
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
-extern undefined4 ObjHits_EnableObject();
-extern undefined4 FUN_801d7698();
+extern u32 GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId, int value);
+extern void fn_801D7ED4(void *p1, int p2, int p3, int p4, s16 p5, int p6);
 
 /*
  * --INFO--
  *
- * Function: FUN_801d8060
+ * Function: fn_801D8060
  * EN v1.0 Address: 0x801D8060
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801D80F0
- * EN v1.1 Size: 160b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
-void FUN_801d8060(short *param_1,int param_2)
+#pragma scheduling off
+#pragma peephole off
+void fn_801D8060(void *p1, int p2, int p3, int p4, s16 p5, int p6)
 {
+    GameBit_Set(p5, !GameBit_Get(p5));
+    fn_801D7ED4(p1, p2, p3, p4, p5, p6);
+    GameBit_Set(p5, !GameBit_Get(p5));
 }
+#pragma peephole reset
+#pragma scheduling reset
