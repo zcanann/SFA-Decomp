@@ -3657,14 +3657,14 @@ void fn_80137998(void)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int  fn_8000B578(u8*, int);
+extern int  Sfx_IsPlayingFromObjectChannel(u8*, int);
 extern void fn_800393F8(u8*, u8*, int, int, int, int);
 
 /* EN v1.0 0x80138920  size: 192b  Drop-anim trigger guard. Returns 1
  * (and dispatches the drop anim via fn_800393F8) only when:
  *   - bit 0x40 of obj->_b8->_58 is set,
  *   - the target halfword obj->_a0 is OUTSIDE the [41, 47] window,
- *   - fn_8000B578(obj, 16) returns 0. */
+ *   - Sfx_IsPlayingFromObjectChannel(obj, 16) returns 0. */
 #pragma scheduling off
 #pragma peephole off
 int fn_80138920(u8* obj, int arg1, int arg2)
@@ -3675,7 +3675,7 @@ int fn_80138920(u8* obj, int arg1, int arg2)
         s16 v = *(s16*)(obj + 0xa0);
         if (v < 48 && v >= 41) return 0;
     }
-    if (fn_8000B578(obj, 16) != 0) return 0;
+    if (Sfx_IsPlayingFromObjectChannel(obj, 16) != 0) return 0;
     fn_800393F8(obj, b + 936, arg1, arg2, -1, 0);
     return 1;
 }

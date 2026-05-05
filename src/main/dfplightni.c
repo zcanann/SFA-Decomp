@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 
-extern int fn_8000B4D0(u8 *obj,int param_2,int param_3);
+extern int Sfx_PlayFromObjectLimited(u8 *obj,int sfxId,int maxCount);
 extern u32 GameBit_Get(int eventId);
 extern u32 fn_800221A0(int min,int max);
 extern void fn_80023800(u32 handle);
@@ -154,7 +154,7 @@ void dfplightni_update(u8 *obj)
         if (eventBlocked == 0) {
           double clampX;
           double clampY;
-          fn_8000B4D0(obj,0x4c3,2);
+          Sfx_PlayFromObjectLimited(obj,0x4c3,2);
           if (eventActive == 0) {
             clampY = (radiusY < (double)lbl_803E6500) ? (double)lbl_803E6500
                        : ((double)lbl_803E6504 < radiusY) ? (double)lbl_803E6504 : radiusY;
