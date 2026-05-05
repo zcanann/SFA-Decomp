@@ -23,6 +23,7 @@ extern uint fn_80022E24();
 extern uint fn_80022E3C(uint param_1);
 extern uint FUN_800177dc();
 extern undefined4 FUN_80017830();
+extern void *mmAlloc(int size,int heap,int flags);
 extern undefined4 FUN_80017970();
 extern undefined4 FUN_80017a50();
 extern undefined4 FUN_80017a54();
@@ -65,9 +66,9 @@ typedef struct ObjTriggerInterface {
 } ObjTriggerInterface;
 
 extern ObjTriggerInterface **lbl_803DCA68;
-extern undefined4 DAT_803dd848;
-extern undefined4 DAT_803dd850;
-extern undefined4 DAT_803dd858;
+extern void *lbl_803DCBC8[2];
+extern void *lbl_803DCBD0[2];
+extern void *lbl_803DCBD8;
 extern undefined4 lbl_803DCBDC;
 extern int gObjHitReactResetObjectCount;
 extern int *gObjHitReactResetObjects;
@@ -77,10 +78,10 @@ extern undefined4 DAT_803dd880;
 extern f64 DOUBLE_803df5c0;
 extern f64 DOUBLE_803df640;
 extern f32 lbl_803DC074;
-extern f32 lbl_803DD868;
+extern f32 lbl_803DCBE8;
+extern f32 lbl_803DE914;
 extern f32 lbl_803DDA58;
 extern f32 lbl_803DDA5C;
-extern f32 lbl_803DF594;
 extern f32 lbl_803DF5E8;
 extern f32 lbl_803DF5F0;
 extern f32 lbl_803DF5F4;
@@ -94,8 +95,6 @@ extern f32 lbl_803DF628;
 extern f32 lbl_803DF630;
 extern f32 lbl_803DF634;
 extern f32 lbl_803DF638;
-extern int iRam803dd84c;
-extern int iRam803dd854;
 
 #define gObjHitsResetObjectCount gObjHitReactResetObjectCount
 #define gObjHitsResetObjects gObjHitReactResetObjects
@@ -1453,19 +1452,19 @@ int *ObjHitReact_GetResetObjects(undefined4 *param_1)
 #pragma peephole off
 void ObjHits_InitWorkBuffers(void)
 {
-  gObjHitsResetObjects = (int *)FUN_80017830(OBJHITREACT_MAX_RESET_OBJECTS * sizeof(int),0xe);
-  lbl_803DCBDC = FUN_80017830(3000,0xe);
-  DAT_803dd858 = FUN_80017830(0x1900,0xe);
-  DAT_803dd850 = FUN_80017830(0x400,0xe);
-  iRam803dd854 = FUN_80017830(0x400,0xe);
-  DAT_803dd848 = FUN_80017830(0x400,0xe);
-  iRam803dd84c = FUN_80017830(0x400,0xe);
-  lbl_803DD868 = lbl_803DF594;
-  gObjHitsActiveHitVolumeObjects[0] = 0;
-  gObjHitsActiveHitVolumeObjects[1] = 0;
-  gObjHitsActiveHitVolumeObjects[2] = 0;
-  gObjHitsActiveHitVolumeObjects[3] = 0;
-  gObjHitsActiveHitVolumeObjects[4] = 0;
+  int i;
+
+  gObjHitsResetObjects = (int *)mmAlloc(OBJHITREACT_MAX_RESET_OBJECTS * sizeof(int),0xe,0);
+  lbl_803DCBDC = (undefined4)mmAlloc(3000,0xe,0);
+  lbl_803DCBD8 = mmAlloc(0x1900,0xe,0);
+  lbl_803DCBD0[0] = mmAlloc(0x400,0xe,0);
+  lbl_803DCBD0[1] = mmAlloc(0x400,0xe,0);
+  lbl_803DCBC8[0] = mmAlloc(0x400,0xe,0);
+  lbl_803DCBC8[1] = mmAlloc(0x400,0xe,0);
+  lbl_803DCBE8 = lbl_803DE914;
+  for (i = 0; i < 5; i++) {
+    gObjHitsActiveHitVolumeObjects[i] = 0;
+  }
   return;
 }
 #pragma peephole reset
