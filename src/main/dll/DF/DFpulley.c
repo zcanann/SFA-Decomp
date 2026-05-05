@@ -3,7 +3,7 @@
 
 extern uint FUN_80017690();
 extern uint FUN_80017760();
-extern undefined4 FUN_80035b84();
+extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined8 ObjGroup_RemoveObject();
@@ -34,7 +34,7 @@ void FUN_801c0e60(int param_1,undefined4 param_2,int param_3)
   
   iVar2 = *(int *)(param_1 + 0xb8);
   ObjHits_SetHitVolumeSlot(param_1,0,0,0);
-  FUN_80035b84(param_1,0);
+  ObjHitbox_SetSphereRadius(param_1,0);
   ObjHits_DisableObject(param_1);
   if (param_3 == 0) {
     uVar1 = FUN_80017760(0xf0,0x1e0);

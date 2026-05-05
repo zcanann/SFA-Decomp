@@ -3,7 +3,7 @@
 
 extern uint FUN_80017690();
 extern undefined4 FUN_800305c4();
-extern undefined4 FUN_80035b84();
+extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
@@ -64,7 +64,7 @@ void treasurechest_update(short *param_1,int param_2)
   dVar4 = (double)FLOAT_803e4854;
 LAB_8018ab40:
   if (*(int *)(param_1 + 0x2a) != 0) {
-    FUN_80035b84((int)param_1,
+    ObjHitbox_SetSphereRadius((int)param_1,
                  (short)(int)((double)(float)((double)CONCAT44(0x43300000,
                                                                (int)*(short *)(*(int *)(param_1 +
                                                                                        0x2a) + 0x5a)

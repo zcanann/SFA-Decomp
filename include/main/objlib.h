@@ -13,8 +13,8 @@ void ObjHitReact_LoadMoveEntries(undefined8 param_1,double param_2,double param_
 void ObjHitReact_InitState(undefined4 param_1,undefined4 param_2,int param_3,uint param_4,int param_5);
 void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3);
 void ObjHits_SetTargetMask(int param_1,undefined param_2);
-void FUN_80035b84(int param_1,undefined2 param_2);
-void FUN_80035d58(int param_1,undefined2 param_2,short param_3,short param_4);
+void ObjHitbox_SetSphereRadius(int param_1,undefined2 param_2);
+void ObjHitbox_SetCapsuleBounds(int param_1,undefined2 param_2,short param_3,short param_4);
 void ObjHits_ClearHitVolumes(int param_1);
 void ObjHits_SetHitVolumeMasks(int param_1,int param_2,int param_3,int param_4);
 void ObjHits_SetHitVolumeSlot(u32 param_1,int param_2,int param_3,int param_4);

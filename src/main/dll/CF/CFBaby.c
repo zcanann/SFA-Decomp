@@ -22,8 +22,8 @@ extern undefined4 FUN_80017ad0();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 FUN_800305c4();
-extern undefined4 FUN_80035b84();
-extern undefined4 FUN_80035d58();
+extern undefined4 ObjHitbox_SetSphereRadius();
+extern undefined4 ObjHitbox_SetCapsuleBounds();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined8 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_MarkObjectPositionDirty();
@@ -593,7 +593,7 @@ void FUN_80187ee0(undefined2 *param_1,int param_2)
   if (*(float *)(param_1 + 4) <= FLOAT_803e47c0) {
     *(float *)(param_1 + 4) = FLOAT_803e47c0;
   }
-  FUN_80035d58((int)param_1,(short)(int)(FLOAT_803e47c4 * *(float *)(param_1 + 4)),0,
+  ObjHitbox_SetCapsuleBounds((int)param_1,(short)(int)(FLOAT_803e47c4 * *(float *)(param_1 + 4)),0,
                (short)(int)(FLOAT_803e47c8 * *(float *)(param_1 + 4)));
   *(float *)(pbVar2 + 0x10) = FLOAT_803e47cc;
   FUN_800305c4((double)FLOAT_803e4798,(int)param_1);
@@ -705,7 +705,7 @@ void FUN_801880e0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if (iVar4 != 0) {
       (**(code **)(*DAT_803dd740 + 0x30))(param_9,iVar5);
       FUN_80006824(param_9,0x48);
-      FUN_80035b84(param_9,0x28);
+      ObjHitbox_SetSphereRadius(param_9,0x28);
       uVar6 = ObjHits_SetHitVolumeSlot(param_9,5,4,0);
       uVar2 = FUN_80017ae8();
       if ((uVar2 & 0xff) != 0) {

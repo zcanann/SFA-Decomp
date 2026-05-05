@@ -22,7 +22,7 @@ extern uint FUN_80017ae8();
 extern int FUN_80017b00();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
-extern undefined4 FUN_80035b84();
+extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
@@ -1925,7 +1925,7 @@ void FUN_80160464(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                  (double)(*(float *)(param_9 + 0x14) * lbl_803DC074),
                  (double)(*(float *)(param_9 + 0x16) * lbl_803DC074),(int)param_9);
     ObjHits_SetHitVolumeSlot((int)param_9,10,1,0);
-    FUN_80035b84((int)param_9,5);
+    ObjHitbox_SetSphereRadius((int)param_9,5);
     ObjHits_EnableObject((int)param_9);
     if ((*(int *)(*(int *)(param_9 + 0x2a) + 0x50) == 0) ||
        ((iVar1 = FUN_80017a98(), *(int *)(*(int *)(param_9 + 0x2a) + 0x50) != iVar1 &&

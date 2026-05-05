@@ -374,7 +374,7 @@ void ObjHits_SetTargetMask(int param_1,undefined param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80035b84
+ * Function: ObjHitbox_SetSphereRadius
  * EN v1.0 Address: 0x80035B84
  * EN v1.0 Size: 468b
  * EN v1.1 Address: 0x80035A6C
@@ -384,7 +384,7 @@ void ObjHits_SetTargetMask(int param_1,undefined param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80035b84(int param_1,undefined2 param_2)
+void ObjHitbox_SetSphereRadius(int param_1,undefined2 param_2)
 {
   double dVar1;
   uint uVar2;
@@ -441,7 +441,7 @@ void FUN_80035b84(int param_1,undefined2 param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80035d58
+ * Function: ObjHitbox_SetCapsuleBounds
  * EN v1.0 Address: 0x80035D58
  * EN v1.0 Size: 592b
  * EN v1.1 Address: 0x80035C48
@@ -451,7 +451,7 @@ void FUN_80035b84(int param_1,undefined2 param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80035d58(int param_1,undefined2 param_2,short param_3,short param_4)
+void ObjHitbox_SetCapsuleBounds(int param_1,undefined2 param_2,short param_3,short param_4)
 {
   float fVar1;
   float fVar2;

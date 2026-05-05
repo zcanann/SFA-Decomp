@@ -10,7 +10,7 @@ extern uint FUN_80017760();
 extern undefined4 FUN_80017a98();
 extern int FUN_80017af8();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_80035b84();
+extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8008112c();
@@ -106,7 +106,7 @@ void FUN_80169360(undefined8 param_1,double param_2,double param_3,undefined8 pa
        lbl_803E3D38 +
        (float)((double)CONCAT44(0x43300000,(int)*(char *)((int)uVar11 + 0x28) ^ 0x80000000) - dVar1)
        / lbl_803E3D3C;
-  FUN_80035b84(iVar2,(short)(int)(lbl_803E3D64 * *(float *)(iVar2 + 8)));
+  ObjHitbox_SetSphereRadius(iVar2,(short)(int)(lbl_803E3D64 * *(float *)(iVar2 + 8)));
   if (param_11 == 0) {
     DAT_803de710 = FUN_80006b14(0x5a);
   }

@@ -15,7 +15,7 @@ extern uint FUN_80017ae8();
 extern int FUN_80017b00();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_80035d58();
+extern undefined4 ObjHitbox_SetCapsuleBounds();
 extern undefined4 ObjHits_RecordObjectHit();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern int ObjHits_PollPriorityHitEffectWithCooldown();
@@ -303,7 +303,7 @@ void FUN_801dc6e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
                        lbl_803E6254),param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                param_9,0,0,param_12,param_13,param_14,param_15,param_16);
   FUN_8002fc3c((double)lbl_803E6224,(double)lbl_803E6224);
-  FUN_80035d58((int)param_9,(short)(int)(lbl_803E6258 * *(float *)(iVar3 + 0x38)),-5,0xff);
+  ObjHitbox_SetCapsuleBounds((int)param_9,(short)(int)(lbl_803E6258 * *(float *)(iVar3 + 0x38)),-5,0xff);
   if ((*(byte *)(iVar3 + 0x4c) & 0x80) != 0) {
     *(byte *)(iVar3 + 0x4c) = *(byte *)(iVar3 + 0x4c) | 0x20;
   }

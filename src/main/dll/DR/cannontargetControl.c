@@ -7,7 +7,7 @@ extern undefined4 FUN_8001777c();
 extern undefined4 FUN_80017a88();
 extern undefined4 FUN_80017a98();
 extern undefined4 FUN_80017ad0();
-extern undefined4 FUN_80035d58();
+extern undefined4 ObjHitbox_SetCapsuleBounds();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_MarkObjectPositionDirty();
@@ -681,7 +681,7 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
         local_40 = (longlong)(int)fVar1;
         local_38 = (longlong)(int)(-fVar1 * lbl_803E4FC0);
         local_30 = (longlong)(int)(fVar1 * lbl_803E4FC0);
-        FUN_80035d58(uVar2,(short)(int)fVar1,(short)(int)(-fVar1 * lbl_803E4FC0),
+        ObjHitbox_SetCapsuleBounds(uVar2,(short)(int)fVar1,(short)(int)(-fVar1 * lbl_803E4FC0),
                      (short)(int)(fVar1 * lbl_803E4FC0));
         if (*(int *)(iVar12 + 0x10) != 0) {
           FUN_8020a90c(*(int *)(iVar12 + 0x10));
@@ -751,7 +751,7 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(byte *)(iVar12 + 0x49) = *(byte *)(iVar12 + 0x49) | 1;
       *(ushort *)(uVar2 + 6) = *(ushort *)(uVar2 + 6) & 0xbfff;
       ObjHits_ClearHitVolumes(uVar2);
-      FUN_80035d58(uVar2,8,-2,0x19);
+      ObjHitbox_SetCapsuleBounds(uVar2,8,-2,0x19);
       ObjHits_EnableObject(uVar2);
       ObjHits_SyncObjectPositionIfDirty(uVar2);
       gunpowderbarrel_hitDetect(uVar2);

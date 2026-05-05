@@ -20,7 +20,7 @@ extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern void* FUN_80017aa4();
 extern uint FUN_80017ae8();
-extern undefined4 FUN_80035d58();
+extern undefined4 ObjHitbox_SetCapsuleBounds();
 extern undefined4 ObjHits_PollPriorityHitEffectWithCooldown();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80048000();
@@ -253,7 +253,7 @@ void FUN_801db5b8(short *param_1,int param_2)
   *param_1 = (ushort)*(byte *)(param_2 + 0x1a) << 8;
   *(undefined4 *)(param_1 + 4) = *(undefined4 *)(param_2 + 0x1c);
   fVar1 = *(float *)(param_1 + 4);
-  FUN_80035d58((int)param_1,(short)(int)(lbl_803E61D8 * fVar1),
+  ObjHitbox_SetCapsuleBounds((int)param_1,(short)(int)(lbl_803E61D8 * fVar1),
                (short)(int)(lbl_803E61DC * fVar1),(short)(int)(lbl_803E61E0 * fVar1));
   param_1[0x58] = param_1[0x58] | 0x4000;
   return;

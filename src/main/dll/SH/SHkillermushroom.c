@@ -15,7 +15,7 @@ extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_80035d58();
+extern undefined4 ObjHitbox_SetCapsuleBounds();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_MarkObjectPositionDirty();

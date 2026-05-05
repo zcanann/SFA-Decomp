@@ -13,7 +13,7 @@ extern undefined4 FUN_800175d0();
 extern undefined4 FUN_800175ec();
 extern void* FUN_80017624();
 extern uint FUN_80017690();
-extern undefined4 FUN_80035d58();
+extern undefined4 ObjHitbox_SetCapsuleBounds();
 
 extern undefined4* DAT_803dd6d8;
 extern f64 DOUBLE_803e4a38;
@@ -101,7 +101,7 @@ void FUN_8018d728(int param_1,int param_2)
   local_20 = 0x43300000;
   iVar6 = (int)((float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e4a40) * fVar2);
   local_18 = (longlong)iVar6;
-  FUN_80035d58(param_1,(short)iVar5,(short)iVar1,(short)iVar6);
+  ObjHitbox_SetCapsuleBounds(param_1,(short)iVar5,(short)iVar1,(short)iVar6);
   piVar7[1] = (int)FLOAT_803e4a18;
   piVar7[2] = (int)FLOAT_803e4a10;
   if (*piVar7 == 0) {

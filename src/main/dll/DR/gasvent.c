@@ -4,7 +4,7 @@
 extern undefined4 FUN_80006824();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
-extern undefined4 FUN_80035d58();
+extern undefined4 ObjHitbox_SetCapsuleBounds();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_ClearSourceMask();
 extern undefined4 ObjHits_SetSourceMask();
@@ -329,7 +329,7 @@ void FUN_801a1654(undefined8 param_1,double param_2,double param_3,undefined8 pa
     }
     ObjHits_ClearFlags(uVar1,0x80);
     ObjHits_SetSourceMask(uVar1,1);
-    FUN_80035d58(uVar1,0x14,-5,0x14);
+    ObjHitbox_SetCapsuleBounds(uVar1,0x14,-5,0x14);
     ObjHits_EnableObject(uVar1);
     ObjHits_MarkObjectPositionDirty(uVar1);
     ObjHits_SetHitVolumeSlot(uVar1,5,4,0);

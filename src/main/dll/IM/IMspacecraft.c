@@ -20,7 +20,7 @@ extern undefined4 FUN_80017a40();
 extern undefined4 FUN_80017a44();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80035b84();
+extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
@@ -589,7 +589,7 @@ void FUN_801a6378(undefined8 param_1,double param_2,double param_3,undefined8 pa
   *(undefined *)(iVar3 + 0x114) = 1;
   *(float *)(iVar3 + 0x110) = lbl_803E5100;
   *(ushort *)(param_9 + 6) = *(ushort *)(param_9 + 6) | 0x4000;
-  FUN_80035b84(param_9,(short)(int)(lbl_803E5104 *
+  ObjHitbox_SetSphereRadius(param_9,(short)(int)(lbl_803E5104 *
                                    (float)((double)CONCAT44(0x43300000,
                                                             (uint)*(byte *)(*(int *)(param_9 + 0x50)
                                                                            + 0x62)) -
@@ -739,7 +739,7 @@ void FUN_801a66f8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         }
       }
       *(undefined *)((int)pfVar7 + 0x116) = 10;
-      FUN_80035b84((int)param_9,(ushort)*(byte *)(*(int *)(param_9 + 0x28) + 0x62));
+      ObjHitbox_SetSphereRadius((int)param_9,(ushort)*(byte *)(*(int *)(param_9 + 0x28) + 0x62));
       if (*psVar6 == 0x72a) {
         fVar2 = lbl_803E5110 + pfVar7[0x1b];
       }

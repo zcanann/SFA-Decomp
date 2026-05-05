@@ -15,7 +15,7 @@ extern int FUN_80017af8();
 extern int FUN_80017b00();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
-extern undefined4 FUN_80035d58();
+extern undefined4 ObjHitbox_SetCapsuleBounds();
 extern undefined4 ObjHits_DisableObject();
 extern void* ObjGroup_GetObjects();
 extern int ObjHits_PollPriorityHitWithCooldown();
@@ -478,7 +478,7 @@ void FUN_801638e8(undefined4 param_1,undefined4 param_2,int param_3)
   *puVar3 = (ushort)*(byte *)(iVar4 + 0x1a) << 8;
   *(undefined4 *)(puVar3 + 4) = *(undefined4 *)(iVar4 + 0x1c);
   fVar1 = *(float *)(puVar3 + 4);
-  FUN_80035d58((int)puVar3,(short)(int)(lbl_803E3BE4 * fVar1),(short)(int)(lbl_803E3BE8 * fVar1)
+  ObjHitbox_SetCapsuleBounds((int)puVar3,(short)(int)(lbl_803E3BE4 * fVar1),(short)(int)(lbl_803E3BE8 * fVar1)
                ,(short)(int)(lbl_803E3BEC * fVar1));
   uVar2 = puVar3[0x23];
   if (uVar2 != 0x4b9) {

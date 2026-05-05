@@ -22,7 +22,7 @@ extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_8002f6ac();
 extern undefined4 FUN_8002fc3c();
-extern undefined4 FUN_80035d58();
+extern undefined4 ObjHitbox_SetCapsuleBounds();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined8 ObjHits_MarkObjectPositionDirty();
@@ -769,7 +769,7 @@ void FUN_80185a48(double param_1,undefined8 param_2,undefined8 param_3,undefined
                  ,0,uVar3,uVar4,iVar5,in_r10);
   }
   local_20 = (longlong)(int)*(float *)(iVar6 + 8);
-  FUN_80035d58(param_9,(short)(int)*(float *)(iVar6 + 8),-5,10);
+  ObjHitbox_SetCapsuleBounds(param_9,(short)(int)*(float *)(iVar6 + 8),-5,10);
   ObjHits_SetHitVolumeSlot(param_9,0xe,1,0);
   ObjHits_EnableObject(param_9);
   return;
