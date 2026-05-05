@@ -22,40 +22,24 @@ extern f32 FLOAT_803e8558;
 extern f32 FLOAT_803e855c;
 extern u8 lbl_803BD150[];
 extern u8 lbl_803D3CA0[];
-extern u8 lbl_803DE238;
+extern u8 gSynthInitialized;
+extern f32 lbl_803E78C8;
+extern f64 lbl_803E78D0;
+extern f64 lbl_803E78D8;
 
-/*
- * --INFO--
- *
- * Function: FUN_80281160
- * EN v1.0 Address: 0x80281160
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8028116C
- * EN v1.1 Size: 552b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80281160(void)
-{
-}
+extern void hwExit(void);
+extern void fn_80275344(void);
+extern void fn_80281040(void);
+extern void fn_802725EC(void);
+extern double __frsqrte(double x);
 
-/*
- * --INFO--
- *
- * Function: FUN_80281164
- * EN v1.0 Address: 0x80281164
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80281394
- * EN v1.1 Size: 972b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80281164(void)
+void fn_80281160(void)
 {
+    hwExit();
+    fn_80275344();
+    fn_80281040();
+    fn_802725EC();
+    gSynthInitialized = 0;
 }
 
 void fn_80281194(u8 valueA, u8 valueB)
@@ -66,7 +50,7 @@ void fn_80281194(u8 valueA, u8 valueB)
 
 u8 fn_802811A8(void)
 {
-    return lbl_803DE238;
+    return gSynthInitialized;
 }
 
 #pragma peephole off
@@ -79,6 +63,24 @@ void fn_802811B0(f32 *matrix, f32 *vec, f32 *out)
 }
 #pragma fp_contract reset
 #pragma peephole reset
+
+#pragma fp_contract off
+void fn_8028125C(f32 *v)
+{
+    f32 divisor;
+    f32 lensq = v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
+    divisor = lensq;
+    if (lensq > lbl_803E78C8) {
+        f64 y = __frsqrte((f64)lensq);
+        y = (lbl_803E78D0 * y) * (lbl_803E78D8 - (f64)lensq * y * y);
+        y = (lbl_803E78D0 * y) * (lbl_803E78D8 - (f64)lensq * y * y);
+        divisor = (f32)((f64)lensq * (lbl_803E78D0 * y) * (lbl_803E78D8 - (f64)lensq * y * y));
+    }
+    v[0] /= divisor;
+    v[1] /= divisor;
+    v[2] /= divisor;
+}
+#pragma fp_contract reset
 
 void fn_80281310(u8 index, u8 group, u32 flags)
 {
