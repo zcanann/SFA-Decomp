@@ -4,8 +4,9 @@
 #include "ghidra_import.h"
 
 typedef struct DIMbossObject DIMbossObject;
+typedef struct ObjAnimUpdateState ObjAnimUpdateState;
 
-void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,int param_3);
+void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate);
 void dimboss_func11(void);
 int DIMboss_setScale(DIMbossObject *obj);
 int DIMboss_getExtraSize(void);

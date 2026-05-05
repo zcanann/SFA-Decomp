@@ -100,6 +100,12 @@ typedef struct DIMbossObject {
   int renderPause;
 } DIMbossObject;
 
+typedef struct ObjAnimUpdateState {
+  u8 pad00[0x81];
+  u8 eventIds[0xA];
+  u8 eventCount;
+} ObjAnimUpdateState;
+
 /*
  * --INFO--
  *
@@ -113,7 +119,7 @@ typedef struct DIMbossObject {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,int param_3)
+void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   byte bVar1;
   bool bVar2;
@@ -140,9 +146,9 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,int param_3)
     puVar7 = lbl_803AC9DC;
     puVar8 = (undefined4 *)0x1;
     puVar9 = (undefined4 *)0x1;
-    fn_80114BB0(puVar3,param_3,(float *)lbl_803AC9DC,1,1);
-    for (iVar10 = 0; iVar10 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar10 = iVar10 + 1) {
-      switch(*(undefined *)(param_3 + iVar10 + 0x81)) {
+    fn_80114BB0(puVar3,animUpdate,(float *)lbl_803AC9DC,1,1);
+    for (iVar10 = 0; iVar10 < (int)(uint)animUpdate->eventCount; iVar10 = iVar10 + 1) {
+      switch(animUpdate->eventIds[iVar10]) {
       case 1:
         (**(code **)(*lbl_803DCAB4 + 0xc))(puVar3,0x800,0,100,0);
         (**(code **)(*lbl_803DCAB4 + 0xc))(puVar3,0x800,0,100,0);
@@ -290,13 +296,13 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,int param_3)
       if (((int)*(short *)((int)puVar13 + 0x3f6) != 0xffffffff) &&
           (uVar6 = GameBit_Get((int)*(short *)((int)puVar13 + 0x3f6)), uVar6 != 0)) {
         puVar7 = (undefined4 *)*DAT_803dd6d4;
-        (*(code *)puVar7[0x16])(param_3,(int)*(short *)(iVar12 + 0x2c));
+        (*(code *)puVar7[0x16])(animUpdate,(int)*(short *)(iVar12 + 0x2c));
         *(undefined2 *)((int)puVar13 + 0x3f6) = 0xffff;
       }
       bVar1 = *(byte *)((int)puVar13 + 0x405);
       if (bVar1 == 1) {
         iVar11 = (**(code **)(*DAT_803dd738 + 0x34))
-                          (puVar3,param_3,puVar13,&DAT_803adc78,&DAT_803adc60,0);
+                          (puVar3,animUpdate,puVar13,&DAT_803adc78,&DAT_803adc60,0);
         if (iVar11 != 0) {
           puVar7 = (undefined4 *)0x1;
           puVar8 = (undefined4 *)*DAT_803dd738;
@@ -304,17 +310,17 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,int param_3)
         }
       }
       else if ((bVar1 != 0) && (bVar1 < 3)) {
-        *(undefined2 *)(param_3 + 0x6e) = 0;
+        *(undefined2 *)((int)animUpdate + 0x6e) = 0;
         puVar7 = puVar13;
         puVar8 = puVar13;
-        fn_801BC7E4(puVar3,param_3,(int)puVar13,(int)puVar13);
+        fn_801BC7E4(puVar3,animUpdate,(int)puVar13,(int)puVar13);
         if (*(char *)((int)puVar13 + 0x405) == '\x01') {
           *(undefined2 *)(puVar13 + 0x9c) = 0;
           puVar7 = &DAT_803adc78;
           puVar8 = &DAT_803adc60;
           puVar9 = (undefined4 *)*DAT_803dd70c;
           (*(code *)puVar9[2])(puVar3,puVar13);
-          *(undefined *)(param_3 + 0x56) = 0;
+          *(undefined *)((int)animUpdate + 0x56) = 0;
         }
       }
     }
