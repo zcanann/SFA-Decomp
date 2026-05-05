@@ -173,9 +173,9 @@ extern undefined4 DAT_80393a70;
 extern undefined4 DAT_80393a72;
 extern undefined4 DAT_80393a73;
 extern undefined4 DAT_80393a74;
-extern undefined2 lbl_803965E0;
+extern u8 lbl_803965E0[0xF0];
 extern undefined4 DAT_80397244;
-extern undefined4 lbl_803966D0;
+extern u8 lbl_803966D0[0xF0];
 extern undefined4 DAT_80397332;
 extern undefined4 DAT_80397338;
 extern undefined4 lbl_803DB65C;
@@ -696,30 +696,29 @@ int fn_8006FDF8(int x, int y, int id)
     if (x >= 0 && x < 0x280 && y >= 0 && y < 0x1E0) {
         ok = true;
     }
-    if (!ok) {
-        return 0;
-    }
-    if (x < 0x10) x = 0x10;
-    if (y < 6) y = 6;
-    n = (u32)lbl_803DD000;
-    if (n < 0x14) {
-        u8* slot = (u8*)&lbl_803966D0 + n * 0xC;
-        *(u16*)(slot + 0x0) = (u16)x;
-        *(u16*)(slot + 0x2) = (u16)y;
-        *(int*)(slot + 0x8) = id;
-        lbl_803DD000++;
-    }
-    i = 0;
-    row = (u8*)&lbl_803965E0;
-    n = (u32)lbl_803DD002;
-    while (n != 0) {
-        if (id == *(int*)(row + 0x8)) {
-            found = (int*)((u8*)&lbl_803965E0 + i * 0xC);
-            return found[1];
+    if (ok) {
+        if (x < 0x10) x = 0x10;
+        if (y < 6) y = 6;
+        n = (u32)lbl_803DD000;
+        if (n < 0x14) {
+            u8* slot = (u8*)&lbl_803966D0 + n * 0xC;
+            *(u16*)(slot + 0x0) = (u16)x;
+            *(u16*)(slot + 0x2) = (u16)y;
+            *(int*)(slot + 0x8) = id;
+            lbl_803DD000++;
         }
-        row += 0xC;
-        i++;
-        n--;
+        i = 0;
+        row = (u8*)&lbl_803965E0;
+        n = (u32)lbl_803DD002;
+        while (n != 0) {
+            if (id == *(int*)(row + 0x8)) {
+                found = (int*)((u8*)&lbl_803965E0 + i * 0xC);
+                return found[1];
+            }
+            row += 0xC;
+            i++;
+            n--;
+        }
     }
     return 0;
 }
