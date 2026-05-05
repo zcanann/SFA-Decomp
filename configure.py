@@ -1363,7 +1363,13 @@ config.libs = [
                 cflags=msl_math_o0_cflags,
                 extra_cflags=["-O0", "-opt", "functions", "-inline", "auto", *msl_math_extra],
             ),
-            Object(NonMatching, "main/unknown/autos/placeholder_80292DC0.c"),
+            Object(
+                NonMatching,
+                "main/unknown/autos/placeholder_80292DC0.c",
+                mw_version="GC/1.2.5n",
+                cflags=msl_math_o0_cflags,
+                extra_cflags=["-O0", "-opt", "functions", "-inline", "auto", *msl_math_extra],
+            ),
             Object(
                 NonMatching,
                 "main/unknown/autos/placeholder_8029312C_math.c",
