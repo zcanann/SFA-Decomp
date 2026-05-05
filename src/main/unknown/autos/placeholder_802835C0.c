@@ -25,7 +25,8 @@ void hwSetADSR(int slot, u32 *adsr, u8 mode)
     u32 offset;
     u32 value;
 
-    if (mode == 0) {
+    switch (mode) {
+    case 0:
         offset = slot * 0xf4;
         entry = lbl_803DE344;
         entry += offset;
@@ -48,7 +49,9 @@ void hwSetADSR(int slot, u32 *adsr, u8 mode)
         entry = lbl_803DE344;
         entry += offset;
         *(u32 *)(entry + 0xc4) = *(u16 *)((u8 *)adsr + 6);
-    } else if (mode < 3) {
+        break;
+    case 1:
+    case 2:
         offset = slot * 0xf4;
         entry = lbl_803DE344;
         entry += offset;
@@ -91,6 +94,7 @@ void hwSetADSR(int slot, u32 *adsr, u8 mode)
         entry = lbl_803DE344;
         entry += offset;
         *(u32 *)(entry + 0xc4) = *(u16 *)((u8 *)adsr + 10);
+        break;
     }
 
     offset = slot * 0xf4;
