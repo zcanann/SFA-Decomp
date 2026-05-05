@@ -4,7 +4,7 @@ extern int Sfx_PlayFromObjectLimited(u8 *obj,int sfxId,int maxCount);
 extern u32 GameBit_Get(int eventId);
 extern u32 fn_800221A0(int min,int max);
 extern void fn_80023800(u32 handle);
-extern u8 *fn_8002B9EC(void);
+extern u8 *Obj_GetPlayerObject(void);
 extern int ObjHits_GetPriorityHit(u8 *obj,int *out,int param_3,int param_4);
 extern void fn_8008F904(u32 handle);
 extern int fn_8008FB20(double radiusX,double radiusY,float *start,float *end,int param_5,int param_6,int param_7);
@@ -117,7 +117,7 @@ void dfplightni_update(u8 *obj)
 
   if (obj != 0) {
     state = dfplightni_getState(obj);
-    playerObj = fn_8002B9EC();
+    playerObj = Obj_GetPlayerObject();
     if (playerObj != 0) {
       state->timer += lbl_803DB414;
       eventActive = GameBit_Get(state->eventId);

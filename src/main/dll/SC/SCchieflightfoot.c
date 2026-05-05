@@ -11,7 +11,7 @@ extern int FUN_80017730();
 extern uint FUN_80017760();
 extern uint fn_800221A0(int min,int max);
 extern undefined4 Obj_GetActiveModel();
-extern undefined4 fn_8002B9EC();
+extern undefined4 Obj_GetPlayerObject();
 extern undefined4 fn_8002CEC0();
 extern int ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnimArg,
                                       void *eventList);
@@ -385,7 +385,7 @@ void SHthorntail_updateDustEffects(SHthorntailObject *obj)
   undefined4 local_20;
   uint uStack_1c;
 
-  playerObj = fn_8002B9EC();
+  playerObj = Obj_GetPlayerObject();
   runtime = obj->runtime;
   local_2c = lbl_803E5460;
   local_28 = lbl_803E5464;

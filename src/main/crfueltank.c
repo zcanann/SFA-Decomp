@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 
-extern void *fn_8002B9EC(void);
+extern void *Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(void *obj,u16 volumeId);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
@@ -98,7 +98,7 @@ void crfueltank_hitDetect(CrFuelTankObject *obj)
     hitObj = collider->hitObj;
     if (hitObj->objType == 0x38c) {
       ObjHits_DisableObject(obj);
-      Sfx_PlayFromObject(fn_8002B9EC(),0xee);
+      Sfx_PlayFromObject(Obj_GetPlayerObject(),0xee);
       obj->fadeTimer = 0xfa;
       obj->triggered = 1;
       if (def->hitEvent != -1) {

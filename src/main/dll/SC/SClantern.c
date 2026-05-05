@@ -8,7 +8,7 @@ extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 fn_80296554();
 extern undefined4 FUN_8028683c();
 extern undefined4 FUN_80286888();
-extern undefined4 fn_8002B9EC();
+extern undefined4 Obj_GetPlayerObject();
 
 extern undefined lbl_803AD048[];
 extern undefined4* lbl_803DCAAC;
@@ -93,7 +93,7 @@ undefined4 fn_801D6D58(void)
   undefined4 playerObj;
 
   (*(code *)(*lbl_803DCAAC + 0x74))();
-  playerObj = fn_8002B9EC();
+  playerObj = Obj_GetPlayerObject();
   fn_80296554(playerObj,0xff);
   return 2;
 }

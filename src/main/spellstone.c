@@ -3,7 +3,7 @@
 extern f32 fn_80021704(void *posA,void *posB);
 extern void GameBit_Set(int eventId,int value);
 extern int GameBit_Get(int eventId);
-extern void *fn_8002B9EC(void);
+extern void *Obj_GetPlayerObject(void);
 extern void fn_8002CE88(void *obj);
 extern void ObjHits_DisableObject(void *obj);
 extern void ObjHits_EnableObject(void *obj);
@@ -132,7 +132,7 @@ void spellstone_update(SpellStoneObject *obj)
       fn_8002CE88(obj);
     }
     if (state->state == 2) {
-      playerObj = fn_8002B9EC();
+      playerObj = Obj_GetPlayerObject();
       if (fn_80021704(&obj->unk18,(u8 *)playerObj + 0x18) < lbl_803E6758) {
         GameBit_Set(def->completeEvent,1);
       }

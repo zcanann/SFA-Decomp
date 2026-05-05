@@ -44,7 +44,7 @@ extern undefined4 Camera_DisableViewYOffset();
 extern undefined4 fn_80013E2C();
 extern undefined4 fn_8001F384();
 extern undefined4 Obj_FreeObject();
-extern undefined4 fn_8002B9EC();
+extern undefined4 Obj_GetPlayerObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 fn_8003B8F4();
 extern undefined4 fn_80055000();
@@ -132,7 +132,7 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,int param_3)
   puVar3 = (undefined4 *)param_1;
   puVar13 = (undefined4 *)puVar3[0x2e];
   iVar12 = puVar3[0x13];
-  fn_8002B9EC();
+  Obj_GetPlayerObject();
   iVar11 = puVar13[0x103];
   *(undefined2 *)((int)puVar13 + 0x402) = 0;
   (**(code **)(*lbl_803DCAAC + 0x50))(0x1c,5,0);

@@ -24,7 +24,7 @@ extern undefined4 FUN_80017830();
 extern undefined4 FUN_80017970();
 extern undefined4 FUN_80017a50();
 extern undefined4 FUN_80017a54();
-extern void *fn_8002B9EC(void);
+extern void *Obj_GetPlayerObject(void);
 extern undefined4 FUN_80017ac0();
 extern int ObjList_GetObjects();
 extern void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2);
@@ -2231,7 +2231,7 @@ bool FUN_80037d74(int param_1)
   int iVar1;
   byte bVar2;
   
-  iVar1 = (int)fn_8002B9EC();
+  iVar1 = (int)Obj_GetPlayerObject();
   bVar2 = FUN_80294c20(iVar1);
   if (bVar2 == 0) {
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xef;
@@ -2574,7 +2574,7 @@ undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
   if (flagEnabled != 0) {
     flagBlocked = triggerFlags & 0x10;
     if ((flagBlocked == 0) && (iVar1 = (*lbl_803DCA68)->isTriggerSet((int)param_2), iVar1 != 0)) {
-      iVar1 = fn_80296BA0(fn_8002B9EC());
+      iVar1 = fn_80296BA0(Obj_GetPlayerObject());
       if (iVar1 == -1) {
         fn_80014B3C(0,0x100);
         return 1;
@@ -2619,7 +2619,7 @@ undefined4 ObjTrigger_IsSet(int param_1)
     if (flagEnabled != 0) {
       flagBlocked = triggerFlags & 8;
       if ((flagBlocked == 0) && (iVar1 = (*lbl_803DCA68)->isCurrentTriggerClear(), iVar1 == 0)) {
-        iVar1 = fn_80296BA0(fn_8002B9EC());
+        iVar1 = fn_80296BA0(Obj_GetPlayerObject());
         if ((iVar1 == -1) || (iVar1 == 0x40)) {
           fn_80014B3C(0,0x100);
           return 1;

@@ -8,7 +8,7 @@ extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern f32 fn_8002166C(int posA,int posB);
 extern u32 fn_800221A0(int min,int max);
-extern int fn_8002B9EC();
+extern int Obj_GetPlayerObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern int ObjTrigger_IsSet();
 extern void fn_8003B310(int obj,int collisionShapeState);
@@ -59,7 +59,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
   int triggerIsSet;
 
   runtime->impactSfxTable = &gSHthorntailLevelControlMode1ImpactSfxTable;
-  playerObj = fn_8002B9EC();
+  playerObj = Obj_GetPlayerObject();
   {
     int cmp = (double)fn_8002166C(objectId + 0x18,playerObj + 0x18) < (double)lbl_803E5424;
     closeToPlayer = cmp;

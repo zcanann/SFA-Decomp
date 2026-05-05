@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 
-extern void fn_8002B884(void *obj,int enabled);
+extern void Obj_SetActiveModelIndex(void *obj,int modelIndex);
 extern void ObjHits_DisableObject(void *obj);
 extern void ObjHits_EnableObject(void *obj);
 extern void fn_8008016C(void *timer);
@@ -81,7 +81,7 @@ void proximitymine_init(ProximityMineObject *obj,ProximityMineDef *def)
   case 0:
     fn_80080178(state->resetTimer,def->parameter);
     state->mode = 2;
-    fn_8002B884(obj,1);
+    Obj_SetActiveModelIndex(obj,1);
     obj->height *= lbl_803E6798;
     break;
   case 1:

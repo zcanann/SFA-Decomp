@@ -1023,7 +1023,7 @@ extern void Music_Trigger(s32, s32);
 extern int  fn_800E88B4(u8, u8, int, s32);
 extern int  fn_800E8AAC(void);
 
-extern void* fn_8002B9EC(void);
+extern void* Obj_GetPlayerObject(void);
 extern int   fn_80295BC8(void);
 extern u8    fn_8005AFAC(f32, f32);
 extern u8    lbl_8031B050[9];
@@ -1334,7 +1334,7 @@ int fn_8012B6BC(void)
     u8 i;
     u8 is_zero;
 
-    s = fn_8002B9EC();
+    s = Obj_GetPlayerObject();
     if (s == NULL) return 0;
     is_zero = fn_80295BC8() == 0;
     if (is_zero) return 0;
@@ -1429,7 +1429,7 @@ void fn_80129CBC(f32 fov, f32 x, f32 y)
  * After the slot pass, clears the three halfword counters at
  * lbl_803DD784/_786/_78C, asks the global tag system to register tag
  * id 0xf via fn_80014B18, runs Obj_SetModelColorFadeRecursive(obj2, 0, 0, 0, 0, 0) when
- * the object handle from fn_8002B9EC was non-null, then plays the
+ * the object handle from Obj_GetPlayerObject was non-null, then plays the
  * scene-down trio: Music_Trigger(0x23, 1) plus two SFX kicks (0x3e5 and
  * 0xff) on object 0.
  */
@@ -1437,7 +1437,7 @@ void fn_80129CBC(f32 fov, f32 x, f32 y)
 #pragma peephole off
 void fn_8012C558(void)
 {
-    void* obj = fn_8002B9EC();
+    void* obj = Obj_GetPlayerObject();
     int   i;
     void**slot = lbl_803A9410;
     void**type = lbl_8031BF90;
@@ -1463,7 +1463,7 @@ void fn_8012C558(void)
     lbl_803DD78C = 0;
     fn_80014B18(0xf);
     if (obj != NULL) {
-        Obj_SetModelColorFadeRecursive(fn_8002B9EC(), 0, 0, 0, 0, 0);
+        Obj_SetModelColorFadeRecursive(Obj_GetPlayerObject(), 0, 0, 0, 0, 0);
     }
     Music_Trigger(0x23, 1);
     Sfx_PlayFromObject(0, 0x3e5);
@@ -1503,7 +1503,7 @@ void fn_8012C558(void)
 #pragma peephole off
 void fn_8012E880(void)
 {
-    fn_8002B9EC();
+    Obj_GetPlayerObject();
     if ((s8)lbl_803DD7A8 != 0) {
         if (lbl_803DD8C8 != 0) {
             (*(void(**)(s32, s32))((char*)*lbl_803DCA50 + 0x5c))(0x41, 1);

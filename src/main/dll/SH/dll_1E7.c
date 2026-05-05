@@ -6,7 +6,7 @@ extern f32 fn_8002166C(Vec *a,Vec *b);
 extern f32 fn_800216D0(Vec *a,Vec *b);
 extern s16 fn_800217C0(f32 deltaX,f32 deltaZ);
 extern int fn_800221A0(int min,int max);
-extern int fn_8002B9EC(void);
+extern int Obj_GetPlayerObject(void);
 extern SHthorntailObject **ObjGroup_GetObjects(int group,int *countOut);
 extern int fn_8005A10C(Vec *pos,f32 radius);
 extern void fn_8014C66C(SHthorntailObject *obj,SHthorntailObject *other);
@@ -201,7 +201,7 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
 
   objWords = (short *)object;
   if (config->leashRadiusByte != '\0') {
-    value = fn_8002B9EC();
+    value = Obj_GetPlayerObject();
     distanceSq = fn_8002166C((Vec *)(objWords + 0xc),(Vec *)(value + 0x18));
     if (distanceSq < lbl_803E5424) {
       behaviorState = runtime->behaviorState;
