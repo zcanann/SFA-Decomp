@@ -25,9 +25,9 @@ extern uint fn_80022E3C(uint param_1);
 extern uint FUN_800177dc();
 extern undefined4 FUN_80017830();
 extern void *mmAlloc(int size,int heap,int flags);
-extern undefined4 FUN_80017970();
+extern float *ObjModel_GetJointMatrix(int *model,int jointIndex);
 extern undefined4 FUN_80017a50();
-extern undefined4 FUN_80017a54();
+extern int *Obj_GetActiveModel(int obj);
 extern void *Obj_GetPlayerObject(void);
 extern void Obj_UpdateObject(ObjAnimComponent *obj,void *modelInstance);
 extern int ObjList_GetObjects();
@@ -2801,14 +2801,14 @@ void ObjPath_GetPointModelMtx(int param_1,int param_2)
   int *piVar1;
   int iVar2;
 
-  piVar1 = (int *)FUN_80017a54(param_1);
+  piVar1 = Obj_GetActiveModel(param_1);
   iVar2 = (int)*(char *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) + param_2 * 0x18 +
                          (int)*(char *)(param_1 + 0xad) + 0x12);
   if ((iVar2 < 0) || ((int)(uint)*(byte *)(*piVar1 + 0xf3) <= iVar2)) {
-    FUN_80017970(piVar1,0);
+    ObjModel_GetJointMatrix(piVar1,0);
   }
   else {
-    FUN_80017970(piVar1,iVar2);
+    ObjModel_GetJointMatrix(piVar1,iVar2);
   }
   return;
 }
@@ -2860,7 +2860,7 @@ void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *
     *param_5 = *(float *)(puVar1 + 10);
   }
   else {
-    piVar2 = (int *)FUN_80017a54((int)puVar1);
+    piVar2 = Obj_GetActiveModel((int)puVar1);
     iVar5 = iVar5 * 0x18;
     iVar4 = (int)*(char *)(*(int *)(*(int *)(puVar1 + 0x28) + 0x2c) + iVar5 +
                            (int)*(char *)((int)puVar1 + 0xad) + 0x12);
@@ -2875,7 +2875,7 @@ void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *
         pfVar3 = afStack_60;
       }
       else {
-        pfVar3 = (float *)FUN_80017970(piVar2,iVar4);
+        pfVar3 = ObjModel_GetJointMatrix(piVar2,iVar4);
       }
       if (param_6 == 0) {
         local_10c = *(float *)(*(int *)(*(int *)(puVar1 + 0x28) + 0x2c) + iVar5);
