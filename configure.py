@@ -728,7 +728,7 @@ config.libs = [
         "progress_category": "game",
         "objects": [
             Object(MatchingFor("GSAE01"), "main/audio/synth_constants.c"),
-            Object(NonMatching, "main/audio/synth_callback.c"),
+            Object(NonMatching, "main/audio/synth_callback.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/synth_channel.c"),
             Object(NonMatching, "main/audio/synth_handle.c"),
             Object(NonMatching, "main/audio/synth_sequence.c"),
