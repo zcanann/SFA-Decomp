@@ -1,12 +1,12 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_80284988.h"
-
-extern u32 OSDisableInterrupts(void);
-extern u32 OSEnableInterrupts(void);
-extern u32 OSRestoreInterrupts(u32 prevState);
+#include "dolphin/os.h"
+#include "dolphin/dsp.h"
 
 extern u16 lbl_803DE3BC;
 extern u32 lbl_803DE3C0;
+extern u32 lbl_803DE374;
+extern u32 lbl_803DE3B4;
 
 /*
  * --INFO--
@@ -46,6 +46,34 @@ void fn_80284ABC(void)
     if (count == 0) {
         OSRestoreInterrupts(lbl_803DE3C0);
     }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80284998
+ * EN v1.0 Address: 0x80284998
+ * EN v1.0 Size: 52b
+ */
+int fn_80284998(void)
+{
+    DSPHalt();
+    while (DSPGetDMAStatus() != 0) {}
+    DSPAssertInt();
+    return 1;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80284A40
+ * EN v1.0 Address: 0x80284A40
+ * EN v1.0 Size: 76b
+ */
+u32 fn_80284A40(void)
+{
+    OSTick now = OSGetTick();
+    return OS_TICKS_TO_USEC(now - lbl_803DE3B4);
 }
 
 /*
@@ -101,4 +129,16 @@ void fn_80284B2C(void)
 void fn_80284B4C(void)
 {
     OSEnableInterrupts();
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80284B6C
+ * EN v1.0 Address: 0x80284B6C
+ * EN v1.0 Size: 40b
+ */
+void* fn_80284B6C(u32 size)
+{
+    return ((void* (*)(u32))lbl_803DE374)(size);
 }
