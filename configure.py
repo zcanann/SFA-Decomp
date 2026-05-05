@@ -1296,7 +1296,7 @@ config.libs = [
             Object(NonMatching, "main/unknown/autos/placeholder_80279D30.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8027A2FC.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8027A710.c"),
-            Object(NonMatching, "main/unknown/autos/placeholder_8027AC80.c"),
+            Object(NonMatching, "main/unknown/autos/placeholder_8027AC80.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/unknown/autos/placeholder_8027B038.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8027B53C.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8027BB90.c"),

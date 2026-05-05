@@ -3,7 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_8027ac34(uint param_1,uint param_2);
-void FUN_8027ac38(uint param_1);
+int fn_8027AC34(int p1, int p2, int p3);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027AC80_H_ */

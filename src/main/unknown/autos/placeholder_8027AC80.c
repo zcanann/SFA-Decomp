@@ -1,49 +1,23 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8027AC80.h"
 
-extern undefined4 FUN_80286718();
-extern double FUN_80294bb8();
-
-extern undefined4 DAT_8032fe78;
-extern undefined4 DAT_80330078;
-extern undefined4 DAT_803bddb0;
-extern f64 DOUBLE_803e84b8;
-extern f64 DOUBLE_803e84d8;
-extern f32 FLOAT_803e84c0;
-extern f32 FLOAT_803e84c8;
-extern f32 FLOAT_803e84cc;
-extern f32 FLOAT_803e84d0;
+extern u32 fn_8027AA94(int p1, int p2, int p3);
 
 /*
  * --INFO--
  *
- * Function: FUN_8027ac34
+ * Function: fn_8027AC34
  * EN v1.0 Address: 0x8027AC34
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8027AC80
- * EN v1.1 Size: 240b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 132b
  */
-void FUN_8027ac34(uint param_1,uint param_2)
+int fn_8027AC34(int p1, int p2, int p3)
 {
-}
+    u8 i;
 
-/*
- * --INFO--
- *
- * Function: FUN_8027ac38
- * EN v1.0 Address: 0x8027AC38
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8027AD70
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8027ac38(uint param_1)
-{
+    for (i = 0; i < 15; i++) {
+        if (fn_8027AA94(p1, p2, p3) != 0) {
+            return 1;
+        }
+    }
+    return 0;
 }
