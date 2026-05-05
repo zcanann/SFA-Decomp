@@ -51,6 +51,37 @@ void fn_80284ABC(void)
 /*
  * --INFO--
  *
+ * Function: fn_80284A8C
+ * EN v1.0 Address: 0x80284A8C
+ * EN v1.0 Size: 44b
+ */
+#pragma scheduling off
+void fn_80284A8C(void)
+{
+    lbl_803DE3C0 = OSDisableInterrupts();
+    lbl_803DE3BC = 1;
+}
+#pragma scheduling reset
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80284AF4
+ * EN v1.0 Address: 0x80284AF4
+ * EN v1.0 Size: 56b
+ */
+void fn_80284AF4(void)
+{
+    u16 count = lbl_803DE3BC;
+    lbl_803DE3BC = count + 1;
+    if (count == 0) {
+        lbl_803DE3C0 = OSDisableInterrupts();
+    }
+}
+
+/*
+ * --INFO--
+ *
  * Function: fn_80284B2C
  * EN v1.0 Address: 0x80284B2C
  * EN v1.0 Size: 32b
