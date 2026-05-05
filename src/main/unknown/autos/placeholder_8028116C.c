@@ -70,12 +70,14 @@ u8 fn_802811A8(void)
 }
 
 #pragma peephole off
+#pragma fp_contract off
 void fn_802811B0(f32 *matrix, f32 *vec, f32 *out)
 {
     out[0] = matrix[9] + (matrix[0] * vec[0] + matrix[1] * vec[1] + matrix[2] * vec[2]);
     out[1] = matrix[10] + (matrix[3] * vec[0] + matrix[4] * vec[1] + matrix[5] * vec[2]);
     out[2] = matrix[11] + (matrix[6] * vec[0] + matrix[7] * vec[1] + matrix[8] * vec[2]);
 }
+#pragma fp_contract reset
 #pragma peephole reset
 
 void fn_80281310(u8 index, u8 group, u32 flags)
@@ -85,8 +87,7 @@ void fn_80281310(u8 index, u8 group, u32 flags)
     u32 offset;
 
     groupBase = lbl_803D3CA0 + group * 0x40;
-    entry = groupBase;
     offset = index * 4;
-    entry += offset;
+    entry = groupBase + offset;
     *(u32 *)entry |= flags;
 }
