@@ -1733,7 +1733,7 @@ void ObjGroup_RemoveObject(int obj,int group)
   int limit;
   int *entries;
 
-  if ((group < 0) || (0x53 < group)) {
+  if ((group < 0) || (group >= 0x54)) {
     return;
   }
   bucketStarts = gObjGroupOffsets;
@@ -1832,7 +1832,7 @@ void ObjGroup_AddObject(int obj,int group)
   int limit;
   int *entries;
 
-  if ((group < 0) || (0x53 < group)) {
+  if ((group < 0) || (group >= 0x54)) {
     return;
   }
   bucketStarts = gObjGroupOffsets;
