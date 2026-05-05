@@ -4,17 +4,23 @@
 extern double __fabs(double);
 extern float __fabsf(float);
 
-static const float min_exp2_arg = -127.0f;
-static const float zero = 0.0f;
-static const float one = 1.0f;
-static const float exp2_p0 = 1.0000035762786865f;
-static const float exp2_p1 = 0.692969560623169f;
-static const float exp2_p2 = 0.24162131547927856f;
-static const float exp2_p3 = 0.05171773582696915f;
-static const float exp2_p4 = 0.013683983124792576f;
-static const float log2e = 1.4426950216293335f;
-static const float small_int_limit = 65536.0f;
-static const float large_int_limit = 8388608.0f;
+// fn_80291D00 constants
+extern float lbl_803E7978;  // -127.0f
+extern float lbl_803E797C;  // 0.0f
+extern float lbl_803E7980;  // 1.0f
+extern float lbl_803E7984;  // exp2_p0
+extern float lbl_803E7988;  // exp2_p1
+extern float lbl_803E798C;  // exp2_p2
+extern float lbl_803E7990;  // exp2_p3
+extern float lbl_803E7994;  // exp2_p4
+// fn_80291DD8 constants
+extern float lbl_803E7998;  // log2e (1.4426950216293335f)
+// fn_80291E40 constants
+extern float lbl_803E79A0;  // 65536.0f (small_int_limit)
+extern float lbl_803E79A4;  // 0.0f
+extern float lbl_803E79A8;  // -1.0f
+extern float lbl_803E79AC;  // 8388608.0f (large_int_limit)
+extern float lbl_803E79B0;  // 1.0f
 
 float fn_80291CBC(float x)
 {
@@ -43,24 +49,24 @@ float fn_80291D00(float x)
     float result;
     u32 bits;
 
-    if (x < min_exp2_arg) {
-        return zero;
+    if (x < lbl_803E7978) {
+        return lbl_803E797C;
     }
 
     fn_80291E24(&exponent, x);
     integer_part = fn_80291E08(&exponent);
     fraction = x - integer_part;
 
-    if (fraction != zero) {
-        if (x < zero) {
+    if (fraction != lbl_803E797C) {
+        if (x < lbl_803E797C) {
             exponent--;
-            fraction += one;
+            fraction += lbl_803E7980;
         }
 
-        result = (((exp2_p4 * fraction + exp2_p3) * fraction + exp2_p2) * fraction + exp2_p1)
-               * fraction + exp2_p0;
+        result = (((lbl_803E7994 * fraction + lbl_803E7990) * fraction + lbl_803E798C) * fraction + lbl_803E7988)
+               * fraction + lbl_803E7984;
     } else {
-        result = one;
+        result = lbl_803E7980;
     }
 
     bits = *(u32*)&result + ((u32)exponent << 23);
@@ -71,7 +77,7 @@ float fn_80291D00(float x)
 float fn_80291DD8(float x)
 {
     volatile float y = x;
-    return fn_80291D00(log2e * y);
+    return fn_80291D00(lbl_803E7998 * y);
 }
 
 float fn_80291E08(s16* p)
@@ -92,31 +98,31 @@ float fn_80291E40(float x)
     int int_value;
 
     abs_x = __fabsf(x);
-    if (abs_x < small_int_limit) {
+    if (abs_x < lbl_803E79A0) {
         fn_80291CE4(&short_value, abs_x);
         rounded = fn_80291CC8(&short_value);
 
-        if (x >= zero) {
+        if (x >= lbl_803E79A4) {
             return rounded;
         }
 
         if (x != -rounded) {
-            return -one - rounded;
+            return lbl_803E79A8 - rounded;
         }
 
         return -rounded;
     }
 
-    if (abs_x < large_int_limit) {
+    if (abs_x < lbl_803E79AC) {
         int_value = (int)x;
         rounded = (float)int_value;
 
-        if (x >= zero) {
+        if (x >= lbl_803E79A4) {
             return rounded;
         }
 
         if (x != rounded) {
-            return rounded - one;
+            return rounded - lbl_803E79B0;
         }
 
         return rounded;
