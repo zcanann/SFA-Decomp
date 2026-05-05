@@ -1225,7 +1225,7 @@ void fn_8007366C(u8 alpha)
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
-    extern void fn_8000F54C(void);
+    extern void Camera_GetViewMatrix(void);
     extern void fn_8006C6F0(int);
     extern void fn_8006CABC(f32* a, f32* b);
     extern void fn_8006C5E4(int* out);
@@ -1242,7 +1242,7 @@ void fn_8007366C(u8 alpha)
     Mtx tex_mtx;
     Mtx mtx;
 
-    fn_8000F54C();
+    Camera_GetViewMatrix();
     fn_8006C6F0(0);
     GXLoadTexMtxImm(lbl_80396820, 0x52, 0);
     GXSetTexCoordGen2(0, 0, 0, 0, 0, 0x52);

@@ -997,8 +997,8 @@ extern u8    lbl_803DD75B;
 extern u8    lbl_803DD77F;
 extern s32   lbl_803DD7E0;
 
-extern void fn_8000F458(s32);
-extern void fn_8000F564(void);
+extern void Camera_SetCurrentViewIndex(s32);
+extern void Camera_UpdateViewMatrices(void);
 extern void fn_8000F780(void);
 extern void fn_8000FAD8(void);
 extern void fn_8000FB00(void);
@@ -1048,8 +1048,8 @@ extern void fn_8002AC30(void*, s32, s32, s32, s32, s32);
 extern void fn_80014B18(s32);
 
 extern void* lbl_803DCCF0;
-extern void  fn_8000F4E0(s32, s32, s32);
-extern void  fn_8000F510(f32, f32, f32);
+extern void  Camera_SetCurrentViewRotation(s32, s32, s32);
+extern void  Camera_SetCurrentViewPosition(f32, f32, f32);
 extern int   fn_8000FAC4(void);
 extern void  fn_8000FACC(void);
 extern f32   fn_8000FC34(void);
@@ -1136,11 +1136,11 @@ void fn_8012DD14(void)
 #pragma peephole off
 void fn_80129C74(void)
 {
-    fn_8000F458(0);
+    Camera_SetCurrentViewIndex(0);
     if (lbl_803DD7E0 != 0) {
         fn_8000FAD8();
     }
-    fn_8000F564();
+    Camera_UpdateViewMatrices();
     fn_8000FC3C(lbl_803DBAA4);
     fn_8000FB00();
     fn_8000F780();
@@ -1397,12 +1397,12 @@ void fn_80129CBC(f32 fov, f32 x, f32 y)
 {
     lbl_803DBAA4 = fn_8000FC34();
     fn_8000FC3C(fov);
-    fn_8000F458(1);
+    Camera_SetCurrentViewIndex(1);
     lbl_803DD7E0 = fn_8000FAC4();
     fn_8000FACC();
-    fn_8000F510(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
-    fn_8000F4E0(0x8000, 0, 0);
-    fn_8000F564();
+    Camera_SetCurrentViewPosition(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
+    Camera_SetCurrentViewRotation(0x8000, 0, 0);
+    Camera_UpdateViewMatrices();
     fn_8000FB00();
     {
         u16* obj = (u16*)lbl_803DCCF0;
@@ -1577,13 +1577,13 @@ void fn_80129DB4(void)
     f32 saved_fov;
 
     if (lbl_803DD780 == 0) return;
-    fn_8000F458(1);
-    fn_8000F510(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
-    fn_8000F4E0(0x8000, 0, 0);
+    Camera_SetCurrentViewIndex(1);
+    Camera_SetCurrentViewPosition(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
+    Camera_SetCurrentViewRotation(0x8000, 0, 0);
     saved_fov = fn_8000FC34();
     fn_8000FC3C(lbl_803E2044);
     fn_8000FB00();
-    fn_8000F564();
+    Camera_UpdateViewMatrices();
     {
         u16* obj = (u16*)lbl_803DCCF0;
         GXSetViewport(lbl_803E1E3C, lbl_803E1E3C,
@@ -1597,10 +1597,10 @@ void fn_80129DB4(void)
             ((u32*)slot)[0x13] = 0;
         }
     }
-    fn_8000F458(0);
+    Camera_SetCurrentViewIndex(0);
     fn_8000FC3C(saved_fov);
     fn_8000FB00();
-    fn_8000F564();
+    Camera_UpdateViewMatrices();
     fn_8000F780();
 }
 #pragma peephole reset

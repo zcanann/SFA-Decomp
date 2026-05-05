@@ -4,7 +4,7 @@
 #include "main/expgfx_internal.h"
 
 extern undefined4 ABS();
-extern int fn_8000F54C(void);
+extern int Camera_GetViewMatrix(void);
 extern int fn_80008B4C(int param_1);
 extern int FUN_80006714();
 extern undefined4 FUN_80006824();
@@ -1045,7 +1045,7 @@ void expgfx_queueStandalonePools(void)
   float queuePosition[3];
 
   expgfxBase = lbl_8039AB58;
-  currentMatrix = fn_8000F54C();
+  currentMatrix = Camera_GetViewMatrix();
   poolIndex = 0;
   poolActiveCounts = (char *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
   poolSourceModes = expgfxBase + EXPGFX_POOL_SOURCE_MODES_OFFSET;
