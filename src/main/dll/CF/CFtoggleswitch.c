@@ -85,9 +85,9 @@ extern f32 FLOAT_803e4904;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void magiccavebottom_update(undefined4 param_1,undefined4 param_2,int param_3)
+void magiccavebottom_update(undefined4 param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
-  byte bVar1;
+  byte eventId;
   int iVar2;
   int iVar3;
   byte *pbVar4;
@@ -97,23 +97,23 @@ void magiccavebottom_update(undefined4 param_1,undefined4 param_2,int param_3)
   iVar2 = FUN_80286840();
   iVar5 = *(int *)(iVar2 + 0x4c);
   pbVar4 = *(byte **)(iVar2 + 0xb8);
-  for (iVar6 = 0; iVar6 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar6 = iVar6 + 1) {
-    bVar1 = *(byte *)(param_3 + iVar6 + 0x81);
-    if (bVar1 == 3) {
+  for (iVar6 = 0; iVar6 < (int)(uint)animUpdate->eventCount; iVar6 = iVar6 + 1) {
+    eventId = animUpdate->eventIds[iVar6];
+    if (eventId == 3) {
       *pbVar4 = *pbVar4 & 0xdf;
     }
-    else if (bVar1 < 3) {
-      if (bVar1 == 1) {
+    else if (eventId < 3) {
+      if (eventId == 1) {
         iVar3 = (int)*(short *)(iVar5 + 0x1c);
         if (iVar3 != 0) {
           (**(code **)(*DAT_803dd6e8 + 0x38))(iVar3,200,0x8c,0);
         }
       }
-      else if (bVar1 != 0) {
+      else if (eventId != 0) {
         *pbVar4 = *pbVar4 & 0xdf | 0x20;
       }
     }
-    else if (bVar1 < 5) {
+    else if (eventId < 5) {
       *(ushort *)(iVar2 + 6) = *(ushort *)(iVar2 + 6) | 0x4000;
       ObjHits_DisableObject(iVar2);
     }
