@@ -49,9 +49,8 @@ extern undefined4 FUN_802949e8();
 extern byte FUN_80294c20();
 extern int fn_80296BA0(void *obj);
 
-extern int DAT_80343558;
-extern byte DAT_80343958;
-extern char DAT_80343959;
+extern int gObjGroupObjects[0x100];
+extern u8 gObjGroupOffsets[0x58];
 extern int DAT_803439b0;
 extern undefined4 DAT_803439b4;
 extern undefined4 DAT_803439b8;
@@ -68,7 +67,7 @@ extern undefined4 DAT_803dd858;
 extern undefined4 lbl_803DCBDC;
 extern undefined4 DAT_803dd860;
 extern undefined4 DAT_803dd864;
-extern undefined4 DAT_803dd870;
+extern u8 gObjGroupObjectCount;
 extern undefined4 DAT_803dd878;
 extern undefined4 DAT_803dd880;
 extern f64 DOUBLE_803df5c0;
@@ -1507,20 +1506,20 @@ void ObjHits_InitWorkBuffers(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint ObjGroup_ContainsObject(int param_1,int param_2)
+uint ObjGroup_ContainsObject(int obj,int group)
 {
-  int *piVar1;
-  uint uVar2;
-  uint uVar3;
+  int *entry;
+  uint index;
+  uint limit;
   
-  if ((-1 < param_2) && (param_2 < 0x54)) {
-    uVar2 = (uint)(byte)(&DAT_80343958)[param_2];
-    uVar3 = (uint)(byte)(&DAT_80343959)[param_2];
-    for (piVar1 = &DAT_80343558 + uVar2; ((int)uVar2 < (int)uVar3 && (param_1 != *piVar1));
-        piVar1 = piVar1 + 1) {
-      uVar2 = uVar2 + 1;
+  if ((-1 < group) && (group < 0x54)) {
+    index = (uint)gObjGroupOffsets[group];
+    limit = (uint)gObjGroupOffsets[group + 1];
+    for (entry = gObjGroupObjects + index; ((int)index < (int)limit && (obj != *entry));
+        entry = entry + 1) {
+      index = index + 1;
     }
-    return ((int)(uVar3 ^ uVar2) >> 1) - ((uVar3 ^ uVar2) & uVar3) >> 0x1f;
+    return ((int)(limit ^ index) >> 1) - ((limit ^ index) & limit) >> 0x1f;
   }
   return 0;
 }
@@ -1554,9 +1553,9 @@ void ObjGroup_FindNearestObjectToPoint(undefined4 param_1,undefined4 param_2,flo
   iVar4 = 0;
   dVar7 = (double)(*param_3 * *param_3);
   if ((-1 < lVar8) && (lVar8 < 0x5400000000)) {
-    uVar3 = (uint)(byte)(&DAT_80343958)[iVar2];
-    bVar1 = (&DAT_80343959)[iVar2];
-    piVar5 = &DAT_80343558 + uVar3;
+    uVar3 = (uint)gObjGroupOffsets[iVar2];
+    bVar1 = gObjGroupOffsets[iVar2 + 1];
+    piVar5 = gObjGroupObjects + uVar3;
     while ((int)uVar3 < (int)(uint)bVar1) {
       if (*piVar5 != 0) {
         dVar6 = FUN_802480c0((float *)lVar8,(float *)(*piVar5 + 0x18));
@@ -1611,9 +1610,9 @@ void ObjGroup_FindNearestObjectForObject(undefined4 param_1,undefined4 param_2,f
       fVar2 = *param_3 * *param_3;
     }
     dVar8 = (double)fVar2;
-    uVar4 = (uint)(byte)(&DAT_80343958)[iVar3];
-    bVar1 = (&DAT_80343959)[iVar3];
-    piVar6 = &DAT_80343558 + uVar4;
+    uVar4 = (uint)gObjGroupOffsets[iVar3];
+    bVar1 = gObjGroupOffsets[iVar3 + 1];
+    piVar6 = gObjGroupObjects + uVar4;
     for (; (int)uVar4 < (int)(uint)bVar1; uVar4 = uVar4 + 1) {
       if ((*piVar6 != (int)lVar9) &&
          (dVar7 = FUN_80017714((float *)((int)lVar9 + 0x18),(float *)(*piVar6 + 0x18)),
@@ -1666,9 +1665,9 @@ void ObjGroup_FindNearestObject(undefined4 param_1,undefined4 param_2,float *par
       fVar2 = *param_3 * *param_3;
     }
     dVar8 = (double)fVar2;
-    uVar4 = (uint)(byte)(&DAT_80343958)[iVar3];
-    bVar1 = (&DAT_80343959)[iVar3];
-    piVar6 = &DAT_80343558 + uVar4;
+    uVar4 = (uint)gObjGroupOffsets[iVar3];
+    bVar1 = gObjGroupOffsets[iVar3 + 1];
+    piVar6 = gObjGroupObjects + uVar4;
     for (; (int)uVar4 < (int)(uint)bVar1; uVar4 = uVar4 + 1) {
       if ((*piVar6 != (int)lVar9) &&
          (dVar7 = FUN_80017714((float *)((int)lVar9 + 0x18),(float *)(*piVar6 + 0x18)),
@@ -1700,13 +1699,13 @@ void ObjGroup_FindNearestObject(undefined4 param_1,undefined4 param_2,float *par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 * ObjGroup_GetObjects(int param_1,int *param_2)
+undefined4 * ObjGroup_GetObjects(int group,int *countOut)
 {
-  if ((-1 < param_1) && (param_1 < 0x54)) {
-    *param_2 = (uint)(byte)(&DAT_80343959)[param_1] - (uint)(byte)(&DAT_80343958)[param_1];
-    return (undefined4 *)(&DAT_80343558 + (byte)(&DAT_80343958)[param_1]);
+  if ((-1 < group) && (group < 0x54)) {
+    *countOut = (uint)gObjGroupOffsets[group + 1] - (uint)gObjGroupOffsets[group];
+    return (undefined4 *)(gObjGroupObjects + gObjGroupOffsets[group]);
   }
-  *param_2 = 0;
+  *countOut = 0;
   return (undefined4 *)0x0;
 }
 
@@ -1725,38 +1724,38 @@ undefined4 * ObjGroup_GetObjects(int param_1,int *param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-void ObjGroup_RemoveObject(int param_1,int param_2)
+void ObjGroup_RemoveObject(int obj,int group)
 {
   byte *bucketStarts;
-  char *bucketEnds;
+  u8 *bucketEnds;
   int count;
   int index;
   int limit;
   int *entries;
 
-  if ((param_2 < 0) || (0x53 < param_2)) {
+  if ((group < 0) || (0x53 < group)) {
     return;
   }
-  bucketStarts = &DAT_80343958;
-  bucketEnds = &DAT_80343959;
-  entries = &DAT_80343558;
-  index = (int)bucketStarts[param_2];
-  limit = (int)(byte)bucketEnds[param_2];
-  while ((index < limit) && (entries[index] != param_1)) {
+  bucketStarts = gObjGroupOffsets;
+  bucketEnds = gObjGroupOffsets + 1;
+  entries = gObjGroupObjects;
+  index = (int)bucketStarts[group];
+  limit = (int)bucketEnds[group];
+  while ((index < limit) && (entries[index] != obj)) {
     index++;
   }
   if (limit <= index) {
     return;
   }
-  count = (int)DAT_803dd870 - 1;
-  DAT_803dd870 = count;
+  count = (int)gObjGroupObjectCount - 1;
+  gObjGroupObjectCount = count;
   while (index < count) {
     entries[index] = entries[index + 1];
     index++;
   }
-  while (param_2 < 0x54) {
-    bucketEnds[param_2] = bucketEnds[param_2] - 1;
-    param_2++;
+  while (group < 0x54) {
+    bucketEnds[group] = bucketEnds[group] - 1;
+    group++;
   }
 }
 #pragma peephole reset
@@ -1775,37 +1774,37 @@ void ObjGroup_RemoveObject(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int ObjGroup_GetObjectGroup(int param_1)
+int ObjGroup_GetObjectGroup(int obj)
 {
-  uint uVar1;
-  int iVar2;
-  int *piVar3;
-  byte *pbVar4;
-  int iVar5;
+  uint remaining;
+  int group;
+  int *entry;
+  byte *offset;
+  int objectIndex;
   
-  iVar5 = 0;
-  piVar3 = &DAT_80343558;
-  uVar1 = (uint)DAT_803dd870;
+  objectIndex = 0;
+  entry = gObjGroupObjects;
+  remaining = (uint)gObjGroupObjectCount;
   while( true ) {
-    if (uVar1 == 0) {
+    if (remaining == 0) {
       return 0;
     }
-    if (*piVar3 == param_1) break;
-    piVar3 = piVar3 + 1;
-    iVar5 = iVar5 + 1;
-    uVar1 = uVar1 - 1;
+    if (*entry == obj) break;
+    entry = entry + 1;
+    objectIndex = objectIndex + 1;
+    remaining = remaining - 1;
   }
-  iVar2 = 0;
-  pbVar4 = &DAT_80343958;
+  group = 0;
+  offset = gObjGroupOffsets;
   while( true ) {
-    if (iVar5 < (int)(uint)*pbVar4) {
-      return iVar2;
+    if (objectIndex < (int)(uint)*offset) {
+      return group;
     }
-    if (0x54 < iVar2) break;
-    pbVar4 = pbVar4 + 1;
-    iVar2 = iVar2 + 1;
+    if (0x54 < group) break;
+    offset = offset + 1;
+    group = group + 1;
   }
-  return iVar2;
+  return group;
 }
 
 /*
@@ -1823,41 +1822,41 @@ int ObjGroup_GetObjectGroup(int param_1)
  */
 #pragma scheduling off
 #pragma peephole off
-void ObjGroup_AddObject(int param_1,int param_2)
+void ObjGroup_AddObject(int obj,int group)
 {
   byte *bucketStarts;
-  char *bucketEnds;
+  u8 *bucketEnds;
   int count;
   int index;
   int insertIndex;
   int limit;
   int *entries;
 
-  if ((param_2 < 0) || (0x53 < param_2)) {
+  if ((group < 0) || (0x53 < group)) {
     return;
   }
-  bucketStarts = &DAT_80343958;
-  entries = &DAT_80343558;
-  bucketEnds = &DAT_80343959;
-  insertIndex = (int)bucketStarts[param_2];
-  limit = (int)(byte)bucketEnds[param_2];
+  bucketStarts = gObjGroupOffsets;
+  entries = gObjGroupObjects;
+  bucketEnds = gObjGroupOffsets + 1;
+  insertIndex = (int)bucketStarts[group];
+  limit = (int)bucketEnds[group];
   for (index = insertIndex; index < limit; index++) {
-    if (entries[index] == param_1) {
+    if (entries[index] == obj) {
       return;
     }
   }
   if (limit != insertIndex) {
     insertIndex = limit - 1;
   }
-  count = (int)DAT_803dd870;
-  DAT_803dd870 = count + 1;
+  count = (int)gObjGroupObjectCount;
+  gObjGroupObjectCount = count + 1;
   for (index = count; insertIndex < index; index--) {
     entries[index] = entries[index - 1];
   }
-  entries[insertIndex] = param_1;
-  while (param_2 < 0x54) {
-    bucketEnds[param_2] = bucketEnds[param_2] + 1;
-    param_2++;
+  entries[insertIndex] = obj;
+  while (group < 0x54) {
+    bucketEnds[group] = bucketEnds[group] + 1;
+    group++;
   }
 }
 #pragma peephole reset
@@ -1877,14 +1876,12 @@ void ObjGroup_AddObject(int param_1,int param_2)
  * PAL Size: TODO
  */
 extern void* memset(void* dst, int val, u32 n);
-extern u8 lbl_80342CF8[0x58];
-extern u8 lbl_803DCBF0;
 #pragma scheduling off
 #pragma peephole off
 void ObjGroup_ClearAll(void)
 {
-  memset(lbl_80342CF8, 0, 0x55);
-  lbl_803DCBF0 = 0;
+  memset(gObjGroupOffsets, 0, 0x55);
+  gObjGroupObjectCount = 0;
   return;
 }
 #pragma peephole reset
