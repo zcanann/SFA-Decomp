@@ -339,22 +339,22 @@ void expgfx_release(uint slotPoolBase,int poolIndex,int slotIndex,int freeTextur
       }
       tableOffset = Expgfx_GetSlotTableIndex(slot) << 4;
       refCount = (u16 *)(expgfxBase + EXPGFX_EXPTAB_REFCOUNT_OFFSET + tableOffset);
-      if (*refCount == 0) {
-        fn_801378A8(sExpgfxMismatchInAddRemove);
-      }
-      else {
+      if (*refCount != 0) {
         (*refCount)--;
         if (*refCount == 0) {
           *(u32 *)(tableTextureResources + tableOffset) = 0;
           *(u32 *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableOffset) = 0;
         }
       }
+      else {
+        fn_801378A8(sExpgfxMismatchInAddRemove);
+      }
     }
     slot->sequenceId = -1;
     if ((clearActive & 0xff) != 0) {
       DCFlushRange(slot,EXPGFX_SLOT_SIZE);
     }
-    *poolActiveMask &= ~activeMask;
+    *poolActiveMask = *poolActiveMask & ~activeMask;
     poolActiveCount =
         (char *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET + poolIndex);
     (*poolActiveCount)--;
@@ -418,7 +418,7 @@ void expgfx_initialise(void)
         tableIndex = Expgfx_GetSlotTableIndex(slot);
         tableEntry = &((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))[tableIndex];
         if (tableEntry->refCount != 0) {
-          tableEntry->refCount = tableEntry->refCount + -1;
+          tableEntry->refCount--;
           if (tableEntry->refCount == 0) {
             tableEntry->textureOrResource = 0;
             tableEntry->key0 = 0;
@@ -751,11 +751,11 @@ void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_
 #pragma peephole off
 int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
 {
-  ExpgfxTableEntry *entry;
   ExpgfxTableEntry *entryBase;
+  ExpgfxTableEntry *entry;
+  u16 *refCount;
   int tableIndex;
   int freeIndex;
-  u32 refCount;
   
   tableIndex = 0;
   entryBase = Expgfx_GetTableEntry(0);
@@ -763,13 +763,12 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
   for (; tableIndex < EXPGFX_POOL_COUNT; tableIndex++) {
     if (((entry->refCount != 0 && (entry->textureOrResource == textureOrResource)) &&
         (entry->key0 == key0)) && (entry->key1 == key1)) {
-      entry = &gExpgfxTableEntries[tableIndex];
-      refCount = entry->refCount;
-      if (refCount >= EXPGFX_EXPTAB_REFCOUNT_MAX) {
+      refCount = &gExpgfxTableEntries[tableIndex].refCount;
+      if (*refCount >= EXPGFX_EXPTAB_REFCOUNT_MAX) {
         fn_801378A8(sExpgfxAddToTableUsageOverflow);
         return EXPGFX_INVALID_TABLE_INDEX;
       }
-      entry->refCount++;
+      (*refCount)++;
       return (int)(short)tableIndex;
     }
     entry = entry + 1;
@@ -816,15 +815,16 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
   u32 bit;
   s32 highBit;
   u32 *sourceMasks;
+  u64 sourceMaskHit;
   u32 *poolSourceIds;
   u8 *poolFrameFlags;
-  s8 aggregateState;
+  int aggregateState;
   int poolIndex;
 
   aggregateState = 0;
   source = (ExpgfxSourceObject *)sourceObject;
-  lbl_803DD253 = 0;
   poolIndex = 0;
+  lbl_803DD253 = 0;
   poolSourceIds = gExpgfxTrackedPoolSourceIds;
   poolFrameFlags = gExpgfxStaticPoolFrameFlags;
   while ((s16)poolIndex < EXPGFX_POOL_COUNT) {
@@ -832,7 +832,8 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
       bit = 1 << ((s16)poolIndex >> 1);
       highBit = (s32)bit >> 0x1f;
       sourceMasks = &gExpgfxTrackedSourceFrameMasks[((u32)(poolIndex & 1)) * 2];
-      if (((bit & sourceMasks[1]) | (highBit & sourceMasks[0])) != 0) {
+      sourceMaskHit = CONCAT44(highBit & sourceMasks[0],bit & sourceMasks[1]);
+      if (sourceMaskHit != 0) {
         *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_B;
         if (aggregateState == EXPGFX_SOURCE_FRAME_STATE_A) {
           aggregateState = EXPGFX_SOURCE_FRAME_STATE_MIXED;
@@ -1132,13 +1133,13 @@ void fn_8009EEB8(u32 sourceId)
 #pragma peephole off
 void expgfx_releaseSourceSlots(u32 sourceId)
 {
-  char *poolActiveCounts;
-  ExpgfxSlot *slot;
   u8 *expgfxBase;
+  uint *slotPoolBases;
   u32 *poolSourceIds;
+  char *poolActiveCounts;
   s16 *poolSlotTypeIds;
   u8 *poolFrameFlags;
-  uint *slotPoolBases;
+  ExpgfxSlot *slot;
   s16 invalidSlotType;
   int poolIndex;
   int slotIndex;
