@@ -134,9 +134,9 @@ void dfptargetblock_init(int param_1,int param_2)
   int iVar4;
   undefined uVar5;
   int iVar6;
-  int iVar7;
   int iVar8;
   DfpTargetBlockState *state;
+  int iVar7;
   double dVar11;
   DfpTargetBlockPoint point;
 
