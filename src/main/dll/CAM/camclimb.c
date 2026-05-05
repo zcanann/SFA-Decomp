@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 
-extern undefined4 fn_8000E034();
-extern undefined4 fn_8000E0A0();
+extern undefined4 Obj_TransformWorldPointToLocal();
+extern undefined4 Obj_TransformLocalPointToWorld();
 extern uint fn_800217C0();
 extern undefined4 fn_80103660();
 extern char camcontrol_getTargetPosition();
@@ -50,7 +50,7 @@ void camclimb_update(short *param_1)
     if (*lbl_803DD538 != *(uint *)(param_1 + 0x18)) {
       iVar3 = 0;
       for (iVar5 = 0; iVar5 < *(int *)((int)lbl_803DD538 + 0x1b0); iVar5 = iVar5 + 1) {
-        fn_8000E0A0((double)*(float *)((int)lbl_803DD538 + iVar3 + 0x1c),
+        Obj_TransformLocalPointToWorld((double)*(float *)((int)lbl_803DD538 + iVar3 + 0x1c),
                      (double)*(float *)((int)lbl_803DD538 + iVar3 + 0x6c),
                      (double)*(float *)((int)lbl_803DD538 + iVar3 + 0xbc),
                      (int)lbl_803DD538 + iVar3 + 0x1c,
@@ -60,7 +60,7 @@ void camclimb_update(short *param_1)
       }
       iVar3 = 0;
       for (iVar5 = 0; iVar5 < *(int *)((int)lbl_803DD538 + 0x1b0); iVar5 = iVar5 + 1) {
-        fn_8000E034((double)*(float *)((int)lbl_803DD538 + iVar3 + 0x1c),
+        Obj_TransformWorldPointToLocal((double)*(float *)((int)lbl_803DD538 + iVar3 + 0x1c),
                      (double)*(float *)((int)lbl_803DD538 + iVar3 + 0x6c),
                      (double)*(float *)((int)lbl_803DD538 + iVar3 + 0xbc),
                      (int)lbl_803DD538 + iVar3 + 0x1c,
@@ -76,7 +76,7 @@ void camclimb_update(short *param_1)
     *(float *)(param_1 + 6) = local_28;
     *(float *)(param_1 + 10) = local_20[0];
     iVar3 = (*(code *)(*(int *)lbl_803DCA50 + 0x18))();
-    fn_8000E0A0((double)*(float *)(param_1 + 6), (double)*(float *)(param_1 + 8),
+    Obj_TransformLocalPointToWorld((double)*(float *)(param_1 + 6), (double)*(float *)(param_1 + 8),
                  (double)*(float *)(param_1 + 10), param_1 + 0xc, param_1 + 0xe,
                  param_1 + 0x10, *(undefined4 *)(param_1 + 0x18));
     (*(code *)(**(int **)(iVar3 + 4) + 0x1c))
@@ -114,7 +114,7 @@ void camclimb_update(short *param_1)
       (*(code *)(*(int *)lbl_803DCA50 + 0x1c))(0x42, 0, 1, 0, 0, 0, 0xff);
     }
     camcontrol_updatePathTargetAction(param_1, psVar4);
-    fn_8000E034((double)*(float *)(param_1 + 0xc), (double)*(float *)(param_1 + 0xe),
+    Obj_TransformWorldPointToLocal((double)*(float *)(param_1 + 0xc), (double)*(float *)(param_1 + 0xe),
                  (double)*(float *)(param_1 + 0x10), param_1 + 6, param_1 + 8,
                  param_1 + 10, *(undefined4 *)(param_1 + 0x18));
   }

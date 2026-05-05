@@ -2,7 +2,7 @@
 
 extern void *mmAlloc(int size, int heap, int flags);
 extern void fn_80023800(void *ptr);
-extern void fn_8000E034(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, s32 param);
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, s32 param);
 extern s16 fn_800217C0(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
 extern f32 fn_80293E80(f32 x);
@@ -89,7 +89,7 @@ void fn_8010DAE0(f32 *param_1, undefined4 param_2, f32 *param_3) {
         param_1[6] = param_3[6];
         param_1[7] = param_3[7];
         param_1[8] = param_3[8];
-        fn_8000E034(param_3[6], param_3[7], param_3[8],
+        Obj_TransformWorldPointToLocal(param_3[6], param_3[7], param_3[8],
                      &param_1[3], &param_1[4], &param_1[5],
                      *(s32 *)&param_1[12]);
         *(s16 *)param_1 = *(s16 *)param_3;
