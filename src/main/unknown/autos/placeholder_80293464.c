@@ -285,7 +285,7 @@ float fn_80293DA4(float x) {
     float y2;
 
     bits.f = x;
-    y = fn_80292CC4(&n, x);
+    y = fn_80292CC4(&n, bits.f);
     n += (bits.u >> 29) & 4;
     y2 = y * y;
 
@@ -311,7 +311,7 @@ float fn_80293E80(float x) {
     float y2;
 
     bits.f = x;
-    y = fn_80292CC4(&n, x);
+    y = fn_80292CC4(&n, bits.f);
     n += (bits.u >> 29) & 4;
     y2 = y * y;
 
@@ -337,7 +337,7 @@ float fn_80293F7C(float x) {
     float y2;
 
     bits.f = x;
-    y = fn_80292CC4(&n, x);
+    y = fn_80292CC4(&n, bits.f);
     n += (bits.u >> 29) & 4;
     y2 = y * y;
 

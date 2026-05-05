@@ -1264,12 +1264,14 @@ void ObjHits_TickPriorityHitCooldowns(void)
 {
   int iVar1;
   short sVar2;
+  int *base;
 
   sVar2 = 0;
   iVar1 = 0;
   do {
-    if (*(int *)((int)lbl_803DCBDC + iVar1) != 0) {
-      *(int *)((int)lbl_803DCBDC + iVar1) = *(int *)((int)lbl_803DCBDC + iVar1) + -1;
+    base = lbl_803DCBDC;
+    if (*(int *)((int)base + iVar1) != 0) {
+      *(int *)((int)base + iVar1) = *(int *)((int)base + iVar1) + -1;
     }
     iVar1 = iVar1 + 0x3c;
     sVar2++;
