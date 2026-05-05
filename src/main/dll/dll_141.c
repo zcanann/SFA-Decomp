@@ -72,7 +72,7 @@ extern f32 lbl_803E41C4;
 /*
  * --INFO--
  *
- * Function: FUN_801732a4
+ * Function: magicdust_update
  * EN v1.0 Address: 0x801732A4
  * EN v1.0 Size: 2272b
  * EN v1.1 Address: 0x80173750
@@ -82,8 +82,8 @@ extern f32 lbl_803E41C4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801732a4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void magicdust_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                      undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   float fVar1;
   short sVar2;
@@ -307,7 +307,7 @@ LAB_80173f80:
 /*
  * --INFO--
  *
- * Function: FUN_80173b84
+ * Function: magicdust_init
  * EN v1.0 Address: 0x80173B84
  * EN v1.0 Size: 1112b
  * EN v1.1 Address: 0x80173F98
@@ -317,7 +317,7 @@ LAB_80173f80:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80173b84(int param_1,int param_2)
+void magicdust_init(int param_1,int param_2)
 {
   short sVar1;
   float fVar2;

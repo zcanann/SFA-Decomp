@@ -256,13 +256,13 @@ void collectible_initialise(void)
 }
 
 /* 8b "li r3, N; blr" returners. */
-int fn_80173224(void) { return 0x288; }
+int magicdust_getExtraSize(void) { return 0x288; }
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E34B0;
 extern void fn_8003B8F4(f32);
 #pragma scheduling off
 #pragma peephole off
-void fn_80173280(void) { fn_8003B8F4(lbl_803E34B0); }
+void magicdust_render(void) { fn_8003B8F4(lbl_803E34B0); }
 #pragma peephole reset
 #pragma scheduling reset
