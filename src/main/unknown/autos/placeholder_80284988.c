@@ -7,6 +7,11 @@ extern u16 lbl_803DE3BC;
 extern u32 lbl_803DE3C0;
 extern u32 lbl_803DE374;
 extern u32 lbl_803DE3B4;
+extern u16 lbl_803DE32C;
+extern u32 lbl_803DE330;
+extern u32 lbl_803DE3A8;
+extern u32 fn_80284A40(void);
+extern void fn_8027C48C(u32 param_1, u32 elapsed);
 
 /*
  * --INFO--
@@ -61,6 +66,28 @@ int fn_80284998(void)
     while (DSPGetDMAStatus() != 0) {}
     DSPAssertInt();
     return 1;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_802849CC
+ * EN v1.0 Address: 0x802849CC
+ * EN v1.0 Size: 116b
+ */
+void fn_802849CC(u32 param_1)
+{
+    u32 elapsed = fn_80284A40();
+    fn_8027C48C(param_1, elapsed);
+    {
+        u32 saved = lbl_803DE330;
+        lbl_803DE3A8 = 0;
+        PPCSync();
+        DSPSendMailToDSP(((u32)0xbabe << 16) | lbl_803DE32C);
+        while (DSPCheckMailToDSP() != 0) {}
+        DSPSendMailToDSP(saved);
+        while (DSPCheckMailToDSP() != 0) {}
+    }
 }
 
 /*
