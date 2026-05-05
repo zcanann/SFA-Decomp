@@ -855,9 +855,9 @@ int shopitem_func08(void) { return 0x0; }
 int spscarab_getExtraSize(void) { return 0x14; }
 int spscarab_func08(void) { return 0x0; }
 
-extern void fn_8000DB90(int x, int y);
+extern void Sfx_RemoveLoopedObjectSound(int x, int y);
 #pragma scheduling off
 #pragma peephole off
-void spscarab_free(int x) { fn_8000DB90(x, 0x406); }
+void spscarab_free(int x) { Sfx_RemoveLoopedObjectSound(x, 0x406); }
 #pragma peephole reset
 #pragma scheduling reset

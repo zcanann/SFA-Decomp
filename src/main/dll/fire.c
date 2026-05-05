@@ -5,7 +5,7 @@ extern undefined4 FUN_800178b8();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern undefined4 fn_8000A380(int param_1,int param_2,int param_3);
-extern undefined4 fn_8000DA58(int param_1,int param_2);
+extern undefined4 Sfx_KeepAliveLoopedObjectSound(int param_1,int param_2);
 extern undefined4 fn_80014948(int param_1);
 extern undefined4 fn_80041E3C(int param_1);
 extern undefined4 fn_80042F78(int param_1);
@@ -59,7 +59,7 @@ undefined4 fire_updateState(FireObject *obj,undefined4 param_2,u8 *stateList)
   undefined4 anim;
 
   mode = (u8)(*lbl_803DCAAC)->getMode((int)obj->mapId);
-  fn_8000DA58(0,0x48b);
+  Sfx_KeepAliveLoopedObjectSound(0,0x48b);
   for (stateIndex = 0; stateIndex < (int)(uint)stateList[0x8b]; stateIndex++) {
     state = stateList[stateIndex + 0x81];
     if (state == 1) {
