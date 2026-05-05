@@ -1295,7 +1295,6 @@ undefined4 RomCurve_getById(uint curveId,int *outIndex)
   int high;
   int low;
   int mid;
-  int curve;
 
   *outIndex = -1;
   if ((int)curveId < 0) {
@@ -1303,18 +1302,17 @@ undefined4 RomCurve_getById(uint curveId,int *outIndex)
   }
   high = gRomCurveCount + -1;
   low = 0;
-  while (low <= high) {
+  while (high >= low) {
     mid = high + low >> 1;
-    curve = (&DAT_803a2448)[mid];
-    if (curveId > *(uint *)(curve + 0x14)) {
+    if (curveId > *(uint *)(gRomCurveTable[mid] + ROMCURVE_ID_OFFSET)) {
       low = mid + 1;
     }
-    else if (curveId < *(uint *)(curve + 0x14)) {
+    else if (curveId < *(uint *)(gRomCurveTable[mid] + ROMCURVE_ID_OFFSET)) {
       high = mid + -1;
     }
     else {
       *outIndex = mid;
-      return curve;
+      return gRomCurveTable[mid];
     }
   }
   *outIndex = -1;
@@ -2401,6 +2399,53 @@ void FUN_800e4628(undefined8 param_1,double param_2,double param_3,undefined4 pa
 /*
  * --INFO--
  *
+ * Function: curves_remove
+ * EN v1.0 Address: 0x800E51EC
+ * EN v1.0 Size: 252b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+void curves_remove(int curve)
+{
+  int *slot;
+  int count;
+  int index;
+  int remaining;
+
+  index = 0;
+  slot = gRomCurveTable;
+  count = gRomCurveCount;
+  while ((index < count) &&
+         (*(uint *)(curve + ROMCURVE_ID_OFFSET) != *(uint *)(*slot + ROMCURVE_ID_OFFSET))) {
+    slot = slot + 1;
+    index = index + 1;
+  }
+
+  if (index >= count) {
+    return;
+  }
+
+  gRomCurveCount = gRomCurveCount - 1;
+  slot = gRomCurveTable + index;
+  remaining = gRomCurveCount - index;
+  while (remaining > 0) {
+    *slot = slot[1];
+    slot = slot + 1;
+    remaining = remaining + -1;
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * --INFO--
+ *
  * Function: curves_addCurveDef
  * EN v1.0 Address: 0x800E4724
  * EN v1.0 Size: 4b
@@ -2415,9 +2460,9 @@ void FUN_800e4628(undefined8 param_1,double param_2,double param_3,undefined4 pa
 #pragma peephole off
 void curves_addCurveDef(int curve)
 {
+  int *slot;
   int count;
   int insertIndex;
-  int *slot;
   int remaining;
 
   count = gRomCurveCount;
