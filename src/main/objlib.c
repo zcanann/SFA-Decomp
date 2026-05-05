@@ -14,6 +14,7 @@ extern void fn_80014B3C(int index,uint flags);
 extern undefined4 FUN_80017640();
 extern undefined4 FUN_80017700();
 extern undefined4 FUN_80017704();
+extern void fn_80021570(void *transform,float *mtx);
 extern double FUN_80017714();
 extern float fn_80021704(float *param_1,float *param_2);
 extern int FUN_80017730();
@@ -80,6 +81,7 @@ extern f64 DOUBLE_803df640;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DCBE8;
 extern f32 lbl_803DE914;
+extern f32 lbl_803DE97C;
 extern f32 lbl_803DDA58;
 extern f32 lbl_803DDA5C;
 extern f32 lbl_803DF5E8;
@@ -111,6 +113,27 @@ typedef struct ObjMsgQueue {
   uint capacity;
   ObjMsgEntry entries[1];
 } ObjMsgQueue;
+
+typedef struct ObjPathPoint {
+  f32 x;
+  f32 y;
+  f32 z;
+  s16 rotX;
+  s16 rotY;
+  s16 rotZ;
+  s8 modelIndex[6];
+} ObjPathPoint;
+
+typedef struct ObjPathTransform {
+  s16 rotX;
+  s16 rotY;
+  s16 rotZ;
+  u8 pad06[2];
+  f32 scale;
+  f32 x;
+  f32 y;
+  f32 z;
+} ObjPathTransform;
 
 typedef struct ObjHitsPriorityState {
   u8 pad00[0x50];
@@ -2716,15 +2739,15 @@ void ObjPath_GetPointWorldPositionArray(undefined4 param_1,undefined4 param_2,in
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjPath_GetPointLocalPosition(int param_1,int param_2,undefined4 *param_3,undefined4 *param_4,
-                 undefined4 *param_5)
+void ObjPath_GetPointLocalPosition(int param_1,int param_2,float *param_3,float *param_4,
+                 float *param_5)
 {
-  int iVar1;
+  int offset;
   
-  iVar1 = param_2 * 0x18;
-  *param_3 = *(undefined4 *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) + iVar1);
-  *param_4 = *(undefined4 *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) + iVar1 + 4);
-  *param_5 = *(undefined4 *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) + iVar1 + 8);
+  offset = param_2 * sizeof(ObjPathPoint);
+  *param_3 = *(float *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) + offset);
+  *param_4 = *(float *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) + offset + 4);
+  *param_5 = *(float *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) + offset + 8);
   return;
 }
 
@@ -2743,25 +2766,18 @@ void ObjPath_GetPointLocalPosition(int param_1,int param_2,undefined4 *param_3,u
  */
 void ObjPath_GetPointLocalMtx(int param_1,int param_2,float *param_3)
 {
-  int iVar1;
-  ushort local_18;
-  undefined2 local_16;
-  undefined2 local_14;
-  float local_10;
-  undefined4 local_c;
-  undefined4 local_8;
-  undefined4 local_4;
-  
-  iVar1 = *(int *)(*(int *)(param_1 + 0x50) + 0x2c);
-  local_c = *(undefined4 *)(iVar1 + param_2 * 0x18);
-  iVar1 = iVar1 + param_2 * 0x18;
-  local_8 = *(undefined4 *)(iVar1 + 4);
-  local_4 = *(undefined4 *)(iVar1 + 8);
-  local_18 = *(ushort *)(iVar1 + 0xc);
-  local_16 = *(undefined2 *)(iVar1 + 0xe);
-  local_14 = *(undefined2 *)(iVar1 + 0x10);
-  local_10 = lbl_803DF5FC;
-  FUN_80017700(&local_18,param_3);
+  ObjPathPoint *pathPoint;
+  ObjPathTransform transform;
+
+  pathPoint = (ObjPathPoint *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) + param_2 * sizeof(ObjPathPoint));
+  transform.x = pathPoint->x;
+  transform.y = pathPoint->y;
+  transform.z = pathPoint->z;
+  transform.rotX = pathPoint->rotX;
+  transform.rotY = pathPoint->rotY;
+  transform.rotZ = pathPoint->rotZ;
+  transform.scale = lbl_803DE97C;
+  fn_80021570(&transform,param_3);
   return;
 }
 
