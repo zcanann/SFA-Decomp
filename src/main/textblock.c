@@ -29,7 +29,7 @@ int textblockObj_func08(void)
 #pragma peephole off
 void textblockObj_freeUnsupported(void)
 {
-  OSReport(sTextBlockNoLongerSupported);
+  OSReport(sTextBlockObjInitNoLongerSupported);
   return;
 }
 
@@ -56,7 +56,7 @@ void textblockObj_hitDetect(void)
  */
 void textblockObj_updateUnsupported(void)
 {
-  OSReport(sTextBlockNoLongerSupported);
+  OSReport(sTextBlockObjInitNoLongerSupported);
   return;
 }
 
@@ -75,7 +75,7 @@ void textblockObj_updateUnsupported(void)
  */
 void textblockObj_initUnsupported(void)
 {
-  OSReport(sTextBlockNoLongerSupported);
+  OSReport(sTextBlockObjInitNoLongerSupported);
   return;
 }
 #pragma peephole reset

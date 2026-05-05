@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 
 extern char sTextBlockInitNoLongerSupported[];
-extern char sTextBlockNoLongerSupported[];
+extern char sTextBlockObjInitNoLongerSupported[];
 
 int textblockObj_getExtraSize(void);
 int textblockObj_func08(void);
