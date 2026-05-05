@@ -117,10 +117,8 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
   ObjHitReactState *hitState;
   int obj;
   int *objectList;
-  int *resetObjects;
   int stateActive;
   int resetPending;
-  int resetObjectCount;
   undefined local_14[4];
   undefined local_18[4];
 
@@ -135,10 +133,7 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
         resetPending = hitState->resetFlags & OBJHITREACT_STATE_RESET_PENDING;
         if (resetPending != 0) {
           if (gObjHitReactResetObjectCount < OBJHITREACT_MAX_RESET_OBJECTS) {
-            resetObjects = gObjHitReactResetObjects;
-            resetObjectCount = gObjHitReactResetObjectCount;
-            gObjHitReactResetObjectCount = resetObjectCount + 1;
-            resetObjects[resetObjectCount] = obj;
+            gObjHitReactResetObjects[gObjHitReactResetObjectCount++] = obj;
           }
           hitState->activeHit = 0;
           hitState->flags = (s16)(hitState->flags & ~OBJHITREACT_STATE_RESET_PENDING);
