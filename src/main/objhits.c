@@ -56,8 +56,8 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803DC078;
 extern f32 lbl_803DC0B0;
 extern f32 lbl_803DCBE8;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
+extern f32 lbl_803DCDD8;
+extern f32 lbl_803DCDDC;
 extern f32 lbl_803DF590;
 extern f32 lbl_803DF598;
 extern f32 lbl_803DF59C;
@@ -1606,10 +1606,10 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
       uStack_1d4 = (int)*(short *)(iVar25 + 100) ^ 0x80000000;
       local_1d8 = 0x43300000;
       fVar2 = (float)((double)CONCAT44(0x43300000,uStack_1d4) - DOUBLE_803df5c0);
-      dVar32 = (double)lbl_803DDA58;
+      dVar32 = (double)lbl_803DCDD8;
       local_214 = (float)((double)*(float *)(iVar14 + 0x18) - dVar32);
       local_210 = *(undefined4 *)(iVar14 + 0x1c);
-      param_2 = (double)lbl_803DDA5C;
+      param_2 = (double)lbl_803DCDDC;
       local_20c = (float)((double)*(float *)(iVar14 + 0x20) - param_2);
       local_1f4 = (float)((double)*(float *)(iVar25 + 0x1c) - dVar32);
       local_1f0 = *(undefined4 *)(iVar25 + 0x20);
@@ -1647,10 +1647,10 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
       uStack_1d4 = (int)*(short *)(iVar24 + 100) ^ 0x80000000;
       local_1d8 = 0x43300000;
       fVar2 = (float)((double)CONCAT44(0x43300000,uStack_1d4) - DOUBLE_803df5c0);
-      dVar32 = (double)lbl_803DDA58;
+      dVar32 = (double)lbl_803DCDD8;
       local_204 = (float)((double)*(float *)(iVar15 + 0x18) - dVar32);
       local_200 = *(undefined4 *)(iVar15 + 0x1c);
-      param_2 = (double)lbl_803DDA5C;
+      param_2 = (double)lbl_803DCDDC;
       local_1fc = (float)((double)*(float *)(iVar15 + 0x20) - param_2);
       local_1e8 = local_218;
       local_1e4 = (float)((double)*(float *)(iVar25 + 0x1c) - dVar32);
@@ -2624,9 +2624,9 @@ static void ObjHits_CheckSkeletonPairInner(undefined4 param_1, undefined4 param_
           ObjHits_CheckSkeletonPairInner(iVar7, iVar5, param_3, recursionDepth + 1);
         }
       } else {
-        local_60 = *(float *)(iVar7 + 0x18) - lbl_803DDA58;
+        local_60 = *(float *)(iVar7 + 0x18) - lbl_803DCDD8;
         local_5c = *(float *)(iVar7 + 0x1c);
-        local_58 = *(float *)(iVar7 + 0x20) - lbl_803DDA5C;
+        local_58 = *(float *)(iVar7 + 0x20) - lbl_803DCDDC;
         uStack_2c = (int)*(short *)(iVar9 + 0x5a) ^ 0x80000000;
         local_30 = 0x43300000;
         uStack_24 = (int)*(short *)(iVar9 + 0x5e) ^ 0x80000000;
@@ -2676,9 +2676,9 @@ static void ObjHits_CheckSkeletonPairInner(undefined4 param_1, undefined4 param_
         }
       }
     } else {
-      local_54 = *(float *)(iVar7 + 0x18) - lbl_803DDA58;
+      local_54 = *(float *)(iVar7 + 0x18) - lbl_803DCDD8;
       local_50 = *(float *)(iVar7 + 0x1c);
-      local_4c = *(float *)(iVar7 + 0x20) - lbl_803DDA5C;
+      local_4c = *(float *)(iVar7 + 0x20) - lbl_803DCDDC;
       uStack_2c = (int)*(short *)(iVar9 + 0x5a) ^ 0x80000000;
       local_30 = 0x43300000;
       local_3c = local_54;
@@ -2824,12 +2824,12 @@ void ObjHits_CheckTrackContact(void)
           uVar7 = (uint)*(ushort *)(iVar18 + 0x14);
           if (uVar7 == 0) {
             if (iVar23 < 4) {
-              *(float *)((int)local_e8 + iVar16) = lbl_803DDA58 + (float)puVar8[1];
+              *(float *)((int)local_e8 + iVar16) = lbl_803DCDD8 + (float)puVar8[1];
               *(undefined4 *)((int)local_e8 + iVar16 + 4) = puVar8[2];
-              *(float *)((int)local_e8 + iVar16 + 8) = lbl_803DDA5C + (float)puVar8[3];
-              *(float *)((int)local_130 + iVar16) = lbl_803DDA58 + *(float *)(iVar10 + 4);
+              *(float *)((int)local_e8 + iVar16 + 8) = lbl_803DCDDC + (float)puVar8[3];
+              *(float *)((int)local_130 + iVar16) = lbl_803DCDD8 + *(float *)(iVar10 + 4);
               *(undefined4 *)((int)local_130 + iVar16 + 4) = *(undefined4 *)(iVar10 + 8);
-              *(float *)((int)local_130 + iVar16 + 8) = lbl_803DDA5C + *(float *)(iVar10 + 0xc);
+              *(float *)((int)local_130 + iVar16 + 8) = lbl_803DCDDC + *(float *)(iVar10 + 0xc);
               *(undefined4 *)((int)local_60 + iVar15) = *puVar8;
               local_50[iVar23] = 0xff;
               local_50[iVar23 + 4] = 7;
@@ -2847,13 +2847,13 @@ void ObjHits_CheckTrackContact(void)
               uVar1 = ((int)(uVar7 & 0xf000) >> 0xc) + iVar11 & 0xffff;
               if (iVar23 < 4) {
                 puVar17 = puVar13 + uVar1 * 4;
-                *pfVar22 = lbl_803DDA58 + (float)puVar17[1];
+                *pfVar22 = lbl_803DCDD8 + (float)puVar17[1];
                 pfVar22[1] = (float)puVar17[2];
-                pfVar22[2] = lbl_803DDA5C + (float)puVar17[3];
+                pfVar22[2] = lbl_803DCDDC + (float)puVar17[3];
                 iVar18 = iVar14 + uVar1 * 0x10;
-                *pfVar21 = lbl_803DDA58 + *(float *)(iVar18 + 4);
+                *pfVar21 = lbl_803DCDD8 + *(float *)(iVar18 + 4);
                 pfVar21[1] = *(float *)(iVar18 + 8);
-                pfVar21[2] = lbl_803DDA5C + *(float *)(iVar18 + 0xc);
+                pfVar21[2] = lbl_803DCDDC + *(float *)(iVar18 + 0xc);
                 *(undefined4 *)(puVar20 + 0x40) = *puVar17;
                 puVar19[0x50] = 0xff;
                 puVar19[0x54] = 7;
