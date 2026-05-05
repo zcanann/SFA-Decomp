@@ -20,14 +20,9 @@ extern u8 lbl_803DE370;
  */
 void hwStart(int slot)
 {
-  u8 *entry;
-  u32 offset;
+  int offset;
 
   offset = slot * 0xf4;
-  entry = lbl_803DE344;
-  entry += offset;
-  entry[0xd4] = lbl_803DE370;
-  entry = lbl_803DE344;
-  entry += offset;
-  fn_8027EF1C(entry);
+  lbl_803DE344[offset + 0xd4] = lbl_803DE370;
+  fn_8027EF1C(lbl_803DE344 + offset);
 }

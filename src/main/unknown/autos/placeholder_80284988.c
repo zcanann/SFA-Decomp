@@ -15,7 +15,7 @@ extern u32 fn_80284A40(void);
 extern void fn_8027C48C(u32 param_1, u32 elapsed);
 extern DSPTaskInfo lbl_803D4880;
 extern u16 lbl_80330840[];
-extern u16 lbl_803DC628[];
+extern u16 lbl_803DC628[4];
 extern void fn_80284714(void *task);
 extern void fn_80284724(void *task);
 

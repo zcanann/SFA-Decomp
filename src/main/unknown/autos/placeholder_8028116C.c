@@ -67,14 +67,14 @@ void fn_802811B0(f32 *matrix, f32 *vec, f32 *out)
 #pragma fp_contract off
 void fn_8028125C(f32 *v)
 {
-    f32 divisor;
+    volatile f32 divisor;
     f32 lensq = v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
     divisor = lensq;
     if (lensq > lbl_803E78C8) {
-        f64 y = __frsqrte((f64)lensq);
-        y = (lbl_803E78D0 * y) * (lbl_803E78D8 - (f64)lensq * y * y);
-        y = (lbl_803E78D0 * y) * (lbl_803E78D8 - (f64)lensq * y * y);
-        divisor = (f32)((f64)lensq * (lbl_803E78D0 * y) * (lbl_803E78D8 - (f64)lensq * y * y));
+        f64 g = __frsqrte((f64)lensq);
+        g = lbl_803E78D0 * g * (lbl_803E78D8 - g * g * (f64)lensq);
+        g = lbl_803E78D0 * g * (lbl_803E78D8 - g * g * (f64)lensq);
+        divisor = (f32)((f64)lensq * (lbl_803E78D0 * g) * (lbl_803E78D8 - g * g * (f64)lensq));
     }
     v[0] /= divisor;
     v[1] /= divisor;
