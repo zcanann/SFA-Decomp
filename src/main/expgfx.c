@@ -1243,7 +1243,7 @@ void expgfx_resetAllPools(void)
         tableEntry =
             (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + (Expgfx_GetSlotTableIndex(slot) << 4));
         if (tableEntry->refCount != 0) {
-          tableEntry->refCount = tableEntry->refCount - 1;
+          tableEntry->refCount--;
           if (tableEntry->refCount == 0) {
             tableEntry->textureOrResource = 0;
             tableEntry->key0 = 0;
