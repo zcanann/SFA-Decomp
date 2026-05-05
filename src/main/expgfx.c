@@ -109,8 +109,6 @@ extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dd430;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd718;
-extern undefined4 DAT_803dded0;
-extern undefined4 DAT_803dded2;
 extern undefined4 DAT_803dded4;
 extern undefined4 DAT_803dded8;
 extern undefined4 DAT_803ddee8;
@@ -195,6 +193,8 @@ extern u32 gExpgfxTrackedPoolSourceIds[];
 extern u32 gExpgfxTrackedSourceFrameMasks[];
 extern s16 gExpgfxStaticPoolSlotTypeIds[];
 extern int lbl_803DD258;
+extern volatile s16 lbl_803DD250;
+extern volatile u8 lbl_803DD252;
 extern char sExpgfxAddToTableUsageOverflow[];
 extern char sExpgfxExpTabIsFull[];
 extern char sExpgfxInvalidTabIndex[];
@@ -205,6 +205,8 @@ extern char sExpgfxNoTexture[];
 #define EXPGFX_SLOT_TABLE_INDEX_OFFSET 0x8A
 #define gExpgfxTrackedPoolMaskHighWords DAT_8039c7c8
 #define gExpgfxTrackedPoolMaskLowWords DAT_8039c7cc
+#define gExpgfxSequenceCounter lbl_803DD250
+#define gExpgfxFrameParityBit lbl_803DD252
 
 extern ExpgfxTableEntry gExpgfxTableEntries[];
 
@@ -214,6 +216,16 @@ typedef struct ExpgfxResourceEntry {
   u32 word8;
   u32 wordC;
 } ExpgfxResourceEntry;
+
+typedef union ExpgfxSlotStateBits {
+  u8 value;
+  struct {
+    u8 padHi : 4;
+    u8 initPhase : 2;
+    u8 quadReady : 1;
+    u8 frameParity : 1;
+  } bits;
+} ExpgfxSlotStateBits;
 
 typedef struct ExpgfxSlot {
   u8 pad00[0x06];
@@ -248,7 +260,7 @@ typedef struct ExpgfxSlot {
   s16 scaleTarget;
   s16 scaleFrames;
   u8 encodedTableIndex;
-  u8 stateBits;
+  ExpgfxSlotStateBits stateBits;
   u8 colorByte0;
   u8 colorByte1;
   u8 colorByte2;
@@ -623,8 +635,8 @@ void expgfx_initSlotQuad(void *slotPtr)
   slot = (ExpgfxSlot *)slotPtr;
   tableEntry = Expgfx_GetTableEntry(Expgfx_GetSlotTableIndex(slot));
   texture = tableEntry->textureOrResource;
-  slot->stateBits = slot->stateBits & ~EXPGFX_SLOT_STATE_FRAME_PARITY;
-  slot->stateBits = slot->stateBits & ~EXPGFX_SLOT_STATE_QUAD_READY | EXPGFX_SLOT_STATE_QUAD_READY;
+  slot->stateBits.bits.frameParity = 0;
+  slot->stateBits.bits.quadReady = 1;
   behaviorFlags = slot->behaviorFlags;
   if ((behaviorFlags & EXPGFX_BEHAVIOR_USE_QUAD_TEMPLATE_A) == 0) {
     quadTemplate = (s16 *)(staticDataBase + EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET);
@@ -1434,14 +1446,14 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
     piVar16 = &DAT_8039b7b8 + (uVar3 & 1) * 2;
     slot = Expgfx_GetSlot(uVar3, local_58);
     puVar18 = (undefined2 *)slot;
-    DAT_803dded0 = DAT_803dded0 + 1;
-    if (30000 < DAT_803dded0) {
-      DAT_803dded0 = 0;
+    gExpgfxSequenceCounter = gExpgfxSequenceCounter + 1;
+    if (30000 < gExpgfxSequenceCounter) {
+      gExpgfxSequenceCounter = 0;
     }
-    slot->sequenceId = DAT_803dded0;
+    slot->sequenceId = gExpgfxSequenceCounter;
     slot->behaviorFlags = spawnConfig->behaviorFlags;
     slot->renderFlags = spawnConfig->renderFlags;
-    slot->stateBits = slot->stateBits & ~EXPGFX_SLOT_STATE_INIT_PHASE_MASK;
+    slot->stateBits.value = slot->stateBits.value & ~EXPGFX_SLOT_STATE_INIT_PHASE_MASK;
     iVar6 = FUN_80081134(dVar19,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                          (int)spawnConfig->tableKeyType,uVar9,uVar12,uVar14,piVar16,param_14,
                          param_15,param_16);
@@ -1565,9 +1577,7 @@ void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double pa
             slot->sourceVecY = spawnConfig->sourceVecY;
             slot->sourceVecX = spawnConfig->sourceVecX;
           }
-          slot->stateBits =
-              DAT_803dded2 & EXPGFX_SLOT_STATE_FRAME_PARITY |
-              slot->stateBits & ~EXPGFX_SLOT_STATE_FRAME_PARITY;
+          slot->stateBits.bits.frameParity = gExpgfxFrameParityBit;
           if ((slot->renderFlags & EXPGFX_RENDER_BACKDATE_MOTION) != 0) {
             slot->renderFlags = slot->renderFlags ^ EXPGFX_RENDER_BACKDATE_MOTION;
             dVar21 = DOUBLE_803dffe0;
