@@ -3032,12 +3032,13 @@ void FUN_80038bb0(char param_1,int param_2)
   return;
 }
 
-extern u8 lbl_803DCC00;
-#pragma scheduling off
-#pragma peephole off
-void fn_80038F1C(int a, u8 b) {
-    if ((u8)a != 0) return;
-    lbl_803DCC00 = (u8)((lbl_803DCC00 & ~0x80) | ((b & 1) << 7));
+typedef struct ObjLibFlagByte {
+    u8 highBit : 1;
+    u8 rest : 7;
+} ObjLibFlagByte;
+
+extern ObjLibFlagByte lbl_803DCC00;
+void fn_80038F1C(int a, int b) {
+    if ((int)(u8)a != 0) return;
+    lbl_803DCC00.highBit = b;
 }
-#pragma peephole reset
-#pragma scheduling reset
