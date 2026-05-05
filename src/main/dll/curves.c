@@ -4108,14 +4108,14 @@ void gameplay_setDebugOptionEnabled(uint param_1,u8 param_2)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_800E542C(void) {}
+void curves_release(void) {}
 void fn_800E5430(void) {}
 void fn_800E7D98(void) {}
 void fn_800E7D9C(void) {}
 
 /* Pattern wrappers. */
 extern u32 gRomCurveCount;
-void fn_800E5420(void) { gRomCurveCount = 0x0; }
+void curves_initialise(void) { gRomCurveCount = 0x0; }
 
 /* *p1 = lbl1; *p2 = lbl2; (u32) */
 extern u32 lbl_803DD474;
