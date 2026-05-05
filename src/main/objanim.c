@@ -37,9 +37,9 @@ extern f32 lbl_803DE90C;
 #pragma scheduling off
 #pragma peephole off
 void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimState *state,
-                          uint moveId,s16 eventState)
+                          uint moveId,int eventState)
 {
-  float frameValue;
+  double frameValue;
   int frameType;
   int moveData;
   int moveIndex;
