@@ -347,7 +347,7 @@ void dimboss_func11(void)
 /*
  * --INFO--
  *
- * Function: dimboss_setScale
+ * Function: DIMboss_setScale
  * EN v1.0 Address: 0x801BD244
  * EN v1.0 Size: 12b
  * EN v1.1 Address: TODO
@@ -357,7 +357,7 @@ void dimboss_func11(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dimboss_setScale(DIMbossObject *obj)
+int DIMboss_setScale(DIMbossObject *obj)
 {
   return obj->runtime->scale;
 }
@@ -365,7 +365,7 @@ int dimboss_setScale(DIMbossObject *obj)
 /*
  * --INFO--
  *
- * Function: dimboss_getExtraSize
+ * Function: DIMboss_getExtraSize
  * EN v1.0 Address: 0x801BD250
  * EN v1.0 Size: 8b
  * EN v1.1 Address: TODO
@@ -375,7 +375,7 @@ int dimboss_setScale(DIMbossObject *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dimboss_getExtraSize(void)
+int DIMboss_getExtraSize(void)
 {
   return 0x4c8;
 }
@@ -401,7 +401,7 @@ int dimboss_func08(void)
 /*
  * --INFO--
  *
- * Function: dimboss_free
+ * Function: DIMboss_free
  * EN v1.0 Address: 0x801BD260
  * EN v1.0 Size: 260b
  * EN v1.1 Address: TODO
@@ -413,7 +413,7 @@ int dimboss_func08(void)
  */
 #pragma scheduling off
 #pragma peephole off
-void dimboss_free(DIMbossObject *obj)
+void DIMboss_free(DIMbossObject *obj)
 {
   DIMbossRuntime *runtime;
   void *childObject;
@@ -450,7 +450,7 @@ void dimboss_free(DIMbossObject *obj)
 /*
  * --INFO--
  *
- * Function: dimboss_render
+ * Function: DIMboss_render
  * EN v1.0 Address: 0x801BD364
  * EN v1.0 Size: 176b
  * EN v1.1 Address: TODO
@@ -461,7 +461,7 @@ void dimboss_free(DIMbossObject *obj)
  * PAL Size: TODO
  */
 #pragma peephole off
-void dimboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
+void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                     undefined4 param_5,char shouldRender)
 {
   DIMbossRuntime *runtime;
@@ -498,7 +498,7 @@ void dimboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
 /*
  * --INFO--
  *
- * Function: dimboss_hitDetect
+ * Function: DIMboss_hitDetect
  * EN v1.0 Address: 0x801BD414
  * EN v1.0 Size: 60b
  * EN v1.1 Address: TODO
@@ -508,7 +508,7 @@ void dimboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimboss_hitDetect(DIMbossObject *obj)
+void DIMboss_hitDetect(DIMbossObject *obj)
 {
   (*(code *)(*(int *)lbl_803DCA8C + 0xc))(obj,obj->runtime,lbl_803AD018);
 }
