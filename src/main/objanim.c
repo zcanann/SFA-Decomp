@@ -428,8 +428,8 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   if (frameStep != 0) {
     state->savedStep = state->step;
     state->eventStep =
-         (short)(int)(lbl_803DE8F4 /
-                      (float)(ObjAnim_U32AsDouble(frameStep ^ 0x80000000) - lbl_803DE900));
+         (int)(lbl_803DE8F4 /
+               (float)(ObjAnim_U32AsDouble(frameStep ^ 0x80000000) - lbl_803DE900));
     state->eventCountdown = OBJANIM_EVENT_COUNTDOWN_RESET;
   }
   state->step = lbl_803DE8F0;
@@ -1173,8 +1173,8 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
   if ((frameStep != 0) && ((flags & OBJANIM_SET_MOVE_FLAG_SKIP_EVENT_COUNTDOWN) == 0)) {
     state->savedStep = state->step;
     state->eventStep =
-         (short)(int)(lbl_803DE8F4 /
-                      (float)(ObjAnim_U32AsDouble(frameStep ^ 0x80000000) - lbl_803DE900));
+         (int)(lbl_803DE8F4 /
+               (float)(ObjAnim_U32AsDouble(frameStep ^ 0x80000000) - lbl_803DE900));
     state->eventCountdown = OBJANIM_EVENT_COUNTDOWN_RESET;
   }
   else {
