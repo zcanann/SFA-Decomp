@@ -17,8 +17,6 @@ extern u8 lbl_803DE370;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void hwKeyOff(int slot)
 {
   u8 *entry;
@@ -30,5 +28,3 @@ void hwKeyOff(int slot)
   entry += offset;
   *(u32 *)(entry + 0x24) |= 0x40;
 }
-#pragma peephole reset
-#pragma scheduling reset
