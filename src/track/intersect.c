@@ -1005,8 +1005,8 @@ void fn_800703C4(void)
 #pragma scheduling off
 void fn_80070404(f32 a, f32 b)
 {
-    extern f32 fn_8000FC1C(void);
-    extern f32 fn_8000FBE8(void);
+    extern f32 Camera_GetNearPlane(void);
+    extern f32 Camera_GetFarPlane(void);
     extern f32 lbl_803DEED8;
     extern f32 lbl_803DEEDC;
     extern f32 gSynthFadeMask;
@@ -1015,8 +1015,8 @@ void fn_80070404(f32 a, f32 b)
     f32 xc, yc, x, y, range;
     GXColor c;
 
-    lbl_803DD038 = fn_8000FC1C();
-    lbl_803DD034 = fn_8000FBE8();
+    lbl_803DD038 = Camera_GetNearPlane();
+    lbl_803DD034 = Camera_GetFarPlane();
 
     x = lbl_803DEED8 * a;
     y = lbl_803DEED8 * b;
@@ -1470,7 +1470,7 @@ undefined4 fn_80074D04(int param_1,int *param_2)
 #pragma scheduling off
 void fn_800753B8(int x1, int y1, int x2, int y2, u8* color)
 {
-    extern void fn_8000FB00(void);
+    extern void Camera_RebuildProjectionMatrix(void);
     extern Mtx lbl_80396880;
     extern f32 lbl_803DFB5C;
     extern void GXSetZMode();
@@ -1540,7 +1540,7 @@ void fn_800753B8(int x1, int y1, int x2, int y2, u8* color)
     GXWGFifo.f32 = lbl_803DFB5C;
     GXWGFifo.f32 = lbl_803DFB5C;
 
-    fn_8000FB00();
+    Camera_RebuildProjectionMatrix();
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -1562,7 +1562,7 @@ void fn_800753B8(int x1, int y1, int x2, int y2, u8* color)
 #pragma scheduling off
 void fn_80075684(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4)
 {
-    extern void fn_8000FB00(void);
+    extern void Camera_RebuildProjectionMatrix(void);
     extern Mtx lbl_80396880;
     extern f32 lbl_803DEF2C;
     extern f32 lbl_803DEEDC;
@@ -1643,7 +1643,7 @@ void fn_80075684(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 
     GXWGFifo.f32 = lbl_803DEEDC;
     GXWGFifo.f32 = lbl_803DEEDC;
 
-    fn_8000FB00();
+    Camera_RebuildProjectionMatrix();
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -1665,7 +1665,7 @@ void fn_80075684(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 
 #pragma scheduling off
 void fn_80075A1C(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
 {
-    extern void fn_8000FB00(void);
+    extern void Camera_RebuildProjectionMatrix(void);
     extern Mtx lbl_80396880;
     extern f32 lbl_803DFBAC;
     extern f32 lbl_803DFB5C;
@@ -1736,7 +1736,7 @@ void fn_80075A1C(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
     GXWGFifo.f32 = lbl_803DFB5C;
     GXWGFifo.f32 = lbl_803DFB5C;
 
-    fn_8000FB00();
+    Camera_RebuildProjectionMatrix();
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -1758,7 +1758,7 @@ void fn_80075A1C(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
 #pragma scheduling off
 void fn_80075D5C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z)
 {
-    extern void fn_8000FB00(void);
+    extern void Camera_RebuildProjectionMatrix(void);
     extern Mtx lbl_80396880;
 
     GXClearVtxDesc();
@@ -1797,7 +1797,7 @@ void fn_80075D5C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2,
     GXWGFifo.f32 = u1;
     GXWGFifo.f32 = v2;
 
-    fn_8000FB00();
+    Camera_RebuildProjectionMatrix();
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -1819,7 +1819,7 @@ void fn_80075D5C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2,
 #pragma scheduling off
 void fn_80075E8C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
 {
-    extern void fn_8000FB00(void);
+    extern void Camera_RebuildProjectionMatrix(void);
     extern Mtx lbl_80396880;
 
     GXClearVtxDesc();
@@ -1858,7 +1858,7 @@ void fn_80075E8C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
     GXWGFifo.f32 = u1;
     GXWGFifo.f32 = v2;
 
-    fn_8000FB00();
+    Camera_RebuildProjectionMatrix();
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -1909,7 +1909,7 @@ void fn_80076510(int x, int y, f32 sx, f32 sy)
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
     extern f32 lbl_803DEF2C;
-    extern void fn_8000FB00(void);
+    extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
 
@@ -1966,7 +1966,7 @@ void fn_80076510(int x, int y, f32 sx, f32 sy)
     GXWGFifo.s16 = (s16)(sy + (f32)((u32)y * 4));
     GXWGFifo.s16 = -0x18C;
 
-    fn_8000FB00();
+    Camera_RebuildProjectionMatrix();
     GXSetColorUpdate(1);
 }
 #pragma scheduling reset
@@ -2021,7 +2021,7 @@ void fn_80076D78(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern int lbl_803DD014;
     extern void fn_8004C264(s16* obj, int slot);
-    extern void fn_8000FB00(void);
+    extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
 
     GXClearVtxDesc();
@@ -2111,7 +2111,7 @@ void fn_80076D78(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
         GXWGFifo.f32 = lbl_803DEEDC;
         GXWGFifo.f32 = lbl_803DEEE4;
     }
-    fn_8000FB00();
+    Camera_RebuildProjectionMatrix();
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -2149,7 +2149,7 @@ void fn_8007719C(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern int lbl_803DD014;
     extern void fn_8004C264(s16* obj, int slot);
-    extern void fn_8000FB00(void);
+    extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     GXColor c;
     s32 w, h;
@@ -2237,7 +2237,7 @@ void fn_8007719C(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
     GXWGFifo.f32 = lbl_803DEEDC;
     GXWGFifo.f32 = lbl_803DEEE4;
 
-    fn_8000FB00();
+    Camera_RebuildProjectionMatrix();
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -3179,7 +3179,7 @@ void fn_80079A64(f32 sx, f32 sy, u8 a, u8 flag)
     extern int lbl_803DD014;
     extern void fn_8006C540(int*);
     extern void fn_8004C2E4(int, int);
-    extern void fn_8000FB00(void);
+    extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
     int handle;
@@ -3275,7 +3275,7 @@ void fn_80079A64(f32 sx, f32 sy, u8 a, u8 flag)
     GXWGFifo.s16 = 0x1E0;
     GXWGFifo.s16 = -8;
 
-    fn_8000FB00();
+    Camera_RebuildProjectionMatrix();
     GXSetCurrentMtx(0);
 }
 #pragma scheduling reset
@@ -3347,7 +3347,7 @@ void fn_8007AD10(f32 alpha)
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
     extern void fn_8006C6F0(int);
-    extern void fn_8000FB00(void);
+    extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
     Mtx mtx;
@@ -3423,7 +3423,7 @@ void fn_8007AD10(f32 alpha)
     GXWGFifo.s16 = 0;
     GXWGFifo.s16 = 0x80;
 
-    fn_8000FB00();
+    Camera_RebuildProjectionMatrix();
 }
 #pragma scheduling reset
 #pragma peephole reset

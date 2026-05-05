@@ -40,7 +40,7 @@ extern undefined4 fn_801BBB44();
 extern undefined8 fn_801BC7E4();
 extern void OSReport(const char *msg, ...);
 
-extern undefined4 fn_8000FACC();
+extern undefined4 Camera_DisableViewYOffset();
 extern undefined4 fn_80013E2C();
 extern undefined4 fn_8001F384();
 extern undefined4 Obj_FreeObject();
@@ -427,7 +427,7 @@ void dimboss_free(DIMbossObject *obj)
   GameBit_Set(0xd8f,0);
   GameBit_Set(0x3e2,0);
   obj->objectFlags &= ~0x80;
-  fn_8000FACC();
+  Camera_DisableViewYOffset();
   ObjGroup_RemoveObject(obj,3);
   childObject = obj->childObject;
   if (childObject != NULL) {

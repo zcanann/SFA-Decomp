@@ -2966,6 +2966,6 @@ void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v 
 
 /* plain forwarder. */
 extern void fn_8015DAE8(void);
-extern void fn_8000FACC(void);
+extern void Camera_DisableViewYOffset(void);
 void fn_8015DAC8(void) { fn_8015DAE8(); }
-void iceball_free(void) { fn_8000FACC(); }
+void iceball_free(void) { Camera_DisableViewYOffset(); }

@@ -999,10 +999,10 @@ extern s32   lbl_803DD7E0;
 
 extern void Camera_SetCurrentViewIndex(s32);
 extern void Camera_UpdateViewMatrices(void);
-extern void fn_8000F780(void);
-extern void fn_8000FAD8(void);
-extern void fn_8000FB00(void);
-extern void fn_8000FC3C(f32);
+extern void Camera_ApplyFullViewport(void);
+extern void Camera_EnableViewYOffset(void);
+extern void Camera_RebuildProjectionMatrix(void);
+extern void Camera_SetFovY(f32);
 extern void fn_80020628(s32);
 extern void fn_800206E8(s32);
 extern void fn_80016C48(void* arg);
@@ -1050,9 +1050,9 @@ extern void fn_80014B18(s32);
 extern void* lbl_803DCCF0;
 extern void  Camera_SetCurrentViewRotation(s32, s32, s32);
 extern void  Camera_SetCurrentViewPosition(f32, f32, f32);
-extern int   fn_8000FAC4(void);
-extern void  fn_8000FACC(void);
-extern f32   fn_8000FC34(void);
+extern int   Camera_IsViewYOffsetEnabled(void);
+extern void  Camera_DisableViewYOffset(void);
+extern f32   Camera_GetFovY(void);
 extern void  GXSetViewport(f32, f32, f32, f32, f32, f32);
 
 extern f32 lbl_803E1E3C;  /*  0.0f */
@@ -1138,12 +1138,12 @@ void fn_80129C74(void)
 {
     Camera_SetCurrentViewIndex(0);
     if (lbl_803DD7E0 != 0) {
-        fn_8000FAD8();
+        Camera_EnableViewYOffset();
     }
     Camera_UpdateViewMatrices();
-    fn_8000FC3C(lbl_803DBAA4);
-    fn_8000FB00();
-    fn_8000F780();
+    Camera_SetFovY(lbl_803DBAA4);
+    Camera_RebuildProjectionMatrix();
+    Camera_ApplyFullViewport();
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1380,7 +1380,7 @@ int fn_80129698(s8 a, int b, u8 c, int mode)
 
 /* EN v1.0 0x80129CBC  size: 248b  Render block setup with explicit
  * viewport sized to (320 x 240) centered on the supplied (x, y).
- * Caches FOV via fn_8000FC34, replaces it with arg0, activates render
+ * Caches FOV via Camera_GetFovY, replaces it with arg0, activates render
  * layer 1, captures depth bias, snaps clip planes (0,0,0), restores
  * ZBuf window 0x8000, then calls GXSetViewport with width/height
  * from the global render obj at lbl_803DCCF0 (offsets 0x4, 0x8).
@@ -1395,15 +1395,15 @@ int fn_80129698(s8 a, int b, u8 c, int mode)
 #pragma peephole off
 void fn_80129CBC(f32 fov, f32 x, f32 y)
 {
-    lbl_803DBAA4 = fn_8000FC34();
-    fn_8000FC3C(fov);
+    lbl_803DBAA4 = Camera_GetFovY();
+    Camera_SetFovY(fov);
     Camera_SetCurrentViewIndex(1);
-    lbl_803DD7E0 = fn_8000FAC4();
-    fn_8000FACC();
+    lbl_803DD7E0 = Camera_IsViewYOffsetEnabled();
+    Camera_DisableViewYOffset();
     Camera_SetCurrentViewPosition(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
-    fn_8000FB00();
+    Camera_RebuildProjectionMatrix();
     {
         u16* obj = (u16*)lbl_803DCCF0;
         GXSetViewport(x - lbl_803E1F34, y - lbl_803E2024,
@@ -1580,9 +1580,9 @@ void fn_80129DB4(void)
     Camera_SetCurrentViewIndex(1);
     Camera_SetCurrentViewPosition(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
-    saved_fov = fn_8000FC34();
-    fn_8000FC3C(lbl_803E2044);
-    fn_8000FB00();
+    saved_fov = Camera_GetFovY();
+    Camera_SetFovY(lbl_803E2044);
+    Camera_RebuildProjectionMatrix();
     Camera_UpdateViewMatrices();
     {
         u16* obj = (u16*)lbl_803DCCF0;
@@ -1598,10 +1598,10 @@ void fn_80129DB4(void)
         }
     }
     Camera_SetCurrentViewIndex(0);
-    fn_8000FC3C(saved_fov);
-    fn_8000FB00();
+    Camera_SetFovY(saved_fov);
+    Camera_RebuildProjectionMatrix();
     Camera_UpdateViewMatrices();
-    fn_8000F780();
+    Camera_ApplyFullViewport();
 }
 #pragma peephole reset
 #pragma scheduling reset
