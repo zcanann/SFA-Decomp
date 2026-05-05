@@ -914,17 +914,17 @@ void fn_80070310(u32 param_1, int param_2, u32 param_3)
 {
     extern void GXSetZMode();
     extern u8 lbl_803DD012;
-    extern int lbl_803DDC94;
-    extern u8 lbl_803DDC98;
+    extern int lbl_803DD014;
+    extern u8 lbl_803DD018;
     extern u8 lbl_803DD01A;
 
-    if ((u32)lbl_803DDC98 != (param_1 & 0xff) ||
-        lbl_803DDC94 != param_2 ||
+    if ((u32)lbl_803DD018 != (param_1 & 0xff) ||
+        lbl_803DD014 != param_2 ||
         (u32)lbl_803DD012 != (param_3 & 0xff) ||
         lbl_803DD01A == 0) {
         GXSetZMode(param_1, param_2, param_3);
-        lbl_803DDC98 = (u8)param_1;
-        lbl_803DDC94 = param_2;
+        lbl_803DD018 = (u8)param_1;
+        lbl_803DD014 = param_2;
         lbl_803DD012 = (u8)param_3;
         lbl_803DD01A = 1;
     }
@@ -1342,8 +1342,8 @@ void fn_80073AAC(void* texture, u32* colorA, u32* colorB)
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
     extern u8 lbl_803DD012;
-    extern int lbl_803DDC94;
-    extern u8 lbl_803DDC98;
+    extern int lbl_803DD014;
+    extern u8 lbl_803DD018;
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
     fn_8004C460(texture, 0);
     GXSetTevKColor(0, *(GXColor*)colorA);
@@ -1364,11 +1364,11 @@ void fn_80073AAC(void* texture, u32* colorA, u32* colorB)
     GXSetTevColorOp(0, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
     GXSetBlendMode(1, 4, 1, 5);
-    if ((u32)lbl_803DDC98 != 1 || lbl_803DDC94 != 3 ||
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
         GXSetZMode(1, 3, 0);
-        lbl_803DDC98 = 1;
-        lbl_803DDC94 = 3;
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 3;
         lbl_803DD012 = 0;
         lbl_803DD01A = 1;
     }
@@ -1475,8 +1475,8 @@ void fn_800753B8(int x1, int y1, int x2, int y2, u8* color)
     extern f32 lbl_803DFB5C;
     extern void GXSetZMode();
     extern u8 lbl_803DD012;
-    extern int lbl_803DDC94;
-    extern u8 lbl_803DDC98;
+    extern int lbl_803DD014;
+    extern u8 lbl_803DD018;
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
@@ -1484,11 +1484,11 @@ void fn_800753B8(int x1, int y1, int x2, int y2, u8* color)
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
-    if ((u32)lbl_803DDC98 != 0 || lbl_803DDC94 != 7 ||
+    if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 7 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
         GXSetZMode(0, 7, 0);
-        lbl_803DDC98 = 0;
-        lbl_803DDC94 = 7;
+        lbl_803DD018 = 0;
+        lbl_803DD014 = 7;
         lbl_803DD012 = 0;
         lbl_803DD01A = 1;
     }
@@ -1667,13 +1667,13 @@ void fn_80075A1C(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
 {
     extern void Camera_RebuildProjectionMatrix(void);
     extern Mtx lbl_80396880;
-    extern f32 lbl_803DFBAC;
+    extern f32 lbl_803DEF2C;
     extern f32 lbl_803DFB5C;
     extern void GXSetZMode();
     extern u8 lbl_803DD012;
-    extern int lbl_803DDC94;
-    extern u8 lbl_803DDC98;
-    f32 scale = lbl_803DFBAC;
+    extern int lbl_803DD014;
+    extern u8 lbl_803DD018;
+    f32 scale = lbl_803DEF2C;
     f32 fx1 = scale * x1;
     f32 fy1 = scale * y1;
     f32 fx2 = scale * x2;
@@ -1687,11 +1687,11 @@ void fn_80075A1C(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
-    if ((u32)lbl_803DDC98 != 0 || lbl_803DDC94 != 7 ||
+    if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 7 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
         GXSetZMode(0, 7, 0);
-        lbl_803DDC98 = 0;
-        lbl_803DDC94 = 7;
+        lbl_803DD018 = 0;
+        lbl_803DD014 = 7;
         lbl_803DD012 = 0;
         lbl_803DD01A = 1;
     }
@@ -1932,7 +1932,7 @@ void fn_80076510(int x, int y, f32 sx, f32 sy)
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
     if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 7 ||
-        (u32)lbl_803DD012 != 1 || lbl_803DD01A != 0) {
+        (u32)lbl_803DD012 != 1 || lbl_803DD01A == 0) {
         GXSetZMode(1, 7, 1);
         lbl_803DD018 = 1;
         lbl_803DD014 = 7;
@@ -2263,8 +2263,8 @@ void fn_80077604(f32* obj, u32* colorPtr, Mtx mtx)
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
     extern u8 lbl_803DD012;
-    extern int lbl_803DDC94;
-    extern u8 lbl_803DDC98;
+    extern int lbl_803DD014;
+    extern u8 lbl_803DD018;
     Mtx tmp;
 
     GXSetTevSwapModeTable(1, 3, 0, 3, 0);
@@ -2290,11 +2290,11 @@ void fn_80077604(f32* obj, u32* colorPtr, Mtx mtx)
     GXSetNumChans(0);
     GXSetNumTexGens(1);
     GXSetNumTevStages(1);
-    if ((u32)lbl_803DDC98 != 1 || lbl_803DDC94 != 3 ||
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
         GXSetZMode(1, 3, 0);
-        lbl_803DDC98 = 1;
-        lbl_803DDC94 = 3;
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 3;
         lbl_803DD012 = 0;
         lbl_803DD01A = 1;
     }
@@ -2327,8 +2327,8 @@ void fn_8007788C(f32* obj, u32* colorPtr, Mtx mtx)
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
     extern u8 lbl_803DD012;
-    extern int lbl_803DDC94;
-    extern u8 lbl_803DDC98;
+    extern int lbl_803DD014;
+    extern u8 lbl_803DD018;
     Mtx tmp;
 
     PSMTXConcat((float(*)[4])obj, mtx, tmp);
@@ -2352,11 +2352,11 @@ void fn_8007788C(f32* obj, u32* colorPtr, Mtx mtx)
     GXSetNumChans(0);
     GXSetNumTexGens(1);
     GXSetNumTevStages(1);
-    if ((u32)lbl_803DDC98 != 1 || lbl_803DDC94 != 3 ||
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
         GXSetZMode(1, 3, 0);
-        lbl_803DDC98 = 1;
-        lbl_803DDC94 = 3;
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 3;
         lbl_803DD012 = 0;
         lbl_803DD01A = 1;
     }
@@ -2422,13 +2422,13 @@ void fn_80078740(void)
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
     extern u8 lbl_803DD012;
-    extern int lbl_803DDC94;
-    extern u8 lbl_803DDC98;
-    if ((u32)lbl_803DDC98 != 1 || lbl_803DDC94 != 3 ||
+    extern int lbl_803DD014;
+    extern u8 lbl_803DD018;
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
         (u32)lbl_803DD012 != 1 || lbl_803DD01A == 0) {
         GXSetZMode(1, 3, 1);
-        lbl_803DDC98 = 1;
-        lbl_803DDC94 = 3;
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 3;
         lbl_803DD012 = 1;
         lbl_803DD01A = 1;
     }
@@ -2461,13 +2461,13 @@ void fn_8007880C(void)
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
     extern u8 lbl_803DD012;
-    extern int lbl_803DDC94;
-    extern u8 lbl_803DDC98;
-    if ((u32)lbl_803DDC98 != 1 || lbl_803DDC94 != 3 ||
+    extern int lbl_803DD014;
+    extern u8 lbl_803DD018;
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
         GXSetZMode(1, 3, 0);
-        lbl_803DDC98 = 1;
-        lbl_803DDC94 = 3;
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 3;
         lbl_803DD012 = 0;
         lbl_803DD01A = 1;
     }
@@ -2500,13 +2500,13 @@ void fn_800788DC(void)
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
     extern u8 lbl_803DD012;
-    extern int lbl_803DDC94;
-    extern u8 lbl_803DDC98;
-    if ((u32)lbl_803DDC98 != 1 || lbl_803DDC94 != 3 ||
+    extern int lbl_803DD014;
+    extern u8 lbl_803DD018;
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
         GXSetZMode(1, 3, 0);
-        lbl_803DDC98 = 1;
-        lbl_803DDC94 = 3;
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 3;
         lbl_803DD012 = 0;
         lbl_803DD01A = 1;
     }
@@ -2539,13 +2539,13 @@ void fn_800789AC(void)
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
     extern u8 lbl_803DD012;
-    extern int lbl_803DDC94;
-    extern u8 lbl_803DDC98;
-    if ((u32)lbl_803DDC98 != 0 || lbl_803DDC94 != 7 ||
+    extern int lbl_803DD014;
+    extern u8 lbl_803DD018;
+    if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 7 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
         GXSetZMode(0, 7, 0);
-        lbl_803DDC98 = 0;
-        lbl_803DDC94 = 7;
+        lbl_803DD018 = 0;
+        lbl_803DD014 = 7;
         lbl_803DD012 = 0;
         lbl_803DD01A = 1;
     }
@@ -2578,13 +2578,13 @@ void fn_80078A7C(void)
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
     extern u8 lbl_803DD012;
-    extern int lbl_803DDC94;
-    extern u8 lbl_803DDC98;
-    if ((u32)lbl_803DDC98 != 0 || lbl_803DDC94 != 7 ||
+    extern int lbl_803DD014;
+    extern u8 lbl_803DD018;
+    if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 7 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
         GXSetZMode(0, 7, 0);
-        lbl_803DDC98 = 0;
-        lbl_803DDC94 = 7;
+        lbl_803DD018 = 0;
+        lbl_803DD014 = 7;
         lbl_803DD012 = 0;
         lbl_803DD01A = 1;
     }
@@ -2617,13 +2617,13 @@ void fn_80078B4C(void)
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
     extern u8 lbl_803DD012;
-    extern int lbl_803DDC94;
-    extern u8 lbl_803DDC98;
-    if ((u32)lbl_803DDC98 != 1 || lbl_803DDC94 != 3 ||
+    extern int lbl_803DD014;
+    extern u8 lbl_803DD018;
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
         GXSetZMode(1, 3, 0);
-        lbl_803DDC98 = 1;
-        lbl_803DDC94 = 3;
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 3;
         lbl_803DD012 = 0;
         lbl_803DD01A = 1;
     }
@@ -2656,8 +2656,8 @@ void fn_80078C1C(void)
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
     extern u8 lbl_803DD012;
-    extern int lbl_803DDC94;
-    extern u8 lbl_803DDC98;
+    extern int lbl_803DD014;
+    extern u8 lbl_803DD018;
     GXSetCullMode(0);
     GXSetTevOrder(0, 0, 0, 0xFF);
     GXSetTevDirect(0);
@@ -2672,11 +2672,11 @@ void fn_80078C1C(void)
     GXSetNumChans(0);
     GXSetNumTexGens(1);
     GXSetNumTevStages(1);
-    if ((u32)lbl_803DDC98 != 0 || lbl_803DDC94 != 7 ||
+    if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 7 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
         GXSetZMode(0, 7, 0);
-        lbl_803DDC98 = 0;
-        lbl_803DDC94 = 7;
+        lbl_803DD018 = 0;
+        lbl_803DD014 = 7;
         lbl_803DD012 = 0;
         lbl_803DD01A = 1;
     }
