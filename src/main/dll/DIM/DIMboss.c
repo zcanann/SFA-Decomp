@@ -13,7 +13,7 @@ extern undefined8 GameBit_Set();
 extern undefined4 fn_800202CC();
 extern undefined8 fn_800234EC();
 extern undefined4 ObjModel_ClearRenderAttachment();
-extern int fn_8002B588();
+extern int Obj_GetActiveModel();
 extern undefined4 FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined8 ObjGroup_RemoveObject();
@@ -151,7 +151,7 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,int param_3)
         puVar8 = (undefined4 *)0x64;
         puVar9 = (undefined4 *)0x0;
         (**(code **)(*lbl_803DCAB4 + 0xc))(puVar3,0x7ff,0,100,0);
-        iVar4 = fn_8002B588((int)puVar3);
+        iVar4 = Obj_GetActiveModel((int)puVar3);
         ObjModel_ClearRenderAttachment(iVar4);
         Music_Trigger(0x27,1);
         break;

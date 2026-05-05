@@ -10,7 +10,7 @@ extern double FUN_80017708();
 extern int FUN_80017730();
 extern uint FUN_80017760();
 extern uint fn_800221A0(int min,int max);
-extern undefined4 fn_8002B588();
+extern undefined4 Obj_GetActiveModel();
 extern undefined4 fn_8002B9EC();
 extern undefined4 fn_8002CEC0();
 extern int ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnimArg,
@@ -344,7 +344,7 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
   local_20 = 0x43300000;
   *(float *)((int)obj + 8) = *(float *)(*(int *)((int)obj + 0x50) + 4) *
       ((float)((double)CONCAT44(0x43300000,uStack_1c) - lbl_803E5440) / lbl_803E545C);
-  fn_8002B588((int)obj);
+  Obj_GetActiveModel((int)obj);
   fn_8002CEC0((double)*(float *)((int)obj + 8));
   moveScratch = (int)runtime->moveScratch;
   (**(code **)(*lbl_803DCAA8 + 4))(moveScratch,3,0xa3,0);
