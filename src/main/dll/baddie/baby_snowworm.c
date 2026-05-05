@@ -1042,8 +1042,8 @@ extern void* lbl_8031BF90[6];
 extern s16 lbl_803DD784;
 extern s16 lbl_803DD786;
 extern s16 lbl_803DD78C;
-extern s32  fn_8002BDF4(s32 size, void* type);
-extern void* fn_8002DF90(s32, s32, s32, s32, s32);
+extern s32  Obj_AllocObjectSetup(s32 size, void* type);
+extern void* Obj_SetupObject(s32, s32, s32, s32, s32);
 extern void Obj_SetModelColorFadeRecursive(void*, s32, s32, s32, s32, s32);
 extern void fn_80014B18(s32);
 
@@ -1422,7 +1422,7 @@ void fn_80129CBC(f32 fov, f32 x, f32 y)
  *
  * Walks 6 candidate slots (lbl_803A9410[i]) but only acts on the first
  * 4. For each empty slot, allocates a 0x20-byte block via
- * fn_8002BDF4(0x20, lbl_8031BF90[i]) and chains it through fn_8002DF90
+ * Obj_AllocObjectSetup(0x20, lbl_8031BF90[i]) and chains it through Obj_SetupObject
  * to install the 0x7447 magic header + zero out the float fields. The
  * one-shot guard at +0x4c (sentinel > 0x90000000) gets cleared.
  *
@@ -1444,7 +1444,7 @@ void fn_8012C558(void)
 
     for (i = 0; i < 6; i++) {
         if (i < 4 && *slot == NULL) {
-            *slot = fn_8002DF90(fn_8002BDF4(0x20, *type), 4, -1, -1, 0);
+            *slot = Obj_SetupObject(Obj_AllocObjectSetup(0x20, *type), 4, -1, -1, 0);
             ((f32*)*slot)[3] = 0.0f;
             ((f32*)*slot)[4] = -5.0f;
             ((f32*)*slot)[5] = -5.0f;
