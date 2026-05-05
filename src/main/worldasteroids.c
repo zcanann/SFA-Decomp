@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 
 extern u32 fn_800221A0(int min,int max);
-extern u8 *fn_8002E0B4(int objectId);
+extern u8 *ObjList_FindObjectById(int objectId);
 extern void fn_8003B8F4(double scale);
 extern f32 angleFn(int angle);
 extern f32 fn_80293EAC(int angle);
@@ -76,7 +76,7 @@ void worldasteroids_update(s16 *obj)
   f32 radius;
 
   state = *(WorldAsteroidsState **)(obj + 0x5c);
-  anchor = fn_8002E0B4(0x42fe7);
+  anchor = ObjList_FindObjectById(0x42fe7);
   obj[0] += state->velocityX;
   obj[1] += state->velocityY;
   obj[2] += state->velocityZ;

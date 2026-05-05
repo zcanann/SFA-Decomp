@@ -26,7 +26,7 @@ extern undefined4 FUN_80017a50();
 extern undefined4 FUN_80017a54();
 extern void *fn_8002B9EC(void);
 extern undefined4 FUN_80017ac0();
-extern int fn_8002E0FC();
+extern int ObjList_GetObjects();
 extern void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2);
 extern undefined4 FUN_80045328();
 extern undefined4 FUN_80053ab4();
@@ -148,7 +148,7 @@ void FUN_800356f0(int param_1)
   undefined4 uStack_18;
   undefined4 auStack_14 [4];
   
-  piVar2 = (int *)fn_8002E0FC(&uStack_18,auStack_14);
+  piVar2 = (int *)ObjList_GetObjects(&uStack_18,auStack_14);
   gObjHitsResetObjectCount = 0;
   if (0 < param_1) {
     do {
@@ -1999,7 +1999,7 @@ void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sende
   int objectCount;
   void *obj;
 
-  objects = (int *)fn_8002E0FC(&objectIndex,&objectCount);
+  objects = (int *)ObjList_GetObjects(&objectIndex,&objectCount);
   maskedFlags = flags & 0xffff;
   for (; objectIndex < objectCount; objectIndex = objectIndex + 1) {
     obj = (void *)objects[objectIndex];
@@ -2053,7 +2053,7 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
   int objectCount;
   void *obj;
   
-  objects = (int *)fn_8002E0FC(&objectIndex,&objectCount);
+  objects = (int *)ObjList_GetObjects(&objectIndex,&objectCount);
   maskedFlags = flags & 0xffff;
   if ((maskedFlags & 4) != 0) {
     for (; objectIndex < objectCount; objectIndex = objectIndex + 1) {
@@ -2665,7 +2665,7 @@ void ObjList_FindNearestObjectByDefNo(undefined4 param_1,undefined4 param_2,floa
   fStack_4 = (float)in_ps31_1;
   uVar7 = FUN_8028683c();
   iVar1 = (int)((ulonglong)uVar7 >> 0x20);
-  iVar2 = fn_8002E0FC(local_34,&local_38);
+  iVar2 = ObjList_GetObjects(local_34,&local_38);
   *param_3 = *param_3 * *param_3;
   if ((int)uVar7 == -1) {
     piVar4 = (int *)(iVar2 + local_34[0] * 4);
@@ -2715,7 +2715,7 @@ undefined4 ObjList_ContainsObject(int param_1)
   int local_18;
   int local_14 [4];
 
-  piVar1 = (int *)fn_8002E0FC(local_14,&local_18);
+  piVar1 = (int *)ObjList_GetObjects(local_14,&local_18);
   local_14[0] = 0;
   while( true ) {
     if (local_18 <= local_14[0]) {
