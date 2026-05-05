@@ -70,7 +70,7 @@ void ObjContact_RemoveObjectCallbacks(int param_1);
 undefined4 ObjContact_AddCallback(int param_1,int param_2,undefined4 param_3);
 undefined4 ObjTrigger_IsSetById(int obj,short triggerId);
 undefined4 ObjTrigger_IsSet(int obj);
-void ObjList_FindNearestObjectByDefNo(undefined4 param_1,undefined4 param_2,float *param_3);
+int ObjList_FindNearestObjectByDefNo(int obj,int defNo,float *maxDistanceSq);
 undefined4 ObjList_ContainsObject(int param_1);
 void ObjPath_GetPointWorldPositionArray(undefined4 param_1,undefined4 param_2,int param_3,float *param_4);
 void ObjPath_GetPointLocalPosition(int param_1,int param_2,float *param_3,float *param_4,

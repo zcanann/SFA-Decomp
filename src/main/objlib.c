@@ -16,6 +16,7 @@ extern undefined4 FUN_80017700();
 extern undefined4 FUN_80017704();
 extern void fn_80021570(void *transform,float *mtx);
 extern double FUN_80017714();
+extern float fn_800216D0(float *posA,float *posB);
 extern float fn_80021704(float *param_1,float *param_2);
 extern int FUN_80017730();
 extern undefined4 FUN_8001774c();
@@ -86,6 +87,7 @@ extern f32 lbl_803DDA58;
 extern f32 lbl_803DDA5C;
 extern f32 lbl_803DF5E8;
 extern f32 lbl_803DF5F0;
+extern f32 lbl_803DE970;
 extern f32 lbl_803DF5F4;
 extern f32 lbl_803DF5F8;
 extern f32 lbl_803DF5FC;
@@ -2610,54 +2612,55 @@ undefined4 ObjTrigger_IsSet(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjList_FindNearestObjectByDefNo(undefined4 param_1,undefined4 param_2,float *param_3)
+#pragma scheduling off
+#pragma peephole off
+int ObjList_FindNearestObjectByDefNo(int obj,int defNo,float *maxDistanceSq)
 {
-  int iVar1;
-  int iVar2;
-  int iVar3;
-  int *piVar4;
-  double dVar5;
-  double dVar6;
-  double in_f31;
-  double in_ps31_1;
-  undefined8 uVar7;
-  int local_38;
-  int local_34 [11];
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  uVar7 = FUN_8028683c();
-  iVar1 = (int)((ulonglong)uVar7 >> 0x20);
-  iVar2 = ObjList_GetObjects(local_34,&local_38);
-  *param_3 = *param_3 * *param_3;
-  if ((int)uVar7 == -1) {
-    piVar4 = (int *)(iVar2 + local_34[0] * 4);
-    dVar5 = (double)lbl_803DF5F0;
-    for (iVar2 = local_34[0]; iVar2 < local_38; iVar2 = iVar2 + 1) {
-      dVar6 = FUN_80017714((float *)(iVar1 + 0x18),(float *)(*piVar4 + 0x18));
-      if ((dVar6 != dVar5) && (dVar6 < (double)*param_3)) {
-        *param_3 = (float)dVar6;
+  int foundObj;
+  int objectIndex;
+  int *objects;
+  int otherObj;
+  float distanceSq;
+  float invalidDistance;
+  int startIndex;
+  int objectCount;
+
+  objects = (int *)ObjList_GetObjects(&startIndex,&objectCount);
+  foundObj = 0;
+  *maxDistanceSq = *maxDistanceSq * *maxDistanceSq;
+  if (defNo != -1) {
+    objectIndex = startIndex;
+    objects = objects + startIndex;
+    while (objectIndex < objectCount) {
+      otherObj = *objects;
+      if (((defNo == *(s16 *)(otherObj + 0x46)) && (obj != otherObj)) &&
+          (distanceSq = fn_800216D0((float *)(obj + 0x18),(float *)(otherObj + 0x18)),
+           distanceSq < *maxDistanceSq)) {
+        *maxDistanceSq = distanceSq;
+        foundObj = *objects;
       }
-      piVar4 = piVar4 + 1;
+      objects++;
+      objectIndex++;
     }
   }
   else {
-    piVar4 = (int *)(iVar2 + local_34[0] * 4);
-    for (iVar2 = local_34[0]; iVar2 < local_38; iVar2 = iVar2 + 1) {
-      iVar3 = *piVar4;
-      if ((((int)uVar7 == (int)*(short *)(iVar3 + 0x46)) && (iVar1 != iVar3)) &&
-         (dVar5 = FUN_80017714((float *)(iVar1 + 0x18),(float *)(iVar3 + 0x18)),
-         dVar5 < (double)*param_3)) {
-        *param_3 = (float)dVar5;
+    objectIndex = startIndex;
+    objects = objects + startIndex;
+    invalidDistance = lbl_803DE970;
+    while (objectIndex < objectCount) {
+      distanceSq = fn_800216D0((float *)(obj + 0x18),(float *)(*objects + 0x18));
+      if ((distanceSq != invalidDistance) && (distanceSq < *maxDistanceSq)) {
+        *maxDistanceSq = distanceSq;
+        foundObj = *objects;
       }
-      piVar4 = piVar4 + 1;
+      objects++;
+      objectIndex++;
     }
   }
-  FUN_80286888();
-  return;
+  return foundObj;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
