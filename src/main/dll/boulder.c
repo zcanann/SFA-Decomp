@@ -32,7 +32,7 @@ extern f32 lbl_803E6B38;
  */
 void FUN_801f4ecc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
+                 undefined4 param_9,undefined4 param_10,ObjAnimUpdateState *animUpdate,undefined4 param_12,
                  undefined4 param_13,undefined *param_14,int param_15,undefined4 param_16)
 {
   uint uVar1;
@@ -57,8 +57,8 @@ void FUN_801f4ecc(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(char *)((int)pfVar6 + 5) = (char)uVar1;
     dVar7 = (double)FUN_80017a0c(uVar2,(char)uVar1);
   }
-  for (iVar5 = 0; iVar5 < (int)(uint)*(byte *)(param_11 + 0x8b); iVar5 = iVar5 + 1) {
-    switch(*(undefined *)(param_11 + iVar5 + 0x81)) {
+  for (iVar5 = 0; iVar5 < (int)(uint)animUpdate->eventCount; iVar5 = iVar5 + 1) {
+    switch(animUpdate->eventIds[iVar5]) {
     case 1:
       *(undefined *)(pfVar6 + 1) = 1;
       break;
@@ -113,7 +113,7 @@ void FUN_801f4ecc(undefined8 param_1,double param_2,double param_3,undefined8 pa
       dVar7 = (double)FUN_80017a0c(uVar2,0);
       *(undefined *)((int)pfVar6 + 5) = 0;
     }
-    *(undefined *)(param_11 + iVar5 + 0x81) = 0;
+    animUpdate->eventIds[iVar5] = 0;
   }
   FUN_8028688c();
   return;
