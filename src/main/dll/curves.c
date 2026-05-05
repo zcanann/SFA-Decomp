@@ -1035,7 +1035,7 @@ f32 curves_distXZ(f32 param_1,f32 param_2,uint param_3)
   int iVar3;
   int iVar4;
   int iVar5;
-  int iVar6;
+  uint iVar6;
   f32 dist;
 
   if ((int)param_3 < 0) {
@@ -1044,7 +1044,7 @@ f32 curves_distXZ(f32 param_1,f32 param_2,uint param_3)
   else {
     iVar5 = gRomCurveCount + -1;
     iVar4 = 0;
-    while (iVar4 <= iVar5) {
+    while (iVar5 >= iVar4) {
       iVar3 = iVar5 + iVar4 >> 1;
       iVar6 = (&DAT_803a2448)[iVar3];
       if (param_3 > *(uint *)(iVar6 + ROMCURVE_ID_OFFSET)) {
@@ -1094,7 +1094,7 @@ f32 RomCurve_distanceToObject(int param_1,uint param_2)
   int iVar4;
   int iVar5;
   int iVar6;
-  int iVar7;
+  uint iVar7;
   f32 dist;
 
   if ((int)param_2 < 0) {
@@ -1103,7 +1103,7 @@ f32 RomCurve_distanceToObject(int param_1,uint param_2)
   else {
     iVar6 = gRomCurveCount + -1;
     iVar5 = 0;
-    while (iVar5 <= iVar6) {
+    while (iVar6 >= iVar5) {
       iVar4 = iVar6 + iVar5 >> 1;
       iVar7 = (&DAT_803a2448)[iVar4];
       if (param_2 > *(uint *)(iVar7 + ROMCURVE_ID_OFFSET)) {
