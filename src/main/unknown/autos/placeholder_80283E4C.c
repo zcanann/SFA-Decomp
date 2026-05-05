@@ -38,16 +38,16 @@ void hwSaveSample(u32 **sample, void **ptr)
   size = header & 0xffffff;
   if (type != 3) {
     if (type < 3) {
-      if (type >= 2) {
-        size <<= 1;
-        goto save;
-      }
+      if (type >= 2) goto size_double;
       if (type < 0) goto save;
     } else if (type >= 6) {
       goto save;
     }
     adjusted = size + 0xd;
-    size = (adjusted / 7) & ~7;
+    size = (adjusted / 7 * 4) & ~7;
+    goto save;
+  size_double:
+    size <<= 1;
   }
 save:
   *ptr = fn_80284468(*ptr, size);
@@ -95,16 +95,16 @@ void hwRemoveSample(u32 *sample, void *ptr)
   size = header & 0xffffff;
   if (type != 3) {
     if (type < 3) {
-      if (type >= 2) {
-        size <<= 1;
-        goto remove;
-      }
+      if (type >= 2) goto size_double;
       if (type < 0) goto remove;
     } else if (type >= 6) {
       goto remove;
     }
     adjusted = size + 0xd;
-    size = (adjusted / 7) & ~7;
+    size = (adjusted / 7 * 4) & ~7;
+    goto remove;
+  size_double:
+    size <<= 1;
   }
 remove:
   fn_80284558(ptr, size);
