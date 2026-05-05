@@ -41,6 +41,7 @@ extern undefined4 FUN_80286880();
 extern undefined4 FUN_80286884();
 extern undefined4 FUN_80286888();
 extern double FUN_80293900();
+extern f32 sqrtf(f32 x);
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 extern uint countLeadingZeros();
@@ -1027,7 +1028,7 @@ LAB_800e33ac:
  */
 #pragma scheduling off
 #pragma peephole off
-double curves_distXZ(double param_1,double param_2,uint param_3)
+f32 curves_distXZ(f32 param_1,f32 param_2,uint param_3)
 {
   float fVar1;
   float fVar2;
@@ -1035,7 +1036,7 @@ double curves_distXZ(double param_1,double param_2,uint param_3)
   int iVar4;
   int iVar5;
   int iVar6;
-  double dVar7;
+  f32 dist;
 
   if ((int)param_3 < 0) {
     iVar6 = 0;
@@ -1058,14 +1059,14 @@ double curves_distXZ(double param_1,double param_2,uint param_3)
   }
 LAB_800e3628:
   if (iVar6 == 0) {
-    dVar7 = (double)lbl_803E12B0;
+    dist = 0.0f;
   }
   else {
-    fVar1 = (float)((double)*(float *)(iVar6 + 8) - param_1);
-    fVar2 = (float)((double)*(float *)(iVar6 + 0x10) - param_2);
-    dVar7 = FUN_80293900((double)(fVar1 * fVar1 + fVar2 * fVar2));
+    fVar1 = *(float *)(iVar6 + 8) - param_1;
+    fVar2 = *(float *)(iVar6 + 0x10) - param_2;
+    dist = sqrtf(fVar1 * fVar1 + fVar2 * fVar2);
   }
-  return dVar7;
+  return dist;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1085,7 +1086,7 @@ LAB_800e3628:
  */
 #pragma scheduling off
 #pragma peephole off
-double RomCurve_distanceToObject(int param_1,uint param_2)
+f32 RomCurve_distanceToObject(int param_1,uint param_2)
 {
   float fVar1;
   float fVar2;
@@ -1094,7 +1095,7 @@ double RomCurve_distanceToObject(int param_1,uint param_2)
   int iVar5;
   int iVar6;
   int iVar7;
-  double dVar8;
+  f32 dist;
 
   if ((int)param_2 < 0) {
     iVar7 = 0;
@@ -1117,15 +1118,15 @@ double RomCurve_distanceToObject(int param_1,uint param_2)
   }
 LAB_800e36d8:
   if ((iVar7 == 0) || (param_1 == 0)) {
-    dVar8 = (double)lbl_803E12B0;
+    dist = 0.0f;
   }
   else {
     fVar1 = *(float *)(iVar7 + 8) - *(float *)(param_1 + 0xc);
     fVar2 = *(float *)(iVar7 + 0xc) - *(float *)(param_1 + 0x10);
     fVar3 = *(float *)(iVar7 + 0x10) - *(float *)(param_1 + 0x14);
-    dVar8 = FUN_80293900((double)(fVar3 * fVar3 + fVar1 * fVar1 + fVar2 * fVar2));
+    dist = sqrtf(fVar2 * fVar2 + fVar1 * fVar1 + fVar3 * fVar3);
   }
-  return dVar8;
+  return dist;
 }
 #pragma peephole reset
 #pragma scheduling reset
