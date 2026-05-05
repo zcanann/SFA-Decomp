@@ -85,8 +85,6 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803DCBE8;
 extern f32 lbl_803DE914;
 extern f32 lbl_803DE97C;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
 extern f32 lbl_803DB414;
 extern f32 lbl_803DCDD8;
 extern f32 lbl_803DCDDC;
@@ -2902,9 +2900,9 @@ void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *
       FUN_8001774c(afStack_100,(int)&local_118);
       FUN_80017704(afStack_100,afStack_90);
       FUN_80247618(pfVar3,afStack_90,afStack_c0);
-      *param_3 = local_b4 + lbl_803DDA58;
+      *param_3 = local_b4 + lbl_803DCDD8;
       *param_4 = local_a4;
-      *param_5 = local_94 + lbl_803DDA5C;
+      *param_5 = local_94 + lbl_803DCDDC;
     }
   }
   FUN_80286884();
