@@ -69,7 +69,7 @@ extern f64 lbl_803E5490;
 /*
  * --INFO--
  *
- * Function: sh_thorntail_update
+ * Function: SHthorntail_update
  * EN v1.0 Address: 0x801D5F58
  * EN v1.0 Size: 1928b
  * EN v1.1 Address: 0x801D6548
@@ -79,7 +79,7 @@ extern f64 lbl_803E5490;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sh_thorntail_update(SHthorntailObject *obj)
+void SHthorntail_update(SHthorntailObject *obj)
 {
   SHthorntailConfig *config;
   SHthorntailRuntime *runtime;

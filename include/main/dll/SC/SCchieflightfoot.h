@@ -5,7 +5,7 @@
 
 #include "main/dll/SH/SHthorntail_internal.h"
 
-void sh_thorntail_update(SHthorntailObject *obj);
+void SHthorntail_update(SHthorntailObject *obj);
 void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config);
 void SHthorntail_updateDustEffects(SHthorntailObject *obj);
 

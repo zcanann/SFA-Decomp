@@ -291,7 +291,7 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4
 /*
  * --INFO--
  *
- * Function: sh_thorntail_getExtraSize
+ * Function: SHthorntail_getExtraSize
  * EN v1.0 Address: 0x801D5E8C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: TODO
@@ -301,7 +301,7 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int sh_thorntail_getExtraSize(void)
+int SHthorntail_getExtraSize(void)
 {
   return SHTHORNTAIL_EXTRA_STATE_BYTES;
 }
