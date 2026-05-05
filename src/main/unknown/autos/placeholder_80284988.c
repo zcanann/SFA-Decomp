@@ -10,18 +10,45 @@ extern u32 lbl_803DE3B4;
 extern u16 lbl_803DE32C;
 extern u32 lbl_803DE330;
 extern u32 lbl_803DE3A8;
+extern u32 lbl_803DE3B8;
 extern u32 fn_80284A40(void);
 extern void fn_8027C48C(u32 param_1, u32 elapsed);
+extern DSPTaskInfo lbl_803D4880;
+extern u16 lbl_80330840[];
+extern u16 lbl_803DC628[];
+extern void fn_80284714(void *task);
+extern void fn_80284724(void *task);
 
 /*
  * --INFO--
  *
- * Function: FUN_802848d8
+ * Function: fn_802848D8
  * EN v1.0 Address: 0x802848D8
- * EN v1.0 Size: 4b
+ * EN v1.0 Size: 192b
  */
-void FUN_802848d8(int param_1)
+int fn_802848D8(u32 flags)
 {
+    lbl_803D4880.iram_mmem_addr = lbl_80330840;
+    lbl_803D4880.iram_length = lbl_803DC628[0];
+    lbl_803D4880.iram_addr = 0;
+    lbl_803D4880.dram_mmem_addr = (u16 *)((u8 *)&lbl_803D4880 + 0x60);
+    lbl_803D4880.dram_length = 0x2000;
+    lbl_803D4880.dram_addr = 0;
+    lbl_803D4880.dsp_init_vector = 0x10;
+    lbl_803D4880.dsp_resume_vector = 0x30;
+    lbl_803D4880.init_cb = fn_80284714;
+    lbl_803D4880.res_cb = fn_80284724;
+    lbl_803D4880.done_cb = NULL;
+    lbl_803D4880.req_cb = NULL;
+    lbl_803D4880.priority = 0;
+
+    DSPInit();
+    DSPAddTask(&lbl_803D4880);
+    lbl_803DE3B8 = 0;
+    fn_80284ABC();
+    while (lbl_803DE3B8 == 0) {}
+    fn_80284AF4();
+    return 1;
 }
 
 /*
