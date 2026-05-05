@@ -67,7 +67,7 @@ float fn_80291E08(s16* p);
 float fn_80292CC4(u16* p, float x);
 
 float __ieee754_rem_pio2(int angle) {
-    s16 reduced = angle << 2;
+    s16 reduced = (u16)angle << 2;
     float y = fn_80291E08(&reduced);
     float y2 = y * y;
 
@@ -89,7 +89,7 @@ float __ieee754_rem_pio2(int angle) {
 }
 
 float fn_80293D0C(int angle) {
-    s16 reduced = angle << 2;
+    s16 reduced = (u16)angle << 2;
     double y = lbl_803E7CD0 * fn_80291E08(&reduced);
     double y2 = y * y;
 
@@ -152,7 +152,7 @@ float fn_80293EAC(int angle) {
 }
 
 float fsin16(int angle) {
-    s16 reduced = angle << 2;
+    s16 reduced = (u16)angle << 2;
     float y = fn_80291E08(&reduced);
     float y2 = y * y;
 
@@ -172,7 +172,7 @@ float fsin16(int angle) {
 }
 
 float fn_8029397C(int angle) {
-    s16 reduced = angle << 2;
+    s16 reduced = (u16)angle << 2;
     float y = fn_80291E08(&reduced);
     float y2 = y * y;
 
@@ -194,7 +194,7 @@ float fn_8029397C(int angle) {
 }
 
 float fn_80293AC4(int angle) {
-    s16 reduced = angle << 2;
+    s16 reduced = (u16)angle << 2;
     double y = lbl_803E7CD0 * fn_80291E08(&reduced);
     double y2 = y * y;
 
