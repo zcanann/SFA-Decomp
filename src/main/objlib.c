@@ -1456,17 +1456,17 @@ uint ObjGroup_ContainsObject(int obj,int group)
   int *entry;
   uint index;
   uint limit;
-  
-  if ((-1 < group) && (group < 0x54)) {
-    index = (uint)gObjGroupOffsets[group];
-    limit = (uint)gObjGroupOffsets[group + 1];
-    for (entry = gObjGroupObjects + index; ((int)index < (int)limit && (obj != *entry));
-        entry = entry + 1) {
-      index = index + 1;
-    }
-    return ((int)(limit ^ index) >> 1) - ((limit ^ index) & limit) >> 0x1f;
+
+  if ((group < 0) || (group >= 0x54)) {
+    return 0;
   }
-  return 0;
+  index = (uint)gObjGroupOffsets[group];
+  limit = (uint)gObjGroupOffsets[group + 1];
+  for (entry = gObjGroupObjects + index; ((int)index < (int)limit && (obj != *entry));
+      entry = entry + 1) {
+    index = index + 1;
+  }
+  return ((int)(limit ^ index) >> 1) - ((limit ^ index) & limit) >> 0x1f;
 }
 
 /*
@@ -1646,12 +1646,12 @@ void ObjGroup_FindNearestObject(undefined4 param_1,undefined4 param_2,float *par
  */
 undefined4 * ObjGroup_GetObjects(int group,int *countOut)
 {
-  if ((-1 < group) && (group < 0x54)) {
-    *countOut = (uint)gObjGroupOffsets[group + 1] - (uint)gObjGroupOffsets[group];
-    return (undefined4 *)(gObjGroupObjects + gObjGroupOffsets[group]);
+  if ((group < 0) || (group >= 0x54)) {
+    *countOut = 0;
+    return (undefined4 *)0x0;
   }
-  *countOut = 0;
-  return (undefined4 *)0x0;
+  *countOut = (uint)gObjGroupOffsets[group + 1] - (uint)gObjGroupOffsets[group];
+  return (undefined4 *)(gObjGroupObjects + gObjGroupOffsets[group]);
 }
 
 /*
@@ -1745,7 +1745,7 @@ int ObjGroup_GetObjectGroup(int obj)
     if (objectIndex < (int)(uint)*offset) {
       return group;
     }
-    if (0x54 < group) break;
+    if (group >= 0x55) break;
     offset = offset + 1;
     group = group + 1;
   }
