@@ -100,12 +100,6 @@ typedef struct DIMbossObject {
   int renderPause;
 } DIMbossObject;
 
-typedef struct ObjAnimUpdateState {
-  u8 pad00[0x81];
-  u8 eventIds[0xA];
-  u8 eventCount;
-} ObjAnimUpdateState;
-
 /*
  * --INFO--
  *

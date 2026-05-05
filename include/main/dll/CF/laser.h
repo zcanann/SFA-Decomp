@@ -2,6 +2,7 @@
 #define MAIN_DLL_CF_LASER_H_
 
 #include "ghidra_import.h"
+#include "main/objanim_update.h"
 
 typedef struct LaserState {
   s16 primarySequenceId;
@@ -80,7 +81,7 @@ void laserObj_initialise(void);
 undefined4
 laser_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
              undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
-             undefined4 param_10,int param_11,int param_12,undefined4 param_13,
+             undefined4 param_10,ObjAnimUpdateState *animUpdate,int param_12,undefined4 param_13,
              undefined4 param_14,undefined4 param_15,undefined4 param_16);
 void laser_render(int param_1);
 void laser_release(undefined4 param_1);

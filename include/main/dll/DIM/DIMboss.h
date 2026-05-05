@@ -2,9 +2,9 @@
 #define MAIN_DLL_DIM_DIMBOSS_H_
 
 #include "ghidra_import.h"
+#include "main/objanim_update.h"
 
 typedef struct DIMbossObject DIMbossObject;
-typedef struct ObjAnimUpdateState ObjAnimUpdateState;
 
 void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate);
 void dimboss_func11(void);

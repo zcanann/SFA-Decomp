@@ -39,7 +39,7 @@ extern undefined4* DAT_803dd72c;
 undefined4
 laser_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
              undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
-             undefined4 param_10,int param_11,int param_12,undefined4 param_13,
+             undefined4 param_10,ObjAnimUpdateState *animUpdate,int param_12,undefined4 param_13,
              undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
   LaserObject *obj;
@@ -52,11 +52,11 @@ laser_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   undefined8 uVar7;
   
   obj = (LaserObject *)param_9;
-  iVar5 = param_11;
+  iVar5 = (int)animUpdate;
   bVar4 = (**(code **)(*DAT_803dd72c + 0x40))((int)obj->modeIndex);
   uVar7 = FUN_800068c4(0,0x48b);
-  for (iVar6 = 0; iVar6 < (int)(uint)*(byte *)(param_11 + 0x8b); iVar6 = iVar6 + 1) {
-    cVar1 = *(char *)(param_11 + iVar6 + 0x81);
+  for (iVar6 = 0; iVar6 < (int)(uint)animUpdate->eventCount; iVar6 = iVar6 + 1) {
+    cVar1 = (char)animUpdate->eventIds[iVar6];
     if (cVar1 == '\x01') {
       uVar7 = FUN_80040da0();
       if (bVar4 == 2) {
