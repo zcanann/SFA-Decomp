@@ -3,14 +3,15 @@
 
 #include "ghidra_import.h"
 
+typedef struct ObjAnimBank ObjAnimBank;
+typedef struct ObjHitReactState ObjHitReactState;
+
 void FUN_800356f0(int param_1);
 int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2);
-void ObjHitReact_LoadMoveEntries(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                                 undefined8 param_5,undefined8 param_6,undefined8 param_7,
-                                 undefined8 param_8,int param_9,undefined4 param_10,
-                                 undefined4 param_11,int param_12,int param_13,int param_14,
-                                 undefined4 param_15,undefined4 param_16);
-void ObjHitReact_InitState(undefined4 param_1,undefined4 param_2,int param_3,uint param_4,int param_5);
+void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
+                                 ObjHitReactState *hitState,int moveId,int async);
+uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitState,
+                           uint entryArena,int objAnim);
 void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3);
 void ObjHits_SetTargetMask(int param_1,undefined param_2);
 void ObjHitbox_SetSphereRadius(int param_1,undefined2 param_2);

@@ -52,6 +52,9 @@ typedef struct ObjHitReactState {
   u8 pad5A[0x60 - 0x5A];
   s16 flags;
   u8 resetFlags;
+  u8 pad63[0xAE - 0x63];
+  u8 activeHitboxMode;
+  u8 resetHitboxMode;
 } ObjHitReactState;
 
 struct ObjHitReactEntry {

@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/objHitReact.h"
+#include "main/objanim_internal.h"
 #include "main/objhits.h"
 #include "main/objlib.h"
 
@@ -19,6 +20,7 @@ extern int FUN_80017730();
 extern undefined4 FUN_8001774c();
 extern uint FUN_80017760();
 extern uint fn_80022E24();
+extern uint fn_80022E3C(uint param_1);
 extern uint FUN_800177dc();
 extern undefined4 FUN_80017830();
 extern undefined4 FUN_80017970();
@@ -29,6 +31,8 @@ extern undefined4 FUN_80017ac0();
 extern int ObjList_GetObjects();
 extern void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2);
 extern undefined4 FUN_80045328();
+extern void fn_8001F71C(void *dst,int fileId,int offset,int size);
+extern void fn_80048F48(int fileId,void *dst,int offset,int size);
 extern undefined4 FUN_80053ab4();
 extern int * fn_8005B11C();
 extern void fn_801378A8(const char *fmt, ...);
@@ -216,39 +220,31 @@ int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHitReact_LoadMoveEntries(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                                 undefined8 param_5,undefined8 param_6,undefined8 param_7,
-                                 undefined8 param_8,int param_9,undefined4 param_10,
-                                 undefined4 param_11,int param_12,int param_13,int param_14,
-                                 undefined4 param_15,undefined4 param_16)
+#pragma dont_inline on
+void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
+                                 ObjHitReactState *hitState,int moveId,int async)
 {
-  ObjHitReactMoveEntry *moveEntry;
-  ObjHitReactMoveEntry *moveEntryTable;
-  ObjHitReactState *hitState;
+  s16 *moveEntry;
+  s16 *moveEntryTable;
   s16 firstEntryIndex;
   int iVar3;
   
-  moveEntryTable = *(ObjHitReactMoveEntry **)(*(int *)(param_9 + 0x50) + 0x24);
-  hitState = (ObjHitReactState *)param_12;
+  moveEntryTable = (s16 *)((ObjAnimDef *)((ObjAnimComponent *)objAnim)->modelInstance)->hitReactMoveTable;
   hitState->activeEntryCount = 0;
-  if (moveEntryTable != (ObjHitReactMoveEntry *)0x0) {
+  if (moveEntryTable != (s16 *)0x0) {
     iVar3 = 0;
-    for (moveEntry = moveEntryTable; moveEntry->moveId != -1; moveEntry = moveEntry + 1) {
-      if (param_13 == moveEntry->moveId) {
-        firstEntryIndex = moveEntryTable[iVar3].firstEntryIndex;
-        hitState->activeEntryCount = moveEntryTable[iVar3].entryCount;
+    for (moveEntry = moveEntryTable; *moveEntry != -1; moveEntry = moveEntry + 3) {
+      if (moveId == *moveEntry) {
+        firstEntryIndex = moveEntryTable[iVar3 + 1];
+        hitState->activeEntryCount = moveEntryTable[iVar3 + 2];
         if (hitState->entryCapacity < hitState->activeEntryCount) {
           hitState->activeEntryCount = hitState->entryCapacity;
         }
-        if (param_14 == 0) {
-          FUN_80017640(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                       hitState->entries,0x41,(int)firstEntryIndex,(int)hitState->activeEntryCount,
-                       param_13,0,param_15,param_16);
+        if (async == 0) {
+          fn_8001F71C(hitState->entries,0x41,(int)firstEntryIndex,(int)hitState->activeEntryCount);
           return;
         }
-        FUN_80045328(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x41,
-                     hitState->entries,(int)firstEntryIndex,(int)hitState->activeEntryCount,
-                     param_13,param_14,param_15,param_16);
+        fn_80048F48(0x41,hitState->entries,(int)firstEntryIndex,(int)hitState->activeEntryCount);
         return;
       }
       iVar3 = iVar3 + 3;
@@ -256,6 +252,7 @@ void ObjHitReact_LoadMoveEntries(undefined8 param_1,double param_2,double param_
   }
   return;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -270,37 +267,20 @@ void ObjHitReact_LoadMoveEntries(undefined8 param_1,double param_2,double param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHitReact_InitState(undefined4 param_1,undefined4 param_2,int param_3,uint param_4,int param_5)
+uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitState,
+                           uint entryArena,int objAnim)
 {
-  uint uVar1;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  undefined8 extraout_f1;
-  undefined8 uVar2;
-  double in_f2;
-  double in_f3;
-  undefined8 in_f4;
-  undefined8 in_f5;
-  undefined8 in_f6;
-  undefined8 in_f7;
-  undefined8 in_f8;
-  undefined8 uVar3;
-  
-  uVar3 = FUN_80286840();
-  if ((int)uVar3 != 0) {
-    *(undefined2 *)(param_3 + 6) = 300;
-    uVar2 = extraout_f1;
-    uVar1 = FUN_800177dc(param_4);
-    *(uint *)(param_3 + 8) = uVar1;
-    *(undefined *)(param_3 + 0xae) = 1;
-    if ((*(byte *)(param_3 + 0x62) & 0x30) != 0) {
-      *(undefined *)(param_3 + 0xaf) = 2;
+  if (bank != (ObjAnimBank *)0x0) {
+    hitState->entryCapacity = 300;
+    hitState->entries = (ObjHitReactEntry *)fn_80022E3C(entryArena);
+    entryArena = (uint)hitState->entries + hitState->entryCapacity;
+    hitState->activeHitboxMode = 1;
+    if ((hitState->resetFlags & 0x30) != 0) {
+      hitState->resetHitboxMode = 2;
     }
-    ObjHitReact_LoadMoveEntries(uVar2,in_f2,in_f3,in_f4,in_f5,in_f6,in_f7,in_f8,param_5,(int)uVar3,
-                                (int)((ulonglong)uVar3 >> 0x20),param_3,0,1,in_r9,in_r10);
+    ObjHitReact_LoadMoveEntries(objAnim,bank,objType,hitState,0,1);
   }
-  FUN_8028688c();
-  return;
+  return entryArena;
 }
 
 /*

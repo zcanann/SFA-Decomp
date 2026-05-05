@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 
 typedef struct ObjHitReactState ObjHitReactState;
+typedef struct ObjHitReactMoveEntry ObjHitReactMoveEntry;
 
 typedef struct ObjAnimHitReactRow {
   u8 pad00[0x16];
@@ -43,7 +44,7 @@ typedef struct ObjAnimDef {
   u16 modNo;
   u8 pad06[0x20 - 6];
   s16 *eventMoveTable;
-  s16 *hitReactMoveTable;
+  ObjHitReactMoveEntry *hitReactMoveTable;
   u8 pad28[0x58 - 0x28];
   ObjAnimHitReactRow *hitReactTable;
   u8 pad5C[0x64 - 0x5C];
