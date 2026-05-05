@@ -425,7 +425,7 @@ void camcontrol_initialise(float *dst,f32 numerator,f32 denominator,f32 minValue
   dst[3] = z;
 }
 
-void fn_80102A2C(f32 x,f32 y,f32 z)
+void Camera_moveBy(f32 x,f32 y,f32 z)
 {
   *(float *)((char *)lbl_803DD524 + 0xc) += x;
   *(float *)((char *)lbl_803DD524 + 0x10) += y;

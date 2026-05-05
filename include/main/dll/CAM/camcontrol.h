@@ -6,6 +6,7 @@
 void camcontrol_updateTargetFeedback(void);
 void camcontrol_getRelativePosition(f32 param_1,int param_2,float *param_3,float *param_4,
                                     float *param_5,float *param_6,int param_7);
+void Camera_moveBy(f32 x,f32 y,f32 z);
 void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char triggerMode);
 void *camcontrol_loadCamAction(int actionNo);
 void camcontrol_releaseCurrentHandler(void);
