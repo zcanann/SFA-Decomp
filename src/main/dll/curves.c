@@ -1047,11 +1047,11 @@ f32 curves_distXZ(f32 param_1,f32 param_2,uint param_3)
     while (iVar4 <= iVar5) {
       iVar3 = iVar5 + iVar4 >> 1;
       iVar6 = (&DAT_803a2448)[iVar3];
-      if (*(uint *)(iVar6 + 0x14) < param_3) {
+      if (param_3 > *(uint *)(iVar6 + ROMCURVE_ID_OFFSET)) {
         iVar4 = iVar3 + 1;
       }
       else {
-        if (*(uint *)(iVar6 + 0x14) <= param_3) goto LAB_800e3628;
+        if (param_3 >= *(uint *)(iVar6 + ROMCURVE_ID_OFFSET)) goto LAB_800e3628;
         iVar5 = iVar3 + -1;
       }
     }
@@ -1106,11 +1106,11 @@ f32 RomCurve_distanceToObject(int param_1,uint param_2)
     while (iVar5 <= iVar6) {
       iVar4 = iVar6 + iVar5 >> 1;
       iVar7 = (&DAT_803a2448)[iVar4];
-      if (*(uint *)(iVar7 + 0x14) < param_2) {
+      if (param_2 > *(uint *)(iVar7 + ROMCURVE_ID_OFFSET)) {
         iVar5 = iVar4 + 1;
       }
       else {
-        if (*(uint *)(iVar7 + 0x14) <= param_2) goto LAB_800e36d8;
+        if (param_2 >= *(uint *)(iVar7 + ROMCURVE_ID_OFFSET)) goto LAB_800e36d8;
         iVar6 = iVar4 + -1;
       }
     }
