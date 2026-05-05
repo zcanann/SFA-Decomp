@@ -848,8 +848,8 @@ void fn_800701A4(f32* x, f32* y, f32* z)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern f32 lbl_803DFB18;
-extern f32 lbl_803DFB1C;
+extern f32 lbl_803DEE98;
+extern f32 lbl_803DEE9C;
 
 /* EN v1.0 Size: 132b - 74% match. 4x4 identity fill. Remaining diff:
  * target uses 'li r0, N; cmpw r4, r0' per column, mine uses 'cmpwi
@@ -861,8 +861,8 @@ extern f32 lbl_803DFB1C;
 void fn_80070234(f32* param_1)
 {
     int i, j;
-    f32 zero = lbl_803DFB1C;
-    f32 one = lbl_803DFB18;
+    f32 zero = lbl_803DEE9C;
+    f32 one = lbl_803DEE98;
     for (i = 0; i < 4; i++) {
         for (j = 0; j < 4; j++) {
             if (i == j) param_1[j] = one; else param_1[j] = zero;
