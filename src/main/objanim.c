@@ -572,7 +572,7 @@ undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnimArg,float *ph
   if (animDef->moveCount != 0) {
     state = bank->currentState;
     iVar18 = (int)state;
-    fVar5 = *(float *)(objAnimArg + 8);
+    fVar5 = objAnim->rootMotionScale;
     pfVar15 = (float *)0x0;
     if (state->eventState != 0) {
       in_f7 = (double)((float)((double)CONCAT44(0x43300000,(uint)state->eventState) -
@@ -930,7 +930,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
         *(undefined *)((int)pfVar20 + 0x12) = 1;
         pfVar27 = (float *)(iVar23 + *(short *)(iVar23 + OBJANIM_MOVE_ROOT_CURVE_OFFSET));
         fVar5 = *pfVar27;
-        fVar6 = *(float *)(objAnimArg + 8);
+        fVar6 = objAnim->rootMotionScale;
         iVar23 = (int)*(short *)(pfVar27 + 1);
         psVar28 = (short *)((int)pfVar27 + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
         local_30 = (double)CONCAT44(0x43300000,iVar23 - 1U ^ 0x80000000);

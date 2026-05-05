@@ -100,7 +100,9 @@ typedef struct ObjAnimBank {
 } ObjAnimBank;
 
 typedef struct ObjAnimComponent {
-  u8 pad00[0x46];
+  u8 pad00[0x08];
+  f32 rootMotionScale;
+  u8 pad0C[0x46 - 0x0C];
   s16 objType;
   u8 pad48[0x50 - 0x48];
   void *modelInstance;
