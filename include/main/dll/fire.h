@@ -2,6 +2,7 @@
 #define MAIN_DLL_FIRE_H_
 
 #include "ghidra_import.h"
+#include "main/objanim_update.h"
 
 typedef struct FireObject FireObject;
 
@@ -11,10 +12,10 @@ struct FireObject {
     u8 padAD[0xB0 - 0xAD];
     u16 flags;
     u8 padB2[0xBC - 0xB2];
-    undefined4 (*stateCallback)(FireObject *obj, undefined4 param_2, u8 *stateList);
+    undefined4 (*stateCallback)(FireObject *obj, undefined4 param_2, ObjAnimUpdateState *animUpdate);
 };
 
-undefined4 fire_updateState(FireObject *obj,undefined4 param_2,u8 *stateList);
+undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate);
 int fireObj_getExtraSize(void);
 int fireObj_func08(void);
 void fireObj_free(void);

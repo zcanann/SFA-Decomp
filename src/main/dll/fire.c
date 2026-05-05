@@ -51,18 +51,18 @@ extern f32 lbl_803E64D8;
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 fire_updateState(FireObject *obj,undefined4 param_2,u8 *stateList)
+undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   int stateIndex;
   int mode;
-  u8 state;
+  u8 eventId;
   undefined4 anim;
 
   mode = (u8)(*lbl_803DCAAC)->getMode((int)obj->mapId);
   Sfx_KeepAliveLoopedObjectSound(0,0x48b);
-  for (stateIndex = 0; stateIndex < (int)(uint)stateList[0x8b]; stateIndex++) {
-    state = stateList[stateIndex + 0x81];
-    if (state == 1) {
+  for (stateIndex = 0; stateIndex < (int)(uint)animUpdate->eventCount; stateIndex++) {
+    eventId = animUpdate->eventIds[stateIndex];
+    if (eventId == 1) {
       fn_80041E3C(0);
       switch (mode) {
       case 0:
@@ -90,7 +90,7 @@ undefined4 fire_updateState(FireObject *obj,undefined4 param_2,u8 *stateList)
         break;
       }
     }
-    else if (state == 2) {
+    else if (eventId == 2) {
       switch (mode) {
       case 0:
       case 1:
@@ -123,7 +123,7 @@ undefined4 fire_updateState(FireObject *obj,undefined4 param_2,u8 *stateList)
       }
       fn_80014948(1);
     }
-    else if (state == 3) {
+    else if (eventId == 3) {
       switch (mode) {
       case 0:
       case 1:
