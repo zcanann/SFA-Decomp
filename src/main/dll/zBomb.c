@@ -7,7 +7,7 @@ extern void GameBit_Set(int eventId,int value);
 extern void fn_80026E00(int param_1,int param_2,float *param_3);
 extern undefined4 fn_80097734();
 
-extern undefined4* DAT_803dcaa8;
+extern undefined4* lbl_803DCAA8;
 extern s32 lbl_80329B78[];
 extern f32 lbl_803DB414;
 extern f32 lbl_803E648C;
@@ -57,18 +57,17 @@ typedef enum DfpTargetBlockMode {
 void dfptargetblock_update(int param_1)
 {
   u8 cVar1;
-  float fVar2;
   undefined uVar3;
-  int iVar4;
   DfpTargetBlockState *state;
-  float buf[3];
+  int iVar4;
+  float buf[6];
 
   state = *(DfpTargetBlockState **)(param_1 + 0xb8);
   iVar4 = *(int *)(param_1 + 0x4c);
   if (*(short *)(param_1 + 0x46) == 0x4e0) {
-    buf[0] = lbl_803E648C;
-    buf[1] = lbl_803E64C4;
-    buf[2] = lbl_803E648C;
+    buf[3] = lbl_803E648C;
+    buf[4] = lbl_803E64C4;
+    buf[5] = lbl_803E648C;
     fn_80097734((double)lbl_803E64C8,(double)lbl_803E64C4,(double)lbl_803E64C4,
                  (double)lbl_803E64B0,param_1,5,1,2,0x32,buf,0);
   }
@@ -81,33 +80,31 @@ void dfptargetblock_update(int param_1)
       uVar3 = GameBit_Get((int)state->stateSfxId);
       state->stateSfxReady = uVar3;
     }
-    fVar2 = lbl_803E64AC;
     if (((state->completionSfxReady == '\0') && (state->stateSfxReady != '\0')) &&
        (cVar1 = state->mode, cVar1 != DFPTARGETBLOCK_MODE_SETTLED)) {
       if ((cVar1 == DFPTARGETBLOCK_MODE_RAISING) || (cVar1 == DFPTARGETBLOCK_MODE_RESETTING)) {
         if (*(float *)(param_1 + 0x10) <= *(float *)(iVar4 + 0xc)) {
           *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) + lbl_803DB414;
-          if (*(float *)(iVar4 + 0xc) <= *(float *)(param_1 + 0x10)) {
+          if (*(float *)(param_1 + 0x10) >= *(float *)(iVar4 + 0xc)) {
             *(float *)(param_1 + 0x10) = *(float *)(iVar4 + 0xc);
             state->mode = DFPTARGETBLOCK_MODE_ACTIVE;
           }
         }
       }
       else if (cVar1 == DFPTARGETBLOCK_MODE_LOWERING) {
-        if (*(float *)(iVar4 + 0xc) - lbl_803E64AC <= *(float *)(param_1 + 0x10)) {
+        if (*(float *)(param_1 + 0x10) >= *(float *)(iVar4 + 0xc) - lbl_803E64AC) {
           *(float *)(param_1 + 0x10) = lbl_803E6494 * lbl_803DB414 + *(float *)(param_1 + 0x10);
-          fVar2 = *(float *)(iVar4 + 0xc) - fVar2;
-          if (*(float *)(param_1 + 0x10) <= fVar2) {
-            *(float *)(param_1 + 0x10) = fVar2;
+          if (*(float *)(param_1 + 0x10) <= *(float *)(iVar4 + 0xc) - lbl_803E64AC) {
+            *(float *)(param_1 + 0x10) = *(float *)(iVar4 + 0xc) - lbl_803E64AC;
             state->mode = DFPTARGETBLOCK_MODE_SETTLED;
             GameBit_Set((int)state->completionSfxId,1);
           }
         }
       }
       else if (state->controlId != 0) {
-        (**(code **)(*DAT_803dcaa8 + 0x10))((double)lbl_803DB414,param_1);
-        (**(code **)(*DAT_803dcaa8 + 0x14))(param_1,state->controlId);
-        (**(code **)(*DAT_803dcaa8 + 0x18))((double)lbl_803DB414,param_1,state->controlId);
+        (*(code *)(*lbl_803DCAA8 + 0x10))((double)lbl_803DB414,param_1);
+        (*(code *)(*lbl_803DCAA8 + 0x14))(param_1,state->controlId);
+        (*(code *)(*lbl_803DCAA8 + 0x18))((double)lbl_803DB414,param_1,state->controlId);
       }
     }
   }
