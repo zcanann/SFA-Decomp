@@ -119,11 +119,12 @@ static inline f64 firepipe_u32AsDouble(u32 value)
 }
 
 #pragma peephole off
+#pragma scheduling off
 void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
 {
     FirePipeExtra *extra;
-    int iVar7;
     int iVar8;
+    int iVar7;
     short sVar1;
     short sVar5;
     undefined4 uVar3;
@@ -132,8 +133,7 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
     if ((int)mapData->scale != 0) {
         obj->scale =
             lbl_803E6BA8 *
-            (float)(firepipe_u32AsDouble((u32)((int)mapData->scale ^ 0x80000000)) -
-                    lbl_803E6BA0) * *(float *)(*(int *)((int)obj + 0x50) + 4);
+            (f32)(s32)mapData->scale * *(float *)(*(int *)((int)obj + 0x50) + 4);
     }
     if (mapData->gameBit != -1) {
         uVar3 = GameBit_Get((int)mapData->gameBit);
@@ -167,47 +167,37 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
         extra->clearVolumeA = 0;
         extra->clearVolumeB = 0;
         sVar5 = obj->objectId;
-        if (sVar5 != 0x70a) {
-            if (sVar5 < 0x70a) {
-                if (sVar5 == 0x6f9) {
-                    extra->effectType = 10;
-                    extra->effectMode = 1;
-                    *(undefined4 *)&extra->effectScale = *(undefined4 *)&lbl_803DC340;
-                    goto done_switch;
-                }
-            }
-            else {
-                if (sVar5 == 0x731) {
-                    extra->effectType = 0xd;
-                    extra->effectMode = 2;
-                    *(undefined4 *)&extra->effectScale = *(undefined4 *)&lbl_803E6B74;
-                    goto done_switch;
-                }
-                if (sVar5 < 0x731) {
-                    if (0x72f < sVar5) {
-                        extra->effectType = 0xc;
-                        extra->effectMode = 2;
-                        *(undefined4 *)&extra->effectScale = *(undefined4 *)&lbl_803E6B74;
-                        goto done_switch;
-                    }
-                }
-                else if (sVar5 < 0x733) {
-                    extra->effectType = 0xe;
-                    extra->effectMode = 2;
-                    *(undefined4 *)&extra->effectScale = *(undefined4 *)&lbl_803E6B74;
-                    goto done_switch;
-                }
-            }
+        switch (sVar5) {
+        case 0x6f9:
+            extra->effectType = 10;
+            extra->effectMode = 1;
+            extra->effectScale = lbl_803DC340;
+            break;
+        case 0x730:
+            extra->effectType = 0xc;
+            extra->effectMode = 2;
+            extra->effectScale = lbl_803E6B74;
+            break;
+        case 0x731:
+            extra->effectType = 0xd;
+            extra->effectMode = 2;
+            extra->effectScale = lbl_803E6B74;
+            break;
+        case 0x732:
+            extra->effectType = 0xe;
+            extra->effectMode = 2;
+            extra->effectScale = lbl_803E6B74;
+            break;
+        case 0x4a4:
+        case 0x70a:
+        default:
+            extra->effectType = 9;
+            extra->effectMode = 0;
+            extra->effectScale = -lbl_803DC340;
+            extra->clearVolumeA = 0x32c;
+            extra->clearVolumeB = 0x32e;
+            break;
         }
-        extra->effectType = 9;
-        extra->effectMode = 0;
-        {
-            f32 neg = -lbl_803DC340;
-            *(undefined4 *)&extra->effectScale = *(undefined4 *)&neg;
-        }
-        extra->clearVolumeA = 0x32c;
-        extra->clearVolumeB = 0x32e;
-    done_switch:
         extra->effectObjs[0] = 0;
         extra->effectObjs[1] = 0;
         extra->effectObjs[2] = 0;
@@ -237,4 +227,5 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
         extra->subObj = 0;
     }
 }
+#pragma scheduling reset
 #pragma peephole reset
