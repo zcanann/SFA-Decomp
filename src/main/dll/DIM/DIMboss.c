@@ -41,7 +41,7 @@ extern undefined8 fn_801BC7E4();
 extern void OSReport(const char *msg, ...);
 
 extern undefined4 Camera_DisableViewYOffset();
-extern undefined4 fn_80013E2C();
+extern undefined4 Resource_Release();
 extern undefined4 fn_8001F384();
 extern undefined4 Obj_FreeObject();
 extern undefined4 Obj_GetPlayerObject();
@@ -436,7 +436,7 @@ void DIMboss_free(DIMbossObject *obj)
   }
   (*(code *)(*lbl_803DCAB8 + 0x40))(obj,runtime,0x20);
   if (lbl_803DDB88 != 0) {
-    fn_80013E2C(lbl_803DDB88);
+    Resource_Release(lbl_803DDB88);
   }
   lbl_803DDB88 = 0;
   effect = *runtime->effect;

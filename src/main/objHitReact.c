@@ -7,7 +7,7 @@
 
 extern int Sfx_IsPlayingFromObject(int obj,u16 sfxId);
 extern void Sfx_PlayFromObject(int obj,u16 sfxId);
-extern void fn_80013E2C(void *handle);
+extern void Resource_Release(void *handle);
 extern int *ObjList_GetObjects(undefined *param_1,undefined *param_2);
 extern void fn_8009A1DC(double param_1,int obj,undefined2 *pos,u32 count,int *param_5);
 
@@ -24,7 +24,7 @@ extern f32 lbl_803DE964;
 extern int gObjHitReactResetObjectCount;
 extern int *gObjHitReactResetObjects;
 
-extern ObjHitReactEffectHandle *fn_80013EC8(u32 effectId,u32 count);
+extern ObjHitReactEffectHandle *Resource_Acquire(u32 effectId,u32 count);
 
 /*
  * --INFO--
@@ -89,10 +89,10 @@ int objHitReact_update(ObjAnimComponent *obj,ObjHitReactEntry *entryTable,u32 en
         Sfx_PlayFromObject(objHandle,(u16)entryTable->hitSfxB);
       }
       if (entryTable->hitFxMode == OBJHITREACT_HIT_FX_MODE_EFFECT) {
-        effectHandle = fn_80013EC8(OBJHITREACT_HIT_EFFECT_ID,1);
+        effectHandle = Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID,1);
         effectHandle->vtable->spawn(0,1,&effectPos,OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,-1,&effectOrigin);
         if (effectHandle != (ObjHitReactEffectHandle *)0x0) {
-          fn_80013E2C(effectHandle);
+          Resource_Release(effectHandle);
         }
       }
       else {

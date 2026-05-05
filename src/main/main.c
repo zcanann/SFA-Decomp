@@ -1241,9 +1241,9 @@ void fn_801FDAA0(void) { fn_801FD6B4(); }
 
 /* fn_X(lbl); lbl = 0; */
 extern u32 lbl_803DDCD8;
-extern void fn_80013E2C(u32);
+extern void Resource_Release(u32);
 #pragma scheduling off
 #pragma peephole off
-void fn_801FDE8C(void) { fn_80013E2C(lbl_803DDCD8); lbl_803DDCD8 = 0; }
+void fn_801FDE8C(void) { Resource_Release(lbl_803DDCD8); lbl_803DDCD8 = 0; }
 #pragma peephole reset
 #pragma scheduling reset
