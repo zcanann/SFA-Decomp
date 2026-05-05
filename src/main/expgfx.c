@@ -189,7 +189,7 @@ extern f32 lbl_803E009C;
 extern f32 lbl_803E00A0;
 extern f32 lbl_803E00A4;
 extern f32 lbl_803E00A8;
-extern u8 lbl_8030F898[];
+extern u8 gExpgfxStaticData[];
 extern u8 lbl_8039AB58[];
 extern u32 gExpgfxTrackedPoolSourceIds[];
 extern u32 gExpgfxTrackedSourceFrameMasks[];
@@ -619,7 +619,7 @@ void expgfx_initSlotQuad(void *slotPtr)
   float frameStep;
   int texture;
 
-  staticDataBase = lbl_8030F898;
+  staticDataBase = gExpgfxStaticData;
   slot = (ExpgfxSlot *)slotPtr;
   tableEntry = Expgfx_GetTableEntry(Expgfx_GetSlotTableIndex(slot));
   texture = tableEntry->textureOrResource;
@@ -973,7 +973,7 @@ void expgfx_renderSourcePools(int sourceId,int sourceMode)
   do {
     if (((*poolActiveCounts != '\0') && ((u32)*poolSourceIds == (u32)sourceId)) &&
        ((int)*poolSourceModes == sourceMode + 1)) {
-      boundsTemplate = (ExpgfxBounds *)(lbl_8030F898 + (uint)*poolBoundsTemplateIds * 0x18);
+      boundsTemplate = (ExpgfxBounds *)(gExpgfxStaticData + (uint)*poolBoundsTemplateIds * 0x18);
       uVar1 = fn_8005E97C((double)(poolBounds->minX - lbl_803DCDD8),
                            (double)(poolBounds->maxX - lbl_803DCDD8),
                            (double)poolBounds->minY,(double)poolBounds->maxY,
@@ -1056,7 +1056,7 @@ void expgfx_queueStandalonePools(void)
   slotPoolBases = (uint *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
   do {
     if ((*poolActiveCounts != '\0') && (*poolSourceModes == 0)) {
-      boundsTemplate = (ExpgfxBounds *)(lbl_8030F898 + (uint)*poolBoundsTemplateIds * 0x18);
+      boundsTemplate = (ExpgfxBounds *)(gExpgfxStaticData + (uint)*poolBoundsTemplateIds * 0x18);
       if (fn_8005E97C((double)(poolBounds->minX - lbl_803DCDD8),
                       (double)(poolBounds->maxX - lbl_803DCDD8),
                       (double)poolBounds->minY,(double)poolBounds->maxY,
@@ -1217,7 +1217,7 @@ void expgfx_resetAllPools(void)
   int slotIndex;
   void *resource;
 
-  staticDataBase = lbl_8030F898;
+  staticDataBase = gExpgfxStaticData;
   expgfxBase = lbl_8039AB58;
   poolIndex = 0;
   slotPoolBases = (u32 *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
