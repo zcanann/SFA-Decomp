@@ -61,8 +61,8 @@ void ObjMsg_AllocQueue(void *obj,int capacity);
 undefined4 Obj_IsObjectAlive(u32 param_1);
 bool FUN_80037d74(int param_1);
 int ObjHits_PollPriorityHitWithCooldown(int obj,float *cooldown,undefined4 *outHitObject,float *outHitPos);
-void ObjHits_PollPriorityHitEffectWithCooldown(undefined4 obj,undefined4 hitFxMode,uint colorR,uint colorG,uint colorB,
-                 uint sfxId,float *cooldown);
+int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR,uint colorG,
+                                              uint colorB,uint sfxId,float *cooldown);
 void ObjLink_DetachChild(int param_1,int param_2);
 void ObjLink_AttachChild(int param_1,int param_2,ushort param_3);
 void ObjContact_DispatchCallbacks(void);

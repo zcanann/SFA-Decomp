@@ -9,6 +9,8 @@ extern float sqrtf(float x);
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b14();
+extern ObjHitReactEffectHandle *Resource_Acquire(int resourceId,int mode);
+extern int Sfx_PlayFromObject(int obj,int sfxId);
 extern uint fn_80014B24(int index);
 extern void fn_80014B3C(int index,uint flags);
 extern undefined4 FUN_80017640();
@@ -85,9 +87,13 @@ extern f32 lbl_803DE914;
 extern f32 lbl_803DE97C;
 extern f32 lbl_803DDA58;
 extern f32 lbl_803DDA5C;
+extern f32 lbl_803DB414;
+extern f32 lbl_803DCDD8;
+extern f32 lbl_803DCDDC;
 extern f32 lbl_803DF5E8;
 extern f32 lbl_803DF5F0;
 extern f32 lbl_803DE970;
+extern f32 lbl_803DE978;
 extern f32 lbl_803DF5F4;
 extern f32 lbl_803DF5F8;
 extern f32 lbl_803DF5FC;
@@ -2246,6 +2252,9 @@ int ObjHits_PollPriorityHitWithCooldown(int obj,float *cooldown,undefined4 *outH
   return collisionType;
 }
 
+#pragma dont_inline on
+#pragma scheduling off
+#pragma peephole off
 /*
  * --INFO--
  *
@@ -2259,52 +2268,45 @@ int ObjHits_PollPriorityHitWithCooldown(int obj,float *cooldown,undefined4 *outH
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_PollPriorityHitEffectWithCooldown(undefined4 obj,undefined4 hitFxMode,uint colorR,uint colorG,uint colorB,
-                 uint sfxId,float *cooldown)
+int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR,uint colorG,
+                                              uint colorB,uint sfxId,float *cooldown)
 {
-  uint currentObj;
   int collisionType;
-  int *effectHandle;
-  undefined8 currentObjPair;
-  int hitObject;
-  uint effectObjId;
-  uint effectColorR;
-  uint effectColorG;
-  uint effectColorB;
-  undefined2 effectPosX;
-  undefined2 effectPosY;
-  undefined2 effectPosZ;
-  float effectScale;
-  float hitPosX;
-  float hitPosY;
-  float hitPosZ;
-  
-  currentObjPair = FUN_80286834();
-  currentObj = (uint)((ulonglong)currentObjPair >> 0x20);
-  *cooldown = *cooldown - lbl_803DC074;
-  collisionType = ObjHits_GetPriorityHitWithPosition((int)currentObj, (undefined4 *)&hitObject,
-                       (int *)0x0, (uint *)0x0, &hitPosX, &hitPosY, &hitPosZ);
-  if ((((*cooldown <= lbl_803DF5F0) && (collisionType != 0)) &&
-      ((*cooldown = lbl_803DF5F8), (collisionType != 0x1a))) && (collisionType != 5)) {
-    hitPosX = hitPosX + lbl_803DDA58;
-    hitPosZ = hitPosZ + lbl_803DDA5C;
-    effectScale = lbl_803DF5FC;
-    effectPosZ = 0;
-    effectPosY = 0;
-    effectPosX = 0;
-    effectHandle = (int *)FUN_80006b14(OBJHITREACT_HIT_EFFECT_ID);
-    effectObjId = (uint)currentObjPair & 0xff;
-    effectColorR = colorR & 0xff;
-    effectColorG = colorG & 0xff;
-    effectColorB = colorB & 0xff;
-    (**(code **)(*effectHandle + 4))(0, 1, &effectPosX, OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,
-                                     0xffffffff, &effectObjId);
-    if ((((sfxId & 0xffff) != 0) && (hitObject != 0)) && (*(short *)(hitObject + 0x46) == 0x69)) {
-      FUN_80006824((int)currentObj, (ushort)sfxId);
+  ObjHitReactEffectHandle *effectHandle;
+  float hitPos[3];
+  ObjHitReactEffectPos effectPos;
+  u32 effectArgs[4];
+  u32 hitObject;
+
+  *cooldown = *cooldown - lbl_803DB414;
+  collisionType = ObjHits_GetPriorityHitWithPosition(obj,(undefined4 *)&hitObject,(int *)0x0,
+                                                     (uint *)0x0,&hitPos[0],&hitPos[1],&hitPos[2]);
+  if ((*cooldown <= lbl_803DE970) && (collisionType != 0)) {
+    *cooldown = lbl_803DE978;
+    if ((collisionType != 0x1a) && (collisionType != 5)) {
+      hitPos[0] = hitPos[0] + lbl_803DCDD8;
+      hitPos[2] = hitPos[2] + lbl_803DCDDC;
+      effectPos.scale = lbl_803DE97C;
+      effectPos.z = 0;
+      effectPos.y = 0;
+      effectPos.x = 0;
+      effectHandle = Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID,1);
+      effectArgs[0] = hitFxMode & 0xff;
+      effectArgs[1] = colorR & 0xff;
+      effectArgs[2] = colorG & 0xff;
+      effectArgs[3] = colorB & 0xff;
+      effectHandle->vtable->spawn(0,1,&effectPos,OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,0xffffffff,
+                                  effectArgs);
+      if ((((sfxId & 0xffff) != 0) && (hitObject != 0)) && (*(short *)(hitObject + 0x46) == 0x69)) {
+        Sfx_PlayFromObject(obj,sfxId);
+      }
     }
   }
-  FUN_80286880();
+  return collisionType;
 }
+#pragma peephole reset
+#pragma scheduling reset
+#pragma dont_inline reset
 
 /*
  * --INFO--
