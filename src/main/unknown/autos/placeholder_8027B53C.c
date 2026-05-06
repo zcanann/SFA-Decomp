@@ -1,95 +1,88 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8027B53C.h"
 
-extern undefined4 FUN_80283ba0();
-extern undefined4 FUN_80283d5c();
-extern int FUN_80283d60();
-extern undefined FUN_80283d68();
-extern undefined2 FUN_80283d70();
-extern uint FUN_80284224();
-extern uint FUN_8028467c();
-extern uint FUN_80284684();
-extern undefined4 FUN_80284c60();
-
-extern undefined1 DAT_803cbef0;
-extern undefined4 DAT_803cbef4;
-extern byte DAT_803cbef8;
-extern undefined4 DAT_803cbefa;
-extern undefined4 DAT_803cbefb;
-extern undefined4 DAT_803cbefc;
-extern undefined4 DAT_803cbf00;
-extern undefined4 DAT_803cbf04;
-extern undefined4 DAT_803cbf0a;
-extern undefined4 DAT_803cc7f8;
-extern undefined4 DAT_803cc838;
-extern undefined4* DAT_803cc83c;
-extern undefined4 DAT_803deee8;
+extern void fn_8027B42C(u16 voiceId, u16 a, u16 b, u16 c);
+extern int fn_8027B89C(u16 voiceId, u16 a, u16 b, u16 c, u16 d, u32 e);
 
 /*
- * --INFO--
- *
- * Function: FUN_8027b42c
- * EN v1.0 Address: 0x8027B42C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8027B53C
- * EN v1.1 Size: 488b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * fn_8027B42C — large voice-update inner helper (~152 instructions).
+ * Stubbed pending full decode.
  */
-uint FUN_8027b42c(byte param_1)
+#pragma dont_inline on
+void fn_8027B42C(u16 voiceId, u16 a, u16 b, u16 c)
 {
+    (void)voiceId;
+    (void)a;
+    (void)b;
+    (void)c;
+}
+#pragma dont_inline reset
+
+/*
+ * Iterate a u16 list terminated by 0xFFFF, dispatching each entry to
+ * fn_8027B42C. Entries with bit 0x8000 set are "ranges": low 14 bits
+ * are the start, the following u16 is the inclusive end.
+ *
+ * EN v1.0 Address: 0x8027B260
+ * EN v1.0 Size: 4b (stub)
+ * EN v1.1 Address: 0x8027B690
+ * EN v1.1 Size: 156b
+ */
+void fn_8027B690(u16 *list, u16 a, u16 b, u16 c)
+{
+    while (*list != 0xffff) {
+        u16 v = *list;
+        if ((v & 0x8000) == 0) {
+            list++;
+            fn_8027B42C(v, a, b, c);
+        } else {
+            u16 i = v & 0x3fff;
+            for (; (u32)i <= (u32)list[1]; i++) {
+                fn_8027B42C(i, a, b, c);
+            }
+            list += 2;
+        }
+    }
+}
+
+/*
+ * fn_8027B72C — second voice-update helper (~91 instructions). Stubbed.
+ */
+#pragma dont_inline on
+void fn_8027B72C(u16 voiceId)
+{
+    (void)voiceId;
+}
+#pragma dont_inline reset
+
+/*
+ * fn_8027B89C — voice-bank scanning loop with 7-arg signature (~80
+ * instructions, walks 'lbl_803DE308' entries against multiple keys).
+ * Stubbed pending full decode.
+ */
+#pragma dont_inline on
+int fn_8027B89C(u16 voiceId, u16 a, u16 b, u16 c, u16 d, u32 e)
+{
+    (void)voiceId;
+    (void)a;
+    (void)b;
+    (void)c;
+    (void)d;
+    (void)e;
     return 0;
 }
+#pragma dont_inline reset
 
 /*
- * --INFO--
+ * Thin wrapper inserting `0` as the f argument into fn_8027B89C and
+ * shifting the caller's last arg into position g.
  *
- * Function: FUN_8027b434
- * EN v1.0 Address: 0x8027B434
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8027B724
- * EN v1.1 Size: 172b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Address: 0x8027B26C
+ * EN v1.0 Size: 4b (stub)
+ * EN v1.1 Address: 0x8027B9DC
+ * EN v1.1 Size: 36b
  */
-void FUN_8027b434(uint param_1)
+int fn_8027B9DC(u16 voiceId, u16 a, u16 b, u16 c, u32 e)
 {
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_8027b438
- * EN v1.0 Address: 0x8027B438
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8027B7D0
- * EN v1.1 Size: 496b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8027b438(int param_1,uint param_2)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_8027b43c
- * EN v1.0 Address: 0x8027B43C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8027B9C0
- * EN v1.1 Size: 452b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8027b43c(void)
-{
+    return fn_8027B89C(voiceId, a, b, c, 0 /* d=arg5 was zeroed */, e);
 }
