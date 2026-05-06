@@ -3920,5 +3920,5 @@ void fn_8008B8B0(void) {}
 void fn_8008B8FC(void) {}
 void fn_8008D970(void) {}
 int fn_8008DCA8(void) { return 0x0; }
-void fn_8008ED20(void) {}
+void sky2_release(void) {}
 void fn_80090270(void) {}
