@@ -33,7 +33,7 @@ typedef struct DfpLightniState {
   s32 eventId;
 } DfpLightniState;
 
-typedef void (*DfpLightniSpawnFn)(u8 *obj,int objectId,int param_3,int param_4,int param_5,int param_6);
+typedef void (*DfpPowerSlSpawnFn)(u8 *obj,int objectId,int param_3,int param_4,int param_5,int param_6);
 
 static inline DfpLightniState *dfplightni_getState(u8 *obj)
 {
@@ -218,7 +218,7 @@ void dfplightni_init(u8 *obj,u8 *params)
 
 #pragma scheduling off
 #pragma peephole off
-undefined4 fn_80209F34(u8 *obj)
+undefined4 dfppowersl_spawnSeqObjectsOnHit(u8 *obj)
 {
   int i;
   int outObj;
@@ -231,7 +231,7 @@ undefined4 fn_80209F34(u8 *obj)
   if (((u32)outObj != 0) && (i != 0)) {
     i = 1;
     do {
-      ((DfpLightniSpawnFn)(*(u32 *)(*lbl_803DCA88 + 8)))(obj,0x39e,0,1,0xffffffff,0);
+      ((DfpPowerSlSpawnFn)(*(u32 *)(*lbl_803DCA88 + 8)))(obj,0x39e,0,1,0xffffffff,0);
     } while (i++ < 0x14);
   }
   return 0;

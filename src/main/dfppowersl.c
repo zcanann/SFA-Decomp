@@ -18,7 +18,7 @@ typedef void (*DfpPowerSlActivateFn)(u8 *obj,int objectId);
 typedef void (*DfpPowerSlRefreshFn)(int param_1,u8 *obj,int param_3);
 typedef void (*DfpPowerSlSpawnFn)(u8 *obj,int objectId,void *params,int param_4,int param_5,void *outObj);
 
-undefined4 fn_80209F34(u8 *obj);
+undefined4 dfppowersl_spawnSeqObjectsOnHit(u8 *obj);
 
 static inline DfpPowerSlState *dfppowersl_getState(u8 *obj)
 {
@@ -98,7 +98,7 @@ void dfppowersl_init(u8 *obj,u8 *params)
     if (*(s16 *)(params + 0x1c) <= 0) {
       *(s16 *)(params + 0x1c) = 1;
     }
-    *(undefined4 **)(obj + 0xbc) = (undefined4 *)fn_80209F34;
+    *(undefined4 **)(obj + 0xbc) = (undefined4 *)dfppowersl_spawnSeqObjectsOnHit;
     state->activateObjectId = *(s16 *)(params + 0x1a);
     state->spawnObjectId = *(s16 *)(params + 0x1c);
     state->eventId = *(s16 *)(params + 0x20);
