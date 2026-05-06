@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 
-extern u32 fn_800221A0(int min,int max);
+extern u32 randomGetRange(int min,int max);
 extern u8 *ObjList_FindObjectById(int objectId);
 extern void fn_8003B8F4(double scale);
 extern f32 angleFn(int angle);
@@ -112,7 +112,7 @@ void worldasteroids_init(u8 *obj)
   int radiusSeed;
 
   state = worldasteroids_getState(obj);
-  baseAngle = fn_800221A0(-0x7fff,0x7fff);
+  baseAngle = randomGetRange(-0x7fff,0x7fff);
   orbitShape = angleFn((u16)baseAngle);
   if (orbitShape < lbl_803E65E0) {
     orbitShape = -angleFn((u16)baseAngle);
@@ -120,7 +120,7 @@ void worldasteroids_init(u8 *obj)
   else {
     orbitShape = angleFn((u16)baseAngle);
   }
-  fn_800221A0(0,(int)(lbl_803E65E8 * orbitShape + lbl_803E65E4));
+  randomGetRange(0,(int)(lbl_803E65E8 * orbitShape + lbl_803E65E4));
   orbitShape = angleFn((u16)baseAngle);
   if (orbitShape < lbl_803E65E0) {
     orbitShape = -angleFn((u16)baseAngle);
@@ -129,13 +129,13 @@ void worldasteroids_init(u8 *obj)
     orbitShape = angleFn((u16)baseAngle);
   }
   radiusSeed = (int)(lbl_803E65EC * orbitShape);
-  randomValue = fn_800221A0(-300,300);
+  randomValue = randomGetRange(-300,300);
   state->velocityZ = randomValue;
-  randomValue = fn_800221A0(-300,300);
+  randomValue = randomGetRange(-300,300);
   state->velocityY = randomValue;
-  randomValue = fn_800221A0(-300,300);
+  randomValue = randomGetRange(-300,300);
   state->velocityX = randomValue;
-  randomValue = fn_800221A0(-0x7fff,0x7fff);
+  randomValue = randomGetRange(-0x7fff,0x7fff);
   state->orbitAngle = randomValue;
   state->orbitRadius =
       (s16)(int)(worldasteroids_s32AsFloat(radiusSeed) * angleFn((u16)baseAngle) +

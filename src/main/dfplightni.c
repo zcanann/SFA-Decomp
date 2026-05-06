@@ -2,7 +2,7 @@
 
 extern int Sfx_PlayFromObjectLimited(u8 *obj,int sfxId,int maxCount);
 extern u32 GameBit_Get(int eventId);
-extern u32 fn_800221A0(int min,int max);
+extern u32 randomGetRange(int min,int max);
 extern void fn_80023800(u32 handle);
 extern u8 *Obj_GetPlayerObject(void);
 extern int ObjHits_GetPriorityHit(u8 *obj,int *out,int param_3,int param_4);
@@ -129,19 +129,19 @@ void dfplightni_update(u8 *obj)
         start[1] = *(f32 *)(obj + 0x10);
         start[2] = *(f32 *)(obj + 0x14);
         if (eventActive != 0) {
-          randomZ = fn_800221A0(-200,200);
+          randomZ = randomGetRange(-200,200);
           end[0] = (f32)(s32)randomZ * lbl_803E64FC + *(f32 *)(playerObj + 0xc);
-          randomY = fn_800221A0(100,300);
+          randomY = randomGetRange(100,300);
           end[1] = (f32)(s32)randomY * lbl_803E64FC + *(f32 *)(playerObj + 0x10);
-          randomX = fn_800221A0(-200,200);
+          randomX = randomGetRange(-200,200);
           end[2] = (f32)(s32)randomX * lbl_803E64FC + *(f32 *)(playerObj + 0x14);
         }
         else {
-          randomX = fn_800221A0(-200,200);
+          randomX = randomGetRange(-200,200);
           end[0] = (f32)(s32)randomX * lbl_803E64FC + start[0];
-          randomY = fn_800221A0(100,300);
+          randomY = randomGetRange(100,300);
           end[1] = (f32)(s32)randomY * lbl_803E64FC + *(f32 *)(obj + 0x10);
-          randomZ = fn_800221A0(-200,200);
+          randomZ = randomGetRange(-200,200);
           end[2] = (f32)(s32)randomZ * lbl_803E64FC + start[2];
         }
         if (state->effectHandle != 0) {
@@ -192,7 +192,7 @@ void dfplightni_init(u8 *obj,u8 *params)
 
   if (obj != 0) {
     state = dfplightni_getState(obj);
-    randomValue = fn_800221A0(0,100);
+    randomValue = randomGetRange(0,100);
     state->timer = (f32)(s32)randomValue;
     state->effectHandle = 0;
     if (*(s16 *)(params + 0x1a) <= 0) {
@@ -201,7 +201,7 @@ void dfplightni_init(u8 *obj,u8 *params)
     if (*(s16 *)(params + 0x1c) <= 0) {
       *(s16 *)(params + 0x1c) = 1;
     }
-    randomValue = fn_800221A0(0,100);
+    randomValue = randomGetRange(0,100);
     state->triggerTime = (f32)(s32)randomValue + lbl_803E6508;
     state->radiusX = ((f32)(s32)*(s16 *)(params + 0x1a) / lbl_803E650C) *
                      lbl_803E6504;

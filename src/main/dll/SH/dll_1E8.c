@@ -5,7 +5,7 @@
 extern void Sfx_PlayFromObject(SHthorntailObject *obj,u16 volumeId);
 extern uint GameBit_Get(int eventId);
 extern u32 fn_8002208C(f32 *state,f32 min,f32 max);
-extern int fn_800221A0(int min,int max);
+extern int randomGetRange(int min,int max);
 extern void OSPanic(const char *file,int line,const char *msg,...);
 
 extern u8 lbl_803DB410;
@@ -85,9 +85,9 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_CLOSE_ATTACK:
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_CLOSE_ATTACK_WAIT;
-      randomValue = fn_800221A0(SHTHORNTAIL_CLOSE_ATTACK_WAIT_MIN,SHTHORNTAIL_CLOSE_ATTACK_WAIT_MAX);
+      randomValue = randomGetRange(SHTHORNTAIL_CLOSE_ATTACK_WAIT_MIN,SHTHORNTAIL_CLOSE_ATTACK_WAIT_MAX);
       runtime->comboTimer = (float)randomValue;
-      randomValue = fn_800221A0(SHTHORNTAIL_CLOSE_ATTACK_REPEAT_MIN,SHTHORNTAIL_CLOSE_ATTACK_REPEAT_MAX);
+      randomValue = randomGetRange(SHTHORNTAIL_CLOSE_ATTACK_REPEAT_MIN,SHTHORNTAIL_CLOSE_ATTACK_REPEAT_MAX);
       runtime->comboRepeatCount = (s8)randomValue;
     }
     break;
@@ -106,7 +106,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_CLOSE_ATTACK_REPEAT:
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_CLOSE_ATTACK_WAIT;
-      randomValue = fn_800221A0(SHTHORNTAIL_CLOSE_ATTACK_WAIT_MIN,SHTHORNTAIL_CLOSE_ATTACK_WAIT_MAX);
+      randomValue = randomGetRange(SHTHORNTAIL_CLOSE_ATTACK_WAIT_MIN,SHTHORNTAIL_CLOSE_ATTACK_WAIT_MAX);
       runtime->comboTimer = (float)randomValue;
       runtime->comboRepeatCount--;
     }
@@ -114,7 +114,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_CLOSE_ATTACK_RECOVER:
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      randomValue = fn_800221A0(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
+      randomValue = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
       runtime->idleTimer = (float)randomValue;
     }
     break;
@@ -134,7 +134,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_TAIL_SWING_RECOVER:
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      randomValue = fn_800221A0(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
+      randomValue = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
       runtime->idleTimer = (float)randomValue;
     }
     break;
@@ -201,7 +201,7 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntim
         if (gameBitValue != 0) {
           if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE3_WAIT) {
             runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-            randomIdleWait = fn_800221A0(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
+            randomIdleWait = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
             runtime->idleTimer = (float)randomIdleWait;
           }
           runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5PlayerImpactSfxTable;

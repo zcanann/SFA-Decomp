@@ -3,7 +3,7 @@
 extern void *mmAlloc(int size, int heap, int flags);
 extern void fn_80023800(void *ptr);
 extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, s32 param);
-extern s16 fn_800217C0(f32 dx, f32 dz);
+extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
 extern f32 fn_80293E80(f32 x);
 extern float sin(float x);
@@ -118,7 +118,7 @@ void fn_8010DB7C(f32 *param_1, f32 *param_2, f32 *param_3, f32 *param_4) {
     dx = param_1[6] - pfVar2[0];
     dz = param_1[8] - pfVar2[2];
     dist = sqrtf(dz * dz + dx * dx);
-    angle = (u16)fn_800217C0(dx, dz);
+    angle = (u16)getAngle(dx, dz);
 
     {
         f32 scale = lbl_803DD584[17];

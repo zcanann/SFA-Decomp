@@ -4,7 +4,7 @@
 #include "main/objhits.h"
 #include "main/objlib.h"
 
-extern s16 fn_800217C0(f32 deltaX, f32 deltaZ);
+extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern float sqrtf(float x);
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80006824();
@@ -12,14 +12,14 @@ extern undefined4 FUN_80006b14();
 extern ObjHitReactEffectHandle *Resource_Acquire(int resourceId,int mode);
 extern int Sfx_PlayFromObject(int obj,int sfxId);
 extern uint fn_80014B24(int index);
-extern void fn_80014B3C(int index,uint flags);
+extern void buttonDisable(int index,uint flags);
 extern undefined4 FUN_80017640();
 extern undefined4 FUN_80017700();
 extern undefined4 FUN_80017704();
 extern void fn_80021570(void *transform,float *mtx);
 extern double FUN_80017714();
 extern float fn_800216D0(float *posA,float *posB);
-extern float fn_80021704(float *param_1,float *param_2);
+extern float Vec_distance(float *param_1,float *param_2);
 extern int FUN_80017730();
 extern undefined4 FUN_8001774c();
 extern uint FUN_80017760();
@@ -36,7 +36,7 @@ extern void Obj_UpdateObject(ObjAnimComponent *obj,void *modelInstance);
 extern int ObjList_GetObjects();
 extern void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2);
 extern undefined4 FUN_80045328();
-extern void fn_8001F71C(void *dst,int fileId,int offset,int size);
+extern void getTabEntry(void *dst,int fileId,int offset,int size);
 extern void fn_80048F48(int fileId,void *dst,int offset,int size);
 extern undefined4 FUN_80053ab4();
 extern int * fn_8005B11C();
@@ -269,7 +269,7 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
           hitState->activeEntryCount = hitState->entryCapacity;
         }
         if (async == 0) {
-          fn_8001F71C(hitState->entries,0x41,(int)firstEntryIndex,(int)hitState->activeEntryCount);
+          getTabEntry(hitState->entries,0x41,(int)firstEntryIndex,(int)hitState->activeEntryCount);
           return;
         }
         fn_80048F48(0x41,hitState->entries,(int)firstEntryIndex,(int)hitState->activeEntryCount);
@@ -1976,7 +1976,7 @@ void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sende
     obj = (void *)objects[objectIndex];
     if (((obj != sender) || ((maskedFlags & 1) == 0)) &&
         ((*(short *)((byte *)obj + 0x46) == (short)targetId || ((maskedFlags & 2) != 0))) &&
-        ((fn_80021704((float *)((byte *)sender + 0x18),(float *)((byte *)obj + 0x18)) < radius &&
+        ((Vec_distance((float *)((byte *)sender + 0x18),(float *)((byte *)obj + 0x18)) < radius &&
           (obj != (void *)0x0)) &&
          (queue = *(ObjMsgQueue **)((byte *)obj + 0xdc), queue != (ObjMsgQueue *)0x0))) {
       count = queue->count;
@@ -2543,7 +2543,7 @@ undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
     if ((flagBlocked == 0) && (iVar1 = (*lbl_803DCA68)->isTriggerSet((int)param_2), iVar1 != 0)) {
       iVar1 = fn_80296BA0(Obj_GetPlayerObject());
       if (iVar1 == -1) {
-        fn_80014B3C(0,0x100);
+        buttonDisable(0,0x100);
         return 1;
       }
     }
@@ -2588,7 +2588,7 @@ undefined4 ObjTrigger_IsSet(int param_1)
       if ((flagBlocked == 0) && (iVar1 = (*lbl_803DCA68)->isCurrentTriggerClear(), iVar1 == 0)) {
         iVar1 = fn_80296BA0(Obj_GetPlayerObject());
         if ((iVar1 == -1) || (iVar1 == 0x40)) {
-          fn_80014B3C(0,0x100);
+          buttonDisable(0,0x100);
           return 1;
         }
       }
@@ -2932,7 +2932,7 @@ int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3)
 
   dVar3 = *(float *)(param_1 + 6) - *(float *)(param_2 + 0xc);
   dVar2 = *(float *)(param_1 + 10) - *(float *)(param_2 + 0x14);
-  iVar1 = fn_800217C0(dVar3, dVar2);
+  iVar1 = getAngle(dVar3, dVar2);
   if (param_3 != (float *)0x0) {
     *param_3 = sqrtf(dVar3 * dVar3 + dVar2 * dVar2);
   }

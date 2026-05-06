@@ -2,7 +2,7 @@
 
 extern undefined4 Obj_TransformWorldPointToLocal();
 extern undefined4 Obj_TransformLocalPointToWorld();
-extern uint fn_800217C0();
+extern uint getAngle();
 extern undefined4 doNothing_80103660();
 extern char camcontrol_getTargetPosition();
 extern char camcontrol_samplePathState();
@@ -99,7 +99,7 @@ void camclimb_update(short *param_1)
     }
     (*(code *)(*(int *)lbl_803DCA50 + 0x38))
               ((double)lbl_803E1740, param_1, &local_2c, auStack_30, &local_34, &local_38, 0);
-    uVar1 = fn_800217C0((double)local_2c, (double)local_34);
+    uVar1 = getAngle((double)local_2c, (double)local_34);
     iVar5 = (0x8000 - (uVar1 & 0xffff)) - ((int)*param_1 & 0xffffU);
     if (0x8000 < iVar5) {
       iVar5 = iVar5 + -0xffff;

@@ -9,7 +9,7 @@ extern undefined4 Sfx_PlayFromObject();
 extern double FUN_80017708();
 extern int FUN_80017730();
 extern uint FUN_80017760();
-extern uint fn_800221A0(int min,int max);
+extern uint randomGetRange(int min,int max);
 extern undefined4 Obj_GetActiveModel();
 extern undefined4 Obj_GetPlayerObject();
 extern undefined4 fn_8002CEC0();
@@ -322,7 +322,7 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
   switch (config->controlMode) {
   case SHTHORNTAIL_CONTROL_MODE_LEVEL_0:
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-    randomTime = fn_800221A0(1000,2000);
+    randomTime = randomGetRange(1000,2000);
     runtime->idleTimer = (f32)(s32)randomTime;
     break;
   case SHTHORNTAIL_CONTROL_MODE_LEVEL_1:
@@ -331,12 +331,12 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
     break;
   case SHTHORNTAIL_CONTROL_MODE_ROOT_2:
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-    randomTime = fn_800221A0(1000,2000);
+    randomTime = randomGetRange(1000,2000);
     runtime->idleTimer = (f32)(s32)randomTime;
     break;
   case SHTHORNTAIL_CONTROL_MODE_ROOT_3:
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-    randomTime = fn_800221A0(1000,2000);
+    randomTime = randomGetRange(1000,2000);
     runtime->idleTimer = (f32)(s32)randomTime;
     break;
   }
@@ -394,13 +394,13 @@ void SHthorntail_updateDustEffects(SHthorntailObject *obj)
   local_36 = 1;
   if ((runtime->dustEffectFlags & 4) != 0) {
     if (runtime->dustEffectTimer < lbl_803E5468) {
-      if ((f32)(s32)fn_800221A0(0,0x1e0) <
+      if ((f32)(s32)randomGetRange(0,0x1e0) <
           runtime->dustEffectTimer * lbl_803E546C) {
         (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
       }
     }
     else if (runtime->dustEffectTimer < lbl_803E5470) {
-      if ((f32)(s32)fn_800221A0(0,0x1e0) <
+      if ((f32)(s32)randomGetRange(0,0x1e0) <
           runtime->dustEffectTimer / lbl_803E5474) {
         (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
       }
@@ -411,7 +411,7 @@ void SHthorntail_updateDustEffects(SHthorntailObject *obj)
       runtime->dustEffectFlags = runtime->dustEffectFlags | 2;
     }
     else if (runtime->dustEffectTimer < lbl_803E5480) {
-      if ((f32)(s32)fn_800221A0(0,0x1e0) <
+      if ((f32)(s32)randomGetRange(0,0x1e0) <
           runtime->dustEffectTimer * lbl_803E546C) {
         (**(code **)(*lbl_803DCA88 + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
       }

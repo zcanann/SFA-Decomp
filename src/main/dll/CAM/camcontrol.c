@@ -27,7 +27,7 @@ extern double FUN_80183544();
 extern int FUN_80286838();
 extern undefined4 FUN_80286884();
 extern f32 sqrtf(f32 x);
-extern void fn_8001F71C(void *dst,int fileId,int offset,int size);
+extern void getTabEntry(void *dst,int fileId,int offset,int size);
 extern void fn_80023800(void *ptr);
 extern void *mmAlloc(int size,int heap,int flags);
 extern void fn_800E84D8(s16 actionNo);
@@ -520,7 +520,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char trigge
     OSReport(sCamcontrolTriggeredCamActionLoadWarning,actionNo);
     camAction = (CamcontrolTriggeredAction *)mmAlloc(CAMCONTROL_ACTION_RECORD_SIZE,0xf,0);
     if (camAction != (CamcontrolTriggeredAction *)0x0) {
-      fn_8001F71C(camAction,CAMCONTROL_ACTION_FILE_ID,0,CAMCONTROL_ACTION_RECORD_SIZE);
+      getTabEntry(camAction,CAMCONTROL_ACTION_FILE_ID,0,CAMCONTROL_ACTION_RECORD_SIZE);
       camAction->triggerMode = triggerMode;
       fn_800E84D8(1);
       if ((((gCamcontrolCurrentActionId == CAMCONTROL_ACTION_DEFAULT) ||
@@ -559,7 +559,7 @@ LAB_80103090:
   else {
     camAction = (CamcontrolTriggeredAction *)mmAlloc(CAMCONTROL_ACTION_RECORD_SIZE,0xf,0);
     if (camAction != (CamcontrolTriggeredAction *)0x0) {
-      fn_8001F71C(camAction,CAMCONTROL_ACTION_FILE_ID,(actionNo - 1) * CAMCONTROL_ACTION_RECORD_SIZE,
+      getTabEntry(camAction,CAMCONTROL_ACTION_FILE_ID,(actionNo - 1) * CAMCONTROL_ACTION_RECORD_SIZE,
                   CAMCONTROL_ACTION_RECORD_SIZE);
     }
     if (camAction != (CamcontrolTriggeredAction *)0x0) {
@@ -625,7 +625,7 @@ void *Camera_getCamActionsBinEntry(int actionNo)
   }
   camAction = mmAlloc(0x10,0xf,0);
   if (camAction != 0) {
-    fn_8001F71C(camAction,0xb,(actionNo + -1) * 0x10,0x10);
+    getTabEntry(camAction,0xb,(actionNo + -1) * 0x10,0x10);
   }
   return camAction;
 }

@@ -7,7 +7,7 @@ extern void Sfx_StopObjectChannel(int obj,u16 volumeId);
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern f32 fn_8002166C(int posA,int posB);
-extern u32 fn_800221A0(int min,int max);
+extern u32 randomGetRange(int min,int max);
 extern int Obj_GetPlayerObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern int ObjTrigger_IsSet();
@@ -135,7 +135,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
   case SHTHORNTAIL_STATE_TAIL_SWING_RECOVER:
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      randomIdleWait = fn_800221A0(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
+      randomIdleWait = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
       runtime->idleTimer = (float)randomIdleWait;
     }
     break;
@@ -217,7 +217,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
     if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_EVENT_PAUSE) {
       Sfx_PlayFromObject(0,SHTHORNTAIL_EVENT_RESUME_VOLUME_ID);
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      randomIdleWait = fn_800221A0(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
+      randomIdleWait = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
       runtime->idleTimer = (float)randomIdleWait;
     }
     gameBit = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION6_GAMEBIT);
@@ -263,7 +263,7 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4
   if (levelControlReady == 0) {
     Sfx_StopObjectChannel((int)obj,0x7f);
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-    randomIdleWait = fn_800221A0(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
+    randomIdleWait = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
     runtime->idleTimer = (float)randomIdleWait;
     runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING;
     runtime->behaviorFlags = runtime->behaviorFlags | (SHTHORNTAIL_FLAG_LEVELCONTROL_READY |

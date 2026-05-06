@@ -1086,7 +1086,7 @@ extern u8  lbl_803DD780;
 extern u8  lbl_803DD788;
 extern u32 fn_80014E70(s32);
 extern void fn_80014B78(s32, u8*, u8*);
-extern void fn_80014B3C(s32, u32);
+extern void buttonDisable(s32, u32);
 extern int  Sfx_PlayFromObject(s32, s32);
 extern int  GameBit_Set(u32, u32);
 
@@ -1296,7 +1296,7 @@ void fn_8012BE84(void)
         Sfx_PlayFromObject(0, 0xf3);
     }
     if ((buttons & 0x100) != 0) {
-        fn_80014B3C(0, 0x100);
+        buttonDisable(0, 0x100);
         if (lbl_803DD75B == 1) {
             GameBit_Set(0x2b3, 1);
         } else {
@@ -1309,7 +1309,7 @@ void fn_8012BE84(void)
         Sfx_PlayFromObject(0, 0x418);
     }
     if ((buttons & 0x200) != 0) {
-        fn_80014B3C(0, 0x200);
+        buttonDisable(0, 0x200);
         lbl_803DD75B = 0;
         fn_800206E8(0);
         (*(void(**)(s32, s32, s32))((char*)*lbl_803DCA50 + 0x24))(3, 0x80, 1);
@@ -1527,7 +1527,7 @@ void fn_8012E880(void)
         }
         ((s32*)lbl_803A9440)[3] = dd;
         if (((s32*)lbl_803A9440)[2] == 1) {
-            fn_80014B3C(0, 0x100);
+            buttonDisable(0, 0x100);
             lbl_803DD8A4 &= ~0x100u;
             lbl_803DD7A8 = 0;
             if (lbl_803DD7A9 != 0) {

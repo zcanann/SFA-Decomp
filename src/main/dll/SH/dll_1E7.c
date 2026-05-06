@@ -4,8 +4,8 @@
 extern void Sfx_PlayFromObject(uint objectId,u16 volumeId);
 extern f32 fn_8002166C(Vec *a,Vec *b);
 extern f32 fn_800216D0(Vec *a,Vec *b);
-extern s16 fn_800217C0(f32 deltaX,f32 deltaZ);
-extern int fn_800221A0(int min,int max);
+extern s16 getAngle(f32 deltaX,f32 deltaZ);
+extern int randomGetRange(int min,int max);
 extern int Obj_GetPlayerObject(void);
 extern SHthorntailObject **ObjGroup_GetObjects(int group,int *countOut);
 extern int fn_8005A10C(Vec *pos,f32 radius);
@@ -216,7 +216,7 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
     }
     distanceSq = fn_8002166C((Vec *)(objWords + 0xc),&config->homePos);
     if (distanceSq > (float)(s32)(config->leashRadiusByte * config->leashRadiusByte)) {
-      value = fn_800217C0(*(float *)(objWords + 6) - config->homePos.x,
+      value = getAngle(*(float *)(objWords + 6) - config->homePos.x,
                           *(float *)(objWords + 10) - config->homePos.z);
       facingAngle = *objWords;
       angleDelta = (short)value - (u16)facingAngle;
@@ -231,7 +231,7 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
         value = -value;
       }
       if (0x20 < value) {
-        value = fn_800217C0(*(float *)(objWords + 6) - config->homePos.x,
+        value = getAngle(*(float *)(objWords + 6) - config->homePos.x,
                             *(float *)(objWords + 10) - config->homePos.z);
         OSReport(sSHthorntailAngleYawDebug,(u16)value,facingAngle);
         behaviorState = runtime->behaviorState;
@@ -251,7 +251,7 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
       behaviorState = runtime->behaviorState;
       if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
           (behaviorState <= SHTHORNTAIL_STATE_MOVE_5)) {
-        nextState = fn_800221A0(SHTHORNTAIL_STATE_MOVE_3,SHTHORNTAIL_STATE_MOVE_5);
+        nextState = randomGetRange(SHTHORNTAIL_STATE_MOVE_3,SHTHORNTAIL_STATE_MOVE_5);
         nextState = nextState & 0xff;
       }
       else {

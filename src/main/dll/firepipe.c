@@ -3,7 +3,7 @@
 
 extern undefined4 fn_8001CB3C(int param_1);
 extern undefined4 GameBit_Get(int eventId);
-extern undefined4 fn_800221A0(int param_1, int param_2);
+extern undefined4 randomGetRange(int param_1, int param_2);
 extern undefined4 Obj_FreeObject(int param_1);
 extern undefined4 ObjHits_EnableObject(FirePipeObject *obj);
 extern undefined8 ObjGroup_RemoveObject();
@@ -153,7 +153,7 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
                 fn_80080178(iVar8 + 0x24, (int)(short)(sVar5 * 0x3c));
             }
             else if (sVar1 < 0) {
-                sVar5 = fn_800221A0(1, sVar5 * 0x3c);
+                sVar5 = randomGetRange(1, sVar5 * 0x3c);
                 fn_80080178(iVar8 + 0x24, (int)sVar5);
             }
             else {

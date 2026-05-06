@@ -6,7 +6,7 @@ extern int FUN_80017730();
 extern undefined4 FUN_8001774c();
 extern undefined4 FUN_80017778();
 extern double fn_80021370(double param_1,double param_2,double param_3);
-extern uint fn_800217C0(double param_1);
+extern uint getAngle(double param_1);
 extern double FUN_80293900();
 extern undefined4 FUN_80293f90();
 extern double FUN_80294d08();
@@ -264,7 +264,7 @@ void firstperson_updatePitch(double param_1,int param_2)
   uint uVar1;
   double dVar2;
 
-  uVar1 = fn_800217C0((double)(*(float *)(param_2 + 0x1c) -
+  uVar1 = getAngle((double)(*(float *)(param_2 + 0x1c) -
                               (float)(param_1 + (double)gCamcontrolModeSettings[0x23])));
   uVar1 = (uVar1 & 0xffff) - ((int)*(short *)(param_2 + 2) & 0xffffU);
   if (0x8000 < (int)uVar1) {

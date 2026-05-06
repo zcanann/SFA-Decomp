@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 
-extern f32 fn_80021704(void *posA,void *posB);
+extern f32 Vec_distance(void *posA,void *posB);
 extern void GameBit_Set(int eventId,int value);
 extern int GameBit_Get(int eventId);
 extern void *Obj_GetPlayerObject(void);
@@ -133,7 +133,7 @@ void spellstone_update(SpellStoneObject *obj)
     }
     if (state->state == 2) {
       playerObj = Obj_GetPlayerObject();
-      if (fn_80021704(&obj->unk18,(u8 *)playerObj + 0x18) < lbl_803E6758) {
+      if (Vec_distance(&obj->unk18,(u8 *)playerObj + 0x18) < lbl_803E6758) {
         GameBit_Set(def->completeEvent,1);
       }
     }

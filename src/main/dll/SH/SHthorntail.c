@@ -5,7 +5,7 @@
 extern void Sfx_PlayFromObject(uint objectId,u16 volumeId);
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
-extern int fn_800221A0(int min,int max);
+extern int randomGetRange(int min,int max);
 extern int ObjTrigger_IsSet(int obj);
 extern int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj);
 
@@ -61,7 +61,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
     if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_EVENT_PAUSE) {
       Sfx_PlayFromObject(0,SHTHORNTAIL_EVENT_RESUME_VOLUME_ID);
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      randomTime = fn_800221A0(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
+      randomTime = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
       runtime->idleTimer = (float)randomTime;
     }
     runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
@@ -75,7 +75,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
       }
       (*lbl_803DCAAC)->setAnimEvent((int)obj->animObjId,SHTHORNTAIL_ROOT_MODE2_TRIGGER_ANIM_EVENT,0);
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      randomTime = fn_800221A0(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
+      randomTime = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
       runtime->idleTimer = (float)randomTime;
     }
     else {
