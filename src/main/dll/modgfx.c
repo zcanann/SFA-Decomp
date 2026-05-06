@@ -1133,7 +1133,7 @@ extern void* PTR_LAB_803108a0;
  *
  * Function: modgfx_resetExpgfxState
  * EN v1.0 Address: 0x8009FED0
- * EN v1.0 Size: 472b
+ * EN v1.0 Size: 288b
  * EN v1.1 Address: 0x8009FF68
  * EN v1.1 Size: 416b
  * JP Address: TODO
