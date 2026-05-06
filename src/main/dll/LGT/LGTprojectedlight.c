@@ -351,19 +351,19 @@ void FUN_801f4be0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /* Trivial 4b 0-arg blr leaves. */
 void wmlevelcontrol_release(void) {}
 void wmlevelcontrol_initialise(void) {}
-void fn_801F4BC8(void) {}
-void fn_801F4BCC(void) {}
-void fn_801F4BFC(void) {}
-void fn_801F4C00(void) {}
+void wmgeneralscales_hitDetect(void) {}
+void wmgeneralscales_update(void) {}
+void wmgeneralscales_release(void) {}
+void wmgeneralscales_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801F4B4C(void) { return 0x8; }
-int fn_801F4B54(void) { return 0x9; }
+int wmgeneralscales_getExtraSize(void) { return 0x8; }
+int wmgeneralscales_func08(void) { return 0x9; }
 
 extern void ObjLink_DetachChild(int *parent, int *child);
 #pragma scheduling off
 #pragma peephole off
-void fn_801F4B5C(int *obj) { int *p = (int*)obj[0xc8/4]; if (p != NULL) ObjLink_DetachChild(obj, p); }
+void wmgeneralscales_free(int *obj) { int *p = (int*)obj[0xc8/4]; if (p != NULL) ObjLink_DetachChild(obj, p); }
 #pragma peephole reset
 #pragma scheduling reset
 
