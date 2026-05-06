@@ -12969,7 +12969,7 @@ void FUN_800ee10c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_800EA048(void) {}
-void fn_800EA754(void) {}
+void screens_release(void) {}
 void fn_800EADC4(void) {}
 void fn_800EADC8(void) {}
 void fn_800EB090(void) {}
