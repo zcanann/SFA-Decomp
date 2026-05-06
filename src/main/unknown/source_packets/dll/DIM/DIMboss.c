@@ -8,15 +8,19 @@
  * Suggested source path: src/dll/DIM/DIMboss.c
  * Packet path: src/main/unknown/source_packets/dll/DIM/DIMboss.c
  * Bucket: dll
- * Score: 2120
+ * Score: 1620
  *
  * Retail EN evidence:
- * - main.dol string @ 0x80326784
- * - main.dol string @ 0x803267AC
+ * - main.dol string @ 0x80325B43
+ * - main.dol string @ 0x80325B6C
  * - retail message: freeing assets for DIMBoss
  * - retail message: loading assets for DIMTop
- * - EN xref: 0x801BD45C fn_801BD0E8 + 0x374
- * - EN xref: 0x801BD4AC fn_801BD0E8 + 0x3C4
+ * - EN xref: 0x801BCEF8 DIMboss_updateState + 0x3C4
+ *
+ * Current EN source-window evidence:
+ * - seed: 0x801BCB34-0x801BD240, DIMboss_updateState
+ * - source_windows top candidate: 0x801BCB34-0x801BD450, functions=8
+ * - debug split fit: seed-near-fit against dll/DIM/DIMboss.c
  *
  * Reference-side path hints:
  * - current debug path: dll/DIM/DIMboss.c
