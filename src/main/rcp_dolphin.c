@@ -2334,24 +2334,24 @@ LAB_80055824:
 }
 
 /* sda21 accessors. */
-extern u32 lbl_803DCE38;
-extern u8 lbl_803DCDFA;
-extern u8 lbl_803DCDF9;
-extern u8 lbl_803DCDF8;
-extern u8 lbl_803DCDF7;
-u32 fn_80054F64(void) { return lbl_803DCE38; }
-void fn_80054F6C(u32 x) { lbl_803DCE38 = x; }
-u8 fn_8005509C(void) { return lbl_803DCDFA; }
-void fn_800550A4(u8 x) { lbl_803DCDFA = x; }
-void fn_800550AC(u8 x) { lbl_803DCDF9 = x; }
-void fn_800550B4(u8 x) { lbl_803DCDF8 = x; }
-u8 fn_800550BC(void) { return lbl_803DCDF7; }
+extern u32 bEnableColorFilter;
+extern u8 bEnableViewFinderHud;
+extern u8 bEnableSpiritVision;
+extern u8 bEnableMonochromeFilter;
+extern u8 bEnableMotionBlur;
+u32 Rcp_GetColorFilterEnabled(void) { return bEnableColorFilter; }
+void Rcp_SetColorFilterEnabled(u32 x) { bEnableColorFilter = x; }
+u8 Rcp_GetViewFinderHudEnabled(void) { return bEnableViewFinderHud; }
+void Rcp_SetViewFinderHudEnabled(u8 x) { bEnableViewFinderHud = x; }
+void Rcp_SetSpiritVisionEnabled(u8 x) { bEnableSpiritVision = x; }
+void Rcp_SetMonochromeFilterEnabled(u8 x) { bEnableMonochromeFilter = x; }
+u8 Rcp_GetMotionBlurEnabled(void) { return bEnableMotionBlur; }
 
 /* Pattern wrappers. */
-extern u8 lbl_803DCDF6;
-extern u8 lbl_803DCDF4;
-void fn_80054FA4(void) { lbl_803DCDF6 = 0x0; }
-void fn_80055070(void) { lbl_803DCDF4 = 0x0; }
+extern u8 bEnableDistortionFilter;
+extern u8 bEnableBlurFilter;
+void Rcp_DisableDistortionFilter(void) { bEnableDistortionFilter = 0x0; }
+void Rcp_DisableBlurFilter(void) { bEnableBlurFilter = 0x0; }
 
 /* misc 8b leaves */
 void fn_800541A4(s16 *p, s16 v) { *(s16*)((char*)p + 0x14) = v; }

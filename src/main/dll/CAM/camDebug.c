@@ -7,7 +7,7 @@ extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
 extern f32 fn_80293E80(f32 x);
 extern float sin(float x);
-extern void fn_80055070(void);
+extern void Rcp_DisableBlurFilter(void);
 extern void memset(void *dst, int val, int size);
 
 extern f32 *lbl_803DD578;
@@ -148,5 +148,5 @@ void fn_8010DD24(void) {}
 void fn_8010DD28(void) {
     fn_80023800(lbl_803DD584);
     lbl_803DD584 = 0;
-    fn_80055070();
+    Rcp_DisableBlurFilter();
 }
