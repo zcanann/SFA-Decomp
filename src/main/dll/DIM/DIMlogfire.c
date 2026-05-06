@@ -793,18 +793,18 @@ undefined4 FUN_801aa4a4(void)
 void animsharpclaw_hitDetect(void) {}
 void animsharpclaw_release(void) {}
 void animsharpclaw_initialise(void) {}
-void fn_801A970C(void) {}
-void fn_801A9E6C(void) {}
-void fn_801A9E70(void) {}
+void MoonSeedPlantingSpot_hitDetect(void) {}
+void MoonSeedPlantingSpot_release(void) {}
+void MoonSeedPlantingSpot_initialise(void) {}
 void ccgasvent_render(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int animsharpclaw_getExtraSize(void) { return 0x140; }
 int animsharpclaw_func08(void) { return 0xb; }
-int fn_801A9484(void) { return 0x2; }
-int fn_801A948C(void) { return 0x0; }
+int MoonSeedPlantingSpot_render2(void) { return 0x2; }
+int MoonSeedPlantingSpot_modelMtxFn(void) { return 0x0; }
 int fn_801A9494(void) { return 0x0; }
-int fn_801A9594(void) { return 0x18; }
+int MoonSeedPlantingSpot_getExtraSize(void) { return 0x18; }
 int fn_801A959C(void) { return 0x1; }
 int ccgasvent_getExtraSize(void) { return 0x1; }
 int ccgasventcontrol_getExtraSize(void) { return 0x10; }
@@ -822,7 +822,7 @@ void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
 #pragma peephole off
-void fn_801A95A4(int x) { ObjGroup_RemoveObject(x, 0x2e); }
+void MoonSeedPlantingSpot_free(int x) { ObjGroup_RemoveObject(x, 0x2e); }
 void ccgasvent_free(int x) { ObjGroup_RemoveObject(x, 0x3f); }
 #pragma peephole reset
 #pragma scheduling reset
