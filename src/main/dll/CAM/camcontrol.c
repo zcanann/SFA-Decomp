@@ -339,29 +339,29 @@ LAB_80102ab4:
 }
 
 #pragma scheduling off
-int fn_801028C0(void)
+int Camera_isZooming(void)
 {
   return *(float *)((char *)lbl_803DD524 + 0xf4) > lbl_803E1630;
 }
 #pragma scheduling reset
 
-void fn_801028DC(int x)
+void Camera_func15(int x)
 {
   *(int *)((char *)lbl_803DD524 + 0x120) = x;
 }
 
-void fn_801028E8(int x)
+void Camera_setTarget(int x)
 {
   *(int *)((char *)lbl_803DD524 + 0x11c) = x;
   *(int *)((char *)lbl_803DD524 + 0x124) = x;
 }
 
-int fn_801028FC(void)
+int Camera_getTarget(void)
 {
   return *(int *)((char *)lbl_803DD524 + 0x124);
 }
 
-int fn_80102908(void)
+int Camera_getOverrideTarget(void)
 {
   return *(int *)((char *)lbl_803DD524 + 0x11c);
 }
@@ -433,7 +433,7 @@ void Camera_moveBy(f32 x,f32 y,f32 z)
 }
 
 #pragma scheduling off
-void fn_80102A60(f32 x,f32 y,f32 z)
+void Camera_overridePos(f32 x,f32 y,f32 z)
 {
   *(u8 *)((char *)lbl_803DD524 + 0x13d) = 1;
   *(float *)((char *)lbl_803DD524 + 0xdc) = x;
@@ -840,5 +840,5 @@ void camcontrol_updateState(undefined8 param_1,double param_2,double param_3,und
 }
 
 /* sda21 accessors. */
-u32 fn_801030B0(void) { return lbl_803DD518; }
-u32 fn_801030B8(void) { return lbl_803DD524; }
+u32 Camera_getMode(void) { return lbl_803DD518; }
+u32 Camera_get(void) { return lbl_803DD524; }
