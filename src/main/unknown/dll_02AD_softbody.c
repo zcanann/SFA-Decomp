@@ -19,3 +19,11 @@
 // - 7: softbody_free (0x80234DD8)
 // - 8: softbody_func08 (0x80234DD0)
 // - 9: softbody_getExtraSize (0x80234DC8)
+
+// Runtime shape:
+// - init seeds decorative foliage rotation from object-def bytes +0x18/+0x19/+0x1A
+//   and scales the bend radius from object-def byte +0x1B.
+// - update eases the model toward a bend/displacement target.
+// - WaterFlowWe samples nearby soft-body objects that have object-def flag bit
+//   +0x1A:1 set and uses their yaw/radius to contribute to the local water
+//   current vector.
