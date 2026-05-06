@@ -43,103 +43,105 @@ laser_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4
              undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
   LaserObject *obj;
-  char cVar1;
-  byte bVar4;
-  undefined4 uVar2;
-  uint uVar3;
-  int iVar5;
-  int iVar6;
-  undefined8 uVar7;
+  char eventId;
+  byte mode;
+  undefined4 mapResource;
+  uint bitValue;
+  int spawnFlag;
+  int eventIndex;
+  undefined8 effectHandle;
   
   obj = (LaserObject *)param_9;
-  iVar5 = (int)animUpdate;
-  bVar4 = (**(code **)(*DAT_803dd72c + 0x40))((int)obj->modeIndex);
-  uVar7 = FUN_800068c4(0,0x48b);
-  for (iVar6 = 0; iVar6 < (int)(uint)animUpdate->eventCount; iVar6 = iVar6 + 1) {
-    cVar1 = (char)animUpdate->eventIds[iVar6];
-    if (cVar1 == '\x01') {
-      uVar7 = FUN_80040da0();
-      if (bVar4 == 2) {
-        FUN_80041ff8(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0xb);
-        uVar2 = FUN_80044404(0xb);
-        FUN_80042bec(uVar2,0);
+  spawnFlag = (int)animUpdate;
+  mode = (**(code **)(*DAT_803dd72c + 0x40))((int)obj->modeIndex);
+  effectHandle = FUN_800068c4(0,0x48b);
+  for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1) {
+    eventId = (char)animUpdate->eventIds[eventIndex];
+    if (eventId == '\x01') {
+      effectHandle = FUN_80040da0();
+      if (mode == 2) {
+        FUN_80041ff8(effectHandle,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0xb);
+        mapResource = FUN_80044404(0xb);
+        FUN_80042bec(mapResource,0);
       }
-      else if (bVar4 < 2) {
+      else if (mode < 2) {
         (**(code **)(*DAT_803dd72c + 0x50))(7,0,0);
         (**(code **)(*DAT_803dd72c + 0x50))(7,2,0);
         (**(code **)(*DAT_803dd72c + 0x50))(7,3,0);
         (**(code **)(*DAT_803dd72c + 0x50))(7,7,0);
         (**(code **)(*DAT_803dd72c + 0x50))(7,10,0);
-        iVar5 = 0;
+        spawnFlag = 0;
         param_12 = *DAT_803dd72c;
         (**(code **)(param_12 + 0x50))(10,7);
-        uVar7 = FUN_80017698(0x1ed,1);
-        FUN_80041ff8(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x17);
-        uVar2 = FUN_80044404(0x17);
-        FUN_80042bec(uVar2,0);
+        effectHandle = FUN_80017698(0x1ed,1);
+        FUN_80041ff8(effectHandle,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x17);
+        mapResource = FUN_80044404(0x17);
+        FUN_80042bec(mapResource,0);
       }
-      else if (bVar4 < 4) {
-        FUN_80041ff8(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,7);
-        uVar2 = FUN_80044404(7);
-        FUN_80042bec(uVar2,0);
+      else if (mode < 4) {
+        FUN_80041ff8(effectHandle,param_2,param_3,param_4,param_5,param_6,param_7,param_8,7);
+        mapResource = FUN_80044404(7);
+        FUN_80042bec(mapResource,0);
       }
     }
-    else if (cVar1 == '\x02') {
-      if (bVar4 == 2) {
+    else if (eventId == '\x02') {
+      if (mode == 2) {
         FUN_80017698(0x405,0);
-        uVar3 = GameBit_Get(0xff);
-        if (uVar3 == 0) {
-          uVar3 = GameBit_Get(0xbfd);
-          if (uVar3 == 0) {
-            uVar3 = GameBit_Get(0xc6e);
-            if (uVar3 != 0) {
+        bitValue = GameBit_Get(0xff);
+        if (bitValue == 0) {
+          bitValue = GameBit_Get(0xbfd);
+          if (bitValue == 0) {
+            bitValue = GameBit_Get(0xc6e);
+            if (bitValue != 0) {
               (**(code **)(*DAT_803dd72c + 0x44))(0xb,4);
               (**(code **)(*DAT_803dd72c + 0x50))(0xb,8,1);
-              iVar5 = 1;
+              spawnFlag = 1;
               param_12 = *DAT_803dd72c;
-              uVar7 = (**(code **)(param_12 + 0x50))(0xb,9);
-              FUN_80053c98(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x22,'\0',
-                           iVar5,param_12,param_13,param_14,param_15,param_16);
+              effectHandle = (**(code **)(param_12 + 0x50))(0xb,9);
+              FUN_80053c98(effectHandle,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                           0x22,'\0',spawnFlag,param_12,param_13,param_14,param_15,param_16);
             }
           }
           else {
             (**(code **)(*DAT_803dd72c + 0x44))(0xb,2);
             (**(code **)(*DAT_803dd72c + 0x50))(0xb,5,1);
-            iVar5 = 1;
+            spawnFlag = 1;
             param_12 = *DAT_803dd72c;
-            uVar7 = (**(code **)(param_12 + 0x50))(0xb,6);
-            FUN_80053c98(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x20,'\0',
-                         iVar5,param_12,param_13,param_14,param_15,param_16);
+            effectHandle = (**(code **)(param_12 + 0x50))(0xb,6);
+            FUN_80053c98(effectHandle,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                         0x20,'\0',spawnFlag,param_12,param_13,param_14,param_15,param_16);
           }
         }
         else {
           (**(code **)(*DAT_803dd72c + 0x44))(0xb,3);
           (**(code **)(*DAT_803dd72c + 0x50))(0xb,8,1);
-          iVar5 = 1;
+          spawnFlag = 1;
           param_12 = *DAT_803dd72c;
-          uVar7 = (**(code **)(param_12 + 0x50))(0xb,9);
-          FUN_80053c98(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x22,'\0',iVar5
-                       ,param_12,param_13,param_14,param_15,param_16);
+          effectHandle = (**(code **)(param_12 + 0x50))(0xb,9);
+          FUN_80053c98(effectHandle,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x22,
+                       '\0',spawnFlag,param_12,param_13,param_14,param_15,param_16);
         }
       }
-      else if (bVar4 < 2) {
-        FUN_80053c98(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,2,'\0',iVar5,
-                     param_12,param_13,param_14,param_15,param_16);
+      else if (mode < 2) {
+        FUN_80053c98(effectHandle,param_2,param_3,param_4,param_5,param_6,param_7,param_8,2,'\0',
+                     spawnFlag,param_12,param_13,param_14,param_15,param_16);
       }
-      else if (bVar4 < 4) {
-        FUN_80053c98(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0xf,'\0',iVar5,
-                     param_12,param_13,param_14,param_15,param_16);
+      else if (mode < 4) {
+        FUN_80053c98(effectHandle,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0xf,
+                     '\0',spawnFlag,param_12,param_13,param_14,param_15,param_16);
       }
-      uVar7 = FUN_80006b84(1);
+      effectHandle = FUN_80006b84(1);
     }
-    else if (cVar1 == '\x03') {
-      if (bVar4 == 3) {
+    else if (eventId == '\x03') {
+      if (mode == 3) {
         FUN_80044404(0xb);
-        uVar7 = FUN_80043030(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        effectHandle = FUN_80043030(effectHandle,param_2,param_3,param_4,param_5,param_6,param_7,
+                                    param_8);
       }
-      else if (bVar4 < 3) {
+      else if (mode < 3) {
         FUN_80044404(7);
-        uVar7 = FUN_80043030(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        effectHandle = FUN_80043030(effectHandle,param_2,param_3,param_4,param_5,param_6,param_7,
+                                    param_8);
       }
     }
   }
