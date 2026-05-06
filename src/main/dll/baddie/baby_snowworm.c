@@ -1008,7 +1008,7 @@ extern void fn_800206E8(s32);
 extern void fn_80016C48(void* arg);
 extern void* gameTextGetBox(s32);
 
-extern u16 lbl_803DBA70;
+extern u16 curGameText;
 extern u8  lbl_803DD7A9;
 extern u8  lbl_803DD8B8;
 extern u8  lbl_803DD8C8;
@@ -1165,10 +1165,10 @@ void fn_8012DF14(void)
 #pragma scheduling reset
 
 /* EN v1.0 0x8012EA5C  size: 172b  Spawn/queue helper for the snowworm
- * death FX. If `id == -1` or the active slot u16 at lbl_803DBA70 is
+ * death FX. If `id == -1` or the active game-text id at curGameText is
  * already occupied, do nothing. Otherwise: ping the death sound, latch
  * the dying-state bytes (lbl_803DD7A8 / lbl_803DD8C8), publish the new
- * id into lbl_803DBA70 (u16-narrowed), drop the lookahead halfword
+ * id into curGameText (u16-narrowed), drop the lookahead halfword
  * (lbl_803DD8CA = -1) and the FX progress halfword (lbl_803DD8D0 = 0),
  * then post the work item at lbl_803A9440 to the global handler queue.
  * When `do_input_disable` is non-zero, also disable player input and
@@ -1179,11 +1179,11 @@ void fn_8012DF14(void)
 void fn_8012EA5C(s32 id, s32 _unused_a, s32 _unused_b, s32 do_input_disable)
 {
     if (id == -1) return;
-    if (lbl_803DBA70 != 0xFFFF) return;
+    if (curGameText != 0xFFFF) return;
     gameTextGetBox(0x7c);
     lbl_803DD7A8 = 1;
     lbl_803DD8D0 = 0;
-    lbl_803DBA70 = (u16)id;
+    curGameText = (u16)id;
     lbl_803DD8CA = -1;
     lbl_803DD8C8 = 1;
     fn_80016C48(lbl_803A9440);
@@ -1482,7 +1482,7 @@ void fn_8012C558(void)
  *    and clamp to >= 0.
  *
  * 2. When the progress halfword bottoms out, drop the active u16 slot
- *    at lbl_803DBA70 to 0xFFFF and return.
+ *    at curGameText to 0xFFFF and return.
  *
  * 3. If no anim id is queued (lbl_803DD8CA == -1), poll the digital
  *    pad's confirm bit (mask 0x100) and stash the result in
@@ -1516,7 +1516,7 @@ void fn_8012E880(void)
     }
 
     if (lbl_803DD8D0 == 0) {
-        lbl_803DBA70 = 0xFFFF;
+        curGameText = 0xFFFF;
         return;
     }
 
@@ -1548,7 +1548,7 @@ void fn_8012E880(void)
             lbl_803DD8CC = (f32)(s32)(s16)lbl_803DD8CA;
             ((s32*)lbl_803A9440)[1]++;
             {
-                u16* end = (u16*)gameTextGet(lbl_803DBA70);
+                u16* end = (u16*)gameTextGet(curGameText);
                 if (((s32*)lbl_803A9440)[1] >= (s32)end[1]) {
                     ((s32*)lbl_803A9440)[1] = (s32)end[1] - 1;
                     lbl_803DD7A8 = 0;
