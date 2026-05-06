@@ -21,3 +21,7 @@
 // - 11: hightop_func0B (0x8021E93C)
 // - 12: hightop_modelMtxFn (0x8021E91C)
 // - 13: hightop_render2 (0x8021E914)
+//
+// Runtime state evidence:
+// - hightop_initialise fills gHighTopStateHandlers with 11 state handlers.
+// - gHighTopDefaultStateHandler is installed as the fallback state callback.
