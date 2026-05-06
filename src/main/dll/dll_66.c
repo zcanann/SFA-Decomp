@@ -74,28 +74,28 @@ void FUN_80100550(double param_1,undefined4 param_2,undefined param_3,int param_
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_80100580(void) {}
-void fn_80100584(void) {}
-void fn_801005B8(void) {}
-void fn_801005BC(void) {}
-void fn_801005F0(void) {}
-void fn_801005F4(void) {}
-void fn_80100628(void) {}
-void fn_8010062C(void) {}
-void fn_80100660(void) {}
-void fn_80100664(void) {}
-void fn_80100698(void) {}
-void fn_8010069C(void) {}
-void fn_801006D0(void) {}
-void fn_801006D4(void) {}
-void fn_80100708(void) {}
-void fn_8010070C(void) {}
-void fn_80100740(void) {}
-void fn_80100744(void) {}
-void fn_80100778(void) {}
-void fn_8010077C(void) {}
-void fn_801007B0(void) {}
-void fn_801007B4(void) {}
+void projdummy_release(void) {}
+void projdummy_initialise(void) {}
+void projmagicstream_release(void) {}
+void projmagicstream_initialise(void) {}
+void projmagicemmit1_release(void) {}
+void projmagicemmit1_initialise(void) {}
+void projroombeam_release(void) {}
+void projroombeam_initialise(void) {}
+void projlightning1_release(void) {}
+void projlightning1_initialise(void) {}
+void projlightning2_release(void) {}
+void projlightning2_initialise(void) {}
+void projlightning3_release(void) {}
+void projlightning3_initialise(void) {}
+void projlightning4_release(void) {}
+void projlightning4_initialise(void) {}
+void projlightning5_release(void) {}
+void projlightning5_initialise(void) {}
+void projlightning7_release(void) {}
+void projlightning7_initialise(void) {}
+void projlightning6_release(void) {}
+void projlightning6_initialise(void) {}
 
 /* OSReport-stub returns. */
 extern void OSReport(const char *fmt, ...);
