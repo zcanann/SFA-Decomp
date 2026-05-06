@@ -4,16 +4,19 @@
  * This file is intentionally not wired into the build yet.
  * It exists as a retail-backed source/object packet for exploratory split work.
  *
- * Retail source: curves.c
- * Suggested source path: src/dll/curves.c
+ * Retail source: Hcurves.c
+ * Suggested source path: src/main/dll/curves.c
  * Packet path: src/main/unknown/source_packets/dll/curves.c
  * Bucket: dll
- * Score: 2530
+ * Score: 40
  *
  * Retail EN evidence:
- * - main.dol string @ 0x8031230C
+ * - main.dol string @ 0x803116BC
+ * - retail string: Hcurves.c: MAX_ROMCURVES exceeded!!
  * - retail message: MAX_ROMCURVES exceeded!!
- * - EN xref: 0x800E5584 fn_800E556C + 0x18
+ * - source_worklist currently classifies this as no-en-xrefs, but the active
+ *   symbol table names the payload string as sCurvesMaxRomCurvesExceeded and
+ *   src/main/dll/curves.c reports it from curves_addCurveDef.
  *
  * Reference-side path hints:
  * - current debug path: dll/curves.c

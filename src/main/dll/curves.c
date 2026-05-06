@@ -2448,14 +2448,16 @@ void curves_remove(int curve)
  * --INFO--
  *
  * Function: curves_addCurveDef
- * EN v1.0 Address: 0x800E4724
- * EN v1.0 Size: 4b
+ * EN v1.0 Address: 0x800E52E8
+ * EN v1.0 Size: 312b
  * EN v1.1 Address: 0x800E556C
  * EN v1.1 Size: 332b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
+ *
+ * Retail source-tag string: Hcurves.c: MAX_ROMCURVES exceeded!!
  */
 #pragma scheduling off
 #pragma peephole off
