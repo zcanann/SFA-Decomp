@@ -438,25 +438,25 @@ void FUN_8018705c(uint param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_80186BC4(void) {}
-void fn_801871C0(void) {}
-void fn_801871C4(void) {}
+void LanternFireFly_hitDetect(void) {}
+void LanternFireFly_release(void) {}
+void LanternFireFly_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801873C8(void) { return 0x24; }
+int FireFlyLantern_getExtraSize(void) { return 0x24; }
 int fn_801873D0(void) { return 0x8; }
 
 /* render-with-fn_8003B8F4 pattern. */
 extern f32 lbl_803E3AA0;
 extern void fn_8003B8F4(f32);
 #pragma peephole off
-void fn_80186B94(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E3AA0); }
+void LanternFireFly_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E3AA0); }
 #pragma peephole reset
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3AF0;
 #pragma scheduling off
 #pragma peephole off
-void fn_8018741C(void) { fn_8003B8F4(lbl_803E3AF0); }
+void FireFlyLantern_render(void) { fn_8003B8F4(lbl_803E3AF0); }
 #pragma peephole reset
 #pragma scheduling reset

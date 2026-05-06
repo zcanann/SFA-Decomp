@@ -1225,7 +1225,7 @@ int Dummy108_getExtraSize(void) { return 0x0; }
 int fn_80186474(void) { return 0x0; }
 int portalspelldoor_getExtraSize(void) { return 0x10; }
 int portalspelldoor_func08(void) { return 0x0; }
-int fn_80186ADC(void) { return 0x74; }
+int LanternFireFly_getExtraSize(void) { return 0x74; }
 int fn_80186AE4(void) { return 0x0; }
 
 /* render-with-fn_8003B8F4 pattern. */

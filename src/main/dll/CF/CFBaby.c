@@ -1692,8 +1692,8 @@ void flammablevine_initialise(void) {}
 void fn_80187C6C(void) {}
 void fn_80187F28(void) {}
 void fn_80187F2C(void) {}
-void fn_80187F78(void) {}
-void fn_80187F7C(void) {}
+void Fall_Ladders_render(void) {}
+void Fall_Ladders_hitDetect(void) {}
 void coldwatercontrol_func07(void) {}
 void coldwatercontrol_func08(void) {}
 void infopoint_free(void) {}
@@ -1708,7 +1708,7 @@ int flammablevine_func08(void) { return 0x0; }
 int fn_80187BA0(void) { return 0x10; }
 int fn_80187BA8(void) { return 0x0; }
 int fn_80187F30(void) { return 0x0; }
-int fn_80187F38(void) { return 0xc; }
+int Fall_Ladders_getExtraSize(void) { return 0xc; }
 int fn_80187F40(void) { return 0x0; }
 int coldwatercontrol_getExtraSize(void) { return 0x8; }
 int infopoint_getExtraSize(void) { return 0x20; }
