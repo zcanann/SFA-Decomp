@@ -7,6 +7,15 @@
 // Current EN descriptor:
 // - gARWArwingObjDescriptor @ 0x8032B520
 //
+// Runtime notes:
+// - init builds the flight model/controller at extra +0xC0, registers object group 0x26,
+//   and maps object byte +0xAC variants 0x3A..0x3E onto route/formation selector bytes
+//   in extra +0x47B/+0x471/+0x47E.
+// - update runs the flight input/state machine, updates wing/engine child transforms, and
+//   drives shot spawning through helper 0x8022B998.  Spawned ARW projectile objects use
+//   arwprojectile_createLinkedEffect, arwprojectile_setLifetime, and
+//   arwprojectile_placeForward to initialize their effect, lifetime, and forward offset.
+//
 // Descriptor slots:
 // - 0: arwarwing_initialise (0x8022E414)
 // - 1: arwarwing_release (0x8022E410)
