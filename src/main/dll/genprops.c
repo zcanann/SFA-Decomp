@@ -4395,10 +4395,10 @@ void mikabombshadow_free(void) {}
 void mikabombshadow_hitDetect(void) {}
 void mikabombshadow_release(void) {}
 void mikabombshadow_initialise(void) {}
-void fn_8016B8FC(void) {}
-void fn_8016B900(void) {}
-void fn_8016B994(void) {}
-void fn_8016B998(void) {}
+void StaticCamera_hitDetect(void) {}
+void StaticCamera_update(void) {}
+void StaticCamera_release(void) {}
+void StaticCamera_initialise(void) {}
 void gcbaddieshield_free(void) {}
 void gcbaddieshield_hitDetect(void) {}
 void gcbaddieshield_release(void) {}
@@ -4440,7 +4440,7 @@ void DummyE9_init(void) {}
 /* 8b "li r3, N; blr" returners. */
 int mikabombshadow_getExtraSize(void) { return 0x4; }
 int mikabombshadow_func08(void) { return 0x0; }
-int fn_8016B898(void) { return 0x8; }
+int StaticCamera_getExtraSize(void) { return 0x8; }
 int fn_8016B8A0(void) { return 0x0; }
 int gcbaddieshield_getExtraSize(void) { return 0x8; }
 int gcbaddieshield_func08(void) { return 0x0; }
@@ -4480,7 +4480,7 @@ extern void fn_8003B8F4(f32);
 extern f32 lbl_803E3220;
 extern f32 lbl_803E33F0;
 #pragma peephole off
-void fn_8016B8CC(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E31E8); }
+void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E31E8); }
 void baddieinterestp_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E3220); }
 void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E33F0); }
 #pragma peephole reset
@@ -4498,7 +4498,7 @@ void fn_801719F8(void) { fn_8003B8F4(lbl_803E3420); }
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8016B8A8(int x) { ObjGroup_RemoveObject(x, 0x7); }
+void StaticCamera_free(int x) { ObjGroup_RemoveObject(x, 0x7); }
 void siderepel_free(int x) { ObjGroup_RemoveObject(x, 0x40); }
 #pragma peephole reset
 #pragma scheduling reset
