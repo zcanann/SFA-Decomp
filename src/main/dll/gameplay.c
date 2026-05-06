@@ -1416,9 +1416,9 @@ undefined4 * FUN_800e87a8(void)
 /*
  * --INFO--
  *
- * Function: gameplay_loadPreviewSettings
- * EN v1.0 Address: 0x800E87B0
- * EN v1.0 Size: 180b
+ * Function: titleLoadSaveFiles
+ * EN v1.0 Address: 0x800E8508
+ * EN v1.0 Size: 152b
  * EN v1.1 Address: 0x800E878C
  * EN v1.1 Size: 152b
  * JP Address: TODO
@@ -1426,9 +1426,9 @@ undefined4 * FUN_800e87a8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int gameplay_loadPreviewSettings(undefined8 param_1,double param_2,undefined8 param_3,
-                                 undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                                 undefined8 param_7,undefined8 param_8)
+int titleLoadSaveFiles(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
+                       undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                       undefined8 param_8)
 {
   int iVar1;
   
