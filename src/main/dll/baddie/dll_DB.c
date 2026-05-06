@@ -720,9 +720,9 @@ void FUN_8013074c(void)
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
-extern u8  lbl_803DD789;
-extern u8  lbl_803DD788;
-extern s16 lbl_803DD798;
+extern u8  pauseDisabled;
+extern u8  pauseMenuFrameCounter;
+extern s16 cMenuFadeCounter;
 extern s8  lbl_803DD8F0;
 extern s16 lbl_803DD8F2;
 extern s8  lbl_803DD8F4;
@@ -734,9 +734,9 @@ extern s16 lbl_803DD90E;
 extern s8  lbl_803DD912;
 extern u8  lbl_803A9458[0x960];
 
-void fn_8012FDB8(u8 v) { lbl_803DD789 = v; }
-void fn_8012FDC0(void) { lbl_803DD788 = 60; }
-void fn_8012FDCC(s16 v) { lbl_803DD798 = v; }
+void Pause_SetDisabled(u8 v) { pauseDisabled = v; }
+void Pause_ResetMenuFrameCounter(void) { pauseMenuFrameCounter = 60; }
+void CMenu_SetFadeCounter(s16 v) { cMenuFadeCounter = v; }
 s32  fn_8012FECC(void) { return lbl_803DD8F0; }
 #pragma peephole off
 void fn_8012FED8(int v) { lbl_803DD8E8 = (s8)v; }

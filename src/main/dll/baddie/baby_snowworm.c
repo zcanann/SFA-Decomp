@@ -917,9 +917,9 @@ void FUN_8012e2a4()
 extern u8  lbl_803DD759;
 extern u16 lbl_803DD774;
 extern u16 lbl_803DD776;
-extern u8  lbl_803DD77E;
+extern u8  mapScreenVisible;
 extern s8  lbl_803DD7A8;
-extern s8  lbl_803DD7D4;
+extern s8  cMenuState;
 extern u8  lbl_803DD840;
 extern s16 lbl_803DD8BA;
 
@@ -962,11 +962,11 @@ s16 fn_8012EB68(void)
     return lbl_803DD8BA;
 }
 
-/* EN v1.0 0x8012EB70  size: 12b  Signed-byte getter for lbl_803DD7D4
+/* EN v1.0 0x8012EB70  size: 12b  Signed-byte getter for cMenuState
  * (lbz; extsb; blr). */
-s32 fn_8012EB70(void)
+s32 CMenu_GetState(void)
 {
-    return lbl_803DD7D4;
+    return cMenuState;
 }
 
 /* fn_8012EB08 (28b, 3 x s16 setter via extsh+sth pattern) — stuck.
@@ -1083,7 +1083,7 @@ extern BabySnowwormBitTableEntry lbl_8031B074[5];
 extern u32 GameBit_Get(u32);
 
 extern u8  lbl_803DD780;
-extern u8  lbl_803DD788;
+extern u8  pauseMenuFrameCounter;
 extern u32 getButtonsJustPressed(s32);
 extern void fn_80014B78(s32, u8*, u8*);
 extern void buttonDisable(s32, u32);
@@ -1097,7 +1097,7 @@ extern int  GameBit_Set(u32, u32);
 #pragma peephole off
 void fn_8012DD7C(u8 param)
 {
-    lbl_803DD77E = param;
+    mapScreenVisible = param;
     if (param != 0) return;
     lbl_803DD774 = 0;
     lbl_803DD776 = 0;
@@ -1305,7 +1305,7 @@ void fn_8012BE84(void)
         lbl_803DD75B = 0;
         fn_800206E8(0);
         (*(void(**)(s32, s32, s32))((char*)*lbl_803DCA50 + 0x24))(3, 0x80, 1);
-        lbl_803DD788 = 0x3c;
+        pauseMenuFrameCounter = 0x3c;
         Sfx_PlayFromObject(0, 0x418);
     }
     if ((buttons & 0x200) != 0) {
@@ -1313,7 +1313,7 @@ void fn_8012BE84(void)
         lbl_803DD75B = 0;
         fn_800206E8(0);
         (*(void(**)(s32, s32, s32))((char*)*lbl_803DCA50 + 0x24))(3, 0x80, 1);
-        lbl_803DD788 = 0x3c;
+        pauseMenuFrameCounter = 0x3c;
         Sfx_PlayFromObject(0, 0x419);
     }
 }

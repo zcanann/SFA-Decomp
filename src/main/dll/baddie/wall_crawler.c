@@ -923,7 +923,7 @@ s32 fn_8012EB7C(s32* arr, int count)
 extern u8  lbl_803DD7B9;
 extern s16 lbl_803DD88C;
 extern u8  lbl_803DBA72;
-extern s8  lbl_803DD7B4;
+extern s8  shouldCloseCMenu;
 
 /* EN v1.0 0x8012EF30  size: 16b  Latch helper: set busy byte
  * lbl_803DD7B9 and stash s16 arg in lbl_803DD88C. */
@@ -943,18 +943,18 @@ void fn_8012FB88(u8 val)
     lbl_803DBA72 = val;
 }
 
-/* EN v1.0 0x8012FB90  size: 12b  s8 setter for lbl_803DD7B4. Target
+/* EN v1.0 0x8012FB90  size: 12b  s8 setter for shouldCloseCMenu. Target
  * emits `extsb r0,r3; stb r0` triple. Forced via #pragma peephole off. */
 #pragma peephole off
-void fn_8012FB90(int val)
+void CMenu_SetShouldClose(int val)
 {
-    lbl_803DD7B4 = (s8)val;
+    shouldCloseCMenu = (s8)val;
 }
 #pragma peephole reset
 
-extern u8 lbl_803DD77E;
+extern u8 mapScreenVisible;
 extern u8 lbl_803DD7C5;
-extern u8 lbl_803DD793;
+extern u8 cMenuEnabled;
 extern void fn_8012D96C(void);
 extern void fn_8012DD14(void);
 extern void fn_8012DF68(void);
@@ -962,15 +962,15 @@ extern void fn_8012E880(void);
 
 /* EN v1.0 0x8012FB2C  size: 92b  Per-frame state advance dispatcher.
  * Gated on the lbl_803DD7C5 enable flag — when zero, fast-returns 0.
- * Otherwise: optionally runs fn_8012D96C (if lbl_803DD77E set), runs
- * fn_8012DD14, optionally runs fn_8012DF68 (if lbl_803DD793 set),
+ * Otherwise: optionally runs fn_8012D96C (if mapScreenVisible set), runs
+ * fn_8012DD14, optionally runs fn_8012DF68 (if cMenuEnabled set),
  * runs fn_8012E880, returns 0. */
 int fn_8012FB2C(void)
 {
     if (lbl_803DD7C5 == 0) return 0;
-    if (lbl_803DD77E != 0) fn_8012D96C();
+    if (mapScreenVisible != 0) fn_8012D96C();
     fn_8012DD14();
-    if (lbl_803DD793 != 0) fn_8012DF68();
+    if (cMenuEnabled != 0) fn_8012DF68();
     fn_8012E880();
     return 0;
 }
