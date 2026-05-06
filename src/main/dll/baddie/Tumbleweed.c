@@ -3550,7 +3550,7 @@ extern f32   lbl_803E22A8;
 extern u8    lbl_803DD970;
 extern void* lbl_803DD974;
 extern void* lbl_803DD96C;
-extern void* fn_80019570(s32);
+extern void* gameTextGet(s32);
 extern void* fn_80054D54(s32);
 extern void  fn_80054308(void*);
 
@@ -3588,7 +3588,7 @@ void titlescreen_release(void)
 void fn_80134388(void)
 {
     lbl_803DD974 = fn_80054D54(0xC5);
-    lbl_803DD96C = fn_80019570(0x1FD);
+    lbl_803DD96C = gameTextGet(0x1FD);
     lbl_803DD970 = 0;
     lbl_803DD968 = lbl_803E22A8;
 }

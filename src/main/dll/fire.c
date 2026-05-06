@@ -11,7 +11,7 @@ extern undefined4 fn_80041E3C(int param_1);
 extern undefined4 fn_80042F78(int param_1);
 extern undefined4 fn_80043560(undefined4 param_1,int param_2);
 extern undefined4 fn_800437BC(undefined4 param_1,uint param_2);
-extern undefined4 fn_800481B0(int param_1);
+extern undefined4 mapGetDirIdx(int param_1);
 extern undefined4 fn_800552E8(int param_1,int param_2);
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
@@ -75,17 +75,17 @@ undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateStat
         (*lbl_803DCAAC)->setAnimEvent(10,7,0);
         GameBit_Set(0x1ed,1);
         fn_80042F78(0x17);
-        anim = fn_800481B0(0x17);
+        anim = mapGetDirIdx(0x17);
         fn_80043560(anim,0);
         break;
       case 2:
         fn_80042F78(0xb);
-        anim = fn_800481B0(0xb);
+        anim = mapGetDirIdx(0xb);
         fn_80043560(anim,0);
         break;
       case 3:
         fn_80042F78(7);
-        anim = fn_800481B0(7);
+        anim = mapGetDirIdx(7);
         fn_80043560(anim,0);
         break;
       }
@@ -128,11 +128,11 @@ undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateStat
       case 0:
       case 1:
       case 2:
-        anim = fn_800481B0(7);
+        anim = mapGetDirIdx(7);
         fn_800437BC(anim,0x20000000);
         break;
       case 3:
-        anim = fn_800481B0(0xb);
+        anim = mapGetDirIdx(0xb);
         fn_800437BC(anim,0x20000000);
         break;
       }

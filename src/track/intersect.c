@@ -4270,7 +4270,7 @@ void fn_8007E54C(u8 kind)
     extern int lbl_803DB708;
     extern void fn_8006C73C(void);
     extern void fn_80076D78(int, int, int, void*, int, int);
-    extern void fn_80019908(int, int, int, int);
+    extern void gameTextSetColor(int, int, int, int);
     extern void fn_80016810(int, int, int);
     extern void fn_80019C24(void);
     extern void fn_8004A43C(int, int);
@@ -4302,7 +4302,7 @@ void fn_8007E54C(u8 kind)
             fn_8006C73C();
             fn_80076D78(0, 0, 0, &saved, 0x200, 0);
         }
-        fn_80019908(0xFF, 0xFF, 0xFF, 0xFF);
+        gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
         if (mode == 1) {
             fn_80016810(0x323, 0, 0xC8);
         } else if (mode == 2) {

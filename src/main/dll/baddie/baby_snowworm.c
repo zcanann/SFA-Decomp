@@ -1006,7 +1006,7 @@ extern void Camera_SetFovY(f32);
 extern void fn_80020628(s32);
 extern void fn_800206E8(s32);
 extern void fn_80016C48(void* arg);
-extern void* fn_800173C8(s32);
+extern void* gameTextGetBox(s32);
 
 extern u16 lbl_803DBA70;
 extern u8  lbl_803DD7A9;
@@ -1035,7 +1035,7 @@ extern f32 lbl_803DD8CC;
 extern u32 lbl_803DD8A4;
 extern f32 lbl_803DB414;
 extern void  fn_80014B0C(void);
-extern void* fn_80019570(u16);
+extern void* gameTextGet(u16);
 
 extern void* lbl_803A9410[6];
 extern void* lbl_8031BF90[6];
@@ -1180,7 +1180,7 @@ void fn_8012EA5C(s32 id, s32 _unused_a, s32 _unused_b, s32 do_input_disable)
 {
     if (id == -1) return;
     if (lbl_803DBA70 != 0xFFFF) return;
-    fn_800173C8(0x7c);
+    gameTextGetBox(0x7c);
     lbl_803DD7A8 = 1;
     lbl_803DD8D0 = 0;
     lbl_803DBA70 = (u16)id;
@@ -1496,7 +1496,7 @@ void fn_8012C558(void)
  * 4. Otherwise, advance the float counter at lbl_803DD8CC. When it
  *    falls to zero or below, wrap around to (f32)lbl_803DD8CA, bump
  *    the index counter at lbl_803A9440[1], and (if it overshoots the
- *    queue length from fn_80019570(slot_id)->_2) clamp it back one
+ *    queue length from gameTextGet(slot_id)->_2) clamp it back one
  *    step and clear the dying byte.
  */
 #pragma scheduling off
@@ -1548,7 +1548,7 @@ void fn_8012E880(void)
             lbl_803DD8CC = (f32)(s32)(s16)lbl_803DD8CA;
             ((s32*)lbl_803A9440)[1]++;
             {
-                u16* end = (u16*)fn_80019570(lbl_803DBA70);
+                u16* end = (u16*)gameTextGet(lbl_803DBA70);
                 if (((s32*)lbl_803A9440)[1] >= (s32)end[1]) {
                     ((s32*)lbl_803A9440)[1] = (s32)end[1] - 1;
                     lbl_803DD7A8 = 0;
@@ -1634,7 +1634,7 @@ void fn_80129DB4(void)
  * Computes blit_x = clamp((v[0x10] - v[0x14] + 0x28), 0, target_y);
  * stores blit_x & 0xfffe at sprite+0x8, and 0x140 - (blit_x>>1) at
  * sprite+0x14. Re-issues fn_8001984C with subbatch 2 and runs
- * fn_80019908(0xff, 0xff, 0xff, alpha) to commit the colour, also
+ * gameTextSetColor(0xff, 0xff, 0xff, alpha) to commit the colour, also
  * latches alpha into sprite+0x1e.
  *
  * Tail: fn_8001618C(handle, 0x49); fn_80019804(2); fn_80019B1C with
@@ -1659,7 +1659,7 @@ void fn_8012D77C(void)
     saved = fn_80019B14();
     fn_80019B1C(lbl_803DD77B, 3);
     handle = fn_800191C4(lbl_803DBA60, lbl_803DBA5C);
-    sprite = fn_800173C8(0x49);
+    sprite = gameTextGetBox(0x49);
 
     lbl_8033BE40[0] = *(u32*)((u8*)lbl_803A89B0 + 0x13c);
     lbl_8033BE40[1] = *(u32*)((u8*)lbl_803A89B0 + 0x140);
@@ -1700,7 +1700,7 @@ void fn_8012D77C(void)
     }
 
     fn_8001984C(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 2);
-    fn_80019908(0xff, 0xff, 0xff, (u8)alpha);
+    gameTextSetColor(0xff, 0xff, 0xff, (u8)alpha);
     *(u8*)((u8*)sprite + 0x1e) = (u8)alpha;
     fn_8001618C(handle, 0x49);
     fn_80019804(2);
