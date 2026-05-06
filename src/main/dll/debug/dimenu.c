@@ -26,7 +26,7 @@ extern undefined4 gameplay_setDebugOptionEnabled();
 extern undefined4 gameplay_isDebugOptionEnabled();
 extern uint gameplay_hasDebugOption();
 extern u8 *gameplay_getPreviewSettings();
-extern void gameplay_applyCurrentPreviewSettings();
+extern void saveGame_save();
 extern undefined4 FUN_8011bfc8();
 extern undefined4 FUN_8011c5cc();
 extern int FUN_8011c7b4();
@@ -428,8 +428,7 @@ FUN_8011d790(undefined8 param_1,double param_2,undefined8 param_3,undefined8 par
   }
   else if (DAT_803de393 == '\x01') {
     if (DAT_803de392 == '\0') {
-      gameplay_applyCurrentPreviewSettings(param_1,param_2,param_3,param_4,param_5,param_6,param_7,
-                                           param_8);
+      saveGame_save(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
     }
     DAT_803de392 = (char)(int)((float)((double)CONCAT44(0x43300000,(int)DAT_803de392 ^ 0x80000000) -
                                       DOUBLE_803e2a78) + lbl_803DC074);

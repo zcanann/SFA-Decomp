@@ -17,7 +17,7 @@ extern undefined4 FUN_8005d0ac();
 extern undefined4 FUN_8005d144();
 extern undefined4 FUN_800723ac();
 extern undefined4 FUN_80072744();
-extern void gameplay_applyPreviewSettings();
+extern void loadSaveSettings();
 extern int titleLoadSaveFiles();
 extern void gameplay_capturePreviewSettings();
 extern double FUN_80110b8c();
@@ -160,7 +160,7 @@ int FUN_801168bc(undefined8 param_1,double param_2,undefined8 param_3,undefined8
       FUN_80072744(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,'\x01',param_10,
                    param_11,param_12,param_13,param_14,param_15,param_16);
     }
-    gameplay_applyPreviewSettings(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+    loadSaveSettings(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
     if (DAT_803dc084 == -2) {
       DAT_803dc084 = '\x01';
     }
@@ -233,8 +233,7 @@ int FUN_801168bc(undefined8 param_1,double param_2,undefined8 param_3,undefined8
               FUN_80072744(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,'\x01',
                            uVar4,iVar3,param_12,param_13,param_14,param_15,param_16);
             }
-            gameplay_applyPreviewSettings(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,
-                                          param_8);
+            loadSaveSettings(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
             if (DAT_803dc084 == -1) {
               DAT_803dc084 = '\x01';
             }

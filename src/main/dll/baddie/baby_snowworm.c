@@ -101,7 +101,7 @@ extern undefined4 FUN_800709e0();
 extern undefined4 FUN_800709e4();
 extern undefined8 FUN_800709e8();
 extern int FUN_8007f7c0();
-extern void gameplay_applyCurrentPreviewSettings();
+extern void saveGame_save();
 extern undefined4 FUN_800e8d50();
 extern int FUN_800e8d6c();
 extern void* FUN_800e8f50();

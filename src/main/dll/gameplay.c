@@ -1078,9 +1078,9 @@ u8 * gameplay_getPreviewSettings(void)
 /*
  * --INFO--
  *
- * Function: gameplay_applyPreviewSettings
- * EN v1.0 Address: 0x800E8184
- * EN v1.0 Size: 340b
+ * Function: loadSaveSettings
+ * EN v1.0 Address: 0x800E7F44
+ * EN v1.0 Size: 256b
  * EN v1.1 Address: 0x800E81C8
  * EN v1.1 Size: 256b
  * JP Address: TODO
@@ -1088,9 +1088,9 @@ u8 * gameplay_getPreviewSettings(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void gameplay_applyPreviewSettings(undefined8 param_1,undefined8 param_2,undefined8 param_3,
-                                   undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                                   undefined8 param_7,undefined8 param_8)
+void loadSaveSettings(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+                      undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                      undefined8 param_8)
 {
   FUN_8005d018(DAT_803a3e2a);
   FUN_80017500(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(uint)DAT_803a3e26);
@@ -1513,9 +1513,9 @@ void gameplay_capturePreviewSettings(void)
 /*
  * --INFO--
  *
- * Function: gameplay_applyCurrentPreviewSettings
- * EN v1.0 Address: 0x800E8A0C
- * EN v1.0 Size: 316b
+ * Function: saveGame_save
+ * EN v1.0 Address: 0x800E86D0
+ * EN v1.0 Size: 188b
  * EN v1.1 Address: 0x800E8954
  * EN v1.1 Size: 188b
  * JP Address: TODO
@@ -1523,10 +1523,8 @@ void gameplay_capturePreviewSettings(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void gameplay_applyCurrentPreviewSettings(undefined8 param_1,double param_2,undefined8 param_3,
-                                          undefined8 param_4,undefined8 param_5,
-                                          undefined8 param_6,undefined8 param_7,
-                                          undefined8 param_8)
+void saveGame_save(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
+                   undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   if (DAT_803a3f2a == '\0') {
     param_1 = FUN_80003494((uint)DAT_803de110,0x803a3f08,0x564);

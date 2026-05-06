@@ -8,9 +8,9 @@ void gameplay_registerDebugOption(uint param_1);
 uint gameplay_hasDebugOption(uint param_1);
 void gameplay_resetPreviewColor(void);
 u8 * gameplay_getPreviewSettings(void);
-void gameplay_applyPreviewSettings(undefined8 param_1,undefined8 param_2,undefined8 param_3,
-                                   undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                                   undefined8 param_7,undefined8 param_8);
+void loadSaveSettings(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+                      undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                      undefined8 param_8);
 undefined * FUN_800e82d8(void);
 undefined4 FUN_800e82e0(int param_1);
 undefined4 FUN_800e83c8(int param_1);
@@ -27,10 +27,9 @@ void gameplay_applyPreviewSettingsForSlot(undefined8 param_1,double param_2,unde
                                           undefined8 param_6,undefined8 param_7,
                                           undefined8 param_8,byte param_9);
 void gameplay_capturePreviewSettings(void);
-void gameplay_applyCurrentPreviewSettings(undefined8 param_1,double param_2,undefined8 param_3,
-                                          undefined8 param_4,undefined8 param_5,
-                                          undefined8 param_6,undefined8 param_7,
-                                          undefined8 param_8);
+void saveGame_save(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
+                   undefined8 param_5,undefined8 param_6,undefined8 param_7,
+                   undefined8 param_8);
 void FUN_800e8b48(void);
 void FUN_800e8b54(void);
 uint FUN_800e8b6c(void);
