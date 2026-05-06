@@ -1,31 +1,13 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_802755E0.h"
-
-extern undefined4 FUN_8028363c();
-
-extern undefined4 DAT_803c62d8;
-extern undefined4 DAT_803c62da;
-extern undefined4 DAT_803c6ad8;
-extern undefined4 DAT_803def14;
-extern undefined4 DAT_803def18;
-extern undefined4 DAT_803def1c;
-extern undefined4* DAT_803def24;
-extern undefined4 uRam803def20;
 
 /*
- * --INFO--
- *
- * Function: FUN_80275364
- * EN v1.0 Address: 0x80275364
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x802755E0
- * EN v1.1 Size: 148b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * fn_80275364 — large noise/random voice update with PRNG and 64-bit
+ * counter math (~776 instructions). Stubbed.
  */
-undefined4 FUN_80275364(uint param_1)
+#pragma dont_inline on
+int fn_80275364(int state, int sample)
 {
+    (void)state; (void)sample;
     return 0;
 }
+#pragma dont_inline reset

@@ -1,129 +1,14 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_8028503C.h"
-
-extern undefined4 FUN_80240a74();
-extern ulonglong FUN_80243e74();
-extern int FUN_802473cc();
-extern ushort FUN_80251624();
-extern undefined4 FUN_8025165c();
-extern undefined4 FUN_80251670();
-extern undefined4 FUN_80251728();
-extern undefined4 FUN_80251770();
-extern ushort FUN_802517b0();
-extern undefined4 FUN_802517c0();
-extern undefined4 FUN_8028504c();
-extern undefined4 FUN_80285050();
-
-extern undefined4 DAT_800000f8;
-extern undefined4 DAT_803314a0;
-extern undefined4 DAT_803d54e0;
-extern undefined4 DAT_803d54e4;
-extern undefined4* DAT_803d54ec;
-extern undefined4 DAT_803d54f0;
-extern undefined4 DAT_803d54f4;
-extern undefined4* DAT_803d54f8;
-extern undefined4 DAT_803d54fc;
-extern undefined4 DAT_803d5500;
-extern undefined4 DAT_803d5504;
-extern undefined4 DAT_803d5506;
-extern undefined4 DAT_803d5508;
-extern undefined4 DAT_803d550c;
-extern undefined4 DAT_803d5510;
-extern undefined4 DAT_803d5514;
-extern undefined4 DAT_803d5540;
-extern undefined4 DAT_803dd290;
-extern undefined4 DAT_803defac;
-extern undefined4 DAT_803defb0;
-extern undefined4 DAT_803df028;
-extern undefined4 DAT_803df034;
-extern undefined4 DAT_803df038;
-extern undefined4 DAT_803df03c;
-extern undefined4 DAT_803df040;
 
 /*
- * --INFO--
- *
- * Function: FUN_80284c58
- * EN v1.0 Address: 0x80284C58
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8028503C
- * EN v1.1 Size: 192b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * ReverbSTDCreate — initialize a standard reverb with delay lines
+ * (~1012 instructions, range-checks 5 floats then sets up 12 delay
+ * lines). Stubbed.
  */
-undefined4 FUN_80284c58(void)
+#pragma dont_inline on
+int ReverbSTDCreate(int reverb, float coloration, float time, float damping, float mix, float predelay)
 {
+    (void)reverb; (void)coloration; (void)time; (void)damping; (void)mix; (void)predelay;
     return 0;
 }
-
-/*
- * --INFO--
- *
- * Function: FUN_80284c60
- * EN v1.0 Address: 0x80284C60
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x802850FC
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_80284c60(void)
-{
-    return 0;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80284c68
- * EN v1.0 Address: 0x80284C68
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80285130
- * EN v1.1 Size: 116b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80284c68(undefined4 param_1)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80284c6c
- * EN v1.0 Address: 0x80284C6C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x802851A4
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-uint FUN_80284c6c(void)
-{
-    return 0;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80284c74
- * EN v1.0 Address: 0x80284C74
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x802851F0
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80284c74(void)
-{
-}
+#pragma dont_inline reset
