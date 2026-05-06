@@ -1602,7 +1602,7 @@ void FUN_800d8e9c(uint param_1,int param_2,int param_3,int param_4,int param_5)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_800D7544(void) {}
+void Checkpoint_release(void) {}
 void fn_800D7F5C(void) {}
 void fn_800D7F60(void) {}
 void fn_800D7F64(void) {}
@@ -1650,7 +1650,7 @@ u8 fn_800D7A7C(void) { return lbl_803DD42D; }
 
 /* Pattern wrappers. */
 extern u32 lbl_803DD410;
-void fn_800D7538(void) { lbl_803DD410 = 0x0; }
+void Checkpoint_reset(void) { lbl_803DD410 = 0x0; }
 
 /* 12b 3-insn patterns. */
 extern u32 lbl_803DD43C;
@@ -1659,7 +1659,7 @@ void fn_800D895C(int unused1, int unused2, u32 a, u32 b) { lbl_803DD43C = a; lbl
 
 /* misc 8b leaves */
 extern f32 lbl_803DD420;
-f32 fn_800D7A84(void) { return lbl_803DD420; }
+f32 screenTransition_getAlpha(void) { return lbl_803DD420; }
 
 /* Pattern wrappers. */
 int fn_800D8010(void) { return -0x1; }
