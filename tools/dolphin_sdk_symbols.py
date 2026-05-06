@@ -46,6 +46,7 @@ SPAM_OBJECTS = {
     ),
 }
 ENTRY_SUFFIX_RE = re.compile(r"\s+\(entry of [^)]+\)$")
+MAX_TRANSLATION_ANCHOR_DISTANCE = 0x4000
 
 
 @dataclass(frozen=True)
@@ -433,7 +434,10 @@ def find_translation_anchor(
     if not neighbors:
         return None
 
-    return min(neighbors, key=lambda anchor: abs(anchor.dolphin_address - address))
+    anchor = min(neighbors, key=lambda anchor: abs(anchor.dolphin_address - address))
+    if abs(anchor.dolphin_address - address) > MAX_TRANSLATION_ANCHOR_DISTANCE:
+        return None
+    return anchor
 
 
 def translate_address(
