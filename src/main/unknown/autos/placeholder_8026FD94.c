@@ -6,42 +6,42 @@ extern int lbl_803DE278;
 extern int lbl_803DE27C;
 
 /*
- * fn_8026FC8C — voice handler (~608 instructions). Stubbed.
+ * fn_8026FC8C - voice handler (~608 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_8026FC8C(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_8026FEEC — voice handler (~664 instructions). Stubbed.
+ * fn_8026FEEC - voice handler (~664 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_8026FEEC(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80270184 — large voice handler (~1972 instructions). Stubbed.
+ * fn_80270184 - large voice handler (~1972 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_80270184(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80270938 — large voice handler (~1712 instructions). Stubbed.
+ * fn_80270938 - large voice handler (~1712 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_80270938(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80270FE8 — voice handler (~400 instructions). Stubbed.
+ * fn_80270FE8 - voice handler (~400 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_80270FE8(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80271178 — internal helper used by the wrappers below (~336
+ * fn_80271178 - internal helper used by the wrappers below (~336
  * instructions). Stubbed.
  */
 #pragma dont_inline on
@@ -103,39 +103,39 @@ int fn_80271370(int handle)
  *
  * EN v1.1 Address: 0x80271398, size 148b
  */
-void fn_80271398(int head, void (*cb)(u8 idx))
+void fn_80271398(void **head, void (*cb)(int idx))
 {
-    int cur = *(int *)head;
+    void *cur = *head;
     while (cur != 0) {
-        int next = *(int *)cur;
-        *(u8 *)(cur + 0x9) = 0xff;
+        void *next = *(void **)cur;
+        *(u8 *)((u8 *)cur + 0x9) = 0xff;
         {
-            u8 idx = *(u8 *)(cur + 0x8);
+            int idx = *(u8 *)((u8 *)cur + 0x8);
             if (*(u8 *)(lbl_803DE268 + idx * 0x404 + 0x11c) == 0) {
                 cb(idx);
             }
         }
         cur = next;
     }
-    *(int *)head = 0;
+    *head = 0;
 }
 
 /*
- * fn_8027142C — list-walker variant (~108 instructions). Stubbed.
+ * fn_8027142C - list-walker variant (~108 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_8027142C(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80271498 — list-walker variant (~792 instructions). Stubbed.
+ * fn_80271498 - list-walker variant (~792 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_80271498(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_802717B0 — voice handler (~188 instructions). Stubbed.
+ * fn_802717B0 - voice handler (~188 instructions). Stubbed.
  */
 #pragma dont_inline on
 int fn_802717B0(int a, int b, int c, int d, u8 e)

@@ -195,14 +195,14 @@ u32 synthAssignHandle(s32 voiceIndex) {
         gSynthNextHandle = handle + 1;
         gSynthNextHandle &= 0x7FFFFFFF;
 
-        for (current = gSynthAllocatedVoices; current != 0; current = current->next) {
+        for (current = gSynthQueuedVoices; current != 0; current = current->next) {
             if (current->handle == handle) {
                 handle = 0xFFFFFFFF;
                 break;
             }
         }
 
-        for (current = gSynthQueuedVoices; current != 0; current = current->next) {
+        for (current = gSynthAllocatedVoices; current != 0; current = current->next) {
             if (current->handle == handle) {
                 handle = 0xFFFFFFFF;
                 break;
