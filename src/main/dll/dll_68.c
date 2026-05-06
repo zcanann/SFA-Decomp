@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: fn_801007E8
+ * Function: projenergise1_release
  * EN v1.0 Address: 0x801007E8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801007E8
@@ -14,6 +14,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801007E8(void)
+void projenergise1_release(void)
 {
 }

@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: fn_80100858
+ * Function: projrobotfire_release
  * EN v1.0 Address: 0x80100858
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80100858
@@ -14,6 +14,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80100858(void)
+void projrobotfire_release(void)
 {
 }

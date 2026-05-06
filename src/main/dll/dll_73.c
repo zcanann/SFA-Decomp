@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: fn_801008C8
+ * Function: projship1_release
  * EN v1.0 Address: 0x801008C8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801008C8
@@ -14,6 +14,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801008C8(void)
+void projship1_release(void)
 {
 }

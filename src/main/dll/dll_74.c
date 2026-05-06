@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: fn_801008CC
+ * Function: projship1_initialise
  * EN v1.0 Address: 0x801008CC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801008CC
@@ -14,6 +14,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801008CC(void)
+void projship1_initialise(void)
 {
 }

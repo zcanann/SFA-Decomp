@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: fn_8010085C
+ * Function: projrobotfire_initialise
  * EN v1.0 Address: 0x8010085C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8010085C
@@ -14,6 +14,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8010085C(void)
+void projrobotfire_initialise(void)
 {
 }

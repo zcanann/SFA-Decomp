@@ -2411,8 +2411,8 @@ void fn_800FE920(void) {}
 void fn_800FE924(void) {}
 void fn_800FEC6C(void) {}
 void fn_800FEC70(void) {}
-void fn_800FEC7C(void) {}
-void fn_800FEC80(void) {}
+void DummyA4_release(void) {}
+void DummyA4_initialise(void) {}
 void fn_800FEFFC(void) {}
 void fn_800FF000(void) {}
 void fn_800FF698(void) {}
