@@ -964,15 +964,15 @@ int expgfx_func09_ret_0(void)
 void expgfx_renderSourcePools(int sourceId,int sourceMode)
 {
   ExpgfxBounds *boundsTemplate;
-  ExpgfxBounds *poolBounds;
   u8 *expgfxBase;
   uint uVar1;
-  int poolIndex;
-  uint *slotPoolBases;
-  u8 *poolBoundsTemplateIds;
-  u8 *poolSourceModes;
-  int *poolSourceIds;
   char *poolActiveCounts;
+  int *poolSourceIds;
+  u8 *poolSourceModes;
+  u8 *poolBoundsTemplateIds;
+  ExpgfxBounds *poolBounds;
+  uint *slotPoolBases;
+  int poolIndex;
   
   expgfxBase = lbl_8039AB58;
   poolIndex = 0;
@@ -1043,17 +1043,17 @@ void expgfx_renderPool(uint slotPoolBase,int poolIndex)
 void expgfx_queueStandalonePools(void)
 {
   ExpgfxBounds *boundsTemplate;
-  ExpgfxBounds *poolBounds;
   float *sourcePosition;
   u8 *expgfxBase;
+  char *poolActiveCounts;
   u8 *poolSourceModes;
   u8 *poolBoundsTemplateIds;
+  ExpgfxBounds *poolBounds;
   int *poolSourceIds;
-  char *poolActiveCounts;
   s16 *poolSlotTypeIds;
   uint *slotPoolBases;
-  int currentMatrix;
   int poolIndex;
+  int currentMatrix;
   float queuePosition[3];
 
   expgfxBase = lbl_8039AB58;
