@@ -19,14 +19,14 @@
 ## Current Seed Functions
 - `expgfx_addToTable@0x8009DDEC-0x8009DF0C` size=`0x120`
 - `expgfx_updateSourceFrameFlags@0x8009DF0C-0x8009E004` size=`0xF8`
-- `fn_8009E004@0x8009E004-0x8009E024` size=`0x20`
-- `fn_8009E024@0x8009E024-0x8009E028` size=`0x4`
-- `fn_8009E028@0x8009E028-0x8009E02C` size=`0x4`
-- `fn_8009E02C@0x8009E02C-0x8009E034` size=`0x8`
+- `expgfx_free0C@0x8009E004-0x8009E024` size=`0x20`
+- `expgfx_func0B_nop@0x8009E024-0x8009E028` size=`0x4`
+- `expgfx_func0A_nop@0x8009E028-0x8009E02C` size=`0x4`
+- `expgfx_func09_ret_0@0x8009E02C-0x8009E034` size=`0x8`
 - `expgfx_renderSourcePools@0x8009E034-0x8009E13C` size=`0x108`
 - `expgfx_renderPool@0x8009E13C-0x8009ECE4` size=`0xBA8`
 - `expgfx_queueStandalonePools@0x8009ECE4-0x8009EEB8` size=`0x1D4`
-- `fn_8009EEB8@0x8009EEB8-0x8009EED8` size=`0x20`
+- `expgfx_free08@0x8009EEB8-0x8009EED8` size=`0x20`
 - `expgfx_releaseSourceSlots@0x8009EED8-0x8009EFDC` size=`0x104`
 - `expgfx_resetAllPools@0x8009EFDC-0x8009F1AC` size=`0x1D0`
 - `expgfx_updateFrameState@0x8009F1AC-0x8009F2CC` size=`0x120`
@@ -35,14 +35,14 @@
 ## Suggested Inspection Window
 - `expgfx_addToTable@0x8009DDEC-0x8009DF0C` size=`0x120`
 - `expgfx_updateSourceFrameFlags@0x8009DF0C-0x8009E004` size=`0xF8`
-- `fn_8009E004@0x8009E004-0x8009E024` size=`0x20`
-- `fn_8009E024@0x8009E024-0x8009E028` size=`0x4`
-- `fn_8009E028@0x8009E028-0x8009E02C` size=`0x4`
-- `fn_8009E02C@0x8009E02C-0x8009E034` size=`0x8`
+- `expgfx_free0C@0x8009E004-0x8009E024` size=`0x20`
+- `expgfx_func0B_nop@0x8009E024-0x8009E028` size=`0x4`
+- `expgfx_func0A_nop@0x8009E028-0x8009E02C` size=`0x4`
+- `expgfx_func09_ret_0@0x8009E02C-0x8009E034` size=`0x8`
 - `expgfx_renderSourcePools@0x8009E034-0x8009E13C` size=`0x108`
 - `expgfx_renderPool@0x8009E13C-0x8009ECE4` size=`0xBA8`
 - `expgfx_queueStandalonePools@0x8009ECE4-0x8009EEB8` size=`0x1D4`
-- `fn_8009EEB8@0x8009EEB8-0x8009EED8` size=`0x20`
+- `expgfx_free08@0x8009EEB8-0x8009EED8` size=`0x20`
 - `expgfx_releaseSourceSlots@0x8009EED8-0x8009EFDC` size=`0x104`
 - `expgfx_resetAllPools@0x8009EFDC-0x8009F1AC` size=`0x1D0`
 - `expgfx_updateFrameState@0x8009F1AC-0x8009F2CC` size=`0x120`
