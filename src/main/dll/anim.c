@@ -4093,9 +4093,9 @@ void dbholecontrol1_initialise(void) {}
 void dfplevelcontrol_render(void) {}
 void dfplevelcontrol_hitDetect(void) {}
 void dfplevelcontrol_release(void) {}
-void fn_802049D4(void) {}
-void fn_80204B4C(void) {}
-void fn_80204B50(void) {}
+void dfpobjcreator_hitDetect(void) {}
+void dfpobjcreator_release(void) {}
+void dfpobjcreator_initialise(void) {}
 void fn_80204BF4(void) {}
 void fn_802050BC(void) {}
 void fn_802050C0(void) {}
@@ -4103,10 +4103,10 @@ void doorswitch_render(void) {}
 void doorswitch_hitDetect(void) {}
 void doorswitch_release(void) {}
 void doorswitch_initialise(void) {}
-void fn_8020541C(void) {}
-void fn_80205450(void) {}
-void fn_802057C4(void) {}
-void fn_802057C8(void) {}
+void dfpseqpoint_free(void) {}
+void dfpseqpoint_hitDetect(void) {}
+void dfpseqpoint_release(void) {}
+void dfpseqpoint_initialise(void) {}
 void fn_80205A90(void) {}
 void fn_80205F38(void) {}
 void fn_80205F3C(void) {}
@@ -4123,15 +4123,15 @@ int dbholecontrol1_getExtraSize(void) { return 0xc; }
 int dbholecontrol1_func08(void) { return 0x0; }
 int dfplevelcontrol_getExtraSize(void) { return 0xc; }
 int dfplevelcontrol_func08(void) { return 0x0; }
-int fn_80204970(void) { return 0x1c; }
-int fn_80204978(void) { return 0x0; }
+int dfpobjcreator_getExtraSize(void) { return 0x1c; }
+int dfpobjcreator_func08(void) { return 0x0; }
 int fn_80204B54(void) { return 0x0; }
 int fn_80204B5C(void) { return 0x10; }
 int fn_80204B64(void) { return 0x0; }
 int doorswitch_getExtraSize(void) { return 0x0; }
 int fn_802050CC(void) { return 0x0; }
-int fn_8020540C(void) { return 0x10; }
-int fn_80205414(void) { return 0x0; }
+int dfpseqpoint_getExtraSize(void) { return 0x10; }
+int dfpseqpoint_func08(void) { return 0x0; }
 int fn_802057CC(void) { return 0x10; }
 int fn_802057D4(void) { return 0x1; }
 int fn_80205F40(void) { return 0x0; }
@@ -4149,7 +4149,7 @@ extern f32 lbl_803E63B8;
 #pragma peephole off
 void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E6390); }
 void fn_80204BC4(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E6398); }
-void fn_80205420(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E63B8); }
+void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E63B8); }
 #pragma peephole reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
