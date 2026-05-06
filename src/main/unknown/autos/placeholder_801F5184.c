@@ -1319,7 +1319,7 @@ int vfplift_getExtraSize(void) { return 0x20; }
 int vfplift_func08(void) { return 0x0; }
 void vfplift_release(void) {}
 void vfplift_initialise(void) {}
-int fn_801FB9AC(void) { return 0x2; }
-int fn_801FB9B4(void) { return 0x0; }
-void fn_801FB9EC(void) {}
-void fn_801FB9F0(void) {}
+int vfpblock1_getExtraSize(void) { return 0x2; }
+int vfpblock1_func08(void) { return 0x0; }
+void vfpblock1_render(void) {}
+void vfpblock1_hitDetect(void) {}

@@ -1048,8 +1048,8 @@ int FUN_801fc4f4(void)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801FBAC0(void) {}
-void fn_801FBAC4(void) {}
+void vfpblock1_release(void) {}
+void vfpblock1_initialise(void) {}
 void fn_801FBDE4(void) {}
 void fn_801FC370(void) {}
 void fn_801FC374(void) {}
