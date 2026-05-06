@@ -19,3 +19,8 @@
 // Runtime shape:
 // - update uses andross_setPartSignal to notify the linked Andross object when
 //   the brain completes scripted states or reaches damage thresholds.
+// - androssbrain_setState (0x8023FC8C) is called by the main Andross controller
+//   to command brain active/hidden states and optionally arm its hit counter.
+// - update follows the main Andross object and the linked AndrossLigh object,
+//   handles brain damage windows, emits hit feedback, and asks AndrossLigh to
+//   hide when the brain completes.
