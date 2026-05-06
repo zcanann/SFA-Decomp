@@ -11,8 +11,12 @@
  * Score: 1707
  *
  * Retail EN evidence:
- * - main.dol string @ 0x803280C8
- * - EN xref: 0x801D5AC8 fn_801D5764 + 0x364
+ * - main.dol string @ 0x80327488
+ * - EN xref: 0x801D54D8 SHthorntail_updateState + 0x364
+ *
+ * Current EN source-window evidence:
+ * - seed: 0x801D5174-0x801D550C, SHthorntail_updateState
+ * - blueprint action: corridor-packet, suggested window stays at the seed
  *
  * Reference-side path hints:
  * - current debug path: dll/SH/SHthorntail.c
