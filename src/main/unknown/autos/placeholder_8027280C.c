@@ -39,7 +39,7 @@ void fn_80272720(int a, int b, int c, int d)
 }
 
 /*
- * Look up an event halfword from a 2D table (slot[u8] × event[u8]).
+ * Look up an event halfword from a 2D table (slot[u8] x event[u8]).
  *
  * EN v1.1 Address: 0x80272788, size 32b
  */
@@ -107,19 +107,19 @@ int fn_802728A8(int a, int b, int c, u8 d)
 }
 
 /*
- * Map id → slot via fn_8027949C, returns -1 sentinel if not found,
+ * Map id -> slot via fn_8027949C, returns -1 sentinel if not found,
  * else returns the input id.
  *
  * EN v1.1 Address: 0x8027292C, size 68b
  */
 int fn_8027292C(u32 id)
 {
-    int slot;
+    u32 slot;
     slot = fn_8027949C(id);
-    if (slot == -1) {
-        return -1;
+    if (slot != 0xffffffff) {
+        return (int)id;
     }
-    return (int)id;
+    return -1;
 }
 
 /*
@@ -164,15 +164,18 @@ void fn_80272A64(int mode)
     u32 oldFlags = lbl_803DE264;
     switch (mode) {
     case 0:
-        lbl_803DE264 = (lbl_803DE264 | 0x1) & ~0x4;
+        lbl_803DE264 = lbl_803DE264 | 0x1;
+        lbl_803DE264 = lbl_803DE264 & ~0x4;
         hwDisableHRTF();
         break;
     case 1:
-        lbl_803DE264 = (lbl_803DE264 & ~0x1) & ~0x4;
+        lbl_803DE264 = lbl_803DE264 & ~0x1;
+        lbl_803DE264 = lbl_803DE264 & ~0x4;
         hwDisableHRTF();
         break;
     case 2:
-        lbl_803DE264 = (lbl_803DE264 & ~0x1) | 0x2;
+        lbl_803DE264 = lbl_803DE264 & ~0x1;
+        lbl_803DE264 = lbl_803DE264 | 0x2;
         hwDisableHRTF();
         break;
     }
@@ -180,14 +183,16 @@ void fn_80272A64(int mode)
         u32 i;
         for (i = 0; i < lbl_803BD150[0x210]; i++) {
             u32 *flags = (u32 *)(lbl_803DE268 + i * 0x404 + 0x114);
+            u32 nextFlags = flags[1];
             flags[0] |= 0x2000;
+            flags[1] = nextFlags;
         }
         fn_80273870();
     }
 }
 
 /*
- * fn_80272B5C — large fn ~360 bytes, complex routing. Stubbed.
+ * fn_80272B5C - large fn ~360 bytes, complex routing. Stubbed.
  */
 #pragma dont_inline on
 void fn_80272B5C(int a, int b, int c, int d)
@@ -216,7 +221,7 @@ void fn_80272CC4(u8 slot, int a, int b)
 }
 
 /*
- * fn_80272D74 — large fn ~240 bytes, voice cleanup loop. Stubbed.
+ * fn_80272D74 - large fn ~240 bytes, voice cleanup loop. Stubbed.
  */
 #pragma dont_inline on
 void fn_80272D74(u8 slot)
