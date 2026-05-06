@@ -1214,19 +1214,19 @@ void expgfx_releaseSourceSlots(u32 sourceId)
 void expgfx_resetAllPools(void)
 {
   ExpgfxTableEntry *tableEntry;
-  ExpgfxSlot *slot;
-  u8 *expgfxBase;
-  int *poolSourceIds;
-  s16 *poolSlotTypeIds;
-  u8 *poolFrameFlags;
-  char *poolActiveCounts;
-  u32 *poolActiveMasks;
-  u32 *slotPoolBases;
   u8 *staticDataBase;
-  u32 activeBit;
+  u8 *expgfxBase;
+  u32 *slotPoolBases;
+  u32 *poolActiveMasks;
+  char *poolActiveCounts;
+  s16 *poolSlotTypeIds;
+  int *poolSourceIds;
+  u8 *poolFrameFlags;
   int poolIndex;
-  int resourceIndex;
+  ExpgfxSlot *slot;
   int slotIndex;
+  u32 activeBit;
+  int resourceIndex;
   void *resource;
 
   staticDataBase = gExpgfxStaticData;
