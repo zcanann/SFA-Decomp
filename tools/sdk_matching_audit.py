@@ -26,11 +26,12 @@ class AuditResult:
     text_size: int
     bad_symbols: int
     error: str | None = None
+    skipped: str | None = None
 
     @property
     def ok(self) -> bool:
         values = [value for value in (self.code_percent, self.data_percent) if value is not None]
-        return self.error is None and all(value == 100.0 for value in values)
+        return self.error is None and self.skipped is None and all(value == 100.0 for value in values)
 
 
 def iter_object_calls(text: str) -> list[str]:
@@ -172,6 +173,14 @@ def bad_symbol_count(diff: dict) -> int:
     return count
 
 
+def has_target_payload(diff: dict) -> bool:
+    for section in diff.get("right", {}).get("sections", []):
+        if section.get("kind") in {"SECTION_CODE", "SECTION_DATA", "SECTION_RODATA", "SECTION_BSS"}:
+            if int(section.get("size", "0")) > 0:
+                return True
+    return False
+
+
 def audit_object(version: str, obj: ConfigObject) -> AuditResult:
     src_obj = object_path(version, "src", obj.path)
     target_obj = object_path(version, "obj", obj.path)
@@ -197,6 +206,9 @@ def audit_object(version: str, obj: ConfigObject) -> AuditResult:
         return AuditResult(obj, None, None, 0, 0, proc.stderr.strip() or proc.stdout.strip())
 
     diff = json.loads(proc.stdout)
+    if not has_target_payload(diff):
+        return AuditResult(obj, None, None, text_size(diff), 0, skipped="empty target split")
+
     return AuditResult(
         obj=obj,
         code_percent=section_min(diff, {"SECTION_CODE"}),
@@ -217,6 +229,7 @@ def main() -> int:
     parser.add_argument("-v", "--version", default="GSAE01", help="Target version (default: GSAE01)")
     parser.add_argument("--all-configured", action="store_true", help="Also audit matching SDK objects absent from config.json")
     parser.add_argument("--fail-on-mismatch", action="store_true", help="Exit nonzero if any audited object is not exact")
+    parser.add_argument("--show-skipped", action="store_true", help="Print SDK objects skipped because the extracted target split is empty")
     parser.add_argument("--limit", type=int, default=0, help="Maximum mismatches to print (default: all)")
     args = parser.parse_args()
 
@@ -226,12 +239,16 @@ def main() -> int:
         objects = [obj for obj in objects if obj.path in active]
 
     mismatches: list[AuditResult] = []
+    skipped: list[AuditResult] = []
     for obj in objects:
         result = audit_object(args.version, obj)
+        if result.skipped:
+            skipped.append(result)
+            continue
         if not result.ok:
             mismatches.append(result)
 
-    print(f"audited={len(objects)} mismatches={len(mismatches)} version={args.version}")
+    print(f"audited={len(objects)} mismatches={len(mismatches)} skipped={len(skipped)} version={args.version}")
     for result in mismatches[: args.limit or None]:
         if result.error:
             print(f"error path={result.obj.path} detail={result.error}")
@@ -243,6 +260,9 @@ def main() -> int:
                 f"bad-symbols={result.bad_symbols:2d} "
                 f"path={result.obj.path}"
             )
+    if args.show_skipped:
+        for result in skipped:
+            print(f"skip path={result.obj.path} reason={result.skipped} text=0x{result.text_size:X}")
 
     return 1 if args.fail_on_mismatch and mismatches else 0
 
