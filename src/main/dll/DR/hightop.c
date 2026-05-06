@@ -1167,16 +1167,16 @@ void FUN_8019bc2c(int param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_8019A3AC(void) {}
-void fn_8019A8A0(void) {}
-void fn_8019AA74(void) {}
-void fn_8019AA78(void) {}
+void Trigger_render(void) {}
+void Trigger_update(void) {}
+void Trigger_release(void) {}
+void Trigger_initialise(void) {}
 void cloudprisoncontrol_free(void) {}
 void cloudprisoncontrol_hitDetect(void) {}
 void cloudprisoncontrol_release(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_8019A300(void) { return 0xac; }
+int Trigger_getExtraSize(void) { return 0xac; }
 int fn_8019A308(void) { return 0x0; }
 int cloudprisoncontrol_getExtraSize(void) { return 0x0; }
 int cloudprisoncontrol_func08(void) { return 0x0; }
