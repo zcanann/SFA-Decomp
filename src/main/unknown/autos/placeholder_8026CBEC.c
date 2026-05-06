@@ -1,53 +1,90 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_8026CBEC.h"
 
-extern int FUN_8026cae4();
-extern undefined4 FUN_8026d7c4();
-extern undefined4 FUN_8026efc8();
-extern undefined4 synthSetStudioChannelScale();
-extern undefined4 FUN_802722b0();
-extern undefined4 FUN_80272714();
-extern undefined4 FUN_80281a30();
-extern undefined4 FUN_80281a38();
-extern undefined4 FUN_80282080();
-
-extern undefined4 DAT_803bd8f0;
-extern undefined4 DAT_803bd8f2;
-extern undefined4 DAT_803bd8f4;
-extern undefined4 DAT_803bd8f6;
-extern undefined4 DAT_803bd8f8;
-extern undefined4 DAT_803bd8fa;
-extern undefined4 DAT_803bd8fc;
-extern undefined4 DAT_803bd8fe;
-extern undefined4 DAT_803bd900;
-extern undefined4 DAT_803bd902;
-extern undefined4 DAT_803bd904;
-extern undefined4 DAT_803bd906;
-extern undefined4 DAT_803bd908;
-extern undefined4 DAT_803bd90a;
-extern undefined4 DAT_803bd90c;
-extern undefined4 DAT_803bd90e;
-extern undefined1 DAT_803be5c4;
-extern undefined4 DAT_803dee98;
-extern undefined4 DAT_803deea0;
-extern int* DAT_803deeac;
-extern undefined4* DAT_803deeb4;
+extern int gSynthQueuedVoices;
+extern int gSynthAllocatedVoices;
 
 /*
- * --INFO--
- *
- * Function: FUN_8026c488
- * EN v1.0 Address: 0x8026C488
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8026CBEC
- * EN v1.1 Size: 2800b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * fn_8026C488 — large voice scheduler (~2800 instructions). Stubbed.
  */
-int FUN_8026c488(int param_1,int param_2,int param_3,int *param_4,uint *param_5,undefined param_6,
-                undefined2 param_7)
+#pragma dont_inline on
+int fn_8026C488(int a, int b)
 {
+    (void)a; (void)b;
     return 0;
 }
+#pragma dont_inline reset
+
+/*
+ * fn_8026CF78 — voice unlink helper (~232 instructions). Stubbed.
+ */
+#pragma dont_inline on
+void fn_8026CF78(u8 idx)
+{
+    (void)idx;
+}
+#pragma dont_inline reset
+
+/*
+ * Move a voice node from the queued list to the head of the allocated
+ * list and mark it active.
+ *
+ * EN v1.1 Address: 0x8026D060, size 100b
+ */
+void fn_8026D060(int node)
+{
+    if (*(int *)(node + 4) != 0) {
+        *(int *)(*(int *)(node + 4) + 0) = *(int *)(node + 0);
+    } else {
+        gSynthQueuedVoices = *(int *)(node + 0);
+    }
+    if (*(int *)(node + 0) != 0) {
+        *(int *)(*(int *)(node + 0) + 4) = *(int *)(node + 4);
+    }
+    *(int *)(node + 0) = gSynthAllocatedVoices;
+    if (gSynthAllocatedVoices != 0) {
+        *(int *)(gSynthAllocatedVoices + 4) = node;
+    }
+    *(int *)(node + 4) = 0;
+    gSynthAllocatedVoices = node;
+    *(u8 *)(node + 8) = 2;
+}
+
+/*
+ * fn_8026D0C4 — voice cleanup with callbacks (~436 instructions). Stubbed.
+ */
+#pragma dont_inline on
+void fn_8026D0C4(int handle)
+{
+    (void)handle;
+}
+#pragma dont_inline reset
+
+/*
+ * fn_8026D278 — voice search and modify (~464 instructions). Stubbed.
+ */
+#pragma dont_inline on
+void fn_8026D278(int handle, int args)
+{
+    (void)handle; (void)args;
+}
+#pragma dont_inline reset
+
+/*
+ * fn_8026D448 — voice flag setter (~220 instructions). Stubbed.
+ */
+#pragma dont_inline on
+void fn_8026D448(int handle, int args)
+{
+    (void)handle; (void)args;
+}
+#pragma dont_inline reset
+
+/*
+ * fn_8026D524 — voice param multi-set (~268 instructions). Stubbed.
+ */
+#pragma dont_inline on
+void fn_8026D524(int handle, int a, int b, int c)
+{
+    (void)handle; (void)a; (void)b; (void)c;
+}
+#pragma dont_inline reset
