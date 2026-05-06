@@ -7,6 +7,14 @@
 // Current EN descriptor:
 // - gWCBouncyCraObjDescriptor @ 0x8032AF78
 //
+// Runtime notes:
+// - init stores the home Y position from object-def +0x0C into extra +0 and starts
+//   a 0x28-frame cooldown at extra +8.
+// - update waits for the cooldown, checks object group 3 for a nearby object, then applies
+//   an upward velocity and enters a bounce simulation with damped rebounds.
+// - extra byte +0x0A is the active/bouncing flag; extra byte +0x0B counts rebounds and
+//   returns the crate to rest after more than 10 bounces.
+//
 // Descriptor slots:
 // - 0: wcbouncycra_initialise (0x802242A4)
 // - 1: wcbouncycra_release (0x802242A0)
