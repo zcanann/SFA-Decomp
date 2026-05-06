@@ -79,10 +79,12 @@ void hwGetPos(int param_1, u32 param_2, int param_3, int param_4, undefined4 par
     u8 stack[8];
 
     offset = fn_80284638(param_4, stack);
-    size = (param_3 + (param_2 & 0x1f) + 0x1f) & 0xffffffe0;
-    param_1 = param_1 + (param_2 & 0xffffffe0);
+    param_3 += param_2 & 0x1f;
+    param_2 &= 0xffffffe0;
+    size = (param_3 + 0x1f) & 0xffffffe0;
+    param_1 = param_1 + param_2;
     DCStoreRange((void *)param_1, size);
-    fn_80284038(param_1, offset + (param_2 & 0xffffffe0), size, 1, param_5, param_6);
+    fn_80284038(param_1, offset + param_2, size, 1, param_5, param_6);
 }
 
 /*
