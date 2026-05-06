@@ -15,3 +15,15 @@
 // - 7: andross_free (0x8023AA18)
 // - 8: andross_func08 (0x8023AA10)
 // - 9: andross_getExtraSize (0x8023AA08)
+
+// Helpers:
+// - andross_setPartSignal (0x8023A688): sets signal bits in the linked Andross
+//   extra byte +0xAD. Called by hands/brain when child parts complete attacks,
+//   take fatal damage, or need to notify the main boss state machine.
+// - andross_updateModelAlpha (0x8023A974): installed in obj->funcBC by init;
+//   refreshes per-model alpha data from the Andross extra alpha scalar.
+
+// Runtime shape:
+// - init caches spawn/origin coordinates from object-def fields, seeds phase and
+//   animation timers, installs andross_updateModelAlpha, disables child model
+//   part visibility, clears switch 0x0D, and enables the main camera/HUD state.

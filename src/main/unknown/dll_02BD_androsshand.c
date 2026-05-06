@@ -16,3 +16,17 @@
 // - 7: androsshand_free (0x8023F43C)
 // - 8: androsshand_func08 (0x8023F434)
 // - 9: androsshand_getExtraSize (0x8023F42C)
+
+// Helpers:
+// - androsshand_spawnShot (0x8023F05C): spawns an Andross hand shot object from
+//   a model attachment point, aiming it toward the linked Andross/player target.
+// - androsshand_handleDamage (0x8023F1FC): applies hit damage, updates the
+//   hand's hit flash/health state, emits fatal explosion feedback, and signals
+//   the linked Andross object when depleted.
+// - androsshand_setState (0x8023F39C): state setter used by the main Andross
+//   controller to command left/right hand attack and recovery states.
+
+// Runtime shape:
+// - update follows commands from Andross, transitions between idle, attack,
+//   hit, and recovery states, spawns shots, and signals the linked boss object
+//   through andross_setPartSignal.

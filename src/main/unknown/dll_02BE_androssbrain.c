@@ -15,3 +15,7 @@
 // - 7: androssbrain_free (0x8023FD0C)
 // - 8: androssbrain_func08 (0x8023FD04)
 // - 9: androssbrain_getExtraSize (0x8023FCFC)
+
+// Runtime shape:
+// - update uses andross_setPartSignal to notify the linked Andross object when
+//   the brain completes scripted states or reaches damage thresholds.
