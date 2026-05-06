@@ -47,7 +47,7 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
                            undefined8 param_8,undefined4 param_9,undefined4 param_10,
                            int param_11,undefined4 param_12,undefined4 param_13,uint param_14,
                            uint param_15,undefined4 param_16);
-void FUN_80033358(void);
+void fn_800333C8(void);
 void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
                                    undefined8 param_4,undefined8 param_5,undefined8 param_6,
                                    undefined8 param_7,undefined8 param_8,undefined4 param_9,

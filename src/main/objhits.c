@@ -77,7 +77,7 @@ extern undefined4 uRam803dd854;
  *
  * Function: ObjHits_CollectSkeletonHitsXZ
  * EN v1.0 Address: 0x80030688
- * EN v1.0 Size: 1452b
+ * EN v1.0 Size: 1124b
  * EN v1.1 Address: 0x80030780
  * EN v1.1 Size: 1124b
  * JP Address: TODO
@@ -297,8 +297,8 @@ void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double para
  * --INFO--
  *
  * Function: ObjHits_CollectSkeletonHits3D
- * EN v1.0 Address: 0x80030C34
- * EN v1.0 Size: 1288b
+ * EN v1.0 Address: 0x80030AEC
+ * EN v1.0 Size: 988b
  * EN v1.1 Address: 0x80030BE4
  * EN v1.1 Size: 988b
  * JP Address: TODO
@@ -491,8 +491,8 @@ void ObjHits_CollectSkeletonHits3D(undefined4 param_1,undefined4 param_2,int *pa
  * --INFO--
  *
  * Function: ObjHits_CalcSkeletonResponseXZ
- * EN v1.0 Address: 0x8003113C
- * EN v1.0 Size: 980b
+ * EN v1.0 Address: 0x80030EC8
+ * EN v1.0 Size: 1248b
  * EN v1.1 Address: 0x80030FC0
  * EN v1.1 Size: 1248b
  * JP Address: TODO
@@ -677,8 +677,8 @@ void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double par
  * --INFO--
  *
  * Function: ObjHits_CalcSkeletonResponse3D
- * EN v1.0 Address: 0x80031510
- * EN v1.0 Size: 928b
+ * EN v1.0 Address: 0x800313A8
+ * EN v1.0 Size: 1196b
  * EN v1.1 Address: 0x800314A0
  * EN v1.1 Size: 1196b
  * JP Address: TODO
@@ -852,8 +852,8 @@ void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double
  * --INFO--
  *
  * Function: ObjHits_ProjectPointToTaperedCapsuleXZ
- * EN v1.0 Address: 0x800318B0
- * EN v1.0 Size: 704b
+ * EN v1.0 Address: 0x80031854
+ * EN v1.0 Size: 732b
  * EN v1.1 Address: 0x8003194C
  * EN v1.1 Size: 732b
  * JP Address: TODO
@@ -927,8 +927,8 @@ float *ObjHits_ProjectPointToTaperedCapsuleXZ(double param_1,double param_2,doub
  * --INFO--
  *
  * Function: ObjHits_ProjectPointToTaperedCapsule3D
- * EN v1.0 Address: 0x80031B70
- * EN v1.0 Size: 732b
+ * EN v1.0 Address: 0x80031B30
+ * EN v1.0 Size: 764b
  * EN v1.1 Address: 0x80031C28
  * EN v1.1 Size: 764b
  * JP Address: TODO
@@ -1001,8 +1001,8 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(double param_1,double param_2,doub
  * --INFO--
  *
  * Function: ObjHits_CalcTaperedCapsuleNormal
- * EN v1.0 Address: 0x80031E4C
- * EN v1.0 Size: 540b
+ * EN v1.0 Address: 0x80031E2C
+ * EN v1.0 Size: 612b
  * EN v1.1 Address: 0x80031F24
  * EN v1.1 Size: 612b
  * JP Address: TODO
@@ -1082,8 +1082,8 @@ float *ObjHits_CalcTaperedCapsuleNormal(double param_1,double param_2,double par
  * --INFO--
  *
  * Function: ObjHits_TestTaperedCapsuleXZ
- * EN v1.0 Address: 0x80032068
- * EN v1.0 Size: 320b
+ * EN v1.0 Address: 0x80032090
+ * EN v1.0 Size: 276b
  * EN v1.1 Address: 0x80032188
  * EN v1.1 Size: 276b
  * JP Address: TODO
@@ -1131,8 +1131,8 @@ uint ObjHits_TestTaperedCapsuleXZ(double param_1,double param_2,double param_3,d
  * --INFO--
  *
  * Function: ObjHits_TestTaperedCapsule3D
- * EN v1.0 Address: 0x800321A8
- * EN v1.0 Size: 388b
+ * EN v1.0 Address: 0x800321A4
+ * EN v1.0 Size: 324b
  * EN v1.1 Address: 0x8003229C
  * EN v1.1 Size: 324b
  * JP Address: TODO
@@ -1189,8 +1189,8 @@ uint ObjHits_TestTaperedCapsule3D(double param_1,double param_2,double param_3,d
  * --INFO--
  *
  * Function: ObjHits_SortSweepEntries
- * EN v1.0 Address: 0x8003232C
- * EN v1.0 Size: 260b
+ * EN v1.0 Address: 0x800322E8
+ * EN v1.0 Size: 232b
  * EN v1.1 Address: 0x800323E0
  * EN v1.1 Size: 232b
  * JP Address: TODO
@@ -1249,7 +1249,7 @@ void ObjHits_SortSweepEntries(int sweepPtrs,int entryCount)
  * --INFO--
  *
  * Function: ObjHits_TickPriorityHitCooldowns
- * EN v1.0 Address: 0x80032430
+ * EN v1.0 Address: 0x800323D0
  * EN v1.0 Size: 64b
  * EN v1.1 Address: 0x800324C8
  * EN v1.1 Size: 64b
@@ -1286,8 +1286,8 @@ void ObjHits_TickPriorityHitCooldowns(void)
  * --INFO--
  *
  * Function: ObjHitbox_UpdateRotatedBounds
- * EN v1.0 Address: 0x80032470
- * EN v1.0 Size: 172b
+ * EN v1.0 Address: 0x80032410
+ * EN v1.0 Size: 432b
  * EN v1.1 Address: 0x80032508
  * EN v1.1 Size: 432b
  * JP Address: TODO
@@ -1358,8 +1358,8 @@ void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2)
  * --INFO--
  *
  * Function: ObjHits_CheckHitVolumes
- * EN v1.0 Address: 0x8003251C
- * EN v1.0 Size: 3644b
+ * EN v1.0 Address: 0x800325C0
+ * EN v1.0 Size: 3592b
  * EN v1.1 Address: 0x800326B8
  * EN v1.1 Size: 3592b
  * JP Address: TODO
@@ -1975,8 +1975,8 @@ LAB_80033418:
 /*
  * --INFO--
  *
- * Function: FUN_80033358
- * EN v1.0 Address: 0x80033358
+ * Function: fn_800333C8
+ * EN v1.0 Address: 0x800333C8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x800334C0
  * EN v1.1 Size: 4b
@@ -1985,7 +1985,7 @@ LAB_80033418:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80033358(void)
+void fn_800333C8(void)
 {
   return;
 }
@@ -1994,8 +1994,8 @@ void FUN_80033358(void)
  * --INFO--
  *
  * Function: ObjHits_CheckObjectHitVolumes
- * EN v1.0 Address: 0x8003335C
- * EN v1.0 Size: 1624b
+ * EN v1.0 Address: 0x800333CC
+ * EN v1.0 Size: 1392b
  * EN v1.1 Address: 0x800334C4
  * EN v1.1 Size: 1392b
  * JP Address: TODO
@@ -2074,7 +2074,7 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
       uVar8 = extraout_f1_01;
     }
     if ((cVar2 == '\0') && (*(short *)(iVar1 + 0x44) == 1)) {
-      FUN_80033358();
+      fn_800333C8();
     }
   }
   cVar2 = '\0';
@@ -2123,7 +2123,7 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
                                       *(uint *)(iVar4 + 0x4c) & 0xf,in_r10);
     }
     if ((cVar2 == '\0') && (*(short *)(iVar3 + 0x44) == 1)) {
-      FUN_80033358();
+      fn_800333C8();
     }
   }
   FUN_80286874();
@@ -2134,8 +2134,8 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
  * --INFO--
  *
  * Function: ObjHits_RegisterActiveHitVolumeObject
- * EN v1.0 Address: 0x800339B4
- * EN v1.0 Size: 72b
+ * EN v1.0 Address: 0x8003393C
+ * EN v1.0 Size: 88b
  * EN v1.1 Address: 0x80033A34
  * EN v1.1 Size: 88b
  * JP Address: TODO
@@ -2170,8 +2170,8 @@ void ObjHits_RegisterActiveHitVolumeObject(int obj)
  * --INFO--
  *
  * Function: ObjHits_ApplyPairResponse
- * EN v1.0 Address: 0x800339FC
- * EN v1.0 Size: 1496b
+ * EN v1.0 Address: 0x80033994
+ * EN v1.0 Size: 1520b
  * EN v1.1 Address: 0x80033A8C
  * EN v1.1 Size: 1520b
  * JP Address: TODO
@@ -2394,8 +2394,8 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
  * --INFO--
  *
  * Function: ObjHits_DetectObjectPair
- * EN v1.0 Address: 0x80033FD4
- * EN v1.0 Size: 1244b
+ * EN v1.0 Address: 0x80033F84
+ * EN v1.0 Size: 1232b
  * EN v1.1 Address: 0x8003407C
  * EN v1.1 Size: 1232b
  * JP Address: TODO
@@ -2566,8 +2566,8 @@ LAB_800344f4:
  * --INFO--
  *
  * Function: ObjHits_CheckSkeletonPair
- * EN v1.0 Address: 0x800344B0
- * EN v1.0 Size: 1120b
+ * EN v1.0 Address: 0x80034454
+ * EN v1.0 Size: 1116b
  * EN v1.1 Address: 0x8003454C
  * EN v1.1 Size: 1116b
  * JP Address: TODO
@@ -2731,8 +2731,8 @@ void ObjHits_CheckSkeletonPair(undefined4 param_1,undefined4 param_2,int *param_
  * --INFO--
  *
  * Function: ObjHits_CheckTrackContact
- * EN v1.0 Address: 0x80034934
- * EN v1.0 Size: 1088b
+ * EN v1.0 Address: 0x800348B0
+ * EN v1.0 Size: 1068b
  * EN v1.1 Address: 0x800349A8
  * EN v1.1 Size: 1068b
  * JP Address: TODO
@@ -2915,8 +2915,8 @@ void ObjHits_CheckTrackContact(void)
  * --INFO--
  *
  * Function: ObjHits_Update
- * EN v1.0 Address: 0x80034D74
- * EN v1.0 Size: 2112b
+ * EN v1.0 Address: 0x80034CDC
+ * EN v1.0 Size: 1736b
  * EN v1.1 Address: 0x80034DD4
  * EN v1.1 Size: 1736b
  * JP Address: TODO
@@ -3136,7 +3136,3 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
     slotIndex++;
   } while (true);
 }
-
-
-/* Trivial 4b 0-arg blr leaves. */
-void fn_800333C8(void) {}
