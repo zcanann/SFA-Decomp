@@ -1250,13 +1250,13 @@ int wmsun_func08(void) { return 0x0; }
 void wmsun_hitDetect(void) {}
 void wmsun_release(void) {}
 void wmsun_initialise(void) {}
-int fn_801F7C50(void) { return 0x2; }
-int fn_801F7C58(void) { return 0x0; }
-void fn_801F7C60(void) {}
-void fn_801F7CEC(void) {}
-void fn_801F7CF0(void) {}
-void fn_801F7D2C(void) {}
-void fn_801F7D30(void) {}
+int wmspiritset_getExtraSize(void) { return 0x2; }
+int wmspiritset_func08(void) { return 0x0; }
+void wmspiritset_free(void) {}
+void wmspiritset_hitDetect(void) {}
+void wmspiritset_update(void) {}
+void wmspiritset_release(void) {}
+void wmspiritset_initialise(void) {}
 int fn_801F7D34(void) { return 0x1c; }
 int fn_801F7D3C(void) { return 0x0; }
 void fn_801F7D44(void) {}
