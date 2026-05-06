@@ -55,7 +55,7 @@ extern f32 lbl_803E6AF8;
 /*
  * --INFO--
  *
- * Function: FUN_801f3c7c
+ * Function: wmworm_update
  * EN v1.0 Address: 0x801F3C7C
  * EN v1.0 Size: 1212b
  * EN v1.1 Address: 0x801F3E04
@@ -65,7 +65,7 @@ extern f32 lbl_803E6AF8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801f3c7c(void)
+void wmworm_update(void)
 {
   int iVar1;
   ushort uVar2;
@@ -344,8 +344,8 @@ void FUN_801f416c(short *param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801F3F10(void) {}
-void fn_801F3F14(void) {}
+void wmworm_release(void) {}
+void wmworm_initialise(void) {}
 void fn_801F44B0(void) {}
 
 /* 8b "li r3, N; blr" returners. */

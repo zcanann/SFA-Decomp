@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801f3c7c(void);
+void wmworm_update(void);
 void FUN_801f4138(void);
 void FUN_801f416c(short *param_1);
 
