@@ -5,7 +5,7 @@
 #include "TRK_MINNOW_DOLPHIN/ppc/Generic/flush_cache.h"
 #include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
 
-static u32 lc_base;
+static u32 lc_base[2];
 extern u32 _db_stack_addr;
 
 static u32 TRK_ISR_OFFSETS[16] = { PPC_SystemReset,
@@ -92,7 +92,7 @@ void EnableMetroTRKInterrupts(void) { EnableEXI2Interrupts(); }
 
 u32 TRKTargetTranslate(u32 param_0)
 {
-	if (param_0 >= lc_base && param_0 < lc_base + 0x4000) {
+	if (param_0 >= lc_base[0] && param_0 < lc_base[0] + 0x4000) {
 		if ((gTRKCPUState.Extended1.DBAT3U & 3) != 0) {
 			return param_0;
 		}
@@ -103,14 +103,14 @@ u32 TRKTargetTranslate(u32 param_0)
 
 extern u8 gTRKInterruptVectorTable[];
 
-void TRK_copy_vector(u32 offset)
+inline void TRK_copy_vector(u32 offset)
 {
 	void* destPtr = (void*)TRKTargetTranslate(offset);
 	TRK_memcpy(destPtr, gTRKInterruptVectorTable + offset, 0x100);
 	TRK_flush_cache(destPtr, 0x100);
 }
 
-void __TRK_copy_vectors(void)
+inline void __TRK_copy_vectors(void)
 {
 	int i;
 	u32 mask;
@@ -128,6 +128,6 @@ DSError TRKInitializeTarget()
 {
 	gTRKState.isStopped     = TRUE;
 	gTRKState.msr           = __TRK_get_MSR();
-	lc_base   = 0xE0000000;
+	lc_base[0] = 0xE0000000;
 	return DS_NoError;
 }
