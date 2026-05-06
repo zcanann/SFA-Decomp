@@ -7,6 +7,16 @@
 // Current EN descriptor:
 // - gDrBarrelGrObjDescriptor @ 0x8032AE88
 //
+// Runtime notes:
+// - init defaults object-def byte +0x19 to 10 and timer +0x1A to 100, then seeds
+//   extra state 5, previous state -3, and the held-object pointer at extra +8.
+// - update searches object group 0x19 for a nearby barrel/object, checks line of sight,
+//   and moves through states that attach, carry, release, or reset the held object.
+// - while carrying, render keeps the held object at the cached carry position and draws it
+//   unless the state machine is in state 4.
+// - free releases any still-held object through the gasvent/small-object helper at 0x801A0B90
+//   and clears extra flag bit 7.
+//
 // Descriptor slots:
 // - 0: drbarrelgr_initialise (0x80223000)
 // - 1: drbarrelgr_release (0x80222FFC)
