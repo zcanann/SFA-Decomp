@@ -1309,16 +1309,16 @@ void fn_801FACB0(void) {}
 void fn_801FAFE4(void) {}
 void fn_801FAFE8(void) {}
 int fn_801FAFEC(void) { return 0x0; }
-int fn_801FAFF4(void) { return 0x8; }
-int fn_801FAFFC(void) { return 0x0; }
-void fn_801FB034(void) {}
-void fn_801FB038(void) {}
-void fn_801FB218(void) {}
-void fn_801FB21C(void) {}
-int fn_801FB728(void) { return 0x20; }
-int fn_801FB730(void) { return 0x0; }
-void fn_801FB9A4(void) {}
-void fn_801FB9A8(void) {}
+int vfpladders_getExtraSize(void) { return 0x8; }
+int vfpladders_func08(void) { return 0x0; }
+void vfpladders_render(void) {}
+void vfpladders_hitDetect(void) {}
+void vfpladders_release(void) {}
+void vfpladders_initialise(void) {}
+int vfplift_getExtraSize(void) { return 0x20; }
+int vfplift_func08(void) { return 0x0; }
+void vfplift_release(void) {}
+void vfplift_initialise(void) {}
 int fn_801FB9AC(void) { return 0x2; }
 int fn_801FB9B4(void) { return 0x0; }
 void fn_801FB9EC(void) {}
