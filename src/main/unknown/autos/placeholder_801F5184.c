@@ -1274,11 +1274,11 @@ void wmnewcrystal_hitDetect(void) {}
 void wmnewcrystal_update(void) {}
 void wmnewcrystal_release(void) {}
 void wmnewcrystal_initialise(void) {}
-int fn_801F993C(void) { return 0x1c; }
-int fn_801F9944(void) { return 0x0; }
-void fn_801F9990(void) {}
-void fn_801F9994(void) {}
-void fn_801F9D68(void) {}
+int vfplevelcontrol_getExtraSize(void) { return 0x1c; }
+int vfplevelcontrol_func08(void) { return 0x0; }
+void vfplevelcontrol_render(void) {}
+void vfplevelcontrol_hitDetect(void) {}
+void vfplevelcontrol_release(void) {}
 int fn_801F9D78(void) { return 0xa; }
 int fn_801F9D80(void) { return 0x0; }
 void fn_801F9D88(void) {}
