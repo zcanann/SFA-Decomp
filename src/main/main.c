@@ -1208,23 +1208,23 @@ void fn_801FDA20(void) {}
 void fn_801FDA9C(void) {}
 void fn_801FDBB4(void) {}
 void fn_801FDBB8(void) {}
-void fn_801FDC20(void) {}
-void fn_801FDC24(void) {}
-void fn_801FDEFC(void) {}
-void fn_801FDF00(void) {}
-void fn_801FDF04(void) {}
-void fn_801FE110(void) {}
-void fn_801FE114(void) {}
+void vfplavastar_render(void) {}
+void vfplavastar_hitDetect(void) {}
+void vfpspellplace_free(void) {}
+void vfpspellplace_render(void) {}
+void vfpspellplace_hitDetect(void) {}
+void vfpspellplace_release(void) {}
+void vfpspellplace_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801FD4E4(void) { return 0x8; }
+int vfpflamepoint_getExtraSize(void) { return 0x8; }
 int fn_801FDA08(void) { return 0x1; }
 int fn_801FDA10(void) { return 0x18; }
 int fn_801FDA18(void) { return 0x0; }
-int fn_801FDBBC(void) { return 0x14; }
-int fn_801FDBC4(void) { return 0x0; }
-int fn_801FDEEC(void) { return 0x6; }
-int fn_801FDEF4(void) { return 0x0; }
+int vfplavastar_getExtraSize(void) { return 0x14; }
+int vfplavastar_func08(void) { return 0x0; }
+int vfpspellplace_getExtraSize(void) { return 0x6; }
+int vfpspellplace_func08(void) { return 0x0; }
 int fn_801FE9D8(void) { return 0x124; }
 int fn_801FE9E0(void) { return 0x8; }
 
@@ -1244,6 +1244,6 @@ extern u32 lbl_803DDCD8;
 extern void Resource_Release(u32);
 #pragma scheduling off
 #pragma peephole off
-void fn_801FDE8C(void) { Resource_Release(lbl_803DDCD8); lbl_803DDCD8 = 0; }
+void vfplavastar_release(void) { Resource_Release(lbl_803DDCD8); lbl_803DDCD8 = 0; }
 #pragma peephole reset
 #pragma scheduling reset
