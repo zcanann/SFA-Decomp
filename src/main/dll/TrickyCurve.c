@@ -577,6 +577,6 @@ void sfxplayer_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int TrickyCurve_getExtraSize(void) { return 0x14; }
-int fn_80207574(void) { return 0x0; }
+int TrickyCurve_func08(void) { return 0x0; }
 int sfxplayer_getExtraSize(void) { return 0xa; }
-int fn_80207C2C(void) { return 0x0; }
+int sfxplayer_func08(void) { return 0x0; }

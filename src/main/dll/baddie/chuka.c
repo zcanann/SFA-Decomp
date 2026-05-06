@@ -94,7 +94,7 @@ void dfpfloorbar_free(int *obj)
 int fn_80206474(void) { return 0; }
 
 /* EN v1.0 0x80206484  size: 8b   trivial 0-returner. */
-int fn_80206484(void) { return 0; }
+int dfpfloorbar_func08(void) { return 0; }
 
 /*
  * --INFO--

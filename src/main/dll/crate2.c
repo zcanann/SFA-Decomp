@@ -152,9 +152,9 @@ void dfperchwitch_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int dfpstatue1_getExtraSize(void) { return 0xa; }
-int fn_802083B0(void) { return 0x0; }
+int dfpstatue1_func08(void) { return 0x0; }
 int dfperchwitch_getExtraSize(void) { return 0x0; }
-int fn_80208494(void) { return 0x0; }
+int dfperchwitch_func08(void) { return 0x0; }
 
 /* plain forwarder.  Logic-only (~55%): existing dfpstatue1_updateState
  * signature has 8 args, but expected `bl` calls it with no setup. */
