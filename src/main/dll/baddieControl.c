@@ -3076,36 +3076,36 @@ undefined4 FUN_801127c4(int param_1,int param_2,char param_3)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_8010E514(void) {}
-void fn_8010E518(void) {}
-void fn_8010F2F0(void) {}
-void fn_8010F2F4(void) {}
+void CameraModeNpcSpeak_release(void) {}
+void CameraModeNpcSpeak_initialise(void) {}
+void CameraModeWorldMap_release(void) {}
+void CameraModeWorldMap_initialise(void) {}
 void fn_8010F2F8(void) {}
 void fn_8010F538(void) {}
 void fn_8010F53C(void) {}
-void fn_8010FA4C(void) {}
-void fn_8010FA50(void) {}
+void CameraModeCrawl_release(void) {}
+void CameraModeCrawl_initialise(void) {}
 void fn_8010FA54(void) {}
-void fn_8010FC6C(void) {}
-void fn_8010FC70(void) {}
+void CameraModeCannon_release(void) {}
+void CameraModeCannon_initialise(void) {}
 void fn_8010FC74(void) {}
 void fn_8010FC78(void) {}
-void fn_801101DC(void) {}
-void fn_801101E0(void) {}
+void CameraModeForceBehind_release(void) {}
+void CameraModeForceBehind_initialise(void) {}
 void fn_801101E4(void) {}
-void fn_801106AC(void) {}
-void fn_801106B0(void) {}
+void CameraModeCloudRunner_release(void) {}
+void CameraModeCloudRunner_initialise(void) {}
 void fn_801106B4(void) {}
 void fn_80110C78(void) {}
 void fn_80110C7C(void) {}
 void fn_80110C80(void) {}
-void fn_80110E28(void) {}
-void fn_80110E2C(void) {}
+void CameraModePerv_release(void) {}
+void CameraModePerv_initialise(void) {}
 void fn_80110EC0(void) {}
-void fn_801115DC(void) {}
-void fn_801115E0(void) {}
-void fn_80111D0C(void) {}
-void fn_80111D10(void) {}
+void CameraModeArwing_release(void) {}
+void CameraModeArwing_initialise(void) {}
+void CameraModeTitle_release(void) {}
+void CameraModeTitle_initialise(void) {}
 
 /* misc 8b leaves */
 extern f32 lbl_803DB9D8;
@@ -3125,9 +3125,9 @@ extern u32 lbl_803DD5C8;
 void fn_8010E588(void) { fn_80023800(lbl_803DD588); lbl_803DD588 = 0; }
 void fn_8010F2FC(void) { fn_80023800(lbl_803DD590); lbl_803DD590 = 0; }
 void fn_8010F720(void) { fn_80023800(lbl_803DD598); lbl_803DD598 = 0; }
-void fn_8010FA58(void) { fn_80023800(lbl_803DD5A0); lbl_803DD5A0 = 0; }
+void CameraModeCannon_free(void) { fn_80023800(lbl_803DD5A0); lbl_803DD5A0 = 0; }
 void fn_801101E8(void) { fn_80023800(lbl_803DD5B8); lbl_803DD5B8 = 0; }
 void fn_801106B8(void) { fn_80023800(lbl_803DD5C0); lbl_803DD5C0 = 0; }
-void fn_80110C84(void) { fn_80023800(lbl_803DD5C8); lbl_803DD5C8 = 0; }
+void CameraModePerv_free(void) { fn_80023800(lbl_803DD5C8); lbl_803DD5C8 = 0; }
 #pragma peephole reset
 #pragma scheduling reset
