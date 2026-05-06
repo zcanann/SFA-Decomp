@@ -11,6 +11,9 @@
  *   direct current EN xref has been recovered yet.
  * - The best current evidence is an indirect neighborhood spanning
  *   0x8010ACF0-0x80130618 across the CAM/front-end corridor.
+ * - Live EN names now anchor the movie side of that corridor:
+ *   n_attractmode_releaseMovieBuffers @ 0x8011611C
+ *   n_attractmode_prepareMovie @ 0x80116224
  * - Nearby supporting strings include:
  *   /savegame/save%d.bin
  *   PICMENU: tex overflow
@@ -24,6 +27,7 @@
  */
 
 /*
- * No function names were promoted here yet.
- * Revisit this file once a tighter EN window or direct xref is recovered.
+ * Keep this as a non-built title/movie packet until a tighter source window
+ * proves whether the two live movie helpers are the whole file or one island in
+ * a larger front-end source.
  */
