@@ -1649,21 +1649,21 @@ void SB_SeqDoor_free(void) {}
 void SB_SeqDoor_hitDetect(void) {}
 void SB_SeqDoor_release(void) {}
 void SB_SeqDoor_initialise(void) {}
-void fn_801E5278(void) {}
-void fn_801E55B0(void) {}
-void fn_801E55B4(void) {}
-void fn_801E569C(void) {}
-void fn_801E59A4(void) {}
-void fn_801E59A8(void) {}
-void fn_801E5DD4(void) {}
-void fn_801E5E08(void) {}
-void fn_801E5F6C(void) {}
-void fn_801E5F70(void) {}
-void fn_801E5F84(void) {}
-void fn_801E5FF8(void) {}
-void fn_801E6044(void) {}
-void fn_801E6048(void) {}
-void fn_801E604C(void) {}
+void SB_MiniFire_hitDetect(void) {}
+void SB_MiniFire_release(void) {}
+void SB_MiniFire_initialise(void) {}
+void ShipBattle_hitDetect(void) {}
+void ShipBattle_release(void) {}
+void ShipBattle_initialise(void) {}
+void Flag_free(void) {}
+void Flag_hitDetect(void) {}
+void Flag_release(void) {}
+void Flag_initialise(void) {}
+void SB_ShipGunBroke_free(void) {}
+void SB_ShipGunBroke_hitDetect(void) {}
+void SB_ShipGunBroke_init(void) {}
+void SB_ShipGunBroke_release(void) {}
+void SB_ShipGunBroke_initialise(void) {}
 void shop_hitDetect(void) {}
 void shop_release(void) {}
 void shop_initialise(void) {}
@@ -1677,14 +1677,14 @@ int SB_CageKyte_getExtraSize(void) { return 0x2; }
 int fn_801E4F58(void) { return 0x1; }
 int SB_SeqDoor_getExtraSize(void) { return 0x0; }
 int fn_801E508C(void) { return 0x0; }
-int fn_801E519C(void) { return 0x2; }
+int SB_MiniFire_getExtraSize(void) { return 0x2; }
 int fn_801E51A4(void) { return 0x0; }
-int fn_801E55B8(void) { return 0x140; }
+int ShipBattle_getExtraSize(void) { return 0x140; }
 int fn_801E55C0(void) { return 0xb; }
-int fn_801E59AC(void) { return 0x1; }
-int fn_801E5DC4(void) { return 0x0; }
+int Lamp_getExtraSize(void) { return 0x1; }
+int Flag_getExtraSize(void) { return 0x0; }
 int fn_801E5DCC(void) { return 0x0; }
-int fn_801E5F74(void) { return 0x1; }
+int SB_ShipGunBroke_getExtraSize(void) { return 0x1; }
 int fn_801E5F7C(void) { return 0x0; }
 int shop_getExtraSize(void) { return 0x5; }
 int shop_func08(void) { return 0x0; }
@@ -1705,7 +1705,7 @@ extern f32 lbl_803E59C8;
 #pragma peephole off
 void SB_CloudBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E58E8); }
 void SB_SeqDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5920); }
-void fn_801E59FC(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5978); }
-void fn_801E5DD8(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E59A8); }
+void Lamp_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5978); }
+void Flag_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E59A8); }
 void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E59C8); }
 #pragma peephole reset
