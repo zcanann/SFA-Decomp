@@ -1321,12 +1321,12 @@ void FUN_801a8d70(void)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801A6C20(void) {}
-void fn_801A6C24(void) {}
-void fn_801A6D6C(void) {}
-void fn_801A6DA0(void) {}
-void fn_801A6F44(void) {}
-void fn_801A6F48(void) {}
+void MMP_levelcontrol_release(void) {}
+void MMP_levelcontrol_initialise(void) {}
+void MoonSeedBush_free(void) {}
+void MoonSeedBush_hitDetect(void) {}
+void MoonSeedBush_release(void) {}
+void MoonSeedBush_initialise(void) {}
 void mmp_asteroid_re_free(void) {}
 void mmp_asteroid_re_hitDetect(void) {}
 void mmp_asteroid_re_release(void) {}
@@ -1344,7 +1344,7 @@ void mmp_gyservent_release(void) {}
 void mmp_gyservent_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801A6D5C(void) { return 0x2; }
+int MoonSeedBush_getExtraSize(void) { return 0x2; }
 int fn_801A6D64(void) { return 0x0; }
 int mmp_asteroid_re_getExtraSize(void) { return 0x1c; }
 int mmp_asteroid_re_func08(void) { return 0x0; }
@@ -1360,6 +1360,6 @@ extern f32 lbl_803E44D0;
 extern void fn_8003B8F4(f32);
 extern f32 lbl_803E44F8;
 #pragma peephole off
-void fn_801A6D70(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E44D0); }
+void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E44D0); }
 void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E44F8); }
 #pragma peephole reset
