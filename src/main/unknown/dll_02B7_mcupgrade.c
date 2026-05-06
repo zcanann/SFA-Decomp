@@ -10,3 +10,10 @@
 // Descriptor slots:
 // - 3: mcupgrade_init (0x80239044)
 // - 4: mcupgrade_update (0x80238FA4)
+
+// Runtime shape:
+// - update waits for the completion switch at object-def +0x1E; until then it
+//   polls pickup/use interaction and fires the switch plus level-controller
+//   callback when collected.
+// - once the switch is already set, update hides the object through object flag
+//   bit 0x08.
