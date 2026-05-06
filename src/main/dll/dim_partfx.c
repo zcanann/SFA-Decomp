@@ -2333,28 +2333,28 @@ void FUN_800c9c68(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_800C9134(void) {}
-void fn_800C9138(void) {}
-void fn_800C913C(void) {}
+void Effect16_release(void) {}
+void Effect16_initialise(void) {}
 void fn_800CA3BC(void) {}
 void fn_800CA3C0(void) {}
-void fn_800CA3C4(void) {}
-void fn_800CA3C8(void) {}
+void Effect15_release(void) {}
+void Effect15_initialise(void) {}
 void fn_800CA920(void) {}
 void fn_800CA924(void) {}
-void fn_800CA928(void) {}
-void fn_800CA92C(void) {}
+void Effect13_release(void) {}
+void Effect13_initialise(void) {}
 void fn_800CB684(void) {}
-void fn_800CB688(void) {}
-void fn_800CB68C(void) {}
+void Effect17_release(void) {}
+void Effect17_initialise(void) {}
 void fn_800CCF50(void) {}
-void fn_800CCF54(void) {}
-void fn_800CCF58(void) {}
+void Effect18_release(void) {}
+void Effect18_initialise(void) {}
 void fn_800CD424(void) {}
-void fn_800CD428(void) {}
-void fn_800CD42C(void) {}
+void Effect19_release(void) {}
+void Effect19_initialise(void) {}
 void fn_800D5524(void) {}
-void fn_800D5528(void) {}
-void fn_800D552C(void) {}
+void Effect20_release(void) {}
+void Effect20_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int fn_800D6108(void) { return 0x1; }
