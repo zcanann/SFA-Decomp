@@ -1,47 +1,108 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_80283FA0.h"
+#include "dolphin/os.h"
 
-extern undefined4 FUN_8027f2ac();
-extern undefined4 FUN_8027f2b0();
-extern uint countLeadingZeros();
+extern void ARQPostRequest(void *req, u32 owner, u32 type, u32 prio, u32 src, u32 dst, u32 size, void (*cb)(void *));
 
-extern undefined4 DAT_802c2fa0;
-extern undefined4 DAT_803cce94;
-extern undefined4 DAT_803defc4;
-extern f32 FLOAT_803e8578;
-extern f32 FLOAT_803e857c;
+extern u8 lbl_803D3F60[];
+extern u8 lbl_803D41E4[];
 
 /*
- * --INFO--
+ * ARQ DMA completion callback dispatcher: walks the 16-slot ring
+ * queue at lbl_803D3F60 (or lbl_803D41E4 for the secondary pool)
+ * and invokes any pending entry's callback whose request handle
+ * matches `req`. Decrements the count when done.
  *
- * Function: FUN_80283fa0
  * EN v1.0 Address: 0x80283FA0
- * EN v1.0 Size: 4b
+ * EN v1.0 Size: 4b (stub)
  * EN v1.1 Address: 0x80283FA0
- * EN v1.1 Size: 720b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.1 Size: 152b
  */
-void FUN_80283fa0(double param_1,double param_2,double param_3,int param_4,char param_5,uint param_6
-                 ,uint param_7)
+void fn_80283FA0(void *req)
 {
+    u8 *base;
+    u8 *slot;
+    int i;
+
+    if (*(u32 *)((u8 *)req + 0xc) == 1) {
+        base = lbl_803D41E4;
+    } else {
+        base = lbl_803D3F60;
+    }
+    slot = base;
+    for (i = 0; i < 0x10; i++) {
+        if (req == slot) {
+            void (*cb)(void *) = *(void (**)(void *))(slot + 0x20);
+            if (cb != NULL) {
+                cb(*(void **)(slot + 0x24));
+            }
+        }
+        slot += 0x28;
+    }
+    base[0x281] = base[0x281] - 1;
 }
 
 /*
- * --INFO--
+ * Submit an ARQ DMA request: locks interrupts, finds the next free
+ * slot in the 16-entry ring, fills in the request fields, calls
+ * ARQPostRequest, then bumps the head/count and restores interrupts.
+ * If the queue is full, just unlocks and retries (busy-loop).
  *
- * Function: FUN_80283fa4
- * EN v1.0 Address: 0x80283FA4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80284270
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Address: 0x8028401C
+ * EN v1.0 Size: 4b (stub)
+ * EN v1.1 Address: 0x80284038
+ * EN v1.1 Size: 464b
  */
-void FUN_80283fa4(int param_1)
+void fn_80284038(u32 src, u32 dst, u32 size, u32 type, u32 prio, u32 owner, u32 mode)
 {
+    u8 *base;
+    u8 *slot;
+    BOOL irq;
+
+    if (mode != 0) {
+        base = lbl_803D41E4;
+    } else {
+        base = lbl_803D3F60;
+    }
+
+    while (1) {
+        irq = OSDisableInterrupts();
+        if (base[0x281] < 0x10) {
+            slot = base + base[0x280] * 0x28;
+            *(u32 *)(slot + 0x4) = 0x2a;
+            *(u32 *)(slot + 0x8) = 0;
+            *(u32 *)(slot + 0xc) = (mode != 0) ? 1 : 0;
+            *(u32 *)(slot + 0x10) = src;
+            *(u32 *)(slot + 0x14) = dst;
+            *(u32 *)(slot + 0x18) = size;
+            *(u32 *)(slot + 0x1c) = (u32)fn_80283FA0;
+            *(u32 *)(slot + 0x20) = type;
+            *(u32 *)(slot + 0x24) = prio;
+            ARQPostRequest((void *)(base + base[0x280] * 0x28),
+                           *(u32 *)(base + base[0x280] * 0x28 + 0x4),
+                           *(u32 *)(base + base[0x280] * 0x28 + 0x8),
+                           *(u32 *)(base + base[0x280] * 0x28 + 0xc),
+                           *(u32 *)(base + base[0x280] * 0x28 + 0x10),
+                           *(u32 *)(base + base[0x280] * 0x28 + 0x14),
+                           *(u32 *)(base + base[0x280] * 0x28 + 0x18),
+                           *(void (**)(void *))(base + base[0x280] * 0x28 + 0x1c));
+            base[0x281] += 1;
+            base[0x280] = (base[0x280] + 1) & 0xf;
+            OSRestoreInterrupts(irq);
+            return;
+        }
+        OSRestoreInterrupts(irq);
+    }
+}
+
+/*
+ * Wait until ARQ count drops to zero.
+ *
+ * EN v1.1 Address: 0x8028420C
+ * EN v1.1 Size: 20b
+ */
+void fn_8028420C(void)
+{
+    while (lbl_803D3F60[0x281] != 0) {
+    }
 }

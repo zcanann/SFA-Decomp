@@ -1,100 +1,51 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8027B038.h"
 
-extern undefined4 FUN_8027acb8();
-extern uint FUN_80286718();
-
-extern undefined4 DAT_80330278;
-extern undefined4 DAT_803303fc;
-extern f64 DOUBLE_803e84d8;
-extern f64 DOUBLE_803e84e8;
-extern f32 FLOAT_803e84e0;
+extern u8 lbl_803CB290[];
 
 /*
- * --INFO--
+ * Sample-completion handler: if the packed (slotIdx, sampleId)
+ * still matches the active sample, fire the global "done" callback
+ * (state->[0x94c]) with mode=2, then clear the entry's mode and free
+ * the slot back to the index pool.
  *
- * Function: FUN_8027afc0
- * EN v1.0 Address: 0x8027AFC0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8027B038
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Address: 0x8027ADC0
+ * EN v1.0 Size: 4b (stub)
+ * EN v1.1 Address: 0x8027AFC0
+ * EN v1.1 Size: 168b
  */
-void FUN_8027afc0(char *param_1)
+void fn_8027AFC0(u32 packed)
 {
+    u8 *state;
+    u8 *slots;
+    u8 vid;
+    u8 *entry;
+
+    if (packed == 0xffffffffU) {
+        return;
+    }
+    state = lbl_803CB290;
+    slots = state + 0x908;
+    vid = slots[(u8)packed];
+    if (vid == 0xff) {
+        return;
+    }
+    entry = state + vid * 0x24;
+    if (*(u16 *)(entry + 0x1a) != ((packed >> 8) & 0xffff)) {
+        return;
+    }
+    if (*(u32 *)(state + 0x94c) != 0) {
+        ((void (*)(int, void *))(*(u32 *)(state + 0x94c)))(2, entry + 0x18);
+    }
+    *(u8 *)(entry + 0x8) = 0;
+    slots[*(u8 *)(entry + 0xb)] = 0xff;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8027afc4
- * EN v1.0 Address: 0x8027AFC4
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8027B060
- * EN v1.1 Size: 340b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_8027afc4(char *param_1,uint param_2)
+/* fn_8027B06C is the voice-time elapsed-tick updater — large and
+ * shared with placeholder_8027B41C; left as a stub here so the
+ * caller (also a stub) links. */
+void fn_8027B06C(void *entry, u32 elapsed)
 {
-    return 0;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_8027afcc
- * EN v1.0 Address: 0x8027AFCC
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8027B1B4
- * EN v1.1 Size: 68b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_8027afcc(byte *param_1)
-{
-    return 0;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_8027afd4
- * EN v1.0 Address: 0x8027AFD4
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8027B1F8
- * EN v1.1 Size: 416b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_8027afd4(char *param_1,undefined2 *param_2,short *param_3)
-{
-    return 0;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_8027afdc
- * EN v1.0 Address: 0x8027AFDC
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8027B398
- * EN v1.1 Size: 132b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_8027afdc(char *param_1,undefined2 *param_2,short *param_3)
-{
-    return 0;
+    (void)entry;
+    (void)elapsed;
 }
