@@ -161,19 +161,19 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
   ObjAnimEventTable *eventTable;
   ObjAnimBank *bank;
   ObjAnimState *state;
-  int iVar1;
-  int iVar2;
-  char cVar3;
+  int previousEventFrame;
+  int currentEventFrame;
+  char triggerSlot;
   float fVar4;
   float fVar5;
   float fVar6;
-  undefined4 uVar7;
-  int iVar9;
+  undefined4 moveWrappedOrEnded;
+  int eventByteOffset;
   int eventCountdown;
   int *piVar10;
   int iVar11;
-  int iVar12;
-  byte bVar13;
+  int eventIndex;
+  byte eventScanFlags;
   u16 eventWord;
   u8 eventId;
   u16 eventFrame;
@@ -181,11 +181,11 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
 
   objAnim = (ObjAnimComponent *)objAnimArg;
   events = (ObjAnimEventList *)eventsArg;
-  uVar7 = 0;
+  moveWrappedOrEnded = 0;
   bank = ObjAnim_GetActiveBank(objAnim);
   piVar10 = (int *)bank;
   if (bank->animDef->moveCount == 0) {
-    uVar7 = 0;
+    moveWrappedOrEnded = 0;
   }
   else {
     state = bank->activeState;
@@ -252,7 +252,7 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
             objAnim->activeMoveProgress = objAnim->activeMoveProgress + fVar5;
           }
         }
-        uVar7 = 1;
+        moveWrappedOrEnded = 1;
       }
     }
     else {
@@ -264,54 +264,60 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
           objAnim->activeMoveProgress = objAnim->activeMoveProgress - fVar5;
         }
       }
-      uVar7 = 1;
+      moveWrappedOrEnded = 1;
     }
     if ((events != (ObjAnimEventList *)0) && (events->resetFlag = 0, objAnim->eventTable != 0)) {
       eventTable = objAnim->eventTable;
       events->triggerCount = 0;
       iVar11 = eventTable->byteCount >> 1;
       if (iVar11 != 0) {
-        iVar1 = (int)(lbl_803DE8F8 * fVar4);
-        iVar2 = (int)(lbl_803DE8F8 * objAnim->activeMoveProgress);
-        bVar13 = iVar2 < iVar1;
+        previousEventFrame = (int)(lbl_803DE8F8 * fVar4);
+        currentEventFrame = (int)(lbl_803DE8F8 * objAnim->activeMoveProgress);
+        eventScanFlags = currentEventFrame < previousEventFrame;
         if (moveStepScale * deltaTime < lbl_803DE8F0) {
-          bVar13 = bVar13 | 2;
+          eventScanFlags = eventScanFlags | 2;
         }
-        iVar12 = 0;
-        iVar9 = 0;
-        while ((iVar12 < iVar11 && (events->triggerCount < OBJANIM_EVENT_TRIGGER_CAPACITY))) {
-          eventWord = *(s16 *)((u8 *)eventTable->entries + iVar9);
+        eventIndex = 0;
+        eventByteOffset = 0;
+        while ((eventIndex < iVar11 && (events->triggerCount < OBJANIM_EVENT_TRIGGER_CAPACITY))) {
+          eventWord = *(s16 *)((u8 *)eventTable->entries + eventByteOffset);
           eventFrame = eventWord & OBJANIM_EVENT_FRAME_MASK;
           eventId = eventWord >> OBJANIM_EVENT_ID_SHIFT & OBJANIM_EVENT_ID_MASK;
           if (eventId != OBJANIM_EVENT_ID_NONE) {
-            if (((bVar13 == 0) && (iVar1 <= (int)eventFrame)) && ((int)eventFrame < iVar2)) {
-              cVar3 = events->triggerCount;
-              events->triggerCount = cVar3 + '\x01';
-              events->triggeredIds[(u8)cVar3] = eventId;
+            if (((eventScanFlags == 0) && (previousEventFrame <= (int)eventFrame)) &&
+               ((int)eventFrame < currentEventFrame)) {
+              triggerSlot = events->triggerCount;
+              events->triggerCount = triggerSlot + '\x01';
+              events->triggeredIds[(u8)triggerSlot] = eventId;
             }
-            if ((bVar13 == 1) && ((iVar1 <= (int)eventFrame || ((int)eventFrame < iVar2)))) {
-              cVar3 = events->triggerCount;
-              events->triggerCount = cVar3 + '\x01';
-              events->triggeredIds[(u8)cVar3] = eventId;
+            if ((eventScanFlags == 1) &&
+               ((previousEventFrame <= (int)eventFrame ||
+                ((int)eventFrame < currentEventFrame)))) {
+              triggerSlot = events->triggerCount;
+              events->triggerCount = triggerSlot + '\x01';
+              events->triggeredIds[(u8)triggerSlot] = eventId;
             }
-            if (((bVar13 == 3) && (iVar2 < (int)eventFrame)) && ((int)eventFrame <= iVar1)) {
-              cVar3 = events->triggerCount;
-              events->triggerCount = cVar3 + '\x01';
-              events->triggeredIds[(u8)cVar3] = eventId;
+            if (((eventScanFlags == 3) && (currentEventFrame < (int)eventFrame)) &&
+               ((int)eventFrame <= previousEventFrame)) {
+              triggerSlot = events->triggerCount;
+              events->triggerCount = triggerSlot + '\x01';
+              events->triggeredIds[(u8)triggerSlot] = eventId;
             }
-            if ((bVar13 == 2) && ((iVar2 < (int)eventFrame || ((int)eventFrame <= iVar1)))) {
-              cVar3 = events->triggerCount;
-              events->triggerCount = cVar3 + '\x01';
-              events->triggeredIds[(u8)cVar3] = eventId;
+            if ((eventScanFlags == 2) &&
+               ((currentEventFrame < (int)eventFrame ||
+                ((int)eventFrame <= previousEventFrame)))) {
+              triggerSlot = events->triggerCount;
+              events->triggerCount = triggerSlot + '\x01';
+              events->triggeredIds[(u8)triggerSlot] = eventId;
             }
           }
-          iVar9 = iVar9 + 2;
-          iVar12 = iVar12 + 1;
+          eventByteOffset = eventByteOffset + 2;
+          eventIndex = eventIndex + 1;
         }
       }
     }
   }
-  return uVar7;
+  return moveWrappedOrEnded;
 }
 #pragma peephole reset
 #pragma scheduling reset
