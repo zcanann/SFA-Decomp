@@ -7,6 +7,12 @@
 // Current EN descriptor:
 // - gDrEnergyDiscObjDescriptor @ 0x8032ACC8
 //
+// Runtime notes:
+// - object-def +0x20 is the activation game bit; when set, update latches extra flag bit 7,
+//   plays SFX 0x30C, writes 0x100 to the first hit target record, and spins hit target yaw.
+// - object-def +0x1E gates the idle/move animation reset through ObjAnim_SetCurrentMove.
+// - init seeds object yaw from map data byte +0x18 and marks status flags 0x6000.
+//
 // Descriptor slots:
 // - 0: drenergydisc_initialise (0x80220804)
 // - 1: drenergydisc_release (0x80220800)

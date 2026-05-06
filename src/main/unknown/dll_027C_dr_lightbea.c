@@ -7,6 +7,13 @@
 // Current EN descriptor:
 // - gDrLightBeaObjDescriptor @ 0x8032AD30
 //
+// Runtime notes:
+// - extra +0 stores the active beam/effect handle freed through fn_80023800.
+// - extra flag bit 7 mirrors object-def +0x20; render creates the beam when the bit is set.
+// - object-def byte +0x19 optionally redirects the beam endpoint through fn_80114184;
+//   otherwise it tracks the player position with a Y offset.
+// - extra flag bit 6 marks a self-removal request after a beam expires when object-def +0x14 is -1.
+//
 // Descriptor slots:
 // - 0: drlightbea_initialise (0x80220ACC)
 // - 1: drlightbea_release (0x80220AC8)
