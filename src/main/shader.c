@@ -44,7 +44,7 @@ extern int FUN_800443cc();
 extern undefined8 FUN_800443fc();
 extern int FUN_80044404();
 extern undefined8 FUN_80044424();
-extern undefined4 FUN_80044428();
+extern undefined4 piRomLoadSection();
 extern undefined8 FUN_80044f74();
 extern uint FUN_800452f8();
 extern undefined8 FUN_80045328();
@@ -1793,7 +1793,7 @@ void FUN_80057274(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   *(uint *)(DAT_803ddb20 + 0x2c) = (DAT_803ddb20 + *(int *)(DAT_803ddafc + iVar3 + 0x10)) - uVar6;
   *(uint *)(DAT_803ddb20 + 0x34) = (DAT_803ddb20 + *(int *)(DAT_803ddafc + iVar3 + 0x14)) - uVar6;
   *(uint *)(DAT_803ddb20 + 0x20) = (DAT_803ddb20 + *(int *)(DAT_803ddafc + iVar3 + 0x18)) - uVar6;
-  FUN_80044428(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+  piRomLoadSection(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                *(undefined4 *)(DAT_803ddafc + iVar3 + 0x18),iVar2,*(uint *)(DAT_803ddb20 + 0x20),
                uVar5,iVar4,in_r8,in_r9,in_r10);
   *(uint *)(DAT_803ddb20 + 0x10) =

@@ -41,7 +41,7 @@
   "functions": [
     {
       "function_start": "0x80048328",
-      "function_name": "fn_80048328",
+      "function_name": "piRomLoadSection",
       "xrefs": [
         {
           "xref_address": "0x80048368",
@@ -49,7 +49,7 @@
           "target_address": "0x802CC524",
           "target_text": "%s.romlist.zlb",
           "pair_kind": "lis/addi",
-          "function_name": "fn_80048328"
+          "function_name": "piRomLoadSection"
         },
         {
           "xref_address": "0x80048404",
@@ -57,7 +57,7 @@
           "target_address": "0x802CC524",
           "target_text": "%s.romlist.zlb",
           "pair_kind": "lis/addi",
-          "function_name": "fn_80048328"
+          "function_name": "piRomLoadSection"
         }
       ]
     }

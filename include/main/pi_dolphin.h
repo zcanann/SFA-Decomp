@@ -13,7 +13,7 @@ void FUN_80044400(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 undefined4 FUN_80044404(int param_1);
 void FUN_80044424(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-void FUN_80044428(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void piRomLoadSection(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,uint param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);

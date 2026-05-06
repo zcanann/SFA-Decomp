@@ -647,7 +647,7 @@ void FUN_80044424(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_80044428
+ * Function: piRomLoadSection
  * EN v1.0 Address: 0x80044428
  * EN v1.0 Size: 1048b
  * EN v1.1 Address: 0x800484A4
@@ -657,7 +657,7 @@ void FUN_80044424(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80044428(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void piRomLoadSection(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,uint param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)

@@ -51,7 +51,7 @@
     },
     {
       "function_start": "0x8001A66C",
-      "function_name": "fn_8001A66C",
+      "function_name": "gameTextLoadForCurMap",
       "xrefs": [
         {
           "xref_address": "0x8001A88C",
@@ -59,7 +59,7 @@
           "target_address": "0x802C9E70",
           "target_text": "gametext/%s/%s.bin",
           "pair_kind": "lis/addi",
-          "function_name": "fn_8001A66C"
+          "function_name": "gameTextLoadForCurMap"
         }
       ]
     }
