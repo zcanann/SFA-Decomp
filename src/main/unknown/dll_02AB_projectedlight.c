@@ -17,3 +17,12 @@
 // - 7: projectedlight_free (0x80234758)
 // - 8: projectedlight_func08 (0x80234750)
 // - 9: projectedlight_getExtraSize (0x80234748)
+
+// Runtime shape:
+// - extra +0x00: projected light/effect handle.
+// - extra +0x04: texture/model resource handle used by the projection.
+// - free removes both the light/effect handle and the projection resource.
+// - update eases yaw, pitch, and roll toward object-def angle fields.
+// - init creates a projected light handle, applies color, clip/falloff,
+//   texture/projection resource, rectangular or cone projection parameters,
+//   layer flags, active state, pulse/flicker, and secondary color.
