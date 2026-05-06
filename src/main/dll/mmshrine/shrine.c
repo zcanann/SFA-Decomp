@@ -41,7 +41,7 @@ extern f32 lbl_803E5BE8;
  *
  * Function: mmsh_shrine_init
  * EN v1.0 Address: 0x801C52D8
- * EN v1.0 Size: 216b
+ * EN v1.0 Size: 192b
  * EN v1.1 Address: 0x801C533C
  * EN v1.1 Size: 220b
  * JP Address: TODO
@@ -80,7 +80,7 @@ void mmsh_shrine_init(int param_1)
  *
  * Function: mmsh_scales_free
  * EN v1.0 Address: 0x801C53B0
- * EN v1.0 Size: 152b
+ * EN v1.0 Size: 144b
  * EN v1.1 Address: 0x801C5418
  * EN v1.1 Size: 188b
  * JP Address: TODO
