@@ -3496,9 +3496,9 @@ extern u8  lbl_803DD9AB;
 
 /* 4-byte and 8-byte trivial leaves. */
 void fn_80134040(void) {}
-void fn_80134098(void) {}
-void fn_8013409C(void) {}
-void fn_801347A0(void) {}
+void Credits_render(void) {}
+void Credits_frameEnd(void) {}
+void WarpstoneUI_frameEnd(void) {}
 void fn_80137DF4(void) {}
 int  fn_80134044(void) { return 0; }
 u8   fn_80134BBC(u8* obj) { return *obj; }
@@ -3509,7 +3509,7 @@ u16 fn_801334D4(void) { return (u16)lbl_803DD938; }
 /* EN v1.0 0x801344F0  size: 12b  u8 setter writing arg low byte to
  * lbl_803DD988. */
 #pragma peephole off
-void fn_801344F0(int val) { lbl_803DD988 = (u8)val; }
+void WarpstoneUI_setState(int val) { lbl_803DD988 = (u8)val; }
 #pragma peephole reset
 
 /* EN v1.0 0x80135814  size: 12b  Two-word setter for state pair. */
@@ -3585,7 +3585,7 @@ void titlescreen_release(void)
  * float at lbl_803DD968. */
 #pragma scheduling off
 #pragma peephole off
-void fn_80134388(void)
+void Credits_initialise(void)
 {
     lbl_803DD974 = textureLoadAsset(0xC5);
     lbl_803DD96C = gameTextGet(0x1FD);
@@ -3687,7 +3687,7 @@ int fn_80138920(u8* obj, int arg1, int arg2)
  * non-null), then walks the 2-slot live-objects table at lbl_803DBBC8
  * tearing down each non-null entry via Obj_FreeObject. Both buffer
  * pointers are zeroed at the end. */
-void fn_80133EA4(void)
+void Minimap_release(void)
 {
     u8 i;
     void** slots;
@@ -3736,7 +3736,7 @@ extern f32   lbl_803E2408;
  * textureLoadAsset into lbl_803DD940; reset frame counter at lbl_803DD938. */
 #pragma scheduling off
 #pragma peephole off
-void fn_80133F40(void)
+void Minimap_initialise(void)
 {
     lbl_803DD940 = textureLoadAsset(0xBE5);
     lbl_803DD938 = 340;
@@ -3763,7 +3763,7 @@ void fn_80134070(void)
 #pragma scheduling reset
 
 /* EN v1.0 0x80134364  size: 36b  Release lbl_803DD974 buffer. */
-void fn_80134364(void)
+void Credits_release(void)
 {
     fn_80054308(lbl_803DD974);
 }
@@ -3811,7 +3811,7 @@ extern int   fn_80014940(void);
 
 /* EN v1.0 0x80134808  size: 44b  Release two buffer slots in sequence:
  * fn_80054308(lbl_803DD984) then fn_80054308(lbl_803DD980). */
-void fn_80134808(void)
+void WarpstoneUI_release(void)
 {
     fn_80054308(lbl_803DD984);
     fn_80054308(lbl_803DD980);
@@ -3821,7 +3821,7 @@ void fn_80134808(void)
  * the float at lbl_803DD97C with the constant from lbl_803E22E0. */
 #pragma scheduling off
 #pragma peephole off
-void fn_80134834(void)
+void WarpstoneUI_initialise(void)
 {
     lbl_803DD984 = textureLoadAsset(0x4FA);
     lbl_803DD980 = textureLoadAsset(0x5E3);

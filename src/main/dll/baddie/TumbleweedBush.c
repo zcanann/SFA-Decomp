@@ -796,7 +796,7 @@ void FUN_80131de4(void)
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
 /* EN v1.0 0x80131570  size: 12b  Read bit 0x10 from obj->_4. */
-int fn_80131570(u8* obj)
+int TitleMenuItem_isChanged(u8* obj)
 {
     return obj[4] & 0x10;
 }
@@ -807,7 +807,7 @@ int fn_80131570(u8* obj)
  * CMenu_SetShouldClose). */
 #pragma scheduling off
 #pragma peephole off
-void fn_8013157C(u8* obj, int val)
+void TitleMenuItem_setVal(u8* obj, int val)
 {
     *(s16*)(obj + 0xc) = (s16)val;
     obj[6] = 2;
@@ -822,7 +822,7 @@ s16 fn_80131590(u8* obj)
 }
 
 /* EN v1.0 0x8013160C  size: 12b  Read bit 0x01 from obj->_4. */
-int fn_8013160C(u8* obj)
+int TitleMenuItem_isEnabled(u8* obj)
 {
     return obj[4] & 0x01;
 }
@@ -837,10 +837,10 @@ void fn_80132010(void) {}
 int fn_80132014(void) { return 0; }
 
 /* EN v1.0 0x8013201C  size: 4b   Empty no-op. */
-void fn_8013201C(void) {}
+void Dummy3E_release(void) {}
 
 /* EN v1.0 0x80132020  size: 4b   Empty no-op. */
-void fn_80132020(void) {}
+void Dummy3E_initialise(void) {}
 
 extern u8  lbl_8031C1B4[0x30];
 extern s16 lbl_8031C2A8[6];
@@ -850,7 +850,7 @@ extern void fn_8001BDD4(int);
 
 /* EN v1.0 0x80131540  size: 48b  Toggle bit 0x20 of obj->_4. */
 #pragma peephole off
-void fn_80131540(u8* obj, int flag)
+void TitleMenuItem_setAButtonToggle(u8* obj, int flag)
 {
     if (flag != 0) {
         obj[4] = (u8)(obj[4] & ~0x20);
@@ -861,13 +861,13 @@ void fn_80131540(u8* obj, int flag)
 #pragma peephole reset
 
 /* EN v1.0 0x80131CF4  size: 32b  Wrapper for fn_80023800. */
-void fn_80131CF4(void)
+void TitleMenuItem_free(void)
 {
     fn_80023800();
 }
 
 /* EN v1.0 0x80131FE0  size: 40b  Zero 6 u32s at lbl_803A9DB8. */
-void fn_80131FE0(void)
+void TitleMenuItem_initialise(void)
 {
     u32* p = (u32*)lbl_803A9DB8;
     p[0] = 0; p[1] = 0; p[2] = 0;
