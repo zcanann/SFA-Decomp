@@ -32,10 +32,10 @@
  * - expgfx_addToTable @ 0x8009DDEC reports the addToTable usage overflow
  *   and exptab full strings.
  * - expgfx_addremove @ 0x8009F2CC reports invalid tabindex and scale overflow.
- * - expgfx_funcs @ 0x8030FA54 is a retail function table; nearby anonymous
- *   callbacks at 0x8009E004, 0x8009E024, 0x8009E028, 0x8009E02C, and
- *   0x8009EEB8 should be reconciled against debug-side expgfx_funcNN slots
- *   before promotion.
+ * - expgfx_funcs @ 0x8030FA54 is a retail function table; Rena's EN map
+ *   reconciles callback slots at 0x8009E004 expgfx_free0C, 0x8009E024
+ *   expgfx_func0B_nop, 0x8009E028 expgfx_func0A_nop, 0x8009E02C
+ *   expgfx_func09_ret_0, and 0x8009EEB8 expgfx_free08.
  *
  * Reference-side path hints:
  * - reference configure path: dll/expgfx.c

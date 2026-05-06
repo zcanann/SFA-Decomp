@@ -879,7 +879,7 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
 /*
  * --INFO--
  *
- * Function: fn_8009E004
+ * Function: expgfx_free0C
  * EN v1.0 Address: 0x8009E004
  * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x8009E290
@@ -889,7 +889,7 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8009E004(u32 sourceId)
+void expgfx_free0C(u32 sourceId)
 {
   expgfx_releaseSourceSlots(sourceId);
   return;
@@ -898,7 +898,7 @@ void fn_8009E004(u32 sourceId)
 /*
  * --INFO--
  *
- * Function: fn_8009E024
+ * Function: expgfx_func0B_nop
  * EN v1.0 Address: 0x8009E024
  * EN v1.0 Size: 4b
  * EN v1.1 Address: TODO
@@ -908,14 +908,14 @@ void fn_8009E004(u32 sourceId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8009E024(void)
+void expgfx_func0B_nop(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: fn_8009E028
+ * Function: expgfx_func0A_nop
  * EN v1.0 Address: 0x8009E028
  * EN v1.0 Size: 4b
  * EN v1.1 Address: TODO
@@ -925,14 +925,14 @@ void fn_8009E024(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8009E028(void)
+void expgfx_func0A_nop(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: fn_8009E02C
+ * Function: expgfx_func09_ret_0
  * EN v1.0 Address: 0x8009E02C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: TODO
@@ -942,7 +942,7 @@ void fn_8009E028(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int fn_8009E02C(void)
+int expgfx_func09_ret_0(void)
 {
   return 0;
 }
@@ -1112,7 +1112,7 @@ void expgfx_queueStandalonePools(void)
 /*
  * --INFO--
  *
- * Function: fn_8009EEB8
+ * Function: expgfx_free08
  * EN v1.0 Address: 0x8009EEB8
  * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x8009F144
@@ -1122,7 +1122,7 @@ void expgfx_queueStandalonePools(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8009EEB8(u32 sourceId)
+void expgfx_free08(u32 sourceId)
 {
   expgfx_releaseSourceSlots(sourceId);
   return;
