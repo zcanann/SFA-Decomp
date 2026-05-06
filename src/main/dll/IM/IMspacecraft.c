@@ -830,30 +830,30 @@ void FUN_801a66f8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801A5858(void) {}
-void fn_801A5D80(void) {}
-void fn_801A5D84(void) {}
-void fn_801A6050(void) {}
-void fn_801A6628(void) {}
+void SpiritDoorLock_hitDetect(void) {}
+void SpiritDoorLock_release(void) {}
+void SpiritDoorLock_initialise(void) {}
+void RollingBarrel_hitDetect(void) {}
+void RollingBarrel_release(void) {}
 void fn_801A6774(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801A57E8(void) { return 0x14; }
+int SpiritDoorLock_getExtraSize(void) { return 0x14; }
 int fn_801A57F0(void) { return 0x0; }
-int fn_801A5F70(void) { return 0x118; }
+int RollingBarrel_getExtraSize(void) { return 0x118; }
 int fn_801A5F78(void) { return 0x0; }
 int fn_801A66FC(void) { return 0x0; }
 int fn_801A6704(void) { return 0x0; }
 
 /* Pattern wrappers. */
 extern s16 lbl_803DDB20;
-void fn_801A662C(void) { lbl_803DDB20 = 0x0; }
+void RollingBarrel_initialise(void) { lbl_803DDB20 = 0x0; }
 
 /* render-with-fn_8003B8F4 pattern. */
 extern f32 lbl_803E4440;
 extern void fn_8003B8F4(f32);
 extern f32 lbl_803E44C4;
 #pragma peephole off
-void fn_801A5828(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4440); }
+void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4440); }
 void fn_801A6744(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E44C4); }
 #pragma peephole reset
