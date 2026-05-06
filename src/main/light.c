@@ -1050,16 +1050,16 @@ int FUN_801fc4f4(void)
 /* Trivial 4b 0-arg blr leaves. */
 void vfpblock1_release(void) {}
 void vfpblock1_initialise(void) {}
-void fn_801FBDE4(void) {}
-void fn_801FC370(void) {}
-void fn_801FC374(void) {}
-void fn_801FC558(void) {}
-void fn_801FC6EC(void) {}
-void fn_801FC6F0(void) {}
-void fn_801FC974(void) {}
-void fn_801FC9A8(void) {}
-void fn_801FCCE0(void) {}
-void fn_801FCCE4(void) {}
+void vfpplatform_hitDetect(void) {}
+void vfpplatform_release(void) {}
+void vfpplatform_initialise(void) {}
+void vfpdoorswitch_hitDetect(void) {}
+void vfpdoorswitch_release(void) {}
+void vfpdoorswitch_initialise(void) {}
+void seqpoint_free(void) {}
+void seqpoint_hitDetect(void) {}
+void seqpoint_release(void) {}
+void seqpoint_initialise(void) {}
 void fn_801FCD64(void) {}
 void fn_801FCD68(void) {}
 void fn_801FD134(void) {}
@@ -1071,12 +1071,12 @@ void fn_801FD26C(void) {}
 void fn_801FD388(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801FBD64(void) { return 0x6; }
-int fn_801FBD6C(void) { return 0x0; }
-int fn_801FC4F4(void) { return 0x4; }
-int fn_801FC4FC(void) { return 0x0; }
-int fn_801FC964(void) { return 0x10; }
-int fn_801FC96C(void) { return 0x0; }
+int vfpplatform_getExtraSize(void) { return 0x6; }
+int vfpplatform_func08(void) { return 0x0; }
+int vfpdoorswitch_getExtraSize(void) { return 0x4; }
+int vfpdoorswitch_func08(void) { return 0x0; }
+int seqpoint_getExtraSize(void) { return 0x10; }
+int seqpoint_func08(void) { return 0x0; }
 int fn_801FCCE8(void) { return 0xc; }
 int fn_801FCCF0(void) { return 0x0; }
 int fn_801FD13C(void) { return 0x0; }
@@ -1089,7 +1089,7 @@ int fn_801FD380(void) { return 0x0; }
 extern f32 lbl_803E6128;
 extern void fn_8003B8F4(f32);
 #pragma peephole off
-void fn_801FC978(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E6128); }
+void seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E6128); }
 #pragma peephole reset
 
 /* render-with-fn(lbl) (no visibility check). */
@@ -1097,7 +1097,7 @@ extern f32 lbl_803E611C;
 extern f32 lbl_803E6140;
 #pragma scheduling off
 #pragma peephole off
-void fn_801FC534(void) { fn_8003B8F4(lbl_803E611C); }
+void vfpdoorswitch_render(void) { fn_8003B8F4(lbl_803E611C); }
 void fn_801FD184(void) { fn_8003B8F4(lbl_803E6140); }
 #pragma peephole reset
 #pragma scheduling reset
