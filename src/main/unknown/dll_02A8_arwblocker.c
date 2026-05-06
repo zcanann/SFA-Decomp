@@ -18,3 +18,16 @@
 // - 7: arwblocker_free (0x80233938)
 // - 8: arwblocker_func08 (0x80233930)
 // - 9: arwblocker_getExtraSize (0x80233928)
+
+// Helpers:
+// - arwblocker_getBlockState (0x802338F0): installed in obj->funcBC by init;
+//   returns block/collision state 1 when extra byte +0 is the active blocker
+//   mode and extra byte +1 has not disabled it.
+
+// Runtime shape:
+// - init sets the object's yaw to 0x8000, derives pitch from object-def byte
+//   +0x18, installs arwblocker_getBlockState as obj->funcBC, and copies
+//   object-def byte +0x19 into extra byte +0 as the blocker mode.
+// - update fades object alpha in as the player approaches, enables hits/model
+//   display, and calls the Arwing level controller once to notify whether this
+//   blocker uses mode 0 or mode 1.
