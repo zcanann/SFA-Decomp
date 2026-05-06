@@ -1029,15 +1029,15 @@ void FUN_80198e08(void)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_80197E04(void) {}
+void WaterFallSpray_render(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_80197DA8(void) { return 0x8; }
-int fn_80198194(void) { return 0x8; }
+int WaterFallSpray_getExtraSize(void) { return 0x8; }
+int sfxPlayer_getExtraSize(void) { return 0x8; }
 
-extern void fn_80197E08(int *obj);
+extern void WaterFallSpray_update(int *obj);
 #pragma scheduling off
 #pragma peephole off
-int fn_80197DB0(int *obj) { fn_80197E08(obj); return 0; }
+int fn_80197DB0(int *obj) { WaterFallSpray_update(obj); return 0; }
 #pragma peephole reset
 #pragma scheduling reset
