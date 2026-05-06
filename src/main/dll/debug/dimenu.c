@@ -599,19 +599,19 @@ void FUN_8011dc40(uint param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_8011CF78(void) {}
-void fn_8011D48C(void) {}
-void fn_8011D51C(void) {}
-void fn_8011D520(void) {}
+void OptionsScreen_frameEnd(void) {}
+void OptionsScreen_release(void) {}
+void WeirdUnusedMenu_render(void) {}
+void WeirdUnusedMenu_frameEnd(void) {}
 void fn_8011D854(void) {}
 void fn_8011D858(void) {}
-void fn_8011D900(void) {}
-void fn_8011D904(void) {}
-void fn_8011D910(void) {}
-void fn_8011D914(void) {}
+void Dummy3A_render(void) {}
+void Dummy3A_frameEnd(void) {}
+void Dummy3A_release(void) {}
+void Dummy3A_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_8011D908(void) { return 0x0; }
+int Dummy3A_frameStart(void) { return 0x0; }
 
 /* Pattern wrappers. */
 extern u8 lbl_803DD728;

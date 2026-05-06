@@ -438,7 +438,7 @@ extern void fn_80130464(int);
 extern void fn_8007D960(int);
 #pragma scheduling off
 #pragma peephole off
-void fn_80116F14(void) {
+void TitleMenu_release(void) {
     fn_8013046C();
     fn_80130464(1);
     fn_8007D960(1);

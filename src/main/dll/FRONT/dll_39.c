@@ -468,5 +468,5 @@ void n_attractmode_prepareMovie(undefined8 param_1,undefined8 param_2,undefined8
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801160DC(void) {}
-void fn_801166C4(void) {}
+void n_rareware_release(void) {}
+void TitleMenu_frameEnd(void) {}

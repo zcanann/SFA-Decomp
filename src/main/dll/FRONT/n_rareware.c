@@ -137,7 +137,7 @@ void FUN_801159e4(undefined8 param_1,double param_2,undefined8 param_3,undefined
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_80115E6C(void) {}
-void fn_80115E70(void) {}
-void fn_80115EBC(void) {}
-void fn_80115FB8(void) {}
+void TitleScreenInit_render(void) {}
+void TitleScreenInit_frameEnd(void) {}
+void TitleScreenInit_release(void) {}
+void n_rareware_frameEnd(void) {}
