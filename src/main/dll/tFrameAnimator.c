@@ -191,14 +191,14 @@ void levelname_render(void) {}
 void levelname_hitDetect(void) {}
 void levelname_release(void) {}
 void levelname_initialise(void) {}
-void fn_8017A388(void) {}
+void ProjectileSwitch_free(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int area_getExtraSize(void) { return 0x0; }
 int area_func08(void) { return 0x0; }
 int levelname_getExtraSize(void) { return 0x18; }
 int levelname_func08(void) { return 0x0; }
-int fn_8017A350(void) { return 0x8; }
+int ProjectileSwitch_getExtraSize(void) { return 0x8; }
 
 /* obj->u16_X |= MASK */
 #pragma peephole off
