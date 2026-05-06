@@ -105,6 +105,13 @@ int objHitReact_update(ObjAnimComponent *obj,ObjHitReactEntry *entryTable,u32 en
 #pragma peephole reset
 #pragma scheduling reset
 
+/*
+ * --INFO--
+ *
+ * Function: ObjHitReact_ResetActiveObjects
+ * EN v1.0 Address: 0x80035630
+ * EN v1.0 Size: 192b
+ */
 #pragma scheduling off
 #pragma peephole off
 void ObjHitReact_ResetActiveObjects(int objectCount)

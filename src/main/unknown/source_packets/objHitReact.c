@@ -20,6 +20,11 @@
  * - blueprint action: corridor-packet, plan stays at the current seed
  * - previous resolved gap: 0x80030688-0x800353A4 is main/objhits.c
  *
+ * Live EN anchors:
+ * - objHitReact_update @ 0x800353A4 checks the retail "sphere overflow" path.
+ * - ObjHitReact_ResetActiveObjects @ 0x80035630 is the adjacent reset helper
+ *   already carried in src/main/objHitReact.c.
+ *
  * Reference-side function hints:
  * - objHitReactFn_80089890
  */
