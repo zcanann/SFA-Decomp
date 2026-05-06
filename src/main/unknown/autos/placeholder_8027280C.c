@@ -21,8 +21,8 @@ extern u8 lbl_803BD150[];
 extern u8 lbl_803BD9C4[];
 extern u8 lbl_803BDA04[];
 extern u8 lbl_803BDA24[];
-extern u8 lbl_803DE244[];
-extern u8 lbl_803DE254[];
+extern u8 lbl_803DE244;
+extern u8 lbl_803DE254;
 extern u32 lbl_803DE264;
 extern u8 *lbl_803DE268;
 
@@ -95,12 +95,12 @@ int audioStopSound(int a)
  *
  * EN v1.1 Address: 0x802728A8, size 132b
  */
-int fn_802728A8(int a, int b, int c, u8 d)
+int fn_802728A8(int a, int b, int c, int d)
 {
     int result;
     u8 e;
     sndBegin();
-    e = *(u8 *)(lbl_803BDA24 + d * 2 + 1);
+    e = lbl_803BDA24[(u8)d * 2 + 1];
     result = fn_802717B0(a, b, c, d, e);
     sndEnd();
     return result;
@@ -212,8 +212,8 @@ void fn_80272CC4(u8 slot, int a, int b)
     sndBegin();
     *(u32 *)(lbl_803BD9C4 + slot * 4) = 0;
     *(u32 *)(lbl_803BDA04 + slot * 4) = 0;
-    lbl_803DE254[slot] = 0xff;
-    lbl_803DE244[slot] = 0xff;
+    (&lbl_803DE254)[slot] = 0xff;
+    (&lbl_803DE244)[slot] = 0xff;
     *(u8 *)(lbl_803BDA24 + slot * 2 + 1) = 0;
     *(u8 *)(lbl_803BDA24 + slot * 2) = 0;
     hwActivateStudio(slot, a, b);
