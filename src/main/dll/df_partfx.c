@@ -1617,19 +1617,19 @@ void fn_800D7FA4(void) {}
 void fn_800D7FA8(void) {}
 void fn_800D7FAC(void) {}
 void fn_800D7FB0(void) {}
-void fn_800D7FB4(void) {}
+void Dummy04_onSetupPlayer(void) {}
 void fn_800D7FB8(void) {}
 void fn_800D7FBC(void) {}
 void fn_800D7FC0(void) {}
 void fn_800D7FCC(void) {}
 void fn_800D7FD8(void) {}
 void fn_800D7FE4(void) {}
-void fn_800D7FF8(void) {}
+void Dummy04_onSelectSave(void) {}
 void fn_800D7FFC(void) {}
 void fn_800D8000(void) {}
 void fn_800D800C(void) {}
-void fn_800D8018(void) {}
-void fn_800D801C(void) {}
+void Dummy04_release(void) {}
+void Dummy04_initialise(void) {}
 void fn_800D8BB0(void) {}
 
 /* 8b "li r3, N; blr" returners. */
