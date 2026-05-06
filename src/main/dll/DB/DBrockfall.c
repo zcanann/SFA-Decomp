@@ -259,15 +259,15 @@ void FUN_801df788(int param_1)
 /* Trivial 4b 0-arg blr leaves. */
 void paymentkiosk_release(void) {}
 void paymentkiosk_initialise(void) {}
-void fn_801DF85C(void) {}
-void fn_801DF890(void) {}
-void fn_801DF92C(void) {}
-void fn_801DF930(void) {}
-void fn_801DF944(void) {}
-void fn_801DF978(void) {}
-void fn_801DF97C(void) {}
-void fn_801DF9A4(void) {}
-void fn_801DF9A8(void) {}
+void FEseqobject_free(void) {}
+void FEseqobject_hitDetect(void) {}
+void FEseqobject_release(void) {}
+void FEseqobject_initialise(void) {}
+void FElevControl_free(void) {}
+void FElevControl_hitDetect(void) {}
+void FElevControl_update(void) {}
+void FElevControl_release(void) {}
+void FElevControl_initialise(void) {}
 void fn_801DF9CC(void) {}
 void fn_801DFA00(void) {}
 void fn_801DFA04(void) {}
@@ -275,9 +275,9 @@ void fn_801DFA20(void) {}
 void fn_801DFA24(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801DF84C(void) { return 0x1; }
+int FEseqobject_getExtraSize(void) { return 0x1; }
 int fn_801DF854(void) { return 0x0; }
-int fn_801DF934(void) { return 0x0; }
+int FElevControl_getExtraSize(void) { return 0x0; }
 int fn_801DF93C(void) { return 0x0; }
 int fn_801DF9BC(void) { return 0x0; }
 int fn_801DF9C4(void) { return 0x0; }
@@ -288,14 +288,14 @@ extern void fn_8003B8F4(f32);
 extern f32 lbl_803E56B8;
 extern f32 lbl_803E56C0;
 #pragma peephole off
-void fn_801DF860(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E56B4); }
-void fn_801DF948(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E56B8); }
+void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E56B4); }
+void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E56B8); }
 void fn_801DF9D0(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E56C0); }
 #pragma peephole reset
 
 /* call(x, N) wrappers. */
 #pragma scheduling off
 #pragma peephole off
-void fn_801DF980(int x) { ObjMsg_AllocQueue(x, 0x2); }
+void FElevControl_init(int x) { ObjMsg_AllocQueue(x, 0x2); }
 #pragma peephole reset
 #pragma scheduling reset
