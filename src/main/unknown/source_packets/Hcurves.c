@@ -16,6 +16,11 @@
  * - retail message: MAX_ROMCURVES exceeded!!
  * - active string symbol: sCurvesMaxRomCurvesExceeded @ 0x803116BC
  * - active source use: curves_addCurveDef reports the overflow string.
+ *
+ * Live EN anchors:
+ * - curves_addCurveDef @ 0x800E52E8 reports the Hcurves overflow string.
+ * - curves_distanceToNearestOfType16 @ 0x800E2214 is now promoted in the
+ *   active symbol map from the existing source/header name.
  */
 
 #if 0

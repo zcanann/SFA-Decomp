@@ -264,8 +264,8 @@ LAB_800e23ec:
  * --INFO--
  *
  * Function: curves_distanceToNearestOfType16
- * EN v1.0 Address: 0x800E1EEC
- * EN v1.0 Size: 420b
+ * EN v1.0 Address: 0x800E2214
+ * EN v1.0 Size: 372b
  * EN v1.1 Address: 0x800E2498
  * EN v1.1 Size: 372b
  * JP Address: TODO
@@ -894,8 +894,8 @@ LAB_800e3130:
  * --INFO--
  *
  * Function: RomCurve_getRandomLinkedOfTypes
- * EN v1.0 Address: 0x800E2B88
- * EN v1.0 Size: 588b
+ * EN v1.0 Address: 0x800E2F5C
+ * EN v1.0 Size: 572b
  * EN v1.1 Address: 0x800E31E0
  * EN v1.1 Size: 980b
  * JP Address: TODO
@@ -1017,8 +1017,8 @@ LAB_800e33ac:
  * --INFO--
  *
  * Function: curves_distXZ
- * EN v1.0 Address: 0x800E2DD4
- * EN v1.0 Size: 172b
+ * EN v1.0 Address: 0x800E3330
+ * EN v1.0 Size: 176b
  * EN v1.1 Address: 0x800E35B4
  * EN v1.1 Size: 176b
  * JP Address: TODO
@@ -1075,8 +1075,8 @@ LAB_800e3628:
  * --INFO--
  *
  * Function: RomCurve_distanceToObject
- * EN v1.0 Address: 0x800E2E80
- * EN v1.0 Size: 196b
+ * EN v1.0 Address: 0x800E33E0
+ * EN v1.0 Size: 208b
  * EN v1.1 Address: 0x800E3664
  * EN v1.1 Size: 208b
  * JP Address: TODO
@@ -1135,8 +1135,8 @@ LAB_800e36d8:
  * --INFO--
  *
  * Function: curves_find
- * EN v1.0 Address: 0x800E2F44
- * EN v1.0 Size: 536b
+ * EN v1.0 Address: 0x800E34B0
+ * EN v1.0 Size: 564b
  * EN v1.1 Address: 0x800E3734
  * EN v1.1 Size: 584b
  * JP Address: TODO
@@ -1280,8 +1280,8 @@ LAB_800e3878:
  * --INFO--
  *
  * Function: RomCurve_getById
- * EN v1.0 Address: 0x800E315C
- * EN v1.0 Size: 128b
+ * EN v1.0 Address: 0x800E36F8
+ * EN v1.0 Size: 132b
  * EN v1.1 Address: 0x800E397C
  * EN v1.1 Size: 132b
  * JP Address: TODO
@@ -1916,8 +1916,8 @@ LAB_800e48f4:
  * --INFO--
  *
  * Function: RomCurve_getAdjacentWindow
- * EN v1.0 Address: 0x800E3ED8
- * EN v1.0 Size: 452b
+ * EN v1.0 Address: 0x800E47C4
+ * EN v1.0 Size: 572b
  * EN v1.1 Address: 0x800E4A48
  * EN v1.1 Size: 572b
  * JP Address: TODO
@@ -2040,8 +2040,8 @@ LAB_800e4bc4:
  * --INFO--
  *
  * Function: RomCurve_getNearestAdjacentLink
- * EN v1.0 Address: 0x800E409C
- * EN v1.0 Size: 456b
+ * EN v1.0 Address: 0x800E4A00
+ * EN v1.0 Size: 484b
  * EN v1.1 Address: 0x800E4C84
  * EN v1.1 Size: 484b
  * JP Address: TODO
@@ -2137,8 +2137,8 @@ LAB_800e4d74:
  * --INFO--
  *
  * Function: RomCurve_distanceToSegment
- * EN v1.0 Address: 0x800E4264
- * EN v1.0 Size: 452b
+ * EN v1.0 Address: 0x800E4BE4
+ * EN v1.0 Size: 324b
  * EN v1.1 Address: 0x800E4E68
  * EN v1.1 Size: 324b
  * JP Address: TODO
@@ -2210,8 +2210,8 @@ double RomCurve_distanceToSegment(double param_1,double param_2,double param_3,f
  * --INFO--
  *
  * Function: RomCurve_getRandomBlockedLink
- * EN v1.0 Address: 0x800E4428
- * EN v1.0 Size: 256b
+ * EN v1.0 Address: 0x800E4D28
+ * EN v1.0 Size: 316b
  * EN v1.1 Address: 0x800E4FAC
  * EN v1.1 Size: 472b
  * JP Address: TODO
@@ -2269,8 +2269,8 @@ int RomCurve_getRandomBlockedLink(int param_1,int param_2)
  * --INFO--
  *
  * Function: RomCurve_getRandomUnblockedLink
- * EN v1.0 Address: 0x800E4528
- * EN v1.0 Size: 256b
+ * EN v1.0 Address: 0x800E4F00
+ * EN v1.0 Size: 316b
  * EN v1.1 Address: 0x800E5184
  * EN v1.1 Size: 428b
  * JP Address: TODO
@@ -2500,8 +2500,8 @@ void curves_addCurveDef(int curve)
  * --INFO--
  *
  * Function: curves_countRandomPoints
- * EN v1.0 Address: 0x800E4728
- * EN v1.0 Size: 664b
+ * EN v1.0 Address: 0x800E5434
+ * EN v1.0 Size: 624b
  * EN v1.1 Address: 0x800E56B8
  * EN v1.1 Size: 624b
  * JP Address: TODO
@@ -3328,8 +3328,8 @@ double FUN_800e56bc(undefined8 param_1,double param_2,double param_3,double para
  * --INFO--
  *
  * Function: curves_getCurves
- * EN v1.0 Address: 0x800E56C4
- * EN v1.0 Size: 500b
+ * EN v1.0 Address: 0x800E6B38
+ * EN v1.0 Size: 428b
  * EN v1.1 Address: 0x800E6DBC
  * EN v1.1 Size: 428b
  * JP Address: TODO
@@ -4052,8 +4052,8 @@ void FUN_800e65c8(uint *param_1,byte param_2,uint param_3,uint param_4,undefined
  * --INFO--
  *
  * Function: curves_clear
- * EN v1.0 Address: 0x800E6610
- * EN v1.0 Size: 112b
+ * EN v1.0 Address: 0x800E7D20
+ * EN v1.0 Size: 120b
  * EN v1.1 Address: 0x800E7FA4
  * EN v1.1 Size: 128b
  * JP Address: TODO

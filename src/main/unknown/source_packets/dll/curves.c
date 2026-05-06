@@ -18,6 +18,11 @@
  *   symbol table names the payload string as sCurvesMaxRomCurvesExceeded and
  *   src/main/dll/curves.c reports it from curves_addCurveDef.
  *
+ * Live EN anchors:
+ * - curves_addCurveDef @ 0x800E52E8 reports the Hcurves overflow string.
+ * - curves_distanceToNearestOfType16 @ 0x800E2214, curves_find @ 0x800E34B0,
+ *   and curves_clear @ 0x800E7D20 are aligned with the active source/header.
+ *
  * Reference-side path hints:
  * - current debug path: dll/curves.c
  *
