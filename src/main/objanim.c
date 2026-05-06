@@ -25,14 +25,16 @@ extern f32 lbl_803DE90C;
  * --INFO--
  *
  * Function: ObjAnim_SetBlendMove
- * EN v1.0 Address: 0x8002EBA8
- * EN v1.0 Size: 540b
+ * EN v1.0 Address: 0x8002EB54
+ * EN v1.0 Size: 452b
  * EN v1.1 Address: 0x8002EC4C
  * EN v1.1 Size: 452b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
+ *
+ * Retail string evidence labels this source-side path as objanim.c/setBlendMove.
  */
 #pragma scheduling off
 #pragma peephole off

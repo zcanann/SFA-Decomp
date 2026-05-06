@@ -11,19 +11,26 @@
  * Score: 1980
  *
  * Retail EN evidence:
- * - main.dol string @ 0x802CB928
+ * - main.dol string @ 0x802CAD50
  * - retail label: setBlendMove
  * - retail message: WARNING tried to load anim -1 from cache modno %d
- * - EN xref: 0x8002ECF8 fn_8002EC4C + 0xAC
- * - EN xref: 0x8002F4A8 fn_8002F334 + 0x174
- * - EN xref: 0x80030608 fn_8003042C + 0x1DC
+ * - EN xref: 0x8002EC00 ObjAnim_SetBlendMove + 0xAC
+ * - EN xref: 0x8002F3B0 Object_ObjAnimSetMove + 0x174
+ * - EN xref: 0x80030510 ObjAnim_SetCurrentMove + 0x1DC
+ *
+ * Current EN source-window evidence:
+ * - seed: 0x8002EB54-0x80030688, current split src/main/objanim.c
+ * - blueprint plan: shrink-window to 0x8002EB54-0x8002F50C
+ * - next source corridor: 0x80030688-0x800353A4 resolves to main/objhits.c
  *
  * Reference-side path hints:
  * - current debug path: main/objanim.c
  * - reference configure path: main/objanim.c
  *
  * Reference-side function hints:
+ * - ObjAnim_SetBlendMove
  * - Object_ObjAnimSetMove
+ * - ObjAnim_SetCurrentMove
  */
 
 #if 0
