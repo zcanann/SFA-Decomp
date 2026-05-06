@@ -4403,10 +4403,10 @@ undefined4 FUN_80043034(uint *param_1,int param_2,int param_3)
 }
 
 /* sda21 accessors. */
-extern u32 lbl_803DCC24;
+extern u32 curObjMtx;
 extern u8 lbl_803DCC29;
 extern u32 lbl_803DCC74;
-void fn_800412D4(u32 x) { lbl_803DCC24 = x; }
+void fn_800412D4(u32 x) { curObjMtx = x; }
 void fn_80041D28(u8 x) { lbl_803DCC29 = x; }
 u32 fn_800430A4(void) { return lbl_803DCC74; }
 

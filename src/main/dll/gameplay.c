@@ -13068,11 +13068,11 @@ s32 fn_800EA914(u8 *obj) { return *(s8*)(obj + 0x5); }
 u8 fn_800EA900(u8 *p) { return p[8]; }
 
 /* if (lbl) fn(lbl); */
-extern u32 lbl_803DD49C;
+extern u32 pRestartPoint;
 extern void fn_80023800(u32);
 #pragma scheduling off
 #pragma peephole off
-void fn_800EA04C(void) { if (lbl_803DD49C != 0) fn_80023800(lbl_803DD49C); }
+void SaveGame_release(void) { if (pRestartPoint != 0) fn_80023800(pRestartPoint); }
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -13086,6 +13086,6 @@ u8 fn_800EA2BC(void) { u8 *p = (u8*)fn_800E8044(); return p[5]; }
 /* conditional init/free pair. */
 #pragma scheduling off
 #pragma peephole off
-void gplayClearRestartPoint(void) { if (lbl_803DD49C != 0) { fn_80023800(lbl_803DD49C); lbl_803DD49C = 0; } }
+void gplayClearRestartPoint(void) { if (pRestartPoint != 0) { fn_80023800(pRestartPoint); pRestartPoint = 0; } }
 #pragma peephole reset
 #pragma scheduling reset
