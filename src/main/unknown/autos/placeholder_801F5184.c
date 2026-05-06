@@ -1227,12 +1227,12 @@ void FUN_801f5070(uint param_1)
 }
 
 /* Pattern wrappers. */
-int fn_801F53C8(void) { return 0x88; }
-int fn_801F53D0(void) { return 0x0; }
-void fn_801F5420(void) {}
-void fn_801F5424(void) {}
-void fn_801F5684(void) {}
-void fn_801F5688(void) {}
+int firefly_getExtraSize(void) { return 0x88; }
+int firefly_func08(void) { return 0x0; }
+void firefly_render(void) {}
+void firefly_hitDetect(void) {}
+void firefly_release(void) {}
+void firefly_initialise(void) {}
 void fn_801F568C(void) {}
 int fn_801F5AEC(void) { return 0x18; }
 int fn_801F5AF4(void) { return 0x0; }
