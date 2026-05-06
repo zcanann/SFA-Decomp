@@ -1257,12 +1257,12 @@ void wmspiritset_hitDetect(void) {}
 void wmspiritset_update(void) {}
 void wmspiritset_release(void) {}
 void wmspiritset_initialise(void) {}
-int fn_801F7D34(void) { return 0x1c; }
-int fn_801F7D3C(void) { return 0x0; }
-void fn_801F7D44(void) {}
-void fn_801F7D78(void) {}
-void fn_801F7FEC(void) {}
-void fn_801F7FF0(void) {}
+int wmplanets_getExtraSize(void) { return 0x1c; }
+int wmplanets_func08(void) { return 0x0; }
+void wmplanets_free(void) {}
+void wmplanets_hitDetect(void) {}
+void wmplanets_release(void) {}
+void wmplanets_initialise(void) {}
 int fn_801F80B8(void) { return 0x29c; }
 int fn_801F80C0(void) { return 0x0; }
 void fn_801F9434(void) {}
