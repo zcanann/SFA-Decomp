@@ -49,15 +49,15 @@
  *
  * EN descriptor slot map:
  * - descriptor=0x80328A68 lbl_80328A68 (slots=10, mask=1101111111)
- * - slot 00: 0x801F30D8 fn_801F30D8 stub=blr ref=initialise (stub)
- * - slot 01: 0x801F30D4 fn_801F30D4 stub=blr ref=release (stub)
+ * - slot 00: 0x801F30D8 WM_colrise_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x801F30D4 WM_colrise_release stub=blr ref=release (stub)
  * - slot 03: 0x801F30A4 fn_801F30A4 ref=init
  * - slot 04: 0x801F2EE0 fn_801F2EE0 ref=update
- * - slot 05: 0x801F2EDC fn_801F2EDC stub=blr ref=hitDetect (stub)
- * - slot 06: 0x801F2EAC fn_801F2EAC ref=render
- * - slot 07: 0x801F2EA8 fn_801F2EA8 stub=blr ref=free (stub)
+ * - slot 05: 0x801F2EDC WM_colrise_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x801F2EAC WM_colrise_render ref=render
+ * - slot 07: 0x801F2EA8 WM_colrise_free stub=blr ref=free (stub)
  * - slot 08: 0x801F2EA0 fn_801F2EA0 stub=const 0
- * - slot 09: 0x801F2E98 fn_801F2E98 stub=const 4 ref=getExtraSize (stub)
+ * - slot 09: 0x801F2E98 WM_colrise_getExtraSize stub=const 4 ref=getExtraSize (stub)
  */
 
 #if 0
