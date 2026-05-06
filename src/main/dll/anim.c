@@ -4073,8 +4073,8 @@ void FUN_802051e0(uint param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801FF87C(void) {}
-void fn_801FF880(void) {}
+void dbegg_release(void) {}
+void dbegg_initialise(void) {}
 void fn_801FF968(void) {}
 void fn_801FF96C(void) {}
 void fn_801FF970(void) {}
@@ -4082,10 +4082,10 @@ void fn_801FF974(void) {}
 void fn_801FF9A8(void) {}
 void fn_801FF9AC(void) {}
 void fn_801FF9B0(void) {}
-void fn_801FF9D8(void) {}
-void fn_801FFA18(void) {}
-void fn_801FFE10(void) {}
-void fn_801FFE14(void) {}
+void drakorenergy_free(void) {}
+void drakorenergy_hitDetect(void) {}
+void drakorenergy_release(void) {}
+void drakorenergy_initialise(void) {}
 void fn_80203C54(void) {}
 void fn_80203F80(void) {}
 void fn_80204090(void) {}
@@ -4115,8 +4115,8 @@ void chuka_render(void) {}
 /* 8b "li r3, N; blr" returners. */
 int fn_801FF958(void) { return 0x8; }
 int fn_801FF960(void) { return 0x0; }
-int fn_801FF9C8(void) { return 0xc; }
-int fn_801FF9D0(void) { return 0x0; }
+int drakorenergy_getExtraSize(void) { return 0xc; }
+int drakorenergy_func08(void) { return 0x0; }
 int fn_8020342C(void) { return 0x460; }
 int fn_80203434(void) { return 0x49; }
 int fn_80203F1C(void) { return 0xc; }

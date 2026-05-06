@@ -1225,13 +1225,13 @@ int vfplavastar_getExtraSize(void) { return 0x14; }
 int vfplavastar_func08(void) { return 0x0; }
 int vfpspellplace_getExtraSize(void) { return 0x6; }
 int vfpspellplace_func08(void) { return 0x0; }
-int fn_801FE9D8(void) { return 0x124; }
-int fn_801FE9E0(void) { return 0x8; }
+int dbegg_getExtraSize(void) { return 0x124; }
+int dbegg_func08(void) { return 0x8; }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
 #pragma peephole off
-void fn_801FE9E8(int x) { ObjGroup_RemoveObject(x, 0x24); }
+void dbegg_free(int x) { ObjGroup_RemoveObject(x, 0x24); }
 #pragma peephole reset
 #pragma scheduling reset
 
