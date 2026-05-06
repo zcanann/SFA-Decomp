@@ -1245,11 +1245,11 @@ void wmseqpoint_free(void) {}
 void wmseqpoint_hitDetect(void) {}
 void wmseqpoint_release(void) {}
 void wmseqpoint_initialise(void) {}
-int fn_801F72F0(void) { return 0x10; }
-int fn_801F72F8(void) { return 0x0; }
-void fn_801F73D0(void) {}
-void fn_801F7C48(void) {}
-void fn_801F7C4C(void) {}
+int wmsun_getExtraSize(void) { return 0x10; }
+int wmsun_func08(void) { return 0x0; }
+void wmsun_hitDetect(void) {}
+void wmsun_release(void) {}
+void wmsun_initialise(void) {}
 int fn_801F7C50(void) { return 0x2; }
 int fn_801F7C58(void) { return 0x0; }
 void fn_801F7C60(void) {}
