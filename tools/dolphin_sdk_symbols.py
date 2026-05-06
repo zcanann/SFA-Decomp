@@ -42,6 +42,10 @@ SPAM_LIBRARIES = {
     "wpad.a",
 }
 SPAM_OBJECTS = {
+    # Single-function exact-size collisions inside game code; neighboring
+    # functions do not match the donor object shape.
+    ("axfx.a", "AXFXHooks.o"),
+    ("SComponent.a", "c_tag.o"),
     ("NdevExi2A.a", "DebuggerDriver.o"),
     (
         "TRK_Hollywood_Revolution.a",
