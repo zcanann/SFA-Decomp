@@ -146,7 +146,7 @@ void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_TAIL_SWING_READY:
     runtime->tailSwingTimer = runtime->tailSwingTimer - lbl_803DB414;
     if (runtime->tailSwingTimer <= lbl_803E5418) {
-      Sfx_PlayFromObject(objectId,0xa9);
+      Sfx_PlayFromObject(objectId,SHTHORNTAIL_TAIL_SWING_WINDUP_VOLUME_ID);
       runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_WINDUP;
       runtime->tailSwingTimer = lbl_803E541C;
     }
@@ -154,7 +154,7 @@ void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_TAIL_SWING_WINDUP:
     runtime->tailSwingTimer = runtime->tailSwingTimer - lbl_803DB414;
     if (runtime->tailSwingTimer <= lbl_803E5418) {
-      Sfx_PlayFromObject(objectId,0xa8);
+      Sfx_PlayFromObject(objectId,SHTHORNTAIL_TAIL_SWING_ACTIVE_VOLUME_ID);
       runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_ACTIVE;
     }
     break;
