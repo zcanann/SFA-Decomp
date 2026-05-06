@@ -1279,29 +1279,29 @@ int vfplevelcontrol_func08(void) { return 0x0; }
 void vfplevelcontrol_render(void) {}
 void vfplevelcontrol_hitDetect(void) {}
 void vfplevelcontrol_release(void) {}
-int fn_801F9D78(void) { return 0xa; }
-int fn_801F9D80(void) { return 0x0; }
-void fn_801F9D88(void) {}
-void fn_801F9D98(void) {}
-void fn_801FA220(void) {}
-void fn_801FA224(void) {}
-int fn_801FA228(void) { return 0xc; }
-int fn_801FA230(void) { return 0x0; }
-void fn_801FA2F0(void) {}
-void fn_801FA6F4(void) {}
-void fn_801FA6F8(void) {}
+int vfpobjcreator_getExtraSize(void) { return 0xa; }
+int vfpobjcreator_func08(void) { return 0x0; }
+void vfpobjcreator_free(void) {}
+void vfpobjcreator_hitDetect(void) {}
+void vfpobjcreator_release(void) {}
+void vfpobjcreator_initialise(void) {}
+int vfpminifire_getExtraSize(void) { return 0xc; }
+int vfpminifire_func08(void) { return 0x0; }
+void vfpminifire_hitDetect(void) {}
+void vfpminifire_release(void) {}
+void vfpminifire_initialise(void) {}
 int fn_801FA6FC(void) { return 0x4; }
 int fn_801FA704(void) { return 0x0; }
 void fn_801FA73C(void) {}
 void fn_801FA740(void) {}
 void fn_801FA868(void) {}
 void fn_801FA86C(void) {}
-int fn_801FA870(void) { return 0xc; }
-int fn_801FA878(void) { return 0x0; }
-void fn_801FA8B0(void) {}
-void fn_801FA8B4(void) {}
-void fn_801FAC64(void) {}
-void fn_801FAC68(void) {}
+int vfpstatueball_getExtraSize(void) { return 0xc; }
+int vfpstatueball_func08(void) { return 0x0; }
+void vfpstatueball_render(void) {}
+void vfpstatueball_hitDetect(void) {}
+void vfpstatueball_release(void) {}
+void vfpstatueball_initialise(void) {}
 int fn_801FAC6C(void) { return 0x4; }
 int fn_801FAC74(void) { return 0x0; }
 void fn_801FACAC(void) {}
