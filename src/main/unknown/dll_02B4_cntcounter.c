@@ -17,3 +17,10 @@
 // - 7: cntcounter_free (0x802383F0)
 // - 8: cntcounter_func08 (0x802383E8)
 // - 9: cntcounter_getExtraSize (0x802383E0)
+
+// Runtime shape:
+// - extra +0x00: remaining hit/switch count.
+// - extra +0x04: nonzero while the counter is active and can play UI feedback.
+// - init leaves the counter idle. update arms the counter from object-def
+//   switch +0x20, decrements it by incoming switch pulses, fires object-def
+//   switch +0x1E when the count reaches zero, and clears the input switch.

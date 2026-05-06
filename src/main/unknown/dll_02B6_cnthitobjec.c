@@ -18,3 +18,17 @@
 // - 7: cnthitobjec_free (0x80238B74)
 // - 8: cnthitobjec_func08 (0x80238B6C)
 // - 9: cnthitobjec_getExtraSize (0x80238B64)
+
+// Helpers:
+// - cnthitobjec_emitHitEvents (0x80238AB0): installed in obj->funcBC; emits the
+//   effect/event ids listed in the hit context and returns false.
+
+// Runtime shape:
+// - init picks one of three hit-data profiles, arms object hits from switch
+//   +0x20, optionally disables hits when completion switch +0x1E is already set,
+//   and installs cnthitobjec_emitHitEvents.
+// - hitDetect subtracts damage from the remaining hit count, plays hit feedback,
+//   fires completion switch +0x1E at zero, and optionally emits a completion
+//   effect.
+// - update disables hits once completion switch +0x1E is set and re-arms from
+//   switch +0x20 when idle.
