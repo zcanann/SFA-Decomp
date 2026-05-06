@@ -1,84 +1,60 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_80279AF0.h"
 
-extern byte DAT_803cb7f0;
-extern undefined4 DAT_803cb7f1;
-extern undefined4 DAT_803cb7f2;
-extern undefined4 DAT_803cb8f0;
-extern undefined4 DAT_803cb9f0;
-extern undefined4 DAT_803cb9f2;
-extern undefined4 DAT_803def70;
-extern int* DAT_803def74;
-extern int* DAT_803def78;
-extern undefined4 DAT_803def7c;
+extern void fn_80278A98(int state, int x);
+extern void fn_802794EC(int state);
+
+extern u8 lbl_803CB190[];
+extern u8 lbl_803DE2FE;
+extern u8 lbl_803DE2FF;
+extern u8 lbl_803DE300;
+extern u8 lbl_803DE301;
 
 /*
- * --INFO--
- *
- * Function: FUN_8027975c
- * EN v1.0 Address: 0x8027975C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80279AF0
- * EN v1.1 Size: 20b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * fn_8027975C — large voice-allocation/sort routine (~1084 instructions).
+ * Stubbed.
  */
-undefined4 FUN_8027975c(int param_1)
+#pragma dont_inline on
+int fn_8027975C(int state)
 {
+    (void)state;
     return 0;
 }
+#pragma dont_inline reset
 
 /*
- * --INFO--
+ * Release a voice slot: clear voice flags, unlink from id table,
+ * decrement counter, and mark id slot as free (-1).
  *
- * Function: FUN_80279764
- * EN v1.0 Address: 0x80279764
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80279B04
- * EN v1.1 Size: 252b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.1 Address: 0x80279B98, size 228b
  */
-uint FUN_80279764(int param_1,int param_2)
+void fn_80279B98(int state)
 {
-    return 0;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_8027976c
- * EN v1.0 Address: 0x8027976C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80279C00
- * EN v1.1 Size: 80b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_8027976c(uint param_1)
-{
-    return 0;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80279774
- * EN v1.0 Address: 0x80279774
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80279C50
- * EN v1.1 Size: 224b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80279774(int param_1)
-{
+    fn_80278A98(state, 2);
+    fn_802794EC(state);
+    *(u32 *)(state + 0x34) = 0;
+    *(u8 *)(state + 0x10c) = 0;
+    {
+        u32 voice = *(u32 *)(state + 0xf4);
+        u8 v = (u8)voice;
+        u8 *slot = lbl_803CB190 + v * 4;
+        if (*(u16 *)(slot + 2) == 0) {
+            *(u16 *)(slot + 2) = 1;
+            if (lbl_803DE301 != 0xff) {
+                *(slot + 1) = 0xff;
+                *(slot) = lbl_803DE300;
+                *(lbl_803CB190 + lbl_803DE300 * 4 + 1) = v;
+            } else {
+                *(slot + 1) = 0xff;
+                *(slot) = 0xff;
+                lbl_803DE301 = v;
+            }
+            lbl_803DE300 = v;
+            if (*(u8 *)(state + 0x11d) != 0) {
+                lbl_803DE2FF--;
+            } else {
+                lbl_803DE2FE--;
+            }
+        }
+    }
+    *(int *)(state + 0xf4) = -1;
 }
