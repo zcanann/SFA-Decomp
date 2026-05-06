@@ -829,13 +829,13 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
   u64 sourceMaskHit;
   u32 *poolSourceIds;
   u8 *poolFrameFlags;
-  int aggregateState;
   int poolIndex;
+  int aggregateState;
 
   aggregateState = 0;
   source = (ExpgfxSourceObject *)sourceObject;
-  poolIndex = 0;
   lbl_803DD253 = 0;
+  poolIndex = 0;
   poolSourceIds = gExpgfxTrackedPoolSourceIds;
   poolFrameFlags = gExpgfxStaticPoolFrameFlags;
   while ((s16)poolIndex < EXPGFX_POOL_COUNT) {
@@ -846,7 +846,7 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
       sourceMaskHit = CONCAT44(highBit & sourceMasks[0],bit & sourceMasks[1]);
       if (sourceMaskHit != 0) {
         *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_B;
-        if (aggregateState == EXPGFX_SOURCE_FRAME_STATE_A) {
+        if ((s8)aggregateState == EXPGFX_SOURCE_FRAME_STATE_A) {
           aggregateState = EXPGFX_SOURCE_FRAME_STATE_MIXED;
         }
         else {
@@ -855,7 +855,7 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
       }
       else {
         *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_A;
-        if (aggregateState == EXPGFX_SOURCE_FRAME_STATE_B) {
+        if ((s8)aggregateState == EXPGFX_SOURCE_FRAME_STATE_B) {
           aggregateState = EXPGFX_SOURCE_FRAME_STATE_MIXED;
         }
         else {
