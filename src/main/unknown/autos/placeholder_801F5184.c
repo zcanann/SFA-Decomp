@@ -1239,12 +1239,12 @@ int wmspiritplace_func08(void) { return 0x0; }
 void wmspiritplace_free(void) {}
 void wmspiritplace_release(void) {}
 void wmspiritplace_initialise(void) {}
-int fn_801F6A40(void) { return 0x10; }
-int fn_801F6A48(void) { return 0x0; }
-void fn_801F6A50(void) {}
-void fn_801F6A84(void) {}
-void fn_801F6E84(void) {}
-void fn_801F6E88(void) {}
+int wmseqpoint_getExtraSize(void) { return 0x10; }
+int wmseqpoint_func08(void) { return 0x0; }
+void wmseqpoint_free(void) {}
+void wmseqpoint_hitDetect(void) {}
+void wmseqpoint_release(void) {}
+void wmseqpoint_initialise(void) {}
 int fn_801F72F0(void) { return 0x10; }
 int fn_801F72F8(void) { return 0x0; }
 void fn_801F73D0(void) {}
