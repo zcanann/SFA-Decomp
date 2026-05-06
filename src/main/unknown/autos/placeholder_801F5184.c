@@ -1267,13 +1267,13 @@ int wmwallcrawler_getExtraSize(void) { return 0x29c; }
 int wmwallcrawler_func08(void) { return 0x0; }
 void wmwallcrawler_release(void) {}
 void wmwallcrawler_initialise(void) {}
-int fn_801F974C(void) { return 0x6c; }
-int fn_801F9754(void) { return 0x0; }
-void fn_801F975C(void) {}
-void fn_801F9784(void) {}
-void fn_801F9788(void) {}
-void fn_801F97FC(void) {}
-void fn_801F9800(void) {}
+int wmnewcrystal_getExtraSize(void) { return 0x6c; }
+int wmnewcrystal_func08(void) { return 0x0; }
+void wmnewcrystal_free(void) {}
+void wmnewcrystal_hitDetect(void) {}
+void wmnewcrystal_update(void) {}
+void wmnewcrystal_release(void) {}
+void wmnewcrystal_initialise(void) {}
 int fn_801F993C(void) { return 0x1c; }
 int fn_801F9944(void) { return 0x0; }
 void fn_801F9990(void) {}
