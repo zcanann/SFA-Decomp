@@ -6,6 +6,7 @@
 //
 // Current EN descriptor:
 // - gDrGeneratorObjDescriptor @ 0x8032AC58
+// - drgenerator_eventCallback (0x8021F34C) is installed at object +0xBC by drgenerator_init.
 //
 // Descriptor slots:
 // - 0: drgenerator_initialise (0x8021F8C8)

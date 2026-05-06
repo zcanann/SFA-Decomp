@@ -15,6 +15,13 @@
 // Current EN descriptor:
 // - gFirePipeObjDescriptor @ 0x8032AC90
 //
+// Internal helpers immediately before the descriptor slots:
+// - firepipe_spawnEffectObject (0x8021F8CC): pooled spawn/reuse for up to eight effect objects.
+// - firepipe_releaseEffectObject (0x8021FA38): releases pooled effect objects or frees unpooled ones.
+// - firepipe_clearLinkedUpdateFlag (0x8021FAB4): clears extra flag bit 2 on linked child effects.
+// - firepipe_setLinkedUpdateFlag (0x8021FAD0): sets extra flag bit 2 on linked child effects.
+// - firepipe_updateState (0x8021FAEC): shared runtime update body used by update and callback.
+//
 // Descriptor slots:
 // - 3: firepipe_init (0x802202B8)
 // - 4: firepipe_update (0x80220288)

@@ -1469,10 +1469,10 @@ main/proximitymine_init.c:
 	.text       start:0x80211A10 end:0x80211C24
 
 main/unknown/autos/placeholder_80211C24.c:
-	.text       start:0x80211C24 end:0x80220130
+	.text       start:0x80211C24 end:0x8021F8CC
 
 main/dll/firepipe.c:
-	.text       start:0x80220130 end:0x80220608
+	.text       start:0x8021F8CC end:0x80220608
 
 main/unknown/autos/placeholder_80220608.c:
 	.text       start:0x80220608 end:0x8024034C

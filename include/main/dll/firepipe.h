@@ -46,11 +46,16 @@ typedef struct FirePipeObject {
     u8 statusFlags;
     u8 padB0[0xB8 - 0xB0];
     FirePipeExtra *extra;
-    undefined4 (*callback)(void);
+    undefined4 (*callback)(struct FirePipeObject *obj);
 } FirePipeObject;
 
+int firepipe_spawnEffectObject(FirePipeExtra *extra, FirePipeObject *obj, void *spawnDef);
+void firepipe_releaseEffectObject(FirePipeObject *obj);
+int firepipe_clearLinkedUpdateFlag(FirePipeObject *obj);
+int firepipe_setLinkedUpdateFlag(FirePipeObject *obj);
+void firepipe_updateState(FirePipeObject *obj);
 int firepipe_getExtraSize(void);
-undefined4 firepipe_stateCallback(void);
+undefined4 firepipe_stateCallback(FirePipeObject *obj);
 int firepipe_func08(void);
 void firepipe_free(FirePipeObject *obj);
 void firepipe_render(FirePipeObject *obj, int param_2, int param_3, int param_4, int param_5, char param_6);

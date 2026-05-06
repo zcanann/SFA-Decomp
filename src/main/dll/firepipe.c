@@ -12,7 +12,6 @@ extern undefined4 fn_8003B8F4(int param_1, int param_2, int param_3, int param_4
 extern undefined4 fn_800604B4(void);
 extern undefined4 fn_8008016C(int param_1);
 extern undefined4 fn_80080178(int param_1, int param_2);
-extern undefined4 fn_8021FAEC(void);
 
 extern f32 lbl_803DC340;
 extern f32 lbl_803E6B74;
@@ -39,9 +38,9 @@ int firepipe_getExtraSize(void)
 #pragma peephole off
 #pragma scheduling off
 #pragma peephole off
-undefined4 firepipe_stateCallback(void)
+undefined4 firepipe_stateCallback(FirePipeObject *obj)
 {
-    fn_8021FAEC();
+    firepipe_updateState(obj);
     return 0;
 }
 #pragma peephole reset
@@ -106,7 +105,7 @@ void firepipe_render(FirePipeObject *obj, int param_2, int param_3, int param_4,
 void firepipe_update(FirePipeObject *obj)
 {
     obj->statusFlags = (u8)(obj->statusFlags | 8);
-    fn_8021FAEC();
+    firepipe_updateState(obj);
 }
 #pragma peephole reset
 #pragma scheduling reset
