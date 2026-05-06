@@ -1,37 +1,63 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_8026E848.h"
 
-extern void* FUN_8026c794();
-extern undefined4 FUN_8026c9b4();
-extern undefined4 FUN_8026de58();
-extern void* FUN_8026e518();
-extern int FUN_8026e5bc();
-extern int FUN_8026fca0();
-extern undefined4 FUN_80281a30();
-extern undefined4 FUN_80281a34();
-extern undefined4 FUN_80281a38();
+extern int fn_8026DE58(u8 i);
+extern void fn_8026E070(int slot, int item);
 
-extern undefined4 DAT_803bd8f0;
-extern undefined4 DAT_803be684;
-extern undefined4 DAT_803dee98;
-extern undefined4* DAT_803dee9c;
-extern undefined4 DAT_803deea0;
-extern undefined4 DAT_803deea4;
+extern int gSynthCurrentVoice;
 
 /*
- * --INFO--
- *
- * Function: FUN_8026e0e4
- * EN v1.0 Address: 0x8026E0E4
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8026E848
- * EN v1.1 Size: 1920b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * fn_8026E0E4 — large voice/MIDI dispatch (~1920 instructions). Stubbed.
  */
-int FUN_8026e0e4(int param_1,byte param_2,uint *param_3)
+#pragma dont_inline on
+void fn_8026E0E4(void) {}
+#pragma dont_inline reset
+
+/*
+ * Iterate 64 voice slots: for each active one, append it to the studio's
+ * voice list. Uses an indirection table when present.
+ *
+ * EN v1.1 Address: 0x8026E864, size 168b
+ */
+void fn_8026E864(void)
 {
+    u32 i;
+    u32 x;
+    if (*(u32 *)(gSynthCurrentVoice + 0x14e4) == 0) {
+        for (i = 0; i < 0x40; i++) {
+            x = fn_8026DE58((u8)i);
+            if (x != 0) {
+                fn_8026E070(gSynthCurrentVoice + 0x14e8, x);
+            }
+        }
+    } else {
+        for (i = 0; i < 0x40; i++) {
+            x = fn_8026DE58((u8)i);
+            if (x != 0) {
+                u8 *table = *(u8 **)(gSynthCurrentVoice + 0x14e4);
+                u8 idx = table[i];
+                fn_8026E070(gSynthCurrentVoice + idx * 0x38 + 0x14e8, x);
+            }
+        }
+    }
+}
+
+/*
+ * fn_8026E90C — voice-loop to add one voice (~196 instructions). Stubbed.
+ */
+#pragma dont_inline on
+void fn_8026E90C(u8 voice)
+{
+    (void)voice;
+}
+#pragma dont_inline reset
+
+/*
+ * fn_8026E9D0 — large 628-instr voice update with FP math. Stubbed.
+ */
+#pragma dont_inline on
+int fn_8026E9D0(u8 voice, int param)
+{
+    (void)voice; (void)param;
     return 0;
 }
+#pragma dont_inline reset
