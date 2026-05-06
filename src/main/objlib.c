@@ -2616,14 +2616,14 @@ undefined4 ObjTrigger_IsSet(int param_1)
 #pragma peephole off
 int ObjList_FindNearestObjectByDefNo(int obj,int defNo,float *maxDistanceSq)
 {
-  int foundObj;
-  int objectIndex;
-  int *objects;
-  int otherObj;
-  float distanceSq;
-  float invalidDistance;
   int startIndex;
   int objectCount;
+  float invalidDistance;
+  float distanceSq;
+  uint otherObj;
+  int objectIndex;
+  int *objects;
+  int foundObj;
 
   objects = (int *)ObjList_GetObjects(&startIndex,&objectCount);
   foundObj = 0;

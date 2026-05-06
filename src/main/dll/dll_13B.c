@@ -147,10 +147,10 @@ void kaldachompme_hitDetect(void)
 #pragma peephole off
 void kaldachompme_update(int obj)
 {
-  float *extra;
   float target;
   float current;
   float step;
+  float *extra;
 
   extra = *(float **)(obj + 0xb8);
   current = extra[0];
