@@ -3,6 +3,7 @@
 // Source evidence:
 // - DLL 0x00E6 is "ReStartMarker" in retail XML.
 // - Object def 0x0516 ("ReStartMark") resolves here.
+// - Retail class is InfoText (0x0031); retail placements are stripped.
 //
 // Current EN descriptor:
 // - gReStartMarkerObjDescriptor @ 0x80320B00
