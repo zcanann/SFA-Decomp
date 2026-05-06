@@ -1203,7 +1203,7 @@ void fn_80072DFC(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Size: TODO
  *
  * Three-tex-coord-gen ind+direct TEV setup. Loads the active env-mtx
- * (lbl_80396820) for tex0, scales tex1 by lbl_803DEF2C through a 3x4
+ * (lbl_80396820) for tex0, scales tex1 by hudScale through a 3x4
  * matrix from PSMTXScale, and stamps an indirect tex matrix from local
  * stack data. Two TEV stages: stage 0 K-modulates the texture by alpha,
  * stage 1 modulates by the second texture. Uses ind tex stage 0 to warp
@@ -1215,7 +1215,7 @@ void fn_8007366C(u8 alpha)
 {
     extern Mtx lbl_80396820;
     extern f32 lbl_803DEF28;
-    extern f32 lbl_803DEF2C;
+    extern f32 hudScale;
     extern f32 lbl_803DEEDC;
     extern f32 lbl_803DEEE4;
     extern f32 lbl_803DEEEC;
@@ -1249,7 +1249,7 @@ void fn_8007366C(u8 alpha)
     a = a * lbl_803DEF28;
     fn_8006C5E4(&handle1);
     selectTexture(handle1, 1);
-    PSMTXScale((f32(*)[4])tex_mtx, lbl_803DEF2C, lbl_803DEF2C, lbl_803DEF2C);
+    PSMTXScale((f32(*)[4])tex_mtx, hudScale, hudScale, hudScale);
     tex_mtx[0][3] = a;
     GXLoadTexMtxImm(tex_mtx, 0x21, 1);
     GXSetTexCoordGen2(1, 1, 0, 0x21, 0, 0x7D);
@@ -1470,7 +1470,7 @@ undefined4 fn_80074D04(int param_1,int *param_2)
 void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
 {
     extern void Camera_RebuildProjectionMatrix(void);
-    extern Mtx lbl_80396880;
+    extern Mtx hudMatrix;
     extern f32 lbl_803DFB5C;
     extern void GXSetZMode();
     extern u8 lbl_803DD012;
@@ -1482,7 +1482,7 @@ void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
-    GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
+    GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 7 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
         GXSetZMode(0, 7, 0);
@@ -1562,15 +1562,15 @@ void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
 void fn_80075684(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4)
 {
     extern void Camera_RebuildProjectionMatrix(void);
-    extern Mtx lbl_80396880;
-    extern f32 lbl_803DEF2C;
+    extern Mtx hudMatrix;
+    extern f32 hudScale;
     extern f32 lbl_803DEEDC;
     extern void GXSetZMode();
     extern u8 lbl_803DD012;
     extern int lbl_803DD014;
     extern u8 lbl_803DD018;
     extern u8 lbl_803DB679;
-    f32 scale = lbl_803DEF2C;
+    f32 scale = hudScale;
     f32 fx1 = scale * x1;
     f32 fy1 = scale * y1;
     f32 fx2 = scale * x2;
@@ -1585,7 +1585,7 @@ void fn_80075684(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
-    GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
+    GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 7 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
         GXSetZMode(0, 7, 0);
@@ -1665,14 +1665,14 @@ void fn_80075684(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 
 void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
 {
     extern void Camera_RebuildProjectionMatrix(void);
-    extern Mtx lbl_80396880;
-    extern f32 lbl_803DEF2C;
+    extern Mtx hudMatrix;
+    extern f32 hudScale;
     extern f32 lbl_803DFB5C;
     extern void GXSetZMode();
     extern u8 lbl_803DD012;
     extern int lbl_803DD014;
     extern u8 lbl_803DD018;
-    f32 scale = lbl_803DEF2C;
+    f32 scale = hudScale;
     f32 fx1 = scale * x1;
     f32 fy1 = scale * y1;
     f32 fx2 = scale * x2;
@@ -1685,7 +1685,7 @@ void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
-    GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
+    GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 7 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
         GXSetZMode(0, 7, 0);
@@ -1758,14 +1758,14 @@ void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
 void fn_80075D5C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z)
 {
     extern void Camera_RebuildProjectionMatrix(void);
-    extern Mtx lbl_80396880;
+    extern Mtx hudMatrix;
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
-    GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
+    GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     GXBegin(GX_QUADS, GX_VTXFMT1, 4);
 
     GXWGFifo.u8 = 0x3C;
@@ -1819,14 +1819,14 @@ void fn_80075D5C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2,
 void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
 {
     extern void Camera_RebuildProjectionMatrix(void);
-    extern Mtx lbl_80396880;
+    extern Mtx hudMatrix;
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
-    GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
+    GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     GXBegin(GX_QUADS, GX_VTXFMT1, 4);
 
     GXWGFifo.u8 = 0x3C;
@@ -1903,11 +1903,11 @@ void drawPartialTexture(undefined8 param_1,double param_2,undefined4 param_3,und
 #pragma scheduling off
 void fn_80076510(int x, int y, f32 sx, f32 sy)
 {
-    extern Mtx lbl_80396880;
+    extern Mtx hudMatrix;
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
-    extern f32 lbl_803DEF2C;
+    extern f32 hudScale;
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
@@ -1929,7 +1929,7 @@ void fn_80076510(int x, int y, f32 sx, f32 sy)
     GXSetNumTexGens(0);
     GXSetNumTevStages(1);
     GXSetCullMode(GX_CULL_NONE);
-    GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
+    GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 7 ||
         (u32)lbl_803DD012 != 1 || lbl_803DD01A == 0) {
         GXSetZMode(1, 7, 1);
@@ -1945,8 +1945,8 @@ void fn_80076510(int x, int y, f32 sx, f32 sy)
     }
     GXSetBlendMode(0, 1, 0, 5);
     GXSetCurrentMtx(0x3C);
-    sx = lbl_803DEF2C * sx;
-    sy = lbl_803DEF2C * sy;
+    sx = hudScale * sx;
+    sy = hudScale * sy;
     GXBegin(GX_QUADS, GX_VTXFMT1, 4);
 
     GXWGFifo.s16 = (s16)sx;
@@ -2012,11 +2012,11 @@ void drawScaledTexture(undefined8 param_1,double param_2,undefined4 param_3,unde
 #pragma scheduling off
 void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
 {
-    extern f32 lbl_803DEF2C;
+    extern f32 hudScale;
     extern f32 lbl_803DEEDC;
     extern f32 lbl_803DEEE4;
     extern u8 lbl_803DB679;
-    extern Mtx lbl_80396880;
+    extern Mtx hudMatrix;
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern int lbl_803DD014;
     extern void textureFn_8004c264(s16* obj, int slot);
@@ -2062,7 +2062,7 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
     textureFn_8004c264(obj, 0);
     GXSetCullMode(GX_CULL_NONE);
-    GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
+    GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 7 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
         GXSetZMode(0, 7, 0);
@@ -2140,11 +2140,11 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
 #pragma scheduling off
 void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
 {
-    extern f32 lbl_803DEF2C;
+    extern f32 hudScale;
     extern f32 lbl_803DEEDC;
     extern f32 lbl_803DEEE4;
     extern u8 lbl_803DB679;
-    extern Mtx lbl_80396880;
+    extern Mtx hudMatrix;
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern int lbl_803DD014;
     extern void textureFn_8004c264(s16* obj, int slot);
@@ -2192,7 +2192,7 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
     textureFn_8004c264(obj, 0);
     GXSetCullMode(GX_CULL_NONE);
-    GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
+    GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 7 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
         GXSetZMode(0, 7, 0);
@@ -2204,8 +2204,8 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
     GXSetBlendMode(1, 4, 5, 5);
     w = ((((u16*)obj)[5] << 2) * (s32)scale) / 256;
     h = ((((u16*)obj)[6] << 2) * (s32)scale) / 256;
-    sx = lbl_803DEF2C * sx;
-    sy = lbl_803DEF2C * sy;
+    sx = hudScale * sx;
+    sy = hudScale * sy;
     GXBegin(GX_QUADS, GX_VTXFMT1, 4);
 
     GXWGFifo.u8 = 0x3C;
@@ -3172,7 +3172,7 @@ void fn_80079A64(f32 sx, f32 sy, u8 a, u8 flag)
     extern f32 lbl_803DEEE4;
     extern f32 lbl_803DEF4C;
     extern f32 lbl_803DEF50;
-    extern Mtx lbl_80396880;
+    extern Mtx hudMatrix;
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
@@ -3255,7 +3255,7 @@ void fn_80079A64(f32 sx, f32 sy, u8 a, u8 flag)
         lbl_803DD019 = 1;
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
-    GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
+    GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 
     GXWGFifo.s16 = 0;
@@ -3341,7 +3341,7 @@ void fn_8007AD10(f32 alpha)
 {
     extern struct { f32 x, y; } lbl_803DEF1C;
     extern GXColor lbl_803DB6A0;
-    extern Mtx lbl_80396880;
+    extern Mtx hudMatrix;
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
@@ -3378,7 +3378,7 @@ void fn_8007AD10(f32 alpha)
         lbl_803DD019 = 1;
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
-    GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
+    GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     GXSetNumTexGens(1);
     GXSetNumTevStages(1);
     GXSetNumIndStages(0);

@@ -140,7 +140,7 @@ extern f32 lbl_803E1EAC;
 extern f32 lbl_803E1EB0;
 extern f32 lbl_803E1EB4;
 extern f32 lbl_803E1EB8;
-extern f32 lbl_803E1EC0;
+extern f32 hudElementOpacity;
 extern f32 lbl_803E1EC4;
 extern f32 lbl_803E1EC8;
 extern f32 lbl_803E1ECC;
@@ -887,9 +887,9 @@ void FUN_800fa6a8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_314 = 0x15;
   local_318 = &DAT_80318060;
   local_328 = 4;
-  local_324 = lbl_803E1EC0;
-  local_320 = lbl_803E1EC0;
-  local_31c = lbl_803E1EC0;
+  local_324 = hudElementOpacity;
+  local_320 = hudElementOpacity;
+  local_31c = hudElementOpacity;
   local_2fa = 0;
   local_2fc = 0x15;
   local_300 = &DAT_80318060;
@@ -905,36 +905,36 @@ void FUN_800fa6a8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_2e8 = &DAT_80318060;
   local_2f8 = 4;
   local_2f4 = lbl_803E1ED0;
-  local_2f0 = lbl_803E1EC0;
-  local_2ec = lbl_803E1EC0;
+  local_2f0 = hudElementOpacity;
+  local_2ec = hudElementOpacity;
   local_2ca = 1;
   local_2cc = 0x15;
   local_2d0 = &DAT_80318060;
   local_2e0 = 0x4000;
   local_2dc = lbl_803E1ED4;
-  local_2d8 = lbl_803E1EC0;
-  local_2d4 = lbl_803E1EC0;
+  local_2d8 = hudElementOpacity;
+  local_2d4 = hudElementOpacity;
   local_2b2 = 2;
   local_2b4 = 0x15;
   local_2b8 = &DAT_80318060;
   local_2c8 = 4;
-  local_2c4 = lbl_803E1EC0;
-  local_2c0 = lbl_803E1EC0;
-  local_2bc = lbl_803E1EC0;
+  local_2c4 = hudElementOpacity;
+  local_2c0 = hudElementOpacity;
+  local_2bc = hudElementOpacity;
   local_29a = 2;
   local_29c = 0x15;
   local_2a0 = &DAT_80318060;
   local_2b0 = 0x4000;
   local_2ac = lbl_803E1ED4;
-  local_2a8 = lbl_803E1EC0;
-  local_2a4 = lbl_803E1EC0;
+  local_2a8 = hudElementOpacity;
+  local_2a4 = hudElementOpacity;
   local_330 = 0;
-  local_35c = lbl_803E1EC0;
-  local_358 = lbl_803E1EC0;
-  local_354 = lbl_803E1EC0;
-  local_368 = lbl_803E1EC0;
-  local_364 = lbl_803E1EC0;
-  local_360 = lbl_803E1EC0;
+  local_35c = hudElementOpacity;
+  local_358 = hudElementOpacity;
+  local_354 = hudElementOpacity;
+  local_368 = hudElementOpacity;
+  local_364 = hudElementOpacity;
+  local_360 = hudElementOpacity;
   local_350 = lbl_803E1ED8;
   local_348 = 2;
   local_34c = 7;
@@ -954,14 +954,14 @@ void FUN_800fa6a8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_334 = param_4 | 0xc0104c0;
   if ((param_4 & 1) != 0) {
     if (iVar2 == 0) {
-      local_35c = lbl_803E1EC0 + *(float *)(param_3 + 0xc);
-      local_358 = lbl_803E1EC0 + *(float *)(param_3 + 0x10);
-      local_354 = lbl_803E1EC0 + *(float *)(param_3 + 0x14);
+      local_35c = hudElementOpacity + *(float *)(param_3 + 0xc);
+      local_358 = hudElementOpacity + *(float *)(param_3 + 0x10);
+      local_354 = hudElementOpacity + *(float *)(param_3 + 0x14);
     }
     else {
-      local_35c = lbl_803E1EC0 + *(float *)(iVar2 + 0xc);
-      local_358 = lbl_803E1EC0 + *(float *)(iVar2 + 0x10);
-      local_354 = lbl_803E1EC0 + *(float *)(iVar2 + 0x14);
+      local_35c = hudElementOpacity + *(float *)(iVar2 + 0xc);
+      local_358 = hudElementOpacity + *(float *)(iVar2 + 0x10);
+      local_354 = hudElementOpacity + *(float *)(iVar2 + 0x14);
     }
   }
   local_388 = &local_328;

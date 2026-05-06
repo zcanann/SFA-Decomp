@@ -1064,7 +1064,7 @@ extern f32 lbl_803E2044;  /*  43.0f  (FOV value) */
 extern s8  lbl_803DBA64;
 extern void fn_8006B558(void*);
 
-extern u8  lbl_803A89B0[0x198];
+extern u8  hudTextures[0x198];
 extern u32 lbl_8033BE40[5];
 extern int   fn_80019B14(void);
 extern void  fn_80019B1C(int, s32);
@@ -1619,7 +1619,7 @@ void fn_80129DB4(void)
  * fn_800191C4(lbl_803DBA60, lbl_803DBA5C), and looks up sprite 0x49.
  *
  * Copies the 5-u32 transform block from the singleton at
- * lbl_803A89B0+0x13c..+0x14c into the global mtx scratch at
+ * hudTextures+0x13c..+0x14c into the global mtx scratch at
  * lbl_8033BE40 (offsets 0x0..0x10).
  *
  * Computes the per-frame fade alpha r30 and target_y r27 from the
@@ -1661,11 +1661,11 @@ void pauseMenuDrawText(void)
     handle = fn_800191C4(lbl_803DBA60, lbl_803DBA5C);
     sprite = gameTextGetBox(0x49);
 
-    lbl_8033BE40[0] = *(u32*)((u8*)lbl_803A89B0 + 0x13c);
-    lbl_8033BE40[1] = *(u32*)((u8*)lbl_803A89B0 + 0x140);
-    lbl_8033BE40[2] = *(u32*)((u8*)lbl_803A89B0 + 0x144);
-    lbl_8033BE40[3] = *(u32*)((u8*)lbl_803A89B0 + 0x148);
-    lbl_8033BE40[4] = *(u32*)((u8*)lbl_803A89B0 + 0x14c);
+    lbl_8033BE40[0] = *(u32*)((u8*)hudTextures + 0x13c);
+    lbl_8033BE40[1] = *(u32*)((u8*)hudTextures + 0x140);
+    lbl_8033BE40[2] = *(u32*)((u8*)hudTextures + 0x144);
+    lbl_8033BE40[3] = *(u32*)((u8*)hudTextures + 0x148);
+    lbl_8033BE40[4] = *(u32*)((u8*)hudTextures + 0x14c);
 
     cur = (s16)lbl_803DD774;
     mirrored = cur;

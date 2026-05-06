@@ -3621,7 +3621,7 @@ extern void  PSMTXTrans(void*, f32, f32, f32);
 
 extern void* lbl_803DBBC8[2];
 extern void  Obj_FreeObject(void*);
-extern void* lbl_803DD93C;
+extern void* minimapTexture;
 extern void* lbl_803DD940;
 
 extern f32   lbl_803E23B8;
@@ -3683,7 +3683,7 @@ int fn_80138920(u8* obj, int arg1, int arg2)
 #pragma scheduling reset
 
 /* EN v1.0 0x80133EA4  size: 156b  Two-step shutdown helper. Releases
- * the buffers at lbl_803DD93C and lbl_803DD940 (the first only if
+ * the buffers at minimapTexture and lbl_803DD940 (the first only if
  * non-null), then walks the 2-slot live-objects table at lbl_803DBBC8
  * tearing down each non-null entry via Obj_FreeObject. Both buffer
  * pointers are zeroed at the end. */
@@ -3691,7 +3691,7 @@ void fn_80133EA4(void)
 {
     u8 i;
     void** slots;
-    if (lbl_803DD93C != NULL) fn_80054308(lbl_803DD93C);
+    if (minimapTexture != NULL) fn_80054308(minimapTexture);
     fn_80054308(lbl_803DD940);
     slots = lbl_803DBBC8;
     i = 0;
@@ -3702,7 +3702,7 @@ void fn_80133EA4(void)
         }
         i++;
     }
-    lbl_803DD93C = NULL;
+    minimapTexture = NULL;
     lbl_803DD940 = NULL;
 }
 
@@ -3797,7 +3797,7 @@ void fn_80138EF8(u8* obj)
 
 extern void* lbl_803DD984;
 extern void* lbl_803DD980;
-extern void* lbl_803DD93C;
+extern void* minimapTexture;
 extern void* lbl_803DD92C;
 extern f32   lbl_803DD97C;
 extern f32   lbl_803E22E0;
@@ -3858,13 +3858,13 @@ int fn_80134BE8(void)
 }
 
 /* EN v1.0 0x80133934  size: 52b  Release-and-clear pair: when
- * lbl_803DD93C is non-null, release via fn_80054308 and zero both
- * lbl_803DD93C and lbl_803DD92C. */
+ * minimapTexture is non-null, release via fn_80054308 and zero both
+ * minimapTexture and lbl_803DD92C. */
 void fn_80133934(void)
 {
-    if (lbl_803DD93C != NULL) {
-        fn_80054308(lbl_803DD93C);
-        lbl_803DD93C = NULL;
+    if (minimapTexture != NULL) {
+        fn_80054308(minimapTexture);
+        minimapTexture = NULL;
         lbl_803DD92C = NULL;
     }
 }
