@@ -32,30 +32,37 @@ int hwChangeStudio(int param_1) {
     u32 pos;
     u32 lowBits;
     int entry;
+    int base;
+    int offset;
 
-    entry = lbl_803DE344 + param_1 * 0xf4;
+    offset = param_1 * 0xf4;
+    base = lbl_803DE344;
+    entry = base + offset;
     if (*(u8 *)(entry + 0xec) != 2) {
         return 0;
     }
     mode = *(u8 *)(entry + 0x90);
-    if (mode == 3) {
-        return *(int *)(entry + 0x20) - *(int *)(entry + 0x78);
-    }
-    if (mode < 3) {
-        if (1 < mode) {
-            return *(int *)(entry + 0x20) - (*(u32 *)(entry + 0x78) >> 1);
+    switch (mode) {
+    case 0:
+    case 1:
+    case 4:
+    case 5:
+        entry = base + offset;
+        pos = *(u32 *)(entry + 0x20);
+        entry = ((pos - 2 * *(int *)(entry + 0x78)) >> 4) * 0xe;
+        lowBits = pos & 0xf;
+        if (lowBits < 2) {
+            return entry;
         }
-    } else if (5 < mode) {
+        entry += lowBits;
+        return entry - 2;
+    default:
         return param_1;
+    case 3:
+        return *(int *)(entry + 0x20) - *(int *)(entry + 0x78);
+    case 2:
+        return *(int *)(entry + 0x20) - (*(u32 *)(entry + 0x78) >> 1);
     }
-    entry = lbl_803DE344 + param_1 * 0xf4;
-    pos = *(u32 *)(entry + 0x20);
-    lowBits = pos & 0xf;
-    entry = ((pos - 2 * *(int *)(entry + 0x78)) >> 4) * 0xe;
-    if (lowBits < 2) {
-        return entry;
-    }
-    return lowBits + entry - 2;
 }
 
 /*
