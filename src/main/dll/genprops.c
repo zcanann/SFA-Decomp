@@ -4424,18 +4424,18 @@ void flamethrowerspe_initialise(void) {}
 void shield_hitDetect(void) {}
 void shield_release(void) {}
 void shield_initialise(void) {}
-void fn_80171308(void) {}
-void fn_8017131C(void) {}
+void curve_setScale(void) {}
+void curve_free(void) {}
 void fn_80171518(void) {}
 void fn_801719D8(void) {}
 void fn_801719DC(void) {}
-void fn_801719E0(void) {}
-void fn_801719F4(void) {}
-void fn_80171A1C(void) {}
-void fn_80171A20(void) {}
-void fn_80171BA4(void) {}
-void fn_80171BA8(void) {}
-void fn_80171D10(void) {}
+void checkpoint4_setScale(void) {}
+void checkpoint4_free(void) {}
+void checkpoint4_hitDetect(void) {}
+void checkpoint4_update(void) {}
+void checkpoint4_release(void) {}
+void checkpoint4_initialise(void) {}
+void DummyE9_init(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int mikabombshadow_getExtraSize(void) { return 0x4; }
@@ -4458,13 +4458,13 @@ int flamethrowerspe_func08(void) { return 0x0; }
 int shield_getExtraSize(void) { return 0x60; }
 int shield_func08(void) { return 0x0; }
 int fn_80171300(void) { return 0x0; }
-int fn_8017130C(void) { return 0x0; }
+int curve_getExtraSize(void) { return 0x0; }
 int fn_80171314(void) { return 0x0; }
 int fn_801713FC(void) { return 0xc; }
 int fn_80171404(void) { return 0x2; }
-int fn_801719E4(void) { return 0x40; }
+int checkpoint4_getExtraSize(void) { return 0x40; }
 int fn_801719EC(void) { return 0x10; }
-int fn_80171C78(void) { return 0x1; }
+int siderepel_getExtraSize(void) { return 0x1; }
 
 /* Pattern wrappers. */
 s16 staff_func13(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x88); }
@@ -4482,7 +4482,7 @@ extern f32 lbl_803E33F0;
 #pragma peephole off
 void fn_8016B8CC(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E31E8); }
 void baddieinterestp_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E3220); }
-void fn_80171320(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E33F0); }
+void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E33F0); }
 #pragma peephole reset
 
 /* render-with-fn(lbl) (no visibility check). */
@@ -4499,7 +4499,7 @@ void fn_801719F8(void) { fn_8003B8F4(lbl_803E3420); }
 #pragma scheduling off
 #pragma peephole off
 void fn_8016B8A8(int x) { ObjGroup_RemoveObject(x, 0x7); }
-void fn_80171C80(int x) { ObjGroup_RemoveObject(x, 0x40); }
+void siderepel_free(int x) { ObjGroup_RemoveObject(x, 0x40); }
 #pragma peephole reset
 #pragma scheduling reset
 
