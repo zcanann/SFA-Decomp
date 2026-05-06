@@ -11,7 +11,7 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern void fn_8003B8F4(void *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                         undefined4 param_5,double scale);
-extern int fn_80210BE8(void);
+extern int spellstone_idleCallback(void);
 
 extern s16 lbl_803DC228;
 extern undefined4 *lbl_803DCAAC;
@@ -159,7 +159,7 @@ void spellstone_init(SpellStoneObject *obj)
   state = obj->state;
   ObjGroup_AddObject(obj,0x1e);
   state->state = 1;
-  obj->callback = fn_80210BE8;
+  obj->callback = spellstone_idleCallback;
   return;
 }
 
