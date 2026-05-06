@@ -62,7 +62,7 @@ extern f32 lbl_803E234C;
 /*
  * --INFO--
  *
- * Function: camcontrol_setPosition
+ * Function: Camera_init
  * EN v1.0 Address: 0x80103524
  * EN v1.0 Size: 252b
  * EN v1.1 Address: 0x80103648
@@ -72,7 +72,7 @@ extern f32 lbl_803E234C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void camcontrol_setPosition(double param_1,double param_2,double param_3,undefined4 param_4)
+void Camera_init(double param_1,double param_2,double param_3,undefined4 param_4)
 {
   FUN_800033a8(gCamcontrolState,0,0x144);
   *(float *)(gCamcontrolState + 0xc) = (float)param_1;
@@ -116,7 +116,7 @@ void FUN_80103620(void)
 /*
  * --INFO--
  *
- * Function: camcontrol_resetState
+ * Function: Camera_initialise
  * EN v1.0 Address: 0x80103648
  * EN v1.0 Size: 288b
  * EN v1.1 Address: 0x80103760
@@ -126,9 +126,8 @@ void FUN_80103620(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void camcontrol_resetState(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                           undefined8 param_5,undefined8 param_6,undefined8 param_7,
-                           undefined8 param_8)
+void Camera_initialise(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                       undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   int iVar1;
   undefined4 uVar2;

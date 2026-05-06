@@ -26,7 +26,10 @@
  *   Camera_getTarget @ 0x801028FC, Camera_getOverrideTarget @ 0x80102908,
  *   Camera_overridePos @ 0x80102A60, Camera_func08 @ 0x80103054,
  *   Camera_GetFollowPos @ 0x801030A8, Camera_getMode @ 0x801030B0,
- *   Camera_get @ 0x801030B8, and Camera_release @ 0x8010349C.
+ *   Camera_get @ 0x801030B8, Camera_setMode @ 0x80102F88,
+ *   Camera_getCamActionsBinEntry @ 0x80102E94, Camera_update @ 0x801030C0,
+ *   Camera_init @ 0x801033AC, Camera_release @ 0x8010349C, and
+ *   Camera_initialise @ 0x801034C4.
  *
  * Reference-side path hints:
  * - current debug path: dll/CAM/camcontrol.c

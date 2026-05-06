@@ -484,8 +484,8 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char trigge
     else {
       blendFrames = 0;
     }
-    camcontrol_queueCamAction(CAMCONTROL_ACTION_TRIGGER_TYPE2,1,0,8,(uint)&local_28,blendFrames,
-                              CAMCONTROL_QUEUE_SENTINEL);
+    Camera_setMode(CAMCONTROL_ACTION_TRIGGER_TYPE2,1,0,8,(uint)&local_28,blendFrames,
+                   CAMCONTROL_QUEUE_SENTINEL);
     return;
   }
   if (triggerType < 2) {
@@ -499,20 +499,20 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char trigge
       else {
         blendFrames = 0;
       }
-      camcontrol_queueCamAction(CAMCONTROL_ACTION_TRIGGER_TYPE1,1,0,8,(uint)&local_20,blendFrames,
-                                CAMCONTROL_QUEUE_SENTINEL);
+      Camera_setMode(CAMCONTROL_ACTION_TRIGGER_TYPE1,1,0,8,(uint)&local_20,blendFrames,
+                     CAMCONTROL_QUEUE_SENTINEL);
       return;
     }
   }
   else {
     if (triggerType == 4) {
-      camcontrol_queueCamAction(actionNo + CAMCONTROL_ACTION_DEFAULT,1,0,0,0,
-                                CAMCONTROL_DEFAULT_BLEND_FRAMES,CAMCONTROL_QUEUE_SENTINEL);
+      Camera_setMode(actionNo + CAMCONTROL_ACTION_DEFAULT,1,0,0,0,
+                     CAMCONTROL_DEFAULT_BLEND_FRAMES,CAMCONTROL_QUEUE_SENTINEL);
       return;
     }
     if (triggerType < 4) {
-      camcontrol_queueCamAction(CAMCONTROL_ACTION_DEFAULT,0,1,0,0,
-                                CAMCONTROL_DEFAULT_BLEND_FRAMES,CAMCONTROL_QUEUE_SENTINEL);
+      Camera_setMode(CAMCONTROL_ACTION_DEFAULT,0,1,0,0,CAMCONTROL_DEFAULT_BLEND_FRAMES,
+                     CAMCONTROL_QUEUE_SENTINEL);
       return;
     }
   }
@@ -528,12 +528,12 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char trigge
           (gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGER_TYPE1)) ||
          (gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
         if (camAction->actionKind == 1) {
-          camcontrol_queueCamAction(CAMCONTROL_ACTION_TRIGGERED,1,2,CAMCONTROL_ACTION_RECORD_SIZE,
-                                    (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
+          Camera_setMode(CAMCONTROL_ACTION_TRIGGERED,1,2,CAMCONTROL_ACTION_RECORD_SIZE,
+                         (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
         }
         else {
-          camcontrol_queueCamAction(CAMCONTROL_ACTION_DEFAULT,0,2,CAMCONTROL_ACTION_RECORD_SIZE,
-                                    (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
+          Camera_setMode(CAMCONTROL_ACTION_DEFAULT,0,2,CAMCONTROL_ACTION_RECORD_SIZE,
+                         (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
         }
       }
       else {
@@ -570,12 +570,12 @@ LAB_80103090:
          ((gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGER_TYPE1 ||
           (gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGER_TYPE2)))) {
         if (camAction->actionKind == 1) {
-          camcontrol_queueCamAction(CAMCONTROL_ACTION_TRIGGERED,1,2,CAMCONTROL_ACTION_RECORD_SIZE,
-                                    (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
+          Camera_setMode(CAMCONTROL_ACTION_TRIGGERED,1,2,CAMCONTROL_ACTION_RECORD_SIZE,
+                         (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
         }
         else {
-          camcontrol_queueCamAction(CAMCONTROL_ACTION_DEFAULT,0,2,CAMCONTROL_ACTION_RECORD_SIZE,
-                                    (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
+          Camera_setMode(CAMCONTROL_ACTION_DEFAULT,0,2,CAMCONTROL_ACTION_RECORD_SIZE,
+                         (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
         }
       }
       else {
@@ -604,7 +604,7 @@ LAB_80102f3c:
 /*
  * --INFO--
  *
- * Function: camcontrol_loadCamAction
+ * Function: Camera_getCamActionsBinEntry
  * EN v1.0 Address: 0x80102E94
  * EN v1.0 Size: 116b
  * EN v1.1 Address: 0x80103130
@@ -616,7 +616,7 @@ LAB_80102f3c:
  */
 #pragma scheduling off
 #pragma peephole off
-void *camcontrol_loadCamAction(int actionNo)
+void *Camera_getCamActionsBinEntry(int actionNo)
 {
   void *camAction;
 
@@ -671,7 +671,7 @@ void camcontrol_releaseCurrentHandler(void)
 void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2)
 {
   if (lbl_803DD4F4 != -1) {
-    camcontrol_queueCamAction(lbl_803DD4F4,lbl_803DD4F0,lbl_803DD4EC,0,0,param_1,param_2);
+    Camera_setMode(lbl_803DD4F4,lbl_803DD4F0,lbl_803DD4EC,0,0,param_1,param_2);
   }
   return;
 }
@@ -681,7 +681,7 @@ void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2)
 /*
  * --INFO--
  *
- * Function: camcontrol_queueCamAction
+ * Function: Camera_setMode
  * EN v1.0 Address: 0x80102F88
  * EN v1.0 Size: 204b
  * EN v1.1 Address: 0x80103224
@@ -693,8 +693,8 @@ void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-void camcontrol_queueCamAction(undefined4 param_1,undefined4 param_2,int param_3,int param_4,
-                               uint param_5,undefined4 param_6,undefined param_7)
+void Camera_setMode(undefined4 param_1,undefined4 param_2,int param_3,int param_4,uint param_5,
+                    undefined4 param_6,undefined param_7)
 {
   int iVar1;
   undefined extraout_r4;
@@ -728,7 +728,7 @@ void camcontrol_queueCamAction(undefined4 param_1,undefined4 param_2,int param_3
 /*
  * --INFO--
  *
- * Function: camcontrol_updateState
+ * Function: Camera_update
  * EN v1.0 Address: 0x801030C0
  * EN v1.0 Size: 748b
  * EN v1.1 Address: 0x8010335C
@@ -738,9 +738,8 @@ void camcontrol_queueCamAction(undefined4 param_1,undefined4 param_2,int param_3
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void camcontrol_updateState(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                            undefined8 param_5,undefined8 param_6,undefined8 param_7,
-                            undefined8 param_8)
+void Camera_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                   undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   int iVar1;
   undefined4 uVar2;
