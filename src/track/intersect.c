@@ -884,7 +884,7 @@ void fn_80070234(f32* param_1)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_800702B8(u32 param_1)
+void gxSetPeControl_ZCompLoc_(u32 param_1)
 {
     extern void GXSetZCompLoc();
     if ((u32)lbl_803DD011 != (param_1 & 0xff) || lbl_803DD019 == 0) {
@@ -909,7 +909,7 @@ void fn_800702B8(u32 param_1)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80070310(u32 param_1, int param_2, u32 param_3)
+void gxSetZMode_(u32 param_1, int param_2, u32 param_3)
 {
     extern void GXSetZMode();
     extern u8 lbl_803DD012;
@@ -1467,7 +1467,7 @@ undefined4 fn_80074D04(int param_1,int *param_2)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_800753B8(int x1, int y1, int x2, int y2, u8* color)
+void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
 {
     extern void Camera_RebuildProjectionMatrix(void);
     extern Mtx lbl_80396880;
@@ -1662,7 +1662,7 @@ void fn_80075684(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80075A1C(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
+void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
 {
     extern void Camera_RebuildProjectionMatrix(void);
     extern Mtx lbl_80396880;
@@ -1816,7 +1816,7 @@ void fn_80075D5C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2,
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80075E8C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
+void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
 {
     extern void Camera_RebuildProjectionMatrix(void);
     extern Mtx lbl_80396880;
@@ -1865,7 +1865,7 @@ void fn_80075E8C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
 /*
  * --INFO--
  *
- * Function: fn_80075FC8
+ * Function: drawPartialTexture
  * EN v1.0 Address: 0x800709D8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80076144
@@ -1875,7 +1875,7 @@ void fn_80075E8C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80075FC8(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
+void drawPartialTexture(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  uint param_5,int param_6,int param_7,int param_8,int param_9)
 {
 }
@@ -1897,7 +1897,7 @@ void fn_80075FC8(undefined8 param_1,double param_2,undefined4 param_3,undefined4
  * fresh (no tex coords, color from constant K0, additive blend, fixed
  * 0x3C texmtx) then emits four GX_VTXFMT1 vertices at z=-0x18C with
  * width 4*size_x and height 4*size_y in screen pixels. Used as the
- * "draw fullscreen tint" primitive by the dialog code in fn_8007E54C.
+ * "draw fullscreen tint" primitive by the dialog code in cardShowLoadingMsg.
  */
 #pragma peephole off
 #pragma scheduling off
@@ -1974,7 +1974,7 @@ void fn_80076510(int x, int y, f32 sx, f32 sy)
 /*
  * --INFO--
  *
- * Function: fn_8007681C
+ * Function: drawScaledTexture
  * EN v1.0 Address: 0x800709E0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80076998
@@ -1984,7 +1984,7 @@ void fn_80076510(int x, int y, f32 sx, f32 sy)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8007681C(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
+void drawScaledTexture(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  uint param_5,int param_6,int param_7,uint param_8)
 {
 }
@@ -1992,7 +1992,7 @@ void fn_8007681C(undefined8 param_1,double param_2,undefined4 param_3,undefined4
 /*
  * --INFO--
  *
- * Function: fn_80076D78
+ * Function: hudDrawColored
  * EN v1.0 Address: 0x80076D78
  * EN v1.0 Size: 1060b
  * EN v1.1 Address: 0x80076EF4
@@ -2002,7 +2002,7 @@ void fn_8007681C(undefined8 param_1,double param_2,undefined4 param_3,undefined4
  * PAL Address: TODO
  * PAL Size: TODO
  *
- * Caller-coloured asset blit. Same mechanic as fn_8007719C but the K0
+ * Caller-coloured asset blit. Same mechanic as drawTexture but the K0
  * color comes from a writable GXColor the caller passes in (we apply the
  * lbl_803DB679 alpha tint to it in place). The flag arg picks between
  * "raster passthrough" (TevColorIn 0xF/0xF/0xF/0xE) and "K-tint replace"
@@ -2010,7 +2010,7 @@ void fn_8007681C(undefined8 param_1,double param_2,undefined4 param_3,undefined4
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80076D78(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
+void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
 {
     extern f32 lbl_803DEF2C;
     extern f32 lbl_803DEEDC;
@@ -2118,7 +2118,7 @@ void fn_80076D78(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
 /*
  * --INFO--
  *
- * Function: fn_8007719C
+ * Function: drawTexture
  * EN v1.0 Address: 0x8007719C
  * EN v1.0 Size: 1128b
  * EN v1.1 Address: 0x80077318
@@ -2138,7 +2138,7 @@ void fn_80076D78(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_8007719C(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
+void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
 {
     extern f32 lbl_803DEF2C;
     extern f32 lbl_803DEEDC;
@@ -2572,7 +2572,7 @@ void fn_800789AC(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80078A7C(void)
+void textBlendSetupFn_80078a7c(void)
 {
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
@@ -2761,7 +2761,7 @@ void fn_80078ED0(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80078FA4(void)
+void textRenderSetup(void)
 {
     GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 0xFF);
     GXSetTevDirect(lbl_803DDCB0);
@@ -2954,7 +2954,7 @@ void fn_800794E0(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_800795E8(void)
+void textRenderSetupFn_800795e8(void)
 {
     GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 0xFF);
     GXSetTevDirect(lbl_803DDCB0);
@@ -3008,7 +3008,7 @@ void fn_800796F0(void)
 /*
  * --INFO--
  *
- * Function: fn_80079804
+ * Function: textRenderSetupFn_80079804
  * EN v1.0 Address: 0x80079804
  * EN v1.0 Size: 444b
  * EN v1.1 Address: 0x80079980
@@ -3027,7 +3027,7 @@ void fn_800796F0(void)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80079804(void)
+void textRenderSetupFn_80079804(void)
 {
     extern u8 lbl_803DD008, lbl_803DD009, lbl_803DD00A, lbl_803DD00B;
     extern u8 lbl_803DB679;
@@ -3079,7 +3079,7 @@ void fn_80079804(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_800799C0(void)
+void textureSetupFn_800799c0(void)
 {
     lbl_803DDC88 = 0;
     lbl_803DD009 = 0;
@@ -3104,7 +3104,7 @@ void fn_800799C0(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_800799E4(u8 r, u8 g, u8 b, u8 a)
+void _gxSetTevColor2(u8 r, u8 g, u8 b, u8 a)
 {
     GXColor c;
     c.r = r;
@@ -3129,7 +3129,7 @@ void fn_800799E4(u8 r, u8 g, u8 b, u8 a)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80079A24(u8 r, u8 g, u8 b, u8 a)
+void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a)
 {
     GXColor c;
     c.r = r;
@@ -3805,7 +3805,7 @@ s32 fn_8007D994(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void fn_8007E54C(u8);
+extern void cardShowLoadingMsg(u8);
 extern int fn_8007EB44(int, int, int, int, int, void*);
 extern void fn_8007E1AC(int);
 extern int fn_8007E6D4(u8, int, void*, void*);
@@ -3888,12 +3888,12 @@ int fn_8007DB24(int a, int b, int c)
 {
     int ret;
     lbl_803DD058 = 0;
-    fn_8007E54C(1);
+    cardShowLoadingMsg(1);
     do {
         ret = fn_8007EB44(0, a, 0, b, c, fn_8007E6D4);
         fn_8007E1AC(0);
         if (lbl_803DD058 != 0) {
-            fn_8007E54C(1);
+            cardShowLoadingMsg(1);
         }
     } while (lbl_803DD058 != 0);
     return ret;
@@ -3918,12 +3918,12 @@ int fn_8007DBC0(int a)
 {
     int ret;
     lbl_803DD058 = 0;
-    fn_8007E54C(0);
+    cardShowLoadingMsg(0);
     do {
         ret = fn_8007EB44(1, 0, 0, a, 0, fn_8007E748);
         fn_8007E1AC(1);
         if (lbl_803DD058 != 0) {
-            fn_8007E54C(0);
+            cardShowLoadingMsg(0);
         }
     } while (lbl_803DD058 != 0);
     return ret;
@@ -3948,12 +3948,12 @@ int fn_8007DC5C(int a, int b)
 {
     int ret;
     lbl_803DD058 = 0;
-    fn_8007E54C(0);
+    cardShowLoadingMsg(0);
     do {
         ret = fn_8007EB44(1, a, 0, b, 0, fn_8007E77C);
         fn_8007E1AC(0);
         if (lbl_803DD058 != 0) {
-            fn_8007E54C(0);
+            cardShowLoadingMsg(0);
         }
     } while (lbl_803DD058 != 0);
     return ret;
@@ -3989,7 +3989,7 @@ int fn_8007DD04(u8 retry)
 
     if (retry != 0) {
         lbl_803DD058 = 0;
-        fn_8007E54C(2);
+        cardShowLoadingMsg(2);
     }
     do {
         ret = fn_8007F83C(0);
@@ -4010,7 +4010,7 @@ int fn_8007DD04(u8 retry)
             fn_8007E1AC(0);
         }
         if (lbl_803DD058 != 0) {
-            fn_8007E54C(2);
+            cardShowLoadingMsg(2);
         }
     } while (lbl_803DD058 != 0 && retry != 0);
     return ret;
@@ -4235,7 +4235,7 @@ void fn_8007E1AC(int param_1)
 /*
  * --INFO--
  *
- * Function: fn_8007E54C
+ * Function: cardShowLoadingMsg
  * EN v1.0 Address: 0x8007E54C
  * EN v1.0 Size: 392b
  * EN v1.1 Address: 0x8007E7A0
@@ -4248,13 +4248,13 @@ void fn_8007E1AC(int param_1)
  * Per-frame "blocking" dialog renderer driven by the card-write retry
  * loops in fn_8007DB24/DBC0/DC5C/DD04. Pumps 60 frames of the GX/dialog
  * pipeline; on each frame either lets the active controller draw its own
- * popup (lbl_803DCA4C[0]->vtbl[1]) or falls back to fn_80076D78 over the
+ * popup (lbl_803DCA4C[0]->vtbl[1]) or falls back to hudDrawColored over the
  * cached prompt id in lbl_803DB708, then routes the OK/Cancel/back text
  * to fn_80016810 based on the dialog kind passed in.
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_8007E54C(u8 kind)
+void cardShowLoadingMsg(u8 kind)
 {
     extern void fn_80017434(int);
     extern int fn_80014F40(void);
@@ -4269,7 +4269,7 @@ void fn_8007E54C(u8 kind)
     extern void fn_8001476C(int, int, int, int);
     extern int lbl_803DB708;
     extern void fn_8006C73C(void);
-    extern void fn_80076D78(int, int, int, void*, int, int);
+    extern void hudDrawColored(int, int, int, void*, int, int);
     extern void gameTextSetColor(int, int, int, int);
     extern void fn_80016810(int, int, int);
     extern void fn_80019C24(void);
@@ -4300,7 +4300,7 @@ void fn_8007E54C(u8 kind)
         } else {
             saved = lbl_803DB708;
             fn_8006C73C();
-            fn_80076D78(0, 0, 0, &saved, 0x200, 0);
+            hudDrawColored(0, 0, 0, &saved, 0x200, 0);
         }
         gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
         if (mode == 1) {

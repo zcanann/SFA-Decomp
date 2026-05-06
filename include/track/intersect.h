@@ -19,8 +19,8 @@ void fn_8006FF0C(double param_1,double param_2,double param_3,double param_4,dou
                  float *param_6,short *param_7);
 void fn_800701A4(f32* x, f32* y, f32* z);
 void fn_80070234(f32* param_1);
-void fn_800702B8(u32 param_1);
-void fn_80070310(u32 param_1, int param_2, u32 param_3);
+void gxSetPeControl_ZCompLoc_(u32 param_1);
+void gxSetZMode_(u32 param_1, int param_2, u32 param_3);
 void fn_800703AC(void);
 void fn_800703BC(u8 param_1);
 void fn_800703C4(void);
@@ -39,18 +39,18 @@ undefined4 fn_80073D04(int param_1,int *param_2);
 undefined4 fn_80074110(int param_1,int *param_2,int param_3);
 void fn_80074518(undefined4 param_1,undefined4 param_2,int param_3);
 undefined4 fn_80074D04(int param_1,int *param_2);
-void fn_800753B8(int x1, int y1, int x2, int y2, u8* color);
+void hudDrawRect(int x1, int y1, int x2, int y2, u8* color);
 void fn_80075684(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4);
-void fn_80075A1C(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3);
+void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3);
 void fn_80075D5C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z);
-void fn_80075E8C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2);
-void fn_80075FC8(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
+void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2);
+void drawPartialTexture(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  uint param_5,int param_6,int param_7,int param_8,int param_9);
 void fn_80076510(int x, int y, f32 sx, f32 sy);
-void fn_8007681C(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
+void drawScaledTexture(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  uint param_5,int param_6,int param_7,uint param_8);
-void fn_80076D78(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag);
-void fn_8007719C(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale);
+void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag);
+void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale);
 void fn_80077604(f32* obj, u32* colorPtr, Mtx mtx);
 void fn_8007788C(f32* obj, u32* colorPtr, Mtx mtx);
 void fn_80077AD8(double param_1,float *param_2,int param_3,float *param_4);
@@ -59,23 +59,23 @@ void FUN_80070ec8(void);
 void fn_8007880C(void);
 void fn_800788DC(void);
 void fn_800789AC(void);
-void fn_80078A7C(void);
+void textBlendSetupFn_80078a7c(void);
 void fn_80078B4C(void);
 void fn_80078C1C(void);
 void fn_80078DFC(void);
 void fn_80078ED0(void);
-void fn_80078FA4(void);
+void textRenderSetup(void);
 void fn_800790AC(void);
 void fn_80079180(void);
 void fn_80079254(void);
 void fn_80079328(void);
 void fn_800794E0(void);
-void fn_800795E8(void);
+void textRenderSetupFn_800795e8(void);
 void fn_800796F0(void);
-void fn_80079804(void);
-void fn_800799C0(void);
-void fn_800799E4(u8 r, u8 g, u8 b, u8 a);
-void fn_80079A24(u8 r, u8 g, u8 b, u8 a);
+void textRenderSetupFn_80079804(void);
+void textureSetupFn_800799c0(void);
+void _gxSetTevColor2(u8 r, u8 g, u8 b, u8 a);
+void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a);
 void fn_80079A64(f32 sx, f32 sy, u8 a, u8 flag);
 void fn_80079E64(double param_1,double param_2,double param_3,undefined param_4,undefined4 param_5,
                  undefined param_6,undefined param_7);
@@ -102,7 +102,7 @@ int fn_8007DE0C(u8 retry);
 void fn_8007DEF0(void);
 void fn_8007DF10(u32* buttons, u32* texts, u32* count);
 void fn_8007E1AC(int param_1);
-void fn_8007E54C(u8 kind);
+void cardShowLoadingMsg(u8 kind);
 int fn_8007E6D4(u8 slot, int unused, void* src1, void* src2);
 int fn_8007E748(int param_1, int param_2, void* dst);
 
