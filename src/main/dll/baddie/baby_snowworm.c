@@ -1642,7 +1642,7 @@ void fn_80129DB4(void)
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_8012D77C(void)
+void pauseMenuDrawText(void)
 {
     s16   target;
     int   saved;

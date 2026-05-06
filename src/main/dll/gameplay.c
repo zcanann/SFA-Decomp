@@ -13088,6 +13088,6 @@ u8 fn_800EA2BC(void) { u8 *p = (u8*)fn_800E8044(); return p[5]; }
 /* conditional init/free pair. */
 #pragma scheduling off
 #pragma peephole off
-void fn_800E9CAC(void) { if (lbl_803DD49C != 0) { fn_80023800(lbl_803DD49C); lbl_803DD49C = 0; } }
+void gplayClearRestartPoint(void) { if (lbl_803DD49C != 0) { fn_80023800(lbl_803DD49C); lbl_803DD49C = 0; } }
 #pragma peephole reset
 #pragma scheduling reset
