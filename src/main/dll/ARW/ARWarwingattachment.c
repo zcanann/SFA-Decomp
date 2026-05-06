@@ -1464,10 +1464,10 @@ void fn_801F1BEC(void) {}
 void fn_801F1C80(void) {}
 void fn_801F1F14(void) {}
 void fn_801F1F18(void) {}
-void fn_801F1F2C(void) {}
-void fn_801F1F60(void) {}
-void fn_801F20CC(void) {}
-void fn_801F20D0(void) {}
+void wmlasertarget_free(void) {}
+void wmlasertarget_hitDetect(void) {}
+void wmlasertarget_release(void) {}
+void wmlasertarget_initialise(void) {}
 void fn_801F2B9C(void) {}
 void fn_801F2C60(void) {}
 void fn_801F2E78(void) {}
@@ -1485,8 +1485,8 @@ void fn_801F34A8(void) {}
 int fn_801F1624(void) { return 0x8; }
 int fn_801F162C(void) { return 0x0; }
 int fn_801F1BC8(void) { return 0x8; }
-int fn_801F1F1C(void) { return 0x4; }
-int fn_801F1F24(void) { return 0x0; }
+int wmlasertarget_getExtraSize(void) { return 0x4; }
+int wmlasertarget_func08(void) { return 0x0; }
 int fn_801F2B8C(void) { return 0x28; }
 int fn_801F2B94(void) { return 0x1; }
 int fn_801F2E98(void) { return 0x4; }
@@ -1503,7 +1503,7 @@ extern f32 lbl_803E5D90;
 extern f32 lbl_803E5DC8;
 #pragma peephole off
 void fn_801F1638(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5D58); }
-void fn_801F1F30(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5D90); }
+void wmlasertarget_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5D90); }
 void fn_801F2EAC(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5DC8); }
 #pragma peephole reset
 
