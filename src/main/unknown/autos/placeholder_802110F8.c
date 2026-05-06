@@ -52,7 +52,7 @@ typedef struct ProximityMineObject {
     ProximityMineState *state;
 } ProximityMineObject;
 
-void fn_802110F8(ProximityMineObject *obj)
+void proximitymine_resetToIdle(ProximityMineObject *obj)
 {
     ProximityMineState *state;
     f32 zero;
