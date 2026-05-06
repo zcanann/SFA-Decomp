@@ -116,7 +116,7 @@ typedef struct CamcontrolTriggeredAction {
  *
  * Function: camcontrol_updateTargetFeedback
  * EN v1.0 Address: 0x8010224C
- * EN v1.0 Size: 1600b
+ * EN v1.0 Size: 1652b
  * EN v1.1 Address: 0x801024E8
  * EN v1.1 Size: 1736b
  * JP Address: TODO
@@ -370,8 +370,8 @@ int fn_80102908(void)
  * --INFO--
  *
  * Function: camcontrol_getRelativePosition
- * EN v1.0 Address: 0x8010288C
- * EN v1.0 Size: 252b
+ * EN v1.0 Address: 0x80102914
+ * EN v1.0 Size: 240b
  * EN v1.1 Address: 0x80102BB0
  * EN v1.1 Size: 396b
  * JP Address: TODO
@@ -454,8 +454,8 @@ void camcontrol_release(void *obj)
  * --INFO--
  *
  * Function: camcontrol_loadTriggeredCamAction
- * EN v1.0 Address: 0x80102988
- * EN v1.0 Size: 1168b
+ * EN v1.0 Address: 0x80102AA0
+ * EN v1.0 Size: 1012b
  * EN v1.1 Address: 0x80102D3C
  * EN v1.1 Size: 1012b
  * JP Address: TODO
@@ -605,8 +605,8 @@ LAB_80102f3c:
  * --INFO--
  *
  * Function: camcontrol_loadCamAction
- * EN v1.0 Address: 0x80102E18
- * EN v1.0 Size: 268b
+ * EN v1.0 Address: 0x80102E94
+ * EN v1.0 Size: 116b
  * EN v1.1 Address: 0x80103130
  * EN v1.1 Size: 116b
  * JP Address: TODO
@@ -636,8 +636,8 @@ void *camcontrol_loadCamAction(int actionNo)
  * --INFO--
  *
  * Function: camcontrol_releaseCurrentHandler
- * EN v1.0 Address: 0x80102F24
- * EN v1.0 Size: 64b
+ * EN v1.0 Address: 0x80102F08
+ * EN v1.0 Size: 60b
  * EN v1.1 Address: 0x801031A4
  * EN v1.1 Size: 60b
  * JP Address: TODO
@@ -657,8 +657,8 @@ void camcontrol_releaseCurrentHandler(void)
  * --INFO--
  *
  * Function: camcontrol_queueSavedAction
- * EN v1.0 Address: 0x80102F64
- * EN v1.0 Size: 80b
+ * EN v1.0 Address: 0x80102F44
+ * EN v1.0 Size: 68b
  * EN v1.1 Address: 0x801031E0
  * EN v1.1 Size: 68b
  * JP Address: TODO
@@ -682,8 +682,8 @@ void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2)
  * --INFO--
  *
  * Function: camcontrol_queueCamAction
- * EN v1.0 Address: 0x80102FB4
- * EN v1.0 Size: 172b
+ * EN v1.0 Address: 0x80102F88
+ * EN v1.0 Size: 204b
  * EN v1.1 Address: 0x80103224
  * EN v1.1 Size: 312b
  * JP Address: TODO
@@ -729,8 +729,8 @@ void camcontrol_queueCamAction(undefined4 param_1,undefined4 param_2,int param_3
  * --INFO--
  *
  * Function: camcontrol_updateState
- * EN v1.0 Address: 0x80103060
- * EN v1.0 Size: 892b
+ * EN v1.0 Address: 0x801030C0
+ * EN v1.0 Size: 748b
  * EN v1.1 Address: 0x8010335C
  * EN v1.1 Size: 748b
  * JP Address: TODO

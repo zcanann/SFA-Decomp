@@ -16,6 +16,12 @@
  * - retail message: failed to load triggered camaction actionno %d
  * - source_recovery currently has no direct current EN xref.
  *
+ * Live EN anchors:
+ * - camcontrol_loadTriggeredCamAction @ 0x80102AA0 is the translated function
+ *   carrying the triggered camera action load path.
+ * - camcontrol_initialise @ 0x80102A04, camcontrol_release @ 0x80102A88,
+ *   and Camera_moveBy @ 0x80102A2C match the reference-side function hints.
+ *
  * Reference-side path hints:
  * - current debug path: dll/CAM/camcontrol.c
  * - reference configure path: dll/camcontrol.c
