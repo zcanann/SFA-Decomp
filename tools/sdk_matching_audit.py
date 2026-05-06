@@ -251,7 +251,22 @@ def mismatched_payload_sections(diff: dict) -> list[str]:
     return names
 
 
-def is_relocation_only_mismatch(src_obj: Path, target_obj: Path, diff: dict) -> bool:
+def section_diff_is_relocation_or_padding_only(
+    src: bytes, target: bytes, reloc_bytes: set[int]
+) -> bool:
+    shared_size = min(len(src), len(target))
+    for index in range(shared_size):
+        if src[index] != target[index] and index not in reloc_bytes:
+            return False
+
+    if len(src) == len(target):
+        return True
+    if len(src) < len(target):
+        return all(byte == 0 for byte in target[shared_size:])
+    return all(byte == 0 for byte in src[shared_size:])
+
+
+def is_relocation_or_padding_only_mismatch(src_obj: Path, target_obj: Path, diff: dict) -> bool:
     sections = mismatched_payload_sections(diff)
     if not sections:
         return False
@@ -262,15 +277,15 @@ def is_relocation_only_mismatch(src_obj: Path, target_obj: Path, diff: dict) -> 
             src = section_bytes(src_obj, section, work_dir)
             target = section_bytes(target_obj, section, work_dir)
             if src is None or target is None or len(src) != len(target):
-                return False
+                if src is None or target is None:
+                    return False
 
             reloc_bytes = source_relocation_bytes(src_obj, section)
-            if not reloc_bytes:
+            if not reloc_bytes and len(src) == len(target):
                 return False
 
-            for index, (src_byte, target_byte) in enumerate(zip(src, target)):
-                if src_byte != target_byte and index not in reloc_bytes:
-                    return False
+            if not section_diff_is_relocation_or_padding_only(src, target, reloc_bytes):
+                return False
     return True
 
 
@@ -301,8 +316,8 @@ def audit_object(version: str, obj: ConfigObject) -> AuditResult:
     diff = json.loads(proc.stdout)
     if not has_target_payload(diff):
         return AuditResult(obj, None, None, text_size(diff), 0, skipped="empty target split")
-    if is_relocation_only_mismatch(src_obj, target_obj, diff):
-        return AuditResult(obj, None, None, text_size(diff), 0, skipped="relocation-only extracted target split")
+    if is_relocation_or_padding_only_mismatch(src_obj, target_obj, diff):
+        return AuditResult(obj, None, None, text_size(diff), 0, skipped="relocation/padding-only extracted target split")
 
     return AuditResult(
         obj=obj,
