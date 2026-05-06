@@ -556,7 +556,7 @@ void mmp_bridge_release(void) {}
 void mmp_bridge_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_8017B8DC(void) { return 0x8; }
+int Door_getExtraSize(void) { return 0x8; }
 int mmp_bridge_getExtraSize(void) { return 0x0; }
 int mmp_bridge_func08(void) { return 0x0; }
 int doorlock_getExtraSize(void) { return 0x1; }
@@ -566,7 +566,7 @@ extern f32 lbl_803E3780;
 extern void fn_8003B8F4(f32);
 #pragma scheduling off
 #pragma peephole off
-void fn_8017B8E4(void) { fn_8003B8F4(lbl_803E3780); }
+void Door_render(void) { fn_8003B8F4(lbl_803E3780); }
 #pragma peephole reset
 #pragma scheduling reset
 

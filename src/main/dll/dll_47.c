@@ -835,4 +835,4 @@ void FUN_8011c080(void)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_8011AE20(void) {}
+void SaveSelectScreen_frameEnd(void) {}

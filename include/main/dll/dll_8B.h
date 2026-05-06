@@ -5,6 +5,6 @@
 
 void projdfp1r_initialise(void);
 u8 fn_80100A90(void);
-s16 fn_80100A9C(void);
+s16 Camera_getMinimapInfoText(void);
 
 #endif /* MAIN_DLL_DLL_8B_H_ */

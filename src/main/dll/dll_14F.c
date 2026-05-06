@@ -1513,7 +1513,7 @@ LAB_80181c38:
 }
 
 /* 8b "li r3, N; blr" returners. */
-int fn_8017F8FC(void) { return 0x10; }
+int MagicPlant_getExtraSize(void) { return 0x10; }
 int trickywarp_getExtraSize(void) { return 0x64; }
 int duster_getExtraSize(void) { return 0x20; }
 int curvefish_getExtraSize(void) { return 0x120; }
@@ -1523,5 +1523,5 @@ u32 fn_8017F904(int *obj) { return (*((u8*)((int**)obj)[0x4c/4] + 0x1c) << 11) |
 
 /* obj->u16_X |= MASK */
 #pragma peephole off
-void fn_801804B4(u16 *obj) { u32 v; v = *(u16*)((char*)obj + 0xb0); v |= 0x4000; *(u16*)((char*)obj + 0xb0) = (u16)v; }
+void StayPoint_init(u16 *obj) { u32 v; v = *(u16*)((char*)obj + 0xb0); v |= 0x4000; *(u16*)((char*)obj + 0xb0) = (u16)v; }
 #pragma peephole reset

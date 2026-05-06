@@ -52,4 +52,4 @@ void FUN_8011b5d4(undefined8 param_1,double param_2,double param_3,undefined8 pa
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_8011B864(void) {}
+void EnterSaveNameScreen_frameEnd(void) {}

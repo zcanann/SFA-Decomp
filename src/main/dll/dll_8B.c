@@ -36,11 +36,11 @@ u8 fn_80100A90(void)
 /*
  * --INFO--
  *
- * Function: fn_80100A9C
+ * Function: Camera_getMinimapInfoText
  * EN v1.0 Address: 0x80100A9C
  * EN v1.0 Size: 8b
  */
-s16 fn_80100A9C(void)
+s16 Camera_getMinimapInfoText(void)
 {
   return lbl_803DB990;
 }

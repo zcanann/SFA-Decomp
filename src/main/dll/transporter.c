@@ -1605,7 +1605,7 @@ void iceblast_initialise(void) {}
 /* 8b "li r3, N; blr" returners. */
 int pushable_getExtraSize(void) { return 0x148; }
 int pushable_func08(void) { return 0x48; }
-int fn_80177030(void) { return 0x10; }
+int WarpPoint_getExtraSize(void) { return 0x10; }
 int fn_80177038(void) { return 0x1; }
 int invhit_getExtraSize(void) { return 0xc; }
 int invhit_func08(void) { return 0x0; }

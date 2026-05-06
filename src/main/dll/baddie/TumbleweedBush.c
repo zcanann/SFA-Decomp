@@ -816,7 +816,7 @@ void TitleMenuItem_setVal(u8* obj, int val)
 #pragma scheduling reset
 
 /* EN v1.0 0x80131590  size: 8b   s16 getter for obj->_c. */
-s16 fn_80131590(u8* obj)
+s16 TitleMenuItem_getVal(u8* obj)
 {
     return *(s16*)(obj + 0xc);
 }
