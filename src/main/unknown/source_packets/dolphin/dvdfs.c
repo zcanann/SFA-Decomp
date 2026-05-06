@@ -5,7 +5,7 @@
  * It exists as a retail-backed source/object packet for exploratory split work.
  *
  * Retail source: dvdfs.c
- * Suggested source path: src/dolphin/dvdfs.c
+ * Suggested source path: src/dolphin/dvd/dvdfs.c
  * Packet path: src/main/unknown/source_packets/dolphin/dvdfs.c
  * Bucket: dolphin
  * Score: 400
@@ -15,8 +15,14 @@
  * - retail string: dvdfs.c
  * - source_recovery currently has no direct current EN xref.
  *
+ * Live SDK anchors:
+ * - src/dolphin/dvd/dvdfs.c is wired in configure.py as MatchingFor("GSAE01").
+ * - __DVDFSInit @ 0x80248870, DVDConvertPathToEntrynum @ 0x802488A8,
+ *   DVDOpen @ 0x80248B9C, DVDClose @ 0x80248C64, and
+ *   DVDGetCurrentDir @ 0x80248DE8 match the active symbol map.
+ *
  * Reference-side path hints:
- * - current debug path: dolphin/dvdfs.c
+ * - current debug path: dolphin/dvd/dvdfs.c
  * - reference configure path: dolphin/dvd/dvdfs.c
  *
  * Reference-side function hints:
