@@ -16,8 +16,8 @@ extern char sObjHitReactHitstateFrameString[];
 extern char sObjHitReactSphereOverflowString[];
 extern char sObjHitReactResetString[7];
 extern f32 timeDelta;
-extern f32 lbl_803DCDD8;
-extern f32 lbl_803DCDDC;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
 extern f32 lbl_803DE910;
 extern f32 lbl_803DE918;
 extern f32 lbl_803DE964;
@@ -63,8 +63,8 @@ int objHitReact_update(ObjAnimComponent *obj,ObjHitReactEntry *reactionEntries,u
                                                        &hitPos[1],&hitPos[2]);
   if (priorityHitType != 0) {
     ObjAnimBank *bank = ObjAnim_GetActiveBank(obj);
-    hitPos[0] = hitPos[0] + lbl_803DCDD8;
-    hitPos[2] = hitPos[2] + lbl_803DCDDC;
+    hitPos[0] = hitPos[0] + playerMapOffsetX;
+    hitPos[2] = hitPos[2] + playerMapOffsetZ;
     effectPos.scale = lbl_803DE918;
     effectPos.z = 0;
     effectPos.y = 0;

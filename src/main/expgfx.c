@@ -138,8 +138,8 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803DC3F0;
 extern f32 lbl_803DDA58;
 extern f32 lbl_803DDA5C;
-extern f32 lbl_803DCDD8;
-extern f32 lbl_803DCDDC;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
 extern f64 lbl_803DF378;
 extern f32 lbl_803DF3B4;
 extern f32 lbl_803DF3B8;
@@ -987,11 +987,11 @@ void expgfx_renderSourcePools(int sourceId,int sourceMode)
     if (((*poolActiveCounts != '\0') && ((u32)*poolSourceIds == (u32)sourceId)) &&
        ((int)*poolSourceModes == sourceMode + 1)) {
       boundsTemplate = (ExpgfxBounds *)(gExpgfxStaticData + (uint)*poolBoundsTemplateIds * 0x18);
-      uVar1 = fn_8005E97C((double)(poolBounds->minX - lbl_803DCDD8),
-                           (double)(poolBounds->maxX - lbl_803DCDD8),
+      uVar1 = fn_8005E97C((double)(poolBounds->minX - playerMapOffsetX),
+                           (double)(poolBounds->maxX - playerMapOffsetX),
                            (double)poolBounds->minY,(double)poolBounds->maxY,
-                           (double)(poolBounds->minZ - lbl_803DCDDC),
-                           (double)(poolBounds->maxZ - lbl_803DCDDC),boundsTemplate);
+                           (double)(poolBounds->minZ - playerMapOffsetZ),
+                           (double)(poolBounds->maxZ - playerMapOffsetZ),boundsTemplate);
       if ((uVar1 & 0xff) != 0) {
         expgfx_renderPool(*slotPoolBases,poolIndex);
       }
@@ -1070,23 +1070,23 @@ void expgfx_queueStandalonePools(void)
   do {
     if ((*poolActiveCounts != '\0') && (*poolSourceModes == 0)) {
       boundsTemplate = (ExpgfxBounds *)(gExpgfxStaticData + (uint)*poolBoundsTemplateIds * 0x18);
-      if (fn_8005E97C((double)(poolBounds->minX - lbl_803DCDD8),
-                      (double)(poolBounds->maxX - lbl_803DCDD8),
+      if (fn_8005E97C((double)(poolBounds->minX - playerMapOffsetX),
+                      (double)(poolBounds->maxX - playerMapOffsetX),
                       (double)poolBounds->minY,(double)poolBounds->maxY,
-                      (double)(poolBounds->minZ - lbl_803DCDDC),
-                      (double)(poolBounds->maxZ - lbl_803DCDDC),boundsTemplate) != 0) {
+                      (double)(poolBounds->minZ - playerMapOffsetZ),
+                      (double)(poolBounds->maxZ - playerMapOffsetZ),boundsTemplate) != 0) {
         sourcePosition = (float *)*poolSourceIds;
         if (sourcePosition != (float *)0x0) {
-          queuePosition[0] = sourcePosition[3] - lbl_803DCDD8;
+          queuePosition[0] = sourcePosition[3] - playerMapOffsetX;
           queuePosition[1] = sourcePosition[4];
-          queuePosition[2] = sourcePosition[5] - lbl_803DCDDC;
+          queuePosition[2] = sourcePosition[5] - playerMapOffsetZ;
         }
         else {
           queuePosition[0] =
-              lbl_803DF358 * (poolBounds->minX + poolBounds->maxX) - lbl_803DCDD8;
+              lbl_803DF358 * (poolBounds->minX + poolBounds->maxX) - playerMapOffsetX;
           queuePosition[1] = lbl_803DF358 * (poolBounds->minY + poolBounds->maxY);
           queuePosition[2] =
-              lbl_803DF358 * (poolBounds->minZ + poolBounds->maxZ) - lbl_803DCDDC;
+              lbl_803DF358 * (poolBounds->minZ + poolBounds->maxZ) - playerMapOffsetZ;
         }
         PSMTXMultVec(currentMatrix,queuePosition,queuePosition);
         if (*poolSourceIds != 0) {

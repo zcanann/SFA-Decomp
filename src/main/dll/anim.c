@@ -182,7 +182,7 @@ extern f32 lbl_803DCDC8;
 extern f32 lbl_803DCDCC;
 extern f32 lbl_803DCDD0;
 extern f32 lbl_803DCDD4;
-extern f32 lbl_803DCDDC;
+extern f32 playerMapOffsetZ;
 extern f32 lbl_803E6E60;
 extern f32 lbl_803E6E64;
 extern f32 lbl_803E6E7C;
@@ -836,7 +836,7 @@ void FUN_801ffa1c(undefined8 param_1,double param_2,double param_3,undefined8 pa
       local_4c = 0xff;
       local_4e = 0;
       local_50 = 0xff;
-      FUN_8008110c((double)lbl_803DCDDC,param_9,1,0xc22,0x14,param_9 + 0x12);
+      FUN_8008110c((double)playerMapOffsetZ,param_9,1,0xc22,0x14,param_9 + 0x12);
     }
     else {
       FUN_80294d60(dVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,DAT_803dcdd8)
@@ -888,7 +888,7 @@ void FUN_801ffa1c(undefined8 param_1,double param_2,double param_3,undefined8 pa
       if (dVar7 < (double)lbl_803DCDCC) {
         *(undefined *)(pfVar6 + 2) = 3;
       }
-      FUN_8008110c((double)lbl_803DCDDC,param_9,1,0xc22,0x14,param_9 + 0x12);
+      FUN_8008110c((double)playerMapOffsetZ,param_9,1,0xc22,0x14,param_9 + 0x12);
     }
   }
   else if (bVar1 == 5) {

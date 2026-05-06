@@ -86,8 +86,8 @@ extern f32 lbl_803DCBE8;
 extern f32 lbl_803DE914;
 extern f32 lbl_803DE97C;
 extern f32 timeDelta;
-extern f32 lbl_803DCDD8;
-extern f32 lbl_803DCDDC;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
 extern f32 lbl_803DF5E8;
 extern f32 lbl_803DF5F0;
 extern f32 lbl_803DE970;
@@ -2282,8 +2282,8 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR
   if ((*cooldown <= lbl_803DE970) && (collisionType != 0)) {
     *cooldown = lbl_803DE978;
     if ((collisionType != 0x1a) && (collisionType != 5)) {
-      hitPos[0] = hitPos[0] + lbl_803DCDD8;
-      hitPos[2] = hitPos[2] + lbl_803DCDDC;
+      hitPos[0] = hitPos[0] + playerMapOffsetX;
+      hitPos[2] = hitPos[2] + playerMapOffsetZ;
       effectPos.scale = lbl_803DE97C;
       effectPos.z = 0;
       effectPos.y = 0;
@@ -2900,9 +2900,9 @@ void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *
       FUN_8001774c(afStack_100,(int)&local_118);
       FUN_80017704(afStack_100,afStack_90);
       FUN_80247618(pfVar3,afStack_90,afStack_c0);
-      *param_3 = local_b4 + lbl_803DCDD8;
+      *param_3 = local_b4 + playerMapOffsetX;
       *param_4 = local_a4;
-      *param_5 = local_94 + lbl_803DCDDC;
+      *param_5 = local_94 + playerMapOffsetZ;
     }
   }
   FUN_80286884();
