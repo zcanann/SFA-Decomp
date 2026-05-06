@@ -5,28 +5,28 @@
  * It exists as a retail-backed source/object packet for exploratory split work.
  *
  * Retail source: expgfx.c
- * Suggested source path: src/dll/expgfx.c
+ * Suggested source path: src/main/expgfx.c
  * Packet path: src/main/unknown/source_packets/dll/expgfx.c
  * Bucket: dll
- * Score: 3580
+ * Score: 2580
  *
  * Retail EN evidence:
  * - main.dol string @ 0x803107B0
  * - main.dol string @ 0x803107E8
  * - main.dol string @ 0x80310810
  * - main.dol string @ 0x8031082C
- * - main.dol string @ 0x80310848
  * - retail message: mismatch in add/remove in exptab
  * - retail message: addToTable usage overflow
  * - retail message: exptab is FULL
  * - retail message: invalid tabindex
- * - retail message: scale overflow
- * - EN xref: 0x8009B450 fn_8009B36C + 0xE4
- * - EN xref: 0x8009B5C0 fn_8009B4E0 + 0xE0
- * - EN xref: 0x8009E0EC fn_8009E078 + 0x74
- * - EN xref: 0x8009E174 fn_8009E078 + 0xFC
- * - EN xref: 0x8009F8CC fn_8009F558 + 0x374
- * - EN xref: 0x8009F98C fn_8009F558 + 0x434
+ * - EN xref: 0x8009DE60 expgfx_addToTable + 0x74
+ * - EN xref: 0x8009DEE8 expgfx_addToTable + 0xFC
+ * - EN xref: 0x8009F640 expgfx_addremove + 0x374
+ * - EN xref: 0x8009F700 expgfx_addremove + 0x434
+ *
+ * Current EN source-window evidence:
+ * - seed: 0x8009DDEC-0x8009FCDC, current expgfx source island
+ * - blueprint action: corridor-packet, plan stays at the current seed
  *
  * Reference-side path hints:
  * - reference configure path: dll/expgfx.c
