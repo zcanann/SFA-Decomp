@@ -4,6 +4,7 @@ import argparse
 import json
 import subprocess
 import sys
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -181,6 +182,98 @@ def has_target_payload(diff: dict) -> bool:
     return False
 
 
+def binutils_tool(name: str) -> Path:
+    exe = REPO_ROOT / "build" / "binutils" / f"{name}.exe"
+    if exe.is_file():
+        return exe
+    return REPO_ROOT / "build" / "binutils" / name
+
+
+def section_bytes(obj: Path, section: str, work_dir: Path) -> bytes | None:
+    output = work_dir / f"{obj.stem}_{section.strip('.')}.bin"
+    cmd = [
+        str(binutils_tool("powerpc-eabi-objcopy")),
+        "-O",
+        "binary",
+        "-j",
+        section,
+        str(obj),
+        str(output),
+    ]
+    proc = subprocess.run(cmd, cwd=REPO_ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if proc.returncode != 0 or not output.is_file():
+        return None
+    return output.read_bytes()
+
+
+def relocation_width(reloc_type: str) -> int:
+    if "16" in reloc_type:
+        return 2
+    return 4
+
+
+def source_relocation_bytes(obj: Path, section: str) -> set[int]:
+    cmd = [str(binutils_tool("powerpc-eabi-objdump")), "-r", str(obj)]
+    proc = subprocess.run(cmd, cwd=REPO_ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    if proc.returncode != 0:
+        return set()
+
+    covered: set[int] = set()
+    active_section: str | None = None
+    header = "RELOCATION RECORDS FOR ["
+    for line in proc.stdout.splitlines():
+        if line.startswith(header):
+            active_section = line[len(header) :].split("]", 1)[0]
+            continue
+        if not line.strip():
+            active_section = None
+            continue
+        if active_section != section:
+            continue
+
+        parts = line.split()
+        if len(parts) < 2 or not all(ch in "0123456789abcdefABCDEF" for ch in parts[0]):
+            continue
+        offset = int(parts[0], 16)
+        for byte_offset in range(offset, offset + relocation_width(parts[1])):
+            covered.add(byte_offset)
+    return covered
+
+
+def mismatched_payload_sections(diff: dict) -> list[str]:
+    names: list[str] = []
+    for section in diff.get("left", {}).get("sections", []):
+        if section.get("kind") not in {"SECTION_CODE", "SECTION_DATA", "SECTION_RODATA"}:
+            continue
+        match = section.get("match_percent")
+        if match is not None and float(match) < 100.0:
+            names.append(section["name"])
+    return names
+
+
+def is_relocation_only_mismatch(src_obj: Path, target_obj: Path, diff: dict) -> bool:
+    sections = mismatched_payload_sections(diff)
+    if not sections:
+        return False
+
+    with tempfile.TemporaryDirectory(prefix="sdk-audit-", dir=REPO_ROOT / "temp") as tmp:
+        work_dir = Path(tmp)
+        for section in sections:
+            src = section_bytes(src_obj, section, work_dir)
+            target = section_bytes(target_obj, section, work_dir)
+            if src is None or target is None or len(src) != len(target):
+                return False
+
+            reloc_bytes = source_relocation_bytes(src_obj, section)
+            if not reloc_bytes:
+                return False
+
+            for index, (src_byte, target_byte) in enumerate(zip(src, target)):
+                if src_byte != target_byte and index not in reloc_bytes:
+                    return False
+    return True
+
+
 def audit_object(version: str, obj: ConfigObject) -> AuditResult:
     src_obj = object_path(version, "src", obj.path)
     target_obj = object_path(version, "obj", obj.path)
@@ -208,6 +301,8 @@ def audit_object(version: str, obj: ConfigObject) -> AuditResult:
     diff = json.loads(proc.stdout)
     if not has_target_payload(diff):
         return AuditResult(obj, None, None, text_size(diff), 0, skipped="empty target split")
+    if is_relocation_only_mismatch(src_obj, target_obj, diff):
+        return AuditResult(obj, None, None, text_size(diff), 0, skipped="relocation-only extracted target split")
 
     return AuditResult(
         obj=obj,
