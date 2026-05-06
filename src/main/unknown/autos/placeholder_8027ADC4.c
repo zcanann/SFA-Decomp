@@ -1,22 +1,32 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_8027ADC4.h"
 
-extern undefined4 DAT_80330278;
+extern u8 lbl_803CB290[];
 
 /*
- * --INFO--
+ * Reset a 64-byte handle table at lbl_803CB290+0x908 to all-0xff,
+ * along with surrounding metadata.
  *
- * Function: FUN_8027acb8
- * EN v1.0 Address: 0x8027ACB8
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8027ADC4
- * EN v1.1 Size: 628b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.1 Address: 0x8027ACB8, size 288b
  */
-undefined4 FUN_8027acb8(char *param_1)
+void fn_8027ACB8(void)
 {
+    int i;
+    lbl_803CB290[0] = 0;
+    for (i = 0; i < 64; i++) {
+        lbl_803CB290[0x908 + i] = 0xff;
+    }
+    *(u16 *)(lbl_803CB290 + 0x948) = 0;
+    *(u32 *)(lbl_803CB290 + 0x94c) = 0;
+}
+
+/*
+ * fn_8027ADD8 — voice-allocate-and-set-loop helper (~488 instructions).
+ * Stubbed.
+ */
+#pragma dont_inline on
+int fn_8027ADD8(u8 a)
+{
+    (void)a;
     return 0;
 }
+#pragma dont_inline reset
