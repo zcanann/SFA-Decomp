@@ -39,10 +39,12 @@ void hwSaveSample(u32 **sample, void **ptr)
   if (type != 3) {
     if (type < 3) {
       if (type >= 2) goto size_double;
-      if (type < 0) goto save;
+      if (type >= 0) goto size_adpcm;
+      goto save;
     } else if (type >= 6) {
       goto save;
     }
+  size_adpcm:
     adjusted = size + 0xd;
     size = (adjusted / 7 * 4) & ~7;
     goto save;
@@ -96,10 +98,12 @@ void hwRemoveSample(u32 *sample, void *ptr)
   if (type != 3) {
     if (type < 3) {
       if (type >= 2) goto size_double;
-      if (type < 0) goto remove;
+      if (type >= 0) goto size_adpcm;
+      goto remove;
     } else if (type >= 6) {
       goto remove;
     }
+  size_adpcm:
     adjusted = size + 0xd;
     size = (adjusted / 7 * 4) & ~7;
     goto remove;
