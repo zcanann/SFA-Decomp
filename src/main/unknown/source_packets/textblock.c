@@ -5,19 +5,26 @@
  * It exists as a retail-backed source/object packet for exploratory split work.
  *
  * Retail source: textblock.c
- * Suggested source path: src/textblock.c
+ * Suggested source path: src/main/textblock.c
  * Packet path: src/main/unknown/source_packets/textblock.c
  * Bucket: unknown
- * Score: 2260
+ * Score: 3760
  *
  * Retail EN evidence:
  * - main.dol string @ 0x8032A838
  * - main.dol string @ 0x8032A92F
  * - retail label: Init
  * - retail message: No Longer supported
- * - EN xref: 0x80209630 fn_80209624 + 0xC
- * - EN xref: 0x8020965C fn_80209650 + 0xC
- * - EN xref: 0x8020968C fn_80209680 + 0xC
+ * - EN xref: 0x80208FF8 laser_freeUnsupported + 0xC
+ * - EN xref: 0x80209024 laser_renderUnsupported + 0xC
+ * - EN xref: 0x80209054 laser_updateUnsupported + 0xC
+ * - EN xref: 0x8020982C textblockObj_freeUnsupported + 0xC
+ * - EN xref: 0x80209860 textblockObj_updateUnsupported + 0xC
+ * - EN xref: 0x8020988C textblockObj_initUnsupported + 0xC
+ *
+ * Current EN relationship:
+ * - the retail textblock.c string backs both the unsupported laser wrappers and
+ *   the TextBlock object wrappers in the 0x80208FEC-0x802098B4 neighborhood.
  *
  * Inferred current EN DLL families:
  * - score=600, dll=0x0239 TextBlock, placements=0, defs=5, packet=src/main/unknown/dll_0239_textblock.c
