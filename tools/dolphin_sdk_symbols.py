@@ -45,6 +45,7 @@ SPAM_OBJECTS = {
         r"C:\products\RVL\runtime_libs\gamedev\cust_connection\utils\common\Circle",
     ),
 }
+ENTRY_SUFFIX_RE = re.compile(r"\s+\(entry of [^)]+\)$")
 
 
 @dataclass(frozen=True)
@@ -99,8 +100,9 @@ class Candidate:
 
     @property
     def status(self) -> str:
+        symbol_name = comparable_symbol_name(self.symbol.name)
         if self.exact is not None:
-            if self.exact.name == self.symbol.name:
+            if self.exact.name == symbol_name:
                 return "matched"
             if is_placeholder(self.exact.name):
                 return "rename"
@@ -291,11 +293,15 @@ def load_source_function_names(path: Path) -> set[str]:
 
 
 def is_anonymous(name: str) -> bool:
-    return name.startswith(ANONYMOUS_PREFIXES)
+    return comparable_symbol_name(name).startswith(ANONYMOUS_PREFIXES)
 
 
 def is_placeholder(name: str) -> bool:
     return name.startswith(PLACEHOLDER_PREFIXES)
+
+
+def comparable_symbol_name(name: str) -> str:
+    return ENTRY_SUFFIX_RE.sub("", name)
 
 
 def sanitize_component(value: str) -> str:
@@ -321,19 +327,20 @@ def source_match_names(
     exact: ConfigSymbol | None,
 ) -> tuple[str, ...]:
     names: list[str] = []
+    symbol_name = comparable_symbol_name(symbol.name)
     if exact is not None and not is_placeholder(exact.name):
         names.append(exact.name)
-        if exact.name != symbol.name:
+        if exact.name != symbol_name:
             return tuple(names)
-    if not is_anonymous(symbol.name) and symbol.name not in names:
-        names.append(symbol.name)
+    if not is_anonymous(symbol_name) and symbol_name not in names:
+        names.append(symbol_name)
     return tuple(names)
 
 
 def preferred_match_name(item: TranslatedSymbol) -> str:
     if item.exact is not None and not is_placeholder(item.exact.name):
         return item.exact.name
-    return item.symbol.name
+    return comparable_symbol_name(item.symbol.name)
 
 
 def build_symbol_indexes(
@@ -356,10 +363,11 @@ def build_address_anchors(
 ) -> list[AddressAnchor]:
     anchors: list[AddressAnchor] = []
     for dolphin_symbol in dolphin_symbols:
-        if is_anonymous(dolphin_symbol.name):
+        symbol_name = comparable_symbol_name(dolphin_symbol.name)
+        if is_anonymous(symbol_name):
             continue
 
-        config_matches = config_symbols_by_name.get(dolphin_symbol.name)
+        config_matches = config_symbols_by_name.get(symbol_name)
         if config_matches is None or len(config_matches) != 1:
             continue
 
@@ -381,7 +389,7 @@ def build_address_anchors(
                 dolphin_address=dolphin_symbol.address,
                 config_address=config_symbol.address,
                 delta=delta,
-                name=dolphin_symbol.name,
+                name=symbol_name,
             )
         )
 
@@ -496,7 +504,8 @@ def score_symbol(
         score += 1
         reasons.append("size>0x20")
 
-    count = occurrences[symbol.name]
+    symbol_name = comparable_symbol_name(symbol.name)
+    count = occurrences[symbol_name]
     if count == 1:
         score += 2
         reasons.append("unique")
@@ -506,7 +515,7 @@ def score_symbol(
         reasons.append(f"repeated:{count}")
 
     if exact is not None:
-        if exact.name == symbol.name:
+        if exact.name == comparable_symbol_name(symbol.name):
             score += 3
             reasons.append("exact-match")
         elif is_placeholder(exact.name):
@@ -526,7 +535,7 @@ def score_symbol(
         score += 1
         reasons.append("outside-splits")
 
-    if symbol.name in SPAM_NAMES:
+    if symbol_name in SPAM_NAMES:
         score -= 3
         reasons.append("spam-name")
     if (symbol.library, symbol.object_path) in SPAM_OBJECTS:
@@ -543,7 +552,9 @@ def build_candidates(
     translated_symbols: list[TranslatedSymbol],
 ) -> list[Candidate]:
     occurrences = Counter(
-        item.symbol.name for item in translated_symbols if not is_anonymous(item.symbol.name)
+        comparable_symbol_name(item.symbol.name)
+        for item in translated_symbols
+        if not is_anonymous(item.symbol.name)
     )
     candidates: list[Candidate] = []
 
