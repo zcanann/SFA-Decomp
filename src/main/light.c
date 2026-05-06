@@ -1060,14 +1060,14 @@ void seqpoint_free(void) {}
 void seqpoint_hitDetect(void) {}
 void seqpoint_release(void) {}
 void seqpoint_initialise(void) {}
-void fn_801FCD64(void) {}
-void fn_801FCD68(void) {}
-void fn_801FD134(void) {}
-void fn_801FD138(void) {}
-void fn_801FD1A8(void) {}
-void fn_801FD1AC(void) {}
-void fn_801FD268(void) {}
-void fn_801FD26C(void) {}
+void vfpdraghead_render(void) {}
+void vfpdraghead_hitDetect(void) {}
+void vfpdraghead_release(void) {}
+void vfpdraghead_initialise(void) {}
+void vfpcoreplat_hitDetect(void) {}
+void vfpcoreplat_update(void) {}
+void vfpcoreplat_release(void) {}
+void vfpcoreplat_initialise(void) {}
 void fn_801FD388(void) {}
 
 /* 8b "li r3, N; blr" returners. */
@@ -1077,11 +1077,11 @@ int vfpdoorswitch_getExtraSize(void) { return 0x4; }
 int vfpdoorswitch_func08(void) { return 0x0; }
 int seqpoint_getExtraSize(void) { return 0x10; }
 int seqpoint_func08(void) { return 0x0; }
-int fn_801FCCE8(void) { return 0xc; }
-int fn_801FCCF0(void) { return 0x0; }
+int vfpdraghead_getExtraSize(void) { return 0xc; }
+int vfpdraghead_func08(void) { return 0x0; }
 int fn_801FD13C(void) { return 0x0; }
-int fn_801FD144(void) { return 0x4; }
-int fn_801FD14C(void) { return 0x0; }
+int vfpcoreplat_getExtraSize(void) { return 0x4; }
+int vfpcoreplat_func08(void) { return 0x0; }
 int fn_801FD378(void) { return 0x6; }
 int fn_801FD380(void) { return 0x0; }
 
@@ -1098,6 +1098,6 @@ extern f32 lbl_803E6140;
 #pragma scheduling off
 #pragma peephole off
 void vfpdoorswitch_render(void) { fn_8003B8F4(lbl_803E611C); }
-void fn_801FD184(void) { fn_8003B8F4(lbl_803E6140); }
+void vfpcoreplat_render(void) { fn_8003B8F4(lbl_803E6140); }
 #pragma peephole reset
 #pragma scheduling reset
