@@ -34,6 +34,13 @@ SPAM_NAMES = {
     "IPCSetBufferLo",
     "WPADGetDpdSensitivity",
 }
+SPAM_LIBRARIES = {
+    # Revolution-only libraries; SFA is a GameCube target, so exact-size hits
+    # from these are signature collisions unless another source proves them.
+    "bte.a",
+    "homebuttonLib.a",
+    "wpad.a",
+}
 SPAM_OBJECTS = {
     ("NdevExi2A.a", "DebuggerDriver.o"),
     (
@@ -542,6 +549,9 @@ def score_symbol(
     if symbol_name in SPAM_NAMES:
         score -= 3
         reasons.append("spam-name")
+    if symbol.library in SPAM_LIBRARIES:
+        score -= 5
+        reasons.append("spam-library")
     if (symbol.library, symbol.object_path) in SPAM_OBJECTS:
         score -= 5
         reasons.append("spam-object")
@@ -893,7 +903,7 @@ def print_split_seeds(
             continue
         if symbol.size <= 8:
             continue
-        if (symbol.library, symbol.object_path) in SPAM_OBJECTS:
+        if symbol.library in SPAM_LIBRARIES or (symbol.library, symbol.object_path) in SPAM_OBJECTS:
             continue
         grouped[(symbol.library, symbol.object_path)].append(candidate)
 
