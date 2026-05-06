@@ -21,7 +21,7 @@
  * Current EN functions in this estimated window:
  * - `fn_80102CC8@0x80102CC8-0x80102CFC` size=`0x34`
  * - `camcontrol_initialise@0x80102CFC-0x80102D24` size=`0x28`
- * - `camcontrol_release@0x80102D24-0x80102D3C` size=`0x18`
+ * - `Camera_setFocus@0x80102D24-0x80102D3C` size=`0x18`
  */
 
 /*

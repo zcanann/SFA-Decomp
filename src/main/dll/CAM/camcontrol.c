@@ -442,12 +442,12 @@ void Camera_overridePos(f32 x,f32 y,f32 z)
 }
 #pragma scheduling reset
 
-void camcontrol_release(void *obj)
+void Camera_setFocus(void *target)
 {
-  if (obj == *(void **)((char *)lbl_803DD524 + 0xa4)) {
+  if (target == *(void **)((char *)lbl_803DD524 + 0xa4)) {
     return;
   }
-  *(void **)((char *)lbl_803DD524 + 0xa4) = obj;
+  *(void **)((char *)lbl_803DD524 + 0xa4) = target;
 }
 
 /*

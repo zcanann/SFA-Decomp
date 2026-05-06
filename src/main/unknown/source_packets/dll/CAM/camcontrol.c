@@ -19,13 +19,14 @@
  * Live EN anchors:
  * - camcontrol_loadTriggeredCamAction @ 0x80102AA0 is the translated function
  *   carrying the triggered camera action load path.
- * - camcontrol_initialise @ 0x80102A04, camcontrol_release @ 0x80102A88,
+ * - camcontrol_initialise @ 0x80102A04, Camera_setFocus @ 0x80102A88,
  *   and Camera_moveBy @ 0x80102A2C match the reference-side function hints.
  * - Rena's EN map also anchors nearby camera accessors:
  *   Camera_isZooming @ 0x801028C0, Camera_setTarget @ 0x801028E8,
  *   Camera_getTarget @ 0x801028FC, Camera_getOverrideTarget @ 0x80102908,
- *   Camera_overridePos @ 0x80102A60, Camera_getMode @ 0x801030B0, and
- *   Camera_get @ 0x801030B8.
+ *   Camera_overridePos @ 0x80102A60, Camera_func08 @ 0x80103054,
+ *   Camera_GetFollowPos @ 0x801030A8, Camera_getMode @ 0x801030B0,
+ *   Camera_get @ 0x801030B8, and Camera_release @ 0x8010349C.
  *
  * Reference-side path hints:
  * - current debug path: dll/CAM/camcontrol.c
@@ -36,7 +37,7 @@
  *
  * Reference-side function hints:
  * - camcontrol_initialise
- * - camcontrol_release
+ * - Camera_setFocus
  * - Camera_moveBy
  */
 
