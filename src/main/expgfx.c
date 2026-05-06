@@ -363,7 +363,7 @@ void expgfx_release(uint slotPoolBase,int poolIndex,int slotIndex,int freeTextur
       }
     }
     slot->sequenceId = -1;
-    if ((clearActive & 0xff) != 0) {
+    if (((u32)clearActive & 0xff) != 0) {
       DCFlushRange(slot,EXPGFX_SLOT_SIZE);
     }
     *poolActiveMask = *poolActiveMask & ~activeMask;
@@ -407,8 +407,8 @@ void expgfx_initialise(void)
   uint *poolActiveMasks;
   uint *slotPoolBases;
 
-  poolIndex = 0;
   expgfxBase = lbl_8039AB58;
+  poolIndex = 0;
   slotPoolBases = (uint *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
   poolActiveMasks = (uint *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
   poolActiveCounts = (char *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
