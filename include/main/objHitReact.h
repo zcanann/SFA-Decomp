@@ -68,8 +68,8 @@ struct ObjHitReactEntry {
   u8 pad10[4];
 };
 
-int objHitReact_update(ObjAnimComponent *obj,ObjHitReactEntry *entryTable,u32 entryCount,
-                       u32 reactionState,float *cooldown);
+int objHitReact_update(ObjAnimComponent *obj,ObjHitReactEntry *reactionEntries,u32 reactionEntryCount,
+                       u32 reactionState,float *reactionStepScale);
 void ObjHitReact_ResetActiveObjects(int objectCount);
 
 #define objHitReactFn_80089890 objHitReact_update
