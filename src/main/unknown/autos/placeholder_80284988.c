@@ -3,8 +3,8 @@
 #include "dolphin/os.h"
 #include "dolphin/dsp.h"
 
-extern u16 lbl_803DE3BC;
-extern u32 lbl_803DE3C0;
+extern u16 irqDisableDepth;
+extern u32 audioPrevIrqFlags;
 extern u32 lbl_803DE374;
 extern u32 lbl_803DE3B4;
 extern u16 lbl_803DE32C;
@@ -73,10 +73,10 @@ void sndEnd(void)
 {
     u16 count;
 
-    count = lbl_803DE3BC - 1;
-    lbl_803DE3BC = count;
+    count = irqDisableDepth - 1;
+    irqDisableDepth = count;
     if (count == 0) {
-        OSRestoreInterrupts(lbl_803DE3C0);
+        OSRestoreInterrupts(audioPrevIrqFlags);
     }
 }
 
@@ -140,8 +140,8 @@ u32 fn_80284A40(void)
 #pragma scheduling off
 void fn_80284A8C(void)
 {
-    lbl_803DE3C0 = OSDisableInterrupts();
-    lbl_803DE3BC = 1;
+    audioPrevIrqFlags = OSDisableInterrupts();
+    irqDisableDepth = 1;
 }
 #pragma scheduling reset
 
@@ -154,10 +154,10 @@ void fn_80284A8C(void)
  */
 void sndBegin(void)
 {
-    u16 count = lbl_803DE3BC;
-    lbl_803DE3BC = count + 1;
+    u16 count = irqDisableDepth;
+    irqDisableDepth = count + 1;
     if (count == 0) {
-        lbl_803DE3C0 = OSDisableInterrupts();
+        audioPrevIrqFlags = OSDisableInterrupts();
     }
 }
 
