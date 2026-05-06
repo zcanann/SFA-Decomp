@@ -3,7 +3,7 @@
 extern undefined4 Obj_TransformWorldPointToLocal();
 extern undefined4 Obj_TransformLocalPointToWorld();
 extern uint fn_800217C0();
-extern undefined4 fn_80103660();
+extern undefined4 doNothing_80103660();
 extern char camcontrol_getTargetPosition();
 extern char camcontrol_samplePathState();
 extern undefined4 camcontrol_updatePathTargetAction();
@@ -90,7 +90,7 @@ void camclimb_update(short *param_1)
     if (lbl_803E1740 < *(float *)((int)lbl_803DD538 + 0x11c)) {
       cVar2 = camcontrol_getTargetPosition(param_1, psVar4, param_1 + 0xc, param_1 + 1);
       if (cVar2 == 1) {
-        fn_80103660(1);
+        doNothing_80103660(1);
       }
       *(float *)(param_1 + 0x5c) = *(float *)(param_1 + 0xc);
       *(float *)(param_1 + 0x5e) = *(float *)(param_1 + 0xe);

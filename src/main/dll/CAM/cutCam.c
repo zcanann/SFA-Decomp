@@ -661,4 +661,4 @@ void FUN_801043bc(void)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_80103660(void) {}
+void doNothing_80103660(void) {}
