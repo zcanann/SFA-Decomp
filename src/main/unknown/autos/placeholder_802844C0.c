@@ -1,118 +1,114 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_802844C0.h"
+#include "dolphin/os/OSCache.h"
 
-extern undefined4 FUN_802848d8();
-extern undefined4 FUN_802848d8();
-extern undefined4 FUN_80284b94();
-extern uint FUN_80284b98();
-extern undefined4 FUN_80284c58();
-extern undefined4 FUN_80286718();
+extern int fn_80284038(void *src, void *dst, u32 size, int p4, int p5, int p6);
 
-extern undefined4 DAT_803bddb0;
-extern f64 DOUBLE_803e8588;
-extern f32 FLOAT_803e8580;
+extern u8 lbl_803D3F60[];
+extern u8 lbl_803D4468[];
+extern u32 lbl_803DE380;
+extern u32 lbl_803DE384;
+extern u32 lbl_803DE388;
+extern void *(*lbl_803DE38C)(void *src, u32 chunk);
+extern u32 lbl_803DE390;
+extern u32 lbl_803DE394;
+extern u32 lbl_803DE398;
+extern void *lbl_803DE39C;
 
 /*
- * --INFO--
+ * Allocate+DMA: copies `size` bytes from `src` into the audio
+ * memory pool, returning the pre-write cursor. With a registered
+ * chunking callback (lbl_803DE38C), copies in pieces of at most
+ * lbl_803DE390 bytes per call.
  *
- * Function: FUN_80284468
  * EN v1.0 Address: 0x80284468
- * EN v1.0 Size: 4b
+ * EN v1.0 Size: 4b (stub)
  * EN v1.1 Address: 0x802844C0
- * EN v1.1 Size: 92b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.1 Size: 240b
  */
-void FUN_80284468(undefined4 param_1)
+u32 fn_80284468(void *src, u32 size)
+{
+    u32 alignedSize = (size + 0x1f) & ~0x1f;
+    u32 startPos = lbl_803DE384;
+
+    if (lbl_803DE38C == NULL) {
+        DCFlushRange(src, alignedSize);
+        fn_80284038(src, (void *)lbl_803DE384, alignedSize, 0, 0, 0);
+        lbl_803DE384 += alignedSize;
+        return startPos;
+    }
+
+    while (alignedSize != 0) {
+        u32 chunk = lbl_803DE390;
+        void *piece;
+        if (alignedSize < chunk) {
+            chunk = alignedSize;
+        }
+        piece = lbl_803DE38C(src, chunk);
+        DCFlushRange(piece, chunk);
+        fn_80284038(piece, (void *)lbl_803DE384, chunk, 0, 0, 0);
+        alignedSize -= chunk;
+        src = (u8 *)src + chunk;
+        lbl_803DE384 += chunk;
+    }
+    return startPos;
+}
+
+/*
+ * Rewind cursor by aligned size.
+ *
+ * EN v1.1 Address: 0x80284558
+ * EN v1.1 Size: 24b
+ */
+void fn_80284558(void *unused, u32 size)
+{
+    u32 aligned = (size + 0x1f) & ~0x1f;
+    lbl_803DE384 -= aligned;
+}
+
+/*
+ * Initialize the 64-element doubly-linked free list at lbl_803D3F60.
+ * Layout: 0x80-byte stride, with each entry's "next" at +0 and the
+ * unrolled body sets up 8 entries per outer iteration.
+ *
+ * EN v1.1 Address: 0x80284570
+ * EN v1.1 Size: 196b
+ */
+void fn_80284570(void)
+{
+    u8 *base = lbl_803D3F60;
+    int i;
+
+    lbl_803DE394 = 0;
+    lbl_803DE398 = 0;
+    lbl_803DE39C = base + 0x508;
+
+    for (i = 1; i < 64; i++) {
+        u8 *node = base + i * 0x10 + 0x508;
+        *(u8 **)(node - 0x10) = node;
+    }
+    *(u32 *)(base + i * 0x10 + 0x4f8) = 0;
+    lbl_803DE388 = lbl_803DE380;
+}
+
+void fn_80284634(void)
 {
 }
 
 /*
- * --INFO--
+ * Look up entry at lbl_803D4468[idx*16]; if outPos != NULL, store
+ * the entry's offset-8 word; return the entry's offset-4 word.
  *
- * Function: FUN_8028446c
- * EN v1.0 Address: 0x8028446C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8028451C
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.1 Address: 0x80284638
+ * EN v1.1 Size: 56b
  */
-void FUN_8028446c(undefined4 param_1,int param_2)
+u32 fn_80284638(u8 idx, u32 *outPos)
 {
+    u8 *entry;
+    if (outPos != NULL) {
+        entry = lbl_803D4468 + idx * 16;
+        *outPos = *(u32 *)(entry + 8);
+    }
+    entry = lbl_803D4468 + idx * 16;
+    return *(u32 *)(entry + 4);
 }
-
-/*
- * --INFO--
- *
- * Function: FUN_80284470
- * EN v1.0 Address: 0x80284470
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80284540
- * EN v1.1 Size: 32b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80284470(void)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80284474
- * EN v1.0 Address: 0x80284474
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80284560
- * EN v1.1 Size: 148b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80284474(int *param_1,uint *param_2)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80284478
- * EN v1.0 Address: 0x80284478
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x802845F4
- * EN v1.1 Size: 132b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80284478(int param_1,undefined4 param_2)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_8028447c
- * EN v1.0 Address: 0x8028447C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80284678
- * EN v1.1 Size: 32b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8028447c(void)
-{
-}
-
-/* Pattern wrappers. */
-void fn_80284634(void) {}

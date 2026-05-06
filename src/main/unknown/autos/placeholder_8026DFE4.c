@@ -1,54 +1,46 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8026DFE4.h"
 
-extern uint FUN_8026cb80();
-extern undefined4 FUN_8026dc88();
-extern undefined4 FUN_8026de48();
-extern undefined4 FUN_8027272c();
-extern undefined4 FUN_80272730();
-extern undefined4 FUN_80272734();
-extern undefined4 FUN_80272738();
-extern uint FUN_8027ba14();
-extern uint FUN_8027ba1c();
-
-extern undefined4 DAT_803b16cc;
-extern undefined4 DAT_803b16d0;
-extern undefined4 DAT_803b2480;
-extern undefined4 DAT_803b2484;
-extern undefined4 DAT_803b2488;
-extern undefined4 DAT_803b248a;
-extern undefined4 DAT_803b2aca;
-extern undefined4 DAT_803b2b02;
-extern undefined4 DAT_803b2b3a;
-extern undefined4 DAT_803b2b72;
-extern undefined4 DAT_803b2baa;
-extern undefined4 DAT_803b2be2;
-extern undefined4 DAT_803b2c1a;
-extern undefined4 DAT_803b2c52;
-extern undefined4 DAT_803b2c8a;
-extern undefined4 DAT_803b2cc2;
-extern undefined4 DAT_803b2cfa;
-extern undefined4 DAT_803b2d32;
-extern undefined4 DAT_803b2d6a;
-extern undefined4 DAT_803b2da2;
-extern undefined4 DAT_803b2dda;
-extern undefined4 DAT_803b2e12;
-extern undefined4* DAT_803deeb0;
-extern undefined4* DAT_803deeb4;
+/* Placeholder for the larger fn_8026DE58 — voice-state walker that's
+ * too complex to fully decode here without more context; stubbed. */
+void fn_8026DE58(u8 voiceIdx) { (void)voiceIdx; }
 
 /*
- * --INFO--
+ * Sorted-by-priority insert into a doubly-linked list anchored at
+ * (*holder)[0x1c]. Walks the list until finding a node with a
+ * priority key (offset 8) less than or equal to the new node's,
+ * then inserts before it. Empty list / tail-append paths handled.
  *
- * Function: FUN_8026de58
- * EN v1.0 Address: 0x8026DE58
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8026DFE4
- * EN v1.1 Size: 1332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Address: 0x8026DEC4
+ * EN v1.0 Size: 4b (stub)
+ * EN v1.1 Address: 0x8026E070
+ * EN v1.1 Size: 116b
  */
-void FUN_8026de58(uint *param_1,uint *param_2,char param_3)
+void fn_8026E070(int holder, int newNode)
 {
+    u32 cur = *(u32 *)(holder + 0x1c);
+    u32 prev = 0;
+
+    while (cur != 0) {
+        if (*(u32 *)(cur + 8) > *(u32 *)(newNode + 8)) {
+            *(u32 *)(newNode + 0) = cur;
+            *(u32 *)(newNode + 4) = prev;
+            if (prev != 0) {
+                *(u32 *)(prev + 0) = (u32)newNode;
+            } else {
+                *(u32 *)(holder + 0x1c) = (u32)newNode;
+            }
+            *(u32 *)(cur + 4) = (u32)newNode;
+            return;
+        }
+        prev = cur;
+        cur = *(u32 *)(cur + 0);
+    }
+    *(u32 *)(newNode + 4) = prev;
+    if (prev != 0) {
+        *(u32 *)(prev + 0) = (u32)newNode;
+    } else {
+        *(u32 *)(holder + 0x1c) = (u32)newNode;
+    }
+    *(u32 *)(newNode + 0) = 0;
 }
