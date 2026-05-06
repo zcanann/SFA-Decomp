@@ -40,7 +40,7 @@ extern f32 lbl_803DE90C;
 #pragma peephole off
 #pragma dont_inline on
 void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimState *state,
-                          uint moveId,int eventState)
+                          uint moveId,s16 eventState)
 {
   double frameValue;
   int frameType;
@@ -48,7 +48,14 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
   int moveIndex;
   u64 frameBits;
 
-  moveIndex = ObjAnim_ResolveMoveIndex(animDef,moveId);
+  moveIndex = animDef->moveBaseTable[(s32)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
+              (moveId & OBJANIM_MOVE_INDEX_MASK);
+  if (moveIndex >= animDef->moveCount) {
+    moveIndex = animDef->moveCount - 1;
+  }
+  if (moveIndex < 0) {
+    moveIndex = 0;
+  }
   if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (state->lastBlendMoveIndex != moveIndex) {
       state->blendCacheSlot = (u16)state->blendToggle;
