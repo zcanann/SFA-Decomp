@@ -1206,13 +1206,13 @@ void FUN_80186748(int param_1)
 void fn_80185B70(void) {}
 void fn_80186464(void) {}
 void fn_80186468(void) {}
-void fn_8018647C(void) {}
-void fn_80186480(void) {}
-void fn_80186484(void) {}
-void fn_80186488(void) {}
-void fn_8018648C(void) {}
-void fn_80186490(void) {}
-void fn_80186494(void) {}
+void Dummy108_free(void) {}
+void Dummy108_render(void) {}
+void Dummy108_hitDetect(void) {}
+void Dummy108_update(void) {}
+void Dummy108_init(void) {}
+void Dummy108_release(void) {}
+void Dummy108_initialise(void) {}
 void portalspelldoor_free(void) {}
 void portalspelldoor_hitDetect(void) {}
 void portalspelldoor_release(void) {}
@@ -1221,7 +1221,7 @@ void portalspelldoor_initialise(void) {}
 /* 8b "li r3, N; blr" returners. */
 int fn_801859C4(void) { return 0x2c; }
 int fn_801859CC(void) { return 0x0; }
-int fn_8018646C(void) { return 0x0; }
+int Dummy108_getExtraSize(void) { return 0x0; }
 int fn_80186474(void) { return 0x0; }
 int portalspelldoor_getExtraSize(void) { return 0x10; }
 int portalspelldoor_func08(void) { return 0x0; }
