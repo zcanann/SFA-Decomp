@@ -1,98 +1,24 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_802818F8.h"
-
-extern undefined4 SQRT();
-
-extern undefined4 DAT_803bdfc1;
-extern undefined4 DAT_803bdfc2;
-extern undefined4 DAT_803d4900;
-extern undefined4 DAT_803deeb8;
-extern f64 DOUBLE_803e8568;
-extern f64 DOUBLE_803e8570;
-extern f32 FLOAT_803e8560;
 
 /*
- * --INFO--
- *
- * Function: FUN_80281338
- * EN v1.0 Address: 0x80281338
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x802818F8
- * EN v1.1 Size: 20b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * fn_80281338 — large voice/instrument event handler with multiple
+ * dispatch paths and table walks (~1488 instructions). Stubbed.
  */
-void FUN_80281338(undefined param_1,undefined param_2)
+#pragma dont_inline on
+void fn_80281338(u8 idx, u8 a, u8 b, u8 mask)
 {
+    (void)idx; (void)a; (void)b; (void)mask;
 }
+#pragma dont_inline reset
 
 /*
- * --INFO--
- *
- * Function: FUN_8028133c
- * EN v1.0 Address: 0x8028133C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8028190C
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * fn_80281908 — wrapper that splits a 16-bit data word into two byte
+ * halves and dispatches to fn_80281338 twice (~296 instructions).
+ * Stubbed.
  */
-undefined FUN_8028133c(void)
+#pragma dont_inline on
+void fn_80281908(u8 idx, u8 a, u8 b, u32 data)
 {
-    return 0;
+    (void)idx; (void)a; (void)b; (void)data;
 }
-
-/*
- * --INFO--
- *
- * Function: FUN_80281344
- * EN v1.0 Address: 0x80281344
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80281914
- * EN v1.1 Size: 172b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80281344(float *param_1,float *param_2,float *param_3)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80281348
- * EN v1.0 Address: 0x80281348
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x802819C0
- * EN v1.1 Size: 180b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80281348(float *param_1)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_8028134c
- * EN v1.0 Address: 0x8028134C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80281A74
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8028134c(uint param_1,uint param_2,uint param_3)
-{
-}
+#pragma dont_inline reset
