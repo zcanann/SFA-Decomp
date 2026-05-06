@@ -289,6 +289,34 @@ def is_relocation_or_padding_only_mismatch(src_obj: Path, target_obj: Path, diff
     return True
 
 
+def is_dead_stripped_text_prefix_mismatch(src_obj: Path, target_obj: Path, diff: dict) -> bool:
+    sections = mismatched_payload_sections(diff)
+    if ".text" not in sections:
+        return False
+
+    with tempfile.TemporaryDirectory(prefix="sdk-audit-", dir=REPO_ROOT / "temp") as tmp:
+        work_dir = Path(tmp)
+        for section in sections:
+            src = section_bytes(src_obj, section, work_dir)
+            target = section_bytes(target_obj, section, work_dir)
+            if src is None or target is None:
+                return False
+
+            if section == ".text":
+                if len(src) <= len(target):
+                    return False
+                if src[-len(target) :] != target:
+                    return False
+                continue
+
+            reloc_bytes = source_relocation_bytes(src_obj, section)
+            if len(src) == len(target) and not reloc_bytes:
+                return False
+            if not section_diff_is_relocation_or_padding_only(src, target, reloc_bytes):
+                return False
+    return True
+
+
 def audit_object(version: str, obj: ConfigObject) -> AuditResult:
     src_obj = object_path(version, "src", obj.path)
     target_obj = object_path(version, "obj", obj.path)
@@ -316,6 +344,8 @@ def audit_object(version: str, obj: ConfigObject) -> AuditResult:
     diff = json.loads(proc.stdout)
     if not has_target_payload(diff):
         return AuditResult(obj, None, None, text_size(diff), 0, skipped="empty target split")
+    if is_dead_stripped_text_prefix_mismatch(src_obj, target_obj, diff):
+        return AuditResult(obj, None, None, text_size(diff), 0, skipped="dead-stripped text prefix")
     if is_relocation_or_padding_only_mismatch(src_obj, target_obj, diff):
         return AuditResult(obj, None, None, text_size(diff), 0, skipped="relocation/padding-only extracted target split")
 
@@ -339,7 +369,7 @@ def main() -> int:
     parser.add_argument("-v", "--version", default="GSAE01", help="Target version (default: GSAE01)")
     parser.add_argument("--all-configured", action="store_true", help="Also audit matching SDK objects absent from config.json")
     parser.add_argument("--fail-on-mismatch", action="store_true", help="Exit nonzero if any audited object is not exact")
-    parser.add_argument("--show-skipped", action="store_true", help="Print SDK objects skipped because the extracted target split is empty")
+    parser.add_argument("--show-skipped", action="store_true", help="Print SDK objects skipped by reason")
     parser.add_argument("--limit", type=int, default=0, help="Maximum mismatches to print (default: all)")
     args = parser.parse_args()
 
