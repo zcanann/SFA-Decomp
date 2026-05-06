@@ -7,6 +7,14 @@
 // Current EN descriptor:
 // - gDrEarthCalObjDescriptor @ 0x8032AE10
 //
+// Runtime notes:
+// - update branches on fn_802972A8, which appears to gate the active EarthCall phase.
+// - inactive phase marks object byte +0xAF bit 3, checks the player's membership in the
+//   object list at object manager +0x100, and sets bit 4 when no nearby target is found.
+// - active phase clears bits 3/4 and fires the DAT_803DCA54 trigger callback when
+//   ObjTrigger_IsSet reports the object trigger.
+// - status flag 0x800 spawns a small effect through fn_80097734.
+//
 // Descriptor slots:
 // - 0: drearthcal_initialise (0x8022166C)
 // - 1: drearthcal_release (0x80221668)
