@@ -10,13 +10,13 @@ extern undefined4 loadUiDll(int param_1);
 extern undefined4 fn_80041E3C(int param_1);
 extern undefined4 fn_80042F78(int param_1);
 extern undefined4 fn_80043560(undefined4 param_1,int param_2);
-extern undefined4 fn_800437BC(undefined4 param_1,uint param_2);
+extern undefined4 mapUnload(undefined4 param_1,uint param_2);
 extern undefined4 mapGetDirIdx(int param_1);
-extern undefined4 fn_800552E8(int param_1,int param_2);
+extern undefined4 warpToMap(int param_1,int param_2);
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern undefined4 fn_8003B8F4(double scale);
-extern undefined4 fn_8004350C(int param_1,int param_2,int param_3);
+extern undefined4 unlockLevel(int param_1,int param_2,int param_3);
 extern undefined4 fn_800887F8(int param_1);
 
 typedef struct FireObjectInterface {
@@ -94,7 +94,7 @@ undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateStat
       switch (mode) {
       case 0:
       case 1:
-        fn_800552E8(2,0);
+        warpToMap(2,0);
         break;
       case 2:
         GameBit_Set(0x405,0);
@@ -102,23 +102,23 @@ undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateStat
           (*lbl_803DCAAC)->triggerEvent(0xb,3);
           (*lbl_803DCAAC)->setAnimEvent(0xb,8,1);
           (*lbl_803DCAAC)->setAnimEvent(0xb,9,1);
-          fn_800552E8(0x22,0);
+          warpToMap(0x22,0);
         }
         else if (GameBit_Get(0xbfd) != 0) {
           (*lbl_803DCAAC)->triggerEvent(0xb,2);
           (*lbl_803DCAAC)->setAnimEvent(0xb,5,1);
           (*lbl_803DCAAC)->setAnimEvent(0xb,6,1);
-          fn_800552E8(0x20,0);
+          warpToMap(0x20,0);
         }
         else if (GameBit_Get(0xc6e) != 0) {
           (*lbl_803DCAAC)->triggerEvent(0xb,4);
           (*lbl_803DCAAC)->setAnimEvent(0xb,8,1);
           (*lbl_803DCAAC)->setAnimEvent(0xb,9,1);
-          fn_800552E8(0x22,0);
+          warpToMap(0x22,0);
         }
         break;
       case 3:
-        fn_800552E8(0xf,0);
+        warpToMap(0xf,0);
         break;
       }
       loadUiDll(1);
@@ -129,11 +129,11 @@ undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateStat
       case 1:
       case 2:
         anim = mapGetDirIdx(7);
-        fn_800437BC(anim,0x20000000);
+        mapUnload(anim,0x20000000);
         break;
       case 3:
         anim = mapGetDirIdx(0xb);
-        fn_800437BC(anim,0x20000000);
+        mapUnload(anim,0x20000000);
         break;
       }
     }
@@ -183,7 +183,7 @@ void fireObj_init(FireObject *obj)
 {
   u32 v;
   obj->stateCallback = fire_updateState;
-  fn_8004350C(0,0,1);
+  unlockLevel(0,0,1);
   v = obj->flags | 0x2000;
   obj->flags = (u16)v;
   fn_800887F8(0);

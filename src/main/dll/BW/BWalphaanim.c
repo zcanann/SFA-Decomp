@@ -284,7 +284,7 @@ void FUN_801ed428(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 }
 
 extern void fn_80054308(u32);
-extern u32 fn_80054D54(int);
+extern u32 textureLoadAsset(int);
 extern u32 lbl_803DDC60;
 
 #pragma scheduling off
@@ -297,7 +297,7 @@ void fn_801EE020(void) {
 }
 void fn_801EE054(void) {
     if (lbl_803DDC60 == 0) {
-        lbl_803DDC60 = fn_80054D54(0x186);
+        lbl_803DDC60 = textureLoadAsset(0x186);
     }
 }
 #pragma peephole reset

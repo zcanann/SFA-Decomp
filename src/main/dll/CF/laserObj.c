@@ -3,7 +3,7 @@
 
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
-extern void fn_80041018(int obj);
+extern void objRenderFn_80041018(int obj);
 
 extern LaserTriggerInterface **lbl_803DCA68;
 extern LaserEventInterface **lbl_803DCAAC;
@@ -47,7 +47,7 @@ void laserObj_update(LaserObject *obj)
   else {
     obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_DISABLED);
   }
-  fn_80041018((int)obj);
+  objRenderFn_80041018((int)obj);
   if ((obj->statusFlags & LASER_OBJECT_STATUS_ACTIVE) != 0) {
     mode = (u8)(*lbl_803DCAAC)->getMode((int)obj->modeIndex);
     switch (mode) {

@@ -5,7 +5,7 @@ extern void fn_8000A380(int param_1,int param_2,int param_3);
 extern int GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern void fn_8003B8F4(double scale);
-extern void fn_8004350C(int param_1,int param_2,int param_3);
+extern void unlockLevel(int param_1,int param_2,int param_3);
 extern void fn_8008016C(void *timer);
 extern void fn_801D7ED4(void *effect,int param_2,int param_3,int param_4,int param_5,int param_6);
 extern void crcloudrace_updateRaceState(void *obj);
@@ -78,7 +78,7 @@ void crcloudrace_update(CrCloudRaceObject *obj)
       fn_80008B74(obj,obj,0x174,0);
       fn_80008B74(obj,obj,0x1e1,0);
       GameBit_Set(0xdcb,0);
-      fn_8004350C(0,0,1);
+      unlockLevel(0,0,1);
     }
     obj->unkF4 = 1;
   }

@@ -34,7 +34,7 @@
   "functions": [
     {
       "function_start": "0x800443CC",
-      "function_name": "fn_800443CC",
+      "function_name": "mapLoadDataFile",
       "xrefs": [
         {
           "xref_address": "0x800443E8",
@@ -42,7 +42,7 @@
           "target_address": "0x802CAF48",
           "target_text": "AUDIO.tab",
           "pair_kind": "lis/addi",
-          "function_name": "fn_800443CC"
+          "function_name": "mapLoadDataFile"
         }
       ]
     }

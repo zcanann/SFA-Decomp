@@ -3551,7 +3551,7 @@ extern u8    lbl_803DD970;
 extern void* lbl_803DD974;
 extern void* lbl_803DD96C;
 extern void* gameTextGet(s32);
-extern void* fn_80054D54(s32);
+extern void* textureLoadAsset(s32);
 extern void  fn_80054308(void*);
 
 /* EN v1.0 0x801368E0  size: 124b  titlescreen_release: free the main
@@ -3587,7 +3587,7 @@ void titlescreen_release(void)
 #pragma peephole off
 void fn_80134388(void)
 {
-    lbl_803DD974 = fn_80054D54(0xC5);
+    lbl_803DD974 = textureLoadAsset(0xC5);
     lbl_803DD96C = gameTextGet(0x1FD);
     lbl_803DD970 = 0;
     lbl_803DD968 = lbl_803E22A8;
@@ -3649,9 +3649,9 @@ void fn_80137998(void)
     lbl_803DD9DC = lbl_803E23B8;
     lbl_803DD9E0 = 0;
     lbl_803DD9E1 = 0;
-    lbl_803DDA24 = fn_80054D54(0x25D);
-    lbl_803DDA20 = fn_80054D54(1);
-    lbl_803DDA1C = fn_80054D54(2);
+    lbl_803DDA24 = textureLoadAsset(0x25D);
+    lbl_803DDA20 = textureLoadAsset(1);
+    lbl_803DDA1C = textureLoadAsset(2);
     lbl_803DBC14 = lbl_803AA018;
 }
 #pragma peephole reset
@@ -3733,12 +3733,12 @@ extern u8    lbl_803DBC09;
 extern f32   lbl_803E2408;
 
 /* EN v1.0 0x80133F40  size: 48b  Acquire a 0xBE5-byte buffer via
- * fn_80054D54 into lbl_803DD940; reset frame counter at lbl_803DD938. */
+ * textureLoadAsset into lbl_803DD940; reset frame counter at lbl_803DD938. */
 #pragma scheduling off
 #pragma peephole off
 void fn_80133F40(void)
 {
-    lbl_803DD940 = fn_80054D54(0xBE5);
+    lbl_803DD940 = textureLoadAsset(0xBE5);
     lbl_803DD938 = 340;
 }
 #pragma peephole reset
@@ -3757,7 +3757,7 @@ void fn_8013404C(void)
 #pragma peephole off
 void fn_80134070(void)
 {
-    lbl_803DD960 = fn_80054D54(0x47A);
+    lbl_803DD960 = textureLoadAsset(0x47A);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -3823,8 +3823,8 @@ void fn_80134808(void)
 #pragma peephole off
 void fn_80134834(void)
 {
-    lbl_803DD984 = fn_80054D54(0x4FA);
-    lbl_803DD980 = fn_80054D54(0x5E3);
+    lbl_803DD984 = textureLoadAsset(0x4FA);
+    lbl_803DD980 = textureLoadAsset(0x5E3);
     lbl_803DD97C = lbl_803E22E0;
 }
 #pragma peephole reset

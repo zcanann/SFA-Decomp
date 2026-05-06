@@ -22,15 +22,15 @@ extern undefined8 FUN_80040da0();
 extern undefined8 fn_80043034();
 extern undefined8 fn_80043074();
 extern uint fn_800430AC();
-extern undefined4 fn_8004350C();
+extern undefined4 unlockLevel();
 extern undefined4 fn_80043560();
-extern undefined8 fn_800437BC();
+extern undefined8 mapUnload();
 extern undefined4 fn_80041E3C();
-extern undefined8 fn_800443CC();
+extern undefined8 mapLoadDataFile();
 extern undefined4 mapGetDirIdx();
 extern undefined8 fn_800481D4();
-extern undefined4 fn_8004A43C();
-extern undefined8 fn_8004A868();
+extern undefined4 GXFlush_();
+extern undefined8 waitNextFrame();
 extern undefined4 FUN_80053b3c();
 extern undefined4 FUN_8005fe14();
 extern undefined8 fn_80114BB0();
@@ -213,11 +213,11 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
       case 0x15:
         OSReport(sDIMBossFreeingAssetsForDIMBoss);
         fn_80043074();
-        fn_8004350C(0,0,1);
+        unlockLevel(0,0,1);
         uVar5 = mapGetDirIdx(0x1c);
-        fn_800437BC(uVar5,0x3ff);
+        mapUnload(uVar5,0x3ff);
         uVar5 = mapGetDirIdx(0x1b);
-        fn_800437BC(uVar5,0x20000000);
+        mapUnload(uVar5,0x20000000);
         fn_80041E3C(0);
         break;
       case 0x16:
@@ -225,46 +225,46 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
         uVar5 = mapGetDirIdx(0x13);
         fn_80043560(uVar5,0);
         mapGetDirIdx(0x13);
-        fn_800443CC(uVar5,0x20);
+        mapLoadDataFile(uVar5,0x20);
         uVar5 = mapGetDirIdx(0x13);
-        fn_800443CC(uVar5,0x21);
+        mapLoadDataFile(uVar5,0x21);
         uVar5 = mapGetDirIdx(0x13);
-        fn_800443CC(uVar5,0x23);
+        mapLoadDataFile(uVar5,0x23);
         uVar5 = mapGetDirIdx(0x13);
-        fn_800443CC(uVar5,0x24);
+        mapLoadDataFile(uVar5,0x24);
         uVar5 = mapGetDirIdx(0x13);
-        fn_800443CC(uVar5,0x30);
+        mapLoadDataFile(uVar5,0x30);
         uVar5 = mapGetDirIdx(0x13);
-        fn_800443CC(uVar5,0x2f);
+        mapLoadDataFile(uVar5,0x2f);
         uVar5 = mapGetDirIdx(0x13);
-        fn_800443CC(uVar5,0x2b);
+        mapLoadDataFile(uVar5,0x2b);
         uVar5 = mapGetDirIdx(0x13);
-        fn_800443CC(uVar5,0x2a);
+        mapLoadDataFile(uVar5,0x2a);
         uVar5 = mapGetDirIdx(0x13);
-        fn_800443CC(uVar5,0x26);
+        mapLoadDataFile(uVar5,0x26);
         uVar5 = mapGetDirIdx(0x13);
-        fn_800443CC(uVar5,0x25);
+        mapLoadDataFile(uVar5,0x25);
         uVar5 = mapGetDirIdx(0x13);
-        fn_800443CC(uVar5,0x1a);
+        mapLoadDataFile(uVar5,0x1a);
         uVar5 = mapGetDirIdx(0x13);
-        fn_800443CC(uVar5,0x1b);
+        mapLoadDataFile(uVar5,0x1b);
         uVar5 = mapGetDirIdx(0x13);
-        fn_800443CC(uVar5,0xe);
+        mapLoadDataFile(uVar5,0xe);
         uVar5 = mapGetDirIdx(0x13);
-        fn_800443CC(uVar5,0xd);
+        mapLoadDataFile(uVar5,0xd);
         bVar2 = false;
         while (uVar6 = fn_800430AC(0), (uVar6 & 0xffefffff) != 0) {
           padUpdate();
           fn_800202CC();
           if (bVar2) {
-            fn_8004A868();
+            waitNextFrame();
           }
           fn_800481D4();
           fn_80015624();
           if (bVar2) {
             fn_800234EC(0);
             fn_80019C24();
-            fn_8004A43C(1,0);
+            GXFlush_(1,0);
           }
           if (DAT_803dd5d0 != '\0') {
             bVar2 = true;

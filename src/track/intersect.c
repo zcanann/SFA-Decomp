@@ -1229,7 +1229,7 @@ void fn_8007366C(u8 alpha)
     extern void fn_8006CABC(f32* a, f32* b);
     extern void fn_8006C5E4(int* out);
     extern void fn_8006C5CC(int* out);
-    extern void fn_8004C2E4(int handle, int slot);
+    extern void selectTexture(int handle, int slot);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
     int handle1;
@@ -1248,7 +1248,7 @@ void fn_8007366C(u8 alpha)
     fn_8006CABC(&a, &b);
     a = a * lbl_803DEF28;
     fn_8006C5E4(&handle1);
-    fn_8004C2E4(handle1, 1);
+    selectTexture(handle1, 1);
     PSMTXScale((f32(*)[4])tex_mtx, lbl_803DEF2C, lbl_803DEF2C, lbl_803DEF2C);
     tex_mtx[0][3] = a;
     GXLoadTexMtxImm(tex_mtx, 0x21, 1);
@@ -1278,7 +1278,7 @@ void fn_8007366C(u8 alpha)
     GXLoadTexMtxImm(mtx, 0x55, 0);
     GXSetTexCoordGen2(2, 1, 1, 0x1E, 1, 0x55);
     fn_8006C5CC(&handle2);
-    fn_8004C2E4(handle2, 2);
+    selectTexture(handle2, 2);
     c.a = alpha;
     GXSetTevKColor(0, c);
     GXSetTevKAlphaSel(1, 0x1C);
@@ -2019,7 +2019,7 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
     extern Mtx lbl_80396880;
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern int lbl_803DD014;
-    extern void fn_8004C264(s16* obj, int slot);
+    extern void textureFn_8004c264(s16* obj, int slot);
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
 
@@ -2060,7 +2060,7 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
     GXSetNumChans(0);
     GXSetNumTexGens(1);
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
-    fn_8004C264(obj, 0);
+    textureFn_8004c264(obj, 0);
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
     if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 7 ||
@@ -2147,7 +2147,7 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
     extern Mtx lbl_80396880;
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern int lbl_803DD014;
-    extern void fn_8004C264(s16* obj, int slot);
+    extern void textureFn_8004c264(s16* obj, int slot);
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     GXColor c;
@@ -2190,7 +2190,7 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
     GXSetNumChans(0);
     GXSetNumTexGens(1);
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
-    fn_8004C264(obj, 0);
+    textureFn_8004c264(obj, 0);
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(lbl_80396880, GX_ORTHOGRAPHIC);
     if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 7 ||
@@ -3177,7 +3177,7 @@ void fn_80079A64(f32 sx, f32 sy, u8 a, u8 flag)
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
     extern void fn_8006C540(int*);
-    extern void fn_8004C2E4(int, int);
+    extern void selectTexture(int, int);
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
@@ -3189,7 +3189,7 @@ void fn_80079A64(f32 sx, f32 sy, u8 a, u8 flag)
     *(u32*)&c1 = lbl_803DEEA4;
     *(u32*)&c2 = lbl_803DEEA8;
     fn_8006C540(&handle);
-    fn_8004C2E4(handle, 0);
+    selectTexture(handle, 0);
     {
         f32 dec = gSynthDelayedActionWord0;
         f32 zero = lbl_803DEEDC;
@@ -4259,7 +4259,7 @@ void cardShowLoadingMsg(u8 kind)
     extern void fn_80017434(int);
     extern int padUpdate(void);
     extern void fn_800234EC(int);
-    extern void fn_8004A868(void);
+    extern void waitNextFrame(void);
     extern int fn_8001FD88(int**);
     extern void** lbl_803DCA4C;
     extern f32 lbl_803DEF98;
@@ -4273,7 +4273,7 @@ void cardShowLoadingMsg(u8 kind)
     extern void gameTextSetColor(int, int, int, int);
     extern void fn_80016810(int, int, int);
     extern void fn_80019C24(void);
-    extern void fn_8004A43C(int, int);
+    extern void GXFlush_(int, int);
 
     int* buttons;
     int saved;
@@ -4287,7 +4287,7 @@ void cardShowLoadingMsg(u8 kind)
     for (frame = 0; frame < 0x3C; frame++) {
         padUpdate();
         fn_800234EC(0);
-        fn_8004A868();
+        waitNextFrame();
         count = fn_8001FD88(&buttons) & 0xFF;
         if ((u32)count != 0) {
             draw = (void (*)(int, int, int))((void**)*lbl_803DCA4C)[1];
@@ -4311,7 +4311,7 @@ void cardShowLoadingMsg(u8 kind)
             fn_80016810(0x56C, 0, 0xC8);
         }
         fn_80019C24();
-        fn_8004A43C(1, 0);
+        GXFlush_(1, 0);
     }
 }
 #pragma scheduling reset
