@@ -1,105 +1,42 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_801175B4.h"
+#include "dolphin/os.h"
 
-extern undefined4 FUN_80119584();
-extern undefined4 FUN_8011960c();
-extern undefined4 FUN_80244758();
-extern int FUN_80244820();
-extern undefined4 FUN_80247054();
-extern int FUN_8026c150();
-extern undefined4 FUN_80286838();
-extern undefined4 FUN_80286884();
-
-extern undefined4 DAT_803a50c0;
-extern undefined4 DAT_803a50e0;
-extern undefined DAT_803a69c0;
-extern undefined4 DAT_803a6a10;
-extern undefined4 DAT_803a6a2c;
-extern undefined4 DAT_803a6a5e;
-extern undefined4 DAT_803a6a78;
+extern void *fn_80117460(void *);
+extern void *fn_8011750C(void *);
+extern u8 lbl_803A4448[];
+extern int lbl_803DD658;
 
 /*
  * --INFO--
  *
- * Function: FUN_801175a4
+ * Function: fn_801175A4
  * EN v1.0 Address: 0x801175A4
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x801175B4
- * EN v1.1 Size: 68b
+ * EN v1.1 Size: 196b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_801175a4(uint param_1)
+int fn_801175A4(OSPriority priority, void *param)
 {
-    return 0;
-}
+    u8 *base = lbl_803A4448;
+    int ok;
 
-/*
- * --INFO--
- *
- * Function: FUN_801175ac
- * EN v1.0 Address: 0x801175AC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801175F8
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801175ac(undefined4 param_1)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801175b0
- * EN v1.0 Address: 0x801175B0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80117628
- * EN v1.1 Size: 224b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801175b0(void)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801175b4
- * EN v1.0 Address: 0x801175B4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80117708
- * EN v1.1 Size: 172b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801175b4(void)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801175b8
- * EN v1.0 Address: 0x801175B8
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801177B4
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801175b8(void)
-{
+    if (param != NULL) {
+        ok = OSCreateThread((OSThread *)(base + 0x1058), fn_80117460, param,
+                            base + 0x1058, 0x1000, priority, 1);
+    } else {
+        ok = OSCreateThread((OSThread *)(base + 0x1058), fn_8011750C, NULL,
+                            base + 0x1058, 0x1000, priority, 1);
+    }
+    if (ok == 0) {
+        return 0;
+    }
+    OSInitMessageQueue((OSMessageQueue *)(base + 0x38), (OSMessage *)(base + 0xc), 3);
+    OSInitMessageQueue((OSMessageQueue *)(base + 0x18), (OSMessage *)base, 3);
+    lbl_803DD658 = 1;
+    return 1;
 }

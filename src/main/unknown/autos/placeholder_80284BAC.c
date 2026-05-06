@@ -1,45 +1,78 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_80284BAC.h"
 
-extern undefined4 FUN_802420e0();
-extern undefined4 FUN_802508f4();
-extern undefined4 FUN_80284670();
+extern u32 lbl_803DE374[2];
+extern void ReverbSTDCallback(int a, int b, int c, void *state);
+extern void ReverbSTDCreate(void *state, f32 a, f32 b, f32 c, f32 d, f32 e);
 
-extern undefined4 DAT_803df004;
-extern undefined4* DAT_803df00c;
-extern undefined4 DAT_803df010;
+typedef struct ReverbParams {
+    int p0;
+    int p4;
+    int p8;
+} ReverbParams;
+
+typedef struct ReverbState {
+    u8 unk0[0x13c];
+    u8 enabled;
+    u8 unk13D[3];
+    f32 a;
+    f32 c;
+    f32 b;
+    f32 d;
+    f32 e;
+} ReverbState;
 
 /*
  * --INFO--
  *
- * Function: FUN_80284b94
+ * Function: fn_80284B94
  * EN v1.0 Address: 0x80284B94
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80284BAC
- * EN v1.1 Size: 32b
+ * EN v1.1 Size: 44b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80284b94(void)
+void fn_80284B94(void)
 {
+    ((void (*)(void))lbl_803DE374[1])();
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80284b98
+ * Function: fn_80284BC0
  * EN v1.0 Address: 0x80284B98
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80284BCC
- * EN v1.1 Size: 240b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 4b (stub)
+ * EN v1.1 Address: 0x80284BC0
+ * EN v1.1 Size: 92b
  */
-int FUN_80284b98(uint param_1,int param_2)
+void fn_80284BC0(u8 mode, ReverbParams *params, ReverbState *state)
 {
-    return 0;
+    switch ((int)mode) {
+    case 0:
+        if (state->enabled == 0) {
+            ReverbSTDCallback(params->p0, params->p4, params->p8, state);
+        }
+        break;
+    case 1:
+        break;
+    }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80284C1C
+ * EN v1.0 Address: 0x80284B9C
+ * EN v1.0 Size: 4b (stub)
+ * EN v1.1 Address: 0x80284C1C
+ * EN v1.1 Size: 60b
+ */
+void fn_80284C1C(ReverbState *state)
+{
+    state->enabled = 0;
+    ReverbSTDCreate(state, state->a, state->b, state->c, state->d, state->e);
 }
