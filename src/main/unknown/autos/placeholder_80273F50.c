@@ -1,292 +1,213 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_80273F50.h"
 
-extern undefined4 FUN_8027a660();
-extern undefined4 FUN_80283fa0();
-extern undefined4 FUN_80284474();
-extern undefined4 FUN_80284478();
-extern undefined4 FUN_8028504c();
-extern undefined4 FUN_80285050();
-
-extern undefined4 DAT_803bdfc0;
-extern undefined4 DAT_803befe0;
-extern undefined4 DAT_803befe4;
-extern undefined4 DAT_803bf020;
-extern undefined4 DAT_803bf024;
-extern int DAT_803c08d8;
-extern undefined4 DAT_803c08dc;
-extern undefined4 DAT_803c08e0;
-extern undefined4 DAT_803c0ed8;
-extern undefined4 DAT_803c0edc;
-extern undefined4 DAT_803c4ed8;
-extern undefined4 DAT_803c4edc;
-extern undefined4 DAT_803c56d8;
-extern undefined4 DAT_803c56dc;
-extern undefined4 DAT_803c56e0;
-extern undefined2 DAT_803c62d8;
-extern undefined4 DAT_803c62da;
-extern undefined4 DAT_803c6ad8;
-extern undefined4 DAT_803c6adc;
-extern undefined4 DAT_803c6ade;
-extern short DAT_803caad8;
-extern undefined4 DAT_803caada;
-extern undefined4 DAT_803caadc;
-extern undefined4 DAT_803deee4;
-extern undefined4 DAT_803def08;
-extern undefined4 DAT_803def0a;
-extern undefined4 DAT_803def0c;
-extern undefined4 DAT_803def0e;
-extern undefined4 DAT_803def10;
-extern undefined4 DAT_803def12;
-extern f64 DOUBLE_803e8478;
-extern f32 FLOAT_803e8470;
+extern int hwTransAddr(int x);
 
 /*
- * --INFO--
- *
- * Function: FUN_80273d2c
- * EN v1.0 Address: 0x80273D2C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80273F50
- * EN v1.1 Size: 132b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * fn_80273D2C — large voice/instrument lookup (~584 instructions). Stubbed.
  */
-void FUN_80273d2c(int param_1)
+#pragma dont_inline on
+void fn_80273D2C(void) {}
+#pragma dont_inline reset
+
+/*
+ * fn_80273F74 — voice handler (~460 instructions). Stubbed.
+ */
+#pragma dont_inline on
+void fn_80273F74(void) {}
+#pragma dont_inline reset
+
+/*
+ * fn_80274140 — voice handler (~504 instructions). Stubbed.
+ */
+#pragma dont_inline on
+void fn_80274140(void) {}
+#pragma dont_inline reset
+
+/*
+ * fn_80274338 — voice handler (~388 instructions). Stubbed.
+ */
+#pragma dont_inline on
+void fn_80274338(void) {}
+#pragma dont_inline reset
+
+/*
+ * fn_802744BC — voice handler (~364 instructions). Stubbed.
+ */
+#pragma dont_inline on
+void fn_802744BC(void) {}
+#pragma dont_inline reset
+
+/*
+ * fn_80274628 — voice handler (~216 instructions). Stubbed.
+ */
+#pragma dont_inline on
+void fn_80274628(void) {}
+#pragma dont_inline reset
+
+/*
+ * fn_80274700 — voice handler (~152 instructions). Stubbed.
+ */
+#pragma dont_inline on
+void fn_80274700(void) {}
+#pragma dont_inline reset
+
+/*
+ * fn_80274798 — voice handler (~296 instructions). Stubbed.
+ */
+#pragma dont_inline on
+void fn_80274798(void) {}
+#pragma dont_inline reset
+
+/*
+ * fn_802748C0 — voice handler (~784 instructions). Stubbed.
+ */
+#pragma dont_inline on
+void fn_802748C0(void) {}
+#pragma dont_inline reset
+
+/*
+ * fn_80274BD0 — voice handler (~668 instructions). Stubbed.
+ */
+#pragma dont_inline on
+void fn_80274BD0(void) {}
+#pragma dont_inline reset
+
+/*
+ * Comparator: return a->key2 - b->key2 (u16 at offset 4).
+ *
+ * EN v1.1 Address: 0x80274E6C, size 16b
+ */
+int fn_80274E6C(void *a, void *b)
 {
+    return (int)*(u16 *)((u8 *)a + 4) - (int)*(u16 *)((u8 *)b + 4);
 }
 
 /*
- * --INFO--
- *
- * Function: FUN_80273d30
- * EN v1.0 Address: 0x80273D30
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80273FD4
- * EN v1.1 Size: 328b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * fn_80274E7C — table lookup helper (~148 instructions). Stubbed.
  */
-void FUN_80273d30(void)
+#pragma dont_inline on
+int fn_80274E7C(int key)
 {
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80273d34
- * EN v1.0 Address: 0x80273D34
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8027411C
- * EN v1.1 Size: 496b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_80273d34(ushort param_1,undefined4 param_2)
-{
+    (void)key;
     return 0;
 }
+#pragma dont_inline reset
 
 /*
- * --INFO--
+ * Comparator: return a->key - b->key (u16 at offset 0).
  *
- * Function: FUN_80273d3c
- * EN v1.0 Address: 0x80273D3C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8027430C
- * EN v1.1 Size: 388b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.1 Address: 0x80274F10, size 16b
  */
-undefined4 FUN_80273d3c(short param_1)
+int fn_80274F10(void *a, void *b)
 {
-    return 0;
+    return (int)*(u16 *)a - (int)*(u16 *)b;
 }
 
 /*
- * --INFO--
- *
- * Function: FUN_80273d44
- * EN v1.0 Address: 0x80273D44
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80274490
- * EN v1.1 Size: 584b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * fn_80274F20 — voice find/copy (~296 instructions). Stubbed.
  */
-undefined4 FUN_80273d44(ushort param_1,undefined4 param_2,undefined2 param_3)
+#pragma dont_inline on
+int fn_80274F20(int a, int b)
 {
+    (void)a; (void)b;
     return 0;
+}
+#pragma dont_inline reset
+
+/*
+ * Comparator: return a->key2 - b->key2 (u16 at offset 4). Same body as
+ * fn_80274E6C but separate symbol used for a different bsearch table.
+ *
+ * EN v1.1 Address: 0x80275048, size 16b
+ */
+int fn_80275048(void *a, void *b)
+{
+    return (int)*(u16 *)((u8 *)a + 4) - (int)*(u16 *)((u8 *)b + 4);
 }
 
 /*
- * --INFO--
- *
- * Function: FUN_80273d4c
- * EN v1.0 Address: 0x80273D4C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x802746D8
- * EN v1.1 Size: 460b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * fn_80275058 — bsearch wrapper (~96 instructions). Stubbed.
  */
-undefined4 FUN_80273d4c(short param_1)
+#pragma dont_inline on
+int fn_80275058(int key)
 {
+    (void)key;
     return 0;
+}
+#pragma dont_inline reset
+
+/*
+ * fn_802750B8 — bsearch wrapper (~96 instructions). Stubbed.
+ */
+#pragma dont_inline on
+int fn_802750B8(int key)
+{
+    (void)key;
+    return 0;
+}
+#pragma dont_inline reset
+
+/*
+ * Comparator: return a->key2 - b->key2 (u16 at offset 4). Same body as
+ * the others but separate symbol.
+ *
+ * EN v1.1 Address: 0x80275118, size 16b
+ */
+int fn_80275118(void *a, void *b)
+{
+    return (int)*(u16 *)((u8 *)a + 4) - (int)*(u16 *)((u8 *)b + 4);
 }
 
 /*
- * --INFO--
- *
- * Function: FUN_80273d54
- * EN v1.0 Address: 0x80273D54
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x802748A4
- * EN v1.1 Size: 504b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * fn_80275128 — bsearch wrapper (~128 instructions). Stubbed.
  */
-undefined4 FUN_80273d54(ushort param_1,undefined4 param_2)
+#pragma dont_inline on
+int fn_80275128(int key, u16 *out)
 {
+    (void)key; (void)out;
     return 0;
+}
+#pragma dont_inline reset
+
+/*
+ * Comparator: return a->key - b->key (u16 at offset 0). Same body as
+ * fn_80274F10 but separate symbol.
+ *
+ * EN v1.1 Address: 0x802751A8, size 16b
+ */
+int fn_802751A8(void *a, void *b)
+{
+    return (int)*(u16 *)a - (int)*(u16 *)b;
 }
 
 /*
- * --INFO--
- *
- * Function: FUN_80273d5c
- * EN v1.0 Address: 0x80273D5C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80274A9C
- * EN v1.1 Size: 388b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * fn_802751B8 — linear search (~168 instructions). Stubbed.
  */
-undefined4 FUN_80273d5c(short param_1)
+#pragma dont_inline on
+int fn_802751B8(int key)
 {
+    (void)key;
     return 0;
 }
+#pragma dont_inline reset
 
 /*
- * --INFO--
- *
- * Function: FUN_80273d64
- * EN v1.0 Address: 0x80273D64
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80274C20
- * EN v1.1 Size: 364b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * fn_80275260 — handler (~228 instructions). Stubbed.
  */
-undefined4 FUN_80273d64(short *param_1,undefined4 param_2)
+#pragma dont_inline on
+int fn_80275260(int a, int b)
 {
+    (void)a; (void)b;
     return 0;
 }
+#pragma dont_inline reset
 
 /*
- * --INFO--
+ * Wrapper for hwTransAddr.
  *
- * Function: FUN_80273d6c
- * EN v1.0 Address: 0x80273D6C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80274D8C
- * EN v1.1 Size: 216b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.1 Address: 0x80275344, size 32b
  */
-undefined4 FUN_80273d6c(short param_1)
+int fn_80275344(int x)
 {
-    return 0;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80273d74
- * EN v1.0 Address: 0x80273D74
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80274E64
- * EN v1.1 Size: 152b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_80273d74(short param_1)
-{
-    return 0;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80273d7c
- * EN v1.0 Address: 0x80273D7C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80274EFC
- * EN v1.1 Size: 296b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_80273d7c(short param_1,int param_2,uint param_3)
-{
-    return 0;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80273d84
- * EN v1.0 Address: 0x80273D84
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80275024
- * EN v1.1 Size: 784b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_80273d84(uint param_1,undefined4 param_2)
-{
-    return 0;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80273d8c
- * EN v1.0 Address: 0x80273D8C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80275334
- * EN v1.1 Size: 668b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_80273d8c(uint param_1)
-{
-    return 0;
+    return hwTransAddr(x);
 }
