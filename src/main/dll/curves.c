@@ -4167,7 +4167,7 @@ void gameplay_setDebugOptionEnabled(uint param_1,u8 param_2)
 
 /* Trivial 4b 0-arg blr leaves. */
 void curves_release(void) {}
-void fn_800E5430(void) {}
+void RomCurve_initialise(void) {}
 void fn_800E7D98(void) {}
 void fn_800E7D9C(void) {}
 

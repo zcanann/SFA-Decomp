@@ -4277,8 +4277,8 @@ void fn_800D9EC8(void) {}
 void fn_800D9ED4(void) {}
 void fn_800D9ED8(void) {}
 void fn_800D9EDC(void) {}
-void fn_800D9EE0(void) {}
-void fn_800D9EE4(void) {}
+void Dummy12_release(void) {}
+void Dummy12_initialise(void) {}
 void fn_800DD640(void) {}
 void fn_800DD644(void) {}
 

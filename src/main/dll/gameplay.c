@@ -12970,8 +12970,8 @@ void FUN_800ee10c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
 /* Trivial 4b 0-arg blr leaves. */
 void fn_800EA048(void) {}
 void screens_release(void) {}
-void fn_800EADC4(void) {}
-void fn_800EADC8(void) {}
+void Carryable_release(void) {}
+void Carryable_initialise(void) {}
 void fn_800EB090(void) {}
 void fn_800EB094(void) {}
 void fn_800ECAD8(void) {}
@@ -13002,16 +13002,16 @@ void fn_800EFA28(void) {}
 void fn_800EFA2C(void) {}
 void fn_800EFD2C(void) {}
 void fn_800EFD30(void) {}
-void fn_800EFD3C(void) {}
-void fn_800EFD40(void) {}
+void Dummy58_release(void) {}
+void Dummy58_initialise(void) {}
 void fn_800F0224(void) {}
 void fn_800F0228(void) {}
 void fn_800F0584(void) {}
 void fn_800F0588(void) {}
 void fn_800F07D4(void) {}
 void fn_800F07D8(void) {}
-void fn_800F07E4(void) {}
-void fn_800F07E8(void) {}
+void Dummy6C_release(void) {}
+void Dummy6C_initialise(void) {}
 void fn_800F0A44(void) {}
 void fn_800F0A48(void) {}
 void fn_800F0C94(void) {}
