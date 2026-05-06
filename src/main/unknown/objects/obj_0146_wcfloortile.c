@@ -48,16 +48,16 @@
  * - 0x0146 WCFloorTile: placements=24, class=0x0030, widths=9w x24
  *
  * EN descriptor slot map:
- * - descriptor=0x8032C028 lbl_8032C028 (slots=10, mask=1101111111)
- * - slot 00: 0x8022AD30 fn_8022AD30 stub=blr ref=initialise (stub)
- * - slot 01: 0x8022AD2C fn_8022AD2C stub=blr ref=release (stub)
- * - slot 03: 0x8022ACF8 fn_8022ACF8 ref=init
- * - slot 04: 0x8022A9A4 fn_8022A9A4 ref=update
- * - slot 05: 0x8022A9A0 fn_8022A9A0 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x8022A970 fn_8022A970 ref=render
- * - slot 07: 0x8022A96C fn_8022A96C stub=blr ref=free (stub)
- * - slot 08: 0x8022A964 fn_8022A964 stub=const 0
- * - slot 09: 0x8022A95C fn_8022A95C stub=const 8 ref=getExtraSize (stub)
+ * - descriptor=0x8032B3D0 gWCFloorTileObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x8022A66C wcfloortile_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x8022A668 wcfloortile_release stub=blr ref=release (stub)
+ * - slot 03: 0x8022A634 wcfloortile_init ref=init
+ * - slot 04: 0x8022A2E0 wcfloortile_update ref=update
+ * - slot 05: 0x8022A2DC wcfloortile_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x8022A2AC wcfloortile_render ref=render
+ * - slot 07: 0x8022A2A8 wcfloortile_free stub=blr ref=free (stub)
+ * - slot 08: 0x8022A2A0 wcfloortile_func08 stub=const 0
+ * - slot 09: 0x8022A298 wcfloortile_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 
 #if 0
