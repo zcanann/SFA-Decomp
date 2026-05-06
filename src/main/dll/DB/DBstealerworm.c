@@ -1108,23 +1108,23 @@ void FUN_801e2940(undefined8 param_1,double param_2,double param_3,undefined8 pa
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801E2568(void) {}
-void fn_801E256C(void) {}
-void fn_801E32CC(void) {}
-void fn_801E3300(void) {}
-void fn_801E3410(void) {}
-void fn_801E3414(void) {}
-void fn_801E3418(void) {}
+void SB_Galleon_release(void) {}
+void SB_Galleon_initialise(void) {}
+void SB_ShipMast_free(void) {}
+void SB_ShipMast_hitDetect(void) {}
+void SB_ShipMast_init(void) {}
+void SB_ShipMast_release(void) {}
+void SB_ShipMast_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801E1F08(void) { return 0xb4; }
+int SB_Galleon_getExtraSize(void) { return 0xb4; }
 int fn_801E1F10(void) { return 0x0; }
-int fn_801E2578(void) { return 0x10; }
+int SB_Propeller_getExtraSize(void) { return 0x10; }
 int fn_801E2B28(void) { return 0x10; }
 int fn_801E2B30(void) { return 0x1; }
-int fn_801E32BC(void) { return 0x0; }
+int SB_ShipMast_getExtraSize(void) { return 0x0; }
 int fn_801E32C4(void) { return 0x0; }
-int fn_801E341C(void) { return 0x10; }
+int SB_ShipGun_getExtraSize(void) { return 0x10; }
 
 /* sda21 accessors. */
 extern u32 lbl_803DDC20;
@@ -1133,7 +1133,7 @@ u32 fn_801E1DA8(void) { return lbl_803DDC20; }
 u32 fn_801E2570(void) { return lbl_803DDC40; }
 
 /* Pattern wrappers. */
-u8 fn_801E1DF4(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x79); }
+u8 SB_Galleon_render2(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x79); }
 
 /* 16b chained patterns. */
 s32 fn_801E1E64(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x2b); }
@@ -1143,8 +1143,8 @@ extern f32 lbl_803E5810;
 extern void fn_8003B8F4(f32);
 extern f32 lbl_803E5868;
 #pragma peephole off
-void fn_801E2580(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5810); }
-void fn_801E32D0(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5868); }
+void SB_Propeller_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5810); }
+void SB_ShipMast_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5868); }
 #pragma peephole reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
