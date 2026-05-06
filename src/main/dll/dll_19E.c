@@ -358,9 +358,9 @@ void dfsh_objcreator_initialise(void)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801C3EB0(void) {}
-void fn_801C3EB4(void) {}
+void DFSH_LaserBeam_render(void) {}
+void DFSH_LaserBeam_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801C3E3C(void) { return 0x4c; }
+int DFSH_LaserBeam_getExtraSize(void) { return 0x4c; }
 int fn_801C3E44(void) { return 0x0; }

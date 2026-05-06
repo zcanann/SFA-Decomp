@@ -329,8 +329,8 @@ void fn_801ECA60(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int fn_801ECDD0(void) { return 0x2; }
-int fn_801ECDD8(void) { return 0x0; }
-int fn_801ECE30(void) { return 0x59c; }
+int SnowBike_render2(void) { return 0x0; }
+int SnowBike_getExtraSize(void) { return 0x59c; }
 int fn_801ECE38(void) { return 0x3; }
 
 /* Pattern wrappers. */

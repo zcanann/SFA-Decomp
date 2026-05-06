@@ -289,13 +289,13 @@ extern u32 lbl_803DDC60;
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801EE020(void) {
+void SnowBike_release(void) {
     if (lbl_803DDC60 != 0) {
         fn_80054308(lbl_803DDC60);
         lbl_803DDC60 = 0;
     }
 }
-void fn_801EE054(void) {
+void SnowBike_initialise(void) {
     if (lbl_803DDC60 == 0) {
         lbl_803DDC60 = textureLoadAsset(0x186);
     }

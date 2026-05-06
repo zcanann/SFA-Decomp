@@ -717,9 +717,9 @@ void FUN_801ef984(int param_1)
 void fn_801EED7C(void) {}
 void fn_801EEDA8(void) {}
 void fn_801EEDD4(void) {}
-void fn_801EF020(void) {}
-void fn_801EF358(void) {}
-void fn_801EF35C(void) {}
+void SB_CloudRunner_hitDetect(void) {}
+void SB_CloudRunner_release(void) {}
+void SB_CloudRunner_initialise(void) {}
 void WM_ObjCreator_free(void) {}
 void WM_ObjCreator_hitDetect(void) {}
 
@@ -730,7 +730,7 @@ int fn_801EEDFC(void) { return 0x0; }
 int fn_801EEE04(void) { return 0x0; }
 int fn_801EEE2C(void) { return 0x0; }
 int fn_801EEE34(void) { return 0x0; }
-int fn_801EEE3C(void) { return 0x84; }
+int SB_CloudRunner_getExtraSize(void) { return 0x84; }
 int fn_801EEE44(void) { return 0x43; }
 int WM_ObjCreator_getExtraSize(void) { return 0x8; }
 int fn_801EF368(void) { return 0x0; }
