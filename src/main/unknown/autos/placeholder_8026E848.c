@@ -6,7 +6,7 @@ extern void fn_8026E070(int slot, int item);
 extern int gSynthCurrentVoice;
 
 /*
- * fn_8026E0E4 — large voice/MIDI dispatch (~1920 instructions). Stubbed.
+ * fn_8026E0E4 - large voice/MIDI dispatch (~1920 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_8026E0E4(void) {}
@@ -34,15 +34,14 @@ void fn_8026E864(void)
             x = fn_8026DE58((u8)i);
             if (x != 0) {
                 u8 *table = *(u8 **)(gSynthCurrentVoice + 0x14e4);
-                u8 idx = table[i];
-                fn_8026E070(gSynthCurrentVoice + idx * 0x38 + 0x14e8, x);
+                fn_8026E070(gSynthCurrentVoice + table[i] * 0x38 + 0x14e8, x);
             }
         }
     }
 }
 
 /*
- * fn_8026E90C — voice-loop to add one voice (~196 instructions). Stubbed.
+ * fn_8026E90C - voice-loop to add one voice (~196 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_8026E90C(u8 voice)
@@ -52,7 +51,7 @@ void fn_8026E90C(u8 voice)
 #pragma dont_inline reset
 
 /*
- * fn_8026E9D0 — large 628-instr voice update with FP math. Stubbed.
+ * fn_8026E9D0 - large 628-instr voice update with FP math. Stubbed.
  */
 #pragma dont_inline on
 int fn_8026E9D0(u8 voice, int param)
