@@ -279,10 +279,10 @@ void pathcam_loadSettings(undefined2 *param_1,int param_2,int param_3)
 }
 
 /* fn_X(lbl); lbl = 0; */
-extern u32 lbl_803DD530;
+extern u32 cameraMtxVar57;
 extern void fn_80023800(u32);
 #pragma scheduling off
 #pragma peephole off
-void camcontrol_releaseModeSettings(void) { fn_80023800(lbl_803DD530); lbl_803DD530 = 0; }
+void camcontrol_releaseModeSettings(void) { fn_80023800(cameraMtxVar57); cameraMtxVar57 = 0; }
 #pragma peephole reset
 #pragma scheduling reset

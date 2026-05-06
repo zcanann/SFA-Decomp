@@ -35,5 +35,5 @@ void FUN_801018a8(uint param_1,undefined4 param_2)
 {
 }
 
-extern u8 *lbl_803DD524;
-void fn_80101974(u8 v) { lbl_803DD524[0x139] = v; }
+extern u8 *pCamera;
+void fn_80101974(u8 v) { pCamera[0x139] = v; }

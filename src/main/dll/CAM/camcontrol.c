@@ -91,7 +91,7 @@ extern int lbl_803DD4EC;
 extern int lbl_803DD4F0;
 extern int lbl_803DD4F4;
 extern u32 lbl_803DD518;
-extern u32 lbl_803DD524;
+extern u32 pCamera;
 
 typedef struct CamcontrolTriggeredAction {
   u8 actionKind;
@@ -341,29 +341,29 @@ LAB_80102ab4:
 #pragma scheduling off
 int Camera_isZooming(void)
 {
-  return *(float *)((char *)lbl_803DD524 + 0xf4) > lbl_803E1630;
+  return *(float *)((char *)pCamera + 0xf4) > lbl_803E1630;
 }
 #pragma scheduling reset
 
 void Camera_func15(int x)
 {
-  *(int *)((char *)lbl_803DD524 + 0x120) = x;
+  *(int *)((char *)pCamera + 0x120) = x;
 }
 
 void Camera_setTarget(int x)
 {
-  *(int *)((char *)lbl_803DD524 + 0x11c) = x;
-  *(int *)((char *)lbl_803DD524 + 0x124) = x;
+  *(int *)((char *)pCamera + 0x11c) = x;
+  *(int *)((char *)pCamera + 0x124) = x;
 }
 
 int Camera_getTarget(void)
 {
-  return *(int *)((char *)lbl_803DD524 + 0x124);
+  return *(int *)((char *)pCamera + 0x124);
 }
 
 int Camera_getOverrideTarget(void)
 {
-  return *(int *)((char *)lbl_803DD524 + 0x11c);
+  return *(int *)((char *)pCamera + 0x11c);
 }
 
 /*
@@ -386,7 +386,7 @@ void camcontrol_getRelativePosition(f32 param_1,int param_2,float *param_3,float
 {
   int iVar1;
 
-  iVar1 = *(int *)((char *)lbl_803DD524 + 0xa4);
+  iVar1 = *(int *)((char *)pCamera + 0xa4);
   if (param_7 != 0) {
     *param_3 = *(float *)(param_2 + 0xc) - *(float *)(iVar1 + 0xc);
     *param_4 = *(float *)(param_2 + 0x10) - (*(float *)(iVar1 + 0x10) + param_1);
@@ -427,27 +427,27 @@ void camcontrol_initialise(float *dst,f32 numerator,f32 denominator,f32 minValue
 
 void Camera_moveBy(f32 x,f32 y,f32 z)
 {
-  *(float *)((char *)lbl_803DD524 + 0xc) += x;
-  *(float *)((char *)lbl_803DD524 + 0x10) += y;
-  *(float *)((char *)lbl_803DD524 + 0x14) += z;
+  *(float *)((char *)pCamera + 0xc) += x;
+  *(float *)((char *)pCamera + 0x10) += y;
+  *(float *)((char *)pCamera + 0x14) += z;
 }
 
 #pragma scheduling off
 void Camera_overridePos(f32 x,f32 y,f32 z)
 {
-  *(u8 *)((char *)lbl_803DD524 + 0x13d) = 1;
-  *(float *)((char *)lbl_803DD524 + 0xdc) = x;
-  *(float *)((char *)lbl_803DD524 + 0xe0) = y;
-  *(float *)((char *)lbl_803DD524 + 0xe4) = z;
+  *(u8 *)((char *)pCamera + 0x13d) = 1;
+  *(float *)((char *)pCamera + 0xdc) = x;
+  *(float *)((char *)pCamera + 0xe0) = y;
+  *(float *)((char *)pCamera + 0xe4) = z;
 }
 #pragma scheduling reset
 
 void Camera_setFocus(void *target)
 {
-  if (target == *(void **)((char *)lbl_803DD524 + 0xa4)) {
+  if (target == *(void **)((char *)pCamera + 0xa4)) {
     return;
   }
-  *(void **)((char *)lbl_803DD524 + 0xa4) = target;
+  *(void **)((char *)pCamera + 0xa4) = target;
 }
 
 /*
@@ -840,4 +840,4 @@ void Camera_update(undefined8 param_1,double param_2,double param_3,undefined8 p
 
 /* sda21 accessors. */
 u32 Camera_getMode(void) { return lbl_803DD518; }
-u32 Camera_get(void) { return lbl_803DD524; }
+u32 Camera_get(void) { return pCamera; }

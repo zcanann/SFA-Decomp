@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_8B.h"
 
-extern u8 *lbl_803DD524;
+extern u8 *pCamera;
 extern s16 lbl_803DB990;
 
 /*
@@ -30,7 +30,7 @@ void fn_80100A8C(void)
  */
 u8 fn_80100A90(void)
 {
-  return lbl_803DD524[0x138];
+  return pCamera[0x138];
 }
 
 /*
