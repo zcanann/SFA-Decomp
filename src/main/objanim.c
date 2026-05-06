@@ -93,8 +93,8 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
  * --INFO--
  *
  * Function: Object_ObjAnimSetPrimaryBlendMove
- * EN v1.0 Address: 0x8002EDC4
- * EN v1.0 Size: 568b
+ * EN v1.0 Address: 0x8002ED18
+ * EN v1.0 Size: 84b
  * EN v1.1 Address: 0x8002EE10
  * EN v1.1 Size: 84b
  * JP Address: TODO
@@ -119,8 +119,8 @@ void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int
  * --INFO--
  *
  * Function: Object_ObjAnimSetSecondaryBlendMove
- * EN v1.0 Address: 0x8002EFFC
- * EN v1.0 Size: 568b
+ * EN v1.0 Address: 0x8002ED6C
+ * EN v1.0 Size: 84b
  * EN v1.1 Address: 0x8002EE64
  * EN v1.1 Size: 84b
  * JP Address: TODO
@@ -145,8 +145,8 @@ void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,uint moveId,i
  * --INFO--
  *
  * Function: Object_ObjAnimAdvanceMove
- * EN v1.0 Address: 0x8002F234
- * EN v1.0 Size: 1168b
+ * EN v1.0 Address: 0x8002EDC0
+ * EN v1.0 Size: 1100b
  * EN v1.1 Address: 0x8002EEB8
  * EN v1.1 Size: 1100b
  * JP Address: TODO
@@ -328,8 +328,8 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
  * --INFO--
  *
  * Function: Object_ObjAnimSetMoveProgress
- * EN v1.0 Address: 0x8002F6C4
- * EN v1.0 Size: 52b
+ * EN v1.0 Address: 0x8002F20C
+ * EN v1.0 Size: 48b
  * EN v1.1 Address: 0x8002F304
  * EN v1.1 Size: 48b
  * JP Address: TODO
@@ -353,8 +353,8 @@ undefined4 Object_ObjAnimSetMoveProgress(f32 moveProgress,ObjAnimComponent *objA
  * --INFO--
  *
  * Function: Object_ObjAnimSetMove
- * EN v1.0 Address: 0x8002F6F8
- * EN v1.0 Size: 816b
+ * EN v1.0 Address: 0x8002F23C
+ * EN v1.0 Size: 720b
  * EN v1.1 Address: 0x8002F334
  * EN v1.1 Size: 720b
  * JP Address: TODO
