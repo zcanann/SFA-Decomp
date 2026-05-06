@@ -606,11 +606,11 @@ void FUN_8010d450(void)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_8010CEB8(void) {}
-void fn_8010CEBC(void) {}
+void CameraModeCombat_release(void) {}
+void CameraModeCombat_initialise(void) {}
 void fn_8010CEC0(void) {}
-void fn_8010D334(void) {}
-void fn_8010D338(void) {}
+void CameraModeShipBattle_release(void) {}
+void CameraModeShipBattle_initialise(void) {}
 void fn_8010D33C(void) {}
 
 /* fn_X(lbl); lbl = 0; */
@@ -619,7 +619,7 @@ extern void fn_80023800(u32);
 extern u32 lbl_803DD578;
 #pragma scheduling off
 #pragma peephole off
-void fn_8010CEC4(void) { fn_80023800(lbl_803DD570); lbl_803DD570 = 0; }
+void CameraModeShipBattle_free(void) { fn_80023800(lbl_803DD570); lbl_803DD570 = 0; }
 void fn_8010D340(void) { fn_80023800(lbl_803DD578); lbl_803DD578 = 0; }
 #pragma peephole reset
 #pragma scheduling reset

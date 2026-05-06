@@ -707,14 +707,14 @@ void FUN_80109110(undefined4 param_1,undefined4 param_2,uint param_3)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_80109740(void) {}
-void fn_80109744(void) {}
+void CameraModeViewfinder_release(void) {}
+void CameraModeViewfinder_initialise(void) {}
 void fn_80109748(void) {}
 void fn_80109AFC(void) {}
 void fn_80109B00(void) {}
 void fn_80109C14(void) {}
-void fn_8010A0FC(void) {}
-void fn_8010A100(void) {}
+void CameraModeStatic_release(void) {}
+void CameraModeStatic_initialise(void) {}
 
 /* fn_X(lbl); lbl = 0; */
 extern u32 lbl_803DD550;

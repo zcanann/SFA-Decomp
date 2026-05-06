@@ -297,6 +297,6 @@ void FUN_8010bd7c(undefined4 param_1,undefined4 param_2,undefined4 *param_3,unde
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_8010BF00(void) {}
-void fn_8010BF04(void) {}
+void CameraModeTestStrength_release(void) {}
+void CameraModeTestStrength_initialise(void) {}
 void fn_8010C064(void) {}

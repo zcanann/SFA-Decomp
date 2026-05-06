@@ -24,7 +24,7 @@ extern f32 lbl_803E19D4;
 extern f32 lbl_803E19D8;
 extern f32 lbl_803E19DC;
 
-void fn_8010D810(undefined4 param_1, int param_2, s8 *param_3) {
+void CameraModeClimb_init(undefined4 param_1, int param_2, s8 *param_3) {
     f32 local_58;
     f32 local_5c;
     f32 local_60;
@@ -76,15 +76,15 @@ void fn_8010D810(undefined4 param_1, int param_2, s8 *param_3) {
     }
 }
 
-void fn_8010DACC(void) {}
-void fn_8010DAD0(void) {}
+void CameraModeClimb_release(void) {}
+void CameraModeClimb_initialise(void) {}
 void fn_8010DAD4(void) {}
 void fn_8010DAD8(void) {}
-void fn_8010DADC(void) {}
+void CameraModeFixed_update(void) {}
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8010DAE0(f32 *param_1, undefined4 param_2, f32 *param_3) {
+void CameraModeFixed_init(f32 *param_1, undefined4 param_2, f32 *param_3) {
     if (param_3 != (f32 *)0) {
         param_1[6] = param_3[6];
         param_1[7] = param_3[7];
@@ -101,8 +101,8 @@ void fn_8010DAE0(f32 *param_1, undefined4 param_2, f32 *param_3) {
 #pragma peephole reset
 #pragma scheduling reset
 
-void fn_8010DB74(void) {}
-void fn_8010DB78(void) {}
+void CameraModeFixed_release(void) {}
+void CameraModeFixed_initialise(void) {}
 
 #pragma scheduling off
 #pragma peephole off
