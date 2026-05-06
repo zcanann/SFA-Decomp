@@ -1210,26 +1210,26 @@ void FUN_8007fb80(undefined4 param_1,undefined4 param_2,short param_3,undefined4
 }
 
 /* sda21 accessors. */
-extern u8 lbl_803DD08C;
+extern u8 curSeqNo;
 extern u32 lbl_803DD0FC;
-extern s16 lbl_803DD06E;
-extern s16 lbl_803DD06C;
-extern u8 lbl_803DD080;
-u8 fn_80080204(void) { return lbl_803DD08C; }
+extern s16 seqGlobal2;
+extern s16 seqGlobal1;
+extern u8 seqGlobal3;
+u8 fn_80080204(void) { return curSeqNo; }
 u32 fn_80080234(void) { return lbl_803DD0FC; }
-void fn_80080B9C(s16 x) { lbl_803DD06E = x; }
-s16 fn_80080BA4(void) { return lbl_803DD06E; }
-void fn_80080BAC(s16 x) { lbl_803DD06C = x; }
-s16 fn_80080BB4(void) { return lbl_803DD06C; }
-void fn_80080BBC(u8 x) { lbl_803DD080 = x; }
-u8 fn_80080BC4(void) { return lbl_803DD080; }
+void fn_80080B9C(s16 x) { seqGlobal2 = x; }
+s16 fn_80080BA4(void) { return seqGlobal2; }
+void fn_80080BAC(s16 x) { seqGlobal1 = x; }
+s16 fn_80080BB4(void) { return seqGlobal1; }
+void fn_80080BBC(u8 x) { seqGlobal3 = x; }
+u8 fn_80080BC4(void) { return seqGlobal3; }
 
 /* Pattern wrappers. */
 extern u32 lbl_803DB700;
 void fn_8007FDF8(void) { lbl_803DB700 = 0x3; }
 
 /* lbl = N (byte) */
-void fn_800801F8(void) { lbl_803DD08C = 0x0; }
+void fn_800801F8(void) { curSeqNo = 0x0; }
 
 extern f32 lbl_803DEFA0;
 void fn_8008016C(f32 *p) { *p = lbl_803DEFA0; }

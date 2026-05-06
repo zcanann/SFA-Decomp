@@ -2699,18 +2699,18 @@ void fn_8005D148(void) {}
 void fn_8005D14C(void) {}
 
 /* return (lbl & 1<<bit). */
-extern u32 lbl_803DCDE8;
-u32 fn_8005CD48(void) { return lbl_803DCDE8 & 0x10000; }
-u32 fn_8005CDB0(void) { return lbl_803DCDE8 & 0x8; }
-u32 fn_8005CDBC(void) { return lbl_803DCDE8 & 0x80; }
-u32 fn_8005CDC8(void) { return lbl_803DCDE8 & 0x10; }
+extern u32 renderFlags;
+u32 fn_8005CD48(void) { return renderFlags & 0x10000; }
+u32 fn_8005CDB0(void) { return renderFlags & 0x8; }
+u32 fn_8005CDBC(void) { return renderFlags & 0x80; }
+u32 fn_8005CDC8(void) { return renderFlags & 0x10; }
 
 /* return (lbl >> bit) & 1 via cntlzw-equivalent (rlwinm; neg; or; srwi). */
-extern u32 lbl_803DCDE8;
+extern u32 renderFlags;
 #pragma scheduling off
 #pragma peephole off
 u32 fn_8005CE90(void) {
-    u32 v = lbl_803DCDE8 & 0x40000;
+    u32 v = renderFlags & 0x40000;
     u32 t = ((u32)-(s32)v | v) >> 31;
     return t;
 }
