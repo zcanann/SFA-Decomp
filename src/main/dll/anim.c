@@ -4075,12 +4075,12 @@ void FUN_802051e0(uint param_1)
 /* Trivial 4b 0-arg blr leaves. */
 void dbegg_release(void) {}
 void dbegg_initialise(void) {}
-void fn_801FF968(void) {}
-void fn_801FF96C(void) {}
-void fn_801FF970(void) {}
-void fn_801FF974(void) {}
-void fn_801FF9A8(void) {}
-void fn_801FF9AC(void) {}
+void GCRobotBlast_free(void) {}
+void GCRobotBlast_render(void) {}
+void GCRobotBlast_hitDetect(void) {}
+void GCRobotBlast_update(void) {}
+void GCRobotBlast_release(void) {}
+void GCRobotBlast_initialise(void) {}
 void fn_801FF9B0(void) {}
 void drakorenergy_free(void) {}
 void drakorenergy_hitDetect(void) {}
@@ -4107,13 +4107,13 @@ void dfpseqpoint_free(void) {}
 void dfpseqpoint_hitDetect(void) {}
 void dfpseqpoint_release(void) {}
 void dfpseqpoint_initialise(void) {}
-void fn_80205A90(void) {}
-void fn_80205F38(void) {}
-void fn_80205F3C(void) {}
+void DFP_Torch_hitDetect(void) {}
+void DFP_Torch_release(void) {}
+void DFP_Torch_initialise(void) {}
 void chuka_render(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801FF958(void) { return 0x8; }
+int GCRobotBlast_getExtraSize(void) { return 0x8; }
 int fn_801FF960(void) { return 0x0; }
 int drakorenergy_getExtraSize(void) { return 0xc; }
 int drakorenergy_func08(void) { return 0x0; }
@@ -4132,14 +4132,14 @@ int doorswitch_getExtraSize(void) { return 0x0; }
 int doorswitch_func08(void) { return 0x0; }
 int dfpseqpoint_getExtraSize(void) { return 0x10; }
 int dfpseqpoint_func08(void) { return 0x0; }
-int fn_802057CC(void) { return 0x10; }
+int DFP_Torch_getExtraSize(void) { return 0x10; }
 int fn_802057D4(void) { return 0x1; }
 int fn_80205F40(void) { return 0x0; }
 int chuka_getExtraSize(void) { return 0xc; }
 int chuka_func08(void) { return 0x0; }
 
 /* Pattern wrappers. */
-s16 fn_80203420(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
+s16 DBstealerworm_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
 
 /* render-with-fn_8003B8F4 pattern. */
 extern f32 lbl_803E6390;
@@ -4176,6 +4176,6 @@ void doorswitch_init(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801FF9B4(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x8) == 0; }
+int DrakorEnergy_setScale(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x8) == 0; }
 #pragma peephole reset
 #pragma scheduling reset
