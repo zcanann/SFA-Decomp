@@ -24,22 +24,19 @@ typedef struct {
 
 static ApploaderHeader Header ATTRIBUTE_ALIGN(32);
 
-#pragma dont_inline on
-static asm void myFunc() {
+static asm void Run(register void (*addr)()) {
+#ifdef __MWERKS__
+    fralloc
+    bl OSDisableInterrupts
+    bl ICFlashInvalidate
+    sync
+    isync
+    mtlr addr
+    blr
+    frfree
+    blr
+#endif
 }
-
-static void Run(register void (*addr)()) {
-    OSDisableInterrupts();
-    ICFlashInvalidate();
-
-    asm {
-        sync
-        isync
-        mtlr addr
-        blr
-    }
-}
-#pragma dont_inline reset
 
 static void Callback(s32 result, DVDCommandBlock* block) {
     (void)result;
