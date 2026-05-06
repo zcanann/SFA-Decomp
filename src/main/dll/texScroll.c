@@ -24,6 +24,7 @@ undefined4 fn_8017AC2C(int obj,undefined4 param_2,int stateParam)
   s16 objType;
   int config;
   u32 handle;
+  u32 offset;
   u8 i;
   int runtime;
   int particleObj;
@@ -32,11 +33,12 @@ undefined4 fn_8017AC2C(int obj,undefined4 param_2,int stateParam)
   config = *(int *)(obj + 0x4c);
   if (*(u8 *)(stateParam + 0x80) == 1) {
     for (i = 0; i < 10; i++) {
-      handle = *(u32 *)(runtime + (u32)i * 4 + 4);
+      offset = (u32)i * 4 + 4;
+      handle = *(u32 *)(runtime + offset);
       if (handle != 0) {
         *(f32 *)(runtime + (u32)i * 8 + 0x2c) = *(f32 *)(handle + 0xc);
         *(f32 *)(runtime + (u32)i * 8 + 0x30) =
-            *(f32 *)(*(int *)(runtime + (u32)i * 4 + 4) + 0x14);
+            *(f32 *)(*(int *)(runtime + offset) + 0x14);
       }
     }
     *(u8 *)(stateParam + 0x80) = 0;
