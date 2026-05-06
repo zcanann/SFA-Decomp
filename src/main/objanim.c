@@ -38,6 +38,7 @@ extern f32 lbl_803DE90C;
  */
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimState *state,
                           uint moveId,int eventState)
 {
@@ -86,6 +87,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
   }
   return;
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -110,7 +112,7 @@ void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int
 
   bank = ObjAnim_GetActiveBank(objAnim);
   if (bank->animDef->moveCount != 0) {
-    ObjAnim_SetBlendMove(objAnim,bank->animDef,bank->activeState,moveId,eventState);
+    ObjAnim_SetBlendMove(objAnim,bank->animDef,bank->activeState,moveId,(s16)eventState);
   }
   return;
 }
@@ -134,7 +136,7 @@ void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,uint moveId,i
 
   bank = ObjAnim_GetActiveBank(objAnim);
   if (bank->animDef->moveCount != 0) {
-    ObjAnim_SetBlendMove(objAnim,bank->animDef,bank->currentState,moveId,eventState);
+    ObjAnim_SetBlendMove(objAnim,bank->animDef,bank->currentState,moveId,(s16)eventState);
   }
   return;
 }
