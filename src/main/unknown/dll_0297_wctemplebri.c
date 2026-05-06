@@ -7,6 +7,19 @@
 // Current EN descriptor:
 // - gWCTempleBriObjDescriptor @ 0x8032B398
 //
+// Runtime notes:
+// - init copies object-def byte +0x18 into the primary angle field, clamps object byte
+//   +0xAD, installs wctemplebri_interactCallback at object +0xBC, sorts the bridge part
+//   offsets, and seeds the active/solved state from object-def bit +0x1E.
+// - wctemplebri_updateModelWarp advances the model part spin counters and the extra
+//   rotation angles used by both update and the interaction callback.
+// - update bends the bridge model parts from the current warp radius, hides/deactivates
+//   the object when inactive, and raises bit 0xEDB plus the object-def +0x1E solved bit
+//   once the interaction path has activated.
+// - wctemplebri_interactCallback accepts command byte 1 from the interaction payload,
+//   marks the bridge active, fades object byte +0x36 toward zero, and suppresses payload
+//   interaction/collision flags while the bridge deformation is handled.
+//
 // Descriptor slots:
 // - 0: wctemplebri_initialise (0x8022A294)
 // - 1: wctemplebri_release (0x8022A290)
@@ -17,3 +30,5 @@
 // - 7: wctemplebri_free (0x80229D78)
 // - 8: wctemplebri_func08 (0x80229D48)
 // - 9: wctemplebri_getExtraSize (0x80229D40)
+// - internal: wctemplebri_updateModelWarp (0x8022999C)
+// - callback: wctemplebri_interactCallback (0x80229AAC)
