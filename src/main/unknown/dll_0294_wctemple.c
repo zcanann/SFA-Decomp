@@ -7,6 +7,12 @@
 // Current EN descriptor:
 // - gWCTempleObjDescriptor @ 0x8032B2A0
 //
+// Runtime notes:
+// - update uses extra float +0 as a countdown/timer clamped at zero and extra byte +4 as
+//   the current visible/animated state.
+// - when the object is touched/activated (object +0xAF bit 0), update toggles sequence
+//   slot 0/1 and flips extra byte +4, matching the WCMoonTempl/WCSunTemple lift objects.
+//
 // Descriptor slots:
 // - 0: wctemple_initialise (0x80228C64)
 // - 1: wctemple_release (0x80228C60)
