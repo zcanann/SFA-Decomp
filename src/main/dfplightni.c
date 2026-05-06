@@ -9,7 +9,7 @@ extern int ObjHits_GetPriorityHit(u8 *obj,int *out,int param_3,int param_4);
 extern void fn_8008F904(u32 handle);
 extern int fn_8008FB20(double radiusX,double radiusY,float *start,float *end,int param_5,int param_6,int param_7);
 
-extern undefined4 *lbl_803DCA88;
+extern undefined4 *pDll_expgfx;
 extern f32 lbl_803DB414;
 extern f32 lbl_803E64E0;
 extern f32 lbl_803E64E4;
@@ -231,7 +231,7 @@ undefined4 dfppowersl_spawnSeqObjectsOnHit(u8 *obj)
   if (((u32)outObj != 0) && (i != 0)) {
     i = 1;
     do {
-      ((DfpPowerSlSpawnFn)(*(u32 *)(*lbl_803DCA88 + 8)))(obj,0x39e,0,1,0xffffffff,0);
+      ((DfpPowerSlSpawnFn)(*(u32 *)(*pDll_expgfx + 8)))(obj,0x39e,0,1,0xffffffff,0);
     } while (i++ < 0x14);
   }
   return 0;

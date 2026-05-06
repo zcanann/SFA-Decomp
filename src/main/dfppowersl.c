@@ -5,7 +5,7 @@ extern void ObjHits_SetHitVolumeSlot(u8 *obj,int param_2,int param_3,int param_4
 
 extern undefined4 *lbl_803DCA54;
 extern undefined4 *lbl_803DCA78;
-extern undefined4 *lbl_803DCA88;
+extern undefined4 *pDll_expgfx;
 
 typedef struct DfpPowerSlState {
   s32 activateObjectId;
@@ -53,9 +53,9 @@ void dfppowersl_render(u8 *obj)
   if ((u32)powerSl != 0) {
     state = dfppowersl_getState(powerSl);
     if (GameBit_Get(state->eventId) == 0) {
-      ((DfpPowerSlSpawnFn)(*(u32 *)(*lbl_803DCA88 + 8)))(powerSl,state->spawnObjectId,0,4,
+      ((DfpPowerSlSpawnFn)(*(u32 *)(*pDll_expgfx + 8)))(powerSl,state->spawnObjectId,0,4,
                                                          0xffffffff,0);
-      ((DfpPowerSlSpawnFn)(*(u32 *)(*lbl_803DCA88 + 8)))(powerSl,state->spawnObjectId,0,1,
+      ((DfpPowerSlSpawnFn)(*(u32 *)(*pDll_expgfx + 8)))(powerSl,state->spawnObjectId,0,1,
                                                          0xffffffff,0);
     }
   }

@@ -208,7 +208,7 @@ extern f32 lbl_803DDCA4;
 extern f32 lbl_803DD034;
 extern f32 lbl_803DDCB8;
 extern undefined4* lbl_803DCA58;
-extern undefined4* lbl_803DCA88;
+extern undefined4* pDll_expgfx;
 extern undefined4* lbl_803DCA98;
 extern undefined4 lbl_803DCFF0;
 extern undefined4 lbl_803DCFF8;
