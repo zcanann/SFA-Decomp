@@ -21,7 +21,7 @@ extern void gameplay_applyPreviewSettingsForSlot();
 extern undefined4 FUN_800e8ba4();
 extern undefined4 FUN_800e8f58();
 extern undefined4 FUN_800e9298();
-extern undefined8 FUN_80116460();
+extern undefined8 n_attractmode_releaseMovieBuffers();
 extern undefined4 FUN_80119d90();
 extern undefined4 FUN_80119fac();
 extern undefined4 FUN_80133a68();
@@ -773,7 +773,7 @@ int FUN_8011b5d4(undefined8 param_1,double param_2,undefined8 param_3,undefined8
         FUN_80006b84(4);
       }
       else {
-        uVar7 = FUN_80116460();
+        uVar7 = n_attractmode_releaseMovieBuffers();
         if (DAT_803dc084 == '\0') {
           FUN_800e8f58(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
         }

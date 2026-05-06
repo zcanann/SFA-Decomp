@@ -11,7 +11,7 @@ extern undefined8 FUN_8005d0ac();
 extern undefined4 FUN_8005d144();
 extern undefined4 FUN_800723ac();
 extern undefined4 FUN_80080f14();
-extern undefined4 FUN_8011656c();
+extern undefined4 n_attractmode_prepareMovie();
 extern undefined4 FUN_80117c30();
 extern undefined4 FUN_80130740();
 extern undefined4 FUN_80134830();
@@ -129,7 +129,7 @@ void FUN_80116f84(undefined8 param_1,undefined8 param_2,double param_3,undefined
     FUN_80117c30(0,1);
   }
   else {
-    FUN_8011656c(uVar2,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+    n_attractmode_prepareMovie(uVar2,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
     dVar3 = (double)FLOAT_803e2998;
     FUN_80134830((double)FLOAT_803e2990,dVar3);
     DAT_803de2cf = 1;

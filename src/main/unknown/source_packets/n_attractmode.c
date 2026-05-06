@@ -18,6 +18,11 @@
  * Current exploratory stub:
  * - src/n_attractmode.c records the indirect CAM/front-end neighborhood
  *   0x8010ACF0-0x80130618 and nearby movie/menu strings.
+ *
+ * Live EN anchors:
+ * - n_attractmode_releaseMovieBuffers @ 0x8011611C releases active movie buffers.
+ * - n_attractmode_prepareMovie @ 0x80116224 prepares starfox.thp and reports
+ *   failures through n_attractmode.c / "Fail to prepare".
  */
 
 #if 0

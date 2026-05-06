@@ -273,9 +273,9 @@ void FUN_80116424(void)
 /*
  * --INFO--
  *
- * Function: FUN_80116460
- * EN v1.0 Address: 0x80116460
- * EN v1.0 Size: 268b
+ * Function: n_attractmode_releaseMovieBuffers
+ * EN v1.0 Address: 0x8011611C
+ * EN v1.0 Size: 264b
  * EN v1.1 Address: 0x801163B8
  * EN v1.1 Size: 264b
  * JP Address: TODO
@@ -283,7 +283,7 @@ void FUN_80116424(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80116460(void)
+void n_attractmode_releaseMovieBuffers(void)
 {
   undefined4 uVar1;
   
@@ -330,9 +330,9 @@ void FUN_80116460(void)
 /*
  * --INFO--
  *
- * Function: FUN_8011656c
- * EN v1.0 Address: 0x8011656C
- * EN v1.0 Size: 1216b
+ * Function: n_attractmode_prepareMovie
+ * EN v1.0 Address: 0x80116224
+ * EN v1.0 Size: 920b
  * EN v1.1 Address: 0x801164C0
  * EN v1.1 Size: 920b
  * JP Address: TODO
@@ -340,8 +340,9 @@ void FUN_80116460(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8011656c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void n_attractmode_prepareMovie(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                                undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                                undefined8 param_7,undefined8 param_8)
 {
   int iVar1;
   undefined4 uVar2;

@@ -71,7 +71,7 @@ extern undefined4 FUN_80080f70();
 extern undefined4 FUN_80080f7c();
 extern undefined4 FUN_80080f80();
 extern int FUN_801113c0();
-extern undefined4 FUN_80116460();
+extern undefined4 n_attractmode_releaseMovieBuffers();
 extern undefined4 FUN_80117318();
 extern undefined4 FUN_801184b8();
 extern undefined4 FUN_80129fb0();
@@ -1963,7 +1963,7 @@ void FUN_80134900(int param_1)
       FUN_80017698(0xdf6,1);
       DAT_803de62a = '\x01';
       (**(code **)(*DAT_803dd6d4 + 0x50))(0x57,0,0,0);
-      FUN_80116460();
+      n_attractmode_releaseMovieBuffers();
       DAT_803de624 = 0;
     }
   }

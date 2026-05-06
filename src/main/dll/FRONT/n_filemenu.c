@@ -21,8 +21,8 @@ extern void gameplay_applyPreviewSettings();
 extern int gameplay_loadPreviewSettings();
 extern void gameplay_capturePreviewSettings();
 extern double FUN_80110b8c();
-extern undefined4 FUN_80116460();
-extern undefined4 FUN_8011656c();
+extern undefined4 n_attractmode_releaseMovieBuffers();
+extern undefined4 n_attractmode_prepareMovie();
 extern undefined4 FUN_80117c30();
 extern undefined4 FUN_80130728();
 extern undefined4 FUN_80130734();
@@ -167,7 +167,7 @@ int FUN_801168bc(undefined8 param_1,double param_2,undefined8 param_3,undefined8
     }
   }
   if ((DAT_803de298 == '\0') && (DAT_803de2c8 == 0)) {
-    FUN_80116460();
+    n_attractmode_releaseMovieBuffers();
     FUN_80006b84(1);
     FUN_8001767c();
     uVar9 = FUN_80134bc4();
@@ -186,14 +186,15 @@ int FUN_801168bc(undefined8 param_1,double param_2,undefined8 param_3,undefined8
         DAT_803de2c8 = DAT_803de2c8 + -1;
       }
       if (DAT_803de291 != '\0') {
-        FUN_8011656c(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        n_attractmode_prepareMovie(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,
+                                   param_8);
       }
       if (((DAT_803de2cd != '\0') && (DAT_803de2cd = DAT_803de2cd + -1, DAT_803de2cd == '\0')) &&
          (DAT_803de2cf != '\0')) {
         FUN_80117c30(100,1000);
       }
       if ((DAT_803de288 == 2) && (DAT_803de318 = DAT_803de318 + 1, 10 < DAT_803de318)) {
-        FUN_80116460();
+        n_attractmode_releaseMovieBuffers();
       }
       if (((DAT_803de288 == 2) && (DAT_803de2cf != '\0')) && (DAT_803de2ce != '\0')) {
         uVar5 = FUN_80006c00(0);
