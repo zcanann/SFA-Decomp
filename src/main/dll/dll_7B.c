@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: fn_80100970
+ * Function: projsunshock_release
  * EN v1.0 Address: 0x80100970
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80100970
@@ -14,6 +14,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80100970(void)
+void projsunshock_release(void)
 {
 }

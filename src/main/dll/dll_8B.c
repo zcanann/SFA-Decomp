@@ -7,7 +7,7 @@ extern s16 lbl_803DB990;
 /*
  * --INFO--
  *
- * Function: fn_80100A8C
+ * Function: projdfp1r_initialise
  * EN v1.0 Address: 0x80100A8C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80100A8C
@@ -17,7 +17,7 @@ extern s16 lbl_803DB990;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80100A8C(void)
+void projdfp1r_initialise(void)
 {
 }
 

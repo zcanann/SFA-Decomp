@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: fn_801009AC
+ * Function: projtesla_initialise
  * EN v1.0 Address: 0x801009AC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801009AC
@@ -14,6 +14,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801009AC(void)
+void projtesla_initialise(void)
 {
 }

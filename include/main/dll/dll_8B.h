@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void fn_80100A8C(void);
+void projdfp1r_initialise(void);
 u8 fn_80100A90(void);
 s16 fn_80100A9C(void);
 

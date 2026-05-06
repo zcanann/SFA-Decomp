@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: fn_80100A18
+ * Function: projcore2_release
  * EN v1.0 Address: 0x80100A18
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80100A18
@@ -14,6 +14,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80100A18(void)
+void projcore2_release(void)
 {
 }

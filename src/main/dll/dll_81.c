@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: fn_801009E0
+ * Function: projcore1_release
  * EN v1.0 Address: 0x801009E0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801009E0
@@ -14,6 +14,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801009E0(void)
+void projcore1_release(void)
 {
 }

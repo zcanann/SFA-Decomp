@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: fn_801009A8
+ * Function: projtesla_release
  * EN v1.0 Address: 0x801009A8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801009A8
@@ -14,6 +14,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801009A8(void)
+void projtesla_release(void)
 {
 }

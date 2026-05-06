@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: fn_80100938
+ * Function: projquakeshock_release
  * EN v1.0 Address: 0x80100938
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80100938
@@ -14,6 +14,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80100938(void)
+void projquakeshock_release(void)
 {
 }

@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: fn_8010093C
+ * Function: projquakeshock_initialise
  * EN v1.0 Address: 0x8010093C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8010093C
@@ -14,6 +14,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8010093C(void)
+void projquakeshock_initialise(void)
 {
 }

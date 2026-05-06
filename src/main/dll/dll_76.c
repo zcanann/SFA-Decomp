@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: fn_80100904
+ * Function: projwallpower_initialise
  * EN v1.0 Address: 0x80100904
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80100904
@@ -14,6 +14,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80100904(void)
+void projwallpower_initialise(void)
 {
 }

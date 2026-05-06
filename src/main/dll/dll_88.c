@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: fn_80100A54
+ * Function: projcore3_initialise
  * EN v1.0 Address: 0x80100A54
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80100A54
@@ -14,6 +14,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80100A54(void)
+void projcore3_initialise(void)
 {
 }

@@ -1,6 +1,6 @@
 #ifndef MAIN_DLL_DLL_87_H_
 #define MAIN_DLL_DLL_87_H_
 
-void fn_80100A50(void);
+void projcore3_release(void);
 
 #endif /* MAIN_DLL_DLL_87_H_ */

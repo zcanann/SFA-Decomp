@@ -4,7 +4,7 @@
 /*
  * --INFO--
  *
- * Function: fn_80100974
+ * Function: projsunshock_initialise
  * EN v1.0 Address: 0x80100974
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80100974
@@ -14,6 +14,6 @@
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80100974(void)
+void projsunshock_initialise(void)
 {
 }
