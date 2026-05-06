@@ -4267,10 +4267,10 @@ LAB_800e1c9c:
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_800D9DC4(void) {}
-void fn_800D9DC8(void) {}
-void fn_800D9EAC(void) {}
-void fn_800D9EB0(void) {}
+void player_release(void) {}
+void player_initialise(void) {}
+void UIController_release(void) {}
+void UIController_initialise(void) {}
 void fn_800D9EB4(void) {}
 void fn_800D9EC4(void) {}
 void fn_800D9EC8(void) {}
