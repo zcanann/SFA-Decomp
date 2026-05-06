@@ -1637,18 +1637,18 @@ void SB_FireBall_release(void) {}
 void SB_FireBall_initialise(void) {}
 void SB_CloudBall_release(void) {}
 void SB_CloudBall_initialise(void) {}
-void fn_801E4BD4(void) {}
-void fn_801E4BD8(void) {}
-void fn_801E4F0C(void) {}
-void fn_801E4F10(void) {}
-void fn_801E4F60(void) {}
-void fn_801E4F70(void) {}
-void fn_801E5058(void) {}
-void fn_801E505C(void) {}
-void fn_801E5094(void) {}
-void fn_801E50C8(void) {}
-void fn_801E5194(void) {}
-void fn_801E5198(void) {}
+void SB_KyteCage_render(void) {}
+void SB_KyteCage_hitDetect(void) {}
+void SB_KyteCage_release(void) {}
+void SB_KyteCage_initialise(void) {}
+void SB_CageKyte_free(void) {}
+void SB_CageKyte_hitDetect(void) {}
+void SB_CageKyte_release(void) {}
+void SB_CageKyte_initialise(void) {}
+void SB_SeqDoor_free(void) {}
+void SB_SeqDoor_hitDetect(void) {}
+void SB_SeqDoor_release(void) {}
+void SB_SeqDoor_initialise(void) {}
 void fn_801E5278(void) {}
 void fn_801E55B0(void) {}
 void fn_801E55B4(void) {}
@@ -1671,11 +1671,11 @@ void shop_initialise(void) {}
 /* 8b "li r3, N; blr" returners. */
 int SB_CloudBall_getExtraSize(void) { return 0x24; }
 int fn_801E45B4(void) { return 0x0; }
-int fn_801E4B94(void) { return 0x8; }
+int SB_KyteCage_getExtraSize(void) { return 0x8; }
 int fn_801E4B9C(void) { return 0x0; }
-int fn_801E4F50(void) { return 0x2; }
+int SB_CageKyte_getExtraSize(void) { return 0x2; }
 int fn_801E4F58(void) { return 0x1; }
-int fn_801E5084(void) { return 0x0; }
+int SB_SeqDoor_getExtraSize(void) { return 0x0; }
 int fn_801E508C(void) { return 0x0; }
 int fn_801E519C(void) { return 0x2; }
 int fn_801E51A4(void) { return 0x0; }
@@ -1704,7 +1704,7 @@ extern f32 lbl_803E59A8;
 extern f32 lbl_803E59C8;
 #pragma peephole off
 void SB_CloudBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E58E8); }
-void fn_801E5098(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5920); }
+void SB_SeqDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5920); }
 void fn_801E59FC(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5978); }
 void fn_801E5DD8(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E59A8); }
 void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E59C8); }
