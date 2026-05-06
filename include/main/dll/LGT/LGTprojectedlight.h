@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801f44b4(undefined2 *param_1,int param_2);
+void wmlevelcontrol_update(undefined2 *param_1,int param_2);
 void FUN_801f456c(int param_1);
 void FUN_801f4b64(int param_1);
 void FUN_801f4bb8(int param_1);

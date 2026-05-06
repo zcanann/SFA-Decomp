@@ -79,7 +79,7 @@ extern undefined2 uRam803de91a;
 /*
  * --INFO--
  *
- * Function: FUN_801f44b4
+ * Function: wmlevelcontrol_update
  * EN v1.0 Address: 0x801F44B4
  * EN v1.0 Size: 184b
  * EN v1.1 Address: 0x801F44C0
@@ -89,7 +89,7 @@ extern undefined2 uRam803de91a;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801f44b4(undefined2 *param_1,int param_2)
+void wmlevelcontrol_update(undefined2 *param_1,int param_2)
 {
   float *pfVar1;
   
@@ -349,8 +349,8 @@ void FUN_801f4be0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801F48B8(void) {}
-void fn_801F48BC(void) {}
+void wmlevelcontrol_release(void) {}
+void wmlevelcontrol_initialise(void) {}
 void fn_801F4BC8(void) {}
 void fn_801F4BCC(void) {}
 void fn_801F4BFC(void) {}
