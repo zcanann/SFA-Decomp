@@ -1,63 +1,59 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_8026F134.h"
 
-extern double ABS();
-extern undefined4 FUN_8026c6b8();
-extern int FUN_8026c888();
-extern undefined4 FUN_8026ca84();
-extern undefined4 FUN_8026d6dc();
-extern undefined4 FUN_8026e7d4();
-extern undefined4 FUN_8026e0e4();
-extern undefined4 FUN_8026f070();
-extern undefined4 synthSetStudioChannelScale();
-extern undefined4 FUN_802726c0();
-extern uint FUN_80272ec4();
-extern int FUN_80286718();
-extern double FUN_80286c1c();
-extern undefined8 FUN_80286d70();
-extern double FUN_80294a10();
-
-extern int* DAT_803dee98;
-extern undefined4 DAT_803deea0;
-extern undefined4 DAT_803deea4;
-extern int* DAT_803deeac;
-extern int* DAT_803deeb4;
-extern f64 DOUBLE_803e8428;
-extern f32 FLOAT_803e8418;
-extern f32 FLOAT_803e841c;
-extern f32 FLOAT_803e8420;
+extern u8 lbl_803BCD90[];
 
 /*
- * --INFO--
- *
- * Function: FUN_8026ec44
- * EN v1.0 Address: 0x8026EC44
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8026F134
- * EN v1.1 Size: 628b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * fn_8026EC44 — large pre-pitch processing (~1736 instructions). Stubbed.
  */
-undefined4 FUN_8026ec44(uint param_1,undefined4 param_2)
+#pragma dont_inline on
+void fn_8026EC44(void) {}
+#pragma dont_inline reset
+
+/*
+ * fn_8026F30C — 560-instr voice param helper. Stubbed.
+ */
+#pragma dont_inline on
+void fn_8026F30C(void) {}
+#pragma dont_inline reset
+
+/*
+ * fn_8026F53C — magic-divide table store (~72 instructions). Stubbed.
+ */
+#pragma dont_inline on
+void fn_8026F53C(int a, u8 b, u8 c)
 {
-    return 0;
+    (void)a; (void)b; (void)c;
+}
+#pragma dont_inline reset
+
+/*
+ * Look up an int from a 2D table indexed by state's ID bytes.
+ *
+ * EN v1.1 Address: 0x8026F584, size 52b
+ */
+int fn_8026F584(int state)
+{
+    u32 a = *(u8 *)(state + 0x122);
+    int b;
+    if (a == 0xff) a = 8;
+    b = *(u8 *)(state + 0x123);
+    return *(int *)(lbl_803BCD90 + a * 64 + b * 4);
 }
 
 /*
- * --INFO--
- *
- * Function: FUN_8026ec4c
- * EN v1.0 Address: 0x8026EC4C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8026F3A8
- * EN v1.1 Size: 1736b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * fn_8026F5B8 — flag-check and conditional store (~120 instructions).
+ * Stubbed.
  */
-void FUN_8026ec4c(int param_1)
+#pragma dont_inline on
+void fn_8026F5B8(int state)
 {
+    (void)state;
 }
+#pragma dont_inline reset
+
+/*
+ * fn_8026F630 — 648-instr per-voice update loop. Stubbed.
+ */
+#pragma dont_inline on
+void fn_8026F630(void) {}
+#pragma dont_inline reset
