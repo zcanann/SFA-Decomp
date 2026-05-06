@@ -10,7 +10,7 @@ extern f32 lbl_803E5448;
 /*
  * --INFO--
  *
- * Function: sh_thorntail_render
+ * Function: SHthorntail_render
  * EN v1.0 Address: 0x801D5ED4
  * EN v1.0 Size: 132b
  * EN v1.1 Address: 0x801D64C4
@@ -22,7 +22,7 @@ extern f32 lbl_803E5448;
  */
 #pragma scheduling off
 #pragma peephole off
-void sh_thorntail_render(SHthorntailObject *obj)
+void SHthorntail_render(SHthorntailObject *obj)
 {
   SHthorntailRuntime *runtime;
   int pointIndex;

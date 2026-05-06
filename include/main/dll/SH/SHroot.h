@@ -11,6 +11,6 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
                                          SHthorntailConfig *config);
 undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4 param_2,int param_3);
 int SHthorntail_getExtraSize(void);
-void sh_thorntail_free(SHthorntailObject *obj);
+void SHthorntail_free(SHthorntailObject *obj);
 
 #endif /* MAIN_DLL_SH_SHROOT_H_ */

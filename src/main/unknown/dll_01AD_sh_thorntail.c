@@ -9,6 +9,6 @@
 // Descriptor slots:
 // - 3: sh_thorntail_init (0x801D66E0)
 // - 4: SHthorntail_update (0x801D5F58)
-// - 6: sh_thorntail_render (0x801D5ED4)
-// - 7: sh_thorntail_free (0x801D5E94)
+// - 6: SHthorntail_render (0x801D5ED4)
+// - 7: SHthorntail_free (0x801D5E94)
 // - 9: SHthorntail_getExtraSize (0x801D5E8C)

@@ -309,7 +309,7 @@ int SHthorntail_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: sh_thorntail_free
+ * Function: SHthorntail_free
  * EN v1.0 Address: 0x801D5E94
  * EN v1.0 Size: 64b
  * EN v1.1 Address: TODO
@@ -321,7 +321,7 @@ int SHthorntail_getExtraSize(void)
  */
 #pragma scheduling off
 #pragma peephole off
-void sh_thorntail_free(SHthorntailObject *obj)
+void SHthorntail_free(SHthorntailObject *obj)
 {
   u32 activeConfigToken;
 
