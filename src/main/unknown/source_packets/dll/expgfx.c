@@ -28,6 +28,15 @@
  * - seed: 0x8009DDEC-0x8009FCDC, current expgfx source island
  * - blueprint action: corridor-packet, plan stays at the current seed
  *
+ * Live EN anchors:
+ * - expgfx_addToTable @ 0x8009DDEC reports the addToTable usage overflow
+ *   and exptab full strings.
+ * - expgfx_addremove @ 0x8009F2CC reports invalid tabindex and scale overflow.
+ * - expgfx_funcs @ 0x8030FA54 is a retail function table; nearby anonymous
+ *   callbacks at 0x8009E004, 0x8009E024, 0x8009E028, 0x8009E02C, and
+ *   0x8009EEB8 should be reconciled against debug-side expgfx_funcNN slots
+ *   before promotion.
+ *
  * Reference-side path hints:
  * - reference configure path: dll/expgfx.c
  *
@@ -39,6 +48,7 @@
  * - expgfx_addremove
  * - expgfx_initialise
  * - expgfx_release
+ * - expgfx_func03 through expgfx_func0D are present in sfadebug symbols.
  */
 
 #if 0
