@@ -1263,10 +1263,10 @@ void wmplanets_free(void) {}
 void wmplanets_hitDetect(void) {}
 void wmplanets_release(void) {}
 void wmplanets_initialise(void) {}
-int fn_801F80B8(void) { return 0x29c; }
-int fn_801F80C0(void) { return 0x0; }
-void fn_801F9434(void) {}
-void fn_801F9438(void) {}
+int wmwallcrawler_getExtraSize(void) { return 0x29c; }
+int wmwallcrawler_func08(void) { return 0x0; }
+void wmwallcrawler_release(void) {}
+void wmwallcrawler_initialise(void) {}
 int fn_801F974C(void) { return 0x6c; }
 int fn_801F9754(void) { return 0x0; }
 void fn_801F975C(void) {}
