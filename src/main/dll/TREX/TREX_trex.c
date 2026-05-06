@@ -1633,10 +1633,10 @@ void FUN_801e6558(undefined8 param_1,double param_2,double param_3,undefined8 pa
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801E45A4(void) {}
-void fn_801E45A8(void) {}
-void fn_801E4AB8(void) {}
-void fn_801E4ABC(void) {}
+void SB_FireBall_release(void) {}
+void SB_FireBall_initialise(void) {}
+void SB_CloudBall_release(void) {}
+void SB_CloudBall_initialise(void) {}
 void fn_801E4BD4(void) {}
 void fn_801E4BD8(void) {}
 void fn_801E4F0C(void) {}
@@ -1669,7 +1669,7 @@ void shop_release(void) {}
 void shop_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801E45AC(void) { return 0x24; }
+int SB_CloudBall_getExtraSize(void) { return 0x24; }
 int fn_801E45B4(void) { return 0x0; }
 int fn_801E4B94(void) { return 0x8; }
 int fn_801E4B9C(void) { return 0x0; }
@@ -1703,7 +1703,7 @@ extern f32 lbl_803E5978;
 extern f32 lbl_803E59A8;
 extern f32 lbl_803E59C8;
 #pragma peephole off
-void fn_801E4610(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E58E8); }
+void SB_CloudBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E58E8); }
 void fn_801E5098(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5920); }
 void fn_801E59FC(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5978); }
 void fn_801E5DD8(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E59A8); }
