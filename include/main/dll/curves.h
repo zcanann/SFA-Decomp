@@ -16,7 +16,7 @@ f32 curves_distXZ(f32 param_1,f32 param_2,uint param_3);
 f32 RomCurve_distanceToObject(int param_1,uint param_2);
 void curves_find(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 *param_6,undefined4 *param_7,undefined4 *param_8);
-undefined4 RomCurve_getById(uint curveId,int *outIndex);
+undefined4 RomCurve_findByIdWithIndex(uint curveId,int *outIndex);
 void FUN_800e31dc(undefined4 param_1,undefined4 param_2,int param_3,int param_4,int param_5);
 int FUN_800e3ad4(int param_1);
 void FUN_800e3cec(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4);
@@ -26,6 +26,7 @@ int RomCurve_getNearestAdjacentLink(double param_1,double param_2,double param_3
 double RomCurve_distanceToSegment(double param_1,double param_2,double param_3,float *param_4);
 int RomCurve_getRandomBlockedLink(int param_1,int param_2);
 int RomCurve_getRandomUnblockedLink(int param_1,int param_2);
+undefined4 RomCurve_getById(uint curveId);
 void FUN_800e4628(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,int param_6);
 void curves_remove(int curve);

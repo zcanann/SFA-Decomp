@@ -371,7 +371,7 @@ void FUN_800e2090(undefined4 param_1,undefined4 param_2,uint param_3,int *param_
   local_8 = (float)in_f31;
   fStack_4 = (float)in_ps31_1;
   uVar28 = FUN_8028680c();
-  iVar5 = RomCurve_getById((uint)((ulonglong)uVar28 >> 0x20),&local_6e0);
+  iVar5 = RomCurve_findByIdWithIndex((uint)((ulonglong)uVar28 >> 0x20),&local_6e0);
   if (iVar5 != 0) {
     iVar16 = 0;
     iVar17 = 0;
@@ -448,7 +448,7 @@ void FUN_800e2090(undefined4 param_1,undefined4 param_2,uint param_3,int *param_
           } while (iVar25 != 0);
         }
         local_578[local_6e0] = '\x01';
-        iVar12 = RomCurve_getById(*(uint *)(iVar20 + 0x1c),&local_6dc);
+        iVar12 = RomCurve_findByIdWithIndex(*(uint *)(iVar20 + 0x1c),&local_6dc);
         if (iVar12 != 0) {
           fVar1 = *(float *)(iVar12 + 0x10) - *(float *)(iVar5 + 0x10);
           fVar2 = *(float *)(iVar12 + 8) - *(float *)(iVar5 + 8);
@@ -491,7 +491,7 @@ void FUN_800e2090(undefined4 param_1,undefined4 param_2,uint param_3,int *param_
                 iVar21 = iVar25;
                 do {
                   if ((((-1 < (int)*(uint *)(iVar21 + 0x1c)) &&
-                       (iVar6 = RomCurve_getById(*(uint *)(iVar21 + 0x1c),&local_6dc), iVar6 != 0)) &&
+                       (iVar6 = RomCurve_findByIdWithIndex(*(uint *)(iVar21 + 0x1c),&local_6dc), iVar6 != 0)) &&
                       (local_578[local_6dc] == '\0')) && (iVar12 < 0x28)) {
                     fVar1 = *(float *)(iVar25 + 0x10) - *(float *)(iVar6 + 0x10);
                     fVar2 = *(float *)(iVar25 + 8) - *(float *)(iVar6 + 8);
@@ -641,7 +641,7 @@ void FUN_800e2590(undefined4 param_1,undefined4 param_2,int param_3,int *param_4
   fStack_4 = (float)in_ps31_1;
   uVar28 = FUN_80286810();
   iVar15 = (int)((ulonglong)uVar28 >> 0x20);
-  if ((iVar15 != 0) && (iVar5 = RomCurve_getById(*(uint *)(iVar15 + 0x14),&local_6d8), iVar5 != 0)) {
+  if ((iVar15 != 0) && (iVar5 = RomCurve_findByIdWithIndex(*(uint *)(iVar15 + 0x14),&local_6d8), iVar5 != 0)) {
     iVar5 = 0;
     iVar18 = 0;
     pfVar19 = local_6d0;
@@ -716,7 +716,7 @@ void FUN_800e2590(undefined4 param_1,undefined4 param_2,int param_3,int *param_4
           } while (iVar25 != 0);
         }
         local_570[local_6d8] = '\x01';
-        iVar13 = RomCurve_getById(*(uint *)(iVar21 + 0x1c),&local_6d4);
+        iVar13 = RomCurve_findByIdWithIndex(*(uint *)(iVar21 + 0x1c),&local_6d4);
         if (iVar13 != 0) {
           fVar1 = *(float *)(iVar13 + 0x10) - *(float *)(iVar15 + 0x10);
           fVar2 = *(float *)(iVar13 + 8) - *(float *)(iVar15 + 8);
@@ -751,7 +751,7 @@ void FUN_800e2590(undefined4 param_1,undefined4 param_2,int param_3,int *param_4
                 iVar22 = iVar25;
                 do {
                   if ((((-1 < (int)*(uint *)(iVar22 + 0x1c)) &&
-                       (iVar6 = RomCurve_getById(*(uint *)(iVar22 + 0x1c),&local_6d4), iVar6 != 0)) &&
+                       (iVar6 = RomCurve_findByIdWithIndex(*(uint *)(iVar22 + 0x1c),&local_6d4), iVar6 != 0)) &&
                       (local_570[local_6d4] == '\0')) && (iVar13 < 0x28)) {
                     fVar1 = *(float *)(iVar25 + 0x10) - *(float *)(iVar6 + 0x10);
                     fVar2 = *(float *)(iVar25 + 8) - *(float *)(iVar6 + 8);
@@ -1279,7 +1279,7 @@ LAB_800e3878:
 /*
  * --INFO--
  *
- * Function: RomCurve_getById
+ * Function: RomCurve_findByIdWithIndex
  * EN v1.0 Address: 0x800E36F8
  * EN v1.0 Size: 132b
  * EN v1.1 Address: 0x800E397C
@@ -1291,7 +1291,7 @@ LAB_800e3878:
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 RomCurve_getById(uint curveId,int *outIndex)
+undefined4 RomCurve_findByIdWithIndex(uint curveId,int *outIndex)
 {
   int high;
   int low;
