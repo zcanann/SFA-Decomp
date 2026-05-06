@@ -49,16 +49,16 @@
  * - 0x0503 BarrelGener: placements=22, class=0x0030, widths=9w x22
  *
  * EN descriptor slot map:
- * - descriptor=0x8032BAA8 lbl_8032BAA8 (slots=10, mask=1101111111)
- * - slot 00: 0x80221FC4 fn_80221FC4 stub=blr ref=initialise (stub)
- * - slot 01: 0x80221FC0 fn_80221FC0 stub=blr ref=release (stub)
- * - slot 03: 0x80221F7C fn_80221F7C ref=init
- * - slot 04: 0x80221D94 fn_80221D94 ref=update
- * - slot 05: 0x80221D90 fn_80221D90 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x80221D60 fn_80221D60 ref=render
- * - slot 07: 0x80221D3C fn_80221D3C ref=free
- * - slot 08: 0x80221D34 fn_80221D34 stub=const 0
- * - slot 09: 0x80221D2C fn_80221D2C stub=const 16 ref=getExtraSize (stub)
+ * - descriptor=0x8032AE50 gBarrelGenerObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x80221974 barrelgener_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x80221970 barrelgener_release stub=blr ref=release (stub)
+ * - slot 03: 0x8022192C barrelgener_init ref=init
+ * - slot 04: 0x80221744 barrelgener_update ref=update
+ * - slot 05: 0x80221740 barrelgener_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x80221710 barrelgener_render ref=render
+ * - slot 07: 0x802216EC barrelgener_free ref=free
+ * - slot 08: 0x802216E4 barrelgener_func08 stub=const 0
+ * - slot 09: 0x802216DC barrelgener_getExtraSize stub=const 16 ref=getExtraSize (stub)
  */
 
 #if 0
