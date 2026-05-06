@@ -8,8 +8,8 @@ extern u32 fn_8002208C(f32 *state,f32 min,f32 max);
 extern int randomGetRange(int min,int max);
 extern void OSPanic(const char *file,int line,const char *msg,...);
 
-extern u8 lbl_803DB410;
-extern f32 lbl_803DB414;
+extern u8 framesThisStep;
+extern f32 timeDelta;
 extern f32 lbl_803E5418;
 extern f64 lbl_803E5428;
 extern f32 lbl_803E5430;
@@ -48,13 +48,13 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
     if (alertTriggered != 0) {
       Sfx_PlayFromObject(obj,SHTHORNTAIL_ALERT_VOLUME_ID);
     }
-    runtime->idleTimer = runtime->idleTimer - lbl_803DB414;
+    runtime->idleTimer = runtime->idleTimer - timeDelta;
     if (runtime->idleTimer <= lbl_803E5438) {
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE_COUNTDOWN;
     }
     break;
   case SHTHORNTAIL_STATE_IDLE_COUNTDOWN:
-    runtime->idleTimer = runtime->idleTimer - lbl_803DB414;
+    runtime->idleTimer = runtime->idleTimer - timeDelta;
     if (runtime->idleTimer <= lbl_803E5418) {
       tailSwingQueued = (*gSHthorntailAnimationInterface)->isTailSwingQueued(0);
       if (tailSwingQueued != 0) {
@@ -93,7 +93,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
     break;
   case SHTHORNTAIL_STATE_CLOSE_ATTACK_WAIT:
     runtime->comboTimer = runtime->comboTimer -
-                          (float)lbl_803DB410;
+                          (float)framesThisStep;
     if (runtime->comboTimer <= lbl_803E5418) {
       if ((s8)runtime->comboRepeatCount <= 0) {
         runtime->behaviorState = SHTHORNTAIL_STATE_CLOSE_ATTACK_RECOVER;

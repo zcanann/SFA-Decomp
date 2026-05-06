@@ -989,7 +989,7 @@ s32 CMenu_GetState(void)
  * because sth ignores upper bits. Skipped. */
 
 /* Wider sbss/sdata extents touched by the larger v1.0 leaves below. */
-extern u8    lbl_803DB410;
+extern u8    framesThisStep;
 extern s32   lbl_803DBA5C;
 extern f32   lbl_803DBAA4;
 extern void**lbl_803DCA50;     /* (*vtable)[] dispatcher singleton */
@@ -1033,7 +1033,7 @@ extern u8  lbl_803DD77B;
 extern s32 lbl_803DBA60;
 extern f32 lbl_803DD8CC;
 extern u32 lbl_803DD8A4;
-extern f32 lbl_803DB414;
+extern f32 timeDelta;
 extern void  fn_80014B0C(void);
 extern void* gameTextGet(u16);
 
@@ -1107,7 +1107,7 @@ void fn_8012DD7C(u8 param)
 #pragma scheduling reset
 
 /* EN v1.0 0x8012DD14  size: 104b  Tween advance: when the active counter
- * lbl_803DD774 is non-zero, add the per-frame step lbl_803DB410. The
+ * lbl_803DD774 is non-zero, add the per-frame step framesThisStep. The
  * direction toggle in lbl_803DD77F gates the "approaching peak" half of
  * the trajectory. Once the counter overshoots 0xFF it resets to 0 and
  * the active-id sentinel lbl_803DBA5C is dropped to -1. */
@@ -1117,9 +1117,9 @@ void fn_8012DD14(void)
 {
     if (lbl_803DD774 == 0) return;
     if (lbl_803DD77F != 0 && lbl_803DD774 < 0x7f) {
-        lbl_803DD774 += lbl_803DB410;
+        lbl_803DD774 += framesThisStep;
     } else if (lbl_803DD77F == 0) {
-        lbl_803DD774 += lbl_803DB410;
+        lbl_803DD774 += framesThisStep;
     }
     if (lbl_803DD774 > 0xff) {
         lbl_803DD774 = 0;
@@ -1478,7 +1478,7 @@ void fn_8012C558(void)
  *    progress halfword at 0xff and (when lbl_803DD8C8 is also set)
  *    dispatch vtable+0x5c on the singleton with (0x41, 1) to fire
  *    the worm-death emitter.
- *    Otherwise, decrement the progress by 8 * lbl_803DB410 per frame
+ *    Otherwise, decrement the progress by 8 * framesThisStep per frame
  *    and clamp to >= 0.
  *
  * 2. When the progress halfword bottoms out, drop the active u16 slot
@@ -1510,7 +1510,7 @@ void fn_8012E880(void)
         }
         lbl_803DD8D0 = 0xff;
     } else {
-        s32 step = (u32)lbl_803DB410 << 3;
+        s32 step = (u32)framesThisStep << 3;
         lbl_803DD8D0 = (s16)(lbl_803DD8D0 - step);
         if (lbl_803DD8D0 < 0) lbl_803DD8D0 = 0;
     }
@@ -1542,7 +1542,7 @@ void fn_8012E880(void)
     }
 
     {
-        f32 cur = lbl_803DD8CC - lbl_803DB414;
+        f32 cur = lbl_803DD8CC - timeDelta;
         lbl_803DD8CC = cur;
         if (cur <= 0.0f) {
             lbl_803DD8CC = (f32)(s32)(s16)lbl_803DD8CA;

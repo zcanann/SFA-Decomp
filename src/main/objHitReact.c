@@ -15,7 +15,7 @@ extern ObjHitReactEffectOrigin lbl_802C1B00;
 extern char sObjHitReactHitstateFrameString[];
 extern char sObjHitReactSphereOverflowString[];
 extern char sObjHitReactResetString[7];
-extern f32 lbl_803DB414;
+extern f32 timeDelta;
 extern f32 lbl_803DCDD8;
 extern f32 lbl_803DCDDC;
 extern f32 lbl_803DE910;
@@ -52,7 +52,7 @@ int objHitReact_update(ObjAnimComponent *obj,ObjHitReactEntry *reactionEntries,u
   effectOrigin = lbl_802C1B00;
   if ((reactionState & 0xff) != 0) {
     OSReport(sObjHitReactHitstateFrameString,obj->currentMoveProgress);
-    moveEnded = ObjAnim_AdvanceCurrentMove((double)*reactionStepScale,(double)lbl_803DB414,
+    moveEnded = ObjAnim_AdvanceCurrentMove((double)*reactionStepScale,(double)timeDelta,
                                            (int)obj,(ObjAnimEventList *)0x0);
     if (moveEnded != 0) {
       OSReport(sObjHitReactResetString);

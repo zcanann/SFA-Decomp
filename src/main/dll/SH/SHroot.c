@@ -17,7 +17,7 @@ extern void fn_8006EF38(double scaleX,double scaleY,int obj,int joint,int pointC
 extern int fn_80114BB0();
 extern int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj);
 
-extern f32 lbl_803DB414;
+extern f32 timeDelta;
 extern f32 lbl_803E5418;
 extern f32 lbl_803E5424;
 extern f64 lbl_803E5428;
@@ -107,7 +107,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
     }
     else {
-      runtime->idleTimer = runtime->idleTimer - lbl_803DB414;
+      runtime->idleTimer = runtime->idleTimer - timeDelta;
       if (runtime->idleTimer <= lbl_803E5418) {
         runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_READY;
       }

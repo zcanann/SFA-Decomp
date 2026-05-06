@@ -51,7 +51,7 @@ extern int *lbl_803DCBDC;
 extern f64 DOUBLE_803df5a8;
 extern f64 DOUBLE_803df5c0;
 extern f64 DOUBLE_803df5d0;
-extern f32 lbl_803DB414;
+extern f32 timeDelta;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DC078;
 extern f32 lbl_803DC0B0;
@@ -1276,7 +1276,7 @@ void ObjHits_TickPriorityHitCooldowns(void)
     iVar1 = iVar1 + 0x3c;
     sVar2++;
   } while (sVar2 < 0x32);
-  lbl_803DCBE8 = lbl_803DB414;
+  lbl_803DCBE8 = timeDelta;
   return;
 }
 #pragma peephole reset

@@ -35,7 +35,7 @@ extern f32 lbl_803E3D68;
 extern f32 lbl_803E3D6C;
 extern f32 lbl_803E3D70;
 extern f32 lbl_803E3D78;
-extern f32 lbl_803DB414;
+extern f32 timeDelta;
 extern f32 lbl_803E30D0;
 extern f32 lbl_803E30D4;
 
@@ -159,7 +159,7 @@ void kaldachompme_update(int obj)
     step = extra[1];
     if (step > lbl_803E30D4) {
       if (current < target) {
-        extra[0] = current + step * lbl_803DB414;
+        extra[0] = current + step * timeDelta;
       }
       else {
         extra[0] = target;
@@ -167,7 +167,7 @@ void kaldachompme_update(int obj)
     }
     else {
       if (current > target) {
-        extra[0] = current + step * lbl_803DB414;
+        extra[0] = current + step * timeDelta;
       }
       else {
         extra[0] = target;

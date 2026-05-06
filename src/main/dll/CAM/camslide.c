@@ -31,7 +31,7 @@ extern f32 lbl_803E2374;
 extern f64 DOUBLE_803e1698;
 extern f32 lbl_803E16A4;
 extern f64 DOUBLE_803e16f8;
-extern f32 lbl_803DB414;
+extern f32 timeDelta;
 
 /*
  * --INFO--
@@ -279,7 +279,7 @@ void firstperson_updatePitch(double param_1,int param_2)
                               (float)((double)CONCAT44(0x43300000,
                                                        (uint)*(byte *)(gCamcontrolModeSettings +
                                                                       0x30)) - DOUBLE_803e16f8)),
-                      (double)lbl_803DB414);
+                      (double)timeDelta);
   *(short *)(param_2 + 2) = *(short *)(param_2 + 2) + (short)(int)dVar2;
   return;
 }

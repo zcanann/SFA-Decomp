@@ -85,7 +85,7 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803DCBE8;
 extern f32 lbl_803DE914;
 extern f32 lbl_803DE97C;
-extern f32 lbl_803DB414;
+extern f32 timeDelta;
 extern f32 lbl_803DCDD8;
 extern f32 lbl_803DCDDC;
 extern f32 lbl_803DF5E8;
@@ -2276,7 +2276,7 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR
   u32 effectArgs[4];
   u32 hitObject;
 
-  *cooldown = *cooldown - lbl_803DB414;
+  *cooldown = *cooldown - timeDelta;
   collisionType = ObjHits_GetPriorityHitWithPosition(obj,(undefined4 *)&hitObject,(int *)0x0,
                                                      (uint *)0x0,&hitPos[0],&hitPos[1],&hitPos[2]);
   if ((*cooldown <= lbl_803DE970) && (collisionType != 0)) {

@@ -10,7 +10,7 @@ extern undefined4 camcontrol_updatePathTargetAction();
 
 extern undefined4 **lbl_803DCA50;
 extern int *lbl_803DD538;
-extern f32 lbl_803DB414;
+extern f32 timeDelta;
 extern f32 lbl_803E1740;
 extern f32 lbl_803E1758;
 extern f32 lbl_803E175C;
@@ -85,7 +85,7 @@ void camclimb_update(short *param_1)
                                                  (int)lbl_803DD538 + 0x14,
                                                  (int)lbl_803DD538 + 0x18);
     if ((param_1[0x50] != 0) || (*(u8 *)(param_1 + 0xa1) != 0)) {
-      *(float *)((int)lbl_803DD538 + 0x11c) = *(float *)((int)lbl_803DD538 + 0x11c) + lbl_803DB414;
+      *(float *)((int)lbl_803DD538 + 0x11c) = *(float *)((int)lbl_803DD538 + 0x11c) + timeDelta;
     }
     if (lbl_803E1740 < *(float *)((int)lbl_803DD538 + 0x11c)) {
       cVar2 = camcontrol_getTargetPosition(param_1, psVar4, param_1 + 0xc, param_1 + 1);

@@ -9,7 +9,7 @@ extern undefined4 fn_80097734();
 
 extern undefined4* lbl_803DCAA8;
 extern s32 lbl_80329B78[];
-extern f32 lbl_803DB414;
+extern f32 timeDelta;
 extern f32 lbl_803E648C;
 extern f32 lbl_803E6494;
 extern f32 lbl_803E64AC;
@@ -84,7 +84,7 @@ void dfptargetblock_update(int param_1)
        (cVar1 = state->mode, cVar1 != DFPTARGETBLOCK_MODE_SETTLED)) {
       if ((cVar1 == DFPTARGETBLOCK_MODE_RAISING) || (cVar1 == DFPTARGETBLOCK_MODE_RESETTING)) {
         if (*(float *)(param_1 + 0x10) <= *(float *)(iVar4 + 0xc)) {
-          *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) + lbl_803DB414;
+          *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) + timeDelta;
           if (*(float *)(param_1 + 0x10) >= *(float *)(iVar4 + 0xc)) {
             *(float *)(param_1 + 0x10) = *(float *)(iVar4 + 0xc);
             state->mode = DFPTARGETBLOCK_MODE_ACTIVE;
@@ -93,7 +93,7 @@ void dfptargetblock_update(int param_1)
       }
       else if (cVar1 == DFPTARGETBLOCK_MODE_LOWERING) {
         if (*(float *)(param_1 + 0x10) >= *(float *)(iVar4 + 0xc) - lbl_803E64AC) {
-          *(float *)(param_1 + 0x10) = lbl_803E6494 * lbl_803DB414 + *(float *)(param_1 + 0x10);
+          *(float *)(param_1 + 0x10) = lbl_803E6494 * timeDelta + *(float *)(param_1 + 0x10);
           if (*(float *)(param_1 + 0x10) <= *(float *)(iVar4 + 0xc) - lbl_803E64AC) {
             *(float *)(param_1 + 0x10) = *(float *)(iVar4 + 0xc) - lbl_803E64AC;
             state->mode = DFPTARGETBLOCK_MODE_SETTLED;
@@ -102,9 +102,9 @@ void dfptargetblock_update(int param_1)
         }
       }
       else if (state->controlId != 0) {
-        (*(code *)(*lbl_803DCAA8 + 0x10))((double)lbl_803DB414,param_1);
+        (*(code *)(*lbl_803DCAA8 + 0x10))((double)timeDelta,param_1);
         (*(code *)(*lbl_803DCAA8 + 0x14))(param_1,state->controlId);
-        (*(code *)(*lbl_803DCAA8 + 0x18))((double)lbl_803DB414,param_1,state->controlId);
+        (*(code *)(*lbl_803DCAA8 + 0x18))((double)timeDelta,param_1,state->controlId);
       }
     }
   }

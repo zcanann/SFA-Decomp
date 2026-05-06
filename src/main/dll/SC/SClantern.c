@@ -12,7 +12,7 @@ extern undefined4 Obj_GetPlayerObject();
 
 extern undefined lbl_803AD048[];
 extern undefined4* lbl_803DCAAC;
-extern f32 lbl_803DB414;
+extern f32 timeDelta;
 extern f32 lbl_803E5498;
 
 /*
@@ -42,7 +42,7 @@ void SHthorntail_init(short *obj)
   pointIndex = 0;
   lbl_803AD048[0x1b] = 0;
   lbl_803AD048[0x12] = 0;
-  advanceResult = ObjAnim_AdvanceCurrentMove((double)lbl_803DB414,(double)lbl_803DB414,(int)obj,
+  advanceResult = ObjAnim_AdvanceCurrentMove((double)timeDelta,(double)timeDelta,(int)obj,
                                              (ObjAnimEventList *)lbl_803AD048);
   if (lbl_803AD048[0x12] != 0) {
     *obj = *obj + *(short *)(lbl_803AD048 + 0xe);

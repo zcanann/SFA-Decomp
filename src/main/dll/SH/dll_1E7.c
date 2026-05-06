@@ -36,7 +36,7 @@ extern undefined4 DAT_803dcc50;
 extern undefined4 DAT_803dcc54;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd72c;
-extern f32 lbl_803DB414;
+extern f32 timeDelta;
 extern f32 lbl_803E5418;
 extern f32 lbl_803E5414;
 extern f32 lbl_803E541C;
@@ -144,7 +144,7 @@ void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
   tailSwingState = runtime->tailSwingState;
   switch(tailSwingState) {
   case SHTHORNTAIL_TAIL_SWING_READY:
-    runtime->tailSwingTimer = runtime->tailSwingTimer - lbl_803DB414;
+    runtime->tailSwingTimer = runtime->tailSwingTimer - timeDelta;
     if (runtime->tailSwingTimer <= lbl_803E5418) {
       Sfx_PlayFromObject(objectId,SHTHORNTAIL_TAIL_SWING_WINDUP_VOLUME_ID);
       runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_WINDUP;
@@ -152,7 +152,7 @@ void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
     }
     break;
   case SHTHORNTAIL_TAIL_SWING_WINDUP:
-    runtime->tailSwingTimer = runtime->tailSwingTimer - lbl_803DB414;
+    runtime->tailSwingTimer = runtime->tailSwingTimer - timeDelta;
     if (runtime->tailSwingTimer <= lbl_803E5418) {
       Sfx_PlayFromObject(objectId,SHTHORNTAIL_TAIL_SWING_ACTIVE_VOLUME_ID);
       runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_ACTIVE;

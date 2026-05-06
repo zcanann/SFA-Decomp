@@ -123,7 +123,7 @@ extern undefined4* pDll_expgfx;
 extern u8 lbl_803DC7B0;
 extern u8 lbl_803DD253;
 extern u8 lbl_803DD254;
-extern volatile f32 lbl_803DB414;
+extern volatile f32 timeDelta;
 extern volatile f32 lbl_803DD25C;
 extern volatile f32 lbl_803DD260;
 extern volatile f32 lbl_803DD264;
@@ -648,10 +648,10 @@ void expgfx_initSlotQuad(void *slotPtr)
     if (slot->velocityY < lbl_803DF3B4) {
       if (((behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) == 0) ||
           (lbl_803DF3B4 <= slot->velocityY)) {
-        slot->velocityY = -(lbl_803DF3BC * lbl_803DB414 - slot->velocityY);
+        slot->velocityY = -(lbl_803DF3BC * timeDelta - slot->velocityY);
       }
       else {
-        slot->velocityY = -(lbl_803DF3B8 * lbl_803DB414 - slot->velocityY);
+        slot->velocityY = -(lbl_803DF3B8 * timeDelta - slot->velocityY);
       }
       goto LAB_8009ba84;
     }
@@ -660,11 +660,11 @@ void expgfx_initSlotQuad(void *slotPtr)
       (slot->velocityY <= lbl_803DF3C0)) {
     if (((behaviorFlags & EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY) != 0) &&
         (lbl_803DF3C0 < slot->velocityY)) {
-      slot->velocityY = lbl_803DF3BC * lbl_803DB414 + slot->velocityY;
+      slot->velocityY = lbl_803DF3BC * timeDelta + slot->velocityY;
     }
   }
   else {
-    slot->velocityY = lbl_803DF3B8 * lbl_803DB414 + slot->velocityY;
+    slot->velocityY = lbl_803DF3B8 * timeDelta + slot->velocityY;
   }
 LAB_8009ba84:
   frameStep = lbl_803DF3C4;
@@ -1327,7 +1327,7 @@ void expgfx_updateFrameState(int sourceMode,int sourceId)
   
   renderMode = fn_80008B4C(-1);
   if ((short)renderMode != 1) {
-    frameValue = lbl_803DD25C + (frameStep = lbl_803DB414);
+    frameValue = lbl_803DD25C + (frameStep = timeDelta);
     lbl_803DD25C = frameValue;
     if (frameValue >= lbl_803DF418) {
       lbl_803DD25C = lbl_803DF35C;

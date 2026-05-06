@@ -10,7 +10,7 @@ extern void fn_8008F904(u32 handle);
 extern int fn_8008FB20(double radiusX,double radiusY,float *start,float *end,int param_5,int param_6,int param_7);
 
 extern undefined4 *pDll_expgfx;
-extern f32 lbl_803DB414;
+extern f32 timeDelta;
 extern f32 lbl_803E64E0;
 extern f32 lbl_803E64E4;
 extern f32 lbl_803E64E8;
@@ -119,7 +119,7 @@ void dfplightni_update(u8 *obj)
     state = dfplightni_getState(obj);
     playerObj = Obj_GetPlayerObject();
     if (playerObj != 0) {
-      state->timer += lbl_803DB414;
+      state->timer += timeDelta;
       eventActive = GameBit_Get(state->eventId);
       if ((eventActive != 0) && (state->timer < lbl_803E64E0)) {
         state->timer = lbl_803E64F8;
