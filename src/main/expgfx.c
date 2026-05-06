@@ -51,7 +51,7 @@ extern undefined4 FUN_80081130();
 extern int FUN_80081134();
 extern void fn_8009B9C8(u8 sourceMode,int sourceId,int param_3);
 extern undefined8 FUN_80135810();
-extern void fn_801378A8(char *message,...);
+extern void debugPrintf(char *message,...);
 extern double FUN_80136594();
 extern undefined4 FUN_802420e0();
 extern undefined4 FUN_802475e4();
@@ -359,7 +359,7 @@ void expgfx_release(uint slotPoolBase,int poolIndex,int slotIndex,int freeTextur
         }
       }
       else {
-        fn_801378A8(sExpgfxMismatchInAddRemove);
+        debugPrintf(sExpgfxMismatchInAddRemove);
       }
     }
     slot->sequenceId = -1;
@@ -437,7 +437,7 @@ void expgfx_initialise(void)
           }
         }
         else {
-          fn_801378A8(sExpgfxMismatchInAddRemove);
+          debugPrintf(sExpgfxMismatchInAddRemove);
         }
         slot->sequenceId = -1;
         *poolActiveMasks = *poolActiveMasks & ~(1 << slotIndex);
@@ -723,7 +723,7 @@ LAB_8009ba84:
     slotWords[0x1d] = tex0T;
   }
   else {
-    fn_801378A8(sExpgfxNoTexture);
+    debugPrintf(sExpgfxNoTexture);
   }
   return;
 }
@@ -777,7 +777,7 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
         (entry->key0 == key0)) && (entry->key1 == key1)) {
       refCount = &gExpgfxTableEntries[tableIndex].refCount;
       if (*refCount >= EXPGFX_EXPTAB_REFCOUNT_MAX) {
-        fn_801378A8(sExpgfxAddToTableUsageOverflow);
+        debugPrintf(sExpgfxAddToTableUsageOverflow);
         return EXPGFX_INVALID_TABLE_INDEX;
       }
       (*refCount)++;
@@ -800,7 +800,7 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
     entryBase = entryBase + 1;
   }
 
-  fn_801378A8(sExpgfxExpTabIsFull);
+  debugPrintf(sExpgfxExpTabIsFull);
   return EXPGFX_INVALID_TABLE_INDEX;
 }
 #pragma peephole reset
@@ -1262,7 +1262,7 @@ void expgfx_resetAllPools(void)
           }
         }
         else {
-          fn_801378A8(sExpgfxMismatchInAddRemove);
+          debugPrintf(sExpgfxMismatchInAddRemove);
         }
         slot->sequenceId = -1;
         *poolActiveMasks = *poolActiveMasks & ~activeBit;

@@ -31,10 +31,10 @@ void fn_80274338(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_802744BC — voice handler (~364 instructions). Stubbed.
+ * audioLoadSdiFile — voice handler (~364 instructions). Stubbed.
  */
 #pragma dont_inline on
-void fn_802744BC(void) {}
+void audioLoadSdiFile(void) {}
 #pragma dont_inline reset
 
 /*

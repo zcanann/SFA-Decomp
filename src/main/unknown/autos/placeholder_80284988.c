@@ -45,9 +45,9 @@ int fn_802848D8(u32 flags)
     DSPInit();
     DSPAddTask(&lbl_803D4880);
     lbl_803DE3B8 = 0;
-    fn_80284ABC();
+    sndEnd();
     while (lbl_803DE3B8 == 0) {}
-    fn_80284AF4();
+    sndBegin();
     return 1;
 }
 
@@ -65,11 +65,11 @@ void fn_80284AB8(void)
 /*
  * --INFO--
  *
- * Function: fn_80284ABC
+ * Function: sndEnd
  * EN v1.0 Address: 0x80284ABC
  * EN v1.0 Size: 56b
  */
-void fn_80284ABC(void)
+void sndEnd(void)
 {
     u16 count;
 
@@ -148,11 +148,11 @@ void fn_80284A8C(void)
 /*
  * --INFO--
  *
- * Function: fn_80284AF4
+ * Function: sndBegin
  * EN v1.0 Address: 0x80284AF4
  * EN v1.0 Size: 56b
  */
-void fn_80284AF4(void)
+void sndBegin(void)
 {
     u16 count = lbl_803DE3BC;
     lbl_803DE3BC = count + 1;

@@ -82,7 +82,7 @@ void hwSetTimeOffset(u8 value);
 extern void fn_8027BDE0(void);
 extern void fn_80284878(void);
 extern int fn_80284998(void);
-extern void fn_80284AF4(void);
+extern void sndBegin(void);
 extern void fn_80284A8C(void);
 extern u32 fn_8028478C(void *callback, u32 flags, u32 value);
 extern u32 fn_8027BA04(u32 valueA, u32 valueB, u32 enabled);
@@ -197,7 +197,7 @@ int hwInit(u32 value, u8 valueA, u8 valueB, u32 flags)
     if (fn_8028478C(snd_handle_irq, flags, value) != 0 &&
         fn_8027BA04(valueA, valueB, (flags & 1) != 0) != 0 &&
         fn_802848D8(flags) != 0) {
-        fn_80284ABC();
+        sndEnd();
         fn_80284858();
         return 0;
     }
@@ -207,11 +207,11 @@ int hwInit(u32 value, u8 valueA, u8 valueB, u32 flags)
 
 void hwExit(void)
 {
-    fn_80284AF4();
+    sndBegin();
     fn_80284998();
     fn_8027BDE0();
     fn_80284878();
-    fn_80284ABC();
+    sndEnd();
     fn_80284AB8();
 }
 

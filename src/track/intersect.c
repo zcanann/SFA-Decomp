@@ -4258,7 +4258,7 @@ void cardShowLoadingMsg(u8 kind)
 {
     extern void fn_80017434(int);
     extern int padUpdate(void);
-    extern void fn_800234EC(int);
+    extern void mmFreeTick(int);
     extern void waitNextFrame(void);
     extern int fn_8001FD88(int**);
     extern void** lbl_803DCA4C;
@@ -4268,7 +4268,7 @@ void cardShowLoadingMsg(u8 kind)
     extern int fn_8003B8F4(int, int, int, int, int, f32);
     extern void fn_8001476C(int, int, int, int);
     extern int lbl_803DB708;
-    extern void fn_8006C73C(void);
+    extern void getLastRenderedFrame(void);
     extern void hudDrawColored(int, int, int, void*, int, int);
     extern void gameTextSetColor(int, int, int, int);
     extern void fn_80016810(int, int, int);
@@ -4286,7 +4286,7 @@ void cardShowLoadingMsg(u8 kind)
     fn_80017434(0);
     for (frame = 0; frame < 0x3C; frame++) {
         padUpdate();
-        fn_800234EC(0);
+        mmFreeTick(0);
         waitNextFrame();
         count = fn_8001FD88(&buttons) & 0xFF;
         if ((u32)count != 0) {
@@ -4299,7 +4299,7 @@ void cardShowLoadingMsg(u8 kind)
             fn_8001476C(0, 0, 0, 0);
         } else {
             saved = lbl_803DB708;
-            fn_8006C73C();
+            getLastRenderedFrame();
             hudDrawColored(0, 0, 0, &saved, 0x200, 0);
         }
         gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);

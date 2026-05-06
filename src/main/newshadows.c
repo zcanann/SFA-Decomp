@@ -2730,7 +2730,7 @@ extern u32 lbl_803DCF94;
 extern u32 lbl_803DCF98;
 extern u32 lbl_803DCF90;
 u32 fn_8006C5C4(void) { return lbl_803DCFD4; }
-u32 fn_8006C73C(void) { return lbl_803DCF7C; }
+u32 getLastRenderedFrame(void) { return lbl_803DCF7C; }
 u32 fn_8006C744(void) { return lbl_803DCF94; }
 u32 fn_8006C74C(void) { return lbl_803DCF98; }
 u32 fn_8006C754(void) { return lbl_803DCF90; }

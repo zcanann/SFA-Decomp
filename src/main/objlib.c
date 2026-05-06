@@ -16,7 +16,7 @@ extern void buttonDisable(int index,uint flags);
 extern undefined4 FUN_80017640();
 extern undefined4 FUN_80017700();
 extern undefined4 FUN_80017704();
-extern void fn_80021570(void *transform,float *mtx);
+extern void setMatrixFromObjectTransposed(void *transform,float *mtx);
 extern double FUN_80017714();
 extern float fn_800216D0(float *posA,float *posB);
 extern float Vec_distance(float *param_1,float *param_2);
@@ -40,7 +40,7 @@ extern void getTabEntry(void *dst,int fileId,int offset,int size);
 extern void fn_80048F48(int fileId,void *dst,int offset,int size);
 extern undefined4 FUN_80053ab4();
 extern int * fn_8005B11C();
-extern void fn_801378A8(const char *fmt, ...);
+extern void debugPrintf(const char *fmt, ...);
 extern undefined4 FUN_80247618();
 extern double FUN_802480c0();
 extern undefined8 FUN_80286834();
@@ -1987,7 +1987,7 @@ void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sende
         entry->param = param;
         queue->count = queue->count + 1;
       } else {
-        fn_801378A8(sObjMsgOverflowInObjectWarning,message,
+        debugPrintf(sObjMsgOverflowInObjectWarning,message,
                      (int)*(short *)((byte *)obj + 0x44),(int)*(short *)((byte *)obj + 0x46),
                      (int)*(short *)((byte *)sender + 0x46));
       }
@@ -2041,7 +2041,7 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
           entry->param = param;
           queue->count = queue->count + 1;
         } else {
-          fn_801378A8(sObjMsgOverflowInObjectWarning,message,
+          debugPrintf(sObjMsgOverflowInObjectWarning,message,
                        (int)*(short *)((byte *)obj + 0x44),(int)*(short *)((byte *)obj + 0x46),
                        (int)*(short *)((byte *)sender + 0x46));
         }
@@ -2063,7 +2063,7 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
           entry->param = param;
           queue->count = queue->count + 1;
         } else {
-          fn_801378A8(sObjMsgOverflowInObjectWarning,message,
+          debugPrintf(sObjMsgOverflowInObjectWarning,message,
                        (int)*(short *)((byte *)obj + 0x44),(int)*(short *)((byte *)obj + 0x46),
                        (int)*(short *)((byte *)sender + 0x46));
         }
@@ -2114,7 +2114,7 @@ uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param)
       queue->count = queue->count + 1;
       return queue->count;
     }
-    fn_801378A8(sObjMsgOverflowInObjectWarning,message,
+    debugPrintf(sObjMsgOverflowInObjectWarning,message,
                  (int)*(short *)((byte *)dstObj + 0x44),(int)*(short *)((byte *)dstObj + 0x46),
                  (int)*(short *)((byte *)senderObj + 0x46));
   }
@@ -2780,7 +2780,7 @@ void ObjPath_GetPointLocalMtx(int param_1,int param_2,float *param_3)
   transform.rotY = pathPoint->rotY;
   transform.rotZ = pathPoint->rotZ;
   transform.scale = lbl_803DE97C;
-  fn_80021570(&transform,param_3);
+  setMatrixFromObjectTransposed(&transform,param_3);
   return;
 }
 

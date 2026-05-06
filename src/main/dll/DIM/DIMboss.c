@@ -10,8 +10,8 @@ extern undefined4 fn_80019C24();
 extern undefined4 FUN_80017620();
 extern uint GameBit_Get();
 extern undefined8 GameBit_Set();
-extern undefined4 fn_800202CC();
-extern undefined8 fn_800234EC();
+extern undefined4 checkReset();
+extern undefined8 mmFreeTick();
 extern undefined4 ObjModel_ClearRenderAttachment();
 extern int Obj_GetActiveModel();
 extern undefined4 FUN_80017a98();
@@ -255,14 +255,14 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
         bVar2 = false;
         while (uVar6 = fn_800430AC(0), (uVar6 & 0xffefffff) != 0) {
           padUpdate();
-          fn_800202CC();
+          checkReset();
           if (bVar2) {
             waitNextFrame();
           }
           fn_800481D4();
           fn_80015624();
           if (bVar2) {
-            fn_800234EC(0);
+            mmFreeTick(0);
             fn_80019C24();
             GXFlush_(1,0);
           }

@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8027280C.h"
 
-extern void fn_80284AF4(void);
-extern void fn_80284ABC(void);
+extern void sndBegin(void);
+extern void sndEnd(void);
 extern void fn_8026D6E4(int a, int b, int c, int d);
 extern int fn_8027186C(int a, int b, int c);
 extern int fn_80271954(int a, int b, int c);
@@ -33,9 +33,9 @@ extern u8 *lbl_803DE268;
  */
 void fn_80272720(int a, int b, int c, int d)
 {
-    fn_80284AF4();
+    sndBegin();
     fn_8026D6E4(a, b, c, d);
-    fn_80284ABC();
+    sndEnd();
 }
 
 /*
@@ -56,9 +56,9 @@ u16 fn_80272788(u8 slot, u8 event)
 int fn_802727A8(int a, int b, int c)
 {
     int result;
-    fn_80284AF4();
+    sndBegin();
     result = fn_8027186C(a, b, c);
-    fn_80284ABC();
+    sndEnd();
     return result;
 }
 
@@ -70,9 +70,9 @@ int fn_802727A8(int a, int b, int c)
 int fn_80272808(int a, int b, int c)
 {
     int result;
-    fn_80284AF4();
+    sndBegin();
     result = fn_80271954(a, b, c);
-    fn_80284ABC();
+    sndEnd();
     return result;
 }
 
@@ -81,12 +81,12 @@ int fn_80272808(int a, int b, int c)
  *
  * EN v1.1 Address: 0x80272868, size 64b
  */
-int fn_80272868(int a)
+int audioStopSound(int a)
 {
     int result;
-    fn_80284AF4();
+    sndBegin();
     result = fn_80271AC0(a);
-    fn_80284ABC();
+    sndEnd();
     return result;
 }
 
@@ -99,10 +99,10 @@ int fn_802728A8(int a, int b, int c, u8 d)
 {
     int result;
     u8 e;
-    fn_80284AF4();
+    sndBegin();
     e = *(u8 *)(lbl_803BDA24 + d * 2 + 1);
     result = fn_802717B0(a, b, c, d, e);
-    fn_80284ABC();
+    sndEnd();
     return result;
 }
 
@@ -130,9 +130,9 @@ int fn_8027292C(u32 id)
  */
 void fn_80272970(int a, int b, int c)
 {
-    fn_80284AF4();
+    sndBegin();
     fn_80271B4C(a, b, c, 0, -1);
-    fn_80284ABC();
+    sndEnd();
 }
 
 /*
@@ -143,14 +143,14 @@ void fn_80272970(int a, int b, int c)
  */
 void fn_802729D0(int a, int b, u8 flag1, u8 flag2)
 {
-    fn_80284AF4();
+    sndBegin();
     if (flag1 != 0) {
         fn_80271B4C(a, b, 0x15, 0, -1);
     }
     if (flag2 != 0) {
         fn_80271B4C(a, b, 0x16, 0, -1);
     }
-    fn_80284ABC();
+    sndEnd();
 }
 
 /*
@@ -204,7 +204,7 @@ void fn_80272B5C(int a, int b, int c, int d)
  */
 void fn_80272CC4(u8 slot, int a, int b)
 {
-    fn_80284AF4();
+    sndBegin();
     *(u32 *)(lbl_803BD9C4 + slot * 4) = 0;
     *(u32 *)(lbl_803BDA04 + slot * 4) = 0;
     lbl_803DE254[slot] = 0xff;
@@ -212,7 +212,7 @@ void fn_80272CC4(u8 slot, int a, int b)
     *(u8 *)(lbl_803BDA24 + slot * 2 + 1) = 0;
     *(u8 *)(lbl_803BDA24 + slot * 2) = 0;
     hwActivateStudio(slot, a, b);
-    fn_80284ABC();
+    sndEnd();
 }
 
 /*

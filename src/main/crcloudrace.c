@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 
-extern void fn_80008B74(void *obj,void *target,int animId,int flags);
+extern void getEnvfxActImmediately(void *obj,void *target,int animId,int flags);
 extern void fn_8000A380(int param_1,int param_2,int param_3);
 extern int GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
@@ -75,8 +75,8 @@ void crcloudrace_update(CrCloudRaceObject *obj)
   if (obj->unkF8 == 0) {
     eventActive = GameBit_Get(0xdcb);
     if (eventActive != 0) {
-      fn_80008B74(obj,obj,0x174,0);
-      fn_80008B74(obj,obj,0x1e1,0);
+      getEnvfxActImmediately(obj,obj,0x174,0);
+      getEnvfxActImmediately(obj,obj,0x1e1,0);
       GameBit_Set(0xdcb,0);
       unlockLevel(0,0,1);
     }
