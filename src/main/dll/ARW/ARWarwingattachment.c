@@ -1476,10 +1476,10 @@ void fn_801F2EA8(void) {}
 void fn_801F2EDC(void) {}
 void fn_801F30D4(void) {}
 void fn_801F30D8(void) {}
-void fn_801F316C(void) {}
-void fn_801F33AC(void) {}
-void fn_801F33B0(void) {}
-void fn_801F34A8(void) {}
+void wmtorch_hitDetect(void) {}
+void wmtorch_release(void) {}
+void wmtorch_initialise(void) {}
+void lightsource_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int pressureswitch_getExtraSize(void) { return 0x8; }
@@ -1491,10 +1491,10 @@ int fn_801F2B8C(void) { return 0x28; }
 int fn_801F2B94(void) { return 0x1; }
 int fn_801F2E98(void) { return 0x4; }
 int fn_801F2EA0(void) { return 0x0; }
-int fn_801F30DC(void) { return 0x10; }
-int fn_801F30E4(void) { return 0x1; }
-int fn_801F33B4(void) { return 0x1c; }
-int fn_801F33BC(void) { return 0x1; }
+int wmtorch_getExtraSize(void) { return 0x10; }
+int wmtorch_func08(void) { return 0x1; }
+int lightsource_getExtraSize(void) { return 0x1c; }
+int lightsource_func08(void) { return 0x1; }
 
 /* render-with-fn_8003B8F4 pattern. */
 extern f32 lbl_803E5D58;

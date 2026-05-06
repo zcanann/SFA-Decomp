@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801f37cc(int param_1,int param_2);
+void lightsource_init(int param_1,int param_2);
 void FUN_801f398c(int param_1);
 void FUN_801f39dc(void);
 void FUN_801f3a50(uint param_1);

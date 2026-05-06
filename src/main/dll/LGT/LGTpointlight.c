@@ -33,7 +33,7 @@ extern f32 lbl_803E6AB4;
 /*
  * --INFO--
  *
- * Function: FUN_801f37cc
+ * Function: lightsource_init
  * EN v1.0 Address: 0x801F37CC
  * EN v1.0 Size: 448b
  * EN v1.1 Address: 0x801F3824
@@ -43,7 +43,7 @@ extern f32 lbl_803E6AB4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801f37cc(int param_1,int param_2)
+void lightsource_init(int param_1,int param_2)
 {
   int iVar1;
   int *piVar2;
@@ -250,8 +250,8 @@ void FUN_801f3a50(uint param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801F3C24(void) {}
-void fn_801F3C28(void) {}
+void lightsource_release(void) {}
+void lightsource_initialise(void) {}
 void fn_801F3C78(void) {}
 
 /* 8b "li r3, N; blr" returners. */
