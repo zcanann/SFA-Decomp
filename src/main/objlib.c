@@ -120,6 +120,12 @@ typedef struct ObjMsgQueue {
   ObjMsgEntry entries[1];
 } ObjMsgQueue;
 
+typedef struct ObjMsgQueueSlotBase {
+  uint count;
+  uint capacity;
+  ObjMsgEntry entry;
+} ObjMsgQueueSlotBase;
+
 typedef struct ObjPathPoint {
   f32 x;
   f32 y;
@@ -1921,7 +1927,7 @@ void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sende
   uint count;
   int maskedFlags;
   ObjMsgQueue *queue;
-  ObjMsgEntry *entry;
+  ObjMsgQueueSlotBase *slot;
   int objectIndex;
   int objectCount;
   void *obj;
@@ -1937,10 +1943,10 @@ void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sende
          (queue = *(ObjMsgQueue **)((byte *)obj + 0xdc), queue != (ObjMsgQueue *)0x0))) {
       count = queue->count;
       if (count < queue->capacity) {
-        entry = &queue->entries[count];
-        entry->message = message;
-        entry->sender = (uint)sender;
-        entry->param = param;
+        slot = (ObjMsgQueueSlotBase *)((byte *)queue + ((count + count + count) << 2));
+        slot->entry.message = message;
+        slot->entry.sender = (uint)sender;
+        slot->entry.param = param;
         queue->count = queue->count + 1;
       } else {
         debugPrintf(sObjMsgOverflowInObjectWarning,message,
@@ -1975,7 +1981,7 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
   uint count;
   int maskedFlags;
   ObjMsgQueue *queue;
-  ObjMsgEntry *entry;
+  ObjMsgQueueSlotBase *slot;
   int objectIndex;
   int objectCount;
   void *obj;
@@ -1991,10 +1997,10 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
             (queue = *(ObjMsgQueue **)((byte *)obj + 0xdc), queue != (ObjMsgQueue *)0x0)))) {
         count = queue->count;
         if (count < queue->capacity) {
-          entry = &queue->entries[count];
-          entry->message = message;
-          entry->sender = (uint)sender;
-          entry->param = param;
+          slot = (ObjMsgQueueSlotBase *)((byte *)queue + ((count + count + count) << 2));
+          slot->entry.message = message;
+          slot->entry.sender = (uint)sender;
+          slot->entry.param = param;
           queue->count = queue->count + 1;
         } else {
           debugPrintf(sObjMsgOverflowInObjectWarning,message,
@@ -2013,10 +2019,10 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
             (queue = *(ObjMsgQueue **)((byte *)obj + 0xdc), queue != (ObjMsgQueue *)0x0)))) {
         count = queue->count;
         if (count < queue->capacity) {
-          entry = &queue->entries[count];
-          entry->message = message;
-          entry->sender = (uint)sender;
-          entry->param = param;
+          slot = (ObjMsgQueueSlotBase *)((byte *)queue + ((count + count + count) << 2));
+          slot->entry.message = message;
+          slot->entry.sender = (uint)sender;
+          slot->entry.param = param;
           queue->count = queue->count + 1;
         } else {
           debugPrintf(sObjMsgOverflowInObjectWarning,message,
@@ -2052,7 +2058,7 @@ uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param)
   void *dstObj;
   void *senderObj;
   ObjMsgQueue *queue;
-  ObjMsgEntry *entry;
+  ObjMsgQueueSlotBase *slot;
 
   dstObj = obj;
   senderObj = sender;
@@ -2063,10 +2069,10 @@ uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param)
   if (queue != (ObjMsgQueue *)0x0) {
     count = queue->count;
     if (count < queue->capacity) {
-      entry = &queue->entries[count];
-      entry->message = message;
-      entry->sender = (uint)senderObj;
-      entry->param = param;
+      slot = (ObjMsgQueueSlotBase *)((byte *)queue + ((count + count + count) << 2));
+      slot->entry.message = message;
+      slot->entry.sender = (uint)senderObj;
+      slot->entry.param = param;
       queue->count = queue->count + 1;
       return queue->count;
     }
