@@ -4462,8 +4462,8 @@ void FUN_800a392c(void)
 void fn_800A3AA8(void) {}
 void fn_800A3AAC(void) {}
 void fn_800A3AB0(void) {}
-void fn_800A3ABC(void) {}
-void fn_800A3AEC(void) {}
+void projgfx_onMapSetup(void) {}
+void projgfx_initialise(void) {}
 void fn_800A432C(void) {}
 void fn_800A4330(void) {}
 void fn_800A4334(void) {}
@@ -4471,7 +4471,7 @@ void fn_800A4338(void) {}
 void fn_800A4A20(void) {}
 void fn_800A4BA8(void) {}
 void fn_800A4BAC(void) {}
-void fn_800AF418(void) {}
+void partfx_onMapSetup(void) {}
 void fn_800B3190(void) {}
 void fn_800B3194(void) {}
 void fn_800B3198(void) {}
