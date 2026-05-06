@@ -1003,8 +1003,8 @@ undefined4 isCheatActive(uint param_1)
  * --INFO--
  *
  * Function: gameplay_registerDebugOption
- * EN v1.0 Address: 0x800E8134
- * EN v1.0 Size: 28b
+ * EN v1.0 Address: 0x800E7ED8
+ * EN v1.0 Size: 36b
  * EN v1.1 Address: 0x800E815C
  * EN v1.1 Size: 36b
  * JP Address: TODO
@@ -1040,8 +1040,8 @@ uint isCheatUnlocked(uint param_1)
  * --INFO--
  *
  * Function: gameplay_resetPreviewColor
- * EN v1.0 Address: 0x800E8168
- * EN v1.0 Size: 20b
+ * EN v1.0 Address: 0x800E7F1C
+ * EN v1.0 Size: 28b
  * EN v1.1 Address: 0x800E81A0
  * EN v1.1 Size: 28b
  * JP Address: TODO
@@ -1061,8 +1061,8 @@ void gameplay_resetPreviewColor(void)
  * --INFO--
  *
  * Function: gameplay_getPreviewSettings
- * EN v1.0 Address: 0x800E817C
- * EN v1.0 Size: 8b
+ * EN v1.0 Address: 0x800E7F38
+ * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x800E81BC
  * EN v1.1 Size: 12b
  * JP Address: TODO
@@ -1452,8 +1452,8 @@ int titleLoadSaveFiles(undefined8 param_1,double param_2,undefined8 param_3,unde
  * --INFO--
  *
  * Function: gameplay_applyPreviewSettingsForSlot
- * EN v1.0 Address: 0x800E8864
- * EN v1.0 Size: 332b
+ * EN v1.0 Address: 0x800E85A0
+ * EN v1.0 Size: 204b
  * EN v1.1 Address: 0x800E8824
  * EN v1.1 Size: 204b
  * JP Address: TODO
@@ -1492,8 +1492,8 @@ void gameplay_applyPreviewSettingsForSlot(undefined8 param_1,double param_2,unde
  * --INFO--
  *
  * Function: gameplay_capturePreviewSettings
- * EN v1.0 Address: 0x800E89B0
- * EN v1.0 Size: 92b
+ * EN v1.0 Address: 0x800E866C
+ * EN v1.0 Size: 100b
  * EN v1.1 Address: 0x800E88F0
  * EN v1.1 Size: 100b
  * JP Address: TODO
