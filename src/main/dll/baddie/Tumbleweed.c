@@ -3632,14 +3632,14 @@ extern u8    lbl_803DD9E1;
 extern void* lbl_803DDA1C;
 extern void* lbl_803DDA20;
 extern void* lbl_803DDA24;
-extern void* lbl_803DBC14;
-extern u8    lbl_803AA018[0x1100];
+extern void* debugLogEnd;
+extern u8    debugLogBuffer[0x1100];
 extern void  fn_8006FED4(void);
 
 /* EN v1.0 0x80137998  size: 104b  Title-screen system init. Calls
  * fn_8006FED4, primes the two float counters, clears two state bytes,
  * acquires three sized buffers (605/1/2 bytes) and primes the
- * lbl_803DBC14 cursor to the start of the 0x1100-byte arena. */
+ * debugLogEnd cursor to the start of the 0x1100-byte arena. */
 #pragma scheduling off
 #pragma peephole off
 void fn_80137998(void)
@@ -3652,7 +3652,7 @@ void fn_80137998(void)
     lbl_803DDA24 = textureLoadAsset(0x25D);
     lbl_803DDA20 = textureLoadAsset(1);
     lbl_803DDA1C = textureLoadAsset(2);
-    lbl_803DBC14 = lbl_803AA018;
+    debugLogEnd = debugLogBuffer;
 }
 #pragma peephole reset
 #pragma scheduling reset
