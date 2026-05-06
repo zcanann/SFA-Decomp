@@ -3,8 +3,8 @@
 
 extern undefined4 FUN_800067b4();
 extern undefined4 FUN_80006824();
-extern undefined4 gameplay_isDebugOptionEnabled();
-extern uint gameplay_hasDebugOption();
+extern undefined4 isCheatActive();
+extern uint isCheatUnlocked();
 extern undefined4 FUN_8011cd54();
 extern bool FUN_80245dbc();
 extern uint countLeadingZeros();
@@ -93,7 +93,7 @@ void FUN_8011c860(void)
   DAT_803dc690 = 3;
   uVar1 = countLeadingZeros((uint)*(byte *)(DAT_803de388 + 2));
   DAT_803a9430 = (**(code **)(*DAT_803dd724 + 0xc))(0x36b,0x22,0,1,(int)(short)(uVar1 >> 5));
-  uVar1 = gameplay_hasDebugOption(3);
+  uVar1 = isCheatUnlocked(3);
   if ((uVar1 == 0) || (DAT_803dd5e8 != '\0')) {
     PTR_DAT_8031b938[(uint)DAT_8031b940 * 0x3c + -0x5d] = 0xff;
     *(ushort *)(PTR_DAT_8031b938 + (uint)DAT_8031b940 * 0x3c + -0x26) =
@@ -103,7 +103,7 @@ void FUN_8011c860(void)
     PTR_DAT_8031b938[(uint)DAT_8031b940 * 0x3c + -0x5d] = DAT_8031b940 - 1;
     *(ushort *)(PTR_DAT_8031b938 + (uint)DAT_8031b940 * 0x3c + -0x26) =
          *(ushort *)(PTR_DAT_8031b938 + (uint)DAT_8031b940 * 0x3c + -0x26) & 0xbfff;
-    uVar2 = gameplay_isDebugOptionEnabled(3);
+    uVar2 = isCheatActive(3);
     uVar1 = countLeadingZeros(uVar2);
     DAT_803a9434 = (**(code **)(*DAT_803dd724 + 0xc))(0x36b,0x23,0,1,(int)(short)(uVar1 >> 5));
   }
@@ -137,7 +137,7 @@ void FUN_8011ca28(void)
     (**(code **)(*DAT_803dd720 + 8))();
   }
   DAT_803dc690 = 1;
-  uVar1 = gameplay_hasDebugOption(2);
+  uVar1 = isCheatUnlocked(2);
   if (uVar1 == 0) {
     PTR_DAT_8031b918[0x10b] = 0xff;
     *(ushort *)(PTR_DAT_8031b918 + 0x142) = *(ushort *)(PTR_DAT_8031b918 + 0x142) | 0x4000;
@@ -166,7 +166,7 @@ void FUN_8011ca28(void)
   *(byte *)(DAT_803a943c + 4) = *(byte *)(DAT_803a943c + 4) | 0x40;
   DAT_803a9440 = 0;
   DAT_803a9444 = 0;
-  uVar1 = gameplay_hasDebugOption(2);
+  uVar1 = isCheatUnlocked(2);
   if (uVar1 != 0) {
     uVar2 = FUN_800067b4();
     DAT_803a9444 = (**(code **)(*DAT_803dd724 + 0xc))

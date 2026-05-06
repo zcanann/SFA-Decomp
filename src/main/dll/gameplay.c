@@ -977,9 +977,9 @@ extern undefined uRam803de10d;
 /*
  * --INFO--
  *
- * Function: gameplay_isDebugOptionEnabled
- * EN v1.0 Address: 0x800E8100
- * EN v1.0 Size: 52b
+ * Function: isCheatActive
+ * EN v1.0 Address: 0x800E7E94
+ * EN v1.0 Size: 68b
  * EN v1.1 Address: 0x800E8118
  * EN v1.1 Size: 68b
  * JP Address: TODO
@@ -987,7 +987,7 @@ extern undefined uRam803de10d;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 gameplay_isDebugOptionEnabled(uint param_1)
+undefined4 isCheatActive(uint param_1)
 {
   uint uVar1;
   
@@ -1021,9 +1021,9 @@ void gameplay_registerDebugOption(uint param_1)
 /*
  * --INFO--
  *
- * Function: gameplay_hasDebugOption
- * EN v1.0 Address: 0x800E8150
- * EN v1.0 Size: 24b
+ * Function: isCheatUnlocked
+ * EN v1.0 Address: 0x800E7EFC
+ * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x800E8180
  * EN v1.1 Size: 32b
  * JP Address: TODO
@@ -1031,7 +1031,7 @@ void gameplay_registerDebugOption(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint gameplay_hasDebugOption(uint param_1)
+uint isCheatUnlocked(uint param_1)
 {
   return gGameplayRegisteredDebugOptions & 1 << (param_1 & 0xff);
 }

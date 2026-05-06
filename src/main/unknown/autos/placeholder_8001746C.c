@@ -178,7 +178,7 @@ extern int FUN_800723e0();
 extern undefined4 FUN_800723e8();
 extern undefined4 FUN_80072930();
 extern undefined8 FUN_80081078();
-extern int gameplay_isDebugOptionEnabled();
+extern int isCheatActive();
 extern uint FUN_800e8b6c();
 extern undefined4 FUN_800e99f8();
 extern undefined4 FUN_800ea9b8();

@@ -3,9 +3,9 @@
 
 #include "ghidra_import.h"
 
-undefined4 gameplay_isDebugOptionEnabled(uint param_1);
+undefined4 isCheatActive(uint param_1);
 void gameplay_registerDebugOption(uint param_1);
-uint gameplay_hasDebugOption(uint param_1);
+uint isCheatUnlocked(uint param_1);
 void gameplay_resetPreviewColor(void);
 u8 * gameplay_getPreviewSettings(void);
 void loadSaveSettings(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
