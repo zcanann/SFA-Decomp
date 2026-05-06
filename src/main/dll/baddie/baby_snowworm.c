@@ -944,7 +944,7 @@ s32 fn_8012EA44(void)
 }
 
 /* EN v1.0 0x8012EA50  size: 12b  Companion setter; clears lbl_803DD7A8. */
-void fn_8012EA50(void)
+void GameUI_finishNpcDialogue(void)
 {
     lbl_803DD7A8 = 0;
 }
@@ -981,7 +981,7 @@ s32 CMenu_GetState(void)
  * Tried typed struct array, raw u8 array, scheduling/peephole pragmas,
  * block-scoped cursor — no change. */
 
-/* fn_8012EA5C declared at end of file (needs externs declared below). */
+/* GameUI_gameTextShowNpcDialogue declared at end of file (needs externs declared below). */
 
 /* fn_8012DDB8 (32b, u16 = param ? 1 : 0) — close but MWCC inserts an
  * extra `clrlwi r0,r0,16` to narrow the int ternary result before the
@@ -1176,7 +1176,7 @@ void fn_8012DF14(void)
  * was suppressed. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8012EA5C(s32 id, s32 _unused_a, s32 _unused_b, s32 do_input_disable)
+void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do_input_disable)
 {
     if (id == -1) return;
     if (curGameText != 0xFFFF) return;

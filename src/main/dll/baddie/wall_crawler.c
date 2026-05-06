@@ -883,7 +883,7 @@ s16 fn_8012EBC8(void)
  * lbl_803DD8B8 and return 1; else return 0. */
 #pragma scheduling off
 #pragma peephole off
-int fn_8012EBD0(s32 id)
+int GameUI_isItemBeingUsed(s32 id)
 {
     if (id == lbl_803DD8C2) {
         lbl_803DD8B8 = 0;
@@ -896,7 +896,7 @@ int fn_8012EBD0(s32 id)
 
 /* EN v1.0 0x8012EBF4  size: 32b  Sign-of-active-id predicate. Returns 1
  * when the current id at lbl_803DD8C2 is non-negative, 0 otherwise. */
-int fn_8012EBF4(void)
+int GameUI_isAnyItemBeingUsed(void)
 {
     return (lbl_803DD8C2 < 0) ? 0 : 1;
 }
@@ -906,7 +906,7 @@ int fn_8012EBF4(void)
  * lbl_803DD8B8 and returns the matched value; on miss returns -1. */
 #pragma scheduling off
 #pragma peephole off
-s32 fn_8012EB7C(s32* arr, int count)
+s32 GameUI_isOneOfItemsBeingUsed(s32* arr, int count)
 {
     int i;
     for (i = 0; i < count; i++) {
@@ -938,7 +938,7 @@ void fn_8012EF30(s16 val)
 #pragma scheduling reset
 
 /* EN v1.0 0x8012FB88  size: 8b  u8 setter for lbl_803DBA72. */
-void fn_8012FB88(u8 val)
+void GameUI_setUnusedHudSetting(u8 val)
 {
     lbl_803DBA72 = val;
 }
@@ -965,7 +965,7 @@ extern void fn_8012E880(void);
  * Otherwise: optionally runs fn_8012D96C (if mapScreenVisible set), runs
  * fn_8012DD14, optionally runs fn_8012DF68 (if cMenuEnabled set),
  * runs fn_8012E880, returns 0. */
-int fn_8012FB2C(void)
+int GameUI_run(void)
 {
     if (lbl_803DD7C5 == 0) return 0;
     if (mapScreenVisible != 0) fn_8012D96C();
