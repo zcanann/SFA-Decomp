@@ -770,8 +770,8 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
   int freeIndex;
   
   tableIndex = 0;
-  entryBase = Expgfx_GetTableEntry(0);
-  entry = entryBase;
+  entry = Expgfx_GetTableEntry(0);
+  entryBase = entry;
   for (; tableIndex < EXPGFX_POOL_COUNT; tableIndex++) {
     if (((entry->refCount != 0 && (entry->textureOrResource == textureOrResource)) &&
         (entry->key0 == key0)) && (entry->key1 == key1)) {
