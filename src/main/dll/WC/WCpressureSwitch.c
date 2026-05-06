@@ -404,8 +404,8 @@ void FUN_801ef3a8(undefined8 param_1,double param_2,double param_3,undefined8 pa
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801EFF74(void) {}
-void fn_801EFF78(void) {}
+void WM_ObjCreator_release(void) {}
+void WM_ObjCreator_initialise(void) {}
 void fn_801F02EC(void) {}
 
 /* 8b "li r3, N; blr" returners. */

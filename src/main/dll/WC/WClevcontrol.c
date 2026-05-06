@@ -720,8 +720,8 @@ void fn_801EEDD4(void) {}
 void fn_801EF020(void) {}
 void fn_801EF358(void) {}
 void fn_801EF35C(void) {}
-void fn_801EF370(void) {}
-void fn_801EF3A4(void) {}
+void WM_ObjCreator_free(void) {}
+void WM_ObjCreator_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int fn_801EEDAC(void) { return 0x0; }
@@ -732,14 +732,14 @@ int fn_801EEE2C(void) { return 0x0; }
 int fn_801EEE34(void) { return 0x0; }
 int fn_801EEE3C(void) { return 0x84; }
 int fn_801EEE44(void) { return 0x43; }
-int fn_801EF360(void) { return 0x8; }
+int WM_ObjCreator_getExtraSize(void) { return 0x8; }
 int fn_801EF368(void) { return 0x0; }
 
 /* render-with-fn_8003B8F4 pattern. */
 extern f32 lbl_803E5CC8;
 extern void fn_8003B8F4(f32);
 #pragma peephole off
-void fn_801EF374(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5CC8); }
+void WM_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5CC8); }
 #pragma peephole reset
 
 extern f32 lbl_803E5C70;

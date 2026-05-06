@@ -242,10 +242,10 @@ void FUN_801f0718(short *param_1)
 /* Trivial 4b 0-arg blr leaves. */
 void fn_801F06D0(void) {}
 void fn_801F06D4(void) {}
-void fn_801F0734(void) {}
-void fn_801F0768(void) {}
-void fn_801F08F8(void) {}
-void fn_801F08FC(void) {}
+void WM_seqobject_free(void) {}
+void WM_seqobject_hitDetect(void) {}
+void WM_seqobject_release(void) {}
+void WM_seqobject_initialise(void) {}
 void fn_801F0950(void) {}
 void fn_801F0998(void) {}
 void fn_801F0ADC(void) {}
@@ -254,7 +254,7 @@ void fn_801F0B48(void) {}
 void fn_801F0B4C(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801F0724(void) { return 0x1; }
+int WM_seqobject_getExtraSize(void) { return 0x1; }
 int fn_801F072C(void) { return 0x0; }
 int fn_801F0940(void) { return 0xc; }
 int fn_801F0948(void) { return 0x0; }
@@ -265,5 +265,5 @@ int fn_801F0AEC(void) { return 0x0; }
 extern f32 lbl_803E5CF8;
 extern void fn_8003B8F4(f32);
 #pragma peephole off
-void fn_801F0738(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5CF8); }
+void WM_seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5CF8); }
 #pragma peephole reset
