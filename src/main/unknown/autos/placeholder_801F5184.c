@@ -1234,11 +1234,11 @@ void firefly_hitDetect(void) {}
 void firefly_release(void) {}
 void firefly_initialise(void) {}
 void fn_801F568C(void) {}
-int fn_801F5AEC(void) { return 0x18; }
-int fn_801F5AF4(void) { return 0x0; }
-void fn_801F5AFC(void) {}
-void fn_801F6544(void) {}
-void fn_801F6548(void) {}
+int wmspiritplace_getExtraSize(void) { return 0x18; }
+int wmspiritplace_func08(void) { return 0x0; }
+void wmspiritplace_free(void) {}
+void wmspiritplace_release(void) {}
+void wmspiritplace_initialise(void) {}
 int fn_801F6A40(void) { return 0x10; }
 int fn_801F6A48(void) { return 0x0; }
 void fn_801F6A50(void) {}
