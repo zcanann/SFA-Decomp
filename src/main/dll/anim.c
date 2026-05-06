@@ -4086,13 +4086,13 @@ void drakorenergy_free(void) {}
 void drakorenergy_hitDetect(void) {}
 void drakorenergy_release(void) {}
 void drakorenergy_initialise(void) {}
-void fn_80203C54(void) {}
-void fn_80203F80(void) {}
-void fn_80204090(void) {}
-void fn_80204094(void) {}
-void fn_802045DC(void) {}
-void fn_802045E0(void) {}
-void fn_8020492C(void) {}
+void dbstealerworm_release(void) {}
+void dbholecontrol1_hitDetect(void) {}
+void dbholecontrol1_release(void) {}
+void dbholecontrol1_initialise(void) {}
+void dfplevelcontrol_render(void) {}
+void dfplevelcontrol_hitDetect(void) {}
+void dfplevelcontrol_release(void) {}
 void fn_802049D4(void) {}
 void fn_80204B4C(void) {}
 void fn_80204B50(void) {}
@@ -4117,12 +4117,12 @@ int fn_801FF958(void) { return 0x8; }
 int fn_801FF960(void) { return 0x0; }
 int drakorenergy_getExtraSize(void) { return 0xc; }
 int drakorenergy_func08(void) { return 0x0; }
-int fn_8020342C(void) { return 0x460; }
-int fn_80203434(void) { return 0x49; }
-int fn_80203F1C(void) { return 0xc; }
-int fn_80203F24(void) { return 0x0; }
-int fn_802045A8(void) { return 0xc; }
-int fn_802045B0(void) { return 0x0; }
+int dbstealerworm_getExtraSize(void) { return 0x460; }
+int dbstealerworm_func08(void) { return 0x49; }
+int dbholecontrol1_getExtraSize(void) { return 0xc; }
+int dbholecontrol1_func08(void) { return 0x0; }
+int dfplevelcontrol_getExtraSize(void) { return 0xc; }
+int dfplevelcontrol_func08(void) { return 0x0; }
 int fn_80204970(void) { return 0x1c; }
 int fn_80204978(void) { return 0x0; }
 int fn_80204B54(void) { return 0x0; }
@@ -4147,7 +4147,7 @@ extern void fn_8003B8F4(f32);
 extern f32 lbl_803E6398;
 extern f32 lbl_803E63B8;
 #pragma peephole off
-void fn_80203F50(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E6390); }
+void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E6390); }
 void fn_80204BC4(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E6398); }
 void fn_80205420(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E63B8); }
 #pragma peephole reset
@@ -4155,14 +4155,14 @@ void fn_80205420(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
 #pragma peephole off
-void fn_80203F2C(int x) { ObjGroup_RemoveObject(x, 0x1e); }
-void fn_802045B8(int x) { ObjGroup_RemoveObject(x, 0x9); }
+void dbholecontrol1_free(int x) { ObjGroup_RemoveObject(x, 0x1e); }
+void dfplevelcontrol_free(int x) { ObjGroup_RemoveObject(x, 0x9); }
 #pragma peephole reset
 #pragma scheduling reset
 
 /* plain forwarder. */
 extern void fn_80203C78(void);
-void fn_80203C58(void) { fn_80203C78(); }
+void dbstealerworm_initialise(void) { fn_80203C78(); }
 
 /* OSReport(string) wrappers. */
 extern void OSReport(const char *fmt, ...);
