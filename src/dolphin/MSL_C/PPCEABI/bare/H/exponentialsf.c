@@ -192,7 +192,7 @@ static inline float exp2_kernel(float x, float* table)
 
 #define float_bits(value) (*(u32*)&(value))
 
-float __ieee754_pow(float x, float y)
+float powf(float x, float y)
 {
     float log_value;
     float* table;
