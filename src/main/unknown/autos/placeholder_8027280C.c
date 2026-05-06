@@ -1,228 +1,246 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8027280C.h"
 
-extern undefined4 FUN_800033a8();
-extern undefined4 FUN_8026d9dc();
-extern undefined4 FUN_8026dbac();
-extern undefined4 FUN_8026dc88();
-extern undefined4 FUN_8026dd94();
-extern undefined4 FUN_8026de48();
-extern undefined4 FUN_802795cc();
-extern undefined4 FUN_802795d0();
-extern undefined4 FUN_8027a330();
-extern undefined4 FUN_8027a90c();
-extern undefined4 FUN_80282fe0();
-extern undefined4 FUN_8028384c();
-extern undefined4 FUN_8028504c();
-extern undefined4 FUN_80285050();
-extern undefined4 FUN_8028506c();
-extern undefined4 FUN_80285070();
+extern void fn_80284AF4(void);
+extern void fn_80284ABC(void);
+extern void fn_8026D6E4(int a, int b, int c, int d);
+extern int fn_8027186C(int a, int b, int c);
+extern int fn_80271954(int a, int b, int c);
+extern int fn_80271AC0(int a);
+extern int fn_802717B0(int a, int b, int c, int d, u8 e);
+extern int fn_80271B4C(int a, int b, int c, int d, int e);
+extern int fn_8027949C(u32 id);
+extern void fn_80273870(void);
+extern void hwAddInput(u8 idx);
+extern void hwRemoveInput(u8 idx);
+extern void hwActivateStudio(int a, int b, int c);
+extern void hwDisableHRTF(void);
 
-extern undefined4 DAT_803bdbf0;
-extern undefined4 DAT_803bdc30;
-extern undefined4 DAT_803bddb0;
-extern undefined4 DAT_803bdfc4;
-extern undefined4 DAT_803be3b4;
-extern undefined4 DAT_803be3e4;
-extern undefined4 DAT_803be441;
-extern undefined4 DAT_803be471;
-extern undefined4 DAT_803be4a1;
-extern undefined4 DAT_803be4d1;
-extern undefined4 DAT_803be501;
-extern undefined4 DAT_803be531;
-extern undefined4 DAT_803be561;
-extern undefined4 DAT_803be591;
-extern undefined4 DAT_803be5c1;
-extern undefined4 DAT_803be624;
-extern undefined4 DAT_803be628;
-extern undefined4 DAT_803be62c;
-extern undefined4 DAT_803be630;
-extern undefined4 DAT_803be634;
-extern undefined4 DAT_803be638;
-extern undefined4 DAT_803be63c;
-extern undefined4 DAT_803be640;
-extern undefined4 DAT_803be664;
-extern undefined4 DAT_803be668;
-extern undefined4 DAT_803be66c;
-extern undefined4 DAT_803be670;
-extern undefined4 DAT_803be674;
-extern undefined4 DAT_803be678;
-extern undefined4 DAT_803be67c;
-extern undefined4 DAT_803be680;
-extern undefined4 DAT_803be684;
-extern undefined4 DAT_803be685;
-extern undefined4 DAT_803be686;
-extern undefined4 DAT_803be687;
-extern undefined4 DAT_803be688;
-extern undefined4 DAT_803be689;
-extern undefined4 DAT_803be68a;
-extern undefined4 DAT_803be68b;
-extern undefined4 DAT_803be68c;
-extern undefined4 DAT_803be68d;
-extern undefined4 DAT_803be68e;
-extern undefined4 DAT_803be68f;
-extern undefined4 DAT_803be690;
-extern undefined4 DAT_803be691;
-extern undefined4 DAT_803be692;
-extern undefined4 DAT_803be693;
-extern undefined4 DAT_803be694;
-extern undefined4 DAT_803be698;
-extern undefined4 DAT_803be69c;
-extern undefined4 DAT_803be6a0;
-extern undefined4 DAT_803be6a4;
-extern undefined4 DAT_803be6a8;
-extern undefined4 DAT_803be6ac;
-extern undefined4 DAT_803be6b0;
-extern undefined4 DAT_803be6b4;
-extern undefined4 DAT_803be6b8;
-extern undefined4 DAT_803be6bc;
-extern undefined4 DAT_803be6c0;
-extern undefined4 DAT_803be6c4;
-extern undefined4 DAT_803be6c8;
-extern undefined4 DAT_803be6cc;
-extern undefined4 DAT_803be6d0;
-extern undefined4 DAT_803deeb9;
-extern undefined4 DAT_803deec4;
-extern undefined4 DAT_803deed4;
-extern undefined4 DAT_803deedc;
-extern undefined4 DAT_803deee0;
-extern undefined4 DAT_803deee4;
-extern undefined4 DAT_803deee8;
-extern undefined4 DAT_803deeec;
-extern undefined4 DAT_803deef8;
-extern undefined4 DAT_803deefc;
-extern f32 FLOAT_803e8440;
-extern f32 FLOAT_803e8468;
-extern undefined uRam803deec5;
-extern undefined2 uRam803deec6;
-extern undefined uRam803deec7;
-extern undefined4 uRam803deec8;
-extern undefined uRam803deec9;
-extern undefined2 uRam803deeca;
-extern undefined uRam803deecb;
-extern undefined uRam803deed5;
-extern undefined2 uRam803deed6;
-extern undefined uRam803deed7;
-extern undefined4 uRam803deed8;
-extern undefined uRam803deed9;
-extern undefined2 uRam803deeda;
-extern undefined uRam803deedb;
+extern u8 lbl_803BCC90[];
+extern u8 lbl_803BD150[];
+extern u8 lbl_803BD9C4[];
+extern u8 lbl_803BDA04[];
+extern u8 lbl_803BDA24[];
+extern u8 lbl_803DE244[];
+extern u8 lbl_803DE254[];
+extern u32 lbl_803DE264;
+extern u8 *lbl_803DE268;
 
 /*
- * --INFO--
+ * Critical-section wrapper around fn_8026D6E4.
  *
- * Function: FUN_80272720
- * EN v1.0 Address: 0x80272720
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8027280C
- * EN v1.1 Size: 1348b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.1 Address: 0x80272720, size 100b
  */
-void FUN_80272720(undefined4 param_1,int param_2)
+void fn_80272720(int a, int b, int c, int d)
 {
+    fn_80284AF4();
+    fn_8026D6E4(a, b, c, d);
+    fn_80284ABC();
 }
 
 /*
- * --INFO--
+ * Look up an event halfword from a 2D table (slot[u8] × event[u8]).
  *
- * Function: FUN_80272724
- * EN v1.0 Address: 0x80272724
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80272D50
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.1 Address: 0x80272788, size 32b
  */
-void FUN_80272724(void)
+u16 fn_80272788(u8 slot, u8 event)
 {
+    return *(u16 *)(lbl_803BCC90 + slot * 32 + event * 2);
 }
 
 /*
- * --INFO--
+ * Critical-section wrapper around fn_8027186C.
  *
- * Function: FUN_80272728
- * EN v1.0 Address: 0x80272728
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80272D74
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.1 Address: 0x802727A8, size 96b
  */
-void FUN_80272728(uint param_1)
+int fn_802727A8(int a, int b, int c)
 {
+    int result;
+    fn_80284AF4();
+    result = fn_8027186C(a, b, c);
+    fn_80284ABC();
+    return result;
 }
 
 /*
- * --INFO--
+ * Critical-section wrapper around fn_80271954.
  *
- * Function: FUN_8027272c
- * EN v1.0 Address: 0x8027272C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80272DAC
- * EN v1.1 Size: 72b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.1 Address: 0x80272808, size 96b
  */
-void FUN_8027272c(uint param_1,undefined2 param_2)
+int fn_80272808(int a, int b, int c)
 {
+    int result;
+    fn_80284AF4();
+    result = fn_80271954(a, b, c);
+    fn_80284ABC();
+    return result;
 }
 
 /*
- * --INFO--
+ * Critical-section wrapper around fn_80271AC0 (single-arg variant).
  *
- * Function: FUN_80272730
- * EN v1.0 Address: 0x80272730
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80272DF4
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.1 Address: 0x80272868, size 64b
  */
-void FUN_80272730(uint param_1)
+int fn_80272868(int a)
 {
+    int result;
+    fn_80284AF4();
+    result = fn_80271AC0(a);
+    fn_80284ABC();
+    return result;
 }
 
 /*
- * --INFO--
+ * Critical-section wrapper plus 2D table u8 lookup.
  *
- * Function: FUN_80272734
- * EN v1.0 Address: 0x80272734
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80272E2C
- * EN v1.1 Size: 88b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.1 Address: 0x802728A8, size 132b
  */
-void FUN_80272734(uint param_1,undefined4 param_2,undefined4 param_3)
+int fn_802728A8(int a, int b, int c, u8 d)
 {
+    int result;
+    u8 e;
+    fn_80284AF4();
+    e = *(u8 *)(lbl_803BDA24 + d * 2 + 1);
+    result = fn_802717B0(a, b, c, d, e);
+    fn_80284ABC();
+    return result;
 }
 
 /*
- * --INFO--
+ * Map id → slot via fn_8027949C, returns -1 sentinel if not found,
+ * else returns the input id.
  *
- * Function: FUN_80272738
- * EN v1.0 Address: 0x80272738
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80272E84
- * EN v1.1 Size: 104b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.1 Address: 0x8027292C, size 68b
  */
-void FUN_80272738(uint param_1,uint param_2,uint param_3,byte param_4)
+int fn_8027292C(u32 id)
 {
+    int slot;
+    slot = fn_8027949C(id);
+    if (slot == -1) {
+        return -1;
+    }
+    return (int)id;
+}
+
+/*
+ * Critical-section wrapper around fn_80271B4C with last 2 args set to
+ * (0, -1).
+ *
+ * EN v1.1 Address: 0x80272970, size 96b
+ */
+void fn_80272970(int a, int b, int c)
+{
+    fn_80284AF4();
+    fn_80271B4C(a, b, c, 0, -1);
+    fn_80284ABC();
+}
+
+/*
+ * Conditionally fire one or two events (codes 0x15, 0x16) under
+ * critical section, skipping each if its u8 flag is zero.
+ *
+ * EN v1.1 Address: 0x802729D0, size 148b
+ */
+void fn_802729D0(int a, int b, u8 flag1, u8 flag2)
+{
+    fn_80284AF4();
+    if (flag1 != 0) {
+        fn_80271B4C(a, b, 0x15, 0, -1);
+    }
+    if (flag2 != 0) {
+        fn_80271B4C(a, b, 0x16, 0, -1);
+    }
+    fn_80284ABC();
+}
+
+/*
+ * Three-way HRTF-mode setter that toggles two bits in lbl_803DE264
+ * and resets all voices' stream flags if the mask changed.
+ *
+ * EN v1.1 Address: 0x80272A64, size 248b
+ */
+void fn_80272A64(int mode)
+{
+    u32 oldFlags = lbl_803DE264;
+    switch (mode) {
+    case 0:
+        lbl_803DE264 = (lbl_803DE264 | 0x1) & ~0x4;
+        hwDisableHRTF();
+        break;
+    case 1:
+        lbl_803DE264 = (lbl_803DE264 & ~0x1) & ~0x4;
+        hwDisableHRTF();
+        break;
+    case 2:
+        lbl_803DE264 = (lbl_803DE264 & ~0x1) | 0x2;
+        hwDisableHRTF();
+        break;
+    }
+    if (oldFlags != lbl_803DE264) {
+        u32 i;
+        for (i = 0; i < lbl_803BD150[0x210]; i++) {
+            u32 *flags = (u32 *)(lbl_803DE268 + i * 0x404 + 0x114);
+            flags[0] |= 0x2000;
+        }
+        fn_80273870();
+    }
+}
+
+/*
+ * fn_80272B5C — large fn ~360 bytes, complex routing. Stubbed.
+ */
+#pragma dont_inline on
+void fn_80272B5C(int a, int b, int c, int d)
+{
+    (void)a; (void)b; (void)c; (void)d;
+}
+#pragma dont_inline reset
+
+/*
+ * Reset a slot's tracking state (clear two ptr arrays + 0xFF in two
+ * byte arrays + zero in a third) and call hwActivateStudio.
+ *
+ * EN v1.1 Address: 0x80272CC4, size 176b
+ */
+void fn_80272CC4(u8 slot, int a, int b)
+{
+    fn_80284AF4();
+    *(u32 *)(lbl_803BD9C4 + slot * 4) = 0;
+    *(u32 *)(lbl_803BDA04 + slot * 4) = 0;
+    lbl_803DE254[slot] = 0xff;
+    lbl_803DE244[slot] = 0xff;
+    *(u8 *)(lbl_803BDA24 + slot * 2 + 1) = 0;
+    *(u8 *)(lbl_803BDA24 + slot * 2) = 0;
+    hwActivateStudio(slot, a, b);
+    fn_80284ABC();
+}
+
+/*
+ * fn_80272D74 — large fn ~240 bytes, voice cleanup loop. Stubbed.
+ */
+#pragma dont_inline on
+void fn_80272D74(u8 slot)
+{
+    (void)slot;
+}
+#pragma dont_inline reset
+
+/*
+ * Wrapper for hwAddInput.
+ *
+ * EN v1.1 Address: 0x80272E64, size 32b
+ */
+void fn_80272E64(u8 idx)
+{
+    hwAddInput(idx);
+}
+
+/*
+ * Wrapper for hwRemoveInput.
+ *
+ * EN v1.1 Address: 0x80272E84, size 32b
+ */
+void fn_80272E84(u8 idx)
+{
+    hwRemoveInput(idx);
 }
