@@ -4257,7 +4257,7 @@ void fn_8007E1AC(int param_1)
 void cardShowLoadingMsg(u8 kind)
 {
     extern void fn_80017434(int);
-    extern int fn_80014F40(void);
+    extern int padUpdate(void);
     extern void fn_800234EC(int);
     extern void fn_8004A868(void);
     extern int fn_8001FD88(int**);
@@ -4285,7 +4285,7 @@ void cardShowLoadingMsg(u8 kind)
 
     fn_80017434(0);
     for (frame = 0; frame < 0x3C; frame++) {
-        fn_80014F40();
+        padUpdate();
         fn_800234EC(0);
         fn_8004A868();
         count = fn_8001FD88(&buttons) & 0xFF;

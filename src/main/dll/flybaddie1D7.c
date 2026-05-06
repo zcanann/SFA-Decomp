@@ -369,12 +369,12 @@ int nw_levcontrol_getExtraSize(void)
 
 extern void** lbl_803DCAAC;
 extern void   fn_800887F8(s32);
-extern void   fn_8001467C(void);
+extern void   gameTimerStop(void);
 
 /* EN v1.0 0x801CFECC  size: 84b  nw_levcontrol_free: dispatches
  * vtable+0x4c on the singleton at lbl_803DCAAC with the s8 obj+0xac;
  * when the call returns 0 also fires fn_800887F8(0); always tails into
- * fn_8001467C. */
+ * gameTimerStop. */
 #pragma scheduling off
 #pragma peephole off
 void nw_levcontrol_free(s8* obj)
@@ -384,7 +384,7 @@ void nw_levcontrol_free(s8* obj)
     if ((u8)ret == 0) {
         fn_800887F8(0);
     }
-    fn_8001467C();
+    gameTimerStop();
 }
 #pragma peephole reset
 #pragma scheduling reset

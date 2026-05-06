@@ -4,7 +4,7 @@
 extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern void fn_8001467C(void);
+extern void gameTimerStop(void);
 extern u32 GameBit_Get(int eventId);
 extern void TrickyCurve_activateEffectHandleRing(void);
 extern undefined8 FUN_80286840();
@@ -144,7 +144,7 @@ void sfxplayer_init(int obj,int config)
   gSfxplayerEffectHandles[5] = 0;
   gSfxplayerEffectHandles[6] = 0;
   gSfxplayerEffectHandles[7] = 0;
-  fn_8001467C();
+  gameTimerStop();
   if (GameBit_Get(*(s16 *)state) != 0) {
     struct { u8 hi : 2; u8 mid : 1; u8 lo : 5; } *flags = (void *)(state + 8);
     flags->mid = 1;

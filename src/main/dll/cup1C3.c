@@ -375,7 +375,7 @@ int dbsh_symbol_getExtraSize(void)
   return 0x24;
 }
 
-extern void fn_8001467C(void);
+extern void gameTimerStop(void);
 
 /*
  * --INFO--
@@ -392,7 +392,7 @@ extern void fn_8001467C(void);
  */
 void dbsh_symbol_free(void)
 {
-  fn_8001467C();
+  gameTimerStop();
 }
 
 /*

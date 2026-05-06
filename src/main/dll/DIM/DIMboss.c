@@ -4,7 +4,7 @@
 extern void Music_Trigger(s32 triggerId, s32 mode);
 extern undefined4 FUN_800069b8();
 extern undefined4 FUN_80006b0c();
-extern undefined8 fn_80014F40();
+extern undefined8 padUpdate();
 extern undefined4 fn_80015624();
 extern undefined4 fn_80019C24();
 extern undefined4 FUN_80017620();
@@ -254,7 +254,7 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
         fn_800443CC(uVar5,0xd);
         bVar2 = false;
         while (uVar6 = fn_800430AC(0), (uVar6 & 0xffefffff) != 0) {
-          fn_80014F40();
+          padUpdate();
           fn_800202CC();
           if (bVar2) {
             fn_8004A868();

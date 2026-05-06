@@ -6,7 +6,7 @@ extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern undefined4 fn_8000A380(int param_1,int param_2,int param_3);
 extern undefined4 Sfx_KeepAliveLoopedObjectSound(int param_1,int param_2);
-extern undefined4 fn_80014948(int param_1);
+extern undefined4 loadUiDll(int param_1);
 extern undefined4 fn_80041E3C(int param_1);
 extern undefined4 fn_80042F78(int param_1);
 extern undefined4 fn_80043560(undefined4 param_1,int param_2);
@@ -121,7 +121,7 @@ undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateStat
         fn_800552E8(0xf,0);
         break;
       }
-      fn_80014948(1);
+      loadUiDll(1);
     }
     else if (eventId == 3) {
       switch (mode) {

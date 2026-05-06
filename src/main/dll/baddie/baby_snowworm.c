@@ -1084,7 +1084,7 @@ extern u32 GameBit_Get(u32);
 
 extern u8  lbl_803DD780;
 extern u8  lbl_803DD788;
-extern u32 fn_80014E70(s32);
+extern u32 getButtonsJustPressed(s32);
 extern void fn_80014B78(s32, u8*, u8*);
 extern void buttonDisable(s32, u32);
 extern int  Sfx_PlayFromObject(s32, s32);
@@ -1258,7 +1258,7 @@ void fn_8012DDD8(s32 fade_target, u8 idx, u8 flags, u8 q)
 
 /* EN v1.0 0x8012BE84  size: 380b  Pause-menu input poll. While the
  * "freeze" byte at lbl_803DD780 is clear, polls the digital pad via
- * fn_80014E70 / fn_80014B78. The byte read into buf[0] is the d-pad
+ * getButtonsJustPressed / fn_80014B78. The byte read into buf[0] is the d-pad
  * direction (1 = right, -1 = left, 0 = neutral) and lbl_803DD75B
  * tracks the current selection (1 = right entry, 2 = left entry). On
  * confirm (button mask 0x100), commits the selection by setting the
@@ -1284,7 +1284,7 @@ void fn_8012BE84(void)
     prev_state = lbl_803DD75B;
     if (lbl_803DD780 != 0) return;
 
-    buttons = (u16)fn_80014E70(0);
+    buttons = (u16)getButtonsJustPressed(0);
     fn_80014B78(0, &buf[1], &buf[0]);
     if ((s8)buf[0] == 1) {
         lbl_803DD75B = 1;
@@ -1522,7 +1522,7 @@ void fn_8012E880(void)
 
     if (lbl_803DD8CA == -1) {
         s8 dd = 0;
-        if ((fn_80014E70(0) & 0x100) != 0) {
+        if ((getButtonsJustPressed(0) & 0x100) != 0) {
             dd = 1;
         }
         ((s32*)lbl_803A9440)[3] = dd;
