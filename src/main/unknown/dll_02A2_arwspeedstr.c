@@ -7,6 +7,13 @@
 // Current EN descriptor:
 // - gARWSpeedStrObjDescriptor @ 0x8032B808
 //
+// Runtime notes:
+// - update randomizes the object's starting offset once, then counts down extra float +4
+//   as a lifetime before culling the streak.
+// - while alive it moves along object-local Z from extra +0, ramps object byte +0x36 up
+//   through extra float +8, and uses extra floats +0x0C/+0x10/+0x14 as the randomized
+//   spawn extents.
+//
 // Descriptor slots:
 // - 0: arwspeedstr_initialise (0x80231024)
 // - 1: arwspeedstr_release (0x80231020)
