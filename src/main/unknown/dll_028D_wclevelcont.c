@@ -7,6 +7,16 @@
 // Current EN descriptor:
 // - gWCLevelContObjDescriptor @ 0x8032B108
 //
+// Runtime notes:
+// - init installs a callback at object +0xBC, clears puzzle bits 0x810/0x811,
+//   mirrors story bits 0x7FA/0x7F9/0x813/0x812/0x2A5/0x205/0xBCF/0xCAC into
+//   extra halfword +0x1A, and seeds controller mode byte +0x0C.
+// - update dispatches to the WCPushBlock helper pair through player-state slot 0x40,
+//   then calls wclevelcont_syncProgressBits on the controller extra block.
+// - wclevelcont_syncProgressBits maintains the active event/object ids at extra
+//   +0x16/+0x18 and pushes the level-progress bit fanout for ids 0xBA6/0xCCE/0xCD0/
+//   0xCBB/0xF31.
+//
 // Descriptor slots:
 // - 0: wclevelcont_initialise (0x802272C4)
 // - 1: wclevelcont_release (0x802272C0)
@@ -17,6 +27,7 @@
 // - 7: wclevelcont_free (0x80226C6C)
 // - 8: wclevelcont_func08 (0x80226C64)
 // - 9: wclevelcont_getExtraSize (0x80226C5C)
+// - internal: wclevelcont_syncProgressBits (0x80226D4C)
 // - 10: wclevelcont_setScale (0x80226B84)
 // - 11: wclevelcont_func0B (0x80226A98)
 // - 12: wclevelcont_modelMtxFn (0x80226A50)
