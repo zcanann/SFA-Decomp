@@ -406,8 +406,8 @@ void FUN_801ef3a8(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /* Trivial 4b 0-arg blr leaves. */
 void WM_ObjCreator_release(void) {}
 void WM_ObjCreator_initialise(void) {}
-void fn_801F02EC(void) {}
+void WM_Galleon_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801F01BC(void) { return 0x10; }
+int WM_Galleon_getExtraSize(void) { return 0x10; }
 int fn_801F01C4(void) { return 0x0; }

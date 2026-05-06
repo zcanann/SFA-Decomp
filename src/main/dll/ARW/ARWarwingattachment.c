@@ -1472,10 +1472,10 @@ void fn_801F2B9C(void) {}
 void fn_801F2C60(void) {}
 void fn_801F2E78(void) {}
 void fn_801F2E7C(void) {}
-void fn_801F2EA8(void) {}
-void fn_801F2EDC(void) {}
-void fn_801F30D4(void) {}
-void fn_801F30D8(void) {}
+void WM_colrise_free(void) {}
+void WM_colrise_hitDetect(void) {}
+void WM_colrise_release(void) {}
+void WM_colrise_initialise(void) {}
 void wmtorch_hitDetect(void) {}
 void wmtorch_release(void) {}
 void wmtorch_initialise(void) {}
@@ -1489,7 +1489,7 @@ int wmlasertarget_getExtraSize(void) { return 0x4; }
 int wmlasertarget_func08(void) { return 0x0; }
 int fn_801F2B8C(void) { return 0x28; }
 int fn_801F2B94(void) { return 0x1; }
-int fn_801F2E98(void) { return 0x4; }
+int WM_colrise_getExtraSize(void) { return 0x4; }
 int fn_801F2EA0(void) { return 0x0; }
 int wmtorch_getExtraSize(void) { return 0x10; }
 int wmtorch_func08(void) { return 0x1; }
@@ -1504,7 +1504,7 @@ extern f32 lbl_803E5DC8;
 #pragma peephole off
 void pressureswitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5D58); }
 void wmlasertarget_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5D90); }
-void fn_801F2EAC(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5DC8); }
+void WM_colrise_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5DC8); }
 #pragma peephole reset
 
 /* if (o->_X == K) return A; else return B; */
@@ -1529,6 +1529,6 @@ extern u32 lbl_803DDC80;
 extern void Resource_Release(u32);
 #pragma scheduling off
 #pragma peephole off
-void fn_801F15B4(void) { Resource_Release(lbl_803DDC80); lbl_803DDC80 = 0; }
+void LaserBeam_release(void) { Resource_Release(lbl_803DDC80); lbl_803DDC80 = 0; }
 #pragma peephole reset
 #pragma scheduling reset
