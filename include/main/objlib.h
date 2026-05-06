@@ -6,7 +6,6 @@
 typedef struct ObjAnimBank ObjAnimBank;
 typedef struct ObjHitReactState ObjHitReactState;
 
-void FUN_800356f0(int param_1);
 int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2);
 void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
                                  ObjHitReactState *hitState,int moveId,int async);

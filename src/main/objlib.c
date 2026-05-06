@@ -161,52 +161,8 @@ typedef struct ObjHitsPriorityState {
 /*
  * --INFO--
  *
- * Function: FUN_800356f0
- * EN v1.0 Address: 0x800356F0
- * EN v1.0 Size: 184b
- * EN v1.1 Address: 0x80035728
- * EN v1.1 Size: 192b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_800356f0(int param_1)
-{
-  int iVar1;
-  int *piVar2;
-  undefined4 *puVar3;
-  undefined4 uStack_18;
-  undefined4 auStack_14 [4];
-  
-  piVar2 = (int *)ObjList_GetObjects(&uStack_18,auStack_14);
-  gObjHitsResetObjectCount = 0;
-  if (0 < param_1) {
-    do {
-      puVar3 = *(undefined4 **)(*piVar2 + 0x54);
-      if (((puVar3 != (undefined4 *)0x0) && ((*(ushort *)(puVar3 + 0x18) & 1) != 0)) &&
-         ((*(byte *)((int)puVar3 + 0x62) & 8) != 0)) {
-        if (gObjHitsResetObjectCount < OBJHITREACT_MAX_RESET_OBJECTS) {
-          iVar1 = gObjHitsResetObjectCount * 4;
-          gObjHitsResetObjectCount = gObjHitsResetObjectCount + 1;
-          *(int *)(gObjHitsResetObjects + iVar1) = *piVar2;
-        }
-        *puVar3 = 0;
-        *(ushort *)(puVar3 + 0x18) = *(ushort *)(puVar3 + 0x18) & 0xfff7;
-        *(undefined2 *)(puVar3 + 0x16) = 0x400;
-      }
-      piVar2 = piVar2 + 1;
-      param_1 = param_1 + -1;
-    } while (param_1 != 0);
-  }
-  return;
-}
-
-/*
- * --INFO--
- *
  * Function: ObjHitbox_AllocRotatedBounds
- * EN v1.0 Address: 0x800357A8
+ * EN v1.0 Address: 0x800356F0
  * EN v1.0 Size: 132b
  * EN v1.1 Address: 0x800357E8
  * EN v1.1 Size: 132b
@@ -239,8 +195,8 @@ int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2)
  * --INFO--
  *
  * Function: ObjHitReact_LoadMoveEntries
- * EN v1.0 Address: 0x8003582C
- * EN v1.0 Size: 336b
+ * EN v1.0 Address: 0x80035774
+ * EN v1.0 Size: 180b
  * EN v1.1 Address: 0x8003586C
  * EN v1.1 Size: 180b
  * JP Address: TODO
@@ -286,8 +242,8 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
  * --INFO--
  *
  * Function: ObjHitReact_InitState
- * EN v1.0 Address: 0x8003597C
- * EN v1.0 Size: 360b
+ * EN v1.0 Address: 0x80035828
+ * EN v1.0 Size: 172b
  * EN v1.1 Address: 0x80035920
  * EN v1.1 Size: 172b
  * JP Address: TODO
@@ -315,7 +271,7 @@ uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitSt
  * --INFO--
  *
  * Function: ObjHitbox_SetStateIndex
- * EN v1.0 Address: 0x80035AE4
+ * EN v1.0 Address: 0x800358D4
  * EN v1.0 Size: 140b
  * EN v1.1 Address: 0x800359CC
  * EN v1.1 Size: 140b
@@ -360,7 +316,7 @@ void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
  * --INFO--
  *
  * Function: ObjHits_SetTargetMask
- * EN v1.0 Address: 0x80035B70
+ * EN v1.0 Address: 0x80035960
  * EN v1.0 Size: 20b
  * EN v1.1 Address: 0x80035A58
  * EN v1.1 Size: 20b
@@ -382,8 +338,8 @@ void ObjHits_SetTargetMask(int param_1,undefined param_2)
  * --INFO--
  *
  * Function: ObjHitbox_SetSphereRadius
- * EN v1.0 Address: 0x80035B84
- * EN v1.0 Size: 468b
+ * EN v1.0 Address: 0x80035974
+ * EN v1.0 Size: 476b
  * EN v1.1 Address: 0x80035A6C
  * EN v1.1 Size: 476b
  * JP Address: TODO
@@ -449,8 +405,8 @@ void ObjHitbox_SetSphereRadius(int param_1,undefined2 param_2)
  * --INFO--
  *
  * Function: ObjHitbox_SetCapsuleBounds
- * EN v1.0 Address: 0x80035D58
- * EN v1.0 Size: 592b
+ * EN v1.0 Address: 0x80035B50
+ * EN v1.0 Size: 604b
  * EN v1.1 Address: 0x80035C48
  * EN v1.1 Size: 604b
  * JP Address: TODO
@@ -542,7 +498,7 @@ void ObjHitbox_SetCapsuleBounds(int param_1,undefined2 param_2,short param_3,sho
  * --INFO--
  *
  * Function: ObjHits_ClearHitVolumes
- * EN v1.0 Address: 0x80035FA8
+ * EN v1.0 Address: 0x80035DAC
  * EN v1.0 Size: 28b
  * EN v1.1 Address: 0x80035EA4
  * EN v1.1 Size: 28b
@@ -567,8 +523,8 @@ void ObjHits_ClearHitVolumes(int param_1)
  * --INFO--
  *
  * Function: ObjHits_SetHitVolumeMasks
- * EN v1.0 Address: 0x80035FC4
- * EN v1.0 Size: 36b
+ * EN v1.0 Address: 0x80035DC8
+ * EN v1.0 Size: 44b
  * EN v1.1 Address: 0x80035EC0
  * EN v1.1 Size: 44b
  * JP Address: TODO
@@ -599,8 +555,8 @@ void ObjHits_SetHitVolumeMasks(int param_1,int param_2,int param_3,int param_4)
  * --INFO--
  *
  * Function: ObjHits_SetHitVolumeSlot
- * EN v1.0 Address: 0x80035FE8
- * EN v1.0 Size: 52b
+ * EN v1.0 Address: 0x80035DF4
+ * EN v1.0 Size: 60b
  * EN v1.1 Address: 0x80035EEC
  * EN v1.1 Size: 60b
  * JP Address: TODO
@@ -636,8 +592,8 @@ void ObjHits_SetHitVolumeSlot(u32 param_1,int param_2,int param_3,int param_4)
  * --INFO--
  *
  * Function: ObjHits_ClearSourceMask
- * EN v1.0 Address: 0x8003601C
- * EN v1.0 Size: 20b
+ * EN v1.0 Address: 0x80035E30
+ * EN v1.0 Size: 24b
  * EN v1.1 Address: 0x80035F28
  * EN v1.1 Size: 24b
  * JP Address: TODO
@@ -658,7 +614,7 @@ void ObjHits_ClearSourceMask(int param_1,int param_2)
  * --INFO--
  *
  * Function: ObjHits_SetSourceMask
- * EN v1.0 Address: 0x80036030
+ * EN v1.0 Address: 0x80035E48
  * EN v1.0 Size: 20b
  * EN v1.1 Address: 0x80035F40
  * EN v1.1 Size: 20b
@@ -677,8 +633,8 @@ void ObjHits_SetSourceMask(int param_1,byte param_2)
  * --INFO--
  *
  * Function: ObjHits_ClearFlags
- * EN v1.0 Address: 0x80036044
- * EN v1.0 Size: 20b
+ * EN v1.0 Address: 0x80035E5C
+ * EN v1.0 Size: 24b
  * EN v1.1 Address: 0x80035F54
  * EN v1.1 Size: 24b
  * JP Address: TODO
@@ -699,8 +655,8 @@ void ObjHits_ClearFlags(int param_1,int param_2)
  * --INFO--
  *
  * Function: ObjHits_SetFlags
- * EN v1.0 Address: 0x80036058
- * EN v1.0 Size: 20b
+ * EN v1.0 Address: 0x80035E74
+ * EN v1.0 Size: 24b
  * EN v1.1 Address: 0x80035F6C
  * EN v1.1 Size: 24b
  * JP Address: TODO
@@ -721,8 +677,8 @@ void ObjHits_SetFlags(int param_1,int param_2)
  * --INFO--
  *
  * Function: ObjHits_MarkObjectPositionDirty
- * EN v1.0 Address: 0x8003606C
- * EN v1.0 Size: 20b
+ * EN v1.0 Address: 0x80035E8C
+ * EN v1.0 Size: 24b
  * EN v1.1 Address: 0x80035F84
  * EN v1.1 Size: 24b
  * JP Address: TODO
@@ -743,8 +699,8 @@ void ObjHits_MarkObjectPositionDirty(int param_1)
  * --INFO--
  *
  * Function: ObjHits_SyncObjectPositionIfDirty
- * EN v1.0 Address: 0x80036080
- * EN v1.0 Size: 84b
+ * EN v1.0 Address: 0x80035EA4
+ * EN v1.0 Size: 92b
  * EN v1.1 Address: 0x80035F9C
  * EN v1.1 Size: 92b
  * JP Address: TODO
@@ -781,8 +737,8 @@ void ObjHits_SyncObjectPositionIfDirty(u32 param_1)
  * --INFO--
  *
  * Function: ObjHits_DisableObject
- * EN v1.0 Address: 0x800360D4
- * EN v1.0 Size: 28b
+ * EN v1.0 Address: 0x80035F00
+ * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x80035FF8
  * EN v1.1 Size: 32b
  * JP Address: TODO
@@ -808,8 +764,8 @@ void ObjHits_DisableObject(u32 param_1)
  * --INFO--
  *
  * Function: ObjHits_EnableObject
- * EN v1.0 Address: 0x800360F0
- * EN v1.0 Size: 84b
+ * EN v1.0 Address: 0x80035F20
+ * EN v1.0 Size: 92b
  * EN v1.1 Address: 0x80036018
  * EN v1.1 Size: 92b
  * JP Address: TODO
@@ -846,7 +802,7 @@ void ObjHits_EnableObject(u32 param_1)
  * --INFO--
  *
  * Function: ObjHits_IsObjectEnabled
- * EN v1.0 Address: 0x80036144
+ * EN v1.0 Address: 0x80035F7C
  * EN v1.0 Size: 16b
  * EN v1.1 Address: 0x80036074
  * EN v1.1 Size: 16b
@@ -864,7 +820,7 @@ ushort ObjHits_IsObjectEnabled(int param_1)
  * --INFO--
  *
  * Function: ObjHits_SyncObjectPosition
- * EN v1.0 Address: 0x80036154
+ * EN v1.0 Address: 0x80035F8C
  * EN v1.0 Size: 64b
  * EN v1.1 Address: 0x80036084
  * EN v1.1 Size: 64b
@@ -894,8 +850,8 @@ void ObjHits_SyncObjectPosition(u32 param_1)
  * --INFO--
  *
  * Function: ObjHits_AllocObjectState
- * EN v1.0 Address: 0x80036194
- * EN v1.0 Size: 108b
+ * EN v1.0 Address: 0x80035FCC
+ * EN v1.0 Size: 120b
  * EN v1.1 Address: 0x800360C4
  * EN v1.1 Size: 120b
  * JP Address: TODO
@@ -927,8 +883,8 @@ int ObjHits_AllocObjectState(int param_1,uint param_2)
  * --INFO--
  *
  * Function: ObjHits_RefreshObjectState
- * EN v1.0 Address: 0x80036200
- * EN v1.0 Size: 932b
+ * EN v1.0 Address: 0x80036044
+ * EN v1.0 Size: 1036b
  * EN v1.1 Address: 0x8003613C
  * EN v1.1 Size: 1036b
  * JP Address: TODO
@@ -1055,8 +1011,8 @@ void ObjHits_RefreshObjectState(int param_1)
  * --INFO--
  *
  * Function: ObjHits_RecordObjectHit
- * EN v1.0 Address: 0x800365A4
- * EN v1.0 Size: 352b
+ * EN v1.0 Address: 0x80036450
+ * EN v1.0 Size: 360b
  * EN v1.1 Address: 0x80036548
  * EN v1.1 Size: 360b
  * JP Address: TODO
@@ -1116,8 +1072,8 @@ undefined4 ObjHits_RecordObjectHit(int obj,int hitObj,char priority,undefined hi
  * --INFO--
  *
  * Function: ObjHits_RecordPositionHit
- * EN v1.0 Address: 0x80036704
- * EN v1.0 Size: 352b
+ * EN v1.0 Address: 0x800365B8
+ * EN v1.0 Size: 336b
  * EN v1.1 Address: 0x800366B0
  * EN v1.1 Size: 336b
  * JP Address: TODO
@@ -1179,8 +1135,8 @@ ObjHits_RecordPositionHit(double hitPosX,double hitPosY,double hitPosZ,int obj,i
  * --INFO--
  *
  * Function: ObjHits_AddContactObject
- * EN v1.0 Address: 0x80036864
- * EN v1.0 Size: 96b
+ * EN v1.0 Address: 0x80036708
+ * EN v1.0 Size: 104b
  * EN v1.1 Address: 0x80036800
  * EN v1.1 Size: 104b
  * JP Address: TODO
@@ -1228,7 +1184,7 @@ void ObjHits_AddContactObject(int param_1,int param_2)
  * --INFO--
  *
  * Function: ObjHits_GetPriorityHitWithPosition
- * EN v1.0 Address: 0x800368C4
+ * EN v1.0 Address: 0x80036770
  * EN v1.0 Size: 268b
  * EN v1.1 Address: 0x80036868
  * EN v1.1 Size: 268b
@@ -1295,7 +1251,7 @@ int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *out
  * --INFO--
  *
  * Function: ObjHits_GetPriorityHit
- * EN v1.0 Address: 0x800369D0
+ * EN v1.0 Address: 0x8003687C
  * EN v1.0 Size: 200b
  * EN v1.1 Address: 0x80036974
  * EN v1.1 Size: 200b
@@ -1357,8 +1313,8 @@ int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,
  * --INFO--
  *
  * Function: ObjHitReact_UpdateResetObjects
- * EN v1.0 Address: 0x80036A98
- * EN v1.0 Size: 212b
+ * EN v1.0 Address: 0x80036944
+ * EN v1.0 Size: 172b
  * EN v1.1 Address: 0x80036A3C
  * EN v1.1 Size: 172b
  * JP Address: TODO
@@ -1393,8 +1349,8 @@ void ObjHitReact_UpdateResetObjects(void)
  * --INFO--
  *
  * Function: ObjHits_ResetWorkBuffers
- * EN v1.0 Address: 0x80036B6C
- * EN v1.0 Size: 308b
+ * EN v1.0 Address: 0x800369F0
+ * EN v1.0 Size: 268b
  * EN v1.1 Address: 0x80036AE8
  * EN v1.1 Size: 268b
  * JP Address: TODO
@@ -1417,7 +1373,7 @@ void ObjHits_ResetWorkBuffers(void)
  * --INFO--
  *
  * Function: ObjHitReact_GetResetObjects
- * EN v1.0 Address: 0x80036CA0
+ * EN v1.0 Address: 0x80036AFC
  * EN v1.0 Size: 16b
  * EN v1.1 Address: 0x80036BF4
  * EN v1.1 Size: 16b
@@ -1436,8 +1392,8 @@ int *ObjHitReact_GetResetObjects(undefined4 *param_1)
  * --INFO--
  *
  * Function: ObjHits_InitWorkBuffers
- * EN v1.0 Address: 0x80036CB0
- * EN v1.0 Size: 172b
+ * EN v1.0 Address: 0x80036B0C
+ * EN v1.0 Size: 256b
  * EN v1.1 Address: 0x80036C04
  * EN v1.1 Size: 256b
  * JP Address: TODO
@@ -1471,8 +1427,8 @@ void ObjHits_InitWorkBuffers(void)
  * --INFO--
  *
  * Function: ObjGroup_ContainsObject
- * EN v1.0 Address: 0x80036D5C
- * EN v1.0 Size: 112b
+ * EN v1.0 Address: 0x80036C0C
+ * EN v1.0 Size: 116b
  * EN v1.1 Address: 0x80036D04
  * EN v1.1 Size: 116b
  * JP Address: TODO
@@ -1502,8 +1458,8 @@ uint ObjGroup_ContainsObject(int obj,int group)
  * --INFO--
  *
  * Function: ObjGroup_FindNearestObjectToPoint
- * EN v1.0 Address: 0x80036DCC
- * EN v1.0 Size: 272b
+ * EN v1.0 Address: 0x80036C80
+ * EN v1.0 Size: 224b
  * EN v1.1 Address: 0x80036D78
  * EN v1.1 Size: 224b
  * JP Address: TODO
@@ -1554,8 +1510,8 @@ void ObjGroup_FindNearestObjectToPoint(undefined4 param_1,undefined4 param_2,flo
  * --INFO--
  *
  * Function: ObjGroup_FindNearestObjectForObject
- * EN v1.0 Address: 0x80036EDC
- * EN v1.0 Size: 300b
+ * EN v1.0 Address: 0x80036D60
+ * EN v1.0 Size: 248b
  * EN v1.1 Address: 0x80036E58
  * EN v1.1 Size: 248b
  * JP Address: TODO
@@ -1609,8 +1565,8 @@ void ObjGroup_FindNearestObjectForObject(undefined4 param_1,undefined4 param_2,f
  * --INFO--
  *
  * Function: ObjGroup_FindNearestObject
- * EN v1.0 Address: 0x80037008
- * EN v1.0 Size: 300b
+ * EN v1.0 Address: 0x80036E58
+ * EN v1.0 Size: 248b
  * EN v1.1 Address: 0x80036F50
  * EN v1.1 Size: 248b
  * JP Address: TODO
@@ -1664,8 +1620,8 @@ void ObjGroup_FindNearestObject(undefined4 param_1,undefined4 param_2,float *par
  * --INFO--
  *
  * Function: ObjGroup_GetObjects
- * EN v1.0 Address: 0x80037134
- * EN v1.0 Size: 76b
+ * EN v1.0 Address: 0x80036F50
+ * EN v1.0 Size: 84b
  * EN v1.1 Address: 0x80037048
  * EN v1.1 Size: 84b
  * JP Address: TODO
@@ -1687,8 +1643,8 @@ undefined4 * ObjGroup_GetObjects(int group,int *countOut)
  * --INFO--
  *
  * Function: ObjGroup_RemoveObject
- * EN v1.0 Address: 0x80037180
- * EN v1.0 Size: 376b
+ * EN v1.0 Address: 0x80036FA4
+ * EN v1.0 Size: 496b
  * EN v1.1 Address: 0x8003709C
  * EN v1.1 Size: 496b
  * JP Address: TODO
@@ -1739,8 +1695,8 @@ void ObjGroup_RemoveObject(int obj,int group)
  * --INFO--
  *
  * Function: ObjGroup_GetObjectGroup
- * EN v1.0 Address: 0x800372F8
- * EN v1.0 Size: 100b
+ * EN v1.0 Address: 0x80037194
+ * EN v1.0 Size: 108b
  * EN v1.1 Address: 0x8003728C
  * EN v1.1 Size: 108b
  * JP Address: TODO
@@ -1785,8 +1741,8 @@ int ObjGroup_GetObjectGroup(int obj)
  * --INFO--
  *
  * Function: ObjGroup_AddObject
- * EN v1.0 Address: 0x8003735C
- * EN v1.0 Size: 392b
+ * EN v1.0 Address: 0x80037200
+ * EN v1.0 Size: 588b
  * EN v1.1 Address: 0x800372F8
  * EN v1.1 Size: 588b
  * JP Address: TODO
@@ -1840,7 +1796,7 @@ void ObjGroup_AddObject(int obj,int group)
  * --INFO--
  *
  * Function: ObjGroup_ClearAll
- * EN v1.0 Address: 0x800374E4
+ * EN v1.0 Address: 0x8003744C
  * EN v1.0 Size: 56b
  * EN v1.1 Address: 0x80037544
  * EN v1.1 Size: 56b
@@ -1865,7 +1821,7 @@ void ObjGroup_ClearAll(void)
  * --INFO--
  *
  * Function: ObjMsg_Peek
- * EN v1.0 Address: 0x8003751C
+ * EN v1.0 Address: 0x80037484
  * EN v1.0 Size: 104b
  * EN v1.1 Address: 0x8003757C
  * EN v1.1 Size: 104b
@@ -1901,8 +1857,8 @@ undefined4 ObjMsg_Peek(void *obj,uint *outMessage,uint *outSender,uint *outParam
  * --INFO--
  *
  * Function: ObjMsg_Pop
- * EN v1.0 Address: 0x80037584
- * EN v1.0 Size: 168b
+ * EN v1.0 Address: 0x800374EC
+ * EN v1.0 Size: 176b
  * EN v1.1 Address: 0x800375E4
  * EN v1.1 Size: 176b
  * JP Address: TODO
@@ -1948,8 +1904,8 @@ undefined4 ObjMsg_Pop(void *obj,uint *outMessage,uint *outSender,uint *outParam)
  * --INFO--
  *
  * Function: ObjMsg_SendToNearbyObjects
- * EN v1.0 Address: 0x8003762C
- * EN v1.0 Size: 536b
+ * EN v1.0 Address: 0x8003759C
+ * EN v1.0 Size: 316b
  * EN v1.1 Address: 0x80037694
  * EN v1.1 Size: 316b
  * JP Address: TODO
@@ -2002,8 +1958,8 @@ void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sende
  * --INFO--
  *
  * Function: ObjMsg_SendToObjects
- * EN v1.0 Address: 0x80037844
- * EN v1.0 Size: 912b
+ * EN v1.0 Address: 0x800376D8
+ * EN v1.0 Size: 492b
  * EN v1.1 Address: 0x800377D0
  * EN v1.1 Size: 492b
  * JP Address: TODO
@@ -2079,8 +2035,8 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
  * --INFO--
  *
  * Function: ObjMsg_SendToObject
- * EN v1.0 Address: 0x80037BD4
- * EN v1.0 Size: 268b
+ * EN v1.0 Address: 0x800378C4
+ * EN v1.0 Size: 160b
  * EN v1.1 Address: 0x800379BC
  * EN v1.1 Size: 160b
  * JP Address: TODO
@@ -2127,8 +2083,8 @@ uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param)
  * --INFO--
  *
  * Function: ObjMsg_AllocQueue
- * EN v1.0 Address: 0x80037CE0
- * EN v1.0 Size: 112b
+ * EN v1.0 Address: 0x80037964
+ * EN v1.0 Size: 120b
  * EN v1.1 Address: 0x80037A5C
  * EN v1.1 Size: 120b
  * JP Address: TODO
@@ -2160,8 +2116,8 @@ void ObjMsg_AllocQueue(void *obj,int capacity)
  * --INFO--
  *
  * Function: Obj_IsObjectAlive
- * EN v1.0 Address: 0x80037D50
- * EN v1.0 Size: 36b
+ * EN v1.0 Address: 0x800379DC
+ * EN v1.0 Size: 40b
  * EN v1.1 Address: 0x80037AD4
  * EN v1.1 Size: 40b
  * JP Address: TODO
@@ -2217,8 +2173,8 @@ bool FUN_80037d74(int param_1)
  * --INFO--
  *
  * Function: ObjHits_PollPriorityHitWithCooldown
- * EN v1.0 Address: 0x80037DD4
- * EN v1.0 Size: 468b
+ * EN v1.0 Address: 0x80037A68
+ * EN v1.0 Size: 216b
  * EN v1.1 Address: 0x80037B60
  * EN v1.1 Size: 216b
  * JP Address: TODO
@@ -2257,8 +2213,8 @@ int ObjHits_PollPriorityHitWithCooldown(int obj,float *cooldown,undefined4 *outH
  * --INFO--
  *
  * Function: ObjHits_PollPriorityHitEffectWithCooldown
- * EN v1.0 Address: 0x80037FA8
- * EN v1.0 Size: 468b
+ * EN v1.0 Address: 0x80037B40
+ * EN v1.0 Size: 368b
  * EN v1.1 Address: 0x80037C38
  * EN v1.1 Size: 368b
  * JP Address: TODO
@@ -2310,7 +2266,7 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR
  * --INFO--
  *
  * Function: ObjLink_DetachChild
- * EN v1.0 Address: 0x8003817C
+ * EN v1.0 Address: 0x80037CB0
  * EN v1.0 Size: 124b
  * EN v1.1 Address: 0x80037DA8
  * EN v1.1 Size: 124b
@@ -2347,8 +2303,8 @@ void ObjLink_DetachChild(int param_1,int param_2)
  * --INFO--
  *
  * Function: ObjLink_AttachChild
- * EN v1.0 Address: 0x800381F8
- * EN v1.0 Size: 64b
+ * EN v1.0 Address: 0x80037D2C
+ * EN v1.0 Size: 72b
  * EN v1.1 Address: 0x80037E24
  * EN v1.1 Size: 72b
  * JP Address: TODO
@@ -2380,8 +2336,8 @@ void ObjLink_AttachChild(int param_1,int param_2,ushort param_3)
  * --INFO--
  *
  * Function: ObjContact_DispatchCallbacks
- * EN v1.0 Address: 0x80038238
- * EN v1.0 Size: 224b
+ * EN v1.0 Address: 0x80037D74
+ * EN v1.0 Size: 208b
  * EN v1.1 Address: 0x80037E6C
  * EN v1.1 Size: 208b
  * JP Address: TODO
@@ -2430,8 +2386,8 @@ void ObjContact_DispatchCallbacks(void)
  * --INFO--
  *
  * Function: ObjContact_RemoveObjectCallbacks
- * EN v1.0 Address: 0x80038318
- * EN v1.0 Size: 168b
+ * EN v1.0 Address: 0x80037E44
+ * EN v1.0 Size: 172b
  * EN v1.1 Address: 0x80037F3C
  * EN v1.1 Size: 172b
  * JP Address: TODO
@@ -2472,8 +2428,8 @@ void ObjContact_RemoveObjectCallbacks(int param_1)
  * --INFO--
  *
  * Function: ObjContact_AddCallback
- * EN v1.0 Address: 0x800383C0
- * EN v1.0 Size: 176b
+ * EN v1.0 Address: 0x80037EF0
+ * EN v1.0 Size: 180b
  * EN v1.1 Address: 0x80037FE8
  * EN v1.1 Size: 180b
  * JP Address: TODO
@@ -2518,8 +2474,8 @@ undefined4 ObjContact_AddCallback(int param_1,int param_2,undefined4 param_3)
  * --INFO--
  *
  * Function: ObjTrigger_IsSetById
- * EN v1.0 Address: 0x80038470
- * EN v1.0 Size: 124b
+ * EN v1.0 Address: 0x80037FA4
+ * EN v1.0 Size: 128b
  * EN v1.1 Address: 0x8003809C
  * EN v1.1 Size: 128b
  * JP Address: TODO
@@ -2557,8 +2513,8 @@ undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
  * --INFO--
  *
  * Function: ObjTrigger_IsSet
- * EN v1.0 Address: 0x800384EC
- * EN v1.0 Size: 172b
+ * EN v1.0 Address: 0x80038024
+ * EN v1.0 Size: 188b
  * EN v1.1 Address: 0x8003811C
  * EN v1.1 Size: 188b
  * JP Address: TODO
@@ -2603,8 +2559,8 @@ undefined4 ObjTrigger_IsSet(int param_1)
  * --INFO--
  *
  * Function: ObjList_FindNearestObjectByDefNo
- * EN v1.0 Address: 0x80038598
- * EN v1.0 Size: 292b
+ * EN v1.0 Address: 0x800380E0
+ * EN v1.0 Size: 296b
  * EN v1.1 Address: 0x800381D8
  * EN v1.1 Size: 296b
  * JP Address: TODO
@@ -2666,8 +2622,8 @@ int ObjList_FindNearestObjectByDefNo(int obj,int defNo,float *maxDistanceSq)
  * --INFO--
  *
  * Function: ObjList_ContainsObject
- * EN v1.0 Address: 0x800386BC
- * EN v1.0 Size: 116b
+ * EN v1.0 Address: 0x80038208
+ * EN v1.0 Size: 120b
  * EN v1.1 Address: 0x80038300
  * EN v1.1 Size: 120b
  * JP Address: TODO
@@ -2702,8 +2658,8 @@ undefined4 ObjList_ContainsObject(int param_1)
  * --INFO--
  *
  * Function: ObjPath_GetPointWorldPositionArray
- * EN v1.0 Address: 0x80038730
- * EN v1.0 Size: 124b
+ * EN v1.0 Address: 0x80038280
+ * EN v1.0 Size: 112b
  * EN v1.1 Address: 0x80038378
  * EN v1.1 Size: 112b
  * JP Address: TODO
@@ -2733,7 +2689,7 @@ void ObjPath_GetPointWorldPositionArray(undefined4 param_1,undefined4 param_2,in
  * --INFO--
  *
  * Function: ObjPath_GetPointLocalPosition
- * EN v1.0 Address: 0x800387AC
+ * EN v1.0 Address: 0x800382F0
  * EN v1.0 Size: 64b
  * EN v1.1 Address: 0x800383E8
  * EN v1.1 Size: 64b
@@ -2758,8 +2714,8 @@ void ObjPath_GetPointLocalPosition(int param_1,int param_2,float *param_3,float 
  * --INFO--
  *
  * Function: ObjPath_GetPointLocalMtx
- * EN v1.0 Address: 0x800387EC
- * EN v1.0 Size: 64b
+ * EN v1.0 Address: 0x80038330
+ * EN v1.0 Size: 112b
  * EN v1.1 Address: 0x80038428
  * EN v1.1 Size: 112b
  * JP Address: TODO
@@ -2788,8 +2744,8 @@ void ObjPath_GetPointLocalMtx(int param_1,int param_2,float *param_3)
  * --INFO--
  *
  * Function: ObjPath_GetPointModelMtx
- * EN v1.0 Address: 0x8003882C
- * EN v1.0 Size: 136b
+ * EN v1.0 Address: 0x800383A0
+ * EN v1.0 Size: 140b
  * EN v1.1 Address: 0x80038498
  * EN v1.1 Size: 140b
  * JP Address: TODO
@@ -2822,8 +2778,8 @@ void ObjPath_GetPointModelMtx(int param_1,int param_2)
  * --INFO--
  *
  * Function: ObjPath_GetPointWorldPosition
- * EN v1.0 Address: 0x800388B4
- * EN v1.0 Size: 384b
+ * EN v1.0 Address: 0x8003842C
+ * EN v1.0 Size: 444b
  * EN v1.1 Address: 0x80038524
  * EN v1.1 Size: 444b
  * JP Address: TODO
@@ -2913,8 +2869,8 @@ void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *
  * --INFO--
  *
  * Function: Obj_GetYawDeltaToObject
- * EN v1.0 Address: 0x80038A34
- * EN v1.0 Size: 216b
+ * EN v1.0 Address: 0x800385E8
+ * EN v1.0 Size: 212b
  * EN v1.1 Address: 0x800386E0
  * EN v1.1 Size: 212b
  * JP Address: TODO
