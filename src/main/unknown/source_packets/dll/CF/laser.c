@@ -20,6 +20,14 @@
  * - seed: 0x80209074-0x802090A0, laser_init only
  * - blueprint plan: expand/corridor packet to 0x80209074-0x802099A8
  * - source_windows exact-size candidate: 0x80209074-0x802099A8, functions=42
+ * - live split owner for the seed is src/main/dll/CF/laser_unsupported.c
+ *   (0x80208FDC-0x802090A8), not the zero-width src/main/dll/CF/laser.c split
+ *   at 0x80209FE0.
+ * - the corridor continues through laserObj.c, fire.c, textblock.c, platform1.c,
+ *   and dfplightni.c before the current zero-width laser.c split marker. The
+ *   checked-in src/main/dll/CF/laser.c decomp overlaps that neighborhood and
+ *   should not be treated as a proven EN source owner until the split is
+ *   re-established from symbols.
  *
  * Reference-side path hints:
  * - current debug path: dll/CF/laser.c
