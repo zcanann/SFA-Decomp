@@ -30,7 +30,7 @@ extern f32 lbl_803E5498;
  */
 #pragma scheduling off
 #pragma peephole off
-void SHthorntail_init(short *obj)
+void SHthorntail_init(double moveStepScale, int obj)
 {
   undefined4 advanceResult;
   undefined *event;
@@ -42,10 +42,10 @@ void SHthorntail_init(short *obj)
   pointIndex = 0;
   lbl_803AD048[0x1b] = 0;
   lbl_803AD048[0x12] = 0;
-  advanceResult = ObjAnim_AdvanceCurrentMove((double)timeDelta,(double)timeDelta,(int)obj,
+  advanceResult = ObjAnim_AdvanceCurrentMove(moveStepScale,timeDelta,obj,
                                              (ObjAnimEventList *)lbl_803AD048);
   if (lbl_803AD048[0x12] != 0) {
-    *obj = *obj + *(short *)(lbl_803AD048 + 0xe);
+    *(short *)obj = *(short *)obj + *(short *)(lbl_803AD048 + 0xe);
   }
   event = lbl_803AD048;
   for (i = 0; i < lbl_803AD048[0x1b]; i++) {
@@ -59,13 +59,13 @@ void SHthorntail_init(short *obj)
       pointIndex = 2;
       break;
     case 9:
-      Sfx_PlayFromObject((int)obj,0x2f4);
+      Sfx_PlayFromObject(obj,0x2f4);
     }
     event++;
   }
   if ((pointIndex != 0) &&
-      (ObjPath_GetPointWorldPosition((int)obj,pointIndex - 1,&local_28,&local_24,&local_20,0),
-       ((obj[0x50] != 0x1b || (lbl_803E5498 <= *(float *)(obj + 0x4c)))))) {
+      (ObjPath_GetPointWorldPosition(obj,pointIndex - 1,&local_28,&local_24,&local_20,0),
+       ((*(short *)(obj + 0xa0) != 0x1b || (lbl_803E5498 <= *(float *)(obj + 0x98)))))) {
     Sfx_PlayAtPositionFromObject((double)local_28,(double)local_24,(double)local_20,obj,0x415);
   }
   FUN_80286888(advanceResult);
