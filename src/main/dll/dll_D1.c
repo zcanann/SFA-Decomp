@@ -41,13 +41,14 @@ void fn_8013DC88(void *param_1, void *param_2)
     int i;
     void **slot;
     void *setup;
+    char *strBase = lbl_8031D2E8;
 
     switch (*(u8 *)((char *)param_2 + 0xa)) {
     case 0:
-        fn_80148BC8(&lbl_8031D2E8[0x558]);
+        fn_80148BC8(strBase + 0x558);
         if (fn_8013B368(param_1, lbl_803E24C8, param_2) == 0) {
             state = *(void **)((char *)param_1 + 0xb8);
-            if (((*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
+            if ((((uint)*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
                 s16 a0 = *(s16 *)((char *)param_1 + 0xa0);
                 if (a0 >= 0x30 || a0 < 0x29) {
                     if (Sfx_IsPlayingFromObjectChannel(param_1, 0x10) == 0) {
@@ -61,15 +62,14 @@ void fn_8013DC88(void *param_1, void *param_2)
         }
         break;
     case 1:
-        fn_80148BC8(&lbl_8031D2E8[0x568]);
+        fn_80148BC8(strBase + 0x568);
         if (*(u8 *)*(int *)param_2 != 0 && *(int *)((char *)param_2 + 0x728) != 0) {
             *(u8 *)((char *)param_2 + 0xa) = 2;
         } else {
             void *target = *(void **)((char *)*(void **)((char *)param_1 + 0xb8) + 0x28);
-            int angle = getAngle(
+            fn_80139930(param_1, (s16)getAngle(
                 -(*(f32 *)target - *(f32 *)((char *)param_1 + 0x18)),
-                -(*(f32 *)((char *)target + 0x8) - *(f32 *)((char *)param_1 + 0x20)));
-            fn_80139930(param_1, (s16)angle);
+                -(*(f32 *)((char *)target + 0x8) - *(f32 *)((char *)param_1 + 0x20))));
             if (randomGetRange(0, 10) == 0) {
                 state = *(void **)((char *)param_1 + 0xb8);
                 if (((*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
@@ -84,7 +84,7 @@ void fn_8013DC88(void *param_1, void *param_2)
         }
         break;
     case 2:
-        fn_80148BC8(&lbl_8031D2E8[0x57c]);
+        fn_80148BC8(strBase + 0x57c);
         if (fn_8013B368(param_1, lbl_803E24CC, param_2) == 0) {
             if ((u8)Obj_IsLoadingLocked() != 0) {
                 *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) | 0x800;
@@ -110,7 +110,7 @@ void fn_8013DC88(void *param_1, void *param_2)
         }
         break;
     case 3:
-        fn_80148BC8(&lbl_8031D2E8[0x590]);
+        fn_80148BC8(strBase + 0x590);
         if (*(f32 *)((char *)param_1 + 0x98) <= lbl_803E24D0) {
             *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) & ~0x800;
             *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) | 0x1000;
@@ -140,10 +140,9 @@ void fn_8013DC88(void *param_1, void *param_2)
             *(u8 *)((char *)param_2 + 0xd) = 0xff;
         } else {
             void *target = *(void **)((char *)*(void **)((char *)param_1 + 0xb8) + 0x28);
-            int angle = getAngle(
+            fn_80139930(param_1, (s16)getAngle(
                 -(*(f32 *)target - *(f32 *)((char *)param_1 + 0x18)),
-                -(*(f32 *)((char *)target + 0x8) - *(f32 *)((char *)param_1 + 0x20)));
-            fn_80139930(param_1, (s16)angle);
+                -(*(f32 *)((char *)target + 0x8) - *(f32 *)((char *)param_1 + 0x20))));
         }
         break;
     }
