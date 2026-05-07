@@ -14,12 +14,12 @@ extern u8 lbl_803D3EA0[][16];
 extern u8 lbl_803D3F20[];
 
 /*
- * Refresh per-voice instrument table from one of two preset banks,
- * then notify via fn_80281FE8.
+ * Reset a MIDI-controller/default table from one of two preset banks,
+ * then mark the controller dirty via fn_80281FE8.
  *
  * EN v1.1 Address: 0x80281A30, size 244b
  */
-void fn_80281A30(u8 a, u8 b, int mode)
+void inpResetMidiCtrl(u8 a, u8 b, int mode)
 {
     u8 *src;
     u8 *dst;
@@ -52,7 +52,7 @@ void fn_80281A30(u8 a, u8 b, int mode)
 }
 
 /*
- * fn_80281B24 — large multi-case lookup (~652 instructions). Stubbed.
+ * fn_80281B24 - large multi-case lookup (~652 instructions). Stubbed.
  */
 #pragma dont_inline on
 u32 fn_80281B24(u8 r3, u8 r4, u8 r5)
@@ -119,7 +119,7 @@ void fn_80281E30(int obj, int b, int c, int d, u32 flag)
 }
 
 /*
- * fn_80281ECC — large multi-case copy (~284 instructions). Stubbed.
+ * fn_80281ECC - large multi-case copy (~284 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_80281ECC(u8 r3, u8 r4, u8 r5)
