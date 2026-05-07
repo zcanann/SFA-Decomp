@@ -18,7 +18,6 @@ u32 fn_8027186C(u32 handle, u8 controller, u8 value) {
     u32 found;
     u32 idx;
     u8* base;
-    u8 key;
 
     found = 0;
     handle = vidGetInternalId(handle);
@@ -29,11 +28,10 @@ u32 fn_8027186C(u32 handle, u8 controller, u8 value) {
             return found;
         }
         if (((*(u32*)(base + 0x114) & 0) ^ 0) | ((*(u32*)(base + 0x118) & 2) ^ 0)) {
-            key = *(u8*)(base + 0x20B);
+            inpSetMidiCtrl(controller, idx, *(u8*)(base + 0x20B), value);
         } else {
-            key = *(u8*)(base + 0x122);
+            inpSetMidiCtrl(controller, idx, *(u8*)(base + 0x122), value);
         }
-        inpSetMidiCtrl(controller, idx, key, value);
         found = 1;
         handle = *(u32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
     }
@@ -47,27 +45,24 @@ u32 fn_8027186C(u32 handle, u8 controller, u8 value) {
  */
 u32 fn_80271954(u32 handle, u8 controller, u32 value) {
     u32 found;
-    s32 slot;
-    u8 idx;
+    u32 idx;
     u8* base;
-    u8 key;
 
     found = 0;
-    slot = vidGetInternalId(handle);
-    while (slot != -1) {
-        idx = (u8)slot;
+    handle = vidGetInternalId(handle);
+    while (handle != 0xFFFFFFFFu) {
+        idx = (u8)handle;
         base = lbl_803DE268 + idx * 0x404;
         if (handle != *(u32*)(base + 0xF4)) {
             return found;
         }
-        if ((*(u32*)(base + 0x114) & 0) | (*(u32*)(base + 0x118) & 2)) {
-            key = *(u8*)(base + 0x20B);
+        if (((*(u32*)(base + 0x114) & 0) ^ 0) | ((*(u32*)(base + 0x118) & 2) ^ 0)) {
+            inpSetMidiCtrl14(controller, idx, *(u8*)(base + 0x20B), value);
         } else {
-            key = *(u8*)(base + 0x122);
+            inpSetMidiCtrl14(controller, idx, *(u8*)(base + 0x122), value);
         }
-        inpSetMidiCtrl14(controller, idx, key, value);
         found = 1;
-        slot = *(s32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
+        handle = *(u32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
     }
     return found;
 }
