@@ -60,7 +60,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
     if (state->lastBlendMoveIndex != moveIndex) {
       state->blendCacheSlot = (u16)state->blendToggle;
       state->prevBlendCacheSlot = (u16)(OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle);
-      if (animDef->blendMoveIds[moveIndex] == -1) {
+      if (animDef->blendMoveIds[moveIndex] == OBJANIM_MISSING_MOVE_ID) {
         OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
         moveIndex = 0;
       }
@@ -82,7 +82,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
   else {
     frameBits = CONCAT44(0x43300000, (uint)state->frameCmd[1]);
     frameValue = *(f64 *)&frameBits - lbl_803DE8E8;
-    if (frameType == 0) {
+    if (frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
       frameValue = frameValue - lbl_803DE8E0;
     }
     if (frameValue != state->segmentLength) {
@@ -209,7 +209,7 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
       state->progress = state->savedStep * deltaTime + state->progress;
       fVar5 = lbl_803DE8F0;
       fVar4 = state->prevSegmentLength;
-      if (state->prevFrameType == 0) {
+      if (state->prevFrameType == OBJANIM_FRAME_TYPE_CLAMPED) {
         fVar5 = state->progress;
         fVar6 = lbl_803DE8F0;
         if ((lbl_803DE8F0 <= fVar5) && (fVar6 = fVar5, fVar4 < fVar5)) {
@@ -255,7 +255,7 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
     fVar5 = lbl_803DE8E0;
     if (objAnim->activeMoveProgress < lbl_803DE8E0) {
       if (objAnim->activeMoveProgress < lbl_803DE8F0) {
-        if (state->frameType == 0) {
+        if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
           objAnim->activeMoveProgress = lbl_803DE8F0;
         }
         else {
@@ -267,7 +267,7 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
       }
     }
     else {
-      if (state->frameType == 0) {
+      if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
         objAnim->activeMoveProgress = lbl_803DE8E0;
       }
       else {
@@ -295,26 +295,28 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
           eventFrame = eventWord & OBJANIM_EVENT_FRAME_MASK;
           eventId = eventWord >> OBJANIM_EVENT_ID_SHIFT & OBJANIM_EVENT_ID_MASK;
           if (eventId != OBJANIM_EVENT_ID_NONE) {
-            if (((eventScanFlags == 0) && (previousEventFrame <= (int)eventFrame)) &&
+            if (((eventScanFlags == OBJANIM_EVENT_SCAN_FORWARD) &&
+                (previousEventFrame <= (int)eventFrame)) &&
                ((int)eventFrame < currentEventFrame)) {
               triggerSlot = events->triggerCount;
               events->triggerCount = triggerSlot + '\x01';
               events->triggeredIds[(u8)triggerSlot] = eventId;
             }
-            if ((eventScanFlags == 1) &&
+            if ((eventScanFlags == OBJANIM_EVENT_SCAN_WRAPPED) &&
                ((previousEventFrame <= (int)eventFrame ||
                 ((int)eventFrame < currentEventFrame)))) {
               triggerSlot = events->triggerCount;
               events->triggerCount = triggerSlot + '\x01';
               events->triggeredIds[(u8)triggerSlot] = eventId;
             }
-            if (((eventScanFlags == 3) && (currentEventFrame < (int)eventFrame)) &&
+            if (((eventScanFlags == OBJANIM_EVENT_SCAN_REVERSE_WRAPPED) &&
+                (currentEventFrame < (int)eventFrame)) &&
                ((int)eventFrame <= previousEventFrame)) {
               triggerSlot = events->triggerCount;
               events->triggerCount = triggerSlot + '\x01';
               events->triggeredIds[(u8)triggerSlot] = eventId;
             }
-            if ((eventScanFlags == 2) &&
+            if ((eventScanFlags == OBJANIM_EVENT_SCAN_REVERSE) &&
                ((currentEventFrame < (int)eventFrame ||
                 ((int)eventFrame <= previousEventFrame)))) {
               triggerSlot = events->triggerCount;
@@ -419,7 +421,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
     if (moveChanged != 0) {
       state->blendToggle = OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle;
       state->moveCacheSlot = (u16)state->blendToggle;
-      if (animDef->blendMoveIds[moveIndex] == -1) {
+      if (animDef->blendMoveIds[moveIndex] == OBJANIM_MISSING_MOVE_ID) {
         OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
         moveIndex = 0;
       }
@@ -436,7 +438,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   state->frameType = *(s8 *)(moveData + 1) & OBJANIM_FRAME_TYPE_MASK;
   state->segmentLength =
        ObjAnim_U32AsDouble((uint)state->frameData[1]) - lbl_803DE8E8;
-  if (state->frameType == 0) {
+  if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
     state->segmentLength = state->segmentLength - lbl_803DE8E0;
   }
   frameStep = *(s8 *)(moveData + 1) & OBJANIM_FRAME_STEP_MASK;
@@ -813,7 +815,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
            (float)((double)state->savedStep * deltaTime + (double)state->progress);
       fVar4 = lbl_803DE8F0;
       fVar3 = state->prevSegmentLength;
-      if (state->prevFrameType == '\0') {
+      if (state->prevFrameType == OBJANIM_FRAME_TYPE_CLAMPED) {
         fVar4 = state->progress;
         fVar5 = lbl_803DE8F0;
         if ((lbl_803DE8F0 <= fVar4) && (fVar5 = fVar4, fVar3 < fVar4)) {
@@ -860,7 +862,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
     fVar5 = lbl_803DE8E0;
     if (objAnim->currentMoveProgress < lbl_803DE8E0) {
       if (objAnim->currentMoveProgress < lbl_803DE8F0) {
-        if (state->frameType == '\0') {
+        if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
           objAnim->currentMoveProgress = lbl_803DE8F0;
         }
         else {
@@ -871,7 +873,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
         uVar18 = 1;
       }
     }
-    else if (state->frameType == '\0') {
+    else if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
       objAnim->currentMoveProgress = lbl_803DE8E0;
       uVar18 = 1;
     }
@@ -906,22 +908,26 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
             uVar16 = uVar16 >> OBJANIM_EVENT_ID_SHIFT & OBJANIM_EVENT_ID_MASK;
             if (uVar16 != OBJANIM_EVENT_ID_NONE) {
               uVar17 = (undefined)uVar16;
-              if (((bVar29 == 0) && (iVar30 <= (int)uVar15)) && ((int)uVar15 < iVar26)) {
+              if (((bVar29 == OBJANIM_EVENT_SCAN_FORWARD) && (iVar30 <= (int)uVar15)) &&
+                  ((int)uVar15 < iVar26)) {
                 cVar2 = *(char *)((int)pfVar20 + 0x1b);
                 *(char *)((int)pfVar20 + 0x1b) = cVar2 + '\x01';
                 *(undefined *)((int)pfVar20 + cVar2 + 0x13) = uVar17;
               }
-              if ((bVar29 == 1) && ((iVar30 <= (int)uVar15 || ((int)uVar15 < iVar26)))) {
+              if ((bVar29 == OBJANIM_EVENT_SCAN_WRAPPED) &&
+                  ((iVar30 <= (int)uVar15 || ((int)uVar15 < iVar26)))) {
                 cVar2 = *(char *)((int)pfVar20 + 0x1b);
                 *(char *)((int)pfVar20 + 0x1b) = cVar2 + '\x01';
                 *(undefined *)((int)pfVar20 + cVar2 + 0x13) = uVar17;
               }
-              if (((bVar29 == 3) && (iVar26 < (int)uVar15)) && ((int)uVar15 <= iVar30)) {
+              if (((bVar29 == OBJANIM_EVENT_SCAN_REVERSE_WRAPPED) &&
+                  (iVar26 < (int)uVar15)) && ((int)uVar15 <= iVar30)) {
                 cVar2 = *(char *)((int)pfVar20 + 0x1b);
                 *(char *)((int)pfVar20 + 0x1b) = cVar2 + '\x01';
                 *(undefined *)((int)pfVar20 + cVar2 + 0x13) = uVar17;
               }
-              if ((bVar29 == 2) && ((iVar26 < (int)uVar15 || ((int)uVar15 <= iVar30)))) {
+              if ((bVar29 == OBJANIM_EVENT_SCAN_REVERSE) &&
+                  ((iVar26 < (int)uVar15 || ((int)uVar15 <= iVar30)))) {
                 cVar2 = *(char *)((int)pfVar20 + 0x1b);
                 *(char *)((int)pfVar20 + 0x1b) = cVar2 + '\x01';
                 *(undefined *)((int)pfVar20 + cVar2 + 0x13) = uVar17;
@@ -1164,7 +1170,7 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
     if (moveChanged != 0) {
       state->blendToggle = OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle;
       state->moveCacheSlot = (u16)state->blendToggle;
-      if (animDef->blendMoveIds[moveIndex] == -1) {
+      if (animDef->blendMoveIds[moveIndex] == OBJANIM_MISSING_MOVE_ID) {
         OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
         moveIndex = 0;
       }
@@ -1181,7 +1187,7 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
   state->frameType = *(s8 *)(moveData + 1) & OBJANIM_FRAME_TYPE_MASK;
   state->segmentLength =
        ObjAnim_U32AsDouble((uint)state->frameData[1]) - lbl_803DE8E8;
-  if (state->frameType == 0) {
+  if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
     state->segmentLength = state->segmentLength - lbl_803DE8E0;
   }
   frameStep = *(s8 *)(moveData + 1) & OBJANIM_FRAME_STEP_MASK;
