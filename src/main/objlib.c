@@ -311,10 +311,11 @@ void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
   if (*(char *)(param_2 + 0xb0) == param_3) {
     return;
   }
-  iVar1 = 0;
-  for (sVar3 = 0; sVar3 < 0x32; sVar3 = sVar3 + 1) {
+  sVar3 = 0;
+  iVar1 = sVar3;
+  for (; sVar3 < 0x32; sVar3 = sVar3 + 1) {
     piVar2 = (int *)(lbl_803DCBDC + iVar1);
-    if ((*piVar2 != 0) && (piVar2[2] == param_1)) {
+    if ((*piVar2 != 0) && ((u32)piVar2[2] == (u32)param_1)) {
       *piVar2 = 0;
     }
     iVar1 = iVar1 + 0x3c;
