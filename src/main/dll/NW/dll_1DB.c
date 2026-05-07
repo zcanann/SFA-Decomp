@@ -17,6 +17,10 @@ extern void Obj_StartModelFadeIn(u8 *obj, int frames);
 extern void Obj_SetModelColorFadeRecursive(u8 *obj, int a, int b, int c, int d, int e);
 extern int ObjHits_GetPriorityHit(u8 *obj, int *outOther, int a, int b);
 extern void fn_801D083C(u8 *self, u8 *state, u8 *other);
+extern f32 sqrtf(f32 x);
+
+#pragma peephole off
+#pragma scheduling off
 
 /*
  * --INFO--
@@ -31,8 +35,8 @@ void ediblemushroom_update(u8 *self)
   u8 *other;
   u8 *player;
   u8 *enemy;
-  int msg;
   int hitObj;
+  int msg;
   int hitKind;
   f32 distState;
   f32 distEnemy;
@@ -46,7 +50,7 @@ void ediblemushroom_update(u8 *self)
 
   if (state[0x136] == 8) {
     while (ObjMsg_Pop(self, &msg, 0, 0) != 0) {
-      if (((u32)msg - 0x70000) >= 0xB) continue;
+      if (((u32)msg - 0x70000) != 0xB) continue;
       *(s16 *)(self + 6) = (s16)(*(s16 *)(self + 6) | 0x4000);
       ObjHits_DisableObject(self);
       gameBitIncrement(*(s16 *)(state + 0x134));
@@ -72,18 +76,17 @@ void ediblemushroom_update(u8 *self)
   *(f32 *)(state + 0x10C) = *(f32 *)(state + 0x108);
   distState = fn_800216D0((f32 *)(player + 0x18), (f32 *)(self + 0x18));
   if (enemy == NULL) {
-    *(f32 *)(state + 0x108) = (f32)__builtin_sqrtf(distState);
+    *(f32 *)(state + 0x108) = sqrtf(distState);
   } else {
     distEnemy = fn_800216D0((f32 *)(enemy + 0x18), (f32 *)(self + 0x18));
     if (distState < distEnemy) {
-      *(f32 *)(state + 0x108) = (f32)__builtin_sqrtf(distState);
+      *(f32 *)(state + 0x108) = sqrtf(distState);
     } else {
-      *(f32 *)(state + 0x108) = (f32)__builtin_sqrtf(distEnemy);
-
-      if (*(f32 *)(state + 0x108) < (f32)(int)other[0x1F]) {
-        ((void (*)(u8 *, u8 *, int, int, int))*(void **)(*(int *)(enemy + 0x68) + 0x28))
-            (enemy, self, 0, 1, 0);
-      }
+      *(f32 *)(state + 0x108) = sqrtf(distEnemy);
+    }
+    if (*(f32 *)(state + 0x108) < (f32)(u32)other[0x1F]) {
+      (*(void (**)(u8 *, u8 *, int, int))(*(int *)*(int *)(enemy + 0x68) + 0x28))
+          (enemy, self, 0, 1);
     }
   }
 
@@ -106,3 +109,6 @@ void ediblemushroom_update(u8 *self)
 end:
   ;
 }
+
+#pragma peephole reset
+#pragma scheduling reset

@@ -23,6 +23,9 @@ extern void Sfx_PlayFromObject(u8 *obj, int sfxId);
 extern void doRumble(f32 val);
 extern void fn_801BDF7C(u8 *arg1, u8 *arg4);
 
+#pragma peephole off
+#pragma scheduling off
+
 /*
  * --INFO--
  *
@@ -43,15 +46,13 @@ void fn_801BE19C(u8 *arg1, u8 *unused2, u8 *arg3, u8 *arg4)
   arg4[0x25F] = 1;
 
   vt = (u8 *)*(int *)lbl_803DCAB8;
-  ((void (*)(u8 *, f32, int, u8 *))*(void **)(vt + 0x2C))(arg4, timer, 1, vt);
+  ((void (*)(u8 *, u8 *, f32, int, u8 *))*(void **)(vt + 0x2C))(arg1, arg4, timer, 1, vt);
 
   vt = (u8 *)*(int *)lbl_803DCAB8;
   ((void (*)(u8 *, u8 *, u8 *, s16, u8 *, int, int, int))*(void **)(vt + 0x54))(
       arg1, arg4, arg3 + 0x35C, *(s16 *)(arg3 + 0x3F4), arg3 + 0x405, 0, 0, 0);
 
-  if (lbl_803E4C90 == lbl_803DDBA4) {
-    timer = timer + lbl_803E4CBC;
-  } else {
+  if (lbl_803E4C90 != lbl_803DDBA4) {
     lbl_803DDBA4 = lbl_803DDBA4 - timeDelta;
     timer = lbl_803DDBA4 * lbl_803E4CB4;
     if (lbl_803DDBA4 <= lbl_803E4CB8) {
@@ -67,9 +68,11 @@ void fn_801BE19C(u8 *arg1, u8 *unused2, u8 *arg3, u8 *arg4)
         GameBit_Set(0x268, 1);
       }
     }
+  } else {
+    timer = timer + lbl_803E4CBC;
   }
 
-  if (lbl_803DDBA0 > lbl_803DDB9C) {
+  if (lbl_803DDBA0 >= lbl_803DDB9C) {
     Sfx_PlayFromObject(arg1, 0x189);
     if (timer > lbl_803E4CBC) timer = lbl_803E4CBC;
     if (timer < lbl_803E4C9C) timer = lbl_803E4C9C;
@@ -82,7 +85,7 @@ void fn_801BE19C(u8 *arg1, u8 *unused2, u8 *arg3, u8 *arg4)
 
   if (lbl_803E4C90 != lbl_803DDB98) {
     lbl_803DDB98 = lbl_803DDB98 - timeDelta;
-    if (lbl_803DDB98 < lbl_803E4C90) {
+    if (lbl_803DDB98 <= lbl_803E4C90) {
       lbl_803DDB98 = lbl_803E4C90;
       arg4[0x349] = 0;
       *(s16 *)((u8 *)*(int *)(arg1 + 0x54) + 0x60) =
@@ -106,3 +109,6 @@ void fn_801BE19C(u8 *arg1, u8 *unused2, u8 *arg3, u8 *arg4)
 
   *(u32 *)(arg1 + 0xC0) = *(u32 *)(arg3 + 0x3E0);
 }
+
+#pragma peephole reset
+#pragma scheduling reset
