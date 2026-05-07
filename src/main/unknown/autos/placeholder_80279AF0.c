@@ -3,14 +3,20 @@
 extern void fn_80278A98(int state, int x);
 extern void fn_802794EC(int state);
 
-extern u8 lbl_803CB190[];
+typedef struct VoiceIdSlot {
+    u8 prev;
+    u8 next;
+    u16 active;
+} VoiceIdSlot;
+
+extern VoiceIdSlot lbl_803CB190[];
 extern u8 lbl_803DE2FE;
 extern u8 lbl_803DE2FF;
 extern u8 lbl_803DE300;
 extern u8 lbl_803DE301;
 
 /*
- * fn_8027975C — large voice-allocation/sort routine (~1084 instructions).
+ * fn_8027975C - large voice-allocation/sort routine (~1084 instructions).
  * Stubbed.
  */
 #pragma dont_inline on
@@ -36,16 +42,16 @@ void fn_80279B98(int state)
     {
         u32 voice = *(u32 *)(state + 0xf4);
         u8 v = (u8)voice;
-        u8 *slot = lbl_803CB190 + v * 4;
-        if (*(u16 *)(slot + 2) == 0) {
-            *(u16 *)(slot + 2) = 1;
+        VoiceIdSlot *slot = &lbl_803CB190[v];
+        if (slot->active == 0) {
+            slot->active = 1;
             if (lbl_803DE301 != 0xff) {
-                *(slot + 1) = 0xff;
-                *(slot) = lbl_803DE300;
-                *(lbl_803CB190 + lbl_803DE300 * 4 + 1) = v;
+                slot->next = 0xff;
+                slot->prev = lbl_803DE300;
+                lbl_803CB190[lbl_803DE300].next = v;
             } else {
-                *(slot + 1) = 0xff;
-                *(slot) = 0xff;
+                slot->next = 0xff;
+                slot->prev = 0xff;
                 lbl_803DE301 = v;
             }
             lbl_803DE300 = v;
