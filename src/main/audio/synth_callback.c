@@ -187,8 +187,8 @@ void synthFreeCallback(SynthCallbackLink* callback) {
 }
 
 u32 synthAssignHandle(s32 voiceIndex) {
-    SynthVoice* current;
     u32 handle;
+    SynthVoice* current;
 
     do {
         handle = gSynthNextHandle;
@@ -214,8 +214,6 @@ u32 synthAssignHandle(s32 voiceIndex) {
     return handle;
 }
 
-#pragma scheduling off
-#pragma peephole off
 u32 synthResolveHandle(u32 handle) {
     SynthVoice* voice;
     for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next) {
@@ -232,5 +230,3 @@ u32 synthResolveHandle(u32 handle) {
 
     return 0xFFFFFFFF;
 }
-#pragma peephole reset
-#pragma scheduling reset
