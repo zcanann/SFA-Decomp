@@ -423,42 +423,38 @@ void ObjHitbox_SetCapsuleBounds(int param_1,undefined2 param_2,short param_3,sho
 {
   float fVar1;
   float fVar2;
-  int iVar3;
-  uint uVar4;
-  
-  iVar3 = *(int *)(param_1 + 0x54);
+  uint iVar3;
+  s32 absVal;
+
+  iVar3 = *(uint *)(param_1 + 0x54);
   if (iVar3 != 0) {
     if ((*(byte *)(iVar3 + 0x62) & 2) != 0) {
       *(short *)(iVar3 + 0x5c) = param_3;
       *(short *)(iVar3 + 0x5e) = param_4;
       *(undefined2 *)(iVar3 + 0x5a) = param_2;
-      uVar4 = (int)*(short *)(iVar3 + 0x5a) ^ 0x80000000;
-      *(float *)(iVar3 + 0xc) =
-           (float)((double)CONCAT44(0x43300000,uVar4) - DOUBLE_803df5c0) *
-           (float)((double)CONCAT44(0x43300000,uVar4) - DOUBLE_803df5c0);
+      fVar1 = (float)(s32)*(short *)(iVar3 + 0x5a);
+      *(float *)(iVar3 + 0xc) = fVar1 * fVar1;
       *(undefined2 *)(iVar3 + 0x58) = 0x400;
       *(float *)(iVar3 + 0x28) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-      uVar4 = (uint)param_3;
-      if ((int)uVar4 < 0) {
-        uVar4 = -uVar4;
+      absVal = (s32)param_3;
+      if (absVal < 0) {
+        absVal = -absVal;
       }
-      fVar1 = (float)((double)CONCAT44(0x43300000,uVar4 ^ 0x80000000) - DOUBLE_803df5c0);
-      uVar4 = (uint)param_4;
-      if ((int)uVar4 < 0) {
-        uVar4 = -uVar4;
+      fVar1 = (float)absVal;
+      absVal = (s32)param_4;
+      if (absVal < 0) {
+        absVal = -absVal;
       }
-      fVar2 = (float)((double)CONCAT44(0x43300000,uVar4 ^ 0x80000000) - DOUBLE_803df5c0);
-      if (fVar2 < fVar1) {
+      fVar2 = (float)absVal;
+      if (fVar1 > fVar2) {
         fVar2 = fVar1;
       }
-      if (*(float *)(iVar3 + 0x28) < fVar2) {
+      if (fVar2 > *(float *)(iVar3 + 0x28)) {
         *(float *)(iVar3 + 0x28) = fVar2;
       }
       *(float *)(iVar3 + 0x2c) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-      uVar4 = (int)*(short *)(iVar3 + 0x5a) ^ 0x80000000;
-      if (*(float *)(iVar3 + 0x2c) < (float)((double)CONCAT44(0x43300000,uVar4) - DOUBLE_803df5c0))
-      {
-        *(float *)(iVar3 + 0x2c) = (float)((double)CONCAT44(0x43300000,uVar4) - DOUBLE_803df5c0);
+      if ((float)(s32)*(short *)(iVar3 + 0x5a) > *(float *)(iVar3 + 0x2c)) {
+        *(float *)(iVar3 + 0x2c) = (float)(s32)*(short *)(iVar3 + 0x5a);
       }
     }
     if ((*(byte *)(iVar3 + 0xb6) & 2) != 0) {
@@ -466,32 +462,28 @@ void ObjHitbox_SetCapsuleBounds(int param_1,undefined2 param_2,short param_3,sho
       *(short *)(iVar3 + 0x68) = param_4;
       *(undefined2 *)(iVar3 + 100) = param_2;
       *(float *)(iVar3 + 0x30) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-      uVar4 = (uint)param_3;
-      if ((int)uVar4 < 0) {
-        uVar4 = -uVar4;
+      absVal = (s32)param_3;
+      if (absVal < 0) {
+        absVal = -absVal;
       }
-      fVar1 = (float)((double)CONCAT44(0x43300000,uVar4 ^ 0x80000000) - DOUBLE_803df5c0);
-      uVar4 = (uint)param_4;
-      if ((int)uVar4 < 0) {
-        uVar4 = -uVar4;
+      fVar1 = (float)absVal;
+      absVal = (s32)param_4;
+      if (absVal < 0) {
+        absVal = -absVal;
       }
-      fVar2 = (float)((double)CONCAT44(0x43300000,uVar4 ^ 0x80000000) - DOUBLE_803df5c0);
-      if (fVar2 < fVar1) {
+      fVar2 = (float)absVal;
+      if (fVar1 > fVar2) {
         fVar2 = fVar1;
       }
-      if (*(float *)(iVar3 + 0x30) < fVar2) {
+      if (fVar2 > *(float *)(iVar3 + 0x30)) {
         *(float *)(iVar3 + 0x30) = fVar2;
       }
       *(float *)(iVar3 + 0x34) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-      if (*(float *)(iVar3 + 0x34) <
-          (float)((double)CONCAT44(0x43300000,(int)*(short *)(iVar3 + 0x5a) ^ 0x80000000) -
-                 DOUBLE_803df5c0)) {
-        *(float *)(iVar3 + 0x34) =
-             (float)((double)CONCAT44(0x43300000,(int)*(short *)(iVar3 + 100) ^ 0x80000000) -
-                    DOUBLE_803df5c0);
+      if ((float)(s32)*(short *)(iVar3 + 0x5a) > *(float *)(iVar3 + 0x34)) {
+        *(float *)(iVar3 + 0x34) = (float)(s32)*(short *)(iVar3 + 100);
       }
     }
-    *(undefined4 *)(iVar3 + 0x38) = *(undefined4 *)(iVar3 + 0x2c);
+    *(float *)(iVar3 + 0x38) = *(float *)(iVar3 + 0x2c);
     if (*(float *)(iVar3 + 0x38) < *(float *)(iVar3 + 0x34)) {
       *(float *)(iVar3 + 0x38) = *(float *)(iVar3 + 0x34);
     }
