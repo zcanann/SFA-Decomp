@@ -1,459 +1,362 @@
 #include "ghidra_import.h"
 #include "main/dll/FRONT/n_filemenu.h"
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b84();
-extern undefined4 FUN_80006ba8();
-extern undefined4 FUN_80006bac();
-extern undefined4 FUN_80006bb0();
-extern undefined4 FUN_80006bb4();
-extern uint FUN_80006c00();
-extern undefined4 FUN_800174d4();
-extern undefined4 FUN_8001767c();
-extern undefined4 FUN_80017818();
-extern undefined4 FUN_80043030();
-extern undefined4 FUN_8005d090();
-extern undefined4 FUN_8005d0ac();
-extern undefined4 FUN_8005d144();
-extern undefined4 FUN_800723ac();
-extern undefined4 FUN_80072744();
-extern void loadSaveSettings();
-extern int titleLoadSaveFiles();
-extern void gameplay_capturePreviewSettings();
-extern double FUN_80110b8c();
-extern undefined4 n_attractmode_releaseMovieBuffers();
+typedef struct TitleMenuTextEntry {
+  u8 pad0[0x16];
+  u16 flags;
+  u8 pad18[0x24];
+} TitleMenuTextEntry;
+
+typedef struct TitleMenuControl {
+  void *vtable;
+} TitleMenuControl;
+
+extern void FUN_80006824(uint obj, ushort sfxId);
+extern void FUN_80006b84(int id);
+extern void FUN_80006ba8(int controller, uint buttons);
+extern void FUN_80006bac(int controller);
+extern void FUN_80006bb0(int controller);
+extern void FUN_80006bb4(int controller, u8 *dpad, u8 *face);
+extern uint FUN_80006c00(int controller);
+extern void loadUiDll(int id);
+extern void fn_8001FEE4(void);
+extern uint mmSetFreeDelay(uint delay);
+extern void mapUnload(int mapId, uint flags);
+extern void fn_8005CDD4(int arg);
+extern void fn_8005CDF8(int arg);
+extern void fn_8005CEA8(int arg);
+extern void fn_8007DD04(u8 retry);
+extern void loadSaveSettings(void);
+extern int titleLoadSaveFiles(void);
+extern void gameplay_capturePreviewSettings(void);
+extern float fn_801115E4(void);
+extern void n_attractmode_releaseMovieBuffers(void);
 extern void n_attractmode_prepareMovie(void);
-extern undefined4 FUN_80117c30();
-extern undefined4 FUN_80130728();
-extern undefined4 FUN_80130734();
-extern undefined4 FUN_80133790();
-extern char FUN_801339f8();
-extern undefined4 FUN_80133a68();
-extern undefined4 FUN_80133c3c();
-extern undefined4 FUN_80134830();
-extern undefined4 FUN_801348c0();
-extern undefined4 FUN_80134b94();
-extern undefined4 FUN_80134bb0();
-extern undefined8 FUN_80134bc4();
-
-extern undefined4 DAT_8031ae64;
-extern undefined4 DAT_8031ae7a;
-extern undefined4 DAT_8031aeb6;
-extern undefined4 DAT_8031aef2;
-extern undefined4 DAT_8031af2e;
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803dc084;
-extern undefined4* DAT_803dd6cc;
-extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd720;
-extern undefined4 DAT_803de288;
-extern undefined4 DAT_803de28c;
-extern undefined4 DAT_803de28d;
-extern undefined4 DAT_803de28e;
-extern undefined4 DAT_803de28f;
-extern undefined4 DAT_803de290;
-extern undefined4 DAT_803de291;
-extern undefined4 DAT_803de294;
-extern undefined4 DAT_803de298;
-extern undefined4 DAT_803de2c8;
-extern undefined4 DAT_803de2cc;
-extern undefined4 DAT_803de2cd;
-extern undefined4 DAT_803de2ce;
-extern undefined4 DAT_803de2cf;
-extern undefined4 DAT_803de2d0;
-extern undefined4 DAT_803de2d1;
-extern undefined4 DAT_803de2d2;
-extern undefined4 DAT_803de300;
-extern undefined4 DAT_803de318;
-extern undefined4 DAT_803de378;
-extern f64 DOUBLE_803e29a0;
-extern f32 FLOAT_803e2990;
-extern f32 FLOAT_803e2994;
-extern f32 FLOAT_803e2998;
-extern f32 FLOAT_803e29a8;
-
-/*
- * --INFO--
- *
- * Function: FUN_801166c8
- * EN v1.0 Address: 0x801166C8
- * EN v1.0 Size: 500b
- * EN v1.1 Address: 0x80116858
- * EN v1.1 Size: 268b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801166c8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9)
-{
-  char cVar2;
-  int iVar1;
-  undefined8 extraout_f1;
-  double dVar3;
-  double dVar4;
-  
-  cVar2 = FUN_801339f8();
-  if (cVar2 == '\0') {
-    iVar1 = (**(code **)(*DAT_803dd6d0 + 0x10))();
-    if (iVar1 == 0x57) {
-      FUN_800174d4(FUN_801348c0);
-      dVar4 = (double)FLOAT_803e2998;
-      FUN_80134830((double)(FLOAT_803e2990 +
-                           (float)((double)CONCAT44(0x43300000,
-                                                    (uint)DAT_803de28e * 0x1a4 ^ 0x80000000) -
-                                  DOUBLE_803e29a0) / FLOAT_803e2994),dVar4);
-      FUN_80133c3c(0,0,0);
-      (**(code **)(*DAT_803dd6cc + 0x18))();
-      (**(code **)(*DAT_803dd720 + 0x30))(0xff);
-      (**(code **)(*DAT_803dd720 + 0x10))(param_9);
-      dVar3 = (double)FUN_800174d4(0);
-      FUN_80133a68(dVar3,dVar4,param_3,param_4,param_5,param_6,param_7,param_8,DAT_803de2cf);
-    }
-  }
-  else {
-    FUN_80133790(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-  }
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801168bc
- * EN v1.0 Address: 0x801168BC
- * EN v1.0 Size: 2604b
- * EN v1.1 Address: 0x80116964
- * EN v1.1 Size: 2136b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-int FUN_801168bc(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                undefined4 param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
-                undefined4 param_13,undefined4 param_14,uint param_15,uint param_16)
-{
-  bool bVar1;
-  char cVar2;
-  int iVar3;
-  undefined4 uVar4;
-  char cVar7;
-  uint uVar5;
-  int iVar6;
-  undefined4 extraout_r4;
-  byte bVar8;
-  undefined8 uVar9;
-  undefined8 extraout_f1;
-  double dVar10;
-  char local_18;
-  char local_17 [11];
-  
-  cVar2 = DAT_803de2d1;
-  bVar8 = DAT_803dc070;
-  if (DAT_803dc084 == -2) {
-    iVar3 = titleLoadSaveFiles(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-    if ((iVar3 == 0) && (DAT_803dc084 != '\0')) {
-      FUN_80072744(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,'\x01',param_10,
-                   param_11,param_12,param_13,param_14,param_15,param_16);
-    }
-    loadSaveSettings(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-    if (DAT_803dc084 == -2) {
-      DAT_803dc084 = '\x01';
-    }
-  }
-  if ((DAT_803de298 == '\0') && (DAT_803de2c8 == 0)) {
-    n_attractmode_releaseMovieBuffers();
-    FUN_80006b84(1);
-    FUN_8001767c();
-    uVar9 = FUN_80134bc4();
-    uVar4 = FUN_80017818(0);
-    FUN_80043030(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-    FUN_80017818(uVar4);
-    gameplay_capturePreviewSettings();
-    iVar3 = 0;
-  }
-  else {
-    FUN_8005d144(0);
-    FUN_8005d0ac(0);
-    cVar7 = FUN_801339f8();
-    if (cVar7 == '\0') {
-      if (DAT_803de2c8 != 0) {
-        DAT_803de2c8 = DAT_803de2c8 + -1;
-      }
-      if (DAT_803de291 != '\0') {
-        n_attractmode_prepareMovie();
-      }
-      if (((DAT_803de2cd != '\0') && (DAT_803de2cd = DAT_803de2cd + -1, DAT_803de2cd == '\0')) &&
-         (DAT_803de2cf != '\0')) {
-        FUN_80117c30(100,1000);
-      }
-      if ((DAT_803de288 == 2) && (DAT_803de318 = DAT_803de318 + 1, 10 < DAT_803de318)) {
-        n_attractmode_releaseMovieBuffers();
-      }
-      if (((DAT_803de288 == 2) && (DAT_803de2cf != '\0')) && (DAT_803de2ce != '\0')) {
-        uVar5 = FUN_80006c00(0);
-        FUN_80006bb4(0,local_17,&local_18);
-        FUN_80006ba8(0,uVar5);
-        FUN_80006bb0(0);
-        FUN_80006bac(0);
-        bVar1 = false;
-        if ((DAT_803de300 == '\0') || (DAT_803de2c8 != 0)) {
-          if ((uVar5 != 0) || ((local_17[0] != '\0' || (local_18 != '\0')))) {
-            bVar1 = true;
-          }
-        }
-        else {
-          bVar1 = true;
-        }
-        if (DAT_803de300 != '\0') {
-          DAT_803de300 = '\0';
-        }
-        if (bVar1) {
-          if (((uVar5 == 0) && (local_17[0] == '\0')) && (local_18 == '\0')) {
-            DAT_803de2cc = '\x01';
-            DAT_803de2c8 = 0x3c;
-          }
-          else {
-            DAT_803de2cc = '\x02';
-          }
-          (**(code **)(*DAT_803dd720 + 0x18))(0);
-          DAT_803de2cf = '\0';
-          iVar3 = *DAT_803dd6d0;
-          uVar9 = (**(code **)(iVar3 + 0x60))(0,1);
-          if (DAT_803dc084 == -1) {
-            uVar4 = extraout_r4;
-            iVar6 = titleLoadSaveFiles(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,
-                                       param_8);
-            if ((iVar6 == 0) && (DAT_803dc084 != '\0')) {
-              FUN_80072744(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,'\x01',
-                           uVar4,iVar3,param_12,param_13,param_14,param_15,param_16);
-            }
-            loadSaveSettings(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-            if (DAT_803dc084 == -1) {
-              DAT_803dc084 = '\x01';
-            }
-          }
-        }
-      }
-      else if ((DAT_803de2ce != '\0') && (DAT_803de2cf == '\0')) {
-        uVar5 = FUN_80006c00(0);
-        FUN_80006bb4(0,local_17,&local_18);
-        if ((uVar5 == 0) && ((local_17[0] == '\0' && (local_18 == '\0')))) {
-          if ((DAT_803de300 != '\0') && (DAT_803de300 = '\0', DAT_803de2c8 == 0)) {
-            DAT_803de2c8 = 0x3c;
-            DAT_803de2cc = DAT_803de2cc + -1;
-            if (DAT_803de2cc == '\0') {
-              DAT_803de2cc = '\x01';
-              (**(code **)(*DAT_803dd6d0 + 0x60))(4,1);
-              DAT_803de2cf = '\x01';
-              DAT_803de28f = -0x19;
-            }
-          }
-        }
-        else {
-          DAT_803de2cc = '\x02';
-        }
-      }
-      if (3 < bVar8) {
-        bVar8 = 3;
-      }
-      if ('\0' < DAT_803de2d1) {
-        DAT_803de2d1 = DAT_803de2d1 - bVar8;
-      }
-      iVar3 = (**(code **)(*DAT_803dd6d0 + 0x10))();
-      if (iVar3 == 0x57) {
-        DAT_803de2ce = '\x01';
-        if (DAT_803de2d0 == '\0') {
-          iVar3 = (**(code **)(*DAT_803dd720 + 0xc))();
-          DAT_803de28c = (**(code **)(*DAT_803dd720 + 0x14))();
-          dVar10 = FUN_80110b8c();
-          if ((((double)FLOAT_803e29a8 == dVar10) && (DAT_803de28e < 0xff)) &&
-             (DAT_803de2cf == '\0')) {
-            DAT_803de28f = '\x19';
-            if (DAT_803de28c == 0) {
-              DAT_803de290 = 1;
-            }
-            else {
-              DAT_803de290 = 0;
-            }
-          }
-          else if (DAT_803de28d != DAT_803de28c) {
-            (**(code **)(*DAT_803dd6d0 + 0x60))(DAT_803de28c,1);
-            FUN_80006824(0,0x37b);
-            DAT_803de28f = -0x19;
-            DAT_803de28d = DAT_803de28c;
-            FUN_80130728(0);
-          }
-          if ((int)((uint)DAT_803de28e + (int)DAT_803de28f) < 0xff) {
-            if ((int)((uint)DAT_803de28e + (int)DAT_803de28f) < 1) {
-              if (DAT_803de28c == 0) {
-                DAT_8031ae7a = DAT_8031ae7a & 0xbfff;
-              }
-              else {
-                DAT_8031ae7a = DAT_8031ae7a | 0x4000;
-              }
-              if (DAT_803de28c == 1) {
-                DAT_8031aeb6 = DAT_8031aeb6 & 0xbfff;
-              }
-              else {
-                DAT_8031aeb6 = DAT_8031aeb6 | 0x4000;
-              }
-              if (DAT_803de28c == 2) {
-                DAT_8031aef2 = DAT_8031aef2 & 0xbfff;
-              }
-              else {
-                DAT_8031aef2 = DAT_8031aef2 | 0x4000;
-              }
-              if (DAT_803de28c == 3) {
-                DAT_8031af2e = DAT_8031af2e & 0xbfff;
-              }
-              else {
-                DAT_8031af2e = DAT_8031af2e | 0x4000;
-              }
-              (**(code **)(*DAT_803dd720 + 0x2c))(&DAT_8031ae64);
-              DAT_803de28e = 0;
-              DAT_803de28f = '\0';
-              if (DAT_803de28c != 0) {
-                DAT_803de290 = 0;
-              }
-            }
-            else {
-              DAT_803de28e = DAT_803de28e + DAT_803de28f;
-            }
-          }
-          else {
-            DAT_803de28e = 0xff;
-            DAT_803de28f = '\0';
-            FUN_80130728(1);
-          }
-          if (DAT_803de2d2 == '\0') {
-            if (iVar3 == 1) {
-              (**(code **)(*DAT_803dd720 + 8))();
-              (**(code **)(*DAT_803dd720 + 4))(&DAT_8031ae64,9,5,0,0,0,0x14,200,0xff,0xff,0xff,0xff)
-              ;
-              DAT_803de2d2 = '\x01';
-            }
-          }
-          else {
-            FUN_80134bb0(DAT_803de28c);
-            if (((iVar3 == 1) || (DAT_803de294 == 1)) && (DAT_803de28e == 0xff)) {
-              FUN_80134b94('\x01');
-              DAT_803de2d1 = 1;
-              FUN_80130728(1);
-              FUN_80006824(0,0xff);
-              if (DAT_803de28c == 2) {
-                DAT_803de2d0 = '\a';
-                DAT_803de378 = 1;
-              }
-              else if (DAT_803de28c < 2) {
-                if (DAT_803de28c == 0) {
-                  DAT_803de2d0 = '\x05';
-                }
-                else {
-                  DAT_803de2d0 = '\a';
-                  DAT_803de378 = 0;
-                }
-              }
-              else if (DAT_803de28c < 4) {
-                DAT_803de2d0 = '\a';
-                DAT_803de378 = 2;
-              }
-              return 0;
-            }
-            FUN_80134b94('\0');
-          }
-          iVar3 = 0;
-        }
-        else {
-          if (((cVar2 < '\r') || ('\f' < DAT_803de2d1)) && (DAT_803de2d1 < '\x01')) {
-            (**(code **)(*DAT_803dd720 + 8))();
-            FUN_8005d090(0);
-            FUN_80130734();
-            FUN_80006b84((int)DAT_803de2d0);
-          }
-          iVar3 = (uint)((uint)(int)DAT_803de2d1 < 0xd) - ((int)DAT_803de2d1 >> 0x1f);
-        }
-      }
-      else {
-        DAT_803de2ce = '\0';
-        iVar3 = 0;
-      }
-    }
-    else {
-      iVar3 = 0;
-    }
-  }
-  return iVar3;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801172e8
- * EN v1.0 Address: 0x801172E8
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x801171BC
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801172e8(void)
-{
-  FUN_80130734();
-  FUN_80130728(1);
-  FUN_800723ac('\x01');
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80117318
- * EN v1.0 Address: 0x80117318
- * EN v1.0 Size: 68b
- * EN v1.1 Address: 0x801171EC
- * EN v1.1 Size: 64b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80117318(undefined param_1)
-{
-  DAT_803de28d = 0xff;
-  DAT_803de28c = param_1;
-  (**(code **)(*DAT_803dd720 + 0x18))();
-  return;
-}
-
+extern void fn_80117B68(int fade, int frames);
+extern void fn_80130464(u8 v);
 extern void fn_8013046C(void);
-extern void fn_80130464(int);
+extern u8 fn_80134BBC(void);
+extern void fn_801368A4(u8 arg);
+extern void fn_801368C4(u8 arg);
+extern void fn_801368D4(void);
 extern void fn_8007D960(int);
+
+extern u8 framesThisStep;
+extern u8 lbl_803DB424;
+extern TitleMenuTextEntry lbl_8031A214[4];
+extern u8 lbl_803DD610;
+extern u8 lbl_803DD614;
+extern u8 lbl_803DD615;
+extern u8 lbl_803DD616;
+extern s8 lbl_803DD617;
+extern u8 lbl_803DD618;
+extern u8 lbl_803DD619;
+extern u8 lbl_803DD61A;
+extern s32 lbl_803DD648;
+extern u8 lbl_803DD64C;
+extern u8 lbl_803DD64D;
+extern u8 lbl_803DD64E;
+extern u8 lbl_803DD64F;
+extern u8 lbl_803DD650;
+extern u8 lbl_803DD651;
+extern u8 lbl_803DD652;
+extern u8 lbl_803DD680;
+extern s32 lbl_803DD698;
+extern u8 lbl_803DD6F8;
+extern TitleMenuControl *lbl_803DCA50;
+extern TitleMenuControl *lbl_803DCAA0;
+extern f64 lbl_803E1D28;
+
+static int TitleMenu_GetMenuId(void)
+{
+  return (*(int (*)(void))((int)lbl_803DCA50->vtable + 0x10))();
+}
+
+static void TitleMenu_SetMenuState(int state, int arg)
+{
+  (*(void (*)(int, int))((int)lbl_803DCA50->vtable + 0x60))(state,arg);
+}
+
+static int TitleMenu_GetFadeState(void)
+{
+  return (*(int (*)(void))((int)lbl_803DCAA0->vtable + 0xc))();
+}
+
+static u8 TitleMenu_GetSelection(void)
+{
+  return (*(u8 (*)(void))((int)lbl_803DCAA0->vtable + 0x14))();
+}
+
+static void TitleMenu_BindEntries(void)
+{
+  (*(void (*)(TitleMenuTextEntry *))((int)lbl_803DCAA0->vtable + 0x2c))(lbl_8031A214);
+}
+
+static void TitleMenu_ClearPanel(void)
+{
+  (*(void (*)(void))((int)lbl_803DCAA0->vtable + 8))();
+}
+
+static void TitleMenu_OpenPanel(void)
+{
+  (*(void (*)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))
+      ((int)lbl_803DCAA0->vtable + 4))(lbl_8031A214,9,5,0,0,0,0x14,200,0xff,0xff,0xff,0xff);
+}
+
+static void TitleMenu_SetPanelSelection(int selection)
+{
+  (*(void (*)(int))((int)lbl_803DCAA0->vtable + 0x18))(selection);
+}
+
+static void TitleMenu_SetEntryHighlight(int entry)
+{
+  int i;
+
+  for (i = 0; i < 4; i++) {
+    if (i == entry) {
+      lbl_8031A214[i].flags &= 0xbfff;
+    } else {
+      lbl_8031A214[i].flags |= 0x4000;
+    }
+  }
+  TitleMenu_BindEntries();
+}
+
+static void TitleMenu_ReloadSaveSettings(void)
+{
+  int result;
+
+  result = titleLoadSaveFiles();
+  if ((result == 0) && (lbl_803DB424 != 0)) {
+    fn_8007DD04(1);
+  }
+  loadSaveSettings();
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801166C8
+ * EN v1.0 Address: 0x801166C8
+ * EN v1.0 Size: 2124b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int fn_801166C8(void)
+{
+  bool inputPressed;
+  int menuId;
+  uint buttons;
+  u8 previousFadeTimer;
+  u8 frames;
+  u8 dpad[11];
+  u8 face;
+
+  previousFadeTimer = lbl_803DD651;
+  frames = framesThisStep;
+  if (lbl_803DB424 == 0xfe) {
+    TitleMenu_ReloadSaveSettings();
+    if (lbl_803DB424 == 0xfe) {
+      lbl_803DB424 = 1;
+    }
+  }
+  if ((lbl_803DD61A == 0) && (lbl_803DD648 == 0)) {
+    n_attractmode_releaseMovieBuffers();
+    loadUiDll(1);
+    fn_8001FEE4();
+    fn_801368D4();
+    buttons = mmSetFreeDelay(0);
+    mapUnload(0x3d,0x20000000);
+    mmSetFreeDelay(buttons);
+    gameplay_capturePreviewSettings();
+    return 0;
+  }
+
+  fn_8005CEA8(0);
+  fn_8005CDF8(0);
+  if (fn_80134BBC() != 0) {
+    return 0;
+  }
+
+  if (lbl_803DD648 != 0) {
+    lbl_803DD648--;
+  }
+  if (lbl_803DD619 != 0) {
+    n_attractmode_prepareMovie();
+  }
+  if ((lbl_803DD64D != 0) && (--lbl_803DD64D == 0) && (lbl_803DD64F != 0)) {
+    fn_80117B68(100,1000);
+  }
+  if ((lbl_803DD610 == 2) && (++lbl_803DD698 > 10)) {
+    n_attractmode_releaseMovieBuffers();
+  }
+  if (((lbl_803DD610 == 2) && (lbl_803DD64F != 0)) && (lbl_803DD64E != 0)) {
+    buttons = FUN_80006c00(0);
+    FUN_80006bb4(0,dpad,&face);
+    FUN_80006ba8(0,buttons);
+    FUN_80006bb0(0);
+    FUN_80006bac(0);
+
+    inputPressed = false;
+    if ((lbl_803DD680 == 0) || (lbl_803DD648 != 0)) {
+      if ((buttons != 0) || ((dpad[0] != 0 || (face != 0)))) {
+        inputPressed = true;
+      }
+    } else {
+      inputPressed = true;
+    }
+    if (lbl_803DD680 != 0) {
+      lbl_803DD680 = 0;
+    }
+    if (inputPressed) {
+      if (((buttons == 0) && (dpad[0] == 0)) && (face == 0)) {
+        lbl_803DD64C = 1;
+        lbl_803DD648 = 0x3c;
+      } else {
+        lbl_803DD64C = 2;
+      }
+      TitleMenu_SetPanelSelection(0);
+      lbl_803DD64F = 0;
+      TitleMenu_SetMenuState(0,1);
+      if (lbl_803DB424 == 0xff) {
+        TitleMenu_ReloadSaveSettings();
+        if (lbl_803DB424 == 0xff) {
+          lbl_803DB424 = 1;
+        }
+      }
+    }
+  } else if ((lbl_803DD64E != 0) && (lbl_803DD64F == 0)) {
+    buttons = FUN_80006c00(0);
+    FUN_80006bb4(0,dpad,&face);
+    if ((buttons == 0) && ((dpad[0] == 0 && (face == 0)))) {
+      if ((lbl_803DD680 != 0) && (lbl_803DD680 = 0, lbl_803DD648 == 0)) {
+        lbl_803DD648 = 0x3c;
+        lbl_803DD64C--;
+        if (lbl_803DD64C == 0) {
+          lbl_803DD64C = 1;
+          TitleMenu_SetMenuState(4,1);
+          lbl_803DD64F = 1;
+          lbl_803DD617 = -0x19;
+        }
+      }
+    } else {
+      lbl_803DD64C = 2;
+    }
+  }
+
+  if (frames > 3) {
+    frames = 3;
+  }
+  if (lbl_803DD651 > 0) {
+    lbl_803DD651 -= frames;
+  }
+  menuId = TitleMenu_GetMenuId();
+  if (menuId != 0x57) {
+    lbl_803DD64E = 0;
+    return 0;
+  }
+
+  lbl_803DD64E = 1;
+  if (lbl_803DD650 == 0) {
+    menuId = TitleMenu_GetFadeState();
+    lbl_803DD614 = TitleMenu_GetSelection();
+    if ((((double)lbl_803E1D28 == (double)fn_801115E4()) && (lbl_803DD616 < 0xff)) &&
+        (lbl_803DD64F == 0)) {
+      lbl_803DD617 = 0x19;
+      if (lbl_803DD614 == 0) {
+        lbl_803DD618 = 1;
+      } else {
+        lbl_803DD618 = 0;
+      }
+    } else if (lbl_803DD615 != lbl_803DD614) {
+      TitleMenu_SetMenuState(lbl_803DD614,1);
+      FUN_80006824(0,0x37b);
+      lbl_803DD617 = -0x19;
+      lbl_803DD615 = lbl_803DD614;
+      fn_80130464(0);
+    }
+    if ((int)((uint)lbl_803DD616 + (int)lbl_803DD617) < 0xff) {
+      if ((int)((uint)lbl_803DD616 + (int)lbl_803DD617) < 1) {
+        TitleMenu_SetEntryHighlight(lbl_803DD614);
+        lbl_803DD616 = 0;
+        lbl_803DD617 = 0;
+        if (lbl_803DD614 != 0) {
+          lbl_803DD618 = 0;
+        }
+      } else {
+        lbl_803DD616 += lbl_803DD617;
+      }
+    } else {
+      lbl_803DD616 = 0xff;
+      lbl_803DD617 = 0;
+      fn_80130464(1);
+    }
+    if (lbl_803DD652 == 0) {
+      if (menuId == 1) {
+        TitleMenu_ClearPanel();
+        TitleMenu_OpenPanel();
+        lbl_803DD652 = 1;
+      }
+    } else {
+      fn_801368C4(lbl_803DD614);
+      if ((menuId == 1) && (lbl_803DD616 == 0xff)) {
+        fn_801368A4(1);
+        lbl_803DD651 = 1;
+        fn_80130464(1);
+        FUN_80006824(0,0xff);
+        if (lbl_803DD614 == 2) {
+          lbl_803DD650 = 7;
+          lbl_803DD6F8 = 1;
+        } else if (lbl_803DD614 < 2) {
+          if (lbl_803DD614 == 0) {
+            lbl_803DD650 = 5;
+          } else {
+            lbl_803DD650 = 7;
+            lbl_803DD6F8 = 0;
+          }
+        } else if (lbl_803DD614 < 4) {
+          lbl_803DD650 = 7;
+          lbl_803DD6F8 = 2;
+        }
+        return 0;
+      }
+      fn_801368A4(0);
+    }
+    return 0;
+  }
+
+  if (((previousFadeTimer < 0xd) || (lbl_803DD651 > 0xc)) && (lbl_803DD651 < 1)) {
+    TitleMenu_ClearPanel();
+    fn_8005CDD4(0);
+    fn_8013046C();
+    loadUiDll(lbl_803DD650);
+  }
+  return (uint)((uint)(int)lbl_803DD651 < 0xd) - ((int)lbl_803DD651 >> 0x1f);
+}
+
 #pragma scheduling off
 #pragma peephole off
-void TitleMenu_release(void) {
-    fn_8013046C();
-    fn_80130464(1);
-    fn_8007D960(1);
+void TitleMenu_release(void)
+{
+  fn_8013046C();
+  fn_80130464(1);
+  fn_8007D960(1);
 }
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u8 lbl_803DD614, lbl_803DD615;
-extern undefined4* lbl_803DCAA0;
 #pragma scheduling off
 #pragma peephole off
-void fn_80116F44(int a) {
-    u8 v = (u8)a;
-    lbl_803DD614 = v;
-    lbl_803DD615 = 0xff;
-    (*(code *)(*lbl_803DCAA0 + 0x18))(v);
+void fn_80116F44(int a)
+{
+  u8 v = (u8)a;
+  lbl_803DD614 = v;
+  lbl_803DD615 = 0xff;
+  (*(void (*)(int))((int)lbl_803DCAA0->vtable + 0x18))(v);
 }
 #pragma peephole reset
 #pragma scheduling reset
