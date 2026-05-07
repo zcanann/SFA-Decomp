@@ -9,7 +9,7 @@ extern int fn_80271954(int a, int b, int c);
 extern int fn_80271AC0(int a);
 extern int fn_802717B0(int a, int b, int c, int d, u8 e);
 extern int fn_80271B4C(int a, int b, int c, int d, int e);
-extern int fn_8027949C(u32 id);
+extern int vidGetInternalId(u32 id);
 extern void fn_80273870(void);
 extern void hwAddInput(u8 idx);
 extern void hwRemoveInput(u8 idx);
@@ -108,7 +108,7 @@ int sndFXStartEx(int fxId, int volume, int pan, int studio)
 }
 
 /*
- * Map id -> slot via fn_8027949C, returns -1 sentinel if not found,
+ * Map id -> slot via vidGetInternalId, returns -1 sentinel if not found,
  * else returns the input id.
  *
  * EN v1.1 Address: 0x8027292C, size 68b
@@ -116,7 +116,7 @@ int sndFXStartEx(int fxId, int volume, int pan, int studio)
 int sndFXCheck(u32 id)
 {
     u32 slot;
-    slot = fn_8027949C(id);
+    slot = vidGetInternalId(id);
     if (slot != 0xffffffff) {
         return (int)id;
     }

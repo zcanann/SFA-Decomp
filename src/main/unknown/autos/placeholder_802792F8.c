@@ -6,7 +6,7 @@ extern u32 lbl_803DE2F0;
 extern void *lbl_803DE2F4;
 
 /*
- * fn_80279038 — large voice-queue init (~144 instructions). Stubbed
+ * fn_80279038 - large voice-queue init (~144 instructions). Stubbed
  * pending full decode.
  */
 #pragma dont_inline on
@@ -24,7 +24,7 @@ void fn_80279038(void)
  * EN v1.1 Address: 0x8027938C
  * EN v1.1 Size: 20b
  */
-int fn_8027938C(int state)
+int vidMakeRoot(int state)
 {
     *(int *)(state + 0xfc) = *(int *)(state + 0xf8);
     return *(int *)(*(int *)(state + 0xf8) + 0x8);
@@ -56,7 +56,7 @@ u32 fn_802793A0(void)
  * EN v1.1 Address: 0x8027949C
  * EN v1.1 Size: 80b
  */
-int fn_8027949C(u32 id)
+int vidGetInternalId(u32 id)
 {
     int *node;
 
@@ -81,7 +81,7 @@ int fn_8027949C(u32 id)
 }
 
 /*
- * fn_802794EC — voice priority-queue removal (sister to placeholder_
+ * fn_802794EC - voice priority-queue removal (sister to placeholder_
  * 80279608's insert). Removes the active voice from its group's
  * linked list and from the sorted priority list.
  *
