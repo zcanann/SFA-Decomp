@@ -57,9 +57,9 @@ int firepipe_spawnEffectObject(FirePipeExtra *extra, FirePipeObject *obj, void *
             *(u16 *)(effectObj + 0xb0) |= 0x200;
             memcpy(*(void **)(effectObj + 0x4c), spawnDef, *(u8 *)((int)spawnDef + 2));
             *(s16 *)(effectObj + 6) &= ~0x4000;
-            *(undefined4 *)(effectObj + 0xc) = *(undefined4 *)((int)spawnDef + 8);
-            *(undefined4 *)(effectObj + 0x10) = *(undefined4 *)((int)spawnDef + 0xc);
-            *(undefined4 *)(effectObj + 0x14) = *(undefined4 *)((int)spawnDef + 0x10);
+            *(float *)(effectObj + 0xc) = *(float *)((int)spawnDef + 8);
+            *(float *)(effectObj + 0x10) = *(float *)((int)spawnDef + 0xc);
+            *(float *)(effectObj + 0x14) = *(float *)((int)spawnDef + 0x10);
             (*(FirePipeEffectInitFn *)(**(int **)(effectObj + 0x68) + 4))(effectObj, spawnDef, 0);
             freeDelay = mmSetFreeDelay(0);
             fn_80023800(spawnDef);
