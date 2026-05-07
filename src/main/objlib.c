@@ -217,19 +217,20 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
                                  ObjHitReactState *hitState,int moveId,int async)
 {
   s16 *moveEntry;
-  s16 *moveEntryTable;
-  s16 firstEntryIndex;
   int iVar3;
+  s16 firstEntryIndex;
+  s16 *moveEntryTable;
   
   moveEntryTable = (s16 *)((ObjAnimDef *)((ObjAnimComponent *)objAnim)->modelInstance)->hitReactMoveTable;
   hitState->activeEntryCount = 0;
   if (moveEntryTable != (s16 *)0x0) {
     iVar3 = 0;
-    for (moveEntry = moveEntryTable; *moveEntry != -1; moveEntry = moveEntry + 3) {
+    moveEntry = moveEntryTable;
+    while (*moveEntry != -1) {
       if (moveId == *moveEntry) {
         firstEntryIndex = moveEntryTable[iVar3 + 1];
         hitState->activeEntryCount = moveEntryTable[iVar3 + 2];
-        if (hitState->entryCapacity < hitState->activeEntryCount) {
+        if (hitState->activeEntryCount > hitState->entryCapacity) {
           hitState->activeEntryCount = hitState->entryCapacity;
         }
         if (async == 0) {
@@ -239,6 +240,7 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
         fn_80048F48(0x41,hitState->entries,(int)firstEntryIndex,(int)hitState->activeEntryCount);
         return;
       }
+      moveEntry = moveEntry + 3;
       iVar3 = iVar3 + 3;
     }
   }
