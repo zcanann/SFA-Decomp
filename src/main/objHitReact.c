@@ -60,13 +60,13 @@ int objHitReact_update(ObjAnimComponent *obj,ObjHitReactEntry *reactionEntries,u
   state = reactionState;
   stepScale = reactionStepScale;
   effectOrigin = lbl_802C1B00;
-  if ((state & 0xff) != 0) {
+  if ((state & OBJHITREACT_REACTION_STATE_MASK) != OBJHITREACT_REACTION_STATE_INACTIVE) {
     OSReport(sObjHitReactHitstateFrameString,object->currentMoveProgress);
     moveEnded = ObjAnim_AdvanceCurrentMove((double)*stepScale,(double)timeDelta,
                                            (int)object,(ObjAnimEventList *)0x0);
     if (moveEnded != 0) {
       OSReport(sObjHitReactResetString);
-      state = 0;
+      state = OBJHITREACT_REACTION_STATE_INACTIVE;
     }
   }
   priorityHitType = ObjHits_GetPriorityHitWithPosition((int)object,0,&hitSphereIndex,0,&hitPos[0],
@@ -87,12 +87,12 @@ int objHitReact_update(ObjAnimComponent *obj,ObjHitReactEntry *reactionEntries,u
     }
     reactionEntry = &entries[hitSphereIndex];
     if (priorityHitType != OBJHITREACT_COLLISION_SKIP_REACTION) {
-      if ((reactionEntry->hitSfxA > -1) &&
+      if ((reactionEntry->hitSfxA > OBJHITREACT_NO_SFX_ID) &&
           (sfxActive = Sfx_IsPlayingFromObject((int)object,(u16)reactionEntry->hitSfxA),
           !sfxActive)) {
         Sfx_PlayFromObject((int)object,(u16)reactionEntry->hitSfxA);
       }
-      if ((reactionEntry->hitSfxB > -1) &&
+      if ((reactionEntry->hitSfxB > OBJHITREACT_NO_SFX_ID) &&
           (sfxActive = Sfx_IsPlayingFromObject((int)object,(u16)reactionEntry->hitSfxB),
           !sfxActive)) {
         Sfx_PlayFromObject((int)object,(u16)reactionEntry->hitSfxB);
@@ -108,10 +108,11 @@ int objHitReact_update(ObjAnimComponent *obj,ObjHitReactEntry *reactionEntries,u
         fn_8009A1DC((double)lbl_803DE964,(int)object,(undefined2 *)&effectPos.x,1,0);
       }
     }
-    if (((state & 0xff) == 0) && (reactionEntry->reactionAnim > -1)) {
+    if (((state & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&
+        (reactionEntry->reactionAnim > OBJHITREACT_NO_REACTION_ANIM)) {
       ObjAnim_SetCurrentMove((double)lbl_803DE910,(int)object,(int)reactionEntry->reactionAnim,0);
       *stepScale = reactionEntry->cooldown;
-      state = 1;
+      state = OBJHITREACT_REACTION_STATE_ACTIVE;
     }
   }
   return state;
