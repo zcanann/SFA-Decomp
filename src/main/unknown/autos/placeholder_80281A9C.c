@@ -19,7 +19,7 @@ extern u8 lbl_803D3F20[];
  *
  * EN v1.1 Address: 0x80281A30, size 244b
  */
-void inpResetMidiCtrl(u8 a, u8 b, int mode)
+void inpResetMidiCtrl(u8 a, u8 b, u32 mode)
 {
     u8 *src;
     u8 *dst;
