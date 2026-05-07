@@ -76,6 +76,8 @@ int firepipe_spawnEffectObject(FirePipeExtra *extra, FirePipeObject *obj, void *
     return effectObj;
 }
 
+#pragma peephole off
+#pragma scheduling off
 void firepipe_releaseEffectObject(FirePipeObject *obj)
 {
     if ((*(u16 *)((int)obj + 0xb0) & 0x200) != 0) {
@@ -88,7 +90,11 @@ void firepipe_releaseEffectObject(FirePipeObject *obj)
         Obj_FreeObject((int)obj);
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma peephole off
+#pragma scheduling off
 int firepipe_clearLinkedUpdateFlag(FirePipeObject *obj)
 {
     ((FirePipeBitFlags *)&obj->extra->flags)->bit2 = 0;
@@ -100,6 +106,8 @@ int firepipe_setLinkedUpdateFlag(FirePipeObject *obj)
     ((FirePipeBitFlags *)&obj->extra->flags)->bit2 = 1;
     return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 int firepipe_getExtraSize(void)
 {
