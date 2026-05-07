@@ -203,7 +203,7 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
     iVar11 = (int)state;
     state->step = moveStepScale * state->segmentLength;
     if (state->eventCountdown != 0) {
-      if ((state->flags & 8) != 0) {
+      if ((state->flags & OBJANIM_STATE_FLAG_REFRESH_SAVED_STEP) != 0) {
         state->savedStep = state->step;
       }
       state->progress = state->savedStep * deltaTime + state->progress;
@@ -229,7 +229,7 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
           }
         }
       }
-      if ((state->flags & 2) == 0) {
+      if ((state->flags & OBJANIM_STATE_FLAG_HOLD_EVENT_COUNTDOWN) == 0) {
         eventCountdown =
             (int)-(float)((ObjAnim_U32AsDouble((uint)state->eventStep) -
                            lbl_803DE8E8) *
@@ -806,7 +806,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
      (state = bank->currentState, iVar24 = (int)state, iVar24 != 0)) {
     state->step = (float)(dVar31 * (double)state->segmentLength);
     if (state->eventCountdown != 0) {
-      if ((state->flags & 8) != 0) {
+      if ((state->flags & OBJANIM_STATE_FLAG_REFRESH_SAVED_STEP) != 0) {
         state->savedStep = state->step;
       }
       state->progress =
@@ -833,7 +833,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
           }
         }
       }
-      if ((state->flags & 2) == 0) {
+      if ((state->flags & OBJANIM_STATE_FLAG_HOLD_EVENT_COUNTDOWN) == 0) {
         uVar15 = (uint)-(float)((double)(float)((double)CONCAT44(0x43300000,
                                                                  (uint)state->eventStep) -
                                                lbl_803DE8E8) * deltaTime -
