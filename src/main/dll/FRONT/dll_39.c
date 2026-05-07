@@ -108,11 +108,11 @@ extern undefined4 *lbl_803DCA4C;
 extern undefined4 *lbl_803DCA50;
 extern undefined4 *lbl_803DCAA0;
 extern int lbl_803DD5F8;
-extern u8 lbl_803DD5FC;
+extern s8 lbl_803DD5FC;
 extern f32 lbl_803DD600;
 extern f32 lbl_803DD604;
 extern u8 lbl_803DD608;
-extern u8 lbl_803DD609;
+extern s8 lbl_803DD609;
 extern u8 lbl_803DD60A;
 extern u8 lbl_803DD616;
 extern int lbl_803DD610;
@@ -174,7 +174,7 @@ struct NAttractModeMovieDims {
 #pragma peephole off
 int fn_80115FBC(void)
 {
-  s8 frameStep;
+  int frameStep;
 
   frameStep = framesThisStep;
   OSReport(sNRarewareReportTag);
@@ -197,10 +197,10 @@ int fn_80115FBC(void)
     lbl_803DD609 = 0x2d;
     lbl_803DD608 = 1;
   }
-  if ((s8)lbl_803DD5FC > 0) {
+  if (lbl_803DD5FC > 0) {
     lbl_803DD604 -= timeDelta;
   }
-  if ((s8)lbl_803DD5FC > 2) {
+  if (lbl_803DD5FC > 2) {
     lbl_803DD600 -= timeDelta;
   }
   return 0;
