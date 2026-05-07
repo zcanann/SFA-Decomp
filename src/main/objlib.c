@@ -2907,8 +2907,8 @@ void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *
 int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3)
 {
   int iVar1;
-  float dVar2;
   float dVar3;
+  float dVar2;
 
   dVar3 = *(float *)(param_1 + 6) - *(float *)(param_2 + 0xc);
   dVar2 = *(float *)(param_1 + 10) - *(float *)(param_2 + 0x14);
@@ -2916,7 +2916,7 @@ int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3)
   if (param_3 != (float *)0x0) {
     *param_3 = sqrtf(dVar3 * dVar3 + dVar2 * dVar2);
   }
-  iVar1 = (int)(short)iVar1 - (uint)*(short *)param_1;
+  iVar1 = (int)(short)iVar1 - (uint)(ushort)*(short *)param_1;
   if (0x8000 < iVar1) {
     iVar1 = iVar1 + -0xffff;
   }
