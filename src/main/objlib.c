@@ -1428,9 +1428,9 @@ void ObjHits_InitWorkBuffers(void)
  */
 #pragma scheduling off
 #pragma peephole off
-uint ObjGroup_ContainsObject(int obj,int group)
+uint ObjGroup_ContainsObject(uint obj,int group)
 {
-  int *entry;
+  uint *entry;
   uint index;
   uint limit;
 
@@ -1439,9 +1439,8 @@ uint ObjGroup_ContainsObject(int obj,int group)
   }
   index = (uint)gObjGroupOffsets[group];
   limit = (uint)gObjGroupOffsets[group + 1];
-  for (entry = gObjGroupObjects + index; ((int)index < (int)limit && (obj != *entry));
-      entry = entry + 1) {
-    index = index + 1;
+  for (entry = (uint *)gObjGroupObjects + index; ((int)index < (int)limit && (obj != *entry));
+      entry = entry + 1, index = index + 1) {
   }
   return ((int)(limit ^ index) >> 1) - ((limit ^ index) & limit) >> 0x1f;
 }
@@ -2653,21 +2652,20 @@ int ObjList_FindNearestObjectByDefNo(int obj,int defNo,float *maxDistanceSq)
 #pragma peephole off
 undefined4 ObjList_ContainsObject(int param_1)
 {
-  int *piVar1;
-  int local_18;
-  int local_14 [4];
+  uint *entry;
+  int i;
+  int count;
 
-  piVar1 = (int *)ObjList_GetObjects(local_14,&local_18);
-  local_14[0] = 0;
-  while( true ) {
-    if (local_18 <= local_14[0]) {
-      return 0;
+  entry = (uint *)ObjList_GetObjects(&i, &count);
+  i = 0;
+  while (i < count) {
+    if (*entry == (uint)param_1) {
+      return 1;
     }
-    if (*piVar1 == param_1) break;
-    piVar1 = piVar1 + 1;
-    local_14[0] = local_14[0] + 1;
+    entry = entry + 1;
+    i = i + 1;
   }
-  return 1;
+  return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
