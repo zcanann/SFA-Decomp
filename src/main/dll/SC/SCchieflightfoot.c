@@ -79,6 +79,8 @@ extern f64 lbl_803E5490;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void SHthorntail_update(SHthorntailObject *obj)
 {
   SHthorntailConfig *config;
@@ -293,6 +295,8 @@ void SHthorntail_update(SHthorntailObject *obj)
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -307,6 +311,8 @@ void SHthorntail_update(SHthorntailObject *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
 {
   SHthorntailRuntime *runtime;
@@ -355,6 +361,8 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
   fn_8011507C((int)runtime,400,0x78);
   ObjGroup_AddObject((int)obj,0x4d);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -369,6 +377,8 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void SHthorntail_updateDustEffects(SHthorntailObject *obj)
 {
   SHthorntailRuntime *runtime;
@@ -435,3 +445,5 @@ void SHthorntail_updateDustEffects(SHthorntailObject *obj)
     runtime->dustEffectTimer = runtime->dustEffectTimer + timeDelta;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset

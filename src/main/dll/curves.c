@@ -287,6 +287,8 @@ LAB_800e23ec:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int curves_distanceToNearestOfType16(double param_1,double param_2,double param_3,int param_4)
 {
   float fVar1;
@@ -324,6 +326,8 @@ int curves_distanceToNearestOfType16(double param_1,double param_2,double param_
   }
   return (int)dVar9;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -917,6 +921,8 @@ LAB_800e3130:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int RomCurve_getRandomLinkedOfTypes(int param_1,int param_2,int param_3,int *param_4)
 {
   uint uVar1;
@@ -1026,6 +1032,8 @@ LAB_800e33ac:
   }
   return local_28[0];
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1158,6 +1166,8 @@ LAB_800e36d8:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void curves_find(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 *param_6,undefined4 *param_7,undefined4 *param_8)
 {
@@ -1289,6 +1299,8 @@ LAB_800e3878:
     iVar8 = iVar8 + 1;
   } while( true );
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1939,6 +1951,8 @@ LAB_800e48f4:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void RomCurve_getAdjacentWindow(int param_1,int *param_2)
 {
   bool bVar1;
@@ -2049,6 +2063,8 @@ LAB_800e4bc4:
   param_2[3] = *(int *)(iVar6 + 0x28);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
