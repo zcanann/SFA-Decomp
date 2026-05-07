@@ -14,6 +14,8 @@ extern u32 lbl_803DE284;
  * EN v1.0 Address: 0x80272EA4
  * EN v1.0 Size: 200b
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_80272EA4(void)
 {
     int count;
@@ -76,3 +78,5 @@ void FUN_80272edc(uint param_1, undefined param_2, undefined4 param_3) {}
 void FUN_80272ee0(uint param_1) {}
 void FUN_80272ee4(uint param_1, byte *param_2) {}
 void FUN_80272ee8(uint param_1, int param_2) {}
+#pragma peephole reset
+#pragma scheduling reset
