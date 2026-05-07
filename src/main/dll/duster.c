@@ -3,6 +3,7 @@
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 
 extern int Sfx_PlayFromObject(u32 obj, int sfxId);
 extern int FUN_80006a10();
