@@ -58,21 +58,22 @@ void fn_80291E24(s16* p, float x);
 float fn_80291D00(float x)
 {
     s16 exponent;
-    float integer_part;
-    float fraction;
+    register float input = x;
+    register float integer_part;
+    register float fraction;
     float result;
     u32 bits;
 
-    if (x < lbl_803E7978) {
+    if (input < lbl_803E7978) {
         return lbl_803E797C;
     }
 
-    fn_80291E24(&exponent, x);
+    fn_80291E24(&exponent, input);
     integer_part = fn_80291E08(&exponent);
-    fraction = x - integer_part;
+    fraction = input - integer_part;
 
     if (fraction != lbl_803E797C) {
-        if (x < lbl_803E797C) {
+        if (input < lbl_803E797C) {
             exponent--;
             fraction += lbl_803E7980;
         }
@@ -120,21 +121,22 @@ void fn_80291E24(s16* p, float x)
 
 float fn_80291E40(float x)
 {
-    float abs_x;
-    float rounded;
+    register float input = x;
+    register float abs_x;
+    register float rounded;
     s16 short_value;
     int int_value;
 
-    abs_x = __fabsf(x);
+    abs_x = __fabsf(input);
     if (abs_x < lbl_803E79A0) {
         fn_80291CE4(&short_value, abs_x);
         rounded = fn_80291CC8(&short_value);
 
-        if (x >= lbl_803E79A4) {
+        if (input >= lbl_803E79A4) {
             return rounded;
         }
 
-        if (x != -rounded) {
+        if (input != -rounded) {
             return lbl_803E79A8 - rounded;
         }
 
@@ -142,19 +144,19 @@ float fn_80291E40(float x)
     }
 
     if (abs_x < lbl_803E79AC) {
-        int_value = (int)x;
+        int_value = (int)input;
         rounded = (float)int_value;
 
-        if (x >= lbl_803E79A4) {
+        if (input >= lbl_803E79A4) {
             return rounded;
         }
 
-        if (x != rounded) {
+        if (input != rounded) {
             return rounded - lbl_803E79B0;
         }
 
         return rounded;
     }
 
-    return x;
+    return input;
 }
