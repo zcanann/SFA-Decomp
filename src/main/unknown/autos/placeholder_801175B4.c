@@ -20,23 +20,27 @@ extern int lbl_803DD658;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int fn_801175A4(OSPriority priority, void *param)
 {
     u8 *base = lbl_803A4448;
-    int ok;
 
     if (param != NULL) {
-        ok = OSCreateThread((OSThread *)(base + 0x1058), fn_80117460, param,
-                            base + 0x1058, 0x1000, priority, 1);
+        if (OSCreateThread((OSThread *)(base + 0x1058), fn_80117460, param,
+                           base + 0x1058, 0x1000, priority, 1) == 0) {
+            return 0;
+        }
     } else {
-        ok = OSCreateThread((OSThread *)(base + 0x1058), fn_8011750C, NULL,
-                            base + 0x1058, 0x1000, priority, 1);
-    }
-    if (ok == 0) {
-        return 0;
+        if (OSCreateThread((OSThread *)(base + 0x1058), fn_8011750C, NULL,
+                           base + 0x1058, 0x1000, priority, 1) == 0) {
+            return 0;
+        }
     }
     OSInitMessageQueue((OSMessageQueue *)(base + 0x38), (OSMessage *)(base + 0xc), 3);
     OSInitMessageQueue((OSMessageQueue *)(base + 0x18), (OSMessage *)base, 3);
     lbl_803DD658 = 1;
     return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
