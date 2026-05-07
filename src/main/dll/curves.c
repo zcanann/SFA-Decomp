@@ -90,6 +90,15 @@ extern char sCurvesMaxRomCurvesExceeded[];
 #define ROMCURVE_MAX_CURVES 0x514
 #define ROMCURVE_ID_OFFSET 0x14
 
+typedef struct RomCurveDef {
+  u8 pad00[ROMCURVE_ID_OFFSET];
+  u32 id;
+} RomCurveDef;
+
+static inline u32 RomCurve_GetId(int curve) {
+  return ((RomCurveDef *)curve)->id;
+}
+
 /*
  * --INFO--
  *
@@ -2423,7 +2432,7 @@ void curves_remove(int curve)
   slot = gRomCurveTable;
   count = gRomCurveCount;
   while ((index < count) &&
-         (*(uint *)(curve + ROMCURVE_ID_OFFSET) != *(uint *)(*slot + ROMCURVE_ID_OFFSET))) {
+         (RomCurve_GetId(curve) != RomCurve_GetId(*slot))) {
     slot = slot + 1;
     index = index + 1;
   }
@@ -2477,7 +2486,7 @@ void curves_addCurveDef(int curve)
   insertIndex = 0;
   slot = gRomCurveTable;
   while ((insertIndex < count) &&
-         (*(uint *)(curve + ROMCURVE_ID_OFFSET) > *(uint *)(*slot + ROMCURVE_ID_OFFSET))) {
+         (RomCurve_GetId(curve) > RomCurve_GetId(*slot))) {
     slot = slot + 1;
     insertIndex = insertIndex + 1;
   }
