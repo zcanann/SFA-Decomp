@@ -43,6 +43,20 @@ extern f32 lbl_803E6334;
 extern f32 lbl_803E6338;
 extern f32 lbl_803E633C;
 
+#define PLATFORM1_OBJECT_TYPE_OFFSET 0x46
+#define PLATFORM1_TRACK_VALUE_OFFSET 0x98
+#define PLATFORM1_MODEL_ID_OFFSET 0xa0
+#define PLATFORM1_STATE_OFFSET 0xb8
+
+#define PLATFORM1_ANCHOR_OBJECT_TYPE 0x3ff
+#define PLATFORM1_PEER_OBJECT_TYPE 0x282
+#define PLATFORM1_ACTIVE_MODEL_ID 0x401
+#define PLATFORM1_IDLE_MODEL_ID 0
+
+#define PLATFORM1_LOOP_SFX_ID 0x3af
+#define PLATFORM1_PLAYER_SFX_ID 0x13a
+#define PLATFORM1_PLATFORM_SFX_ID 0x4a3
+
 /*
  * --INFO--
  *
@@ -177,7 +191,7 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
   local_c8 = (float)in_f19;
   fStack_c4 = (float)in_ps19_1;
   uVar2 = FUN_80286840();
-  state = *(Platform1State **)(uVar2 + 0xb8);
+  state = *(Platform1State **)(uVar2 + PLATFORM1_STATE_OFFSET);
   uVar3 = FUN_80017a98();
   state->flags = state->flags | PLATFORM1_FLAG_ACTIVE;
   FUN_8011e868(0xf);
@@ -187,7 +201,7 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
   while (local_104[0] < local_108) {
     state->linkedObject = *(int *)(iVar4 + local_104[0] * 4);
     local_104[0] = local_104[0] + 1;
-    if (*(short *)(state->linkedObject + 0x46) == 0x3ff) {
+    if (*(short *)(state->linkedObject + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_ANCHOR_OBJECT_TYPE) {
       local_104[0] = local_108;
     }
   }
@@ -199,7 +213,8 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
       puVar8 = (uint *)(iVar5 + (int)local_110 * 4);
       for (; param_12 = local_10c, param_13 = local_110, (int)local_110 < local_10c;
           local_110 = (int *)((int)local_110 + 1)) {
-        if ((*puVar8 != uVar2) && (*(short *)(*puVar8 + 0x46) == 0x282)) {
+        if ((*puVar8 != uVar2) &&
+            (*(short *)(*puVar8 + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE)) {
           iVar5 = *(int *)(iVar5 + (int)local_110 * 4);
           (**(code **)(**(int **)(iVar5 + 0x68) + 0x20))(iVar5,2);
           break;
@@ -221,13 +236,14 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
     }
     else if (bVar7 == 5) {
       if (state->linkedObject != 0) {
-        *(float *)(uVar3 + 0x98) = lbl_803E6300;
-        *(float *)(state->linkedObject + 0x98) = fVar1;
-        FUN_800305f8((double)*(float *)(uVar3 + 0x98),param_2,param_3,param_4,param_5,param_6,
-                     param_7,param_8,uVar3,0x401,0,param_12,param_13,param_14,param_15,param_16);
-        FUN_800305f8((double)*(float *)(state->linkedObject + 0x98),param_2,param_3,param_4,param_5,
-                     param_6,param_7,param_8,state->linkedObject,0,0,param_12,param_13,param_14,
-                     param_15,param_16);
+        *(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET) = lbl_803E6300;
+        *(float *)(state->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET) = fVar1;
+        FUN_800305f8((double)*(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET),param_2,param_3,
+                     param_4,param_5,param_6,param_7,param_8,uVar3,PLATFORM1_ACTIVE_MODEL_ID,0,
+                     param_12,param_13,param_14,param_15,param_16);
+        FUN_800305f8((double)*(float *)(state->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET),param_2,
+                     param_3,param_4,param_5,param_6,param_7,param_8,state->linkedObject,
+                     PLATFORM1_IDLE_MODEL_ID,0,param_12,param_13,param_14,param_15,param_16);
         state->prevTrackOffset = state->currentTrackOffset;
       }
     }
@@ -236,7 +252,8 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
       puVar8 = (uint *)(iVar5 + (int)local_118 * 4);
       for (; param_12 = local_114, param_13 = local_118, (int)local_118 < local_114;
           local_118 = (int *)((int)local_118 + 1)) {
-        if ((*puVar8 != uVar2) && (*(short *)(*puVar8 + 0x46) == 0x282)) {
+        if ((*puVar8 != uVar2) &&
+            (*(short *)(*puVar8 + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE)) {
           iVar5 = *(int *)(iVar5 + (int)local_118 * 4);
           (**(code **)(**(int **)(iVar5 + 0x68) + 0x20))(iVar5,3);
           break;
@@ -257,18 +274,20 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
       param_16 = *DAT_803dd6d0;
       (**(code **)(param_16 + 0x1c))(0x48,1,3);
     }
-    if (*(short *)(uVar3 + 0xa0) != 0x401) {
-      FUN_800305f8((double)*(float *)(uVar3 + 0x98),param_2,param_3,param_4,param_5,param_6,param_7,
-                   param_8,uVar3,0x401,0,param_12,param_13,param_14,param_15,param_16);
+    if (*(short *)(uVar3 + PLATFORM1_MODEL_ID_OFFSET) != PLATFORM1_ACTIVE_MODEL_ID) {
+      FUN_800305f8((double)*(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET),param_2,param_3,
+                   param_4,param_5,param_6,param_7,param_8,uVar3,PLATFORM1_ACTIVE_MODEL_ID,0,
+                   param_12,param_13,param_14,param_15,param_16);
     }
     iVar4 = state->linkedObject;
-    if (*(short *)(iVar4 + 0xa0) != 0) {
-      FUN_800305f8((double)*(float *)(iVar4 + 0x98),param_2,param_3,param_4,param_5,param_6,param_7,
-                   param_8,iVar4,0,0,param_12,param_13,param_14,param_15,param_16);
+    if (*(short *)(iVar4 + PLATFORM1_MODEL_ID_OFFSET) != PLATFORM1_IDLE_MODEL_ID) {
+      FUN_800305f8((double)*(float *)(iVar4 + PLATFORM1_TRACK_VALUE_OFFSET),param_2,param_3,param_4,
+                   param_5,param_6,param_7,param_8,iVar4,PLATFORM1_IDLE_MODEL_ID,0,param_12,
+                   param_13,param_14,param_15,param_16);
     }
     *(undefined2 *)(param_11 + 0x6e) = 0xffff;
     *(undefined *)(param_11 + 0x56) = 0;
-    FUN_800068c4(uVar2,0x3af);
+    FUN_800068c4(uVar2,PLATFORM1_LOOP_SFX_ID);
     dVar13 = (double)lbl_803E6304;
     dVar14 = (double)lbl_803E630C;
     dVar15 = (double)lbl_803E6308;
@@ -341,8 +360,9 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
                                                    (float)((double)CONCAT44(0x43300000,uStack_f4) -
                                                           dVar12)) / dVar22),(double)lbl_803DC074)
       ;
-      if ((iVar5 != 0) && (*(float *)(uVar3 + 0x98) < lbl_803E6310)) {
-        *(float *)(uVar3 + 0x98) = lbl_803E6314 + *(float *)(uVar3 + 0x98);
+      if ((iVar5 != 0) && (*(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET) < lbl_803E6310)) {
+        *(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET) =
+            lbl_803E6314 + *(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET);
       }
       local_f0 = (double)CONCAT44(0x43300000,state->currentTrackOffset ^ 0x80000000);
       uStack_f4 = state->prevTrackOffset ^ 0x80000000;
@@ -352,9 +372,9 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
                                                           dVar12)) / dVar22),(double)lbl_803DC074)
       ;
       if (iVar5 != 0) {
-        fVar1 = *(float *)(state->linkedObject + 0x98);
+        fVar1 = *(float *)(state->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET);
         if (fVar1 < lbl_803E6310) {
-          *(float *)(state->linkedObject + 0x98) = lbl_803E6314 + fVar1;
+          *(float *)(state->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET) = lbl_803E6314 + fVar1;
         }
       }
       state->prevTrackOffset = state->currentTrackOffset;
@@ -371,7 +391,7 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
         local_f0 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
         state->playerSfxTimer = (int)(float)(local_f0 - DOUBLE_803e6340);
       }
-      FUN_80006824(uVar3,0x13a);
+      FUN_80006824(uVar3,PLATFORM1_PLAYER_SFX_ID);
     }
     state->platformSfxTimer = (int)((float)state->platformSfxTimer - lbl_803DC074);
     if ((double)(float)state->platformSfxTimer < (double)lbl_803E6310) {
@@ -385,7 +405,7 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
         local_f0 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
         state->platformSfxTimer = (int)(float)(local_f0 - DOUBLE_803e6340);
       }
-      FUN_80006824(uVar2,0x4a3);
+      FUN_80006824(uVar2,PLATFORM1_PLATFORM_SFX_ID);
     }
     if (in_f19 < (double)lbl_803E6310) {
       in_f19 = -in_f19;
@@ -395,14 +415,15 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
     if (100 < iVar4) {
       iVar4 = 100;
     }
-    FUN_80006818((double)lbl_803E633C,uVar2,0x3af,(byte)iVar4);
+    FUN_80006818((double)lbl_803E633C,uVar2,PLATFORM1_LOOP_SFX_ID,(byte)iVar4);
   }
 LAB_801df3c4:
   FUN_8028688c();
   return;
 LAB_801defcc:
   if (local_11c <= local_120) goto LAB_801defd8;
-  if ((*puVar8 != uVar2) && (*(short *)(*puVar8 + 0x46) == 0x282)) {
+  if ((*puVar8 != uVar2) &&
+      (*(short *)(*puVar8 + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE)) {
     iVar4 = *(int *)(iVar4 + local_120 * 4);
     (**(code **)(**(int **)(iVar4 + 0x68) + 0x20))(iVar4,4);
     goto LAB_801defd8;
@@ -423,7 +444,8 @@ LAB_801defd8:
   goto LAB_801df3c4;
 LAB_801df0d8:
   if (local_124 <= local_128) goto LAB_801df0e4;
-  if ((*puVar8 != uVar2) && (*(short *)(*puVar8 + 0x46) == 0x282)) {
+  if ((*puVar8 != uVar2) &&
+      (*(short *)(*puVar8 + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE)) {
     iVar4 = *(int *)(iVar4 + local_128 * 4);
     (**(code **)(**(int **)(iVar4 + 0x68) + 0x20))(iVar4,4);
     goto LAB_801df0e4;
