@@ -65,6 +65,7 @@
 #define EXPGFX_SOURCE_FRAME_STATE_A 1
 #define EXPGFX_SOURCE_FRAME_STATE_B 2
 #define EXPGFX_SOURCE_FRAME_STATE_MIXED 3
+#define EXPGFX_SOURCE_OBJTYPE_MATCH_ALL 0xD4
 
 typedef struct ExpgfxBounds {
   float minX;
@@ -82,6 +83,7 @@ typedef struct ExpgfxCurrentSource {
 
 typedef struct ExpgfxSourceObject {
   u8 pad00[0x46];
+  /* Type 0xD4 updates frame flags for every tracked pool, not just pointer matches. */
   s16 objType;
 } ExpgfxSourceObject;
 
