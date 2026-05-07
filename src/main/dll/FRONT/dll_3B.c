@@ -203,30 +203,35 @@ void fn_80116F84(void)
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void *fn_8011730C(int flags)
 {
   void *message;
 
-  if (OSReceiveMessage(&lbl_803A4460,&message,flags) != 1) {
-    message = NULL;
+  if (OSReceiveMessage(&lbl_803A4460,&message,flags) == 1) {
+    return message;
   }
-  return message;
+  return NULL;
 }
 
 void fn_80117350(void *message)
 {
   OSSendMessage(&lbl_803A4480,message,0);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void fn_80117380(void *cursorArg)
 {
-  MovieAudioCursor *cursor;
-  u32 track;
   u32 *audioFrameSizes;
   u8 *audioFrame;
+  MovieAudioCursor *cursor;
   MovieAudioPacket *packet;
+  u32 track;
 
   cursor = (MovieAudioCursor *)cursorArg;
   audioFrameSizes = (u32 *)(cursor->frame + 8);
@@ -242,36 +247,42 @@ void fn_80117380(void *cursorArg)
     audioFrame += *audioFrameSizes++;
   }
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void *fn_80117460(void *param)
 {
   int frame;
   int stride;
   MovieAudioCursor cursor;
 
-  frame = 0;
   stride = lbl_803A5D60.frameStride;
   cursor.frame = param;
+  frame = 0;
   while (true) {
     cursor.frameIndex = frame;
     fn_80117380(&cursor);
     if (((frame + lbl_803A5D60.frameOffset) % lbl_803A5D60.framesPerGroup) ==
         (lbl_803A5D60.framesPerGroup - 1)) {
-      if ((lbl_803A5D60.flags & 1) == 0) {
-        OSSuspendThread(&lbl_803A54A0);
-      } else {
+      if ((lbl_803A5D60.flags & 1) != 0) {
         stride = *(int *)cursor.frame;
         cursor.frame = lbl_803A5D60.loopFrame;
+      } else {
+        OSSuspendThread(&lbl_803A54A0);
       }
     } else {
-      stride = *(int *)cursor.frame;
+      int newStride = *(int *)cursor.frame;
       cursor.frame += stride;
+      stride = newStride;
     }
     frame++;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void *fn_8011750C(void *param)
 {
