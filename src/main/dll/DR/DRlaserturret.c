@@ -99,7 +99,7 @@ int fn_801E6B10(void *obj, void *param2)
     if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
         if (fn_8029689C(playerObj) < 1) {
             rng = randomGetRange(0, 2);
-            (**(void (***)(int, void *, int))((char *)*(void **)&lbl_803DCA54 + 0x48))(rng, obj, -1);
+            (*(code **)lbl_803DCA54)[0x48 / 4](rng, obj, -1);
             buttonDisable(0, 0x100);
         } else {
             GameBit_Set(0x61d, 1);
@@ -232,7 +232,7 @@ int fn_801E6D08(void *obj, void *param2)
     *(u16 *)((char *)state + 0x9ca) = (u16)sum;
     if (ObjTrigger_IsSet(obj) != 0) {
         rng = randomGetRange(0, 2);
-        (**(void (***)(int, void *, int))((char *)*(void **)&lbl_803DCA54 + 0x48))(rng, obj, -1);
+        (*(code **)lbl_803DCA54)[0x48 / 4](rng, obj, -1);
     }
     return 0;
 }
@@ -257,8 +257,8 @@ int fn_801E7124(void *obj)
     }
     GameBit_Set(0xad3, 1);
     {
-        void *target = *(void **)((char *)state + 0x9b4);
-        (**(void (***)(void *, int, int))(*(int *)((char *)target + 0x68) + 0x24))(target, 1, 2);
+        int *target = *(int **)((char *)state + 0x9b4);
+        (**(code ***)((char *)target + 0x68))[0x24 / 4](target, 1, 2);
     }
     return 2;
 }
@@ -332,7 +332,7 @@ int fn_801E71A4(void *obj, void *param2, int dispatch)
         btn = getButtonsJustPressed(0);
         if ((btn & 0x200) != 0) {
             *(u8 *)((char *)state + 0x9d4) = *(u8 *)((char *)state + 0x9d4) | 0x10;
-            (**(void (***)(int, int))((char *)*(void **)&lbl_803DCA4C + 0x8))(0x1e, 1);
+            (*(code **)lbl_803DCA4C)[0x8 / 4](0x1e, 1);
             return 1;
         }
     }
@@ -350,7 +350,10 @@ int fn_801E71A4(void *obj, void *param2, int dispatch)
         }
         if (dispatch == 0x15) {
             if ((s8)nudge == 1) {
-                (**(void (***)(void *))(*(int *)((char *)state + 0x68) + 0x48))(state);
+                {
+                    int *target = *(int **)((char *)state + 0x9b4);
+                    (**(code ***)((char *)target + 0x68))[0x48 / 4](target);
+                }
             }
             return ((s8)nudge == 1) ? 1 : 0;
         } else if (dispatch < 0x15) {
@@ -380,14 +383,14 @@ int fn_801E75EC(void *obj)
 
     state = *(void **)((char *)obj + 0xb8);
     if ((*(u8 *)((char *)state + 0x9d4) & 2) != 0) {
+        int *target;
         gameTimerInit(0x11, 0x1e);
         fn_8001469C();
         fn_8011F6F0(1);
         GameBit_Set(0x626, 1);
-        (**(void (***)(void *, u8))(*(int *)(*(int *)((char *)state + 0x9b4) + 0x68) + 0x4c))(
-            *(void **)((char *)state + 0x9b4), *(u8 *)((char *)state + 0x9d5));
-        (**(void (***)(int, int, int, int, int))(*(int *)*(void **)&lbl_803DCA74 + 0x4))(
-            0, 0xf5, 0, 0, 0);
+        target = *(int **)((char *)state + 0x9b4);
+        (**(code ***)((char *)target + 0x68))[0x4c / 4](target, *(u8 *)((char *)state + 0x9d5));
+        (*(code **)lbl_803DCA74)[0x4 / 4](0, 0xf5, 0, 0, 0);
     } else {
         fn_8011F38C(0);
     }
