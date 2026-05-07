@@ -1,76 +1,59 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_43.h"
 
-extern undefined8 FUN_80006c64();
-extern undefined4 FUN_80017484();
-extern undefined4 FUN_800709e8();
-extern undefined4 FUN_8028fde8();
+typedef struct TitleMenuControl {
+  void *vtable;
+} TitleMenuControl;
 
-extern undefined4 DAT_803a92e4;
-extern undefined4 DAT_803a92e8;
-extern undefined4 DAT_803dc66c;
-extern undefined4 DAT_803dc674;
-extern undefined4 DAT_803de324;
-extern undefined4 DAT_803de328;
-extern undefined4 DAT_803de330;
-extern f32 lbl_803E29D8;
-extern f32 lbl_803E29DC;
-extern f32 lbl_803E29E0;
-extern char s__3d__02d__02d_8031b4a4[];
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void fn_8011A7E4(int arg);
+
+extern u8 lbl_803DB424;
+extern TitleMenuControl *lbl_803DCA4C;
+extern TitleMenuControl *lbl_803DCA70;
+extern u8 lbl_803DD6C4;
+extern u8 lbl_803DD6CC;
+extern u8 lbl_803DD6CD;
+extern u8 lbl_803DD6CF;
 
 /*
  * --INFO--
  *
- * Function: FUN_80119fac
+ * Function: fn_80119FAC
  * EN v1.0 Address: 0x80119FAC
- * EN v1.0 Size: 868b
- * EN v1.1 Address: 0x8011A07C
- * EN v1.1 Size: 472b
+ * EN v1.0 Size: 304b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80119fac(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,uint param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+#pragma scheduling off
+#pragma peephole off
+void fn_80119FAC(int param_1, int param_2)
 {
-  uint uVar1;
-  uint uVar2;
-  undefined4 uVar3;
-  uint uVar4;
-  undefined8 uVar5;
-  double dVar6;
-  undefined auStack_18 [20];
-  
-  FUN_800709e8((double)lbl_803E29D8,(double)lbl_803E29DC,DAT_803a92e4,param_10,0x100);
-  dVar6 = (double)lbl_803E29DC;
-  FUN_800709e8((double)lbl_803E29E0,dVar6,DAT_803a92e8,param_10,0x100);
-  FUN_80017484(0xff,0xff,0xff,(byte)param_10);
-  DAT_803de330 = DAT_803de328;
-  uVar3 = 0;
-  uVar5 = FUN_80006c64(DAT_803de328 + DAT_803de324 * 0x24,0x41,0,0);
-  FUN_8028fde8(uVar5,dVar6,param_3,param_4,param_5,param_6,param_7,param_8,(int)auStack_18,
-               &DAT_803dc66c,(uint)*(byte *)(DAT_803de330 + DAT_803de324 * 0x24 + 4),uVar3,param_13,
-               param_14,param_15,param_16);
-  uVar5 = FUN_80006c64(auStack_18,0x42,0,0);
-  uVar2 = *(uint *)(DAT_803de330 + DAT_803de324 * 0x24 + 8);
-  uVar4 = uVar2 % 0xe10;
-  uVar1 = uVar4 % 0x3c;
-  FUN_8028fde8(uVar5,dVar6,param_3,param_4,param_5,param_6,param_7,param_8,(int)auStack_18,
-               s__3d__02d__02d_8031b4a4,uVar2 / 0xe10,uVar4 / 0x3c,uVar1,param_14,param_15,param_16)
-  ;
-  uVar3 = 0;
-  uVar5 = FUN_80006c64(auStack_18,0x43,0,0);
-  FUN_8028fde8(uVar5,dVar6,param_3,param_4,param_5,param_6,param_7,param_8,(int)auStack_18,
-               &DAT_803dc674,(uint)*(byte *)(DAT_803de330 + DAT_803de324 * 0x24 + 6),uVar3,uVar1,
-               param_14,param_15,param_16);
-  uVar3 = 0;
-  uVar5 = FUN_80006c64(auStack_18,0x44,0,0);
-  FUN_8028fde8(uVar5,dVar6,param_3,param_4,param_5,param_6,param_7,param_8,(int)auStack_18,
-               &DAT_803dc674,(uint)*(byte *)(DAT_803de330 + DAT_803de324 * 0x24 + 5),uVar3,uVar1,
-               param_14,param_15,param_16);
-  FUN_80006c64(auStack_18,0x45,0,0);
-  return;
+  if (param_1 == 0) {
+    if (lbl_803DB424 != 0) {
+      Sfx_PlayFromObject(0, 0x419);
+      fn_8011A7E4(0);
+    } else {
+      Sfx_PlayFromObject(0, 0x100);
+      ((void (**)(int, int))lbl_803DCA4C->vtable)[2](0x14, 5);
+      lbl_803DD6CF = 0x23;
+      lbl_803DD6CC = 1;
+    }
+  } else {
+    lbl_803DD6CD = 1;
+    Sfx_PlayFromObject(0, 0x418);
+    ((void (**)(int, int))lbl_803DCA4C->vtable)[2](0x14, 1);
+    ((void (**)(int))lbl_803DCA70->vtable)[7](0);
+    ((void (**)(int))lbl_803DCA70->vtable)[7](1);
+    ((void (**)(int))lbl_803DCA70->vtable)[7](2);
+    ((void (**)(int))lbl_803DCA70->vtable)[7](3);
+    lbl_803DD6CF = 0x23;
+    lbl_803DD6C4 = param_2;
+  }
 }
+#pragma peephole reset
+#pragma scheduling reset
