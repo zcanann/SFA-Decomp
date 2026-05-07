@@ -857,6 +857,8 @@ extern f32 lbl_803DEE9C;
  * 132 byte discrepancy. Not crackable without materializing the
  * comparison indices via a global/volatile, which would break other
  * matches. */
+#pragma scheduling off
+#pragma peephole off
 void fn_80070234(f32* param_1)
 {
     int i, j;
@@ -869,6 +871,8 @@ void fn_80070234(f32* param_1)
         param_1 += 4;
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1002,6 +1006,8 @@ void fn_800703C4(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma scheduling off
+#pragma peephole off
 void fn_80070404(f32 a, f32 b)
 {
     extern f32 Camera_GetNearPlane(void);
@@ -1041,6 +1047,8 @@ void fn_80070404(f32 a, f32 b)
     c = lbl_803DD01C;
     GXSetFog(GX_FOG_PERSP_EXP, lbl_803DD024, lbl_803DD020, lbl_803DD038, lbl_803DD034, c);
 }
+#pragma peephole reset
+#pragma scheduling reset
 #pragma scheduling reset
 
 /*
@@ -3595,6 +3603,8 @@ void fn_8007CF7C(void)
  * each PSMTXConcat call; target caches it once in r31 (callee-save)
  * and reuses across both calls. Register-allocator preference — not
  * crackable without inline asm. */
+#pragma scheduling off
+#pragma peephole off
 void fn_8007D670(void)
 {
     Mtx* mats = &lbl_803967C0;
@@ -3604,6 +3614,8 @@ void fn_8007D670(void)
     PSMTXConcat(mats[2], mats[0], tmp);
     GXLoadTexMtxImm(tmp, 0x24, GX_MTX3x4);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

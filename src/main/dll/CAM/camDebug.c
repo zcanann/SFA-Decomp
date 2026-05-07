@@ -24,6 +24,8 @@ extern f32 lbl_803E19D4;
 extern f32 lbl_803E19D8;
 extern f32 lbl_803E19DC;
 
+#pragma scheduling off
+#pragma peephole off
 void CameraModeClimb_init(undefined4 param_1, int param_2, s8 *param_3) {
     f32 local_58;
     f32 local_5c;
@@ -75,6 +77,8 @@ void CameraModeClimb_init(undefined4 param_1, int param_2, s8 *param_3) {
         break;
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void CameraModeClimb_release(void) {}
 void CameraModeClimb_initialise(void) {}

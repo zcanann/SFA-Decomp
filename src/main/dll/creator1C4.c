@@ -46,6 +46,8 @@ extern f32 lbl_803E5CD8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -280,6 +282,8 @@ void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefin
   FUN_80286880();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */

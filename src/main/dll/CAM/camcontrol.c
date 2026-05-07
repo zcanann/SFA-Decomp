@@ -138,6 +138,8 @@ typedef struct CamcontrolQueuedActionParam {
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void camcontrol_updateTargetFeedback(void)
 {
   bool bVar1;
@@ -351,6 +353,8 @@ LAB_80102ab4:
                                DOUBLE_803e22d0));
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 int Camera_isZooming(void)
@@ -477,6 +481,8 @@ void Camera_setFocus(void *target)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char triggerMode)
 {
   uint handlerCount;
@@ -578,6 +584,8 @@ LAB_80102f3c:
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -717,6 +725,8 @@ void Camera_setMode(undefined4 param_1,undefined4 param_2,int param_3,int param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void Camera_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                    undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -816,6 +826,8 @@ void Camera_update(undefined8 param_1,double param_2,double param_3,undefined8 p
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* sda21 accessors. */
 u32 Camera_getMode(void) { return lbl_803DD518; }

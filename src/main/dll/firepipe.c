@@ -40,6 +40,8 @@ typedef struct {
 
 typedef void (*FirePipeEffectInitFn)(int obj, void *spawnDef, int param_3);
 
+#pragma scheduling off
+#pragma peephole off
 int firepipe_spawnEffectObject(FirePipeExtra *extra, FirePipeObject *obj, void *spawnDef)
 {
     int i;
@@ -75,6 +77,8 @@ int firepipe_spawnEffectObject(FirePipeExtra *extra, FirePipeObject *obj, void *
     }
     return effectObj;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off

@@ -1551,6 +1551,8 @@ void ObjGroup_FindNearestObjectToPoint(undefined4 param_1,undefined4 param_2,flo
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjGroup_FindNearestObjectForObject(undefined4 param_1,undefined4 param_2,float *param_3)
 {
   byte bVar1;
@@ -1592,6 +1594,8 @@ void ObjGroup_FindNearestObjectForObject(undefined4 param_1,undefined4 param_2,f
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1606,6 +1610,8 @@ void ObjGroup_FindNearestObjectForObject(undefined4 param_1,undefined4 param_2,f
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjGroup_FindNearestObject(undefined4 param_1,undefined4 param_2,float *param_3)
 {
   byte bVar1;
@@ -1647,6 +1653,8 @@ void ObjGroup_FindNearestObject(undefined4 param_1,undefined4 param_2,float *par
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

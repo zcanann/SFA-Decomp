@@ -1501,6 +1501,8 @@ void gameplay_applyPreviewSettingsForSlot(undefined8 param_1,double param_2,unde
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void gameplay_capturePreviewSettings(void)
 {
   FUN_80244e58(0,0);
@@ -1509,6 +1511,8 @@ void gameplay_capturePreviewSettings(void)
   (**(code **)(*DAT_803dd72c + 0x20))();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

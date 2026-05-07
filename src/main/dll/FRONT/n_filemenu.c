@@ -146,6 +146,8 @@ static void TitleMenu_ReloadSaveSettings(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int fn_801166C8(void)
 {
   bool inputPressed;
@@ -337,6 +339,8 @@ int fn_801166C8(void)
   }
   return (uint)((uint)(int)lbl_803DD651 < 0xd) - ((int)lbl_803DD651 >> 0x1f);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off

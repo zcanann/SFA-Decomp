@@ -61,6 +61,8 @@ extern f32 lbl_803E1D0C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_801159E4(void)
 {
   int alpha;
@@ -130,6 +132,8 @@ void fn_801159E4(void)
     gameTextShowStr(gameTextGetStr(0x565),0,0x118,300);
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -144,6 +148,8 @@ void fn_801159E4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_80115D54(void)
 {
   int *textureSlot;
@@ -175,6 +181,8 @@ void fn_80115D54(void)
   lbl_803DD5EC = 0;
   lbl_803DD5E8 = 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void TitleScreenInit_render(void) {}
@@ -245,6 +253,8 @@ void fn_80115EC0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_80115F20(void)
 {
   int frame;
@@ -266,5 +276,7 @@ void fn_80115F20(void)
     lbl_803DD600 = lbl_803E1D0C;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void n_rareware_frameEnd(void) {}

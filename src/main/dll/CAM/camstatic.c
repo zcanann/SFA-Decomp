@@ -48,6 +48,8 @@ extern f32 lbl_803E23B0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void camstatic_update(short *param_1)
 {
   float fVar1;
@@ -246,3 +248,5 @@ LAB_80105bbc:
                (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset

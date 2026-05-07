@@ -555,6 +555,8 @@ void FUN_80175ed4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void pushable_render(void)
 {
   short sVar1;
@@ -596,6 +598,8 @@ LAB_80176578:
   FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

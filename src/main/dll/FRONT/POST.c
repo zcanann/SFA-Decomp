@@ -65,6 +65,8 @@ extern f32 lbl_803E1CE0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int fn_80115650(void *objAnimArg, void *objArg, int *turning, void *controlArg,
                 float *turnSpeed, s16 *moves)
 {
@@ -169,6 +171,8 @@ int fn_80115650(void *objAnimArg, void *objArg, int *turning, void *controlArg,
   *turnSpeed = (float)((double)(s32)ret - lbl_803E1C98) / lbl_803E1CE0;
   return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_801159DC(void) {}

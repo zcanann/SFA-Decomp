@@ -56,6 +56,8 @@ typedef struct DfpTargetBlockCollisionPoints {
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject *obj,
                                            DfpTargetBlockCollisionPoints *collisionPoints)
 {
@@ -91,6 +93,8 @@ void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject *obj,
     i++;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

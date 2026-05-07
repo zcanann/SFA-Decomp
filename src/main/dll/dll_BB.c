@@ -38,6 +38,8 @@ extern f32 lbl_803E22EC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void camcontrol_applyState(short *param_1)
 {
   float fVar1;
@@ -192,3 +194,5 @@ void camcontrol_applyState(short *param_1)
   FUN_80006984();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset

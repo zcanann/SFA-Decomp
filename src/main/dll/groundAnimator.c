@@ -85,6 +85,8 @@ typedef void (*GroundAnimatorInitAnimFn)(void *obj, undefined4 state, int param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_8017D0D4(int obj)
 {
   u8 *state;
@@ -128,6 +130,8 @@ void fn_8017D0D4(int obj)
     }
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -142,6 +146,8 @@ void fn_8017D0D4(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_8017D278(short *obj, int mapData)
 {
   int step;
@@ -170,6 +176,8 @@ void fn_8017D278(short *obj, int mapData)
     state[0] = 9;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -273,12 +281,16 @@ void wm_column_free(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void wm_column_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
   if ((*(GroundAnimatorVisibleFn *)(*lbl_803DCAC0 + 0xc))(param_1, visible) != 0) {
     fn_8003B8F4(param_1, param_2, param_3, param_4, param_5, lbl_803E37B8);
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -310,6 +322,8 @@ void wm_column_hitDetect(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void wm_column_update(int obj)
 {
   int *objects;
@@ -379,6 +393,8 @@ void wm_column_update(int obj)
     *(u32 *)(obj + 0xf4) &= ~1;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -393,6 +409,8 @@ void wm_column_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void wm_column_init(short *obj, int mapData)
 {
   undefined4 state = *(undefined4 *)((int)obj + 0xb8);
@@ -406,6 +424,8 @@ void wm_column_init(short *obj, int mapData)
   (*(GroundAnimatorInitAnimFn *)(*lbl_803DCAC0 + 4))(obj, state, 0x32);
   ObjGroup_AddObject((int)obj, 4);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

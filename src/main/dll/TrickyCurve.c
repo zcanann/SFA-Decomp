@@ -46,6 +46,8 @@ extern f32 lbl_803E7100;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void TrickyCurve_updateBurstTrigger(void)
 {
   float fVar1;
@@ -176,6 +178,8 @@ void TrickyCurve_updateBurstTrigger(void)
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

@@ -42,6 +42,8 @@ extern f32 lbl_803E5D74;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void dbsh_shrine_init(int param_1)
 {
   uint uVar1;
@@ -63,6 +65,8 @@ void dbsh_shrine_init(int param_1)
   FUN_80017698(0xcbb,1);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

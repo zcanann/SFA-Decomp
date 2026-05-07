@@ -360,6 +360,8 @@ undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void camcontrol_updateTargetAction(int param_1,int param_2)
 {
   short sVar1;
@@ -409,6 +411,8 @@ void camcontrol_updateTargetAction(int param_1,int param_2)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

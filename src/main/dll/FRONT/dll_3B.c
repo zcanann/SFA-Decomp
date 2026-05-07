@@ -134,6 +134,8 @@ static void TitleMenu_PlayPopup(int id, int arg)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_80116F84(void)
 {
   int mode;
@@ -194,6 +196,8 @@ void fn_80116F84(void)
   fn_8000B694(0);
   lbl_803DD698 = 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void *fn_8011730C(int flags)
 {
@@ -210,6 +214,8 @@ void fn_80117350(void *message)
   OSSendMessage(&lbl_803A4480,message,0);
 }
 
+#pragma scheduling off
+#pragma peephole off
 void fn_80117380(void *cursorArg)
 {
   MovieAudioCursor *cursor;
@@ -232,6 +238,8 @@ void fn_80117380(void *cursorArg)
     audioFrame += *audioFrameSizes++;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void *fn_80117460(void *param)
 {

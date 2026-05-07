@@ -41,6 +41,8 @@ extern u8 lbl_80327618[0x104];
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void sh_levelcontrol_update(int param_1)
 {
   uint *puVar5;
@@ -290,6 +292,8 @@ void sh_levelcontrol_update(int param_1)
   fn_801D7C94(param_1, puVar5);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */

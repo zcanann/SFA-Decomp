@@ -317,6 +317,8 @@ LAB_80173f80:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void magicdust_init(int param_1,int param_2)
 {
   short sVar1;
@@ -450,6 +452,8 @@ LAB_80174324:
   ObjMsg_AllocQueue(param_1,1);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

@@ -170,6 +170,8 @@ struct NAttractModeMovieDims {
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int fn_80115FBC(void)
 {
   s8 frameStep;
@@ -203,6 +205,8 @@ int fn_80115FBC(void)
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void n_rareware_release(void) {}
 
@@ -242,6 +246,8 @@ void fn_801160E0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void n_attractmode_releaseMovieBuffers(void)
 {
   int freeDelay;
@@ -285,6 +291,8 @@ void n_attractmode_releaseMovieBuffers(void)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -299,6 +307,8 @@ void n_attractmode_releaseMovieBuffers(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void n_attractmode_prepareMovie(void)
 {
   int iVar1;
@@ -409,6 +419,8 @@ void n_attractmode_prepareMovie(void)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -423,6 +435,8 @@ void n_attractmode_prepareMovie(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_801165BC(u8 *param_1)
 {
   int menuAction;
@@ -445,6 +459,8 @@ void fn_801165BC(u8 *param_1)
     fn_80134C28(lbl_803DD64F);
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void TitleMenu_frameEnd(void) {}

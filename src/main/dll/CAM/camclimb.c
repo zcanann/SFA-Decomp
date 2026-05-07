@@ -28,6 +28,8 @@ extern f32 lbl_803E175C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void camclimb_update(short *param_1)
 {
   byte cVar2;
@@ -120,3 +122,5 @@ void camclimb_update(short *param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
