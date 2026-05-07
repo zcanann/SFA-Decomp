@@ -88,18 +88,18 @@ extern f32 lbl_803E1D18;
 
 static void TitleMenu_OpenPanel(TitleMenuTextEntry *entries, int count)
 {
-  (*(void (*)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))
-      ((int)lbl_803DCAA0->vtable + 4))(entries,count,0,0,0,0,0x14,200,0xff,0xff,0xff,0xff);
+  ((void (**)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))
+      lbl_803DCAA0->vtable)[1](entries,count,0,0,0,0,0x14,200,0xff,0xff,0xff,0xff);
 }
 
 static void TitleMenu_SetPanelSelection(int selection)
 {
-  (*(void (*)(int))((int)lbl_803DCAA0->vtable + 0x18))(selection);
+  ((void (**)(int))lbl_803DCAA0->vtable)[6](selection);
 }
 
 static void TitleMenu_BindEntries(TitleMenuTextEntry *entries)
 {
-  (*(void (*)(TitleMenuTextEntry *))((int)lbl_803DCAA0->vtable + 0x2c))(entries);
+  ((void (**)(TitleMenuTextEntry *))lbl_803DCAA0->vtable)[11](entries);
 }
 
 static void TitleMenu_SetEntryHighlight(int entry)
@@ -108,7 +108,7 @@ static void TitleMenu_SetEntryHighlight(int entry)
 
   for (i = 0; i < 4; i++) {
     if (i == entry) {
-      lbl_8031A214[i].flags &= 0xbfff;
+      lbl_8031A214[i].flags &= ~0x4000;
     } else {
       lbl_8031A214[i].flags |= 0x4000;
     }
@@ -118,7 +118,7 @@ static void TitleMenu_SetEntryHighlight(int entry)
 
 static void TitleMenu_PlayPopup(int id, int arg)
 {
-  (*(void (*)(int, int))((int)lbl_803DCA4C->vtable + 0xc))(id,arg);
+  ((void (**)(int, int))lbl_803DCA4C->vtable)[3](id,arg);
 }
 
 /*
@@ -140,20 +140,24 @@ void fn_80116F84(void)
 {
   int mode;
 
-  lbl_803DD61A = (lbl_803DD498[0x21] & 0x80) == 0;
-  if (lbl_803DB424 > 0xfd) {
+  if ((lbl_803DD498[0x21] & 0x80) != 0) {
+    lbl_803DD61A = 0;
+  } else {
+    lbl_803DD61A = 1;
+  }
+  if (lbl_803DB424 >= 0xfe) {
     fn_8007D960(0);
   }
   gameTextLoadDir(0x15);
   lbl_803DD650 = 0;
   lbl_803DD651 = 0;
   mode = fn_80014930();
-  if (mode != 3) {
-    TitleMenu_OpenPanel(lbl_8031A214,4);
-    lbl_803DD652 = 1;
-  } else {
+  if (mode == 3) {
     TitleMenu_OpenPanel(lbl_8031A1D8,1);
     lbl_803DD652 = 0;
+  } else {
+    TitleMenu_OpenPanel(lbl_8031A214,4);
+    lbl_803DD652 = 1;
   }
   TitleMenu_SetPanelSelection(lbl_803DD614);
   fn_801368A4(0);
