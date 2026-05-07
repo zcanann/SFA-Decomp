@@ -8,9 +8,6 @@ extern void fn_80278610(SynthVoiceSlot* slot);
 
 extern u8* lbl_803DE268;
 
-#pragma peephole off
-#pragma scheduling off
-
 /*
  * synthSetHandleControllerValue — sndFXCtrl underlying impl.
  * Walks the handle's voice-slot chain, dispatching inpSetMidiCtrl per slot.
@@ -116,9 +113,6 @@ u32 fn_80271AC0(u32 handle) {
     }
     return found;
 }
-
-#pragma scheduling reset
-#pragma peephole reset
 
 /* Stub kept so synth_control.c can link — not in v1.0 binary at this address. */
 #pragma dont_inline on
