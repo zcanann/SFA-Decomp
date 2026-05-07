@@ -1,11 +1,19 @@
 #include "ghidra_import.h"
 #include "main/dll/firepipe.h"
+#include "string.h"
 
 extern undefined4 fn_8001CB3C(int param_1);
 extern undefined4 GameBit_Get(int eventId);
 extern undefined4 randomGetRange(int param_1, int param_2);
+extern int Obj_IsLoadingLocked(void);
 extern undefined4 Obj_FreeObject(int param_1);
+extern int fn_8002B5A0(FirePipeObject *obj, void *spawnDef);
+extern void fn_8002CE14(int obj);
+extern void fn_8002CE88(FirePipeObject *obj);
+extern int mmSetFreeDelay(int delay);
+extern void fn_80023800(void *ptr);
 extern undefined4 ObjHits_EnableObject(FirePipeObject *obj);
+extern void ObjHits_DisableObject(FirePipeObject *obj);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 fn_8003B8F4(int param_1, int param_2, int param_3, int param_4, int param_5, double scale);
@@ -29,6 +37,69 @@ typedef struct {
     u8 bit1 : 1;
     u8 bit0 : 1;
 } FirePipeBitFlags;
+
+typedef void (*FirePipeEffectInitFn)(int obj, void *spawnDef, int param_3);
+
+int firepipe_spawnEffectObject(FirePipeExtra *extra, FirePipeObject *obj, void *spawnDef)
+{
+    int i;
+    int effectObj;
+    int freeDelay;
+
+    if (Obj_IsLoadingLocked() == 0) {
+        return 0;
+    }
+    for (i = 0; i < extra->effectCount; i++) {
+        effectObj = extra->effectObjs[i];
+        if ((*(u16 *)(effectObj + 0xb0) & 0x200) == 0) {
+            *(u16 *)(effectObj + 0xb0) |= 0x200;
+            memcpy(*(void **)(effectObj + 0x4c), spawnDef, *(u8 *)((int)spawnDef + 2));
+            *(s16 *)(effectObj + 6) &= ~0x4000;
+            *(undefined4 *)(effectObj + 0xc) = *(undefined4 *)((int)spawnDef + 8);
+            *(undefined4 *)(effectObj + 0x10) = *(undefined4 *)((int)spawnDef + 0xc);
+            *(undefined4 *)(effectObj + 0x14) = *(undefined4 *)((int)spawnDef + 0x10);
+            (*(FirePipeEffectInitFn *)(**(int **)(effectObj + 0x68) + 4))(effectObj, spawnDef, 0);
+            freeDelay = mmSetFreeDelay(0);
+            fn_80023800(spawnDef);
+            mmSetFreeDelay(freeDelay);
+            fn_8002CE14(effectObj);
+            *(u16 *)(effectObj + 0xb0) &= ~0x8000;
+            return effectObj;
+        }
+    }
+    effectObj = fn_8002B5A0(obj, spawnDef);
+    if (extra->effectCount != 8) {
+        *(u16 *)(effectObj + 0xb0) |= 0x200;
+        extra->effectObjs[extra->effectCount] = effectObj;
+        extra->effectCount++;
+    }
+    return effectObj;
+}
+
+void firepipe_releaseEffectObject(FirePipeObject *obj)
+{
+    if ((*(u16 *)((int)obj + 0xb0) & 0x200) != 0) {
+        ObjHits_DisableObject(obj);
+        *(u16 *)((int)obj + 0xb0) &= ~0x200;
+        fn_8002CE88(obj);
+        *(u16 *)((int)obj + 0xb0) |= 0x8000;
+        *(s16 *)((int)obj + 6) |= 0x4000;
+    } else {
+        Obj_FreeObject((int)obj);
+    }
+}
+
+int firepipe_clearLinkedUpdateFlag(FirePipeObject *obj)
+{
+    ((FirePipeBitFlags *)&obj->extra->flags)->bit2 = 0;
+    return 1;
+}
+
+int firepipe_setLinkedUpdateFlag(FirePipeObject *obj)
+{
+    ((FirePipeBitFlags *)&obj->extra->flags)->bit2 = 1;
+    return 1;
+}
 
 int firepipe_getExtraSize(void)
 {
