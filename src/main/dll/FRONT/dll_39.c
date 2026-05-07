@@ -38,6 +38,16 @@ extern uint FUN_8025ae94();
 extern int FUN_8025aea4();
 extern undefined4 FUN_80286838();
 extern undefined4 FUN_80286884();
+extern void fn_8001404C(int param_1);
+extern void loadUiDll(int dllNo);
+extern void fn_8001B444(void *callback);
+extern void GameBit_Set(int eventId,int value);
+extern u8 fn_80134BBC(u8 *obj);
+extern void fn_801349C8(void);
+extern void fn_80134C28(u8 param_1);
+extern void fn_80134D40(int param_1,int param_2,int param_3);
+extern void fn_80135820(f32 param_1,f32 param_2);
+extern void fn_80135A90(void);
 
 extern int DAT_803a5098;
 extern undefined4 DAT_803dc070;
@@ -73,6 +83,7 @@ extern f32 FLOAT_803de27c;
 extern f32 FLOAT_803e2970;
 extern f32 FLOAT_803e2980;
 extern int iRam803de2bc;
+static char sNRarewareReportTag[] = "n_rareware\n";
 static char s_starfox_thp_8031a32c[] = "starfox.thp";
 static char s__________________malloc_for_movi_8031a338[] =
     "^^^^^^^^^^^^^^^^  malloc for movie failed\n";
@@ -91,6 +102,19 @@ extern void OSPanic(const char *file,int line,const char *msg,...);
 extern void DCInvalidateRange(void *addr,uint nBytes);
 extern void VIWaitForRetrace(void);
 
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern undefined4 *lbl_803DCA4C;
+extern undefined4 *lbl_803DCA50;
+extern undefined4 *lbl_803DCAA0;
+extern int lbl_803DD5F8;
+extern u8 lbl_803DD5FC;
+extern f32 lbl_803DD600;
+extern f32 lbl_803DD604;
+extern u8 lbl_803DD608;
+extern u8 lbl_803DD609;
+extern u8 lbl_803DD60A;
+extern u8 lbl_803DD616;
 extern int lbl_803DD610;
 extern u8 lbl_803DD614;
 extern u8 lbl_803DD619;
@@ -105,8 +129,12 @@ extern struct NAttractModeMovieDims lbl_803DD638;
 extern int lbl_803DD640;
 extern int lbl_803DD644;
 extern u8 lbl_803DD64D;
+extern u8 lbl_803DD64F;
 extern int lbl_803DD698;
 extern u16 *lbl_803DCCF0;
+extern f32 lbl_803E1D10;
+extern f32 lbl_803E1D14;
+extern f32 lbl_803E1D18;
 
 struct NAttractModeMovieDims {
   int width;
@@ -132,177 +160,63 @@ struct NAttractModeMovieDims {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80115fbc(void)
+int fn_80115FBC(void)
 {
-  int iVar1;
-  int iVar2;
-  uint uVar3;
-  uint uVar4;
-  int iVar5;
-  int *piVar6;
-  int iVar7;
-  uint *puVar8;
-  double dVar9;
-  
-  FUN_80286838();
-  iVar1 = FUN_80241de8();
-  iVar1 = iVar1 + -0x40000;
-  iVar5 = 0;
-  piVar6 = &DAT_803a5098;
-  do {
-    *piVar6 = iVar1;
-    iVar7 = *piVar6;
-    *(undefined4 *)(iVar7 + 0x40) = 0;
-    *(undefined *)(iVar7 + 0x48) = 0;
-    puVar8 = (uint *)(iVar7 + 0x20);
-    FUN_8025aa74(puVar8,iVar7 + 0x60,(uint)*(ushort *)(iVar7 + 10),(uint)*(ushort *)(iVar7 + 0xc),
-                 (uint)*(byte *)(iVar7 + 0x16),(uint)*(byte *)(iVar7 + 0x17),
-                 (uint)*(byte *)(iVar7 + 0x18),'\0');
-    dVar9 = (double)FLOAT_803e2970;
-    FUN_8025ace8(dVar9,dVar9,dVar9,puVar8,(uint)*(byte *)(iVar7 + 0x19),
-                 (uint)*(byte *)(iVar7 + 0x1a),0,'\0',0);
-    FUN_8025ae7c((int)puVar8,iVar7);
-    iVar2 = FUN_8025aea4((int)puVar8);
-    uVar3 = FUN_8025ae84((int)puVar8);
-    uVar4 = FUN_8025ae94((int)puVar8);
-    iVar2 = FUN_8025a850(uVar3,uVar4,iVar2,'\0',0);
-    *(int *)(iVar7 + 0x44) = iVar2;
-    iVar1 = iVar1 + *(int *)(*piVar6 + 0x44) + 0x60;
-    piVar6 = piVar6 + 1;
-    iVar5 = iVar5 + 1;
-  } while (iVar5 < 3);
-  DAT_803de264 = 0;
-  DAT_803de260 = 0;
-  FUN_80286884();
-  return;
-}
+  s8 frameStep;
 
-/*
- * --INFO--
- *
- * Function: FUN_801160e4
- * EN v1.0 Address: 0x801160E4
- * EN v1.0 Size: 68b
- * EN v1.1 Address: 0x80116110
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_801160e4(void)
-{
-  if (DAT_803de268 != '\0') {
-    DAT_803de268 = '\0';
-    FLOAT_803de26c = FLOAT_803e2980;
-    FUN_80006b84(4);
+  frameStep = framesThisStep;
+  OSReport(sNRarewareReportTag);
+  if (frameStep > 3) {
+    frameStep = 3;
+  }
+  if ((s8)lbl_803DD609 > 0) {
+    lbl_803DD609 = (s8)(lbl_803DD609 - frameStep);
+  }
+  if ((s8)lbl_803DD608 != 0) {
+    GameBit_Set(0x44f,0);
+    loadUiDll(4);
+  }
+  lbl_803DD5F8 += framesThisStep;
+  if (lbl_803DD5F8 > 0x26c) {
+    lbl_803DD60A = 1;
+  }
+  if ((s8)lbl_803DD60A != 0) {
+    (*(code *)(*lbl_803DCA4C + 8))(0x1e,1);
+    lbl_803DD609 = 0x2d;
+    lbl_803DD608 = 1;
+  }
+  if ((s8)lbl_803DD5FC > 0) {
+    lbl_803DD604 -= timeDelta;
+  }
+  if ((s8)lbl_803DD5FC > 2) {
+    lbl_803DD600 -= timeDelta;
   }
   return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80116128
- * EN v1.0 Address: 0x80116128
- * EN v1.0 Size: 500b
- * EN v1.1 Address: 0x8011615C
- * EN v1.1 Size: 252b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80116128(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
-{
-  undefined8 uVar1;
-  
-  DAT_803de268 = 1;
-  FLOAT_803de26c = FLOAT_803e2980;
-  FUN_80043030(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-  uVar1 = FUN_80040d94();
-  FUN_80041ff8(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x3f);
-  uVar1 = FUN_80040d88();
-  uVar1 = FUN_80080f24(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-  uVar1 = FUN_8011d9b0(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-  uVar1 = FUN_801010b4(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-  FUN_80053c98(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x12,'\0',param_11,
-               param_12,param_13,param_14,param_15,param_16);
-  return;
-}
+void n_rareware_release(void) {}
 
 /*
  * --INFO--
  *
- * Function: FUN_8011631c
- * EN v1.0 Address: 0x8011631C
- * EN v1.0 Size: 264b
- * EN v1.1 Address: 0x80116258
- * EN v1.1 Size: 292b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_8011631c(void)
-{
-  byte bVar1;
-  
-  bVar1 = DAT_803dc070;
-  FUN_800723a0();
-  if (3 < bVar1) {
-    bVar1 = 3;
-  }
-  if ('\0' < DAT_803de281) {
-    DAT_803de281 = DAT_803de281 - bVar1;
-  }
-  if (DAT_803de280 != '\0') {
-    FUN_80017698(0x44f,0);
-    FUN_80006b84(4);
-  }
-  DAT_803de270 = DAT_803de270 + (uint)DAT_803dc070;
-  if (0x26c < DAT_803de270) {
-    DAT_803de282 = '\x01';
-  }
-  if (DAT_803de282 != '\0') {
-    (**(code **)(*DAT_803dd6cc + 8))(0x1e,1);
-    DAT_803de281 = '-';
-    DAT_803de280 = '\x01';
-  }
-  if ('\0' < DAT_803de274) {
-    FLOAT_803de27c = FLOAT_803de27c - FLOAT_803dc074;
-  }
-  if ('\x02' < DAT_803de274) {
-    FLOAT_803de278 = FLOAT_803de278 - FLOAT_803dc074;
-  }
-  return 0;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80116424
- * EN v1.0 Address: 0x80116424
+ * Function: fn_801160E0
+ * EN v1.0 Address: 0x801160E0
  * EN v1.0 Size: 60b
- * EN v1.1 Address: 0x8011637C
- * EN v1.1 Size: 60b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80116424(void)
+void fn_801160E0(void)
 {
-  FUN_80006b1c(0);
-  DAT_803de270 = 0;
-  DAT_803de274 = 0;
-  DAT_803de282 = 0;
-  DAT_803de281 = 0;
-  DAT_803de280 = 0;
-  return;
+  fn_8001404C(0);
+  lbl_803DD5F8 = 0;
+  lbl_803DD5FC = 0;
+  lbl_803DD60A = 0;
+  lbl_803DD609 = 0;
+  lbl_803DD608 = 0;
 }
 
 /*
@@ -485,7 +399,41 @@ void n_attractmode_prepareMovie(void)
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: fn_801165BC
+ * EN v1.0 Address: 0x801165BC
+ * EN v1.0 Size: 264b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_801165BC(u8 *param_1)
+{
+  int menuAction;
+
+  if (fn_80134BBC(param_1) != 0) {
+    fn_801349C8();
+    return;
+  }
+
+  menuAction = (*(code *)(*lbl_803DCA50 + 0x10))();
+  if (menuAction == 0x57) {
+    fn_8001B444(fn_80135A90);
+    fn_80135820(lbl_803E1D10 + (f32)((u32)lbl_803DD616 * 0x1a4) / lbl_803E1D14,
+                lbl_803E1D18);
+    fn_80134D40(0,0,0);
+    (*(code *)(*lbl_803DCA4C + 0x18))();
+    (*(code *)(*lbl_803DCAA0 + 0x30))(0xff);
+    (*(code *)(*lbl_803DCAA0 + 0x10))(param_1);
+    fn_8001B444(0);
+    fn_80134C28(lbl_803DD64F);
+  }
+}
 
 /* Trivial 4b 0-arg blr leaves. */
-void n_rareware_release(void) {}
 void TitleMenu_frameEnd(void) {}
