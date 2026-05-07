@@ -74,7 +74,7 @@ void aramRemoveData(void *unused, u32 size)
  * EN v1.1 Address: 0x80284570
  * EN v1.1 Size: 196b
  */
-void fn_80284570(void)
+void InitStreamBuffers(void)
 {
     u8 *base = lbl_803D3F60;
     int i;
@@ -102,7 +102,7 @@ void fn_80284634(void)
  * EN v1.1 Address: 0x80284638
  * EN v1.1 Size: 56b
  */
-u32 fn_80284638(u8 idx, u32 *outPos)
+u32 aramGetStreamBufferAddress(u8 idx, u32 *outPos)
 {
     u8 *entry;
     if (outPos != NULL) {

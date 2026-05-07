@@ -4,7 +4,7 @@
 extern int aramUploadData(void *src, void *dst, u32 size, int p4, int p5, int p6);
 extern void *salMalloc(u32 size);
 extern void salFree(void *p);
-extern void fn_80284570(void);
+extern void InitStreamBuffers(void);
 extern void DCFlushRange(void *src, u32 size);
 extern u32 ARGetBaseAddress(void);
 extern u32 ARGetSize(void);
@@ -53,7 +53,7 @@ void aramInit(u32 extraSize)
     }
     lbl_803DE384 = arBase + 0x500;
     lbl_803DE38C = NULL;
-    fn_80284570();
+    InitStreamBuffers();
 }
 
 /*

@@ -2,7 +2,7 @@
 #include "main/unknown/autos/placeholder_80283BF0.h"
 
 extern void fn_8027F0C8(void *p);
-extern int fn_80284638(int stream, void *out);
+extern int aramGetStreamBufferAddress(int stream, void *out);
 extern int aramUploadData(int dest, int src, u32 size, int flag, undefined4 param_5, undefined4 param_6);
 extern void DCStoreRange(void *addr, u32 nBytes);
 
@@ -79,7 +79,7 @@ void hwGetPos(int param_1, u32 param_2, int param_3, int param_4, undefined4 par
     int offset;
     u8 stack[8];
 
-    offset = fn_80284638(param_4, stack);
+    offset = aramGetStreamBufferAddress(param_4, stack);
     param_3 += param_2 & 0x1f;
     param_2 &= 0xffffffe0;
     size = (param_3 + 0x1f) & 0xffffffe0;
@@ -96,7 +96,7 @@ void hwGetPos(int param_1, u32 param_2, int param_3, int param_4, undefined4 par
  * EN v1.0 Size: 36b
  */
 void hwFlushStream(int stream) {
-    fn_80284638(stream, 0);
+    aramGetStreamBufferAddress(stream, 0);
 }
 
 /*

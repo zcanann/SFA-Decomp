@@ -11,5 +11,7 @@ void FUN_80284478(int param_1,undefined4 param_2);
 void FUN_8028447c(void);
 u32 aramStoreData(void *src, u32 size);
 void aramRemoveData(void *unused, u32 size);
+void InitStreamBuffers(void);
+u32 aramGetStreamBufferAddress(u8 idx, u32 *outPos);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802844C0_H_ */
