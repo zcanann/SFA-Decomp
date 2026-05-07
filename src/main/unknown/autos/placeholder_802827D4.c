@@ -8,7 +8,7 @@ extern u32 lbl_803DC610;
 extern s16 lbl_80330028[];
 
 /*
- * Bit-11 (0x800) accessor — slot at +0x3a4, cached u16 at +0x3c4.
+ * Bit-11 (0x800) accessor - slot at +0x3a4, cached u16 at +0x3c4.
  *
  * EN v1.1 Address: 0x802827C8, size 72b
  */
@@ -24,7 +24,7 @@ u16 fn_802827C8(int state)
 }
 
 /*
- * Bit-12 (0x1000) accessor — slot at +0x3c8, cached u16 at +0x3e8.
+ * Bit-12 (0x1000) accessor - slot at +0x3c8, cached u16 at +0x3e8.
  *
  * EN v1.1 Address: 0x80282810, size 72b
  */
@@ -39,17 +39,17 @@ u16 fn_80282810(int state)
                        *(u8 *)(state + 0x121), *(u8 *)(state + 0x122));
 }
 
-/* fn_80282858 — 47-instruction helper. Stubbed. */
+/* fn_80282858 - 47-instruction helper. Stubbed. */
 #pragma dont_inline on
 void fn_80282858(void) {}
 #pragma dont_inline reset
 
-/* fn_80282914 — 47-instruction helper. Stubbed. */
+/* fn_80282914 - 47-instruction helper. Stubbed. */
 #pragma dont_inline on
 void fn_80282914(void) {}
 #pragma dont_inline reset
 
-/* fn_802829D0 — 185-instruction main dispatcher. Stubbed. */
+/* fn_802829D0 - 185-instruction main dispatcher. Stubbed. */
 #pragma dont_inline on
 void fn_802829D0(void) {}
 #pragma dont_inline reset
@@ -60,12 +60,10 @@ void fn_802829D0(void) {}
  *
  * EN v1.1 Address: 0x80282CB4, size 112b
  */
-u32 fn_80282CB4(u8 input)
+u32 fn_80282CB4(u32 input)
 {
-    u32 idx = (u32)input - 0x80;
-    if (idx > 8) {
-        return input;
-    }
+    u32 value = input & 0xff;
+    u32 idx = value - 0x80;
     switch (idx) {
     case 0: return 0x80;
     case 1: return 0x82;
@@ -76,16 +74,16 @@ u32 fn_80282CB4(u8 input)
     case 6: return 0xa2;
     case 7: return 0xa3;
     case 8: return 0xa4;
+    default: return input;
     }
-    return input;
 }
 
-/* fn_80282D24 — 40-instruction helper. Stubbed. */
+/* fn_80282D24 - 40-instruction helper. Stubbed. */
 #pragma dont_inline on
 void fn_80282D24(void) {}
 #pragma dont_inline reset
 
-/* fn_80282DC4 — 38-instruction helper. Stubbed. */
+/* fn_80282DC4 - 38-instruction helper. Stubbed. */
 #pragma dont_inline on
 void fn_80282DC4(void) {}
 #pragma dont_inline reset
@@ -127,7 +125,7 @@ s16 fn_80282E7C(u32 packed)
     }
 }
 
-/* fn_80282EE8 — 38-instruction helper. Stubbed. */
+/* fn_80282EE8 - 38-instruction helper. Stubbed. */
 #pragma dont_inline on
 void fn_80282EE8(void) {}
 #pragma dont_inline reset
