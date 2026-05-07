@@ -137,7 +137,7 @@ s32 synthUpdateCallbacks(void) {
 }
 
 void synthFlushCallbacks(void) {
-    s32 listIndex;
+    u32 listIndex;
     SynthCallbackLink* callback;
     SynthCallbackLink* next;
     SynthCallbackLink* completed;
