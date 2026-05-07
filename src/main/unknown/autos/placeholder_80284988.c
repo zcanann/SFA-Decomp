@@ -11,7 +11,7 @@ extern u16 lbl_803DE32C;
 extern u32 lbl_803DE330;
 extern u32 lbl_803DE3A8;
 extern u32 lbl_803DE3B8;
-extern u32 fn_80284A40(void);
+extern u32 salGetStartDelay(void);
 extern void fn_8027C48C(u32 param_1, u32 elapsed);
 extern DSPTaskInfo lbl_803D4880;
 extern u16 lbl_80330840[];
@@ -22,11 +22,11 @@ extern void dspResumeCallback(void *task);
 /*
  * --INFO--
  *
- * Function: fn_802848D8
+ * Function: salInitDsp
  * EN v1.0 Address: 0x802848D8
  * EN v1.0 Size: 192b
  */
-int fn_802848D8(u32 flags)
+int salInitDsp(u32 flags)
 {
     lbl_803D4880.iram_mmem_addr = lbl_80330840;
     lbl_803D4880.iram_length = lbl_803DC628[0];
@@ -54,11 +54,11 @@ int fn_802848D8(u32 flags)
 /*
  * --INFO--
  *
- * Function: fn_80284AB8
+ * Function: hwEnableIrq
  * EN v1.0 Address: 0x80284AB8
  * EN v1.0 Size: 4b
  */
-void fn_80284AB8(void)
+void hwEnableIrq(void)
 {
 }
 
@@ -83,11 +83,11 @@ void sndEnd(void)
 /*
  * --INFO--
  *
- * Function: fn_80284998
+ * Function: salStartDsp
  * EN v1.0 Address: 0x80284998
  * EN v1.0 Size: 52b
  */
-int fn_80284998(void)
+int salStartDsp(void)
 {
     DSPHalt();
     while (DSPGetDMAStatus() != 0) {}
@@ -98,13 +98,13 @@ int fn_80284998(void)
 /*
  * --INFO--
  *
- * Function: fn_802849CC
+ * Function: salCtrlDsp
  * EN v1.0 Address: 0x802849CC
  * EN v1.0 Size: 116b
  */
-void fn_802849CC(u32 param_1)
+void salCtrlDsp(u32 param_1)
 {
-    u32 elapsed = fn_80284A40();
+    u32 elapsed = salGetStartDelay();
     fn_8027C48C(param_1, elapsed);
     {
         u32 saved = lbl_803DE330;
@@ -120,11 +120,11 @@ void fn_802849CC(u32 param_1)
 /*
  * --INFO--
  *
- * Function: fn_80284A40
+ * Function: salGetStartDelay
  * EN v1.0 Address: 0x80284A40
  * EN v1.0 Size: 76b
  */
-u32 fn_80284A40(void)
+u32 salGetStartDelay(void)
 {
     OSTick now = OSGetTick();
     return OS_TICKS_TO_USEC(now - lbl_803DE3B4);
@@ -133,12 +133,12 @@ u32 fn_80284A40(void)
 /*
  * --INFO--
  *
- * Function: fn_80284A8C
+ * Function: hwInitIrq
  * EN v1.0 Address: 0x80284A8C
  * EN v1.0 Size: 44b
  */
 #pragma scheduling off
-void fn_80284A8C(void)
+void hwInitIrq(void)
 {
     audioPrevIrqFlags = OSDisableInterrupts();
     irqDisableDepth = 1;
@@ -164,11 +164,11 @@ void sndBegin(void)
 /*
  * --INFO--
  *
- * Function: fn_80284B2C
+ * Function: hwIRQEnterCritical
  * EN v1.0 Address: 0x80284B2C
  * EN v1.0 Size: 32b
  */
-void fn_80284B2C(void)
+void hwIRQEnterCritical(void)
 {
     OSDisableInterrupts();
 }
@@ -176,11 +176,11 @@ void fn_80284B2C(void)
 /*
  * --INFO--
  *
- * Function: fn_80284B4C
+ * Function: hwIRQLeaveCritical
  * EN v1.0 Address: 0x80284B4C
  * EN v1.0 Size: 32b
  */
-void fn_80284B4C(void)
+void hwIRQLeaveCritical(void)
 {
     OSEnableInterrupts();
 }
@@ -188,11 +188,11 @@ void fn_80284B4C(void)
 /*
  * --INFO--
  *
- * Function: fn_80284B6C
+ * Function: salMalloc
  * EN v1.0 Address: 0x80284B6C
  * EN v1.0 Size: 40b
  */
-void* fn_80284B6C(u32 size)
+void* salMalloc(u32 size)
 {
     return ((void* (*)(u32))lbl_803DE374)(size);
 }

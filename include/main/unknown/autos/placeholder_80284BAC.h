@@ -3,7 +3,11 @@
 
 #include "ghidra_import.h"
 
-void FUN_80284b94(void);
-int FUN_80284b98(uint param_1,int param_2);
+typedef struct ReverbParams ReverbParams;
+typedef struct ReverbState ReverbState;
+
+void salFree(void);
+void sndAuxCallbackReverbSTD(u8 mode, ReverbParams *params, ReverbState *state);
+void sndAuxCallbackUpdateSettingsReverbSTD(ReverbState *state);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80284BAC_H_ */

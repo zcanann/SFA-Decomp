@@ -80,17 +80,17 @@ extern void hwSetPolyPhaseFilter(int slot, u32 value);
 extern void hwSetITDMode(int slot, u32 value);
 void hwSetTimeOffset(u8 value);
 extern void fn_8027BDE0(void);
-extern void fn_80284878(void);
-extern int fn_80284998(void);
+extern int salExitAi(void);
+extern int salStartDsp(void);
 extern void sndBegin(void);
-extern void fn_80284A8C(void);
+extern void hwInitIrq(void);
 extern u32 salInitAi(void *callback, u32 flags, u32 value);
 extern u32 fn_8027BA04(u32 valueA, u32 valueB, u32 enabled);
-extern int fn_802848D8(u32 flags);
+extern int salInitDsp(u32 flags);
 extern void salStartAi(void);
 extern void fn_802737E8(void);
-extern u32 fn_802848AC(void);
-extern void fn_802849CC(u32 param_1);
+extern u32 salAiGetDest(void);
+extern void salCtrlDsp(u32 param_1);
 extern void fn_8027F14C(void);
 extern void fn_8026EC44(u32 value);
 extern void fn_80271498(u32 value);
@@ -122,13 +122,13 @@ void snd_handle_irq(void)
     }
 
     fn_802737E8();
-    fn_80284B2C();
-    fn_802849CC(fn_802848AC());
-    fn_80284B4C();
-    fn_80284B2C();
+    hwIRQEnterCritical();
+    salCtrlDsp(salAiGetDest());
+    hwIRQLeaveCritical();
+    hwIRQEnterCritical();
     fn_8027F14C();
-    fn_80284B4C();
-    fn_80284B2C();
+    hwIRQLeaveCritical();
+    hwIRQEnterCritical();
 
     lbl_803DE37E = (lbl_803DE37E + 1) % 3;
     lbl_803DE37F ^= 1;
@@ -150,28 +150,28 @@ void snd_handle_irq(void)
         i++;
     }
 
-    fn_80284B4C();
+    hwIRQLeaveCritical();
 
     i = 0;
     while ((u8)i < 5) {
-        fn_80284B2C();
+        hwIRQEnterCritical();
         hwSetTimeOffset(i);
         fn_8026EC44(0x100);
         fn_80271498(0x100);
-        fn_80284B4C();
+        hwIRQLeaveCritical();
         i++;
     }
 
-    fn_80284B2C();
+    hwIRQEnterCritical();
     hwSetTimeOffset(0);
     fn_80280C30();
-    fn_80284B4C();
-    fn_80284B2C();
+    hwIRQLeaveCritical();
+    hwIRQEnterCritical();
     fn_80272F70();
-    fn_80284B4C();
-    fn_80284B2C();
+    hwIRQLeaveCritical();
+    hwIRQEnterCritical();
     fn_8027B25C();
-    fn_80284B4C();
+    hwIRQLeaveCritical();
 }
 
 /*
@@ -189,14 +189,14 @@ void snd_handle_irq(void)
  */
 int hwInit(u32 value, u8 valueA, u8 valueB, u32 flags)
 {
-    fn_80284A8C();
+    hwInitIrq();
     lbl_803DE37F = 0;
     lbl_803DE37E = 0;
     lbl_803DE348 = 0;
 
     if (salInitAi(snd_handle_irq, flags, value) != 0 &&
         fn_8027BA04(valueA, valueB, (flags & 1) != 0) != 0 &&
-        fn_802848D8(flags) != 0) {
+        salInitDsp(flags) != 0) {
         sndEnd();
         salStartAi();
         return 0;
@@ -208,11 +208,11 @@ int hwInit(u32 value, u8 valueA, u8 valueB, u32 flags)
 void hwExit(void)
 {
     sndBegin();
-    fn_80284998();
+    salStartDsp();
     fn_8027BDE0();
-    fn_80284878();
+    salExitAi();
     sndEnd();
-    fn_80284AB8();
+    hwEnableIrq();
 }
 
 void hwSetTimeOffset(u8 value)

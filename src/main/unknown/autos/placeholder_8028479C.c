@@ -3,7 +3,7 @@
 #include "dolphin/os.h"
 #include "dolphin/ai.h"
 
-extern void *fn_80284B6C(u32 size);
+extern void *salMalloc(u32 size);
 extern void *memset(void *, int, u32);
 extern void DCFlushRange(void *src, u32 size);
 
@@ -88,7 +88,7 @@ int salInitAi(void *userCallback, u32 unused, u32 *outSampleCount)
 {
     void *buf;
 
-    buf = fn_80284B6C(0xa00);
+    buf = salMalloc(0xa00);
     lbl_803DE3A4 = (u32)buf;
     if (buf == NULL) {
         return 0;

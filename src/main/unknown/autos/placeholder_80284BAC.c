@@ -25,7 +25,7 @@ typedef struct ReverbState {
 /*
  * --INFO--
  *
- * Function: fn_80284B94
+ * Function: salFree
  * EN v1.0 Address: 0x80284B94
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80284BAC
@@ -35,7 +35,7 @@ typedef struct ReverbState {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80284B94(void)
+void salFree(void)
 {
     ((void (*)(void))lbl_803DE374[1])();
 }
@@ -43,13 +43,13 @@ void fn_80284B94(void)
 /*
  * --INFO--
  *
- * Function: fn_80284BC0
+ * Function: sndAuxCallbackReverbSTD
  * EN v1.0 Address: 0x80284B98
  * EN v1.0 Size: 4b (stub)
  * EN v1.1 Address: 0x80284BC0
  * EN v1.1 Size: 92b
  */
-void fn_80284BC0(u8 mode, ReverbParams *params, ReverbState *state)
+void sndAuxCallbackReverbSTD(u8 mode, ReverbParams *params, ReverbState *state)
 {
     switch ((int)mode) {
     case 0:
@@ -65,13 +65,13 @@ void fn_80284BC0(u8 mode, ReverbParams *params, ReverbState *state)
 /*
  * --INFO--
  *
- * Function: fn_80284C1C
+ * Function: sndAuxCallbackUpdateSettingsReverbSTD
  * EN v1.0 Address: 0x80284B9C
  * EN v1.0 Size: 4b (stub)
  * EN v1.1 Address: 0x80284C1C
  * EN v1.1 Size: 60b
  */
-void fn_80284C1C(ReverbState *state)
+void sndAuxCallbackUpdateSettingsReverbSTD(ReverbState *state)
 {
     state->enabled = 0;
     ReverbSTDCreate(state, state->a, state->b, state->c, state->d, state->e);

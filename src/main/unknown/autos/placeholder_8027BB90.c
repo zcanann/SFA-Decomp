@@ -2,7 +2,7 @@
 
 extern void *memset(void *dst, int val, u32 n);
 extern void DCFlushRangeNoSync(void *p, u32 n);
-extern void fn_80284B94(int p);
+extern void salFree(int p);
 
 extern u8 *lbl_803DE338;
 extern u8 *lbl_803DE344;
@@ -14,7 +14,7 @@ extern u8 lbl_803DE37C;
 extern u8 lbl_803DE37D;
 
 /*
- * fn_8027BA04 — large voice processing (~932 instructions). Stubbed.
+ * fn_8027BA04 - large voice processing (~932 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_8027BA04(void) {}
@@ -39,24 +39,24 @@ void fn_8027BDA8(void)
 int fn_8027BDE0(void)
 {
     int i;
-    fn_80284B94((int)lbl_803DE338);
+    salFree((int)lbl_803DE338);
     for (i = 0; (u8)i < lbl_803DE37D; i++) {
-        fn_80284B94(*(int *)(lbl_803DE344 + i * 0xf4));
-        fn_80284B94(*(int *)(lbl_803DE344 + i * 0xf4 + 4));
+        salFree(*(int *)(lbl_803DE344 + i * 0xf4));
+        salFree(*(int *)(lbl_803DE344 + i * 0xf4 + 4));
     }
     for (i = 0; (u8)i < lbl_803DE37C; i++) {
-        fn_80284B94(*(int *)(&lbl_803CC1E0[i][0]));
-        fn_80284B94(*(int *)(&lbl_803CC1E0[i][0x28]));
+        salFree(*(int *)(&lbl_803CC1E0[i][0]));
+        salFree(*(int *)(&lbl_803CC1E0[i][0x28]));
     }
-    fn_80284B94((int)lbl_803DE340);
-    fn_80284B94((int)lbl_803DE344);
-    fn_80284B94((int)lbl_803DE33C);
-    fn_80284B94((int)lbl_803DE330);
+    salFree((int)lbl_803DE340);
+    salFree((int)lbl_803DE344);
+    salFree((int)lbl_803DE33C);
+    salFree((int)lbl_803DE330);
     return 1;
 }
 
 /*
- * fn_8027BEBC — voice-buffer init with several memset/flush calls
+ * fn_8027BEBC - voice-buffer init with several memset/flush calls
  * (~264 instructions). Stubbed.
  */
 #pragma dont_inline on
@@ -77,7 +77,7 @@ void fn_8027BFC4(u8 idx)
 }
 
 /*
- * fn_8027BFE4 — pitch/interval mapper (~244 instructions). Stubbed.
+ * fn_8027BFE4 - pitch/interval mapper (~244 instructions). Stubbed.
  */
 #pragma dont_inline on
 int fn_8027BFE4(int r3, u16 *r4, u16 *r5, u16 r6, u16 *r7, u16 r8)
@@ -88,7 +88,7 @@ int fn_8027BFE4(int r3, u16 *r4, u16 *r5, u16 r6, u16 *r7, u16 r8)
 #pragma dont_inline reset
 
 /*
- * fn_8027C0D8 — large voice param updater (~696 instructions). Stubbed.
+ * fn_8027C0D8 - large voice param updater (~696 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_8027C0D8(int r3, int r4)
@@ -98,7 +98,7 @@ void fn_8027C0D8(int r3, int r4)
 #pragma dont_inline reset
 
 /*
- * fn_8027C390 — large voice routing (~252 instructions). Stubbed.
+ * fn_8027C390 - large voice routing (~252 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_8027C390(void) {}

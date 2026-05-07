@@ -2,8 +2,8 @@
 #include "main/unknown/autos/placeholder_80284410.h"
 
 extern int aramUploadData(void *src, void *dst, u32 size, int p4, int p5, int p6);
-extern void *fn_80284B6C(u32 size);
-extern void fn_80284B94(void *p);
+extern void *salMalloc(u32 size);
+extern void salFree(void *p);
 extern void fn_80284570(void);
 extern void DCFlushRange(void *src, u32 size);
 extern u32 ARGetBaseAddress(void);
@@ -33,7 +33,7 @@ void aramInit(u32 extraSize)
     int i;
 
     arBase = ARGetBaseAddress();
-    buf = fn_80284B6C(0x500);
+    buf = salMalloc(0x500);
     for (i = 0; i < 0x500; i += 2) {
         *(u16 *)(buf + i) = 0;
     }
@@ -46,7 +46,7 @@ void aramInit(u32 extraSize)
     aramUploadData(buf, (void *)arBase, 0x500, 0, 0, 0);
     while (*flag != 0) {
     }
-    fn_80284B94(buf);
+    salFree(buf);
     lbl_803DE380 = arBase + extraSize;
     if (lbl_803DE380 > ARGetSize()) {
         lbl_803DE380 = ARGetSize();
