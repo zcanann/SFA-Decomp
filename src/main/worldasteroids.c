@@ -3,8 +3,8 @@
 extern u32 randomGetRange(int min,int max);
 extern u8 *ObjList_FindObjectById(int objectId);
 extern void fn_8003B8F4(double scale);
-extern f32 angleFn(int angle);
-extern f32 fn_80293EAC(int angle);
+extern f32 fsin16Approx(int angle);
+extern f32 fcos16Approx(int angle);
 
 extern f32 lbl_803E65D0;
 extern f64 lbl_803E65D8;
@@ -81,18 +81,18 @@ void worldasteroids_update(s16 *obj)
   obj[1] += state->velocityY;
   obj[2] += state->velocityZ;
   state->orbitAngle += 0x9c4 / state->orbitRadius;
-  orbitCos = fn_80293EAC(3000);
-  orbitSin = angleFn((u16)state->orbitAngle);
+  orbitCos = fcos16Approx(3000);
+  orbitSin = fsin16Approx((u16)state->orbitAngle);
   radius = worldasteroids_s32AsFloat(state->orbitRadius);
   orbitScale = radius * orbitSin;
   *(f32 *)(obj + 6) = orbitScale * orbitCos + *(f32 *)(anchor + 0xc);
-  orbitSin = angleFn(3000);
-  orbitScale = angleFn((u16)state->orbitAngle) *
+  orbitSin = fsin16Approx(3000);
+  orbitScale = fsin16Approx((u16)state->orbitAngle) *
                worldasteroids_s32AsFloat(state->orbitRadius);
   *(f32 *)(obj + 8) =
       orbitScale * orbitSin + (*(f32 *)(anchor + 0x10) +
                                worldasteroids_s32AsFloat(state->heightOffset));
-  orbitCos = fn_80293EAC((u16)state->orbitAngle);
+  orbitCos = fcos16Approx((u16)state->orbitAngle);
   *(f32 *)(obj + 10) =
       worldasteroids_s32AsFloat(state->orbitRadius) * orbitCos + *(f32 *)(anchor + 0x14);
   return;
@@ -113,20 +113,20 @@ void worldasteroids_init(u8 *obj)
 
   state = worldasteroids_getState(obj);
   baseAngle = randomGetRange(-0x7fff,0x7fff);
-  orbitShape = angleFn((u16)baseAngle);
+  orbitShape = fsin16Approx((u16)baseAngle);
   if (orbitShape < lbl_803E65E0) {
-    orbitShape = -angleFn((u16)baseAngle);
+    orbitShape = -fsin16Approx((u16)baseAngle);
   }
   else {
-    orbitShape = angleFn((u16)baseAngle);
+    orbitShape = fsin16Approx((u16)baseAngle);
   }
   randomGetRange(0,(int)(lbl_803E65E8 * orbitShape + lbl_803E65E4));
-  orbitShape = angleFn((u16)baseAngle);
+  orbitShape = fsin16Approx((u16)baseAngle);
   if (orbitShape < lbl_803E65E0) {
-    orbitShape = -angleFn((u16)baseAngle);
+    orbitShape = -fsin16Approx((u16)baseAngle);
   }
   else {
-    orbitShape = angleFn((u16)baseAngle);
+    orbitShape = fsin16Approx((u16)baseAngle);
   }
   radiusSeed = (int)(lbl_803E65EC * orbitShape);
   randomValue = randomGetRange(-300,300);
@@ -138,10 +138,10 @@ void worldasteroids_init(u8 *obj)
   randomValue = randomGetRange(-0x7fff,0x7fff);
   state->orbitAngle = randomValue;
   state->orbitRadius =
-      (s16)(int)(worldasteroids_s32AsFloat(radiusSeed) * angleFn((u16)baseAngle) +
+      (s16)(int)(worldasteroids_s32AsFloat(radiusSeed) * fsin16Approx((u16)baseAngle) +
                  lbl_803E65F0);
   state->heightOffset =
-      (s16)(int)(worldasteroids_s32AsFloat(radiusSeed) * fn_80293EAC((u16)baseAngle));
+      (s16)(int)(worldasteroids_s32AsFloat(radiusSeed) * fcos16Approx((u16)baseAngle));
   return;
 }
 #pragma peephole reset

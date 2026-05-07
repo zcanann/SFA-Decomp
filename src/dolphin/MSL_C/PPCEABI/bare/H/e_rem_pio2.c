@@ -131,7 +131,7 @@ float fn_80293D0C(int angle) {
     }
 }
 
-float fn_80293EAC(int angle) {
+float fcos16Approx(int angle) {
     s16 reduced = (u16)angle << 2;
     float y = fastCastS16ToFloat(&reduced);
     float y2 = y * y;

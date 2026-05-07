@@ -59,7 +59,7 @@ float invSqrt(float x) {
     return guess;
 }
 
-float angleFn(int angle) {
+float fsin16Approx(int angle) {
     s16 reduced = (s16)(angle << 2);
     float x = fastCastS16ToFloat(&reduced);
     float x2 = x * x;
