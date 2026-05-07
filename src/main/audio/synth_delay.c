@@ -17,25 +17,22 @@ extern u8* lbl_803DE268;
 u32 fn_8027186C(u32 handle, u8 controller, u8 value) {
     u32 found;
     u32 idx;
-    u32 slotOffset;
-    u8* base;
 
     found = 0;
     handle = vidGetInternalId(handle);
     while (handle != 0xFFFFFFFFu) {
         idx = (u8)handle;
-        slotOffset = idx * 0x404;
-        base = lbl_803DE268 + slotOffset;
-        if (handle != *(u32*)(base + 0xF4)) {
+        if (handle != *(u32*)(lbl_803DE268 + idx * 0x404 + 0xF4)) {
             return found;
         }
-        if (((*(u32*)(base + 0x114) & 0) ^ 0) | ((*(u32*)(base + 0x118) & 2) ^ 0)) {
-            inpSetMidiCtrl(controller, idx, *(u8*)(base + 0x20B), value);
+        if (((*(u32*)(lbl_803DE268 + idx * 0x404 + 0x114) & 0) ^ 0) |
+            ((*(u32*)(lbl_803DE268 + idx * 0x404 + 0x118) & 2) ^ 0)) {
+            inpSetMidiCtrl(controller, idx, *(u8*)(lbl_803DE268 + idx * 0x404 + 0x20B), value);
         } else {
-            inpSetMidiCtrl(controller, idx, *(u8*)(base + 0x122), value);
+            inpSetMidiCtrl(controller, idx, *(u8*)(lbl_803DE268 + idx * 0x404 + 0x122), value);
         }
         found = 1;
-        handle = *(u32*)(lbl_803DE268 + slotOffset + 0xEC);
+        handle = *(u32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
     }
     return found;
 }
@@ -48,25 +45,22 @@ u32 fn_8027186C(u32 handle, u8 controller, u8 value) {
 u32 fn_80271954(u32 handle, u8 controller, u32 value) {
     u32 found;
     u32 idx;
-    u32 slotOffset;
-    u8* base;
 
     found = 0;
     handle = vidGetInternalId(handle);
     while (handle != 0xFFFFFFFFu) {
         idx = (u8)handle;
-        slotOffset = idx * 0x404;
-        base = lbl_803DE268 + slotOffset;
-        if (handle != *(u32*)(base + 0xF4)) {
+        if (handle != *(u32*)(lbl_803DE268 + idx * 0x404 + 0xF4)) {
             return found;
         }
-        if (((*(u32*)(base + 0x114) & 0) ^ 0) | ((*(u32*)(base + 0x118) & 2) ^ 0)) {
-            inpSetMidiCtrl14(controller, idx, *(u8*)(base + 0x20B), value);
+        if (((*(u32*)(lbl_803DE268 + idx * 0x404 + 0x114) & 0) ^ 0) |
+            ((*(u32*)(lbl_803DE268 + idx * 0x404 + 0x118) & 2) ^ 0)) {
+            inpSetMidiCtrl14(controller, idx, *(u8*)(lbl_803DE268 + idx * 0x404 + 0x20B), value);
         } else {
-            inpSetMidiCtrl14(controller, idx, *(u8*)(base + 0x122), value);
+            inpSetMidiCtrl14(controller, idx, *(u8*)(lbl_803DE268 + idx * 0x404 + 0x122), value);
         }
         found = 1;
-        handle = *(u32*)(lbl_803DE268 + slotOffset + 0xEC);
+        handle = *(u32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
     }
     return found;
 }
