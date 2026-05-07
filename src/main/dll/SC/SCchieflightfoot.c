@@ -37,8 +37,8 @@ extern f32 DAT_80327f84[];
 extern u8 DAT_80327fc8[];
 extern u16 DAT_80327fdc[];
 extern u8 DAT_80328000[];
-extern undefined4 lbl_80326EF8;
-extern undefined4 lbl_80326F28;
+extern u8 lbl_80326EF8[0x30];
+extern u8 lbl_80326F28[0x4AC];
 extern undefined4 lbl_803E5410;
 extern undefined4* pDll_expgfx;
 extern undefined4* DAT_803dd6d4;
@@ -346,16 +346,14 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
     runtime->idleTimer = (f32)(s32)randomTime;
     break;
   }
-  uStack_1c = config->initScale;
-  local_20 = 0x43300000;
   *(float *)((int)obj + 8) = *(float *)(*(int *)((int)obj + 0x50) + 4) *
-      ((float)((double)CONCAT44(0x43300000,uStack_1c) - lbl_803E5440) / lbl_803E545C);
+      ((float)config->initScale / lbl_803E545C);
   Obj_GetActiveModel((int)obj);
   fn_8002CEC0((double)*(float *)((int)obj + 8));
   moveScratch = (int)runtime->moveScratch;
-  (**(code **)(*lbl_803DCAA8 + 4))(moveScratch,3,0xa3,0);
-  (**(code **)(*lbl_803DCAA8 + 0xc))(moveScratch,4,&lbl_80326EF8,&lbl_80326F28,local_28);
-  (**(code **)(*lbl_803DCAA8 + 0x20))((int)obj,moveScratch);
+  (*(code *)(*lbl_803DCAA8 + 4))(moveScratch,3,0xa3,0);
+  (*(code *)(*lbl_803DCAA8 + 0xc))(moveScratch,4,lbl_80326EF8,lbl_80326F28,local_28);
+  (*(code *)(*lbl_803DCAA8 + 0x20))((int)obj,moveScratch);
   *(code **)((int)obj + 0xbc) = (code *)SHthorntail_updateLevelControlState;
   fn_80114F64((int)obj,(int)runtime,0xffffdc72,0x2aaa,3);
   fn_8011507C((int)runtime,400,0x78);
