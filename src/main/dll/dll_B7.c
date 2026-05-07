@@ -1,49 +1,86 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_B7.h"
 
-extern double FUN_80247f54();
-extern double FUN_80293900();
+extern void Resource_Release(void *handle);
+extern void *Resource_Acquire(int id, int mode);
+extern void fn_80023800(void *ptr);
+extern void *mmAlloc(int size, int heap, int flags);
 
-extern f32 lbl_803E22B0;
-extern f32 lbl_803E22D8;
+extern void *lbl_803A4228[20];
+extern void *pCamera;
+extern void *lbl_803DD51C;
+extern int lbl_803DD518;
+extern int lbl_803DD514;
+extern u8 lbl_803DD520;
+extern s8 lbl_803DD500;
+extern s8 lbl_803DD501;
+extern int lbl_803DD508;
+extern int lbl_803DD50C;
 
-/*
- * --INFO--
- *
- * Function: camcontrol_updateMoveAverage
- * EN v1.0 Address: 0x80101690
- * EN v1.0 Size: 236b
- * EN v1.1 Address: 0x80101844
- * EN v1.1 Size: 232b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void camcontrol_updateMoveAverage(int param_1,int param_2)
+#pragma scheduling off
+#pragma peephole off
+void fn_80101690(int param_1, int param_2)
 {
-  float fVar1;
-  double dVar2;
-  
-  *(undefined4 *)(param_1 + 200) = *(undefined4 *)(param_1 + 0xcc);
-  *(undefined4 *)(param_1 + 0xcc) = *(undefined4 *)(param_1 + 0xd0);
-  *(undefined4 *)(param_1 + 0xd0) = *(undefined4 *)(param_1 + 0xd4);
-  *(undefined4 *)(param_1 + 0xd4) = *(undefined4 *)(param_1 + 0xd8);
-  dVar2 = FUN_80247f54((float *)(param_2 + 0x24));
-  if ((double)lbl_803E22B0 < dVar2) {
-    dVar2 = FUN_80293900(dVar2);
+  void *entry;
+  int idx;
+  int n;
+  int priority;
+
+  if (lbl_803DD51C != NULL) {
+    if (lbl_803DD518 != (int)(u16)param_1) {
+      (*(void (****)(void *))((char *)lbl_803DD51C + 4))[0][3](pCamera);
+      if (*(u8 *)((char *)lbl_803DD51C + 8) == 1) {
+        idx = lbl_803DD514;
+        Resource_Release(*(void **)((char *)lbl_803A4228[idx] + 4));
+        fn_80023800(lbl_803A4228[idx]);
+        lbl_803A4228[idx] = lbl_803A4228[lbl_803DD520 - 1];
+        lbl_803DD520--;
+        lbl_803DD51C = NULL;
+        lbl_803DD518 = -1;
+        lbl_803DD514 = -1;
+      }
+    }
   }
-  *(float *)(param_1 + 0xd8) = (float)dVar2;
-  fVar1 = lbl_803E22B0;
-  *(float *)(param_1 + 0xc4) = lbl_803E22B0;
-  *(float *)(param_1 + 0xc4) = *(float *)(param_1 + 0xc4) + *(float *)(param_1 + 200);
-  *(float *)(param_1 + 0xc4) = *(float *)(param_1 + 0xc4) + *(float *)(param_1 + 0xcc);
-  *(float *)(param_1 + 0xc4) = *(float *)(param_1 + 0xc4) + *(float *)(param_1 + 0xd0);
-  *(float *)(param_1 + 0xc4) = *(float *)(param_1 + 0xc4) + *(float *)(param_1 + 0xd4);
-  *(float *)(param_1 + 0xc4) = *(float *)(param_1 + 0xc4) + *(float *)(param_1 + 0xd8);
-  *(float *)(param_1 + 0xc4) = *(float *)(param_1 + 0xc4) * lbl_803E22D8;
-  if (*(float *)(param_1 + 0xc4) < fVar1) {
-    *(float *)(param_1 + 0xc4) = -*(float *)(param_1 + 0xc4);
+
+  idx = 0;
+  n = lbl_803DD520;
+  {
+    void **p = lbl_803A4228;
+    for (; idx < n; idx++) {
+      if (*(u16 *)*p == (u16)param_1) goto found;
+      p++;
+    }
   }
-  return;
+  idx = -1;
+found:
+  lbl_803DD514 = idx;
+
+  if (idx == -1) {
+    void *new_entry;
+    priority = lbl_803DD500;
+    new_entry = mmAlloc(0xC, 0xF, 0);
+    n = lbl_803DD520;
+    lbl_803A4228[n] = new_entry;
+    lbl_803DD520++;
+    entry = lbl_803A4228[n];
+    *(s16 *)entry = param_1;
+    *((u8 *)entry + 8) = priority;
+    *(void **)((u8 *)entry + 4) = Resource_Acquire(param_1, 4);
+    lbl_803DD514 = lbl_803DD520 - 1;
+  }
+
+  if (lbl_803DD514 != -1) {
+    entry = lbl_803A4228[lbl_803DD514];
+    lbl_803DD51C = entry;
+    lbl_803DD518 = *(u16 *)entry;
+    (*(void (****)(void *, int, int))((char *)entry + 4))[0][1](pCamera, lbl_803DD501, param_2);
+  } else {
+    lbl_803DD51C = NULL;
+    lbl_803DD518 = -1;
+  }
+
+  lbl_803DD50C = lbl_803DD500;
+  lbl_803DD508 = lbl_803DD501;
 }
+#pragma peephole reset
+#pragma scheduling reset
