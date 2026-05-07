@@ -88,21 +88,19 @@ void fn_8013DC88(void *param_1, void *param_2)
         if (fn_8013B368(param_1, lbl_803E24CC, param_2) == 0) {
             if ((u8)Obj_IsLoadingLocked() != 0) {
                 *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) | 0x800;
-                slot = (void **)((char *)param_2 + 0x700);
-                for (i = 0; i < 7; i++) {
+                for (i = 0, slot = (void **)param_2; i < 7; slot++, i++) {
                     setup = Obj_AllocObjectSetup(0x24, 0x4f0);
                     *(u8 *)((char *)setup + 0x4) = 2;
                     *(u8 *)((char *)setup + 0x5) = 1;
                     *(s16 *)((char *)setup + 0x1a) = (s16)i;
-                    *slot = (void *)Obj_SetupObject(
+                    slot[0x700 / 4] = (void *)Obj_SetupObject(
                         setup, 5, *(s8 *)((char *)param_1 + 0xac), -1,
                         *(void **)((char *)param_1 + 0x30));
-                    slot++;
                 }
                 Sfx_PlayFromObject(param_1, 0x3db);
                 Sfx_AddLoopedObjectSound(param_1, 0x3dc);
             }
-            *(u8 *)*(int *)param_2 = *(u8 *)*(int *)param_2 - 1;
+            (*(u8 *)*(int *)param_2)--;
             fn_8013A3F0(param_1, 0x34, lbl_803E2444, 0x4000000);
             *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) | 0x10;
             *(u8 *)((char *)param_2 + 0xa) = 3;
@@ -114,10 +112,8 @@ void fn_8013DC88(void *param_1, void *param_2)
         if (*(f32 *)((char *)param_1 + 0x98) <= lbl_803E24D0) {
             *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) & ~0x800;
             *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) | 0x1000;
-            slot = (void **)((char *)param_2 + 0x700);
-            for (i = 0; i < 7; i++) {
-                fn_8017804C(*slot);
-                slot++;
+            for (i = 0, slot = (void **)param_2; i < 7; slot++, i++) {
+                fn_8017804C(slot[0x700 / 4]);
             }
             Sfx_RemoveLoopedObjectSound(param_1, 0x3dc);
             state = *(void **)((char *)param_1 + 0xb8);
