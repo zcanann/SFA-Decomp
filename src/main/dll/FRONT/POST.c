@@ -1,29 +1,63 @@
 #include "ghidra_import.h"
 #include "main/dll/FRONT/POST.h"
 #include "main/objanim.h"
+#include "main/objlib.h"
 
-extern undefined4 FUN_800305f8();
-extern int Obj_GetYawDeltaToObject();
-extern undefined4 FUN_80038bb0();
-extern void* FUN_80039518();
-extern short FUN_8003a420();
-extern undefined4 FUN_8003a8ac();
-extern undefined8 FUN_80286834();
-extern undefined4 FUN_80286880();
-extern uint countLeadingZeros();
+typedef struct PostMotionTarget {
+  u8 pad0[0x5a];
+  s16 yawA;
+  u8 pad5c[2];
+  s16 yawB;
+  u8 pad60[2];
+  u8 flags;
+} PostMotionTarget;
 
-extern f64 DOUBLE_803e2918;
-extern f32 FLOAT_803e2910;
-extern f32 FLOAT_803e2944;
-extern f32 FLOAT_803e295c;
-extern f32 FLOAT_803e2960;
+typedef struct PostObject {
+  u8 pad0[0x54];
+  PostMotionTarget *motion;
+} PostObject;
+
+typedef struct PostObjAnimComponent {
+  s16 yaw;
+  u8 pad2[0x9e];
+  s16 currentMove;
+} PostObjAnimComponent;
+
+typedef struct PostControl {
+  u8 pad0[0x10];
+  u8 primary[0xc];
+  u8 secondary[0x5a0];
+  s16 events[0x1e];
+  int blocked;
+  u8 pad5fc[0x10];
+  s16 eventState;
+  s16 yawLimit;
+  u8 contactAnim;
+  u8 flags;
+} PostControl;
+
+extern PostMotionTarget *fn_800394A0(void);
+extern void fn_80038F1C(int a, int b);
+extern s16 fn_8003A380(double distance, PostObjAnimComponent *objAnim, PostObject *obj,
+                       void *primary, void *secondary, s16 *events, int eventCount,
+                       int eventState);
+extern int fn_8003A8B4(PostObjAnimComponent *objAnim, PostMotionTarget *leadAnims,
+                       u8 contactAnim, void *secondary);
+extern uint countLeadingZeros(int value);
+
+extern f64 lbl_803E1C98;
+extern f32 lbl_803E1C90;
+extern f32 lbl_803E1CC4;
+extern f32 lbl_803E1CD0;
+extern f32 lbl_803E1CDC;
+extern f32 lbl_803E1CE0;
 
 /*
  * --INFO--
  *
- * Function: FUN_80115650
+ * Function: fn_80115650
  * EN v1.0 Address: 0x80115650
- * EN v1.0 Size: 1116b
+ * EN v1.0 Size: 908b
  * EN v1.1 Address: 0x801158EC
  * EN v1.1 Size: 916b
  * JP Address: TODO
@@ -31,119 +65,110 @@ extern f32 FLOAT_803e2960;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80115650(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int *param_11,int param_12,float *param_13,
-                 short *param_14,undefined4 param_15,undefined4 param_16)
+int fn_80115650(void *objAnimArg, void *objArg, int *turning, void *controlArg,
+                float *turnSpeed, s16 *moves)
 {
-  uint uVar1;
-  ushort *puVar2;
-  undefined4 *puVar3;
-  int iVar4;
-  short sVar6;
-  undefined4 uVar5;
-  int iVar7;
-  short *psVar8;
-  undefined4 uVar9;
-  int iVar10;
-  short sVar11;
-  undefined8 uVar12;
-  
-  uVar12 = FUN_80286834();
-  puVar2 = (ushort *)((ulonglong)uVar12 >> 0x20);
-  iVar7 = (int)uVar12;
-  puVar3 = FUN_80039518();
-  if ((*(int *)(iVar7 + 0x54) != 0) && ((*(byte *)(*(int *)(iVar7 + 0x54) + 0x62) & 2) != 0)) {
-    param_2 = (double)FLOAT_803e295c;
-  }
-  iVar4 = Obj_GetYawDeltaToObject(puVar2,iVar7,(float *)0x0);
-  sVar11 = (short)iVar4;
-  if ((*(byte *)(param_12 + 0x611) & 0x10) != 0) {
-    FUN_80038bb0('\0',1);
-    sVar11 = sVar11 + -0x8000;
-  }
-  if ((*(byte *)(param_12 + 0x611) & 8) == 0) {
-    iVar4 = param_12 + 0x1c;
-  }
-  else {
-    iVar4 = 0;
-  }
-  psVar8 = (short *)(param_12 + 0x5bc);
-  uVar9 = 8;
-  iVar10 = (int)*(short *)(param_12 + 0x60c);
-  sVar6 = FUN_8003a420(puVar2,iVar7,(float *)(param_12 + 0x10),iVar4,psVar8,8,
-                       *(short *)(param_12 + 0x60c));
-  if ((*(byte *)(param_12 + 0x611) & 8) == 0) {
-    iVar4 = param_12 + 0x1c;
-    uVar5 = FUN_8003a8ac(puVar2,puVar3,(uint)*(byte *)(param_12 + 0x610),iVar4);
-    uVar1 = countLeadingZeros(uVar5);
-    *(uint *)(param_12 + 0x5f8) = uVar1 >> 5;
-  }
-  *(undefined4 *)(param_12 + 0x5f8) = 0;
-  if (((*(byte *)(param_12 + 0x611) & 2) == 0) || (sVar6 == 0)) {
-    if (*(int *)(param_12 + 0x5f8) == 0) {
-      if ((-(int)*(short *)(param_12 + 0x60e) < (int)sVar11) &&
-         ((int)sVar11 < (int)*(short *)(param_12 + 0x60e))) {
-        *param_13 = FLOAT_803e2944;
-        *param_11 = 0;
-        countLeadingZeros((int)sVar6);
-        goto LAB_80115c58;
-      }
-    }
-    if ((*param_11 == 0) && (sVar6 != 0)) {
-      *param_11 = 1;
-      *param_13 = FLOAT_803e2944;
-    }
-    else if (*param_11 != 0) {
-      if ((0 < sVar11) && ((int)(short)puVar2[0x50] != (int)param_14[1])) {
-        FUN_800305f8((double)FLOAT_803e2910,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                     puVar2,(int)param_14[1],0,iVar4,psVar8,uVar9,iVar10,param_16);
-        ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)puVar2,0x1e);
-      }
-      if ((sVar11 < 0) && ((int)(short)puVar2[0x50] != (int)*param_14)) {
-        FUN_800305f8((double)FLOAT_803e2910,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                     puVar2,(int)*param_14,0,iVar4,psVar8,uVar9,iVar10,param_16);
-        ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)puVar2,0x1e);
-      }
-      if (sVar6 == 0) {
-        iVar7 = (int)sVar11;
-        if (iVar7 < 1) {
-          iVar7 = iVar7 / 0x14 + (iVar7 >> 0x1f);
-          sVar11 = (short)iVar7 - (short)(iVar7 >> 0x1f);
-        }
-        else {
-          iVar7 = iVar7 / 0x14 + (iVar7 >> 0x1f);
-          sVar11 = (short)iVar7 - (short)(iVar7 >> 0x1f);
-        }
-      }
-      else {
-        iVar7 = (int)sVar11;
-        if (iVar7 < 1) {
-          iVar7 = (iVar7 + 0x500) / 0x14 + (iVar7 + 0x500 >> 0x1f);
-          sVar11 = (short)iVar7 - (short)(iVar7 >> 0x1f);
-        }
-        else {
-          iVar7 = (iVar7 + -0x500) / 0x14 + (iVar7 + -0x500 >> 0x1f);
-          sVar11 = (short)iVar7 - (short)(iVar7 >> 0x1f);
-        }
-      }
-      *puVar2 = *puVar2 + sVar11;
-      uVar1 = (uint)sVar11;
-      if ((int)uVar1 < 0) {
-        uVar1 = -uVar1;
-      }
-      *param_13 = (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - DOUBLE_803e2918) /
-                  FLOAT_803e2960;
-    }
-  }
-  else {
-    *param_11 = 0;
-  }
-LAB_80115c58:
-  FUN_80286880();
-  return;
-}
+  PostObjAnimComponent *objAnim;
+  PostObject *obj;
+  PostControl *control;
+  PostMotionTarget *motion;
+  s16 yawDelta;
+  s16 hitResult;
+  int turnAmount;
+  uint ret;
+  double distance;
+  void *secondary;
 
+  objAnim = (PostObjAnimComponent *)objAnimArg;
+  obj = (PostObject *)objArg;
+  control = (PostControl *)controlArg;
+  motion = fn_800394A0();
+  if (obj->motion == 0) {
+    distance = (double)lbl_803E1CD0;
+  } else if ((obj->motion->flags & 2) != 0) {
+    distance = (double)(lbl_803E1CDC *
+                        (float)((double)(s32)obj->motion->yawB - lbl_803E1C98));
+  } else if ((obj->motion->flags & 1) != 0) {
+    distance = (double)(float)((double)(s32)obj->motion->yawA - lbl_803E1C98);
+  } else {
+    distance = (double)lbl_803E1CD0;
+  }
+
+  yawDelta = Obj_GetYawDeltaToObject((ushort *)objAnim,(int)obj,(float *)0);
+  if ((control->flags & 0x10) != 0) {
+    fn_80038F1C(0,1);
+    yawDelta += -0x8000;
+  }
+
+  if ((control->flags & 8) == 0) {
+    secondary = control->secondary;
+  } else {
+    secondary = 0;
+  }
+
+  hitResult = fn_8003A380(distance,objAnim,obj,control->primary,secondary,control->events,8,
+                          control->eventState);
+  if ((control->flags & 8) == 0) {
+    control->blocked = countLeadingZeros(fn_8003A8B4(objAnim,motion,control->contactAnim,
+                                                     control->secondary)) >> 5;
+  }
+  control->blocked = 0;
+
+  if (((control->flags & 2) != 0) && (hitResult != 0)) {
+    *turning = 0;
+    return 0;
+  }
+
+  if (control->blocked == 0) {
+    if ((-(int)control->yawLimit < (int)yawDelta) &&
+        ((int)yawDelta < (int)control->yawLimit)) {
+      *turnSpeed = lbl_803E1CC4;
+      *turning = 0;
+      return countLeadingZeros((int)hitResult) >> 5;
+    }
+  }
+
+  if ((*turning == 0) && (hitResult != 0)) {
+    *turning = 1;
+    *turnSpeed = lbl_803E1CC4;
+    return 1;
+  }
+
+  if (*turning == 0) {
+    return 1;
+  }
+
+  if ((0 < yawDelta) && (objAnim->currentMove != moves[1])) {
+    ObjAnim_SetCurrentMove((double)lbl_803E1C90,(int)objAnim,moves[1],0);
+    ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)objAnim,0x1e);
+  }
+  if ((yawDelta < 0) && (objAnim->currentMove != moves[0])) {
+    ObjAnim_SetCurrentMove((double)lbl_803E1C90,(int)objAnim,moves[0],0);
+    ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)objAnim,0x1e);
+  }
+
+  if (hitResult == 0) {
+    turnAmount = (int)yawDelta;
+    turnAmount = turnAmount / 0x14 + (turnAmount >> 0x1f);
+    yawDelta = (s16)turnAmount - (s16)(turnAmount >> 0x1f);
+  } else {
+    turnAmount = (int)yawDelta;
+    if (turnAmount > 0) {
+      turnAmount = (turnAmount - 0x500) / 0x14 + ((turnAmount - 0x500) >> 0x1f);
+    } else {
+      turnAmount = (turnAmount + 0x500) / 0x14 + ((turnAmount + 0x500) >> 0x1f);
+    }
+    yawDelta = (s16)turnAmount - (s16)(turnAmount >> 0x1f);
+  }
+
+  objAnim->yaw += yawDelta;
+  ret = (uint)yawDelta;
+  if ((int)ret < 0) {
+    ret = -ret;
+  }
+  *turnSpeed = (float)((double)(s32)ret - lbl_803E1C98) / lbl_803E1CE0;
+  return 1;
+}
 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_801159DC(void) {}
