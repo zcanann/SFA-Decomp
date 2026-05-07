@@ -17,13 +17,15 @@ extern u8* lbl_803DE268;
 u32 fn_8027186C(u32 handle, u8 controller, u8 value) {
     u32 found;
     u32 idx;
+    u32 slotOffset;
     u8* base;
 
     found = 0;
     handle = vidGetInternalId(handle);
     while (handle != 0xFFFFFFFFu) {
         idx = (u8)handle;
-        base = lbl_803DE268 + idx * 0x404;
+        slotOffset = idx * 0x404;
+        base = lbl_803DE268 + slotOffset;
         if (handle != *(u32*)(base + 0xF4)) {
             return found;
         }
@@ -33,7 +35,7 @@ u32 fn_8027186C(u32 handle, u8 controller, u8 value) {
             inpSetMidiCtrl(controller, idx, *(u8*)(base + 0x122), value);
         }
         found = 1;
-        handle = *(u32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
+        handle = *(u32*)(lbl_803DE268 + slotOffset + 0xEC);
     }
     return found;
 }
@@ -46,13 +48,15 @@ u32 fn_8027186C(u32 handle, u8 controller, u8 value) {
 u32 fn_80271954(u32 handle, u8 controller, u32 value) {
     u32 found;
     u32 idx;
+    u32 slotOffset;
     u8* base;
 
     found = 0;
     handle = vidGetInternalId(handle);
     while (handle != 0xFFFFFFFFu) {
         idx = (u8)handle;
-        base = lbl_803DE268 + idx * 0x404;
+        slotOffset = idx * 0x404;
+        base = lbl_803DE268 + slotOffset;
         if (handle != *(u32*)(base + 0xF4)) {
             return found;
         }
@@ -62,7 +66,7 @@ u32 fn_80271954(u32 handle, u8 controller, u32 value) {
             inpSetMidiCtrl14(controller, idx, *(u8*)(base + 0x122), value);
         }
         found = 1;
-        handle = *(u32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
+        handle = *(u32*)(lbl_803DE268 + slotOffset + 0xEC);
     }
     return found;
 }
@@ -89,21 +93,22 @@ void fn_80271A3C(u32 dstHandle, u32 srcHandle) {
  */
 u32 fn_80271AC0(u32 handle) {
     u32 found;
-    s32 slot;
-    u8 idx;
+    u32 idx;
+    u32 slotOffset;
     u8* base;
 
     found = 0;
     if (gSynthInitialized != 0) {
-        slot = vidGetInternalId(handle);
-        while (slot != -1) {
-            idx = (u8)slot;
-            base = lbl_803DE268 + idx * 0x404;
+        handle = vidGetInternalId(handle);
+        while (handle != 0xFFFFFFFFu) {
+            idx = (u8)handle;
+            slotOffset = idx * 0x404;
+            base = lbl_803DE268 + slotOffset;
             if (handle == *(u32*)(base + 0xF4)) {
                 fn_80278610((SynthVoiceSlot*)base);
                 found = 1;
             }
-            slot = *(s32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
+            handle = *(u32*)(lbl_803DE268 + slotOffset + 0xEC);
         }
     }
     return found;
