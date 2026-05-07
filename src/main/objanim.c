@@ -385,16 +385,14 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   int frameStep;
   int moveIndex;
   int moveData;
-  float clampedProgress;
   objAnim = (ObjAnimComponent *)objAnimArg;
-  clampedProgress = moveProgress;
-  if (clampedProgress > lbl_803DE8E0) {
-    clampedProgress = lbl_803DE8E0;
+  if (moveProgress > lbl_803DE8E0) {
+    moveProgress = lbl_803DE8E0;
   }
-  else if (clampedProgress < lbl_803DE8F0) {
-    clampedProgress = lbl_803DE8F0;
+  else if (moveProgress < lbl_803DE8F0) {
+    moveProgress = lbl_803DE8F0;
   }
-  objAnim->activeMoveProgress = clampedProgress;
+  objAnim->activeMoveProgress = moveProgress;
   bank = ObjAnim_GetActiveBank(objAnim);
   animDef = bank->animDef;
   if (animDef->moveCount == 0) {
@@ -450,7 +448,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
     state->eventCountdown = OBJANIM_EVENT_COUNTDOWN_RESET;
   }
   state->step = lbl_803DE8F0;
-  state->speed = clampedProgress * state->segmentLength;
+  state->speed = moveProgress * state->segmentLength;
   return 0;
 }
 #pragma peephole reset
