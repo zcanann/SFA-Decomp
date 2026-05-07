@@ -1,95 +1,52 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_B4.h"
 
-extern int FUN_8001792c();
-extern undefined4 FUN_80051d64();
-extern undefined4 FUN_800528d0();
-extern undefined4 FUN_80052904();
-extern uint FUN_80053078();
-extern undefined4 FUN_8006f8a4();
-extern undefined4 FUN_8006f8fc();
-extern undefined4 FUN_80259288();
-extern undefined4 FUN_8025c754();
-extern undefined4 FUN_8025cce8();
+extern u8 *Obj_AllocObjectSetup(int size, int type);
+extern u8 *Obj_SetupObject(u8 *obj, int a, int b, int c, int d);
+extern u8 *Obj_GetActiveModel(u8 *obj);
+extern void ObjModel_SetRenderCallback(u8 *model, void *cb);
+extern void fn_80100DCC(void);
+extern void fn_80100C90(void);
+extern void fn_8001EFE0(int a, int b, int c, int d);
+extern u8 *fn_8001F4C8(int a, int b);
+extern void fn_8001DB2C(u8 *p, int a);
+extern void fn_8001DB3C(u8 *p, int a);
+extern void fn_8001DB34(u8 *p, int a);
+extern void fn_8001DC90(u8 *p, f32 a, f32 b, f32 c);
+extern void fn_8001DAF0(u8 *p, int a, int b, int c, int d);
 
-extern undefined4 gCamcontrolState;
-extern f32 lbl_803E22B0;
-extern f32 lbl_803E22B4;
-extern f32 lbl_803E22B8;
-extern f32 lbl_803E22BC;
+extern u8 *lbl_803DD4BC;
+extern u8 *lbl_803DD4C4;
+extern f32 lbl_803E162C;
+extern f32 lbl_803E1630;
+extern f32 lbl_803E1640;
+
+#pragma scheduling off
 
 /*
  * --INFO--
  *
- * Function: FUN_80100fa0
+ * Function: fn_80100FA0
  * EN v1.0 Address: 0x80100FA0
- * EN v1.0 Size: 452b
- * EN v1.1 Address: 0x80101068
- * EN v1.1 Size: 468b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 276b
  */
-undefined4 FUN_80100fa0(int param_1,int *param_2,int param_3)
+void fn_80100FA0(void)
 {
-  float fVar1;
-  int iVar2;
-  uint uVar3;
-  byte bVar4;
-  char local_18 [12];
-  
-  iVar2 = FUN_8001792c(*param_2,param_3);
-  fVar1 = *(float *)(gCamcontrolState + 0x134);
-  if (lbl_803E22B0 < fVar1) {
-    if (lbl_803E22B4 < fVar1) {
-      if (lbl_803E22B8 < fVar1) {
-        if (lbl_803E22BC < fVar1) {
-          bVar4 = 0;
-        }
-        else {
-          bVar4 = 1;
-        }
-      }
-      else {
-        bVar4 = 2;
-      }
-    }
-    else {
-      bVar4 = 3;
+  if (lbl_803DD4BC == NULL) {
+    lbl_803DD4BC = Obj_SetupObject(Obj_AllocObjectSetup(0x18, 0x1FE), 4, -1, -1, 0);
+    ObjModel_SetRenderCallback(Obj_GetActiveModel(lbl_803DD4BC), fn_80100DCC);
+    lbl_803DD4BC[0xAD] = 1;
+    ObjModel_SetRenderCallback(Obj_GetActiveModel(lbl_803DD4BC), fn_80100C90);
+    lbl_803DD4BC[0xAD] = 2;
+    ObjModel_SetRenderCallback(Obj_GetActiveModel(lbl_803DD4BC), fn_80100C90);
+    fn_8001EFE0(1, 0x32, 0x3C, 0x28);
+    lbl_803DD4C4 = fn_8001F4C8(0, 1);
+    if (lbl_803DD4C4 != NULL) {
+      fn_8001DB2C(lbl_803DD4C4, 4);
+      fn_8001DB3C(lbl_803DD4C4, 1);
+      fn_8001DB34(lbl_803DD4C4, 1);
+      fn_8001DC90(lbl_803DD4C4, lbl_803E162C, lbl_803E1630, lbl_803E1640);
+      fn_8001DAF0(lbl_803DD4C4, 0xB4, 0xC8, 0xFF, 0xFF);
     }
   }
-  else {
-    bVar4 = 4;
-  }
-  FUN_80052904();
-  if (bVar4 < *(byte *)(iVar2 + 0x29)) {
-    local_18[0] = -1;
-    local_18[1] = 0xff;
-    local_18[2] = 0xff;
-    local_18[3] = *(undefined *)(param_1 + 0x36);
-    uVar3 = FUN_80053078(*(uint *)(iVar2 + 0x24));
-    FUN_80051d64(uVar3,(float *)0x0,0,local_18);
-  }
-  else {
-    local_18[0] = '\0';
-    local_18[1] = 0;
-    local_18[2] = 0;
-    local_18[3] = (char)((*(byte *)(param_1 + 0x36) + 1) * 0x60 >> 8);
-    uVar3 = FUN_80053078(*(uint *)(iVar2 + 0x24));
-    FUN_80051d64(uVar3,(float *)0x0,0,local_18);
-  }
-  FUN_800528d0();
-  if ((*(char *)(param_1 + 0x36) == -1) && (bVar4 < *(byte *)(iVar2 + 0x29))) {
-    FUN_8025cce8(0,1,0,5);
-    FUN_8006f8fc(1,3,1);
-  }
-  else {
-    FUN_8025cce8(1,4,5,5);
-    FUN_8006f8fc(1,3,0);
-  }
-  FUN_8006f8a4(1);
-  FUN_8025c754(7,0,0,7,0);
-  FUN_80259288(2);
-  return 1;
 }
