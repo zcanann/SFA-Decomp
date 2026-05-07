@@ -74,9 +74,10 @@ void proximitymine_resetToIdle(ProximityMineObject *obj)
     ObjHits_MarkObjectPositionDirty(obj);
     fn_8008016C(state->resetTimer);
     fn_8009A8C8(obj, lbl_803E676C);
-    fn_8009AB70(obj,
-                (state->triggerDistance - lbl_803E6774) * lbl_803DC24C + lbl_803E6770,
-                1, 1, 0, 1, 0, 1, 0);
+    {
+        f32 dist = state->triggerDistance - lbl_803E6774;
+        fn_8009AB70(obj, dist * lbl_803DC24C + lbl_803E6770, 1, 1, 0, 1, 0, 1, 0);
+    }
     ObjHitbox_SetCapsuleBounds(obj, (s32)state->triggerDistance, -5, 10);
     ObjHits_SetHitVolumeSlot(obj, 13, 1, 0);
     ObjHits_EnableObject(obj);
