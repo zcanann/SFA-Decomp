@@ -180,27 +180,20 @@ void FUN_80173364(short *param_1,int param_2)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80173368
- * EN v1.0 Address: 0x80173368
- * EN v1.0 Size: 88b
- * EN v1.1 Address: 0x801736D8
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80173368(int param_1)
+extern void *lbl_803DCA78;
+
+#pragma scheduling off
+#pragma peephole off
+void magicdust_free(int param_1)
 {
-  if (*(int *)(param_1 + 0xc4) != 0) {
-    ObjLink_DetachChild(*(int *)(param_1 + 0xc4),param_1);
+  if (*(uint *)(param_1 + 0xc4) != 0) {
+    ObjLink_DetachChild(*(int *)(param_1 + 0xc4), param_1);
   }
-  (**(code **)(*DAT_803dd6f8 + 0x18))(param_1);
+  (*(void (***)(int))lbl_803DCA78)[6](param_1);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
