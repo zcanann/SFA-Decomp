@@ -7,11 +7,6 @@ extern undefined4 FUN_800068f8();
 extern uint FUN_80017730();
 extern undefined4 FUN_8001774c();
 extern undefined4 FUN_80017754();
-extern undefined4 FUN_8001777c();
-extern undefined4 FUN_80017780();
-extern undefined4 FUN_80017784();
-extern undefined4 FUN_80017788();
-extern undefined4 FUN_8001778c();
 extern int FUN_80017970();
 extern undefined4 FUN_80017b00();
 extern undefined4 ObjHits_RecordObjectHit();
@@ -65,6 +60,8 @@ extern f32 lbl_803DF598;
 extern void Vec3_Normalize();
 extern void Vec3_ScaleAdd();
 extern void Vec3_Cross();
+extern f32 Vec3_Length();
+extern void fn_8002273C();
 extern f32 lbl_803DF59C;
 extern f32 lbl_803DF5A0;
 extern f32 lbl_803DF5B0;
@@ -587,7 +584,7 @@ void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double par
   local_d8 = *(float *)(iVar5 + 0x10) - *(float *)(iVar5 + 0x90);
   local_d4 = *(float *)(iVar5 + 0x20) - *(float *)(iVar5 + 0x94);
   dVar7 = extraout_f1;
-  dVar6 = (double)FUN_8001778c(&local_dc);
+  dVar6 = (double)Vec3_Length(&local_dc);
   local_dc = (float)((double)local_dc * param_2);
   local_d8 = (float)((double)local_d8 * param_2);
   local_d4 = (float)((double)local_d4 * param_2);
@@ -606,7 +603,7 @@ void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double par
       (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(param_9 + 0x44) * 4),
       (double)*(float *)(*(int *)(param_7 + 0xc) + iVar5),&local_e8,(float *)(param_9 + 8),
       (float *)(param_9 + 0x14),afStack_b8);
-  FUN_80017784(pfVar4);
+  Vec3_Normalize(pfVar4);
   dVar8 = (double)lbl_803DF590;
   for (iVar5 = param_6; *(int *)(iVar5 + 0x40) != -1; iVar5 = iVar5 + 0x48) {
     iVar1 = *(int *)(iVar5 + 0x40) * 4;
@@ -633,20 +630,20 @@ void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double par
         (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(iVar5 + 0x44) * 4),
         (double)*(float *)(*(int *)(param_7 + 0xc) + iVar1),pfVar3,(float *)(iVar5 + 8),
         (float *)(iVar5 + 0x14),afStack_b8);
-    FUN_80017784(pfVar4);
+    Vec3_Normalize(pfVar4);
     local_c4 = local_c4 + *pfVar4;
     local_c0 = local_c0 + pfVar4[1];
     local_bc = local_bc + pfVar4[2];
   }
-  FUN_80017784(&local_c4);
+  Vec3_Normalize(&local_c4);
   local_d0 = local_7c - local_e8;
   local_cc = lbl_803DF590;
   local_c8 = local_74 - local_e0;
-  dVar8 = (double)FUN_8001778c(&local_d0);
+  dVar8 = (double)Vec3_Length(&local_d0);
   local_d0 = local_7c - *pfVar3;
   local_cc = lbl_803DF590;
   local_c8 = local_74 - pfVar3[2];
-  FUN_80017784(&local_dc);
+  Vec3_Normalize(&local_dc);
   if (dVar6 <= dVar8) {
     local_ac = lbl_803DF590;
     local_a8 = lbl_803DF590;
@@ -659,7 +656,7 @@ void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double par
     local_dc = local_dc * fVar2;
     local_d8 = local_d8 * fVar2;
     local_d4 = local_d4 * fVar2;
-    FUN_8001777c(&local_c4,&local_dc,&local_ac);
+    fn_8002273C(&local_c4,&local_dc,&local_ac);
   }
   local_7c = local_7c + local_ac;
   local_78 = local_78 + local_a8;
@@ -771,7 +768,7 @@ void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double
   local_c8 = *(float *)(iVar5 + 0x10) - *(float *)(iVar5 + 0x84);
   local_c4 = *(float *)(iVar5 + 0x14) - *(float *)(iVar5 + 0x88);
   dVar7 = extraout_f1;
-  dVar6 = (double)FUN_8001778c(&local_cc);
+  dVar6 = (double)Vec3_Length(&local_cc);
   local_d8 = *pfVar3 - local_cc;
   local_d4 = pfVar3[1] - local_c8;
   local_d0 = pfVar3[2] - local_c4;
@@ -787,7 +784,7 @@ void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double
       (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(param_9 + 0x44) * 4),
       (double)*(float *)(*(int *)(param_7 + 0xc) + iVar5),&local_d8,(float *)(param_9 + 8),
       (float *)(param_9 + 0x14),afStack_a8);
-  FUN_80017784(pfVar4);
+  Vec3_Normalize(pfVar4);
   dVar8 = (double)lbl_803DF590;
   for (iVar5 = param_6; *(int *)(iVar5 + 0x40) != -1; iVar5 = iVar5 + 0x48) {
     iVar2 = *(int *)(iVar5 + 0x40) * 4;
@@ -814,20 +811,20 @@ void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double
         (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(iVar5 + 0x44) * 4),
         (double)*(float *)(*(int *)(param_7 + 0xc) + iVar2),pfVar3,(float *)(iVar5 + 8),
         (float *)(iVar5 + 0x14),afStack_a8);
-    FUN_80017784(pfVar4);
+    Vec3_Normalize(pfVar4);
     local_b4 = local_b4 + *pfVar4;
     local_b0 = local_b0 + pfVar4[1];
     local_ac = local_ac + pfVar4[2];
   }
-  FUN_80017784(&local_b4);
+  Vec3_Normalize(&local_b4);
   local_c0 = local_6c - local_d8;
   local_bc = local_68 - local_d4;
   local_b8 = local_64 - local_d0;
-  dVar8 = (double)FUN_8001778c(&local_c0);
+  dVar8 = (double)Vec3_Length(&local_c0);
   local_c0 = local_6c - *pfVar3;
   local_bc = local_68 - pfVar3[1];
   local_b8 = local_64 - pfVar3[2];
-  FUN_80017784(&local_cc);
+  Vec3_Normalize(&local_cc);
   if (dVar6 <= dVar8) {
     local_9c = lbl_803DF590;
     local_98 = lbl_803DF590;
@@ -838,7 +835,7 @@ void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double
     local_cc = local_cc * fVar1;
     local_c8 = local_c8 * fVar1;
     local_c4 = local_c4 * fVar1;
-    FUN_8001777c(&local_b4,&local_cc,&local_9c);
+    fn_8002273C(&local_b4,&local_cc,&local_9c);
   }
   local_6c = local_6c + local_9c;
   local_68 = local_68 + local_98;
