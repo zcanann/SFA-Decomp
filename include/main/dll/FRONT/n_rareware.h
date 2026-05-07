@@ -3,7 +3,14 @@
 
 #include "ghidra_import.h"
 
-void FUN_801159e4(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void fn_801159E4(void);
+void fn_80115D54(void);
+void TitleScreenInit_render(void);
+void TitleScreenInit_frameEnd(void);
+int fn_80115E74(void);
+void TitleScreenInit_release(void);
+void fn_80115EC0(void);
+void fn_80115F20(void);
+void n_rareware_frameEnd(void);
 
 #endif /* MAIN_DLL_FRONT_N_RAREWARE_H_ */

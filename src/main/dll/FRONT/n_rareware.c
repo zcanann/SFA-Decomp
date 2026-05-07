@@ -1,29 +1,59 @@
 #include "ghidra_import.h"
 #include "main/dll/FRONT/n_rareware.h"
 
-extern undefined4 FUN_80006c64();
-extern undefined4 FUN_80017468();
-extern undefined8 FUN_80017484();
-extern undefined4 FUN_800709e4();
-extern undefined4 FUN_800709e8();
+extern void *OSGetArenaHi(void);
+extern void GXInitTexObj(void *obj, void *image, u16 width, u16 height, u8 format, u8 wrapS,
+                         u8 wrapT, u8 mipmap);
+extern void GXInitTexObjLOD(void *obj, u8 minFilt, u8 magFilt, f32 minLod, f32 maxLod,
+                            f32 lodBias, u8 biasClamp, u8 doEdgeLOD, u8 maxAniso);
+extern void GXInitTexObjUserData(void *obj, void *userData);
+extern uint GXGetTexObjFmt(void *obj);
+extern uint GXGetTexObjWidth(void *obj);
+extern uint GXGetTexObjHeight(void *obj);
+extern uint GXGetTexBufferSize(uint width, uint height, uint format, u8 mipmap, u8 maxLod);
 
-extern undefined4 DAT_803a5098;
-extern undefined4 DAT_803a509c;
-extern undefined4 DAT_803a50a0;
-extern undefined4 DAT_803dd5d0;
-extern undefined4 DAT_803dd5e8;
-extern undefined4 DAT_803de260;
-extern undefined4 DAT_803de264;
-extern f64 DOUBLE_803e2968;
-extern f32 FLOAT_803e2974;
-extern f32 FLOAT_803e2978;
+extern void hudDrawColored(int texture, int x, int y, uint *color, uint scale, int flags);
+extern void drawTexture(double x, double y, int texture, uint alpha, uint flags);
+extern void gameTextSetColor(u8 red, u8 green, u8 blue, u8 alpha);
+extern undefined4 gameTextGetStr(int id);
+extern void gameTextShowStr(undefined4 text, int font, int x, int y);
+extern void mapUnload(int mapId, int flags);
+extern void fn_80041E30(void);
+extern void fn_80042F78(int param_1);
+extern void fn_80041E24(void);
+extern void fn_80088C0C(void);
+extern void fn_8011D9B0(void);
+extern void fn_80100FA0(void);
+extern void warpToMap(int mapId, int param_2);
+extern void loadUiDll(int dllNo);
+
+extern int lbl_803A4438[];
+extern u8 lbl_803DC950;
+extern u8 lbl_803DC968;
+extern u8 lbl_803DD5E8;
+extern int lbl_803DD5EC;
+extern u8 lbl_803DD5F0;
+extern f32 lbl_803DD5F4;
+extern int lbl_803DD5F8;
+extern u8 lbl_803DD5FC;
+extern f32 lbl_803DD600;
+extern f32 lbl_803DD604;
+extern u8 lbl_803DD608;
+extern u8 lbl_803DD609;
+extern f64 lbl_803E1CE8;
+extern f32 lbl_803E1CF0;
+extern f32 lbl_803E1CF4;
+extern f32 lbl_803E1CF8;
+extern f32 lbl_803E1D00;
+extern f32 lbl_803E1D08;
+extern f32 lbl_803E1D0C;
 
 /*
  * --INFO--
  *
- * Function: FUN_801159e4
+ * Function: fn_801159E4
  * EN v1.0 Address: 0x801159E4
- * EN v1.0 Size: 1120b
+ * EN v1.0 Size: 880b
  * EN v1.1 Address: 0x80115C80
  * EN v1.1 Size: 880b
  * JP Address: TODO
@@ -31,113 +61,210 @@ extern f32 FLOAT_803e2978;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801159e4(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void fn_801159E4(void)
 {
-  int iVar1;
-  undefined3 uVar2;
-  undefined uVar4;
-  uint uVar3;
-  undefined4 extraout_r4;
-  undefined4 uVar5;
-  undefined4 uVar6;
-  undefined4 in_r7;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  undefined8 uVar7;
-  undefined4 local_18;
-  undefined4 local_14;
-  undefined8 local_10;
-  undefined8 local_8;
-  
-  if (DAT_803de264 < 0xf0) {
-    if (DAT_803de264 < 0x1e) {
-      param_2 = (double)FLOAT_803e2974;
-      local_10 = (double)CONCAT44(0x43300000,DAT_803de264);
-      iVar1 = (int)((float)(param_2 * (double)(float)(local_10 - DOUBLE_803e2968)) / FLOAT_803e2978)
-      ;
-      local_8 = (double)(longlong)iVar1;
-      uVar4 = (undefined)iVar1;
+  int alpha;
+  u8 alphaByte;
+  uint color;
+
+  if (lbl_803DD5EC < 0xf0) {
+    if (lbl_803DD5EC < 0x1e) {
+      alpha = (int)((lbl_803E1CF4 * (f32)((double)lbl_803DD5EC - lbl_803E1CE8)) /
+                    lbl_803E1CF8);
+      alphaByte = (u8)alpha;
+    } else if (lbl_803DD5EC < 0xd2) {
+      alphaByte = 0xff;
+    } else {
+      alpha = (int)((lbl_803E1CF4 * (f32)((double)(0xf0 - lbl_803DD5EC) - lbl_803E1CE8)) /
+                    lbl_803E1CF8);
+      alphaByte = (u8)alpha;
     }
-    else if (DAT_803de264 < 0xd2) {
-      uVar4 = 0xff;
+
+    if (lbl_803DC968 == 0) {
+      color = 0xdc000000;
+    } else {
+      color = 0x46ff00;
     }
-    else {
-      param_2 = (double)FLOAT_803e2974;
-      local_8 = (double)CONCAT44(0x43300000,0xf0 - DAT_803de264);
-      iVar1 = (int)((float)(param_2 * (double)(float)(local_8 - DOUBLE_803e2968)) / FLOAT_803e2978);
-      local_10 = (double)(longlong)iVar1;
-      uVar4 = (undefined)iVar1;
+    color |= alphaByte;
+    hudDrawColored(lbl_803A4438[0],0x85,0xaa,&color,0x100,0);
+  } else if (lbl_803DD5EC < 0x1e0) {
+    if (lbl_803DD5EC < 0x10e) {
+      alpha = (int)((lbl_803E1CF4 * (f32)((double)(lbl_803DD5EC - 0xf0) - lbl_803E1CE8)) /
+                    lbl_803E1CF8);
+    } else if (lbl_803DD5EC < 0x1c2) {
+      alpha = 0xff;
+    } else {
+      alpha = (int)((lbl_803E1CF4 * (f32)((double)(0x1e0 - lbl_803DD5EC) - lbl_803E1CE8)) /
+                    lbl_803E1CF8);
     }
-    if (DAT_803dd5e8 == '\0') {
-      uVar2 = 0xdc0000;
+    drawTexture((double)(f32)((double)((int)(0x280 - (uint)*(u16 *)(lbl_803A4438[1] + 0xa)) >> 1) -
+                              lbl_803E1CE8),
+                (double)(f32)((double)((int)(0x1e0 - (uint)*(u16 *)(lbl_803A4438[1] + 0xc)) >> 1) -
+                              lbl_803E1CE8),
+                lbl_803A4438[1],alpha,0x119);
+  } else if (lbl_803DD5EC < 600) {
+    if (lbl_803DD5EC < 0x1fe) {
+      alpha = (int)((lbl_803E1CF4 * (f32)((double)(lbl_803DD5EC - 0x1e0) - lbl_803E1CE8)) /
+                    lbl_803E1CF8);
+    } else if (lbl_803DD5EC < 0x23a) {
+      alpha = 0xff;
+    } else {
+      alpha = (int)((lbl_803E1CF4 * (f32)((double)(600 - lbl_803DD5EC) - lbl_803E1CE8)) /
+                    lbl_803E1CF8);
     }
-    else {
-      uVar2 = 0x46ff;
-    }
-    local_18 = CONCAT31(uVar2,uVar4);
-    local_14 = local_18;
-    in_r7 = 0x100;
-    in_r8 = 0;
-    FUN_800709e4(DAT_803a5098,0x85,0xaa,&local_14,0x100,0);
+    drawTexture((double)(f32)((double)((int)(0x280 - (uint)*(u16 *)(lbl_803A4438[2] + 0xa)) >> 1) -
+                              lbl_803E1CE8),
+                (double)(f32)((double)((int)(0x1e0 - (uint)*(u16 *)(lbl_803A4438[2] + 0xc)) >> 1) -
+                              lbl_803E1CE8),
+                lbl_803A4438[2],alpha,0x119);
   }
-  else if (DAT_803de264 < 0x1e0) {
-    if (DAT_803de264 < 0x10e) {
-      local_8 = (double)CONCAT44(0x43300000,DAT_803de264 - 0xf0);
-      uVar3 = (uint)((FLOAT_803e2974 * (float)(local_8 - DOUBLE_803e2968)) / FLOAT_803e2978);
-    }
-    else if (DAT_803de264 < 0x1c2) {
-      uVar3 = 0xff;
-    }
-    else {
-      local_8 = (double)CONCAT44(0x43300000,0x1e0 - DAT_803de264);
-      uVar3 = (uint)((FLOAT_803e2974 * (float)(local_8 - DOUBLE_803e2968)) / FLOAT_803e2978);
-    }
-    local_8 = (double)CONCAT44(0x43300000,(int)(0x280 - (uint)*(ushort *)(DAT_803a509c + 10)) >> 1);
-    local_10 = (double)CONCAT44(0x43300000,(int)(0x1e0 - (uint)*(ushort *)(DAT_803a509c + 0xc)) >> 1
-                               );
-    param_2 = (double)(float)(local_10 - DOUBLE_803e2968);
-    FUN_800709e8((double)(float)(local_8 - DOUBLE_803e2968),param_2,DAT_803a509c,uVar3,0x119);
+
+  if (lbl_803DC950 == 0) {
+    lbl_803DD5EC++;
+  } else {
+    lbl_803DD5E8 = 1;
   }
-  else if (DAT_803de264 < 600) {
-    if (DAT_803de264 < 0x1fe) {
-      local_8 = (double)CONCAT44(0x43300000,DAT_803de264 - 0x1e0);
-      uVar3 = (uint)((FLOAT_803e2974 * (float)(local_8 - DOUBLE_803e2968)) / FLOAT_803e2978);
-    }
-    else if (DAT_803de264 < 0x23a) {
-      uVar3 = 0xff;
-    }
-    else {
-      local_8 = (double)CONCAT44(0x43300000,600 - DAT_803de264);
-      uVar3 = (uint)((FLOAT_803e2974 * (float)(local_8 - DOUBLE_803e2968)) / FLOAT_803e2978);
-    }
-    local_8 = (double)CONCAT44(0x43300000,(int)(0x280 - (uint)*(ushort *)(DAT_803a50a0 + 10)) >> 1);
-    local_10 = (double)CONCAT44(0x43300000,(int)(0x1e0 - (uint)*(ushort *)(DAT_803a50a0 + 0xc)) >> 1
-                               );
-    param_2 = (double)(float)(local_10 - DOUBLE_803e2968);
-    FUN_800709e8((double)(float)(local_8 - DOUBLE_803e2968),param_2,DAT_803a50a0,uVar3,0x119);
+
+  if ((lbl_803DD5E8 != 0) && (lbl_803DD5EC > 600) && (lbl_803DC950 == 0)) {
+    gameTextSetColor(0xff,0xff,0xff,0xff);
+    gameTextShowStr(gameTextGetStr(0x565),0,0x118,300);
   }
-  if (DAT_803dd5d0 == '\0') {
-    DAT_803de264 = DAT_803de264 + 1;
-  }
-  else {
-    DAT_803de260 = '\x01';
-  }
-  if (((DAT_803de260 != '\0') && (600 < DAT_803de264)) && (DAT_803dd5d0 == '\0')) {
-    uVar5 = 0xff;
-    uVar6 = 0xff;
-    uVar7 = FUN_80017484(0xff,0xff,0xff,0xff);
-    uVar5 = FUN_80017468(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x565,
-                         extraout_r4,uVar5,uVar6,in_r7,in_r8,in_r9,in_r10);
-    FUN_80006c64(uVar5,0,0x118,300);
-  }
-  return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: fn_80115D54
+ * EN v1.0 Address: 0x80115D54
+ * EN v1.0 Size: 280b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_80115D54(void)
+{
+  int *textureSlot;
+  int textureHeader;
+  void *texObj;
+  int arenaHi;
+  int i;
+
+  arenaHi = (int)OSGetArenaHi() - 0x40000;
+  textureSlot = lbl_803A4438;
+  for (i = 0; i < 3; i++) {
+    *textureSlot = arenaHi;
+    textureHeader = *textureSlot;
+    *(int *)(textureHeader + 0x40) = 0;
+    *(u8 *)(textureHeader + 0x48) = 0;
+    texObj = (void *)(textureHeader + 0x20);
+    GXInitTexObj(texObj,(void *)(textureHeader + 0x60),*(u16 *)(textureHeader + 0xa),
+                 *(u16 *)(textureHeader + 0xc),*(u8 *)(textureHeader + 0x16),
+                 *(u8 *)(textureHeader + 0x17),*(u8 *)(textureHeader + 0x18),0);
+    GXInitTexObjLOD(texObj,*(u8 *)(textureHeader + 0x19),*(u8 *)(textureHeader + 0x1a),
+                    lbl_803E1CF0,lbl_803E1CF0,lbl_803E1CF0,0,0,0);
+    GXInitTexObjUserData(texObj,(void *)textureHeader);
+    *(uint *)(textureHeader + 0x44) =
+        GXGetTexBufferSize(GXGetTexObjWidth(texObj),GXGetTexObjHeight(texObj),
+                           GXGetTexObjFmt(texObj),0,0);
+    arenaHi += *(int *)(*textureSlot + 0x44) + 0x60;
+    textureSlot++;
+  }
+  lbl_803DD5EC = 0;
+  lbl_803DD5E8 = 0;
+}
 
 /* Trivial 4b 0-arg blr leaves. */
 void TitleScreenInit_render(void) {}
 void TitleScreenInit_frameEnd(void) {}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80115E74
+ * EN v1.0 Address: 0x80115E74
+ * EN v1.0 Size: 72b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int fn_80115E74(void)
+{
+  if (lbl_803DD5F0 != 0) {
+    lbl_803DD5F0 = 0;
+    lbl_803DD5F4 = lbl_803E1D00;
+    loadUiDll(4);
+  }
+  return 0;
+}
+
 void TitleScreenInit_release(void) {}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80115EC0
+ * EN v1.0 Address: 0x80115EC0
+ * EN v1.0 Size: 96b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_80115EC0(void)
+{
+  lbl_803DD5F0 = 1;
+  lbl_803DD5F4 = lbl_803E1D00;
+  mapUnload(0x3d,0x10000000);
+  fn_80041E30();
+  fn_80042F78(0x3f);
+  fn_80041E24();
+  fn_80088C0C();
+  fn_8011D9B0();
+  fn_80100FA0();
+  warpToMap(0x12,0);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80115F20
+ * EN v1.0 Address: 0x80115F20
+ * EN v1.0 Size: 152b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_80115F20(void)
+{
+  int frame;
+
+  if (((s8)lbl_803DD608 != 0) && ((s8)lbl_803DD609 <= 10)) {
+    return;
+  }
+
+  frame = lbl_803DD5F8;
+  if ((frame > 40) && ((s8)lbl_803DD5FC == 0)) {
+    lbl_803DD5FC = 1;
+    lbl_803DD604 = lbl_803E1D08;
+  }
+  if ((frame > 50) && ((s8)lbl_803DD5FC == 1)) {
+    lbl_803DD5FC = 2;
+  }
+  if ((frame > 285) && ((s8)lbl_803DD5FC == 2)) {
+    lbl_803DD5FC = 3;
+    lbl_803DD600 = lbl_803E1D0C;
+  }
+}
+
 void n_rareware_frameEnd(void) {}
