@@ -360,7 +360,7 @@ void fn_80116F44(int a)
   u8 v = (u8)a;
   lbl_803DD614 = v;
   lbl_803DD615 = 0xff;
-  (*(void (*)(int))((int)lbl_803DCAA0->vtable + 0x18))(v);
+  (*(*(void (**)(int))((int)lbl_803DCAA0->vtable + 0x18)))(v);
 }
 #pragma peephole reset
 #pragma scheduling reset
