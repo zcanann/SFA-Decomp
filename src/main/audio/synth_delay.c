@@ -94,21 +94,17 @@ void fn_80271A3C(u32 dstHandle, u32 srcHandle) {
 u32 fn_80271AC0(u32 handle) {
     u32 found;
     u32 idx;
-    u32 slotOffset;
-    u8* base;
 
     found = 0;
     if (gSynthInitialized != 0) {
         handle = vidGetInternalId(handle);
         while (handle != 0xFFFFFFFFu) {
             idx = (u8)handle;
-            slotOffset = idx * 0x404;
-            base = lbl_803DE268 + slotOffset;
-            if (handle == *(u32*)(base + 0xF4)) {
-                fn_80278610((SynthVoiceSlot*)base);
+            if (handle == *(u32*)(lbl_803DE268 + idx * 0x404 + 0xF4)) {
+                fn_80278610((SynthVoiceSlot*)(lbl_803DE268 + idx * 0x404));
                 found = 1;
             }
-            handle = *(u32*)(lbl_803DE268 + slotOffset + 0xEC);
+            handle = *(u32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
         }
     }
     return found;
