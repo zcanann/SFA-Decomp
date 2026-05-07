@@ -18,8 +18,34 @@ extern u8 lbl_8031DD30[];
 extern f32 timeDelta;
 extern f32 lbl_803E2740;
 extern f32 lbl_803E274C;
+extern f32 lbl_803E2768;
+extern f32 lbl_803E276C;
 extern f32 lbl_803E27A0;
 extern f64 lbl_803E2770;
+
+int fn_801504F8(void *p1, void *p2, void *p3, int msgId, int arrIdx, int p6) {
+    u8 *table = lbl_8031DD30;
+    u8 idx = *(u8 *)((u8 *)p2 + 0x33b);
+    u8 *entry = table + 0x143c + idx * 0x28;
+    u8 *r31 = *(u8 **)(entry + 0x10);
+    int retVal = 0;
+
+    if (idx == 5) {
+        *(u32 *)((u8 *)p2 + 0x2e8) |= 0x10;
+        return 0;
+    }
+    if (msgId == 0xe) {
+        p6 = p6 * 0xa;
+    }
+    if ((s32)*(s16 *)((u8 *)p1 + 0xa0) == *(u8 *)(r31 + 0x128)) {
+        return 0;
+    }
+    if (msgId == 0x10) {
+        *(u32 *)((u8 *)p2 + 0x2e8) |= 0x28;
+        return 0;
+    }
+    return retVal;
+}
 
 void fn_80150EDC(void *p1, void *p2) {
     u8 *table = lbl_8031DD30;
