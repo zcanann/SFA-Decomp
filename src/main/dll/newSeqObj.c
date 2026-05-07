@@ -9,7 +9,7 @@ extern int Sfx_PlayFromObject(void *obj, int sfxId);
 extern void fn_8001FEA8(void);
 extern void fn_8015039C(void *p1, void *p2);
 extern u32 fn_8014FFB4(void *p1, void *p2, int p3);
-extern void fn_8014D08C(void *p1, void *p2, int p3, int p4, f32 f1, int p6, int p7);
+extern void fn_8014D08C(void *p1, void *p2, int p3, int p4, f32 f1, int p6);
 extern void fn_8014CF7C(void *p1, void *p2, int p3, int p4, f32 f1, f32 f2);
 extern void ObjAnim_SetMoveProgress(void *obj, f32 progress);
 extern void ObjAnim_SetCurrentMove(void *obj, int move, f32 f1, int p4);
@@ -55,20 +55,20 @@ void fn_80150EDC(void *p1, void *p2) {
         return;
     }
 
-    if ((*(u32 *)((u8 *)p2 + 0x2dc) & 0x40000000) != 0 &&
-        (*(u32 *)((u8 *)p2 + 0x2e0) & 0x40000000) == 0) {
+    if ((*(u32 *)((u8 *)p2 + 0x2dc) & 0x20000000) != 0 &&
+        (*(u32 *)((u8 *)p2 + 0x2e0) & 0x20000000) == 0) {
         Sfx_PlayFromObject(p1, 0x17);
         *(u32 *)((u8 *)p2 + 0x2dc) |= 0x40000000;
     }
 
-    if ((*(u32 *)((u8 *)p2 + 0x2dc) & 0x80000000) != 0) {
+    if ((*(u32 *)((u8 *)p2 + 0x2dc) & 0x40000000) != 0) {
         u16 cur338 = *(u16 *)((u8 *)p2 + 0x338);
         if (cur338 != 0) {
             u8 *row = r28 + (cur338 << 4);
             *(u8 *)((u8 *)p2 + 0x2f2) = (u8)*(u32 *)(row + 0xc);
             fn_8014D08C(p1, p2, *(u8 *)(row + 0x8), 0,
                         *(f32 *)(r28 + (cur338 << 4)),
-                        0, (u8)*(u32 *)(row + 0x4));
+                        (u8)*(u32 *)(row + 0x4));
             ObjAnim_SetMoveProgress(p1,
                 *(f32 *)(table + (*(u8 *)(r28 + (*(u16 *)((u8 *)p2 + 0x338) << 4) + 0x8) << 2)));
             *(u16 *)((u8 *)p2 + 0x338) =
@@ -85,7 +85,7 @@ void fn_80150EDC(void *p1, void *p2) {
                 ObjAnim_SetCurrentMove(p1, *(u8 *)((u8 *)r30 + 0x2c), lbl_803E2740, 0);
             } else {
                 fn_8014D08C(p1, p2, v8, 0,
-                            *(f32 *)((u8 *)r29 + idx2a0 * 0xc), 0, 0xb);
+                            *(f32 *)((u8 *)r29 + idx2a0 * 0xc), 0xb);
                 ObjAnim_SetMoveProgress(p1,
                     *(f32 *)(table + (*(u8 *)((u8 *)r29 + (*(u16 *)((u8 *)p2 + 0x2a0)) * 0xc + 0x8) << 2)));
             }
@@ -93,11 +93,11 @@ void fn_80150EDC(void *p1, void *p2) {
     }
 
     if ((s32)*(s16 *)((u8 *)p1 + 0xa0) == *(u8 *)((u8 *)r30 + 0x2c)) {
-        f32 f2 = *(f32 *)((u8 *)p2 + 0x2fc);
-        f32 num = (f32)((f64)((s32)*(u16 *)((u8 *)p2 + 0x2a4)) - lbl_803E2770);
-        f32 v308 = f2 * (num / *(f32 *)((u8 *)p2 + 0x2a8) / lbl_803E274C) *
-                   *(f32 *)(table + (*(u8 *)((u8 *)p2 + 0x33b) << 2) + 0x1538);
-        *(f32 *)((u8 *)p2 + 0x308) = v308;
+        *(f32 *)((u8 *)p2 + 0x308) =
+            *(f32 *)((u8 *)p2 + 0x2fc) *
+            (((f32)(s32) * (u16 *)((u8 *)p2 + 0x2a4) /
+              *(f32 *)((u8 *)p2 + 0x2a8) / lbl_803E274C) *
+             *(f32 *)(table + (*(u8 *)((u8 *)p2 + 0x33b) << 2) + 0x1538));
         if (*(f32 *)((u8 *)p2 + 0x308) < lbl_803E27A0) {
             *(f32 *)((u8 *)p2 + 0x308) = lbl_803E27A0;
         }
