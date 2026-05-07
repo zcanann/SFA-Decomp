@@ -12,6 +12,7 @@ extern int FUN_80017730();
 extern undefined4 FUN_8001774c();
 extern undefined4 FUN_80017754();
 extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017778();
 extern undefined4 FUN_80017b00();
 extern ushort ObjHits_IsObjectEnabled();
@@ -2253,44 +2254,30 @@ double RomCurve_distanceToSegment(double param_1,double param_2,double param_3,f
 #pragma peephole off
 int RomCurve_getRandomBlockedLink(int param_1,int param_2)
 {
-  uint uVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  int local_18 [6];
+  int link;
+  int count;
+  uint mask;
+  int i;
+  int result;
+  int local_18[4];
 
-  iVar4 = 0;
-  iVar2 = *(int *)(param_1 + 0x1c);
-  if (((-1 < iVar2) && ((*(byte *)(param_1 + 0x1b) & 1) != 0)) && (iVar2 != param_2)) {
-    iVar4 = 1;
-    local_18[0] = iVar2;
+  count = 0;
+  mask = 1;
+
+  for (i = 0; i < 4; i = i + 1) {
+    link = *(int *)(param_1 + 0x1c + i * 4);
+    if ((-1 < link) && ((*(char *)(param_1 + 0x1b) & mask) != 0) && (link != param_2)) {
+      local_18[count++] = link;
+    }
+    mask = mask << 1;
   }
-  iVar3 = *(int *)(param_1 + 0x20);
-  iVar2 = iVar4;
-  if (((-1 < iVar3) && ((*(byte *)(param_1 + 0x1b) & 2) != 0)) && (iVar3 != param_2)) {
-    iVar2 = iVar4 + 1;
-    local_18[iVar4] = iVar3;
+
+  if (count != 0) {
+    result = local_18[randomGetRange(0, count - 1)];
+  } else {
+    result = -1;
   }
-  iVar3 = *(int *)(param_1 + 0x24);
-  iVar4 = iVar2;
-  if (((-1 < iVar3) && ((*(byte *)(param_1 + 0x1b) & 4) != 0)) && (iVar3 != param_2)) {
-    iVar4 = iVar2 + 1;
-    local_18[iVar2] = iVar3;
-  }
-  iVar3 = *(int *)(param_1 + 0x28);
-  iVar2 = iVar4;
-  if (((-1 < iVar3) && ((*(byte *)(param_1 + 0x1b) & 8) != 0)) && (iVar3 != param_2)) {
-    iVar2 = iVar4 + 1;
-    local_18[iVar4] = iVar3;
-  }
-  if (iVar2 == 0) {
-    iVar2 = -1;
-  }
-  else {
-    uVar1 = FUN_80017760(0,iVar2 - 1);
-    iVar2 = local_18[uVar1];
-  }
-  return iVar2;
+  return result;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2312,44 +2299,30 @@ int RomCurve_getRandomBlockedLink(int param_1,int param_2)
 #pragma peephole off
 int RomCurve_getRandomUnblockedLink(int param_1,int param_2)
 {
-  uint uVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  int local_18 [6];
+  int link;
+  int count;
+  uint mask;
+  int i;
+  int result;
+  int local_18[4];
 
-  iVar4 = 0;
-  iVar2 = *(int *)(param_1 + 0x1c);
-  if (((-1 < iVar2) && ((*(byte *)(param_1 + 0x1b) & 1) == 0)) && (iVar2 != param_2)) {
-    iVar4 = 1;
-    local_18[0] = iVar2;
+  count = 0;
+  mask = 1;
+
+  for (i = 0; i < 4; i = i + 1) {
+    link = *(int *)(param_1 + 0x1c + i * 4);
+    if ((-1 < link) && ((*(char *)(param_1 + 0x1b) & mask) == 0) && (link != param_2)) {
+      local_18[count++] = link;
+    }
+    mask = mask << 1;
   }
-  iVar3 = *(int *)(param_1 + 0x20);
-  iVar2 = iVar4;
-  if (((-1 < iVar3) && ((*(byte *)(param_1 + 0x1b) & 2) == 0)) && (iVar3 != param_2)) {
-    iVar2 = iVar4 + 1;
-    local_18[iVar4] = iVar3;
+
+  if (count != 0) {
+    result = local_18[randomGetRange(0, count - 1)];
+  } else {
+    result = -1;
   }
-  iVar3 = *(int *)(param_1 + 0x24);
-  iVar4 = iVar2;
-  if (((-1 < iVar3) && ((*(byte *)(param_1 + 0x1b) & 4) == 0)) && (iVar3 != param_2)) {
-    iVar4 = iVar2 + 1;
-    local_18[iVar2] = iVar3;
-  }
-  iVar3 = *(int *)(param_1 + 0x28);
-  iVar2 = iVar4;
-  if (((-1 < iVar3) && ((*(byte *)(param_1 + 0x1b) & 8) == 0)) && (iVar3 != param_2)) {
-    iVar2 = iVar4 + 1;
-    local_18[iVar4] = iVar3;
-  }
-  if (iVar2 == 0) {
-    iVar2 = -1;
-  }
-  else {
-    uVar1 = FUN_80017760(0,iVar2 - 1);
-    iVar2 = local_18[uVar1];
-  }
-  return iVar2;
+  return result;
 }
 #pragma peephole reset
 #pragma scheduling reset
