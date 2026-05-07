@@ -1,122 +1,108 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIMbossspit.h"
 
-extern undefined4 FUN_80017a98();
-extern undefined4 FUN_800305f8();
+extern f32 timeDelta;
+extern u8 lbl_803DDB94;
+extern f32 lbl_803DDB98;
+extern f32 lbl_803DDB9C;
+extern f32 lbl_803DDBA0;
+extern f32 lbl_803DDBA4;
+extern u8 lbl_803DDBA8[8];
+extern u8 lbl_803DDBB0[8];
+extern u8 *lbl_803DCAB8;
+extern u8 *lbl_803DCA8C;
+extern f32 lbl_803E4C90;
+extern f32 lbl_803E4C9C;
+extern f32 lbl_803E4CB4;
+extern f32 lbl_803E4CB8;
+extern f32 lbl_803E4CBC;
+extern f32 lbl_803E4CC0;
 
-extern undefined4* DAT_803dd70c;
-extern undefined4* DAT_803dd738;
-extern f32 lbl_803DE81C;
-extern f32 lbl_803DE820;
-extern f32 lbl_803E5928;
-extern f32 lbl_803E592C;
+extern void GameBit_Set(int bit, int value);
+extern void Sfx_PlayFromObject(u8 *obj, int sfxId);
+extern void doRumble(f32 val);
+extern void fn_801BDF7C(u8 *arg1, u8 *arg4);
 
 /*
  * --INFO--
  *
- * Function: FUN_801be19c
+ * Function: fn_801BE19C
  * EN v1.0 Address: 0x801BE19C
- * EN v1.0 Size: 100b
- * EN v1.1 Address: 0x801BE2AC
- * EN v1.1 Size: 108b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 688b
  */
-bool FUN_801be19c(undefined4 param_1,int param_2)
+void fn_801BE19C(u8 *arg1, u8 *unused2, u8 *arg3, u8 *arg4)
 {
-  if (*(char *)(param_2 + 0x27a) != '\0') {
-    (**(code **)(*DAT_803dd70c + 0x14))(param_1,param_2,1);
-  }
-  return *(char *)(param_2 + 0x346) != '\0';
-}
+  f32 timer;
+  u8 *vt;
 
-/*
- * --INFO--
- *
- * Function: FUN_801be200
- * EN v1.0 Address: 0x801BE200
- * EN v1.0 Size: 80b
- * EN v1.1 Address: 0x801BE318
- * EN v1.1 Size: 80b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_801be200(undefined4 param_1,int param_2)
-{
-  if (*(char *)(param_2 + 0x27b) != '\0') {
-    *(undefined *)(param_2 + 0x27a) = 1;
-    (**(code **)(*DAT_803dd70c + 0x14))(param_1,param_2,0);
-  }
-  return 0;
-}
+  timer = lbl_803E4C90;
 
-/*
- * --INFO--
- *
- * Function: FUN_801be250
- * EN v1.0 Address: 0x801BE250
- * EN v1.0 Size: 720b
- * EN v1.1 Address: 0x801BE368
- * EN v1.1 Size: 364b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4
-FUN_801be250(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,int param_10
-            )
-{
-  undefined4 uVar1;
-  ushort *puVar2;
-  undefined *puVar3;
-  undefined *puVar4;
-  int iVar5;
-  undefined4 in_r10;
-  undefined auStack_18 [2];
-  undefined auStack_16 [2];
-  ushort local_14 [6];
-  
-  if (*(char *)(param_10 + 0x27a) != '\0') {
-    lbl_803DE81C = lbl_803DE820;
-    uVar1 = FUN_80017a98();
-    puVar2 = local_14;
-    puVar3 = auStack_16;
-    puVar4 = auStack_18;
-    iVar5 = *DAT_803dd738;
-    (**(code **)(iVar5 + 0x14))(param_9,uVar1,4);
-    if (local_14[0] == 1) {
-      if (*(char *)(param_10 + 0x27a) != '\0') {
-        FUN_800305f8((double)lbl_803E5928,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                     param_9,3,0,puVar2,puVar3,puVar4,iVar5,in_r10);
-        *(undefined *)(param_10 + 0x346) = 0;
+  *(s16 *)((u8 *)*(int *)(arg1 + 0x54) + 0x60) =
+      (s16)(*(s16 *)((u8 *)*(int *)(arg1 + 0x54) + 0x60) | 1);
+
+  arg4[0x25F] = 1;
+
+  vt = (u8 *)*(int *)lbl_803DCAB8;
+  ((void (*)(u8 *, f32, int, u8 *))*(void **)(vt + 0x2C))(arg4, timer, 1, vt);
+
+  vt = (u8 *)*(int *)lbl_803DCAB8;
+  ((void (*)(u8 *, u8 *, u8 *, s16, u8 *, int, int, int))*(void **)(vt + 0x54))(
+      arg1, arg4, arg3 + 0x35C, *(s16 *)(arg3 + 0x3F4), arg3 + 0x405, 0, 0, 0);
+
+  if (lbl_803E4C90 == lbl_803DDBA4) {
+    timer = timer + lbl_803E4CBC;
+  } else {
+    lbl_803DDBA4 = lbl_803DDBA4 - timeDelta;
+    timer = lbl_803DDBA4 * lbl_803E4CB4;
+    if (lbl_803DDBA4 <= lbl_803E4CB8) {
+      lbl_803DDBA4 = lbl_803E4C90;
+      arg4[0x349] = 0;
+      *(s16 *)((u8 *)*(int *)(arg1 + 0x54) + 0x60) =
+          (s16)(*(s16 *)((u8 *)*(int *)(arg1 + 0x54) + 0x60) & ~1);
+      arg1[0xAF] = (u8)(arg1[0xAF] | 0x8);
+      GameBit_Set(0x20E, 0);
+      if ((s8)lbl_803DDB94 >= 7) {
+        GameBit_Set(0x311, 1);
+      } else {
+        GameBit_Set(0x268, 1);
       }
     }
-    else if (local_14[0] == 0) {
-      if (*(char *)(param_10 + 0x27a) != '\0') {
-        FUN_800305f8((double)lbl_803E5928,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                     param_9,1,0,puVar2,puVar3,puVar4,iVar5,in_r10);
-        *(undefined *)(param_10 + 0x346) = 0;
-      }
-    }
-    else if (local_14[0] < 3) {
-      if (*(char *)(param_10 + 0x27a) != '\0') {
-        FUN_800305f8((double)lbl_803E5928,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                     param_9,2,0,puVar2,puVar3,puVar4,iVar5,in_r10);
-        *(undefined *)(param_10 + 0x346) = 0;
-      }
-    }
-    else if (*(char *)(param_10 + 0x27a) != '\0') {
-      FUN_800305f8((double)lbl_803E5928,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                   param_9,4,0,puVar2,puVar3,puVar4,iVar5,in_r10);
-      *(undefined *)(param_10 + 0x346) = 0;
-    }
-    *(float *)(param_10 + 0x2a0) = lbl_803E592C;
   }
-  return 0;
+
+  if (lbl_803DDBA0 > lbl_803DDB9C) {
+    Sfx_PlayFromObject(arg1, 0x189);
+    if (timer > lbl_803E4CBC) timer = lbl_803E4CBC;
+    if (timer < lbl_803E4C9C) timer = lbl_803E4C9C;
+    lbl_803DDB9C = lbl_803DDB9C + timer;
+    doRumble(lbl_803E4CC0);
+  }
+
+  lbl_803DDBA0 = lbl_803DDBA0 + timeDelta;
+  fn_801BDF7C(arg1, arg4);
+
+  if (lbl_803E4C90 != lbl_803DDB98) {
+    lbl_803DDB98 = lbl_803DDB98 - timeDelta;
+    if (lbl_803DDB98 < lbl_803E4C90) {
+      lbl_803DDB98 = lbl_803E4C90;
+      arg4[0x349] = 0;
+      *(s16 *)((u8 *)*(int *)(arg1 + 0x54) + 0x60) =
+          (s16)(*(s16 *)((u8 *)*(int *)(arg1 + 0x54) + 0x60) & ~1);
+      arg1[0xAF] = (u8)(arg1[0xAF] | 0x8);
+      GameBit_Set(0x20E, 0);
+      if ((s8)lbl_803DDB94 == 3) {
+        GameBit_Set(0x268, 1);
+      } else {
+        GameBit_Set(0x311, 1);
+      }
+    }
+  }
+
+  *(u32 *)(arg3 + 0x3E0) = *(u32 *)(arg1 + 0xC0);
+  *(u32 *)(arg1 + 0xC0) = 0;
+
+  vt = (u8 *)*(int *)lbl_803DCA8C;
+  ((void (*)(u8 *, u8 *, u8 *, u8 *, u8 *, f32, f32))*(void **)(vt + 0x8))(
+      arg1, arg4, lbl_803DDBB0, lbl_803DDBA8, vt, timeDelta, timeDelta);
+
+  *(u32 *)(arg1 + 0xC0) = *(u32 *)(arg3 + 0x3E0);
 }
