@@ -13,7 +13,7 @@ extern undefined4 fn_80017A88();
 extern void* Obj_AllocObjectSetup();
 extern int Obj_SetupObject();
 extern uint Obj_IsLoadingLocked();
-extern undefined4 ObjAnim_SetCurrentMove();
+extern void ObjAnim_SetCurrentMove(uint obj, int mode, float val, uint flags);
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern void ObjHits_DisableObject(int);
 extern void ObjHits_EnableObject(int);
@@ -788,10 +788,7 @@ void fn_801561EC(uint param_1,int param_2,undefined4 param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8015625C(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 ushort *param_9,int param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+void fn_8015625C(ushort *param_9,int param_10)
 {
   float fVar1;
   uint uVar2;
@@ -823,9 +820,7 @@ void fn_8015625C(undefined8 param_1,double param_2,double param_3,undefined8 par
     Sfx_PlayFromObject((uint)param_9,0x262);
   }
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
-    ObjAnim_SetCurrentMove((double)lbl_803E3730,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                 param_9,3,(uint)*(byte *)(param_10 + 0x323),uVar4,param_13,param_14,param_15,
-                 param_16);
+    ObjAnim_SetCurrentMove((uint)param_9,3,lbl_803E3730,(uint)*(byte *)(param_10 + 0x323));
   }
   fVar1 = lbl_803E3730;
   if (*(float *)(param_10 + 0x324) <= lbl_803E3730) {
@@ -893,10 +888,7 @@ void fn_8015625C(undefined8 param_1,double param_2,double param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8015652C(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 ushort *param_9,undefined4 *param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+void fn_8015652C(ushort *param_9,undefined4 *param_10)
 {
   float fVar1;
   uint uVar2;
@@ -927,9 +919,7 @@ void fn_8015652C(undefined8 param_1,double param_2,double param_3,undefined8 par
     Sfx_PlayFromObject((uint)param_9,0x262);
   }
   if ((param_10[0xb7] & 0x40000000) != 0) {
-    ObjAnim_SetCurrentMove((double)lbl_803E3730,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                 param_9,0,(uint)*(byte *)((int)param_10 + 0x323),uVar4,param_13,param_14,param_15,
-                 param_16);
+    ObjAnim_SetCurrentMove((uint)param_9,0,lbl_803E3730,(uint)*(byte *)((int)param_10 + 0x323));
   }
   fVar1 = lbl_803E3730;
   if ((float)param_10[0xc9] <= lbl_803E3730) {
