@@ -220,19 +220,19 @@ void fn_801554B4(int *param_1,int param_2)
   pfVar5 = (float *)&lbl_8031F2F8;
   for (iVar4 = 0; (fVar2 = lbl_803E36BC, fVar1 = lbl_803E36B8, cVar3 == '\0' && (iVar4 < 4));
       iVar4 = iVar4 + 1) {
-    local_70 = (float)param_1[3] + *pfVar5;
+    local_70 = *(float *)(param_1 + 3) + *pfVar5;
     local_78 = param_1[4];
-    local_68 = (float)param_1[5] + pfVar5[1];
-    local_7c = (float)param_1[3] - *pfVar5;
-    local_74 = (float)param_1[5] - pfVar5[1];
+    local_68 = *(float *)(param_1 + 5) + pfVar5[1];
+    local_7c = *(float *)(param_1 + 3) - *pfVar5;
+    local_74 = *(float *)(param_1 + 5) - pfVar5[1];
     local_6c = local_78;
     cVar3 = fn_800640CC(&local_70,&local_7c,(float *)0x3,&iStack_64,param_1,5,3,0xff,0);
     pfVar5 = pfVar5 + 2;
   }
   if (cVar3 != '\0') {
-    param_1[3] = (int)((local_20 - lbl_803E36B8) * ((local_7c - local_70) / lbl_803E36BC) +
-                      local_70);
-    param_1[5] = (int)((local_20 - fVar1) * ((local_74 - local_68) / fVar2) + local_68);
+    *(float *)(param_1 + 3) = (local_20 - lbl_803E36B8) * ((local_7c - local_70) / lbl_803E36BC) +
+                      local_70;
+    *(float *)(param_1 + 5) = (local_20 - fVar1) * ((local_74 - local_68) / fVar2) + local_68;
     *(undefined4 *)(param_2 + 0x344) = local_48;
     *(undefined4 *)(param_2 + 0x348) = local_44;
     *(undefined4 *)(param_2 + 0x34c) = local_40;
