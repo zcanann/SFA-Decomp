@@ -451,7 +451,7 @@ void fn_801165BC(u8 *param_1)
   menuAction = (*(code *)(*lbl_803DCA50 + 0x10))();
   if (menuAction == 0x57) {
     fn_8001B444(fn_80135A90);
-    fn_80135820(lbl_803E1D10 + (f32)((u32)lbl_803DD616 * 0x1a4) / lbl_803E1D14,
+    fn_80135820(lbl_803E1D10 + (f32)(lbl_803DD616 * 0x1a4) / lbl_803E1D14,
                 lbl_803E1D18);
     fn_80134D40(0,0,0);
     (*(code *)(*lbl_803DCA4C + 0x18))();
