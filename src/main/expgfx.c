@@ -1302,7 +1302,7 @@ void expgfx_resetAllPools(void)
     *(int *)(expgfxBase + 0xc) = 0;
     expgfxBase = expgfxBase + 0x10;
     resourceIndex = resourceIndex + 1;
-  } while (resourceIndex < 0x20);
+  } while (resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT);
   return;
 }
 #pragma peephole reset

@@ -89,6 +89,11 @@ extern char sCurvesMaxRomCurvesExceeded[];
 
 #define ROMCURVE_MAX_CURVES 0x514
 #define ROMCURVE_ID_OFFSET 0x14
+#define ROMCURVE_LINK_FLAGS_OFFSET 0x1b
+#define ROMCURVE_LINK_IDS_OFFSET 0x1c
+#define ROMCURVE_LINK_ID_STRIDE sizeof(u32)
+#define ROMCURVE_LINK_COUNT 4
+#define ROMCURVE_LINK_ID_NONE 0xffffffff
 
 typedef struct RomCurveDef {
   u8 pad00[ROMCURVE_ID_OFFSET];
@@ -204,11 +209,11 @@ void FUN_800e1c00(undefined8 param_1,double param_2,double param_3)
     while (iVar11 <= iVar7) {
       iVar8 = iVar7 + iVar11 >> 1;
       iVar9 = (&DAT_803a2448)[iVar8];
-      if (*(uint *)(iVar9 + 0x14) < uVar4) {
+      if (RomCurve_GetId(iVar9) < uVar4) {
         iVar11 = iVar8 + 1;
       }
       else {
-        if (*(uint *)(iVar9 + 0x14) <= uVar4) goto LAB_800e2324;
+        if (RomCurve_GetId(iVar9) <= uVar4) goto LAB_800e2324;
         iVar7 = iVar8 + -1;
       }
     }
@@ -219,18 +224,18 @@ LAB_800e2324:
   uVar10 = uVar4;
   dVar14 = extraout_f1;
   do {
-    uVar12 = 0xffffffff;
+    uVar12 = ROMCURVE_LINK_ID_NONE;
     iVar7 = 0;
     iVar11 = iVar9;
-    while ((iVar7 < 4 && (uVar12 == 0xffffffff))) {
-      if (((int)*(char *)(iVar9 + 0x1b) & 1 << iVar7) == 0) {
-        uVar12 = *(uint *)(iVar11 + 0x1c);
+    while ((iVar7 < ROMCURVE_LINK_COUNT && (uVar12 == ROMCURVE_LINK_ID_NONE))) {
+      if (((int)*(char *)(iVar9 + ROMCURVE_LINK_FLAGS_OFFSET) & 1 << iVar7) == 0) {
+        uVar12 = *(uint *)(iVar11 + ROMCURVE_LINK_IDS_OFFSET);
       }
-      iVar11 = iVar11 + 4;
+      iVar11 = iVar11 + ROMCURVE_LINK_ID_STRIDE;
       iVar7 = iVar7 + 1;
     }
     iVar11 = iVar9;
-    if (uVar12 != 0xffffffff) {
+    if (uVar12 != ROMCURVE_LINK_ID_NONE) {
       if ((int)uVar12 < 0) {
         iVar11 = 0;
       }
@@ -240,11 +245,11 @@ LAB_800e2324:
         while (iVar7 <= iVar8) {
           iVar6 = iVar8 + iVar7 >> 1;
           iVar11 = (&DAT_803a2448)[iVar6];
-          if (*(uint *)(iVar11 + 0x14) < uVar12) {
+          if (RomCurve_GetId(iVar11) < uVar12) {
             iVar7 = iVar6 + 1;
           }
           else {
-            if (*(uint *)(iVar11 + 0x14) <= uVar12) goto LAB_800e23ec;
+            if (RomCurve_GetId(iVar11) <= uVar12) goto LAB_800e23ec;
             iVar8 = iVar6 + -1;
           }
         }
@@ -262,7 +267,7 @@ LAB_800e23ec:
         *pfVar5 = (float)dVar13;
       }
     }
-    if ((uVar10 == uVar4) || (iVar9 = iVar11, uVar12 == 0xffffffff)) {
+    if ((uVar10 == uVar4) || (iVar9 = iVar11, uVar12 == ROMCURVE_LINK_ID_NONE)) {
       FUN_80286888();
       return;
     }
@@ -1056,11 +1061,11 @@ f32 curves_distXZ(f32 param_1,f32 param_2,uint param_3)
     while (iVar5 >= iVar4) {
       iVar3 = iVar5 + iVar4 >> 1;
       iVar6 = (&DAT_803a2448)[iVar3];
-      if (param_3 > *(uint *)(iVar6 + ROMCURVE_ID_OFFSET)) {
+      if (param_3 > RomCurve_GetId((int)iVar6)) {
         iVar4 = iVar3 + 1;
       }
       else {
-        if (param_3 >= *(uint *)(iVar6 + ROMCURVE_ID_OFFSET)) goto LAB_800e3628;
+        if (param_3 >= RomCurve_GetId((int)iVar6)) goto LAB_800e3628;
         iVar5 = iVar3 + -1;
       }
     }
@@ -1115,11 +1120,11 @@ f32 RomCurve_distanceToObject(int param_1,uint param_2)
     while (iVar6 >= iVar5) {
       iVar4 = iVar6 + iVar5 >> 1;
       iVar7 = (&DAT_803a2448)[iVar4];
-      if (param_2 > *(uint *)(iVar7 + ROMCURVE_ID_OFFSET)) {
+      if (param_2 > RomCurve_GetId((int)iVar7)) {
         iVar5 = iVar4 + 1;
       }
       else {
-        if (param_2 >= *(uint *)(iVar7 + ROMCURVE_ID_OFFSET)) goto LAB_800e36d8;
+        if (param_2 >= RomCurve_GetId((int)iVar7)) goto LAB_800e36d8;
         iVar6 = iVar4 + -1;
       }
     }
@@ -1314,10 +1319,10 @@ undefined4 RomCurve_findByIdWithIndex(uint curveId,int *outIndex)
   low = 0;
   while (high >= low) {
     mid = high + low >> 1;
-    if (curveId > *(uint *)(gRomCurveTable[mid] + ROMCURVE_ID_OFFSET)) {
+    if (curveId > RomCurve_GetId(gRomCurveTable[mid])) {
       low = mid + 1;
     }
-    else if (curveId < *(uint *)(gRomCurveTable[mid] + ROMCURVE_ID_OFFSET)) {
+    else if (curveId < RomCurve_GetId(gRomCurveTable[mid])) {
       high = mid + -1;
     }
     else {
