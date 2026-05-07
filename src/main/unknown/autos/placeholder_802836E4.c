@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_802836E4.h"
 
-extern void fn_8027EF1C(void *entry);
+extern void salActivateVoice(void *entry);
 extern u8 *lbl_803DE344;
 extern u8 lbl_803DE370;
 
@@ -24,5 +24,5 @@ void hwStart(int slot)
 
   offset = slot * 0xf4;
   lbl_803DE344[offset + 0xd4] = lbl_803DE370;
-  fn_8027EF1C(lbl_803DE344 + offset);
+  salActivateVoice(lbl_803DE344 + offset);
 }

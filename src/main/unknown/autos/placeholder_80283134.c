@@ -91,7 +91,7 @@ extern void salStartAi(void);
 extern void fn_802737E8(void);
 extern u32 salAiGetDest(void);
 extern void salCtrlDsp(u32 param_1);
-extern void fn_8027F14C(void);
+extern void salHandleAuxProcessing(void);
 extern void fn_8026EC44(u32 value);
 extern void fn_80271498(u32 value);
 extern void fn_80280C30(void);
@@ -126,7 +126,7 @@ void snd_handle_irq(void)
     salCtrlDsp(salAiGetDest());
     hwIRQLeaveCritical();
     hwIRQEnterCritical();
-    fn_8027F14C();
+    salHandleAuxProcessing();
     hwIRQLeaveCritical();
     hwIRQEnterCritical();
 

@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_80283BF0.h"
 
-extern void fn_8027F0C8(void *p);
+extern void salRemoveStudioInput(void *p);
 extern int aramGetStreamBufferAddress(int stream, void *out);
 extern int aramUploadData(int dest, int src, u32 size, int flag, undefined4 param_5, undefined4 param_6);
 extern void DCStoreRange(void *addr, u32 nBytes);
@@ -18,7 +18,7 @@ extern int lbl_803DE344;
  */
 void hwRemoveInput(u32 idx) {
     u32 offset = (idx & 0xff) * 0xbc;
-    fn_8027F0C8(lbl_803CC1E0 + offset);
+    salRemoveStudioInput(lbl_803CC1E0 + offset);
 }
 
 /*

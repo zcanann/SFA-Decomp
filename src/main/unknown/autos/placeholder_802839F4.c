@@ -1,14 +1,14 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_802839F4.h"
 
-extern void fn_8027EFC0(void *entry);
+extern void salDeactivateVoice(void *entry);
 extern void fn_8027BEBC(void);
 extern void fn_8027BFC4(void);
 extern u8 *lbl_803DE344;
 extern u8 lbl_803CC1E0[];
 
 /*
- * hwSetVolume — large mix-volume setter; computes 4-channel pan from
+ * hwSetVolume - large mix-volume setter; computes 4-channel pan from
  * 3-axis float input via fn_8027F2AC, clamps each to s16, and writes
  * back to the voice's pan/volume table. Stubbed pending full decode.
  */
@@ -33,7 +33,7 @@ void hwSetVolume(int slot, f32 a, f32 b, f32 c, void *aux)
  */
 void hwOff(int slot)
 {
-    fn_8027EFC0(lbl_803DE344 + slot * 0xf4);
+    salDeactivateVoice(lbl_803DE344 + slot * 0xf4);
 }
 
 /*
@@ -54,7 +54,7 @@ void hwSetAUXProcessingCallbacks(u8 idx, void *cb0, void *cb1, void *cb2, void *
 }
 
 /*
- * Activate the audio "studio" effect chain — thin wrapper.
+ * Activate the audio "studio" effect chain - thin wrapper.
  *
  * EN v1.1 Address: 0x80283B60
  * EN v1.1 Size: 32b
@@ -65,7 +65,7 @@ void hwActivateStudio(void)
 }
 
 /*
- * Deactivate the audio "studio" effect chain — thin wrapper.
+ * Deactivate the audio "studio" effect chain - thin wrapper.
  *
  * EN v1.1 Address: 0x80283B80
  * EN v1.1 Size: 32b

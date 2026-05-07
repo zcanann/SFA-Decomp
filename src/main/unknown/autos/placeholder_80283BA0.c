@@ -2,7 +2,7 @@
 #include "main/unknown/autos/placeholder_80283BA0.h"
 
 extern u8 lbl_803CC1E0[];
-extern void fn_8027F020(void *entry);
+extern void salAddStudioInput(void *entry);
 
 /*
  * --INFO--
@@ -19,5 +19,5 @@ extern void fn_8027F020(void *entry);
  */
 void hwAddInput(u8 index)
 {
-  fn_8027F020(lbl_803CC1E0 + index * 0xbc);
+  salAddStudioInput(lbl_803CC1E0 + index * 0xbc);
 }
