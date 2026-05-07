@@ -14,17 +14,17 @@ extern undefined4 FUN_80053c98();
 extern undefined4 FUN_800723a0();
 extern undefined8 FUN_80080f24();
 extern undefined8 FUN_801010b4();
-extern undefined4 FUN_80117c30();
-extern undefined4 FUN_80118164();
+extern undefined4 fn_80117B68();
+extern undefined4 fn_801181F8();
 extern undefined4 fn_8011881C();
-extern undefined4 FUN_80118524();
-extern bool FUN_80118574();
-extern undefined8 FUN_80118d44();
-extern undefined4 FUN_80118ed8();
+extern undefined4 fn_80118900();
+extern bool fn_80118960();
+extern undefined8 fn_80118C88();
+extern undefined4 fn_80118EAC();
 extern undefined4 fn_80118FAC();
-extern int FUN_80119000();
+extern int fn_80119000();
 extern undefined4 fn_801192EC();
-extern int FUN_80119478();
+extern int fn_80119338();
 extern undefined8 FUN_8011d9b0();
 extern int FUN_80241de8();
 extern undefined4 FUN_802420b0();
@@ -318,31 +318,31 @@ void n_attractmode_prepareMovie(void)
   int local_18;
   int local_1c;
   int local_20;
-  int local_24;
+  uint local_24;
   int workBufferSize;
   uint local_14 [3];
   
   lbl_803DD619 = NATTRACTMODE_MOVIE_BUSY;
-  iVar1 = FUN_80119478(NATTRACTMODE_MOVIE_SETUP_ID);
+  iVar1 = fn_80119338(NATTRACTMODE_MOVIE_SETUP_ID);
   if (iVar1 != 0) {
-    iVar1 = FUN_80119000(sNAttractModeMoviePath,NATTRACTMODE_MOVIE_START_FRAME_DEFAULT);
+    iVar1 = fn_80119000(sNAttractModeMoviePath,NATTRACTMODE_MOVIE_START_FRAME_DEFAULT);
     if (iVar1 == 0) {
       fn_801192EC();
     }
     else {
-      FUN_80118164((uint)&lbl_803DD638);
+      fn_801181F8((uint)&lbl_803DD638);
       lbl_803DD644 = ((uint)lbl_803DCCF0[2] - lbl_803DD638.width) >> 1;
       lbl_803DD640 = ((uint)lbl_803DCCF0[3] - lbl_803DD638.height) >> 1;
-      FUN_80118ed8(local_14,&local_18,&local_1c,&local_20,&local_24,&workBufferSize);
+      fn_80118EAC(local_14,&local_18,&local_1c,&local_20,&local_24,&workBufferSize);
       lbl_803DD634 = mmAlloc(local_14[0],NATTRACTMODE_MOVIE_HEAP,0);
       lbl_803DD630 = mmAlloc(local_18,NATTRACTMODE_MOVIE_HEAP,0);
       lbl_803DD62C = mmAlloc(local_1c,NATTRACTMODE_MOVIE_HEAP,0);
       lbl_803DD628 = mmAlloc(local_20,NATTRACTMODE_MOVIE_HEAP,0);
-      if (local_24 == NATTRACTMODE_OPTIONAL_BUFFER_SIZE_NONE) {
-        lbl_803DD624 = 0;
+      if (local_24 != NATTRACTMODE_OPTIONAL_BUFFER_SIZE_NONE) {
+        lbl_803DD624 = mmAlloc(local_24,NATTRACTMODE_MOVIE_HEAP,0);
       }
       else {
-        lbl_803DD624 = mmAlloc(local_24,NATTRACTMODE_MOVIE_HEAP,0);
+        lbl_803DD624 = 0;
       }
       lbl_803DD620 = mmAlloc(workBufferSize,NATTRACTMODE_MOVIE_HEAP,0);
       lbl_803DD61C = mmAlloc(NATTRACTMODE_WORK_BUFFER_SIZE,NATTRACTMODE_MOVIE_HEAP,0);
@@ -398,23 +398,23 @@ void n_attractmode_prepareMovie(void)
         }
         DCInvalidateRange(lbl_803DD620,workBufferSize);
         DCInvalidateRange(lbl_803DD61C,NATTRACTMODE_WORK_BUFFER_SIZE);
-        FUN_80118d44(lbl_803DD634,lbl_803DD630,lbl_803DD62C,lbl_803DD628,lbl_803DD624,
+        fn_80118C88(lbl_803DD634,lbl_803DD630,lbl_803DD62C,lbl_803DD628,lbl_803DD624,
                      lbl_803DD620);
-        iVar1 = FUN_80118574(0,1);
+        iVar1 = fn_80118960(0,1);
         if (iVar1 == 0) {
           OSPanic(sNAttractModeSourceFile,NATTRACTMODE_PREPARE_FAIL_LINE,
                   sNAttractModeFailToPrepare);
         }
-        FUN_80118524();
+        fn_80118900();
         lbl_803DD610 = NATTRACTMODE_MOVIE_STATE_PREPARED;
         VIWaitForRetrace();
         lbl_803DD64D = NATTRACTMODE_MOVIE_RETRACE_COUNTDOWN;
         lbl_803DD698 = 0;
         if (lbl_803DD614 == NATTRACTMODE_MOVIE_STATE_RELEASED) {
-          FUN_80117c30(NATTRACTMODE_MOVIE_START_FRAME_ALTERNATE,1);
+          fn_80117B68(NATTRACTMODE_MOVIE_START_FRAME_ALTERNATE,1);
         }
         else {
-          FUN_80117c30(NATTRACTMODE_MOVIE_START_FRAME_DEFAULT,1);
+          fn_80117B68(NATTRACTMODE_MOVIE_START_FRAME_DEFAULT,1);
         }
       }
     }
