@@ -58,6 +58,11 @@ void fn_80276440(int state, u32 *params, u32 timeArg)
     u32 scaled;
     u16 keyId;
     u8 *table;
+    u32 p0;
+    u32 hi;
+    u32 lo;
+    u32 a;
+    u32 b;
 
     t = params[1] >> 16;
     if ((params[1] >> 8) & 1) {
@@ -70,28 +75,23 @@ void fn_80276440(int state, u32 *params, u32 timeArg)
         divisor = 1;
     }
 
-    {
-        u32 p0 = params[0];
-        u32 hi = (p0 >> 8) & 0xff;
-        scaled = (*(u32 *)(state + 0x154) * hi) >> 7;
-        scaled += (p0 & 0xff0000);
-        if (scaled > 0x7f0000) {
-            scaled = 0x7f0000;
-        }
-        {
-            u32 hiByte = p0 >> 24;
-            keyId = (u16)(hiByte | ((params[1] & 0xff) << 8));
-        }
+    p0 = params[0];
+    hi = (p0 >> 8) & 0xff;
+    scaled = (*(u32 *)(state + 0x154) * hi) >> 7;
+    scaled += (p0 & 0xff0000);
+    if (scaled > 0x7f0000) {
+        scaled = 0x7f0000;
     }
+    keyId = (u16)((p0 >> 24) | ((params[1] & 0xff) << 8));
 
     if (keyId != 0xffff) {
         table = fn_80275058(keyId);
         if (table != NULL) {
-            u32 hi = scaled >> 16;
-            u32 lo = scaled & 0xffff;
+            hi = scaled >> 16;
+            lo = scaled & 0xffff;
             if (hi < 0x7f) {
-                u32 a = table[hi];
-                u32 b = table[hi + 1];
+                a = table[hi];
+                b = table[hi + 1];
                 scaled = (a << 16) + lo * (b - a);
             } else {
                 scaled = (u32)table[hi] << 16;
