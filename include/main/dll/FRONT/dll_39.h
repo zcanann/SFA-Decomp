@@ -12,8 +12,6 @@ void FUN_80116128(undefined8 param_1,double param_2,double param_3,undefined8 pa
 undefined4 FUN_8011631c(void);
 void FUN_80116424(void);
 void n_attractmode_releaseMovieBuffers(void);
-void n_attractmode_prepareMovie(undefined8 param_1,undefined8 param_2,undefined8 param_3,
-                                undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                                undefined8 param_7,undefined8 param_8);
+void n_attractmode_prepareMovie(void);
 
 #endif /* MAIN_DLL_FRONT_DLL_39_H_ */

@@ -22,7 +22,7 @@ extern int titleLoadSaveFiles();
 extern void gameplay_capturePreviewSettings();
 extern double FUN_80110b8c();
 extern undefined4 n_attractmode_releaseMovieBuffers();
-extern undefined4 n_attractmode_prepareMovie();
+extern void n_attractmode_prepareMovie(void);
 extern undefined4 FUN_80117c30();
 extern undefined4 FUN_80130728();
 extern undefined4 FUN_80130734();
@@ -185,8 +185,7 @@ int FUN_801168bc(undefined8 param_1,double param_2,undefined8 param_3,undefined8
         DAT_803de2c8 = DAT_803de2c8 + -1;
       }
       if (DAT_803de291 != '\0') {
-        n_attractmode_prepareMovie(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,
-                                   param_8);
+        n_attractmode_prepareMovie();
       }
       if (((DAT_803de2cd != '\0') && (DAT_803de2cd = DAT_803de2cd + -1, DAT_803de2cd == '\0')) &&
          (DAT_803de2cf != '\0')) {
