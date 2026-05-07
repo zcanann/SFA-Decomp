@@ -2094,22 +2094,22 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
         GXWGFifo.f32 = lbl_803DEEDC;
 
         GXWGFifo.u8 = 0x3C;
-        GXWGFifo.s16 = (s16)((x + w) << 2);
+        GXWGFifo.s16 = (s16)((x << 2) + w);
         GXWGFifo.s16 = (s16)(y << 2);
         GXWGFifo.s16 = -8;
         GXWGFifo.f32 = lbl_803DEEE4;
         GXWGFifo.f32 = lbl_803DEEDC;
 
         GXWGFifo.u8 = 0x3C;
-        GXWGFifo.s16 = (s16)((x + w) << 2);
-        GXWGFifo.s16 = (s16)((y + h) << 2);
+        GXWGFifo.s16 = (s16)((x << 2) + w);
+        GXWGFifo.s16 = (s16)((y << 2) + h);
         GXWGFifo.s16 = -8;
         GXWGFifo.f32 = lbl_803DEEE4;
         GXWGFifo.f32 = lbl_803DEEE4;
 
         GXWGFifo.u8 = 0x3C;
         GXWGFifo.s16 = (s16)(x << 2);
-        GXWGFifo.s16 = (s16)((y + h) << 2);
+        GXWGFifo.s16 = (s16)((y << 2) + h);
         GXWGFifo.s16 = -8;
         GXWGFifo.f32 = lbl_803DEEDC;
         GXWGFifo.f32 = lbl_803DEEE4;
