@@ -16,14 +16,14 @@ extern undefined8 FUN_80080f24();
 extern undefined8 FUN_801010b4();
 extern undefined4 FUN_80117c30();
 extern undefined4 FUN_80118164();
-extern undefined4 FUN_80118470();
+extern undefined4 fn_8011881C();
 extern undefined4 FUN_80118524();
 extern bool FUN_80118574();
 extern undefined8 FUN_80118d44();
 extern undefined4 FUN_80118ed8();
-extern undefined4 FUN_80118fc8();
+extern undefined4 fn_80118FAC();
 extern int FUN_80119000();
-extern undefined4 FUN_8011943c();
+extern undefined4 fn_801192EC();
 extern int FUN_80119478();
 extern undefined8 FUN_8011d9b0();
 extern int FUN_80241de8();
@@ -223,6 +223,7 @@ void n_rareware_release(void) {}
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void fn_801160E0(void)
 {
   fn_8001404C(0);
@@ -232,6 +233,7 @@ void fn_801160E0(void)
   lbl_803DD609 = 0;
   lbl_803DD608 = 0;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -253,9 +255,9 @@ void n_attractmode_releaseMovieBuffers(void)
   int freeDelay;
   
   if (lbl_803DD610 == NATTRACTMODE_MOVIE_STATE_PREPARED) {
-    FUN_80118470();
-    FUN_80118fc8();
-    FUN_8011943c();
+    fn_8011881C();
+    fn_80118FAC();
+    fn_801192EC();
     freeDelay = mmSetFreeDelay(0);
     if (lbl_803DD634 != 0) {
       fn_80023800(lbl_803DD634);
@@ -325,7 +327,7 @@ void n_attractmode_prepareMovie(void)
   if (iVar1 != 0) {
     iVar1 = FUN_80119000(sNAttractModeMoviePath,NATTRACTMODE_MOVIE_START_FRAME_DEFAULT);
     if (iVar1 == 0) {
-      FUN_8011943c();
+      fn_801192EC();
     }
     else {
       FUN_80118164((uint)&lbl_803DD638);
@@ -348,7 +350,7 @@ void n_attractmode_prepareMovie(void)
           ((lbl_803DD628 == 0 ||
            ((lbl_803DD624 == 0 && (local_24 != NATTRACTMODE_OPTIONAL_BUFFER_SIZE_NONE)))))) ||
          ((lbl_803DD620 == 0 || (lbl_803DD61C == 0)))) {
-        FUN_8011943c();
+        fn_801192EC();
         freeDelay = mmSetFreeDelay(0);
         if (lbl_803DD634 != 0) {
           fn_80023800(lbl_803DD634);
