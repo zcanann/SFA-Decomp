@@ -3,20 +3,20 @@
 
 #include "ghidra_import.h"
 
-undefined4 FUN_8017d0d4(int param_1,undefined4 param_2,int param_3);
-void FUN_8017d1bc(int param_1);
-void FUN_8017d1e0(int param_1);
-void FUN_8017d208(int param_1);
-void FUN_8017d39c(short *param_1,int param_2);
-undefined4 FUN_8017d3a0(int param_1,undefined4 param_2,int param_3);
-void FUN_8017d488(int param_1);
-void FUN_8017d4ac(int param_1);
-void FUN_8017d4d4(int param_1);
-void FUN_8017d67c(short *param_1,int param_2);
-void FUN_8017d680(int param_1);
-void FUN_8017d6cc(void);
-void FUN_8017d730(int param_1);
-void FUN_8017daa0(short *param_1,int param_2);
+void fn_8017D0D4(int obj);
+void fn_8017D278(short *obj,int mapData);
+void fn_8017D374(void);
+void fn_8017D378(void);
+int wm_column_getExtraSize(void);
+int wm_column_func08(void);
+void wm_column_free(int obj);
+void wm_column_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
+void wm_column_hitDetect(void);
+void wm_column_update(int obj);
+void wm_column_init(short *obj,int mapData);
+void wm_column_release(void);
+void wm_column_initialise(void);
+void appleontree_func0B(int obj,float *pos);
 void FUN_8017db40(uint param_1,int param_2);
 void FUN_8017de58(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,

@@ -16,6 +16,8 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 FUN_8003b818();
+extern void fn_8003B8F4(int param_1, int param_2, int param_3, int param_4, int param_5,
+                        f32 scale);
 extern int FUN_800632d8();
 extern undefined4 FUN_80081118();
 extern undefined4 FUN_8011e868();
@@ -25,12 +27,26 @@ extern double FUN_80293900();
 extern undefined4 FUN_80294d60();
 extern uint FUN_80294db4();
 extern uint countLeadingZeros();
+extern int GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId, int value);
+extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
+extern f32 Vec_distance(float *posA, float *posB);
+extern int Obj_GetPlayerObject(void);
+extern uint fn_8029729C(int obj);
+extern void fn_8011F3EC(int param_1);
+extern void fn_8017CF90(void);
 
+extern undefined4* lbl_803DCA54;
+extern undefined4* lbl_803DCAC0;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd718;
 extern undefined4* DAT_803dd740;
 extern f32 lbl_803DC074;
+extern f32 lbl_803E37B8;
+extern f32 lbl_803E37BC;
+extern f32 lbl_803E37C0;
+extern f32 lbl_803E37C4;
 extern f32 lbl_803E4454;
 extern f32 lbl_803E4458;
 extern f32 lbl_803E445C;
@@ -48,10 +64,18 @@ extern f32 lbl_803E4490;
 extern f32 lbl_803E4494;
 extern f32 lbl_803E4498;
 
+typedef void (*GroundAnimatorActivateFn)(int obj, int eventId);
+typedef void (*GroundAnimatorFreeFn)(int obj);
+typedef void (*GroundAnimatorRefreshFn)(int objectId, int obj, int value);
+typedef int (*GroundAnimatorVisibleFn)(int obj, int visible);
+typedef int (*GroundAnimatorAnimStateFn)(int obj, int state);
+typedef void (*GroundAnimatorSetVisibleFn)(int state, int visible);
+typedef void (*GroundAnimatorInitAnimFn)(void *obj, undefined4 state, int param_3);
+
 /*
  * --INFO--
  *
- * Function: FUN_8017d0d4
+ * Function: fn_8017D0D4
  * EN v1.0 Address: 0x8017D0D4
  * EN v1.0 Size: 232b
  * EN v1.1 Address: 0x8017D134
@@ -61,35 +85,48 @@ extern f32 lbl_803E4498;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8017d0d4(int param_1,undefined4 param_2,int param_3)
+void fn_8017D0D4(int obj)
 {
-  uint uVar1;
-  uint uVar2;
-  int iVar3;
-  byte *pbVar4;
-  
-  pbVar4 = *(byte **)(param_1 + 0xb8);
-  iVar3 = *(int *)(param_1 + 0x4c);
-  *(undefined2 *)(param_3 + 0x6e) = *(undefined2 *)(param_3 + 0x70);
-  *(undefined *)(param_3 + 0x56) = 0;
-  if (*(short *)(param_1 + 0xb4) != -1) {
-    if (((*pbVar4 != 4) && (uVar2 = *pbVar4 + 1, uVar2 < 4)) &&
-       (uVar1 = (uint)*(short *)(iVar3 + uVar2 * 2 + 0x20), uVar1 != 0xffffffff)) {
-      uVar1 = FUN_80017690(uVar1);
-      uVar2 = countLeadingZeros((int)(uint)*(byte *)(iVar3 + 0x30) >> (uVar2 & 0x3f) & 1);
-      if (uVar2 >> 5 == uVar1) {
-        (**(code **)(*DAT_803dd6d4 + 0x4c))((int)*(short *)(param_1 + 0xb4));
-      }
+  u8 *state;
+  int mapData;
+  int step;
+  int eventId;
+
+  state = *(u8 **)(obj + 0xb8);
+  mapData = *(int *)(obj + 0x4c);
+  if ((state[1] & 1) != 0) {
+    eventId = *(s16 *)(mapData + state[0] * 2 + 0x18);
+    if (eventId != -1) {
+      GameBit_Set(eventId, 1);
     }
-    pbVar4[1] = pbVar4[1] | 1;
+    state[1] &= 0xfe;
+    state[0]++;
   }
-  return 0;
+  if (state[0] == 9) {
+    (*(GroundAnimatorActivateFn *)(*lbl_803DCA54 + 0x54))(obj, *(s16 *)(mapData + 0x3c));
+    (*(GroundAnimatorRefreshFn *)(*lbl_803DCA54 + 0x48))
+        (*(u8 *)(mapData + 0x3a), obj, *(u8 *)(mapData + 0x3b));
+  } else if (((state[0] < 8) || (state[0] >= 0xb)) &&
+             (*(s16 *)(mapData + state[0] * 2 + 0x28) == -1)) {
+    state[0] = 8;
+  } else if (((state[0] < 8) || (state[0] >= 0xb)) &&
+             (GameBit_Get(*(s16 *)(mapData + state[0] * 2 + 0x28)) != 0) &&
+             ((s8)*(u8 *)(mapData + state[0] + 0x40) != -1)) {
+    (*(GroundAnimatorRefreshFn *)(*lbl_803DCA54 + 0x48))
+        ((s8)*(u8 *)(mapData + state[0] + 0x40), obj, -1);
+  }
+  step = state[0] - 1;
+  while ((step >= 0) && (*(s16 *)(mapData + step * 2 + 0x18) != -1) &&
+         (GameBit_Get(*(s16 *)(mapData + step * 2 + 0x18)) == 0)) {
+    state[0]--;
+    step--;
+  }
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8017d1bc
+ * Function: fn_8017D278
  * EN v1.0 Address: 0x8017D1BC
  * EN v1.0 Size: 36b
  * EN v1.1 Address: 0x8017D228
@@ -99,16 +136,35 @@ undefined4 FUN_8017d0d4(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017d1bc(int param_1)
+void fn_8017D278(short *obj, int mapData)
 {
-  ObjGroup_RemoveObject(param_1,0xf);
-  return;
+  int step;
+  u8 *state;
+
+  state = *(u8 **)(obj + 0x5c);
+  *obj = (u16)*(u8 *)(mapData + 0x38) << 8;
+  *(void **)(obj + 0x5e) = fn_8017CF90;
+  obj[0x58] |= 0x6000;
+  ObjGroup_AddObject((int)obj, 0xf);
+  step = 0;
+  while ((step < 8) && (*(s16 *)(mapData + step * 2 + 0x18) != -1) &&
+         (GameBit_Get(*(s16 *)(mapData + step * 2 + 0x18)) != 0)) {
+    step++;
+  }
+  if ((step < 8) && (*(s16 *)(mapData + step * 2 + 0x18) == -1)) {
+    state[0] = 8;
+  } else {
+    state[0] = step;
+  }
+  if ((state[0] == 8) && ((*(u8 *)(mapData + 0x39) & 0x10) != 0)) {
+    state[0] = 9;
+  }
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8017d1e0
+ * Function: fn_8017D374
  * EN v1.0 Address: 0x8017D1E0
  * EN v1.0 Size: 40b
  * EN v1.1 Address: 0x8017D24C
@@ -118,20 +174,14 @@ void FUN_8017d1bc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017d1e0(int param_1)
+void fn_8017D374(void)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
-    FUN_8003b818(param_1);
-  }
-  return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8017d208
+ * Function: fn_8017D378
  * EN v1.0 Address: 0x8017D208
  * EN v1.0 Size: 404b
  * EN v1.1 Address: 0x8017D280
@@ -141,53 +191,14 @@ void FUN_8017d1e0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017d208(int param_1)
+void fn_8017D378(void)
 {
-  uint uVar1;
-  uint uVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  byte *pbVar6;
-  
-  pbVar6 = *(byte **)(param_1 + 0xb8);
-  iVar5 = *(int *)(param_1 + 0x4c);
-  if ((pbVar6[1] & 1) != 0) {
-    uVar1 = countLeadingZeros((int)(uint)*(byte *)(iVar5 + 0x30) >> (*pbVar6 + 4 & 0x3f) & 1);
-    FUN_80017698((int)*(short *)(iVar5 + (uint)*pbVar6 * 2 + 0x18),uVar1 >> 5);
-    pbVar6[1] = pbVar6[1] & 0xfe;
-    *pbVar6 = *pbVar6 + 1;
-  }
-  if (*pbVar6 != 4) {
-    uVar1 = (uint)*(short *)(iVar5 + (uint)*pbVar6 * 2 + 0x20);
-    if (uVar1 == 0xffffffff) {
-      *pbVar6 = 4;
-    }
-    else {
-      uVar2 = FUN_80017690(uVar1);
-      uVar1 = countLeadingZeros((int)(uint)*(byte *)(iVar5 + 0x30) >> (*pbVar6 & 0x3f) & 1);
-      if ((uVar1 >> 5 == uVar2) &&
-         (iVar3 = (int)*(char *)(iVar5 + (uint)*pbVar6 + 0x2c), iVar3 != -1)) {
-        (**(code **)(*DAT_803dd6d4 + 0x48))(iVar3,param_1,0xffffffff);
-      }
-    }
-  }
-  iVar3 = *pbVar6 - 1;
-  iVar4 = iVar5 + iVar3 * 2;
-  while (((-1 < iVar3 && ((int)*(short *)(iVar4 + 0x18) != 0xffffffff)) &&
-         (uVar1 = FUN_80017690((int)*(short *)(iVar4 + 0x18)),
-         ((int)(uint)*(byte *)(iVar5 + 0x30) >> (iVar3 + 4U & 0x3f) & 1U) == uVar1))) {
-    *pbVar6 = *pbVar6 - 1;
-    iVar4 = iVar4 + -2;
-    iVar3 = iVar3 + -1;
-  }
-  return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8017d39c
+ * Function: wm_column_getExtraSize
  * EN v1.0 Address: 0x8017D39C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8017D3F8
@@ -197,14 +208,15 @@ void FUN_8017d208(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017d39c(short *param_1,int param_2)
+int wm_column_getExtraSize(void)
 {
+  return 0xa;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8017d3a0
+ * Function: wm_column_func08
  * EN v1.0 Address: 0x8017D3A0
  * EN v1.0 Size: 232b
  * EN v1.1 Address: 0x8017D4E8
@@ -214,34 +226,15 @@ void FUN_8017d39c(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8017d3a0(int param_1,undefined4 param_2,int param_3)
+int wm_column_func08(void)
 {
-  uint uVar1;
-  uint uVar2;
-  int iVar3;
-  byte *pbVar4;
-  
-  pbVar4 = *(byte **)(param_1 + 0xb8);
-  iVar3 = *(int *)(param_1 + 0x4c);
-  *(undefined2 *)(param_3 + 0x6e) = *(undefined2 *)(param_3 + 0x70);
-  *(undefined *)(param_3 + 0x56) = 0;
-  if (*(short *)(param_1 + 0xb4) != -1) {
-    uVar2 = (uint)*pbVar4;
-    if ((((9 < uVar2) || (uVar2 < 8)) && (uVar2 + 1 < 8)) &&
-       (((uVar1 = (uint)*(short *)(iVar3 + (uVar2 + 1) * 2 + 0x28), uVar1 != 0xffffffff &&
-         (uVar1 != (int)*(short *)(iVar3 + uVar2 * 2 + 0x28))) &&
-        (uVar2 = FUN_80017690(uVar1), uVar2 != 0)))) {
-      (**(code **)(*DAT_803dd6d4 + 0x4c))((int)*(short *)(param_1 + 0xb4));
-    }
-    pbVar4[1] = pbVar4[1] | 1;
-  }
   return 0;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8017d488
+ * Function: wm_column_free
  * EN v1.0 Address: 0x8017D488
  * EN v1.0 Size: 36b
  * EN v1.1 Address: 0x8017D5D4
@@ -251,16 +244,16 @@ undefined4 FUN_8017d3a0(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017d488(int param_1)
+void wm_column_free(int obj)
 {
-  ObjGroup_RemoveObject(param_1,0xf);
-  return;
+  ObjGroup_RemoveObject(obj, 4);
+  (*(GroundAnimatorFreeFn *)(*lbl_803DCAC0 + 0x10))(obj);
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8017d4ac
+ * Function: wm_column_render
  * EN v1.0 Address: 0x8017D4AC
  * EN v1.0 Size: 40b
  * EN v1.1 Address: 0x8017D5F8
@@ -270,20 +263,17 @@ void FUN_8017d488(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017d4ac(int param_1)
+void wm_column_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
-    FUN_8003b818(param_1);
+  if ((*(GroundAnimatorVisibleFn *)(*lbl_803DCAC0 + 0xc))(param_1, visible) != 0) {
+    fn_8003B8F4(param_1, param_2, param_3, param_4, param_5, lbl_803E37B8);
   }
-  return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8017d4d4
+ * Function: wm_column_hitDetect
  * EN v1.0 Address: 0x8017D4D4
  * EN v1.0 Size: 424b
  * EN v1.1 Address: 0x8017D62C
@@ -293,61 +283,14 @@ void FUN_8017d4ac(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017d4d4(int param_1)
+void wm_column_hitDetect(void)
 {
-  uint uVar1;
-  int iVar2;
-  int iVar3;
-  byte *pbVar4;
-  
-  pbVar4 = *(byte **)(param_1 + 0xb8);
-  iVar3 = *(int *)(param_1 + 0x4c);
-  if ((pbVar4[1] & 1) != 0) {
-    uVar1 = (uint)*(short *)(iVar3 + (uint)*pbVar4 * 2 + 0x18);
-    if (uVar1 != 0xffffffff) {
-      FUN_80017698(uVar1,1);
-    }
-    pbVar4[1] = pbVar4[1] & 0xfe;
-    *pbVar4 = *pbVar4 + 1;
-  }
-  uVar1 = (uint)*pbVar4;
-  if (uVar1 == 9) {
-    (**(code **)(*DAT_803dd6d4 + 0x54))(param_1,(int)*(short *)(iVar3 + 0x3c));
-    (**(code **)(*DAT_803dd6d4 + 0x48))
-              (*(undefined *)(iVar3 + 0x3a),param_1,*(undefined *)(iVar3 + 0x3b));
-  }
-  else {
-    if (uVar1 < 9) {
-      if (7 < uVar1) goto LAB_8017d768;
-    }
-    else if (uVar1 < 0xb) goto LAB_8017d768;
-    uVar1 = (uint)*(short *)(iVar3 + uVar1 * 2 + 0x28);
-    if (uVar1 == 0xffffffff) {
-      *pbVar4 = 8;
-    }
-    else {
-      uVar1 = FUN_80017690(uVar1);
-      if ((uVar1 != 0) && (iVar2 = (int)*(char *)(iVar3 + (uint)*pbVar4 + 0x40), iVar2 != -1)) {
-        (**(code **)(*DAT_803dd6d4 + 0x48))(iVar2,param_1,0xffffffff);
-      }
-    }
-  }
-LAB_8017d768:
-  iVar2 = *pbVar4 - 1;
-  iVar3 = iVar3 + iVar2 * 2;
-  while (((-1 < iVar2 && ((int)*(short *)(iVar3 + 0x18) != 0xffffffff)) &&
-         (uVar1 = FUN_80017690((int)*(short *)(iVar3 + 0x18)), uVar1 == 0))) {
-    *pbVar4 = *pbVar4 - 1;
-    iVar3 = iVar3 + -2;
-    iVar2 = iVar2 + -1;
-  }
-  return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8017d67c
+ * Function: wm_column_update
  * EN v1.0 Address: 0x8017D67C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8017D7D0
@@ -357,14 +300,80 @@ LAB_8017d768:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017d67c(short *param_1,int param_2)
+void wm_column_update(int obj)
 {
+  int *objects;
+  int flags;
+  int i;
+  int count;
+  int other;
+  int state;
+  f32 nearest[5];
+
+  state = *(int *)(obj + 0xb8);
+  nearest[0] = lbl_803E37BC;
+  if ((*(GroundAnimatorAnimStateFn *)(*lbl_803DCAC0 + 8))(obj, *(int *)(obj + 0xb8)) != 0) {
+    if ((*(u32 *)(obj + 0xf4) & 2) != 0) {
+      objects = ObjList_GetObjects(&i, &count);
+      for (; i < count; i++) {
+        other = objects[i];
+        if ((other != obj) && (*(s16 *)(other + 0x46) == 499) &&
+            (Vec_distance((float *)(obj + 0x18), (float *)(other + 0x18)) < lbl_803E37C0)) {
+          other = *(s16 *)(*(int *)(objects[i] + 0x4c) + 0x1e);
+          if (other != -1) {
+            GameBit_Set(other, 0);
+          }
+        }
+      }
+    }
+    flags = Obj_GetPlayerObject();
+    ObjGroup_FindNearestObject(0x10, obj, nearest);
+    flags = fn_8029729C(flags);
+    if (((flags & 0x4000) != 0) && (nearest[0] > lbl_803E37C4)) {
+      (*(GroundAnimatorSetVisibleFn *)(*lbl_803DCAC0 + 0x24))(state, 0);
+      fn_8011F3EC(5);
+      *(u32 *)(obj + 0xf4) |= 1;
+    } else {
+      (*(GroundAnimatorSetVisibleFn *)(*lbl_803DCAC0 + 0x24))(state, 1);
+    }
+    *(u32 *)(obj + 0xf4) &= ~2;
+  } else {
+    if ((*(u32 *)(obj + 0xf4) & 1) != 0) {
+      objects = ObjList_GetObjects(&i, &count);
+      for (; i < count; i++) {
+        other = objects[i];
+        if ((other != obj) && (*(s16 *)(other + 0x46) == 499) &&
+            (Vec_distance((float *)(obj + 0x18), (float *)(other + 0x18)) < lbl_803E37C0)) {
+          int mapData = *(int *)(objects[i] + 0x4c);
+          if (*(s16 *)(obj + 0x46) == (s8)*(u8 *)(mapData + 0x19) + 500) {
+            if (*(s16 *)(mapData + 0x1e) != -1) {
+              GameBit_Set(*(s16 *)(mapData + 0x1e), 1);
+            }
+          } else if (*(s16 *)(mapData + 0x1e) != -1) {
+            GameBit_Set(*(s16 *)(mapData + 0x1e), 0);
+          }
+          *(f32 *)(obj + 0xc) = *(f32 *)(objects[i] + 0xc);
+          *(f32 *)(obj + 0x10) = *(f32 *)(objects[i] + 0x10);
+          *(f32 *)(obj + 0x14) = *(f32 *)(objects[i] + 0x14);
+        }
+      }
+    }
+    flags = fn_8029729C(Obj_GetPlayerObject());
+    if ((flags & 0x4000) != 0) {
+      (*(GroundAnimatorSetVisibleFn *)(*lbl_803DCAC0 + 0x24))(state, 0);
+      *(u32 *)(obj + 0xf4) |= 2;
+    } else {
+      (*(GroundAnimatorSetVisibleFn *)(*lbl_803DCAC0 + 0x24))(state, 1);
+      *(u32 *)(obj + 0xf4) &= ~2;
+    }
+    *(u32 *)(obj + 0xf4) &= ~1;
+  }
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8017d680
+ * Function: wm_column_init
  * EN v1.0 Address: 0x8017D680
  * EN v1.0 Size: 76b
  * EN v1.1 Address: 0x8017D8E4
@@ -374,17 +383,23 @@ void FUN_8017d67c(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017d680(int param_1)
+void wm_column_init(short *obj, int mapData)
 {
-  ObjGroup_RemoveObject(param_1,4);
-  (**(code **)(*DAT_803dd740 + 0x10))(param_1);
-  return;
+  *obj = (u16)*(u8 *)(mapData + 0x18) << 8;
+  obj[0x58] |= 0x2000;
+  *(undefined4 *)(obj + 0x7a) = 0;
+  *(u8 *)((int)obj + 0xad) = *(u8 *)(mapData + 0x19);
+  if (*(s8 *)(*(int *)(obj + 0x28) + 0x55) <= *(s8 *)((int)obj + 0xad)) {
+    *(u8 *)((int)obj + 0xad) = 0;
+  }
+  (*(GroundAnimatorInitAnimFn *)(*lbl_803DCAC0 + 4))(obj, *(undefined4 *)(obj + 0x5c), 0x32);
+  ObjGroup_AddObject((int)obj, 4);
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8017d6cc
+ * Function: wm_column_release
  * EN v1.0 Address: 0x8017D6CC
  * EN v1.0 Size: 100b
  * EN v1.1 Address: 0x8017D92C
@@ -394,25 +409,14 @@ void FUN_8017d680(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017d6cc(void)
+void wm_column_release(void)
 {
-  int iVar1;
-  int iVar2;
-  char in_r8;
-  
-  iVar1 = FUN_80286840();
-  iVar2 = (**(code **)(*DAT_803dd740 + 0xc))(iVar1,(int)in_r8);
-  if (iVar2 != 0) {
-    FUN_8003b818(iVar1);
-  }
-  FUN_8028688c();
-  return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8017d730
+ * Function: wm_column_initialise
  * EN v1.0 Address: 0x8017D730
  * EN v1.0 Size: 880b
  * EN v1.1 Address: 0x8017D9AC
@@ -422,89 +426,14 @@ void FUN_8017d6cc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017d730(int param_1)
+void wm_column_initialise(void)
 {
-  int iVar1;
-  uint uVar2;
-  int iVar3;
-  undefined4 uVar4;
-  double dVar5;
-  int local_28;
-  int local_24;
-  float local_20 [5];
-  
-  uVar4 = *(undefined4 *)(param_1 + 0xb8);
-  local_20[0] = lbl_803E4454;
-  iVar1 = (**(code **)(*DAT_803dd740 + 8))(param_1,*(undefined4 *)(param_1 + 0xb8));
-  if (iVar1 == 0) {
-    if ((*(uint *)(param_1 + 0xf4) & 1) != 0) {
-      iVar1 = FUN_80017b00(&local_24,&local_28);
-      for (; local_24 < local_28; local_24 = local_24 + 1) {
-        iVar3 = *(int *)(iVar1 + local_24 * 4);
-        if (((iVar3 != param_1) && (*(short *)(iVar3 + 0x46) == 499)) &&
-           (dVar5 = (double)FUN_8001771c((float *)(param_1 + 0x18),(float *)(iVar3 + 0x18)),
-           dVar5 < (double)lbl_803E4458)) {
-          iVar3 = *(int *)(*(int *)(iVar1 + local_24 * 4) + 0x4c);
-          if ((int)*(short *)(param_1 + 0x46) == *(char *)(iVar3 + 0x19) + 500) {
-            if ((int)*(short *)(iVar3 + 0x1e) != 0xffffffff) {
-              FUN_80017698((int)*(short *)(iVar3 + 0x1e),1);
-            }
-          }
-          else if ((int)*(short *)(iVar3 + 0x1e) != 0xffffffff) {
-            FUN_80017698((int)*(short *)(iVar3 + 0x1e),0);
-          }
-          *(undefined4 *)(param_1 + 0xc) = *(undefined4 *)(*(int *)(iVar1 + local_24 * 4) + 0xc);
-          *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(*(int *)(iVar1 + local_24 * 4) + 0x10);
-          *(undefined4 *)(param_1 + 0x14) = *(undefined4 *)(*(int *)(iVar1 + local_24 * 4) + 0x14);
-        }
-      }
-    }
-    iVar1 = FUN_80017a98();
-    uVar2 = FUN_80294db4(iVar1);
-    if ((uVar2 & 0x4000) == 0) {
-      (**(code **)(*DAT_803dd740 + 0x24))(uVar4,1);
-      *(uint *)(param_1 + 0xf4) = *(uint *)(param_1 + 0xf4) & 0xfffffffd;
-    }
-    else {
-      (**(code **)(*DAT_803dd740 + 0x24))(uVar4,0);
-      *(uint *)(param_1 + 0xf4) = *(uint *)(param_1 + 0xf4) | 2;
-    }
-    *(uint *)(param_1 + 0xf4) = *(uint *)(param_1 + 0xf4) & 0xfffffffe;
-  }
-  else {
-    if ((*(uint *)(param_1 + 0xf4) & 2) != 0) {
-      iVar1 = FUN_80017b00(&local_24,&local_28);
-      for (; local_24 < local_28; local_24 = local_24 + 1) {
-        iVar3 = *(int *)(iVar1 + local_24 * 4);
-        if (((iVar3 != param_1) && (*(short *)(iVar3 + 0x46) == 499)) &&
-           ((dVar5 = (double)FUN_8001771c((float *)(param_1 + 0x18),(float *)(iVar3 + 0x18)),
-            dVar5 < (double)lbl_803E4458 &&
-            (uVar2 = (uint)*(short *)(*(int *)(*(int *)(iVar1 + local_24 * 4) + 0x4c) + 0x1e),
-            uVar2 != 0xffffffff)))) {
-          FUN_80017698(uVar2,0);
-        }
-      }
-    }
-    iVar1 = FUN_80017a98();
-    ObjGroup_FindNearestObject(0x10,param_1,local_20);
-    uVar2 = FUN_80294db4(iVar1);
-    if (((uVar2 & 0x4000) == 0) || (local_20[0] <= lbl_803E445C)) {
-      (**(code **)(*DAT_803dd740 + 0x24))(uVar4,1);
-    }
-    else {
-      (**(code **)(*DAT_803dd740 + 0x24))(uVar4,0);
-      FUN_8011e868(5);
-      *(uint *)(param_1 + 0xf4) = *(uint *)(param_1 + 0xf4) | 1;
-    }
-    *(uint *)(param_1 + 0xf4) = *(uint *)(param_1 + 0xf4) & 0xfffffffd;
-  }
-  return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_8017daa0
+ * Function: appleontree_func0B
  * EN v1.0 Address: 0x8017DAA0
  * EN v1.0 Size: 160b
  * EN v1.1 Address: 0x8017DCBC
@@ -514,19 +443,22 @@ void FUN_8017d730(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017daa0(short *param_1,int param_2)
+void appleontree_func0B(int obj, float *pos)
 {
-  *param_1 = (ushort)*(byte *)(param_2 + 0x18) << 8;
-  param_1[0x58] = param_1[0x58] | 0x2000;
-  param_1[0x7a] = 0;
-  param_1[0x7b] = 0;
-  *(undefined *)((int)param_1 + 0xad) = *(undefined *)(param_2 + 0x19);
-  if (*(char *)(*(int *)(param_1 + 0x28) + 0x55) <= *(char *)((int)param_1 + 0xad)) {
-    *(undefined *)((int)param_1 + 0xad) = 0;
+  u8 *state = *(u8 **)(obj + 0xb8);
+
+  if (state[0x3a] == 4) {
+    return;
   }
-  (**(code **)(*DAT_803dd740 + 4))(param_1,*(undefined4 *)(param_1 + 0x5c),0x32);
-  ObjGroup_AddObject((int)param_1,4);
-  return;
+  if (state[0x3a] == 5) {
+    return;
+  }
+  if (state[0x3a] == 6) {
+    return;
+  }
+  *(float *)(obj + 0xc) = pos[0];
+  *(float *)(obj + 0x10) = pos[1];
+  *(float *)(obj + 0x14) = pos[2];
 }
 
 /*
@@ -961,16 +893,9 @@ undefined4 FUN_8017e3c0(double param_1,undefined2 *param_2,int param_3)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_8017D374(void) {}
-void fn_8017D378(void) {}
-void wm_column_hitDetect(void) {}
-void wm_column_release(void) {}
-void wm_column_initialise(void) {}
 void appleontree_setScale(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int wm_column_getExtraSize(void) { return 0xa; }
-int wm_column_func08(void) { return 0x0; }
 int appleontree_getExtraSize(void) { return 0x64; }
 
 /* Pattern wrappers. */
