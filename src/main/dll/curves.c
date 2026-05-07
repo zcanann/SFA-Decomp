@@ -4219,6 +4219,44 @@ void RomCurve_initialise(void) {}
 void fn_800E7D98(void) {}
 void fn_800E7D9C(void) {}
 
+/*
+ * --INFO--
+ *
+ * Function: loadSaveSettings
+ * EN v1.0 Address: 0x800E7F44
+ * EN v1.0 Size: 256b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern void setWidescreen(u8 enabled);
+extern void setSubtitlesEnabled(u8 enabled);
+extern void fn_800154A4(u8 value);
+extern void audioSetSoundMode(u8 mode, u8 secondary);
+extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
+extern void **lbl_803DCA68;
+extern void **lbl_803DCA50;
+
+#pragma scheduling off
+#pragma peephole off
+void loadSaveSettings(void)
+{
+  setWidescreen(*((u8 *)&lbl_803A31C4 + 6));
+  setSubtitlesEnabled(*((u8 *)&lbl_803A31C4 + 2));
+  fn_800154A4(*((u8 *)&lbl_803A31C4 + 8));
+  audioSetSoundMode(*((u8 *)&lbl_803A31C4 + 9), 0);
+  (*(void (**)(u8))((char *)*lbl_803DCA68 + 0x50))(*((u8 *)&lbl_803A31C4 + 3));
+  (*(void (**)(u8))((char *)*lbl_803DCA50 + 0x6c))(*((u8 *)&lbl_803A31C4 + 4));
+  audioSetVolumes(*((u8 *)&lbl_803A31C4 + 11), 10, 0, 1, 0);
+  audioSetVolumes(*((u8 *)&lbl_803A31C4 + 10), 10, 1, 0, 0);
+  audioSetVolumes(*((u8 *)&lbl_803A31C4 + 12), 10, 0, 0, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* Pattern wrappers. */
 extern u32 gRomCurveCount;
 void curves_initialise(void) { gRomCurveCount = 0x0; }
