@@ -1136,12 +1136,12 @@ void fn_80156B0C(uint param_9,int param_10)
   
   *(undefined *)(*(int *)(param_9 + 0x54) + 0x6e) = 10;
   *(undefined *)(*(int *)(param_9 + 0x54) + 0x6f) = 1;
-  if (((*(uint *)(param_10 + 0x2dc) & 0x80000000) != 0) && (*(byte *)(param_10 + 0x33a) < 2)) {
+  if (((*(uint *)(param_10 + 0x2dc) & 0x80000000) != 0) && (*(byte *)(param_10 + 0x33a) <= 1)) {
     *(undefined *)(param_10 + 0x33a) = 1;
     *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) | 0x40000000;
   }
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
-    *(char *)(param_10 + 0x33a) = *(char *)(param_10 + 0x33a) + '\x01';
+    *(byte *)(param_10 + 0x33a) = *(byte *)(param_10 + 0x33a) + 1;
     if (10 < *(byte *)(param_10 + 0x33a)) {
       *(undefined *)(param_10 + 0x33a) = 3;
     }
