@@ -417,7 +417,7 @@ void wm_column_init(short *obj, int mapData)
   *obj = (s16)(*(u8 *)(mapData + 0x18) << 8);
   *(u16 *)((int)obj + 0xb0) |= 0x2000;
   *(undefined4 *)((int)obj + 0xf4) = 0;
-  *(s8 *)((int)obj + 0xad) = *(s8 *)(mapData + 0x19);
+  *(s8 *)((int)obj + 0xad) = (s8)(int)*(s8 *)(mapData + 0x19);
   if (*(s8 *)((int)obj + 0xad) >= *(s8 *)(*(int *)((int)obj + 0x50) + 0x55)) {
     *(u8 *)((int)obj + 0xad) = 0;
   }
