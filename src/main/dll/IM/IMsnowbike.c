@@ -41,7 +41,7 @@ extern f32 lbl_803E6158;
 /*
  * --INFO--
  *
- * Function: FUN_801d8d20
+ * Function: sh_levelcontrol_update
  * EN v1.0 Address: 0x801D8D20
  * EN v1.0 Size: 560b
  * EN v1.1 Address: 0x801D90F0
@@ -51,7 +51,7 @@ extern f32 lbl_803E6158;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d8d20(int param_1,uint *param_2)
+void sh_levelcontrol_update(int param_1,uint *param_2)
 {
   uint uVar1;
   int iVar2;
