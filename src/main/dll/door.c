@@ -87,9 +87,12 @@ void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject *obj,
       if (lbl_803E648C != obj->velZ) {
         obj->z = obj->z + deltaZ;
       }
-      obj->velX = lbl_803E648C;
-      obj->velY = lbl_803E648C;
-      obj->velZ = lbl_803E648C;
+      {
+        f32 zero = lbl_803E648C;
+        obj->velX = zero;
+        obj->velY = zero;
+        obj->velZ = zero;
+      }
       Sfx_PlayFromObject(obj,0x1d0);
       return;
     }
