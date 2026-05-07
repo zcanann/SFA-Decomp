@@ -772,7 +772,7 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
   tableIndex = 0;
   entry = Expgfx_GetTableEntry(0);
   entryBase = entry;
-  for (; tableIndex < EXPGFX_POOL_COUNT; tableIndex++) {
+  for (; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++) {
     if (((entry->refCount != 0 && (entry->textureOrResource == textureOrResource)) &&
         (entry->key0 == key0)) && (entry->key1 == key1)) {
       refCount = &gExpgfxTableEntries[tableIndex].refCount;
@@ -787,7 +787,7 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
   }
 
   freeIndex = 0;
-  for (; freeIndex < EXPGFX_POOL_COUNT; freeIndex++) {
+  for (; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeIndex++) {
     if (entryBase->refCount == 0) {
       gExpgfxTableEntries[freeIndex].refCount = 1;
       gExpgfxTableEntries[freeIndex].textureOrResource = textureOrResource;
@@ -984,14 +984,16 @@ void expgfx_renderSourcePools(int sourceId,int sourceMode)
   poolIndex = 0;
   do {
     if (((*poolActiveCounts != '\0') && ((u32)*poolSourceIds == (u32)sourceId)) &&
-       ((int)*poolSourceModes == sourceMode + 1)) {
-      boundsTemplate = (ExpgfxBounds *)(gExpgfxStaticData + (uint)*poolBoundsTemplateIds * 0x18);
+       ((int)*poolSourceModes == sourceMode + EXPGFX_POOL_SOURCE_MODE_SOURCE_OFFSET)) {
+      boundsTemplate =
+          (ExpgfxBounds *)(gExpgfxStaticData +
+                           (uint)*poolBoundsTemplateIds * EXPGFX_BOUNDS_TEMPLATE_SIZE);
       uVar1 = fn_8005E97C((double)(poolBounds->minX - playerMapOffsetX),
                            (double)(poolBounds->maxX - playerMapOffsetX),
                            (double)poolBounds->minY,(double)poolBounds->maxY,
                            (double)(poolBounds->minZ - playerMapOffsetZ),
                            (double)(poolBounds->maxZ - playerMapOffsetZ),boundsTemplate);
-      if ((uVar1 & 0xff) != 0) {
+      if ((uVar1 & EXPGFX_BYTE_VALUE_MASK) != 0) {
         expgfx_renderPool(*slotPoolBases,poolIndex);
       }
     }
@@ -1067,8 +1069,11 @@ void expgfx_queueStandalonePools(void)
   poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
   slotPoolBases = (uint *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
   do {
-    if ((*poolActiveCounts != '\0') && (*poolSourceModes == 0)) {
-      boundsTemplate = (ExpgfxBounds *)(gExpgfxStaticData + (uint)*poolBoundsTemplateIds * 0x18);
+    if ((*poolActiveCounts != '\0') &&
+        (*poolSourceModes == EXPGFX_POOL_SOURCE_MODE_STANDALONE)) {
+      boundsTemplate =
+          (ExpgfxBounds *)(gExpgfxStaticData +
+                           (uint)*poolBoundsTemplateIds * EXPGFX_BOUNDS_TEMPLATE_SIZE);
       if (fn_8005E97C((double)(poolBounds->minX - playerMapOffsetX),
                       (double)(poolBounds->maxX - playerMapOffsetX),
                       (double)poolBounds->minY,(double)poolBounds->maxY,
@@ -1089,7 +1094,8 @@ void expgfx_queueStandalonePools(void)
         }
         PSMTXMultVec(currentMatrix,queuePosition,queuePosition);
         if (*poolSourceIds != 0) {
-          queuePosition[2] = queuePosition[2] - (float)(*poolSlotTypeIds & 0x21);
+          queuePosition[2] =
+              queuePosition[2] - (float)(*poolSlotTypeIds & EXPGFX_QUEUE_DEPTH_SLOT_TYPE_MASK);
         }
         fn_8005DE94(*slotPoolBases,poolIndex,queuePosition);
       }
