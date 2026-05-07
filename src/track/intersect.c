@@ -1471,11 +1471,12 @@ void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
 {
     extern void Camera_RebuildProjectionMatrix(void);
     extern Mtx hudMatrix;
-    extern f32 lbl_803DFB5C;
+    extern f32 lbl_803DEEDC;
     extern void GXSetZMode();
     extern u8 lbl_803DD012;
     extern int lbl_803DD014;
     extern u8 lbl_803DD018;
+    extern u8 lbl_803DB679;
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
@@ -1492,7 +1493,7 @@ void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
         lbl_803DD01A = 1;
     }
     GXSetBlendMode(1, 4, 5, 5);
-    color[3] = (u8)(((s32)color[3] * (s32)lbl_803DC2D9) >> 8);
+    color[3] = (u8)(((s32)color[3] * (s32)lbl_803DB679) >> 8);
     GXSetTevKColor(0, *(GXColor*)color);
     GXSetTevKAlphaSel(0, 0x1C);
     GXSetTevKColorSel(0, 0xC);
@@ -1515,29 +1516,29 @@ void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
     GXWGFifo.s16 = x1 << 2;
     GXWGFifo.s16 = y1 << 2;
     GXWGFifo.s16 = -8;
-    GXWGFifo.f32 = lbl_803DFB5C;
-    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DEEDC;
+    GXWGFifo.f32 = lbl_803DEEDC;
 
     GXWGFifo.u8 = 0x3C;
     GXWGFifo.s16 = x2 << 2;
     GXWGFifo.s16 = y1 << 2;
     GXWGFifo.s16 = -8;
-    GXWGFifo.f32 = lbl_803DFB5C;
-    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DEEDC;
+    GXWGFifo.f32 = lbl_803DEEDC;
 
     GXWGFifo.u8 = 0x3C;
     GXWGFifo.s16 = x2 << 2;
     GXWGFifo.s16 = y2 << 2;
     GXWGFifo.s16 = -8;
-    GXWGFifo.f32 = lbl_803DFB5C;
-    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DEEDC;
+    GXWGFifo.f32 = lbl_803DEEDC;
 
     GXWGFifo.u8 = 0x3C;
     GXWGFifo.s16 = x1 << 2;
     GXWGFifo.s16 = y2 << 2;
     GXWGFifo.s16 = -8;
-    GXWGFifo.f32 = lbl_803DFB5C;
-    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DEEDC;
+    GXWGFifo.f32 = lbl_803DEEDC;
 
     Camera_RebuildProjectionMatrix();
 }
@@ -1571,14 +1572,15 @@ void fn_80075684(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 
     extern u8 lbl_803DD018;
     extern u8 lbl_803DB679;
     f32 scale = hudScale;
-    f32 fx1 = scale * x1;
-    f32 fy1 = scale * y1;
-    f32 fx2 = scale * x2;
-    f32 fy2 = scale * y2;
-    f32 fx3 = scale * x3;
-    f32 fy3 = scale * y3;
-    f32 fx4 = scale * x4;
-    f32 fy4 = scale * y4;
+    f32 fy4, fx4, fy3, fx3, fy2, fx2, fy1, fx1;
+    fx1 = scale * x1;
+    fy1 = scale * y1;
+    fx2 = scale * x2;
+    fy2 = scale * y2;
+    fx3 = scale * x3;
+    fy3 = scale * y3;
+    fx4 = scale * x4;
+    fy4 = scale * y4;
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
@@ -1667,18 +1669,20 @@ void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
     extern void Camera_RebuildProjectionMatrix(void);
     extern Mtx hudMatrix;
     extern f32 hudScale;
-    extern f32 lbl_803DFB5C;
+    extern f32 lbl_803DEEDC;
     extern void GXSetZMode();
     extern u8 lbl_803DD012;
     extern int lbl_803DD014;
     extern u8 lbl_803DD018;
+    extern u8 lbl_803DB679;
     f32 scale = hudScale;
-    f32 fx1 = scale * x1;
-    f32 fy1 = scale * y1;
-    f32 fx2 = scale * x2;
-    f32 fy2 = scale * y2;
-    f32 fx3 = scale * x3;
-    f32 fy3 = scale * y3;
+    f32 fy3, fx3, fy2, fx2, fy1, fx1;
+    fx1 = scale * x1;
+    fy1 = scale * y1;
+    fx2 = scale * x2;
+    fy2 = scale * y2;
+    fx3 = scale * x3;
+    fy3 = scale * y3;
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
@@ -1695,7 +1699,7 @@ void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
         lbl_803DD01A = 1;
     }
     GXSetBlendMode(1, 4, 5, 5);
-    color[3] = (u8)(((s32)color[3] * (s32)lbl_803DC2D9) >> 8);
+    color[3] = (u8)(((s32)color[3] * (s32)lbl_803DB679) >> 8);
     GXSetTevKColor(0, *(GXColor*)color);
     GXSetTevKAlphaSel(0, 0x1C);
     GXSetTevKColorSel(0, 0xC);
@@ -1718,22 +1722,22 @@ void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
     GXWGFifo.s16 = (s16)fx1;
     GXWGFifo.s16 = (s16)fy1;
     GXWGFifo.s16 = -8;
-    GXWGFifo.f32 = lbl_803DFB5C;
-    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DEEDC;
+    GXWGFifo.f32 = lbl_803DEEDC;
 
     GXWGFifo.u8 = 0x3C;
     GXWGFifo.s16 = (s16)fx2;
     GXWGFifo.s16 = (s16)fy2;
     GXWGFifo.s16 = -8;
-    GXWGFifo.f32 = lbl_803DFB5C;
-    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DEEDC;
+    GXWGFifo.f32 = lbl_803DEEDC;
 
     GXWGFifo.u8 = 0x3C;
     GXWGFifo.s16 = (s16)fx3;
     GXWGFifo.s16 = (s16)fy3;
     GXWGFifo.s16 = -8;
-    GXWGFifo.f32 = lbl_803DFB5C;
-    GXWGFifo.f32 = lbl_803DFB5C;
+    GXWGFifo.f32 = lbl_803DEEDC;
+    GXWGFifo.f32 = lbl_803DEEDC;
 
     Camera_RebuildProjectionMatrix();
 }
