@@ -6,7 +6,7 @@ extern int fn_80284638(int stream, void *out);
 extern int fn_80284038(int dest, int src, u32 size, int flag, undefined4 param_5, undefined4 param_6);
 extern void DCStoreRange(void *addr, u32 nBytes);
 
-extern u32 lbl_803CC1E0[];
+extern u8 lbl_803CC1E0[];
 extern int lbl_803DE344;
 
 /*
@@ -17,7 +17,8 @@ extern int lbl_803DE344;
  * EN v1.0 Size: 52b
  */
 void hwRemoveInput(u32 idx) {
-    fn_8027F0C8(&lbl_803CC1E0[(idx & 0xff) * 0x2f]);
+    u32 offset = (idx & 0xff) * 0xbc;
+    fn_8027F0C8(lbl_803CC1E0 + offset);
 }
 
 /*
