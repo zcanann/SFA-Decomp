@@ -18,5 +18,7 @@ uint FUN_80282820(int param_1);
 uint FUN_80282828(int param_1);
 uint FUN_80282830(uint param_1,uint param_2,uint param_3,uint param_4);
 uint FUN_80282838(uint param_1,uint param_2,uint param_3,uint param_4);
+u16 inpGetPostAuxB(int state);
+u16 inpGetTremolo(int state);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802827D4_H_ */

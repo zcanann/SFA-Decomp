@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_802827D4.h"
 
-extern u16 fn_80282070(void *state, void *slot, u8 a, u8 b);
+extern u16 _GetInputValue(void *state, void *slot, u8 a, u8 b);
 extern int fn_8026F584(int x);
 
 extern u32 lbl_803DC610;
@@ -12,14 +12,14 @@ extern s16 lbl_80330028[];
  *
  * EN v1.1 Address: 0x802827C8, size 72b
  */
-u16 fn_802827C8(int state)
+u16 inpGetPostAuxB(int state)
 {
     u32 flags = *(u32 *)(state + 0x214);
     if ((flags & 0x800) == 0) {
         return *(u16 *)(state + 0x3c4);
     }
     *(u32 *)(state + 0x214) = flags & ~0x800;
-    return fn_80282070((void *)state, (void *)(state + 0x3a4),
+    return _GetInputValue((void *)state, (void *)(state + 0x3a4),
                        *(u8 *)(state + 0x121), *(u8 *)(state + 0x122));
 }
 
@@ -28,14 +28,14 @@ u16 fn_802827C8(int state)
  *
  * EN v1.1 Address: 0x80282810, size 72b
  */
-u16 fn_80282810(int state)
+u16 inpGetTremolo(int state)
 {
     u32 flags = *(u32 *)(state + 0x214);
     if ((flags & 0x1000) == 0) {
         return *(u16 *)(state + 0x3e8);
     }
     *(u32 *)(state + 0x214) = flags & ~0x1000;
-    return fn_80282070((void *)state, (void *)(state + 0x3c8),
+    return _GetInputValue((void *)state, (void *)(state + 0x3c8),
                        *(u8 *)(state + 0x121), *(u8 *)(state + 0x122));
 }
 
