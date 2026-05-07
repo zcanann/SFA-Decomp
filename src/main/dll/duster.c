@@ -349,7 +349,7 @@ void fn_80155884(int *param_9,int param_10)
 {
   uint uVar1;
   
-  if (*(char *)(param_10 + 0x33a) == '\0') {
+  if (*(byte *)(param_10 + 0x33a) == 0) {
     fn_801554B4(param_9,param_10);
   }
   else if ((*(short *)(*(int *)(param_10 + 0x29c) + 0x44) == 1) &&
@@ -386,7 +386,7 @@ void fn_80155948(int *param_9,int param_10)
   ushort local_18 [2];
   float afStack_14 [3];
   
-  if (*(char *)(param_10 + 0x33a) == '\0') {
+  if (*(byte *)(param_10 + 0x33a) == 0) {
     fn_801554B4(param_9,param_10);
   }
   else if ((*(short *)(*(int *)(param_10 + 0x29c) + 0x44) == 1) &&
@@ -556,19 +556,19 @@ void fn_80155CF8(int param_9,int param_10)
   bool bVar1;
   float local_18 [4];
   
-  (**(code **)(*gSHthorntailAnimationInterface + 0x14))(local_18);
-  if ((local_18[0] < lbl_803E3708) || (lbl_803E370C < local_18[0])) {
-    bVar1 = false;
-  }
-  else {
+  (*(code *)(*(int *)gSHthorntailAnimationInterface + 0x14))(local_18);
+  if ((local_18[0] >= lbl_803E3708) && (local_18[0] <= lbl_803E370C)) {
     bVar1 = true;
   }
-  if ((bVar1) && (*(char *)(param_10 + 0x33a) == '\0')) {
+  else {
+    bVar1 = false;
+  }
+  if ((bVar1) && (*(byte *)(param_10 + 0x33a) == 0)) {
     *(undefined *)(param_10 + 0x33a) = 1;
     *(uint *)(param_10 + 0x2e4) = *(uint *)(param_10 + 0x2e4) | 0x10000;
     fn_8014D08C(param_9,param_10,1,lbl_803E3710,0,0);
   }
-  else if ((!bVar1) && (*(char *)(param_10 + 0x33a) == '\x02')) {
+  else if ((!bVar1) && (*(byte *)(param_10 + 0x33a) == 2)) {
     *(undefined *)(param_10 + 0x33a) = 1;
     *(uint *)(param_10 + 0x2e4) = *(uint *)(param_10 + 0x2e4) | 0x10000;
     fn_8014D08C(param_9,param_10,3,lbl_803E3710,0,0);
@@ -850,7 +850,7 @@ void fn_8015625C(undefined8 param_1,double param_2,double param_3,undefined8 par
      ((*(uint *)(param_10 + 0x2dc) & 0x8000000) != 0)) {
     *(undefined *)(param_10 + 0x33a) = 1;
   }
-  if ((*(char *)(param_10 + 0x33a) == '\0') || (dVar5 <= (double)lbl_803E3730)) {
+  if ((*(byte *)(param_10 + 0x33a) == 0) || (dVar5 <= (double)lbl_803E3730)) {
     *(undefined *)(param_10 + 0x33a) = 0;
     if (lbl_803E3774 < *(float *)(param_10 + 0x308)) {
       *(float *)(param_10 + 0x308) =
