@@ -218,15 +218,14 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
 {
   s16 *moveEntry;
   int iVar3;
-  s16 firstEntryIndex;
   s16 *moveEntryTable;
-  
+  s16 firstEntryIndex;
+
   moveEntryTable = (s16 *)((ObjAnimDef *)((ObjAnimComponent *)objAnim)->modelInstance)->hitReactMoveTable;
   hitState->activeEntryCount = 0;
   if (moveEntryTable != (s16 *)0x0) {
     iVar3 = 0;
-    moveEntry = moveEntryTable;
-    while (*moveEntry != -1) {
+    for (moveEntry = moveEntryTable; *moveEntry != -1; moveEntry = moveEntry + 3, iVar3 = iVar3 + 3) {
       if (moveId == *moveEntry) {
         firstEntryIndex = moveEntryTable[iVar3 + 1];
         hitState->activeEntryCount = moveEntryTable[iVar3 + 2];
@@ -240,8 +239,6 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
         fn_80048F48(0x41,hitState->entries,(int)firstEntryIndex,(int)hitState->activeEntryCount);
         return;
       }
-      moveEntry = moveEntry + 3;
-      iVar3 = iVar3 + 3;
     }
   }
   return;
@@ -2909,8 +2906,8 @@ void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *
 int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3)
 {
   int iVar1;
-  float dVar3;
   float dVar2;
+  float dVar3;
 
   dVar3 = *(float *)(param_1 + 6) - *(float *)(param_2 + 0xc);
   dVar2 = *(float *)(param_1 + 10) - *(float *)(param_2 + 0x14);
@@ -2918,7 +2915,7 @@ int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3)
   if (param_3 != (float *)0x0) {
     *param_3 = sqrtf(dVar3 * dVar3 + dVar2 * dVar2);
   }
-  iVar1 = (int)(short)iVar1 - (uint)(ushort)*(short *)param_1;
+  iVar1 = (int)(short)iVar1 - (uint)*(short *)param_1;
   if (0x8000 < iVar1) {
     iVar1 = iVar1 + -0xffff;
   }
