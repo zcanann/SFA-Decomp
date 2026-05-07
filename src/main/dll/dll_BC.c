@@ -1,89 +1,62 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_BC.h"
 
-extern void* FUN_800069a8();
-extern double FUN_800069f8();
-extern undefined4 FUN_80017814();
-extern undefined4 FUN_801018a8();
+extern u8 *pCamera;
+extern s16 lbl_803DB990;
+extern int lbl_803DD518;
 
-extern undefined4 gCamcontrolSavedActionMode;
-extern undefined4 gCamcontrolSavedActionFlags;
-extern undefined4 gCamcontrolSavedActionId;
-extern undefined gCamcontrolQueuedActionMode;
-extern undefined4 gCamcontrolQueuedActionBlendFrames;
-extern undefined gCamcontrolQueuedActionPending;
-extern void *gCamcontrolQueuedActionData;
-extern undefined4 gCamcontrolCurrentActionMode;
-extern undefined4 gCamcontrolCurrentActionFlags;
-extern int gCamcontrolQueuedActionSource;
-extern undefined4 gCamcontrolCurrentActionId;
-extern undefined4* gCamcontrolState;
-extern f64 DOUBLE_803e22d0;
-extern f32 lbl_803E22AC;
-extern f32 lbl_803E22B0;
+extern int fn_80134BE8(void);
+extern void camcontrol_updateTargetReticle(int a, int b, int c, int d, int e, int f);
+extern void fn_8011F3EC(int kind);
+
+#pragma scheduling off
 
 /*
  * --INFO--
  *
- * Function: camcontrol_applyQueuedAction
+ * Function: fn_8010210C
  * EN v1.0 Address: 0x8010210C
- * EN v1.0 Size: 400b
- * EN v1.1 Address: 0x80102158
- * EN v1.1 Size: 400b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 152b
  */
-void camcontrol_applyQueuedAction(void)
+void fn_8010210C(int arg1, int arg2, int arg3, int arg4)
 {
-  float fVar1;
-  undefined2 *puVar2;
-  double dVar3;
-  
-  if (gCamcontrolQueuedActionPending != '\0') {
-    if ((int)gCamcontrolQueuedActionBlendFrames < 2) {
-      *(float *)(gCamcontrolState + 0x7a) = lbl_803E22B0;
-      *(undefined *)((int)gCamcontrolState + 0x13f) = 0;
-    }
-    else {
-      fVar1 = lbl_803E22AC /
-              (float)((double)CONCAT44(0x43300000,gCamcontrolQueuedActionBlendFrames ^ 0x80000000) -
-                     DOUBLE_803e22d0);
-      if ((fVar1 <= lbl_803E22B0) || (lbl_803E22AC < fVar1)) {
-        fVar1 = lbl_803E22AC;
-      }
-      *(float *)(gCamcontrolState + 0x7a) = lbl_803E22AC;
-      *(float *)(gCamcontrolState + 0x7c) = fVar1;
-      *(undefined *)((int)gCamcontrolState + 0x13f) = gCamcontrolQueuedActionMode;
-    }
-    puVar2 = FUN_800069a8();
-    if (lbl_803E22AC == *(float *)(gCamcontrolState + 0x7a)) {
-      *(undefined4 *)(gCamcontrolState + 0x86) = *(undefined4 *)(puVar2 + 6);
-      *(undefined4 *)(gCamcontrolState + 0x88) = *(undefined4 *)(puVar2 + 8);
-      *(undefined4 *)(gCamcontrolState + 0x8a) = *(undefined4 *)(puVar2 + 10);
-      gCamcontrolState[0x83] = *puVar2;
-      gCamcontrolState[0x84] = puVar2[1];
-      gCamcontrolState[0x85] = puVar2[2];
-      dVar3 = FUN_800069f8();
-      *(float *)(gCamcontrolState + 0x8c) = (float)dVar3;
-    }
-    else {
-      *gCamcontrolState = *puVar2;
-      gCamcontrolState[1] = puVar2[1];
-      gCamcontrolState[2] = puVar2[2];
-      dVar3 = FUN_800069f8();
-      *(float *)(gCamcontrolState + 0x5a) = (float)dVar3;
-    }
-    gCamcontrolSavedActionId = gCamcontrolCurrentActionId;
-    gCamcontrolSavedActionFlags = gCamcontrolCurrentActionFlags;
-    gCamcontrolSavedActionMode = gCamcontrolCurrentActionMode;
-    FUN_801018a8(gCamcontrolQueuedActionSource & 0xffff,(undefined4)gCamcontrolQueuedActionData);
-    gCamcontrolQueuedActionPending = '\0';
-    if (gCamcontrolQueuedActionData != (void *)0x0) {
-      FUN_80017814((uint)gCamcontrolQueuedActionData);
-      gCamcontrolQueuedActionData = (void *)0x0;
-    }
+  if (fn_80134BE8() == 0) {
+    lbl_803DB990 = -1;
+    camcontrol_updateTargetReticle(*(int *)(pCamera + 0x128), lbl_803DD518 == 0x49,
+                                   arg1, arg2, arg3, arg4);
+    *(int *)(pCamera + 0x120) = 0;
   }
-  return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: camcontrol_playTargetTypeSfx
+ * EN v1.0 Address: 0x801021A4
+ * EN v1.0 Size: 168b
+ */
+void camcontrol_playTargetTypeSfx(void)
+{
+  u8 *p = (u8 *)*(int *)(pCamera + 0x124);
+  int kind;
+
+  if (fn_80134BE8() != 0) return;
+  if (p == NULL) return;
+
+  {
+    u8 *base = (u8 *)*(int *)(p + 0x78);
+    base = base + (int)*(u8 *)(p + 0xE4) * 5;
+    kind = *(base + 4) & 0xF;
+  }
+  if (kind == 6) {
+    if (*(s16 *)(p + 0x44) == 6) {
+      fn_8011F3EC(8);
+    } else {
+      fn_8011F3EC(9);
+    }
+  } else if (kind == 2) {
+    fn_8011F3EC(7);
+  } else if (kind == 5) {
+    fn_8011F3EC(0xF);
+  }
 }
