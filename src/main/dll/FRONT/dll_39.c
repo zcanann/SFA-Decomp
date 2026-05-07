@@ -410,7 +410,7 @@ void n_attractmode_prepareMovie(void)
         VIWaitForRetrace();
         lbl_803DD64D = NATTRACTMODE_MOVIE_RETRACE_COUNTDOWN;
         lbl_803DD698 = 0;
-        if (lbl_803DD614 == NATTRACTMODE_MOVIE_STATE_RELEASED) {
+        if ((int)lbl_803DD614 == NATTRACTMODE_MOVIE_STATE_RELEASED) {
           fn_80117B68(NATTRACTMODE_MOVIE_START_FRAME_ALTERNATE,1);
         }
         else {
