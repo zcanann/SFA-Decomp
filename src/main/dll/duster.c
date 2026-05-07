@@ -520,12 +520,9 @@ void fn_80155B10(undefined8 param_1,undefined8 param_2,double param_3,undefined8
     local_38 = *(float *)(iVar2 + 0xc);
     local_34 = lbl_803E36E4 + *(float *)(iVar2 + 0x10);
     local_30 = *(float *)(iVar2 + 0x14);
-    uStack_1c = randomGetRange(0xfffffff6,10);
-    uStack_1c = uStack_1c ^ 0x80000000;
-    local_20 = 0x43300000;
     dVar5 = (double)(lbl_803E36E8 *
                     (lbl_803E36F0 *
-                     (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e3700) +
+                     (float)(int)randomGetRange(0xfffffff6,10) +
                     lbl_803E36EC));
     iVar2 = fn_80169EF4(dVar5,(double)lbl_803E36F4,&local_2c,&local_38,'\x01');
     fn_80293018(iVar2,&local_40,&local_3c);
@@ -862,12 +859,12 @@ void fn_8015625C(undefined8 param_1,double param_2,double param_3,undefined8 par
     if ((*(uint *)(param_10 + 0x2dc) & 0x600) == 0) {
       uVar2 = randomGetRange(600,0x352);
       *(float *)(param_10 + 0x328) =
-           (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3738);
+           (float)(int)uVar2;
     }
     else {
       uVar2 = randomGetRange(0x96,0xfa);
       *(float *)(param_10 + 0x328) =
-           (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3738);
+           (float)(int)uVar2;
     }
     Sfx_PlayFromObject((uint)param_9,0x262);
   }
@@ -967,11 +964,11 @@ void fn_8015652C(undefined8 param_1,double param_2,double param_3,undefined8 par
   if ((float)param_10[0xca] <= lbl_803E3730) {
     if ((param_10[0xb7] & 0x600) == 0) {
       uVar2 = randomGetRange(600,0x352);
-      param_10[0xca] = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3738);
+      param_10[0xca] = (float)(int)uVar2;
     }
     else {
       uVar2 = randomGetRange(0x96,0xfa);
-      param_10[0xca] = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3738);
+      param_10[0xca] = (float)(int)uVar2;
     }
     Sfx_PlayFromObject((uint)param_9,0x262);
   }
@@ -1079,7 +1076,7 @@ void fn_801568A8(undefined4 param_1,int param_2)
   *(float *)(param_2 + 0x31c) = fVar1;
   uVar2 = randomGetRange(0x78,0x1e0);
   *(float *)(param_2 + 0x328) =
-       (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3738);
+       (float)(int)uVar2;
   return;
 }
 
