@@ -144,8 +144,18 @@ struct NAttractModeMovieDims {
 #define NATTRACTMODE_PREPARE_FAIL_LINE 0x2FB
 #define NATTRACTMODE_MOVIE_HEAP 0x18
 #define NATTRACTMODE_WORK_BUFFER_SIZE 0x4000
+#define NATTRACTMODE_MOVIE_STATE_PREPARED 2
+#define NATTRACTMODE_MOVIE_STATE_RELEASED 4
+#define NATTRACTMODE_MOVIE_BUSY 1
+#define NATTRACTMODE_MOVIE_READY 0
+#define NATTRACTMODE_OPTIONAL_BUFFER_SIZE_NONE 0
+#define NATTRACTMODE_MOVIE_SETUP_ID 2
+#define NATTRACTMODE_MOVIE_START_FRAME_DEFAULT 0
+#define NATTRACTMODE_MOVIE_START_FRAME_ALTERNATE 100
+#define NATTRACTMODE_MOVIE_RETRACE_COUNTDOWN 10
 #define sNAttractModeSourceFile s_n_attractmode_c_8031a38c
 #define sNAttractModeFailToPrepare s_Fail_to_prepare_8031a39c
+#define sNAttractModeMoviePath s_starfox_thp_8031a32c
 
 /*
  * --INFO--
@@ -236,7 +246,7 @@ void n_attractmode_releaseMovieBuffers(void)
 {
   int freeDelay;
   
-  if (lbl_803DD610 == 2) {
+  if (lbl_803DD610 == NATTRACTMODE_MOVIE_STATE_PREPARED) {
     FUN_80118470();
     FUN_80118fc8();
     FUN_8011943c();
@@ -270,8 +280,8 @@ void n_attractmode_releaseMovieBuffers(void)
       lbl_803DD61C = 0;
     }
     mmSetFreeDelay(freeDelay);
-    lbl_803DD610 = 4;
-    lbl_803DD619 = 1;
+    lbl_803DD610 = NATTRACTMODE_MOVIE_STATE_RELEASED;
+    lbl_803DD619 = NATTRACTMODE_MOVIE_BUSY;
   }
   return;
 }
@@ -300,10 +310,10 @@ void n_attractmode_prepareMovie(void)
   int workBufferSize;
   uint local_14 [3];
   
-  lbl_803DD619 = 1;
-  iVar1 = FUN_80119478(2);
+  lbl_803DD619 = NATTRACTMODE_MOVIE_BUSY;
+  iVar1 = FUN_80119478(NATTRACTMODE_MOVIE_SETUP_ID);
   if (iVar1 != 0) {
-    iVar1 = FUN_80119000(s_starfox_thp_8031a32c,0);
+    iVar1 = FUN_80119000(sNAttractModeMoviePath,NATTRACTMODE_MOVIE_START_FRAME_DEFAULT);
     if (iVar1 == 0) {
       FUN_8011943c();
     }
@@ -316,7 +326,7 @@ void n_attractmode_prepareMovie(void)
       lbl_803DD630 = mmAlloc(local_18,NATTRACTMODE_MOVIE_HEAP,0);
       lbl_803DD62C = mmAlloc(local_1c,NATTRACTMODE_MOVIE_HEAP,0);
       lbl_803DD628 = mmAlloc(local_20,NATTRACTMODE_MOVIE_HEAP,0);
-      if (local_24 == 0) {
+      if (local_24 == NATTRACTMODE_OPTIONAL_BUFFER_SIZE_NONE) {
         lbl_803DD624 = 0;
       }
       else {
@@ -325,7 +335,8 @@ void n_attractmode_prepareMovie(void)
       lbl_803DD620 = mmAlloc(workBufferSize,NATTRACTMODE_MOVIE_HEAP,0);
       lbl_803DD61C = mmAlloc(NATTRACTMODE_WORK_BUFFER_SIZE,NATTRACTMODE_MOVIE_HEAP,0);
       if (((((lbl_803DD634 == 0) || (lbl_803DD630 == 0)) || (lbl_803DD62C == 0)) ||
-          ((lbl_803DD628 == 0 || ((lbl_803DD624 == 0 && (local_24 != 0)))))) ||
+          ((lbl_803DD628 == 0 ||
+           ((lbl_803DD624 == 0 && (local_24 != NATTRACTMODE_OPTIONAL_BUFFER_SIZE_NONE)))))) ||
          ((lbl_803DD620 == 0 || (lbl_803DD61C == 0)))) {
         FUN_8011943c();
         freeDelay = mmSetFreeDelay(0);
@@ -365,7 +376,7 @@ void n_attractmode_prepareMovie(void)
         fn_80022D58(1);
       }
       else {
-        lbl_803DD619 = 0;
+        lbl_803DD619 = NATTRACTMODE_MOVIE_READY;
         DCInvalidateRange(lbl_803DD634,local_14[0]);
         DCInvalidateRange(lbl_803DD630,local_18);
         DCInvalidateRange(lbl_803DD62C,local_1c);
@@ -383,15 +394,15 @@ void n_attractmode_prepareMovie(void)
                   sNAttractModeFailToPrepare);
         }
         FUN_80118524();
-        lbl_803DD610 = 2;
+        lbl_803DD610 = NATTRACTMODE_MOVIE_STATE_PREPARED;
         VIWaitForRetrace();
-        lbl_803DD64D = 10;
+        lbl_803DD64D = NATTRACTMODE_MOVIE_RETRACE_COUNTDOWN;
         lbl_803DD698 = 0;
-        if (lbl_803DD614 == 4) {
-          FUN_80117c30(100,1);
+        if (lbl_803DD614 == NATTRACTMODE_MOVIE_STATE_RELEASED) {
+          FUN_80117c30(NATTRACTMODE_MOVIE_START_FRAME_ALTERNATE,1);
         }
         else {
-          FUN_80117c30(0,1);
+          FUN_80117c30(NATTRACTMODE_MOVIE_START_FRAME_DEFAULT,1);
         }
       }
     }
