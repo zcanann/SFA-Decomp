@@ -39,10 +39,13 @@ void fn_8027BDA8(void)
 int fn_8027BDE0(void)
 {
     int i;
+    int offset;
     salFree((int)lbl_803DE338);
+    offset = 0;
     for (i = 0; (u8)i < lbl_803DE37D; i++) {
-        salFree(*(int *)(lbl_803DE344 + i * 0xf4));
-        salFree(*(int *)(lbl_803DE344 + i * 0xf4 + 4));
+        salFree(*(int *)(lbl_803DE344 + offset));
+        salFree(*(int *)(lbl_803DE344 + offset + 4));
+        offset += 0xf4;
     }
     for (i = 0; (u8)i < lbl_803DE37C; i++) {
         salFree(*(int *)(&lbl_803CC1E0[i][0]));
