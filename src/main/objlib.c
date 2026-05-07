@@ -1208,8 +1208,8 @@ int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *out
   int hitCount;
   ObjHitsPriorityState *hitState;
   int hitSlot;
-  char bestHitSlot;
   char bestPriority;
+  char bestHitSlot;
 
   hitState = *(ObjHitsPriorityState **)(obj + 0x54);
   if (hitState != 0) {
@@ -1217,17 +1217,12 @@ int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *out
     if (hitCount != 0) {
       bestPriority = '\x7f';
       bestHitSlot = -1;
-      hitSlot = 0;
-      if (0 < hitCount) {
-        do {
-          hitPriority = hitState->priorities[hitSlot];
-          if (hitPriority < bestPriority) {
-            bestHitSlot = (char)hitSlot;
-            bestPriority = hitPriority;
-          }
-          hitSlot = hitSlot + 1;
-          hitCount = hitCount + -1;
-        } while (hitCount != 0);
+      for (hitSlot = 0; hitSlot < hitCount; hitSlot++) {
+        hitPriority = hitState->priorities[hitSlot];
+        if (hitPriority < bestPriority) {
+          bestPriority = hitPriority;
+          bestHitSlot = (char)hitSlot;
+        }
       }
       if (bestHitSlot != -1) {
         if (outHitObject != (undefined4 *)0x0) {
@@ -1274,8 +1269,8 @@ int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,
   int hitCount;
   ObjHitsPriorityState *hitState;
   int hitSlot;
-  char bestHitSlot;
   char bestPriority;
+  char bestHitSlot;
 
   hitState = *(ObjHitsPriorityState **)(obj + 0x54);
   if (hitState == 0) {
@@ -1285,17 +1280,12 @@ int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,
   if (hitCount != 0) {
     bestPriority = '\x7f';
     bestHitSlot = -1;
-    hitSlot = 0;
-    if (0 < hitCount) {
-      do {
-        hitPriority = hitState->priorities[hitSlot];
-        if (hitPriority < bestPriority) {
-          bestHitSlot = (char)hitSlot;
-          bestPriority = hitPriority;
-        }
-        hitSlot = hitSlot + 1;
-        hitCount = hitCount + -1;
-      } while (hitCount != 0);
+    for (hitSlot = 0; hitSlot < hitCount; hitSlot++) {
+      hitPriority = hitState->priorities[hitSlot];
+      if (hitPriority < bestPriority) {
+        bestPriority = hitPriority;
+        bestHitSlot = (char)hitSlot;
+      }
     }
     if (bestHitSlot != -1) {
       if (outHitObject != (undefined4 *)0x0) {
