@@ -310,27 +310,21 @@ void fn_80155770(uint param_1,int param_2,undefined4 param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801557D4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int *param_9,int param_10)
+void fn_801557D4(int *param_9,int param_10)
 {
   uint uVar1;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  
-  if (*(char *)(param_10 + 0x33a) == '\0') {
+
+  if (*(byte *)(param_10 + 0x33a) == 0) {
     fn_801554B4(param_9,param_10);
   }
   else {
     if ((*(short *)(*(int *)(param_10 + 0x29c) + 0x44) == 1) &&
        (uVar1 = fn_80295CBC(*(int *)(param_10 + 0x29c)), uVar1 != 0)) {
-      *(uint *)(param_10 + 0x2e4) = *(uint *)(param_10 + 0x2e4) & 0xfffeffff;
+      *(uint *)(param_10 + 0x2e4) = *(uint *)(param_10 + 0x2e4) & ~0x10000;
     }
     if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
       Sfx_PlayFromObject((uint)param_9,0x253);
-      fn_8014D08C((double)lbl_803E369C,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                   (int)param_9,param_10,2,0,0,in_r8,in_r9,in_r10);
+      fn_8014D08C((int)param_9,param_10,2,lbl_803E369C,0,0);
     }
   }
   return;
