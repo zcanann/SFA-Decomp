@@ -861,10 +861,11 @@ extern f32 lbl_803DEE9C;
 #pragma peephole off
 void fn_80070234(f32* param_1)
 {
-    int i, j;
-    f32 zero = lbl_803DEE9C;
-    f32 one = lbl_803DEE98;
-    for (i = 0; i < 4; i++) {
+    int i = 0, j;
+    f32 zero, one;
+    one = lbl_803DEE98;
+    zero = lbl_803DEE9C;
+    for (; i < 4; i++) {
         for (j = 0; j < 4; j++) {
             if (i == j) param_1[j] = one; else param_1[j] = zero;
         }
