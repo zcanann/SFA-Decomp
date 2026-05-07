@@ -2357,6 +2357,49 @@ int RomCurve_getRandomUnblockedLink(int param_1,int param_2)
 /*
  * --INFO--
  *
+ * Function: RomCurve_getById
+ * EN v1.0 Address: 0x800E503C
+ * EN v1.0 Size: 112b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+RomCurveDef *RomCurve_getById(uint curveId)
+{
+  int high;
+  int low;
+  int mid;
+
+  if ((int)curveId < 0) {
+    return 0;
+  }
+  high = gRomCurveCount - 1;
+  low = 0;
+  while (high >= low) {
+    mid = (high + low) >> 1;
+    if (curveId > RomCurve_GetId(gRomCurveTable[mid])) {
+      low = mid + 1;
+    }
+    else if (curveId < RomCurve_GetId(gRomCurveTable[mid])) {
+      high = mid - 1;
+    }
+    else {
+      return (RomCurveDef *)gRomCurveTable[mid];
+    }
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * --INFO--
+ *
  * Function: FUN_800e4628
  * EN v1.0 Address: 0x800E4628
  * EN v1.0 Size: 252b
