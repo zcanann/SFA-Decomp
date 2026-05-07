@@ -32,7 +32,7 @@ extern u8 lbl_803DC950;
 extern u8 lbl_803DC968;
 extern u8 lbl_803DD5E8;
 extern uint lbl_803DD5EC;
-extern u8 lbl_803DD5F0;
+extern s8 lbl_803DD5F0;
 extern f32 lbl_803DD5F4;
 extern int lbl_803DD5F8;
 extern u8 lbl_803DD5FC;
