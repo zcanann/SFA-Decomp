@@ -100,6 +100,11 @@ typedef struct CamcontrolTriggeredAction {
   u8 pad0E[2];
 } CamcontrolTriggeredAction;
 
+typedef struct CamcontrolQueuedActionParam {
+  uint actionIndex;
+  byte noBlendFlag;
+} CamcontrolQueuedActionParam;
+
 #define CAMCONTROL_TRIGGERED_ACTION_KIND_TRIGGERED 1
 #define CAMCONTROL_ACTION_DEFAULT 0x42
 #define CAMCONTROL_ACTION_TRIGGERED 0x4B
@@ -473,28 +478,26 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char trigge
   CamcontrolTriggeredAction *camAction;
   int actionOffset;
   int loadedActionNo;
-  uint local_28;
-  undefined local_24;
-  uint local_20;
-  byte local_1c;
+  CamcontrolQueuedActionParam triggerType2Param;
+  CamcontrolQueuedActionParam triggerType1Param;
   
   if (triggerType == 2) {
-    local_28 = actionNo & CAMCONTROL_ACTION_INDEX_MASK;
-    local_24 = (undefined)(actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND);
+    triggerType2Param.actionIndex = actionNo & CAMCONTROL_ACTION_INDEX_MASK;
+    triggerType2Param.noBlendFlag = (byte)(actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND);
     if ((actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND) == 0) {
       blendFrames = CAMCONTROL_DEFAULT_BLEND_FRAMES;
     }
     else {
       blendFrames = 0;
     }
-    Camera_setMode(CAMCONTROL_ACTION_TRIGGER_TYPE2,1,0,8,(uint)&local_28,blendFrames,
+    Camera_setMode(CAMCONTROL_ACTION_TRIGGER_TYPE2,1,0,8,(uint)&triggerType2Param,blendFrames,
                    CAMCONTROL_QUEUE_SENTINEL);
     return;
   }
   if (triggerType < 2) {
     if ((triggerType != 0) && (-1 < triggerType)) {
-      local_20 = actionNo & CAMCONTROL_ACTION_INDEX_MASK;
-      local_1c = (byte)actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND;
+      triggerType1Param.actionIndex = actionNo & CAMCONTROL_ACTION_INDEX_MASK;
+      triggerType1Param.noBlendFlag = (byte)actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND;
       *(undefined *)((int)gCamcontrolState + 0x139) = 1;
       if ((actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND) == 0) {
         blendFrames = CAMCONTROL_DEFAULT_BLEND_FRAMES;
@@ -502,7 +505,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char trigge
       else {
         blendFrames = 0;
       }
-      Camera_setMode(CAMCONTROL_ACTION_TRIGGER_TYPE1,1,0,8,(uint)&local_20,blendFrames,
+      Camera_setMode(CAMCONTROL_ACTION_TRIGGER_TYPE1,1,0,8,(uint)&triggerType1Param,blendFrames,
                      CAMCONTROL_QUEUE_SENTINEL);
       return;
     }
