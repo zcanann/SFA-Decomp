@@ -16,7 +16,7 @@ extern u8* lbl_803DE268;
  */
 u32 fn_8027186C(u32 handle, u8 controller, u8 value) {
     u32 found;
-    u32 idx;
+    u8 idx;
     u8* slotPtr;
 
     found = 0;
@@ -46,7 +46,7 @@ u32 fn_8027186C(u32 handle, u8 controller, u8 value) {
  */
 u32 fn_80271954(u32 handle, u8 controller, u32 value) {
     u32 found;
-    u32 idx;
+    u8 idx;
     u8* slotPtr;
 
     found = 0;
