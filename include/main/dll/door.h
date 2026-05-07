@@ -3,7 +3,11 @@
 
 #include "ghidra_import.h"
 
-void dfptargetblock_resolveCollisionPoints(undefined2 *param_1,int param_2);
+typedef struct DfpTargetBlockObject DfpTargetBlockObject;
+typedef struct DfpTargetBlockCollisionPoints DfpTargetBlockCollisionPoints;
+
+void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject *obj,
+                                           DfpTargetBlockCollisionPoints *collisionPoints);
 int dfptargetblock_getExtraSize(void);
 int dfptargetblock_func08(void);
 void dfptargetblock_free(void);
