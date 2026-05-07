@@ -11,7 +11,7 @@ extern undefined4 DAT_803def64;
 /*
  * --INFO--
  *
- * Function: fn_80279004
+ * Function: get_vidlist
  * EN v1.0 Address: 0x80279004
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80279018
@@ -21,7 +21,7 @@ extern undefined4 DAT_803def64;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-u32 *fn_80279004(u32 key)
+u32 *get_vidlist(u32 key)
 {
   u32 *node;
   u32 value;

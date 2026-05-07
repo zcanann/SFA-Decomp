@@ -15,7 +15,7 @@ extern VoiceNode *lbl_803DE2F8;
 /*
  * --INFO--
  *
- * Function: fn_80278F0C
+ * Function: vidInit
  * EN v1.0 Address: 0x80278F0C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80278F74
@@ -25,7 +25,7 @@ extern VoiceNode *lbl_803DE2F8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80278F0C(void)
+void vidInit(void)
 {
     VoiceNode *node = lbl_803CA2D0;
     VoiceNode *prev = NULL;

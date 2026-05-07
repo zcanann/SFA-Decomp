@@ -4,7 +4,7 @@ extern u32 hwIsActive(u32 voice);
 extern void hwBreak(u32 voice);
 extern void fn_80279038(int handle);
 extern void fn_80279B98(int handle);
-extern u32 fn_80279004(u32 id);
+extern u32 get_vidlist(u32 id);
 extern void fn_802737EC(u8 voice);
 
 extern u8 *lbl_803DE268;
@@ -13,7 +13,7 @@ extern u8 lbl_803CAB50[];
 extern u8 lbl_803CAAD0[][16];
 
 /*
- * fn_80279C7C — large voice/slot table init (~204 instructions). Stubbed.
+ * fn_80279C7C - large voice/slot table init (~204 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_80279C7C(void) {}
@@ -72,7 +72,7 @@ int fn_8027A0CC(u32 id)
     if (id == 0xffffffff) {
         next = 0xffffffff;
     } else {
-        u32 s = fn_80279004(id);
+        u32 s = get_vidlist(id);
         if (s == 0) {
             next = 0xffffffff;
         } else {

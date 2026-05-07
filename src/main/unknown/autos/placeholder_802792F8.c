@@ -41,7 +41,7 @@ int vidMakeRoot(int state)
  * EN v1.1 Size: 332b
  */
 #pragma dont_inline on
-u32 fn_802793A0(void)
+u32 vidMakeNew(void)
 {
     return 0;
 }
@@ -81,7 +81,7 @@ int vidGetInternalId(u32 id)
 }
 
 /*
- * fn_802794EC - voice priority-queue removal (sister to placeholder_
+ * voiceRemovePriority - voice priority-queue removal (sister to placeholder_
  * 80279608's insert). Removes the active voice from its group's
  * linked list and from the sorted priority list.
  *
@@ -91,7 +91,7 @@ int vidGetInternalId(u32 id)
  * EN v1.1 Size: 224b
  */
 #pragma dont_inline on
-void fn_802794EC(int state)
+void voiceRemovePriority(int state)
 {
     (void)state;
 }

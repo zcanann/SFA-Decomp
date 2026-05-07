@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 
 extern void fn_80278A98(int state, int x);
-extern void fn_802794EC(int state);
+extern void voiceRemovePriority(int state);
 
 typedef struct VoiceIdSlot {
     u8 prev;
@@ -16,11 +16,11 @@ extern u8 lbl_803DE300;
 extern u8 lbl_803DE301;
 
 /*
- * fn_8027975C - large voice-allocation/sort routine (~1084 instructions).
+ * voiceAllocate - large voice-allocation/sort routine (~1084 instructions).
  * Stubbed.
  */
 #pragma dont_inline on
-int fn_8027975C(int state)
+int voiceAllocate(int state)
 {
     (void)state;
     return 0;
@@ -36,7 +36,7 @@ int fn_8027975C(int state)
 void fn_80279B98(int state)
 {
     fn_80278A98(state, 2);
-    fn_802794EC(state);
+    voiceRemovePriority(state);
     *(u32 *)(state + 0x34) = 0;
     *(u8 *)(state + 0x10c) = 0;
     {

@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_80279608.h"
 
-extern void fn_802794EC(void *state);
+extern void voiceRemovePriority(void *state);
 extern void hwSetPriority(u8 voiceId, u32 priority);
 
 extern u8 lbl_803CA2D0[];   /* voice tables */
@@ -17,7 +17,7 @@ extern u16 lbl_803DE2FC;    /* sorted-list head (u16) */
  * EN v1.1 Address: 0x80279608
  * EN v1.1 Size: 400b
  */
-void fn_802795CC(int state, u8 newGroup)
+void voiceSetPriority(int state, u8 newGroup)
 {
     u32 voiceId = *(u8 *)(state + 0xf4);
     u8 *base = lbl_803CA2D0;
@@ -31,7 +31,7 @@ void fn_802795CC(int state, u8 newGroup)
         if (*(u8 *)(state + 0x10c) == newGroup) {
             return;
         }
-        fn_802794EC((void *)state);
+        voiceRemovePriority((void *)state);
     }
 
     *(u16 *)(slot + 2) = 1;

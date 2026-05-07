@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_802795cc(void);
+void voiceSetPriority(int state, u8 newGroup);
 int FUN_802795d0(void);
 undefined4 * FUN_802795d8(uint param_1);
 
