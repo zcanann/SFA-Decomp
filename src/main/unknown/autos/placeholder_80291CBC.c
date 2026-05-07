@@ -4,7 +4,7 @@
 extern double __fabs(double);
 extern float __fabsf(float);
 
-// fn_80291D00 constants
+// exp2f constants
 extern float lbl_803E7978;  // -127.0f
 extern float lbl_803E797C;  // 0.0f
 extern float lbl_803E7980;  // 1.0f
@@ -13,22 +13,22 @@ extern float lbl_803E7988;  // exp2_p1
 extern float lbl_803E798C;  // exp2_p2
 extern float lbl_803E7990;  // exp2_p3
 extern float lbl_803E7994;  // exp2_p4
-// fn_80291DD8 constants
+// expf constants
 extern float lbl_803E7998;  // log2e (1.4426950216293335f)
-// fn_80291E40 constants
+// internal floorf-like helper constants
 extern float lbl_803E79A0;  // 65536.0f (small_int_limit)
 extern float lbl_803E79A4;  // 0.0f
 extern float lbl_803E79A8;  // -1.0f
 extern float lbl_803E79AC;  // 8388608.0f (large_int_limit)
 extern float lbl_803E79B0;  // 1.0f
 
-float fn_80291CBC(float x)
+float fabsf(float x)
 {
     double y = __fabs(x);
     return y;
 }
 
-float fn_80291CC8(s16* p)
+float fastCastU16ToFloat(s16* p)
 {
     register s16* ptr = p;
     register float result;
@@ -41,7 +41,7 @@ float fn_80291CC8(s16* p)
     return result;
 }
 
-void fn_80291CE4(s16* p, float x)
+void fastCastFloatToU16(s16* p, float x)
 {
     register s16* ptr = p;
     register float value = x;
@@ -52,10 +52,10 @@ void fn_80291CE4(s16* p, float x)
     }
 }
 
-float fn_80291E08(s16* p);
-void fn_80291E24(s16* p, float x);
+float fastCastS16ToFloat(s16* p);
+void fastCastFloatToS16(s16* p, float x);
 
-float fn_80291D00(float x)
+float exp2f(float x)
 {
     s16 exponent;
     register float input = x;
@@ -68,8 +68,8 @@ float fn_80291D00(float x)
         return lbl_803E797C;
     }
 
-    fn_80291E24(&exponent, input);
-    integer_part = fn_80291E08(&exponent);
+    fastCastFloatToS16(&exponent, input);
+    integer_part = fastCastS16ToFloat(&exponent);
     fraction = input - integer_part;
 
     if (fraction != lbl_803E797C) {
@@ -89,13 +89,13 @@ float fn_80291D00(float x)
     return result;
 }
 
-float fn_80291DD8(float x)
+float expf(float x)
 {
     volatile float y = x;
-    return fn_80291D00(lbl_803E7998 * y);
+    return exp2f(lbl_803E7998 * y);
 }
 
-float fn_80291E08(s16* p)
+float fastCastS16ToFloat(s16* p)
 {
     register s16* ptr = p;
     register float result;
@@ -108,7 +108,7 @@ float fn_80291E08(s16* p)
     return result;
 }
 
-void fn_80291E24(s16* p, float x)
+void fastCastFloatToS16(s16* p, float x)
 {
     register s16* ptr = p;
     register float value = x;
@@ -119,7 +119,7 @@ void fn_80291E24(s16* p, float x)
     }
 }
 
-float fn_80291E40(float x)
+float fastFloorf(float x)
 {
     register float input = x;
     register float abs_x;
@@ -129,8 +129,8 @@ float fn_80291E40(float x)
 
     abs_x = __fabsf(input);
     if (abs_x < lbl_803E79A0) {
-        fn_80291CE4(&short_value, abs_x);
-        rounded = fn_80291CC8(&short_value);
+        fastCastFloatToU16(&short_value, abs_x);
+        rounded = fastCastU16ToFloat(&short_value);
 
         if (input >= lbl_803E79A4) {
             return rounded;

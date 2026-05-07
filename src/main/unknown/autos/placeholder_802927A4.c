@@ -44,8 +44,8 @@ extern float lbl_803E7BE8;
 extern float lbl_803E7BEC;
 extern float lbl_803E7BF0;
 
-float fn_80291E08(s16* p);
-void fn_80291E24(s16* p, float x);
+float fastCastS16ToFloat(s16* p);
+void fastCastFloatToS16(s16* p, float x);
 
 typedef union FloatBits {
     float f;
@@ -143,10 +143,10 @@ float __ieee754_log(float x, float y) {
 
     value = result.f - lbl_803E7BC8;
     value = ((lbl_803E7BE4 * value + lbl_803E7BE0) * value + lbl_803E7BDC) * value + lbl_803E7BD8;
-    value = y * (value + fn_80291E08(&exponent));
+    value = y * (value + fastCastS16ToFloat(&exponent));
 
-    fn_80291E24(&scale, value);
-    frac = fn_80291E08(&scale);
+    fastCastFloatToS16(&scale, value);
+    frac = fastCastS16ToFloat(&scale);
     value -= frac;
 
     if (value != lbl_803E7AB8) {

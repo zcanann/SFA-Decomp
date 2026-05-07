@@ -7,7 +7,7 @@ typedef struct Vec3f {
 } Vec3f;
 
 extern float invSqrt(float x);
-extern float fn_80291E08(s16* p);
+extern float fastCastS16ToFloat(s16* p);
 extern float lbl_803E7AB8;
 extern float lbl_803E7BC8;
 extern float lbl_803E7BF4;
@@ -15,8 +15,8 @@ extern float lbl_803E7BF8;
 
 void Vec_scale(void* v_in, void* v_out, float s);
 float fn_80292C9C(void* v);
-void fn_80291CE4(u16* p, float x);
-float fn_80291CC8(u16* p);
+void fastCastFloatToU16(u16* p, float x);
+float fastCastU16ToFloat(u16* p);
 
 float fn_80292B44(float x, float y) {
     union {
@@ -32,7 +32,7 @@ float fn_80292B44(float x, float y) {
         x_bits = bits.u;
         exponent = (s16)(((x_bits >> 23) & 0xFF) - 128);
         bits.u = (x_bits & 0x7FFFFF) | 0x3F800000;
-        bits.f = (lbl_803E7BF4 * y) * (bits.f + fn_80291E08(&exponent));
+        bits.f = (lbl_803E7BF4 * y) * (bits.f + fastCastS16ToFloat(&exponent));
 
         y_int = (int)bits.f;
         bits.u = (u32)y_int + 0x3F800000;
@@ -71,7 +71,7 @@ float fn_80292C9C(void* v) {
 
 float fn_80292CC4(u16* p, float x) {
     float scaled = lbl_803E7BF8 * __fabsf(x);
-    fn_80291CE4(p, scaled);
+    fastCastFloatToU16(p, scaled);
     *p = (*p + 1) & 0xFFFE;
-    return scaled - fn_80291CC8(p);
+    return scaled - fastCastU16ToFloat(p);
 }

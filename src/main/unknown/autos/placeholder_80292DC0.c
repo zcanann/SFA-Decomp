@@ -22,7 +22,7 @@ extern float lbl_803E7C64;
 extern float lbl_803E7C68;
 extern float lbl_803E7C6C;
 
-float fn_80291E08(s16* p);
+float fastCastS16ToFloat(s16* p);
 
 float fn_80292DEC(float x) {
     float estimate;
@@ -56,7 +56,7 @@ float fn_80292DEC(float x) {
 
 void fn_80292E20(int q, float* sin_out, float* cos_out) {
     s16 angle = q << 2;
-    float x = fn_80291E08(&angle);
+    float x = fastCastS16ToFloat(&angle);
     float x2 = x * x;
     float sin_value = x * (lbl_803E7C24 * x2 + lbl_803E7C20);
     float cos_value = x2 * (lbl_803E7C30 * x2 + lbl_803E7C2C) + lbl_803E7C28;
@@ -66,7 +66,7 @@ void fn_80292E20(int q, float* sin_out, float* cos_out) {
 
 void angleToVec2(int q, float* sin_out, float* cos_out) {
     s16 angle = q << 2;
-    float x = fn_80291E08(&angle);
+    float x = fastCastS16ToFloat(&angle);
     float x2 = x * x;
     float sin_value = x * ((lbl_803E7C3C * x2 + lbl_803E7C38) * x2 + lbl_803E7C34);
     float cos_value = ((lbl_803E7C4C * x2 + lbl_803E7C48) * x2 + lbl_803E7C44) * x2 + lbl_803E7C40;
@@ -76,7 +76,7 @@ void angleToVec2(int q, float* sin_out, float* cos_out) {
 
 void fn_80293018(int q, float* sin_out, float* cos_out) {
     s16 angle = q << 2;
-    float x = fn_80291E08(&angle);
+    float x = fastCastS16ToFloat(&angle);
     float x2 = x * x;
     float sin_value = x * (((lbl_803E7C5C * x2 + lbl_803E7C58) * x2 + lbl_803E7C54) * x2 + lbl_803E7C50);
     float cos_value = (((lbl_803E7C6C * x2 + lbl_803E7C68) * x2 + lbl_803E7C64) * x2 + lbl_803E7C60) * x2 + lbl_803E7C40;

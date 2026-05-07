@@ -35,7 +35,7 @@ extern float lbl_803E7E24;
 extern float lbl_803E7E28;
 extern float lbl_803E7E2C;
 
-float fn_80291E08(s16* p);
+float fastCastS16ToFloat(s16* p);
 float fn_80292CC4(u16* p, float x);
 double tan(int* out_n, float x);
 
@@ -140,6 +140,6 @@ float fn_802945E0(float x) {
     exponent = (s16)(((bits >> 23) & 0xFF) - 128);
     *(u32*)&mantissa = (bits & 0x7FFFFF) | 0x3F800000;
 
-    tail = fn_80291E08(&exponent);
+    tail = fastCastS16ToFloat(&exponent);
     return mantissa + tail;
 }

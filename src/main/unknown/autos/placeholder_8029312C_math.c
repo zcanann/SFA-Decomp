@@ -17,7 +17,7 @@ extern float lbl_803E7CA4;
 extern float lbl_803E7CA8;
 extern float lbl_803E7CAC;
 
-extern float fn_80291E08(s16* p);
+extern float fastCastS16ToFloat(s16* p);
 
 float sqrtf_8029312c(float x) {
     float guess;
@@ -61,7 +61,7 @@ float invSqrt(float x) {
 
 float angleFn(int angle) {
     s16 reduced = (s16)(angle << 2);
-    float x = fn_80291E08(&reduced);
+    float x = fastCastS16ToFloat(&reduced);
     float x2 = x * x;
 
     switch (angle & 0xE000) {
@@ -81,7 +81,7 @@ float angleFn(int angle) {
 
 float fcos16(int angle) {
     s16 reduced = (s16)(angle << 2);
-    float x = fn_80291E08(&reduced);
+    float x = fastCastS16ToFloat(&reduced);
     float x2 = x * x;
 
     switch (angle & 0xE000) {
