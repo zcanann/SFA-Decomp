@@ -57,12 +57,12 @@ int hwChangeStudio(int param_1) {
         }
         entry += lowBits;
         return entry - 2;
-    default:
-        return param_1;
     case 3:
         return *(int *)(entry + 0x20) - *(int *)(entry + 0x78);
     case 2:
         return *(int *)(entry + 0x20) - (*(u32 *)(entry + 0x78) >> 1);
+    default:
+        return param_1;
     }
 }
 
