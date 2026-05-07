@@ -9,7 +9,7 @@ extern undefined4 FUN_80006a8c();
 extern ushort FUN_80006be8();
 extern uint FUN_80006c00();
 extern uint FUN_80017730();
-extern u8 fn_800640CC(float *p1, float *p2, float *p3, int *p4, int *p5, int p6, int p7, int p8, int p9);
+extern int fn_800640CC(float *p1, float *p2, float *p3, int *p4, int *p5, int p6, int p7, int p8, int p9);
 extern void fn_80067958(int a, float *b, float *c, int d, int e, int f);
 extern void fn_800691C0(int a, void *b, int c, int d);
 extern void fn_8006961C(uint *boundsOut,float *startPoints,float *endPoints,
@@ -185,9 +185,9 @@ camcontrol_traceMove(float param_1,float *param_2,float *param_3,float *param_4,
   param_4[2] = param_3[2];
   *(float *)(param_5 + 0x40) = param_1;
   *(s8 *)(param_5 + 0x50) = -1;
-  *(undefined *)(param_5 + 0x54) = param_6;
-  *(undefined2 *)(param_5 + 0x6c) = 0;
+  *(s8 *)(param_5 + 0x54) = param_6;
   cVar2 = '\0';
+  *(undefined2 *)(param_5 + 0x6c) = 0;
   if (param_8 != '\0') {
     cVar2 = fn_800640CC(param_2,param_4,(float *)0x1,(int *)0x0,(int *)0x0,0x10,0xffffffff,0xff,0);
   }
