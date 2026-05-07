@@ -1145,10 +1145,10 @@ main/dll/SH/lily.c:
 	.text       start:0x801D5174 end:0x801D5174
 
 main/dll/SH/dll_1E8.c:
-	.text       start:0x801D5174 end:0x801D56C4
+	.text       start:0x801D5174 end:0x801D5174
 
 main/dll/SH/SHthorntail.c:
-	.text       start:0x801D56C4 end:0x801D58E4
+	.text       start:0x801D5174 end:0x801D58E4
 
 main/dll/SH/SHroot.c:
 	.text       start:0x801D58E4 end:0x801D5ED4
