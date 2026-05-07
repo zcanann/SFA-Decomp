@@ -3,8 +3,7 @@
 
 #include "ghidra_import.h"
 
-void dimbosstonsil_render(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                          undefined8 param_5,undefined8 param_6,undefined8 param_7,
-                          undefined8 param_8,undefined4 param_9,undefined4 param_10,int param_11);
+void dimbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible);
+void dimbosstonsil_hitDetect(void *obj);
 
 #endif /* MAIN_DLL_DLL_227_H_ */
