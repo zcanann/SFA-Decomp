@@ -679,10 +679,10 @@ void fn_80156010(uint param_9,int param_10)
   short sVar2;
   double dVar3;
   
+  bVar1 = false;
   *(float *)(param_10 + 0x324) = *(float *)(param_10 + 0x324) - lbl_803DC074;
-  dVar3 = (double)*(float *)(param_10 + 0x324);
-  bVar1 = dVar3 <= (double)lbl_803E36F8;
-  if (bVar1) {
+  if ((double)*(float *)(param_10 + 0x324) <= (double)lbl_803E36F8) {
+    bVar1 = true;
     *(float *)(param_10 + 0x324) = lbl_803E36F8;
   }
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
