@@ -25,7 +25,7 @@ extern int fn_80065E50(void *obj, float x, float y, float z, void *out, int p5, 
 extern void fn_8011F38C(int);
 extern void fn_8011F6F0(int);
 extern double fn_801E7C4C(void *obj, void *playerObj, int p3);
-extern double fn_80293E80(double);
+extern float fn_80293E80(double);
 extern int fn_8029689C(void *playerObj);
 
 extern void *lbl_803DCA4C;
@@ -73,7 +73,7 @@ int fn_801E6B10(void *obj, void *param2)
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E59DC, 0);
     }
     ObjHits_EnableObject(obj);
-    *(u8 *)((char *)obj + 0xaf) = *(u8 *)((char *)obj + 0xaf) & 0xf7;
+    *(u8 *)((char *)obj + 0xaf) = *(u8 *)((char *)obj + 0xaf) & ~0x08;
     if (GameBit_Get(0x617) == 0) {
         v = 1;
         psStack = *(void **)((char *)state + 0x9b0);
@@ -85,24 +85,24 @@ int fn_801E6B10(void *obj, void *param2)
     fn_801E7C4C(obj, playerObj, 0);
     *(f32 *)((char *)obj + 0x10) =
         *(f32 *)((char *)state + 0x9b8) *
-            (f32)fn_80293E80(
+            fn_80293E80(
                 (double)(lbl_803E59E8 *
-                         (f32)((double)(uint)*(u16 *)((char *)state + 0x9ca)) /
+                         (float)(uint)*(u16 *)((char *)state + 0x9ca) /
                          lbl_803E59EC)) +
         *(f32 *)((char *)state + 0x9bc);
     sum = (uint)*(u16 *)((char *)state + 0x9ca) + (uint)framesThisStep * 0x100;
     if (sum > 0xffff) {
         rng = randomGetRange(0xf, 0x23);
-        *(f32 *)((char *)state + 0x9b8) = lbl_803E59F0 * (f32)rng;
+        *(f32 *)((char *)state + 0x9b8) = (float)rng * lbl_803E59F0;
     }
     *(u16 *)((char *)state + 0x9ca) = (u16)sum;
     if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
-        if (fn_8029689C(playerObj) < 1) {
-            rng = randomGetRange(0, 2);
-            (*(code **)lbl_803DCA54)[0x48 / 4](rng, obj, -1);
+        if (fn_8029689C(playerObj) >= 1) {
+            GameBit_Set(0x61d, 1);
             buttonDisable(0, 0x100);
         } else {
-            GameBit_Set(0x61d, 1);
+            rng = randomGetRange(0, 2);
+            (*(code **)lbl_803DCA54)[0x48 / 4](rng, obj, -1);
             buttonDisable(0, 0x100);
         }
     }
@@ -219,15 +219,15 @@ int fn_801E6D08(void *obj, void *param2)
     }
     *(f32 *)((char *)obj + 0x10) =
         *(f32 *)((char *)state + 0x9b8) *
-            (f32)fn_80293E80(
+            fn_80293E80(
                 (double)(lbl_803E59E8 *
-                         (f32)((double)(uint)*(u16 *)((char *)state + 0x9ca)) /
+                         (float)(uint)*(u16 *)((char *)state + 0x9ca) /
                          lbl_803E59EC)) +
         *(f32 *)((char *)state + 0x9bc);
     sum = (uint)*(u16 *)((char *)state + 0x9ca) + (uint)framesThisStep * 0x100;
     if (sum > 0xffff) {
         rng = randomGetRange(0xf, 0x23);
-        *(f32 *)((char *)state + 0x9b8) = lbl_803E59F0 * (f32)rng;
+        *(f32 *)((char *)state + 0x9b8) = (float)rng * lbl_803E59F0;
     }
     *(u16 *)((char *)state + 0x9ca) = (u16)sum;
     if (ObjTrigger_IsSet(obj) != 0) {
