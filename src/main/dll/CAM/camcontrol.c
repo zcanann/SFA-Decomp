@@ -100,6 +100,7 @@ typedef struct CamcontrolTriggeredAction {
   u8 pad0E[2];
 } CamcontrolTriggeredAction;
 
+#define CAMCONTROL_TRIGGERED_ACTION_KIND_TRIGGERED 1
 #define CAMCONTROL_ACTION_DEFAULT 0x42
 #define CAMCONTROL_ACTION_TRIGGERED 0x4B
 #define CAMCONTROL_ACTION_TRIGGER_TYPE1 0x48
@@ -470,6 +471,8 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char trigge
   void **handlerEntry;
   int blendFrames;
   CamcontrolTriggeredAction *camAction;
+  int actionOffset;
+  int loadedActionNo;
   uint local_28;
   undefined local_24;
   uint local_20;
@@ -518,85 +521,49 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char trigge
   }
   if (actionNo == 0) {
     OSReport(sCamcontrolTriggeredCamActionLoadWarning,actionNo);
-    camAction = (CamcontrolTriggeredAction *)mmAlloc(CAMCONTROL_ACTION_RECORD_SIZE,0xf,0);
-    if (camAction != (CamcontrolTriggeredAction *)0x0) {
-      getTabEntry(camAction,CAMCONTROL_ACTION_FILE_ID,0,CAMCONTROL_ACTION_RECORD_SIZE);
-      camAction->triggerMode = triggerMode;
-      fn_800E84D8(1);
-      if ((((gCamcontrolCurrentActionId == CAMCONTROL_ACTION_DEFAULT) ||
-           (gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGERED)) ||
-          (gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGER_TYPE1)) ||
-         (gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
-        if (camAction->actionKind == 1) {
-          Camera_setMode(CAMCONTROL_ACTION_TRIGGERED,1,2,CAMCONTROL_ACTION_RECORD_SIZE,
-                         (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
-        }
-        else {
-          Camera_setMode(CAMCONTROL_ACTION_DEFAULT,0,2,CAMCONTROL_ACTION_RECORD_SIZE,
-                         (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
-        }
-      }
-      else {
-        handlerIndex = 0;
-        handlerEntry = gCamcontrolHandlers;
-        for (handlerCount = (uint)gCamcontrolHandlerCount; handlerCount != 0;
-             handlerCount = handlerCount - 1) {
-          if (*(short *)*handlerEntry == CAMCONTROL_ACTION_DEFAULT) {
-            handlerIndex = (int)gCamcontrolHandlers[handlerIndex];
-            goto LAB_80103090;
-          }
-          handlerEntry = handlerEntry + 1;
-          handlerIndex = handlerIndex + 1;
-        }
-        handlerIndex = 0;
-LAB_80103090:
-        (**(code **)(**(int **)(handlerIndex + 4) + 0x10))(camAction,
-                                                            CAMCONTROL_ACTION_RECORD_SIZE);
-      }
-      fn_80023800(camAction);
-    }
+    actionOffset = 0;
+    loadedActionNo = 1;
   }
   else {
-    camAction = (CamcontrolTriggeredAction *)mmAlloc(CAMCONTROL_ACTION_RECORD_SIZE,0xf,0);
-    if (camAction != (CamcontrolTriggeredAction *)0x0) {
-      getTabEntry(camAction,CAMCONTROL_ACTION_FILE_ID,(actionNo - 1) * CAMCONTROL_ACTION_RECORD_SIZE,
-                  CAMCONTROL_ACTION_RECORD_SIZE);
-    }
-    if (camAction != (CamcontrolTriggeredAction *)0x0) {
-      camAction->triggerMode = triggerMode;
-      fn_800E84D8((short)actionNo);
-      if (((gCamcontrolCurrentActionId == CAMCONTROL_ACTION_DEFAULT) ||
-          (gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGERED)) ||
-         ((gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGER_TYPE1 ||
-          (gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGER_TYPE2)))) {
-        if (camAction->actionKind == 1) {
-          Camera_setMode(CAMCONTROL_ACTION_TRIGGERED,1,2,CAMCONTROL_ACTION_RECORD_SIZE,
-                         (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
-        }
-        else {
-          Camera_setMode(CAMCONTROL_ACTION_DEFAULT,0,2,CAMCONTROL_ACTION_RECORD_SIZE,
-                         (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
-        }
+    actionOffset = (actionNo - 1) * CAMCONTROL_ACTION_RECORD_SIZE;
+    loadedActionNo = actionNo;
+  }
+  camAction = (CamcontrolTriggeredAction *)mmAlloc(CAMCONTROL_ACTION_RECORD_SIZE,0xf,0);
+  if (camAction != (CamcontrolTriggeredAction *)0x0) {
+    getTabEntry(camAction,CAMCONTROL_ACTION_FILE_ID,actionOffset,CAMCONTROL_ACTION_RECORD_SIZE);
+    camAction->triggerMode = triggerMode;
+    fn_800E84D8((short)loadedActionNo);
+    if ((((gCamcontrolCurrentActionId == CAMCONTROL_ACTION_DEFAULT) ||
+         (gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGERED)) ||
+        (gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGER_TYPE1)) ||
+       (gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
+      if (camAction->actionKind == CAMCONTROL_TRIGGERED_ACTION_KIND_TRIGGERED) {
+        Camera_setMode(CAMCONTROL_ACTION_TRIGGERED,1,2,CAMCONTROL_ACTION_RECORD_SIZE,
+                       (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
       }
       else {
-        handlerIndex = 0;
-        handlerEntry = gCamcontrolHandlers;
-        for (handlerCount = (uint)gCamcontrolHandlerCount; handlerCount != 0;
-             handlerCount = handlerCount - 1) {
-          if (*(short *)*handlerEntry == CAMCONTROL_ACTION_DEFAULT) {
-            handlerIndex = (int)gCamcontrolHandlers[handlerIndex];
-            goto LAB_80102f3c;
-          }
-          handlerEntry = handlerEntry + 1;
-          handlerIndex = handlerIndex + 1;
-        }
-        handlerIndex = 0;
-LAB_80102f3c:
-        (**(code **)(**(int **)(handlerIndex + 4) + 0x10))(camAction,
-                                                            CAMCONTROL_ACTION_RECORD_SIZE);
+        Camera_setMode(CAMCONTROL_ACTION_DEFAULT,0,2,CAMCONTROL_ACTION_RECORD_SIZE,
+                       (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
       }
-      fn_80023800(camAction);
     }
+    else {
+      handlerIndex = 0;
+      handlerEntry = gCamcontrolHandlers;
+      for (handlerCount = (uint)gCamcontrolHandlerCount; handlerCount != 0;
+           handlerCount = handlerCount - 1) {
+        if (*(short *)*handlerEntry == CAMCONTROL_ACTION_DEFAULT) {
+          handlerIndex = (int)gCamcontrolHandlers[handlerIndex];
+          goto LAB_80102f3c;
+        }
+        handlerEntry = handlerEntry + 1;
+        handlerIndex = handlerIndex + 1;
+      }
+      handlerIndex = 0;
+LAB_80102f3c:
+      (**(code **)(**(int **)(handlerIndex + 4) + 0x10))(camAction,
+                                                          CAMCONTROL_ACTION_RECORD_SIZE);
+    }
+    fn_80023800(camAction);
   }
   return;
 }
