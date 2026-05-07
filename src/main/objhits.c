@@ -880,66 +880,63 @@ void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
-float *ObjHits_ProjectPointToTaperedCapsuleXZ(double param_1,double param_2,double param_3,
-                                              double param_4,double param_5,float *param_6,
-                                              float *param_7,float *param_8,float *param_9)
+float *ObjHits_ProjectPointToTaperedCapsuleXZ(float radiusA, float axial, float radiusB,
+                                              float radiusC, float halfLength, float *p,
+                                              float *p0, float *p1, float *out)
 {
-  float fVar1;
-  float local_78;
-  float local_74;
-  float local_70;
-  float local_6c;
-  float local_68;
-  float local_64;
+    float invHalfLength;
+    float surface[3];
+    float dir[3];
 
-  if (param_2 < (double)lbl_803DE910) {
-    *param_9 = *param_6 - *param_7;
-    param_9[1] = lbl_803DE910;
-    param_9[2] = param_6[2] - param_7[2];
-    Vec3_Normalize(param_9);
-    fVar1 = (float)(param_1 + param_3);
-    *param_9 = *param_9 * fVar1;
-    param_9[1] = param_9[1] * fVar1;
-    param_9[2] = param_9[2] * fVar1;
-    *param_9 = *param_9 + *param_7;
-    param_9[1] = param_9[1] + param_7[1];
-    param_9[2] = param_9[2] + param_7[2];
-  }
-  else if (param_2 > param_5) {
-    *param_9 = *param_6 - *param_8;
-    param_9[1] = lbl_803DE910;
-    param_9[2] = param_6[2] - param_8[2];
-    Vec3_Normalize(param_9);
-    fVar1 = (float)(param_1 + param_4);
-    *param_9 = *param_9 * fVar1;
-    param_9[1] = param_9[1] * fVar1;
-    param_9[2] = param_9[2] * fVar1;
-    *param_9 = *param_9 + *param_8;
-    param_9[1] = param_9[1] + param_8[1];
-    param_9[2] = param_9[2] + param_8[2];
-  }
-  else {
-    local_64 = (float)((double)lbl_803DE918 / param_5);
-    local_6c = (*param_8 - *param_7) * local_64;
-    local_68 = (param_8[1] - param_7[1]) * local_64;
-    local_64 = (param_8[2] - param_7[2]) * local_64;
-    Vec3_ScaleAdd(param_7,&local_6c,param_2,&local_78);
-    *param_9 = *param_6 - local_78;
-    param_9[1] = lbl_803DE910;
-    param_9[2] = param_6[2] - local_70;
-    Vec3_Normalize(param_9);
-    fVar1 = (float)(param_4 - param_3) * (float)(param_2 / param_5) + (float)(param_3 + param_1);
-    *param_9 = *param_9 * fVar1;
-    param_9[1] = param_9[1] * fVar1;
-    param_9[2] = param_9[2] * fVar1;
-    *param_9 = *param_9 + local_78;
-    param_9[1] = param_9[1] + local_74;
-    param_9[2] = param_9[2] + local_70;
-  }
-  return param_9;
+    if (axial < lbl_803DE910) {
+        out[0] = p[0] - p0[0];
+        out[1] = lbl_803DE910;
+        out[2] = p[2] - p0[2];
+        Vec3_Normalize(out);
+        radiusA = radiusA + radiusB;
+        out[0] = out[0] * radiusA;
+        out[1] = out[1] * radiusA;
+        out[2] = out[2] * radiusA;
+        out[0] = out[0] + p0[0];
+        out[1] = out[1] + p0[1];
+        out[2] = out[2] + p0[2];
+        return out;
+    }
+    if (axial > halfLength) {
+        out[0] = p[0] - p1[0];
+        out[1] = lbl_803DE910;
+        out[2] = p[2] - p1[2];
+        Vec3_Normalize(out);
+        radiusA = radiusA + radiusC;
+        out[0] = out[0] * radiusA;
+        out[1] = out[1] * radiusA;
+        out[2] = out[2] * radiusA;
+        out[0] = out[0] + p1[0];
+        out[1] = out[1] + p1[1];
+        out[2] = out[2] + p1[2];
+        return out;
+    }
+    dir[0] = p1[0] - p0[0];
+    dir[1] = p1[1] - p0[1];
+    dir[2] = p1[2] - p0[2];
+    invHalfLength = lbl_803DE918 / halfLength;
+    dir[0] = dir[0] * invHalfLength;
+    dir[1] = dir[1] * invHalfLength;
+    dir[2] = dir[2] * invHalfLength;
+    Vec3_ScaleAdd(axial, p0, dir, surface);
+    out[0] = p[0] - surface[0];
+    out[1] = lbl_803DE910;
+    out[2] = p[2] - surface[2];
+    Vec3_Normalize(out);
+    radiusA = (radiusC - radiusB) * (axial / halfLength) + (radiusB + radiusA);
+    out[0] = out[0] * radiusA;
+    out[1] = out[1] * radiusA;
+    out[2] = out[2] * radiusA;
+    out[0] = out[0] + surface[0];
+    out[1] = out[1] + surface[1];
+    out[2] = out[2] + surface[2];
+    return out;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -956,66 +953,63 @@ float *ObjHits_ProjectPointToTaperedCapsuleXZ(double param_1,double param_2,doub
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
-float *ObjHits_ProjectPointToTaperedCapsule3D(double param_1,double param_2,double param_3,
-                                              double param_4,double param_5,float *param_6,
-                                              float *param_7,float *param_8,float *param_9)
+float *ObjHits_ProjectPointToTaperedCapsule3D(float radiusA, float axial, float radiusB,
+                                              float radiusC, float halfLength, float *p,
+                                              float *p0, float *p1, float *out)
 {
-  float fVar1;
-  float local_78;
-  float local_74;
-  float local_70;
-  float local_6c;
-  float local_68;
-  float local_64;
+    float invHalfLength;
+    float surface[3];
+    float dir[3];
 
-  if (param_2 < (double)lbl_803DE910) {
-    *param_9 = *param_6 - *param_7;
-    param_9[1] = param_6[1] - param_7[1];
-    param_9[2] = param_6[2] - param_7[2];
-    Vec3_Normalize(param_9);
-    fVar1 = (float)(param_1 + param_3);
-    *param_9 = *param_9 * fVar1;
-    param_9[1] = param_9[1] * fVar1;
-    param_9[2] = param_9[2] * fVar1;
-    *param_9 = *param_9 + *param_7;
-    param_9[1] = param_9[1] + param_7[1];
-    param_9[2] = param_9[2] + param_7[2];
-  }
-  else if (param_2 > param_5) {
-    *param_9 = *param_6 - *param_8;
-    param_9[1] = param_6[1] - param_8[1];
-    param_9[2] = param_6[2] - param_8[2];
-    Vec3_Normalize(param_9);
-    fVar1 = (float)(param_1 + param_4);
-    *param_9 = *param_9 * fVar1;
-    param_9[1] = param_9[1] * fVar1;
-    param_9[2] = param_9[2] * fVar1;
-    *param_9 = *param_9 + *param_8;
-    param_9[1] = param_9[1] + param_8[1];
-    param_9[2] = param_9[2] + param_8[2];
-  }
-  else {
-    local_64 = (float)((double)lbl_803DE918 / param_5);
-    local_6c = (*param_8 - *param_7) * local_64;
-    local_68 = (param_8[1] - param_7[1]) * local_64;
-    local_64 = (param_8[2] - param_7[2]) * local_64;
-    Vec3_ScaleAdd(param_7,&local_6c,param_2,&local_78);
-    *param_9 = *param_6 - local_78;
-    param_9[1] = param_6[1] - local_74;
-    param_9[2] = param_6[2] - local_70;
-    Vec3_Normalize(param_9);
-    fVar1 = (float)(param_4 - param_3) * (float)(param_2 / param_5) + (float)(param_3 + param_1);
-    *param_9 = *param_9 * fVar1;
-    param_9[1] = param_9[1] * fVar1;
-    param_9[2] = param_9[2] * fVar1;
-    *param_9 = *param_9 + local_78;
-    param_9[1] = param_9[1] + local_74;
-    param_9[2] = param_9[2] + local_70;
-  }
-  return param_9;
+    if (axial < lbl_803DE910) {
+        out[0] = p[0] - p0[0];
+        out[1] = p[1] - p0[1];
+        out[2] = p[2] - p0[2];
+        Vec3_Normalize(out);
+        radiusA = radiusA + radiusB;
+        out[0] = out[0] * radiusA;
+        out[1] = out[1] * radiusA;
+        out[2] = out[2] * radiusA;
+        out[0] = out[0] + p0[0];
+        out[1] = out[1] + p0[1];
+        out[2] = out[2] + p0[2];
+        return out;
+    }
+    if (axial > halfLength) {
+        out[0] = p[0] - p1[0];
+        out[1] = p[1] - p1[1];
+        out[2] = p[2] - p1[2];
+        Vec3_Normalize(out);
+        radiusA = radiusA + radiusC;
+        out[0] = out[0] * radiusA;
+        out[1] = out[1] * radiusA;
+        out[2] = out[2] * radiusA;
+        out[0] = out[0] + p1[0];
+        out[1] = out[1] + p1[1];
+        out[2] = out[2] + p1[2];
+        return out;
+    }
+    dir[0] = p1[0] - p0[0];
+    dir[1] = p1[1] - p0[1];
+    dir[2] = p1[2] - p0[2];
+    invHalfLength = lbl_803DE918 / halfLength;
+    dir[0] = dir[0] * invHalfLength;
+    dir[1] = dir[1] * invHalfLength;
+    dir[2] = dir[2] * invHalfLength;
+    Vec3_ScaleAdd(axial, p0, dir, surface);
+    out[0] = p[0] - surface[0];
+    out[1] = p[1] - surface[1];
+    out[2] = p[2] - surface[2];
+    Vec3_Normalize(out);
+    radiusA = (radiusC - radiusB) * (axial / halfLength) + (radiusB + radiusA);
+    out[0] = out[0] * radiusA;
+    out[1] = out[1] * radiusA;
+    out[2] = out[2] * radiusA;
+    out[0] = out[0] + surface[0];
+    out[1] = out[1] + surface[1];
+    out[2] = out[2] + surface[2];
+    return out;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -1115,43 +1109,40 @@ float *ObjHits_CalcTaperedCapsuleNormal(double param_1,double param_2,double par
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
-uint ObjHits_TestTaperedCapsuleXZ(double param_1,double param_2,double param_3,double param_4,
-                                  float *param_5,float *param_6,float *param_7,float *param_8,
-                                  float *param_9,float *param_10,float *param_11)
+uint ObjHits_TestTaperedCapsuleXZ(float radiusA, float radiusB, float radiusC, float halfLength,
+                                  float *p0, float *p1, float *axis, float *hit,
+                                  float *axial, float *dist2, float *sumR)
 {
-  float fVar1;
-  float fVar2;
-  double dVar3;
-  double dVar4;
-  double dVar5;
-  
-  dVar4 = (double)(*param_5 - *param_6);
-  dVar5 = (double)(param_5[2] - param_6[2]);
-  *param_9 = (float)(dVar4 * (double)*param_7 + (double)(float)(dVar5 * (double)param_7[2]));
-  dVar3 = (double)*param_9;
-  if (param_4 < dVar3) {
-    *param_10 = (*param_8 - *param_5) * (*param_8 - *param_5) +
-                (param_8[2] - param_5[2]) * (param_8[2] - param_5[2]);
-    fVar1 = (float)(param_1 + param_3);
-    *param_11 = fVar1;
-    return ((uint)(byte)((*param_10 <= fVar1 * fVar1) << 1) << 0x1c) >> 0x1d;
-  }
-  if (dVar3 < (double)lbl_803DE910) {
-    *param_10 = (float)(dVar4 * dVar4 + (double)(float)(dVar5 * dVar5));
-    fVar1 = (float)(param_1 + param_2);
-    *param_11 = fVar1;
-    return ((uint)(byte)((*param_10 <= fVar1 * fVar1) << 1) << 0x1c) >> 0x1d;
-  }
-  fVar1 = (float)((double)*param_7 * -dVar3 + dVar4);
-  fVar2 = (float)((double)param_7[2] * -dVar3 + dVar5);
-  *param_10 = fVar1 * fVar1 + fVar2 * fVar2;
-  fVar1 = (float)((double)*param_9 / param_4) * (float)(param_3 - param_2) +
-          (float)(param_1 + param_2);
-  *param_11 = fVar1;
-  return ((uint)(byte)((*param_10 <= fVar1 * fVar1) << 1) << 0x1c) >> 0x1d;
+    float dx, dz;
+    float ex, ey;
+    float fa, fc;
+    float t;
+    float r;
+
+    dx = p0[0] - p1[0];
+    dz = p0[2] - p1[2];
+    *axial = dx * axis[0] + dz * axis[2];
+    if (*axial > halfLength) {
+        fa = hit[0] - p0[0];
+        fc = hit[2] - p0[2];
+        *dist2 = fa * fa + fc * fc;
+        r = radiusA + radiusC;
+        *sumR = r;
+        return *dist2 <= r * r;
+    }
+    if (*axial < lbl_803DE910) {
+        *dist2 = dx * dx + dz * dz;
+        r = radiusA + radiusB;
+        *sumR = r;
+        return *dist2 <= r * r;
+    }
+    ex = axis[0] * (t = -*axial) + dx;
+    ey = axis[2] * t + dz;
+    *dist2 = ex * ex + ey * ey;
+    r = (*axial / halfLength) * (radiusC - radiusB) + (radiusA + radiusB);
+    *sumR = r;
+    return *dist2 <= r * r;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
