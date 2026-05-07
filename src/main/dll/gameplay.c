@@ -1426,27 +1426,31 @@ undefined4 * FUN_800e87a8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int titleLoadSaveFiles(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                       undefined8 param_5,undefined8 param_6,undefined8 param_7,
-                       undefined8 param_8)
+extern int fn_8007DBC0(int a);
+extern void *memset(void *dst, int val, u32 n);
+extern u8 lbl_803A31C4[228];
+
+#pragma scheduling off
+#pragma peephole off
+int titleLoadSaveFiles(void)
 {
   int iVar1;
-  
-  iVar1 = FUN_80072600(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                      &gGameplayPreviewSettings
-                      );
-  if ((iVar1 == 0) || (gGameplayPreviewSettings == '\0')) {
-    FUN_800033a8(-0x7fc5c1dc,0,0xe4);
-    DAT_803a3e2a = 0;
-    DAT_803a3e26 = 1;
-    DAT_803a3e2c = 1;
-    gGameplayPreviewSettings = '\x01';
-    gGameplayPreviewColorRed = 0x7f;
-    gGameplayPreviewColorGreen = 0x7f;
-    gGameplayPreviewColorBlue = 0x7f;
+
+  iVar1 = fn_8007DBC0((int)lbl_803A31C4);
+  if ((iVar1 == 0) || (lbl_803A31C4[0] == '\0')) {
+    memset(lbl_803A31C4, 0, 0xE4);
+    lbl_803A31C4[6] = 0;
+    lbl_803A31C4[2] = 1;
+    lbl_803A31C4[8] = 1;
+    lbl_803A31C4[0] = 1;
+    lbl_803A31C4[10] = 0x7F;
+    lbl_803A31C4[11] = 0x7F;
+    lbl_803A31C4[12] = 0x7F;
   }
   return iVar1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
