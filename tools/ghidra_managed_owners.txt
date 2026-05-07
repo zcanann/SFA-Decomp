@@ -407,7 +407,6 @@ main/unknown/autos/placeholder_8026F134.c
 main/unknown/autos/placeholder_8026FD1C.c
 main/unknown/autos/placeholder_8026FD94.c
 main/unknown/autos/placeholder_80271BFC.c
-main/unknown/autos/placeholder_8027280C.c
 main/unknown/autos/placeholder_80272EEC.c
 main/unknown/autos/placeholder_80272F0C.c
 main/unknown/autos/placeholder_80273608.c

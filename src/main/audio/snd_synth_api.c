@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_8027280C.h"
+#include "main/audio/snd_synth_api.h"
 
 extern void sndBegin(void);
 extern void sndEnd(void);
@@ -27,81 +27,82 @@ extern u32 lbl_803DE264;
 extern u8 *lbl_803DE268;
 
 /*
- * Critical-section wrapper around fn_8026D6E4.
+ * MusyX sequence volume API, wrapping the underlying synth volume helper.
  *
  * EN v1.1 Address: 0x80272720, size 100b
  */
-void fn_80272720(int a, int b, int c, int d)
+void sndSeqVolume(int seqId, int volume, int time, int mode)
 {
     sndBegin();
-    fn_8026D6E4(a, b, c, d);
+    fn_8026D6E4(seqId, volume, time, mode);
     sndEnd();
 }
 
 /*
- * Look up an event halfword from a 2D table (slot[u8] x event[u8]).
+ * Look up a sequence MIDI priority halfword from a 2D table.
  *
  * EN v1.1 Address: 0x80272788, size 32b
  */
-u16 fn_80272788(u8 slot, u8 event)
+u16 seqGetMIDIPriority(u8 slot, u8 event)
 {
     return *(u16 *)(lbl_803BCC90 + slot * 32 + event * 2);
 }
 
 /*
- * Critical-section wrapper around fn_8027186C.
+ * MusyX FX controller wrapper.
  *
  * EN v1.1 Address: 0x802727A8, size 96b
  */
-int fn_802727A8(int a, int b, int c)
+int sndFXCtrl(int handle, int controller, int value)
 {
     int result;
     sndBegin();
-    result = fn_8027186C(a, b, c);
+    result = fn_8027186C(handle, controller, value);
     sndEnd();
     return result;
 }
 
 /*
- * Critical-section wrapper around fn_80271954.
+ * MusyX FX 14-bit controller wrapper.
  *
  * EN v1.1 Address: 0x80272808, size 96b
  */
-int fn_80272808(int a, int b, int c)
+int sndFXCtrl14(int handle, int controller, int value)
 {
     int result;
     sndBegin();
-    result = fn_80271954(a, b, c);
+    result = fn_80271954(handle, controller, value);
     sndEnd();
     return result;
 }
 
 /*
- * Critical-section wrapper around fn_80271AC0 (single-arg variant).
+ * MusyX FX key-off wrapper. Rena's SFA-Amethyst export also names this
+ * address audioStopSound, matching the game-facing behavior.
  *
  * EN v1.1 Address: 0x80272868, size 64b
  */
-int audioStopSound(int a)
+int sndFXKeyOff(int handle)
 {
     int result;
     sndBegin();
-    result = fn_80271AC0(a);
+    result = fn_80271AC0(handle);
     sndEnd();
     return result;
 }
 
 /*
- * Critical-section wrapper plus 2D table u8 lookup.
+ * MusyX FX start wrapper, adding the current studio's cached aux index.
  *
  * EN v1.1 Address: 0x802728A8, size 132b
  */
-int fn_802728A8(int a, int b, int c, int d)
+int sndFXStartEx(int fxId, int volume, int pan, int studio)
 {
     int result;
-    u8 e;
+    u8 auxIndex;
     sndBegin();
-    e = lbl_803BDA24[(u8)d * 2 + 1];
-    result = fn_802717B0(a, b, c, d, e);
+    auxIndex = lbl_803BDA24[(u8)studio * 2 + 1];
+    result = fn_802717B0(fxId, volume, pan, studio, auxIndex);
     sndEnd();
     return result;
 }
@@ -112,7 +113,7 @@ int fn_802728A8(int a, int b, int c, int d)
  *
  * EN v1.1 Address: 0x8027292C, size 68b
  */
-int fn_8027292C(u32 id)
+int sndFXCheck(u32 id)
 {
     u32 slot;
     slot = fn_8027949C(id);
@@ -123,43 +124,42 @@ int fn_8027292C(u32 id)
 }
 
 /*
- * Critical-section wrapper around fn_80271B4C with last 2 args set to
- * (0, -1).
+ * MusyX sequence volume-group volume wrapper.
  *
  * EN v1.1 Address: 0x80272970, size 96b
  */
-void fn_80272970(int a, int b, int c)
+void sndVolume(int group, int volume, int time)
 {
     sndBegin();
-    fn_80271B4C(a, b, c, 0, -1);
+    fn_80271B4C(group, volume, time, 0, -1);
     sndEnd();
 }
 
 /*
- * Conditionally fire one or two events (codes 0x15, 0x16) under
- * critical section, skipping each if its u8 flag is zero.
+ * MusyX master-volume wrapper. The two flags gate the 0x15 and 0x16
+ * controller updates.
  *
  * EN v1.1 Address: 0x802729D0, size 148b
  */
-void fn_802729D0(int a, int b, u8 flag1, u8 flag2)
+void sndMasterVolume(int volume, int time, u8 musicFlag, u8 fxFlag)
 {
     sndBegin();
-    if (flag1 != 0) {
-        fn_80271B4C(a, b, 0x15, 0, -1);
+    if (musicFlag != 0) {
+        fn_80271B4C(volume, time, 0x15, 0, -1);
     }
-    if (flag2 != 0) {
-        fn_80271B4C(a, b, 0x16, 0, -1);
+    if (fxFlag != 0) {
+        fn_80271B4C(volume, time, 0x16, 0, -1);
     }
     sndEnd();
 }
 
 /*
- * Three-way HRTF-mode setter that toggles two bits in lbl_803DE264
- * and resets all voices' stream flags if the mask changed.
+ * MusyX output-mode setter. It toggles the HRTF/stereo bits in
+ * lbl_803DE264 and marks all voices dirty when the output mask changes.
  *
  * EN v1.1 Address: 0x80272A64, size 248b
  */
-void fn_80272A64(int mode)
+void sndOutputMode(int mode)
 {
     u32 oldFlags = lbl_803DE264;
     switch (mode) {
@@ -192,10 +192,10 @@ void fn_80272A64(int mode)
 }
 
 /*
- * fn_80272B5C - large fn ~360 bytes, complex routing. Stubbed.
+ * sndSetAuxProcessingCallbacks - large fn ~360 bytes, complex routing. Stubbed.
  */
 #pragma dont_inline on
-void fn_80272B5C(int a, int b, int c, int d)
+void sndSetAuxProcessingCallbacks(int a, int b, int c, int d)
 {
     (void)a; (void)b; (void)c; (void)d;
 }
@@ -207,7 +207,7 @@ void fn_80272B5C(int a, int b, int c, int d)
  *
  * EN v1.1 Address: 0x80272CC4, size 176b
  */
-void fn_80272CC4(u8 slot, int a, int b)
+void synthActivateStudio(u8 slot, int a, int b)
 {
     sndBegin();
     *(u32 *)(lbl_803BD9C4 + slot * 4) = 0;
@@ -221,10 +221,10 @@ void fn_80272CC4(u8 slot, int a, int b)
 }
 
 /*
- * fn_80272D74 - large fn ~240 bytes, voice cleanup loop. Stubbed.
+ * synthDeactivateStudio - large fn ~240 bytes, voice cleanup loop. Stubbed.
  */
 #pragma dont_inline on
-void fn_80272D74(u8 slot)
+void synthDeactivateStudio(u8 slot)
 {
     (void)slot;
 }
@@ -235,7 +235,7 @@ void fn_80272D74(u8 slot)
  *
  * EN v1.1 Address: 0x80272E64, size 32b
  */
-void fn_80272E64(u8 idx)
+void synthAddStudioInput(u8 idx)
 {
     hwAddInput(idx);
 }
@@ -245,7 +245,7 @@ void fn_80272E64(u8 idx)
  *
  * EN v1.1 Address: 0x80272E84, size 32b
  */
-void fn_80272E84(u8 idx)
+void synthRemoveStudioInput(u8 idx)
 {
     hwRemoveInput(idx);
 }

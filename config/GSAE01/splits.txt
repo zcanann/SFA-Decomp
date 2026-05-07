@@ -1911,7 +1911,7 @@ main/audio/synth_control.c:
 	extabindex  start:0x80005E4C end:0x80005E94
 	.text       start:0x802720A8 end:0x80272720
 
-main/unknown/autos/placeholder_8027280C.c:
+main/audio/snd_synth_api.c:
 	extab       start:0x80005758 end:0x800057C8
 	extabindex  start:0x80005E94 end:0x80005F3C
 	.text       start:0x80272720 end:0x80272EA4
