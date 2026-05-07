@@ -109,7 +109,7 @@ void magicdust_update(undefined8 param_1,double param_2,double param_3,undefined
   while (iVar6 = ObjMsg_Pop((int)psVar4,local_24,(uint *)0x0,(uint *)0x0), iVar6 != 0) {
     if (local_24[0] == 0x7000b) {
       iVar6 = *(int *)(*(int *)(psVar4 + 0x28) + 0x18);
-      (**(code **)(*DAT_803dd6f8 + 0x18))(psVar4);
+      (*(code *)(*DAT_803dd6f8 + 0x18))(psVar4);
       FUN_80081118((double)lbl_803E4148,psVar4,(uint)*(byte *)(iVar8 + 0x27c),0x28);
       ObjHits_DisableObject((int)psVar4);
       FUN_80006824((uint)psVar4,*(ushort *)(iVar8 + 0x274));
@@ -129,23 +129,23 @@ void magicdust_update(undefined8 param_1,double param_2,double param_3,undefined
        dVar9 < (double)lbl_803E4150)) {
       *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 0x10;
       local_28 = '\0';
-      (**(code **)(*DAT_803dd708 + 8))
+      (*(code *)(*DAT_803dd708 + 8))
                 (psVar4,*(undefined2 *)(iVar8 + 0x272),0,0x10002,0xffffffff,&local_28);
       local_28 = '\x01';
-      (**(code **)(*DAT_803dd708 + 8))
+      (*(code *)(*DAT_803dd708 + 8))
                 (psVar4,*(undefined2 *)(iVar8 + 0x272),0,0x10002,0xffffffff,&local_28);
       local_28 = '\x02';
       in_r7 = 0xffffffff;
       in_r8 = &local_28;
       in_r9 = *DAT_803dd708;
-      (**(code **)(in_r9 + 8))(psVar4,*(undefined2 *)(iVar8 + 0x272),0,0x10002);
+      (*(code *)(in_r9 + 8))(psVar4,*(undefined2 *)(iVar8 + 0x272),0,0x10002);
     }
   }
   else {
     dVar9 = FUN_80017708((float *)(psVar4 + 0xc),(float *)(iVar5 + 0x18));
     if ((double)lbl_803E4150 <= dVar9) {
       *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) & 0xef;
-      (**(code **)(*DAT_803dd6f8 + 0x18))(psVar4);
+      (*(code *)(*DAT_803dd6f8 + 0x18))(psVar4);
     }
   }
   if ((psVar4[3] & 0x2000U) != 0) {
@@ -164,7 +164,7 @@ void magicdust_update(undefined8 param_1,double param_2,double param_3,undefined
       if (iVar5 != 0) {
         *(uint *)(iVar5 + 0x30) = *(uint *)(iVar5 + 0x30) | 0x1000;
       }
-      (**(code **)(*DAT_803dd728 + 0x20))(psVar4,iVar8);
+      (*(code *)(*DAT_803dd728 + 0x20))(psVar4,iVar8);
       goto LAB_80173f80;
     }
     iVar6 = *(int *)(psVar4 + 0x32);
@@ -194,13 +194,13 @@ void magicdust_update(undefined8 param_1,double param_2,double param_3,undefined
         *(byte *)(iVar8 + 0x27a) = bVar3 & 0xfb;
         *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 8;
         *(float *)(iVar8 + 0x26c) = lbl_803E414C;
-        (**(code **)(*DAT_803dd6f8 + 0x18))(psVar4);
+        (*(code *)(*DAT_803dd6f8 + 0x18))(psVar4);
         if (*(int *)(psVar4 + 0x18) == 0) {
           for (local_27[0] = '\x1e'; local_27[0] != '\0'; local_27[0] = local_27[0] + -1) {
             in_r7 = 0xffffffff;
             in_r8 = local_27;
             in_r9 = *DAT_803dd708;
-            (**(code **)(in_r9 + 8))(psVar4,*(undefined2 *)(iVar8 + 0x270),0,1);
+            (*(code *)(in_r9 + 8))(psVar4,*(undefined2 *)(iVar8 + 0x270),0,1);
           }
         }
         *(undefined *)(psVar4 + 0x1b) = 1;
@@ -218,17 +218,17 @@ void magicdust_update(undefined8 param_1,double param_2,double param_3,undefined
         *(undefined *)(psVar4 + 0x1b) = 0xff;
       }
       if (*(int *)(psVar4 + 0x18) == 0) {
-        (**(code **)(*DAT_803dd708 + 8))(psVar4,*(undefined2 *)(iVar8 + 0x270),0,1,0xffffffff,0);
+        (*(code *)(*DAT_803dd708 + 8))(psVar4,*(undefined2 *)(iVar8 + 0x270),0,1,0xffffffff,0);
         in_r7 = 0xffffffff;
         in_r8 = (char *)0x0;
         in_r9 = *DAT_803dd708;
-        (**(code **)(in_r9 + 8))(psVar4,*(undefined2 *)(iVar8 + 0x270),0,1);
+        (*(code *)(in_r9 + 8))(psVar4,*(undefined2 *)(iVar8 + 0x270),0,1);
       }
     }
     if ((*(byte *)(iVar8 + 0x27a) & 3) == 0) {
-      (**(code **)(*DAT_803dd728 + 0x10))((double)lbl_803DC074,psVar4,iVar8);
-      (**(code **)(*DAT_803dd728 + 0x14))(psVar4,iVar8);
-      (**(code **)(*DAT_803dd728 + 0x18))((double)lbl_803DC074,psVar4,iVar8);
+      (*(code *)(*DAT_803dd728 + 0x10))((double)lbl_803DC074,psVar4,iVar8);
+      (*(code *)(*DAT_803dd728 + 0x14))(psVar4,iVar8);
+      (*(code *)(*DAT_803dd728 + 0x18))((double)lbl_803DC074,psVar4,iVar8);
       if (*(char *)(iVar8 + 0x261) != '\0') {
         param_3 = -(double)*(float *)(psVar4 + 0x16);
         dVar9 = FUN_80293900((double)(float)(param_3 * param_3 +
@@ -283,7 +283,7 @@ void magicdust_update(undefined8 param_1,double param_2,double param_3,undefined
         }
         else {
           iVar6 = *(int *)(*(int *)(psVar4 + 0x28) + 0x18);
-          (**(code **)(*DAT_803dd6f8 + 0x18))(psVar4);
+          (*(code *)(*DAT_803dd6f8 + 0x18))(psVar4);
           FUN_80081118((double)lbl_803E4148,psVar4,(uint)*(byte *)(iVar8 + 0x27c),0x28);
           ObjHits_DisableObject((int)psVar4);
           FUN_80006824((uint)psVar4,*(ushort *)(iVar8 + 0x274));
@@ -437,9 +437,9 @@ void magicdust_init(int param_1,int param_2)
 LAB_80174324:
   *(float *)(iVar5 + 0x268) = lbl_803E4190;
   if ((*(ushort *)(param_1 + 6) & 0x2000) != 0) {
-    (**(code **)(*DAT_803dd728 + 4))(iVar5,0,0x40007,0);
-    (**(code **)(*DAT_803dd728 + 0xc))(iVar5,1,&DAT_80321908,iVar5 + 0x268,local_58);
-    (**(code **)(*DAT_803dd728 + 0x20))(param_1,iVar5);
+    (*(code *)(*DAT_803dd728 + 4))(iVar5,0,0x40007,0);
+    (*(code *)(*DAT_803dd728 + 0xc))(iVar5,1,&DAT_80321908,iVar5 + 0x268,local_58);
+    (*(code *)(*DAT_803dd728 + 0x20))(param_1,iVar5);
   }
   *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x2000;
   if ((*(byte *)(iVar5 + 0x27a) & 1) == 0) {
@@ -617,7 +617,7 @@ void FUN_80174024(int param_1)
                          iVar3,1);
           }
           else if (bVar1 < 3) {
-            (**(code **)(**(int **)(iVar3 + 0x68) + 0x28))(iVar3,*(undefined *)(iVar5 + 0x1d));
+            (*(code *)(**(int **)(iVar3 + 0x68) + 0x28))(iVar3,*(undefined *)(iVar5 + 0x1d));
           }
         }
       }
