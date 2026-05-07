@@ -150,9 +150,9 @@ void fn_8017D0D4(int obj)
 #pragma peephole off
 void fn_8017D278(short *obj, int mapData)
 {
-  int step;
-  u8 *state;
   short *p;
+  u8 *state;
+  int step;
 
   state = *(u8 **)((int)obj + 0xb8);
   *obj = (s16)(*(u8 *)(mapData + 0x38) << 8);
@@ -167,7 +167,7 @@ void fn_8017D278(short *obj, int mapData)
     p++;
     step++;
   } while (step < 8);
-  if ((step < 8) && (*(s16 *)(mapData + step * 2 + 0x18) == -1)) {
+  if ((step < 8) && (*(s16 *)(mapData + 0x18 + step * 2) == -1)) {
     state[0] = 8;
   } else {
     state[0] = step;
