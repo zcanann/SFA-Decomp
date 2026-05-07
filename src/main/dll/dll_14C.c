@@ -7,7 +7,7 @@ extern undefined4 FUN_80017a78();
 extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_80039520();
 extern undefined4 FUN_8003b818();
-extern undefined4 FUN_800400b0();
+extern void objRenderFn_80041018(void);
 
 extern f64 DOUBLE_803e44b8;
 extern f64 DOUBLE_803e44d8;
@@ -122,15 +122,18 @@ void FUN_8017ec94(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017f0ac(int param_1)
+#pragma peephole off
+void fn_8017EF3C(int param_1, int param_2)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
-    FUN_8003b818(param_1);
-  }
+  byte *pbVar1;
+
+  pbVar1 = *(byte **)(param_1 + 0xb8);
+  pbVar1[0] = 0;
+  pbVar1[1] = *(byte *)(param_2 + 0x1e);
+  *(ushort *)(param_1 + 0xb0) |= 0x4000;
   return;
 }
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -145,13 +148,15 @@ void FUN_8017f0ac(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017f0d4(int param_1)
+#pragma peephole off
+void fn_8017EFB0(int param_1)
 {
-  if (((*(uint *)(*(int *)(param_1 + 0x50) + 0x44) & 1) != 0) && (*(int *)(param_1 + 0x74) != 0)) {
-    FUN_800400b0();
+  if (((*(uint *)(*(int *)(param_1 + 0x50) + 0x44) & 1) != 0) && (*(uint *)(param_1 + 0x74) != 0)) {
+    objRenderFn_80041018();
   }
   return;
 }
+#pragma peephole reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
