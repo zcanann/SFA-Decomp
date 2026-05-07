@@ -361,6 +361,8 @@ void ObjHits_SetTargetMask(int param_1,undefined param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHitbox_SetSphereRadius(int param_1,undefined2 param_2)
 {
   double dVar1;
@@ -414,6 +416,8 @@ void ObjHitbox_SetSphereRadius(int param_1,undefined2 param_2)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -428,6 +432,8 @@ void ObjHitbox_SetSphereRadius(int param_1,undefined2 param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHitbox_SetCapsuleBounds(int param_1,undefined2 param_2,short param_3,short param_4)
 {
   float fVar1;
@@ -507,6 +513,8 @@ void ObjHitbox_SetCapsuleBounds(int param_1,undefined2 param_2,short param_3,sho
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -906,6 +914,8 @@ int ObjHits_AllocObjectState(int param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHits_RefreshObjectState(int param_1)
 {
   double dVar1;
@@ -1020,6 +1030,8 @@ void ObjHits_RefreshObjectState(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1034,6 +1046,8 @@ void ObjHits_RefreshObjectState(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4 ObjHits_RecordObjectHit(int obj,int hitObj,char priority,undefined hitVolume,undefined sphereIndex)
 {
   int hitObjectSlot;
@@ -1081,6 +1095,8 @@ undefined4 ObjHits_RecordObjectHit(int obj,int hitObj,char priority,undefined hi
   }
   return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1366,6 +1382,8 @@ void ObjHitReact_UpdateResetObjects(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHits_ResetWorkBuffers(void)
 {
   int i;
@@ -1376,6 +1394,8 @@ void ObjHits_ResetWorkBuffers(void)
   gObjHitsResetObjectCount = 0;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1720,6 +1740,8 @@ void ObjGroup_RemoveObject(int obj,int group)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int ObjGroup_GetObjectGroup(int obj)
 {
   uint remaining;
@@ -1752,6 +1774,8 @@ int ObjGroup_GetObjectGroup(int obj)
   }
   return group;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2815,6 +2839,8 @@ void ObjPath_GetPointModelMtx(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *param_3,undefined4 *param_4,
                  float *param_5,int param_6)
 {
@@ -2892,6 +2918,8 @@ void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *
   FUN_80286884();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
