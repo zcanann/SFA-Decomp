@@ -102,7 +102,7 @@ void fn_80199188(void *param_1, int param_2, int p3, int p4, int p5, int p6, int
 
     state = *(void **)((char *)param_1 + 0xb8);
     cfg = *(void **)((char *)param_1 + 0x4c);
-    thresh = (float)(s32)((s8)*(u8 *)((char *)cfg + 0x3b) * 2);
+    thresh = (float)(s32)(*(u8 *)((char *)cfg + 0x3b) * 2);
 
     dx0 = *(f32 *)((char *)state + 0x1c) - *(f32 *)((char *)param_1 + 0x18);
     dy0 = *(f32 *)((char *)state + 0x20) - *(f32 *)((char *)param_1 + 0x1c);
@@ -175,7 +175,7 @@ void fn_801992EC(void *param_1, int param_2, int p3, int p4, int p5, int p6, int
     } else {
         cat = (d0 < r) ? -1 : -2;
     }
-    fn_801993B0((double)r, (double)d1, 0.0, (double)d0, 0.0, 0.0, 0.0, 0.0,
+    fn_801993B0((double)d1, (double)dx1, (double)dy1, (double)dz1, (double)d0, (double)dx0, (double)dy0, (double)dz0,
                 param_1, param_2, (int)cat, (int)d1, p5, p6, p7, p8);
 }
 
