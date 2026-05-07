@@ -85,6 +85,8 @@ extern undefined4 uRam803dd854;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double param_3,
                                    undefined4 param_4,undefined4 param_5,int *param_6,
                                    int *param_7,int *param_8,float *param_9)
@@ -292,7 +294,11 @@ void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double para
   FUN_80286864();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 /*
  * --INFO--
  *
@@ -486,6 +492,8 @@ void ObjHits_CollectSkeletonHits3D(undefined4 param_1,undefined4 param_2,int *pa
   FUN_80286864();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -500,6 +508,8 @@ void ObjHits_CollectSkeletonHits3D(undefined4 param_1,undefined4 param_2,int *pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double param_3,
                                     undefined4 param_4,undefined4 param_5,int param_6,
                                     int param_7,undefined4 param_8,int param_9,float *param_10)
@@ -672,7 +682,11 @@ void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double par
   FUN_80286880();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 /*
  * --INFO--
  *
@@ -847,6 +861,8 @@ void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double
   FUN_80286880();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -861,6 +877,8 @@ void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 float *ObjHits_ProjectPointToTaperedCapsuleXZ(double param_1,double param_2,double param_3,
                                               double param_4,double param_5,float *param_6,
                                               float *param_7,float *param_8,float *param_9)
@@ -922,6 +940,8 @@ float *ObjHits_ProjectPointToTaperedCapsuleXZ(double param_1,double param_2,doub
   }
   return param_9;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -936,6 +956,8 @@ float *ObjHits_ProjectPointToTaperedCapsuleXZ(double param_1,double param_2,doub
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 float *ObjHits_ProjectPointToTaperedCapsule3D(double param_1,double param_2,double param_3,
                                               double param_4,double param_5,float *param_6,
                                               float *param_7,float *param_8,float *param_9)
@@ -996,6 +1018,8 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(double param_1,double param_2,doub
   }
   return param_9;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
