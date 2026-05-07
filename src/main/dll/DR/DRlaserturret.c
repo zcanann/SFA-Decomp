@@ -276,9 +276,9 @@ int fn_801E71A4(void *obj, void *param2, int dispatch)
     char stickHi;
     char stickLo;
     s16 v9d0;
-    int rng;
     int btn;
     int slot;
+    char nudge;
 
     state = *(void **)((char *)obj + 0xb8);
     if (dispatch == 0x14) {
@@ -340,32 +340,26 @@ int fn_801E71A4(void *obj, void *param2, int dispatch)
     if ((btn & 0x100) == 0) {
         return 0;
     }
-    {
-        char nudge;
-        if (*(s16 *)((char *)state + 0x9d0) < *(s16 *)((char *)state + 0x9ce)) {
-            if (*(u8 *)((char *)state + 0x9d2) >= 2) nudge = 2;
-            else nudge = 0;
-        } else {
-            nudge = 1;
+    if (*(s16 *)((char *)state + 0x9d0) < *(s16 *)((char *)state + 0x9ce)) {
+        if (*(u8 *)((char *)state + 0x9d2) >= 2) nudge = 2;
+        else nudge = 0;
+    } else {
+        nudge = 1;
+    }
+    switch (dispatch) {
+    case 0x14:
+        if ((s8)nudge == 0) {
+            *(u8 *)((char *)state + 0x9d2) = *(u8 *)((char *)state + 0x9d2) + 1;
         }
-        if (dispatch == 0x15) {
-            if ((s8)nudge == 1) {
-                {
-                    int *target = *(int **)((char *)state + 0x9b4);
-                    (**(code ***)((char *)target + 0x68))[0x48 / 4](target);
-                }
-            }
-            return ((s8)nudge == 1) ? 1 : 0;
-        } else if (dispatch < 0x15) {
-            if (dispatch == 0x14) {
-                if ((s8)nudge == 0) {
-                    *(u8 *)((char *)state + 0x9d2) = *(u8 *)((char *)state + 0x9d2) + 1;
-                }
-                return ((s8)nudge == 0) ? 1 : 0;
-            }
-        } else if (dispatch < 0x17) {
-            return ((s8)nudge == 2) ? 1 : 0;
+        return ((s8)nudge == 0) ? 1 : 0;
+    case 0x15:
+        if ((s8)nudge == 1) {
+            int *target = *(int **)((char *)state + 0x9b4);
+            (**(code ***)((char *)target + 0x68))[0x48 / 4](target);
         }
+        return ((s8)nudge == 1) ? 1 : 0;
+    case 0x16:
+        return ((s8)nudge == 2) ? 1 : 0;
     }
     return 0;
 }
