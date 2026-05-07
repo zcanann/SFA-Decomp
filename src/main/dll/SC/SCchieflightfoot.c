@@ -134,7 +134,7 @@ void SHthorntail_update(SHthorntailObject *obj)
         ObjPath_GetPointWorldPosition(obj,4,&fStack_6c,&fStack_68,&fStack_64,0);
         in_r8 = 0;
         in_r9 = *pDll_expgfx;
-        (**(code **)(in_r9 + 8))(psVar2,0x7f0,auStack_78,0x200001,0xffffffff);
+        (*(code *)(in_r9 + 8))(psVar2,0x7f0,auStack_78,0x200001,0xffffffff);
       }
       runtime->effectTimer = lbl_803E5450;
     }
@@ -154,7 +154,7 @@ void SHthorntail_update(SHthorntailObject *obj)
   cVar3 = objHitReact_update((ObjAnimComponent *)psVar2,hitReactEntries,0x19,uVar7,pfVar8);
   runtime->hitReactState = cVar3;
   if (cVar3 == '\0') {
-    uVar4 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(psVar2 + 0x56));
+    uVar4 = (*(code *)(*DAT_803dd72c + 0x40))((int)*(char *)(psVar2 + 0x56));
     runtime->locomotionMode = uVar4;
     bVar1 = config->controlMode;
     switch (bVar1) {
@@ -253,7 +253,7 @@ void SHthorntail_update(SHthorntailObject *obj)
     if (((runtime->behaviorFlags & 4) == 0) && (iVar6 = ObjTrigger_IsSet((int)psVar2), iVar6 != 0)) {
       uVar7 = FUN_80017760(1,(uint)*runtime->impactSfxTable);
       runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_IMPACT_PENDING;
-      (**(code **)(*DAT_803dd6d4 + 0x48))
+      (*(code *)(*DAT_803dd6d4 + 0x48))
                 (*(undefined *)(runtime->impactSfxTable + uVar7),psVar2,0xffffffff);
     }
     if (config->leashRadiusByte != '\0') {
@@ -269,9 +269,9 @@ void SHthorntail_update(SHthorntailObject *obj)
     if (gSHthorntailActiveConfigToken == SHTHORNTAIL_CONFIG_TOKEN_NONE) {
       gSHthorntailActiveConfigToken = config->configToken;
       *(float *)(psVar2 + 0x14) = -(lbl_803E544C * timeDelta - *(float *)(psVar2 + 0x14));
-      (**(code **)(*DAT_803dd728 + 0x10))((double)timeDelta,psVar2,(int)runtime->moveScratch);
-      (**(code **)(*DAT_803dd728 + 0x14))(psVar2,(int)runtime->moveScratch);
-      (**(code **)(*DAT_803dd728 + 0x18))((double)timeDelta,psVar2,(int)runtime->moveScratch);
+      (*(code *)(*DAT_803dd728 + 0x10))((double)timeDelta,psVar2,(int)runtime->moveScratch);
+      (*(code *)(*DAT_803dd728 + 0x14))(psVar2,(int)runtime->moveScratch);
+      (*(code *)(*DAT_803dd728 + 0x18))((double)timeDelta,psVar2,(int)runtime->moveScratch);
       psVar2[1] = *(short *)(iVar10 + 0x7dc);
       psVar2[2] = *(short *)(iVar10 + 0x7de);
     }
@@ -280,13 +280,13 @@ void SHthorntail_update(SHthorntailObject *obj)
         gSHthorntailActiveConfigToken = SHTHORNTAIL_CONFIG_TOKEN_NONE;
       }
       if ((runtime->behaviorState < '\x02') || ('\x06' < runtime->behaviorState)) {
-        (**(code **)(*DAT_803dd728 + 0x20))(psVar2,(int)runtime->moveScratch);
+        (*(code *)(*DAT_803dd728 + 0x20))(psVar2,(int)runtime->moveScratch);
       }
       else {
         *(float *)(psVar2 + 0x14) = -(lbl_803E544C * timeDelta - *(float *)(psVar2 + 0x14));
-        (**(code **)(*DAT_803dd728 + 0x10))((double)timeDelta,psVar2,(int)runtime->moveScratch);
-        (**(code **)(*DAT_803dd728 + 0x14))(psVar2,(int)runtime->moveScratch);
-        (**(code **)(*DAT_803dd728 + 0x18))((double)timeDelta,psVar2,(int)runtime->moveScratch);
+        (*(code *)(*DAT_803dd728 + 0x10))((double)timeDelta,psVar2,(int)runtime->moveScratch);
+        (*(code *)(*DAT_803dd728 + 0x14))(psVar2,(int)runtime->moveScratch);
+        (*(code *)(*DAT_803dd728 + 0x18))((double)timeDelta,psVar2,(int)runtime->moveScratch);
         psVar2[1] = *(short *)(iVar10 + 0x7dc);
         psVar2[2] = *(short *)(iVar10 + 0x7de);
       }
@@ -404,31 +404,31 @@ void SHthorntail_updateDustEffects(SHthorntailObject *obj)
     if (runtime->dustEffectTimer < lbl_803E5468) {
       if ((f32)(s32)randomGetRange(0,0x1e0) <
           runtime->dustEffectTimer * lbl_803E546C) {
-        (**(code **)(*pDll_expgfx + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
+        (*(code *)(*pDll_expgfx + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
       }
     }
     else if (runtime->dustEffectTimer < lbl_803E5470) {
       if ((f32)(s32)randomGetRange(0,0x1e0) <
           runtime->dustEffectTimer / lbl_803E5474) {
-        (**(code **)(*pDll_expgfx + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
+        (*(code *)(*pDll_expgfx + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
       }
       local_32 = 0x28;
       local_38 = 0;
       local_30 = lbl_803E5478 * ((runtime->dustEffectTimer - lbl_803E5468) / lbl_803E547C);
-      (**(code **)(*pDll_expgfx + 8))(playerObj,0x7d2,&local_38,2,0xffffffff,0);
+      (*(code *)(*pDll_expgfx + 8))(playerObj,0x7d2,&local_38,2,0xffffffff,0);
       runtime->dustEffectFlags = runtime->dustEffectFlags | 2;
     }
     else if (runtime->dustEffectTimer < lbl_803E5480) {
       if ((f32)(s32)randomGetRange(0,0x1e0) <
           runtime->dustEffectTimer * lbl_803E546C) {
-        (**(code **)(*pDll_expgfx + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
+        (*(code *)(*pDll_expgfx + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
       }
       if ((runtime->dustEffectFlags & 2) != 0) {
         runtime->dustEffectFlags = runtime->dustEffectFlags & 0xfd;
         local_32 = 0x46;
         local_30 = lbl_803E5484;
         for (burstCount = 0xf; burstCount != 0; burstCount = burstCount + -1) {
-          (**(code **)(*pDll_expgfx + 8))(playerObj,0x7d2,&local_38,2,0xffffffff,0);
+          (*(code *)(*pDll_expgfx + 8))(playerObj,0x7d2,&local_38,2,0xffffffff,0);
         }
       }
     }
