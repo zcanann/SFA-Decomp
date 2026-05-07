@@ -36,6 +36,37 @@ extern FireObjectInterface **lbl_803DCA54;
 extern FireEventInterface **lbl_803DCAAC;
 extern f32 lbl_803E64D8;
 
+#define FIRE_LOOP_SFX_ID 0x48B
+
+#define FIRE_MODE_0 0
+#define FIRE_MODE_1 1
+#define FIRE_MODE_2 2
+#define FIRE_MODE_3 3
+
+#define FIRE_ANIM_EVENT_OPEN_PATH 1
+#define FIRE_ANIM_EVENT_WARP 2
+#define FIRE_ANIM_EVENT_UNLOAD_NEIGHBOR_MAP 3
+
+#define FIRE_MAP_ID_7 7
+#define FIRE_MAP_ID_0B 0x0B
+#define FIRE_MAP_ID_17 0x17
+
+#define FIRE_WARP_ID_SHRINE 2
+#define FIRE_WARP_ID_MODE2_ROUTE_A 0x20
+#define FIRE_WARP_ID_MODE2_ROUTE_B 0x22
+#define FIRE_WARP_ID_MODE3 0x0F
+
+#define FIRE_MODE2_RESET_GAMEBIT 0x405
+#define FIRE_MODE2_ROUTE_A_GAMEBIT 0xBFD
+#define FIRE_MODE2_ROUTE_B_GAMEBIT 0x0FF
+#define FIRE_MODE2_ROUTE_C_GAMEBIT 0xC6E
+#define FIRE_LIGHTFOOT_UNLOCK_GAMEBIT 0x1ED
+
+#define FIRE_INIT_GAMEBIT_0 0x90D
+#define FIRE_INIT_GAMEBIT_1 0x90E
+#define FIRE_INIT_GAMEBIT_2 0x90F
+#define FIRE_INIT_COLLECTABLE_ID 0x2EE
+
 /*
  * --INFO--
  *
@@ -53,86 +84,86 @@ extern f32 lbl_803E64D8;
 #pragma peephole off
 undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
+  u8 mode;
   int stateIndex;
-  int mode;
   u8 eventId;
   undefined4 anim;
 
   mode = (u8)(*lbl_803DCAAC)->getMode((int)obj->mapId);
-  Sfx_KeepAliveLoopedObjectSound(0,0x48b);
+  Sfx_KeepAliveLoopedObjectSound(0,FIRE_LOOP_SFX_ID);
   for (stateIndex = 0; stateIndex < (int)(uint)animUpdate->eventCount; stateIndex++) {
     eventId = animUpdate->eventIds[stateIndex];
-    if (eventId == 1) {
+    if (eventId == FIRE_ANIM_EVENT_OPEN_PATH) {
       fn_80041E3C(0);
       switch (mode) {
-      case 0:
-      case 1:
-        (*lbl_803DCAAC)->setAnimEvent(7,0,0);
-        (*lbl_803DCAAC)->setAnimEvent(7,2,0);
-        (*lbl_803DCAAC)->setAnimEvent(7,3,0);
-        (*lbl_803DCAAC)->setAnimEvent(7,7,0);
-        (*lbl_803DCAAC)->setAnimEvent(7,10,0);
+      case FIRE_MODE_0:
+      case FIRE_MODE_1:
+        (*lbl_803DCAAC)->setAnimEvent(FIRE_MAP_ID_7,0,0);
+        (*lbl_803DCAAC)->setAnimEvent(FIRE_MAP_ID_7,2,0);
+        (*lbl_803DCAAC)->setAnimEvent(FIRE_MAP_ID_7,3,0);
+        (*lbl_803DCAAC)->setAnimEvent(FIRE_MAP_ID_7,7,0);
+        (*lbl_803DCAAC)->setAnimEvent(FIRE_MAP_ID_7,10,0);
         (*lbl_803DCAAC)->setAnimEvent(10,7,0);
-        GameBit_Set(0x1ed,1);
-        fn_80042F78(0x17);
-        anim = mapGetDirIdx(0x17);
+        GameBit_Set(FIRE_LIGHTFOOT_UNLOCK_GAMEBIT,1);
+        fn_80042F78(FIRE_MAP_ID_17);
+        anim = mapGetDirIdx(FIRE_MAP_ID_17);
         fn_80043560(anim,0);
         break;
-      case 2:
-        fn_80042F78(0xb);
-        anim = mapGetDirIdx(0xb);
+      case FIRE_MODE_2:
+        fn_80042F78(FIRE_MAP_ID_0B);
+        anim = mapGetDirIdx(FIRE_MAP_ID_0B);
         fn_80043560(anim,0);
         break;
-      case 3:
-        fn_80042F78(7);
-        anim = mapGetDirIdx(7);
+      case FIRE_MODE_3:
+        fn_80042F78(FIRE_MAP_ID_7);
+        anim = mapGetDirIdx(FIRE_MAP_ID_7);
         fn_80043560(anim,0);
         break;
       }
     }
-    else if (eventId == 2) {
+    else if (eventId == FIRE_ANIM_EVENT_WARP) {
       switch (mode) {
-      case 0:
-      case 1:
-        warpToMap(2,0);
+      case FIRE_MODE_0:
+      case FIRE_MODE_1:
+        warpToMap(FIRE_WARP_ID_SHRINE,0);
         break;
-      case 2:
-        GameBit_Set(0x405,0);
-        if (GameBit_Get(0xff) != 0) {
-          (*lbl_803DCAAC)->triggerEvent(0xb,3);
-          (*lbl_803DCAAC)->setAnimEvent(0xb,8,1);
-          (*lbl_803DCAAC)->setAnimEvent(0xb,9,1);
-          warpToMap(0x22,0);
+      case FIRE_MODE_2:
+        GameBit_Set(FIRE_MODE2_RESET_GAMEBIT,0);
+        if (GameBit_Get(FIRE_MODE2_ROUTE_B_GAMEBIT) != 0) {
+          (*lbl_803DCAAC)->triggerEvent(FIRE_MAP_ID_0B,3);
+          (*lbl_803DCAAC)->setAnimEvent(FIRE_MAP_ID_0B,8,1);
+          (*lbl_803DCAAC)->setAnimEvent(FIRE_MAP_ID_0B,9,1);
+          warpToMap(FIRE_WARP_ID_MODE2_ROUTE_B,0);
         }
-        else if (GameBit_Get(0xbfd) != 0) {
-          (*lbl_803DCAAC)->triggerEvent(0xb,2);
-          (*lbl_803DCAAC)->setAnimEvent(0xb,5,1);
-          (*lbl_803DCAAC)->setAnimEvent(0xb,6,1);
-          warpToMap(0x20,0);
+        else if (GameBit_Get(FIRE_MODE2_ROUTE_A_GAMEBIT) != 0) {
+          (*lbl_803DCAAC)->triggerEvent(FIRE_MAP_ID_0B,2);
+          (*lbl_803DCAAC)->setAnimEvent(FIRE_MAP_ID_0B,5,1);
+          (*lbl_803DCAAC)->setAnimEvent(FIRE_MAP_ID_0B,6,1);
+          warpToMap(FIRE_WARP_ID_MODE2_ROUTE_A,0);
         }
-        else if (GameBit_Get(0xc6e) != 0) {
-          (*lbl_803DCAAC)->triggerEvent(0xb,4);
-          (*lbl_803DCAAC)->setAnimEvent(0xb,8,1);
-          (*lbl_803DCAAC)->setAnimEvent(0xb,9,1);
-          warpToMap(0x22,0);
+        else if (GameBit_Get(FIRE_MODE2_ROUTE_C_GAMEBIT) != 0) {
+          (*lbl_803DCAAC)->triggerEvent(FIRE_MAP_ID_0B,4);
+          (*lbl_803DCAAC)->setAnimEvent(FIRE_MAP_ID_0B,8,1);
+          (*lbl_803DCAAC)->setAnimEvent(FIRE_MAP_ID_0B,9,1);
+          warpToMap(FIRE_WARP_ID_MODE2_ROUTE_B,0);
         }
         break;
-      case 3:
-        warpToMap(0xf,0);
+      case FIRE_MODE_3:
+        warpToMap(FIRE_WARP_ID_MODE3,0);
         break;
       }
       loadUiDll(1);
     }
-    else if (eventId == 3) {
+    else if (eventId == FIRE_ANIM_EVENT_UNLOAD_NEIGHBOR_MAP) {
       switch (mode) {
-      case 0:
-      case 1:
-      case 2:
-        anim = mapGetDirIdx(7);
+      case FIRE_MODE_0:
+      case FIRE_MODE_1:
+      case FIRE_MODE_2:
+        anim = mapGetDirIdx(FIRE_MAP_ID_7);
         mapUnload(anim,0x20000000);
         break;
-      case 3:
-        anim = mapGetDirIdx(0xb);
+      case FIRE_MODE_3:
+        anim = mapGetDirIdx(FIRE_MAP_ID_0B);
         mapUnload(anim,0x20000000);
         break;
       }
@@ -187,10 +218,10 @@ void fireObj_init(FireObject *obj)
   v = obj->flags | 0x2000;
   obj->flags = (u16)v;
   fn_800887F8(0);
-  GameBit_Set(0x90d,1);
-  GameBit_Set(0x90e,1);
-  GameBit_Set(0x90f,1);
-  fn_8000A380(3,2,0x2ee);
+  GameBit_Set(FIRE_INIT_GAMEBIT_0,1);
+  GameBit_Set(FIRE_INIT_GAMEBIT_1,1);
+  GameBit_Set(FIRE_INIT_GAMEBIT_2,1);
+  fn_8000A380(3,2,FIRE_INIT_COLLECTABLE_ID);
   return;
 }
 #pragma peephole reset
