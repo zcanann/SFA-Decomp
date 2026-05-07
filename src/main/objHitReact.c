@@ -48,21 +48,31 @@ int objHitReact_update(ObjAnimComponent *obj,ObjHitReactEntry *reactionEntries,u
   ObjHitReactEffectOrigin effectOrigin;
   int hitSphereIndex;
   ObjHitReactEntry *reactionEntry;
+  ObjAnimComponent *object;
+  ObjHitReactEntry *entries;
+  u32 entryCount;
+  u32 state;
+  float *stepScale;
 
+  object = obj;
+  entries = reactionEntries;
+  entryCount = reactionEntryCount;
+  state = reactionState;
+  stepScale = reactionStepScale;
   effectOrigin = lbl_802C1B00;
-  if ((reactionState & 0xff) != 0) {
-    OSReport(sObjHitReactHitstateFrameString,obj->currentMoveProgress);
-    moveEnded = ObjAnim_AdvanceCurrentMove((double)*reactionStepScale,(double)timeDelta,
-                                           (int)obj,(ObjAnimEventList *)0x0);
+  if ((state & 0xff) != 0) {
+    OSReport(sObjHitReactHitstateFrameString,object->currentMoveProgress);
+    moveEnded = ObjAnim_AdvanceCurrentMove((double)*stepScale,(double)timeDelta,
+                                           (int)object,(ObjAnimEventList *)0x0);
     if (moveEnded != 0) {
       OSReport(sObjHitReactResetString);
-      reactionState = 0;
+      state = 0;
     }
   }
-  priorityHitType = ObjHits_GetPriorityHitWithPosition((int)obj,0,&hitSphereIndex,0,&hitPos[0],
+  priorityHitType = ObjHits_GetPriorityHitWithPosition((int)object,0,&hitSphereIndex,0,&hitPos[0],
                                                        &hitPos[1],&hitPos[2]);
   if (priorityHitType != 0) {
-    ObjAnimBank *bank = ObjAnim_GetActiveBank(obj);
+    ObjAnimBank *bank = ObjAnim_GetActiveBank(object);
     hitPos[0] = hitPos[0] + playerMapOffsetX;
     hitPos[2] = hitPos[2] + playerMapOffsetZ;
     effectPos.scale = lbl_803DE918;
@@ -71,21 +81,21 @@ int objHitReact_update(ObjAnimComponent *obj,ObjHitReactEntry *reactionEntries,u
     effectPos.x = 0;
     animDef = bank->animDef;
     hitSphereIndex = ObjAnim_GetHitReactEntryIndex(animDef,hitSphereIndex);
-    if (hitSphereIndex >= (int)(reactionEntryCount & 0xff)) {
+    if (hitSphereIndex >= (int)(entryCount & 0xff)) {
       OSReport(sObjHitReactSphereOverflowString);
       hitSphereIndex = 0;
     }
-    reactionEntry = &reactionEntries[hitSphereIndex];
+    reactionEntry = &entries[hitSphereIndex];
     if (priorityHitType != OBJHITREACT_COLLISION_SKIP_REACTION) {
       if ((reactionEntry->hitSfxA > -1) &&
-          (sfxActive = Sfx_IsPlayingFromObject((int)obj,(u16)reactionEntry->hitSfxA),
+          (sfxActive = Sfx_IsPlayingFromObject((int)object,(u16)reactionEntry->hitSfxA),
           !sfxActive)) {
-        Sfx_PlayFromObject((int)obj,(u16)reactionEntry->hitSfxA);
+        Sfx_PlayFromObject((int)object,(u16)reactionEntry->hitSfxA);
       }
       if ((reactionEntry->hitSfxB > -1) &&
-          (sfxActive = Sfx_IsPlayingFromObject((int)obj,(u16)reactionEntry->hitSfxB),
+          (sfxActive = Sfx_IsPlayingFromObject((int)object,(u16)reactionEntry->hitSfxB),
           !sfxActive)) {
-        Sfx_PlayFromObject((int)obj,(u16)reactionEntry->hitSfxB);
+        Sfx_PlayFromObject((int)object,(u16)reactionEntry->hitSfxB);
       }
       if (reactionEntry->hitFxMode == OBJHITREACT_HIT_FX_MODE_EFFECT) {
         effectHandle = Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID,1);
@@ -95,16 +105,16 @@ int objHitReact_update(ObjAnimComponent *obj,ObjHitReactEntry *reactionEntries,u
         }
       }
       else {
-        fn_8009A1DC((double)lbl_803DE964,(int)obj,(undefined2 *)&effectPos.x,1,0);
+        fn_8009A1DC((double)lbl_803DE964,(int)object,(undefined2 *)&effectPos.x,1,0);
       }
     }
-    if (((reactionState & 0xff) == 0) && (reactionEntry->reactionAnim > -1)) {
-      ObjAnim_SetCurrentMove((double)lbl_803DE910,(int)obj,(int)reactionEntry->reactionAnim,0);
-      *reactionStepScale = reactionEntry->cooldown;
-      reactionState = 1;
+    if (((state & 0xff) == 0) && (reactionEntry->reactionAnim > -1)) {
+      ObjAnim_SetCurrentMove((double)lbl_803DE910,(int)object,(int)reactionEntry->reactionAnim,0);
+      *stepScale = reactionEntry->cooldown;
+      state = 1;
     }
   }
-  return reactionState;
+  return state;
 }
 #pragma peephole reset
 #pragma scheduling reset
