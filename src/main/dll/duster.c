@@ -319,14 +319,14 @@ void fn_80155770(uint param_1,int param_2,undefined4 param_3,int param_4)
  */
 void fn_801557D4(int *param_9,int param_10)
 {
-  uint uVar1;
+  int iVar1;
 
   if (*(byte *)(param_10 + 0x33a) == 0) {
     fn_801554B4(param_9,param_10);
   }
   else {
     if ((*(short *)(*(int *)(param_10 + 0x29c) + 0x44) == 1) &&
-       (uVar1 = fn_80295CBC(*(int *)(param_10 + 0x29c)), uVar1 != 0)) {
+       (iVar1 = (int)fn_80295CBC(*(int *)(param_10 + 0x29c)), iVar1 != 0)) {
       *(uint *)(param_10 + 0x2e4) = *(uint *)(param_10 + 0x2e4) & ~0x10000;
     }
     if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
@@ -387,15 +387,15 @@ void fn_80155884(int *param_9,int param_10)
 void fn_80155948(int *param_9,int param_10)
 {
   short sVar1;
-  uint uVar2;
+  int iVar2;
   ushort local_18 [2];
   float afStack_14 [3];
-  
+
   if (*(byte *)(param_10 + 0x33a) == 0) {
     fn_801554B4(param_9,param_10);
   }
   else if ((*(short *)(*(int *)(param_10 + 0x29c) + 0x44) == 1) &&
-          (uVar2 = fn_80295CBC(*(int *)(param_10 + 0x29c)), uVar2 != 0)) {
+          (iVar2 = (int)fn_80295CBC(*(int *)(param_10 + 0x29c)), iVar2 != 0)) {
     ObjHits_SetHitVolumeSlot((int)param_9,10,1,0);
     sVar1 = *(short *)(param_9 + 0x28);
     if (sVar1 == 3) {
