@@ -14,11 +14,11 @@ extern float lbl_803E7BF4;
 extern float lbl_803E7BF8;
 
 void Vec_scale(void* v_in, void* v_out, float s);
-float fn_80292C9C(void* v);
+float Vec_lengthSquared(void* v);
 void fastCastFloatToU16(u16* p, float x);
 float fastCastU16ToFloat(u16* p);
 
-float fn_80292B44(float x, float y) {
+float powfBitEstimate(float x, float y) {
     union {
         float f;
         u32 u;
@@ -51,8 +51,8 @@ float fn_80292B44(float x, float y) {
     return lbl_803E7BC8;
 }
 
-void fn_80292C30(void* v_in, void* v_out) {
-    float scale = invSqrt(fn_80292C9C(v_in));
+void Vec_normalize(void* v_in, void* v_out) {
+    float scale = invSqrt(Vec_lengthSquared(v_in));
     Vec_scale(v_in, v_out, scale);
 }
 
@@ -64,12 +64,12 @@ void Vec_scale(void* v_in, void* v_out, float s) {
     out->z = in->z * s;
 }
 
-float fn_80292C9C(void* v) {
+float Vec_lengthSquared(void* v) {
     Vec3f* vec = v;
     return vec->z * vec->z + (vec->x * vec->x + vec->y * vec->y);
 }
 
-float fn_80292CC4(u16* p, float x) {
+float trigReduceQuadrant(u16* p, float x) {
     float scaled = lbl_803E7BF8 * __fabsf(x);
     fastCastFloatToU16(p, scaled);
     *p = (*p + 1) & 0xFFFE;

@@ -64,7 +64,7 @@ extern float lbl_803E7DA8;
 extern float lbl_803E7DAC;
 
 float fastCastS16ToFloat(s16* p);
-float fn_80292CC4(u16* p, float x);
+float trigReduceQuadrant(u16* p, float x);
 
 float __ieee754_rem_pio2(int angle) {
     s16 reduced = (u16)angle << 2;
@@ -238,7 +238,7 @@ float fn_80293AC4(int angle) {
 
 void fn_80293C64(float x, float* sin_out, float* cos_out) {
     u16 n;
-    float y = fn_80292CC4(&n, x);
+    float y = trigReduceQuadrant(&n, x);
     float y2 = y * y;
     float sin_y = y * ((lbl_803E7D4C * y2 + lbl_803E7D48) * y2 + lbl_803E7D44);
     float cos_y = ((lbl_803E7D5C * y2 + lbl_803E7D58) * y2 + lbl_803E7D54) * y2 + lbl_803E7D50;
@@ -285,7 +285,7 @@ float fn_80293DA4(float x) {
     float y2;
 
     bits.f = x;
-    y = fn_80292CC4(&n, bits.f);
+    y = trigReduceQuadrant(&n, bits.f);
     n += (bits.u >> 29) & 4;
     y2 = y * y;
 
@@ -311,7 +311,7 @@ float fn_80293E80(float x) {
     float y2;
 
     bits.f = x;
-    y = fn_80292CC4(&n, bits.f);
+    y = trigReduceQuadrant(&n, bits.f);
     n += (bits.u >> 29) & 4;
     y2 = y * y;
 
@@ -337,7 +337,7 @@ float fn_80293F7C(float x) {
     float y2;
 
     bits.f = x;
-    y = fn_80292CC4(&n, bits.f);
+    y = trigReduceQuadrant(&n, bits.f);
     n += (bits.u >> 29) & 4;
     y2 = y * y;
 

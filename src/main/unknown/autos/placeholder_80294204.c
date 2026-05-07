@@ -36,12 +36,12 @@ extern float lbl_803E7E28;
 extern float lbl_803E7E2C;
 
 float fastCastS16ToFloat(s16* p);
-float fn_80292CC4(u16* p, float x);
+float trigReduceQuadrant(u16* p, float x);
 double tan(int* out_n, float x);
 
 float sin(float x) {
     u16 n;
-    float y = fn_80292CC4(&n, x);
+    float y = trigReduceQuadrant(&n, x);
     float y2 = y * y;
 
     switch (n & 6) {
@@ -58,7 +58,7 @@ float sin(float x) {
 
 float fn_802942EC(float x) {
     u16 n;
-    float y = fn_80292CC4(&n, x);
+    float y = trigReduceQuadrant(&n, x);
     float y2 = y * y;
 
     switch (n & 6) {
@@ -116,7 +116,7 @@ float fn_802943F4(float x) {
 
 float fn_8029454C(float x) {
     u16 n;
-    float y = fn_80292CC4(&n, x);
+    float y = trigReduceQuadrant(&n, x);
     float y2 = y * y;
     float result = y * (((lbl_803E7E2C * y2 + lbl_803E7E28) * y2 + lbl_803E7E24) * y2 + lbl_803E7E20);
 

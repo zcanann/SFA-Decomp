@@ -52,7 +52,7 @@ typedef union FloatBits {
     u32 u;
 } FloatBits;
 
-float __ieee754_sqrt(float x, float y) {
+float powfCoreHighPrecision(float x, float y) {
     FloatBits bits;
     FloatBits result;
     s16 exponent;
@@ -122,7 +122,7 @@ float __ieee754_sqrt(float x, float y) {
     return result.f;
 }
 
-float __ieee754_log(float x, float y) {
+float powfCoreFast(float x, float y) {
     FloatBits bits;
     FloatBits result;
     s16 exponent;
