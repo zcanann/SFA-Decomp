@@ -30,12 +30,26 @@ float fn_80291CBC(float x)
 
 float fn_80291CC8(s16* p)
 {
-    return __OSu16tof32((u16*)p);
+    register s16* ptr = p;
+    register float result;
+
+    asm {
+        psq_l f31, 0(ptr), 1, OS_FASTCAST_U16
+        fmr result, f31
+    }
+
+    return result;
 }
 
 void fn_80291CE4(s16* p, float x)
 {
-    OSf32tou16(&x, (u16*)p);
+    register s16* ptr = p;
+    register float value = x;
+
+    asm {
+        fmr f31, value
+        psq_st f31, 0(ptr), 1, OS_FASTCAST_U16
+    }
 }
 
 float fn_80291E08(s16* p);
@@ -82,12 +96,26 @@ float fn_80291DD8(float x)
 
 float fn_80291E08(s16* p)
 {
-    return __OSs16tof32(p);
+    register s16* ptr = p;
+    register float result;
+
+    asm {
+        psq_l f31, 0(ptr), 1, OS_FASTCAST_S16
+        fmr result, f31
+    }
+
+    return result;
 }
 
 void fn_80291E24(s16* p, float x)
 {
-    OSf32tos16(&x, p);
+    register s16* ptr = p;
+    register float value = x;
+
+    asm {
+        fmr f31, value
+        psq_st f31, 0(ptr), 1, OS_FASTCAST_S16
+    }
 }
 
 float fn_80291E40(float x)
