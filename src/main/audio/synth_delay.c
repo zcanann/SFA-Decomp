@@ -17,22 +17,24 @@ extern u8* lbl_803DE268;
 u32 fn_8027186C(u32 handle, u8 controller, u8 value) {
     u32 found;
     u32 idx;
+    u8* slotPtr;
 
     found = 0;
     handle = vidGetInternalId(handle);
     while (handle != 0xFFFFFFFFu) {
         idx = (u8)handle;
-        if (handle != *(u32*)(lbl_803DE268 + idx * 0x404 + 0xF4)) {
+        if (handle == *(u32*)(lbl_803DE268 + idx * 0x404 + 0xF4)) {
+            slotPtr = lbl_803DE268 + idx * 0x404;
+            if (((*(u32*)(slotPtr + 0x114) & 0) ^ 0) | ((*(u32*)(slotPtr + 0x118) & 2) ^ 0)) {
+                inpSetMidiCtrl(controller, idx, *(u8*)(slotPtr + 0x20B), value);
+            } else {
+                inpSetMidiCtrl(controller, idx, *(u8*)(slotPtr + 0x122), value);
+            }
+            found = 1;
+            handle = *(u32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
+        } else {
             return found;
         }
-        if (((*(u32*)(lbl_803DE268 + idx * 0x404 + 0x114) & 0) ^ 0) |
-            ((*(u32*)(lbl_803DE268 + idx * 0x404 + 0x118) & 2) ^ 0)) {
-            inpSetMidiCtrl(controller, idx, *(u8*)(lbl_803DE268 + idx * 0x404 + 0x20B), value);
-        } else {
-            inpSetMidiCtrl(controller, idx, *(u8*)(lbl_803DE268 + idx * 0x404 + 0x122), value);
-        }
-        found = 1;
-        handle = *(u32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
     }
     return found;
 }
@@ -45,22 +47,24 @@ u32 fn_8027186C(u32 handle, u8 controller, u8 value) {
 u32 fn_80271954(u32 handle, u8 controller, u32 value) {
     u32 found;
     u32 idx;
+    u8* slotPtr;
 
     found = 0;
     handle = vidGetInternalId(handle);
     while (handle != 0xFFFFFFFFu) {
         idx = (u8)handle;
-        if (handle != *(u32*)(lbl_803DE268 + idx * 0x404 + 0xF4)) {
+        if (handle == *(u32*)(lbl_803DE268 + idx * 0x404 + 0xF4)) {
+            slotPtr = lbl_803DE268 + idx * 0x404;
+            if (((*(u32*)(slotPtr + 0x114) & 0) ^ 0) | ((*(u32*)(slotPtr + 0x118) & 2) ^ 0)) {
+                inpSetMidiCtrl14(controller, idx, *(u8*)(slotPtr + 0x20B), value);
+            } else {
+                inpSetMidiCtrl14(controller, idx, *(u8*)(slotPtr + 0x122), value);
+            }
+            found = 1;
+            handle = *(u32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
+        } else {
             return found;
         }
-        if (((*(u32*)(lbl_803DE268 + idx * 0x404 + 0x114) & 0) ^ 0) |
-            ((*(u32*)(lbl_803DE268 + idx * 0x404 + 0x118) & 2) ^ 0)) {
-            inpSetMidiCtrl14(controller, idx, *(u8*)(lbl_803DE268 + idx * 0x404 + 0x20B), value);
-        } else {
-            inpSetMidiCtrl14(controller, idx, *(u8*)(lbl_803DE268 + idx * 0x404 + 0x122), value);
-        }
-        found = 1;
-        handle = *(u32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
     }
     return found;
 }
