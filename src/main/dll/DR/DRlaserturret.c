@@ -136,7 +136,7 @@ int fn_801E6D08(void *obj, void *param2)
     if (*(s8 *)((char *)param2 + 0x27a) != 0) {
         rng = randomGetRange(0x1f4, 0x3e8);
         *(f32 *)((char *)state + 0x9c0) = (f32)rng;
-        *(u8 *)((char *)state + 0x9d4) = *(u8 *)((char *)state + 0x9d4) & 0xf7;
+        *(u8 *)((char *)state + 0x9d4) = *(u8 *)((char *)state + 0x9d4) & ~0x08;
     }
     if ((*(u8 *)((char *)state + 0x9d4) & 8) != 0) {
         if (*(s8 *)((char *)param2 + 0x346) != 0) {
@@ -151,7 +151,7 @@ int fn_801E6D08(void *obj, void *param2)
             }
         L_DE8:
             *(f32 *)((char *)param2 + 0x2a0) = lbl_803E59E4;
-            *(u8 *)((char *)state + 0x9d4) = *(u8 *)((char *)state + 0x9d4) & 0xf7;
+            *(u8 *)((char *)state + 0x9d4) = *(u8 *)((char *)state + 0x9d4) & ~0x08;
             rng = randomGetRange(0x1f4, 0x3e8);
             *(f32 *)((char *)state + 0x9c0) = (f32)rng;
         }
