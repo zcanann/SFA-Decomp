@@ -2510,13 +2510,13 @@ main/unknown/autos/placeholder_80292DC0.c:
 main/unknown/autos/placeholder_8029312C_math.c:
 	.text       start:0x8029312C end:0x80293464
 
-main/unknown/autos/placeholder_80293464.c:
+dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.c:
 	.text       start:0x80293464 end:0x80294098
 
-main/unknown/autos/placeholder_80294098.c:
+dolphin/MSL_C/PPCEABI/bare/H/s_floor.c:
 	.text       start:0x80294098 end:0x80294204
 
-main/unknown/autos/placeholder_80294204.c:
+dolphin/MSL_C/PPCEABI/bare/H/s_sin.c:
 	.text       start:0x80294204 end:0x80294640
 
 dolphin/base/PPCArch_weak.c:
