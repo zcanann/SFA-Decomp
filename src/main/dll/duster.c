@@ -1163,3 +1163,74 @@ void fn_80156B0C(uint param_9,int param_10)
   fn_80156950(param_9,param_10);
   return;
 }
+
+/*
+ * --INFO--
+ * Function: fn_80156C34
+ * EN v1.0 Address: 0x80156C34
+ * EN v1.0 Size: 168b
+ */
+void fn_80156C34(uint param_9,int param_10)
+{
+  int iVar1;
+  
+  if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
+    if (*(byte *)(param_10 + 0x33a) == 0) {
+      *(undefined *)(param_10 + 0x33a) = 1;
+    }
+    else if (*(byte *)(param_10 + 0x33a) >= 2) {
+      *(undefined *)(param_10 + 0x33a) = 0;
+    }
+    iVar1 = (uint)*(byte *)(param_10 + 0x33a) * 0xc;
+    fn_8014D08C(param_9,param_10,(uint)((byte *)&lbl_8031F318)[iVar1 + 8],
+                 *(float *)((byte *)&lbl_8031F318 + iVar1),0,0);
+  }
+  fn_80156950(param_9,param_10);
+  return;
+}
+
+/*
+ * --INFO--
+ * Function: fn_80156CDC
+ * EN v1.0 Address: 0x80156CDC
+ * EN v1.0 Size: 104b
+ */
+void fn_80156CDC(undefined4 param_1,int param_2)
+{
+  float fVar1;
+  
+  *(float *)(param_2 + 0x2ac) = lbl_803E371C;
+  *(undefined4 *)(param_2 + 0x2e4) = 0x46001;
+  *(float *)(param_2 + 0x308) = lbl_803E36F0;
+  *(float *)(param_2 + 0x300) = lbl_803E3720;
+  *(float *)(param_2 + 0x304) = lbl_803E3724;
+  *(undefined *)(param_2 + 0x320) = 0;
+  fVar1 = lbl_803E36EC;
+  *(float *)(param_2 + 0x314) = lbl_803E36EC;
+  *(undefined *)(param_2 + 0x321) = 4;
+  *(float *)(param_2 + 0x318) = fVar1;
+  *(undefined *)(param_2 + 0x322) = 3;
+  *(float *)(param_2 + 0x31c) = fVar1;
+  *(undefined *)(param_2 + 0x33a) = 1;
+  *(undefined2 *)(param_2 + 0x2b0) = 0xa;
+  return;
+}
+
+/*
+ * --INFO--
+ * Function: fn_80156D44
+ * EN v1.0 Address: 0x80156D44
+ * EN v1.0 Size: 92b
+ */
+void fn_80156D44(uint param_1,int param_2,undefined4 param_3,int param_4)
+{
+  if (param_4 == 0x10) {
+    *(uint *)(param_2 + 0x2e8) = *(uint *)(param_2 + 0x2e8) | 0x20;
+  }
+  else {
+    *(uint *)(param_2 + 0x2e8) = *(uint *)(param_2 + 0x2e8) | 8;
+    Sfx_PlayFromObject(param_1,0x244);
+    *(undefined2 *)(param_2 + 0x2b0) = 0;
+  }
+  return;
+}
