@@ -52,6 +52,8 @@ typedef struct ProximityMineObject {
     ProximityMineState *state;
 } ProximityMineObject;
 
+#pragma scheduling off
+#pragma peephole off
 void proximitymine_resetToIdle(ProximityMineObject *obj)
 {
     ProximityMineState *state;
@@ -82,3 +84,5 @@ void proximitymine_resetToIdle(ProximityMineObject *obj)
         fn_8001CB3C(&state->effectHandle);
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
