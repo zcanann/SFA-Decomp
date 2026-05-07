@@ -12,19 +12,3 @@ extern undefined4 DAT_803cb9f0;
 extern undefined4 DAT_803cb9f2;
 extern undefined4 DAT_803def7c;
 
-/*
- * --INFO--
- *
- * Function: FUN_80279c7c
- * EN v1.0 Address: 0x80279C7C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80279D30
- * EN v1.1 Size: 400b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80279c7c(int param_1,byte param_2)
-{
-}
