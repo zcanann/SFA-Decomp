@@ -28,10 +28,10 @@ extern u32 lbl_803DE378;
  */
 void hwSaveSample(u32 **sample, void **ptr)
 {
-  u32 header;
-  s32 type;
   u32 size;
+  s32 type;
   u32 adjusted;
+  u32 header;
 
   header = (*sample)[1];
   type = header >> 24;
@@ -87,10 +87,10 @@ void FUN_80283e00(int param_1,ushort param_2)
  */
 void hwRemoveSample(u32 *sample, void *ptr)
 {
-  u32 header;
-  s32 type;
   u32 size;
+  s32 type;
   u32 adjusted;
+  u32 header;
 
   header = sample[1];
   type = header >> 24;
