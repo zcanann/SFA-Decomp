@@ -105,6 +105,10 @@ typedef struct CamcontrolQueuedActionParam {
   byte noBlendFlag;
 } CamcontrolQueuedActionParam;
 
+#define CAMCONTROL_TRIGGER_KIND_QUEUE_TYPE1 1
+#define CAMCONTROL_TRIGGER_KIND_QUEUE_TYPE2 2
+#define CAMCONTROL_TRIGGER_KIND_DEFAULT_ACTION 3
+#define CAMCONTROL_TRIGGER_KIND_DEFAULT_ACTION_OFFSET 4
 #define CAMCONTROL_TRIGGERED_ACTION_KIND_TRIGGERED 1
 #define CAMCONTROL_ACTION_DEFAULT 0x42
 #define CAMCONTROL_ACTION_TRIGGERED 0x4B
@@ -114,6 +118,7 @@ typedef struct CamcontrolQueuedActionParam {
 #define CAMCONTROL_ACTION_FLAG_NO_BLEND 0x80
 #define CAMCONTROL_ACTION_RECORD_SIZE 0x10
 #define CAMCONTROL_ACTION_FILE_ID 0xB
+#define CAMCONTROL_ACTION_HEAP 0xF
 #define CAMCONTROL_DEFAULT_BLEND_FRAMES 0x78
 #define CAMCONTROL_QUEUE_SENTINEL 0xFF
 
@@ -481,7 +486,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char trigge
   CamcontrolQueuedActionParam triggerType2Param;
   CamcontrolQueuedActionParam triggerType1Param;
   
-  if (triggerType == 2) {
+  if (triggerType == CAMCONTROL_TRIGGER_KIND_QUEUE_TYPE2) {
     triggerType2Param.actionIndex = actionNo & CAMCONTROL_ACTION_INDEX_MASK;
     triggerType2Param.noBlendFlag = (byte)(actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND);
     if ((actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND) == 0) {
@@ -494,7 +499,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char trigge
                    CAMCONTROL_QUEUE_SENTINEL);
     return;
   }
-  if (triggerType < 2) {
+  if (triggerType < CAMCONTROL_TRIGGER_KIND_QUEUE_TYPE2) {
     if ((triggerType != 0) && (-1 < triggerType)) {
       triggerType1Param.actionIndex = actionNo & CAMCONTROL_ACTION_INDEX_MASK;
       triggerType1Param.noBlendFlag = (byte)actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND;
@@ -511,12 +516,12 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char trigge
     }
   }
   else {
-    if (triggerType == 4) {
+    if (triggerType == CAMCONTROL_TRIGGER_KIND_DEFAULT_ACTION_OFFSET) {
       Camera_setMode(actionNo + CAMCONTROL_ACTION_DEFAULT,1,0,0,0,
                      CAMCONTROL_DEFAULT_BLEND_FRAMES,CAMCONTROL_QUEUE_SENTINEL);
       return;
     }
-    if (triggerType < 4) {
+    if (triggerType < CAMCONTROL_TRIGGER_KIND_DEFAULT_ACTION_OFFSET) {
       Camera_setMode(CAMCONTROL_ACTION_DEFAULT,0,1,0,0,CAMCONTROL_DEFAULT_BLEND_FRAMES,
                      CAMCONTROL_QUEUE_SENTINEL);
       return;
@@ -531,7 +536,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char trigge
     actionOffset = (actionNo - 1) * CAMCONTROL_ACTION_RECORD_SIZE;
     loadedActionNo = actionNo;
   }
-  camAction = (CamcontrolTriggeredAction *)mmAlloc(CAMCONTROL_ACTION_RECORD_SIZE,0xf,0);
+  camAction = (CamcontrolTriggeredAction *)mmAlloc(CAMCONTROL_ACTION_RECORD_SIZE,CAMCONTROL_ACTION_HEAP,0);
   if (camAction != (CamcontrolTriggeredAction *)0x0) {
     getTabEntry(camAction,CAMCONTROL_ACTION_FILE_ID,actionOffset,CAMCONTROL_ACTION_RECORD_SIZE);
     camAction->triggerMode = triggerMode;
@@ -593,9 +598,10 @@ void *Camera_getCamActionsBinEntry(int actionNo)
   if (actionNo == 0) {
     return 0;
   }
-  camAction = mmAlloc(0x10,0xf,0);
+  camAction = mmAlloc(CAMCONTROL_ACTION_RECORD_SIZE,CAMCONTROL_ACTION_HEAP,0);
   if (camAction != 0) {
-    getTabEntry(camAction,0xb,(actionNo + -1) * 0x10,0x10);
+    getTabEntry(camAction,CAMCONTROL_ACTION_FILE_ID,(actionNo + -1) * CAMCONTROL_ACTION_RECORD_SIZE,
+                CAMCONTROL_ACTION_RECORD_SIZE);
   }
   return camAction;
 }
