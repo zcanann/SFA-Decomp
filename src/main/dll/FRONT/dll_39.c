@@ -73,11 +73,13 @@ extern f32 FLOAT_803de27c;
 extern f32 FLOAT_803e2970;
 extern f32 FLOAT_803e2980;
 extern int iRam803de2bc;
-extern char s_starfox_thp_8031a32c[];
-extern char s__________________malloc_for_movi_8031a338[];
-extern char s__________________RESTRUCT_for_mo_8031a364[];
-extern char s_n_attractmode_c_8031a38c[];
-extern char s_Fail_to_prepare_8031a39c[];
+static char s_starfox_thp_8031a32c[] = "starfox.thp";
+static char s__________________malloc_for_movi_8031a338[] =
+    "^^^^^^^^^^^^^^^^  malloc for movie failed\n";
+static char s__________________RESTRUCT_for_mo_8031a364[] =
+    "^^^^^^^^^^^^^^^^  RESTRUCT for movie\n";
+static char s_n_attractmode_c_8031a38c[] = "n_attractmode.c";
+static char s_Fail_to_prepare_8031a39c[] = "Fail to prepare\n";
 
 extern void *mmAlloc(int size,int heap,int flags);
 extern int mmSetFreeDelay(int delay);
