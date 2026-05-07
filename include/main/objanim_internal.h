@@ -13,6 +13,9 @@ typedef struct ObjAnimHitReactRow {
 } ObjAnimHitReactRow;
 
 #define OBJANIM_DEF_FLAG_CACHED_MOVES 0x40
+/* Bits observed in ObjAnimState::flags during move advancement. */
+#define OBJANIM_STATE_FLAG_HOLD_EVENT_COUNTDOWN 0x02
+#define OBJANIM_STATE_FLAG_REFRESH_SAVED_STEP 0x08
 #define OBJANIM_SET_MOVE_FLAG_SKIP_EVENT_COUNTDOWN 0x10
 #define OBJANIM_MOVE_CACHE_SLOT_COUNT 2
 #define OBJANIM_CACHED_MOVE_DATA_OFFSET 0x80
@@ -26,6 +29,9 @@ typedef struct ObjAnimHitReactRow {
 #define OBJANIM_EVENT_ID_MASK 0x7F
 #define OBJANIM_EVENT_ID_NONE 0x7F
 #define OBJANIM_EVENT_TRIGGER_CAPACITY 8
+/* Event-scan flags: wrapped progress and reverse playback combine as a bitfield. */
+#define OBJANIM_EVENT_SCAN_WRAPPED 0x01
+#define OBJANIM_EVENT_SCAN_REVERSE 0x02
 #define OBJANIM_MOVE_GROUP_SHIFT 8
 #define OBJANIM_MOVE_INDEX_MASK 0xFF
 #define OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET 6
