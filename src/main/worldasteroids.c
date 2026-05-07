@@ -87,8 +87,8 @@ void worldasteroids_update(s16 *obj)
   orbitScale = radius * orbitSin;
   *(f32 *)(obj + 6) = orbitScale * orbitCos + *(f32 *)(anchor + 0xc);
   orbitSin = fsin16Approx(3000);
-  orbitScale = fsin16Approx((u16)state->orbitAngle) *
-               worldasteroids_s32AsFloat(state->orbitRadius);
+  orbitScale = fsin16Approx((u16)state->orbitAngle);
+  orbitScale = worldasteroids_s32AsFloat(state->orbitRadius) * orbitScale;
   *(f32 *)(obj + 8) =
       orbitScale * orbitSin + (*(f32 *)(anchor + 0x10) +
                                worldasteroids_s32AsFloat(state->heightOffset));
@@ -138,10 +138,9 @@ void worldasteroids_init(u8 *obj)
   randomValue = randomGetRange(-0x7fff,0x7fff);
   state->orbitAngle = randomValue;
   state->orbitRadius =
-      (s16)(int)(worldasteroids_s32AsFloat(radiusSeed) * fsin16Approx((u16)baseAngle) +
-                 lbl_803E65F0);
+      worldasteroids_s32AsFloat(radiusSeed) * fsin16Approx((u16)baseAngle) + lbl_803E65F0;
   state->heightOffset =
-      (s16)(int)(worldasteroids_s32AsFloat(radiusSeed) * fcos16Approx((u16)baseAngle));
+      worldasteroids_s32AsFloat(radiusSeed) * fcos16Approx((u16)baseAngle);
   return;
 }
 #pragma peephole reset
