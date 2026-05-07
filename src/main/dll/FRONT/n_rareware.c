@@ -31,7 +31,7 @@ extern int lbl_803A4438[];
 extern u8 lbl_803DC950;
 extern u8 lbl_803DC968;
 extern u8 lbl_803DD5E8;
-extern int lbl_803DD5EC;
+extern uint lbl_803DD5EC;
 extern u8 lbl_803DD5F0;
 extern f32 lbl_803DD5F4;
 extern int lbl_803DD5F8;
