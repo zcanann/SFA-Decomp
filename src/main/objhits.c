@@ -64,6 +64,7 @@ extern f32 lbl_803DF590;
 extern f32 lbl_803DF598;
 extern void Vec3_Normalize();
 extern void Vec3_ScaleAdd();
+extern void Vec3_Cross();
 extern f32 lbl_803DF59C;
 extern f32 lbl_803DF5A0;
 extern f32 lbl_803DF5B0;
@@ -1033,6 +1034,8 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(double param_1,double param_2,doub
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 float *ObjHits_CalcTaperedCapsuleNormal(double param_1,double param_2,double param_3,
                                         double param_4,float *param_5,float *param_6,
                                         float *param_7,float *param_8)
@@ -1051,55 +1054,55 @@ float *ObjHits_CalcTaperedCapsuleNormal(double param_1,double param_2,double par
   float local_58;
   float local_54;
   float local_50;
-  
-  if ((double)lbl_803DF590 < param_1) {
-    if (param_1 < param_4) {
-      dVar3 = (double)(float)(param_3 - param_2);
-      dVar2 = (double)(float)(dVar3 * (double)(float)(param_1 / param_4));
-      local_58 = *param_7 - *param_6;
-      local_54 = param_7[1] - param_6[1];
-      local_50 = param_7[2] - param_6[2];
-      FUN_80017784(&local_58);
-      FUN_80017780(param_1,param_6,&local_58,&local_88);
-      local_64 = *param_5 - local_88;
-      local_60 = param_5[1] - local_84;
-      local_5c = param_5[2] - local_80;
-      FUN_80017784(&local_64);
-      if (dVar3 == (double)lbl_803DF590) {
-        *param_8 = local_64;
-        param_8[1] = local_60;
-        param_8[2] = local_5c;
-      }
-      else {
-        local_58 = (float)((double)local_58 * param_1);
-        local_54 = (float)((double)local_54 * param_1);
-        local_50 = (float)((double)local_50 * param_1);
-        FUN_80017780(dVar2,&local_58,&local_64,afStack_70);
-        FUN_80017784(afStack_70);
-        fVar1 = (float)((double)lbl_803DF598 / param_1);
-        local_58 = local_58 * fVar1;
-        local_54 = local_54 * fVar1;
-        local_50 = local_50 * fVar1;
-        FUN_80017788(&local_64,&local_58,afStack_7c);
-        FUN_80017784(afStack_7c);
-        FUN_80017788(afStack_7c,afStack_70,param_8);
-      }
-    }
-    else {
-      *param_8 = *param_5 - *param_7;
-      param_8[1] = param_5[1] - param_7[1];
-      param_8[2] = param_5[2] - param_7[2];
-      FUN_80017784(param_8);
-    }
-  }
-  else {
+
+  if (param_1 <= (double)lbl_803DE910) {
     *param_8 = *param_5 - *param_7;
     param_8[1] = param_5[1] - param_7[1];
     param_8[2] = param_5[2] - param_7[2];
-    FUN_80017784(param_8);
+    Vec3_Normalize(param_8);
+  }
+  else if (param_1 >= param_4) {
+    *param_8 = *param_5 - *param_7;
+    param_8[1] = param_5[1] - param_7[1];
+    param_8[2] = param_5[2] - param_7[2];
+    Vec3_Normalize(param_8);
+  }
+  else {
+    dVar3 = (double)(float)(param_3 - param_2);
+    dVar2 = (double)(float)(dVar3 * (double)(float)(param_1 / param_4));
+    local_58 = *param_7 - *param_6;
+    local_54 = param_7[1] - param_6[1];
+    local_50 = param_7[2] - param_6[2];
+    Vec3_Normalize(&local_58);
+    Vec3_ScaleAdd(param_6,&local_58,param_1,&local_88);
+    local_64 = *param_5 - local_88;
+    local_60 = param_5[1] - local_84;
+    local_5c = param_5[2] - local_80;
+    Vec3_Normalize(&local_64);
+    if (dVar3 == (double)lbl_803DE910) {
+      *param_8 = local_64;
+      param_8[1] = local_60;
+      param_8[2] = local_5c;
+    }
+    else {
+      local_58 = (float)((double)local_58 * param_1);
+      local_54 = (float)((double)local_54 * param_1);
+      local_50 = (float)((double)local_50 * param_1);
+      Vec3_ScaleAdd(&local_58,&local_64,dVar2,afStack_70);
+      Vec3_Normalize(afStack_70);
+      fVar1 = (float)((double)lbl_803DE918 / param_1);
+      local_58 = local_58 * fVar1;
+      local_54 = local_54 * fVar1;
+      local_50 = local_50 * fVar1;
+      Vec3_Cross(&local_64,&local_58,afStack_7c);
+      Vec3_Normalize(afStack_7c);
+      Vec3_Cross(afStack_7c,afStack_70,param_8);
+    }
   }
   return param_8;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1137,7 +1140,7 @@ uint ObjHits_TestTaperedCapsuleXZ(double param_1,double param_2,double param_3,d
     *param_11 = fVar1;
     return ((uint)(byte)((*param_10 <= fVar1 * fVar1) << 1) << 0x1c) >> 0x1d;
   }
-  if (dVar3 < (double)lbl_803DF590) {
+  if (dVar3 < (double)lbl_803DE910) {
     *param_10 = (float)(dVar4 * dVar4 + (double)(float)(dVar5 * dVar5));
     fVar1 = (float)(param_1 + param_2);
     *param_11 = fVar1;
@@ -1196,7 +1199,7 @@ uint ObjHits_TestTaperedCapsule3D(double param_1,double param_2,double param_3,d
     *param_11 = fVar1;
     return ((uint)(byte)((*param_10 <= fVar1 * fVar1) << 1) << 0x1c) >> 0x1d;
   }
-  if (dVar4 < (double)lbl_803DF590) {
+  if (dVar4 < (double)lbl_803DE910) {
     *param_10 = (float)(dVar7 * dVar7 +
                        (double)(float)(dVar5 * dVar5 + (double)(float)(dVar6 * dVar6)));
     fVar1 = (float)(param_1 + param_2);
