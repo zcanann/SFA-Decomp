@@ -1044,41 +1044,42 @@ void fn_801568A8(undefined4 param_1,int param_2)
  */
 void fn_80156950(uint param_1,int param_2)
 {
-  short sVar1;
-  
-  sVar1 = *(short *)(param_1 + 0xa0);
-  if (sVar1 == 7) {
-    if (*(short *)(param_2 + 0x2f8) != 0) {
-      if (lbl_803E3790 <= *(float *)(param_1 + 0x98)) {
+  switch (*(short *)(param_1 + 0xa0)) {
+  case 7:
+    if (*(ushort *)(param_2 + 0x2f8) != 0) {
+      if (*(float *)(param_1 + 0x98) >= lbl_803E3790) {
         Sfx_PlayFromObject(param_1,0x24c);
       }
       else {
         Sfx_PlayFromObject(param_1,0x24d);
       }
     }
-  }
-  else if (sVar1 < 7) {
-    if (sVar1 == 5) {
-      if (*(short *)(param_2 + 0x2f8) != 0) {
-        Sfx_PlayFromObject(param_1,0x24d);
-      }
-    }
-    else if ((4 < sVar1) && (*(short *)(param_2 + 0x2f8) != 0)) {
+    break;
+  case 5:
+    if (*(ushort *)(param_2 + 0x2f8) != 0) {
       Sfx_PlayFromObject(param_1,0x24d);
     }
-  }
-  else if ((sVar1 < 9) && (*(short *)(param_2 + 0x2f8) != 0)) {
-    if (lbl_803E3794 <= *(float *)(param_1 + 0x98)) {
-      if (lbl_803E3798 <= *(float *)(param_1 + 0x98)) {
-        Sfx_PlayFromObject(param_1,0x24c);
+    break;
+  case 6:
+    if (*(ushort *)(param_2 + 0x2f8) != 0) {
+      Sfx_PlayFromObject(param_1,0x24d);
+    }
+    break;
+  case 8:
+    if (*(ushort *)(param_2 + 0x2f8) != 0) {
+      if (*(float *)(param_1 + 0x98) >= lbl_803E3794) {
+        if (*(float *)(param_1 + 0x98) >= lbl_803E3798) {
+          Sfx_PlayFromObject(param_1,0x24c);
+        }
+        else {
+          Sfx_PlayFromObject(param_1,0x24e);
+        }
       }
       else {
-        Sfx_PlayFromObject(param_1,0x24e);
+        Sfx_PlayFromObject(param_1,0x24b);
       }
     }
-    else {
-      Sfx_PlayFromObject(param_1,0x24b);
-    }
+    break;
   }
   return;
 }
