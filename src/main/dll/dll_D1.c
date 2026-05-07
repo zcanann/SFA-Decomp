@@ -1,172 +1,153 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_D1.h"
 
-extern bool FUN_800067f0();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068cc();
-extern undefined4 FUN_800068d0();
-extern int FUN_80017730();
-extern uint FUN_80017760();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined4 FUN_80039468();
-extern undefined4 FUN_80139910();
-extern undefined4 FUN_80139a4c();
-extern int FUN_8013b368();
-extern undefined4 FUN_80146fa0();
-extern undefined4 FUN_801778d0();
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_80286888();
+#pragma peephole off
+#pragma scheduling off
 
-extern f32 lbl_803E306C;
-extern f32 lbl_803E30D4;
-extern f32 lbl_803E3158;
-extern f32 lbl_803E315C;
-extern f32 lbl_803E3160;
+extern int fn_80148BC8(const char *fmt, ...);
+extern int fn_8013B368(void *param_1, float threshold, void *param_2);
+extern int Sfx_IsPlayingFromObjectChannel(void *obj, int chan);
+extern void *Obj_AllocObjectSetup(int p1, int p2);
+extern int Obj_SetupObject(void *setup, int p2, int p3, int p4, void *p5);
+extern int Obj_IsLoadingLocked(void);
+extern int Sfx_PlayFromObject(void *obj, int sfxId);
+extern int Sfx_AddLoopedObjectSound(void *obj, int sfxId);
+extern int Sfx_RemoveLoopedObjectSound(void *obj, int sfxId);
+extern int randomGetRange(int lo, int hi);
+extern int getAngle(float x, float z);
+extern void fn_800393F8(void *obj, void *p2, int p3, int p4, int p5, int p6);
+extern void fn_8013A3F0(void *obj, int p2, float p3, int p4);
+extern void fn_80139930(void *obj, s16 angle);
+extern void fn_8017804C(void *obj);
+
+extern char lbl_8031D2E8[];
+
+extern f32 lbl_803E23DC;
+extern f32 lbl_803E2444;
+extern f32 lbl_803E24C8;
+extern f32 lbl_803E24CC;
+extern f32 lbl_803E24D0;
 
 /*
  * --INFO--
  *
- * Function: FUN_8013dc88
+ * Function: fn_8013DC88
  * EN v1.0 Address: 0x8013DC88
- * EN v1.0 Size: 1296b
- * EN v1.1 Address: 0x8013E010
- * EN v1.1 Size: 1096b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 1096b
  */
-void FUN_8013dc88(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
-                 byte param_13,uint param_14,undefined4 param_15,undefined4 param_16)
+void fn_8013DC88(void *param_1, void *param_2)
 {
-  byte bVar1;
-  float fVar2;
-  ushort *puVar3;
-  int iVar4;
-  uint uVar5;
-  bool bVar8;
-  undefined2 *puVar6;
-  undefined4 uVar7;
-  undefined4 *puVar9;
-  undefined4 *puVar10;
-  undefined8 extraout_f1;
-  undefined8 extraout_f1_00;
-  undefined8 uVar11;
-  
-  uVar11 = FUN_8028683c();
-  puVar3 = (ushort *)((ulonglong)uVar11 >> 0x20);
-  puVar9 = (undefined4 *)uVar11;
-  bVar1 = *(byte *)((int)puVar9 + 10);
-  if (bVar1 == 2) {
-    FUN_80146fa0();
-    iVar4 = FUN_8013b368((double)lbl_803E315C,param_2,param_3,param_4,param_5,param_6,param_7,
-                         param_8,puVar3,puVar9,param_11,param_12,param_13,param_14,param_15,param_16
-                        );
-    if (iVar4 == 0) {
-      uVar11 = extraout_f1;
-      uVar5 = FUN_80017ae8();
-      if ((uVar5 & 0xff) != 0) {
-        puVar9[0x15] = puVar9[0x15] | 0x800;
-        iVar4 = 0;
-        puVar10 = puVar9;
-        do {
-          puVar6 = FUN_80017aa4(0x24,0x4f0);
-          *(undefined *)(puVar6 + 2) = 2;
-          *(undefined *)((int)puVar6 + 5) = 1;
-          puVar6[0xd] = (short)iVar4;
-          uVar7 = FUN_80017ae4(uVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar6
-                               ,5,*(undefined *)(puVar3 + 0x56),0xffffffff,*(uint **)(puVar3 + 0x18)
-                               ,param_14,param_15,param_16);
-          puVar10[0x1c0] = uVar7;
-          puVar10 = puVar10 + 1;
-          iVar4 = iVar4 + 1;
-          uVar11 = extraout_f1_00;
-        } while (iVar4 < 7);
-        FUN_80006824((uint)puVar3,0x3db);
-        FUN_800068d0((uint)puVar3,0x3dc);
-      }
-      *(char *)*puVar9 = *(char *)*puVar9 + -1;
-      FUN_80139a4c((double)lbl_803E30D4,(int)puVar3,0x34,0x4000000);
-      puVar9[0x15] = puVar9[0x15] | 0x10;
-      *(undefined *)((int)puVar9 + 10) = 3;
-      puVar9[0x1ca] = 0;
-    }
-  }
-  else if (bVar1 < 2) {
-    if (bVar1 == 0) {
-      FUN_80146fa0();
-      iVar4 = FUN_8013b368((double)lbl_803E3158,param_2,param_3,param_4,param_5,param_6,param_7,
-                           param_8,puVar3,puVar9,param_11,param_12,param_13,param_14,param_15,
-                           param_16);
-      if (iVar4 == 0) {
-        iVar4 = *(int *)(puVar3 + 0x5c);
-        if ((((*(byte *)(iVar4 + 0x58) >> 6 & 1) == 0) &&
-            ((0x2f < (short)puVar3[0x50] || ((short)puVar3[0x50] < 0x29)))) &&
-           (bVar8 = FUN_800067f0((int)puVar3,0x10), !bVar8)) {
-          FUN_80039468(puVar3,iVar4 + 0x3a8,0x299,0x100,0xffffffff,0);
+    void *state;
+    int i;
+    void **slot;
+    void *setup;
+
+    switch (*(u8 *)((char *)param_2 + 0xa)) {
+    case 0:
+        fn_80148BC8(&lbl_8031D2E8[0x558]);
+        if (fn_8013B368(param_1, lbl_803E24C8, param_2) == 0) {
+            state = *(void **)((char *)param_1 + 0xb8);
+            if (((*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
+                s16 a0 = *(s16 *)((char *)param_1 + 0xa0);
+                if (a0 >= 0x30 || a0 < 0x29) {
+                    if (Sfx_IsPlayingFromObjectChannel(param_1, 0x10) == 0) {
+                        fn_800393F8(param_1, (char *)state + 0x3a8, 0x299, 0x100, -1, 0);
+                    }
+                }
+            }
+            *(u8 *)((char *)param_2 + 0xa) = 1;
+            fn_8013A3F0(param_1, 0x33, lbl_803E2444, 0x4000000);
+            *(int *)((char *)param_2 + 0x728) = 0;
         }
-        *(undefined *)((int)puVar9 + 10) = 1;
-        FUN_80139a4c((double)lbl_803E30D4,(int)puVar3,0x33,0x4000000);
-        puVar9[0x1ca] = 0;
-      }
-    }
-    else {
-      FUN_80146fa0();
-      if ((*(char *)*puVar9 == '\0') || (puVar9[0x1ca] == 0)) {
-        iVar4 = FUN_80017730();
-        FUN_80139910(puVar3,(ushort)iVar4);
-        uVar5 = FUN_80017760(0,10);
-        if (((uVar5 == 0) &&
-            (iVar4 = *(int *)(puVar3 + 0x5c), (*(byte *)(iVar4 + 0x58) >> 6 & 1) == 0)) &&
-           (((0x2f < (short)puVar3[0x50] || ((short)puVar3[0x50] < 0x29)) &&
-            (bVar8 = FUN_800067f0((int)puVar3,0x10), !bVar8)))) {
-          FUN_80039468(puVar3,iVar4 + 0x3a8,0x299,0x100,0xffffffff,0);
+        break;
+    case 1:
+        fn_80148BC8(&lbl_8031D2E8[0x568]);
+        if (*(u8 *)*(int *)param_2 != 0 && *(int *)((char *)param_2 + 0x728) != 0) {
+            *(u8 *)((char *)param_2 + 0xa) = 2;
+        } else {
+            void *target = *(void **)((char *)*(void **)((char *)param_1 + 0xb8) + 0x28);
+            int angle = getAngle(
+                -(*(f32 *)target - *(f32 *)((char *)param_1 + 0x18)),
+                -(*(f32 *)((char *)target + 0x8) - *(f32 *)((char *)param_1 + 0x20)));
+            fn_80139930(param_1, (s16)angle);
+            if (randomGetRange(0, 10) == 0) {
+                state = *(void **)((char *)param_1 + 0xb8);
+                if (((*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
+                    s16 a0 = *(s16 *)((char *)param_1 + 0xa0);
+                    if (a0 >= 0x30 || a0 < 0x29) {
+                        if (Sfx_IsPlayingFromObjectChannel(param_1, 0x10) == 0) {
+                            fn_800393F8(param_1, (char *)state + 0x3a8, 0x299, 0x100, -1, 0);
+                        }
+                    }
+                }
+            }
         }
-      }
-      else {
-        *(undefined *)((int)puVar9 + 10) = 2;
-      }
+        break;
+    case 2:
+        fn_80148BC8(&lbl_8031D2E8[0x57c]);
+        if (fn_8013B368(param_1, lbl_803E24CC, param_2) == 0) {
+            if ((u8)Obj_IsLoadingLocked() != 0) {
+                *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) | 0x800;
+                slot = (void **)((char *)param_2 + 0x700);
+                for (i = 0; i < 7; i++) {
+                    setup = Obj_AllocObjectSetup(0x24, 0x4f0);
+                    *(u8 *)((char *)setup + 0x4) = 2;
+                    *(u8 *)((char *)setup + 0x5) = 1;
+                    *(s16 *)((char *)setup + 0x1a) = (s16)i;
+                    *slot = (void *)Obj_SetupObject(
+                        setup, 5, *(s8 *)((char *)param_1 + 0xac), -1,
+                        *(void **)((char *)param_1 + 0x30));
+                    slot++;
+                }
+                Sfx_PlayFromObject(param_1, 0x3db);
+                Sfx_AddLoopedObjectSound(param_1, 0x3dc);
+            }
+            *(u8 *)*(int *)param_2 = *(u8 *)*(int *)param_2 - 1;
+            fn_8013A3F0(param_1, 0x34, lbl_803E2444, 0x4000000);
+            *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) | 0x10;
+            *(u8 *)((char *)param_2 + 0xa) = 3;
+            *(int *)((char *)param_2 + 0x728) = 0;
+        }
+        break;
+    case 3:
+        fn_80148BC8(&lbl_8031D2E8[0x590]);
+        if (*(f32 *)((char *)param_1 + 0x98) <= lbl_803E24D0) {
+            *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) & ~0x800;
+            *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) | 0x1000;
+            slot = (void **)((char *)param_2 + 0x700);
+            for (i = 0; i < 7; i++) {
+                fn_8017804C(*slot);
+                slot++;
+            }
+            Sfx_RemoveLoopedObjectSound(param_1, 0x3dc);
+            state = *(void **)((char *)param_1 + 0xb8);
+            if (((*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
+                s16 a0 = *(s16 *)((char *)param_1 + 0xa0);
+                if (a0 >= 0x30 || a0 < 0x29) {
+                    if (Sfx_IsPlayingFromObjectChannel(param_1, 0x10) == 0) {
+                        fn_800393F8(param_1, (char *)state + 0x3a8, 0x29d, 0, -1, 0);
+                    }
+                }
+            }
+            *(u8 *)((char *)param_2 + 0x8) = 1;
+            *(u8 *)((char *)param_2 + 0xa) = 0;
+            *(f32 *)((char *)param_2 + 0x71c) = lbl_803E23DC;
+            *(f32 *)((char *)param_2 + 0x720) = lbl_803E23DC;
+            *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) & ~0x10;
+            *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) & ~0x10000;
+            *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) & ~0x20000;
+            *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) & ~0x40000;
+            *(u8 *)((char *)param_2 + 0xd) = 0xff;
+        } else {
+            void *target = *(void **)((char *)*(void **)((char *)param_1 + 0xb8) + 0x28);
+            int angle = getAngle(
+                -(*(f32 *)target - *(f32 *)((char *)param_1 + 0x18)),
+                -(*(f32 *)((char *)target + 0x8) - *(f32 *)((char *)param_1 + 0x20)));
+            fn_80139930(param_1, (s16)angle);
+        }
+        break;
     }
-  }
-  else if (bVar1 < 4) {
-    FUN_80146fa0();
-    if (*(float *)(puVar3 + 0x4c) < lbl_803E3160) {
-      iVar4 = FUN_80017730();
-      FUN_80139910(puVar3,(ushort)iVar4);
-    }
-    else {
-      puVar9[0x15] = puVar9[0x15] & 0xfffff7ff;
-      puVar9[0x15] = puVar9[0x15] | 0x1000;
-      iVar4 = 0;
-      puVar10 = puVar9;
-      do {
-        FUN_801778d0(puVar10[0x1c0]);
-        puVar10 = puVar10 + 1;
-        iVar4 = iVar4 + 1;
-      } while (iVar4 < 7);
-      FUN_800068cc();
-      iVar4 = *(int *)(puVar3 + 0x5c);
-      if (((*(byte *)(iVar4 + 0x58) >> 6 & 1) == 0) &&
-         (((0x2f < (short)puVar3[0x50] || ((short)puVar3[0x50] < 0x29)) &&
-          (bVar8 = FUN_800067f0((int)puVar3,0x10), !bVar8)))) {
-        FUN_80039468(puVar3,iVar4 + 0x3a8,0x29d,0,0xffffffff,0);
-      }
-      *(undefined *)(puVar9 + 2) = 1;
-      *(undefined *)((int)puVar9 + 10) = 0;
-      fVar2 = lbl_803E306C;
-      puVar9[0x1c7] = lbl_803E306C;
-      puVar9[0x1c8] = fVar2;
-      puVar9[0x15] = puVar9[0x15] & 0xffffffef;
-      puVar9[0x15] = puVar9[0x15] & 0xfffeffff;
-      puVar9[0x15] = puVar9[0x15] & 0xfffdffff;
-      puVar9[0x15] = puVar9[0x15] & 0xfffbffff;
-      *(undefined *)((int)puVar9 + 0xd) = 0xff;
-    }
-  }
-  FUN_80286888();
-  return;
 }
+
+#pragma scheduling reset
+#pragma peephole reset
