@@ -1,218 +1,137 @@
 #include "ghidra_import.h"
 #include "main/dll/FRONT/frontend_control.h"
 
-extern undefined4 FUN_80006824();
-extern uint FUN_80006c00();
-extern uint FUN_80006c10();
-extern int FUN_801195b0();
-extern undefined4 FUN_801195e0();
-extern undefined4 FUN_8011960c();
-extern undefined4 FUN_80119954();
-extern undefined4 FUN_80119a90();
-extern undefined4 FUN_80243e74();
-extern undefined4 FUN_80243e9c();
-extern undefined4 FUN_802446f8();
-extern int FUN_80246a0c();
-extern undefined4 FUN_80246c10();
-extern undefined4 FUN_80246dcc();
+extern u32 getButtonsHeld(int port);
+extern u32 getButtonsJustPressed(int port);
+extern void Sfx_PlayFromObject(int sfx, int id);
+extern void drawTexture(void *tex, int p2, f32 x, f32 y, int alpha);
+extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
+extern void gameTextShowStr(void *str, int id, int p3, int p4);
+extern int sprintf(char *buf, const char *fmt, ...);
 
-extern undefined4 DAT_8031b464;
-extern undefined4 DAT_8031b470;
-extern undefined4 DAT_803a6a10;
-extern undefined4 DAT_803a6a5e;
-extern undefined4 DAT_803a6a5f;
-extern undefined4 DAT_803a6a78;
-extern undefined4 DAT_803a6a90;
-extern undefined4 DAT_803a7f50;
-extern undefined4 DAT_803a7f5c;
-extern undefined4 DAT_803a7f68;
-extern undefined4 DAT_803a7f88;
-extern undefined4 DAT_803de310;
-extern undefined4 DAT_803de314;
-extern undefined4 DAT_803de324;
-extern undefined4 DAT_803de325;
-extern undefined4 DAT_803de330;
-extern undefined4 DAT_803de33c;
-extern undefined4 DAT_803de33d;
-extern undefined4 DAT_803de33e;
-extern undefined4 DAT_803de6a8;
+extern u8 lbl_803DD6BC;
+extern u8 lbl_803DD6BD;
+extern u8 lbl_803DD6BE;
+extern s8 lbl_803DD6A4;
+extern u8 lbl_803DD6A5;
+extern int lbl_803DD6A8;
+extern int lbl_803DD6B0;
+extern u8 enableDebugText;
+extern u16 lbl_8031A814[6];
+extern u16 lbl_8031A820[6];
+extern void *lbl_803A8680[4];
+extern f32 lbl_803E1D58;
+extern f32 lbl_803E1D5C;
+extern f32 lbl_803E1D60;
+extern char sFrontendTimeFormat[];
+extern char sFrontendCompletionPercentFormat[];
+extern char sFrontendSingleDigitFormat[];
 
 /*
  * --INFO--
  *
- * Function: FUN_80119c20
+ * Function: fn_80119C20
  * EN v1.0 Address: 0x80119C20
- * EN v1.0 Size: 64b
- * EN v1.1 Address: 0x80119CC4
- * EN v1.1 Size: 204b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 436b
  */
-void FUN_80119c20(void)
+#pragma peephole off
+#pragma scheduling off
+void fn_80119C20(void)
 {
-  int iVar1;
-  undefined4 uVar2;
-  uint uVar3;
-  
-  do {
-    if (DAT_803a6a5f != '\0') {
-      while (DAT_803a6a90 < 0) {
-        iVar1 = FUN_801195b0();
-        uVar3 = *(int *)(iVar1 + 4) + DAT_803a6a78;
-        if ((uVar3 - (uVar3 / DAT_803a6a10) * DAT_803a6a10 == DAT_803a6a10 - 1) &&
-           ((DAT_803a6a5e & 1) == 0)) {
-          FUN_80119954();
+    u32 held;
+    u32 pressed;
+    u32 nibbles;
+
+    if (lbl_803DD6BC != 0 || lbl_803DD6BD != 0) {
+        u8 inc = lbl_803DD6BE + 1;
+        lbl_803DD6BE = inc;
+        if (inc > 0xF) {
+            lbl_803DD6BC = 0;
+            lbl_803DD6BD = 0;
+            lbl_803DD6BE = 0;
         }
-        FUN_801195e0(iVar1);
-        FUN_80243e74();
-        DAT_803a6a90 = DAT_803a6a90 + 1;
-        FUN_80243e9c();
-      }
     }
-    if (DAT_803a6a5f == '\0') {
-      uVar2 = FUN_8011960c();
+    held = getButtonsHeld(0);
+    if ((held & 0x10) == 0) return;
+
+    if (lbl_803DD6BD == 0) {
+        pressed = (u16)getButtonsJustPressed(0);
+        nibbles = (int)(pressed & 0xF000) >> 8;
+        nibbles |= (pressed & 0xF00) << 4;
+        nibbles |= (pressed & 0xF) << 8;
+        nibbles |= (int)(pressed & 0xF0) >> 4;
+        if ((int)(nibbles & lbl_8031A814[lbl_803DD6BC]) != 0) {
+            lbl_803DD6BC = lbl_803DD6BC + 1;
+            lbl_803DD6BE = 0;
+        }
+        if (lbl_803DD6BC == 5) {
+            enableDebugText = 1;
+            Sfx_PlayFromObject(0, 0x58);
+        }
     }
-    else {
-      uVar2 = FUN_801195b0();
+    if (lbl_803DD6BC != 0) return;
+
+    {
+        pressed = (u16)getButtonsJustPressed(0);
+        nibbles = (int)(pressed & 0xF000) >> 8;
+        nibbles |= (pressed & 0xF00) << 4;
+        nibbles |= (pressed & 0xF) << 8;
+        nibbles |= (int)(pressed & 0xF0) >> 4;
+        if ((int)(nibbles & lbl_8031A820[lbl_803DD6BD]) != 0) {
+            lbl_803DD6BD = lbl_803DD6BD + 1;
+            lbl_803DD6BE = 0;
+        }
+        if (lbl_803DD6BD == 5) {
+            *(u8 *)(lbl_803DD6B0 + (int)lbl_803DD6A4 * 0x24 + 0x21) = 5;
+            lbl_803DD6A5 = 1;
+            Sfx_PlayFromObject(0, 0x58);
+        }
     }
-    FUN_80119954();
-    FUN_801195e0(uVar2);
-  } while( true );
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
  *
- * Function: FUN_80119c60
- * EN v1.0 Address: 0x80119C60
- * EN v1.0 Size: 60b
- * EN v1.1 Address: 0x80119D90
- * EN v1.1 Size: 60b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * Function: saveSelect_drawText
+ * EN v1.0 Address: 0x80119DD4
+ * EN v1.0 Size: 472b
  */
-void FUN_80119c60(void)
+#pragma peephole off
+#pragma scheduling off
+void saveSelect_drawText(int param_1, int param_2)
 {
-  if (DAT_803de310 != 0) {
-    FUN_80246c10(-0x7fc57058);
-    DAT_803de310 = 0;
-  }
-  return;
-}
+    char buf[20];
 
-/*
- * --INFO--
- *
- * Function: FUN_80119c9c
- * EN v1.0 Address: 0x80119C9C
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x80119DCC
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80119c9c(void)
-{
-  if (DAT_803de310 != 0) {
-    FUN_80246dcc(-0x7fc57058);
-  }
-  return;
-}
+    drawTexture(lbl_803A8680[1], param_2, lbl_803E1D58, lbl_803E1D5C, 0x100);
+    drawTexture(lbl_803A8680[2], param_2, lbl_803E1D60, lbl_803E1D5C, 0x100);
+    gameTextSetColor(0xff, 0xff, 0xff, param_2);
 
-/*
- * --INFO--
- *
- * Function: FUN_80119cd0
- * EN v1.0 Address: 0x80119CD0
- * EN v1.0 Size: 192b
- * EN v1.1 Address: 0x80119E00
- * EN v1.1 Size: 200b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_80119cd0(int param_1,int param_2)
-{
-  int iVar1;
-  
-  if (param_2 == 0) {
-    iVar1 = FUN_80246a0c(-0x7fc57058,FUN_80119c20,0,0x803a8fa8,0x1000,param_1,1);
-    if (iVar1 == 0) {
-      return 0;
-    }
-  }
-  else {
-    iVar1 = FUN_80246a0c(-0x7fc57058,FUN_80119a90,param_2,0x803a8fa8,0x1000,param_1,1);
-    if (iVar1 == 0) {
-      return 0;
-    }
-  }
-  FUN_802446f8((undefined4 *)&DAT_803a7f88,&DAT_803a7f5c,3);
-  FUN_802446f8((undefined4 *)&DAT_803a7f68,&DAT_803a7f50,3);
-  DAT_803de314 = 1;
-  DAT_803de310 = 1;
-  return 1;
-}
+    lbl_803DD6B0 = lbl_803DD6A8;
+    gameTextShowStr((void *)(lbl_803DD6B0 + (int)lbl_803DD6A4 * 0x24), 0x41, 0, 0);
 
-/*
- * --INFO--
- *
- * Function: FUN_80119d90
- * EN v1.0 Address: 0x80119D90
- * EN v1.0 Size: 344b
- * EN v1.1 Address: 0x80119EC8
- * EN v1.1 Size: 436b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80119d90(void)
-{
-  uint uVar1;
-  
-  if (((DAT_803de33c != 0) || (DAT_803de33d != 0)) &&
-     (DAT_803de33e = DAT_803de33e + 1, 0xf < DAT_803de33e)) {
-    DAT_803de33c = 0;
-    DAT_803de33d = 0;
-    DAT_803de33e = 0;
-  }
-  uVar1 = FUN_80006c10(0);
-  if ((uVar1 & 0x10) != 0) {
-    if (DAT_803de33d == 0) {
-      uVar1 = FUN_80006c00(0);
-      if ((((int)(uVar1 & 0xf000) >> 8 |
-           (uVar1 & 0xf00) << 4 | (uVar1 & 0xf) << 8 | (int)(uVar1 & 0xf0) >> 4) &
-          (uint)*(ushort *)(&DAT_8031b464 + (uint)DAT_803de33c * 2)) != 0) {
-        DAT_803de33c = DAT_803de33c + 1;
-        DAT_803de33e = 0;
-      }
-      if (DAT_803de33c == 5) {
-        DAT_803de6a8 = 1;
-        FUN_80006824(0,0x58);
-      }
+    sprintf(buf, sFrontendCompletionPercentFormat,
+            (u32) * (u8 *)(lbl_803DD6B0 + (int)lbl_803DD6A4 * 0x24 + 4));
+    gameTextShowStr(buf, 0x42, 0, 0);
+
+    {
+        u32 secs = *(u32 *)(lbl_803DD6B0 + (int)lbl_803DD6A4 * 0x24 + 8);
+        u32 mins = secs / 0xe10;
+        u32 rem = secs - mins * 0xe10;
+        u32 m_in_h = rem / 0x3c;
+        u32 s_in_m = rem - m_in_h * 0x3c;
+        sprintf(buf, sFrontendTimeFormat, (u32)(u8)mins, (u32)(u8)m_in_h, (u32)(u8)s_in_m);
+        gameTextShowStr(buf, 0x43, 0, 0);
     }
-    if (DAT_803de33c == 0) {
-      uVar1 = FUN_80006c00(0);
-      if ((((int)(uVar1 & 0xf000) >> 8 |
-           (uVar1 & 0xf00) << 4 | (uVar1 & 0xf) << 8 | (int)(uVar1 & 0xf0) >> 4) &
-          (uint)*(ushort *)(&DAT_8031b470 + (uint)DAT_803de33d * 2)) != 0) {
-        DAT_803de33d = DAT_803de33d + 1;
-        DAT_803de33e = 0;
-      }
-      if (DAT_803de33d == 5) {
-        *(undefined *)(DAT_803de330 + DAT_803de324 * 0x24 + 0x21) = 5;
-        DAT_803de325 = 1;
-        FUN_80006824(0,0x58);
-      }
-    }
-  }
-  return;
+
+    sprintf(buf, sFrontendSingleDigitFormat,
+            (u32) * (u8 *)(lbl_803DD6B0 + (int)lbl_803DD6A4 * 0x24 + 6));
+    gameTextShowStr(buf, 0x44, 0, 0);
+
+    sprintf(buf, sFrontendSingleDigitFormat,
+            (u32) * (u8 *)(lbl_803DD6B0 + (int)lbl_803DD6A4 * 0x24 + 5));
+    gameTextShowStr(buf, 0x45, 0, 0);
 }
+#pragma scheduling reset
+#pragma peephole reset
