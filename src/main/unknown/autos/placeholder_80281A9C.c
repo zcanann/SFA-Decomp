@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 
 extern void *memcpy(void *dst, const void *src, u32 n);
-extern void fn_80281FE8(u8 a, u8 b, u8 v);
+extern void inpSetMidiLastNote(u8 a, u8 b, u8 v);
 extern int fn_80282CB4(int input);
 
 extern u8 lbl_802C2710[];
@@ -15,7 +15,7 @@ extern u8 lbl_803D3F20[];
 
 /*
  * Reset a MIDI-controller/default table from one of two preset banks,
- * then mark the controller dirty via fn_80281FE8.
+ * then mark the last-note/controller slot dirty via inpSetMidiLastNote.
  *
  * EN v1.1 Address: 0x80281A30, size 244b
  */
@@ -48,14 +48,14 @@ void inpResetMidiCtrl(u8 a, u8 b, int mode)
         }
     }
 
-    fn_80281FE8(a, b, 0xff);
+    inpSetMidiLastNote(a, b, 0xff);
 }
 
 /*
- * fn_80281B24 - large multi-case lookup (~652 instructions). Stubbed.
+ * inpGetMidiCtrl - large multi-case controller lookup. Stubbed.
  */
 #pragma dont_inline on
-u32 fn_80281B24(u8 r3, u8 r4, u8 r5)
+u32 inpGetMidiCtrl(u8 r3, u8 r4, u8 r5)
 {
     (void)r3; (void)r4; (void)r5;
     return 0;
@@ -67,7 +67,7 @@ u32 fn_80281B24(u8 r3, u8 r4, u8 r5)
  *
  * EN v1.1 Address: 0x80281DB0, size 60b
  */
-u8 *fn_80281DB0(u8 a, u8 b)
+u8 *inpGetChannelDefaults(u8 a, u8 b)
 {
     if (b == 0xff) {
         return &lbl_803D3F20[a];
@@ -80,7 +80,7 @@ u8 *fn_80281DB0(u8 a, u8 b)
  *
  * EN v1.1 Address: 0x80281DEC, size 68b
  */
-void fn_80281DEC(u8 a, u8 b)
+void inpResetChannelDefaults(u8 a, u8 b)
 {
     u8 *p;
     if (b != 0xff) {
@@ -98,7 +98,7 @@ void fn_80281DEC(u8 a, u8 b)
  *
  * EN v1.1 Address: 0x80281E30, size 156b
  */
-void fn_80281E30(int obj, int b, int c, int d, u32 flag)
+void inpAddCtrl(int obj, int b, int c, int d, u32 flag)
 {
     u8 counter;
     if ((d & 0xff) == 0) {
@@ -119,10 +119,10 @@ void fn_80281E30(int obj, int b, int c, int d, u32 flag)
 }
 
 /*
- * fn_80281ECC - large multi-case copy (~284 instructions). Stubbed.
+ * inpFXCopyCtrl - large multi-case FX controller copy. Stubbed.
  */
 #pragma dont_inline on
-void fn_80281ECC(u8 r3, u8 r4, u8 r5)
+void inpFXCopyCtrl(u8 r3, u8 r4, u8 r5)
 {
     (void)r3; (void)r4; (void)r5;
 }
@@ -134,7 +134,7 @@ void fn_80281ECC(u8 r3, u8 r4, u8 r5)
  *
  * EN v1.1 Address: 0x80281FE8, size 68b
  */
-void fn_80281FE8(u8 a, u8 b, u8 v)
+void inpSetMidiLastNote(u8 a, u8 b, u8 v)
 {
     if (b != 0xff) {
         lbl_803CD760[b][a] = v;
@@ -149,7 +149,7 @@ void fn_80281FE8(u8 a, u8 b, u8 v)
  *
  * EN v1.1 Address: 0x8028202C, size 68b
  */
-u8 fn_8028202C(u8 a, u8 b)
+u8 inpGetMidiLastNote(u8 a, u8 b)
 {
     if (b != 0xff) {
         return lbl_803CD760[b][a];
