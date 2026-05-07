@@ -1,143 +1,128 @@
 #include "src/main/audio/synth_internal.h"
 
-typedef void (*SynthDelayCallback)(void);
+extern s32 vidGetInternalId(u32 handle);
+extern void inpSetMidiCtrl(u8 controller, u8 slot, u8 key, u8 value);
+extern void inpSetMidiCtrl14(u8 controller, u8 slot, u8 key, u32 value);
+extern void inpFXCopyCtrl(u8 controller, u32 dstHandle, u32 srcHandle);
+extern void fn_80278610(SynthVoiceSlot* slot);
 
-#define SYNTH_DELAY_ACTION_FREE 1
-#define SYNTH_DELAY_ACTION_QUEUE 2
-#define SYNTH_DELAY_ACTION_CLEAR_MIX 3
+extern u8* lbl_803DE268;
 
-void synthInsertDelayedNode(SynthDelayedEntry* entry, s32 nodeIndex, u32 delay) {
-    SynthDelayedNode* node;
-    SynthDelayedNode** bucketHeads;
-    SynthDelayedNode** head;
-    u8 targetBucket;
+#pragma peephole off
+#pragma scheduling off
 
-    targetBucket = (u8)(((delay >> 8) + gSynthDelayBucketCursor) & 0x1F);
-    bucketHeads = gSynthDelayStorage.bucketHeads[targetBucket];
+/*
+ * synthSetHandleControllerValue — sndFXCtrl underlying impl.
+ * Walks the handle's voice-slot chain, dispatching inpSetMidiCtrl per slot.
+ *
+ * EN v1.0 Address: 0x8027186C, size 0xE8
+ */
+u32 fn_8027186C(u32 handle, u8 controller, u8 value) {
+    u32 found;
+    u32 idx;
+    u8* base;
+    u8 key;
 
-    if (nodeIndex == 1) {
-        node = &entry->nodes[1];
-        if (node->bucketIndex != SYNTH_DELAY_BUCKET_INVALID) {
-            if (node->bucketIndex == targetBucket) {
-                return;
-            }
-
-            if (node->next != 0) {
-                node->next->prev = node->prev;
-            }
-
-            if (node->prev != 0) {
-                node->prev->next = node->next;
-            } else {
-                gSynthDelayStorage.bucketHeads[node->bucketIndex][2] = node->next;
-            }
+    found = 0;
+    handle = vidGetInternalId(handle);
+    while (handle != 0xFFFFFFFFu) {
+        idx = (u8)handle;
+        base = lbl_803DE268 + idx * 0x404;
+        if (handle != *(u32*)(base + 0xF4)) {
+            return found;
         }
-
-        head = &bucketHeads[2];
-    } else if (nodeIndex < 1) {
-        if (nodeIndex < 0) {
-            return;
+        if (((*(u32*)(base + 0x114) & 0) ^ 0) | ((*(u32*)(base + 0x118) & 2) ^ 0)) {
+            key = *(u8*)(base + 0x20B);
+        } else {
+            key = *(u8*)(base + 0x122);
         }
-
-        node = &entry->nodes[0];
-        if (node->bucketIndex != SYNTH_DELAY_BUCKET_INVALID) {
-            if (node->bucketIndex == targetBucket) {
-                return;
-            }
-
-            if (node->next != 0) {
-                node->next->prev = node->prev;
-            }
-
-            if (node->prev != 0) {
-                node->prev->next = node->next;
-            } else {
-                gSynthDelayStorage.bucketHeads[node->bucketIndex][0] = node->next;
-            }
-        }
-
-        head = &bucketHeads[0];
-    } else if (nodeIndex < 3) {
-        node = &entry->nodes[2];
-        if (node->bucketIndex != SYNTH_DELAY_BUCKET_INVALID) {
-            return;
-        }
-
-        head = &bucketHeads[1];
-    } else {
-        return;
+        inpSetMidiCtrl(controller, idx, key, value);
+        found = 1;
+        handle = *(u32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
     }
-
-    node->bucketIndex = targetBucket;
-    node->next = *head;
-
-    if (*head != 0) {
-        (*head)->prev = node;
-    }
-
-    node->prev = 0;
-    *head = node;
+    return found;
 }
 
-void synthInitDelayedEntry(SynthDelayedEntry* entry) {
-    u32 word0;
-    u32 word1;
+/*
+ * synthSetHandleControllerValue14Bit — sndFXCtrl14 underlying impl.
+ *
+ * EN v1.0 Address: 0x80271954, size 0xE8
+ */
+u32 fn_80271954(u32 handle, u8 controller, u32 value) {
+    u32 found;
+    s32 slot;
+    u8 idx;
+    u8* base;
+    u8 key;
 
-    word0 = gSynthDelayedActionWord0;
-    word1 = gSynthDelayedActionWord1;
-    entry->word1 = word1;
-    entry->word0 = word0;
-
-    word0 = gSynthDelayedActionWord0;
-    word1 = gSynthDelayedActionWord1;
-    entry->word3 = word1;
-    entry->word2.word = word0;
-
-    synthInsertDelayedNode(entry, 0, 0);
-    synthInsertDelayedNode(entry, 1, 0);
-}
-
-void synthRequeueDelayedEntry(SynthDelayedEntry* entry) {
-    SynthDelayedEntry* delayedEntry;
-
-    delayedEntry = entry;
-    synthInsertDelayedNode(delayedEntry, 0, 0);
-    synthInsertDelayedNode(delayedEntry, 1, 0);
-}
-
-void synthQueueDelayedAction(SynthDelayedEntry* entry) {
-    synthInsertDelayedNode(entry, 2, 0);
-}
-
-void synthFlushDelayedBucket(SynthDelayedNode** head, SynthDelayCallback callback) {
-    SynthDelayedNode* next;
-    SynthDelayedNode* node;
-
-    node = *head;
-    while (node != 0) {
-        next = node->next;
-        node->bucketIndex = 0xFF;
-
-        if (gSynthVoiceSlots[node->voiceIndex].callbackActive == 0) {
-            callback();
+    found = 0;
+    slot = vidGetInternalId(handle);
+    while (slot != -1) {
+        idx = (u8)slot;
+        base = lbl_803DE268 + idx * 0x404;
+        if (handle != *(u32*)(base + 0xF4)) {
+            return found;
         }
-
-        node = next;
+        if ((*(u32*)(base + 0x114) & 0) | (*(u32*)(base + 0x118) & 2)) {
+            key = *(u8*)(base + 0x20B);
+        } else {
+            key = *(u8*)(base + 0x122);
+        }
+        inpSetMidiCtrl14(controller, idx, key, value);
+        found = 1;
+        slot = *(s32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
     }
-
-    *head = 0;
+    return found;
 }
 
+/*
+ * synthCopyHandleFXState — copies the five FX-stage controllers
+ * (volume, pan, expression, reverb, chorus) between two handles.
+ *
+ * EN v1.0 Address: 0x80271A3C, size 0x84
+ */
+void fn_80271A3C(u32 dstHandle, u32 srcHandle) {
+    inpFXCopyCtrl(0x07, dstHandle, srcHandle);
+    inpFXCopyCtrl(0x0A, dstHandle, srcHandle);
+    inpFXCopyCtrl(0x5B, dstHandle, srcHandle);
+    inpFXCopyCtrl(0x80, dstHandle, srcHandle);
+    inpFXCopyCtrl(0x84, dstHandle, srcHandle);
+}
+
+/*
+ * synthHandleKeyOff — sndFXKeyOff underlying impl.
+ * Walks the handle's voice-slot chain and signals key-off on each slot.
+ *
+ * EN v1.0 Address: 0x80271AC0, size 0x8C
+ */
+u32 fn_80271AC0(u32 handle) {
+    u32 found;
+    s32 slot;
+    u8 idx;
+    u8* base;
+
+    found = 0;
+    if (gSynthInitialized != 0) {
+        slot = vidGetInternalId(handle);
+        while (slot != -1) {
+            idx = (u8)slot;
+            base = lbl_803DE268 + idx * 0x404;
+            if (handle == *(u32*)(base + 0xF4)) {
+                fn_80278610((SynthVoiceSlot*)base);
+                found = 1;
+            }
+            slot = *(s32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
+        }
+    }
+    return found;
+}
+
+#pragma scheduling reset
+#pragma peephole reset
+
+/* Stub kept so synth_control.c can link — not in v1.0 binary at this address. */
+#pragma dont_inline on
 void synthDispatchDelayedAction(SynthFade* fade) {
-    switch (fade->delayAction) {
-        case SYNTH_DELAY_ACTION_FREE:
-            synthFreeHandle(fade->handle);
-            break;
-        case SYNTH_DELAY_ACTION_QUEUE:
-            synthQueueHandle(fade->handle);
-            break;
-        case SYNTH_DELAY_ACTION_CLEAR_MIX:
-            synthSetHandleMixData(fade->handle, 0, 0);
-            break;
-    }
+    (void)fade;
 }
+#pragma dont_inline reset
