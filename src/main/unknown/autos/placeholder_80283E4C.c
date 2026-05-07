@@ -58,23 +58,6 @@ save:
 /*
  * --INFO--
  *
- * Function: FUN_80283e00
- * EN v1.0 Address: 0x80283E00
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80283E74
- * EN v1.1 Size: 120b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80283e00(int param_1,ushort param_2)
-{
-}
-
-/*
- * --INFO--
- *
  * Function: hwRemoveSample
  * EN v1.0 Address: 0x80283E04
  * EN v1.0 Size: 4b
@@ -130,23 +113,6 @@ remove:
 void hwSyncSampleMem(void)
 {
   aramSyncTransferQueue();
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80283e0c
- * EN v1.0 Address: 0x80283E0C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80283F44
- * EN v1.1 Size: 92b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80283e0c(int param_1,char param_2)
-{
 }
 
 /* Pattern wrappers. */
