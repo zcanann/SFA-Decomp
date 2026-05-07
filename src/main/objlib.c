@@ -211,6 +211,8 @@ int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2)
  * PAL Size: TODO
  */
 #pragma dont_inline on
+#pragma scheduling off
+#pragma peephole off
 void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
                                  ObjHitReactState *hitState,int moveId,int async)
 {
@@ -242,6 +244,8 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 #pragma dont_inline reset
 
 /*
@@ -257,6 +261,8 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitState,
                            uint entryArena,int objAnim)
 {
@@ -272,6 +278,8 @@ uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitSt
   }
   return entryArena;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1318,12 +1326,14 @@ int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHitReact_UpdateResetObjects(void)
 {
   ObjAnimComponent *obj;
   int iVar2;
   int iVar3;
-  
+
   iVar3 = 0;
   for (iVar2 = 0; iVar2 < gObjHitsResetObjectCount; iVar2 = iVar2 + 1) {
     obj = *(ObjAnimComponent **)((int)gObjHitsResetObjects + iVar3);
@@ -1340,6 +1350,8 @@ void ObjHitReact_UpdateResetObjects(void)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1432,6 +1444,8 @@ void ObjHits_InitWorkBuffers(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 uint ObjGroup_ContainsObject(int obj,int group)
 {
   int *entry;
@@ -1449,6 +1463,8 @@ uint ObjGroup_ContainsObject(int obj,int group)
   }
   return ((int)(limit ^ index) >> 1) - ((limit ^ index) & limit) >> 0x1f;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1625,6 +1641,8 @@ void ObjGroup_FindNearestObject(undefined4 param_1,undefined4 param_2,float *par
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4 * ObjGroup_GetObjects(int group,int *countOut)
 {
   if ((group < 0) || (group >= 0x54)) {
@@ -1634,6 +1652,8 @@ undefined4 * ObjGroup_GetObjects(int group,int *countOut)
   *countOut = (uint)gObjGroupOffsets[group + 1] - (uint)gObjGroupOffsets[group];
   return (undefined4 *)(gObjGroupObjects + gObjGroupOffsets[group]);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2993,7 +3013,11 @@ typedef struct ObjLibFlagByte {
 } ObjLibFlagByte;
 
 extern ObjLibFlagByte lbl_803DCC00;
+#pragma scheduling off
+#pragma peephole off
 void fn_80038F1C(int a, int b) {
     if ((int)(u8)a != 0) return;
     lbl_803DCC00.highBit = b;
 }
+#pragma peephole reset
+#pragma scheduling reset
