@@ -2481,33 +2481,33 @@ dolphin/MSL_C/PPCEABI/bare/H/s_ldexp.c:
 dolphin/MSL_C/PPCEABI/bare/H/s_modf.c:
 	.text       start:0x80291BC0 end:0x80291CBC
 
-main/unknown/autos/placeholder_80291CBC.c:
+dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.c:
 	.text       start:0x80291CBC end:0x80291F44
 	.sdata2     start:0x803E7978 end:0x803E79C0
 
-main/unknown/autos/placeholder_80291F44.c:
+dolphin/MSL_C/PPCEABI/bare/H/k_sin.c:
 	.text       start:0x80291F44 end:0x802923C4
 
-main/unknown/autos/placeholder_802923C4.c:
+dolphin/MSL_C/PPCEABI/bare/H/k_cos.c:
 	.text       start:0x802923C4 end:0x802927A4
 
-main/unknown/autos/placeholder_802927A4.c:
+dolphin/MSL_C/PPCEABI/bare/H/e_sqrt.c:
 	.text       start:0x802927A4 end:0x80292B44
 
-main/unknown/autos/placeholder_80292B44.c:
+dolphin/MSL_C/PPCEABI/bare/H/e_atan2.c:
 	.text       start:0x80292B44 end:0x80292D3C
 
-main/unknown/autos/placeholder_80292D3C.c:
+dolphin/MSL_C/PPCEABI/bare/H/s_tan.c:
 	.text       start:0x80292D3C end:0x80292DC0
 
 dolphin/MSL_C/PPCEABI/bare/H/rand.c:
 	.text       start:0x80292DC0 end:0x80292DEC
 	.sbss       start:0x803DE410 end:0x803DE414
 
-main/unknown/autos/placeholder_80292DC0.c:
+dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.c:
 	.text       start:0x80292DEC end:0x8029312C
 
-main/unknown/autos/placeholder_8029312C_math.c:
+dolphin/MSL_C/PPCEABI/bare/H/k_tan.c:
 	.text       start:0x8029312C end:0x80293464
 
 dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.c:
