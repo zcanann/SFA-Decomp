@@ -5,7 +5,7 @@
 extern undefined4 fn_8001CB3C(int param_1);
 extern undefined4 GameBit_Get(int eventId);
 extern undefined4 randomGetRange(int param_1, int param_2);
-extern int Obj_IsLoadingLocked(void);
+extern u8 Obj_IsLoadingLocked(void);
 extern undefined4 Obj_FreeObject(int param_1);
 extern int fn_8002B5A0(FirePipeObject *obj, void *spawnDef);
 extern void fn_8002CE14(int obj);
