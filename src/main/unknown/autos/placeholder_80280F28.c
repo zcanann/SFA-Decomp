@@ -4,7 +4,7 @@
 extern int hwInit(void *params, u8 voiceCount, u8 streamCount, u8 stereo, void *aux1, void *aux2, u32 sampleRate);
 extern void fn_80275260(int p1, void *p2);
 extern void fn_8026F30C(void);
-extern void fn_802720A8(int sampleRate, void *p2);
+extern void synthInit(int sampleRate, void *p2);
 extern void fn_80272EA4(void);
 extern void fn_8027ACB8(void);
 extern void fn_8027B420(void);
@@ -24,7 +24,7 @@ extern u8 lbl_803DE369;
 extern u8 lbl_803DE36A;
 
 /*
- * fn_80280C30 — large state-table init not implemented here; stubbed
+ * fn_80280C30 - large state-table init not implemented here; stubbed
  * so that any cross-file callers link.
  */
 #pragma dont_inline on
@@ -65,7 +65,7 @@ void fn_80281040(void)
 }
 
 /*
- * Synth init: clamps voice/stream counts, calls hwInit, then walks
+ * Sound init: clamps voice/stream counts, calls hwInit, then walks
  * a chain of subsystem inits if hwInit succeeded; sets the
  * gSynthInitialized flag last.
  *
@@ -74,7 +74,7 @@ void fn_80281040(void)
  * EN v1.1 Address: 0x80281044
  * EN v1.1 Size: 280b
  */
-int fn_80281044(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, void *p7, u32 flags)
+int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, void *p7, u32 flags)
 {
     u32 sampleRate;
     void *params;
@@ -102,7 +102,7 @@ int fn_80281044(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, void *p7, u32
         fn_80275260(0, p7);
         fn_8026F30C();
         lbl_803DE270 = 0;
-        fn_802720A8(0x7d00, &voiceCountSnapshot);
+        synthInit(0x7d00, &voiceCountSnapshot);
         fn_80272EA4();
         fn_8027ACB8();
         fn_80280FFC(flags);

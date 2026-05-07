@@ -30,7 +30,7 @@ extern f64 lbl_803E78D8;
 extern void hwExit(void);
 extern void fn_80275344(void);
 extern void fn_80281040(void);
-extern void fn_802725EC(void);
+extern void synthExit(void);
 extern double __frsqrte(double x);
 
 void fn_80281160(void)
@@ -38,7 +38,7 @@ void fn_80281160(void)
     hwExit();
     fn_80275344();
     fn_80281040();
-    fn_802725EC();
+    synthExit();
     gSynthInitialized = 0;
 }
 
@@ -48,14 +48,14 @@ void fn_80281194(u8 valueA, u8 valueB)
     lbl_803BD150[0x212] = valueB;
 }
 
-u8 fn_802811A8(void)
+u8 sndIsInstalled(void)
 {
     return gSynthInitialized;
 }
 
 #pragma peephole off
 #pragma fp_contract off
-void fn_802811B0(f32 *matrix, f32 *vec, f32 *out)
+void salApplyMatrix(f32 *matrix, f32 *vec, f32 *out)
 {
     out[0] = matrix[9] + (matrix[0] * vec[0] + matrix[1] * vec[1] + matrix[2] * vec[2]);
     out[1] = matrix[10] + (matrix[3] * vec[0] + matrix[4] * vec[1] + matrix[5] * vec[2]);
@@ -65,7 +65,7 @@ void fn_802811B0(f32 *matrix, f32 *vec, f32 *out)
 #pragma peephole reset
 
 #pragma fp_contract off
-void fn_8028125C(f32 *v)
+void salNormalizeVector(f32 *v)
 {
     volatile f32 divisor;
     f32 lensq = v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
@@ -82,7 +82,7 @@ void fn_8028125C(f32 *v)
 }
 #pragma fp_contract reset
 
-void fn_80281310(u8 index, u8 group, u32 flags)
+void inpSetGlobalMIDIDirtyFlag(u8 index, u8 group, u32 flags)
 {
     u8 *groupBase;
     u8 *entry;
