@@ -196,7 +196,7 @@ int hwInit(u32 value, u8 valueA, u8 valueB, u32 flags)
 
     if (salInitAi(snd_handle_irq, flags, value) != 0 &&
         fn_8027BA04(valueA, valueB, (flags & 1) != 0) != 0 &&
-        salInitDsp(flags) != 0) {
+        (u32)salInitDsp(flags) != 0) {
         sndEnd();
         salStartAi();
         return 0;
