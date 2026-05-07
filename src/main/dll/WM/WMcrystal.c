@@ -46,6 +46,21 @@ extern f32 FLOAT_803e62c0;
 extern f32 FLOAT_803e62c4;
 extern f32 FLOAT_803e62c8;
 
+#define SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE 0x3c1
+#define SC_TOTEMPUZZLE_PEER_OBJECT_TYPE 0x282
+
+#define SC_TOTEMPUZZLE_STATE_FLAGS_OFFSET 0x12
+#define SC_TOTEMPUZZLE_STATE_STEP_OFFSET 0x10
+#define SC_TOTEMPUZZLE_STATE_READY_FLAG 0x2
+#define SC_TOTEMPUZZLE_STATE_REVERSED_FLAG 0x1
+#define SC_TOTEMPUZZLE_FORWARD_STEP 4
+#define SC_TOTEMPUZZLE_REVERSE_STEP 3
+#define SC_TOTEMPUZZLE_SOLVED_COUNT 5
+
+#define SC_TOTEMPUZZLE_WRONG_SFX_ID 0x487
+#define SC_TOTEMPUZZLE_COMPLETE_SFX_ID 0x7e
+#define SC_TOTEMPUZZLE_PROGRESS_SFX_ID 0x409
+
 /*
  * --INFO--
  *
@@ -88,11 +103,13 @@ void sc_totempuzzle_update(void)
   iVar3 = FUN_80017b00(&local_44,&local_48);
   for (; local_44 < local_48; local_44 = local_44 + 1) {
     puVar6 = *(undefined2 **)(iVar3 + local_44 * 4);
-    if (puVar6[0x23] == 0x3c1) {
+    if (puVar6[0x23] == SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE) {
       iVar7 = *(int *)(puVar6 + 0x5c);
-      if ((*(ushort *)(iVar7 + 0x12) & 2) != 0) {
-        if ((*(ushort *)(iVar7 + 0x12) & 1) == 0) {
-          if (*(short *)(iVar7 + 0x10) == 4) {
+      if ((*(ushort *)(iVar7 + SC_TOTEMPUZZLE_STATE_FLAGS_OFFSET) &
+          SC_TOTEMPUZZLE_STATE_READY_FLAG) != 0) {
+        if ((*(ushort *)(iVar7 + SC_TOTEMPUZZLE_STATE_FLAGS_OFFSET) &
+            SC_TOTEMPUZZLE_STATE_REVERSED_FLAG) == 0) {
+          if (*(short *)(iVar7 + SC_TOTEMPUZZLE_STATE_STEP_OFFSET) == SC_TOTEMPUZZLE_FORWARD_STEP) {
             iVar8 = iVar8 + 1;
             if (puVar6 == puVar2) {
               local_20 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar5 + 0x10) ^ 0x80000000);
@@ -103,10 +120,10 @@ void sc_totempuzzle_update(void)
             }
           }
           else if (puVar6 == puVar2) {
-            FUN_80006824(0,0x487);
+            FUN_80006824(0,SC_TOTEMPUZZLE_WRONG_SFX_ID);
           }
         }
-        else if (*(short *)(iVar7 + 0x10) == 3) {
+        else if (*(short *)(iVar7 + SC_TOTEMPUZZLE_STATE_STEP_OFFSET) == SC_TOTEMPUZZLE_REVERSE_STEP) {
           iVar8 = iVar8 + 1;
           if (puVar6 == puVar2) {
             local_28 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar5 + 0x10) + 1U ^ 0x80000000);
@@ -117,7 +134,7 @@ void sc_totempuzzle_update(void)
           }
         }
         else if (puVar6 == puVar2) {
-          FUN_80006824(0,0x487);
+          FUN_80006824(0,SC_TOTEMPUZZLE_WRONG_SFX_ID);
         }
       }
     }
@@ -136,13 +153,13 @@ void sc_totempuzzle_update(void)
       *puVar4 = 0x100;
     }
   }
-  if (iVar8 == 5) {
+  if (iVar8 == SC_TOTEMPUZZLE_SOLVED_COUNT) {
     if (bVar1) {
-      FUN_80006824(0,0x7e);
+      FUN_80006824(0,SC_TOTEMPUZZLE_COMPLETE_SFX_ID);
     }
   }
   else if (bVar1) {
-    FUN_80006824(0,0x409);
+    FUN_80006824(0,SC_TOTEMPUZZLE_PROGRESS_SFX_ID);
   }
   FUN_8028688c();
   return;
@@ -309,7 +326,7 @@ undefined4 FUN_801dd938(int param_1,undefined4 param_2,int param_3)
       iVar2 = FUN_80017b00(&local_20,local_1c);
       piVar3 = (int *)(iVar2 + local_20 * 4);
       for (; local_20 < local_1c[0]; local_20 = local_20 + 1) {
-        if ((*piVar3 != param_1) && (*(short *)(*piVar3 + 0x46) == 0x282)) {
+        if ((*piVar3 != param_1) && (*(short *)(*piVar3 + 0x46) == SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)) {
           iVar2 = *(int *)(iVar2 + local_20 * 4);
           (**(code **)(**(int **)(iVar2 + 0x68) + 0x20))(iVar2,2);
           break;
@@ -328,7 +345,7 @@ undefined4 FUN_801dd938(int param_1,undefined4 param_2,int param_3)
       iVar2 = FUN_80017b00(&local_28,&local_24);
       piVar3 = (int *)(iVar2 + local_28 * 4);
       for (; local_28 < local_24; local_28 = local_28 + 1) {
-        if ((*piVar3 != param_1) && (*(short *)(*piVar3 + 0x46) == 0x282)) {
+        if ((*piVar3 != param_1) && (*(short *)(*piVar3 + 0x46) == SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)) {
           iVar2 = *(int *)(iVar2 + local_28 * 4);
           (**(code **)(**(int **)(iVar2 + 0x68) + 0x20))(iVar2,1);
           break;
