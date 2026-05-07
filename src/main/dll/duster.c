@@ -558,22 +558,22 @@ void fn_80155B10(uint param_9,int param_10)
  */
 void fn_80155CF8(int param_9,int param_10)
 {
-  bool bVar1;
+  byte bVar1;
   float local_18 [4];
-  
+
   (*(code *)(*(int *)gSHthorntailAnimationInterface + 0x14))(local_18);
   if ((local_18[0] >= lbl_803E3708) && (local_18[0] <= lbl_803E370C)) {
-    bVar1 = true;
+    bVar1 = 1;
   }
   else {
-    bVar1 = false;
+    bVar1 = 0;
   }
-  if ((bVar1) && (*(byte *)(param_10 + 0x33a) == 0)) {
+  if ((bVar1 != 0) && (*(byte *)(param_10 + 0x33a) == 0)) {
     *(undefined *)(param_10 + 0x33a) = 1;
     *(uint *)(param_10 + 0x2e4) = *(uint *)(param_10 + 0x2e4) | 0x10000;
     fn_8014D08C(param_9,param_10,1,lbl_803E3710,0,0);
   }
-  else if ((!bVar1) && (*(byte *)(param_10 + 0x33a) == 2)) {
+  else if ((bVar1 == 0) && (*(byte *)(param_10 + 0x33a) == 2)) {
     *(undefined *)(param_10 + 0x33a) = 1;
     *(uint *)(param_10 + 0x2e4) = *(uint *)(param_10 + 0x2e4) | 0x10000;
     fn_8014D08C(param_9,param_10,3,lbl_803E3710,0,0);
