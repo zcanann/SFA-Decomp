@@ -58,8 +58,12 @@ extern f32 lbl_803DC0B0;
 extern f32 lbl_803DCBE8;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
+extern f32 lbl_803DE910;
+extern f32 lbl_803DE918;
 extern f32 lbl_803DF590;
 extern f32 lbl_803DF598;
+extern void Vec3_Normalize();
+extern void Vec3_ScaleAdd();
 extern f32 lbl_803DF59C;
 extern f32 lbl_803DF5A0;
 extern f32 lbl_803DF5B0;
@@ -890,46 +894,12 @@ float *ObjHits_ProjectPointToTaperedCapsuleXZ(double param_1,double param_2,doub
   float local_6c;
   float local_68;
   float local_64;
-  
-  fVar1 = lbl_803DF590;
-  if ((double)lbl_803DF590 <= param_2) {
-    if (param_2 <= param_5) {
-      local_64 = (float)((double)lbl_803DF598 / param_5);
-      local_6c = (*param_8 - *param_7) * local_64;
-      local_68 = (param_8[1] - param_7[1]) * local_64;
-      local_64 = (param_8[2] - param_7[2]) * local_64;
-      FUN_80017780(param_2,param_7,&local_6c,&local_78);
-      *param_9 = *param_6 - local_78;
-      param_9[1] = lbl_803DF590;
-      param_9[2] = param_6[2] - local_70;
-      FUN_80017784(param_9);
-      fVar1 = (float)(param_4 - param_3) * (float)(param_2 / param_5) + (float)(param_3 + param_1);
-      *param_9 = *param_9 * fVar1;
-      param_9[1] = param_9[1] * fVar1;
-      param_9[2] = param_9[2] * fVar1;
-      *param_9 = *param_9 + local_78;
-      param_9[1] = param_9[1] + local_74;
-      param_9[2] = param_9[2] + local_70;
-    }
-    else {
-      *param_9 = *param_6 - *param_8;
-      param_9[1] = fVar1;
-      param_9[2] = param_6[2] - param_8[2];
-      FUN_80017784(param_9);
-      fVar1 = (float)(param_1 + param_4);
-      *param_9 = *param_9 * fVar1;
-      param_9[1] = param_9[1] * fVar1;
-      param_9[2] = param_9[2] * fVar1;
-      *param_9 = *param_9 + *param_8;
-      param_9[1] = param_9[1] + param_8[1];
-      param_9[2] = param_9[2] + param_8[2];
-    }
-  }
-  else {
+
+  if (param_2 < (double)lbl_803DE910) {
     *param_9 = *param_6 - *param_7;
-    param_9[1] = fVar1;
+    param_9[1] = lbl_803DE910;
     param_9[2] = param_6[2] - param_7[2];
-    FUN_80017784(param_9);
+    Vec3_Normalize(param_9);
     fVar1 = (float)(param_1 + param_3);
     *param_9 = *param_9 * fVar1;
     param_9[1] = param_9[1] * fVar1;
@@ -937,6 +907,37 @@ float *ObjHits_ProjectPointToTaperedCapsuleXZ(double param_1,double param_2,doub
     *param_9 = *param_9 + *param_7;
     param_9[1] = param_9[1] + param_7[1];
     param_9[2] = param_9[2] + param_7[2];
+  }
+  else if (param_2 > param_5) {
+    *param_9 = *param_6 - *param_8;
+    param_9[1] = lbl_803DE910;
+    param_9[2] = param_6[2] - param_8[2];
+    Vec3_Normalize(param_9);
+    fVar1 = (float)(param_1 + param_4);
+    *param_9 = *param_9 * fVar1;
+    param_9[1] = param_9[1] * fVar1;
+    param_9[2] = param_9[2] * fVar1;
+    *param_9 = *param_9 + *param_8;
+    param_9[1] = param_9[1] + param_8[1];
+    param_9[2] = param_9[2] + param_8[2];
+  }
+  else {
+    local_64 = (float)((double)lbl_803DE918 / param_5);
+    local_6c = (*param_8 - *param_7) * local_64;
+    local_68 = (param_8[1] - param_7[1]) * local_64;
+    local_64 = (param_8[2] - param_7[2]) * local_64;
+    Vec3_ScaleAdd(param_7,&local_6c,param_2,&local_78);
+    *param_9 = *param_6 - local_78;
+    param_9[1] = lbl_803DE910;
+    param_9[2] = param_6[2] - local_70;
+    Vec3_Normalize(param_9);
+    fVar1 = (float)(param_4 - param_3) * (float)(param_2 / param_5) + (float)(param_3 + param_1);
+    *param_9 = *param_9 * fVar1;
+    param_9[1] = param_9[1] * fVar1;
+    param_9[2] = param_9[2] * fVar1;
+    *param_9 = *param_9 + local_78;
+    param_9[1] = param_9[1] + local_74;
+    param_9[2] = param_9[2] + local_70;
   }
   return param_9;
 }
@@ -969,45 +970,12 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(double param_1,double param_2,doub
   float local_6c;
   float local_68;
   float local_64;
-  
-  if ((double)lbl_803DF590 <= param_2) {
-    if (param_2 <= param_5) {
-      local_64 = (float)((double)lbl_803DF598 / param_5);
-      local_6c = (*param_8 - *param_7) * local_64;
-      local_68 = (param_8[1] - param_7[1]) * local_64;
-      local_64 = (param_8[2] - param_7[2]) * local_64;
-      FUN_80017780(param_2,param_7,&local_6c,&local_78);
-      *param_9 = *param_6 - local_78;
-      param_9[1] = param_6[1] - local_74;
-      param_9[2] = param_6[2] - local_70;
-      FUN_80017784(param_9);
-      fVar1 = (float)(param_4 - param_3) * (float)(param_2 / param_5) + (float)(param_3 + param_1);
-      *param_9 = *param_9 * fVar1;
-      param_9[1] = param_9[1] * fVar1;
-      param_9[2] = param_9[2] * fVar1;
-      *param_9 = *param_9 + local_78;
-      param_9[1] = param_9[1] + local_74;
-      param_9[2] = param_9[2] + local_70;
-    }
-    else {
-      *param_9 = *param_6 - *param_8;
-      param_9[1] = param_6[1] - param_8[1];
-      param_9[2] = param_6[2] - param_8[2];
-      FUN_80017784(param_9);
-      fVar1 = (float)(param_1 + param_4);
-      *param_9 = *param_9 * fVar1;
-      param_9[1] = param_9[1] * fVar1;
-      param_9[2] = param_9[2] * fVar1;
-      *param_9 = *param_9 + *param_8;
-      param_9[1] = param_9[1] + param_8[1];
-      param_9[2] = param_9[2] + param_8[2];
-    }
-  }
-  else {
+
+  if (param_2 < (double)lbl_803DE910) {
     *param_9 = *param_6 - *param_7;
     param_9[1] = param_6[1] - param_7[1];
     param_9[2] = param_6[2] - param_7[2];
-    FUN_80017784(param_9);
+    Vec3_Normalize(param_9);
     fVar1 = (float)(param_1 + param_3);
     *param_9 = *param_9 * fVar1;
     param_9[1] = param_9[1] * fVar1;
@@ -1015,6 +983,37 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(double param_1,double param_2,doub
     *param_9 = *param_9 + *param_7;
     param_9[1] = param_9[1] + param_7[1];
     param_9[2] = param_9[2] + param_7[2];
+  }
+  else if (param_2 > param_5) {
+    *param_9 = *param_6 - *param_8;
+    param_9[1] = param_6[1] - param_8[1];
+    param_9[2] = param_6[2] - param_8[2];
+    Vec3_Normalize(param_9);
+    fVar1 = (float)(param_1 + param_4);
+    *param_9 = *param_9 * fVar1;
+    param_9[1] = param_9[1] * fVar1;
+    param_9[2] = param_9[2] * fVar1;
+    *param_9 = *param_9 + *param_8;
+    param_9[1] = param_9[1] + param_8[1];
+    param_9[2] = param_9[2] + param_8[2];
+  }
+  else {
+    local_64 = (float)((double)lbl_803DE918 / param_5);
+    local_6c = (*param_8 - *param_7) * local_64;
+    local_68 = (param_8[1] - param_7[1]) * local_64;
+    local_64 = (param_8[2] - param_7[2]) * local_64;
+    Vec3_ScaleAdd(param_7,&local_6c,param_2,&local_78);
+    *param_9 = *param_6 - local_78;
+    param_9[1] = param_6[1] - local_74;
+    param_9[2] = param_6[2] - local_70;
+    Vec3_Normalize(param_9);
+    fVar1 = (float)(param_4 - param_3) * (float)(param_2 / param_5) + (float)(param_3 + param_1);
+    *param_9 = *param_9 * fVar1;
+    param_9[1] = param_9[1] * fVar1;
+    param_9[2] = param_9[2] * fVar1;
+    *param_9 = *param_9 + local_78;
+    param_9[1] = param_9[1] + local_74;
+    param_9[2] = param_9[2] + local_70;
   }
   return param_9;
 }
