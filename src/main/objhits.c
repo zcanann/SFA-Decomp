@@ -1115,6 +1115,8 @@ float *ObjHits_CalcTaperedCapsuleNormal(double param_1,double param_2,double par
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 uint ObjHits_TestTaperedCapsuleXZ(double param_1,double param_2,double param_3,double param_4,
                                   float *param_5,float *param_6,float *param_7,float *param_8,
                                   float *param_9,float *param_10,float *param_11)
@@ -1150,7 +1152,11 @@ uint ObjHits_TestTaperedCapsuleXZ(double param_1,double param_2,double param_3,d
   *param_11 = fVar1;
   return ((uint)(byte)((*param_10 <= fVar1 * fVar1) << 1) << 0x1c) >> 0x1d;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 /*
  * --INFO--
  *
@@ -1208,6 +1214,8 @@ uint ObjHits_TestTaperedCapsule3D(double param_1,double param_2,double param_3,d
   *param_11 = fVar1;
   return ((uint)(byte)((*param_10 <= fVar1 * fVar1) << 1) << 0x1c) >> 0x1d;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1391,6 +1399,8 @@ void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                            undefined8 param_5,undefined8 param_6,undefined8 param_7,
                            undefined8 param_8,undefined4 param_9,undefined4 param_10,
@@ -1995,6 +2005,8 @@ LAB_80033418:
   FUN_80286858();
   return (u8)local_1a8;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2027,6 +2039,8 @@ void fn_800333C8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
                                    undefined8 param_4,undefined8 param_5,undefined8 param_6,
                                    undefined8 param_7,undefined8 param_8,undefined4 param_9,
@@ -2153,6 +2167,8 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
   FUN_80286874();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2203,6 +2219,8 @@ void ObjHits_RegisterActiveHitVolumeObject(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                                undefined4 param_5,int param_6)
 {
@@ -2413,7 +2431,11 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
   FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 /*
  * --INFO--
  *
@@ -2585,6 +2607,8 @@ LAB_800344f4:
   FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2764,6 +2788,8 @@ void ObjHits_CheckSkeletonPair(undefined4 param_1,undefined4 param_2,int *param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHits_CheckTrackContact(void)
 {
   uint uVar1;
@@ -2934,6 +2960,8 @@ void ObjHits_CheckTrackContact(void)
   FUN_8028687c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
