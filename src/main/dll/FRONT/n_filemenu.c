@@ -44,7 +44,7 @@ extern void fn_8007D960(int);
 extern u8 framesThisStep;
 extern u8 lbl_803DB424;
 extern TitleMenuTextEntry lbl_8031A214[4];
-extern u8 lbl_803DD610;
+extern s32 lbl_803DD610;
 extern u8 lbl_803DD614;
 extern u8 lbl_803DD615;
 extern u8 lbl_803DD616;

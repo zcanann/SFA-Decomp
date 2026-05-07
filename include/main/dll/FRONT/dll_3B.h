@@ -3,7 +3,13 @@
 
 #include "ghidra_import.h"
 
-void FUN_80116f84(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void fn_80116F84(void);
+void *fn_8011730C(int flags);
+void fn_80117350(void *message);
+void fn_80117380(void *cursor);
+void *fn_80117460(void *param);
+void *fn_8011750C(void *param);
+void AXInit(void);
+void AXQuit(void);
 
 #endif /* MAIN_DLL_FRONT_DLL_3B_H_ */

@@ -1,148 +1,289 @@
 #include "ghidra_import.h"
 #include "main/dll/FRONT/dll_3B.h"
+#include "dolphin/os.h"
+#include "dolphin/thp/THPAudio.h"
 
-extern undefined4 FUN_8000676c();
-extern undefined4 FUN_80006770();
-extern undefined4 FUN_80006804();
-extern undefined4 FUN_80006b4c();
-extern int FUN_80006b6c();
-extern undefined4 FUN_80017488();
-extern undefined8 FUN_8005d0ac();
-extern undefined4 FUN_8005d144();
-extern undefined4 FUN_800723ac();
-extern undefined4 FUN_80080f14();
+typedef struct TitleMenuTextEntry {
+  u8 pad0[0x16];
+  u16 flags;
+  u8 pad18[0x24];
+} TitleMenuTextEntry;
+
+typedef struct TitleMenuControl {
+  void *vtable;
+} TitleMenuControl;
+
+typedef struct MovieAudioPacket {
+  s16 *audioBuffer;
+  s16 *decodedBuffer;
+  u32 decodedSize;
+  int frameIndex;
+} MovieAudioPacket;
+
+typedef struct MovieAudioCursor {
+  u8 *frame;
+  int frameIndex;
+} MovieAudioCursor;
+
+typedef struct MovieAudioState {
+  u8 pad0[0x50];
+  u32 framesPerGroup;
+  u8 pad54[0x18];
+  u32 audioTrackCount;
+  u8 audioTrackEnabled[0x2e];
+  u8 flags;
+  u8 pad9f[0xd];
+  void *loopFrame;
+  u8 padb0[4];
+  int frameStride;
+  u32 frameOffset;
+} MovieAudioState;
+
+extern void audioSetVolumes(int channel, int volume, int frames, int arg3, int arg4);
+extern void audioStopByMask(int mask);
+extern void fn_8000B694(int arg);
+extern int fn_80014930(void);
+extern void gameTimerStop(void);
+extern void gameTextLoadDir(int dirId);
+extern void fn_8005CDF8(int arg);
+extern void fn_8005CEA8(int arg);
+extern void fn_8007D960(int arg);
+extern void fn_800887F8(int arg);
 extern void n_attractmode_prepareMovie(void);
-extern undefined4 FUN_80117c30();
-extern undefined4 FUN_80130740();
-extern undefined4 FUN_80134830();
-extern undefined4 FUN_80134b94();
+extern void fn_80117B68(int fade, int frames);
+extern void fn_80130478(void);
+extern void fn_80135820(f32 x, f32 y);
+extern void fn_801368A4(u8 arg);
+extern void *fn_801194EC(void);
+extern void fn_80119458(void *arg);
 
-extern undefined4 DAT_8031ae28;
-extern undefined4 DAT_8031ae64;
-extern undefined4 DAT_8031ae7a;
-extern undefined4 DAT_8031aeb6;
-extern undefined4 DAT_8031aef2;
-extern undefined4 DAT_8031af2e;
-extern undefined4 DAT_803dc084;
-extern undefined4* DAT_803dd6cc;
-extern undefined4* DAT_803dd720;
-extern undefined4 DAT_803de110;
-extern undefined4 DAT_803de288;
-extern undefined4 DAT_803de28c;
-extern undefined4 DAT_803de28e;
-extern undefined4 DAT_803de291;
-extern undefined4 DAT_803de298;
-extern undefined4 DAT_803de2c8;
-extern undefined4 DAT_803de2cc;
-extern undefined4 DAT_803de2cd;
-extern undefined4 DAT_803de2ce;
-extern undefined4 DAT_803de2cf;
-extern undefined4 DAT_803de2d0;
-extern undefined4 DAT_803de2d1;
-extern undefined4 DAT_803de2d2;
-extern undefined4 DAT_803de300;
-extern undefined4 DAT_803de318;
-extern f32 FLOAT_803e2990;
-extern f32 FLOAT_803e2998;
+extern TitleMenuTextEntry lbl_8031A1D8[1];
+extern TitleMenuTextEntry lbl_8031A214[4];
+extern OSMessageQueue lbl_803A4460;
+extern OSMessageQueue lbl_803A4480;
+extern OSThread lbl_803A54A0;
+extern MovieAudioState lbl_803A5D60;
+extern u8 *lbl_803DD498;
+extern u8 lbl_803DB424;
+extern s32 lbl_803DD610;
+extern u8 lbl_803DD614;
+extern u8 lbl_803DD616;
+extern u8 lbl_803DD619;
+extern u8 lbl_803DD61A;
+extern s32 lbl_803DD648;
+extern u8 lbl_803DD64C;
+extern u8 lbl_803DD64D;
+extern u8 lbl_803DD64E;
+extern u8 lbl_803DD64F;
+extern u8 lbl_803DD650;
+extern u8 lbl_803DD651;
+extern u8 lbl_803DD652;
+extern u8 lbl_803DD680;
+extern s32 lbl_803DD698;
+extern s32 lbl_803DD658;
+extern TitleMenuControl *lbl_803DCA4C;
+extern TitleMenuControl *lbl_803DCAA0;
+extern f32 lbl_803E1D10;
+extern f32 lbl_803E1D18;
+
+static void TitleMenu_OpenPanel(TitleMenuTextEntry *entries, int count)
+{
+  (*(void (*)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))
+      ((int)lbl_803DCAA0->vtable + 4))(entries,count,0,0,0,0,0x14,200,0xff,0xff,0xff,0xff);
+}
+
+static void TitleMenu_SetPanelSelection(int selection)
+{
+  (*(void (*)(int))((int)lbl_803DCAA0->vtable + 0x18))(selection);
+}
+
+static void TitleMenu_BindEntries(TitleMenuTextEntry *entries)
+{
+  (*(void (*)(TitleMenuTextEntry *))((int)lbl_803DCAA0->vtable + 0x2c))(entries);
+}
+
+static void TitleMenu_SetEntryHighlight(int entry)
+{
+  int i;
+
+  for (i = 0; i < 4; i++) {
+    if (i == entry) {
+      lbl_8031A214[i].flags &= 0xbfff;
+    } else {
+      lbl_8031A214[i].flags |= 0x4000;
+    }
+  }
+  TitleMenu_BindEntries(lbl_8031A214);
+}
+
+static void TitleMenu_PlayPopup(int id, int arg)
+{
+  (*(void (*)(int, int))((int)lbl_803DCA4C->vtable + 0xc))(id,arg);
+}
 
 /*
  * --INFO--
  *
- * Function: FUN_80116f84
+ * Function: fn_80116F84
  * EN v1.0 Address: 0x80116F84
- * EN v1.0 Size: 1072b
- * EN v1.1 Address: 0x8011722C
- * EN v1.1 Size: 904b
+ * EN v1.0 Size: 904b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80116f84(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void fn_80116F84(void)
 {
-  int iVar1;
-  undefined8 uVar2;
-  double dVar3;
-  
-  DAT_803de298 = (*(byte *)(DAT_803de110 + 0x21) & 0x80) == 0;
-  if (0xfd < DAT_803dc084) {
-    param_1 = FUN_800723ac('\0');
+  int mode;
+
+  lbl_803DD61A = (lbl_803DD498[0x21] & 0x80) == 0;
+  if (lbl_803DB424 > 0xfd) {
+    fn_8007D960(0);
   }
-  FUN_80017488(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x15);
-  DAT_803de2d0 = 0;
-  DAT_803de2d1 = 0;
-  iVar1 = FUN_80006b6c();
-  if (iVar1 != 3) {
-    (**(code **)(*DAT_803dd720 + 4))(&DAT_8031ae64,4,0,0,0,0,0x14,200,0xff,0xff,0xff,0xff);
+  gameTextLoadDir(0x15);
+  lbl_803DD650 = 0;
+  lbl_803DD651 = 0;
+  mode = fn_80014930();
+  if (mode != 3) {
+    TitleMenu_OpenPanel(lbl_8031A214,4);
+    lbl_803DD652 = 1;
+  } else {
+    TitleMenu_OpenPanel(lbl_8031A1D8,1);
+    lbl_803DD652 = 0;
   }
-  else {
-    (**(code **)(*DAT_803dd720 + 4))(&DAT_8031ae28,1,0,0,0,0,0x14,200,0xff,0xff,0xff,0xff);
+  TitleMenu_SetPanelSelection(lbl_803DD614);
+  fn_801368A4(0);
+
+  mode = fn_80014930();
+  if ((((mode == 0xd) || (mode = fn_80014930(), mode == 7)) ||
+       (mode = fn_80014930(), mode == 6)) ||
+      (mode = fn_80014930(), mode == 5)) {
+    TitleMenu_PlayPopup(0x23,5);
+  } else {
+    audioStopByMask(0xf);
+    TitleMenu_PlayPopup(0x3c,1);
   }
-  DAT_803de2d2 = iVar1 != 3;
-  (**(code **)(*DAT_803dd720 + 0x18))(DAT_803de28c);
-  FUN_80134b94('\0');
-  iVar1 = FUN_80006b6c();
-  if ((((iVar1 == 0xd) || (iVar1 = FUN_80006b6c(), iVar1 == 7)) ||
-      (iVar1 = FUN_80006b6c(), iVar1 == 6)) || (iVar1 = FUN_80006b6c(), iVar1 == 5)) {
-    (**(code **)(*DAT_803dd6cc + 0xc))(0x23,5);
-  }
-  else {
-    FUN_80006770(0xf);
-    (**(code **)(*DAT_803dd6cc + 0xc))(0x3c,1);
-  }
-  FUN_80130740();
-  if (DAT_803de28c == '\0') {
-    DAT_8031ae7a = DAT_8031ae7a & 0xbfff;
-  }
-  else {
-    DAT_8031ae7a = DAT_8031ae7a | 0x4000;
-  }
-  if (DAT_803de28c == '\x01') {
-    DAT_8031aeb6 = DAT_8031aeb6 & 0xbfff;
-  }
-  else {
-    DAT_8031aeb6 = DAT_8031aeb6 | 0x4000;
-  }
-  if (DAT_803de28c == '\x02') {
-    DAT_8031aef2 = DAT_8031aef2 & 0xbfff;
-  }
-  else {
-    DAT_8031aef2 = DAT_8031aef2 | 0x4000;
-  }
-  if (DAT_803de28c == '\x03') {
-    DAT_8031af2e = DAT_8031af2e & 0xbfff;
-  }
-  else {
-    DAT_8031af2e = DAT_8031af2e | 0x4000;
-  }
-  uVar2 = (**(code **)(*DAT_803dd720 + 0x2c))(&DAT_8031ae64);
-  DAT_803de291 = 0;
-  DAT_803de2cd = 0;
-  DAT_803de2cc = 1;
-  DAT_803de2c8 = 0x3c;
-  DAT_803de300 = 0;
-  if ((DAT_803de298 == '\0') || ((DAT_803de288 != 0 && (DAT_803de288 != 4)))) {
-    dVar3 = (double)FLOAT_803e2998;
-    FUN_80134830((double)FLOAT_803e2990,dVar3);
-    DAT_803de2cf = 0;
-    FUN_80117c30(0,1);
-  }
-  else {
+
+  fn_80130478();
+  TitleMenu_SetEntryHighlight(lbl_803DD614);
+  lbl_803DD619 = 0;
+  lbl_803DD64D = 0;
+  lbl_803DD64C = 1;
+  lbl_803DD648 = 0x3c;
+  lbl_803DD680 = 0;
+
+  if ((lbl_803DD61A != 0) && ((lbl_803DD610 == 0) || (lbl_803DD610 == 4))) {
     n_attractmode_prepareMovie();
-    dVar3 = (double)FLOAT_803e2998;
-    FUN_80134830((double)FLOAT_803e2990,dVar3);
-    DAT_803de2cf = 1;
-    FUN_80117c30(0,0);
-    FUN_8000676c(0,10,1,0,0);
-    DAT_803de28e = 0;
+    fn_80135820(lbl_803E1D10,lbl_803E1D18);
+    lbl_803DD64F = 1;
+    fn_80117B68(0,0);
+    audioSetVolumes(0,10,1,0,0);
+    lbl_803DD616 = 0;
+  } else {
+    fn_80135820(lbl_803E1D10,lbl_803E1D18);
+    lbl_803DD64F = 0;
+    fn_80117B68(0,1);
   }
-  FUN_8005d144(0);
-  uVar2 = FUN_8005d0ac(0);
-  DAT_803de2ce = 0;
-  FUN_80080f14(uVar2,dVar3,param_3,param_4,param_5,param_6,param_7,param_8,0);
-  FUN_80006b4c();
-  FUN_80006804('\0');
-  DAT_803de318 = 0;
-  return;
+  fn_8005CEA8(0);
+  fn_8005CDF8(0);
+  lbl_803DD64E = 0;
+  fn_800887F8(0);
+  gameTimerStop();
+  fn_8000B694(0);
+  lbl_803DD698 = 0;
+}
+
+void *fn_8011730C(int flags)
+{
+  void *message;
+
+  if (OSReceiveMessage(&lbl_803A4460,&message,flags) != 1) {
+    message = NULL;
+  }
+  return message;
+}
+
+void fn_80117350(void *message)
+{
+  OSSendMessage(&lbl_803A4480,message,0);
+}
+
+void fn_80117380(void *cursorArg)
+{
+  MovieAudioCursor *cursor;
+  u32 track;
+  u32 *audioFrameSizes;
+  u8 *audioFrame;
+  MovieAudioPacket *packet;
+
+  cursor = (MovieAudioCursor *)cursorArg;
+  audioFrameSizes = (u32 *)(cursor->frame + 8);
+  audioFrame = cursor->frame + (lbl_803A5D60.audioTrackCount * 4) + 8;
+  OSReceiveMessage(&lbl_803A4480,&packet,1);
+  for (track = 0; track < lbl_803A5D60.audioTrackCount; track++) {
+    if (lbl_803A5D60.audioTrackEnabled[track] == 1) {
+      packet->decodedSize = THPAudioDecode(packet->audioBuffer,audioFrame,0);
+      packet->decodedBuffer = packet->audioBuffer;
+      packet->frameIndex = cursor->frameIndex;
+      OSSendMessage(&lbl_803A4460,packet,1);
+    }
+    audioFrame += *audioFrameSizes++;
+  }
+}
+
+void *fn_80117460(void *param)
+{
+  int frame;
+  int stride;
+  MovieAudioCursor cursor;
+
+  frame = 0;
+  stride = lbl_803A5D60.frameStride;
+  cursor.frame = param;
+  while (true) {
+    cursor.frameIndex = frame;
+    fn_80117380(&cursor);
+    if (((frame + lbl_803A5D60.frameOffset) % lbl_803A5D60.framesPerGroup) ==
+        (lbl_803A5D60.framesPerGroup - 1)) {
+      if ((lbl_803A5D60.flags & 1) == 0) {
+        OSSuspendThread(&lbl_803A54A0);
+      } else {
+        stride = *(int *)cursor.frame;
+        cursor.frame = lbl_803A5D60.loopFrame;
+      }
+    } else {
+      stride = *(int *)cursor.frame;
+      cursor.frame += stride;
+    }
+    frame++;
+  }
+}
+
+void *fn_8011750C(void *param)
+{
+  void *token;
+
+  (void)param;
+  while (true) {
+    token = fn_801194EC();
+    fn_80117380(token);
+    fn_80119458(token);
+  }
+}
+
+void AXInit(void)
+{
+  if (lbl_803DD658 != 0) {
+    OSCancelThread(&lbl_803A54A0);
+    lbl_803DD658 = 0;
+  }
+}
+
+void AXQuit(void)
+{
+  if (lbl_803DD658 != 0) {
+    OSResumeThread(&lbl_803A54A0);
+  }
 }
