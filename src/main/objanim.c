@@ -524,12 +524,12 @@ void ObjAnim_WriteStateWord(ObjAnimComponent *objAnim,int stateIndex,short wordI
 void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,uint frameCount)
 {
   ObjAnimBank *bank;
+  float stepFrames;
 
   bank = ObjAnim_GetActiveBank(objAnim);
   if (bank != (ObjAnimBank *)0x0) {
-    bank->currentState->eventStep =
-        (short)(int)(lbl_803DE8F4 /
-                    (ObjAnim_U32AsDouble(frameCount ^ 0x80000000) - lbl_803DE900));
+    stepFrames = (float)ObjAnim_U32AsDouble(frameCount ^ 0x80000000) - (float)lbl_803DE900;
+    bank->currentState->eventStep = (int)(lbl_803DE8F4 / stepFrames);
   }
 }
 #pragma peephole reset
