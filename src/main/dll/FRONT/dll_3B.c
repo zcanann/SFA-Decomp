@@ -236,7 +236,11 @@ void fn_80117380(void *cursorArg)
   cursor = (MovieAudioCursor *)cursorArg;
   audioFrameSizes = (u32 *)(cursor->frame + 8);
   audioFrame = cursor->frame + (lbl_803A5D60.audioTrackCount * 4) + 8;
-  OSReceiveMessage(&lbl_803A4480,&packet,1);
+  {
+    MovieAudioPacket *received;
+    OSReceiveMessage(&lbl_803A4480,&received,1);
+    packet = received;
+  }
   for (track = 0; track < lbl_803A5D60.audioTrackCount; track++) {
     if (lbl_803A5D60.audioTrackEnabled[track] == 1) {
       packet->decodedSize = THPAudioDecode(packet->audioBuffer,audioFrame,0);
