@@ -247,17 +247,17 @@ int fn_801E6D08(void *obj, void *param2)
 int fn_801E7124(void *obj)
 {
     void *state;
+    int v;
 
     state = *(void **)((char *)obj + 0xb8);
     if (GameBit_Get(0xcef) == 0) {
         return 0;
     }
-    if (GameBit_Get(0xad3) != 0) {
-        return 2;
-    }
-    GameBit_Set(0xad3, 1);
-    {
-        int *target = *(int **)((char *)state + 0x9b4);
+    v = (int)GameBit_Get(0xad3);
+    if (v == 0) {
+        int *target;
+        GameBit_Set(0xad3, 1);
+        target = *(int **)((char *)state + 0x9b4);
         (**(code ***)((char *)target + 0x68))[0x24 / 4](target, 1, 2);
     }
     return 2;
@@ -377,7 +377,7 @@ int fn_801E71A4(void *obj, void *param2, int dispatch)
  * EN v1.0 Address: 0x801E75EC
  * EN v1.0 Size: 180b
  */
-int fn_801E75EC(void *obj)
+void fn_801E75EC(void *obj)
 {
     void *state;
 
@@ -395,7 +395,6 @@ int fn_801E75EC(void *obj)
         fn_8011F38C(0);
     }
     *(u8 *)((char *)state + 0x9d4) = 0;
-    return 0;
 }
 
 #pragma scheduling reset
