@@ -50,24 +50,27 @@ void camclimb_update(short *param_1)
   }
   else {
     if (*lbl_803DD538 != *(uint *)(param_1 + 0x18)) {
+      int base;
       iVar3 = 0;
       for (iVar5 = 0; iVar5 < *(int *)((int)lbl_803DD538 + 0x1b0); iVar5 = iVar5 + 1) {
-        Obj_TransformLocalPointToWorld((double)*(float *)((int)lbl_803DD538 + iVar3 + 0x1c),
-                     (double)*(float *)((int)lbl_803DD538 + iVar3 + 0x6c),
-                     (double)*(float *)((int)lbl_803DD538 + iVar3 + 0xbc),
-                     (int)lbl_803DD538 + iVar3 + 0x1c,
-                     (int)lbl_803DD538 + iVar3 + 0x6c,
-                     (int)lbl_803DD538 + iVar3 + 0xbc, *lbl_803DD538);
+        base = (int)lbl_803DD538 + iVar3;
+        Obj_TransformLocalPointToWorld((double)*(float *)(base + 0x1c),
+                     (double)*(float *)(base + 0x6c),
+                     (double)*(float *)(base + 0xbc),
+                     base + 0x1c,
+                     base + 0x6c,
+                     base + 0xbc, *lbl_803DD538);
         iVar3 = iVar3 + 4;
       }
       iVar3 = 0;
       for (iVar5 = 0; iVar5 < *(int *)((int)lbl_803DD538 + 0x1b0); iVar5 = iVar5 + 1) {
-        Obj_TransformWorldPointToLocal((double)*(float *)((int)lbl_803DD538 + iVar3 + 0x1c),
-                     (double)*(float *)((int)lbl_803DD538 + iVar3 + 0x6c),
-                     (double)*(float *)((int)lbl_803DD538 + iVar3 + 0xbc),
-                     (int)lbl_803DD538 + iVar3 + 0x1c,
-                     (int)lbl_803DD538 + iVar3 + 0x6c,
-                     (int)lbl_803DD538 + iVar3 + 0xbc, *(undefined4 *)(param_1 + 0x18));
+        base = (int)lbl_803DD538 + iVar3;
+        Obj_TransformWorldPointToLocal((double)*(float *)(base + 0x1c),
+                     (double)*(float *)(base + 0x6c),
+                     (double)*(float *)(base + 0xbc),
+                     base + 0x1c,
+                     base + 0x6c,
+                     base + 0xbc, *(undefined4 *)(param_1 + 0x18));
         iVar3 = iVar3 + 4;
       }
       *lbl_803DD538 = *(int *)(param_1 + 0x18);
@@ -89,7 +92,7 @@ void camclimb_update(short *param_1)
     if ((param_1[0x50] != 0) || (*(u8 *)(param_1 + 0xa1) != 0)) {
       *(float *)((int)lbl_803DD538 + 0x11c) = *(float *)((int)lbl_803DD538 + 0x11c) + timeDelta;
     }
-    if (lbl_803E1740 < *(float *)((int)lbl_803DD538 + 0x11c)) {
+    if (*(float *)((int)lbl_803DD538 + 0x11c) > lbl_803E1740) {
       cVar2 = camcontrol_getTargetPosition(param_1, psVar4, param_1 + 0xc, param_1 + 1);
       if (cVar2 == 1) {
         doNothing_80103660(1);
@@ -102,14 +105,17 @@ void camclimb_update(short *param_1)
     (*(code *)(*(int *)lbl_803DCA50 + 0x38))
               ((double)lbl_803E1740, param_1, &local_2c, auStack_30, &local_34, &local_38, 0);
     uVar1 = getAngle((double)local_2c, (double)local_34);
-    iVar5 = (0x8000 - (uVar1 & 0xffff)) - ((int)*param_1 & 0xffffU);
-    if (0x8000 < iVar5) {
-      iVar5 = iVar5 + -0xffff;
+    {
+      short sParam = *param_1;
+      iVar5 = (0x8000 - (uVar1 & 0xffff)) - ((int)sParam & 0xffffU);
+      if (0x8000 < iVar5) {
+        iVar5 = iVar5 + -0xffff;
+      }
+      if (iVar5 < -0x8000) {
+        iVar5 = iVar5 + 0xffff;
+      }
+      *param_1 = sParam + (short)iVar5;
     }
-    if (iVar5 < -0x8000) {
-      iVar5 = iVar5 + 0xffff;
-    }
-    *param_1 = *param_1 + (short)iVar5;
     (*(code *)(**(int **)(iVar3 + 4) + 0x18))
               ((double)*(float *)(psVar4 + 0xe), (double)local_38, param_1);
     if (cVar2 != 0) {
