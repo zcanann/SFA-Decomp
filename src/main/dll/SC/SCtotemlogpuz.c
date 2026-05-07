@@ -1,220 +1,146 @@
 #include "ghidra_import.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
-extern undefined4 FUN_80006810();
-extern undefined4 FUN_80006824();
-extern uint FUN_80017690();
-extern int FUN_80017a98();
-extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_800305f8();
-extern int ObjGroup_FindNearestObject();
-extern undefined8 ObjLink_DetachChild();
-extern int Obj_GetYawDeltaToObject();
-extern undefined4 FUN_80038f38();
-extern undefined4 FUN_80039468();
-extern undefined4 FUN_8003964c();
-extern undefined4 FUN_8003add8();
-extern undefined4 FUN_8003b280();
-extern uint FUN_8007f66c();
-extern int FUN_801d7034();
-extern uint countLeadingZeros();
+extern int GameBit_Get(int bit);
+extern int GameBit_Set(int bit, int value);
+extern int mapUnload(int id, int flags);
+extern int Music_Trigger(int id, int value);
+extern void fn_801D80F4(void *p);
 
-extern undefined4 DAT_803dcca0;
-extern undefined4 DAT_803dcca4;
-extern undefined4 DAT_803dcca8;
-extern undefined4 DAT_803dccac;
-extern undefined4 DAT_803dccb0;
-extern undefined4 DAT_803dccb4;
-extern undefined4 DAT_803de870;
-extern undefined4 DAT_803de872;
-extern f64 DOUBLE_803e6128;
-extern f32 lbl_803E60F8;
-extern f32 lbl_803E6104;
-extern f32 lbl_803E6140;
-extern f32 lbl_803E6144;
+extern void *lbl_803DCAAC;
 
 /*
  * --INFO--
  *
- * Function: FUN_801d7c14
+ * Function: fn_801D7C14
  * EN v1.0 Address: 0x801D7C14
- * EN v1.0 Size: 1628b
- * EN v1.1 Address: 0x801D7C64
- * EN v1.1 Size: 1164b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 128b
  */
-void FUN_801d7c14(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 ushort *param_9)
+#pragma peephole off
+#pragma scheduling off
+int fn_801D7C14(void *obj, void *unused, void *p3)
 {
-  ushort uVar1;
-  int iVar2;
-  uint uVar3;
-  int iVar4;
-  short *psVar5;
-  uint uVar6;
-  undefined4 uVar7;
-  undefined4 uVar8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  int *piVar9;
-  undefined8 uVar10;
-  double dVar11;
-  
-  piVar9 = *(int **)(param_9 + 0x5c);
-  if (*piVar9 != 0) {
-    uVar10 = ObjLink_DetachChild((int)param_9,*piVar9);
-    FUN_80017ac8(uVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,*piVar9);
-    *piVar9 = 0;
-  }
-  iVar2 = FUN_801d7034();
-  if (param_9[0x50] == 0) {
-    uVar3 = FUN_8007f66c(100);
-    if (uVar3 != 0) {
-      FUN_80039468(param_9,piVar9 + 5,0xab,-0x100,0xffffffff,0);
-    }
-    uVar3 = FUN_8007f66c(500);
-    if (uVar3 != 0) {
-      FUN_80039468(param_9,piVar9 + 5,0x417,-0x500,0xffffffff,0);
-    }
-  }
-  uVar3 = FUN_80017690(0xc7d);
-  if (uVar3 != 0) {
-    uVar3 = FUN_8007f66c(DAT_803dcca0);
-    if (uVar3 != 0) {
-      uVar3 = countLeadingZeros(*(byte *)((int)piVar9 + 0xd5) >> 6 & 1);
-      *(byte *)((int)piVar9 + 0xd5) =
-           (byte)((uVar3 >> 5 & 0xff) << 6) & 0x40 | *(byte *)((int)piVar9 + 0xd5) & 0xbf;
-    }
-    if ((*(byte *)((int)piVar9 + 0xd5) >> 6 & 1) == 0) {
-      uVar3 = FUN_80017690(0xa45);
-      *(byte *)((int)piVar9 + 0xd5) =
-           (byte)((uVar3 & 0xff) << 6) & 0x40 | *(byte *)((int)piVar9 + 0xd5) & 0xbf;
-    }
-  }
-  if ((*(byte *)((int)piVar9 + 0xd5) >> 6 & 1) == 0) {
-    iVar4 = ObjGroup_FindNearestObject(8,param_9,(float *)0x0);
-  }
-  else {
-    iVar4 = FUN_80017a98();
-  }
-  *(float *)(param_9 + 8) =
-       *(float *)(param_9 + 8) +
-       (float)((double)CONCAT44(0x43300000,DAT_803dcca8 ^ 0x80000000) - DOUBLE_803e6128);
-  uVar7 = 0x23;
-  uVar8 = 1;
-  uVar3 = DAT_803dcca4;
-  FUN_8003add8(param_9,iVar4,(int)(piVar9 + 0x1d),0x23,1,DAT_803dcca4);
-  psVar5 = (short *)FUN_8003964c((int)param_9,0);
-  dVar11 = (double)*(float *)(param_9 + 8);
-  *(float *)(param_9 + 8) =
-       (float)(dVar11 - (double)(float)((double)CONCAT44(0x43300000,DAT_803dcca8 ^ 0x80000000) -
-                                       DOUBLE_803e6128));
-  if (psVar5 != (short *)0x0) {
-    psVar5[1] = psVar5[1] + DAT_803de872;
-    *psVar5 = 0;
-    *psVar5 = *psVar5 + DAT_803dccac;
-  }
-  if (iVar2 != 0) {
-    *(byte *)((int)piVar9 + 0xd5) = *(byte *)((int)piVar9 + 0xd5) & 0xef;
-    iVar2 = Obj_GetYawDeltaToObject(param_9,iVar4,(float *)0x0);
-    iVar4 = (int)(short)((short)iVar2 - DAT_803de870);
-    iVar2 = iVar4 + -0x8000;
-    if (iVar2 < 0) {
-      iVar2 = -iVar2;
-    }
-    if (iVar2 < 0x18e4) {
-      if (param_9[0x50] == 0) {
-        uVar6 = FUN_8007f66c(DAT_803dccb0);
-        if (uVar6 == 0) {
-          uVar6 = FUN_8007f66c(DAT_803dccb4);
-          if (uVar6 != 0) {
-            FUN_80006824((uint)param_9,0x2f1);
-            FUN_800305f8((double)lbl_803E60F8,dVar11,param_3,param_4,param_5,param_6,param_7,
-                         param_8,param_9,0x1a,0,uVar7,uVar8,uVar3,in_r9,in_r10);
-          }
+    int i;
+    i = 0;
+    while (i < (int)*(u8 *)((char *)p3 + 0x8b)) {
+        if (((u8 *)p3)[i + 0x81] != 0) {
+            i++;
+            continue;
         }
-        else {
-          FUN_80006824((uint)param_9,0x416);
-          FUN_800305f8((double)lbl_803E60F8,dVar11,param_3,param_4,param_5,param_6,param_7,param_8
-                       ,param_9,0x1b,0,uVar7,uVar8,uVar3,in_r9,in_r10);
-        }
-      }
-      else {
-        FUN_800305f8((double)lbl_803E60F8,dVar11,param_3,param_4,param_5,param_6,param_7,param_8,
-                     param_9,0,0,uVar7,uVar8,uVar3,in_r9,in_r10);
-        FUN_80006810((int)param_9,0x2f1);
-      }
+        fn_801D80F4(*(void **)((char *)obj + 0xb8));
+        i++;
     }
-    else {
-      if (iVar4 < 1) {
-        if (iVar4 < -0xe38) {
-          iVar2 = 0x19;
-        }
-        else {
-          iVar2 = 0x18;
-        }
-      }
-      else if (iVar4 < 0xe39) {
-        iVar2 = 0x16;
-      }
-      else {
-        iVar2 = 0x17;
-      }
-      if ((short)param_9[0x50] != iVar2) {
-        FUN_800305f8((double)lbl_803E60F8,dVar11,param_3,param_4,param_5,param_6,param_7,param_8,
-                     param_9,iVar2,0,uVar7,uVar8,uVar3,in_r9,in_r10);
-      }
-    }
-  }
-  FUN_80038f38((int)param_9,(char *)(piVar9 + 5));
-  FUN_8003b280((int)param_9,(int)(piVar9 + 0x11));
-  uVar3 = FUN_80017690(0x887);
-  if (uVar3 == 0) {
-    *(undefined *)(piVar9 + 3) = 0;
-  }
-  if ((*(byte *)((int)piVar9 + 0xd5) >> 4 & 1) != 0) {
-    return;
-  }
-  uVar1 = param_9[0x50];
-  if (uVar1 != 0x19) {
-    if (0x18 < (short)uVar1) {
-      if (uVar1 == 0x1b) {
-        if (*(float *)(param_9 + 0x4c) <= lbl_803E6144) {
-          return;
-        }
-        FUN_80006824((uint)param_9,0x2f4);
-        *(byte *)((int)piVar9 + 0xd5) = *(byte *)((int)piVar9 + 0xd5) & 0xef | 0x10;
-        return;
-      }
-      if (0x1a < (short)uVar1) {
-        return;
-      }
-      if (*(float *)(param_9 + 0x4c) <= lbl_803E6140) {
-        return;
-      }
-      FUN_80006824((uint)param_9,0x417);
-      *(byte *)((int)piVar9 + 0xd5) = *(byte *)((int)piVar9 + 0xd5) & 0xef | 0x10;
-      return;
-    }
-    if (uVar1 != 0x17) {
-      if (((short)uVar1 < 0x17) && ((short)uVar1 < 0x16)) {
-        return;
-      }
-      if (*(float *)(param_9 + 0x4c) <= lbl_803E6104) {
-        return;
-      }
-      FUN_80006824((uint)param_9,700);
-      *(byte *)((int)piVar9 + 0xd5) = *(byte *)((int)piVar9 + 0xd5) & 0xef | 0x10;
-      return;
-    }
-  }
-  if (lbl_803E6104 < *(float *)(param_9 + 0x4c)) {
-    FUN_80006824((uint)param_9,0x2f1);
-    *(byte *)((int)piVar9 + 0xd5) = *(byte *)((int)piVar9 + 0xd5) & 0xef | 0x10;
-  }
-  return;
+    fn_801D7C94(obj, *(void **)((char *)obj + 0xb8));
+    return 0;
 }
+#pragma scheduling reset
+#pragma peephole reset
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801D7C94
+ * EN v1.0 Address: 0x801D7C94
+ * EN v1.0 Size: 576b
+ */
+#pragma peephole off
+#pragma scheduling off
+void fn_801D7C94(void *obj, void *p2)
+{
+    s8 ac;
+
+    if (GameBit_Get(0xbf8) != 0) {
+        *(u8 *)((char *)p2 + 7) = 5;
+        GameBit_Set(0xbf8, 0);
+    }
+    if (*(u8 *)((char *)p2 + 7) == 0) return;
+
+    if (*(u8 *)((char *)p2 + 7) == 5) {
+        ac = *(s8 *)((char *)obj + 0xac);
+        (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 1, 0);
+        ac = *(s8 *)((char *)obj + 0xac);
+        (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 4, 0);
+        ac = *(s8 *)((char *)obj + 0xac);
+        (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 6, 0);
+        ac = *(s8 *)((char *)obj + 0xac);
+        (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 7, 0);
+        ac = *(s8 *)((char *)obj + 0xac);
+        (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 8, 0);
+        ac = *(s8 *)((char *)obj + 0xac);
+        (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 9, 0);
+        mapUnload(0x13, 0x20000000);
+        mapUnload(0x41, 0x20000000);
+        mapUnload(0x43, 0x20000000);
+        mapUnload(0x45, 0x20000000);
+    }
+    if (*(u8 *)((char *)p2 + 7) != 1) {
+        goto dec;
+    }
+    ac = *(s8 *)((char *)obj + 0xac);
+    (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 0, 1);
+    ac = *(s8 *)((char *)obj + 0xac);
+    (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 2, 1);
+    ac = *(s8 *)((char *)obj + 0xac);
+    (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 3, 1);
+    ac = *(s8 *)((char *)obj + 0xac);
+    (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 5, 1);
+    ac = *(s8 *)((char *)obj + 0xac);
+    (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 0xa, 1);
+dec:
+    *(u8 *)((char *)p2 + 7) = *(u8 *)((char *)p2 + 7) - 1;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801D7ED4
+ * EN v1.0 Address: 0x801D7ED4
+ * EN v1.0 Size: 396b
+ */
+#pragma peephole off
+#pragma scheduling off
+void fn_801D7ED4(int *p1, int p2, s16 a, s16 b, s16 c, int musicId)
+{
+    int has_a = (a + 1) | (-1 - a);
+    int has_b = (b + 1) | (-1 - b);
+    u8 ah = (u8)((u32)has_a >> 31);
+    u8 bh = (u8)((u32)has_b >> 31);
+
+    if ((*p1 & p2) != 0) {
+        if (ah == 0 || GameBit_Get(a) == 0) {
+            if (GameBit_Get(c) != 0) goto end;
+        }
+        if (ah != 0) {
+            GameBit_Set(a, 0);
+        }
+        if (bh != 0) {
+            GameBit_Set(b, 0);
+        }
+        GameBit_Set(c, 0);
+        if (musicId != -1) {
+            Music_Trigger(musicId, 0);
+        }
+        *p1 = *p1 & ~p2;
+    } else {
+        if (bh == 0 || GameBit_Get(b) == 0) {
+            if (GameBit_Get(c) == 0) goto end;
+        }
+        if (ah != 0) {
+            GameBit_Set(a, 0);
+        }
+        if (bh != 0) {
+            GameBit_Set(b, 0);
+        }
+        GameBit_Set(c, 1);
+        if (musicId != -1) {
+            Music_Trigger(musicId, 1);
+        }
+        *p1 = *p1 | p2;
+    }
+end:
+    return;
+}
+#pragma scheduling reset
+#pragma peephole reset
