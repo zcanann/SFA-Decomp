@@ -66,6 +66,7 @@
 #define EXPGFX_SOURCE_FRAME_STATE_B 2
 #define EXPGFX_SOURCE_FRAME_STATE_MIXED 3
 #define EXPGFX_SOURCE_OBJTYPE_MATCH_ALL 0xD4
+#define EXPGFX_QUAD_TEXCOORD_MAX 0x80
 
 typedef struct ExpgfxBounds {
   float minX;

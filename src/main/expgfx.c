@@ -689,14 +689,14 @@ LAB_8009ba84:
     tex1S = 0;
     tex1T = 0;
     if (texture != 0) {
-      tex1S = 0x80;
-      tex0S = 0x80;
+      tex1S = EXPGFX_QUAD_TEXCOORD_MAX;
+      tex0S = EXPGFX_QUAD_TEXCOORD_MAX;
       if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX1_T) != 0) {
-        tex1T = 0x80;
+        tex1T = EXPGFX_QUAD_TEXCOORD_MAX;
         tex1S = 0;
       }
       if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX0_T) != 0) {
-        tex0T = 0x80;
+        tex0T = EXPGFX_QUAD_TEXCOORD_MAX;
         tex0S = 0;
       }
     }
@@ -839,7 +839,7 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
   poolSourceIds = gExpgfxTrackedPoolSourceIds;
   poolFrameFlags = gExpgfxStaticPoolFrameFlags;
   while ((s16)poolIndex < EXPGFX_POOL_COUNT) {
-    if ((source->objType == 0xd4) || (*poolSourceIds == (u32)sourceObject)) {
+    if ((source->objType == EXPGFX_SOURCE_OBJTYPE_MATCH_ALL) || (*poolSourceIds == (u32)sourceObject)) {
       bit = 1 << ((s16)poolIndex >> 1);
       highBit = (s32)bit >> 0x1f;
       sourceMasks = &gExpgfxTrackedSourceFrameMasks[((u32)(poolIndex & 1)) * 2];
