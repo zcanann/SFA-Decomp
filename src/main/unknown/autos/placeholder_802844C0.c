@@ -2,7 +2,7 @@
 #include "main/unknown/autos/placeholder_802844C0.h"
 #include "dolphin/os/OSCache.h"
 
-extern int fn_80284038(void *src, void *dst, u32 size, int p4, int p5, int p6);
+extern int aramUploadData(void *src, void *dst, u32 size, int p4, int p5, int p6);
 
 extern u8 lbl_803D3F60[];
 extern u8 lbl_803D4468[];
@@ -26,14 +26,14 @@ extern void *lbl_803DE39C;
  * EN v1.1 Address: 0x802844C0
  * EN v1.1 Size: 240b
  */
-u32 fn_80284468(void *src, u32 size)
+u32 aramStoreData(void *src, u32 size)
 {
     u32 alignedSize = (size + 0x1f) & ~0x1f;
     u32 startPos = lbl_803DE384;
 
     if (lbl_803DE38C == NULL) {
         DCFlushRange(src, alignedSize);
-        fn_80284038(src, (void *)lbl_803DE384, alignedSize, 0, 0, 0);
+        aramUploadData(src, (void *)lbl_803DE384, alignedSize, 0, 0, 0);
         lbl_803DE384 += alignedSize;
         return startPos;
     }
@@ -46,7 +46,7 @@ u32 fn_80284468(void *src, u32 size)
         }
         piece = lbl_803DE38C(src, chunk);
         DCFlushRange(piece, chunk);
-        fn_80284038(piece, (void *)lbl_803DE384, chunk, 0, 0, 0);
+        aramUploadData(piece, (void *)lbl_803DE384, chunk, 0, 0, 0);
         alignedSize -= chunk;
         src = (u8 *)src + chunk;
         lbl_803DE384 += chunk;
@@ -60,7 +60,7 @@ u32 fn_80284468(void *src, u32 size)
  * EN v1.1 Address: 0x80284558
  * EN v1.1 Size: 24b
  */
-void fn_80284558(void *unused, u32 size)
+void aramRemoveData(void *unused, u32 size)
 {
     u32 aligned = (size + 0x1f) & ~0x1f;
     lbl_803DE384 -= aligned;

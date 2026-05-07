@@ -18,7 +18,7 @@ extern u8 lbl_803D41E4[];
  * EN v1.1 Address: 0x80283FA0
  * EN v1.1 Size: 152b
  */
-void fn_80283FA0(void *req)
+void aramQueueCallback(void *req)
 {
     u8 *base;
     u8 *slot;
@@ -53,7 +53,7 @@ void fn_80283FA0(void *req)
  * EN v1.1 Address: 0x80284038
  * EN v1.1 Size: 464b
  */
-void fn_80284038(u32 src, u32 dst, u32 size, u32 type, u32 prio, u32 owner, u32 mode)
+void aramUploadData(u32 src, u32 dst, u32 size, u32 type, u32 prio, u32 owner, u32 mode)
 {
     u8 *base;
     u8 *slot;
@@ -75,7 +75,7 @@ void fn_80284038(u32 src, u32 dst, u32 size, u32 type, u32 prio, u32 owner, u32 
             *(u32 *)(slot + 0x10) = src;
             *(u32 *)(slot + 0x14) = dst;
             *(u32 *)(slot + 0x18) = size;
-            *(u32 *)(slot + 0x1c) = (u32)fn_80283FA0;
+            *(u32 *)(slot + 0x1c) = (u32)aramQueueCallback;
             *(u32 *)(slot + 0x20) = type;
             *(u32 *)(slot + 0x24) = prio;
             ARQPostRequest((void *)(base + base[0x280] * 0x28),
@@ -101,7 +101,7 @@ void fn_80284038(u32 src, u32 dst, u32 size, u32 type, u32 prio, u32 owner, u32 
  * EN v1.1 Address: 0x8028420C
  * EN v1.1 Size: 20b
  */
-void fn_8028420C(void)
+void aramSyncTransferQueue(void)
 {
     while (lbl_803D3F60[0x281] != 0) {
     }

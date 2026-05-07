@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_80284410.h"
 
-extern int fn_80284038(void *src, void *dst, u32 size, int p4, int p5, int p6);
+extern int aramUploadData(void *src, void *dst, u32 size, int p4, int p5, int p6);
 extern void *fn_80284B6C(u32 size);
 extern void fn_80284B94(void *p);
 extern void fn_80284570(void);
@@ -25,7 +25,7 @@ extern void *lbl_803DE38C;
  * EN v1.1 Address: 0x80284410
  * EN v1.1 Size: 540b
  */
-void fn_80284224(u32 extraSize)
+void aramInit(u32 extraSize)
 {
     u32 arBase;
     u8 *buf;
@@ -43,7 +43,7 @@ void fn_80284224(u32 extraSize)
     lbl_803D3F60[0x280] = 0;
     lbl_803D3F60[0x505] = 0;
     lbl_803D3F60[0x504] = 0;
-    fn_80284038(buf, (void *)arBase, 0x500, 0, 0, 0);
+    aramUploadData(buf, (void *)arBase, 0x500, 0, 0, 0);
     while (*flag != 0) {
     }
     fn_80284B94(buf);
@@ -61,7 +61,7 @@ void fn_80284224(u32 extraSize)
  *
  * EN v1.1 Address: 0x80284444
  */
-void fn_80284444(void)
+void aramGetZeroBuffer(void)
 {
 }
 
@@ -70,7 +70,7 @@ void fn_80284444(void)
  *
  * EN v1.1 Address: 0x80284448
  */
-u32 fn_80284448(void)
+u32 aramGetBaseAddress(void)
 {
     return ARGetBaseAddress();
 }

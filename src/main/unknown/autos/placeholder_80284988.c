@@ -16,8 +16,8 @@ extern void fn_8027C48C(u32 param_1, u32 elapsed);
 extern DSPTaskInfo lbl_803D4880;
 extern u16 lbl_80330840[];
 extern u16 lbl_803DC628[4];
-extern void fn_80284714(void *task);
-extern void fn_80284724(void *task);
+extern void dspInitCallback(void *task);
+extern void dspResumeCallback(void *task);
 
 /*
  * --INFO--
@@ -36,8 +36,8 @@ int fn_802848D8(u32 flags)
     lbl_803D4880.dram_addr = 0;
     lbl_803D4880.dsp_init_vector = 0x10;
     lbl_803D4880.dsp_resume_vector = 0x30;
-    lbl_803D4880.init_cb = fn_80284714;
-    lbl_803D4880.res_cb = fn_80284724;
+    lbl_803D4880.init_cb = dspInitCallback;
+    lbl_803D4880.res_cb = dspResumeCallback;
     lbl_803D4880.done_cb = NULL;
     lbl_803D4880.req_cb = NULL;
     lbl_803D4880.priority = 0;

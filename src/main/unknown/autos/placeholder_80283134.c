@@ -84,10 +84,10 @@ extern void fn_80284878(void);
 extern int fn_80284998(void);
 extern void sndBegin(void);
 extern void fn_80284A8C(void);
-extern u32 fn_8028478C(void *callback, u32 flags, u32 value);
+extern u32 salInitAi(void *callback, u32 flags, u32 value);
 extern u32 fn_8027BA04(u32 valueA, u32 valueB, u32 enabled);
 extern int fn_802848D8(u32 flags);
-extern void fn_80284858(void);
+extern void salStartAi(void);
 extern void fn_802737E8(void);
 extern u32 fn_802848AC(void);
 extern void fn_802849CC(u32 param_1);
@@ -194,11 +194,11 @@ int hwInit(u32 value, u8 valueA, u8 valueB, u32 flags)
     lbl_803DE37E = 0;
     lbl_803DE348 = 0;
 
-    if (fn_8028478C(snd_handle_irq, flags, value) != 0 &&
+    if (salInitAi(snd_handle_irq, flags, value) != 0 &&
         fn_8027BA04(valueA, valueB, (flags & 1) != 0) != 0 &&
         fn_802848D8(flags) != 0) {
         sndEnd();
-        fn_80284858();
+        salStartAi();
         return 0;
     }
 

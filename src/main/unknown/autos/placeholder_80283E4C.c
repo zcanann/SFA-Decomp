@@ -5,9 +5,9 @@ extern undefined4 DAT_803dd280;
 extern undefined4 DAT_803dd288;
 extern undefined4 DAT_803defc4;
 extern undefined4 DAT_803deff0;
-extern void fn_8028420C(void);
-extern void* fn_80284468(void* ptr, u32 size);
-extern void fn_80284558(void* ptr, u32 size);
+extern void aramSyncTransferQueue(void);
+extern void* aramStoreData(void* ptr, u32 size);
+extern void aramRemoveData(void* ptr, u32 size);
 extern u32 lbl_803DE334;
 extern u8 *lbl_803DE344;
 extern u32 lbl_803DE374;
@@ -52,7 +52,7 @@ void hwSaveSample(u32 **sample, void **ptr)
     size <<= 1;
   }
 save:
-  *ptr = fn_80284468(*ptr, size);
+  *ptr = aramStoreData(*ptr, size);
 }
 
 /*
@@ -111,7 +111,7 @@ void hwRemoveSample(u32 *sample, void *ptr)
     size <<= 1;
   }
 remove:
-  fn_80284558(ptr, size);
+  aramRemoveData(ptr, size);
 }
 
 /*
@@ -129,7 +129,7 @@ remove:
  */
 void hwSyncSampleMem(void)
 {
-  fn_8028420C();
+  aramSyncTransferQueue();
 }
 
 /*

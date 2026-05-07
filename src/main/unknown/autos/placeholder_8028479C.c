@@ -28,7 +28,7 @@ extern u8 lbl_803DE3C4;
  * EN v1.1 Address: 0x8028479C
  * EN v1.1 Size: 164b
  */
-void fn_80284670(u32 p1, u32 p2, u32 p3, int p4, u32 p5, u32 p6)
+void salCallback(u32 p1, u32 p2, u32 p3, int p4, u32 p5, u32 p6)
 {
     lbl_803DE3C4 = (lbl_803DE3C4 + 1) % 4;
     AIInitDMA((u32)(u8 *)lbl_803DE3A4 | 0x80000000U + lbl_803DE3C4 * 0x280, 0x280);
@@ -51,7 +51,7 @@ void fn_80284670(u32 p1, u32 p2, u32 p3, int p4, u32 p5, u32 p6)
  *
  * EN v1.1 Address: 0x80284714
  */
-void fn_80284714(void)
+void dspInitCallback(void)
 {
     lbl_803DE3A8 = 1;
     lbl_803DE3B8 = 1;
@@ -62,7 +62,7 @@ void fn_80284714(void)
  *
  * EN v1.1 Address: 0x80284724
  */
-void fn_80284724(void)
+void dspResumeCallback(void)
 {
     lbl_803DE3A8 = 1;
     if (lbl_803DE3AC != 0) {
@@ -78,13 +78,13 @@ void fn_80284724(void)
 }
 
 /*
- * Audio output setup: allocate 0xa00-byte (4 × 0x280) DMA buffer,
+ * Audio output setup: allocate 0xa00-byte (4 x 0x280) DMA buffer,
  * zero it, register the AI DMA callback, and kick off the first DMA.
  * Returns 1 on success, 0 if allocation failed.
  *
  * EN v1.1 Address: 0x8028478C
  */
-int fn_8028478C(void *userCallback, u32 unused, u32 *outSampleCount)
+int salInitAi(void *userCallback, u32 unused, u32 *outSampleCount)
 {
     void *buf;
 
@@ -100,7 +100,7 @@ int fn_8028478C(void *userCallback, u32 unused, u32 *outSampleCount)
     lbl_803DE3A8 = 1;
     lbl_803DE3C4 = 1;
     lbl_803DE3B0 = 0;
-    AIRegisterDMACallback(fn_80284670);
+    AIRegisterDMACallback(salCallback);
     AIInitDMA((u32)(u8 *)lbl_803DE3A4 | 0x80000000U + lbl_803DE3C4 * 0x280, 0x280);
     *(u32 *)(lbl_803BD150 + 4) = 0x20;
     *outSampleCount = 0x7d00;
@@ -112,7 +112,7 @@ int fn_8028478C(void *userCallback, u32 unused, u32 *outSampleCount)
  *
  * EN v1.1 Address: 0x80284858
  */
-void fn_80284858(void)
+void salStartAi(void)
 {
     AIStartDMA();
 }

@@ -5,8 +5,8 @@ extern undefined4 DAT_803defc4;
 extern u32 lbl_803BD150[];
 extern f32 lbl_803E78E8;
 extern u32 __cvt_fp2unsigned(double value);
-extern void fn_80284224(undefined4 value);
-extern void fn_80284444(void);
+extern void aramInit(undefined4 value);
+extern void aramGetZeroBuffer(void);
 
 /*
  * --INFO--
@@ -41,7 +41,7 @@ u32 hwExitStream(u32 value)
  */
 void hwGetStreamPlayBuffer(undefined4 unused, undefined4 value)
 {
-    fn_80284224(value);
+    aramInit(value);
 }
 
 /*
@@ -59,7 +59,7 @@ void hwGetStreamPlayBuffer(undefined4 unused, undefined4 value)
  */
 void hwTransAddr(void)
 {
-    fn_80284444();
+    aramGetZeroBuffer();
 }
 
 /*

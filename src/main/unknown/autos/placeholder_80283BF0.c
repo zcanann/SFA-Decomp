@@ -3,7 +3,7 @@
 
 extern void fn_8027F0C8(void *p);
 extern int fn_80284638(int stream, void *out);
-extern int fn_80284038(int dest, int src, u32 size, int flag, undefined4 param_5, undefined4 param_6);
+extern int aramUploadData(int dest, int src, u32 size, int flag, undefined4 param_5, undefined4 param_6);
 extern void DCStoreRange(void *addr, u32 nBytes);
 
 extern u8 lbl_803CC1E0[];
@@ -85,7 +85,7 @@ void hwGetPos(int param_1, u32 param_2, int param_3, int param_4, undefined4 par
     size = (param_3 + 0x1f) & 0xffffffe0;
     param_1 = param_1 + param_2;
     DCStoreRange((void *)param_1, size);
-    fn_80284038(param_1, offset + param_2, size, 1, param_5, param_6);
+    aramUploadData(param_1, offset + param_2, size, 1, param_5, param_6);
 }
 
 /*
