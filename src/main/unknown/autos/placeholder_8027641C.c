@@ -2,9 +2,9 @@
 #include "main/unknown/autos/placeholder_8027641C.h"
 
 extern u8 *fn_80275058(u16 keyId);
-extern void fn_80282F80(u32 *p);
-extern void fn_80282F90(u32 *p, void *state);
-extern int fn_80282FD8(u32 v);
+extern void sndConvertMs(u32 *p);
+extern void sndConvertTicks(u32 *p, int state);
+extern int sndConvert2Ms(u32 v);
 
 /*
  * Linear-interpolated table lookup: value's high u16 selects entry,
@@ -54,11 +54,11 @@ void fn_80276440(int state, u32 *params, u32 timeArg)
 
     t = params[1] >> 16;
     if ((params[1] >> 8) & 1) {
-        fn_80282F80(&t);
+        sndConvertMs(&t);
     } else {
-        fn_80282F90(&t, (void *)state);
+        sndConvertTicks(&t, state);
     }
-    divisor = fn_80282FD8(t);
+    divisor = sndConvert2Ms(t);
     if (divisor == 0) {
         divisor = 1;
     }

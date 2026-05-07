@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_802757BC.h"
 
-extern u32 fn_80282E5C(void);
+extern u32 sndRand(void);
 extern u32 hwIsActive(u8 voiceId);
 
 typedef struct VoiceParams {
@@ -42,7 +42,7 @@ void fn_8027566C(int state, int params)
 
     if (*(u16 *)(state + 0xaa) == 0) {
         if ((*(u32 *)(params + 0) >> 16) & 1) {
-            *(u16 *)(state + 0xaa) = (u16)fn_80282E5C() % (u16)(*(u32 *)(params + 4) >> 16);
+            *(u16 *)(state + 0xaa) = (u16)sndRand() % (u16)(*(u32 *)(params + 4) >> 16);
         } else {
             *(u16 *)(state + 0xaa) = (u16)(*(u32 *)(params + 4) >> 16);
         }

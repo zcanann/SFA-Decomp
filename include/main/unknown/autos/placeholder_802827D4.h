@@ -20,5 +20,17 @@ uint FUN_80282830(uint param_1,uint param_2,uint param_3,uint param_4);
 uint FUN_80282838(uint param_1,uint param_2,uint param_3,uint param_4);
 u16 inpGetPostAuxB(int state);
 u16 inpGetTremolo(int state);
+void inpGetAuxA(void);
+void inpGetAuxB(void);
+void inpInit(void);
+u32 inpTranslateExCtrl(u32 input);
+void inpGetExCtrl(void);
+void inpSetExCtrl(void);
+u16 sndRand(void);
+s16 sndSin(u32 packed);
+void sndBSearch(void);
+void sndConvertMs(u32 *p);
+void sndConvertTicks(u32 *p, int x);
+u32 sndConvert2Ms(u32 x);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802827D4_H_ */

@@ -2,7 +2,7 @@
 
 extern void *memcpy(void *dst, const void *src, u32 n);
 extern void inpSetMidiLastNote(u8 a, u8 b, u8 v);
-extern int fn_80282CB4(int input);
+extern int inpTranslateExCtrl(int input);
 
 extern u8 lbl_802C2710[];
 extern u8 lbl_802C2798[];
@@ -108,7 +108,7 @@ void inpAddCtrl(int obj, int b, int c, int d, u32 flag)
     if (counter < 4) {
         *(u8 *)(obj + 0x22) = counter + 1;
         if (flag == 0) {
-            b = fn_80282CB4(b);
+            b = inpTranslateExCtrl(b);
         } else {
             d |= 0x10;
         }

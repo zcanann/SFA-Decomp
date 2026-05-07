@@ -39,19 +39,19 @@ u16 inpGetTremolo(int state)
                        *(u8 *)(state + 0x121), *(u8 *)(state + 0x122));
 }
 
-/* fn_80282858 - 47-instruction helper. Stubbed. */
+/* inpGetAuxA - aux A getter. Stubbed. */
 #pragma dont_inline on
-void fn_80282858(void) {}
+void inpGetAuxA(void) {}
 #pragma dont_inline reset
 
-/* fn_80282914 - 47-instruction helper. Stubbed. */
+/* inpGetAuxB - aux B getter. Stubbed. */
 #pragma dont_inline on
-void fn_80282914(void) {}
+void inpGetAuxB(void) {}
 #pragma dont_inline reset
 
-/* fn_802829D0 - 185-instruction main dispatcher. Stubbed. */
+/* inpInit - input/controller state init. Stubbed. */
 #pragma dont_inline on
-void fn_802829D0(void) {}
+void inpInit(void) {}
 #pragma dont_inline reset
 
 /*
@@ -60,7 +60,7 @@ void fn_802829D0(void) {}
  *
  * EN v1.1 Address: 0x80282CB4, size 112b
  */
-u32 fn_80282CB4(u32 input)
+u32 inpTranslateExCtrl(u32 input)
 {
     u32 value = input & 0xff;
     u32 idx = value - 0x80;
@@ -78,14 +78,14 @@ u32 fn_80282CB4(u32 input)
     }
 }
 
-/* fn_80282D24 - 40-instruction helper. Stubbed. */
+/* inpGetExCtrl - extended controller getter. Stubbed. */
 #pragma dont_inline on
-void fn_80282D24(void) {}
+void inpGetExCtrl(void) {}
 #pragma dont_inline reset
 
-/* fn_80282DC4 - 38-instruction helper. Stubbed. */
+/* inpSetExCtrl - extended controller setter. Stubbed. */
 #pragma dont_inline on
-void fn_80282DC4(void) {}
+void inpSetExCtrl(void) {}
 #pragma dont_inline reset
 
 /*
@@ -93,7 +93,7 @@ void fn_80282DC4(void) {}
  *
  * EN v1.1 Address: 0x80282E5C, size 32b
  */
-u16 fn_80282E5C(void)
+u16 sndRand(void)
 {
     lbl_803DC610 = lbl_803DC610 * 0xA8351D63U;
     return (u16)((lbl_803DC610 >> 6) & 0xffff);
@@ -105,7 +105,7 @@ u16 fn_80282E5C(void)
  *
  * EN v1.1 Address: 0x80282E7C, size 108b
  */
-s16 fn_80282E7C(u32 packed)
+s16 sndSin(u32 packed)
 {
     u32 zone = packed & 0xfff;
     if (zone < 0x400) {
@@ -125,9 +125,9 @@ s16 fn_80282E7C(u32 packed)
     }
 }
 
-/* fn_80282EE8 - 38-instruction helper. Stubbed. */
+/* sndBSearch - table binary-search helper. Stubbed. */
 #pragma dont_inline on
-void fn_80282EE8(void) {}
+void sndBSearch(void) {}
 #pragma dont_inline reset
 
 /*
@@ -135,7 +135,7 @@ void fn_80282EE8(void) {}
  *
  * EN v1.1 Address: 0x80282F80, size 16b
  */
-void fn_80282F80(u32 *p)
+void sndConvertMs(u32 *p)
 {
     *p = *p << 8;
 }
@@ -146,7 +146,7 @@ void fn_80282F80(u32 *p)
  *
  * EN v1.1 Address: 0x80282F90, size 72b
  */
-void fn_80282F90(u32 *p, int x)
+void sndConvertTicks(u32 *p, int x)
 {
     int div = fn_8026F584(x);
     *p = (((*p << 16) / div) * 0x3e8) >> 5;
@@ -157,7 +157,7 @@ void fn_80282F90(u32 *p, int x)
  *
  * EN v1.1 Address: 0x80282FD8, size 8b
  */
-u32 fn_80282FD8(u32 x)
+u32 sndConvert2Ms(u32 x)
 {
     return x >> 8;
 }
