@@ -18,9 +18,9 @@ extern int sndConvert2Ms(u32 v);
 u32 fn_802763C0(u32 value, u16 keyId)
 {
     u8 *table;
-    u32 lo;
     u32 a;
     u32 b;
+    u32 lo;
     u32 hi;
     u32 result;
 
