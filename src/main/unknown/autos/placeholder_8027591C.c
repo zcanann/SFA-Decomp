@@ -13,6 +13,17 @@ extern void hwInitSamplePlayback(u32 voice, u32 sampleId, u32 *sampleInfo, u32 n
 extern u32 countLeadingZeros(u32 value);
 extern void fn_80271370(int state);
 extern u32 lbl_803CA2B0[];
+extern void *fn_80275058(u16 key);
+extern u32 fn_8027A60C(u32 value);
+extern int fn_8027A8D4(int state);
+extern void hwSetADSR(int slot, u32 *adsr, u8 mode);
+extern u8 lbl_8032F79C[];
+extern f32 lbl_8032FB9C[];
+extern f32 lbl_803E77F0;
+extern f32 lbl_803E77F4;
+extern f32 lbl_803E77F8;
+extern f64 lbl_803E7800;
+extern f64 lbl_803E7808;
 
 /*
  * fn_802757C4 - voice param/key/velocity processor.
@@ -195,18 +206,168 @@ void fn_80275CB8(int state)
 #pragma dont_inline reset
 
 /*
- * fn_80275E48 - voice processor (~600 instructions). Stubbed.
+ * Resolve ADSR parameters and send them to the hardware voice.
  */
-#pragma dont_inline on
-void fn_80275E48(void) {}
-#pragma dont_inline reset
+void fn_80275E48(int state, u32 *args)
+{
+    u8 *table;
+    u16 *words;
+    u16 sustainIndex;
+    u32 velCurve;
+    u32 keyCurve;
+    int bend;
+    u32 adsr[3];
+    union {
+        struct {
+            u32 hi;
+            u32 lo;
+        } word;
+        f64 d;
+    } conv;
+    union {
+        struct {
+            u32 hi;
+            u32 lo;
+        } word;
+        f64 d;
+    } curve;
+
+    table = fn_80275058((*args >> 8) & 0xffff);
+    if (table != 0) {
+        words = (u16 *)table;
+        if ((*args >> 0x18) == 0) {
+            adsr[0] = (((u16)((words[0] << 8) | ((u32)words[0] >> 8))) << 16) |
+                      (u16)((words[1] << 8) | ((u32)words[1] >> 8));
+            adsr[1] = (((u16)((words[2] << 8) | ((u32)words[2] >> 8))) << 16) |
+                      (u16)((words[3] << 8) | ((u32)words[3] >> 8));
+            hwSetADSR(*(u32 *)(state + 0xf4) & 0xff, adsr, 0);
+        } else {
+            adsr[0] = ((u32)table[3] << 24) | ((u32)table[2] << 16) |
+                      ((u32)table[1] << 8) | table[0];
+            adsr[1] = ((u32)table[7] << 24) | ((u32)table[6] << 16) |
+                      ((u32)table[5] << 8) | table[4];
+            sustainIndex = (u16)((words[4] << 8) | ((u32)words[4] >> 8));
+            *(u16 *)((u8 *)adsr + 8) =
+                (u16)(int)(lbl_803E77F0 *
+                           *(f32 *)((u8 *)lbl_8032FB9C + ((sustainIndex >> 3) & 0x1ffc)));
+            *(u16 *)((u8 *)adsr + 10) =
+                (u16)((words[5] << 8) | ((u32)words[5] >> 8));
+            velCurve = ((u32)table[15] << 24) | ((u32)table[14] << 16) |
+                       ((u32)table[13] << 8) | table[12];
+            keyCurve = ((u32)table[19] << 24) | ((u32)table[18] << 16) |
+                       ((u32)table[17] << 8) | table[16];
+            if (velCurve != 0x80000000) {
+                conv.word.hi = 0x43300000;
+                conv.word.lo = *(u32 *)(state + 0x158);
+                curve.word.hi = 0x43300000;
+                curve.word.lo = velCurve ^ 0x80000000;
+                bend = (int)(lbl_803E77F4 * (f32)(conv.d - lbl_803E7800) *
+                             (f32)(curve.d - lbl_803E7808));
+                adsr[0] += bend;
+            }
+            if (keyCurve != 0x80000000) {
+                conv.word.hi = 0x43300000;
+                conv.word.lo = *(u8 *)(state + 0x12f);
+                curve.word.hi = 0x43300000;
+                curve.word.lo = keyCurve ^ 0x80000000;
+                bend = (int)(lbl_803E77F8 * (f32)(conv.d - lbl_803E7800) *
+                             (f32)(curve.d - lbl_803E7808));
+                adsr[1] += bend;
+            }
+            hwSetADSR(*(u32 *)(state + 0xf4) & 0xff, adsr, 1);
+        }
+        *(u32 *)(state + 0x118) |= 0x100;
+    }
+}
 
 /*
- * fn_802760A0 - voice processor (~640 instructions). Stubbed.
+ * Configure the per-voice envelope state from an ADSR/keygroup table.
  */
-#pragma dont_inline on
-void fn_802760A0(void) {}
-#pragma dont_inline reset
+void fn_802760A0(int state, u32 *args)
+{
+    s16 basePan;
+    u16 decayRaw;
+    u16 releaseRaw;
+    u32 velCurve;
+    u32 keyCurve;
+    u32 decayIndex;
+    u32 panDelta;
+    u32 panScaled;
+    int attack;
+    int decay;
+    int delta;
+    u8 *table;
+    union {
+        struct {
+            u32 hi;
+            u32 lo;
+        } word;
+        f64 d;
+    } conv;
+    union {
+        struct {
+            u32 hi;
+            u32 lo;
+        } word;
+        f64 d;
+    } curve;
+
+    table = fn_80275058((*args >> 8) & 0xffff);
+    if (table != 0) {
+        *(s16 *)(state + 0x204) = (s16)((s8)args[1] << 8);
+        basePan = *(s16 *)(state + 0x204);
+        panDelta = (u32)(s16)(s8)(args[1] >> 8);
+        panScaled = panDelta << 8;
+        delta = (int)panScaled / 100 + ((int)(panScaled | (panDelta >> 24)) >> 31);
+        delta = (s16)delta - (s16)(delta >> 31);
+        if (basePan < 0) {
+            *(s16 *)(state + 0x204) = basePan - (s16)delta;
+        } else {
+            *(s16 *)(state + 0x204) = basePan + (s16)delta;
+        }
+
+        decayRaw = *(u16 *)(table + 8);
+        releaseRaw = *(u16 *)(table + 10);
+        attack = ((u32)table[3] << 24) | ((u32)table[2] << 16) | ((u32)table[1] << 8) |
+                 table[0];
+        decay = ((u32)table[7] << 24) | ((u32)table[6] << 16) | ((u32)table[5] << 8) |
+                table[4];
+        velCurve = ((u32)table[15] << 24) | ((u32)table[14] << 16) |
+                   ((u32)table[13] << 8) | table[12];
+        keyCurve = ((u32)table[19] << 24) | ((u32)table[18] << 16) |
+                   ((u32)table[17] << 8) | table[16];
+
+        if (velCurve != 0x80000000) {
+            conv.word.hi = 0x43300000;
+            conv.word.lo = *(u32 *)(state + 0x158);
+            curve.word.hi = 0x43300000;
+            curve.word.lo = velCurve ^ 0x80000000;
+            attack += (int)(lbl_803E77F4 * (f32)(conv.d - lbl_803E7800) *
+                            (f32)(curve.d - lbl_803E7808));
+        }
+        if (keyCurve != 0x80000000) {
+            conv.word.hi = 0x43300000;
+            conv.word.lo = *(u8 *)(state + 0x12f);
+            curve.word.hi = 0x43300000;
+            curve.word.lo = keyCurve ^ 0x80000000;
+            decay += (int)(lbl_803E77F8 * (f32)(conv.d - lbl_803E7800) *
+                           (f32)(curve.d - lbl_803E7808));
+        }
+
+        *(u8 *)(state + 0x1dc) = 1;
+        *(u8 *)(state + 0x202) = 0;
+        *(u32 *)(state + 0x1f0) = fn_8027A60C(attack);
+        *(u32 *)(state + 0x1f4) = fn_8027A60C(decay);
+        decayIndex = ((decayRaw & 0xff) << 8 | ((u32)decayRaw >> 8)) >> 2;
+        if (decayIndex > 0x3ff) {
+            decayIndex = 0x3ff;
+        }
+        *(u16 *)(state + 0x1f8) = 0xc1 - lbl_8032F79C[decayIndex];
+        *(u32 *)(state + 0x1fc) = ((releaseRaw & 0xff) << 8) | ((u32)releaseRaw >> 8);
+        fn_8027A8D4(state + 0x1dc);
+        *(u32 *)(state + 0x114) |= 0x200;
+    }
+}
 
 /*
  * fn_80276320 - voice param store with magic-divide (~160 instructions).
