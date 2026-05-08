@@ -16,6 +16,7 @@ extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern int FUN_80017b00();
+extern void fn_8001F384(void *effect);
 extern int ObjHits_GetPriorityHit();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8008112c();
@@ -24,6 +25,7 @@ extern undefined4 FUN_80286888();
 extern double FUN_80293900();
 
 extern undefined4 DAT_803dc070;
+extern undefined4* lbl_803DCA78;
 extern undefined4* DAT_803dd708;
 extern f32 lbl_803E6520;
 extern f32 lbl_803E6524;
@@ -336,11 +338,47 @@ void FUN_801e34c0(undefined8 param_1,double param_2,double param_3,undefined8 pa
 void SB_CannonBall_release(void) {}
 void SB_CannonBall_initialise(void) {}
 
+#pragma scheduling off
+#pragma peephole off
+void fn_801E3D14(int obj)
+{
+  int state;
+
+  state = *(int *)(obj + 0xb8);
+  *(u8 *)(state + 0xd) = 0;
+  *(u8 *)(state + 0xc) = 2;
+  *(u8 *)(state + 0xe) = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* 8b "li r3, N; blr" returners. */
 int SB_CannonBall_getExtraSize(void) { return 0x24; }
 int fn_801E3D38(void) { return 0x0; }
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801E3D40(int obj)
+{
+  int state;
+
+  state = *(int *)(obj + 0xb8);
+  (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+  if (*(void **)(state + 0x20) != 0) {
+    fn_8001F384(*(void **)(state + 0x20));
+    *(undefined4 *)(state + 0x20) = 0;
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 int SB_FireBall_getExtraSize(void) { return 0x18; }
 int fn_801E4290(void) { return 0x0; }
+
+void fn_801E4298(int obj)
+{
+  (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+}
 
 /* render-with-fn_8003B8F4 pattern. */
 extern f32 lbl_803E58B0;
