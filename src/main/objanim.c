@@ -523,12 +523,10 @@ void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,uint frameCount
 {
   ObjAnimBank *bank;
   float eventStepFrames;
-  u64 frameBits;
 
   bank = ObjAnim_GetActiveBank(objAnim);
   if (bank != (ObjAnimBank *)0x0) {
-    frameBits = CONCAT44(0x43300000, frameCount ^ 0x80000000);
-    eventStepFrames = lbl_803DE8F4 / (float)((*(f64 *)&frameBits) - lbl_803DE900);
+    eventStepFrames = lbl_803DE8F4 / (float)(s32)frameCount;
     bank->currentState->eventStep = eventStepFrames;
   }
 }
