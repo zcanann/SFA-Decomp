@@ -1888,9 +1888,113 @@ void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int width, int height, int u_offset, int v_offset)
 {
+    extern f32 hudScale;
+    extern u8 lbl_803DB679;
+    extern Mtx hudMatrix;
+    extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
+    extern int lbl_803DD014;
+    extern void textureFn_8004c264(s16* obj, int slot);
+    extern void Camera_RebuildProjectionMatrix(void);
+    extern void GXSetZMode();
+    GXColor c;
+    s32 w;
+    f32 u1, u0, v0, v1;
+
+    c.r = 0xFF;
+    c.g = 0xFF;
+    c.b = 0xFF;
+    c.a = (u8)(((s32)alpha_mod * (s32)lbl_803DB679) >> 8);
+
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXSetTevKColor(0, c);
+    GXSetTevKAlphaSel(0, 0x1C);
+    GXSetTevOrder(0, 0, 0, 0xFF);
+    GXSetTevDirect(0);
+    GXSetTevColorIn(0, 0xF, 0xF, 0xF, 8);
+    GXSetTevAlphaIn(0, 7, 4, 6, 7);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    if (((u32*)obj)[0x14] != 0) {
+        GXSetTevKAlphaSel(1, 0x1C);
+        GXSetTevOrder(1, 0, 1, 0xFF);
+        GXSetTevDirect(1);
+        GXSetTevColorIn(1, 0xF, 0xF, 0xF, 0);
+        GXSetTevAlphaIn(1, 7, 4, 6, 7);
+        GXSetTevSwapMode(1, 0, 0);
+        GXSetTevColorOp(1, 0, 0, 0, 1, 0);
+        GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+        GXSetNumTevStages(2);
+    } else {
+        GXSetNumTevStages(1);
+    }
+    GXSetNumIndStages(0);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(0);
+    GXSetNumTexGens(1);
+    GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
+    textureFn_8004c264(obj, 0);
+    GXSetCullMode(GX_CULL_NONE);
+    GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
+    if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 7 ||
+        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+        GXSetZMode(0, 7, 0);
+        lbl_803DD018 = 0;
+        lbl_803DD014 = 7;
+        lbl_803DD012 = 0;
+        lbl_803DD01A = 1;
+    }
+    GXSetBlendMode(1, 4, 5, 5);
+    w = (s32)(((u32)(width << 2) * (u16)scale) >> 8);
+    sx = hudScale * sx;
+    sy = hudScale * sy;
+    u0 = (f32)(u32)u_offset / (f32)((u16*)obj)[5];
+    v0 = (f32)(u32)v_offset / (f32)((u16*)obj)[6];
+    u1 = (f32)(u32)(width + u_offset) / (f32)((u16*)obj)[5];
+    v1 = (f32)(u32)(height + v_offset) / (f32)((u16*)obj)[6];
+
+    GXBegin(GX_QUADS, GX_VTXFMT1, 4);
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = (s16)sx;
+    GXWGFifo.s16 = (s16)sy;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = u0;
+    GXWGFifo.f32 = v0;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = (s16)(sx + (f32)(u32)w);
+    GXWGFifo.s16 = (s16)sy;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = u1;
+    GXWGFifo.f32 = v0;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = (s16)(sx + (f32)(u32)w);
+    GXWGFifo.s16 = (s16)(sy + (f32)(u32)(((u32)(height << 2) * (u16)scale) >> 8));
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = u1;
+    GXWGFifo.f32 = v1;
+
+    GXWGFifo.u8 = 0x3C;
+    GXWGFifo.s16 = (s16)sx;
+    GXWGFifo.s16 = (s16)(sy + (f32)(u32)(((u32)(height << 2) * (u16)scale) >> 8));
+    GXWGFifo.s16 = -8;
+    GXWGFifo.f32 = u0;
+    GXWGFifo.f32 = v1;
+
+    Camera_RebuildProjectionMatrix();
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
