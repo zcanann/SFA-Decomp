@@ -778,8 +778,8 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
   int freeIndex;
   
   tableIndex = 0;
-  entry = gExpgfxTableEntries;
-  entryBase = entry;
+  entryBase = gExpgfxTableEntries;
+  entry = entryBase;
   for (; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++) {
     if (((entry->refCount != 0 && (entry->textureOrResource == textureOrResource)) &&
         (entry->key0 == key0)) && (entry->key1 == key1)) {
@@ -836,7 +836,6 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
   u32 *sourceMasks;
   u64 sourceMaskHit;
   u32 *poolSourceIds;
-  u8 *poolFrameFlags;
   int poolIndex;
   int aggregateState;
 
@@ -845,7 +844,6 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
   lbl_803DD253 = 0;
   poolIndex = 0;
   poolSourceIds = gExpgfxTrackedPoolSourceIds;
-  poolFrameFlags = gExpgfxStaticPoolFrameFlags;
   while ((s16)poolIndex < EXPGFX_POOL_COUNT) {
     if ((source->objType == EXPGFX_SOURCE_OBJTYPE_MATCH_ALL) || (*poolSourceIds == (u32)sourceObject)) {
       bit = 1 << ((s16)poolIndex >> 1);
@@ -853,7 +851,7 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
       sourceMasks = &gExpgfxTrackedSourceFrameMasks[((u32)(poolIndex & 1)) * 2];
       sourceMaskHit = CONCAT44(highBit & sourceMasks[0],bit & sourceMasks[1]);
       if (sourceMaskHit != 0) {
-        *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_B;
+        gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_B;
         if ((s8)aggregateState == EXPGFX_SOURCE_FRAME_STATE_A) {
           aggregateState = EXPGFX_SOURCE_FRAME_STATE_MIXED;
         }
@@ -862,7 +860,7 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
         }
       }
       else {
-        *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_A;
+        gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_A;
         if ((s8)aggregateState == EXPGFX_SOURCE_FRAME_STATE_B) {
           aggregateState = EXPGFX_SOURCE_FRAME_STATE_MIXED;
         }
@@ -872,10 +870,9 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
       }
     }
     else {
-      *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_NONE;
+      gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
     }
     poolSourceIds = poolSourceIds + 1;
-    poolFrameFlags = poolFrameFlags + 1;
     poolIndex = poolIndex + 1;
   }
   return aggregateState;
