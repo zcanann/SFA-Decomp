@@ -6,7 +6,14 @@ extern void ObjGroup_RemoveObject(int obj, int group);
 extern undefined4 *lbl_803DCA8C;
 extern undefined4 *lbl_803DCAA8;
 extern f32 lbl_803E8234;
+extern f32 lbl_803E8258;
 extern f32 lbl_803E827C;
+extern f32 lbl_803E8298;
+extern f32 lbl_803E829C;
+
+extern void fn_80021EE8(void *matrix, void *packedTransform);
+extern void Matrix_TransformPoint(double x, double y, double z, void *matrix, undefined4 outX,
+                                  undefined4 outY, undefined4 outZ);
 
 /*
  * Empty stub.
@@ -58,10 +65,31 @@ void fn_802BB008(int obj, u8 value)
 int fn_802BB018(void) { return 0; }
 
 /*
- * fn_802BB020 - 41-instruction state setup. Stubbed.
+ * Build a transform from a packed rotation/translation record and sample
+ * one fixed local point through it.
  */
 #pragma dont_inline on
-void fn_802BB020(void) {}
+void fn_802BB020(undefined2 *packed, undefined4 outX, undefined4 outY, undefined4 outZ)
+{
+    undefined2 local_68;
+    undefined2 local_66;
+    undefined2 local_64;
+    f32 local_60;
+    undefined4 local_5c;
+    undefined4 local_58;
+    undefined4 local_54;
+    undefined matrix[68];
+
+    local_5c = *(undefined4 *)(packed + 6);
+    local_58 = *(undefined4 *)(packed + 8);
+    local_54 = *(undefined4 *)(packed + 10);
+    local_68 = packed[0];
+    local_66 = packed[1];
+    local_64 = packed[2];
+    local_60 = lbl_803E8258;
+    fn_80021EE8(matrix, &local_68);
+    Matrix_TransformPoint(lbl_803E8234, lbl_803E8298, lbl_803E829C, matrix, outX, outY, outZ);
+}
 #pragma dont_inline reset
 
 /*
