@@ -14,7 +14,7 @@ int Camera_getOverrideTarget(void);
 void Camera_moveBy(f32 x,f32 y,f32 z);
 void Camera_overridePos(f32 x,f32 y,f32 z);
 void Camera_setFocus(void *target);
-void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char triggerMode);
+void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,s8 triggerMode);
 void *Camera_getCamActionsBinEntry(int actionNo);
 void camcontrol_releaseCurrentHandler(void);
 void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2);
