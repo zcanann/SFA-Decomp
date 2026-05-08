@@ -1322,22 +1322,23 @@ int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,
 void ObjHitReact_UpdateResetObjects(void)
 {
   ObjAnimComponent *obj;
-  int iVar2;
-  int iVar3;
+  int objectIndex;
+  int objectOffset;
 
-  iVar3 = 0;
-  for (iVar2 = 0; iVar2 < gObjHitsResetObjectCount; iVar2 = iVar2 + 1) {
-    obj = *(ObjAnimComponent **)((int)gObjHitsResetObjects + iVar3);
+  objectIndex = 0;
+  objectOffset = 0;
+  for (; objectIndex < gObjHitsResetObjectCount; objectIndex = objectIndex + 1) {
+    obj = *(ObjAnimComponent **)((int)gObjHitsResetObjects + objectOffset);
     if (((*(uint *)((int)obj->modelInstance + 0x44) & 0x40) == 0) &&
        (obj->activeHitboxMode != 'd')) {
       Obj_UpdateObject(obj,obj->modelInstance);
     }
-    iVar3 = iVar3 + 4;
+    objectOffset = objectOffset + 4;
   }
-  iVar3 = 0;
-  for (iVar2 = 0; iVar2 < gObjHitsResetObjectCount; iVar2 = iVar2 + 1) {
-    ObjHitbox_UpdateRotatedBounds(*(short **)((int)gObjHitsResetObjects + iVar3),1);
-    iVar3 = iVar3 + 4;
+  objectOffset = 0;
+  for (objectIndex = 0; objectIndex < gObjHitsResetObjectCount; objectIndex = objectIndex + 1) {
+    ObjHitbox_UpdateRotatedBounds(*(short **)((int)gObjHitsResetObjects + objectOffset),1);
+    objectOffset = objectOffset + 4;
   }
   return;
 }
