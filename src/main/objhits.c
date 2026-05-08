@@ -1189,9 +1189,9 @@ uint ObjHits_TestTaperedCapsule3D(float radiusA, float radiusB, float radiusC, f
         *sumR = r;
         return *dist2 <= r * r;
     }
-    ex = axis[0] * (t = -*axial) + dx;
-    ey = axis[1] * t + dy;
-    ez = axis[2] * t + dz;
+    ex = axis[0] * -*axial + dx;
+    ey = axis[1] * -*axial + dy;
+    ez = axis[2] * -*axial + dz;
     *dist2 = ez * ez + (ex * ex + ey * ey);
     r = (*axial / halfLength) * (radiusC - radiusB) + (radiusA + radiusB);
     *sumR = r;
