@@ -2719,12 +2719,12 @@ void ObjPath_GetPointWorldPositionArray(undefined4 param_1,undefined4 param_2,in
 void ObjPath_GetPointLocalPosition(int param_1,int param_2,float *param_3,float *param_4,
                  float *param_5)
 {
-  int offset;
-
-  offset = param_2 * sizeof(ObjPathPoint);
-  *param_3 = *(float *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) + offset);
-  *param_4 = *(float *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) + offset + 4);
-  *param_5 = *(float *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) + offset + 8);
+  *param_3 = ((ObjPathPoint *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) +
+                               param_2 * sizeof(ObjPathPoint)))->x;
+  *param_4 = ((ObjPathPoint *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) +
+                               param_2 * sizeof(ObjPathPoint)))->y;
+  *param_5 = ((ObjPathPoint *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) +
+                               param_2 * sizeof(ObjPathPoint)))->z;
   return;
 }
 #pragma peephole reset
