@@ -2,6 +2,7 @@
 #include "main/dll/campfire.h"
 
 extern undefined4 FUN_80006824();
+extern undefined4 Sfx_PlayFromObject();
 extern undefined4 FUN_80017698();
 extern uint FUN_80017760();
 extern undefined4 FUN_80017a28();
@@ -12,6 +13,7 @@ extern uint FUN_80017ae8();
 extern undefined4 Resource_Acquire();
 extern uint randomGetRange();
 extern undefined4 ObjAnim_SetCurrentMove();
+extern int Obj_SetupObject();
 extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 Obj_IsLoadingLocked();
 extern undefined4 Obj_GetPlayerObject();
@@ -46,6 +48,8 @@ extern undefined4 DAT_803ad2cc;
 extern undefined4 DAT_803ad2d0;
 extern undefined4 DAT_803ad2e0;
 extern undefined4 DAT_803ad2f8;
+extern f32 lbl_803DDA94;
+extern f32 lbl_803DDA98;
 extern void* lbl_803AC680[];
 extern void* lbl_803AC698[];
 extern undefined4* pDll_expgfx;
@@ -77,8 +81,10 @@ extern f32 lbl_803E3D60;
 extern f32 lbl_803E3060;
 extern f64 DOUBLE_803E3070;
 extern f32 lbl_803E307C;
+extern f32 lbl_803E308C;
 extern f32 lbl_803E30A0;
 extern f32 lbl_803E30A4;
+extern f32 lbl_803E30A8;
 extern f32 lbl_803E30C8;
 extern f32 lbl_803E30CC;
 
@@ -110,49 +116,36 @@ extern void fn_80168118(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8016821C(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9,int *param_10)
+void fn_8016821C(int param_1,int *param_2)
 {
-  uint uVar1;
-  undefined2 *puVar2;
-  float *pfVar3;
-  int iVar4;
-  undefined4 in_r10;
-  int iVar5;
-  int iVar6;
-  double dVar7;
-  double dVar8;
-  
-  iVar6 = *(int *)(param_9 + 0x4c);
-  dVar8 = (double)lbl_803E3D38;
-  lbl_803DE714 =
-       (float)(dVar8 + (double)((float)((double)CONCAT44(0x43300000,
-                                                         (int)*(char *)(iVar6 + 0x28) ^ 0x80000000)
-                                       - DOUBLE_803e3d08) / lbl_803E3D3C));
-  param_10[0x10] = (int)lbl_803E3D24;
-  FUN_80006824(param_9,0x276);
-  iVar5 = 0x28;
+  char cVar1;
+  int iVar2;
+  int iVar3;
+
+  iVar3 = *(int *)(param_1 + 0x4c);
+  lbl_803DDA94 =
+       lbl_803E30A0 +
+       (float)((double)CONCAT44(0x43300000,(int)*(char *)(iVar3 + 0x28) ^ 0x80000000) -
+              DOUBLE_803E3070) / lbl_803E30A4;
+  param_2[0x10] = (int)lbl_803E308C;
+  Sfx_PlayFromObject(param_1,0x276);
+  iVar2 = 0x28;
   do {
-    pfVar3 = &lbl_803DE714;
-    iVar4 = *pDll_expgfx;
-    (**(code **)(iVar4 + 8))(param_9,0x717,0,4,0xffffffff);
-    iVar5 = iVar5 + -1;
-  } while (iVar5 != 0);
-  if ((*param_10 == 0) && (uVar1 = FUN_80017ae8(), (uVar1 & 0xff) != 0)) {
-    puVar2 = FUN_80017aa4(0x24,0x55e);
-    *(undefined4 *)(puVar2 + 4) = *(undefined4 *)(param_9 + 0xc);
-    dVar7 = (double)lbl_803E3D40;
-    *(float *)(puVar2 + 6) = (float)(dVar7 + (double)*(float *)(param_9 + 0x10));
-    *(undefined4 *)(puVar2 + 8) = *(undefined4 *)(param_9 + 0x14);
-    *(undefined *)(puVar2 + 2) = *(undefined *)(iVar6 + 4);
-    *(undefined *)((int)puVar2 + 5) = *(undefined *)(iVar6 + 5);
-    *(undefined *)(puVar2 + 3) = *(undefined *)(iVar6 + 6);
-    *(undefined *)((int)puVar2 + 7) = *(undefined *)(iVar6 + 7);
-    iVar5 = FUN_80017ae4(dVar7,dVar8,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,5,0xff,
-                         0xffffffff,(uint *)0x0,pfVar3,iVar4,in_r10);
-    *param_10 = iVar5;
-    *(float *)(*param_10 + 8) = lbl_803DE714;
+    (**(code **)(*pDll_expgfx + 8))(param_1,0x717,0,4,0xffffffff,&lbl_803DDA94);
+    iVar2 = iVar2 + -1;
+  } while (iVar2 != 0);
+  if ((*param_2 == 0) && (cVar1 = Obj_IsLoadingLocked(), cVar1 != '\0')) {
+    iVar2 = Obj_AllocObjectSetup(0x24,0x55e);
+    *(undefined4 *)(iVar2 + 8) = *(undefined4 *)(param_1 + 0xc);
+    *(float *)(iVar2 + 0xc) = lbl_803E30A8 + *(float *)(param_1 + 0x10);
+    *(undefined4 *)(iVar2 + 0x10) = *(undefined4 *)(param_1 + 0x14);
+    *(undefined *)(iVar2 + 4) = *(undefined *)(iVar3 + 4);
+    *(undefined *)(iVar2 + 5) = *(undefined *)(iVar3 + 5);
+    *(undefined *)(iVar2 + 6) = *(undefined *)(iVar3 + 6);
+    *(undefined *)(iVar2 + 7) = *(undefined *)(iVar3 + 7);
+    iVar2 = Obj_SetupObject(iVar2,5,0xffffffff,0xffffffff,0);
+    *param_2 = iVar2;
+    *(float *)(*param_2 + 8) = lbl_803DDA94;
   }
   return;
 }
@@ -243,11 +236,60 @@ void fn_80168374(undefined8 param_1,undefined8 param_2,double param_3,undefined8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8016855C(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
-                 undefined4 param_13,int param_14,int param_15,undefined4 param_16)
+void fn_8016855C(undefined4 param_1,undefined4 param_2,int param_3)
 {
+  int iVar1;
+  undefined uVar2;
+  int iVar3;
+  int iVar4;
+  int iVar5;
+  undefined8 uVar6;
+
+  uVar6 = _savegpr_27();
+  iVar1 = (int)((ulonglong)uVar6 >> 0x20);
+  iVar4 = (int)uVar6;
+  iVar5 = *(int *)(iVar4 + 0x40c);
+  lbl_803DDA98 =
+       lbl_803E30A0 +
+       (float)((double)CONCAT44(0x43300000,
+                                (int)*(char *)(*(int *)(iVar1 + 0x4c) + 0x28) ^ 0x80000000) -
+              DOUBLE_803E3070) / lbl_803E30A4;
+  if ((*(uint *)(param_3 + 0x314) & 1) != 0) {
+    *(uint *)(param_3 + 0x314) = *(uint *)(param_3 + 0x314) & 0xfffffffe;
+    Sfx_PlayFromObject(iVar1,0x273);
+  }
+  if ((*(uint *)(param_3 + 0x314) & 0x80) != 0) {
+    uVar2 = randomGetRange(0,2);
+    *(undefined *)(iVar5 + 0x4a) = uVar2;
+    *(uint *)(param_3 + 0x314) = *(uint *)(param_3 + 0x314) & 0xffffff7f;
+    Sfx_PlayFromObject(iVar1,0x274);
+    for (iVar3 = (2 - (uint)*(byte *)(iVar5 + 0x4a)) * 10; iVar3 != 0; iVar3 = iVar3 + -1) {
+      (**(code **)(*pDll_expgfx + 8))(iVar1,0x711,0,4,0xffffffff,&lbl_803DDA98);
+    }
+  }
+  if ((*(uint *)(param_3 + 0x314) & 0x40) != 0) {
+    *(uint *)(param_3 + 0x314) = *(uint *)(param_3 + 0x314) & 0xffffffbf;
+    fn_80168374(0,0,0,0,0,0,0,0,iVar1,iVar4,0,0,0,0,0,0);
+  }
+  if ((*(uint *)(param_3 + 0x314) & 0x800) != 0) {
+    *(uint *)(param_3 + 0x314) = *(uint *)(param_3 + 0x314) & 0xfffff7ff;
+    fn_80168374(0,0,0,0,0,0,0,0,iVar1,iVar4,1,0,0,0,0,0);
+  }
+  if ((*(uint *)(param_3 + 0x314) & 0x200) != 0) {
+    *(uint *)(param_3 + 0x314) = *(uint *)(param_3 + 0x314) & 0xfffffdff;
+    Sfx_PlayFromObject(iVar1,0x275);
+  }
+  if ((*(uint *)(param_3 + 0x314) & 0x400) != 0) {
+    *(undefined *)(iVar5 + 0x4a) = 3;
+    iVar4 = 10;
+    do {
+      (**(code **)(*pDll_expgfx + 8))(iVar1,0x710,0,4,0xffffffff,&lbl_803DDA98);
+      iVar4 = iVar4 + -1;
+    } while (iVar4 != 0);
+    *(uint *)(param_3 + 0x314) = *(uint *)(param_3 + 0x314) & 0xfffffbff;
+  }
+  _restgpr_27();
+  return;
 }
 
 /*
@@ -347,8 +389,7 @@ void fn_8016874C(undefined8 param_1,double param_2,double param_3,double param_4
         }
       }
       else if ((iVar4 != 0x10) && ((double)(float)piVar7[0x10] < (double)lbl_803E3D58)) {
-        fn_8016821C((double)(float)piVar7[0x10],param_2,param_3,param_4,param_5,param_6,param_7,
-                     param_8,(uint)puVar2,piVar7);
+        fn_8016821C((int)puVar2,piVar7);
         DAT_803ad2d0 = lbl_803E3D10;
         DAT_803ad2cc = 0;
         DAT_803ad2ca = 0;
@@ -536,8 +577,7 @@ void kaldachom_update(undefined8 param_1,double param_2,double param_3,double pa
         *piVar3 = (int)((double)lbl_803E3D48 * dVar10);
         uVar4 = FUN_80017a98();
         *(undefined4 *)(iVar9 + 0x2d0) = uVar4;
-        fn_8016855C(dVar10,dVar11,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar9,
-                     iVar9,iVar1,in_r7,in_r8,in_r9,in_r10);
+        fn_8016855C(param_9,iVar9,iVar9);
         (**(code **)(*lbl_803DCAB8 + 0x2c))((double)lbl_803E3CF8,param_9,iVar9,0xffffffff);
         if (*(short *)(iVar9 + 0x274) != 6) {
           (**(code **)(*lbl_803DCA8C + 0x30))((double)lbl_803DC074,param_9,iVar9,5);
