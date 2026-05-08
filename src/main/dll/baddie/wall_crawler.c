@@ -898,7 +898,10 @@ int GameUI_isItemBeingUsed(s32 id)
  * when the current id at lbl_803DD8C2 is non-negative, 0 otherwise. */
 int GameUI_isAnyItemBeingUsed(void)
 {
-    return (lbl_803DD8C2 < 0) ? 0 : 1;
+    s32 activeId = lbl_803DD8C2;
+    s32 inverted = activeId ^ -1;
+
+    return (u32)((inverted >> 1) - (inverted & activeId)) >> 31;
 }
 
 /* EN v1.0 0x8012EB7C  size: 76b  Linear search through a 4-byte array
@@ -961,7 +964,7 @@ extern void fn_8012DF68(void);
 extern void fn_8012E880(void);
 
 /* EN v1.0 0x8012FB2C  size: 92b  Per-frame state advance dispatcher.
- * Gated on the lbl_803DD7C5 enable flag — when zero, fast-returns 0.
+ * Gated on the lbl_803DD7C5 enable flag; when zero, fast-returns 0.
  * Otherwise: optionally runs fn_8012D96C (if mapScreenVisible set), runs
  * fn_8012DD14, optionally runs fn_8012DF68 (if cMenuEnabled set),
  * runs fn_8012E880, returns 0. */
