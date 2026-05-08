@@ -4,6 +4,7 @@
 #include "dolphin/ai.h"
 
 extern void *salMalloc(u32 size);
+extern void salFree(void *ptr);
 extern void *memset(void *, int, u32);
 extern void DCFlushRange(void *src, u32 size);
 
@@ -115,4 +116,20 @@ int salInitAi(void *userCallback, u32 unused, u32 *outSampleCount)
 void salStartAi(void)
 {
     AIStartDMA();
+}
+
+int salExitAi(void)
+{
+    AIRegisterDMACallback(0);
+    AIStopDMA();
+    salFree((void *)lbl_803DE3A4);
+    return 1;
+}
+
+int salAiGetDest(void)
+{
+    int nextBuffer;
+
+    nextBuffer = lbl_803DE3C4 + 2;
+    return lbl_803DE3A4 + ((u8)(nextBuffer - (nextBuffer / 4) * 4)) * 0x280;
 }
