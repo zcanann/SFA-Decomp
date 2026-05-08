@@ -17,18 +17,163 @@ void fn_80273F74(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80274140 - voice handler (~504 instructions). Stubbed.
+ * Insert a keygroup/sample indirection entry, keeping the table sorted by id.
  */
-#pragma dont_inline on
-void fn_80274140(void) {}
-#pragma dont_inline reset
+extern u8 lbl_803C0278[];
+extern u16 lbl_803DE28A;
+extern void sndBegin(void);
+extern void sndEnd(void);
+
+int fn_80274140(u16 key, void *value)
+{
+    u32 moveCount;
+    u32 used;
+    u32 batches;
+    int index;
+    u32 *entry;
+
+    sndBegin();
+    used = lbl_803DE28A;
+    index = 0;
+    for (entry = (u32 *)lbl_803C0278;
+         (index < (int)used) && (*(u16 *)(entry + 1) < key); entry += 2) {
+        index++;
+    }
+    if (index < (int)used) {
+        if (key == *(u16 *)(lbl_803C0278 + 4 + index * 8)) {
+            sndEnd();
+            (*(u16 *)(lbl_803C0278 + 6 + index * 8))++;
+            return 0;
+        }
+        if (used > 0x7ff) {
+            sndEnd();
+            return 0;
+        }
+        moveCount = used - index;
+        entry = (u32 *)(lbl_803C0278 + (used - 1) * 8);
+        if (index <= (int)(used - 1)) {
+            batches = moveCount >> 3;
+            if (batches != 0) {
+                do {
+                    entry[2] = entry[0];
+                    entry[3] = entry[1];
+                    entry[0] = entry[-2];
+                    entry[1] = entry[-1];
+                    entry[-2] = entry[-4];
+                    entry[-1] = entry[-3];
+                    entry[-4] = entry[-6];
+                    entry[-3] = entry[-5];
+                    entry[-6] = entry[-8];
+                    entry[-5] = entry[-7];
+                    entry[-8] = entry[-10];
+                    entry[-7] = entry[-9];
+                    entry[-10] = entry[-12];
+                    entry[-9] = entry[-11];
+                    entry[-12] = entry[-14];
+                    entry[-11] = entry[-13];
+                    entry -= 0x10;
+                    batches--;
+                } while (batches != 0);
+                moveCount &= 7;
+                if (moveCount == 0) {
+                    goto insert;
+                }
+            }
+            do {
+                entry[2] = entry[0];
+                entry[3] = entry[1];
+                entry -= 2;
+                moveCount--;
+            } while (moveCount != 0);
+        }
+    } else if (used > 0x7ff) {
+        sndEnd();
+        return 0;
+    }
+
+insert:
+    lbl_803DE28A++;
+    *(u16 *)(lbl_803C0278 + 4 + index * 8) = key;
+    *(void **)(lbl_803C0278 + index * 8) = value;
+    *(u16 *)(lbl_803C0278 + 6 + index * 8) = 1;
+    sndEnd();
+    return 1;
+}
 
 /*
- * fn_80274338 - voice handler (~388 instructions). Stubbed.
+ * Release a keygroup/sample indirection entry, compacting the sorted table.
  */
-#pragma dont_inline on
-void fn_80274338(void) {}
-#pragma dont_inline reset
+int fn_80274338(s16 key)
+{
+    s16 refCount;
+    int next;
+    u32 *entry;
+    u32 moveCount;
+    u32 index;
+    u32 used;
+
+    sndBegin();
+    used = lbl_803DE28A;
+    index = 0;
+    for (entry = (u32 *)lbl_803C0278;
+         ((int)index < (int)used) && (key != *(s16 *)(entry + 1)); entry += 2) {
+        index++;
+    }
+    if (index == used) {
+        sndEnd();
+        return 0;
+    }
+    refCount = *(s16 *)(lbl_803C0278 + 6 + index * 8);
+    *(s16 *)(lbl_803C0278 + 6 + index * 8) = refCount - 1;
+    if ((s16)(refCount - 1) != 0) {
+        sndEnd();
+        return 0;
+    }
+
+    next = index + 1;
+    moveCount = used - next;
+    entry = (u32 *)(lbl_803C0278 + next * 8);
+    if (next < (int)used) {
+        used = moveCount >> 3;
+        if (used != 0) {
+            do {
+                entry[-2] = entry[0];
+                entry[-1] = entry[1];
+                entry[0] = entry[2];
+                entry[1] = entry[3];
+                entry[2] = entry[4];
+                entry[3] = entry[5];
+                entry[4] = entry[6];
+                entry[5] = entry[7];
+                entry[6] = entry[8];
+                entry[7] = entry[9];
+                entry[8] = entry[10];
+                entry[9] = entry[11];
+                entry[10] = entry[12];
+                entry[11] = entry[13];
+                entry[12] = entry[14];
+                entry[13] = entry[15];
+                entry += 0x10;
+                used--;
+            } while (used != 0);
+            moveCount &= 7;
+            if (moveCount == 0) {
+                goto remove;
+            }
+        }
+        do {
+            entry[-2] = entry[0];
+            entry[-1] = entry[1];
+            entry += 2;
+            moveCount--;
+        } while (moveCount != 0);
+    }
+
+remove:
+    lbl_803DE28A--;
+    sndEnd();
+    return 1;
+}
 
 /*
  * audioLoadSdiFile - voice handler (~364 instructions). Stubbed.
