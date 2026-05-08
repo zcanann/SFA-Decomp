@@ -1889,9 +1889,9 @@ undefined4 ObjMsg_Peek(void *obj,uint *outMessage,uint *outSender,uint *outParam
 #pragma peephole off
 undefined4 ObjMsg_Pop(void *obj,uint *outMessage,uint *outSender,uint *outParam)
 {
-  uint i;
   ObjMsgQueue *queue;
   ObjMsgQueueSlotBase *slot;
+  uint i;
 
   if (obj == (void *)0x0) {
     return 0;
