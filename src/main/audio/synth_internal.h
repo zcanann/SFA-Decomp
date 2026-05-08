@@ -166,6 +166,26 @@ typedef struct SynthTrackCommand {
     u16 arg;
 } SynthTrackCommand;
 
+typedef struct SynthStartRequest {
+    u32 handle;
+    u16 fadeTime;
+    u8 pad06[2];
+    u32 linkedHandle;
+    u16 linkedFadeTime;
+    u8 studio;
+    u8 pad0F;
+    u32 sampleId;
+    u16 key;
+    u16 velocity;
+    u8 auxIndex;
+    u8 pad19[3];
+    u32 mixValue0;
+    u32 mixValue1;
+    u16 value16;
+    u8 flags;
+    u8 pad27;
+} SynthStartRequest;
+
 typedef struct SynthKeyGroupState {
     u8 unk00[0x36];
     u8 active;
