@@ -2,7 +2,7 @@
 #include "main/dll/DR/DRCloudball.h"
 
 extern f32 sqrtf(f32 x);
-extern double sin(double x);
+extern f32 sin(double x);
 extern f32 fn_80293E80(double x); /* cos-like */
 extern int randomGetRange(int lo, int hi);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -123,22 +123,21 @@ void spscarab_init(int param_1, int param_2)
 {
     int p_b8;
     int model;
-    s16 sp08;
-    u8 sp0a;
+    struct { u16 a; u8 b; } pair;
 
     p_b8 = *(int *)(param_1 + 0xb8);
-    sp08 = lbl_803E5A70;
-    sp0a = lbl_803E5A72;
+    pair.a = lbl_803E5A70;
+    pair.b = lbl_803E5A72;
 
     *(u16 *)(param_1 + 0xb0) = *(u16 *)(param_1 + 0xb0) | 0x6000;
     *(s16 *)(param_1) = (s16)((s32)(s8)*(u8 *)(param_2 + 0x18) << 8);
 
     *(f32 *)(param_1 + 0x24) =
-        -fn_80293E80((double)(lbl_803E5A8C * (f32)(s32)*(s16 *)(param_1)) /
+        -fn_80293E80(lbl_803E5A8C * (f32)(s32)*(s16 *)(param_1) /
                      lbl_803E5A90);
     *(f32 *)(param_1 + 0x2c) =
-        (f32)-sin((double)(lbl_803E5A8C * (f32)(s32)*(s16 *)(param_1)) /
-                  lbl_803E5A90);
+        -sin(lbl_803E5A8C * (f32)(s32)*(s16 *)(param_1) /
+             lbl_803E5A90);
 
     *(s8 *)(param_1 + 0xad) = (s8)(1 - *(u8 *)(param_2 + 0x19));
 
@@ -152,7 +151,7 @@ void spscarab_init(int param_1, int param_2)
 
     switch ((s8)*(u8 *)(param_2 + 0x19)) {
     case 0:
-        *(u8 *)(*(int *)(model + 0x34) + 8) = *((u8 *)&sp08 + randomGetRange(0, 2));
+        *(u8 *)(*(int *)(model + 0x34) + 8) = *((u8 *)&pair + randomGetRange(0, 2));
         *(s16 *)(p_b8 + 0xc) = 0x41;
         *(s16 *)(p_b8 + 0xe) = 4;
         *(s16 *)(p_b8 + 0x10) = 2;
