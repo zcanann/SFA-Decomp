@@ -86,6 +86,17 @@ extern int lbl_803DE2D8;
 extern int lbl_803DE2E0;
 extern int lbl_803DE2E4;
 extern void fn_8027132C(void *state);
+extern void *fn_80274E7C(u32 key);
+extern u16 seqGetMIDIPriority(u8 slot, u8 event);
+extern u32 voiceAllocate(u8 priority, u8 maxInstances, s16 key, s8 streamKind);
+extern void fn_80279038(int state);
+extern void voiceSetPriority(int state, u8 newGroup);
+extern u32 vidMakeNew(int state, int returnNewId);
+extern int hwIsActive(int slot);
+extern void hwBreak(int slot);
+extern void fn_80279B98(int state);
+extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
+extern void inpResetChannelDefaults(u8 a, u8 b);
 
 /*
  * --INFO--
@@ -576,6 +587,126 @@ void fn_80278A98(int state, int mode)
         }
     }
     *(int *)(state + 0x4c) = mode;
+}
+
+/*
+ * Allocate and initialize a synth voice from an instrument/sample command.
+ */
+int fn_80278B94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 baseSample,
+                u8 keyFlags, u8 volume, u8 pan, u32 midiSlot, u8 midiEvent, u8 midiLayer,
+                u16 sampleOffsetIndex, u8 studio, u8 returnNewId, u8 auxA, u8 auxB,
+                int startImmediately)
+{
+    int instrument;
+    u8 streamKey;
+    u32 midiPriority;
+    u32 voiceId;
+    int wasActive;
+    int vid;
+    int state;
+    int hadHead;
+
+    instrument = (int)fn_80274E7C(instrumentKey);
+    if (instrument != 0) {
+        streamKey = keyFlags & 0x80;
+        if (streamKey == 0) {
+            midiPriority = seqGetMIDIPriority(midiEvent, midiSlot);
+            if ((midiPriority & 0xffff) != 0xffff) {
+                priority = midiPriority & 0xff;
+            }
+        }
+        voiceId = voiceAllocate(priority, maxInstances, baseSample, streamKey != 0);
+        if (voiceId != 0xffffffff) {
+            state = (int)(lbl_803DE268 + voiceId * 0x404);
+            fn_80279038(state);
+            if (*(int *)(state + 0x4c) != 2) {
+                if (*(int *)(state + 0x4c) == 0) {
+                    if (*(int *)(state + 0x40) == 0) {
+                        lbl_803DE2D4 = *(int *)(state + 0x3c);
+                    } else {
+                        *(int *)(*(int *)(state + 0x40) + 0x3c) = *(int *)(state + 0x3c);
+                    }
+                    if (*(int *)(state + 0x3c) != 0) {
+                        *(int *)(*(int *)(state + 0x3c) + 0x40) = *(int *)(state + 0x40);
+                    }
+                }
+                fn_802788B4(state, 1);
+                *(int *)(state + 0x4c) = 2;
+            }
+
+            *(u32 *)(state + 0x118) = (*(u32 *)(state + 0x118) & 0x10) | 2;
+            *(int *)(state + 0x114) = 0;
+            wasActive = hwIsActive(voiceId);
+            if (wasActive != 0) {
+                *(u32 *)(state + 0x118) |= 1;
+            }
+            *(int *)(state + 0x9c) = 0;
+            *(int *)(state + 0x98) = 0;
+            if (streamKey == 0) {
+                *(u8 *)(state + 0x11d) = 0;
+                *(u8 *)(state + 0x20a) = (u8)midiSlot;
+                *(u8 *)(state + 0x20b) = midiEvent;
+                *(u8 *)(state + 0x20c) = midiLayer;
+            } else {
+                *(u8 *)(state + 0x11d) = 1;
+                keyFlags &= 0x7f;
+                inpResetMidiCtrl(voiceId & 0xff, 0xff, 1);
+                inpResetChannelDefaults(voiceId & 0xff, 0xff);
+                *(u8 *)(state + 0x20a) = voiceId;
+                *(u8 *)(state + 0x20b) = 0xff;
+                *(u8 *)(state + 0x20c) = 0;
+            }
+
+            *(u16 *)(state + 0x102) = instrumentKey;
+            *(s16 *)(state + 0x100) = (s16)baseSample;
+            *(u32 *)(state + 0x110) = 0x75300000;
+            *(u16 *)(state + 0x10e) = 0x400;
+            *(int *)(state + 0x34) = instrument;
+            *(u32 *)(state + 0x38) = instrument + (u32)sampleOffsetIndex * 8;
+            *(u8 *)(state + 0x12f) = keyFlags;
+            *(u16 *)(state + 0x12c) = keyFlags;
+            *(u8 *)(state + 0x12e) = 0;
+            *(u8 *)(state + 0x208) = volume;
+            *(u8 *)(state + 0x209) = pan;
+            *(u8 *)(state + 0x20d) = studio;
+            *(u8 *)(state + 0x8c) = 0;
+            *(u8 *)(state + 0x8d) = 0;
+            *(int *)(state + 0xec) = -1;
+            *(int *)(state + 0xf0) = -1;
+            *(int *)(state + 0x108) = -1;
+            *(u8 *)(state + 0x20e) = auxA;
+            *(u8 *)(state + 0x20f) = auxB;
+            *(u8 *)(state + 0x210) = startImmediately == 0;
+            *(u8 *)(state + 0x3ee) = 0;
+            *(u8 *)(state + 0x3ed) = 0;
+            *(u8 *)(state + 0x3ec) = 0;
+            *(u32 *)(state + 0xf4) = voiceId | ((u32)instrumentKey << 0x10) |
+                                      ((u32)keyFlags << 8);
+            voiceSetPriority(state, priority);
+            vid = vidMakeNew(state, returnNewId);
+            if (vid != -1) {
+                if (*(int *)(state + 0x4c) == 0) {
+                    return vid;
+                }
+                fn_802788B4(state, 0);
+                hadHead = lbl_803DE2D4 != 0;
+                *(int *)(state + 0x3c) = lbl_803DE2D4;
+                if (hadHead) {
+                    *(int *)(lbl_803DE2D4 + 0x40) = state;
+                }
+                *(int *)(state + 0x40) = 0;
+                lbl_803DE2D4 = state;
+                *(int *)(state + 0x4c) = 0;
+                return vid;
+            }
+            wasActive = hwIsActive(voiceId);
+            if (wasActive != 0) {
+                hwBreak(voiceId);
+            }
+            fn_80279B98(state);
+        }
+    }
+    return -1;
 }
 
 /*
