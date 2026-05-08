@@ -19,7 +19,7 @@ extern uint FUN_80006c00();
 extern uint FUN_80006c10();
 extern uint FUN_80017690();
 extern double FUN_800176f4();
-extern uint FUN_80017730();
+extern uint getAngle();
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern int FUN_80017a98();
@@ -43,7 +43,7 @@ extern undefined4 sin();
 extern undefined4 FUN_80294c64();
 extern undefined4 FUN_80294d00();
 
-extern undefined4 framesThisStep;
+extern u8 framesThisStep;
 extern undefined4* lbl_803DCA50;
 extern undefined4* lbl_803DCA9C;
 extern undefined4* lbl_803DD548;
@@ -569,8 +569,12 @@ void fn_80109C44(short *param_1)
   int iVar4;
   double dVar5;
   double dVar6;
+  double dVar7;
   
-  if (*(char *)((int)lbl_803DD558 + 0xf5) == '\0') {
+  if (*(byte *)((int)lbl_803DD558 + 0xf5) != 0) {
+    (**(code **)(*lbl_803DCA50 + 0x1c))(0x42,0,1,0,0,0,0xff);
+  }
+  else {
     iVar3 = *(int *)(param_1 + 0x52);
     iVar4 = *(int *)(*lbl_803DD558 + 0x4c);
     if ((*(byte *)(iVar4 + 0x1b) & 1) == 0) {
@@ -588,14 +592,14 @@ void fn_80109C44(short *param_1)
     *(float *)(param_1 + 0x5a) =
          (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(iVar4 + 0x1a)) - lbl_803E1880);
     dVar6 = (double)(*(float *)(param_1 + 0xc) - *(float *)(iVar3 + 0x18));
+    dVar7 = (double)(*(float *)(param_1 + 0xe) - *(float *)(iVar3 + 0x1c));
     dVar5 = (double)(*(float *)(param_1 + 0x10) - *(float *)(iVar3 + 0x20));
     if ((*(byte *)(iVar4 + 0x1b) & 1) != 0) {
-      iVar1 = FUN_80017730();
+      iVar1 = getAngle(dVar6,dVar5);
       *param_1 = -0x8000 - (short)iVar1;
     }
     if ((*(byte *)(iVar4 + 0x1b) & 2) != 0) {
-      sqrtf((double)(float)(dVar6 * dVar6 + (double)(float)(dVar5 * dVar5)));
-      uVar2 = FUN_80017730();
+      uVar2 = getAngle(dVar7,sqrtf((double)(float)(dVar6 * dVar6 + (double)(float)(dVar5 * dVar5))));
       iVar1 = ((uVar2 & 0xffff) - (int)*(short *)(iVar4 + 0x1e)) - (uint)(ushort)param_1[1];
       if (0x8000 < iVar1) {
         iVar1 = iVar1 + -0xffff;
@@ -618,9 +622,6 @@ void fn_80109C44(short *param_1)
     Obj_TransformWorldPointToLocal((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
                  (double)*(float *)(param_1 + 0x10),(float *)(param_1 + 6),(float *)(param_1 + 8),
                  (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
-  }
-  else {
-    (**(code **)(*lbl_803DCA50 + 0x1c))(0x42,0,1,0,0,0,0xff);
   }
   return;
 }
