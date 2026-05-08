@@ -79,7 +79,7 @@ void fn_80079E64(double param_1,double param_2,double param_3,undefined param_4,
                  undefined param_6,undefined param_7);
 void fn_8007A71C(uint param_1);
 void fn_8007AD10(f32 alpha);
-void fn_8007B01C(double param_1,double param_2,double param_3,char param_4,char param_5);
+void fn_8007B01C(double wx, double wy, double wz, char param4, char param5);
 void fn_8007BD8C(int param_1,int param_2);
 void fn_8007C3D0(u8 flag);
 void fn_8007C664(int param_1);
