@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_8010d36c(ushort *param_1);
+void fn_8010D36C(short *param_1);
 
 #endif /* MAIN_DLL_CAM_DLL_62_H_ */
