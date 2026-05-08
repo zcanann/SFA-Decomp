@@ -38,25 +38,134 @@ void audioLoadSdiFile(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80274628 - voice handler (~216 instructions). Stubbed.
+ * Add a reference to a sample table entry, loading it on the first reference.
  */
-#pragma dont_inline on
-void fn_80274628(void) {}
-#pragma dont_inline reset
+extern u8 lbl_803BFC78[];
+extern u16 lbl_803DE288;
+extern void hwSaveSample(void *sampleDescPtr, void *addrOut);
+
+int fn_80274628(s16 sampleId)
+{
+    u32 remaining;
+    u32 bucketIndex;
+    s16 **bucket;
+    s16 *entry;
+    s16 *sampleDesc;
+
+    bucket = (s16 **)lbl_803BFC78;
+    bucketIndex = 0;
+    for (remaining = lbl_803DE288, entry = 0; remaining != 0; remaining--) {
+        for (entry = *bucket; *entry != -1; entry += 0x10) {
+            if ((*entry == sampleId) && (entry[1] != -1)) {
+                goto found;
+            }
+        }
+        bucket += 3;
+        bucketIndex++;
+    }
+
+found:
+    if (entry[1] == 0) {
+        sampleDesc = entry + 6;
+        *(int *)(entry + 4) = *(int *)(entry + 2) + *(int *)(lbl_803BFC78 + 4 + bucketIndex * 0xc);
+        hwSaveSample(&sampleDesc, entry + 4);
+    }
+    entry[1]++;
+    return 1;
+}
 
 /*
- * fn_80274700 - voice handler (~152 instructions). Stubbed.
+ * Release a sample table reference, removing it after the last user.
  */
-#pragma dont_inline on
-void fn_80274700(void) {}
-#pragma dont_inline reset
+extern void hwRemoveSample(void *sampleDesc, u32 addr);
+
+int fn_80274700(s16 sampleId)
+{
+    u32 remaining;
+    s16 **bucket;
+    s16 *entry;
+
+    bucket = (s16 **)lbl_803BFC78;
+    remaining = lbl_803DE288;
+    do {
+        if (remaining == 0) {
+            return 0;
+        }
+        for (entry = *bucket; *entry != -1; entry += 0x10) {
+            if ((*entry == sampleId) && (entry[1] != -1)) {
+                entry[1]--;
+                if (entry[1] == 0) {
+                    hwRemoveSample(entry + 6, *(u32 *)(entry + 4));
+                }
+                return 1;
+            }
+        }
+        bucket += 3;
+        remaining--;
+    } while (1);
+}
 
 /*
- * fn_80274798 - voice handler (~296 instructions). Stubbed.
+ * Register an FX sample-list bucket and mark each sample descriptor as resident.
  */
-#pragma dont_inline on
-void fn_80274798(void) {}
-#pragma dont_inline reset
+extern u8 lbl_803C5678[];
+extern u16 lbl_803DE292;
+extern void sndBegin(void);
+extern void sndEnd(void);
+
+int fn_80274798(s16 fxId, u8 *samples, u32 count)
+{
+    u32 i;
+    u32 used;
+    u32 batchCount;
+
+    i = 0;
+    used = lbl_803DE292;
+    while (((int)i < (int)used) && (fxId != *(s16 *)(lbl_803C5678 + 0x4800 + i * 8))) {
+        i++;
+    }
+    if ((i != used) || (used > 0x7f)) {
+        return 0;
+    }
+
+    sndBegin();
+    used = lbl_803DE292;
+    i = count & 0xffff;
+    *(s16 *)(lbl_803C5678 + 0x4800 + used * 8) = fxId;
+    *(s16 *)(lbl_803C5678 + 0x4802 + used * 8) = count;
+    *(u8 **)(lbl_803C5678 + 0x4804 + used * 8) = samples;
+    if (i != 0) {
+        batchCount = i >> 3;
+        if (batchCount != 0) {
+            do {
+                samples[9] = 0x1f;
+                samples[0x13] = 0x1f;
+                samples[0x1d] = 0x1f;
+                samples[0x27] = 0x1f;
+                samples[0x31] = 0x1f;
+                samples[0x3b] = 0x1f;
+                samples[0x45] = 0x1f;
+                samples[0x4f] = 0x1f;
+                samples += 0x50;
+                batchCount--;
+            } while (batchCount != 0);
+            i = count & 7;
+            if (i == 0) {
+                goto done;
+            }
+        }
+        do {
+            samples[9] = 0x1f;
+            samples += 10;
+            i--;
+        } while (i != 0);
+    }
+
+done:
+    lbl_803DE292++;
+    sndEnd();
+    return 1;
+}
 
 /*
  * fn_802748C0 - voice handler (~784 instructions). Stubbed.
