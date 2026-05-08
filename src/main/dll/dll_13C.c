@@ -22,6 +22,7 @@ extern undefined4 FUN_80017620();
 extern void* FUN_80017624();
 extern int FUN_80017730();
 extern uint FUN_80017760();
+extern int randomGetRange(int min,int max);
 extern undefined4 FUN_80017a88();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
@@ -33,6 +34,7 @@ extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined8 ObjHits_EnableObject();
+extern void ObjHits_SetTargetMask(int obj,undefined mask);
 extern int ObjHits_GetPriorityHit();
 extern int ObjGroup_FindNearestObject();
 extern undefined4 ObjPath_GetPointWorldPosition();
@@ -56,10 +58,15 @@ extern int FUN_80286840();
 extern undefined4 FUN_80286888();
 extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
+extern int Sfx_PlayFromObjectLimited(int obj,int sfxId,int maxCount);
+extern void fn_80080178(void *timer,int duration);
+extern void fn_8008016C(void *timer);
 
 extern undefined4 DAT_803dc070;
+extern undefined4 *pDll_expgfx;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
+extern undefined4 lbl_8032059C[];
 extern f64 DOUBLE_803e3d80;
 extern f64 DOUBLE_803e3d98;
 extern f64 DOUBLE_803e3dc8;
@@ -100,6 +107,9 @@ extern f32 lbl_803E3E0C;
 extern f32 lbl_803E3E10;
 extern f32 lbl_803E3E14;
 extern f32 lbl_803E3E18;
+extern f64 lbl_803E3190;
+extern f32 lbl_803E3198;
+extern f32 lbl_803E319C;
 
 /*
  * --INFO--
@@ -734,31 +744,50 @@ void FUN_8016ae64(double param_1,double param_2,double param_3,undefined8 param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void pollenfragment_init(int param_1)
+void pollenfragment_init(int obj,int config)
 {
-  uint uVar1;
-  int iVar2;
-  undefined2 *puVar3;
+  bool keepSpawning;
+  byte pollenType;
+  uint randomValue;
+  int spawnCount;
+  undefined4 *state;
   
-  puVar3 = *(undefined2 **)(param_1 + 0xb8);
-  uVar1 = FUN_80017760(0xffff8000,0x7fff);
-  *puVar3 = (short)uVar1;
-  uVar1 = FUN_80017760(4000,5000);
-  *(float *)(puVar3 + 6) =
-       lbl_803E3DE0 * (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - DOUBLE_803e3de8);
-  uVar1 = FUN_80017760(0xffff8000,0x7fff);
-  puVar3[2] = (short)uVar1;
-  *(float *)(puVar3 + 4) = lbl_803E3DD4;
-  uVar1 = FUN_80017760(0xe6,500);
-  puVar3[3] = (short)uVar1;
-  puVar3[8] = 0;
-  puVar3[9] = 0;
-  *(undefined *)(param_1 + 0x36) = 0xff;
-  ObjHits_DisableObject(param_1);
-  iVar2 = *(int *)(param_1 + 100);
-  if (iVar2 != 0) {
-    *(uint *)(iVar2 + 0x30) = *(uint *)(iVar2 + 0x30) | 0x810;
+  state = *(undefined4 **)(obj + 0xb8);
+  if (*(char *)(config + 0x19) == '\x01') {
+    *(float *)(state + 2) = lbl_803E3198;
   }
+  else {
+    randomValue = randomGetRange(0xb4,300);
+    *(float *)(state + 2) =
+        (float)((double)CONCAT44(0x43300000,randomValue ^ 0x80000000) - lbl_803E3190);
+  }
+  pollenType = *(byte *)(config + 0x19);
+  if ((char)pollenType < '\0') {
+    pollenType = 0;
+  }
+  else if (5 < pollenType) {
+    pollenType = 5;
+  }
+  *(byte *)(config + 0x19) = pollenType;
+  state[7] = lbl_8032059C[*(char *)(config + 0x19)];
+  if ((int)*(short *)state[7] != 0) {
+    Sfx_PlayFromObjectLimited(obj,(int)*(short *)state[7] & 0xffff,3);
+  }
+  spawnCount = 4;
+  do {
+    (*(code *)(*pDll_expgfx + 8))(obj,(int)*(short *)(state[7] + 6),0,1,0xffffffff,0);
+    keepSpawning = spawnCount != 0;
+    spawnCount = spawnCount + -1;
+  } while (keepSpawning);
+  if ((*(byte *)(state[7] + 0x12) >> 6 & 1) == 0) {
+    *(float *)(state + 2) = lbl_803E319C;
+  }
+  ObjHits_SetTargetMask(obj,4);
+  state[6] = 0;
+  state[1] = *(undefined4 *)(state[7] + 0xc);
+  *state = 0;
+  fn_80080178(state + 9,0xe10);
+  fn_8008016C(state + 8);
   return;
 }
 
