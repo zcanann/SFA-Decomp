@@ -38,7 +38,6 @@ extern ObjHitReactEffectHandle *Resource_Acquire(u32 effectId,u32 count);
 int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEntryCount,
                        u32 reactionState,float *reactionStepScale)
 {
-  u32 currentReactionState;
   ObjAnimDef *animDef;
   int moveEnded;
   int priorityHitType;
@@ -49,15 +48,14 @@ int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
   ObjHitReactEffectOrigin effectOrigin;
   int hitSphereIndex;
 
-  currentReactionState = reactionState;
   effectOrigin = lbl_802C1B00;
-  if ((currentReactionState & OBJHITREACT_REACTION_STATE_MASK) != OBJHITREACT_REACTION_STATE_INACTIVE) {
+  if ((reactionState & OBJHITREACT_REACTION_STATE_MASK) != OBJHITREACT_REACTION_STATE_INACTIVE) {
     OSReport(sObjHitReactHitstateFrameString,((ObjAnimComponent *)obj)->currentMoveProgress);
     moveEnded = ObjAnim_AdvanceCurrentMove((double)*reactionStepScale,(double)timeDelta,
                                            obj,(ObjAnimEventList *)0x0);
     if (moveEnded != 0) {
       OSReport(sObjHitReactResetString);
-      currentReactionState = OBJHITREACT_REACTION_STATE_INACTIVE;
+      reactionState = OBJHITREACT_REACTION_STATE_INACTIVE;
     }
   }
   priorityHitType = ObjHits_GetPriorityHitWithPosition(obj,0,&hitSphereIndex,0,&hitPos[0],
@@ -99,14 +97,14 @@ int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
         fn_8009A1DC(obj,(double)lbl_803DE964,(undefined2 *)&effectPos.x,1,0);
       }
     }
-    if (((currentReactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&
+    if (((reactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&
         (reactionEntries->reactionAnim > OBJHITREACT_NO_REACTION_ANIM)) {
       ObjAnim_SetCurrentMove(lbl_803DE910,obj,(int)reactionEntries->reactionAnim,0);
       *reactionStepScale = reactionEntries->cooldown;
-      currentReactionState = OBJHITREACT_REACTION_STATE_ACTIVE;
+      reactionState = OBJHITREACT_REACTION_STATE_ACTIVE;
     }
   }
-  return currentReactionState;
+  return reactionState;
 }
 #pragma peephole reset
 #pragma scheduling reset
