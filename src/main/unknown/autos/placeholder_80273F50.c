@@ -282,15 +282,64 @@ void *fn_802751B8(u16 key)
 }
 
 /*
- * fn_80275260 - handler (~228 instructions). Stubbed.
+ * Reset the synth sample/instrument lookup counters and bucket table.
  */
-#pragma dont_inline on
-int fn_80275260(int a, int b)
+extern u16 lbl_803DE290;
+extern void hwGetStreamPlayBuffer(void);
+
+void fn_80275260(void)
 {
-    (void)a; (void)b;
-    return 0;
+    u16 *bucketTable;
+    int i;
+
+    lbl_803DE288 = 0;
+    lbl_803DE28A = 0;
+    lbl_803DE28C = 0;
+    lbl_803DE28E = 0;
+    lbl_803DE292 = 0;
+    lbl_803DE290 = 0;
+
+    i = 0x20;
+    bucketTable = (u16 *)lbl_803C5678;
+    do {
+        bucketTable[0] = 0;
+        bucketTable[1] = 0;
+        bucketTable[2] = 0;
+        bucketTable[3] = 0;
+        bucketTable[4] = 0;
+        bucketTable[5] = 0;
+        bucketTable[6] = 0;
+        bucketTable[7] = 0;
+        bucketTable[8] = 0;
+        bucketTable[9] = 0;
+        bucketTable[10] = 0;
+        bucketTable[11] = 0;
+        bucketTable[12] = 0;
+        bucketTable[13] = 0;
+        bucketTable[14] = 0;
+        bucketTable[15] = 0;
+        bucketTable[16] = 0;
+        bucketTable[17] = 0;
+        bucketTable[18] = 0;
+        bucketTable[19] = 0;
+        bucketTable[20] = 0;
+        bucketTable[21] = 0;
+        bucketTable[22] = 0;
+        bucketTable[23] = 0;
+        bucketTable[24] = 0;
+        bucketTable[25] = 0;
+        bucketTable[26] = 0;
+        bucketTable[27] = 0;
+        bucketTable[28] = 0;
+        bucketTable[29] = 0;
+        bucketTable[30] = 0;
+        bucketTable[31] = 0;
+        bucketTable += 0x20;
+        i--;
+    } while (i != 0);
+
+    hwGetStreamPlayBuffer();
 }
-#pragma dont_inline reset
 
 /*
  * Wrapper for hwTransAddr.
