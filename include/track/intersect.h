@@ -52,7 +52,7 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale);
 void fn_80077604(f32* obj, u32* colorPtr, Mtx mtx);
 void fn_8007788C(f32* obj, u32* colorPtr, Mtx mtx);
 void fn_80077AD8(double param_1,float *param_2,int param_3,float *param_4);
-void fn_80077EF8(undefined4 param_1,undefined4 param_2,float *param_3);
+void fn_80077EF8(void* obj, u8* node, Mtx mtx, double scale);
 void FUN_80070ec8(void);
 void fn_8007880C(void);
 void fn_800788DC(void);

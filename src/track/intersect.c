@@ -3623,9 +3623,223 @@ void fn_80077AD8(double param_1,float *param_2,int param_3,float *param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80077EF8(undefined4 param_1,undefined4 param_2,float *param_3)
+#pragma peephole off
+#pragma scheduling off
+void fn_80077EF8(void* obj, u8* node, Mtx mtx, double scale)
 {
+    extern f32 lbl_803DEEDC, lbl_803DEEE4;
+    extern u32 lbl_803DEEAC;
+    extern u32 lbl_803DEEB0;
+    extern u32 lbl_803E8450;
+    extern f32 lbl_803DD024, lbl_803DD020, lbl_803DD038, lbl_803DD034;
+    extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
+    extern u8 lbl_803DD011, lbl_803DD019;
+    extern int lbl_803DD014;
+    extern u8 lbl_802C1EA8[0xC0];
+    extern void selectTexture(int handle, int slot);
+    extern void fn_8006C5B8(int* out);
+    extern void GXSetZMode();
+    extern void GXSetZCompLoc(u8);
+    Mtx mtx_e0;
+    Mtx mtx_110;
+    f32 buf_38[8];
+    f32 buf_54[8];
+    f32 buf_70[8];
+    f32 buf_8c[8];
+    f32 buf_a8[8];
+    f32 buf_c4[8];
+    GXColor temp;
+    GXColor color2;
+    f32 fog_var;
+    f32 vec3[3];
+    int handle;
+    int stage_idx;
+    int stage_count;
+    int stage_base;
+    f32 f31_val;
+
+    /* Copy table from lbl_802C1EA8 */
+    {
+        u32* src = (u32*)(lbl_802C1EA8 + 0x18);
+        u32* dst1 = (u32*)buf_c4; /* +0xC4 in stack */
+        int i;
+        for (i = 0; i < 7; i++) dst1[i] = src[i];
+        /* additional unrolled copies to scattered slots */
+        {
+            u32* src2 = (u32*)(lbl_802C1EA8 + 0x34);
+            u32* dst2 = (u32*)buf_a8;
+            for (i = 0; i < 7; i++) dst2[i] = src2[i];
+        }
+        {
+            u32* src3 = (u32*)(lbl_802C1EA8 + 0x50);
+            u32* dst3 = (u32*)buf_8c;
+            for (i = 0; i < 7; i++) dst3[i] = src3[i];
+        }
+        {
+            u32* src4 = (u32*)(lbl_802C1EA8 + 0x6C);
+            u32* dst4 = (u32*)buf_70;
+            for (i = 0; i < 7; i++) dst4[i] = src4[i];
+        }
+        {
+            u32* src5 = (u32*)(lbl_802C1EA8 + 0x88);
+            u32* dst5 = (u32*)buf_54;
+            for (i = 0; i < 7; i++) dst5[i] = src5[i];
+        }
+        {
+            u32* src6 = (u32*)(lbl_802C1EA8 + 0xA4);
+            u32* dst6 = (u32*)buf_38;
+            for (i = 0; i < 7; i++) dst6[i] = src6[i];
+        }
+    }
+    *(u32*)&color2 = lbl_803DEEAC;
+    *(u16*)((u8*)&temp + 0) = (u16)lbl_803DEEB0;
+    ((u8*)&temp)[2] = (u8)(lbl_803DEEB0 >> 8);
+    fog_var = (f32)lbl_803E8450;
+
+    PSMTXConcat((f32(*)[4])((u8*)lbl_802C1EA8 + 0xB8), mtx, mtx_110);
+    GXLoadTexMtxImm(mtx_110, 0x1e, 1);
+    GXSetTexCoordGen2(0, 1, 0, 0x1e, 0, 0x7d);
+
+    selectTexture(*(int*)((u8*)obj + 0x60), 0);
+
+    if (((u8*)obj)[0x65] < 8) {
+        GXSetTevSwapModeTable(1, 0, 0, 0, 0);
+        stage_idx = ((u8*)obj)[0x65] - 1;
+    } else if (((u8*)obj)[0x65] < 0x10) {
+        GXSetTevSwapModeTable(1, 3, 3, 3, 3);
+        stage_idx = ((u8*)obj)[0x65] - 9;
+    } else {
+        stage_idx = 0;
+    }
+    if (stage_idx < 0) stage_idx = 0;
+
+    /* Set TevColor 1 = (0x7F, 0x7F, 0x7F, 0) */
+    ((u8*)&color2)[0] = 0x7F;
+    ((u8*)&color2)[1] = 0x7F;
+    ((u8*)&color2)[2] = 0x7F;
+    GXSetTevColor(1, color2);
+
+    /* Modify node[3] (alpha-like) */
+    node[3] = (u8)((node[3] >> 1) + (node[3] >> 2));
+    ((u8*)&temp)[0] = node[3];
+    ((u8*)&temp)[1] = node[3];
+    ((u8*)&temp)[2] = node[3];
+    GXSetTevKColor(0, temp);
+
+    stage_base = 0;
+    stage_count = ((u8*)buf_c4)[0];  /* indexed by stage_idx but for skel we just ignore */
+    if (stage_count != 0) {
+        GXSetTevDirect(0);
+        GXSetTevSwapMode(0, 0, 1);
+        GXSetTevOrder(0, 0, 0, 0xFF);
+        GXSetTevColorIn(0, 0xF, 0x8, 0xC, ((u8*)buf_c4)[stage_idx * 4]);
+        GXSetTevAlphaIn(0, 7, 7, 7, 7);
+        GXSetTevColorOp(0, 0, 0, ((u8*)buf_a8)[stage_idx * 4], 0, 0);
+        GXSetTevAlphaOp(0, 0, 0, 0, 0, 0);
+        stage_base = 1;
+    }
+
+    if (stage_count > 1) {
+        GXSetTevDirect(stage_base);
+        GXSetTevSwapMode(stage_base, 0, 0);
+        GXSetTevOrder(stage_base, 0xFF, 0xFF, 0xFF);
+        GXSetTevColorIn(stage_base, 0xF, 0, 0xC, ((u8*)buf_70)[stage_idx * 4]);
+        GXSetTevAlphaIn(stage_base, 7, 7, 7, 7);
+        GXSetTevColorOp(stage_base, 0, 0, ((u8*)buf_70)[stage_idx * 4], 0, 0);
+        GXSetTevAlphaOp(stage_base, 0, 0, 0, 0, 0);
+        stage_base++;
+    }
+
+    if (stage_count > 2) {
+        GXSetTevDirect(stage_base);
+        GXSetTevSwapMode(stage_base, 0, 0);
+        GXSetTevOrder(stage_base, 0xFF, 0xFF, 0xFF);
+        GXSetTevColorIn(stage_base, 0xF, 0, 0xC, ((u8*)buf_54)[stage_idx * 4]);
+        GXSetTevAlphaIn(stage_base, 7, 7, 7, 7);
+        GXSetTevColorOp(stage_base, 0, 0, ((u8*)buf_38)[stage_idx * 4], 0, 0);
+        GXSetTevAlphaOp(stage_base, 0, 0, 0, 0, 0);
+        stage_base++;
+    }
+
+    GXSetTevDirect(stage_base);
+    GXSetTevSwapMode(stage_base, 0, 0);
+    GXSetTevKColorSel(stage_base, 0xC);
+    GXSetTevOrder(stage_base, 0xFF, 0xFF, 0xFF);
+    if (stage_count == 0) {
+        GXSetTevColorIn(stage_base, 8, 2, 0xE, 0xF);
+    } else {
+        GXSetTevColorIn(stage_base, 0, 2, 0xE, 0xF);
+    }
+    GXSetTevAlphaIn(stage_base, 7, 7, 7, 7);
+    GXSetTevColorOp(stage_base, 8, 0, 0, 1, 0);
+    GXSetTevAlphaOp(stage_base, 0, 0, 0, 1, 0);
+
+    /* Build second tex matrix (slot 0x21) */
+    vec3[0] = mtx[0][3];
+    vec3[1] = mtx[1][3];
+    vec3[2] = mtx[2][3];
+    PSMTXMultVec((f32(*)[4])((u8*)obj + 0x30), (Vec*)vec3, (Vec*)vec3);
+    f31_val = -vec3[2];
+
+    fn_8006C5B8(&handle);
+    selectTexture(handle, 1);
+
+    {
+        f32 d = f31_val - (f32)scale;
+        f32 d2 = f31_val - d;
+        mtx_110[0][0] = lbl_803DEEDC;
+        mtx_110[0][1] = lbl_803DEEDC;
+        mtx_110[0][2] = lbl_803DEEE4 / d2;
+        mtx_110[0][3] = f31_val / d2;
+        mtx_110[1][0] = lbl_803DEEDC;
+        mtx_110[1][1] = lbl_803DEEDC;
+        mtx_110[1][2] = lbl_803DEEDC;
+        mtx_110[1][3] = lbl_803DEEDC;
+    }
+    PSMTXConcat((f32(*)[4])((u8*)obj + 0x30), mtx, mtx_e0);
+    PSMTXConcat(mtx_110, mtx_e0, mtx_e0);
+    GXLoadTexMtxImm(mtx_e0, 0x21, 1);
+    GXSetTexCoordGen2(1, 1, 0, 0x21, 0, 0x7d);
+
+    GXSetTevDirect(stage_base + 1);
+    GXSetTevSwapMode(stage_base + 1, 0, 0);
+    GXSetTevOrder(stage_base + 1, 1, 1, 0xFF);
+    GXSetTevColorIn(stage_base + 1, 0, 0xF, 8, 0xF);
+    GXSetTevAlphaIn(stage_base + 1, 7, 7, 7, 7);
+    GXSetTevColorOp(stage_base + 1, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(stage_base + 1, 0, 0, 0, 1, 0);
+
+    GXSetNumIndStages(0);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(0);
+    GXSetNumTexGens(2);
+    GXSetNumTevStages((u8)(stage_count + 2));
+
+    {
+        GXColor fc;
+        *(u32*)&fc = lbl_803E8450;
+        GXSetFog(4, lbl_803DD024, lbl_803DD020, lbl_803DD038, lbl_803DD034, fc);
+    }
+    GXSetBlendMode(1, 0, 3, 5);
+
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+        GXSetZMode(1, 3, 0);
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 3;
+        lbl_803DD012 = 0;
+        lbl_803DD01A = 1;
+    }
+    if ((u32)lbl_803DD011 != 1 || (u32)lbl_803DD019 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DD011 = 1;
+        lbl_803DD019 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
