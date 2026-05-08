@@ -301,10 +301,36 @@ s16 sndSin(u32 packed)
     }
 }
 
-/* sndBSearch - table binary-search helper. Stubbed. */
-#pragma dont_inline on
-void sndBSearch(void) {}
-#pragma dont_inline reset
+/*
+ * Binary search over fixed-stride sorted table entries.
+ */
+void *sndBSearch(void *key, void *base, u16 count, u32 stride, int (*cmp)(void *, void *))
+{
+    int low;
+    int mid;
+    int high;
+    void *entry;
+    int result;
+
+    if (count != 0) {
+        low = 1;
+        high = count;
+        do {
+            mid = (low + high) >> 1;
+            entry = (u8 *)base + stride * (mid - 1);
+            result = cmp(key, entry);
+            if (result == 0) {
+                return entry;
+            }
+            if (result > -1) {
+                low = mid + 1;
+                mid = high;
+            }
+            high = mid;
+        } while (low <= high);
+    }
+    return 0;
+}
 
 /*
  * Shift the value at *p left by 8 bits.

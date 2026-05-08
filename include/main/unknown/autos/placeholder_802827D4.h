@@ -28,7 +28,7 @@ u32 inpGetExCtrl(int state, u32 ctrl);
 void inpSetExCtrl(int state, u32 ctrl, s16 value);
 u16 sndRand(void);
 s16 sndSin(u32 packed);
-void sndBSearch(void);
+void *sndBSearch(void *key, void *base, u16 count, u32 stride, int (*cmp)(void *, void *));
 void sndConvertMs(u32 *p);
 void sndConvertTicks(u32 *p, int x);
 u32 sndConvert2Ms(u32 x);
