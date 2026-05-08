@@ -10,6 +10,7 @@ extern uint getAngle();
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern undefined4 FUN_80053bb0();
+extern void *mmAlloc(int size,int heap,int flags);
 extern undefined4 camcontrol_traceMove();
 extern uint FUN_801ef1a4();
 extern undefined4 FUN_80247e94();
@@ -452,6 +453,55 @@ LAB_8010cfb8:
  */
 void fn_8010CD5C(int param_1,undefined4 param_2,undefined4 *param_3)
 {
+  float fVar1;
+  float fVar2;
+  int iVar3;
+  int iVar4;
+  int iVar5;
+  double dVar6;
+
+  *(undefined4 *)(param_1 + 0x11c) = *param_3;
+  iVar5 = *(int *)(param_1 + 0xa4);
+  if (lbl_803DD568 == (float *)0x0) {
+    lbl_803DD568 = (float *)mmAlloc(0x1c,0xf,0);
+  }
+  fVar1 = lbl_803E18C4;
+  lbl_803DD568[1] = lbl_803E18C4;
+  lbl_803DD568[2] = lbl_803E18C0;
+  *(undefined *)((int)lbl_803DD568 + 0x12) = 0;
+  *(undefined *)((int)lbl_803DD568 + 0x11) = 0;
+  *(undefined *)((int)lbl_803DD568 + 0x13) = 1;
+  *(undefined *)(lbl_803DD568 + 5) = 1;
+  lbl_803DD568[6] = fVar1;
+  if (*(short *)(iVar5 + 0x44) == 1) {
+    iVar4 = *(int *)(param_1 + 0x11c);
+    if (iVar4 == 0) {
+      *(undefined *)((int)lbl_803DD568 + 0x12) = 1;
+    }
+    else {
+      if (*(int *)(iVar4 + 0x74) == 0) {
+        fVar1 = *(float *)(iVar5 + 0x18) - *(float *)(iVar4 + 0x18);
+        fVar2 = *(float *)(iVar5 + 0x20) - *(float *)(iVar4 + 0x20);
+      }
+      else {
+        iVar3 = *(int *)(iVar4 + 0x74) + (uint)*(byte *)(iVar4 + 0xe4) * 0x18;
+        fVar1 = *(float *)(iVar3 + 0xc) - *(float *)(iVar5 + 0x18);
+        fVar2 = *(float *)(iVar3 + 0x14) - *(float *)(iVar5 + 0x20);
+      }
+      if (*(short *)(iVar4 + 0x44) == 0x6d) {
+        *lbl_803DD568 = lbl_803E1940;
+      }
+      else {
+        dVar6 = (double)sqrtf((double)(fVar1 * fVar1 + fVar2 * fVar2));
+        *lbl_803DD568 = (float)dVar6;
+      }
+      *(undefined *)(lbl_803DD568 + 4) = 0;
+    }
+  }
+  else {
+    *(undefined *)((int)lbl_803DD568 + 0x12) = 1;
+  }
+  return;
 }
 
 /*
@@ -582,6 +632,24 @@ void fn_8010CEF0(undefined2 *param_1)
  */
 void fn_8010D298(void)
 {
+  float fVar1;
+
+  if (lbl_803DD570 == (float *)0x0) {
+    lbl_803DD570 = (float *)mmAlloc(0x2c,0xf,0);
+  }
+  fVar1 = lbl_803E1954;
+  *lbl_803DD570 = lbl_803E1954;
+  lbl_803DD570[1] = fVar1;
+  lbl_803DD570[2] = lbl_803E1978;
+  fVar1 = lbl_803E194C;
+  lbl_803DD570[4] = lbl_803E194C;
+  lbl_803DD570[3] = fVar1;
+  lbl_803DD570[5] = lbl_803E195C;
+  *(undefined *)(lbl_803DD570 + 10) = 0;
+  fVar1 = lbl_803E1950;
+  lbl_803DD570[8] = lbl_803E1950;
+  lbl_803DD570[7] = fVar1;
+  return;
 }
 
 /*
