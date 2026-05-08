@@ -1028,64 +1028,67 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(float radiusA, float axial, float 
  */
 #pragma scheduling off
 #pragma peephole off
-float *ObjHits_CalcTaperedCapsuleNormal(float param_1,float param_2,float param_3,
-                                        float param_4,float *param_5,float *param_6,
-                                        float *param_7,float *param_8)
+float *ObjHits_CalcTaperedCapsuleNormal(float axial,float baseRadius,float tipRadius,
+                                        float length,float *point,float *base,float *tip,
+                                        float *out)
 {
-  float fVar1;
-  float dVar2;
-  float dVar3;
+  float invAxial;
+  float radiusDelta;
+  float radiusOffset;
   float axisDir[3];
   float normal[3];
   float blended[3];
   float cross[3];
   float surface[3];
 
-  if (param_1 <= lbl_803DE910) {
-    *param_8 = *param_5 - *param_7;
-    param_8[1] = param_5[1] - param_7[1];
-    param_8[2] = param_5[2] - param_7[2];
-    Vec3_Normalize(param_8);
+  if (axial <= lbl_803DE910) {
+    *out = *point - *tip;
+    out[1] = point[1] - tip[1];
+    out[2] = point[2] - tip[2];
+    Vec3_Normalize(out);
+    return out;
   }
-  else if (param_1 >= param_4) {
-    *param_8 = *param_5 - *param_7;
-    param_8[1] = param_5[1] - param_7[1];
-    param_8[2] = param_5[2] - param_7[2];
-    Vec3_Normalize(param_8);
+  else if (axial >= length) {
+    *out = *point - *tip;
+    out[1] = point[1] - tip[1];
+    out[2] = point[2] - tip[2];
+    Vec3_Normalize(out);
+    return out;
   }
   else {
-    dVar3 = param_3 - param_2;
-    dVar2 = dVar3 * (param_1 / param_4);
-    axisDir[0] = param_7[0] - param_6[0];
-    axisDir[1] = param_7[1] - param_6[1];
-    axisDir[2] = param_7[2] - param_6[2];
+    radiusDelta = tipRadius - baseRadius;
+    radiusOffset = radiusDelta * (axial / length);
+    axisDir[0] = tip[0] - base[0];
+    axisDir[1] = tip[1] - base[1];
+    axisDir[2] = tip[2] - base[2];
     Vec3_Normalize(axisDir);
-    Vec3_ScaleAdd(param_6,axisDir,param_1,surface);
-    normal[0] = param_5[0] - surface[0];
-    normal[1] = param_5[1] - surface[1];
-    normal[2] = param_5[2] - surface[2];
+    Vec3_ScaleAdd(base,axisDir,axial,surface);
+    normal[0] = point[0] - surface[0];
+    normal[1] = point[1] - surface[1];
+    normal[2] = point[2] - surface[2];
     Vec3_Normalize(normal);
-    if (dVar3 == lbl_803DE910) {
-      param_8[0] = normal[0];
-      param_8[1] = normal[1];
-      param_8[2] = normal[2];
+    if (radiusDelta == lbl_803DE910) {
+      out[0] = normal[0];
+      out[1] = normal[1];
+      out[2] = normal[2];
+      return out;
     }
     else {
-      axisDir[0] = axisDir[0] * param_1;
-      axisDir[1] = axisDir[1] * param_1;
-      axisDir[2] = axisDir[2] * param_1;
-      Vec3_ScaleAdd(axisDir,normal,dVar2,blended);
+      axisDir[0] = axisDir[0] * axial;
+      axisDir[1] = axisDir[1] * axial;
+      axisDir[2] = axisDir[2] * axial;
+      Vec3_ScaleAdd(axisDir,normal,radiusOffset,blended);
       Vec3_Normalize(blended);
-      fVar1 = lbl_803DE918 / param_1;
-      axisDir[0] = axisDir[0] * fVar1;
-      axisDir[1] = axisDir[1] * fVar1;
-      axisDir[2] = axisDir[2] * fVar1;
+      invAxial = lbl_803DE918 / axial;
+      axisDir[0] = axisDir[0] * invAxial;
+      axisDir[1] = axisDir[1] * invAxial;
+      axisDir[2] = axisDir[2] * invAxial;
       Vec3_Cross(normal,axisDir,cross);
       Vec3_Normalize(cross);
-      Vec3_Cross(cross,blended,param_8);
+      Vec3_Cross(cross,blended,out);
     }
   }
-  return param_8;
+  return out;
 }
 #pragma peephole reset
 #pragma scheduling reset
