@@ -13,7 +13,9 @@ int sndFXCheck(u32 id);
 void sndVolume(int group, int volume, int time);
 void sndMasterVolume(int volume, int time, u8 musicFlag, u8 fxFlag);
 void sndOutputMode(int mode);
-void sndSetAuxProcessingCallbacks(int a, int b, int c, int d);
+void sndSetAuxProcessingCallbacks(u32 studio, void *auxACallback, void *auxAUser, u8 auxAIndex,
+                                  void *auxAData, void *auxBCallback, void *auxBUser,
+                                  u8 auxBIndex, void *auxBData);
 void synthActivateStudio(u8 slot, int a, int b);
 void synthDeactivateStudio(u8 slot);
 void synthAddStudioInput(u8 idx);

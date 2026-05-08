@@ -14,14 +14,25 @@ extern void fn_80273870(void);
 extern void hwAddInput(u8 idx);
 extern void hwRemoveInput(u8 idx);
 extern void hwActivateStudio(int a, int b, int c);
+extern void hwDeactivateStudio(u8 slot);
+extern void hwSetAUXProcessingCallbacks(u32 studio, void *auxACallback, void *auxAUser,
+                                        void *auxBCallback, void *auxBUser);
+extern u32 hwIsActive(u32 slot);
+extern void hwOff(u32 slot);
 extern void hwDisableHRTF(void);
+extern u32 synthResolveHandle(u32 handle);
+extern void fn_8027A0CC(u32 value);
 
 extern u8 lbl_803BCC90[];
 extern u8 lbl_803BD150[];
+extern u8 lbl_803BD9A4[];
 extern u8 lbl_803BD9C4[];
+extern u8 lbl_803BD9E4[];
 extern u8 lbl_803BDA04[];
 extern u8 lbl_803BDA24[];
+extern u8 lbl_803DE23C;
 extern u8 lbl_803DE244;
+extern u8 lbl_803DE24C;
 extern u8 lbl_803DE254;
 extern u32 lbl_803DE264;
 extern u8 *lbl_803DE268;
@@ -192,14 +203,41 @@ void sndOutputMode(int mode)
 }
 
 /*
- * sndSetAuxProcessingCallbacks - large fn ~360 bytes, complex routing. Stubbed.
+ * Configure studio AUX A/B processing callbacks and cache the callback
+ * routing indices used by synth voice updates.
+ *
+ * EN v1.1 Address: 0x80272B5C, size 360b
  */
-#pragma dont_inline on
-void sndSetAuxProcessingCallbacks(int a, int b, int c, int d)
+void sndSetAuxProcessingCallbacks(u32 studio, void *auxACallback, void *auxAUser, u8 auxAIndex,
+                                  void *auxAData, void *auxBCallback, void *auxBUser,
+                                  u8 auxBIndex, void *auxBData)
 {
-    (void)a; (void)b; (void)c; (void)d;
+    sndBegin();
+    if (auxACallback != 0) {
+        (&lbl_803DE254)[studio & 0xff] = auxAIndex;
+        if (auxAIndex != 0xff) {
+            (&lbl_803DE24C)[studio & 0xff] = synthResolveHandle((u32)auxAData);
+            *(u32 *)(lbl_803BD9C4 + (studio & 0xff) * 4) = (u32)auxACallback;
+            *(u32 *)(lbl_803BD9A4 + (studio & 0xff) * 4) = (u32)auxAUser;
+        }
+    } else {
+        *(u32 *)(lbl_803BD9C4 + (studio & 0xff) * 4) = 0;
+        (&lbl_803DE254)[studio & 0xff] = 0xff;
+    }
+    if (auxBCallback != 0) {
+        (&lbl_803DE244)[studio & 0xff] = auxBIndex;
+        if (auxBIndex != 0xff) {
+            (&lbl_803DE23C)[studio & 0xff] = synthResolveHandle((u32)auxBData);
+            *(u32 *)(lbl_803BDA04 + (studio & 0xff) * 4) = (u32)auxBCallback;
+            *(u32 *)(lbl_803BD9E4 + (studio & 0xff) * 4) = (u32)auxBUser;
+        }
+    } else {
+        *(u32 *)(lbl_803BDA04 + (studio & 0xff) * 4) = 0;
+        (&lbl_803DE244)[studio & 0xff] = 0xff;
+    }
+    hwSetAUXProcessingCallbacks(studio, auxACallback, auxAUser, auxBCallback, auxBUser);
+    sndEnd();
 }
-#pragma dont_inline reset
 
 /*
  * Reset a slot's tracking state (clear two ptr arrays + 0xFF in two
@@ -221,14 +259,39 @@ void synthActivateStudio(u8 slot, int a, int b)
 }
 
 /*
- * synthDeactivateStudio - large fn ~240 bytes, voice cleanup loop. Stubbed.
+ * Deactivate a studio: clear routed AUX callbacks and release/off any voices
+ * currently assigned to that studio.
+ *
+ * EN v1.1 Address: 0x80272D74, size 240b
  */
-#pragma dont_inline on
 void synthDeactivateStudio(u8 slot)
 {
-    (void)slot;
+    u32 i;
+    u32 offset;
+    u8 *voice;
+
+    offset = 0;
+    for (i = 0; i < lbl_803BD150[0x210]; i++) {
+        voice = lbl_803DE268 + offset;
+        if (slot == *(u8 *)(voice + 0x11f)) {
+            if (*(u32 *)(voice + 0xf4) != 0xffffffff) {
+                fn_8027A0CC(*(u32 *)(*(u32 *)(voice + 0xf8) + 8));
+            } else {
+                if (hwIsActive(i) != 0) {
+                    hwOff(i);
+                }
+            }
+        }
+        offset += 0x404;
+    }
+    sndBegin();
+    *(u32 *)(lbl_803BD9C4 + slot * 4) = 0;
+    *(u32 *)(lbl_803BDA04 + slot * 4) = 0;
+    (&lbl_803DE254)[slot] = 0xff;
+    (&lbl_803DE244)[slot] = 0xff;
+    sndEnd();
+    hwDeactivateStudio(slot);
 }
-#pragma dont_inline reset
 
 /*
  * Wrapper for hwAddInput.
