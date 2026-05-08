@@ -52,15 +52,71 @@ void inpResetMidiCtrl(u8 a, u8 b, u32 mode)
 }
 
 /*
- * inpGetMidiCtrl - large multi-case controller lookup. Stubbed.
+ * Read a 14-bit MIDI controller value from either the global channel defaults
+ * or the per-key controller bank.
  */
-#pragma dont_inline on
-u32 inpGetMidiCtrl(u8 r3, u8 r4, u8 r5)
+u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key)
 {
-    (void)r3; (void)r4; (void)r5;
-    return 0;
+    u32 ctrl;
+    u8 *base;
+
+    slot &= 0xff;
+    if (slot == 0xff) {
+        return 0;
+    }
+
+    key &= 0xff;
+    ctrl = controller & 0xff;
+    if (key == 0xff) {
+        base = lbl_803D1B20 + slot * 0x86;
+        if (ctrl < 0x40) {
+            return ((u32)base[(controller & 0x1f) + 0x40] << 7) |
+                   (u32)base[(controller & 0x1f) + 0x60];
+        }
+        if (ctrl < 0x46) {
+            if (base[ctrl] < 0x40) {
+                return 0;
+            }
+            return 0x3fff;
+        }
+        if (ctrl > 0x5f && ctrl < 0x66) {
+            return 0;
+        }
+        if (((controller - 0x80) & 0xff) < 2) {
+            return ((u32)base[(controller & 0xfe) + 0x40] << 7) |
+                   (u32)base[(controller & 0xfe) + 0x41];
+        }
+        if (((controller - 0x84) & 0xff) < 2) {
+            return ((u32)base[(controller & 0xfe) + 0x40] << 7) |
+                   (u32)base[(controller & 0xfe) + 0x41];
+        }
+        return (u32)base[ctrl] << 7;
+    }
+
+    base = lbl_803CD820 + key * 0x860 + slot * 0x86;
+    if (ctrl < 0x40) {
+        return ((u32)base[(controller & 0x1f) + 0x40] << 7) |
+               (u32)base[(controller & 0x1f) + 0x60];
+    }
+    if (ctrl < 0x46) {
+        if (base[ctrl] < 0x40) {
+            return 0;
+        }
+        return 0x3fff;
+    }
+    if (ctrl > 0x5f && ctrl < 0x66) {
+        return 0;
+    }
+    if (((controller - 0x80) & 0xff) < 2) {
+        return ((u32)base[(controller & 0xfe) + 0x40] << 7) |
+               (u32)base[(controller & 0xfe) + 0x41];
+    }
+    if (((controller - 0x84) & 0xff) < 2) {
+        return ((u32)base[(controller & 0xfe) + 0x40] << 7) |
+               (u32)base[(controller & 0xfe) + 0x41];
+    }
+    return (u32)base[ctrl] << 7;
 }
-#pragma dont_inline reset
 
 /*
  * Returns pointer into either 1D or 2D voice-state table.
