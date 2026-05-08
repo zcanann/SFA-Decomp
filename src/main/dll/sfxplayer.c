@@ -23,6 +23,15 @@ typedef struct SfxplayerStateFlags {
   u8 lowBits : 4;
 } SfxplayerStateFlags;
 
+typedef struct SfxplayerState {
+  s16 eventId;
+  s16 unk2;
+  s16 unk4;
+  u8 config19;
+  u8 ringCount;
+  SfxplayerStateFlags flags;
+} SfxplayerState;
+
 /*
  * --INFO--
  *
@@ -38,25 +47,26 @@ typedef struct SfxplayerStateFlags {
  */
 void sfxplayer_update(int obj)
 {
-  int i;
-  int mode;
-  int state;
-  int *handles;
+  s16 i;
+  s16 hitType;
+  u8 mode;
+  SfxplayerState *state;
+  uint *handles;
   SfxplayerStateFlags *flags;
   undefined4 hitObj;
   
-  state = *(int *)(obj + 0xb8);
-  flags = (SfxplayerStateFlags *)(state + 8);
-  if ((flags->bit20 == 0) && (GameBit_Get(*(s16 *)state) == 0)) {
-    if (*(u8 *)(state + 7) == 4) {
+  state = *(SfxplayerState **)(obj + 0xb8);
+  flags = &state->flags;
+  if ((flags->bit20 == 0) && (GameBit_Get(state->eventId) == 0)) {
+    if (state->ringCount == 4) {
       Sfx_PlayFromObject(0,0x7e);
       flags->bit20 = 1;
       flags->bit10 = 0;
       flags->bit40 = 0;
-      GameBit_Set(*(s16 *)state,1);
+      GameBit_Set(state->eventId,1);
       GameBit_Set(0xedf,0);
       mode = (*(code *)(*lbl_803DCAAC + 0x40))((int)*(char *)(obj + 0xac));
-      if ((u8)mode == 1) {
+      if (mode == 1) {
         GameBit_Set(0x9f7,1);
       }
       gameTimerStop();
@@ -66,7 +76,7 @@ void sfxplayer_update(int obj)
         flags->bit80 = 0;
         if (flags->bit10 != 0) {
           mode = (*(code *)(*lbl_803DCAAC + 0x40))((int)*(char *)(obj + 0xac));
-          if ((u8)mode == 1) {
+          if (mode == 1) {
             gameTimerInit(0x1d,0x96);
           }
           else {
@@ -76,7 +86,7 @@ void sfxplayer_update(int obj)
         }
       }
       if (fn_80014670() != 0) {
-        handles = gSfxplayerEffectHandles;
+        handles = (uint *)gSfxplayerEffectHandles;
         for (i = 0; i < 4; i++) {
           if (handles[0] != 0) {
             Obj_FreeObject(handles[0]);
@@ -89,19 +99,20 @@ void sfxplayer_update(int obj)
           Sfx_PlayFromObject(obj,0x1ce);
           handles += 2;
         }
-        *(u8 *)(state + 7) = 0;
+        state->ringCount = 0;
         flags->bit40 = 0;
         flags->bit10 = 0;
         GameBit_Set(0xedf,0);
       }
       TrickyCurve_updateEffectHandleRing(obj);
-      handles = gSfxplayerEffectHandles;
+      handles = (uint *)gSfxplayerEffectHandles;
       for (i = 0; i < 4; i++) {
         if (handles[0] != 0) {
           hitObj = 0;
-          if ((ObjHits_GetPriorityHit(handles[1],&hitObj,(int *)0x0,(uint *)0x0) == 0x13) &&
+          hitType = ObjHits_GetPriorityHit(handles[1],&hitObj,(int *)0x0,(uint *)0x0);
+          if ((hitType == 0x13) &&
              (mode = (*(code *)(*lbl_803DCAAC + 0x40))((int)*(char *)(obj + 0xac)),
-              ((u8)mode == 1 || (*(int *)((int)hitObj + 0xf4) == i)))) {
+              (mode == 1 || (*(int *)((int)hitObj + 0xf4) == i)))) {
             if (handles[0] != 0) {
               Obj_FreeObject(handles[0]);
             }
@@ -111,7 +122,7 @@ void sfxplayer_update(int obj)
             }
             handles[1] = 0;
             Sfx_PlayFromObject(0,0x409);
-            *(u8 *)(state + 7) = *(u8 *)(state + 7) + 1;
+            state->ringCount++;
           }
         }
         handles += 2;
@@ -138,15 +149,15 @@ void sfxplayer_update(int obj)
 #pragma peephole off
 void sfxplayer_init(int obj,int config)
 {
-  int state;
+  SfxplayerState *state;
 
-  state = *(int *)(obj + 0xb8);
+  state = *(SfxplayerState **)(obj + 0xb8);
   *(s16 *)obj = (s16)((s8)*(u8 *)(config + 0x18) << 8);
   *(void (**)(void))(obj + 0xbc) = TrickyCurve_activateEffectHandleRing;
-  *(u8 *)(state + 6) = *(u8 *)(config + 0x19);
-  *(s16 *)state = *(s16 *)(config + 0x1e);
-  *(s16 *)(state + 2) = *(s16 *)(config + 0x20);
-  *(s16 *)(state + 4) = 1;
+  state->config19 = *(u8 *)(config + 0x19);
+  state->eventId = *(s16 *)(config + 0x1e);
+  state->unk2 = *(s16 *)(config + 0x20);
+  state->unk4 = 1;
   gSfxplayerEffectHandles[0] = 0;
   gSfxplayerEffectHandles[1] = 0;
   gSfxplayerEffectHandles[2] = 0;
@@ -156,9 +167,8 @@ void sfxplayer_init(int obj,int config)
   gSfxplayerEffectHandles[6] = 0;
   gSfxplayerEffectHandles[7] = 0;
   gameTimerStop();
-  if (GameBit_Get(*(s16 *)state) != 0) {
-    SfxplayerStateFlags *flags = (void *)(state + 8);
-    flags->bit20 = 1;
+  if (GameBit_Get(state->eventId) != 0) {
+    state->flags.bit20 = 1;
   }
   *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x6000;
 }
