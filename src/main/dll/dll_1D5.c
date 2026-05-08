@@ -211,7 +211,7 @@ void FUN_801cf1a0(undefined8 param_1,double param_2,double param_3,undefined8 pa
       hitReactEntries = &DAT_80327414;
     }
     in_r7 = (float *)(iVar6 + 0x50);
-    uVar3 = objHitReact_update((ObjAnimComponent *)param_9,hitReactEntries,1,(uint)*(byte *)(iVar6 + 0x3d4),
+    uVar3 = objHitReact_update((int)param_9,hitReactEntries,1,(uint)*(byte *)(iVar6 + 0x3d4),
                                in_r7);
     *(undefined *)(iVar6 + 0x3d4) = uVar3;
     if (*(char *)(iVar6 + 0x3d4) != '\0') {
