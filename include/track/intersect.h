@@ -27,7 +27,7 @@ void fn_800703C4(void);
 void fn_80070404(f32 a, f32 b);
 void fn_800704DC(u8* param_1);
 void fn_800704FC(u8 param_1, u8 param_2, u8 param_3);
-void fn_80070510(undefined4 param_1,undefined4 param_2,int param_3);
+void fn_80070510(void* obj_a, void** obj_b, int param_3);
 void fn_80070ED4(undefined param_1);
 void fn_800717FC(void);
 void fn_80071D54(byte *param_1);
