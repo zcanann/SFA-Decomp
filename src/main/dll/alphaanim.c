@@ -2,6 +2,7 @@
 #include "main/dll/alphaanim.h"
 
 extern undefined4 FUN_80006ba8();
+extern uint GameBit_Get(int eventId);
 extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
 extern undefined8 ObjGroup_RemoveObject();
@@ -12,6 +13,7 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
 extern undefined4 FUN_80053c98();
 extern undefined4 FUN_800723a0();
+extern undefined4 fn_8017BCF8();
 
 extern undefined4* DAT_803dd6d4;
 
@@ -28,22 +30,35 @@ extern undefined4* DAT_803dd6d4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 doorlock_init(int param_1,undefined4 param_2,int param_3)
+void doorlock_init(short *obj,int config)
 {
-  int iVar1;
+  byte *state;
   
-  iVar1 = *(int *)(param_1 + 0x4c);
-  if (*(char *)(param_3 + 0x80) != '\0') {
-    if (((*(byte *)(iVar1 + 0x1b) & 4) != 0) && (*(char *)(param_3 + 0x80) == '\x01')) {
-      FUN_80017698((int)*(short *)(iVar1 + 0x1c),1);
-    }
-    if ((*(char *)(param_3 + 0x80) == '\x02') && (*(short *)(iVar1 + 0x24) != 0)) {
-      (**(code **)(*DAT_803dd6d4 + 0x58))(param_3);
-    }
-    *(undefined *)(param_3 + 0x80) = 0;
+  *obj = (short)((byte)*(byte *)(config + 0x18) << 8);
+  obj[1] = (short)((byte)*(byte *)(config + 0x19) << 8);
+  obj[2] = (short)((byte)*(byte *)(config + 0x1a) << 8);
+  *(code *)(obj + 0x5e) = fn_8017BCF8;
+  *(undefined *)((int)obj + 0xad) = *(undefined *)(config + 0x21);
+  if (!(*(char *)((int)obj + 0xad) < *(char *)(*(int *)(obj + 0x28) + 0x55))) {
+    *(undefined *)((int)obj + 0xad) = 0;
   }
-  *(undefined4 *)(param_1 + 0xf8) = 0;
-  return 0;
+  state = *(byte **)(obj + 0x5c);
+  *state = (byte)GameBit_Get((int)*(short *)(config + 0x1c));
+  ObjGroup_AddObject(obj,0xf);
+  if ((*(byte *)(config + 0x1b) & 1) != 0) {
+    if (*state != 0) {
+      *(undefined *)(obj + 0x1b) = 0;
+    }
+  }
+  else if ((*(short *)(config + 0x26) & 1) != 0) {
+    if (*state == 0) {
+      *(undefined4 *)(obj + 0x7c) = 1;
+    }
+    else {
+      *(undefined4 *)(obj + 0x7c) = 0;
+    }
+  }
+  return;
 }
 
 /*
