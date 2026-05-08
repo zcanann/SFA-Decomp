@@ -1,253 +1,183 @@
 #include "ghidra_import.h"
 #include "main/dll/LGT/LGTpointlight.h"
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068cc();
-extern undefined4 FUN_800068d0();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern undefined4 FUN_80017620();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
-extern int ObjHits_GetPriorityHit();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_8005fe14();
-extern undefined4 FUN_80081110();
-extern int FUN_8028683c();
-extern undefined4 FUN_80286888();
+extern int fn_8001F4C8();
+extern void fn_8001DB2C();
+extern void fn_8001DD88();
+extern void fn_8001DAF0();
+extern void fn_8001DA18();
+extern void fn_8001DC38();
+extern void fn_8001DB6C();
+extern void fn_8001D620();
+extern void fn_8001DAB8();
+extern void fn_8001DB54();
+extern void fn_8001D730();
+extern void fn_8001D714();
 
-extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
-extern f64 DOUBLE_803e6a98;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E6A84;
-extern f32 lbl_803E6A88;
-extern f32 lbl_803E6A8C;
-extern f32 lbl_803E6A90;
-extern f32 lbl_803E6AA0;
-extern f32 lbl_803E6AA4;
-extern f32 lbl_803E6AA8;
-extern f32 lbl_803E6AAC;
-extern f32 lbl_803E6AB4;
+extern u8 lbl_802C2488[];
+extern f64 lbl_803E5E48;
+extern f64 lbl_803E5E50;
+extern f32 lbl_803E5E08;
+extern f32 lbl_803E5E0C;
+extern f32 lbl_803E5E10;
+extern f32 lbl_803E5E20;
+extern f32 lbl_803E5E24;
+extern f32 lbl_803E5E28;
+extern f32 lbl_803E5E2C;
+extern f32 lbl_803E5E30;
+extern f32 lbl_803E5E34;
+extern f32 lbl_803E5E38;
+extern f32 lbl_803E5E3C;
+extern f32 lbl_803E5E40;
 
 /*
  * --INFO--
  *
  * Function: lightsource_init
  * EN v1.0 Address: 0x801F37CC
- * EN v1.0 Size: 448b
- * EN v1.1 Address: 0x801F3824
- * EN v1.1 Size: 472b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 1112b
  */
-void lightsource_init(int param_1,int param_2)
+void lightsource_init(undefined2 *obj,int mapData)
 {
-  int iVar1;
-  int *piVar2;
-  undefined auStack_28 [16];
-  float local_18;
-  undefined4 local_10;
-  uint uStack_c;
-  
-  iVar1 = *(int *)(param_1 + 0xb8);
-  if ((int)*(short *)(param_2 + 0x1a) == 0) {
-    *(float *)(iVar1 + 4) = lbl_803E6A84;
+  ushort flags;
+  int lightIndex;
+  int temp;
+  int colorBase;
+  int *state;
+  u8 *colors;
+  undefined4 local_48;
+  uint uStack_44;
+  longlong local_40;
+  undefined4 local_38;
+  uint uStack_34;
+  longlong local_30;
+  undefined4 local_28;
+  uint uStack_24;
+  longlong local_20;
+
+  state = *(int **)(obj + 0x5c);
+  colors = lbl_802C2488;
+  *obj = (short)(((int)*(s8 *)(mapData + 0x18) & 0x3fU) << 10);
+  if (*(short *)(mapData + 0x1a) < 1) {
+    *(float *)(obj + 4) = lbl_803E5E24;
   }
   else {
-    uStack_c = (int)*(short *)(param_2 + 0x1a) ^ 0x80000000;
-    local_10 = 0x43300000;
-    *(float *)(iVar1 + 4) = (float)((double)CONCAT44(0x43300000,uStack_c) - DOUBLE_803e6a98);
+    uStack_44 = (int)*(short *)(mapData + 0x1a) ^ 0x80000000;
+    local_48 = 0x43300000;
+    *(float *)(obj + 4) =
+        (float)((double)CONCAT44(0x43300000,uStack_44) - lbl_803E5E48) / lbl_803E5E20;
   }
-  if (*(short *)(param_2 + 0x1c) == 0) {
-    *(undefined2 *)(iVar1 + 10) = 0x8c;
+
+  *(undefined *)(state + 5) = *(undefined *)(mapData + 0x19);
+  state[4] = (int)*(short *)(mapData + 0x1e);
+  *(undefined *)((int)state + 0x15) = 1;
+  if ((*(ushort *)(mapData + 0x1c) & 0x20) == 0) {
+    *(undefined *)((int)state + 0x16) = 3;
   }
   else {
-    *(short *)(iVar1 + 10) = *(short *)(param_2 + 0x1c);
+    *(undefined *)((int)state + 0x16) = 0;
   }
-  *(undefined *)(iVar1 + 0xc) = *(undefined *)(param_2 + 0x19);
-  local_18 = lbl_803E6A88;
-  if (*(char *)(iVar1 + 0xc) == '\0') {
-    piVar2 = (int *)FUN_80006b14(0x69);
-    *(float *)(param_1 + 8) = *(float *)(param_1 + 8) * lbl_803E6A8C;
-    (**(code **)(*piVar2 + 4))(param_1,1,auStack_28,0x10004,0xffffffff,0);
-  }
-  else if (*(char *)(iVar1 + 0xc) == '\x7f') {
-    piVar2 = (int *)FUN_80006b14(0x69);
-    *(float *)(param_1 + 8) = *(float *)(param_1 + 8) * lbl_803E6A8C;
-    (**(code **)(*piVar2 + 4))(param_1,2,auStack_28,0x10004,0xffffffff,0);
+  if ((*(byte *)(mapData + 0x22) & 1) == 0) {
+    *(undefined *)((int)state + 0x19) = 0;
   }
   else {
-    piVar2 = (int *)FUN_80006b14(99);
-    *(float *)(param_1 + 8) = *(float *)(param_1 + 8) * lbl_803E6A8C;
-    (**(code **)(*piVar2 + 4))(param_1,2,auStack_28,0x10004,0xffffffff,0);
+    *(undefined *)((int)state + 0x19) = 1;
   }
-  *(float *)(param_1 + 8) = *(float *)(param_1 + 8) * lbl_803E6A90;
-  FUN_80006b0c((undefined *)piVar2);
-  *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x2000;
-  return;
-}
 
-/*
- * --INFO--
- *
- * Function: FUN_801f398c
- * EN v1.0 Address: 0x801F398C
- * EN v1.0 Size: 80b
- * EN v1.1 Address: 0x801F39FC
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801f398c(int param_1)
-{
-  uint *puVar1;
-  
-  puVar1 = *(uint **)(param_1 + 0xb8);
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
-  if (*puVar1 != 0) {
-    FUN_80017620(*puVar1);
-  }
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801f39dc
- * EN v1.0 Address: 0x801F39DC
- * EN v1.0 Size: 116b
- * EN v1.1 Address: 0x801F3A48
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801f39dc(void)
-{
-  int iVar1;
-  int iVar2;
-  char in_r8;
-  
-  iVar1 = FUN_8028683c();
-  iVar2 = **(int **)(iVar1 + 0xb8);
-  if (((iVar2 != 0) && (*(char *)(iVar2 + 0x2f8) != '\0')) && (*(char *)(iVar2 + 0x4c) != '\0')) {
-    FUN_8005fe14(iVar2);
-  }
-  if (in_r8 != '\0') {
-    FUN_8003b818(iVar1);
-  }
-  FUN_80286888();
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801f3a50
- * EN v1.0 Address: 0x801F3A50
- * EN v1.0 Size: 908b
- * EN v1.1 Address: 0x801F3AE4
- * EN v1.1 Size: 800b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801f3a50(uint param_1)
-{
-  short sVar1;
-  int iVar2;
-  uint uVar3;
-  int *piVar4;
-  float local_38;
-  float local_34;
-  float local_30;
-  undefined auStack_2c [8];
-  float local_24;
-  
-  piVar4 = *(int **)(param_1 + 0xb8);
-  if (*(char *)(piVar4 + 5) == '\x01') {
-    *(undefined *)(piVar4 + 6) = *(undefined *)((int)piVar4 + 0x17);
-    iVar2 = ObjHits_GetPriorityHit(param_1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
-    if (iVar2 != 0) {
-      *(char *)((int)piVar4 + 0x17) = '\x01' - *(char *)((int)piVar4 + 0x17);
-    }
-    if (*(char *)((int)piVar4 + 0x17) != *(char *)(piVar4 + 6)) {
-      if (*(char *)((int)piVar4 + 0x17) == '\0') {
-        (**(code **)(*DAT_803dd6f8 + 0x14))(param_1);
-        if ((piVar4[4] != 0xffffffff) && (uVar3 = FUN_80017690(piVar4[4]), uVar3 != 0)) {
-          FUN_80017698(piVar4[4],0);
+  if (*(char *)(state + 5) == '\0') {
+    *(undefined *)((int)state + 0x17) = 1;
+    flags = *(ushort *)(mapData + 0x1c);
+    if ((flags & 4) == 0) {
+      if ((flags & 8) == 0) {
+        if ((flags & 0x10) == 0) {
+          if ((flags & 1) != 0) {
+            *(undefined *)((int)state + 0x16) = 6;
+          }
+        }
+        else {
+          *(undefined *)((int)state + 0x15) = 6;
         }
       }
       else {
-        if ((piVar4[4] != 0xffffffff) && (uVar3 = FUN_80017690(piVar4[4]), uVar3 == 0)) {
-          FUN_80017698(piVar4[4],1);
-        }
-        FUN_80006824(param_1,0x80);
+        *(undefined *)((int)state + 0x15) = 8;
       }
-    }
-  }
-  if ((*(char *)((int)piVar4 + 0x17) != '\0') && ((*(ushort *)(param_1 + 0xb0) & 0x800) != 0)) {
-    piVar4[1] = (int)((float)piVar4[1] - lbl_803DC074);
-    if (lbl_803E6AA4 < (float)piVar4[1]) {
-      uVar3 = 0;
     }
     else {
-      uVar3 = (uint)*(byte *)((int)piVar4 + 0x16);
-      piVar4[1] = (int)((float)piVar4[1] + lbl_803E6AA8);
+      *(undefined *)((int)state + 0x15) = 4;
     }
-    if ((*(char *)((int)piVar4 + 0x15) != '\0') || (*(char *)((int)piVar4 + 0x16) != '\0')) {
-      local_38 = lbl_803E6AA4;
-      if (*(short *)(param_1 + 0x46) == 0x717) {
-        local_34 = lbl_803E6AA4;
+  }
+
+  if ((*(ushort *)(mapData + 0x1c) & 0x40) == 0) {
+    *state = 0;
+  }
+  else {
+    if (*state == 0) {
+      temp = fn_8001F4C8(obj,1);
+      *state = temp;
+      if (*state != 0) {
+        fn_8001DB2C(*state,2);
+      }
+    }
+    if (*state != 0) {
+      if ((obj[0x23] == 0x705) || (obj[0x23] == 0x712)) {
+        fn_8001DD88((double)lbl_803E5E0C,(double)lbl_803E5E0C,(double)lbl_803E5E0C);
       }
       else {
-        local_34 = lbl_803E6AAC;
+        fn_8001DD88((double)lbl_803E5E0C,(double)lbl_803E5E28,(double)lbl_803E5E0C);
       }
-      local_30 = lbl_803E6AA4;
-      FUN_80081110(param_1,(uint)*(byte *)((int)piVar4 + 0x15),uVar3,0,&local_38);
-    }
-    if ((*(char *)((int)piVar4 + 0x19) != '\0') &&
-       (piVar4[3] = (int)((float)piVar4[3] - lbl_803DC074), (float)piVar4[3] <= lbl_803E6AA4)) {
-      local_24 = lbl_803E6AA0;
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x7cb,auStack_2c,2,0xffffffff,0);
-      piVar4[3] = (int)((float)piVar4[3] + lbl_803E6AB4);
-    }
-  }
-  iVar2 = *piVar4;
-  if (((iVar2 != 0) && (*(char *)(iVar2 + 0x2f8) != '\0')) && (*(char *)(iVar2 + 0x4c) != '\0')) {
-    sVar1 = (ushort)*(byte *)(iVar2 + 0x2f9) + (short)*(char *)(iVar2 + 0x2fa);
-    if (sVar1 < 0) {
-      sVar1 = 0;
-      *(undefined *)(iVar2 + 0x2fa) = 0;
-    }
-    else if (0xff < sVar1) {
-      sVar1 = 0xff;
-      *(undefined *)(iVar2 + 0x2fa) = 0;
-    }
-    *(char *)(*piVar4 + 0x2f9) = (char)sVar1;
-  }
-  if ((*(short *)(param_1 + 0x46) != 0x705) && (*(short *)(param_1 + 0x46) != 0x712)) {
-    if (*(char *)((int)piVar4 + 0x17) == '\0') {
-      if (*(char *)((int)piVar4 + 0x1a) < '\0') {
-        FUN_800068cc();
-        *(byte *)((int)piVar4 + 0x1a) = *(byte *)((int)piVar4 + 0x1a) & 0x7f;
+
+      colorBase = (uint)*(byte *)((int)state + 0x15) * 3;
+      fn_8001DAF0(*state,colors[colorBase],colors[colorBase + 1],colors[colorBase + 2],0xff);
+      colorBase = (uint)*(byte *)((int)state + 0x15) * 3;
+      fn_8001DA18(*state,colors[colorBase],colors[colorBase + 1],colors[colorBase + 2],0xff);
+      fn_8001DC38((double)lbl_803E5E2C,(double)lbl_803E5E30,*state);
+      fn_8001DB6C((double)lbl_803E5E0C,*state,1);
+      fn_8001D620(*state,1,3);
+
+      colorBase = (uint)*(byte *)((int)state + 0x15) * 3;
+      uStack_44 = colors[colorBase];
+      local_48 = 0x43300000;
+      temp = (int)(lbl_803E5E34 *
+                   (float)((double)CONCAT44(0x43300000,uStack_44) - lbl_803E5E50));
+      local_40 = (longlong)temp;
+      uStack_34 = colors[colorBase + 1];
+      local_38 = 0x43300000;
+      lightIndex = (int)(lbl_803E5E34 *
+                         (float)((double)CONCAT44(0x43300000,uStack_34) - lbl_803E5E50));
+      local_30 = (longlong)lightIndex;
+      uStack_24 = colors[colorBase + 2];
+      local_28 = 0x43300000;
+      colorBase = (int)(lbl_803E5E34 *
+                        (float)((double)CONCAT44(0x43300000,uStack_24) - lbl_803E5E50));
+      local_20 = (longlong)colorBase;
+      fn_8001DAB8(*state,temp,lightIndex,colorBase,0xff);
+      fn_8001DB54(*state,1);
+
+      if ((*(ushort *)(mapData + 0x1c) & 0x80) != 0) {
+        lightIndex = (uint)*(byte *)((int)state + 0x15) * 3;
+        if ((obj[0x23] == 0x705) || (obj[0x23] == 0x712)) {
+          fn_8001D730((double)(lbl_803E5E38 * lbl_803E5E3C * *(float *)(obj + 4)),
+                      *state,0,colors[lightIndex],colors[lightIndex + 1],colors[lightIndex + 2],
+                      0x8c);
+        }
+        else {
+          fn_8001D730((double)(lbl_803E5E3C * *(float *)(obj + 4)),
+                      *state,0,colors[lightIndex],colors[lightIndex + 1],colors[lightIndex + 2],
+                      0x8c);
+        }
+        fn_8001D714((double)lbl_803E5E40,*state);
       }
     }
-    else if (-1 < *(char *)((int)piVar4 + 0x1a)) {
-      FUN_800068d0(param_1,0x72);
-      *(byte *)((int)piVar4 + 0x1a) = *(byte *)((int)piVar4 + 0x1a) & 0x7f | 0x80;
-    }
   }
+
+  if ((*(ushort *)(mapData + 0x1c) & 2) != 0) {
+    *(undefined *)((int)state + 0x15) = 0;
+  }
+  obj[0x58] = obj[0x58] | 0x2000;
+  state[1] = (int)lbl_803E5E10;
+  state[2] = (int)lbl_803E5E08;
   return;
 }
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void lightsource_release(void) {}
