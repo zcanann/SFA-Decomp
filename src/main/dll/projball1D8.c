@@ -18,6 +18,8 @@ extern int FUN_801d025c();
 extern undefined4 FUN_801d8308();
 extern int FUN_80286840();
 extern undefined4 FUN_8028688c();
+extern u8 *Obj_GetPlayerObject(void);
+extern void fn_80016870(int p);
 
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6d8;
@@ -31,35 +33,7 @@ extern f32 lbl_803E5F14;
  *
  * Function: nw_levcontrol_update
  * EN v1.0 Address: 0x801CFF20
- * EN v1.0 Size: 228b
- * EN v1.1 Address: 0x801D049C
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void nw_levcontrol_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                          undefined8 param_5,undefined8 param_6,undefined8 param_7,
-                          undefined8 param_8,int param_9)
-{
-  char cVar1;
-  undefined8 extraout_f1;
-  
-  cVar1 = (**(code **)(*DAT_803dd72c + 0x4c))((int)*(char *)(param_9 + 0xac),0);
-  if (cVar1 == '\0') {
-    FUN_80080f14(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0);
-  }
-  FUN_80006b4c();
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801d0004
- * EN v1.0 Address: 0x801D0004
- * EN v1.0 Size: 1832b
+ * EN v1.0 Size: 1472b
  * EN v1.1 Address: 0x801D04F0
  * EN v1.1 Size: 1472b
  * JP Address: TODO
@@ -67,8 +41,9 @@ void nw_levcontrol_update(undefined8 param_1,double param_2,double param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d0004(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+#pragma scheduling off
+#pragma peephole off
+void nw_levcontrol_update(int param_1)
 {
   int iVar1;
   short *psVar2;
@@ -82,12 +57,12 @@ void FUN_801d0004(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   float *pfVar10;
   double dVar11;
   double dVar12;
-  
-  iVar1 = FUN_80286840();
+
+  iVar1 = param_1;
   pfVar10 = *(float **)(iVar1 + 0xb8);
-  psVar2 = (short *)FUN_80017a98();
-  if ((double)lbl_803E5F10 < (double)*pfVar10) {
-    FUN_80006c88((double)*pfVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x435);
+  psVar2 = (short *)Obj_GetPlayerObject();
+  if (lbl_803E5F10 < *pfVar10) {
+    fn_80016870(0x435);
     *pfVar10 = *pfVar10 - lbl_803DC074;
     if (*pfVar10 < lbl_803E5F10) {
       *pfVar10 = lbl_803E5F10;
@@ -221,9 +196,10 @@ void FUN_801d0004(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     FUN_80006824(0,0x28d);
     (**(code **)(*DAT_803dd72c + 0x28))();
   }
-  FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
