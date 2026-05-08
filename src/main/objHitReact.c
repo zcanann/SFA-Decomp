@@ -39,7 +39,6 @@ int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
                        u32 reactionState,float *reactionStepScale)
 {
   u32 currentReactionState;
-  float *stepScale;
   ObjAnimDef *animDef;
   int moveEnded;
   int priorityHitType;
@@ -49,14 +48,12 @@ int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
   ObjHitReactEffectPos effectPos;
   ObjHitReactEffectOrigin effectOrigin;
   int hitSphereIndex;
-  ObjHitReactEntry *reactionEntry;
 
   currentReactionState = reactionState;
-  stepScale = reactionStepScale;
   effectOrigin = lbl_802C1B00;
   if ((currentReactionState & OBJHITREACT_REACTION_STATE_MASK) != OBJHITREACT_REACTION_STATE_INACTIVE) {
     OSReport(sObjHitReactHitstateFrameString,((ObjAnimComponent *)obj)->currentMoveProgress);
-    moveEnded = ObjAnim_AdvanceCurrentMove((double)*stepScale,(double)timeDelta,
+    moveEnded = ObjAnim_AdvanceCurrentMove((double)*reactionStepScale,(double)timeDelta,
                                            obj,(ObjAnimEventList *)0x0);
     if (moveEnded != 0) {
       OSReport(sObjHitReactResetString);
@@ -79,19 +76,19 @@ int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
       OSReport(sObjHitReactSphereOverflowString);
       hitSphereIndex = 0;
     }
-    reactionEntry = &reactionEntries[hitSphereIndex];
+    reactionEntries = &reactionEntries[hitSphereIndex];
     if (priorityHitType != OBJHITREACT_COLLISION_SKIP_REACTION) {
-      if ((reactionEntry->hitSfxA > OBJHITREACT_NO_SFX_ID) &&
-          (sfxActive = Sfx_IsPlayingFromObject(obj,(u16)reactionEntry->hitSfxA),
+      if ((reactionEntries->hitSfxA > OBJHITREACT_NO_SFX_ID) &&
+          (sfxActive = Sfx_IsPlayingFromObject(obj,(u16)reactionEntries->hitSfxA),
           !sfxActive)) {
-        Sfx_PlayFromObject(obj,(u16)reactionEntry->hitSfxA);
+        Sfx_PlayFromObject(obj,(u16)reactionEntries->hitSfxA);
       }
-      if ((reactionEntry->hitSfxB > OBJHITREACT_NO_SFX_ID) &&
-          (sfxActive = Sfx_IsPlayingFromObject(obj,(u16)reactionEntry->hitSfxB),
+      if ((reactionEntries->hitSfxB > OBJHITREACT_NO_SFX_ID) &&
+          (sfxActive = Sfx_IsPlayingFromObject(obj,(u16)reactionEntries->hitSfxB),
           !sfxActive)) {
-        Sfx_PlayFromObject(obj,(u16)reactionEntry->hitSfxB);
+        Sfx_PlayFromObject(obj,(u16)reactionEntries->hitSfxB);
       }
-      if (reactionEntry->hitFxMode == OBJHITREACT_HIT_FX_MODE_EFFECT) {
+      if (reactionEntries->hitFxMode == OBJHITREACT_HIT_FX_MODE_EFFECT) {
         effectHandle = Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID,1);
         effectHandle->vtable->spawn(0,1,&effectPos,OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,-1,&effectOrigin);
         if (effectHandle != (ObjHitReactEffectHandle *)0x0) {
@@ -103,9 +100,9 @@ int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
       }
     }
     if (((currentReactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&
-        (reactionEntry->reactionAnim > OBJHITREACT_NO_REACTION_ANIM)) {
-      ObjAnim_SetCurrentMove(lbl_803DE910,obj,(int)reactionEntry->reactionAnim,0);
-      *stepScale = reactionEntry->cooldown;
+        (reactionEntries->reactionAnim > OBJHITREACT_NO_REACTION_ANIM)) {
+      ObjAnim_SetCurrentMove(lbl_803DE910,obj,(int)reactionEntries->reactionAnim,0);
+      *reactionStepScale = reactionEntries->cooldown;
       currentReactionState = OBJHITREACT_REACTION_STATE_ACTIVE;
     }
   }
