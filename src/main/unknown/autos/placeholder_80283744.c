@@ -16,6 +16,7 @@ extern u16 lbl_803DC620[4];
 void hwSetPitch(int slot, u32 pitch)
 {
     u8 *entry;
+    u8 *channelEntry;
     u32 val;
     u32 channel;
 
@@ -23,15 +24,25 @@ void hwSetPitch(int slot, u32 pitch)
     if ((u16)pitch >= 0x4000) {
         pitch = 0x3fff;
     }
-    if (entry[0xe4] != 0xff) {
-        if (*(u32 *)(entry + entry[0xe4] * 4 + 0x38) == ((u16)pitch << 4)) {
+    channel = entry[0xe4];
+    if (channel != 0xff) {
+        channel = channel << 2;
+        channelEntry = entry + channel;
+        val = *(u32 *)(channelEntry + 0x38);
+        if (val == ((u16)pitch << 4)) {
             return;
         }
     }
     channel = lbl_803DE370;
-    *(u32 *)(entry + channel * 4 + 0x38) = (u16)pitch << 4;
+    pitch = (u16)pitch << 4;
+    channel = channel << 2;
+    channelEntry = entry + channel;
+    *(u32 *)(channelEntry + 0x38) = pitch;
     channel = lbl_803DE370;
-    *(u32 *)(entry + channel * 4 + 0x24) |= 0x8;
+    channel = channel << 2;
+    channelEntry = entry + channel;
+    val = *(u32 *)(channelEntry + 0x24);
+    *(u32 *)(channelEntry + 0x24) = val | 0x8;
     entry[0xe4] = lbl_803DE370;
 }
 
@@ -72,14 +83,21 @@ void hwSetPolyPhaseFilter(int slot, u32 value)
  */
 void hwSetITDMode(int slot, u32 value)
 {
+    u32 offset;
     u8 *entry;
+    u32 flags;
+    u16 center;
+
     if ((u8)value == 0) {
-        entry = lbl_803DE344 + slot * 0xf4;
-        *(u32 *)(entry + 0xf0) |= 0x80000000;
-        entry = lbl_803DE344 + slot * 0xf4;
-        *(u16 *)(entry + 0xd0) = 0x10;
-        entry = lbl_803DE344 + slot * 0xf4;
-        *(u16 *)(entry + 0xd2) = 0x10;
+        offset = slot * 0xf4;
+        entry = lbl_803DE344 + offset;
+        flags = *(u32 *)(entry + 0xf0);
+        center = 0x10;
+        *(u32 *)(entry + 0xf0) = flags | 0x80000000;
+        entry = lbl_803DE344 + offset;
+        *(u16 *)(entry + 0xd0) = center;
+        entry = lbl_803DE344 + offset;
+        *(u16 *)(entry + 0xd2) = center;
     } else {
         entry = lbl_803DE344 + slot * 0xf4;
         *(u32 *)(entry + 0xf0) &= 0x7fffffff;
