@@ -1,201 +1,275 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/DRpickup.h"
 
-extern undefined4 FUN_80006b94();
-extern uint FUN_80017760();
-extern double FUN_80247f54();
-extern double FUN_80293900();
+#pragma peephole off
+#pragma scheduling off
 
-extern undefined4* DAT_803dd708;
-extern f64 DOUBLE_803e6798;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E6780;
-extern f32 lbl_803E6784;
-extern f32 lbl_803E6790;
-extern f32 lbl_803E67B4;
-extern f32 lbl_803E67B8;
-extern f32 lbl_803E67C4;
-extern f32 lbl_803E67CC;
-extern f32 lbl_803E6820;
-extern f32 lbl_803E6854;
-extern f32 lbl_803E685C;
-extern f32 lbl_803E6870;
-extern f32 lbl_803E6874;
-extern f32 lbl_803E6878;
-extern f32 lbl_803E687C;
-extern f32 lbl_803E6880;
-extern f32 lbl_803E6884;
-extern f32 lbl_803E6888;
-extern f32 lbl_803E688C;
-extern f32 lbl_803E6890;
-extern f32 lbl_803E6894;
-extern f32 lbl_803E6898;
-extern f32 lbl_803E689C;
-extern f32 lbl_803E68A0;
-extern f32 lbl_803E68A4;
-extern f32 lbl_803E68A8;
-extern f32 lbl_803E68AC;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Matrix_TransformPoint(void *mtx, float x, float y, float z, float *ox, float *oy, float *oz);
+extern void PSVECAdd(const void *a, const void *b, void *ab);
+extern float powfBitEstimate(float x, float y);
+
+extern void **lbl_803DCA50;
+extern f32 timeDelta;
+extern f32 oneOverTimeDelta;
+extern f32 lbl_803E5AE8;
+extern f32 lbl_803E5AEC;
+extern f32 lbl_803E5B48;
+extern f32 lbl_803E5B8C;
+extern f32 lbl_803E5BA4;
+extern f32 lbl_803E5C28;
+extern f32 lbl_803E5C2C;
+extern f32 lbl_803E5C30;
+
+/* Bitfield: PowerPC big-endian: bit 0 = 0x80, bit 7 = 0x01 */
+typedef struct PickupFlags {
+    u8 b7 : 1;  /* 0x80 (sign bit) */
+    u8 b6 : 1;  /* 0x40 */
+    u8 b5 : 1;  /* 0x20 */
+    u8 b4 : 1;  /* 0x10 */
+    u8 b3 : 1;  /* 0x08 */
+    u8 b2 : 1;  /* 0x04 */
+    u8 b1 : 1;  /* 0x02 */
+    u8 b0 : 1;  /* 0x01 */
+} PickupFlags;
 
 /*
  * --INFO--
  *
- * Function: FUN_801ec1ac
+ * Function: fn_801EC1AC
  * EN v1.0 Address: 0x801EC1AC
- * EN v1.0 Size: 1096b
- * EN v1.1 Address: 0x801EC398
- * EN v1.1 Size: 1100b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 1524b
  */
-void FUN_801ec1ac(int param_1,int param_2)
+void fn_801EC1AC(int param_1, int param_2)
 {
-  byte bVar1;
-  float fVar2;
-  short sVar3;
-  float fVar4;
-  double dVar5;
-  double dVar6;
-  double dVar7;
-  double dVar8;
-  double dVar9;
-  double dVar10;
-  double dVar11;
-  double dVar12;
-  double dVar13;
-  undefined2 local_a8;
-  undefined2 local_a6;
-  undefined2 local_a4;
-  float local_a0;
-  undefined4 local_9c;
-  float local_98;
-  undefined4 local_94;
-  undefined4 local_90;
-  uint uStack_8c;
-  
-  dVar5 = FUN_80293900((double)(*(float *)(param_2 + 0x49c) * *(float *)(param_2 + 0x49c) +
-                               *(float *)(param_2 + 0x494) * *(float *)(param_2 + 0x494) +
-                               *(float *)(param_2 + 0x498) * *(float *)(param_2 + 0x498)));
-  *(float *)(param_2 + 0x43c) = *(float *)(param_2 + 0x43c) - lbl_803DC074;
-  fVar2 = *(float *)(param_2 + 0x43c);
-  fVar4 = lbl_803E6780;
-  if ((lbl_803E6780 <= fVar2) && (fVar4 = fVar2, lbl_803E67B4 < fVar2)) {
-    fVar4 = lbl_803E67B4;
-  }
-  *(float *)(param_2 + 0x43c) = fVar4;
-  if ((char)*(byte *)(param_2 + 0x428) < '\0') {
-    dVar13 = (double)*(float *)(param_2 + 0x578);
-    dVar11 = (double)*(float *)(param_2 + 0x574);
-    dVar12 = (double)*(float *)(param_2 + 0x56c);
-    dVar10 = (double)*(float *)(param_2 + 0x57c);
-    dVar9 = (double)*(float *)(param_2 + 0x580);
-    dVar8 = (double)lbl_803E67B8;
-    dVar7 = (double)lbl_803E6790;
-  }
-  else {
-    bVar1 = *(byte *)(param_2 + 0x4b4);
-    if (bVar1 == 9) {
-      dVar13 = (double)lbl_803E6884;
-      dVar11 = (double)lbl_803E688C;
-      dVar12 = (double)lbl_803E6898;
-      dVar10 = (double)lbl_803E689C;
-      dVar9 = (double)lbl_803E68A0;
-      dVar8 = (double)lbl_803E67B8;
-      dVar7 = (double)lbl_803E68A4;
-      if ((double)lbl_803E67CC < dVar5) {
-        local_a0 = lbl_803E6784;
-        local_a4 = 0;
-        local_a6 = 0;
-        local_a8 = 0;
-        local_9c = *(undefined4 *)(param_1 + 0xc);
-        local_98 = lbl_803E68A8 + *(float *)(param_1 + 0x10);
-        local_94 = *(undefined4 *)(param_1 + 0x14);
-        (**(code **)(*DAT_803dd708 + 8))(param_1,0x80a,&local_a8,1,0xffffffff,0);
-      }
+    PickupFlags *flags;
+    int origBit4;
+    f32 fVar3;
+    f32 fVar2;
+    f32 fVar4;
+    f32 fLim;
+    f32 vec_args[4];
+    f32 out_x, out_y, out_z;
+
+    flags = (PickupFlags *)(param_2 + 0x428);
+    origBit4 = flags->b4;
+
+    if ((*(u32 *)(param_2 + 0x458) & 0x100) != 0) {
+        flags->b6 = 1;
+    } else {
+        flags->b6 = 0;
     }
-    else if ((bVar1 < 9) || (bVar1 != 0xd)) {
-      dVar13 = (double)lbl_803E6888;
-      dVar11 = (double)lbl_803E688C;
-      dVar12 = (double)lbl_803E6890;
-      dVar10 = (double)lbl_803E6894;
-      dVar9 = (double)lbl_803E687C;
-      dVar8 = (double)lbl_803E6880;
-      dVar7 = (double)lbl_803E6790;
+
+    if ((*(u32 *)(param_2 + 0x458) & 0x200) != 0) {
+        flags->b4 = 1;
+    } else {
+        flags->b4 = 0;
     }
-    else {
-      dVar13 = (double)lbl_803E6870;
-      dVar11 = (double)lbl_803E6874;
-      dVar12 = (double)lbl_803E6820;
-      dVar10 = (double)lbl_803E6878;
-      dVar9 = (double)lbl_803E687C;
-      dVar8 = (double)lbl_803E6880;
-      dVar7 = (double)lbl_803E6790;
-      if (((*(byte *)(param_2 + 0x428) >> 1 & 1) == 0) &&
-         (*(float *)(param_2 + 0x43c) <= lbl_803E6780)) {
-        uStack_8c = FUN_80017760(5,10);
-        uStack_8c = uStack_8c ^ 0x80000000;
-        local_90 = 0x43300000;
-        *(float *)(param_2 + 0x43c) =
-             (float)((double)CONCAT44(0x43300000,uStack_8c) - DOUBLE_803e6798);
-        dVar6 = FUN_80247f54((float *)(param_1 + 0x24));
-        if ((double)lbl_803E685C < dVar6) {
-          uStack_8c = FUN_80017760(1,3);
-          uStack_8c = uStack_8c ^ 0x80000000;
-          local_90 = 0x43300000;
-          FUN_80006b94((double)(float)((double)CONCAT44(0x43300000,uStack_8c) - DOUBLE_803e6798));
+
+    if ((origBit4 == 0) && (flags->b4 != 0)) {
+        Sfx_PlayFromObject(param_1, 0x45f);
+    }
+
+    /* Damping #1: update 0x430 (rotation/angle) */
+    fVar2 = lbl_803E5AE8;
+    if (flags->b6 != 0) {
+        fVar2 = *(f32 *)(param_2 + 0x538);
+    }
+    fVar3 = (fVar2 - *(f32 *)(param_2 + 0x430)) * lbl_803E5C28;
+    fVar4 = lbl_803E5C2C;
+    if (!(fVar3 < fVar4)) {
+        fVar4 = lbl_803E5B8C;
+        if (!(fVar3 > fVar4)) {
+            fVar4 = fVar3;
         }
-      }
-      if ((double)lbl_803E6884 < dVar5) {
-        (**(code **)(*DAT_803dd708 + 8))(param_1,0x80b,0,2,0xffffffff,0);
-      }
     }
-    sVar3 = *(short *)(param_2 + 0x44c);
-    if (((0x1d < sVar3) && (sVar3 < 0x3d)) || ((299 < sVar3 && (sVar3 < 0x14b)))) {
-      dVar13 = (double)(float)(dVar13 * (double)lbl_803E67B8);
-      dVar11 = (double)(float)(dVar11 * (double)lbl_803E67C4);
-      dVar5 = (double)(float)(dVar12 + (double)lbl_803E67B8);
-      dVar12 = (double)lbl_803E6780;
-      if ((dVar12 <= dVar5) && (dVar12 = dVar5, (double)lbl_803E6820 < dVar5)) {
-        dVar12 = (double)lbl_803E6820;
-      }
+    *(f32 *)(param_2 + 0x430) = fVar4 * timeDelta + *(f32 *)(param_2 + 0x430);
+
+    /* Velocity calc on 0x4a8 */
+    fVar2 = lbl_803E5AE8;
+    if (flags->b4 != 0) {
+        f32 vy53c = *(f32 *)(param_2 + 0x53c);
+        f32 v49c = *(f32 *)(param_2 + 0x49c);
+        if (v49c <= fVar2) {
+            f32 nv = -vy53c;
+            f32 lim = -v49c * oneOverTimeDelta;
+            if (!(nv < lim)) {
+                if (nv > fVar2) {
+                    fVar2 = fVar2;
+                } else {
+                    fVar2 = nv;
+                }
+            } else {
+                fVar2 = lim;
+            }
+        } else {
+            if (!(vy53c < fVar2)) {
+                f32 lim = -v49c * oneOverTimeDelta;
+                if (!(vy53c > lim)) {
+                    fVar2 = vy53c;
+                } else {
+                    fVar2 = lim;
+                }
+            }
+        }
     }
-  }
-  if ((*(byte *)(param_2 + 0x428) >> 1 & 1) != 0) {
-    dVar13 = (double)lbl_803E6790;
-  }
-  dVar5 = (double)lbl_803E6870;
-  if ((dVar5 <= dVar13) && (dVar5 = dVar13, (double)lbl_803E6784 < dVar13)) {
-    dVar5 = (double)lbl_803E6784;
-  }
-  *(float *)(param_2 + 0x558) =
-       (float)((double)lbl_803DC074 *
-               (double)(lbl_803E68AC * (float)(dVar5 - (double)*(float *)(param_2 + 0x558))) +
-              (double)*(float *)(param_2 + 0x558));
-  *(float *)(param_2 + 0x534) =
-       (float)((double)lbl_803DC074 *
-               (double)(lbl_803E6854 * (float)(dVar11 - (double)*(float *)(param_2 + 0x534))) +
-              (double)*(float *)(param_2 + 0x534));
-  *(float *)(param_2 + 0x530) =
-       (float)((double)lbl_803DC074 *
-               (double)(lbl_803E68AC * (float)(dVar12 - (double)*(float *)(param_2 + 0x530))) +
-              (double)*(float *)(param_2 + 0x530));
-  fVar2 = lbl_803E67B8;
-  *(float *)(param_2 + 0x548) =
-       (float)((double)lbl_803DC074 *
-               (double)(lbl_803E67B8 * (float)(dVar10 - (double)*(float *)(param_2 + 0x548))) +
-              (double)*(float *)(param_2 + 0x548));
-  *(float *)(param_2 + 0x54c) =
-       (float)((double)lbl_803DC074 *
-               (double)(fVar2 * (float)(dVar9 - (double)*(float *)(param_2 + 0x54c))) +
-              (double)*(float *)(param_2 + 0x54c));
-  *(float *)(param_2 + 0x540) =
-       (float)((double)lbl_803DC074 *
-               (double)(fVar2 * (float)(dVar8 - (double)*(float *)(param_2 + 0x540))) +
-              (double)*(float *)(param_2 + 0x540));
-  *(float *)(param_2 + 0x544) =
-       (float)((double)lbl_803DC074 *
-               (double)(fVar2 * (float)(dVar7 - (double)*(float *)(param_2 + 0x544))) +
-              (double)*(float *)(param_2 + 0x544));
-  return;
+    *(f32 *)(param_2 + 0x4a0) = lbl_803E5AE8;
+    *(f32 *)(param_2 + 0x4a4) = lbl_803E5AE8;
+    *(f32 *)(param_2 + 0x4a8) = (*(f32 *)(param_2 + 0x430) + fVar2) * timeDelta;
+
+    /* Two TransformPoint calls reusing the same out_x/out_y/out_z buffer */
+    Matrix_TransformPoint((void *)(param_2 + 0x6c),
+                          *(f32 *)(param_2 + 0x4a0),
+                          *(f32 *)(param_2 + 0x4a4),
+                          *(f32 *)(param_2 + 0x4a8),
+                          &out_x, &out_y, &out_z);
+    Matrix_TransformPoint((void *)(param_2 + 0x12c),
+                          out_x, out_y, out_z,
+                          &out_x, &out_y, &out_z);
+    PSVECAdd(&out_x, (void *)(param_2 + 0x494), (void *)(param_2 + 0x494));
+
+    /* 0x414 update with negated 0x45c * 0x52c then powfBitEstimate */
+    *(f32 *)(param_2 + 0x414) =
+        (-*(f32 *)(param_2 + 0x45c) * *(f32 *)(param_2 + 0x52c)) * timeDelta +
+        *(f32 *)(param_2 + 0x414);
+    *(f32 *)(param_2 + 0x414) =
+        powfBitEstimate(*(f32 *)(param_2 + 0x530), timeDelta) *
+        *(f32 *)(param_2 + 0x414);
+
+    /* Clamp 0x414 to [-0x534, 0x534] */
+    fVar2 = *(f32 *)(param_2 + 0x414);
+    fVar3 = *(f32 *)(param_2 + 0x534);
+    fLim = -fVar3;
+    if (!(fVar2 < fLim)) {
+        if (fVar2 > fVar3) {
+            fLim = fVar3;
+        } else {
+            fLim = fVar2;
+        }
+    }
+    *(f32 *)(param_2 + 0x414) = fLim;
+
+    /* Apply 0x414 * timeDelta to short at 0x40e (with overflow normalization) */
+    {
+        f32 newF = (f32)(s32)*(s16 *)(param_2 + 0x40e) +
+                   *(f32 *)(param_2 + 0x414) * timeDelta;
+        s32 newI = (s32)newF;
+        s32 delta;
+        *(s16 *)(param_2 + 0x40e) = (s16)newI;
+        delta = newI - (s32)(u16)*(u32 *)(param_2 + 0x410);
+        if (delta > 0x8000) {
+            delta = delta - 0xFFFF;
+        }
+        if (delta < -0x8000) {
+            delta = delta + 0xFFFF;
+        }
+        *(u32 *)(param_2 + 0x410) =
+            (u32)(s32)((f32)delta * *(f32 *)(param_2 + 0x554) +
+                       (f32)(s32)*(u32 *)(param_2 + 0x410));
+    }
+    {
+        s32 delta = (s32)*(s16 *)(param_2 + 0x40e) - (s32)(u16)*(u32 *)(param_2 + 0x40c);
+        if (delta > 0x8000) {
+            delta = delta - 0xFFFF;
+        }
+        if (delta < -0x8000) {
+            delta = delta + 0xFFFF;
+        }
+        *(s16 *)(param_2 + 0x40c) = (s16)((f32)delta * *(f32 *)(param_2 + 0x558) +
+                                          (f32)(s32)*(s16 *)(param_2 + 0x40c));
+    }
+
+    /* Bit 7 (>>7 & 1) check on 0x428 = mask 0x80 = flags->b7 (first bitfield = MSB) */
+    if (flags->b7 != 0) {
+        *(f32 *)(param_2 + 0x584) =
+            (-*(f32 *)(param_2 + 0x570)) * timeDelta + *(f32 *)(param_2 + 0x584);
+        {
+            f32 v = *(f32 *)(param_2 + 0x584);
+            f32 result = lbl_803E5C30;
+            if (!(v < result)) {
+                result = lbl_803E5B48;
+                if (!(v > result)) {
+                    result = v;
+                }
+            }
+            *(f32 *)(param_2 + 0x584) = result;
+        }
+        {
+            s32 newI = (s32)((f32)(s32)*(s16 *)(param_1 + 0x2) +
+                             *(f32 *)(param_2 + 0x584) * timeDelta);
+            *(s16 *)(param_1 + 0x2) = (s16)newI;
+        }
+    }
+
+    /* Bit 1 (>>1 & 1) check on 0x428 = mask 0x02 = flags->b1 (7th bitfield) */
+    if (flags->b1 == 0) {
+        vec_args[0] = *(f32 *)(param_2 + 0x414);
+        vec_args[1] = *(f32 *)(param_2 + 0x49c);
+        vec_args[2] = (f32)(s32)*(s16 *)(param_1 + 0x4);
+        vec_args[3] = (f32)(s32)*(s16 *)(param_1 + 0x2);
+        (*(void (**)(void *, int, void *))(((void **)*lbl_803DCA50)[0x60 / 4]))(
+            vec_args, 0x10, *lbl_803DCA50);
+    }
+
+    /* Clamp 0x494 to [-0x47c, 0x47c] */
+    {
+        f32 lim = *(f32 *)(param_2 + 0x47c);
+        f32 v = *(f32 *)(param_2 + 0x494);
+        f32 result = -lim;
+        if (!(v < -lim)) {
+            if (v > lim) {
+                result = lim;
+            } else {
+                result = v;
+            }
+        }
+        *(f32 *)(param_2 + 0x494) = result;
+        v = *(f32 *)(param_2 + 0x494);
+        if (v < lbl_803E5B8C) {
+            if (v > lbl_803E5BA4) {
+                *(f32 *)(param_2 + 0x494) = lbl_803E5AE8;
+            }
+        }
+    }
+
+    /* Clamp 0x498 to [-0x480, lbl_803E5AEC] */
+    {
+        f32 v = *(f32 *)(param_2 + 0x498);
+        f32 lim = -*(f32 *)(param_2 + 0x480);
+        f32 result = lim;
+        if (!(v < lim)) {
+            result = lbl_803E5AEC;
+            if (!(v > result)) {
+                result = v;
+            }
+        }
+        *(f32 *)(param_2 + 0x498) = result;
+        v = *(f32 *)(param_2 + 0x498);
+        if (v < lbl_803E5B8C) {
+            if (v > lbl_803E5BA4) {
+                *(f32 *)(param_2 + 0x498) = lbl_803E5AE8;
+            }
+        }
+    }
+
+    /* Clamp 0x49c to [-0x484, 0x484] */
+    {
+        f32 lim = *(f32 *)(param_2 + 0x484);
+        f32 v = *(f32 *)(param_2 + 0x49c);
+        f32 result = -lim;
+        if (!(v < -lim)) {
+            if (v > lim) {
+                result = lim;
+            } else {
+                result = v;
+            }
+        }
+        *(f32 *)(param_2 + 0x49c) = result;
+        v = *(f32 *)(param_2 + 0x49c);
+        if (v < lbl_803E5B8C) {
+            if (v > lbl_803E5BA4) {
+                *(f32 *)(param_2 + 0x49c) = lbl_803E5AE8;
+            }
+        }
+    }
 }
