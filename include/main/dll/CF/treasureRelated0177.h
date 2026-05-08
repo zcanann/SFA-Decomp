@@ -13,5 +13,8 @@ void fn_8018CDFC(short *param_1,int param_2);
 void FUN_8018d064(int param_1);
 void FUN_8018d0b4(int param_1);
 void FUN_8018d110(void);
+void campfire_free(int obj);
+void campfire_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible);
+void cfccrate_free(int obj);
 
 #endif /* MAIN_DLL_CF_TREASURERELATED0177_H_ */

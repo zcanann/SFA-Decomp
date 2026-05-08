@@ -22,9 +22,11 @@ extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_80039520();
 extern undefined4 FUN_8003b818();
+extern void fn_8003B8F4(f32);
 extern undefined4 FUN_80053bf0();
 extern undefined8 FUN_8005d1e8();
 extern undefined4 FUN_8005fe14();
+extern void fn_800604B4(void *effect);
 extern undefined4 FUN_80081110();
 extern undefined4 FUN_800d7780();
 extern undefined4 FUN_8011daf8();
@@ -61,6 +63,8 @@ extern f32 FLOAT_803e4a18;
 extern f32 lbl_803E3D64;
 extern f32 lbl_803E3D68;
 extern f64 lbl_803E3D70;
+extern f32 lbl_803E3D78;
+extern f32 lbl_803E3DB0;
 
 /*
  * --INFO--
@@ -384,6 +388,28 @@ void campfire_free(int obj)
 }
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
+void campfire_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
+{
+  void **state;
+  void *effect;
+  s32 isVisible;
+
+  state = *(void ***)(obj + 0xb8);
+  isVisible = visible;
+  if (isVisible != 0) {
+    fn_8003B8F4(lbl_803E3D78);
+    effect = *state;
+    if (((effect != 0) && (*(u8 *)((int)effect + 0x2f8) != 0)) &&
+        (*(u8 *)((int)effect + 0x4c) != 0)) {
+      fn_800604B4(effect);
+    }
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 void kt_torch_free(void) {}
 void kt_torch_hitDetect(void) {}
 void kt_torch_release(void) {}
@@ -397,9 +423,14 @@ int kt_torch_func08(void) { return 0x0; }
 int cfccrate_getExtraSize(void) { return 0x4c; }
 int cfccrate_func08(void) { return 0x1; }
 
+#pragma scheduling off
+void cfccrate_free(int obj)
+{
+  (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+}
+#pragma scheduling reset
+
 /* render-with-fn_8003B8F4 pattern. */
-extern f32 lbl_803E3DB0;
-extern void fn_8003B8F4(f32);
 #pragma peephole off
 void kt_torch_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E3DB0); }
 #pragma peephole reset
