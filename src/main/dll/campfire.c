@@ -22,7 +22,7 @@ extern undefined4 Obj_GetPlayerObject();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern undefined8 ObjGroup_RemoveObject();
+extern void ObjGroup_RemoveObject(int obj,int group);
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern int fn_800394AC();
 extern undefined4 FUN_80039520();
@@ -464,7 +464,7 @@ void kaldachom_free(int param_1)
   
   uVar1 = *(undefined4 *)(param_1 + 0xb8);
   ObjGroup_RemoveObject(param_1,3);
-  (**(code **)(*lbl_803DCAB8 + 0x40))(param_1,uVar1,0x20);
+  (*(code *)(*lbl_803DCAB8 + 0x40))(param_1,uVar1,0x20);
   return;
 }
 
