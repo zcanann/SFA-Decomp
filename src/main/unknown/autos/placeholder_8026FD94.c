@@ -20,10 +20,10 @@ extern void fn_8026D0C4(u32 handle);
 extern void fn_8026D278(u32 handle);
 extern void fn_8026D630(u32 handle, u32 mixValue0, u32 mixValue1);
 extern void fn_80278418(u32 delta);
-extern int fn_8028324C(void);
-extern u16 fn_80282858(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex);
-extern u16 fn_80282914(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex);
-extern void fn_80283F34(void);
+extern u8 hwGetTimeOffset(void);
+extern u16 inpGetAuxA(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex);
+extern u16 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex);
+extern void hwFrameDone(void);
 extern u8 gSynthInitialized;
 extern u8 lbl_803BD364[];
 extern u8 lbl_803BD9A4[];
@@ -285,7 +285,7 @@ void fn_80271498(u32 delta)
         fn_80271398((void **)&gSynthDelayStorage.bucketHeads[bucket][1], fn_80270FE8);
         fn_80271398((void **)&gSynthDelayStorage.bucketHeads[bucket][2], fn_80270938);
         gSynthDelayBucketCursor = (gSynthDelayBucketCursor + 1) & 0x1f;
-        if (fn_8028324C() == 0) {
+        if (hwGetTimeOffset() == 0) {
             if ((lbl_803DE260 | lbl_803DE25C) != 0) {
                 fade = (f32 *)lbl_803BD364;
                 mask = 1;
@@ -321,7 +321,7 @@ void fn_80271498(u32 delta)
                 if ((&lbl_803DE254)[i] != 0xff) {
                     for (channel = 0; channel < 4; channel++) {
                         auxSamplesA[channel] =
-                            fn_80282858(i & 0xff, channel & 0xff, (&lbl_803DE254)[i],
+                            inpGetAuxA(i & 0xff, channel & 0xff, (&lbl_803DE254)[i],
                                          (&lbl_803DE24C)[i]);
                     }
                     (*(SynthAuxCallback *)(lbl_803BD9C4 + i * 4))(1, auxSamplesA,
@@ -330,7 +330,7 @@ void fn_80271498(u32 delta)
                 if ((&lbl_803DE244)[i] != 0xff) {
                     for (channel = 0; channel < 4; channel++) {
                         auxSamplesB[channel] =
-                            fn_80282914(i & 0xff, channel & 0xff, (&lbl_803DE244)[i],
+                            inpGetAuxB(i & 0xff, channel & 0xff, (&lbl_803DE244)[i],
                                          (&lbl_803DE23C)[i]);
                     }
                     (*(SynthAuxCallback *)(lbl_803BDA04 + i * 4))(1, auxSamplesB,
@@ -338,7 +338,7 @@ void fn_80271498(u32 delta)
                 }
             }
         }
-        fn_80283F34();
+        hwFrameDone();
         {
             u32 oldLo = lbl_803DE27C;
             lbl_803DE27C += delta;
