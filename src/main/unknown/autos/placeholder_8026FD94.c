@@ -24,12 +24,7 @@ extern u8 hwGetTimeOffset(void);
 extern u16 inpGetAuxA(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex);
 extern u16 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex);
 extern void hwFrameDone(void);
-extern u8 gSynthInitialized;
-extern u8 lbl_803BD364[];
-extern u8 lbl_803BD9A4[];
-extern u8 lbl_803BD9C4[];
-extern u8 lbl_803BD9E4[];
-extern u8 lbl_803BDA04[];
+extern u8 lbl_803BCD90[];
 extern u32 lbl_803DE25C;
 extern u32 lbl_803DE260;
 extern u8 lbl_803DE23C;
@@ -269,31 +264,39 @@ void fn_8027142C(u8 *fade)
  */
 void fn_80271498(u32 delta)
 {
+    u8 *stateBase;
+    SynthDelayStorageLocal *storage;
     u32 bucket;
     u32 fadeIndex;
     u32 mask;
     f32 *fade;
+    f32 zeroThreshold;
+    f32 fadeDelta;
     u32 i;
     u32 channel;
     u16 auxSamplesA[8];
     u16 auxSamplesB[6];
 
-    if (gSynthInitialized != 0) {
+    stateBase = lbl_803BCD90;
+    if (*(u32 *)(stateBase + 0x3c4) != 0) {
+        storage = (SynthDelayStorageLocal *)stateBase;
         fn_80278418(delta);
         bucket = gSynthDelayBucketCursor;
-        fn_80271398((void **)&gSynthDelayStorage.bucketHeads[bucket][0], fn_80270184);
-        fn_80271398((void **)&gSynthDelayStorage.bucketHeads[bucket][1], fn_80270FE8);
-        fn_80271398((void **)&gSynthDelayStorage.bucketHeads[bucket][2], fn_80270938);
+        fn_80271398((void **)&storage->bucketHeads[bucket][0], fn_80270184);
+        fn_80271398((void **)&storage->bucketHeads[bucket][1], fn_80270FE8);
+        fn_80271398((void **)&storage->bucketHeads[bucket][2], fn_80270938);
         gSynthDelayBucketCursor = (gSynthDelayBucketCursor + 1) & 0x1f;
         if (hwGetTimeOffset() == 0) {
             if ((lbl_803DE260 | lbl_803DE25C) != 0) {
-                fade = (f32 *)lbl_803BD364;
+                zeroThreshold = lbl_803E77D0;
+                fade = (f32 *)(stateBase + 0x5d4);
                 mask = 1;
                 for (fadeIndex = 0; fadeIndex < 0x20; fadeIndex++) {
                     if ((lbl_803DE260 & mask) != 0) {
-                        fade[0] = fade[1] - fade[3] * (fade[1] - fade[2]);
+                        fadeDelta = fade[3] * (fade[1] - fade[2]);
+                        fade[0] = fade[1] - fadeDelta;
                         fade[3] = fade[3] - fade[4];
-                        if (fade[3] <= lbl_803E77D0) {
+                        if (fade[3] <= zeroThreshold) {
                             fade[0] = fade[1];
                             fn_8027142C((u8 *)fade);
                             lbl_803DE260 &= ~mask;
@@ -303,9 +306,10 @@ void fn_80271498(u32 delta)
                         }
                     }
                     if ((lbl_803DE25C & mask) != 0) {
-                        fade[5] = fade[6] - fade[8] * (fade[6] - fade[7]);
+                        fadeDelta = fade[8] * (fade[6] - fade[7]);
+                        fade[5] = fade[6] - fadeDelta;
                         fade[8] = fade[8] - fade[9];
-                        if (fade[8] <= lbl_803E77D0) {
+                        if (fade[8] <= zeroThreshold) {
                             fade[5] = fade[6];
                             lbl_803DE25C &= ~mask;
                             if ((lbl_803DE25C == 0) && (lbl_803DE260 == 0)) {
@@ -324,8 +328,8 @@ void fn_80271498(u32 delta)
                             inpGetAuxA(i & 0xff, channel & 0xff, (&lbl_803DE254)[i],
                                          (&lbl_803DE24C)[i]);
                     }
-                    (*(SynthAuxCallback *)(lbl_803BD9C4 + i * 4))(1, auxSamplesA,
-                                                                   *(u32 *)(lbl_803BD9A4 + i * 4));
+                    (*(SynthAuxCallback *)(stateBase + 0xc34 + i * 4))(
+                        1, auxSamplesA, *(u32 *)(stateBase + 0xc14 + i * 4));
                 }
                 if ((&lbl_803DE244)[i] != 0xff) {
                     for (channel = 0; channel < 4; channel++) {
@@ -333,16 +337,16 @@ void fn_80271498(u32 delta)
                             inpGetAuxB(i & 0xff, channel & 0xff, (&lbl_803DE244)[i],
                                          (&lbl_803DE23C)[i]);
                     }
-                    (*(SynthAuxCallback *)(lbl_803BDA04 + i * 4))(1, auxSamplesB,
-                                                                   *(u32 *)(lbl_803BD9E4 + i * 4));
+                    (*(SynthAuxCallback *)(stateBase + 0xc74 + i * 4))(
+                        1, auxSamplesB, *(u32 *)(stateBase + 0xc54 + i * 4));
                 }
             }
         }
         hwFrameDone();
         {
-            u32 oldLo = lbl_803DE27C;
+            u32 carry = CARRY4(lbl_803DE27C, delta);
             lbl_803DE27C += delta;
-            lbl_803DE278 += (lbl_803DE27C < oldLo);
+            lbl_803DE278 += carry;
         }
     }
 }
