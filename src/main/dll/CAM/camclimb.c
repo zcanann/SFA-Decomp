@@ -105,17 +105,15 @@ void camclimb_update(short *param_1)
     (*(code *)(*(int *)lbl_803DCA50 + 0x38))
               ((double)lbl_803E1740, param_1, &local_2c, auStack_30, &local_34, &local_38, 0);
     uVar1 = getAngle((double)local_2c, (double)local_34);
-    {
-      short sParam = *param_1;
-      iVar5 = (0x8000 - (uVar1 & 0xffff)) - ((int)sParam & 0xffffU);
-      if (0x8000 < iVar5) {
-        iVar5 = iVar5 + -0xffff;
-      }
-      if (iVar5 < -0x8000) {
-        iVar5 = iVar5 + 0xffff;
-      }
-      *param_1 = sParam + (short)iVar5;
+    iVar5 = 0x8000 - (uVar1 & 0xffff);
+    iVar5 = iVar5 - (uint)*(ushort *)param_1;
+    if (0x8000 < iVar5) {
+      iVar5 = iVar5 + -0xffff;
     }
+    if (iVar5 < -0x8000) {
+      iVar5 = iVar5 + 0xffff;
+    }
+    *param_1 = (short)(*param_1 + iVar5);
     (*(code *)(**(int **)(iVar3 + 4) + 0x18))
               ((double)*(float *)(psVar4 + 0xe), (double)local_38, param_1);
     if (cVar2 != 0) {
