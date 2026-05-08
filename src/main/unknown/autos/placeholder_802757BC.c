@@ -38,6 +38,8 @@ typedef struct VoiceState {
  */
 void fn_8027566C(int state, int params)
 {
+    u16 counter;
+    u32 zero;
     u32 flags;
 
     if (*(u16 *)(state + 0xaa) == 0) {
@@ -55,23 +57,27 @@ void fn_8027566C(int state, int params)
             goto check_flags;
         }
     }
-    *(u16 *)(state + 0xaa) = *(u16 *)(state + 0xaa) - 1;
-    if (*(u16 *)(state + 0xaa) == 0) {
+    counter = *(u16 *)(state + 0xaa) - 1;
+    *(u16 *)(state + 0xaa) = counter;
+    if (counter == 0) {
         return;
     }
 
 check_flags:
     flags = *(u32 *)(params + 0);
     if ((flags >> 8) & 1) {
-        if ((*(u32 *)(state + 0x114) & 0x100) == 0 && (*(u32 *)(state + 0x118) & 0x8) != 0) {
+        if (((*(u32 *)(state + 0x114) & 0x100) == 0) &&
+            ((*(u32 *)(state + 0x118) & 0x8) == 0x8)) {
             *(u16 *)(state + 0xaa) = 0;
             return;
         }
     }
     if ((flags >> 24) & 1) {
-        if ((*(u32 *)(state + 0x114) & 0) == 0 && (*(u32 *)(state + 0x118) & 0x20) == 0) {
+        zero = 0;
+        if (((*(u32 *)(state + 0x114) & zero) == zero) &&
+            ((*(u32 *)(state + 0x118) & 0x20) == zero)) {
             if (hwIsActive(*(u8 *)(state + 0xf4)) == 0) {
-                *(u16 *)(state + 0xaa) = 0;
+                *(u16 *)(state + 0xaa) = zero;
                 return;
             }
         }
