@@ -4,9 +4,10 @@ extern u8 *lbl_803DE268;
 extern int fn_80278B94(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8,
                        int p9, int p10, int p11, int p12, int p13, int p14, int p15, int p16);
 extern void fn_80271A3C(int voice, int state);
+extern void sndConvertMs(u32 *p);
 
 /*
- * fn_802757C4 — voice param/key/velocity processor.
+ * fn_802757C4 - voice param/key/velocity processor.
  *
  * EN v1.0 Address: 0x802757C4
  * EN v1.0 Size: 408b
@@ -73,47 +74,67 @@ void fn_802757C4(int state, int args)
 }
 
 /*
- * fn_8027595C — voice processor (~476 instructions). Stubbed.
+ * fn_8027595C - voice processor (~476 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_8027595C(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80275B38 — voice processor (~384 instructions). Stubbed.
+ * fn_80275B38 - voice processor (~384 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_80275B38(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80275CB8 — voice processor (~400 instructions). Stubbed.
+ * fn_80275CB8 - voice processor (~400 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_80275CB8(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80275E48 — voice processor (~600 instructions). Stubbed.
+ * fn_80275E48 - voice processor (~600 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_80275E48(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_802760A0 — voice processor (~640 instructions). Stubbed.
+ * fn_802760A0 - voice processor (~640 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_802760A0(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80276320 — voice param store with magic-divide (~160 instructions).
+ * fn_80276320 - voice param store with magic-divide (~160 instructions).
  * Stubbed.
  */
-#pragma dont_inline on
-void fn_80276320(int state, int args, u8 idx)
+void fn_80276320(int state, u32 *args, u32 idx)
 {
-    (void)state; (void)args; (void)idx;
+    u32 *duration;
+    int offset;
+    u32 packed;
+    u32 initial;
+    int stepBase;
+    int base;
+
+    offset = (idx & 0xff) * 4;
+    packed = *args;
+    duration = (u32 *)(state + offset + 0x188);
+    *duration = packed >> 0x10;
+    sndConvertMs(duration);
+    initial = args[1];
+    *(u32 *)(state + offset + 0x170) = (*args & 0xff00) << 8;
+    stepBase = (s8)initial * 0x10000;
+    base = state + offset;
+    *(int *)(base + 0x180) = *(int *)(state + offset + 0x170) + stepBase;
+    if (*duration == 0) {
+        *(int *)(base + 0x178) = stepBase;
+    } else {
+        *(int *)(base + 0x178) = stepBase / (int)(packed >> 0x10);
+    }
+    *(u32 *)(state + 0x114) |= 0x2000;
 }
-#pragma dont_inline reset
