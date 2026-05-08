@@ -19,6 +19,7 @@ extern int FUN_80044404();
 extern undefined8 FUN_80080f28();
 extern undefined4 FUN_8008111c();
 extern undefined4 FUN_8011eb10();
+extern void fn_801C4B10(void);
 extern undefined4 FUN_801c4b14();
 extern undefined4 FUN_801c4f4c();
 extern undefined4 FUN_801d8308();
@@ -26,6 +27,8 @@ extern undefined4 FUN_801d8480();
 extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern uint FUN_80294cd0();
+extern int fn_8001F4C8(int param_1,int param_2);
+extern void GameBit_Set(int eventId,int value);
 
 extern undefined4 DAT_803dc071;
 extern undefined4* DAT_803dd6d4;
@@ -49,29 +52,28 @@ extern f32 lbl_803E5BE8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void mmsh_shrine_init(int param_1)
+void mmsh_shrine_init(undefined2 *param_1,int param_2)
 {
-  uint *puVar1;
+  int iVar1;
+  int *piVar2;
   
-  puVar1 = *(uint **)(param_1 + 0xb8);
-  if ((puVar1[6] & 0x20) != 0) {
-    FUN_8011eb10(0);
-    puVar1[6] = puVar1[6] & 0xffffffdf;
+  piVar2 = *(int **)(param_1 + 0x5c);
+  *param_1 = 0;
+  *(void (**)(void))(param_1 + 0x5e) = fn_801C4B10;
+  *(undefined2 *)(piVar2 + 7) = 10;
+  *(undefined *)(piVar2 + 9) = 0;
+  if (0 < *(short *)(param_2 + 0x1a)) {
+    *(short *)(piVar2 + 7) = *(short *)(param_2 + 0x1a) >> 8;
   }
-  if (*puVar1 != 0) {
-    FUN_80017620(*puVar1);
-    *puVar1 = 0;
+  GameBit_Set(299,0);
+  GameBit_Set(0x12d,0);
+  *(undefined4 *)(param_1 + 0x7a) = 1;
+  if (*piVar2 == 0) {
+    iVar1 = fn_8001F4C8(0,1);
+    *piVar2 = iVar1;
   }
-  FUN_800067c0((int *)0xd8,0);
-  FUN_800067c0((int *)0xd9,0);
-  FUN_800067c0((int *)0x8,0);
-  FUN_800067c0((int *)0xa,0);
-  FUN_80017698(0xefa,0);
-  FUN_80017698(0xcbb,1);
-  FUN_80017698(0xe82,0);
-  FUN_80017698(0xe83,0);
-  FUN_80017698(0xe84,0);
-  FUN_80017698(0xe85,0);
+  GameBit_Set(0xf07,1);
+  GameBit_Set(0xefa,1);
   return;
 }
 
