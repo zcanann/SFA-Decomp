@@ -1,7 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/CAM/camTalk.h"
 
-extern undefined4 FUN_800033a8();
+extern void *memset(void *dst, int val, u32 n);
+extern void *mmAlloc(int size, int heap, int flags);
 extern undefined4 Obj_TransformWorldPointToLocal();
 extern undefined4 FUN_80006a1c();
 extern undefined4 FUN_80006a30();
@@ -11,11 +12,16 @@ extern undefined4 fn_80021EE8();
 extern undefined4 Matrix_TransformPoint();
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
-extern undefined4 camcontrol_getTargetPosition();
+extern undefined4 camcontrol_getTargetPosition(int param_1,int param_2,float *outPos,void *outAngle);
+extern void fn_80010A6C(void *param_1);
+extern double fn_80010DC0(double param_1,float *param_2,float *param_3);
+extern void fn_80010D54(void);
+extern int getAngle(double dx,double dz);
 extern void *fn_801E1DA8(void);
 extern int fn_801E12DC(int *obj);
 extern double FUN_80293900();
 extern double fn_80293E80(double);
+extern f32 sqrtf(f32 value);
 extern double sin(double);
 extern void fn_80296BD4(int obj, float *x, float *y, float *z);
 
@@ -40,6 +46,11 @@ extern f32 lbl_803E17AC;
 extern f32 lbl_803E17B0;
 extern f32 lbl_803E17B4;
 extern f32 lbl_803E17C0;
+extern f32 lbl_803E17C4;
+extern f32 lbl_803E17C8;
+extern f32 lbl_803E17CC;
+extern f32 lbl_803E17D0;
+extern f64 lbl_803E17D8;
 extern f32 lbl_803E2440;
 extern f32 lbl_803E2444;
 extern f32 lbl_803E2448;
@@ -232,6 +243,14 @@ void fn_80107B4C(short *param_1)
  */
 void fn_80107F80(int param_1)
 {
+  if (lbl_803DD540 == 0) {
+    lbl_803DD540 = (u8 *)mmAlloc(0x38,0xf,0);
+  }
+  memset(lbl_803DD540,0,0x38);
+  *(float *)(lbl_803DD540 + 0x18) = *(float *)(param_1 + 0xb4);
+  *(float *)(lbl_803DD540 + 0) = lbl_803E1784;
+  *(float *)(lbl_803DD540 + 0x14) = lbl_803E1788;
+  *(float *)(lbl_803DD540 + 0x28) = lbl_803E17AC;
 }
 
 /*
@@ -300,6 +319,87 @@ void fn_80108010(int param_1,int param_2)
  */
 void fn_80108194(short *param_1)
 {
+  float fVar1;
+  float fVar2;
+  short sVar3;
+  int iVar4;
+  double dVar5;
+  float local_24[3];
+  undefined auStack_28[4];
+  undefined4 local_18;
+  uint uStack_14;
+  undefined4 local_10;
+  uint uStack_c;
+
+  iVar4 = *(int *)(param_1 + 0x52);
+  *(float *)(lbl_803DD548 + 0x10) = *(float *)(param_1 + 0xc);
+  fVar1 = lbl_803E17C4;
+  *(float *)(lbl_803DD548 + 0x18) = lbl_803E17C4;
+  *(float *)(lbl_803DD548 + 0x1c) = fVar1;
+  *(float *)(lbl_803DD548 + 0x20) = *(float *)(param_1 + 0xe);
+  *(float *)(lbl_803DD548 + 0x28) = fVar1;
+  *(float *)(lbl_803DD548 + 0x2c) = fVar1;
+  *(float *)(lbl_803DD548 + 0x30) = *(float *)(param_1 + 0x10);
+  *(float *)(lbl_803DD548 + 0x38) = fVar1;
+  *(float *)(lbl_803DD548 + 0x3c) = fVar1;
+  camcontrol_getTargetPosition((int)param_1,iVar4,local_24,auStack_28);
+  *(float *)(lbl_803DD548 + 0x14) = local_24[0];
+  *(float *)(lbl_803DD548 + 0x24) = local_24[1];
+  *(float *)(lbl_803DD548 + 0x34) = local_24[2];
+  fVar1 = *(float *)(lbl_803DD548 + 0x14) - *(float *)(lbl_803DD548 + 0x10);
+  fVar2 = *(float *)(lbl_803DD548 + 0x34) - *(float *)(lbl_803DD548 + 0x30);
+  dVar5 = (double)sqrtf(fVar1 * fVar1 + fVar2 * fVar2);
+  *(float *)(lbl_803DD548 + 0x118) = (float)dVar5;
+  *(int *)(lbl_803DD548 + 0xfc) = (int)(lbl_803DD548 + 0x40);
+  *(int *)(lbl_803DD548 + 0x100) = (int)(lbl_803DD548 + 0x50);
+  *(undefined4 *)(lbl_803DD548 + 0x104) = 0;
+  *(undefined4 *)(lbl_803DD548 + 0x108) = 4;
+  *(undefined4 *)(lbl_803DD548 + 0xf8) = 0;
+  *(code **)(lbl_803DD548 + 0x10c) = (code *)fn_80010DC0;
+  *(void **)(lbl_803DD548 + 0x110) = fn_80010D54;
+  uStack_14 = (int)*param_1 ^ 0x80000000;
+  local_18 = 0x43300000;
+  *(float *)(lbl_803DD548 + 0x40) =
+      (float)((double)CONCAT44(0x43300000,uStack_14) - lbl_803E17D8);
+  sVar3 = getAngle((double)(*(float *)(lbl_803DD548 + 0x14) - *(float *)(iVar4 + 0x18)),
+                   (double)(*(float *)(lbl_803DD548 + 0x34) - *(float *)(iVar4 + 0x20)));
+  *(float *)(lbl_803DD548 + 0x44) =
+      (float)((double)CONCAT44(0x43300000,(int)(short)(-0x8000 - sVar3) ^ 0x80000000) -
+              lbl_803E17D8);
+  fVar1 = lbl_803E17C4;
+  *(float *)(lbl_803DD548 + 0x48) = lbl_803E17C4;
+  *(float *)(lbl_803DD548 + 0x4c) = fVar1;
+  fVar1 = *(float *)(lbl_803DD548 + 0x40) - *(float *)(lbl_803DD548 + 0x44);
+  if ((lbl_803E17C8 < fVar1) || (fVar1 < lbl_803E17CC)) {
+    if (lbl_803E17C4 <= *(float *)(lbl_803DD548 + 0x40)) {
+      if (*(float *)(lbl_803DD548 + 0x44) < lbl_803E17C4) {
+        *(float *)(lbl_803DD548 + 0x44) = *(float *)(lbl_803DD548 + 0x44) + lbl_803E17D0;
+      }
+    }
+    else {
+      *(float *)(lbl_803DD548 + 0x40) = *(float *)(lbl_803DD548 + 0x40) + lbl_803E17D0;
+    }
+  }
+  uStack_c = (int)param_1[1] ^ 0x80000000;
+  local_10 = 0x43300000;
+  *(float *)(lbl_803DD548 + 0x50) =
+      (float)((double)CONCAT44(0x43300000,uStack_c) - lbl_803E17D8);
+  fVar1 = lbl_803E17C4;
+  *(float *)(lbl_803DD548 + 0x54) = lbl_803E17C4;
+  *(float *)(lbl_803DD548 + 0x58) = fVar1;
+  *(float *)(lbl_803DD548 + 0x5c) = fVar1;
+  fVar1 = *(float *)(lbl_803DD548 + 0x50) - *(float *)(lbl_803DD548 + 0x54);
+  if ((lbl_803E17C8 < fVar1) || (fVar1 < lbl_803E17CC)) {
+    if (lbl_803E17C4 <= *(float *)(lbl_803DD548 + 0x50)) {
+      if (*(float *)(lbl_803DD548 + 0x54) < lbl_803E17C4) {
+        *(float *)(lbl_803DD548 + 0x54) = *(float *)(lbl_803DD548 + 0x54) + lbl_803E17D0;
+      }
+    }
+    else {
+      *(float *)(lbl_803DD548 + 0x50) = *(float *)(lbl_803DD548 + 0x50) + lbl_803E17D0;
+    }
+  }
+  fn_80010A6C(lbl_803DD548 + 0x78);
 }
 
 
