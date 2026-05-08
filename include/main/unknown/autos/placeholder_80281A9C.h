@@ -11,7 +11,7 @@ u32 inpGetMidiCtrl(u8 r3, u8 r4, u8 r5);
 u8 *inpGetChannelDefaults(u8 a, u8 b);
 void inpResetChannelDefaults(u8 a, u8 b);
 void inpAddCtrl(int obj, int b, int c, int d, u32 flag);
-void inpFXCopyCtrl(u8 r3, u8 r4, u8 r5);
+void inpFXCopyCtrl(u8 controller, int dstState, int srcState);
 void inpSetMidiLastNote(u8 a, u8 b, u8 v);
 u8 inpGetMidiLastNote(u8 a, u8 b);
 

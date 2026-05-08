@@ -70,8 +70,8 @@ u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key)
     if (key == 0xff) {
         base = lbl_803D1B20 + slot * 0x86;
         if (ctrl < 0x40) {
-            return ((u32)base[(controller & 0x1f) + 0x40] << 7) |
-                   (u32)base[(controller & 0x1f) + 0x60];
+            return ((u32)base[controller & 0x1f] << 7) |
+                   (u32)base[(controller & 0x1f) + 0x20];
         }
         if (ctrl < 0x46) {
             if (base[ctrl] < 0x40) {
@@ -83,20 +83,18 @@ u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key)
             return 0;
         }
         if (((controller - 0x80) & 0xff) < 2) {
-            return ((u32)base[(controller & 0xfe) + 0x40] << 7) |
-                   (u32)base[(controller & 0xfe) + 0x41];
+            return ((u32)base[controller & 0xfe] << 7) | (u32)base[(controller & 0xfe) + 1];
         }
         if (((controller - 0x84) & 0xff) < 2) {
-            return ((u32)base[(controller & 0xfe) + 0x40] << 7) |
-                   (u32)base[(controller & 0xfe) + 0x41];
+            return ((u32)base[controller & 0xfe] << 7) | (u32)base[(controller & 0xfe) + 1];
         }
         return (u32)base[ctrl] << 7;
     }
 
     base = lbl_803CD820 + key * 0x860 + slot * 0x86;
     if (ctrl < 0x40) {
-        return ((u32)base[(controller & 0x1f) + 0x40] << 7) |
-               (u32)base[(controller & 0x1f) + 0x60];
+        return ((u32)base[controller & 0x1f] << 7) |
+               (u32)base[(controller & 0x1f) + 0x20];
     }
     if (ctrl < 0x46) {
         if (base[ctrl] < 0x40) {
@@ -108,12 +106,10 @@ u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key)
         return 0;
     }
     if (((controller - 0x80) & 0xff) < 2) {
-        return ((u32)base[(controller & 0xfe) + 0x40] << 7) |
-               (u32)base[(controller & 0xfe) + 0x41];
+        return ((u32)base[controller & 0xfe] << 7) | (u32)base[(controller & 0xfe) + 1];
     }
     if (((controller - 0x84) & 0xff) < 2) {
-        return ((u32)base[(controller & 0xfe) + 0x40] << 7) |
-               (u32)base[(controller & 0xfe) + 0x41];
+        return ((u32)base[controller & 0xfe] << 7) | (u32)base[(controller & 0xfe) + 1];
     }
     return (u32)base[ctrl] << 7;
 }
@@ -175,14 +171,42 @@ void inpAddCtrl(int obj, int b, int c, int d, u32 flag)
 }
 
 /*
- * inpFXCopyCtrl - large multi-case FX controller copy. Stubbed.
+ * Copy one FX controller value between two voice slots' global controller banks.
  */
-#pragma dont_inline on
-void inpFXCopyCtrl(u8 r3, u8 r4, u8 r5)
+void inpFXCopyCtrl(u8 controller, int dstState, int srcState)
 {
-    (void)r3; (void)r4; (void)r5;
+    u32 ctrl;
+    u32 dstVoice;
+    u32 srcVoice;
+    u8 *dst;
+    u8 *src;
+
+    ctrl = controller & 0xff;
+    dstVoice = *(u32 *)(dstState + 0xf4) & 0xff;
+    srcVoice = *(u32 *)(srcState + 0xf4) & 0xff;
+    dst = lbl_803D1B20 + dstVoice * 0x86;
+    src = lbl_803D1B20 + srcVoice * 0x86;
+
+    if (ctrl < 0x40) {
+        ctrl = controller & 0x1f;
+        dst[ctrl] = src[ctrl];
+        dst[ctrl + 0x20] = src[ctrl + 0x20];
+        return;
+    }
+    if (((controller - 0x80) & 0xff) < 2) {
+        ctrl = controller & 0xfe;
+        dst[ctrl] = src[ctrl];
+        dst[ctrl + 1] = src[ctrl + 1];
+        return;
+    }
+    if (((controller - 0x84) & 0xff) < 2) {
+        ctrl = controller & 0xfe;
+        dst[ctrl] = src[ctrl];
+        dst[ctrl + 1] = src[ctrl + 1];
+        return;
+    }
+    dst[ctrl] = src[ctrl];
 }
-#pragma dont_inline reset
 
 /*
  * Set a byte in either lbl_803CD7E0[a] (1D, when b == 0xff) or
