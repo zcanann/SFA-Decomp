@@ -2774,17 +2774,19 @@ void ObjPath_GetPointLocalMtx(int param_1,int param_2,float *param_3)
 #pragma peephole off
 void ObjPath_GetPointModelMtx(int param_1,int param_2)
 {
-  int *piVar1;
-  int iVar2;
+  int *model;
+  ObjPathPoint *pathPoint;
+  int jointIndex;
 
-  piVar1 = Obj_GetActiveModel(param_1);
-  iVar2 = (int)*(char *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) + param_2 * 0x18 +
-                         (int)*(char *)(param_1 + 0xad) + 0x12);
-  if ((iVar2 < 0) || ((int)(uint)*(byte *)(*piVar1 + 0xf3) <= iVar2)) {
-    ObjModel_GetJointMatrix(piVar1,0);
+  model = Obj_GetActiveModel(param_1);
+  pathPoint = (ObjPathPoint *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) +
+                               param_2 * sizeof(ObjPathPoint));
+  jointIndex = pathPoint->modelIndex[(int)*(char *)(param_1 + 0xad)];
+  if ((jointIndex >= 0) && (jointIndex < (int)(uint)*(byte *)(*model + 0xf3))) {
+    ObjModel_GetJointMatrix(model,jointIndex);
   }
   else {
-    ObjModel_GetJointMatrix(piVar1,iVar2);
+    ObjModel_GetJointMatrix(model,0);
   }
   return;
 }
