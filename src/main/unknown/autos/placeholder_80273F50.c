@@ -1,20 +1,184 @@
 #include "ghidra_import.h"
 
 extern int hwTransAddr(int x);
+extern void sndBegin(void);
+extern void sndEnd(void);
 
 /*
- * fn_80273D2C - large voice/instrument lookup (~584 instructions). Stubbed.
+ * Insert a scene/sample-list entry, keeping the 12-byte table sorted by id.
  */
-#pragma dont_inline on
-void fn_80273D2C(void) {}
-#pragma dont_inline reset
+extern u8 lbl_803C4278[];
+extern u16 lbl_803DE28E;
+
+int fn_80273D2C(u16 key, void *value, u16 count)
+{
+    u32 moveCount;
+    u32 *entry;
+    u32 used;
+    u32 batches;
+    int index;
+
+    sndBegin();
+    used = lbl_803DE28E;
+    index = 0;
+    for (entry = (u32 *)(lbl_803C4278 + 0x800);
+         (index < (int)used) && (*(u16 *)(entry + 1) < key); entry += 3) {
+        index++;
+    }
+    if (index < (int)used) {
+        if (key == *(u16 *)(lbl_803C4278 + 0x804 + index * 0xc)) {
+            (*(u16 *)(lbl_803C4278 + 0x808 + index * 0xc))++;
+            sndEnd();
+            return 0;
+        }
+        if (used > 0xff) {
+            sndEnd();
+            return 0;
+        }
+        moveCount = used - index;
+        entry = (u32 *)(lbl_803C4278 + 0x800 + (used - 1) * 0xc);
+        if (index <= (int)(used - 1)) {
+            batches = moveCount >> 3;
+            if (batches != 0) {
+                do {
+                    entry[3] = entry[0];
+                    entry[4] = entry[1];
+                    entry[5] = entry[2];
+                    entry[0] = entry[-3];
+                    entry[1] = entry[-2];
+                    entry[2] = entry[-1];
+                    entry[-3] = entry[-6];
+                    entry[-2] = entry[-5];
+                    entry[-1] = entry[-4];
+                    entry[-6] = entry[-9];
+                    entry[-5] = entry[-8];
+                    entry[-4] = entry[-7];
+                    entry[-9] = entry[-12];
+                    entry[-8] = entry[-11];
+                    entry[-7] = entry[-10];
+                    entry[-12] = entry[-15];
+                    entry[-11] = entry[-14];
+                    entry[-10] = entry[-13];
+                    entry[-15] = entry[-18];
+                    entry[-14] = entry[-17];
+                    entry[-13] = entry[-16];
+                    entry[-18] = entry[-21];
+                    entry[-17] = entry[-20];
+                    entry[-16] = entry[-19];
+                    entry -= 0x18;
+                    batches--;
+                } while (batches != 0);
+                moveCount &= 7;
+                if (moveCount == 0) {
+                    goto insert;
+                }
+            }
+            do {
+                entry[3] = entry[0];
+                entry[4] = entry[1];
+                entry[5] = entry[2];
+                entry -= 3;
+                moveCount--;
+            } while (moveCount != 0);
+        }
+    } else if (used > 0xff) {
+        sndEnd();
+        return 0;
+    }
+
+insert:
+    lbl_803DE28E++;
+    *(u16 *)(lbl_803C4278 + 0x804 + index * 0xc) = key;
+    *(void **)(lbl_803C4278 + 0x800 + index * 0xc) = value;
+    *(u16 *)(lbl_803C4278 + 0x806 + index * 0xc) = count;
+    *(u16 *)(lbl_803C4278 + 0x808 + index * 0xc) = 1;
+    sndEnd();
+    return 1;
+}
 
 /*
- * fn_80273F74 - voice handler (~460 instructions). Stubbed.
+ * Release a scene/sample-list entry, compacting the sorted table.
  */
-#pragma dont_inline on
-void fn_80273F74(void) {}
-#pragma dont_inline reset
+int fn_80273F74(s16 key)
+{
+    s16 refCount;
+    int next;
+    u32 *entry;
+    u32 moveCount;
+    u32 index;
+    u32 used;
+
+    sndBegin();
+    used = lbl_803DE28E;
+    index = 0;
+    for (entry = (u32 *)(lbl_803C4278 + 0x800);
+         ((int)index < (int)used) && (key != *(s16 *)(entry + 1)); entry += 3) {
+        index++;
+    }
+    if (index == used) {
+        sndEnd();
+        return 0;
+    }
+    refCount = *(s16 *)(lbl_803C4278 + 0x808 + index * 0xc);
+    *(s16 *)(lbl_803C4278 + 0x808 + index * 0xc) = refCount - 1;
+    if ((s16)(refCount - 1) != 0) {
+        sndEnd();
+        return 0;
+    }
+
+    next = index + 1;
+    moveCount = used - next;
+    entry = (u32 *)(lbl_803C4278 + 0x800 + next * 0xc);
+    if (next < (int)used) {
+        used = moveCount >> 3;
+        if (used != 0) {
+            do {
+                entry[-3] = entry[0];
+                entry[-2] = entry[1];
+                entry[-1] = entry[2];
+                entry[0] = entry[3];
+                entry[1] = entry[4];
+                entry[2] = entry[5];
+                entry[3] = entry[6];
+                entry[4] = entry[7];
+                entry[5] = entry[8];
+                entry[6] = entry[9];
+                entry[7] = entry[10];
+                entry[8] = entry[11];
+                entry[9] = entry[12];
+                entry[10] = entry[13];
+                entry[11] = entry[14];
+                entry[12] = entry[15];
+                entry[13] = entry[16];
+                entry[14] = entry[17];
+                entry[15] = entry[18];
+                entry[16] = entry[19];
+                entry[17] = entry[20];
+                entry[18] = entry[21];
+                entry[19] = entry[22];
+                entry[20] = entry[23];
+                entry += 0x18;
+                used--;
+            } while (used != 0);
+            moveCount &= 7;
+            if (moveCount == 0) {
+                goto remove;
+            }
+        }
+        do {
+            entry[-3] = entry[0];
+            entry[-2] = entry[1];
+            entry[-1] = entry[2];
+            entry += 3;
+            moveCount--;
+        } while (moveCount != 0);
+    }
+
+remove:
+    lbl_803DE28E--;
+    sndEnd();
+    return 1;
+}
 
 /*
  * Insert a keygroup/sample indirection entry, keeping the table sorted by id.
