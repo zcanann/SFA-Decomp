@@ -5372,8 +5372,140 @@ void fn_8007B01C(double wx, double wy, double wz, char param4, char param5)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8007BD8C(int param_1,int param_2)
+void fn_8007BD8C(int handle1, int handle2)
 {
+    extern f32 lbl_803DEEDC, lbl_803DEEE4;
+    extern f32 lbl_803DEF64;
+    extern u32 lbl_803DB690, lbl_803DB694, lbl_803DB698;
+    extern u32 lbl_803DD01C;
+    extern Mtx lbl_80396820;
+    extern f32 lbl_8030EA10[3][3];
+    extern void* gSHthorntailAnimationInterface;
+    extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
+    extern u8 lbl_803DD011, lbl_803DD019;
+    extern int lbl_803DD014;
+    extern void fn_8006C6F0(int);
+    extern int fn_8004C248(void);
+    extern void selectTexture(int handle, int slot);
+    extern void GXSetZMode();
+    extern void GXSetZCompLoc(u8);
+    Mtx mtx_30;
+    GXColor temp;
+
+    fn_8006C6F0(0);
+    selectTexture(handle1, 1);
+    selectTexture(handle2, 2);
+
+    GXSetTexCoordGen2(1, 1, 4, 0x3C, 0, 0x7D);
+    GXLoadTexMtxImm(lbl_80396820, 0x55, 0);
+    GXSetTexCoordGen2(0, 0, 0, 0, 0, 0x55);
+    PSMTXScale(mtx_30, lbl_803DEF64, lbl_803DEEE4, lbl_803DEEDC);
+    GXLoadTexMtxImm(mtx_30, 0x1e, 1);
+    GXSetTexCoordGen2(2, 1, 4, 0x1e, 0, 0x7d);
+    GXSetChanCtrl(4, 0, 0, 1, 0, 0, 2);
+
+    if (fn_8004C248() != 0) {
+        ((u8*)&temp)[0] = ((u8*)&lbl_803DD01C)[0];
+        ((u8*)&temp)[1] = ((u8*)&lbl_803DD01C)[1];
+        ((u8*)&temp)[2] = ((u8*)&lbl_803DD01C)[2];
+    } else {
+        f32 dummy;
+        (*(void(**)(u8*, u8*, u8*, f32*, f32*, f32*))(*(int*)gSHthorntailAnimationInterface + 0x40))(
+            &((u8*)&temp)[0],
+            &((u8*)&temp)[1],
+            &((u8*)&temp)[2],
+            &dummy, &dummy, &dummy);
+    }
+
+    *(u32*)&temp = (lbl_803DB690 & 0xFFFFFF00) | (*(u32*)&temp & 0xFFFFFFFF);
+    {
+        GXColor c0;
+        *(u32*)&c0 = lbl_803DB690;
+        GXSetTevKColor(0, c0);
+    }
+    GXSetTevKColorSel(0, 0xC);
+    {
+        GXColor c1;
+        *(u32*)&c1 = lbl_803DB694;
+        GXSetTevKColor(1, c1);
+    }
+    GXSetTevKColorSel(1, 0xD);
+    {
+        GXColor c2;
+        *(u32*)&c2 = lbl_803DB698;
+        GXSetTevKColor(2, c2);
+    }
+    GXSetTevKColorSel(2, 0xE);
+
+    /* Modify temp[0..2] /= 4 */
+    ((u8*)&temp)[0] = (u8)((s8)((u8*)&temp)[0] >> 2);
+    ((u8*)&temp)[1] = (u8)((s8)((u8*)&temp)[1] >> 2);
+    ((u8*)&temp)[2] = (u8)((s8)((u8*)&temp)[2] >> 2);
+    GXSetTevColor(1, temp);
+
+    /* Add 0xC0 */
+    ((u8*)&temp)[0] = (u8)(((u8*)&temp)[0] + 0xC0);
+    ((u8*)&temp)[1] = (u8)(((u8*)&temp)[1] + 0xC0);
+    ((u8*)&temp)[2] = (u8)(((u8*)&temp)[2] + 0xC0);
+    GXSetTevColor(2, temp);
+
+    GXSetIndTexOrder(0, 1, 1);
+    GXSetIndTexCoordScale(0, 0, 0);
+    GXSetIndTexMtx(1, lbl_8030EA10, -1);
+    GXSetIndTexMtx(2, (f32(*)[3])((u8*)lbl_8030EA10 + 0x18), -1);
+    GXSetIndTexMtx(3, (f32(*)[3])((u8*)lbl_8030EA10 + 0x30), -1);
+    GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
+    GXSetTevIndirect(1, 0, 0, 7, 2, 0, 0, 0, 0, 1);
+    GXSetTevIndirect(2, 0, 0, 7, 3, 0, 0, 0, 0, 0);
+    GXSetNumIndStages(1);
+    GXSetNumTexGens(3);
+    GXSetNumTevStages(4);
+    GXSetNumChans(1);
+
+    GXSetTevOrder(0, 0, 0, 4);
+    GXSetTevColorIn(0, 0xF, 0x8, 0xE, 2);
+    GXSetTevAlphaIn(0, 7, 7, 7, 5);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+
+    GXSetTevOrder(1, 0, 0, 8);
+    GXSetTevColorIn(1, 0xF, 8, 0xE, 0);
+    GXSetTevAlphaIn(1, 7, 5, 0, 7);
+    GXSetTevSwapMode(1, 0, 0);
+    GXSetTevColorOp(1, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+
+    GXSetTevOrder(2, 0, 0, 0xff);
+    GXSetTevColorIn(2, 0xF, 8, 0xE, 0);
+    GXSetTevAlphaIn(2, 7, 7, 7, 0);
+    GXSetTevSwapMode(2, 0, 0);
+    GXSetTevColorOp(2, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(2, 0, 0, 0, 1, 0);
+
+    GXSetTevDirect(3);
+    GXSetTevOrder(3, 2, 2, 0xff);
+    GXSetTevColorIn(3, 0, 4, 9, 0xF);
+    GXSetTevAlphaIn(3, 7, 7, 7, 0);
+    GXSetTevSwapMode(3, 0, 0);
+    GXSetTevColorOp(3, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(3, 0, 0, 0, 1, 0);
+
+    GXSetBlendMode(1, 4, 5, 5);
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+        GXSetZMode(1, 3, 0);
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 3;
+        lbl_803DD012 = 0;
+        lbl_803DD01A = 1;
+    }
+    if ((u32)lbl_803DD011 != 1 || (u32)lbl_803DD019 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DD011 = 1;
+        lbl_803DD019 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
 /*
