@@ -15,6 +15,7 @@ extern double FUN_800176f4();
 extern uint FUN_80017760();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
+extern void fn_8001F384(void *effect);
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_ClearHitVolumes();
@@ -38,6 +39,8 @@ extern void* SUB42();
 extern undefined4* DAT_803dd6cc;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6f8;
+extern undefined4* lbl_803DCA78;
+extern u8 framesThisStep;
 extern f64 DOUBLE_803e4a08;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803e49b0;
@@ -55,11 +58,14 @@ extern f32 FLOAT_803e4a00;
 extern f32 FLOAT_803e4a10;
 extern f32 FLOAT_803e4a14;
 extern f32 FLOAT_803e4a18;
+extern f32 lbl_803E3D64;
+extern f32 lbl_803E3D68;
+extern f64 lbl_803E3D70;
 
 /*
  * --INFO--
  *
- * Function: FUN_8018cdac
+ * Function: fn_8018CDAC
  * EN v1.0 Address: 0x8018CDAC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8018CDAC
@@ -69,10 +75,29 @@ extern f32 FLOAT_803e4a18;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018cdac(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+#pragma scheduling off
+void fn_8018CDAC(int obj)
 {
+  int timer;
+  int flags;
+
+  if (*(void **)(obj + 0x54) == 0) {
+    return;
+  }
+  timer = *(short *)(obj + 0xf8);
+  if (timer > 0) {
+    *(short *)(obj + 0xf8) = timer - framesThisStep;
+  }
+  flags = *(short *)(*(int *)(obj + 0x54) + 0x60) & 8;
+  if (flags == 0) {
+    return;
+  }
+  if (*(short *)(obj + 0xf8) > 0) {
+    return;
+  }
+  *(short *)(obj + 0xf8) = 100;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -142,7 +167,7 @@ void FUN_8018cf58(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8018cf80
+ * Function: fn_8018CDFC
  * EN v1.0 Address: 0x8018CF80
  * EN v1.0 Size: 228b
  * EN v1.1 Address: 0x8018D378
@@ -152,31 +177,42 @@ void FUN_8018cf58(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018cf80(undefined2 *param_1,int param_2)
+#pragma scheduling off
+void fn_8018CDFC(short *param_1,int param_2)
 {
   float fVar1;
+  double dVar2;
   uint uVar2;
+  uint local_18[2];
+  uint local_10[2];
   
   param_1[3] = param_1[3] | 2;
   uVar2 = *(byte *)(param_2 + 0x19) ^ 0x80000000;
-  fVar1 = (float)((double)CONCAT44(0x43300000,uVar2) - DOUBLE_803e4a08);
-  if ((float)((double)CONCAT44(0x43300000,uVar2) - DOUBLE_803e4a08) < FLOAT_803e49fc) {
-    fVar1 = FLOAT_803e49fc;
+  dVar2 = lbl_803E3D70;
+  local_18[1] = uVar2;
+  local_18[0] = 0x43300000;
+  fVar1 = (float)(*(double *)local_18 - dVar2);
+  local_10[1] = uVar2;
+  local_10[0] = 0x43300000;
+  if ((float)(*(double *)local_10 - dVar2) < lbl_803E3D64) {
+    fVar1 = lbl_803E3D64;
   }
-  fVar1 = fVar1 * FLOAT_803e4a00;
+  fVar1 = fVar1 * lbl_803E3D68;
   *(float *)(param_1 + 4) = *(float *)(*(int *)(param_1 + 0x28) + 4) * fVar1;
   if (*(float **)(param_1 + 0x32) != (float *)0x0) {
     **(float **)(param_1 + 0x32) = **(float **)(param_1 + 0x28) * fVar1;
   }
-  *(undefined *)((int)param_1 + 0xad) = *(undefined *)(param_2 + 0x18);
-  *param_1 = (short)((*(byte *)(param_2 + 0x1a) & 0x3f) << 10);
-  if (*(char *)(*(int *)(param_1 + 0x28) + 0x55) <= *(char *)((int)param_1 + 0xad)) {
+  *(char *)((int)param_1 + 0xad) = *(char *)(param_2 + 0x18);
+  uVar2 = *(byte *)(param_2 + 0x1a) & 0x3f;
+  *param_1 = (short)(uVar2 << 10);
+  if (*(char *)((int)param_1 + 0xad) >= *(char *)(*(int *)(param_1 + 0x28) + 0x55)) {
     *(undefined *)((int)param_1 + 0xad) = 0;
   }
   *(undefined4 *)(param_1 + 0x7a) = 0;
   *(undefined4 *)(param_1 + 0x7c) = 0;
   return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -332,6 +368,22 @@ void FUN_8018d110(void)
 /* Trivial 4b 0-arg blr leaves. */
 void fn_8018CEDC(void) {}
 void fn_8018CEE0(void) {}
+
+#pragma scheduling off
+void campfire_free(int obj)
+{
+  void **state;
+  void *effect;
+
+  state = *(void ***)(obj + 0xb8);
+  (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+  effect = *state;
+  if (effect != 0) {
+    fn_8001F384(effect);
+  }
+}
+#pragma scheduling reset
+
 void kt_torch_free(void) {}
 void kt_torch_hitDetect(void) {}
 void kt_torch_release(void) {}
