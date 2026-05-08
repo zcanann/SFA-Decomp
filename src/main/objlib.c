@@ -267,16 +267,20 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
 uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitState,
                            uint entryArena,int objAnim)
 {
-  if (bank != (ObjAnimBank *)0x0) {
-    hitState->entryCapacity = 300;
-    hitState->entries = (ObjHitReactEntry *)fn_80022E3C(entryArena);
-    entryArena = (uint)hitState->entries + hitState->entryCapacity;
-    hitState->activeHitboxMode = 1;
-    if ((hitState->resetFlags & 0x30) != 0) {
-      hitState->resetHitboxMode = 2;
-    }
-    ObjHitReact_LoadMoveEntries(objAnim,bank,objType,hitState,0,1);
+  ObjHitReactEntry *entries;
+
+  if (bank == (ObjAnimBank *)0x0) {
+    return entryArena;
   }
+  hitState->entryCapacity = 300;
+  entries = (ObjHitReactEntry *)fn_80022E3C(entryArena);
+  hitState->entries = entries;
+  entryArena = (uint)entries + hitState->entryCapacity;
+  hitState->activeHitboxMode = 1;
+  if ((hitState->resetFlags & 0x30) != 0) {
+    hitState->resetHitboxMode = 2;
+  }
+  ObjHitReact_LoadMoveEntries(objAnim,bank,objType,hitState,0,1);
   return entryArena;
 }
 #pragma peephole reset
