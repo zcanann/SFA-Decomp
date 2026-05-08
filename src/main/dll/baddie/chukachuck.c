@@ -201,17 +201,20 @@ void dfpfloorbar_init(int obj, int params)
 
 /* EN v1.0 0x8020692C  size: 60b  Zero out the 9-byte mode table by
  * walking three rows of 3 bytes each. The asm has explicit
- * `addi r3, r3, 3` pointer-bump between rows (not a flat loop).
- * Logic-only — MWCC -O4 collapses the per-row pointer bumps into a
- * single 9-store sequence with stbu+stb offsets 0..8 regardless of
- * whether the source uses pointer addition, struct stride, or
- * volatile. */
+ * `addi r3, r3, 3` pointer-bump between rows. MWCC -O4,p folds the
+ * stride into a flat 9-store sequence regardless of source idiom;
+ * the row-pointer cast at least gets the prologue and first row
+ * matching. */
+#pragma scheduling off
+#pragma peephole off
 void dfpfloorbar_initialise(void)
 {
-    u8* p = gDfpfloorbarModeTable;
-    p[0] = 0; p[1] = 0; p[2] = 0;
-    p += 3;
-    p[0] = 0; p[1] = 0; p[2] = 0;
-    p += 3;
-    p[0] = 0; p[1] = 0; p[2] = 0;
+    u8 (*p)[3] = (u8 (*)[3])gDfpfloorbarModeTable;
+    (*p)[0] = 0; (*p)[1] = 0; (*p)[2] = 0;
+    p++;
+    (*p)[0] = 0; (*p)[1] = 0; (*p)[2] = 0;
+    p++;
+    (*p)[0] = 0; (*p)[1] = 0; (*p)[2] = 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
