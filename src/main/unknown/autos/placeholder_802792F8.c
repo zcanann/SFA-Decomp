@@ -6,16 +6,130 @@ extern u32 lbl_803DE2F0;
 extern void *lbl_803DE2F4;
 extern void *lbl_803DE2F8;
 extern u16 lbl_803DE2FC;
+extern u8 *lbl_803DE268;
+extern void fn_8027A2B4(int state);
 
 /*
- * fn_80279038 - large voice-queue init (~144 instructions). Stubbed
- * pending full decode.
+ * Remove a voice from the vid id list, recycling any allocated id-list nodes.
  */
-#pragma dont_inline on
-void fn_80279038(void)
+void fn_80279038(int state)
 {
+    u32 *node;
+    int next;
+
+    if (*(int *)(state + 0xf4) != -1) {
+        fn_8027A2B4(state);
+        if (*(u32 *)(state + 0xf0) == 0xffffffff) {
+            if (*(int *)(state + 0xec) == -1) {
+                node = *(u32 **)(state + 0xf8);
+                if (node == *(u32 **)(state + 0xfc)) {
+                    if ((u32 *)node[1] == 0) {
+                        lbl_803DE2F4 = (void *)node[0];
+                    } else {
+                        *(u32 *)node[1] = node[0];
+                    }
+                    next = *(int *)*(u32 **)(state + 0xf8);
+                    if (next != 0) {
+                        *(u32 *)(next + 4) = (*(u32 **)(state + 0xf8))[1];
+                    }
+                    **(u32 **)(state + 0xf8) = (u32)lbl_803DE2F8;
+                    if (lbl_803DE2F8 != 0) {
+                        *(u32 *)((u8 *)lbl_803DE2F8 + 4) = *(u32 *)(state + 0xf8);
+                    }
+                    *(u32 *)(*(int *)(state + 0xf8) + 4) = 0;
+                    lbl_803DE2F8 = *(void **)(state + 0xf8);
+                    *(u32 *)(state + 0xf8) = 0;
+                    *(u32 *)(state + 0xfc) = 0;
+                } else {
+                    if ((u32 *)node[1] == 0) {
+                        lbl_803DE2F4 = (void *)node[0];
+                    } else {
+                        *(u32 *)node[1] = node[0];
+                    }
+                    next = *(int *)*(u32 **)(state + 0xf8);
+                    if (next != 0) {
+                        *(u32 *)(next + 4) = (*(u32 **)(state + 0xf8))[1];
+                    }
+                    **(u32 **)(state + 0xf8) = (u32)lbl_803DE2F8;
+                    if (lbl_803DE2F8 != 0) {
+                        *(u32 *)((u8 *)lbl_803DE2F8 + 4) = *(u32 *)(state + 0xf8);
+                    }
+                    *(u32 *)(*(int *)(state + 0xf8) + 4) = 0;
+                    lbl_803DE2F8 = *(void **)(state + 0xf8);
+                    *(u32 *)(state + 0xf8) = 0;
+                    node = *(u32 **)(state + 0xfc);
+                    if ((u32 *)node[1] == 0) {
+                        lbl_803DE2F4 = (void *)node[0];
+                    } else {
+                        *(u32 *)node[1] = node[0];
+                    }
+                    next = *(int *)*(u32 **)(state + 0xfc);
+                    if (next != 0) {
+                        *(u32 *)(next + 4) = (*(u32 **)(state + 0xfc))[1];
+                    }
+                    **(u32 **)(state + 0xfc) = (u32)lbl_803DE2F8;
+                    if (lbl_803DE2F8 != 0) {
+                        *(u32 *)((u8 *)lbl_803DE2F8 + 4) = *(u32 *)(state + 0xfc);
+                    }
+                    *(u32 *)(*(int *)(state + 0xfc) + 4) = 0;
+                    lbl_803DE2F8 = *(void **)(state + 0xfc);
+                    *(u32 *)(state + 0xfc) = 0;
+                }
+            } else {
+                *(u32 *)(*(int *)(state + 0xf8) + 0xc) = *(u32 *)(state + 0xec);
+                *(u32 *)(lbl_803DE268 + (*(u32 *)(state + 0xec) & 0xff) * 0x404 + 0xf0) =
+                    0xffffffff;
+                *(u32 *)(lbl_803DE268 + (*(u32 *)(state + 0xec) & 0xff) * 0x404 + 0xfc) =
+                    *(u32 *)(state + 0xfc);
+                node = *(u32 **)(state + 0xf8);
+                if (node != *(u32 **)(state + 0xfc)) {
+                    if ((u32 *)node[1] == 0) {
+                        lbl_803DE2F4 = (void *)node[0];
+                    } else {
+                        *(u32 *)node[1] = node[0];
+                    }
+                    next = *(int *)*(u32 **)(state + 0xf8);
+                    if (next != 0) {
+                        *(u32 *)(next + 4) = (*(u32 **)(state + 0xf8))[1];
+                    }
+                    **(u32 **)(state + 0xf8) = (u32)lbl_803DE2F8;
+                    if (lbl_803DE2F8 != 0) {
+                        *(u32 *)((u8 *)lbl_803DE2F8 + 4) = *(u32 *)(state + 0xf8);
+                    }
+                    *(u32 *)(*(int *)(state + 0xf8) + 4) = 0;
+                    lbl_803DE2F8 = *(void **)(state + 0xf8);
+                    *(u32 *)(state + 0xf8) = 0;
+                }
+                *(u32 *)(state + 0xf8) = 0;
+                *(u32 *)(state + 0xfc) = 0;
+            }
+        } else {
+            *(u32 *)(lbl_803DE268 + (*(u32 *)(state + 0xf0) & 0xff) * 0x404 + 0xec) =
+                *(u32 *)(state + 0xec);
+            if (*(u32 *)(state + 0xec) != 0xffffffff) {
+                *(u32 *)(lbl_803DE268 + (*(u32 *)(state + 0xec) & 0xff) * 0x404 + 0xf0) =
+                    *(u32 *)(state + 0xf0);
+            }
+            node = *(u32 **)(state + 0xf8);
+            if ((u32 *)node[1] == 0) {
+                lbl_803DE2F4 = (void *)node[0];
+            } else {
+                *(u32 *)node[1] = node[0];
+            }
+            next = *(int *)*(u32 **)(state + 0xf8);
+            if (next != 0) {
+                *(u32 *)(next + 4) = (*(u32 **)(state + 0xf8))[1];
+            }
+            **(u32 **)(state + 0xf8) = (u32)lbl_803DE2F8;
+            if (lbl_803DE2F8 != 0) {
+                *(u32 *)((u8 *)lbl_803DE2F8 + 4) = *(u32 *)(state + 0xf8);
+            }
+            *(u32 *)(*(int *)(state + 0xf8) + 4) = 0;
+            lbl_803DE2F8 = *(void **)(state + 0xf8);
+            *(u32 *)(state + 0xf8) = 0;
+        }
+    }
 }
-#pragma dont_inline reset
 
 /*
  * Snapshot the current entry's `next` pointer (state->[0xf8]) into the
