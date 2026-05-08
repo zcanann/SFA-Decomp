@@ -3,8 +3,12 @@
 
 #include "ghidra_import.h"
 
-int fn_80115650(void *objAnim,void *obj,int *turning,void *control,float *turnSpeed,
-                short *moves);
+typedef struct PostObjAnimComponent PostObjAnimComponent;
+typedef struct PostObject PostObject;
+typedef struct PostControl PostControl;
+
+int fn_80115650(PostObjAnimComponent *objAnim,PostObject *obj,int *turning,
+                PostControl *control,float *turnSpeed,short *moves);
 void fn_801159DC(void);
 void fn_801159E0(void);
 

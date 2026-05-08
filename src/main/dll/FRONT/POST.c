@@ -43,8 +43,6 @@ extern s16 fn_8003A380(double distance, PostObjAnimComponent *objAnim, PostObjec
                        int eventState);
 extern int fn_8003A8B4(PostObjAnimComponent *objAnim, PostMotionTarget *leadAnims,
                        u8 contactAnim, void *secondary);
-extern uint countLeadingZeros(int value);
-
 extern f64 lbl_803E1C98;
 extern f32 lbl_803E1C90;
 extern f32 lbl_803E1CC4;
@@ -67,30 +65,26 @@ extern f32 lbl_803E1CE0;
  */
 #pragma scheduling off
 #pragma peephole off
-int fn_80115650(void *objAnimArg, void *objArg, int *turning, void *controlArg,
-                float *turnSpeed, s16 *moves)
+int fn_80115650(PostObjAnimComponent *objAnim, PostObject *obj, int *turning,
+                PostControl *control, float *turnSpeed, s16 *moves)
 {
-  PostObjAnimComponent *objAnim;
-  PostObject *obj;
-  PostControl *control;
+  int yawDelta;
   PostMotionTarget *motion;
-  s16 yawDelta;
   s16 hitResult;
   int turnAmount;
   uint ret;
   double distance;
   void *secondary;
 
-  objAnim = (PostObjAnimComponent *)objAnimArg;
-  obj = (PostObject *)objArg;
-  control = (PostControl *)controlArg;
   motion = fn_800394A0();
-  if (obj->motion == 0) {
-    distance = (double)lbl_803E1CD0;
-  } else if ((obj->motion->flags & 2) != 0) {
-    distance = (double)(lbl_803E1CDC * (float)(s32)obj->motion->yawB);
-  } else if ((obj->motion->flags & 1) != 0) {
-    distance = (double)(float)(s32)obj->motion->yawA;
+  if (obj->motion != 0) {
+    if ((obj->motion->flags & 2) != 0) {
+      distance = (double)(lbl_803E1CDC * (float)(s32)obj->motion->yawB);
+    } else if ((obj->motion->flags & 1) != 0) {
+      distance = (double)(float)(s32)obj->motion->yawA;
+    } else {
+      distance = (double)lbl_803E1CD0;
+    }
   } else {
     distance = (double)lbl_803E1CD0;
   }
@@ -101,17 +95,17 @@ int fn_80115650(void *objAnimArg, void *objArg, int *turning, void *controlArg,
     yawDelta += -0x8000;
   }
 
-  if ((control->flags & 8) == 0) {
-    secondary = control->secondary;
-  } else {
+  if ((control->flags & 8) != 0) {
     secondary = 0;
+  } else {
+    secondary = control->secondary;
   }
 
   hitResult = fn_8003A380(distance,objAnim,obj,control->primary,secondary,control->events,8,
                           control->eventState);
   if ((control->flags & 8) == 0) {
-    control->blocked = countLeadingZeros(fn_8003A8B4(objAnim,motion,control->contactAnim,
-                                                     control->secondary)) >> 5;
+    control->blocked = (uint)__cntlzw(fn_8003A8B4(objAnim,motion,control->contactAnim,
+                                                  control->secondary)) >> 5;
   }
   control->blocked = 0;
 
@@ -125,7 +119,7 @@ int fn_80115650(void *objAnimArg, void *objArg, int *turning, void *controlArg,
         ((int)yawDelta < (int)control->yawLimit)) {
       *turnSpeed = lbl_803E1CC4;
       *turning = 0;
-      return countLeadingZeros((int)hitResult) >> 5;
+      return (uint)__cntlzw((int)hitResult) >> 5;
     }
   }
 
@@ -150,20 +144,24 @@ int fn_80115650(void *objAnimArg, void *objArg, int *turning, void *controlArg,
 
   if (hitResult == 0) {
     turnAmount = (int)yawDelta;
-    turnAmount = turnAmount / 0x14 + (turnAmount >> 0x1f);
-    yawDelta = (s16)turnAmount - (s16)(turnAmount >> 0x1f);
+    if (turnAmount > 0) {
+      turnAmount = turnAmount / 0x14;
+    } else {
+      turnAmount = turnAmount / 0x14;
+    }
+    yawDelta = (s16)turnAmount;
   } else {
     turnAmount = (int)yawDelta;
     if (turnAmount > 0) {
-      turnAmount = (turnAmount - 0x500) / 0x14 + ((turnAmount - 0x500) >> 0x1f);
+      turnAmount = (turnAmount - 0x500) / 0x14;
     } else {
-      turnAmount = (turnAmount + 0x500) / 0x14 + ((turnAmount + 0x500) >> 0x1f);
+      turnAmount = (turnAmount + 0x500) / 0x14;
     }
-    yawDelta = (s16)turnAmount - (s16)(turnAmount >> 0x1f);
+    yawDelta = (s16)turnAmount;
   }
 
   objAnim->yaw += yawDelta;
-  ret = (uint)yawDelta;
+  ret = (uint)(s16)yawDelta;
   if ((int)ret < 0) {
     ret = -ret;
   }
