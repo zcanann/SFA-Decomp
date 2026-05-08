@@ -9,7 +9,7 @@ extern int Sfx_IsPlayingFromObject(int obj,u16 sfxId);
 extern void Sfx_PlayFromObject(int obj,u16 sfxId);
 extern void Resource_Release(void *handle);
 extern int *ObjList_GetObjects(undefined *param_1,undefined *param_2);
-extern void fn_8009A1DC(double param_1,int obj,undefined2 *pos,u32 count,int *param_5);
+extern void fn_8009A1DC(int obj,double scale,undefined2 *pos,u32 count,int *param_5);
 
 extern ObjHitReactEffectOrigin lbl_802C1B00;
 extern char sObjHitReactHitstateFrameString[];
@@ -38,6 +38,8 @@ extern ObjHitReactEffectHandle *Resource_Acquire(u32 effectId,u32 count);
 int objHitReact_update(ObjAnimComponent *obj,ObjHitReactEntry *reactionEntries,u32 reactionEntryCount,
                        u32 reactionState,float *reactionStepScale)
 {
+  u32 currentReactionState;
+  float *stepScale;
   ObjAnimDef *animDef;
   int moveEnded;
   int priorityHitType;
@@ -49,14 +51,16 @@ int objHitReact_update(ObjAnimComponent *obj,ObjHitReactEntry *reactionEntries,u
   int hitSphereIndex;
   ObjHitReactEntry *reactionEntry;
 
+  currentReactionState = reactionState;
+  stepScale = reactionStepScale;
   effectOrigin = lbl_802C1B00;
-  if ((reactionState & OBJHITREACT_REACTION_STATE_MASK) != OBJHITREACT_REACTION_STATE_INACTIVE) {
+  if ((currentReactionState & OBJHITREACT_REACTION_STATE_MASK) != OBJHITREACT_REACTION_STATE_INACTIVE) {
     OSReport(sObjHitReactHitstateFrameString,obj->currentMoveProgress);
-    moveEnded = ObjAnim_AdvanceCurrentMove((double)*reactionStepScale,(double)timeDelta,
+    moveEnded = ObjAnim_AdvanceCurrentMove((double)*stepScale,(double)timeDelta,
                                            (int)obj,(ObjAnimEventList *)0x0);
     if (moveEnded != 0) {
       OSReport(sObjHitReactResetString);
-      reactionState = OBJHITREACT_REACTION_STATE_INACTIVE;
+      currentReactionState = OBJHITREACT_REACTION_STATE_INACTIVE;
     }
   }
   priorityHitType = ObjHits_GetPriorityHitWithPosition((int)obj,0,&hitSphereIndex,0,&hitPos[0],
@@ -95,17 +99,17 @@ int objHitReact_update(ObjAnimComponent *obj,ObjHitReactEntry *reactionEntries,u
         }
       }
       else {
-        fn_8009A1DC((double)lbl_803DE964,(int)obj,(undefined2 *)&effectPos.x,1,0);
+        fn_8009A1DC((int)obj,(double)lbl_803DE964,(undefined2 *)&effectPos.x,1,0);
       }
     }
-    if (((reactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&
+    if (((currentReactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&
         (reactionEntry->reactionAnim > OBJHITREACT_NO_REACTION_ANIM)) {
       ObjAnim_SetCurrentMove(lbl_803DE910,(int)obj,(int)reactionEntry->reactionAnim,0);
-      *reactionStepScale = reactionEntry->cooldown;
-      reactionState = OBJHITREACT_REACTION_STATE_ACTIVE;
+      *stepScale = reactionEntry->cooldown;
+      currentReactionState = OBJHITREACT_REACTION_STATE_ACTIVE;
     }
   }
-  return reactionState;
+  return currentReactionState;
 }
 #pragma peephole reset
 #pragma scheduling reset
