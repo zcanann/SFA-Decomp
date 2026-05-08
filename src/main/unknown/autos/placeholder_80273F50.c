@@ -3,70 +3,70 @@
 extern int hwTransAddr(int x);
 
 /*
- * fn_80273D2C — large voice/instrument lookup (~584 instructions). Stubbed.
+ * fn_80273D2C - large voice/instrument lookup (~584 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_80273D2C(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80273F74 — voice handler (~460 instructions). Stubbed.
+ * fn_80273F74 - voice handler (~460 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_80273F74(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80274140 — voice handler (~504 instructions). Stubbed.
+ * fn_80274140 - voice handler (~504 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_80274140(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80274338 — voice handler (~388 instructions). Stubbed.
+ * fn_80274338 - voice handler (~388 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_80274338(void) {}
 #pragma dont_inline reset
 
 /*
- * audioLoadSdiFile — voice handler (~364 instructions). Stubbed.
+ * audioLoadSdiFile - voice handler (~364 instructions). Stubbed.
  */
 #pragma dont_inline on
 void audioLoadSdiFile(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80274628 — voice handler (~216 instructions). Stubbed.
+ * fn_80274628 - voice handler (~216 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_80274628(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80274700 — voice handler (~152 instructions). Stubbed.
+ * fn_80274700 - voice handler (~152 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_80274700(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80274798 — voice handler (~296 instructions). Stubbed.
+ * fn_80274798 - voice handler (~296 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_80274798(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_802748C0 — voice handler (~784 instructions). Stubbed.
+ * fn_802748C0 - voice handler (~784 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_802748C0(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80274BD0 — voice handler (~668 instructions). Stubbed.
+ * fn_80274BD0 - voice handler (~668 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_80274BD0(void) {}
@@ -83,7 +83,7 @@ int fn_80274E6C(void *a, void *b)
 }
 
 /*
- * fn_80274E7C — table lookup helper (~148 instructions). Stubbed.
+ * fn_80274E7C - table lookup helper (~148 instructions). Stubbed.
  */
 #pragma dont_inline on
 int fn_80274E7C(int key)
@@ -104,7 +104,7 @@ int fn_80274F10(void *a, void *b)
 }
 
 /*
- * fn_80274F20 — voice find/copy (~296 instructions). Stubbed.
+ * fn_80274F20 - voice find/copy (~296 instructions). Stubbed.
  */
 #pragma dont_inline on
 int fn_80274F20(int a, int b)
@@ -126,26 +126,45 @@ int fn_80275048(void *a, void *b)
 }
 
 /*
- * fn_80275058 — bsearch wrapper (~96 instructions). Stubbed.
+ * Look up a keygroup/sample indirection table by id.
  */
-#pragma dont_inline on
-int fn_80275058(int key)
+extern void *sndBSearch(void *key, void *base, u16 count, u32 stride,
+                        int (*cmp)(void *a, void *b));
+extern u8 lbl_803C0278[];
+extern u8 lbl_803C4278[];
+extern u8 lbl_803C5678[];
+extern u16 lbl_803DE28A;
+extern u16 lbl_803DE28C;
+extern u16 lbl_803DE28E;
+extern u16 lbl_803DE292;
+extern u8 lbl_803DE2B0[];
+extern void *lbl_803DE2B8;
+extern u8 lbl_803DE2BC[];
+extern void *lbl_803DE2C4;
+extern void *lbl_803DE2C8;
+
+void *fn_80275058(u16 key)
 {
-    (void)key;
-    return 0;
+    *(u16 *)(lbl_803DE2B0 + 4) = key;
+    lbl_803DE2B8 = sndBSearch(lbl_803DE2B0, lbl_803C0278, lbl_803DE28A, 8, fn_80275048);
+    if (lbl_803DE2B8 == 0) {
+        return 0;
+    }
+    return *(void **)lbl_803DE2B8;
 }
-#pragma dont_inline reset
 
 /*
- * fn_802750B8 — bsearch wrapper (~96 instructions). Stubbed.
+ * Look up the sample-map table used by nested sample groups.
  */
-#pragma dont_inline on
-int fn_802750B8(int key)
+void *fn_802750B8(u16 key)
 {
-    (void)key;
-    return 0;
+    *(u16 *)(lbl_803DE2BC + 4) = key;
+    lbl_803DE2C4 = sndBSearch(lbl_803DE2BC, lbl_803C4278, lbl_803DE28C, 8, fn_80275048);
+    if (lbl_803DE2C4 == 0) {
+        return 0;
+    }
+    return *(void **)lbl_803DE2C4;
 }
-#pragma dont_inline reset
 
 /*
  * Comparator: return a->key2 - b->key2 (u16 at offset 4). Same body as
@@ -159,15 +178,21 @@ int fn_80275118(void *a, void *b)
 }
 
 /*
- * fn_80275128 — bsearch wrapper (~128 instructions). Stubbed.
+ * Look up a scene/sample list and return its entry count through outCount.
  */
-#pragma dont_inline on
-int fn_80275128(int key, u16 *out)
+void *fn_80275128(u16 key, u16 *outCount)
 {
-    (void)key; (void)out;
-    return 0;
+    u8 *searchKey = lbl_803C5678 + 0x4c20;
+
+    *(u16 *)(searchKey + 4) = key;
+    lbl_803DE2C8 =
+        sndBSearch(searchKey, lbl_803C4278 + 0x800, lbl_803DE28E, 0xc, fn_80275118);
+    if (lbl_803DE2C8 == 0) {
+        return 0;
+    }
+    *outCount = *(u16 *)((u8 *)lbl_803DE2C8 + 6);
+    return *(void **)lbl_803DE2C8;
 }
-#pragma dont_inline reset
 
 /*
  * Comparator: return a->key - b->key (u16 at offset 0). Same body as
@@ -181,18 +206,32 @@ int fn_802751A8(void *a, void *b)
 }
 
 /*
- * fn_802751B8 — linear search (~168 instructions). Stubbed.
+ * Search each FX sample-list bucket for the requested FX id.
  */
-#pragma dont_inline on
-int fn_802751B8(int key)
+void *fn_802751B8(u16 key)
 {
-    (void)key;
+    u32 i;
+    u16 *bucket;
+    void *entry;
+    u8 *searchKey;
+
+    i = 0;
+    bucket = (u16 *)(lbl_803C5678 + 0x4800);
+    searchKey = lbl_803C5678 + 0x4c2c;
+    *(u16 *)searchKey = key;
+    while (i < lbl_803DE292) {
+        entry = sndBSearch(searchKey, *(void **)(bucket + 2), bucket[1], 10, fn_802751A8);
+        if (entry != 0) {
+            return entry;
+        }
+        bucket += 4;
+        i++;
+    }
     return 0;
 }
-#pragma dont_inline reset
 
 /*
- * fn_80275260 — handler (~228 instructions). Stubbed.
+ * fn_80275260 - handler (~228 instructions). Stubbed.
  */
 #pragma dont_inline on
 int fn_80275260(int a, int b)
