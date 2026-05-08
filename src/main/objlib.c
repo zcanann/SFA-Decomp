@@ -2685,18 +2685,15 @@ undefined4 ObjList_ContainsObject(int param_1)
  */
 #pragma scheduling off
 #pragma peephole off
-void ObjPath_GetPointWorldPositionArray(undefined4 param_1,undefined4 param_2,int param_3,float *param_4)
+void ObjPath_GetPointWorldPositionArray(int obj,int pointIndex,int count,float *positions)
 {
-  int iVar1;
-  undefined8 uVar2;
+  int i;
 
-  uVar2 = FUN_80286840();
-  for (iVar1 = 0; iVar1 < param_3; iVar1 = iVar1 + 1) {
-    ObjPath_GetPointWorldPosition((int)((ulonglong)uVar2 >> 0x20), (int)uVar2 + iVar1, param_4,
-                 (undefined4 *)(param_4 + 1), param_4 + 2, 0);
-    param_4 = param_4 + 3;
+  for (i = 0; i < count; i++) {
+    ObjPath_GetPointWorldPosition(obj,pointIndex + i,positions,(undefined4 *)(positions + 1),
+                                  positions + 2,0);
+    positions = positions + 3;
   }
-  FUN_8028688c();
 }
 #pragma peephole reset
 #pragma scheduling reset
