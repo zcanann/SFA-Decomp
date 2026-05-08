@@ -26,7 +26,6 @@ extern uint FUN_80017760();
 extern uint fn_80022E24();
 extern uint fn_80022E3C(uint param_1);
 extern uint FUN_800177dc();
-extern undefined4 FUN_80017830();
 extern void *mmAlloc(int size,int heap,int flags);
 extern float *ObjModel_GetJointMatrix(int *model,int jointIndex);
 extern undefined4 FUN_80017a50();
@@ -2118,7 +2117,7 @@ void ObjMsg_AllocQueue(void *obj,int capacity)
   if (((capacity != 0) && (obj != (void *)0x0)) &&
       (*(ObjMsgQueue **)((byte *)obj + 0xdc) == (ObjMsgQueue *)0x0)) {
     queueBytes = (capacity * 3 + 2) * 4;
-    queue = (ObjMsgQueue *)FUN_80017830(queueBytes,0xe,0);
+    queue = (ObjMsgQueue *)mmAlloc(queueBytes,0xe,0);
     queue->count = 0;
     queue->capacity = capacity;
     *(ObjMsgQueue **)((byte *)obj + 0xdc) = queue;
