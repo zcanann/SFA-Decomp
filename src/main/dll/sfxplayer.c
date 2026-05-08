@@ -1,19 +1,19 @@
 #include "ghidra_import.h"
 #include "main/dll/sfxplayer.h"
 
-extern void* FUN_80017aa4();
-extern int FUN_80017ae4();
-extern uint FUN_80017ae8();
+extern void Obj_FreeObject(int obj);
+extern int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,uint *outHitVolume);
+extern void Sfx_PlayFromObject(int obj,int sfxId);
+extern void GameBit_Set(int eventId,int value);
 extern void gameTimerStop(void);
+extern void gameTimerInit(int timerId,int frames);
 extern u32 GameBit_Get(int eventId);
+extern int fn_80014670(void);
+extern void fn_8001469C(void);
 extern void TrickyCurve_activateEffectHandleRing(void);
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_8028688c();
+extern void TrickyCurve_updateEffectHandleRing(int obj);
 
-extern undefined4* DAT_803dd72c;
-extern undefined4 DAT_803e70e8;
-extern undefined4 DAT_803e70ec;
-extern f32 lbl_803E7110;
+extern undefined4* lbl_803DCAAC;
 
 /*
  * --INFO--
@@ -28,85 +28,83 @@ extern f32 lbl_803E7110;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sfxplayer_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                      undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void sfxplayer_update(int obj)
 {
-  int handleIndex;
-  uint uVar1;
-  undefined2 *puVar2;
-  char cVar5;
-  undefined4 uVar3;
-  int iVar4;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  undefined8 extraout_f1;
-  undefined8 uVar6;
-  undefined8 extraout_f1_00;
-  undefined8 extraout_f1_01;
-  undefined8 uVar7;
-  undefined4 local_28;
-  undefined4 local_24;
+  int i;
+  int mode;
+  int state;
+  int *handles;
+  undefined4 hitObj;
   
-  uVar7 = FUN_80286840();
-  iVar4 = (int)((ulonglong)uVar7 >> 0x20);
-  local_28 = DAT_803e70e8;
-  local_24 = DAT_803e70ec;
-  uVar6 = extraout_f1;
-  uVar1 = FUN_80017ae8();
-  if ((uVar1 & 0xff) != 0) {
-    uVar1 = (uint)uVar7 & 0xff;
-    handleIndex = uVar1 * 2;
-    if (gSfxplayerEffectHandles[handleIndex] == 0) {
-      puVar2 = FUN_80017aa4(0x2c,0x6e8);
-      *(undefined *)(puVar2 + 3) = 0xff;
-      *(undefined *)((int)puVar2 + 7) = 0xff;
-      *(undefined *)(puVar2 + 2) = 2;
-      *(undefined *)((int)puVar2 + 5) = 1;
-      *(undefined4 *)(puVar2 + 4) = *(undefined4 *)(iVar4 + 0xc);
-      *(undefined4 *)(puVar2 + 6) = *(undefined4 *)(iVar4 + 0x10);
-      *(undefined4 *)(puVar2 + 8) = *(undefined4 *)(iVar4 + 0x14);
-      puVar2[0x12] = 0xffff;
-      *(undefined *)(puVar2 + 0xd) = 0;
-      *(undefined *)(puVar2 + 0xc) = 0;
-      *(undefined *)((int)puVar2 + 0x19) = 0;
-      cVar5 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(iVar4 + 0xac));
-      if (cVar5 == '\x02') {
-        *(char *)((int)puVar2 + 0x1b) = (char)*(undefined2 *)((int)&local_28 + uVar1 * 2);
+  state = *(int *)(obj + 0xb8);
+  if (((*(u8 *)(state + 8) & 0x20) == 0) && (GameBit_Get(*(s16 *)state) == 0)) {
+    if (*(u8 *)(state + 7) == 4) {
+      Sfx_PlayFromObject(0,0x7e);
+      *(u8 *)(state + 8) = (*(u8 *)(state + 8) | 0x20) & 0xaf;
+      GameBit_Set(*(s16 *)state,1);
+      GameBit_Set(0xedf,0);
+      mode = (*(code *)(*lbl_803DCAAC + 0x40))((int)*(char *)(obj + 0xac));
+      if ((u8)mode == 1) {
+        GameBit_Set(0x9f7,1);
       }
-      else {
-        *(char *)((int)puVar2 + 0x1b) = (char)local_24;
-      }
-      *(undefined *)(puVar2 + 0xe) = 0;
-      *(undefined *)((int)puVar2 + 0x1d) = 0;
-      *(undefined *)(puVar2 + 0x13) = 100;
-      *(undefined *)((int)puVar2 + 0x27) = 0;
-      *(undefined *)(puVar2 + 0x14) = 0;
-      *(float *)(puVar2 + 0x10) = lbl_803E7110;
-      *(undefined *)((int)puVar2 + 0x29) = 0xd2;
-      *(undefined *)(puVar2 + 0x15) = 0;
-      uVar3 = FUN_80017ae4(extraout_f1_00,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                           puVar2,5,*(undefined *)(iVar4 + 0xac),0xffffffff,*(uint **)(iVar4 + 0x30)
-                           ,in_r8,in_r9,in_r10);
-      gSfxplayerEffectHandles[handleIndex] = uVar3;
-      uVar6 = extraout_f1_01;
+      gameTimerStop();
     }
-    if (gSfxplayerEffectHandles[handleIndex + 1] == 0) {
-      puVar2 = FUN_80017aa4(4,0x71c);
-      *(undefined *)(puVar2 + 3) = 0xff;
-      *(undefined *)((int)puVar2 + 7) = 0xff;
-      *(undefined *)(puVar2 + 2) = 2;
-      *(undefined *)((int)puVar2 + 5) = 1;
-      *(undefined4 *)(puVar2 + 4) = *(undefined4 *)(iVar4 + 0xc);
-      *(undefined4 *)(puVar2 + 6) = *(undefined4 *)(iVar4 + 0x10);
-      *(undefined4 *)(puVar2 + 8) = *(undefined4 *)(iVar4 + 0x14);
-      iVar4 = FUN_80017ae4(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,5,
-                           *(undefined *)(iVar4 + 0xac),0xffffffff,*(uint **)(iVar4 + 0x30),in_r8,
-                           in_r9,in_r10);
-      gSfxplayerEffectHandles[handleIndex + 1] = iVar4;
+    else {
+      if ((*(u8 *)(state + 8) & 0x80) != 0) {
+        *(u8 *)(state + 8) = *(u8 *)(state + 8) & 0x7f;
+        if ((*(u8 *)(state + 8) & 0x10) != 0) {
+          mode = (*(code *)(*lbl_803DCAAC + 0x40))((int)*(char *)(obj + 0xac));
+          if ((u8)mode == 1) {
+            gameTimerInit(0x1d,0x96);
+          }
+          else {
+            gameTimerInit(0x1d,0xb4);
+          }
+          fn_8001469C();
+        }
+      }
+      if (fn_80014670() != 0) {
+        handles = gSfxplayerEffectHandles;
+        for (i = 0; i < 4; i++) {
+          if (handles[0] != 0) {
+            Obj_FreeObject(handles[0]);
+          }
+          handles[0] = 0;
+          if (handles[1] != 0) {
+            Obj_FreeObject(handles[1]);
+          }
+          handles[1] = 0;
+          Sfx_PlayFromObject(obj,0x1ce);
+          handles += 2;
+        }
+        *(u8 *)(state + 7) = 0;
+        *(u8 *)(state + 8) = *(u8 *)(state + 8) & 0xaf;
+        GameBit_Set(0xedf,0);
+      }
+      TrickyCurve_updateEffectHandleRing(obj);
+      handles = gSfxplayerEffectHandles;
+      for (i = 0; i < 4; i++) {
+        if (handles[0] != 0) {
+          hitObj = 0;
+          if ((ObjHits_GetPriorityHit(handles[1],&hitObj,(int *)0x0,(uint *)0x0) == 0x13) &&
+             (mode = (*(code *)(*lbl_803DCAAC + 0x40))((int)*(char *)(obj + 0xac)),
+              ((u8)mode == 1 || (*(int *)((int)hitObj + 0xf4) == i)))) {
+            if (handles[0] != 0) {
+              Obj_FreeObject(handles[0]);
+            }
+            handles[0] = 0;
+            if (handles[1] != 0) {
+              Obj_FreeObject(handles[1]);
+            }
+            handles[1] = 0;
+            Sfx_PlayFromObject(0,0x409);
+            *(u8 *)(state + 7) = *(u8 *)(state + 7) + 1;
+          }
+        }
+        handles += 2;
+      }
     }
   }
-  FUN_8028688c();
   return;
 }
 
