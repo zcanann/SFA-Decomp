@@ -2070,8 +2070,7 @@ void expgfx_resetPoolResources(void)
   poolFrameFlags = gExpgfxStaticPoolFrameFlags;
   poolSourceModes = expgfxBase + EXPGFX_POOL_SOURCE_MODES_OFFSET;
   poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
-  groupIndex = EXPGFX_POOL_GROUP_COUNT;
-  do {
+  for (groupIndex = 0; groupIndex < EXPGFX_POOL_GROUP_COUNT; groupIndex++) {
     poolActiveMasks[0] = 0;
     poolActiveCounts[0] = 0;
     poolSlotTypeIds[0] = EXPGFX_INVALID_SLOT_TYPE;
@@ -2126,8 +2125,7 @@ void expgfx_resetPoolResources(void)
     poolFrameFlags = poolFrameFlags + 8;
     poolSourceModes = poolSourceModes + 8;
     poolSourceIds = poolSourceIds + 8;
-    groupIndex = groupIndex - 1;
-  } while (groupIndex != 0);
+  }
   *(u32 *)(expgfxBase + 0x1014) = 0;
   *(u32 *)(expgfxBase + 0x1010) = 0;
   *(u32 *)(expgfxBase + 0x101c) = 0;
