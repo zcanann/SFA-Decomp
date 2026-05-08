@@ -13,6 +13,7 @@ extern uint FUN_80017ae8();
 extern undefined4 Resource_Acquire();
 extern uint randomGetRange();
 extern undefined4 ObjAnim_SetCurrentMove();
+extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject();
 extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 Obj_IsLoadingLocked();
@@ -79,12 +80,14 @@ extern f32 lbl_803E3D58;
 extern f32 lbl_803E3D5C;
 extern f32 lbl_803E3D60;
 extern f32 lbl_803E3060;
+extern f64 lbl_803E3068;
 extern f64 DOUBLE_803E3070;
 extern f32 lbl_803E307C;
 extern f32 lbl_803E308C;
 extern f32 lbl_803E30A0;
 extern f32 lbl_803E30A4;
 extern f32 lbl_803E30A8;
+extern f32 lbl_803E30AC;
 extern f32 lbl_803E30C8;
 extern f32 lbl_803E30CC;
 
@@ -163,60 +166,54 @@ void fn_8016821C(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80168374(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,int param_10,char param_11,undefined4 param_12,undefined4 param_13,
-                 undefined4 param_14,undefined4 param_15,undefined4 param_16)
+void fn_80168374(int param_1,int param_2,char param_3)
 {
   uint uVar1;
-  undefined2 *puVar2;
   int iVar3;
   int iVar4;
   double dVar5;
   double dVar6;
   double dVar7;
-  
-  iVar4 = *(int *)(param_10 + 0x40c);
-  iVar3 = *(int *)(param_9 + 0x4c);
-  uVar1 = FUN_80017ae8();
-  if ((uVar1 & 0xff) != 0) {
-    dVar6 = (double)lbl_803E3D38;
-    dVar5 = (double)(float)((double)CONCAT44(0x43300000,(int)*(char *)(iVar3 + 0x28) ^ 0x80000000) -
-                           DOUBLE_803e3d08);
-    dVar7 = (double)(float)(dVar6 + (double)(float)(dVar5 / (double)lbl_803E3D3C));
-    puVar2 = FUN_80017aa4(0x24,0x51b);
-    if (param_11 == '\0') {
-      *(undefined4 *)(puVar2 + 4) = *(undefined4 *)(iVar4 + 0x28);
-      *(undefined4 *)(puVar2 + 6) = *(undefined4 *)(iVar4 + 0x2c);
-      *(undefined4 *)(puVar2 + 8) = *(undefined4 *)(iVar4 + 0x30);
+
+  iVar4 = *(int *)(param_2 + 0x40c);
+  iVar3 = *(int *)(param_1 + 0x4c);
+  if ((char)Obj_IsLoadingLocked() != '\0') {
+    dVar6 = (double)(lbl_803E30A0 +
+                    (float)((double)CONCAT44(0x43300000,(int)*(char *)(iVar3 + 0x28) ^ 0x80000000) -
+                           DOUBLE_803E3070) / lbl_803E30A4);
+    iVar3 = Obj_AllocObjectSetup(0x24,0x51b);
+    if (param_3 == '\0') {
+      *(undefined4 *)(iVar3 + 8) = *(undefined4 *)(iVar4 + 0x28);
+      *(undefined4 *)(iVar3 + 0xc) = *(undefined4 *)(iVar4 + 0x2c);
+      *(undefined4 *)(iVar3 + 0x10) = *(undefined4 *)(iVar4 + 0x30);
     }
     else {
-      *(undefined4 *)(puVar2 + 4) = *(undefined4 *)(iVar4 + 0x10);
-      *(undefined4 *)(puVar2 + 6) = *(undefined4 *)(iVar4 + 0x14);
-      *(undefined4 *)(puVar2 + 8) = *(undefined4 *)(iVar4 + 0x18);
+      *(undefined4 *)(iVar3 + 8) = *(undefined4 *)(iVar4 + 0x10);
+      *(undefined4 *)(iVar3 + 0xc) = *(undefined4 *)(iVar4 + 0x14);
+      *(undefined4 *)(iVar3 + 0x10) = *(undefined4 *)(iVar4 + 0x18);
     }
-    *(undefined *)(puVar2 + 2) = 1;
-    *(undefined *)((int)puVar2 + 5) = 4;
-    *(undefined *)(puVar2 + 3) = 0xff;
-    *(undefined *)((int)puVar2 + 7) = 0xff;
-    iVar3 = FUN_80017ae4(dVar5,dVar6,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,5,0xff,
-                         0xffffffff,(uint *)0x0,param_14,param_15,param_16);
-    if (iVar3 != 0) {
-      dVar5 = (double)(lbl_803E3D44 *
-                      (*(float *)(param_10 + 0x2c0) /
-                      (float)((double)CONCAT44(0x43300000,(uint)*(ushort *)(param_10 + 0x3fe)) -
-                             DOUBLE_803e3d00)));
-      *(float *)(iVar3 + 0x24) =
-           (float)((double)(*(float *)(*(int *)(param_10 + 0x2d0) + 0xc) - *(float *)(puVar2 + 4)) /
+    *(undefined *)(iVar3 + 4) = 1;
+    *(undefined *)(iVar3 + 5) = 4;
+    *(undefined *)(iVar3 + 6) = 0xff;
+    *(undefined *)(iVar3 + 7) = 0xff;
+    iVar4 = Obj_SetupObject(iVar3,5,0xffffffff,0xffffffff,0);
+    if (iVar4 != 0) {
+      dVar7 = (double)(lbl_803E30AC *
+                      (*(float *)(param_2 + 0x2c0) /
+                      (float)((double)CONCAT44(0x43300000,(uint)*(ushort *)(param_2 + 0x3fe)) -
+                             lbl_803E3068)));
+      dVar5 = dVar7;
+      *(float *)(iVar4 + 0x24) =
+           (float)((double)(*(float *)(*(int *)(param_2 + 0x2d0) + 0xc) - *(float *)(iVar3 + 8)) /
                   dVar5);
-      uVar1 = FUN_80017760(0xfffffff6,10);
-      *(float *)(iVar3 + 0x28) =
-           (float)((double)(((float)((double)lbl_803E3D40 * dVar7 +
-                                    (double)*(float *)(*(int *)(param_10 + 0x2d0) + 0x10)) +
+      uVar1 = randomGetRange(0xfffffff6,10);
+      *(float *)(iVar4 + 0x28) =
+           (float)((double)(((float)((double)lbl_803E30A8 * dVar6 +
+                                    (double)*(float *)(*(int *)(param_2 + 0x2d0) + 0x10)) +
                             (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) -
-                                   DOUBLE_803e3d08)) - *(float *)(puVar2 + 6)) / dVar5);
-      *(float *)(iVar3 + 0x2c) =
-           (float)((double)(*(float *)(*(int *)(param_10 + 0x2d0) + 0x14) - *(float *)(puVar2 + 8))
+                                   DOUBLE_803E3070)) - *(float *)(iVar3 + 0xc)) / dVar5);
+      *(float *)(iVar4 + 0x2c) =
+           (float)((double)(*(float *)(*(int *)(param_2 + 0x2d0) + 0x14) - *(float *)(iVar3 + 0x10))
                   / dVar5);
     }
   }
@@ -269,11 +266,11 @@ void fn_8016855C(undefined4 param_1,undefined4 param_2,int param_3)
   }
   if ((*(uint *)(param_3 + 0x314) & 0x40) != 0) {
     *(uint *)(param_3 + 0x314) = *(uint *)(param_3 + 0x314) & 0xffffffbf;
-    fn_80168374(0,0,0,0,0,0,0,0,iVar1,iVar4,0,0,0,0,0,0);
+    fn_80168374(iVar1,iVar4,0);
   }
   if ((*(uint *)(param_3 + 0x314) & 0x800) != 0) {
     *(uint *)(param_3 + 0x314) = *(uint *)(param_3 + 0x314) & 0xfffff7ff;
-    fn_80168374(0,0,0,0,0,0,0,0,iVar1,iVar4,1,0,0,0,0,0);
+    fn_80168374(iVar1,iVar4,1);
   }
   if ((*(uint *)(param_3 + 0x314) & 0x200) != 0) {
     *(uint *)(param_3 + 0x314) = *(uint *)(param_3 + 0x314) & 0xfffffdff;
