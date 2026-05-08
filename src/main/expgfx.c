@@ -475,7 +475,7 @@ void expgfx_initialise(void)
  */
 #pragma scheduling off
 #pragma peephole off
-int expgfx_reserveSlot(short *poolIndexOut,undefined2 *slotIndexOut,short slotType,
+int expgfx_reserveSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
                        int preferredPoolIndex,uint sourceId)
 {
   bool foundPool;
@@ -783,7 +783,7 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
   for (; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++) {
     if (((entry->refCount != 0 && (entry->textureOrResource == textureOrResource)) &&
         (entry->key0 == key0)) && (entry->key1 == key1)) {
-      refCount = &(gExpgfxTableEntries + tableIndex)->refCount;
+      refCount = &gExpgfxTableEntries[tableIndex].refCount;
       if (*refCount >= EXPGFX_EXPTAB_REFCOUNT_MAX) {
         debugPrintf(sExpgfxAddToTableUsageOverflow);
         return EXPGFX_INVALID_TABLE_INDEX;
@@ -1778,7 +1778,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIdx, short slot
   if (fn_8002073C() != 0) {
     return EXPGFX_INVALID_POOL_INDEX;
   }
-  if (expgfx_reserveSlot(&poolIdxOut, (undefined2 *)&slotIdxOut, slotType,
+  if (expgfx_reserveSlot(&poolIdxOut, &slotIdxOut, slotType,
                           preferredPoolIdx, (uint)(int)config->attachedSource)
       == EXPGFX_INVALID_POOL_INDEX) {
     return EXPGFX_INVALID_POOL_INDEX;

@@ -5,7 +5,7 @@
 
 void expgfx_release(uint slotPoolBase,int poolIndex,int slotIndex,int freeTexture,int clearActive);
 void expgfx_initialise(void);
-int expgfx_reserveSlot(short *poolIndexOut,undefined2 *slotIndexOut,short slotType,
+int expgfx_reserveSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
                        int preferredPoolIndex,uint sourceId);
 void expgfx_initSlotQuad(void *slot);
 void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_4,double param_5,
