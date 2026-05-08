@@ -1,5 +1,4 @@
 #include "ghidra_import.h"
-#include "main/dll/DB/DBbonedust.h"
 #include "main/dll/CAM/camTalk.h"
 
 extern undefined4 FUN_800033a8();
@@ -7,21 +6,22 @@ extern undefined4 Obj_TransformWorldPointToLocal();
 extern undefined4 FUN_80006a1c();
 extern undefined4 FUN_80006a30();
 extern int FUN_80017730();
-extern undefined4 FUN_80017748();
+extern void fn_80021AC8(void *param_1, void *outVec);
 extern undefined4 fn_80021EE8();
 extern undefined4 Matrix_TransformPoint();
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern undefined4 camcontrol_getTargetPosition();
-extern undefined4 FUN_801e1ee4();
+extern void *fn_801E1DA8(void);
+extern int fn_801E12DC(int *obj);
 extern double FUN_80293900();
 extern double fn_80293E80(double);
 extern double sin(double);
-extern undefined4 FUN_80294d78();
+extern void fn_80296BD4(int obj, float *x, float *y, float *z);
 
 extern int *lbl_803DCA50;
 extern u8* lbl_803DD540;
-extern undefined4 DAT_803de1c0;
+extern u8* lbl_803DD548;
 extern f64 lbl_803E17B8;
 extern f64 DOUBLE_803e2458;
 extern f32 timeDelta;
@@ -39,6 +39,7 @@ extern f32 lbl_803E17A8;
 extern f32 lbl_803E17AC;
 extern f32 lbl_803E17B0;
 extern f32 lbl_803E17B4;
+extern f32 lbl_803E17C0;
 extern f32 lbl_803E2440;
 extern f32 lbl_803E2444;
 extern f32 lbl_803E2448;
@@ -248,40 +249,38 @@ void fn_80107F80(int param_1)
  */
 void fn_80108010(int param_1,int param_2)
 {
-  ushort *puVar1;
+  int *puVar1;
   int iVar2;
-  float local_28;
-  undefined4 local_24;
   float local_20;
-  float local_1c;
-  float local_18;
-  float local_14;
+  float local_24;
+  float local_28;
+  float local_1c[3];
   
   if (*(short *)(param_1 + 0x44) == 1) {
-    FUN_80294d78(param_1,&local_28,&local_24,&local_20);
-    if (((param_2 != 0) || (*(float *)(DAT_803de1c0 + 0x120) != local_28)) ||
-       (*(float *)(DAT_803de1c0 + 0x128) != local_20)) {
-      *(undefined4 *)(DAT_803de1c0 + 0x130) = local_24;
+    fn_80296BD4(param_1,&local_28,&local_24,&local_20);
+    if (((param_2 != 0) || (*(float *)(lbl_803DD548 + 0x120) != local_28)) ||
+       (*(float *)(lbl_803DD548 + 0x128) != local_20)) {
+      *(float *)(lbl_803DD548 + 0x130) = local_24;
     }
-    *(float *)(DAT_803de1c0 + 0x120) = local_28;
-    *(undefined4 *)(DAT_803de1c0 + 0x124) = local_24;
-    *(float *)(DAT_803de1c0 + 0x128) = local_20;
+    *(float *)(lbl_803DD548 + 0x120) = local_28;
+    *(float *)(lbl_803DD548 + 0x124) = local_24;
+    *(float *)(lbl_803DD548 + 0x128) = local_20;
   }
   else {
-    *(undefined4 *)(DAT_803de1c0 + 0x120) = *(undefined4 *)(param_1 + 0x18);
-    *(float *)(DAT_803de1c0 + 0x124) = lbl_803E2440 + *(float *)(param_1 + 0x1c);
-    *(undefined4 *)(DAT_803de1c0 + 0x128) = *(undefined4 *)(param_1 + 0x20);
-    *(undefined4 *)(DAT_803de1c0 + 0x130) = *(undefined4 *)(DAT_803de1c0 + 0x124);
+    *(float *)(lbl_803DD548 + 0x120) = *(float *)(param_1 + 0x18);
+    *(float *)(lbl_803DD548 + 0x124) = lbl_803E17C0 + *(float *)(param_1 + 0x1c);
+    *(float *)(lbl_803DD548 + 0x128) = *(float *)(param_1 + 0x20);
+    *(float *)(lbl_803DD548 + 0x130) = *(float *)(lbl_803DD548 + 0x124);
   }
-  puVar1 = (ushort *)FUN_801e1ee4();
-  if ((puVar1 != (ushort *)0x0) && (iVar2 = DBbonedust_getState((int)puVar1), iVar2 == 2)) {
-    local_1c = *(float *)(param_1 + 0x18) - *(float *)(puVar1 + 0xc);
-    local_18 = (lbl_803E2440 + *(float *)(param_1 + 0x1c)) - *(float *)(puVar1 + 0xe);
-    local_14 = *(float *)(param_1 + 0x20) - *(float *)(puVar1 + 0x10);
-    FUN_80017748(puVar1,&local_1c);
-    *(float *)(DAT_803de1c0 + 0x120) = *(float *)(puVar1 + 0xc) + local_1c;
-    *(float *)(DAT_803de1c0 + 0x124) = *(float *)(puVar1 + 0xe) + local_18;
-    *(float *)(DAT_803de1c0 + 0x128) = *(float *)(puVar1 + 0x10) + local_14;
+  puVar1 = (int *)fn_801E1DA8();
+  if ((puVar1 != (int *)0x0) && (iVar2 = fn_801E12DC(puVar1), iVar2 == 2)) {
+    local_1c[0] = *(float *)(param_1 + 0x18) - *(float *)(puVar1 + 6);
+    local_1c[1] = (lbl_803E17C0 + *(float *)(param_1 + 0x1c)) - *(float *)(puVar1 + 7);
+    local_1c[2] = *(float *)(param_1 + 0x20) - *(float *)(puVar1 + 8);
+    fn_80021AC8(puVar1,local_1c);
+    *(float *)(lbl_803DD548 + 0x120) = *(float *)(puVar1 + 6) + local_1c[0];
+    *(float *)(lbl_803DD548 + 0x124) = *(float *)(puVar1 + 7) + local_1c[1];
+    *(float *)(lbl_803DD548 + 0x128) = *(float *)(puVar1 + 8) + local_1c[2];
   }
   return;
 }
