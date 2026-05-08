@@ -104,6 +104,11 @@ extern u32 inpGetExCtrl(int state, u32 ctrl);
 extern void inpSetExCtrl(int state, u32 ctrl, s16 value);
 extern void fn_8027A02C(u32 voice);
 extern u8 lbl_803BD9E4[];
+extern void sndConvertTicks(u32 *p, int state);
+extern void sndConvertMs(u32 *p);
+extern void inpSetMidiCtrl(int idx, u8 a, u8 b, u8 mask);
+extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
+extern void fn_8026F5B8(int state);
 
 /*
  * --INFO--
@@ -489,6 +494,101 @@ void fn_80276A70(int state, int useExCtrl, u32 index, u32 value)
     } else {
         inpSetExCtrl(state, index, (s16)value);
     }
+}
+
+/*
+ * Configure the controller-0x41 ramp trigger for the current voice.
+ */
+void fn_80276840(int state, u32 *args)
+{
+    u32 duration[2];
+    u32 mode;
+
+    *(u8 *)(state + 0x131) = *args >> 0x10;
+    duration[0] = args[1] >> 0x10;
+    if (((args[1] >> 8) & 1) == 0) {
+        sndConvertTicks(duration, state);
+    } else {
+        sndConvertMs(duration);
+    }
+    *(u32 *)(state + 0x134) = duration[0];
+    mode = (*args >> 8) & 0xff;
+    if (mode == 1) {
+        if (*(s8 *)(state + 0x121) != -1) {
+            inpSetMidiCtrl(0x41, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122), 0x7f);
+        }
+    } else {
+        if (mode == 0) {
+            if (*(s8 *)(state + 0x121) != -1) {
+                inpSetMidiCtrl(0x41, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122), 0);
+            }
+            *(u32 *)(state + 0x118) &= 0xfffffbff;
+            *(u32 *)(state + 0x114) = *(u32 *)(state + 0x114);
+            return;
+        }
+        if (mode > 2) {
+            return;
+        }
+        if (*(s8 *)(state + 0x121) == -1) {
+            return;
+        }
+        if ((u16)inpGetMidiCtrl(0x41, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122)) <
+            0x1f81) {
+            return;
+        }
+    }
+    if ((*(u32 *)(state + 0x118) & 0x400) == 0) {
+        fn_8026F5B8(state);
+    }
+    *(u32 *)(state + 0x118) |= 0x400;
+}
+
+/*
+ * Arithmetic command over synth registers.
+ */
+void fn_80276AD4(int state, u32 *args, u8 op)
+{
+    s16 lhs;
+    s16 rhs;
+    int result;
+
+    lhs = (s16)fn_802769A4(state, *args >> 0x18, args[1] & 0xff);
+    if (op == 4) {
+        rhs = (s16)(args[1] >> 8);
+    } else {
+        rhs = (s16)fn_802769A4(state, (args[1] >> 8) & 0xff, (args[1] >> 0x10) & 0xff);
+    }
+
+    if (op == 2) {
+        result = lhs * rhs;
+    } else if (op < 2) {
+        if (op != 0) {
+            result = lhs - rhs;
+        } else {
+            result = lhs + rhs;
+        }
+    } else if (op != 4) {
+        if (op < 4) {
+            if (rhs == 0) {
+                result = 0;
+            } else {
+                result = lhs / (int)rhs;
+            }
+        } else {
+            result = lhs + rhs;
+        }
+    } else {
+        result = lhs + rhs;
+    }
+
+    if (result < -0x8000) {
+        rhs = -0x8000;
+    } else if (result < 0x8000) {
+        rhs = (s16)result;
+    } else {
+        rhs = 0x7fff;
+    }
+    fn_80276A70(state, (*args >> 8) & 0xff, (*args >> 0x10) & 0xff, (int)rhs);
 }
 
 /*
