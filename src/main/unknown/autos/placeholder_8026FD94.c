@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 
 extern int fn_80271178(int handle, int mode, int flag);
+extern void fn_8026D0C4(u32 handle);
+extern void fn_8026D278(u32 handle);
+extern void fn_8026D630(u32 handle, u32 mixValue0, u32 mixValue1);
 extern u8 *lbl_803DE268;
 extern int lbl_803DE278;
 extern int lbl_803DE27C;
@@ -141,11 +144,27 @@ void fn_80271398(void **head, void (*cb)(int idx))
 }
 
 /*
- * fn_8027142C - list-walker variant (~108 instructions). Stubbed.
+ * Dispatch a completed fade action based on its type byte.
+ *
+ * EN v1.1 Address: 0x8027142C, size 108b
  */
-#pragma dont_inline on
-void fn_8027142C(void) {}
-#pragma dont_inline reset
+void fn_8027142C(u8 *fade)
+{
+    u8 action;
+
+    action = fade[0x2c];
+    switch (action) {
+    case 1:
+        fn_8026D278(*(u32 *)(fade + 0x28));
+        break;
+    case 2:
+        fn_8026D0C4(*(u32 *)(fade + 0x28));
+        break;
+    case 3:
+        fn_8026D630(*(u32 *)(fade + 0x28), 0, 0);
+        break;
+    }
+}
 
 /*
  * fn_80271498 - list-walker variant (~792 instructions). Stubbed.
