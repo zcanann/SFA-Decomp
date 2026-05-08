@@ -23,7 +23,7 @@ void FUN_800e3cec(undefined4 param_1,undefined4 param_2,float *param_3,float *pa
 void RomCurve_getAdjacentWindow(int param_1,int *param_2);
 int RomCurve_getNearestAdjacentLink(double param_1,double param_2,double param_3,int param_4,
                                     int param_5);
-double RomCurve_distanceToSegment(double param_1,double param_2,double param_3,float *param_4);
+f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment);
 int RomCurve_getRandomBlockedLink(int param_1,int param_2);
 int RomCurve_getRandomUnblockedLink(int param_1,int param_2);
 struct RomCurveDef;

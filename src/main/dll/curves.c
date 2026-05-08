@@ -2179,64 +2179,71 @@ LAB_800e4d74:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-double RomCurve_distanceToSegment(double param_1,double param_2,double param_3,float *param_4)
+f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment)
 {
-  double dVar1;
-  double dVar2;
-  double dVar3;
-  double dVar4;
-  double dVar5;
-  double dVar6;
-  double dVar7;
-  double dVar8;
-  double dVar9;
-  double dVar10;
-  
-  dVar5 = (double)param_4[3];
-  dVar4 = (double)*param_4;
-  dVar8 = (double)(float)(dVar5 - dVar4);
-  dVar6 = (double)param_4[4];
-  dVar3 = (double)param_4[1];
-  dVar9 = (double)(float)(dVar6 - dVar3);
-  dVar7 = (double)param_4[5];
-  dVar2 = (double)param_4[2];
-  dVar10 = (double)(float)(dVar7 - dVar2);
-  dVar1 = (double)lbl_803E12B8;
-  if (((dVar1 != dVar8) || (dVar1 != dVar9)) || (dVar1 != dVar10)) {
-    dVar1 = (double)((float)(dVar10 * (double)(float)(param_3 - dVar2) +
-                            (double)(float)(dVar8 * (double)(float)(param_1 - dVar4) +
-                                           (double)(float)(dVar9 * (double)(float)(param_2 - dVar3))
-                                           )) /
-                    (float)(dVar10 * dVar10 +
-                           (double)(float)(dVar8 * dVar8 + (double)(float)(dVar9 * dVar9))));
+  f32 startX;
+  f32 startY;
+  f32 startZ;
+  f32 endX;
+  f32 endY;
+  f32 endZ;
+  f32 deltaX;
+  f32 deltaY;
+  f32 deltaZ;
+  f32 projection;
+  f32 nearestX;
+  f32 nearestY;
+  f32 nearestZ;
+  f32 diffX;
+  f32 diffY;
+  f32 diffZ;
+  f32 distance;
+
+  endX = segment[3];
+  startX = segment[0];
+  deltaX = endX - startX;
+  endY = segment[4];
+  startY = segment[1];
+  deltaY = endY - startY;
+  endZ = segment[5];
+  startZ = segment[2];
+  deltaZ = endZ - startZ;
+  projection = lbl_803E12B8;
+  if (((projection != deltaX) || (projection != deltaY)) || (projection != deltaZ)) {
+    projection = (deltaY * (y - startY) + deltaX * (x - startX) + deltaZ * (z - startZ)) /
+                 (deltaY * deltaY + deltaX * deltaX + deltaZ * deltaZ);
   }
-  if ((double)lbl_803E12B8 <= dVar1) {
-    if (dVar1 <= (double)lbl_803E12B4) {
-      dVar5 = (double)(float)(dVar1 * dVar8 + dVar4);
-      dVar6 = (double)(float)(dVar1 * dVar9 + dVar3);
-      dVar7 = (double)(float)(dVar1 * dVar10 + dVar2);
-      dVar1 = (double)((float)(dVar7 - param_3) * (float)(dVar7 - param_3) +
-                      (float)(dVar5 - param_1) * (float)(dVar5 - param_1) +
-                      (float)(dVar6 - param_2) * (float)(dVar6 - param_2));
-    }
-    else {
-      dVar1 = -(double)((float)(dVar7 - param_3) * (float)(dVar7 - param_3) +
-                       (float)(dVar5 - param_1) * (float)(dVar5 - param_1) +
-                       (float)(dVar6 - param_2) * (float)(dVar6 - param_2));
-    }
+  if (projection < lbl_803E12B8) {
+    nearestX = startX;
+    nearestY = startY;
+    nearestZ = startZ;
+    diffZ = startZ - z;
+    diffX = startX - x;
+    diffY = startY - y;
+    distance = -(diffZ * diffZ + diffX * diffX + diffY * diffY);
+  }
+  else if (projection > lbl_803E12B4) {
+    nearestX = endX;
+    nearestY = endY;
+    nearestZ = endZ;
+    diffZ = endZ - z;
+    diffX = endX - x;
+    diffY = endY - y;
+    distance = -(diffZ * diffZ + diffX * diffX + diffY * diffY);
   }
   else {
-    dVar1 = -(double)((float)(dVar2 - param_3) * (float)(dVar2 - param_3) +
-                     (float)(dVar4 - param_1) * (float)(dVar4 - param_1) +
-                     (float)(dVar3 - param_2) * (float)(dVar3 - param_2));
-    dVar5 = dVar4;
-    dVar6 = dVar3;
-    dVar7 = dVar2;
+    nearestX = projection * deltaX + startX;
+    nearestY = projection * deltaY + startY;
+    nearestZ = projection * deltaZ + startZ;
+    diffZ = nearestZ - z;
+    diffX = nearestX - x;
+    diffY = nearestY - y;
+    distance = diffZ * diffZ + diffX * diffX + diffY * diffY;
   }
-  param_4[6] = (float)dVar5;
-  param_4[7] = (float)dVar6;
-  param_4[8] = (float)dVar7;
-  return dVar1;
+  segment[6] = nearestX;
+  segment[7] = nearestY;
+  segment[8] = nearestZ;
+  return distance;
 }
 
 /*

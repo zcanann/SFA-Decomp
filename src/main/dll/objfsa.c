@@ -29,7 +29,7 @@ extern int FUN_800e1b24();
 extern int FUN_800e1c00();
 extern int RomCurve_findByIdWithIndex();
 extern undefined4 RomCurve_getAdjacentWindow();
-extern undefined4 RomCurve_distanceToSegment();
+extern f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment);
 extern int FUN_80286818();
 extern undefined4 FUN_80286824();
 extern undefined8 FUN_8028682c();
