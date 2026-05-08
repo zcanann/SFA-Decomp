@@ -844,6 +844,8 @@ void Camera_update(undefined8 param_1,double param_2,double param_3,undefined8 p
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void *Camera_func08(void)
 {
   void **entry;
@@ -907,3 +909,5 @@ void Camera_initialise(void)
   lbl_803DD4CB = -1;
   lbl_803DB992 = 0xffff;
 }
+#pragma peephole reset
+#pragma scheduling reset
