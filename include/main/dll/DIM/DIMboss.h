@@ -15,5 +15,6 @@ void DIMboss_free(DIMbossObject *obj);
 void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                     undefined4 param_5,char shouldRender);
 void DIMboss_hitDetect(DIMbossObject *obj);
+void dimboss_update2(DIMbossObject *obj);
 
 #endif /* MAIN_DLL_DIM_DIMBOSS_H_ */

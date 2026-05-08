@@ -8,13 +8,17 @@ extern undefined8 padUpdate();
 extern undefined4 fn_80015624();
 extern undefined4 fn_80019C24();
 extern undefined4 FUN_80017620();
+extern undefined4 fn_80016870();
 extern uint GameBit_Get();
 extern undefined8 GameBit_Set();
 extern undefined4 checkReset();
 extern undefined8 mmFreeTick();
 extern undefined4 ObjModel_ClearRenderAttachment();
+extern undefined4 ObjModel_EnableDefaultRenderCallback();
 extern int Obj_GetActiveModel();
+extern undefined4 Obj_BuildWorldTransformMatrix();
 extern undefined4 FUN_80017a98();
+extern undefined4 fn_8002B9AC();
 extern undefined4 FUN_80017ac8();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_8003b818();
@@ -33,25 +37,33 @@ extern undefined4 GXFlush_();
 extern undefined8 waitNextFrame();
 extern undefined4 FUN_80053b3c();
 extern undefined4 FUN_8005fe14();
+extern undefined4 FUN_80080f70();
+extern undefined4 FUN_80080f7c();
+extern undefined4 FUN_80080f80();
 extern undefined8 fn_80114BB0();
 extern undefined4 FUN_801149bc();
 extern undefined4 FUN_801bb848();
 extern undefined4 fn_801BBB44();
 extern undefined8 fn_801BC7E4();
+extern undefined4 fn_8011508C();
 extern void OSReport(const char *msg, ...);
 
 extern undefined4 Camera_DisableViewYOffset();
+extern undefined4 getEnvfxAct();
 extern undefined4 Resource_Release();
 extern undefined4 fn_8001F384();
 extern undefined4 Obj_FreeObject();
 extern undefined4 Obj_GetPlayerObject();
+extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 fn_8003B8F4();
 extern undefined4 fn_80055000();
 extern undefined4 fn_800604B4();
 extern undefined4 fn_80114DEC();
+extern undefined4 fn_80115094();
 extern undefined4 fn_801BB598();
 
+extern f32 timeDelta;
 extern undefined4 DAT_803adc60;
 extern undefined4 DAT_803adc78;
 extern undefined4 DAT_803dd5d0;
@@ -64,12 +76,17 @@ extern undefined4 lbl_803DDB80;
 extern undefined4 DAT_803de808;
 extern f32 lbl_803E58DC;
 extern f32 lbl_803E5908;
+extern undefined4 lbl_803AC9AC[];
 extern undefined4 lbl_803AC9DC[];
 extern undefined4 lbl_803AD018[];
 extern int lbl_803DCA8C;
 extern undefined4* lbl_803DCAB8;
 extern undefined4 lbl_803DDB88;
+extern f32 lbl_803E4BD8;
 extern f32 lbl_803E4C44;
+extern f32 lbl_803E4C4C;
+extern f32 lbl_803E4C50;
+extern f32 lbl_803E4C54;
 extern char sDIMBossFreeingAssetsForDIMBoss[];
 extern char sDIMBossLoadingAssetsForDIMTop[];
 
@@ -80,17 +97,60 @@ typedef struct DIMbossEffect {
   u8 active;
 } DIMbossEffect;
 
+typedef struct DIMbossTopState {
+  DIMbossEffect *effect;
+  u8 pad004[0xA4 - 0x04];
+  f32 launchLift;
+  u8 pad0A8[0xAC - 0xA8];
+  f32 introSinkHeight;
+  s32 defeatTimer;
+  s8 stompDustDelay;
+  u8 pad0B5;
+  s8 steamSfxPending;
+} DIMbossTopState;
+
 typedef struct DIMbossRuntime {
   u8 pad000[0x274];
   s16 scale;
-  u8 pad276[0x402 - 0x276];
+  u8 pad276[0x2D0 - 0x276];
+  undefined4 targetModel;
+  u8 pad2D4[0x354 - 0x2D4];
+  u8 animMode;
+  u8 pad355[0x35C - 0x355];
+  u8 moveScratch[0x3F4 - 0x35C];
+  s16 activeMoveId;
+  s16 eventGameBit;
+  u8 pad3F8[0x400 - 0x3F8];
+  u16 stateFlags;
   s16 phase;
-  u8 pad404[0x40C - 0x404];
-  DIMbossEffect **effect;
+  u8 pad404;
+  u8 hitReactMode;
+  u8 pad406[0x40C - 0x406];
+  DIMbossTopState *topState;
 } DIMbossRuntime;
 
+typedef struct DIMbossConfig {
+  u8 pad00[0x08];
+  f32 spawnX;
+  f32 spawnY;
+  f32 spawnZ;
+  u8 pad14[0x2E - 0x14];
+  s8 animObjId;
+} DIMbossConfig;
+
 typedef struct DIMbossObject {
-  u8 pad00[0xAF];
+  u8 pad00[0x08];
+  f32 baseScale;
+  f32 posX;
+  f32 posY;
+  f32 posZ;
+  u8 pad18[0x30 - 0x18];
+  undefined4 facingAngle;
+  u8 pad34[0x4C - 0x34];
+  DIMbossConfig *config;
+  u8 pad50[0xA8 - 0x50];
+  f32 modelScale;
+  u8 padAC[0xAF - 0xAC];
   u8 objectFlags;
   u8 padB0[0xB8 - 0xB0];
   DIMbossRuntime *runtime;
@@ -98,6 +158,7 @@ typedef struct DIMbossObject {
   void *childObject;
   u8 padCC[0xF4 - 0xCC];
   int renderPause;
+  int updateInitialized;
 } DIMbossObject;
 
 /*
@@ -416,10 +477,12 @@ int dimboss_func08(void)
 void DIMboss_free(DIMbossObject *obj)
 {
   DIMbossRuntime *runtime;
+  DIMbossTopState *topState;
   void *childObject;
   void *effect;
 
   runtime = obj->runtime;
+  topState = runtime->topState;
   GameBit_Set(0xefd,0);
   GameBit_Set(0xc1e,1);
   GameBit_Set(0xc1f,0);
@@ -439,7 +502,7 @@ void DIMboss_free(DIMbossObject *obj)
     Resource_Release(lbl_803DDB88);
   }
   lbl_803DDB88 = 0;
-  effect = *runtime->effect;
+  effect = topState->effect;
   if (effect != NULL) {
     fn_8001F384(effect);
   }
@@ -465,10 +528,12 @@ void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
                     undefined4 param_5,char shouldRender)
 {
   DIMbossRuntime *runtime;
+  DIMbossTopState *topState;
   DIMbossEffect *effect;
   int visible;
 
   runtime = obj->runtime;
+  topState = runtime->topState;
   visible = shouldRender;
   if (visible == 0) {
     return;
@@ -482,7 +547,7 @@ void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
   fn_8003B8F4((double)lbl_803E4C44);
   fn_801BB598(obj,runtime);
   fn_80114DEC(obj,lbl_803AC9DC,0);
-  effect = *runtime->effect;
+  effect = topState->effect;
   if (effect == NULL) {
     return;
   }
@@ -511,6 +576,112 @@ void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
 void DIMboss_hitDetect(DIMbossObject *obj)
 {
   (*(code *)(*(int *)lbl_803DCA8C + 0xc))(obj,obj->runtime,lbl_803AD018);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dimboss_update2
+ * EN v1.0 Address: 0x801BD450
+ * EN v1.0 Size: 860b
+ * EN v1.1 Address: 0x801BDA04
+ * EN v1.1 Size: 860b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+void dimboss_update2(DIMbossObject *obj)
+{
+  uint gameBitCount;
+  undefined4 targetModel;
+  DIMbossRuntime *runtime;
+  DIMbossConfig *config;
+  DIMbossTopState *topState;
+  void *childObject;
+
+  runtime = obj->runtime;
+  config = obj->config;
+  Obj_GetPlayerObject();
+  topState = runtime->topState;
+  if (obj->renderPause == 0) {
+    if (lbl_803E4BD8 < topState->introSinkHeight) {
+      fn_80016870(0x432);
+      topState->introSinkHeight -= timeDelta;
+      if (topState->introSinkHeight < lbl_803E4BD8) {
+        topState->introSinkHeight = lbl_803E4BD8;
+      }
+    }
+    ObjHits_RegisterActiveHitVolumeObject(obj);
+    if (obj->updateInitialized == 0) {
+      obj->posX = config->spawnX;
+      obj->posY = config->spawnY;
+      obj->posZ = config->spawnZ;
+      (**(code **)(*DAT_803dd6d4 + 0x48))((int)config->animObjId,obj,0xffffffff);
+      obj->updateInitialized = 1;
+    }
+    else {
+      if ((runtime->stateFlags & 2) != 0) {
+        (**(code **)(*DAT_803dd738 + 0x28))
+                  (obj,runtime,runtime->moveScratch,(int)runtime->activeMoveId,
+                   &runtime->hitReactMode,0,0,0,1);
+        runtime->stateFlags &= ~2;
+        obj->objectFlags &= ~8;
+        obj->objectFlags |= 0x80;
+        gameBitCount = GameBit_Get(0x20c);
+        if (gameBitCount < 3) {
+          runtime->phase = 1;
+          runtime->animMode = 3;
+          obj->objectFlags &= ~8;
+          topState->launchLift = lbl_803E4C44;
+          GameBit_Set(0x9e,1);
+        }
+        else {
+          runtime->phase = 2;
+          runtime->animMode = 3;
+          obj->objectFlags &= ~8;
+          GameBit_Set(0x9e,0);
+        }
+      }
+      if ((runtime->phase == 0) || (runtime->phase == 3)) {
+        if ((topState->stompDustDelay != 0) &&
+            (--topState->stompDustDelay == 0)) {
+          Obj_BuildWorldTransformMatrix(obj,lbl_803AC9AC,0);
+          targetModel = Obj_GetActiveModel(obj);
+          ObjModel_EnableDefaultRenderCallback
+                    ((double)(obj->modelScale * obj->baseScale),obj,targetModel,lbl_803AC9AC,1);
+        }
+        if (topState->steamSfxPending < 0) {
+          getEnvfxAct(0,0,0xdb,0);
+          getEnvfxAct(0,0,0xdc,0);
+          FUN_80080f80(7,1,0);
+          FUN_80080f70((double)lbl_803E4C4C,(double)lbl_803E4C50,(double)lbl_803E4C54,7);
+          FUN_80080f7c(7,0xa0,0xa0,0xff,0x7f,0x28);
+          topState->steamSfxPending &= 0x7f;
+        }
+      }
+      else {
+        if ((runtime->stateFlags & 4) == 0) {
+          targetModel = Obj_GetPlayerObject();
+          runtime->targetModel = targetModel;
+        }
+        else {
+          targetModel = fn_8002B9AC();
+          runtime->targetModel = targetModel;
+        }
+        childObject = obj->childObject;
+        if (childObject != NULL) {
+          *(undefined4 *)((int)childObject + 0x30) = obj->facingAngle;
+        }
+        fn_801BC7E4(obj,0,runtime,runtime);
+        fn_8011508C(lbl_803AC9DC,runtime->targetModel);
+        fn_80115094(obj,lbl_803AC9DC);
+        fn_801BBB44(obj,runtime);
+      }
+    }
+  }
 }
 #pragma peephole reset
 #pragma scheduling reset
