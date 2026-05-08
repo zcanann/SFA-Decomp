@@ -1716,35 +1716,33 @@ void ObjGroup_RemoveObject(int obj,int group)
 #pragma peephole off
 int ObjGroup_GetObjectGroup(int obj)
 {
-  uint remaining;
   int group;
   int *entry;
   byte *offset;
   int objectIndex;
   
   objectIndex = 0;
-  entry = gObjGroupObjects;
-  remaining = (uint)gObjGroupObjectCount;
-  while( true ) {
-    if (remaining == 0) {
-      return 0;
+  entry = &gObjGroupObjects[0];
+  for (; objectIndex < (int)(uint)gObjGroupObjectCount; objectIndex = objectIndex + 1) {
+    if ((u32)*entry == (u32)obj) {
+      group = 0;
+      offset = gObjGroupOffsets;
+      while( true ) {
+        if ((int)(uint)*offset > objectIndex) {
+          return group;
+        }
+        if (group < 0x55) {
+          offset = offset + 1;
+          group = group + 1;
+        }
+        else {
+          return group;
+        }
+      }
     }
-    if (*entry == obj) break;
     entry = entry + 1;
-    objectIndex = objectIndex + 1;
-    remaining = remaining - 1;
   }
-  group = 0;
-  offset = gObjGroupOffsets;
-  while( true ) {
-    if (objectIndex < (int)(uint)*offset) {
-      return group;
-    }
-    if (group >= 0x55) break;
-    offset = offset + 1;
-    group = group + 1;
-  }
-  return group;
+  return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
