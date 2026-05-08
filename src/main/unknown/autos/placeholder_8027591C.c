@@ -5,6 +5,7 @@ extern int fn_80278B94(int p1, int p2, int p3, int p4, int p5, int p6, int p7, i
                        int p9, int p10, int p11, int p12, int p13, int p14, int p15, int p16);
 extern void fn_80271A3C(int voice, int state);
 extern void sndConvertMs(u32 *p);
+extern void sndConvertTicks(u32 *p, int state);
 
 /*
  * fn_802757C4 - voice param/key/velocity processor.
@@ -81,11 +82,61 @@ void fn_8027595C(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80275B38 - voice processor (~384 instructions). Stubbed.
+ * Configure the voice pitch bend ramp and curve flags.
  */
-#pragma dont_inline on
-void fn_80275B38(void) {}
-#pragma dont_inline reset
+void fn_80275B38(int state, u32 *args)
+{
+    s8 start;
+    s8 target;
+    u32 duration[2];
+
+    if (((*args >> 0x18) & 3) == 0) {
+        *(u32 *)(state + 0x118) &= ~0x4000;
+        *(u32 *)(state + 0x114) = *(u32 *)(state + 0x114);
+    } else {
+        *(u32 *)(state + 0x118) |= 0x4000;
+    }
+
+    duration[0] = args[1] >> 0x10;
+    if (((args[1] >> 8) & 1) == 0) {
+        sndConvertTicks(duration, state);
+    } else {
+        sndConvertMs(duration);
+    }
+    if (duration[0] == 0) {
+        *(u32 *)(state + 0x118) &= ~0x2000;
+        *(u32 *)(state + 0x114) = *(u32 *)(state + 0x114);
+    } else {
+        *(u32 *)(state + 0x118) |= 0x2000;
+        *(u32 *)(state + 0x144) = duration[0];
+        start = (s8)(*args >> 8);
+        target = (s8)(*args >> 0x10);
+        if (start < 0) {
+            if (target < 0) {
+                *(s8 *)(state + 0x141) = -target;
+            } else {
+                *(s8 *)(state + 0x141) = target;
+            }
+            *(s8 *)(state + 0x140) = -start;
+            *(u32 *)(state + 0x148) = *(u32 *)(state + 0x144) >> 1;
+        } else {
+            if (target < 0) {
+                if (start == 0) {
+                    *(s8 *)(state + 0x141) = -target;
+                    *(u32 *)(state + 0x148) = *(u32 *)(state + 0x144) >> 1;
+                } else {
+                    *(s8 *)(state + 0x141) = 100 - target;
+                    start--;
+                    *(u32 *)(state + 0x148) = 0;
+                }
+            } else {
+                *(s8 *)(state + 0x141) = target;
+                *(u32 *)(state + 0x148) = 0;
+            }
+            *(s8 *)(state + 0x140) = start;
+        }
+    }
+}
 
 /*
  * fn_80275CB8 - voice processor (~400 instructions). Stubbed.
