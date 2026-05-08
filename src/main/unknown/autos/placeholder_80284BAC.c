@@ -35,9 +35,9 @@ typedef struct ReverbState {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void salFree(void)
+void salFree(void *ptr)
 {
-    ((void (*)(void))lbl_803DE374[1])();
+    ((void (*)(void *))lbl_803DE374[1])(ptr);
 }
 
 /*

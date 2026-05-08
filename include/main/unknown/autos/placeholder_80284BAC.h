@@ -6,7 +6,7 @@
 typedef struct ReverbParams ReverbParams;
 typedef struct ReverbState ReverbState;
 
-void salFree(void);
+void salFree(void *ptr);
 void sndAuxCallbackReverbSTD(u8 mode, ReverbParams *params, ReverbState *state);
 void sndAuxCallbackUpdateSettingsReverbSTD(ReverbState *state);
 
