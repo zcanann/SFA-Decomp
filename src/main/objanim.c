@@ -253,26 +253,24 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
     objAnim->activeMoveProgress = fVar4 + moveStepScale * deltaTime;
     fVar6 = lbl_803DE8F0;
     fVar5 = lbl_803DE8E0;
-    if (objAnim->activeMoveProgress < lbl_803DE8E0) {
-      if (objAnim->activeMoveProgress < lbl_803DE8F0) {
-        if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
-          objAnim->activeMoveProgress = lbl_803DE8F0;
-        }
-        else {
-          while (objAnim->activeMoveProgress < fVar6) {
-            objAnim->activeMoveProgress = objAnim->activeMoveProgress + fVar5;
-          }
-        }
-        moveWrappedOrEnded = 1;
-      }
-    }
-    else {
+    if (objAnim->activeMoveProgress >= lbl_803DE8E0) {
       if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
         objAnim->activeMoveProgress = lbl_803DE8E0;
       }
       else {
         while (fVar5 <= objAnim->activeMoveProgress) {
           objAnim->activeMoveProgress = objAnim->activeMoveProgress - fVar5;
+        }
+      }
+      moveWrappedOrEnded = 1;
+    }
+    else if (objAnim->activeMoveProgress < lbl_803DE8F0) {
+      if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
+        objAnim->activeMoveProgress = lbl_803DE8F0;
+      }
+      else {
+        while (objAnim->activeMoveProgress < fVar6) {
+          objAnim->activeMoveProgress = objAnim->activeMoveProgress + fVar5;
         }
       }
       moveWrappedOrEnded = 1;
@@ -862,26 +860,25 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
     objAnim->currentMoveProgress = fVar4 + fVar3;
     fVar6 = lbl_803DE8F0;
     fVar5 = lbl_803DE8E0;
-    if (objAnim->currentMoveProgress < lbl_803DE8E0) {
-      if (objAnim->currentMoveProgress < lbl_803DE8F0) {
-        if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
-          objAnim->currentMoveProgress = lbl_803DE8F0;
-        }
-        else {
-          while (objAnim->currentMoveProgress < fVar6) {
-            objAnim->currentMoveProgress = objAnim->currentMoveProgress + fVar5;
-          }
-        }
-        uVar18 = 1;
+    if (objAnim->currentMoveProgress >= lbl_803DE8E0) {
+      if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
+        objAnim->currentMoveProgress = lbl_803DE8E0;
       }
-    }
-    else if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
-      objAnim->currentMoveProgress = lbl_803DE8E0;
+      else {
+        while (fVar5 <= objAnim->currentMoveProgress) {
+          objAnim->currentMoveProgress = objAnim->currentMoveProgress - fVar5;
+        }
+      }
       uVar18 = 1;
     }
-    else {
-      while (fVar5 <= objAnim->currentMoveProgress) {
-        objAnim->currentMoveProgress = objAnim->currentMoveProgress - fVar5;
+    else if (objAnim->currentMoveProgress < lbl_803DE8F0) {
+      if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
+        objAnim->currentMoveProgress = lbl_803DE8F0;
+      }
+      else {
+        while (objAnim->currentMoveProgress < fVar6) {
+          objAnim->currentMoveProgress = objAnim->currentMoveProgress + fVar5;
+        }
       }
       uVar18 = 1;
     }
