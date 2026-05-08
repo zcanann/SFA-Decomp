@@ -75,8 +75,7 @@ void textureSetupFn_800799c0(void);
 void _gxSetTevColor2(u8 r, u8 g, u8 b, u8 a);
 void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a);
 void fn_80079A64(f32 sx, f32 sy, u8 a, u8 flag);
-void fn_80079E64(double param_1,double param_2,double param_3,undefined param_4,undefined4 param_5,
-                 undefined param_6,undefined param_7);
+void fn_80079E64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 alpha0, u8 alpha1);
 void fn_8007A71C(uint param_1);
 void fn_8007AD10(f32 alpha);
 void fn_8007B01C(double wx, double wy, double wz, char param4, char param5);
