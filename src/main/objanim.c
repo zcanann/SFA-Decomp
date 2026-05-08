@@ -46,10 +46,8 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
   int frameType;
   int moveData;
   int moveIndex;
-  s16 blendEventState;
   u64 frameBits;
 
-  blendEventState = eventState;
   moveIndex = animDef->moveBaseTable[(s32)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
               (moveId & OBJANIM_MOVE_INDEX_MASK);
   if (moveIndex >= animDef->moveCount) {
@@ -91,7 +89,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
       state->eventState = 0;
     }
     else {
-      state->eventState = blendEventState;
+      state->eventState = eventState;
     }
   }
   return;

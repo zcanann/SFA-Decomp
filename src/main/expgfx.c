@@ -105,7 +105,7 @@ extern byte gExpgfxPoolBoundsTemplateIds;
 extern char gExpgfxPoolActiveCounts;
 extern char DAT_8039c829;
 extern uint gExpgfxPoolActiveMasks;
-extern u32 lbl_8039BD58;
+extern u32 lbl_8039BD58[];
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dd430;
 extern undefined4* DAT_803dd708;
@@ -281,7 +281,7 @@ static inline void Expgfx_SetSlotTableIndex(ExpgfxSlot *slot, u8 tableIndex) {
 }
 
 static inline ExpgfxSlot *Expgfx_GetSlot(int poolIndex, int slotIndex) {
-  return (ExpgfxSlot *)((&gExpgfxSlotPoolBases)[poolIndex] + slotIndex * EXPGFX_SLOT_SIZE);
+  return (ExpgfxSlot *)(gExpgfxSlotPoolBases[poolIndex] + slotIndex * EXPGFX_SLOT_SIZE);
 }
 
 static inline ExpgfxBounds *Expgfx_GetBoundsTemplate(int templateIndex) {
@@ -2167,14 +2167,14 @@ void expgfx_resetPoolResources(void)
  */
 void expgfx_releaseSlotPoolHandles(void)
 {
-  u32 *slotPoolBases;
   int poolIndex;
+  u32 *slotPoolBases;
 
   asm {
     bl expgfx_initialise
   }
   poolIndex = 0;
-  slotPoolBases = &gExpgfxSlotPoolBases;
+  slotPoolBases = gExpgfxSlotPoolBases;
   do {
     fn_80023800(*slotPoolBases);
     slotPoolBases = slotPoolBases + 1;
