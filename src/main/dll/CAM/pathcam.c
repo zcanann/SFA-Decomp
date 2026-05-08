@@ -4,12 +4,20 @@
 
 extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,
                                            int model);
+extern void Obj_TransformLocalPointToWorld(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,
+                                           int model);
 extern s16 getAngle(f32 dx,f32 dz);
+extern void *mmAlloc(int size,int heap,int flags);
 extern undefined4 camcontrol_getTargetPosition();
+extern double fn_80010DC0();
+extern undefined4 fn_80010320();
+extern undefined8 FUN_80286840();
+extern undefined4 FUN_8028688c();
 extern void fn_80023800(void *ptr);
 
 extern int *lbl_803DCA50;
 extern f32 *cameraMtxVar57;
+extern undefined4 lbl_803DD538;
 extern f64 DOUBLE_803e1698;
 extern f64 DOUBLE_803e16f8;
 extern f32 lbl_803E16D0;
@@ -20,6 +28,9 @@ extern f32 lbl_803E1710;
 extern f32 lbl_803E1714;
 extern f32 lbl_803E1734;
 extern f32 lbl_803E1738;
+extern f32 lbl_803E1740;
+extern f32 lbl_803E1744;
+extern f32 lbl_803E1748;
 
 #define gCamcontrolModeSettings cameraMtxVar57
 
@@ -296,3 +307,80 @@ void pathcam_loadSettings(undefined2 *param_1,int param_2,int param_3)
 void camcontrol_releaseModeSettings(void) { fn_80023800(cameraMtxVar57); cameraMtxVar57 = 0; }
 #pragma peephole reset
 #pragma scheduling reset
+
+void camcontrol_initialiseModeSettings(void)
+{
+  cameraMtxVar57 = (f32 *)mmAlloc(0xcc,0xf,0);
+  memset(cameraMtxVar57,0,0xcc);
+  return;
+}
+
+void camcontrol_samplePathState(undefined4 param_1,undefined4 param_2,undefined4 *param_3,
+                                undefined4 param_4,int param_5)
+{
+  int iVar1;
+  int iVar2;
+  double dVar3;
+  double dVar4;
+  undefined8 uVar5;
+  undefined auStack_168 [12];
+  float local_15c;
+  float local_158;
+  float local_154;
+  float fStack_150;
+  float fStack_14c;
+  float afStack_148 [4];
+  int local_138;
+  undefined4 local_c4;
+  float local_c0;
+  float local_bc;
+  float local_b8;
+  float fStack_b0;
+  float fStack_ac;
+  float afStack_a8 [42];
+
+  uVar5 = FUN_80286840();
+  memset(auStack_168,0,0x144);
+  local_138 = *(int *)(param_5 + 0x30);
+  iVar1 = lbl_803DD538 + *(int *)(lbl_803DD538 + 0x1b0) * 4;
+  local_15c = *(float *)(iVar1 + 0x14);
+  local_158 = *(float *)uVar5;
+  local_154 = *(float *)(iVar1 + 0xb4);
+  local_c0 = local_15c;
+  local_bc = local_158;
+  local_b8 = local_154;
+  Obj_TransformLocalPointToWorld((double)local_15c,(double)local_158,(double)local_154,
+                                 &fStack_b0,&fStack_ac,afStack_a8,local_138);
+  local_c4 = param_4;
+  iVar1 = (**(code **)(*lbl_803DCA50 + 0x18))();
+  (**(code **)(**(int **)(iVar1 + 4) + 0x14))(auStack_168,param_4);
+  Obj_TransformLocalPointToWorld((double)local_15c,(double)local_158,(double)local_154,
+                                 &fStack_150,&fStack_14c,afStack_148,local_138);
+  (**(code **)(**(int **)(iVar1 + 4) + 0x24))
+            (auStack_168,1,3,lbl_803DD538 + 0x14,lbl_803DD538 + 0x18);
+  iVar2 = *(int *)(lbl_803DD538 + 0x1b0) + -3;
+  iVar1 = iVar2 * 4;
+  for (; iVar2 < *(int *)(lbl_803DD538 + 0x1b0); iVar2 = iVar2 + 1) {
+    *(float *)(lbl_803DD538 + iVar1 + 0x1c) = local_15c;
+    *(float *)(lbl_803DD538 + iVar1 + 0xbc) = local_154;
+    iVar1 = iVar1 + 4;
+  }
+  dVar3 = (double)lbl_803E1740;
+  if (dVar3 != (double)*(float *)(lbl_803DD538 + 300)) {
+    dVar3 = (double)(float)((double)*(float *)(lbl_803DD538 + 0x128) /
+                           (double)*(float *)(lbl_803DD538 + 300));
+  }
+  dVar4 = (double)lbl_803E1744;
+  if ((dVar3 <= dVar4) && (dVar4 = dVar3, dVar3 < (double)lbl_803E1740)) {
+    dVar4 = (double)lbl_803E1740;
+  }
+  dVar3 = fn_80010DC0(dVar4,(float *)(lbl_803DD538 + 0x10c),(float *)0x0);
+  if (dVar3 < (double)lbl_803E1748) {
+    dVar3 = (double)lbl_803E1748;
+  }
+  fn_80010320(dVar3,(float *)(lbl_803DD538 + 0x120));
+  *(undefined4 *)((ulonglong)uVar5 >> 0x20) = *(undefined4 *)(lbl_803DD538 + 0x188);
+  *param_3 = *(undefined4 *)(lbl_803DD538 + 400);
+  FUN_8028688c();
+  return;
+}
