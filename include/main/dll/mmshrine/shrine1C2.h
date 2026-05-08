@@ -3,9 +3,7 @@
 
 #include "ghidra_import.h"
 
-void ecsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 ushort *param_9);
+void ecsh_shrine_update(ushort *param_9);
 void FUN_801c6dd8(undefined2 *param_1,int param_2);
 void FUN_801c6ddc(int param_1);
 void FUN_801c6e04(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
