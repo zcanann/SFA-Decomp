@@ -97,6 +97,8 @@ extern void hwBreak(int slot);
 extern void fn_80279B98(int state);
 extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
 extern void inpResetChannelDefaults(u8 a, u8 b);
+void fn_80278990(int state);
+void fn_802788B4(int state, int skipFadeReset);
 
 /*
  * --INFO--
@@ -424,6 +426,151 @@ uint FUN_802765bc(int *param_1)
  */
 void FUN_802765c4(int *param_1,int param_2)
 {
+}
+
+/*
+ * Large per-voice command dispatcher. Stubbed, but named so callers can
+ * reference the recovered current EN boundary.
+ */
+#pragma dont_inline on
+void fn_80276F0C(int state)
+{
+    (void)state;
+}
+#pragma dont_inline reset
+
+/*
+ * Advance the synth voice timer queue and process active voices.
+ */
+void fn_80278418(u32 delta)
+{
+    int timer;
+    int active;
+    u32 wakeLo;
+    int wakeHi;
+    int nextTimer;
+    int hasAlt;
+
+    timer = lbl_803DE2D8;
+    while (active = lbl_803DE2D4, timer != 0) {
+        wakeLo = *(u32 *)(timer + 0x9c);
+        wakeHi = *(int *)(timer + 0x98);
+        if (lbl_803DE2E0 < (u32)(lbl_803DE2E4 < wakeLo) + wakeHi) {
+            break;
+        }
+        nextTimer = *(int *)(timer + 0x44);
+        fn_80278990(timer);
+        *(u32 *)(timer + 0xa4) = wakeLo;
+        *(int *)(timer + 0xa0) = wakeHi;
+        timer = nextTimer;
+    }
+
+    for (; active != 0; active = *(int *)(active + 0x3c)) {
+        if (*(s8 *)(active + 0x68) == 0) {
+            hasAlt = 0;
+        } else {
+            hasAlt = *(int *)(active + 0x54) != 0;
+        }
+        if (hasAlt && ((*(u32 *)(active + 0x118) & 0x20) == 0) &&
+            hwIsActive(*(u32 *)(active + 0xf4) & 0xff) == 0 &&
+            (*(s8 *)(active + 0x68) != 0 && *(int *)(active + 0x54) != 0)) {
+            *(int *)(active + 0x38) = *(int *)(active + 0x60);
+            *(int *)(active + 0x34) = *(int *)(active + 0x54);
+            *(int *)(active + 0x54) = 0;
+            fn_80278990(active);
+        }
+        fn_80276F0C(active);
+    }
+    lbl_803DE2E0 += CARRY4(lbl_803DE2E4, delta);
+    lbl_803DE2E4 += delta;
+}
+
+/*
+ * Resume an active voice from its alternate command stream when needed.
+ */
+void fn_80278560(int state)
+{
+    int resumed;
+
+    if (*(int *)(state + 0x4c) == 1) {
+        if (*(s8 *)(state + 0x68) == 0 || *(int *)(state + 0x54) == 0) {
+            resumed = 0;
+        } else {
+            *(int *)(state + 0x38) = *(int *)(state + 0x60);
+            *(int *)(state + 0x34) = *(int *)(state + 0x54);
+            *(int *)(state + 0x54) = 0;
+            fn_80278990(state);
+            resumed = 1;
+        }
+        if (!resumed && ((*(u32 *)(state + 0x118) & 0x40000) != 0)) {
+            fn_80278990(state);
+        }
+    }
+}
+
+/*
+ * Mark a voice for key-off/release, falling back to its release stream.
+ */
+u32 fn_80278610(int state)
+{
+    int resumed;
+    u32 result;
+
+    result = *(u32 *)(state + 0x114);
+    *(u32 *)(state + 0x118) |= 8;
+    if (*(int *)(state + 0x34) != 0) {
+        result = 0;
+        if ((*(u32 *)(state + 0x114) & 0x100) == 0) {
+            if (*(s8 *)(state + 0x68) == 0 || *(int *)(state + 0x50) == 0) {
+                resumed = 0;
+            } else {
+                *(int *)(state + 0x38) = *(int *)(state + 0x5c);
+                *(int *)(state + 0x34) = *(int *)(state + 0x50);
+                *(int *)(state + 0x50) = 0;
+                fn_80278990(state);
+                resumed = 1;
+            }
+            if (!resumed) {
+                result = *(u32 *)(state + 0x118) & 4;
+                if (result != 0) {
+                    fn_80278990(state);
+                }
+            }
+        } else {
+            *(u32 *)(state + 0x118) = *(u32 *)(state + 0x118);
+            *(u32 *)(state + 0x114) |= 0x400;
+        }
+    }
+    return result;
+}
+
+/*
+ * Clear or defer the release request flag.
+ */
+void fn_80278704(int state, int defer)
+{
+    int resumed;
+
+    if (defer == 0) {
+        if (*(int *)(state + 0x34) != 0 && ((*(u32 *)(state + 0x114) & 0x400) != 0)) {
+            if (*(s8 *)(state + 0x68) == 0 || *(int *)(state + 0x50) == 0) {
+                resumed = 0;
+            } else {
+                *(int *)(state + 0x38) = *(int *)(state + 0x5c);
+                *(int *)(state + 0x34) = *(int *)(state + 0x50);
+                *(int *)(state + 0x50) = 0;
+                fn_80278990(state);
+                resumed = 1;
+            }
+            if (!resumed && ((*(u32 *)(state + 0x118) & 4) != 0)) {
+                fn_80278990(state);
+            }
+        }
+        *(u32 *)(state + 0x118) = *(u32 *)(state + 0x118);
+        *(u32 *)(state + 0x114) &= 0xfffffaff;
+    } else {
+        *(u32 *)(state + 0x114) |= 0x100;
+    }
 }
 
 /*
