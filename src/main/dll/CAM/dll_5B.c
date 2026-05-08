@@ -23,6 +23,7 @@ extern uint FUN_80017730();
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern int FUN_80017a98();
+extern void *mmAlloc(int size,int heap,int flags);
 extern int ObjHits_GetPriorityHit();
 extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_80053bf0();
@@ -46,7 +47,7 @@ extern undefined4 framesThisStep;
 extern undefined4* lbl_803DCA50;
 extern undefined4* lbl_803DCA9C;
 extern undefined4* lbl_803DD548;
-extern undefined4* lbl_803DD550;
+extern f32* lbl_803DD550;
 extern undefined4* lbl_803DD558;
 extern f64 lbl_803E17D8;
 extern f64 lbl_803E1838;
@@ -446,6 +447,12 @@ void fn_80109778(short *param_1)
  */
 void fn_80109AA8(void)
 {
+  if (lbl_803DD550 == (f32 *)0x0) {
+    lbl_803DD550 = (f32 *)mmAlloc(8,0xf,0);
+  }
+  *lbl_803DD550 = lbl_803E1870;
+  lbl_803DD550[1] = lbl_803E1840;
+  return;
 }
 
 /*
@@ -717,7 +724,7 @@ void CameraModeStatic_release(void) {}
 void CameraModeStatic_initialise(void) {}
 
 /* fn_X(lbl); lbl = 0; */
-extern void fn_80023800(undefined4 *);
+extern void fn_80023800(void *);
 #pragma scheduling off
 #pragma peephole off
 void fn_8010974C(void) { fn_80023800(lbl_803DD550); lbl_803DD550 = 0; }
