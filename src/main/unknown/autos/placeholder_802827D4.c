@@ -3,6 +3,8 @@
 
 extern u16 _GetInputValue(void *state, void *slot, u8 a, u8 b);
 extern int fn_8026F584(int x);
+extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
+extern void inpSetMidiCtrl14(u8 controller, u8 slot, u8 key, u32 value);
 
 extern u32 lbl_803DC610;
 extern s16 lbl_80330028[];
@@ -190,15 +192,46 @@ u32 inpTranslateExCtrl(u32 input)
     }
 }
 
-/* inpGetExCtrl - extended controller getter. Stubbed. */
-#pragma dont_inline on
-void inpGetExCtrl(void) {}
-#pragma dont_inline reset
+/*
+ * Read an extended controller value, with local state-backed overrides for
+ * translated controller 0xA0/0xA1.
+ */
+u32 inpGetExCtrl(int state, u32 ctrl)
+{
+    u8 translated;
+    u32 value;
 
-/* inpSetExCtrl - extended controller setter. Stubbed. */
-#pragma dont_inline on
-void inpSetExCtrl(void) {}
-#pragma dont_inline reset
+    translated = inpTranslateExCtrl(ctrl);
+    if (translated == 0xa1) {
+        value = *(s16 *)(state + 0x1d0) * 2 + 0x2000;
+    } else if (translated < 0xa1 && translated > 0x9f) {
+        value = *(s16 *)(state + 0x1c4) * 2 + 0x2000;
+    } else if (*(s8 *)(state + 0x121) == -1) {
+        value = 0;
+    } else {
+        value = inpGetMidiCtrl(ctrl, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122));
+        value &= 0xffff;
+    }
+    return value;
+}
+
+/*
+ * Clamp and write an extended controller through MIDI for non-local controls.
+ */
+void inpSetExCtrl(int state, u32 ctrl, s16 value)
+{
+    u8 translated;
+
+    if (value < 0) {
+        value = 0;
+    } else if (value > 0x3fff) {
+        value = 0x3fff;
+    }
+    translated = inpTranslateExCtrl(ctrl);
+    if ((translated > 0xa1 || translated < 0xa0) && *(s8 *)(state + 0x121) != -1) {
+        inpSetMidiCtrl14(ctrl, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122), (int)value);
+    }
+}
 
 /*
  * Pseudo-random number generator (linear congruential).
