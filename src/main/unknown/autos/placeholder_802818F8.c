@@ -22,7 +22,7 @@ void inpSetMidiCtrl(int idx, u8 a, u8 b, u8 mask)
     if (a == 0xff) return;
 
     if (b != 0xff) {
-        /* main branch — b is concrete */
+        /* main branch - b is concrete */
         switch (idx) {
         case 0x6: {
             u8 *e = lbl_803CD760 + b * 0x860 + a * 0x86;
@@ -99,7 +99,7 @@ void inpSetMidiCtrl(int idx, u8 a, u8 b, u8 mask)
         }
         *(u32 *)(lbl_803CD760 + b * 0x40 + a * 4 + 0x6540) = 0xff;
     } else {
-        /* b == 0xff branch — same dispatch but different common path */
+        /* b == 0xff branch - same dispatch but different common path */
         switch (idx) {
         case 0x6: {
             u8 *e = lbl_803CD760 + b * 0x860 + a * 0x86;
@@ -179,11 +179,22 @@ void inpSetMidiCtrl(int idx, u8 a, u8 b, u8 mask)
 
 /*
  * inpSetMidiCtrl14 - wrapper that splits a 16-bit data word into two
- * byte halves and dispatches to the MIDI-control setter. Stubbed.
+ * 7-bit MIDI controller bytes and dispatches to the MIDI-control setter.
  */
-#pragma dont_inline on
 void inpSetMidiCtrl14(u8 idx, u8 a, u8 b, u32 data)
 {
-    (void)idx; (void)a; (void)b; (void)data;
+    if (a != 0xff) {
+        if (idx < 0x40) {
+            inpSetMidiCtrl(idx & 0x1f, a, b, (data >> 7) & 0xff);
+            inpSetMidiCtrl((idx & 0x1f) + 0x20, a, b, data & 0x7f);
+        } else if (((idx - 0x80) & 0xff) < 2) {
+            inpSetMidiCtrl(idx & 0xfe, a, b, (data >> 7) & 0xff);
+            inpSetMidiCtrl((idx & 0xfe) + 1, a, b, data & 0x7f);
+        } else if (((idx - 0x84) & 0xff) < 2) {
+            inpSetMidiCtrl(idx & 0xfe, a, b, (data >> 7) & 0xff);
+            inpSetMidiCtrl((idx & 0xfe) + 1, a, b, data & 0x7f);
+        } else {
+            inpSetMidiCtrl(idx, a, b, (data >> 7) & 0xff);
+        }
+    }
 }
-#pragma dont_inline reset
