@@ -9,6 +9,12 @@ extern undefined4 FUN_80017a98();
 extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
+extern undefined4 Resource_Acquire();
+extern uint randomGetRange();
+extern undefined4 ObjAnim_SetCurrentMove();
+extern undefined4 ObjHitbox_SetSphereRadius();
+extern undefined4 Obj_IsLoadingLocked();
+extern undefined4 Obj_GetPlayerObject();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
@@ -20,6 +26,8 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8008111c();
 extern undefined4 FUN_80081120();
 extern undefined4 FUN_801695e8();
+extern undefined8 _savegpr_27();
+extern undefined4 _restgpr_27();
 extern int FUN_8028683c();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_80286888();
@@ -38,6 +46,8 @@ extern undefined4 DAT_803ad2cc;
 extern undefined4 DAT_803ad2d0;
 extern undefined4 DAT_803ad2e0;
 extern undefined4 DAT_803ad2f8;
+extern void* lbl_803AC680[];
+extern void* lbl_803AC698[];
 extern undefined4* pDll_expgfx;
 extern undefined4* lbl_803DCA8C;
 extern undefined4* lbl_803DCAAC;
@@ -64,6 +74,28 @@ extern f32 lbl_803E3D4C;
 extern f32 lbl_803E3D58;
 extern f32 lbl_803E3D5C;
 extern f32 lbl_803E3D60;
+extern f32 lbl_803E3060;
+extern f64 DOUBLE_803E3070;
+extern f32 lbl_803E307C;
+extern f32 lbl_803E30A0;
+extern f32 lbl_803E30A4;
+extern f32 lbl_803E30C8;
+extern f32 lbl_803E30CC;
+
+extern void fn_80167764(void);
+extern void fn_801678E4(void);
+extern void fn_8016792C(void);
+extern void fn_80167988(void);
+extern void fn_80167A60(void);
+extern void fn_80167AE4(void);
+extern void fn_80167B60(void);
+extern void fn_80167D10(void);
+extern void fn_80167DA4(void);
+extern void fn_80167E3C(void);
+extern void fn_80167EC4(void);
+extern void fn_80167F58(void);
+extern void fn_80168018(void);
+extern void fn_80168118(void);
 
 /*
  * --INFO--
@@ -353,6 +385,14 @@ void fn_8016874C(undefined8 param_1,double param_2,double param_3,double param_4
   return;
 }
 
+/* Trivial 4b 0-arg blr leaves. */
+void kaldachom_func0B(void) {}
+
+/* 8b "li r3, N; blr" returners and small wrappers. */
+s16 kaldachom_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
+int kaldachom_getExtraSize(void) { return 0x45c; }
+int kaldachom_func08(void) { return 0x49; }
+
 /*
  * --INFO--
  *
@@ -414,6 +454,8 @@ void kaldachom_render(void)
   FUN_80286888();
   return;
 }
+
+void kaldachom_hitDetect(void) {}
 
 /*
  * --INFO--
@@ -529,15 +571,86 @@ void kaldachom_update(undefined8 param_1,double param_2,double param_3,double pa
   return;
 }
 
+/*
+ * --INFO--
+ *
+ * Function: kaldachom_init
+ * EN v1.0 Address: 0x801690B8
+ * EN v1.0 Size: 488b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void kaldachom_init(undefined4 param_1,undefined4 param_2,int param_3)
+{
+  double dVar1;
+  int iVar2;
+  uint uVar3;
+  undefined4 uVar4;
+  undefined4 *puVar5;
+  int iVar6;
+  undefined8 uVar7;
 
-/* Trivial 4b 0-arg blr leaves. */
-void kaldachom_func0B(void) {}
-void kaldachom_hitDetect(void) {}
+  uVar7 = _savegpr_27();
+  iVar2 = (int)((ulonglong)uVar7 >> 0x20);
+  iVar6 = *(int *)(iVar2 + 0xb8);
+  uVar4 = 6;
+  if (param_3 != 0) {
+    uVar4 = 7;
+  }
+  (**(code **)(*lbl_803DCAB8 + 0x58))((double)lbl_803E30C8,iVar2,(int)uVar7,iVar6,8,6,0,uVar4);
+  *(undefined4 *)(iVar2 + 0xbc) = 0;
+  puVar5 = *(undefined4 **)(iVar6 + 0x40c);
+  ObjAnim_SetCurrentMove((double)lbl_803E3060,iVar2,4,0x10);
+  *(float *)(iVar2 + 0x98) = lbl_803E307C;
+  *(byte *)(iVar2 + 0xaf) = *(byte *)(iVar2 + 0xaf) | 8;
+  (**(code **)(*lbl_803DCA8C + 0x14))(iVar2,iVar6,0);
+  *(undefined2 *)(iVar6 + 0x270) = 0;
+  *(float *)(iVar6 + 0x2a0) = lbl_803E307C;
+  *(float *)(iVar6 + 0x280) = lbl_803E3060;
+  uVar4 = Obj_GetPlayerObject();
+  *(undefined4 *)(iVar6 + 0x2d0) = uVar4;
+  *(undefined *)(iVar6 + 0x25f) = 0;
+  ObjHits_DisableObject(iVar2);
+  uVar3 = randomGetRange(300,600);
+  puVar5[0xd] = (float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - DOUBLE_803E3070);
+  uVar3 = randomGetRange(0,499);
+  dVar1 = DOUBLE_803E3070;
+  puVar5[0xe] = (float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - DOUBLE_803E3070);
+  puVar5[0xf] = lbl_803E3060;
+  *puVar5 = 0;
+  *(ushort *)(iVar2 + 0xb0) = *(ushort *)(iVar2 + 0xb0) | 0x2000;
+  *(float *)(iVar2 + 8) =
+       lbl_803E30A0 +
+       (float)((double)CONCAT44(0x43300000,(int)*(char *)((int)uVar7 + 0x28) ^ 0x80000000) - dVar1)
+       / lbl_803E30A4;
+  ObjHitbox_SetSphereRadius(iVar2,(int)(lbl_803E30CC * *(float *)(iVar2 + 8)));
+  if (param_3 == 0) {
+    lbl_803DDA90 = (undefined4 *)Resource_Acquire(0x5a,1);
+  }
+  _restgpr_27();
+  return;
+}
+
 void kaldachom_release(void) {}
 
-/* 8b "li r3, N; blr" returners. */
-int kaldachom_getExtraSize(void) { return 0x45c; }
-int kaldachom_func08(void) { return 0x49; }
-
-/* Pattern wrappers. */
-s16 kaldachom_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
+void kaldachom_initialise(void)
+{
+  lbl_803AC698[0] = fn_80168118;
+  lbl_803AC698[1] = fn_80168018;
+  lbl_803AC698[2] = fn_80167F58;
+  lbl_803AC698[3] = fn_80167EC4;
+  lbl_803AC698[4] = fn_80167E3C;
+  lbl_803AC698[5] = fn_80167DA4;
+  lbl_803AC698[6] = fn_80167D10;
+  lbl_803AC698[7] = fn_80167B60;
+  lbl_803AC680[0] = fn_80167AE4;
+  lbl_803AC680[1] = fn_80167A60;
+  lbl_803AC680[2] = fn_80167988;
+  lbl_803AC680[3] = fn_8016792C;
+  lbl_803AC680[4] = fn_801678E4;
+  lbl_803AC680[5] = fn_80167764;
+}
