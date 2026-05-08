@@ -49,15 +49,96 @@ void fn_8026D060(int node)
     *(u8 *)(node + 8) = 2;
 }
 
+extern u8 gSynthVoices[];
+extern void fn_8027A0CC(int p);
+extern void synthRecycleVoiceCallbacks(int voice);
+
 /*
- * fn_8026D0C4 — voice cleanup with callbacks (~436 instructions). Stubbed.
+ * fn_8026D0C4 — voice handle lookup + cleanup with callbacks.
+ *
+ * EN v1.0 Address: 0x8026D0C4
+ * EN v1.0 Size: 436b
  */
-#pragma dont_inline on
 void fn_8026D0C4(int handle)
 {
-    (void)handle;
+    u32 key;
+    int found;
+    int i;
+
+    key = (u32)handle & 0x7fffffffu;
+
+    found = gSynthQueuedVoices;
+    while (found != 0) {
+        if ((u32)*(int *)((u8 *)found + 0xc) == key) {
+            found = *(u8 *)((u8 *)found + 9) | (handle & 0x80000000);
+            goto done;
+        }
+        found = *(int *)found;
+    }
+
+    found = gSynthAllocatedVoices;
+    while (found != 0) {
+        if ((u32)*(int *)((u8 *)found + 0xc) == key) {
+            found = *(u8 *)((u8 *)found + 9) | (handle & 0x80000000);
+            goto done;
+        }
+        found = *(int *)found;
+    }
+    found = -1;
+done:
+
+    if ((u32)(found + 1) == 0xffff) return;
+
+    if ((found & 0x80000000) == 0) {
+        u8 *voice = gSynthVoices + found * 0x1868;
+        if (*(u8 *)(voice + 8) != 1) return;
+
+        /* Unlink from queued list */
+        if (*(int *)(voice + 4) != 0) {
+            *(int *)(*(int *)(voice + 4) + 0) = *(int *)(voice + 0);
+        } else {
+            gSynthQueuedVoices = *(int *)(voice + 0);
+        }
+        if (*(int *)(voice + 0) != 0) {
+            *(int *)(*(int *)(voice + 0) + 4) = *(int *)(voice + 4);
+        }
+
+        /* Push to allocated list head */
+        *(int *)(voice + 0) = gSynthAllocatedVoices;
+        if (gSynthAllocatedVoices != 0) {
+            *(int *)(gSynthAllocatedVoices + 4) = (int)voice;
+        }
+        *(int *)(voice + 4) = 0;
+        gSynthAllocatedVoices = (int)voice;
+        *(u8 *)(voice + 8) = 2;
+
+        /* Walk two callback lists */
+        {
+            u8 *base = voice;
+            for (i = 0; i < 2; i++) {
+                int *cb = *(int **)(base + 0xe64);
+                while (cb != 0) {
+                    fn_8027A0CC(*(int *)((u8 *)cb + 8));
+                    cb = (int *)*cb;
+                }
+                base += 4;
+            }
+        }
+        {
+            int *cb2 = *(int **)(voice + 0xe6c);
+            while (cb2 != 0) {
+                fn_8027A0CC(*(int *)((u8 *)cb2 + 8));
+                cb2 = (int *)*cb2;
+            }
+        }
+        synthRecycleVoiceCallbacks((int)voice);
+    } else {
+        u32 idx = (u32)found & 0x7fffffffu;
+        u8 *voice = gSynthVoices + idx * 0x1868;
+        if (*(u8 *)(voice + 8) == 0) return;
+        *(u8 *)(voice + 0xeda) |= 8;
+    }
 }
-#pragma dont_inline reset
 
 /*
  * fn_8026D278 — voice search and modify (~464 instructions). Stubbed.
