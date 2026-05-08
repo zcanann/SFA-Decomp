@@ -8,6 +8,8 @@ extern undefined4 FUN_80006a88();
 extern undefined4 FUN_80006a8c();
 extern ushort FUN_80006be8();
 extern uint FUN_80006c00();
+extern ushort fn_80014D9C(int controller);
+extern ushort getButtonsJustPressed(int controller);
 extern uint FUN_80017730();
 extern int fn_800640CC(float *p1, float *p2, float *p3, int *p4, int *p5, int p6, int p7, int p8, int p9);
 extern void fn_80067958(int a, float *b, float *c, int d, int e, int f);
@@ -15,6 +17,8 @@ extern void fn_800691C0(int a, void *b, int c, int d);
 extern void fn_8006961C(uint *boundsOut,float *startPoints,float *endPoints,
                         float *radii,int pointCount);
 extern int FUN_8007f7c0();
+extern int fn_80080204();
+extern void fn_80101974(u8);
 extern undefined4 FUN_80101980();
 extern undefined4 FUN_802473cc();
 extern undefined4 FUN_8028681c();
@@ -28,10 +32,14 @@ extern uint FUN_80294bf4();
 extern int FUN_80294c88();
 extern int FUN_80294d10();
 extern undefined4 FUN_80294d78();
+extern int fn_80295C0C(int);
+extern int fn_802962B4(int);
+extern int fn_80296700(int);
 
 extern undefined4 DAT_803a4ed8;
 extern undefined4 gCamcontrolTargetTypeMask;
 extern undefined4* DAT_803dd6d0;
+extern int *lbl_803DCA50;
 extern undefined4 gCamcontrolTargetState;
 extern undefined4 DAT_803de143;
 extern undefined4 DAT_803de144;
@@ -41,6 +49,7 @@ extern undefined4 gCamcontrolCurrentActionId;
 extern undefined4* gCamcontrolState;
 extern u8 lbl_803DD528;
 extern undefined4* gCamcontrolModeSettings;
+extern f32 *cameraMtxVar57;
 extern f64 DOUBLE_803e2318;
 extern f32 lbl_803DE1A4;
 extern f32 lbl_803E2304;
@@ -58,6 +67,18 @@ extern f32 lbl_803E2340;
 extern f32 lbl_803E2344;
 extern f32 lbl_803E2348;
 extern f32 lbl_803E234C;
+
+typedef struct CamcontrolAction43Payload {
+  short action;
+  u8 enabled;
+  u8 immediate;
+} CamcontrolAction43Payload;
+
+typedef struct CamcontrolAction44Payload {
+  float distance;
+  float yOffset;
+  undefined2 height;
+} CamcontrolAction44Payload;
 
 /*
  * --INFO--
@@ -369,47 +390,52 @@ void camcontrol_updateTargetAction(int param_1,int param_2)
   short sVar1;
   uint uVar2;
   int iVar3;
-  uint uVar4;
-  ushort uVar5;
-  undefined2 local_28;
-  undefined local_26;
-  undefined local_25;
-  undefined4 local_24;
-  undefined4 local_20;
-  undefined2 local_1c;
+  CamcontrolAction43Payload local_28;
+  CamcontrolAction44Payload local_24;
   longlong local_18;
   
   if (*(int *)(param_2 + 0xc0) == 0) {
-    uVar2 = FUN_80006c00(0);
-    if ((((*(int *)(param_1 + 0x124) == 0) ||
-         (((sVar1 = *(short *)(*(int *)(param_1 + 0x124) + 0x44), sVar1 != 0x1c && (sVar1 != 0x2a))
-          || (*(short *)(param_2 + 0x44) != 1)))) ||
-        ((iVar3 = FUN_80294d10(param_2), iVar3 == 0 || (uVar4 = FUN_80294bf4(param_2), uVar4 == 0)))
-        ) && ((*(byte *)(param_1 + 0x141) & 2) == 0)) {
-      if ((((uVar2 & 0x10) == 0) || (*(short *)(param_2 + 0x44) != 1)) ||
-         (iVar3 = FUN_80294c88(param_2), iVar3 == 0)) {
-        iVar3 = FUN_8007f7c0();
-        if (((iVar3 == 0) && (uVar5 = FUN_80006be8(0), (uVar5 & 0x40) != 0)) &&
-           ((*(ushort *)(param_1 + 6) & 4) == 0)) {
-          local_28 = 5;
-          local_26 = 1;
-          local_25 = 1;
-          (**(code **)(*DAT_803dd6d0 + 0x1c))(0x43,1,0,4,&local_28,0,0xff);
+    uVar2 = getButtonsJustPressed(0);
+    if (*(int *)(param_1 + 0x124) != 0) {
+      sVar1 = *(short *)(*(int *)(param_1 + 0x124) + 0x44);
+      if (((sVar1 == 0x1c) || (sVar1 == 0x2a)) && (*(short *)(param_2 + 0x44) == 1)) {
+        iVar3 = fn_80296700(param_2);
+        if ((iVar3 != 0) && (iVar3 = fn_80295C0C(param_2), iVar3 != 0)) {
+          goto action_49;
         }
       }
-      else {
-        local_24 = *gCamcontrolModeSettings;
-        local_20 = gCamcontrolModeSettings[2];
-        local_18 = (longlong)(int)(float)gCamcontrolModeSettings[0x23];
-        local_1c = (undefined2)(int)(float)gCamcontrolModeSettings[0x23];
-        FUN_80101980(0);
-        (**(code **)(*DAT_803dd6d0 + 0x1c))(0x44,1,0,0xc,&local_24,0xf,0xfe);
-      }
+    }
+    if ((*(byte *)(param_1 + 0x141) & 2) != 0) {
+      goto action_49;
+    }
+    goto check_action_44;
+action_49:
+    fn_80101974(1);
+    (*(code *)(*lbl_803DCA50 + 0x1c))(0x49,1,0,4,param_1 + 0x124,0x3c,0xff);
+    goto done;
+check_action_44:
+    if ((((uVar2 & 0x10) != 0) && (*(short *)(param_2 + 0x44) == 1)) &&
+       (iVar3 = fn_802962B4(param_2), iVar3 != 0)) {
+      local_24.distance = *cameraMtxVar57;
+      local_24.yOffset = cameraMtxVar57[2];
+      local_18 = (longlong)(int)cameraMtxVar57[0x23];
+      local_24.height = (undefined2)(int)cameraMtxVar57[0x23];
+      fn_80101974(0);
+      (*(code *)(*lbl_803DCA50 + 0x1c))(0x44,1,0,0xc,&local_24,0xf,0xfe);
     }
     else {
-      FUN_80101980(1);
-      (**(code **)(*DAT_803dd6d0 + 0x1c))(0x49,1,0,4,param_1 + 0x124,0x3c,0xff);
+      iVar3 = fn_80080204();
+      if (((iVar3 == 0) && (uVar2 = fn_80014D9C(0), (uVar2 & 0x40) != 0)) &&
+         ((*(ushort *)(param_1 + 6) & 4) == 0)) {
+        local_28.action = 5;
+        local_28.enabled = 1;
+        local_28.immediate = 1;
+        (*(code *)(*lbl_803DCA50 + 0x1c))(0x43,1,0,4,&local_28,0,0xff);
+      }
     }
+    goto done;
+done:
+    ;
   }
   return;
 }
