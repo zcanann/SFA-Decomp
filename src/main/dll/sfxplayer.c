@@ -15,6 +15,14 @@ extern void TrickyCurve_updateEffectHandleRing(int obj);
 
 extern undefined4* lbl_803DCAAC;
 
+typedef struct SfxplayerStateFlags {
+  u8 bit80 : 1;
+  u8 bit40 : 1;
+  u8 bit20 : 1;
+  u8 bit10 : 1;
+  u8 lowBits : 4;
+} SfxplayerStateFlags;
+
 /*
  * --INFO--
  *
@@ -34,13 +42,17 @@ void sfxplayer_update(int obj)
   int mode;
   int state;
   int *handles;
+  SfxplayerStateFlags *flags;
   undefined4 hitObj;
   
   state = *(int *)(obj + 0xb8);
-  if (((*(u8 *)(state + 8) & 0x20) == 0) && (GameBit_Get(*(s16 *)state) == 0)) {
+  flags = (SfxplayerStateFlags *)(state + 8);
+  if ((flags->bit20 == 0) && (GameBit_Get(*(s16 *)state) == 0)) {
     if (*(u8 *)(state + 7) == 4) {
       Sfx_PlayFromObject(0,0x7e);
-      *(u8 *)(state + 8) = (*(u8 *)(state + 8) | 0x20) & 0xaf;
+      flags->bit20 = 1;
+      flags->bit10 = 0;
+      flags->bit40 = 0;
       GameBit_Set(*(s16 *)state,1);
       GameBit_Set(0xedf,0);
       mode = (*(code *)(*lbl_803DCAAC + 0x40))((int)*(char *)(obj + 0xac));
@@ -50,9 +62,9 @@ void sfxplayer_update(int obj)
       gameTimerStop();
     }
     else {
-      if ((*(u8 *)(state + 8) & 0x80) != 0) {
-        *(u8 *)(state + 8) = *(u8 *)(state + 8) & 0x7f;
-        if ((*(u8 *)(state + 8) & 0x10) != 0) {
+      if (flags->bit80 != 0) {
+        flags->bit80 = 0;
+        if (flags->bit10 != 0) {
           mode = (*(code *)(*lbl_803DCAAC + 0x40))((int)*(char *)(obj + 0xac));
           if ((u8)mode == 1) {
             gameTimerInit(0x1d,0x96);
@@ -78,7 +90,8 @@ void sfxplayer_update(int obj)
           handles += 2;
         }
         *(u8 *)(state + 7) = 0;
-        *(u8 *)(state + 8) = *(u8 *)(state + 8) & 0xaf;
+        flags->bit40 = 0;
+        flags->bit10 = 0;
         GameBit_Set(0xedf,0);
       }
       TrickyCurve_updateEffectHandleRing(obj);
@@ -144,8 +157,8 @@ void sfxplayer_init(int obj,int config)
   gSfxplayerEffectHandles[7] = 0;
   gameTimerStop();
   if (GameBit_Get(*(s16 *)state) != 0) {
-    struct { u8 hi : 2; u8 mid : 1; u8 lo : 5; } *flags = (void *)(state + 8);
-    flags->mid = 1;
+    SfxplayerStateFlags *flags = (void *)(state + 8);
+    flags->bit20 = 1;
   }
   *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x6000;
 }
