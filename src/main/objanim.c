@@ -552,7 +552,7 @@ void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,uint frameCount
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 ObjAnim_SampleRootCurvePhase(ObjAnimComponent *objAnim,f32 distance,float *phaseOut)
+undefined4 ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *phaseOut)
 {
   ObjAnimBank *bank;
   ObjAnimDef *animDef;

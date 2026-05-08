@@ -11,7 +11,7 @@ extern int Obj_GetActiveModel(int obj);
 extern int Obj_GetPlayerObject(void);
 extern s16 getAngle(f32 dx, f32 dz);
 extern int fn_8002B95C(int obj, f32 vx, f32 vy, f32 vz);
-extern void ObjAnim_SampleRootCurvePhase(int obj, f32 *out);
+extern void ObjAnim_SampleRootCurvePhase(f32 distance, int obj, f32 *out);
 extern void ObjAnim_AdvanceCurrentMove(int obj, f32 phase, f32 dt, int flag);
 extern int fn_800640CC(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
 extern void fn_8002273C(int p1, int p2, int p3);
@@ -47,6 +47,7 @@ void spscarab_update(int param_1)
     int p_b8;
     int p_4c;
     s16 angle;
+    f32 distance;
     f32 phase;        /* sp+0x10 */
     f32 outV[3];      /* sp+0x14 (output of fn_8002273C) */
     f32 hit_buf[24];  /* sp+0x20 .. sp+0x80 (collision struct, fn_800640CC out) */
@@ -63,10 +64,10 @@ void spscarab_update(int param_1)
                 *(f32 *)(param_1 + 0x28) * timeDelta,
                 timeDelta * (*(f32 *)(param_1 + 0x2c) * *(f32 *)(p_b8 + 4)));
 
-    sqrtf(*(f32 *)(param_1 + 0x24) * *(f32 *)(param_1 + 0x24) +
-          *(f32 *)(param_1 + 0x2c) * *(f32 *)(param_1 + 0x2c));
+    distance = sqrtf(*(f32 *)(param_1 + 0x24) * *(f32 *)(param_1 + 0x24) +
+                     *(f32 *)(param_1 + 0x2c) * *(f32 *)(param_1 + 0x2c));
 
-    ObjAnim_SampleRootCurvePhase(param_1, &phase);
+    ObjAnim_SampleRootCurvePhase(distance, param_1, &phase);
     ObjAnim_AdvanceCurrentMove(param_1, phase, timeDelta, 0);
 
     if (*(f32 *)(param_1 + 0x10) < *(f32 *)(p_b8 + 0)) {
