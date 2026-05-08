@@ -99,6 +99,11 @@ extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
 extern void inpResetChannelDefaults(u8 a, u8 b);
 void fn_80278990(int state);
 void fn_802788B4(int state, int skipFadeReset);
+u32 fn_80278610(int state);
+extern u32 inpGetExCtrl(int state, u32 ctrl);
+extern void inpSetExCtrl(int state, u32 ctrl, s16 value);
+extern void fn_8027A02C(u32 voice);
+extern u8 lbl_803BD9E4[];
 
 /*
  * --INFO--
@@ -426,6 +431,98 @@ uint FUN_802765bc(int *param_1)
  */
 void FUN_802765c4(int *param_1,int param_2)
 {
+}
+
+/*
+ * Read a 32-bit synth register, either from the voice or EX controller bank.
+ */
+u32 fn_802769A4(int state, int useExCtrl, u32 index)
+{
+    u32 value;
+
+    if (useExCtrl == 0) {
+        index &= 0x1f;
+        if (index < 0x10) {
+            value = *(u32 *)(state + index * 4 + 0xac);
+        } else {
+            value = *(u32 *)(lbl_803BD9E4 + 0x10 + index * 4);
+        }
+    } else {
+        value = inpGetExCtrl(state, index);
+        value &= 0xffff;
+    }
+    return value;
+}
+
+/*
+ * Read a signed 16-bit synth register.
+ */
+int fn_80276A08(int state, int useExCtrl, u32 index)
+{
+    s16 value;
+
+    if (useExCtrl == 0) {
+        index &= 0x1f;
+        if (index < 0x10) {
+            value = (s16)*(u32 *)(state + index * 4 + 0xac);
+        } else {
+            value = (s16)*(u32 *)(lbl_803BD9E4 + 0x10 + index * 4);
+        }
+    } else {
+        value = inpGetExCtrl(state, index);
+    }
+    return value;
+}
+
+/*
+ * Write a synth register, routing high registers to the EX controller bank.
+ */
+void fn_80276A70(int state, int useExCtrl, u32 index, u32 value)
+{
+    if (useExCtrl == 0) {
+        index &= 0x1f;
+        if (index < 0x10) {
+            *(u32 *)(state + index * 4 + 0xac) = value;
+        } else {
+            *(u32 *)(lbl_803BD9E4 + 0x10 + index * 4) = value;
+        }
+    } else {
+        inpSetExCtrl(state, index, (s16)value);
+    }
+}
+
+/*
+ * Key off other voices in the same tag group, optionally by immediate stop.
+ */
+void fn_80276E38(int state, u32 *args)
+{
+    u32 group;
+    u32 command;
+    u32 i;
+    int offset;
+    int voice;
+
+    offset = 0;
+    *(u8 *)(state + 0x104) = 0;
+    command = *args;
+    group = (command >> 8) & 0xff;
+    if (group != 0) {
+        for (i = 0; i < *(u32 *)(lbl_803BD150 + 0x210); i++) {
+            voice = (int)(lbl_803DE268 + offset);
+            if (*(int *)(voice + 0x34) != 0) {
+                if (((*(u32 *)(voice + 0x118) & 2) == 0) &&
+                    group == *(u8 *)(voice + 0x104)) {
+                    if (((command >> 0x10) & 0xff) == 0) {
+                        fn_80278610(voice);
+                    } else {
+                        fn_8027A02C(i);
+                    }
+                }
+            }
+            offset += 0x404;
+        }
+        *(u8 *)(state + 0x104) = group;
+    }
 }
 
 /*
