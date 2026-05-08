@@ -2170,20 +2170,20 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
 #pragma peephole off
 void ObjHits_RegisterActiveHitVolumeObject(int obj)
 {
-  u32 *piVar1;
-  int iVar2;
+  u32 *entry;
+  int index;
 
-  iVar2 = 0;
-  piVar1 = (u32 *)gObjHitsActiveHitVolumeObjects;
-  while (iVar2 < OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT && *piVar1 != 0) {
-    piVar1 = piVar1 + 1;
-    iVar2 = iVar2 + 1;
+  index = 0;
+  entry = (u32 *)gObjHitsActiveHitVolumeObjects;
+  while (index < OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT && *entry != 0) {
+    entry = entry + 1;
+    index = index + 1;
   }
-  if (iVar2 == OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT) {
+  if (index == OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT) {
     gObjHitsActiveHitVolumeObjects[0] = obj;
     return;
   }
-  gObjHitsActiveHitVolumeObjects[iVar2] = obj;
+  gObjHitsActiveHitVolumeObjects[index] = obj;
   return;
 }
 #pragma peephole reset
