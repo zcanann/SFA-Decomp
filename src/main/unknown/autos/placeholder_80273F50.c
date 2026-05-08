@@ -176,11 +176,76 @@ remove:
 }
 
 /*
- * audioLoadSdiFile - voice handler (~364 instructions). Stubbed.
+ * Register an SDI sample table and flag entries already present in earlier tables.
  */
-#pragma dont_inline on
-void audioLoadSdiFile(void) {}
-#pragma dont_inline reset
+extern u8 lbl_803BFC78[];
+extern u16 lbl_803DE288;
+
+int audioLoadSdiFile(s16 *sampleTable, void *baseAddr)
+{
+    s16 **bucket;
+    s16 *entry;
+    int result;
+    u32 bucketIndex;
+    u32 used;
+    s16 *scan;
+    u16 tableCount;
+    u16 i;
+    u16 j;
+    u16 k;
+
+    bucketIndex = 0;
+    used = lbl_803DE288;
+    for (bucket = (s16 **)lbl_803BFC78;
+         ((int)bucketIndex < (int)used) && (*bucket != sampleTable); bucket += 3) {
+        bucketIndex++;
+    }
+    if (bucketIndex == used) {
+        if (used < 0x80) {
+            tableCount = 0;
+            for (entry = sampleTable; *entry != -1; entry += 0x10) {
+                tableCount++;
+            }
+            sndBegin();
+            entry = sampleTable;
+            for (i = 0; i < tableCount; i++) {
+                j = 0;
+                bucket = (s16 **)lbl_803BFC78;
+                for (bucketIndex = lbl_803DE288; bucketIndex != 0; bucketIndex--) {
+                    scan = *bucket;
+                    for (k = 0; k < *(u16 *)(bucket + 2); k++) {
+                        if (*entry == *scan) {
+                            goto foundEntry;
+                        }
+                        scan += 0x10;
+                    }
+                    bucket += 3;
+                    j++;
+                }
+
+foundEntry:
+                if (j == lbl_803DE288) {
+                    entry[1] = 0;
+                } else {
+                    entry[1] = -1;
+                }
+                entry += 0x10;
+            }
+            bucketIndex = lbl_803DE288;
+            *(s16 **)(lbl_803BFC78 + bucketIndex * 0xc) = sampleTable;
+            *(u16 *)(lbl_803BFC78 + bucketIndex * 0xc + 8) = tableCount;
+            *(void **)(lbl_803BFC78 + bucketIndex * 0xc + 4) = baseAddr;
+            lbl_803DE288++;
+            sndEnd();
+            result = 1;
+        } else {
+            result = 0;
+        }
+    } else {
+        result = 1;
+    }
+    return result;
+}
 
 /*
  * Add a reference to a sample table entry, loading it on the first reference.
