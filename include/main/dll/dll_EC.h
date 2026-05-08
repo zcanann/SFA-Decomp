@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void TrickyCurve_updateCooldownTrigger(void);
+void TrickyCurve_updateCooldownTrigger(int obj);
 
 #endif /* MAIN_DLL_DLL_EC_H_ */
