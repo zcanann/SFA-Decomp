@@ -1,6 +1,21 @@
 #include "ghidra_import.h"
 
-extern int fn_80271178(int handle, int mode, int flag);
+typedef struct SynthDelayedNode {
+    struct SynthDelayedNode *next;
+    struct SynthDelayedNode *prev;
+    u8 voiceIndex;
+    u8 bucketIndex;
+    u8 pad[2];
+} SynthDelayedNode;
+
+typedef struct SynthDelayStorageLocal {
+    u32 studioChannelScales[9][0x10];
+    SynthDelayedNode *bucketHeads[0x20][3];
+} SynthDelayStorageLocal;
+
+extern SynthDelayStorageLocal gSynthDelayStorage;
+extern u8 gSynthDelayBucketCursor;
+extern void fn_80271178(SynthDelayedNode *fade, int mode, u32 delay);
 extern void fn_8026D0C4(u32 handle);
 extern void fn_8026D278(u32 handle);
 extern void fn_8026D630(u32 handle, u32 mixValue0, u32 mixValue1);
@@ -64,16 +79,74 @@ void fn_80270FE8(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_80271178 - internal helper used by the wrappers below (~336
- * instructions). Stubbed.
+ * Queue one of a fade's embedded delayed-action nodes into the 32-bucket
+ * scheduler ring.
+ *
+ * EN v1.1 Address: 0x80271178, size 336b
  */
-#pragma dont_inline on
-int fn_80271178(int handle, int mode, int flag)
+void fn_80271178(SynthDelayedNode *fade, int mode, u32 delay)
 {
-    (void)handle; (void)mode; (void)flag;
-    return 0;
+    u32 bucket;
+    SynthDelayStorageLocal *storage;
+    SynthDelayedNode *node;
+    SynthDelayedNode **head;
+
+    bucket = gSynthDelayBucketCursor + (delay >> 8);
+    bucket &= 0x1f;
+    storage = &gSynthDelayStorage;
+    head = &storage->bucketHeads[bucket][0];
+    switch (mode) {
+    case 0:
+        node = fade;
+        if (node->bucketIndex != 0xff) {
+            if (node->bucketIndex == bucket) {
+                return;
+            }
+            if (node->next != 0) {
+                node->next->prev = node->prev;
+            }
+            if (node->prev == 0) {
+                storage->bucketHeads[node->bucketIndex][0] = node->next;
+            } else {
+                node->prev->next = node->next;
+            }
+        }
+        break;
+    case 1:
+        node = fade + 1;
+        if (node->bucketIndex != 0xff) {
+            if (node->bucketIndex == bucket) {
+                return;
+            }
+            if (node->next != 0) {
+                node->next->prev = node->prev;
+            }
+            if (node->prev == 0) {
+                storage->bucketHeads[node->bucketIndex][2] = node->next;
+            } else {
+                node->prev->next = node->next;
+            }
+        }
+        head = &storage->bucketHeads[bucket][2];
+        break;
+    case 2:
+        node = fade + 2;
+        if (node->bucketIndex != 0xff) {
+            return;
+        }
+        head = &storage->bucketHeads[bucket][1];
+        break;
+    default:
+        return;
+    }
+    node->bucketIndex = bucket;
+    node->next = *head;
+    if (*head != 0) {
+        (*head)->prev = node;
+    }
+    node->prev = 0;
+    *head = node;
 }
-#pragma dont_inline reset
 
 /*
  * Reset four pos/timer fields on the handle, then advance both
@@ -81,22 +154,22 @@ int fn_80271178(int handle, int mode, int flag)
  *
  * EN v1.1 Address: 0x802712C8, size 100b
  */
-int fn_802712C8(int handle)
+void fn_802712C8(SynthDelayedNode *fade)
 {
     {
         int a = lbl_803DE278;
         int b = lbl_803DE27C;
-        *(int *)(handle + 0x24) = a;
-        *(int *)(handle + 0x28) = b;
+        *(int *)((u8 *)fade + 0x24) = a;
+        *(int *)((u8 *)fade + 0x28) = b;
     }
     {
         int a = lbl_803DE278;
         int b = lbl_803DE27C;
-        *(int *)(handle + 0x2c) = a;
-        *(int *)(handle + 0x30) = b;
+        *(int *)((u8 *)fade + 0x2c) = a;
+        *(int *)((u8 *)fade + 0x30) = b;
     }
-    fn_80271178(handle, 0, 0);
-    return fn_80271178(handle, 1, 0);
+    fn_80271178(fade, 0, 0);
+    fn_80271178(fade, 1, 0);
 }
 
 /*
@@ -104,10 +177,10 @@ int fn_802712C8(int handle)
  *
  * EN v1.1 Address: 0x8027132C, size 68b
  */
-int fn_8027132C(int handle)
+void fn_8027132C(SynthDelayedNode *fade)
 {
-    fn_80271178(handle, 0, 0);
-    return fn_80271178(handle, 1, 0);
+    fn_80271178(fade, 0, 0);
+    fn_80271178(fade, 1, 0);
 }
 
 /*
@@ -115,9 +188,9 @@ int fn_8027132C(int handle)
  *
  * EN v1.1 Address: 0x80271370, size 40b
  */
-int fn_80271370(int handle)
+void fn_80271370(SynthDelayedNode *fade)
 {
-    return fn_80271178(handle, 2, 0);
+    fn_80271178(fade, 2, 0);
 }
 
 /*
