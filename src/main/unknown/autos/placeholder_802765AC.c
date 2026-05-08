@@ -79,6 +79,14 @@ extern void* PTR_DAT_8032fc70;
 extern void* PTR_DAT_8032fca0;
 extern undefined4 uRam803def6c;
 
+extern u8 *lbl_803DE268;
+extern u8 lbl_803BD150[];
+extern int lbl_803DE2D4;
+extern int lbl_803DE2D8;
+extern int lbl_803DE2E0;
+extern int lbl_803DE2E4;
+extern void fn_8027132C(void *state);
+
 /*
  * --INFO--
  *
@@ -405,4 +413,188 @@ uint FUN_802765bc(int *param_1)
  */
 void FUN_802765c4(int *param_1,int param_2)
 {
+}
+
+/*
+ * Insert a voice into the 64-bit wake-time queue sorted by 0x98:0x9c.
+ */
+void TimeQueueAdd(int state)
+{
+    int next;
+    int prev;
+    int cur;
+
+    next = lbl_803DE2D8;
+    prev = 0;
+    while ((cur = next) != 0 &&
+           (*(u32 *)(cur + 0x98) <
+            (u32)(*(u32 *)(cur + 0x9c) < *(u32 *)(state + 0x9c)) +
+                *(u32 *)(state + 0x98))) {
+        prev = cur;
+        next = *(int *)(cur + 0x44);
+    }
+
+    if (cur != 0) {
+        *(int *)(state + 0x44) = cur;
+        prev = *(int *)(cur + 0x48);
+        *(int *)(state + 0x48) = prev;
+        next = state;
+        if (prev != 0) {
+            *(int *)(*(int *)(cur + 0x48) + 0x44) = state;
+            next = lbl_803DE2D8;
+        }
+        lbl_803DE2D8 = next;
+        *(int *)(cur + 0x48) = state;
+        return;
+    }
+
+    if (prev != 0) {
+        *(int *)(prev + 0x44) = state;
+        *(int *)(state + 0x48) = prev;
+        *(int *)(state + 0x44) = 0;
+        return;
+    }
+
+    lbl_803DE2D8 = state;
+    *(int *)(state + 0x44) = 0;
+    *(int *)(state + 0x48) = 0;
+}
+
+/*
+ * Remove a voice from the time queue and clear its scheduled wake time.
+ */
+void fn_802788B4(int state, int skipFadeReset)
+{
+    int activeTimeHi;
+
+    if ((*(u32 *)(state + 0x9c) | *(u32 *)(state + 0x98)) != 0) {
+        if ((*(u32 *)(state + 0x9c) ^ 0xffffffff |
+             *(u32 *)(state + 0x98) ^ 0xffffffff) != 0) {
+            if (*(int *)(state + 0x48) == 0) {
+                lbl_803DE2D8 = *(int *)(state + 0x44);
+            } else {
+                *(int *)(*(int *)(state + 0x48) + 0x44) = *(int *)(state + 0x44);
+            }
+            if (*(int *)(state + 0x44) != 0) {
+                *(int *)(*(int *)(state + 0x44) + 0x48) = *(int *)(state + 0x48);
+            }
+        }
+        if (skipFadeReset == 0) {
+            fn_8027132C((void *)state);
+        }
+        *(int *)(state + 0x9c) = 0;
+        *(int *)(state + 0x98) = 0;
+        activeTimeHi = lbl_803DE2E0;
+        *(int *)(state + 0xa4) = lbl_803DE2E4;
+        *(int *)(state + 0xa0) = activeTimeHi;
+        *(u32 *)(state + 0x118) &= 0xfffbfffb;
+        *(u32 *)(state + 0x114) = *(u32 *)(state + 0x114);
+    }
+}
+
+/*
+ * Move a live voice back onto the active voice list.
+ */
+void fn_80278990(int state)
+{
+    int activeTimeHi;
+    int hadHead;
+
+    if (*(int *)(state + 0x4c) != 0) {
+        if ((*(u32 *)(state + 0x9c) | *(u32 *)(state + 0x98)) != 0) {
+            if ((*(u32 *)(state + 0x9c) ^ 0xffffffff |
+                 *(u32 *)(state + 0x98) ^ 0xffffffff) != 0) {
+                if (*(int *)(state + 0x48) == 0) {
+                    lbl_803DE2D8 = *(int *)(state + 0x44);
+                } else {
+                    *(int *)(*(int *)(state + 0x48) + 0x44) = *(int *)(state + 0x44);
+                }
+                if (*(int *)(state + 0x44) != 0) {
+                    *(int *)(*(int *)(state + 0x44) + 0x48) = *(int *)(state + 0x48);
+                }
+            }
+            fn_8027132C((void *)state);
+            *(int *)(state + 0x9c) = 0;
+            *(int *)(state + 0x98) = 0;
+            activeTimeHi = lbl_803DE2E0;
+            *(int *)(state + 0xa4) = lbl_803DE2E4;
+            *(int *)(state + 0xa0) = activeTimeHi;
+            *(u32 *)(state + 0x118) &= 0xfffbfffb;
+            *(u32 *)(state + 0x114) = *(u32 *)(state + 0x114);
+        }
+        hadHead = lbl_803DE2D4 != 0;
+        *(int *)(state + 0x3c) = lbl_803DE2D4;
+        if (hadHead) {
+            *(int *)(lbl_803DE2D4 + 0x40) = state;
+        }
+        *(int *)(state + 0x40) = 0;
+        lbl_803DE2D4 = state;
+        *(int *)(state + 0x4c) = 0;
+    }
+}
+
+/*
+ * Change a voice list state, unlinking it from active or timer queues as needed.
+ */
+void fn_80278A98(int state, int mode)
+{
+    int activeTimeHi;
+
+    if (*(int *)(state + 0x4c) == mode) {
+        return;
+    }
+    if (*(int *)(state + 0x4c) == 0) {
+        if (*(int *)(state + 0x40) == 0) {
+            lbl_803DE2D4 = *(int *)(state + 0x3c);
+        } else {
+            *(int *)(*(int *)(state + 0x40) + 0x3c) = *(int *)(state + 0x3c);
+        }
+        if (*(int *)(state + 0x3c) != 0) {
+            *(int *)(*(int *)(state + 0x3c) + 0x40) = *(int *)(state + 0x40);
+        }
+    }
+    if (mode == 2) {
+        if ((*(u32 *)(state + 0x9c) | *(u32 *)(state + 0x98)) != 0) {
+            if ((*(u32 *)(state + 0x9c) ^ 0xffffffff |
+                 *(u32 *)(state + 0x98) ^ 0xffffffff) != 0) {
+                if (*(int *)(state + 0x48) == 0) {
+                    lbl_803DE2D8 = *(int *)(state + 0x44);
+                } else {
+                    *(int *)(*(int *)(state + 0x48) + 0x44) = *(int *)(state + 0x44);
+                }
+                if (*(int *)(state + 0x44) != 0) {
+                    *(int *)(*(int *)(state + 0x44) + 0x48) = *(int *)(state + 0x48);
+                }
+            }
+            *(int *)(state + 0x9c) = 0;
+            *(int *)(state + 0x98) = 0;
+            activeTimeHi = lbl_803DE2E0;
+            *(int *)(state + 0xa4) = lbl_803DE2E4;
+            *(int *)(state + 0xa0) = activeTimeHi;
+            *(u32 *)(state + 0x118) &= 0xfffbfffb;
+            *(u32 *)(state + 0x114) = *(u32 *)(state + 0x114);
+        }
+    }
+    *(int *)(state + 0x4c) = mode;
+}
+
+/*
+ * Reset the global voice list heads and per-voice list bookkeeping.
+ */
+void fn_80278EA4(void)
+{
+    int offset;
+    u32 i;
+
+    lbl_803DE2E4 = 0;
+    offset = 0;
+    lbl_803DE2D4 = 0;
+    lbl_803DE2D8 = 0;
+    lbl_803DE2E0 = 0;
+    for (i = 0; i < *(u32 *)(lbl_803BD150 + 0x210); i++) {
+        *(u32 *)(lbl_803DE268 + offset + 0x34) = 0;
+        *(u32 *)(lbl_803DE268 + offset + 0x4c) = 2;
+        *(u16 *)(lbl_803DE268 + offset + 0xaa) = 0;
+        offset += 0x404;
+    }
 }
