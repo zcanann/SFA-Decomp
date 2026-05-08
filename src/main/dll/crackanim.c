@@ -20,6 +20,12 @@ extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern undefined4 FUN_80294d60();
 
+extern u8 *Obj_GetPlayerObject(void);
+extern void Obj_FreeObject(int obj);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void fn_80296AFC(u8 *player, int v);
+extern void fn_800999B4(int obj, f32 f1, int p3, int p4);
+
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e44b8;
@@ -48,8 +54,9 @@ extern f32 lbl_803E44B0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void appleontree_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+#pragma scheduling off
+#pragma peephole off
+void appleontree_update(int param_1)
 {
   float fVar1;
   undefined2 *puVar2;
@@ -59,16 +66,10 @@ void appleontree_update(undefined8 param_1,double param_2,double param_3,undefin
   int *piVar6;
   int iVar7;
   int iVar8;
-  undefined8 extraout_f1;
-  undefined8 uVar9;
   double dVar10;
   double dVar11;
-  double in_f30;
   double dVar12;
-  double in_f31;
   double dVar13;
-  double in_ps30_1;
-  double in_ps31_1;
   uint local_78;
   undefined auStack_74 [4];
   undefined8 local_70;
@@ -79,38 +80,26 @@ void appleontree_update(undefined8 param_1,double param_2,double param_3,undefin
   undefined4 local_50;
   uint uStack_4c;
   longlong local_48;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  puVar2 = (undefined2 *)FUN_80286840();
+
+  puVar2 = (undefined2 *)param_1;
   iVar8 = *(int *)(puVar2 + 0x5c);
   iVar7 = *(int *)(puVar2 + 0x26);
   local_78 = 0;
-  uVar9 = extraout_f1;
   if ((*(byte *)(iVar8 + 0x5a) & 4) != 0) {
     while (iVar3 = ObjMsg_Pop((int)puVar2,&local_78,(uint *)0x0,(uint *)0x0), iVar3 != 0) {
       if (local_78 == 0x7000b) {
-        iVar3 = FUN_80017a98();
-        FUN_80294d60(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,
-                     (uint)*(ushort *)(iVar8 + 0x38));
-        FUN_80081118((double)lbl_803E4460,puVar2,0xff,0x28);
-        uVar9 = FUN_80006824((uint)puVar2,0x58);
+        fn_80296AFC(Obj_GetPlayerObject(), (int)*(u16 *)(iVar8 + 0x38));
+        fn_800999B4((int)puVar2, lbl_803E4460, 0xff, 0x28);
+        Sfx_PlayFromObject((int)puVar2, 0x58);
         iVar3 = *(int *)(puVar2 + 0x5c);
         if ((puVar2[3] & 0x2000) == 0) {
           if (*(int *)(puVar2 + 0x2a) != 0) {
-            uVar9 = ObjHits_DisableObject((int)puVar2);
+            ObjHits_DisableObject((int)puVar2);
           }
           *(byte *)(iVar3 + 0x5a) = *(byte *)(iVar3 + 0x5a) | 2;
         }
         else {
-          uVar9 = FUN_80017ac8(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                               (int)puVar2);
+          Obj_FreeObject((int)puVar2);
         }
         *(byte *)(iVar8 + 0x5a) = *(byte *)(iVar8 + 0x5a) & 0xfb;
       }
@@ -247,12 +236,12 @@ void appleontree_update(undefined8 param_1,double param_2,double param_3,undefin
         iVar3 = 0;
         dVar12 = (double)lbl_803E446C;
         do {
+          double t = (double)*(float *)(iVar8 + 0xc);
           if (iVar7 != 0) break;
-          param_3 = (double)*(float *)(iVar8 + 0xc);
-          dVar11 = (double)(float)(param_3 *
+          dVar11 = (double)(float)(t *
                                   (double)(*(float *)(iVar8 + 0x40) + *(float *)(iVar8 + 0x3c)));
-          dVar10 = (double)(float)(param_3 * dVar11 +
-                                  (double)(float)((double)*(float *)(iVar8 + 0x44) * param_3 +
+          dVar10 = (double)(float)(t * dVar11 +
+                                  (double)(float)((double)*(float *)(iVar8 + 0x44) * t +
                                                  (double)*(float *)(iVar8 + 0x2c)));
           if ((double)*(float *)(iVar8 + 0x28) <= dVar12) {
             iVar7 = FUN_8017e15c(dVar10,puVar2,iVar8);
@@ -285,7 +274,7 @@ void appleontree_update(undefined8 param_1,double param_2,double param_3,undefin
         piVar6 = (int *)FUN_80039520((int)puVar2,0);
         local_48 = (longlong)(int)((double)lbl_803E44A4 * dVar13);
         *piVar6 = (int)((double)lbl_803E44A4 * dVar13);
-        FUN_8017de58(dVar10,dVar11,param_3,param_4,param_5,param_6,param_7,param_8,(uint)puVar2);
+        FUN_8017de58((uint)puVar2);
       }
       else {
         *(undefined *)(iVar8 + 0x3a) = 6;
@@ -302,8 +291,7 @@ void appleontree_update(undefined8 param_1,double param_2,double param_3,undefin
           *(byte *)(iVar7 + 0x5a) = *(byte *)(iVar7 + 0x5a) | 2;
         }
         else {
-          FUN_80017ac8((double)fVar1,dVar11,param_3,param_4,param_5,param_6,param_7,param_8,
-                       (int)puVar2);
+          Obj_FreeObject((int)puVar2);
         }
       }
       break;
@@ -313,7 +301,7 @@ void appleontree_update(undefined8 param_1,double param_2,double param_3,undefin
         iVar7 = (int)((double)(float)((double)lbl_803E44B0 * dVar11) / dVar13);
         local_48 = (longlong)iVar7;
         *(char *)(puVar2 + 0x1b) = -1 - (char)iVar7;
-        FUN_8017de58(dVar13,dVar11,param_3,param_4,param_5,param_6,param_7,param_8,(uint)puVar2);
+        FUN_8017de58((uint)puVar2);
       }
       else {
         iVar7 = *(int *)(puVar2 + 0x5c);
@@ -324,15 +312,16 @@ void appleontree_update(undefined8 param_1,double param_2,double param_3,undefin
           *(byte *)(iVar7 + 0x5a) = *(byte *)(iVar7 + 0x5a) | 2;
         }
         else {
-          FUN_80017ac8(dVar13,dVar11,param_3,param_4,param_5,param_6,param_7,param_8,(int)puVar2);
+          Obj_FreeObject((int)puVar2);
         }
       }
     }
   }
 switchD_8017e864_caseD_7:
-  FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */

@@ -227,102 +227,77 @@ void pathcam_buildWindowSamples(undefined4 param_1,undefined4 param_2,float *par
 #pragma peephole reset
 #pragma scheduling reset
 
+extern char sPathCamNeedTwoControlPointsError[];
+extern void debugPrintf(const char *fmt, ...);
+extern void *lbl_803DCA9C;
+
 /*
  * --INFO--
  *
  * Function: pathcam_findTaggedNodeWindow
- * EN v1.0 Address: 0x8010AA64
- * EN v1.0 Size: 716b
- * EN v1.1 Address: 0x8010ACF0
- * EN v1.1 Size: 500b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Address: 0x8010AA54
+ * EN v1.0 Size: 500b
  */
-void pathcam_findTaggedNodeWindow(undefined8 param_1,undefined8 param_2,undefined8 param_3,
-                                  undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                                  undefined8 param_7,undefined8 param_8,undefined4 param_9,
-                                  undefined4 param_10,uint param_11,undefined4 param_12,
-                                  undefined4 param_13,undefined4 param_14,undefined4 param_15,
-                                  undefined4 param_16)
+void pathcam_findTaggedNodeWindow(int node, int *out, u8 tag)
 {
-  bool bVar1;
-  int iVar2;
-  int iVar3;
-  undefined4 *puVar4;
-  uint uVar5;
-  uint uVar6;
-  int iVar7;
-  int iVar8;
-  undefined8 extraout_f1;
-  undefined8 extraout_f1_00;
-  undefined8 extraout_f1_01;
-  undefined8 extraout_f1_02;
-  undefined8 uVar9;
-  undefined8 uVar10;
-  
-  uVar10 = FUN_80286840();
-  iVar2 = (int)((ulonglong)uVar10 >> 0x20);
-  puVar4 = (undefined4 *)uVar10;
-  *puVar4 = 0xffffffff;
-  puVar4[1] = 0xffffffff;
-  puVar4[2] = 0xffffffff;
-  puVar4[3] = 0xffffffff;
-  if (iVar2 != 0) {
-    puVar4[1] = *(undefined4 *)(iVar2 + 0x14);
-    iVar7 = 0;
-    uVar6 = param_11;
-    uVar9 = extraout_f1;
-    do {
-      iVar8 = (int)((ulonglong)uVar10 >> 0x20);
-      uVar5 = (uint)uVar10;
-      if (((-1 < *(int *)(iVar8 + 0x1c)) &&
-          (uVar10 = (**(code **)(*DAT_803dd71c + 0x1c))(), iVar3 = (int)((ulonglong)uVar10 >> 0x20),
-          uVar5 = (uint)uVar10, uVar9 = extraout_f1_00, iVar3 != 0)) &&
-         ((*(byte *)(iVar3 + 0x31) == param_11 ||
-          ((*(byte *)(iVar3 + 0x32) == param_11 || (*(byte *)(iVar3 + 0x33) == param_11)))))) {
-        bVar1 = ((int)*(char *)(iVar2 + 0x1b) & 1 << iVar7) == 0;
-        if (bVar1) {
-          if (bVar1) {
-            puVar4[2] = *(undefined4 *)(iVar8 + 0x1c);
-          }
+    int i;
+    int *cur;
+    int *p;
+
+    out[0] = -1;
+    out[1] = -1;
+    out[2] = -1;
+    out[3] = -1;
+
+    if (node == 0) return;
+
+    out[1] = *(int *)(node + 0x14);
+
+    cur = (int *)node;
+    for (i = 0; i < 5; i++) {
+        int idx = *(int *)((u8 *)cur + 0x1c);
+        if (idx > -1) {
+            p = (int *)(**(int *(**)(int))(*(int *)lbl_803DCA9C + 0x1c))(idx);
+            if (p != 0) {
+                if (*(u8 *)((u8 *)p + 0x31) == tag ||
+                    *(u8 *)((u8 *)p + 0x32) == tag ||
+                    *(u8 *)((u8 *)p + 0x33) == tag) {
+                    if ((s8)*(u8 *)(node + 0x1b) & (1 << i)) {
+                        out[0] = *(int *)((u8 *)cur + 0x1c);
+                    } else {
+                        out[2] = *(int *)((u8 *)cur + 0x1c);
+                    }
+                }
+            }
         }
-        else {
-          *puVar4 = *(undefined4 *)(iVar8 + 0x1c);
-        }
-      }
-      uVar10 = CONCAT44(iVar8 + 4,uVar5);
-      iVar7 = iVar7 + 1;
-    } while (iVar7 < 5);
-    if (((-1 < (int)puVar4[2]) &&
-        (uVar10 = (**(code **)(*DAT_803dd71c + 0x1c))(), iVar2 = (int)((ulonglong)uVar10 >> 0x20),
-        uVar5 = (uint)uVar10, uVar9 = extraout_f1_01, iVar2 != 0)) &&
-       ((*(byte *)(iVar2 + 0x31) == param_11 ||
-        ((*(byte *)(iVar2 + 0x32) == param_11 || (*(byte *)(iVar2 + 0x33) == param_11)))))) {
-      iVar7 = 0;
-      do {
-        iVar8 = (int)((ulonglong)uVar10 >> 0x20);
-        uVar5 = (uint)uVar10;
-        if ((((-1 < *(int *)(iVar8 + 0x1c)) &&
-             (uVar5 = (uint)*(char *)(iVar2 + 0x1b), (uVar5 & 1 << iVar7) == 0)) &&
-            (uVar10 = (**(code **)(*DAT_803dd71c + 0x1c))(),
-            iVar3 = (int)((ulonglong)uVar10 >> 0x20), uVar5 = (uint)uVar10, uVar9 = extraout_f1_02,
-            iVar3 != 0)) &&
-           (((*(byte *)(iVar3 + 0x31) == param_11 || (*(byte *)(iVar3 + 0x32) == param_11)) ||
-            (*(byte *)(iVar3 + 0x33) == param_11)))) {
-          puVar4[3] = *(undefined4 *)(iVar8 + 0x1c);
-        }
-        uVar10 = CONCAT44(iVar8 + 4,uVar5);
-        iVar7 = iVar7 + 1;
-      } while (iVar7 < 5);
+        cur = (int *)((u8 *)cur + 4);
     }
-    if (((int)puVar4[1] < 0) || ((int)puVar4[2] < 0)) {
-      FUN_80135810(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                   sPathcamErrorNeedAtLeastTwoControlPoints,uVar5,uVar6,param_12,param_13,
-                   param_14,param_15,param_16);
+
+    if (out[2] > -1) {
+        p = (int *)(**(int *(**)(int))(*(int *)lbl_803DCA9C + 0x1c))(out[2]);
+        if (p != 0) {
+            if (*(u8 *)((u8 *)p + 0x31) == tag ||
+                *(u8 *)((u8 *)p + 0x32) == tag ||
+                *(u8 *)((u8 *)p + 0x33) == tag) {
+                cur = (int *)node;
+                for (i = 0; i < 5; i++) {
+                    int idx = *(int *)((u8 *)cur + 0x1c);
+                    if (idx > -1 && ((s8)*(u8 *)(node + 0x1b) & (1 << i)) == 0) {
+                        int *p2 = (int *)(**(int *(**)(int))(*(int *)lbl_803DCA9C + 0x1c))(idx);
+                        if (p2 != 0 && (
+                            *(u8 *)((u8 *)p2 + 0x31) == tag ||
+                            *(u8 *)((u8 *)p2 + 0x32) == tag ||
+                            *(u8 *)((u8 *)p2 + 0x33) == tag)) {
+                            out[3] = *(int *)((u8 *)cur + 0x1c);
+                        }
+                    }
+                    cur = (int *)((u8 *)cur + 4);
+                }
+            }
+        }
     }
-  }
-  FUN_8028688c();
-  return;
+
+    if (out[1] < 0 || out[2] < 0) {
+        debugPrintf(sPathCamNeedTwoControlPointsError);
+    }
 }
