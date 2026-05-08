@@ -37,7 +37,7 @@ void fn_8007366C(u8 alpha);
 void fn_80073AAC(void* texture, u32* colorA, u32* colorB);
 undefined4 fn_80073D04(int param_1,int *param_2);
 undefined4 fn_80074110(int param_1,int *param_2,int param_3);
-void fn_80074518(undefined4 param_1,undefined4 param_2,int param_3);
+void fn_80074518(void* obj_a, void** obj_b, int param_3);
 undefined4 fn_80074D04(int param_1,int *param_2);
 void hudDrawRect(int x1, int y1, int x2, int y2, u8* color);
 void fn_80075684(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4);
