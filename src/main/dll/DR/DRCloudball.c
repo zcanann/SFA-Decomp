@@ -1,166 +1,171 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/DRCloudball.h"
 
-extern double FUN_80006a38();
-extern undefined4 FUN_80006ba8();
-extern int FUN_80017730();
-extern int FUN_80017a98();
-extern undefined4 FUN_8002fc3c();
-extern undefined4 ObjGroup_FindNearestObject();
-extern undefined4 ObjMsg_SendToObject();
-extern undefined4 FUN_800400b0();
-extern undefined4 FUN_8011e800();
-extern undefined4 FUN_8011e85c();
-extern undefined4 FUN_8012f744();
-extern undefined4 FUN_801f4f9c();
-extern undefined4 FUN_801f4fa0();
-extern undefined4 FUN_80286840();
-extern undefined4 FUN_8028688c();
-extern int FUN_80294d20();
+extern f32 sqrtf(f32 x);
+extern double sin(double x);
+extern f32 fn_80293E80(double x); /* cos-like */
+extern int randomGetRange(int lo, int hi);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
+extern int Obj_GetActiveModel(int obj);
+extern int Obj_GetPlayerObject(void);
+extern s16 getAngle(f32 dx, f32 dz);
+extern int fn_8002B95C(int obj, f32 vx, f32 vy, f32 vz);
+extern void ObjAnim_SampleRootCurvePhase(int obj, f32 *out);
+extern void ObjAnim_AdvanceCurrentMove(int obj, f32 phase, f32 dt, int flag);
+extern int fn_800640CC(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
+extern void fn_8002273C(int p1, int p2, int p3);
+extern f32 fn_8002166C(int *p1, int *p2);
+extern void fn_800999B4(int obj, f32 a, int b, int c);
+extern void fn_800972DC(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, int p7, int p8);
 
-extern undefined4* DAT_803dd6d4;
-extern undefined4* DAT_803dd708;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E66C8;
-extern f32 lbl_803E66F8;
-extern f32 lbl_803E66FC;
-extern f32 lbl_803E6700;
+extern f32 timeDelta;
+extern u16 lbl_803E5A70;
+extern u8 lbl_803E5A72;
+extern f32 lbl_803E5A74;
+extern f32 lbl_803E5A78;
+extern f32 lbl_803E5A7C;
+extern f32 lbl_803E5A80;
+extern f32 lbl_803E5A84;
+extern f32 lbl_803E5A88;
+extern f32 lbl_803E5A8C;
+extern f32 lbl_803E5A90;
+extern f32 lbl_803E5A94;
+extern f64 lbl_803E5A98; /* int->float magic 0x4330000000000000 */
 
 /*
  * --INFO--
  *
  * Function: spscarab_update
  * EN v1.0 Address: 0x801E8EE0
- * EN v1.0 Size: 1176b
- * EN v1.1 Address: 0x801E8FA0
- * EN v1.1 Size: 1044b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 588b
  */
-void spscarab_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+#pragma peephole off
+#pragma scheduling off
+void spscarab_update(int param_1)
 {
-  undefined2 *puVar1;
-  int iVar2;
-  undefined4 uVar3;
-  undefined2 uVar5;
-  int iVar4;
-  undefined4 in_r7;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  int iVar6;
-  int iVar7;
-  undefined8 extraout_f1;
-  undefined8 uVar8;
-  double dVar9;
-  float local_28 [10];
-  
-  puVar1 = (undefined2 *)FUN_80286840();
-  iVar7 = *(int *)(puVar1 + 0x26);
-  uVar8 = extraout_f1;
-  iVar2 = FUN_80017a98();
-  iVar6 = *(int *)(puVar1 + 0x5c);
-  local_28[0] = lbl_803E66FC;
-  if ((*(byte *)(iVar6 + 0x97) >> 6 & 1) == 0) {
-    if ((char)*(byte *)(iVar6 + 0x97) < '\0') {
-      *(undefined2 *)(iVar6 + 0x88) = 0xffff;
-      iVar2 = FUN_80017a98();
-      ObjMsg_SendToObject(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar2,0x7000a,
-                   (uint)puVar1,iVar6 + 0x88,in_r7,in_r8,in_r9,in_r10);
-      *(byte *)(iVar6 + 0x97) = *(byte *)(iVar6 + 0x97) & 0x7f;
-      *(byte *)(iVar6 + 0x97) = *(byte *)(iVar6 + 0x97) & 0xbf | 0x40;
+    int p_b8;
+    int p_4c;
+    s16 angle;
+    f32 phase;        /* sp+0x10 */
+    f32 outV[3];      /* sp+0x14 (output of fn_8002273C) */
+    f32 hit_buf[24];  /* sp+0x20 .. sp+0x80 (collision struct, fn_800640CC out) */
+
+    p_b8 = *(int *)(param_1 + 0xb8);
+    p_4c = *(int *)(param_1 + 0x4c);
+
+    if (*(f32 *)(param_1 + 0x10) > *(f32 *)(p_b8 + 0)) {
+        *(f32 *)(param_1 + 0x28) = *(f32 *)(param_1 + 0x28) - lbl_803E5A74 * timeDelta;
     }
-    else {
-      if (*(int *)(iVar6 + 0x90) == 0) {
-        uVar3 = ObjGroup_FindNearestObject(9,puVar1,local_28);
-        *(undefined4 *)(iVar6 + 0x90) = uVar3;
-        iVar2 = *(int *)(iVar6 + 0x90);
-        if (iVar2 != 0) {
-          iVar2 = (**(code **)(**(int **)(iVar2 + 0x68) + 0x28))(iVar2,*(undefined *)(iVar7 + 0x19))
-          ;
-          if ((iVar2 == 0) ||
-             (iVar2 = (**(code **)(**(int **)(*(int *)(iVar6 + 0x90) + 0x68) + 0x2c))
-                                (*(int *)(iVar6 + 0x90),*(undefined *)(iVar7 + 0x19)), iVar2 != 0))
-          {
-            *(byte *)(iVar6 + 0x97) = *(byte *)(iVar6 + 0x97) & 0xbf | 0x40;
-            puVar1[3] = puVar1[3] | 0x4000;
-            puVar1[0x58] = puVar1[0x58] | 0x8000;
-            *(byte *)((int)puVar1 + 0xaf) = *(byte *)((int)puVar1 + 0xaf) | 8;
-          }
-          uVar5 = (**(code **)(**(int **)(*(int *)(iVar6 + 0x90) + 0x68) + 0x3c))
-                            (*(int *)(iVar6 + 0x90),*(undefined *)(iVar7 + 0x19));
-          *(undefined2 *)(iVar6 + 0x94) = uVar5;
-        }
-      }
-      else {
-        if ((*(byte *)((int)puVar1 + 0xaf) & 4) != 0) {
-          FUN_8011e85c(0x12);
-          FUN_8012f744(*(undefined2 *)(iVar6 + 0x94));
-        }
-        if ((*(byte *)((int)puVar1 + 0xaf) & 1) != 0) {
-          iVar2 = FUN_80294d20(iVar2);
-          iVar4 = (**(code **)(**(int **)(*(int *)(iVar6 + 0x90) + 0x68) + 0x38))
-                            (*(int *)(iVar6 + 0x90),*(undefined *)(iVar7 + 0x19));
-          (**(code **)(**(int **)(*(int *)(iVar6 + 0x90) + 0x68) + 0x40))
-                    (*(int *)(iVar6 + 0x90),*(undefined *)(iVar7 + 0x19));
-          if (puVar1[0x23] == 0x467) {
-            *(float *)(puVar1 + 8) = lbl_803E6700 + *(float *)(*(int *)(puVar1 + 0x26) + 0xc);
-          }
-          if (iVar2 < iVar4) {
-            (**(code **)(*DAT_803dd6d4 + 0x48))(1,puVar1,0xffffffff);
-          }
-          else {
-            FUN_8011e800(3);
-            (**(code **)(*DAT_803dd6d4 + 0x48))(0,puVar1,0xffffffff);
-          }
-          FUN_80006ba8(0,0x100);
-        }
-        if (puVar1[0x23] == 0x467) {
-          if (lbl_803E66C8 < *(float *)(iVar6 + 0x40)) {
-            *(float *)(iVar6 + 0x40) = *(float *)(iVar6 + 0x40) - lbl_803E66C8;
-            if (*(byte *)(iVar6 + 0x68) < 4) {
-              FUN_801f4f9c(puVar1,iVar6);
-            }
-            else {
-              *(byte *)(iVar6 + 0x68) = *(byte *)(iVar6 + 0x68) + 1;
-            }
-            FUN_801f4fa0(puVar1,iVar6);
-          }
-          dVar9 = FUN_80006a38((double)*(float *)(iVar6 + 0x40),(float *)(iVar6 + 4),(float *)0x0);
-          *(float *)(puVar1 + 6) = (float)dVar9;
-          dVar9 = FUN_80006a38((double)*(float *)(iVar6 + 0x40),(float *)(iVar6 + 0x14),(float *)0x0
-                              );
-          *(float *)(puVar1 + 8) = (float)dVar9;
-          dVar9 = FUN_80006a38((double)*(float *)(iVar6 + 0x40),(float *)(iVar6 + 0x24),(float *)0x0
-                              );
-          *(float *)(puVar1 + 10) = (float)dVar9;
-          *(float *)(iVar6 + 0x40) =
-               *(float *)(iVar6 + 0x44) * lbl_803DC074 + *(float *)(iVar6 + 0x40);
-          iVar2 = FUN_80017730();
-          *puVar1 = (short)iVar2;
-          (**(code **)(*DAT_803dd708 + 8))(puVar1,0x19f,0,1,0xffffffff,0);
-          (**(code **)(*DAT_803dd708 + 8))(puVar1,0x1a0,0,1,0xffffffff,0);
-        }
-      }
-      if ((puVar1[0x23] != 0x464) && (puVar1[0x23] != 0x467)) {
-        FUN_8002fc3c((double)lbl_803E66F8,(double)lbl_803DC074);
-      }
-      if ((*(byte *)((int)puVar1 + 0xaf) & 8) == 0) {
-        FUN_800400b0();
-      }
+
+    fn_8002B95C(param_1,
+                timeDelta * (*(f32 *)(param_1 + 0x24) * *(f32 *)(p_b8 + 4)),
+                *(f32 *)(param_1 + 0x28) * timeDelta,
+                timeDelta * (*(f32 *)(param_1 + 0x2c) * *(f32 *)(p_b8 + 4)));
+
+    sqrtf(*(f32 *)(param_1 + 0x24) * *(f32 *)(param_1 + 0x24) +
+          *(f32 *)(param_1 + 0x2c) * *(f32 *)(param_1 + 0x2c));
+
+    ObjAnim_SampleRootCurvePhase(param_1, &phase);
+    ObjAnim_AdvanceCurrentMove(param_1, phase, timeDelta, 0);
+
+    if (*(f32 *)(param_1 + 0x10) < *(f32 *)(p_b8 + 0)) {
+        *(f32 *)(param_1 + 0x10) = *(f32 *)(p_b8 + 0);
+        *(f32 *)(param_1 + 0x28) = lbl_803E5A78;
     }
-  }
-  else {
-    puVar1[3] = puVar1[3] | 0x4000;
-    puVar1[0x58] = puVar1[0x58] | 0x8000;
-    *(byte *)((int)puVar1 + 0xaf) = *(byte *)((int)puVar1 + 0xaf) | 8;
-  }
-  FUN_8028688c();
-  return;
+
+    if (fn_800640CC(param_1 + 0x80, param_1 + 0xc,
+                    lbl_803E5A7C, 0, (int)&hit_buf[0] /* sp+0x20 */, param_1,
+                    8, -1, 0xff, 0xa) != 0) {
+        fn_8002273C((int)&hit_buf[7] /* sp+0x3c */, param_1 + 0x24, (int)outV);
+        *(f32 *)(param_1 + 0x24) = outV[0];
+        *(f32 *)(param_1 + 0x2c) = outV[2];
+        angle = (s16)getAngle(-*(f32 *)(param_1 + 0x24), -*(f32 *)(param_1 + 0x2c));
+        *(s16 *)(param_1) = angle;
+    }
+
+    if (fn_8002166C((int *)(Obj_GetPlayerObject() + 0x18), (int *)(param_1 + 0x18))
+        < lbl_803E5A80) {
+        Sfx_PlayFromObject(param_1, (u16)*(s16 *)(p_b8 + 0xc));
+        fn_800999B4(param_1, lbl_803E5A84, *(s16 *)(p_b8 + 0xe), 0x28);
+        *(u16 *)(param_1 + 0xb0) = *(u16 *)(param_1 + 0xb0) | 0x8000;
+        *(s16 *)(param_1 + 0x6) = *(s16 *)(param_1 + 0x6) | 0x4000;
+
+        {
+            int r5val = (*(s8 *)(p_4c + 0x19) == 0) ? 1 : 0;
+            int v3 = *(int *)(p_b8 + 8);
+            int r4val = (*(s8 *)(p_4c + 0x19) == 0) ? 0 : 1;
+            (*(void (**)(int, int, int))(*(int *)(*(int *)(v3 + 0x68)) + 0x50))(
+                v3, r4val, r5val);
+        }
+    }
+
+    if ((*(u16 *)(param_1 + 0xb0) & 0x800) != 0) {
+        if (*(s16 *)(p_b8 + 0x10) != 0) {
+            fn_800972DC(param_1, 5, lbl_803E5A84, (u8)*(s16 *)(p_b8 + 0x10), 1, 0x14,
+                        lbl_803E5A88, 0, 0);
+        }
+    }
 }
+#pragma scheduling reset
+#pragma peephole reset
+
+/*
+ * --INFO--
+ *
+ * Function: spscarab_init
+ * EN v1.0 Address: 0x801E912C
+ * EN v1.0 Size: 500b
+ */
+#pragma peephole off
+#pragma scheduling off
+void spscarab_init(int param_1, int param_2)
+{
+    int p_b8;
+    int model;
+    s16 sp08;
+    u8 sp0a;
+
+    p_b8 = *(int *)(param_1 + 0xb8);
+    sp08 = lbl_803E5A70;
+    sp0a = lbl_803E5A72;
+
+    *(u16 *)(param_1 + 0xb0) = *(u16 *)(param_1 + 0xb0) | 0x6000;
+    *(s16 *)(param_1) = (s16)((s32)(s8)*(u8 *)(param_2 + 0x18) << 8);
+
+    *(f32 *)(param_1 + 0x24) =
+        -fn_80293E80((double)(lbl_803E5A8C * (f32)(s32)*(s16 *)(param_1)) /
+                     lbl_803E5A90);
+    *(f32 *)(param_1 + 0x2c) =
+        (f32)-sin((double)(lbl_803E5A8C * (f32)(s32)*(s16 *)(param_1)) /
+                  lbl_803E5A90);
+
+    *(s8 *)(param_1 + 0xad) = (s8)(1 - *(u8 *)(param_2 + 0x19));
+
+    *(f32 *)(p_b8 + 0) = (f32)(s32)*(s16 *)(param_2 + 0x1a);
+    *(f32 *)(p_b8 + 4) = lbl_803E5A94 + (f32)randomGetRange(0, 0x64) / lbl_803E5A80;
+    *(int *)(p_b8 + 8) = *(int *)(param_2 + 0x14);
+    *(int *)(param_2 + 0x14) = -1;
+
+    Sfx_AddLoopedObjectSound(param_1, 0x406);
+    model = Obj_GetActiveModel(param_1);
+
+    switch ((s8)*(u8 *)(param_2 + 0x19)) {
+    case 0:
+        *(u8 *)(*(int *)(model + 0x34) + 8) = *((u8 *)&sp08 + randomGetRange(0, 2));
+        *(s16 *)(p_b8 + 0xc) = 0x41;
+        *(s16 *)(p_b8 + 0xe) = 4;
+        *(s16 *)(p_b8 + 0x10) = 2;
+        break;
+    case 1:
+        *(s16 *)(p_b8 + 0xc) = 0x42;
+        *(s16 *)(p_b8 + 0xe) = 1;
+        *(s16 *)(p_b8 + 0x10) = 0;
+        break;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -168,12 +173,6 @@ void spscarab_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,un
  * Function: spscarab_release
  * EN v1.0 Address: 0x801E9320
  * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
 void spscarab_release(void)
 {
@@ -185,12 +184,6 @@ void spscarab_release(void)
  * Function: spscarab_initialise
  * EN v1.0 Address: 0x801E9324
  * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
 void spscarab_initialise(void)
 {
@@ -202,16 +195,10 @@ void spscarab_initialise(void)
  * Function: spdrape_getExtraSize
  * EN v1.0 Address: 0x801E9328
  * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
 int spdrape_getExtraSize(void)
 {
-  return 0x18;
+    return 0x18;
 }
 
 /*
@@ -220,16 +207,10 @@ int spdrape_getExtraSize(void)
  * Function: spdrape_func08
  * EN v1.0 Address: 0x801E9330
  * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
 int spdrape_func08(void)
 {
-  return 0;
+    return 0;
 }
 
 /*
@@ -238,12 +219,6 @@ int spdrape_func08(void)
  * Function: spdrape_free
  * EN v1.0 Address: 0x801E9338
  * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
 void spdrape_free(void)
 {
@@ -255,12 +230,6 @@ void spdrape_free(void)
  * Function: spdrape_render
  * EN v1.0 Address: 0x801E933C
  * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
 void spdrape_render(void)
 {
@@ -272,12 +241,6 @@ void spdrape_render(void)
  * Function: spdrape_hitDetect
  * EN v1.0 Address: 0x801E9340
  * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
 void spdrape_hitDetect(void)
 {
