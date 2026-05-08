@@ -1113,7 +1113,7 @@ undefined4 ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,u32 flags)
+undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,u32 flags)
 {
   ObjAnimComponent *objAnim;
   ObjAnimBank *bank;
@@ -1124,18 +1124,16 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
   int frameStep;
   int moveIndex;
   int moveData;
-  f32 clampedProgress;
   ObjHitReactState *hitState;
 
   objAnim = (ObjAnimComponent *)objAnimArg;
-  clampedProgress = (float)moveProgress;
-  if (lbl_803DE8E0 < clampedProgress) {
-    clampedProgress = lbl_803DE8E0;
+  if (lbl_803DE8E0 < moveProgress) {
+    moveProgress = lbl_803DE8E0;
   }
-  else if (clampedProgress < lbl_803DE8F0) {
-    clampedProgress = lbl_803DE8F0;
+  else if (moveProgress < lbl_803DE8F0) {
+    moveProgress = lbl_803DE8F0;
   }
-  objAnim->currentMoveProgress = clampedProgress;
+  objAnim->currentMoveProgress = moveProgress;
   bank = ObjAnim_GetActiveBank(objAnim);
   if (bank == (ObjAnimBank *)0x0) {
     return 0;
@@ -1204,7 +1202,7 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
     state->eventCountdown = 0;
   }
   state->step = lbl_803DE8F0;
-  state->speed = clampedProgress * state->segmentLength;
+  state->speed = moveProgress * state->segmentLength;
   return 0;
 }
 #pragma peephole reset

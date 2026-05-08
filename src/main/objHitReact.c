@@ -110,7 +110,7 @@ int objHitReact_update(ObjAnimComponent *obj,ObjHitReactEntry *reactionEntries,u
     }
     if (((state & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&
         (reactionEntry->reactionAnim > OBJHITREACT_NO_REACTION_ANIM)) {
-      ObjAnim_SetCurrentMove((double)lbl_803DE910,(int)object,(int)reactionEntry->reactionAnim,0);
+      ObjAnim_SetCurrentMove(lbl_803DE910,(int)object,(int)reactionEntry->reactionAnim,0);
       *stepScale = reactionEntry->cooldown;
       state = OBJHITREACT_REACTION_STATE_ACTIVE;
     }
