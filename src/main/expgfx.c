@@ -1719,340 +1719,311 @@ void expgfx_updateFrameState(int sourceMode,int sourceId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double param_4,undefined8 param_5,
-                      undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,
-                      undefined4 param_10,short param_11,undefined param_12,undefined4 param_13,
-                      undefined4 param_14,undefined4 param_15,undefined4 param_16)
+extern int fn_8009ADEC(short slotType);
+extern void *Obj_GetPlayerObject(void);
+extern f32 lbl_803DF350;
+extern f32 lbl_803DF41C;
+extern f32 lbl_803DF420;
+extern f32 lbl_803DF424;
+extern f32 lbl_803DF428;
+extern int lbl_803DD26C;
+extern int lbl_803DD270;
+extern int lbl_803DD274;
+extern int lbl_803DD278;
+
+#pragma scheduling off
+#pragma peephole off
+int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIdx, short slotType, u8 boundsTemplateId)
 {
-  ExpgfxSpawnConfig *spawnConfig;
   ExpgfxSlot *slot;
-  float fVar1;
-  uint uVar2;
-  uint uVar3;
-  undefined2 uVar4;
-  int *spawnWords;
-  int iVar6;
-  int iVar7;
-  uint uVar8;
-  uint uVar9;
-  undefined2 *puVar10;
-  byte *pbVar11;
-  uint uVar12;
-  int iVar13;
-  uint uVar14;
-  int iVar15;
-  int *piVar16;
   ExpgfxAttachedSourceState *attachedSource;
-  undefined2 *puVar18;
-  double extraout_f1;
-  double dVar19;
-  double dVar20;
-  double dVar21;
-  undefined8 uVar22;
-  undefined2 local_58;
-  short local_56 [3];
-  undefined8 local_50;
-  undefined8 local_48;
-  undefined8 local_40;
-  undefined8 local_38;
-  
-  uVar22 = FUN_8028682c();
-  spawnConfig = (ExpgfxSpawnConfig *)((ulonglong)uVar22 >> 0x20);
-  spawnWords = (int *)spawnConfig;
-  local_56[0] = 0;
-  local_58 = 0;
-  dVar19 = extraout_f1;
-  iVar6 = FUN_800176d0();
-  if ((iVar6 == 0) &&
-     (iVar6 = expgfx_reserveSlot(local_56,&local_58,param_11,(int)uVar22,
-                                 (int)spawnConfig->attachedSource),
-                       iVar6 != EXPGFX_INVALID_POOL_INDEX)) {
-    uVar3 = (uint)local_56[0];
-    if ((int)uVar3 < EXPGFX_POOL_COUNT) {
-      (&gExpgfxPoolSourceIds)[uVar3] = (int)spawnConfig->attachedSource;
+  ExpgfxResourceEntry *resourceEntry;
+  void *playerObj;
+  u8 *expgfxBase;
+  uint behaviorFlags;
+  int tableIndex;
+  int subTableIndex;
+  int attachedKey1;
+  uint pairIdx;
+  uint bit;
+  uint hi;
+  uint lo;
+  uint maskBit;
+  short poolIdxOut;
+  short slotIdxOut;
+  int polePosX = 0;
+  int polePosY = 0;
+  int poleVecY = 0;
+  int poleVecZ = 0;
+  f32 scaleVal;
+  u8 *poolSourceModesByte;
+  u8 modeFlag;
+  uint *slotPoolBases;
+  u32 *trackedFrameMasks;
+
+  expgfxBase = lbl_8039AB58;
+  poolIdxOut = 0;
+  slotIdxOut = 0;
+  polePosX = 0;
+  polePosY = 0;
+  poleVecY = 0;
+  poleVecZ = 0;
+  if (fn_8002073C() != 0) {
+    return EXPGFX_INVALID_POOL_INDEX;
+  }
+  if (expgfx_reserveSlot(&poolIdxOut, (undefined2 *)&slotIdxOut, slotType,
+                          preferredPoolIdx, (uint)(int)config->attachedSource)
+      == EXPGFX_INVALID_POOL_INDEX) {
+    return EXPGFX_INVALID_POOL_INDEX;
+  }
+  {
+  slotPoolBases = (uint *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
+  trackedFrameMasks = (u32 *)(expgfxBase + 0x1010);
+
+  if ((int)poolIdxOut < EXPGFX_POOL_COUNT) {
+    *(int *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET + ((int)poolIdxOut << 2)) =
+        (int)config->attachedSource;
+  }
+  if ((int)poolIdxOut < EXPGFX_POOL_COUNT &&
+      (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) != 0) {
+    pairIdx = ((uint)poolIdxOut & 1) * 2;
+    hi = trackedFrameMasks[pairIdx];
+    lo = trackedFrameMasks[pairIdx + 1];
+    bit = 1 << ((int)poolIdxOut >> 1);
+    trackedFrameMasks[pairIdx + 1] = lo | bit;
+    trackedFrameMasks[pairIdx] = hi | (uint)((int)bit >> 0x1f);
+  } else {
+    pairIdx = ((uint)poolIdxOut & 1) * 2;
+    hi = trackedFrameMasks[pairIdx];
+    lo = trackedFrameMasks[pairIdx + 1];
+    maskBit = ~(uint)(1 << ((int)poolIdxOut >> 1));
+    trackedFrameMasks[pairIdx + 1] = lo & maskBit;
+    trackedFrameMasks[pairIdx] = hi & (uint)((int)maskBit >> 0x1f);
+  }
+  slot = (ExpgfxSlot *)(slotPoolBases[(int)poolIdxOut] + slotIdxOut * EXPGFX_SLOT_SIZE);
+  gExpgfxSequenceCounter = gExpgfxSequenceCounter + 1;
+  if ((short)EXPGFX_SEQUENCE_COUNTER_MAX < (short)gExpgfxSequenceCounter) {
+    gExpgfxSequenceCounter = 0;
+  }
+  slot->sequenceId = gExpgfxSequenceCounter;
+  slot->behaviorFlags = config->behaviorFlags;
+  slot->renderFlags = config->renderFlags;
+  slot->stateBits.value = slot->stateBits.value & ~EXPGFX_SLOT_STATE_INIT_PHASE_MASK;
+
+  tableIndex = (int)(short)fn_8009ADEC(config->tableKeyType);
+  if (tableIndex < 0) {
+    expgfx_release(slotPoolBases[(int)poolIdxOut], (int)poolIdxOut, (int)slotIdxOut, 1, 1);
+    return EXPGFX_INVALID_POOL_INDEX;
+  }
+  resourceEntry = (ExpgfxResourceEntry *)*(u32 *)(expgfxBase + (tableIndex << 4));
+  if (resourceEntry == NULL) {
+    expgfx_release(slotPoolBases[(int)poolIdxOut], (int)poolIdxOut, (int)slotIdxOut, 1, 1);
+    return EXPGFX_INVALID_POOL_INDEX;
+  }
+  if (*(u16 *)((char *)resourceEntry + 0xe) >= 0xffff) {
+    expgfx_release(slotPoolBases[(int)poolIdxOut], (int)poolIdxOut, (int)slotIdxOut, 1, 1);
+    return EXPGFX_INVALID_POOL_INDEX;
+  }
+  *(u16 *)((char *)resourceEntry + 0xe) = *(u16 *)((char *)resourceEntry + 0xe) + 1;
+  *(u16 *)((char *)resourceEntry + 0x14) = (u16)config->linkGroup;
+
+  behaviorFlags = slot->behaviorFlags;
+  if ((behaviorFlags & 0x80) != 0) {
+    polePosX = 0;
+    polePosY = 0;
+  }
+  if ((behaviorFlags & 0x40) != 0) {
+    poleVecZ = 0;
+    poleVecY = 0;
+  }
+
+  attachedSource = (ExpgfxAttachedSourceState *)config->attachedSource;
+  attachedKey1 = 0;
+  if (attachedSource == NULL) {
+    *(f32 *)&slot->sourcePosY = *(f32 *)&config->sourcePosYBits;
+    *(f32 *)&slot->sourcePosZ = *(f32 *)&config->sourcePosZBits;
+    *(f32 *)&slot->sourcePosW = *(f32 *)&config->sourcePosWBits;
+    *(f32 *)&slot->sourcePosX = *(f32 *)&config->sourcePosXBits;
+    slot->sourceVecZ = config->sourceVecZ;
+    slot->sourceVecY = config->sourceVecY;
+    slot->sourceVecX = config->sourceVecX;
+  } else if ((behaviorFlags & EXPGFX_BEHAVIOR_COPY_ATTACHED_SOURCE) != 0) {
+    *(f32 *)&slot->sourcePosY = *(f32 *)&attachedSource->sourcePosYBits;
+    *(f32 *)&slot->sourcePosZ = *(f32 *)&attachedSource->sourcePosZBits;
+    *(f32 *)&slot->sourcePosW = *(f32 *)&attachedSource->sourcePosWBits;
+    *(f32 *)&slot->sourcePosX = *(f32 *)&attachedSource->sourcePosXBits;
+    slot->sourceVecZ = attachedSource->sourceVecZ;
+    slot->sourceVecY = attachedSource->sourceVecY;
+    slot->sourceVecX = attachedSource->sourceVecX;
+    if ((behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_A) != 0 ||
+        (behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_B) != 0) {
+      config->velocityX = config->velocityX + attachedSource->velocityX;
+      config->velocityY = config->velocityY + attachedSource->velocityY;
+      config->velocityZ = config->velocityZ + attachedSource->velocityZ;
     }
-    if (((int)uVar3 < EXPGFX_POOL_COUNT) &&
-        ((spawnConfig->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) != 0)) {
-      uVar2 = uVar3 & 1;
-      uVar12 = (&gExpgfxTrackedPoolMaskHighWords)[uVar2 * EXPGFX_TRACKED_POOL_MASK_WORD_STRIDE];
-      uVar14 = (&gExpgfxTrackedPoolMaskLowWords)[uVar2 * EXPGFX_TRACKED_POOL_MASK_WORD_STRIDE];
-      uVar8 = 1 << ((int)uVar3 >> 1);
-      uVar9 = uVar14 | uVar8;
-      (&gExpgfxTrackedPoolMaskLowWords)[uVar2 * EXPGFX_TRACKED_POOL_MASK_WORD_STRIDE] = uVar9;
-      (&gExpgfxTrackedPoolMaskHighWords)[uVar2 * EXPGFX_TRACKED_POOL_MASK_WORD_STRIDE] =
-          uVar12 | (int)uVar8 >> 0x1f;
-    }
-    else {
-      uVar2 = uVar3 & 1;
-      uVar12 = (&gExpgfxTrackedPoolMaskHighWords)[uVar2 * EXPGFX_TRACKED_POOL_MASK_WORD_STRIDE];
-      uVar14 = (&gExpgfxTrackedPoolMaskLowWords)[uVar2 * EXPGFX_TRACKED_POOL_MASK_WORD_STRIDE];
-      uVar8 = ~(1 << ((int)uVar3 >> 1));
-      uVar9 = uVar14 & uVar8;
-      (&gExpgfxTrackedPoolMaskLowWords)[uVar2 * EXPGFX_TRACKED_POOL_MASK_WORD_STRIDE] = uVar9;
-      (&gExpgfxTrackedPoolMaskHighWords)[uVar2 * EXPGFX_TRACKED_POOL_MASK_WORD_STRIDE] =
-          uVar12 & (int)uVar8 >> 0x1f;
-    }
-    piVar16 = &DAT_8039b7b8 + (uVar3 & 1) * 2;
-    slot = Expgfx_GetSlot(uVar3, local_58);
-    puVar18 = (undefined2 *)slot;
-    gExpgfxSequenceCounter = gExpgfxSequenceCounter + 1;
-    if (EXPGFX_SEQUENCE_COUNTER_MAX < gExpgfxSequenceCounter) {
-      gExpgfxSequenceCounter = 0;
-    }
-    slot->sequenceId = gExpgfxSequenceCounter;
-    slot->behaviorFlags = spawnConfig->behaviorFlags;
-    slot->renderFlags = spawnConfig->renderFlags;
-    slot->stateBits.value = slot->stateBits.value & ~EXPGFX_SLOT_STATE_INIT_PHASE_MASK;
-    iVar6 = FUN_80081134(dVar19,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                         (int)spawnConfig->tableKeyType,uVar9,uVar12,uVar14,piVar16,param_14,
-                         param_15,param_16);
-    iVar6 = (int)(short)iVar6;
-    if (iVar6 < 0) {
-      expgfx_release((&gExpgfxSlotPoolBases)[local_56[0]],(int)local_56[0],(int)local_58,1,1);
-    }
-    else {
-      iVar7 = (&DAT_8039b7b8)[iVar6 * 4];
-      if (iVar7 == 0) {
-        expgfx_release((&gExpgfxSlotPoolBases)[local_56[0]],(int)local_56[0],(int)local_58,1,1);
+    attachedKey1 = attachedSource->tableKey1;
+    attachedSource = NULL;
+  }
+
+  subTableIndex = expgfx_addToTable((uint)resourceEntry, (uint)attachedSource, attachedKey1,
+                                     config->tableKeyType);
+  if ((short)subTableIndex == EXPGFX_INVALID_TABLE_INDEX) {
+    debugPrintf(sExpgfxInvalidTabIndex);
+    expgfx_release(slotPoolBases[(int)poolIdxOut], (int)poolIdxOut, (int)slotIdxOut, 1, 1);
+    return EXPGFX_INVALID_POOL_INDEX;
+  }
+  Expgfx_SetSlotTableIndex(slot, (u8)subTableIndex);
+
+  *(f32 *)&slot->posX = *(f32 *)&config->startPosXBits;
+  *(f32 *)&slot->startPosX = *(f32 *)&config->startPosXBits;
+  *(f32 *)&slot->posY = *(f32 *)&config->startPosYBits;
+  *(f32 *)&slot->startPosY = *(f32 *)&config->startPosYBits;
+  *(f32 *)&slot->posZ = *(f32 *)&config->startPosZBits;
+  *(f32 *)&slot->startPosZ = *(f32 *)&config->startPosZBits;
+  slot->velocityX = config->velocityX;
+  slot->velocityY = config->velocityY;
+  slot->velocityZ = config->velocityZ;
+  slot->initialStateByte = config->initialStateByte;
+  *(s16 *)((char *)slot + 0x36) = (s16)*(int *)((char *)config + 0x4);
+  slot->lifetimeFrame = (s16)*(int *)((char *)config + 0x8);
+  slot->lifetimeFrameLimit = (s16)*(int *)((char *)config + 0x8);
+
+  if (config->scale > lbl_803DF354) {
+    debugPrintf(sExpgfxScaleOverflow);
+  }
+  scaleVal = lbl_803DF350 * config->scale;
+
+  if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0) {
+    slot->scaleCounter = 0;
+    slot->scaleFrames = (s16)(int)(scaleVal / (f32)(s32)slot->lifetimeFrameLimit);
+    slot->scaleTarget = (s16)(int)scaleVal;
+  } else if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0) {
+    slot->scaleCounter = (s16)(int)scaleVal;
+    slot->scaleFrames = (s16)(int)(scaleVal / (f32)(s32)slot->lifetimeFrameLimit);
+    slot->scaleTarget = slot->scaleCounter;
+  } else {
+    slot->scaleCounter = (s16)(int)scaleVal;
+    slot->scaleTarget = slot->scaleCounter;
+    slot->scaleFrames = 0;
+  }
+
+  if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 ||
+      (slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_B) != 0) {
+    *(f32 *)&slot->sourcePosY = *(f32 *)&config->sourcePosYBits;
+    *(f32 *)&slot->sourcePosZ = *(f32 *)&config->sourcePosZBits;
+    *(f32 *)&slot->sourcePosW = *(f32 *)&config->sourcePosWBits;
+    *(f32 *)&slot->sourcePosX = *(f32 *)&config->sourcePosXBits;
+    slot->sourceVecZ = config->sourceVecZ;
+    slot->sourceVecY = config->sourceVecY;
+    slot->sourceVecX = config->sourceVecX;
+  }
+  slot->stateBits.bits.frameParity = gExpgfxFrameParityBit;
+
+  if ((slot->renderFlags & EXPGFX_RENDER_BACKDATE_MOTION) != 0) {
+    f32 step;
+    slot->renderFlags = slot->renderFlags ^ EXPGFX_RENDER_BACKDATE_MOTION;
+    step = lbl_803DF41C * (f32)(s32)slot->lifetimeFrame;
+    *(f32 *)&slot->posX = slot->velocityX * step + *(f32 *)&slot->posX;
+    *(f32 *)&slot->posY = slot->velocityY * step + *(f32 *)&slot->posY;
+    *(f32 *)&slot->posZ = slot->velocityZ * step + *(f32 *)&slot->posZ;
+    slot->velocityX = slot->velocityX * lbl_803DF420;
+    slot->velocityY = slot->velocityY * lbl_803DF420;
+    slot->velocityZ = slot->velocityZ * lbl_803DF420;
+  }
+
+  if ((slot->renderFlags & EXPGFX_RENDER_AIM_AT_ACTOR) != 0) {
+    f32 dx;
+    f32 dz;
+    f32 distSq;
+    f32 inv;
+    playerObj = Obj_GetPlayerObject();
+    slot->renderFlags = slot->renderFlags ^ EXPGFX_RENDER_AIM_AT_ACTOR;
+    if ((slot->behaviorFlags & 1) != 0) {
+      dx = *(f32 *)((char *)playerObj + 0x18) - *(f32 *)&slot->startPosX;
+      dz = *(f32 *)((char *)playerObj + 0x20) - *(f32 *)&slot->startPosZ;
+      distSq = dx * dx + dz * dz;
+      if (distSq < lbl_803DF424
+          && lbl_803DF35C != *(f32 *)((char *)playerObj + 0x24)
+          && lbl_803DF35C != *(f32 *)((char *)playerObj + 0x2c)) {
+        slot->velocityX = slot->velocityX + dx / (f32)(s32)((int)slot->lifetimeFrame << 1);
+        slot->velocityY = slot->velocityY +
+            ((lbl_803DF428 + *(f32 *)((char *)playerObj + 0x1c)) - *(f32 *)&slot->startPosY) /
+                (f32)(s32)((int)slot->lifetimeFrame << 1);
+        slot->velocityZ = slot->velocityZ +
+            (*(f32 *)((char *)playerObj + 0x20) - *(f32 *)&slot->startPosZ) /
+                (f32)(s32)((int)slot->lifetimeFrame << 1);
       }
-      else if (*(short *)(iVar7 + 0xe) == EXPGFX_INVALID_SLOT_TYPE) {
-        expgfx_release((&gExpgfxSlotPoolBases)[local_56[0]],(int)local_56[0],(int)local_58,1,1);
-      }
-      else {
-        *(short *)(iVar7 + 0xe) = *(short *)(iVar7 + 0xe) + 1;
-        *(ushort *)(iVar7 + 0x14) = (ushort)spawnConfig->linkGroup;
-        attachedSource = (ExpgfxAttachedSourceState *)spawnConfig->attachedSource;
-        iVar13 = 0;
-        if (attachedSource == (ExpgfxAttachedSourceState *)0x0) {
-          slot->sourcePosY = spawnConfig->sourcePosYBits;
-          slot->sourcePosZ = spawnConfig->sourcePosZBits;
-          slot->sourcePosW = spawnConfig->sourcePosWBits;
-          slot->sourcePosX = spawnConfig->sourcePosXBits;
-          slot->sourceVecZ = spawnConfig->sourceVecZ;
-          slot->sourceVecY = spawnConfig->sourceVecY;
-          slot->sourceVecX = spawnConfig->sourceVecX;
-        }
-        else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_ATTACHED_SOURCE) != 0) {
-          slot->sourcePosY = attachedSource->sourcePosYBits;
-          slot->sourcePosZ = attachedSource->sourcePosZBits;
-          slot->sourcePosW = attachedSource->sourcePosWBits;
-          slot->sourcePosX = attachedSource->sourcePosXBits;
-          slot->sourceVecZ = attachedSource->sourceVecZ;
-          slot->sourceVecY = attachedSource->sourceVecY;
-          slot->sourceVecX = attachedSource->sourceVecX;
-          if (((slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_A) != 0) ||
-              ((slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_B) != 0)) {
-            spawnConfig->velocityX = spawnConfig->velocityX + attachedSource->velocityX;
-            spawnConfig->velocityY = spawnConfig->velocityY + attachedSource->velocityY;
-            dVar19 = (double)spawnConfig->velocityZ;
-            spawnConfig->velocityZ = (float)(dVar19 + (double)attachedSource->velocityZ);
-          }
-          iVar13 = attachedSource->tableKey1;
-          attachedSource = (ExpgfxAttachedSourceState *)0x0;
-        }
-        iVar15 = (int)spawnConfig->tableKeyType;
-        puVar10 = (undefined2 *)attachedSource;
-        uVar3 = expgfx_addToTable(iVar7,(int)attachedSource,iVar13,iVar15);
-        if ((short)uVar3 == EXPGFX_INVALID_TABLE_INDEX) {
-          uVar22 = FUN_80135810(dVar19,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                                sExpgfxInvalidTabIndex,puVar10,iVar13,iVar15,piVar16,
-                                param_14,param_15,param_16);
-          expgfx_release((&gExpgfxSlotPoolBases)[local_56[0]],(int)local_56[0],(int)local_58,1,1);
-        }
-        else {
-          Expgfx_SetSlotTableIndex(slot, (u8)uVar3);
-          iVar7 = spawnConfig->startPosXBits;
-          slot->startPosX = iVar7;
-          slot->posX = iVar7;
-          iVar7 = spawnConfig->startPosYBits;
-          slot->startPosY = iVar7;
-          slot->posY = iVar7;
-          iVar7 = spawnConfig->startPosZBits;
-          slot->startPosZ = iVar7;
-          slot->posZ = iVar7;
-          slot->velocityX = spawnConfig->velocityX;
-          slot->velocityY = spawnConfig->velocityY;
-          slot->velocityZ = spawnConfig->velocityZ;
-          slot->initialStateByte = spawnConfig->initialStateByte;
-          puVar18[0x1b] = (short)spawnWords[1];
-          slot->lifetimeFrame = (short)spawnWords[2];
-          slot->lifetimeFrameLimit = (short)spawnWords[2];
-          if ((double)lbl_803DFFD4 < (double)spawnConfig->scale) {
-            FUN_80135810((double)spawnConfig->scale,param_2,param_3,param_4,param_5,param_6,param_7,
-                         param_8,sExpgfxScaleOverflow,puVar10,iVar13,iVar15,piVar16,param_14,
-                         param_15,param_16);
-          }
-          dVar20 = (double)lbl_803DFFD0;
-          dVar19 = dVar20 * (double)spawnConfig->scale;
-          dVar21 = (double)(float)dVar19;
-          if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) == 0) {
-            if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) == 0) {
-              local_38 = (double)(longlong)(int)dVar19;
-              slot->scaleCounter = (short)(int)dVar19;
-              slot->scaleTarget = slot->scaleCounter;
-              slot->scaleFrames = 0;
-            }
-            else {
-              param_2 = (double)(longlong)(int)dVar19;
-              uVar4 = (undefined2)(int)dVar19;
-              slot->scaleCounter = uVar4;
-              dVar20 = DOUBLE_803dffe0;
-              local_48 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrameLimit ^ 0x80000000);
-              iVar7 = (int)(dVar21 / (double)(float)(local_48 - DOUBLE_803dffe0));
-              local_50 = (double)(longlong)iVar7;
-              slot->scaleFrames = (short)iVar7;
-              slot->scaleTarget = uVar4;
-              local_40 = param_2;
-              local_38 = param_2;
-            }
-          }
-          else {
-            slot->scaleCounter = 0;
-            dVar20 = DOUBLE_803dffe0;
-            local_50 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrameLimit ^ 0x80000000);
-            iVar7 = (int)(dVar21 / (double)(float)(local_50 - DOUBLE_803dffe0));
-            local_48 = (double)(longlong)iVar7;
-            slot->scaleFrames = (short)iVar7;
-            local_40 = (double)(longlong)(int)dVar19;
-            slot->scaleTarget = (short)(int)dVar19;
-          }
-          if (((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0) ||
-             ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_B) != 0)) {
-            slot->sourcePosY = spawnConfig->sourcePosYBits;
-            slot->sourcePosZ = spawnConfig->sourcePosZBits;
-            slot->sourcePosW = spawnConfig->sourcePosWBits;
-            slot->sourcePosX = spawnConfig->sourcePosXBits;
-            slot->sourceVecZ = spawnConfig->sourceVecZ;
-            slot->sourceVecY = spawnConfig->sourceVecY;
-            slot->sourceVecX = spawnConfig->sourceVecX;
-          }
-          slot->stateBits.bits.frameParity = gExpgfxFrameParityBit;
-          if ((slot->renderFlags & EXPGFX_RENDER_BACKDATE_MOTION) != 0) {
-            slot->renderFlags = slot->renderFlags ^ EXPGFX_RENDER_BACKDATE_MOTION;
-            dVar21 = DOUBLE_803dffe0;
-            param_4 = (double)lbl_803E009C;
-            local_38 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame ^ 0x80000000);
-            *(float *)&slot->posX =
-                 slot->velocityX *
-                 (float)(param_4 * (double)(float)(local_38 - DOUBLE_803dffe0)) +
-                 *(float *)&slot->posX;
-            local_40 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame ^ 0x80000000);
-            *(float *)&slot->posY =
-                 slot->velocityY * (float)(param_4 * (double)(float)(local_40 - dVar21)) +
-                 *(float *)&slot->posY;
-            param_2 = (double)slot->velocityZ;
-            local_48 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame ^ 0x80000000);
-            *(float *)&slot->posZ =
-                 (float)(param_2 * (double)(float)(param_4 * (double)(float)(local_48 - dVar21)) +
-                        (double)*(float *)&slot->posZ);
-            dVar20 = (double)lbl_803E00A0;
-            slot->velocityX = (float)((double)slot->velocityX * dVar20);
-            slot->velocityY = (float)((double)slot->velocityY * dVar20);
-            slot->velocityZ = (float)((double)slot->velocityZ * dVar20);
-          }
-          if ((slot->renderFlags & EXPGFX_RENDER_AIM_AT_ACTOR) != 0) {
-            iVar7 = FUN_80017a98();
-            slot->renderFlags = slot->renderFlags ^ EXPGFX_RENDER_AIM_AT_ACTOR;
-            dVar19 = DOUBLE_803dffe0;
-            if ((slot->behaviorFlags & 1) == 0) {
-              dVar21 = (double)(*(float *)(iVar7 + 0x18) -
-                               (*(float *)&slot->startPosX +
-                               *(float *)&attachedSource->sourcePosYBits));
-              param_2 = (double)*(float *)(iVar7 + 0x20);
-              fVar1 = (float)(param_2 -
-                             (double)(*(float *)&slot->startPosZ +
-                                     *(float *)&attachedSource->sourcePosWBits));
-              dVar20 = (double)(float)(dVar21 * dVar21 + (double)(fVar1 * fVar1));
-              if (((dVar20 < (double)lbl_803E00A4) &&
-                  (dVar20 = (double)lbl_803DFFDC, dVar20 != (double)*(float *)(iVar7 + 0x24))) &&
-                 (dVar20 != (double)*(float *)(iVar7 + 0x2c))) {
-                local_38 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame << 1 ^ 0x80000000);
-                slot->velocityX =
-                     slot->velocityX -
-                     (float)(dVar21 / (double)(float)(local_38 - DOUBLE_803dffe0));
-                local_40 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame << 1 ^ 0x80000000);
-                slot->velocityY =
-                     slot->velocityY -
-                     ((lbl_803E00A8 + *(float *)(iVar7 + 0x1c)) -
-                     (*(float *)&slot->startPosY + *(float *)&attachedSource->sourcePosZBits)) /
-                     (float)(local_40 - dVar19);
-                dVar21 = (double)slot->velocityZ;
-                param_2 = (double)*(float *)(iVar7 + 0x20);
-                dVar20 = (double)(float)(param_2 - (double)(*(float *)&slot->startPosZ +
-                                                *(float *)&attachedSource->sourcePosWBits));
-                local_48 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame << 1 ^ 0x80000000);
-                slot->velocityZ =
-                     (float)(dVar21 - (double)(float)(dVar20 / (double)(float)(local_48 - dVar19)));
-                param_4 = dVar19;
-              }
-            }
-            else {
-              param_2 = (double)(*(float *)(iVar7 + 0x18) - *(float *)&slot->startPosX);
-              fVar1 = *(float *)(iVar7 + 0x20) - *(float *)&slot->startPosZ;
-              dVar20 = (double)(float)(param_2 * param_2 + (double)(fVar1 * fVar1));
-              if (((dVar20 < (double)lbl_803E00A4) &&
-                  (dVar20 = (double)lbl_803DFFDC, dVar20 != (double)*(float *)(iVar7 + 0x24))) &&
-                 (dVar20 != (double)*(float *)(iVar7 + 0x2c))) {
-                local_38 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame << 1 ^ 0x80000000);
-                slot->velocityX =
-                     slot->velocityX +
-                     (float)(param_2 / (double)(float)(local_38 - DOUBLE_803dffe0));
-                local_40 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame << 1 ^ 0x80000000);
-                slot->velocityY =
-                     slot->velocityY +
-                     ((lbl_803E00A8 + *(float *)(iVar7 + 0x1c)) - *(float *)&slot->startPosY) /
-                     (float)(local_40 - dVar19);
-                param_2 = (double)slot->velocityZ;
-                dVar20 = (double)(*(float *)(iVar7 + 0x20) - *(float *)&slot->startPosZ);
-                local_48 = (double)CONCAT44(0x43300000,(int)slot->lifetimeFrame << 1 ^ 0x80000000);
-                slot->velocityZ =
-                     (float)(param_2 + (double)(float)(dVar20 / (double)(float)(local_48 - dVar19)));
-                dVar21 = dVar19;
-              }
-            }
-          }
-          if (iVar6 == 1) {
-            DAT_803ddef0 = DAT_803ddef0 + 1;
-            DAT_803ddef8 = DAT_803ddef4 / DAT_803ddef0;
-          }
-          slot->colorByte0 = (char)((uint)spawnConfig->colorByte0Hi >> 8);
-          slot->colorByte1 = (char)((uint)spawnConfig->colorByte1Hi >> 8);
-          slot->colorByte2 = (char)((uint)spawnConfig->colorByte2Hi >> 8);
-          if ((spawnConfig->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS) != 0) {
-            *(char *)((int)puVar18 + 0x1f) = (char)(spawnConfig->overrideColor0 >> 8);
-            *(char *)((int)puVar18 + 0x2f) = (char)(spawnConfig->overrideColor1 >> 8);
-            *(char *)((int)puVar18 + 0x3f) = (char)(spawnConfig->overrideColor2 >> 8);
-          }
-          *(undefined *)(puVar18 + 6) = 0xff;
-          *(undefined *)((int)puVar18 + 0xd) = 0xff;
-          *(undefined *)(puVar18 + 7) = 0xff;
-          puVar18[4] = 0;
-          puVar18[5] = 0;
-          puVar18[0xc] = 0;
-          puVar18[0xd] = 0;
-          puVar18[0x14] = 0;
-          puVar18[0x15] = 0;
-          puVar18[0x1c] = 0;
-          puVar18[0x1d] = 0;
-          if ((slot->renderFlags & EXPGFX_RENDER_INIT_QUAD) != 0) {
-            expgfx_initSlotQuad(puVar18);
-          }
-          pbVar11 = &gExpgfxPoolSourceModes + local_56[0];
-          *pbVar11 = (spawnConfig->behaviorFlags & EXPGFX_BEHAVIOR_SOURCE_MODE_FLAG) != 0;
-          if ((*pbVar11 != 0) &&
-              ((spawnConfig->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) == 0)) {
-            *pbVar11 = *pbVar11 + 1;
-          }
-          (&gExpgfxPoolBoundsTemplateIds)[local_56[0]] = param_12;
-          FUN_802420e0((uint)slot,EXPGFX_SLOT_SIZE);
-          DAT_803ddeec = (undefined2 *)slot;
-        }
+    } else {
+      dx = *(f32 *)((char *)playerObj + 0x18) -
+           (*(f32 *)&slot->startPosX + *(f32 *)((char *)config + 0xc));
+      dz = *(f32 *)((char *)playerObj + 0x20) -
+           (*(f32 *)&slot->startPosZ + *(f32 *)((char *)config + 0x14));
+      distSq = dx * dx + dz * dz;
+      if (distSq < lbl_803DF424
+          && lbl_803DF35C != *(f32 *)((char *)playerObj + 0x24)
+          && lbl_803DF35C != *(f32 *)((char *)playerObj + 0x2c)) {
+        slot->velocityX = slot->velocityX - dx / (f32)(s32)((int)slot->lifetimeFrame << 1);
+        slot->velocityY = slot->velocityY -
+            ((lbl_803DF428 + *(f32 *)((char *)playerObj + 0x1c)) -
+             (*(f32 *)&slot->startPosY + *(f32 *)((char *)config + 0x10))) /
+                (f32)(s32)((int)slot->lifetimeFrame << 1);
+        slot->velocityZ = slot->velocityZ -
+            (*(f32 *)((char *)playerObj + 0x20) -
+             (*(f32 *)&slot->startPosZ + *(f32 *)((char *)config + 0x14))) /
+                (f32)(s32)((int)slot->lifetimeFrame << 1);
       }
     }
   }
-  FUN_80286878();
-  return;
+
+  if (slotType == 1) {
+    lbl_803DD270 = lbl_803DD270 + 1;
+    lbl_803DD278 = lbl_803DD274 / lbl_803DD270;
+  }
+
+  slot->colorByte0 = (u8)((int)config->colorByte0Hi >> 8);
+  slot->colorByte1 = (u8)((int)config->colorByte1Hi >> 8);
+  slot->colorByte2 = (u8)((int)config->colorByte2Hi >> 8);
+
+  if ((config->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS) != 0) {
+    *(u8 *)((char *)slot + 0x1f) = (u8)((int)config->overrideColor0 >> 8);
+    *(u8 *)((char *)slot + 0x2f) = (u8)((int)config->overrideColor1 >> 8);
+    *(u8 *)((char *)slot + 0x3f) = (u8)((int)config->overrideColor2 >> 8);
+  }
+
+  *(u8 *)((char *)slot + 0xc) = 0xff;
+  *(u8 *)((char *)slot + 0xd) = 0xff;
+  *(u8 *)((char *)slot + 0xe) = 0xff;
+
+  *(s16 *)((char *)slot + 0x08) = (s16)polePosY;
+  *(s16 *)((char *)slot + 0x0a) = (s16)poleVecY;
+  *(s16 *)((char *)slot + 0x18) = (s16)polePosX;
+  *(s16 *)((char *)slot + 0x1a) = (s16)poleVecY;
+  *(s16 *)((char *)slot + 0x28) = (s16)polePosX;
+  *(s16 *)((char *)slot + 0x2a) = (s16)poleVecZ;
+  *(s16 *)((char *)slot + 0x38) = (s16)polePosY;
+  *(s16 *)((char *)slot + 0x3a) = (s16)poleVecZ;
+
+  if ((slot->renderFlags & EXPGFX_RENDER_INIT_QUAD) != 0) {
+    expgfx_initSlotQuad(slot);
+  }
+
+  poolSourceModesByte = expgfxBase + EXPGFX_POOL_SOURCE_MODES_OFFSET + (s16)poolIdxOut;
+  modeFlag = (config->behaviorFlags & EXPGFX_BEHAVIOR_SOURCE_MODE_FLAG) != 0 ? 1 : 0;
+  *poolSourceModesByte = modeFlag;
+  if (*poolSourceModesByte != 0 &&
+      (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) == 0) {
+    *poolSourceModesByte = *poolSourceModesByte + 1;
+  }
+  *(expgfxBase + EXPGFX_POOL_BOUNDS_TEMPLATE_IDS_OFFSET + (s16)poolIdxOut) =
+      boundsTemplateId;
+
+  DCFlushRange(slot, EXPGFX_SLOT_SIZE);
+  lbl_803DD26C = (int)slot;
+  return slot->sequenceId;
+  }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

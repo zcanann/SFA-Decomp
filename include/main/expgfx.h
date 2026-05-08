@@ -23,10 +23,8 @@ void expgfx_free08(u32 sourceId);
 void expgfx_releaseSourceSlots(u32 sourceId);
 void expgfx_resetAllPools(void);
 void expgfx_updateFrameState(int sourceMode,int sourceId);
-void expgfx_addremove(undefined8 param_1,double param_2,double param_3,double param_4,undefined8 param_5,
-                      undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,
-                      undefined4 param_10,short param_11,undefined param_12,undefined4 param_13,
-                      undefined4 param_14,undefined4 param_15,undefined4 param_16);
+struct ExpgfxSpawnConfig;
+int expgfx_addremove(struct ExpgfxSpawnConfig *config, int preferredPoolIdx, short slotType, u8 boundsTemplateId);
 void expgfx_resetPoolResources(void);
 void expgfx_releaseSlotPoolHandles(void);
 
