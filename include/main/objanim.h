@@ -12,7 +12,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
                           uint moveId,s16 eventState);
 void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int eventState);
 void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int eventState);
-undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim,int events);
+int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim,ObjAnimEventList *events);
 undefined4 Object_ObjAnimSetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim);
 undefined4 Object_ObjAnimSetMove(f32 moveProgress,int objAnim,int moveId,int flags);
 undefined2 ObjAnim_GetCurrentEventCountdown(ObjAnimComponent *objAnim);

@@ -165,10 +165,9 @@ void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,uint moveId,i
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,int eventsArg)
+int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,ObjAnimEventList *events)
 {
   ObjAnimComponent *objAnim;
-  ObjAnimEventList *events;
   ObjAnimEventTable *eventTable;
   ObjAnimBank *bank;
   ObjAnimState *state;
@@ -178,7 +177,7 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
   float fVar4;
   float fVar5;
   float fVar6;
-  undefined4 moveWrappedOrEnded;
+  int moveWrappedOrEnded;
   int eventByteOffset;
   int eventCountdown;
   int *piVar10;
@@ -191,7 +190,6 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
   double local_28;
 
   objAnim = (ObjAnimComponent *)objAnimArg;
-  events = (ObjAnimEventList *)eventsArg;
   moveWrappedOrEnded = 0;
   bank = ObjAnim_GetActiveBank(objAnim);
   piVar10 = (int *)bank;
