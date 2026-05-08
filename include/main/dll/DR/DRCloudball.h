@@ -3,8 +3,8 @@
 
 #include "ghidra_import.h"
 
-void spscarab_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void spscarab_update(int param_1);
+void spscarab_init(int param_1, int param_2);
 void spscarab_release(void);
 void spscarab_initialise(void);
 int spdrape_getExtraSize(void);
