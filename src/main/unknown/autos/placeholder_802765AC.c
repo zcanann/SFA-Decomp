@@ -109,6 +109,12 @@ extern void sndConvertMs(u32 *p);
 extern void inpSetMidiCtrl(int idx, u8 a, u8 b, u8 mask);
 extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
 extern void fn_8026F5B8(int state);
+extern u16 sndRand(void);
+extern int fn_8027A1DC(int state);
+extern void inpSetMidiLastNote(u8 a, u8 b, u8 v);
+extern int fn_80275364(int state, u32 *args);
+extern void inpAddCtrl(int obj, int b, int c, int d, u32 flag);
+extern void inpSetGlobalMIDIDirtyFlag(u8 a, u8 b, u32 flag);
 
 /*
  * --INFO--
@@ -436,6 +442,106 @@ uint FUN_802765bc(int *param_1)
  */
 void FUN_802765c4(int *param_1,int param_2)
 {
+}
+
+/*
+ * Choose a randomized note/velocity command and dispatch it through the
+ * normal sample-start handler.
+ */
+void fn_8027656C(int state, u32 *args)
+{
+    u32 command;
+    u32 low;
+    u32 high;
+    u32 pitch;
+    u32 rand;
+    int range;
+
+    if (((args[1] >> 8) & 0xff) == 0) {
+        command = *args;
+        low = (command >> 8) & 0xff;
+        high = command >> 0x18;
+        if (high < low) {
+            high = low;
+            low = command >> 0x18;
+        }
+    } else {
+        low = (u32)*(u16 *)(state + 0x12c) - ((*args >> 8) & 0xff);
+        high = (u32)*(u16 *)(state + 0x12c) + (*args >> 0x18);
+        if ((int)low < 0) {
+            low = 0;
+        } else if ((int)low > 0x7f) {
+            low = 0x7f;
+        }
+        low &= 0xff;
+        if (high > 0x7f) {
+            high = 0x7f;
+        }
+        high &= 0xff;
+    }
+
+    if ((args[1] & 0xff) == 0) {
+        pitch = (*args >> 0x10) & 0xff;
+    } else {
+        pitch = (sndRand() & 0xffff) % 0xc9 - 100;
+    }
+    rand = sndRand();
+    range = (high - low) + 1;
+    *args = ((pitch & 0xff) << 0x10) | 0x19 |
+            (low + ((rand & 0xffff) - ((int)(rand & 0xffff) / range) * range)) * 0x100;
+    args[1] = 0;
+    *(u16 *)(state + 0x12c) = (u16)(*args >> 8) & 0x7f;
+    *(u8 *)(state + 0x12e) = *args >> 0x10;
+    if (fn_8027A1DC(state) != 0) {
+        inpSetMidiLastNote(*(u8 *)(state + 0x121), *(u8 *)(state + 0x122),
+                           *(u16 *)(state + 0x12c) & 0xff);
+    }
+    *args = 4;
+    fn_80275364(state, args);
+}
+
+/*
+ * Queue a controller event and mark the owning MIDI/global dirty flag.
+ */
+void fn_8027670C(int state, int ctrlObj, u32 *args, int unused, u32 stateFlag,
+                 u32 activeFlag, u32 dirtyFlag)
+{
+    u32 command;
+    u32 panDelta;
+    u32 panScaled;
+    int baseValue;
+    int signedDelta;
+    u32 ctrlValue;
+
+    (void)unused;
+    if (((*(u32 *)(state + 0x118) & activeFlag) |
+         (*(u32 *)(state + 0x114) & stateFlag)) == 0) {
+        *(u32 *)(state + 0x118) |= activeFlag;
+        ctrlValue = 0;
+        *(u32 *)(state + 0x114) |= stateFlag;
+    } else {
+        ctrlValue = args[1] & 0xff;
+    }
+
+    command = *args;
+    baseValue = (int)(command & 0xffff0000) / 100 + ((int)command >> 0x1f);
+    baseValue = baseValue - (baseValue >> 0x1f);
+    panDelta = (u32)(s8)(args[1] >> 0x10);
+    panScaled = panDelta << 8;
+    signedDelta = (int)panScaled / 100 + ((int)(panScaled | (panDelta >> 0x18)) >> 0x1f);
+    signedDelta = signedDelta - (signedDelta >> 0x1f);
+    if (baseValue < 0) {
+        signedDelta = -signedDelta;
+    }
+
+    inpAddCtrl(ctrlObj, (command >> 8) & 0xff, baseValue + signedDelta, ctrlValue,
+               ((args[1] >> 8) & 0xff) != 0);
+    if ((dirtyFlag & 0x80000000) == 0) {
+        *(u32 *)(state + 0x214) |= dirtyFlag;
+    } else {
+        inpSetGlobalMIDIDirtyFlag(*(u8 *)(state + 0x121), *(u8 *)(state + 0x122),
+                                  dirtyFlag);
+    }
 }
 
 /*
