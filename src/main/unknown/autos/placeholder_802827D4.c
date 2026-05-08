@@ -49,10 +49,122 @@ void inpGetAuxA(void) {}
 void inpGetAuxB(void) {}
 #pragma dont_inline reset
 
-/* inpInit - input/controller state init. Stubbed. */
-#pragma dont_inline on
-void inpInit(void) {}
-#pragma dont_inline reset
+extern u8 lbl_803BDA74[];
+extern u8 lbl_803BDEF4[];
+extern u32 lbl_803D3CA0[];
+
+/*
+ * inpInit - input/controller state init.
+ *
+ * EN v1.0 Address: 0x802829D0
+ * EN v1.0 Size: 740b (0x2E4)
+ */
+void inpInit(u32 state)
+{
+    if (state != 0) {
+        *(u8 *)(state + 0x218) = 7;
+        *(u8 *)(state + 0x219) = 0;
+        *(u32 *)(state + 0x21c) = 0x10000;
+        *(u8 *)(state + 0x220) = 0xb;
+        *(u8 *)(state + 0x221) = 2;
+        *(u32 *)(state + 0x224) = 0x10000;
+        *(u8 *)(state + 0x23a) = 2;
+        *(u8 *)(state + 0x23c) = 0xa;
+        *(u8 *)(state + 0x23d) = 0;
+        *(u32 *)(state + 0x240) = 0x10000;
+        *(u8 *)(state + 0x25e) = 1;
+        *(u8 *)(state + 0x260) = 0x83;
+        *(u8 *)(state + 0x261) = 0;
+        *(u32 *)(state + 0x264) = 0x10000;
+        *(u8 *)(state + 0x282) = 1;
+        *(u8 *)(state + 0x284) = 0x80;
+        *(u8 *)(state + 0x285) = 0;
+        *(u32 *)(state + 0x288) = 0x10000;
+        *(u8 *)(state + 0x2a6) = 1;
+        *(u8 *)(state + 0x2cc) = 1;
+        *(u8 *)(state + 0x2cd) = 0;
+        *(u32 *)(state + 0x2d0) = 0x10000;
+        *(u8 *)(state + 0x2ee) = 1;
+        *(u8 *)(state + 0x2f0) = 0x40;
+        *(u8 *)(state + 0x2f1) = 0;
+        *(u32 *)(state + 0x2f4) = 0x10000;
+        *(u8 *)(state + 0x312) = 1;
+        *(u8 *)(state + 0x314) = 0x41;
+        *(u8 *)(state + 0x315) = 0;
+        *(u32 *)(state + 0x318) = 0x10000;
+        *(u8 *)(state + 0x336) = 1;
+        *(u8 *)(state + 0x35a) = 0;
+        *(u8 *)(state + 0x35c) = 0x5b;
+        *(u8 *)(state + 0x35d) = 0;
+        *(u32 *)(state + 0x360) = 0x10000;
+        *(u8 *)(state + 0x37e) = 1;
+        *(u8 *)(state + 0x3a2) = 0;
+        *(u8 *)(state + 0x3a4) = 0x5d;
+        *(u8 *)(state + 0x3a5) = 0;
+        *(u32 *)(state + 0x3a8) = 0x10000;
+        *(u8 *)(state + 0x3c6) = 1;
+        *(u8 *)(state + 0x2a8) = 0x84;
+        *(u8 *)(state + 0x2a9) = 0;
+        *(u32 *)(state + 0x2ac) = 0x10000;
+        *(u8 *)(state + 0x2ca) = 1;
+        *(u8 *)(state + 0x3ea) = 0;
+        *(u32 *)(state + 0x214) = 0x1fff;
+        *(u8 *)(state + 0x1d4) = 0;
+        *(u8 *)(state + 0x1d5) = 0;
+        *(u8 *)(state + 0xa8) = 0;
+    } else {
+        int i;
+        u8 *b = lbl_803BDA74;
+        u8 *a = lbl_803BDEF4;
+        u32 *p = lbl_803D3CA0;
+
+        a[0x22] = 0;  b[0x22] = 0;
+        a[0x46] = 0;  b[0x46] = 0;
+        a[0x6a] = 0;  b[0x6a] = 0;
+        a[0x8e] = 0;  b[0x8e] = 0;
+        a[0xb2] = 0;  b[0xb2] = 0;
+        a[0xd6] = 0;  b[0xd6] = 0;
+        a[0xfa] = 0;  b[0xfa] = 0;
+        a[0x11e] = 0; b[0x11e] = 0;
+        a[0x142] = 0; b[0x142] = 0;
+        a[0x166] = 0; b[0x166] = 0;
+        a[0x18a] = 0; b[0x18a] = 0;
+        a[0x1ae] = 0; b[0x1ae] = 0;
+        a[0x1d2] = 0; b[0x1d2] = 0;
+        a[0x1f6] = 0; b[0x1f6] = 0;
+        a[0x21a] = 0; b[0x21a] = 0;
+        a[0x23e] = 0; b[0x23e] = 0;
+        a[0x262] = 0; b[0x262] = 0;
+        a[0x286] = 0; b[0x286] = 0;
+        a[0x2aa] = 0; b[0x2aa] = 0;
+        a[0x2ce] = 0; b[0x2ce] = 0;
+        a[0x2f2] = 0; b[0x2f2] = 0;
+        a[0x316] = 0; b[0x316] = 0;
+        a[0x33a] = 0; b[0x33a] = 0;
+        a[0x35e] = 0; b[0x35e] = 0;
+        a[0x382] = 0; b[0x382] = 0;
+        a[0x3a6] = 0; b[0x3a6] = 0;
+        a[0x3ca] = 0; b[0x3ca] = 0;
+        a[0x3ee] = 0; b[0x3ee] = 0;
+        a[0x412] = 0; b[0x412] = 0;
+        a[0x436] = 0; b[0x436] = 0;
+        a[0x45a] = 0; b[0x45a] = 0;
+        a[0x47e] = 0; b[0x47e] = 0;
+
+        for (i = 0; i < 4; i++) {
+            p[0] = 0xff;  p[1] = 0xff;  p[2] = 0xff;  p[3] = 0xff;
+            p[4] = 0xff;  p[5] = 0xff;  p[6] = 0xff;  p[7] = 0xff;
+            p[8] = 0xff;  p[9] = 0xff;  p[10] = 0xff; p[11] = 0xff;
+            p[12] = 0xff; p[13] = 0xff; p[14] = 0xff; p[15] = 0xff;
+            p += 16;
+            p[0] = 0xff;  p[1] = 0xff;  p[2] = 0xff;  p[3] = 0xff;
+            p[4] = 0xff;  p[5] = 0xff;  p[6] = 0xff;  p[7] = 0xff;
+            p[8] = 0xff;  p[9] = 0xff;  p[10] = 0xff; p[11] = 0xff;
+            p[12] = 0xff; p[13] = 0xff; p[14] = 0xff; p[15] = 0xff;
+            p += 16;
+        }
+    }
+}
 
 /*
  * Map an input byte (0x80..0x88) to a packed table value via a

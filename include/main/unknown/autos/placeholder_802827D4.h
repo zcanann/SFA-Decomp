@@ -22,7 +22,7 @@ u16 inpGetPostAuxB(int state);
 u16 inpGetTremolo(int state);
 void inpGetAuxA(void);
 void inpGetAuxB(void);
-void inpInit(void);
+void inpInit(u32 state);
 u32 inpTranslateExCtrl(u32 input);
 void inpGetExCtrl(void);
 void inpSetExCtrl(void);
