@@ -185,7 +185,7 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
   int iVar11;
   int eventIndex;
   byte eventScanFlags;
-  u16 eventWord;
+  s16 eventWord;
   u8 eventId;
   u16 eventFrame;
   double local_28;
