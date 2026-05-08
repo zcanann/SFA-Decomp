@@ -3,7 +3,7 @@
 
 extern u32 lbl_803DE374[2];
 extern void ReverbSTDCallback(int a, int b, int c, void *state);
-extern void ReverbSTDCreate(void *state, f32 a, f32 b, f32 c, f32 d, f32 e);
+extern int ReverbSTDCreate(void *state, f32 a, f32 b, f32 c, f32 d, f32 e);
 
 typedef struct ReverbParams {
     int p0;
