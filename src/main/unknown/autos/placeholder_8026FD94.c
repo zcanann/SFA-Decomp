@@ -19,9 +19,29 @@ extern void fn_80271178(SynthDelayedNode *fade, int mode, u32 delay);
 extern void fn_8026D0C4(u32 handle);
 extern void fn_8026D278(u32 handle);
 extern void fn_8026D630(u32 handle, u32 mixValue0, u32 mixValue1);
+extern void fn_80278418(u32 delta);
+extern int fn_8028324C(void);
+extern u16 fn_80282858(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex);
+extern u16 fn_80282914(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex);
+extern void fn_80283F34(void);
+extern u8 gSynthInitialized;
+extern u8 lbl_803BD364[];
+extern u8 lbl_803BD9A4[];
+extern u8 lbl_803BD9C4[];
+extern u8 lbl_803BD9E4[];
+extern u8 lbl_803BDA04[];
+extern u32 lbl_803DE25C;
+extern u32 lbl_803DE260;
+extern u8 lbl_803DE23C;
+extern u8 lbl_803DE244;
+extern u8 lbl_803DE24C;
+extern u8 lbl_803DE254;
 extern u8 *lbl_803DE268;
 extern int lbl_803DE278;
 extern int lbl_803DE27C;
+extern f32 lbl_803E77D0;
+
+typedef void (*SynthAuxCallback)(int active, u16 *samples, u32 user);
 
 /*
  * fn_8026FC8C - voice handler (~608 instructions). Stubbed.
@@ -61,21 +81,21 @@ int fn_8026FEEC(u32 sampleId, u8 key, u8 velocity, u32 flags, u32 volume, u32 pa
  * fn_80270184 - large voice handler (~1972 instructions). Stubbed.
  */
 #pragma dont_inline on
-void fn_80270184(void) {}
+void fn_80270184(int idx) { (void)idx; }
 #pragma dont_inline reset
 
 /*
  * fn_80270938 - large voice handler (~1712 instructions). Stubbed.
  */
 #pragma dont_inline on
-void fn_80270938(void) {}
+void fn_80270938(int idx) { (void)idx; }
 #pragma dont_inline reset
 
 /*
  * fn_80270FE8 - voice handler (~400 instructions). Stubbed.
  */
 #pragma dont_inline on
-void fn_80270FE8(void) {}
+void fn_80270FE8(int idx) { (void)idx; }
 #pragma dont_inline reset
 
 /*
@@ -240,11 +260,90 @@ void fn_8027142C(u8 *fade)
 }
 
 /*
- * fn_80271498 - list-walker variant (~792 instructions). Stubbed.
+ * Periodic synth tick: drains delayed-action buckets, advances fade ramps,
+ * runs AUX callbacks, and advances the global synth timer.
+ *
+ * EN v1.1 Address: 0x80271498, size 792b
  */
-#pragma dont_inline on
-void fn_80271498(void) {}
-#pragma dont_inline reset
+void fn_80271498(u32 delta)
+{
+    u32 bucket;
+    u32 fadeIndex;
+    u32 mask;
+    f32 *fade;
+    u32 i;
+    u32 channel;
+    u16 auxSamplesA[8];
+    u16 auxSamplesB[6];
+
+    if (gSynthInitialized != 0) {
+        fn_80278418(delta);
+        bucket = gSynthDelayBucketCursor;
+        fn_80271398((void **)&gSynthDelayStorage.bucketHeads[bucket][0], fn_80270184);
+        fn_80271398((void **)&gSynthDelayStorage.bucketHeads[bucket][1], fn_80270FE8);
+        fn_80271398((void **)&gSynthDelayStorage.bucketHeads[bucket][2], fn_80270938);
+        gSynthDelayBucketCursor = (gSynthDelayBucketCursor + 1) & 0x1f;
+        if (fn_8028324C() == 0) {
+            if ((lbl_803DE260 | lbl_803DE25C) != 0) {
+                fade = (f32 *)lbl_803BD364;
+                mask = 1;
+                for (fadeIndex = 0; fadeIndex < 0x20; fadeIndex++) {
+                    if ((lbl_803DE260 & mask) != 0) {
+                        fade[0] = fade[1] - fade[3] * (fade[1] - fade[2]);
+                        fade[3] = fade[3] - fade[4];
+                        if (fade[3] <= lbl_803E77D0) {
+                            fade[0] = fade[1];
+                            fn_8027142C((u8 *)fade);
+                            lbl_803DE260 &= ~mask;
+                            if ((lbl_803DE260 == 0) && (lbl_803DE25C == 0)) {
+                                break;
+                            }
+                        }
+                    }
+                    if ((lbl_803DE25C & mask) != 0) {
+                        fade[5] = fade[6] - fade[8] * (fade[6] - fade[7]);
+                        fade[8] = fade[8] - fade[9];
+                        if (fade[8] <= lbl_803E77D0) {
+                            fade[5] = fade[6];
+                            lbl_803DE25C &= ~mask;
+                            if ((lbl_803DE25C == 0) && (lbl_803DE260 == 0)) {
+                                break;
+                            }
+                        }
+                    }
+                    mask <<= 1;
+                    fade += 12;
+                }
+            }
+            for (i = 0; i < 8; i++) {
+                if ((&lbl_803DE254)[i] != 0xff) {
+                    for (channel = 0; channel < 4; channel++) {
+                        auxSamplesA[channel] =
+                            fn_80282858(i & 0xff, channel & 0xff, (&lbl_803DE254)[i],
+                                         (&lbl_803DE24C)[i]);
+                    }
+                    (*(SynthAuxCallback *)(lbl_803BD9C4 + i * 4))(1, auxSamplesA,
+                                                                   *(u32 *)(lbl_803BD9A4 + i * 4));
+                }
+                if ((&lbl_803DE244)[i] != 0xff) {
+                    for (channel = 0; channel < 4; channel++) {
+                        auxSamplesB[channel] =
+                            fn_80282914(i & 0xff, channel & 0xff, (&lbl_803DE244)[i],
+                                         (&lbl_803DE23C)[i]);
+                    }
+                    (*(SynthAuxCallback *)(lbl_803BDA04 + i * 4))(1, auxSamplesB,
+                                                                   *(u32 *)(lbl_803BD9E4 + i * 4));
+                }
+            }
+        }
+        fn_80283F34();
+        {
+            u32 oldLo = lbl_803DE27C;
+            lbl_803DE27C += delta;
+            lbl_803DE278 += (lbl_803DE27C < oldLo);
+        }
+    }
+}
 
 /*
  * fn_802717B0 - voice handler (~188 instructions). Stubbed.
