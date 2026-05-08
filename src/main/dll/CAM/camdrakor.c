@@ -79,7 +79,7 @@ extern f32 lbl_803E2600;
 /*
  * --INFO--
  *
- * Function: FUN_8010c0d8
+ * Function: fn_8010C0D8
  * EN v1.0 Address: 0x8010C0D8
  * EN v1.0 Size: 3352b
  * EN v1.1 Address: 0x8010C374
@@ -89,7 +89,7 @@ extern f32 lbl_803E2600;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010c0d8(void)
+void fn_8010C0D8(void)
 {
   float fVar1;
   short sVar2;
@@ -440,7 +440,7 @@ LAB_8010cfb8:
 /*
  * --INFO--
  *
- * Function: FUN_8010cdf0
+ * Function: fn_8010CD5C
  * EN v1.0 Address: 0x8010CDF0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8010CFF8
@@ -450,7 +450,7 @@ LAB_8010cfb8:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010cdf0(int param_1,undefined4 param_2,undefined4 *param_3)
+void fn_8010CD5C(int param_1,undefined4 param_2,undefined4 *param_3)
 {
 }
 
@@ -477,7 +477,7 @@ void FUN_8010cdf4(void)
 /*
  * --INFO--
  *
- * Function: FUN_8010ce20
+ * Function: fn_8010CEF0
  * EN v1.0 Address: 0x8010CE20
  * EN v1.0 Size: 1580b
  * EN v1.1 Address: 0x8010D18C
@@ -487,7 +487,7 @@ void FUN_8010cdf4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010ce20(undefined2 *param_1)
+void fn_8010CEF0(undefined2 *param_1)
 {
   float fVar1;
   float fVar2;
@@ -570,7 +570,7 @@ void FUN_8010ce20(undefined2 *param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8010d44c
+ * Function: fn_8010D298
  * EN v1.0 Address: 0x8010D44C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8010D534
@@ -580,7 +580,7 @@ void FUN_8010ce20(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010d44c(void)
+void fn_8010D298(void)
 {
 }
 
