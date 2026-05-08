@@ -542,18 +542,251 @@ done:
 }
 
 /*
- * fn_802748C0 - voice handler (~784 instructions). Stubbed.
+ * Insert an instrument entry into the bucketed sorted table.
  */
-#pragma dont_inline on
-void fn_802748C0(void) {}
-#pragma dont_inline reset
+extern u16 lbl_803DE290;
+
+int fn_802748C0(u32 key, void *value)
+{
+    u32 bucketOffset;
+    u32 bucketCount;
+    u32 insertIndex;
+    u32 bucketIndex;
+    u16 *bucket;
+    u32 *entry;
+    int i;
+    u32 moveCount;
+    u32 batches;
+
+    sndBegin();
+    bucketOffset = (key >> 4) & 0xffc;
+    bucketCount = *(u16 *)(lbl_803C5678 + bucketOffset);
+    bucketIndex = (key >> 6) & 0x3ff;
+    if (bucketCount == 0) {
+        bucketCount = lbl_803DE290;
+        *(u16 *)(lbl_803C5678 + bucketOffset + 2) = lbl_803DE290;
+        insertIndex = bucketCount;
+    } else {
+        insertIndex = *(u16 *)(lbl_803C5678 + bucketOffset + 2);
+        i = 0;
+        while ((i < (int)bucketCount) &&
+               (*(u16 *)(lbl_803C5678 + 0x804 + (insertIndex + i) * 8) <
+                (key & 0xffff))) {
+            i++;
+        }
+        if (i < (int)bucketCount) {
+            bucketCount = insertIndex + i;
+            i = bucketCount * 8;
+            if ((key & 0xffff) == *(u16 *)(lbl_803C5678 + 0x804 + i)) {
+                (*(u16 *)(lbl_803C5678 + 0x806 + i))++;
+                sndEnd();
+                return 0;
+            }
+        } else {
+            bucketCount = insertIndex + i;
+        }
+    }
+    if (lbl_803DE290 > 0x7ff) {
+        sndEnd();
+        return 0;
+    }
+
+    i = 0x40;
+    bucket = (u16 *)lbl_803C5678;
+    do {
+        if (insertIndex < bucket[1]) {
+            bucket[1]++;
+        }
+        if (insertIndex < bucket[3]) {
+            bucket[3]++;
+        }
+        if (insertIndex < bucket[5]) {
+            bucket[5]++;
+        }
+        if (insertIndex < bucket[7]) {
+            bucket[7]++;
+        }
+        if (insertIndex < bucket[9]) {
+            bucket[9]++;
+        }
+        if (insertIndex < bucket[11]) {
+            bucket[11]++;
+        }
+        if (insertIndex < bucket[13]) {
+            bucket[13]++;
+        }
+        if (insertIndex < bucket[15]) {
+            bucket[15]++;
+        }
+        bucket += 0x10;
+        i--;
+    } while (i != 0);
+
+    i = lbl_803DE290 - 1;
+    moveCount = lbl_803DE290 - bucketCount;
+    entry = (u32 *)(lbl_803C5678 + 0x800 + i * 8);
+    if ((int)bucketCount <= i) {
+        batches = moveCount >> 3;
+        if (batches != 0) {
+            do {
+                entry[2] = entry[0];
+                entry[3] = entry[1];
+                entry[0] = entry[-2];
+                entry[1] = entry[-1];
+                entry[-2] = entry[-4];
+                entry[-1] = entry[-3];
+                entry[-4] = entry[-6];
+                entry[-3] = entry[-5];
+                entry[-6] = entry[-8];
+                entry[-5] = entry[-7];
+                entry[-8] = entry[-10];
+                entry[-7] = entry[-9];
+                entry[-10] = entry[-12];
+                entry[-9] = entry[-11];
+                entry[-12] = entry[-14];
+                entry[-11] = entry[-13];
+                entry -= 0x10;
+                batches--;
+            } while (batches != 0);
+            moveCount &= 7;
+            if (moveCount == 0) {
+                goto insert;
+            }
+        }
+        do {
+            entry[2] = entry[0];
+            entry[3] = entry[1];
+            entry -= 2;
+            moveCount--;
+        } while (moveCount != 0);
+    }
+
+insert:
+    i = bucketCount * 8;
+    *(u16 *)(lbl_803C5678 + 0x804 + i) = key;
+    *(void **)(lbl_803C5678 + 0x800 + i) = value;
+    *(u16 *)(lbl_803C5678 + 0x806 + i) = 1;
+    (*(u16 *)(lbl_803C5678 + bucketIndex * 4))++;
+    lbl_803DE290++;
+    sndEnd();
+    return 1;
+}
 
 /*
- * fn_80274BD0 - voice handler (~668 instructions). Stubbed.
+ * Release an instrument entry from the bucketed sorted table.
  */
-#pragma dont_inline on
-void fn_80274BD0(void) {}
-#pragma dont_inline reset
+int fn_80274BD0(u32 key)
+{
+    s16 refCount;
+    int countOffset;
+    u32 bucketOffset;
+    u32 moveCount;
+    u16 *bucket;
+    u32 *entry;
+    u32 startIndex;
+    int scanIndex;
+    u32 batches;
+
+    sndBegin();
+    bucketOffset = (key >> 4) & 0xffc;
+    if (*(s16 *)(lbl_803C5678 + bucketOffset) == 0) {
+        goto done;
+    }
+    startIndex = *(u16 *)(lbl_803C5678 + bucketOffset + 2);
+    scanIndex = 0;
+    while ((scanIndex < (int)(u32)*(u16 *)(lbl_803C5678 + bucketOffset)) &&
+           ((key & 0xffff) !=
+            *(u16 *)(lbl_803C5678 + 0x804 + (startIndex + scanIndex) * 8))) {
+        scanIndex++;
+    }
+    if ((int)(u32)*(u16 *)(lbl_803C5678 + bucketOffset) <= scanIndex) {
+        goto done;
+    }
+
+    countOffset = (startIndex + scanIndex) * 8;
+    refCount = *(s16 *)(lbl_803C5678 + 0x806 + countOffset);
+    *(s16 *)(lbl_803C5678 + 0x806 + countOffset) = refCount - 1;
+    if ((s16)(refCount - 1) != 0) {
+        goto done;
+    }
+
+    scanIndex = startIndex + scanIndex + 1;
+    moveCount = lbl_803DE290 - scanIndex;
+    entry = (u32 *)(lbl_803C5678 + 0x800 + scanIndex * 8);
+    if (scanIndex < (int)(u32)lbl_803DE290) {
+        batches = moveCount >> 3;
+        if (batches != 0) {
+            do {
+                entry[-2] = entry[0];
+                entry[-1] = entry[1];
+                entry[0] = entry[2];
+                entry[1] = entry[3];
+                entry[2] = entry[4];
+                entry[3] = entry[5];
+                entry[4] = entry[6];
+                entry[5] = entry[7];
+                entry[6] = entry[8];
+                entry[7] = entry[9];
+                entry[8] = entry[10];
+                entry[9] = entry[11];
+                entry[10] = entry[12];
+                entry[11] = entry[13];
+                entry[12] = entry[14];
+                entry[13] = entry[15];
+                entry += 0x10;
+                batches--;
+            } while (batches != 0);
+            moveCount &= 7;
+            if (moveCount == 0) {
+                goto compactBuckets;
+            }
+        }
+        do {
+            entry[-2] = entry[0];
+            entry[-1] = entry[1];
+            entry += 2;
+            moveCount--;
+        } while (moveCount != 0);
+    }
+
+compactBuckets:
+    scanIndex = 0x40;
+    bucket = (u16 *)lbl_803C5678;
+    do {
+        if (startIndex < bucket[1]) {
+            bucket[1]--;
+        }
+        if (startIndex < bucket[3]) {
+            bucket[3]--;
+        }
+        if (startIndex < bucket[5]) {
+            bucket[5]--;
+        }
+        if (startIndex < bucket[7]) {
+            bucket[7]--;
+        }
+        if (startIndex < bucket[9]) {
+            bucket[9]--;
+        }
+        if (startIndex < bucket[11]) {
+            bucket[11]--;
+        }
+        if (startIndex < bucket[13]) {
+            bucket[13]--;
+        }
+        if (startIndex < bucket[15]) {
+            bucket[15]--;
+        }
+        bucket += 0x10;
+        scanIndex--;
+    } while (scanIndex != 0);
+    (*(s16 *)(lbl_803C5678 + bucketOffset))--;
+    lbl_803DE290--;
+
+done:
+    sndEnd();
+    return 0;
+}
 
 /*
  * Comparator: return a->key2 - b->key2 (u16 at offset 4).
@@ -566,7 +799,7 @@ int fn_80274E6C(void *a, void *b)
 }
 
 /*
- * fn_80274E7C - table lookup helper (~148 instructions). Stubbed.
+ * Look up an instrument entry through the bucketed table.
  */
 extern void *sndBSearch(void *key, void *base, u16 count, u32 stride,
                         int (*cmp)(void *a, void *b));
@@ -606,7 +839,7 @@ int fn_80274F10(void *a, void *b)
 }
 
 /*
- * fn_80274F20 - voice find/copy (~296 instructions). Stubbed.
+ * Find an SDI sample descriptor and copy its load metadata.
  */
 extern u8 lbl_803BFC78[];
 extern u16 lbl_803DE288;
