@@ -10,6 +10,9 @@ extern void Sfx_PlayFromObject(int obj,u16 sfxId);
 extern void Resource_Release(void *handle);
 extern int *ObjList_GetObjects(undefined *param_1,undefined *param_2);
 extern void fn_8009A1DC(int obj,double scale,undefined2 *pos,u32 count,int *param_5);
+typedef int (*ObjAnimAdvanceObjectFirstFn)(int obj,double moveStepScale,double deltaTime,
+                                           ObjAnimEventList *events);
+typedef void (*ObjAnimSetMoveObjectFirstFn)(int obj,int moveId,f32 moveProgress,int flags);
 
 extern ObjHitReactEffectOrigin lbl_802C1B00;
 extern char sObjHitReactHitstateFrameString[];
@@ -51,8 +54,8 @@ int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
   effectOrigin = lbl_802C1B00;
   if ((reactionState & OBJHITREACT_REACTION_STATE_MASK) != OBJHITREACT_REACTION_STATE_INACTIVE) {
     OSReport(sObjHitReactHitstateFrameString,((ObjAnimComponent *)obj)->currentMoveProgress);
-    moveEnded = ObjAnim_AdvanceCurrentMove((double)*reactionStepScale,(double)timeDelta,
-                                           obj,(ObjAnimEventList *)0x0);
+    moveEnded = ((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)
+        (obj,(double)*reactionStepScale,(double)timeDelta,(ObjAnimEventList *)0x0);
     if (moveEnded != 0) {
       OSReport(sObjHitReactResetString);
       reactionState = OBJHITREACT_REACTION_STATE_INACTIVE;
@@ -99,7 +102,8 @@ int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
     }
     if (((reactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&
         (reactionEntries->reactionAnim > OBJHITREACT_NO_REACTION_ANIM)) {
-      ObjAnim_SetCurrentMove(lbl_803DE910,obj,(int)reactionEntries->reactionAnim,0);
+      ((ObjAnimSetMoveObjectFirstFn)ObjAnim_SetCurrentMove)
+          (obj,(int)reactionEntries->reactionAnim,lbl_803DE910,0);
       *reactionStepScale = reactionEntries->cooldown;
       reactionState = OBJHITREACT_REACTION_STATE_ACTIVE;
     }
