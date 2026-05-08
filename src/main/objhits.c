@@ -1125,8 +1125,10 @@ uint ObjHits_TestTaperedCapsuleXZ(float radiusA, float radiusB, float radiusC, f
     *axial = dx * axis[0] + dz * axis[2];
     if (*axial > halfLength) {
         fa = hit[0] - p0[0];
+        fa *= fa;
         fc = hit[2] - p0[2];
-        *dist2 = fa * fa + fc * fc;
+        fc *= fc;
+        *dist2 = fa + fc;
         r = radiusA + radiusC;
         *sumR = r;
         return *dist2 <= r * r;
