@@ -7,8 +7,8 @@ extern undefined4 camcontrol_getTargetPosition();
 extern double FUN_80247f54();
 extern double FUN_80293900();
 
-extern undefined4* DAT_803dd6d0;
-extern undefined4* gCamcontrolModeSettings;
+extern int *lbl_803DCA50;
+extern f32 *cameraMtxVar57;
 extern f64 DOUBLE_803e1698;
 extern f64 DOUBLE_803e16f8;
 extern f32 lbl_803E1710;
@@ -25,6 +25,18 @@ extern f32 lbl_803E2388;
 extern f32 lbl_803E238C;
 extern f32 lbl_803E2390;
 extern f32 lbl_803E2394;
+
+#define gCamcontrolModeSettings cameraMtxVar57
+
+static inline f64 FirstPerson_U32AsDouble(u32 value) {
+  u64 bits = CONCAT44(0x43300000, value);
+  return *(f64 *)&bits;
+}
+
+static inline f64 FirstPerson_S32AsDouble(s32 value) {
+  u64 bits = CONCAT44(0x43300000, (u32)value ^ 0x80000000);
+  return *(f64 *)&bits;
+}
 
 /*
  * --INFO--
@@ -53,7 +65,7 @@ void firstperson_updatePosition(int param_1,short *param_2)
   float local_30;
   float local_2c;
   
-  (**(code **)(*DAT_803dd6d0 + 0x38))
+  (**(code **)(*lbl_803DCA50 + 0x38))
             ((double)gCamcontrolModeSettings[0x23],param_1,&local_2c,&local_30,&local_34,&local_38,
              1);
   local_38 = local_34 * local_34 + local_2c * local_2c + local_30 * local_30;
@@ -72,7 +84,7 @@ void firstperson_updatePosition(int param_1,short *param_2)
     *(undefined4 *)(param_1 + 0xb8) = *(undefined4 *)(param_1 + 0x18);
     *(undefined4 *)(param_1 + 0xbc) = *(undefined4 *)(param_1 + 0x1c);
     *(undefined4 *)(param_1 + 0xc0) = *(undefined4 *)(param_1 + 0x20);
-    (**(code **)(*DAT_803dd6d0 + 0x38))
+    (**(code **)(*lbl_803DCA50 + 0x38))
               ((double)gCamcontrolModeSettings[0x23],param_1,&local_2c,&local_30,&local_34,
                &local_38,1);
     local_38 = local_34 * local_34 + local_2c * local_2c + local_30 * local_30;
@@ -180,7 +192,7 @@ void firstperson_loadSettings(int param_1)
   double dVar3;
   int iVar4;
   
-  iVar4 = (**(code **)(*DAT_803dd6d0 + 0xc))();
+  iVar4 = (**(code **)(*lbl_803DCA50 + 0xc))();
   gCamcontrolModeSettings[0x24] = gCamcontrolModeSettings[0x23];
   gCamcontrolModeSettings[0xf] = gCamcontrolModeSettings[2];
   gCamcontrolModeSettings[0x11] = gCamcontrolModeSettings[3];
@@ -192,40 +204,38 @@ void firstperson_loadSettings(int param_1)
   gCamcontrolModeSettings[0x15] = gCamcontrolModeSettings[5];
   gCamcontrolModeSettings[0x13] = gCamcontrolModeSettings[4];
   dVar2 = DOUBLE_803e1698;
-  fVar1 = (float)((double)CONCAT44(0x43300000,(int)*(char *)(param_1 + 5) ^ 0x80000000) -
-                 DOUBLE_803e1698);
+  fVar1 = (float)(FirstPerson_S32AsDouble(*(s8 *)(param_1 + 5)) - DOUBLE_803e1698);
   gCamcontrolModeSettings[0x23] = fVar1;
   gCamcontrolModeSettings[0x25] = fVar1;
   dVar3 = DOUBLE_803e16f8;
-  fVar1 = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 6)) - DOUBLE_803e16f8);
+  fVar1 = (float)(FirstPerson_U32AsDouble(*(u8 *)(param_1 + 6)) - DOUBLE_803e16f8);
   gCamcontrolModeSettings[2] = fVar1;
   gCamcontrolModeSettings[0x26] = fVar1;
   gCamcontrolModeSettings[0x10] = fVar1;
-  fVar1 = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 8)) - dVar3);
+  fVar1 = (float)(FirstPerson_U32AsDouble(*(u8 *)(param_1 + 8)) - dVar3);
   gCamcontrolModeSettings[3] = fVar1;
   gCamcontrolModeSettings[0x27] = fVar1;
   gCamcontrolModeSettings[0x12] = fVar1;
-  fVar1 = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 3)) - dVar3);
+  fVar1 = (float)(FirstPerson_U32AsDouble(*(u8 *)(param_1 + 3)) - dVar3);
   *gCamcontrolModeSettings = fVar1;
   gCamcontrolModeSettings[0xc] = fVar1;
-  fVar1 = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 4)) - dVar3);
+  fVar1 = (float)(FirstPerson_U32AsDouble(*(u8 *)(param_1 + 4)) - dVar3);
   gCamcontrolModeSettings[1] = fVar1;
   gCamcontrolModeSettings[0xe] = fVar1;
-  fVar1 = (float)((double)CONCAT44(0x43300000,(int)*(char *)(param_1 + 2) ^ 0x80000000) - dVar2);
+  fVar1 = (float)(FirstPerson_S32AsDouble(*(s8 *)(param_1 + 2)) - dVar2);
   *(float *)(iVar4 + 0xb4) = fVar1;
   gCamcontrolModeSettings[0x1c] = fVar1;
-  fVar1 = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 9)) - dVar3);
+  fVar1 = (float)(FirstPerson_U32AsDouble(*(u8 *)(param_1 + 9)) - dVar3);
   gCamcontrolModeSettings[6] = fVar1;
   gCamcontrolModeSettings[0x18] = fVar1;
-  fVar1 = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 10)) - dVar3);
+  fVar1 = (float)(FirstPerson_U32AsDouble(*(u8 *)(param_1 + 10)) - dVar3);
   gCamcontrolModeSettings[7] = fVar1;
   gCamcontrolModeSettings[0x1a] = fVar1;
   if (*(byte *)(param_1 + 0xb) == 0) {
     gCamcontrolModeSettings[0x14] = lbl_803E1714;
   }
   else {
-    fVar1 = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 0xb)) - dVar3) /
-            lbl_803E1710;
+    fVar1 = (float)(FirstPerson_U32AsDouble(*(u8 *)(param_1 + 0xb)) - dVar3) / lbl_803E1710;
     gCamcontrolModeSettings[4] = fVar1;
     gCamcontrolModeSettings[0x14] = fVar1;
   }
@@ -233,7 +243,7 @@ void firstperson_loadSettings(int param_1)
     gCamcontrolModeSettings[0x16] = lbl_803E1714;
   }
   else {
-    fVar1 = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 0xc)) - DOUBLE_803e16f8) /
+    fVar1 = (float)(FirstPerson_U32AsDouble(*(u8 *)(param_1 + 0xc)) - DOUBLE_803e16f8) /
             lbl_803E1710;
     gCamcontrolModeSettings[5] = fVar1;
     gCamcontrolModeSettings[0x16] = fVar1;
