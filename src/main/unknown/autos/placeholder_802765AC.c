@@ -115,6 +115,8 @@ extern void inpSetMidiLastNote(u8 a, u8 b, u8 v);
 extern int fn_80275364(int state, u32 *args);
 extern void inpAddCtrl(int obj, int b, int c, int d, u32 flag);
 extern void inpSetGlobalMIDIDirtyFlag(u8 a, u8 b, u32 flag);
+extern int vidGetInternalId(u32 id);
+extern void (*lbl_803DE26C)(u32 id);
 
 /*
  * --INFO--
@@ -695,6 +697,83 @@ void fn_80276AD4(int state, u32 *args, u8 op)
         rhs = 0x7fff;
     }
     fn_80276A70(state, (*args >> 8) & 0xff, (*args >> 0x10) & 0xff, (int)rhs);
+}
+
+/*
+ * Queue register-derived messages onto voices found through vid handles.
+ */
+void fn_80276C04(int state, u32 *args)
+{
+    u32 index;
+    u32 value;
+    u32 targetInstrument;
+    int offset;
+    int voice;
+    u32 i;
+    int targetVoice;
+
+    index = (args[1] >> 8) & 0x1f;
+    if (index < 0x10) {
+        value = *(u32 *)(state + index * 4 + 0xac);
+    } else {
+        value = *(u32 *)(lbl_803BD9E4 + 0x10 + index * 4);
+    }
+
+    if (((*args >> 8) & 0xff) == 0) {
+        targetInstrument = *args >> 0x10;
+        if (targetInstrument == 0xffff) {
+            if (lbl_803DE26C != 0) {
+                lbl_803DE26C(*(u32 *)(*(int *)(state + 0xf8) + 8));
+            }
+        } else {
+            offset = 0;
+            for (i = 0; i < *(u32 *)(lbl_803BD150 + 0x210); i++) {
+                voice = (int)(lbl_803DE268 + offset);
+                if (*(int *)(voice + 0x34) != 0 &&
+                    targetInstrument == *(u16 *)(voice + 0x102)) {
+                    targetVoice = vidGetInternalId(*(u32 *)(*(int *)(voice + 0xf8) + 8));
+                    if (targetVoice != -1) {
+                        voice = (int)(lbl_803DE268 + (targetVoice & 0xff) * 0x404);
+                        if (*(u8 *)(voice + 0x3ec) < 4) {
+                            *(u8 *)(voice + 0x3ec) = *(u8 *)(voice + 0x3ec) + 1;
+                            *(u32 *)(voice + (u32)*(u8 *)(voice + 0x3ee) * 4 + 0x3f0) =
+                                value;
+                            *(u8 *)(voice + 0x3ee) = (*(u8 *)(voice + 0x3ee) + 1) & 3;
+                            if (*(s8 *)(voice + 0x68) != 0 && *(int *)(voice + 0x58) != 0) {
+                                *(int *)(voice + 0x38) = *(int *)(voice + 0x64);
+                                *(int *)(voice + 0x34) = *(int *)(voice + 0x58);
+                                *(int *)(voice + 0x58) = 0;
+                                fn_80278990(voice);
+                            }
+                        }
+                    }
+                }
+                offset += 0x404;
+            }
+        }
+    } else {
+        index = args[1] & 0x1f;
+        if (index < 0x10) {
+            targetInstrument = *(u32 *)(state + index * 4 + 0xac);
+        } else {
+            targetInstrument = *(u32 *)(lbl_803BD9E4 + 0x10 + index * 4);
+        }
+        targetVoice = vidGetInternalId(targetInstrument);
+        if (targetVoice != -1) {
+            voice = (int)(lbl_803DE268 + (targetVoice & 0xff) * 0x404);
+            if (*(u8 *)(voice + 0x3ec) < 4) {
+                *(u8 *)(voice + 0x3ec) = *(u8 *)(voice + 0x3ec) + 1;
+                *(u32 *)(voice + (u32)*(u8 *)(voice + 0x3ee) * 4 + 0x3f0) = value;
+                *(u8 *)(voice + 0x3ee) = (*(u8 *)(voice + 0x3ee) + 1) & 3;
+                if (*(s8 *)(voice + 0x68) != 0 && *(int *)(voice + 0x58) != 0) {
+                    *(int *)(voice + 0x38) = *(int *)(voice + 0x64);
+                    *(int *)(voice + 0x34) = *(int *)(voice + 0x58);
+                    *(int *)(voice + 0x58) = 0;
+                    fn_80278990(voice);
+                }
+            }
+        }
+    }
 }
 
 /*
