@@ -166,6 +166,7 @@ void Camera_initialise(undefined8 param_1,double param_2,double param_3,undefine
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 undefined4
@@ -205,6 +206,7 @@ camcontrol_traceMove(float param_1,float *param_2,float *param_3,float *param_4,
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 /*
  * --INFO--
