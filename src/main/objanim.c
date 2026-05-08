@@ -1114,7 +1114,7 @@ undefined4 ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,int flags)
+undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
 {
   ObjAnimComponent *objAnim;
   ObjAnimBank *bank;

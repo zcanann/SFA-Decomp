@@ -22,6 +22,6 @@ undefined4 ObjAnim_SampleRootCurvePhase(ObjAnimComponent *objAnim,f32 distance,f
 undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnim,
                                       ObjAnimEventList *events);
 undefined4 ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim);
-undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnim,int moveId,int flags);
+undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int objAnim,int moveId,int flags);
 
 #endif /* MAIN_OBJANIM_H_ */
