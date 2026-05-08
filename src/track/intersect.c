@@ -5361,8 +5361,129 @@ void fn_80079E64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 alpha
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8007A71C(uint param_1)
+void fn_8007A71C(u32 alpha_in)
 {
+    extern f32 lbl_803DEEDC, lbl_803DEEE4;
+    extern f32 lbl_803DEF6C, lbl_803DEF70, lbl_803DEF74;
+    extern f32 gSynthDelayedActionWord0;
+    extern u32 lbl_803DB6A4;
+    extern u8 lbl_802C1EA8[];
+    extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
+    extern u8 lbl_803DD011, lbl_803DD019;
+    extern int lbl_803DD014;
+    extern s16 fn_8000FA70(void);
+    extern void fn_8006C6F0(int);
+    extern void fn_8006C5D8(int* out);
+    extern void fn_8006C5E4(int* out);
+    extern void fn_8006CABC(f32* a, f32* b);
+    extern void fn_80293C64(f32* a, f32* b, f32 c);
+    extern void selectTexture(int handle, int slot);
+    extern void GXSetZMode();
+    extern void GXSetZCompLoc(u8);
+    f32 indMtx[6];
+    Mtx mtx_44;
+    int handle1, handle2;
+    f32 fA, fB;
+    f32 mulX, mulY;
+    int alpha_clamp;
+    int alpha_final;
+    GXColor temp;
+
+    /* Copy 24 bytes from lbl_802C1EA8 (6 floats) to local stack */
+    {
+        u32* src = (u32*)lbl_802C1EA8;
+        u32* dst = (u32*)indMtx;
+        int i;
+        for (i = 0; i < 6; i++) dst[i] = src[i];
+    }
+
+    /* Compute alpha clamp from fn_8000FA70 */
+    {
+        s16 v = fn_8000FA70();
+        if (v < 0) {
+            int x = ((u16)v >> 8) - 0xC0;
+            alpha_clamp = (x << 2) & 0xFF;
+        } else {
+            alpha_clamp = 0xFF;
+        }
+    }
+    /* alpha_in *= 0xFF/256 */
+    alpha_in = ((alpha_in & 0xFF) * 0xFF) >> 8;
+    alpha_final = (alpha_clamp * (alpha_in & 0xFF)) >> 8;
+
+    fn_8006C6F0(0);
+    fn_8006C5D8(&handle1);
+    selectTexture(handle1, 1);
+    GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
+
+    fn_8006CABC(&fA, &fB);
+    fA *= lbl_803DEF6C;
+    fB *= lbl_803DEF6C;
+    fn_8006C5E4(&handle2);
+    selectTexture(handle2, 2);
+
+    fn_80293C64(&mulX, &mulY, lbl_803DEF70 * fA);
+    mulY *= gSynthDelayedActionWord0;
+    mulX *= gSynthDelayedActionWord0;
+
+    indMtx[0] = mulY;
+    indMtx[1] = mulX;
+    indMtx[2] = lbl_803DEEDC;
+    indMtx[3] = -mulX;
+    indMtx[4] = mulY;
+    indMtx[5] = lbl_803DEEDC;
+
+    PSMTXScale(mtx_44, lbl_803DEF74, lbl_803DEF74, lbl_803DEEE4);
+    mtx_44[0][3] = fA;
+    mtx_44[2][3] = -fB;
+    GXLoadTexMtxImm(mtx_44, 0x40, 0);
+    GXSetTexCoordGen2(1, 0, 4, 0x3C, 0, 0x40);
+
+    GXSetIndTexOrder(0, 1, 2);
+    GXSetIndTexCoordScale(0, 0, 0);
+    GXSetIndTexMtx(1, (f32(*)[3])indMtx, -6);
+    GXSetTevIndirect(1, 0, 0, 7, 1, 0, 0, 0, 0, 0);
+
+    *(u32*)&temp = lbl_803DB6A4;
+    GXSetTevKColor(0, temp);
+    GXSetTevKAlphaSel(0, 0x1c);
+    GXSetTevDirect(0);
+    GXSetTevOrder(0, 0, 1, 0xff);
+    GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xf);
+    GXSetTevAlphaIn(0, 6, 7, 7, 4);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 1, 0, 2, 1, 0);
+
+    GXSetTevOrder(1, 0, 0, 0xff);
+    GXSetTevColorIn(1, 8, 0xf, 0xf, 0xf);
+    GXSetTevAlphaIn(1, 7, 7, 7, 0);
+    GXSetTevSwapMode(1, 0, 0);
+    GXSetTevColorOp(1, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+
+    GXSetNumIndStages(1);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(0);
+    GXSetNumTexGens(2);
+    GXSetNumTevStages(2);
+
+    GXSetBlendMode(1, 4, 5, 5);
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+        GXSetZMode(1, 3, 0);
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 3;
+        lbl_803DD012 = 0;
+        lbl_803DD01A = 1;
+    }
+    if ((u32)lbl_803DD011 != 1 || (u32)lbl_803DD019 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DD011 = 1;
+        lbl_803DD019 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
 /*
