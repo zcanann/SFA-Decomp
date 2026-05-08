@@ -25,6 +25,14 @@ extern double FUN_80081014();
 extern undefined4 FUN_801d8308();
 extern undefined4 FUN_801d8480();
 extern uint countLeadingZeros();
+extern void *Obj_GetPlayerObject(void);
+extern void gameTextSetColor(int r,int g,int b,int a);
+extern void fn_80016870(int textId);
+extern void fn_801F3F18(int obj);
+extern uint GameBit_Get(int eventId);
+extern int fn_80080204(void);
+extern void fn_801D7ED4(void *state,int mask,int param_3,int param_4,int eventId,int actionId);
+extern void fn_801D8060(void *state,int mask,int param_3,int param_4,int eventId,int actionId);
 
 extern undefined4 DAT_802c2c44;
 extern undefined4 DAT_802c2c48;
@@ -42,6 +50,7 @@ extern undefined4 DAT_803dcd84;
 extern undefined4 DAT_803dcd88;
 extern undefined4 DAT_803dcd8c;
 extern undefined4* DAT_803dd72c;
+extern undefined4* lbl_803DCAAC;
 extern undefined4 DAT_803de910;
 extern undefined4 DAT_803de914;
 extern undefined4 DAT_803de918;
@@ -57,6 +66,8 @@ extern f32 lbl_803E6B10;
 extern f32 lbl_803E6B14;
 extern f32 lbl_803E6B18;
 extern f32 lbl_803E6B1C;
+extern f32 lbl_803E5E70;
+extern f32 timeDelta;
 extern undefined bRam803dcd79;
 extern undefined2 bRam803dcd7a;
 extern undefined bRam803dcd7d;
@@ -79,8 +90,8 @@ extern undefined2 uRam803de91a;
 /*
  * --INFO--
  *
- * Function: wmlevelcontrol_update
- * EN v1.0 Address: 0x801F44B4
+ * Function: wmlevelcontrol_readParams
+ * EN v1.0 Address: TODO
  * EN v1.0 Size: 184b
  * EN v1.1 Address: 0x801F44C0
  * EN v1.1 Size: 144b
@@ -89,7 +100,7 @@ extern undefined2 uRam803de91a;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void wmlevelcontrol_update(undefined2 *param_1,int param_2)
+void wmlevelcontrol_readParams(undefined2 *param_1,int param_2)
 {
   float *pfVar1;
   
@@ -300,50 +311,51 @@ void FUN_801f4bb8(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_801f4be0
- * EN v1.0 Address: 0x801F4BE0
- * EN v1.0 Size: 532b
- * EN v1.1 Address: 0x801F4AEC
- * EN v1.1 Size: 372b
+ * Function: wmlevelcontrol_update
+ * EN v1.0 Address: 0x801F44B4
+ * EN v1.0 Size: 372b
+ * EN v1.1 Address: 0x801F44C0
+ * EN v1.1 Size: 144b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801f4be0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9)
+void wmlevelcontrol_update(int obj)
 {
-  uint uVar1;
-  int iVar2;
-  float *pfVar3;
-  undefined8 uVar4;
+  uint areaId;
+  int loadingDone;
+  float *state;
+  float timer;
   
-  FUN_80017a98();
-  pfVar3 = *(float **)(param_9 + 0xb8);
-  if (lbl_803E6B08 < *pfVar3) {
-    uVar4 = FUN_80017484(0xff,0xff,0xff,0xff);
-    FUN_80006c88(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x42c);
-    *pfVar3 = *pfVar3 - lbl_803DC074;
-    if (*pfVar3 < lbl_803E6B08) {
-      *pfVar3 = lbl_803E6B08;
+  Obj_GetPlayerObject();
+  state = *(float **)(obj + 0xb8);
+  timer = *state;
+  if (timer > lbl_803E5E70) {
+    gameTextSetColor(0xff,0xff,0xff,0xff);
+    fn_80016870(0x42c);
+    *state = *state - timeDelta;
+    timer = *state;
+    if (timer < lbl_803E5E70) {
+      *state = lbl_803E5E70;
     }
   }
-  if (*(char *)(pfVar3 + 5) == '\0') {
-    uVar1 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(param_9 + 0xac));
-    uVar1 = countLeadingZeros(6 - (uVar1 & 0xff));
-    if (((uVar1 >> 5 == 0) || (iVar2 = FUN_8007f7c0(), iVar2 == 0)) ||
-       (uVar1 = FUN_80017690(0xa7f), uVar1 == 0)) {
-      FUN_801d8480(pfVar3 + 4,0x10,-1,-1,0xa7f,(int *)0xa6);
-      FUN_801d8308(pfVar3 + 4,2,-1,-1,0xa7f,(int *)0xa8);
+  if (*(u8 *)(state + 5) == 0) {
+    areaId = (*(code *)(*lbl_803DCAAC + 0x40))((int)*(char *)(obj + 0xac));
+    areaId = __cntlzw(6 - (areaId & 0xff));
+    areaId = areaId >> 5;
+    if (((areaId == 0) || (loadingDone = fn_80080204(), loadingDone == 0)) ||
+       (areaId = GameBit_Get(0xa7f), areaId == 0)) {
+      fn_801D8060(state + 4,0x10,-1,-1,0xa7f,0xa6);
+      fn_801D7ED4(state + 4,2,-1,-1,0xa7f,0xa8);
     }
-    if (0x3c < (uint)pfVar3[6]) {
-      FUN_801d8308(pfVar3 + 4,1,-1,-1,0xada,(int *)0xac);
+    if (0x3c < *(uint *)(state + 6)) {
+      fn_801D7ED4(state + 4,1,-1,-1,0xada,0xac);
     }
-    FUN_801d8308(pfVar3 + 4,0x20,-1,-1,0xcbb,(int *)0xc4);
+    fn_801D7ED4(state + 4,0x20,-1,-1,0xcbb,0xc4);
   }
-  FUN_801f456c(param_9);
-  pfVar3[6] = (float)((int)pfVar3[6] + 1);
+  fn_801F3F18(obj);
+  *(uint *)(state + 6) = *(uint *)(state + 6) + 1;
   return;
 }
 
