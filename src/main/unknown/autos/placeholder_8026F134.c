@@ -3,28 +3,30 @@
 extern u8 lbl_803BCD90[];
 
 /*
- * fn_8026EC44 — large pre-pitch processing (~1736 instructions). Stubbed.
+ * fn_8026EC44 - large pre-pitch processing (~1736 instructions). Stubbed.
  */
 #pragma dont_inline on
 void fn_8026EC44(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_8026F30C — 560-instr voice param helper. Stubbed.
+ * fn_8026F30C - 560-instr voice param helper. Stubbed.
  */
 #pragma dont_inline on
 void fn_8026F30C(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_8026F53C — magic-divide table store (~72 instructions). Stubbed.
+ * fn_8026F53C - magic-divide table store (~72 instructions). Stubbed.
  */
-#pragma dont_inline on
-void fn_8026F53C(int a, u8 b, u8 c)
+void fn_8026F53C(int value, u8 bank, u32 key)
 {
-    (void)a; (void)b; (void)c;
+    if (bank == 0xff) {
+        bank = 8;
+    }
+    *(u32 *)(lbl_803BCD90 + (key & 0xff) * 4 + bank * 0x40) =
+        (u32)(value * 0x3000) / 0xf0;
 }
-#pragma dont_inline reset
 
 /*
  * Look up an int from a 2D table indexed by state's ID bytes.
@@ -41,18 +43,28 @@ int fn_8026F584(int state)
 }
 
 /*
- * fn_8026F5B8 — flag-check and conditional store (~120 instructions).
+ * fn_8026F5B8 - flag-check and conditional store (~120 instructions).
  * Stubbed.
  */
-#pragma dont_inline on
 void fn_8026F5B8(int state)
 {
-    (void)state;
+    if ((*(u32 *)(state + 0x118) & 0x20000) != 0) {
+        return;
+    }
+    if (*(s8 *)(state + 0x131) == 1) {
+        if ((*(u32 *)(state + 0x118) & 0x1000) == 0) {
+            *(u32 *)(state + 0x13c) = 0;
+        } else {
+            *(u32 *)(state + 0x13c) = *(u32 *)(state + 0x134);
+        }
+    } else {
+        *(u32 *)(state + 0x13c) = *(u32 *)(state + 0x134);
+    }
+    *(u32 *)(state + 0x138) = (u32)*(u8 *)(state + 0x130) << 0x10;
 }
-#pragma dont_inline reset
 
 /*
- * fn_8026F630 — 648-instr per-voice update loop. Stubbed.
+ * fn_8026F630 - 648-instr per-voice update loop. Stubbed.
  */
 #pragma dont_inline on
 void fn_8026F630(void) {}
