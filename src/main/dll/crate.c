@@ -3,11 +3,9 @@
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b4c();
-extern undefined8 FUN_80017698();
 extern undefined4 FUN_80017ac8();
-extern undefined8 sfxplayer_update();
+extern void GameBit_Set(int eventId,int value);
 extern int gSfxplayerEffectHandles[8];
-extern undefined4 sfxplayer_updateEffectHandlePositions();
 
 typedef struct SfxplayerState {
   s16 unused0;
@@ -30,33 +28,48 @@ typedef struct SfxplayerState {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-sfxplayer_updateState(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                      undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                      short *param_9,undefined4 param_10,int param_11)
+undefined4 sfxplayer_updateState(int obj,undefined4 param_2,int hitState)
 {
-  int iVar1;
+  u8 event;
+  int i;
   SfxplayerState *state;
-  undefined8 uVar3;
   
-  state = *(SfxplayerState **)(param_9 + 0x5c);
-  state->effectFlags = state->effectFlags & 0x7f | 0x80;
-  FUN_80006b4c();
-  for (iVar1 = 0; iVar1 < (int)(uint)*(byte *)(param_11 + 0x8b); iVar1 = iVar1 + 1) {
-    if (*(char *)(param_11 + iVar1 + 0x81) == '\x01') {
-      state->effectFlags = state->effectFlags & 0xef | 0x10;
-      state->unused6[1] = 0;
-      FUN_80017698((int)state->effectSfxBaseId,0);
-      uVar3 = FUN_80017698(0xedf,1);
-      iVar1 = 0;
-      do {
-        uVar3 = sfxplayer_update(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        iVar1 = iVar1 + 1;
-      } while (iVar1 < 4);
-      state->effectFlags = state->effectFlags & 0xbf | 0x40;
+  state = *(SfxplayerState **)(obj + 0xb8);
+  *(s16 *)(hitState + 0x6e) = -1;
+  *(u8 *)(hitState + 0x56) = 0;
+  for (i = 0; i < (int)*(u8 *)(hitState + 0x8b); i++) {
+    event = *(u8 *)(hitState + i + 0x81);
+    if (event == 2) {
+      GameBit_Set(state->effectSfxBaseId + 5,0);
+      state->effectFlags = 1;
     }
+    else if (event < 2) {
+      if (event != 0) {
+        GameBit_Set(state->effectSfxBaseId + 5,1);
+      }
+    }
+    else if (event < 4) {
+      if (state->effectSfxBaseId == 0x674) {
+        GameBit_Set(0x670,1);
+        state->variantSfxTimer = 0x96;
+      }
+      else if (state->effectSfxBaseId < 0x674) {
+        if (state->effectSfxBaseId == 0x672) {
+          GameBit_Set(0x66e,1);
+          state->variantSfxTimer = 0x96;
+        }
+        else if (0x671 < state->effectSfxBaseId) {
+          GameBit_Set(0x66f,1);
+          state->variantSfxTimer = 0x96;
+        }
+      }
+      else if (state->effectSfxBaseId < 0x676) {
+        GameBit_Set(0x9f5,1);
+        state->variantSfxTimer = 0x96;
+      }
+    }
+    *(u8 *)(hitState + i + 0x81) = 0;
   }
-  sfxplayer_updateEffectHandlePositions(param_9);
   return 0;
 }
 
