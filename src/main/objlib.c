@@ -305,7 +305,9 @@ void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
 {
   int iVar1;
   int *piVar2;
-  short sVar3;
+  int slotIndex;
+  int slotOffset;
+  int clearedState;
 
   iVar1 = (int)*(char *)(*(int *)(param_1 + 0x50) + 0x55);
   if (param_3 >= iVar1) {
@@ -317,14 +319,15 @@ void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
   if (*(char *)(param_2 + 0xb0) == param_3) {
     return;
   }
-  sVar3 = 0;
-  iVar1 = sVar3;
-  for (; sVar3 < 0x32; sVar3 = sVar3 + 1) {
-    piVar2 = (int *)(lbl_803DCBDC + iVar1);
+  slotIndex = 0;
+  slotOffset = (s16)slotIndex;
+  clearedState = slotOffset;
+  for (; (s16)slotIndex < 0x32; slotIndex = slotIndex + 1) {
+    piVar2 = (int *)(lbl_803DCBDC + slotOffset);
     if ((*piVar2 != 0) && ((u32)piVar2[2] == (u32)param_1)) {
-      *piVar2 = 0;
+      *piVar2 = clearedState;
     }
-    iVar1 = iVar1 + 0x3c;
+    slotOffset = slotOffset + 0x3c;
   }
   *(char *)(param_2 + 0xb0) = (char)param_3;
   return;
