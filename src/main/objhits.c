@@ -958,8 +958,8 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(float radiusA, float axial, float 
                                               float *p0, float *p1, float *out)
 {
     float invHalfLength;
-    float surface[3];
     float dir[3];
+    float surface[3];
 
     if (axial < lbl_803DE910) {
         out[0] = p[0] - p0[0];
@@ -1001,7 +1001,8 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(float radiusA, float axial, float 
     out[1] = p[1] - surface[1];
     out[2] = p[2] - surface[2];
     Vec3_Normalize(out);
-    radiusA = (radiusC - radiusB) * (axial / halfLength) + (radiusB + radiusA);
+    invHalfLength = (radiusC - radiusB) * (axial / halfLength);
+    radiusA = invHalfLength + (radiusB + radiusA);
     out[0] = out[0] * radiusA;
     out[1] = out[1] * radiusA;
     out[2] = out[2] * radiusA;
