@@ -33,7 +33,7 @@ extern int *Obj_GetActiveModel(int obj);
 extern void *Obj_GetPlayerObject(void);
 extern void Obj_UpdateObject(ObjAnimComponent *obj,void *modelInstance);
 extern int ObjList_GetObjects();
-extern void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2);
+extern void ObjHitbox_UpdateRotatedBounds(short *param_1,int param_2);
 extern undefined4 FUN_80045328();
 extern void getTabEntry(void *dst,int fileId,int offset,int size);
 extern void fn_80048F48(int fileId,void *dst,int offset,int size);
@@ -191,8 +191,8 @@ int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2)
     *(undefined *)(*(uint *)(param_1 + 0x2c) + 0x10c) = 0;
     *(undefined *)(*(uint *)(param_1 + 0x2c) + 0x10d) = 10;
     *(undefined *)(*(uint *)(param_1 + 0x2c) + 0x10f) = 0;
-    ObjHitbox_UpdateRotatedBounds(param_1,1);
-    ObjHitbox_UpdateRotatedBounds(param_1,1);
+    ObjHitbox_UpdateRotatedBounds((short *)param_1,1);
+    ObjHitbox_UpdateRotatedBounds((short *)param_1,1);
   }
   return uVar1 + 0x110;
 }
@@ -1336,7 +1336,7 @@ void ObjHitReact_UpdateResetObjects(void)
   }
   iVar3 = 0;
   for (iVar2 = 0; iVar2 < gObjHitsResetObjectCount; iVar2 = iVar2 + 1) {
-    ObjHitbox_UpdateRotatedBounds(*(ushort **)((int)gObjHitsResetObjects + iVar3),1);
+    ObjHitbox_UpdateRotatedBounds(*(short **)((int)gObjHitsResetObjects + iVar3),1);
     iVar3 = iVar3 + 4;
   }
   return;

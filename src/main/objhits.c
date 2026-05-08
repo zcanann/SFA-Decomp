@@ -5,8 +5,8 @@ extern undefined8 memcpy();
 extern undefined4 Obj_TransformWorldPointToLocal();
 extern undefined4 Obj_TransformLocalPointToWorld();
 extern uint getAngle();
-extern undefined4 FUN_8001774c();
-extern undefined4 FUN_80017754();
+extern undefined4 mtxRotateByVec3s();
+extern undefined4 fn_80021EE8();
 extern int FUN_80017970();
 extern undefined4 ObjList_GetObjects();
 extern undefined4 ObjHits_RecordObjectHit();
@@ -1310,58 +1310,63 @@ void ObjHits_TickPriorityHitCooldowns(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2)
+void ObjHitbox_UpdateRotatedBounds(short *param_1,int param_2)
 {
+  typedef struct HitboxTransform {
+    short x;
+    short y;
+    short z;
+    float scale;
+    float radiusX;
+    float radiusY;
+    float radiusZ;
+  } HitboxTransform;
   int iVar1;
-  ushort local_28;
-  ushort local_26;
-  ushort local_24;
-  float local_20;
-  float local_1c;
-  float local_18;
-  float local_14;
+  int iVar2;
+  HitboxTransform local_28;
   
   iVar1 = *(int *)(param_1 + 0x2c);
   if (iVar1 != 0) {
     if (param_2 != 0) {
       *(byte *)(iVar1 + 0x10c) = *(char *)(iVar1 + 0x10c) + 1U & 1;
     }
-    local_28 = -*param_1;
-    if ((*(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) & 0x800) == 0) {
-      local_26 = -param_1[1];
+    iVar2 = iVar1 + (uint)*(byte *)(iVar1 + 0x10c) * 0x40;
+    local_28.x = -*param_1;
+    if ((*(short *)(*(int *)(param_1 + 0x2a) + 0x60) & 0x800) != 0) {
+      local_28.y = 0;
     }
     else {
-      local_26 = 0;
+      local_28.y = -param_1[1];
     }
-    if ((*(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) & 0x1000) == 0) {
-      local_24 = -param_1[2];
-    }
-    else {
-      local_24 = 0;
-    }
-    local_20 = lbl_803DF598;
-    local_1c = -*(float *)(param_1 + 0xc);
-    local_18 = -*(float *)(param_1 + 0xe);
-    local_14 = -*(float *)(param_1 + 0x10);
-    FUN_8001774c((float *)(iVar1 + (uint)*(byte *)(iVar1 + 0x10c) * 0x40),(int)&local_28);
-    local_28 = *param_1;
-    if ((*(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) & 0x800) == 0) {
-      local_26 = param_1[1];
+    if ((*(short *)(*(int *)(param_1 + 0x2a) + 0x60) & 0x1000) != 0) {
+      local_28.z = 0;
     }
     else {
-      local_26 = 0;
+      local_28.z = -param_1[2];
     }
-    if ((*(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) & 0x1000) == 0) {
-      local_24 = param_1[2];
+    local_28.scale = lbl_803DE918;
+    local_28.radiusX = -*(float *)(param_1 + 0xc);
+    local_28.radiusY = -*(float *)(param_1 + 0xe);
+    local_28.radiusZ = -*(float *)(param_1 + 0x10);
+    mtxRotateByVec3s((float *)iVar2,&local_28);
+    local_28.x = *param_1;
+    if ((*(short *)(*(int *)(param_1 + 0x2a) + 0x60) & 0x800) != 0) {
+      local_28.y = 0;
     }
     else {
-      local_24 = 0;
+      local_28.y = param_1[1];
     }
-    local_20 = lbl_803DF598;
-    local_1c = *(float *)(param_1 + 0xc);
-    local_18 = *(float *)(param_1 + 0xe);
-    local_14 = *(float *)(param_1 + 0x10);
-    FUN_80017754((float *)(iVar1 + (*(byte *)(iVar1 + 0x10c) + 2) * 0x40),&local_28);
+    if ((*(short *)(*(int *)(param_1 + 0x2a) + 0x60) & 0x1000) != 0) {
+      local_28.z = 0;
+    }
+    else {
+      local_28.z = param_1[2];
+    }
+    local_28.scale = lbl_803DE918;
+    local_28.radiusX = *(float *)(param_1 + 0xc);
+    local_28.radiusY = *(float *)(param_1 + 0xe);
+    local_28.radiusZ = *(float *)(param_1 + 0x10);
+    fn_80021EE8((float *)(iVar1 + (*(byte *)(iVar1 + 0x10c) + 2) * 0x40),&local_28);
     if (*(char *)(iVar1 + 0x10d) != '\0') {
       *(char *)(iVar1 + 0x10d) = *(char *)(iVar1 + 0x10d) + -1;
     }

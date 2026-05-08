@@ -41,7 +41,7 @@ uint ObjHits_TestTaperedCapsule3D(float radiusA,float radiusB,float radiusC,floa
                                   float *axial,float *dist2,float *sumR);
 void ObjHits_SortSweepEntries(int sweepPtrs,int entryCount);
 void ObjHits_TickPriorityHitCooldowns(void);
-void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2);
+void ObjHitbox_UpdateRotatedBounds(short *param_1,int param_2);
 u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                            undefined8 param_5,undefined8 param_6,undefined8 param_7,
                            undefined8 param_8,undefined4 param_9,undefined4 param_10,
