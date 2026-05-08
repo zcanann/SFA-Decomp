@@ -1177,9 +1177,270 @@ void fn_80071D54(byte *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_800722B0(double param_1,double param_2,float *param_3,byte *param_4)
+#pragma peephole off
+#pragma scheduling off
+void fn_800722B0(double radius, double angle, float* pos, u8* mod)
 {
+    extern f32 playerMapOffsetX, playerMapOffsetZ;
+    extern f32 lbl_803DEEDC, lbl_803DEEE4;
+    extern f32 lbl_803DEF08;
+    extern f32 lbl_803DEF24;
+    extern f32 lbl_803DB6C4, lbl_803DB6C8, lbl_803DB6CC;
+    extern f32 gSynthDelayedActionWord0, gSynthFadeMask;
+    extern struct { f32 x, y; } lbl_803DEF1C;
+    extern u32 lbl_803DEEB8, lbl_803DEEBC, lbl_803DEEC0, lbl_803DEEC4;
+    extern Mtx hudMatrix;
+    extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
+    extern u8 lbl_803DD011, lbl_803DD019;
+    extern int lbl_803DD014;
+    extern void fn_8006C6F0(int);
+    extern void fn_8006C5D8(int* out);
+    extern void fn_8006C540(int* out);
+    extern void fn_8006C534(int* out);
+    extern void selectTexture(int handle, int slot);
+    extern void Camera_ProjectWorldSphere(f32* p0, f32* p1, f32* p2, f32* p3, f32* p4, f32* p5,
+                                          double x, double y, double z, double r);
+    extern void Camera_RebuildProjectionMatrix(void);
+    extern void GXSetZMode();
+    extern void GXSetZCompLoc(u8);
+    Mtx mtx_d0;
+    Mtx mtx_a0;
+    Mtx mtx_70;
+    f32 indMtx[6];
+    int handle1;
+    int handle2;
+    int handle3;
+    f32 proj0, proj1, proj2, proj3, proj4, proj5;
+    GXColor c0;
+    GXColor c1;
+    GXColor c2;
+    GXColor c3;
+
+    *(u32*)&c0 = lbl_803DEEB8;
+    *(u32*)&c1 = lbl_803DEEBC;
+    *(u32*)&c2 = lbl_803DEEC0;
+    *(u32*)&c3 = lbl_803DEEC4;
+    c0.r = (u8)(c0.r + (mod[0] >> 2));
+    c0.g = (u8)(c0.g + (mod[1] >> 2));
+    c0.b = (u8)(c0.b + (mod[2] >> 2));
+    c1.r = (u8)(c1.r + (mod[0] >> 2));
+    c1.g = (u8)(c1.g + (mod[1] >> 2));
+    c1.b = (u8)(c1.b + (mod[2] >> 2));
+    c2.r = (u8)(c2.r + (mod[0] >> 2));
+    c2.g = (u8)(c2.g + (mod[1] >> 2));
+    c2.b = (u8)(c2.b + (mod[2] >> 2));
+    c3.r = (u8)(c3.r + (mod[0] >> 3));
+    c3.g = (u8)(c3.g + (mod[1] >> 3));
+    c3.b = (u8)(c3.b + (mod[2] >> 3));
+
+    Camera_ProjectWorldSphere(&proj5, &proj4, &proj3, &proj2, &proj1, &proj0,
+                              pos[0] - playerMapOffsetX, pos[1], pos[2] - playerMapOffsetZ, radius);
+    proj3 = proj3 + lbl_803DEEE4;
+    c0.a = (u8)(((u32)(lbl_803DEF08 * proj3) & 0x00FF0000) >> 16);
+
+    fn_8006C6F0(0);
+    fn_8006C5D8(&handle1);
+    selectTexture(handle1, 1);
+    fn_8006C540(&handle2);
+    selectTexture(handle2, 2);
+
+    GXSetTevSwapModeTable(1, 0, 0, 0, 3);
+    GXSetTevSwapModeTable(2, 1, 1, 1, 3);
+    GXSetTevSwapModeTable(3, 2, 2, 2, 3);
+
+    GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
+    GXSetTexCoordGen2(1, 1, 4, 0x3C, 0, 0x7D);
+
+    /* Build cylinder matrix */
+    PSMTXTrans(mtx_a0, gSynthDelayedActionWord0 * (-proj5) - gSynthDelayedActionWord0,
+                       gSynthDelayedActionWord0 * proj4 - gSynthDelayedActionWord0,
+                       lbl_803DEEDC);
+    PSMTXScale(mtx_70, lbl_803DB6C4 / proj1, lbl_803DB6C4 / proj2, lbl_803DEEDC);
+    PSMTXConcat(mtx_70, mtx_a0, mtx_d0);
+    PSMTXTrans(mtx_a0, gSynthDelayedActionWord0, gSynthDelayedActionWord0, lbl_803DEEDC);
+    PSMTXConcat(mtx_a0, mtx_d0, mtx_d0);
+    GXLoadTexMtxImm(mtx_d0, 0x1e, 1);
+    GXSetTexCoordGen2(2, 1, 4, 0x1e, 0, 0x7d);
+
+    /* Compute scaled radius (with rsqrt refinement when positive) */
+    {
+        f32 r2 = lbl_803DB6C8 / (f32)radius;
+        f32 sr;
+        if (r2 > lbl_803DEEDC) {
+            f32 e = (f32)(1.0 / __frsqrte((double)r2));
+            sr = r2 * e;
+        } else {
+            sr = r2;
+        }
+        if (sr > lbl_803DEEE4) {
+            c2.a = 0xFF;
+        } else {
+            c2.a = (u8)(s32)(lbl_803DEF1C.y * sr);
+        }
+        sr = sr * gSynthFadeMask;
+        if (sr > lbl_803DEEE4) sr = lbl_803DEEE4;
+        c1.a = (u8)(s32)(lbl_803DEF1C.y * sr);
+    }
+
+    /* Stage K-color setup */
+    GXSetTevKColor(0, c0);
+    GXSetTevKColor(1, c1);
+    GXSetTevKColor(2, c2);
+    GXSetTevColor(1, c3);
+
+    /* Third texture for indirect */
+    fn_8006C534(&handle3);
+    selectTexture(handle3, 3);
+
+    /* Indirect tex matrix scale */
+    {
+        f32 ind_s = lbl_803DB6CC / (f32)radius;
+        if (ind_s > gSynthDelayedActionWord0) ind_s = gSynthDelayedActionWord0;
+        indMtx[0] = ind_s;
+        indMtx[1] = lbl_803DEEDC;
+        indMtx[2] = lbl_803DEEDC;
+        indMtx[3] = lbl_803DEEDC;
+        indMtx[4] = ind_s;
+        indMtx[5] = lbl_803DEEDC;
+    }
+
+    /* Build indirect tex matrix */
+    PSMTXTrans(mtx_a0, gSynthDelayedActionWord0 * (-proj5) - gSynthDelayedActionWord0,
+                       gSynthDelayedActionWord0 * proj4 - gSynthDelayedActionWord0,
+                       lbl_803DEEDC);
+    PSMTXScale(mtx_70, lbl_803DEF24, lbl_803DEF24, lbl_803DEEDC);
+    PSMTXRotRad(mtx_d0, 'z', angle);
+    PSMTXConcat(mtx_70, mtx_a0, mtx_70);
+    PSMTXConcat(mtx_d0, mtx_70, mtx_d0);
+    PSMTXTrans(mtx_a0, gSynthDelayedActionWord0, gSynthDelayedActionWord0, lbl_803DEEDC);
+    PSMTXConcat(mtx_a0, mtx_d0, mtx_d0);
+    GXLoadTexMtxImm(mtx_d0, 0x21, 1);
+    GXSetTexCoordGen2(3, 1, 4, 0x21, 0, 0x7d);
+
+    GXSetIndTexOrder(0, 3, 3);
+    GXSetIndTexCoordScale(0, 0, 0);
+    GXSetIndTexMtx(1, (f32(*)[3])indMtx, 1);
+
+    /* Indirect for stages 2, 3, 4 */
+    GXSetTevIndirect(2, 0, 0, 7, 1, 0, 0, 0, 0, 0);
+    GXSetTevIndirect(3, 0, 0, 7, 1, 0, 0, 0, 0, 0);
+    GXSetTevIndirect(4, 0, 0, 7, 1, 0, 0, 0, 0, 0);
+
+    GXSetNumTexGens(4);
+    GXSetNumIndStages(1);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(0);
+    GXSetNumTevStages(6);
+
+    /* Stage 0 */
+    GXSetTevKAlphaSel(0, 0x1C);
+    GXSetTevDirect(0);
+    GXSetTevOrder(0, 1, 1, 0xFF);
+    GXSetTevColorIn(0, 0xF, 0xF, 0xF, 0xF);
+    GXSetTevAlphaIn(0, 4, 7, 7, 6);
+    GXSetTevSwapMode(0, 0, 1);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 1, 0, 2, 1, 3);
+
+    /* Stage 1 */
+    GXSetTevKAlphaSel(1, 0x1C);
+    GXSetTevDirect(1);
+    GXSetTevOrder(1, 1, 1, 0xFF);
+    GXSetTevColorIn(1, 0xF, 0xF, 0xF, 0xF);
+    GXSetTevAlphaIn(1, 6, 7, 7, 4);
+    GXSetTevSwapMode(1, 0, 1);
+    GXSetTevColorOp(1, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(1, 1, 0, 2, 1, 0);
+
+    /* Stage 2 */
+    GXSetTevKColorSel(2, 0x0C);
+    GXSetTevOrder(2, 0, 0, 0xFF);
+    GXSetTevColorIn(2, 0xF, 0x8, 0xE, 0x2);
+    GXSetTevAlphaIn(2, 7, 0, 1, 7);
+    GXSetTevSwapMode(2, 0, 1);
+    GXSetTevColorOp(2, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(2, 0, 0, 2, 1, 0);
+
+    /* Stage 3 */
+    GXSetTevKColorSel(3, 0x0D);
+    GXSetTevKAlphaSel(3, 0x1D);
+    GXSetTevOrder(3, 0, 0, 0xFF);
+    GXSetTevColorIn(3, 0xF, 0x8, 0xE, 0);
+    GXSetTevAlphaIn(3, 7, 3, 6, 7);
+    GXSetTevSwapMode(3, 0, 2);
+    GXSetTevColorOp(3, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(3, 0, 0, 2, 1, 3);
+
+    /* Stage 4 */
+    GXSetTevKColorSel(4, 0x0E);
+    GXSetTevOrder(4, 0, 0, 0xFF);
+    GXSetTevColorIn(4, 0xF, 0x8, 0xE, 0);
+    GXSetTevAlphaIn(4, 3, 7, 7, 0);
+    GXSetTevSwapMode(4, 0, 3);
+    GXSetTevColorOp(4, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(4, 0, 0, 2, 1, 0);
+
+    /* Stage 5 */
+    GXSetTevDirect(5);
+    GXSetTevOrder(5, 2, 2, 0xFF);
+    GXSetTevColorIn(5, 0xF, 0xF, 0xF, 0);
+    GXSetTevAlphaIn(5, 4, 7, 0, 7);
+    GXSetTevSwapMode(5, 0, 0);
+    GXSetTevColorOp(5, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(5, 0, 0, 0, 1, 0);
+
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXSetCullMode(GX_CULL_NONE);
+    GXSetBlendMode(1, 5, 4, 5);
+    if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 7 ||
+        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+        GXSetZMode(0, 7, 0);
+        lbl_803DD018 = 0;
+        lbl_803DD014 = 7;
+        lbl_803DD012 = 0;
+        lbl_803DD01A = 1;
+    }
+    if ((u32)lbl_803DD011 != 1 || (u32)lbl_803DD019 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DD011 = 1;
+        lbl_803DD019 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
+    GXSetCurrentMtx(0x3C);
+    GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = 0;
+
+    GXWGFifo.s16 = 0x280;
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.s16 = 0x80;
+    GXWGFifo.s16 = 0;
+
+    GXWGFifo.s16 = 0x280;
+    GXWGFifo.s16 = 0x1E0;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.s16 = 0x80;
+    GXWGFifo.s16 = 0x80;
+
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = 0x1E0;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = 0x80;
+
+    Camera_RebuildProjectionMatrix();
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
