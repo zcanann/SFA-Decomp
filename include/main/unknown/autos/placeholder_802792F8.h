@@ -8,7 +8,7 @@ uint FUN_80279038(uint param_1,byte param_2,byte param_3,short param_4,byte para
                  ushort param_11,undefined param_12,byte param_13,undefined param_14,
                  undefined param_15,int param_16);
 int vidMakeRoot(int state);
-u32 vidMakeNew(void);
+u32 vidMakeNew(int state, int returnNewId);
 int vidGetInternalId(u32 id);
 void voiceRemovePriority(int state);
 

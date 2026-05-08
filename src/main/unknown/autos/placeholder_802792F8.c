@@ -4,6 +4,8 @@
 extern u8 lbl_803CA2D0[];
 extern u32 lbl_803DE2F0;
 extern void *lbl_803DE2F4;
+extern void *lbl_803DE2F8;
+extern u16 lbl_803DE2FC;
 
 /*
  * fn_80279038 - large voice-queue init (~144 instructions). Stubbed
@@ -40,12 +42,68 @@ int vidMakeRoot(int state)
  * EN v1.1 Address: 0x802793A0
  * EN v1.1 Size: 332b
  */
-#pragma dont_inline on
-u32 vidMakeNew(void)
+u32 vidMakeNew(int state, int returnNewId)
 {
-    return 0;
+    int wrapped;
+    u32 nextId;
+    int **freeNode;
+    int **cursor;
+    int **node;
+    int **prev;
+
+    freeNode = lbl_803DE2F8;
+    nextId = lbl_803DE2F0;
+    do {
+        lbl_803DE2F0 = nextId;
+        nextId = lbl_803DE2F0 + 1;
+    } while (lbl_803DE2F0 == 0xffffffffU);
+
+    nextId = lbl_803DE2F0;
+    cursor = lbl_803DE2F4;
+    prev = 0;
+    lbl_803DE2F0++;
+    while ((node = cursor) != 0 && ((u32)node[2] <= nextId)) {
+        if ((u32)node[2] == nextId) {
+            do {
+                wrapped = lbl_803DE2F0 == 0xffffffffU;
+                nextId = lbl_803DE2F0;
+                lbl_803DE2F0++;
+            } while (wrapped);
+        }
+        prev = node;
+        cursor = (int **)*node;
+    }
+
+    if (lbl_803DE2F8 != 0) {
+        lbl_803DE2F8 = *(void **)lbl_803DE2F8;
+        if (lbl_803DE2F8 != 0) {
+            *(u32 *)((u8 *)lbl_803DE2F8 + 4) = 0;
+        }
+        if (prev == 0) {
+            lbl_803DE2F4 = freeNode;
+        } else {
+            *prev = (int *)freeNode;
+        }
+        freeNode[1] = (int *)prev;
+        *freeNode = (int *)node;
+        if (node != 0) {
+            node[1] = (int *)freeNode;
+        }
+        freeNode[2] = (int *)nextId;
+        freeNode[3] = *(int **)(state + 0xf4);
+        cursor = freeNode;
+        if (returnNewId == 0) {
+            cursor = 0;
+        }
+        *(int ***)(state + 0xfc) = cursor;
+        *(int ***)(state + 0xf8) = freeNode;
+        if (returnNewId == 0) {
+            return *(u32 *)(state + 0xf4);
+        }
+        return nextId;
+    }
+    return 0xffffffffU;
 }
-#pragma dont_inline reset
 
 /*
  * Look up a voice handle's slot via the sorted linked list.
@@ -93,6 +151,41 @@ int vidGetInternalId(u32 id)
 #pragma dont_inline on
 void voiceRemovePriority(int state)
 {
-    (void)state;
+    u32 voiceId;
+    int offset;
+    u16 *priorityNode;
+    u8 *slot;
+
+    voiceId = *(u32 *)(state + 0xf4) & 0xff;
+    offset = voiceId * 4;
+    slot = lbl_803CA2D0 + 0x8c0 + offset;
+    if (*(u16 *)(slot + 2) != 1) {
+        return;
+    }
+    if (*slot == 0xff) {
+        *(u8 *)(lbl_803CA2D0 + 0x9c0 + *(u8 *)(state + 0x10c)) = slot[1];
+    } else {
+        *(u8 *)(lbl_803CA2D0 + 0x8c1 + (u32)*slot * 4) = slot[1];
+    }
+    if (slot[1] == 0xff) {
+        if (*slot == 0xff) {
+            offset = (u32)*(u8 *)(state + 0x10c) * 4;
+            priorityNode = (u16 *)(lbl_803CA2D0 + 0xac0 + offset);
+            if (*(u16 *)(lbl_803CA2D0 + 0xac2 + offset) == 0xffff) {
+                lbl_803DE2FC = *priorityNode;
+            } else {
+                *(u16 *)(lbl_803CA2D0 +
+                         0xac0 + (u32)*(u16 *)(lbl_803CA2D0 + 0xac2 + offset) * 4) =
+                    *priorityNode;
+            }
+            if (*priorityNode != 0xffff) {
+                *(u16 *)(lbl_803CA2D0 + 0xac2 + (u32)*priorityNode * 4) =
+                    *(u16 *)(lbl_803CA2D0 + 0xac2 + offset);
+            }
+        }
+    } else {
+        *(u8 *)(lbl_803CA2D0 + 0x8c0 + (u32)slot[1] * 4) = *slot;
+    }
+    *(u16 *)(lbl_803CA2D0 + 0x8c2 + voiceId * 4) = 0;
 }
 #pragma dont_inline reset
