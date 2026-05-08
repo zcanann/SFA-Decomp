@@ -29,10 +29,13 @@ extern undefined4 FUN_80286888();
 extern uint FUN_80294cd0();
 extern int fn_8001F4C8(int param_1,int param_2);
 extern void GameBit_Set(int eventId,int value);
+extern void Obj_FreeObject(void);
 
 extern undefined4 DAT_803dc071;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6f4;
+extern int *lbl_803DCA54;
+extern int *lbl_803DCA74;
 extern f64 DOUBLE_803e5bd0;
 extern f64 DOUBLE_803e5c08;
 extern f32 lbl_803DC074;
@@ -90,27 +93,13 @@ void mmsh_shrine_init(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void mmsh_scales_free(void)
+void mmsh_scales_free(int param_1,int param_2)
 {
-  int iVar1;
-  char in_r8;
-  int *piVar2;
-  
-  iVar1 = FUN_8028683c();
-  piVar2 = *(int **)(iVar1 + 0xb8);
-  if (in_r8 == '\0') {
-    if (*piVar2 != 0) {
-      FUN_800175cc((double)lbl_803E5BE8,*piVar2,'\0');
-    }
+  (**(code **)(*lbl_803DCA54 + 0x24))(*(undefined4 *)(param_1 + 0xb8));
+  (**(code **)(*lbl_803DCA74 + 8))(param_1,0xffff,0,0,0);
+  if ((*(int *)(param_1 + 200) != 0) && (param_2 == 0)) {
+    Obj_FreeObject();
   }
-  else {
-    if (*piVar2 != 0) {
-      FUN_800175cc((double)lbl_803E5BE8,*piVar2,'\x01');
-    }
-    FUN_8003b818(iVar1);
-    FUN_8008111c((double)lbl_803E5BE8,(double)lbl_803E5BE8,iVar1,7,(int *)*piVar2);
-  }
-  FUN_80286888();
   return;
 }
 

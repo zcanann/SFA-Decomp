@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 
 void mmsh_shrine_init(undefined2 *param_1,int param_2);
-void mmsh_scales_free(void);
+void mmsh_scales_free(int param_1,int param_2);
 void FUN_801c5448(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9);
