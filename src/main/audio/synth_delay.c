@@ -9,7 +9,7 @@ extern void fn_80278610(SynthVoiceSlot* slot);
 extern u8* lbl_803DE268;
 
 /*
- * synthSetHandleControllerValue — sndFXCtrl underlying impl.
+ * synthSetHandleControllerValue - sndFXCtrl underlying impl.
  * Walks the handle's voice-slot chain, dispatching inpSetMidiCtrl per slot.
  *
  * EN v1.0 Address: 0x8027186C, size 0xE8
@@ -25,7 +25,7 @@ u32 fn_8027186C(u32 handle, u8 controller, u8 value) {
         idx = (u8)handle;
         if (handle == *(u32*)(lbl_803DE268 + idx * 0x404 + 0xF4)) {
             slotPtr = lbl_803DE268 + idx * 0x404;
-            if (((*(u32*)(slotPtr + 0x114) & 0) ^ 0) | ((*(u32*)(slotPtr + 0x118) & 2) ^ 0)) {
+            if ((*(u32*)(slotPtr + 0x118) & 2) != 0) {
                 inpSetMidiCtrl(controller, idx, *(u8*)(slotPtr + 0x20B), value);
             } else {
                 inpSetMidiCtrl(controller, idx, *(u8*)(slotPtr + 0x122), value);
@@ -40,7 +40,7 @@ u32 fn_8027186C(u32 handle, u8 controller, u8 value) {
 }
 
 /*
- * synthSetHandleControllerValue14Bit — sndFXCtrl14 underlying impl.
+ * synthSetHandleControllerValue14Bit - sndFXCtrl14 underlying impl.
  *
  * EN v1.0 Address: 0x80271954, size 0xE8
  */
@@ -55,7 +55,7 @@ u32 fn_80271954(u32 handle, u8 controller, u32 value) {
         idx = (u8)handle;
         if (handle == *(u32*)(lbl_803DE268 + idx * 0x404 + 0xF4)) {
             slotPtr = lbl_803DE268 + idx * 0x404;
-            if (((*(u32*)(slotPtr + 0x114) & 0) ^ 0) | ((*(u32*)(slotPtr + 0x118) & 2) ^ 0)) {
+            if ((*(u32*)(slotPtr + 0x118) & 2) != 0) {
                 inpSetMidiCtrl14(controller, idx, *(u8*)(slotPtr + 0x20B), value);
             } else {
                 inpSetMidiCtrl14(controller, idx, *(u8*)(slotPtr + 0x122), value);
@@ -70,7 +70,7 @@ u32 fn_80271954(u32 handle, u8 controller, u32 value) {
 }
 
 /*
- * synthCopyHandleFXState — copies the five FX-stage controllers
+ * synthCopyHandleFXState - copies the five FX-stage controllers
  * (volume, pan, expression, reverb, chorus) between two handles.
  *
  * EN v1.0 Address: 0x80271A3C, size 0x84
@@ -84,7 +84,7 @@ void fn_80271A3C(u32 dstHandle, u32 srcHandle) {
 }
 
 /*
- * synthHandleKeyOff — sndFXKeyOff underlying impl.
+ * synthHandleKeyOff - sndFXKeyOff underlying impl.
  * Walks the handle's voice-slot chain and signals key-off on each slot.
  *
  * EN v1.0 Address: 0x80271AC0, size 0x8C
@@ -108,7 +108,7 @@ u32 fn_80271AC0(u32 handle) {
     return found;
 }
 
-/* Stub kept so synth_control.c can link — not in v1.0 binary at this address. */
+/* Stub kept so synth_control.c can link; not in v1.0 binary at this address. */
 #pragma dont_inline on
 void synthDispatchDelayedAction(SynthFade* fade) {
     (void)fade;

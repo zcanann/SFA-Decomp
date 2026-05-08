@@ -68,15 +68,28 @@ typedef struct SynthDelayStorage {
 
 typedef struct SynthVoiceSlot {
     u8 unk000[0xEC];
-    u32 callbackNext;
+    union {
+        u32 nextHandle;
+        u32 callbackNext;
+    };
     u8 unk0F0[4];
-    u32 callbackLinkId;
-    u8 unk0F8[0x24];
+    union {
+        u32 handle;
+        u32 callbackLinkId;
+    };
+    u8 unk0F8[0x20];
+    u32 inputFlags;
+    u32 flags;
     u8 callbackActive;
     u8 unk11D[5];
     u8 studioIndex;
-    u8 channelIndex;
-    u8 unk124[0x404 - 0x124];
+    union {
+        u8 unk123;
+        u8 channelIndex;
+    };
+    u8 unk124[0x20B - 0x124];
+    u8 alternateStudioIndex;
+    u8 unk20C[0x404 - 0x20C];
 } SynthVoiceSlot;
 
 typedef struct SynthFade {
