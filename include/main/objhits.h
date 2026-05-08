@@ -30,8 +30,8 @@ float *ObjHits_ProjectPointToTaperedCapsuleXZ(float radiusA,float axial,float ra
 float *ObjHits_ProjectPointToTaperedCapsule3D(float radiusA,float axial,float radiusB,
                                               float radiusC,float halfLength,float *p,
                                               float *p0,float *p1,float *out);
-float *ObjHits_CalcTaperedCapsuleNormal(double param_1,double param_2,double param_3,
-                                        double param_4,float *param_5,float *param_6,
+float *ObjHits_CalcTaperedCapsuleNormal(float param_1,float param_2,float param_3,
+                                        float param_4,float *param_5,float *param_6,
                                         float *param_7,float *param_8);
 uint ObjHits_TestTaperedCapsuleXZ(float radiusA,float radiusB,float radiusC,float halfLength,
                                   float *p0,float *p1,float *axis,float *hit,

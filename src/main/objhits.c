@@ -1028,26 +1028,20 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(float radiusA, float axial, float 
  */
 #pragma scheduling off
 #pragma peephole off
-float *ObjHits_CalcTaperedCapsuleNormal(double param_1,double param_2,double param_3,
-                                        double param_4,float *param_5,float *param_6,
+float *ObjHits_CalcTaperedCapsuleNormal(float param_1,float param_2,float param_3,
+                                        float param_4,float *param_5,float *param_6,
                                         float *param_7,float *param_8)
 {
   float fVar1;
-  double dVar2;
-  double dVar3;
-  float local_88;
-  float local_84;
-  float local_80;
-  float afStack_7c [3];
-  float afStack_70 [3];
-  float local_64;
-  float local_60;
-  float local_5c;
-  float local_58;
-  float local_54;
-  float local_50;
+  float dVar2;
+  float dVar3;
+  float axisDir[3];
+  float normal[3];
+  float blended[3];
+  float cross[3];
+  float surface[3];
 
-  if (param_1 <= (double)lbl_803DE910) {
+  if (param_1 <= lbl_803DE910) {
     *param_8 = *param_5 - *param_7;
     param_8[1] = param_5[1] - param_7[1];
     param_8[2] = param_5[2] - param_7[2];
@@ -1060,35 +1054,35 @@ float *ObjHits_CalcTaperedCapsuleNormal(double param_1,double param_2,double par
     Vec3_Normalize(param_8);
   }
   else {
-    dVar3 = (double)(float)(param_3 - param_2);
-    dVar2 = (double)(float)(dVar3 * (double)(float)(param_1 / param_4));
-    local_58 = *param_7 - *param_6;
-    local_54 = param_7[1] - param_6[1];
-    local_50 = param_7[2] - param_6[2];
-    Vec3_Normalize(&local_58);
-    Vec3_ScaleAdd(param_6,&local_58,param_1,&local_88);
-    local_64 = *param_5 - local_88;
-    local_60 = param_5[1] - local_84;
-    local_5c = param_5[2] - local_80;
-    Vec3_Normalize(&local_64);
-    if (dVar3 == (double)lbl_803DE910) {
-      *param_8 = local_64;
-      param_8[1] = local_60;
-      param_8[2] = local_5c;
+    dVar3 = param_3 - param_2;
+    dVar2 = dVar3 * (param_1 / param_4);
+    axisDir[0] = param_7[0] - param_6[0];
+    axisDir[1] = param_7[1] - param_6[1];
+    axisDir[2] = param_7[2] - param_6[2];
+    Vec3_Normalize(axisDir);
+    Vec3_ScaleAdd(param_6,axisDir,param_1,surface);
+    normal[0] = param_5[0] - surface[0];
+    normal[1] = param_5[1] - surface[1];
+    normal[2] = param_5[2] - surface[2];
+    Vec3_Normalize(normal);
+    if (dVar3 == lbl_803DE910) {
+      param_8[0] = normal[0];
+      param_8[1] = normal[1];
+      param_8[2] = normal[2];
     }
     else {
-      local_58 = (float)((double)local_58 * param_1);
-      local_54 = (float)((double)local_54 * param_1);
-      local_50 = (float)((double)local_50 * param_1);
-      Vec3_ScaleAdd(&local_58,&local_64,dVar2,afStack_70);
-      Vec3_Normalize(afStack_70);
-      fVar1 = (float)((double)lbl_803DE918 / param_1);
-      local_58 = local_58 * fVar1;
-      local_54 = local_54 * fVar1;
-      local_50 = local_50 * fVar1;
-      Vec3_Cross(&local_64,&local_58,afStack_7c);
-      Vec3_Normalize(afStack_7c);
-      Vec3_Cross(afStack_7c,afStack_70,param_8);
+      axisDir[0] = axisDir[0] * param_1;
+      axisDir[1] = axisDir[1] * param_1;
+      axisDir[2] = axisDir[2] * param_1;
+      Vec3_ScaleAdd(axisDir,normal,dVar2,blended);
+      Vec3_Normalize(blended);
+      fVar1 = lbl_803DE918 / param_1;
+      axisDir[0] = axisDir[0] * fVar1;
+      axisDir[1] = axisDir[1] * fVar1;
+      axisDir[2] = axisDir[2] * fVar1;
+      Vec3_Cross(normal,axisDir,cross);
+      Vec3_Normalize(cross);
+      Vec3_Cross(cross,blended,param_8);
     }
   }
   return param_8;
