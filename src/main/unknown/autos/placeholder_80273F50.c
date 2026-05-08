@@ -85,13 +85,32 @@ int fn_80274E6C(void *a, void *b)
 /*
  * fn_80274E7C - table lookup helper (~148 instructions). Stubbed.
  */
-#pragma dont_inline on
-int fn_80274E7C(int key)
+extern void *sndBSearch(void *key, void *base, u16 count, u32 stride,
+                        int (*cmp)(void *a, void *b));
+extern u8 lbl_803C5678[];
+extern u32 lbl_803DE294;
+extern u32 lbl_803DE298;
+extern u8 lbl_803DE29C[];
+extern void *lbl_803DE2A4;
+
+void *fn_80274E7C(u32 key)
 {
-    (void)key;
+    u16 *bucketTable;
+
+    bucketTable = (u16 *)lbl_803C5678;
+    lbl_803DE298 = (key >> 6) & 0x3ff;
+    if (bucketTable[lbl_803DE298 * 2] != 0) {
+        lbl_803DE294 = bucketTable[lbl_803DE298 * 2 + 1];
+        *(u16 *)(lbl_803DE29C + 4) = key;
+        lbl_803DE2A4 =
+            sndBSearch(lbl_803DE29C, lbl_803C5678 + 0x800 + lbl_803DE294 * 8,
+                       bucketTable[lbl_803DE298 * 2], 8, fn_80274E6C);
+        if (lbl_803DE2A4 != 0) {
+            return *(void **)lbl_803DE2A4;
+        }
+    }
     return 0;
 }
-#pragma dont_inline reset
 
 /*
  * Comparator: return a->key - b->key (u16 at offset 0).
@@ -106,13 +125,45 @@ int fn_80274F10(void *a, void *b)
 /*
  * fn_80274F20 - voice find/copy (~296 instructions). Stubbed.
  */
-#pragma dont_inline on
-int fn_80274F20(int a, int b)
+extern u8 lbl_803BFC78[];
+extern u16 lbl_803DE288;
+extern void *lbl_803DE2A8;
+extern u8 *lbl_803DE2AC;
+
+int fn_80274F20(u16 key, u32 *out)
 {
-    (void)a; (void)b;
-    return 0;
+    u32 i;
+    u32 *bucket;
+    u8 *entry;
+    u8 *searchKey;
+
+    i = 0;
+    bucket = (u32 *)lbl_803BFC78;
+    searchKey = lbl_803C5678 + 0x4c00;
+    *(u16 *)searchKey = key;
+    while (i < lbl_803DE288) {
+        lbl_803DE2A8 = sndBSearch(searchKey, (void *)*bucket, *(u16 *)(bucket + 2), 0x20,
+                                  fn_80274F10);
+        entry = lbl_803DE2A8;
+        if ((entry != 0) && (*(s16 *)(entry + 2) != -1)) {
+            lbl_803DE2AC = entry + 0xc;
+            out[0] = *(u32 *)lbl_803DE2AC;
+            out[1] = *(u32 *)(entry + 8);
+            out[3] = 0;
+            out[5] = *(u32 *)(lbl_803DE2AC + 8);
+            out[4] = *(u32 *)(lbl_803DE2AC + 4) & 0xffffff;
+            out[6] = *(u32 *)(lbl_803DE2AC + 0xc);
+            *(u8 *)(out + 7) = *(u32 *)(lbl_803DE2AC + 4) >> 0x18;
+            if (*(int *)(entry + 0x1c) != 0) {
+                out[2] = *(int *)(entry + 0x1c) + *bucket;
+            }
+            return 0;
+        }
+        bucket += 3;
+        i++;
+    }
+    return -1;
 }
-#pragma dont_inline reset
 
 /*
  * Comparator: return a->key2 - b->key2 (u16 at offset 4). Same body as
