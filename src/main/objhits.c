@@ -1227,8 +1227,8 @@ void ObjHits_SortSweepEntries(int sweepPtrs,int entryCount)
   int iVar8;
   int iVar9;
 
-  iVar1 = (entryCount + -1) / 9 + (entryCount + -1 >> 0x1f);
-  for (iVar9 = 1; iVar9 <= iVar1 - (iVar1 >> 0x1f); iVar9 = iVar9 * 3 + 1) {
+  iVar1 = (entryCount + -1) / 9;
+  for (iVar9 = 1; iVar9 <= iVar1; iVar9 = iVar9 * 3 + 1) {
   }
   for (; 0 < iVar9; iVar9 = iVar9 / 3) {
     iVar6 = iVar9 + 1;
