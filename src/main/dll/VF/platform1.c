@@ -1,23 +1,24 @@
 #include "ghidra_import.h"
 #include "main/dll/VF/platform1.h"
 
-extern undefined4 FUN_80006818();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068c4();
+extern undefined4 Sfx_SetObjectSfxVolume();
+extern undefined4 Sfx_PlayFromObject();
+extern undefined4 Sfx_KeepAliveLoopedObjectSound();
 extern double FUN_80006b34();
 extern byte FUN_80006b44();
 extern uint FUN_80006bf8();
-extern uint FUN_80017760();
+extern uint randomGetRange();
 extern uint FUN_80017a98();
-extern int FUN_80017b00();
+extern int ObjList_GetObjects();
 extern int FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
+extern undefined4 ObjAnim_SetCurrentMove();
 extern undefined4 FUN_80080eec();
 extern undefined4 FUN_8011e800();
-extern undefined4 FUN_8011e868();
+extern undefined4 fn_8011F3EC();
 extern undefined4 FUN_801de914();
 extern uint FUN_80286840();
 extern undefined4 FUN_8028688c();
+extern u8 *Obj_GetPlayerObject(void);
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6cc;
@@ -70,6 +71,8 @@ extern f32 lbl_803E633C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void platform1_control(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                        undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                        undefined4 param_9,undefined4 param_10,int param_11,int param_12,
@@ -190,14 +193,14 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
   fStack_b4 = (float)in_ps20_1;
   local_c8 = (float)in_f19;
   fStack_c4 = (float)in_ps19_1;
-  uVar2 = FUN_80286840();
+  uVar2 = (uint)param_1;
   state = *(Platform1State **)(uVar2 + PLATFORM1_STATE_OFFSET);
-  uVar3 = FUN_80017a98();
+  uVar3 = (uint)Obj_GetPlayerObject();
   state->flags = state->flags | PLATFORM1_FLAG_ACTIVE;
-  FUN_8011e868(0xf);
+  fn_8011F3EC(0xf);
   DAT_803de890 = 0;
   state->linkedObject = 0;
-  iVar4 = FUN_80017b00(local_104,&local_108);
+  iVar4 = ObjList_GetObjects(local_104,&local_108);
   while (local_104[0] < local_108) {
     state->linkedObject = *(int *)(iVar4 + local_104[0] * 4);
     local_104[0] = local_104[0] + 1;
@@ -209,7 +212,7 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
       iVar4 = iVar4 + 1) {
     bVar7 = *(byte *)(param_11 + iVar4 + 0x81);
     if (bVar7 == 3) {
-      iVar5 = FUN_80017b00(&local_110,&local_10c);
+      iVar5 = ObjList_GetObjects(&local_110,&local_10c);
       puVar8 = (uint *)(iVar5 + (int)local_110 * 4);
       for (; param_12 = local_10c, param_13 = local_110, (int)local_110 < local_10c;
           local_110 = (int *)((int)local_110 + 1)) {
@@ -238,17 +241,17 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
       if (state->linkedObject != 0) {
         *(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET) = lbl_803E6300;
         *(float *)(state->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET) = fVar1;
-        FUN_800305f8((double)*(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET),param_2,param_3,
+        ObjAnim_SetCurrentMove((double)*(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET),param_2,param_3,
                      param_4,param_5,param_6,param_7,param_8,uVar3,PLATFORM1_ACTIVE_MODEL_ID,0,
                      param_12,param_13,param_14,param_15,param_16);
-        FUN_800305f8((double)*(float *)(state->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET),param_2,
+        ObjAnim_SetCurrentMove((double)*(float *)(state->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET),param_2,
                      param_3,param_4,param_5,param_6,param_7,param_8,state->linkedObject,
                      PLATFORM1_IDLE_MODEL_ID,0,param_12,param_13,param_14,param_15,param_16);
         state->prevTrackOffset = state->currentTrackOffset;
       }
     }
     else if (bVar7 < 5) {
-      iVar5 = FUN_80017b00(&local_118,&local_114);
+      iVar5 = ObjList_GetObjects(&local_118,&local_114);
       puVar8 = (uint *)(iVar5 + (int)local_118 * 4);
       for (; param_12 = local_114, param_13 = local_118, (int)local_118 < local_114;
           local_118 = (int *)((int)local_118 + 1)) {
@@ -275,19 +278,19 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
       (**(code **)(param_16 + 0x1c))(0x48,1,3);
     }
     if (*(short *)(uVar3 + PLATFORM1_MODEL_ID_OFFSET) != PLATFORM1_ACTIVE_MODEL_ID) {
-      FUN_800305f8((double)*(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET),param_2,param_3,
+      ObjAnim_SetCurrentMove((double)*(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET),param_2,param_3,
                    param_4,param_5,param_6,param_7,param_8,uVar3,PLATFORM1_ACTIVE_MODEL_ID,0,
                    param_12,param_13,param_14,param_15,param_16);
     }
     iVar4 = state->linkedObject;
     if (*(short *)(iVar4 + PLATFORM1_MODEL_ID_OFFSET) != PLATFORM1_IDLE_MODEL_ID) {
-      FUN_800305f8((double)*(float *)(iVar4 + PLATFORM1_TRACK_VALUE_OFFSET),param_2,param_3,param_4,
+      ObjAnim_SetCurrentMove((double)*(float *)(iVar4 + PLATFORM1_TRACK_VALUE_OFFSET),param_2,param_3,param_4,
                    param_5,param_6,param_7,param_8,iVar4,PLATFORM1_IDLE_MODEL_ID,0,param_12,
                    param_13,param_14,param_15,param_16);
     }
     *(undefined2 *)(param_11 + 0x6e) = 0xffff;
     *(undefined *)(param_11 + 0x56) = 0;
-    FUN_800068c4(uVar2,PLATFORM1_LOOP_SFX_ID);
+    Sfx_KeepAliveLoopedObjectSound(uVar2,PLATFORM1_LOOP_SFX_ID);
     dVar13 = (double)lbl_803E6304;
     dVar14 = (double)lbl_803E630C;
     dVar15 = (double)lbl_803E6308;
@@ -334,7 +337,7 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
         state->transitionStep = 0;
         state->flags = state->flags & ~PLATFORM1_TRIGGER_MASK;
         state->flags = state->flags | PLATFORM1_FLAG_EXIT_NEGATIVE;
-        iVar4 = FUN_80017b00(&local_120,&local_11c);
+        iVar4 = ObjList_GetObjects(&local_120,&local_11c);
         puVar8 = (uint *)(iVar4 + local_120 * 4);
         goto LAB_801defcc;
       }
@@ -342,7 +345,7 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
         state->transitionStep = 3;
         state->flags = state->flags & ~PLATFORM1_TRIGGER_MASK;
         state->flags = state->flags | PLATFORM1_FLAG_EXIT_POSITIVE;
-        iVar4 = FUN_80017b00(&local_128,&local_124);
+        iVar4 = ObjList_GetObjects(&local_128,&local_124);
         puVar8 = (uint *)(iVar4 + local_128 * 4);
         goto LAB_801df0d8;
       }
@@ -382,30 +385,30 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
     state->playerSfxTimer = (int)((float)state->playerSfxTimer - lbl_803DC074);
     if ((double)(float)state->playerSfxTimer < (double)lbl_803E6310) {
       if ((double)lbl_803E6310 <= in_f19) {
-        uVar6 = FUN_80017760(0x78,0xf0);
+        uVar6 = randomGetRange(0x78,0xf0);
         local_f0 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
         state->playerSfxTimer = (int)(float)(local_f0 - DOUBLE_803e6340);
       }
       else {
-        uVar6 = FUN_80017760(0x28,100);
+        uVar6 = randomGetRange(0x28,100);
         local_f0 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
         state->playerSfxTimer = (int)(float)(local_f0 - DOUBLE_803e6340);
       }
-      FUN_80006824(uVar3,PLATFORM1_PLAYER_SFX_ID);
+      Sfx_PlayFromObject(uVar3,PLATFORM1_PLAYER_SFX_ID);
     }
     state->platformSfxTimer = (int)((float)state->platformSfxTimer - lbl_803DC074);
     if ((double)(float)state->platformSfxTimer < (double)lbl_803E6310) {
       if (in_f19 <= (double)lbl_803E6310) {
-        uVar3 = FUN_80017760(0x78,0xf0);
+        uVar3 = randomGetRange(0x78,0xf0);
         local_f0 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
         state->platformSfxTimer = (int)(float)(local_f0 - DOUBLE_803e6340);
       }
       else {
-        uVar3 = FUN_80017760(0x28,100);
+        uVar3 = randomGetRange(0x28,100);
         local_f0 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
         state->platformSfxTimer = (int)(float)(local_f0 - DOUBLE_803e6340);
       }
-      FUN_80006824(uVar2,PLATFORM1_PLATFORM_SFX_ID);
+      Sfx_PlayFromObject(uVar2,PLATFORM1_PLATFORM_SFX_ID);
     }
     if (in_f19 < (double)lbl_803E6310) {
       in_f19 = -in_f19;
@@ -415,10 +418,9 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
     if (100 < iVar4) {
       iVar4 = 100;
     }
-    FUN_80006818((double)lbl_803E633C,uVar2,PLATFORM1_LOOP_SFX_ID,(byte)iVar4);
+    Sfx_SetObjectSfxVolume((double)lbl_803E633C,uVar2,PLATFORM1_LOOP_SFX_ID,(byte)iVar4);
   }
 LAB_801df3c4:
-  FUN_8028688c();
   return;
 LAB_801defcc:
   if (local_11c <= local_120) goto LAB_801defd8;
@@ -462,6 +464,8 @@ LAB_801df0e4:
   DAT_803de890 = 2;
   goto LAB_801df3c4;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */

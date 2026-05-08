@@ -179,22 +179,22 @@ void dfplightni_update(u8 *obj)
           double clampX;
           double clampY;
           Sfx_PlayFromObjectLimited(obj,DFPLIGHTNI_SFX_ID,DFPLIGHTNI_SFX_MAX_COUNT);
-          if (eventActive == 0) {
+          if (eventActive != 0) {
             clampY = (radiusY < (double)lbl_803E6500) ? (double)lbl_803E6500
-                       : ((double)lbl_803E6504 < radiusY) ? (double)lbl_803E6504 : radiusY;
+                       : (radiusY > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusY;
             clampX = (radiusX < (double)lbl_803E6500) ? (double)lbl_803E6500
-                       : ((double)lbl_803E6504 < radiusX) ? (double)lbl_803E6504 : radiusX;
+                       : (radiusX > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusX;
             state->effectHandle =
-                fn_8008FB20(clampX,clampY,start,end,state->delayFrames,
+                fn_8008FB20(clampX,clampY,start,end,DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES,
                             state->angleIndex * DFPLIGHTNI_ANGLE_STEP & 0xff,0);
           }
           else {
             clampY = (radiusY < (double)lbl_803E6500) ? (double)lbl_803E6500
-                       : ((double)lbl_803E6504 < radiusY) ? (double)lbl_803E6504 : radiusY;
+                       : (radiusY > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusY;
             clampX = (radiusX < (double)lbl_803E6500) ? (double)lbl_803E6500
-                       : ((double)lbl_803E6504 < radiusX) ? (double)lbl_803E6504 : radiusX;
+                       : (radiusX > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusX;
             state->effectHandle =
-                fn_8008FB20(clampX,clampY,start,end,DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES,
+                fn_8008FB20(clampX,clampY,start,end,state->delayFrames,
                             state->angleIndex * DFPLIGHTNI_ANGLE_STEP & 0xff,0);
           }
         }

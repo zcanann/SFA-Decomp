@@ -46,10 +46,10 @@ extern u8 lbl_80327618[0x104];
 void sh_levelcontrol_update(int param_1)
 {
   uint *puVar5;
-  int iVar1;
-  int iVar3;
+  uint iVar1;
+  uint iVar3;
   uint uVar2;
-  char cVar4;
+  u8 cVar4;
   u8 *base = lbl_80327618;
 
   puVar5 = *(uint **)(param_1 + 0xb8);
@@ -64,7 +64,7 @@ void sh_levelcontrol_update(int param_1)
   iVar1 = GameBit_Get(0x3aa);
   if (iVar1 != 0) {
     if (*(char *)(param_1 + 0xac) == 8) {
-      cVar4 = (*(code *)(*lbl_803DCAAC + 0x4c))(8, 0x1d);
+      cVar4 = (*(code *)(*lbl_803DCAAC + 0x4c))((int)*(char *)(param_1 + 0xac), 0x1d);
       if (cVar4 == '\0') {
         (*(code *)(*lbl_803DCAAC + 0x50))((int)*(char *)(param_1 + 0xac), 0x1d, 1);
       }
@@ -77,16 +77,16 @@ void sh_levelcontrol_update(int param_1)
     }
   }
   iVar1 = GameBit_Get(0x3b8);
-  if (iVar1 == 0) {
+  if (iVar1 != 0) {
     cVar4 = (*(code *)(*lbl_803DCAAC + 0x4c))((int)*(char *)(param_1 + 0xac), 0x1c);
-    if (cVar4 != '\0') {
-      (*(code *)(*lbl_803DCAAC + 0x50))((int)*(char *)(param_1 + 0xac), 0x1c, 0);
+    if (cVar4 == '\0') {
+      (*(code *)(*lbl_803DCAAC + 0x50))((int)*(char *)(param_1 + 0xac), 0x1c, 1);
     }
   }
   else {
     cVar4 = (*(code *)(*lbl_803DCAAC + 0x4c))((int)*(char *)(param_1 + 0xac), 0x1c);
-    if (cVar4 == '\0') {
-      (*(code *)(*lbl_803DCAAC + 0x50))((int)*(char *)(param_1 + 0xac), 0x1c, 1);
+    if (cVar4 != '\0') {
+      (*(code *)(*lbl_803DCAAC + 0x50))((int)*(char *)(param_1 + 0xac), 0x1c, 0);
     }
   }
   iVar1 = GameBit_Get(999);
@@ -96,16 +96,16 @@ void sh_levelcontrol_update(int param_1)
     (*(code *)(*lbl_803DCAAC + 0x50))((int)*(char *)(param_1 + 0xac), 0x1b, 1);
   }
   iVar1 = GameBit_Get(0x11);
-  if (iVar1 == 0) {
+  if (iVar1 != 0) {
     cVar4 = (*(code *)(*lbl_803DCAAC + 0x4c))((int)*(char *)(param_1 + 0xac), 0x1a);
-    if (cVar4 != '\0') {
-      (*(code *)(*lbl_803DCAAC + 0x50))((int)*(char *)(param_1 + 0xac), 0x1a, 0);
+    if (cVar4 == '\0') {
+      (*(code *)(*lbl_803DCAAC + 0x50))((int)*(char *)(param_1 + 0xac), 0x1a, 1);
     }
   }
   else {
     cVar4 = (*(code *)(*lbl_803DCAAC + 0x4c))((int)*(char *)(param_1 + 0xac), 0x1a);
-    if (cVar4 == '\0') {
-      (*(code *)(*lbl_803DCAAC + 0x50))((int)*(char *)(param_1 + 0xac), 0x1a, 1);
+    if (cVar4 != '\0') {
+      (*(code *)(*lbl_803DCAAC + 0x50))((int)*(char *)(param_1 + 0xac), 0x1a, 0);
     }
   }
   switch (*(undefined *)((int)puVar5 + 5)) {
@@ -114,18 +114,20 @@ void sh_levelcontrol_update(int param_1)
     break;
   case 2:
     iVar1 = GameBit_Get(0xbf);
-    if ((iVar1 == 0) || (uVar2 = GameBit_Get(0xc2), 5 < uVar2)) {
+    if ((iVar1 != 0) && (uVar2 = GameBit_Get(0xc2), uVar2 < 6)) {
+      if (*(short *)((int)puVar5 + 0x12) != 0xdb) {
+        *(undefined2 *)((int)puVar5 + 0x12) = 0xdb;
+        GameBit_Set(0xc0, 1);
+        *puVar5 = *puVar5 & 0xfffffffd;
+      }
+    }
+    else {
       iVar1 = GameBit_Get(0xc2);
       if ((iVar1 == 6) && (*(short *)((int)puVar5 + 0x12) != 0xcc)) {
         *(undefined2 *)((int)puVar5 + 0x12) = 0xcc;
         GameBit_Set(0xc0, 1);
         *puVar5 = *puVar5 & 0xfffffffd;
       }
-    }
-    else if (*(short *)((int)puVar5 + 0x12) != 0xdb) {
-      *(undefined2 *)((int)puVar5 + 0x12) = 0xdb;
-      GameBit_Set(0xc0, 1);
-      *puVar5 = *puVar5 & 0xfffffffd;
     }
     iVar1 = GameBit_Get(0xc2);
     iVar3 = GameBit_Get(0x66d);
@@ -143,10 +145,7 @@ void sh_levelcontrol_update(int param_1)
       GameBit_Set(0xc0, 1);
       *puVar5 = *puVar5 & 0xfffffffd;
     }
-    if (*(byte *)(puVar5 + 1) < 2) {
-      *(byte *)(puVar5 + 1) = *(byte *)(puVar5 + 1) + 1;
-    }
-    else {
+    if (*(byte *)(puVar5 + 1) >= 2) {
       iVar1 = GameBit_Get(0xdff);
       if (iVar1 == 0) {
         fn_80014B68(0);
@@ -167,6 +166,9 @@ void sh_levelcontrol_update(int param_1)
           GameBit_Set(0x9d5, 1);
         }
       }
+    }
+    else {
+      *(byte *)(puVar5 + 1) = *(byte *)(puVar5 + 1) + 1;
     }
     break;
   case 5:
@@ -202,10 +204,7 @@ void sh_levelcontrol_update(int param_1)
       GameBit_Set(0xc0, 1);
       *puVar5 = *puVar5 & 0xfffffffd;
     }
-    if (*(byte *)(puVar5 + 1) < 2) {
-      *(byte *)(puVar5 + 1) = *(byte *)(puVar5 + 1) + 1;
-    }
-    else {
+    if (*(byte *)(puVar5 + 1) >= 2) {
       iVar1 = GameBit_Get(0x177);
       if (iVar1 == 0) {
         fn_80014B68(0);
@@ -219,6 +218,9 @@ void sh_levelcontrol_update(int param_1)
           GameBit_Set(0x177, 1);
         }
       }
+    }
+    else {
+      *(byte *)(puVar5 + 1) = *(byte *)(puVar5 + 1) + 1;
     }
     break;
   case 8:
