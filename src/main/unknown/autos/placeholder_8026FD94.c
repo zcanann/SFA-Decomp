@@ -219,6 +219,7 @@ void fn_80271370(SynthDelayedNode *fade)
  *
  * EN v1.1 Address: 0x80271398, size 148b
  */
+#pragma dont_inline on
 void fn_80271398(void **head, void (*cb)(int idx))
 {
     void *cur = *head;
@@ -235,6 +236,7 @@ void fn_80271398(void **head, void (*cb)(int idx))
     }
     *head = 0;
 }
+#pragma dont_inline reset
 
 /*
  * Dispatch a completed fade action based on its type byte.
