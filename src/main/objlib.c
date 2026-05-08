@@ -19,6 +19,7 @@ extern undefined4 FUN_80017704();
 extern void setMatrixFromObjectTransposed(void *transform,float *mtx);
 extern float fn_800216D0(float *posA,float *posB);
 extern float Vec_distance(float *param_1,float *param_2);
+extern void OSReport(const char *fmt, ...);
 extern int FUN_80017730();
 extern undefined4 FUN_8001774c();
 extern uint FUN_80017760();
@@ -107,6 +108,7 @@ extern f32 lbl_803DF638;
 #define gObjHitsResetObjectCount gObjHitReactResetObjectCount
 #define gObjHitsResetObjects gObjHitReactResetObjects
 extern char sObjMsgOverflowInObjectWarning[];
+extern char sObjAddObjectTypeReachedMaxTypes[];
 
 typedef struct ObjMsgEntry {
   uint message;
@@ -1761,6 +1763,10 @@ void ObjGroup_AddObject(int obj,int group)
   int *entries;
 
   if ((group < 0) || (group >= 0x54)) {
+    return;
+  }
+  if ((int)(uint)gObjGroupObjectCount >= 0x100) {
+    OSReport(sObjAddObjectTypeReachedMaxTypes);
     return;
   }
   bucketStarts = gObjGroupOffsets;
