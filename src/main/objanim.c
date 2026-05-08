@@ -209,15 +209,7 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
       state->progress = state->savedStep * deltaTime + state->progress;
       fVar5 = lbl_803DE8F0;
       fVar4 = state->prevSegmentLength;
-      if (state->prevFrameType == OBJANIM_FRAME_TYPE_CLAMPED) {
-        fVar5 = state->progress;
-        fVar6 = lbl_803DE8F0;
-        if ((lbl_803DE8F0 <= fVar5) && (fVar6 = fVar5, fVar4 < fVar5)) {
-          fVar6 = fVar4;
-        }
-        state->progress = fVar6;
-      }
-      else {
+      if (state->prevFrameType != OBJANIM_FRAME_TYPE_CLAMPED) {
         if (state->progress < lbl_803DE8F0) {
           while (state->progress < fVar5) {
             state->progress = state->progress + fVar4;
@@ -228,6 +220,14 @@ undefined4 Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim
             state->progress = state->progress - fVar4;
           }
         }
+      }
+      else {
+        fVar5 = state->progress;
+        fVar6 = lbl_803DE8F0;
+        if ((lbl_803DE8F0 <= fVar5) && (fVar6 = fVar5, fVar4 < fVar5)) {
+          fVar6 = fVar4;
+        }
+        state->progress = fVar6;
       }
       if ((state->flags & OBJANIM_STATE_FLAG_HOLD_EVENT_COUNTDOWN) == 0) {
         eventCountdown =
@@ -817,15 +817,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
            (float)((double)state->savedStep * deltaTime + (double)state->progress);
       fVar4 = lbl_803DE8F0;
       fVar3 = state->prevSegmentLength;
-      if (state->prevFrameType == OBJANIM_FRAME_TYPE_CLAMPED) {
-        fVar4 = state->progress;
-        fVar5 = lbl_803DE8F0;
-        if ((lbl_803DE8F0 <= fVar4) && (fVar5 = fVar4, fVar3 < fVar4)) {
-          fVar5 = fVar3;
-        }
-        state->progress = fVar5;
-      }
-      else {
+      if (state->prevFrameType != OBJANIM_FRAME_TYPE_CLAMPED) {
         if (state->progress < lbl_803DE8F0) {
           while (state->progress < fVar4) {
             state->progress = state->progress + fVar3;
@@ -836,6 +828,14 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
             state->progress = state->progress - fVar3;
           }
         }
+      }
+      else {
+        fVar4 = state->progress;
+        fVar5 = lbl_803DE8F0;
+        if ((lbl_803DE8F0 <= fVar4) && (fVar5 = fVar4, fVar3 < fVar4)) {
+          fVar5 = fVar3;
+        }
+        state->progress = fVar5;
       }
       if ((state->flags & OBJANIM_STATE_FLAG_HOLD_EVENT_COUNTDOWN) == 0) {
         uVar15 = (uint)-(float)((double)(float)((double)CONCAT44(0x43300000,
