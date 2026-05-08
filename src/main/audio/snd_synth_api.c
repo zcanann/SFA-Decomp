@@ -3,7 +3,7 @@
 
 extern void sndBegin(void);
 extern void sndEnd(void);
-extern void fn_8026D6E4(int a, int b, int c, int d);
+extern void fn_8026D6E4(u32 value0, u32 value1, u32 handle, u32 mode);
 extern int fn_8027186C(int a, int b, int c);
 extern int fn_80271954(int a, int b, int c);
 extern int fn_80271AC0(int a);
