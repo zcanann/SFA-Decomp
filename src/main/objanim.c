@@ -388,6 +388,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   int moveIndex;
   int moveData;
   float eventStepFrames;
+  u64 frameBits;
   objAnim = (ObjAnimComponent *)objAnimArg;
   if (moveProgress > lbl_803DE8E0) {
     moveProgress = lbl_803DE8E0;
@@ -444,9 +445,9 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   frameStep = *(s8 *)(moveData + 1) & OBJANIM_FRAME_STEP_MASK;
   if (frameStep != 0) {
     state->savedStep = state->step;
-    eventStepFrames = lbl_803DE8F4 /
-                      (ObjAnim_U32AsDouble(frameStep ^ 0x80000000) - lbl_803DE900);
-    state->eventStep = (s16)(int)eventStepFrames;
+    frameBits = CONCAT44(0x43300000, frameStep ^ 0x80000000);
+    eventStepFrames = lbl_803DE8F4 / ((*(f64 *)&frameBits) - lbl_803DE900);
+    state->eventStep = (int)eventStepFrames;
     state->eventCountdown = OBJANIM_EVENT_COUNTDOWN_RESET;
   }
   state->step = lbl_803DE8F0;
@@ -1127,6 +1128,7 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
   int moveIndex;
   int moveData;
   float eventStepFrames;
+  u64 frameBits;
   ObjHitReactState *hitState;
 
   objAnim = (ObjAnimComponent *)objAnimArg;
@@ -1195,9 +1197,9 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
   frameStep = *(s8 *)(moveData + 1) & OBJANIM_FRAME_STEP_MASK;
   if ((frameStep != 0) && ((flags & OBJANIM_SET_MOVE_FLAG_SKIP_EVENT_COUNTDOWN) == 0)) {
     state->savedStep = state->step;
-    eventStepFrames = lbl_803DE8F4 /
-                      (ObjAnim_U32AsDouble(frameStep ^ 0x80000000) - lbl_803DE900);
-    state->eventStep = (s16)(int)eventStepFrames;
+    frameBits = CONCAT44(0x43300000, frameStep ^ 0x80000000);
+    eventStepFrames = lbl_803DE8F4 / ((*(f64 *)&frameBits) - lbl_803DE900);
+    state->eventStep = (int)eventStepFrames;
     state->eventCountdown = OBJANIM_EVENT_COUNTDOWN_RESET;
   }
   else {
