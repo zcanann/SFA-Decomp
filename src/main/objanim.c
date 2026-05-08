@@ -42,11 +42,10 @@ extern f32 lbl_803DE90C;
 void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimState *state,
                           uint moveId,s16 eventState)
 {
-  double frameValue;
+  float frameValue;
   int frameType;
   int moveData;
   int moveIndex;
-  u64 frameBits;
 
   moveIndex = animDef->moveBaseTable[(s32)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
               (moveId & OBJANIM_MOVE_INDEX_MASK);
@@ -80,8 +79,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
     state->eventState = 0;
   }
   else {
-    frameBits = CONCAT44(0x43300000, (uint)state->frameCmd[1]);
-    frameValue = *(f64 *)&frameBits - lbl_803DE8E8;
+    frameValue = (float)state->frameCmd[1];
     if (frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
       frameValue = frameValue - lbl_803DE8E0;
     }
