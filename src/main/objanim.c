@@ -446,8 +446,8 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   if (frameStep != 0) {
     state->savedStep = state->step;
     frameBits = CONCAT44(0x43300000, frameStep ^ 0x80000000);
-    eventStepFrames = lbl_803DE8F4 / ((*(f64 *)&frameBits) - lbl_803DE900);
-    state->eventStep = (int)eventStepFrames;
+    eventStepFrames = lbl_803DE8F4 / (float)((*(f64 *)&frameBits) - lbl_803DE900);
+    state->eventStep = eventStepFrames;
     state->eventCountdown = OBJANIM_EVENT_COUNTDOWN_RESET;
   }
   state->step = lbl_803DE8F0;
@@ -533,8 +533,8 @@ void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,uint frameCount
   bank = ObjAnim_GetActiveBank(objAnim);
   if (bank != (ObjAnimBank *)0x0) {
     frameBits = CONCAT44(0x43300000, frameCount ^ 0x80000000);
-    eventStepFrames = lbl_803DE8F4 / ((*(f64 *)&frameBits) - lbl_803DE900);
-    bank->currentState->eventStep = (int)eventStepFrames;
+    eventStepFrames = lbl_803DE8F4 / (float)((*(f64 *)&frameBits) - lbl_803DE900);
+    bank->currentState->eventStep = eventStepFrames;
   }
 }
 #pragma peephole reset
@@ -1198,8 +1198,8 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
   if ((frameStep != 0) && ((flags & OBJANIM_SET_MOVE_FLAG_SKIP_EVENT_COUNTDOWN) == 0)) {
     state->savedStep = state->step;
     frameBits = CONCAT44(0x43300000, frameStep ^ 0x80000000);
-    eventStepFrames = lbl_803DE8F4 / ((*(f64 *)&frameBits) - lbl_803DE900);
-    state->eventStep = (int)eventStepFrames;
+    eventStepFrames = lbl_803DE8F4 / (float)((*(f64 *)&frameBits) - lbl_803DE900);
+    state->eventStep = eventStepFrames;
     state->eventCountdown = OBJANIM_EVENT_COUNTDOWN_RESET;
   }
   else {
