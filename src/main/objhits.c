@@ -880,58 +880,58 @@ void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double
  * PAL Size: TODO
  */
 #pragma scheduling off
-float *ObjHits_ProjectPointToTaperedCapsuleXZ(float radiusA, float axial, float radiusB,
-                                              float radiusC, float halfLength, float *p,
-                                              float *p0, float *p1, float *out)
+float *ObjHits_ProjectPointToTaperedCapsuleXZ(float pointRadius, float axial, float baseRadius,
+                                              float tipRadius, float length, float *point,
+                                              float *base, float *tip, float *out)
 {
     float invHalfLength;
-    float surface[3];
     float dir[3];
+    float surface[3];
 
     if (axial < lbl_803DE910) {
-        out[0] = p[0] - p0[0];
+        out[0] = point[0] - base[0];
         out[1] = lbl_803DE910;
-        out[2] = p[2] - p0[2];
+        out[2] = point[2] - base[2];
         Vec3_Normalize(out);
-        radiusA = radiusA + radiusB;
-        out[0] = out[0] * radiusA;
-        out[1] = out[1] * radiusA;
-        out[2] = out[2] * radiusA;
-        out[0] = out[0] + p0[0];
-        out[1] = out[1] + p0[1];
-        out[2] = out[2] + p0[2];
+        pointRadius = pointRadius + baseRadius;
+        out[0] = out[0] * pointRadius;
+        out[1] = out[1] * pointRadius;
+        out[2] = out[2] * pointRadius;
+        out[0] = out[0] + base[0];
+        out[1] = out[1] + base[1];
+        out[2] = out[2] + base[2];
         return out;
     }
-    if (axial > halfLength) {
-        out[0] = p[0] - p1[0];
+    if (axial > length) {
+        out[0] = point[0] - tip[0];
         out[1] = lbl_803DE910;
-        out[2] = p[2] - p1[2];
+        out[2] = point[2] - tip[2];
         Vec3_Normalize(out);
-        radiusA = radiusA + radiusC;
-        out[0] = out[0] * radiusA;
-        out[1] = out[1] * radiusA;
-        out[2] = out[2] * radiusA;
-        out[0] = out[0] + p1[0];
-        out[1] = out[1] + p1[1];
-        out[2] = out[2] + p1[2];
+        pointRadius = pointRadius + tipRadius;
+        out[0] = out[0] * pointRadius;
+        out[1] = out[1] * pointRadius;
+        out[2] = out[2] * pointRadius;
+        out[0] = out[0] + tip[0];
+        out[1] = out[1] + tip[1];
+        out[2] = out[2] + tip[2];
         return out;
     }
-    dir[0] = p1[0] - p0[0];
-    dir[1] = p1[1] - p0[1];
-    dir[2] = p1[2] - p0[2];
-    invHalfLength = lbl_803DE918 / halfLength;
+    dir[0] = tip[0] - base[0];
+    dir[1] = tip[1] - base[1];
+    dir[2] = tip[2] - base[2];
+    invHalfLength = lbl_803DE918 / length;
     dir[0] = dir[0] * invHalfLength;
     dir[1] = dir[1] * invHalfLength;
     dir[2] = dir[2] * invHalfLength;
-    Vec3_ScaleAdd(axial, p0, dir, surface);
-    out[0] = p[0] - surface[0];
+    Vec3_ScaleAdd(axial, base, dir, surface);
+    out[0] = point[0] - surface[0];
     out[1] = lbl_803DE910;
-    out[2] = p[2] - surface[2];
+    out[2] = point[2] - surface[2];
     Vec3_Normalize(out);
-    radiusA = (radiusC - radiusB) * (axial / halfLength) + (radiusB + radiusA);
-    out[0] = out[0] * radiusA;
-    out[1] = out[1] * radiusA;
-    out[2] = out[2] * radiusA;
+    pointRadius = (tipRadius - baseRadius) * (axial / length) + (baseRadius + pointRadius);
+    out[0] = out[0] * pointRadius;
+    out[1] = out[1] * pointRadius;
+    out[2] = out[2] * pointRadius;
     out[0] = out[0] + surface[0];
     out[1] = out[1] + surface[1];
     out[2] = out[2] + surface[2];
@@ -953,59 +953,59 @@ float *ObjHits_ProjectPointToTaperedCapsuleXZ(float radiusA, float axial, float 
  * PAL Size: TODO
  */
 #pragma scheduling off
-float *ObjHits_ProjectPointToTaperedCapsule3D(float radiusA, float axial, float radiusB,
-                                              float radiusC, float halfLength, float *p,
-                                              float *p0, float *p1, float *out)
+float *ObjHits_ProjectPointToTaperedCapsule3D(float pointRadius, float axial, float baseRadius,
+                                              float tipRadius, float length, float *point,
+                                              float *base, float *tip, float *out)
 {
     float invHalfLength;
     float dir[3];
     float surface[3];
 
     if (axial < lbl_803DE910) {
-        out[0] = p[0] - p0[0];
-        out[1] = p[1] - p0[1];
-        out[2] = p[2] - p0[2];
+        out[0] = point[0] - base[0];
+        out[1] = point[1] - base[1];
+        out[2] = point[2] - base[2];
         Vec3_Normalize(out);
-        radiusA = radiusA + radiusB;
-        out[0] = out[0] * radiusA;
-        out[1] = out[1] * radiusA;
-        out[2] = out[2] * radiusA;
-        out[0] = out[0] + p0[0];
-        out[1] = out[1] + p0[1];
-        out[2] = out[2] + p0[2];
+        pointRadius = pointRadius + baseRadius;
+        out[0] = out[0] * pointRadius;
+        out[1] = out[1] * pointRadius;
+        out[2] = out[2] * pointRadius;
+        out[0] = out[0] + base[0];
+        out[1] = out[1] + base[1];
+        out[2] = out[2] + base[2];
         return out;
     }
-    if (axial > halfLength) {
-        out[0] = p[0] - p1[0];
-        out[1] = p[1] - p1[1];
-        out[2] = p[2] - p1[2];
+    if (axial > length) {
+        out[0] = point[0] - tip[0];
+        out[1] = point[1] - tip[1];
+        out[2] = point[2] - tip[2];
         Vec3_Normalize(out);
-        radiusA = radiusA + radiusC;
-        out[0] = out[0] * radiusA;
-        out[1] = out[1] * radiusA;
-        out[2] = out[2] * radiusA;
-        out[0] = out[0] + p1[0];
-        out[1] = out[1] + p1[1];
-        out[2] = out[2] + p1[2];
+        pointRadius = pointRadius + tipRadius;
+        out[0] = out[0] * pointRadius;
+        out[1] = out[1] * pointRadius;
+        out[2] = out[2] * pointRadius;
+        out[0] = out[0] + tip[0];
+        out[1] = out[1] + tip[1];
+        out[2] = out[2] + tip[2];
         return out;
     }
-    dir[0] = p1[0] - p0[0];
-    dir[1] = p1[1] - p0[1];
-    dir[2] = p1[2] - p0[2];
-    invHalfLength = lbl_803DE918 / halfLength;
+    dir[0] = tip[0] - base[0];
+    dir[1] = tip[1] - base[1];
+    dir[2] = tip[2] - base[2];
+    invHalfLength = lbl_803DE918 / length;
     dir[0] = dir[0] * invHalfLength;
     dir[1] = dir[1] * invHalfLength;
     dir[2] = dir[2] * invHalfLength;
-    Vec3_ScaleAdd(axial, p0, dir, surface);
-    out[0] = p[0] - surface[0];
-    out[1] = p[1] - surface[1];
-    out[2] = p[2] - surface[2];
+    Vec3_ScaleAdd(axial, base, dir, surface);
+    out[0] = point[0] - surface[0];
+    out[1] = point[1] - surface[1];
+    out[2] = point[2] - surface[2];
     Vec3_Normalize(out);
-    invHalfLength = (radiusC - radiusB) * (axial / halfLength);
-    radiusA = invHalfLength + (radiusB + radiusA);
-    out[0] = out[0] * radiusA;
-    out[1] = out[1] * radiusA;
-    out[2] = out[2] * radiusA;
+    invHalfLength = (tipRadius - baseRadius) * (axial / length);
+    pointRadius = invHalfLength + (baseRadius + pointRadius);
+    out[0] = out[0] * pointRadius;
+    out[1] = out[1] * pointRadius;
+    out[2] = out[2] * pointRadius;
     out[0] = out[0] + surface[0];
     out[1] = out[1] + surface[1];
     out[2] = out[2] + surface[2];

@@ -24,12 +24,12 @@ void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double par
 void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double param_3,
                                     undefined4 param_4,undefined4 param_5,int param_6,
                                     int param_7,undefined4 param_8,int param_9,float *param_10);
-float *ObjHits_ProjectPointToTaperedCapsuleXZ(float radiusA,float axial,float radiusB,
-                                              float radiusC,float halfLength,float *p,
-                                              float *p0,float *p1,float *out);
-float *ObjHits_ProjectPointToTaperedCapsule3D(float radiusA,float axial,float radiusB,
-                                              float radiusC,float halfLength,float *p,
-                                              float *p0,float *p1,float *out);
+float *ObjHits_ProjectPointToTaperedCapsuleXZ(float pointRadius,float axial,float baseRadius,
+                                              float tipRadius,float length,float *point,
+                                              float *base,float *tip,float *out);
+float *ObjHits_ProjectPointToTaperedCapsule3D(float pointRadius,float axial,float baseRadius,
+                                              float tipRadius,float length,float *point,
+                                              float *base,float *tip,float *out);
 float *ObjHits_CalcTaperedCapsuleNormal(float axial,float baseRadius,float tipRadius,
                                         float length,float *point,float *base,float *tip,
                                         float *out);
