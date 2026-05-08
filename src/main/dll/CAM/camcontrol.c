@@ -501,7 +501,7 @@ void Camera_setFocus(void *target)
 #pragma peephole off
 void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,s8 triggerMode)
 {
-  uint handlerCount;
+  int handlerCount;
   int handlerIndex;
   void **handlerEntry;
   int blendFrames;
@@ -515,7 +515,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,s8 triggerM
   case CAMCONTROL_TRIGGER_KIND_QUEUE_TYPE1:
     triggerType1Param.actionIndex = actionNo & CAMCONTROL_ACTION_INDEX_MASK;
     triggerType1Param.noBlendFlag = (byte)actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND;
-    *(undefined *)((int)gCamcontrolState + 0x139) = 1;
+    *(undefined *)((int)pCamera + 0x139) = 1;
     if (triggerType1Param.noBlendFlag != 0) {
       blendFrames = 0;
     }
@@ -547,24 +547,24 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,s8 triggerM
     return;
   }
   if (actionNo != CAMCONTROL_ACTION_NO_NONE) {
-    actionOffset = (actionNo - 1) * CAMCONTROL_ACTION_RECORD_SIZE;
     camAction = (CamcontrolTriggeredAction *)mmAlloc(CAMCONTROL_ACTION_RECORD_SIZE,CAMCONTROL_ACTION_HEAP,0);
     if (camAction == (CamcontrolTriggeredAction *)0x0) {
       return;
     }
+    actionOffset = (actionNo - 1) * CAMCONTROL_ACTION_RECORD_SIZE;
     getTabEntry(camAction,CAMCONTROL_ACTION_FILE_ID,actionOffset,CAMCONTROL_ACTION_RECORD_SIZE);
     camAction->triggerMode = triggerMode;
     fn_800E84D8((short)actionNo);
-    if (((((int)gCamcontrolCurrentActionId != CAMCONTROL_ACTION_DEFAULT) &&
-         ((int)gCamcontrolCurrentActionId != CAMCONTROL_ACTION_TRIGGERED)) &&
-        ((int)gCamcontrolCurrentActionId != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
-       ((int)gCamcontrolCurrentActionId != CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
+    if (((((int)lbl_803DD518 != CAMCONTROL_ACTION_DEFAULT) &&
+         ((int)lbl_803DD518 != CAMCONTROL_ACTION_TRIGGERED)) &&
+        ((int)lbl_803DD518 != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
+       ((int)lbl_803DD518 != CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
       handlerIndex = 0;
-      handlerEntry = gCamcontrolHandlers;
-      for (handlerCount = (uint)gCamcontrolHandlerCount; handlerCount != 0;
+      handlerEntry = lbl_803A4228;
+      for (handlerCount = (int)lbl_803DD520; 0 < handlerCount;
            handlerCount = handlerCount - 1) {
-        if (*(short *)*handlerEntry == CAMCONTROL_ACTION_DEFAULT) {
-          handlerIndex = (int)gCamcontrolHandlers[handlerIndex];
+        if (*(u16 *)*handlerEntry == CAMCONTROL_ACTION_DEFAULT) {
+          handlerIndex = (int)lbl_803A4228[handlerIndex];
           goto LAB_80102f3c;
         }
         handlerEntry = handlerEntry + 1;
@@ -572,7 +572,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,s8 triggerM
       }
       handlerIndex = 0;
 LAB_80102f3c:
-      (**(code **)(**(int **)(handlerIndex + 4) + 0x10))(camAction,
+      (*(code *)(**(int **)(handlerIndex + 4) + 0x10))(camAction,
                                                           CAMCONTROL_ACTION_RECORD_SIZE);
     }
     else {
@@ -599,16 +599,16 @@ LAB_80102f3c:
     }
     camAction->triggerMode = triggerMode;
     fn_800E84D8(1);
-    if (((((int)gCamcontrolCurrentActionId != CAMCONTROL_ACTION_DEFAULT) &&
-         ((int)gCamcontrolCurrentActionId != CAMCONTROL_ACTION_TRIGGERED)) &&
-        ((int)gCamcontrolCurrentActionId != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
-       ((int)gCamcontrolCurrentActionId != CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
+    if (((((int)lbl_803DD518 != CAMCONTROL_ACTION_DEFAULT) &&
+         ((int)lbl_803DD518 != CAMCONTROL_ACTION_TRIGGERED)) &&
+        ((int)lbl_803DD518 != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
+       ((int)lbl_803DD518 != CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
       handlerIndex = 0;
-      handlerEntry = gCamcontrolHandlers;
-      for (handlerCount = (uint)gCamcontrolHandlerCount; handlerCount != 0;
+      handlerEntry = lbl_803A4228;
+      for (handlerCount = (int)lbl_803DD520; 0 < handlerCount;
            handlerCount = handlerCount - 1) {
-        if (*(short *)*handlerEntry == CAMCONTROL_ACTION_DEFAULT) {
-          handlerIndex = (int)gCamcontrolHandlers[handlerIndex];
+        if (*(u16 *)*handlerEntry == CAMCONTROL_ACTION_DEFAULT) {
+          handlerIndex = (int)lbl_803A4228[handlerIndex];
           goto LAB_80102f3c_b;
         }
         handlerEntry = handlerEntry + 1;
@@ -616,7 +616,7 @@ LAB_80102f3c:
       }
       handlerIndex = 0;
 LAB_80102f3c_b:
-      (**(code **)(**(int **)(handlerIndex + 4) + 0x10))(camAction,
+      (*(code *)(**(int **)(handlerIndex + 4) + 0x10))(camAction,
                                                           CAMCONTROL_ACTION_RECORD_SIZE);
     }
     else {
