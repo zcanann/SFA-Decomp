@@ -82,6 +82,7 @@ That is useful for SDK matching. These names are not game-specific, but they are
 
 - Use `python tools/orig/developer_artifacts.py --search GameTextData Boot_English_texts` when scaffolding boot text or generated text source.
 - Use `python tools/orig/developer_artifacts.py --search SNG SFX` before introducing audio enums or symbol tables.
+- Use `python tools/orig/audio_symbols.py 0x23 menu_pause --kind SFX` to query the preserved MusyX names without committing the generated header into `src/`.
 - Use `python tools/orig/developer_artifacts.py --search testmod plf` when working on REL/module parsing.
 - Use `python tools/orig/developer_artifacts.py --search dvd.c CRCMain.c` when matching apploader or SDK code.
 
