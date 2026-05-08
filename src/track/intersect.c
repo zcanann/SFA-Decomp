@@ -5789,6 +5789,159 @@ void fn_8007CAF4(void)
  */
 void fn_8007CF7C(void)
 {
+    extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0, lbl_803DEEF4;
+    extern f32 lbl_803DEF40, lbl_803DEF88;
+    extern u8 lbl_803DEF81[8];
+    extern u32 lbl_803DB67C;
+    extern u32 lbl_803DD01C;
+    extern u8 lbl_803DB678;
+    extern f32 gSynthDelayedActionWord0;
+    extern void* gSHthorntailAnimationInterface;
+    extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
+    extern u8 lbl_803DD011, lbl_803DD019;
+    extern int lbl_803DD014;
+    extern void fn_8006CABC(f32* a, f32* b);
+    extern void fn_8006C5E4(int* out);
+    extern void fn_8006C6F0(int);
+    extern int fn_8004C248(void);
+    extern void selectTexture(int handle, int slot);
+    Mtx mtx_cc;
+    Mtx mtx_9c;
+    Mtx mtx_6c;
+    f32 indMtx_54[6];
+    f32 indMtx_3c[6];
+    f32 indMtx_24[6];
+    f32 fA, fB;
+    int handle1;
+    GXColor temp;
+
+    fn_8006CABC(&fA, &fB);
+    fn_8006C6F0(0);
+    GXSetTexCoordGen2(0, 0, 0, 0x1e, 0, 0x7d);
+    fn_8006C5E4(&handle1);
+    selectTexture(handle1, 1);
+
+    PSMTXScale(mtx_cc, lbl_803DEEE4, lbl_803DEEE4, lbl_803DEEE4);
+    mtx_cc[1][3] = fB;
+    GXLoadTexMtxImm(mtx_cc, 0x27, 1);
+    GXSetTexCoordGen2(1, 1, 4, 0x27, 0, 0x7d);
+
+    indMtx_54[0] = gSynthDelayedActionWord0;
+    indMtx_54[1] = lbl_803DEEDC;
+    indMtx_54[2] = lbl_803DEEDC;
+    indMtx_54[3] = lbl_803DEEDC;
+    indMtx_54[4] = gSynthDelayedActionWord0;
+    indMtx_54[5] = lbl_803DEEDC;
+    GXSetIndTexOrder(0, 1, 1);
+    GXSetIndTexCoordScale(0, 0, 0);
+    GXSetIndTexMtx(1, (f32(*)[3])indMtx_54, -2);
+    GXSetTevIndirect(0, 0, 0, 7, 1, 6, 6, 0, 0, 0);
+
+    PSMTXScale(mtx_9c, lbl_803DEF40, lbl_803DEF40, lbl_803DEF40);
+    PSMTXRotRad(mtx_6c, 'z', lbl_803DEEF0);
+    PSMTXConcat(mtx_6c, mtx_9c, mtx_9c);
+    mtx_9c[1][3] = fA;
+    mtx_9c[2][3] = fA;
+    GXLoadTexMtxImm(mtx_9c, 0x2a, 1);
+    GXSetTexCoordGen2(2, 1, 4, 0x2a, 0, 0x7d);
+
+    indMtx_3c[0] = *(f32*)((u8*)lbl_803DEF81 + 3);
+    indMtx_3c[1] = *(f32*)((u8*)lbl_803DEF81 + 3);
+    indMtx_3c[2] = lbl_803DEEDC;
+    indMtx_3c[3] = lbl_803DEF88;
+    indMtx_3c[4] = *(f32*)((u8*)lbl_803DEF81 + 3);
+    indMtx_3c[5] = lbl_803DEEDC;
+    GXSetIndTexOrder(1, 2, 1);
+    GXSetIndTexCoordScale(1, 0, 0);
+    GXSetIndTexMtx(2, (f32(*)[3])indMtx_3c, -4);
+    GXSetTevIndirect(1, 1, 1, 7, 2, 0, 0, 0, 0, 1);
+
+    /* Color setup */
+    if (fn_8004C248() != 0) {
+        ((u8*)&lbl_803DB67C)[0] = ((u8*)&lbl_803DD01C)[0];
+        ((u8*)&lbl_803DB67C)[1] = ((u8*)&lbl_803DD01C)[1];
+        ((u8*)&lbl_803DB67C)[2] = ((u8*)&lbl_803DD01C)[2];
+        ((u8*)&lbl_803DB67C)[3] = 0x80;
+    } else {
+        f32 dummy;
+        (*(void(**)(u8*, u8*, u8*, f32*, f32*, f32*))(*(int*)gSHthorntailAnimationInterface + 0x40))(
+            (u8*)&lbl_803DB67C,
+            (u8*)&lbl_803DB67C + 1,
+            (u8*)&lbl_803DB67C + 2,
+            &dummy, &dummy, &dummy);
+        ((u8*)&lbl_803DB67C)[0] = (u8)((s8)((u8*)&lbl_803DB67C)[0] >> 3);
+        ((u8*)&lbl_803DB67C)[1] = (u8)((s8)((u8*)&lbl_803DB67C)[1] >> 3);
+        ((u8*)&lbl_803DB67C)[2] = (u8)((s8)((u8*)&lbl_803DB67C)[2] >> 3);
+        ((u8*)&lbl_803DB67C)[3] = lbl_803DB678;
+    }
+    *(u32*)&temp = lbl_803DB67C;
+    GXSetTevKColor(0, temp);
+    GXSetTevKAlphaSel(1, 0x1c);
+    GXSetTevKColorSel(1, 0xc);
+
+    GXSetNumIndStages(2);
+    GXSetNumChans(1);
+    GXSetNumTexGens(4);
+    GXSetNumTevStages(4);
+
+    GXSetTevOrder(0, 0xff, 0xff, 0xff);
+    GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xf);
+    GXSetTevAlphaIn(0, 7, 7, 7, 7);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+
+    GXSetTevOrder(1, 0, 0, 0xff);
+    GXSetTevColorIn(1, 0xe, 0xf, 0xf, 8);
+    GXSetTevAlphaIn(1, 7, 7, 7, 6);
+    GXSetTevSwapMode(1, 0, 0);
+    if (fn_8004C248() != 0) {
+        GXSetTevColorOp(1, 0, 0, 3, 1, 1);
+    } else {
+        GXSetTevColorOp(1, 0, 0, 0, 1, 1);
+    }
+    GXSetTevAlphaOp(1, 0, 0, 0, 1, 1);
+
+    indMtx_24[0] = lbl_803DEEDC;
+    indMtx_24[1] = gSynthDelayedActionWord0;
+    indMtx_24[2] = lbl_803DEEDC;
+    indMtx_24[3] = lbl_803DEEF4;
+    indMtx_24[4] = lbl_803DEEDC;
+    indMtx_24[5] = lbl_803DEEDC;
+    GXSetIndTexMtx(3, (f32(*)[3])indMtx_24, -5);
+    GXSetTevIndirect(2, 0, 0, 7, 2, 6, 6, 0, 0, 0);
+    GXSetTevIndirect(3, 1, 0, 7, 3, 0, 0, 0, 0, 1);
+    GXSetTexCoordGen2(3, 0, 0, 0x21, 0, 0x7d);
+
+    GXSetTevOrder(2, 0xff, 0xff, 4);
+    GXSetTevColorIn(2, 0xf, 0xf, 0xf, 0xf);
+    GXSetTevAlphaIn(2, 7, 7, 7, 7);
+    GXSetTevSwapMode(2, 0, 0);
+    GXSetTevColorOp(2, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(2, 0, 0, 0, 1, 0);
+
+    GXSetTevOrder(3, 3, 0, 4);
+    GXSetTevColorIn(3, 8, 2, 3, 0xf);
+    GXSetTevAlphaIn(3, 7, 7, 7, 5);
+    GXSetTevSwapMode(3, 0, 0);
+    GXSetTevColorOp(3, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(3, 0, 0, 0, 1, 0);
+
+    GXSetBlendMode(1, 4, 5, 5);
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+        GXSetZMode(1, 3, 0);
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 3;
+        lbl_803DD012 = 0;
+        lbl_803DD01A = 1;
+    }
+    if ((u32)lbl_803DD011 != 1 || (u32)lbl_803DD019 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DD011 = 1;
+        lbl_803DD019 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
 /*
