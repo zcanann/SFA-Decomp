@@ -104,9 +104,9 @@ extern f32 lbl_803E3E18;
 /*
  * --INFO--
  *
- * Function: kaldachompspit_init
- * EN v1.0 Address: 0x80169CC4
- * EN v1.0 Size: 116b
+ * Function: kaldachompspit_render
+ * EN v1.0 Address: 0x8016984C
+ * EN v1.0 Size: 152b
  * EN v1.1 Address: 0x80169CF8
  * EN v1.1 Size: 156b
  * JP Address: TODO
@@ -114,18 +114,18 @@ extern f32 lbl_803E3E18;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void kaldachompspit_init(void)
+void kaldachompspit_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,
+                           undefined4 param_4,undefined4 param_5,char visible)
 {
   int iVar1;
   int iVar2;
-  char in_r8;
   
   iVar1 = FUN_8028683c();
   iVar2 = **(int **)(iVar1 + 0xb8);
   if (((iVar2 != 0) && (*(char *)(iVar2 + 0x2f8) != '\0')) && (*(char *)(iVar2 + 0x4c) != '\0')) {
     FUN_8005fe14(iVar2);
   }
-  if (in_r8 != '\0') {
+  if (visible != '\0') {
     FUN_8003b818(iVar1);
   }
   FUN_80286888();
@@ -255,9 +255,9 @@ void FUN_80169d38(undefined8 param_1,undefined8 param_2,undefined8 param_3,doubl
 /*
  * --INFO--
  *
- * Function: FUN_8016a24c
- * EN v1.0 Address: 0x8016A24C
- * EN v1.0 Size: 744b
+ * Function: kaldachompspit_init
+ * EN v1.0 Address: 0x80169CC4
+ * EN v1.0 Size: 552b
  * EN v1.1 Address: 0x8016A170
  * EN v1.1 Size: 560b
  * JP Address: TODO
@@ -265,7 +265,7 @@ void FUN_80169d38(undefined8 param_1,undefined8 param_2,undefined8 param_3,doubl
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016a24c(uint param_1)
+void kaldachompspit_init(uint param_1)
 {
   uint uVar1;
   int *piVar2;
