@@ -245,7 +245,7 @@ void sndSetAuxProcessingCallbacks(u32 studio, void *auxACallback, void *auxAUser
  *
  * EN v1.1 Address: 0x80272CC4, size 176b
  */
-void synthActivateStudio(u8 slot, int a, int b)
+void synthActivateStudio(u32 slot, int a, int b)
 {
     sndBegin();
     *(u32 *)(lbl_803BD9C4 + slot * 4) = 0;
