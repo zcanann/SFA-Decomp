@@ -18,9 +18,12 @@ typedef struct ObjHitReactEffectPos {
   f32 scale;
 } ObjHitReactEffectPos;
 
+typedef void (*ObjHitReactEffectSpawnFn)(int parent,int mode,ObjHitReactEffectPos *pos,
+                                         u32 flags,int sequenceId,void *args);
+
 typedef struct ObjHitReactEffectVTable {
-  code pad00;
-  code spawn;
+  void *pad00;
+  ObjHitReactEffectSpawnFn spawn;
 } ObjHitReactEffectVTable;
 
 typedef struct ObjHitReactEffectHandle {
