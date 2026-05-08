@@ -1864,8 +1864,173 @@ void fn_800722B0(double radius, double angle, float* pos, u8* mod)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80072DFC(undefined4 param_1,undefined4 param_2,int param_3)
+void fn_80072DFC(void* obj_a, void** obj_b, int param_3)
 {
+    extern f32 lbl_803DEEDC, lbl_803DEEE4;
+    extern f32 lbl_803DB6B8, lbl_803DB6C0;
+    extern u32 lbl_803DB6BC;
+    extern f32 gSynthDelayedActionWord0;
+    extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
+    extern u8 lbl_803DD011, lbl_803DD019;
+    extern int lbl_803DD014;
+    extern Mtx lbl_80396820;
+    extern f32 lbl_8030EA58[3][3];
+    extern int ObjModel_GetRenderOp(void* model, int slot);
+    extern void* fn_8006C744(void);
+    extern void fn_8006C6F0(int);
+    extern void fn_8006C6A4(int);
+    extern void selectTexture(void* tex, int slot);
+    extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
+    extern void GXSetZMode();
+    extern void GXSetZCompLoc(u8);
+    Mtx mtx_24;
+    Mtx mtx_54;
+    void* renderOp;
+    void* tex;
+    void* model;
+    GXColor temp;
+    void (*pcb)(void*, void**, int);
+    int alpha_byte;
+
+    model = obj_b[0];
+    renderOp = (void*)ObjModel_GetRenderOp(model, param_3);
+    tex = fn_8006C744();
+    fn_8006C6F0(0);
+    selectTexture(tex, 1);
+    fn_8006C6A4(2);
+
+    GXLoadTexMtxImm(lbl_80396820, 0x55, 0);
+    GXSetTexCoordGen2(1, 0, 0, 0, 0, 0x55);
+
+    if (model == 0 || *(u16*)((u8*)model + 0xe6) == 0) {
+        PSMTXScale(mtx_54, lbl_803DB6B8, lbl_803DB6B8, lbl_803DEEDC);
+        mtx_54[2][0] = lbl_803DEEE4;
+        PSMTXTrans(mtx_24, gSynthDelayedActionWord0, gSynthDelayedActionWord0, lbl_803DEEDC);
+        PSMTXConcat(mtx_24, mtx_54, mtx_54);
+    } else {
+        PSMTXScale(mtx_54, lbl_803DEEDC, lbl_803DEEDC, lbl_803DEEDC);
+        mtx_54[0][3] = gSynthDelayedActionWord0;
+        mtx_54[1][3] = gSynthDelayedActionWord0;
+        mtx_54[2][0] = lbl_803DEEE4;
+    }
+    GXLoadTexMtxImm(mtx_54, 0x52, 0);
+    GXSetTexCoordGen2(0, 0, 1, 0x1e, 1, 0x52);
+
+    PSMTXScale(mtx_54, lbl_803DB6C0, lbl_803DB6C0, lbl_803DEEDC);
+    mtx_54[2][0] = lbl_803DEEE4;
+    GXLoadTexMtxImm(mtx_54, 0x4f, 0);
+    GXSetTexCoordGen2(2, 0, 4, 0x3c, 0, 0x4f);
+
+    GXSetIndTexOrder(0, 1, 1);
+    GXSetIndTexCoordScale(0, 0, 0);
+    GXSetIndTexMtx(1, lbl_8030EA58, -1);
+    GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
+    GXSetTevOrder(0, 0, 0, 0xff);
+    GXSetTevColorIn(0, 0xf, 0xf, 0xf, 8);
+    GXSetTevAlphaIn(0, 7, 7, 7, 6);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+
+    GXSetTevDirect(1);
+    GXSetTevOrder(1, 2, 2, 0xff);
+    GXSetTevColorIn(1, 0, 8, 0xe, 0xf);
+    GXSetTevAlphaIn(1, 7, 7, 7, 0);
+    GXSetTevSwapMode(1, 0, 0);
+    GXSetTevColorOp(1, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+
+    GXSetNumIndStages(1);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(0);
+    GXSetNumTexGens(3);
+    GXSetNumTevStages(2);
+
+    alpha_byte = (((u8*)renderOp)[0xc] * ((u8*)obj_a)[0x37]) >> 8;
+    ((u8*)&temp)[3] = (u8)alpha_byte;
+    ((u8*)&temp)[0] = ((u8*)&temp)[0]; /* keep rgb */
+    {
+        u32 tmp_word;
+        tmp_word = *(u32*)&temp;  /* sourced from 0x20 in stack */
+        *(u32*)&temp = tmp_word;
+    }
+    GXSetTevKColor(0, temp);
+    GXSetTevKAlphaSel(0, 0x1c);
+    *(u32*)&temp = lbl_803DB6BC;
+    GXSetTevKColor(1, temp);
+    GXSetTevKColorSel(1, 0xd);
+
+    pcb = (void(*)(void*, void**, int))ObjModel_GetPostRenderCallback(obj_b);
+    if (pcb != 0) {
+        pcb(obj_a, obj_b, param_3);
+    } else {
+        u8 zCompLoc = 1;
+        u32 modelFlags;
+        if (((u8*)obj_a)[0x37] >= 0xff
+            && (*(u32*)((u8*)renderOp + 0x3c) & 0x40000000) == 0
+            && ((u8*)renderOp)[0xc] >= 0xff) {
+            modelFlags = *(u32*)((u8*)renderOp + 0x3c);
+            if ((*(u16*)((u8*)model + 2) & 0x400) != 0) {
+                GXSetBlendMode(0, 1, 0, 5);
+                if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 3 ||
+                    (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+                    GXSetZMode(0, 3, 0);
+                    lbl_803DD018 = 0;
+                    lbl_803DD014 = 3;
+                    lbl_803DD012 = 0;
+                    lbl_803DD01A = 1;
+                }
+            } else {
+                GXSetBlendMode(0, 1, 0, 5);
+                if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+                    (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+                    GXSetZMode(1, 3, 0);
+                    lbl_803DD018 = 1;
+                    lbl_803DD014 = 3;
+                    lbl_803DD012 = 0;
+                    lbl_803DD01A = 1;
+                }
+            }
+            GXSetAlphaCompare(7, 0, 0, 7, 0);
+        } else {
+            if ((*(u16*)((u8*)model + 2) & 0x400) != 0) {
+                GXSetBlendMode(1, 4, 5, 5);
+                if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+                    (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+                    GXSetZMode(1, 3, 0);
+                    lbl_803DD018 = 1;
+                    lbl_803DD014 = 3;
+                    lbl_803DD012 = 0;
+                    lbl_803DD01A = 1;
+                }
+            } else {
+                GXSetBlendMode(1, 4, 5, 5);
+                if ((u32)lbl_803DD018 != 0 || lbl_803DD014 != 3 ||
+                    (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+                    GXSetZMode(0, 3, 0);
+                    lbl_803DD018 = 0;
+                    lbl_803DD014 = 3;
+                    lbl_803DD012 = 0;
+                    lbl_803DD01A = 1;
+                }
+            }
+            GXSetAlphaCompare(7, 0, 0, 7, 0);
+        }
+        if ((*(u32*)((u8*)renderOp + 0x3c) & 0x400) != 0) {
+            zCompLoc = 0;
+        }
+        if (lbl_803DD011 != zCompLoc || lbl_803DD019 == 0) {
+            GXSetZCompLoc(zCompLoc);
+            lbl_803DD011 = zCompLoc;
+            lbl_803DD019 = 1;
+        }
+        if ((*(u32*)((u8*)renderOp + 0x3c) & 0x10) != 0) {
+            GXSetCullMode(2);
+        } else {
+            GXSetCullMode(0);
+        }
+    }
 }
 
 /*
