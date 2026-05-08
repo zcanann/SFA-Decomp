@@ -499,12 +499,10 @@ int dimboss_func08(void)
 void DIMboss_free(DIMbossObject *obj)
 {
   DIMbossRuntime *runtime;
-  DIMbossTopState *topState;
   void *childObject;
   void *effect;
 
   runtime = obj->runtime;
-  topState = runtime->topState;
   GameBit_Set(0xefd,0);
   GameBit_Set(0xc1e,1);
   GameBit_Set(0xc1f,0);
@@ -524,7 +522,7 @@ void DIMboss_free(DIMbossObject *obj)
     Resource_Release(lbl_803DDB88);
   }
   lbl_803DDB88 = 0;
-  effect = topState->effect;
+  effect = runtime->topState->effect;
   if (effect != NULL) {
     fn_8001F384(effect);
   }
@@ -550,12 +548,10 @@ void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
                     undefined4 param_5,char shouldRender)
 {
   DIMbossRuntime *runtime;
-  DIMbossTopState *topState;
   DIMbossEffect *effect;
   int visible;
 
   runtime = obj->runtime;
-  topState = runtime->topState;
   visible = shouldRender;
   if (visible == 0) {
     return;
@@ -569,7 +565,7 @@ void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
   fn_8003B8F4((double)lbl_803E4C44);
   fn_801BB598(obj,runtime);
   fn_80114DEC(obj,lbl_803AC9DC,0);
-  effect = topState->effect;
+  effect = runtime->topState->effect;
   if (effect == NULL) {
     return;
   }
