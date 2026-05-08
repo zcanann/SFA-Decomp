@@ -7,7 +7,7 @@ extern void fn_8026D6E4(u32 value0, u32 value1, u32 handle, u32 mode);
 extern int fn_8027186C(int a, int b, int c);
 extern int fn_80271954(int a, int b, int c);
 extern int fn_80271AC0(int a);
-extern int fn_802717B0(int a, int b, int c, int d, u8 e);
+extern int fn_802717B0(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux);
 extern int fn_80271B4C(int a, int b, int c, int d, int e);
 extern int vidGetInternalId(u32 id);
 extern void fn_80273870(void);

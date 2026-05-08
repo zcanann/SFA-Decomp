@@ -16,7 +16,27 @@ void fn_8026FC8C(void) {}
  * fn_8026FEEC - voice handler (~664 instructions). Stubbed.
  */
 #pragma dont_inline on
-void fn_8026FEEC(void) {}
+int fn_8026FEEC(u32 sampleId, u8 key, u8 velocity, u32 flags, u32 volume, u32 pan, u32 param_7,
+                u32 param_8, u32 param_9, u32 param_10, u32 param_11, u8 auxIndex, u32 param_13,
+                u32 studio, u8 studioAux)
+{
+    (void)sampleId;
+    (void)key;
+    (void)velocity;
+    (void)flags;
+    (void)volume;
+    (void)pan;
+    (void)param_7;
+    (void)param_8;
+    (void)param_9;
+    (void)param_10;
+    (void)param_11;
+    (void)auxIndex;
+    (void)param_13;
+    (void)studio;
+    (void)studioAux;
+    return 0;
+}
 #pragma dont_inline reset
 
 /*
@@ -137,10 +157,36 @@ void fn_80271498(void) {}
 /*
  * fn_802717B0 - voice handler (~188 instructions). Stubbed.
  */
-#pragma dont_inline on
-int fn_802717B0(int a, int b, int c, int d, u8 e)
+typedef struct SynthFxSampleInfo {
+    u8 pad00[2];
+    u16 sampleId;
+    u8 velocity;
+    u8 key;
+    u8 defaultVolume;
+    u8 defaultPan;
+    u8 flags;
+    u8 auxIndex;
+} SynthFxSampleInfo;
+
+extern SynthFxSampleInfo *fn_802751B8(u32 fxId);
+
+int fn_802717B0(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux)
 {
-    (void)a; (void)b; (void)c; (void)d; (void)e;
-    return 0;
+    SynthFxSampleInfo *sampleInfo;
+    u32 handle;
+
+    handle = 0xFFFFFFFF;
+    sampleInfo = fn_802751B8(fxId);
+    if (sampleInfo != (SynthFxSampleInfo *)0x0) {
+        if ((volume & 0xff) == 0xff) {
+            volume = sampleInfo->defaultVolume;
+        }
+        if ((pan & 0xff) == 0xff) {
+            pan = sampleInfo->defaultPan;
+        }
+        handle = fn_8026FEEC(sampleInfo->sampleId, sampleInfo->key, sampleInfo->velocity,
+                             sampleInfo->flags | 0x80, volume, pan, 0xff, 0xff, 0, 0, 0xff,
+                             sampleInfo->auxIndex, 0, studio, studioAux);
+    }
+    return handle;
 }
-#pragma dont_inline reset
