@@ -7,9 +7,12 @@ extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
 extern u8 *Obj_GetPlayerObject(void);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 
+extern void fn_80206474(void);
+
 extern u8 gDfpfloorbarModeTable[9];
 extern undefined4 *lbl_803DCAAC;
 extern f32 timeDelta;
+extern f32 lbl_803E6408;
 extern f32 lbl_803E640C;
 extern f32 lbl_803E6410;
 extern f32 lbl_803E6414;
@@ -18,6 +21,7 @@ extern f32 lbl_803E641C;
 extern f32 lbl_803E6420;
 extern f32 lbl_803E6424;
 extern f32 lbl_803E6428;
+extern f32 lbl_803E642C;
 
 /*
  * --INFO--
@@ -162,6 +166,38 @@ void dfpfloorbar_update(int param_1)
 void dfpfloorbar_release(void)
 {
 }
+
+/*
+ * --INFO--
+ *
+ * Function: dfpfloorbar_init
+ * EN v1.0 Address: 0x80206844
+ * EN v1.0 Size: 228b
+ */
+#pragma scheduling off
+#pragma peephole off
+void dfpfloorbar_init(int obj, int params)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    *(s16 *)(obj + 0x0) = (s16)((s8)*(u8 *)(params + 0x18) << 8);
+    *(int *)(obj + 0xbc) = (int)&fn_80206474;
+    *(u8 *)(state + 0x5) = *(u8 *)(params + 0x19);
+    *(s16 *)(state + 0x0) = *(s16 *)(params + 0x1e);
+    *(s16 *)(state + 0x2) = *(s16 *)(params + 0x20);
+    *(int *)(state + 0x8) = 0;
+
+    if (*(s16 *)(params + 0x1c) != 0) {
+        *(f32 *)(obj + 0x8) = lbl_803E6408 / ((f32)(s32)*(s16 *)(params + 0x1c) / lbl_803E642C);
+    }
+
+    if (GameBit_Get((int)*(s16 *)(state + 0x2)) != 0) {
+        *(u8 *)(state + 0x4) = 1;
+        *(f32 *)(obj + 0x10) = *(f32 *)(params + 0xc) - lbl_803E640C;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* EN v1.0 0x8020692C  size: 60b  Zero out the 9-byte mode table by
  * walking three rows of 3 bytes each. The asm has explicit
