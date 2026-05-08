@@ -1442,6 +1442,8 @@ uint ObjGroup_ContainsObject(uint obj,int group)
   uint *entry;
   uint index;
   uint limit;
+  uint limitXorIndex;
+  int halfDiff;
 
   if ((group < 0) || (group >= 0x54)) {
     return 0;
@@ -1451,7 +1453,10 @@ uint ObjGroup_ContainsObject(uint obj,int group)
   for (entry = (uint *)gObjGroupObjects + index; ((int)index < (int)limit && (obj != *entry));
       entry = entry + 1, index = index + 1) {
   }
-  return ((int)(limit ^ index) >> 1) - ((limit ^ index) & limit) >> 0x1f;
+  limitXorIndex = limit ^ index;
+  halfDiff = (int)limitXorIndex >> 1;
+  limitXorIndex = limitXorIndex & limit;
+  return (uint)(halfDiff - limitXorIndex) >> 0x1f;
 }
 #pragma peephole reset
 #pragma scheduling reset
