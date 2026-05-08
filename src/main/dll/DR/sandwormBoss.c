@@ -62,6 +62,7 @@ extern undefined4 FUN_8003add8();
 extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
 extern undefined4 FUN_8003b818();
+extern void fn_8003B8F4(f32);
 extern int FUN_80057690();
 extern int FUN_800620e8();
 extern int FUN_800632e8();
@@ -166,6 +167,7 @@ extern f32 lbl_803DCAAC;
 extern f32 lbl_803DCAB4;
 extern f32 lbl_803DCAC0;
 extern f32 lbl_803DCAC4;
+extern f32 lbl_803E4228;
 extern f32 lbl_803E4DA8;
 extern f32 lbl_803E4DB8;
 extern f32 lbl_803E4DBC;
@@ -2607,15 +2609,15 @@ void babycloudrunner_func08(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 babycloudrunner_render(undefined4 param_1,undefined4 param_2,int param_3)
+void babycloudrunner_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  uint uVar1;
-  
-  uVar1 = FUN_80017690(0x4d);
-  if (uVar1 != 0) {
-    *(undefined *)(param_3 + 0x90) = 4;
+  s32 isVisible;
+
+  isVisible = visible;
+  if (isVisible != 0) {
+    fn_8003B8F4(lbl_803E4228);
   }
-  return 0;
+  return;
 }
 
 /*
