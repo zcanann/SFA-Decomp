@@ -8,7 +8,7 @@ extern double fn_80010EE0();
 extern undefined4 getButtonsJustPressed();
 extern int FUN_80017730();
 extern undefined4 FUN_80017830();
-extern undefined4 FUN_8010910c();
+extern undefined4 fn_8010A104();
 extern undefined4 pathcam_buildWindowSamples();
 extern undefined8 pathcam_findTaggedNodeWindow();
 extern double fn_8010AC48();
@@ -16,7 +16,7 @@ extern undefined4 fn_8010AEA8();
 extern undefined4 FUN_8010b218();
 extern undefined8 FUN_8028683c();
 extern undefined4 FUN_80286888();
-extern undefined4 FUN_80293900();
+extern undefined4 sqrtf();
 
 extern u8 framesThisStep;
 extern int *lbl_803DCA50;
@@ -229,7 +229,7 @@ void fn_8010B424(short *param_1,undefined8 param_2,undefined8 param_3,undefined8
       *psVar3 = -0x8000 - (short)iVar6;
     }
     if ((bVar2 & 2) != 0) {
-      FUN_80293900((double)(float)(dVar17 * dVar17 + (double)(float)(dVar14 * dVar14)));
+      sqrtf((double)(float)(dVar17 * dVar17 + (double)(float)(dVar14 * dVar14)));
       uVar7 = FUN_80017730();
       dVar14 = fn_80010C64(dVar16,afStack_e8,(float *)0x0);
       local_78 = (double)CONCAT44(0x43300000,uVar7 & 0xffff ^ 0x80000000);
