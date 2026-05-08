@@ -17,7 +17,6 @@ extern undefined4 FUN_80017640();
 extern undefined4 FUN_80017700();
 extern undefined4 FUN_80017704();
 extern void setMatrixFromObjectTransposed(void *transform,float *mtx);
-extern double FUN_80017714();
 extern float fn_800216D0(float *posA,float *posB);
 extern float Vec_distance(float *param_1,float *param_2);
 extern int FUN_80017730();
@@ -42,7 +41,7 @@ extern undefined4 FUN_80053ab4();
 extern int * fn_8005B11C();
 extern void debugPrintf(const char *fmt, ...);
 extern undefined4 FUN_80247618();
-extern double FUN_802480c0();
+extern float PSVECSquareDistance(float *a,float *b);
 extern undefined8 FUN_80286834();
 extern ulonglong FUN_80286838();
 extern longlong FUN_8028683c();
@@ -84,6 +83,7 @@ extern f64 DOUBLE_803df640;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DCBE8;
 extern f32 lbl_803DE914;
+extern f32 lbl_803DE968;
 extern f32 lbl_803DE97C;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
@@ -1460,43 +1460,38 @@ uint ObjGroup_ContainsObject(uint obj,int group)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjGroup_FindNearestObjectToPoint(undefined4 param_1,undefined4 param_2,float *param_3)
+int ObjGroup_FindNearestObjectToPoint(int group,float *point,float *maxDistance)
 {
-  byte bVar1;
-  int iVar2;
-  uint uVar3;
-  int iVar4;
-  int *piVar5;
-  double dVar6;
-  double dVar7;
-  longlong lVar8;
+  uint nearest;
+  uint index;
+  uint limit;
+  uint *entry;
+  float distanceSq;
+  float bestDistanceSq;
   
-  lVar8 = FUN_8028683c();
-  iVar2 = (int)((ulonglong)lVar8 >> 0x20);
-  iVar4 = 0;
-  dVar7 = (double)(*param_3 * *param_3);
-  if ((-1 < lVar8) && (lVar8 < 0x5400000000)) {
-    uVar3 = (uint)gObjGroupOffsets[iVar2];
-    bVar1 = gObjGroupOffsets[iVar2 + 1];
-    piVar5 = gObjGroupObjects + uVar3;
-    while ((int)uVar3 < (int)(uint)bVar1) {
-      if (*piVar5 != 0) {
-        dVar6 = FUN_802480c0((float *)lVar8,(float *)(*piVar5 + 0x18));
-        if (dVar6 < dVar7) {
-          iVar4 = *piVar5;
-          dVar7 = dVar6;
-        }
-        piVar5 = piVar5 + 1;
-        uVar3 = uVar3 + 1;
+  nearest = 0;
+  bestDistanceSq = *maxDistance * *maxDistance;
+  if ((group < 0) || (group >= 0x54)) {
+    return 0;
+  }
+  index = (uint)gObjGroupOffsets[group];
+  limit = (uint)gObjGroupOffsets[group + 1];
+  entry = (uint *)gObjGroupObjects + index;
+  while ((int)index < (int)limit) {
+    if (*entry != 0) {
+      distanceSq = PSVECSquareDistance(point,(float *)(*entry + 0x18));
+      if (distanceSq < bestDistanceSq) {
+        bestDistanceSq = distanceSq;
+        nearest = *entry;
       }
     }
-    if (iVar4 != 0) {
-      dVar7 = FUN_80293900(dVar7);
-      *param_3 = (float)dVar7;
-    }
+    entry++;
+    index++;
   }
-  FUN_80286888();
-  return;
+  if (nearest != 0) {
+    *maxDistance = sqrtf(bestDistanceSq);
+  }
+  return nearest;
 }
 
 /*
@@ -1514,46 +1509,43 @@ void ObjGroup_FindNearestObjectToPoint(undefined4 param_1,undefined4 param_2,flo
  */
 #pragma scheduling off
 #pragma peephole off
-void ObjGroup_FindNearestObjectForObject(undefined4 param_1,undefined4 param_2,float *param_3)
+int ObjGroup_FindNearestObjectForObject(int group,uint obj,float *maxDistance)
 {
-  byte bVar1;
-  float fVar2;
-  int iVar3;
-  uint uVar4;
-  int iVar5;
-  int *piVar6;
-  double dVar7;
-  double dVar8;
-  longlong lVar9;
+  uint nearest;
+  uint index;
+  uint limit;
+  uint *entry;
+  float distanceSq;
+  float bestDistanceSq;
   
-  lVar9 = FUN_8028683c();
-  iVar3 = (int)((ulonglong)lVar9 >> 0x20);
-  iVar5 = 0;
-  if ((-1 < lVar9) && (lVar9 < 0x5400000000)) {
-    fVar2 = lbl_803DF5E8;
-    if (param_3 != (float *)0x0) {
-      fVar2 = *param_3 * *param_3;
-    }
-    dVar8 = (double)fVar2;
-    uVar4 = (uint)gObjGroupOffsets[iVar3];
-    bVar1 = gObjGroupOffsets[iVar3 + 1];
-    piVar6 = gObjGroupObjects + uVar4;
-    for (; (int)uVar4 < (int)(uint)bVar1; uVar4 = uVar4 + 1) {
-      if ((*piVar6 != (int)lVar9) &&
-         (dVar7 = FUN_80017714((float *)((int)lVar9 + 0x18),(float *)(*piVar6 + 0x18)),
-         dVar7 < dVar8)) {
-        iVar5 = *piVar6;
-        dVar8 = dVar7;
-      }
-      piVar6 = piVar6 + 1;
-    }
-    if ((iVar5 != 0) && (param_3 != (float *)0x0)) {
-      dVar8 = FUN_80293900(dVar8);
-      *param_3 = (float)dVar8;
-    }
+  nearest = 0;
+  if ((group < 0) || (group >= 0x54)) {
+    return 0;
   }
-  FUN_80286888();
-  return;
+  if (maxDistance != (float *)0x0) {
+    bestDistanceSq = *maxDistance * *maxDistance;
+  }
+  else {
+    bestDistanceSq = lbl_803DE968;
+  }
+  index = (uint)gObjGroupOffsets[group];
+  limit = (uint)gObjGroupOffsets[group + 1];
+  entry = (uint *)gObjGroupObjects + index;
+  while ((int)index < (int)limit) {
+    if (*entry != obj) {
+      distanceSq = fn_800216D0((float *)(obj + 0x18),(float *)(*entry + 0x18));
+      if (distanceSq < bestDistanceSq) {
+        bestDistanceSq = distanceSq;
+        nearest = *entry;
+      }
+    }
+    entry++;
+    index++;
+  }
+  if ((nearest != 0) && (maxDistance != (float *)0x0)) {
+    *maxDistance = sqrtf(bestDistanceSq);
+  }
+  return nearest;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1573,46 +1565,43 @@ void ObjGroup_FindNearestObjectForObject(undefined4 param_1,undefined4 param_2,f
  */
 #pragma scheduling off
 #pragma peephole off
-void ObjGroup_FindNearestObject(undefined4 param_1,undefined4 param_2,float *param_3)
+int ObjGroup_FindNearestObject(int group,uint obj,float *maxDistance)
 {
-  byte bVar1;
-  float fVar2;
-  int iVar3;
-  uint uVar4;
-  int iVar5;
-  int *piVar6;
-  double dVar7;
-  double dVar8;
-  longlong lVar9;
+  uint nearest;
+  uint index;
+  uint limit;
+  uint *entry;
+  float distanceSq;
+  float bestDistanceSq;
   
-  lVar9 = FUN_8028683c();
-  iVar3 = (int)((ulonglong)lVar9 >> 0x20);
-  iVar5 = 0;
-  if ((-1 < lVar9) && (lVar9 < 0x5400000000)) {
-    fVar2 = lbl_803DF5E8;
-    if (param_3 != (float *)0x0) {
-      fVar2 = *param_3 * *param_3;
-    }
-    dVar8 = (double)fVar2;
-    uVar4 = (uint)gObjGroupOffsets[iVar3];
-    bVar1 = gObjGroupOffsets[iVar3 + 1];
-    piVar6 = gObjGroupObjects + uVar4;
-    for (; (int)uVar4 < (int)(uint)bVar1; uVar4 = uVar4 + 1) {
-      if ((*piVar6 != (int)lVar9) &&
-         (dVar7 = FUN_80017714((float *)((int)lVar9 + 0x18),(float *)(*piVar6 + 0x18)),
-         dVar7 < dVar8)) {
-        iVar5 = *piVar6;
-        dVar8 = dVar7;
-      }
-      piVar6 = piVar6 + 1;
-    }
-    if ((iVar5 != 0) && (param_3 != (float *)0x0)) {
-      dVar8 = FUN_80293900(dVar8);
-      *param_3 = (float)dVar8;
-    }
+  nearest = 0;
+  if ((group < 0) || (group >= 0x54)) {
+    return 0;
   }
-  FUN_80286888();
-  return;
+  if (maxDistance != (float *)0x0) {
+    bestDistanceSq = *maxDistance * *maxDistance;
+  }
+  else {
+    bestDistanceSq = lbl_803DE968;
+  }
+  index = (uint)gObjGroupOffsets[group];
+  limit = (uint)gObjGroupOffsets[group + 1];
+  entry = (uint *)gObjGroupObjects + index;
+  while ((int)index < (int)limit) {
+    if (*entry != obj) {
+      distanceSq = fn_800216D0((float *)(obj + 0x18),(float *)(*entry + 0x18));
+      if (distanceSq < bestDistanceSq) {
+        bestDistanceSq = distanceSq;
+        nearest = *entry;
+      }
+    }
+    entry++;
+    index++;
+  }
+  if ((nearest != 0) && (maxDistance != (float *)0x0)) {
+    *maxDistance = sqrtf(bestDistanceSq);
+  }
+  return nearest;
 }
 #pragma peephole reset
 #pragma scheduling reset
