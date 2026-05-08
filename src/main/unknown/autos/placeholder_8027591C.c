@@ -4,8 +4,15 @@ extern u8 *lbl_803DE268;
 extern int fn_80278B94(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8,
                        int p9, int p10, int p11, int p12, int p13, int p14, int p15, int p16);
 extern void fn_80271A3C(int voice, int state);
+void fn_80275CB8(int state);
 extern void sndConvertMs(u32 *p);
 extern void sndConvertTicks(u32 *p, int state);
+extern int fn_80274F20(u32 key, u32 *out);
+extern void hwInitSamplePlayback(u32 voice, u32 sampleId, u32 *sampleInfo, u32 noKeySync,
+                                 u32 priority, u32 handle, u32 noStartOffset, u8 restart);
+extern u32 countLeadingZeros(u32 value);
+extern void fn_80271370(int state);
+extern u32 lbl_803CA2B0[];
 
 /*
  * fn_802757C4 - voice param/key/velocity processor.
@@ -75,11 +82,50 @@ void fn_802757C4(int state, int args)
 }
 
 /*
- * fn_8027595C - voice processor (~476 instructions). Stubbed.
+ * Resolve a sample descriptor and start hardware playback for a voice.
  */
-#pragma dont_inline on
-void fn_8027595C(void) {}
-#pragma dont_inline reset
+void fn_8027595C(int state, u32 *args)
+{
+    int found;
+    u32 mode;
+    u32 noStartOffset;
+    u32 noKeySync;
+    u32 sampleId;
+
+    sampleId = (*args >> 8) & 0xffff;
+    found = fn_80274F20(sampleId, lbl_803CA2B0);
+    if (found == 0) {
+        mode = *args >> 0x18;
+        if (mode == 1) {
+            lbl_803CA2B0[3] =
+                (args[1] * (0x7f - ((*(u32 *)(state + 0x154) >> 0x10) & 0xff))) / 0x7f;
+        } else if (mode == 0) {
+            lbl_803CA2B0[3] = args[1];
+        } else if (mode < 3) {
+            lbl_803CA2B0[3] =
+                (args[1] * ((*(u32 *)(state + 0x154) >> 0x10) & 0xff)) / 0x7f;
+        } else {
+            lbl_803CA2B0[3] = 0;
+        }
+        if (lbl_803CA2B0[4] <= lbl_803CA2B0[3]) {
+            lbl_803CA2B0[3] = lbl_803CA2B0[4] - 1;
+        }
+        noStartOffset = countLeadingZeros(*(u32 *)(state + 0x114) & 0x800);
+        noKeySync = countLeadingZeros(*(u32 *)(state + 0x118) & 0x100);
+        hwInitSamplePlayback(*(u32 *)(state + 0xf4) & 0xff, sampleId, lbl_803CA2B0,
+                             noKeySync >> 5,
+                             ((u32)*(u8 *)(state + 0x10c) << 0x18) |
+                                 (*(u32 *)(state + 0x110) >> 0xf),
+                             *(u32 *)(state + 0xf4), noStartOffset >> 5,
+                             *(u8 *)(state + 0x193));
+        *(u32 *)(state + 0x124) = lbl_803CA2B0[0];
+        if (*(int *)(state + 0x128) != -1) {
+            fn_80275CB8(state);
+        }
+        *(u32 *)(state + 0x118) |= 0x20;
+        fn_80271370(state);
+    }
+}
 
 /*
  * Configure the voice pitch bend ramp and curve flags.
@@ -142,7 +188,10 @@ void fn_80275B38(int state, u32 *args)
  * fn_80275CB8 - voice processor (~400 instructions). Stubbed.
  */
 #pragma dont_inline on
-void fn_80275CB8(void) {}
+void fn_80275CB8(int state)
+{
+    (void)state;
+}
 #pragma dont_inline reset
 
 /*
