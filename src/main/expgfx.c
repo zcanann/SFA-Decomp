@@ -478,7 +478,7 @@ void expgfx_initialise(void)
 int expgfx_reserveSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
                        int preferredPoolIndex,uint sourceId)
 {
-  bool foundPool;
+  short foundPool;
   short poolIndex;
   u8 *expgfxBase;
   char *poolActiveCounts;
