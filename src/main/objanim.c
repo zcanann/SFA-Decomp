@@ -387,7 +387,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   int frameStep;
   int moveIndex;
   int moveData;
-  u64 frameBits;
+  float eventStepFrames;
   objAnim = (ObjAnimComponent *)objAnimArg;
   if (moveProgress > lbl_803DE8E0) {
     moveProgress = lbl_803DE8E0;
@@ -437,17 +437,16 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   }
   state->frameData = (u8 *)(moveData + OBJANIM_FRAME_CMD_OFFSET);
   state->frameType = *(s8 *)(moveData + 1) & OBJANIM_FRAME_TYPE_MASK;
-  frameBits = CONCAT44(0x43300000, (uint)state->frameData[1]);
-  state->segmentLength = *(f64 *)&frameBits - lbl_803DE8E8;
+  state->segmentLength = ObjAnim_U32AsDouble((uint)state->frameData[1]) - lbl_803DE8E8;
   if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
     state->segmentLength = state->segmentLength - lbl_803DE8E0;
   }
   frameStep = *(s8 *)(moveData + 1) & OBJANIM_FRAME_STEP_MASK;
   if (frameStep != 0) {
     state->savedStep = state->step;
-    state->eventStep =
-         (int)(lbl_803DE8F4 /
-               (float)(ObjAnim_U32AsDouble(frameStep ^ 0x80000000) - lbl_803DE900));
+    eventStepFrames = lbl_803DE8F4 /
+                      (ObjAnim_U32AsDouble(frameStep ^ 0x80000000) - lbl_803DE900);
+    state->eventStep = (int)eventStepFrames;
     state->eventCountdown = OBJANIM_EVENT_COUNTDOWN_RESET;
   }
   state->step = lbl_803DE8F0;
@@ -1127,7 +1126,7 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
   int moveIndex;
   int moveData;
   f32 clampedProgress;
-  u64 frameBits;
+  float eventStepFrames;
   ObjHitReactState *hitState;
 
   objAnim = (ObjAnimComponent *)objAnimArg;
@@ -1190,17 +1189,16 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
   }
   state->frameData = (u8 *)(moveData + OBJANIM_FRAME_CMD_OFFSET);
   state->frameType = *(s8 *)(moveData + 1) & OBJANIM_FRAME_TYPE_MASK;
-  frameBits = CONCAT44(0x43300000, (uint)state->frameData[1]);
-  state->segmentLength = *(f64 *)&frameBits - lbl_803DE8E8;
+  state->segmentLength = ObjAnim_U32AsDouble((uint)state->frameData[1]) - lbl_803DE8E8;
   if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
     state->segmentLength = state->segmentLength - lbl_803DE8E0;
   }
   frameStep = *(s8 *)(moveData + 1) & OBJANIM_FRAME_STEP_MASK;
   if ((frameStep != 0) && ((flags & OBJANIM_SET_MOVE_FLAG_SKIP_EVENT_COUNTDOWN) == 0)) {
     state->savedStep = state->step;
-    state->eventStep =
-         (int)(lbl_803DE8F4 /
-               (float)(ObjAnim_U32AsDouble(frameStep ^ 0x80000000) - lbl_803DE900));
+    eventStepFrames = lbl_803DE8F4 /
+                      (ObjAnim_U32AsDouble(frameStep ^ 0x80000000) - lbl_803DE900);
+    state->eventStep = (int)eventStepFrames;
     state->eventCountdown = OBJANIM_EVENT_COUNTDOWN_RESET;
   }
   else {
