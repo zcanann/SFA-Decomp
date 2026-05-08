@@ -1886,6 +1886,7 @@ undefined4 ObjMsg_Pop(void *obj,uint *outMessage,uint *outSender,uint *outParam)
 {
   uint i;
   ObjMsgQueue *queue;
+  ObjMsgQueueSlotBase *slot;
 
   if (obj == (void *)0x0) {
     return 0;
@@ -1903,9 +1904,10 @@ undefined4 ObjMsg_Pop(void *obj,uint *outMessage,uint *outSender,uint *outParam)
       *outParam = queue->entries[0].param;
     }
     for (i = 0; i < queue->count; i = i + 1) {
-      queue->entries[i].message = queue->entries[i + 1].message;
-      queue->entries[i].sender = queue->entries[i + 1].sender;
-      queue->entries[i].param = queue->entries[i + 1].param;
+      slot = (ObjMsgQueueSlotBase *)((byte *)queue + ((i + i + i) << 2));
+      slot->entry.message = *(uint *)((byte *)slot + 0x14);
+      slot->entry.sender = *(uint *)((byte *)slot + 0x18);
+      slot->entry.param = *(uint *)((byte *)slot + 0x1c);
     }
     return 1;
   }
