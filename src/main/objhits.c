@@ -1,14 +1,14 @@
 #include "ghidra_import.h"
 #include "main/objhits.h"
 
-extern undefined8 FUN_80003494();
-extern undefined4 FUN_800068f0();
-extern undefined4 FUN_800068f8();
-extern uint FUN_80017730();
+extern undefined8 memcpy();
+extern undefined4 Obj_TransformWorldPointToLocal();
+extern undefined4 Obj_TransformLocalPointToWorld();
+extern uint getAngle();
 extern undefined4 FUN_8001774c();
 extern undefined4 FUN_80017754();
 extern int FUN_80017970();
-extern undefined4 FUN_80017b00();
+extern undefined4 ObjList_GetObjects();
 extern undefined4 ObjHits_RecordObjectHit();
 extern undefined4 ObjHits_RecordPositionHit();
 extern undefined4 ObjContact_DispatchCallbacks();
@@ -31,8 +31,8 @@ extern undefined4 FUN_80286874();
 extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286880();
 extern undefined4 FUN_8028688c();
-extern double FUN_80293900();
-extern undefined4 FUN_80294964();
+extern double sqrtf();
+extern undefined4 sin();
 
 extern undefined4* DAT_80341558;
 extern int DAT_8034155c;
@@ -188,7 +188,7 @@ void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double para
     local_c4 = *(float *)(iVar6 + 0xc);
     local_c0 = *(float *)(iVar6 + 0x1c);
     local_bc = *(float *)(iVar6 + 0x2c);
-    dVar17 = FUN_80293900((double)((local_bc - pfVar5[2]) * (local_bc - pfVar5[2]) +
+    dVar17 = sqrtf((double)((local_bc - pfVar5[2]) * (local_bc - pfVar5[2]) +
                                   (local_c4 - *pfVar5) * (local_c4 - *pfVar5) + lbl_803DF590));
     dVar17 = (double)(float)(dVar17 - dVar20);
     dVar23 = (double)(*pfVar5 + *pfVar5);
@@ -251,7 +251,7 @@ void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double para
             if (uVar8 != 0) {
               *(undefined *)(*(int *)(iVar9 + 0x18) + uVar13) = 1;
               *(undefined *)(*(int *)(iVar9 + 0x18) + iVar12) = 1;
-              dVar18 = FUN_80293900((double)local_e4);
+              dVar18 = sqrtf((double)local_e4);
               param_7[0xc] = (int)(float)(dVar20 + (double)(float)(dVar18 - (double)local_e8));
               if (lbl_803DF590 == (float)param_7[0xc]) {
                 param_7[0xc] = (int)lbl_803DF5A0;
@@ -275,7 +275,7 @@ void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double para
               param_7[7] = (int)local_c8;
               param_7[0xb] = (int)local_e0;
               param_7[0xe] = (int)local_e8;
-              dVar18 = FUN_80293900((double)local_e4);
+              dVar18 = sqrtf((double)local_e4);
               param_7[0xd] = (int)(float)dVar18;
               param_7[8] = (int)local_dc;
               param_7[9] = (int)local_d8;
@@ -400,7 +400,7 @@ void ObjHits_CollectSkeletonHits3D(undefined4 param_1,undefined4 param_2,int *pa
     local_a4 = *(float *)(iVar5 + 0xc);
     local_a0 = *(float *)(iVar5 + 0x1c);
     local_9c = *(float *)(iVar5 + 0x2c);
-    dVar16 = FUN_80293900((double)((local_9c - pfVar4[2]) * (local_9c - pfVar4[2]) +
+    dVar16 = sqrtf((double)((local_9c - pfVar4[2]) * (local_9c - pfVar4[2]) +
                                   (local_a4 - *pfVar4) * (local_a4 - *pfVar4) + lbl_803DF590));
     dVar16 = (double)(float)(dVar16 - dVar20);
     dVar23 = (double)(*pfVar4 + *pfVar4);
@@ -450,7 +450,7 @@ void ObjHits_CollectSkeletonHits3D(undefined4 param_1,undefined4 param_2,int *pa
           if (uVar7 != 0) {
             *(undefined *)(*(int *)(iVar8 + 0x18) + uVar12) = 1;
             *(undefined *)(*(int *)(iVar8 + 0x18) + iVar11) = 1;
-            dVar17 = FUN_80293900((double)local_c4);
+            dVar17 = sqrtf((double)local_c4);
             param_4[0xc] = (int)(float)(dVar20 + (double)(float)(dVar17 - (double)local_c8));
             if (lbl_803DF590 == (float)param_4[0xc]) {
               param_4[0xc] = (int)lbl_803DF5A0;
@@ -474,7 +474,7 @@ void ObjHits_CollectSkeletonHits3D(undefined4 param_1,undefined4 param_2,int *pa
             param_4[7] = (int)local_a8;
             param_4[0xb] = (int)local_c0;
             param_4[0xe] = (int)local_c8;
-            dVar17 = FUN_80293900((double)local_c4);
+            dVar17 = sqrtf((double)local_c4);
             param_4[0xd] = (int)(float)dVar17;
             param_4[8] = (int)local_bc;
             param_4[9] = (int)local_b8;
@@ -1696,7 +1696,7 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
     dVar41 = (double)(*(float *)(iVar14 + 0x18) - *(float *)(iVar15 + 0x18));
     dVar40 = (double)(*(float *)(iVar14 + 0x1c) - *(float *)(iVar15 + 0x1c));
     dVar39 = (double)(*(float *)(iVar14 + 0x20) - *(float *)(iVar15 + 0x20));
-    dVar32 = FUN_80293900((double)(float)(dVar39 * dVar39 +
+    dVar32 = sqrtf((double)(float)(dVar39 * dVar39 +
                                          (double)(float)(dVar41 * dVar41 +
                                                         (double)(float)(dVar40 * dVar40))));
     if (dVar32 <= (double)(lbl_803DF5B4 + (float)(dVar44 + dVar42))) {
@@ -1857,7 +1857,7 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
                           (double)lbl_803DF590 <= dVar34 ||
                           ((double)(float)(dVar34 * dVar34) <= dVar33)))) {
                         unaff_r26 = 1;
-                        dVar32 = FUN_80293900(dVar33);
+                        dVar32 = sqrtf(dVar33);
                         dVar32 = (double)(local_1c8 * -(float)(dVar35 + dVar32));
                         dVar41 = (double)(float)(in_f21 * dVar32 + dVar38);
                         dVar40 = (double)(float)(in_f20 * dVar32 + dVar37);
@@ -1871,7 +1871,7 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
                 }
                 if ((unaff_r26 != 0) && (iVar16 < 0x40)) {
                   if (cVar19 == '\0') {
-                    in_f22 = FUN_80293900((double)(float)(dVar39 * dVar39 +
+                    in_f22 = sqrtf((double)(float)(dVar39 * dVar39 +
                                                          (double)(float)(dVar41 * dVar41 +
                                                                         (double)(float)(dVar40 * 
                                                   dVar40))));
@@ -1886,8 +1886,8 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
                     pfVar29[4] = (float)(dVar39 * dVar33);
                   }
                   else if ((double)lbl_803DF590 < dVar32) {
-                    dVar33 = FUN_80293900(in_f22);
-                    dVar32 = FUN_80293900(dVar32);
+                    dVar33 = sqrtf(in_f22);
+                    dVar32 = sqrtf(dVar32);
                     in_f22 = (double)lbl_803DF590;
                     if (in_f22 < dVar33) {
                       in_f22 = (double)(float)((double)(float)(dVar33 - dVar32) / dVar33);
@@ -2055,27 +2055,27 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
       piVar7 = *(int **)(*(int *)(iVar1 + 0x7c) + *(char *)(iVar1 + 0xad) * 4);
       uVar6 = *(ushort *)(piVar7 + 6) >> 2 & 1;
       if ((*(ushort *)(iVar5 + 0x60) & 0x2000) == 0) {
-        FUN_80003494(DAT_803dd850,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-        uVar8 = FUN_80003494(uRam803dd854,piVar7[(uVar6 ^ 1) + 0x12],
+        memcpy(DAT_803dd850,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
+        uVar8 = memcpy(uRam803dd854,piVar7[(uVar6 ^ 1) + 0x12],
                              (uint)*(byte *)(*piVar7 + 0xf7) << 4);
       }
       else {
-        FUN_80003494(piVar7[uVar6 + 0x12],DAT_803dd850,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-        uVar8 = FUN_80003494(piVar7[(uVar6 ^ 1) + 0x12],uRam803dd854,
+        memcpy(piVar7[uVar6 + 0x12],DAT_803dd850,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
+        uVar8 = memcpy(piVar7[(uVar6 ^ 1) + 0x12],uRam803dd854,
                              (uint)*(byte *)(*piVar7 + 0xf7) << 4);
       }
       if (param_11 != 0) {
         piVar7 = *(int **)(*(int *)(param_11 + 0x7c) + *(char *)(param_11 + 0xad) * 4);
         uVar6 = *(ushort *)(piVar7 + 6) >> 2 & 1;
         if ((*(ushort *)(iVar5 + 0x60) & 0x2000) == 0) {
-          FUN_80003494(DAT_803dd848,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-          uVar8 = FUN_80003494(uRam803dd84c,piVar7[(uVar6 ^ 1) + 0x12],
+          memcpy(DAT_803dd848,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
+          uVar8 = memcpy(uRam803dd84c,piVar7[(uVar6 ^ 1) + 0x12],
                                (uint)*(byte *)(*piVar7 + 0xf7) << 4);
           *(ushort *)(iVar5 + 0x60) = *(ushort *)(iVar5 + 0x60) | 0x2000;
         }
         else {
-          FUN_80003494(piVar7[uVar6 + 0x12],DAT_803dd848,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-          uVar8 = FUN_80003494(piVar7[(uVar6 ^ 1) + 0x12],uRam803dd84c,
+          memcpy(piVar7[uVar6 + 0x12],DAT_803dd848,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
+          uVar8 = memcpy(piVar7[(uVar6 ^ 1) + 0x12],uRam803dd84c,
                                (uint)*(byte *)(*piVar7 + 0xf7) << 4);
         }
       }
@@ -2105,27 +2105,27 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
       piVar7 = *(int **)(*(int *)(iVar3 + 0x7c) + *(char *)(iVar3 + 0xad) * 4);
       uVar6 = *(ushort *)(piVar7 + 6) >> 2 & 1;
       if ((*(ushort *)(iVar4 + 0x60) & 0x2000) == 0) {
-        FUN_80003494(DAT_803dd850,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-        uVar8 = FUN_80003494(uRam803dd854,piVar7[(uVar6 ^ 1) + 0x12],
+        memcpy(DAT_803dd850,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
+        uVar8 = memcpy(uRam803dd854,piVar7[(uVar6 ^ 1) + 0x12],
                              (uint)*(byte *)(*piVar7 + 0xf7) << 4);
       }
       else {
-        FUN_80003494(piVar7[uVar6 + 0x12],DAT_803dd850,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-        uVar8 = FUN_80003494(piVar7[(uVar6 ^ 1) + 0x12],uRam803dd854,
+        memcpy(piVar7[uVar6 + 0x12],DAT_803dd850,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
+        uVar8 = memcpy(piVar7[(uVar6 ^ 1) + 0x12],uRam803dd854,
                              (uint)*(byte *)(*piVar7 + 0xf7) << 4);
       }
       if (param_12 != 0) {
         piVar7 = *(int **)(*(int *)(param_12 + 0x7c) + *(char *)(param_12 + 0xad) * 4);
         uVar6 = *(ushort *)(piVar7 + 6) >> 2 & 1;
         if ((*(ushort *)(iVar4 + 0x60) & 0x2000) == 0) {
-          FUN_80003494(DAT_803dd848,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-          uVar8 = FUN_80003494(uRam803dd84c,piVar7[(uVar6 ^ 1) + 0x12],
+          memcpy(DAT_803dd848,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
+          uVar8 = memcpy(uRam803dd84c,piVar7[(uVar6 ^ 1) + 0x12],
                                (uint)*(byte *)(*piVar7 + 0xf7) << 4);
           *(ushort *)(iVar4 + 0x60) = *(ushort *)(iVar4 + 0x60) | 0x2000;
         }
         else {
-          FUN_80003494(piVar7[uVar6 + 0x12],DAT_803dd848,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-          uVar8 = FUN_80003494(piVar7[(uVar6 ^ 1) + 0x12],uRam803dd84c,
+          memcpy(piVar7[uVar6 + 0x12],DAT_803dd848,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
+          uVar8 = memcpy(piVar7[(uVar6 ^ 1) + 0x12],uRam803dd84c,
                                (uint)*(byte *)(*piVar7 + 0xf7) << 4);
         }
       }
@@ -2271,7 +2271,7 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
     local_8c = (float)param_3;
   }
   else {
-    FUN_800068f0(dVar8,param_2,param_3,local_84,&local_88,&local_8c,*(int *)(psVar2 + 0x18));
+    Obj_TransformWorldPointToLocal(dVar8,param_2,param_3,local_84,&local_88,&local_8c,*(int *)(psVar2 + 0x18));
   }
   if (*(int *)(psVar4 + 0x18) == 0) {
     local_90 = (float)dVar8;
@@ -2279,7 +2279,7 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
     local_98 = (float)param_3;
   }
   else {
-    FUN_800068f0(dVar8,param_2,param_3,&local_90,&local_94,&local_98,*(int *)(psVar4 + 0x18));
+    Obj_TransformWorldPointToLocal(dVar8,param_2,param_3,&local_90,&local_94,&local_98,*(int *)(psVar4 + 0x18));
   }
   if (((psVar2[0x22] == 1) && (*(char *)((int)puVar6 + 0x6a) != '\0')) &&
      ((*(ushort *)(puVar5 + 0x18) & 0x400) == 0)) {
@@ -2287,7 +2287,7 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
     *(float *)(psVar2 + 8) = *(float *)(psVar2 + 8) - local_88;
     *(float *)(psVar2 + 10) = *(float *)(psVar2 + 10) - local_8c;
     if (param_6 == 0) {
-      FUN_800068f8((double)*(float *)(psVar2 + 6),(double)*(float *)(psVar2 + 8),
+      Obj_TransformLocalPointToWorld((double)*(float *)(psVar2 + 6),(double)*(float *)(psVar2 + 8),
                    (double)*(float *)(psVar2 + 10),(float *)(psVar2 + 0xc),(float *)(psVar2 + 0xe),
                    (float *)(psVar2 + 0x10),*(int *)(psVar2 + 0x18));
     }
@@ -2303,7 +2303,7 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
     *(float *)(psVar4 + 8) = *(float *)(psVar4 + 8) + local_94;
     *(float *)(psVar4 + 10) = *(float *)(psVar4 + 10) + local_98;
     if (param_6 == 0) {
-      FUN_800068f8((double)*(float *)(psVar4 + 6),(double)*(float *)(psVar4 + 8),
+      Obj_TransformLocalPointToWorld((double)*(float *)(psVar4 + 6),(double)*(float *)(psVar4 + 8),
                    (double)*(float *)(psVar4 + 10),(float *)(psVar4 + 0xc),(float *)(psVar4 + 0xe),
                    (float *)(psVar4 + 0x10),*(int *)(psVar4 + 0x18));
     }
@@ -2319,7 +2319,7 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
       *(float *)(psVar2 + 8) = *(float *)(psVar2 + 8) - local_88;
       *(float *)(psVar2 + 10) = *(float *)(psVar2 + 10) - local_8c;
       if (param_6 == 0) {
-        FUN_800068f8((double)*(float *)(psVar2 + 6),(double)*(float *)(psVar2 + 8),
+        Obj_TransformLocalPointToWorld((double)*(float *)(psVar2 + 6),(double)*(float *)(psVar2 + 8),
                      (double)*(float *)(psVar2 + 10),(float *)(psVar2 + 0xc),(float *)(psVar2 + 0xe),
                      (float *)(psVar2 + 0x10),*(int *)(psVar2 + 0x18));
       }
@@ -2336,7 +2336,7 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
       *(float *)(psVar4 + 8) = *(float *)(psVar4 + 8) + local_94;
       *(float *)(psVar4 + 10) = *(float *)(psVar4 + 10) + local_98;
       if (param_6 == 0) {
-        FUN_800068f8((double)*(float *)(psVar4 + 6),(double)*(float *)(psVar4 + 8),
+        Obj_TransformLocalPointToWorld((double)*(float *)(psVar4 + 6),(double)*(float *)(psVar4 + 8),
                      (double)*(float *)(psVar4 + 10),(float *)(psVar4 + 0xc),(float *)(psVar4 + 0xe),
                      (float *)(psVar4 + 0x10),*(int *)(psVar4 + 0x18));
       }
@@ -2348,7 +2348,7 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
     }
   }
   else {
-    uVar3 = FUN_80017730();
+    uVar3 = getAngle();
     uStack_7c = (int)*psVar2 - (uVar3 & 0xffff);
     if (0x8000 < (int)uStack_7c) {
       uStack_7c = uStack_7c - 0xffff;
@@ -2365,7 +2365,7 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
     }
     uStack_7c = uStack_7c ^ 0x80000000;
     local_84[1] = 176.0f;
-    dVar8 = (double)FUN_80294964();
+    dVar8 = (double)sin();
     uStack_74 = (uint)*(byte *)((int)puVar6 + 0x6a);
     local_78 = 0x43300000;
     uStack_6c = (uint)*(byte *)((int)puVar6 + 0x6b);
@@ -2376,7 +2376,7 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
                     (lbl_803DF598 - (float)(dVar8 * dVar8)));
     uStack_64 = uVar3 ^ 0x80000000;
     local_68 = 0x43300000;
-    dVar8 = (double)FUN_80294964();
+    dVar8 = (double)sin();
     uStack_5c = (uint)*(byte *)((int)puVar5 + 0x6a);
     local_60 = 0x43300000;
     uStack_54 = (uint)*(byte *)((int)puVar5 + 0x6b);
@@ -2400,14 +2400,14 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
     *(float *)(psVar2 + 6) = -(float)((double)local_84[0] * dVar7 - (double)*(float *)(psVar2 + 6));
     *(float *)(psVar2 + 8) = -(float)((double)local_88 * dVar7 - (double)*(float *)(psVar2 + 8));
     *(float *)(psVar2 + 10) = -(float)((double)local_8c * dVar7 - (double)*(float *)(psVar2 + 10));
-    FUN_800068f8((double)*(float *)(psVar2 + 6),(double)*(float *)(psVar2 + 8),
+    Obj_TransformLocalPointToWorld((double)*(float *)(psVar2 + 6),(double)*(float *)(psVar2 + 8),
                  (double)*(float *)(psVar2 + 10),(float *)(psVar2 + 0xc),(float *)(psVar2 + 0xe),
                  (float *)(psVar2 + 0x10),*(int *)(psVar2 + 0x18));
     fVar1 = (float)((double)lbl_803DF598 - dVar7);
     *(float *)(psVar4 + 6) = local_90 * fVar1 + *(float *)(psVar4 + 6);
     *(float *)(psVar4 + 8) = local_94 * fVar1 + *(float *)(psVar4 + 8);
     *(float *)(psVar4 + 10) = local_98 * fVar1 + *(float *)(psVar4 + 10);
-    FUN_800068f8((double)*(float *)(psVar4 + 6),(double)*(float *)(psVar4 + 8),
+    Obj_TransformLocalPointToWorld((double)*(float *)(psVar4 + 6),(double)*(float *)(psVar4 + 8),
                  (double)*(float *)(psVar4 + 10),(float *)(psVar4 + 0xc),(float *)(psVar4 + 0xe),
                  (float *)(psVar4 + 0x10),*(int *)(psVar4 + 0x18));
   }
@@ -2517,7 +2517,7 @@ void ObjHits_DetectObjectPair(void)
   dVar18 = (double)(float)(dVar21 * dVar21 +
                           (double)(float)(dVar23 * dVar23 + (double)(float)(dVar22 * dVar22)));
   if (dVar18 != (double)lbl_803DF590) {
-    dVar18 = FUN_80293900(dVar18);
+    dVar18 = sqrtf(dVar18);
   }
   iVar11 = (int)((double)CONCAT44(0x43300000,(int)dVar18 ^ 0x80000000) - DOUBLE_803df5c0);
   iVar13 = iVar11;
@@ -2553,7 +2553,7 @@ void ObjHits_DetectObjectPair(void)
         fVar4 = (fVar8 * fVar7 + fVar4) - *(float *)(iVar12 + 0x20);
         fVar5 = (fVar8 * fVar5 + fVar2) - *(float *)(iVar12 + 0x18);
         fVar2 = (fVar8 * fVar6 + fVar3) - *(float *)(iVar12 + 0x1c);
-        dVar18 = FUN_80293900((double)(fVar4 * fVar4 + fVar5 * fVar5 + fVar2 * fVar2));
+        dVar18 = sqrtf((double)(fVar4 * fVar4 + fVar5 * fVar5 + fVar2 * fVar2));
       }
     }
     if ((dVar18 < dVar17) && ((double)lbl_803DF590 < dVar18)) {
@@ -2567,7 +2567,7 @@ void ObjHits_DetectObjectPair(void)
           fVar2 = lbl_803DF590;
         }
         dVar19 = (double)fVar2;
-        dVar16 = FUN_80293900((double)(float)(dVar24 * dVar24 +
+        dVar16 = sqrtf((double)(float)(dVar24 * dVar24 +
                                              (double)(float)(dVar20 * dVar20 +
                                                             (double)(float)(dVar19 * dVar19))));
         if (dVar16 <= (double)lbl_803DF590) {
@@ -2992,7 +2992,7 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
   int aiStack_e58[918];
   
   objectCount = FUN_80286820();
-  objectList = (int *)FUN_80017b00(&uStack_f28, auStack_f24);
+  objectList = (int *)ObjList_GetObjects(&uStack_f28, auStack_f24);
   sweepPtrs = (ObjHitsSweepEntry **)&DAT_80341558;
   sweepEntries = (ObjHitsSweepEntry *)&DAT_80341b98;
   nextEntry = (ObjHitsSweepEntry *)&DAT_80341ba4;
@@ -3060,7 +3060,7 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
           *(undefined4 *)(objState + 0x20) = *(undefined4 *)(obj + 0x10);
           *(undefined4 *)(objState + 0x24) = *(undefined4 *)(obj + 0x14);
         } else {
-          FUN_800068f8((double)*(float *)(objState + 0x10), (double)*(float *)(objState + 0x14),
+          Obj_TransformLocalPointToWorld((double)*(float *)(objState + 0x10), (double)*(float *)(objState + 0x14),
                        (double)*(float *)(objState + 0x18), (float *)(objState + 0x1c),
                        (float *)(objState + 0x20), (float *)(objState + 0x24),
                        *(int *)(obj + 0x30));
