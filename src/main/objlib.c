@@ -37,7 +37,7 @@ extern void ObjHitbox_UpdateRotatedBounds(ushort *param_1,int param_2);
 extern undefined4 FUN_80045328();
 extern void getTabEntry(void *dst,int fileId,int offset,int size);
 extern void fn_80048F48(int fileId,void *dst,int offset,int size);
-extern undefined4 FUN_80053ab4();
+extern void fn_80054F74(int obj,float *pos);
 extern int * fn_8005B11C();
 extern void debugPrintf(const char *fmt, ...);
 extern undefined4 FUN_80247618();
@@ -91,6 +91,7 @@ extern f32 playerMapOffsetZ;
 extern f32 lbl_803DF5E8;
 extern f32 lbl_803DF5F0;
 extern f32 lbl_803DE970;
+extern f32 lbl_803DE974;
 extern f32 lbl_803DE978;
 extern f32 lbl_803DF5F4;
 extern f32 lbl_803DF5F8;
@@ -1193,6 +1194,7 @@ void ObjHits_AddContactObject(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *outSphereIndex,
@@ -1241,6 +1243,7 @@ int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *out
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -1255,6 +1258,7 @@ int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *out
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,uint *outHitVolume)
@@ -1298,6 +1302,7 @@ int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -2197,29 +2202,33 @@ bool FUN_80037d74(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int ObjHits_PollPriorityHitWithCooldown(int obj,float *cooldown,undefined4 *outHitObject,float *outHitPos)
 {
   int collisionType;
   
   collisionType = 0;
-  *cooldown = *cooldown - lbl_803DC074;
-  if (*cooldown <= lbl_803DF5F0) {
-    if (outHitPos == (float *)0x0) {
-      collisionType = ObjHits_GetPriorityHit(obj,outHitObject,(int *)0x0,(uint *)0x0);
-    }
-    else {
+  *cooldown = *cooldown - timeDelta;
+  if (*cooldown <= lbl_803DE970) {
+    if (outHitPos != (float *)0x0) {
       collisionType = ObjHits_GetPriorityHitWithPosition(obj,outHitObject,(int *)0x0,(uint *)0x0,outHitPos,
                            outHitPos + 1,outHitPos + 2);
       if (collisionType != 0) {
-        FUN_80053ab4(obj,outHitPos);
+        fn_80054F74(obj,outHitPos);
       }
     }
+    else {
+      collisionType = ObjHits_GetPriorityHit(obj,outHitObject,(int *)0x0,(uint *)0x0);
+    }
     if (collisionType != 0) {
-      *cooldown = lbl_803DF5F4;
+      *cooldown = lbl_803DE974;
     }
   }
   return collisionType;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma dont_inline on
 #pragma scheduling off
