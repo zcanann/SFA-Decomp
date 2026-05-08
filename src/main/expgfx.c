@@ -617,6 +617,8 @@ int expgfx_reserveSlot(short *poolIndexOut,undefined2 *slotIndexOut,short slotTy
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void expgfx_initSlotQuad(void *slotPtr)
 {
   ExpgfxSlot *slot;
@@ -639,33 +641,31 @@ void expgfx_initSlotQuad(void *slotPtr)
   slot->stateBits.bits.frameParity = 0;
   slot->stateBits.bits.quadReady = 1;
   behaviorFlags = slot->behaviorFlags;
-  if ((behaviorFlags & EXPGFX_BEHAVIOR_USE_QUAD_TEMPLATE_A) == 0) {
-    quadTemplate = (s16 *)(staticDataBase + EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET);
+  if ((behaviorFlags & EXPGFX_BEHAVIOR_USE_QUAD_TEMPLATE_A) != 0) {
+    quadTemplate = (s16 *)(staticDataBase + EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET);
   }
   else {
-    quadTemplate = (s16 *)(staticDataBase + EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET);
+    quadTemplate = (s16 *)(staticDataBase + EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET);
   }
   if ((behaviorFlags & EXPGFX_BEHAVIOR_BOUNCE_LOW_Y_VELOCITY) != 0) {
     if (slot->velocityY < lbl_803DF3B4) {
-      if (((behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) == 0) ||
-          (lbl_803DF3B4 <= slot->velocityY)) {
-        slot->velocityY = -(lbl_803DF3BC * timeDelta - slot->velocityY);
+      if ((behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0 &&
+          slot->velocityY < lbl_803DF3B4) {
+        slot->velocityY = -(lbl_803DF3B8 * timeDelta - slot->velocityY);
       }
       else {
-        slot->velocityY = -(lbl_803DF3B8 * timeDelta - slot->velocityY);
+        slot->velocityY = -(lbl_803DF3BC * timeDelta - slot->velocityY);
       }
       goto LAB_8009ba84;
     }
   }
-  if (((behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) == 0) ||
-      (slot->velocityY <= lbl_803DF3C0)) {
-    if (((behaviorFlags & EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY) != 0) &&
-        (lbl_803DF3C0 < slot->velocityY)) {
-      slot->velocityY = lbl_803DF3BC * timeDelta + slot->velocityY;
-    }
-  }
-  else {
+  if ((behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0 &&
+      slot->velocityY > lbl_803DF3C0) {
     slot->velocityY = lbl_803DF3B8 * timeDelta + slot->velocityY;
+  }
+  else if ((behaviorFlags & EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY) != 0 &&
+           slot->velocityY > lbl_803DF3C0) {
+    slot->velocityY = lbl_803DF3BC * timeDelta + slot->velocityY;
   }
 LAB_8009ba84:
   frameStep = lbl_803DF3C4;
@@ -675,16 +675,19 @@ LAB_8009ba84:
   if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) == 0) {
     if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0) {
       slot->scaleCounter =
-           (short)(int)-(Expgfx_U16AsDouble((u16)slot->scaleFrames) * frameStep -
-                         Expgfx_U16AsDouble((u16)slot->scaleCounter));
+           (short)(int)-((f32)(u32)*(u16 *)&slot->scaleFrames * frameStep -
+                         (f32)(u32)*(u16 *)&slot->scaleCounter);
     }
   }
   else {
     slot->scaleCounter =
-         (short)(int)(Expgfx_U16AsDouble((u16)slot->scaleFrames) * frameStep +
-                     Expgfx_U16AsDouble((u16)slot->scaleCounter));
+         (short)(int)((f32)(u32)*(u16 *)&slot->scaleFrames * frameStep +
+                     (f32)(u32)*(u16 *)&slot->scaleCounter);
   }
-  if (texture != 0) {
+  if (texture == 0) {
+    debugPrintf(sExpgfxNoTexture);
+  }
+  else {
     tex0S = 0;
     tex0T = 0;
     tex1S = 0;
@@ -723,11 +726,10 @@ LAB_8009ba84:
     slotWords[0x1c] = tex1S;
     slotWords[0x1d] = tex0T;
   }
-  else {
-    debugPrintf(sExpgfxNoTexture);
-  }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
