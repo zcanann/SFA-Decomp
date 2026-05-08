@@ -3,6 +3,8 @@
 extern void GameBit_Set(int eventId, int value);
 extern void ObjGroup_RemoveObject(int obj, int group);
 
+extern undefined4 *lbl_803DCA8C;
+extern undefined4 *lbl_803DCAA8;
 extern f32 lbl_803E8234;
 extern f32 lbl_803E827C;
 
@@ -56,7 +58,7 @@ void fn_802BB008(int obj, u8 value)
 int fn_802BB018(void) { return 0; }
 
 /*
- * fn_802BB020 — 41-instruction state setup. Stubbed.
+ * fn_802BB020 - 41-instruction state setup. Stubbed.
  */
 #pragma dont_inline on
 void fn_802BB020(void) {}
@@ -111,29 +113,81 @@ int gdev_cc_initinterrupts(int obj)
 }
 
 /*
- * ddh_cc_initinterrupts — large interrupt-init helper (~140
- * instructions). Stubbed.
+ * ddh_cc_initinterrupts - large interrupt-init helper (~140 instructions).
  */
 #pragma dont_inline on
-void ddh_cc_initinterrupts(void) {}
+int ddh_cc_initinterrupts(int obj, undefined4 unused, int setup)
+{
+    u8 mode;
+    int state;
+    int animState;
+    int i;
+
+    (void)unused;
+    state = *(int *)(obj + 0xb8);
+    *(u8 *)(obj + 0xaf) |= 8;
+    mode = *(u8 *)(state + 0xa8c);
+
+    if (mode == 3) {
+        *(u8 *)(setup + 0x56) = 0;
+        *(u8 *)(state + 0x27a) = 1;
+        (*(void (*)(int, int, int))(*lbl_803DCA8C + 0x14))(obj, state, 7);
+    } else if (mode < 3) {
+        if (mode == 1) {
+            *(u8 *)(setup + 0x56) = 0;
+            if (*(s16 *)(obj + 0xb4) == -1) {
+                animState = 7;
+            } else if ((*(u8 *)(state + 0xa8d) == 4) || (3 < *(u8 *)(state + 0xa8d))) {
+                animState = 7;
+            } else {
+                animState = 6;
+            }
+            (*(void (*)(int, int, int))(*lbl_803DCA8C + 0x14))(obj, state, animState);
+        } else if (mode == 0) {
+            *(u8 *)(setup + 0x56) = 0;
+            if (*(s16 *)(obj + 0xb4) == -1) {
+                for (i = 0; i < (int)(u32)*(u8 *)(setup + 0x8b); i++) {
+                    GameBit_Set(0x17b, 1);
+                    *(u8 *)(state + 0xa8e) |= 0x20;
+                }
+            }
+            (*(void (*)(int, int, int))(*lbl_803DCA8C + 0x14))(obj, state, 1);
+        }
+    } else if (mode == 5) {
+        *(u8 *)(setup + 0x56) = 0;
+        (*(void (*)(int, int, int))(*lbl_803DCA8C + 0x14))(obj, state, 2);
+    } else if (mode < 5) {
+        *(u8 *)(setup + 0x56) = 0;
+        (*(void (*)(int, int, int))(*lbl_803DCA8C + 0x14))(obj, state, 7);
+    }
+
+    (*(void (*)(int, int))(*lbl_803DCAA8 + 0x20))(obj, state + 4);
+    *(f32 *)(state + 0x294) = lbl_803E8234;
+    *(f32 *)(state + 0x284) = lbl_803E8234;
+    *(f32 *)(state + 0x280) = lbl_803E8234;
+    *(f32 *)(obj + 0x24) = lbl_803E8234;
+    *(f32 *)(obj + 0x28) = lbl_803E8234;
+    *(f32 *)(obj + 0x2c) = lbl_803E8234;
+    return (u32)(-*(s8 *)(setup + 0x56) | *(s8 *)(setup + 0x56)) >> 0x1f;
+}
 #pragma dont_inline reset
 
 /*
- * fn_802BB648 — 52-instruction helper. Stubbed.
+ * fn_802BB648 - 52-instruction helper. Stubbed.
  */
 #pragma dont_inline on
 void fn_802BB648(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_802BB8E4 — 45-instruction helper. Stubbed.
+ * fn_802BB8E4 - 45-instruction helper. Stubbed.
  */
 #pragma dont_inline on
 void fn_802BB8E4(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_802BB998 — 85-instruction helper. Stubbed.
+ * fn_802BB998 - 85-instruction helper. Stubbed.
  */
 #pragma dont_inline on
 void fn_802BB998(void) {}
@@ -158,7 +212,7 @@ void fn_802BBAFC(int obj)
 }
 
 /*
- * fn_802BBB20 — 60-instruction helper. Stubbed.
+ * fn_802BBB20 - 60-instruction helper. Stubbed.
  */
 #pragma dont_inline on
 void fn_802BBB20(void) {}
