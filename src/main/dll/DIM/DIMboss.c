@@ -122,9 +122,9 @@ typedef struct DIMbossTopState {
   u8 pad0A8[0xAC - 0xA8];
   f32 introSinkHeight;
   s32 defeatTimer;
-  s8 stompDustDelay;
+  u8 stompDustDelay;
   u8 pad0B5;
-  s8 steamSfxPending;
+  u8 steamSfxPending;
 } DIMbossTopState;
 
 typedef struct DIMbossRuntime {
@@ -615,9 +615,9 @@ void dimboss_update2(DIMbossObject *obj)
 {
   uint gameBitCount;
   undefined4 targetModel;
+  DIMbossTopState *topState;
   DIMbossRuntime *runtime;
   DIMbossConfig *config;
-  DIMbossTopState *topState;
   void *childObject;
 
   runtime = obj->runtime;
@@ -625,7 +625,7 @@ void dimboss_update2(DIMbossObject *obj)
   Obj_GetPlayerObject();
   topState = runtime->topState;
   if (obj->renderPause == 0) {
-    if (lbl_803E4BD8 < topState->introSinkHeight) {
+    if (topState->introSinkHeight > lbl_803E4BD8) {
       fn_80016870(0x432);
       topState->introSinkHeight -= timeDelta;
       if (topState->introSinkHeight < lbl_803E4BD8) {
@@ -649,18 +649,18 @@ void dimboss_update2(DIMbossObject *obj)
         obj->objectFlags &= ~8;
         obj->objectFlags |= 0x80;
         gameBitCount = GameBit_Get(0x20c);
-        if (gameBitCount < 3) {
+        if (gameBitCount >= 3) {
+          runtime->phase = 2;
+          runtime->animMode = 3;
+          obj->objectFlags &= ~8;
+          GameBit_Set(0x9e,0);
+        }
+        else {
           runtime->phase = 1;
           runtime->animMode = 3;
           obj->objectFlags &= ~8;
           topState->launchLift = lbl_803E4C44;
           GameBit_Set(0x9e,1);
-        }
-        else {
-          runtime->phase = 2;
-          runtime->animMode = 3;
-          obj->objectFlags &= ~8;
-          GameBit_Set(0x9e,0);
         }
       }
       if ((runtime->phase == 0) || (runtime->phase == 3)) {
@@ -671,13 +671,13 @@ void dimboss_update2(DIMbossObject *obj)
           ObjModel_EnableDefaultRenderCallback
                     ((double)(obj->modelScale * obj->baseScale),obj,targetModel,lbl_803AC9AC,1);
         }
-        if (topState->steamSfxPending < 0) {
+        if ((topState->steamSfxPending & 0x80) != 0) {
           getEnvfxAct(0,0,0xdb,0);
           getEnvfxAct(0,0,0xdc,0);
           FUN_80080f80(7,1,0);
           FUN_80080f70((double)lbl_803E4C4C,(double)lbl_803E4C50,(double)lbl_803E4C54,7);
           FUN_80080f7c(7,0xa0,0xa0,0xff,0x7f,0x28);
-          topState->steamSfxPending &= 0x7f;
+          topState->steamSfxPending &= ~0x80;
         }
       }
       else {
