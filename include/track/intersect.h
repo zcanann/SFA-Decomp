@@ -30,7 +30,7 @@ void fn_800704FC(u8 param_1, u8 param_2, u8 param_3);
 void fn_80070510(void* obj_a, void** obj_b, int param_3);
 void fn_80070ED4(u8 alpha);
 void fn_800717FC(void);
-void fn_80071D54(byte *param_1);
+void fn_80071D54(u8* mod);
 void fn_800722B0(double radius, double angle, float* pos, u8* mod);
 void fn_80072DFC(void* obj_a, void** obj_b, int param_3);
 void fn_8007366C(u8 alpha);
