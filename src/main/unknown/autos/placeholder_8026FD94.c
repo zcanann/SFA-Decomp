@@ -38,39 +38,160 @@ extern f32 lbl_803E77D0;
 
 typedef void (*SynthAuxCallback)(int active, u16 *samples, u32 user);
 
-/*
- * fn_8026FC8C - voice handler (~608 instructions). Stubbed.
- */
-#pragma dont_inline on
-void fn_8026FC8C(void) {}
-#pragma dont_inline reset
+extern u8 *fn_802750B8(u32 sampleId);
+extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
+extern int fn_8026F630(u32 key, u32 slot, u32 channel, u32 voiceGroup, u32 *outFlags);
+extern int fn_8026F8B8(u32 sampleId, int key, u32 velocity, u32 baseSample, u32 flags, u32 volume,
+                       u32 pan, u32 param_8, u32 param_9, u32 param_10, u32 param_11,
+                       u32 param_12, u32 param_13, u32 param_14, u32 param_15, u32 param_16);
+extern int fn_80278B94(u32 sampleId, int key, u32 velocity, u32 baseSample, u32 flags, u32 volume,
+                       u32 pan, u32 param_8, u32 param_9, u32 param_10, u32 param_11,
+                       u32 param_12, u32 param_13, u32 param_14, u32 param_15, u32 param_16);
+extern u32 vidGetInternalId(u32 handle);
 
 /*
- * fn_8026FEEC - voice handler (~664 instructions). Stubbed.
+ * Resolve an indirection-table sample entry, then dispatch the resolved
+ * sample or nested sample group.
  */
-#pragma dont_inline on
+int fn_8026FC8C(u32 sampleId, s16 key, u32 velocity, u32 baseSample, u32 flags, u32 volume,
+                u32 pan, u32 param_8, u32 param_9, u32 param_10, u32 param_11, u32 param_12,
+                u32 param_13, u32 param_14, u32 param_15, u32 param_16)
+{
+    u8 *table;
+    u8 *entry;
+    u16 resolvedSample;
+    u32 adjustedPan;
+    s32 adjustedKey;
+    u32 allow;
+    int handle;
+    u32 outFlags;
+
+    table = fn_802750B8(sampleId);
+    if (table != 0) {
+        entry = table + ((flags & 0x7f) * 8);
+        if (*(s16 *)entry != -1) {
+            resolvedSample = *(u16 *)entry;
+            if ((resolvedSample & 0xc000) != 0x4000) {
+                if ((entry[3] & 0x80) == 0) {
+                    adjustedPan = (entry[3] - 0x40) + (pan & 0xff);
+                    if ((s32)adjustedPan < 0) {
+                        adjustedPan = 0;
+                    } else if ((s32)adjustedPan < 0x80) {
+                        adjustedPan &= 0xff;
+                    } else {
+                        adjustedPan = 0x7f;
+                    }
+                } else {
+                    adjustedPan = 0x80;
+                }
+                adjustedKey = (flags & 0x7f) + *(s8 *)(entry + 2);
+                if (adjustedKey >= 0x80) {
+                    adjustedKey = 0x7f;
+                } else if (adjustedKey < 0) {
+                    adjustedKey = 0;
+                }
+                key = key + *(s16 *)(entry + 4);
+                if (key >= 0x100) {
+                    key = 0xff;
+                } else if (key < 0) {
+                    key = 0;
+                }
+                if ((resolvedSample & 0xc000) == 0) {
+                    if ((u16)inpGetMidiCtrl(0x41, param_8, param_9) < 0x1f81) {
+                        handle = -1;
+                        allow = 1;
+                    } else {
+                        handle = fn_8026F630(adjustedKey & 0x7f, param_8, param_9, param_13,
+                                             &outFlags);
+                        allow = __cntlzw(outFlags) >> 5;
+                    }
+                    if (allow == 0) {
+                        return -1;
+                    }
+                    if (handle != -1) {
+                        return handle;
+                    }
+                    return fn_80278B94(resolvedSample, key & 0xff, velocity, baseSample,
+                                       adjustedKey | (flags & 0x80), volume, adjustedPan, param_8,
+                                       param_9, param_10, param_11, param_12, param_13 & 0xff,
+                                       param_14, param_15, param_16);
+                }
+                return fn_8026F8B8(resolvedSample, key, velocity, baseSample,
+                                   adjustedKey | (flags & 0x80), volume, adjustedPan, param_8,
+                                   param_9, param_10, param_11, param_12, param_13 & 0xff,
+                                   param_14, param_15, param_16);
+            }
+        }
+    }
+    return -1;
+}
+
+/*
+ * Start a sample/FX id, handling direct samples, table-expanded sample
+ * groups, and already-linked voice chains.
+ */
 int fn_8026FEEC(u32 sampleId, u8 key, u8 velocity, u32 flags, u32 volume, u32 pan, u32 param_7,
                 u32 param_8, u32 param_9, u32 param_10, u32 param_11, u8 auxIndex, u32 param_13,
                 u32 studio, u8 studioAux)
 {
-    (void)sampleId;
-    (void)key;
-    (void)velocity;
-    (void)flags;
-    (void)volume;
-    (void)pan;
-    (void)param_7;
-    (void)param_8;
-    (void)param_9;
-    (void)param_10;
-    (void)param_11;
-    (void)auxIndex;
-    (void)param_13;
-    (void)studio;
-    (void)studioAux;
-    return 0;
+    u32 sampleClass;
+    int handle;
+    u32 voice;
+    u8 *slot;
+    u32 outFlags;
+
+    key = key + param_13;
+    sampleClass = sampleId & 0xc000;
+    if (sampleClass == 0x4000) {
+        handle = fn_8026FC8C(sampleId, key, velocity, sampleId, flags, volume, pan, param_7,
+                             param_8, param_9, param_10, param_11, 1, auxIndex, studio,
+                             studioAux);
+        if (handle != -1) {
+            voice = vidGetInternalId(handle);
+            while (voice != 0xffffffff) {
+                slot = lbl_803DE268 + ((voice & 0xff) * 0x404);
+                slot[0x11c] = 0;
+                voice = *(u32 *)(slot + 0xec);
+            }
+        }
+    } else {
+        if (sampleClass == 0) {
+            if ((u16)inpGetMidiCtrl(0x41, param_7, param_8) < 0x1f81) {
+                handle = -1;
+                sampleClass = 1;
+            } else {
+                handle = fn_8026F630(flags & 0x7f, param_7, param_8, 1, &outFlags);
+                sampleClass = __cntlzw(outFlags) >> 5;
+            }
+            if (sampleClass == 0) {
+                return -1;
+            }
+            if (handle != -1) {
+                return handle;
+            }
+            return fn_80278B94(sampleId, key, velocity, sampleId, flags, volume, pan, param_7,
+                               param_8, param_9, param_10, param_11, 1, auxIndex, studio,
+                               studioAux);
+        }
+        if (sampleClass == 0x8000) {
+            handle = fn_8026F8B8(sampleId, key, velocity, sampleId, flags, volume, pan, param_7,
+                                 param_8, param_9, param_10, param_11, 1, auxIndex, studio,
+                                 studioAux);
+            if (handle == -1) {
+                return -1;
+            }
+            voice = vidGetInternalId(handle);
+            while (voice != 0xffffffff) {
+                slot = lbl_803DE268 + ((voice & 0xff) * 0x404);
+                slot[0x11c] = 0;
+                voice = *(u32 *)(slot + 0xec);
+            }
+            return handle;
+        }
+        handle = -1;
+    }
+    return handle;
 }
-#pragma dont_inline reset
 
 /*
  * fn_80270184 - large voice handler (~1972 instructions). Stubbed.
