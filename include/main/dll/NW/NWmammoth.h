@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void ediblemushroom_init(int param_1);
+void ediblemushroom_init(int obj, int aux);
 void FUN_801d19b4(int *param_1);
 void FUN_801d1b50(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);

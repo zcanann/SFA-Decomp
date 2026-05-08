@@ -41,24 +41,113 @@ extern f32 FLOAT_803e5f84;
 extern f32 FLOAT_803e5f88;
 extern f32 FLOAT_803e5f8c;
 
+extern void *Obj_GetPlayerObject(void);
+extern u32 GameBit_Get(int bit);
+extern void ObjAnim_SetCurrentMove(int obj, int move, f32 f, int p4);
+extern void ObjAnim_AdvanceCurrentMove(int obj, void *out, f32 a, f32 b);
+extern f32 Vec_distance(int a, int b);
+extern void fn_801D0828(void);
+
+extern void *lbl_803DCA9C;
+
+extern f32 lbl_803E5288;
+extern f32 lbl_803E52A0;
+extern f32 lbl_803E52A8;
+extern f64 lbl_803E52C0;
+extern f32 lbl_803E52E0;
+extern f32 lbl_803E52E4;
+extern f32 lbl_803E52E8;
+extern f32 lbl_803E52EC;
+extern f32 lbl_803E52F0;
+extern f32 lbl_803E52F4;
+
 /*
  * --INFO--
  *
  * Function: ediblemushroom_init
  * EN v1.0 Address: 0x801D1978
- * EN v1.0 Size: 60b
- * EN v1.1 Address: 0x801D1B54
- * EN v1.1 Size: 60b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 644b
  */
-void ediblemushroom_init(int param_1)
+#pragma scheduling off
+#pragma peephole off
+void ediblemushroom_init(int obj, int aux)
 {
-  ObjGroup_RemoveObject(param_1,0x47);
-  ObjGroup_RemoveObject(param_1,0x31);
-  return;
+    int state;
+    int player;
+    int local_x;
+    f32 anim_out[4];
+    f32 dist;
+
+    state = *(int *)(obj + 0xb8);
+    local_x = 0x19;
+    player = (int)Obj_GetPlayerObject();
+
+    *(int *)(obj + 0xbc) = (int)&fn_801D0828;
+    *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x4000);
+
+    if (GameBit_Get(*(short *)(aux + 0x1a)) != 0) {
+        *(u8 *)(state + 0x136) = 8;
+        ObjHits_DisableObject(obj);
+        *(short *)(obj + 0x6) = (short)(*(short *)(obj + 0x6) | 0x4000);
+    }
+
+    *(u32 *)(*(int *)(obj + 0x64) + 0x30) |= 0x810;
+
+    *(f32 *)(state + 0x110) = lbl_803E52E0;
+    *(f32 *)(state + 0x114) = lbl_803E52E4 *
+        ((f32)*(u8 *)(aux + 0x1c) / lbl_803E52E8);
+
+    ObjAnim_SetCurrentMove(obj, 1, lbl_803E5288, 0);
+    ObjAnim_AdvanceCurrentMove(obj, anim_out, lbl_803E52A8, lbl_803E52A8);
+    *(f32 *)(state + 0x118) = anim_out[0];
+    if (*(f32 *)(state + 0x118) < lbl_803E5288) {
+        *(f32 *)(state + 0x118) = -*(f32 *)(state + 0x118);
+    }
+    *(f32 *)(state + 0x118) = *(f32 *)(state + 0x118) * *(f32 *)(state + 0x110);
+    *(f32 *)(state + 0x118) = *(f32 *)(state + 0x118) + lbl_803E52A0;
+
+    ObjAnim_SetCurrentMove(obj, 4, lbl_803E5288, 0);
+    ObjAnim_AdvanceCurrentMove(obj, anim_out, lbl_803E52A8, lbl_803E52A8);
+    *(f32 *)(state + 0x11c) = anim_out[2];
+    if (*(f32 *)(state + 0x11c) < lbl_803E5288) {
+        *(f32 *)(state + 0x11c) = -*(f32 *)(state + 0x11c);
+    }
+    *(f32 *)(state + 0x11c) = *(f32 *)(state + 0x11c) + lbl_803E52A0;
+
+    ObjMsg_AllocQueue(obj, 1);
+
+    {
+        int v = *(u8 *)(aux + 0x18);
+        if (v < 6) {
+            if (v >= 4) {
+                *(u8 *)(state + 0x137) |= 2;
+                (**(void(***)(int, int, f32, int *, int))(*(int *)lbl_803DCA9C + 0x8c))(
+                    state, obj, lbl_803E52EC, &local_x, -1);
+                *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x68);
+                *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x70);
+            }
+        }
+    }
+
+    *(f32 *)(state + 0x120) = lbl_803E52F0;
+
+    if (player != 0) {
+        dist = Vec_distance(player + 0x18, obj + 0x18);
+        *(f32 *)(state + 0x108) = dist;
+        *(f32 *)(state + 0x10c) = dist;
+    } else {
+        *(f32 *)(state + 0x108) = lbl_803E52F4;
+        *(f32 *)(state + 0x10c) = lbl_803E52F4;
+    }
+
+    ObjGroup_AddObject(obj, 0x31);
+    ObjGroup_AddObject(obj, 0x47);
+
+    if (*(short *)(obj + 0x46) == 0x658) {
+        *(short *)(state + 0x134) = 0x66d;
+    } else {
+        *(short *)(state + 0x134) = 0xc1;
+    }
 }
 
 /*
