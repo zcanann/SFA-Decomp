@@ -438,7 +438,8 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   }
   state->frameData = (u8 *)(moveData + OBJANIM_FRAME_CMD_OFFSET);
   state->frameType = *(s8 *)(moveData + 1) & OBJANIM_FRAME_TYPE_MASK;
-  state->segmentLength = ObjAnim_U32AsDouble((uint)state->frameData[1]) - lbl_803DE8E8;
+  state->segmentLength = (float)ObjAnim_U32AsDouble((uint)state->frameData[1]) -
+                         (float)lbl_803DE8E8;
   if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
     state->segmentLength = state->segmentLength - lbl_803DE8E0;
   }
@@ -1130,7 +1131,7 @@ undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int
   ObjHitReactState *hitState;
 
   objAnim = (ObjAnimComponent *)objAnimArg;
-  if (lbl_803DE8E0 < moveProgress) {
+  if (moveProgress > lbl_803DE8E0) {
     moveProgress = lbl_803DE8E0;
   }
   else if (moveProgress < lbl_803DE8F0) {
