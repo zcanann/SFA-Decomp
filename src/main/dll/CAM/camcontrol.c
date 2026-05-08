@@ -2,15 +2,13 @@
 #include "dolphin/os.h"
 #include "main/dll/CAM/camcontrol.h"
 #include "main/objanim.h"
+#include "string.h"
 
-extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068f4();
 extern undefined4 FUN_800068f8();
 extern uint FUN_80006c00();
 extern undefined4 FUN_80017640();
-extern undefined4 FUN_80017814();
-extern int FUN_80017830();
 extern int Obj_IsObjectAlive();
 extern undefined8 FUN_800723a0();
 extern undefined4 FUN_80081100();
@@ -24,15 +22,17 @@ extern int FUN_8012ef0c();
 extern int FUN_80133a28();
 extern double FUN_8014cbcc();
 extern double FUN_80183544();
-extern int FUN_80286838();
-extern undefined4 FUN_80286884();
 extern f32 sqrtf(f32 x);
 extern void getTabEntry(void *dst,int fileId,int offset,int size);
 extern void fn_80023800(void *ptr);
 extern void *mmAlloc(int size,int heap,int flags);
 extern void fn_800E84D8(s16 actionNo);
+extern void voxmaps_initialise(void);
+extern void voxmaps_resetLoadedMaps(void);
 
 extern void *gCamcontrolHandlers[20];
+extern void *lbl_803A4228[20];
+extern u8 lbl_803A4278[];
 extern undefined4* DAT_803dd738;
 extern undefined4 gCamcontrolTargetChanged;
 extern short* gCamcontrolTargetReticle;
@@ -41,12 +41,13 @@ extern undefined4 gCamcontrolTargetState;
 extern undefined4 gCamcontrolSavedActionMode;
 extern undefined4 gCamcontrolSavedActionFlags;
 extern undefined4 gCamcontrolSavedActionId;
-extern undefined gCamcontrolQueuedActionMode;
-extern undefined4 gCamcontrolQueuedActionBlendFrames;
-extern undefined gCamcontrolQueuedActionPending;
-extern void *gCamcontrolQueuedActionData;
-extern int gCamcontrolQueuedActionSource;
-extern undefined4 gCamcontrolCurrentActionId;
+extern undefined lbl_803DD4F8;
+extern undefined4 lbl_803DD4FC;
+extern s8 lbl_803DD500;
+extern s8 lbl_803DD501;
+extern undefined lbl_803DD502;
+extern void *lbl_803DD504;
+extern undefined4 lbl_803DD510;
 extern undefined4 gCamcontrolCurrentHandler;
 extern u8 gCamcontrolHandlerCount;
 extern short* gCamcontrolState;
@@ -71,6 +72,13 @@ extern f32 lbl_803E22F4;
 extern f32 lbl_803E22F8;
 extern f32 lbl_803E22FC;
 extern f32 lbl_803E2300;
+extern f32 lbl_803E1684;
+extern s16 lbl_803DB992;
+extern undefined lbl_803DD4CA;
+extern s8 lbl_803DD4CB;
+extern undefined4 lbl_803DD4CC;
+extern int lbl_803DD514;
+extern u8 lbl_803DD520;
 
 typedef struct CamcontrolHandlerVTable {
   u8 pad00[0x10];
@@ -92,6 +100,14 @@ extern int lbl_803DD4F0;
 extern int lbl_803DD4F4;
 extern u32 lbl_803DD518;
 extern u32 pCamera;
+
+#define gCamcontrolQueuedActionMode lbl_803DD4F8
+#define gCamcontrolQueuedActionBlendFrames lbl_803DD4FC
+#define gCamcontrolQueuedActionPriority lbl_803DD500
+#define gCamcontrolQueuedActionStartFlags lbl_803DD501
+#define gCamcontrolQueuedActionPending lbl_803DD502
+#define gCamcontrolQueuedActionData lbl_803DD504
+#define gCamcontrolCurrentActionId lbl_803DD510
 
 typedef struct CamcontrolTriggeredAction {
   u8 actionKind;
@@ -505,7 +521,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char trigge
       blendFrames = 0;
     }
     Camera_setMode(CAMCONTROL_ACTION_TRIGGER_TYPE2,1,0,CAMCONTROL_QUEUED_ACTION_PARAM_SIZE,
-                   (uint)&triggerType2Param,blendFrames,CAMCONTROL_QUEUE_SENTINEL);
+                   &triggerType2Param,blendFrames,CAMCONTROL_QUEUE_SENTINEL);
     return;
   }
   if (triggerType < CAMCONTROL_TRIGGER_KIND_QUEUE_TYPE2) {
@@ -520,7 +536,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char trigge
         blendFrames = 0;
       }
       Camera_setMode(CAMCONTROL_ACTION_TRIGGER_TYPE1,1,0,CAMCONTROL_QUEUED_ACTION_PARAM_SIZE,
-                     (uint)&triggerType1Param,blendFrames,CAMCONTROL_QUEUE_SENTINEL);
+                     &triggerType1Param,blendFrames,CAMCONTROL_QUEUE_SENTINEL);
       return;
     }
   }
@@ -556,11 +572,11 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char trigge
        (gCamcontrolCurrentActionId == CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
       if (camAction->actionKind == CAMCONTROL_TRIGGERED_ACTION_KIND_TRIGGERED) {
         Camera_setMode(CAMCONTROL_ACTION_TRIGGERED,1,2,CAMCONTROL_ACTION_RECORD_SIZE,
-                       (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
+                       camAction,0,CAMCONTROL_QUEUE_SENTINEL);
       }
       else {
         Camera_setMode(CAMCONTROL_ACTION_DEFAULT,0,2,CAMCONTROL_ACTION_RECORD_SIZE,
-                       (uint)camAction,0,CAMCONTROL_QUEUE_SENTINEL);
+                       camAction,0,CAMCONTROL_QUEUE_SENTINEL);
       }
     }
     else {
@@ -680,33 +696,32 @@ void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-void Camera_setMode(undefined4 param_1,undefined4 param_2,int param_3,int param_4,uint param_5,
-                    undefined4 param_6,undefined param_7)
+void Camera_setMode(s32 actionId,int priority,int startFlags,int dataSize,void *data,
+                    undefined4 blendFrames,undefined queueMode)
 {
-  int iVar1;
-  undefined extraout_r4;
-
-  iVar1 = FUN_80286838();
   if (gCamcontrolQueuedActionData != (void *)0x0) {
-    FUN_80017814((uint)gCamcontrolQueuedActionData);
+    fn_80023800(gCamcontrolQueuedActionData);
     gCamcontrolQueuedActionData = (void *)0x0;
     gCamcontrolQueuedActionPending = 0;
   }
-  gCamcontrolQueuedActionBlendFrames = param_6;
-  gCamcontrolQueuedActionSource = iVar1;
-  if (param_5 == 0) {
-    gCamcontrolQueuedActionData = (void *)0x0;
+  gCamcontrolCurrentActionId = actionId;
+  gCamcontrolQueuedActionBlendFrames = blendFrames;
+  if (data != (void *)0x0) {
+    gCamcontrolQueuedActionData = mmAlloc(dataSize,CAMCONTROL_ACTION_HEAP,0);
+    memcpy(gCamcontrolQueuedActionData,data,dataSize);
   }
   else {
-    gCamcontrolQueuedActionData = (void *)FUN_80017830(param_4,0xf);
-    FUN_80003494((uint)gCamcontrolQueuedActionData,param_5,param_4);
+    gCamcontrolQueuedActionData = (void *)0x0;
   }
-  if (iVar1 == 0x42) {
-    extraout_r4 = 0;
+  if (actionId == CAMCONTROL_ACTION_DEFAULT) {
+    gCamcontrolQueuedActionPriority = 0;
   }
+  else {
+    gCamcontrolQueuedActionPriority = (s8)priority;
+  }
+  gCamcontrolQueuedActionStartFlags = (s8)startFlags;
   gCamcontrolQueuedActionPending = 1;
-  gCamcontrolQueuedActionMode = param_7;
-  FUN_80286884();
+  gCamcontrolQueuedActionMode = queueMode;
   return;
 }
 #pragma peephole reset
@@ -829,6 +844,66 @@ void Camera_update(undefined8 param_1,double param_2,double param_3,undefined8 p
 #pragma peephole reset
 #pragma scheduling reset
 
+void *Camera_func08(void)
+{
+  void **entry;
+  int i;
+
+  i = 0;
+  entry = lbl_803A4228;
+  for (; i < lbl_803DD520; i++) {
+    if (*(u16 *)*entry == CAMCONTROL_ACTION_DEFAULT) {
+      return lbl_803A4228[i];
+    }
+    entry++;
+  }
+  return NULL;
+}
+
+void *Camera_GetFollowPos(void)
+{
+  return lbl_803DD51C;
+}
+
 /* sda21 accessors. */
 u32 Camera_getMode(void) { return lbl_803DD518; }
 u32 Camera_get(void) { return pCamera; }
+
+void Camera_init(void *focus,f32 x,f32 y,f32 z)
+{
+  memset((void *)pCamera,0,0x144);
+  *(f32 *)((char *)pCamera + 0x0c) = x;
+  *(f32 *)((char *)pCamera + 0x10) = y;
+  *(f32 *)((char *)pCamera + 0x14) = z;
+  *(f32 *)((char *)pCamera + 0x18) = x;
+  *(f32 *)((char *)pCamera + 0x1c) = y;
+  *(f32 *)((char *)pCamera + 0x20) = z;
+  *(f32 *)((char *)pCamera + 0xa8) = x;
+  *(f32 *)((char *)pCamera + 0xac) = y;
+  *(f32 *)((char *)pCamera + 0xb0) = z;
+  *(f32 *)((char *)pCamera + 0xb8) = x;
+  *(f32 *)((char *)pCamera + 0xbc) = y;
+  *(f32 *)((char *)pCamera + 0xc0) = z;
+  *(void **)((char *)pCamera + 0xa4) = focus;
+  *(f32 *)((char *)pCamera + 0xb4) = lbl_803E1684;
+  lbl_803DD4CA = 0;
+}
+
+void Camera_release(void)
+{
+  voxmaps_resetLoadedMaps();
+  lbl_803DD4CB = -1;
+}
+
+void Camera_initialise(void)
+{
+  pCamera = (u32)lbl_803A4278;
+  memset((void *)pCamera,0,0x144);
+  voxmaps_initialise();
+  lbl_803DD518 = -1;
+  lbl_803DD514 = -1;
+  gCamcontrolCurrentActionId = -1;
+  lbl_803DD4CC = 0;
+  lbl_803DD4CB = -1;
+  lbl_803DB992 = 0xffff;
+}

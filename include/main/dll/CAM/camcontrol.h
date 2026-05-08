@@ -18,14 +18,16 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,char trigge
 void *Camera_getCamActionsBinEntry(int actionNo);
 void camcontrol_releaseCurrentHandler(void);
 void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2);
-void Camera_setMode(undefined4 param_1,undefined4 param_2,int param_3,int param_4,uint param_5,
-                    undefined4 param_6,undefined param_7);
+void Camera_setMode(s32 actionId,int priority,int startFlags,int dataSize,void *data,
+                    undefined4 blendFrames,undefined queueMode);
 void Camera_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                    undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void *Camera_func08(void);
 void *Camera_GetFollowPos(void);
 u32 Camera_getMode(void);
 u32 Camera_get(void);
+void Camera_init(void *focus,f32 x,f32 y,f32 z);
 void Camera_release(void);
+void Camera_initialise(void);
 
 #endif /* MAIN_DLL_CAM_CAMCONTROL_H_ */
