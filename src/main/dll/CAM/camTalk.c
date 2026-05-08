@@ -15,12 +15,12 @@ extern undefined4 FUN_80017830();
 extern undefined4 camcontrol_getTargetPosition();
 extern undefined4 FUN_801e1ee4();
 extern double FUN_80293900();
-extern undefined4 fn_80293E80();
-extern undefined4 sin();
+extern double fn_80293E80(double);
+extern double sin(double);
 extern undefined4 FUN_80294d78();
 
 extern int *lbl_803DCA50;
-extern undefined4* lbl_803DD540;
+extern u8* lbl_803DD540;
 extern undefined4 DAT_803de1c0;
 extern f64 lbl_803E17B8;
 extern f64 DOUBLE_803e2458;
@@ -33,6 +33,8 @@ extern f32 lbl_803E1790;
 extern f32 lbl_803E1794;
 extern f32 lbl_803E1798;
 extern f32 lbl_803E179C;
+extern f32 lbl_803E17A0;
+extern f32 lbl_803E17A4;
 extern f32 lbl_803E17A8;
 extern f32 lbl_803E17AC;
 extern f32 lbl_803E17B0;
@@ -42,6 +44,17 @@ extern f32 lbl_803E2444;
 extern f32 lbl_803E2448;
 extern f32 lbl_803E244C;
 extern f32 lbl_803E2450;
+
+typedef struct CamTalkTransformInput {
+  ushort yaw;
+  undefined2 pitch;
+  undefined2 roll;
+  undefined2 pad;
+  float scale;
+  float x;
+  float y;
+  float z;
+} CamTalkTransformInput;
 
 /*
  * --INFO--
@@ -90,13 +103,7 @@ void fn_80107B4C(short *param_1)
   float local_108;
   float local_104;
   float local_100;
-  ushort local_fc;
-  undefined2 local_fa;
-  undefined2 local_f8;
-  float local_f4;
-  undefined4 local_f0;
-  undefined4 local_ec;
-  undefined4 local_e8;
+  CamTalkTransformInput local_fc;
   float afStack_e4 [17];
   longlong local_a0;
   undefined4 local_98;
@@ -118,18 +125,18 @@ void fn_80107B4C(short *param_1)
   uint uStack_4c;
   longlong local_48;
   
-  (**(code **)(*lbl_803DCA50 + 0x18))();
+  (*(code *)(*lbl_803DCA50 + 0x18))();
   puVar5 = *(ushort **)(param_1 + 0x52);
   if (puVar5 != (ushort *)0x0) {
     *(float *)(param_1 + 0x5a) = lbl_803E1784;
-    local_f0 = *(undefined4 *)(puVar5 + 0xc);
-    local_ec = *(undefined4 *)(puVar5 + 0xe);
-    local_e8 = *(undefined4 *)(puVar5 + 0x10);
-    local_f4 = lbl_803E1788;
-    local_fc = *puVar5;
+    local_fc.x = *(float *)(puVar5 + 0xc);
+    local_fc.y = *(float *)(puVar5 + 0xe);
+    local_fc.z = *(float *)(puVar5 + 0x10);
+    local_fc.scale = lbl_803E1788;
+    local_fc.yaw = *puVar5;
     local_a0 = (longlong)(int)*(float *)(lbl_803DD540 + 0x30);
-    local_fa = (undefined2)(int)*(float *)(lbl_803DD540 + 0x30);
-    local_f8 = 0;
+    local_fc.pitch = (undefined2)(int)*(float *)(lbl_803DD540 + 0x30);
+    local_fc.roll = 0;
     fn_80021EE8(afStack_e4,&local_fc);
     Matrix_TransformPoint((double)lbl_803E1780,(double)lbl_803E178C,(double)lbl_803E1780,afStack_e4,
                  &local_100,&local_104,&local_108);
@@ -156,17 +163,21 @@ void fn_80107B4C(short *param_1)
     param_1[1] = param_1[1] + (sVar4 >> 3);
     uStack_7c = (int)*param_1 - 0x4000U ^ 0x80000000;
     local_80 = 0x43300000;
-    dVar6 = (double)fn_80293E80();
+    dVar6 = (double)fn_80293E80((double)(lbl_803E179C *
+        (float)((double)CONCAT44(0x43300000,uStack_7c) - lbl_803E17B8) / lbl_803E17A0));
     uStack_74 = (int)*param_1 - 0x4000U ^ 0x80000000;
     local_78 = 0x43300000;
-    dVar7 = (double)sin();
+    dVar7 = (double)sin((double)(lbl_803E179C *
+        (float)((double)CONCAT44(0x43300000,uStack_74) - lbl_803E17B8) / lbl_803E17A0));
     uStack_6c = (int)param_1[1] ^ 0x80000000;
     local_70 = 0x43300000;
-    dVar8 = (double)sin();
+    dVar8 = (double)sin((double)(lbl_803E179C *
+        (float)((double)CONCAT44(0x43300000,uStack_6c) - lbl_803E17B8) / lbl_803E17A0));
     uStack_64 = (int)param_1[1] ^ 0x80000000;
     local_68 = 0x43300000;
-    dVar9 = (double)fn_80293E80();
-    fVar2 = -*(float *)(lbl_803DD540 + 0x24) / lbl_803E179C;
+    dVar9 = (double)fn_80293E80((double)(lbl_803E179C *
+        (float)((double)CONCAT44(0x43300000,uStack_64) - lbl_803E17B8) / lbl_803E17A0));
+    fVar2 = -*(float *)(lbl_803DD540 + 0x24) / lbl_803E17A4;
     fVar3 = lbl_803E1780;
     if ((lbl_803E1780 <= fVar2) && (fVar3 = fVar2, lbl_803E1788 < fVar2)) {
       fVar3 = lbl_803E1788;
