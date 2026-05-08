@@ -174,6 +174,8 @@ typedef struct DIMbossObject {
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   byte bVar1;
@@ -196,7 +198,7 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
   Obj_GetPlayerObject();
   iVar11 = puVar13[0x103];
   *(undefined2 *)((int)puVar13 + 0x402) = 0;
-  (**(code **)(*lbl_803DCAAC + 0x50))(0x1c,5,0);
+  (*(code *)(*lbl_803DCAAC + 0x50))(0x1c,5,0);
   if (puVar3[0x3d] == 0) {
     puVar7 = lbl_803AC9DC;
     puVar8 = (undefined4 *)0x1;
@@ -205,13 +207,13 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
     for (iVar10 = 0; iVar10 < (int)(uint)animUpdate->eventCount; iVar10 = iVar10 + 1) {
       switch(animUpdate->eventIds[iVar10]) {
       case 1:
-        (**(code **)(*lbl_803DCAB4 + 0xc))(puVar3,0x800,0,100,0);
-        (**(code **)(*lbl_803DCAB4 + 0xc))(puVar3,0x800,0,100,0);
-        (**(code **)(*lbl_803DCAB4 + 0xc))(puVar3,0x7ff,0,100,0);
+        (*(code *)(*lbl_803DCAB4 + 0xc))(puVar3,0x800,0,100,0);
+        (*(code *)(*lbl_803DCAB4 + 0xc))(puVar3,0x800,0,100,0);
+        (*(code *)(*lbl_803DCAB4 + 0xc))(puVar3,0x7ff,0,100,0);
         puVar7 = (undefined4 *)0x0;
         puVar8 = (undefined4 *)0x64;
         puVar9 = (undefined4 *)0x0;
-        (**(code **)(*lbl_803DCAB4 + 0xc))(puVar3,0x7ff,0,100,0);
+        (*(code *)(*lbl_803DCAB4 + 0xc))(puVar3,0x7ff,0,100,0);
         iVar4 = Obj_GetActiveModel((int)puVar3);
         ObjModel_ClearRenderAttachment(iVar4);
         Music_Trigger(0x27,1);
@@ -220,7 +222,7 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
         *(undefined2 *)((int)puVar13 + 0x402) = 1;
         *(byte *)((int)puVar3 + 0xaf) = *(byte *)((int)puVar3 + 0xaf) & 0xf7;
         *(byte *)((int)puVar3 + 0xaf) = *(byte *)((int)puVar3 + 0xaf) | 0x80;
-        (**(code **)(*lbl_803DCAAC + 0x50))(0x1c,0,0);
+        (*(code *)(*lbl_803DCAAC + 0x50))(0x1c,0,0);
         break;
       case 6:
         lbl_803DDB80 = lbl_803DDB80 | 0x40004;
@@ -263,13 +265,13 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
         Music_Trigger(0xee,0);
         break;
       case 0x12:
-        (**(code **)(*DAT_803dd6d4 + 0x50))(0x49,4,puVar3,0x3c);
+        (*(code *)(*DAT_803dd6d4 + 0x50))(0x49,4,puVar3,0x3c);
         break;
       case 0x13:
-        (**(code **)(*lbl_803DCAAC + 0x50))(0x1c,2,1);
+        (*(code *)(*lbl_803DCAAC + 0x50))(0x1c,2,1);
         break;
       case 0x14:
-        (**(code **)(*lbl_803DCAAC + 0x50))(0x1c,2,0);
+        (*(code *)(*lbl_803DCAAC + 0x50))(0x1c,2,0);
         break;
       case 0x15:
         OSReport(sDIMBossFreeingAssetsForDIMBoss);
@@ -356,7 +358,7 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
       }
       bVar1 = *(byte *)((int)puVar13 + 0x405);
       if (bVar1 == 1) {
-        iVar11 = (**(code **)(*DAT_803dd738 + 0x34))
+        iVar11 = (*(code *)(*DAT_803dd738 + 0x34))
                           (puVar3,animUpdate,puVar13,&DAT_803adc78,&DAT_803adc60,0);
         if (iVar11 != 0) {
           puVar7 = (undefined4 *)0x1;
@@ -387,6 +389,8 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
 LAB_801bd7dc:
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

@@ -39,6 +39,8 @@ extern f32 lbl_803E2394;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void firstperson_updatePosition(int param_1,short *param_2)
 {
   float fVar1;
@@ -155,6 +157,8 @@ void firstperson_updatePosition(int param_1,short *param_2)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

@@ -85,6 +85,8 @@ typedef void (*GroundAnimatorInitAnimFn)(void *obj, undefined4 state, int param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_8017D0D4(int obj)
 {
   u8 *state;
@@ -102,26 +104,34 @@ void fn_8017D0D4(int obj)
     state[1] &= 0xfe;
     state[0]++;
   }
-  if (state[0] == 9) {
+  if ((s8)state[0] == 9) {
     (*(GroundAnimatorActivateFn *)(*lbl_803DCA54 + 0x54))(obj, *(s16 *)(mapData + 0x3c));
     (*(GroundAnimatorRefreshFn *)(*lbl_803DCA54 + 0x48))
         (*(u8 *)(mapData + 0x3a), obj, *(u8 *)(mapData + 0x3b));
-  } else if (((state[0] < 8) || (state[0] >= 0xb)) &&
+  } else if ((((s8)state[0] < 8) || ((s8)state[0] >= 0xb)) &&
              (*(s16 *)(mapData + state[0] * 2 + 0x28) == -1)) {
     state[0] = 8;
-  } else if (((state[0] < 8) || (state[0] >= 0xb)) &&
-             (GameBit_Get(*(s16 *)(mapData + state[0] * 2 + 0x28)) != 0) &&
+  } else if ((((s8)state[0] < 8) || ((s8)state[0] >= 0xb)) &&
+             ((u32)GameBit_Get(*(s16 *)(mapData + state[0] * 2 + 0x28)) != 0) &&
              ((s8)*(u8 *)(mapData + state[0] + 0x40) != -1)) {
     (*(GroundAnimatorRefreshFn *)(*lbl_803DCA54 + 0x48))
         ((s8)*(u8 *)(mapData + state[0] + 0x40), obj, -1);
   }
-  step = state[0] - 1;
-  while ((step >= 0) && (*(s16 *)(mapData + step * 2 + 0x18) != -1) &&
-         (GameBit_Get(*(s16 *)(mapData + step * 2 + 0x18)) == 0)) {
-    state[0]--;
-    step--;
+  {
+    short *p;
+    step = state[0] - 1;
+    p = (short *)mapData + step;
+    while (step >= 0) {
+      if (p[12] == -1) break;
+      if ((u32)GameBit_Get(p[12]) != 0) break;
+      state[0]--;
+      step--;
+      p--;
+    }
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -136,22 +146,28 @@ void fn_8017D0D4(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_8017D278(short *obj, int mapData)
 {
-  int step;
+  short *p;
   u8 *state;
+  int step;
 
-  state = *(u8 **)(obj + 0x5c);
-  *obj = (u16)*(u8 *)(mapData + 0x38) << 8;
-  *(void **)(obj + 0x5e) = fn_8017CF90;
-  obj[0x58] |= 0x6000;
+  state = *(u8 **)((int)obj + 0xb8);
+  *obj = (s16)(*(u8 *)(mapData + 0x38) << 8);
+  *(void **)((int)obj + 0xbc) = fn_8017CF90;
+  *(u16 *)((int)obj + 0xb0) |= 0x6000;
   ObjGroup_AddObject((int)obj, 0xf);
   step = 0;
-  while ((step < 8) && (*(s16 *)(mapData + step * 2 + 0x18) != -1) &&
-         (GameBit_Get(*(s16 *)(mapData + step * 2 + 0x18)) != 0)) {
+  p = (short *)mapData;
+  do {
+    if (p[12] == -1) break;
+    if ((u32)GameBit_Get(p[12]) == 0) break;
+    p++;
     step++;
-  }
-  if ((step < 8) && (*(s16 *)(mapData + step * 2 + 0x18) == -1)) {
+  } while (step < 8);
+  if ((step < 8) && (*(s16 *)(mapData + 0x18 + step * 2) == -1)) {
     state[0] = 8;
   } else {
     state[0] = step;
@@ -160,6 +176,8 @@ void fn_8017D278(short *obj, int mapData)
     state[0] = 9;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -263,12 +281,16 @@ void wm_column_free(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void wm_column_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
   if ((*(GroundAnimatorVisibleFn *)(*lbl_803DCAC0 + 0xc))(param_1, visible) != 0) {
     fn_8003B8F4(param_1, param_2, param_3, param_4, param_5, lbl_803E37B8);
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -300,6 +322,8 @@ void wm_column_hitDetect(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void wm_column_update(int obj)
 {
   int *objects;
@@ -317,7 +341,7 @@ void wm_column_update(int obj)
       objects = ObjList_GetObjects(&i, &count);
       for (; i < count; i++) {
         other = objects[i];
-        if ((other != obj) && (*(s16 *)(other + 0x46) == 499) &&
+        if (((u32)other != (u32)obj) && (*(s16 *)(other + 0x46) == 499) &&
             (Vec_distance((float *)(obj + 0x18), (float *)(other + 0x18)) < lbl_803E37C0)) {
           other = *(s16 *)(*(int *)(objects[i] + 0x4c) + 0x1e);
           if (other != -1) {
@@ -342,7 +366,7 @@ void wm_column_update(int obj)
       objects = ObjList_GetObjects(&i, &count);
       for (; i < count; i++) {
         other = objects[i];
-        if ((other != obj) && (*(s16 *)(other + 0x46) == 499) &&
+        if (((u32)other != (u32)obj) && (*(s16 *)(other + 0x46) == 499) &&
             (Vec_distance((float *)(obj + 0x18), (float *)(other + 0x18)) < lbl_803E37C0)) {
           int mapData = *(int *)(objects[i] + 0x4c);
           if (*(s16 *)(obj + 0x46) == (s8)*(u8 *)(mapData + 0x19) + 500) {
@@ -369,6 +393,8 @@ void wm_column_update(int obj)
     *(u32 *)(obj + 0xf4) &= ~1;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -383,18 +409,23 @@ void wm_column_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void wm_column_init(short *obj, int mapData)
 {
-  *obj = (u16)*(u8 *)(mapData + 0x18) << 8;
-  obj[0x58] |= 0x2000;
-  *(undefined4 *)(obj + 0x7a) = 0;
-  *(u8 *)((int)obj + 0xad) = *(u8 *)(mapData + 0x19);
-  if (*(s8 *)(*(int *)(obj + 0x28) + 0x55) <= *(s8 *)((int)obj + 0xad)) {
+  undefined4 state = *(undefined4 *)((int)obj + 0xb8);
+  *obj = (s16)(*(u8 *)(mapData + 0x18) << 8);
+  *(u16 *)((int)obj + 0xb0) |= 0x2000;
+  *(undefined4 *)((int)obj + 0xf4) = 0;
+  *(s8 *)((int)obj + 0xad) = (s8)(int)*(s8 *)(mapData + 0x19);
+  if (*(s8 *)((int)obj + 0xad) >= *(s8 *)(*(int *)((int)obj + 0x50) + 0x55)) {
     *(u8 *)((int)obj + 0xad) = 0;
   }
-  (*(GroundAnimatorInitAnimFn *)(*lbl_803DCAC0 + 4))(obj, *(undefined4 *)(obj + 0x5c), 0x32);
+  (*(GroundAnimatorInitAnimFn *)(*lbl_803DCAC0 + 4))(obj, state, 0x32);
   ObjGroup_AddObject((int)obj, 4);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

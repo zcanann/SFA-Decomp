@@ -67,14 +67,14 @@ void salApplyMatrix(f32 *matrix, f32 *vec, f32 *out)
 #pragma fp_contract off
 void salNormalizeVector(f32 *v)
 {
-    volatile f32 divisor;
+    f32 divisor;
     f32 lensq = v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
     divisor = lensq;
     if (lensq > lbl_803E78C8) {
         f64 g = __frsqrte((f64)lensq);
         g = lbl_803E78D0 * g * (lbl_803E78D8 - g * g * (f64)lensq);
         g = lbl_803E78D0 * g * (lbl_803E78D8 - g * g * (f64)lensq);
-        divisor = (f32)((f64)lensq * (lbl_803E78D0 * g) * (lbl_803E78D8 - g * g * (f64)lensq));
+        *(volatile f32 *)&divisor = (f32)((f64)lensq * ((lbl_803E78D0 * g) * (lbl_803E78D8 - g * g * (f64)lensq)));
     }
     v[0] /= divisor;
     v[1] /= divisor;

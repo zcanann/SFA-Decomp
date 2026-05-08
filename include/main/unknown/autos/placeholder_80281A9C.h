@@ -6,7 +6,7 @@
 void FUN_80281a30(byte param_1,byte param_2,byte param_3,byte param_4);
 void FUN_80281a34(byte param_1,byte param_2,byte param_3,uint param_4);
 void FUN_80281a38(uint param_1,uint param_2,int param_3);
-void inpResetMidiCtrl(u8 a, u8 b, int mode);
+void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
 u32 inpGetMidiCtrl(u8 r3, u8 r4, u8 r5);
 u8 *inpGetChannelDefaults(u8 a, u8 b);
 void inpResetChannelDefaults(u8 a, u8 b);

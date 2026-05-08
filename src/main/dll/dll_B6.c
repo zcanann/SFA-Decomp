@@ -30,6 +30,8 @@ extern f32 lbl_803E22C8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void camcontrol_findBestTarget(undefined8 param_1,double param_2,undefined8 param_3,
                                undefined8 param_4,undefined8 param_5,undefined8 param_6,
                                undefined8 param_7,undefined8 param_8)
@@ -216,3 +218,5 @@ LAB_80101720:
   FUN_8028687c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset

@@ -52,6 +52,8 @@ extern f32 lbl_803E4420;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void pressureswitchfb_update(void)
 {
   char cVar1;
@@ -279,6 +281,8 @@ void pressureswitchfb_update(void)
   FUN_8028687c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

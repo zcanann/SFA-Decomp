@@ -65,6 +65,8 @@ extern f32 lbl_803E1CE0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int fn_80115650(void *objAnimArg, void *objArg, int *turning, void *controlArg,
                 float *turnSpeed, s16 *moves)
 {
@@ -86,10 +88,9 @@ int fn_80115650(void *objAnimArg, void *objArg, int *turning, void *controlArg,
   if (obj->motion == 0) {
     distance = (double)lbl_803E1CD0;
   } else if ((obj->motion->flags & 2) != 0) {
-    distance = (double)(lbl_803E1CDC *
-                        (float)((double)(s32)obj->motion->yawB - lbl_803E1C98));
+    distance = (double)(lbl_803E1CDC * (float)(s32)obj->motion->yawB);
   } else if ((obj->motion->flags & 1) != 0) {
-    distance = (double)(float)((double)(s32)obj->motion->yawA - lbl_803E1C98);
+    distance = (double)(float)(s32)obj->motion->yawA;
   } else {
     distance = (double)lbl_803E1CD0;
   }
@@ -166,9 +167,11 @@ int fn_80115650(void *objAnimArg, void *objArg, int *turning, void *controlArg,
   if ((int)ret < 0) {
     ret = -ret;
   }
-  *turnSpeed = (float)((double)(s32)ret - lbl_803E1C98) / lbl_803E1CE0;
+  *turnSpeed = (float)(s32)ret / lbl_803E1CE0;
   return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_801159DC(void) {}

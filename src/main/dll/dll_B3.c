@@ -1,68 +1,86 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_B3.h"
 
-extern int FUN_8001792c();
-extern undefined4 FUN_80051d64();
-extern undefined4 FUN_800528d0();
-extern undefined4 FUN_80052904();
-extern uint FUN_80053078();
-extern undefined4 FUN_8006f8a4();
-extern undefined4 FUN_8006f8fc();
-extern undefined4 FUN_80259288();
-extern undefined4 FUN_8025c754();
-extern undefined4 FUN_8025cce8();
+extern u8 *ObjModel_GetRenderOp(int model, int idx);
+extern void fn_800528F0(void);
+extern void fn_800528BC(void);
+extern void *textureIdxToPtr(int idx);
+extern void fn_80051D5C(void *tex, void *arg2, int arg3, void *color);
+extern void GXSetBlendMode(int mode, int srcFactor, int dstFactor, int op);
+extern void gxSetZMode_(u32 enable, int func, u32 update);
+extern void gxSetPeControl_ZCompLoc_(u32 ctrl);
+extern void GXSetAlphaCompare(int compA, int refA, int op, int compB, int refB);
+extern void GXSetCullMode(int mode);
 
-extern undefined4 gCamcontrolState;
+extern u8 *pCamera;
+extern f32 lbl_803E1630;
+extern f32 lbl_803E1634;
+extern f32 lbl_803E1638;
+extern f32 lbl_803E163C;
 
 /*
  * --INFO--
  *
- * Function: FUN_80100dcc
+ * Function: fn_80100DCC
  * EN v1.0 Address: 0x80100DCC
- * EN v1.0 Size: 296b
- * EN v1.1 Address: 0x80100F2C
- * EN v1.1 Size: 316b
+ * EN v1.0 Size: 468b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80100dcc(int param_1,int *param_2,int param_3)
+#pragma scheduling off
+#pragma peephole off
+int fn_80100DCC(u8 *param_1, int *param_2, int param_3)
 {
-  int iVar1;
-  uint uVar2;
-  char acStack_18 [3];
-  byte local_15;
-  
-  iVar1 = FUN_8001792c(*param_2,param_3);
-  FUN_80052904();
-  if (*(char *)(iVar1 + 0x29) == '\x01') {
-    if ((*(byte *)(gCamcontrolState + 0x141) & 0x20) == 0) {
-      local_15 = 0;
-    }
-    else {
-      local_15 = *(byte *)(param_1 + 0x36);
-    }
+  u8 *renderOp;
+  u8 tier;
+  u8 colorBuf[4];
+  f32 dist;
+  int alphaVal;
+
+  renderOp = ObjModel_GetRenderOp(*param_2, param_3);
+  dist = *(f32 *)(pCamera + 0x134);
+  if (dist <= lbl_803E1630) {
+    tier = 4;
+  } else if (dist <= lbl_803E1634) {
+    tier = 3;
+  } else if (dist <= lbl_803E1638) {
+    tier = 2;
+  } else if (dist <= lbl_803E163C) {
+    tier = 1;
+  } else {
+    tier = 0;
   }
-  else {
-    local_15 = *(byte *)(param_1 + 0x36);
+  fn_800528F0();
+  if (renderOp[0x29] <= tier) {
+    colorBuf[0] = 0;
+    colorBuf[1] = 0;
+    colorBuf[2] = 0;
+    alphaVal = ((param_1[0x36] + 1) * 0x60) >> 8;
+    colorBuf[3] = alphaVal;
+    fn_80051D5C(textureIdxToPtr(*(int *)(renderOp + 0x24)), 0, 0, colorBuf);
+  } else {
+    colorBuf[0] = 0xff;
+    colorBuf[1] = 0xff;
+    colorBuf[2] = 0xff;
+    colorBuf[3] = param_1[0x36];
+    fn_80051D5C(textureIdxToPtr(*(int *)(renderOp + 0x24)), 0, 0, colorBuf);
   }
-  if (*(char *)(gCamcontrolState + 0x138) == '\b') {
-    local_15 = 0;
+  fn_800528BC();
+  if (param_1[0x36] < 0xff || renderOp[0x29] <= tier) {
+    GXSetBlendMode(1, 4, 5, 5);
+    gxSetZMode_(1, 3, 0);
+  } else {
+    GXSetBlendMode(0, 1, 0, 5);
+    gxSetZMode_(1, 3, 1);
   }
-  uVar2 = FUN_80053078(*(uint *)(iVar1 + 0x24));
-  FUN_80051d64(uVar2,(float *)0x0,0,acStack_18);
-  FUN_800528d0();
-  if (local_15 < 0xff) {
-    FUN_8025cce8(1,4,5,5);
-    FUN_8006f8fc(1,3,0);
-  }
-  else {
-    FUN_8025cce8(0,1,0,5);
-    FUN_8006f8fc(1,3,1);
-  }
-  FUN_8006f8a4(1);
-  FUN_8025c754(7,0,0,7,0);
-  FUN_80259288(2);
+  gxSetPeControl_ZCompLoc_(1);
+  GXSetAlphaCompare(7, 0, 0, 7, 0);
+  GXSetCullMode(2);
   return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset

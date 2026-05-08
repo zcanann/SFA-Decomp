@@ -40,19 +40,3 @@ u32 *get_vidlist(u32 key)
   return NULL;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80279008
- * EN v1.0 Address: 0x80279008
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x802790F4
- * EN v1.1 Size: 264b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80279008(int *param_1)
-{
-}

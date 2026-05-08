@@ -84,8 +84,8 @@ extern f32 lbl_803E64D8;
 #pragma peephole off
 undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
-  u8 mode;
   int stateIndex;
+  u8 mode;
   u8 eventId;
   undefined4 anim;
 

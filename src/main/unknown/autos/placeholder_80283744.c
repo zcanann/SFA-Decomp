@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_80283744.h"
 
-extern u8 *lbl_803DE344;
+extern u8 *volatile lbl_803DE344;
 extern u8 lbl_803DE370;
 extern u16 lbl_803DC618[4];
 extern u16 lbl_803DC620[4];

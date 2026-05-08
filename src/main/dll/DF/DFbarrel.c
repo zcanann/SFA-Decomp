@@ -1,94 +1,114 @@
 #include "ghidra_import.h"
 #include "main/dll/DF/DFbarrel.h"
+#include "dolphin/mtx.h"
 
-extern undefined4 FUN_80003494();
-extern uint FUN_8028682c();
-extern undefined4 FUN_80286878();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
+extern f32 lbl_803E4DF8;
+extern f32 lbl_803E4DFC;
 
-extern f64 DOUBLE_803e5a88;
-extern f32 lbl_803E5A78;
+extern void fn_801C0E60(u8 *self);
+
+#pragma scheduling off
+#pragma peephole off
 
 /*
  * --INFO--
  *
- * Function: FUN_801c0fd8
+ * Function: fn_801C0FD8
  * EN v1.0 Address: 0x801C0FD8
- * EN v1.0 Size: 748b
- * EN v1.1 Address: 0x801C11AC
- * EN v1.1 Size: 616b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 480b
  */
-void FUN_801c0fd8(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4,short *param_5
-                 )
+void fn_801C0FD8(u8 *self)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  short sVar7;
-  short sVar8;
-  short sVar9;
-  short sVar10;
-  short sVar11;
-  short sVar12;
-  uint uVar13;
-  int iVar14;
-  short *psVar15;
-  double dVar16;
-  double dVar17;
-  double dVar18;
-  
-  uVar13 = FUN_8028682c();
-  fVar1 = lbl_803E5A78 * *param_3;
-  fVar2 = lbl_803E5A78 * param_3[1];
-  fVar3 = lbl_803E5A78 * param_3[2];
-  fVar4 = lbl_803E5A78 * *param_4;
-  fVar5 = lbl_803E5A78 * param_4[1];
-  fVar6 = lbl_803E5A78 * param_4[2];
-  FUN_80003494((uint)param_5,uVar13,0x60);
-  iVar14 = 0;
-  psVar15 = param_5;
-  dVar18 = DOUBLE_803e5a88;
-  do {
-    dVar17 = (double)(float)((double)CONCAT44(0x43300000,(int)*psVar15 ^ 0x80000000) - dVar18);
-    dVar16 = (double)FUN_80294964();
-    *psVar15 = (short)(int)(dVar17 * dVar16);
-    dVar16 = (double)FUN_80293f90();
-    psVar15[2] = (short)(int)(-dVar17 * dVar16);
-    psVar15 = psVar15 + 8;
-    iVar14 = iVar14 + 1;
-  } while (iVar14 < 6);
-  sVar7 = (short)(int)fVar1;
-  *param_5 = *param_5 + sVar7;
-  sVar8 = (short)(int)fVar2;
-  param_5[1] = param_5[1] + sVar8;
-  sVar9 = (short)(int)fVar3;
-  param_5[2] = param_5[2] + sVar9;
-  sVar10 = (short)(int)fVar4;
-  param_5[0x18] = param_5[0x18] + sVar10;
-  sVar11 = (short)(int)fVar5;
-  param_5[0x19] = param_5[0x19] + sVar11;
-  sVar12 = (short)(int)fVar6;
-  param_5[0x1a] = param_5[0x1a] + sVar12;
-  param_5[8] = param_5[8] + sVar7;
-  param_5[9] = param_5[9] + sVar8;
-  param_5[10] = param_5[10] + sVar9;
-  param_5[0x20] = param_5[0x20] + sVar10;
-  param_5[0x21] = param_5[0x21] + sVar11;
-  param_5[0x22] = param_5[0x22] + sVar12;
-  param_5[0x10] = param_5[0x10] + sVar7;
-  param_5[0x11] = param_5[0x11] + sVar8;
-  param_5[0x12] = param_5[0x12] + sVar9;
-  param_5[0x28] = param_5[0x28] + sVar10;
-  param_5[0x29] = param_5[0x29] + sVar11;
-  param_5[0x2a] = param_5[0x2a] + sVar12;
-  FUN_80286878();
-  return;
+  int j;
+  int k;
+  u8 *link;
+  u8 *parts;
+  int i;
+  u8 *partIter;
+  Vec tmp;
+  f32 zero;
+
+  parts = (u8 *)*(int *)(self + 0x0);
+
+  if ((s8)self[0x34] < -0x32) {
+    self[0x35] = 1;
+  }
+  if ((s8)self[0x34] > 0x32) {
+    self[0x35] = 2;
+  }
+  if ((s8)self[0x35] == 2) {
+    self[0x34]--;
+  } else {
+    self[0x34]++;
+  }
+
+  partIter = parts + 0x34;
+  for (i = 1; i < (int)self[0x8] - 1; i++) {
+    *(f32 *)(partIter + 0x18) =
+        *(f32 *)(partIter + 0x18) + lbl_803E4DF8 * (f32)(int)(s8)self[0x34];
+    partIter += 0x34;
+  }
+
+  zero = lbl_803E4DFC;
+  for (k = 0; k < *(int *)(self + 0x28); k++) {
+    link = (u8 *)*(int *)(self + 0x4);
+    for (j = 0; j < (int)self[0x8] - 1; j++) {
+      PSVECSubtract((Vec *)*(int *)(link + 0x4), (Vec *)*(int *)(link + 0x8), &tmp);
+      *(f32 *)(link + 0x0) = PSVECMag(&tmp);
+      if (*(f32 *)(link + 0x0) > *(f32 *)(link + 0x14)) {
+        *(f32 *)(link + 0xC) = lbl_803E4DFC;
+      }
+      if (zero == *(f32 *)(link + 0xC)) {
+        *(f32 *)(link + 0x20) = zero;
+        *(f32 *)(link + 0x1C) = zero;
+        *(f32 *)(link + 0x18) = zero;
+      } else {
+        PSVECScale(&tmp, (Vec *)(link + 0x18),
+                   -*(f32 *)(link + 0x10) * (*(f32 *)(link + 0x0) - *(f32 *)(link + 0xC)));
+      }
+      link += 0x24;
+    }
+    fn_801C0E60(self);
+  }
+
+  partIter = parts;
+  for (i = 0; i < (int)self[0x8]; i++) {
+    *(f32 *)(partIter + 0x18) = lbl_803E4DFC;
+    *(f32 *)(partIter + 0x1C) = lbl_803E4DFC;
+    *(f32 *)(partIter + 0x20) = lbl_803E4DFC;
+    partIter += 0x34;
+  }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801C11B8
+ * EN v1.0 Address: 0x801C11B8
+ * EN v1.0 Size: 128b
+ */
+void fn_801C11B8(u8 *self, u8 *a, u8 *b)
+{
+  u8 *p;
+  int i;
+  int j;
+
+  i = 0;
+  j = 0;
+  p = a;
+  while (*(u32 *)(p + 0x28) != 0) {
+    p += 4;
+    i++;
+  }
+  p = b;
+  while (*(u32 *)(p + 0x28) != 0) {
+    p += 4;
+    j++;
+  }
+  if (i > (int)a[0x24]) return;
+  if (j > (int)b[0x24]) return;
+  ((u32 *)(a + 0x28))[i] = (u32)self;
+  ((u32 *)(b + 0x28))[j] = (u32)self;
+  *(u32 *)(self + 0x4) = (u32)a;
+  *(u32 *)(self + 0x8) = (u32)b;
 }

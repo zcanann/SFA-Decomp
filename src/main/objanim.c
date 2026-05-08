@@ -1111,6 +1111,8 @@ undefined4 ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,u32 flags)
 {
   ObjAnimComponent *objAnim;
@@ -1205,3 +1207,5 @@ undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,
   state->speed = clampedProgress * state->segmentLength;
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset

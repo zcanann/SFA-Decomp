@@ -1,137 +1,59 @@
 #include "ghidra_import.h"
 #include "main/dll/DF/DFpulley.h"
+#include "dolphin/mtx.h"
 
-extern uint FUN_80017690();
-extern uint FUN_80017760();
-extern undefined4 ObjHitbox_SetSphereRadius();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_DisableObject();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-
-extern f64 DOUBLE_803e5a60;
-extern f64 DOUBLE_803e5a70;
-extern f32 lbl_803E5A68;
-extern f32 lbl_803E5A6C;
+extern f32 lbl_803E4DFC;
 
 /*
  * --INFO--
  *
- * Function: FUN_801c0e60
+ * Function: fn_801C0E60
  * EN v1.0 Address: 0x801C0E60
- * EN v1.0 Size: 164b
- * EN v1.1 Address: 0x801C0F60
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 376b
  */
-void FUN_801c0e60(int param_1,undefined4 param_2,int param_3)
+void fn_801C0E60(u8 *self)
 {
-  uint uVar1;
-  int iVar2;
-  
-  iVar2 = *(int *)(param_1 + 0xb8);
-  ObjHits_SetHitVolumeSlot(param_1,0,0,0);
-  ObjHitbox_SetSphereRadius(param_1,0);
-  ObjHits_DisableObject(param_1);
-  if (param_3 == 0) {
-    uVar1 = FUN_80017760(0xf0,0x1e0);
-    *(float *)(iVar2 + 0xc) =
-         (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - DOUBLE_803e5a60);
-    uVar1 = FUN_80017760(0,9);
-    *(char *)(iVar2 + 1) = (char)uVar1;
-  }
-  return;
-}
+  int i;
+  u8 *part;
+  int j;
+  u8 *linkPtr;
+  Vec accel;
+  Vec scaled;
+  Vec velscaled;
+  f32 mag;
+  f32 zero = lbl_803E4DFC;
 
-/*
- * --INFO--
- *
- * Function: FUN_801c0f04
- * EN v1.0 Address: 0x801C0F04
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x801C101C
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801c0f04(int param_1)
-{
-  if (**(char **)(param_1 + 0xb8) != '\0') {
-    ObjGroup_RemoveObject(param_1,0x14);
-  }
-  return;
-}
+  part = (u8 *)*(int *)(self + 0);
+  for (i = 0; i < (int)self[0x8]; i++) {
+    *(f32 *)((u8 *)&accel + 0) = zero;
+    *(f32 *)((u8 *)&accel + 4) = zero;
+    *(f32 *)((u8 *)&accel + 8) = zero;
 
-/*
- * --INFO--
- *
- * Function: FUN_801c0f38
- * EN v1.0 Address: 0x801C0F38
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x801C1054
- * EN v1.1 Size: 148b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801c0f38(int param_1)
-{
-  uint uVar1;
-  char *pcVar2;
-  
-  uVar1 = (uint)*(short *)(*(int *)(param_1 + 0x4c) + 0x1c);
-  if (uVar1 != 0xffffffff) {
-    pcVar2 = *(char **)(param_1 + 0xb8);
-    uVar1 = FUN_80017690(uVar1);
-    if (uVar1 == 0) {
-      if (*pcVar2 == '\0') {
-        *pcVar2 = '\x01';
-        ObjGroup_AddObject(param_1,0x14);
+    if (part[0x30] == 0) {
+      linkPtr = part;
+      for (j = 0; j < (int)part[0x24]; j++) {
+        u8 *link = (u8 *)*(u32 *)(linkPtr + 0x28);
+        if (*(u32 *)(link + 4) == (u32)part) {
+          PSVECAdd(&accel, (Vec *)(link + 0x18), &accel);
+        } else {
+          PSVECSubtract(&accel, (Vec *)(link + 0x18), &accel);
+        }
+        linkPtr += 4;
       }
+      mag = PSVECMag(&accel);
+      if (mag > *(f32 *)(self + 0x2C)) {
+        PSVECScale(&accel, &accel, *(f32 *)(self + 0x2C) / mag);
+      }
+      PSVECScale(&accel, &accel, *(f32 *)(self + 0x40));
+      PSVECAdd(&accel, (Vec *)(part + 0x18), &accel);
+      PSVECAdd((Vec *)(part + 0xC), &accel, (Vec *)(part + 0xC));
+      PSVECScale((Vec *)(part + 0xC), &velscaled, *(f32 *)(self + 0x38));
+      PSVECSubtract((Vec *)(part + 0xC), &velscaled, (Vec *)(part + 0xC));
+      *(f32 *)(part + 0x10) = *(f32 *)(self + 0x30) * *(f32 *)(self + 0x3C)
+                              + *(f32 *)(part + 0x10);
+      PSVECScale((Vec *)(part + 0xC), &scaled, *(f32 *)(self + 0x30));
+      PSVECAdd((Vec *)part, &scaled, (Vec *)part);
     }
-    else if (*pcVar2 != '\0') {
-      *pcVar2 = '\0';
-      ObjGroup_RemoveObject(param_1,0x14);
-    }
+    part += 0x34;
   }
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801c0fd0
- * EN v1.0 Address: 0x801C0FD0
- * EN v1.0 Size: 188b
- * EN v1.1 Address: 0x801C10E8
- * EN v1.1 Size: 196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801c0fd0(short *param_1,int param_2)
-{
-  if (*(short *)(param_2 + 0x1c) == -1) {
-    ObjGroup_AddObject((int)param_1,0x14);
-    **(undefined **)(param_1 + 0x5c) = 1;
-  }
-  *param_1 = (ushort)*(byte *)(param_2 + 0x18) << 8;
-  *(undefined4 *)(param_1 + 4) = *(undefined4 *)(*(int *)(param_1 + 0x28) + 4);
-  *(float *)(param_1 + 4) =
-       (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_2 + 0x19)) - DOUBLE_803e5a70) *
-       lbl_803E5A68 + *(float *)(param_1 + 4);
-  if (*(float *)(param_1 + 4) < lbl_803E5A6C) {
-    *(float *)(param_1 + 4) = lbl_803E5A6C;
-  }
-  if (*(char *)(param_2 + 0x1a) == '\0') {
-    *(undefined *)(param_2 + 0x1a) = 0xff;
-  }
-  return;
 }

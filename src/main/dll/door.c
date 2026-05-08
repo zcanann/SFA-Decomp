@@ -56,6 +56,8 @@ typedef struct DfpTargetBlockCollisionPoints {
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject *obj,
                                            DfpTargetBlockCollisionPoints *collisionPoints)
 {
@@ -64,6 +66,8 @@ void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject *obj,
   u8 hit[0x54];
   f32 originalX;
   f32 originalZ;
+  f32 deltaX;
+  f32 deltaZ;
   int i;
 
   i = 0;
@@ -75,15 +79,20 @@ void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject *obj,
     probe[2] = *(f32 *)(point + DFPTARGETBLOCK_POINT_OFFSET_Z) + obj->z;
     originalZ = probe[2];
     if (fn_800640CC(lbl_803E6488,&obj->x,probe,1,hit,obj,8,-1,0,0) != 0) {
+      deltaX = probe[0] - originalX;
+      deltaZ = probe[2] - originalZ;
       if (lbl_803E648C != obj->velX) {
-        obj->x = obj->x + (probe[0] - originalX);
+        obj->x = obj->x + deltaX;
       }
       if (lbl_803E648C != obj->velZ) {
-        obj->z = obj->z + (probe[2] - originalZ);
+        obj->z = obj->z + deltaZ;
       }
-      obj->velX = lbl_803E648C;
-      obj->velY = lbl_803E648C;
-      obj->velZ = lbl_803E648C;
+      {
+        f32 zero = lbl_803E648C;
+        obj->velX = zero;
+        obj->velY = zero;
+        obj->velZ = zero;
+      }
       Sfx_PlayFromObject(obj,0x1d0);
       return;
     }
@@ -91,6 +100,8 @@ void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject *obj,
     i++;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -158,6 +169,8 @@ void dfptargetblock_free(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void dfptargetblock_render(int obj)
 {
   int state;
@@ -168,3 +181,5 @@ void dfptargetblock_render(int obj)
     fn_8003B8F4(obj,lbl_803E6490);
   }
 }
+#pragma peephole reset
+#pragma scheduling reset

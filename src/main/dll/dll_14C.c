@@ -1,113 +1,95 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_14C.h"
 
-extern uint FUN_80017690();
-extern uint FUN_80017760();
-extern undefined4 FUN_80017a78();
-extern undefined4 ObjMsg_AllocQueue();
-extern undefined4 FUN_80039520();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_800400b0();
+extern void objRenderFn_80041018(void);
+extern int  ObjGroup_FindNearestObject(byte type, int obj, float *dist_out);
+extern u32  GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId, int value);
+extern u32  randomGetRange(int min, int max);
 
-extern f64 DOUBLE_803e44b8;
-extern f64 DOUBLE_803e44d8;
-extern f32 lbl_803E4460;
-extern f32 lbl_803E446C;
-extern f32 lbl_803E4474;
-extern f32 lbl_803E44C0;
-extern f32 lbl_803E44C4;
-extern f32 lbl_803E44C8;
-extern f32 lbl_803E44CC;
-extern f32 lbl_803E44D0;
+extern f32 lbl_803E384C;
+extern void *lbl_803DCA54;
 
-/*
- * --INFO--
- *
- * Function: FUN_8017ec94
- * EN v1.0 Address: 0x8017EC94
- * EN v1.0 Size: 1048b
- * EN v1.1 Address: 0x8017EEBC
- * EN v1.1 Size: 704b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8017ec94(undefined2 *param_1,int param_2)
+#pragma scheduling off
+#pragma peephole off
+void fn_8017EC94(int param_1)
 {
-  float fVar1;
-  double dVar2;
+  int *piVar1;
+  byte *pbState;
   uint uVar3;
-  undefined4 *puVar4;
-  int iVar5;
-  undefined4 *puVar6;
-  
-  puVar6 = *(undefined4 **)(param_1 + 0x5c);
-  *puVar6 = *(undefined4 *)(param_2 + 0x18);
-  dVar2 = DOUBLE_803e44d8;
-  puVar6[1] = (float)((double)CONCAT44(0x43300000,(uint)*(ushort *)(param_2 + 0x1c)) -
-                     DOUBLE_803e44d8);
-  puVar6[2] = (float)((double)CONCAT44(0x43300000,(uint)*(ushort *)(param_2 + 0x1e)) - dVar2);
-  fVar1 = lbl_803E44C0;
-  puVar6[4] = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_2 + 0x20)) - dVar2) /
-              lbl_803E44C0;
-  puVar6[5] = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_2 + 0x21)) - dVar2) / fVar1
-              + (float)puVar6[4];
-  puVar6[6] = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_2 + 0x22)) - dVar2) / fVar1
-              + (float)puVar6[5];
-  puVar6[7] = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_2 + 0x23)) - dVar2) / fVar1
-              + (float)puVar6[6];
-  puVar6[8] = (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_2 + 0x24)) - dVar2) / fVar1;
-  puVar6[10] = (float)((double)CONCAT44(0x43300000,(int)*(char *)(param_2 + 0x25) ^ 0x80000000) -
-                      DOUBLE_803e44b8) / fVar1;
-  puVar6[10] = (float)puVar6[10] * lbl_803E4474;
-  puVar6[9] = lbl_803E4460;
-  *(undefined2 *)(puVar6 + 0xe) = 0;
-  fVar1 = lbl_803E446C;
-  puVar6[0xf] = lbl_803E446C;
-  puVar6[0x10] = lbl_803E44C4;
-  puVar6[0x11] = fVar1;
-  fVar1 = (float)puVar6[1] * (float)puVar6[6] * (float)puVar6[1] * (float)puVar6[6];
-  fVar1 = fVar1 * fVar1;
-  puVar6[0x15] = fVar1 * fVar1 * lbl_803E44C8;
-  uVar3 = FUN_80017760(0xffff8000,0x7fff);
-  *param_1 = (short)uVar3;
-  *(float *)(param_1 + 4) = lbl_803E44CC;
-  FUN_80017a78((int)param_1,0);
-  if (((int)*(short *)(param_2 + 0x26) == 0xffffffff) ||
-     (uVar3 = FUN_80017690((int)*(short *)(param_2 + 0x26)), uVar3 == 0)) {
-    fVar1 = (float)puVar6[2] / (float)puVar6[1];
-    if ((float)puVar6[4] <= fVar1) {
-      if ((float)puVar6[5] <= fVar1) {
-        if ((float)puVar6[6] <= fVar1) {
-          iVar5 = *(int *)(param_1 + 0x5c);
-          puVar4 = (undefined4 *)FUN_80039520((int)param_1,0);
-          *puVar4 = 0;
-          *(float *)(iVar5 + 0x24) = lbl_803E4460;
-          *(undefined4 *)(param_1 + 4) = *(undefined4 *)(*(int *)(param_1 + 0x28) + 4);
-          FUN_80017a78((int)param_1,1);
-          *(undefined *)((int)puVar6 + 0x3a) = 3;
-        }
-        else {
-          *(undefined *)((int)puVar6 + 0x3a) = 2;
+  float local8;
+
+  local8 = lbl_803E384C;
+  piVar1 = *(int **)(param_1 + 0x4c);
+  pbState = *(byte **)(param_1 + 0xb8);
+
+  if (*(uint *)(pbState + 4) == 0) {
+    *(int *)(pbState + 4) = ObjGroup_FindNearestObject(*(byte *)((int)piVar1 + 0x1c), param_1, &local8);
+    if (*(uint *)(pbState + 4) == 0) goto end;
+    if ((int)*(short *)((int)piVar1 + 0x1a) == -1) {
+      pbState[2] = 0;
+    } else {
+      uVar3 = GameBit_Get((int)*(short *)((int)piVar1 + 0x1a));
+      pbState[2] = (byte)uVar3;
+    }
+    pbState[0] = 1;
+  }
+
+  *(float *)(param_1 + 0x0c) = *(float *)(*(int *)(pbState + 4) + 0x0c);
+  *(float *)(param_1 + 0x10) = *(float *)(*(int *)(pbState + 4) + 0x10);
+  *(float *)(param_1 + 0x14) = *(float *)(*(int *)(pbState + 4) + 0x14);
+  *(short *)(param_1 + 0x00) = *(short *)(*(int *)(pbState + 4) + 0x00);
+  *(short *)(param_1 + 0x04) = *(short *)(*(int *)(pbState + 4) + 0x04);
+  *(short *)(param_1 + 0x02) = *(short *)(*(int *)(pbState + 4) + 0x02);
+
+  switch (pbState[0]) {
+  case 3:
+    break;
+  case 1:
+    if ((pbState[2] != 0) && ((*(byte *)((int)piVar1 + 0x1f) & 1) == 0)) {
+      *(byte *)(*(int *)(pbState + 4) + 0xaf) &= ~0x20;
+      *(byte *)(param_1 + 0xaf) |= 0x08;
+      pbState[0] = 3;
+    } else if (((int)*(short *)((int)piVar1 + 0x18) != -1) &&
+               (GameBit_Get((int)*(short *)((int)piVar1 + 0x18)) == 0)) {
+      *(byte *)(*(int *)(pbState + 4) + 0xaf) &= ~0x20;
+      *(byte *)(param_1 + 0xaf) |= 0x08;
+      pbState[0] = 2;
+    } else if ((*(byte *)(param_1 + 0xaf) & 1) != 0) {
+      if ((*(byte *)((int)piVar1 + 0x1f) & 2) != 0) {
+        GameBit_Set((int)*(short *)((int)piVar1 + 0x18), 0);
+      }
+      if ((int)*(short *)((int)piVar1 + 0x1a) != -1) {
+        GameBit_Set((int)*(short *)((int)piVar1 + 0x1a), 1);
+      }
+      if ((*(byte *)((int)piVar1 + 0x1f) & 4) != 0) {
+        uVar3 = randomGetRange((int)*(byte *)((int)piVar1 + 0x1d), (int)*(byte *)((int)piVar1 + 0x1e));
+        pbState[1] = (byte)uVar3;
+      } else {
+        pbState[1] += 1;
+        if (pbState[1] > *(byte *)((int)piVar1 + 0x1e)) {
+          pbState[1] = *(byte *)((int)piVar1 + 0x1d);
         }
       }
-      else {
-        *(undefined4 *)(param_1 + 4) = *(undefined4 *)(*(int *)(param_1 + 0x28) + 4);
-        *(undefined *)((int)puVar6 + 0x3a) = 1;
-      }
+      *(byte *)(param_1 + 0xaf) |= 0x08;
+      pbState[2] = 1;
+      (*(void (***)(byte, int, int))lbl_803DCA54)[0x12](pbState[1], param_1, -1);
+    } else {
+      *(byte *)(*(int *)(pbState + 4) + 0xaf) |= 0x20;
+      *(byte *)(param_1 + 0xaf) &= ~0x08;
     }
-    else {
-      *(undefined *)((int)puVar6 + 0x3a) = 0;
+    break;
+  case 2:
+    if (GameBit_Get((int)*(short *)((int)piVar1 + 0x18)) != 0) {
+      pbState[0] = 1;
     }
+    break;
   }
-  else {
-    puVar6[2] = lbl_803E44D0;
-    *(undefined *)((int)puVar6 + 0x3a) = 6;
-  }
-  ObjMsg_AllocQueue((int)param_1,2);
+end:
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -122,15 +104,18 @@ void FUN_8017ec94(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017f0ac(int param_1)
+#pragma peephole off
+void fn_8017EF3C(int param_1, int param_2)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
-    FUN_8003b818(param_1);
-  }
+  byte *pbVar1;
+
+  pbVar1 = *(byte **)(param_1 + 0xb8);
+  pbVar1[0] = 0;
+  pbVar1[1] = *(byte *)(param_2 + 0x1e);
+  *(ushort *)(param_1 + 0xb0) |= 0x4000;
   return;
 }
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -145,13 +130,15 @@ void FUN_8017f0ac(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017f0d4(int param_1)
+#pragma peephole off
+void fn_8017EFB0(int param_1)
 {
-  if (((*(uint *)(*(int *)(param_1 + 0x50) + 0x44) & 1) != 0) && (*(int *)(param_1 + 0x74) != 0)) {
-    FUN_800400b0();
+  if (((*(uint *)(*(int *)(param_1 + 0x50) + 0x44) & 1) != 0) && (*(uint *)(param_1 + 0x74) != 0)) {
+    objRenderFn_80041018();
   }
   return;
 }
+#pragma peephole reset
 
 
 /* Trivial 4b 0-arg blr leaves. */

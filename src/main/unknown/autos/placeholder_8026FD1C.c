@@ -1,19 +1,3 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8026FD1C.h"
 
-/*
- * --INFO--
- *
- * Function: FUN_8026fc8c
- * EN v1.0 Address: 0x8026FC8C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8026FD1C
- * EN v1.1 Size: 120b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8026fc8c(int param_1)
-{
-}

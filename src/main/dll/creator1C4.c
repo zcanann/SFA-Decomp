@@ -46,6 +46,8 @@ extern f32 lbl_803E5CD8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -149,7 +151,7 @@ void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefin
           FUN_80017698(0x129,0);
           FUN_80017698(0x5af,0);
           FUN_80017698(0xdd2,1);
-          (**(code **)(*DAT_803dd6d4 + 0x48))(0,puVar2,0xffffffff);
+          (*(code *)(*DAT_803dd6d4 + 0x48))(0,puVar2,0xffffffff);
           FUN_800067c0((int *)0xd8,1);
         }
         break;
@@ -192,7 +194,7 @@ void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefin
           FUN_80006b4c();
           FUN_80017698(0xdd2,0);
           *(float *)(iVar13 + 4) = lbl_803E5CD8;
-          (**(code **)(*DAT_803dd6cc + 8))(0x1e,1);
+          (*(code *)(*DAT_803dd6cc + 8))(0x1e,1);
           FUN_80006824(0,0x7e);
         }
         else {
@@ -208,7 +210,7 @@ void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefin
                                             param_8,puVar11[local_38[0] + -1]);
             }
             *(float *)(iVar13 + 4) = lbl_803E5CD8;
-            (**(code **)(*DAT_803dd6cc + 8))(0x1e,1);
+            (*(code *)(*DAT_803dd6cc + 8))(0x1e,1);
           }
         }
         break;
@@ -216,14 +218,14 @@ void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefin
         uVar4 = FUN_80294cd0(iVar3,0x80);
         if (uVar4 == 0) {
           FUN_80006770(3);
-          (**(code **)(*DAT_803dd6d4 + 0x48))(1,puVar2,0xffffffff);
+          (*(code *)(*DAT_803dd6d4 + 0x48))(1,puVar2,0xffffffff);
           *(undefined *)(iVar13 + 0x14) = 4;
           FUN_80017698(0x36a,0);
-          (**(code **)(*DAT_803dd72c + 0x50))(0xd,0,1);
-          (**(code **)(*DAT_803dd72c + 0x50))(0xd,1,1);
-          (**(code **)(*DAT_803dd72c + 0x50))(0xd,5,1);
-          (**(code **)(*DAT_803dd72c + 0x50))(0xd,10,1);
-          (**(code **)(*DAT_803dd72c + 0x50))(0xd,0xb,1);
+          (*(code *)(*DAT_803dd72c + 0x50))(0xd,0,1);
+          (*(code *)(*DAT_803dd72c + 0x50))(0xd,1,1);
+          (*(code *)(*DAT_803dd72c + 0x50))(0xd,5,1);
+          (*(code *)(*DAT_803dd72c + 0x50))(0xd,10,1);
+          (*(code *)(*DAT_803dd72c + 0x50))(0xd,0xb,1);
           FUN_80017698(0xc91,1);
           FUN_80017698(0xe05,0);
         }
@@ -257,7 +259,7 @@ void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefin
         break;
       case 5:
         *(float *)(iVar13 + 4) = lbl_803E5CD8;
-        (**(code **)(*DAT_803dd6cc + 0xc))(0x1e,1);
+        (*(code *)(*DAT_803dd6cc + 0xc))(0x1e,1);
         *(undefined *)(iVar13 + 0x14) = 1;
         puVar2[3] = puVar2[3] | 0x4000;
         break;
@@ -280,6 +282,8 @@ void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefin
   FUN_80286880();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */

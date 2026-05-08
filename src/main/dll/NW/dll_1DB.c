@@ -1,137 +1,114 @@
 #include "ghidra_import.h"
 #include "main/dll/NW/dll_1DB.h"
 
-extern int FUN_80017730();
-extern int FUN_800620e8();
-extern undefined4 FUN_80286840();
-extern undefined4 FUN_8028688c();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
+extern f32 lbl_803E52A8;
+
+extern u8 *Obj_GetPlayerObject(void);
+extern u8 *fn_8002B9AC(void);
+extern int fn_8002B044(u8 *self);
+extern void ObjHits_DisableObject(u8 *obj);
+extern void gameBitIncrement(s16 bit);
+extern void GameBit_Set(int bit, int value);
+extern void fn_800999B4(u8 *obj, int a, int b, f32 f1);
+extern void Sfx_PlayFromObject(u8 *obj, int sfxId);
+extern int ObjMsg_Pop(u8 *obj, int *outMsg, int a, int b);
+extern f32 fn_800216D0(f32 *a, f32 *b);
+extern void Obj_StartModelFadeIn(u8 *obj, int frames);
+extern void Obj_SetModelColorFadeRecursive(u8 *obj, int a, int b, int c, int d, int e);
+extern int ObjHits_GetPriorityHit(u8 *obj, int *outOther, int a, int b);
+extern void fn_801D083C(u8 *self, u8 *state, u8 *other);
+extern f32 sqrtf(f32 x);
+
+#pragma peephole off
+#pragma scheduling off
 
 /*
  * --INFO--
  *
  * Function: ediblemushroom_update
  * EN v1.0 Address: 0x801D16EC
- * EN v1.0 Size: 768b
- * EN v1.1 Address: 0x801D188C
- * EN v1.1 Size: 704b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 652b
  */
-void ediblemushroom_update(void)
+void ediblemushroom_update(u8 *self)
 {
-  int *piVar1;
-  int iVar2;
-  int iVar3;
-  double extraout_f1;
-  double dVar4;
-  double dVar5;
-  double dVar6;
-  double dVar7;
-  double dVar8;
-  double dVar9;
-  double dVar10;
-  double dVar11;
-  double in_f23;
-  double dVar12;
-  double in_f24;
-  double in_f25;
-  double dVar13;
-  double in_f26;
-  double in_f27;
-  double dVar14;
-  double in_f28;
-  double in_f29;
-  double in_f30;
-  double in_f31;
-  double in_ps23_1;
-  double in_ps24_1;
-  double in_ps25_1;
-  double in_ps26_1;
-  double in_ps27_1;
-  double in_ps28_1;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  float local_c0;
-  int local_bc;
-  float local_b8;
-  undefined4 local_b0;
-  uint uStack_ac;
-  float local_88;
-  float fStack_84;
-  float local_78;
-  float fStack_74;
-  float local_68;
-  float fStack_64;
-  float local_58;
-  float fStack_54;
-  float local_48;
-  float fStack_44;
-  float local_38;
-  float fStack_34;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  local_38 = (float)in_f28;
-  fStack_34 = (float)in_ps28_1;
-  local_48 = (float)in_f27;
-  fStack_44 = (float)in_ps27_1;
-  local_58 = (float)in_f26;
-  fStack_54 = (float)in_ps26_1;
-  local_68 = (float)in_f25;
-  fStack_64 = (float)in_ps25_1;
-  local_78 = (float)in_f24;
-  fStack_74 = (float)in_ps24_1;
-  local_88 = (float)in_f23;
-  fStack_84 = (float)in_ps23_1;
-  piVar1 = (int *)FUN_80286840();
-  dVar12 = extraout_f1;
-  iVar2 = FUN_80017730();
-  uStack_ac = (int)(short)iVar2 ^ 0x80000000;
-  local_b0 = 0x43300000;
-  dVar4 = (double)FUN_80293f90();
-  dVar5 = (double)FUN_80294964();
-  local_c0 = -(float)(dVar12 * dVar4 - (double)(float)piVar1[3]);
-  local_bc = piVar1[4];
-  local_b8 = -(float)(dVar12 * dVar5 - (double)(float)piVar1[5]);
-  iVar2 = FUN_800620e8(piVar1 + 3,&local_c0,(float *)0x3,(int *)0x0,piVar1,8,0xffffffff,0xff,0);
-  if (iVar2 != 0) {
-    dVar14 = dVar4;
-    dVar6 = (double)FUN_80293f90();
-    dVar7 = (double)FUN_80293f90();
-    dVar13 = dVar5;
-    dVar8 = (double)FUN_80294964();
-    dVar9 = (double)FUN_80294964();
-    iVar2 = 0;
-    while( true ) {
-      dVar10 = (double)(float)(dVar4 * dVar8 + (double)(float)(dVar5 * dVar6));
-      dVar5 = (double)(float)(dVar5 * dVar8 - (double)(float)(dVar4 * dVar6));
-      local_c0 = -(float)(dVar12 * dVar10 - (double)(float)piVar1[3]);
-      local_b8 = -(float)(dVar12 * dVar5 - (double)(float)piVar1[5]);
-      iVar3 = FUN_800620e8(piVar1 + 3,&local_c0,(float *)0x1,(int *)0x0,piVar1,8,0xffffffff,0xff,0);
-      if (iVar3 == 0) break;
-      dVar11 = (double)(float)(dVar14 * dVar9 + (double)(float)(dVar13 * dVar7));
-      dVar13 = (double)(float)(dVar13 * dVar9 - (double)(float)(dVar14 * dVar7));
-      local_c0 = -(float)(dVar12 * dVar11 - (double)(float)piVar1[3]);
-      local_b8 = -(float)(dVar12 * dVar13 - (double)(float)piVar1[5]);
-      iVar3 = FUN_800620e8(piVar1 + 3,&local_c0,(float *)0x1,(int *)0x0,piVar1,8,0xffffffff,0xff,0);
-      if ((iVar3 == 0) || (iVar2 = iVar2 + 1, dVar4 = dVar10, dVar14 = dVar11, 7 < iVar2)) break;
+  u8 *state;
+  u8 *other;
+  u8 *player;
+  u8 *enemy;
+  int hitObj;
+  int msg;
+  int hitKind;
+  f32 distState;
+  f32 distEnemy;
+
+  state = (u8 *)*(int *)(self + 0xB8);
+  other = (u8 *)*(int *)(self + 0x4C);
+  player = Obj_GetPlayerObject();
+  enemy = fn_8002B9AC();
+
+  if (fn_8002B044(self) != 0) goto end;
+
+  if (state[0x136] == 8) {
+    while (ObjMsg_Pop(self, &msg, 0, 0) != 0) {
+      if (((u32)msg - 0x70000) != 0xB) continue;
+      *(s16 *)(self + 6) = (s16)(*(s16 *)(self + 6) | 0x4000);
+      ObjHits_DisableObject(self);
+      gameBitIncrement(*(s16 *)(state + 0x134));
+      GameBit_Set(0x12E, 0);
+      if (*(s16 *)(self + 0x46) == 0x658) {
+        fn_800999B4(self, 0xFF, 0x28, lbl_803E52A8);
+      } else {
+        fn_800999B4(self, 6, 0x28, lbl_803E52A8);
+      }
+      Sfx_PlayFromObject(self, 0x58);
+    }
+    goto end;
+  }
+
+  if (state[0x139] != 0) {
+    *(f32 *)(self + 0xC) = *(f32 *)(other + 0x8);
+    *(f32 *)(self + 0x10) = *(f32 *)(other + 0xC);
+    *(f32 *)(self + 0x14) = *(f32 *)(other + 0x10);
+    self[0x36] = 0xFF;
+    state[0x139] = 0;
+  }
+
+  *(f32 *)(state + 0x10C) = *(f32 *)(state + 0x108);
+  distState = fn_800216D0((f32 *)(player + 0x18), (f32 *)(self + 0x18));
+  if (enemy == NULL) {
+    *(f32 *)(state + 0x108) = sqrtf(distState);
+  } else {
+    distEnemy = fn_800216D0((f32 *)(enemy + 0x18), (f32 *)(self + 0x18));
+    if (distState < distEnemy) {
+      *(f32 *)(state + 0x108) = sqrtf(distState);
+    } else {
+      *(f32 *)(state + 0x108) = sqrtf(distEnemy);
+    }
+    if (*(f32 *)(state + 0x108) < (f32)(u32)other[0x1F]) {
+      (*(void (**)(u8 *, u8 *, int, int))(*(int *)*(int *)(enemy + 0x68) + 0x28))
+          (enemy, self, 0, 1);
     }
   }
-  FUN_8028688c();
-  return;
+
+  hitKind = ObjHits_GetPriorityHit(self, &hitObj, 0, 0);
+  if (hitKind != 0) {
+    if (hitKind == 0x10) {
+      Obj_StartModelFadeIn(self, 0x12C);
+    } else {
+      Obj_SetModelColorFadeRecursive(self, 0xF, 0xC8, 0, 0, 1);
+      if (*(s16 *)((u8 *)hitObj + 0x46) != 0x416) {
+        if ((state[0x137] & 0x10) == 0) {
+          Sfx_PlayFromObject(self, 0x9D);
+        }
+        state[0x137] = (u8)(state[0x137] | 0x10);
+      }
+    }
+  }
+  fn_801D083C(self, state, other);
+
+end:
+  ;
 }
+
+#pragma peephole reset
+#pragma scheduling reset

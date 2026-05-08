@@ -3,8 +3,8 @@
 
 #include "ghidra_import.h"
 
-void FUN_801d7c14(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 ushort *param_9);
+int fn_801D7C14(void *obj, void *unused, void *p3);
+void fn_801D7C94(void *obj, void *p2);
+void fn_801D7ED4(int *p1, int p2, s16 a, s16 b, s16 c, int musicId);
 
 #endif /* MAIN_DLL_SC_SCTOTEMLOGPUZ_H_ */

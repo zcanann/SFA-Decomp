@@ -1,97 +1,77 @@
-#include "ghidra_import.h"
+#include "global.h"
 #include "main/dll/dll_4D.h"
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b8c();
-extern undefined4 FUN_80006b94();
-extern undefined4 FUN_80006c20();
-extern undefined4 FUN_80053aac();
-extern undefined4 FUN_8005d018();
-extern undefined4 FUN_80133a04();
-extern uint countLeadingZeros();
+typedef struct TitleMenuTextEntry {
+    u8 pad0[0x16];
+    u16 flags;
+    s8 pad18[0x24];
+} TitleMenuTextEntry;
 
-extern int DAT_803a9430;
-extern undefined4 DAT_803a9438;
-extern undefined4 DAT_803dc690;
-extern undefined4* DAT_803dd6cc;
-extern undefined4* DAT_803dd720;
-extern undefined4* DAT_803dd724;
-extern undefined4 DAT_803de384;
-extern undefined4 DAT_803de385;
-extern f32 lbl_803E2A50;
+typedef struct TitleMenuControl {
+    void *vtable;
+} TitleMenuControl;
+
+typedef struct MenuPanelGroup {
+    u8 pad00[0x30];
+    TitleMenuTextEntry *entries;
+    u32 unused34;
+    u8 count;
+    u8 pad39[7];
+} MenuPanelGroup;
+
+extern MenuPanelGroup lbl_8031ACB8;
+
+extern u8 lbl_803DBA28;
+extern u8 lbl_803DC968;
+extern TitleMenuControl *lbl_803DCAA0;
+extern TitleMenuControl *lbl_803DCAA4;
+extern u8 lbl_803DD706;
+extern u8 *lbl_803DD708;
+extern int lbl_803A87D0[8];
+
+extern int isCheatActive(int);
+extern int isCheatUnlocked(int);
 
 /*
  * --INFO--
  *
- * Function: FUN_8011c5cc
+ * Function: fn_8011C5CC
  * EN v1.0 Address: 0x8011C5CC
- * EN v1.0 Size: 532b
- * EN v1.1 Address: 0x8011C5FC
- * EN v1.1 Size: 516b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 488b
  */
-void FUN_8011c5cc(int param_1,int param_2)
-{
-  uint uVar1;
-  uint uVar2;
-  int iVar3;
-  char cVar5;
-  undefined4 uVar4;
-  int *piVar6;
-  
-  if (((&DAT_803a9430)[param_2] != 0) && (iVar3 = (**(code **)(*DAT_803dd724 + 0x2c))(), iVar3 != 0)
-     ) {
-    if (param_2 == 2) {
-      iVar3 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9438);
-      if (iVar3 == 0) {
-        FUN_80133a04();
-        if (DAT_803dc690 != -1) {
-          (**(code **)(*DAT_803dd720 + 8))();
-          DAT_803dc690 = -1;
-        }
-        iVar3 = 0;
-        piVar6 = &DAT_803a9430;
-        do {
-          if (*piVar6 != 0) {
-            (**(code **)(*DAT_803dd724 + 0x10))();
-            *piVar6 = 0;
-          }
-          piVar6 = piVar6 + 1;
-          iVar3 = iVar3 + 1;
-        } while (iVar3 < 8);
-      }
+#pragma scheduling off
+#pragma peephole off
+void fn_8011C5CC(void) {
+    MenuPanelGroup *p;
+
+    if ((s8)lbl_803DBA28 != -1) {
+        ((void (**)(void))lbl_803DCAA0->vtable)[2]();
     }
-    else if (param_2 < 2) {
-      if (param_2 == 0) {
-        cVar5 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9430);
-        FUN_8005d018(cVar5);
-      }
-      else if (-1 < param_2) {
-        uVar4 = (**(code **)(*DAT_803dd724 + 0x24))((&DAT_803a9430)[param_2]);
-        uVar2 = countLeadingZeros(uVar4);
-        uVar1 = uVar2 >> 5 & 0xff;
-        if (uVar1 == 0) {
-          FUN_80006b8c();
-        }
-        FUN_80006c20((char)(uVar2 >> 5));
-        if (uVar1 != 0) {
-          FUN_80006b94((double)lbl_803E2A50);
-        }
-      }
+    lbl_803DBA28 = 3;
+
+    p = &lbl_8031ACB8;
+    lbl_803A87D0[0] = ((int (**)(int, int, int, int, s16))lbl_803DCAA4->vtable)[3](
+        0x36b, 0x22, 0, 1, (s16)(lbl_803DD708[2] == 0));
+
+    if (isCheatUnlocked(3) != 0 && lbl_803DC968 == 0) {
+        p->entries[p->count - 2].pad18[3] = p->count - 1;
+        p->entries[p->count - 1].flags &= ~0x4000;
+
+        lbl_803A87D0[1] = ((int (**)(int, int, int, int, s16))lbl_803DCAA4->vtable)[3](
+            0x36b, 0x23, 0, 1, (s16)(isCheatActive(3) == 0));
+    } else {
+        p->entries[p->count - 2].pad18[3] = -1;
+        p->entries[p->count - 1].flags |= 0x4000;
     }
-    else if (param_2 < 4) {
-      uVar4 = (**(code **)(*DAT_803dd724 + 0x24))((&DAT_803a9430)[param_2]);
-      FUN_80053aac(uVar4);
-    }
-  }
-  if (param_1 == 0) {
-    FUN_80006824(0,0x100);
-    (**(code **)(*DAT_803dd6cc + 8))(0x14,5);
-    DAT_803de384 = 0x23;
-    DAT_803de385 = 1;
-  }
-  return;
+
+    ((void (**)(int, int))lbl_803DCAA0->vtable)[8](lbl_803A87D0[0], 1);
+
+    ((void (**)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))
+        lbl_803DCAA0->vtable)[1](
+        p->entries, p->count, 0, 0, 0, 0, 0x14, 0xc8,
+        0xff, 0xff, 0xff, 0xff);
+
+    lbl_803DD706 = 2;
 }
+#pragma peephole reset
+#pragma scheduling reset

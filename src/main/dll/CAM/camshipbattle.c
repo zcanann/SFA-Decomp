@@ -159,6 +159,8 @@ void camcontrol_buildPathPoints(undefined8 param_1,double param_2,double param_3
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void camcontrol_updatePathTargetAction(int param_1,int param_2)
 {
   short sVar1;
@@ -190,6 +192,8 @@ void camcontrol_updatePathTargetAction(int param_1,int param_2)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

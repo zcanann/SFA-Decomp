@@ -211,23 +211,25 @@ int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2)
  * PAL Size: TODO
  */
 #pragma dont_inline on
+#pragma scheduling off
+#pragma peephole off
 void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
                                  ObjHitReactState *hitState,int moveId,int async)
 {
   s16 *moveEntry;
+  int iVar3;
   s16 *moveEntryTable;
   s16 firstEntryIndex;
-  int iVar3;
-  
+
   moveEntryTable = (s16 *)((ObjAnimDef *)((ObjAnimComponent *)objAnim)->modelInstance)->hitReactMoveTable;
   hitState->activeEntryCount = 0;
   if (moveEntryTable != (s16 *)0x0) {
     iVar3 = 0;
-    for (moveEntry = moveEntryTable; *moveEntry != -1; moveEntry = moveEntry + 3) {
+    for (moveEntry = moveEntryTable; *moveEntry != -1; moveEntry = moveEntry + 3, iVar3 = iVar3 + 3) {
       if (moveId == *moveEntry) {
         firstEntryIndex = moveEntryTable[iVar3 + 1];
         hitState->activeEntryCount = moveEntryTable[iVar3 + 2];
-        if (hitState->entryCapacity < hitState->activeEntryCount) {
+        if (hitState->activeEntryCount > hitState->entryCapacity) {
           hitState->activeEntryCount = hitState->entryCapacity;
         }
         if (async == 0) {
@@ -237,11 +239,12 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
         fn_80048F48(0x41,hitState->entries,(int)firstEntryIndex,(int)hitState->activeEntryCount);
         return;
       }
-      iVar3 = iVar3 + 3;
     }
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 #pragma dont_inline reset
 
 /*
@@ -257,6 +260,8 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitState,
                            uint entryArena,int objAnim)
 {
@@ -272,6 +277,8 @@ uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitSt
   }
   return entryArena;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -304,10 +311,11 @@ void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
   if (*(char *)(param_2 + 0xb0) == param_3) {
     return;
   }
-  iVar1 = 0;
-  for (sVar3 = 0; sVar3 < 0x32; sVar3 = sVar3 + 1) {
+  sVar3 = 0;
+  iVar1 = sVar3;
+  for (; sVar3 < 0x32; sVar3 = sVar3 + 1) {
     piVar2 = (int *)(lbl_803DCBDC + iVar1);
-    if ((*piVar2 != 0) && (piVar2[2] == param_1)) {
+    if ((*piVar2 != 0) && ((u32)piVar2[2] == (u32)param_1)) {
       *piVar2 = 0;
     }
     iVar1 = iVar1 + 0x3c;
@@ -353,59 +361,48 @@ void ObjHits_SetTargetMask(int param_1,undefined param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHitbox_SetSphereRadius(int param_1,undefined2 param_2)
 {
-  double dVar1;
-  uint uVar2;
-  int iVar3;
-  
-  iVar3 = *(int *)(param_1 + 0x54);
+  float fVar1;
+  uint iVar3;
+
+  iVar3 = *(uint *)(param_1 + 0x54);
   if (iVar3 != 0) {
     if ((*(byte *)(iVar3 + 0x62) & 1) != 0) {
       *(undefined2 *)(iVar3 + 0x5a) = param_2;
-      dVar1 = DOUBLE_803df5c0;
-      uVar2 = (int)*(short *)(iVar3 + 0x5a) ^ 0x80000000;
-      *(float *)(iVar3 + 0xc) =
-           (float)((double)CONCAT44(0x43300000,uVar2) - DOUBLE_803df5c0) *
-           (float)((double)CONCAT44(0x43300000,uVar2) - DOUBLE_803df5c0);
+      fVar1 = (float)(s32)*(short *)(iVar3 + 0x5a);
+      *(float *)(iVar3 + 0xc) = fVar1 * fVar1;
       *(float *)(iVar3 + 0x28) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-      uVar2 = (int)*(short *)(iVar3 + 0x5a) ^ 0x80000000;
-      if (*(float *)(iVar3 + 0x28) < (float)((double)CONCAT44(0x43300000,uVar2) - dVar1)) {
-        *(float *)(iVar3 + 0x28) = (float)((double)CONCAT44(0x43300000,uVar2) - dVar1);
+      if ((float)(s32)*(short *)(iVar3 + 0x5a) > *(float *)(iVar3 + 0x28)) {
+        *(float *)(iVar3 + 0x28) = (float)(s32)*(short *)(iVar3 + 0x5a);
       }
       *(float *)(iVar3 + 0x2c) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-      uVar2 = (int)*(short *)(iVar3 + 0x5a) ^ 0x80000000;
-      if (*(float *)(iVar3 + 0x2c) < (float)((double)CONCAT44(0x43300000,uVar2) - DOUBLE_803df5c0))
-      {
-        *(float *)(iVar3 + 0x2c) = (float)((double)CONCAT44(0x43300000,uVar2) - DOUBLE_803df5c0);
+      if ((float)(s32)*(short *)(iVar3 + 0x5a) > *(float *)(iVar3 + 0x2c)) {
+        *(float *)(iVar3 + 0x2c) = (float)(s32)*(short *)(iVar3 + 0x5a);
       }
     }
     if ((*(byte *)(iVar3 + 0xb6) & 1) != 0) {
       *(undefined2 *)(iVar3 + 100) = param_2;
       *(float *)(iVar3 + 0x30) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-      if (*(float *)(iVar3 + 0x30) <
-          (float)((double)CONCAT44(0x43300000,(int)*(short *)(iVar3 + 0x5a) ^ 0x80000000) -
-                 DOUBLE_803df5c0)) {
-        *(float *)(iVar3 + 0x30) =
-             (float)((double)CONCAT44(0x43300000,(int)*(short *)(iVar3 + 100) ^ 0x80000000) -
-                    DOUBLE_803df5c0);
+      if ((float)(s32)*(short *)(iVar3 + 0x5a) > *(float *)(iVar3 + 0x30)) {
+        *(float *)(iVar3 + 0x30) = (float)(s32)*(short *)(iVar3 + 100);
       }
       *(float *)(iVar3 + 0x34) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-      if (*(float *)(iVar3 + 0x34) <
-          (float)((double)CONCAT44(0x43300000,(int)*(short *)(iVar3 + 0x5a) ^ 0x80000000) -
-                 DOUBLE_803df5c0)) {
-        *(float *)(iVar3 + 0x34) =
-             (float)((double)CONCAT44(0x43300000,(int)*(short *)(iVar3 + 100) ^ 0x80000000) -
-                    DOUBLE_803df5c0);
+      if ((float)(s32)*(short *)(iVar3 + 0x5a) > *(float *)(iVar3 + 0x34)) {
+        *(float *)(iVar3 + 0x34) = (float)(s32)*(short *)(iVar3 + 100);
       }
     }
-    *(undefined4 *)(iVar3 + 0x38) = *(undefined4 *)(iVar3 + 0x2c);
+    *(float *)(iVar3 + 0x38) = *(float *)(iVar3 + 0x2c);
     if (*(float *)(iVar3 + 0x38) < *(float *)(iVar3 + 0x34)) {
       *(float *)(iVar3 + 0x38) = *(float *)(iVar3 + 0x34);
     }
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -420,46 +417,44 @@ void ObjHitbox_SetSphereRadius(int param_1,undefined2 param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHitbox_SetCapsuleBounds(int param_1,undefined2 param_2,short param_3,short param_4)
 {
   float fVar1;
   float fVar2;
-  int iVar3;
-  uint uVar4;
-  
-  iVar3 = *(int *)(param_1 + 0x54);
+  uint iVar3;
+  s32 absVal;
+
+  iVar3 = *(uint *)(param_1 + 0x54);
   if (iVar3 != 0) {
     if ((*(byte *)(iVar3 + 0x62) & 2) != 0) {
       *(short *)(iVar3 + 0x5c) = param_3;
       *(short *)(iVar3 + 0x5e) = param_4;
       *(undefined2 *)(iVar3 + 0x5a) = param_2;
-      uVar4 = (int)*(short *)(iVar3 + 0x5a) ^ 0x80000000;
-      *(float *)(iVar3 + 0xc) =
-           (float)((double)CONCAT44(0x43300000,uVar4) - DOUBLE_803df5c0) *
-           (float)((double)CONCAT44(0x43300000,uVar4) - DOUBLE_803df5c0);
+      fVar1 = (float)(s32)*(short *)(iVar3 + 0x5a);
+      *(float *)(iVar3 + 0xc) = fVar1 * fVar1;
       *(undefined2 *)(iVar3 + 0x58) = 0x400;
       *(float *)(iVar3 + 0x28) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-      uVar4 = (uint)param_3;
-      if ((int)uVar4 < 0) {
-        uVar4 = -uVar4;
+      absVal = (s32)param_3;
+      if (absVal < 0) {
+        absVal = -absVal;
       }
-      fVar1 = (float)((double)CONCAT44(0x43300000,uVar4 ^ 0x80000000) - DOUBLE_803df5c0);
-      uVar4 = (uint)param_4;
-      if ((int)uVar4 < 0) {
-        uVar4 = -uVar4;
+      fVar1 = (float)absVal;
+      absVal = (s32)param_4;
+      if (absVal < 0) {
+        absVal = -absVal;
       }
-      fVar2 = (float)((double)CONCAT44(0x43300000,uVar4 ^ 0x80000000) - DOUBLE_803df5c0);
-      if (fVar2 < fVar1) {
+      fVar2 = (float)absVal;
+      if (fVar1 > fVar2) {
         fVar2 = fVar1;
       }
-      if (*(float *)(iVar3 + 0x28) < fVar2) {
+      if (fVar2 > *(float *)(iVar3 + 0x28)) {
         *(float *)(iVar3 + 0x28) = fVar2;
       }
       *(float *)(iVar3 + 0x2c) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-      uVar4 = (int)*(short *)(iVar3 + 0x5a) ^ 0x80000000;
-      if (*(float *)(iVar3 + 0x2c) < (float)((double)CONCAT44(0x43300000,uVar4) - DOUBLE_803df5c0))
-      {
-        *(float *)(iVar3 + 0x2c) = (float)((double)CONCAT44(0x43300000,uVar4) - DOUBLE_803df5c0);
+      if ((float)(s32)*(short *)(iVar3 + 0x5a) > *(float *)(iVar3 + 0x2c)) {
+        *(float *)(iVar3 + 0x2c) = (float)(s32)*(short *)(iVar3 + 0x5a);
       }
     }
     if ((*(byte *)(iVar3 + 0xb6) & 2) != 0) {
@@ -467,38 +462,36 @@ void ObjHitbox_SetCapsuleBounds(int param_1,undefined2 param_2,short param_3,sho
       *(short *)(iVar3 + 0x68) = param_4;
       *(undefined2 *)(iVar3 + 100) = param_2;
       *(float *)(iVar3 + 0x30) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-      uVar4 = (uint)param_3;
-      if ((int)uVar4 < 0) {
-        uVar4 = -uVar4;
+      absVal = (s32)param_3;
+      if (absVal < 0) {
+        absVal = -absVal;
       }
-      fVar1 = (float)((double)CONCAT44(0x43300000,uVar4 ^ 0x80000000) - DOUBLE_803df5c0);
-      uVar4 = (uint)param_4;
-      if ((int)uVar4 < 0) {
-        uVar4 = -uVar4;
+      fVar1 = (float)absVal;
+      absVal = (s32)param_4;
+      if (absVal < 0) {
+        absVal = -absVal;
       }
-      fVar2 = (float)((double)CONCAT44(0x43300000,uVar4 ^ 0x80000000) - DOUBLE_803df5c0);
-      if (fVar2 < fVar1) {
+      fVar2 = (float)absVal;
+      if (fVar1 > fVar2) {
         fVar2 = fVar1;
       }
-      if (*(float *)(iVar3 + 0x30) < fVar2) {
+      if (fVar2 > *(float *)(iVar3 + 0x30)) {
         *(float *)(iVar3 + 0x30) = fVar2;
       }
       *(float *)(iVar3 + 0x34) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-      if (*(float *)(iVar3 + 0x34) <
-          (float)((double)CONCAT44(0x43300000,(int)*(short *)(iVar3 + 0x5a) ^ 0x80000000) -
-                 DOUBLE_803df5c0)) {
-        *(float *)(iVar3 + 0x34) =
-             (float)((double)CONCAT44(0x43300000,(int)*(short *)(iVar3 + 100) ^ 0x80000000) -
-                    DOUBLE_803df5c0);
+      if ((float)(s32)*(short *)(iVar3 + 0x5a) > *(float *)(iVar3 + 0x34)) {
+        *(float *)(iVar3 + 0x34) = (float)(s32)*(short *)(iVar3 + 100);
       }
     }
-    *(undefined4 *)(iVar3 + 0x38) = *(undefined4 *)(iVar3 + 0x2c);
+    *(float *)(iVar3 + 0x38) = *(float *)(iVar3 + 0x2c);
     if (*(float *)(iVar3 + 0x38) < *(float *)(iVar3 + 0x34)) {
       *(float *)(iVar3 + 0x38) = *(float *)(iVar3 + 0x34);
     }
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -898,16 +891,17 @@ int ObjHits_AllocObjectState(int param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHits_RefreshObjectState(int param_1)
 {
-  double dVar1;
-  uint uVar2;
+  float fVar1;
   short sVar3;
   short sVar4;
-  int iVar5;
+  uint iVar5;
   int *piVar6;
-  
-  iVar5 = *(int *)(param_1 + 0x54);
+
+  iVar5 = *(uint *)(param_1 + 0x54);
   if (iVar5 != 0) {
     *(undefined2 *)(iVar5 + 0x60) = *(undefined2 *)(*(int *)(param_1 + 0x50) + 0x4e);
     *(undefined *)(iVar5 + 0x62) = *(undefined *)(*(int *)(param_1 + 0x50) + 0x65);
@@ -923,11 +917,8 @@ void ObjHits_RefreshObjectState(int param_1)
     *(undefined2 *)(iVar5 + 0x5e) = *(undefined2 *)(*(int *)(param_1 + 0x50) + 0x6a);
     *(undefined *)(iVar5 + 0xb0) = *(undefined *)(*(int *)(param_1 + 0x50) + 0x60);
     *(undefined2 *)(iVar5 + 0x58) = 0x400;
-    dVar1 = DOUBLE_803df5c0;
-    uVar2 = (int)*(short *)(iVar5 + 0x5a) ^ 0x80000000;
-    *(float *)(iVar5 + 0xc) =
-         (float)((double)CONCAT44(0x43300000,uVar2) - DOUBLE_803df5c0) *
-         (float)((double)CONCAT44(0x43300000,uVar2) - DOUBLE_803df5c0);
+    fVar1 = (float)(s32)*(short *)(iVar5 + 0x5a);
+    *(float *)(iVar5 + 0xc) = fVar1 * fVar1;
     *(undefined *)(iVar5 + 0xb6) = *(undefined *)(*(int *)(param_1 + 0x50) + 0x90);
     *(ushort *)(iVar5 + 100) = (ushort)*(byte *)(*(int *)(param_1 + 0x50) + 0x77);
     *(undefined2 *)(iVar5 + 0x66) = *(undefined2 *)(*(int *)(param_1 + 0x50) + 0x6c);
@@ -935,9 +926,8 @@ void ObjHits_RefreshObjectState(int param_1)
     *(float *)(iVar5 + 0x28) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
     if ((*(byte *)(iVar5 + 0x62) & 2) == 0) {
       if ((*(byte *)(iVar5 + 0x62) & 1) != 0) {
-        uVar2 = (int)*(short *)(iVar5 + 0x5a) ^ 0x80000000;
-        if (*(float *)(iVar5 + 0x28) < (float)((double)CONCAT44(0x43300000,uVar2) - dVar1)) {
-          *(float *)(iVar5 + 0x28) = (float)((double)CONCAT44(0x43300000,uVar2) - dVar1);
+        if ((float)(s32)*(short *)(iVar5 + 0x5a) > *(float *)(iVar5 + 0x28)) {
+          *(float *)(iVar5 + 0x28) = (float)(s32)*(short *)(iVar5 + 0x5a);
         }
       }
     }
@@ -953,27 +943,21 @@ void ObjHits_RefreshObjectState(int param_1)
       if (sVar4 < sVar3) {
         sVar4 = sVar3;
       }
-      if (*(float *)(iVar5 + 0x28) <
-          (float)((double)CONCAT44(0x43300000,(int)sVar4 ^ 0x80000000U) - DOUBLE_803df5c0)) {
-        *(float *)(iVar5 + 0x28) =
-             (float)((double)CONCAT44(0x43300000,(int)sVar4 ^ 0x80000000U) - DOUBLE_803df5c0);
+      if ((float)(s32)sVar4 > *(float *)(iVar5 + 0x28)) {
+        *(float *)(iVar5 + 0x28) = (float)(s32)sVar4;
       }
     }
     *(float *)(iVar5 + 0x2c) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
     if (((*(byte *)(iVar5 + 0x62) & 2) != 0) || ((*(byte *)(iVar5 + 0x62) & 1) != 0)) {
-      uVar2 = (int)*(short *)(iVar5 + 0x5a) ^ 0x80000000;
-      if (*(float *)(iVar5 + 0x2c) < (float)((double)CONCAT44(0x43300000,uVar2) - DOUBLE_803df5c0))
-      {
-        *(float *)(iVar5 + 0x2c) = (float)((double)CONCAT44(0x43300000,uVar2) - DOUBLE_803df5c0);
+      if ((float)(s32)*(short *)(iVar5 + 0x5a) > *(float *)(iVar5 + 0x2c)) {
+        *(float *)(iVar5 + 0x2c) = (float)(s32)*(short *)(iVar5 + 0x5a);
       }
     }
     *(float *)(iVar5 + 0x30) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
     if ((*(byte *)(iVar5 + 0xb6) & 2) == 0) {
       if ((*(byte *)(iVar5 + 0xb6) & 1) != 0) {
-        uVar2 = (int)*(short *)(iVar5 + 100) ^ 0x80000000;
-        if (*(float *)(iVar5 + 0x30) < (float)((double)CONCAT44(0x43300000,uVar2) - DOUBLE_803df5c0)
-           ) {
-          *(float *)(iVar5 + 0x30) = (float)((double)CONCAT44(0x43300000,uVar2) - DOUBLE_803df5c0);
+        if ((float)(s32)*(short *)(iVar5 + 100) > *(float *)(iVar5 + 0x30)) {
+          *(float *)(iVar5 + 0x30) = (float)(s32)*(short *)(iVar5 + 100);
         }
       }
     }
@@ -989,21 +973,17 @@ void ObjHits_RefreshObjectState(int param_1)
       if (sVar4 < sVar3) {
         sVar4 = sVar3;
       }
-      if (*(float *)(iVar5 + 0x30) <
-          (float)((double)CONCAT44(0x43300000,(int)sVar4 ^ 0x80000000U) - DOUBLE_803df5c0)) {
-        *(float *)(iVar5 + 0x30) =
-             (float)((double)CONCAT44(0x43300000,(int)sVar4 ^ 0x80000000U) - DOUBLE_803df5c0);
+      if ((float)(s32)sVar4 > *(float *)(iVar5 + 0x30)) {
+        *(float *)(iVar5 + 0x30) = (float)(s32)sVar4;
       }
     }
     *(float *)(iVar5 + 0x34) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
     if (((*(byte *)(iVar5 + 0xb6) & 2) != 0) || ((*(byte *)(iVar5 + 0xb6) & 1) != 0)) {
-      uVar2 = (int)*(short *)(iVar5 + 100) ^ 0x80000000;
-      if (*(float *)(iVar5 + 0x34) < (float)((double)CONCAT44(0x43300000,uVar2) - DOUBLE_803df5c0))
-      {
-        *(float *)(iVar5 + 0x34) = (float)((double)CONCAT44(0x43300000,uVar2) - DOUBLE_803df5c0);
+      if ((float)(s32)*(short *)(iVar5 + 100) > *(float *)(iVar5 + 0x34)) {
+        *(float *)(iVar5 + 0x34) = (float)(s32)*(short *)(iVar5 + 100);
       }
     }
-    *(undefined4 *)(iVar5 + 0x38) = *(undefined4 *)(iVar5 + 0x2c);
+    *(float *)(iVar5 + 0x38) = *(float *)(iVar5 + 0x2c);
     if (*(float *)(iVar5 + 0x38) < *(float *)(iVar5 + 0x34)) {
       *(float *)(iVar5 + 0x38) = *(float *)(iVar5 + 0x34);
     }
@@ -1012,6 +992,8 @@ void ObjHits_RefreshObjectState(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1026,6 +1008,8 @@ void ObjHits_RefreshObjectState(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4 ObjHits_RecordObjectHit(int obj,int hitObj,char priority,undefined hitVolume,undefined sphereIndex)
 {
   int hitObjectSlot;
@@ -1073,6 +1057,8 @@ undefined4 ObjHits_RecordObjectHit(int obj,int hitObj,char priority,undefined hi
   }
   return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1208,8 +1194,8 @@ int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *out
   int hitCount;
   ObjHitsPriorityState *hitState;
   int hitSlot;
-  char bestHitSlot;
   char bestPriority;
+  char bestHitSlot;
 
   hitState = *(ObjHitsPriorityState **)(obj + 0x54);
   if (hitState != 0) {
@@ -1217,17 +1203,12 @@ int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *out
     if (hitCount != 0) {
       bestPriority = '\x7f';
       bestHitSlot = -1;
-      hitSlot = 0;
-      if (0 < hitCount) {
-        do {
-          hitPriority = hitState->priorities[hitSlot];
-          if (hitPriority < bestPriority) {
-            bestHitSlot = (char)hitSlot;
-            bestPriority = hitPriority;
-          }
-          hitSlot = hitSlot + 1;
-          hitCount = hitCount + -1;
-        } while (hitCount != 0);
+      for (hitSlot = 0; hitSlot < hitCount; hitSlot++) {
+        hitPriority = hitState->priorities[hitSlot];
+        if (hitPriority < bestPriority) {
+          bestPriority = hitPriority;
+          bestHitSlot = (char)hitSlot;
+        }
       }
       if (bestHitSlot != -1) {
         if (outHitObject != (undefined4 *)0x0) {
@@ -1274,8 +1255,8 @@ int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,
   int hitCount;
   ObjHitsPriorityState *hitState;
   int hitSlot;
-  char bestHitSlot;
   char bestPriority;
+  char bestHitSlot;
 
   hitState = *(ObjHitsPriorityState **)(obj + 0x54);
   if (hitState == 0) {
@@ -1285,17 +1266,12 @@ int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,
   if (hitCount != 0) {
     bestPriority = '\x7f';
     bestHitSlot = -1;
-    hitSlot = 0;
-    if (0 < hitCount) {
-      do {
-        hitPriority = hitState->priorities[hitSlot];
-        if (hitPriority < bestPriority) {
-          bestHitSlot = (char)hitSlot;
-          bestPriority = hitPriority;
-        }
-        hitSlot = hitSlot + 1;
-        hitCount = hitCount + -1;
-      } while (hitCount != 0);
+    for (hitSlot = 0; hitSlot < hitCount; hitSlot++) {
+      hitPriority = hitState->priorities[hitSlot];
+      if (hitPriority < bestPriority) {
+        bestPriority = hitPriority;
+        bestHitSlot = (char)hitSlot;
+      }
     }
     if (bestHitSlot != -1) {
       if (outHitObject != (undefined4 *)0x0) {
@@ -1328,12 +1304,14 @@ int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHitReact_UpdateResetObjects(void)
 {
   ObjAnimComponent *obj;
   int iVar2;
   int iVar3;
-  
+
   iVar3 = 0;
   for (iVar2 = 0; iVar2 < gObjHitsResetObjectCount; iVar2 = iVar2 + 1) {
     obj = *(ObjAnimComponent **)((int)gObjHitsResetObjects + iVar3);
@@ -1350,6 +1328,8 @@ void ObjHitReact_UpdateResetObjects(void)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1364,6 +1344,8 @@ void ObjHitReact_UpdateResetObjects(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjHits_ResetWorkBuffers(void)
 {
   int i;
@@ -1374,6 +1356,8 @@ void ObjHits_ResetWorkBuffers(void)
   gObjHitsResetObjectCount = 0;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1442,9 +1426,11 @@ void ObjHits_InitWorkBuffers(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint ObjGroup_ContainsObject(int obj,int group)
+#pragma scheduling off
+#pragma peephole off
+uint ObjGroup_ContainsObject(uint obj,int group)
 {
-  int *entry;
+  uint *entry;
   uint index;
   uint limit;
 
@@ -1453,12 +1439,13 @@ uint ObjGroup_ContainsObject(int obj,int group)
   }
   index = (uint)gObjGroupOffsets[group];
   limit = (uint)gObjGroupOffsets[group + 1];
-  for (entry = gObjGroupObjects + index; ((int)index < (int)limit && (obj != *entry));
-      entry = entry + 1) {
-    index = index + 1;
+  for (entry = (uint *)gObjGroupObjects + index; ((int)index < (int)limit && (obj != *entry));
+      entry = entry + 1, index = index + 1) {
   }
   return ((int)(limit ^ index) >> 1) - ((limit ^ index) & limit) >> 0x1f;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1525,6 +1512,8 @@ void ObjGroup_FindNearestObjectToPoint(undefined4 param_1,undefined4 param_2,flo
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjGroup_FindNearestObjectForObject(undefined4 param_1,undefined4 param_2,float *param_3)
 {
   byte bVar1;
@@ -1566,6 +1555,8 @@ void ObjGroup_FindNearestObjectForObject(undefined4 param_1,undefined4 param_2,f
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1580,6 +1571,8 @@ void ObjGroup_FindNearestObjectForObject(undefined4 param_1,undefined4 param_2,f
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjGroup_FindNearestObject(undefined4 param_1,undefined4 param_2,float *param_3)
 {
   byte bVar1;
@@ -1621,6 +1614,8 @@ void ObjGroup_FindNearestObject(undefined4 param_1,undefined4 param_2,float *par
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1635,6 +1630,8 @@ void ObjGroup_FindNearestObject(undefined4 param_1,undefined4 param_2,float *par
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4 * ObjGroup_GetObjects(int group,int *countOut)
 {
   if ((group < 0) || (group >= 0x54)) {
@@ -1644,6 +1641,8 @@ undefined4 * ObjGroup_GetObjects(int group,int *countOut)
   *countOut = (uint)gObjGroupOffsets[group + 1] - (uint)gObjGroupOffsets[group];
   return (undefined4 *)(gObjGroupObjects + gObjGroupOffsets[group]);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1710,6 +1709,8 @@ void ObjGroup_RemoveObject(int obj,int group)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int ObjGroup_GetObjectGroup(int obj)
 {
   uint remaining;
@@ -1742,6 +1743,8 @@ int ObjGroup_GetObjectGroup(int obj)
   }
   return group;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2281,13 +2284,15 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjLink_DetachChild(int param_1,int param_2)
 {
   uint uVar1;
   int iVar2;
   int iVar3;
   int iVar4;
-  
+
   iVar4 = 0;
   uVar1 = (uint)*(byte *)(param_1 + 0xeb);
   for (iVar3 = param_1; (uVar1 != 0 && (*(int *)(iVar3 + 200) != param_2)); iVar3 = iVar3 + 4) {
@@ -2304,6 +2309,8 @@ void ObjLink_DetachChild(int param_1,int param_2)
   *(undefined4 *)(param_2 + 0xc4) = 0;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2401,6 +2408,8 @@ void ObjContact_DispatchCallbacks(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjContact_RemoveObjectCallbacks(int param_1)
 {
   int *piVar1;
@@ -2429,6 +2438,8 @@ void ObjContact_RemoveObjectCallbacks(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2641,21 +2652,20 @@ int ObjList_FindNearestObjectByDefNo(int obj,int defNo,float *maxDistanceSq)
 #pragma peephole off
 undefined4 ObjList_ContainsObject(int param_1)
 {
-  int *piVar1;
-  int local_18;
-  int local_14 [4];
+  uint *entry;
+  int i;
+  int count;
 
-  piVar1 = (int *)ObjList_GetObjects(local_14,&local_18);
-  local_14[0] = 0;
-  while( true ) {
-    if (local_18 <= local_14[0]) {
-      return 0;
+  entry = (uint *)ObjList_GetObjects(&i, &count);
+  i = 0;
+  while (i < count) {
+    if (*entry == (uint)param_1) {
+      return 1;
     }
-    if (*piVar1 == param_1) break;
-    piVar1 = piVar1 + 1;
-    local_14[0] = local_14[0] + 1;
+    entry = entry + 1;
+    i = i + 1;
   }
-  return 1;
+  return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2704,17 +2714,21 @@ void ObjPath_GetPointWorldPositionArray(undefined4 param_1,undefined4 param_2,in
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjPath_GetPointLocalPosition(int param_1,int param_2,float *param_3,float *param_4,
                  float *param_5)
 {
   int offset;
-  
+
   offset = param_2 * sizeof(ObjPathPoint);
   *param_3 = *(float *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) + offset);
   *param_4 = *(float *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) + offset + 4);
   *param_5 = *(float *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) + offset + 8);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2793,6 +2807,8 @@ void ObjPath_GetPointModelMtx(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *param_3,undefined4 *param_4,
                  float *param_5,int param_6)
 {
@@ -2870,6 +2886,8 @@ void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *
   FUN_80286884();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2889,8 +2907,8 @@ void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *
 int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3)
 {
   int iVar1;
-  float dVar2;
   float dVar3;
+  float dVar2;
 
   dVar3 = *(float *)(param_1 + 6) - *(float *)(param_2 + 0xc);
   dVar2 = *(float *)(param_1 + 10) - *(float *)(param_2 + 0x14);
@@ -2898,7 +2916,7 @@ int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3)
   if (param_3 != (float *)0x0) {
     *param_3 = sqrtf(dVar3 * dVar3 + dVar2 * dVar2);
   }
-  iVar1 = (int)(short)iVar1 - (uint)*(short *)param_1;
+  iVar1 = (int)(short)iVar1 - (uint)(ushort)*(short *)param_1;
   if (0x8000 < iVar1) {
     iVar1 = iVar1 + -0xffff;
   }
@@ -3003,7 +3021,11 @@ typedef struct ObjLibFlagByte {
 } ObjLibFlagByte;
 
 extern ObjLibFlagByte lbl_803DCC00;
+#pragma scheduling off
+#pragma peephole off
 void fn_80038F1C(int a, int b) {
     if ((int)(u8)a != 0) return;
     lbl_803DCC00.highBit = b;
 }
+#pragma peephole reset
+#pragma scheduling reset

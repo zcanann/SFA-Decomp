@@ -32,7 +32,7 @@ extern u8 lbl_803DC950;
 extern u8 lbl_803DC968;
 extern u8 lbl_803DD5E8;
 extern uint lbl_803DD5EC;
-extern u8 lbl_803DD5F0;
+extern s8 lbl_803DD5F0;
 extern f32 lbl_803DD5F4;
 extern int lbl_803DD5F8;
 extern u8 lbl_803DD5FC;
@@ -61,61 +61,58 @@ extern f32 lbl_803E1D0C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_801159E4(void)
 {
   int alpha;
-  u8 alphaByte;
+  int textureSlot;
   uint color;
+  union { u32 word; u8 bytes[4]; } colorBuf;
 
   if (lbl_803DD5EC < 0xf0) {
     if (lbl_803DD5EC < 0x1e) {
-      alpha = (int)((lbl_803E1CF4 * (f32)((double)lbl_803DD5EC - lbl_803E1CE8)) /
-                    lbl_803E1CF8);
-      alphaByte = (u8)alpha;
+      alpha = (int)((lbl_803E1CF4 * (f32)lbl_803DD5EC) / lbl_803E1CF8);
     } else if (lbl_803DD5EC < 0xd2) {
-      alphaByte = 0xff;
+      alpha = 0xff;
     } else {
-      alpha = (int)((lbl_803E1CF4 * (f32)((double)(0xf0 - lbl_803DD5EC) - lbl_803E1CE8)) /
-                    lbl_803E1CF8);
-      alphaByte = (u8)alpha;
+      alpha = (int)((lbl_803E1CF4 * (f32)(0xf0 - lbl_803DD5EC)) / lbl_803E1CF8);
     }
 
-    if (lbl_803DC968 == 0) {
-      color = 0xdc000000;
+    textureSlot = lbl_803A4438[0];
+    if (lbl_803DC968 != 0) {
+      colorBuf.bytes[0] = 0;
+      colorBuf.bytes[1] = 0x46;
+      colorBuf.bytes[2] = 0xff;
     } else {
-      color = 0x46ff00;
+      colorBuf.bytes[0] = 0xdc;
+      colorBuf.bytes[1] = 0;
+      colorBuf.bytes[2] = 0;
     }
-    color |= alphaByte;
-    hudDrawColored(lbl_803A4438[0],0x85,0xaa,&color,0x100,0);
+    colorBuf.bytes[3] = alpha;
+    color = colorBuf.word;
+    hudDrawColored(textureSlot,0x85,0xaa,&color,0x100,0);
   } else if (lbl_803DD5EC < 0x1e0) {
     if (lbl_803DD5EC < 0x10e) {
-      alpha = (int)((lbl_803E1CF4 * (f32)((double)(lbl_803DD5EC - 0xf0) - lbl_803E1CE8)) /
-                    lbl_803E1CF8);
+      alpha = (int)((lbl_803E1CF4 * (f32)(lbl_803DD5EC - 0xf0)) / lbl_803E1CF8);
     } else if (lbl_803DD5EC < 0x1c2) {
       alpha = 0xff;
     } else {
-      alpha = (int)((lbl_803E1CF4 * (f32)((double)(0x1e0 - lbl_803DD5EC) - lbl_803E1CE8)) /
-                    lbl_803E1CF8);
+      alpha = (int)((lbl_803E1CF4 * (f32)(0x1e0 - lbl_803DD5EC)) / lbl_803E1CF8);
     }
-    drawTexture((double)(f32)((double)((int)(0x280 - (uint)*(u16 *)(lbl_803A4438[1] + 0xa)) >> 1) -
-                              lbl_803E1CE8),
-                (double)(f32)((double)((int)(0x1e0 - (uint)*(u16 *)(lbl_803A4438[1] + 0xc)) >> 1) -
-                              lbl_803E1CE8),
+    drawTexture((double)(f32)(uint)((int)(0x280 - (uint)*(u16 *)(lbl_803A4438[1] + 0xa)) >> 1),
+                (double)(f32)(uint)((int)(0x1e0 - (uint)*(u16 *)(lbl_803A4438[1] + 0xc)) >> 1),
                 lbl_803A4438[1],alpha,0x119);
   } else if (lbl_803DD5EC < 600) {
     if (lbl_803DD5EC < 0x1fe) {
-      alpha = (int)((lbl_803E1CF4 * (f32)((double)(lbl_803DD5EC - 0x1e0) - lbl_803E1CE8)) /
-                    lbl_803E1CF8);
+      alpha = (int)((lbl_803E1CF4 * (f32)(lbl_803DD5EC - 0x1e0)) / lbl_803E1CF8);
     } else if (lbl_803DD5EC < 0x23a) {
       alpha = 0xff;
     } else {
-      alpha = (int)((lbl_803E1CF4 * (f32)((double)(600 - lbl_803DD5EC) - lbl_803E1CE8)) /
-                    lbl_803E1CF8);
+      alpha = (int)((lbl_803E1CF4 * (f32)(600 - lbl_803DD5EC)) / lbl_803E1CF8);
     }
-    drawTexture((double)(f32)((double)((int)(0x280 - (uint)*(u16 *)(lbl_803A4438[2] + 0xa)) >> 1) -
-                              lbl_803E1CE8),
-                (double)(f32)((double)((int)(0x1e0 - (uint)*(u16 *)(lbl_803A4438[2] + 0xc)) >> 1) -
-                              lbl_803E1CE8),
+    drawTexture((double)(f32)(uint)((int)(0x280 - (uint)*(u16 *)(lbl_803A4438[2] + 0xa)) >> 1),
+                (double)(f32)(uint)((int)(0x1e0 - (uint)*(u16 *)(lbl_803A4438[2] + 0xc)) >> 1),
                 lbl_803A4438[2],alpha,0x119);
   }
 
@@ -130,6 +127,8 @@ void fn_801159E4(void)
     gameTextShowStr(gameTextGetStr(0x565),0,0x118,300);
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -144,6 +143,8 @@ void fn_801159E4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_80115D54(void)
 {
   int *textureSlot;
@@ -175,6 +176,8 @@ void fn_80115D54(void)
   lbl_803DD5EC = 0;
   lbl_803DD5E8 = 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void TitleScreenInit_render(void) {}
@@ -193,6 +196,8 @@ void TitleScreenInit_frameEnd(void) {}
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int fn_80115E74(void)
 {
   if (lbl_803DD5F0 != 0) {
@@ -202,6 +207,8 @@ int fn_80115E74(void)
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void TitleScreenInit_release(void) {}
 
@@ -218,6 +225,8 @@ void TitleScreenInit_release(void) {}
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_80115EC0(void)
 {
   lbl_803DD5F0 = 1;
@@ -231,6 +240,8 @@ void fn_80115EC0(void)
   fn_80100FA0();
   warpToMap(0x12,0);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -245,6 +256,8 @@ void fn_80115EC0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_80115F20(void)
 {
   int frame;
@@ -266,5 +279,7 @@ void fn_80115F20(void)
     lbl_803DD600 = lbl_803E1D0C;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void n_rareware_frameEnd(void) {}

@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801c0fd8(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4,short *param_5
-                 );
+void fn_801C0FD8(u8 *self);
+void fn_801C11B8(u8 *self, u8 *a, u8 *b);
 
 #endif /* MAIN_DLL_DF_DFBARREL_H_ */

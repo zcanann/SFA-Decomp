@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_8013d8f0(double param_1,short *param_2,int param_3,float *param_4,char param_5);
+void fn_8013D8F0(u8 *arg1, u8 *arg2);
 
 #endif /* MAIN_DLL_BADDIE_MMP_CRATERCRITTER_H_ */

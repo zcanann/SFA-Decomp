@@ -12,6 +12,7 @@ extern int FUN_80017730();
 extern undefined4 FUN_8001774c();
 extern undefined4 FUN_80017754();
 extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017778();
 extern undefined4 FUN_80017b00();
 extern ushort ObjHits_IsObjectEnabled();
@@ -287,6 +288,8 @@ LAB_800e23ec:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int curves_distanceToNearestOfType16(double param_1,double param_2,double param_3,int param_4)
 {
   float fVar1;
@@ -324,6 +327,8 @@ int curves_distanceToNearestOfType16(double param_1,double param_2,double param_
   }
   return (int)dVar9;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -917,6 +922,8 @@ LAB_800e3130:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int RomCurve_getRandomLinkedOfTypes(int param_1,int param_2,int param_3,int *param_4)
 {
   uint uVar1;
@@ -1026,6 +1033,8 @@ LAB_800e33ac:
   }
   return local_28[0];
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1059,26 +1068,28 @@ f32 curves_distXZ(f32 param_1,f32 param_2,uint param_3)
     iVar5 = gRomCurveCount + -1;
     iVar4 = 0;
     while (iVar5 >= iVar4) {
-      iVar3 = iVar5 + iVar4 >> 1;
-      iVar6 = (&DAT_803a2448)[iVar3];
+      iVar3 = (iVar5 + iVar4) >> 1;
+      iVar6 = gRomCurveTable[iVar3];
       if (param_3 > RomCurve_GetId((int)iVar6)) {
         iVar4 = iVar3 + 1;
       }
+      else if (param_3 >= RomCurve_GetId((int)iVar6)) {
+        goto LAB_800e3628;
+      }
       else {
-        if (param_3 >= RomCurve_GetId((int)iVar6)) goto LAB_800e3628;
         iVar5 = iVar3 + -1;
       }
     }
     iVar6 = 0;
   }
 LAB_800e3628:
-  if (iVar6 == 0) {
-    dist = 0.0f;
-  }
-  else {
+  if (iVar6 != 0) {
     fVar1 = *(float *)(iVar6 + 8) - param_1;
     fVar2 = *(float *)(iVar6 + 0x10) - param_2;
     dist = sqrtf(fVar1 * fVar1 + fVar2 * fVar2);
+  }
+  else {
+    dist = 0.0f;
   }
   return dist;
 }
@@ -1118,8 +1129,8 @@ f32 RomCurve_distanceToObject(int param_1,uint param_2)
     iVar6 = gRomCurveCount + -1;
     iVar5 = 0;
     while (iVar6 >= iVar5) {
-      iVar4 = iVar6 + iVar5 >> 1;
-      iVar7 = (&DAT_803a2448)[iVar4];
+      iVar4 = (iVar6 + iVar5) >> 1;
+      iVar7 = gRomCurveTable[iVar4];
       if (param_2 > RomCurve_GetId((int)iVar7)) {
         iVar5 = iVar4 + 1;
       }
@@ -1131,14 +1142,14 @@ f32 RomCurve_distanceToObject(int param_1,uint param_2)
     iVar7 = 0;
   }
 LAB_800e36d8:
-  if ((iVar7 == 0) || (param_1 == 0)) {
-    dist = 0.0f;
-  }
-  else {
+  if ((iVar7 != 0) && ((uint)param_1 != 0)) {
     fVar1 = *(float *)(iVar7 + 8) - *(float *)(param_1 + 0xc);
     fVar2 = *(float *)(iVar7 + 0xc) - *(float *)(param_1 + 0x10);
     fVar3 = *(float *)(iVar7 + 0x10) - *(float *)(param_1 + 0x14);
     dist = sqrtf(fVar2 * fVar2 + fVar1 * fVar1 + fVar3 * fVar3);
+  }
+  else {
+    dist = 0.0f;
   }
   return dist;
 }
@@ -1158,6 +1169,8 @@ LAB_800e36d8:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void curves_find(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 *param_6,undefined4 *param_7,undefined4 *param_8)
 {
@@ -1289,6 +1302,8 @@ LAB_800e3878:
     iVar8 = iVar8 + 1;
   } while( true );
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1939,6 +1954,8 @@ LAB_800e48f4:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void RomCurve_getAdjacentWindow(int param_1,int *param_2)
 {
   bool bVar1;
@@ -2049,6 +2066,8 @@ LAB_800e4bc4:
   param_2[3] = *(int *)(iVar6 + 0x28);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2237,44 +2256,30 @@ double RomCurve_distanceToSegment(double param_1,double param_2,double param_3,f
 #pragma peephole off
 int RomCurve_getRandomBlockedLink(int param_1,int param_2)
 {
-  uint uVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  int local_18 [6];
+  int link;
+  int count;
+  uint mask;
+  int i;
+  int result;
+  int local_18[4];
 
-  iVar4 = 0;
-  iVar2 = *(int *)(param_1 + 0x1c);
-  if (((-1 < iVar2) && ((*(byte *)(param_1 + 0x1b) & 1) != 0)) && (iVar2 != param_2)) {
-    iVar4 = 1;
-    local_18[0] = iVar2;
+  count = 0;
+  mask = 1;
+
+  for (i = 0; i < 4; i = i + 1) {
+    link = *(int *)(param_1 + 0x1c + i * 4);
+    if ((-1 < link) && ((*(char *)(param_1 + 0x1b) & mask) != 0) && (link != param_2)) {
+      local_18[count++] = link;
+    }
+    mask = mask << 1;
   }
-  iVar3 = *(int *)(param_1 + 0x20);
-  iVar2 = iVar4;
-  if (((-1 < iVar3) && ((*(byte *)(param_1 + 0x1b) & 2) != 0)) && (iVar3 != param_2)) {
-    iVar2 = iVar4 + 1;
-    local_18[iVar4] = iVar3;
+
+  if (count != 0) {
+    result = local_18[randomGetRange(0, count - 1)];
+  } else {
+    result = -1;
   }
-  iVar3 = *(int *)(param_1 + 0x24);
-  iVar4 = iVar2;
-  if (((-1 < iVar3) && ((*(byte *)(param_1 + 0x1b) & 4) != 0)) && (iVar3 != param_2)) {
-    iVar4 = iVar2 + 1;
-    local_18[iVar2] = iVar3;
-  }
-  iVar3 = *(int *)(param_1 + 0x28);
-  iVar2 = iVar4;
-  if (((-1 < iVar3) && ((*(byte *)(param_1 + 0x1b) & 8) != 0)) && (iVar3 != param_2)) {
-    iVar2 = iVar4 + 1;
-    local_18[iVar4] = iVar3;
-  }
-  if (iVar2 == 0) {
-    iVar2 = -1;
-  }
-  else {
-    uVar1 = FUN_80017760(0,iVar2 - 1);
-    iVar2 = local_18[uVar1];
-  }
-  return iVar2;
+  return result;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2296,44 +2301,73 @@ int RomCurve_getRandomBlockedLink(int param_1,int param_2)
 #pragma peephole off
 int RomCurve_getRandomUnblockedLink(int param_1,int param_2)
 {
-  uint uVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  int local_18 [6];
+  int link;
+  int count;
+  uint mask;
+  int i;
+  int result;
+  int local_18[4];
 
-  iVar4 = 0;
-  iVar2 = *(int *)(param_1 + 0x1c);
-  if (((-1 < iVar2) && ((*(byte *)(param_1 + 0x1b) & 1) == 0)) && (iVar2 != param_2)) {
-    iVar4 = 1;
-    local_18[0] = iVar2;
+  count = 0;
+  mask = 1;
+
+  for (i = 0; i < 4; i = i + 1) {
+    link = *(int *)(param_1 + 0x1c + i * 4);
+    if ((-1 < link) && ((*(char *)(param_1 + 0x1b) & mask) == 0) && (link != param_2)) {
+      local_18[count++] = link;
+    }
+    mask = mask << 1;
   }
-  iVar3 = *(int *)(param_1 + 0x20);
-  iVar2 = iVar4;
-  if (((-1 < iVar3) && ((*(byte *)(param_1 + 0x1b) & 2) == 0)) && (iVar3 != param_2)) {
-    iVar2 = iVar4 + 1;
-    local_18[iVar4] = iVar3;
+
+  if (count != 0) {
+    result = local_18[randomGetRange(0, count - 1)];
+  } else {
+    result = -1;
   }
-  iVar3 = *(int *)(param_1 + 0x24);
-  iVar4 = iVar2;
-  if (((-1 < iVar3) && ((*(byte *)(param_1 + 0x1b) & 4) == 0)) && (iVar3 != param_2)) {
-    iVar4 = iVar2 + 1;
-    local_18[iVar2] = iVar3;
+  return result;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * --INFO--
+ *
+ * Function: RomCurve_getById
+ * EN v1.0 Address: 0x800E503C
+ * EN v1.0 Size: 112b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+RomCurveDef *RomCurve_getById(uint curveId)
+{
+  int high;
+  int low;
+  int mid;
+
+  if ((int)curveId < 0) {
+    return 0;
   }
-  iVar3 = *(int *)(param_1 + 0x28);
-  iVar2 = iVar4;
-  if (((-1 < iVar3) && ((*(byte *)(param_1 + 0x1b) & 8) == 0)) && (iVar3 != param_2)) {
-    iVar2 = iVar4 + 1;
-    local_18[iVar4] = iVar3;
+  high = gRomCurveCount - 1;
+  low = 0;
+  while (high >= low) {
+    mid = (high + low) >> 1;
+    if (curveId > RomCurve_GetId(gRomCurveTable[mid])) {
+      low = mid + 1;
+    }
+    else if (curveId < RomCurve_GetId(gRomCurveTable[mid])) {
+      high = mid - 1;
+    }
+    else {
+      return (RomCurveDef *)gRomCurveTable[mid];
+    }
   }
-  if (iVar2 == 0) {
-    iVar2 = -1;
-  }
-  else {
-    uVar1 = FUN_80017760(0,iVar2 - 1);
-    iVar2 = local_18[uVar1];
-  }
-  return iVar2;
+  return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4184,6 +4218,44 @@ void curves_release(void) {}
 void RomCurve_initialise(void) {}
 void fn_800E7D98(void) {}
 void fn_800E7D9C(void) {}
+
+/*
+ * --INFO--
+ *
+ * Function: loadSaveSettings
+ * EN v1.0 Address: 0x800E7F44
+ * EN v1.0 Size: 256b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern void setWidescreen(u8 enabled);
+extern void setSubtitlesEnabled(u8 enabled);
+extern void fn_800154A4(u8 value);
+extern void audioSetSoundMode(u8 mode, u8 secondary);
+extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
+extern void **lbl_803DCA68;
+extern void **lbl_803DCA50;
+
+#pragma scheduling off
+#pragma peephole off
+void loadSaveSettings(void)
+{
+  setWidescreen(*((u8 *)&lbl_803A31C4 + 6));
+  setSubtitlesEnabled(*((u8 *)&lbl_803A31C4 + 2));
+  fn_800154A4(*((u8 *)&lbl_803A31C4 + 8));
+  audioSetSoundMode(*((u8 *)&lbl_803A31C4 + 9), 0);
+  (*(void (**)(u8))((char *)*lbl_803DCA68 + 0x50))(*((u8 *)&lbl_803A31C4 + 3));
+  (*(void (**)(u8))((char *)*lbl_803DCA50 + 0x6c))(*((u8 *)&lbl_803A31C4 + 4));
+  audioSetVolumes(*((u8 *)&lbl_803A31C4 + 11), 10, 0, 1, 0);
+  audioSetVolumes(*((u8 *)&lbl_803A31C4 + 10), 10, 1, 0, 0);
+  audioSetVolumes(*((u8 *)&lbl_803A31C4 + 12), 10, 0, 0, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* Pattern wrappers. */
 extern u32 gRomCurveCount;

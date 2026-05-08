@@ -165,12 +165,12 @@ void sndOutputMode(int mode)
     switch (mode) {
     case 0:
         lbl_803DE264 = lbl_803DE264 | 0x1;
-        lbl_803DE264 = lbl_803DE264 & ~0x4;
+        lbl_803DE264 = lbl_803DE264 & ~0x2;
         hwDisableHRTF();
         break;
     case 1:
         lbl_803DE264 = lbl_803DE264 & ~0x1;
-        lbl_803DE264 = lbl_803DE264 & ~0x4;
+        lbl_803DE264 = lbl_803DE264 & ~0x2;
         hwDisableHRTF();
         break;
     case 2:

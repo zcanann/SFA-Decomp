@@ -3,20 +3,3 @@
 
 extern undefined4 DAT_803defc4;
 
-/*
- * --INFO--
- *
- * Function: FUN_80284224
- * EN v1.0 Address: 0x80284224
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x8028436C
- * EN v1.1 Size: 164b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-int FUN_80284224(int param_1)
-{
-    return 0;
-}

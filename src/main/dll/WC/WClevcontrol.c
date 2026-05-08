@@ -743,7 +743,7 @@ void WM_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { 
 #pragma peephole reset
 
 extern f32 lbl_803E5C70;
-void fn_801EEDB4(int unused, f32 *p) { f32 v = lbl_803E5C70; *p = v; }
+f32 fn_801EEDB4(int unused, f32 *p) { f32 v = lbl_803E5C70; *p = v; return v; }
 
 /* copy 3 floats from struct to out args */
 void fn_801EEDE0(int *src, f32 *out_x, f32 *out_y, f32 *out_z) {

@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/baddie/dll_DF.h"
 
+#pragma peephole off
+#pragma scheduling off
+
 extern uint FUN_80017690();
 extern double FUN_80017708();
 extern int FUN_80017730();
@@ -70,6 +73,21 @@ extern f32 FLOAT_803e3148;
 extern f32 FLOAT_803e314c;
 extern f32 FLOAT_803e3150;
 
+extern f32 timeDelta;
+extern f32 oneOverTimeDelta;
+
+extern f32 lbl_803E23DC;  /*  0.0f  */
+extern f32 lbl_803E23F4;  /* -0.01f */
+extern f32 lbl_803E241C;  /* -0.15f */
+extern f32 lbl_803E2420;  /*  0.05f */
+extern f32 lbl_803E243C;  /*  0.02f */
+extern f32 lbl_803E2488;  /*  5.0f  */
+extern f32 lbl_803E248C;  /*  3.0f  */
+
+extern f32 fn_8002166C(f32 *a, f32 *b);
+extern void fn_80021AC8(void *params, void *outVec);
+extern f32 sqrtf(f32 x);
+
 /*
  * --INFO--
  *
@@ -88,4 +106,132 @@ void FUN_8013b368(undefined8 param_1,undefined8 param_2,double param_3,undefined
                  undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
                  byte param_13,uint param_14,undefined4 param_15,undefined4 param_16)
 {
+}
+
+void fn_8013D5A4(u8 *obj, u8 *state, f32 *targetPos, u8 flag, f32 baseRadius)
+{
+    struct {
+        s16 a;
+        s16 angle;
+        s16 c;
+    } params;
+    f32 delta[3];
+    f32 sum;
+    f32 v;
+    f32 dec;
+    f32 thresh;
+    f32 distSq;
+    f32 dist;
+    f32 dx;
+    f32 dz;
+    f32 vel;
+    f32 candidate;
+    f32 *otherTarget;
+    u8 *ctx;
+
+    sum = lbl_803E2420;
+    v = *(f32 *)(state + 0x14);
+    dec = lbl_803E241C * timeDelta;
+    while (v > lbl_803E23DC) {
+        sum = sum + v * timeDelta;
+        v = v + dec;
+    }
+    thresh = baseRadius + sum;
+    distSq = thresh * thresh;
+    dist = fn_8002166C(targetPos, (f32 *)(obj + 0x18));
+    if (dist < distSq) {
+        candidate = lbl_803E241C * timeDelta + *(f32 *)(state + 0x14);
+        if (candidate < lbl_803E23DC) {
+            candidate = lbl_803E23DC;
+        }
+        *(f32 *)(state + 0x14) = candidate;
+        return;
+    }
+    if (flag != 0) {
+        delta[0] = *(f32 *)(targetPos + 0) - *(f32 *)(obj + 0x18);
+        delta[1] = *(f32 *)(targetPos + 1) - *(f32 *)(obj + 0x1c);
+        delta[2] = *(f32 *)(targetPos + 2) - *(f32 *)(obj + 0x20);
+        params.a = -*(s16 *)(obj + 0x0);
+        params.angle = 0;
+        params.c = 0;
+        fn_80021AC8(&params, delta);
+        if (delta[2] > lbl_803E23DC) {
+            candidate = lbl_803E241C * timeDelta + *(f32 *)(state + 0x14);
+            if (candidate < lbl_803E23DC) {
+                candidate = lbl_803E23DC;
+            }
+            *(f32 *)(state + 0x14) = candidate;
+            return;
+        }
+    }
+    if ((*(u32 *)(state + 0x54) & 0x10000000) != 0) {
+        *(f32 *)(state + 0x14) =
+            lbl_803E23F4 * timeDelta + *(f32 *)(state + 0x14);
+        if (*(f32 *)(state + 0x14) < lbl_803E23DC) {
+            *(f32 *)(state + 0x14) = lbl_803E23DC;
+        }
+        return;
+    }
+    {
+        f32 deltaSpeed = lbl_803E2488 + thresh;
+        f32 deltaSpeedSq = deltaSpeed * deltaSpeed;
+        ctx = *(u8 **)(obj + 0xb8);
+        otherTarget = *(f32 **)(ctx + 0x28);
+        if (otherTarget == *(f32 **)(ctx + 0x6f0)) {
+            dx = *(f32 *)(ctx + 0x6f4) - *(f32 *)(obj + 0x18);
+            dz = *(f32 *)(ctx + 0x6fc) - *(f32 *)(obj + 0x20);
+            vel = sqrtf(dx * dx + dz * dz) * oneOverTimeDelta;
+            dx = *(f32 *)((u8 *)otherTarget + 0) - *(f32 *)(obj + 0x18);
+            dz = *(f32 *)((u8 *)otherTarget + 8) - *(f32 *)(obj + 0x20);
+            {
+                f32 distOther = sqrtf(dx * dx + dz * dz) * oneOverTimeDelta;
+                candidate = distOther - vel;
+            }
+        } else {
+            candidate = lbl_803E23DC;
+        }
+        if (dist < deltaSpeedSq) {
+            if (candidate > lbl_803E23DC) {
+                if (candidate < *(f32 *)(state + 0x14)) {
+                    f32 step = lbl_803E241C * timeDelta + *(f32 *)(state + 0x14);
+                    if (step < candidate) {
+                        step = candidate;
+                    }
+                    *(f32 *)(state + 0x14) = step;
+                    return;
+                } else {
+                    f32 step;
+                    if (candidate > lbl_803E248C) {
+                        step = lbl_803E2420 * timeDelta + *(f32 *)(state + 0x14);
+                        if (step > lbl_803E248C) {
+                            step = lbl_803E248C;
+                        }
+                        *(f32 *)(state + 0x14) = step;
+                        return;
+                    }
+                    step = lbl_803E2420 * timeDelta + *(f32 *)(state + 0x14);
+                    if (step > candidate) {
+                        step = candidate;
+                    }
+                    *(f32 *)(state + 0x14) = step;
+                    return;
+                }
+            }
+        }
+    }
+    if ((*(u32 *)(state + 0x54) & 0x00100000) != 0) {
+        *(f32 *)(state + 0x14) =
+            lbl_803E243C * timeDelta + *(f32 *)(state + 0x14);
+        if (*(f32 *)(state + 0x14) > lbl_803E248C) {
+            *(f32 *)(state + 0x14) = lbl_803E248C;
+        }
+        return;
+    }
+    {
+        f32 step = lbl_803E2420 * timeDelta + *(f32 *)(state + 0x14);
+        if (step > lbl_803E248C) {
+            step = lbl_803E248C;
+        }
+        *(f32 *)(state + 0x14) = step;
+    }
 }

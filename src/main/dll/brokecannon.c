@@ -1,58 +1,64 @@
 #include "ghidra_import.h"
 #include "main/dll/brokecannon.h"
+#include "main/dll/SH/SHthorntail_internal.h"
 
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
-extern undefined8 FUN_80043030();
-
-extern undefined4* DAT_803dd72c;
+extern u32 GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId, int value);
+extern void Music_Trigger(int trackId, int restart);
+extern void fn_801D7ED4(void *obj, int mask, int p3, int p4, int p5, int p6);
 
 /*
  * --INFO--
  *
- * Function: FUN_801d80f4
+ * Function: fn_801D80F4
  * EN v1.0 Address: 0x801D80F4
- * EN v1.0 Size: 880b
- * EN v1.1 Address: 0x801D8284
- * EN v1.1 Size: 576b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 532b
  */
-void FUN_801d80f4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,int param_10)
+#pragma peephole off
+#pragma scheduling off
+void fn_801D80F4(short *obj)
 {
-  uint uVar1;
-  undefined8 uVar2;
-  
-  uVar1 = FUN_80017690(0xbf8);
-  if (uVar1 != 0) {
-    *(undefined *)(param_10 + 7) = 5;
-    FUN_80017698(0xbf8,0);
-  }
-  if (*(char *)(param_10 + 7) != '\0') {
-    if (*(char *)(param_10 + 7) == '\x05') {
-      (**(code **)(*DAT_803dd72c + 0x50))((int)*(char *)(param_9 + 0xac),1,0);
-      (**(code **)(*DAT_803dd72c + 0x50))((int)*(char *)(param_9 + 0xac),4,0);
-      (**(code **)(*DAT_803dd72c + 0x50))((int)*(char *)(param_9 + 0xac),6,0);
-      (**(code **)(*DAT_803dd72c + 0x50))((int)*(char *)(param_9 + 0xac),7,0);
-      (**(code **)(*DAT_803dd72c + 0x50))((int)*(char *)(param_9 + 0xac),8,0);
-      uVar2 = (**(code **)(*DAT_803dd72c + 0x50))((int)*(char *)(param_9 + 0xac),9,0);
-      uVar2 = FUN_80043030(uVar2,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-      uVar2 = FUN_80043030(uVar2,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-      uVar2 = FUN_80043030(uVar2,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-      FUN_80043030(uVar2,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+    if ((*gSHthorntailAnimationInterface)->isTailSwingQueued(0) != 0) {
+        if (obj[8] == 0x39 || obj[8] == -1) {
+            obj[8] = 0x2d;
+            if ((*(int *)obj & 1) != 0) {
+                Music_Trigger(0x39, 0);
+                Music_Trigger(0x2d, 1);
+            }
+        }
+        if (obj[9] == 0xc2 || obj[9] == -1) {
+            obj[9] = 0xce;
+            if ((*(int *)obj & 2) != 0) {
+                Music_Trigger(0xc2, 0);
+                Music_Trigger(0xce, 1);
+            }
+        }
+    } else {
+        if (obj[8] == 0x2d || obj[8] == -1) {
+            obj[8] = 0x39;
+            if ((*(int *)obj & 1) != 0) {
+                Music_Trigger(0x2d, 0);
+                Music_Trigger(0x39, 1);
+            }
+        }
+        if (obj[9] == 0xce || obj[9] == -1) {
+            obj[9] = 0xc2;
+            if ((*(int *)obj & 2) != 0) {
+                Music_Trigger(0xce, 0);
+                Music_Trigger(0xc2, 1);
+            }
+        }
     }
-    if (*(char *)(param_10 + 7) == '\x01') {
-      (**(code **)(*DAT_803dd72c + 0x50))((int)*(char *)(param_9 + 0xac),0,1);
-      (**(code **)(*DAT_803dd72c + 0x50))((int)*(char *)(param_9 + 0xac),2,1);
-      (**(code **)(*DAT_803dd72c + 0x50))((int)*(char *)(param_9 + 0xac),3,1);
-      (**(code **)(*DAT_803dd72c + 0x50))((int)*(char *)(param_9 + 0xac),5,1);
-      (**(code **)(*DAT_803dd72c + 0x50))((int)*(char *)(param_9 + 0xac),10,1);
+    if (GameBit_Get(0xb) != 0) {
+        if (GameBit_Get(0x64b) != 0) {
+            GameBit_Set(0x390, 1);
+        }
+        fn_801D7ED4(obj, 1, 0x1a7, 0x64b, 0x372, obj[8]);
+        fn_801D7ED4(obj, 2, 0x1a8, 0xc0, 0x390, obj[9]);
+        fn_801D7ED4(obj, 4, -1, -1, 0x393, 0x36);
+        fn_801D7ED4(obj, 8, -1, -1, 0xa32, 0x98);
+        fn_801D7ED4(obj, 0x10, -1, -1, 0xbfe, 0xc3);
     }
-    *(char *)(param_10 + 7) = *(char *)(param_10 + 7) + -1;
-  }
-  return;
 }
+#pragma scheduling reset
+#pragma peephole reset

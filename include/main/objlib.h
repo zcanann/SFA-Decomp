@@ -42,7 +42,7 @@ void ObjHitReact_UpdateResetObjects(void);
 void ObjHits_ResetWorkBuffers(void);
 int *ObjHitReact_GetResetObjects(undefined4 *param_1);
 void ObjHits_InitWorkBuffers(void);
-uint ObjGroup_ContainsObject(int obj,int group);
+uint ObjGroup_ContainsObject(uint obj,int group);
 void ObjGroup_FindNearestObjectToPoint(undefined4 param_1,undefined4 param_2,float *param_3);
 void ObjGroup_FindNearestObjectForObject(undefined4 param_1,undefined4 param_2,float *param_3);
 void ObjGroup_FindNearestObject(undefined4 param_1,undefined4 param_2,float *param_3);

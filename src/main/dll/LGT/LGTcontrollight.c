@@ -1,94 +1,128 @@
 #include "ghidra_import.h"
 #include "main/dll/LGT/LGTcontrollight.h"
 
-extern undefined4 FUN_80017698();
-extern undefined4 ObjGroup_AddObject();
-extern undefined4 FUN_80042b9c();
-extern undefined4 FUN_80042bec();
-extern int FUN_80044404();
+extern u32 randomGetRange(int min, int max);
+extern void fn_80021AC8(void *params, void *outVec);
 
-extern undefined4* DAT_803dd72c;
-extern f32 lbl_803E6B28;
+extern f32 lbl_803E5EAC;
+extern f32 lbl_803E5EB0;
+extern f32 lbl_803E5EB4;
+extern f32 lbl_803E5EB8;
+extern f32 lbl_803E5EBC;
+extern f32 lbl_803E5EC0;
+extern f32 lbl_803E5EC4;
+extern f32 lbl_803E5EC8;
+extern f64 lbl_803E5ED0;
+
 
 /*
  * --INFO--
  *
- * Function: FUN_801f4c28
+ * Function: fn_801F4C28
  * EN v1.0 Address: 0x801F4C28
- * EN v1.0 Size: 676b
- * EN v1.1 Address: 0x801F4C60
- * EN v1.1 Size: 656b
+ * EN v1.0 Size: 300b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801f4c28(int param_1)
+#pragma scheduling off
+#pragma peephole off
+void fn_801F4C28(u8 *param_1, u8 *param_2)
 {
-  int iVar1;
-  undefined uVar2;
-  float *pfVar3;
-  
-  ObjGroup_AddObject(param_1,9);
-  iVar1 = FUN_80044404(0xb);
-  FUN_80042b9c(iVar1,0,0);
-  pfVar3 = *(float **)(param_1 + 0xb8);
-  *(undefined *)((int)pfVar3 + 0xb) = 0;
-  *(undefined2 *)((int)pfVar3 + 6) = 0x1e;
-  *pfVar3 = lbl_803E6B28;
-  pfVar3[4] = 0.0;
-  FUN_80042bec(0xf,0);
-  uVar2 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(param_1 + 0xac));
-  switch(uVar2) {
-  case 1:
-    (**(code **)(*DAT_803dd72c + 0x44))(0xe,1);
-    (**(code **)(*DAT_803dd72c + 0x50))(0xe,0,1);
-    break;
-  case 2:
-    FUN_80017698(0xd1b,1);
-    FUN_80017698(0xe6f,1);
-    FUN_80017698(0xf43,1);
-    FUN_80017698(0xf44,0);
-    break;
-  case 3:
-    FUN_80017698(0xd1b,1);
-    FUN_80017698(0xd1c,1);
-    FUN_80017698(0xa7f,1);
-    FUN_80017698(0xf43,0);
-    FUN_80017698(0xf44,1);
-    break;
-  case 4:
-    FUN_80017698(0xd1b,1);
-    FUN_80017698(0xd1c,1);
-    FUN_80017698(0xd1d,1);
-    FUN_80017698(0xa7f,1);
-    FUN_80017698(0xf43,0);
-    FUN_80017698(0xf44,1);
-    *(undefined2 *)(pfVar3 + 1) = 0xffff;
-    break;
-  case 5:
-    FUN_80017698(0xd1b,1);
-    FUN_80017698(0xd1c,1);
-    FUN_80017698(0xd1d,1);
-    FUN_80017698(0xd1e,1);
-    FUN_80017698(0xf43,0);
-    FUN_80017698(0xf44,1);
-    break;
-  case 6:
-    FUN_80017698(0xd1b,1);
-    FUN_80017698(0xd1c,1);
-    FUN_80017698(0xd1d,1);
-    FUN_80017698(0xd1e,1);
-    FUN_80017698(0xd1f,1);
-    FUN_80017698(0x164,1);
-    FUN_80017698(0xf43,0);
-    FUN_80017698(0xf44,0);
-    break;
-  case 7:
-    *(undefined2 *)(pfVar3 + 2) = 700;
-    *(undefined *)((int)pfVar3 + 10) = 0x1e;
-    *(ushort *)((int)pfVar3 + 6) = (ushort)*(byte *)((int)pfVar3 + 10);
-    *(undefined *)(pfVar3 + 5) = 1;
-  }
-  return;
+  *(f32 *)(param_2 + 0x04) = *(f32 *)(param_1 + 0x0c);
+  *(f32 *)(param_2 + 0x14) = *(f32 *)(param_1 + 0x10);
+  *(f32 *)(param_2 + 0x24) = *(f32 *)(param_1 + 0x14);
+  *(f32 *)(param_2 + 0x08) = *(f32 *)(param_1 + 0x0c);
+  *(f32 *)(param_2 + 0x18) = *(f32 *)(param_1 + 0x10);
+  *(f32 *)(param_2 + 0x28) = *(f32 *)(param_1 + 0x14);
+  *(f32 *)(param_2 + 0x0c) = *(f32 *)(param_1 + 0x0c);
+  *(f32 *)(param_2 + 0x1c) = *(f32 *)(param_1 + 0x10);
+  *(f32 *)(param_2 + 0x2c) = *(f32 *)(param_1 + 0x14);
+  *(f32 *)(param_2 + 0x10) = *(f32 *)(param_1 + 0x0c);
+  *(f32 *)(param_2 + 0x20) = *(f32 *)(param_1 + 0x10);
+  *(f32 *)(param_2 + 0x30) = *(f32 *)(param_1 + 0x14);
+  *(f32 *)(param_2 + 0x44) = lbl_803E5EAC;
+  *(f32 *)(param_2 + 0x48) = lbl_803E5EB0;
+  *(f32 *)(param_2 + 0x40) = lbl_803E5EB4;
+  param_2[0x68] = 0;
+  param_2[0x67] = 0;
+  *(s16 *)(param_2 + 0x62) = (s16)randomGetRange(0x1f4, 0x5dc);
+  *(s16 *)(param_2 + 0x60) = (s16)randomGetRange(0, 0xfde8);
+  *(s16 *)(param_2 + 0x64) = 0x3c;
+  param_2[0x66] = 4;
+  *(f32 *)(param_2 + 0x4c) = lbl_803E5EB8;
+  *(f32 *)(param_2 + 0x50) = lbl_803E5EBC;
+  *(f32 *)(param_2 + 0x54) = *(f32 *)(param_1 + 0x0c);
+  *(f32 *)(param_2 + 0x58) = *(f32 *)(param_1 + 0x10);
+  *(f32 *)(param_2 + 0x5c) = *(f32 *)(param_1 + 0x14);
+  param_2[0x6b] = 1;
+  *(f32 *)(param_2 + 0x78) = lbl_803E5EC0;
 }
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801F4D54
+ * EN v1.0 Address: 0x801F4D54
+ * EN v1.0 Size: 376b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+void fn_801F4D54(int param_1, u8 *param_2)
+{
+  struct {
+    s16 angle;
+    s16 a;
+    s16 b;
+    u8 pad0e[2];
+    f32 m;
+    f32 z0;
+    f32 z1;
+    f32 z2;
+  } locals;
+
+  *(f32 *)(param_2 + 0x34) = lbl_803E5EC4;
+  if (param_2[0x6b] != 0) {
+    *(f32 *)(param_2 + 0x38) = (f32)(s32)(*(s16 *)(param_2 + 0x64));
+    param_2[0x6b] = 0;
+  } else {
+    *(f32 *)(param_2 + 0x38) =
+        (f32)(s32)(randomGetRange(0, *(s16 *)(param_2 + 0x64)));
+  }
+  if (*(f32 *)(param_2 + 0x50) < lbl_803E5EC8) {
+    *(f32 *)(param_2 + 0x3c) = lbl_803E5EC4;
+  } else {
+    *(f32 *)(param_2 + 0x3c) =
+        *(f32 *)(param_2 + 0x50) -
+        (f32)(s32)(randomGetRange(0x14, (s16)(s32)*(f32 *)(param_2 + 0x50)));
+  }
+  *(s16 *)(param_2 + 0x60) =
+      *(s16 *)(param_2 + 0x60) + (s16)randomGetRange(0xbb8, 0x1388);
+  locals.m = lbl_803E5EB4;
+  locals.z0 = lbl_803E5EC4;
+  locals.z1 = lbl_803E5EC4;
+  locals.z2 = lbl_803E5EC4;
+  locals.b = 0;
+  locals.a = 0;
+  locals.angle = *(s16 *)(param_2 + 0x60);
+  fn_80021AC8(&locals, param_2 + 0x34);
+  *(f32 *)(param_2 + 0x34) =
+      *(f32 *)(param_2 + 0x34) + *(f32 *)(param_2 + 0x54);
+  *(f32 *)(param_2 + 0x38) =
+      *(f32 *)(param_2 + 0x38) + *(f32 *)(param_2 + 0x58);
+  *(f32 *)(param_2 + 0x3c) =
+      *(f32 *)(param_2 + 0x3c) + *(f32 *)(param_2 + 0x5c);
+}
+#pragma peephole reset
+#pragma scheduling reset

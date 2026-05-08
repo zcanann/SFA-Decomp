@@ -88,18 +88,18 @@ extern f32 lbl_803E1D18;
 
 static void TitleMenu_OpenPanel(TitleMenuTextEntry *entries, int count)
 {
-  (*(void (*)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))
-      ((int)lbl_803DCAA0->vtable + 4))(entries,count,0,0,0,0,0x14,200,0xff,0xff,0xff,0xff);
+  ((void (**)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))
+      lbl_803DCAA0->vtable)[1](entries,count,0,0,0,0,0x14,200,0xff,0xff,0xff,0xff);
 }
 
 static void TitleMenu_SetPanelSelection(int selection)
 {
-  (*(void (*)(int))((int)lbl_803DCAA0->vtable + 0x18))(selection);
+  ((void (**)(int))lbl_803DCAA0->vtable)[6](selection);
 }
 
 static void TitleMenu_BindEntries(TitleMenuTextEntry *entries)
 {
-  (*(void (*)(TitleMenuTextEntry *))((int)lbl_803DCAA0->vtable + 0x2c))(entries);
+  ((void (**)(TitleMenuTextEntry *))lbl_803DCAA0->vtable)[11](entries);
 }
 
 static void TitleMenu_SetEntryHighlight(int entry)
@@ -108,7 +108,7 @@ static void TitleMenu_SetEntryHighlight(int entry)
 
   for (i = 0; i < 4; i++) {
     if (i == entry) {
-      lbl_8031A214[i].flags &= 0xbfff;
+      lbl_8031A214[i].flags &= ~0x4000;
     } else {
       lbl_8031A214[i].flags |= 0x4000;
     }
@@ -118,7 +118,7 @@ static void TitleMenu_SetEntryHighlight(int entry)
 
 static void TitleMenu_PlayPopup(int id, int arg)
 {
-  (*(void (*)(int, int))((int)lbl_803DCA4C->vtable + 0xc))(id,arg);
+  ((void (**)(int, int))lbl_803DCA4C->vtable)[3](id,arg);
 }
 
 /*
@@ -134,24 +134,30 @@ static void TitleMenu_PlayPopup(int id, int arg)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_80116F84(void)
 {
   int mode;
 
-  lbl_803DD61A = (lbl_803DD498[0x21] & 0x80) == 0;
-  if (lbl_803DB424 > 0xfd) {
+  if ((lbl_803DD498[0x21] & 0x80) != 0) {
+    lbl_803DD61A = 0;
+  } else {
+    lbl_803DD61A = 1;
+  }
+  if (lbl_803DB424 >= 0xfe) {
     fn_8007D960(0);
   }
   gameTextLoadDir(0x15);
   lbl_803DD650 = 0;
   lbl_803DD651 = 0;
   mode = fn_80014930();
-  if (mode != 3) {
-    TitleMenu_OpenPanel(lbl_8031A214,4);
-    lbl_803DD652 = 1;
-  } else {
+  if (mode == 3) {
     TitleMenu_OpenPanel(lbl_8031A1D8,1);
     lbl_803DD652 = 0;
+  } else {
+    TitleMenu_OpenPanel(lbl_8031A214,4);
+    lbl_803DD652 = 1;
   }
   TitleMenu_SetPanelSelection(lbl_803DD614);
   fn_801368A4(0);
@@ -194,34 +200,47 @@ void fn_80116F84(void)
   fn_8000B694(0);
   lbl_803DD698 = 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void *fn_8011730C(int flags)
 {
   void *message;
 
-  if (OSReceiveMessage(&lbl_803A4460,&message,flags) != 1) {
-    message = NULL;
+  if (OSReceiveMessage(&lbl_803A4460,&message,flags) == 1) {
+    return message;
   }
-  return message;
+  return NULL;
 }
 
 void fn_80117350(void *message)
 {
   OSSendMessage(&lbl_803A4480,message,0);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
 void fn_80117380(void *cursorArg)
 {
-  MovieAudioCursor *cursor;
-  u32 track;
   u32 *audioFrameSizes;
   u8 *audioFrame;
+  MovieAudioCursor *cursor;
   MovieAudioPacket *packet;
+  u32 track;
 
   cursor = (MovieAudioCursor *)cursorArg;
   audioFrameSizes = (u32 *)(cursor->frame + 8);
   audioFrame = cursor->frame + (lbl_803A5D60.audioTrackCount * 4) + 8;
-  OSReceiveMessage(&lbl_803A4480,&packet,1);
+  {
+    MovieAudioPacket *received;
+    OSReceiveMessage(&lbl_803A4480,&received,1);
+    packet = received;
+  }
   for (track = 0; track < lbl_803A5D60.audioTrackCount; track++) {
     if (lbl_803A5D60.audioTrackEnabled[track] == 1) {
       packet->decodedSize = THPAudioDecode(packet->audioBuffer,audioFrame,0);
@@ -232,34 +251,42 @@ void fn_80117380(void *cursorArg)
     audioFrame += *audioFrameSizes++;
   }
 }
+#pragma dont_inline reset
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void *fn_80117460(void *param)
 {
   int frame;
   int stride;
   MovieAudioCursor cursor;
 
-  frame = 0;
   stride = lbl_803A5D60.frameStride;
   cursor.frame = param;
+  frame = 0;
   while (true) {
     cursor.frameIndex = frame;
     fn_80117380(&cursor);
     if (((frame + lbl_803A5D60.frameOffset) % lbl_803A5D60.framesPerGroup) ==
         (lbl_803A5D60.framesPerGroup - 1)) {
-      if ((lbl_803A5D60.flags & 1) == 0) {
-        OSSuspendThread(&lbl_803A54A0);
-      } else {
+      if ((lbl_803A5D60.flags & 1) != 0) {
         stride = *(int *)cursor.frame;
         cursor.frame = lbl_803A5D60.loopFrame;
+      } else {
+        OSSuspendThread(&lbl_803A54A0);
       }
     } else {
-      stride = *(int *)cursor.frame;
+      int newStride = *(int *)cursor.frame;
       cursor.frame += stride;
+      stride = newStride;
     }
     frame++;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void *fn_8011750C(void *param)
 {

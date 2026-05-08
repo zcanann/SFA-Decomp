@@ -1,149 +1,100 @@
 #include "ghidra_import.h"
 #include "main/dll/baddie/MMP_cratercritter.h"
 
-extern double FUN_80017708();
-extern undefined4 FUN_80017748();
-extern double FUN_80293900();
+extern f32 lbl_803E23DC;
+extern f32 lbl_803E2410;
+extern f32 lbl_803E2414;
+extern f32 lbl_803E2418;
+extern f32 lbl_803E243C;
+extern f32 lbl_803E2440;
+extern f32 lbl_803E2444;
+extern f32 lbl_803E247C;
+extern f32 lbl_803E24C4;
 
-extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803dc078;
-extern f32 FLOAT_803e306c;
-extern f32 FLOAT_803e3084;
-extern f32 FLOAT_803e30ac;
-extern f32 FLOAT_803e30b0;
-extern f32 FLOAT_803e30cc;
-extern f32 FLOAT_803e3118;
-extern f32 FLOAT_803e311c;
+extern char sInWaterMessage[];
+extern char lbl_8031D478[];
+
+extern int fn_8013DB3C(u8 *arg1, u8 *arg2);
+extern u8 **ObjGroup_GetObjects(int kind, int *count);
+extern f32 fn_8002166C(f32 *a, f32 *b);
+extern int fn_8013B368(u8 *arg1, u8 *arg2, f32 dist);
+extern void fn_8013A3F0(u8 *self, int a, int b, f32 f1);
+extern void fn_80148BC8(char *msg);
 
 /*
  * --INFO--
  *
- * Function: FUN_8013d8f0
+ * Function: fn_8013D8F0
  * EN v1.0 Address: 0x8013D8F0
- * EN v1.0 Size: 840b
- * EN v1.1 Address: 0x8013D92C
- * EN v1.1 Size: 844b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 588b
  */
-void FUN_8013d8f0(double param_1,short *param_2,int param_3,float *param_4,char param_5)
+void fn_8013D8F0(u8 *arg1, u8 *arg2)
 {
-  float fVar1;
-  float fVar2;
-  int iVar3;
-  float *pfVar4;
-  double dVar5;
-  double dVar6;
-  double dVar7;
-  double dVar8;
-  ushort local_58 [4];
-  float local_50;
-  float local_4c;
-  float local_48;
-  
-  fVar1 = *(float *)(param_3 + 0x14);
-  fVar2 = FLOAT_803e30b0;
-  while( true ) {
-    dVar5 = (double)fVar1;
-    if (dVar5 <= (double)FLOAT_803e306c) break;
-    fVar2 = (float)(dVar5 * (double)FLOAT_803dc074 + (double)fVar2);
-    fVar1 = (float)(dVar5 + (double)(float)((double)FLOAT_803e30ac * (double)FLOAT_803dc074));
+  f32 minDist;
+  f32 dist;
+  u8 *nearest;
+  u8 **objs;
+  int count;
+  int i;
+  int waterFlag;
+
+  nearest = NULL;
+  minDist = lbl_803E2418;
+
+  if (fn_8013DB3C(arg1, arg2) == 0) {
+    arg2[0x8] = 1;
+    arg2[0xA] = 0;
+    *(f32 *)(arg2 + 0x71C) = lbl_803E23DC;
+    *(f32 *)(arg2 + 0x720) = lbl_803E23DC;
+    *(u32 *)(arg2 + 0x54) = *(u32 *)(arg2 + 0x54) & 0xFFFFFFEF;
+    *(u32 *)(arg2 + 0x54) = *(u32 *)(arg2 + 0x54) & 0xFFFEFFFF;
+    *(u32 *)(arg2 + 0x54) = *(u32 *)(arg2 + 0x54) & 0xFFFDFFFF;
+    *(u32 *)(arg2 + 0x54) = *(u32 *)(arg2 + 0x54) & 0xFFFBFFFF;
+    arg2[0xD] = 0xFF;
+    return;
   }
-  dVar6 = (double)(float)(param_1 + (double)fVar2);
-  dVar8 = (double)(float)(dVar6 * dVar6);
-  dVar5 = FUN_80017708(param_4,(float *)(param_2 + 0xc));
-  if (dVar8 <= dVar5) {
-    if (param_5 != '\0') {
-      local_50 = *param_4 - *(float *)(param_2 + 0xc);
-      local_4c = param_4[1] - *(float *)(param_2 + 0xe);
-      local_48 = param_4[2] - *(float *)(param_2 + 0x10);
-      local_58[0] = -*param_2;
-      local_58[1] = 0;
-      local_58[2] = 0;
-      FUN_80017748(local_58,&local_50);
-      if (FLOAT_803e306c < local_48) {
-        fVar1 = FLOAT_803e30ac * FLOAT_803dc074 + *(float *)(param_3 + 0x14);
-        if (fVar1 < FLOAT_803e306c) {
-          fVar1 = FLOAT_803e306c;
-        }
-        *(float *)(param_3 + 0x14) = fVar1;
-        return;
+
+  objs = ObjGroup_GetObjects(0x4B, &count);
+  for (i = 0; i < count; i++) {
+    dist = fn_8002166C((f32 *)((u8 *)*(int *)(arg2 + 4) + 0x18),
+                       (f32 *)(*objs + 0x18));
+    if (dist > lbl_803E24C4) {
+      dist = fn_8002166C((f32 *)(arg1 + 0x18), (f32 *)(*objs + 0x18));
+      if (dist < minDist) {
+        nearest = *objs;
+        minDist = dist;
       }
     }
-    if ((*(uint *)(param_3 + 0x54) & 0x10000000) == 0) {
-      dVar6 = (double)((float)((double)FLOAT_803e3118 + dVar6) *
-                      (float)((double)FLOAT_803e3118 + dVar6));
-      iVar3 = *(int *)(param_2 + 0x5c);
-      pfVar4 = *(float **)(iVar3 + 0x28);
-      fVar1 = FLOAT_803e306c;
-      if (pfVar4 == *(float **)(iVar3 + 0x6f0)) {
-        fVar1 = *(float *)(iVar3 + 0x6f4) - *(float *)(param_2 + 0xc);
-        fVar2 = *(float *)(iVar3 + 0x6fc) - *(float *)(param_2 + 0x10);
-        dVar8 = FUN_80293900((double)(fVar1 * fVar1 + fVar2 * fVar2));
-        dVar7 = (double)(float)((double)FLOAT_803dc078 * dVar8);
-        dVar8 = FUN_80293900((double)((*pfVar4 - *(float *)(param_2 + 0xc)) *
-                                      (*pfVar4 - *(float *)(param_2 + 0xc)) +
-                                     (pfVar4[2] - *(float *)(param_2 + 0x10)) *
-                                     (pfVar4[2] - *(float *)(param_2 + 0x10))));
-        fVar1 = (float)((double)(float)((double)FLOAT_803dc078 * dVar8) - dVar7);
-      }
-      if ((dVar6 <= dVar5) || (fVar1 <= FLOAT_803e306c)) {
-        if ((*(uint *)(param_3 + 0x54) & 0x100000) == 0) {
-          fVar1 = FLOAT_803e30b0 * FLOAT_803dc074 + *(float *)(param_3 + 0x14);
-          if (FLOAT_803e311c < fVar1) {
-            fVar1 = FLOAT_803e311c;
-          }
-          *(float *)(param_3 + 0x14) = fVar1;
-        }
-        else {
-          *(float *)(param_3 + 0x14) = FLOAT_803e30cc * FLOAT_803dc074 + *(float *)(param_3 + 0x14);
-          if (FLOAT_803e311c < *(float *)(param_3 + 0x14)) {
-            *(float *)(param_3 + 0x14) = FLOAT_803e311c;
-          }
-        }
-      }
-      else {
-        fVar2 = *(float *)(param_3 + 0x14);
-        if (fVar2 <= fVar1) {
-          if (fVar1 <= FLOAT_803e311c) {
-            fVar2 = FLOAT_803e30b0 * FLOAT_803dc074 + fVar2;
-            if (fVar1 < fVar2) {
-              fVar2 = fVar1;
-            }
-            *(float *)(param_3 + 0x14) = fVar2;
-          }
-          else {
-            fVar2 = FLOAT_803e30b0 * FLOAT_803dc074 + fVar2;
-            if (FLOAT_803e311c < fVar2) {
-              fVar2 = FLOAT_803e311c;
-            }
-            *(float *)(param_3 + 0x14) = fVar2;
-          }
-        }
-        else {
-          fVar2 = FLOAT_803e30ac * FLOAT_803dc074 + fVar2;
-          if (fVar2 < fVar1) {
-            fVar2 = fVar1;
-          }
-          *(float *)(param_3 + 0x14) = fVar2;
-        }
-      }
-    }
-    else {
-      *(float *)(param_3 + 0x14) = FLOAT_803e3084 * FLOAT_803dc074 + *(float *)(param_3 + 0x14);
-      if (*(float *)(param_3 + 0x14) < FLOAT_803e306c) {
-        *(float *)(param_3 + 0x14) = FLOAT_803e306c;
-      }
-    }
+    objs++;
   }
-  else {
-    fVar1 = FLOAT_803e30ac * FLOAT_803dc074 + *(float *)(param_3 + 0x14);
-    if (fVar1 < FLOAT_803e306c) {
-      fVar1 = FLOAT_803e306c;
+
+  if (nearest != NULL) {
+    *(u8 **)(arg2 + 0x24) = nearest;
+    if (*(u32 *)(arg2 + 0x28) != (u32)(nearest + 0x18)) {
+      *(u32 *)(arg2 + 0x28) = (u32)(nearest + 0x18);
+      *(u32 *)(arg2 + 0x54) = *(u32 *)(arg2 + 0x54) & 0xFFFFFBFF;
+      *(s16 *)(arg2 + 0xD2) = 0;
     }
-    *(float *)(param_3 + 0x14) = fVar1;
+    if (fn_8013B368(arg1, arg2, lbl_803E247C) == 1) return;
   }
-  return;
+
+  if (lbl_803E23DC == *(f32 *)(arg2 + 0x2AC)) {
+    waterFlag = 0;
+  } else if (lbl_803E2410 == *(f32 *)(arg2 + 0x2B0)) {
+    waterFlag = 1;
+  } else if (*(f32 *)(arg2 + 0x2B4) - *(f32 *)(arg2 + 0x2B0) > lbl_803E2414) {
+    waterFlag = 1;
+  } else {
+    waterFlag = 0;
+  }
+
+  if (waterFlag != 0) {
+    fn_8013A3F0(arg1, 8, 0, lbl_803E243C);
+    *(f32 *)(arg2 + 0x79C) = lbl_803E2440;
+    *(f32 *)(arg2 + 0x838) = lbl_803E23DC;
+    fn_80148BC8(sInWaterMessage);
+  } else {
+    fn_8013A3F0(arg1, 0, 0, lbl_803E2444);
+    fn_80148BC8(lbl_8031D478);
+  }
 }

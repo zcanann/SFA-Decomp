@@ -1,127 +1,40 @@
 #include "ghidra_import.h"
 #include "main/dll/DF/DFmole.h"
 
-extern double FUN_80293900();
-
-extern f64 DOUBLE_803e5a88;
-extern f32 lbl_803E5AB0;
+extern void fn_80023800(void *p);
+extern void ObjGroup_RemoveObject(void *obj, int group);
+extern int *ObjGroup_GetObjects(int group, int *count);
 
 /*
  * --INFO--
  *
- * Function: FUN_801c1eac
+ * Function: dfropenode_free
  * EN v1.0 Address: 0x801C1EAC
- * EN v1.0 Size: 268b
- * EN v1.1 Address: 0x801C1F24
- * EN v1.1 Size: 164b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 176b
  */
-void FUN_801c1eac(double param_1,double param_2,int param_3)
+#pragma peephole off
+#pragma scheduling off
+void dfropenode_free(void *obj)
 {
-  int iVar1;
-  uint uVar2;
-  int iVar3;
-  int iVar4;
-  double dVar5;
-  
-  iVar4 = *(int *)(param_3 + 0xb8);
-  dVar5 = param_1 - (double)(float)((double)CONCAT44(0x43300000,(int)(char)(int)param_1 ^ 0x80000000
-                                                    ) - DOUBLE_803e5a88);
-  uVar2 = (uint)(char)(int)dVar5;
-  dVar5 = (double)((float)dVar5 -
-                  (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5a88));
-  iVar3 = uVar2 * 0x34;
-  iVar1 = **(int **)(iVar4 + 0x2c) + iVar3;
-  *(float *)(iVar1 + 0x1c) = (float)(param_2 * dVar5 + (double)*(float *)(iVar1 + 0x1c));
-  iVar3 = **(int **)(iVar4 + 0x2c) + iVar3;
-  *(float *)(iVar3 + 0x1c) =
-       (float)(param_2 * (double)(float)((double)lbl_803E5AB0 - dVar5) +
-              (double)*(float *)(iVar3 + 0x1c));
-  return;
-}
+    void *node;
+    int **objs;
+    int count;
+    int i;
 
-/*
- * --INFO--
- *
- * Function: FUN_801c1fb8
- * EN v1.0 Address: 0x801C1FB8
- * EN v1.0 Size: 256b
- * EN v1.1 Address: 0x801C1FC8
- * EN v1.1 Size: 240b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801c1fb8(double param_1,int param_2,float *param_3)
-{
-  float fVar1;
-  float fVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  char cVar6;
-  double dVar7;
-  
-  iVar3 = *(int *)(param_2 + 0xb8);
-  cVar6 = (char)(int)*param_3;
-  *param_3 = *param_3 -
-             (float)((double)CONCAT44(0x43300000,(int)cVar6 ^ 0x80000000) - DOUBLE_803e5a88);
-  iVar4 = **(int **)(iVar3 + 0x2c);
-  iVar3 = cVar6 * 0x34;
-  iVar5 = iVar4 + iVar3;
-  fVar1 = *(float *)(iVar4 + iVar3) - *(float *)(iVar5 + 0x34);
-  fVar2 = *(float *)(iVar5 + 8) - *(float *)(iVar5 + 0x3c);
-  dVar7 = FUN_80293900((double)(fVar1 * fVar1 + fVar2 * fVar2));
-  *param_3 = *param_3 + (float)(param_1 / dVar7);
-  *param_3 = *param_3 +
-             (float)((double)CONCAT44(0x43300000,(int)cVar6 ^ 0x80000000) - DOUBLE_803e5a88);
-  return;
+    node = *(void **)((char *)obj + 0xb8);
+    ObjGroup_RemoveObject(obj, 0x17);
+    if (*(void **)((char *)node + 0x2c) != NULL && *(void **)((char *)node + 0x2c) != NULL) {
+        fn_80023800(*(void **)((char *)node + 0x2c));
+    }
+    node = *(void **)node;
+    if (node != NULL) {
+        objs = (int **)ObjGroup_GetObjects(0x17, &count);
+        for (i = 0; i < count; i++) {
+            if ((void *)objs[i] == node) {
+                (*(void (***)(void *))*(void **)((char *)node + 0x68))[17](node);
+            }
+        }
+    }
 }
-
-/*
- * --INFO--
- *
- * Function: FUN_801c20b8
- * EN v1.0 Address: 0x801C20B8
- * EN v1.0 Size: 264b
- * EN v1.1 Address: 0x801C20B8
- * EN v1.1 Size: 236b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801c20b8(double param_1,int param_2,float *param_3,float *param_4,float *param_5)
-{
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  int iVar7;
-  int iVar8;
-  int iVar9;
-  
-  iVar9 = *(int *)(param_2 + 0xb8);
-  fVar1 = (float)(param_1 -
-                 (double)(float)((double)CONCAT44(0x43300000,(int)(char)(int)param_1 ^ 0x80000000) -
-                                DOUBLE_803e5a88));
-  iVar8 = (char)(int)param_1 * 0x34;
-  iVar7 = **(int **)(iVar9 + 0x2c) + iVar8;
-  fVar2 = *(float *)(iVar7 + 0x38);
-  fVar3 = *(float *)(iVar7 + 4);
-  fVar4 = *(float *)(iVar7 + 0x3c);
-  fVar5 = *(float *)(iVar7 + 8);
-  fVar6 = *(float *)(**(int **)(iVar9 + 0x2c) + iVar8);
-  *param_3 = (*(float *)(iVar7 + 0x34) - fVar6) * fVar1 + *(float *)(param_2 + 0xc) + fVar6;
-  *param_4 = (fVar2 - fVar3) * fVar1 +
-             *(float *)(param_2 + 0x10) + *(float *)(**(int **)(iVar9 + 0x2c) + iVar8 + 4);
-  *param_5 = (fVar4 - fVar5) * fVar1 +
-             *(float *)(param_2 + 0x14) + *(float *)(**(int **)(iVar9 + 0x2c) + iVar8 + 8);
-  return;
-}
+#pragma scheduling reset
+#pragma peephole reset

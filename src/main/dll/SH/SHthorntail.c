@@ -295,13 +295,15 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
     if ((s8)runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE2_EVENT) {
       triggerEventId = GameBit_Get(SHTHORNTAIL_ROOT_MODE2_TRIGGER_SELECTOR_GAMEBIT);
       triggerIsSet = GameBit_Get(triggerEventId);
-      if (triggerIsSet == 0) {
+      if (triggerIsSet != 0) {
+        (*lbl_803DCAAC)->setAnimEvent((int)obj->animObjId,SHTHORNTAIL_ROOT_MODE2_TRIGGER_ANIM_EVENT,0);
+        runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
+        randomTime = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
+        runtime->idleTimer = (float)randomTime;
+      }
+      else {
         return;
       }
-      (*lbl_803DCAAC)->setAnimEvent((int)obj->animObjId,SHTHORNTAIL_ROOT_MODE2_TRIGGER_ANIM_EVENT,0);
-      runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-      randomTime = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
-      runtime->idleTimer = (float)randomTime;
     }
     else {
       triggerIsSet = GameBit_Get(SHTHORNTAIL_ROOT_MODE2_TRIGGER_SELECTOR_GAMEBIT);

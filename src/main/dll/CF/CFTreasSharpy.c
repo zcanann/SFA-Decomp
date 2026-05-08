@@ -12,6 +12,12 @@ extern undefined4 FUN_8018dc28();
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 
+extern u32 GameBit_Get(int bit);
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern void ObjAnim_SetCurrentMove(int obj, int move, f32 f, int p4);
+extern int  randomGetRange(int lo, int hi);
+extern void fn_8018D7C4(void);
+
 extern undefined4 DAT_803dca50;
 extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e4ac0;
@@ -26,24 +32,186 @@ extern f32 FLOAT_803e4ad4;
 extern f32 FLOAT_803e4ad8;
 extern f32 FLOAT_803e4ae0;
 
+extern void *lbl_803DBDE8;
+
+extern f32 lbl_803E3DD8;
+extern f32 lbl_803E3DEC;
+extern f32 lbl_803E3DF4;
+extern f32 lbl_803E3DFC;
+extern f64 lbl_803E3E28;
+extern f32 lbl_803E3E30;
+extern f32 lbl_803E3E34;
+extern f32 lbl_803E3E38;
+extern f32 lbl_803E3E3C;
+extern f32 lbl_803E3E40;
+
 /*
  * --INFO--
  *
  * Function: cfccrate_init
  * EN v1.0 Address: 0x8018E0A4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8018E620
- * EN v1.1 Size: 1568b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 1560b
  */
-void cfccrate_init(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined2 *param_9,short *param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+#pragma scheduling off
+#pragma peephole off
+void cfccrate_init(int obj, int aux)
 {
+    int state;
+    short id;
+    f32 zeroF;
+
+    id = *(short *)(aux + 0x0);
+    state = *(int *)(obj + 0xb8);
+    zeroF = lbl_803E3DD8;
+    *(f32 *)(state + 0x2c) = zeroF;
+
+    switch (id) {
+    case 0x2bb:
+        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        *(short *)(obj + 2) = *(short *)(aux + 0x1a);
+        *(short *)(obj + 4) = *(short *)(aux + 0x1c);
+        *(f32 *)(obj + 8) = zeroF;
+        break;
+    case 0x1d0:
+    case 0x1d1:
+    case 0x1d7:
+    case 0x1e6:
+    case 0x201:
+    case 0x23b:
+    case 0x492:
+    case 0x78b:
+    case 0x78c:
+        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        break;
+    case 0x726:
+        *(int *)(obj + 0xbc) = (int)&fn_8018D7C4;
+        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        break;
+    case 0x71b:
+        *(short *)(state + 0x36) = *(short *)(aux + 0x1a);
+        break;
+    case 0x6be:
+        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        *(u8 *)(state + 0x3e) = 0;
+        *(short *)(state + 0x3a) = *(short *)(aux + 0x20);
+        break;
+    case 0x828:
+        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        *(u8 *)(state + 0x3e) = 0;
+        *(short *)(state + 0x3a) = *(short *)(aux + 0x20);
+        if ((GameBit_Get(*(short *)(state + 0x3a)) != 0) && (*(u8 *)(state + 0x3e) == 0)) {
+            *(short *)(obj + 4) = 0x7fff;
+            *(u8 *)(state + 0x3e) = 1;
+        }
+        break;
+    case 0x6bf:
+        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        *(short *)(obj + 2) = *(short *)(aux + 0x1a);
+        *(short *)(state + 0x3a) = *(short *)(aux + 0x20);
+        break;
+    case 0x708:
+        *(s8 *)(obj + 0xad) = (s8)*(short *)(aux + 0x1a);
+        *(short *)(state + 0x38) = *(short *)(aux + 0x20);
+        if ((s8)*(u8 *)(obj + 0xad) >= 3) {
+            *(s8 *)(obj + 0xad) = 0;
+        }
+        Obj_SetActiveModelIndex(obj, *(s8 *)(obj + 0xad));
+        break;
+    case 0x6fc:
+        *(short *)(state + 0x38) = *(short *)(aux + 0x20);
+        break;
+    case 0x622:
+        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        *(short *)(state + 0x38) = *(short *)(aux + 0x20);
+        break;
+    case 0x6b4:
+        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        *(short *)(obj + 2) = *(short *)(aux + 0x1a);
+        ObjAnim_SetCurrentMove(obj, 0, lbl_803E3E30, 0);
+        break;
+    case 0x66c:
+        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        *(short *)(state + 0x38) = *(short *)(aux + 0x20);
+        break;
+    case 0x216:
+        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        *(short *)(obj + 2) = *(short *)(aux + 0x1a);
+        break;
+    case 0x4bf:
+        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        *(u8 *)(obj + 0xad) = *(u8 *)(aux + 0x19);
+        *(short *)(state + 0x38) = *(short *)(aux + 0x20);
+        if (GameBit_Get(*(short *)(state + 0x38)) != 0) {
+            *(f32 *)(obj + 0x10) = lbl_803E3DFC + *(f32 *)(aux + 0xc);
+        }
+        break;
+    case 0x8e:
+        *(short *)(obj + 0) = 0;
+        *(short *)(obj + 2) = 0;
+        if (*(short *)(aux + 0x1c) >= 0x3e8) {
+            *(f32 *)(obj + 8) = zeroF / ((f32)(s32)*(short *)(aux + 0x1c) / lbl_803E3DF4);
+        } else {
+            *(f32 *)(obj + 8) = lbl_803E3E34;
+        }
+        *(u8 *)(state + 0x3e) = 0;
+        *(f32 *)(state + 0x4) = *(f32 *)(aux + 0x8);
+        *(f32 *)(state + 0x8) = *(f32 *)(aux + 0xc);
+        *(f32 *)(state + 0xc) = *(f32 *)(aux + 0x10);
+        *(f32 *)(state + 0x14) = *(f32 *)(state + 0x18) = lbl_803E3E30;
+        *(f32 *)(state + 0x28) = lbl_803E3DF4;
+        *(f32 *)(state + 0x20) = lbl_803E3E38;
+        *(f32 *)(state + 0x1c) = *(f32 *)(state + 0x24) = lbl_803E3DEC;
+        *(short *)(obj + 4) = 0;
+        *(int *)(obj + 0xbc) = (int)&fn_8018D7C4;
+        break;
+    case 0x7de:
+        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        *(short *)(obj + 2) = 0;
+        if (*(short *)(aux + 0x1c) >= 0x3e8) {
+            *(f32 *)(obj + 8) = zeroF / ((f32)(s32)*(short *)(aux + 0x1c) / lbl_803E3DF4);
+        } else {
+            *(f32 *)(obj + 8) = zeroF;
+        }
+        *(f32 *)(state + 0x24) = (f32)(s32)*(short *)(aux + 0x1a);
+        *(short *)(state + 0x38) = *(short *)(aux + 0x20);
+        if (GameBit_Get(*(short *)(state + 0x38)) != 0) {
+            *(f32 *)(state + 0x24) = *(f32 *)(state + 0x24) * lbl_803E3E3C;
+        }
+        break;
+    case 0xd7:
+        *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
+        *(f32 *)(obj + 8) = zeroF;
+        *(u8 *)(state + 0x3e) = 0;
+        *(f32 *)(state + 0x4) = *(f32 *)(aux + 0x8);
+        *(f32 *)(state + 0x8) = *(f32 *)(aux + 0xc);
+        *(f32 *)(state + 0xc) = *(f32 *)(aux + 0x10);
+        *(f32 *)(state + 0x1c) = *(f32 *)(state + 0x24) = *(f32 *)(state + 0x20) = *(f32 *)(state + 0x28) = *(f32 *)(state + 0x14) = *(f32 *)(state + 0x18) = lbl_803E3E30;
+        *(int *)(obj + 0xbc) = (int)&fn_8018D7C4;
+        break;
+    case 0x125:
+        *(short *)(obj + 0) = 0;
+        *(short *)(obj + 2) = 0;
+        *(short *)(obj + 4) = 0;
+        *(f32 *)(obj + 8) = zeroF;
+        *(int *)(obj + 0xf4) = 0;
+        *(int *)(obj + 0xf8) = 0;
+        *(f32 *)(state + 0x24) = lbl_803E3E40;
+        *(f32 *)(state + 0x1c) = lbl_803E3DEC;
+        *(short *)(state + 0x32) = 0;
+        *(short *)(state + 0x34) = (short)randomGetRange(0x3e8, 0x1388);
+        *(u8 *)(state + 0x3f) = 1;
+        *(int *)(obj + 0xbc) = (int)&fn_8018D7C4;
+        break;
+    case 0x10d:
+        *(int *)(obj + 0x54) = 0;
+        if (*(short *)(aux + 0x1a) == 0) {
+            *(int *)(state + 0x44) = (int)&lbl_803DBDE8;
+            *(u8 *)(state + 0x40) = 1;
+        }
+        *(u16 *)(state + 0x48) = (u16)*(short *)(aux + 0x1c);
+        *(short *)(state + 0x3c) = (short)*(u16 *)(state + 0x48);
+        break;
+    }
 }
 
 /*
