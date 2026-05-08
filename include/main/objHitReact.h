@@ -18,6 +18,13 @@ typedef struct ObjHitReactEffectPos {
   f32 scale;
 } ObjHitReactEffectPos;
 
+typedef struct ObjHitReactEffectColorArgs {
+  u32 hitFxMode;
+  u32 colorR;
+  u32 colorG;
+  u32 colorB;
+} ObjHitReactEffectColorArgs;
+
 typedef void (*ObjHitReactEffectSpawnFn)(int parent,int mode,ObjHitReactEffectPos *pos,
                                          u32 flags,int sequenceId,void *args);
 

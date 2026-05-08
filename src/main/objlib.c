@@ -2253,7 +2253,7 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR
   ObjHitReactEffectHandle *effectHandle;
   float hitPos[3];
   ObjHitReactEffectPos effectPos;
-  u32 effectArgs[4];
+  ObjHitReactEffectColorArgs effectArgs;
   u32 hitObject;
 
   *cooldown = *cooldown - timeDelta;
@@ -2269,12 +2269,12 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR
       effectPos.y = 0;
       effectPos.x = 0;
       effectHandle = Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID,1);
-      effectArgs[0] = hitFxMode & 0xff;
-      effectArgs[1] = colorR & 0xff;
-      effectArgs[2] = colorG & 0xff;
-      effectArgs[3] = colorB & 0xff;
+      effectArgs.hitFxMode = hitFxMode & 0xff;
+      effectArgs.colorR = colorR & 0xff;
+      effectArgs.colorG = colorG & 0xff;
+      effectArgs.colorB = colorB & 0xff;
       effectHandle->vtable->spawn(0,1,&effectPos,OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,0xffffffff,
-                                  effectArgs);
+                                  &effectArgs);
       if ((((sfxId & 0xffff) != 0) && (hitObject != 0)) && (*(short *)(hitObject + 0x46) == 0x69)) {
         Sfx_PlayFromObject(obj,sfxId);
       }
