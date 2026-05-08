@@ -555,9 +555,8 @@ void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,uint frameCount
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnimArg,float *phaseOut)
+undefined4 ObjAnim_SampleRootCurvePhase(ObjAnimComponent *objAnim,f32 distance,float *phaseOut)
 {
-  ObjAnimComponent *objAnim;
   ObjAnimBank *bank;
   ObjAnimDef *animDef;
   ObjAnimState *state;
@@ -570,8 +569,8 @@ undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnimArg,float *ph
   float fVar7;
   float fVar8;
   bool bVar9;
-  uint uVar10;
-  uint uVar11;
+  int uVar10;
+  int uVar11;
   int *piVar12;
   int iVar13;
   float *pfVar14;
@@ -579,12 +578,11 @@ undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnimArg,float *ph
   float *pfVar16;
   int iVar17;
   int iVar18;
-  double in_f6;
-  double in_f7;
-  double in_f8;
+  float in_f6;
+  float in_f7;
+  float in_f8;
   undefined8 local_20;
 
-  objAnim = (ObjAnimComponent *)objAnimArg;
   bank = ObjAnim_GetActiveBank(objAnim);
   piVar12 = (int *)bank;
   animDef = bank->animDef;
@@ -595,9 +593,9 @@ undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnimArg,float *ph
     fVar5 = objAnim->rootMotionScale;
     pfVar15 = (float *)0x0;
     if (state->eventState != 0) {
-      in_f7 = (double)((float)((double)CONCAT44(0x43300000,(uint)state->eventState) -
-                              lbl_803DE8E8) / lbl_803DE8F4);
-      in_f8 = (double)(float)((double)lbl_803DE8E0 - in_f7);
+      in_f7 = (float)(ObjAnim_U32AsDouble((uint)state->eventState) - lbl_803DE8E8) /
+              lbl_803DE8F4;
+      in_f8 = lbl_803DE8E0 - in_f7;
       if ((*(ushort *)(iVar17 + 2) & OBJANIM_DEF_FLAG_CACHED_MOVES) == 0) {
         iVar13 = *(int *)(*(int *)(iVar17 + 100) + (uint)*(ushort *)(iVar18 + 0x48) * 4);
       }
@@ -607,7 +605,7 @@ undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnimArg,float *ph
       }
       if (*(short *)(iVar13 + OBJANIM_MOVE_ROOT_CURVE_OFFSET) != 0) {
         pfVar16 = (float *)(iVar13 + *(short *)(iVar13 + OBJANIM_MOVE_ROOT_CURVE_OFFSET));
-        in_f6 = (double)(*pfVar16 * fVar5);
+        in_f6 = *pfVar16 * fVar5;
         pfVar15 = (float *)((int)pfVar16 + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
         if (((*(short *)pfVar15 == 0) && (pfVar15 = pfVar16 + 2, *(short *)pfVar15 == 0)) &&
            (pfVar15 = (float *)((int)pfVar16 + OBJANIM_ROOT_CURVE_Z_AXIS_OFFSET),
@@ -640,43 +638,45 @@ undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnimArg,float *ph
           fVar7 = -fVar7;
         }
         if (sVar6 != 0) {
-          fVar4 = (float)((double)CONCAT44(0x43300000,uVar10 ^ 0x80000000) - lbl_803DE900);
+          fVar4 = (float)(ObjAnim_U32AsDouble(uVar10 ^ 0x80000000) - lbl_803DE900);
           fVar8 = lbl_803DE8E0 / fVar4;
           fVar4 = fVar4 * objAnim->currentMoveProgress;
-          uVar11 = (uint)fVar4;
-          fVar4 = fVar4 - (float)((double)CONCAT44(0x43300000,uVar11 ^ 0x80000000) - lbl_803DE900
-                                 );
+          uVar11 = (int)fVar4;
+          fVar4 = fVar4 - (float)(ObjAnim_U32AsDouble(uVar11 ^ 0x80000000) - lbl_803DE900);
           if (pfVar15 == (float *)0x0) {
-            fVar1 = fVar7 * (float)((double)CONCAT44(0x43300000,
-                                                     (int)*(short *)((int)pfVar14 + uVar11 * 2 + 2)
-                                                     ^ 0x80000000) - lbl_803DE900);
-            fVar2 = fVar7 * (float)((double)CONCAT44(0x43300000,
-                                                     (int)*(short *)((int)pfVar14 + uVar11 * 2 + 4)
-                                                     ^ 0x80000000) - lbl_803DE900);
+            fVar1 = fVar7 *
+                    (float)(ObjAnim_U32AsDouble((int)*(short *)((int)pfVar14 + uVar11 * 2 + 2) ^
+                                                0x80000000) -
+                            lbl_803DE900);
+            fVar2 = fVar7 *
+                    (float)(ObjAnim_U32AsDouble((int)*(short *)((int)pfVar14 + uVar11 * 2 + 4) ^
+                                                0x80000000) -
+                            lbl_803DE900);
           }
           else {
             if (*(short *)((int)pfVar15 + uVar10 * 2) < 0) {
               in_f6 = -in_f6;
             }
             iVar17 = uVar11 * 2;
-            local_20 = (double)CONCAT44(0x43300000,
-                                        (int)*(short *)((int)pfVar15 + iVar17) ^ 0x80000000);
-            fVar1 = (float)(in_f6 * (double)(float)(in_f7 * (double)(float)(local_20 -
-                                                                           lbl_803DE900)) +
-                           (double)(fVar7 * (float)(in_f8 * (double)(float)((double)CONCAT44(
-                                                  0x43300000,
-                                                  (int)*(short *)((int)pfVar14 + iVar17 + 2) ^
-                                                  0x80000000) - lbl_803DE900))));
-            fVar2 = (float)(in_f6 * (double)(float)(in_f7 * (double)(float)((double)CONCAT44(
-                                                  0x43300000,
-                                                  (int)*(short *)((int)pfVar15 + iVar17 + 2) ^
-                                                  0x80000000) - lbl_803DE900)) +
-                           (double)(fVar7 * (float)(in_f8 * (double)(float)((double)CONCAT44(
-                                                  0x43300000,
-                                                  (int)*(short *)((int)pfVar14 + iVar17 + 4) ^
-                                                  0x80000000) - lbl_803DE900))));
+            local_20 = ObjAnim_U32AsDouble((int)*(short *)((int)pfVar15 + iVar17) ^ 0x80000000);
+            fVar1 = in_f6 * (in_f7 * (float)(local_20 - lbl_803DE900)) +
+                    fVar7 *
+                        (in_f8 *
+                         (float)(ObjAnim_U32AsDouble(
+                                     (int)*(short *)((int)pfVar14 + iVar17 + 2) ^ 0x80000000) -
+                                 lbl_803DE900));
+            fVar2 = in_f6 *
+                        (in_f7 *
+                         (float)(ObjAnim_U32AsDouble(
+                                     (int)*(short *)((int)pfVar15 + iVar17 + 2) ^ 0x80000000) -
+                                 lbl_803DE900)) +
+                    fVar7 *
+                        (in_f8 *
+                         (float)(ObjAnim_U32AsDouble(
+                                     (int)*(short *)((int)pfVar14 + iVar17 + 4) ^ 0x80000000) -
+                                 lbl_803DE900));
           }
-          fVar5 = (float)(distance * (double)(fVar5 / *(float *)(*(int *)(objAnimArg + 0x50) + 4))) +
+          fVar5 = distance * (fVar5 / *(float *)((int)objAnim->modelInstance + 4)) +
                   fVar4 * (fVar2 - fVar1) + fVar1;
           fVar4 = -(fVar8 * fVar4 - fVar8);
           bVar9 = false;
@@ -687,34 +687,32 @@ undefined4 ObjAnim_SampleRootCurvePhase(double distance,int objAnimArg,float *ph
                 uVar11 = 0;
               }
               if (pfVar15 == (float *)0x0) {
-                fVar3 = fVar7 * ((float)((double)CONCAT44(0x43300000,
-                                                          (int)*(short *)((int)pfVar14 +
-                                                                         uVar11 * 2 + 4) ^
-                                                          0x80000000) - lbl_803DE900) -
-                                (float)((double)CONCAT44(0x43300000,
-                                                         (int)*(short *)((int)pfVar14 +
-                                                                        uVar11 * 2 + 2) ^ 0x80000000
-                                                        ) - lbl_803DE900));
+                fVar3 = fVar7 *
+                        ((float)(ObjAnim_U32AsDouble(
+                                     (int)*(short *)((int)pfVar14 + uVar11 * 2 + 4) ^ 0x80000000) -
+                                 lbl_803DE900) -
+                         (float)(ObjAnim_U32AsDouble(
+                                     (int)*(short *)((int)pfVar14 + uVar11 * 2 + 2) ^ 0x80000000) -
+                                 lbl_803DE900));
               }
               else {
                 iVar17 = uVar11 * 2;
-                local_20 = (double)CONCAT44(0x43300000,
-                                            (int)((short *)((int)pfVar15 + iVar17))[1] ^ 0x80000000)
-                ;
-                fVar3 = (float)((double)(fVar7 * ((float)((double)CONCAT44(0x43300000,
-                                                                           (int)*(short *)((int)
-                                                  pfVar14 + iVar17 + 4) ^ 0x80000000) -
-                                                  lbl_803DE900) -
-                                                 (float)((double)CONCAT44(0x43300000,
-                                                                          (int)*(short *)((int)
-                                                  pfVar14 + iVar17 + 2) ^ 0x80000000) -
-                                                  lbl_803DE900))) * in_f8 +
-                               (double)(float)((double)(float)(in_f6 * (double)((float)(local_20 -
-                                                  lbl_803DE900) -
-                                                  (float)((double)CONCAT44(0x43300000,
-                                                                           (int)*(short *)((int)
-                                                  pfVar15 + iVar17) ^ 0x80000000) - lbl_803DE900)
-                                                  )) * in_f7));
+                local_20 = ObjAnim_U32AsDouble((int)((short *)((int)pfVar15 + iVar17))[1] ^
+                                               0x80000000);
+                fVar3 = fVar7 *
+                            ((float)(ObjAnim_U32AsDouble(
+                                         (int)*(short *)((int)pfVar14 + iVar17 + 4) ^ 0x80000000) -
+                                     lbl_803DE900) -
+                             (float)(ObjAnim_U32AsDouble(
+                                         (int)*(short *)((int)pfVar14 + iVar17 + 2) ^ 0x80000000) -
+                                     lbl_803DE900)) *
+                            in_f8 +
+                        in_f6 *
+                            ((float)(local_20 - lbl_803DE900) -
+                             (float)(ObjAnim_U32AsDouble(
+                                         (int)*(short *)((int)pfVar15 + iVar17) ^ 0x80000000) -
+                                     lbl_803DE900)) *
+                            in_f7;
               }
               fVar4 = fVar4 + fVar8;
               fVar1 = fVar2;

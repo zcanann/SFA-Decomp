@@ -1043,7 +1043,7 @@ void FUN_801f1d3c(undefined8 param_1,undefined8 param_2,double param_3,undefined
           dVar8 = (double)lbl_803E6A44;
           *(float *)(param_9 + 0x12) = (float)(dVar8 * (double)(float)(dVar9 / dVar6));
           *(float *)(param_9 + 0x16) = (float)(dVar8 * (double)(float)(dVar7 / dVar6));
-          ObjAnim_SampleRootCurvePhase(dVar8,(int)param_9,pfVar5 + 3);
+          ObjAnim_SampleRootCurvePhase((ObjAnimComponent *)param_9,(float)dVar8,pfVar5 + 3);
         }
         if (dVar6 < (double)lbl_803E6A4C) {
           *(undefined *)((int)pfVar5 + 0x23) = *(undefined *)((int)pfVar5 + 0x22);
