@@ -16,7 +16,10 @@ extern uint FUN_80017760();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern void fn_8001F384(void *effect);
+extern u32 GameBit_Get(int bit);
 extern undefined4 FUN_8002fc3c();
+extern undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnimArg,
+                                             void *animEvents);
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
@@ -60,11 +63,14 @@ extern f32 FLOAT_803e4a00;
 extern f32 FLOAT_803e4a10;
 extern f32 FLOAT_803e4a14;
 extern f32 FLOAT_803e4a18;
+extern f32 timeDelta;
 extern f32 lbl_803E3D64;
 extern f32 lbl_803E3D68;
 extern f64 lbl_803E3D70;
 extern f32 lbl_803E3D78;
 extern f32 lbl_803E3DB0;
+extern f32 lbl_803E3DB4;
+extern f64 lbl_803E3DB8;
 
 /*
  * --INFO--
@@ -414,6 +420,31 @@ void kt_torch_free(void) {}
 void kt_torch_hitDetect(void) {}
 void kt_torch_release(void) {}
 void kt_torch_initialise(void) {}
+
+#pragma scheduling off
+void kt_torch_update(int obj)
+{
+  int mapData;
+  int bit;
+  uint local_18[2];
+
+  mapData = *(int *)(obj + 0x4c);
+  local_18[1] = *(u8 *)(mapData + 0x1b);
+  local_18[0] = 0x43300000;
+  ObjAnim_AdvanceCurrentMove((double)((float)(*(double *)local_18 - lbl_803E3DB8) /
+                                      lbl_803E3DB4),
+                             (double)timeDelta,obj,0);
+  bit = *(short *)(mapData + 0x20);
+  if (bit != -1) {
+    if (GameBit_Get(bit) != 0) {
+      *(u8 *)(obj + 0x36) = 0xff;
+    }
+    else {
+      *(u8 *)(obj + 0x36) = 0;
+    }
+  }
+}
+#pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
 int campfire_getExtraSize(void) { return 0x14; }
