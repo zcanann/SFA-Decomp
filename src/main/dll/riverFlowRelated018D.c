@@ -16,6 +16,10 @@ extern void fn_8001D620(int handle,int param_2,int param_3);
 extern void fn_8001DD40(int handle,int param_2);
 extern void fn_8001D730(int handle,f32 param_2,int param_3,int r,int g,int b,int a);
 extern void dll_DIM_BossGutSpik_update(void);
+extern void fn_801BDCF8(void);
+extern void fn_801BDD64(void);
+extern void fn_801BDDB4(void);
+extern void fn_801BDF20(void);
 
 extern undefined4* lbl_803DCA8C;
 extern undefined4* lbl_803DCAB8;
@@ -25,6 +29,8 @@ extern f32 lbl_803DDB98;
 extern f32 lbl_803DDB9C;
 extern f32 lbl_803DDBA0;
 extern f32 lbl_803DDBA4;
+extern void (*lbl_803DDBA8[2])(void);
+extern void (*lbl_803DDBB0[2])(void);
 extern f32 lbl_803E4C90;
 extern f32 lbl_803E4C9C;
 extern f32 lbl_803E4CA0;
@@ -102,3 +108,15 @@ void dimbosstonsil_init(int obj,undefined4 param_2,int isAltVariant)
 void dimbosstonsil_release(void)
 {
 }
+
+#pragma scheduling off
+#pragma peephole off
+void dimbosstonsil_initialise(void)
+{
+  lbl_803DDBB0[0] = fn_801BDF20;
+  lbl_803DDBB0[1] = fn_801BDDB4;
+  lbl_803DDBA8[0] = fn_801BDD64;
+  lbl_803DDBA8[1] = fn_801BDCF8;
+}
+#pragma peephole reset
+#pragma scheduling reset
