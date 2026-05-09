@@ -284,7 +284,7 @@ void Camera_func13(int enable)
     pCamera[0x141] = (u8)(pCamera[0x141] | 2);
   }
   else {
-    pCamera[0x141] = (u8)(pCamera[0x141] & 0xfd);
+    pCamera[0x141] = (u8)(pCamera[0x141] & ~2);
   }
 }
 
@@ -295,8 +295,8 @@ void Camera_func1C(int flags)
 
 void Camera_setLetterbox(int yOffset,int applyNow)
 {
-  if ((int)(s8)pCamera[0x13b] < yOffset) {
-    pCamera[0x13b] = (s8)yOffset;
+  if (yOffset > (int)(s8)pCamera[0x13b]) {
+    ((s8 *)pCamera)[0x13b] = yOffset;
     pCamera[0x13c] = 2;
     if (applyNow != 0) {
       Camera_SetViewportYOffset((s16)yOffset);
