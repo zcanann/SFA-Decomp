@@ -14,7 +14,7 @@ extern u8* lbl_803DE268;
  *
  * EN v1.0 Address: 0x8027186C, size 0xE8
  */
-u32 fn_8027186C(u32 handle, u8 controller, u8 value) {
+u32 synthSetHandleControllerValue(u32 handle, u8 controller, u8 value) {
     u32 found;
     u8 idx;
     u8* slotPtr;
@@ -44,7 +44,7 @@ u32 fn_8027186C(u32 handle, u8 controller, u8 value) {
  *
  * EN v1.0 Address: 0x80271954, size 0xE8
  */
-u32 fn_80271954(u32 handle, u8 controller, u32 value) {
+u32 synthSetHandleControllerValue14Bit(u32 handle, u8 controller, u32 value) {
     u32 found;
     u8 idx;
     u8* slotPtr;
@@ -75,7 +75,7 @@ u32 fn_80271954(u32 handle, u8 controller, u32 value) {
  *
  * EN v1.0 Address: 0x80271A3C, size 0x84
  */
-void fn_80271A3C(u32 dstHandle, u32 srcHandle) {
+void synthCopyHandleFXState(u32 dstHandle, u32 srcHandle) {
     inpFXCopyCtrl(0x07, dstHandle, srcHandle);
     inpFXCopyCtrl(0x0A, dstHandle, srcHandle);
     inpFXCopyCtrl(0x5B, dstHandle, srcHandle);
@@ -89,7 +89,7 @@ void fn_80271A3C(u32 dstHandle, u32 srcHandle) {
  *
  * EN v1.0 Address: 0x80271AC0, size 0x8C
  */
-u32 fn_80271AC0(u32 handle) {
+u32 synthHandleKeyOff(u32 handle) {
     u32 found;
     u32 idx;
 

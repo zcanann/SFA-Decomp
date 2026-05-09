@@ -4,9 +4,9 @@
 extern void sndBegin(void);
 extern void sndEnd(void);
 extern void fn_8026D6E4(u32 value0, u32 value1, u32 handle, u32 mode);
-extern int fn_8027186C(int a, int b, int c);
-extern int fn_80271954(int a, int b, int c);
-extern int fn_80271AC0(int a);
+extern int synthSetHandleControllerValue(int handle, int controller, int value);
+extern int synthSetHandleControllerValue14Bit(int handle, int controller, int value);
+extern int synthHandleKeyOff(int handle);
 extern int fn_802717B0(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux);
 extern int fn_80271B4C(int a, int b, int c, int d, int e);
 extern int vidGetInternalId(u32 id);
@@ -68,7 +68,7 @@ int sndFXCtrl(int handle, int controller, int value)
 {
     int result;
     sndBegin();
-    result = fn_8027186C(handle, controller, value);
+    result = synthSetHandleControllerValue(handle, controller, value);
     sndEnd();
     return result;
 }
@@ -82,7 +82,7 @@ int sndFXCtrl14(int handle, int controller, int value)
 {
     int result;
     sndBegin();
-    result = fn_80271954(handle, controller, value);
+    result = synthSetHandleControllerValue14Bit(handle, controller, value);
     sndEnd();
     return result;
 }
@@ -97,7 +97,7 @@ int sndFXKeyOff(int handle)
 {
     int result;
     sndBegin();
-    result = fn_80271AC0(handle);
+    result = synthHandleKeyOff(handle);
     sndEnd();
     return result;
 }
