@@ -5,7 +5,7 @@ extern int hwInit(void *params, u8 voiceCount, u8 streamCount, u8 stereo, void *
 extern void fn_80275260(int p1, void *p2);
 extern void fn_8026F30C(void);
 extern void synthInit(int sampleRate, void *p2);
-extern void fn_80272EA4(void);
+extern void synthInitJobTable(void);
 extern void synthInitVirtualSampleTable(void);
 extern void synthResetVirtualSampleCounter(void);
 extern void fn_80280FFC(u32 flags);
@@ -103,7 +103,7 @@ int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, void *p7, u32 fla
         fn_8026F30C();
         synthIdleWaitActive = 0;
         synthInit(0x7d00, &voiceCountSnapshot);
-        fn_80272EA4();
+        synthInitJobTable();
         synthInitVirtualSampleTable();
         fn_80280FFC(flags);
         gSynthInitialized = 1;

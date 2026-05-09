@@ -30,10 +30,10 @@ extern u8 lbl_803BD9C4[];
 extern u8 lbl_803BD9E4[];
 extern u8 lbl_803BDA04[];
 extern u8 lbl_803BDA24[];
-extern u8 lbl_803DE23C;
-extern u8 lbl_803DE244;
-extern u8 lbl_803DE24C;
-extern u8 lbl_803DE254;
+extern u8 synthAuxBMIDI;
+extern u8 synthAuxBIndex;
+extern u8 synthAuxAMIDI;
+extern u8 synthAuxAIndex;
 extern u32 synthFlags;
 extern u8 *synthVoice;
 
@@ -214,26 +214,26 @@ void sndSetAuxProcessingCallbacks(u32 studio, void *auxACallback, void *auxAUser
 {
     sndBegin();
     if (auxACallback != 0) {
-        (&lbl_803DE254)[studio & 0xff] = auxAIndex;
+        (&synthAuxAIndex)[studio & 0xff] = auxAIndex;
         if (auxAIndex != 0xff) {
-            (&lbl_803DE24C)[studio & 0xff] = synthResolveHandle((u32)auxAData);
+            (&synthAuxAMIDI)[studio & 0xff] = synthResolveHandle((u32)auxAData);
             *(u32 *)(lbl_803BD9C4 + (studio & 0xff) * 4) = (u32)auxACallback;
             *(u32 *)(lbl_803BD9A4 + (studio & 0xff) * 4) = (u32)auxAUser;
         }
     } else {
         *(u32 *)(lbl_803BD9C4 + (studio & 0xff) * 4) = 0;
-        (&lbl_803DE254)[studio & 0xff] = 0xff;
+        (&synthAuxAIndex)[studio & 0xff] = 0xff;
     }
     if (auxBCallback != 0) {
-        (&lbl_803DE244)[studio & 0xff] = auxBIndex;
+        (&synthAuxBIndex)[studio & 0xff] = auxBIndex;
         if (auxBIndex != 0xff) {
-            (&lbl_803DE23C)[studio & 0xff] = synthResolveHandle((u32)auxBData);
+            (&synthAuxBMIDI)[studio & 0xff] = synthResolveHandle((u32)auxBData);
             *(u32 *)(lbl_803BDA04 + (studio & 0xff) * 4) = (u32)auxBCallback;
             *(u32 *)(lbl_803BD9E4 + (studio & 0xff) * 4) = (u32)auxBUser;
         }
     } else {
         *(u32 *)(lbl_803BDA04 + (studio & 0xff) * 4) = 0;
-        (&lbl_803DE244)[studio & 0xff] = 0xff;
+        (&synthAuxBIndex)[studio & 0xff] = 0xff;
     }
     hwSetAUXProcessingCallbacks(studio, auxACallback, auxAUser, auxBCallback, auxBUser);
     sndEnd();
@@ -250,8 +250,8 @@ void synthActivateStudio(u32 slot, int a, int b)
     sndBegin();
     *(u32 *)(lbl_803BD9C4 + slot * 4) = 0;
     *(u32 *)(lbl_803BDA04 + slot * 4) = 0;
-    (&lbl_803DE254)[slot] = 0xff;
-    (&lbl_803DE244)[slot] = 0xff;
+    (&synthAuxAIndex)[slot] = 0xff;
+    (&synthAuxBIndex)[slot] = 0xff;
     *(u8 *)(lbl_803BDA24 + slot * 2 + 1) = 0;
     *(u8 *)(lbl_803BDA24 + slot * 2) = 0;
     hwActivateStudio(slot, a, b);
@@ -287,8 +287,8 @@ void synthDeactivateStudio(u8 slot)
     sndBegin();
     *(u32 *)(lbl_803BD9C4 + slot * 4) = 0;
     *(u32 *)(lbl_803BDA04 + slot * 4) = 0;
-    (&lbl_803DE254)[slot] = 0xff;
-    (&lbl_803DE244)[slot] = 0xff;
+    (&synthAuxAIndex)[slot] = 0xff;
+    (&synthAuxBIndex)[slot] = 0xff;
     sndEnd();
     hwDeactivateStudio(slot);
 }

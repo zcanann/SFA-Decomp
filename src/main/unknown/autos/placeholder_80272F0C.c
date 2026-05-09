@@ -2,7 +2,7 @@
 #include "main/unknown/autos/placeholder_80272F0C.h"
 
 extern u8 lbl_803BD150[];
-extern u8 lbl_803BE378[];
+extern u8 synthJobTable[];
 extern u8 lbl_803DE280;
 extern u8 lbl_803DE281;
 extern u32 lbl_803DE284;
@@ -10,13 +10,13 @@ extern u32 lbl_803DE284;
 /*
  * --INFO--
  *
- * Function: fn_80272EA4
+ * Function: synthInitJobTable
  * EN v1.0 Address: 0x80272EA4
  * EN v1.0 Size: 200b
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_80272EA4(void)
+void synthInitJobTable(void)
 {
     int count;
     int progress;
@@ -32,7 +32,7 @@ void fn_80272EA4(void)
     if (count != 0) {
         if (8 < count) {
             outerLoops = (count - 1) >> 3;
-            outerEntry = lbl_803BE378;
+            outerEntry = synthJobTable;
             if ((int)(count - 8) > 0) {
                 do {
                     outerEntry[0x008] = 0;
@@ -49,7 +49,7 @@ void fn_80272EA4(void)
                 } while (outerLoops != 0);
             }
         }
-        tailEntry = lbl_803BE378 + progress * 0x64;
+        tailEntry = synthJobTable + progress * 0x64;
         tailRemaining = count - progress;
         if (progress < (int)count) {
             do {
