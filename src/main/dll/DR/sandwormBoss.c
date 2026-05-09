@@ -49,7 +49,7 @@ extern int ObjMsg_Pop();
 extern undefined8 ObjMsg_SendToObjects();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 ObjMsg_AllocQueue();
-extern undefined4 FUN_80037d74();
+extern bool ObjTrigger_UpdateIdBlockFlag(int obj);
 extern undefined4 ObjLink_DetachChild();
 extern int ObjTrigger_IsSet();
 extern undefined4 ObjPath_GetPointWorldPosition();
@@ -2345,7 +2345,7 @@ void FUN_8019e54c(uint param_1)
         }
       }
     }
-    FUN_80037d74(param_1);
+    ObjTrigger_UpdateIdBlockFlag(param_1);
     uVar1 = FUN_80017690(0x4d);
     *(char *)((int)piVar6 + 0x73) = (char)uVar1;
     if (*(char *)((int)piVar6 + 0x73) == '\0') {

@@ -54,7 +54,7 @@ extern double FUN_80293900();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 extern undefined4 FUN_802949e8();
-extern byte FUN_80294c20();
+extern int fn_80295CD4(int obj);
 extern int objGetAnimState80A(void *obj);
 
 #define OBJGROUP_COUNT 0x54
@@ -2256,9 +2256,9 @@ undefined4 Obj_IsObjectAlive(u32 param_1)
 /*
  * --INFO--
  *
- * Function: FUN_80037d74
- * EN v1.0 Address: 0x80037D74
- * EN v1.0 Size: 96b
+ * Function: ObjTrigger_UpdateIdBlockFlag
+ * EN v1.0 Address: 0x80037A04
+ * EN v1.0 Size: 100b
  * EN v1.1 Address: 0x80037AFC
  * EN v1.1 Size: 100b
  * JP Address: TODO
@@ -2266,23 +2266,26 @@ undefined4 Obj_IsObjectAlive(u32 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-bool FUN_80037d74(int param_1)
+#pragma peephole off
+#pragma scheduling off
+bool ObjTrigger_UpdateIdBlockFlag(int param_1)
 {
   int iVar1;
-  byte bVar2;
+  byte flags;
   
   iVar1 = (int)Obj_GetPlayerObject();
-  bVar2 = FUN_80294c20(iVar1);
-  if (bVar2 == 0) {
-    *(byte *)(param_1 + OBJTRIGGER_FLAGS_OFFSET) =
-        *(byte *)(param_1 + OBJTRIGGER_FLAGS_OFFSET) & ~OBJTRIGGER_ID_BLOCK_FLAG;
+  iVar1 = fn_80295CD4(iVar1);
+  if (iVar1 != 0) {
+    flags = *(byte *)(param_1 + OBJTRIGGER_FLAGS_OFFSET) | OBJTRIGGER_ID_BLOCK_FLAG;
+    *(byte *)(param_1 + OBJTRIGGER_FLAGS_OFFSET) = flags;
+    return false;
   }
-  else {
-    *(byte *)(param_1 + OBJTRIGGER_FLAGS_OFFSET) =
-        *(byte *)(param_1 + OBJTRIGGER_FLAGS_OFFSET) | OBJTRIGGER_ID_BLOCK_FLAG;
-  }
-  return bVar2 == 0;
+  flags = *(byte *)(param_1 + OBJTRIGGER_FLAGS_OFFSET) & ~OBJTRIGGER_ID_BLOCK_FLAG;
+  *(byte *)(param_1 + OBJTRIGGER_FLAGS_OFFSET) = flags;
+  return true;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
