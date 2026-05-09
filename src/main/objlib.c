@@ -1804,29 +1804,36 @@ int ObjGroup_GetObjectGroup(int obj)
   int *entry;
   byte *offset;
   int objectIndex;
+  uint remainingObjects;
   
   objectIndex = 0;
   entry = &gObjGroupObjects[0];
-  for (; objectIndex < (int)(uint)gObjGroupObjectCount; objectIndex = objectIndex + 1) {
-    if ((u32)*entry == (u32)obj) {
-      group = 0;
-      offset = gObjGroupOffsets;
-      while( true ) {
-        if ((int)(uint)*offset > objectIndex) {
-          return group;
-        }
-        if (group < OBJGROUP_OFFSET_CLEAR_COUNT) {
-          offset = offset + 1;
-          group = group + 1;
-        }
-        else {
-          return group;
-        }
-      }
+  remainingObjects = (uint)gObjGroupObjectCount;
+  while( true ) {
+    if (remainingObjects == 0) {
+      return 0;
+    }
+    if (*entry == obj) {
+      break;
     }
     entry = entry + 1;
+    objectIndex = objectIndex + 1;
+    remainingObjects = remainingObjects - 1;
   }
-  return 0;
+  group = 0;
+  offset = gObjGroupOffsets;
+  while( true ) {
+    if (objectIndex < (int)(uint)*offset) {
+      return group;
+    }
+    if (group < OBJGROUP_OFFSET_CLEAR_COUNT) {
+      offset = offset + 1;
+      group = group + 1;
+    }
+    else {
+      return group;
+    }
+  }
 }
 #pragma peephole reset
 #pragma scheduling reset
