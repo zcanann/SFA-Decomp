@@ -661,6 +661,15 @@ extern undefined uRam803dd555;
 extern u32 gAudioResetting;
 extern u32 gAudioManagedChannelMask;
 extern u32 gAudioActiveChannelMask;
+extern u8 gAudioInitStarted;
+
+extern void fn_80281160(void);
+extern void AIReset(void);
+extern void Music_Update(void);
+extern void Sfx_UpdateObjectSounds(void);
+extern void AudioStream_UpdateFadeTimer(void);
+extern void mm_free(void *ptr);
+extern void *mmAlloc(u32 size, u32 tag, void *name);
 
 /*
  * --INFO--
@@ -1258,8 +1267,12 @@ void FUN_80006770(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80006774(void)
+void audioReset(void)
 {
+    if (gAudioInitStarted != 0) {
+        fn_80281160();
+    }
+    AIReset();
 }
 
 /*
@@ -1310,8 +1323,11 @@ void FUN_80006780(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80006784(void)
+void audioUpdate(void)
 {
+    Music_Update();
+    Sfx_UpdateObjectSounds();
+    AudioStream_UpdateFadeTimer();
 }
 
 /*
@@ -1369,8 +1385,9 @@ u32 fn_8000A188(u32 mask)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80006798(uint param_1)
+void fn_8000A1B8(void *ptr)
 {
+    mm_free(ptr);
 }
 
 /*
@@ -1386,9 +1403,9 @@ void FUN_80006798(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_8000679c(int param_1)
+void *fn_8000A1D8(u32 size)
 {
-    return 0;
+    return mmAlloc(size, 0xb, NULL);
 }
 
 /*
