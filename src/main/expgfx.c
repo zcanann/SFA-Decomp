@@ -213,8 +213,8 @@ extern ExpgfxTableEntry gExpgfxTableEntries[];
 
 typedef struct ExpgfxResourceEntry {
   void *resource;
-  u32 word4;
-  u32 word8;
+  s32 evictionScore;
+  s32 tableKeyType;
   u32 wordC;
 } ExpgfxResourceEntry;
 
@@ -1730,7 +1730,7 @@ void expgfx_updateFrameState(int sourceMode,int sourceId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int fn_8009ADEC(short slotType);
+extern int expgfx_acquireResourceEntry(short slotType);
 extern void *Obj_GetPlayerObject(void);
 extern f32 lbl_803DF350;
 extern f32 lbl_803DF41C;
@@ -1821,7 +1821,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIdx, short slot
   slot->renderFlags = config->renderFlags;
   slot->stateBits.value = slot->stateBits.value & ~EXPGFX_SLOT_STATE_INIT_PHASE_MASK;
 
-  tableIndex = (int)(short)fn_8009ADEC(config->tableKeyType);
+  tableIndex = (int)(short)expgfx_acquireResourceEntry(config->tableKeyType);
   if (tableIndex < 0) {
     expgfx_release(slotPoolBases[(int)poolIdxOut], (int)poolIdxOut, (int)slotIdxOut, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
@@ -2142,8 +2142,8 @@ void expgfx_resetPoolResources(void)
       fn_80054308(resourceEntry->resource);
     }
     resourceEntry->resource = (void *)0x0;
-    resourceEntry->word8 = 0;
-    resourceEntry->word4 = 0;
+    resourceEntry->tableKeyType = 0;
+    resourceEntry->evictionScore = 0;
     resourceEntry->wordC = 0;
     resourceEntry = resourceEntry + 1;
     resourceIndex = resourceIndex + 1;
