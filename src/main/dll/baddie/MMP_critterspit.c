@@ -14,11 +14,11 @@ extern f32 vec3f_distanceSquared(f32 *a, f32 *b);
 /*
  * --INFO--
  *
- * Function: fn_8013DB3C
+ * Function: trickyFoodFn_8013db3c
  * EN v1.0 Address: 0x8013DB3C
  * EN v1.0 Size: 332b
  */
-int fn_8013DB3C(u8 *arg1, u8 *arg2)
+int trickyFoodFn_8013db3c(u8 *arg1, u8 *arg2)
 {
   int result = 0;
   f32 dist = lbl_803E242C;

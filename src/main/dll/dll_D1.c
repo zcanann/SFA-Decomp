@@ -4,8 +4,8 @@
 #pragma peephole off
 #pragma scheduling off
 
-extern int fn_80148BC8(const char *fmt, ...);
-extern int fn_8013B368(void *param_1, float threshold, void *param_2);
+extern int trickyDebugPrint(const char *fmt, ...);
+extern int trickyFn_8013b368(void *param_1, float threshold, void *param_2);
 extern int Sfx_IsPlayingFromObjectChannel(void *obj, int chan);
 extern void *Obj_AllocObjectSetup(int p1, int p2);
 extern int Obj_SetupObject(void *setup, int p2, int p3, int p4, void *p5);
@@ -16,7 +16,7 @@ extern int Sfx_RemoveLoopedObjectSound(void *obj, int sfxId);
 extern int randomGetRange(int lo, int hi);
 extern int getAngle(float x, float z);
 extern void fn_800393F8(void *obj, void *p2, int p3, int p4, int p5, int p6);
-extern void fn_8013A3F0(void *obj, int p2, float p3, int p4);
+extern void objAnimFn_8013a3f0(void *obj, int p2, float p3, int p4);
 extern void fn_80139930(void *obj, s16 angle);
 extern void fn_8017804C(void *obj);
 
@@ -45,8 +45,8 @@ void fn_8013DC88(void *param_1, void *param_2)
 
     switch (*(u8 *)((char *)param_2 + 0xa)) {
     case 0:
-        fn_80148BC8(strBase + 0x558);
-        if (fn_8013B368(param_1, lbl_803E24C8, param_2) == 0) {
+        trickyDebugPrint(strBase + 0x558);
+        if (trickyFn_8013b368(param_1, lbl_803E24C8, param_2) == 0) {
             state = *(void **)((char *)param_1 + 0xb8);
             if ((((uint)*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
                 s16 a0 = *(s16 *)((char *)param_1 + 0xa0);
@@ -57,12 +57,12 @@ void fn_8013DC88(void *param_1, void *param_2)
                 }
             }
             *(u8 *)((char *)param_2 + 0xa) = 1;
-            fn_8013A3F0(param_1, 0x33, lbl_803E2444, 0x4000000);
+            objAnimFn_8013a3f0(param_1, 0x33, lbl_803E2444, 0x4000000);
             *(int *)((char *)param_2 + 0x728) = 0;
         }
         break;
     case 1:
-        fn_80148BC8(strBase + 0x568);
+        trickyDebugPrint(strBase + 0x568);
         if (*(u8 *)*(int *)param_2 != 0 && *(int *)((char *)param_2 + 0x728) != 0) {
             *(u8 *)((char *)param_2 + 0xa) = 2;
         } else {
@@ -84,8 +84,8 @@ void fn_8013DC88(void *param_1, void *param_2)
         }
         break;
     case 2:
-        fn_80148BC8(strBase + 0x57c);
-        if (fn_8013B368(param_1, lbl_803E24CC, param_2) == 0) {
+        trickyDebugPrint(strBase + 0x57c);
+        if (trickyFn_8013b368(param_1, lbl_803E24CC, param_2) == 0) {
             if ((u8)Obj_IsLoadingLocked() != 0) {
                 *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) | 0x800;
                 for (i = 0, slot = (void **)param_2; i < 7; slot++, i++) {
@@ -101,14 +101,14 @@ void fn_8013DC88(void *param_1, void *param_2)
                 Sfx_AddLoopedObjectSound(param_1, 0x3dc);
             }
             (*(u8 *)*(int *)param_2)--;
-            fn_8013A3F0(param_1, 0x34, lbl_803E2444, 0x4000000);
+            objAnimFn_8013a3f0(param_1, 0x34, lbl_803E2444, 0x4000000);
             *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) | 0x10;
             *(u8 *)((char *)param_2 + 0xa) = 3;
             *(int *)((char *)param_2 + 0x728) = 0;
         }
         break;
     case 3:
-        fn_80148BC8(strBase + 0x590);
+        trickyDebugPrint(strBase + 0x590);
         if (*(f32 *)((char *)param_1 + 0x98) <= lbl_803E24D0) {
             *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) & ~0x800;
             *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) | 0x1000;

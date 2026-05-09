@@ -11,7 +11,7 @@ extern int fn_8002178C(f32 dx, f32 dz);
 extern int randomGetRange(int lo, int hi);
 extern f32 __ieee754_rem_pio2(int angle);
 extern f32 fn_8029397C(int angle);
-extern int fn_8013B368(void *p1, void *p2, f32 f);
+extern int trickyFn_8013b368(void *p1, void *p2, f32 f);
 extern void fn_80148B78(const char *fmt, ...);
 
 extern f32 lbl_803E23F8;
@@ -86,7 +86,7 @@ void fn_8013EF8C(void *p1, void *p2) {
         *(f32 *)((u8 *)*(void **)((u8 *)p2 + 0x24) + 0x20) -
         lbl_803E24D4 * fn_8029397C((u16)*(s32 *)((u8 *)p2 + 0x704));
 
-    if (fn_8013B368(p1, p2, lbl_803E2488) == 0) {
+    if (trickyFn_8013b368(p1, p2, lbl_803E2488) == 0) {
         fn_80148B78(sTrickyShouldNeverStopCirclingError);
     }
 }

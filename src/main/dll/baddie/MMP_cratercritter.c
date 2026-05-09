@@ -14,12 +14,12 @@ extern f32 lbl_803E24C4;
 extern char sInWaterMessage[];
 extern char lbl_8031D478[];
 
-extern int fn_8013DB3C(u8 *arg1, u8 *arg2);
+extern int trickyFoodFn_8013db3c(u8 *arg1, u8 *arg2);
 extern u8 **ObjGroup_GetObjects(int kind, int *count);
 extern f32 getXZDistance(f32 *a, f32 *b);
-extern int fn_8013B368(u8 *arg1, u8 *arg2, f32 dist);
-extern void fn_8013A3F0(u8 *self, int a, int b, f32 f1);
-extern void fn_80148BC8(char *msg);
+extern int trickyFn_8013b368(u8 *arg1, u8 *arg2, f32 dist);
+extern void objAnimFn_8013a3f0(u8 *self, int a, int b, f32 f1);
+extern void trickyDebugPrint(char *msg);
 
 /*
  * --INFO--
@@ -41,7 +41,7 @@ void fn_8013D8F0(u8 *arg1, u8 *arg2)
   nearest = NULL;
   minDist = lbl_803E2418;
 
-  if (fn_8013DB3C(arg1, arg2) == 0) {
+  if (trickyFoodFn_8013db3c(arg1, arg2) == 0) {
     arg2[0x8] = 1;
     arg2[0xA] = 0;
     *(f32 *)(arg2 + 0x71C) = lbl_803E23DC;
@@ -75,7 +75,7 @@ void fn_8013D8F0(u8 *arg1, u8 *arg2)
       *(u32 *)(arg2 + 0x54) = *(u32 *)(arg2 + 0x54) & 0xFFFFFBFF;
       *(s16 *)(arg2 + 0xD2) = 0;
     }
-    if (fn_8013B368(arg1, arg2, lbl_803E247C) == 1) return;
+    if (trickyFn_8013b368(arg1, arg2, lbl_803E247C) == 1) return;
   }
 
   if (lbl_803E23DC == *(f32 *)(arg2 + 0x2AC)) {
@@ -89,12 +89,12 @@ void fn_8013D8F0(u8 *arg1, u8 *arg2)
   }
 
   if (waterFlag != 0) {
-    fn_8013A3F0(arg1, 8, 0, lbl_803E243C);
+    objAnimFn_8013a3f0(arg1, 8, 0, lbl_803E243C);
     *(f32 *)(arg2 + 0x79C) = lbl_803E2440;
     *(f32 *)(arg2 + 0x838) = lbl_803E23DC;
-    fn_80148BC8(sInWaterMessage);
+    trickyDebugPrint(sInWaterMessage);
   } else {
-    fn_8013A3F0(arg1, 0, 0, lbl_803E2444);
-    fn_80148BC8(lbl_8031D478);
+    objAnimFn_8013a3f0(arg1, 0, 0, lbl_803E2444);
+    trickyDebugPrint(lbl_8031D478);
   }
 }
