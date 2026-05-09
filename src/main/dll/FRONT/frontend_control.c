@@ -30,13 +30,13 @@ extern char sFrontendSingleDigitFormat[];
 /*
  * --INFO--
  *
- * Function: fn_80119C20
+ * Function: saveFileSelect_checkCheatCodes
  * EN v1.0 Address: 0x80119C20
  * EN v1.0 Size: 436b
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80119C20(void)
+void saveFileSelect_checkCheatCodes(void)
 {
     u32 held;
     u32 pressed;

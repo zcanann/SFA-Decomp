@@ -3109,7 +3109,7 @@ void CameraModeTitle_initialise(void) {}
 
 /* misc 8b leaves */
 extern f32 lbl_803DB9D8;
-f32 fn_801115E4(void) { return lbl_803DB9D8; }
+f32 titleScreenGetCamProgress(void) { return lbl_803DB9D8; }
 
 /* fn_X(lbl); lbl = 0; */
 extern u32 lbl_803DD588;

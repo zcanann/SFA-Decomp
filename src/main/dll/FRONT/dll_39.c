@@ -196,7 +196,7 @@ void n_rareware_release(void) {}
 /*
  * --INFO--
  *
- * Function: fn_801160E0
+ * Function: n_rareware_initialise
  * EN v1.0 Address: 0x801160E0
  * EN v1.0 Size: 60b
  * EN v1.1 Address: TODO
@@ -207,7 +207,7 @@ void n_rareware_release(void) {}
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_801160E0(void)
+void n_rareware_initialise(void)
 {
   fn_8001404C(0);
   lbl_803DD5F8 = 0;
@@ -410,7 +410,7 @@ void n_attractmode_prepareMovie(void)
 /*
  * --INFO--
  *
- * Function: fn_801165BC
+ * Function: TitleMenu_render
  * EN v1.0 Address: 0x801165BC
  * EN v1.0 Size: 264b
  * EN v1.1 Address: TODO
@@ -422,7 +422,7 @@ void n_attractmode_prepareMovie(void)
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_801165BC(u8 *param_1)
+void TitleMenu_render(u8 *param_1)
 {
   int menuAction;
 

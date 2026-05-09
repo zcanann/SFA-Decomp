@@ -30,7 +30,7 @@ extern void memCardFn_8007dd04(u8 retry);
 extern void loadSaveSettings(void);
 extern int titleLoadSaveFiles(void);
 extern void gameplay_capturePreviewSettings(void);
-extern float fn_801115E4(void);
+extern float titleScreenGetCamProgress(void);
 extern void fn_80117B68(int fade, int frames);
 extern void titleScreenFn_80130464(u8 v);
 extern void setLinkNotRotated(void);
@@ -135,7 +135,7 @@ static void TitleMenu_ReloadSaveSettings(void)
 /*
  * --INFO--
  *
- * Function: fn_801166C8
+ * Function: TitleMenu_run
  * EN v1.0 Address: 0x801166C8
  * EN v1.0 Size: 2124b
  * EN v1.1 Address: TODO
@@ -147,7 +147,7 @@ static void TitleMenu_ReloadSaveSettings(void)
  */
 #pragma scheduling off
 #pragma peephole off
-int fn_801166C8(void)
+int TitleMenu_run(void)
 {
   bool inputPressed;
   int menuId;
@@ -267,7 +267,7 @@ int fn_801166C8(void)
   if (lbl_803DD650 == 0) {
     menuId = TitleMenu_GetFadeState();
     lbl_803DD614 = TitleMenu_GetSelection();
-    if ((((double)lbl_803E1D28 == (double)fn_801115E4()) && (lbl_803DD616 < 0xff)) &&
+    if ((((double)lbl_803E1D28 == (double)titleScreenGetCamProgress()) && (lbl_803DD616 < 0xff)) &&
         (lbl_803DD64F == 0)) {
       lbl_803DD617 = 0x19;
       if (lbl_803DD614 == 0) {

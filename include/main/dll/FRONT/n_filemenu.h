@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-int fn_801166C8(void);
+int TitleMenu_run(void);
 void TitleMenu_release(void);
 void fn_80116F44(int a);
 

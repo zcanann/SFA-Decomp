@@ -124,7 +124,7 @@ static void TitleMenu_PlayPopup(int id, int arg)
 /*
  * --INFO--
  *
- * Function: fn_80116F84
+ * Function: TitleMenu_initialise
  * EN v1.0 Address: 0x80116F84
  * EN v1.0 Size: 904b
  * EN v1.1 Address: TODO
@@ -136,7 +136,7 @@ static void TitleMenu_PlayPopup(int id, int arg)
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_80116F84(void)
+void TitleMenu_initialise(void)
 {
   int mode;
 

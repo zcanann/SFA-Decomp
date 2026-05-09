@@ -51,7 +51,7 @@ extern f32 lbl_803E1D0C;
 /*
  * --INFO--
  *
- * Function: fn_801159E4
+ * Function: runLoadingScreens
  * EN v1.0 Address: 0x801159E4
  * EN v1.0 Size: 880b
  * EN v1.1 Address: 0x80115C80
@@ -63,7 +63,7 @@ extern f32 lbl_803E1D0C;
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_801159E4(void)
+void runLoadingScreens(void)
 {
   int alpha;
   int textureSlot;
@@ -133,7 +133,7 @@ void fn_801159E4(void)
 /*
  * --INFO--
  *
- * Function: fn_80115D54
+ * Function: initLoadingScreenTextures
  * EN v1.0 Address: 0x80115D54
  * EN v1.0 Size: 280b
  * EN v1.1 Address: TODO
@@ -145,7 +145,7 @@ void fn_801159E4(void)
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_80115D54(void)
+void initLoadingScreenTextures(void)
 {
   int *textureSlot;
   int textureHeader;
@@ -186,7 +186,7 @@ void TitleScreenInit_frameEnd(void) {}
 /*
  * --INFO--
  *
- * Function: fn_80115E74
+ * Function: TitleScreenInit_frameStart
  * EN v1.0 Address: 0x80115E74
  * EN v1.0 Size: 72b
  * EN v1.1 Address: TODO
@@ -198,7 +198,7 @@ void TitleScreenInit_frameEnd(void) {}
  */
 #pragma scheduling off
 #pragma peephole off
-int fn_80115E74(void)
+int TitleScreenInit_frameStart(void)
 {
   if (lbl_803DD5F0 != 0) {
     lbl_803DD5F0 = 0;
@@ -215,7 +215,7 @@ void TitleScreenInit_release(void) {}
 /*
  * --INFO--
  *
- * Function: fn_80115EC0
+ * Function: TitleScreenInit_initialise
  * EN v1.0 Address: 0x80115EC0
  * EN v1.0 Size: 96b
  * EN v1.1 Address: TODO
@@ -227,7 +227,7 @@ void TitleScreenInit_release(void) {}
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_80115EC0(void)
+void TitleScreenInit_initialise(void)
 {
   lbl_803DD5F0 = 1;
   lbl_803DD5F4 = lbl_803E1D00;
@@ -246,7 +246,7 @@ void fn_80115EC0(void)
 /*
  * --INFO--
  *
- * Function: fn_80115F20
+ * Function: n_rareware_render
  * EN v1.0 Address: 0x80115F20
  * EN v1.0 Size: 152b
  * EN v1.1 Address: TODO
@@ -258,7 +258,7 @@ void fn_80115EC0(void)
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_80115F20(void)
+void n_rareware_render(void)
 {
   int frame;
 
