@@ -6,10 +6,6 @@
 typedef struct ObjHitReactEntry ObjHitReactEntry;
 typedef struct ObjAnimComponent ObjAnimComponent;
 
-typedef struct ObjHitReactEffectOrigin {
-  undefined4 m[4];
-} ObjHitReactEffectOrigin;
-
 typedef struct ObjHitReactEffectPos {
   s16 x;
   s16 y;

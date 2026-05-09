@@ -14,7 +14,7 @@ typedef int (*ObjAnimAdvanceObjectFirstFn)(int obj,double moveStepScale,double d
                                            ObjAnimEventList *events);
 typedef void (*ObjAnimSetMoveObjectFirstFn)(int obj,int moveId,f32 moveProgress,int flags);
 
-extern ObjHitReactEffectOrigin lbl_802C1B00;
+extern ObjHitReactEffectColorArgs gObjHitReactEffectColorArgs;
 extern char sObjHitReactHitstateFrameString[];
 extern char sObjHitReactSphereOverflowString[];
 extern char sObjHitReactResetString[7];
@@ -23,7 +23,7 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803DE910;
 extern f32 lbl_803DE918;
-extern f32 lbl_803DE964;
+extern f32 gObjHitReactAltEffectScale;
 extern int gObjHitReactResetObjectCount;
 extern int *gObjHitReactResetObjects;
 
@@ -48,10 +48,10 @@ int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
   bool sfxActive;
   f32 hitPos[3];
   ObjHitReactEffectPos effectPos;
-  ObjHitReactEffectOrigin effectOrigin;
+  ObjHitReactEffectColorArgs effectColorArgs;
   int hitSphereIndex;
 
-  effectOrigin = lbl_802C1B00;
+  effectColorArgs = gObjHitReactEffectColorArgs;
   if ((reactionState & OBJHITREACT_REACTION_STATE_MASK) != OBJHITREACT_REACTION_STATE_INACTIVE) {
     OSReport(sObjHitReactHitstateFrameString,((ObjAnimComponent *)obj)->currentMoveProgress);
     moveEnded = ((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)
@@ -91,13 +91,14 @@ int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
       }
       if (reactionEntries->hitFxMode == OBJHITREACT_HIT_FX_MODE_EFFECT) {
         effectHandle = Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID,1);
-        effectHandle->vtable->spawn(0,1,&effectPos,OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,-1,&effectOrigin);
+        effectHandle->vtable->spawn(0,1,&effectPos,OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,-1,
+                                    &effectColorArgs);
         if (effectHandle != (ObjHitReactEffectHandle *)0x0) {
           Resource_Release(effectHandle);
         }
       }
       else {
-        fn_8009A1DC(obj,(double)lbl_803DE964,(undefined2 *)&effectPos.x,1,0);
+        fn_8009A1DC(obj,(double)gObjHitReactAltEffectScale,(undefined2 *)&effectPos.x,1,0);
       }
     }
     if (((reactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&
