@@ -69,6 +69,7 @@ extern f32 lbl_803E60B8;
 int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj)
 {
   SHthorntailObject **objects;
+  u32 *configTable;
   u32 configToken;
   int count;
   int index;
@@ -79,23 +80,24 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj)
   linkedEventPending = 0;
   groupIndex = -1;
   matchCount = 0;
+  configTable = lbl_80326E98[0];
   configToken = obj->config->configToken;
-  if (configToken == lbl_80326E98[0][0]) {
+  if (configToken == configTable[0]) {
     groupIndex = 0;
   }
-  else if (configToken == lbl_80326E98[1][0]) {
+  else if (configTable += 4, configToken == configTable[0]) {
     groupIndex = 1;
   }
-  else if (configToken == lbl_80326E98[2][0]) {
+  else if (configTable += 4, configToken == configTable[0]) {
     groupIndex = 2;
   }
-  else if (configToken == lbl_80326E98[3][0]) {
+  else if (configTable += 4, configToken == configTable[0]) {
     groupIndex = 3;
   }
-  else if (configToken == lbl_80326E98[4][0]) {
+  else if (configTable += 4, configToken == configTable[0]) {
     groupIndex = 4;
   }
-  else if (configToken == lbl_80326E98[5][0]) {
+  else if (configTable += 4, configToken == configTable[0]) {
     groupIndex = 5;
   }
   objects = ObjGroup_GetObjects(3,&count);
