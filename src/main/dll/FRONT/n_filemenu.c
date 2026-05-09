@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/FRONT/n_filemenu.h"
+#include "main/dll/FRONT/dll_39.h"
 
 typedef struct TitleMenuTextEntry {
   u8 pad0[0x16];
@@ -30,8 +31,6 @@ extern void loadSaveSettings(void);
 extern int titleLoadSaveFiles(void);
 extern void gameplay_capturePreviewSettings(void);
 extern float fn_801115E4(void);
-extern void n_attractmode_releaseMovieBuffers(void);
-extern void n_attractmode_prepareMovie(void);
 extern void fn_80117B68(int fade, int frames);
 extern void fn_80130464(u8 v);
 extern void fn_8013046C(void);
@@ -193,10 +192,12 @@ int fn_801166C8(void)
   if ((lbl_803DD64D != 0) && (--lbl_803DD64D == 0) && (lbl_803DD64F != 0)) {
     fn_80117B68(100,1000);
   }
-  if ((lbl_803DD610 == 2) && (++lbl_803DD698 > 10)) {
+  if ((lbl_803DD610 == NATTRACTMODE_MOVIE_STATE_PREPARED) &&
+      (++lbl_803DD698 > NATTRACTMODE_MOVIE_RETRACE_COUNTDOWN)) {
     n_attractmode_releaseMovieBuffers();
   }
-  if (((lbl_803DD610 == 2) && (lbl_803DD64F != 0)) && (lbl_803DD64E != 0)) {
+  if (((lbl_803DD610 == NATTRACTMODE_MOVIE_STATE_PREPARED) && (lbl_803DD64F != 0)) &&
+      (lbl_803DD64E != 0)) {
     buttons = FUN_80006c00(0);
     FUN_80006bb4(0,dpad,&face);
     FUN_80006ba8(0,buttons);

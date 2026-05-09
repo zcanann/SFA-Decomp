@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/baddie/Tumbleweed.h"
+#include "main/dll/FRONT/dll_39.h"
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006728();
@@ -71,7 +72,6 @@ extern undefined4 FUN_80080f70();
 extern undefined4 FUN_80080f7c();
 extern undefined4 FUN_80080f80();
 extern int FUN_801113c0();
-extern undefined4 n_attractmode_releaseMovieBuffers();
 extern undefined4 FUN_80117318();
 extern undefined4 FUN_801184b8();
 extern undefined4 FUN_80129fb0();

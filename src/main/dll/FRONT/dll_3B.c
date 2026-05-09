@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/FRONT/dll_3B.h"
+#include "main/dll/FRONT/dll_39.h"
 #include "dolphin/os.h"
 #include "dolphin/thp/THPAudio.h"
 
@@ -49,7 +50,6 @@ extern void fn_8005CDF8(int arg);
 extern void fn_8005CEA8(int arg);
 extern void fn_8007D960(int arg);
 extern void fn_800887F8(int arg);
-extern void n_attractmode_prepareMovie(void);
 extern void fn_80117B68(int fade, int frames);
 extern void fn_80130478(void);
 extern void fn_80135820(f32 x, f32 y);
@@ -180,7 +180,9 @@ void fn_80116F84(void)
   lbl_803DD648 = 0x3c;
   lbl_803DD680 = 0;
 
-  if ((lbl_803DD61A != 0) && ((lbl_803DD610 == 0) || (lbl_803DD610 == 4))) {
+  if ((lbl_803DD61A != 0) &&
+      ((lbl_803DD610 == NATTRACTMODE_MOVIE_READY) ||
+       (lbl_803DD610 == NATTRACTMODE_MOVIE_STATE_RELEASED))) {
     n_attractmode_prepareMovie();
     fn_80135820(lbl_803E1D10,lbl_803E1D18);
     lbl_803DD64F = 1;
