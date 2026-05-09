@@ -1335,7 +1335,7 @@ void FUN_8005c24c(void)
     FUN_8003b878(0,0,0,0,*piVar5,1);
     piVar5 = piVar5 + 1;
   }
-  expgfx_queueStandalonePools();
+  renderParticles();
   FUN_8005bdbc();
   FUN_8005bdbc();
   if (DAT_803ddab0 == 1000) {
@@ -2642,7 +2642,7 @@ void lightmap_flushQueuedRenderPackets(void)
       FUN_8005d85c(*piVar6,piVar6[1],afStack_70);
       break;
     case 7:
-      expgfx_renderPool(*piVar6,piVar6[1]);
+      drawGlow(*piVar6,piVar6[1]);
       break;
     case 8:
       FUN_8006f09c();

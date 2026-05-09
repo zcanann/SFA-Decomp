@@ -19,8 +19,8 @@
  * - retail message: addToTable usage overflow
  * - retail message: exptab is FULL
  * - retail message: invalid tabindex
- * - EN xref: 0x8009DE60 expgfx_addToTable + 0x74
- * - EN xref: 0x8009DEE8 expgfx_addToTable + 0xFC
+ * - EN xref: 0x8009DE60 expgfxAddToTable + 0x74
+ * - EN xref: 0x8009DEE8 expgfxAddToTable + 0xFC
  * - EN xref: 0x8009F640 expgfx_addremove + 0x374
  * - EN xref: 0x8009F700 expgfx_addremove + 0x434
  *
@@ -29,7 +29,7 @@
  * - blueprint action: corridor-packet, plan stays at the current seed
  *
  * Live EN anchors:
- * - expgfx_addToTable @ 0x8009DDEC reports the addToTable usage overflow
+ * - expgfxAddToTable @ 0x8009DDEC reports the addToTable usage overflow
  *   and exptab full strings.
  * - expgfx_addremove @ 0x8009F2CC reports invalid tabindex and scale overflow.
  * - expgfx_funcs @ 0x8030FA54 is a retail function table; Rena's EN map
@@ -47,7 +47,7 @@
  * - 0x000B expgfx expgfx.c
  *
  * Reference-side function hints:
- * - expgfx_addToTable
+ * - expgfxAddToTable
  * - expgfx_addremove
  * - expgfx_initialise
  * - expgfx_release

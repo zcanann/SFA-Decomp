@@ -252,7 +252,7 @@ static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void) {
 /*
  * --INFO--
  *
- * Function: expgfx_release
+ * Function: expgfxRemove
  * EN v1.0 Address: 0x8009B0E0
  * EN v1.0 Size: 372b
  * EN v1.1 Address: TODO
@@ -264,7 +264,7 @@ static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void) {
  */
 #pragma scheduling off
 #pragma peephole off
-void expgfx_release(uint slotPoolBase,int poolIndex,int slotIndex,int freeTexture,int clearActive)
+void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int freeTexture,int clearActive)
 {
   u8 *expgfxBase;
   u32 *poolActiveMask;
@@ -324,7 +324,7 @@ void expgfx_release(uint slotPoolBase,int poolIndex,int slotIndex,int freeTextur
 /*
  * --INFO--
  *
- * Function: expgfx_initialise
+ * Function: expgfxRemoveAll
  * EN v1.0 Address: 0x8009B254
  * EN v1.0 Size: 360b
  * EN v1.1 Address: 0x8009B36C
@@ -336,7 +336,7 @@ void expgfx_release(uint slotPoolBase,int poolIndex,int slotIndex,int freeTextur
  */
 #pragma scheduling off
 #pragma peephole off
-void expgfx_initialise(void)
+void expgfxRemoveAll(void)
 {
   ExpgfxTableEntry *tableEntry;
   ExpgfxSlot *slot;
@@ -404,7 +404,7 @@ void expgfx_initialise(void)
 /*
  * --INFO--
  *
- * Function: expgfx_reserveSlot
+ * Function: expgfxGetSlot
  * EN v1.0 Address: 0x8009B6A4
  * EN v1.0 Size: 752b
  * EN v1.1 Address: 0x8009B648
@@ -416,7 +416,7 @@ void expgfx_initialise(void)
  */
 #pragma scheduling off
 #pragma peephole off
-int expgfx_reserveSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
+int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
                        int preferredPoolIndex,uint sourceId)
 {
   short foundPool;
@@ -698,7 +698,7 @@ void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_
 /*
  * --INFO--
  *
- * Function: expgfx_addToTable
+ * Function: expgfxAddToTable
  * EN v1.0 Address: 0x8009DDEC
  * EN v1.0 Size: 288b
  * EN v1.1 Address: 0x8009E078
@@ -710,7 +710,7 @@ void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_
  */
 #pragma scheduling off
 #pragma peephole off
-int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
+int expgfxAddToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
 {
   ExpgfxTableEntry *entry;
   ExpgfxTableEntry *entryBase;
@@ -836,7 +836,7 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
  */
 void expgfx_free0C(u32 sourceId)
 {
-  expgfx_releaseSourceSlots(sourceId);
+  expgfx_free(sourceId);
   return;
 }
 
@@ -940,7 +940,7 @@ void expgfx_renderSourcePools(int sourceId,int sourceMode)
                            (double)(poolBounds->minZ - playerMapOffsetZ),
                            (double)(poolBounds->maxZ - playerMapOffsetZ),boundsTemplate);
       if ((uVar1 & EXPGFX_BYTE_VALUE_MASK) != 0) {
-        expgfx_renderPool(*slotPoolBases,poolIndex);
+        drawGlow(*slotPoolBases,poolIndex);
       }
     }
     poolActiveCounts = poolActiveCounts + 1;
@@ -959,7 +959,7 @@ void expgfx_renderSourcePools(int sourceId,int sourceMode)
 /*
  * --INFO--
  *
- * Function: expgfx_renderPool
+ * Function: drawGlow
  * EN v1.0 Address: 0x8009E13C
  * EN v1.0 Size: 2984b
  * EN v1.1 Address: 0x8009E3C8
@@ -1003,7 +1003,7 @@ extern u16 gExpgfxPhaseAngleB;
 
 #pragma scheduling off
 #pragma peephole off
-void expgfx_renderPool(uint slotPoolBase,int poolIndex)
+void drawGlow(uint slotPoolBase,int poolIndex)
 {
   void *dstBuf;
   int trackedFlags;
@@ -1319,7 +1319,7 @@ void expgfx_renderPool(uint slotPoolBase,int poolIndex)
 /*
  * --INFO--
  *
- * Function: expgfx_queueStandalonePools
+ * Function: renderParticles
  * EN v1.0 Address: 0x8009ECE4
  * EN v1.0 Size: 468b
  * EN v1.1 Address: 0x8009EF70
@@ -1331,7 +1331,7 @@ void expgfx_renderPool(uint slotPoolBase,int poolIndex)
  */
 #pragma scheduling off
 #pragma peephole off
-void expgfx_queueStandalonePools(void)
+void renderParticles(void)
 {
   ExpgfxBounds *boundsTemplate;
   float *sourcePosition;
@@ -1418,14 +1418,14 @@ void expgfx_queueStandalonePools(void)
  */
 void expgfx_free08(u32 sourceId)
 {
-  expgfx_releaseSourceSlots(sourceId);
+  expgfx_free(sourceId);
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: expgfx_releaseSourceSlots
+ * Function: expgfx_free
  * EN v1.0 Address: 0x8009EED8
  * EN v1.0 Size: 260b
  * EN v1.1 Address: 0x8009F164
@@ -1437,7 +1437,7 @@ void expgfx_free08(u32 sourceId)
  */
 #pragma scheduling off
 #pragma peephole off
-void expgfx_releaseSourceSlots(u32 sourceId)
+void expgfx_free(u32 sourceId)
 {
   u8 *expgfxBase;
   uint *slotPoolBases;
@@ -1467,7 +1467,7 @@ void expgfx_releaseSourceSlots(u32 sourceId)
           if ((slot != (ExpgfxSlot *)0x0) &&
               (((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))
                    [Expgfx_GetSlotTableIndex(slot)].key0 == sourceId)) {
-            expgfx_release(*slotPoolBases,poolIndex,slotIndex,0,1);
+            expgfxRemove(*slotPoolBases,poolIndex,slotIndex,0,1);
           }
           slot = slot + 1;
           if (*poolActiveCounts == '\0') {
@@ -1718,7 +1718,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIdx, short slot
   if (fn_8002073C() != 0) {
     return EXPGFX_INVALID_POOL_INDEX;
   }
-  if (expgfx_reserveSlot(&poolIdxOut, &slotIdxOut, slotType,
+  if (expgfxGetSlot(&poolIdxOut, &slotIdxOut, slotType,
                           preferredPoolIdx, (uint)(int)config->attachedSource)
       == EXPGFX_INVALID_POOL_INDEX) {
     return EXPGFX_INVALID_POOL_INDEX;
@@ -1759,17 +1759,17 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIdx, short slot
 
   tableIndex = (int)(short)expgfx_acquireResourceEntry(config->tableKeyType);
   if (tableIndex < 0) {
-    expgfx_release(slotPoolBases[(int)poolIdxOut], (int)poolIdxOut, (int)slotIdxOut, 1, 1);
+    expgfxRemove(slotPoolBases[(int)poolIdxOut], (int)poolIdxOut, (int)slotIdxOut, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
   }
   resourceHandle =
       (ExpgfxResourceHandle *)*(u32 *)(expgfxBase + (tableIndex << EXPGFX_TABLE_ENTRY_SHIFT));
   if (resourceHandle == NULL) {
-    expgfx_release(slotPoolBases[(int)poolIdxOut], (int)poolIdxOut, (int)slotIdxOut, 1, 1);
+    expgfxRemove(slotPoolBases[(int)poolIdxOut], (int)poolIdxOut, (int)slotIdxOut, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
   }
   if (resourceHandle->refCount >= EXPGFX_EXPTAB_REFCOUNT_MAX) {
-    expgfx_release(slotPoolBases[(int)poolIdxOut], (int)poolIdxOut, (int)slotIdxOut, 1, 1);
+    expgfxRemove(slotPoolBases[(int)poolIdxOut], (int)poolIdxOut, (int)slotIdxOut, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
   }
   resourceHandle->refCount = resourceHandle->refCount + 1;
@@ -1813,11 +1813,11 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIdx, short slot
     attachedSource = NULL;
   }
 
-  subTableIndex = expgfx_addToTable((uint)resourceHandle, (uint)attachedSource, attachedKey1,
+  subTableIndex = expgfxAddToTable((uint)resourceHandle, (uint)attachedSource, attachedKey1,
                                      config->tableKeyType);
   if ((short)subTableIndex == EXPGFX_INVALID_TABLE_INDEX) {
     debugPrintf(sExpgfxInvalidTabIndex);
-    expgfx_release(slotPoolBases[(int)poolIdxOut], (int)poolIdxOut, (int)slotIdxOut, 1, 1);
+    expgfxRemove(slotPoolBases[(int)poolIdxOut], (int)poolIdxOut, (int)slotIdxOut, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
   }
   Expgfx_SetSlotTableIndex(slot, (u8)subTableIndex);
@@ -1976,7 +1976,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIdx, short slot
 /*
  * --INFO--
  *
- * Function: expgfx_resetPoolResources
+ * Function: expgfx_onMapSetup
  * EN v1.0 Address: 0x8009FCDC
  * EN v1.0 Size: 416b
  * EN v1.1 Address: TODO
@@ -1988,7 +1988,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIdx, short slot
  */
 #pragma scheduling off
 #pragma peephole off
-void expgfx_resetPoolResources(void)
+void expgfx_onMapSetup(void)
 {
   ExpgfxResourceEntry *resourceEntry;
   u8 *expgfxBase;
@@ -2003,7 +2003,7 @@ void expgfx_resetPoolResources(void)
 
   expgfxBase = gExpgfxRuntimeData;
   asm {
-    bl expgfx_initialise
+    bl expgfxRemoveAll
   }
   poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
   poolActiveCounts = expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET;
@@ -2094,7 +2094,7 @@ void expgfx_resetPoolResources(void)
 /*
  * --INFO--
  *
- * Function: expgfx_releaseSlotPoolHandles
+ * Function: expgfx_release
  * EN v1.0 Address: 0x8009FE7C
  * EN v1.0 Size: 84b
  * EN v1.1 Address: TODO
@@ -2104,13 +2104,13 @@ void expgfx_resetPoolResources(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void expgfx_releaseSlotPoolHandles(void)
+void expgfx_release(void)
 {
   int poolIndex;
   u32 *slotPoolBases;
 
   asm {
-    bl expgfx_initialise
+    bl expgfxRemoveAll
   }
   poolIndex = 0;
   slotPoolBases = gExpgfxSlotPoolBases;

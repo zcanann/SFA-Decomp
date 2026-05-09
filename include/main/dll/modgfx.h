@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 #include "main/expgfx_internal.h"
 
-void modgfx_resetExpgfxState(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+void expgfx_initialise(undefined8 param_1,undefined8 param_2,undefined8 param_3,
                              undefined8 param_4,undefined8 param_5,undefined8 param_6,
                              undefined8 param_7,undefined8 param_8);
 void modgfx_releaseExpgfxPools(undefined8 param_1,undefined8 param_2,undefined8 param_3,

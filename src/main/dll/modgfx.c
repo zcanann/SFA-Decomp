@@ -126,7 +126,7 @@ extern undefined4 FUN_8007f3c8();
 extern undefined4 FUN_8007f718();
 extern undefined4 FUN_8007f960();
 extern undefined4 FUN_80080f8c();
-extern void expgfx_initialise();
+extern void expgfxRemoveAll();
 extern undefined4 FUN_80135814();
 extern undefined4 FUN_802420e0();
 extern undefined4 FUN_80247618();
@@ -1131,7 +1131,7 @@ extern void* PTR_LAB_803108a0;
 /*
  * --INFO--
  *
- * Function: modgfx_resetExpgfxState
+ * Function: expgfx_initialise
  * EN v1.0 Address: 0x8009FED0
  * EN v1.0 Size: 288b
  * EN v1.1 Address: 0x8009FF68
@@ -1141,7 +1141,7 @@ extern void* PTR_LAB_803108a0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modgfx_resetExpgfxState(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+void expgfx_initialise(undefined8 param_1,undefined8 param_2,undefined8 param_3,
                              undefined8 param_4,undefined8 param_5,undefined8 param_6,
                              undefined8 param_7,undefined8 param_8)
 {
@@ -1155,7 +1155,7 @@ void modgfx_resetExpgfxState(undefined8 param_1,undefined8 param_2,undefined8 pa
   int iVar8;
   
   piVar7 = &DAT_8039b7b8;
-  expgfx_initialise(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+  expgfxRemoveAll(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
   puVar2 = &gExpgfxPoolActiveMasks;
   puVar3 = &gExpgfxPoolActiveCounts;
   puVar4 = &gExpgfxPoolSlotTypeIds;
@@ -1261,7 +1261,7 @@ void modgfx_releaseExpgfxPools(undefined8 param_1,undefined8 param_2,undefined8 
   int iVar1;
   uint *puVar2;
   
-  expgfx_initialise(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+  expgfxRemoveAll(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
   iVar1 = 0;
   puVar2 = gExpgfxSlotPoolBases;
   do {
