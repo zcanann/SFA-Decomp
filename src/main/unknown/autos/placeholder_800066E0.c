@@ -663,6 +663,16 @@ extern u32 gAudioManagedChannelMask;
 extern u32 gAudioActiveChannelMask;
 extern u8 gAudioInitStarted;
 extern s32 lbl_803DD610;
+extern u8 gAudioStreamDefaultVolume;
+extern u8 gAudioStreamDvdState;
+extern u32 gAudioStreamMusicFadeFlagA;
+extern u32 gAudioStreamMusicFadeFlagB;
+extern s32 gAudioStreamCurrentId;
+extern f32 gAudioStreamEndPos;
+extern f32 gAudioStreamPos;
+extern f32 timeDelta;
+extern f32 lbl_803DE5D0;
+extern f32 lbl_803DE5E8;
 
 extern void fn_80281160(void);
 extern void AIReset(void);
@@ -2095,9 +2105,12 @@ void FUN_80006868(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8000686c(void)
+u32 AudioStream_GetMusicFadeFlagA(void)
 {
-    return 0;
+    if (gAudioStreamPos > gAudioStreamEndPos) {
+        return 0;
+    }
+    return gAudioStreamMusicFadeFlagA;
 }
 
 /*
@@ -2113,9 +2126,12 @@ undefined4 FUN_8000686c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80006874(void)
+u32 AudioStream_GetMusicFadeFlagB(void)
 {
-    return 0;
+    if (gAudioStreamPos > gAudioStreamEndPos) {
+        return 0;
+    }
+    return gAudioStreamMusicFadeFlagB;
 }
 
 /*
@@ -2131,9 +2147,9 @@ undefined4 FUN_80006874(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8000687c(void)
+u32 AudioStream_GetCurrentId(void)
 {
-    return 0;
+    return gAudioStreamCurrentId;
 }
 
 /*
@@ -2149,9 +2165,9 @@ undefined4 FUN_8000687c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined FUN_80006884(void)
+u8 AudioStream_IsPreparing(void)
 {
-    return 0;
+    return gAudioStreamDvdState;
 }
 
 /*
@@ -2270,8 +2286,14 @@ void FUN_800068a0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800068a4(void)
+void AudioStream_UpdateFadeTimer(void)
 {
+    if (gAudioStreamCurrentId != 0) {
+        f32 position = gAudioStreamPos;
+        gAudioStreamPos = position + (timeDelta / lbl_803DE5E8);
+    } else {
+        gAudioStreamPos = lbl_803DE5D0;
+    }
 }
 
 /*
@@ -2287,8 +2309,9 @@ void FUN_800068a4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800068a8(undefined param_1)
+void AudioStream_SetDefaultVolume(u8 volume)
 {
+    gAudioStreamDefaultVolume = volume;
 }
 
 /*
