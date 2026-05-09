@@ -989,7 +989,7 @@ extern void fn_80079180(void);
 extern void geomDrawFn_800796f0(void);
 extern void fn_8007C3D0(u32 flag);
 extern void fn_8007D670(void);
-extern void fn_800703C4(void);
+extern void _gxSetFogParams(void);
 extern void gxSetZMode_(u32 a, int b, u32 c);
 extern void gxSetPeControl_ZCompLoc_(u32 a);
 
@@ -1059,7 +1059,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
   GXLoadPosMtxImm((void *)viewMatrix, 0);
   PSMTXCopy((void *)viewMatrix, lbl_803967C0);
   fn_8007D670();
-  fn_800703C4();
+  _gxSetFogParams();
   if ((short)fn_80008B4C(-1) == 1) {
     return;
   }

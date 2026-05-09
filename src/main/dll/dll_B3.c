@@ -2,8 +2,8 @@
 #include "main/dll/dll_B3.h"
 
 extern u8 *ObjModel_GetRenderOp(int model, int idx);
-extern void fn_800528F0(void);
-extern void fn_800528BC(void);
+extern void resetLotsOfRenderVars(void);
+extern void textureFn_800528bc(void);
 extern void *textureIdxToPtr(int idx);
 extern void fn_80051D5C(void *tex, void *arg2, int arg3, void *color);
 extern void GXSetBlendMode(int mode, int srcFactor, int dstFactor, int op);
@@ -54,7 +54,7 @@ int lockIconTexCb(u8 *param_1, int *param_2, int param_3)
   } else {
     tier = 0;
   }
-  fn_800528F0();
+  resetLotsOfRenderVars();
   if (renderOp[0x29] <= tier) {
     colorBuf[0] = 0;
     colorBuf[1] = 0;
@@ -69,7 +69,7 @@ int lockIconTexCb(u8 *param_1, int *param_2, int param_3)
     colorBuf[3] = param_1[0x36];
     fn_80051D5C(textureIdxToPtr(*(int *)(renderOp + 0x24)), 0, 0, colorBuf);
   }
-  fn_800528BC();
+  textureFn_800528bc();
   if (param_1[0x36] < 0xff || renderOp[0x29] <= tier) {
     GXSetBlendMode(1, 4, 5, 5);
     gxSetZMode_(1, 3, 0);

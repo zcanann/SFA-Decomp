@@ -6,26 +6,26 @@
 void fn_8006EF38(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  uint param_5,int param_6,int param_7);
 void* fn_8006F388(u32 i);
-void fn_8006F400(f32 step);
+void timeFn_8006f400(f32 step);
 void drawFn_8006f500(void);
 void playerEarthWalkerAudioFn_8006f950(undefined4 param_1,undefined4 param_2,undefined param_3,uint param_4);
 void fn_8006FC00(int param_1);
-void fn_8006FCCC(void);
+void mapInitFn_8006fccc(void);
 int maybeReadDepthBuffer(int x, int y, int id);
 uint getScreenResolution(void);
-void fn_8006FEF8(u32 param_1);
-void fn_8006FF00(void);
+void setScreenWidth(u32 param_1);
+void clearScreenWidth(void);
 void matrixFn_8006ff0c(double param_1,double param_2,double param_3,double param_4,double param_5,
                  float *param_6,short *param_7);
-void fn_800701A4(f32* x, f32* y, f32* z);
+void normalize(f32* x, f32* y, f32* z);
 void fn_80070234(f32* param_1);
 void gxSetPeControl_ZCompLoc_(u32 param_1);
 void gxSetZMode_(u32 param_1, int param_2, u32 param_3);
-void fn_800703AC(void);
-void fn_800703BC(u8 param_1);
-void fn_800703C4(void);
-void fn_80070404(f32 a, f32 b);
-void fn_800704DC(u8* param_1);
+void resetSomeGxFlags(void);
+void setHudOpacity(u8 param_1);
+void _gxSetFogParams(void);
+void fogFn_80070404(f32 a, f32 b);
+void getColor803dd01c(u8* param_1);
 void fn_800704FC(u8 param_1, u8 param_2, u8 param_3);
 void renderWhirlpool(void* obj_a, void** obj_b, int param_3);
 void screenImageDraw(u8 alpha);

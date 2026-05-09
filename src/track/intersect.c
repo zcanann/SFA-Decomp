@@ -377,7 +377,7 @@ void* fn_8006F388(u32 i)
  * Can't reproduce the re-store without __asm. */
 #pragma peephole off
 #pragma scheduling off
-void fn_8006F400(f32 step)
+void timeFn_8006f400(f32 step)
 {
     int i;
     u8* a;
@@ -622,7 +622,7 @@ void fn_8006FC00(int param_1)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_8006FCCC(void)
+void mapInitFn_8006fccc(void)
 {
     extern u8 lbl_80391DC0[];
     extern f32 lbl_803DFADC, lbl_803DFAE0, lbl_803DFAE4;
@@ -764,7 +764,7 @@ uint getScreenResolution(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8006FEF8(u32 param_1)
+void setScreenWidth(u32 param_1)
 {
     lbl_803DD004 = param_1;
 }
@@ -782,7 +782,7 @@ void fn_8006FEF8(u32 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8006FF00(void)
+void clearScreenWidth(void)
 {
     lbl_803DD004 = 0;
 }
@@ -820,7 +820,7 @@ void matrixFn_8006ff0c(double param_1,double param_2,double param_3,double param
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_800701A4(f32* x, f32* y, f32* z)
+void normalize(f32* x, f32* y, f32* z)
 {
     f32 scale;
     f32 len;
@@ -948,7 +948,7 @@ void gxSetZMode_(u32 param_1, int param_2, u32 param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_800703AC(void)
+void resetSomeGxFlags(void)
 {
     lbl_803DD01A = 0;
     lbl_803DD019 = 0;
@@ -967,7 +967,7 @@ void fn_800703AC(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_800703BC(u8 param_1)
+void setHudOpacity(u8 param_1)
 {
     lbl_803DC2D9 = param_1;
 }
@@ -986,7 +986,7 @@ void fn_800703BC(u8 param_1)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_800703C4(void)
+void _gxSetFogParams(void)
 {
     GXColor c = lbl_803DDC9C;
     GXSetFog(GX_FOG_PERSP_EXP, lbl_803DDCA4, lbl_803DDCA0, lbl_803DDCB8, lbl_803DD034, c);
@@ -1009,7 +1009,7 @@ void fn_800703C4(void)
 #pragma scheduling off
 #pragma scheduling off
 #pragma peephole off
-void fn_80070404(f32 a, f32 b)
+void fogFn_80070404(f32 a, f32 b)
 {
     extern f32 Camera_GetNearPlane(void);
     extern f32 Camera_GetFarPlane(void);
@@ -1066,7 +1066,7 @@ void fn_80070404(f32 a, f32 b)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_800704DC(u8* param_1)
+void getColor803dd01c(u8* param_1)
 {
     param_1[0] = lbl_803DDC9C.r;
     param_1[1] = lbl_803DDC9C.g;
@@ -1123,13 +1123,13 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
     extern f32 lbl_8030EAA0[3][3];
     extern void* gSHthorntailAnimationInterface;
     extern int ObjModel_GetRenderOp(void* model, int slot);
-    extern int* fn_8004C250(void* op, int slot);
+    extern int* Shader_getLayer(void* op, int slot);
     extern void* textureIdxToPtr(int idx);
     extern void selectTexture(void* tex, int slot);
     extern void selectReflectionTexture(int);
     extern void GXInitTexObj();
     extern void fn_8006CABC(void* a, void* b);
-    extern int fn_8004C248(void);
+    extern int isHeavyFogEnabled(void);
     extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
     extern int fn_8003BB74(void);
     extern void GXSetZMode();
@@ -1148,7 +1148,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
 
     model = obj_b[0];
     renderOp = (void*)ObjModel_GetRenderOp(model, param_3);
-    handle1 = *fn_8004C250(renderOp, 0);
+    handle1 = *Shader_getLayer(renderOp, 0);
     selectTexture(textureIdxToPtr(handle1), 0);
     selectReflectionTexture(1);
     tex2 = textureIdxToPtr(*(int*)((u8*)renderOp + 0x34));
@@ -1168,7 +1168,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
     GXSetTexCoordGen2(2, 1, 4, 0x21, 0, 0x7d);
     GXSetTexCoordGen2(3, 1, 4, 0x21, 0, 0x7d);
 
-    if (fn_8004C248() != 0) {
+    if (isHeavyFogEnabled() != 0) {
         *(u32*)&k_color = lbl_803DD01C;
         ((u8*)&lbl_803DB6F4)[0] = ((u8*)&lbl_803DD01C)[0];
         ((u8*)&lbl_803DB6F4)[1] = ((u8*)&lbl_803DD01C)[1];
@@ -1200,7 +1200,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
     GXSetTevColorIn(0, 6, 0xf, 0xf, 8);
     GXSetTevAlphaIn(0, 7, 7, 7, 7);
     GXSetTevSwapMode(0, 0, 0);
-    if (fn_8004C248() != 0) {
+    if (isHeavyFogEnabled() != 0) {
         GXSetTevColorOp(0, 0, 0, 3, 1, 0);
     } else {
         GXSetTevColorOp(0, 0, 0, 0, 1, 0);
@@ -2539,7 +2539,7 @@ void fn_80074518(void* obj_a, void** obj_b, int param_3)
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
     extern int ObjModel_GetRenderOp(void* model, int slot);
-    extern int* fn_8004C250(void* op, int slot);
+    extern int* Shader_getLayer(void* op, int slot);
     extern void* textureIdxToPtr(int idx);
     extern void selectTexture(void* tex, int slot);
     extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
@@ -2565,7 +2565,7 @@ void fn_80074518(void* obj_a, void** obj_b, int param_3)
 
     model = obj_b[0];
     renderOp = (void*)ObjModel_GetRenderOp(model, param_3);
-    tex = textureIdxToPtr(*fn_8004C250(renderOp, 0));
+    tex = textureIdxToPtr(*Shader_getLayer(renderOp, 0));
 
     PSMTXScale(mtx_60, lbl_803DB6B4, lbl_803DB6B4, lbl_803DEEDC);
     mtx_60[2][3] = lbl_803DEEE4;
@@ -5930,7 +5930,7 @@ void fn_8007BD8C(int handle1, int handle2)
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
     extern void selectReflectionTexture(int);
-    extern int fn_8004C248(void);
+    extern int isHeavyFogEnabled(void);
     extern void selectTexture(int handle, int slot);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
@@ -5949,7 +5949,7 @@ void fn_8007BD8C(int handle1, int handle2)
     GXSetTexCoordGen2(2, 1, 4, 0x1e, 0, 0x7d);
     GXSetChanCtrl(4, 0, 0, 1, 0, 0, 2);
 
-    if (fn_8004C248() != 0) {
+    if (isHeavyFogEnabled() != 0) {
         ((u8*)&temp)[0] = ((u8*)&lbl_803DD01C)[0];
         ((u8*)&temp)[1] = ((u8*)&lbl_803DD01C)[1];
         ((u8*)&temp)[2] = ((u8*)&lbl_803DD01C)[2];
@@ -6178,7 +6178,7 @@ void gxTextureSetupFn_8007cf7c(void)
     extern void fn_8006CABC(f32* a, f32* b);
     extern void getTextureFn_8006c5e4(int* out);
     extern void selectReflectionTexture(int);
-    extern int fn_8004C248(void);
+    extern int isHeavyFogEnabled(void);
     extern void selectTexture(int handle, int slot);
     Mtx mtx_cc;
     Mtx mtx_9c;
@@ -6232,7 +6232,7 @@ void gxTextureSetupFn_8007cf7c(void)
     GXSetTevIndirect(1, 1, 1, 7, 2, 0, 0, 0, 0, 1);
 
     /* Color setup */
-    if (fn_8004C248() != 0) {
+    if (isHeavyFogEnabled() != 0) {
         ((u8*)&lbl_803DB67C)[0] = ((u8*)&lbl_803DD01C)[0];
         ((u8*)&lbl_803DB67C)[1] = ((u8*)&lbl_803DD01C)[1];
         ((u8*)&lbl_803DB67C)[2] = ((u8*)&lbl_803DD01C)[2];
@@ -6270,7 +6270,7 @@ void gxTextureSetupFn_8007cf7c(void)
     GXSetTevColorIn(1, 0xe, 0xf, 0xf, 8);
     GXSetTevAlphaIn(1, 7, 7, 7, 6);
     GXSetTevSwapMode(1, 0, 0);
-    if (fn_8004C248() != 0) {
+    if (isHeavyFogEnabled() != 0) {
         GXSetTevColorOp(1, 0, 0, 3, 1, 1);
     } else {
         GXSetTevColorOp(1, 0, 0, 0, 1, 1);
