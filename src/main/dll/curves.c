@@ -90,28 +90,6 @@ extern f32 lbl_803E133C;
 extern f32 lbl_803E1340;
 extern char sCurvesMaxRomCurvesExceeded[];
 
-#define ROMCURVE_MAX_CURVES 0x514
-#define ROMCURVE_ID_OFFSET 0x14
-#define ROMCURVE_LINK_FLAGS_OFFSET 0x1b
-#define ROMCURVE_LINK_IDS_OFFSET 0x1c
-#define ROMCURVE_LINK_ID_STRIDE sizeof(u32)
-#define ROMCURVE_LINK_COUNT 4
-#define ROMCURVE_LINK_ID_NONE 0xffffffff
-
-typedef struct RomCurveDef {
-  u8 pad00[ROMCURVE_ID_OFFSET];
-  u32 id;
-} RomCurveDef;
-
-typedef struct RomCurvePoint {
-  f32 x;
-  f32 y;
-  f32 z;
-  f32 w;
-  u32 flags;
-  u8 type;
-} RomCurvePoint;
-
 static inline u32 RomCurve_GetId(int curve) {
   return ((RomCurveDef *)curve)->id;
 }

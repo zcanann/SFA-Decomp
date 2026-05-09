@@ -3,6 +3,28 @@
 
 #include "ghidra_import.h"
 
+#define ROMCURVE_MAX_CURVES 0x514
+#define ROMCURVE_ID_OFFSET 0x14
+#define ROMCURVE_LINK_FLAGS_OFFSET 0x1b
+#define ROMCURVE_LINK_IDS_OFFSET 0x1c
+#define ROMCURVE_LINK_ID_STRIDE sizeof(u32)
+#define ROMCURVE_LINK_COUNT 4
+#define ROMCURVE_LINK_ID_NONE 0xffffffff
+
+typedef struct RomCurveDef {
+  u8 pad00[ROMCURVE_ID_OFFSET];
+  u32 id;
+} RomCurveDef;
+
+typedef struct RomCurvePoint {
+  f32 x;
+  f32 y;
+  f32 z;
+  f32 w;
+  u32 flags;
+  u8 type;
+} RomCurvePoint;
+
 undefined4
 FUN_800e1b24(double param_1,double param_2,double param_3,uint *param_4,float *param_5,
             float *param_6,float *param_7);
@@ -26,8 +48,7 @@ int RomCurve_getNearestAdjacentLink(double param_1,double param_2,double param_3
 f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment);
 int RomCurve_getRandomBlockedLink(int param_1,int param_2);
 int RomCurve_getRandomUnblockedLink(int param_1,int param_2);
-struct RomCurveDef;
-struct RomCurveDef *RomCurve_getById(uint curveId);
+RomCurveDef *RomCurve_getById(uint curveId);
 void FUN_800e4628(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,int param_6);
 void curves_remove(int curve);
@@ -45,8 +66,7 @@ void FUN_800e514c(void);
 void FUN_800e5428(void);
 void FUN_800e5570(void);
 double FUN_800e56bc(undefined8 param_1,double param_2,double param_3,double param_4,int param_5);
-struct RomCurvePoint;
-struct RomCurvePoint *curves_getCurves(f32 x,f32 z,int curve,u32 *outCount,int param_5);
+RomCurvePoint *curves_getCurves(f32 x,f32 z,int curve,u32 *outCount,int param_5);
 void FUN_800e58b8(void);
 void FUN_800e6140(undefined4 param_1,uint *param_2);
 void FUN_800e61a4(void);
