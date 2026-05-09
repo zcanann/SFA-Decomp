@@ -39,7 +39,7 @@ extern undefined4 FUN_80081038();
 extern undefined4 FUN_800810f4();
 extern int FUN_801149b8();
 extern undefined4 FUN_801149bc();
-extern void fn_80114DEC();
+extern void dll_2E_func06();
 extern undefined4 FUN_80114b10();
 extern undefined4 FUN_801150ac();
 extern undefined4 FUN_8011e800();
@@ -518,7 +518,7 @@ void shopkeeper_render(int param_1,int param_2,int param_3,int param_4,int param
   local_18[0] = lbl_803E59D8;
   if ((*(short *)(iVar1 + 0x274) != 7) && (visible != 0)) {
     FUN_8003b818(param_1);
-    fn_80114DEC(param_1,iVar1 + 0x35c,0);
+    dll_2E_func06(param_1,iVar1 + 0x35c,0);
   }
   if ((*(byte *)(iVar1 + 0x9d4) & 0x20) != 0) {
     (**(code **)(*lbl_803DCAB4 + 0xc))(param_1,0x7ef,local_18,0x50,0);

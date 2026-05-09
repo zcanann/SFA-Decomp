@@ -29,7 +29,7 @@ extern f32 lbl_803E2958;
 /*
  * --INFO--
  *
- * Function: FUN_80115094
+ * Function: dll_2E_func03
  * EN v1.0 Address: 0x80115094
  * EN v1.0 Size: 16b
  * EN v1.1 Address: 0x80115318
@@ -39,7 +39,7 @@ extern f32 lbl_803E2958;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80115094(int param_1,undefined4 param_2,undefined4 param_3)
+void dll_2E_func03(int param_1,undefined4 param_2,undefined4 param_3)
 {
   *(undefined4 *)(param_1 + 0x618) = param_2;
   *(undefined4 *)(param_1 + 0x61c) = param_3;

@@ -155,7 +155,7 @@ extern f32 lbl_803E1D18;
  */
 #pragma scheduling off
 #pragma peephole off
-int fn_80115FBC(void)
+int n_rareware_frameStart(void)
 {
   int frameStep;
 

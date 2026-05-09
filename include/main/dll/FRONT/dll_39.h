@@ -21,7 +21,7 @@ typedef struct NAttractModeMovieDims {
 #define NATTRACTMODE_MOVIE_START_FRAME_ALTERNATE 100
 #define NATTRACTMODE_MOVIE_RETRACE_COUNTDOWN 10
 
-int fn_80115FBC(void);
+int n_rareware_frameStart(void);
 void n_rareware_release(void);
 void n_rareware_initialise(void);
 void n_attractmode_releaseMovieBuffers(void);

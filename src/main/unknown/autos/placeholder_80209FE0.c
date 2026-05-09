@@ -280,7 +280,7 @@ extern int FUN_80114340();
 extern int FUN_801149b8();
 extern undefined4 FUN_801149bc();
 extern undefined4 FUN_80114b10();
-extern undefined4 FUN_80115094();
+extern undefined4 dll_2E_func03();
 extern undefined4 FUN_801150ac();
 extern undefined8 FUN_8011e7c8();
 extern undefined4 FUN_8011e800();

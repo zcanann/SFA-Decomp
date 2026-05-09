@@ -1180,4 +1180,4 @@ f32 fn_8011383C(int *obj) { return *(f32*)((char*)((int**)obj)[0xb8/4] + 0x3e4);
 
 /* misc 8b leaves */
 void fn_80113F94(int *p, f32 v) { *(f32*)((char*)p + 0x614) = v; }
-void fn_8011508C(int *p, int v) { *(int*)((char*)p + 0x608) = v; }
+void dll_2E_func04(int *p, int v) { *(int*)((char*)p + 0x608) = v; }

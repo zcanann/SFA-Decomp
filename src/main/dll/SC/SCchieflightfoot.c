@@ -25,7 +25,7 @@ extern int FUN_800575b4();
 extern undefined4 objAudioFn_8006ef38();
 extern undefined4 fn_80114F64();
 extern undefined4 fn_8011507C();
-extern void fn_80115094(SHthorntailObject *obj,SHthorntailRuntime *runtime);
+extern void dll_2E_func03(SHthorntailObject *obj,SHthorntailRuntime *runtime);
 extern undefined4 FUN_80286888();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
@@ -242,7 +242,7 @@ void SHthorntail_update(SHthorntailObject *obj)
     else {
       runtime->movementControlFlags = runtime->movementControlFlags & 0xfe;
     }
-    fn_80115094(obj,runtime);
+    dll_2E_func03(obj,runtime);
     if ((DAT_80327fc8[runtime->behaviorState] & 2) == 0) {
       FUN_8003b280((int)psVar2,(int)runtime->collisionShapeState);
     }

@@ -7,9 +7,9 @@ typedef struct PostObjAnimComponent PostObjAnimComponent;
 typedef struct PostObject PostObject;
 typedef struct PostControl PostControl;
 
-int fn_80115650(PostObjAnimComponent *objAnim,PostObject *obj,int *turning,
+int objAnimFn_80115650(PostObjAnimComponent *objAnim,PostObject *obj,int *turning,
                 PostControl *control,float *turnSpeed,short *moves);
-void fn_801159DC(void);
-void fn_801159E0(void);
+void dll_2E_release_nop(void);
+void dll_2E_initialise_nop(void);
 
 #endif /* MAIN_DLL_FRONT_POST_H_ */

@@ -48,7 +48,7 @@ extern undefined4 FUN_8005fe14();
 extern undefined4 FUN_80080f70();
 extern undefined4 FUN_80080f7c();
 extern undefined4 FUN_80080f80();
-extern undefined8 fn_80114BB0();
+extern undefined8 dll_2E_func07();
 extern undefined4 FUN_801150a4();
 extern undefined8 FUN_801150ac();
 extern undefined4 FUN_801149bc();
@@ -57,7 +57,7 @@ extern undefined4 FUN_801bb848();
 extern undefined4 warpDarkIceMines_801bbb44();
 extern undefined4 FUN_801bcc94();
 extern undefined8 fn_801BC7E4();
-extern undefined4 fn_8011508C();
+extern undefined4 dll_2E_func04();
 extern void OSReport(const char *msg, ...);
 
 extern undefined4 Camera_DisableViewYOffset();
@@ -71,8 +71,8 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 objRenderFn_8003b8f4();
 extern undefined4 fn_80055000();
 extern undefined4 queueGlowRender();
-extern undefined4 fn_80114DEC();
-extern undefined4 fn_80115094();
+extern undefined4 dll_2E_func06();
+extern undefined4 dll_2E_func03();
 extern undefined4 fn_801BB598();
 
 extern f32 timeDelta;
@@ -150,7 +150,7 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
     puVar7 = lbl_803AC9DC;
     puVar8 = (undefined4 *)0x1;
     puVar9 = (undefined4 *)0x1;
-    fn_80114BB0(puVar3,animUpdate,(float *)lbl_803AC9DC,1,1);
+    dll_2E_func07(puVar3,animUpdate,(float *)lbl_803AC9DC,1,1);
     for (iVar10 = 0; iVar10 < (int)(uint)animUpdate->eventCount; iVar10 = iVar10 + 1) {
       switch(animUpdate->eventIds[iVar10]) {
       case 1:
@@ -493,7 +493,7 @@ void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
   }
   objRenderFn_8003b8f4((double)lbl_803E4C44);
   fn_801BB598(obj,runtime);
-  fn_80114DEC(obj,lbl_803AC9DC,0);
+  dll_2E_func06(obj,lbl_803AC9DC,0);
   effect = runtime->topState->effect;
   if (effect == NULL) {
     return;
@@ -623,8 +623,8 @@ void dimboss_update2(DIMbossObject *obj)
           *(undefined4 *)((int)childObject + 0x30) = obj->facingAngle;
         }
         fn_801BC7E4(obj,0,runtime,runtime);
-        fn_8011508C(lbl_803AC9DC,runtime->targetModel);
-        fn_80115094(obj,lbl_803AC9DC);
+        dll_2E_func04(lbl_803AC9DC,runtime->targetModel);
+        dll_2E_func03(obj,lbl_803AC9DC);
         warpDarkIceMines_801bbb44(obj,runtime);
       }
     }

@@ -53,7 +53,7 @@ extern f32 lbl_803E1CE0;
 /*
  * --INFO--
  *
- * Function: fn_80115650
+ * Function: objAnimFn_80115650
  * EN v1.0 Address: 0x80115650
  * EN v1.0 Size: 908b
  * EN v1.1 Address: 0x801158EC
@@ -65,7 +65,7 @@ extern f32 lbl_803E1CE0;
  */
 #pragma scheduling off
 #pragma peephole off
-int fn_80115650(PostObjAnimComponent *objAnim, PostObject *obj, int *turning,
+int objAnimFn_80115650(PostObjAnimComponent *objAnim, PostObject *obj, int *turning,
                 PostControl *control, float *turnSpeed, s16 *moves)
 {
   int yawDelta;
@@ -172,5 +172,5 @@ int fn_80115650(PostObjAnimComponent *objAnim, PostObject *obj, int *turning,
 #pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801159DC(void) {}
-void fn_801159E0(void) {}
+void dll_2E_release_nop(void) {}
+void dll_2E_initialise_nop(void) {}

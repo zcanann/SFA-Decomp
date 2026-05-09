@@ -48,7 +48,7 @@ extern undefined4 FUN_8008112c();
 extern undefined4 FUN_801141e8();
 extern undefined4 FUN_801149bc();
 extern undefined4 FUN_80114b10();
-extern undefined4 FUN_80115094();
+extern undefined4 dll_2E_func03();
 extern undefined4 FUN_801150ac();
 extern undefined4 FUN_8012f744();
 extern char FUN_80132034();
@@ -353,7 +353,7 @@ void FUN_801aa820(short *param_1,int param_2)
   local_14 = DAT_803e52f4;
   *param_1 = (ushort)*(byte *)(param_2 + 0x1a) << 8;
   FUN_80114b10((int)param_1,puVar1,0x71c7,0x3555,3);
-  FUN_80115094((int)puVar1,600,0xf0);
+  dll_2E_func03((int)puVar1,600,0xf0);
   FUN_801141e8((int)puVar1,(wchar_t *)&local_18,(wchar_t *)&local_10);
   *(byte *)((int)puVar1 + 0x611) = *(byte *)((int)puVar1 + 0x611) | 10;
   return;

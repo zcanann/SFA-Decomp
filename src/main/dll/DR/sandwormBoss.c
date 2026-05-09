@@ -88,7 +88,7 @@ extern int FUN_801145b0();
 extern int FUN_801149b8();
 extern undefined4 FUN_801149bc();
 extern undefined4 FUN_80114b10();
-extern undefined4 FUN_80115094();
+extern undefined4 dll_2E_func03();
 extern undefined4 FUN_801150a4();
 extern undefined4 FUN_801150ac();
 extern undefined4 FUN_8014ccac();

@@ -14,7 +14,7 @@ extern int ObjTrigger_IsSet();
 extern void characterDoEyeAnims(int obj,int collisionShapeState);
 extern void objAudioFn_8006ef38(double scaleX,double scaleY,int obj,int joint,int pointCount,int pathPoints,
                         int scratch);
-extern int fn_80114BB0();
+extern int dll_2E_func07();
 extern int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj);
 
 extern f32 timeDelta;
@@ -273,7 +273,7 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4
   }
   impactPending = (int)(runtime->behaviorFlags & SHTHORNTAIL_FLAG_IMPACT_PENDING);
   if (impactPending != 0) {
-    impactHandled = fn_80114BB0((int)obj,param_3,(int)runtime,0,0);
+    impactHandled = dll_2E_func07((int)obj,param_3,(int)runtime,0,0);
     if (impactHandled != 0) {
       return 0;
     }
