@@ -175,6 +175,70 @@ typedef struct ExpgfxSpawnConfig {
   u8 linkGroup;
 } ExpgfxSpawnConfig;
 
+typedef struct ExpgfxResourceEntry {
+  void *resource;
+  s32 evictionScore;
+  s32 tableKeyType;
+  u32 wordC;
+} ExpgfxResourceEntry;
+
+typedef struct ExpgfxResourceHandle {
+  u8 pad00[0x0E];
+  u16 refCount;
+  u8 pad10[0x14 - 0x10];
+  u16 linkGroup;
+} ExpgfxResourceHandle;
+
+typedef union ExpgfxSlotStateBits {
+  u8 value;
+  struct {
+    u8 padHi : 4;
+    u8 initPhase : 2;
+    u8 quadReady : 1;
+    u8 frameParity : 1;
+  } bits;
+} ExpgfxSlotStateBits;
+
+typedef struct ExpgfxSlot {
+  u8 pad00[0x06];
+  s16 lifetimeFrame;
+  u8 pad08[0x0F - 0x08];
+  u8 initialStateByte;
+  u8 pad10[0x16 - 0x10];
+  s16 lifetimeFrameLimit;
+  u8 pad18[0x26 - 0x18];
+  s16 sequenceId;
+  u8 pad28[0x40 - 0x28];
+  s16 sourceVecX;
+  s16 sourceVecY;
+  s16 sourceVecZ;
+  u8 pad46[0x48 - 0x46];
+  int sourcePosX;
+  int sourcePosY;
+  int sourcePosZ;
+  int sourcePosW;
+  int posX;
+  int posY;
+  int posZ;
+  int startPosX;
+  int startPosY;
+  int startPosZ;
+  float velocityX;
+  float velocityY;
+  float velocityZ;
+  u32 behaviorFlags;
+  u32 renderFlags;
+  s16 scaleCounter;
+  s16 scaleTarget;
+  s16 scaleFrames;
+  u8 encodedTableIndex;
+  ExpgfxSlotStateBits stateBits;
+  u8 colorByte0;
+  u8 colorByte1;
+  u8 colorByte2;
+  u8 pad8F[0xA0 - 0x8F];
+} ExpgfxSlot;
+
 /*
  * These arrays are still linker-backed by recovered addresses, but the pool
  * roles are stable enough to use semantic aliases across the expgfx corridor.
