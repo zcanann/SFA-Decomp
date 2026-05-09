@@ -23,7 +23,7 @@ extern void loadUiDll(int id);
 extern void doNothing_onSaveSelectScreenExit(void);
 extern uint mmSetFreeDelay(uint delay);
 extern void mapUnload(int mapId, uint flags);
-extern void fn_8005CDD4(int arg);
+extern void titleScreenFn_8005cdd4(int arg);
 extern void setDrawLights(int arg);
 extern void setIsOvercast(int arg);
 extern void memCardFn_8007dd04(u8 retry);
@@ -334,7 +334,7 @@ int TitleMenu_run(void)
 
   if (((previousFadeTimer < 0xd) || (lbl_803DD651 > 0xc)) && (lbl_803DD651 < 1)) {
     TitleMenu_ClearPanel();
-    fn_8005CDD4(0);
+    titleScreenFn_8005cdd4(0);
     setLinkNotRotated();
     loadUiDll(lbl_803DD650);
   }

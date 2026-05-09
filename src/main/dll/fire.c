@@ -4,7 +4,7 @@
 extern undefined4 FUN_800178b8();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
-extern undefined4 fn_8000A380(int param_1,int param_2,int param_3);
+extern undefined4 streamFn_8000a380(int param_1,int param_2,int param_3);
 extern undefined4 Sfx_KeepAliveLoopedObjectSound(int param_1,int param_2);
 extern undefined4 loadUiDll(int param_1);
 extern undefined4 defragMemory(int param_1);
@@ -221,7 +221,7 @@ void fireObj_init(FireObject *obj)
   GameBit_Set(FIRE_INIT_GAMEBIT_0,1);
   GameBit_Set(FIRE_INIT_GAMEBIT_1,1);
   GameBit_Set(FIRE_INIT_GAMEBIT_2,1);
-  fn_8000A380(3,2,FIRE_INIT_COLLECTABLE_ID);
+  streamFn_8000a380(3,2,FIRE_INIT_COLLECTABLE_ID);
   return;
 }
 #pragma peephole reset

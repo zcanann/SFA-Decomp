@@ -2,7 +2,7 @@
 #include "main/dll/SC/SCtotemlogpuz.h"
 
 extern void getEnvfxActImmediately(void *obj,void *target,int animId,int flags);
-extern void fn_8000A380(int param_1,int param_2,int param_3);
+extern void streamFn_8000a380(int param_1,int param_2,int param_3);
 extern int GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern void objRenderFn_8003b8f4(double scale);
@@ -98,7 +98,7 @@ void crcloudrace_init(CrCloudRaceObject *obj)
   state->phase = 2;
   storeZeroToFloatParam(state->timer);
   GameBit_Set(0xe24,1);
-  fn_8000A380(3,2,1000);
+  streamFn_8000a380(3,2,1000);
   return;
 }
 

@@ -18,13 +18,13 @@ extern undefined4 movieFn_80117b68();
 extern undefined4 fn_801181F8();
 extern undefined4 fn_8011881C();
 extern undefined4 fn_80118900();
-extern bool fn_80118960();
+extern bool prepareAttractMode();
 extern undefined8 fn_80118C88();
 extern undefined4 fn_80118EAC();
 extern undefined4 fn_80118FAC();
-extern int fn_80119000();
-extern undefined4 fn_801192EC();
-extern int fn_80119338();
+extern int movieLoad();
+extern undefined4 audioFn_801192ec();
+extern int attractModeAudioFn_80119338();
 extern undefined8 FUN_8011d9b0();
 extern int FUN_80241de8();
 extern undefined4 FUN_802420b0();
@@ -43,11 +43,11 @@ extern void loadUiDll(int dllNo);
 extern void gameTextSetDrawFunc(void *callback);
 extern void GameBit_Set(int eventId,int value);
 extern u8 shouldShowCredits(u8 *obj);
-extern void fn_801349C8(void);
-extern void fn_80134C28(u8 param_1);
-extern void fn_80134D40(int param_1,int param_2,int param_3);
+extern void creditsStart_(void);
+extern void titleScreenShowCopyright(u8 param_1);
+extern void gameTextBoxFn_80134d40(int param_1,int param_2,int param_3);
 extern void titleScreenPositionElements(f32 param_1,f32 param_2);
-extern void fn_80135A90(void);
+extern void titleScreenTextDrawFunc(void);
 
 extern int DAT_803a5098;
 extern undefined4 DAT_803dc070;
@@ -240,7 +240,7 @@ void n_attractmode_releaseMovieBuffers(void)
   if (lbl_803DD610 == NATTRACTMODE_MOVIE_STATE_PREPARED) {
     fn_8011881C();
     fn_80118FAC();
-    fn_801192EC();
+    audioFn_801192ec();
     freeDelay = mmSetFreeDelay(0);
     if (lbl_803DD634 != 0) {
       mm_free(lbl_803DD634);
@@ -306,11 +306,11 @@ void n_attractmode_prepareMovie(void)
   uint local_14 [3];
   
   lbl_803DD619 = NATTRACTMODE_MOVIE_BUSY;
-  iVar1 = fn_80119338(NATTRACTMODE_MOVIE_SETUP_ID);
+  iVar1 = attractModeAudioFn_80119338(NATTRACTMODE_MOVIE_SETUP_ID);
   if (iVar1 != 0) {
-    iVar1 = fn_80119000(sNAttractModeMoviePath,NATTRACTMODE_MOVIE_START_FRAME_DEFAULT);
+    iVar1 = movieLoad(sNAttractModeMoviePath,NATTRACTMODE_MOVIE_START_FRAME_DEFAULT);
     if (iVar1 == 0) {
-      fn_801192EC();
+      audioFn_801192ec();
     }
     else {
       fn_801181F8((uint)&lbl_803DD638);
@@ -333,7 +333,7 @@ void n_attractmode_prepareMovie(void)
           ((lbl_803DD628 == 0 ||
            ((lbl_803DD624 == 0 && (local_24 != NATTRACTMODE_OPTIONAL_BUFFER_SIZE_NONE)))))) ||
          ((lbl_803DD620 == 0 || (lbl_803DD61C == 0)))) {
-        fn_801192EC();
+        audioFn_801192ec();
         freeDelay = mmSetFreeDelay(0);
         if (lbl_803DD634 != 0) {
           mm_free(lbl_803DD634);
@@ -383,7 +383,7 @@ void n_attractmode_prepareMovie(void)
         DCInvalidateRange(lbl_803DD61C,NATTRACTMODE_WORK_BUFFER_SIZE);
         fn_80118C88(lbl_803DD634,lbl_803DD630,lbl_803DD62C,lbl_803DD628,lbl_803DD624,
                      lbl_803DD620);
-        iVar1 = fn_80118960(0,1);
+        iVar1 = prepareAttractMode(0,1);
         if (iVar1 == 0) {
           OSPanic(sNAttractModeSourceFile,NATTRACTMODE_PREPARE_FAIL_LINE,
                   sNAttractModeFailToPrepare);
@@ -427,21 +427,21 @@ void TitleMenu_render(u8 *param_1)
   int menuAction;
 
   if (shouldShowCredits(param_1) != 0) {
-    fn_801349C8();
+    creditsStart_();
     return;
   }
 
   menuAction = (*(code *)(*lbl_803DCA50 + 0x10))();
   if (menuAction == 0x57) {
-    gameTextSetDrawFunc(fn_80135A90);
+    gameTextSetDrawFunc(titleScreenTextDrawFunc);
     titleScreenPositionElements(lbl_803E1D10 + (f32)(lbl_803DD616 * 0x1a4) / lbl_803E1D14,
                 lbl_803E1D18);
-    fn_80134D40(0,0,0);
+    gameTextBoxFn_80134d40(0,0,0);
     (*(code *)(*lbl_803DCA4C + 0x18))();
     (*(code *)(*lbl_803DCAA0 + 0x30))(0xff);
     (*(code *)(*lbl_803DCAA0 + 0x10))(param_1);
     gameTextSetDrawFunc(0);
-    fn_80134C28(lbl_803DD64F);
+    titleScreenShowCopyright(lbl_803DD64F);
   }
 }
 #pragma peephole reset

@@ -42,7 +42,7 @@ typedef struct MovieAudioState {
 
 extern void audioSetVolumes(int channel, int volume, int frames, int arg3, int arg4);
 extern void audioStopByMask(int mask);
-extern void fn_8000B694(int arg);
+extern void audioFn_8000b694(int arg);
 extern int getUiDllFn_80014930(void);
 extern void gameTimerStop(void);
 extern void gameTextLoadDir(int dirId);
@@ -199,7 +199,7 @@ void TitleMenu_initialise(void)
   lbl_803DD64E = 0;
   envFxActFn_800887f8(0);
   gameTimerStop();
-  fn_8000B694(0);
+  audioFn_8000b694(0);
   lbl_803DD698 = 0;
 }
 #pragma peephole reset
