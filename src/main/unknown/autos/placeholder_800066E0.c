@@ -664,7 +664,10 @@ extern u32 gAudioActiveChannelMask;
 extern u8 gAudioInitStarted;
 extern s32 lbl_803DD610;
 extern u8 gAudioStreamDefaultVolume;
+extern u8 gAudioStreamVolumeLeft;
+extern u8 gAudioStreamVolumeRight;
 extern u8 gAudioStreamDvdState;
+extern u8 lbl_803DC848;
 extern u32 gAudioStreamMusicFadeFlagA;
 extern u32 gAudioStreamMusicFadeFlagB;
 extern s32 gAudioStreamCurrentId;
@@ -684,6 +687,9 @@ extern void AudioStream_StopCurrent(void);
 extern void AudioStream_CancelPrepared(void);
 extern void streamFn_8000a380(u32 channel, u32 mode, u32 time);
 extern void movieFn_80117b68(u32 volume, u32 fadeMs);
+extern void AISetStreamPlayState(u32 state);
+extern void AISetStreamVolLeft(u32 volume);
+extern void AISetStreamVolRight(u32 volume);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(u32 size, u32 tag, void *name);
 
@@ -2183,8 +2189,12 @@ u8 AudioStream_IsPreparing(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8000688c(uint param_1)
+void AudioStream_SetVolume(u32 volume)
 {
+    gAudioStreamVolumeLeft = volume;
+    gAudioStreamVolumeRight = volume;
+    AISetStreamVolLeft(volume);
+    AISetStreamVolRight(volume);
 }
 
 /*
@@ -2200,8 +2210,13 @@ void FUN_8000688c(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80006890(int param_1)
+void AudioStream_CancelCallback(s32 result)
 {
+    if (result == 0) {
+        AISetStreamPlayState(0);
+    }
+    gAudioActiveChannelMask = 0;
+    lbl_803DC848 = 0;
 }
 
 /*
