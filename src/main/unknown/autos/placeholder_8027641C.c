@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8027641C.h"
 
-extern u8 *fn_80275058(u16 keyId);
+extern u8 *dataGetCurve(u16 keyId);
 extern void sndConvertMs(u32 *p);
 extern void sndConvertTicks(u32 *p, int state);
 extern int sndConvert2Ms(u32 v);
@@ -26,7 +26,7 @@ u32 fn_802763C0(u32 value, u16 keyId)
 
     result = value;
     if (keyId != 0xffff) {
-        table = fn_80275058(keyId);
+        table = dataGetCurve(keyId);
         if (table != NULL) {
             hi = result >> 16;
             lo = result & 0xffff;
@@ -85,7 +85,7 @@ void fn_80276440(int state, u32 *params, u32 timeArg)
     keyId = (u16)((p0 >> 24) | ((params[1] & 0xff) << 8));
 
     if (keyId != 0xffff) {
-        table = fn_80275058(keyId);
+        table = dataGetCurve(keyId);
         if (table != NULL) {
             hi = scaled >> 16;
             lo = scaled & 0xffff;

@@ -38,7 +38,7 @@ extern f32 lbl_803E77D0;
 
 typedef void (*SynthAuxCallback)(int active, u16 *samples, u32 user);
 
-extern u8 *musyxKeymapFn_802750b8(u32 sampleId);
+extern u8 *dataGetKeymap(u32 sampleId);
 extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
 extern int audioFn_8026f630(u32 key, u32 slot, u32 channel, u32 voiceGroup, u32 *outFlags);
 extern int audioLayerFn_8026f8b8(u32 sampleId, int key, u32 velocity, u32 baseSample, u32 flags, u32 volume,
@@ -66,7 +66,7 @@ int audioKeymapFn_8026fc8c(u32 sampleId, s16 key, u32 velocity, u32 baseSample, 
     int handle;
     u32 outFlags;
 
-    table = musyxKeymapFn_802750b8(sampleId);
+    table = dataGetKeymap(sampleId);
     if (table != 0) {
         entry = table + ((flags & 0x7f) * 8);
         if (*(s16 *)entry != -1) {

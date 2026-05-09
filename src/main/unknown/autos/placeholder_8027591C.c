@@ -7,13 +7,13 @@ extern void synthCopyHandleFXState(int voice, int state);
 void fn_80275CB8(int state);
 extern void sndConvertMs(u32 *p);
 extern void sndConvertTicks(u32 *p, int state);
-extern int audioFn_80274f20(u32 key, u32 *out);
+extern int dataGetSample(u32 key, u32 *out);
 extern void hwInitSamplePlayback(u32 voice, u32 sampleId, u32 *sampleInfo, u32 noKeySync,
                                  u32 priority, u32 handle, u32 noStartOffset, u8 restart);
 extern u32 countLeadingZeros(u32 value);
 extern void fn_80271370(int state);
 extern u32 lbl_803CA2B0[];
-extern void *fn_80275058(u16 key);
+extern void *dataGetCurve(u16 key);
 extern u32 fn_8027A60C(u32 value);
 extern int fn_8027A8D4(int state);
 extern void hwSetADSR(int slot, u32 *adsr, u8 mode);
@@ -104,7 +104,7 @@ void fn_8027595C(int state, u32 *args)
     u32 sampleId;
 
     sampleId = (*args >> 8) & 0xffff;
-    found = audioFn_80274f20(sampleId, lbl_803CA2B0);
+    found = dataGetSample(sampleId, lbl_803CA2B0);
     if (found == 0) {
         mode = *args >> 0x18;
         if (mode == 1) {
@@ -232,7 +232,7 @@ void fn_80275E48(int state, u32 *args)
         f64 d;
     } curve;
 
-    table = fn_80275058((*args >> 8) & 0xffff);
+    table = dataGetCurve((*args >> 8) & 0xffff);
     if (table != 0) {
         words = (u16 *)table;
         if ((*args >> 0x18) == 0) {
@@ -312,7 +312,7 @@ void fn_802760A0(int state, u32 *args)
         f64 d;
     } curve;
 
-    table = fn_80275058((*args >> 8) & 0xffff);
+    table = dataGetCurve((*args >> 8) & 0xffff);
     if (table != 0) {
         *(s16 *)(state + 0x204) = (s16)((s8)args[1] << 8);
         basePan = *(s16 *)(state + 0x204);
