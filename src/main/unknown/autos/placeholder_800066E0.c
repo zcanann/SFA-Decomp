@@ -658,6 +658,10 @@ extern undefined uRam803dd553;
 extern undefined4 uRam803dd554;
 extern undefined uRam803dd555;
 
+extern u32 gAudioResetting;
+extern u32 gAudioManagedChannelMask;
+extern u32 gAudioActiveChannelMask;
+
 /*
  * --INFO--
  *
@@ -1271,9 +1275,9 @@ void FUN_80006774(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80006778(void)
+u32 audioIsResetting(void)
 {
-    return 0;
+    return gAudioResetting;
 }
 
 /*
@@ -1343,9 +1347,13 @@ FUN_80006788(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint FUN_80006790(uint param_1)
+u32 fn_8000A188(u32 mask)
 {
-    return 0;
+    u32 managed = gAudioManagedChannelMask & mask;
+    if (managed == 0) {
+        return 1;
+    }
+    return (gAudioActiveChannelMask & mask) != 0;
 }
 
 /*
