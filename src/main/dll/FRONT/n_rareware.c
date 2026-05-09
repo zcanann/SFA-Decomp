@@ -23,7 +23,7 @@ extern void loadMapAndParent(int param_1);
 extern void fn_80041E24(void);
 extern void fn_80088C0C(void);
 extern void fn_8011D9B0(void);
-extern void fn_80100FA0(void);
+extern void lockIconInit(void);
 extern void warpToMap(int mapId, int param_2);
 extern void loadUiDll(int dllNo);
 
@@ -237,7 +237,7 @@ void fn_80115EC0(void)
   fn_80041E24();
   fn_80088C0C();
   fn_8011D9B0();
-  fn_80100FA0();
+  lockIconInit();
   warpToMap(0x12,0);
 }
 #pragma peephole reset

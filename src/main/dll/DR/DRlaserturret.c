@@ -22,8 +22,8 @@ extern void ObjHits_EnableObject(void *);
 extern int ObjTrigger_IsSet(void *);
 extern void *objFindTexture(void *obj, int idx, int flags);
 extern int fn_80065E50(void *obj, float x, float y, float z, void *out, int p5, int p6);
-extern void fn_8011F38C(int);
-extern void fn_8011F6F0(int);
+extern void hudFn_8011f38c(int);
+extern void hudFn_8011f6f0(int);
 extern double fn_801E7C4C(void *obj, void *playerObj, int p3);
 extern float fn_80293E80(double);
 extern int fn_8029689C(void *playerObj);
@@ -380,13 +380,13 @@ void fn_801E75EC(void *obj)
         int *target;
         gameTimerInit(0x11, 0x1e);
         fn_8001469C();
-        fn_8011F6F0(1);
+        hudFn_8011f6f0(1);
         GameBit_Set(0x626, 1);
         target = *(int **)((char *)state + 0x9b4);
         (**(code ***)((char *)target + 0x68))[0x4c / 4](target, *(u8 *)((char *)state + 0x9d5));
         (*(code **)lbl_803DCA74)[0x4 / 4](0, 0xf5, 0, 0, 0);
     } else {
-        fn_8011F38C(0);
+        hudFn_8011f38c(0);
     }
     *(u8 *)((char *)state + 0x9d4) = 0;
 }

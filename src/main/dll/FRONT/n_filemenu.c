@@ -32,10 +32,10 @@ extern int titleLoadSaveFiles(void);
 extern void gameplay_capturePreviewSettings(void);
 extern float fn_801115E4(void);
 extern void fn_80117B68(int fade, int frames);
-extern void fn_80130464(u8 v);
-extern void fn_8013046C(void);
-extern u8 fn_80134BBC(void);
-extern void fn_801368A4(u8 arg);
+extern void titleScreenFn_80130464(u8 v);
+extern void setLinkNotRotated(void);
+extern u8 shouldShowCredits(void);
+extern void titleScreenFn_801368a4(u8 arg);
 extern void fn_801368C4(u8 arg);
 extern void fn_801368D4(void);
 extern void saveFn_8007d960(int);
@@ -179,7 +179,7 @@ int fn_801166C8(void)
 
   fn_8005CEA8(0);
   fn_8005CDF8(0);
-  if (fn_80134BBC() != 0) {
+  if (shouldShowCredits() != 0) {
     return 0;
   }
 
@@ -280,7 +280,7 @@ int fn_801166C8(void)
       FUN_80006824(0,0x37b);
       lbl_803DD617 = -0x19;
       lbl_803DD615 = lbl_803DD614;
-      fn_80130464(0);
+      titleScreenFn_80130464(0);
     }
     if ((int)((uint)lbl_803DD616 + (int)lbl_803DD617) < 0xff) {
       if ((int)((uint)lbl_803DD616 + (int)lbl_803DD617) < 1) {
@@ -296,7 +296,7 @@ int fn_801166C8(void)
     } else {
       lbl_803DD616 = 0xff;
       lbl_803DD617 = 0;
-      fn_80130464(1);
+      titleScreenFn_80130464(1);
     }
     if (lbl_803DD652 == 0) {
       if (menuId == 1) {
@@ -307,9 +307,9 @@ int fn_801166C8(void)
     } else {
       fn_801368C4(lbl_803DD614);
       if ((menuId == 1) && (lbl_803DD616 == 0xff)) {
-        fn_801368A4(1);
+        titleScreenFn_801368a4(1);
         lbl_803DD651 = 1;
-        fn_80130464(1);
+        titleScreenFn_80130464(1);
         FUN_80006824(0,0xff);
         if (lbl_803DD614 == 2) {
           lbl_803DD650 = 7;
@@ -327,7 +327,7 @@ int fn_801166C8(void)
         }
         return 0;
       }
-      fn_801368A4(0);
+      titleScreenFn_801368a4(0);
     }
     return 0;
   }
@@ -335,7 +335,7 @@ int fn_801166C8(void)
   if (((previousFadeTimer < 0xd) || (lbl_803DD651 > 0xc)) && (lbl_803DD651 < 1)) {
     TitleMenu_ClearPanel();
     fn_8005CDD4(0);
-    fn_8013046C();
+    setLinkNotRotated();
     loadUiDll(lbl_803DD650);
   }
   return (uint)((uint)(int)lbl_803DD651 < 0xd) - ((int)lbl_803DD651 >> 0x1f);
@@ -347,8 +347,8 @@ int fn_801166C8(void)
 #pragma peephole off
 void TitleMenu_release(void)
 {
-  fn_8013046C();
-  fn_80130464(1);
+  setLinkNotRotated();
+  titleScreenFn_80130464(1);
   saveFn_8007d960(1);
 }
 #pragma peephole reset

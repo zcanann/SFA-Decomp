@@ -17,7 +17,7 @@
 #include "main/dll/baddie/wispBaddie.h"
 
 extern f32   fn_80293E80(f32 x);
-extern void  fn_8011EDA4(void* tex, s16 x, u8 alpha, s32 mode, s32 flag, f32 a, f32 b);
+extern void  pauseMenuDrawElement(void* tex, s16 x, u8 alpha, s32 mode, s32 flag, f32 a, f32 b);
 
 extern u8 hudTextures[0x198];
 
@@ -54,11 +54,11 @@ void fn_80127F24(s32 param_1) {
                         lbl_803E1E94);
 
     for (i = 10; (s8)i >= 0; i -= 2) {
-        fn_8011EDA4(*(void**)((u8*)hudTextures + 0x11c),
+        pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x11c),
                     (s16)((s16)(0xf5 - (s8)i) - lbl_803DD75C),
                     (u8)param_1, 0x200, 0,
                     lbl_803E20BC, lbl_803E1EE4);
-        fn_8011EDA4(*(void**)((u8*)hudTextures + 0x11c),
+        pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x11c),
                     (s16)((s16)(0xf5 - (s8)i) - lbl_803DD75C),
                     (u8)param_1, 0x200, 0,
                     lbl_803E20C0, lbl_803E1EE4);
@@ -70,11 +70,11 @@ void fn_80127F24(s32 param_1) {
     baseSub = lbl_803E20D0;
     for (i = 10; (s8)i >= 0; i -= 10) {
         f32 off = (denom - (f32)(s32)((s8)i)) * phase / denom;
-        fn_8011EDA4(*(void**)((u8*)hudTextures + 0x118),
+        pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x118),
                     (s16)((s16)(0xff - (s8)i) - lbl_803DD75C),
                     (u8)param_1, (s32)yFloat, 0,
                     baseAdd + off, lbl_803E20CC);
-        fn_8011EDA4(*(void**)((u8*)hudTextures + 0x118),
+        pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x118),
                     (s16)((s16)(0xff - (s8)i) - lbl_803DD75C),
                     (u8)param_1, (s32)yFloat, 0,
                     baseSub - off, lbl_803E20CC);

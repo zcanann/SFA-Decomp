@@ -751,8 +751,8 @@ void fn_801300E8(int v) { lbl_803DD8F2 = (s16)v; lbl_803DD8F0 = 0; lbl_803DD8F4 
 #pragma peephole reset
 #pragma scheduling reset
 void Menu_release(void) {}
-void fn_80130464(u8 v) { lbl_803DD8F8 = v; }
-void fn_8013046C(void) { lbl_803DD8F9 = 0; }
+void titleScreenFn_80130464(u8 v) { lbl_803DD8F8 = v; }
+void setLinkNotRotated(void) { lbl_803DD8F9 = 0; }
 void fn_80130478(void) { lbl_803DD8F9 = 1; }
 u8   fn_801306D8(void) { return (u8)lbl_803DD90E; }
 void fn_8013082C(int idx, s8 v) { *(s8*)(lbl_803A9458 + idx * 60 + 0x1e) = v; }

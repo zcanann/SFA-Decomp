@@ -13,8 +13,8 @@ extern int Stack_Push(int stack, int *in);
 
 extern int fn_80014670(void);
 extern void gameTimerStop(void);
-extern void fn_8011F6F0(int x);
-extern void fn_8011F38C(int x);
+extern void hudFn_8011f6f0(int x);
+extern void hudFn_8011f38c(int x);
 
 extern undefined4 *lbl_803DCA74;
 extern undefined4 *lbl_803DCA9C;
@@ -138,7 +138,7 @@ int fn_801E69C8(int arg1)
 
     if (fn_80014670() != 0 || localC >= local8 || local10 != 0) {
         gameTimerStop();
-        fn_8011F6F0(0);
+        hudFn_8011f6f0(0);
         GameBit_Set(0x626, 0);
 
         if (localC >= local8) {
@@ -147,7 +147,7 @@ int fn_801E69C8(int arg1)
             GameBit_Set(0x625, 1);
         }
 
-        fn_8011F38C(2);
+        hudFn_8011f38c(2);
 
         (*(void (**)(int, int, int))(*(int *)*lbl_803DCAAC + 0x50))(
             (s32)*(s8 *)(arg1 + 0xac), 6, 0);

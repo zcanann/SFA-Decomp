@@ -42,11 +42,11 @@ extern void fn_8001404C(int param_1);
 extern void loadUiDll(int dllNo);
 extern void fn_8001B444(void *callback);
 extern void GameBit_Set(int eventId,int value);
-extern u8 fn_80134BBC(u8 *obj);
+extern u8 shouldShowCredits(u8 *obj);
 extern void fn_801349C8(void);
 extern void fn_80134C28(u8 param_1);
 extern void fn_80134D40(int param_1,int param_2,int param_3);
-extern void fn_80135820(f32 param_1,f32 param_2);
+extern void titleScreenPositionElements(f32 param_1,f32 param_2);
 extern void fn_80135A90(void);
 
 extern int DAT_803a5098;
@@ -426,7 +426,7 @@ void fn_801165BC(u8 *param_1)
 {
   int menuAction;
 
-  if (fn_80134BBC(param_1) != 0) {
+  if (shouldShowCredits(param_1) != 0) {
     fn_801349C8();
     return;
   }
@@ -434,7 +434,7 @@ void fn_801165BC(u8 *param_1)
   menuAction = (*(code *)(*lbl_803DCA50 + 0x10))();
   if (menuAction == 0x57) {
     fn_8001B444(fn_80135A90);
-    fn_80135820(lbl_803E1D10 + (f32)(lbl_803DD616 * 0x1a4) / lbl_803E1D14,
+    titleScreenPositionElements(lbl_803E1D10 + (f32)(lbl_803DD616 * 0x1a4) / lbl_803E1D14,
                 lbl_803E1D18);
     fn_80134D40(0,0,0);
     (*(code *)(*lbl_803DCA4C + 0x18))();

@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void fn_80100FA0(void);
+void lockIconInit(void);
 
 #endif /* MAIN_DLL_DLL_B4_H_ */

@@ -33,7 +33,7 @@ extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
 extern f32 Vec_distance(float *posA, float *posB);
 extern int Obj_GetPlayerObject(void);
 extern uint fn_8029729C(int obj);
-extern void fn_8011F3EC(int param_1);
+extern void setAButtonIcon(int param_1);
 extern void fn_8017CF90(void);
 
 extern undefined4* lbl_803DCA54;
@@ -355,7 +355,7 @@ void wm_column_update(int obj)
     flags = fn_8029729C(flags);
     if (((flags & 0x4000) != 0) && (nearest[0] > lbl_803E37C4)) {
       (*(GroundAnimatorSetVisibleFn *)(*lbl_803DCAC0 + 0x24))(state, 0);
-      fn_8011F3EC(5);
+      setAButtonIcon(5);
       *(u32 *)(obj + 0xf4) |= 1;
     } else {
       (*(GroundAnimatorSetVisibleFn *)(*lbl_803DCAC0 + 0x24))(state, 1);

@@ -52,8 +52,8 @@ extern void saveFn_8007d960(int arg);
 extern void fn_800887F8(int arg);
 extern void fn_80117B68(int fade, int frames);
 extern void fn_80130478(void);
-extern void fn_80135820(f32 x, f32 y);
-extern void fn_801368A4(u8 arg);
+extern void titleScreenPositionElements(f32 x, f32 y);
+extern void titleScreenFn_801368a4(u8 arg);
 extern void *fn_801194EC(void);
 extern void fn_80119458(void *arg);
 
@@ -160,7 +160,7 @@ void fn_80116F84(void)
     lbl_803DD652 = 1;
   }
   TitleMenu_SetPanelSelection(lbl_803DD614);
-  fn_801368A4(0);
+  titleScreenFn_801368a4(0);
 
   mode = fn_80014930();
   if ((((mode == 0xd) || (mode = fn_80014930(), mode == 7)) ||
@@ -184,13 +184,13 @@ void fn_80116F84(void)
       ((lbl_803DD610 == NATTRACTMODE_MOVIE_READY) ||
        (lbl_803DD610 == NATTRACTMODE_MOVIE_STATE_RELEASED))) {
     n_attractmode_prepareMovie();
-    fn_80135820(lbl_803E1D10,lbl_803E1D18);
+    titleScreenPositionElements(lbl_803E1D10,lbl_803E1D18);
     lbl_803DD64F = 1;
     fn_80117B68(0,0);
     audioSetVolumes(0,10,1,0,0);
     lbl_803DD616 = 0;
   } else {
-    fn_80135820(lbl_803E1D10,lbl_803E1D18);
+    titleScreenPositionElements(lbl_803E1D10,lbl_803E1D18);
     lbl_803DD64F = 0;
     fn_80117B68(0,1);
   }

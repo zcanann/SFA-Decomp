@@ -3501,7 +3501,7 @@ void Credits_frameEnd(void) {}
 void WarpstoneUI_frameEnd(void) {}
 void fn_80137DF4(void) {}
 int  fn_80134044(void) { return 0; }
-u8   fn_80134BBC(u8* obj) { return *obj; }
+u8   shouldShowCredits(u8* obj) { return *obj; }
 
 /* EN v1.0 0x801334D4  size: 12b  u16-narrow getter for lbl_803DD938. */
 u16 fn_801334D4(void) { return (u16)lbl_803DD938; }
@@ -3711,7 +3711,7 @@ void Minimap_release(void)
  * positions from the supplied (a, b) coordinates. */
 #pragma scheduling off
 #pragma peephole off
-void fn_80135820(f32 a, f32 b)
+void titleScreenPositionElements(f32 a, f32 b)
 {
     PSMTXTrans(lbl_803A9FE4, a, b, lbl_803E22F8);
     lbl_803DD9C8 = (lbl_803E2344 - b) / lbl_803E2348;
@@ -3770,7 +3770,7 @@ void Credits_release(void)
 
 /* EN v1.0 0x801368A4  size: 32b  Two-byte state push: if arg differs
  * from lbl_803DD991, save old to lbl_803DBC09 and set new. */
-void fn_801368A4(s8 arg)
+void titleScreenFn_801368a4(s8 arg)
 {
     u8 cur = lbl_803DD991;
     if (arg == (s8)cur) return;
@@ -3848,7 +3848,7 @@ void fn_80134BC4(void)
 
 /* EN v1.0 0x80134BE8  size: 60b  Predicate. Returns 1 when the value
  * from fn_80014940 is in {2..6} or equals 7, else 0. */
-int fn_80134BE8(void)
+int gameTextFn_80134be8(void)
 {
     int x = fn_80014940();
     if ((u32)(x - 2) <= 4 || x == 7) {

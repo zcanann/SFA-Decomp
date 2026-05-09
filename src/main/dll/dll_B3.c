@@ -21,7 +21,7 @@ extern f32 lbl_803E163C;
 /*
  * --INFO--
  *
- * Function: fn_80100DCC
+ * Function: lockIconTexCb
  * EN v1.0 Address: 0x80100DCC
  * EN v1.0 Size: 468b
  * EN v1.1 Address: TODO
@@ -33,7 +33,7 @@ extern f32 lbl_803E163C;
  */
 #pragma scheduling off
 #pragma peephole off
-int fn_80100DCC(u8 *param_1, int *param_2, int param_3)
+int lockIconTexCb(u8 *param_1, int *param_2, int param_3)
 {
   u8 *renderOp;
   u8 tier;

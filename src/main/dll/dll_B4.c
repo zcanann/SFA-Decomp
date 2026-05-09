@@ -5,8 +5,8 @@ extern u8 *Obj_AllocObjectSetup(int size, int type);
 extern u8 *Obj_SetupObject(u8 *obj, int a, int b, int c, int d);
 extern u8 *Obj_GetActiveModel(u8 *obj);
 extern void ObjModel_SetRenderCallback(u8 *model, void *cb);
-extern void fn_80100DCC(void);
-extern void fn_80100C90(void);
+extern void lockIconTexCb(void);
+extern void aButtonIconTexCb(void);
 extern void fn_8001EFE0(int a, int b, int c, int d);
 extern u8 *objCreateLight(int a, int b);
 extern void modelLightStruct_setField50(u8 *p, int a);
@@ -26,19 +26,19 @@ extern f32 lbl_803E1640;
 /*
  * --INFO--
  *
- * Function: fn_80100FA0
+ * Function: lockIconInit
  * EN v1.0 Address: 0x80100FA0
  * EN v1.0 Size: 276b
  */
-void fn_80100FA0(void)
+void lockIconInit(void)
 {
   if (lbl_803DD4BC == NULL) {
     lbl_803DD4BC = Obj_SetupObject(Obj_AllocObjectSetup(0x18, 0x1FE), 4, -1, -1, 0);
-    ObjModel_SetRenderCallback(Obj_GetActiveModel(lbl_803DD4BC), fn_80100DCC);
+    ObjModel_SetRenderCallback(Obj_GetActiveModel(lbl_803DD4BC), lockIconTexCb);
     lbl_803DD4BC[0xAD] = 1;
-    ObjModel_SetRenderCallback(Obj_GetActiveModel(lbl_803DD4BC), fn_80100C90);
+    ObjModel_SetRenderCallback(Obj_GetActiveModel(lbl_803DD4BC), aButtonIconTexCb);
     lbl_803DD4BC[0xAD] = 2;
-    ObjModel_SetRenderCallback(Obj_GetActiveModel(lbl_803DD4BC), fn_80100C90);
+    ObjModel_SetRenderCallback(Obj_GetActiveModel(lbl_803DD4BC), aButtonIconTexCb);
     fn_8001EFE0(1, 0x32, 0x3C, 0x28);
     lbl_803DD4C4 = objCreateLight(0, 1);
     if (lbl_803DD4C4 != NULL) {

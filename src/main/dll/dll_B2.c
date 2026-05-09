@@ -17,14 +17,14 @@ extern void GXSetCullMode(int mode);
 /*
  * --INFO--
  *
- * Function: fn_80100C90
+ * Function: aButtonIconTexCb
  * EN v1.0 Address: 0x80100C90
  * EN v1.0 Size: 316b
  */
 #pragma peephole off
 #pragma scheduling off
 
-int fn_80100C90(u8 *this_, void **objPtr, undefined4 arg3)
+int aButtonIconTexCb(u8 *this_, void **objPtr, undefined4 arg3)
 {
   u8 *renderOp;
   u8 color[4];

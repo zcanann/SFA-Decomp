@@ -14,7 +14,7 @@ extern int FUN_8002fc3c();
 extern undefined4 ObjAnim_SetCurrentMove();
 extern undefined4 FUN_80080eec();
 extern undefined4 FUN_8011e800();
-extern undefined4 fn_8011F3EC();
+extern undefined4 setAButtonIcon();
 extern undefined4 FUN_801de914();
 extern uint FUN_80286840();
 extern undefined4 FUN_8028688c();
@@ -197,7 +197,7 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
   state = *(Platform1State **)(uVar2 + PLATFORM1_STATE_OFFSET);
   uVar3 = (uint)Obj_GetPlayerObject();
   state->flags = state->flags | PLATFORM1_FLAG_ACTIVE;
-  fn_8011F3EC(0xf);
+  setAButtonIcon(0xf);
   DAT_803de890 = 0;
   state->linkedObject = 0;
   iVar4 = ObjList_GetObjects(local_104,&local_108);
