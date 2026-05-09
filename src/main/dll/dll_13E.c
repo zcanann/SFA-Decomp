@@ -9,7 +9,7 @@ extern f32 lbl_803E36AC;
 extern u8 *lbl_803DCAA8;
 
 extern u8 *Obj_GetPlayerObject(void);
-extern u8 *fn_8002B9AC(void);
+extern u8 *getTrickyObject(void);
 extern int GameBit_Get(int bit);
 extern void Obj_FreeObject(u8 *obj);
 extern u8 fn_80179A2C(u8 *obj);
@@ -37,7 +37,7 @@ void sidekickball_update(u8 *self)
   state[0x275] = 0;
 
   player = Obj_GetPlayerObject();
-  other = fn_8002B9AC();
+  other = getTrickyObject();
   if (player == NULL
       || (*(u16 *)(player + 0xB0) & 0x1000) != 0
       || other == NULL

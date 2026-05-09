@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 
 extern void *mmAlloc(int size, int heap, int flags);
-extern void fn_80023800(void *ptr);
+extern void mm_free(void *ptr);
 extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, s32 param);
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
@@ -150,7 +150,7 @@ void fn_8010DB7C(f32 *param_1, f32 *param_2, f32 *param_3, f32 *param_4) {
 void fn_8010DD24(void) {}
 
 void fn_8010DD28(void) {
-    fn_80023800(lbl_803DD584);
+    mm_free(lbl_803DD584);
     lbl_803DD584 = 0;
     Rcp_DisableBlurFilter();
 }

@@ -26,7 +26,7 @@ extern undefined4 ObjModel_EnableDefaultRenderCallback();
 extern int Obj_GetActiveModel();
 extern undefined4 Obj_BuildWorldTransformMatrix();
 extern undefined4 FUN_80017a98();
-extern undefined4 fn_8002B9AC();
+extern undefined4 getTrickyObject();
 extern undefined4 FUN_80017ac8();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_8003b818();
@@ -615,7 +615,7 @@ void dimboss_update2(DIMbossObject *obj)
           runtime->targetModel = targetModel;
         }
         else {
-          targetModel = fn_8002B9AC();
+          targetModel = getTrickyObject();
           runtime->targetModel = targetModel;
         }
         childObject = obj->childObject;

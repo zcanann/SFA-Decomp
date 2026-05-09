@@ -682,10 +682,10 @@ void CameraModeShipBattle_initialise(void) {}
 void fn_8010D33C(void) {}
 
 /* fn_X(lbl); lbl = 0; */
-extern void fn_80023800(void *);
+extern void mm_free(void *);
 #pragma scheduling off
 #pragma peephole off
-void CameraModeShipBattle_free(void) { fn_80023800(lbl_803DD570); lbl_803DD570 = 0; }
-void fn_8010D340(void) { fn_80023800(lbl_803DD578); lbl_803DD578 = 0; }
+void CameraModeShipBattle_free(void) { mm_free(lbl_803DD570); lbl_803DD570 = 0; }
+void fn_8010D340(void) { mm_free(lbl_803DD578); lbl_803DD578 = 0; }
 #pragma peephole reset
 #pragma scheduling reset

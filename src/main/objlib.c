@@ -17,7 +17,7 @@ extern undefined4 FUN_80017640();
 extern undefined4 FUN_80017700();
 extern undefined4 FUN_80017704();
 extern void setMatrixFromObjectTransposed(void *transform,float *mtx);
-extern float fn_800216D0(float *posA,float *posB);
+extern float vec3f_distanceSquared(float *posA,float *posB);
 extern float Vec_distance(float *param_1,float *param_2);
 extern void OSReport(const char *fmt, ...);
 extern int FUN_80017730();
@@ -1599,7 +1599,7 @@ int ObjGroup_FindNearestObjectForObject(int group,uint obj,float *maxDistance)
   entry = (uint *)gObjGroupObjects + index;
   while ((int)index < (int)limit) {
     if (*entry != obj) {
-      distanceSq = fn_800216D0((float *)(obj + 0x18),(float *)(*entry + 0x18));
+      distanceSq = vec3f_distanceSquared((float *)(obj + 0x18),(float *)(*entry + 0x18));
       if (distanceSq < bestDistanceSq) {
         bestDistanceSq = distanceSq;
         nearest = *entry;
@@ -1655,7 +1655,7 @@ int ObjGroup_FindNearestObject(int group,uint obj,float *maxDistance)
   entry = (uint *)gObjGroupObjects + index;
   while ((int)index < (int)limit) {
     if (*entry != obj) {
-      distanceSq = fn_800216D0((float *)(obj + 0x18),(float *)(*entry + 0x18));
+      distanceSq = vec3f_distanceSquared((float *)(obj + 0x18),(float *)(*entry + 0x18));
       if (distanceSq < bestDistanceSq) {
         bestDistanceSq = distanceSq;
         nearest = *entry;
@@ -2690,7 +2690,7 @@ int ObjList_FindNearestObjectByDefNo(int obj,int defNo,float *maxDistanceSq)
     while (objectIndex < objectCount) {
       otherObj = *objects;
       if (((defNo == *(s16 *)(otherObj + 0x46)) && (obj != otherObj)) &&
-          (distanceSq = fn_800216D0((float *)(obj + 0x18),(float *)(otherObj + 0x18)),
+          (distanceSq = vec3f_distanceSquared((float *)(obj + 0x18),(float *)(otherObj + 0x18)),
            distanceSq < *maxDistanceSq)) {
         *maxDistanceSq = distanceSq;
         foundObj = *objects;
@@ -2704,7 +2704,7 @@ int ObjList_FindNearestObjectByDefNo(int obj,int defNo,float *maxDistanceSq)
     objects = objects + startIndex;
     invalidDistance = lbl_803DE970;
     while (objectIndex < objectCount) {
-      distanceSq = fn_800216D0((float *)(obj + 0x18),(float *)(*objects + 0x18));
+      distanceSq = vec3f_distanceSquared((float *)(obj + 0x18),(float *)(*objects + 0x18));
       if ((distanceSq != invalidDistance) && (distanceSq < *maxDistanceSq)) {
         *maxDistanceSq = distanceSq;
         foundObj = *objects;

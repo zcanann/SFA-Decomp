@@ -3,7 +3,7 @@
 extern int Sfx_PlayFromObjectLimited(u8 *obj,int sfxId,int maxCount);
 extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min,int max);
-extern void fn_80023800(u32 handle);
+extern void mm_free(u32 handle);
 extern u8 *Obj_GetPlayerObject(void);
 extern int ObjHits_GetPriorityHit(u8 *obj,int *out,int param_3,int param_4);
 extern void fn_8008F904(u32 handle);
@@ -90,7 +90,7 @@ void dfplightni_free(u8 *obj)
   if (obj != 0) {
     state = dfplightni_getState(obj);
     if (state->effectHandle != 0) {
-      fn_80023800(state->effectHandle);
+      mm_free(state->effectHandle);
       state->effectHandle = 0;
     }
   }
@@ -179,7 +179,7 @@ void dfplightni_update(u8 *obj)
           end[2] = (f32)(s32)randomZ * lbl_803E64FC + start[2];
         }
         if (state->effectHandle != 0) {
-          fn_80023800(state->effectHandle);
+          mm_free(state->effectHandle);
           state->effectHandle = 0;
         }
         radiusX = (double)state->radiusX;

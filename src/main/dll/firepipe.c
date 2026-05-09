@@ -11,7 +11,7 @@ extern int fn_8002B5A0(FirePipeObject *obj, void *spawnDef);
 extern void fn_8002CE14(int obj);
 extern void fn_8002CE88(FirePipeObject *obj);
 extern int mmSetFreeDelay(int delay);
-extern void fn_80023800(void *ptr);
+extern void mm_free(void *ptr);
 extern undefined4 ObjHits_EnableObject(FirePipeObject *obj);
 extern void ObjHits_DisableObject(FirePipeObject *obj);
 extern undefined8 ObjGroup_RemoveObject();
@@ -62,7 +62,7 @@ int firepipe_spawnEffectObject(FirePipeExtra *extra, FirePipeObject *obj, void *
             *(float *)(effectObj + 0x14) = *(float *)((int)spawnDef + 0x10);
             (*(FirePipeEffectInitFn *)(**(int **)(effectObj + 0x68) + 4))(effectObj, spawnDef, 0);
             freeDelay = mmSetFreeDelay(0);
-            fn_80023800(spawnDef);
+            mm_free(spawnDef);
             mmSetFreeDelay(freeDelay);
             fn_8002CE14(effectObj);
             *(u16 *)(effectObj + 0xb0) &= ~0x8000;

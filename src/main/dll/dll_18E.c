@@ -9,7 +9,7 @@ extern f32 lbl_803E4D08;
 extern f32 lbl_803E4D0C;
 extern f32 lbl_803E4D10;
 
-extern int fn_80021754(s16 angle);
+extern int cos16(s16 angle);
 
 /*
  * --INFO--
@@ -28,7 +28,7 @@ void fn_801BEEA0(s16 *out, u8 *arg2)
   dt = *(f32 *)(st + 0xC) - *(f32 *)((u8 *)out + 0x10);
 
   *(s16 *)(st + 0x14) = (s16)(*(s16 *)(st + 0x14) + 0x400);
-  dt = dt + (f32)(int)fn_80021754(*(s16 *)(st + 0x14)) / lbl_803E4D00;
+  dt = dt + (f32)(int)cos16(*(s16 *)(st + 0x14)) / lbl_803E4D00;
 
   *(f32 *)(st + 0x0) = timeDelta * (dt / lbl_803E4D04 - *(f32 *)(st + 0x8))
                        + *(f32 *)(st + 0x0);

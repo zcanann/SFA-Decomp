@@ -4,15 +4,15 @@
 extern f32 lbl_803E52A8;
 
 extern u8 *Obj_GetPlayerObject(void);
-extern u8 *fn_8002B9AC(void);
-extern int fn_8002B044(u8 *self);
+extern u8 *getTrickyObject(void);
+extern int objIsFrozen(u8 *self);
 extern void ObjHits_DisableObject(u8 *obj);
 extern void gameBitIncrement(s16 bit);
 extern void GameBit_Set(int bit, int value);
 extern void itemPickupDoParticleFx(u8 *obj, int a, int b, f32 f1);
 extern void Sfx_PlayFromObject(u8 *obj, int sfxId);
 extern int ObjMsg_Pop(u8 *obj, int *outMsg, int a, int b);
-extern f32 fn_800216D0(f32 *a, f32 *b);
+extern f32 vec3f_distanceSquared(f32 *a, f32 *b);
 extern void Obj_StartModelFadeIn(u8 *obj, int frames);
 extern void Obj_SetModelColorFadeRecursive(u8 *obj, int a, int b, int c, int d, int e);
 extern int ObjHits_GetPriorityHit(u8 *obj, int *outOther, int a, int b);
@@ -44,9 +44,9 @@ void ediblemushroom_update(u8 *self)
   state = (u8 *)*(int *)(self + 0xB8);
   other = (u8 *)*(int *)(self + 0x4C);
   player = Obj_GetPlayerObject();
-  enemy = fn_8002B9AC();
+  enemy = getTrickyObject();
 
-  if (fn_8002B044(self) != 0) goto end;
+  if (objIsFrozen(self) != 0) goto end;
 
   if (state[0x136] == 8) {
     while (ObjMsg_Pop(self, &msg, 0, 0) != 0) {
@@ -74,11 +74,11 @@ void ediblemushroom_update(u8 *self)
   }
 
   *(f32 *)(state + 0x10C) = *(f32 *)(state + 0x108);
-  distState = fn_800216D0((f32 *)(player + 0x18), (f32 *)(self + 0x18));
+  distState = vec3f_distanceSquared((f32 *)(player + 0x18), (f32 *)(self + 0x18));
   if (enemy == NULL) {
     *(f32 *)(state + 0x108) = sqrtf(distState);
   } else {
-    distEnemy = fn_800216D0((f32 *)(enemy + 0x18), (f32 *)(self + 0x18));
+    distEnemy = vec3f_distanceSquared((f32 *)(enemy + 0x18), (f32 *)(self + 0x18));
     if (distState < distEnemy) {
       *(f32 *)(state + 0x108) = sqrtf(distState);
     } else {

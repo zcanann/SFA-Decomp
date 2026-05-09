@@ -10,12 +10,12 @@ extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
 extern int Obj_GetActiveModel(int obj);
 extern int Obj_GetPlayerObject(void);
 extern s16 getAngle(f32 dx, f32 dz);
-extern int fn_8002B95C(int obj, f32 vx, f32 vy, f32 vz);
+extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern void ObjAnim_SampleRootCurvePhase(f32 distance, int obj, f32 *out);
 extern void ObjAnim_AdvanceCurrentMove(int obj, f32 phase, f32 dt, int flag);
 extern int fn_800640CC(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
 extern void fn_8002273C(int p1, int p2, int p3);
-extern f32 fn_8002166C(int *p1, int *p2);
+extern f32 getXZDistance(int *p1, int *p2);
 extern void itemPickupDoParticleFx(int obj, f32 a, int b, int c);
 extern void objFn_800972dc(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, int p7, int p8);
 
@@ -59,7 +59,7 @@ void spscarab_update(int param_1)
         *(f32 *)(param_1 + 0x28) = *(f32 *)(param_1 + 0x28) - lbl_803E5A74 * timeDelta;
     }
 
-    fn_8002B95C(param_1,
+    objMove(param_1,
                 timeDelta * (*(f32 *)(param_1 + 0x24) * *(f32 *)(p_b8 + 4)),
                 *(f32 *)(param_1 + 0x28) * timeDelta,
                 timeDelta * (*(f32 *)(param_1 + 0x2c) * *(f32 *)(p_b8 + 4)));
@@ -85,7 +85,7 @@ void spscarab_update(int param_1)
         *(s16 *)(param_1) = angle;
     }
 
-    if (fn_8002166C((int *)(Obj_GetPlayerObject() + 0x18), (int *)(param_1 + 0x18))
+    if (getXZDistance((int *)(Obj_GetPlayerObject() + 0x18), (int *)(param_1 + 0x18))
         < lbl_803E5A80) {
         Sfx_PlayFromObject(param_1, (u16)*(s16 *)(p_b8 + 0xc));
         itemPickupDoParticleFx(param_1, lbl_803E5A84, *(s16 *)(p_b8 + 0xe), 0x28);

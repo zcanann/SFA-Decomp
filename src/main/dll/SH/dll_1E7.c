@@ -2,8 +2,8 @@
 #include "main/dll/SH/dll_1E7.h"
 
 extern void Sfx_PlayFromObject(uint objectId,u16 volumeId);
-extern f32 fn_8002166C(Vec *a,Vec *b);
-extern f32 fn_800216D0(Vec *a,Vec *b);
+extern f32 getXZDistance(Vec *a,Vec *b);
+extern f32 vec3f_distanceSquared(Vec *a,Vec *b);
 extern s16 getAngle(f32 deltaX,f32 deltaZ);
 extern int randomGetRange(int min,int max);
 extern int Obj_GetPlayerObject(void);
@@ -105,7 +105,7 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj)
          ((*objects)->config->configToken == lbl_80326E98[groupIndex][2]) ||
          ((*objects)->config->configToken == lbl_80326E98[groupIndex][3]))) {
       fn_8014C66C(*objects,obj);
-      if ((fn_800216D0(&(*objects)->pos,&obj->pos) < lbl_803E5414) &&
+      if ((vec3f_distanceSquared(&(*objects)->pos,&obj->pos) < lbl_803E5414) &&
           (GameBit_Get(SHthorntail_GetLinkedGameBit((*objects)->config)) == 0)) {
         linkedEventPending = 1;
       }
@@ -202,7 +202,7 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
   objWords = (short *)object;
   if (config->leashRadiusByte != '\0') {
     value = Obj_GetPlayerObject();
-    distanceSq = fn_8002166C((Vec *)(objWords + 0xc),(Vec *)(value + 0x18));
+    distanceSq = getXZDistance((Vec *)(objWords + 0xc),(Vec *)(value + 0x18));
     if (distanceSq < lbl_803E5424) {
       behaviorState = runtime->behaviorState;
       if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
@@ -214,7 +214,7 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
       }
       return nextState;
     }
-    distanceSq = fn_8002166C((Vec *)(objWords + 0xc),&config->homePos);
+    distanceSq = getXZDistance((Vec *)(objWords + 0xc),&config->homePos);
     if (distanceSq > (float)(s32)(config->leashRadiusByte * config->leashRadiusByte)) {
       value = getAngle(*(float *)(objWords + 6) - config->homePos.x,
                           *(float *)(objWords + 10) - config->homePos.z);

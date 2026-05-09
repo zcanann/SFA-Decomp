@@ -16,7 +16,7 @@ extern char lbl_8031D478[];
 
 extern int fn_8013DB3C(u8 *arg1, u8 *arg2);
 extern u8 **ObjGroup_GetObjects(int kind, int *count);
-extern f32 fn_8002166C(f32 *a, f32 *b);
+extern f32 getXZDistance(f32 *a, f32 *b);
 extern int fn_8013B368(u8 *arg1, u8 *arg2, f32 dist);
 extern void fn_8013A3F0(u8 *self, int a, int b, f32 f1);
 extern void fn_80148BC8(char *msg);
@@ -56,10 +56,10 @@ void fn_8013D8F0(u8 *arg1, u8 *arg2)
 
   objs = ObjGroup_GetObjects(0x4B, &count);
   for (i = 0; i < count; i++) {
-    dist = fn_8002166C((f32 *)((u8 *)*(int *)(arg2 + 4) + 0x18),
+    dist = getXZDistance((f32 *)((u8 *)*(int *)(arg2 + 4) + 0x18),
                        (f32 *)(*objs + 0x18));
     if (dist > lbl_803E24C4) {
-      dist = fn_8002166C((f32 *)(arg1 + 0x18), (f32 *)(*objs + 0x18));
+      dist = getXZDistance((f32 *)(arg1 + 0x18), (f32 *)(*objs + 0x18));
       if (dist < minDist) {
         nearest = *objs;
         minDist = dist;

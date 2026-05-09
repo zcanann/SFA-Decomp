@@ -6400,7 +6400,7 @@ int fn_8007D72C(void)
 {
     extern int fn_8007DE0C(int);
     extern void* mmAlloc(int, int, int);
-    extern void fn_80023800(void*);
+    extern void mm_free(void*);
     extern void fn_8007FDF8(void);
     extern void* lbl_803DD040;
     extern volatile s32 lbl_803DB700;
@@ -6440,7 +6440,7 @@ int fn_8007D72C(void)
                 res = CARDFormat(0);
             } else {
                 CARDUnmount(0);
-                fn_80023800(lbl_803DD040);
+                mm_free(lbl_803DD040);
                 lbl_803DD040 = 0;
                 lbl_803DB700 = 0xD;
                 return 1;
@@ -6448,7 +6448,7 @@ int fn_8007D72C(void)
         }
     }
     CARDUnmount(0);
-    fn_80023800(lbl_803DD040);
+    mm_free(lbl_803DD040);
     lbl_803DD040 = 0;
     switch (res) {
         case -2:
@@ -6571,7 +6571,7 @@ int fn_8007D99C(void)
     extern s32 CARDCheck();
     extern s32 CARDDelete();
     extern void CARDUnmount();
-    extern void fn_80023800();
+    extern void mm_free();
     extern void fn_8007FDF8();
     extern void* lbl_803DD040;
     extern const char* sMemoryCardFileName;
@@ -6598,7 +6598,7 @@ int fn_8007D99C(void)
             res = CARDDelete(0, sMemoryCardFileName);
         }
         CARDUnmount(0);
-        fn_80023800(lbl_803DD040);
+        mm_free(lbl_803DD040);
         lbl_803DD040 = 0;
 
         switch (res + 13) {
@@ -6729,7 +6729,7 @@ int fn_8007DD04(u8 retry)
     extern int fn_8007F83C(int);
     extern void CARDClose(void*);
     extern void CARDUnmount(s32);
-    extern void fn_80023800(void*);
+    extern void mm_free(void*);
     extern u8 lbl_80396900[];
     extern void* lbl_803DD040;
     extern u8 lbl_803DD05A;
@@ -6748,7 +6748,7 @@ int fn_8007DD04(u8 retry)
                 CARDClose(lbl_80396900);
             }
             CARDUnmount(0);
-            fn_80023800(lbl_803DD040);
+            mm_free(lbl_803DD040);
             lbl_803DD040 = 0;
             lbl_803DB700 = 13;
             if (ret == 2) {

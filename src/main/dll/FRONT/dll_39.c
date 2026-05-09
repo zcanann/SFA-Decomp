@@ -94,7 +94,7 @@ static char s_Fail_to_prepare_8031a39c[] = "Fail to prepare\n";
 
 extern void *mmAlloc(int size,int heap,int flags);
 extern int mmSetFreeDelay(int delay);
-extern void fn_80023800(void *ptr);
+extern void mm_free(void *ptr);
 extern void fn_80022D58(int param_1);
 extern void fn_80041E3C(int param_1);
 extern void OSReport(const char *fmt,...);
@@ -243,31 +243,31 @@ void n_attractmode_releaseMovieBuffers(void)
     fn_801192EC();
     freeDelay = mmSetFreeDelay(0);
     if (lbl_803DD634 != 0) {
-      fn_80023800(lbl_803DD634);
+      mm_free(lbl_803DD634);
       lbl_803DD634 = 0;
     }
     if (lbl_803DD630 != 0) {
-      fn_80023800(lbl_803DD630);
+      mm_free(lbl_803DD630);
       lbl_803DD630 = 0;
     }
     if (lbl_803DD62C != 0) {
-      fn_80023800(lbl_803DD62C);
+      mm_free(lbl_803DD62C);
       lbl_803DD62C = 0;
     }
     if (lbl_803DD628 != 0) {
-      fn_80023800(lbl_803DD628);
+      mm_free(lbl_803DD628);
       lbl_803DD628 = 0;
     }
     if (lbl_803DD624 != 0) {
-      fn_80023800(lbl_803DD624);
+      mm_free(lbl_803DD624);
       lbl_803DD624 = 0;
     }
     if (lbl_803DD620 != 0) {
-      fn_80023800(lbl_803DD620);
+      mm_free(lbl_803DD620);
       lbl_803DD620 = 0;
     }
     if (lbl_803DD61C != 0) {
-      fn_80023800(lbl_803DD61C);
+      mm_free(lbl_803DD61C);
       lbl_803DD61C = 0;
     }
     mmSetFreeDelay(freeDelay);
@@ -336,31 +336,31 @@ void n_attractmode_prepareMovie(void)
         fn_801192EC();
         freeDelay = mmSetFreeDelay(0);
         if (lbl_803DD634 != 0) {
-          fn_80023800(lbl_803DD634);
+          mm_free(lbl_803DD634);
           lbl_803DD634 = 0;
         }
         if (lbl_803DD630 != 0) {
-          fn_80023800(lbl_803DD630);
+          mm_free(lbl_803DD630);
           lbl_803DD630 = 0;
         }
         if (lbl_803DD62C != 0) {
-          fn_80023800(lbl_803DD62C);
+          mm_free(lbl_803DD62C);
           lbl_803DD62C = 0;
         }
         if (lbl_803DD628 != 0) {
-          fn_80023800(lbl_803DD628);
+          mm_free(lbl_803DD628);
           lbl_803DD628 = 0;
         }
         if (lbl_803DD624 != 0) {
-          fn_80023800(lbl_803DD624);
+          mm_free(lbl_803DD624);
           lbl_803DD624 = 0;
         }
         if (lbl_803DD620 != 0) {
-          fn_80023800(lbl_803DD620);
+          mm_free(lbl_803DD620);
           lbl_803DD620 = 0;
         }
         if (lbl_803DD61C != 0) {
-          fn_80023800(lbl_803DD61C);
+          mm_free(lbl_803DD61C);
           lbl_803DD61C = 0;
         }
         mmSetFreeDelay(freeDelay);

@@ -3,7 +3,7 @@
 
 extern void Resource_Release(void *handle);
 extern void *Resource_Acquire(int id, int mode);
-extern void fn_80023800(void *ptr);
+extern void mm_free(void *ptr);
 extern void *mmAlloc(int size, int heap, int flags);
 
 extern void *lbl_803A4228[20];
@@ -32,7 +32,7 @@ void camcontrol_activateHandler(u32 actionId, void *actionData)
       if (*(u8 *)((char *)lbl_803DD51C + 8) == 1) {
         idx = lbl_803DD514;
         Resource_Release(*(void **)((char *)lbl_803A4228[idx] + 4));
-        fn_80023800(lbl_803A4228[idx]);
+        mm_free(lbl_803A4228[idx]);
         lbl_803A4228[idx] = lbl_803A4228[lbl_803DD520 - 1];
         lbl_803DD520--;
         lbl_803DD51C = NULL;

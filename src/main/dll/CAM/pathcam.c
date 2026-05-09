@@ -13,7 +13,7 @@ extern double curveFn_80010dc0();
 extern undefined4 curveFn_80010320();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
-extern void fn_80023800(void *ptr);
+extern void mm_free(void *ptr);
 
 extern int *lbl_803DCA50;
 extern f32 *cameraMtxVar57;
@@ -304,7 +304,7 @@ void pathcam_loadSettings(undefined2 *param_1,int param_2,int param_3)
 
 #pragma scheduling off
 #pragma peephole off
-void camcontrol_releaseModeSettings(void) { fn_80023800(cameraMtxVar57); cameraMtxVar57 = 0; }
+void camcontrol_releaseModeSettings(void) { mm_free(cameraMtxVar57); cameraMtxVar57 = 0; }
 #pragma peephole reset
 #pragma scheduling reset
 

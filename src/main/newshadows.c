@@ -2769,9 +2769,9 @@ extern f32 lbl_803DCFA4;
 f32 fn_8006C670(void) { return lbl_803DCFA4; }
 
 /* fn_X(lbl); lbl = 0; */
-extern void fn_80023800(u32);
+extern void mm_free(u32);
 #pragma scheduling off
 #pragma peephole off
-void fn_8006CB24(void) { fn_80023800(lbl_803DCFBC); lbl_803DCFBC = 0; }
+void fn_8006CB24(void) { mm_free(lbl_803DCFBC); lbl_803DCFBC = 0; }
 #pragma peephole reset
 #pragma scheduling reset

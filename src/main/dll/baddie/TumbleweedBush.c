@@ -845,7 +845,7 @@ void Dummy3E_initialise(void) {}
 extern u8  lbl_8031C1B4[0x30];
 extern s16 lbl_8031C2A8[6];
 extern u8  lbl_803A9DB8[0x18];
-extern void fn_80023800(void);
+extern void mm_free(void);
 extern void fn_8001BDD4(int);
 
 /* EN v1.0 0x80131540  size: 48b  Toggle bit 0x20 of obj->_4. */
@@ -860,10 +860,10 @@ void TitleMenuItem_setAButtonToggle(u8* obj, int flag)
 }
 #pragma peephole reset
 
-/* EN v1.0 0x80131CF4  size: 32b  Wrapper for fn_80023800. */
+/* EN v1.0 0x80131CF4  size: 32b  Wrapper for mm_free. */
 void TitleMenuItem_free(void)
 {
-    fn_80023800();
+    mm_free();
 }
 
 /* EN v1.0 0x80131FE0  size: 40b  Zero 6 u32s at lbl_803A9DB8. */

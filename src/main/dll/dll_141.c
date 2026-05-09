@@ -30,7 +30,7 @@ extern undefined4 FUN_8028688c();
 extern u8 *Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
 extern f32 sqrtf(f32 x);
-extern void fn_8002B95C(f32 a, f32 b, f32 c, int obj);
+extern void objMove(f32 a, f32 b, f32 c, int obj);
 extern double FUN_80293900();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
@@ -197,7 +197,7 @@ void magicdust_update(int param_1)
         *(undefined *)(psVar4 + 0x1b) = 1;
         FUN_80006824((uint)psVar4,0x57);
       }
-      fn_8002B95C((float)(*(float *)(psVar4 + 0x12) * lbl_803DC074),
+      objMove((float)(*(float *)(psVar4 + 0x12) * lbl_803DC074),
                   (float)(*(float *)(psVar4 + 0x14) * lbl_803DC074),
                   (float)(*(float *)(psVar4 + 0x16) * lbl_803DC074), (int)psVar4);
     }

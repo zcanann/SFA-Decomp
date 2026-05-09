@@ -725,10 +725,10 @@ void CameraModeStatic_release(void) {}
 void CameraModeStatic_initialise(void) {}
 
 /* fn_X(lbl); lbl = 0; */
-extern void fn_80023800(void *);
+extern void mm_free(void *);
 #pragma scheduling off
 #pragma peephole off
-void fn_8010974C(void) { fn_80023800(lbl_803DD550); lbl_803DD550 = 0; }
-void fn_80109C18(void) { fn_80023800(lbl_803DD558); lbl_803DD558 = 0; }
+void fn_8010974C(void) { mm_free(lbl_803DD550); lbl_803DD550 = 0; }
+void fn_80109C18(void) { mm_free(lbl_803DD558); lbl_803DD558 = 0; }
 #pragma peephole reset
 #pragma scheduling reset

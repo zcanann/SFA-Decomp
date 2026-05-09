@@ -7,7 +7,7 @@ extern f32 lbl_803E24C4;
 extern u8 *ObjGroup_FindNearestObject(int kind, u8 *self, f32 *outDist);
 extern int GameBit_Get(int bit);
 extern int fn_8005AFAC(u8 *p, f32 a, f32 b);
-extern f32 fn_800216D0(f32 *a, f32 *b);
+extern f32 vec3f_distanceSquared(f32 *a, f32 *b);
 
 #pragma peephole off
 
@@ -54,7 +54,7 @@ int fn_8013DB3C(u8 *arg1, u8 *arg2)
   }
 
   if (result == 1) {
-    if (fn_800216D0((f32 *)((u8 *)*(u32 *)(arg2 + 4) + 0x18),
+    if (vec3f_distanceSquared((f32 *)((u8 *)*(u32 *)(arg2 + 4) + 0x18),
                     (f32 *)(arg1 + 0x18)) < lbl_803E24C4) {
       return 2;
     }

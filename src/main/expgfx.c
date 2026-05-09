@@ -26,7 +26,7 @@ extern undefined4 FUN_80017798();
 extern uint FUN_8001779c();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
-extern void fn_80023800(uint slotPoolBase);
+extern void mm_free(uint slotPoolBase);
 extern undefined4 FUN_8004812c();
 extern undefined8 FUN_80053754();
 extern void fn_80054308(void *resource);
@@ -2115,7 +2115,7 @@ void expgfx_release(void)
   poolIndex = 0;
   slotPoolBases = gExpgfxSlotPoolBases;
   do {
-    fn_80023800(*slotPoolBases);
+    mm_free(*slotPoolBases);
     slotPoolBases = slotPoolBases + 1;
     poolIndex = poolIndex + 1;
   } while (poolIndex < EXPGFX_POOL_COUNT);

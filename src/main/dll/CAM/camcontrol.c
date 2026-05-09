@@ -24,7 +24,7 @@ extern double FUN_8014cbcc();
 extern double FUN_80183544();
 extern f32 sqrtf(f32 x);
 extern void getTabEntry(void *dst,int fileId,int offset,int size);
-extern void fn_80023800(void *ptr);
+extern void mm_free(void *ptr);
 extern void *mmAlloc(int size,int heap,int flags);
 extern void fn_800E84D8(s16 actionNo);
 extern void voxmaps_initialise(void);
@@ -553,7 +553,7 @@ LAB_80102f3c:
                        camAction,0,CAMCONTROL_QUEUE_SENTINEL);
       }
     }
-    fn_80023800(camAction);
+    mm_free(camAction);
   }
   else {
     OSReport(sCamcontrolTriggeredCamActionLoadWarning,actionNo);
@@ -597,7 +597,7 @@ LAB_80102f3c_b:
                        camAction,0,CAMCONTROL_QUEUE_SENTINEL);
       }
     }
-    fn_80023800(camAction);
+    mm_free(camAction);
   }
   return;
 }
@@ -701,7 +701,7 @@ void Camera_setMode(s32 actionId,int priority,int startFlags,int dataSize,void *
                     undefined4 blendFrames,undefined queueMode)
 {
   if (gCamcontrolQueuedActionData != (void *)0x0) {
-    fn_80023800(gCamcontrolQueuedActionData);
+    mm_free(gCamcontrolQueuedActionData);
     gCamcontrolQueuedActionData = (void *)0x0;
     gCamcontrolQueuedActionPending = 0;
   }

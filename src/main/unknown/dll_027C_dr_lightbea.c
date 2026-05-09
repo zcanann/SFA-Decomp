@@ -8,7 +8,7 @@
 // - gDrLightBeaObjDescriptor @ 0x8032AD30
 //
 // Runtime notes:
-// - extra +0 stores the active beam/effect handle freed through fn_80023800.
+// - extra +0 stores the active beam/effect handle freed through mm_free.
 // - extra flag bit 7 mirrors object-def +0x20; render creates the beam when the bit is set.
 // - object-def byte +0x19 optionally redirects the beam endpoint through fn_80114184;
 //   otherwise it tracks the player position with a Y offset.

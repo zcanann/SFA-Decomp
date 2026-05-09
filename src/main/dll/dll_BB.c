@@ -17,7 +17,7 @@ extern double FUN_80247f54();
 extern void *Camera_GetCurrentViewSlot(void);
 extern f32 Camera_GetFovY(void);
 extern void Camera_SetViewportYOffset(s32 yOffset);
-extern void fn_80023800(void *ptr);
+extern void mm_free(void *ptr);
 extern void camcontrol_activateHandler(u32 actionId,void *actionData);
 
 extern undefined4 DAT_803de138;
@@ -266,7 +266,7 @@ void camcontrol_applyQueuedAction(void)
     camcontrol_activateHandler((u16)lbl_803DD510,lbl_803DD504);
     lbl_803DD502 = '\0';
     if (lbl_803DD504 != (void *)0x0) {
-      fn_80023800(lbl_803DD504);
+      mm_free(lbl_803DD504);
       lbl_803DD504 = (void *)0x0;
     }
   }
