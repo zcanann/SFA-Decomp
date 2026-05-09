@@ -938,7 +938,7 @@ u8 fn_8012DDAC(void)
 
 /* EN v1.0 0x8012EA44  size: 12b  Signed-byte getter for lbl_803DD7A8
  * (lbz; extsb; blr). */
-s32 fn_8012EA44(void)
+s32 isTalkingToNpc(void)
 {
     return lbl_803DD7A8;
 }
@@ -950,14 +950,14 @@ void GameUI_finishNpcDialogue(void)
 }
 
 /* EN v1.0 0x8012EB24  size: 12b  Latch the u8 flag at lbl_803DD840 to 1. */
-void fn_8012EB24(void)
+void GameUI_func07(void)
 {
     lbl_803DD840 = 1;
 }
 
 /* EN v1.0 0x8012EB68  size: 8b   Signed-halfword getter for lbl_803DD8BA
  * (lha; blr). */
-s16 fn_8012EB68(void)
+s16 GameUI_func0D(void)
 {
     return lbl_803DD8BA;
 }
@@ -1134,7 +1134,7 @@ void gameTextFadeOut(void)
  * issues the close/restore pair before returning to the parent renderer. */
 #pragma scheduling off
 #pragma peephole off
-void fn_80129C74(void)
+void viewFn_80129c74(void)
 {
     Camera_SetCurrentViewIndex(0);
     if (lbl_803DD7E0 != 0) {
@@ -1154,7 +1154,7 @@ void fn_80129C74(void)
  * then runs the standard player-input-disable + alpha-fade-to-FF pair. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8012DF14(void)
+void timeListFn_8012df14(void)
 {
     lbl_803DD75B = 1;
     (*(void(**)(s32, s32, s32))((char*)*lbl_803DCA50 + 0x24))(1, 0x94, 1);
@@ -1214,7 +1214,7 @@ void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do
  * latch the s32 fade_target at lbl_803DBA60. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8012DDD8(s32 fade_target, u8 idx, u8 flags, u8 q)
+void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
 {
     if (flags & 0x08) {
         lbl_803DD77A = idx;
@@ -1326,7 +1326,7 @@ void timeListFn_8012be84(void)
  * 0 if any of the table entries match the slot's lookup byte. */
 #pragma scheduling off
 #pragma peephole off
-int fn_8012B6BC(void)
+int pauseMenuIsFox(void)
 {
     void* s;
     void* inner;
@@ -1362,7 +1362,7 @@ int fn_8012B6BC(void)
  * funnels through `c == 0xa` as a branchless boolean. Always returns 1. */
 #pragma scheduling off
 #pragma peephole off
-int fn_80129698(s8 a, int b, u8 c, int mode)
+int registerNewScore(s8 a, int b, u8 c, int mode)
 {
     lbl_803DBA91 = (u8)saveScoreFn_800e88b4(a, c == 0xa, b, getSaveFileName());
     if ((u8)mode == 2 || (u8)mode == 1) {
@@ -1572,7 +1572,7 @@ void npcTalkFn_8012e880(void)
  * f31 and runs the standard close-block trio. */
 #pragma scheduling off
 #pragma peephole off
-void fn_80129DB4(void)
+void perspectiveFn_80129db4(void)
 {
     f32 saved_fov;
 

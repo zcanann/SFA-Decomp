@@ -737,17 +737,17 @@ extern u8  lbl_803A9458[0x960];
 void Pause_SetDisabled(u8 v) { pauseDisabled = v; }
 void Pause_ResetMenuFrameCounter(void) { pauseMenuFrameCounter = 60; }
 void CMenu_SetFadeCounter(s16 v) { cMenuFadeCounter = v; }
-s32  fn_8012FECC(void) { return lbl_803DD8F0; }
+s32  Menu_func0B(void) { return lbl_803DD8F0; }
 #pragma peephole off
-void fn_8012FED8(int v) { lbl_803DD8E8 = (s8)v; }
+void Menu_func0A(int v) { lbl_803DD8E8 = (s8)v; }
 #pragma peephole reset
-void fn_8012FEE4(void) {}
+void Menu_func09_nop(void) {}
 #pragma peephole off
-void fn_80130028(int v) { lbl_803DD8F4 = (s8)v; }
+void Menu_func07(int v) { lbl_803DD8F4 = (s8)v; }
 #pragma peephole reset
 #pragma scheduling off
 #pragma peephole off
-void fn_801300E8(int v) { lbl_803DD8F2 = (s16)v; lbl_803DD8F0 = 0; lbl_803DD8F4 = -1; }
+void Menu_func03(int v) { lbl_803DD8F2 = (s16)v; lbl_803DD8F0 = 0; lbl_803DD8F4 = -1; }
 #pragma peephole reset
 #pragma scheduling reset
 void Menu_release(void) {}
