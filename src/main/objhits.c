@@ -1241,8 +1241,8 @@ uint ObjHits_TestTaperedCapsule3D(float radiusA, float radiusB, float radiusC, f
 #pragma peephole off
 void ObjHits_SortSweepEntries(int sweepPtrs,int entryCount)
 {
-  int iVar1;
-  int iVar2;
+  uint iVar1;
+  uint iVar2;
   int *piVar3;
   int *piVar4;
   int iVar5;
@@ -1349,50 +1349,60 @@ void ObjHitbox_UpdateRotatedBounds(short *param_1,int param_2)
   int iVar2;
   HitboxTransform local_28;
   
-  iVar1 = *(int *)(param_1 + 0x2c);
+  iVar1 = *(int *)((char *)param_1 + OBJHITBOX_TRANSFORM_STATE_OFFSET);
   if (iVar1 != 0) {
     if (param_2 != 0) {
-      *(byte *)(iVar1 + 0x10c) = *(char *)(iVar1 + 0x10c) + 1U & 1;
+      *(byte *)(iVar1 + OBJHITBOX_STATE_ACTIVE_MATRIX_INDEX_OFFSET) =
+          (*(byte *)(iVar1 + OBJHITBOX_STATE_ACTIVE_MATRIX_INDEX_OFFSET) + 1) & 1;
     }
-    iVar2 = iVar1 + (uint)*(byte *)(iVar1 + 0x10c) * 0x40;
+    iVar2 = iVar1 + (uint)*(byte *)(iVar1 + OBJHITBOX_STATE_ACTIVE_MATRIX_INDEX_OFFSET) *
+                         OBJHITBOX_STATE_MATRIX_STRIDE;
     local_28.x = -*param_1;
-    if ((*(short *)(*(int *)(param_1 + 0x2a) + 0x60) & 0x800) != 0) {
+    if ((*(short *)(*(int *)((char *)param_1 + OBJHITBOX_DEF_OFFSET) +
+                    OBJHITBOX_DEF_FLAGS_OFFSET) & OBJHITBOX_DEF_CLAMP_Y) != 0) {
       local_28.y = 0;
     }
     else {
       local_28.y = -param_1[1];
     }
-    if ((*(short *)(*(int *)(param_1 + 0x2a) + 0x60) & 0x1000) != 0) {
+    if ((*(short *)(*(int *)((char *)param_1 + OBJHITBOX_DEF_OFFSET) +
+                    OBJHITBOX_DEF_FLAGS_OFFSET) & OBJHITBOX_DEF_CLAMP_Z) != 0) {
       local_28.z = 0;
     }
     else {
       local_28.z = -param_1[2];
     }
     local_28.scale = gObjHitsScalarOne;
-    local_28.radiusX = -*(float *)(param_1 + 0xc);
-    local_28.radiusY = -*(float *)(param_1 + 0xe);
-    local_28.radiusZ = -*(float *)(param_1 + 0x10);
+    local_28.radiusX = -*(float *)((char *)param_1 + OBJHITBOX_RADIUS_X_OFFSET);
+    local_28.radiusY = -*(float *)((char *)param_1 + OBJHITBOX_RADIUS_Y_OFFSET);
+    local_28.radiusZ = -*(float *)((char *)param_1 + OBJHITBOX_RADIUS_Z_OFFSET);
     mtxRotateByVec3s((float *)iVar2,&local_28);
     local_28.x = *param_1;
-    if ((*(short *)(*(int *)(param_1 + 0x2a) + 0x60) & 0x800) != 0) {
+    if ((*(short *)(*(int *)((char *)param_1 + OBJHITBOX_DEF_OFFSET) +
+                    OBJHITBOX_DEF_FLAGS_OFFSET) & OBJHITBOX_DEF_CLAMP_Y) != 0) {
       local_28.y = 0;
     }
     else {
       local_28.y = param_1[1];
     }
-    if ((*(short *)(*(int *)(param_1 + 0x2a) + 0x60) & 0x1000) != 0) {
+    if ((*(short *)(*(int *)((char *)param_1 + OBJHITBOX_DEF_OFFSET) +
+                    OBJHITBOX_DEF_FLAGS_OFFSET) & OBJHITBOX_DEF_CLAMP_Z) != 0) {
       local_28.z = 0;
     }
     else {
       local_28.z = param_1[2];
     }
     local_28.scale = gObjHitsScalarOne;
-    local_28.radiusX = *(float *)(param_1 + 0xc);
-    local_28.radiusY = *(float *)(param_1 + 0xe);
-    local_28.radiusZ = *(float *)(param_1 + 0x10);
-    setMatrixFromObjectPos((float *)(iVar1 + (*(byte *)(iVar1 + 0x10c) + 2) * 0x40),&local_28);
-    if (*(char *)(iVar1 + 0x10d) != '\0') {
-      *(char *)(iVar1 + 0x10d) = *(char *)(iVar1 + 0x10d) + -1;
+    local_28.radiusX = *(float *)((char *)param_1 + OBJHITBOX_RADIUS_X_OFFSET);
+    local_28.radiusY = *(float *)((char *)param_1 + OBJHITBOX_RADIUS_Y_OFFSET);
+    local_28.radiusZ = *(float *)((char *)param_1 + OBJHITBOX_RADIUS_Z_OFFSET);
+    setMatrixFromObjectPos(
+        (float *)(iVar1 + (*(byte *)(iVar1 + OBJHITBOX_STATE_ACTIVE_MATRIX_INDEX_OFFSET) + 2) *
+                              OBJHITBOX_STATE_MATRIX_STRIDE),
+        &local_28);
+    if (*(char *)(iVar1 + OBJHITBOX_STATE_RESET_FRAMES_OFFSET) != '\0') {
+      *(char *)(iVar1 + OBJHITBOX_STATE_RESET_FRAMES_OFFSET) =
+          *(char *)(iVar1 + OBJHITBOX_STATE_RESET_FRAMES_OFFSET) + -1;
     }
   }
   return;
