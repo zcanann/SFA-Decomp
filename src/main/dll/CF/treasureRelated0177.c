@@ -29,7 +29,7 @@ extern void fn_8003B8F4(f32);
 extern undefined4 FUN_80053bf0();
 extern undefined8 FUN_8005d1e8();
 extern undefined4 FUN_8005fe14();
-extern void fn_800604B4(void *effect);
+extern void queueGlowRender(void *effect);
 extern undefined4 FUN_80081110();
 extern undefined4 FUN_800d7780();
 extern undefined4 FUN_8011daf8();
@@ -409,7 +409,7 @@ void campfire_render(int obj, int param_2, int param_3, int param_4, int param_5
     effect = *state;
     if (((effect != 0) && (*(u8 *)((int)effect + 0x2f8) != 0)) &&
         (*(u8 *)((int)effect + 0x4c) != 0)) {
-      fn_800604B4(effect);
+      queueGlowRender(effect);
     }
   }
 }

@@ -70,7 +70,7 @@ extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 fn_8003B8F4();
 extern undefined4 fn_80055000();
-extern undefined4 fn_800604B4();
+extern undefined4 queueGlowRender();
 extern undefined4 fn_80114DEC();
 extern undefined4 fn_80115094();
 extern undefined4 fn_801BB598();
@@ -502,7 +502,7 @@ void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
     return;
   }
   if (effect->visible != 0) {
-    fn_800604B4();
+    queueGlowRender();
   }
 }
 #pragma peephole reset

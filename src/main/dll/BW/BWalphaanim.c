@@ -283,7 +283,7 @@ void FUN_801ed428(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   return;
 }
 
-extern void fn_80054308(u32);
+extern void textureFree(u32);
 extern u32 textureLoadAsset(int);
 extern u32 lbl_803DDC60;
 
@@ -291,7 +291,7 @@ extern u32 lbl_803DDC60;
 #pragma peephole off
 void SnowBike_release(void) {
     if (lbl_803DDC60 != 0) {
-        fn_80054308(lbl_803DDC60);
+        textureFree(lbl_803DDC60);
         lbl_803DDC60 = 0;
     }
 }

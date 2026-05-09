@@ -3,7 +3,7 @@
 
 extern void fn_8003B8F4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
 extern void fn_8001DD88(f32 x, f32 y, f32 z);
-extern void fn_800604B4(void *p);
+extern void queueGlowRender(void *p);
 extern void ObjPath_GetPointWorldPosition(void *obj, int idx, void *out0, void *out1, void *out2, int flag);
 extern void *Obj_GetPlayerObject(void);
 extern int fn_801BE19C(void *obj, int p2, void *p3, void *p4);
@@ -47,7 +47,7 @@ void dimbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
 
             if (lbl_803DDB90 != NULL && *((u8 *)lbl_803DDB90 + 0x2f8) != 0 && *((u8 *)lbl_803DDB90 + 0x4c) != 0) {
                 fn_8001DD88(outX, outY, outZ);
-                fn_800604B4(lbl_803DDB90);
+                queueGlowRender(lbl_803DDB90);
             }
         }
     }

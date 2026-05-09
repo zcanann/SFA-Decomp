@@ -11,7 +11,7 @@ extern void Obj_FreeObject(int obj);
 extern void ObjAnim_AdvanceCurrentMove(int obj, int p2, double p3, double p4);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int  randomGetRange(int lo, int hi);
-extern int  fn_800394AC(int p1, int p2, int p3);
+extern int  objFindTexture(int p1, int p2, int p3);
 extern void getLActions(int p1, int p2, int p3, int p4, int p5, int p6);
 extern float sqrtf(float x);
 
@@ -108,7 +108,7 @@ void cfccrate_update(int obj)
         }
         break;
     case 0x622: {
-        int *p = (int *)fn_800394AC(obj, 0, 0);
+        int *p = (int *)objFindTexture(obj, 0, 0);
         if ((p != NULL) && (GameBit_Get(*(short *)(state + 0x38)) != 0) && (*p == 0)) {
             Sfx_PlayFromObject(obj, 0x3c4);
             *p = 0x100;

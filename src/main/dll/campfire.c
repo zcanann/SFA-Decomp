@@ -24,7 +24,7 @@ extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern void ObjGroup_RemoveObject(int obj,int group);
 extern undefined4 ObjPath_GetPointWorldPosition();
-extern int fn_800394AC();
+extern int objFindTexture();
 extern undefined4 FUN_80039520();
 extern undefined4 fn_8003B5E0();
 extern undefined4 fn_8003B8F4();
@@ -569,7 +569,7 @@ void kaldachom_update(int param_1)
       }
       else {
         iVar8 = *(int *)(iVar9 + 0x40c);
-        piVar3 = (int *)fn_800394AC(param_1,0,0);
+        piVar3 = (int *)objFindTexture(param_1,0,0);
         *(short *)(iVar8 + 0x48) = *(short *)(iVar8 + 0x48) + 0x1000;
         dVar10 = (double)fn_80293E80((double)((lbl_803E30B4 *
                                               (float)((double)CONCAT44(0x43300000,

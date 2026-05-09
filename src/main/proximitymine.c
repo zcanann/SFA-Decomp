@@ -5,7 +5,7 @@ extern int ObjHits_GetPriorityHit(void *obj,int param_2,int param_3,int param_4)
 extern void fn_8003B8F4(void *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                         undefined4 param_5,double scale);
 extern int fn_8005B2FC(double x,double y,double z);
-extern void fn_800604B4(void *effect);
+extern void queueGlowRender(void *effect);
 extern int fn_80080150(void *timer);
 extern void fn_8008016C(void *timer);
 extern void fn_80080178(void *timer,int duration);
@@ -106,7 +106,7 @@ void proximitymine_render(ProximityMineObject *obj,undefined4 param_2,undefined4
     }
     effect = state->effectHandle;
     if ((effect != NULL) && (effect->active != 0) && (effect->visible != 0)) {
-      fn_800604B4(effect);
+      queueGlowRender(effect);
     }
     fn_8003B8F4(obj,param_2,param_3,param_4,param_5,(double)lbl_803E6778);
   }

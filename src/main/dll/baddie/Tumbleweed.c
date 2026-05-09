@@ -3552,7 +3552,7 @@ extern void* lbl_803DD974;
 extern void* lbl_803DD96C;
 extern void* gameTextGet(s32);
 extern void* textureLoadAsset(s32);
-extern void  fn_80054308(void*);
+extern void  textureFree(void*);
 
 /* EN v1.0 0x801368E0  size: 124b  titlescreen_release: free the main
  * buffer at lbl_803DD9D4 and walk the 19-slot table at lbl_803A9F98
@@ -3564,13 +3564,13 @@ void titlescreen_release(void)
 {
     void** p;
     int i;
-    fn_80054308(lbl_803DD9D4);
+    textureFree(lbl_803DD9D4);
     lbl_803DD9D4 = NULL;
     i = 0;
     p = lbl_803A9F98;
     while (i < 19) {
         if (*p != NULL) {
-            fn_80054308(*p);
+            textureFree(*p);
             *p = NULL;
         }
         p++;
@@ -3691,8 +3691,8 @@ void Minimap_release(void)
 {
     u8 i;
     void** slots;
-    if (minimapTexture != NULL) fn_80054308(minimapTexture);
-    fn_80054308(lbl_803DD940);
+    if (minimapTexture != NULL) textureFree(minimapTexture);
+    textureFree(lbl_803DD940);
     slots = lbl_803DBBC8;
     i = 0;
     while ((u32)i < 2) {
@@ -3745,10 +3745,10 @@ void Minimap_initialise(void)
 #pragma scheduling reset
 
 /* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960
- * via fn_80054308. */
+ * via textureFree. */
 void fn_8013404C(void)
 {
-    fn_80054308(lbl_803DD960);
+    textureFree(lbl_803DD960);
 }
 
 /* EN v1.0 0x80134070  size: 40b  Acquire 0x47A-byte buffer into
@@ -3765,7 +3765,7 @@ void fn_80134070(void)
 /* EN v1.0 0x80134364  size: 36b  Release lbl_803DD974 buffer. */
 void Credits_release(void)
 {
-    fn_80054308(lbl_803DD974);
+    textureFree(lbl_803DD974);
 }
 
 /* EN v1.0 0x801368A4  size: 32b  Two-byte state push: if arg differs
@@ -3810,11 +3810,11 @@ extern s16   lbl_803DD9A8;
 extern int   fn_80014940(void);
 
 /* EN v1.0 0x80134808  size: 44b  Release two buffer slots in sequence:
- * fn_80054308(lbl_803DD984) then fn_80054308(lbl_803DD980). */
+ * textureFree(lbl_803DD984) then textureFree(lbl_803DD980). */
 void WarpstoneUI_release(void)
 {
-    fn_80054308(lbl_803DD984);
-    fn_80054308(lbl_803DD980);
+    textureFree(lbl_803DD984);
+    textureFree(lbl_803DD980);
 }
 
 /* EN v1.0 0x80134834  size: 60b  Acquire two buffer slots and prime
@@ -3858,12 +3858,12 @@ int fn_80134BE8(void)
 }
 
 /* EN v1.0 0x80133934  size: 52b  Release-and-clear pair: when
- * minimapTexture is non-null, release via fn_80054308 and zero both
+ * minimapTexture is non-null, release via textureFree and zero both
  * minimapTexture and lbl_803DD92C. */
 void fn_80133934(void)
 {
     if (minimapTexture != NULL) {
-        fn_80054308(minimapTexture);
+        textureFree(minimapTexture);
         minimapTexture = NULL;
         lbl_803DD92C = NULL;
     }

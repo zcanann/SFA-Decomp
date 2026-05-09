@@ -1126,7 +1126,7 @@ void fn_80070510(void* obj_a, void** obj_b, int param_3)
     extern int* fn_8004C250(void* op, int slot);
     extern void* textureIdxToPtr(int idx);
     extern void selectTexture(void* tex, int slot);
-    extern void fn_8006C6F0(int);
+    extern void selectReflectionTexture(int);
     extern void GXInitTexObj();
     extern void fn_8006CABC(void* a, void* b);
     extern int fn_8004C248(void);
@@ -1150,7 +1150,7 @@ void fn_80070510(void* obj_a, void** obj_b, int param_3)
     renderOp = (void*)ObjModel_GetRenderOp(model, param_3);
     handle1 = *fn_8004C250(renderOp, 0);
     selectTexture(textureIdxToPtr(handle1), 0);
-    fn_8006C6F0(1);
+    selectReflectionTexture(1);
     tex2 = textureIdxToPtr(*(int*)((u8*)renderOp + 0x34));
     wrapBit = (((u8*)tex2)[0x1d] - ((u8*)tex2)[0x1c] > 0) ? 1 : 0;
     GXInitTexObj((void*)((u8*)tex2 + 0x20), (u8*)tex2 + 0x60,
@@ -1344,9 +1344,9 @@ void fn_80070ED4(u8 alpha)
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
     extern void fn_8006CABC(f32* a, f32* b);
-    extern void fn_8006C5E4(int* out);
-    extern void fn_8006C830(void);
-    extern void fn_8006C6F0(int);
+    extern void getTextureFn_8006c5e4(int* out);
+    extern void updateReflectionTextures(void);
+    extern void selectReflectionTexture(int);
     extern void selectTexture(int handle, int slot);
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
@@ -1359,9 +1359,9 @@ void fn_80070ED4(u8 alpha)
     GXColor temp_color;
 
     fn_8006CABC(&fA, &fB);
-    fn_8006C5E4(&handle);
-    fn_8006C830();
-    fn_8006C6F0(0);
+    getTextureFn_8006c5e4(&handle);
+    updateReflectionTextures();
+    selectReflectionTexture(0);
     selectTexture(handle, 1);
     ((u8*)&lbl_803DB6E4)[3] = alpha;
     *(u32*)&temp_color = lbl_803DB6E4;
@@ -1561,15 +1561,15 @@ void fn_800717FC(void)
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
-    extern void fn_8006C830(void);
-    extern void fn_8006C6F0(int);
+    extern void updateReflectionTextures(void);
+    extern void selectReflectionTexture(int);
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
     GXColor temp;
 
-    fn_8006C830();
-    fn_8006C6F0(0);
+    updateReflectionTextures();
+    selectReflectionTexture(0);
     GXSetTevSwapModeTable(0, 1, 2, 0, 3);
     GXSetTevSwapModeTable(1, 0, 0, 0, 3);
     GXSetTevSwapModeTable(2, 1, 1, 1, 3);
@@ -1702,8 +1702,8 @@ void fn_80071D54(u8* mod)
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
-    extern void fn_8006C830(void);
-    extern void fn_8006C6F0(int);
+    extern void updateReflectionTextures(void);
+    extern void selectReflectionTexture(int);
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
@@ -1728,8 +1728,8 @@ void fn_80071D54(u8* mod)
         c2.b = (u8)(c2.b + s2);
     }
 
-    fn_8006C830();
-    fn_8006C6F0(0);
+    updateReflectionTextures();
+    selectReflectionTexture(0);
     GXSetTevSwapModeTable(1, 0, 0, 0, 3);
     GXSetTevSwapModeTable(2, 1, 1, 1, 3);
     GXSetTevSwapModeTable(3, 2, 2, 2, 3);
@@ -1856,8 +1856,8 @@ void fn_800722B0(double radius, double angle, float* pos, u8* mod)
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
-    extern void fn_8006C6F0(int);
-    extern void fn_8006C5D8(int* out);
+    extern void selectReflectionTexture(int);
+    extern void getReflectionTexture2(int* out);
     extern void fn_8006C540(int* out);
     extern void fn_8006C534(int* out);
     extern void selectTexture(int handle, int slot);
@@ -1901,8 +1901,8 @@ void fn_800722B0(double radius, double angle, float* pos, u8* mod)
     proj3 = proj3 + lbl_803DEEE4;
     c0.a = (u8)(((u32)(lbl_803DEF08 * proj3) & 0x00FF0000) >> 16);
 
-    fn_8006C6F0(0);
-    fn_8006C5D8(&handle1);
+    selectReflectionTexture(0);
+    getReflectionTexture2(&handle1);
     selectTexture(handle1, 1);
     fn_8006C540(&handle2);
     selectTexture(handle2, 2);
@@ -2131,7 +2131,7 @@ void fn_80072DFC(void* obj_a, void** obj_b, int param_3)
     extern f32 lbl_8030EA58[3][3];
     extern int ObjModel_GetRenderOp(void* model, int slot);
     extern void* fn_8006C744(void);
-    extern void fn_8006C6F0(int);
+    extern void selectReflectionTexture(int);
     extern void fn_8006C6A4(int);
     extern void selectTexture(void* tex, int slot);
     extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
@@ -2149,7 +2149,7 @@ void fn_80072DFC(void* obj_a, void** obj_b, int param_3)
     model = obj_b[0];
     renderOp = (void*)ObjModel_GetRenderOp(model, param_3);
     tex = fn_8006C744();
-    fn_8006C6F0(0);
+    selectReflectionTexture(0);
     selectTexture(tex, 1);
     fn_8006C6A4(2);
 
@@ -2323,9 +2323,9 @@ void fn_8007366C(u8 alpha)
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
     extern void Camera_GetViewMatrix(void);
-    extern void fn_8006C6F0(int);
+    extern void selectReflectionTexture(int);
     extern void fn_8006CABC(f32* a, f32* b);
-    extern void fn_8006C5E4(int* out);
+    extern void getTextureFn_8006c5e4(int* out);
     extern void fn_8006C5CC(int* out);
     extern void selectTexture(int handle, int slot);
     extern void GXSetZMode();
@@ -2340,12 +2340,12 @@ void fn_8007366C(u8 alpha)
     Mtx mtx;
 
     Camera_GetViewMatrix();
-    fn_8006C6F0(0);
+    selectReflectionTexture(0);
     GXLoadTexMtxImm(lbl_80396820, 0x52, 0);
     GXSetTexCoordGen2(0, 0, 0, 0, 0, 0x52);
     fn_8006CABC(&a, &b);
     a = a * lbl_803DEF28;
-    fn_8006C5E4(&handle1);
+    getTextureFn_8006c5e4(&handle1);
     selectTexture(handle1, 1);
     PSMTXScale((f32(*)[4])tex_mtx, hudScale, hudScale, hudScale);
     tex_mtx[0][3] = a;
@@ -2708,9 +2708,9 @@ u32 fn_80074D04(int handle, void* model)
     extern int lbl_803DD014;
     extern f32* Camera_GetViewMatrix(void);
     extern f32* ObjModel_GetJointMatrix(void* model, int joint);
-    extern void fn_8006C6F0(int);
+    extern void selectReflectionTexture(int);
     extern void fn_8006CABC(f32* a, f32* b);
-    extern void fn_8006C5E4(int* out);
+    extern void getTextureFn_8006c5e4(int* out);
     extern void fn_8006C5CC(int* out);
     extern void selectTexture(int handle, int slot);
     extern void GXSetZMode();
@@ -2747,13 +2747,13 @@ u32 fn_80074D04(int handle, void* model)
         f31_val = lbl_803DEEE4;
     }
 
-    fn_8006C6F0(0);
+    selectReflectionTexture(0);
     GXLoadTexMtxImm(lbl_80396820, 0x52, 0);
     GXSetTexCoordGen2(0, 0, 0, 0, 0, 0x52);
     fn_8006CABC(&f1, &f2);
     f1 *= hudScale;
     f2 *= hudScale;
-    fn_8006C5E4(&handle1);
+    getTextureFn_8006c5e4(&handle1);
     selectTexture(handle1, 1);
 
     PSMTXScale(mtx_ec, hudScale, hudScale, hudScale);
@@ -5173,7 +5173,7 @@ void fn_80079E64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 alpha
     extern int fn_8002073C(void);
     extern f32 fn_80292194(f32 v);
     extern f32 fn_80021370(f32 a, f32 b, f32 c);
-    extern void fn_8006C5D8(int* out);
+    extern void getReflectionTexture2(int* out);
     extern void fn_8006C4F8(int* out);
     extern void selectTexture(int handle, int slot);
     extern void Camera_RebuildProjectionMatrix(void);
@@ -5203,7 +5203,7 @@ void fn_80079E64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 alpha
     }
     c_K2.a = mtxIdx;
 
-    fn_8006C5D8(&handle1);
+    getReflectionTexture2(&handle1);
     selectTexture(handle1, 0);
     fn_8006C4F8(&handle2);
     selectTexture(handle2, 1);
@@ -5372,9 +5372,9 @@ void fn_8007A71C(u32 alpha_in)
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
     extern s16 fn_8000FA70(void);
-    extern void fn_8006C6F0(int);
-    extern void fn_8006C5D8(int* out);
-    extern void fn_8006C5E4(int* out);
+    extern void selectReflectionTexture(int);
+    extern void getReflectionTexture2(int* out);
+    extern void getTextureFn_8006c5e4(int* out);
     extern void fn_8006CABC(f32* a, f32* b);
     extern void fn_80293C64(f32* a, f32* b, f32 c);
     extern void selectTexture(int handle, int slot);
@@ -5411,15 +5411,15 @@ void fn_8007A71C(u32 alpha_in)
     alpha_in = ((alpha_in & 0xFF) * 0xFF) >> 8;
     alpha_final = (alpha_clamp * (alpha_in & 0xFF)) >> 8;
 
-    fn_8006C6F0(0);
-    fn_8006C5D8(&handle1);
+    selectReflectionTexture(0);
+    getReflectionTexture2(&handle1);
     selectTexture(handle1, 1);
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
 
     fn_8006CABC(&fA, &fB);
     fA *= lbl_803DEF6C;
     fB *= lbl_803DEF6C;
-    fn_8006C5E4(&handle2);
+    getTextureFn_8006c5e4(&handle2);
     selectTexture(handle2, 2);
 
     fn_80293C64(&mulX, &mulY, lbl_803DEF70 * fA);
@@ -5516,14 +5516,14 @@ void fn_8007AD10(f32 alpha)
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
-    extern void fn_8006C6F0(int);
+    extern void selectReflectionTexture(int);
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
     Mtx mtx;
 
     lbl_803DB6A0.a = lbl_803DEF1C.y * alpha;
-    fn_8006C6F0(0);
+    selectReflectionTexture(0);
     GXSetTevKColor(0, lbl_803DB6A0);
     GXSetTevKAlphaSel(0, 0x1C);
     PSMTXIdentity(mtx);
@@ -5624,8 +5624,8 @@ void fn_8007B01C(double wx, double wy, double wz, char param4, char param5)
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
-    extern void fn_8006C6F0(int);
-    extern void fn_8006C5D8(int* out);
+    extern void selectReflectionTexture(int);
+    extern void getReflectionTexture2(int* out);
     extern void selectTexture(int handle, int slot);
     extern void Camera_ProjectWorldPoint(f32* out_x, f32* out_y, f32* out_z, f32* out_w, double x, double y, double z);
     extern void Camera_RebuildProjectionMatrix(void);
@@ -5647,8 +5647,8 @@ void fn_8007B01C(double wx, double wy, double wz, char param4, char param5)
     Camera_ProjectWorldPoint(&px, &py, &pz, &pw, wx, wy, wz);
     pz = pz + lbl_803DEEE4;
     c0.a = (u8)(((u32)(lbl_803DEF08 * pz) & 0x00FF0000) >> 16);
-    fn_8006C6F0(0);
-    fn_8006C5D8(&handle);
+    selectReflectionTexture(0);
+    getReflectionTexture2(&handle);
     selectTexture(handle, 1);
     GXSetTevSwapModeTable(1, 0, 0, 0, 1);
 
@@ -5929,7 +5929,7 @@ void fn_8007BD8C(int handle1, int handle2)
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
-    extern void fn_8006C6F0(int);
+    extern void selectReflectionTexture(int);
     extern int fn_8004C248(void);
     extern void selectTexture(int handle, int slot);
     extern void GXSetZMode();
@@ -5937,7 +5937,7 @@ void fn_8007BD8C(int handle1, int handle2)
     Mtx mtx_30;
     GXColor temp;
 
-    fn_8006C6F0(0);
+    selectReflectionTexture(0);
     selectTexture(handle1, 1);
     selectTexture(handle2, 2);
 
@@ -6072,10 +6072,10 @@ void fn_8007C3D0(u8 flag)
 {
     extern f32 lbl_803DEEDC;
     extern f32 gSynthDelayedActionWord0;
-    extern void fn_8006C6F0(int);
+    extern void selectReflectionTexture(int);
     f32 mtx[6];
 
-    fn_8006C6F0(1);
+    selectReflectionTexture(1);
     GXSetTexCoordGen2(1, 0, 0, 0x24, 0, 0x7D);
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
     mtx[0] = lbl_803DEEDC;
@@ -6176,8 +6176,8 @@ void fn_8007CF7C(void)
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
     extern void fn_8006CABC(f32* a, f32* b);
-    extern void fn_8006C5E4(int* out);
-    extern void fn_8006C6F0(int);
+    extern void getTextureFn_8006c5e4(int* out);
+    extern void selectReflectionTexture(int);
     extern int fn_8004C248(void);
     extern void selectTexture(int handle, int slot);
     Mtx mtx_cc;
@@ -6191,9 +6191,9 @@ void fn_8007CF7C(void)
     GXColor temp;
 
     fn_8006CABC(&fA, &fB);
-    fn_8006C6F0(0);
+    selectReflectionTexture(0);
     GXSetTexCoordGen2(0, 0, 0, 0x1e, 0, 0x7d);
-    fn_8006C5E4(&handle1);
+    getTextureFn_8006c5e4(&handle1);
     selectTexture(handle1, 1);
 
     PSMTXScale(mtx_cc, lbl_803DEEE4, lbl_803DEEE4, lbl_803DEEE4);

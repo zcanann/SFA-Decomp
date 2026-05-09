@@ -2756,8 +2756,8 @@ void fn_8006C534(u32 *p) { *p = lbl_803DCFBC; }
 void fn_8006C540(u32 *p) { *p = lbl_803DCFC0; }
 void fn_8006C5B8(u32 *p) { *p = lbl_803DCF9C; }
 void fn_8006C5CC(u32 *p) { *p = lbl_803DCFD8; }
-void fn_8006C5D8(u32 *p) { *p = lbl_803DCFDC; }
-void fn_8006C5E4(u32 *p) { *p = lbl_803DCFE0; }
+void getReflectionTexture2(u32 *p) { *p = lbl_803DCFDC; }
+void getTextureFn_8006c5e4(u32 *p) { *p = lbl_803DCFE0; }
 
 /* *p1 = lbl1; *p2 = lbl2; (f32) */
 extern f32 lbl_803DCFAC;

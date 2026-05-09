@@ -29,7 +29,7 @@ extern int FUN_80017a98();
 extern void mm_free(uint slotPoolBase);
 extern undefined4 FUN_8004812c();
 extern undefined8 FUN_80053754();
-extern void fn_80054308(void *resource);
+extern void textureFree(void *resource);
 extern int FUN_8005b024();
 extern undefined4 FUN_8005d340();
 extern undefined4 FUN_8005e1d8();
@@ -287,7 +287,7 @@ void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int freeTexture,
       tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
       if (*(u32 *)(tableTextureResources + tableOffset) != 0) {
         lbl_803DD258 = 1;
-        fn_80054308(*(void **)(tableTextureResources +
+        textureFree(*(void **)(tableTextureResources +
                                (Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT)));
         lbl_803DD258 = 0;
       }
@@ -365,7 +365,7 @@ void expgfxRemoveAll(void)
             (((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))[Expgfx_GetSlotTableIndex(slot)].
              textureOrResource != 0)) {
           lbl_803DD258 = 1;
-          fn_80054308((void *)((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))
+          textureFree((void *)((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))
                           [Expgfx_GetSlotTableIndex(slot)].textureOrResource);
           lbl_803DD258 = 0;
         }
@@ -1542,7 +1542,7 @@ void expgfx_resetAllPools(void)
         if (((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))[Expgfx_GetSlotTableIndex(slot)].
             textureOrResource != 0) {
           lbl_803DD258 = 1;
-          fn_80054308((void *)((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))
+          textureFree((void *)((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))
                           [Expgfx_GetSlotTableIndex(slot)].textureOrResource);
           lbl_803DD258 = 0;
         }
@@ -1583,7 +1583,7 @@ void expgfx_resetAllPools(void)
     lbl_803DD258 = 1;
     resource = *(void **)expgfxBase;
     if (resource != (void *)0x0) {
-      fn_80054308(resource);
+      textureFree(resource);
     }
     lbl_803DD258 = 0;
     *(int *)(expgfxBase + 0) = 0;
@@ -2076,7 +2076,7 @@ void expgfx_onMapSetup(void)
   resourceEntry = (ExpgfxResourceEntry *)(expgfxBase + EXPGFX_RESOURCE_TABLE_OFFSET);
   do {
     if (resourceEntry->resource != (void *)0x0) {
-      fn_80054308(resourceEntry->resource);
+      textureFree(resourceEntry->resource);
     }
     resourceEntry->resource = (void *)0x0;
     resourceEntry->tableKeyType = 0;

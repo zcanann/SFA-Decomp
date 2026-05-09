@@ -20,7 +20,7 @@ extern void ObjAnim_SetCurrentMove(void *obj, int mode, float val, uint flags);
 extern void ObjHits_DisableObject(void *);
 extern void ObjHits_EnableObject(void *);
 extern int ObjTrigger_IsSet(void *);
-extern void *fn_800394AC(void *obj, int idx, int flags);
+extern void *objFindTexture(void *obj, int idx, int flags);
 extern int fn_80065E50(void *obj, float x, float y, float z, void *out, int p5, int p6);
 extern void fn_8011F38C(int);
 extern void fn_8011F6F0(int);
@@ -299,11 +299,11 @@ int fn_801E71A4(void *obj, void *param2, int dispatch)
             *(s16 *)((char *)state + 0x9d0) = (s16)(*(s16 *)((char *)state + 0x9cc) >> 1);
         }
         v9d0 = *(s16 *)((char *)state + 0x9d0);
-        *(int *)fn_800394AC(obj, 8, 0) = (v9d0 - v9d0 / 10 * 10) << 8;
-        *(int *)fn_800394AC(obj, 7, 0) = (v9d0 / 10 - v9d0 / 100 * 10) << 8;
+        *(int *)objFindTexture(obj, 8, 0) = (v9d0 - v9d0 / 10 * 10) << 8;
+        *(int *)objFindTexture(obj, 7, 0) = (v9d0 / 10 - v9d0 / 100 * 10) << 8;
         slot = v9d0 / 100;
         if (slot > 9) slot = 9;
-        *(int *)fn_800394AC(obj, 6, 0) = slot << 8;
+        *(int *)objFindTexture(obj, 6, 0) = slot << 8;
     } else if (dispatch == 0x17) {
         fn_80014B78(0, &stickHi, &stickLo);
         if ((s8)stickLo < 0) {
@@ -323,11 +323,11 @@ int fn_801E71A4(void *obj, void *param2, int dispatch)
         }
         {
             u8 v = *(u8 *)((char *)state + 0x9d5);
-            *(int *)fn_800394AC(obj, 8, 0) = (v - v / 10 * 10) << 8;
-            *(int *)fn_800394AC(obj, 7, 0) = (v / 10 - v / 100 * 10) << 8;
+            *(int *)objFindTexture(obj, 8, 0) = (v - v / 10 * 10) << 8;
+            *(int *)objFindTexture(obj, 7, 0) = (v / 10 - v / 100 * 10) << 8;
             slot = v / 100;
             if (slot > 9) slot = 9;
-            *(int *)fn_800394AC(obj, 6, 0) = slot << 8;
+            *(int *)objFindTexture(obj, 6, 0) = slot << 8;
         }
         btn = getButtonsJustPressed(0);
         if ((btn & 0x200) != 0) {
