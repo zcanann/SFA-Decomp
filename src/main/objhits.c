@@ -597,19 +597,25 @@ void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double par
   local_c4 = lbl_803DF590;
   local_c0 = lbl_803DF590;
   local_bc = lbl_803DF590;
-  iVar5 = *(int *)(param_9 + 0x40) * 4;
+  iVar5 = *(int *)(param_9 + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) * 4;
   pfVar4 = ObjHits_CalcTaperedCapsuleNormal(
-      (double)*(float *)(param_9 + 0x2c),(double)*(float *)(*(int *)(param_7 + 4) + iVar5),
-      (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(param_9 + 0x44) * 4),
+      (double)*(float *)(param_9 + OBJHITS_SKELETON_HIT_AXIAL_OFFSET),
+      (double)*(float *)(*(int *)(param_7 + 4) + iVar5),
+      (double)*(float *)(*(int *)(param_7 + 4) +
+                         *(int *)(param_9 + OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET) * 4),
       (double)*(float *)(*(int *)(param_7 + 0xc) + iVar5),&local_e8,(float *)(param_9 + 8),
       (float *)(param_9 + 0x14),afStack_b8);
   Vec3_Normalize(pfVar4);
   dVar8 = (double)lbl_803DF590;
-  for (iVar5 = param_6; *(int *)(iVar5 + 0x40) != -1; iVar5 = iVar5 + 0x48) {
-    iVar1 = *(int *)(iVar5 + 0x40) * 4;
+  for (iVar5 = param_6;
+       *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) != OBJHITS_SKELETON_HIT_SENTINEL;
+       iVar5 = iVar5 + OBJHITS_SKELETON_HIT_SIZE) {
+    iVar1 = *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) * 4;
     pfVar4 = ObjHits_ProjectPointToTaperedCapsuleXZ(
-        dVar7,(double)*(float *)(iVar5 + 0x2c),(double)*(float *)(*(int *)(param_7 + 4) + iVar1),
-        (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(iVar5 + 0x44) * 4),
+        dVar7,(double)*(float *)(iVar5 + OBJHITS_SKELETON_HIT_AXIAL_OFFSET),
+        (double)*(float *)(*(int *)(param_7 + 4) + iVar1),
+        (double)*(float *)(*(int *)(param_7 + 4) +
+                           *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET) * 4),
         (double)*(float *)(*(int *)(param_7 + 0xc) + iVar1),&local_e8,(float *)(iVar5 + 8),
         (float *)(iVar5 + 0x14),afStack_a0);
     if (param_3 <= dVar8) {
@@ -618,16 +624,18 @@ void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double par
     else {
       *(float *)(iVar5 + 0x3c) = (float)((double)*(float *)(iVar5 + 0x3c) / param_3);
     }
-    *pfVar4 = *pfVar4 * *(float *)(iVar5 + 0x3c);
-    pfVar4[1] = pfVar4[1] * *(float *)(iVar5 + 0x3c);
-    pfVar4[2] = pfVar4[2] * *(float *)(iVar5 + 0x3c);
+    *pfVar4 = *pfVar4 * *(float *)(iVar5 + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
+    pfVar4[1] = pfVar4[1] * *(float *)(iVar5 + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
+    pfVar4[2] = pfVar4[2] * *(float *)(iVar5 + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
     local_7c = local_7c + *pfVar4;
     local_78 = local_78 + pfVar4[1];
     local_74 = local_74 + pfVar4[2];
-    iVar1 = *(int *)(iVar5 + 0x40) * 4;
+    iVar1 = *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) * 4;
     pfVar4 = ObjHits_CalcTaperedCapsuleNormal(
-        (double)*(float *)(iVar5 + 0x2c),(double)*(float *)(*(int *)(param_7 + 4) + iVar1),
-        (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(iVar5 + 0x44) * 4),
+        (double)*(float *)(iVar5 + OBJHITS_SKELETON_HIT_AXIAL_OFFSET),
+        (double)*(float *)(*(int *)(param_7 + 4) + iVar1),
+        (double)*(float *)(*(int *)(param_7 + 4) +
+                           *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET) * 4),
         (double)*(float *)(*(int *)(param_7 + 0xc) + iVar1),pfVar3,(float *)(iVar5 + 8),
         (float *)(iVar5 + 0x14),afStack_b8);
     Vec3_Normalize(pfVar4);
@@ -664,16 +672,20 @@ void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double par
   local_ac = lbl_803DF590;
   local_a8 = lbl_803DF590;
   local_a4 = lbl_803DF590;
-  for (; *(int *)(param_6 + 0x40) != -1; param_6 = param_6 + 0x48) {
-    iVar5 = *(int *)(param_6 + 0x40) * 4;
+  for (; *(int *)(param_6 + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) !=
+         OBJHITS_SKELETON_HIT_SENTINEL;
+       param_6 = param_6 + OBJHITS_SKELETON_HIT_SIZE) {
+    iVar5 = *(int *)(param_6 + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) * 4;
     pfVar4 = ObjHits_ProjectPointToTaperedCapsuleXZ(
-        dVar7,(double)*(float *)(param_6 + 0x2c),(double)*(float *)(*(int *)(param_7 + 4) + iVar5),
-        (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(param_6 + 0x44) * 4),
+        dVar7,(double)*(float *)(param_6 + OBJHITS_SKELETON_HIT_AXIAL_OFFSET),
+        (double)*(float *)(*(int *)(param_7 + 4) + iVar5),
+        (double)*(float *)(*(int *)(param_7 + 4) +
+                           *(int *)(param_6 + OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET) * 4),
         (double)*(float *)(*(int *)(param_7 + 0xc) + iVar5),&local_7c,(float *)(param_6 + 8),
         (float *)(param_6 + 0x14),afStack_a0);
-    *pfVar4 = *pfVar4 * *(float *)(param_6 + 0x3c);
-    pfVar4[1] = pfVar4[1] * *(float *)(param_6 + 0x3c);
-    pfVar4[2] = pfVar4[2] * *(float *)(param_6 + 0x3c);
+    *pfVar4 = *pfVar4 * *(float *)(param_6 + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
+    pfVar4[1] = pfVar4[1] * *(float *)(param_6 + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
+    pfVar4[2] = pfVar4[2] * *(float *)(param_6 + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
     local_ac = local_ac + *pfVar4;
     local_a8 = local_a8 + pfVar4[1];
     local_a4 = local_a4 + pfVar4[2];
@@ -778,19 +790,25 @@ void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double
   local_b4 = lbl_803DF590;
   local_b0 = lbl_803DF590;
   local_ac = lbl_803DF590;
-  iVar5 = *(int *)(param_9 + 0x40) * 4;
+  iVar5 = *(int *)(param_9 + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) * 4;
   pfVar4 = ObjHits_CalcTaperedCapsuleNormal(
-      (double)*(float *)(param_9 + 0x2c),(double)*(float *)(*(int *)(param_7 + 4) + iVar5),
-      (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(param_9 + 0x44) * 4),
+      (double)*(float *)(param_9 + OBJHITS_SKELETON_HIT_AXIAL_OFFSET),
+      (double)*(float *)(*(int *)(param_7 + 4) + iVar5),
+      (double)*(float *)(*(int *)(param_7 + 4) +
+                         *(int *)(param_9 + OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET) * 4),
       (double)*(float *)(*(int *)(param_7 + 0xc) + iVar5),&local_d8,(float *)(param_9 + 8),
       (float *)(param_9 + 0x14),afStack_a8);
   Vec3_Normalize(pfVar4);
   dVar8 = (double)lbl_803DF590;
-  for (iVar5 = param_6; *(int *)(iVar5 + 0x40) != -1; iVar5 = iVar5 + 0x48) {
-    iVar2 = *(int *)(iVar5 + 0x40) * 4;
+  for (iVar5 = param_6;
+       *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) != OBJHITS_SKELETON_HIT_SENTINEL;
+       iVar5 = iVar5 + OBJHITS_SKELETON_HIT_SIZE) {
+    iVar2 = *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) * 4;
     pfVar4 = ObjHits_ProjectPointToTaperedCapsule3D(
-        dVar7,(double)*(float *)(iVar5 + 0x2c),(double)*(float *)(*(int *)(param_7 + 4) + iVar2),
-        (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(iVar5 + 0x44) * 4),
+        dVar7,(double)*(float *)(iVar5 + OBJHITS_SKELETON_HIT_AXIAL_OFFSET),
+        (double)*(float *)(*(int *)(param_7 + 4) + iVar2),
+        (double)*(float *)(*(int *)(param_7 + 4) +
+                           *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET) * 4),
         (double)*(float *)(*(int *)(param_7 + 0xc) + iVar2),&local_d8,(float *)(iVar5 + 8),
         (float *)(iVar5 + 0x14),afStack_90);
     if (param_3 <= dVar8) {
@@ -799,16 +817,18 @@ void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double
     else {
       *(float *)(iVar5 + 0x3c) = (float)((double)*(float *)(iVar5 + 0x3c) / param_3);
     }
-    *pfVar4 = *pfVar4 * *(float *)(iVar5 + 0x3c);
-    pfVar4[1] = pfVar4[1] * *(float *)(iVar5 + 0x3c);
-    pfVar4[2] = pfVar4[2] * *(float *)(iVar5 + 0x3c);
+    *pfVar4 = *pfVar4 * *(float *)(iVar5 + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
+    pfVar4[1] = pfVar4[1] * *(float *)(iVar5 + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
+    pfVar4[2] = pfVar4[2] * *(float *)(iVar5 + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
     local_6c = local_6c + *pfVar4;
     local_68 = local_68 + pfVar4[1];
     local_64 = local_64 + pfVar4[2];
-    iVar2 = *(int *)(iVar5 + 0x40) * 4;
+    iVar2 = *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) * 4;
     pfVar4 = ObjHits_CalcTaperedCapsuleNormal(
-        (double)*(float *)(iVar5 + 0x2c),(double)*(float *)(*(int *)(param_7 + 4) + iVar2),
-        (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(iVar5 + 0x44) * 4),
+        (double)*(float *)(iVar5 + OBJHITS_SKELETON_HIT_AXIAL_OFFSET),
+        (double)*(float *)(*(int *)(param_7 + 4) + iVar2),
+        (double)*(float *)(*(int *)(param_7 + 4) +
+                           *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET) * 4),
         (double)*(float *)(*(int *)(param_7 + 0xc) + iVar2),pfVar3,(float *)(iVar5 + 8),
         (float *)(iVar5 + 0x14),afStack_a8);
     Vec3_Normalize(pfVar4);
@@ -843,16 +863,20 @@ void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double
   local_9c = lbl_803DF590;
   local_98 = lbl_803DF590;
   local_94 = lbl_803DF590;
-  for (; *(int *)(param_6 + 0x40) != -1; param_6 = param_6 + 0x48) {
-    iVar5 = *(int *)(param_6 + 0x40) * 4;
+  for (; *(int *)(param_6 + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) !=
+         OBJHITS_SKELETON_HIT_SENTINEL;
+       param_6 = param_6 + OBJHITS_SKELETON_HIT_SIZE) {
+    iVar5 = *(int *)(param_6 + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) * 4;
     pfVar4 = ObjHits_ProjectPointToTaperedCapsule3D(
-        dVar7,(double)*(float *)(param_6 + 0x2c),(double)*(float *)(*(int *)(param_7 + 4) + iVar5),
-        (double)*(float *)(*(int *)(param_7 + 4) + *(int *)(param_6 + 0x44) * 4),
+        dVar7,(double)*(float *)(param_6 + OBJHITS_SKELETON_HIT_AXIAL_OFFSET),
+        (double)*(float *)(*(int *)(param_7 + 4) + iVar5),
+        (double)*(float *)(*(int *)(param_7 + 4) +
+                           *(int *)(param_6 + OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET) * 4),
         (double)*(float *)(*(int *)(param_7 + 0xc) + iVar5),&local_6c,(float *)(param_6 + 8),
         (float *)(param_6 + 0x14),afStack_90);
-    *pfVar4 = *pfVar4 * *(float *)(param_6 + 0x3c);
-    pfVar4[1] = pfVar4[1] * *(float *)(param_6 + 0x3c);
-    pfVar4[2] = pfVar4[2] * *(float *)(param_6 + 0x3c);
+    *pfVar4 = *pfVar4 * *(float *)(param_6 + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
+    pfVar4[1] = pfVar4[1] * *(float *)(param_6 + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
+    pfVar4[2] = pfVar4[2] * *(float *)(param_6 + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
     local_9c = local_9c + *pfVar4;
     local_98 = local_98 + pfVar4[1];
     local_94 = local_94 + pfVar4[2];
