@@ -5,7 +5,7 @@ extern undefined4 FUN_8000a380();
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern void fn_80026E00(int param_1,int param_2,float *param_3);
-extern undefined4 fn_80097734();
+extern undefined4 objParticleFn_80097734();
 
 extern undefined4* lbl_803DCAA8;
 extern s32 lbl_80329B78[];
@@ -68,7 +68,7 @@ void dfptargetblock_update(int param_1)
     buf[3] = lbl_803E648C;
     buf[4] = lbl_803E64C4;
     buf[5] = lbl_803E648C;
-    fn_80097734((double)lbl_803E64C8,(double)lbl_803E64C4,(double)lbl_803E64C4,
+    objParticleFn_80097734((double)lbl_803E64C8,(double)lbl_803E64C4,(double)lbl_803E64C4,
                  (double)lbl_803E64B0,param_1,5,1,2,0x32,buf,0);
   }
   else {

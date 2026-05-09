@@ -30,10 +30,10 @@ extern undefined4 fn_8003B5E0();
 extern undefined4 fn_8003B8F4();
 extern undefined4 FUN_8003b540();
 extern undefined4 FUN_8003b818();
-extern undefined4 fn_80099D84();
+extern undefined4 objParticleFn_80099d84();
 extern undefined4 FUN_8008111c();
 extern undefined4 FUN_80081120();
-extern undefined4 fn_8009A1DC();
+extern undefined4 objLightFn_8009a1dc();
 extern undefined4 FUN_801695e8();
 extern undefined8 _savegpr_27();
 extern undefined4 _restgpr_27();
@@ -372,7 +372,7 @@ void fn_8016874C(undefined4 param_1,undefined4 param_2,int param_3)
                        &DAT_803ad2c8);
     if (iVar5 != 0) {
       if ((iVar5 != 0x10) && (iVar5 != 0x11)) {
-        fn_8009A1DC((double)lbl_803E30BC,puVar3,&DAT_803ad2c8,3,0);
+        objLightFn_8009a1dc((double)lbl_803E30BC,puVar3,&DAT_803ad2c8,3,0);
         (**(code **)(*lbl_803DCA8C + 0x14))(puVar3,param_3,4);
         *(char *)(param_3 + 0x354) = *(char *)(param_3 + 0x354) + -1;
         Obj_SetModelColorFadeRecursive(puVar3,0xf,200,0,0,1);
@@ -394,7 +394,7 @@ void fn_8016874C(undefined4 param_1,undefined4 param_2,int param_3)
           *(undefined *)(param_3 + 0x27b) = 1;
           *(undefined *)(param_3 + 0x27a) = 1;
           *(undefined2 *)(param_3 + 0x270) = 1;
-          fn_8009A1DC((double)lbl_803E30BC,puVar3,&DAT_803ad2c8,1,0);
+          objLightFn_8009a1dc((double)lbl_803E30BC,puVar3,&DAT_803ad2c8,1,0);
           Sfx_PlayFromObject((uint)puVar3,0x22);
           Sfx_PlayFromObject((uint)puVar3,0x3ac);
         }
@@ -408,7 +408,7 @@ void fn_8016874C(undefined4 param_1,undefined4 param_2,int param_3)
         (**(code **)(*lbl_803DDA90 + 4))(0,1,&DAT_803ad2c8,0x401,0xffffffff,&local_34);
         fn_802961FC(uVar4,2);
         (**(code **)(*lbl_803DCA8C + 0x14))(puVar3,param_3,5);
-        fn_8009A1DC((double)lbl_803E30BC,puVar3,&DAT_803ad2c8,4,0);
+        objLightFn_8009a1dc((double)lbl_803E30BC,puVar3,&DAT_803ad2c8,4,0);
         Sfx_PlayFromObject((uint)puVar3,0x255);
       }
     }
@@ -497,7 +497,7 @@ void kaldachom_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,u
     }
     fn_8003B8F4((double)lbl_803E3078,iVar1,(int)uVar3,param_3,param_4,param_5);
     if ((*(ushort *)(iVar2 + 0x400) & 0x60) != 0) {
-      fn_80099D84((double)lbl_803E3078,(double)*(float *)(iVar2 + 1000),iVar1,3,0);
+      objParticleFn_80099d84((double)lbl_803E3078,(double)*(float *)(iVar2 + 1000),iVar1,3,0);
     }
     iVar2 = *(int *)(iVar2 + 0x40c);
     ObjPath_GetPointWorldPosition(iVar1,2,iVar2 + 0x10,iVar2 + 0x14,iVar2 + 0x18,0);

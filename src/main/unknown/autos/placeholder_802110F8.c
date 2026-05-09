@@ -10,7 +10,7 @@ extern void ObjHits_SetHitVolumeSlot(void *obj, int param2, int param3, int para
 extern void fn_8008016C(void *timer);
 extern void fn_80080178(void *timer, int duration);
 extern void fn_8009A8C8(void *obj, f32 param2);
-extern void fn_8009AB70(void *obj, f32 param2, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+extern void spawnExplosion(void *obj, f32 param2, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void fn_8001CB3C(void *handle);
 
 extern f32 lbl_803E6768;
@@ -76,7 +76,7 @@ void proximitymine_resetToIdle(ProximityMineObject *obj)
     fn_8009A8C8(obj, lbl_803E676C);
     {
         f32 dist = state->triggerDistance - lbl_803E6774;
-        fn_8009AB70(obj, dist * lbl_803DC24C + lbl_803E6770, 1, 1, 0, 1, 0, 1, 0);
+        spawnExplosion(obj, dist * lbl_803DC24C + lbl_803E6770, 1, 1, 0, 1, 0, 1, 0);
     }
     ObjHitbox_SetCapsuleBounds(obj, (s32)state->triggerDistance, -5, 10);
     ObjHits_SetHitVolumeSlot(obj, 13, 1, 0);

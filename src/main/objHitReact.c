@@ -9,7 +9,7 @@ extern int Sfx_IsPlayingFromObject(int obj,u16 sfxId);
 extern void Sfx_PlayFromObject(int obj,u16 sfxId);
 extern void Resource_Release(void *handle);
 extern int *ObjList_GetObjects(undefined *param_1,undefined *param_2);
-extern void fn_8009A1DC(int obj,double scale,undefined2 *pos,u32 count,int *param_5);
+extern void objLightFn_8009a1dc(int obj,double scale,undefined2 *pos,u32 count,int *param_5);
 typedef int (*ObjAnimAdvanceObjectFirstFn)(int obj,double moveStepScale,double deltaTime,
                                            ObjAnimEventList *events);
 typedef void (*ObjAnimSetMoveObjectFirstFn)(int obj,int moveId,f32 moveProgress,int flags);
@@ -101,7 +101,7 @@ int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
         }
       }
       else {
-        fn_8009A1DC(obj,(double)gObjHitReactAltEffectScale,(undefined2 *)&effectPos.x,1,0);
+        objLightFn_8009a1dc(obj,(double)gObjHitReactAltEffectScale,(undefined2 *)&effectPos.x,1,0);
       }
     }
     if (((reactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&

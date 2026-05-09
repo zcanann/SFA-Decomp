@@ -9,7 +9,7 @@ extern int fn_8002B044(u8 *self);
 extern void ObjHits_DisableObject(u8 *obj);
 extern void gameBitIncrement(s16 bit);
 extern void GameBit_Set(int bit, int value);
-extern void fn_800999B4(u8 *obj, int a, int b, f32 f1);
+extern void itemPickupDoParticleFx(u8 *obj, int a, int b, f32 f1);
 extern void Sfx_PlayFromObject(u8 *obj, int sfxId);
 extern int ObjMsg_Pop(u8 *obj, int *outMsg, int a, int b);
 extern f32 fn_800216D0(f32 *a, f32 *b);
@@ -56,9 +56,9 @@ void ediblemushroom_update(u8 *self)
       gameBitIncrement(*(s16 *)(state + 0x134));
       GameBit_Set(0x12E, 0);
       if (*(s16 *)(self + 0x46) == 0x658) {
-        fn_800999B4(self, 0xFF, 0x28, lbl_803E52A8);
+        itemPickupDoParticleFx(self, 0xFF, 0x28, lbl_803E52A8);
       } else {
-        fn_800999B4(self, 6, 0x28, lbl_803E52A8);
+        itemPickupDoParticleFx(self, 6, 0x28, lbl_803E52A8);
       }
       Sfx_PlayFromObject(self, 0x58);
     }

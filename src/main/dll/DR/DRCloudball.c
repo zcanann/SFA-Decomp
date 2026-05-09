@@ -16,8 +16,8 @@ extern void ObjAnim_AdvanceCurrentMove(int obj, f32 phase, f32 dt, int flag);
 extern int fn_800640CC(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
 extern void fn_8002273C(int p1, int p2, int p3);
 extern f32 fn_8002166C(int *p1, int *p2);
-extern void fn_800999B4(int obj, f32 a, int b, int c);
-extern void fn_800972DC(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, int p7, int p8);
+extern void itemPickupDoParticleFx(int obj, f32 a, int b, int c);
+extern void objFn_800972dc(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, int p7, int p8);
 
 extern f32 timeDelta;
 extern u16 lbl_803E5A70;
@@ -88,7 +88,7 @@ void spscarab_update(int param_1)
     if (fn_8002166C((int *)(Obj_GetPlayerObject() + 0x18), (int *)(param_1 + 0x18))
         < lbl_803E5A80) {
         Sfx_PlayFromObject(param_1, (u16)*(s16 *)(p_b8 + 0xc));
-        fn_800999B4(param_1, lbl_803E5A84, *(s16 *)(p_b8 + 0xe), 0x28);
+        itemPickupDoParticleFx(param_1, lbl_803E5A84, *(s16 *)(p_b8 + 0xe), 0x28);
         *(u16 *)(param_1 + 0xb0) = *(u16 *)(param_1 + 0xb0) | 0x8000;
         *(s16 *)(param_1 + 0x6) = *(s16 *)(param_1 + 0x6) | 0x4000;
 
@@ -103,7 +103,7 @@ void spscarab_update(int param_1)
 
     if ((*(u16 *)(param_1 + 0xb0) & 0x800) != 0) {
         if (*(s16 *)(p_b8 + 0x10) != 0) {
-            fn_800972DC(param_1, 5, lbl_803E5A84, (u8)*(s16 *)(p_b8 + 0x10), 1, 0x14,
+            objFn_800972dc(param_1, 5, lbl_803E5A84, (u8)*(s16 *)(p_b8 + 0x10), 1, 0x14,
                         lbl_803E5A88, 0, 0);
         }
     }
