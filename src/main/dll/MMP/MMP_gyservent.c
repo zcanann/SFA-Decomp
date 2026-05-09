@@ -9,7 +9,7 @@ extern void mtx44Transpose(void *m, void *out);
 extern void Matrix_TransformPoint(void *mtx, float x, float y, float z, float *ox, float *oy, float *oz);
 extern void setMatrixFromObjectPos(void *out, void *vec);
 extern void OSReport(const char *fmt, ...);
-extern void fn_801993B0(void *obj, int param_2, int triggerState, int distanceSquared);
+extern void objInterpretSeq(void *obj, int param_2, int triggerState, int distanceSquared);
 
 extern char lbl_8032253C[];
 extern f64 lbl_803E40D0;
@@ -23,11 +23,11 @@ extern f32 lbl_803E40E8;
 /*
  * --INFO--
  *
- * Function: fn_80198FA4
+ * Function: objFn_80198fa4
  * EN v1.0 Address: 0x80198FA4
  * EN v1.0 Size: 484b
  */
-void fn_80198FA4(s16 *param_1, void *param_2)
+void objFn_80198fa4(s16 *param_1, void *param_2)
 {
     void *state;
     s16 vec[3];
@@ -82,11 +82,11 @@ void fn_80198FA4(s16 *param_1, void *param_2)
 /*
  * --INFO--
  *
- * Function: fn_80199188
+ * Function: objSeqMoveFn_80199188
  * EN v1.0 Address: 0x80199188
  * EN v1.0 Size: 356b
  */
-void fn_80199188(void *param_1, int param_2)
+void objSeqMoveFn_80199188(void *param_1, int param_2)
 {
     f32 fVar1;
     f32 fVar2;
@@ -148,17 +148,17 @@ void fn_80199188(void *param_1, int param_2)
         cVar8 = -2;
     }
 end:
-    fn_801993B0(param_1, param_2, (int)cVar8, (int)fVar6);
+    objInterpretSeq(param_1, param_2, (int)cVar8, (int)fVar6);
 }
 
 /*
  * --INFO--
  *
- * Function: fn_801992EC
+ * Function: objSeqFn_801992ec
  * EN v1.0 Address: 0x801992EC
  * EN v1.0 Size: 196b
  */
-void fn_801992EC(void *param_1, int param_2)
+void objSeqFn_801992ec(void *param_1, int param_2)
 {
     void *state;
     f32 dx0, dy0, dz0, d0;
@@ -184,7 +184,7 @@ void fn_801992EC(void *param_1, int param_2)
     } else {
         cat = (d0 < r) ? -1 : -2;
     }
-    fn_801993B0(param_1, param_2, (int)cat, (int)d1);
+    objInterpretSeq(param_1, param_2, (int)cat, (int)d1);
 }
 
 #pragma scheduling reset

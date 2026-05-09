@@ -10,7 +10,7 @@ extern void ObjHits_EnableObject(void *obj);
 extern int fn_80080150(void *timer);
 extern void storeZeroToFloatParam(void *timer);
 extern void s16toFloat(void *timer,int duration);
-extern int fn_800801A8(void *timer);
+extern int timerCountDown(void *timer);
 
 extern f32 lbl_803E6760;
 
@@ -124,7 +124,7 @@ void crfueltank_update(CrFuelTankObject *obj)
   def = obj->def;
   state = obj->state;
   if (fn_80080150(state->timer) != 0) {
-    if (fn_800801A8(state->timer) != 0) {
+    if (timerCountDown(state->timer) != 0) {
       ObjHits_EnableObject(obj);
       obj->flags = (s16)(obj->flags & ~0x4000);
       obj->fadeTimer = 0xff;

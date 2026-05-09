@@ -1217,19 +1217,19 @@ extern s16 seqGlobal1;
 extern u8 seqGlobal3;
 u8 getCurSeqNo(void) { return curSeqNo; }
 u32 fn_80080234(void) { return lbl_803DD0FC; }
-void fn_80080B9C(s16 x) { seqGlobal2 = x; }
-s16 fn_80080BA4(void) { return seqGlobal2; }
-void fn_80080BAC(s16 x) { seqGlobal1 = x; }
-s16 fn_80080BB4(void) { return seqGlobal1; }
-void fn_80080BBC(u8 x) { seqGlobal3 = x; }
-u8 fn_80080BC4(void) { return seqGlobal3; }
+void ObjSeq_setGlobal2(s16 x) { seqGlobal2 = x; }
+s16 ObjSeq_getGlobal2(void) { return seqGlobal2; }
+void ObjSeq_setGlobal1(s16 x) { seqGlobal1 = x; }
+s16 ObjSeq_getGlobal1(void) { return seqGlobal1; }
+void ObjSeq_setGlobal3(u8 x) { seqGlobal3 = x; }
+u8 ObjSeq_getGlobal3(void) { return seqGlobal3; }
 
 /* Pattern wrappers. */
 extern u32 lbl_803DB700;
 void cardSetStatusNoCard2(void) { lbl_803DB700 = 0x3; }
 
 /* lbl = N (byte) */
-void fn_800801F8(void) { curSeqNo = 0x0; }
+void clearCurSeqNo(void) { curSeqNo = 0x0; }
 
 extern f32 lbl_803DEFA0;
 void storeZeroToFloatParam(f32 *p) { *p = lbl_803DEFA0; }
@@ -1239,6 +1239,6 @@ extern u32 lbl_803DB714;
 extern u32 lbl_803DB71C;
 #pragma scheduling off
 #pragma peephole off
-void fn_800801E8(void) { u32 v = -0x1; lbl_803DB714 = v; lbl_803DB71C = v; }
+void seqClearTaskTexts(void) { u32 v = -0x1; lbl_803DB714 = v; lbl_803DB71C = v; }
 #pragma peephole reset
 #pragma scheduling reset
