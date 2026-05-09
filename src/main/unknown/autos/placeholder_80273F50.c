@@ -7,7 +7,7 @@ extern void sndEnd(void);
 /*
  * Insert a scene/sample-list entry, keeping the 12-byte table sorted by id.
  */
-extern u8 lbl_803C4278[];
+extern u8 dataKeymapTable[];
 extern u16 dataLayerNum;
 
 int fn_80273D2C(u16 key, void *value, u16 count)
@@ -21,13 +21,13 @@ int fn_80273D2C(u16 key, void *value, u16 count)
     sndBegin();
     used = dataLayerNum;
     index = 0;
-    for (entry = (u32 *)(lbl_803C4278 + 0x800);
+    for (entry = (u32 *)(dataKeymapTable + 0x800);
          (index < (int)used) && (*(u16 *)(entry + 1) < key); entry += 3) {
         index++;
     }
     if (index < (int)used) {
-        if (key == *(u16 *)(lbl_803C4278 + 0x804 + index * 0xc)) {
-            (*(u16 *)(lbl_803C4278 + 0x808 + index * 0xc))++;
+        if (key == *(u16 *)(dataKeymapTable + 0x804 + index * 0xc)) {
+            (*(u16 *)(dataKeymapTable + 0x808 + index * 0xc))++;
             sndEnd();
             return 0;
         }
@@ -36,7 +36,7 @@ int fn_80273D2C(u16 key, void *value, u16 count)
             return 0;
         }
         moveCount = used - index;
-        entry = (u32 *)(lbl_803C4278 + 0x800 + (used - 1) * 0xc);
+        entry = (u32 *)(dataKeymapTable + 0x800 + (used - 1) * 0xc);
         if (index <= (int)(used - 1)) {
             batches = moveCount >> 3;
             if (batches != 0) {
@@ -88,10 +88,10 @@ int fn_80273D2C(u16 key, void *value, u16 count)
 
 insert:
     dataLayerNum++;
-    *(u16 *)(lbl_803C4278 + 0x804 + index * 0xc) = key;
-    *(void **)(lbl_803C4278 + 0x800 + index * 0xc) = value;
-    *(u16 *)(lbl_803C4278 + 0x806 + index * 0xc) = count;
-    *(u16 *)(lbl_803C4278 + 0x808 + index * 0xc) = 1;
+    *(u16 *)(dataKeymapTable + 0x804 + index * 0xc) = key;
+    *(void **)(dataKeymapTable + 0x800 + index * 0xc) = value;
+    *(u16 *)(dataKeymapTable + 0x806 + index * 0xc) = count;
+    *(u16 *)(dataKeymapTable + 0x808 + index * 0xc) = 1;
     sndEnd();
     return 1;
 }
@@ -111,7 +111,7 @@ int fn_80273F74(s16 key)
     sndBegin();
     used = dataLayerNum;
     index = 0;
-    for (entry = (u32 *)(lbl_803C4278 + 0x800);
+    for (entry = (u32 *)(dataKeymapTable + 0x800);
          ((int)index < (int)used) && (key != *(s16 *)(entry + 1)); entry += 3) {
         index++;
     }
@@ -119,8 +119,8 @@ int fn_80273F74(s16 key)
         sndEnd();
         return 0;
     }
-    refCount = *(s16 *)(lbl_803C4278 + 0x808 + index * 0xc);
-    *(s16 *)(lbl_803C4278 + 0x808 + index * 0xc) = refCount - 1;
+    refCount = *(s16 *)(dataKeymapTable + 0x808 + index * 0xc);
+    *(s16 *)(dataKeymapTable + 0x808 + index * 0xc) = refCount - 1;
     if ((s16)(refCount - 1) != 0) {
         sndEnd();
         return 0;
@@ -128,7 +128,7 @@ int fn_80273F74(s16 key)
 
     next = index + 1;
     moveCount = used - next;
-    entry = (u32 *)(lbl_803C4278 + 0x800 + next * 0xc);
+    entry = (u32 *)(dataKeymapTable + 0x800 + next * 0xc);
     if (next < (int)used) {
         used = moveCount >> 3;
         if (used != 0) {
@@ -183,7 +183,7 @@ remove:
 /*
  * Insert a keygroup/sample indirection entry, keeping the table sorted by id.
  */
-extern u8 lbl_803C0278[];
+extern u8 dataCurveTable[];
 extern u16 dataCurveNum;
 extern void sndBegin(void);
 extern void sndEnd(void);
@@ -199,14 +199,14 @@ int fn_80274140(u16 key, void *value)
     sndBegin();
     used = dataCurveNum;
     index = 0;
-    for (entry = (u32 *)lbl_803C0278;
+    for (entry = (u32 *)dataCurveTable;
          (index < (int)used) && (*(u16 *)(entry + 1) < key); entry += 2) {
         index++;
     }
     if (index < (int)used) {
-        if (key == *(u16 *)(lbl_803C0278 + 4 + index * 8)) {
+        if (key == *(u16 *)(dataCurveTable + 4 + index * 8)) {
             sndEnd();
-            (*(u16 *)(lbl_803C0278 + 6 + index * 8))++;
+            (*(u16 *)(dataCurveTable + 6 + index * 8))++;
             return 0;
         }
         if (used > 0x7ff) {
@@ -214,7 +214,7 @@ int fn_80274140(u16 key, void *value)
             return 0;
         }
         moveCount = used - index;
-        entry = (u32 *)(lbl_803C0278 + (used - 1) * 8);
+        entry = (u32 *)(dataCurveTable + (used - 1) * 8);
         if (index <= (int)(used - 1)) {
             batches = moveCount >> 3;
             if (batches != 0) {
@@ -257,9 +257,9 @@ int fn_80274140(u16 key, void *value)
 
 insert:
     dataCurveNum++;
-    *(u16 *)(lbl_803C0278 + 4 + index * 8) = key;
-    *(void **)(lbl_803C0278 + index * 8) = value;
-    *(u16 *)(lbl_803C0278 + 6 + index * 8) = 1;
+    *(u16 *)(dataCurveTable + 4 + index * 8) = key;
+    *(void **)(dataCurveTable + index * 8) = value;
+    *(u16 *)(dataCurveTable + 6 + index * 8) = 1;
     sndEnd();
     return 1;
 }
@@ -279,7 +279,7 @@ int fn_80274338(s16 key)
     sndBegin();
     used = dataCurveNum;
     index = 0;
-    for (entry = (u32 *)lbl_803C0278;
+    for (entry = (u32 *)dataCurveTable;
          ((int)index < (int)used) && (key != *(s16 *)(entry + 1)); entry += 2) {
         index++;
     }
@@ -287,8 +287,8 @@ int fn_80274338(s16 key)
         sndEnd();
         return 0;
     }
-    refCount = *(s16 *)(lbl_803C0278 + 6 + index * 8);
-    *(s16 *)(lbl_803C0278 + 6 + index * 8) = refCount - 1;
+    refCount = *(s16 *)(dataCurveTable + 6 + index * 8);
+    *(s16 *)(dataCurveTable + 6 + index * 8) = refCount - 1;
     if ((s16)(refCount - 1) != 0) {
         sndEnd();
         return 0;
@@ -296,7 +296,7 @@ int fn_80274338(s16 key)
 
     next = index + 1;
     moveCount = used - next;
-    entry = (u32 *)(lbl_803C0278 + next * 8);
+    entry = (u32 *)(dataCurveTable + next * 8);
     if (next < (int)used) {
         used = moveCount >> 3;
         if (used != 0) {
@@ -897,8 +897,8 @@ int audioFindKeymapCb(void *a, void *b)
  */
 extern void *sndBSearch(void *key, void *base, u16 count, u32 stride,
                         int (*cmp)(void *a, void *b));
-extern u8 lbl_803C0278[];
-extern u8 lbl_803C4278[];
+extern u8 dataCurveTable[];
+extern u8 dataKeymapTable[];
 extern u8 lbl_803C5678[];
 extern u16 dataCurveNum;
 extern u16 dataKeymapNum;
@@ -913,7 +913,7 @@ extern void *dataGetLayer_result;
 void *dataGetCurve(u16 key)
 {
     *(u16 *)(dataGetCurve_key + 4) = key;
-    dataGetCurve_result = sndBSearch(dataGetCurve_key, lbl_803C0278, dataCurveNum, 8, audioFindKeymapCb);
+    dataGetCurve_result = sndBSearch(dataGetCurve_key, dataCurveTable, dataCurveNum, 8, audioFindKeymapCb);
     if (dataGetCurve_result == 0) {
         return 0;
     }
@@ -926,7 +926,7 @@ void *dataGetCurve(u16 key)
 void *dataGetKeymap(u16 key)
 {
     *(u16 *)(dataGetKeymap_key + 4) = key;
-    dataGetKeymap_result = sndBSearch(dataGetKeymap_key, lbl_803C4278, dataKeymapNum, 8, audioFindKeymapCb);
+    dataGetKeymap_result = sndBSearch(dataGetKeymap_key, dataKeymapTable, dataKeymapNum, 8, audioFindKeymapCb);
     if (dataGetKeymap_result == 0) {
         return 0;
     }
@@ -953,7 +953,7 @@ void *dataGetLayer(u16 key, u16 *outCount)
 
     *(u16 *)(searchKey + 4) = key;
     dataGetLayer_result =
-        sndBSearch(searchKey, lbl_803C4278 + 0x800, dataLayerNum, 0xc, fn_80275118);
+        sndBSearch(searchKey, dataKeymapTable + 0x800, dataLayerNum, 0xc, fn_80275118);
     if (dataGetLayer_result == 0) {
         return 0;
     }

@@ -18,7 +18,7 @@ extern void hwSetVolume(int slot, undefined4 mode, f32 front, f32 left, f32 righ
                         undefined4 auxB);
 
 extern u8 lbl_803BD150[];
-extern u8 lbl_803BFC78[];
+extern u8 dataKeymapTable[];
 extern u8 synthJobTable[];
 extern u32 synthFlags;
 extern u16 dataKeymapNum;
@@ -88,10 +88,12 @@ done:
 
 void synthRefreshJobVolumes(void)
 {
-    u32 i;
     u8 *job;
+    u32 i;
+    f32 volumeScale;
 
     sndBegin();
+    volumeScale = lbl_803E77D8;
     job = synthJobTable;
     for (i = 0; i < lbl_803BD150[0x210]; i++) {
         if (job[8] != 0) {
@@ -104,8 +106,8 @@ void synthRefreshJobVolumes(void)
                 job[0x57] = 0;
             }
             if (job[8] != 3) {
-                hwSetVolume(*(u32 *)(job + 0x48), 0, lbl_803E77D8 * job[0x55],
-                            lbl_803E77D8 * job[0x58], lbl_803E77D8 * job[0x59],
+                hwSetVolume(*(u32 *)(job + 0x48), 0, volumeScale * job[0x55],
+                            volumeScale * job[0x58], volumeScale * job[0x59],
                             job[0x56] << 0x10, job[0x57] << 0x10);
             }
         }
@@ -119,13 +121,15 @@ int dataAddKeymapRef(u32 keymapId, void *data)
     DataKeymapRef *table;
     DataKeymapRef *entry;
     u16 count;
+    u32 moveCount;
+    u32 batches;
+    u32 *move;
     int index;
-    int moveIndex;
     u16 key;
 
     sndBegin();
     count = dataKeymapNum;
-    table = (DataKeymapRef *)(lbl_803BFC78 + 0x4600);
+    table = (DataKeymapRef *)dataKeymapTable;
     key = keymapId;
     entry = table;
     index = 0;
@@ -144,13 +148,44 @@ int dataAddKeymapRef(u32 keymapId, void *data)
             sndEnd();
             return 0;
         }
-        moveIndex = count - 1;
-        if (moveIndex >= index) {
+        moveCount = count - index;
+        move = (u32 *)(table + (count - 1));
+        if (index <= (int)(count - 1)) {
+            batches = moveCount >> 3;
+            if (batches != 0) {
+                do {
+                    move[2] = move[0];
+                    move[3] = move[1];
+                    move[0] = move[-2];
+                    move[1] = move[-1];
+                    move[-2] = move[-4];
+                    move[-1] = move[-3];
+                    move[-4] = move[-6];
+                    move[-3] = move[-5];
+                    move[-6] = move[-8];
+                    move[-5] = move[-7];
+                    move[-8] = move[-10];
+                    move[-7] = move[-9];
+                    move[-10] = move[-12];
+                    move[-9] = move[-11];
+                    move[-12] = move[-14];
+                    move[-11] = move[-13];
+                    move -= 0x10;
+                    batches--;
+                } while (batches != 0);
+                moveCount &= 7;
+                if (moveCount == 0) {
+                    goto insert;
+                }
+            }
             do {
-                table[moveIndex + 1] = table[moveIndex];
-                moveIndex--;
-            } while (moveIndex >= index);
+                move[2] = move[0];
+                move[3] = move[1];
+                move -= 2;
+                moveCount--;
+            } while (moveCount != 0);
         }
+insert:
         dataKeymapNum++;
     } else {
         if (count >= 0x100) {
@@ -177,7 +212,7 @@ int dataRemoveKeymapRef(u32 keymapId)
 
     sndBegin();
     count = dataKeymapNum;
-    table = (DataKeymapRef *)(lbl_803BFC78 + 0x4600);
+    table = (DataKeymapRef *)dataKeymapTable;
     keymapId &= 0xffff;
     entry = table;
     index = 0;
