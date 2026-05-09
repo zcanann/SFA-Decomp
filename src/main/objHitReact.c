@@ -21,8 +21,8 @@ extern char sObjHitReactResetString[7];
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern f32 lbl_803DE910;
-extern f32 lbl_803DE918;
+extern f32 gObjHitsScalarZero;
+extern f32 gObjHitsScalarOne;
 extern f32 gObjHitReactAltEffectScale;
 extern int gObjHitReactResetObjectCount;
 extern int *gObjHitReactResetObjects;
@@ -67,7 +67,7 @@ int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
     ObjAnimBank *bank = ObjAnim_GetActiveBank((ObjAnimComponent *)obj);
     hitPos[0] = hitPos[0] + playerMapOffsetX;
     hitPos[2] = hitPos[2] + playerMapOffsetZ;
-    effectPos.scale = lbl_803DE918;
+    effectPos.scale = gObjHitsScalarOne;
     effectPos.z = 0;
     effectPos.y = 0;
     effectPos.x = 0;
@@ -104,7 +104,7 @@ int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
     if (((reactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&
         (reactionEntries->reactionAnim > OBJHITREACT_NO_REACTION_ANIM)) {
       ((ObjAnimSetMoveObjectFirstFn)ObjAnim_SetCurrentMove)
-          (obj,(int)reactionEntries->reactionAnim,lbl_803DE910,0);
+          (obj,(int)reactionEntries->reactionAnim,gObjHitsScalarZero,0);
       *reactionStepScale = reactionEntries->cooldown;
       reactionState = OBJHITREACT_REACTION_STATE_ACTIVE;
     }

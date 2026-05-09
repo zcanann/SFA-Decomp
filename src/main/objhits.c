@@ -51,8 +51,8 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803DC078;
 extern f32 lbl_803DC0B0;
 extern f32 lbl_803DCBE8;
-extern f32 lbl_803DE910;
-extern f32 lbl_803DE918;
+extern f32 gObjHitsScalarZero;
+extern f32 gObjHitsScalarOne;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803DF590;
@@ -888,9 +888,9 @@ float *ObjHits_ProjectPointToTaperedCapsuleXZ(float pointRadius, float axial, fl
     float dir[3];
     float surface[3];
 
-    if (axial < lbl_803DE910) {
+    if (axial < gObjHitsScalarZero) {
         out[0] = point[0] - base[0];
-        out[1] = lbl_803DE910;
+        out[1] = gObjHitsScalarZero;
         out[2] = point[2] - base[2];
         Vec3_Normalize(out);
         pointRadius = pointRadius + baseRadius;
@@ -904,7 +904,7 @@ float *ObjHits_ProjectPointToTaperedCapsuleXZ(float pointRadius, float axial, fl
     }
     if (axial > length) {
         out[0] = point[0] - tip[0];
-        out[1] = lbl_803DE910;
+        out[1] = gObjHitsScalarZero;
         out[2] = point[2] - tip[2];
         Vec3_Normalize(out);
         pointRadius = pointRadius + tipRadius;
@@ -919,13 +919,13 @@ float *ObjHits_ProjectPointToTaperedCapsuleXZ(float pointRadius, float axial, fl
     dir[0] = tip[0] - base[0];
     dir[1] = tip[1] - base[1];
     dir[2] = tip[2] - base[2];
-    invHalfLength = lbl_803DE918 / length;
+    invHalfLength = gObjHitsScalarOne / length;
     dir[0] = dir[0] * invHalfLength;
     dir[1] = dir[1] * invHalfLength;
     dir[2] = dir[2] * invHalfLength;
     Vec3_ScaleAdd(axial, base, dir, surface);
     out[0] = point[0] - surface[0];
-    out[1] = lbl_803DE910;
+    out[1] = gObjHitsScalarZero;
     out[2] = point[2] - surface[2];
     Vec3_Normalize(out);
     pointRadius = (tipRadius - baseRadius) * (axial / length) + (baseRadius + pointRadius);
@@ -961,7 +961,7 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(float pointRadius, float axial, fl
     float dir[3];
     float surface[3];
 
-    if (axial < lbl_803DE910) {
+    if (axial < gObjHitsScalarZero) {
         out[0] = point[0] - base[0];
         out[1] = point[1] - base[1];
         out[2] = point[2] - base[2];
@@ -992,7 +992,7 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(float pointRadius, float axial, fl
     dir[0] = tip[0] - base[0];
     dir[1] = tip[1] - base[1];
     dir[2] = tip[2] - base[2];
-    invHalfLength = lbl_803DE918 / length;
+    invHalfLength = gObjHitsScalarOne / length;
     dir[0] = dir[0] * invHalfLength;
     dir[1] = dir[1] * invHalfLength;
     dir[2] = dir[2] * invHalfLength;
@@ -1041,7 +1041,7 @@ float *ObjHits_CalcTaperedCapsuleNormal(float axial,float baseRadius,float tipRa
   float cross[3];
   float surface[3];
 
-  if (axial <= lbl_803DE910) {
+  if (axial <= gObjHitsScalarZero) {
     *out = *point - *tip;
     out[1] = point[1] - tip[1];
     out[2] = point[2] - tip[2];
@@ -1067,7 +1067,7 @@ float *ObjHits_CalcTaperedCapsuleNormal(float axial,float baseRadius,float tipRa
     normal[1] = point[1] - surface[1];
     normal[2] = point[2] - surface[2];
     Vec3_Normalize(normal);
-    if (radiusDelta == lbl_803DE910) {
+    if (radiusDelta == gObjHitsScalarZero) {
       out[0] = normal[0];
       out[1] = normal[1];
       out[2] = normal[2];
@@ -1079,7 +1079,7 @@ float *ObjHits_CalcTaperedCapsuleNormal(float axial,float baseRadius,float tipRa
       axisDir[2] = axisDir[2] * axial;
       Vec3_ScaleAdd(axisDir,normal,radiusOffset,blended);
       Vec3_Normalize(blended);
-      invAxial = lbl_803DE918 / axial;
+      invAxial = gObjHitsScalarOne / axial;
       axisDir[0] = axisDir[0] * invAxial;
       axisDir[1] = axisDir[1] * invAxial;
       axisDir[2] = axisDir[2] * invAxial;
@@ -1130,7 +1130,7 @@ uint ObjHits_TestTaperedCapsuleXZ(float radiusA, float radiusB, float radiusC, f
         *sumR = r;
         return *dist2 <= r * r;
     }
-    if (*axial < lbl_803DE910) {
+    if (*axial < gObjHitsScalarZero) {
         *dist2 = dx * dx + dz * dz;
         r = radiusA + radiusB;
         *sumR = r;
@@ -1183,7 +1183,7 @@ uint ObjHits_TestTaperedCapsule3D(float radiusA, float radiusB, float radiusC, f
         *sumR = r;
         return *dist2 <= r * r;
     }
-    if (*axial < lbl_803DE910) {
+    if (*axial < gObjHitsScalarZero) {
         *dist2 = dz * dz + (dx * dx + dy * dy);
         r = radiusA + radiusB;
         *sumR = r;
@@ -1344,7 +1344,7 @@ void ObjHitbox_UpdateRotatedBounds(short *param_1,int param_2)
     else {
       local_28.z = -param_1[2];
     }
-    local_28.scale = lbl_803DE918;
+    local_28.scale = gObjHitsScalarOne;
     local_28.radiusX = -*(float *)(param_1 + 0xc);
     local_28.radiusY = -*(float *)(param_1 + 0xe);
     local_28.radiusZ = -*(float *)(param_1 + 0x10);
@@ -1362,7 +1362,7 @@ void ObjHitbox_UpdateRotatedBounds(short *param_1,int param_2)
     else {
       local_28.z = param_1[2];
     }
-    local_28.scale = lbl_803DE918;
+    local_28.scale = gObjHitsScalarOne;
     local_28.radiusX = *(float *)(param_1 + 0xc);
     local_28.radiusY = *(float *)(param_1 + 0xe);
     local_28.radiusZ = *(float *)(param_1 + 0x10);
