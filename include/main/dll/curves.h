@@ -14,6 +14,9 @@
 typedef struct RomCurveDef {
   u8 pad00[ROMCURVE_ID_OFFSET];
   u32 id;
+  u8 pad18[ROMCURVE_LINK_FLAGS_OFFSET - 0x18];
+  s8 linkFlags;
+  u32 linkIds[ROMCURVE_LINK_COUNT];
 } RomCurveDef;
 
 typedef struct RomCurvePoint {

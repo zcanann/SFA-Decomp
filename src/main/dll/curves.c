@@ -2252,6 +2252,7 @@ f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment)
 #pragma peephole off
 int RomCurve_getRandomBlockedLink(int param_1,int param_2)
 {
+  RomCurveDef *curve;
   int link;
   int count;
   uint mask;
@@ -2261,10 +2262,11 @@ int RomCurve_getRandomBlockedLink(int param_1,int param_2)
 
   count = 0;
   mask = 1;
+  curve = (RomCurveDef *)param_1;
 
-  for (i = 0; i < 4; i = i + 1) {
-    link = *(int *)(param_1 + 0x1c + i * 4);
-    if ((-1 < link) && ((*(char *)(param_1 + 0x1b) & mask) != 0) && (link != param_2)) {
+  for (i = 0; i < ROMCURVE_LINK_COUNT; i = i + 1) {
+    link = curve->linkIds[i];
+    if ((-1 < link) && ((curve->linkFlags & mask) != 0) && (link != param_2)) {
       local_18[count++] = link;
     }
     mask = mask << 1;
@@ -2297,6 +2299,7 @@ int RomCurve_getRandomBlockedLink(int param_1,int param_2)
 #pragma peephole off
 int RomCurve_getRandomUnblockedLink(int param_1,int param_2)
 {
+  RomCurveDef *curve;
   int link;
   int count;
   uint mask;
@@ -2306,10 +2309,11 @@ int RomCurve_getRandomUnblockedLink(int param_1,int param_2)
 
   count = 0;
   mask = 1;
+  curve = (RomCurveDef *)param_1;
 
-  for (i = 0; i < 4; i = i + 1) {
-    link = *(int *)(param_1 + 0x1c + i * 4);
-    if ((-1 < link) && ((*(char *)(param_1 + 0x1b) & mask) == 0) && (link != param_2)) {
+  for (i = 0; i < ROMCURVE_LINK_COUNT; i = i + 1) {
+    link = curve->linkIds[i];
+    if ((-1 < link) && ((curve->linkFlags & mask) == 0) && (link != param_2)) {
       local_18[count++] = link;
     }
     mask = mask << 1;
