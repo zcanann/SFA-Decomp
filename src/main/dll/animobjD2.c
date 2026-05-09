@@ -12,7 +12,7 @@ extern int randomGetRange(int lo, int hi);
 extern f32 __ieee754_rem_pio2(int angle);
 extern f32 fn_8029397C(int angle);
 extern int trickyFn_8013b368(void *p1, void *p2, f32 f);
-extern void fn_80148B78(const char *fmt, ...);
+extern void trickyReportError(const char *fmt, ...);
 
 extern f32 lbl_803E23F8;
 extern f32 lbl_803E24D4;
@@ -50,7 +50,7 @@ fail:
     return NULL;
 }
 
-void fn_8013EF8C(void *p1, void *p2) {
+void trickyFn_8013ef8c(void *p1, void *p2) {
     void *p_24 = *(void **)((u8 *)p2 + 0x24);
     f32 dx = *(f32 *)((u8 *)p_24 + 0x18) - *(f32 *)((u8 *)p1 + 0x18);
     f32 dz = *(f32 *)((u8 *)p_24 + 0x20) - *(f32 *)((u8 *)p1 + 0x20);
@@ -87,6 +87,6 @@ void fn_8013EF8C(void *p1, void *p2) {
         lbl_803E24D4 * fn_8029397C((u16)*(s32 *)((u8 *)p2 + 0x704));
 
     if (trickyFn_8013b368(p1, p2, lbl_803E2488) == 0) {
-        fn_80148B78(sTrickyShouldNeverStopCirclingError);
+        trickyReportError(sTrickyShouldNeverStopCirclingError);
     }
 }

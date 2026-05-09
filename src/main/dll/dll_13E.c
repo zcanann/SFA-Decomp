@@ -12,11 +12,11 @@ extern u8 *Obj_GetPlayerObject(void);
 extern u8 *getTrickyObject(void);
 extern int GameBit_Get(int bit);
 extern void Obj_FreeObject(u8 *obj);
-extern u8 fn_80179A2C(u8 *obj);
+extern u8 trickyBallMove(u8 *obj);
 extern int buttonGetDisabled(int unused);
 extern int ObjTrigger_IsSet(u8 *obj);
 extern void ObjHits_DisableObject(u8 *obj);
-extern void fn_801793B8(u8 *obj, u8 *state);
+extern void trickyBallFn_801793b8(u8 *obj, u8 *state);
 
 /*
  * --INFO--
@@ -57,10 +57,10 @@ void sidekickball_update(u8 *self)
 
   switch ((s8)state[0x274]) {
   case 0:
-    fn_801793B8(self, state);
+    trickyBallFn_801793b8(self, state);
     break;
   case 1:
-    fn_80179A2C(self);
+    trickyBallMove(self);
     /* fallthrough */
   case 2:
     self[0xAF] = (u8)(self[0xAF] & 0xF7);
@@ -79,7 +79,7 @@ void sidekickball_update(u8 *self)
     }
     break;
   case 3:
-    state[0x274] = fn_80179A2C(self);
+    state[0x274] = trickyBallMove(self);
     return;
   case 5:
     *(f32 *)(state + 0x26C) = *(f32 *)(state + 0x26C) + timeDelta;

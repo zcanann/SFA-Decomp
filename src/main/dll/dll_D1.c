@@ -18,7 +18,7 @@ extern int getAngle(float x, float z);
 extern void objAudioFn_800393f8(void *obj, void *p2, int p3, int p4, int p5, int p6);
 extern void objAnimFn_8013a3f0(void *obj, int p2, float p3, int p4);
 extern void fn_80139930(void *obj, s16 angle);
-extern void fn_8017804C(void *obj);
+extern void objSetAnimSpeedTo1(void *obj);
 
 extern char lbl_8031D2E8[];
 
@@ -31,11 +31,11 @@ extern f32 lbl_803E24D0;
 /*
  * --INFO--
  *
- * Function: fn_8013DC88
+ * Function: trickyGrowl
  * EN v1.0 Address: 0x8013DC88
  * EN v1.0 Size: 1096b
  */
-void fn_8013DC88(void *param_1, void *param_2)
+void trickyGrowl(void *param_1, void *param_2)
 {
     void *state;
     int i;
@@ -113,7 +113,7 @@ void fn_8013DC88(void *param_1, void *param_2)
             *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) & ~0x800;
             *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) | 0x1000;
             for (i = 0, slot = (void **)param_2; i < 7; slot++, i++) {
-                fn_8017804C(slot[0x700 / 4]);
+                objSetAnimSpeedTo1(slot[0x700 / 4]);
             }
             Sfx_RemoveLoopedObjectSound(param_1, 0x3dc);
             state = *(void **)((char *)param_1 + 0xb8);

@@ -3598,7 +3598,7 @@ void Credits_initialise(void)
 /* EN v1.0 0x80138F14  size: 100b  GameBit-gated bit toggle on
  * obj->_b8->_54: requires GameBit_Get(0x4E4); sets bit 0x10000 then
  * checks bit 0x10. Returns 1 only when the post-OR check passes. */
-int fn_80138F14(u8* obj)
+int trickyFn_80138f14(u8* obj)
 {
     u8* b = *(u8**)(obj + 0xb8);
     if (GameBit_Get(0x4E4) == 0) return 0;
@@ -3788,7 +3788,7 @@ void titleScreenFn_801368c4(u8 arg)
 
 /* EN v1.0 0x80138EF8  size: 28b  Set bit 0x80000000 of obj->_b8->_54
  * and store lbl_803E2408 into obj->_b8->_808. */
-void fn_80138EF8(u8* obj)
+void trickyImpress(u8* obj)
 {
     u8* b = *(u8**)(obj + 0xb8);
     *(u32*)(b + 0x54) |= 0x80000000;

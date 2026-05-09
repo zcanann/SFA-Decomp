@@ -24,11 +24,11 @@ extern void trickyDebugPrint(char *msg);
 /*
  * --INFO--
  *
- * Function: fn_8013D8F0
+ * Function: trickyFn_8013d8f0
  * EN v1.0 Address: 0x8013D8F0
  * EN v1.0 Size: 588b
  */
-void fn_8013D8F0(u8 *arg1, u8 *arg2)
+void trickyFn_8013d8f0(u8 *arg1, u8 *arg2)
 {
   f32 minDist;
   f32 dist;

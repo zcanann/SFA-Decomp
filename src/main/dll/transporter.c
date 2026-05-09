@@ -1620,7 +1620,7 @@ int flameblast_getExtraSize(void) { return 0x14; }
 /* 16b chained patterns. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8017804C(int *obj) { u8 v = 0x1; *((u8*)((int**)obj)[0xb8/4] + 0x10) = v; }
+void objSetAnimSpeedTo1(int *obj) { u8 v = 0x1; *((u8*)((int**)obj)[0xb8/4] + 0x10) = v; }
 #pragma peephole reset
 #pragma scheduling reset
 

@@ -51,7 +51,7 @@ extern void setIsOvercast(int arg);
 extern void saveFn_8007d960(int arg);
 extern void envFxActFn_800887f8(int arg);
 extern void movieFn_80117b68(int fade, int frames);
-extern void fn_80130478(void);
+extern void setLinkIsRotated(void);
 extern void titleScreenPositionElements(f32 x, f32 y);
 extern void titleScreenFn_801368a4(u8 arg);
 extern void *fn_801194EC(void);
@@ -172,7 +172,7 @@ void TitleMenu_initialise(void)
     TitleMenu_PlayPopup(0x3c,1);
   }
 
-  fn_80130478();
+  setLinkIsRotated();
   TitleMenu_SetEntryHighlight(lbl_803DD614);
   lbl_803DD619 = 0;
   lbl_803DD64D = 0;
