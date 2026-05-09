@@ -662,12 +662,18 @@ extern u32 gAudioResetting;
 extern u32 gAudioManagedChannelMask;
 extern u32 gAudioActiveChannelMask;
 extern u8 gAudioInitStarted;
+extern s32 lbl_803DD610;
 
 extern void fn_80281160(void);
 extern void AIReset(void);
 extern void Music_Update(void);
 extern void Sfx_UpdateObjectSounds(void);
+extern void Sfx_StopAllObjectSounds(void);
 extern void AudioStream_UpdateFadeTimer(void);
+extern void AudioStream_StopCurrent(void);
+extern void AudioStream_CancelPrepared(void);
+extern void streamFn_8000a380(u32 channel, u32 mode, u32 time);
+extern void movieFn_80117b68(u32 volume, u32 fadeMs);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(u32 size, u32 tag, void *name);
 
@@ -1250,8 +1256,20 @@ void FUN_8000676c(uint param_1,uint param_2,int param_3,int param_4,int param_5)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80006770(uint param_1)
+void audioStopByMask(u32 mask)
 {
+    if ((mask & 4) != 0) {
+        Sfx_StopAllObjectSounds();
+    }
+    if ((mask & 1) != 0) {
+        streamFn_8000a380(1, 1, 0);
+    }
+    if ((mask & 2) != 0) {
+        streamFn_8000a380(2, 1, 0);
+    }
+    if ((mask & 8) != 0) {
+        AudioStream_StopCurrent();
+    }
 }
 
 /*
@@ -1306,8 +1324,19 @@ u32 audioIsResetting(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80006780(void)
+void audioStopAll(void)
 {
+    gAudioResetting = 1;
+    Sfx_StopAllObjectSounds();
+    streamFn_8000a380(1, 1, 0);
+    streamFn_8000a380(2, 1, 0);
+    AudioStream_StopCurrent();
+    gAudioManagedChannelMask &= ~0xfU;
+    gAudioResetting = 1;
+    if ((lbl_803DD610 == 2) || (lbl_803DD610 == 3)) {
+        movieFn_80117b68(0, 500);
+    }
+    AudioStream_CancelPrepared();
 }
 
 /*
