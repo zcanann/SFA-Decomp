@@ -102,12 +102,12 @@ static void TitleMenu_BindEntries(TitleMenuTextEntry *entries)
   ((void (**)(TitleMenuTextEntry *))lbl_803DCAA0->vtable)[11](entries);
 }
 
-static void TitleMenu_SetEntryHighlight(int entry)
+static void TitleMenu_SetEntryHighlight(void)
 {
   int i;
 
   for (i = 0; i < 4; i++) {
-    if (i == entry) {
+    if (i == lbl_803DD614) {
       lbl_8031A214[i].flags &= ~0x4000;
     } else {
       lbl_8031A214[i].flags |= 0x4000;
@@ -173,7 +173,7 @@ void TitleMenu_initialise(void)
   }
 
   setLinkIsRotated();
-  TitleMenu_SetEntryHighlight(lbl_803DD614);
+  TitleMenu_SetEntryHighlight();
   lbl_803DD619 = 0;
   lbl_803DD64D = 0;
   lbl_803DD64C = 1;
