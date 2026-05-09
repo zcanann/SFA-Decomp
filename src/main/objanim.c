@@ -42,12 +42,19 @@ extern f32 lbl_803DE90C;
 void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimState *state,
                           uint moveId,s16 eventState)
 {
-  float frameValue;
-  int frameType;
-  int moveData;
   int moveIndex;
+  int moveData;
+  int frameType;
+  float frameValue;
 
-  moveIndex = ObjAnim_ResolveMoveIndex(animDef,moveId);
+  moveIndex = (int)animDef->moveBaseTable[(int)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
+              (moveId & OBJANIM_MOVE_INDEX_MASK);
+  if ((int)animDef->moveCount <= moveIndex) {
+    moveIndex = animDef->moveCount - 1;
+  }
+  if (moveIndex < 0) {
+    moveIndex = 0;
+  }
   if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (state->lastBlendMoveIndex != moveIndex) {
       state->blendCacheSlot = (u16)state->blendToggle;
