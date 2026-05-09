@@ -90,7 +90,7 @@ extern f32 lbl_803E4334;
 
 extern int fn_80080150(void *p1);
 extern int fn_80062E84(int p1, int p2, int p3);
-extern int fn_800640CC(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
+extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
 extern void fn_8002273C(void *p1, void *p2, void *p3);
 extern f32 PSVECMag(f32 *v);
 extern int fn_801A0E04(int p1, int p2);
@@ -168,7 +168,7 @@ void gunpowderbarrel_hitDetect(int param_1)
         goto copy_end;
     }
 
-    if (fn_800640CC(param_1 + 0x80, param_1 + 0xc, lbl_803E432C, 1,
+    if (objBboxFn_800640cc(param_1 + 0x80, param_1 + 0xc, lbl_803E432C, 1,
                     (int)&collision_buf[0], param_1, 8, -1, 0xff, 0) == 0) {
         goto copy_end;
     }

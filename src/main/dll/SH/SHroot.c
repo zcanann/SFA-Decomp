@@ -11,8 +11,8 @@ extern u32 randomGetRange(int min,int max);
 extern int Obj_GetPlayerObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern int ObjTrigger_IsSet();
-extern void fn_8003B310(int obj,int collisionShapeState);
-extern void fn_8006EF38(double scaleX,double scaleY,int obj,int joint,int pointCount,int pathPoints,
+extern void characterDoEyeAnims(int obj,int collisionShapeState);
+extern void objAudioFn_8006ef38(double scaleX,double scaleY,int obj,int joint,int pointCount,int pathPoints,
                         int scratch);
 extern int fn_80114BB0();
 extern int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj);
@@ -278,10 +278,10 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4
       return 0;
     }
     *(short *)(param_3 + 0x6e) = *(short *)(param_3 + 0x6e) & ~0x40;
-    fn_8003B310((int)obj,(int)runtime->collisionShapeState);
+    characterDoEyeAnims((int)obj,(int)runtime->collisionShapeState);
   }
   runtime->activeMoveValid = 0;
-  fn_8006EF38((double)lbl_803E5448,(double)lbl_803E5448,(int)obj,param_3 + 0xf0,8,
+  objAudioFn_8006ef38((double)lbl_803E5448,(double)lbl_803E5448,(int)obj,param_3 + 0xf0,8,
               (int)runtime->renderPathPoints,(int)runtime->moveScratch);
   return 0;
 }

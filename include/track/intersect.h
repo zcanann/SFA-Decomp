@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void fn_8006EF38(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
+void objAudioFn_8006ef38(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  uint param_5,int param_6,int param_7);
 void* fn_8006F388(u32 i);
 void timeFn_8006f400(f32 step);

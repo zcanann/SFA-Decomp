@@ -9,7 +9,7 @@ extern u8 Obj_IsLoadingLocked(void);
 extern undefined4 Obj_FreeObject(int param_1);
 extern int fn_8002B5A0(FirePipeObject *obj, void *spawnDef);
 extern void fn_8002CE14(int obj);
-extern void fn_8002CE88(FirePipeObject *obj);
+extern void objRemoveFromListFn_8002ce88(FirePipeObject *obj);
 extern int mmSetFreeDelay(int delay);
 extern void mm_free(void *ptr);
 extern undefined4 ObjHits_EnableObject(FirePipeObject *obj);
@@ -87,7 +87,7 @@ void firepipe_releaseEffectObject(FirePipeObject *obj)
     if ((*(u16 *)((int)obj + 0xb0) & 0x200) != 0) {
         ObjHits_DisableObject(obj);
         *(u16 *)((int)obj + 0xb0) &= ~0x200;
-        fn_8002CE88(obj);
+        objRemoveFromListFn_8002ce88(obj);
         *(u16 *)((int)obj + 0xb0) |= 0x8000;
         *(s16 *)((int)obj + 6) |= 0x4000;
     } else {

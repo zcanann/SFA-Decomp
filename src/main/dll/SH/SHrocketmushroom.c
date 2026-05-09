@@ -13,7 +13,7 @@ extern void Sfx_StopObjectChannel(void *obj, int channel);
 extern void *Obj_GetPlayerObject(void);
 extern int fn_8003B500(void *obj, void *p2, f32 f1);
 extern int fn_8003B228(void *obj, void *p2);
-extern int fn_8003B310(void *obj, void *p2);
+extern int characterDoEyeAnims(void *obj, void *p2);
 
 extern void *lbl_803DCA54;
 extern f32 lbl_803E53F8;
@@ -104,7 +104,7 @@ int fn_801D4198(void *obj, void *unused, void *p5) {
         if ((*(u8 *)((u8 *)pState + 0x2) & 0x8) != 0) {
             fn_8003B228(obj, (u8 *)pState + 0x8);
         } else {
-            fn_8003B310(obj, (u8 *)pState + 0x8);
+            characterDoEyeAnims(obj, (u8 *)pState + 0x8);
         }
     }
     return 0;

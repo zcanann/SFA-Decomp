@@ -1999,7 +1999,7 @@ LAB_80033418:
 /*
  * --INFO--
  *
- * Function: fn_800333C8
+ * Function: doNothing_800333C8
  * EN v1.0 Address: 0x800333C8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x800334C0
@@ -2009,7 +2009,7 @@ LAB_80033418:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_800333C8(void)
+void doNothing_800333C8(void)
 {
   return;
 }
@@ -2100,7 +2100,7 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
       uVar8 = extraout_f1_01;
     }
     if ((cVar2 == '\0') && (*(short *)(iVar1 + 0x44) == 1)) {
-      fn_800333C8();
+      doNothing_800333C8();
     }
   }
   cVar2 = '\0';
@@ -2149,7 +2149,7 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
                                       *(uint *)(iVar4 + 0x4c) & 0xf,in_r10);
     }
     if ((cVar2 == '\0') && (*(short *)(iVar3 + 0x44) == 1)) {
-      fn_800333C8();
+      doNothing_800333C8();
     }
   }
   FUN_80286874();

@@ -22,7 +22,7 @@ extern void ObjPath_GetPointWorldPosition(SHthorntailObject *obj,int pointIndex,
 extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
 extern int FUN_800575b4();
-extern undefined4 fn_8006EF38();
+extern undefined4 objAudioFn_8006ef38();
 extern undefined4 fn_80114F64();
 extern undefined4 fn_8011507C();
 extern void fn_80115094(SHthorntailObject *obj,SHthorntailRuntime *runtime);
@@ -234,7 +234,7 @@ void SHthorntail_update(SHthorntailObject *obj)
       }
       pfVar8 = (float *)((int)pfVar8 + 1);
     }
-    fn_8006EF38((double)lbl_803E5448,(double)lbl_803E5448,psVar2,local_60,8,
+    objAudioFn_8006ef38((double)lbl_803E5448,(double)lbl_803E5448,psVar2,local_60,8,
                  (int)runtime->renderPathPoints,(int)runtime->moveScratch);
     if ((DAT_80327fc8[runtime->behaviorState] & 4) == 0) {
       runtime->movementControlFlags = runtime->movementControlFlags | 1;

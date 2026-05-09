@@ -151,12 +151,12 @@ extern s16 getAngle(f32 dx, f32 dz);
 extern int randomGetRange(int lo, int hi);
 extern void fn_802968AC(int player, u8 b);
 extern int fn_801843C0(int obj);
-extern int fn_800640CC(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
+extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
 extern int fn_8005A10C(f32 *p1, f32 f1);
-extern int fn_80065E50(int obj, f32 x, f32 y, f32 z, void *out, int p5, int p6);
+extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void *out, int p5, int p6);
 extern int fn_8006961C(void *p1, void *p2, void *p3, void *p4, void *p5, int p6);
-extern int fn_800691C0(int obj, void *p2, int p3, int p4);
-extern int fn_80067958(int obj, void *p2, void *p3, int p4, void *p5, int p6);
+extern int hitDetectFn_800691c0(int obj, void *p2, int p3, int p4);
+extern int hitDetectFn_80067958(int obj, void *p2, void *p3, int p4, void *p5, int p6);
 extern int fn_801845FC(int obj, int p2, int p3, void *p4);
 extern f32 FLOAT_803e471c;
 
@@ -249,7 +249,7 @@ void scarab_update(int param_1)
             v30 = 1;
         }
         if (v30 == 0) {
-            v30 = fn_800640CC(param_1 + 0x80, param_1 + 0xc, lbl_803E3A00,
+            v30 = objBboxFn_800640cc(param_1 + 0x80, param_1 + 0xc, lbl_803E3A00,
                               0, (int)&collision_buf[24], param_1, 8, -1, 0, 0);
         }
         if (v30 == 0) {
@@ -306,8 +306,8 @@ void scarab_update(int param_1)
             hit_index = fn_8006961C(&collision_buf[6], sp40, sp34, 0,
                                     &collision_buf[35], 1);
             (void)hit_index;
-            fn_800691C0(param_1, &collision_buf[6], 0, 1);
-            fn_80067958(param_1, sp40, sp34, 1,
+            hitDetectFn_800691c0(param_1, &collision_buf[6], 0, 1);
+            hitDetectFn_80067958(param_1, sp40, sp34, 1,
                         &collision_buf[28], 0);
             *(f32 *)(param_1 + 0xc) = *(f32 *)&sp34[0];
             *(f32 *)(param_1 + 0x10) = *(f32 *)&sp34[1];
@@ -348,7 +348,7 @@ void scarab_update(int param_1)
             int *list_ptr;
             int list_count;
 
-            list_count = fn_80065E50(param_1, *(f32 *)(param_1 + 0xc),
+            list_count = hitDetectFn_80065e50(param_1, *(f32 *)(param_1 + 0xc),
                                      *(f32 *)(param_1 + 0x10),
                                      *(f32 *)(param_1 + 0x14),
                                      &v_local_24, 1, 0);

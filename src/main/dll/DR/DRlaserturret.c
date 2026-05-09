@@ -21,7 +21,7 @@ extern void ObjHits_DisableObject(void *);
 extern void ObjHits_EnableObject(void *);
 extern int ObjTrigger_IsSet(void *);
 extern void *objFindTexture(void *obj, int idx, int flags);
-extern int fn_80065E50(void *obj, float x, float y, float z, void *out, int p5, int p6);
+extern int hitDetectFn_80065e50(void *obj, float x, float y, float z, void *out, int p5, int p6);
 extern void hudFn_8011f38c(int);
 extern void hudFn_8011f6f0(int);
 extern double fn_801E7C4C(void *obj, void *playerObj, int p3);
@@ -198,7 +198,7 @@ int fn_801E6D08(void *obj, void *param2)
         }
         *(f32 *)((char *)param2 + 0x280) = lbl_803E59DC;
     }
-    count = fn_80065E50(obj, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
+    count = hitDetectFn_80065e50(obj, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
                         *(f32 *)((char *)obj + 0x14), &arr, 0, 0);
     fmin = lbl_803E5A20;
     if (count > 0) {

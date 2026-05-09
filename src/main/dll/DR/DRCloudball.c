@@ -13,7 +13,7 @@ extern s16 getAngle(f32 dx, f32 dz);
 extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern void ObjAnim_SampleRootCurvePhase(f32 distance, int obj, f32 *out);
 extern void ObjAnim_AdvanceCurrentMove(int obj, f32 phase, f32 dt, int flag);
-extern int fn_800640CC(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
+extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
 extern void fn_8002273C(int p1, int p2, int p3);
 extern f32 getXZDistance(int *p1, int *p2);
 extern void itemPickupDoParticleFx(int obj, f32 a, int b, int c);
@@ -50,7 +50,7 @@ void spscarab_update(int param_1)
     f32 distance;
     f32 phase;        /* sp+0x10 */
     f32 outV[3];      /* sp+0x14 (output of fn_8002273C) */
-    f32 hit_buf[24];  /* sp+0x20 .. sp+0x80 (collision struct, fn_800640CC out) */
+    f32 hit_buf[24];  /* sp+0x20 .. sp+0x80 (collision struct, objBboxFn_800640cc out) */
 
     p_b8 = *(int *)(param_1 + 0xb8);
     p_4c = *(int *)(param_1 + 0x4c);
@@ -75,7 +75,7 @@ void spscarab_update(int param_1)
         *(f32 *)(param_1 + 0x28) = lbl_803E5A78;
     }
 
-    if (fn_800640CC(param_1 + 0x80, param_1 + 0xc,
+    if (objBboxFn_800640cc(param_1 + 0x80, param_1 + 0xc,
                     lbl_803E5A7C, 0, (int)&hit_buf[0] /* sp+0x20 */, param_1,
                     8, -1, 0xff, 0xa) != 0) {
         fn_8002273C((int)&hit_buf[7] /* sp+0x3c */, param_1 + 0x24, (int)outV);

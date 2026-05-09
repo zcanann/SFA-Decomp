@@ -15,7 +15,7 @@ extern int Sfx_AddLoopedObjectSound(void *obj, int sfxId);
 extern int Sfx_RemoveLoopedObjectSound(void *obj, int sfxId);
 extern int randomGetRange(int lo, int hi);
 extern int getAngle(float x, float z);
-extern void fn_800393F8(void *obj, void *p2, int p3, int p4, int p5, int p6);
+extern void objAudioFn_800393f8(void *obj, void *p2, int p3, int p4, int p5, int p6);
 extern void objAnimFn_8013a3f0(void *obj, int p2, float p3, int p4);
 extern void fn_80139930(void *obj, s16 angle);
 extern void fn_8017804C(void *obj);
@@ -52,7 +52,7 @@ void fn_8013DC88(void *param_1, void *param_2)
                 s16 a0 = *(s16 *)((char *)param_1 + 0xa0);
                 if (a0 >= 0x30 || a0 < 0x29) {
                     if (Sfx_IsPlayingFromObjectChannel(param_1, 0x10) == 0) {
-                        fn_800393F8(param_1, (char *)state + 0x3a8, 0x299, 0x100, -1, 0);
+                        objAudioFn_800393f8(param_1, (char *)state + 0x3a8, 0x299, 0x100, -1, 0);
                     }
                 }
             }
@@ -76,7 +76,7 @@ void fn_8013DC88(void *param_1, void *param_2)
                     s16 a0 = *(s16 *)((char *)param_1 + 0xa0);
                     if (a0 >= 0x30 || a0 < 0x29) {
                         if (Sfx_IsPlayingFromObjectChannel(param_1, 0x10) == 0) {
-                            fn_800393F8(param_1, (char *)state + 0x3a8, 0x299, 0x100, -1, 0);
+                            objAudioFn_800393f8(param_1, (char *)state + 0x3a8, 0x299, 0x100, -1, 0);
                         }
                     }
                 }
@@ -121,7 +121,7 @@ void fn_8013DC88(void *param_1, void *param_2)
                 s16 a0 = *(s16 *)((char *)param_1 + 0xa0);
                 if (a0 >= 0x30 || a0 < 0x29) {
                     if (Sfx_IsPlayingFromObjectChannel(param_1, 0x10) == 0) {
-                        fn_800393F8(param_1, (char *)state + 0x3a8, 0x29d, 0, -1, 0);
+                        objAudioFn_800393f8(param_1, (char *)state + 0x3a8, 0x29d, 0, -1, 0);
                     }
                 }
             }

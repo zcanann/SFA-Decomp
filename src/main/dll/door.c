@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_80006b4c();
 extern uint FUN_80017690();
-extern int fn_800640CC(f32 radius,f32 *from,f32 *to,int mode,void *hit,
+extern int objBboxFn_800640cc(f32 radius,f32 *from,f32 *to,int mode,void *hit,
                        DfpTargetBlockObject *obj,int flags,int mask,int arg9,int arg10);
 extern void Sfx_PlayFromObject(DfpTargetBlockObject *obj,u16 sfxId);
 extern void objRenderFn_8003b8f4(int obj,float param_2);
@@ -78,7 +78,7 @@ void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject *obj,
     probe[1] = *(f32 *)(point + DFPTARGETBLOCK_POINT_OFFSET_Y) + obj->y;
     probe[2] = *(f32 *)(point + DFPTARGETBLOCK_POINT_OFFSET_Z) + obj->z;
     originalZ = probe[2];
-    if (fn_800640CC(lbl_803E6488,&obj->x,probe,1,hit,obj,8,-1,0,0) != 0) {
+    if (objBboxFn_800640cc(lbl_803E6488,&obj->x,probe,1,hit,obj,8,-1,0,0) != 0) {
       deltaX = probe[0] - originalX;
       deltaZ = probe[2] - originalZ;
       if (lbl_803E648C != obj->velX) {

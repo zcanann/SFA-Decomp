@@ -301,7 +301,7 @@ extern undefined4 _DAT_803dc354;
 /*
  * --INFO--
  *
- * Function: fn_8006EF38
+ * Function: objAudioFn_8006ef38
  * EN v1.0 Address: 0x8006EF38
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8006F0B4
@@ -311,7 +311,7 @@ extern undefined4 _DAT_803dc354;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8006EF38(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
+void objAudioFn_8006ef38(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  uint param_5,int param_6,int param_7)
 {
 }

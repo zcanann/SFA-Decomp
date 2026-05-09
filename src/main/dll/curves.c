@@ -21,7 +21,7 @@ extern undefined4 ObjHits_AddContactObject();
 extern undefined4 FUN_80061fc8();
 extern int FUN_800620e8();
 extern int FUN_800632f4();
-extern int fn_80065E50(int obj,f32 x,f32 y,f32 z,void *out,int p5,int p6);
+extern int hitDetectFn_80065e50(int obj,f32 x,f32 y,f32 z,void *out,int p5,int p6);
 extern undefined FUN_80063a68();
 extern undefined4 FUN_80063a74();
 extern undefined4 FUN_800723a0();
@@ -2622,7 +2622,7 @@ void curves_countRandomPoints(int obj,uint *curve)
     for (iVar8 = 0; dVar11 = DOUBLE_803e12f0, iVar8 < (int)(uint)*(byte *)(puVar5 + 0x97) >> 4;
         iVar8 = iVar8 + 1) {
       *pfVar9 = *(float *)(puVar10 + 3);
-      iVar3 = fn_80065E50(iVar2,*(float *)(puVar10 + 2),*(float *)(iVar2 + 0x1c),
+      iVar3 = hitDetectFn_80065e50(iVar2,*(float *)(puVar10 + 2),*(float *)(iVar2 + 0x1c),
                           *(float *)(puVar10 + 4),&local_98,-1,0);
       bVar1 = false;
       if ((iVar3 != 0) && (puVar6 = local_98, 0 < iVar3)) {
@@ -3404,7 +3404,7 @@ curves_getCurves(f32 x,f32 z,int curve,u32 *outCount,int param_5)
     else {
       iVar1 = -2;
     }
-    DAT_803de0f8 = fn_80065E50(curve,x,*(float *)(curve + 0x1c),z,&local_18,iVar1,0);
+    DAT_803de0f8 = hitDetectFn_80065e50(curve,x,*(float *)(curve + 0x1c),z,&local_18,iVar1,0);
     if (0x23 < (int)DAT_803de0f8) {
       DAT_803de0f8 = 0x23;
     }

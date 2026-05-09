@@ -4,7 +4,7 @@ extern f32 Vec_distance(void *posA,void *posB);
 extern void GameBit_Set(int eventId,int value);
 extern int GameBit_Get(int eventId);
 extern void *Obj_GetPlayerObject(void);
-extern void fn_8002CE88(void *obj);
+extern void objRemoveFromListFn_8002ce88(void *obj);
 extern void ObjHits_DisableObject(void *obj);
 extern void ObjHits_EnableObject(void *obj);
 extern undefined8 ObjGroup_RemoveObject();
@@ -122,14 +122,14 @@ void spellstone_update(SpellStoneObject *obj)
   if (eventActive != 0) {
     GameBit_Set(*(&lbl_803DC228 + def->eventIndex),1);
     obj->flags = (s16)(obj->flags | 0x4000);
-    fn_8002CE88(obj);
+    objRemoveFromListFn_8002ce88(obj);
     (*(code *)(*lbl_803DCAAC + 0x44))(0x1d,2);
   }
   else {
     eventActive = GameBit_Get(def->activeEvent);
     if (eventActive != 0) {
       obj->flags = (s16)(obj->flags | 0x4000);
-      fn_8002CE88(obj);
+      objRemoveFromListFn_8002ce88(obj);
     }
     if (state->state == 2) {
       playerObj = Obj_GetPlayerObject();
