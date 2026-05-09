@@ -3516,7 +3516,7 @@ void WarpstoneUI_setState(int val) { lbl_803DD988 = (u8)val; }
 void fn_80135814(u32 a, u32 b) { lbl_803DD9BC = a; lbl_803DD9B8 = b; }
 
 /* EN v1.0 0x801368D4  size: 12b  Clear lbl_803DD9AB to 0. */
-void fn_801368D4(void) { lbl_803DD9AB = 0; }
+void titleScreenFn_801368d4(void) { lbl_803DD9AB = 0; }
 
 /* EN v1.0 0x80138F78  size: 12b  obj->_b8->_14 (f32). */
 f32 fn_80138F78(u8* obj) { return *(f32*)(*(u8**)(obj + 0xb8) + 0x14); }
@@ -3780,7 +3780,7 @@ void titleScreenFn_801368a4(s8 arg)
 
 /* EN v1.0 0x801368C4  size: 16b  Two-byte state push (no equality
  * check): copy lbl_803DD990 to lbl_803DBC08 and write new value. */
-void fn_801368C4(u8 arg)
+void titleScreenFn_801368c4(u8 arg)
 {
     lbl_803DBC08 = lbl_803DD990;
     lbl_803DD990 = arg;

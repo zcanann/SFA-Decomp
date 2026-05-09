@@ -20,7 +20,7 @@ extern void FUN_80006bb0(int controller);
 extern void FUN_80006bb4(int controller, u8 *dpad, u8 *face);
 extern uint FUN_80006c00(int controller);
 extern void loadUiDll(int id);
-extern void fn_8001FEE4(void);
+extern void doNothing_onSaveSelectScreenExit(void);
 extern uint mmSetFreeDelay(uint delay);
 extern void mapUnload(int mapId, uint flags);
 extern void fn_8005CDD4(int arg);
@@ -36,8 +36,8 @@ extern void titleScreenFn_80130464(u8 v);
 extern void setLinkNotRotated(void);
 extern u8 shouldShowCredits(void);
 extern void titleScreenFn_801368a4(u8 arg);
-extern void fn_801368C4(u8 arg);
-extern void fn_801368D4(void);
+extern void titleScreenFn_801368c4(u8 arg);
+extern void titleScreenFn_801368d4(void);
 extern void saveFn_8007d960(int);
 
 extern u8 framesThisStep;
@@ -168,8 +168,8 @@ int TitleMenu_run(void)
   if ((lbl_803DD61A == 0) && (lbl_803DD648 == 0)) {
     n_attractmode_releaseMovieBuffers();
     loadUiDll(1);
-    fn_8001FEE4();
-    fn_801368D4();
+    doNothing_onSaveSelectScreenExit();
+    titleScreenFn_801368d4();
     buttons = mmSetFreeDelay(0);
     mapUnload(0x3d,0x20000000);
     mmSetFreeDelay(buttons);
@@ -305,7 +305,7 @@ int TitleMenu_run(void)
         lbl_803DD652 = 1;
       }
     } else {
-      fn_801368C4(lbl_803DD614);
+      titleScreenFn_801368c4(lbl_803DD614);
       if ((menuId == 1) && (lbl_803DD616 == 0xff)) {
         titleScreenFn_801368a4(1);
         lbl_803DD651 = 1;

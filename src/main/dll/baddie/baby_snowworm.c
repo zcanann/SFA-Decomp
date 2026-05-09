@@ -13,13 +13,13 @@
  * appended in batches.
  *
  * Logic-only (correct semantics, byte-divergent): timeListFn_8012be84,
- * fn_8012C558, fn_80129CBC. See inline notes per function for the
+ * pauseMenuInit, viewFn_80129cbc. See inline notes per function for the
  * specific MWCC quirk that blocks each one.
  *
  * Known-stuck (verified, don't retry without new ideas):
  *   GameUI_func0F (28b)  : extsh-before-sth triple; MWCC strips the
  *                        redundant extsh.
- *   fn_8012EB30 (56b)  : .data array address routes via r0+mr instead
+ *   GameUI_unselectAllItems (56b)  : .data array address routes via r0+mr instead
  *                        of clean lis/addi pair using r3 as scratch.
  *   fn_8012DDB8 (32b)  : u16 = param ? 1 : 0 picks up an extra
  *                        clrlwi r0,r0,16 narrowing before sth.
@@ -973,7 +973,7 @@ s32 CMenu_GetState(void)
  * Target emits extsh-before-sth triples; MWCC strips the extsh since
  * sth ignores upper bits. */
 
-/* fn_8012EB30 (56b) — stuck. Target loads .data array address with
+/* GameUI_unselectAllItems (56b) — stuck. Target loads .data array address with
  * `lis r3,@ha; addi r4,r3,@l` (using r3 as scratch), MWCC routes via
  * r0 with extra mr (`lis r4; addi r0,r4,@l; mr r4,r0`). The reg
  * pressure ripples into the post-loop register choice (target uses r0
@@ -1005,7 +1005,7 @@ extern void Camera_RebuildProjectionMatrix(void);
 extern void Camera_SetFovY(f32);
 extern void setTimeStop(s32);
 extern void cutsceneFadeInOut(s32);
-extern void fn_80016C48(void* arg);
+extern void gameTextFreePhrase(void* arg);
 extern void* gameTextGetBox(s32);
 
 extern u16 curGameText;
@@ -1020,8 +1020,8 @@ extern u8  lbl_803A9440[0x18];
 extern s8  lbl_803DBA90;
 extern u8  lbl_803DBA91;
 extern void Music_Trigger(s32, s32);
-extern int  fn_800E88B4(u8, u8, int, s32);
-extern int  fn_800E8AAC(void);
+extern int  saveScoreFn_800e88b4(u8, u8, int, s32);
+extern int  getSaveFileName(void);
 
 extern void* Obj_GetPlayerObject(void);
 extern int   fn_80295BC8(void);
@@ -1186,7 +1186,7 @@ void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do
     curGameText = (u16)id;
     lbl_803DD8CA = -1;
     lbl_803DD8C8 = 1;
-    fn_80016C48(lbl_803A9440);
+    gameTextFreePhrase(lbl_803A9440);
     if (do_input_disable != 0) {
         cutsceneFadeInOut(1);
         setTimeStop(0xff);
@@ -1355,7 +1355,7 @@ int fn_8012B6BC(void)
 #pragma scheduling reset
 
 /* EN v1.0 0x80129698  size: 196b  Pickup-pickup state hook: latches the
- * resulting object id from fn_800E88B4 into lbl_803DBA91, and on the
+ * resulting object id from saveScoreFn_800e88b4 into lbl_803DBA91, and on the
  * "post-collect" mode codes (1 or 2) optionally fires off the cleanup
  * trio (Music_Trigger / cutsceneFadeInOut / setTimeStop) when no slot was active
  * yet, then commits the new u8 active-id to lbl_803DBA90. The third arg
@@ -1364,7 +1364,7 @@ int fn_8012B6BC(void)
 #pragma peephole off
 int fn_80129698(s8 a, int b, u8 c, int mode)
 {
-    lbl_803DBA91 = (u8)fn_800E88B4(a, c == 0xa, b, fn_800E8AAC());
+    lbl_803DBA91 = (u8)saveScoreFn_800e88b4(a, c == 0xa, b, getSaveFileName());
     if ((u8)mode == 2 || (u8)mode == 1) {
         if (lbl_803DBA90 == -1) {
             Music_Trigger(0x23, 1);
@@ -1393,7 +1393,7 @@ int fn_80129698(s8 a, int b, u8 c, int mode)
  * either subtlety in this configuration. */
 #pragma scheduling off
 #pragma peephole off
-void fn_80129CBC(f32 fov, f32 x, f32 y)
+void viewFn_80129cbc(f32 fov, f32 x, f32 y)
 {
     lbl_803DBAA4 = Camera_GetFovY();
     Camera_SetFovY(fov);
@@ -1435,7 +1435,7 @@ void fn_80129CBC(f32 fov, f32 x, f32 y)
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_8012C558(void)
+void pauseMenuInit(void)
 {
     void* obj = Obj_GetPlayerObject();
     int   i;

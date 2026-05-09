@@ -6,7 +6,7 @@ typedef struct TitleMenuControl {
 } TitleMenuControl;
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void fn_8011A7E4(int arg);
+extern void saveSelectGoToChooseSlot(int arg);
 
 extern u8 lbl_803DB424;
 extern TitleMenuControl *lbl_803DCA4C;
@@ -19,7 +19,7 @@ extern u8 lbl_803DD6CF;
 /*
  * --INFO--
  *
- * Function: fn_80119FAC
+ * Function: saveSelectSetSlot
  * EN v1.0 Address: 0x80119FAC
  * EN v1.0 Size: 304b
  * EN v1.1 Address: TODO
@@ -31,12 +31,12 @@ extern u8 lbl_803DD6CF;
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_80119FAC(int param_1, int param_2)
+void saveSelectSetSlot(int param_1, int param_2)
 {
   if (param_1 == 0) {
     if (lbl_803DB424 != 0) {
       Sfx_PlayFromObject(0, 0x419);
-      fn_8011A7E4(0);
+      saveSelectGoToChooseSlot(0);
     } else {
       Sfx_PlayFromObject(0, 0x100);
       ((void (**)(int, int))lbl_803DCA4C->vtable)[2](0x14, 5);

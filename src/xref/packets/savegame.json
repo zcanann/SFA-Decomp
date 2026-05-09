@@ -37,7 +37,7 @@
   "functions": [
     {
       "function_start": "0x8011AE24",
-      "function_name": "fn_8011AE24",
+      "function_name": "SaveSelectScreen_run",
       "xrefs": [
         {
           "xref_address": "0x8011AFB4",
@@ -45,7 +45,7 @@
           "target_address": "0x8031A864",
           "target_text": "/savegame/save%d.bin",
           "pair_kind": "lis/addi",
-          "function_name": "fn_8011AE24"
+          "function_name": "SaveSelectScreen_run"
         }
       ]
     }

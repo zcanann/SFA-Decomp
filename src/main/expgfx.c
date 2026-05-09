@@ -976,7 +976,7 @@ extern void cacheFn_800229c4(int wait);
 extern int Camera_GetProjectionMatrix(void);
 extern void Camera_ApplyFullViewport(void);
 extern void *Camera_GetCurrentViewSlot(void);
-extern void fn_8005D0E8(int reg, u8 r, u8 g, u8 b, u8 a);
+extern void _textSetColor(int reg, u8 r, u8 g, u8 b, u8 a);
 extern void fn_8000F83C(void);
 extern void fn_8009AD44(int param);
 extern u32 randomGetRange(int min, int max);
@@ -1064,7 +1064,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
     return;
   }
   cameraSlot = Camera_GetCurrentViewSlot();
-  fn_8005D0E8(0, 0xff, 0xff, 0xff, 0xff);
+  _textSetColor(0, 0xff, 0xff, 0xff, 0xff);
   alphaMode = -1;
   blendMode = -1;
   zMode = -1;

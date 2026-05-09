@@ -6990,7 +6990,7 @@ void FUN_80017b20(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /* Pattern wrappers. */
 void fn_8001F678(void) {}
 void fn_8001F67C(void) {}
-void fn_8001FEE4(void) {}
+void doNothing_onSaveSelectScreenExit(void) {}
 int fn_800202BC(void) { return 0x1; }
 int fn_8002969C(void) { return 0x0; }
 int fn_8002A5B8(void) { return 0x0; }

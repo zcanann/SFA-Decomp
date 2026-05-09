@@ -13084,10 +13084,10 @@ void SaveGame_release(void) { if (pRestartPoint != 0) mm_free(pRestartPoint); }
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void* fn_800E8044(void);
+extern void* getLastSavedGameTexts(void);
 #pragma scheduling off
 #pragma peephole off
-u8 fn_800EA2BC(void) { u8 *p = (u8*)fn_800E8044(); return p[5]; }
+u8 fn_800EA2BC(void) { u8 *p = (u8*)getLastSavedGameTexts(); return p[5]; }
 #pragma peephole reset
 #pragma scheduling reset
 

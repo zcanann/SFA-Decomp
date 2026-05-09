@@ -7005,7 +7005,7 @@ void showMemCardError(int param_1)
 #pragma scheduling off
 void cardShowLoadingMsg(u8 kind)
 {
-    extern void fn_80017434(int);
+    extern void gameTextFn_80017434(int);
     extern int padUpdate(void);
     extern void mmFreeTick(int);
     extern void waitNextFrame(void);
@@ -7032,7 +7032,7 @@ void cardShowLoadingMsg(u8 kind)
     void (*draw)(int, int, int);
     u8 mode = kind;
 
-    fn_80017434(0);
+    gameTextFn_80017434(0);
     for (frame = 0; frame < 0x3C; frame++) {
         padUpdate();
         mmFreeTick(0);
