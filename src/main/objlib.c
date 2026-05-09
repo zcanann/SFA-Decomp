@@ -55,7 +55,7 @@ extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 extern undefined4 FUN_802949e8();
 extern byte FUN_80294c20();
-extern int fn_80296BA0(void *obj);
+extern int objGetAnimState80A(void *obj);
 
 #define OBJGROUP_COUNT 0x54
 #define OBJGROUP_OFFSET_CLEAR_COUNT (OBJGROUP_COUNT + 1)
@@ -2597,7 +2597,7 @@ undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
   if (flagEnabled != 0) {
     flagBlocked = triggerFlags & OBJTRIGGER_ID_BLOCK_FLAG;
     if ((flagBlocked == 0) && (iVar1 = (*lbl_803DCA68)->isTriggerSet((int)param_2), iVar1 != 0)) {
-      iVar1 = fn_80296BA0(Obj_GetPlayerObject());
+      iVar1 = objGetAnimState80A(Obj_GetPlayerObject());
       if (iVar1 == OBJTRIGGER_PLAYER_STATE_NONE) {
         buttonDisable(OBJTRIGGER_BUTTON_DISABLE_INDEX,OBJTRIGGER_BUTTON_DISABLE_FLAG);
         return 1;
@@ -2642,7 +2642,7 @@ undefined4 ObjTrigger_IsSet(int param_1)
     if (flagEnabled != 0) {
       flagBlocked = triggerFlags & OBJTRIGGER_CURRENT_BLOCK_FLAG;
       if ((flagBlocked == 0) && (iVar1 = (*lbl_803DCA68)->isCurrentTriggerClear(), iVar1 == 0)) {
-        iVar1 = fn_80296BA0(Obj_GetPlayerObject());
+        iVar1 = objGetAnimState80A(Obj_GetPlayerObject());
         if ((iVar1 == OBJTRIGGER_PLAYER_STATE_NONE) || (iVar1 == OBJTRIGGER_PLAYER_STATE_CLEAR)) {
           buttonDisable(OBJTRIGGER_BUTTON_DISABLE_INDEX,OBJTRIGGER_BUTTON_DISABLE_FLAG);
           return 1;

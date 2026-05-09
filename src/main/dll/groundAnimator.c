@@ -32,7 +32,7 @@ extern void GameBit_Set(int eventId, int value);
 extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
 extern f32 Vec_distance(float *posA, float *posB);
 extern int Obj_GetPlayerObject(void);
-extern uint fn_8029729C(int obj);
+extern uint playerGetStateFlag310(int obj);
 extern void setAButtonIcon(int param_1);
 extern void dll_115_seqFn(void);
 
@@ -352,7 +352,7 @@ void wm_column_update(int obj)
     }
     flags = Obj_GetPlayerObject();
     ObjGroup_FindNearestObject(0x10, obj, nearest);
-    flags = fn_8029729C(flags);
+    flags = playerGetStateFlag310(flags);
     if (((flags & 0x4000) != 0) && (nearest[0] > lbl_803E37C4)) {
       (*(GroundAnimatorSetVisibleFn *)(*lbl_803DCAC0 + 0x24))(state, 0);
       setAButtonIcon(5);
@@ -382,7 +382,7 @@ void wm_column_update(int obj)
         }
       }
     }
-    flags = fn_8029729C(Obj_GetPlayerObject());
+    flags = playerGetStateFlag310(Obj_GetPlayerObject());
     if ((flags & 0x4000) != 0) {
       (*(GroundAnimatorSetVisibleFn *)(*lbl_803DCAC0 + 0x24))(state, 0);
       *(u32 *)(obj + 0xf4) |= 2;

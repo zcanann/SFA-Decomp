@@ -269,7 +269,7 @@ extern u8 lbl_803DE3DB;
 extern void*** lbl_803DD6D0;
 extern u8 lbl_8031BCA0[];
 extern void* fn_8002BAC4(void);
-extern int fn_80296328(void);
+extern int objAnimFn_80296328(void);
 extern u8 fn_8005B128(f32, f32);
 extern void fn_800207AC(int);
 extern void fn_800206EC(int);
@@ -691,7 +691,7 @@ int fn_8012B9F8(void)
 
     s = fn_8002BAC4();
     if (s == NULL) return 0;
-    is_zero = fn_80296328() == 0;
+    is_zero = objAnimFn_80296328() == 0;
     if (is_zero) return 0;
     inner = *(void**)((char*)s + 0x30);
     if (inner != NULL) {
@@ -1024,7 +1024,7 @@ extern int  saveScoreFn_800e88b4(u8, u8, int, s32);
 extern int  getSaveFileName(void);
 
 extern void* Obj_GetPlayerObject(void);
-extern int   fn_80295BC8(void);
+extern int   objIsCurModelNotZero(void);
 extern u8    coordsToMapCell(f32, f32);
 extern u8    lbl_8031B050[9];
 
@@ -1336,7 +1336,7 @@ int fn_8012B6BC(void)
 
     s = Obj_GetPlayerObject();
     if (s == NULL) return 0;
-    is_zero = fn_80295BC8() == 0;
+    is_zero = objIsCurModelNotZero() == 0;
     if (is_zero) return 0;
     inner = *(void**)((char*)s + 0x30);
     if (inner != NULL) {

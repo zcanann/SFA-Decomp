@@ -26,7 +26,7 @@ extern void hudFn_8011f38c(int);
 extern void hudFn_8011f6f0(int);
 extern double fn_801E7C4C(void *obj, void *playerObj, int p3);
 extern float fn_80293E80(double);
-extern int fn_8029689C(void *playerObj);
+extern int playerGetMoney(void *playerObj);
 
 extern void *lbl_803DCA4C;
 extern void *lbl_803DCA54;
@@ -97,7 +97,7 @@ int fn_801E6B10(void *obj, void *param2)
     }
     *(u16 *)((char *)state + 0x9ca) = (u16)sum;
     if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
-        if (fn_8029689C(playerObj) >= 1) {
+        if (playerGetMoney(playerObj) >= 1) {
             GameBit_Set(0x61d, 1);
             buttonDisable(0, 0x100);
         } else {

@@ -33,8 +33,8 @@ extern int FUN_80294c88();
 extern int FUN_80294d10();
 extern undefined4 FUN_80294d78();
 extern int fn_80295C0C(int);
-extern int fn_802962B4(int);
-extern int fn_80296700(int);
+extern int objFn_802962b4(int);
+extern int objFn_80296700(int);
 
 extern undefined4 DAT_803a4ed8;
 extern undefined4 gCamcontrolTargetTypeMask;
@@ -399,7 +399,7 @@ void camcontrol_updateTargetAction(int param_1,int param_2)
     if (*(int *)(param_1 + 0x124) != 0) {
       sVar1 = *(short *)(*(int *)(param_1 + 0x124) + 0x44);
       if (((sVar1 == 0x1c) || (sVar1 == 0x2a)) && (*(short *)(param_2 + 0x44) == 1)) {
-        iVar3 = fn_80296700(param_2);
+        iVar3 = objFn_80296700(param_2);
         if ((iVar3 != 0) && (iVar3 = fn_80295C0C(param_2), iVar3 != 0)) {
           goto action_49;
         }
@@ -415,7 +415,7 @@ action_49:
     goto done;
 check_action_44:
     if ((((uVar2 & 0x10) != 0) && (*(short *)(param_2 + 0x44) == 1)) &&
-       (iVar3 = fn_802962B4(param_2), iVar3 != 0)) {
+       (iVar3 = objFn_802962b4(param_2), iVar3 != 0)) {
       local_24.distance = *cameraMtxVar57;
       local_24.yOffset = cameraMtxVar57[2];
       local_18 = (longlong)(int)cameraMtxVar57[0x23];

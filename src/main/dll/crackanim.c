@@ -23,7 +23,7 @@ extern undefined4 FUN_80294d60();
 extern u8 *Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void fn_80296AFC(u8 *player, int v);
+extern void playerAddHealth(u8 *player, int v);
 extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
 
 extern undefined4* DAT_803dd6d8;
@@ -88,7 +88,7 @@ void appleontree_update(int param_1)
   if ((*(byte *)(iVar8 + 0x5a) & 4) != 0) {
     while (iVar3 = ObjMsg_Pop((int)puVar2,&local_78,(uint *)0x0,(uint *)0x0), iVar3 != 0) {
       if (local_78 == 0x7000b) {
-        fn_80296AFC(Obj_GetPlayerObject(), (int)*(u16 *)(iVar8 + 0x38));
+        playerAddHealth(Obj_GetPlayerObject(), (int)*(u16 *)(iVar8 + 0x38));
         itemPickupDoParticleFx((int)puVar2, lbl_803E4460, 0xff, 0x28);
         Sfx_PlayFromObject((int)puVar2, 0x58);
         iVar3 = *(int *)(puVar2 + 0x5c);

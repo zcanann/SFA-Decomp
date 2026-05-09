@@ -149,7 +149,7 @@ extern void Sfx_KeepAliveLoopedObjectSoundLimited(int obj, int sfx, int limit);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
 extern int randomGetRange(int lo, int hi);
-extern void fn_802968AC(int player, u8 b);
+extern void playerAddMoney(int player, u8 b);
 extern int fn_801843C0(int obj);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
 extern int fn_8005A10C(f32 *p1, f32 f1);
@@ -205,7 +205,7 @@ void scarab_update(int param_1)
         while (ObjMsg_Pop(param_1, &msg_type, 0, 0) != 0) {
             if (msg_type == 0x7000b) {
                 v_lbl_18 = lbl_803E39F0;
-                fn_802968AC(player, *((u8 *)&v_lbl_18 + *(u8 *)(p_b8 + 0x27)));
+                playerAddMoney(player, *((u8 *)&v_lbl_18 + *(u8 *)(p_b8 + 0x27)));
                 *(s16 *)(p_b8 + 0x10) = 0x50;
                 *(s16 *)(p_b8 + 0x14) = 0;
                 *(u8 *)(p_b8 + 0x28) = *(u8 *)(p_b8 + 0x28) & 0xfe;
