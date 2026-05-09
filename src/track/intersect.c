@@ -412,7 +412,7 @@ void fn_8006F400(f32 step)
 /*
  * --INFO--
  *
- * Function: fn_8006F500
+ * Function: drawFn_8006f500
  * EN v1.0 Address: 0x8006F09C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8006F67C
@@ -422,14 +422,14 @@ void fn_8006F400(f32 step)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8006F500(void)
+void drawFn_8006f500(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: fn_8006F950
+ * Function: playerEarthWalkerAudioFn_8006f950
  * EN v1.0 Address: 0x8006F0A0
  * EN v1.0 Size: 1016b
  * EN v1.1 Address: 0x8006FACC
@@ -439,7 +439,7 @@ void fn_8006F500(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8006F950(undefined4 param_1,undefined4 param_2,undefined param_3,uint param_4)
+void playerEarthWalkerAudioFn_8006f950(undefined4 param_1,undefined4 param_2,undefined param_3,uint param_4)
 {
   extern undefined4 lbl_80391DE0;
   extern undefined4 lbl_80391DC0;
@@ -672,7 +672,7 @@ void fn_8006FCCC(void)
 /*
  * --INFO--
  *
- * Function: fn_8006FDF8
+ * Function: maybeReadDepthBuffer
  * EN v1.0 Address: 0x8006F690
  * EN v1.0 Size: 212b
  * EN v1.1 Address: 0x8006FF74
@@ -684,7 +684,7 @@ void fn_8006FCCC(void)
  */
 #pragma peephole off
 #pragma scheduling off
-int fn_8006FDF8(int x, int y, int id)
+int maybeReadDepthBuffer(int x, int y, int id)
 {
     bool ok;
     u8* row;
@@ -790,7 +790,7 @@ void fn_8006FF00(void)
 /*
  * --INFO--
  *
- * Function: fn_8006FF0C
+ * Function: matrixFn_8006ff0c
  * EN v1.0 Address: 0x8006F79C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80070088
@@ -800,7 +800,7 @@ void fn_8006FF00(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8006FF0C(double param_1,double param_2,double param_3,double param_4,double param_5,
+void matrixFn_8006ff0c(double param_1,double param_2,double param_3,double param_4,double param_5,
                  float *param_6,short *param_7)
 {
 }
@@ -1099,7 +1099,7 @@ void fn_800704FC(u8 param_1, u8 param_2, u8 param_3)
 /*
  * --INFO--
  *
- * Function: fn_80070510
+ * Function: renderWhirlpool
  * EN v1.0 Address: 0x8006FB00
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8007068C
@@ -1109,7 +1109,7 @@ void fn_800704FC(u8 param_1, u8 param_2, u8 param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80070510(void* obj_a, void** obj_b, int param_3)
+void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
 {
     extern f32 lbl_803DEEE4;
     extern u32 lbl_803DB6F4, lbl_803DB6F8;
@@ -1320,7 +1320,7 @@ void fn_80070510(void* obj_a, void** obj_b, int param_3)
 /*
  * --INFO--
  *
- * Function: fn_80070ED4
+ * Function: screenImageDraw
  * EN v1.0 Address: 0x8006FB04
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80071050
@@ -1332,7 +1332,7 @@ void fn_80070510(void* obj_a, void** obj_b, int param_3)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80070ED4(u8 alpha)
+void screenImageDraw(u8 alpha)
 {
     extern f32 lbl_803DEEE4, lbl_803DEEEC, lbl_803DEEF0;
     extern f32 gSynthVoiceSlots;
@@ -1542,7 +1542,7 @@ void fn_80070ED4(u8 alpha)
 /*
  * --INFO--
  *
- * Function: fn_800717FC
+ * Function: doSpiritVisionFilter
  * EN v1.0 Address: 0x8006FB08
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80071978
@@ -1554,7 +1554,7 @@ void fn_80070ED4(u8 alpha)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_800717FC(void)
+void doSpiritVisionFilter(void)
 {
     extern u32 lbl_803DB6D0, lbl_803DB6D4, lbl_803DB6D8, lbl_803DB6DC;
     extern Mtx hudMatrix;
@@ -1685,7 +1685,7 @@ void fn_800717FC(void)
 /*
  * --INFO--
  *
- * Function: fn_80071D54
+ * Function: doColorFilter
  * EN v1.0 Address: 0x8006FB0C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80071ED0
@@ -1695,7 +1695,7 @@ void fn_800717FC(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80071D54(u8* mod)
+void doColorFilter(u8* mod)
 {
     extern u32 lbl_803DEEC8, lbl_803DEECC, lbl_803DEED0, lbl_803DEED4;
     extern Mtx hudMatrix;
@@ -1830,7 +1830,7 @@ void fn_80071D54(u8* mod)
 /*
  * --INFO--
  *
- * Function: fn_800722B0
+ * Function: doDistortionFilter
  * EN v1.0 Address: 0x8006FB10
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8007242C
@@ -1842,7 +1842,7 @@ void fn_80071D54(u8* mod)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_800722B0(double radius, double angle, float* pos, u8* mod)
+void doDistortionFilter(double radius, double angle, float* pos, u8* mod)
 {
     extern f32 playerMapOffsetX, playerMapOffsetZ;
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -2108,7 +2108,7 @@ void fn_800722B0(double radius, double angle, float* pos, u8* mod)
 /*
  * --INFO--
  *
- * Function: fn_80072DFC
+ * Function: gxTextureFn_80072dfc
  * EN v1.0 Address: 0x8006FB14
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80072F78
@@ -2118,7 +2118,7 @@ void fn_800722B0(double radius, double angle, float* pos, u8* mod)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80072DFC(void* obj_a, void** obj_b, int param_3)
+void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern f32 lbl_803DB6B8, lbl_803DB6C0;
@@ -2290,7 +2290,7 @@ void fn_80072DFC(void* obj_a, void** obj_b, int param_3)
 /*
  * --INFO--
  *
- * Function: fn_8007366C
+ * Function: quakeSpellTextureFn_8007366c
  * EN v1.0 Address: 0x8007366C
  * EN v1.0 Size: 1088b
  * EN v1.1 Address: 0x800737E8
@@ -2309,7 +2309,7 @@ void fn_80072DFC(void* obj_a, void** obj_b, int param_3)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_8007366C(u8 alpha)
+void quakeSpellTextureFn_8007366c(u8 alpha)
 {
     extern Mtx lbl_80396820;
     extern f32 lbl_803DEF28;
@@ -4849,7 +4849,7 @@ void textRenderSetupFn_800795e8(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_800796F0(void)
+void geomDrawFn_800796f0(void)
 {
     GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 4);
     GXSetTevDirect(lbl_803DDCB0);
@@ -4881,7 +4881,7 @@ void fn_800796F0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  *
- * Closes out the TEV pipeline configuration that fn_80079A64 etc. open:
+ * Closes out the TEV pipeline configuration that drawViewFinderAperture etc. open:
  * pushes the current ind-stage / chan-ctrl / tex-gen counts in
  * lbl_803DD008..00B back into GX, and if the global tint alpha
  * lbl_803DB679 isn't fully transparent (0xFF) appends one final TEV
@@ -5006,7 +5006,7 @@ void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a)
 /*
  * --INFO--
  *
- * Function: fn_80079A64
+ * Function: drawViewFinderAperture
  * EN v1.0 Address: 0x80079A64
  * EN v1.0 Size: 1024b
  * EN v1.1 Address: 0x80079BE0
@@ -5025,7 +5025,7 @@ void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80079A64(f32 sx, f32 sy, u8 a, u8 flag)
+void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
 {
     extern u32 lbl_803DEEA0;
     extern u32 lbl_803DEEA4;
@@ -5146,7 +5146,7 @@ void fn_80079A64(f32 sx, f32 sy, u8 a, u8 flag)
 /*
  * --INFO--
  *
- * Function: fn_80079E64
+ * Function: drawFn_80079e64
  * EN v1.0 Address: 0x80072038
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80079FE0
@@ -5158,7 +5158,7 @@ void fn_80079A64(f32 sx, f32 sy, u8 a, u8 flag)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80079E64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 alpha0, u8 alpha1)
+void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 alpha0, u8 alpha1)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF4;
     extern f32 lbl_803DEF54, lbl_803DEF58, lbl_803DEF5C, lbl_803DEF60, lbl_803DEF64, lbl_803DEF68;
@@ -5351,7 +5351,7 @@ void fn_80079E64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 alpha
 /*
  * --INFO--
  *
- * Function: fn_8007A71C
+ * Function: doHeatEffect
  * EN v1.0 Address: 0x8007203C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8007A898
@@ -5361,7 +5361,7 @@ void fn_80079E64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 alpha
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8007A71C(u32 alpha_in)
+void doHeatEffect(u32 alpha_in)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern f32 lbl_803DEF6C, lbl_803DEF70, lbl_803DEF74;
@@ -5489,7 +5489,7 @@ void fn_8007A71C(u32 alpha_in)
 /*
  * --INFO--
  *
- * Function: fn_8007AD10
+ * Function: renderMotionBlur
  * EN v1.0 Address: 0x8007AD10
  * EN v1.0 Size: 780b
  * EN v1.1 Address: 0x8007AE8C
@@ -5508,7 +5508,7 @@ void fn_8007A71C(u32 alpha_in)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_8007AD10(f32 alpha)
+void renderMotionBlur(f32 alpha)
 {
     extern struct { f32 x, y; } lbl_803DEF1C;
     extern GXColor lbl_803DB6A0;
@@ -5601,7 +5601,7 @@ void fn_8007AD10(f32 alpha)
 /*
  * --INFO--
  *
- * Function: fn_8007B01C
+ * Function: doBlurFilter
  * EN v1.0 Address: 0x80072044
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8007B198
@@ -5613,7 +5613,7 @@ void fn_8007AD10(f32 alpha)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_8007B01C(double wx, double wy, double wz, char param4, char param5)
+void doBlurFilter(double wx, double wy, double wz, char param4, char param5)
 {
     extern f32 playerMapOffsetX, playerMapOffsetZ;
     extern f32 lbl_803DEEE4;
@@ -6152,7 +6152,7 @@ void fn_8007CAF4(void)
 /*
  * --INFO--
  *
- * Function: fn_8007CF7C
+ * Function: gxTextureSetupFn_8007cf7c
  * EN v1.0 Address: 0x800722E8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8007D0F8
@@ -6162,7 +6162,7 @@ void fn_8007CAF4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8007CF7C(void)
+void gxTextureSetupFn_8007cf7c(void)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0, lbl_803DEEF4;
     extern f32 lbl_803DEF40, lbl_803DEF88;

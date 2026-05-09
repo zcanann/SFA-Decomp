@@ -986,7 +986,7 @@ extern void selectTexture(int handle, int slot);
 extern void textureSetupFn_800799c0(void);
 extern void textRenderSetupFn_80079804(void);
 extern void fn_80079180(void);
-extern void fn_800796F0(void);
+extern void geomDrawFn_800796f0(void);
 extern void fn_8007C3D0(u32 flag);
 extern void fn_8007D670(void);
 extern void fn_800703C4(void);
@@ -1214,7 +1214,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
         }
       } else if ((s8)alphaMode != 1) {
         textureSetupFn_800799c0();
-        fn_800796F0();
+        geomDrawFn_800796f0();
         textRenderSetupFn_80079804();
         alphaMode = 1;
       }
