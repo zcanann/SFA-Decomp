@@ -671,7 +671,7 @@ extern u8 lbl_803DC848;
 extern u32 gAudioStreamMusicFadeFlagA;
 extern u32 gAudioStreamMusicFadeFlagB;
 extern s32 gAudioStreamCurrentId;
-extern s32 lbl_803DC86C;
+extern s32 gAudioStreamStartWhenPrepared;
 extern s32 gAudioStreamPreparingId;
 extern s32 gAudioStreamPreparedId;
 extern f32 gAudioStreamEndPos;
@@ -2252,7 +2252,7 @@ void AudioStream_StopCurrent(void)
         gAudioStreamPreparedId = 0;
         gAudioStreamPreparingId = 0;
         gAudioStreamCurrentId = 0;
-        lbl_803DC86C = 0;
+        gAudioStreamStartWhenPrepared = 0;
         gAudioActiveChannelMask = 0;
         gAudioStreamMusicFadeFlagB = 0;
         gAudioStreamMusicFadeFlagA = 0;
@@ -2289,7 +2289,7 @@ void AudioStream_CancelPrepared(void)
     gAudioStreamPreparedId = 0;
     gAudioStreamPreparingId = 0;
     gAudioStreamCurrentId = 0;
-    lbl_803DC86C = 0;
+    gAudioStreamStartWhenPrepared = 0;
     gAudioActiveChannelMask = 0;
     gAudioStreamMusicFadeFlagB = 0;
     gAudioStreamMusicFadeFlagA = 0;
@@ -2384,8 +2384,15 @@ void AudioStream_SetDefaultVolume(u8 volume)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800068ac(void)
+void AudioStream_Init(void)
 {
+    AISetStreamVolLeft(0);
+    AISetStreamVolRight(0);
+    gAudioStreamCurrentId = 0;
+    gAudioStreamMusicFadeFlagA = 0;
+    gAudioStreamMusicFadeFlagB = 0;
+    gAudioStreamDefaultVolume = 0x7f;
+    gAudioStreamStartWhenPrepared = 0;
 }
 
 /*
