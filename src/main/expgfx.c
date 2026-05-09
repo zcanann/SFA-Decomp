@@ -50,7 +50,7 @@ extern undefined4 FUN_80080f84();
 extern undefined4 FUN_80080f8c();
 extern undefined4 FUN_80081130();
 extern int FUN_80081134();
-extern void fn_8009B9C8(u8 sourceMode,int sourceId,int param_3);
+extern void expgfx_updateActivePools(u8 sourceMode,int sourceId,int param_3);
 extern undefined8 FUN_80135810();
 extern void debugPrintf(char *message,...);
 extern double FUN_80136594();
@@ -1702,7 +1702,7 @@ void expgfx_updateFrameState(int sourceMode,int sourceId)
       lbl_803DD264 = lbl_803DF35C;
     }
     lbl_803DC7B0 = 1;
-    fn_8009B9C8((u8)sourceMode,sourceId,0);
+    expgfx_updateActivePools((u8)sourceMode,sourceId,0);
     lbl_803DC7B0 = 0;
     poolIndex = EXPGFX_POOL_COUNT;
     while ((u8)poolIndex > 0) {
