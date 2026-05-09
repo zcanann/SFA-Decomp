@@ -6,8 +6,8 @@ extern void sndConvertMs(u32 *p);
 extern void TimeQueueAdd(int state);
 extern void fn_80278A98(int state, int mode);
 extern int hwIsActive(int slot);
-extern u32 lbl_803DE2E0;
-extern u32 lbl_803DE2E4;
+extern u32 macRealTimeHi;
+extern u32 macRealTimeLo;
 
 /*
  * Delay/schedule a voice command, optionally randomizing the delay and
@@ -68,10 +68,10 @@ int fn_80275364(int state, u32 *args)
                 }
             } else {
                 sndConvertMs(delay);
-                nowHi = lbl_803DE2E0;
+                nowHi = macRealTimeHi;
                 if ((args[1] & 1) == 0) {
-                    carry = CARRY4(lbl_803DE2E4, delay[0]);
-                    *(u32 *)(state + 0x9c) = lbl_803DE2E4 + delay[0];
+                    carry = CARRY4(macRealTimeLo, delay[0]);
+                    *(u32 *)(state + 0x9c) = macRealTimeLo + delay[0];
                     *(u32 *)(state + 0x98) = nowHi + carry;
                 } else {
                     *(u32 *)(state + 0x9c) = *(u32 *)(state + 0x94) + delay[0];
@@ -80,8 +80,8 @@ int fn_80275364(int state, u32 *args)
                 }
             }
 
-            if ((u32)(lbl_803DE2E4 < *(u32 *)(state + 0x9c)) + *(int *)(state + 0x98) <=
-                lbl_803DE2E0) {
+            if ((u32)(macRealTimeLo < *(u32 *)(state + 0x9c)) + *(int *)(state + 0x98) <=
+                macRealTimeHi) {
                 *(u32 *)(state + 0xa4) = *(u32 *)(state + 0x9c);
                 *(u32 *)(state + 0xa0) = *(u32 *)(state + 0x98);
                 *(u32 *)(state + 0x9c) = 0;

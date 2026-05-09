@@ -79,10 +79,10 @@ extern undefined4 uRam803def6c;
 
 extern u8 *lbl_803DE268;
 extern u8 lbl_803BD150[];
-extern int lbl_803DE2D4;
-extern int lbl_803DE2D8;
-extern int lbl_803DE2E0;
-extern int lbl_803DE2E4;
+extern int macActiveRoot;
+extern int macTimeQueueRoot;
+extern int macRealTimeHi;
+extern int macRealTimeLo;
 extern void audioFn_8027132c(void *state);
 extern void *audioFn_80274e7c(u32 key);
 extern u16 seqGetMIDIPriority(u8 slot, u8 event);
@@ -831,11 +831,11 @@ void fn_80278418(u32 delta)
     int nextTimer;
     int hasAlt;
 
-    timer = lbl_803DE2D8;
-    while (active = lbl_803DE2D4, timer != 0) {
+    timer = macTimeQueueRoot;
+    while (active = macActiveRoot, timer != 0) {
         wakeLo = *(u32 *)(timer + 0x9c);
         wakeHi = *(int *)(timer + 0x98);
-        if (lbl_803DE2E0 < (u32)(lbl_803DE2E4 < wakeLo) + wakeHi) {
+        if (macRealTimeHi < (u32)(macRealTimeLo < wakeLo) + wakeHi) {
             break;
         }
         nextTimer = *(int *)(timer + 0x44);
@@ -861,8 +861,8 @@ void fn_80278418(u32 delta)
         }
         audioFn_80276f0c(active);
     }
-    lbl_803DE2E0 += CARRY4(lbl_803DE2E4, delta);
-    lbl_803DE2E4 += delta;
+    macRealTimeHi += CARRY4(macRealTimeLo, delta);
+    macRealTimeLo += delta;
 }
 
 /*
@@ -962,7 +962,7 @@ void TimeQueueAdd(int state)
     int prev;
     int cur;
 
-    next = lbl_803DE2D8;
+    next = macTimeQueueRoot;
     prev = 0;
     while ((cur = next) != 0 &&
            (*(u32 *)(cur + 0x98) <
@@ -979,9 +979,9 @@ void TimeQueueAdd(int state)
         next = state;
         if (prev != 0) {
             *(int *)(*(int *)(cur + 0x48) + 0x44) = state;
-            next = lbl_803DE2D8;
+            next = macTimeQueueRoot;
         }
-        lbl_803DE2D8 = next;
+        macTimeQueueRoot = next;
         *(int *)(cur + 0x48) = state;
         return;
     }
@@ -993,7 +993,7 @@ void TimeQueueAdd(int state)
         return;
     }
 
-    lbl_803DE2D8 = state;
+    macTimeQueueRoot = state;
     *(int *)(state + 0x44) = 0;
     *(int *)(state + 0x48) = 0;
 }
@@ -1009,7 +1009,7 @@ void fn_802788B4(int state, int skipFadeReset)
         if ((*(u32 *)(state + 0x9c) ^ 0xffffffff |
              *(u32 *)(state + 0x98) ^ 0xffffffff) != 0) {
             if (*(int *)(state + 0x48) == 0) {
-                lbl_803DE2D8 = *(int *)(state + 0x44);
+                macTimeQueueRoot = *(int *)(state + 0x44);
             } else {
                 *(int *)(*(int *)(state + 0x48) + 0x44) = *(int *)(state + 0x44);
             }
@@ -1022,8 +1022,8 @@ void fn_802788B4(int state, int skipFadeReset)
         }
         *(int *)(state + 0x9c) = 0;
         *(int *)(state + 0x98) = 0;
-        activeTimeHi = lbl_803DE2E0;
-        *(int *)(state + 0xa4) = lbl_803DE2E4;
+        activeTimeHi = macRealTimeHi;
+        *(int *)(state + 0xa4) = macRealTimeLo;
         *(int *)(state + 0xa0) = activeTimeHi;
         *(u32 *)(state + 0x118) &= 0xfffbfffb;
         *(u32 *)(state + 0x114) = *(u32 *)(state + 0x114);
@@ -1043,7 +1043,7 @@ void audioFn_80278990(int state)
             if ((*(u32 *)(state + 0x9c) ^ 0xffffffff |
                  *(u32 *)(state + 0x98) ^ 0xffffffff) != 0) {
                 if (*(int *)(state + 0x48) == 0) {
-                    lbl_803DE2D8 = *(int *)(state + 0x44);
+                    macTimeQueueRoot = *(int *)(state + 0x44);
                 } else {
                     *(int *)(*(int *)(state + 0x48) + 0x44) = *(int *)(state + 0x44);
                 }
@@ -1054,19 +1054,19 @@ void audioFn_80278990(int state)
             audioFn_8027132c((void *)state);
             *(int *)(state + 0x9c) = 0;
             *(int *)(state + 0x98) = 0;
-            activeTimeHi = lbl_803DE2E0;
-            *(int *)(state + 0xa4) = lbl_803DE2E4;
+            activeTimeHi = macRealTimeHi;
+            *(int *)(state + 0xa4) = macRealTimeLo;
             *(int *)(state + 0xa0) = activeTimeHi;
             *(u32 *)(state + 0x118) &= 0xfffbfffb;
             *(u32 *)(state + 0x114) = *(u32 *)(state + 0x114);
         }
-        hadHead = lbl_803DE2D4 != 0;
-        *(int *)(state + 0x3c) = lbl_803DE2D4;
+        hadHead = macActiveRoot != 0;
+        *(int *)(state + 0x3c) = macActiveRoot;
         if (hadHead) {
-            *(int *)(lbl_803DE2D4 + 0x40) = state;
+            *(int *)(macActiveRoot + 0x40) = state;
         }
         *(int *)(state + 0x40) = 0;
-        lbl_803DE2D4 = state;
+        macActiveRoot = state;
         *(int *)(state + 0x4c) = 0;
     }
 }
@@ -1083,7 +1083,7 @@ void fn_80278A98(int state, int mode)
     }
     if (*(int *)(state + 0x4c) == 0) {
         if (*(int *)(state + 0x40) == 0) {
-            lbl_803DE2D4 = *(int *)(state + 0x3c);
+            macActiveRoot = *(int *)(state + 0x3c);
         } else {
             *(int *)(*(int *)(state + 0x40) + 0x3c) = *(int *)(state + 0x3c);
         }
@@ -1096,7 +1096,7 @@ void fn_80278A98(int state, int mode)
             if ((*(u32 *)(state + 0x9c) ^ 0xffffffff |
                  *(u32 *)(state + 0x98) ^ 0xffffffff) != 0) {
                 if (*(int *)(state + 0x48) == 0) {
-                    lbl_803DE2D8 = *(int *)(state + 0x44);
+                    macTimeQueueRoot = *(int *)(state + 0x44);
                 } else {
                     *(int *)(*(int *)(state + 0x48) + 0x44) = *(int *)(state + 0x44);
                 }
@@ -1106,8 +1106,8 @@ void fn_80278A98(int state, int mode)
             }
             *(int *)(state + 0x9c) = 0;
             *(int *)(state + 0x98) = 0;
-            activeTimeHi = lbl_803DE2E0;
-            *(int *)(state + 0xa4) = lbl_803DE2E4;
+            activeTimeHi = macRealTimeHi;
+            *(int *)(state + 0xa4) = macRealTimeLo;
             *(int *)(state + 0xa0) = activeTimeHi;
             *(u32 *)(state + 0x118) &= 0xfffbfffb;
             *(u32 *)(state + 0x114) = *(u32 *)(state + 0x114);
@@ -1149,7 +1149,7 @@ int audioFn_80278b94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 base
             if (*(int *)(state + 0x4c) != 2) {
                 if (*(int *)(state + 0x4c) == 0) {
                     if (*(int *)(state + 0x40) == 0) {
-                        lbl_803DE2D4 = *(int *)(state + 0x3c);
+                        macActiveRoot = *(int *)(state + 0x3c);
                     } else {
                         *(int *)(*(int *)(state + 0x40) + 0x3c) = *(int *)(state + 0x3c);
                     }
@@ -1216,13 +1216,13 @@ int audioFn_80278b94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 base
                     return vid;
                 }
                 fn_802788B4(state, 0);
-                hadHead = lbl_803DE2D4 != 0;
-                *(int *)(state + 0x3c) = lbl_803DE2D4;
+                hadHead = macActiveRoot != 0;
+                *(int *)(state + 0x3c) = macActiveRoot;
                 if (hadHead) {
-                    *(int *)(lbl_803DE2D4 + 0x40) = state;
+                    *(int *)(macActiveRoot + 0x40) = state;
                 }
                 *(int *)(state + 0x40) = 0;
-                lbl_803DE2D4 = state;
+                macActiveRoot = state;
                 *(int *)(state + 0x4c) = 0;
                 return vid;
             }
@@ -1244,11 +1244,11 @@ void fn_80278EA4(void)
     int offset;
     u32 i;
 
-    lbl_803DE2E4 = 0;
+    macRealTimeLo = 0;
     offset = 0;
-    lbl_803DE2D4 = 0;
-    lbl_803DE2D8 = 0;
-    lbl_803DE2E0 = 0;
+    macActiveRoot = 0;
+    macTimeQueueRoot = 0;
+    macRealTimeHi = 0;
     for (i = 0; i < *(u32 *)(lbl_803BD150 + 0x210); i++) {
         *(u32 *)(lbl_803DE268 + offset + 0x34) = 0;
         *(u32 *)(lbl_803DE268 + offset + 0x4c) = 2;
