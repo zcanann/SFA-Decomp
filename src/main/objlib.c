@@ -57,7 +57,11 @@ extern undefined4 FUN_802949e8();
 extern byte FUN_80294c20();
 extern int fn_80296BA0(void *obj);
 
-extern int gObjGroupObjects[0x100];
+#define OBJGROUP_COUNT 0x54
+#define OBJGROUP_OFFSET_CLEAR_COUNT (OBJGROUP_COUNT + 1)
+#define OBJGROUP_MAX_OBJECTS 0x100
+
+extern int gObjGroupObjects[OBJGROUP_MAX_OBJECTS];
 extern u8 gObjGroupOffsets[0x58];
 extern int DAT_803439b0;
 extern undefined4 DAT_803439b4;
@@ -1456,7 +1460,7 @@ uint ObjGroup_ContainsObject(uint obj,int group)
   uint limitXorIndex;
   int halfDiff;
 
-  if ((group < 0) || (group >= 0x54)) {
+  if ((group < 0) || (group >= OBJGROUP_COUNT)) {
     return 0;
   }
   index = (uint)gObjGroupOffsets[group];
@@ -1496,7 +1500,7 @@ int ObjGroup_FindNearestObjectToPoint(int group,float *point,float *maxDistance)
   
   nearest = 0;
   bestDistanceSq = *maxDistance * *maxDistance;
-  if ((group < 0) || (group >= 0x54)) {
+  if ((group < 0) || (group >= OBJGROUP_COUNT)) {
     return 0;
   }
   index = (uint)gObjGroupOffsets[group];
@@ -1544,7 +1548,7 @@ int ObjGroup_FindNearestObjectForObject(int group,uint obj,float *maxDistance)
   float bestDistanceSq;
   
   nearest = 0;
-  if ((group < 0) || (group >= 0x54)) {
+  if ((group < 0) || (group >= OBJGROUP_COUNT)) {
     return 0;
   }
   if (maxDistance != (float *)0x0) {
@@ -1600,7 +1604,7 @@ int ObjGroup_FindNearestObject(int group,uint obj,float *maxDistance)
   float bestDistanceSq;
   
   nearest = 0;
-  if ((group < 0) || (group >= 0x54)) {
+  if ((group < 0) || (group >= OBJGROUP_COUNT)) {
     return 0;
   }
   if (maxDistance != (float *)0x0) {
@@ -1648,7 +1652,7 @@ int ObjGroup_FindNearestObject(int group,uint obj,float *maxDistance)
 #pragma peephole off
 undefined4 * ObjGroup_GetObjects(int group,int *countOut)
 {
-  if ((group < 0) || (group >= 0x54)) {
+  if ((group < 0) || (group >= OBJGROUP_COUNT)) {
     *countOut = 0;
     return (undefined4 *)0x0;
   }
@@ -1682,7 +1686,7 @@ void ObjGroup_RemoveObject(int obj,int group)
   int limit;
   int *entries;
 
-  if ((group < 0) || (group >= 0x54)) {
+  if ((group < 0) || (group >= OBJGROUP_COUNT)) {
     return;
   }
   bucketStarts = gObjGroupOffsets;
@@ -1702,7 +1706,7 @@ void ObjGroup_RemoveObject(int obj,int group)
     entries[index] = entries[index + 1];
     index++;
   }
-  while (group < 0x54) {
+  while (group < OBJGROUP_COUNT) {
     bucketEnds[group] = bucketEnds[group] - 1;
     group++;
   }
@@ -1742,7 +1746,7 @@ int ObjGroup_GetObjectGroup(int obj)
         if ((int)(uint)*offset > objectIndex) {
           return group;
         }
-        if (group < 0x55) {
+        if (group < OBJGROUP_OFFSET_CLEAR_COUNT) {
           offset = offset + 1;
           group = group + 1;
         }
@@ -1783,10 +1787,10 @@ void ObjGroup_AddObject(int obj,int group)
   int limit;
   int *entries;
 
-  if ((group < 0) || (group >= 0x54)) {
+  if ((group < 0) || (group >= OBJGROUP_COUNT)) {
     return;
   }
-  if ((int)(uint)gObjGroupObjectCount >= 0x100) {
+  if ((int)(uint)gObjGroupObjectCount >= OBJGROUP_MAX_OBJECTS) {
     OSReport(sObjAddObjectTypeReachedMaxTypes);
     return;
   }
@@ -1809,7 +1813,7 @@ void ObjGroup_AddObject(int obj,int group)
     entries[index] = entries[index - 1];
   }
   entries[insertIndex] = obj;
-  while (group < 0x54) {
+  while (group < OBJGROUP_COUNT) {
     bucketEnds[group] = bucketEnds[group] + 1;
     group++;
   }
@@ -1835,7 +1839,7 @@ extern void* memset(void* dst, int val, u32 n);
 #pragma peephole off
 void ObjGroup_ClearAll(void)
 {
-  memset(gObjGroupOffsets, 0, 0x55);
+  memset(gObjGroupOffsets, 0, OBJGROUP_OFFSET_CLEAR_COUNT);
   gObjGroupObjectCount = 0;
   return;
 }
