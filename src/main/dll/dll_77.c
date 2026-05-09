@@ -22,8 +22,11 @@
 
 extern char sProjquakeshockDoNoLongerSupported[];
 extern void OSReport(const char *fmt, ...);
+
+#define PROJECTILE_UNSUPPORTED_RETURN -1
+
 #pragma scheduling off
 #pragma peephole off
-int projquakeshock_doUnsupported(void) { OSReport(sProjquakeshockDoNoLongerSupported); return -1; }
+int projquakeshock_doUnsupported(void) { OSReport(sProjquakeshockDoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
 #pragma peephole reset
 #pragma scheduling reset

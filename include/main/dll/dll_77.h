@@ -1,6 +1,6 @@
 #ifndef MAIN_DLL_DLL_77_H_
 #define MAIN_DLL_DLL_77_H_
 
-#include "ghidra_import.h"
+int projquakeshock_doUnsupported(void);
 
 #endif /* MAIN_DLL_DLL_77_H_ */

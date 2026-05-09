@@ -1,6 +1,6 @@
 #ifndef MAIN_DLL_DLL_64_H_
 #define MAIN_DLL_DLL_64_H_
 
-#include "ghidra_import.h"
+int projwallpower_doUnsupported(void);
 
 #endif /* MAIN_DLL_DLL_64_H_ */

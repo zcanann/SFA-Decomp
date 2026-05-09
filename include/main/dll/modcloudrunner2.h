@@ -1,6 +1,6 @@
 #ifndef MAIN_DLL_MODCLOUDRUNNER2_H_
 #define MAIN_DLL_MODCLOUDRUNNER2_H_
 
-#include "ghidra_import.h"
+int projcore3_doUnsupported(void);
 
 #endif /* MAIN_DLL_MODCLOUDRUNNER2_H_ */
