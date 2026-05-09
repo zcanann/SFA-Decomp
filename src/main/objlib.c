@@ -322,12 +322,12 @@ void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
   slotIndex = 0;
   slotOffset = (s16)slotIndex;
   clearedState = slotOffset;
-  for (; (s16)slotIndex < 0x32; slotIndex = slotIndex + 1) {
+  for (; (s16)slotIndex < OBJHITS_PRIORITY_WORK_SLOT_COUNT; slotIndex = slotIndex + 1) {
     piVar2 = (int *)(gObjHitsPriorityHitStates + slotOffset);
     if ((*piVar2 != 0) && ((u32)piVar2[2] == (u32)param_1)) {
       *piVar2 = clearedState;
     }
-    slotOffset = slotOffset + 0x3c;
+    slotOffset = slotOffset + OBJHITS_PRIORITY_WORK_SLOT_SIZE;
   }
   *(char *)(param_2 + 0xb0) = (char)param_3;
   return;
@@ -1364,8 +1364,8 @@ void ObjHits_ResetWorkBuffers(void)
 {
   int i;
 
-  for (i = 0; i < OBJHITREACT_MAX_RESET_OBJECTS; i++) {
-    *(undefined4 *)(gObjHitsPriorityHitStates + i * 0x3c) = 0;
+  for (i = 0; i < OBJHITS_PRIORITY_WORK_SLOT_COUNT; i++) {
+    *(undefined4 *)(gObjHitsPriorityHitStates + i * OBJHITS_PRIORITY_WORK_SLOT_SIZE) = 0;
   }
   gObjHitsResetObjectCount = 0;
   return;
@@ -1412,7 +1412,8 @@ void ObjHits_InitWorkBuffers(void)
   int i;
 
   gObjHitsResetObjects = (int *)mmAlloc(OBJHITREACT_MAX_RESET_OBJECTS * sizeof(int),0xe,0);
-  gObjHitsPriorityHitStates = (undefined4)mmAlloc(3000,0xe,0);
+  gObjHitsPriorityHitStates =
+      (undefined4)mmAlloc(OBJHITS_PRIORITY_WORK_SLOT_COUNT * OBJHITS_PRIORITY_WORK_SLOT_SIZE,0xe,0);
   lbl_803DCBD8 = mmAlloc(0x1900,0xe,0);
   lbl_803DCBD0[0] = mmAlloc(0x400,0xe,0);
   lbl_803DCBD0[1] = mmAlloc(0x400,0xe,0);

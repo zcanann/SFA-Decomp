@@ -1288,9 +1288,9 @@ void ObjHits_TickPriorityHitCooldowns(void)
     if (*(int *)((int)base + iVar1) != 0) {
       *(int *)((int)base + iVar1) = *(int *)((int)base + iVar1) + -1;
     }
-    iVar1 = iVar1 + 0x3c;
+    iVar1 = iVar1 + OBJHITS_PRIORITY_WORK_SLOT_SIZE;
     sVar2++;
-  } while (sVar2 < 0x32);
+  } while (sVar2 < OBJHITS_PRIORITY_WORK_SLOT_COUNT);
   gObjHitsPriorityHitTickDelta = timeDelta;
   return;
 }
