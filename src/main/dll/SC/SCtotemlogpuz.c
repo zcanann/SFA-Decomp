@@ -12,6 +12,29 @@ typedef struct SCTotemLogPuzzleEventInterface {
     void (*setAnimEvent)(int animId, int eventId, int value);
 } SCTotemLogPuzzleEventInterface;
 
+typedef struct SCTotemLogPuzzleRuntime {
+    u8 pad00[7];
+    u8 eventCountdown;
+} SCTotemLogPuzzleRuntime;
+
+typedef struct SCTotemLogPuzzleObject {
+    u8 pad00[0xAC];
+    s8 animId;
+    u8 padAD[0xB8 - 0xAD];
+    SCTotemLogPuzzleRuntime *runtime;
+} SCTotemLogPuzzleObject;
+
+typedef struct SCTotemLogPuzzleUpdateState {
+    u8 pad00[0x81];
+    u8 eventHandled[10];
+    u8 eventCount;
+} SCTotemLogPuzzleUpdateState;
+
+#define SCTOTEMLOGPUZ_RESET_GAMEBIT 0xBF8
+#define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET 5
+#define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE 1
+#define SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS 0x20000000
+
 extern SCTotemLogPuzzleEventInterface **lbl_803DCAAC;
 
 /*
@@ -25,17 +48,21 @@ extern SCTotemLogPuzzleEventInterface **lbl_803DCAAC;
 #pragma scheduling off
 int fn_801D7C14(void *obj, void *unused, void *p3)
 {
+    SCTotemLogPuzzleObject *puzzleObj;
+    SCTotemLogPuzzleUpdateState *updateState;
     int i;
+    puzzleObj = (SCTotemLogPuzzleObject *)obj;
+    updateState = (SCTotemLogPuzzleUpdateState *)p3;
     i = 0;
-    while (i < (int)*(u8 *)((char *)p3 + 0x8b)) {
-        if (((u8 *)p3)[i + 0x81] != 0) {
+    while (i < (int)updateState->eventCount) {
+        if (updateState->eventHandled[i] != 0) {
             i++;
             continue;
         }
-        fn_801D80F4(*(void **)((char *)obj + 0xb8));
+        fn_801D80F4(puzzleObj->runtime);
         i++;
     }
-    fn_801D7C94(obj, *(void **)((char *)obj + 0xb8));
+    fn_801D7C94(obj, puzzleObj->runtime);
     return 0;
 }
 #pragma scheduling reset
@@ -52,47 +79,51 @@ int fn_801D7C14(void *obj, void *unused, void *p3)
 #pragma scheduling off
 void fn_801D7C94(void *obj, void *p2)
 {
+    SCTotemLogPuzzleObject *puzzleObj;
+    SCTotemLogPuzzleRuntime *runtime;
     s8 ac;
+    puzzleObj = (SCTotemLogPuzzleObject *)obj;
+    runtime = (SCTotemLogPuzzleRuntime *)p2;
 
-    if (GameBit_Get(0xbf8) != 0) {
-        *(u8 *)((char *)p2 + 7) = 5;
-        GameBit_Set(0xbf8, 0);
+    if (GameBit_Get(SCTOTEMLOGPUZ_RESET_GAMEBIT) != 0) {
+        runtime->eventCountdown = SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET;
+        GameBit_Set(SCTOTEMLOGPUZ_RESET_GAMEBIT, 0);
     }
-    if (*(u8 *)((char *)p2 + 7) == 0) return;
+    if (runtime->eventCountdown == 0) return;
 
-    if (*(u8 *)((char *)p2 + 7) == 5) {
-        ac = *(s8 *)((char *)obj + 0xac);
+    if (runtime->eventCountdown == SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET) {
+        ac = puzzleObj->animId;
         (*lbl_803DCAAC)->setAnimEvent(ac, 1, 0);
-        ac = *(s8 *)((char *)obj + 0xac);
+        ac = puzzleObj->animId;
         (*lbl_803DCAAC)->setAnimEvent(ac, 4, 0);
-        ac = *(s8 *)((char *)obj + 0xac);
+        ac = puzzleObj->animId;
         (*lbl_803DCAAC)->setAnimEvent(ac, 6, 0);
-        ac = *(s8 *)((char *)obj + 0xac);
+        ac = puzzleObj->animId;
         (*lbl_803DCAAC)->setAnimEvent(ac, 7, 0);
-        ac = *(s8 *)((char *)obj + 0xac);
+        ac = puzzleObj->animId;
         (*lbl_803DCAAC)->setAnimEvent(ac, 8, 0);
-        ac = *(s8 *)((char *)obj + 0xac);
+        ac = puzzleObj->animId;
         (*lbl_803DCAAC)->setAnimEvent(ac, 9, 0);
-        mapUnload(0x13, 0x20000000);
-        mapUnload(0x41, 0x20000000);
-        mapUnload(0x43, 0x20000000);
-        mapUnload(0x45, 0x20000000);
+        mapUnload(0x13, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
+        mapUnload(0x41, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
+        mapUnload(0x43, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
+        mapUnload(0x45, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
     }
-    if (*(u8 *)((char *)p2 + 7) != 1) {
+    if (runtime->eventCountdown != SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE) {
         goto dec;
     }
-    ac = *(s8 *)((char *)obj + 0xac);
+    ac = puzzleObj->animId;
     (*lbl_803DCAAC)->setAnimEvent(ac, 0, 1);
-    ac = *(s8 *)((char *)obj + 0xac);
+    ac = puzzleObj->animId;
     (*lbl_803DCAAC)->setAnimEvent(ac, 2, 1);
-    ac = *(s8 *)((char *)obj + 0xac);
+    ac = puzzleObj->animId;
     (*lbl_803DCAAC)->setAnimEvent(ac, 3, 1);
-    ac = *(s8 *)((char *)obj + 0xac);
+    ac = puzzleObj->animId;
     (*lbl_803DCAAC)->setAnimEvent(ac, 5, 1);
-    ac = *(s8 *)((char *)obj + 0xac);
+    ac = puzzleObj->animId;
     (*lbl_803DCAAC)->setAnimEvent(ac, 0xa, 1);
 dec:
-    *(u8 *)((char *)p2 + 7) = *(u8 *)((char *)p2 + 7) - 1;
+    runtime->eventCountdown--;
 }
 #pragma scheduling reset
 #pragma peephole reset
