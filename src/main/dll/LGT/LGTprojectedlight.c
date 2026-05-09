@@ -28,7 +28,7 @@ extern undefined4 FUN_801d8480();
 extern uint countLeadingZeros();
 extern void *Obj_GetPlayerObject(void);
 extern void gameTextSetColor(int r,int g,int b,int a);
-extern void fn_80016870(int textId);
+extern void gameTextShow(int textId);
 extern void fn_801F3F18(int obj);
 extern uint GameBit_Get(int eventId);
 extern int fn_80080204(void);
@@ -332,7 +332,7 @@ void wmlevelcontrol_update(int obj)
   timer = *state;
   if (timer > lbl_803E5E70) {
     gameTextSetColor(0xff,0xff,0xff,0xff);
-    fn_80016870(0x42c);
+    gameTextShow(0x42c);
     *state = *state - timeDelta;
     timer = *state;
     if (timer < lbl_803E5E70) {

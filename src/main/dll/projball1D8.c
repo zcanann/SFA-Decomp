@@ -19,7 +19,7 @@ extern undefined4 FUN_801d8308();
 extern int FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern u8 *Obj_GetPlayerObject(void);
-extern void fn_80016870(int p);
+extern void gameTextShow(int p);
 
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6d8;
@@ -62,7 +62,7 @@ void nw_levcontrol_update(int param_1)
   pfVar10 = *(float **)(iVar1 + 0xb8);
   psVar2 = (short *)Obj_GetPlayerObject();
   if (lbl_803E5F10 < *pfVar10) {
-    fn_80016870(0x435);
+    gameTextShow(0x435);
     *pfVar10 = *pfVar10 - lbl_803DC074;
     if (*pfVar10 < lbl_803E5F10) {
       *pfVar10 = lbl_803E5F10;

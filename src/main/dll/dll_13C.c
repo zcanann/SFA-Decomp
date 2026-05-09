@@ -59,8 +59,8 @@ extern undefined4 FUN_80286888();
 extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
 extern int Sfx_PlayFromObjectLimited(int obj,int sfxId,int maxCount);
-extern void fn_80080178(void *timer,int duration);
-extern void fn_8008016C(void *timer);
+extern void s16toFloat(void *timer,int duration);
+extern void storeZeroToFloatParam(void *timer);
 
 extern undefined4 DAT_803dc070;
 extern undefined4 *pDll_expgfx;
@@ -786,8 +786,8 @@ void pollenfragment_init(int obj,int config)
   state[6] = 0;
   state[1] = *(undefined4 *)(state[7] + 0xc);
   *state = 0;
-  fn_80080178(state + 9,0xe10);
-  fn_8008016C(state + 8);
+  s16toFloat(state + 9,0xe10);
+  storeZeroToFloatParam(state + 8);
   return;
 }
 

@@ -3634,17 +3634,17 @@ extern void* lbl_803DDA20;
 extern void* lbl_803DDA24;
 extern void* debugLogEnd;
 extern u8    debugLogBuffer[0x1100];
-extern void  fn_8006FED4(void);
+extern void  getScreenResolution(void);
 
 /* EN v1.0 0x80137998  size: 104b  Title-screen system init. Calls
- * fn_8006FED4, primes the two float counters, clears two state bytes,
+ * getScreenResolution, primes the two float counters, clears two state bytes,
  * acquires three sized buffers (605/1/2 bytes) and primes the
  * debugLogEnd cursor to the start of the 0x1100-byte arena. */
 #pragma scheduling off
 #pragma peephole off
 void fn_80137998(void)
 {
-    fn_8006FED4();
+    getScreenResolution();
     lbl_803DD9D8 = lbl_803E23B8;
     lbl_803DD9DC = lbl_803E23B8;
     lbl_803DD9E0 = 0;

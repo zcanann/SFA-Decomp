@@ -1232,7 +1232,7 @@ void fn_8007FDF8(void) { lbl_803DB700 = 0x3; }
 void fn_800801F8(void) { curSeqNo = 0x0; }
 
 extern f32 lbl_803DEFA0;
-void fn_8008016C(f32 *p) { *p = lbl_803DEFA0; }
+void storeZeroToFloatParam(f32 *p) { *p = lbl_803DEFA0; }
 
 /* misc 16b 4-insn patterns. */
 extern u32 lbl_803DB714;

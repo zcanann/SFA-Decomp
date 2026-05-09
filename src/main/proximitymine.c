@@ -7,8 +7,8 @@ extern void fn_8003B8F4(void *obj,undefined4 param_2,undefined4 param_3,undefine
 extern int fn_8005B2FC(double x,double y,double z);
 extern void queueGlowRender(void *effect);
 extern int fn_80080150(void *timer);
-extern void fn_8008016C(void *timer);
-extern void fn_80080178(void *timer,int duration);
+extern void storeZeroToFloatParam(void *timer);
+extern void s16toFloat(void *timer,int duration);
 
 extern f32 lbl_803E6768;
 extern f32 lbl_803E6778;
@@ -133,9 +133,9 @@ void proximitymine_hitDetect(ProximityMineObject *obj)
       obj->velocityX = zeroVelocity;
       obj->velocityZ = zeroVelocity;
       state->mode = 0;
-      fn_8008016C(state->resetTimer);
-      fn_80080178(state->resetTimer,1);
-      fn_80080178(state->renderTimer,10);
+      storeZeroToFloatParam(state->resetTimer);
+      s16toFloat(state->resetTimer,1);
+      s16toFloat(state->renderTimer,10);
     }
   }
   return;

@@ -12,7 +12,7 @@ void fn_8006F950(undefined4 param_1,undefined4 param_2,undefined param_3,uint pa
 void fn_8006FC00(int param_1);
 void fn_8006FCCC(void);
 int fn_8006FDF8(int x, int y, int id);
-uint fn_8006FED4(void);
+uint getScreenResolution(void);
 void fn_8006FEF8(u32 param_1);
 void fn_8006FF00(void);
 void fn_8006FF0C(double param_1,double param_2,double param_3,double param_4,double param_5,
@@ -45,7 +45,7 @@ void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3);
 void fn_80075D5C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z);
 void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2);
 void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int width, int height, int u_offset, int v_offset);
-void fn_80076510(int x, int y, f32 sx, f32 sy);
+void drawRect(int x, int y, f32 sx, f32 sy);
 void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int width, int height, u8 flags);
 void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag);
 void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale);

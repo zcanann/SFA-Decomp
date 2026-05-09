@@ -18,8 +18,8 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 fn_8003B8F4(int param_1, int param_2, int param_3, int param_4, int param_5, double scale);
 extern undefined4 queueGlowRender(void);
-extern undefined4 fn_8008016C(int param_1);
-extern undefined4 fn_80080178(int param_1, int param_2);
+extern undefined4 storeZeroToFloatParam(int param_1);
+extern undefined4 s16toFloat(int param_1, int param_2);
 
 extern f32 lbl_803DC340;
 extern f32 lbl_803E6B74;
@@ -228,19 +228,19 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
     {
         iVar7 = (int)obj->objectDef;
         iVar8 = (int)obj->extra;
-        fn_8008016C(iVar8 + 0x24);
+        storeZeroToFloatParam(iVar8 + 0x24);
         sVar5 = *(short *)(iVar7 + 0x1a);
         if (sVar5 != 0) {
             sVar1 = *(short *)(iVar7 + 0x20);
             if (sVar1 == 0) {
-                fn_80080178(iVar8 + 0x24, (int)(short)(sVar5 * 0x3c));
+                s16toFloat(iVar8 + 0x24, (int)(short)(sVar5 * 0x3c));
             }
             else if (sVar1 < 0) {
                 sVar5 = randomGetRange(1, sVar5 * 0x3c);
-                fn_80080178(iVar8 + 0x24, (int)sVar5);
+                s16toFloat(iVar8 + 0x24, (int)sVar5);
             }
             else {
-                fn_80080178(iVar8 + 0x24, (int)(short)(sVar1 * 0x3c));
+                s16toFloat(iVar8 + 0x24, (int)(short)(sVar1 * 0x3c));
                 if (*(short *)(iVar7 + 0x1a) <= *(short *)(iVar7 + 0x20)) {
                     ((FirePipeBitFlags *)(iVar8 + 0x41))->bit6 = 0;
                 }
@@ -302,8 +302,8 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
         }
         ((FirePipeBitFlags *)&extra->flags)->bit1 = (mapData->flags & 1) == 0;
         ((FirePipeBitFlags *)&extra->flags)->bit0 = (mapData->flags & 2) == 0;
-        fn_8008016C((int)&extra->cycleTimer);
-        fn_80080178((int)&extra->cycleTimer, 0x14);
+        storeZeroToFloatParam((int)&extra->cycleTimer);
+        s16toFloat((int)&extra->cycleTimer, 0x14);
         ObjGroup_AddObject(obj, 0x4a);
         ((FirePipeBitFlags *)&extra->flags)->bit2 = 0;
         extra->subObj = 0;

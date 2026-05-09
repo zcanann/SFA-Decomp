@@ -25,7 +25,7 @@ extern undefined4 FUN_80017788();
 extern undefined4 FUN_80017790();
 extern undefined4 FUN_80017794();
 extern uint FUN_8001779c();
-extern uint fn_80022E24();
+extern uint roundUpTo4();
 extern int FUN_80017830();
 extern undefined4 FUN_80017904();
 extern undefined4 FUN_8001790c();
@@ -1848,7 +1848,7 @@ int FUN_800614dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
   undefined4 uVar3;
   undefined4 *puVar4;
   
-  uVar1 = fn_80022E24(param_10);
+  uVar1 = roundUpTo4(param_10);
   *(uint *)(param_9 + 100) = uVar1;
   puVar4 = *(undefined4 **)(param_9 + 100);
   iVar2 = *(int *)(param_9 + 0x50);

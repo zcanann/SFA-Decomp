@@ -970,7 +970,7 @@ void expgfx_renderSourcePools(int sourceId,int sourceMode)
  * PAL Size: TODO
  */
 extern void *fn_80022A48(void);
-extern int fn_8002073C(void);
+extern int getHudHiddenFrameCount(void);
 extern void fn_800229F8(void *dst, void *src, int blockCount);
 extern void fn_800229C4(int wait);
 extern int Camera_GetProjectionMatrix(void);
@@ -1042,7 +1042,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
 
   dstBuf = fn_80022A48();
   trackedFlags = 0;
-  dummy = fn_8002073C();
+  dummy = getHudHiddenFrameCount();
   Camera_GetProjectionMatrix();
   fn_800229F8(dstBuf, (void *)slotPoolBase, 0x7e);
 
@@ -1715,7 +1715,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIdx, short slot
   polePosY = 0;
   poleVecY = 0;
   poleVecZ = 0;
-  if (fn_8002073C() != 0) {
+  if (getHudHiddenFrameCount() != 0) {
     return EXPGFX_INVALID_POOL_INDEX;
   }
   if (expgfxGetSlot(&poolIdxOut, &slotIdxOut, slotType,

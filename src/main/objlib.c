@@ -23,7 +23,7 @@ extern void OSReport(const char *fmt, ...);
 extern int FUN_80017730();
 extern undefined4 FUN_8001774c();
 extern uint FUN_80017760();
-extern uint fn_80022E24();
+extern uint roundUpTo4();
 extern uint fn_80022E3C(uint param_1);
 extern uint FUN_800177dc();
 extern void *mmAlloc(int size,int heap,int flags);
@@ -231,7 +231,7 @@ int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2)
 {
   uint uVar1;
 
-  uVar1 = fn_80022E24(param_2);
+  uVar1 = roundUpTo4(param_2);
   *(uint *)(param_1 + 0x2c) = uVar1;
   if (*(uint *)(param_1 + 0x2c) != 0) {
     *(undefined *)(*(uint *)(param_1 + 0x2c) + 0x10c) = 0;
@@ -920,7 +920,7 @@ int ObjHits_AllocObjectState(int param_1,uint param_2)
   uint uVar1;
   int iVar2;
 
-  uVar1 = fn_80022E24(param_2);
+  uVar1 = roundUpTo4(param_2);
   *(uint *)(param_1 + 0x54) = uVar1;
   iVar2 = *(int *)(param_1 + 0x54);
   ObjHits_RefreshObjectState(param_1);

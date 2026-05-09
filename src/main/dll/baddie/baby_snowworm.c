@@ -1003,7 +1003,7 @@ extern void Camera_ApplyFullViewport(void);
 extern void Camera_EnableViewYOffset(void);
 extern void Camera_RebuildProjectionMatrix(void);
 extern void Camera_SetFovY(f32);
-extern void fn_80020628(s32);
+extern void setTimeStop(s32);
 extern void fn_800206E8(s32);
 extern void fn_80016C48(void* arg);
 extern void* gameTextGetBox(s32);
@@ -1067,11 +1067,11 @@ extern void fn_8006B558(void*);
 extern u8  hudTextures[0x198];
 extern u32 lbl_8033BE40[5];
 extern int   fn_80019B14(void);
-extern void  fn_80019B1C(int, s32);
+extern void  gameTextSetCharset(int, s32);
 extern void* fn_800191C4(s32, s32);
-extern void  fn_8001984C(u16, u16, s32);
+extern void  gameTextFn_8001984c(u16, u16, s32);
 extern void  fn_800163C4(void*, s32, s32, s32, s32*, s32*, s32*, s32*);
-extern void  fn_80019804(s32);
+extern void  gameTextFn_80019804(s32);
 extern void  fn_8001618C(void*, s32);
 
 typedef struct BabySnowwormBitTableEntry {
@@ -1159,7 +1159,7 @@ void fn_8012DF14(void)
     lbl_803DD75B = 1;
     (*(void(**)(s32, s32, s32))((char*)*lbl_803DCA50 + 0x24))(1, 0x94, 1);
     fn_800206E8(1);
-    fn_80020628(0xff);
+    setTimeStop(0xff);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1189,7 +1189,7 @@ void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do
     fn_80016C48(lbl_803A9440);
     if (do_input_disable != 0) {
         fn_800206E8(1);
-        fn_80020628(0xff);
+        setTimeStop(0xff);
         lbl_803DD7A9 = 1;
     } else {
         lbl_803DD7A9 = 0;
@@ -1357,7 +1357,7 @@ int fn_8012B6BC(void)
 /* EN v1.0 0x80129698  size: 196b  Pickup-pickup state hook: latches the
  * resulting object id from fn_800E88B4 into lbl_803DBA91, and on the
  * "post-collect" mode codes (1 or 2) optionally fires off the cleanup
- * trio (Music_Trigger / fn_800206E8 / fn_80020628) when no slot was active
+ * trio (Music_Trigger / fn_800206E8 / setTimeStop) when no slot was active
  * yet, then commits the new u8 active-id to lbl_803DBA90. The third arg
  * funnels through `c == 0xa` as a branchless boolean. Always returns 1. */
 #pragma scheduling off
@@ -1369,7 +1369,7 @@ int fn_80129698(s8 a, int b, u8 c, int mode)
         if (lbl_803DBA90 == -1) {
             Music_Trigger(0x23, 1);
             fn_800206E8(1);
-            fn_80020628(0xff);
+            setTimeStop(0xff);
         }
         lbl_803DBA90 = a;
     }
@@ -1615,7 +1615,7 @@ void fn_80129DB4(void)
  *
  * Gated on (lbl_803DD774 != 0) && (lbl_803DD776 == 0). Saves the
  * current sprite-batch state via fn_80019B14, sets sub-batch via
- * fn_80019B1C(lbl_803DD77B, 3), grabs a slot handle from
+ * gameTextSetCharset(lbl_803DD77B, 3), grabs a slot handle from
  * fn_800191C4(lbl_803DBA60, lbl_803DBA5C), and looks up sprite 0x49.
  *
  * Copies the 5-u32 transform block from the singleton at
@@ -1627,17 +1627,17 @@ void fn_80129DB4(void)
  *   alpha  = clamp((mirror) * 0xf, 0, 0xff)
  *   target = clamp(((mirror) - 0x14) << 4, 0, 0x10e)
  *
- * Issues fn_8001984C(sprite->_2, sprite->_a, 1) to enable, then
+ * Issues gameTextFn_8001984c(sprite->_2, sprite->_a, 1) to enable, then
  * fn_800163C4(handle, 0x49, 0, 0, &v[3..0]) to read the sprite's
- * current bbox into stack slots 0x14..0x8. Calls fn_80019804(1).
+ * current bbox into stack slots 0x14..0x8. Calls gameTextFn_80019804(1).
  *
  * Computes blit_x = clamp((v[0x10] - v[0x14] + 0x28), 0, target_y);
  * stores blit_x & 0xfffe at sprite+0x8, and 0x140 - (blit_x>>1) at
- * sprite+0x14. Re-issues fn_8001984C with subbatch 2 and runs
+ * sprite+0x14. Re-issues gameTextFn_8001984c with subbatch 2 and runs
  * gameTextSetColor(0xff, 0xff, 0xff, alpha) to commit the colour, also
  * latches alpha into sprite+0x1e.
  *
- * Tail: fn_8001618C(handle, 0x49); fn_80019804(2); fn_80019B1C with
+ * Tail: fn_8001618C(handle, 0x49); gameTextFn_80019804(2); gameTextSetCharset with
  * the saved state to restore the batch.
  */
 #pragma scheduling off
@@ -1657,7 +1657,7 @@ void pauseMenuDrawText(void)
     if (lbl_803DD776 != 0) return;
 
     saved = fn_80019B14();
-    fn_80019B1C(lbl_803DD77B, 3);
+    gameTextSetCharset(lbl_803DD77B, 3);
     handle = fn_800191C4(lbl_803DBA60, lbl_803DBA5C);
     sprite = gameTextGetBox(0x49);
 
@@ -1684,9 +1684,9 @@ void pauseMenuDrawText(void)
     target = (s16)(target << 4);
     if (target > 0x10e) target = 0x10e;
 
-    fn_8001984C(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 1);
+    gameTextFn_8001984c(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 1);
     fn_800163C4(handle, 0x49, 0, 0, &v[3], &v[2], &v[1], &v[0]);
-    fn_80019804(1);
+    gameTextFn_80019804(1);
 
     {
         s16 width = (s16)(v[2] - v[3]);
@@ -1699,12 +1699,12 @@ void pauseMenuDrawText(void)
         *(s16*)((u8*)sprite + 0x14) = (s16)(0x140 - (blit_x >> 1));
     }
 
-    fn_8001984C(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 2);
+    gameTextFn_8001984c(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 2);
     gameTextSetColor(0xff, 0xff, 0xff, (u8)alpha);
     *(u8*)((u8*)sprite + 0x1e) = (u8)alpha;
     fn_8001618C(handle, 0x49);
-    fn_80019804(2);
-    fn_80019B1C(saved, 3);
+    gameTextFn_80019804(2);
+    gameTextSetCharset(saved, 3);
 }
 #pragma peephole reset
 #pragma scheduling reset

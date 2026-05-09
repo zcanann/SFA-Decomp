@@ -7,8 +7,8 @@ extern void ObjHits_EnableObject(void *obj);
 extern void ObjHits_MarkObjectPositionDirty(void *obj);
 extern void ObjHitbox_SetCapsuleBounds(void *obj, int height, int param3, int param4);
 extern void ObjHits_SetHitVolumeSlot(void *obj, int param2, int param3, int param4);
-extern void fn_8008016C(void *timer);
-extern void fn_80080178(void *timer, int duration);
+extern void storeZeroToFloatParam(void *timer);
+extern void s16toFloat(void *timer, int duration);
 extern void fn_8009A8C8(void *obj, f32 param2);
 extern void spawnExplosion(void *obj, f32 param2, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void fn_8001CB3C(void *handle);
@@ -67,12 +67,12 @@ void proximitymine_resetToIdle(ProximityMineObject *obj)
     zero = lbl_803E6768;
     obj->velocityX = zero;
     obj->velocityZ = zero;
-    fn_8008016C(state->renderTimer);
-    fn_80080178(state->renderTimer, 10);
+    storeZeroToFloatParam(state->renderTimer);
+    s16toFloat(state->renderTimer, 10);
     state->mode = 0;
     ObjHits_EnableObject(obj);
     ObjHits_MarkObjectPositionDirty(obj);
-    fn_8008016C(state->resetTimer);
+    storeZeroToFloatParam(state->resetTimer);
     fn_8009A8C8(obj, lbl_803E676C);
     {
         f32 dist = state->triggerDistance - lbl_803E6774;

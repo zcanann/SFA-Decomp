@@ -6,7 +6,7 @@ extern uint getAngle();
 extern void mtxRotateByVec3s(void *matrix,void *angles);
 extern void Matrix_TransformPoint(double x,double y,double z,void *matrix,float *outX,float *outY,
                                   float *outZ);
-extern double fn_80021370(double param_1,double param_2,double param_3);
+extern double interpolate(double param_1,double param_2,double param_3);
 extern f32 sqrtf(f32 x);
 extern f32 fn_80293E80(f32 x);
 extern f32 fn_802966F4(int obj);
@@ -230,7 +230,7 @@ void camslide_update(int param_1,int param_2)
   else {
     local_b4 = (float)(dVar8 - dVar5);
   }
-  dVar5 = fn_80021370((double)local_b4,(double)gCamcontrolModeSettings[5],
+  dVar5 = interpolate((double)local_b4,(double)gCamcontrolModeSettings[5],
                       (double)timeDelta);
   local_b4 = (float)dVar5;
   if ((lbl_803E16E8 < (float)dVar5) && ((float)dVar5 < lbl_803E16F4)) {
@@ -282,7 +282,7 @@ void firstperson_updatePitch(double param_1,int param_2)
   if ((int)uVar1 < -0x8000) {
     uVar1 = uVar1 + 0xffff;
   }
-  dVar2 = fn_80021370((double)(float)(CamSlide_U32AsDouble(uVar1 ^ 0x80000000) -
+  dVar2 = interpolate((double)(float)(CamSlide_U32AsDouble(uVar1 ^ 0x80000000) -
                                       DOUBLE_803e1698),
                       (double)(lbl_803E16A4 /
                               (float)(CamSlide_U32AsDouble(*(u8 *)(gCamcontrolModeSettings + 0x30)) -

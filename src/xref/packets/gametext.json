@@ -37,7 +37,7 @@
   "functions": [
     {
       "function_start": "0x80019C24",
-      "function_name": "fn_80019C24",
+      "function_name": "gameTextRun",
       "xrefs": [
         {
           "xref_address": "0x80019D68",
@@ -45,7 +45,7 @@
           "target_address": "0x802C9E70",
           "target_text": "gametext/%s/%s.bin",
           "pair_kind": "lis/addi",
-          "function_name": "fn_80019C24"
+          "function_name": "gameTextRun"
         }
       ]
     },

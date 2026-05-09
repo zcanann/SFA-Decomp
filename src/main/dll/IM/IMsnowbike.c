@@ -8,7 +8,7 @@ extern int Obj_GetPlayerObject(void);
 extern void buttonDisable(int a, int b);
 extern void fn_80014B58(int a);
 extern void fn_80014B68(int a);
-extern void fn_80016870(int a);
+extern void gameTextShow(int a);
 extern void fn_80088870(void *a, void *b, void *c, void *d);
 extern void fn_800887F8(int a);
 extern void fn_80088E54(int a, f32 b);
@@ -54,7 +54,7 @@ void sh_levelcontrol_update(int param_1)
 
   puVar5 = *(uint **)(param_1 + 0xb8);
   if (*(f32 *)((int)puVar5 + 0xc) > lbl_803E54B4) {
-    fn_80016870(0x3f6);
+    gameTextShow(0x3f6);
     *(f32 *)((int)puVar5 + 0xc) = *(f32 *)((int)puVar5 + 0xc) - timeDelta;
     if (*(f32 *)((int)puVar5 + 0xc) < lbl_803E54B4) {
       *(f32 *)((int)puVar5 + 0xc) = lbl_803E54B4;

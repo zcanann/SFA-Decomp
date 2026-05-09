@@ -8,7 +8,7 @@ extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006c88();
 extern undefined8 padUpdate();
 extern undefined4 fn_80015624();
-extern undefined4 fn_80019C24();
+extern undefined4 gameTextRun();
 extern undefined4 FUN_80017620();
 extern uint FUN_80017690();
 extern undefined8 FUN_80017698();
@@ -16,7 +16,7 @@ extern undefined8 FUN_80017940();
 extern undefined4 FUN_80017a50();
 extern int FUN_80017a54();
 extern undefined4 FUN_80017a90();
-extern undefined4 fn_80016870();
+extern undefined4 gameTextShow();
 extern uint GameBit_Get();
 extern undefined8 GameBit_Set();
 extern undefined4 checkReset();
@@ -273,7 +273,7 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
           fn_80015624();
           if (bVar2) {
             mmFreeTick(0);
-            fn_80019C24();
+            gameTextRun();
             GXFlush_(1,0);
           }
           if (DAT_803dd5d0 != '\0') {
@@ -555,7 +555,7 @@ void dimboss_update2(DIMbossObject *obj)
   topState = runtime->topState;
   if (obj->renderPause == 0) {
     if (topState->introSinkHeight > lbl_803E4BD8) {
-      fn_80016870(0x432);
+      gameTextShow(0x432);
       topState->introSinkHeight -= timeDelta;
       if (topState->introSinkHeight < lbl_803E4BD8) {
         topState->introSinkHeight = lbl_803E4BD8;

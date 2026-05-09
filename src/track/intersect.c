@@ -740,7 +740,7 @@ int fn_8006FDF8(int x, int y, int id)
  */
 #pragma peephole off
 #pragma scheduling off
-uint fn_8006FED4(void)
+uint getScreenResolution(void)
 {
     u32 v = lbl_803DD004;
     if (v != 0) {
@@ -3408,7 +3408,7 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
 /*
  * --INFO--
  *
- * Function: fn_80076510
+ * Function: drawRect
  * EN v1.0 Address: 0x80076510
  * EN v1.0 Size: 780b
  * EN v1.1 Address: 0x8007668C
@@ -3426,7 +3426,7 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80076510(int x, int y, f32 sx, f32 sy)
+void drawRect(int x, int y, f32 sx, f32 sy)
 {
     extern Mtx hudMatrix;
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
@@ -5170,9 +5170,9 @@ void fn_80079E64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 alpha
     extern int lbl_803DD014;
     extern u16 fn_8000FA90(void);
     extern u16 fn_8000FA70(void);
-    extern int fn_8002073C(void);
+    extern int getHudHiddenFrameCount(void);
     extern f32 fn_80292194(f32 v);
-    extern f32 fn_80021370(f32 a, f32 b, f32 c);
+    extern f32 interpolate(f32 a, f32 b, f32 c);
     extern void getReflectionTexture2(int* out);
     extern void fn_8006C4F8(int* out);
     extern void selectTexture(int handle, int slot);
@@ -5194,11 +5194,11 @@ void fn_80079E64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 alpha
     c_K1.a = alpha1;
     ratio1 = ((f32)(u32)fn_8000FA90() - lbl_803DEF54) / lbl_803DEF58;
     ratio2 = ((f32)(u32)fn_8000FA70() - lbl_803DEF54) / lbl_803DEF58;
-    if (fn_8002073C() != 0) {
+    if (getHudHiddenFrameCount() != 0) {
         angle = lbl_803DD00C;
     } else {
         f32 t = fn_80292194(((f32*)vec)[0] / ((f32*)vec)[1]);
-        angle = lbl_803DD00C + fn_80021370(t - lbl_803DD00C, lbl_803DEF5C, timeDelta);
+        angle = lbl_803DD00C + interpolate(t - lbl_803DD00C, lbl_803DEF5C, timeDelta);
         lbl_803DD00C = angle;
     }
     c_K2.a = mtxIdx;
@@ -6999,7 +6999,7 @@ void fn_8007E1AC(int param_1)
  * pipeline; on each frame either lets the active controller draw its own
  * popup (lbl_803DCA4C[0]->vtbl[1]) or falls back to hudDrawColored over the
  * cached prompt id in lbl_803DB708, then routes the OK/Cancel/back text
- * to fn_80016810 based on the dialog kind passed in.
+ * to gameTextFn_80016810 based on the dialog kind passed in.
  */
 #pragma peephole off
 #pragma scheduling off
@@ -7013,15 +7013,15 @@ void cardShowLoadingMsg(u8 kind)
     extern void** lbl_803DCA4C;
     extern f32 lbl_803DEF98;
     extern f32 lbl_803DEF9C;
-    extern void fn_80076510(int, int, f32, f32);
+    extern void drawRect(int, int, f32, f32);
     extern int fn_8003B8F4(int, int, int, int, int, f32);
     extern void fn_8001476C(int, int, int, int);
     extern int lbl_803DB708;
     extern void getLastRenderedFrame(void);
     extern void hudDrawColored(int, int, int, void*, int, int);
     extern void gameTextSetColor(int, int, int, int);
-    extern void fn_80016810(int, int, int);
-    extern void fn_80019C24(void);
+    extern void gameTextFn_80016810(int, int, int);
+    extern void gameTextRun(void);
     extern void GXFlush_(int, int);
 
     int* buttons;
@@ -7041,7 +7041,7 @@ void cardShowLoadingMsg(u8 kind)
         if ((u32)count != 0) {
             draw = (void (*)(int, int, int))((void**)*lbl_803DCA4C)[1];
             draw(0, 0, 0);
-            fn_80076510(0x280, 0x1E0, lbl_803DEF98, lbl_803DEF98);
+            drawRect(0x280, 0x1E0, lbl_803DEF98, lbl_803DEF98);
             for (j = 0; j < count; j++) {
                 fn_8003B8F4(buttons[j], 0, 0, 0, 0, lbl_803DEF9C);
             }
@@ -7053,13 +7053,13 @@ void cardShowLoadingMsg(u8 kind)
         }
         gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
         if (mode == 1) {
-            fn_80016810(0x323, 0, 0xC8);
+            gameTextFn_80016810(0x323, 0, 0xC8);
         } else if (mode == 2) {
-            fn_80016810(0x573, 0, 0xC8);
+            gameTextFn_80016810(0x573, 0, 0xC8);
         } else {
-            fn_80016810(0x56C, 0, 0xC8);
+            gameTextFn_80016810(0x56C, 0, 0xC8);
         }
-        fn_80019C24();
+        gameTextRun();
         GXFlush_(1, 0);
     }
 }

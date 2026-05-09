@@ -7,7 +7,7 @@ extern int GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern void fn_8003B8F4(double scale);
 extern void unlockLevel(int param_1,int param_2,int param_3);
-extern void fn_8008016C(void *timer);
+extern void storeZeroToFloatParam(void *timer);
 extern void crcloudrace_updateRaceState(void *obj);
 extern undefined4 crcloudrace_completionCallback(void *obj,undefined4 param_2,void *param_3);
 
@@ -96,7 +96,7 @@ void crcloudrace_init(CrCloudRaceObject *obj)
   state = obj->state;
   obj->callback = crcloudrace_completionCallback;
   state->phase = 2;
-  fn_8008016C(state->timer);
+  storeZeroToFloatParam(state->timer);
   GameBit_Set(0xe24,1);
   fn_8000A380(3,2,1000);
   return;
