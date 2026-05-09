@@ -2108,8 +2108,8 @@ void expgfx_onMapSetup(void)
 #pragma peephole off
 void expgfx_release(void)
 {
-  int poolIndex;
   u32 *slotPoolBases;
+  int poolIndex;
 
   asm {
     bl expgfxRemoveAll
