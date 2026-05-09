@@ -1,10 +1,10 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_80271BFC.h"
 
-extern u32 fn_8027ADD8(u8 voiceIdx);
+extern u32 synthClaimVirtualSampleSlot(u8 voiceIdx);
 extern void voiceKill(u8 voiceIdx);
 extern void fn_80278560(void);
-extern void fn_8027AFC0(u32 packed);
+extern void synthHandleVirtualSampleDone(u32 packed);
 extern u32 hwGetVirtualSampleID(int slot);
 extern void sndConvertMs(u32 *p);
 extern void fn_8027142C(u8 *fade);
@@ -195,10 +195,10 @@ void fn_80271FB0(u32 voiceIdx, u8 value)
 
 /*
  * Voice command dispatcher: runs different actions per command code.
- *   0 -> claim slot via fn_8027ADD8
+ *   0 -> validate current sample and mark the slot active
  *   1 -> voiceKill
- *   2 -> vacate-or-skip via hwGetVirtualSampleID + fn_8027AFC0 + check
- *   3 -> simple vacate via hwGetVirtualSampleID + fn_8027AFC0
+ *   2 -> claim virtual sample slot
+ *   3 -> simple vacate via hwGetVirtualSampleID + synthHandleVirtualSampleDone
  *
  * EN v1.0 Address: 0x802719B0
  * EN v1.0 Size: 4b (stub)
@@ -218,7 +218,7 @@ int fn_80271FD8(int mode, u32 arg)
         if (entry[0x11c] != 0) {
             break;
         }
-        fn_8027AFC0(hwGetVirtualSampleID(arg & 0xff));
+        synthHandleVirtualSampleDone(hwGetVirtualSampleID(arg & 0xff));
         entry = lbl_803DE268 + offset;
         if (arg != *(u32 *)(entry + 0xf4)) {
             break;
@@ -230,10 +230,10 @@ int fn_80271FD8(int mode, u32 arg)
         voiceKill(arg & 0xff);
         break;
     case 2:
-        result = fn_8027ADD8(arg & 0xff);
+        result = synthClaimVirtualSampleSlot(arg & 0xff);
         break;
     case 3: {
-        fn_8027AFC0(hwGetVirtualSampleID(arg & 0xff));
+        synthHandleVirtualSampleDone(hwGetVirtualSampleID(arg & 0xff));
         break;
     }
     }

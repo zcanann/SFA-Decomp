@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8027B41C.h"
 
-extern u32 fn_8027B06C(void *entry, u32 tick);
+extern u32 synthAdvanceVirtualSampleEntry(void *entry, u32 tick);
 extern u32 hwChangeStudio(int slot);
 extern u32 hwGetVirtualSampleState(int slot);
 extern u16 hwGetVirtualSampleID(int slot);
@@ -13,9 +13,9 @@ extern u8 *lbl_803DE268;
 extern u16 lbl_803DE308;
 
 /*
- * Periodic voice tick processor: walks 64 active voices, computes
+ * Periodic virtual-sample tick processor: walks 64 active voices, computes
  * elapsed tick for each, and either advances the envelope (mode 1)
- * or runs sample-completion logic (mode 2 — checks current sample
+ * or runs sample-completion logic (mode 2 - checks current sample
  * id matches expected and triggers a stop+vacate when threshold
  * elapsed).
  *
@@ -24,7 +24,7 @@ extern u16 lbl_803DE308;
  * EN v1.1 Address: 0x8027B41C
  * EN v1.1 Size: 452b
  */
-void fn_8027B25C(void)
+void synthUpdateVirtualSamples(void)
 {
     u8 *state;
     int i;
@@ -65,7 +65,7 @@ void fn_8027B25C(void)
                 u32 prev;
                 u32 threshold;
                 u16 val;
-                fn_8027B06C(entry, elapsed);
+                synthAdvanceVirtualSampleEntry(entry, elapsed);
                 prev = *(u32 *)(entry + 0xc);
                 if (currentTick < prev) {
                     u32 delta = *(u32 *)(state + 4) - (prev - currentTick);
@@ -86,7 +86,7 @@ void fn_8027B25C(void)
                 }
             }
         } else if (entry[0] == 1) {
-            fn_8027B06C(entry, elapsed);
+            synthAdvanceVirtualSampleEntry(entry, elapsed);
         }
     }
 }
@@ -95,7 +95,7 @@ void fn_8027B25C(void)
  * EN v1.1 Address: 0x8027B420
  * EN v1.1 Size: 12b
  */
-void fn_8027B420(void)
+void synthResetVirtualSampleCounter(void)
 {
     lbl_803DE308 = 0;
 }

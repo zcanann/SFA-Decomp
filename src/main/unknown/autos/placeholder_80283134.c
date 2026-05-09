@@ -96,7 +96,7 @@ extern void fn_8026EC44(u32 value);
 extern void fn_80271498(u32 value);
 extern void fn_80280C30(void);
 extern void fn_80272F70(void);
-extern void fn_8027B25C(void);
+extern void synthUpdateVirtualSamples(void);
 
 /*
  * --INFO--
@@ -170,7 +170,7 @@ void snd_handle_irq(void)
     fn_80272F70();
     hwIRQLeaveCritical();
     hwIRQEnterCritical();
-    fn_8027B25C();
+    synthUpdateVirtualSamples();
     hwIRQLeaveCritical();
 }
 

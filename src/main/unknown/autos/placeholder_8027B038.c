@@ -14,7 +14,7 @@ extern u8 lbl_803CB290[];
  * EN v1.1 Address: 0x8027AFC0
  * EN v1.1 Size: 168b
  */
-void fn_8027AFC0(u32 packed)
+void synthHandleVirtualSampleDone(u32 packed)
 {
     u8 *state;
     u8 *slots;
@@ -41,10 +41,10 @@ void fn_8027AFC0(u32 packed)
     slots[*(u8 *)(entry + 0xb)] = 0xff;
 }
 
-/* fn_8027B06C is the voice-time elapsed-tick updater — large and
+/* synthAdvanceVirtualSampleEntry is the voice-time elapsed-tick updater - large and
  * shared with placeholder_8027B41C; left as a stub here so the
  * caller (also a stub) links. */
-void fn_8027B06C(void *entry, u32 elapsed)
+void synthAdvanceVirtualSampleEntry(void *entry, u32 elapsed)
 {
     (void)entry;
     (void)elapsed;

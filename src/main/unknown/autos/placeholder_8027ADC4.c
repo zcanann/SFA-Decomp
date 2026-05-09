@@ -8,7 +8,7 @@ extern u8 lbl_803CB290[];
  *
  * EN v1.1 Address: 0x8027ACB8, size 288b
  */
-void fn_8027ACB8(void)
+void synthInitVirtualSampleTable(void)
 {
     int i;
     lbl_803CB290[0] = 0;
@@ -20,11 +20,12 @@ void fn_8027ACB8(void)
 }
 
 /*
- * fn_8027ADD8 — voice-allocate-and-set-loop helper (~488 instructions).
+ * synthClaimVirtualSampleSlot - voice-allocate-and-set-loop helper
+ * (~488 instructions).
  * Stubbed.
  */
 #pragma dont_inline on
-int fn_8027ADD8(u8 a)
+int synthClaimVirtualSampleSlot(u8 a)
 {
     (void)a;
     return 0;

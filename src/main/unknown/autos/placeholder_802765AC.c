@@ -21,7 +21,6 @@ extern undefined4 FUN_8027a664();
 extern int FUN_8027a8fc();
 extern undefined4 FUN_8027a904();
 extern undefined4 FUN_8027ac38();
-extern undefined4 FUN_8027afc0();
 extern undefined4 FUN_8028134c();
 extern undefined4 FUN_80281a30();
 extern uint FUN_80282070();
