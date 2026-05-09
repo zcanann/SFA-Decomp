@@ -4,7 +4,7 @@
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 fn_801EA678(int p1, int p2);
-extern int fn_8005B2FC(double x, double y, double z);
+extern int objPosToMapBlockIdx(double x, double y, double z);
 extern int fn_801EC870(int p1, int p2);
 extern void fn_800658A4(int p1, f32 x, f32 y, f32 z, f32 *out, int flag);
 
@@ -154,7 +154,7 @@ int fn_801EAAC0(int param_1, int param_2)
     if (flags->b3 == 0) {
         return 0;
     }
-    iVar3 = fn_8005B2FC(*(f32 *)(param_1 + 0xc), *(f32 *)(param_1 + 0x10), *(f32 *)(param_1 + 0x14));
+    iVar3 = objPosToMapBlockIdx(*(f32 *)(param_1 + 0xc), *(f32 *)(param_1 + 0x10), *(f32 *)(param_1 + 0x14));
     if (iVar3 > -1) {
         if (flags->b0 == 0) {
         {

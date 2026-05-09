@@ -24,7 +24,7 @@ extern int FUN_80017730();
 extern undefined4 FUN_8001774c();
 extern uint FUN_80017760();
 extern uint roundUpTo4();
-extern uint fn_80022E3C(uint param_1);
+extern uint roundUpTo8(uint param_1);
 extern uint FUN_800177dc();
 extern void *mmAlloc(int size,int heap,int flags);
 extern float *ObjModel_GetJointMatrix(int *model,int jointIndex);
@@ -36,7 +36,7 @@ extern int ObjList_GetObjects();
 extern void ObjHitbox_UpdateRotatedBounds(short *param_1,int param_2);
 extern undefined4 FUN_80045328();
 extern void getTabEntry(void *dst,int fileId,int offset,int size);
-extern void fn_80048F48(int fileId,void *dst,int offset,int size);
+extern void fileLoadToBufferOffset(int fileId,void *dst,int offset,int size);
 extern void fn_80054F74(int obj,float *pos);
 extern int * fn_8005B11C();
 extern void debugPrintf(const char *fmt, ...);
@@ -284,7 +284,7 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
           getTabEntry(hitState->entries,0x41,(int)firstEntryIndex,(int)hitState->activeEntryCount);
           return;
         }
-        fn_80048F48(0x41,hitState->entries,(int)firstEntryIndex,(int)hitState->activeEntryCount);
+        fileLoadToBufferOffset(0x41,hitState->entries,(int)firstEntryIndex,(int)hitState->activeEntryCount);
         return;
       }
     }
@@ -319,7 +319,7 @@ uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitSt
     return entryArena;
   }
   hitState->entryCapacity = 300;
-  entries = (ObjHitReactEntry *)fn_80022E3C(entryArena);
+  entries = (ObjHitReactEntry *)roundUpTo8(entryArena);
   hitState->entries = entries;
   entryArena = (uint)entries + hitState->entryCapacity;
   hitState->activeHitboxMode = 1;

@@ -969,10 +969,10 @@ void expgfx_renderSourcePools(int sourceId,int sourceMode)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void *fn_80022A48(void);
+extern void *getCache(void);
 extern int getHudHiddenFrameCount(void);
-extern void fn_800229F8(void *dst, void *src, int blockCount);
-extern void fn_800229C4(int wait);
+extern void copyToCache(void *dst, void *src, int blockCount);
+extern void cacheFn_800229c4(int wait);
 extern int Camera_GetProjectionMatrix(void);
 extern void Camera_ApplyFullViewport(void);
 extern void *Camera_GetCurrentViewSlot(void);
@@ -1040,11 +1040,11 @@ void drawGlow(uint slotPoolBase,int poolIndex)
   f32 viewProjW;
   volatile int dummy;
 
-  dstBuf = fn_80022A48();
+  dstBuf = getCache();
   trackedFlags = 0;
   dummy = getHudHiddenFrameCount();
   Camera_GetProjectionMatrix();
-  fn_800229F8(dstBuf, (void *)slotPoolBase, 0x7e);
+  copyToCache(dstBuf, (void *)slotPoolBase, 0x7e);
 
   GXClearVtxDesc();
   GXSetVtxDesc(9, 1);
@@ -1069,7 +1069,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
   blendMode = -1;
   zMode = -1;
   zCompLoc = -1;
-  fn_800229C4(0);
+  cacheFn_800229c4(0);
 
   slot = (ExpgfxSlot *)((char *)dstBuf - EXPGFX_SLOT_SIZE);
   slotIndex = 0;

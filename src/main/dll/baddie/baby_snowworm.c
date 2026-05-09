@@ -1025,7 +1025,7 @@ extern int  fn_800E8AAC(void);
 
 extern void* Obj_GetPlayerObject(void);
 extern int   fn_80295BC8(void);
-extern u8    fn_8005AFAC(f32, f32);
+extern u8    coordsToMapCell(f32, f32);
 extern u8    lbl_8031B050[9];
 
 extern u8  lbl_803DD77A;
@@ -1342,7 +1342,7 @@ int fn_8012B6BC(void)
     if (inner != NULL) {
         lookup = *((u8*)inner + 0xac);
     } else {
-        lookup = (u8)fn_8005AFAC(*(f32*)((char*)s + 0xc), *(f32*)((char*)s + 0x14));
+        lookup = (u8)coordsToMapCell(*(f32*)((char*)s + 0xc), *(f32*)((char*)s + 0x14));
     }
     for (i = 0; i < 9; i++) {
         if (lookup == lbl_8031B050[i]) {

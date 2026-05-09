@@ -4412,5 +4412,5 @@ u32 fn_800430A4(void) { return lbl_803DCC74; }
 
 /* Pattern wrappers. */
 extern u32 lbl_803DCC70;
-void fn_80041E24(void) { lbl_803DCC70 = 0x0; }
-void fn_80041E30(void) { lbl_803DCC70 = 0x1; }
+void clearForceLoadImmediately(void) { lbl_803DCC70 = 0x0; }
+void setForceLoadImmediately(void) { lbl_803DCC70 = 0x1; }

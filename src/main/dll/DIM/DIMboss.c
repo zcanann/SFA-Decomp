@@ -31,16 +31,16 @@ extern undefined4 FUN_80017ac8();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_8003b818();
 extern undefined8 FUN_80040da0();
-extern undefined8 fn_80043034();
-extern undefined8 fn_80043074();
-extern uint fn_800430AC();
+extern undefined8 clearLoadedFileFlags_blocks1();
+extern undefined8 setLoadedFileFlags_blocks1();
+extern uint getLoadedFileFlags();
 extern undefined4 unlockLevel();
 extern undefined4 lockLevel();
 extern undefined8 mapUnload();
 extern undefined4 defragMemory();
 extern undefined8 mapLoadDataFile();
 extern undefined4 mapGetDirIdx();
-extern undefined8 fn_800481D4();
+extern undefined8 loadDataFiles();
 extern undefined4 GXFlush_();
 extern undefined8 waitNextFrame();
 extern undefined4 FUN_80053b3c();
@@ -222,7 +222,7 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
         break;
       case DIMBOSS_EVENT_FREE_DIMBOSS_ASSETS:
         OSReport(sDIMBossFreeingAssetsForDIMBoss);
-        fn_80043074();
+        setLoadedFileFlags_blocks1();
         unlockLevel(0,0,1);
         uVar5 = mapGetDirIdx(DIMBOSS_MAP_DIR);
         mapUnload(uVar5,DIMBOSS_MAP_UNLOAD_MASK);
@@ -263,13 +263,13 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
         uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
         mapLoadDataFile(uVar5,DIMTOP_AUDIO_DATA_FILE_B);
         bVar2 = false;
-        while (uVar6 = fn_800430AC(0), (uVar6 & 0xffefffff) != 0) {
+        while (uVar6 = getLoadedFileFlags(0), (uVar6 & 0xffefffff) != 0) {
           padUpdate();
           checkReset();
           if (bVar2) {
             waitNextFrame();
           }
-          fn_800481D4();
+          loadDataFiles();
           dvdCheckError();
           if (bVar2) {
             mmFreeTick(0);
@@ -280,7 +280,7 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
             bVar2 = true;
           }
         }
-        fn_80043034();
+        clearLoadedFileFlags_blocks1();
         break;
       case 0x17:
         lbl_803DDB80 = lbl_803DDB80 | 0x80000;

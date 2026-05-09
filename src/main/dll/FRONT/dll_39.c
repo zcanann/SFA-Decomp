@@ -95,7 +95,7 @@ static char s_Fail_to_prepare_8031a39c[] = "Fail to prepare\n";
 extern void *mmAlloc(int size,int heap,int flags);
 extern int mmSetFreeDelay(int delay);
 extern void mm_free(void *ptr);
-extern void fn_80022D58(int param_1);
+extern void printHeapStats(int param_1);
 extern void defragMemory(int param_1);
 extern void OSReport(const char *fmt,...);
 extern void OSPanic(const char *file,int line,const char *msg,...);
@@ -365,10 +365,10 @@ void n_attractmode_prepareMovie(void)
         }
         mmSetFreeDelay(freeDelay);
         OSReport(s__________________malloc_for_movi_8031a338);
-        fn_80022D58(1);
+        printHeapStats(1);
         defragMemory(0);
         OSReport(s__________________RESTRUCT_for_mo_8031a364);
-        fn_80022D58(1);
+        printHeapStats(1);
       }
       else {
         lbl_803DD619 = NATTRACTMODE_MOVIE_READY;
