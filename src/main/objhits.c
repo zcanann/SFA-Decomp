@@ -2503,49 +2503,62 @@ void ObjHits_DetectObjectPair(void)
   uVar25 = FUN_80286840();
   iVar10 = (int)((ulonglong)uVar25 >> 0x20);
   iVar12 = (int)uVar25;
-  iVar15 = *(int *)(iVar10 + 0x54);
-  iVar14 = *(int *)(iVar12 + 0x54);
-  if ((*(char *)(iVar15 + 0xae) != '\0') || (*(char *)(iVar14 + 0xae) != '\0')) goto LAB_800344f4;
-  dVar23 = (double)(*(float *)(iVar12 + 0x18) - *(float *)(iVar10 + 0x18));
-  dVar18 = (double)*(float *)(iVar12 + 0x1c);
-  dVar17 = (double)*(float *)(iVar10 + 0x1c);
+  iVar15 = *(int *)(iVar10 + OBJHITBOX_DEF_OFFSET);
+  iVar14 = *(int *)(iVar12 + OBJHITBOX_DEF_OFFSET);
+  if ((*(char *)(iVar15 + OBJHITBOX_DEF_SKIP_OBJECT_PAIRS_OFFSET) != '\0') ||
+      (*(char *)(iVar14 + OBJHITBOX_DEF_SKIP_OBJECT_PAIRS_OFFSET) != '\0')) goto LAB_800344f4;
+  dVar23 = (double)(*(float *)(iVar12 + OBJHITBOX_WORLD_X_OFFSET) -
+                    *(float *)(iVar10 + OBJHITBOX_WORLD_X_OFFSET));
+  dVar18 = (double)*(float *)(iVar12 + OBJHITBOX_WORLD_Y_OFFSET);
+  dVar17 = (double)*(float *)(iVar10 + OBJHITBOX_WORLD_Y_OFFSET);
   dVar22 = (double)(float)(dVar18 - dVar17);
-  dVar21 = (double)(*(float *)(iVar12 + 0x20) - *(float *)(iVar10 + 0x20));
-  dVar24 = (double)(float)((double)CONCAT44(0x43300000,(int)*(short *)(iVar15 + 0x5a) ^ 0x80000000)
+  dVar21 = (double)(*(float *)(iVar12 + OBJHITBOX_WORLD_Z_OFFSET) -
+                    *(float *)(iVar10 + OBJHITBOX_WORLD_Z_OFFSET));
+  dVar24 = (double)(float)((double)CONCAT44(0x43300000,
+                          (int)*(short *)(iVar15 + OBJHITBOX_DEF_RADIUS_OFFSET) ^ 0x80000000)
                           - DOUBLE_803df5c0);
-  local_b0 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar14 + 0x5a) ^ 0x80000000);
+  local_b0 = (double)CONCAT44(0x43300000,
+                              (int)*(short *)(iVar14 + OBJHITBOX_DEF_RADIUS_OFFSET) ^ 0x80000000);
   dVar20 = (double)(float)(local_b0 - DOUBLE_803df5c0);
   bVar9 = false;
-  bVar1 = *(byte *)(iVar14 + 0x62);
-  if (((bVar1 & 2) != 0) || ((*(byte *)(iVar15 + 0x62) & 2) != 0)) {
+  bVar1 = *(byte *)(iVar14 + OBJHITBOX_DEF_SHAPE_FLAGS_OFFSET);
+  if (((bVar1 & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) ||
+      ((*(byte *)(iVar15 + OBJHITBOX_DEF_SHAPE_FLAGS_OFFSET) &
+        OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0)) {
     if (dVar22 <= (double)lbl_803DF590) {
       dVar22 = dVar20;
-      if ((bVar1 & 2) != 0) {
-        local_b0 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar14 + 0x5e) ^ 0x80000000);
+      if ((bVar1 & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) {
+        local_b0 = (double)CONCAT44(0x43300000,
+                                    (int)*(short *)(iVar14 + OBJHITBOX_DEF_VERTICAL_MAX_OFFSET) ^
+                                    0x80000000);
         dVar22 = (double)(float)(local_b0 - DOUBLE_803df5c0);
       }
-      if ((*(byte *)(iVar15 + 0x62) & 2) == 0) {
+      if ((*(byte *)(iVar15 + OBJHITBOX_DEF_SHAPE_FLAGS_OFFSET) &
+           OBJHITBOX_SHAPE_VERTICAL_SPAN) == 0) {
         dVar17 = dVar17 - dVar24;
       }
       else {
         dVar17 = dVar17 + (double)(float)((double)CONCAT44(0x43300000,
-                                                           (int)*(short *)(iVar15 + 0x5c) ^
+                                                           (int)*(short *)(iVar15 + OBJHITBOX_DEF_VERTICAL_MIN_OFFSET) ^
                                                            0x80000000) - DOUBLE_803df5c0);
       }
       if ((float)(dVar18 + dVar22) < (float)dVar17) goto LAB_800344f4;
     }
     else {
       dVar22 = dVar24;
-      if ((*(byte *)(iVar15 + 0x62) & 2) != 0) {
-        local_b0 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar15 + 0x5e) ^ 0x80000000);
+      if ((*(byte *)(iVar15 + OBJHITBOX_DEF_SHAPE_FLAGS_OFFSET) &
+           OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) {
+        local_b0 = (double)CONCAT44(0x43300000,
+                                    (int)*(short *)(iVar15 + OBJHITBOX_DEF_VERTICAL_MAX_OFFSET) ^
+                                    0x80000000);
         dVar22 = (double)(float)(local_b0 - DOUBLE_803df5c0);
       }
-      if ((bVar1 & 2) == 0) {
+      if ((bVar1 & OBJHITBOX_SHAPE_VERTICAL_SPAN) == 0) {
         dVar18 = dVar18 - dVar20;
       }
       else {
         dVar18 = dVar18 + (double)(float)((double)CONCAT44(0x43300000,
-                                                           (int)*(short *)(iVar14 + 0x5c) ^
+                                                           (int)*(short *)(iVar14 + OBJHITBOX_DEF_VERTICAL_MIN_OFFSET) ^
                                                            0x80000000) - DOUBLE_803df5c0);
       }
       if ((float)(dVar17 + dVar22) < (float)dVar18) goto LAB_800344f4;
@@ -2563,16 +2576,16 @@ void ObjHits_DetectObjectPair(void)
   if (0x400 < iVar11) {
     iVar13 = 0x400;
   }
-  if (iVar13 <= *(short *)(iVar15 + 0x58)) {
-    *(short *)(iVar15 + 0x58) = (short)iVar13;
+  if (iVar13 <= *(short *)(iVar15 + OBJHITBOX_DEF_DISTANCE_CACHE_OFFSET)) {
+    *(short *)(iVar15 + OBJHITBOX_DEF_DISTANCE_CACHE_OFFSET) = (short)iVar13;
   }
   if (0x400 < iVar11) {
     iVar11 = 0x400;
   }
-  if (iVar11 <= *(short *)(iVar14 + 0x58)) {
-    *(short *)(iVar14 + 0x58) = (short)iVar11;
+  if (iVar11 <= *(short *)(iVar14 + OBJHITBOX_DEF_DISTANCE_CACHE_OFFSET)) {
+    *(short *)(iVar14 + OBJHITBOX_DEF_DISTANCE_CACHE_OFFSET) = (short)iVar11;
   }
-  if ((*(ushort *)(iVar14 + 0x60) & 1) != 0) {
+  if ((*(ushort *)(iVar14 + OBJHITBOX_DEF_FLAGS_OFFSET) & OBJHITBOX_DEF_SOLID) != 0) {
     dVar17 = (double)(float)(dVar20 + dVar24);
     fVar2 = *(float *)(iVar15 + 0x1c);
     fVar5 = *(float *)(iVar10 + 0x18) - fVar2;
@@ -2596,9 +2609,14 @@ void ObjHits_DetectObjectPair(void)
       }
     }
     if ((dVar18 < dVar17) && ((double)lbl_803DF590 < dVar18)) {
-      ObjHits_RecordObjectHit(iVar12,iVar10,*(char *)(iVar15 + 0x6c),*(undefined *)(iVar15 + 0x6d),0);
-      ObjHits_RecordObjectHit(iVar10,iVar12,*(char *)(iVar14 + 0x6c),*(undefined *)(iVar14 + 0x6d),0);
-      if (((*(ushort *)(iVar14 + 0x60) & 2) == 0) && ((*(ushort *)(iVar15 + 0x60) & 2) == 0)) {
+      ObjHits_RecordObjectHit(iVar12,iVar10,*(char *)(iVar15 + OBJHITBOX_DEF_HIT_TYPE_OFFSET),
+                              *(undefined *)(iVar15 + OBJHITBOX_DEF_HIT_PRIORITY_OFFSET),0);
+      ObjHits_RecordObjectHit(iVar10,iVar12,*(char *)(iVar14 + OBJHITBOX_DEF_HIT_TYPE_OFFSET),
+                              *(undefined *)(iVar14 + OBJHITBOX_DEF_HIT_PRIORITY_OFFSET),0);
+      if (((*(ushort *)(iVar14 + OBJHITBOX_DEF_FLAGS_OFFSET) &
+            OBJHITBOX_DEF_NO_SEPARATION_RESPONSE) == 0) &&
+          ((*(ushort *)(iVar15 + OBJHITBOX_DEF_FLAGS_OFFSET) &
+            OBJHITBOX_DEF_NO_SEPARATION_RESPONSE) == 0)) {
         dVar20 = (double)(*(float *)(iVar14 + 0x1c) - *(float *)(iVar15 + 0x1c));
         dVar24 = (double)(*(float *)(iVar14 + 0x24) - *(float *)(iVar15 + 0x24));
         fVar2 = *(float *)(iVar14 + 0x20) - *(float *)(iVar15 + 0x20);
@@ -2682,15 +2700,17 @@ static void ObjHits_CheckSkeletonPairInner(undefined4 param_1, undefined4 param_
   uVar12 = FUN_80286840();
   iVar5 = (int)((ulonglong)uVar12 >> 0x20);
   iVar7 = (int)uVar12;
-  iVar9 = *(int *)(iVar7 + 0x54);
-  if ((((*(char *)(*(int *)(iVar5 + 0x54) + 0xaf) == '\0') && (*(char *)(iVar9 + 0xaf) == '\0'))
-      && (*(char *)(iVar9 + 0xae) == '\0')) && (*(char *)(*(int *)(iVar5 + 0x54) + 0xae) == '\0'))
+  iVar9 = *(int *)(iVar7 + OBJHITBOX_DEF_OFFSET);
+  if ((((*(char *)(*(int *)(iVar5 + OBJHITBOX_DEF_OFFSET) + OBJHITBOX_DEF_SKIP_SKELETON_PAIRS_OFFSET) == '\0') &&
+        (*(char *)(iVar9 + OBJHITBOX_DEF_SKIP_SKELETON_PAIRS_OFFSET) == '\0'))
+      && (*(char *)(iVar9 + OBJHITBOX_DEF_SKIP_OBJECT_PAIRS_OFFSET) == '\0')) &&
+      (*(char *)(*(int *)(iVar5 + OBJHITBOX_DEF_OFFSET) + OBJHITBOX_DEF_SKIP_OBJECT_PAIRS_OFFSET) == '\0'))
   {
     piVar8 = *(int **)(*(int *)(iVar5 + 0x7c) + *(char *)(iVar5 + 0xad) * 4);
-    bVar1 = *(byte *)(iVar9 + 0x62);
-    if ((bVar1 & 1) == 0) {
-      if ((bVar1 & 2) == 0) {
-        if (((bVar1 & 0x20) != 0) && (recursionDepth < 1)) {
+    bVar1 = *(byte *)(iVar9 + OBJHITBOX_DEF_SHAPE_FLAGS_OFFSET);
+    if ((bVar1 & OBJHITBOX_SHAPE_SKELETON_3D) == 0) {
+      if ((bVar1 & OBJHITBOX_SHAPE_VERTICAL_SPAN) == 0) {
+        if (((bVar1 & OBJHITBOX_SHAPE_CHECK_REVERSE) != 0) && (recursionDepth < 1)) {
           ObjHits_CheckSkeletonPairInner(iVar7, iVar5, param_3, recursionDepth + 1);
         }
       } else {
