@@ -47,7 +47,7 @@ void CameraModeStaffAnim_init(undefined4 param_1,undefined4 param_2,short *param
 {
 }
 
-void fn_80107AEC(f32 *param_1)
+void CameraModeBike_func06(f32 *param_1)
 {
   lbl_803DD540[7] = param_1[0];
   lbl_803DD540[9] = param_1[1];

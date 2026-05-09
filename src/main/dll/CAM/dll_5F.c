@@ -300,4 +300,4 @@ void CameraModeTestStrength_init(undefined4 param_1,undefined4 param_2,undefined
 /* Trivial 4b 0-arg blr leaves. */
 void CameraModeTestStrength_release(void) {}
 void CameraModeTestStrength_initialise(void) {}
-void fn_8010C064(void) {}
+void CameraModeCombat_func06_nop(void) {}

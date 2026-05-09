@@ -14,11 +14,11 @@ extern void setAButtonIcon(int kind);
 /*
  * --INFO--
  *
- * Function: fn_8010210C
+ * Function: Camera_minimapShowHelpTextForTarget
  * EN v1.0 Address: 0x8010210C
  * EN v1.0 Size: 152b
  */
-void fn_8010210C(int arg1, int arg2, int arg3, int arg4)
+void Camera_minimapShowHelpTextForTarget(int arg1, int arg2, int arg3, int arg4)
 {
   if (gameTextFn_80134be8() == 0) {
     lbl_803DB990 = -1;

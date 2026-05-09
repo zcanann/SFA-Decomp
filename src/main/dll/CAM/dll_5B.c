@@ -29,8 +29,8 @@ extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_80053bf0();
 extern undefined4 FUN_800810d8();
 extern undefined4 FUN_80101980();
-extern undefined4 fn_80108010();
-extern undefined4 fn_80108194();
+extern undefined4 firstPersonPlaceCamera();
+extern undefined4 firstPersonExit();
 extern double fn_8010AEA8();
 extern undefined4 FUN_80135814();
 extern undefined8 FUN_8028683c();
@@ -717,10 +717,10 @@ void fn_8010A47C(undefined4 param_1,undefined4 param_2,uint param_3)
 /* Trivial 4b 0-arg blr leaves. */
 void CameraModeViewfinder_release(void) {}
 void CameraModeViewfinder_initialise(void) {}
-void fn_80109748(void) {}
-void fn_80109AFC(void) {}
-void fn_80109B00(void) {}
-void fn_80109C14(void) {}
+void dll_46_func06_nop(void) {}
+void dll_46_release_nop(void) {}
+void dll_46_initialise_nop(void) {}
+void CameraModeStatic_func06_nop(void) {}
 void CameraModeStatic_release(void) {}
 void CameraModeStatic_initialise(void) {}
 
@@ -728,7 +728,7 @@ void CameraModeStatic_initialise(void) {}
 extern void mm_free(void *);
 #pragma scheduling off
 #pragma peephole off
-void fn_8010974C(void) { mm_free(lbl_803DD550); lbl_803DD550 = 0; }
-void fn_80109C18(void) { mm_free(lbl_803DD558); lbl_803DD558 = 0; }
+void dll_46_func05(void) { mm_free(lbl_803DD550); lbl_803DD550 = 0; }
+void CameraModeStatic_func05(void) { mm_free(lbl_803DD558); lbl_803DD558 = 0; }
 #pragma peephole reset
 #pragma scheduling reset

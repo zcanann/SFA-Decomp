@@ -676,16 +676,16 @@ void FUN_8010d450(void)
 /* Trivial 4b 0-arg blr leaves. */
 void CameraModeCombat_release(void) {}
 void CameraModeCombat_initialise(void) {}
-void fn_8010CEC0(void) {}
+void CameraModeShipBattle_func06_nop(void) {}
 void CameraModeShipBattle_release(void) {}
 void CameraModeShipBattle_initialise(void) {}
-void fn_8010D33C(void) {}
+void CameraModeClimb_func06_nop(void) {}
 
 /* fn_X(lbl); lbl = 0; */
 extern void mm_free(void *);
 #pragma scheduling off
 #pragma peephole off
 void CameraModeShipBattle_free(void) { mm_free(lbl_803DD570); lbl_803DD570 = 0; }
-void fn_8010D340(void) { mm_free(lbl_803DD578); lbl_803DD578 = 0; }
+void CameraModeClimb_func05(void) { mm_free(lbl_803DD578); lbl_803DD578 = 0; }
 #pragma peephole reset
 #pragma scheduling reset

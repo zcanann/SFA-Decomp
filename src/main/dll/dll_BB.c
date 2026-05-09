@@ -273,12 +273,12 @@ void camcontrol_applyQueuedAction(void)
   return;
 }
 
-void fn_8010204C(int param_1)
+void Camera_func1D(int param_1)
 {
   pCamera[0x141] = (u8)(pCamera[0x141] | ((param_1 << 3) & 0x18));
 }
 
-void fn_80102068(int enable)
+void Camera_func13(int enable)
 {
   if (enable != 0) {
     pCamera[0x141] = (u8)(pCamera[0x141] | 2);
@@ -288,12 +288,12 @@ void fn_80102068(int enable)
   }
 }
 
-void fn_801020A0(int flags)
+void Camera_func1C(int flags)
 {
   pCamera[0x140] = (u8)(pCamera[0x140] | flags);
 }
 
-void fn_801020B8(int yOffset,int applyNow)
+void Camera_setLetterbox(int yOffset,int applyNow)
 {
   if ((int)(s8)pCamera[0x13b] < yOffset) {
     pCamera[0x13b] = (s8)yOffset;

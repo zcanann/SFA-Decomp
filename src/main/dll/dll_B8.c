@@ -8,7 +8,7 @@ extern u8 *pCamera;
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801018A8(byte param_1, byte param_2)
+void firstPersonZoomOutOnExit(byte param_1, byte param_2)
 {
   void *vs;
 

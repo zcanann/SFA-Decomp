@@ -217,4 +217,4 @@ void camcontrol_releasePathState(void)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801070CC(void) {}
+void CameraModeStaffAnim_func06_nop(void) {}

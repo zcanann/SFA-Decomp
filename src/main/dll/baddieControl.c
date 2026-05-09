@@ -3080,16 +3080,16 @@ void CameraModeNpcSpeak_release(void) {}
 void CameraModeNpcSpeak_initialise(void) {}
 void CameraModeWorldMap_release(void) {}
 void CameraModeWorldMap_initialise(void) {}
-void fn_8010F2F8(void) {}
-void fn_8010F538(void) {}
-void fn_8010F53C(void) {}
+void dll_4F_func06_nop(void) {}
+void dll_4F_release_nop(void) {}
+void dll_4F_initialise_nop(void) {}
 void CameraModeCrawl_release(void) {}
 void CameraModeCrawl_initialise(void) {}
-void fn_8010FA54(void) {}
+void CameraModeCannon_func06_nop(void) {}
 void CameraModeCannon_release(void) {}
 void CameraModeCannon_initialise(void) {}
-void fn_8010FC74(void) {}
-void fn_8010FC78(void) {}
+void CameraModeForceBehind_func06_nop(void) {}
+void CameraModeForceBehind_func05_nop(void) {}
 void CameraModeForceBehind_release(void) {}
 void CameraModeForceBehind_initialise(void) {}
 void fn_801101E4(void) {}
@@ -3122,9 +3122,9 @@ extern u32 lbl_803DD5C0;
 extern u32 lbl_803DD5C8;
 #pragma scheduling off
 #pragma peephole off
-void fn_8010E588(void) { mm_free(lbl_803DD588); lbl_803DD588 = 0; }
-void fn_8010F2FC(void) { mm_free(lbl_803DD590); lbl_803DD590 = 0; }
-void fn_8010F720(void) { mm_free(lbl_803DD598); lbl_803DD598 = 0; }
+void CameraModeWorldMap_func05(void) { mm_free(lbl_803DD588); lbl_803DD588 = 0; }
+void dll_4F_func05(void) { mm_free(lbl_803DD590); lbl_803DD590 = 0; }
+void CameraModeCrawl_func05(void) { mm_free(lbl_803DD598); lbl_803DD598 = 0; }
 void CameraModeCannon_free(void) { mm_free(lbl_803DD5A0); lbl_803DD5A0 = 0; }
 void fn_801101E8(void) { mm_free(lbl_803DD5B8); lbl_803DD5B8 = 0; }
 void fn_801106B8(void) { mm_free(lbl_803DD5C0); lbl_803DD5C0 = 0; }

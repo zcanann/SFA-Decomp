@@ -256,7 +256,7 @@ void CameraModeBike_init(int param_1)
 /*
  * --INFO--
  *
- * Function: fn_80108010
+ * Function: firstPersonPlaceCamera
  * EN v1.0 Address: 0x80107EE4
  * EN v1.0 Size: 400b
  * EN v1.1 Address: 0x801082AC
@@ -266,7 +266,7 @@ void CameraModeBike_init(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80108010(int param_1,int param_2)
+void firstPersonPlaceCamera(int param_1,int param_2)
 {
   int *puVar1;
   int iVar2;
@@ -307,7 +307,7 @@ void fn_80108010(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: fn_80108194
+ * Function: firstPersonExit
  * EN v1.0 Address: 0x80108074
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80108430
@@ -317,7 +317,7 @@ void fn_80108010(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80108194(short *param_1)
+void firstPersonExit(short *param_1)
 {
   float fVar1;
   float fVar2;

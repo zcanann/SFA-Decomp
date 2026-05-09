@@ -2421,10 +2421,10 @@ void fn_800FFB3C(void) {}
 void fn_800FFB40(void) {}
 void fn_800FFEFC(void) {}
 void fn_800FFF00(void) {}
-void fn_801002B8(void) {}
-void fn_801002BC(void) {}
-void fn_80100548(void) {}
-void fn_8010054C(void) {}
+void dll_A9_func01_nop(void) {}
+void dll_A9_func00_nop(void) {}
+void dll_AA_func01_nop(void) {}
+void dll_AA_func00_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int fn_800FEC74(void) { return 0x0; }

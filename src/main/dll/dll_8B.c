@@ -24,11 +24,11 @@ void projdfp1r_initialise(void)
 /*
  * --INFO--
  *
- * Function: fn_80100A90
+ * Function: cameraGetTargetType
  * EN v1.0 Address: 0x80100A90
  * EN v1.0 Size: 12b
  */
-u8 fn_80100A90(void)
+u8 cameraGetTargetType(void)
 {
   return pCamera[0x138];
 }

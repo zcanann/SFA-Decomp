@@ -206,13 +206,13 @@ void FUN_8010b428(void)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_8010B3F4(void) {}
+void CameraModeTestStrength_func06_nop(void) {}
 
 /* fn_X(lbl); lbl = 0; */
 extern u32 lbl_803DD560;
 extern void mm_free(u32);
 #pragma scheduling off
 #pragma peephole off
-void fn_8010B3F8(void) { mm_free(lbl_803DD560); lbl_803DD560 = 0; }
+void CameraModeTestStrength_func05(void) { mm_free(lbl_803DD560); lbl_803DD560 = 0; }
 #pragma peephole reset
 #pragma scheduling reset

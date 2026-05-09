@@ -82,8 +82,8 @@ void CameraModeClimb_init(undefined4 param_1, int param_2, s8 *param_3) {
 
 void CameraModeClimb_release(void) {}
 void CameraModeClimb_initialise(void) {}
-void fn_8010DAD4(void) {}
-void fn_8010DAD8(void) {}
+void CameraModeFixed_func06_nop(void) {}
+void CameraModeFixed_func05_nop(void) {}
 void CameraModeFixed_update(void) {}
 
 #pragma scheduling off
@@ -147,9 +147,9 @@ void fn_8010DB7C(f32 *param_1, f32 *param_2, f32 *param_3, f32 *param_4) {
 #pragma peephole reset
 #pragma scheduling reset
 
-void fn_8010DD24(void) {}
+void CameraModeNpcSpeak_func06_nop(void) {}
 
-void fn_8010DD28(void) {
+void CameraModeNpcSpeak_func05(void) {
     mm_free(lbl_803DD584);
     lbl_803DD584 = 0;
     Rcp_DisableBlurFilter();
