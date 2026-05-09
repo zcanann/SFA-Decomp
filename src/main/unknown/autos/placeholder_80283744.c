@@ -2,7 +2,7 @@
 #include "main/unknown/autos/placeholder_80283744.h"
 
 extern u8 *volatile lbl_803DE344;
-extern u8 lbl_803DE370;
+extern u8 salTimeOffset;
 extern u16 lbl_803DC618[4];
 extern u16 lbl_803DC620[4];
 
@@ -33,17 +33,17 @@ void hwSetPitch(int slot, u32 pitch)
             return;
         }
     }
-    channel = lbl_803DE370;
+    channel = salTimeOffset;
     pitch = (u16)pitch << 4;
     channel = channel << 2;
     channelEntry = entry + channel;
     *(u32 *)(channelEntry + 0x38) = pitch;
-    channel = lbl_803DE370;
+    channel = salTimeOffset;
     channel = channel << 2;
     channelEntry = entry + channel;
     val = *(u32 *)(channelEntry + 0x24);
     *(u32 *)(channelEntry + 0x24) = val | 0x8;
-    entry[0xe4] = lbl_803DE370;
+    entry[0xe4] = salTimeOffset;
 }
 
 /*

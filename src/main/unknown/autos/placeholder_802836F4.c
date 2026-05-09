@@ -2,7 +2,7 @@
 #include "main/unknown/autos/placeholder_802836F4.h"
 
 extern u8 *lbl_803DE344;
-extern u8 lbl_803DE370;
+extern u8 salTimeOffset;
 
 /*
  * --INFO--
@@ -24,7 +24,7 @@ void hwKeyOff(int slot)
 
   slot *= 0xf4;
   entry = lbl_803DE344 + slot;
-  offset = lbl_803DE370 << 2;
+  offset = salTimeOffset << 2;
   entry += offset;
   *(u32 *)(entry + 0x24) |= 0x40;
 }

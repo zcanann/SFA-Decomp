@@ -10,8 +10,8 @@ extern u8 *lbl_803DE340;
 extern u8 *lbl_803DE33C;
 extern u8 *lbl_803DE330;
 extern u8 lbl_803CC1E0[][0xbc];
-extern u8 lbl_803DE37C;
-extern u8 lbl_803DE37D;
+extern u8 salMaxStudioNum;
+extern u8 salNumVoices;
 
 /*
  * fn_8027BA04 - large voice processing (~932 instructions). Stubbed.
@@ -42,12 +42,12 @@ int audioFreeFn_8027bde0(void)
     int offset;
     salFree((int)lbl_803DE338);
     offset = 0;
-    for (i = 0; (u8)i < lbl_803DE37D; i++) {
+    for (i = 0; (u8)i < salNumVoices; i++) {
         salFree(*(int *)(lbl_803DE344 + offset));
         salFree(*(int *)(lbl_803DE344 + offset + 4));
         offset += 0xf4;
     }
-    for (i = 0; (u8)i < lbl_803DE37C; i++) {
+    for (i = 0; (u8)i < salMaxStudioNum; i++) {
         salFree(*(int *)(&lbl_803CC1E0[i][0]));
         salFree(*(int *)(&lbl_803CC1E0[i][0x28]));
     }

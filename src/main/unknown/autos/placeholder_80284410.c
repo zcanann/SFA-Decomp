@@ -11,9 +11,9 @@ extern u32 ARGetBaseAddress(void);
 extern u32 ARGetSize(void);
 
 extern u8 lbl_803D3F60[];
-extern u32 lbl_803DE380;
-extern u32 lbl_803DE384;
-extern void *lbl_803DE38C;
+extern u32 aramTop;
+extern u32 aramWrite;
+extern void *aramChunkCallback;
 
 /*
  * Initializes the AR-side audio data buffer: allocates a 0x500-byte
@@ -48,12 +48,12 @@ void aramInit(u32 extraSize)
     while (*flag != 0) {
     }
     salFree(buf);
-    lbl_803DE380 = arBase + extraSize;
-    if (lbl_803DE380 > ARGetSize()) {
-        lbl_803DE380 = ARGetSize();
+    aramTop = arBase + extraSize;
+    if (aramTop > ARGetSize()) {
+        aramTop = ARGetSize();
     }
-    lbl_803DE384 = arBase + 0x500;
-    lbl_803DE38C = NULL;
+    aramWrite = arBase + 0x500;
+    aramChunkCallback = NULL;
     aramInitStreamBuffers();
 }
 

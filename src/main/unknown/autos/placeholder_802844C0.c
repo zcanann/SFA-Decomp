@@ -7,20 +7,19 @@ extern void aramUploadData(void *src, void *dst, u32 size, int mode, int callbac
 
 extern u8 lbl_803D3F60[];
 extern u8 lbl_803D4468[];
-extern u32 lbl_803DE380;
-extern u32 lbl_803DE384;
-extern u32 lbl_803DE388;
-extern void *(*lbl_803DE38C)(void *src, u32 chunk);
-extern u32 lbl_803DE390;
-extern u32 lbl_803DE394;
-extern u32 lbl_803DE398;
-extern void *lbl_803DE39C;
+extern u32 aramTop;
+extern u32 aramWrite;
+extern u32 aramStream;
+extern void *(*aramChunkCallback)(void *src, u32 chunk);
+extern u32 aramChunkSize;
+extern u32 aramQueueWrite;
+extern u32 aramQueueValid;
+extern void *aramStreamFreeList;
 
 /*
  * Allocate+DMA: copies `size` bytes from `src` into the audio
  * memory pool, returning the pre-write cursor. With a registered
- * chunking callback (lbl_803DE38C), copies in pieces of at most
- * lbl_803DE390 bytes per call.
+ * chunking callback, copies in pieces of at most aramChunkSize bytes.
  *
  * EN v1.0 Address: 0x80284468
  * EN v1.0 Size: 4b (stub)
@@ -30,27 +29,27 @@ extern void *lbl_803DE39C;
 u32 aramStoreData(void *src, u32 size)
 {
     u32 alignedSize = (size + 0x1f) & ~0x1f;
-    u32 startPos = lbl_803DE384;
+    u32 startPos = aramWrite;
 
-    if (lbl_803DE38C == NULL) {
+    if (aramChunkCallback == NULL) {
         DCFlushRange(src, alignedSize);
-        aramUploadData(src, (void *)lbl_803DE384, alignedSize, 0, 0, 0);
-        lbl_803DE384 += alignedSize;
+        aramUploadData(src, (void *)aramWrite, alignedSize, 0, 0, 0);
+        aramWrite += alignedSize;
         return startPos;
     }
 
     while (alignedSize != 0) {
-        u32 chunk = lbl_803DE390;
+        u32 chunk = aramChunkSize;
         void *piece;
         if (alignedSize < chunk) {
             chunk = alignedSize;
         }
-        piece = lbl_803DE38C(src, chunk);
+        piece = aramChunkCallback(src, chunk);
         DCFlushRange(piece, chunk);
-        aramUploadData(piece, (void *)lbl_803DE384, chunk, 0, 0, 0);
+        aramUploadData(piece, (void *)aramWrite, chunk, 0, 0, 0);
         alignedSize -= chunk;
         src = (u8 *)src + chunk;
-        lbl_803DE384 += chunk;
+        aramWrite += chunk;
     }
     return startPos;
 }
@@ -64,7 +63,7 @@ u32 aramStoreData(void *src, u32 size)
 void aramRemoveData(void *unused, u32 size)
 {
     u32 aligned = (size + 0x1f) & ~0x1f;
-    lbl_803DE384 -= aligned;
+    aramWrite -= aligned;
 }
 
 /*
@@ -80,16 +79,16 @@ void aramInitStreamBuffers(void)
     u8 *base = lbl_803D3F60;
     int i;
 
-    lbl_803DE394 = 0;
-    lbl_803DE398 = 0;
-    lbl_803DE39C = base + 0x508;
+    aramQueueWrite = 0;
+    aramQueueValid = 0;
+    aramStreamFreeList = base + 0x508;
 
     for (i = 1; i < 64; i++) {
         u8 *node = base + i * 0x10 + 0x508;
         *(u8 **)(node - 0x10) = node;
     }
     *(u32 *)(base + i * 0x10 + 0x4f8) = 0;
-    lbl_803DE388 = lbl_803DE380;
+    aramStream = aramTop;
 }
 
 void fn_80284634(void)

@@ -3,7 +3,7 @@
 
 extern void salActivateVoice(void *entry);
 extern u8 *lbl_803DE344;
-extern u8 lbl_803DE370;
+extern u8 salTimeOffset;
 
 /*
  * --INFO--
@@ -23,6 +23,6 @@ void hwStart(int slot)
   int offset;
 
   offset = slot * 0xf4;
-  lbl_803DE344[offset + 0xd4] = lbl_803DE370;
+  lbl_803DE344[offset + 0xd4] = salTimeOffset;
   salActivateVoice(lbl_803DE344 + offset);
 }

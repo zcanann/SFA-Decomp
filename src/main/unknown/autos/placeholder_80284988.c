@@ -3,14 +3,14 @@
 #include "dolphin/os.h"
 #include "dolphin/dsp.h"
 
-extern u16 irqDisableDepth;
-extern u32 audioPrevIrqFlags;
+extern u16 hwIrqLevel;
+extern u32 oldState;
 extern void *(*gSalMallocHook)(u32 size);
-extern u32 lbl_803DE3B4;
+extern u32 salLastTick;
 extern u16 lbl_803DE32C;
 extern u32 lbl_803DE330;
-extern u32 lbl_803DE3A8;
-extern u32 lbl_803DE3B8;
+extern u32 salDspCallbackEnabled;
+extern u32 salDspInitIsDone;
 extern u32 salGetStartDelay(void);
 extern void fn_8027C48C(u32 param_1, u32 elapsed);
 extern DSPTaskInfo lbl_803D4880;
@@ -44,9 +44,9 @@ int salInitDsp(u32 flags)
 
     DSPInit();
     DSPAddTask(&lbl_803D4880);
-    lbl_803DE3B8 = 0;
+    salDspInitIsDone = 0;
     sndEnd();
-    while (lbl_803DE3B8 == 0) {}
+    while (salDspInitIsDone == 0) {}
     sndBegin();
     return 1;
 }
@@ -73,10 +73,10 @@ void sndEnd(void)
 {
     u16 count;
 
-    count = irqDisableDepth - 1;
-    irqDisableDepth = count;
+    count = hwIrqLevel - 1;
+    hwIrqLevel = count;
     if (count == 0) {
-        OSRestoreInterrupts(audioPrevIrqFlags);
+        OSRestoreInterrupts(oldState);
     }
 }
 
@@ -108,7 +108,7 @@ void salCtrlDsp(u32 param_1)
     fn_8027C48C(param_1, elapsed);
     {
         u32 saved = lbl_803DE330;
-        lbl_803DE3A8 = 0;
+        salDspCallbackEnabled = 0;
         PPCSync();
         DSPSendMailToDSP(((u32)0xbabe << 16) | lbl_803DE32C);
         while (DSPCheckMailToDSP() != 0) {}
@@ -127,7 +127,7 @@ void salCtrlDsp(u32 param_1)
 u32 salGetStartDelay(void)
 {
     OSTick now = OSGetTick();
-    return OS_TICKS_TO_USEC(now - lbl_803DE3B4);
+    return OS_TICKS_TO_USEC(now - salLastTick);
 }
 
 /*
@@ -140,8 +140,8 @@ u32 salGetStartDelay(void)
 #pragma scheduling off
 void hwInitIrq(void)
 {
-    audioPrevIrqFlags = OSDisableInterrupts();
-    irqDisableDepth = 1;
+    oldState = OSDisableInterrupts();
+    hwIrqLevel = 1;
 }
 #pragma scheduling reset
 
@@ -154,10 +154,10 @@ void hwInitIrq(void)
  */
 void sndBegin(void)
 {
-    u16 count = irqDisableDepth;
-    irqDisableDepth = count + 1;
+    u16 count = hwIrqLevel;
+    hwIrqLevel = count + 1;
     if (count == 0) {
-        audioPrevIrqFlags = OSDisableInterrupts();
+        oldState = OSDisableInterrupts();
     }
 }
 

@@ -68,10 +68,10 @@ extern undefined4 DAT_803befae;
 extern undefined4 DAT_803befd2;
 extern undefined4 DAT_803d4900;
 extern u8 lbl_803DE238;
-extern u8 lbl_803DE370;
-extern u8 lbl_803DE37D;
-extern u8 lbl_803DE37E;
-extern u8 lbl_803DE37F;
+extern u8 salTimeOffset;
+extern u8 salNumVoices;
+extern u8 salAuxFrame;
+extern u8 salFrame;
 extern u32 lbl_803DE348;
 extern u8 *lbl_803DE344;
 
@@ -130,12 +130,12 @@ void snd_handle_irq(void)
     hwIRQLeaveCritical();
     hwIRQEnterCritical();
 
-    lbl_803DE37E = (lbl_803DE37E + 1) % 3;
-    lbl_803DE37F ^= 1;
+    salAuxFrame = (salAuxFrame + 1) % 3;
+    salFrame ^= 1;
 
     offset = 0;
     i = 0;
-    while ((u8)i < lbl_803DE37D) {
+    while ((u8)i < salNumVoices) {
         entry = lbl_803DE344;
         *(u32 *)(entry + offset + 0x24) = 0;
         entry = lbl_803DE344;
@@ -190,8 +190,8 @@ void snd_handle_irq(void)
 int hwInit(u32 value, u8 valueA, u8 valueB, u32 flags)
 {
     hwInitIrq();
-    lbl_803DE37F = 0;
-    lbl_803DE37E = 0;
+    salFrame = 0;
+    salAuxFrame = 0;
     lbl_803DE348 = 0;
 
     if (salInitAi(snd_handle_irq, flags, value) != 0 &&
@@ -217,12 +217,12 @@ void hwExit(void)
 
 void hwSetTimeOffset(u8 value)
 {
-    lbl_803DE370 = value;
+    salTimeOffset = value;
 }
 
 u8 hwGetTimeOffset(void)
 {
-    return lbl_803DE370;
+    return salTimeOffset;
 }
 
 #pragma peephole off
@@ -272,7 +272,7 @@ void hwInitSamplePlayback(int slot, u16 value70, u32 *values, u32 resetAdsr, u32
     i = 0;
     offset = slot * 0xf4;
 
-    while ((u8)i <= lbl_803DE370) {
+    while ((u8)i <= salTimeOffset) {
         entry = lbl_803DE344;
         entry += inputOffset;
         entry += offset;

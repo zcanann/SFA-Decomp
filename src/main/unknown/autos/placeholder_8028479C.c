@@ -9,14 +9,14 @@ extern void *memset(void *, int, u32);
 extern void DCFlushRange(void *src, u32 size);
 
 extern u8 lbl_803BD150[];
-extern void *lbl_803DE3A0;
-extern u32 lbl_803DE3A4;
-extern u32 lbl_803DE3A8;
-extern u32 lbl_803DE3AC;
-extern u32 lbl_803DE3B0;
-extern u32 lbl_803DE3B4;
-extern u32 lbl_803DE3B8;
-extern u8 lbl_803DE3C4;
+extern void *salAiCallback;
+extern u32 salAiDmaBuffer;
+extern u32 salDspCallbackEnabled;
+extern u32 salDspCallbackPending;
+extern u32 salCallbackActive;
+extern u32 salLastTick;
+extern u32 salDspInitIsDone;
+extern u8 salAIBufferIndex;
 
 /*
  * AI DMA done callback: bumps the round-robin buffer index and
@@ -31,19 +31,19 @@ extern u8 lbl_803DE3C4;
  */
 void salCallback(u32 p1, u32 p2, u32 p3, int p4, u32 p5, u32 p6)
 {
-    lbl_803DE3C4 = (lbl_803DE3C4 + 1) % 4;
-    AIInitDMA((u32)(u8 *)lbl_803DE3A4 | 0x80000000U + lbl_803DE3C4 * 0x280, 0x280);
-    lbl_803DE3B4 = OSGetTick();
-    if (lbl_803DE3A8 != 0) {
-        if (lbl_803DE3B0 == 0) {
-            lbl_803DE3B0 = 1;
+    salAIBufferIndex = (salAIBufferIndex + 1) % 4;
+    AIInitDMA((u32)(u8 *)salAiDmaBuffer | 0x80000000U + salAIBufferIndex * 0x280, 0x280);
+    salLastTick = OSGetTick();
+    if (salDspCallbackEnabled != 0) {
+        if (salCallbackActive == 0) {
+            salCallbackActive = 1;
             OSEnableInterrupts();
-            ((void (*)(void))lbl_803DE3A0)();
+            ((void (*)(void))salAiCallback)();
             OSDisableInterrupts();
-            lbl_803DE3B0 = 0;
+            salCallbackActive = 0;
         }
     } else {
-        lbl_803DE3AC = 1;
+        salDspCallbackPending = 1;
     }
 }
 
@@ -54,8 +54,8 @@ void salCallback(u32 p1, u32 p2, u32 p3, int p4, u32 p5, u32 p6)
  */
 void dspInitCallback(void)
 {
-    lbl_803DE3A8 = 1;
-    lbl_803DE3B8 = 1;
+    salDspCallbackEnabled = 1;
+    salDspInitIsDone = 1;
 }
 
 /*
@@ -65,15 +65,15 @@ void dspInitCallback(void)
  */
 void dspResumeCallback(void)
 {
-    lbl_803DE3A8 = 1;
-    if (lbl_803DE3AC != 0) {
-        lbl_803DE3AC = 0;
-        if (lbl_803DE3B0 == 0) {
-            lbl_803DE3B0 = 1;
+    salDspCallbackEnabled = 1;
+    if (salDspCallbackPending != 0) {
+        salDspCallbackPending = 0;
+        if (salCallbackActive == 0) {
+            salCallbackActive = 1;
             OSEnableInterrupts();
-            ((void (*)(void))lbl_803DE3A0)();
+            ((void (*)(void))salAiCallback)();
             OSDisableInterrupts();
-            lbl_803DE3B0 = 0;
+            salCallbackActive = 0;
         }
     }
 }
@@ -90,19 +90,19 @@ int salInitAi(void *userCallback, u32 unused, u32 *outSampleCount)
     void *buf;
 
     buf = salMalloc(0xa00);
-    lbl_803DE3A4 = (u32)buf;
+    salAiDmaBuffer = (u32)buf;
     if (buf == NULL) {
         return 0;
     }
     memset(buf, 0, 0xa00);
     DCFlushRange(buf, 0xa00);
-    lbl_803DE3A0 = userCallback;
-    lbl_803DE3AC = 0;
-    lbl_803DE3A8 = 1;
-    lbl_803DE3C4 = 1;
-    lbl_803DE3B0 = 0;
+    salAiCallback = userCallback;
+    salDspCallbackPending = 0;
+    salDspCallbackEnabled = 1;
+    salAIBufferIndex = 1;
+    salCallbackActive = 0;
     AIRegisterDMACallback(salCallback);
-    AIInitDMA((u32)(u8 *)lbl_803DE3A4 | 0x80000000U + lbl_803DE3C4 * 0x280, 0x280);
+    AIInitDMA((u32)(u8 *)salAiDmaBuffer | 0x80000000U + salAIBufferIndex * 0x280, 0x280);
     *(u32 *)(lbl_803BD150 + 4) = 0x20;
     *outSampleCount = 0x7d00;
     return 1;
@@ -122,7 +122,7 @@ int salExitAi(void)
 {
     AIRegisterDMACallback(0);
     AIStopDMA();
-    salFree((void *)lbl_803DE3A4);
+    salFree((void *)salAiDmaBuffer);
     return 1;
 }
 
@@ -130,6 +130,6 @@ int salAiGetDest(void)
 {
     int nextBuffer;
 
-    nextBuffer = lbl_803DE3C4 + 2;
-    return lbl_803DE3A4 + ((u8)(nextBuffer - (nextBuffer / 4) * 4)) * 0x280;
+    nextBuffer = salAIBufferIndex + 2;
+    return salAiDmaBuffer + ((u8)(nextBuffer - (nextBuffer / 4) * 4)) * 0x280;
 }
