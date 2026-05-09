@@ -2130,7 +2130,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3)
     extern Mtx lbl_80396820;
     extern f32 lbl_8030EA58[3][3];
     extern int ObjModel_GetRenderOp(void* model, int slot);
-    extern void* fn_8006C744(void);
+    extern void* getTextureFn_8006c744(void);
     extern void selectReflectionTexture(int);
     extern void fn_8006C6A4(int);
     extern void selectTexture(void* tex, int slot);
@@ -2148,7 +2148,7 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3)
 
     model = obj_b[0];
     renderOp = (void*)ObjModel_GetRenderOp(model, param_3);
-    tex = fn_8006C744();
+    tex = getTextureFn_8006c744();
     selectReflectionTexture(0);
     selectTexture(tex, 1);
     fn_8006C6A4(2);
@@ -2482,7 +2482,7 @@ void fn_80073AAC(void* texture, u32* colorA, u32* colorB)
 /*
  * --INFO--
  *
- * Function: fn_80073D04
+ * Function: modelCb_80073d04
  * EN v1.0 Address: 0x8006FD74
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80073E80
@@ -2492,7 +2492,7 @@ void fn_80073AAC(void* texture, u32* colorA, u32* colorB)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 fn_80073D04(int param_1,int *param_2)
+undefined4 modelCb_80073d04(int param_1,int *param_2)
 {
     return 0;
 }
@@ -2500,7 +2500,7 @@ undefined4 fn_80073D04(int param_1,int *param_2)
 /*
  * --INFO--
  *
- * Function: fn_80074110
+ * Function: moonFxCb_80074110
  * EN v1.0 Address: 0x8006FD7C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8007428C
@@ -2510,7 +2510,7 @@ undefined4 fn_80073D04(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 fn_80074110(int param_1,int *param_2,int param_3)
+undefined4 moonFxCb_80074110(int param_1,int *param_2,int param_3)
 {
     return 0;
 }
@@ -2518,7 +2518,7 @@ undefined4 fn_80074110(int param_1,int *param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: fn_80074518
+ * Function: modelCb_80074518
  * EN v1.0 Address: 0x8006FD84
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80074694
@@ -2528,7 +2528,7 @@ undefined4 fn_80074110(int param_1,int *param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80074518(void* obj_a, void** obj_b, int param_3)
+void modelCb_80074518(void* obj_a, void** obj_b, int param_3)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern f32 lbl_803DB6B0, lbl_803DB6B4;
@@ -2685,7 +2685,7 @@ void fn_80074518(void* obj_a, void** obj_b, int param_3)
 /*
  * --INFO--
  *
- * Function: fn_80074D04
+ * Function: objCallback_80074d04
  * EN v1.0 Address: 0x8006FD88
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80074E80
@@ -2695,7 +2695,7 @@ void fn_80074518(void* obj_a, void** obj_b, int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-u32 fn_80074D04(int handle, void* model)
+u32 objCallback_80074d04(int handle, void* model)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0;
     extern f32 lbl_803DEF3C, lbl_803DEF40, lbl_803DEF44, lbl_803DEF48;
@@ -2978,7 +2978,7 @@ void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80075684(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4)
+void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4)
 {
     extern void Camera_RebuildProjectionMatrix(void);
     extern Mtx hudMatrix;
@@ -3177,7 +3177,7 @@ void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80075D5C(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z)
+void skyDrawFn_80075d5c(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z)
 {
     extern void Camera_RebuildProjectionMatrix(void);
     extern Mtx hudMatrix;
@@ -4396,7 +4396,7 @@ void fn_800788DC(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_800789AC(void)
+void gxBlendFn_800789ac(void)
 {
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
@@ -4474,7 +4474,7 @@ void textBlendSetupFn_80078a7c(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80078B4C(void)
+void gxBlendFn_80078b4c(void)
 {
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
@@ -4513,7 +4513,7 @@ void fn_80078B4C(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80078C1C(void)
+void gxDebugTextureFn_80078c1c(void)
 {
     extern void GXSetZMode();
     extern void GXSetZCompLoc();
@@ -4714,7 +4714,7 @@ void fn_80079180(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80079254(void)
+void gxTexColorFn_80079254(void)
 {
     GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
     GXSetTevDirect(lbl_803DDCB0);
@@ -4785,7 +4785,7 @@ void fn_80079328(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_800794E0(void)
+void gxTextureFn_800794e0(void)
 {
     GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 0xFF);
     GXSetTevDirect(lbl_803DDCB0);
