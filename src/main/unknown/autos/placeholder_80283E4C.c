@@ -10,8 +10,8 @@ extern void* aramStoreData(void* ptr, u32 size);
 extern void aramRemoveData(void* ptr, u32 size);
 extern u32 lbl_803DE334;
 extern u8 *lbl_803DE344;
-extern u32 lbl_803DE374;
-extern u32 lbl_803DE378;
+extern void *(*gSalMallocHook)(u32 size);
+extern void (*gSalFreeHook)(void *ptr);
 
 /*
  * --INFO--
@@ -125,8 +125,8 @@ void sndSetHooks(u32 *values)
 
   first = values[0];
   second = values[1];
-  lbl_803DE374 = first;
-  lbl_803DE378 = second;
+  gSalMallocHook = (void *(*)(u32))first;
+  gSalFreeHook = (void (*)(void *))second;
 }
 
 void hwDisableHRTF(void)

@@ -5,7 +5,7 @@
 
 extern u16 irqDisableDepth;
 extern u32 audioPrevIrqFlags;
-extern u32 lbl_803DE374;
+extern void *(*gSalMallocHook)(u32 size);
 extern u32 lbl_803DE3B4;
 extern u16 lbl_803DE32C;
 extern u32 lbl_803DE330;
@@ -194,5 +194,5 @@ void hwIRQLeaveCritical(void)
  */
 void* salMalloc(u32 size)
 {
-    return ((void* (*)(u32))lbl_803DE374)(size);
+    return gSalMallocHook(size);
 }

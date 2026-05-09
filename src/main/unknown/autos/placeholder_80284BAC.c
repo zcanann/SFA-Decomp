@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_80284BAC.h"
 
-extern u32 lbl_803DE374[2];
+extern u32 gSalMallocHook[2];
 extern void ReverbSTDCallback(int a, int b, int c, void *state);
 extern int ReverbSTDCreate(void *state, f32 a, f32 b, f32 c, f32 d, f32 e);
 
@@ -37,7 +37,7 @@ typedef struct ReverbState {
  */
 void salFree(void *ptr)
 {
-    ((void (*)(void *))lbl_803DE374[1])(ptr);
+    ((void (*)(void *))gSalMallocHook[1])(ptr);
 }
 
 /*
