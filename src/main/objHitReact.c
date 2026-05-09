@@ -74,7 +74,7 @@ int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
     animDef = bank->animDef;
     hitSphereIndex = ObjAnim_GetHitReactEntryIndex(animDef,hitSphereIndex);
     if (hitSphereIndex >= (int)(reactionEntryCount & 0xff)) {
-      OSReport(sObjHitReactSphereOverflowString);
+      OSReport(sObjHitReactSphereOverflowString,hitSphereIndex);
       hitSphereIndex = 0;
     }
     reactionEntries = &reactionEntries[hitSphereIndex];
