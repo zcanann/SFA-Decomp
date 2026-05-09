@@ -40,7 +40,7 @@ extern undefined4 FUN_80286838();
 extern undefined4 FUN_80286884();
 extern void fn_8001404C(int param_1);
 extern void loadUiDll(int dllNo);
-extern void fn_8001B444(void *callback);
+extern void gameTextSetDrawFunc(void *callback);
 extern void GameBit_Set(int eventId,int value);
 extern u8 shouldShowCredits(u8 *obj);
 extern void fn_801349C8(void);
@@ -433,14 +433,14 @@ void TitleMenu_render(u8 *param_1)
 
   menuAction = (*(code *)(*lbl_803DCA50 + 0x10))();
   if (menuAction == 0x57) {
-    fn_8001B444(fn_80135A90);
+    gameTextSetDrawFunc(fn_80135A90);
     titleScreenPositionElements(lbl_803E1D10 + (f32)(lbl_803DD616 * 0x1a4) / lbl_803E1D14,
                 lbl_803E1D18);
     fn_80134D40(0,0,0);
     (*(code *)(*lbl_803DCA4C + 0x18))();
     (*(code *)(*lbl_803DCAA0 + 0x30))(0xff);
     (*(code *)(*lbl_803DCAA0 + 0x10))(param_1);
-    fn_8001B444(0);
+    gameTextSetDrawFunc(0);
     fn_80134C28(lbl_803DD64F);
   }
 }

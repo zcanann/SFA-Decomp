@@ -958,22 +958,22 @@ void CMenu_SetShouldClose(int val)
 extern u8 mapScreenVisible;
 extern u8 lbl_803DD7C5;
 extern u8 cMenuEnabled;
-extern void fn_8012D96C(void);
-extern void fn_8012DD14(void);
-extern void fn_8012DF68(void);
-extern void fn_8012E880(void);
+extern void drawWorldMapHud(void);
+extern void gameTextFadeOut(void);
+extern void cMenuRun(void);
+extern void npcTalkFn_8012e880(void);
 
 /* EN v1.0 0x8012FB2C  size: 92b  Per-frame state advance dispatcher.
  * Gated on the lbl_803DD7C5 enable flag; when zero, fast-returns 0.
- * Otherwise: optionally runs fn_8012D96C (if mapScreenVisible set), runs
- * fn_8012DD14, optionally runs fn_8012DF68 (if cMenuEnabled set),
- * runs fn_8012E880, returns 0. */
+ * Otherwise: optionally runs drawWorldMapHud (if mapScreenVisible set), runs
+ * gameTextFadeOut, optionally runs cMenuRun (if cMenuEnabled set),
+ * runs npcTalkFn_8012e880, returns 0. */
 int GameUI_run(void)
 {
     if (lbl_803DD7C5 == 0) return 0;
-    if (mapScreenVisible != 0) fn_8012D96C();
-    fn_8012DD14();
-    if (cMenuEnabled != 0) fn_8012DF68();
-    fn_8012E880();
+    if (mapScreenVisible != 0) drawWorldMapHud();
+    gameTextFadeOut();
+    if (cMenuEnabled != 0) cMenuRun();
+    npcTalkFn_8012e880();
     return 0;
 }

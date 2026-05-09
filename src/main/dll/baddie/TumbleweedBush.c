@@ -803,7 +803,7 @@ int TitleMenuItem_isChanged(u8* obj)
 
 /* EN v1.0 0x8013157C  size: 20b  Set obj->_c (s16) = val and obj->_6 = 2.
  * Logic-only — target has `extsh r0,r4; sth r0,0xc(r3)` but MWCC -O4
- * strips the redundant extsh before sth (same family as fn_8012EB08 /
+ * strips the redundant extsh before sth (same family as GameUI_func0F /
  * CMenu_SetShouldClose). */
 #pragma scheduling off
 #pragma peephole off

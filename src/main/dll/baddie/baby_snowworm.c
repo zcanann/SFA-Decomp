@@ -12,18 +12,18 @@
  * matched/in-progress fn_xxxxxxxx helpers live below the FUN_ block,
  * appended in batches.
  *
- * Logic-only (correct semantics, byte-divergent): fn_8012BE84,
+ * Logic-only (correct semantics, byte-divergent): timeListFn_8012be84,
  * fn_8012C558, fn_80129CBC. See inline notes per function for the
  * specific MWCC quirk that blocks each one.
  *
  * Known-stuck (verified, don't retry without new ideas):
- *   fn_8012EB08 (28b)  : extsh-before-sth triple; MWCC strips the
+ *   GameUI_func0F (28b)  : extsh-before-sth triple; MWCC strips the
  *                        redundant extsh.
  *   fn_8012EB30 (56b)  : .data array address routes via r0+mr instead
  *                        of clean lis/addi pair using r3 as scratch.
  *   fn_8012DDB8 (32b)  : u16 = param ? 1 : 0 picks up an extra
  *                        clrlwi r0,r0,16 narrowing before sth.
- *   fn_8012BE84 (380b) : MWCC swaps r30/r31 between prev_state and
+ *   timeListFn_8012be84 (380b) : MWCC swaps r30/r31 between prev_state and
  *                        buttons relative to retail.
  */
 
@@ -969,7 +969,7 @@ s32 CMenu_GetState(void)
     return cMenuState;
 }
 
-/* fn_8012EB08 (28b, 3 x s16 setter via extsh+sth pattern) — stuck.
+/* GameUI_func0F (28b, 3 x s16 setter via extsh+sth pattern) — stuck.
  * Target emits extsh-before-sth triples; MWCC strips the extsh since
  * sth ignores upper bits. */
 
@@ -1066,13 +1066,13 @@ extern void fn_8006B558(void*);
 
 extern u8  hudTextures[0x198];
 extern u32 lbl_8033BE40[5];
-extern int   fn_80019B14(void);
+extern int   gameTextFn_80019b14(void);
 extern void  gameTextSetCharset(int, s32);
-extern void* fn_800191C4(s32, s32);
+extern void* gameTextGetPhrase(s32, s32);
 extern void  gameTextFn_8001984c(u16, u16, s32);
-extern void  fn_800163C4(void*, s32, s32, s32, s32*, s32*, s32*, s32*);
+extern void  gameTextMeasureFn_800163c4(void*, s32, s32, s32, s32*, s32*, s32*, s32*);
 extern void  gameTextFn_80019804(s32);
-extern void  fn_8001618C(void*, s32);
+extern void  gameTextAppendStr(void*, s32);
 
 typedef struct BabySnowwormBitTableEntry {
     u8  _0[0x16];   /* 0x00 */
@@ -1095,7 +1095,7 @@ extern int  GameBit_Set(u32, u32);
  * tween halfwords and drops the active-id sentinel to -1. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8012DD7C(u8 param)
+void setShowWorldMapHud(u8 param)
 {
     mapScreenVisible = param;
     if (param != 0) return;
@@ -1113,7 +1113,7 @@ void fn_8012DD7C(u8 param)
  * the active-id sentinel lbl_803DBA5C is dropped to -1. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8012DD14(void)
+void gameTextFadeOut(void)
 {
     if (lbl_803DD774 == 0) return;
     if (lbl_803DD77F != 0 && lbl_803DD774 < 0x7f) {
@@ -1275,7 +1275,7 @@ void fn_8012DDD8(s32 fade_target, u8 idx, u8 flags, u8 q)
  * stack frame matches retail's 0x20 layout via the buf[16] trick. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8012BE84(void)
+void timeListFn_8012be84(void)
 {
     s32 buttons;
     u8  prev_state;
@@ -1487,7 +1487,7 @@ void fn_8012C558(void)
  * 3. If no anim id is queued (lbl_803DD8CA == -1), poll the digital
  *    pad's confirm bit (mask 0x100) and stash the result in
  *    lbl_803A9440[3]. When lbl_803A9440[2] == 1, run the same teardown
- *    as fn_8012BE84's commit path: clear input gate flag, drop bit 9
+ *    as timeListFn_8012be84's commit path: clear input gate flag, drop bit 9
  *    from lbl_803DD8A4, clear the dying byte, and (if lbl_803DD7A9 is
  *    set) call cutsceneFadeInOut(0) + clear the input-disable flag. If after
  *    all that the dying byte is still non-zero, run fn_80014B0C to do
@@ -1501,7 +1501,7 @@ void fn_8012C558(void)
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_8012E880(void)
+void npcTalkFn_8012e880(void)
 {
     Obj_GetPlayerObject();
     if ((s8)lbl_803DD7A8 != 0) {
@@ -1614,9 +1614,9 @@ void fn_80129DB4(void)
  * order, scheduling/peephole pragmas, or intermediate var tricks).
  *
  * Gated on (lbl_803DD774 != 0) && (lbl_803DD776 == 0). Saves the
- * current sprite-batch state via fn_80019B14, sets sub-batch via
+ * current sprite-batch state via gameTextFn_80019b14, sets sub-batch via
  * gameTextSetCharset(lbl_803DD77B, 3), grabs a slot handle from
- * fn_800191C4(lbl_803DBA60, lbl_803DBA5C), and looks up sprite 0x49.
+ * gameTextGetPhrase(lbl_803DBA60, lbl_803DBA5C), and looks up sprite 0x49.
  *
  * Copies the 5-u32 transform block from the singleton at
  * hudTextures+0x13c..+0x14c into the global mtx scratch at
@@ -1628,7 +1628,7 @@ void fn_80129DB4(void)
  *   target = clamp(((mirror) - 0x14) << 4, 0, 0x10e)
  *
  * Issues gameTextFn_8001984c(sprite->_2, sprite->_a, 1) to enable, then
- * fn_800163C4(handle, 0x49, 0, 0, &v[3..0]) to read the sprite's
+ * gameTextMeasureFn_800163c4(handle, 0x49, 0, 0, &v[3..0]) to read the sprite's
  * current bbox into stack slots 0x14..0x8. Calls gameTextFn_80019804(1).
  *
  * Computes blit_x = clamp((v[0x10] - v[0x14] + 0x28), 0, target_y);
@@ -1637,7 +1637,7 @@ void fn_80129DB4(void)
  * gameTextSetColor(0xff, 0xff, 0xff, alpha) to commit the colour, also
  * latches alpha into sprite+0x1e.
  *
- * Tail: fn_8001618C(handle, 0x49); gameTextFn_80019804(2); gameTextSetCharset with
+ * Tail: gameTextAppendStr(handle, 0x49); gameTextFn_80019804(2); gameTextSetCharset with
  * the saved state to restore the batch.
  */
 #pragma scheduling off
@@ -1656,9 +1656,9 @@ void pauseMenuDrawText(void)
     if (lbl_803DD774 == 0) return;
     if (lbl_803DD776 != 0) return;
 
-    saved = fn_80019B14();
+    saved = gameTextFn_80019b14();
     gameTextSetCharset(lbl_803DD77B, 3);
-    handle = fn_800191C4(lbl_803DBA60, lbl_803DBA5C);
+    handle = gameTextGetPhrase(lbl_803DBA60, lbl_803DBA5C);
     sprite = gameTextGetBox(0x49);
 
     lbl_8033BE40[0] = *(u32*)((u8*)hudTextures + 0x13c);
@@ -1685,7 +1685,7 @@ void pauseMenuDrawText(void)
     if (target > 0x10e) target = 0x10e;
 
     gameTextFn_8001984c(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 1);
-    fn_800163C4(handle, 0x49, 0, 0, &v[3], &v[2], &v[1], &v[0]);
+    gameTextMeasureFn_800163c4(handle, 0x49, 0, 0, &v[3], &v[2], &v[1], &v[0]);
     gameTextFn_80019804(1);
 
     {
@@ -1702,7 +1702,7 @@ void pauseMenuDrawText(void)
     gameTextFn_8001984c(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 2);
     gameTextSetColor(0xff, 0xff, 0xff, (u8)alpha);
     *(u8*)((u8*)sprite + 0x1e) = (u8)alpha;
-    fn_8001618C(handle, 0x49);
+    gameTextAppendStr(handle, 0x49);
     gameTextFn_80019804(2);
     gameTextSetCharset(saved, 3);
 }

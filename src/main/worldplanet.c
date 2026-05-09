@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 
 extern void objRenderFn_8003b8f4(double scale);
-extern void fn_8012DD7C(int enabled);
+extern void setShowWorldMapHud(int enabled);
 
 extern f32 lbl_803E6618;
 
@@ -24,7 +24,7 @@ int worldplanet_func08(void)
 #pragma peephole off
 void worldplanet_free(void)
 {
-  fn_8012DD7C(0);
+  setShowWorldMapHud(0);
   return;
 }
 
