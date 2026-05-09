@@ -591,7 +591,7 @@ void SeqObj2_initialise(void) {}
 void immultiseq_hitDetect(void) {}
 void immultiseq_release(void) {}
 void immultiseq_initialise(void) {}
-void fn_8017D0D0(void) {}
+void dll_115_hitDetect_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int seqobject_getExtraSize(void) { return 0x3; }
@@ -600,8 +600,8 @@ int seqobj2_getExtraSize(void) { return 0x1; }
 int seqobj2_func08(void) { return 0x0; }
 int immultiseq_getExtraSize(void) { return 0x2; }
 int immultiseq_func08(void) { return 0x0; }
-int fn_8017D06C(void) { return 0x2; }
-int fn_8017D074(void) { return 0x0; }
+int dll_115_getExtraSize_ret_2(void) { return 0x2; }
+int dll_115_func08_ret_0(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E37A0;
@@ -611,7 +611,7 @@ extern f32 lbl_803E37B0;
 #pragma peephole off
 void seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E37A0); }
 void immultiseq_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E37A8); }
-void fn_8017D0A0(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E37B0); }
+void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E37B0); }
 #pragma peephole reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
@@ -620,6 +620,6 @@ void fn_8017D0A0(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 void seqobject_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 void seqobj2_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 void immultiseq_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
-void fn_8017D07C(int x) { ObjGroup_RemoveObject(x, 0xf); }
+void dll_115_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 #pragma peephole reset
 #pragma scheduling reset

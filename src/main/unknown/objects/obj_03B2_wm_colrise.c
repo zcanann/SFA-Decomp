@@ -56,7 +56,7 @@
  * - slot 05: 0x801F2EDC WM_colrise_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801F2EAC WM_colrise_render ref=render
  * - slot 07: 0x801F2EA8 WM_colrise_free stub=blr ref=free (stub)
- * - slot 08: 0x801F2EA0 fn_801F2EA0 stub=const 0
+ * - slot 08: 0x801F2EA0 WM_colrise_func08_ret_0 stub=const 0
  * - slot 09: 0x801F2E98 WM_colrise_getExtraSize stub=const 4 ref=getExtraSize (stub)
  */
 

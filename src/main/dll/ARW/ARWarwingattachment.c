@@ -1460,18 +1460,18 @@ void pressureswitch_free(void) {}
 void pressureswitch_hitDetect(void) {}
 void pressureswitch_release(void) {}
 void pressureswitch_initialise(void) {}
-void fn_801F1BEC(void) {}
-void fn_801F1C80(void) {}
-void fn_801F1F14(void) {}
-void fn_801F1F18(void) {}
+void dll_1FF_free_nop(void) {}
+void dll_1FF_hitDetect_nop(void) {}
+void dll_1FF_release_nop(void) {}
+void dll_1FF_initialise_nop(void) {}
 void wmlasertarget_free(void) {}
 void wmlasertarget_hitDetect(void) {}
 void wmlasertarget_release(void) {}
 void wmlasertarget_initialise(void) {}
-void fn_801F2B9C(void) {}
-void fn_801F2C60(void) {}
-void fn_801F2E78(void) {}
-void fn_801F2E7C(void) {}
+void dll_200_free_nop(void) {}
+void dll_200_hitDetect_nop(void) {}
+void dll_200_release_nop(void) {}
+void dll_200_initialise_nop(void) {}
 void WM_colrise_free(void) {}
 void WM_colrise_hitDetect(void) {}
 void WM_colrise_release(void) {}
@@ -1484,13 +1484,13 @@ void lightsource_hitDetect(void) {}
 /* 8b "li r3, N; blr" returners. */
 int pressureswitch_getExtraSize(void) { return 0x8; }
 int pressureswitch_func08(void) { return 0x0; }
-int fn_801F1BC8(void) { return 0x8; }
+int dll_1FF_getExtraSize_ret_8(void) { return 0x8; }
 int wmlasertarget_getExtraSize(void) { return 0x4; }
 int wmlasertarget_func08(void) { return 0x0; }
-int fn_801F2B8C(void) { return 0x28; }
-int fn_801F2B94(void) { return 0x1; }
+int dll_200_getExtraSize_ret_40(void) { return 0x28; }
+int dll_200_func08_ret_1(void) { return 0x1; }
 int WM_colrise_getExtraSize(void) { return 0x4; }
-int fn_801F2EA0(void) { return 0x0; }
+int WM_colrise_func08_ret_0(void) { return 0x0; }
 int wmtorch_getExtraSize(void) { return 0x10; }
 int wmtorch_func08(void) { return 0x1; }
 int lightsource_getExtraSize(void) { return 0x1c; }
@@ -1511,7 +1511,7 @@ void WM_colrise_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32
 #pragma peephole off
 #pragma scheduling off
 #pragma peephole off
-int fn_801F1BD0(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x146) return 0x2; return 0x0; }
+int dll_1FF_func08(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x146) return 0x2; return 0x0; }
 #pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
@@ -1519,8 +1519,8 @@ int fn_801F1BD0(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x146) return 0x2;
 /* init pattern: short=-1; byte=0; return 0; */
 #pragma scheduling off
 #pragma peephole off
-int fn_801F160C(int p1, int p2, void* p3) { *(s16*)((char*)p3 + 0x6e) = -1; *(u8*)((char*)p3 + 0x56) = 0; return 0; }
-int fn_801F2E80(int p1, int p2, void* p3) { *(s16*)((char*)p3 + 0x6e) = -1; *(u8*)((char*)p3 + 0x56) = 0; return 0; }
+int PressureSwitch_SeqFn(int p1, int p2, void* p3) { *(s16*)((char*)p3 + 0x6e) = -1; *(u8*)((char*)p3 + 0x56) = 0; return 0; }
+int WM_colrise_SeqFn(int p1, int p2, void* p3) { *(s16*)((char*)p3 + 0x6e) = -1; *(u8*)((char*)p3 + 0x56) = 0; return 0; }
 #pragma peephole reset
 #pragma scheduling reset
 

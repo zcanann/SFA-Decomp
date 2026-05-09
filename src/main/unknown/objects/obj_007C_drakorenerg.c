@@ -59,7 +59,7 @@
  * - slot 08: 0x801FF9D0 drakorenergy_func08 stub=const 0
  * - slot 09: 0x801FF9C8 drakorenergy_getExtraSize stub=const 12 ref=getExtraSize (stub)
  * - slot 10: 0x801FF9B4 fn_801FF9B4 ref=setScale
- * - slot 11: 0x801FF9B0 fn_801FF9B0 stub=blr
+ * - slot 11: 0x801FF9B0 DrakorEnergy_func0B_nop stub=blr
  */
 
 #if 0

@@ -4081,7 +4081,7 @@ void GCRobotBlast_hitDetect(void) {}
 void GCRobotBlast_update(void) {}
 void GCRobotBlast_release(void) {}
 void GCRobotBlast_initialise(void) {}
-void fn_801FF9B0(void) {}
+void DrakorEnergy_func0B_nop(void) {}
 void drakorenergy_free(void) {}
 void drakorenergy_hitDetect(void) {}
 void drakorenergy_release(void) {}
@@ -4096,9 +4096,9 @@ void dfplevelcontrol_release(void) {}
 void dfpobjcreator_hitDetect(void) {}
 void dfpobjcreator_release(void) {}
 void dfpobjcreator_initialise(void) {}
-void fn_80204BF4(void) {}
-void fn_802050BC(void) {}
-void fn_802050C0(void) {}
+void dll_22C_hitDetect_nop(void) {}
+void dll_22C_release_nop(void) {}
+void dll_22C_initialise_nop(void) {}
 void doorswitch_render(void) {}
 void doorswitch_hitDetect(void) {}
 void doorswitch_release(void) {}
@@ -4114,7 +4114,7 @@ void chuka_render(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int GCRobotBlast_getExtraSize(void) { return 0x8; }
-int fn_801FF960(void) { return 0x0; }
+int GCRobotBlast_func08_ret_0(void) { return 0x0; }
 int drakorenergy_getExtraSize(void) { return 0xc; }
 int drakorenergy_func08(void) { return 0x0; }
 int dbstealerworm_getExtraSize(void) { return 0x460; }
@@ -4125,16 +4125,16 @@ int dfplevelcontrol_getExtraSize(void) { return 0xc; }
 int dfplevelcontrol_func08(void) { return 0x0; }
 int dfpobjcreator_getExtraSize(void) { return 0x1c; }
 int dfpobjcreator_func08(void) { return 0x0; }
-int fn_80204B54(void) { return 0x0; }
-int fn_80204B5C(void) { return 0x10; }
-int fn_80204B64(void) { return 0x0; }
+int return0_80204B54(void) { return 0x0; }
+int dll_22C_getExtraSize_ret_16(void) { return 0x10; }
+int dll_22C_func08_ret_0(void) { return 0x0; }
 int doorswitch_getExtraSize(void) { return 0x0; }
 int doorswitch_func08(void) { return 0x0; }
 int dfpseqpoint_getExtraSize(void) { return 0x10; }
 int dfpseqpoint_func08(void) { return 0x0; }
 int DFP_Torch_getExtraSize(void) { return 0x10; }
-int fn_802057D4(void) { return 0x1; }
-int fn_80205F40(void) { return 0x0; }
+int DFP_Torch_func08_ret_1(void) { return 0x1; }
+int return0_80205F40(void) { return 0x0; }
 int chuka_getExtraSize(void) { return 0xc; }
 int chuka_func08(void) { return 0x0; }
 
@@ -4148,7 +4148,7 @@ extern f32 lbl_803E6398;
 extern f32 lbl_803E63B8;
 #pragma peephole off
 void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E6390); }
-void fn_80204BC4(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E6398); }
+void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E6398); }
 void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E63B8); }
 #pragma peephole reset
 
@@ -4161,8 +4161,8 @@ void dfplevelcontrol_free(int x) { ObjGroup_RemoveObject(x, 0x9); }
 #pragma scheduling reset
 
 /* plain forwarder. */
-extern void fn_80203C78(void);
-void dbstealerworm_initialise(void) { fn_80203C78(); }
+extern void DBstealerwo_setFuncPtrs_80203c78(void);
+void dbstealerworm_initialise(void) { DBstealerwo_setFuncPtrs_80203c78(); }
 
 /* OSReport(string) wrappers. */
 extern void OSReport(const char *fmt, ...);
