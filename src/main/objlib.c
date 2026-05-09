@@ -135,6 +135,15 @@ extern char sObjAddObjectTypeReachedMaxTypes[];
 #define OBJTRIGGER_PLAYER_STATE_NONE -1
 #define OBJTRIGGER_PLAYER_STATE_CLEAR 0x40
 
+#define OBJLINK_PARENT_OFFSET 0xc4
+#define OBJLINK_CHILD_LIST_OFFSET 0xc8
+#define OBJLINK_CHILD_COUNT_OFFSET 0xeb
+#define OBJLINK_CHILD_STATE_OFFSET 0xe5
+#define OBJLINK_FLAGS_OFFSET 0xb0
+#define OBJLINK_FLAGS_MODE_MASK 0x0007
+#define OBJLINK_FLAGS_MODE_CLEAR_MASK 0xfff8
+#define OBJLINK_FLAGS_DEAD 0x0040
+
 typedef struct ObjMsgEntry {
   uint message;
   uint sender;
@@ -2185,7 +2194,7 @@ undefined4 Obj_IsObjectAlive(u32 param_1)
   undefined4 uVar1;
 
   uVar1 = 0;
-  if ((param_1 != 0) && ((*(ushort *)(param_1 + 0xb0) & 0x40) == 0)) {
+  if ((param_1 != 0) && ((*(ushort *)(param_1 + OBJLINK_FLAGS_OFFSET) & OBJLINK_FLAGS_DEAD) == 0)) {
     uVar1 = 1;
   }
   return uVar1;
@@ -2347,19 +2356,21 @@ void ObjLink_DetachChild(int param_1,int param_2)
   int iVar4;
 
   iVar4 = 0;
-  uVar1 = (uint)*(byte *)(param_1 + 0xeb);
-  for (iVar3 = param_1; (uVar1 != 0 && (*(int *)(iVar3 + 200) != param_2)); iVar3 = iVar3 + 4) {
+  uVar1 = (uint)*(byte *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET);
+  for (iVar3 = param_1; (uVar1 != 0 && (*(int *)(iVar3 + OBJLINK_CHILD_LIST_OFFSET) != param_2)); iVar3 = iVar3 + 4) {
     iVar4 = iVar4 + 1;
     uVar1 = uVar1 - 1;
   }
   iVar3 = param_1 + iVar4 * 4;
-  for (; iVar2 = *(byte *)(param_1 + 0xeb) - 1, iVar4 < iVar2; iVar4 = iVar4 + 1) {
-    *(undefined4 *)(iVar3 + 200) = *(undefined4 *)(iVar3 + 0xcc);
+  for (; iVar2 = *(byte *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET) - 1, iVar4 < iVar2; iVar4 = iVar4 + 1) {
+    *(undefined4 *)(iVar3 + OBJLINK_CHILD_LIST_OFFSET) =
+        *(undefined4 *)(iVar3 + OBJLINK_CHILD_LIST_OFFSET + sizeof(int));
     iVar3 = iVar3 + 4;
   }
-  *(char *)(param_1 + 0xeb) = (char)iVar2;
-  *(undefined4 *)(param_1 + (uint)*(byte *)(param_1 + 0xeb) * 4 + 200) = 0;
-  *(undefined4 *)(param_2 + 0xc4) = 0;
+  *(char *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET) = (char)iVar2;
+  *(undefined4 *)(param_1 + (uint)*(byte *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET) * 4 +
+                  OBJLINK_CHILD_LIST_OFFSET) = 0;
+  *(undefined4 *)(param_2 + OBJLINK_PARENT_OFFSET) = 0;
   return;
 }
 #pragma peephole reset
@@ -2385,14 +2396,16 @@ void ObjLink_AttachChild(int param_1,int param_2,ushort param_3)
   u8 bVar1;
   u8* base;
 
-  bVar1 = *(u8 *)(param_1 + 0xeb);
-  *(u8 *)(param_1 + 0xeb) = bVar1 + 1;
+  bVar1 = *(u8 *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET);
+  *(u8 *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET) = bVar1 + 1;
   base = (u8*)(param_1 + bVar1 * 4);
-  *(int *)(base + 200) = param_2;
-  *(int *)(param_2 + 0xc4) = param_1;
-  *(u16 *)(param_2 + 0xb0) = (u16)(*(u16 *)(param_2 + 0xb0) & 0xfff8);
-  *(u16 *)(param_2 + 0xb0) = (u16)(*(u16 *)(param_2 + 0xb0) | param_3);
-  *(u8 *)(param_2 + 0xe5) = 0;
+  *(int *)(base + OBJLINK_CHILD_LIST_OFFSET) = param_2;
+  *(int *)(param_2 + OBJLINK_PARENT_OFFSET) = param_1;
+  *(u16 *)(param_2 + OBJLINK_FLAGS_OFFSET) =
+      (u16)(*(u16 *)(param_2 + OBJLINK_FLAGS_OFFSET) & OBJLINK_FLAGS_MODE_CLEAR_MASK);
+  *(u16 *)(param_2 + OBJLINK_FLAGS_OFFSET) =
+      (u16)(*(u16 *)(param_2 + OBJLINK_FLAGS_OFFSET) | param_3);
+  *(u8 *)(param_2 + OBJLINK_CHILD_STATE_OFFSET) = 0;
   return;
 }
 #pragma peephole reset
