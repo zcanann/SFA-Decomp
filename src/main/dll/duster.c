@@ -281,7 +281,7 @@ void fn_801554B4(int *param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: fn_80155770
+ * Function: rachnopUpdateWhileFrozen
  * EN v1.0 Address: 0x80155B08
  * EN v1.0 Size: 100b
  * EN v1.1 Address: 0x80155C1C
@@ -291,7 +291,7 @@ void fn_801554B4(int *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80155770(uint param_1,int param_2,undefined4 param_3,int param_4)
+void rachnopUpdateWhileFrozen(uint param_1,int param_2,undefined4 param_3,int param_4)
 {
   if (param_4 == 0x10) {
     *(uint *)(param_2 + 0x2e8) = *(uint *)(param_2 + 0x2e8) | 0x20;
@@ -425,7 +425,7 @@ void fn_80155948(int *param_9,int param_10)
 /*
  * --INFO--
  *
- * Function: fn_80155AAC
+ * Function: rachnopInit
  * EN v1.0 Address: 0x8015603C
  * EN v1.0 Size: 100b
  * EN v1.1 Address: 0x80155F58
@@ -435,7 +435,7 @@ void fn_80155948(int *param_9,int param_10)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80155AAC(undefined4 param_1,int param_2)
+void rachnopInit(undefined4 param_1,int param_2)
 {
   float fVar1;
   float fVar2;
@@ -464,7 +464,7 @@ void fn_80155AAC(undefined4 param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: fn_80155B10
+ * Function: pollenFn_80155b10
  * EN v1.0 Address: 0x801560A0
  * EN v1.0 Size: 628b
  * EN v1.1 Address: 0x80155FBC
@@ -474,7 +474,7 @@ void fn_80155AAC(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80155B10(uint param_9,int param_10)
+void pollenFn_80155b10(uint param_9,int param_10)
 {
   uint uVar1;
   int iVar2;
@@ -546,7 +546,7 @@ void fn_80155B10(uint param_9,int param_10)
 /*
  * --INFO--
  *
- * Function: fn_80155CF8
+ * Function: timeOfDayFn_80155cf8
  * EN v1.0 Address: 0x80156314
  * EN v1.0 Size: 472b
  * EN v1.1 Address: 0x801561A4
@@ -556,7 +556,7 @@ void fn_80155B10(uint param_9,int param_10)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80155CF8(int param_9,int param_10)
+void timeOfDayFn_80155cf8(int param_9,int param_10)
 {
   byte bVar1;
   float local_18 [4];
@@ -584,7 +584,7 @@ void fn_80155CF8(int param_9,int param_10)
 /*
  * --INFO--
  *
- * Function: fn_80155E10
+ * Function: baddieUpdateWhileFrozen_80155e10
  * EN v1.0 Address: 0x801564EC
  * EN v1.0 Size: 384b
  * EN v1.1 Address: 0x801562BC
@@ -594,7 +594,7 @@ void fn_80155CF8(int param_9,int param_10)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80155E10(uint param_9,int param_10,undefined4 param_11,int param_12,undefined4 param_13,int param_14)
+void baddieUpdateWhileFrozen_80155e10(uint param_9,int param_10,undefined4 param_11,int param_12,undefined4 param_13,int param_14)
 {
   if (param_12 == 0x10) {
     *(uint *)(param_10 + 0x2e8) = *(uint *)(param_10 + 0x2e8) | 0x20;
@@ -656,7 +656,7 @@ void fn_80155F20(int param_9,int param_10)
       fn_8014D08C(param_9,param_10,2,lbl_803E36EC,0,0);
     }
   }
-  fn_80155CF8(param_9,param_10);
+  timeOfDayFn_80155cf8(param_9,param_10);
   return;
 }
 
@@ -688,7 +688,7 @@ void fn_80156010(uint param_9,int param_10)
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
     sVar2 = *(short *)(param_9 + 0xa0);
     if (sVar2 == 4) {
-      fn_80155B10(param_9,param_10);
+      pollenFn_80155b10(param_9,param_10);
       *(float *)(param_10 + 0x324) = lbl_803E3718;
       fn_8014D08C(param_9,param_10,5,lbl_803E36EC,0,0);
     }
@@ -705,14 +705,14 @@ void fn_80156010(uint param_9,int param_10)
       dVar3 = (double)Sfx_PlayFromObject(param_9,0x24b);
     }
   }
-  fn_80155CF8(param_9,param_10);
+  timeOfDayFn_80155cf8(param_9,param_10);
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: fn_80156188
+ * Function: baddieInit_80156188
  * EN v1.0 Address: 0x80156DE4
  * EN v1.0 Size: 100b
  * EN v1.1 Address: 0x80156634
@@ -722,7 +722,7 @@ void fn_80156010(uint param_9,int param_10)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80156188(undefined4 param_1,int param_2)
+void baddieInit_80156188(undefined4 param_1,int param_2)
 {
   float fVar1;
   float fVar2;
@@ -749,7 +749,7 @@ void fn_80156188(undefined4 param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: fn_801561EC
+ * Function: wbUpdateWhileFrozen
  * EN v1.0 Address: 0x80156E48
  * EN v1.0 Size: 112b
  * EN v1.1 Address: 0x80156698
@@ -759,7 +759,7 @@ void fn_80156188(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801561EC(uint param_1,int param_2,undefined4 param_3,int param_4)
+void wbUpdateWhileFrozen(uint param_1,int param_2,undefined4 param_3,int param_4)
 {
   if (param_4 != 0x11) {
     if (param_4 == 0x10) {
@@ -987,7 +987,7 @@ void fn_8015652C(ushort *param_9,int param_10)
 /*
  * --INFO--
  *
- * Function: fn_801568A8
+ * Function: wbInit
  * EN v1.0 Address: 0x80157724
  * EN v1.0 Size: 164b
  * EN v1.1 Address: 0x80156D54
@@ -997,7 +997,7 @@ void fn_8015652C(ushort *param_9,int param_10)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801568A8(undefined4 param_1,int param_2)
+void wbInit(undefined4 param_1,int param_2)
 {
   float fVar1;
   uint uVar2;
@@ -1078,7 +1078,7 @@ void fn_80156950(uint param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: fn_80156A44
+ * Function: mutatedEbaUpdateWhileFrozen
  * EN v1.0 Address: 0x801578C4
  * EN v1.0 Size: 304b
  * EN v1.1 Address: 0x80156EF0
@@ -1088,7 +1088,7 @@ void fn_80156950(uint param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80156A44(uint param_9,int param_10,undefined4 param_11,int param_12)
+void mutatedEbaUpdateWhileFrozen(uint param_9,int param_10,undefined4 param_11,int param_12)
 {
   short sVar1;
   
@@ -1183,11 +1183,11 @@ void fn_80156C34(uint param_9,int param_10)
 
 /*
  * --INFO--
- * Function: fn_80156CDC
+ * Function: mutatedEbaInit
  * EN v1.0 Address: 0x80156CDC
  * EN v1.0 Size: 104b
  */
-void fn_80156CDC(undefined4 param_1,int param_2)
+void mutatedEbaInit(undefined4 param_1,int param_2)
 {
   float fVar1;
   
@@ -1210,11 +1210,11 @@ void fn_80156CDC(undefined4 param_1,int param_2)
 
 /*
  * --INFO--
- * Function: fn_80156D44
+ * Function: hoodedZyckUpdateWhileFrozen
  * EN v1.0 Address: 0x80156D44
  * EN v1.0 Size: 92b
  */
-void fn_80156D44(uint param_1,int param_2,undefined4 param_3,int param_4)
+void hoodedZyckUpdateWhileFrozen(uint param_1,int param_2,undefined4 param_3,int param_4)
 {
   if (param_4 == 0x10) {
     *(uint *)(param_2 + 0x2e8) = *(uint *)(param_2 + 0x2e8) | 0x20;
