@@ -125,7 +125,7 @@ extern void *lbl_803DD628;
 extern void *lbl_803DD62C;
 extern void *lbl_803DD630;
 extern void *lbl_803DD634;
-extern struct NAttractModeMovieDims lbl_803DD638;
+extern NAttractModeMovieDims lbl_803DD638;
 extern int lbl_803DD640;
 extern int lbl_803DD644;
 extern u8 lbl_803DD64D;
@@ -136,23 +136,6 @@ extern f32 lbl_803E1D10;
 extern f32 lbl_803E1D14;
 extern f32 lbl_803E1D18;
 
-struct NAttractModeMovieDims {
-  int width;
-  int height;
-};
-
-#define NATTRACTMODE_PREPARE_FAIL_LINE 0x2FB
-#define NATTRACTMODE_MOVIE_HEAP 0x18
-#define NATTRACTMODE_WORK_BUFFER_SIZE 0x4000
-#define NATTRACTMODE_MOVIE_STATE_PREPARED 2
-#define NATTRACTMODE_MOVIE_STATE_RELEASED 4
-#define NATTRACTMODE_MOVIE_BUSY 1
-#define NATTRACTMODE_MOVIE_READY 0
-#define NATTRACTMODE_OPTIONAL_BUFFER_SIZE_NONE 0
-#define NATTRACTMODE_MOVIE_SETUP_ID 2
-#define NATTRACTMODE_MOVIE_START_FRAME_DEFAULT 0
-#define NATTRACTMODE_MOVIE_START_FRAME_ALTERNATE 100
-#define NATTRACTMODE_MOVIE_RETRACE_COUNTDOWN 10
 #define sNAttractModeSourceFile s_n_attractmode_c_8031a38c
 #define sNAttractModeFailToPrepare s_Fail_to_prepare_8031a39c
 #define sNAttractModeMoviePath s_starfox_thp_8031a32c
