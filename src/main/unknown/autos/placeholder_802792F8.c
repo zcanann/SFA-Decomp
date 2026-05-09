@@ -2,9 +2,9 @@
 #include "main/unknown/autos/placeholder_802792F8.h"
 
 extern u8 lbl_803CA2D0[];
-extern u32 lbl_803DE2F0;
-extern void *lbl_803DE2F4;
-extern void *lbl_803DE2F8;
+extern u32 vidCurrentId;
+extern void *vidRoot;
+extern void *vidFree;
 extern u16 voicePrioSortRootListRoot;
 extern u8 *lbl_803DE268;
 extern void voiceUnregister(int state);
@@ -24,7 +24,7 @@ void vidRemoveVoice(int state)
                 node = *(u32 **)(state + 0xf8);
                 if (node == *(u32 **)(state + 0xfc)) {
                     if ((u32 *)node[1] == 0) {
-                        lbl_803DE2F4 = (void *)node[0];
+                        vidRoot = (void *)node[0];
                     } else {
                         *(u32 *)node[1] = node[0];
                     }
@@ -32,17 +32,17 @@ void vidRemoveVoice(int state)
                     if (next != 0) {
                         *(u32 *)(next + 4) = (*(u32 **)(state + 0xf8))[1];
                     }
-                    **(u32 **)(state + 0xf8) = (u32)lbl_803DE2F8;
-                    if (lbl_803DE2F8 != 0) {
-                        *(u32 *)((u8 *)lbl_803DE2F8 + 4) = *(u32 *)(state + 0xf8);
+                    **(u32 **)(state + 0xf8) = (u32)vidFree;
+                    if (vidFree != 0) {
+                        *(u32 *)((u8 *)vidFree + 4) = *(u32 *)(state + 0xf8);
                     }
                     *(u32 *)(*(int *)(state + 0xf8) + 4) = 0;
-                    lbl_803DE2F8 = *(void **)(state + 0xf8);
+                    vidFree = *(void **)(state + 0xf8);
                     *(u32 *)(state + 0xf8) = 0;
                     *(u32 *)(state + 0xfc) = 0;
                 } else {
                     if ((u32 *)node[1] == 0) {
-                        lbl_803DE2F4 = (void *)node[0];
+                        vidRoot = (void *)node[0];
                     } else {
                         *(u32 *)node[1] = node[0];
                     }
@@ -50,16 +50,16 @@ void vidRemoveVoice(int state)
                     if (next != 0) {
                         *(u32 *)(next + 4) = (*(u32 **)(state + 0xf8))[1];
                     }
-                    **(u32 **)(state + 0xf8) = (u32)lbl_803DE2F8;
-                    if (lbl_803DE2F8 != 0) {
-                        *(u32 *)((u8 *)lbl_803DE2F8 + 4) = *(u32 *)(state + 0xf8);
+                    **(u32 **)(state + 0xf8) = (u32)vidFree;
+                    if (vidFree != 0) {
+                        *(u32 *)((u8 *)vidFree + 4) = *(u32 *)(state + 0xf8);
                     }
                     *(u32 *)(*(int *)(state + 0xf8) + 4) = 0;
-                    lbl_803DE2F8 = *(void **)(state + 0xf8);
+                    vidFree = *(void **)(state + 0xf8);
                     *(u32 *)(state + 0xf8) = 0;
                     node = *(u32 **)(state + 0xfc);
                     if ((u32 *)node[1] == 0) {
-                        lbl_803DE2F4 = (void *)node[0];
+                        vidRoot = (void *)node[0];
                     } else {
                         *(u32 *)node[1] = node[0];
                     }
@@ -67,12 +67,12 @@ void vidRemoveVoice(int state)
                     if (next != 0) {
                         *(u32 *)(next + 4) = (*(u32 **)(state + 0xfc))[1];
                     }
-                    **(u32 **)(state + 0xfc) = (u32)lbl_803DE2F8;
-                    if (lbl_803DE2F8 != 0) {
-                        *(u32 *)((u8 *)lbl_803DE2F8 + 4) = *(u32 *)(state + 0xfc);
+                    **(u32 **)(state + 0xfc) = (u32)vidFree;
+                    if (vidFree != 0) {
+                        *(u32 *)((u8 *)vidFree + 4) = *(u32 *)(state + 0xfc);
                     }
                     *(u32 *)(*(int *)(state + 0xfc) + 4) = 0;
-                    lbl_803DE2F8 = *(void **)(state + 0xfc);
+                    vidFree = *(void **)(state + 0xfc);
                     *(u32 *)(state + 0xfc) = 0;
                 }
             } else {
@@ -84,7 +84,7 @@ void vidRemoveVoice(int state)
                 node = *(u32 **)(state + 0xf8);
                 if (node != *(u32 **)(state + 0xfc)) {
                     if ((u32 *)node[1] == 0) {
-                        lbl_803DE2F4 = (void *)node[0];
+                        vidRoot = (void *)node[0];
                     } else {
                         *(u32 *)node[1] = node[0];
                     }
@@ -92,12 +92,12 @@ void vidRemoveVoice(int state)
                     if (next != 0) {
                         *(u32 *)(next + 4) = (*(u32 **)(state + 0xf8))[1];
                     }
-                    **(u32 **)(state + 0xf8) = (u32)lbl_803DE2F8;
-                    if (lbl_803DE2F8 != 0) {
-                        *(u32 *)((u8 *)lbl_803DE2F8 + 4) = *(u32 *)(state + 0xf8);
+                    **(u32 **)(state + 0xf8) = (u32)vidFree;
+                    if (vidFree != 0) {
+                        *(u32 *)((u8 *)vidFree + 4) = *(u32 *)(state + 0xf8);
                     }
                     *(u32 *)(*(int *)(state + 0xf8) + 4) = 0;
-                    lbl_803DE2F8 = *(void **)(state + 0xf8);
+                    vidFree = *(void **)(state + 0xf8);
                     *(u32 *)(state + 0xf8) = 0;
                 }
                 *(u32 *)(state + 0xf8) = 0;
@@ -112,7 +112,7 @@ void vidRemoveVoice(int state)
             }
             node = *(u32 **)(state + 0xf8);
             if ((u32 *)node[1] == 0) {
-                lbl_803DE2F4 = (void *)node[0];
+                vidRoot = (void *)node[0];
             } else {
                 *(u32 *)node[1] = node[0];
             }
@@ -120,12 +120,12 @@ void vidRemoveVoice(int state)
             if (next != 0) {
                 *(u32 *)(next + 4) = (*(u32 **)(state + 0xf8))[1];
             }
-            **(u32 **)(state + 0xf8) = (u32)lbl_803DE2F8;
-            if (lbl_803DE2F8 != 0) {
-                *(u32 *)((u8 *)lbl_803DE2F8 + 4) = *(u32 *)(state + 0xf8);
+            **(u32 **)(state + 0xf8) = (u32)vidFree;
+            if (vidFree != 0) {
+                *(u32 *)((u8 *)vidFree + 4) = *(u32 *)(state + 0xf8);
             }
             *(u32 *)(*(int *)(state + 0xf8) + 4) = 0;
-            lbl_803DE2F8 = *(void **)(state + 0xf8);
+            vidFree = *(void **)(state + 0xf8);
             *(u32 *)(state + 0xf8) = 0;
         }
     }
@@ -165,36 +165,36 @@ u32 vidMakeNew(int state, int returnNewId)
     int **node;
     int **prev;
 
-    freeNode = lbl_803DE2F8;
-    nextId = lbl_803DE2F0;
+    freeNode = vidFree;
+    nextId = vidCurrentId;
     do {
-        lbl_803DE2F0 = nextId;
-        nextId = lbl_803DE2F0 + 1;
-    } while (lbl_803DE2F0 == 0xffffffffU);
+        vidCurrentId = nextId;
+        nextId = vidCurrentId + 1;
+    } while (vidCurrentId == 0xffffffffU);
 
-    nextId = lbl_803DE2F0;
-    cursor = lbl_803DE2F4;
+    nextId = vidCurrentId;
+    cursor = vidRoot;
     prev = 0;
-    lbl_803DE2F0++;
+    vidCurrentId++;
     while ((node = cursor) != 0 && ((u32)node[2] <= nextId)) {
         if ((u32)node[2] == nextId) {
             do {
-                wrapped = lbl_803DE2F0 == 0xffffffffU;
-                nextId = lbl_803DE2F0;
-                lbl_803DE2F0++;
+                wrapped = vidCurrentId == 0xffffffffU;
+                nextId = vidCurrentId;
+                vidCurrentId++;
             } while (wrapped);
         }
         prev = node;
         cursor = (int **)*node;
     }
 
-    if (lbl_803DE2F8 != 0) {
-        lbl_803DE2F8 = *(void **)lbl_803DE2F8;
-        if (lbl_803DE2F8 != 0) {
-            *(u32 *)((u8 *)lbl_803DE2F8 + 4) = 0;
+    if (vidFree != 0) {
+        vidFree = *(void **)vidFree;
+        if (vidFree != 0) {
+            *(u32 *)((u8 *)vidFree + 4) = 0;
         }
         if (prev == 0) {
-            lbl_803DE2F4 = freeNode;
+            vidRoot = freeNode;
         } else {
             *prev = (int *)freeNode;
         }
@@ -235,7 +235,7 @@ int vidGetInternalId(u32 id)
     if (id == 0xffffffffU) {
         return -1;
     }
-    node = lbl_803DE2F4;
+    node = vidRoot;
     while (node != NULL) {
         if (*(u32 *)(node + 2) == id) {
             break;

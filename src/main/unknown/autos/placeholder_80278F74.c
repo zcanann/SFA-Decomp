@@ -8,9 +8,9 @@ typedef struct VoiceNode {
 } VoiceNode;
 
 extern VoiceNode lbl_803CA2D0[128];
-extern int lbl_803DE2F0;
-extern int lbl_803DE2F4;
-extern VoiceNode *lbl_803DE2F8;
+extern int vidCurrentId;
+extern int vidRoot;
+extern VoiceNode *vidFree;
 
 /*
  * --INFO--
@@ -31,9 +31,9 @@ void vidInit(void)
     VoiceNode *prev = NULL;
     int i;
 
-    lbl_803DE2F8 = node;
-    lbl_803DE2F0 = 0;
-    lbl_803DE2F4 = 0;
+    vidFree = node;
+    vidCurrentId = 0;
+    vidRoot = 0;
 
     for (i = 0; i < 128; i++) {
         node->prev = prev;

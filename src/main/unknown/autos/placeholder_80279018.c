@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_80271a90();
 
-extern u32 *lbl_803DE2F4;
+extern u32 *vidRoot;
 extern undefined4 DAT_803def58;
 extern undefined4 DAT_803def60;
 extern undefined4 DAT_803def64;
@@ -26,7 +26,7 @@ u32 *get_vidlist(u32 key)
   u32 *node;
   u32 value;
 
-  node = lbl_803DE2F4;
+  node = vidRoot;
   while (node != NULL) {
     value = node[2];
     if (value == key) {
