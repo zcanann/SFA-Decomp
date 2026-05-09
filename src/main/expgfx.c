@@ -2104,6 +2104,8 @@ void expgfx_onMapSetup(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void expgfx_release(void)
 {
   int poolIndex;
@@ -2121,3 +2123,5 @@ void expgfx_release(void)
   } while (poolIndex < EXPGFX_POOL_COUNT);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
