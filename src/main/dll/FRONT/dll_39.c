@@ -96,7 +96,7 @@ extern void *mmAlloc(int size,int heap,int flags);
 extern int mmSetFreeDelay(int delay);
 extern void mm_free(void *ptr);
 extern void fn_80022D58(int param_1);
-extern void fn_80041E3C(int param_1);
+extern void defragMemory(int param_1);
 extern void OSReport(const char *fmt,...);
 extern void OSPanic(const char *file,int line,const char *msg,...);
 extern void DCInvalidateRange(void *addr,uint nBytes);
@@ -366,7 +366,7 @@ void n_attractmode_prepareMovie(void)
         mmSetFreeDelay(freeDelay);
         OSReport(s__________________malloc_for_movi_8031a338);
         fn_80022D58(1);
-        fn_80041E3C(0);
+        defragMemory(0);
         OSReport(s__________________RESTRUCT_for_mo_8031a364);
         fn_80022D58(1);
       }

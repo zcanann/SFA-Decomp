@@ -26,7 +26,7 @@ extern void mapUnload(int mapId, uint flags);
 extern void fn_8005CDD4(int arg);
 extern void fn_8005CDF8(int arg);
 extern void fn_8005CEA8(int arg);
-extern void fn_8007DD04(u8 retry);
+extern void memCardFn_8007dd04(u8 retry);
 extern void loadSaveSettings(void);
 extern int titleLoadSaveFiles(void);
 extern void gameplay_capturePreviewSettings(void);
@@ -38,7 +38,7 @@ extern u8 fn_80134BBC(void);
 extern void fn_801368A4(u8 arg);
 extern void fn_801368C4(u8 arg);
 extern void fn_801368D4(void);
-extern void fn_8007D960(int);
+extern void saveFn_8007d960(int);
 
 extern u8 framesThisStep;
 extern u8 lbl_803DB424;
@@ -127,7 +127,7 @@ static void TitleMenu_ReloadSaveSettings(void)
 
   result = titleLoadSaveFiles();
   if ((result == 0) && (lbl_803DB424 != 0)) {
-    fn_8007DD04(1);
+    memCardFn_8007dd04(1);
   }
   loadSaveSettings();
 }
@@ -349,7 +349,7 @@ void TitleMenu_release(void)
 {
   fn_8013046C();
   fn_80130464(1);
-  fn_8007D960(1);
+  saveFn_8007d960(1);
 }
 #pragma peephole reset
 #pragma scheduling reset

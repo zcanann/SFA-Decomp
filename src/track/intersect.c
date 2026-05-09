@@ -6398,10 +6398,10 @@ void OSReport(const char* msg, ...)
 #pragma scheduling off
 int fn_8007D72C(void)
 {
-    extern int fn_8007DE0C(int);
+    extern int cardProbe(int);
     extern void* mmAlloc(int, int, int);
     extern void mm_free(void*);
-    extern void fn_8007FDF8(void);
+    extern void cardSetStatusNoCard2(void);
     extern void* lbl_803DD040;
     extern volatile s32 lbl_803DB700;
     extern u32 lbl_803DD048, lbl_803DD04C, lbl_803DD050, lbl_803DD054;
@@ -6410,7 +6410,7 @@ int fn_8007D72C(void)
     u64 serial;
 
     need_format = 0;
-    if (fn_8007DE0C(0) == 0) {
+    if (cardProbe(0) == 0) {
         return 0;
     }
     lbl_803DD040 = mmAlloc(0xA000, -1, 0);
@@ -6419,7 +6419,7 @@ int fn_8007D72C(void)
         return 0;
     }
     lbl_803DB700 = 0;
-    res = CARDMount(0, lbl_803DD040, (void*)fn_8007FDF8);
+    res = CARDMount(0, lbl_803DD040, (void*)cardSetStatusNoCard2);
     if (res == -13) {
         need_format = 1;
     }
@@ -6490,7 +6490,7 @@ int fn_8007D72C(void)
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_8007D960(u32 param_1)
+void saveFn_8007d960(u32 param_1)
 {
     u8 v = (u8)param_1;
     lbl_803DD059 = v;
@@ -6555,11 +6555,11 @@ s32 fn_8007D994(void)
  * PAL Size: TODO
  */
 extern void cardShowLoadingMsg(u8);
-extern int fn_8007EB44(int, int, int, int, int, void*);
-extern void fn_8007E1AC(int);
-extern int fn_8007E6D4(u8, int, void*, void*);
-extern int fn_8007E748(int, int, void*);
-extern void fn_8007E77C(void);
+extern int saveGame_prepareAndWrite(int, int, int, int, int, void*);
+extern void showMemCardError(int);
+extern int cardCb_8007e6d4(u8, int, void*, void*);
+extern int saveCb_8007e748(int, int, void*);
+extern void saveCb_8007e77c(void);
 extern u8 lbl_803DD058;
 
 #pragma scheduling off
@@ -6572,7 +6572,7 @@ int fn_8007D99C(void)
     extern s32 CARDDelete();
     extern void CARDUnmount();
     extern void mm_free();
-    extern void fn_8007FDF8();
+    extern void cardSetStatusNoCard2();
     extern void* lbl_803DD040;
     extern const char* sMemoryCardFileName;
     extern volatile s32 lbl_803DB700;
@@ -6581,7 +6581,7 @@ int fn_8007D99C(void)
     lbl_803DD058 = 0;
 
     do {
-        if (fn_8007DE0C(0) == 0) {
+        if (cardProbe(0) == 0) {
             return 0;
         }
         lbl_803DD040 = mmAlloc(0xA000, -1, 0);
@@ -6590,7 +6590,7 @@ int fn_8007D99C(void)
             return 0;
         }
         lbl_803DB700 = 0;
-        res = CARDMount(0, lbl_803DD040, (void*)fn_8007FDF8);
+        res = CARDMount(0, lbl_803DD040, (void*)cardSetStatusNoCard2);
         if (res == 0 || res == -6) {
             res = CARDCheck(0);
         }
@@ -6612,7 +6612,7 @@ int fn_8007D99C(void)
                 lbl_803DB700 = 13;
                 return 1;
         }
-        fn_8007E1AC(0);
+        showMemCardError(0);
     } while (lbl_803DD058 != 0);
     return 0;
 }
@@ -6633,14 +6633,14 @@ int fn_8007D99C(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-int fn_8007DB24(int a, int b, int c)
+int _saveGame(int a, int b, int c)
 {
     int ret;
     lbl_803DD058 = 0;
     cardShowLoadingMsg(1);
     do {
-        ret = fn_8007EB44(0, a, 0, b, c, fn_8007E6D4);
-        fn_8007E1AC(0);
+        ret = saveGame_prepareAndWrite(0, a, 0, b, c, cardCb_8007e6d4);
+        showMemCardError(0);
         if (lbl_803DD058 != 0) {
             cardShowLoadingMsg(1);
         }
@@ -6663,14 +6663,14 @@ int fn_8007DB24(int a, int b, int c)
  * PAL Size: TODO
  */
 #pragma scheduling off
-int fn_8007DBC0(int a)
+int maybeTryLoadSave(int a)
 {
     int ret;
     lbl_803DD058 = 0;
     cardShowLoadingMsg(0);
     do {
-        ret = fn_8007EB44(1, 0, 0, a, 0, fn_8007E748);
-        fn_8007E1AC(1);
+        ret = saveGame_prepareAndWrite(1, 0, 0, a, 0, saveCb_8007e748);
+        showMemCardError(1);
         if (lbl_803DD058 != 0) {
             cardShowLoadingMsg(0);
         }
@@ -6699,8 +6699,8 @@ int fn_8007DC5C(int a, int b)
     lbl_803DD058 = 0;
     cardShowLoadingMsg(0);
     do {
-        ret = fn_8007EB44(1, a, 0, b, 0, fn_8007E77C);
-        fn_8007E1AC(0);
+        ret = saveGame_prepareAndWrite(1, a, 0, b, 0, saveCb_8007e77c);
+        showMemCardError(0);
         if (lbl_803DD058 != 0) {
             cardShowLoadingMsg(0);
         }
@@ -6724,7 +6724,7 @@ int fn_8007DC5C(int a, int b)
  */
 #pragma peephole off
 #pragma scheduling off
-int fn_8007DD04(u8 retry)
+int memCardFn_8007dd04(u8 retry)
 {
     extern int fn_8007F83C(int);
     extern void CARDClose(void*);
@@ -6752,11 +6752,11 @@ int fn_8007DD04(u8 retry)
             lbl_803DD040 = 0;
             lbl_803DB700 = 13;
             if (ret == 2) {
-                ret = fn_8007EB44(0, 0, 0, 0, 0, 0);
+                ret = saveGame_prepareAndWrite(0, 0, 0, 0, 0, 0);
             }
         }
         if (retry != 0) {
-            fn_8007E1AC(0);
+            showMemCardError(0);
         }
         if (lbl_803DD058 != 0) {
             cardShowLoadingMsg(2);
@@ -6782,7 +6782,7 @@ int fn_8007DD04(u8 retry)
  */
 #pragma peephole off
 #pragma scheduling off
-int fn_8007DE0C(u8 retry)
+int cardProbe(u8 retry)
 {
     extern s32 CARDProbeEx(s32 chan, s32* memSize, s32* sectorSize);
     extern volatile s32 lbl_803DB700;
@@ -6812,7 +6812,7 @@ int fn_8007DE0C(u8 retry)
             lbl_803DB700 = 0;
         }
         if (retry != 0) {
-            fn_8007E1AC(0);
+            showMemCardError(0);
         }
     } while (lbl_803DD058 != 0 && retry != 0);
     return 0;
@@ -6967,7 +6967,7 @@ void fn_8007DF10(u32* buttons, u32* texts, u32* count)
 /*
  * --INFO--
  *
- * Function: fn_8007E1AC
+ * Function: showMemCardError
  * EN v1.0 Address: 0x8007E1AC
  * EN v1.0 Size: 928b
  * EN v1.1 Address: 0x8007E328
@@ -6977,7 +6977,7 @@ void fn_8007DF10(u32* buttons, u32* texts, u32* count)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8007E1AC(int param_1)
+void showMemCardError(int param_1)
 {
 }
 
@@ -6995,7 +6995,7 @@ void fn_8007E1AC(int param_1)
  * PAL Size: TODO
  *
  * Per-frame "blocking" dialog renderer driven by the card-write retry
- * loops in fn_8007DB24/DBC0/DC5C/DD04. Pumps 60 frames of the GX/dialog
+ * loops in _saveGame/DBC0/DC5C/DD04. Pumps 60 frames of the GX/dialog
  * pipeline; on each frame either lets the active controller draw its own
  * popup (lbl_803DCA4C[0]->vtbl[1]) or falls back to hudDrawColored over the
  * cached prompt id in lbl_803DB708, then routes the OK/Cancel/back text
@@ -7069,7 +7069,7 @@ void cardShowLoadingMsg(u8 kind)
 /*
  * --INFO--
  *
- * Function: fn_8007E6D4
+ * Function: cardCb_8007e6d4
  * EN v1.0 Address: 0x8007E6D4
  * EN v1.0 Size: 116b
  * EN v1.1 Address: 0x8007E928
@@ -7079,23 +7079,23 @@ void cardShowLoadingMsg(u8 kind)
  * PAL Address: TODO
  * PAL Size: TODO
  *
- * Card-write callback dispatched through fn_8007EB44 from fn_8007DB24.
+ * Card-write callback dispatched through saveGame_prepareAndWrite from _saveGame.
  * Stages a per-slot 0x6EC-byte block plus the shared 0xE4-byte trailer
- * into the card-IO buffer (lbl_803DD044), then asks fn_8007E7C0(2) to
- * commit; if that fails it falls back to fn_8007E7C0(1).
+ * into the card-IO buffer (lbl_803DD044), then asks saveGame_doWrite(2) to
+ * commit; if that fails it falls back to saveGame_doWrite(1).
  */
 #pragma peephole off
 #pragma scheduling off
-int fn_8007E6D4(u8 slot, int unused, void* src1, void* src2)
+int cardCb_8007e6d4(u8 slot, int unused, void* src1, void* src2)
 {
     extern char* lbl_803DD044;
-    extern int fn_8007E7C0(int);
+    extern int saveGame_doWrite(int);
     int ret;
     memcpy(lbl_803DD044 + (u32)slot * 0x6EC + 0xA50, src1, 0x6EC);
     memcpy(lbl_803DD044 + 0x1F14, src2, 0xE4);
-    ret = fn_8007E7C0(2);
+    ret = saveGame_doWrite(2);
     if (ret == 0) {
-        ret = fn_8007E7C0(1);
+        ret = saveGame_doWrite(1);
     }
     return ret;
 }
@@ -7105,7 +7105,7 @@ int fn_8007E6D4(u8 slot, int unused, void* src1, void* src2)
 /*
  * --INFO--
  *
- * Function: fn_8007E748
+ * Function: saveCb_8007e748
  * EN v1.0 Address: 0x8007E748
  * EN v1.0 Size: 52b
  * EN v1.1 Address: 0x8007E99C
@@ -7115,13 +7115,13 @@ int fn_8007E6D4(u8 slot, int unused, void* src1, void* src2)
  * PAL Address: TODO
  * PAL Size: TODO
  *
- * Card-write callback dispatched through fn_8007EB44 from fn_8007DBC0.
+ * Card-write callback dispatched through saveGame_prepareAndWrite from maybeTryLoadSave.
  * Copies the 0xE4-byte block at offset 0x1F14 in the card buffer (held in
  * lbl_803DD044) into the caller-supplied destination.
  */
 #pragma peephole off
 #pragma scheduling off
-int fn_8007E748(int param_1, int param_2, void* dst)
+int saveCb_8007e748(int param_1, int param_2, void* dst)
 {
     extern char* lbl_803DD044;
     memcpy(dst, lbl_803DD044 + 0x1F14, 0xE4);

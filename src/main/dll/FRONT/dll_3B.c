@@ -48,7 +48,7 @@ extern void gameTimerStop(void);
 extern void gameTextLoadDir(int dirId);
 extern void fn_8005CDF8(int arg);
 extern void fn_8005CEA8(int arg);
-extern void fn_8007D960(int arg);
+extern void saveFn_8007d960(int arg);
 extern void fn_800887F8(int arg);
 extern void fn_80117B68(int fade, int frames);
 extern void fn_80130478(void);
@@ -146,7 +146,7 @@ void fn_80116F84(void)
     lbl_803DD61A = 1;
   }
   if (lbl_803DB424 >= 0xfe) {
-    fn_8007D960(0);
+    saveFn_8007d960(0);
   }
   gameTextLoadDir(0x15);
   lbl_803DD650 = 0;

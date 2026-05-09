@@ -87,20 +87,20 @@ void fn_8007CF7C(void);
 void fn_8007D670(void);
 void FUN_800723a0(void);
 int fn_8007D72C(void);
-void fn_8007D960(u32 param_1);
+void saveFn_8007d960(u32 param_1);
 void fn_8007D988(void);
 s32 fn_8007D994(void);
 int fn_8007D99C(void);
-int fn_8007DB24(int a, int b, int c);
-int fn_8007DBC0(int a);
+int _saveGame(int a, int b, int c);
+int maybeTryLoadSave(int a);
 int fn_8007DC5C(int a, int b);
-int fn_8007DD04(u8 retry);
-int fn_8007DE0C(u8 retry);
+int memCardFn_8007dd04(u8 retry);
+int cardProbe(u8 retry);
 void fn_8007DEF0(void);
 void fn_8007DF10(u32* buttons, u32* texts, u32* count);
-void fn_8007E1AC(int param_1);
+void showMemCardError(int param_1);
 void cardShowLoadingMsg(u8 kind);
-int fn_8007E6D4(u8 slot, int unused, void* src1, void* src2);
-int fn_8007E748(int param_1, int param_2, void* dst);
+int cardCb_8007e6d4(u8 slot, int unused, void* src1, void* src2);
+int saveCb_8007e748(int param_1, int param_2, void* dst);
 
 #endif /* TRACK_INTERSECT_H_ */

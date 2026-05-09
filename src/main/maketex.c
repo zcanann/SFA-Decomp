@@ -1226,7 +1226,7 @@ u8 fn_80080BC4(void) { return seqGlobal3; }
 
 /* Pattern wrappers. */
 extern u32 lbl_803DB700;
-void fn_8007FDF8(void) { lbl_803DB700 = 0x3; }
+void cardSetStatusNoCard2(void) { lbl_803DB700 = 0x3; }
 
 /* lbl = N (byte) */
 void fn_800801F8(void) { curSeqNo = 0x0; }

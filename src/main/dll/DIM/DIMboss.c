@@ -35,9 +35,9 @@ extern undefined8 fn_80043034();
 extern undefined8 fn_80043074();
 extern uint fn_800430AC();
 extern undefined4 unlockLevel();
-extern undefined4 fn_80043560();
+extern undefined4 lockLevel();
 extern undefined8 mapUnload();
-extern undefined4 fn_80041E3C();
+extern undefined4 defragMemory();
 extern undefined8 mapLoadDataFile();
 extern undefined4 mapGetDirIdx();
 extern undefined8 fn_800481D4();
@@ -228,12 +228,12 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
         mapUnload(uVar5,DIMBOSS_MAP_UNLOAD_MASK);
         uVar5 = mapGetDirIdx(DIMBOSS_GUT_MAP_DIR);
         mapUnload(uVar5,DIMBOSS_GUT_MAP_UNLOAD_MASK);
-        fn_80041E3C(0);
+        defragMemory(0);
         break;
       case DIMBOSS_EVENT_LOAD_DIMTOP_ASSETS:
         OSReport(sDIMBossLoadingAssetsForDIMTop);
         uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
-        fn_80043560(uVar5,0);
+        lockLevel(uVar5,0);
         mapGetDirIdx(DIMTOP_MAP_DIR);
         mapLoadDataFile(uVar5,DIMTOP_BOOT_DATA_FILE);
         uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);

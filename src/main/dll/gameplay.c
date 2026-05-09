@@ -1426,7 +1426,7 @@ undefined4 * FUN_800e87a8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int fn_8007DBC0(int a);
+extern int maybeTryLoadSave(int a);
 extern void *memset(void *dst, int val, u32 n);
 extern u8 lbl_803A31C4[228];
 
@@ -1436,7 +1436,7 @@ int titleLoadSaveFiles(void)
 {
   int iVar1;
 
-  iVar1 = fn_8007DBC0((int)lbl_803A31C4);
+  iVar1 = maybeTryLoadSave((int)lbl_803A31C4);
   if ((iVar1 == 0) || (lbl_803A31C4[0] == '\0')) {
     memset(lbl_803A31C4, 0, 0xE4);
     lbl_803A31C4[6] = 0;

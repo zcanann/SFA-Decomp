@@ -19,7 +19,7 @@ extern undefined4 gameTextGetStr(int id);
 extern void gameTextShowStr(undefined4 text, int font, int x, int y);
 extern void mapUnload(int mapId, int flags);
 extern void fn_80041E30(void);
-extern void fn_80042F78(int param_1);
+extern void loadMapAndParent(int param_1);
 extern void fn_80041E24(void);
 extern void fn_80088C0C(void);
 extern void fn_8011D9B0(void);
@@ -233,7 +233,7 @@ void fn_80115EC0(void)
   lbl_803DD5F4 = lbl_803E1D00;
   mapUnload(0x3d,0x10000000);
   fn_80041E30();
-  fn_80042F78(0x3f);
+  loadMapAndParent(0x3f);
   fn_80041E24();
   fn_80088C0C();
   fn_8011D9B0();

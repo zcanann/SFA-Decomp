@@ -7,9 +7,9 @@ extern undefined4 FUN_8028688c();
 extern undefined4 fn_8000A380(int param_1,int param_2,int param_3);
 extern undefined4 Sfx_KeepAliveLoopedObjectSound(int param_1,int param_2);
 extern undefined4 loadUiDll(int param_1);
-extern undefined4 fn_80041E3C(int param_1);
-extern undefined4 fn_80042F78(int param_1);
-extern undefined4 fn_80043560(undefined4 param_1,int param_2);
+extern undefined4 defragMemory(int param_1);
+extern undefined4 loadMapAndParent(int param_1);
+extern undefined4 lockLevel(undefined4 param_1,int param_2);
 extern undefined4 mapUnload(undefined4 param_1,uint param_2);
 extern undefined4 mapGetDirIdx(int param_1);
 extern undefined4 warpToMap(int param_1,int param_2);
@@ -94,7 +94,7 @@ undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateStat
   for (stateIndex = 0; stateIndex < (int)(uint)animUpdate->eventCount; stateIndex++) {
     eventId = animUpdate->eventIds[stateIndex];
     if (eventId == FIRE_ANIM_EVENT_OPEN_PATH) {
-      fn_80041E3C(0);
+      defragMemory(0);
       switch (mode) {
       case FIRE_MODE_0:
       case FIRE_MODE_1:
@@ -105,19 +105,19 @@ undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateStat
         (*lbl_803DCAAC)->setAnimEvent(FIRE_MAP_ID_7,10,0);
         (*lbl_803DCAAC)->setAnimEvent(10,7,0);
         GameBit_Set(FIRE_LIGHTFOOT_UNLOCK_GAMEBIT,1);
-        fn_80042F78(FIRE_MAP_ID_17);
+        loadMapAndParent(FIRE_MAP_ID_17);
         anim = mapGetDirIdx(FIRE_MAP_ID_17);
-        fn_80043560(anim,0);
+        lockLevel(anim,0);
         break;
       case FIRE_MODE_2:
-        fn_80042F78(FIRE_MAP_ID_0B);
+        loadMapAndParent(FIRE_MAP_ID_0B);
         anim = mapGetDirIdx(FIRE_MAP_ID_0B);
-        fn_80043560(anim,0);
+        lockLevel(anim,0);
         break;
       case FIRE_MODE_3:
-        fn_80042F78(FIRE_MAP_ID_7);
+        loadMapAndParent(FIRE_MAP_ID_7);
         anim = mapGetDirIdx(FIRE_MAP_ID_7);
-        fn_80043560(anim,0);
+        lockLevel(anim,0);
         break;
       }
     }
