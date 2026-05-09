@@ -19,7 +19,7 @@ extern int lbl_803DD50C;
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80101690(int param_1, int param_2)
+void camcontrol_activateHandler(u32 actionId, void *actionData)
 {
   void *entry;
   int idx;
@@ -27,7 +27,7 @@ void fn_80101690(int param_1, int param_2)
   int priority;
 
   if (lbl_803DD51C != NULL) {
-    if (lbl_803DD518 != (int)(u16)param_1) {
+    if (lbl_803DD518 != (int)(u16)actionId) {
       (*(void (****)(void *))((char *)lbl_803DD51C + 4))[0][3](pCamera);
       if (*(u8 *)((char *)lbl_803DD51C + 8) == 1) {
         idx = lbl_803DD514;
@@ -47,7 +47,7 @@ void fn_80101690(int param_1, int param_2)
   {
     void **p = lbl_803A4228;
     for (; idx < n; idx++) {
-      if (*(u16 *)*p == (u16)param_1) goto found;
+      if (*(u16 *)*p == (u16)actionId) goto found;
       p++;
     }
   }
@@ -63,9 +63,9 @@ found:
     lbl_803A4228[n] = new_entry;
     lbl_803DD520++;
     entry = lbl_803A4228[n];
-    *(s16 *)entry = param_1;
+    *(u16 *)entry = actionId;
     *((u8 *)entry + 8) = priority;
-    *(void **)((u8 *)entry + 4) = Resource_Acquire(param_1, 4);
+    *(void **)((u8 *)entry + 4) = Resource_Acquire(actionId, 4);
     lbl_803DD514 = lbl_803DD520 - 1;
   }
 
@@ -73,7 +73,7 @@ found:
     entry = lbl_803A4228[lbl_803DD514];
     lbl_803DD51C = entry;
     lbl_803DD518 = *(u16 *)entry;
-    (*(void (****)(void *, int, int))((char *)entry + 4))[0][1](pCamera, lbl_803DD501, param_2);
+    (*(void (****)(void *, int, void *))((char *)entry + 4))[0][1](pCamera, lbl_803DD501, actionData);
   } else {
     lbl_803DD51C = NULL;
     lbl_803DD518 = -1;

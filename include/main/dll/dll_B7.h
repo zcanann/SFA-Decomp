@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void fn_80101690(int param_1, int param_2);
+void camcontrol_activateHandler(u32 actionId, void *actionData);
 
 #endif /* MAIN_DLL_DLL_B7_H_ */
