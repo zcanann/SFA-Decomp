@@ -4,6 +4,19 @@ extern int hwTransAddr(int x);
 extern void sndBegin(void);
 extern void sndEnd(void);
 
+typedef struct DataRefEntry {
+    void *data;
+    u16 key;
+    u16 refCount;
+} DataRefEntry;
+
+typedef struct DataLayerRef {
+    void *data;
+    u16 key;
+    u16 count;
+    u16 refCount;
+} DataLayerRef;
+
 /*
  * Insert a scene/sample-list entry, keeping the 12-byte table sorted by id.
  */
@@ -825,7 +838,7 @@ void *dataGetMacro(u32 key)
             sndBSearch(dataGetMacro_key, dataMacroTable + dataGetMacro_main * 8,
                        bucketTable[dataGetMacro_bucket * 2], 8, dataMacroKeyCompare);
         if (dataGetMacro_result != 0) {
-            return *(void **)dataGetMacro_result;
+            return ((DataRefEntry *)dataGetMacro_result)->data;
         }
     }
     return 0;
@@ -921,7 +934,7 @@ void *dataGetCurve(u16 key)
     if (dataGetCurve_result == 0) {
         return 0;
     }
-    return *(void **)dataGetCurve_result;
+    return ((DataRefEntry *)dataGetCurve_result)->data;
 }
 
 /*
@@ -934,7 +947,7 @@ void *dataGetKeymap(u16 key)
     if (dataGetKeymap_result == 0) {
         return 0;
     }
-    return *(void **)dataGetKeymap_result;
+    return ((DataRefEntry *)dataGetKeymap_result)->data;
 }
 
 /*
@@ -960,8 +973,8 @@ void *dataGetLayer(u16 key, u16 *outCount)
     if (dataGetLayer_result == 0) {
         return 0;
     }
-    *outCount = *(u16 *)((u8 *)dataGetLayer_result + 6);
-    return *(void **)dataGetLayer_result;
+    *outCount = ((DataLayerRef *)dataGetLayer_result)->count;
+    return ((DataLayerRef *)dataGetLayer_result)->data;
 }
 
 /*
