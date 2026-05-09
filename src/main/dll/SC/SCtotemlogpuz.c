@@ -5,7 +5,7 @@ extern int GameBit_Get(int bit);
 extern int GameBit_Set(int bit, int value);
 extern int mapUnload(int id, int flags);
 extern int Music_Trigger(int id, int value);
-extern void fn_801D80F4(void *p);
+extern void SH_LevelControl_setMusic(void *p);
 
 typedef struct SCTotemLogPuzzleEventInterface {
     u8 pad00[0x50];
@@ -40,13 +40,13 @@ extern SCTotemLogPuzzleEventInterface **lbl_803DCAAC;
 /*
  * --INFO--
  *
- * Function: fn_801D7C14
+ * Function: SH_LevelControl_SeqFn
  * EN v1.0 Address: 0x801D7C14
  * EN v1.0 Size: 128b
  */
 #pragma peephole off
 #pragma scheduling off
-int fn_801D7C14(void *obj, void *unused, void *p3)
+int SH_LevelControl_SeqFn(void *obj, void *unused, void *p3)
 {
     SCTotemLogPuzzleObject *puzzleObj;
     SCTotemLogPuzzleUpdateState *updateState;
@@ -59,10 +59,10 @@ int fn_801D7C14(void *obj, void *unused, void *p3)
             i++;
             continue;
         }
-        fn_801D80F4(puzzleObj->runtime);
+        SH_LevelControl_setMusic(puzzleObj->runtime);
         i++;
     }
-    fn_801D7C94(obj, puzzleObj->runtime);
+    mapUnloadFn_801d7c94(obj, puzzleObj->runtime);
     return 0;
 }
 #pragma scheduling reset
@@ -71,13 +71,13 @@ int fn_801D7C14(void *obj, void *unused, void *p3)
 /*
  * --INFO--
  *
- * Function: fn_801D7C94
+ * Function: mapUnloadFn_801d7c94
  * EN v1.0 Address: 0x801D7C94
  * EN v1.0 Size: 576b
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_801D7C94(void *obj, void *p2)
+void mapUnloadFn_801d7c94(void *obj, void *p2)
 {
     SCTotemLogPuzzleObject *puzzleObj;
     SCTotemLogPuzzleRuntime *runtime;

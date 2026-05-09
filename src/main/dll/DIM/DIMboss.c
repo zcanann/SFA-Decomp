@@ -54,7 +54,7 @@ extern undefined8 FUN_801150ac();
 extern undefined4 FUN_801149bc();
 extern undefined4 FUN_801bbed0();
 extern undefined4 FUN_801bb848();
-extern undefined4 fn_801BBB44();
+extern undefined4 warpDarkIceMines_801bbb44();
 extern undefined4 FUN_801bcc94();
 extern undefined8 fn_801BC7E4();
 extern undefined4 fn_8011508C();
@@ -328,7 +328,7 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
         }
       }
     }
-    fn_801BBB44(puVar3,puVar13);
+    warpDarkIceMines_801bbb44(puVar3,puVar13);
     if (*(short *)(puVar3 + 0x2d) == -1) {
       *(ushort *)(puVar13 + 0x100) = *(ushort *)(puVar13 + 0x100) | 2;
     }
@@ -625,7 +625,7 @@ void dimboss_update2(DIMbossObject *obj)
         fn_801BC7E4(obj,0,runtime,runtime);
         fn_8011508C(lbl_803AC9DC,runtime->targetModel);
         fn_80115094(obj,lbl_803AC9DC);
-        fn_801BBB44(obj,runtime);
+        warpDarkIceMines_801bbb44(obj,runtime);
       }
     }
   }

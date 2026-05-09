@@ -10,13 +10,13 @@ extern void Music_Trigger(int trackId, int restart);
 /*
  * --INFO--
  *
- * Function: fn_801D80F4
+ * Function: SH_LevelControl_setMusic
  * EN v1.0 Address: 0x801D80F4
  * EN v1.0 Size: 532b
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_801D80F4(short *obj)
+void SH_LevelControl_setMusic(short *obj)
 {
     if ((*gSHthorntailAnimationInterface)->isTailSwingQueued(0) != 0) {
         if (obj[8] == 0x39 || obj[8] == -1) {

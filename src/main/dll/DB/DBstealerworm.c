@@ -1129,7 +1129,7 @@ int SB_ShipGun_getExtraSize(void) { return 0x10; }
 /* sda21 accessors. */
 extern u32 lbl_803DDC20;
 extern u32 lbl_803DDC40;
-u32 fn_801E1DA8(void) { return lbl_803DDC20; }
+u32 getSbGalleon(void) { return lbl_803DDC20; }
 u32 fn_801E2570(void) { return lbl_803DDC40; }
 
 /* Pattern wrappers. */

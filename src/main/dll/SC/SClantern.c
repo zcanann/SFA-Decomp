@@ -75,7 +75,7 @@ void SHthorntail_init(double moveStepScale, int obj)
 /*
  * --INFO--
  *
- * Function: fn_801D6D58
+ * Function: playerFn_801d6d58
  * EN v1.0 Address: 0x801D6D58
  * EN v1.0 Size: 64b
  * EN v1.1 Address: TODO
@@ -87,7 +87,7 @@ void SHthorntail_init(double moveStepScale, int obj)
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 fn_801D6D58(void)
+undefined4 playerFn_801d6d58(void)
 {
   undefined4 playerObj;
 

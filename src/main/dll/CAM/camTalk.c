@@ -17,7 +17,7 @@ extern void curvesMove(void *param_1);
 extern double curveFn_80010dc0(double param_1,float *param_2,float *param_3);
 extern void curveFn_80010d54(void);
 extern int getAngle(double dx,double dz);
-extern void *fn_801E1DA8(void);
+extern void *getSbGalleon(void);
 extern int fn_801E12DC(int *obj);
 extern double FUN_80293900();
 extern double fn_80293E80(double);
@@ -291,7 +291,7 @@ void firstPersonPlaceCamera(int param_1,int param_2)
     *(float *)(lbl_803DD548 + 0x128) = *(float *)(param_1 + 0x20);
     *(float *)(lbl_803DD548 + 0x130) = *(float *)(lbl_803DD548 + 0x124);
   }
-  puVar1 = (int *)fn_801E1DA8();
+  puVar1 = (int *)getSbGalleon();
   if ((puVar1 != (int *)0x0) && (iVar2 = fn_801E12DC(puVar1), iVar2 == 2)) {
     local_1c[0] = *(float *)(param_1 + 0x18) - *(float *)(puVar1 + 6);
     local_1c[1] = (lbl_803E17C0 + *(float *)(param_1 + 0x1c)) - *(float *)(puVar1 + 7);

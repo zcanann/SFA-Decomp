@@ -14,8 +14,8 @@ extern void envFxActFn_800887f8(int a);
 extern void fn_80088E54(int a, f32 b);
 extern void getEnvfxAct(int a, int b, int c, int d);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
-extern void fn_801D7C94(int param_1, uint *param_2);
-extern void fn_801D80F4(uint *param_1);
+extern void mapUnloadFn_801d7c94(int param_1, uint *param_2);
+extern void SH_LevelControl_setMusic(uint *param_1);
 extern void fn_801D8308(int param_1, uint *param_2);
 extern void fn_801D87F8(int param_1, uint *param_2);
 extern void fn_801D8B00(int param_1, uint *param_2);
@@ -60,7 +60,7 @@ void sh_levelcontrol_update(int param_1)
       *(f32 *)((int)puVar5 + 0xc) = lbl_803E54B4;
     }
   }
-  fn_801D80F4(puVar5);
+  SH_LevelControl_setMusic(puVar5);
   iVar1 = GameBit_Get(0x3aa);
   if (iVar1 != 0) {
     if (*(char *)(param_1 + 0xac) == 8) {
@@ -291,7 +291,7 @@ void sh_levelcontrol_update(int param_1)
       getEnvfxAct(0, 0, 0x244, 0);
     }
   }
-  fn_801D7C94(param_1, puVar5);
+  mapUnloadFn_801d7c94(param_1, puVar5);
   return;
 }
 #pragma peephole reset
