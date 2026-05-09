@@ -16,7 +16,7 @@ extern undefined4 ObjHits_EnableObject(FirePipeObject *obj);
 extern void ObjHits_DisableObject(FirePipeObject *obj);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
-extern undefined4 fn_8003B8F4(int param_1, int param_2, int param_3, int param_4, int param_5, double scale);
+extern undefined4 objRenderFn_8003b8f4(int param_1, int param_2, int param_3, int param_4, int param_5, double scale);
 extern undefined4 queueGlowRender(void);
 extern undefined4 storeZeroToFloatParam(int param_1);
 extern undefined4 s16toFloat(int param_1, int param_2);
@@ -175,7 +175,7 @@ void firepipe_render(FirePipeObject *obj, int param_2, int param_3, int param_4,
         queueGlowRender();
     }
     if (param_6 != '\0' && (uint)((extra->flags >> 1) & 1) != 0) {
-        fn_8003B8F4((int)obj, param_2, param_3, param_4, param_5, (double)lbl_803E6B78);
+        objRenderFn_8003b8f4((int)obj, param_2, param_3, param_4, param_5, (double)lbl_803E6B78);
     }
 }
 #pragma peephole reset

@@ -547,13 +547,13 @@ int dimicewall_getExtraSize(void) { return 0x2; }
 int dimbarrier_getExtraSize(void) { return 0x4; }
 int dimbarrier_func08(void) { return 0x0; }
 
-/* render-with-fn_8003B8F4 pattern. */
+/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4860;
-extern void fn_8003B8F4(f32);
+extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4878;
 extern f32 lbl_803E4898;
 #pragma peephole off
-void dimsnowball1c2_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4860); }
-void dimgate_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4878); }
-void dimbarrier_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4898); }
+void dimsnowball1c2_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4860); }
+void dimgate_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4878); }
+void dimbarrier_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4898); }
 #pragma peephole reset

@@ -1716,15 +1716,15 @@ int infopoint_func08(void) { return 0x0; }
 int decoration11a_getExtraSize(void) { return 0x1c; }
 int landed_arwing_getExtraSize(void) { return 0x1c; }
 
-/* render-with-fn_8003B8F4 pattern. */
+/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3AF8;
-extern void fn_8003B8F4(f32);
+extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3B70;
 extern f32 lbl_803E3B78;
 #pragma peephole off
-void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E3AF8); }
-void infopoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E3B70); }
-void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E3B78); }
+void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3AF8); }
+void infopoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3B70); }
+void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3B78); }
 #pragma peephole reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */

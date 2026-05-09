@@ -68,7 +68,7 @@ extern undefined4 Obj_FreeObject();
 extern undefined4 Obj_GetPlayerObject();
 extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
 extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 fn_8003B8F4();
+extern undefined4 objRenderFn_8003b8f4();
 extern undefined4 fn_80055000();
 extern undefined4 queueGlowRender();
 extern undefined4 fn_80114DEC();
@@ -491,7 +491,7 @@ void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
   if (runtime->phase == 3) {
     return;
   }
-  fn_8003B8F4((double)lbl_803E4C44);
+  objRenderFn_8003b8f4((double)lbl_803E4C44);
   fn_801BB598(obj,runtime);
   fn_80114DEC(obj,lbl_803AC9DC,0);
   effect = runtime->topState->effect;

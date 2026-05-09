@@ -242,14 +242,14 @@ void FUN_801dd244(undefined8 param_1,double param_2,double param_3,undefined8 pa
 }
 
 extern f32 lbl_803E55FC;
-extern void fn_8003B8F4(f32);
+extern void objRenderFn_8003b8f4(f32);
 
 #pragma peephole off
 void sc_totempuzzle_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0) {
-        fn_8003B8F4(lbl_803E55FC);
+        objRenderFn_8003b8f4(lbl_803E55FC);
     }
 }
 #pragma peephole reset

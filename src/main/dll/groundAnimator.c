@@ -16,7 +16,7 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 FUN_8003b818();
-extern void fn_8003B8F4(int param_1, int param_2, int param_3, int param_4, int param_5,
+extern void objRenderFn_8003b8f4(int param_1, int param_2, int param_3, int param_4, int param_5,
                         f32 scale);
 extern int FUN_800632d8();
 extern undefined4 FUN_80081118();
@@ -286,7 +286,7 @@ void wm_column_free(int obj)
 void wm_column_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
   if ((*(GroundAnimatorVisibleFn *)(*lbl_803DCAC0 + 0xc))(param_1, visible) != 0) {
-    fn_8003B8F4(param_1, param_2, param_3, param_4, param_5, lbl_803E37B8);
+    objRenderFn_8003b8f4(param_1, param_2, param_3, param_4, param_5, lbl_803E37B8);
   }
 }
 #pragma peephole reset

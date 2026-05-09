@@ -2,7 +2,7 @@
 
 extern u32 randomGetRange(int min,int max);
 extern u8 *ObjList_FindObjectById(int objectId);
-extern void fn_8003B8F4(double scale);
+extern void objRenderFn_8003b8f4(double scale);
 extern f32 fsin16Approx(int angle);
 extern f32 fcos16Approx(int angle);
 
@@ -54,7 +54,7 @@ void worldasteroids_render(undefined4 param_1,undefined4 param_2,undefined4 para
 {
   s32 v = visible;
   if (v != 0) {
-    fn_8003B8F4(lbl_803E65D0);
+    objRenderFn_8003b8f4(lbl_803E65D0);
   }
 }
 #pragma peephole reset

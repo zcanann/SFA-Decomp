@@ -5,7 +5,7 @@ extern void getEnvfxActImmediately(void *obj,void *target,int animId,int flags);
 extern void fn_8000A380(int param_1,int param_2,int param_3);
 extern int GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
-extern void fn_8003B8F4(double scale);
+extern void objRenderFn_8003b8f4(double scale);
 extern void unlockLevel(int param_1,int param_2,int param_3);
 extern void storeZeroToFloatParam(void *timer);
 extern void crcloudrace_updateRaceState(void *obj);
@@ -56,7 +56,7 @@ void crcloudrace_render(undefined4 param_1,undefined4 param_2,undefined4 param_3
 
   draw = visible;
   if (draw != 0) {
-    fn_8003B8F4((double)lbl_803E6748);
+    objRenderFn_8003b8f4((double)lbl_803E6748);
   }
   return;
 }

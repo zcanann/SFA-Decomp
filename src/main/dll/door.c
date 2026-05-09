@@ -6,7 +6,7 @@ extern uint FUN_80017690();
 extern int fn_800640CC(f32 radius,f32 *from,f32 *to,int mode,void *hit,
                        DfpTargetBlockObject *obj,int flags,int mask,int arg9,int arg10);
 extern void Sfx_PlayFromObject(DfpTargetBlockObject *obj,u16 sfxId);
-extern void fn_8003B8F4(int obj,float param_2);
+extern void objRenderFn_8003b8f4(int obj,float param_2);
 extern undefined4 sfxplayer_updateState();
 
 extern undefined4 DAT_803add98;
@@ -178,7 +178,7 @@ void dfptargetblock_render(int obj)
   state = *(int *)(obj + 0xb8);
   if (((*(u8 *)(state + 0x6b) == 0) && (*(u8 *)(state + 0x6a) != 0)) &&
       (*(u8 *)(state + 0x69) != 4)) {
-    fn_8003B8F4(obj,lbl_803E6490);
+    objRenderFn_8003b8f4(obj,lbl_803E6490);
   }
 }
 #pragma peephole reset

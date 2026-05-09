@@ -567,10 +567,10 @@ int doorlock_getExtraSize(void) { return 0x1; }
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3780;
-extern void fn_8003B8F4(f32);
+extern void objRenderFn_8003b8f4(f32);
 #pragma scheduling off
 #pragma peephole off
-void Door_render(void) { fn_8003B8F4(lbl_803E3780); }
+void Door_render(void) { objRenderFn_8003b8f4(lbl_803E3780); }
 #pragma peephole reset
 #pragma scheduling reset
 

@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/creator1D4.h"
 
-extern void fn_8003B8F4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
+extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
 extern void ObjGroup_RemoveObject(void *obj, int group);
 extern void ObjPath_GetPointWorldPosition(void *obj, int idx, void *out0, void *out1, void *out2, int flag);
 
@@ -45,7 +45,7 @@ void nw_mammoth_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, u
     void *node;
 
     node = *(void **)((char *)obj + 0xb8);
-    fn_8003B8F4(obj, p2, p3, p4, p5, (double)lbl_803E5210);
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E5210);
     for (i = 0; i < 4; i++) {
         ObjPath_GetPointWorldPosition(obj, i,
             (char *)node + i * 0xc + 0x45c,

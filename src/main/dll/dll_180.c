@@ -138,11 +138,11 @@ int cf_doorlight_func08(void) { return 0x0; }
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3EE8;
-extern void fn_8003B8F4(f32);
+extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3F00;
 #pragma scheduling off
 #pragma peephole off
-void cflightwall_render(void) { fn_8003B8F4(lbl_803E3EE8); }
-void barrelpad_render(void) { fn_8003B8F4(lbl_803E3F00); }
+void cflightwall_render(void) { objRenderFn_8003b8f4(lbl_803E3EE8); }
+void barrelpad_render(void) { objRenderFn_8003b8f4(lbl_803E3F00); }
 #pragma peephole reset
 #pragma scheduling reset

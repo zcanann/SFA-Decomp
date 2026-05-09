@@ -62,7 +62,7 @@ extern undefined4 FUN_8003add8();
 extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
 extern undefined4 FUN_8003b818();
-extern void fn_8003B8F4(f32);
+extern void objRenderFn_8003b8f4(f32);
 extern int FUN_80057690();
 extern int FUN_800620e8();
 extern int FUN_800632e8();
@@ -2615,7 +2615,7 @@ void babycloudrunner_render(int param_1,int param_2,int param_3,int param_4,int 
 
   isVisible = visible;
   if (isVisible != 0) {
-    fn_8003B8F4(lbl_803E4228);
+    objRenderFn_8003b8f4(lbl_803E4228);
   }
   return;
 }
@@ -3185,17 +3185,17 @@ int cfprisoncage_getExtraSize(void) { return 0x0; }
 int spiritdoorspirit_getExtraSize(void) { return 0x1; }
 int spiritdoorspirit_func08(void) { return 0x0; }
 
-/* render-with-fn_8003B8F4 pattern. */
+/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4190;
-extern void fn_8003B8F4(f32);
+extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E41D0;
 extern f32 lbl_803E4210;
 extern f32 lbl_803E42B0;
 #pragma peephole off
-void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4190); }
-void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E41D0); }
-void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E4210); }
-void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E42B0); }
+void windlift_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4190); }
+void cfpowerbase_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E41D0); }
+void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4210); }
+void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E42B0); }
 #pragma peephole reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */

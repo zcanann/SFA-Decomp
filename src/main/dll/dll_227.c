@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_227.h"
 
-extern void fn_8003B8F4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
+extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
 extern void lightVecFn_8001dd88(f32 x, f32 y, f32 z);
 extern void queueGlowRender(void *p);
 extern void ObjPath_GetPointWorldPosition(void *obj, int idx, void *out0, void *out1, void *out2, int flag);
@@ -37,7 +37,7 @@ void dimbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
 
     if (visible != 0) {
         if (*(int *)((char *)obj + 0xf4) == 0) {
-            fn_8003B8F4(obj, p2, p3, p4, p5, (double)lbl_803E4CB8);
+            objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E4CB8);
 
             ObjPath_GetPointWorldPosition(obj, 1, &outX, &outY, &outZ, 0);
             (*(void (***)(void *, int, int *, int, int, int))pDll_expgfx)[2](obj, 0x4bd, &local_8, 0x200001, -1, 0);

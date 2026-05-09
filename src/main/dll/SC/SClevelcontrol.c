@@ -2,7 +2,7 @@
 #include "main/dll/SC/SClevelcontrol.h"
 
 extern void ObjPath_GetPointWorldPosition(SHthorntailObject *obj,int pointIndex,f32 *x,f32 *y,f32 *z,int param_6);
-extern void fn_8003B8F4(f32 scale);
+extern void objRenderFn_8003b8f4(f32 scale);
 extern void fn_80114DEC(SHthorntailObject *obj,SHthorntailRuntime *runtime,int param_3);
 
 extern f32 lbl_803E5448;
@@ -28,7 +28,7 @@ void SHthorntail_render(SHthorntailObject *obj)
   int pointIndex;
 
   runtime = obj->runtime;
-  fn_8003B8F4(lbl_803E5448);
+  objRenderFn_8003b8f4(lbl_803E5448);
   fn_80114DEC(obj,runtime,0);
   pointIndex = 0;
   do {

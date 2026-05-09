@@ -4141,15 +4141,15 @@ int chuka_func08(void) { return 0x0; }
 /* Pattern wrappers. */
 s16 DBstealerworm_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
 
-/* render-with-fn_8003B8F4 pattern. */
+/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E6390;
-extern void fn_8003B8F4(f32);
+extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E6398;
 extern f32 lbl_803E63B8;
 #pragma peephole off
-void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E6390); }
-void fn_80204BC4(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E6398); }
-void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E63B8); }
+void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E6390); }
+void fn_80204BC4(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E6398); }
+void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E63B8); }
 #pragma peephole reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */

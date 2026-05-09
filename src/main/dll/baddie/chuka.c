@@ -149,9 +149,9 @@ int dfpfloorbar_getExtraSize(void)
 }
 
 extern f32 lbl_803E6408;
-extern void fn_8003B8F4(f32);
+extern void objRenderFn_8003b8f4(f32);
 
-/* EN v1.0 0x802064D0  size: 48b   if (p6) fn_8003B8F4(lbl_803E6408).
+/* EN v1.0 0x802064D0  size: 48b   if (p6) objRenderFn_8003b8f4(lbl_803E6408).
  * Logic-only (~91%): retail uses extsb+cmpwi, MWCC -O4,p folds to extsb.
  */
 #pragma peephole off
@@ -159,7 +159,7 @@ void dfpfloorbar_render(int p1, int p2, int p3, int p4, int p5, s8 p6)
 {
     s32 t = p6;
     if (t != 0) {
-        fn_8003B8F4(lbl_803E6408);
+        objRenderFn_8003b8f4(lbl_803E6408);
     }
 }
 #pragma peephole reset

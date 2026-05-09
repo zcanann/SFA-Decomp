@@ -384,10 +384,10 @@ u8 fn_8018A220(int *obj) { return *(u8*)((char*)((int**)obj)[0x4c/4] + 0x1c); }
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3BBC;
-extern void fn_8003B8F4(f32);
+extern void objRenderFn_8003b8f4(f32);
 #pragma scheduling off
 #pragma peephole off
-void staffactivated_render(void) { fn_8003B8F4(lbl_803E3BBC); }
+void staffactivated_render(void) { objRenderFn_8003b8f4(lbl_803E3BBC); }
 #pragma peephole reset
 #pragma scheduling reset
 

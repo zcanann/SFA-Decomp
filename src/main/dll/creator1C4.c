@@ -308,13 +308,13 @@ int gpsh_scene_func08(void) { return 0x0; }
 int ecsh_cup_getExtraSize(void) { return 0x30; }
 int ecsh_cup_func08(void) { return 0x0; }
 
-/* render-with-fn_8003B8F4 pattern. */
+/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5048;
-extern void fn_8003B8F4(f32);
+extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5058;
 extern f32 lbl_803E5060;
 #pragma peephole off
-void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5048); }
-void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5058); }
-void ecsh_cup_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5060); }
+void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5048); }
+void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5058); }
+void ecsh_cup_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5060); }
 #pragma peephole reset

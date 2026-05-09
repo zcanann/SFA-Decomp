@@ -27,7 +27,7 @@ extern undefined4 ObjPath_GetPointWorldPosition();
 extern int objFindTexture();
 extern undefined4 FUN_80039520();
 extern undefined4 fn_8003B5E0();
-extern undefined4 fn_8003B8F4();
+extern undefined4 objRenderFn_8003b8f4();
 extern undefined4 FUN_8003b540();
 extern undefined4 FUN_8003b818();
 extern undefined4 objParticleFn_80099d84();
@@ -495,7 +495,7 @@ void kaldachom_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,u
     if (*(float *)(iVar2 + 1000) != lbl_803E3060) {
       fn_8003B5E0(200,0,0,(int)*(float *)(iVar2 + 1000));
     }
-    fn_8003B8F4((double)lbl_803E3078,iVar1,(int)uVar3,param_3,param_4,param_5);
+    objRenderFn_8003b8f4((double)lbl_803E3078,iVar1,(int)uVar3,param_3,param_4,param_5);
     if ((*(ushort *)(iVar2 + 0x400) & 0x60) != 0) {
       objParticleFn_80099d84((double)lbl_803E3078,(double)*(float *)(iVar2 + 1000),iVar1,3,0);
     }

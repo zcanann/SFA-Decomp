@@ -16,7 +16,7 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8008112c();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
-extern void fn_8003B8F4(double scale);
+extern void objRenderFn_8003b8f4(double scale);
 
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd70c;
@@ -134,7 +134,7 @@ void kaldachompme_render(undefined4 param_1,undefined4 param_2,undefined4 param_
 {
   s32 v = renderFlag;
   if (v != 0) {
-    fn_8003B8F4(lbl_803E30D0);
+    objRenderFn_8003b8f4(lbl_803E30D0);
   }
 }
 #pragma peephole reset

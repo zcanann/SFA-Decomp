@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 
-extern void fn_8003B8F4(double scale);
+extern void objRenderFn_8003b8f4(double scale);
 extern void fn_8012DD7C(int enabled);
 
 extern f32 lbl_803E6618;
@@ -35,7 +35,7 @@ void worldplanet_render(undefined4 param_1,undefined4 param_2,undefined4 param_3
 
   draw = visible;
   if (draw != 0) {
-    fn_8003B8F4((double)lbl_803E6618);
+    objRenderFn_8003b8f4((double)lbl_803E6618);
   }
   return;
 }

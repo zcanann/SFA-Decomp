@@ -15,7 +15,7 @@ extern undefined4 mapGetDirIdx(int param_1);
 extern undefined4 warpToMap(int param_1,int param_2);
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
-extern undefined4 fn_8003B8F4(double scale);
+extern undefined4 objRenderFn_8003b8f4(double scale);
 extern undefined4 unlockLevel(int param_1,int param_2,int param_3);
 extern undefined4 fn_800887F8(int param_1);
 
@@ -190,7 +190,7 @@ void fireObj_free(void)
 
 void fireObj_render(void)
 {
-  fn_8003B8F4((double)lbl_803E64D8);
+  objRenderFn_8003b8f4((double)lbl_803E64D8);
   return;
 }
 

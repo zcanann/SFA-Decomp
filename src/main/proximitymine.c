@@ -2,7 +2,7 @@
 
 extern void fn_8001CB3C(void *handle);
 extern int ObjHits_GetPriorityHit(void *obj,int param_2,int param_3,int param_4);
-extern void fn_8003B8F4(void *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
+extern void objRenderFn_8003b8f4(void *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                         undefined4 param_5,double scale);
 extern int fn_8005B2FC(double x,double y,double z);
 extern void queueGlowRender(void *effect);
@@ -108,7 +108,7 @@ void proximitymine_render(ProximityMineObject *obj,undefined4 param_2,undefined4
     if ((effect != NULL) && (effect->active != 0) && (effect->visible != 0)) {
       queueGlowRender(effect);
     }
-    fn_8003B8F4(obj,param_2,param_3,param_4,param_5,(double)lbl_803E6778);
+    objRenderFn_8003b8f4(obj,param_2,param_3,param_4,param_5,(double)lbl_803E6778);
   }
   return;
 }

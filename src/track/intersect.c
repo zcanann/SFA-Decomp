@@ -7014,7 +7014,7 @@ void cardShowLoadingMsg(u8 kind)
     extern f32 lbl_803DEF98;
     extern f32 lbl_803DEF9C;
     extern void drawRect(int, int, f32, f32);
-    extern int fn_8003B8F4(int, int, int, int, int, f32);
+    extern int objRenderFn_8003b8f4(int, int, int, int, int, f32);
     extern void fn_8001476C(int, int, int, int);
     extern int lbl_803DB708;
     extern void getLastRenderedFrame(void);
@@ -7043,7 +7043,7 @@ void cardShowLoadingMsg(u8 kind)
             draw(0, 0, 0);
             drawRect(0x280, 0x1E0, lbl_803DEF98, lbl_803DEF98);
             for (j = 0; j < count; j++) {
-                fn_8003B8F4(buttons[j], 0, 0, 0, 0, lbl_803DEF9C);
+                objRenderFn_8003b8f4(buttons[j], 0, 0, 0, 0, lbl_803DEF9C);
             }
             fn_8001476C(0, 0, 0, 0);
         } else {

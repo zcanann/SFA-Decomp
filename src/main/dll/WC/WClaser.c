@@ -261,9 +261,9 @@ int fn_801F0948(void) { return 0x0; }
 int LaserBeam_getExtraSize(void) { return 0x50; }
 int fn_801F0AEC(void) { return 0x0; }
 
-/* render-with-fn_8003B8F4 pattern. */
+/* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5CF8;
-extern void fn_8003B8F4(f32);
+extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
-void WM_seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E5CF8); }
+void WM_seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5CF8); }
 #pragma peephole reset

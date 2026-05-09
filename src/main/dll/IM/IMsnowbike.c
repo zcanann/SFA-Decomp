@@ -19,7 +19,7 @@ extern void fn_801D80F4(uint *param_1);
 extern void fn_801D8308(int param_1, uint *param_2);
 extern void fn_801D87F8(int param_1, uint *param_2);
 extern void fn_801D8B00(int param_1, uint *param_2);
-extern void fn_8003B8F4(f32);
+extern void objRenderFn_8003b8f4(f32);
 
 extern undefined4 *lbl_803DCAAC;
 extern undefined4 *lbl_803DCA54;
@@ -309,7 +309,7 @@ int warpstonelift_getExtraSize(void) { return 0x1; }
 int warpstonelift_func08(void) { return 0x0; }
 int sh_staff_getExtraSize(void) { return 0x74; }
 
-/* render-with-fn_8003B8F4 pattern. */
+/* render-with-objRenderFn_8003b8f4 pattern. */
 #pragma peephole off
-void warpstonelift_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E54C8); }
+void warpstonelift_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E54C8); }
 #pragma peephole reset

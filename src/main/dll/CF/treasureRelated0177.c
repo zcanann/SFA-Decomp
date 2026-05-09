@@ -25,7 +25,7 @@ extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_80039520();
 extern undefined4 FUN_8003b818();
-extern void fn_8003B8F4(f32);
+extern void objRenderFn_8003b8f4(f32);
 extern undefined4 FUN_80053bf0();
 extern undefined8 FUN_8005d1e8();
 extern undefined4 FUN_8005fe14();
@@ -405,7 +405,7 @@ void campfire_render(int obj, int param_2, int param_3, int param_4, int param_5
   state = *(void ***)(obj + 0xb8);
   isVisible = visible;
   if (isVisible != 0) {
-    fn_8003B8F4(lbl_803E3D78);
+    objRenderFn_8003b8f4(lbl_803E3D78);
     effect = *state;
     if (((effect != 0) && (*(u8 *)((int)effect + 0x2f8) != 0)) &&
         (*(u8 *)((int)effect + 0x4c) != 0)) {
@@ -461,7 +461,7 @@ void cfccrate_free(int obj)
 }
 #pragma scheduling reset
 
-/* render-with-fn_8003B8F4 pattern. */
+/* render-with-objRenderFn_8003b8f4 pattern. */
 #pragma peephole off
-void kt_torch_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) fn_8003B8F4(lbl_803E3DB0); }
+void kt_torch_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3DB0); }
 #pragma peephole reset

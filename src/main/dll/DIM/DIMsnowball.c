@@ -1227,9 +1227,9 @@ int cclevcontrol_getExtraSize(void) { return 0x10; }
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E46CC;
-extern void fn_8003B8F4(f32);
+extern void objRenderFn_8003b8f4(f32);
 #pragma scheduling off
 #pragma peephole off
-void cclevcontrol_render(void) { fn_8003B8F4(lbl_803E46CC); }
+void cclevcontrol_render(void) { objRenderFn_8003b8f4(lbl_803E46CC); }
 #pragma peephole reset
 #pragma scheduling reset
