@@ -104,8 +104,8 @@ extern undefined4 DAT_8039c7cc;
 extern byte gExpgfxPoolBoundsTemplateIds;
 extern char gExpgfxPoolActiveCounts;
 extern char DAT_8039c829;
-extern uint gExpgfxPoolActiveMasks;
-extern u32 lbl_8039BD58[];
+extern u32 gExpgfxPoolActiveMasks[];
+extern u32 gExpgfxSlotPoolBases[];
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dd430;
 extern undefined4* DAT_803dd708;
@@ -1059,7 +1059,7 @@ extern void fn_800703C4(void);
 extern void gxSetZMode_(u32 a, int b, u32 c);
 extern void gxSetPeControl_ZCompLoc_(u32 a);
 
-extern u32 lbl_8039BC18[];
+extern u32 gExpgfxSlotActiveMasks[];
 extern f32 lbl_803967C0[3][4];
 extern f32 lbl_803DF410;
 extern f32 lbl_803DF414;
@@ -1145,7 +1145,7 @@ void expgfx_renderPool(uint slotPoolBase,int poolIndex)
     tabEntry = &((ExpgfxTableEntry *)dstBuf)[((u32)slot->encodedTableIndex >> 1) & 0x7f];
     textureKey0 = tabEntry->key0;
     texture = tabEntry->textureOrResource;
-    if ((1U << slotIndex & lbl_8039BC18[poolIndex]) == 0) goto next_slot;
+    if ((1U << slotIndex & gExpgfxSlotActiveMasks[poolIndex]) == 0) goto next_slot;
     state = slot->stateBits.value;
     if (((state >> 2) & 3) != 0) goto next_slot;
     if (((state >> 1) & 1) == 0) goto next_slot;
