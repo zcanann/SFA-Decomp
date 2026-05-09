@@ -754,9 +754,9 @@ void Menu_release(void) {}
 void titleScreenFn_80130464(u8 v) { lbl_803DD8F8 = v; }
 void setLinkNotRotated(void) { lbl_803DD8F9 = 0; }
 void setLinkIsRotated(void) { lbl_803DD8F9 = 1; }
-u8   fn_801306D8(void) { return (u8)lbl_803DD90E; }
-void fn_8013082C(int idx, s8 v) { *(s8*)(lbl_803A9458 + idx * 60 + 0x1e) = v; }
-s32  fn_80130848(int idx) { return *(s8*)(lbl_803A9458 + idx * 60 + 0x1e); }
+u8   Link_func0C(void) { return (u8)lbl_803DD90E; }
+void Link_func0A(int idx, s8 v) { *(s8*)(lbl_803A9458 + idx * 60 + 0x1e) = v; }
+s32  Link_func09(int idx) { return *(s8*)(lbl_803A9458 + idx * 60 + 0x1e); }
 void Link_setOpacity(u8 v) { lbl_803DD90C = v; }
 #pragma peephole off
 void Link_setSelected(int v) { lbl_803DD912 = (s8)v; }

@@ -873,7 +873,7 @@ extern s16 lbl_803DD8C0;
 extern s16 lbl_803DD8C2;
 
 /* EN v1.0 0x8012EBC8  size: 8b   s16 getter for lbl_803DD8C0. */
-s16 fn_8012EBC8(void)
+s16 cMenuGetSelectedItem(void)
 {
     return lbl_803DD8C0;
 }
@@ -932,7 +932,7 @@ extern s8  shouldCloseCMenu;
  * lbl_803DD7B9 and stash s16 arg in lbl_803DD88C. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8012EF30(s16 val)
+void showHelpText(s16 val)
 {
     lbl_803DD7B9 = 1;
     lbl_803DD88C = val;

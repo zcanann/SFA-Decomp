@@ -828,13 +828,13 @@ int TitleMenuItem_isEnabled(u8* obj)
 }
 
 /* EN v1.0 0x80132008  size: 8b   Trivial 1-returner. */
-int fn_80132008(void) { return 1; }
+int Dummy3E_func05_ret_1(void) { return 1; }
 
 /* EN v1.0 0x80132010  size: 4b   Empty no-op. */
-void fn_80132010(void) {}
+void Dummy3E_func04_nop(void) {}
 
 /* EN v1.0 0x80132014  size: 8b   Trivial 0-returner. */
-int fn_80132014(void) { return 0; }
+int Dummy3E_func03_ret_0(void) { return 0; }
 
 /* EN v1.0 0x8013201C  size: 4b   Empty no-op. */
 void Dummy3E_release(void) {}

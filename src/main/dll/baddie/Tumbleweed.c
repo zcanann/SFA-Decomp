@@ -3495,16 +3495,16 @@ extern u32 lbl_803DD9BC;
 extern u8  lbl_803DD9AB;
 
 /* 4-byte and 8-byte trivial leaves. */
-void fn_80134040(void) {}
+void dll_3F_frameEnd_nop(void) {}
 void Credits_render(void) {}
 void Credits_frameEnd(void) {}
 void WarpstoneUI_frameEnd(void) {}
-void fn_80137DF4(void) {}
-int  fn_80134044(void) { return 0; }
+void reportAllocFail(void) {}
+int  dll_3F_frameStart_ret_0(void) { return 0; }
 u8   shouldShowCredits(u8* obj) { return *obj; }
 
 /* EN v1.0 0x801334D4  size: 12b  u16-narrow getter for lbl_803DD938. */
-u16 fn_801334D4(void) { return (u16)lbl_803DD938; }
+u16 getMinimapY(void) { return (u16)lbl_803DD938; }
 
 /* EN v1.0 0x801344F0  size: 12b  u8 setter writing arg low byte to
  * lbl_803DD988. */
@@ -3746,7 +3746,7 @@ void Minimap_initialise(void)
 
 /* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960
  * via textureFree. */
-void fn_8013404C(void)
+void dll_3F_release(void)
 {
     textureFree(lbl_803DD960);
 }
@@ -3755,7 +3755,7 @@ void fn_8013404C(void)
  * lbl_803DD960. */
 #pragma scheduling off
 #pragma peephole off
-void fn_80134070(void)
+void dll_3F_initialise(void)
 {
     lbl_803DD960 = textureLoadAsset(0x47A);
 }
@@ -3834,7 +3834,7 @@ void WarpstoneUI_initialise(void)
  * latch lbl_803DD993 = 1 and zero five halfword/byte counters. */
 #pragma scheduling off
 #pragma peephole off
-void fn_80134BC4(void)
+void creditsStart(void)
 {
     lbl_803DD993 = 1;
     lbl_803DD994 = 0;
