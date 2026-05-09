@@ -33,4 +33,4 @@ void fn_801018A8(byte param_1, byte param_2)
 #pragma peephole reset
 #pragma scheduling reset
 
-void fn_80101974(u8 v) { pCamera[0x139] = v; }
+void cameraSetInterpMode(u8 v) { pCamera[0x139] = v; }

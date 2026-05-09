@@ -23,7 +23,7 @@ extern f32 lbl_803E19B4;
 /*
  * --INFO--
  *
- * Function: fn_8010D36C
+ * Function: CameraModeClimb_update
  * EN v1.0 Address: 0x8010D36C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8010D608
@@ -33,7 +33,7 @@ extern f32 lbl_803E19B4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8010D36C(short *param_1)
+void CameraModeClimb_update(short *param_1)
 {
   float fVar1;
   float fVar2;

@@ -18,7 +18,7 @@ extern void fn_8006961C(uint *boundsOut,float *startPoints,float *endPoints,
                         float *radii,int pointCount);
 extern int FUN_8007f7c0();
 extern int fn_80080204();
-extern void fn_80101974(u8);
+extern void cameraSetInterpMode(u8);
 extern undefined4 FUN_80101980();
 extern undefined4 FUN_802473cc();
 extern undefined4 FUN_8028681c();
@@ -410,7 +410,7 @@ void camcontrol_updateTargetAction(int param_1,int param_2)
     }
     goto check_action_44;
 action_49:
-    fn_80101974(1);
+    cameraSetInterpMode(1);
     (*(code *)(*lbl_803DCA50 + 0x1c))(0x49,1,0,4,param_1 + 0x124,0x3c,0xff);
     goto done;
 check_action_44:
@@ -420,7 +420,7 @@ check_action_44:
       local_24.yOffset = cameraMtxVar57[2];
       local_18 = (longlong)(int)cameraMtxVar57[0x23];
       local_24.height = (undefined2)(int)cameraMtxVar57[0x23];
-      fn_80101974(0);
+      cameraSetInterpMode(0);
       (*(code *)(*lbl_803DCA50 + 0x1c))(0x44,1,0,0xc,&local_24,0xf,0xfe);
     }
     else {

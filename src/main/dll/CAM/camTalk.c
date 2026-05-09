@@ -91,7 +91,7 @@ void FUN_80107b4c(void)
 /*
  * --INFO--
  *
- * Function: fn_80107B4C
+ * Function: CameraModeBike_update
  * EN v1.0 Address: 0x80107B78
  * EN v1.0 Size: 872b
  * EN v1.1 Address: 0x80107DE8
@@ -101,7 +101,7 @@ void FUN_80107b4c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80107B4C(short *param_1)
+void CameraModeBike_update(short *param_1)
 {
   int iVar1;
   float fVar2;
@@ -231,7 +231,7 @@ void fn_80107B4C(short *param_1)
 /*
  * --INFO--
  *
- * Function: fn_80107F80
+ * Function: CameraModeBike_init
  * EN v1.0 Address: 0x80107EE0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8010821C
@@ -241,7 +241,7 @@ void fn_80107B4C(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80107F80(int param_1)
+void CameraModeBike_init(int param_1)
 {
   if (lbl_803DD540 == 0) {
     lbl_803DD540 = (u8 *)mmAlloc(0x38,0xf,0);

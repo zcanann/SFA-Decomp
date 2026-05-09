@@ -94,7 +94,7 @@ extern f32 lbl_803E188C;
 /*
  * --INFO--
  *
- * Function: fn_8010847C
+ * Function: firstPersonDoControls
  * EN v1.0 Address: 0x8010847C
  * EN v1.0 Size: 1012b
  * EN v1.1 Address: 0x80108718
@@ -104,7 +104,7 @@ extern f32 lbl_803E188C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8010847C(short *param_1)
+void firstPersonDoControls(short *param_1)
 {
   float fVar1;
   short sVar2;
@@ -201,7 +201,7 @@ void fn_8010847C(short *param_1)
 /*
  * --INFO--
  *
- * Function: fn_8010887C
+ * Function: firstPersonEnter
  * EN v1.0 Address: 0x80108870
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80108B18
@@ -211,14 +211,14 @@ void fn_8010847C(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8010887C(void)
+void firstPersonEnter(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: fn_80108AD0
+ * Function: CameraModeViewfinder_func06
  * EN v1.0 Address: 0x80108874
  * EN v1.0 Size: 160b
  * EN v1.1 Address: 0x80108D6C
@@ -228,7 +228,7 @@ void fn_8010887C(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80108AD0(undefined2 *param_1)
+void CameraModeViewfinder_func06(undefined2 *param_1)
 {
   undefined2 *puVar1;
   
@@ -251,7 +251,7 @@ void fn_80108AD0(undefined2 *param_1)
 /*
  * --INFO--
  *
- * Function: fn_80108B6C
+ * Function: CameraModeViewfinder_func05
  * EN v1.0 Address: 0x80108914
  * EN v1.0 Size: 188b
  * EN v1.1 Address: 0x80108E08
@@ -261,7 +261,7 @@ void fn_80108AD0(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80108B6C(int param_1)
+void CameraModeViewfinder_func05(int param_1)
 {
   int iVar1;
   int iVar2;
@@ -293,7 +293,7 @@ void fn_80108B6C(int param_1)
 /*
  * --INFO--
  *
- * Function: fn_80108C2C
+ * Function: CameraModeViewfinder_update
  * EN v1.0 Address: 0x801089D0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80108EC8
@@ -303,7 +303,7 @@ void fn_80108B6C(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80108C2C(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void CameraModeViewfinder_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -313,7 +313,7 @@ void fn_80108C2C(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
 /*
  * --INFO--
  *
- * Function: fn_801091D8
+ * Function: CameraModeViewfinder_init
  * EN v1.0 Address: 0x801089D4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80109474
@@ -323,7 +323,7 @@ void fn_80108C2C(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801091D8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void CameraModeViewfinder_init(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,int param_10,undefined4 *param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -353,7 +353,7 @@ void FUN_801089d8(void)
 /*
  * --INFO--
  *
- * Function: fn_80109778
+ * Function: dll_46_update
  * EN v1.0 Address: 0x80108A04
  * EN v1.0 Size: 848b
  * EN v1.1 Address: 0x80109A14
@@ -363,7 +363,7 @@ void FUN_801089d8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80109778(short *param_1)
+void dll_46_update(short *param_1)
 {
   float fVar1;
   uint uVar2;
@@ -435,7 +435,7 @@ void fn_80109778(short *param_1)
 /*
  * --INFO--
  *
- * Function: fn_80109AA8
+ * Function: dll_46_init
  * EN v1.0 Address: 0x80108D54
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80109D44
@@ -445,7 +445,7 @@ void fn_80109778(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80109AA8(void)
+void dll_46_init(void)
 {
   if (lbl_803DD550 == (f32 *)0x0) {
     lbl_803DD550 = (f32 *)mmAlloc(8,0xf,0);
@@ -551,7 +551,7 @@ void FUN_80108e7c(void)
 /*
  * --INFO--
  *
- * Function: fn_80109C44
+ * Function: CameraModeStatic_update
  * EN v1.0 Address: 0x80108EA8
  * EN v1.0 Size: 608b
  * EN v1.1 Address: 0x80109EE0
@@ -561,7 +561,7 @@ void FUN_80108e7c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80109C44(short *param_1)
+void CameraModeStatic_update(short *param_1)
 {
   int iVar1;
   uint uVar2;
@@ -629,7 +629,7 @@ void fn_80109C44(short *param_1)
 /*
  * --INFO--
  *
- * Function: fn_80109EFC
+ * Function: CameraModeStatic_init
  * EN v1.0 Address: 0x80109108
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8010A198
@@ -639,7 +639,7 @@ void fn_80109C44(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80109EFC(void)
+void CameraModeStatic_init(void)
 {
 }
 

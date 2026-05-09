@@ -33,7 +33,7 @@ extern f32 lbl_803E1778;
 /*
  * --INFO--
  *
- * Function: fn_8010747C
+ * Function: CameraModeStaffAnim_init
  * EN v1.0 Address: 0x8010747C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80107718
@@ -43,7 +43,7 @@ extern f32 lbl_803E1778;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8010747C(undefined4 param_1,undefined4 param_2,short *param_3)
+void CameraModeStaffAnim_init(undefined4 param_1,undefined4 param_2,short *param_3)
 {
 }
 

@@ -80,7 +80,7 @@ extern f32 lbl_803E1980;
 /*
  * --INFO--
  *
- * Function: fn_8010C0D8
+ * Function: CameraModeCombat_update
  * EN v1.0 Address: 0x8010C0D8
  * EN v1.0 Size: 3352b
  * EN v1.1 Address: 0x8010C374
@@ -90,7 +90,7 @@ extern f32 lbl_803E1980;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8010C0D8(void)
+void CameraModeCombat_update(void)
 {
   float fVar1;
   short sVar2;
@@ -441,7 +441,7 @@ LAB_8010cfb8:
 /*
  * --INFO--
  *
- * Function: fn_8010CD5C
+ * Function: CameraModeCombat_init
  * EN v1.0 Address: 0x8010CDF0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8010CFF8
@@ -451,7 +451,7 @@ LAB_8010cfb8:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8010CD5C(int param_1,undefined4 param_2,undefined4 *param_3)
+void CameraModeCombat_init(int param_1,undefined4 param_2,undefined4 *param_3)
 {
   float fVar1;
   float fVar2;
@@ -527,7 +527,7 @@ void FUN_8010cdf4(void)
 /*
  * --INFO--
  *
- * Function: fn_8010CEF0
+ * Function: CameraModeShipBattle_update
  * EN v1.0 Address: 0x8010CE20
  * EN v1.0 Size: 1580b
  * EN v1.1 Address: 0x8010D18C
@@ -537,7 +537,7 @@ void FUN_8010cdf4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8010CEF0(undefined2 *param_1)
+void CameraModeShipBattle_update(undefined2 *param_1)
 {
   float fVar1;
   float fVar2;
@@ -620,7 +620,7 @@ void fn_8010CEF0(undefined2 *param_1)
 /*
  * --INFO--
  *
- * Function: fn_8010D298
+ * Function: CameraModeShipBattle_init
  * EN v1.0 Address: 0x8010D44C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8010D534
@@ -630,7 +630,7 @@ void fn_8010CEF0(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8010D298(void)
+void CameraModeShipBattle_init(void)
 {
   float fVar1;
 
