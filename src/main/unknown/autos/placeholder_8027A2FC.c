@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8027A2FC.h"
 
-extern u8 lbl_803CAAD0[];
-extern u8 lbl_803CAB50[];
+extern u8 voiceMidiKeySlots[];
+extern u8 voiceDirectSlots[];
 
 /*
  * --INFO--
@@ -32,12 +32,12 @@ void voiceUnregister(int obj)
     c = *(u8 *)(obj + 0x122);
     key = (u8)a;
     if (c == 0xff) {
-        u8 *base = lbl_803CAB50;
+        u8 *base = voiceDirectSlots;
         slot = base + key;
         if (*slot != key) return;
         *slot = 0xff;
     } else {
-        u8 *base = lbl_803CAAD0;
+        u8 *base = voiceMidiKeySlots;
         slot = base + c * 16 + b;
         if (*slot != key) return;
         *slot = 0xff;

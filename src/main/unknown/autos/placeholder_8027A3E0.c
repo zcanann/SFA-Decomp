@@ -4,8 +4,8 @@
 extern u32 __cvt_fp2unsigned(double x);
 extern double __ieee754_pow(double x, double y);
 
-extern u8 lbl_803CAAD0[];
-extern u8 lbl_803CAB50[];
+extern u8 voiceMidiKeySlots[];
+extern u8 voiceDirectSlots[];
 extern u8 lbl_803BD150[];
 extern f32 lbl_8032F218[];
 extern f32 lbl_8032F418[];
@@ -18,9 +18,9 @@ extern f64 lbl_803E7820;
 extern f64 lbl_803E7840;
 
 /*
- * Mark all 256 entries of the voice-id table and 64 entries of the
- * status table as 0xFF (free). The asm has the inner stb's unrolled
- * to 16 per loop iter for the 256-byte table (4 outer × 32 bytes),
+ * Mark all entries of the MIDI voice-id table and direct voice-id table as
+ * as 0xFF (free). The asm has the inner stb's unrolled
+ * to 16 per loop iter for the 128-byte table (4 outer x 32 bytes),
  * and the 64-byte table is fully unrolled.
  *
  * EN v1.0 Address: 0x8027A270
@@ -28,9 +28,9 @@ extern f64 lbl_803E7840;
  * EN v1.1 Address: 0x8027A330
  * EN v1.1 Size: 432b
  */
-void fn_8027A330(void)
+void voiceInitRegistrationTables(void)
 {
-    u8 *p = lbl_803CAAD0;
+    u8 *p = voiceMidiKeySlots;
     int i;
     int j;
 
@@ -41,7 +41,7 @@ void fn_8027A330(void)
         p += 32;
     }
     {
-        u8 *q = lbl_803CAB50;
+        u8 *q = voiceDirectSlots;
         for (j = 0; j < 64; j++) {
             q[j] = 0xff;
         }

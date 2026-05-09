@@ -7,7 +7,7 @@ typedef struct VoiceNode {
     u8 unk8[8];
 } VoiceNode;
 
-extern VoiceNode lbl_803CA2D0[128];
+extern VoiceNode vidListNodes[128];
 extern int vidCurrentId;
 extern int vidRoot;
 extern VoiceNode *vidFree;
@@ -27,7 +27,7 @@ extern VoiceNode *vidFree;
  */
 void vidInit(void)
 {
-    VoiceNode *node = lbl_803CA2D0;
+    VoiceNode *node = vidListNodes;
     VoiceNode *prev = NULL;
     int i;
 

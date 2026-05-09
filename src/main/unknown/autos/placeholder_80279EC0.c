@@ -11,9 +11,11 @@ extern void synthCancelJob(u8 voice);
 extern u8 *synthVoice;
 extern u8 lbl_803BD150[];
 extern u8 gSynthInitialized;
-extern u8 lbl_803CA2D0[];
-extern u8 lbl_803CAB50[];
-extern u8 lbl_803CAAD0[][16];
+extern u8 voicePriorityLinks[];
+extern u8 voicePriorityGroupHeads[];
+extern u8 voiceFreeListSlots[];
+extern u8 voiceDirectSlots[];
+extern u8 voiceMidiKeySlots[][16];
 extern u16 voicePrioSortRootListRoot;
 extern u8 voiceMusicRunning;
 extern u8 voiceFxRunning;
@@ -40,7 +42,7 @@ void voiceInitPriorityTables(void)
     if (count != 0) {
         if (count > 8) {
             batches = (count - 1) >> 3;
-            freeSlot = (s8 *)(lbl_803CA2D0 + 0xec0);
+            freeSlot = (s8 *)voiceFreeListSlots;
             if (count != 8) {
                 do {
                     value = progress;
@@ -74,7 +76,7 @@ void voiceInitPriorityTables(void)
                 } while (batches != 0);
             }
         }
-        freeSlot = (s8 *)(lbl_803CA2D0 + 0xec0 + progress * 4);
+        freeSlot = (s8 *)(voiceFreeListSlots + progress * 4);
         remaining = lbl_803BD150[0x210] - progress;
         if (progress < lbl_803BD150[0x210]) {
             do {
@@ -90,16 +92,16 @@ void voiceInitPriorityTables(void)
     }
 
     lastVoice = lbl_803BD150[0x210];
-    *(u8 *)(lbl_803CA2D0 + 0xec0) = SYNTH_INVALID_VOICE_U8;
+    voiceFreeListSlots[0] = SYNTH_INVALID_VOICE_U8;
     progress = 0;
     count = lbl_803BD150[0x210];
-    *(u8 *)(lbl_803CA2D0 + 0xec0 - 3 + count * 4) = SYNTH_INVALID_VOICE_U8;
+    *(u8 *)(voiceFreeListSlots - 3 + count * 4) = SYNTH_INVALID_VOICE_U8;
     voiceListInsert = lastVoice - 1;
     voiceListRoot = 0;
     if (count != 0) {
         if (count > 8) {
             batches = (count - 1) >> 3;
-            activeSlot = lbl_803CA2D0 + 0x8c0;
+            activeSlot = voicePriorityLinks;
             if (count != 8) {
                 do {
                     *(u16 *)(activeSlot + 2) = 0;
@@ -116,7 +118,7 @@ void voiceInitPriorityTables(void)
                 } while (batches != 0);
             }
         }
-        activeSlot = lbl_803CA2D0 + 0x8c0 + progress * 4;
+        activeSlot = voicePriorityLinks + progress * 4;
         remaining = lbl_803BD150[0x210] - progress;
         if (progress < lbl_803BD150[0x210]) {
             do {
@@ -128,7 +130,7 @@ void voiceInitPriorityTables(void)
     }
 
     remaining = 4;
-    groupHead = lbl_803CA2D0 + 0x9c0;
+    groupHead = voicePriorityGroupHeads;
     do {
         groupHead[0] = 0xff;
         groupHead[1] = 0xff;
@@ -307,10 +309,10 @@ int voiceIsRegistered(int state)
     b = *(u8 *)(state + SYNTH_VOICE_MIDI_KEY_OFFSET);
     v = (u8)voice;
     if (b == SYNTH_INVALID_VOICE_U8) {
-        if (lbl_803CAB50[v] == v) return 1;
+        if (voiceDirectSlots[v] == v) return 1;
         goto fail;
     }
-    if (v == lbl_803CAAD0[b][a]) return 1;
+    if (v == voiceMidiKeySlots[b][a]) return 1;
 fail:
     return 0;
 }
@@ -332,8 +334,8 @@ void voiceRegister(int state)
     b = *(u8 *)(state + SYNTH_VOICE_MIDI_KEY_OFFSET);
     v = (u8)voice;
     if (b == SYNTH_INVALID_VOICE_U8) {
-        lbl_803CAB50[v] = v;
+        voiceDirectSlots[v] = v;
     } else {
-        lbl_803CAAD0[b][a] = v;
+        voiceMidiKeySlots[b][a] = v;
     }
 }

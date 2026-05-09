@@ -9,16 +9,20 @@ typedef struct VoiceIdSlot {
     u16 active;
 } VoiceIdSlot;
 
-extern VoiceIdSlot lbl_803CB190[];
+extern VoiceIdSlot voiceFreeListSlots[];
 extern u8 *synthVoice;
 extern u8 lbl_803BD150[];
-extern u8 lbl_803CA2D0[];
+extern u8 vidListNodes[];
 extern u8 synthIdleWaitActive;
 extern u16 voicePrioSortRootListRoot;
 extern u8 voiceMusicRunning;
 extern u8 voiceFxRunning;
 extern u8 voiceListInsert;
 extern u8 voiceListRoot;
+
+#define voicePriorityLinks (vidListNodes + 0x8c0)
+#define voicePriorityGroupHeads (vidListNodes + 0x9c0)
+#define voicePrioritySortLinks (vidListNodes + 0xac0)
 
 /*
  * Allocate a voice id, preferring a free slot but stealing the lowest-priority
@@ -62,7 +66,7 @@ count_matching_key:
             priorityNode = voicePrioSortRootListRoot;
             while (((priorityNode != 0xffff) && (priorityNode <= priority)) &&
                    (selectedVoice == 0xffffffff)) {
-                voiceLink = *(u8 *)(lbl_803CA2D0 + 0x9c0 + priorityNode);
+                voiceLink = *(u8 *)(voicePriorityGroupHeads + priorityNode);
                 while ((current = voiceLink) != 0xff) {
                     state = (int)(synthVoice + current * 0x404);
                     candidate = selectedVoice;
@@ -82,23 +86,23 @@ count_matching_key:
                         }
                     }
                     selectedVoice = candidate;
-                    voiceLink = *(u8 *)(lbl_803CA2D0 + 0x8c1 + current * 4);
+                    voiceLink = *(u8 *)(voicePriorityLinks + 1 + current * 4);
                 }
-                priorityNode = *(u16 *)(lbl_803CA2D0 + 0xac0 + (u32)priorityNode * 4);
+                priorityNode = *(u16 *)(voicePrioritySortLinks + (u32)priorityNode * 4);
             }
             limit = maxInstances;
             if ((int)limit <= matchingCount) {
                 goto found_voice;
             }
             while (((current = priorityNode) != 0xffff) && (matchingCount < (int)limit)) {
-                voiceLink = *(u8 *)(lbl_803CA2D0 + 0x9c0 + current);
+                voiceLink = *(u8 *)(voicePriorityGroupHeads + current);
                 while ((candidate = voiceLink) != 0xff) {
                     if (key == *(s16 *)(synthVoice + candidate * 0x404 + 0x100)) {
                         matchingCount++;
                     }
-                    voiceLink = *(u8 *)(lbl_803CA2D0 + 0x8c1 + candidate * 4);
+                    voiceLink = *(u8 *)(voicePriorityLinks + 1 + candidate * 4);
                 }
-                priorityNode = *(u16 *)(lbl_803CA2D0 + 0xac0 + current * 4);
+                priorityNode = *(u16 *)(voicePrioritySortLinks + current * 4);
             }
             if ((int)limit <= matchingCount) {
                 goto found_voice;
@@ -115,7 +119,7 @@ count_matching_key:
         }
         while (((selectedVoice != 0xffff) && (selectedVoice <= priority)) &&
                (candidate == 0xffffffff)) {
-            voiceLink = *(u8 *)(lbl_803CA2D0 + 0x9c0 + selectedVoice);
+            voiceLink = *(u8 *)(voicePriorityGroupHeads + selectedVoice);
             while ((current = voiceLink) != 0xff) {
                 state = (int)(synthVoice + current * 0x404);
                 limit = candidate;
@@ -132,9 +136,9 @@ count_matching_key:
                     }
                 }
                 candidate = limit;
-                voiceLink = *(u8 *)(lbl_803CA2D0 + 0x8c1 + current * 4);
+                voiceLink = *(u8 *)(voicePriorityLinks + 1 + current * 4);
             }
-            selectedVoice = *(u16 *)(lbl_803CA2D0 + 0xac0 + selectedVoice * 4);
+            selectedVoice = *(u16 *)(voicePrioritySortLinks + selectedVoice * 4);
         }
         selectedVoice = candidate;
         if (candidate == 0xffffffff) {
@@ -151,21 +155,21 @@ found_voice:
         return 0xffffffff;
     }
     state = selectedVoice * 4;
-    if (lbl_803CB190[selectedVoice].active == 1) {
-        if (lbl_803CB190[selectedVoice].prev == 0xff) {
-            voiceListRoot = lbl_803CB190[selectedVoice].next;
+    if (voiceFreeListSlots[selectedVoice].active == 1) {
+        if (voiceFreeListSlots[selectedVoice].prev == 0xff) {
+            voiceListRoot = voiceFreeListSlots[selectedVoice].next;
         } else {
-            lbl_803CB190[lbl_803CB190[selectedVoice].prev].next =
-                lbl_803CB190[selectedVoice].next;
+            voiceFreeListSlots[voiceFreeListSlots[selectedVoice].prev].next =
+                voiceFreeListSlots[selectedVoice].next;
         }
-        if (lbl_803CB190[selectedVoice].next != 0xff) {
-            lbl_803CB190[lbl_803CB190[selectedVoice].next].prev =
-                lbl_803CB190[selectedVoice].prev;
+        if (voiceFreeListSlots[selectedVoice].next != 0xff) {
+            voiceFreeListSlots[voiceFreeListSlots[selectedVoice].next].prev =
+                voiceFreeListSlots[selectedVoice].prev;
         }
         if (selectedVoice == voiceListInsert) {
-            voiceListInsert = lbl_803CB190[selectedVoice].prev;
+            voiceListInsert = voiceFreeListSlots[selectedVoice].prev;
         }
-        lbl_803CB190[selectedVoice].active = 0;
+        voiceFreeListSlots[selectedVoice].active = 0;
     } else if (*(s8 *)(synthVoice + selectedVoice * 0x404 + 0x11d) == 0) {
         voiceMusicRunning--;
     } else {
@@ -195,13 +199,13 @@ void voiceFree(int state)
     {
         u32 voice = *(u32 *)(state + 0xf4);
         u8 v = (u8)voice;
-        VoiceIdSlot *slot = &lbl_803CB190[v];
+        VoiceIdSlot *slot = &voiceFreeListSlots[v];
         if (slot->active == 0) {
             slot->active = 1;
             if (voiceListRoot != 0xff) {
                 slot->next = 0xff;
                 slot->prev = voiceListInsert;
-                lbl_803CB190[voiceListInsert].next = v;
+                voiceFreeListSlots[voiceListInsert].next = v;
             } else {
                 slot->next = 0xff;
                 slot->prev = 0xff;

@@ -4,8 +4,12 @@
 extern void voiceRemovePriority(void *state);
 extern void hwSetPriority(u8 voiceId, u32 priority);
 
-extern u8 lbl_803CA2D0[];   /* voice tables */
+extern u8 vidListNodes[];
 extern u16 voicePrioSortRootListRoot;    /* sorted-list head (u16) */
+
+#define voicePriorityLinks (vidListNodes + 0x8c0)
+#define voicePriorityGroupHeads (vidListNodes + 0x9c0)
+#define voicePrioritySortLinks (vidListNodes + 0xac0)
 
 /*
  * Inserts the voice into the new group's linked list (prepend) and
@@ -20,8 +24,7 @@ extern u16 voicePrioSortRootListRoot;    /* sorted-list head (u16) */
 void voiceSetPriority(int state, u8 newGroup)
 {
     u32 voiceId = *(u8 *)(state + 0xf4);
-    u8 *base = lbl_803CA2D0;
-    u8 *slot = base + voiceId * 4 + 0x8c0;
+    u8 *slot = voicePriorityLinks + voiceId * 4;
     u16 oldFirst;
     u16 prev;
     u16 cur;
@@ -39,7 +42,7 @@ void voiceSetPriority(int state, u8 newGroup)
 
     /* prepend to new group's linked list */
     {
-        u8 *groupHead = base + newGroup * 4 + 0x9c0;
+        u8 *groupHead = voicePriorityGroupHeads + newGroup * 4;
         oldFirst = *groupHead;
         *(u8 *)(slot + 1) = (u8)oldFirst;
         if ((u8)oldFirst == 0xff) {
@@ -47,37 +50,37 @@ void voiceSetPriority(int state, u8 newGroup)
             cur = voicePrioSortRootListRoot;
             if (cur == 0xffff) {
                 /* list empty: voice becomes head and tail */
-                *(u16 *)(base + voiceId * 4 + 0xac0) = 0xffff;
-                *(u16 *)(base + voiceId * 4 + 0xac2) = 0xffff;
+                *(u16 *)(voicePrioritySortLinks + voiceId * 4) = 0xffff;
+                *(u16 *)(voicePrioritySortLinks + voiceId * 4 + 2) = 0xffff;
                 voicePrioSortRootListRoot = (u16)voiceId;
             } else if ((u32)cur > voiceId) {
                 /* prepend: voice's next = old head, old head's prev = voice */
-                *(u16 *)(base + voiceId * 4 + 0xac0) = cur;
-                *(u16 *)(base + voiceId * 4 + 0xac2) = 0xffff;
-                *(u16 *)(base + cur * 4 + 0xac2) = (u16)voiceId;
+                *(u16 *)(voicePrioritySortLinks + voiceId * 4) = cur;
+                *(u16 *)(voicePrioritySortLinks + voiceId * 4 + 2) = 0xffff;
+                *(u16 *)(voicePrioritySortLinks + cur * 4 + 2) = (u16)voiceId;
                 voicePrioSortRootListRoot = (u16)voiceId;
             } else {
                 /* walk list: find first node with id > voiceId */
                 prev = cur;
-                cur = *(u16 *)(base + cur * 4 + 0xac0);
+                cur = *(u16 *)(voicePrioritySortLinks + cur * 4);
                 while (cur != 0xffff) {
                     if (cur > voiceId) {
                         break;
                     }
                     prev = cur;
-                    cur = *(u16 *)(base + cur * 4 + 0xac0);
+                    cur = *(u16 *)(voicePrioritySortLinks + cur * 4);
                 }
                 /* insert after prev */
-                *(u16 *)(base + prev * 4 + 0xac0) = (u16)voiceId;
-                *(u16 *)(base + voiceId * 4 + 0xac2) = prev;
-                *(u16 *)(base + voiceId * 4 + 0xac0) = cur;
+                *(u16 *)(voicePrioritySortLinks + prev * 4) = (u16)voiceId;
+                *(u16 *)(voicePrioritySortLinks + voiceId * 4 + 2) = prev;
+                *(u16 *)(voicePrioritySortLinks + voiceId * 4) = cur;
                 if (cur != 0xffff) {
-                    *(u16 *)(base + cur * 4 + 0xac2) = (u16)voiceId;
+                    *(u16 *)(voicePrioritySortLinks + cur * 4 + 2) = (u16)voiceId;
                 }
             }
         } else {
             /* group had voices: link old first to new voice */
-            *(u8 *)(base + oldFirst * 4 + 0x8c0) = (u8)voiceId;
+            *(u8 *)(voicePriorityLinks + oldFirst * 4) = (u8)voiceId;
         }
         *groupHead = (u8)voiceId;
     }
