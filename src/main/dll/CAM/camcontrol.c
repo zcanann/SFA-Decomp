@@ -109,38 +109,6 @@ extern u32 pCamera;
 #define gCamcontrolQueuedActionData lbl_803DD504
 #define gCamcontrolCurrentActionId lbl_803DD510
 
-typedef struct CamcontrolTriggeredAction {
-  u8 actionKind;
-  u8 pad01[0xC];
-  s8 triggerMode;
-  u8 pad0E[2];
-} CamcontrolTriggeredAction;
-
-typedef struct CamcontrolQueuedActionParam {
-  uint actionIndex;
-  byte noBlendFlag;
-} CamcontrolQueuedActionParam;
-
-#define CAMCONTROL_TRIGGER_KIND_QUEUE_TYPE1 1
-#define CAMCONTROL_TRIGGER_KIND_QUEUE_TYPE2 2
-#define CAMCONTROL_TRIGGER_KIND_DEFAULT_ACTION 3
-#define CAMCONTROL_TRIGGER_KIND_DEFAULT_ACTION_OFFSET 4
-#define CAMCONTROL_TRIGGERED_ACTION_KIND_TRIGGERED 1
-#define CAMCONTROL_ACTION_DEFAULT 0x42
-#define CAMCONTROL_ACTION_TRIGGERED 0x4B
-#define CAMCONTROL_ACTION_TRIGGER_TYPE1 0x48
-#define CAMCONTROL_ACTION_TRIGGER_TYPE2 0x47
-#define CAMCONTROL_ACTION_NO_NONE 0
-#define CAMCONTROL_SAVED_ACTION_NONE -1
-#define CAMCONTROL_ACTION_INDEX_MASK 0x7F
-#define CAMCONTROL_ACTION_FLAG_NO_BLEND 0x80
-#define CAMCONTROL_ACTION_RECORD_SIZE 0x10
-#define CAMCONTROL_QUEUED_ACTION_PARAM_SIZE sizeof(CamcontrolQueuedActionParam)
-#define CAMCONTROL_ACTION_FILE_ID 0xB
-#define CAMCONTROL_ACTION_HEAP 0xF
-#define CAMCONTROL_DEFAULT_BLEND_FRAMES 0x78
-#define CAMCONTROL_QUEUE_SENTINEL 0xFF
-
 /*
  * --INFO--
  *
