@@ -1,17 +1,18 @@
 #include "ghidra_import.h"
+#include "main/unknown/autos/placeholder_80281A9C.h"
 
 extern void *memcpy(void *dst, const void *src, u32 n);
 extern void inpSetMidiLastNote(u8 a, u8 b, u8 v);
 extern int inpTranslateExCtrl(int input);
 
-extern u8 lbl_802C2710[];
-extern u8 lbl_802C2798[];
-extern u8 lbl_803CD760[][16];
-extern u8 lbl_803CD7E0[];
-extern u8 lbl_803CD820[];
-extern u8 lbl_803D1B20[];
-extern u8 lbl_803D3EA0[][16];
-extern u8 lbl_803D3F20[];
+extern u8 sInpMidiCtrlFullResetPreset[];
+extern u8 sInpMidiCtrlMaskedResetPreset[];
+extern u8 lbl_803CD760[][INP_MIDI_SLOT_COUNT];
+extern u8 gInpMidiLastNote[];
+extern u8 gInpMidiCtrlByKey[];
+extern u8 gInpMidiCtrl[];
+extern u8 gInpChannelDefaultsByKey[][INP_MIDI_SLOT_COUNT];
+extern u8 gInpChannelDefaults[];
 
 /*
  * Reset a MIDI-controller/default table from one of two preset banks,
@@ -25,15 +26,15 @@ void inpResetMidiCtrl(u8 a, u8 b, u32 mode)
     u8 *dst;
 
     if (mode != 0) {
-        src = lbl_802C2710;
+        src = sInpMidiCtrlFullResetPreset;
     } else {
-        src = lbl_802C2798;
+        src = sInpMidiCtrlMaskedResetPreset;
     }
 
-    if (b != 0xff) {
-        dst = lbl_803CD820 + b * 0x860 + a * 0x86;
+    if (b != INP_INVALID_SLOT) {
+        dst = gInpMidiCtrlByKey + b * INP_MIDI_KEY_STRIDE + a * INP_MIDI_CTRL_BANK_SIZE;
     } else {
-        dst = lbl_803D1B20 + a * 0x86;
+        dst = gInpMidiCtrl + a * INP_MIDI_CTRL_BANK_SIZE;
     }
 
     if (mode != 0) {
@@ -61,14 +62,14 @@ u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key)
     u8 *base;
 
     slot &= 0xff;
-    if (slot == 0xff) {
+    if (slot == INP_INVALID_SLOT) {
         return 0;
     }
 
     key &= 0xff;
     ctrl = controller & 0xff;
-    if (key == 0xff) {
-        base = lbl_803D1B20 + slot * 0x86;
+    if (key == INP_INVALID_SLOT) {
+        base = gInpMidiCtrl + slot * INP_MIDI_CTRL_BANK_SIZE;
         if (ctrl < 0x40) {
             return ((u32)base[controller & 0x1f] << 7) |
                    (u32)base[(controller & 0x1f) + 0x20];
@@ -91,7 +92,7 @@ u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key)
         return (u32)base[ctrl] << 7;
     }
 
-    base = lbl_803CD820 + key * 0x860 + slot * 0x86;
+    base = gInpMidiCtrlByKey + key * INP_MIDI_KEY_STRIDE + slot * INP_MIDI_CTRL_BANK_SIZE;
     if (ctrl < 0x40) {
         return ((u32)base[controller & 0x1f] << 7) |
                (u32)base[(controller & 0x1f) + 0x20];
@@ -121,10 +122,10 @@ u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key)
  */
 u8 *inpGetChannelDefaults(u8 a, u8 b)
 {
-    if (b == 0xff) {
-        return &lbl_803D3F20[a];
+    if (b == INP_INVALID_SLOT) {
+        return &gInpChannelDefaults[a];
     }
-    return &lbl_803D3EA0[b][a];
+    return &gInpChannelDefaultsByKey[b][a];
 }
 
 /*
@@ -135,10 +136,10 @@ u8 *inpGetChannelDefaults(u8 a, u8 b)
 void inpResetChannelDefaults(u8 a, u8 b)
 {
     u8 *p;
-    if (b != 0xff) {
-        p = &lbl_803D3EA0[b][a];
+    if (b != INP_INVALID_SLOT) {
+        p = &gInpChannelDefaultsByKey[b][a];
     } else {
-        p = &lbl_803D3F20[a];
+        p = &gInpChannelDefaults[a];
     }
     *p = 2;
 }
@@ -184,8 +185,8 @@ void inpFXCopyCtrl(u8 controller, int dstState, int srcState)
     ctrl = controller & 0xff;
     dstVoice = *(u32 *)(dstState + 0xf4) & 0xff;
     srcVoice = *(u32 *)(srcState + 0xf4) & 0xff;
-    dst = lbl_803D1B20 + dstVoice * 0x86;
-    src = lbl_803D1B20 + srcVoice * 0x86;
+    dst = gInpMidiCtrl + dstVoice * INP_MIDI_CTRL_BANK_SIZE;
+    src = gInpMidiCtrl + srcVoice * INP_MIDI_CTRL_BANK_SIZE;
 
     if (ctrl < 0x40) {
         ctrl = controller & 0x1f;
@@ -209,30 +210,30 @@ void inpFXCopyCtrl(u8 controller, int dstState, int srcState)
 }
 
 /*
- * Set a byte in either lbl_803CD7E0[a] (1D, when b == 0xff) or
+ * Set a byte in either gInpMidiLastNote[a] (1D, when b == 0xff) or
  * lbl_803CD760[b][a] (2D).
  *
  * EN v1.1 Address: 0x80281FE8, size 68b
  */
 void inpSetMidiLastNote(u8 a, u8 b, u8 v)
 {
-    if (b != 0xff) {
+    if (b != INP_INVALID_SLOT) {
         lbl_803CD760[b][a] = v;
     } else {
-        lbl_803CD7E0[a] = v;
+        gInpMidiLastNote[a] = v;
     }
 }
 
 /*
- * Get a byte from either lbl_803CD7E0[a] (1D, when b == 0xff) or
+ * Get a byte from either gInpMidiLastNote[a] (1D, when b == 0xff) or
  * lbl_803CD760[b][a] (2D).
  *
  * EN v1.1 Address: 0x8028202C, size 68b
  */
 u8 inpGetMidiLastNote(u8 a, u8 b)
 {
-    if (b != 0xff) {
+    if (b != INP_INVALID_SLOT) {
         return lbl_803CD760[b][a];
     }
-    return lbl_803CD7E0[a];
+    return gInpMidiLastNote[a];
 }

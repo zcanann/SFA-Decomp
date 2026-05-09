@@ -3,11 +3,13 @@
 
 #include "ghidra_import.h"
 
-void FUN_80281a30(byte param_1,byte param_2,byte param_3,byte param_4);
-void FUN_80281a34(byte param_1,byte param_2,byte param_3,uint param_4);
-void FUN_80281a38(uint param_1,uint param_2,int param_3);
+#define INP_INVALID_SLOT 0xFF
+#define INP_MIDI_CTRL_BANK_SIZE 0x86
+#define INP_MIDI_KEY_STRIDE 0x860
+#define INP_MIDI_SLOT_COUNT 16
+
 void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
-u32 inpGetMidiCtrl(u8 r3, u8 r4, u8 r5);
+u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
 u8 *inpGetChannelDefaults(u8 a, u8 b);
 void inpResetChannelDefaults(u8 a, u8 b);
 void inpAddCtrl(int obj, int b, int c, int d, u32 flag);
