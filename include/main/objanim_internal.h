@@ -46,6 +46,7 @@ typedef struct ObjAnimHitReactRow {
 #define OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT 3
 #define OBJANIM_DOUBLE_CONVERSION_HIGH_WORD 0x43300000
 #define OBJANIM_S32_DOUBLE_BIAS_XOR 0x80000000
+#define OBJANIM_U32_DOUBLE(value) ((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD, (value)))
 
 /*
  * Shared state used by the object-animation helpers around main/objanim.c.
