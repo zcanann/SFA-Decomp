@@ -7,8 +7,8 @@ extern double __ieee754_pow(double x, double y);
 extern u8 voiceMidiKeySlots[];
 extern u8 voiceDirectSlots[];
 extern u8 lbl_803BD150[];
-extern f32 lbl_8032F218[];
-extern f32 lbl_8032F418[];
+extern f32 voicePitchUpTable[];
+extern f32 voicePitchDownTable[];
 extern f32 lbl_803E7818;
 extern f32 lbl_803E7828;
 extern f32 lbl_803E7830;
@@ -18,7 +18,7 @@ extern f64 lbl_803E7820;
 extern f64 lbl_803E7840;
 
 /*
- * Mark all entries of the MIDI voice-id table and direct voice-id table as
+ * Mark all entries of the MIDI voice-id table and direct voice-id table
  * as 0xFF (free). The asm has the inner stb's unrolled
  * to 16 per loop iter for the 128-byte table (4 outer x 32 bytes),
  * and the 64-byte table is fully unrolled.
@@ -57,7 +57,7 @@ void voiceInitRegistrationTables(void)
  * EN v1.1 Address: 0x8027A4E0
  * EN v1.1 Size: 60b
  */
-int fn_8027A4E0(u16 x)
+int voiceScaleSampleRate(u16 x)
 {
     union {
         struct { u32 hi, lo; } w;
@@ -79,7 +79,7 @@ int fn_8027A4E0(u16 x)
  * EN v1.1 Address: 0x8027A51C
  * EN v1.1 Size: 240b
  */
-u32 fn_8027A51C(u8 noteIn, u32 packed)
+u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
 {
     u8 baseNote;
     u8 inputNote;
@@ -101,13 +101,13 @@ u32 fn_8027A51C(u8 noteIn, u32 packed)
         freq = (f32)(conv.d - lbl_803E7820);
     } else if (baseNote >= inputNote) {
         u32 d = baseNote - inputNote;
-        f32 mul = lbl_8032F418[d];
+        f32 mul = voicePitchDownTable[d];
         conv.w.hi = 0x43300000;
         conv.w.lo = packed & 0xffffff;
         freq = (f32)((conv.d - lbl_803E7820) * mul);
     } else {
         u32 d = inputNote - baseNote;
-        f32 mul = lbl_8032F218[d];
+        f32 mul = voicePitchUpTable[d];
         conv.w.hi = 0x43300000;
         conv.w.lo = packed & 0xffffff;
         freq = (f32)((conv.d - lbl_803E7820) * mul);
@@ -133,7 +133,7 @@ u32 fn_8027A51C(u8 noteIn, u32 packed)
  * EN v1.1 Address: 0x8027A60C
  * EN v1.1 Size: 84b
  */
-u32 fn_8027A60C(u32 dbCents)
+u32 voiceConvertDbToLinear(u32 dbCents)
 {
     union {
         struct { u32 hi, lo; } w;

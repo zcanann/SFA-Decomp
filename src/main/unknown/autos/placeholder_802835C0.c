@@ -4,7 +4,7 @@
 extern u8 lbl_8032F79C[];
 extern u8 *dspVoice;
 
-extern u32 fn_8027A60C(u32 value);
+extern u32 voiceConvertDbToLinear(u32 value);
 
 /*
  * --INFO--
@@ -61,12 +61,12 @@ void hwSetADSR(int slot, u32 *adsr, u8 mode)
         *(u8 *)(entry + 0xca) = 0;
 
         if (mode == 1) {
-            value = fn_8027A60C(adsr[0]);
+            value = voiceConvertDbToLinear(adsr[0]);
             entry = dspVoice;
             entry += offset;
             *(u32 *)(entry + 0xb8) = value & 0xffff;
 
-            value = fn_8027A60C(adsr[1]);
+            value = voiceConvertDbToLinear(adsr[1]);
             entry = dspVoice;
             entry += offset;
             *(u32 *)(entry + 0xbc) = value & 0xffff;

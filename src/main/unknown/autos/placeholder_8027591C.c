@@ -14,7 +14,7 @@ extern u32 countLeadingZeros(u32 value);
 extern void fn_80271370(int state);
 extern u32 dataSampleInfo[];
 extern void *dataGetCurve(u16 key);
-extern u32 fn_8027A60C(u32 value);
+extern u32 voiceConvertDbToLinear(u32 value);
 extern int fn_8027A8D4(int state);
 extern void hwSetADSR(int slot, u32 *adsr, u8 mode);
 extern u8 lbl_8032F79C[];
@@ -356,8 +356,8 @@ void fn_802760A0(int state, u32 *args)
 
         *(u8 *)(state + 0x1dc) = 1;
         *(u8 *)(state + 0x202) = 0;
-        *(u32 *)(state + 0x1f0) = fn_8027A60C(attack);
-        *(u32 *)(state + 0x1f4) = fn_8027A60C(decay);
+        *(u32 *)(state + 0x1f0) = voiceConvertDbToLinear(attack);
+        *(u32 *)(state + 0x1f4) = voiceConvertDbToLinear(decay);
         decayIndex = ((decayRaw & 0xff) << 8 | ((u32)decayRaw >> 8)) >> 2;
         if (decayIndex > 0x3ff) {
             decayIndex = 0x3ff;
