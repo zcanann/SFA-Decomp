@@ -280,9 +280,9 @@ void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double para
               param_7[8] = (int)local_dc;
               param_7[9] = (int)local_d8;
               param_7[10] = (int)local_d4;
-              param_7[0x10] = uVar13;
-              param_7[0x11] = iVar12;
-              if (iVar11 < 0x13) {
+              param_7[OBJHITS_SKELETON_HIT_POINT_INDEX_A_WORD] = uVar13;
+              param_7[OBJHITS_SKELETON_HIT_POINT_INDEX_B_WORD] = iVar12;
+              if (iVar11 < OBJHITS_SKELETON_HIT_CAPACITY) {
                 param_7 = param_7 + OBJHITS_SKELETON_HIT_WORD_COUNT;
                 iVar11 = iVar11 + 1;
               }
@@ -291,7 +291,7 @@ void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double para
         }
       }
     }
-    param_7[0x10] = OBJHITS_SKELETON_HIT_SENTINEL;
+    param_7[OBJHITS_SKELETON_HIT_POINT_INDEX_A_WORD] = OBJHITS_SKELETON_HIT_SENTINEL;
   }
   FUN_80286864();
   return;
@@ -479,9 +479,9 @@ void ObjHits_CollectSkeletonHits3D(undefined4 param_1,undefined4 param_2,int *pa
             param_4[8] = (int)local_bc;
             param_4[9] = (int)local_b8;
             param_4[10] = (int)local_b4;
-            param_4[0x10] = uVar12;
-            param_4[0x11] = iVar11;
-            if (iVar10 < 0x13) {
+            param_4[OBJHITS_SKELETON_HIT_POINT_INDEX_A_WORD] = uVar12;
+            param_4[OBJHITS_SKELETON_HIT_POINT_INDEX_B_WORD] = iVar11;
+            if (iVar10 < OBJHITS_SKELETON_HIT_CAPACITY) {
               iVar10 = iVar10 + 1;
               param_4 = param_4 + OBJHITS_SKELETON_HIT_WORD_COUNT;
             }
@@ -489,7 +489,7 @@ void ObjHits_CollectSkeletonHits3D(undefined4 param_1,undefined4 param_2,int *pa
         }
       }
     }
-    param_4[0x10] = OBJHITS_SKELETON_HIT_SENTINEL;
+    param_4[OBJHITS_SKELETON_HIT_POINT_INDEX_A_WORD] = OBJHITS_SKELETON_HIT_SENTINEL;
   }
   FUN_80286864();
   return;
