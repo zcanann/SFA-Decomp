@@ -63,17 +63,27 @@ void doNothing_802737E8(void) {}
 void synthCancelJob(int voice)
 {
     u8 *job;
+    int state;
     void (*callback)(u32, u32, u32, u32, u32);
 
     job = synthJobTable + voice * 0x64;
-    if (job[8] < 3 && job[8] >= 1) {
-        if (job[8] == 2) {
-            voiceBreakAndFree(*(u32 *)(job + 0x48));
-        }
-        job[8] = 3;
-        callback = *(void (**)(u32, u32, u32, u32, u32))(job + 0xc);
-        callback(0, 0, 0, 0, *(u32 *)(job + 0x4c));
+    state = job[8];
+    if (state >= 3) {
+        goto done;
     }
+    if (state >= 1) {
+        goto cancel;
+    }
+    goto done;
+cancel:
+    if ((u32)state == 2) {
+        voiceBreakAndFree(*(u32 *)(job + 0x48));
+    }
+    job[8] = 3;
+    callback = *(void (**)(u32, u32, u32, u32, u32))(job + 0xc);
+    callback(0, 0, 0, 0, *(u32 *)(job + 0x4c));
+done:
+    return;
 }
 
 void synthRefreshJobVolumes(void)
