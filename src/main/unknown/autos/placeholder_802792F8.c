@@ -5,7 +5,7 @@ extern u8 lbl_803CA2D0[];
 extern u32 lbl_803DE2F0;
 extern void *lbl_803DE2F4;
 extern void *lbl_803DE2F8;
-extern u16 lbl_803DE2FC;
+extern u16 voicePrioSortRootListRoot;
 extern u8 *lbl_803DE268;
 extern void voiceUnregister(int state);
 
@@ -286,7 +286,7 @@ void voiceRemovePriority(int state)
             offset = (u32)*(u8 *)(state + 0x10c) * 4;
             priorityNode = (u16 *)(lbl_803CA2D0 + 0xac0 + offset);
             if (*(u16 *)(lbl_803CA2D0 + 0xac2 + offset) == 0xffff) {
-                lbl_803DE2FC = *priorityNode;
+                voicePrioSortRootListRoot = *priorityNode;
             } else {
                 *(u16 *)(lbl_803CA2D0 +
                          0xac0 + (u32)*(u16 *)(lbl_803CA2D0 + 0xac2 + offset) * 4) =

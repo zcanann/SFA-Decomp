@@ -14,11 +14,11 @@ extern u8 *lbl_803DE268;
 extern u8 lbl_803BD150[];
 extern u8 lbl_803CA2D0[];
 extern u8 lbl_803DE270;
-extern u16 lbl_803DE2FC;
-extern u8 lbl_803DE2FE;
-extern u8 lbl_803DE2FF;
-extern u8 lbl_803DE300;
-extern u8 lbl_803DE301;
+extern u16 voicePrioSortRootListRoot;
+extern u8 voiceMusicRunning;
+extern u8 voiceFxRunning;
+extern u8 voiceListInsert;
+extern u8 voiceListRoot;
 
 /*
  * Allocate a voice id, preferring a free slot but stealing the lowest-priority
@@ -42,7 +42,7 @@ u32 voiceAllocate(u8 priority, u8 maxInstances, s16 key, s8 streamKind)
 
     if (streamKind == 0) {
         enforceKind = 0;
-        if ((lbl_803BD150[0x211] <= lbl_803DE2FE) &&
+        if ((lbl_803BD150[0x211] <= voiceMusicRunning) &&
             (lbl_803BD150[0x211] < lbl_803BD150[0x210])) {
             enforceKind = 1;
         }
@@ -51,7 +51,7 @@ u32 voiceAllocate(u8 priority, u8 maxInstances, s16 key, s8 streamKind)
         }
     } else {
         enforceKind = 0;
-        if ((lbl_803BD150[0x212] <= lbl_803DE2FF) &&
+        if ((lbl_803BD150[0x212] <= voiceFxRunning) &&
             (lbl_803BD150[0x212] < lbl_803BD150[0x210])) {
             enforceKind = 1;
         }
@@ -59,7 +59,7 @@ u32 voiceAllocate(u8 priority, u8 maxInstances, s16 key, s8 streamKind)
 count_matching_key:
             matchingCount = 0;
             selectedVoice = 0xffffffff;
-            priorityNode = lbl_803DE2FC;
+            priorityNode = voicePrioSortRootListRoot;
             while (((priorityNode != 0xffff) && (priorityNode <= priority)) &&
                    (selectedVoice == 0xffffffff)) {
                 voiceLink = *(u8 *)(lbl_803CA2D0 + 0x9c0 + priorityNode);
@@ -106,10 +106,10 @@ count_matching_key:
         }
     }
 
-    selectedVoice = lbl_803DE301;
+    selectedVoice = voiceListRoot;
     candidate = 0xffffffff;
     if ((selectedVoice == 0xff) || (enforceKind)) {
-        selectedVoice = lbl_803DE2FC;
+        selectedVoice = voicePrioSortRootListRoot;
         if (priority < selectedVoice) {
             return 0xffffffff;
         }
@@ -153,7 +153,7 @@ found_voice:
     state = selectedVoice * 4;
     if (lbl_803CB190[selectedVoice].active == 1) {
         if (lbl_803CB190[selectedVoice].prev == 0xff) {
-            lbl_803DE301 = lbl_803CB190[selectedVoice].next;
+            voiceListRoot = lbl_803CB190[selectedVoice].next;
         } else {
             lbl_803CB190[lbl_803CB190[selectedVoice].prev].next =
                 lbl_803CB190[selectedVoice].next;
@@ -162,21 +162,21 @@ found_voice:
             lbl_803CB190[lbl_803CB190[selectedVoice].next].prev =
                 lbl_803CB190[selectedVoice].prev;
         }
-        if (selectedVoice == lbl_803DE300) {
-            lbl_803DE300 = lbl_803CB190[selectedVoice].prev;
+        if (selectedVoice == voiceListInsert) {
+            voiceListInsert = lbl_803CB190[selectedVoice].prev;
         }
         lbl_803CB190[selectedVoice].active = 0;
     } else if (*(s8 *)(lbl_803DE268 + selectedVoice * 0x404 + 0x11d) == 0) {
-        lbl_803DE2FE--;
+        voiceMusicRunning--;
     } else {
-        lbl_803DE2FF--;
+        voiceFxRunning--;
     }
 
     if (streamKind == 0) {
-        lbl_803DE2FE++;
+        voiceMusicRunning++;
         return selectedVoice;
     }
-    lbl_803DE2FF++;
+    voiceFxRunning++;
     return selectedVoice;
 }
 
@@ -198,20 +198,20 @@ void voiceFree(int state)
         VoiceIdSlot *slot = &lbl_803CB190[v];
         if (slot->active == 0) {
             slot->active = 1;
-            if (lbl_803DE301 != 0xff) {
+            if (voiceListRoot != 0xff) {
                 slot->next = 0xff;
-                slot->prev = lbl_803DE300;
-                lbl_803CB190[lbl_803DE300].next = v;
+                slot->prev = voiceListInsert;
+                lbl_803CB190[voiceListInsert].next = v;
             } else {
                 slot->next = 0xff;
                 slot->prev = 0xff;
-                lbl_803DE301 = v;
+                voiceListRoot = v;
             }
-            lbl_803DE300 = v;
+            voiceListInsert = v;
             if (*(u8 *)(state + 0x11d) != 0) {
-                lbl_803DE2FF--;
+                voiceFxRunning--;
             } else {
-                lbl_803DE2FE--;
+                voiceMusicRunning--;
             }
         }
     }

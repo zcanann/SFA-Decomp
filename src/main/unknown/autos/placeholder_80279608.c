@@ -5,7 +5,7 @@ extern void voiceRemovePriority(void *state);
 extern void hwSetPriority(u8 voiceId, u32 priority);
 
 extern u8 lbl_803CA2D0[];   /* voice tables */
-extern u16 lbl_803DE2FC;    /* sorted-list head (u16) */
+extern u16 voicePrioSortRootListRoot;    /* sorted-list head (u16) */
 
 /*
  * Inserts the voice into the new group's linked list (prepend) and
@@ -44,18 +44,18 @@ void voiceSetPriority(int state, u8 newGroup)
         *(u8 *)(slot + 1) = (u8)oldFirst;
         if ((u8)oldFirst == 0xff) {
             /* group was empty: insert into the global priority list */
-            cur = lbl_803DE2FC;
+            cur = voicePrioSortRootListRoot;
             if (cur == 0xffff) {
                 /* list empty: voice becomes head and tail */
                 *(u16 *)(base + voiceId * 4 + 0xac0) = 0xffff;
                 *(u16 *)(base + voiceId * 4 + 0xac2) = 0xffff;
-                lbl_803DE2FC = (u16)voiceId;
+                voicePrioSortRootListRoot = (u16)voiceId;
             } else if ((u32)cur > voiceId) {
                 /* prepend: voice's next = old head, old head's prev = voice */
                 *(u16 *)(base + voiceId * 4 + 0xac0) = cur;
                 *(u16 *)(base + voiceId * 4 + 0xac2) = 0xffff;
                 *(u16 *)(base + cur * 4 + 0xac2) = (u16)voiceId;
-                lbl_803DE2FC = (u16)voiceId;
+                voicePrioSortRootListRoot = (u16)voiceId;
             } else {
                 /* walk list: find first node with id > voiceId */
                 prev = cur;

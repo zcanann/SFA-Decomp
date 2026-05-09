@@ -14,11 +14,11 @@ extern u8 gSynthInitialized;
 extern u8 lbl_803CA2D0[];
 extern u8 lbl_803CAB50[];
 extern u8 lbl_803CAAD0[][16];
-extern u16 lbl_803DE2FC;
-extern u8 lbl_803DE2FE;
-extern u8 lbl_803DE2FF;
-extern u8 lbl_803DE300;
-extern u8 lbl_803DE301;
+extern u16 voicePrioSortRootListRoot;
+extern u8 voiceMusicRunning;
+extern u8 voiceFxRunning;
+extern u8 voiceListInsert;
+extern u8 voiceListRoot;
 
 /*
  * Initialize the voice priority and group linked-list tables.
@@ -94,8 +94,8 @@ void voiceInitPriorityTables(void)
     progress = 0;
     count = lbl_803BD150[0x210];
     *(u8 *)(lbl_803CA2D0 + 0xec0 - 3 + count * 4) = SYNTH_INVALID_VOICE_U8;
-    lbl_803DE300 = lastVoice - 1;
-    lbl_803DE301 = 0;
+    voiceListInsert = lastVoice - 1;
+    voiceListRoot = 0;
     if (count != 0) {
         if (count > 8) {
             batches = (count - 1) >> 3;
@@ -197,9 +197,9 @@ void voiceInitPriorityTables(void)
         groupHead += 0x40;
         remaining--;
     } while (remaining != 0);
-    lbl_803DE2FC = 0xffff;
-    lbl_803DE2FE = 0;
-    lbl_803DE2FF = 0;
+    voicePrioSortRootListRoot = 0xffff;
+    voiceMusicRunning = 0;
+    voiceFxRunning = 0;
 }
 
 /*
