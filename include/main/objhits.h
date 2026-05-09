@@ -7,6 +7,8 @@
 #define OBJHITS_PRIORITY_HIT_COUNT 3
 #define OBJHITS_PRIORITY_WORK_SLOT_COUNT 0x32
 #define OBJHITS_PRIORITY_WORK_SLOT_SIZE 0x3c
+#define OBJHITS_SKELETON_HIT_WORD_COUNT 0x12
+#define OBJHITS_SKELETON_HIT_SENTINEL -1
 
 extern int gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT];
 
@@ -15,6 +17,26 @@ typedef struct ObjHitsSweepEntry {
   float maxX;
   int obj;
 } ObjHitsSweepEntry;
+
+/*
+ * The skeleton collectors fill a 0x48-byte hit record and terminate the list
+ * by writing -1 to pointIndexA. Response code then walks the same records to
+ * blend capsule normals and pair response vectors.
+ */
+typedef struct ObjHitsSkeletonHit {
+  float *pointARef;
+  float *pointBRef;
+  float pointA[3];
+  float pointB[3];
+  float axis[3];
+  float axial;
+  float surfaceDistance;
+  float distance;
+  float capsuleAxial;
+  float inverseDistance;
+  s32 pointIndexA;
+  s32 pointIndexB;
+} ObjHitsSkeletonHit;
 
 void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double param_3,
                                    undefined4 param_4,undefined4 param_5,int *param_6,
