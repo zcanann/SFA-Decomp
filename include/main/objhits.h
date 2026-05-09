@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 
 #define OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT 5
+#define OBJHITS_PRIORITY_HIT_COUNT 3
 
 extern int gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT];
 

@@ -156,14 +156,14 @@ typedef struct ObjHitsPriorityState {
   u16 flags;
   u8 pad62[0xf];
   s8 priorityHitCount;
-  s8 sphereIndices[3];
-  s8 priorities[3];
-  u8 hitVolumes[3];
+  s8 sphereIndices[OBJHITS_PRIORITY_HIT_COUNT];
+  s8 priorities[OBJHITS_PRIORITY_HIT_COUNT];
+  u8 hitVolumes[OBJHITS_PRIORITY_HIT_COUNT];
   u8 pad7b;
-  int hitObjects[3];
-  f32 hitPosX[3];
-  f32 hitPosY[3];
-  f32 hitPosZ[3];
+  int hitObjects[OBJHITS_PRIORITY_HIT_COUNT];
+  f32 hitPosX[OBJHITS_PRIORITY_HIT_COUNT];
+  f32 hitPosY[OBJHITS_PRIORITY_HIT_COUNT];
+  f32 hitPosZ[OBJHITS_PRIORITY_HIT_COUNT];
 } ObjHitsPriorityState;
 
 /*
@@ -1054,7 +1054,7 @@ undefined4 ObjHits_RecordObjectHit(int obj,int hitObj,char priority,undefined hi
     }
     hitSlot = hitSlot + 1;
   }
-  if ((hitSlot == hitObjectSlot) && (hitObjectSlot < 3)) {
+  if ((hitSlot == hitObjectSlot) && (hitObjectSlot < OBJHITS_PRIORITY_HIT_COUNT)) {
     *(undefined *)((int)hitState->sphereIndices + hitObjectSlot) = sphereIndex;
     *(char *)((int)hitState->priorities + hitState->priorityHitCount) = priority;
     *(undefined *)((int)hitState->hitVolumes + hitState->priorityHitCount) = hitVolume;
@@ -1119,7 +1119,7 @@ ObjHits_RecordPositionHit(double hitPosX,double hitPosY,double hitPosZ,int obj,i
     }
     hitSlot = hitSlot + 1;
   }
-  if ((hitSlot == hitObjectSlot) && (hitObjectSlot < 3)) {
+  if ((hitSlot == hitObjectSlot) && (hitObjectSlot < OBJHITS_PRIORITY_HIT_COUNT)) {
     *(undefined *)((int)hitState->sphereIndices + hitObjectSlot) = sphereIndex;
     *(char *)((int)hitState->priorities + hitState->priorityHitCount) = priority;
     *(undefined *)((int)hitState->hitVolumes + hitState->priorityHitCount) = hitVolume;
