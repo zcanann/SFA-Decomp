@@ -44,6 +44,8 @@ typedef struct ObjAnimHitReactRow {
 #define OBJANIM_ROOT_CURVE_Z_AXIS_OFFSET 10
 #define OBJANIM_ROOT_CURVE_AXIS_COUNT 6
 #define OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT 3
+#define OBJANIM_DOUBLE_CONVERSION_HIGH_WORD 0x43300000
+#define OBJANIM_S32_DOUBLE_BIAS_XOR 0x80000000
 
 /*
  * Shared state used by the object-animation helpers around main/objanim.c.
@@ -156,7 +158,7 @@ static inline ObjAnimBank *ObjAnim_GetActiveBank(ObjAnimComponent *objAnim) {
 }
 
 static inline f64 ObjAnim_U32AsDouble(u32 value) {
-  u64 bits = CONCAT44(0x43300000, value);
+  u64 bits = CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD, value);
   return *(f64 *)&bits;
 }
 

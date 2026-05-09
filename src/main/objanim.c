@@ -230,11 +230,11 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,Obj
             (int)-(float)((ObjAnim_U32AsDouble((uint)state->eventStep) -
                            gObjAnimU32ToDoubleBias) *
                               deltaTime -
-                          (ObjAnim_U32AsDouble(state->eventCountdown ^ 0x80000000) -
+                          (ObjAnim_U32AsDouble(state->eventCountdown ^ OBJANIM_S32_DOUBLE_BIAS_XOR) -
                            gObjAnimS32ToDoubleBias));
         fVar4 = gObjAnimProgressZero;
         if ((-1 < eventCountdown) &&
-           (eventCountdown = eventCountdown ^ 0x80000000, fVar4 = gObjAnimEventStepScale,
+           (eventCountdown = eventCountdown ^ OBJANIM_S32_DOUBLE_BIAS_XOR, fVar4 = gObjAnimEventStepScale,
            ObjAnim_U32AsDouble(eventCountdown) - gObjAnimS32ToDoubleBias <= gObjAnimEventStepScale)) {
           local_28 = ObjAnim_U32AsDouble(eventCountdown);
           fVar4 = local_28 - gObjAnimS32ToDoubleBias;
@@ -630,19 +630,19 @@ undefined4 ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,f
           fVar7 = -fVar7;
         }
         if (sVar6 != 0) {
-          fVar4 = (float)(ObjAnim_U32AsDouble(uVar10 ^ 0x80000000) - gObjAnimS32ToDoubleBias);
+          fVar4 = (float)(ObjAnim_U32AsDouble(uVar10 ^ OBJANIM_S32_DOUBLE_BIAS_XOR) - gObjAnimS32ToDoubleBias);
           fVar8 = gObjAnimProgressOne / fVar4;
           fVar4 = fVar4 * objAnim->currentMoveProgress;
           uVar11 = (int)fVar4;
-          fVar4 = fVar4 - (float)(ObjAnim_U32AsDouble(uVar11 ^ 0x80000000) - gObjAnimS32ToDoubleBias);
+          fVar4 = fVar4 - (float)(ObjAnim_U32AsDouble(uVar11 ^ OBJANIM_S32_DOUBLE_BIAS_XOR) - gObjAnimS32ToDoubleBias);
           if (pfVar15 == (float *)0x0) {
             fVar1 = fVar7 *
                     (float)(ObjAnim_U32AsDouble((int)*(short *)((int)pfVar14 + uVar11 * 2 + 2) ^
-                                                0x80000000) -
+                                                OBJANIM_S32_DOUBLE_BIAS_XOR) -
                             gObjAnimS32ToDoubleBias);
             fVar2 = fVar7 *
                     (float)(ObjAnim_U32AsDouble((int)*(short *)((int)pfVar14 + uVar11 * 2 + 4) ^
-                                                0x80000000) -
+                                                OBJANIM_S32_DOUBLE_BIAS_XOR) -
                             gObjAnimS32ToDoubleBias);
           }
           else {
@@ -650,22 +650,22 @@ undefined4 ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,f
               in_f6 = -in_f6;
             }
             iVar17 = uVar11 * 2;
-            local_20 = ObjAnim_U32AsDouble((int)*(short *)((int)pfVar15 + iVar17) ^ 0x80000000);
+            local_20 = ObjAnim_U32AsDouble((int)*(short *)((int)pfVar15 + iVar17) ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
             fVar1 = in_f6 * (in_f7 * (float)(local_20 - gObjAnimS32ToDoubleBias)) +
                     fVar7 *
                         (in_f8 *
                          (float)(ObjAnim_U32AsDouble(
-                                     (int)*(short *)((int)pfVar14 + iVar17 + 2) ^ 0x80000000) -
+                                     (int)*(short *)((int)pfVar14 + iVar17 + 2) ^ OBJANIM_S32_DOUBLE_BIAS_XOR) -
                                  gObjAnimS32ToDoubleBias));
             fVar2 = in_f6 *
                         (in_f7 *
                          (float)(ObjAnim_U32AsDouble(
-                                     (int)*(short *)((int)pfVar15 + iVar17 + 2) ^ 0x80000000) -
+                                     (int)*(short *)((int)pfVar15 + iVar17 + 2) ^ OBJANIM_S32_DOUBLE_BIAS_XOR) -
                                  gObjAnimS32ToDoubleBias)) +
                     fVar7 *
                         (in_f8 *
                          (float)(ObjAnim_U32AsDouble(
-                                     (int)*(short *)((int)pfVar14 + iVar17 + 4) ^ 0x80000000) -
+                                     (int)*(short *)((int)pfVar14 + iVar17 + 4) ^ OBJANIM_S32_DOUBLE_BIAS_XOR) -
                                  gObjAnimS32ToDoubleBias));
           }
           fVar5 = distance * (fVar5 / *(float *)((int)objAnim->modelInstance + 4)) +
@@ -681,28 +681,28 @@ undefined4 ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,f
               if (pfVar15 == (float *)0x0) {
                 fVar3 = fVar7 *
                         ((float)(ObjAnim_U32AsDouble(
-                                     (int)*(short *)((int)pfVar14 + uVar11 * 2 + 4) ^ 0x80000000) -
+                                     (int)*(short *)((int)pfVar14 + uVar11 * 2 + 4) ^ OBJANIM_S32_DOUBLE_BIAS_XOR) -
                                  gObjAnimS32ToDoubleBias) -
                          (float)(ObjAnim_U32AsDouble(
-                                     (int)*(short *)((int)pfVar14 + uVar11 * 2 + 2) ^ 0x80000000) -
+                                     (int)*(short *)((int)pfVar14 + uVar11 * 2 + 2) ^ OBJANIM_S32_DOUBLE_BIAS_XOR) -
                                  gObjAnimS32ToDoubleBias));
               }
               else {
                 iVar17 = uVar11 * 2;
                 local_20 = ObjAnim_U32AsDouble((int)((short *)((int)pfVar15 + iVar17))[1] ^
-                                               0x80000000);
+                                               OBJANIM_S32_DOUBLE_BIAS_XOR);
                 fVar3 = fVar7 *
                             ((float)(ObjAnim_U32AsDouble(
-                                         (int)*(short *)((int)pfVar14 + iVar17 + 4) ^ 0x80000000) -
+                                         (int)*(short *)((int)pfVar14 + iVar17 + 4) ^ OBJANIM_S32_DOUBLE_BIAS_XOR) -
                                      gObjAnimS32ToDoubleBias) -
                              (float)(ObjAnim_U32AsDouble(
-                                         (int)*(short *)((int)pfVar14 + iVar17 + 2) ^ 0x80000000) -
+                                         (int)*(short *)((int)pfVar14 + iVar17 + 2) ^ OBJANIM_S32_DOUBLE_BIAS_XOR) -
                                      gObjAnimS32ToDoubleBias)) *
                             in_f8 +
                         in_f6 *
                             ((float)(local_20 - gObjAnimS32ToDoubleBias) -
                              (float)(ObjAnim_U32AsDouble(
-                                         (int)*(short *)((int)pfVar15 + iVar17) ^ 0x80000000) -
+                                         (int)*(short *)((int)pfVar15 + iVar17) ^ OBJANIM_S32_DOUBLE_BIAS_XOR) -
                                      gObjAnimS32ToDoubleBias)) *
                             in_f7;
               }
@@ -829,17 +829,17 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
         state->progress = fVar5;
       }
       if ((state->flags & OBJANIM_STATE_FLAG_HOLD_EVENT_COUNTDOWN) == 0) {
-        uVar15 = (uint)-(float)((double)(float)((double)CONCAT44(0x43300000,
+        uVar15 = (uint)-(float)((double)(float)((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
                                                                  (uint)state->eventStep) -
                                                gObjAnimU32ToDoubleBias) * deltaTime -
-                               (double)(float)((double)CONCAT44(0x43300000,
+                               (double)(float)((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
                                                                 state->eventCountdown ^
-                                                                0x80000000) - gObjAnimS32ToDoubleBias));
+                                                                OBJANIM_S32_DOUBLE_BIAS_XOR) - gObjAnimS32ToDoubleBias));
         fVar3 = gObjAnimProgressZero;
         if ((-1 < (int)uVar15) &&
-           (uVar15 = uVar15 ^ 0x80000000, fVar3 = gObjAnimEventStepScale,
-           (float)((double)CONCAT44(0x43300000,uVar15) - gObjAnimS32ToDoubleBias) <= gObjAnimEventStepScale)) {
-          local_38 = (double)CONCAT44(0x43300000,uVar15);
+           (uVar15 = uVar15 ^ OBJANIM_S32_DOUBLE_BIAS_XOR, fVar3 = gObjAnimEventStepScale,
+           (float)((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,uVar15) - gObjAnimS32ToDoubleBias) <= gObjAnimEventStepScale)) {
+          local_38 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,uVar15);
           fVar3 = (float)(local_38 - gObjAnimS32ToDoubleBias);
         }
         state->eventCountdown = (short)(int)fVar3;
@@ -946,18 +946,18 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
         fVar6 = objAnim->rootMotionScale;
         iVar23 = (int)*(short *)(pfVar27 + 1);
         psVar28 = (short *)((int)pfVar27 + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
-        local_30 = (double)CONCAT44(0x43300000,iVar23 - 1U ^ 0x80000000);
+        local_30 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,iVar23 - 1U ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
         fVar7 = (float)(local_30 - gObjAnimS32ToDoubleBias) * fVar4;
         uVar15 = (uint)fVar7;
-        dVar31 = (double)CONCAT44(0x43300000,uVar15 ^ 0x80000000) - gObjAnimS32ToDoubleBias;
+        dVar31 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,uVar15 ^ OBJANIM_S32_DOUBLE_BIAS_XOR) - gObjAnimS32ToDoubleBias;
         fVar8 = (float)(local_30 - gObjAnimS32ToDoubleBias) * objAnim->currentMoveProgress;
         uVar16 = (uint)fVar8;
-        dVar1 = (double)CONCAT44(0x43300000,uVar16 ^ 0x80000000) - gObjAnimS32ToDoubleBias;
+        dVar1 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,uVar16 ^ OBJANIM_S32_DOUBLE_BIAS_XOR) - gObjAnimS32ToDoubleBias;
         iVar30 = 0;
         fVar11 = gObjAnimProgressZero;
         fVar13 = gObjAnimProgressOne;
         if (*(ushort *)(iVar24 + 0x5a) != 0) {
-          local_30 = (double)CONCAT44(0x43300000,(uint)*(ushort *)(iVar24 + 0x5a));
+          local_30 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,(uint)*(ushort *)(iVar24 + 0x5a));
           fVar11 = (float)(local_30 - gObjAnimU32ToDoubleBias) / gObjAnimEventStepScale;
           if ((*(ushort *)(*piVar22 + 2) & OBJANIM_DEF_FLAG_CACHED_MOVES) == 0) {
             iVar24 = *(int *)(*(int *)(*piVar22 + 100) + (uint)*(ushort *)(iVar24 + 0x48) * 4);
@@ -989,54 +989,54 @@ undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int 
             if (iVar30 != 0) {
               iVar30 = iVar30 + 2;
             }
-            local_30 = (double)CONCAT44(0x43300000,(int)psVar28[uVar15 + 1] ^ 0x80000000);
+            local_30 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,(int)psVar28[uVar15 + 1] ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
             fVar9 = fVar13 * (float)(local_30 - gObjAnimS32ToDoubleBias);
             if (iVar30 != 0) {
-              local_38 = (double)CONCAT44(0x43300000,
-                                          (int)*(short *)(uVar15 * 2 + iVar30) ^ 0x80000000);
+              local_38 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
+                                          (int)*(short *)(uVar15 * 2 + iVar30) ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
               fVar9 = fVar11 * (float)(local_38 - gObjAnimS32ToDoubleBias) + fVar9;
             }
-            fVar10 = fVar13 * (float)((double)CONCAT44(0x43300000,
-                                                       (int)(psVar28 + uVar15 + 1)[1] ^ 0x80000000)
+            fVar10 = fVar13 * (float)((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
+                                                       (int)(psVar28 + uVar15 + 1)[1] ^ OBJANIM_S32_DOUBLE_BIAS_XOR)
                                      - gObjAnimS32ToDoubleBias);
             if (iVar30 != 0) {
-              local_48 = (double)CONCAT44(0x43300000,
-                                          (int)*(short *)(uVar15 * 2 + iVar30 + 2) ^ 0x80000000);
+              local_48 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
+                                          (int)*(short *)(uVar15 * 2 + iVar30 + 2) ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
               fVar10 = fVar11 * (float)(local_48 - gObjAnimS32ToDoubleBias) + fVar10;
             }
-            fVar12 = fVar13 * (float)((double)CONCAT44(0x43300000,
-                                                       (int)psVar28[uVar16 + 1] ^ 0x80000000) -
+            fVar12 = fVar13 * (float)((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
+                                                       (int)psVar28[uVar16 + 1] ^ OBJANIM_S32_DOUBLE_BIAS_XOR) -
                                      gObjAnimS32ToDoubleBias);
             if (iVar30 != 0) {
-              fVar12 = fVar11 * (float)((double)CONCAT44(0x43300000,
+              fVar12 = fVar11 * (float)((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
                                                          (int)*(short *)(uVar16 * 2 + iVar30) ^
-                                                         0x80000000) - gObjAnimS32ToDoubleBias) + fVar12;
+                                                         OBJANIM_S32_DOUBLE_BIAS_XOR) - gObjAnimS32ToDoubleBias) + fVar12;
             }
-            fVar14 = fVar13 * (float)((double)CONCAT44(0x43300000,
-                                                       (int)(psVar28 + uVar16 + 1)[1] ^ 0x80000000)
+            fVar14 = fVar13 * (float)((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
+                                                       (int)(psVar28 + uVar16 + 1)[1] ^ OBJANIM_S32_DOUBLE_BIAS_XOR)
                                      - gObjAnimS32ToDoubleBias);
             if (iVar30 != 0) {
-              local_20 = (double)CONCAT44(0x43300000,
-                                          (int)*(short *)(uVar16 * 2 + iVar30 + 2) ^ 0x80000000);
+              local_20 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
+                                          (int)*(short *)(uVar16 * 2 + iVar30 + 2) ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
               fVar14 = fVar11 * (float)(local_20 - gObjAnimS32ToDoubleBias) + fVar14;
             }
             fVar12 = (fVar8 - (float)dVar1) * (fVar14 - fVar12) + fVar12;
             if (fVar3 <= gObjAnimProgressZero) {
               if (fVar4 < objAnim->currentMoveProgress) {
-                local_20 = (double)CONCAT44(0x43300000,(int)psVar28[iVar23] ^ 0x80000000);
+                local_20 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,(int)psVar28[iVar23] ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
                 fVar12 = -(fVar13 * (float)(local_20 - gObjAnimS32ToDoubleBias) - fVar12);
                 if (iVar30 != 0) {
-                  local_20 = (double)CONCAT44(0x43300000,
-                                              (int)*(short *)(iVar24 + iVar30) ^ 0x80000000);
+                  local_20 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
+                                              (int)*(short *)(iVar24 + iVar30) ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
                   fVar12 = fVar11 * (float)(local_20 - gObjAnimS32ToDoubleBias) + fVar12;
                 }
               }
             }
             else if (objAnim->currentMoveProgress < fVar4) {
-              local_20 = (double)CONCAT44(0x43300000,(int)psVar28[iVar23] ^ 0x80000000);
+              local_20 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,(int)psVar28[iVar23] ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
               fVar12 = fVar13 * (float)(local_20 - gObjAnimS32ToDoubleBias) + fVar12;
               if (iVar30 != 0) {
-                local_20 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar24 + iVar30) ^ 0x80000000
+                local_20 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,(int)*(short *)(iVar24 + iVar30) ^ OBJANIM_S32_DOUBLE_BIAS_XOR
                                            );
                 fVar12 = fVar11 * (float)(local_20 - gObjAnimS32ToDoubleBias) + fVar12;
               }
