@@ -7,7 +7,12 @@ extern int mapUnload(int id, int flags);
 extern int Music_Trigger(int id, int value);
 extern void fn_801D80F4(void *p);
 
-extern void *lbl_803DCAAC;
+typedef struct SCTotemLogPuzzleEventInterface {
+    u8 pad00[0x50];
+    void (*setAnimEvent)(int animId, int eventId, int value);
+} SCTotemLogPuzzleEventInterface;
+
+extern SCTotemLogPuzzleEventInterface **lbl_803DCAAC;
 
 /*
  * --INFO--
@@ -57,17 +62,17 @@ void fn_801D7C94(void *obj, void *p2)
 
     if (*(u8 *)((char *)p2 + 7) == 5) {
         ac = *(s8 *)((char *)obj + 0xac);
-        (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 1, 0);
+        (*lbl_803DCAAC)->setAnimEvent(ac, 1, 0);
         ac = *(s8 *)((char *)obj + 0xac);
-        (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 4, 0);
+        (*lbl_803DCAAC)->setAnimEvent(ac, 4, 0);
         ac = *(s8 *)((char *)obj + 0xac);
-        (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 6, 0);
+        (*lbl_803DCAAC)->setAnimEvent(ac, 6, 0);
         ac = *(s8 *)((char *)obj + 0xac);
-        (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 7, 0);
+        (*lbl_803DCAAC)->setAnimEvent(ac, 7, 0);
         ac = *(s8 *)((char *)obj + 0xac);
-        (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 8, 0);
+        (*lbl_803DCAAC)->setAnimEvent(ac, 8, 0);
         ac = *(s8 *)((char *)obj + 0xac);
-        (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 9, 0);
+        (*lbl_803DCAAC)->setAnimEvent(ac, 9, 0);
         mapUnload(0x13, 0x20000000);
         mapUnload(0x41, 0x20000000);
         mapUnload(0x43, 0x20000000);
@@ -77,15 +82,15 @@ void fn_801D7C94(void *obj, void *p2)
         goto dec;
     }
     ac = *(s8 *)((char *)obj + 0xac);
-    (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 0, 1);
+    (*lbl_803DCAAC)->setAnimEvent(ac, 0, 1);
     ac = *(s8 *)((char *)obj + 0xac);
-    (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 2, 1);
+    (*lbl_803DCAAC)->setAnimEvent(ac, 2, 1);
     ac = *(s8 *)((char *)obj + 0xac);
-    (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 3, 1);
+    (*lbl_803DCAAC)->setAnimEvent(ac, 3, 1);
     ac = *(s8 *)((char *)obj + 0xac);
-    (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 5, 1);
+    (*lbl_803DCAAC)->setAnimEvent(ac, 5, 1);
     ac = *(s8 *)((char *)obj + 0xac);
-    (*(void (***)(int, int, int))lbl_803DCAAC)[0x14](ac, 0xa, 1);
+    (*lbl_803DCAAC)->setAnimEvent(ac, 0xa, 1);
 dec:
     *(u8 *)((char *)p2 + 7) = *(u8 *)((char *)p2 + 7) - 1;
 }
