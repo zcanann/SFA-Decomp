@@ -351,13 +351,14 @@ void expgfx_release(uint slotPoolBase,int poolIndex,int slotIndex,int freeTextur
     slot->behaviorFlags = 0;
     if (freeTexture == 0) {
       tableTextureResources = expgfxBase + EXPGFX_EXPTAB_TEXTURE_RESOURCE_OFFSET;
-      tableOffset = Expgfx_GetSlotTableIndex(slot) << 4;
+      tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
       if (*(u32 *)(tableTextureResources + tableOffset) != 0) {
         lbl_803DD258 = 1;
-        fn_80054308(*(void **)(tableTextureResources + (Expgfx_GetSlotTableIndex(slot) << 4)));
+        fn_80054308(*(void **)(tableTextureResources +
+                               (Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT)));
         lbl_803DD258 = 0;
       }
-      tableOffset = Expgfx_GetSlotTableIndex(slot) << 4;
+      tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
       refCount = (u16 *)(expgfxBase + EXPGFX_EXPTAB_REFCOUNT_OFFSET + tableOffset);
       if (*refCount != 0) {
         (*refCount)--;
@@ -1612,7 +1613,8 @@ void expgfx_resetAllPools(void)
           lbl_803DD258 = 0;
         }
         tableEntry =
-            (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + (Expgfx_GetSlotTableIndex(slot) << 4));
+            (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET +
+                                 (Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT));
         if (tableEntry->refCount != 0) {
           tableEntry->refCount--;
           if (tableEntry->refCount == 0) {
@@ -1826,12 +1828,13 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIdx, short slot
     expgfx_release(slotPoolBases[(int)poolIdxOut], (int)poolIdxOut, (int)slotIdxOut, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
   }
-  resourceHandle = (ExpgfxResourceHandle *)*(u32 *)(expgfxBase + (tableIndex << 4));
+  resourceHandle =
+      (ExpgfxResourceHandle *)*(u32 *)(expgfxBase + (tableIndex << EXPGFX_TABLE_ENTRY_SHIFT));
   if (resourceHandle == NULL) {
     expgfx_release(slotPoolBases[(int)poolIdxOut], (int)poolIdxOut, (int)slotIdxOut, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
   }
-  if (resourceHandle->refCount >= 0xffff) {
+  if (resourceHandle->refCount >= EXPGFX_EXPTAB_REFCOUNT_MAX) {
     expgfx_release(slotPoolBases[(int)poolIdxOut], (int)poolIdxOut, (int)slotIdxOut, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
   }
