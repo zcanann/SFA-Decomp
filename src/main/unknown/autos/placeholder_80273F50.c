@@ -794,9 +794,8 @@ done:
 /*
  * Comparator: return a->key2 - b->key2 (u16 at offset 4).
  *
- * EN v1.1 Address: 0x80274E6C, size 16b
  */
-int fn_80274E6C(void *a, void *b)
+int dataMacroKeyCompare(void *a, void *b)
 {
     return (int)*(u16 *)((u8 *)a + 4) - (int)*(u16 *)((u8 *)b + 4);
 }
@@ -824,7 +823,7 @@ void *dataGetMacro(u32 key)
         *(u16 *)(dataGetMacro_key + 4) = key;
         dataGetMacro_result =
             sndBSearch(dataGetMacro_key, dataMacroTable + dataGetMacro_main * 8,
-                       bucketTable[dataGetMacro_bucket * 2], 8, fn_80274E6C);
+                       bucketTable[dataGetMacro_bucket * 2], 8, dataMacroKeyCompare);
         if (dataGetMacro_result != 0) {
             return *(void **)dataGetMacro_result;
         }
@@ -835,9 +834,8 @@ void *dataGetMacro(u32 key)
 /*
  * Comparator: return a->key - b->key (u16 at offset 0).
  *
- * EN v1.1 Address: 0x80274F10, size 16b
  */
-int fn_80274F10(void *a, void *b)
+int dataSampleIdCompare(void *a, void *b)
 {
     return (int)*(u16 *)a - (int)*(u16 *)b;
 }
@@ -864,7 +862,7 @@ int dataGetSample(u16 key, u32 *out)
     *(u16 *)searchKey = key;
     while (i < dataSmpSDirNum) {
         dataGetSample_result = sndBSearch(searchKey, (void *)*bucket, *(u16 *)(bucket + 2), 0x20,
-                                  fn_80274F10);
+                                  dataSampleIdCompare);
         entry = dataGetSample_result;
         if ((entry != 0) && (*(s16 *)(entry + 2) != -1)) {
             dataGetSample_sheader = entry + 0xc;
@@ -888,9 +886,7 @@ int dataGetSample(u16 key, u32 *out)
 
 /*
  * Comparator: return a->key2 - b->key2 (u16 at offset 4). Same body as
- * fn_80274E6C but separate symbol used for a different bsearch table.
- *
- * EN v1.1 Address: 0x80275048, size 16b
+ * dataMacroKeyCompare but separate symbol used for a different bsearch table.
  */
 int audioFindKeymapCb(void *a, void *b)
 {
@@ -945,9 +941,8 @@ void *dataGetKeymap(u16 key)
  * Comparator: return a->key2 - b->key2 (u16 at offset 4). Same body as
  * the others but separate symbol.
  *
- * EN v1.1 Address: 0x80275118, size 16b
  */
-int fn_80275118(void *a, void *b)
+int dataLayerKeyCompare(void *a, void *b)
 {
     return (int)*(u16 *)((u8 *)a + 4) - (int)*(u16 *)((u8 *)b + 4);
 }
@@ -961,7 +956,7 @@ void *dataGetLayer(u16 key, u16 *outCount)
 
     *(u16 *)(searchKey + 4) = key;
     dataGetLayer_result =
-        sndBSearch(searchKey, dataLayerTable, dataLayerNum, 0xc, fn_80275118);
+        sndBSearch(searchKey, dataLayerTable, dataLayerNum, 0xc, dataLayerKeyCompare);
     if (dataGetLayer_result == 0) {
         return 0;
     }
@@ -971,11 +966,9 @@ void *dataGetLayer(u16 key, u16 *outCount)
 
 /*
  * Comparator: return a->key - b->key (u16 at offset 0). Same body as
- * fn_80274F10 but separate symbol.
- *
- * EN v1.1 Address: 0x802751A8, size 16b
+ * dataSampleIdCompare but separate symbol.
  */
-int audioIdListFindCb_802751a8(void *a, void *b)
+int audioIdListFindCb(void *a, void *b)
 {
     return (int)*(u16 *)a - (int)*(u16 *)b;
 }
@@ -995,7 +988,7 @@ void *audioGetSoundEffectById(u16 key)
     searchKey = dataGetFXSearchKey;
     *(u16 *)searchKey = key;
     while (i < dataFXGroupNum) {
-        entry = sndBSearch(searchKey, *(void **)(bucket + 2), bucket[1], 10, audioIdListFindCb_802751a8);
+        entry = sndBSearch(searchKey, *(void **)(bucket + 2), bucket[1], 10, audioIdListFindCb);
         if (entry != 0) {
             return entry;
         }
