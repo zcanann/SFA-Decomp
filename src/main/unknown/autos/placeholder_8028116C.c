@@ -28,16 +28,16 @@ extern f64 lbl_803E78D0;
 extern f64 lbl_803E78D8;
 
 extern void hwExit(void);
-extern void fn_80275344(void);
-extern void fn_80281040(void);
+extern void IFFifoAlloc(void);
+extern void doNothing_80281040(void);
 extern void synthExit(void);
 extern double __frsqrte(double x);
 
 void fn_80281160(void)
 {
     hwExit();
-    fn_80275344();
-    fn_80281040();
+    IFFifoAlloc();
+    doNothing_80281040();
     synthExit();
     gSynthInitialized = 0;
 }

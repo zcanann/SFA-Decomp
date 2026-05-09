@@ -7,7 +7,7 @@ extern void synthCopyHandleFXState(int voice, int state);
 void fn_80275CB8(int state);
 extern void sndConvertMs(u32 *p);
 extern void sndConvertTicks(u32 *p, int state);
-extern int fn_80274F20(u32 key, u32 *out);
+extern int audioFn_80274f20(u32 key, u32 *out);
 extern void hwInitSamplePlayback(u32 voice, u32 sampleId, u32 *sampleInfo, u32 noKeySync,
                                  u32 priority, u32 handle, u32 noStartOffset, u8 restart);
 extern u32 countLeadingZeros(u32 value);
@@ -104,7 +104,7 @@ void fn_8027595C(int state, u32 *args)
     u32 sampleId;
 
     sampleId = (*args >> 8) & 0xffff;
-    found = fn_80274F20(sampleId, lbl_803CA2B0);
+    found = audioFn_80274f20(sampleId, lbl_803CA2B0);
     if (found == 0) {
         mode = *args >> 0x18;
         if (mode == 1) {

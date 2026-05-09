@@ -36,7 +36,7 @@ void fn_8027BDA8(void)
  *
  * EN v1.1 Address: 0x8027BDE0, size 220b
  */
-int fn_8027BDE0(void)
+int audioFreeFn_8027bde0(void)
 {
     int i;
     int offset;

@@ -46,10 +46,10 @@ void fn_8027B690(u16 *list, u16 a, u16 b, u16 c)
 }
 
 /*
- * fn_8027B72C — second voice-update helper (~91 instructions). Stubbed.
+ * sndPushGroup — second voice-update helper (~91 instructions). Stubbed.
  */
 #pragma dont_inline on
-void fn_8027B72C(u16 voiceId)
+void sndPushGroup(u16 voiceId)
 {
     (void)voiceId;
 }

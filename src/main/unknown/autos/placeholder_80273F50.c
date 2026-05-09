@@ -809,7 +809,7 @@ extern u32 lbl_803DE298;
 extern u8 lbl_803DE29C[];
 extern void *lbl_803DE2A4;
 
-void *fn_80274E7C(u32 key)
+void *audioFn_80274e7c(u32 key)
 {
     u16 *bucketTable;
 
@@ -846,7 +846,7 @@ extern u16 lbl_803DE288;
 extern void *lbl_803DE2A8;
 extern u8 *lbl_803DE2AC;
 
-int fn_80274F20(u16 key, u32 *out)
+int audioFn_80274f20(u16 key, u32 *out)
 {
     u32 i;
     u32 *bucket;
@@ -887,7 +887,7 @@ int fn_80274F20(u16 key, u32 *out)
  *
  * EN v1.1 Address: 0x80275048, size 16b
  */
-int fn_80275048(void *a, void *b)
+int audioFindKeymapCb(void *a, void *b)
 {
     return (int)*(u16 *)((u8 *)a + 4) - (int)*(u16 *)((u8 *)b + 4);
 }
@@ -913,7 +913,7 @@ extern void *lbl_803DE2C8;
 void *fn_80275058(u16 key)
 {
     *(u16 *)(lbl_803DE2B0 + 4) = key;
-    lbl_803DE2B8 = sndBSearch(lbl_803DE2B0, lbl_803C0278, lbl_803DE28A, 8, fn_80275048);
+    lbl_803DE2B8 = sndBSearch(lbl_803DE2B0, lbl_803C0278, lbl_803DE28A, 8, audioFindKeymapCb);
     if (lbl_803DE2B8 == 0) {
         return 0;
     }
@@ -923,10 +923,10 @@ void *fn_80275058(u16 key)
 /*
  * Look up the sample-map table used by nested sample groups.
  */
-void *fn_802750B8(u16 key)
+void *musyxKeymapFn_802750b8(u16 key)
 {
     *(u16 *)(lbl_803DE2BC + 4) = key;
-    lbl_803DE2C4 = sndBSearch(lbl_803DE2BC, lbl_803C4278, lbl_803DE28C, 8, fn_80275048);
+    lbl_803DE2C4 = sndBSearch(lbl_803DE2BC, lbl_803C4278, lbl_803DE28C, 8, audioFindKeymapCb);
     if (lbl_803DE2C4 == 0) {
         return 0;
     }
@@ -947,7 +947,7 @@ int fn_80275118(void *a, void *b)
 /*
  * Look up a scene/sample list and return its entry count through outCount.
  */
-void *fn_80275128(u16 key, u16 *outCount)
+void *audioFn_80275128(u16 key, u16 *outCount)
 {
     u8 *searchKey = lbl_803C5678 + 0x4c20;
 
@@ -967,7 +967,7 @@ void *fn_80275128(u16 key, u16 *outCount)
  *
  * EN v1.1 Address: 0x802751A8, size 16b
  */
-int fn_802751A8(void *a, void *b)
+int audioIdListFindCb_802751a8(void *a, void *b)
 {
     return (int)*(u16 *)a - (int)*(u16 *)b;
 }
@@ -975,7 +975,7 @@ int fn_802751A8(void *a, void *b)
 /*
  * Search each FX sample-list bucket for the requested FX id.
  */
-void *fn_802751B8(u16 key)
+void *audioGetSoundEffectById(u16 key)
 {
     u32 i;
     u16 *bucket;
@@ -987,7 +987,7 @@ void *fn_802751B8(u16 key)
     searchKey = lbl_803C5678 + 0x4c2c;
     *(u16 *)searchKey = key;
     while (i < lbl_803DE292) {
-        entry = sndBSearch(searchKey, *(void **)(bucket + 2), bucket[1], 10, fn_802751A8);
+        entry = sndBSearch(searchKey, *(void **)(bucket + 2), bucket[1], 10, audioIdListFindCb_802751a8);
         if (entry != 0) {
             return entry;
         }
@@ -1062,7 +1062,7 @@ void fn_80275260(void)
  *
  * EN v1.1 Address: 0x80275344, size 32b
  */
-int fn_80275344(int x)
+int IFFifoAlloc(int x)
 {
     return hwTransAddr(x);
 }

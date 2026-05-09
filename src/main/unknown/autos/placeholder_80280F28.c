@@ -60,7 +60,7 @@ void fn_80280FFC(u32 flags)
  *
  * EN v1.1 Address: 0x80281040
  */
-void fn_80281040(void)
+void doNothing_80281040(void)
 {
 }
 

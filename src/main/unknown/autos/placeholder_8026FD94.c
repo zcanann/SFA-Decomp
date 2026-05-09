@@ -38,7 +38,7 @@ extern f32 lbl_803E77D0;
 
 typedef void (*SynthAuxCallback)(int active, u16 *samples, u32 user);
 
-extern u8 *fn_802750B8(u32 sampleId);
+extern u8 *musyxKeymapFn_802750b8(u32 sampleId);
 extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
 extern int audioFn_8026f630(u32 key, u32 slot, u32 channel, u32 voiceGroup, u32 *outFlags);
 extern int audioLayerFn_8026f8b8(u32 sampleId, int key, u32 velocity, u32 baseSample, u32 flags, u32 volume,
@@ -66,7 +66,7 @@ int audioKeymapFn_8026fc8c(u32 sampleId, s16 key, u32 velocity, u32 baseSample, 
     int handle;
     u32 outFlags;
 
-    table = fn_802750B8(sampleId);
+    table = musyxKeymapFn_802750b8(sampleId);
     if (table != 0) {
         entry = table + ((flags & 0x7f) * 8);
         if (*(s16 *)entry != -1) {
@@ -130,7 +130,7 @@ int audioKeymapFn_8026fc8c(u32 sampleId, s16 key, u32 velocity, u32 baseSample, 
  * Start a sample/FX id, handling direct samples, table-expanded sample
  * groups, and already-linked voice chains.
  */
-int fn_8026FEEC(u32 sampleId, u8 key, u8 velocity, u32 flags, u32 volume, u32 pan, u32 param_7,
+int audioFn_8026feec(u32 sampleId, u8 key, u8 velocity, u32 flags, u32 volume, u32 pan, u32 param_7,
                 u32 param_8, u32 param_9, u32 param_10, u32 param_11, u8 auxIndex, u32 param_13,
                 u32 studio, u8 studioAux)
 {
@@ -194,10 +194,10 @@ int fn_8026FEEC(u32 sampleId, u8 key, u8 velocity, u32 flags, u32 volume, u32 pa
 }
 
 /*
- * fn_80270184 - large voice handler (~1972 instructions). Stubbed.
+ * audioFn_80270184 - large voice handler (~1972 instructions). Stubbed.
  */
 #pragma dont_inline on
-void fn_80270184(int idx) { (void)idx; }
+void audioFn_80270184(int idx) { (void)idx; }
 #pragma dont_inline reset
 
 /*
@@ -383,7 +383,7 @@ void fn_8027142C(u8 *fade)
  *
  * EN v1.1 Address: 0x80271498, size 792b
  */
-void fn_80271498(u32 delta)
+void audioFn_80271498(u32 delta)
 {
     u8 *stateBase;
     SynthDelayStorageLocal *storage;
@@ -403,7 +403,7 @@ void fn_80271498(u32 delta)
         storage = (SynthDelayStorageLocal *)stateBase;
         fn_80278418(delta);
         bucket = gSynthDelayBucketCursor;
-        fn_80271398((void **)&storage->bucketHeads[bucket][0], fn_80270184);
+        fn_80271398((void **)&storage->bucketHeads[bucket][0], audioFn_80270184);
         fn_80271398((void **)&storage->bucketHeads[bucket][1], fn_80270FE8);
         fn_80271398((void **)&storage->bucketHeads[bucket][2], fn_80270938);
         gSynthDelayBucketCursor = (gSynthDelayBucketCursor + 1) & 0x1f;
@@ -486,7 +486,7 @@ typedef struct SynthFxSampleInfo {
     u8 auxIndex;
 } SynthFxSampleInfo;
 
-extern SynthFxSampleInfo *fn_802751B8(u32 fxId);
+extern SynthFxSampleInfo *audioGetSoundEffectById(u32 fxId);
 
 int audioGetSfxFn_802717b0(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux)
 {
@@ -494,7 +494,7 @@ int audioGetSfxFn_802717b0(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioA
     u32 handle;
 
     handle = 0xFFFFFFFF;
-    sampleInfo = fn_802751B8(fxId);
+    sampleInfo = audioGetSoundEffectById(fxId);
     if (sampleInfo != (SynthFxSampleInfo *)0x0) {
         if ((volume & 0xff) == 0xff) {
             volume = sampleInfo->defaultVolume;
@@ -502,7 +502,7 @@ int audioGetSfxFn_802717b0(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioA
         if ((pan & 0xff) == 0xff) {
             pan = sampleInfo->defaultPan;
         }
-        handle = fn_8026FEEC(sampleInfo->sampleId, sampleInfo->key, sampleInfo->velocity,
+        handle = audioFn_8026feec(sampleInfo->sampleId, sampleInfo->key, sampleInfo->velocity,
                              sampleInfo->flags | 0x80, volume, pan, 0xff, 0xff, 0, 0, 0xff,
                              sampleInfo->auxIndex, 0, studio, studioAux);
     }

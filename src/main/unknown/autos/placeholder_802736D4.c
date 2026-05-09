@@ -38,4 +38,4 @@ void FUN_80272f70(void)
 }
 
 /* Pattern wrappers. */
-void fn_802737E8(void) {}
+void doNothing_802737E8(void) {}

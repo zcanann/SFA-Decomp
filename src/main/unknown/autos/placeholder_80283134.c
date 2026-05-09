@@ -79,7 +79,7 @@ extern void hwSetSRCType(int slot, u32 value);
 extern void hwSetPolyPhaseFilter(int slot, u32 value);
 extern void hwSetITDMode(int slot, u32 value);
 void hwSetTimeOffset(u8 value);
-extern void fn_8027BDE0(void);
+extern void audioFreeFn_8027bde0(void);
 extern int salExitAi(void);
 extern int salStartDsp(void);
 extern void sndBegin(void);
@@ -88,12 +88,12 @@ extern u32 salInitAi(void *callback, u32 flags, u32 value);
 extern u32 fn_8027BA04(u32 valueA, u32 valueB, u32 enabled);
 extern int salInitDsp(u32 flags);
 extern void salStartAi(void);
-extern void fn_802737E8(void);
+extern void doNothing_802737E8(void);
 extern u32 salAiGetDest(void);
 extern void salCtrlDsp(u32 param_1);
 extern void salHandleAuxProcessing(void);
 extern void fn_8026EC44(u32 value);
-extern void fn_80271498(u32 value);
+extern void audioFn_80271498(u32 value);
 extern void fn_80280C30(void);
 extern void fn_80272F70(void);
 extern void synthUpdateVirtualSamples(void);
@@ -121,7 +121,7 @@ void snd_handle_irq(void)
         return;
     }
 
-    fn_802737E8();
+    doNothing_802737E8();
     hwIRQEnterCritical();
     salCtrlDsp(salAiGetDest());
     hwIRQLeaveCritical();
@@ -157,7 +157,7 @@ void snd_handle_irq(void)
         hwIRQEnterCritical();
         hwSetTimeOffset(i);
         fn_8026EC44(0x100);
-        fn_80271498(0x100);
+        audioFn_80271498(0x100);
         hwIRQLeaveCritical();
         i++;
     }
@@ -209,7 +209,7 @@ void hwExit(void)
 {
     sndBegin();
     salStartDsp();
-    fn_8027BDE0();
+    audioFreeFn_8027bde0();
     salExitAi();
     sndEnd();
     hwEnableIrq();

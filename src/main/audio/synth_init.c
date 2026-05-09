@@ -4,7 +4,7 @@
 #define NULL ((void*)0)
 #endif
 
-extern void* fn_80275128(int sceneId, void* outBuf);
+extern void* audioFn_80275128(int sceneId, void* outBuf);
 extern int inpGetMidiCtrl(int ctrl, int slot, int key);
 extern int audioFn_8026f630(int key, int slot, int chan, int unk, int* outFlags);
 extern int audioKeymapFn_8026fc8c(u8 a0, u8 a1, int a2, int a3, int a4, u32 a5, u32 a6,
@@ -37,7 +37,7 @@ int audioLayerFn_8026f8b8(
     int chosen_key;
     int useFlag;
 
-    p = (char*)fn_80275128(sceneId, &buf);
+    p = (char*)audioFn_80275128(sceneId, &buf);
     if (p == NULL) {
         return handle;
     }

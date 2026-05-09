@@ -38,8 +38,8 @@ int fn_802808D8(int state, float f1, float f2, float f3, float f4, float f5)
 #pragma dont_inline reset
 
 /*
- * fn_80280A08 — 552-instr voice list walker with FP math. Stubbed.
+ * audioFn_80280a08 — 552-instr voice list walker with FP math. Stubbed.
  */
 #pragma dont_inline on
-void fn_80280A08(void) {}
+void audioFn_80280a08(void) {}
 #pragma dont_inline reset

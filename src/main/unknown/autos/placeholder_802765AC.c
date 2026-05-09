@@ -84,7 +84,7 @@ extern int lbl_803DE2D8;
 extern int lbl_803DE2E0;
 extern int lbl_803DE2E4;
 extern void audioFn_8027132c(void *state);
-extern void *fn_80274E7C(u32 key);
+extern void *audioFn_80274e7c(u32 key);
 extern u16 seqGetMIDIPriority(u8 slot, u8 event);
 extern u32 voiceAllocate(u8 priority, u8 maxInstances, s16 key, s8 streamKind);
 extern void vidRemoveVoice(int state);
@@ -1133,7 +1133,7 @@ int audioFn_80278b94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 base
     int state;
     int hadHead;
 
-    instrument = (int)fn_80274E7C(instrumentKey);
+    instrument = (int)audioFn_80274e7c(instrumentKey);
     if (instrument != 0) {
         streamKey = keyFlags & 0x80;
         if (streamKey == 0) {
