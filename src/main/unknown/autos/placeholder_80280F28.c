@@ -2,7 +2,7 @@
 #include "main/unknown/autos/placeholder_80280F28.h"
 
 extern int hwInit(void *params, u8 voiceCount, u8 streamCount, u8 stereo, void *aux1, void *aux2, u32 sampleRate);
-extern void fn_80275260(int p1, void *p2);
+extern void dataInitStack(int p1, void *p2);
 extern void fn_8026F30C(void);
 extern void synthInit(int sampleRate, void *p2);
 extern void synthInitJobTable(void);
@@ -99,7 +99,7 @@ int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, void *p7, u32 fla
     {
         u8 voiceCountSnapshot = lbl_803BD150[0x210];
         synthResetVirtualSampleCounter();
-        fn_80275260(0, p7);
+        dataInitStack(0, p7);
         fn_8026F30C();
         synthIdleWaitActive = 0;
         synthInit(0x7d00, &voiceCountSnapshot);

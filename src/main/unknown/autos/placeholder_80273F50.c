@@ -8,9 +8,10 @@ extern void sndEnd(void);
  * Insert a scene/sample-list entry, keeping the 12-byte table sorted by id.
  */
 extern u8 dataKeymapTable[];
+extern u8 dataLayerTable[];
 extern u16 dataLayerNum;
 
-int fn_80273D2C(u16 key, void *value, u16 count)
+int dataAddLayerRef(u16 key, void *value, u16 count)
 {
     u32 moveCount;
     u32 *entry;
@@ -21,13 +22,13 @@ int fn_80273D2C(u16 key, void *value, u16 count)
     sndBegin();
     used = dataLayerNum;
     index = 0;
-    for (entry = (u32 *)(dataKeymapTable + 0x800);
+    for (entry = (u32 *)dataLayerTable;
          (index < (int)used) && (*(u16 *)(entry + 1) < key); entry += 3) {
         index++;
     }
     if (index < (int)used) {
-        if (key == *(u16 *)(dataKeymapTable + 0x804 + index * 0xc)) {
-            (*(u16 *)(dataKeymapTable + 0x808 + index * 0xc))++;
+        if (key == *(u16 *)(dataLayerTable + 4 + index * 0xc)) {
+            (*(u16 *)(dataLayerTable + 8 + index * 0xc))++;
             sndEnd();
             return 0;
         }
@@ -36,7 +37,7 @@ int fn_80273D2C(u16 key, void *value, u16 count)
             return 0;
         }
         moveCount = used - index;
-        entry = (u32 *)(dataKeymapTable + 0x800 + (used - 1) * 0xc);
+        entry = (u32 *)(dataLayerTable + (used - 1) * 0xc);
         if (index <= (int)(used - 1)) {
             batches = moveCount >> 3;
             if (batches != 0) {
@@ -88,10 +89,10 @@ int fn_80273D2C(u16 key, void *value, u16 count)
 
 insert:
     dataLayerNum++;
-    *(u16 *)(dataKeymapTable + 0x804 + index * 0xc) = key;
-    *(void **)(dataKeymapTable + 0x800 + index * 0xc) = value;
-    *(u16 *)(dataKeymapTable + 0x806 + index * 0xc) = count;
-    *(u16 *)(dataKeymapTable + 0x808 + index * 0xc) = 1;
+    *(u16 *)(dataLayerTable + 4 + index * 0xc) = key;
+    *(void **)(dataLayerTable + index * 0xc) = value;
+    *(u16 *)(dataLayerTable + 6 + index * 0xc) = count;
+    *(u16 *)(dataLayerTable + 8 + index * 0xc) = 1;
     sndEnd();
     return 1;
 }
@@ -99,7 +100,7 @@ insert:
 /*
  * Release a scene/sample-list entry, compacting the sorted table.
  */
-int fn_80273F74(s16 key)
+int dataRemoveLayerRef(s16 key)
 {
     s16 refCount;
     int next;
@@ -111,7 +112,7 @@ int fn_80273F74(s16 key)
     sndBegin();
     used = dataLayerNum;
     index = 0;
-    for (entry = (u32 *)(dataKeymapTable + 0x800);
+    for (entry = (u32 *)dataLayerTable;
          ((int)index < (int)used) && (key != *(s16 *)(entry + 1)); entry += 3) {
         index++;
     }
@@ -119,8 +120,8 @@ int fn_80273F74(s16 key)
         sndEnd();
         return 0;
     }
-    refCount = *(s16 *)(dataKeymapTable + 0x808 + index * 0xc);
-    *(s16 *)(dataKeymapTable + 0x808 + index * 0xc) = refCount - 1;
+    refCount = *(s16 *)(dataLayerTable + 8 + index * 0xc);
+    *(s16 *)(dataLayerTable + 8 + index * 0xc) = refCount - 1;
     if ((s16)(refCount - 1) != 0) {
         sndEnd();
         return 0;
@@ -128,7 +129,7 @@ int fn_80273F74(s16 key)
 
     next = index + 1;
     moveCount = used - next;
-    entry = (u32 *)(dataKeymapTable + 0x800 + next * 0xc);
+    entry = (u32 *)(dataLayerTable + next * 0xc);
     if (next < (int)used) {
         used = moveCount >> 3;
         if (used != 0) {
@@ -188,7 +189,7 @@ extern u16 dataCurveNum;
 extern void sndBegin(void);
 extern void sndEnd(void);
 
-int fn_80274140(u16 key, void *value)
+int dataAddCurveRef(u16 key, void *value)
 {
     u32 moveCount;
     u32 used;
@@ -267,7 +268,7 @@ insert:
 /*
  * Release a keygroup/sample indirection entry, compacting the sorted table.
  */
-int fn_80274338(s16 key)
+int dataRemoveCurveRef(s16 key)
 {
     s16 refCount;
     int next;
@@ -342,7 +343,7 @@ remove:
 /*
  * Register an SDI sample table and flag entries already present in earlier tables.
  */
-extern u8 lbl_803BFC78[];
+extern u8 dataSmpSDirTable[];
 extern u16 dataSmpSDirNum;
 
 int audioLoadSdiFile(s16 *sampleTable, void *baseAddr)
@@ -360,7 +361,7 @@ int audioLoadSdiFile(s16 *sampleTable, void *baseAddr)
 
     bucketIndex = 0;
     used = dataSmpSDirNum;
-    for (bucket = (s16 **)lbl_803BFC78;
+    for (bucket = (s16 **)dataSmpSDirTable;
          ((int)bucketIndex < (int)used) && (*bucket != sampleTable); bucket += 3) {
         bucketIndex++;
     }
@@ -374,7 +375,7 @@ int audioLoadSdiFile(s16 *sampleTable, void *baseAddr)
             entry = sampleTable;
             for (i = 0; i < tableCount; i++) {
                 j = 0;
-                bucket = (s16 **)lbl_803BFC78;
+                bucket = (s16 **)dataSmpSDirTable;
                 for (bucketIndex = dataSmpSDirNum; bucketIndex != 0; bucketIndex--) {
                     scan = *bucket;
                     for (k = 0; k < *(u16 *)(bucket + 2); k++) {
@@ -396,9 +397,9 @@ foundEntry:
                 entry += 0x10;
             }
             bucketIndex = dataSmpSDirNum;
-            *(s16 **)(lbl_803BFC78 + bucketIndex * 0xc) = sampleTable;
-            *(u16 *)(lbl_803BFC78 + bucketIndex * 0xc + 8) = tableCount;
-            *(void **)(lbl_803BFC78 + bucketIndex * 0xc + 4) = baseAddr;
+            *(s16 **)(dataSmpSDirTable + bucketIndex * 0xc) = sampleTable;
+            *(u16 *)(dataSmpSDirTable + bucketIndex * 0xc + 8) = tableCount;
+            *(void **)(dataSmpSDirTable + bucketIndex * 0xc + 4) = baseAddr;
             dataSmpSDirNum++;
             sndEnd();
             result = 1;
@@ -414,11 +415,11 @@ foundEntry:
 /*
  * Add a reference to a sample table entry, loading it on the first reference.
  */
-extern u8 lbl_803BFC78[];
+extern u8 dataSmpSDirTable[];
 extern u16 dataSmpSDirNum;
 extern void hwSaveSample(void *sampleDescPtr, void *addrOut);
 
-int fn_80274628(s16 sampleId)
+int dataAddSampleReference(s16 sampleId)
 {
     u32 remaining;
     u32 bucketIndex;
@@ -426,7 +427,7 @@ int fn_80274628(s16 sampleId)
     s16 *entry;
     s16 *sampleDesc;
 
-    bucket = (s16 **)lbl_803BFC78;
+    bucket = (s16 **)dataSmpSDirTable;
     bucketIndex = 0;
     for (remaining = dataSmpSDirNum, entry = 0; remaining != 0; remaining--) {
         for (entry = *bucket; *entry != -1; entry += 0x10) {
@@ -441,7 +442,7 @@ int fn_80274628(s16 sampleId)
 found:
     if (entry[1] == 0) {
         sampleDesc = entry + 6;
-        *(int *)(entry + 4) = *(int *)(entry + 2) + *(int *)(lbl_803BFC78 + 4 + bucketIndex * 0xc);
+        *(int *)(entry + 4) = *(int *)(entry + 2) + *(int *)(dataSmpSDirTable + 4 + bucketIndex * 0xc);
         hwSaveSample(&sampleDesc, entry + 4);
     }
     entry[1]++;
@@ -453,13 +454,13 @@ found:
  */
 extern void hwRemoveSample(void *sampleDesc, u32 addr);
 
-int fn_80274700(s16 sampleId)
+int dataRemoveSampleReference(s16 sampleId)
 {
     u32 remaining;
     s16 **bucket;
     s16 *entry;
 
-    bucket = (s16 **)lbl_803BFC78;
+    bucket = (s16 **)dataSmpSDirTable;
     remaining = dataSmpSDirNum;
     do {
         if (remaining == 0) {
@@ -482,12 +483,12 @@ int fn_80274700(s16 sampleId)
 /*
  * Register an FX sample-list bucket and mark each sample descriptor as resident.
  */
-extern u8 lbl_803C5678[];
+extern u8 dataFXGroupTable[];
 extern u16 dataFXGroupNum;
 extern void sndBegin(void);
 extern void sndEnd(void);
 
-int fn_80274798(s16 fxId, u8 *samples, u32 count)
+int dataAddFXGroup(s16 fxId, u8 *samples, u32 count)
 {
     u32 i;
     u32 used;
@@ -495,7 +496,7 @@ int fn_80274798(s16 fxId, u8 *samples, u32 count)
 
     i = 0;
     used = dataFXGroupNum;
-    while (((int)i < (int)used) && (fxId != *(s16 *)(lbl_803C5678 + 0x4800 + i * 8))) {
+    while (((int)i < (int)used) && (fxId != *(s16 *)(dataFXGroupTable + i * 8))) {
         i++;
     }
     if ((i != used) || (used > 0x7f)) {
@@ -505,9 +506,9 @@ int fn_80274798(s16 fxId, u8 *samples, u32 count)
     sndBegin();
     used = dataFXGroupNum;
     i = count & 0xffff;
-    *(s16 *)(lbl_803C5678 + 0x4800 + used * 8) = fxId;
-    *(s16 *)(lbl_803C5678 + 0x4802 + used * 8) = count;
-    *(u8 **)(lbl_803C5678 + 0x4804 + used * 8) = samples;
+    *(s16 *)(dataFXGroupTable + used * 8) = fxId;
+    *(s16 *)(dataFXGroupTable + 2 + used * 8) = count;
+    *(u8 **)(dataFXGroupTable + 4 + used * 8) = samples;
     if (i != 0) {
         batchCount = i >> 3;
         if (batchCount != 0) {
@@ -545,8 +546,10 @@ done:
  * Insert an instrument entry into the bucketed sorted table.
  */
 extern u16 dataMacTotal;
+extern u8 dataMacroBucketTable[];
+extern u8 dataMacroTable[];
 
-int fn_802748C0(u32 key, void *value)
+int dataAddMacroRef(u32 key, void *value)
 {
     u32 bucketOffset;
     u32 bucketCount;
@@ -560,25 +563,25 @@ int fn_802748C0(u32 key, void *value)
 
     sndBegin();
     bucketOffset = (key >> 4) & 0xffc;
-    bucketCount = *(u16 *)(lbl_803C5678 + bucketOffset);
+    bucketCount = *(u16 *)(dataMacroBucketTable + bucketOffset);
     bucketIndex = (key >> 6) & 0x3ff;
     if (bucketCount == 0) {
         bucketCount = dataMacTotal;
-        *(u16 *)(lbl_803C5678 + bucketOffset + 2) = dataMacTotal;
+        *(u16 *)(dataMacroBucketTable + bucketOffset + 2) = dataMacTotal;
         insertIndex = bucketCount;
     } else {
-        insertIndex = *(u16 *)(lbl_803C5678 + bucketOffset + 2);
+        insertIndex = *(u16 *)(dataMacroBucketTable + bucketOffset + 2);
         i = 0;
         while ((i < (int)bucketCount) &&
-               (*(u16 *)(lbl_803C5678 + 0x804 + (insertIndex + i) * 8) <
+               (*(u16 *)(dataMacroTable + 4 + (insertIndex + i) * 8) <
                 (key & 0xffff))) {
             i++;
         }
         if (i < (int)bucketCount) {
             bucketCount = insertIndex + i;
             i = bucketCount * 8;
-            if ((key & 0xffff) == *(u16 *)(lbl_803C5678 + 0x804 + i)) {
-                (*(u16 *)(lbl_803C5678 + 0x806 + i))++;
+            if ((key & 0xffff) == *(u16 *)(dataMacroTable + 4 + i)) {
+                (*(u16 *)(dataMacroTable + 6 + i))++;
                 sndEnd();
                 return 0;
             }
@@ -592,7 +595,7 @@ int fn_802748C0(u32 key, void *value)
     }
 
     i = 0x40;
-    bucket = (u16 *)lbl_803C5678;
+    bucket = (u16 *)dataMacroBucketTable;
     do {
         if (insertIndex < bucket[1]) {
             bucket[1]++;
@@ -624,7 +627,7 @@ int fn_802748C0(u32 key, void *value)
 
     i = dataMacTotal - 1;
     moveCount = dataMacTotal - bucketCount;
-    entry = (u32 *)(lbl_803C5678 + 0x800 + i * 8);
+    entry = (u32 *)(dataMacroTable + i * 8);
     if ((int)bucketCount <= i) {
         batches = moveCount >> 3;
         if (batches != 0) {
@@ -663,10 +666,10 @@ int fn_802748C0(u32 key, void *value)
 
 insert:
     i = bucketCount * 8;
-    *(u16 *)(lbl_803C5678 + 0x804 + i) = key;
-    *(void **)(lbl_803C5678 + 0x800 + i) = value;
-    *(u16 *)(lbl_803C5678 + 0x806 + i) = 1;
-    (*(u16 *)(lbl_803C5678 + bucketIndex * 4))++;
+    *(u16 *)(dataMacroTable + 4 + i) = key;
+    *(void **)(dataMacroTable + i) = value;
+    *(u16 *)(dataMacroTable + 6 + i) = 1;
+    (*(u16 *)(dataMacroBucketTable + bucketIndex * 4))++;
     dataMacTotal++;
     sndEnd();
     return 1;
@@ -675,7 +678,7 @@ insert:
 /*
  * Release an instrument entry from the bucketed sorted table.
  */
-int fn_80274BD0(u32 key)
+int dataRemoveMacroRef(u32 key)
 {
     s16 refCount;
     int countOffset;
@@ -689,30 +692,30 @@ int fn_80274BD0(u32 key)
 
     sndBegin();
     bucketOffset = (key >> 4) & 0xffc;
-    if (*(s16 *)(lbl_803C5678 + bucketOffset) == 0) {
+    if (*(s16 *)(dataMacroBucketTable + bucketOffset) == 0) {
         goto done;
     }
-    startIndex = *(u16 *)(lbl_803C5678 + bucketOffset + 2);
+    startIndex = *(u16 *)(dataMacroBucketTable + bucketOffset + 2);
     scanIndex = 0;
-    while ((scanIndex < (int)(u32)*(u16 *)(lbl_803C5678 + bucketOffset)) &&
+    while ((scanIndex < (int)(u32)*(u16 *)(dataMacroBucketTable + bucketOffset)) &&
            ((key & 0xffff) !=
-            *(u16 *)(lbl_803C5678 + 0x804 + (startIndex + scanIndex) * 8))) {
+            *(u16 *)(dataMacroTable + 4 + (startIndex + scanIndex) * 8))) {
         scanIndex++;
     }
-    if ((int)(u32)*(u16 *)(lbl_803C5678 + bucketOffset) <= scanIndex) {
+    if ((int)(u32)*(u16 *)(dataMacroBucketTable + bucketOffset) <= scanIndex) {
         goto done;
     }
 
     countOffset = (startIndex + scanIndex) * 8;
-    refCount = *(s16 *)(lbl_803C5678 + 0x806 + countOffset);
-    *(s16 *)(lbl_803C5678 + 0x806 + countOffset) = refCount - 1;
+    refCount = *(s16 *)(dataMacroTable + 6 + countOffset);
+    *(s16 *)(dataMacroTable + 6 + countOffset) = refCount - 1;
     if ((s16)(refCount - 1) != 0) {
         goto done;
     }
 
     scanIndex = startIndex + scanIndex + 1;
     moveCount = dataMacTotal - scanIndex;
-    entry = (u32 *)(lbl_803C5678 + 0x800 + scanIndex * 8);
+    entry = (u32 *)(dataMacroTable + scanIndex * 8);
     if (scanIndex < (int)(u32)dataMacTotal) {
         batches = moveCount >> 3;
         if (batches != 0) {
@@ -751,7 +754,7 @@ int fn_80274BD0(u32 key)
 
 compactBuckets:
     scanIndex = 0x40;
-    bucket = (u16 *)lbl_803C5678;
+    bucket = (u16 *)dataMacroBucketTable;
     do {
         if (startIndex < bucket[1]) {
             bucket[1]--;
@@ -780,7 +783,7 @@ compactBuckets:
         bucket += 0x10;
         scanIndex--;
     } while (scanIndex != 0);
-    (*(s16 *)(lbl_803C5678 + bucketOffset))--;
+    (*(s16 *)(dataMacroBucketTable + bucketOffset))--;
     dataMacTotal--;
 
 done:
@@ -803,7 +806,8 @@ int fn_80274E6C(void *a, void *b)
  */
 extern void *sndBSearch(void *key, void *base, u16 count, u32 stride,
                         int (*cmp)(void *a, void *b));
-extern u8 lbl_803C5678[];
+extern u8 dataMacroBucketTable[];
+extern u8 dataMacroTable[];
 extern u32 dataGetMacro_main;
 extern u32 dataGetMacro_bucket;
 extern u8 dataGetMacro_key[];
@@ -813,13 +817,13 @@ void *dataGetMacro(u32 key)
 {
     u16 *bucketTable;
 
-    bucketTable = (u16 *)lbl_803C5678;
+    bucketTable = (u16 *)dataMacroBucketTable;
     dataGetMacro_bucket = (key >> 6) & 0x3ff;
     if (bucketTable[dataGetMacro_bucket * 2] != 0) {
         dataGetMacro_main = bucketTable[dataGetMacro_bucket * 2 + 1];
         *(u16 *)(dataGetMacro_key + 4) = key;
         dataGetMacro_result =
-            sndBSearch(dataGetMacro_key, lbl_803C5678 + 0x800 + dataGetMacro_main * 8,
+            sndBSearch(dataGetMacro_key, dataMacroTable + dataGetMacro_main * 8,
                        bucketTable[dataGetMacro_bucket * 2], 8, fn_80274E6C);
         if (dataGetMacro_result != 0) {
             return *(void **)dataGetMacro_result;
@@ -841,7 +845,8 @@ int fn_80274F10(void *a, void *b)
 /*
  * Find an SDI sample descriptor and copy its load metadata.
  */
-extern u8 lbl_803BFC78[];
+extern u8 dataSmpSDirTable[];
+extern u8 dataGetSampleSearchKey[];
 extern u16 dataSmpSDirNum;
 extern void *dataGetSample_result;
 extern u8 *dataGetSample_sheader;
@@ -854,8 +859,8 @@ int dataGetSample(u16 key, u32 *out)
     u8 *searchKey;
 
     i = 0;
-    bucket = (u32 *)lbl_803BFC78;
-    searchKey = lbl_803C5678 + 0x4c00;
+    bucket = (u32 *)dataSmpSDirTable;
+    searchKey = dataGetSampleSearchKey;
     *(u16 *)searchKey = key;
     while (i < dataSmpSDirNum) {
         dataGetSample_result = sndBSearch(searchKey, (void *)*bucket, *(u16 *)(bucket + 2), 0x20,
@@ -899,7 +904,10 @@ extern void *sndBSearch(void *key, void *base, u16 count, u32 stride,
                         int (*cmp)(void *a, void *b));
 extern u8 dataCurveTable[];
 extern u8 dataKeymapTable[];
-extern u8 lbl_803C5678[];
+extern u8 dataLayerTable[];
+extern u8 dataGetLayerSearchKey[];
+extern u8 dataFXGroupTable[];
+extern u8 dataGetFXSearchKey[];
 extern u16 dataCurveNum;
 extern u16 dataKeymapNum;
 extern u16 dataLayerNum;
@@ -949,11 +957,11 @@ int fn_80275118(void *a, void *b)
  */
 void *dataGetLayer(u16 key, u16 *outCount)
 {
-    u8 *searchKey = lbl_803C5678 + 0x4c20;
+    u8 *searchKey = dataGetLayerSearchKey;
 
     *(u16 *)(searchKey + 4) = key;
     dataGetLayer_result =
-        sndBSearch(searchKey, dataKeymapTable + 0x800, dataLayerNum, 0xc, fn_80275118);
+        sndBSearch(searchKey, dataLayerTable, dataLayerNum, 0xc, fn_80275118);
     if (dataGetLayer_result == 0) {
         return 0;
     }
@@ -983,8 +991,8 @@ void *audioGetSoundEffectById(u16 key)
     u8 *searchKey;
 
     i = 0;
-    bucket = (u16 *)(lbl_803C5678 + 0x4800);
-    searchKey = lbl_803C5678 + 0x4c2c;
+    bucket = (u16 *)dataFXGroupTable;
+    searchKey = dataGetFXSearchKey;
     *(u16 *)searchKey = key;
     while (i < dataFXGroupNum) {
         entry = sndBSearch(searchKey, *(void **)(bucket + 2), bucket[1], 10, audioIdListFindCb_802751a8);
@@ -1003,7 +1011,7 @@ void *audioGetSoundEffectById(u16 key)
 extern u16 dataMacTotal;
 extern void hwGetStreamPlayBuffer(void);
 
-void fn_80275260(void)
+void dataInitStack(void)
 {
     u16 *bucketTable;
     int i;
@@ -1016,7 +1024,7 @@ void fn_80275260(void)
     dataMacTotal = 0;
 
     i = 0x20;
-    bucketTable = (u16 *)lbl_803C5678;
+    bucketTable = (u16 *)dataMacroBucketTable;
     do {
         bucketTable[0] = 0;
         bucketTable[1] = 0;
