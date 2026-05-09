@@ -14,12 +14,31 @@ extern undefined4 FUN_800723a0();
 extern undefined4 FUN_80247eb8();
 extern undefined4 FUN_80247ef8();
 extern double FUN_80247f54();
+extern void *Camera_GetCurrentViewSlot(void);
+extern f32 Camera_GetFovY(void);
+extern void Camera_SetViewportYOffset(s32 yOffset);
+extern void fn_80023800(void *ptr);
+extern void fn_80101690(int param_1,void *param_2);
 
 extern undefined4 DAT_803de138;
 extern undefined4 gCamcontrolState;
+extern u8 *pCamera;
 extern f64 DOUBLE_803e22d0;
 extern f32 lbl_803DC074;
+extern undefined4 lbl_803DD4EC;
+extern undefined4 lbl_803DD4F0;
+extern undefined4 lbl_803DD4F4;
+extern u8 lbl_803DD4F8;
+extern s32 lbl_803DD4FC;
+extern u8 lbl_803DD502;
+extern void *lbl_803DD504;
+extern undefined4 lbl_803DD508;
+extern undefined4 lbl_803DD50C;
+extern undefined4 lbl_803DD510;
+extern undefined4 lbl_803DD518;
 extern f32 lbl_803DE148;
+extern f32 lbl_803E162C;
+extern f32 lbl_803E1630;
 extern f32 lbl_803E22AC;
 extern f32 lbl_803E22B0;
 extern f32 lbl_803E22E8;
@@ -192,6 +211,97 @@ void camcontrol_applyState(short *param_1)
   }
   *(undefined *)((int)param_1 + 0x13b) = 0;
   FUN_80006984();
+  return;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * --INFO--
+ *
+ * Function: camcontrol_applyQueuedAction
+ * EN v1.0 Address: 0x80101EBC
+ * EN v1.0 Size: 400b
+ */
+#pragma scheduling off
+#pragma peephole off
+void camcontrol_applyQueuedAction(void)
+{
+  short *view;
+  float blendStep;
+
+  if (lbl_803DD502 != '\0') {
+    if (lbl_803DD4FC < 2) {
+      *(float *)(pCamera + 0xf4) = lbl_803E1630;
+      pCamera[0x13f] = 0;
+    }
+    else {
+      blendStep = lbl_803E162C / (float)lbl_803DD4FC;
+      if ((blendStep <= lbl_803E1630) || (lbl_803E162C < blendStep)) {
+        blendStep = lbl_803E162C;
+      }
+      *(float *)(pCamera + 0xf4) = lbl_803E162C;
+      *(float *)(pCamera + 0xf8) = blendStep;
+      pCamera[0x13f] = lbl_803DD4F8;
+    }
+    view = Camera_GetCurrentViewSlot();
+    if (lbl_803E162C == *(float *)(pCamera + 0xf4)) {
+      *(float *)(pCamera + 0x10c) = *(float *)(view + 6);
+      *(float *)(pCamera + 0x110) = *(float *)(view + 8);
+      *(float *)(pCamera + 0x114) = *(float *)(view + 10);
+      *(short *)(pCamera + 0x106) = *view;
+      *(short *)(pCamera + 0x108) = view[1];
+      *(short *)(pCamera + 0x10a) = view[2];
+      *(float *)(pCamera + 0x118) = Camera_GetFovY();
+    }
+    else {
+      *(short *)pCamera = *view;
+      *(short *)(pCamera + 2) = view[1];
+      *(short *)(pCamera + 4) = view[2];
+      *(float *)(pCamera + 0xb4) = Camera_GetFovY();
+    }
+    lbl_803DD4F4 = lbl_803DD518;
+    lbl_803DD4F0 = lbl_803DD50C;
+    lbl_803DD4EC = lbl_803DD508;
+    fn_80101690((u16)lbl_803DD510,lbl_803DD504);
+    lbl_803DD502 = '\0';
+    if (lbl_803DD504 != (void *)0x0) {
+      fn_80023800(lbl_803DD504);
+      lbl_803DD504 = (void *)0x0;
+    }
+  }
+  return;
+}
+
+void fn_8010204C(int param_1)
+{
+  pCamera[0x141] = (u8)(pCamera[0x141] | ((param_1 << 3) & 0x18));
+}
+
+void fn_80102068(int enable)
+{
+  if (enable != 0) {
+    pCamera[0x141] = (u8)(pCamera[0x141] | 2);
+  }
+  else {
+    pCamera[0x141] = (u8)(pCamera[0x141] & 0xfd);
+  }
+}
+
+void fn_801020A0(int flags)
+{
+  pCamera[0x140] = (u8)(pCamera[0x140] | flags);
+}
+
+void fn_801020B8(int yOffset,int applyNow)
+{
+  if ((int)(s8)pCamera[0x13b] < yOffset) {
+    pCamera[0x13b] = (s8)yOffset;
+    pCamera[0x13c] = 2;
+    if (applyNow != 0) {
+      Camera_SetViewportYOffset((s16)yOffset);
+    }
+  }
   return;
 }
 #pragma peephole reset
