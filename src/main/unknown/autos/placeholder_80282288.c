@@ -3,8 +3,8 @@
 
 extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
 extern int fn_80276A08(int state, int useExCtrl, u32 index);
-extern u32 lbl_803DE278;
-extern u32 lbl_803DE27C;
+extern u32 synthRealTimeHi;
+extern u32 synthRealTimeLo;
 
 /*
  * Evaluate a controller expression list and cache its 14-bit result.
@@ -70,10 +70,10 @@ u16 _GetInputValue(void *statePtr, void *slotPtr, u8 midiSlot, u8 midiKey)
                 } else if (state == 0) {
                     value = 0;
                 } else {
-                    u32 hi = lbl_803DE278 -
-                             ((u32)(lbl_803DE27C < *(u32 *)(state + 0x94)) +
+                    u32 hi = synthRealTimeHi -
+                             ((u32)(synthRealTimeLo < *(u32 *)(state + 0x94)) +
                               *(u32 *)(state + 0x90));
-                    u32 lo = lbl_803DE27C - *(u32 *)(state + 0x94);
+                    u32 lo = synthRealTimeLo - *(u32 *)(state + 0x94);
                     value = (u32)((((u64)hi << 32) | lo) >> 8);
                     if ((int)value > 0x3fff) {
                         value = 0x3fff;

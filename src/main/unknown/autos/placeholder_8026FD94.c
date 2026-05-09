@@ -32,8 +32,8 @@ extern u8 lbl_803DE244;
 extern u8 lbl_803DE24C;
 extern u8 lbl_803DE254;
 extern u8 *synthVoice;
-extern int lbl_803DE278;
-extern int lbl_803DE27C;
+extern int synthRealTimeHi;
+extern int synthRealTimeLo;
 extern f32 lbl_803E77D0;
 
 typedef void (*SynthAuxCallback)(int active, u16 *samples, u32 user);
@@ -293,14 +293,14 @@ void audioFn_80271178(SynthDelayedNode *fade, int mode, u32 delay)
 void fn_802712C8(SynthDelayedNode *fade)
 {
     {
-        int a = lbl_803DE278;
-        int b = lbl_803DE27C;
+        int a = synthRealTimeHi;
+        int b = synthRealTimeLo;
         *(int *)((u8 *)fade + 0x24) = a;
         *(int *)((u8 *)fade + 0x28) = b;
     }
     {
-        int a = lbl_803DE278;
-        int b = lbl_803DE27C;
+        int a = synthRealTimeHi;
+        int b = synthRealTimeLo;
         *(int *)((u8 *)fade + 0x2c) = a;
         *(int *)((u8 *)fade + 0x30) = b;
     }
@@ -465,9 +465,9 @@ void audioFn_80271498(u32 delta)
         }
         hwFrameDone();
         {
-            u32 carry = CARRY4(lbl_803DE27C, delta);
-            lbl_803DE27C += delta;
-            lbl_803DE278 += carry;
+            u32 carry = CARRY4(synthRealTimeLo, delta);
+            synthRealTimeLo += delta;
+            synthRealTimeHi += carry;
         }
     }
 }
