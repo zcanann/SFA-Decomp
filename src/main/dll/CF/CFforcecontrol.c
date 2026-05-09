@@ -813,19 +813,19 @@ void deathseq_render(void) {}
 void deathseq_hitDetect(void) {}
 void deathseq_release(void) {}
 void deathseq_initialise(void) {}
-void fn_8018CD74(void) {}
-void fn_8018CDA8(void) {}
+void dll_127_free_nop(void) {}
+void dll_127_hitDetect_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int fuelcell_getExtraSize(void) { return 0x60; }
 int deathseq_getExtraSize(void) { return 0x24; }
 int deathseq_func08(void) { return 0x0; }
-int fn_8018CD64(void) { return 0x0; }
-int fn_8018CD6C(void) { return 0x13; }
+int dll_127_getExtraSize_ret_0(void) { return 0x0; }
+int dll_127_func08_ret_19(void) { return 0x13; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3D60;
 extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
-void fn_8018CD78(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3D60); }
+void dll_127_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3D60); }
 #pragma peephole reset

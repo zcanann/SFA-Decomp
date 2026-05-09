@@ -444,7 +444,7 @@ void LanternFireFly_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int FireFlyLantern_getExtraSize(void) { return 0x24; }
-int fn_801873D0(void) { return 0x8; }
+int FireFlyLantern_func08_ret_8(void) { return 0x8; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3AA0;

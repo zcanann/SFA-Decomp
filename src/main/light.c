@@ -1068,7 +1068,7 @@ void vfpcoreplat_hitDetect(void) {}
 void vfpcoreplat_update(void) {}
 void vfpcoreplat_release(void) {}
 void vfpcoreplat_initialise(void) {}
-void fn_801FD388(void) {}
+void dll_224_free_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int vfpplatform_getExtraSize(void) { return 0x6; }
@@ -1079,11 +1079,11 @@ int seqpoint_getExtraSize(void) { return 0x10; }
 int seqpoint_func08(void) { return 0x0; }
 int vfpdraghead_getExtraSize(void) { return 0xc; }
 int vfpdraghead_func08(void) { return 0x0; }
-int fn_801FD13C(void) { return 0x0; }
+int return0_801FD13C(void) { return 0x0; }
 int vfpcoreplat_getExtraSize(void) { return 0x4; }
 int vfpcoreplat_func08(void) { return 0x0; }
-int fn_801FD378(void) { return 0x6; }
-int fn_801FD380(void) { return 0x0; }
+int dll_224_getExtraSize_ret_6(void) { return 0x6; }
+int dll_224_func08_ret_0(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E6128;

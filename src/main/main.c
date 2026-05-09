@@ -1202,12 +1202,12 @@ void FUN_801feb6c(int param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801FD4A0(void) {}
-void fn_801FD4A4(void) {}
-void fn_801FDA20(void) {}
-void fn_801FDA9C(void) {}
-void fn_801FDBB4(void) {}
-void fn_801FDBB8(void) {}
+void dll_224_release_nop(void) {}
+void dll_224_initialise_nop(void) {}
+void VFP_lavapool_free_nop(void) {}
+void VFP_lavapool_hitDetect_nop(void) {}
+void VFP_lavapool_release_nop(void) {}
+void VFP_lavapool_initialise_nop(void) {}
 void vfplavastar_render(void) {}
 void vfplavastar_hitDetect(void) {}
 void vfpspellplace_free(void) {}
@@ -1218,9 +1218,9 @@ void vfpspellplace_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int vfpflamepoint_getExtraSize(void) { return 0x8; }
-int fn_801FDA08(void) { return 0x1; }
-int fn_801FDA10(void) { return 0x18; }
-int fn_801FDA18(void) { return 0x0; }
+int return1_801FDA08(void) { return 0x1; }
+int VFP_lavapool_getExtraSize_ret_24(void) { return 0x18; }
+int VFP_lavapool_func08_ret_0(void) { return 0x0; }
 int vfplavastar_getExtraSize(void) { return 0x14; }
 int vfplavastar_func08(void) { return 0x0; }
 int vfpspellplace_getExtraSize(void) { return 0x6; }
@@ -1237,7 +1237,7 @@ void dbegg_free(int x) { ObjGroup_RemoveObject(x, 0x24); }
 
 /* plain forwarder. */
 extern void fn_801FD6B4(void);
-void fn_801FDAA0(void) { fn_801FD6B4(); }
+void VFP_lavapool_update(void) { fn_801FD6B4(); }
 
 /* fn_X(lbl); lbl = 0; */
 extern u32 lbl_803DDCD8;

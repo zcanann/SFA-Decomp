@@ -1413,9 +1413,9 @@ void FUN_80186748(int param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_80185B70(void) {}
-void fn_80186464(void) {}
-void fn_80186468(void) {}
+void dll_107_hitDetect_nop(void) {}
+void dll_107_release_nop(void) {}
+void dll_107_initialise_nop(void) {}
 void Dummy108_free(void) {}
 void Dummy108_render(void) {}
 void Dummy108_hitDetect(void) {}
@@ -1429,14 +1429,14 @@ void portalspelldoor_release(void) {}
 void portalspelldoor_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801859C4(void) { return 0x2c; }
-int fn_801859CC(void) { return 0x0; }
+int dll_107_getExtraSize_ret_44(void) { return 0x2c; }
+int dll_107_func08_ret_0(void) { return 0x0; }
 int Dummy108_getExtraSize(void) { return 0x0; }
-int fn_80186474(void) { return 0x0; }
+int Dummy108_func08_ret_0(void) { return 0x0; }
 int portalspelldoor_getExtraSize(void) { return 0x10; }
 int portalspelldoor_func08(void) { return 0x0; }
 int LanternFireFly_getExtraSize(void) { return 0x74; }
-int fn_80186AE4(void) { return 0x0; }
+int LanternFireFly_func08_ret_0(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3A88;

@@ -376,8 +376,8 @@ void FUN_8018d110(void)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_8018CEDC(void) {}
-void fn_8018CEE0(void) {}
+void dll_127_release_nop(void) {}
+void dll_127_initialise_nop(void) {}
 
 #pragma scheduling off
 void campfire_free(int obj)

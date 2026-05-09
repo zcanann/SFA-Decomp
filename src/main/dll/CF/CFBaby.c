@@ -1689,9 +1689,9 @@ void FUN_80189e94(int param_1,int param_2)
 /* Trivial 4b 0-arg blr leaves. */
 void flammablevine_release(void) {}
 void flammablevine_initialise(void) {}
-void fn_80187C6C(void) {}
-void fn_80187F28(void) {}
-void fn_80187F2C(void) {}
+void dll_109_hitDetect_nop(void) {}
+void dll_109_release_nop(void) {}
+void dll_109_initialise_nop(void) {}
 void Fall_Ladders_render(void) {}
 void Fall_Ladders_hitDetect(void) {}
 void coldwatercontrol_func07(void) {}
@@ -1705,11 +1705,11 @@ void decoration11a_update(void) {}
 /* 8b "li r3, N; blr" returners. */
 int flammablevine_getExtraSize(void) { return 0x14; }
 int flammablevine_func08(void) { return 0x0; }
-int fn_80187BA0(void) { return 0x10; }
-int fn_80187BA8(void) { return 0x0; }
-int fn_80187F30(void) { return 0x0; }
+int dll_109_getExtraSize_ret_16(void) { return 0x10; }
+int dll_109_func08_ret_0(void) { return 0x0; }
+int return0_80187F30(void) { return 0x0; }
 int Fall_Ladders_getExtraSize(void) { return 0xc; }
-int fn_80187F40(void) { return 0x0; }
+int Fall_Ladders_func08_ret_0(void) { return 0x0; }
 int coldwatercontrol_getExtraSize(void) { return 0x8; }
 int infopoint_getExtraSize(void) { return 0x20; }
 int infopoint_func08(void) { return 0x0; }

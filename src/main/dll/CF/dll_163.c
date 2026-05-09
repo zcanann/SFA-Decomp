@@ -380,7 +380,7 @@ int staffactivated_func08(void)
 
 /* Pattern wrappers. */
 u32 fn_8018A200(int *obj) { return *(u32*)((char*)((int**)obj)[0xb8/4] + 0x14); }
-u8 fn_8018A220(int *obj) { return *(u8*)((char*)((int**)obj)[0x4c/4] + 0x1c); }
+u8 objGetByteParam1C(int *obj) { return *(u8*)((char*)((int**)obj)[0x4c/4] + 0x1c); }
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3BBC;
