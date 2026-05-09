@@ -34,7 +34,7 @@ extern f32 Vec_distance(float *posA, float *posB);
 extern int Obj_GetPlayerObject(void);
 extern uint fn_8029729C(int obj);
 extern void setAButtonIcon(int param_1);
-extern void fn_8017CF90(void);
+extern void dll_115_seqFn(void);
 
 extern undefined4* lbl_803DCA54;
 extern undefined4* lbl_803DCAC0;
@@ -75,7 +75,7 @@ typedef void (*GroundAnimatorInitAnimFn)(void *obj, undefined4 state, int param_
 /*
  * --INFO--
  *
- * Function: fn_8017D0D4
+ * Function: dll_115_update
  * EN v1.0 Address: 0x8017D0D4
  * EN v1.0 Size: 232b
  * EN v1.1 Address: 0x8017D134
@@ -87,7 +87,7 @@ typedef void (*GroundAnimatorInitAnimFn)(void *obj, undefined4 state, int param_
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_8017D0D4(int obj)
+void dll_115_update(int obj)
 {
   u8 *state;
   int mapData;
@@ -136,7 +136,7 @@ void fn_8017D0D4(int obj)
 /*
  * --INFO--
  *
- * Function: fn_8017D278
+ * Function: dll_115_init
  * EN v1.0 Address: 0x8017D1BC
  * EN v1.0 Size: 36b
  * EN v1.1 Address: 0x8017D228
@@ -148,7 +148,7 @@ void fn_8017D0D4(int obj)
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_8017D278(short *obj, int mapData)
+void dll_115_init(short *obj, int mapData)
 {
   short *p;
   u8 *state;
@@ -156,7 +156,7 @@ void fn_8017D278(short *obj, int mapData)
 
   state = *(u8 **)((int)obj + 0xb8);
   *obj = (s16)(*(u8 *)(mapData + 0x38) << 8);
-  *(void **)((int)obj + 0xbc) = fn_8017CF90;
+  *(void **)((int)obj + 0xbc) = dll_115_seqFn;
   *(u16 *)((int)obj + 0xb0) |= 0x6000;
   ObjGroup_AddObject((int)obj, 0xf);
   step = 0;
@@ -182,7 +182,7 @@ void fn_8017D278(short *obj, int mapData)
 /*
  * --INFO--
  *
- * Function: fn_8017D374
+ * Function: dll_115_release_nop
  * EN v1.0 Address: 0x8017D1E0
  * EN v1.0 Size: 40b
  * EN v1.1 Address: 0x8017D24C
@@ -192,14 +192,14 @@ void fn_8017D278(short *obj, int mapData)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8017D374(void)
+void dll_115_release_nop(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: fn_8017D378
+ * Function: dll_115_initialise_nop
  * EN v1.0 Address: 0x8017D208
  * EN v1.0 Size: 404b
  * EN v1.1 Address: 0x8017D280
@@ -209,7 +209,7 @@ void fn_8017D374(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8017D378(void)
+void dll_115_initialise_nop(void)
 {
 }
 

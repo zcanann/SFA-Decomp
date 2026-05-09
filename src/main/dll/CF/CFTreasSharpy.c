@@ -16,7 +16,7 @@ extern u32 GameBit_Get(int bit);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void ObjAnim_SetCurrentMove(int obj, int move, f32 f, int p4);
 extern int  randomGetRange(int lo, int hi);
-extern void fn_8018D7C4(void);
+extern void CFCrate_SeqFn(void);
 
 extern undefined4 DAT_803dca50;
 extern undefined4* DAT_803dd708;
@@ -84,7 +84,7 @@ void cfccrate_init(int obj, int aux)
         *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
         break;
     case 0x726:
-        *(int *)(obj + 0xbc) = (int)&fn_8018D7C4;
+        *(int *)(obj + 0xbc) = (int)&CFCrate_SeqFn;
         *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
         break;
     case 0x71b:
@@ -162,7 +162,7 @@ void cfccrate_init(int obj, int aux)
         *(f32 *)(state + 0x20) = lbl_803E3E38;
         *(f32 *)(state + 0x1c) = *(f32 *)(state + 0x24) = lbl_803E3DEC;
         *(short *)(obj + 4) = 0;
-        *(int *)(obj + 0xbc) = (int)&fn_8018D7C4;
+        *(int *)(obj + 0xbc) = (int)&CFCrate_SeqFn;
         break;
     case 0x7de:
         *(short *)(obj + 0) = (short)((s8)*(u8 *)(aux + 0x18) << 8);
@@ -186,7 +186,7 @@ void cfccrate_init(int obj, int aux)
         *(f32 *)(state + 0x8) = *(f32 *)(aux + 0xc);
         *(f32 *)(state + 0xc) = *(f32 *)(aux + 0x10);
         *(f32 *)(state + 0x1c) = *(f32 *)(state + 0x24) = *(f32 *)(state + 0x20) = *(f32 *)(state + 0x28) = *(f32 *)(state + 0x14) = *(f32 *)(state + 0x18) = lbl_803E3E30;
-        *(int *)(obj + 0xbc) = (int)&fn_8018D7C4;
+        *(int *)(obj + 0xbc) = (int)&CFCrate_SeqFn;
         break;
     case 0x125:
         *(short *)(obj + 0) = 0;
@@ -200,7 +200,7 @@ void cfccrate_init(int obj, int aux)
         *(short *)(state + 0x32) = 0;
         *(short *)(state + 0x34) = (short)randomGetRange(0x3e8, 0x1388);
         *(u8 *)(state + 0x3f) = 1;
-        *(int *)(obj + 0xbc) = (int)&fn_8018D7C4;
+        *(int *)(obj + 0xbc) = (int)&CFCrate_SeqFn;
         break;
     case 0x10d:
         *(int *)(obj + 0x54) = 0;

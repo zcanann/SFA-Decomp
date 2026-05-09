@@ -3,10 +3,10 @@
 
 #include "ghidra_import.h"
 
-void fn_8017D0D4(int obj);
-void fn_8017D278(short *obj,int mapData);
-void fn_8017D374(void);
-void fn_8017D378(void);
+void dll_115_update(int obj);
+void dll_115_init(short *obj,int mapData);
+void dll_115_release_nop(void);
+void dll_115_initialise_nop(void);
 int wm_column_getExtraSize(void);
 int wm_column_func08(void);
 void wm_column_free(int obj);

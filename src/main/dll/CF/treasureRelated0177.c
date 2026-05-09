@@ -75,7 +75,7 @@ extern f64 lbl_803E3DB8;
 /*
  * --INFO--
  *
- * Function: fn_8018CDAC
+ * Function: dll_127_update
  * EN v1.0 Address: 0x8018CDAC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8018CDAC
@@ -86,7 +86,7 @@ extern f64 lbl_803E3DB8;
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_8018CDAC(int obj)
+void dll_127_update(int obj)
 {
   int timer;
   int flags;
@@ -177,7 +177,7 @@ void FUN_8018cf58(int param_1)
 /*
  * --INFO--
  *
- * Function: fn_8018CDFC
+ * Function: dll_127_init
  * EN v1.0 Address: 0x8018CF80
  * EN v1.0 Size: 228b
  * EN v1.1 Address: 0x8018D378
@@ -188,7 +188,7 @@ void FUN_8018cf58(int param_1)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_8018CDFC(short *param_1,int param_2)
+void dll_127_init(short *param_1,int param_2)
 {
   float fVar1;
   double dVar2;
