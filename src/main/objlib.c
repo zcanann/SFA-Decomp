@@ -1381,10 +1381,10 @@ void ObjHitReact_UpdateResetObjects(void)
     }
     objectOffset = objectOffset + 4;
   }
-  objectOffset = 0;
-  for (objectIndex = 0; objectIndex < gObjHitsResetObjectCount; objectIndex = objectIndex + 1) {
-    ObjHitbox_UpdateRotatedBounds(*(short **)((int)gObjHitsResetObjects + objectOffset),1);
-    objectOffset = objectOffset + 4;
+  objectIndex = 0;
+  for (objectOffset = 0; objectOffset < gObjHitsResetObjectCount; objectOffset = objectOffset + 1) {
+    ObjHitbox_UpdateRotatedBounds(*(short **)((int)gObjHitsResetObjects + objectIndex),1);
+    objectIndex = objectIndex + 4;
   }
   return;
 }
