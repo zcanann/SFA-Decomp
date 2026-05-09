@@ -671,11 +671,17 @@ extern u8 lbl_803DC848;
 extern u32 gAudioStreamMusicFadeFlagA;
 extern u32 gAudioStreamMusicFadeFlagB;
 extern s32 gAudioStreamCurrentId;
+extern s32 lbl_803DC86C;
+extern s32 gAudioStreamPreparingId;
+extern s32 gAudioStreamPreparedId;
 extern f32 gAudioStreamEndPos;
 extern f32 gAudioStreamPos;
 extern f32 timeDelta;
 extern f32 lbl_803DE5D0;
 extern f32 lbl_803DE5E8;
+extern u8 lbl_80336C40[];
+extern u8 lbl_80336C70[];
+extern char lbl_802C5DC4[];
 
 extern void fn_80281160(void);
 extern void AIReset(void);
@@ -690,6 +696,8 @@ extern void movieFn_80117b68(u32 volume, u32 fadeMs);
 extern void AISetStreamPlayState(u32 state);
 extern void AISetStreamVolLeft(u32 volume);
 extern void AISetStreamVolRight(u32 volume);
+extern s32 DVDCancelStreamAsync(void *streamInfo, void *callback);
+extern void OSReport(char *message, ...);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(u32 size, u32 tag, void *name);
 
@@ -2232,8 +2240,30 @@ void AudioStream_CancelCallback(s32 result)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80006894(void)
+void AudioStream_StopCurrent(void)
 {
+    if (gAudioStreamCurrentId != 0) {
+        AISetStreamVolLeft(0);
+        AISetStreamVolRight(0);
+        if (DVDCancelStreamAsync(lbl_80336C40, AudioStream_CancelCallback) == 0) {
+            OSReport(lbl_802C5DC4);
+            lbl_803DC848 = 0;
+        }
+        gAudioStreamPreparedId = 0;
+        gAudioStreamPreparingId = 0;
+        gAudioStreamCurrentId = 0;
+        lbl_803DC86C = 0;
+        gAudioActiveChannelMask = 0;
+        gAudioStreamMusicFadeFlagB = 0;
+        gAudioStreamMusicFadeFlagA = 0;
+    } else {
+        lbl_803DC848 = 0;
+    }
+}
+
+void fn_8000D0B4(void)
+{
+    gAudioStreamDvdState = 0;
 }
 
 /*
@@ -2249,8 +2279,20 @@ void FUN_80006894(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80006898(void)
+void AudioStream_CancelPrepared(void)
 {
+    AISetStreamVolLeft(0);
+    AISetStreamVolRight(0);
+    if (DVDCancelStreamAsync(lbl_80336C70, fn_8000D0B4) == 0) {
+        OSReport(lbl_802C5DC4);
+    }
+    gAudioStreamPreparedId = 0;
+    gAudioStreamPreparingId = 0;
+    gAudioStreamCurrentId = 0;
+    lbl_803DC86C = 0;
+    gAudioActiveChannelMask = 0;
+    gAudioStreamMusicFadeFlagB = 0;
+    gAudioStreamMusicFadeFlagA = 0;
 }
 
 /*
