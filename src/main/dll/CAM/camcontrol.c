@@ -754,12 +754,8 @@ void Camera_update(undefined8 param_1,double param_2,double param_3,undefined8 p
   iVar1 = FUN_80133a28();
   psVar3 = *(short **)(gCamcontrolState + 0x52);
   if (psVar3 == (short *)0x0) {
-    psVar3 = gCamcontrolState;
-    psVar3[0x92] = 0;
-    psVar3[0x93] = 0;
-    psVar3 = gCamcontrolState;
-    psVar3[0x8e] = 0;
-    psVar3[0x8f] = 0;
+    *(undefined4 *)(gCamcontrolState + 0x92) = 0;
+    *(undefined4 *)(gCamcontrolState + 0x8e) = 0;
   }
   else {
     lbl_803DE160 = *(float *)(psVar3 + 6);
