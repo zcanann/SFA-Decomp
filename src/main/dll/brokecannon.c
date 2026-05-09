@@ -1,11 +1,11 @@
 #include "ghidra_import.h"
 #include "main/dll/brokecannon.h"
+#include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/dll/SH/SHthorntail_internal.h"
 
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void Music_Trigger(int trackId, int restart);
-extern void fn_801D7ED4(void *obj, int mask, int p3, int p4, int p5, int p6);
 
 /*
  * --INFO--
@@ -53,11 +53,11 @@ void fn_801D80F4(short *obj)
         if (GameBit_Get(0x64b) != 0) {
             GameBit_Set(0x390, 1);
         }
-        fn_801D7ED4(obj, 1, 0x1a7, 0x64b, 0x372, obj[8]);
-        fn_801D7ED4(obj, 2, 0x1a8, 0xc0, 0x390, obj[9]);
-        fn_801D7ED4(obj, 4, -1, -1, 0x393, 0x36);
-        fn_801D7ED4(obj, 8, -1, -1, 0xa32, 0x98);
-        fn_801D7ED4(obj, 0x10, -1, -1, 0xbfe, 0xc3);
+        SCGameBitLatch_Update((SCGameBitLatchState *)obj, 1, 0x1a7, 0x64b, 0x372, obj[8]);
+        SCGameBitLatch_Update((SCGameBitLatchState *)obj, 2, 0x1a8, 0xc0, 0x390, obj[9]);
+        SCGameBitLatch_Update((SCGameBitLatchState *)obj, 4, -1, -1, 0x393, 0x36);
+        SCGameBitLatch_Update((SCGameBitLatchState *)obj, 8, -1, -1, 0xa32, 0x98);
+        SCGameBitLatch_Update((SCGameBitLatchState *)obj, 0x10, -1, -1, 0xbfe, 0xc3);
     }
 }
 #pragma scheduling reset

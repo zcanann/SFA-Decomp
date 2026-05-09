@@ -131,49 +131,50 @@ dec:
 /*
  * --INFO--
  *
- * Function: fn_801D7ED4
+ * Function: SCGameBitLatch_Update
  * EN v1.0 Address: 0x801D7ED4
  * EN v1.0 Size: 396b
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_801D7ED4(int *p1, int p2, s16 a, s16 b, s16 c, int musicId)
+void SCGameBitLatch_Update(SCGameBitLatchState *state, int mask, s16 clearIfSetBit,
+                           s16 clearIfClearBit, s16 latchBit, int musicId)
 {
-    int has_a = (a + 1) | (-1 - a);
-    int has_b = (b + 1) | (-1 - b);
-    u8 ah = (u8)((u32)has_a >> 31);
-    u8 bh = (u8)((u32)has_b >> 31);
+    int hasClearIfSetBit = (clearIfSetBit + 1) | (-1 - clearIfSetBit);
+    int hasClearIfClearBit = (clearIfClearBit + 1) | (-1 - clearIfClearBit);
+    u8 clearIfSetBitValid = (u8)((u32)hasClearIfSetBit >> 31);
+    u8 clearIfClearBitValid = (u8)((u32)hasClearIfClearBit >> 31);
 
-    if ((*p1 & p2) != 0) {
-        if (ah == 0 || GameBit_Get(a) == 0) {
-            if (GameBit_Get(c) != 0) goto end;
+    if ((state->activeMask & mask) != 0) {
+        if (clearIfSetBitValid == 0 || GameBit_Get(clearIfSetBit) == 0) {
+            if (GameBit_Get(latchBit) != 0) goto end;
         }
-        if (ah != 0) {
-            GameBit_Set(a, 0);
+        if (clearIfSetBitValid != 0) {
+            GameBit_Set(clearIfSetBit, 0);
         }
-        if (bh != 0) {
-            GameBit_Set(b, 0);
+        if (clearIfClearBitValid != 0) {
+            GameBit_Set(clearIfClearBit, 0);
         }
-        GameBit_Set(c, 0);
+        GameBit_Set(latchBit, 0);
         if (musicId != -1) {
             Music_Trigger(musicId, 0);
         }
-        *p1 = *p1 & ~p2;
+        state->activeMask = state->activeMask & ~mask;
     } else {
-        if (bh == 0 || GameBit_Get(b) == 0) {
-            if (GameBit_Get(c) == 0) goto end;
+        if (clearIfClearBitValid == 0 || GameBit_Get(clearIfClearBit) == 0) {
+            if (GameBit_Get(latchBit) == 0) goto end;
         }
-        if (ah != 0) {
-            GameBit_Set(a, 0);
+        if (clearIfSetBitValid != 0) {
+            GameBit_Set(clearIfSetBit, 0);
         }
-        if (bh != 0) {
-            GameBit_Set(b, 0);
+        if (clearIfClearBitValid != 0) {
+            GameBit_Set(clearIfClearBit, 0);
         }
-        GameBit_Set(c, 1);
+        GameBit_Set(latchBit, 1);
         if (musicId != -1) {
             Music_Trigger(musicId, 1);
         }
-        *p1 = *p1 | p2;
+        state->activeMask = state->activeMask | mask;
     }
 end:
     return;

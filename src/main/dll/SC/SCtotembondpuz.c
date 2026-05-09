@@ -3,21 +3,21 @@
 
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern void fn_801D7ED4(void *p1, int p2, int p3, int p4, s16 p5, int p6);
 
 /*
  * --INFO--
  *
- * Function: fn_801D8060
+ * Function: SCGameBitLatch_UpdateInverted
  * EN v1.0 Address: 0x801D8060
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_801D8060(void *p1, int p2, int p3, int p4, s16 p5, int p6)
+void SCGameBitLatch_UpdateInverted(SCGameBitLatchState *state, int mask, s16 clearIfSetBit,
+                                   s16 clearIfClearBit, s16 latchBit, int musicId)
 {
-    GameBit_Set(p5, !GameBit_Get(p5));
-    fn_801D7ED4(p1, p2, p3, p4, p5, p6);
-    GameBit_Set(p5, !GameBit_Get(p5));
+    GameBit_Set(latchBit, !GameBit_Get(latchBit));
+    SCGameBitLatch_Update(state, mask, clearIfSetBit, clearIfClearBit, latchBit, musicId);
+    GameBit_Set(latchBit, !GameBit_Get(latchBit));
 }
 #pragma peephole reset
 #pragma scheduling reset

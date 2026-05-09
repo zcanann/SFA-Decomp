@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/LGT/LGTprojectedlight.h"
+#include "main/dll/SC/SCtotemlogpuz.h"
 
 extern undefined4 FUN_800067c0();
 extern undefined4 FUN_80006c88();
@@ -31,8 +32,6 @@ extern void fn_80016870(int textId);
 extern void fn_801F3F18(int obj);
 extern uint GameBit_Get(int eventId);
 extern int fn_80080204(void);
-extern void fn_801D7ED4(void *state,int mask,int param_3,int param_4,int eventId,int actionId);
-extern void fn_801D8060(void *state,int mask,int param_3,int param_4,int eventId,int actionId);
 
 extern undefined4 DAT_802c2c44;
 extern undefined4 DAT_802c2c48;
@@ -346,13 +345,13 @@ void wmlevelcontrol_update(int obj)
     areaId = areaId >> 5;
     if (((areaId == 0) || (loadingDone = fn_80080204(), loadingDone == 0)) ||
        (areaId = GameBit_Get(0xa7f), areaId == 0)) {
-      fn_801D8060(state + 4,0x10,-1,-1,0xa7f,0xa6);
-      fn_801D7ED4(state + 4,2,-1,-1,0xa7f,0xa8);
+      SCGameBitLatch_UpdateInverted((SCGameBitLatchState *)(state + 4),0x10,-1,-1,0xa7f,0xa6);
+      SCGameBitLatch_Update((SCGameBitLatchState *)(state + 4),2,-1,-1,0xa7f,0xa8);
     }
     if (0x3c < *(uint *)(state + 6)) {
-      fn_801D7ED4(state + 4,1,-1,-1,0xada,0xac);
+      SCGameBitLatch_Update((SCGameBitLatchState *)(state + 4),1,-1,-1,0xada,0xac);
     }
-    fn_801D7ED4(state + 4,0x20,-1,-1,0xcbb,0xc4);
+    SCGameBitLatch_Update((SCGameBitLatchState *)(state + 4),0x20,-1,-1,0xcbb,0xc4);
   }
   fn_801F3F18(obj);
   *(uint *)(state + 6) = *(uint *)(state + 6) + 1;

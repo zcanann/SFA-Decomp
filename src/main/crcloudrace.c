@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/dll/SC/SCtotemlogpuz.h"
 
 extern void getEnvfxActImmediately(void *obj,void *target,int animId,int flags);
 extern void fn_8000A380(int param_1,int param_2,int param_3);
@@ -7,7 +8,6 @@ extern void GameBit_Set(int eventId,int value);
 extern void fn_8003B8F4(double scale);
 extern void unlockLevel(int param_1,int param_2,int param_3);
 extern void fn_8008016C(void *timer);
-extern void fn_801D7ED4(void *effect,int param_2,int param_3,int param_4,int param_5,int param_6);
 extern void crcloudrace_updateRaceState(void *obj);
 extern undefined4 crcloudrace_completionCallback(void *obj,undefined4 param_2,void *param_3);
 
@@ -84,8 +84,8 @@ void crcloudrace_update(CrCloudRaceObject *obj)
   }
   crcloudrace_updateRaceState(obj);
   state->flags &= ~1;
-  fn_801D7ED4(state->effect,1,-1,-1,0xe24,0xe8);
-  fn_801D7ED4(state->effect,2,-1,-1,0xe24,0x38);
+  SCGameBitLatch_Update((SCGameBitLatchState *)state->effect,1,-1,-1,0xe24,0xe8);
+  SCGameBitLatch_Update((SCGameBitLatchState *)state->effect,2,-1,-1,0xe24,0x38);
   return;
 }
 
