@@ -8,9 +8,9 @@ extern void modelLightStruct_setColorsA8AC();
 extern void modelLightStruct_setColors100104();
 extern void lightDistAttenFn_8001dc38();
 extern void lightFn_8001db6c();
-extern void fn_8001D620();
-extern void fn_8001DAB8();
-extern void fn_8001DB54();
+extern void lightFn_8001d620();
+extern void lightSetFieldB0();
+extern void lightSetField4D();
 extern void fn_8001D730();
 extern void fn_8001D714();
 
@@ -132,7 +132,7 @@ void lightsource_init(undefined2 *obj,int mapData)
       modelLightStruct_setColors100104(*state,colors[colorBase],colors[colorBase + 1],colors[colorBase + 2],0xff);
       lightDistAttenFn_8001dc38((double)lbl_803E5E2C,(double)lbl_803E5E30,*state);
       lightFn_8001db6c((double)lbl_803E5E0C,*state,1);
-      fn_8001D620(*state,1,3);
+      lightFn_8001d620(*state,1,3);
 
       colorBase = (uint)*(byte *)((int)state + 0x15) * 3;
       uStack_44 = colors[colorBase];
@@ -150,8 +150,8 @@ void lightsource_init(undefined2 *obj,int mapData)
       colorBase = (int)(lbl_803E5E34 *
                         (float)((double)CONCAT44(0x43300000,uStack_24) - lbl_803E5E50));
       local_20 = (longlong)colorBase;
-      fn_8001DAB8(*state,temp,lightIndex,colorBase,0xff);
-      fn_8001DB54(*state,1);
+      lightSetFieldB0(*state,temp,lightIndex,colorBase,0xff);
+      lightSetField4D(*state,1);
 
       if ((*(ushort *)(mapData + 0x1c) & 0x80) != 0) {
         lightIndex = (uint)*(byte *)((int)state + 0x15) * 3;
