@@ -1079,7 +1079,8 @@ void expgfx_renderPool(uint slotPoolBase,int poolIndex)
   dstBuf = gExpgfxTableEntries;
   do {
     slot = (ExpgfxSlot *)((char *)slot + EXPGFX_SLOT_SIZE);
-    tabEntry = &((ExpgfxTableEntry *)dstBuf)[((u32)slot->encodedTableIndex >> 1) & 0x7f];
+    tabEntry = &((ExpgfxTableEntry *)dstBuf)[((u32)slot->encodedTableIndex >> 1) &
+                                             EXPGFX_SLOT_TABLE_INDEX_MASK];
     textureKey0 = tabEntry->key0;
     texture = tabEntry->textureOrResource;
     if ((1U << slotIndex & gExpgfxSlotActiveMasks[poolIndex]) == 0) goto next_slot;
@@ -1778,11 +1779,11 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIdx, short slot
   resourceHandle->linkGroup = (u16)config->linkGroup;
 
   behaviorFlags = slot->behaviorFlags;
-  if ((behaviorFlags & 0x80) != 0) {
+  if ((behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX1_T) != 0) {
     polePosX = 0;
     polePosY = 0;
   }
-  if ((behaviorFlags & 0x40) != 0) {
+  if ((behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX0_T) != 0) {
     poleVecZ = 0;
     poleVecY = 0;
   }
