@@ -15,7 +15,7 @@ typedef struct SynthDelayStorageLocal {
 
 extern SynthDelayStorageLocal gSynthDelayStorage;
 extern u8 gSynthDelayBucketCursor;
-extern void fn_80271178(SynthDelayedNode *fade, int mode, u32 delay);
+extern void audioFn_80271178(SynthDelayedNode *fade, int mode, u32 delay);
 extern void fn_8026D0C4(u32 handle);
 extern void fn_8026D278(u32 handle);
 extern void fn_8026D630(u32 handle, u32 mixValue0, u32 mixValue1);
@@ -40,11 +40,11 @@ typedef void (*SynthAuxCallback)(int active, u16 *samples, u32 user);
 
 extern u8 *fn_802750B8(u32 sampleId);
 extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
-extern int fn_8026F630(u32 key, u32 slot, u32 channel, u32 voiceGroup, u32 *outFlags);
-extern int fn_8026F8B8(u32 sampleId, int key, u32 velocity, u32 baseSample, u32 flags, u32 volume,
+extern int audioFn_8026f630(u32 key, u32 slot, u32 channel, u32 voiceGroup, u32 *outFlags);
+extern int audioLayerFn_8026f8b8(u32 sampleId, int key, u32 velocity, u32 baseSample, u32 flags, u32 volume,
                        u32 pan, u32 param_8, u32 param_9, u32 param_10, u32 param_11,
                        u32 param_12, u32 param_13, u32 param_14, u32 param_15, u32 param_16);
-extern int fn_80278B94(u32 sampleId, int key, u32 velocity, u32 baseSample, u32 flags, u32 volume,
+extern int audioFn_80278b94(u32 sampleId, int key, u32 velocity, u32 baseSample, u32 flags, u32 volume,
                        u32 pan, u32 param_8, u32 param_9, u32 param_10, u32 param_11,
                        u32 param_12, u32 param_13, u32 param_14, u32 param_15, u32 param_16);
 extern u32 vidGetInternalId(u32 handle);
@@ -53,7 +53,7 @@ extern u32 vidGetInternalId(u32 handle);
  * Resolve an indirection-table sample entry, then dispatch the resolved
  * sample or nested sample group.
  */
-int fn_8026FC8C(u32 sampleId, s16 key, u32 velocity, u32 baseSample, u32 flags, u32 volume,
+int audioKeymapFn_8026fc8c(u32 sampleId, s16 key, u32 velocity, u32 baseSample, u32 flags, u32 volume,
                 u32 pan, u32 param_8, u32 param_9, u32 param_10, u32 param_11, u32 param_12,
                 u32 param_13, u32 param_14, u32 param_15, u32 param_16)
 {
@@ -101,7 +101,7 @@ int fn_8026FC8C(u32 sampleId, s16 key, u32 velocity, u32 baseSample, u32 flags, 
                         handle = -1;
                         allow = 1;
                     } else {
-                        handle = fn_8026F630(adjustedKey & 0x7f, param_8, param_9, param_13,
+                        handle = audioFn_8026f630(adjustedKey & 0x7f, param_8, param_9, param_13,
                                              &outFlags);
                         allow = __cntlzw(outFlags) >> 5;
                     }
@@ -111,12 +111,12 @@ int fn_8026FC8C(u32 sampleId, s16 key, u32 velocity, u32 baseSample, u32 flags, 
                     if (handle != -1) {
                         return handle;
                     }
-                    return fn_80278B94(resolvedSample, key & 0xff, velocity, baseSample,
+                    return audioFn_80278b94(resolvedSample, key & 0xff, velocity, baseSample,
                                        adjustedKey | (flags & 0x80), volume, adjustedPan, param_8,
                                        param_9, param_10, param_11, param_12, param_13 & 0xff,
                                        param_14, param_15, param_16);
                 }
-                return fn_8026F8B8(resolvedSample, key, velocity, baseSample,
+                return audioLayerFn_8026f8b8(resolvedSample, key, velocity, baseSample,
                                    adjustedKey | (flags & 0x80), volume, adjustedPan, param_8,
                                    param_9, param_10, param_11, param_12, param_13 & 0xff,
                                    param_14, param_15, param_16);
@@ -143,7 +143,7 @@ int fn_8026FEEC(u32 sampleId, u8 key, u8 velocity, u32 flags, u32 volume, u32 pa
     key = key + param_13;
     sampleClass = sampleId & 0xc000;
     if (sampleClass == 0x4000) {
-        handle = fn_8026FC8C(sampleId, key, velocity, sampleId, flags, volume, pan, param_7,
+        handle = audioKeymapFn_8026fc8c(sampleId, key, velocity, sampleId, flags, volume, pan, param_7,
                              param_8, param_9, param_10, param_11, 1, auxIndex, studio,
                              studioAux);
         if (handle != -1) {
@@ -160,7 +160,7 @@ int fn_8026FEEC(u32 sampleId, u8 key, u8 velocity, u32 flags, u32 volume, u32 pa
                 handle = -1;
                 sampleClass = 1;
             } else {
-                handle = fn_8026F630(flags & 0x7f, param_7, param_8, 1, &outFlags);
+                handle = audioFn_8026f630(flags & 0x7f, param_7, param_8, 1, &outFlags);
                 sampleClass = __cntlzw(outFlags) >> 5;
             }
             if (sampleClass == 0) {
@@ -169,12 +169,12 @@ int fn_8026FEEC(u32 sampleId, u8 key, u8 velocity, u32 flags, u32 volume, u32 pa
             if (handle != -1) {
                 return handle;
             }
-            return fn_80278B94(sampleId, key, velocity, sampleId, flags, volume, pan, param_7,
+            return audioFn_80278b94(sampleId, key, velocity, sampleId, flags, volume, pan, param_7,
                                param_8, param_9, param_10, param_11, 1, auxIndex, studio,
                                studioAux);
         }
         if (sampleClass == 0x8000) {
-            handle = fn_8026F8B8(sampleId, key, velocity, sampleId, flags, volume, pan, param_7,
+            handle = audioLayerFn_8026f8b8(sampleId, key, velocity, sampleId, flags, volume, pan, param_7,
                                  param_8, param_9, param_10, param_11, 1, auxIndex, studio,
                                  studioAux);
             if (handle == -1) {
@@ -220,7 +220,7 @@ void fn_80270FE8(int idx) { (void)idx; }
  *
  * EN v1.1 Address: 0x80271178, size 336b
  */
-void fn_80271178(SynthDelayedNode *fade, int mode, u32 delay)
+void audioFn_80271178(SynthDelayedNode *fade, int mode, u32 delay)
 {
     u32 bucket;
     SynthDelayStorageLocal *storage;
@@ -304,8 +304,8 @@ void fn_802712C8(SynthDelayedNode *fade)
         *(int *)((u8 *)fade + 0x2c) = a;
         *(int *)((u8 *)fade + 0x30) = b;
     }
-    fn_80271178(fade, 0, 0);
-    fn_80271178(fade, 1, 0);
+    audioFn_80271178(fade, 0, 0);
+    audioFn_80271178(fade, 1, 0);
 }
 
 /*
@@ -313,20 +313,20 @@ void fn_802712C8(SynthDelayedNode *fade)
  *
  * EN v1.1 Address: 0x8027132C, size 68b
  */
-void fn_8027132C(SynthDelayedNode *fade)
+void audioFn_8027132c(SynthDelayedNode *fade)
 {
-    fn_80271178(fade, 0, 0);
-    fn_80271178(fade, 1, 0);
+    audioFn_80271178(fade, 0, 0);
+    audioFn_80271178(fade, 1, 0);
 }
 
 /*
- * Wrapper for fn_80271178(handle, 2, 0).
+ * Wrapper for audioFn_80271178(handle, 2, 0).
  *
  * EN v1.1 Address: 0x80271370, size 40b
  */
 void fn_80271370(SynthDelayedNode *fade)
 {
-    fn_80271178(fade, 2, 0);
+    audioFn_80271178(fade, 2, 0);
 }
 
 /*
@@ -473,7 +473,7 @@ void fn_80271498(u32 delta)
 }
 
 /*
- * fn_802717B0 - voice handler (~188 instructions). Stubbed.
+ * audioGetSfxFn_802717b0 - voice handler (~188 instructions). Stubbed.
  */
 typedef struct SynthFxSampleInfo {
     u8 pad00[2];
@@ -488,7 +488,7 @@ typedef struct SynthFxSampleInfo {
 
 extern SynthFxSampleInfo *fn_802751B8(u32 fxId);
 
-int fn_802717B0(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux)
+int audioGetSfxFn_802717b0(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux)
 {
     SynthFxSampleInfo *sampleInfo;
     u32 handle;

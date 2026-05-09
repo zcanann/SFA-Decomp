@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 
 extern u8 *lbl_803DE268;
-extern int fn_80278B94(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8,
+extern int audioFn_80278b94(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8,
                        int p9, int p10, int p11, int p12, int p13, int p14, int p15, int p16);
 extern void synthCopyHandleFXState(int voice, int state);
 void fn_80275CB8(int state);
@@ -50,7 +50,7 @@ void fn_802757C4(int state, int args)
     }
     *(u8 *)(state + 0x11c) = 1;
 
-    result = fn_80278B94(*(u32 *)args >> 16,
+    result = audioFn_80278b94(*(u32 *)args >> 16,
                         (*(u32 *)(args + 4) >> 8) & 0xff,
                         *(u32 *)(args + 4) >> 24,
                         *(u16 *)(state + 0x100), key,

@@ -1,6 +1,6 @@
 #include "src/main/audio/synth_internal.h"
 
-extern void fn_80271b4c(u32 value0, u32 value1, u8 studio, u8 mode, u32 handle);
+extern void audioSetChannelVolume(u32 value0, u32 value1, u8 studio, u8 mode, u32 handle);
 
 /*
  * sndSeqVolume backend. Resolves a sequence handle across queued and active
@@ -35,12 +35,12 @@ void synthUpdateHandle(u32 value0, u32 value1, u32 handle, u32 mode) {
 resolved:
     if (studioIndex != 0xFFFFFFFF) {
         if ((studioIndex & 0x80000000) == 0) {
-            fn_80271b4c(value0, value1, gSynthVoices[studioIndex].currentStudio, mode, handle);
+            audioSetChannelVolume(value0, value1, gSynthVoices[studioIndex].currentStudio, mode, handle);
             voice = &gSynthVoices[studioIndex];
             voiceIndex = 0;
             do {
                 if (voice->studioMap[voiceIndex] != gSynthVoices[studioIndex].currentStudio) {
-                    fn_80271b4c(value0, value1, voice->studioMap[voiceIndex], 0, 0xFFFFFFFF);
+                    audioSetChannelVolume(value0, value1, voice->studioMap[voiceIndex], 0, 0xFFFFFFFF);
                 }
                 voiceIndex++;
             } while (voiceIndex < SYNTH_SEQUENCE_TRACK_COUNT);

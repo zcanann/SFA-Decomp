@@ -83,7 +83,7 @@ extern int lbl_803DE2D4;
 extern int lbl_803DE2D8;
 extern int lbl_803DE2E0;
 extern int lbl_803DE2E4;
-extern void fn_8027132C(void *state);
+extern void audioFn_8027132c(void *state);
 extern void *fn_80274E7C(u32 key);
 extern u16 seqGetMIDIPriority(u8 slot, u8 event);
 extern u32 voiceAllocate(u8 priority, u8 maxInstances, s16 key, s8 streamKind);
@@ -95,9 +95,9 @@ extern void hwBreak(int slot);
 extern void voiceFree(int state);
 extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
 extern void inpResetChannelDefaults(u8 a, u8 b);
-void fn_80278990(int state);
+void audioFn_80278990(int state);
 void fn_802788B4(int state, int skipFadeReset);
-u32 fn_80278610(int state);
+u32 audioFn_80278610(int state);
 extern u32 inpGetExCtrl(int state, u32 ctrl);
 extern void inpSetExCtrl(int state, u32 ctrl, s16 value);
 extern void voiceKill(u32 voice);
@@ -741,7 +741,7 @@ void fn_80276C04(int state, u32 *args)
                                 *(int *)(voice + 0x38) = *(int *)(voice + 0x64);
                                 *(int *)(voice + 0x34) = *(int *)(voice + 0x58);
                                 *(int *)(voice + 0x58) = 0;
-                                fn_80278990(voice);
+                                audioFn_80278990(voice);
                             }
                         }
                     }
@@ -767,7 +767,7 @@ void fn_80276C04(int state, u32 *args)
                     *(int *)(voice + 0x38) = *(int *)(voice + 0x64);
                     *(int *)(voice + 0x34) = *(int *)(voice + 0x58);
                     *(int *)(voice + 0x58) = 0;
-                    fn_80278990(voice);
+                    audioFn_80278990(voice);
                 }
             }
         }
@@ -796,7 +796,7 @@ void fn_80276E38(int state, u32 *args)
                 if (((*(u32 *)(voice + 0x118) & 2) == 0) &&
                     group == *(u8 *)(voice + 0x104)) {
                     if (((command >> 0x10) & 0xff) == 0) {
-                        fn_80278610(voice);
+                        audioFn_80278610(voice);
                     } else {
                         voiceKill(i);
                     }
@@ -813,7 +813,7 @@ void fn_80276E38(int state, u32 *args)
  * reference the recovered current EN boundary.
  */
 #pragma dont_inline on
-void fn_80276F0C(int state)
+void audioFn_80276f0c(int state)
 {
     (void)state;
 }
@@ -839,7 +839,7 @@ void fn_80278418(u32 delta)
             break;
         }
         nextTimer = *(int *)(timer + 0x44);
-        fn_80278990(timer);
+        audioFn_80278990(timer);
         *(u32 *)(timer + 0xa4) = wakeLo;
         *(int *)(timer + 0xa0) = wakeHi;
         timer = nextTimer;
@@ -857,9 +857,9 @@ void fn_80278418(u32 delta)
             *(int *)(active + 0x38) = *(int *)(active + 0x60);
             *(int *)(active + 0x34) = *(int *)(active + 0x54);
             *(int *)(active + 0x54) = 0;
-            fn_80278990(active);
+            audioFn_80278990(active);
         }
-        fn_80276F0C(active);
+        audioFn_80276f0c(active);
     }
     lbl_803DE2E0 += CARRY4(lbl_803DE2E4, delta);
     lbl_803DE2E4 += delta;
@@ -879,11 +879,11 @@ void fn_80278560(int state)
             *(int *)(state + 0x38) = *(int *)(state + 0x60);
             *(int *)(state + 0x34) = *(int *)(state + 0x54);
             *(int *)(state + 0x54) = 0;
-            fn_80278990(state);
+            audioFn_80278990(state);
             resumed = 1;
         }
         if (!resumed && ((*(u32 *)(state + 0x118) & 0x40000) != 0)) {
-            fn_80278990(state);
+            audioFn_80278990(state);
         }
     }
 }
@@ -891,7 +891,7 @@ void fn_80278560(int state)
 /*
  * Mark a voice for key-off/release, falling back to its release stream.
  */
-u32 fn_80278610(int state)
+u32 audioFn_80278610(int state)
 {
     int resumed;
     u32 result;
@@ -907,13 +907,13 @@ u32 fn_80278610(int state)
                 *(int *)(state + 0x38) = *(int *)(state + 0x5c);
                 *(int *)(state + 0x34) = *(int *)(state + 0x50);
                 *(int *)(state + 0x50) = 0;
-                fn_80278990(state);
+                audioFn_80278990(state);
                 resumed = 1;
             }
             if (!resumed) {
                 result = *(u32 *)(state + 0x118) & 4;
                 if (result != 0) {
-                    fn_80278990(state);
+                    audioFn_80278990(state);
                 }
             }
         } else {
@@ -939,11 +939,11 @@ void fn_80278704(int state, int defer)
                 *(int *)(state + 0x38) = *(int *)(state + 0x5c);
                 *(int *)(state + 0x34) = *(int *)(state + 0x50);
                 *(int *)(state + 0x50) = 0;
-                fn_80278990(state);
+                audioFn_80278990(state);
                 resumed = 1;
             }
             if (!resumed && ((*(u32 *)(state + 0x118) & 4) != 0)) {
-                fn_80278990(state);
+                audioFn_80278990(state);
             }
         }
         *(u32 *)(state + 0x118) = *(u32 *)(state + 0x118);
@@ -1018,7 +1018,7 @@ void fn_802788B4(int state, int skipFadeReset)
             }
         }
         if (skipFadeReset == 0) {
-            fn_8027132C((void *)state);
+            audioFn_8027132c((void *)state);
         }
         *(int *)(state + 0x9c) = 0;
         *(int *)(state + 0x98) = 0;
@@ -1033,7 +1033,7 @@ void fn_802788B4(int state, int skipFadeReset)
 /*
  * Move a live voice back onto the active voice list.
  */
-void fn_80278990(int state)
+void audioFn_80278990(int state)
 {
     int activeTimeHi;
     int hadHead;
@@ -1051,7 +1051,7 @@ void fn_80278990(int state)
                     *(int *)(*(int *)(state + 0x44) + 0x48) = *(int *)(state + 0x48);
                 }
             }
-            fn_8027132C((void *)state);
+            audioFn_8027132c((void *)state);
             *(int *)(state + 0x9c) = 0;
             *(int *)(state + 0x98) = 0;
             activeTimeHi = lbl_803DE2E0;
@@ -1119,7 +1119,7 @@ void fn_80278A98(int state, int mode)
 /*
  * Allocate and initialize a synth voice from an instrument/sample command.
  */
-int fn_80278B94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 baseSample,
+int audioFn_80278b94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 baseSample,
                 u8 keyFlags, u8 volume, u8 pan, u32 midiSlot, u8 midiEvent, u8 midiLayer,
                 u16 sampleOffsetIndex, u8 studio, u8 returnNewId, u8 auxA, u8 auxB,
                 int startImmediately)

@@ -7,8 +7,8 @@ extern void synthUpdateHandle(u32 value0, u32 value1, u32 handle, u32 mode);
 extern int synthSetHandleControllerValue(int handle, int controller, int value);
 extern int synthSetHandleControllerValue14Bit(int handle, int controller, int value);
 extern int synthHandleKeyOff(int handle);
-extern int fn_802717B0(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux);
-extern int fn_80271B4C(int a, int b, int c, int d, int e);
+extern int audioGetSfxFn_802717b0(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux);
+extern int audioSetChannelVolume(int a, int b, int c, int d, int e);
 extern int vidGetInternalId(u32 id);
 extern void fn_80273870(void);
 extern void hwAddInput(u8 idx);
@@ -113,7 +113,7 @@ int sndFXStartEx(int fxId, int volume, int pan, int studio)
     u8 auxIndex;
     sndBegin();
     auxIndex = lbl_803BDA24[(u8)studio * 2 + 1];
-    result = fn_802717B0(fxId, volume, pan, studio, auxIndex);
+    result = audioGetSfxFn_802717b0(fxId, volume, pan, studio, auxIndex);
     sndEnd();
     return result;
 }
@@ -142,7 +142,7 @@ int sndFXCheck(u32 id)
 void sndVolume(int group, int volume, int time)
 {
     sndBegin();
-    fn_80271B4C(group, volume, time, 0, -1);
+    audioSetChannelVolume(group, volume, time, 0, -1);
     sndEnd();
 }
 
@@ -156,10 +156,10 @@ void sndMasterVolume(int volume, int time, u8 musicFlag, u8 fxFlag)
 {
     sndBegin();
     if (musicFlag != 0) {
-        fn_80271B4C(volume, time, 0x15, 0, -1);
+        audioSetChannelVolume(volume, time, 0x15, 0, -1);
     }
     if (fxFlag != 0) {
-        fn_80271B4C(volume, time, 0x16, 0, -1);
+        audioSetChannelVolume(volume, time, 0x16, 0, -1);
     }
     sndEnd();
 }

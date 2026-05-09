@@ -64,8 +64,8 @@ void fn_8026F5B8(int state)
 }
 
 /*
- * fn_8026F630 - 648-instr per-voice update loop. Stubbed.
+ * audioFn_8026f630 - 648-instr per-voice update loop. Stubbed.
  */
 #pragma dont_inline on
-void fn_8026F630(void) {}
+void audioFn_8026f630(void) {}
 #pragma dont_inline reset

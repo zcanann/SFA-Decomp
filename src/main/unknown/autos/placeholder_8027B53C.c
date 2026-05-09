@@ -1,15 +1,15 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8027B53C.h"
 
-extern void fn_8027B42C(u16 voiceId, u16 a, u16 b, u16 c);
+extern void audioFn_8027b42c(u16 voiceId, u16 a, u16 b, u16 c);
 extern int fn_8027B89C(u16 voiceId, u16 a, u16 b, u16 c, u16 d, u32 e);
 
 /*
- * fn_8027B42C — large voice-update inner helper (~152 instructions).
+ * audioFn_8027b42c — large voice-update inner helper (~152 instructions).
  * Stubbed pending full decode.
  */
 #pragma dont_inline on
-void fn_8027B42C(u16 voiceId, u16 a, u16 b, u16 c)
+void audioFn_8027b42c(u16 voiceId, u16 a, u16 b, u16 c)
 {
     (void)voiceId;
     (void)a;
@@ -20,7 +20,7 @@ void fn_8027B42C(u16 voiceId, u16 a, u16 b, u16 c)
 
 /*
  * Iterate a u16 list terminated by 0xFFFF, dispatching each entry to
- * fn_8027B42C. Entries with bit 0x8000 set are "ranges": low 14 bits
+ * audioFn_8027b42c. Entries with bit 0x8000 set are "ranges": low 14 bits
  * are the start, the following u16 is the inclusive end.
  *
  * EN v1.0 Address: 0x8027B260
@@ -34,11 +34,11 @@ void fn_8027B690(u16 *list, u16 a, u16 b, u16 c)
         u16 v = *list;
         if ((v & 0x8000) == 0) {
             list++;
-            fn_8027B42C(v, a, b, c);
+            audioFn_8027b42c(v, a, b, c);
         } else {
             u16 i = v & 0x3fff;
             for (; (u32)i <= (u32)list[1]; i++) {
-                fn_8027B42C(i, a, b, c);
+                audioFn_8027b42c(i, a, b, c);
             }
             list += 2;
         }

@@ -6,11 +6,11 @@
 
 extern void* fn_80275128(int sceneId, void* outBuf);
 extern int inpGetMidiCtrl(int ctrl, int slot, int key);
-extern int fn_8026F630(int key, int slot, int chan, int unk, int* outFlags);
-extern int fn_8026FC8C(u8 a0, u8 a1, int a2, int a3, int a4, u32 a5, u32 a6,
+extern int audioFn_8026f630(int key, int slot, int chan, int unk, int* outFlags);
+extern int audioKeymapFn_8026fc8c(u8 a0, u8 a1, int a2, int a3, int a4, u32 a5, u32 a6,
                         u8 a7, u32 a8, int a9, u32 aA, u32 aB, u32 aC, u32 aD,
                         u32 aE, u32 aF);
-extern int fn_80278B94(u8 a0, u8 a1, int a2, int a3, int a4, u32 a5, u32 a6,
+extern int audioFn_80278b94(u8 a0, u8 a1, int a2, int a3, int a4, u32 a5, u32 a6,
                         u8 a7, u32 a8, int a9, u32 aA, u32 aB, u32 aC, u32 aD,
                         u32 aE, u32 aF);
 extern int vidMakeRoot(void* slotPtr);
@@ -22,7 +22,7 @@ typedef struct SynthBuf {
     u16 pad;
 } SynthBuf;
 
-int fn_8026F8B8(
+int audioLayerFn_8026f8b8(
     int sceneId, int chan, int slot, int unk4,
     int velPair, char unk6, int prog, int unkR10,
     char arg9, char arg10, short arg11, short arg12,
@@ -64,7 +64,7 @@ int fn_8026F8B8(
                 if ((rec0 & 0xC000) == 0) {
                     if ((u16)inpGetMidiCtrl(0x41, arg9, unkR10) > 0x1F80) {
                         int outVal = 0;
-                        subResult = fn_8026F630(chosen_key & 0x7F, arg9, 0, unkR10, &outVal);
+                        subResult = audioFn_8026f630(chosen_key & 0x7F, arg9, 0, unkR10, &outVal);
                         useFlag = (outVal == 0);
                     } else {
                         subResult = -1;
@@ -101,20 +101,20 @@ int fn_8026F8B8(
 
                         switch (rec0 & 0xC000) {
                         case 0x4000:
-                            subResult = fn_8026FC8C((u8)arg9, (u8)arg10, chan, slot, (u8)unk4,
+                            subResult = audioKeymapFn_8026fc8c((u8)arg9, (u8)arg10, chan, slot, (u8)unk4,
                                                     (u32)(chosen_key | velPair), 0, (u8)magic,
                                                     arg11, (int)unkR10, arg14, arg13, arg12,
                                                     arg15, 0, arg16);
                             break;
                         case 0:
-                            subResult = fn_8026F8B8(arg9, chan, slot, (u8)unk4, velPair,
+                            subResult = audioLayerFn_8026f8b8(arg9, chan, slot, (u8)unk4, velPair,
                                                     unk6, chosen_key, unkR10, arg11,
                                                     (char)magic, arg12, arg13, 0, arg14,
                                                     arg15, arg16);
                             break;
                         case 0x8000:
                         default:
-                            subResult = fn_80278B94((u8)arg9, (u8)arg10, chan, slot, (u8)unk4,
+                            subResult = audioFn_80278b94((u8)arg9, (u8)arg10, chan, slot, (u8)unk4,
                                                     (u32)(chosen_key | velPair), 0, (u8)magic,
                                                     arg11, (int)unkR10, arg14, arg13, arg12,
                                                     arg15, 0, arg16);

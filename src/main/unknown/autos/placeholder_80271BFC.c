@@ -35,7 +35,7 @@ typedef struct SynthFadeSlotLocal {
  * Route synth fade commands to one slot or to the broadcast pseudo-slots
  * 0xfa through 0xff.
  */
-void fn_80271B4C(u32 volume, u32 timeMs, u32 target, u8 action, u32 handle)
+void audioSetChannelVolume(u32 volume, u32 timeMs, u32 target, u8 action, u32 handle)
 {
     u32 convertedTime;
     u32 targetIndex;
