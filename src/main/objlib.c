@@ -72,7 +72,7 @@ extern ObjTriggerInterface **lbl_803DCA68;
 extern void *lbl_803DCBC8[2];
 extern void *lbl_803DCBD0[2];
 extern void *lbl_803DCBD8;
-extern undefined4 lbl_803DCBDC;
+extern undefined4 gObjHitsPriorityHitStates;
 extern int gObjHitReactResetObjectCount;
 extern int *gObjHitReactResetObjects;
 extern u8 gObjGroupObjectCount;
@@ -81,7 +81,7 @@ extern undefined4 DAT_803dd880;
 extern f64 DOUBLE_803df5c0;
 extern f64 DOUBLE_803df640;
 extern f32 lbl_803DC074;
-extern f32 lbl_803DCBE8;
+extern f32 gObjHitsPriorityHitTickDelta;
 extern f32 lbl_803DE914;
 extern f32 lbl_803DE968;
 extern f32 lbl_803DE97C;
@@ -323,7 +323,7 @@ void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
   slotOffset = (s16)slotIndex;
   clearedState = slotOffset;
   for (; (s16)slotIndex < 0x32; slotIndex = slotIndex + 1) {
-    piVar2 = (int *)(lbl_803DCBDC + slotOffset);
+    piVar2 = (int *)(gObjHitsPriorityHitStates + slotOffset);
     if ((*piVar2 != 0) && ((u32)piVar2[2] == (u32)param_1)) {
       *piVar2 = clearedState;
     }
@@ -1365,7 +1365,7 @@ void ObjHits_ResetWorkBuffers(void)
   int i;
 
   for (i = 0; i < OBJHITREACT_MAX_RESET_OBJECTS; i++) {
-    *(undefined4 *)(lbl_803DCBDC + i * 0x3c) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + i * 0x3c) = 0;
   }
   gObjHitsResetObjectCount = 0;
   return;
@@ -1412,13 +1412,13 @@ void ObjHits_InitWorkBuffers(void)
   int i;
 
   gObjHitsResetObjects = (int *)mmAlloc(OBJHITREACT_MAX_RESET_OBJECTS * sizeof(int),0xe,0);
-  lbl_803DCBDC = (undefined4)mmAlloc(3000,0xe,0);
+  gObjHitsPriorityHitStates = (undefined4)mmAlloc(3000,0xe,0);
   lbl_803DCBD8 = mmAlloc(0x1900,0xe,0);
   lbl_803DCBD0[0] = mmAlloc(0x400,0xe,0);
   lbl_803DCBD0[1] = mmAlloc(0x400,0xe,0);
   lbl_803DCBC8[0] = mmAlloc(0x400,0xe,0);
   lbl_803DCBC8[1] = mmAlloc(0x400,0xe,0);
-  lbl_803DCBE8 = lbl_803DE914;
+  gObjHitsPriorityHitTickDelta = lbl_803DE914;
   for (i = 0; i < 5; i++) {
     gObjHitsActiveHitVolumeObjects[i] = 0;
   }

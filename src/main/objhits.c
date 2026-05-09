@@ -42,7 +42,7 @@ extern undefined4 DAT_80341ba4;
 extern undefined4 DAT_80342e58;
 extern undefined4 DAT_803dd848;
 extern undefined4 DAT_803dd850;
-extern int *lbl_803DCBDC;
+extern int *gObjHitsPriorityHitStates;
 extern f64 DOUBLE_803df5a8;
 extern f64 DOUBLE_803df5c0;
 extern f64 DOUBLE_803df5d0;
@@ -50,7 +50,7 @@ extern f32 timeDelta;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DC078;
 extern f32 lbl_803DC0B0;
-extern f32 lbl_803DCBE8;
+extern f32 gObjHitsPriorityHitTickDelta;
 extern f32 gObjHitsScalarZero;
 extern f32 gObjHitsScalarOne;
 extern f32 playerMapOffsetX;
@@ -1284,14 +1284,14 @@ void ObjHits_TickPriorityHitCooldowns(void)
   sVar2 = 0;
   iVar1 = 0;
   do {
-    base = lbl_803DCBDC;
+    base = gObjHitsPriorityHitStates;
     if (*(int *)((int)base + iVar1) != 0) {
       *(int *)((int)base + iVar1) = *(int *)((int)base + iVar1) + -1;
     }
     iVar1 = iVar1 + 0x3c;
     sVar2++;
   } while (sVar2 < 0x32);
-  lbl_803DCBE8 = timeDelta;
+  gObjHitsPriorityHitTickDelta = timeDelta;
   return;
 }
 #pragma peephole reset
