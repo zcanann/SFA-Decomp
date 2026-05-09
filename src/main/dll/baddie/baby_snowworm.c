@@ -1062,7 +1062,7 @@ extern f32 lbl_803E2024;  /*  240.0f */
 extern f32 lbl_803E2044;  /*  43.0f  (FOV value) */
 
 extern s8  lbl_803DBA64;
-extern void fn_8006B558(void*);
+extern void shadowRenderFn_8006b558(void*);
 
 extern u8  hudTextures[0x198];
 extern u32 lbl_8033BE40[5];
@@ -1566,7 +1566,7 @@ void npcTalkFn_8012e880(void)
  * 0x8000, saves current FOV (in f31) before swapping in 43.0f, then
  * issues GXSetViewport with width/height from the global render obj
  * at lbl_803DCCF0. Then walks to slot lbl_803A9410[(s8)lbl_803DBA64],
- * dispatches fn_8006B558(slot) to do the actual draw, re-reads the
+ * dispatches shadowRenderFn_8006b558(slot) to do the actual draw, re-reads the
  * slot pointer (reload across the call) and clears the +0x4c sentinel
  * if it overflowed the 0x90000000 watermark. Tail restores FOV from
  * f31 and runs the standard close-block trio. */
@@ -1590,7 +1590,7 @@ void perspectiveFn_80129db4(void)
                       (f32)obj[2], (f32)obj[4],
                       lbl_803E1E3C, lbl_803E1E68);
     }
-    fn_8006B558(((void**)lbl_803A9410)[(s32)lbl_803DBA64]);
+    shadowRenderFn_8006b558(((void**)lbl_803A9410)[(s32)lbl_803DBA64]);
     {
         void* slot = ((void**)lbl_803A9410)[(s32)lbl_803DBA64];
         if (((u32*)slot)[0x13] > 0x90000000U) {

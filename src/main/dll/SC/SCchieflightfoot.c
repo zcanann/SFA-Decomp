@@ -12,7 +12,7 @@ extern uint FUN_80017760();
 extern uint randomGetRange(int min,int max);
 extern undefined4 Obj_GetActiveModel();
 extern undefined4 Obj_GetPlayerObject();
-extern undefined4 fn_8002CEC0();
+extern undefined4 modelInitBones();
 extern int ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnimArg,
                                       void *eventList);
 extern undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,u32 flags);
@@ -349,7 +349,7 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
   *(float *)((int)obj + 8) = *(float *)(*(int *)((int)obj + 0x50) + 4) *
       ((float)config->initScale / lbl_803E545C);
   Obj_GetActiveModel((int)obj);
-  fn_8002CEC0((double)*(float *)((int)obj + 8));
+  modelInitBones((double)*(float *)((int)obj + 8));
   moveScratch = (int)runtime->moveScratch;
   (*(code *)(*lbl_803DCAA8 + 4))(moveScratch,3,0xa3,0);
   (*(code *)(*lbl_803DCAA8 + 0xc))(moveScratch,4,lbl_80326EF8,lbl_80326F28,local_28);

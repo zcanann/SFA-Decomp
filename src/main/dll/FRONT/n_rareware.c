@@ -21,7 +21,7 @@ extern void mapUnload(int mapId, int flags);
 extern void setForceLoadImmediately(void);
 extern void loadMapAndParent(int param_1);
 extern void clearForceLoadImmediately(void);
-extern void fn_80088C0C(void);
+extern void loadSunAndMoon(void);
 extern void fn_8011D9B0(void);
 extern void lockIconInit(void);
 extern void warpToMap(int mapId, int param_2);
@@ -235,7 +235,7 @@ void TitleScreenInit_initialise(void)
   setForceLoadImmediately();
   loadMapAndParent(0x3f);
   clearForceLoadImmediately();
-  fn_80088C0C();
+  loadSunAndMoon();
   fn_8011D9B0();
   lockIconInit();
   warpToMap(0x12,0);

@@ -13,7 +13,7 @@ extern void fn_8001D714(int handle,f32 param_2);
 extern void lightSetFieldB0(int handle,int r,int g,int b,int a);
 extern void fn_8001D9E0(int handle,int r,int g,int b,int a);
 extern void lightFn_8001d620(int handle,int param_2,int param_3);
-extern void fn_8001DD40(int handle,int param_2);
+extern void lightSetField2FB(int handle,int param_2);
 extern void fn_8001D730(int handle,f32 param_2,int param_3,int r,int g,int b,int a);
 extern void dll_DIM_BossGutSpik_update(void);
 extern void fn_801BDCF8(void);
@@ -86,7 +86,7 @@ void dimbosstonsil_init(int obj,undefined4 param_2,int isAltVariant)
     lightSetFieldB0(lbl_803DDB90,0xff,0x7f,0,0x40);
     fn_8001D9E0(lbl_803DDB90,0xff,0x7f,0,0x40);
     lightFn_8001d620(lbl_803DDB90,2,0x3c);
-    fn_8001DD40(lbl_803DDB90,1);
+    lightSetField2FB(lbl_803DDB90,1);
     fn_8001D730(lbl_803DDB90,lbl_803E4CA0,0,0xff,0,0,0x7f);
   }
   return;

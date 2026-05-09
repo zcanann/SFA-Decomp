@@ -6,7 +6,7 @@ extern u32 randomGetRange(int min,int max);
 extern void mm_free(u32 handle);
 extern u8 *Obj_GetPlayerObject(void);
 extern int ObjHits_GetPriorityHit(u8 *obj,int *out,int param_3,int param_4);
-extern void fn_8008F904(u32 handle);
+extern void renderFn_8008f904(u32 handle);
 extern int fn_8008FB20(double radiusX,double radiusY,float *start,float *end,int param_5,int param_6,int param_7);
 
 extern undefined4 *pDll_expgfx;
@@ -111,7 +111,7 @@ void dfplightni_render(u8 *obj)
     if (state->timer >= lbl_803E64E0) {
       eventActive = GameBit_Get(DFPLIGHTNI_EVENT_TIMER_GAMEBIT);
       if (state->effectHandle != 0) {
-        fn_8008F904(state->effectHandle);
+        renderFn_8008f904(state->effectHandle);
       }
       if (eventActive != 0) {
         if (state->timer >= lbl_803E64E0 + (f32)(s32)state->delayFrames) {

@@ -16,7 +16,7 @@ extern f32 vec3f_distanceSquared(f32 *a, f32 *b);
 extern void Obj_StartModelFadeIn(u8 *obj, int frames);
 extern void Obj_SetModelColorFadeRecursive(u8 *obj, int a, int b, int c, int d, int e);
 extern int ObjHits_GetPriorityHit(u8 *obj, int *outOther, int a, int b);
-extern void fn_801D083C(u8 *self, u8 *state, u8 *other);
+extern void edibleMushroomFn_801d083c(u8 *self, u8 *state, u8 *other);
 extern f32 sqrtf(f32 x);
 
 #pragma peephole off
@@ -104,7 +104,7 @@ void ediblemushroom_update(u8 *self)
       }
     }
   }
-  fn_801D083C(self, state, other);
+  edibleMushroomFn_801d083c(self, state, other);
 
 end:
   ;

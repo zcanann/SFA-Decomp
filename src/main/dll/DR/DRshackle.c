@@ -6,7 +6,7 @@ extern s16 getAngle(f32 dx, f32 dz);
 extern f32 fn_801EA678(int p1, int p2);
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern int fn_801EC870(int p1, int p2);
-extern void fn_800658A4(int p1, f32 x, f32 y, f32 z, f32 *out, int flag);
+extern void hitDetectFn_800658a4(int p1, f32 x, f32 y, f32 z, f32 *out, int flag);
 
 extern undefined4 *lbl_803DCA6C;
 extern undefined4 *lbl_803DCAA8;
@@ -192,7 +192,7 @@ int fn_801EAAC0(int param_1, int param_2)
         *(f32 *)(*(int *)(param_1 + 0x54) + 0x24) = *(f32 *)(param_1 + 0x20);
 
         if (*(u8 *)(param_2 + 0x434) == 0) {
-            fn_800658A4(param_1, *(f32 *)(param_1 + 0xc),
+            hitDetectFn_800658a4(param_1, *(f32 *)(param_1 + 0xc),
                         *(f32 *)(param_1 + 0x10), *(f32 *)(param_1 + 0x14),
                         &local_8, 0);
             *(f32 *)(param_1 + 0x10) = *(f32 *)(param_1 + 0x10) - local_8;

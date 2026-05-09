@@ -242,7 +242,7 @@ void FUN_801ce008(int param_1)
   return;
 }
 
-extern void fn_801CDC78(void);
+extern void NW_geyser_SeqFn(void);
 
 /*
  * --INFO--
@@ -262,7 +262,7 @@ extern void fn_801CDC78(void);
 void nw_geyser_init(int obj)
 {
   *(ushort *)(obj + 0xb0) = (ushort)(*(ushort *)(obj + 0xb0) | 0x6000);
-  *(void **)(obj + 0xbc) = fn_801CDC78;
+  *(void **)(obj + 0xbc) = NW_geyser_SeqFn;
 }
 #pragma peephole reset
 #pragma scheduling reset

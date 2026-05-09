@@ -7,7 +7,7 @@ extern u8 *Obj_GetActiveModel(u8 *obj);
 extern void ObjModel_SetRenderCallback(u8 *model, void *cb);
 extern void lockIconTexCb(void);
 extern void aButtonIconTexCb(void);
-extern void fn_8001EFE0(int a, int b, int c, int d);
+extern void colorFn_8001efe0(int a, int b, int c, int d);
 extern u8 *objCreateLight(int a, int b);
 extern void modelLightStruct_setField50(u8 *p, int a);
 extern void modelFn_8001db3c(u8 *p, int a);
@@ -39,7 +39,7 @@ void lockIconInit(void)
     ObjModel_SetRenderCallback(Obj_GetActiveModel(lbl_803DD4BC), aButtonIconTexCb);
     lbl_803DD4BC[0xAD] = 2;
     ObjModel_SetRenderCallback(Obj_GetActiveModel(lbl_803DD4BC), aButtonIconTexCb);
-    fn_8001EFE0(1, 0x32, 0x3C, 0x28);
+    colorFn_8001efe0(1, 0x32, 0x3C, 0x28);
     lbl_803DD4C4 = objCreateLight(0, 1);
     if (lbl_803DD4C4 != NULL) {
       modelLightStruct_setField50(lbl_803DD4C4, 4);

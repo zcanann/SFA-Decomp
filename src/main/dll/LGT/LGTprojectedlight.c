@@ -378,9 +378,9 @@ void wmgeneralscales_free(int *obj) { int *p = (int*)obj[0xc8/4]; if (p != NULL)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void fn_801F4F88(int *obj);
+extern void FireFlyFn_801f4f88(int *obj);
 #pragma scheduling off
 #pragma peephole off
-int fn_801F4C04(int *obj) { fn_801F4F88(obj); return 0; }
+int fn_801F4C04(int *obj) { FireFlyFn_801f4f88(obj); return 0; }
 #pragma peephole reset
 #pragma scheduling reset

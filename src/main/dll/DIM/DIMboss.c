@@ -69,7 +69,7 @@ extern undefined4 Obj_GetPlayerObject();
 extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 objRenderFn_8003b8f4();
-extern undefined4 fn_80055000();
+extern undefined4 timeOfDayFn_80055000();
 extern undefined4 queueGlowRender();
 extern undefined4 dll_2E_func06();
 extern undefined4 dll_2E_func03();
@@ -455,7 +455,7 @@ void DIMboss_free(DIMbossObject *obj)
   if (effect != NULL) {
     ModelLightStruct_free(effect);
   }
-  fn_80055000();
+  timeOfDayFn_80055000();
 }
 #pragma peephole reset
 

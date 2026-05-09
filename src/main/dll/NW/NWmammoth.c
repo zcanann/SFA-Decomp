@@ -46,7 +46,7 @@ extern u32 GameBit_Get(int bit);
 extern void ObjAnim_SetCurrentMove(int obj, int move, f32 f, int p4);
 extern void ObjAnim_AdvanceCurrentMove(int obj, void *out, f32 a, f32 b);
 extern f32 Vec_distance(int a, int b);
-extern void fn_801D0828(void);
+extern void EdibleMushroom_SeqFn(void);
 
 extern void *lbl_803DCA9C;
 
@@ -82,7 +82,7 @@ void ediblemushroom_init(int obj, int aux)
     local_x = 0x19;
     player = (int)Obj_GetPlayerObject();
 
-    *(int *)(obj + 0xbc) = (int)&fn_801D0828;
+    *(int *)(obj + 0xbc) = (int)&EdibleMushroom_SeqFn;
     *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x4000);
 
     if (GameBit_Get(*(short *)(aux + 0x1a)) != 0) {

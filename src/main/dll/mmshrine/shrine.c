@@ -19,7 +19,7 @@ extern int FUN_80044404();
 extern undefined8 FUN_80080f28();
 extern undefined4 FUN_8008111c();
 extern undefined4 FUN_8011eb10();
-extern void fn_801C4B10(void);
+extern void MMSH_Shrine_SeqFn(void);
 extern undefined4 FUN_801c4b14();
 extern undefined4 FUN_801c4f4c();
 extern undefined4 FUN_801d8308();
@@ -62,7 +62,7 @@ void mmsh_shrine_init(undefined2 *param_1,int param_2)
   
   piVar2 = *(int **)(param_1 + 0x5c);
   *param_1 = 0;
-  *(void (**)(void))(param_1 + 0x5e) = fn_801C4B10;
+  *(void (**)(void))(param_1 + 0x5e) = MMSH_Shrine_SeqFn;
   *(undefined2 *)(piVar2 + 7) = 10;
   *(undefined *)(piVar2 + 9) = 0;
   if (0 < *(short *)(param_2 + 0x1a)) {

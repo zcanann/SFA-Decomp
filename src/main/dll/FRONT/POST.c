@@ -36,9 +36,9 @@ typedef struct PostControl {
   u8 flags;
 } PostControl;
 
-extern PostMotionTarget *fn_800394A0(void);
+extern PostMotionTarget *seqFn_800394a0(void);
 extern void fn_80038F1C(int a, int b);
-extern s16 fn_8003A380(double distance, PostObjAnimComponent *objAnim, PostObject *obj,
+extern s16 objMathFn_8003a380(double distance, PostObjAnimComponent *objAnim, PostObject *obj,
                        void *primary, void *secondary, s16 *events, int eventCount,
                        int eventState);
 extern int fn_8003A8B4(PostObjAnimComponent *objAnim, PostMotionTarget *leadAnims,
@@ -76,7 +76,7 @@ int objAnimFn_80115650(PostObjAnimComponent *objAnim, PostObject *obj, int *turn
   double distance;
   void *secondary;
 
-  motion = fn_800394A0();
+  motion = seqFn_800394a0();
   if (obj->motion != 0) {
     if ((obj->motion->flags & 2) != 0) {
       distance = (double)(lbl_803E1CDC * (float)(s32)obj->motion->yawB);
@@ -101,7 +101,7 @@ int objAnimFn_80115650(PostObjAnimComponent *objAnim, PostObject *obj, int *turn
     secondary = control->secondary;
   }
 
-  hitResult = fn_8003A380(distance,objAnim,obj,control->primary,secondary,control->events,8,
+  hitResult = objMathFn_8003a380(distance,objAnim,obj,control->primary,secondary,control->events,8,
                           control->eventState);
   if ((control->flags & 8) == 0) {
     control->blocked = (uint)__cntlzw(fn_8003A8B4(objAnim,motion,control->contactAnim,

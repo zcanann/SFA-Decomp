@@ -7,7 +7,7 @@ extern undefined4 GameBit_Get(int eventId);
 extern undefined4 randomGetRange(int param_1, int param_2);
 extern u8 Obj_IsLoadingLocked(void);
 extern undefined4 Obj_FreeObject(int param_1);
-extern int fn_8002B5A0(FirePipeObject *obj, void *spawnDef);
+extern int loadObjectAtObject(FirePipeObject *obj, void *spawnDef);
 extern void fn_8002CE14(int obj);
 extern void objRemoveFromListFn_8002ce88(FirePipeObject *obj);
 extern int mmSetFreeDelay(int delay);
@@ -69,7 +69,7 @@ int firepipe_spawnEffectObject(FirePipeExtra *extra, FirePipeObject *obj, void *
             return effectObj;
         }
     }
-    effectObj = fn_8002B5A0(obj, spawnDef);
+    effectObj = loadObjectAtObject(obj, spawnDef);
     if (extra->effectCount != 8) {
         *(u16 *)(effectObj + 0xb0) |= 0x200;
         extra->effectObjs[extra->effectCount] = effectObj;

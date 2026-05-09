@@ -11,14 +11,14 @@ extern void padClearAnalogInputX(int a);
 extern void gameTextShow(int a);
 extern void fn_80088870(void *a, void *b, void *c, void *d);
 extern void envFxActFn_800887f8(int a);
-extern void fn_80088E54(int a, f32 b);
+extern void skyFn_80088e54(int a, f32 b);
 extern void getEnvfxAct(int a, int b, int c, int d);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern void mapUnloadFn_801d7c94(int param_1, uint *param_2);
 extern void SH_LevelControl_setMusic(uint *param_1);
-extern void fn_801D8308(int param_1, uint *param_2);
-extern void fn_801D87F8(int param_1, uint *param_2);
-extern void fn_801D8B00(int param_1, uint *param_2);
+extern void SH_LevelControl_runBloopEvent(int param_1, uint *param_2);
+extern void SH_LevelControl_doThornTailEvents(int param_1, uint *param_2);
+extern void SH_LevelControl_doEarlyScenes(int param_1, uint *param_2);
 extern void objRenderFn_8003b8f4(f32);
 
 extern undefined4 *lbl_803DCAAC;
@@ -110,7 +110,7 @@ void sh_levelcontrol_update(int param_1)
   }
   switch (*(undefined *)((int)puVar5 + 5)) {
   case 1:
-    fn_801D8B00(param_1, puVar5);
+    SH_LevelControl_doEarlyScenes(param_1, puVar5);
     break;
   case 2:
     iVar1 = GameBit_Get(0xbf);
@@ -137,7 +137,7 @@ void sh_levelcontrol_update(int param_1)
     }
     break;
   case 3:
-    fn_801D87F8(param_1, puVar5);
+    SH_LevelControl_doThornTailEvents(param_1, puVar5);
     break;
   case 4:
     if (*(short *)((int)puVar5 + 0x12) != 0xcc) {
@@ -190,7 +190,7 @@ void sh_levelcontrol_update(int param_1)
     }
     break;
   case 6:
-    fn_801D8308(param_1, puVar5);
+    SH_LevelControl_runBloopEvent(param_1, puVar5);
     break;
   case 7:
     iVar1 = GameBit_Get(0x1a0);
@@ -248,7 +248,7 @@ void sh_levelcontrol_update(int param_1)
           fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
           envFxActFn_800887f8(0x3f);
           getEnvfxActImmediately(0, 0, 0x244, 0);
-          fn_80088E54(0, lbl_803E54B4);
+          skyFn_80088e54(0, lbl_803E54B4);
         }
         else {
           fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
