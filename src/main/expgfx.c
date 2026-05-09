@@ -1064,8 +1064,8 @@ extern f32 lbl_803967C0[3][4];
 extern f32 lbl_803DF410;
 extern f32 lbl_803DF414;
 extern f32 lbl_803DB790;
-extern u16 lbl_803DD268;
-extern u16 lbl_803DD26A;
+extern u16 gExpgfxPhaseAngleA;
+extern u16 gExpgfxPhaseAngleB;
 
 #pragma scheduling off
 #pragma peephole off
@@ -1248,10 +1248,10 @@ void expgfx_renderPool(uint slotPoolBase,int poolIndex)
 
     angleToVec2((u16)angleA, &cosA, &sinA);
     angleToVec2((u16)angleB, &cosB, &sinB);
-    if ((slot->renderFlags & 0x04000000) != 0) {
-      angleToVec2((u16)(lbl_803DD268 + (((u32)slot & 0xff) << 8)), &sinC, &cosC);
-    } else if ((slot->renderFlags & 0x08000000) != 0) {
-      angleToVec2((u16)(lbl_803DD26A + (((u32)slot & 0xff) << 8)), &sinC, &cosC);
+    if ((slot->renderFlags & EXPGFX_RENDER_PHASE_ROTATE_A) != 0) {
+      angleToVec2((u16)(gExpgfxPhaseAngleA + (((u32)slot & 0xff) << 8)), &sinC, &cosC);
+    } else if ((slot->renderFlags & EXPGFX_RENDER_PHASE_ROTATE_B) != 0) {
+      angleToVec2((u16)(gExpgfxPhaseAngleB + (((u32)slot & 0xff) << 8)), &sinC, &cosC);
     }
     if (textureKey0 != 0 && (slot->renderFlags & 0x00000080) != 0) {
       alpha = (alpha * *(u8 *)((char *)textureKey0 + 0x36)) >> 8;
@@ -1334,7 +1334,7 @@ void expgfx_renderPool(uint slotPoolBase,int poolIndex)
       f32 outX, outY, outZ;
       f32 ax, ay;
       f32 ay_cosB, pz_sinB;
-      if ((slot->renderFlags & 0x0c000000) != 0) {
+      if ((slot->renderFlags & (EXPGFX_RENDER_PHASE_ROTATE_A | EXPGFX_RENDER_PHASE_ROTATE_B)) != 0) {
         f32 nx = px * cosC - py * sinC;
         f32 ny = px * sinC + py * cosC;
         ay_cosB = ny * cosB;
