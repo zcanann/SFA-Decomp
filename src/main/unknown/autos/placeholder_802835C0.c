@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_802835C0.h"
 
-extern u8 lbl_8032F79C[];
+extern u8 voiceAdsrDecayTable[];
 extern u8 *dspVoice;
 
 extern u32 voiceConvertDbToLinear(u32 value);
@@ -78,7 +78,7 @@ void hwSetADSR(int slot, u32 *adsr, u8 mode)
 
             entry = dspVoice;
             entry += offset;
-            *(u16 *)(entry + 0xc0) = 0xc1 - lbl_8032F79C[value];
+            *(u16 *)(entry + 0xc0) = 0xc1 - voiceAdsrDecayTable[value];
         } else {
             entry = dspVoice;
             entry += offset;

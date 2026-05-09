@@ -17,8 +17,8 @@ extern void *dataGetCurve(u16 key);
 extern u32 voiceConvertDbToLinear(u32 value);
 extern int fn_8027A8D4(int state);
 extern void hwSetADSR(int slot, u32 *adsr, u8 mode);
-extern u8 lbl_8032F79C[];
-extern f32 lbl_8032FB9C[];
+extern u8 voiceAdsrDecayTable[];
+extern f32 voiceAdsrSustainTable[];
 extern f32 lbl_803E77F0;
 extern f32 lbl_803E77F4;
 extern f32 lbl_803E77F8;
@@ -249,7 +249,7 @@ void voiceApplyAdsrTable(int state, u32 *args)
             sustainIndex = (u16)((words[4] << 8) | ((u32)words[4] >> 8));
             *(u16 *)((u8 *)adsr + 8) =
                 (u16)(int)(lbl_803E77F0 *
-                           *(f32 *)((u8 *)lbl_8032FB9C + ((sustainIndex >> 3) & 0x1ffc)));
+                           *(f32 *)((u8 *)voiceAdsrSustainTable + ((sustainIndex >> 3) & 0x1ffc)));
             *(u16 *)((u8 *)adsr + 10) =
                 (u16)((words[5] << 8) | ((u32)words[5] >> 8));
             velCurve = ((u32)table[15] << 24) | ((u32)table[14] << 16) |
@@ -362,7 +362,7 @@ void voiceConfigureAdsrEnvelope(int state, u32 *args)
         if (decayIndex > 0x3ff) {
             decayIndex = 0x3ff;
         }
-        *(u16 *)(state + 0x1f8) = 0xc1 - lbl_8032F79C[decayIndex];
+        *(u16 *)(state + 0x1f8) = 0xc1 - voiceAdsrDecayTable[decayIndex];
         *(u32 *)(state + 0x1fc) = ((releaseRaw & 0xff) << 8) | ((u32)releaseRaw >> 8);
         fn_8027A8D4(state + 0x1dc);
         *(u32 *)(state + 0x114) |= 0x200;
