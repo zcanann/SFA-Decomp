@@ -110,6 +110,11 @@ extern f32 lbl_803DF638;
 extern char sObjMsgOverflowInObjectWarning[];
 extern char sObjAddObjectTypeReachedMaxTypes[];
 
+#define OBJMSG_QUEUE_OFFSET 0xdc
+#define OBJMSG_SEND_INCLUDE_SENDER 0x1
+#define OBJMSG_SEND_MATCH_ANY 0x2
+#define OBJMSG_SEND_MATCH_OBJTYPE 0x4
+
 typedef struct ObjMsgEntry {
   uint message;
   uint sender;
@@ -1857,7 +1862,7 @@ undefined4 ObjMsg_Peek(void *obj,uint *outMessage,uint *outSender,uint *outParam
   if (obj == (void *)0x0) {
     return 0;
   }
-  queue = *(ObjMsgQueue **)((byte *)obj + 0xdc);
+  queue = *(ObjMsgQueue **)((byte *)obj + OBJMSG_QUEUE_OFFSET);
   if ((queue != (ObjMsgQueue *)0x0) && (queue->count != 0)) {
     if (outMessage != (uint *)0x0) {
       *outMessage = queue->entries[0].message;
@@ -1897,7 +1902,7 @@ undefined4 ObjMsg_Pop(void *obj,uint *outMessage,uint *outSender,uint *outParam)
   if (obj == (void *)0x0) {
     return 0;
   }
-  queue = *(ObjMsgQueue **)((byte *)obj + 0xdc);
+  queue = *(ObjMsgQueue **)((byte *)obj + OBJMSG_QUEUE_OFFSET);
   if ((queue != (ObjMsgQueue *)0x0) && (queue->count != 0)) {
     queue->count = queue->count - 1;
     if (outMessage != (uint *)0x0) {
@@ -1952,11 +1957,13 @@ void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sende
   maskedFlags = flags & 0xffff;
   for (; objectIndex < objectCount; objectIndex = objectIndex + 1) {
     obj = (void *)objects[objectIndex];
-    if (((obj != sender) || ((maskedFlags & 1) == 0)) &&
-        ((*(short *)((byte *)obj + 0x46) == (short)targetId || ((maskedFlags & 2) != 0))) &&
+    if (((obj != sender) || ((maskedFlags & OBJMSG_SEND_INCLUDE_SENDER) == 0)) &&
+        ((*(short *)((byte *)obj + 0x46) == (short)targetId ||
+          ((maskedFlags & OBJMSG_SEND_MATCH_ANY) != 0))) &&
         ((Vec_distance((float *)((byte *)sender + 0x18),(float *)((byte *)obj + 0x18)) < radius &&
           (obj != (void *)0x0)) &&
-         (queue = *(ObjMsgQueue **)((byte *)obj + 0xdc), queue != (ObjMsgQueue *)0x0))) {
+         (queue = *(ObjMsgQueue **)((byte *)obj + OBJMSG_QUEUE_OFFSET),
+          queue != (ObjMsgQueue *)0x0))) {
       count = queue->count;
       if (count < queue->capacity) {
         slot = (ObjMsgQueueSlotBase *)((byte *)queue + ((count + count + count) << 2));
@@ -2004,13 +2011,15 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
   
   objects = (int *)ObjList_GetObjects(&objectIndex,&objectCount);
   maskedFlags = flags & 0xffff;
-  if ((maskedFlags & 4) != 0) {
+  if ((maskedFlags & OBJMSG_SEND_MATCH_OBJTYPE) != 0) {
     for (; objectIndex < objectCount; objectIndex = objectIndex + 1) {
       obj = (void *)objects[objectIndex];
-      if (((obj != sender) || ((maskedFlags & 1) == 0)) &&
-          (((maskedFlags & 2) != 0 || (targetId == *(short *)((byte *)obj + 0x46)))) &&
+      if (((obj != sender) || ((maskedFlags & OBJMSG_SEND_INCLUDE_SENDER) == 0)) &&
+          (((maskedFlags & OBJMSG_SEND_MATCH_ANY) != 0 ||
+            (targetId == *(short *)((byte *)obj + 0x46)))) &&
           ((obj != (void *)0x0 &&
-            (queue = *(ObjMsgQueue **)((byte *)obj + 0xdc), queue != (ObjMsgQueue *)0x0)))) {
+            (queue = *(ObjMsgQueue **)((byte *)obj + OBJMSG_QUEUE_OFFSET),
+             queue != (ObjMsgQueue *)0x0)))) {
         count = queue->count;
         if (count < queue->capacity) {
           slot = (ObjMsgQueueSlotBase *)((byte *)queue + ((count + count + count) << 2));
@@ -2029,10 +2038,12 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
   else {
     for (; objectIndex < objectCount; objectIndex = objectIndex + 1) {
       obj = (void *)objects[objectIndex];
-      if (((obj != sender) || ((maskedFlags & 1) == 0)) &&
-          (((maskedFlags & 2) != 0 || (targetId == *(short *)((byte *)obj + 0x44)))) &&
+      if (((obj != sender) || ((maskedFlags & OBJMSG_SEND_INCLUDE_SENDER) == 0)) &&
+          (((maskedFlags & OBJMSG_SEND_MATCH_ANY) != 0 ||
+            (targetId == *(short *)((byte *)obj + 0x44)))) &&
           ((obj != (void *)0x0 &&
-            (queue = *(ObjMsgQueue **)((byte *)obj + 0xdc), queue != (ObjMsgQueue *)0x0)))) {
+            (queue = *(ObjMsgQueue **)((byte *)obj + OBJMSG_QUEUE_OFFSET),
+             queue != (ObjMsgQueue *)0x0)))) {
         count = queue->count;
         if (count < queue->capacity) {
           slot = (ObjMsgQueueSlotBase *)((byte *)queue + ((count + count + count) << 2));
@@ -2081,7 +2092,7 @@ uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param)
   if (dstObj == (void *)0x0) {
     return 0;
   }
-  queue = *(ObjMsgQueue **)((byte *)dstObj + 0xdc);
+  queue = *(ObjMsgQueue **)((byte *)dstObj + OBJMSG_QUEUE_OFFSET);
   if (queue != (ObjMsgQueue *)0x0) {
     count = queue->count;
     if (count < queue->capacity) {
@@ -2122,12 +2133,12 @@ void ObjMsg_AllocQueue(void *obj,int capacity)
   ObjMsgQueue *queue;
 
   if (((capacity != 0) && (obj != (void *)0x0)) &&
-      (*(ObjMsgQueue **)((byte *)obj + 0xdc) == (ObjMsgQueue *)0x0)) {
+      (*(ObjMsgQueue **)((byte *)obj + OBJMSG_QUEUE_OFFSET) == (ObjMsgQueue *)0x0)) {
     queueBytes = (capacity * 3 + 2) * 4;
     queue = (ObjMsgQueue *)mmAlloc(queueBytes,0xe,0);
     queue->count = 0;
     queue->capacity = capacity;
-    *(ObjMsgQueue **)((byte *)obj + 0xdc) = queue;
+    *(ObjMsgQueue **)((byte *)obj + OBJMSG_QUEUE_OFFSET) = queue;
   }
   return;
 }
