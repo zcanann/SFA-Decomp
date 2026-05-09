@@ -99,5 +99,10 @@ undefined4
 FUN_800a3924(int param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,uint param_4,
              undefined param_5);
 void FUN_800a392c(void);
+void projgfx_release_doUnsupported(void);
+int projgfx_rayhit_doUnsupported(void);
+int projgfx_setzscale_doUnsupported(void);
+void projgfx_onMapSetup(void);
+void projgfx_initialise(void);
 
 #endif /* MAIN_DLL_MODGFX_H_ */
