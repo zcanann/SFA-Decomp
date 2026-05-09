@@ -95,7 +95,7 @@ void fn_802757C4(int state, int args)
 /*
  * Resolve a sample descriptor and start hardware playback for a voice.
  */
-void fn_8027595C(int state, u32 *args)
+void voiceStartSamplePlayback(int state, u32 *args)
 {
     int found;
     u32 mode;
@@ -141,7 +141,7 @@ void fn_8027595C(int state, u32 *args)
 /*
  * Configure the voice pitch bend ramp and curve flags.
  */
-void fn_80275B38(int state, u32 *args)
+void voiceConfigurePitchBend(int state, u32 *args)
 {
     s8 start;
     s8 target;
@@ -208,7 +208,7 @@ void fn_80275CB8(int state)
 /*
  * Resolve ADSR parameters and send them to the hardware voice.
  */
-void fn_80275E48(int state, u32 *args)
+void voiceApplyAdsrTable(int state, u32 *args)
 {
     u8 *table;
     u16 *words;
@@ -283,7 +283,7 @@ void fn_80275E48(int state, u32 *args)
 /*
  * Configure the per-voice envelope state from an ADSR/keygroup table.
  */
-void fn_802760A0(int state, u32 *args)
+void voiceConfigureAdsrEnvelope(int state, u32 *args)
 {
     s16 basePan;
     u16 decayRaw;
@@ -370,10 +370,10 @@ void fn_802760A0(int state, u32 *args)
 }
 
 /*
- * fn_80276320 - voice param store with magic-divide (~160 instructions).
+ * voiceConfigureParamRamp - voice param store with magic-divide (~160 instructions).
  * Stubbed.
  */
-void fn_80276320(int state, u32 *args, u32 idx)
+void voiceConfigureParamRamp(int state, u32 *args, u32 idx)
 {
     u32 *duration;
     int offset;
