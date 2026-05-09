@@ -218,6 +218,13 @@ typedef struct ExpgfxResourceEntry {
   u32 wordC;
 } ExpgfxResourceEntry;
 
+typedef struct ExpgfxResourceHandle {
+  u8 pad00[0x0E];
+  u16 refCount;
+  u8 pad10[0x14 - 0x10];
+  u16 linkGroup;
+} ExpgfxResourceHandle;
+
 typedef union ExpgfxSlotStateBits {
   u8 value;
   struct {
@@ -1741,7 +1748,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIdx, short slot
 {
   ExpgfxSlot *slot;
   ExpgfxAttachedSourceState *attachedSource;
-  ExpgfxResourceEntry *resourceEntry;
+  ExpgfxResourceHandle *resourceHandle;
   void *playerObj;
   u8 *expgfxBase;
   uint behaviorFlags;
@@ -1782,7 +1789,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIdx, short slot
   }
   {
   slotPoolBases = (uint *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
-  trackedFrameMasks = (u32 *)(expgfxBase + 0x1010);
+  trackedFrameMasks = (u32 *)(expgfxBase + EXPGFX_TRACKED_SOURCE_FRAME_MASKS_OFFSET);
 
   if ((int)poolIdxOut < EXPGFX_POOL_COUNT) {
     *(int *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET + ((int)poolIdxOut << 2)) =
@@ -1819,17 +1826,17 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIdx, short slot
     expgfx_release(slotPoolBases[(int)poolIdxOut], (int)poolIdxOut, (int)slotIdxOut, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
   }
-  resourceEntry = (ExpgfxResourceEntry *)*(u32 *)(expgfxBase + (tableIndex << 4));
-  if (resourceEntry == NULL) {
+  resourceHandle = (ExpgfxResourceHandle *)*(u32 *)(expgfxBase + (tableIndex << 4));
+  if (resourceHandle == NULL) {
     expgfx_release(slotPoolBases[(int)poolIdxOut], (int)poolIdxOut, (int)slotIdxOut, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
   }
-  if (*(u16 *)((char *)resourceEntry + 0xe) >= 0xffff) {
+  if (resourceHandle->refCount >= 0xffff) {
     expgfx_release(slotPoolBases[(int)poolIdxOut], (int)poolIdxOut, (int)slotIdxOut, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
   }
-  *(u16 *)((char *)resourceEntry + 0xe) = *(u16 *)((char *)resourceEntry + 0xe) + 1;
-  *(u16 *)((char *)resourceEntry + 0x14) = (u16)config->linkGroup;
+  resourceHandle->refCount = resourceHandle->refCount + 1;
+  resourceHandle->linkGroup = (u16)config->linkGroup;
 
   behaviorFlags = slot->behaviorFlags;
   if ((behaviorFlags & 0x80) != 0) {
@@ -1869,7 +1876,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIdx, short slot
     attachedSource = NULL;
   }
 
-  subTableIndex = expgfx_addToTable((uint)resourceEntry, (uint)attachedSource, attachedKey1,
+  subTableIndex = expgfx_addToTable((uint)resourceHandle, (uint)attachedSource, attachedKey1,
                                      config->tableKeyType);
   if ((short)subTableIndex == EXPGFX_INVALID_TABLE_INDEX) {
     debugPrintf(sExpgfxInvalidTabIndex);
@@ -2123,10 +2130,10 @@ void expgfx_resetPoolResources(void)
     poolSourceModes = poolSourceModes + 8;
     poolSourceIds = poolSourceIds + 8;
   }
-  *(u32 *)(expgfxBase + 0x1014) = 0;
-  *(u32 *)(expgfxBase + 0x1010) = 0;
-  *(u32 *)(expgfxBase + 0x101c) = 0;
-  *(u32 *)(expgfxBase + 0x1018) = 0;
+  *(u32 *)(expgfxBase + EXPGFX_TRACKED_SOURCE_FRAME_MASKS_OFFSET + 4) = 0;
+  *(u32 *)(expgfxBase + EXPGFX_TRACKED_SOURCE_FRAME_MASKS_OFFSET) = 0;
+  *(u32 *)(expgfxBase + EXPGFX_TRACKED_SOURCE_FRAME_MASKS_OFFSET + 0xC) = 0;
+  *(u32 *)(expgfxBase + EXPGFX_TRACKED_SOURCE_FRAME_MASKS_OFFSET + 8) = 0;
   lbl_803DD258 = 1;
   resourceIndex = 0;
   resourceEntry = (ExpgfxResourceEntry *)(expgfxBase + EXPGFX_RESOURCE_TABLE_OFFSET);
