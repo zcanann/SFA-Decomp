@@ -6,7 +6,7 @@ extern undefined4 Obj_TransformWorldPointToLocal();
 extern undefined4 Obj_TransformLocalPointToWorld();
 extern uint getAngle();
 extern undefined4 mtxRotateByVec3s();
-extern undefined4 fn_80021EE8();
+extern undefined4 setMatrixFromObjectPos();
 extern int FUN_80017970();
 extern undefined4 ObjList_GetObjects();
 extern undefined4 ObjHits_RecordObjectHit();
@@ -1366,7 +1366,7 @@ void ObjHitbox_UpdateRotatedBounds(short *param_1,int param_2)
     local_28.radiusX = *(float *)(param_1 + 0xc);
     local_28.radiusY = *(float *)(param_1 + 0xe);
     local_28.radiusZ = *(float *)(param_1 + 0x10);
-    fn_80021EE8((float *)(iVar1 + (*(byte *)(iVar1 + 0x10c) + 2) * 0x40),&local_28);
+    setMatrixFromObjectPos((float *)(iVar1 + (*(byte *)(iVar1 + 0x10c) + 2) * 0x40),&local_28);
     if (*(char *)(iVar1 + 0x10d) != '\0') {
       *(char *)(iVar1 + 0x10d) = *(char *)(iVar1 + 0x10d) + -1;
     }

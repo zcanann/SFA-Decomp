@@ -63,7 +63,7 @@ extern void OSReport(const char *msg, ...);
 extern undefined4 Camera_DisableViewYOffset();
 extern undefined4 getEnvfxAct();
 extern undefined4 Resource_Release();
-extern undefined4 fn_8001F384();
+extern undefined4 ModelLightStruct_free();
 extern undefined4 Obj_FreeObject();
 extern undefined4 Obj_GetPlayerObject();
 extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
@@ -453,7 +453,7 @@ void DIMboss_free(DIMbossObject *obj)
   lbl_803DDB88 = 0;
   effect = runtime->topState->effect;
   if (effect != NULL) {
-    fn_8001F384(effect);
+    ModelLightStruct_free(effect);
   }
   fn_80055000();
 }

@@ -85,7 +85,7 @@ extern f32 lbl_803E2488;  /*  5.0f  */
 extern f32 lbl_803E248C;  /*  3.0f  */
 
 extern f32 getXZDistance(f32 *a, f32 *b);
-extern void fn_80021AC8(void *params, void *outVec);
+extern void mathFn_80021ac8(void *params, void *outVec);
 extern f32 sqrtf(f32 x);
 
 /*
@@ -154,7 +154,7 @@ void fn_8013D5A4(u8 *obj, u8 *state, f32 *targetPos, u8 flag, f32 baseRadius)
         params.a = -*(s16 *)(obj + 0x0);
         params.angle = 0;
         params.c = 0;
-        fn_80021AC8(&params, delta);
+        mathFn_80021ac8(&params, delta);
         if (delta[2] > lbl_803E23DC) {
             candidate = lbl_803E241C * timeDelta + *(f32 *)(state + 0x14);
             if (candidate < lbl_803E23DC) {

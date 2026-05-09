@@ -7,7 +7,7 @@
 extern void mtxRotateByVec3s(void *out, void *vec);
 extern void mtx44Transpose(void *m, void *out);
 extern void Matrix_TransformPoint(void *mtx, float x, float y, float z, float *ox, float *oy, float *oz);
-extern void fn_80021EE8(void *out, void *vec);
+extern void setMatrixFromObjectPos(void *out, void *vec);
 extern void OSReport(const char *fmt, ...);
 extern void fn_801993B0(void *obj, int param_2, int triggerState, int distanceSquared);
 
@@ -52,7 +52,7 @@ void fn_80198FA4(s16 *param_1, void *param_2)
     tmp[1] = lbl_803E40D8;
     tmp[2] = lbl_803E40D8;
     tmp[3] = lbl_803E40D8;
-    fn_80021EE8(&tmp[4], vec);
+    setMatrixFromObjectPos(&tmp[4], vec);
     Matrix_TransformPoint(&tmp[4], lbl_803E40D8, lbl_803E40D8, lbl_803E40E0, &out_z, &out_y, &out_x);
     *(f32 *)((char *)state + 0xc) = out_y;
     *(f32 *)((char *)state + 0x10) = out_z;

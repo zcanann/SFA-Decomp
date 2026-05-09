@@ -27,7 +27,7 @@ extern undefined4 FUN_801d8480();
 extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern uint FUN_80294cd0();
-extern int fn_8001F4C8(int param_1,int param_2);
+extern int objCreateLight(int param_1,int param_2);
 extern void GameBit_Set(int eventId,int value);
 extern void Obj_FreeObject(void);
 
@@ -72,7 +72,7 @@ void mmsh_shrine_init(undefined2 *param_1,int param_2)
   GameBit_Set(0x12d,0);
   *(undefined4 *)(param_1 + 0x7a) = 1;
   if (*piVar2 == 0) {
-    iVar1 = fn_8001F4C8(0,1);
+    iVar1 = objCreateLight(0,1);
     *piVar2 = iVar1;
   }
   GameBit_Set(0xf07,1);

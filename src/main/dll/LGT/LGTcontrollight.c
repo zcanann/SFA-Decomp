@@ -2,7 +2,7 @@
 #include "main/dll/LGT/LGTcontrollight.h"
 
 extern u32 randomGetRange(int min, int max);
-extern void fn_80021AC8(void *params, void *outVec);
+extern void mathFn_80021ac8(void *params, void *outVec);
 
 extern f32 lbl_803E5EAC;
 extern f32 lbl_803E5EB0;
@@ -116,7 +116,7 @@ void fn_801F4D54(int param_1, u8 *param_2)
   locals.b = 0;
   locals.a = 0;
   locals.angle = *(s16 *)(param_2 + 0x60);
-  fn_80021AC8(&locals, param_2 + 0x34);
+  mathFn_80021ac8(&locals, param_2 + 0x34);
   *(f32 *)(param_2 + 0x34) =
       *(f32 *)(param_2 + 0x34) + *(f32 *)(param_2 + 0x54);
   *(f32 *)(param_2 + 0x38) =

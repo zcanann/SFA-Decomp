@@ -15,7 +15,7 @@ extern double FUN_800176f4();
 extern uint FUN_80017760();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
-extern void fn_8001F384(void *effect);
+extern void ModelLightStruct_free(void *effect);
 extern u32 GameBit_Get(int bit);
 extern undefined4 FUN_8002fc3c();
 extern undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnimArg,
@@ -389,7 +389,7 @@ void campfire_free(int obj)
   (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
   effect = *state;
   if (effect != 0) {
-    fn_8001F384(effect);
+    ModelLightStruct_free(effect);
   }
 }
 #pragma scheduling reset

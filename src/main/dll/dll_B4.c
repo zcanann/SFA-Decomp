@@ -8,12 +8,12 @@ extern void ObjModel_SetRenderCallback(u8 *model, void *cb);
 extern void fn_80100DCC(void);
 extern void fn_80100C90(void);
 extern void fn_8001EFE0(int a, int b, int c, int d);
-extern u8 *fn_8001F4C8(int a, int b);
-extern void fn_8001DB2C(u8 *p, int a);
+extern u8 *objCreateLight(int a, int b);
+extern void modelLightStruct_setField50(u8 *p, int a);
 extern void fn_8001DB3C(u8 *p, int a);
 extern void fn_8001DB34(u8 *p, int a);
 extern void fn_8001DC90(u8 *p, f32 a, f32 b, f32 c);
-extern void fn_8001DAF0(u8 *p, int a, int b, int c, int d);
+extern void modelLightStruct_setColorsA8AC(u8 *p, int a, int b, int c, int d);
 
 extern u8 *lbl_803DD4BC;
 extern u8 *lbl_803DD4C4;
@@ -40,13 +40,13 @@ void fn_80100FA0(void)
     lbl_803DD4BC[0xAD] = 2;
     ObjModel_SetRenderCallback(Obj_GetActiveModel(lbl_803DD4BC), fn_80100C90);
     fn_8001EFE0(1, 0x32, 0x3C, 0x28);
-    lbl_803DD4C4 = fn_8001F4C8(0, 1);
+    lbl_803DD4C4 = objCreateLight(0, 1);
     if (lbl_803DD4C4 != NULL) {
-      fn_8001DB2C(lbl_803DD4C4, 4);
+      modelLightStruct_setField50(lbl_803DD4C4, 4);
       fn_8001DB3C(lbl_803DD4C4, 1);
       fn_8001DB34(lbl_803DD4C4, 1);
       fn_8001DC90(lbl_803DD4C4, lbl_803E162C, lbl_803E1630, lbl_803E1640);
-      fn_8001DAF0(lbl_803DD4C4, 0xB4, 0xC8, 0xFF, 0xFF);
+      modelLightStruct_setColorsA8AC(lbl_803DD4C4, 0xB4, 0xC8, 0xFF, 0xFF);
     }
   }
 }

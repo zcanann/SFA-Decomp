@@ -2,13 +2,13 @@
 #include "main/dll/riverFlowRelated018D.h"
 
 extern int GameBit_Get(int eventId);
-extern int fn_8001F4C8(int param_1,int param_2);
-extern void fn_8001DB2C(int handle,int param_2);
-extern void fn_8001DAF0(int handle,int r,int g,int b,int a);
-extern void fn_8001DA18(int handle,int r,int g,int b,int a);
-extern void fn_8001DC38(int handle,f32 param_2,f32 param_3);
+extern int objCreateLight(int param_1,int param_2);
+extern void modelLightStruct_setField50(int handle,int param_2);
+extern void modelLightStruct_setColorsA8AC(int handle,int r,int g,int b,int a);
+extern void modelLightStruct_setColors100104(int handle,int r,int g,int b,int a);
+extern void lightDistAttenFn_8001dc38(int handle,f32 param_2,f32 param_3);
 extern void fn_8001DB54(int handle,int param_2);
-extern void fn_8001DB6C(int handle,f32 param_2,int param_3);
+extern void lightFn_8001db6c(int handle,f32 param_2,int param_3);
 extern void fn_8001D714(int handle,f32 param_2);
 extern void fn_8001DAB8(int handle,int r,int g,int b,int a);
 extern void fn_8001D9E0(int handle,int r,int g,int b,int a);
@@ -74,14 +74,14 @@ void dimbosstonsil_init(int obj,undefined4 param_2,int isAltVariant)
   lbl_803DDBA0 = lbl_803E4C90;
   lbl_803DDB98 = lbl_803E4C90;
   lbl_803DDB9C = lbl_803E4C9C;
-  lbl_803DDB90 = fn_8001F4C8(0,1);
+  lbl_803DDB90 = objCreateLight(0,1);
   if (lbl_803DDB90 != 0) {
-    fn_8001DB2C(lbl_803DDB90,2);
-    fn_8001DAF0(lbl_803DDB90,0xff,0,0,0x7f);
-    fn_8001DA18(lbl_803DDB90,0xff,0,0,0x7f);
-    fn_8001DC38(lbl_803DDB90,lbl_803E4C9C,lbl_803E4CA0);
+    modelLightStruct_setField50(lbl_803DDB90,2);
+    modelLightStruct_setColorsA8AC(lbl_803DDB90,0xff,0,0,0x7f);
+    modelLightStruct_setColors100104(lbl_803DDB90,0xff,0,0,0x7f);
+    lightDistAttenFn_8001dc38(lbl_803DDB90,lbl_803E4C9C,lbl_803E4CA0);
     fn_8001DB54(lbl_803DDB90,1);
-    fn_8001DB6C(lbl_803DDB90,lbl_803E4C90,1);
+    lightFn_8001db6c(lbl_803DDB90,lbl_803E4C90,1);
     fn_8001D714(lbl_803DDB90,lbl_803E4CA0);
     fn_8001DAB8(lbl_803DDB90,0xff,0x7f,0,0x40);
     fn_8001D9E0(lbl_803DDB90,0xff,0x7f,0,0x40);

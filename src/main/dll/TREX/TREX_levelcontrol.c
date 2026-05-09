@@ -16,7 +16,7 @@ extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern int FUN_80017b00();
-extern void fn_8001F384(void *effect);
+extern void ModelLightStruct_free(void *effect);
 extern int ObjHits_GetPriorityHit();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8008112c();
@@ -365,7 +365,7 @@ void fn_801E3D40(int obj)
   state = *(int *)(obj + 0xb8);
   (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
   if (*(void **)(state + 0x20) != 0) {
-    fn_8001F384(*(void **)(state + 0x20));
+    ModelLightStruct_free(*(void **)(state + 0x20));
     *(undefined4 *)(state + 0x20) = 0;
   }
 }

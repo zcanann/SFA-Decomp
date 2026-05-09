@@ -2,7 +2,7 @@
 #include "main/dll/dll_227.h"
 
 extern void fn_8003B8F4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
-extern void fn_8001DD88(f32 x, f32 y, f32 z);
+extern void lightVecFn_8001dd88(f32 x, f32 y, f32 z);
 extern void queueGlowRender(void *p);
 extern void ObjPath_GetPointWorldPosition(void *obj, int idx, void *out0, void *out1, void *out2, int flag);
 extern void *Obj_GetPlayerObject(void);
@@ -46,7 +46,7 @@ void dimbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
             (*(void (***)(void *, int, int *, int, int, int))pDll_expgfx)[2](obj, 0x4bd, &local_8, 0x200001, -1, 0);
 
             if (lbl_803DDB90 != NULL && *((u8 *)lbl_803DDB90 + 0x2f8) != 0 && *((u8 *)lbl_803DDB90 + 0x4c) != 0) {
-                fn_8001DD88(outX, outY, outZ);
+                lightVecFn_8001dd88(outX, outY, outZ);
                 queueGlowRender(lbl_803DDB90);
             }
         }

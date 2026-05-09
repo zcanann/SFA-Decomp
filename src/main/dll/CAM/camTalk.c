@@ -7,8 +7,8 @@ extern undefined4 Obj_TransformWorldPointToLocal();
 extern undefined4 FUN_80006a1c();
 extern undefined4 FUN_80006a30();
 extern int FUN_80017730();
-extern void fn_80021AC8(void *param_1, void *outVec);
-extern undefined4 fn_80021EE8();
+extern void mathFn_80021ac8(void *param_1, void *outVec);
+extern undefined4 setMatrixFromObjectPos();
 extern undefined4 Matrix_TransformPoint();
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
@@ -149,7 +149,7 @@ void fn_80107B4C(short *param_1)
     local_a0 = (longlong)(int)*(float *)(lbl_803DD540 + 0x30);
     local_fc.pitch = (undefined2)(int)*(float *)(lbl_803DD540 + 0x30);
     local_fc.roll = 0;
-    fn_80021EE8(afStack_e4,&local_fc);
+    setMatrixFromObjectPos(afStack_e4,&local_fc);
     Matrix_TransformPoint((double)lbl_803E1780,(double)lbl_803E178C,(double)lbl_803E1780,afStack_e4,
                  &local_100,&local_104,&local_108);
     *param_1 = -0x8000 - *puVar5;
@@ -296,7 +296,7 @@ void fn_80108010(int param_1,int param_2)
     local_1c[0] = *(float *)(param_1 + 0x18) - *(float *)(puVar1 + 6);
     local_1c[1] = (lbl_803E17C0 + *(float *)(param_1 + 0x1c)) - *(float *)(puVar1 + 7);
     local_1c[2] = *(float *)(param_1 + 0x20) - *(float *)(puVar1 + 8);
-    fn_80021AC8(puVar1,local_1c);
+    mathFn_80021ac8(puVar1,local_1c);
     *(float *)(lbl_803DD548 + 0x120) = *(float *)(puVar1 + 6) + local_1c[0];
     *(float *)(lbl_803DD548 + 0x124) = *(float *)(puVar1 + 7) + local_1c[1];
     *(float *)(lbl_803DD548 + 0x128) = *(float *)(puVar1 + 8) + local_1c[2];

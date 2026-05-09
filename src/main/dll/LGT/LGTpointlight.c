@@ -1,13 +1,13 @@
 #include "ghidra_import.h"
 #include "main/dll/LGT/LGTpointlight.h"
 
-extern int fn_8001F4C8();
-extern void fn_8001DB2C();
-extern void fn_8001DD88();
-extern void fn_8001DAF0();
-extern void fn_8001DA18();
-extern void fn_8001DC38();
-extern void fn_8001DB6C();
+extern int objCreateLight();
+extern void modelLightStruct_setField50();
+extern void lightVecFn_8001dd88();
+extern void modelLightStruct_setColorsA8AC();
+extern void modelLightStruct_setColors100104();
+extern void lightDistAttenFn_8001dc38();
+extern void lightFn_8001db6c();
 extern void fn_8001D620();
 extern void fn_8001DAB8();
 extern void fn_8001DB54();
@@ -112,26 +112,26 @@ void lightsource_init(undefined2 *obj,int mapData)
   }
   else {
     if (*state == 0) {
-      temp = fn_8001F4C8(obj,1);
+      temp = objCreateLight(obj,1);
       *state = temp;
       if (*state != 0) {
-        fn_8001DB2C(*state,2);
+        modelLightStruct_setField50(*state,2);
       }
     }
     if (*state != 0) {
       if ((obj[0x23] == 0x705) || (obj[0x23] == 0x712)) {
-        fn_8001DD88((double)lbl_803E5E0C,(double)lbl_803E5E0C,(double)lbl_803E5E0C);
+        lightVecFn_8001dd88((double)lbl_803E5E0C,(double)lbl_803E5E0C,(double)lbl_803E5E0C);
       }
       else {
-        fn_8001DD88((double)lbl_803E5E0C,(double)lbl_803E5E28,(double)lbl_803E5E0C);
+        lightVecFn_8001dd88((double)lbl_803E5E0C,(double)lbl_803E5E28,(double)lbl_803E5E0C);
       }
 
       colorBase = (uint)*(byte *)((int)state + 0x15) * 3;
-      fn_8001DAF0(*state,colors[colorBase],colors[colorBase + 1],colors[colorBase + 2],0xff);
+      modelLightStruct_setColorsA8AC(*state,colors[colorBase],colors[colorBase + 1],colors[colorBase + 2],0xff);
       colorBase = (uint)*(byte *)((int)state + 0x15) * 3;
-      fn_8001DA18(*state,colors[colorBase],colors[colorBase + 1],colors[colorBase + 2],0xff);
-      fn_8001DC38((double)lbl_803E5E2C,(double)lbl_803E5E30,*state);
-      fn_8001DB6C((double)lbl_803E5E0C,*state,1);
+      modelLightStruct_setColors100104(*state,colors[colorBase],colors[colorBase + 1],colors[colorBase + 2],0xff);
+      lightDistAttenFn_8001dc38((double)lbl_803E5E2C,(double)lbl_803E5E30,*state);
+      lightFn_8001db6c((double)lbl_803E5E0C,*state,1);
       fn_8001D620(*state,1,3);
 
       colorBase = (uint)*(byte *)((int)state + 0x15) * 3;
