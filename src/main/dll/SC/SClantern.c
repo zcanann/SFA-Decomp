@@ -10,7 +10,7 @@ extern undefined4 FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern undefined4 Obj_GetPlayerObject();
 
-extern ObjAnimEventList lbl_803AD048;
+extern ObjAnimEventList gSClanternObjAnimEvents;
 extern undefined4* lbl_803DCAAC;
 extern f32 timeDelta;
 extern f32 lbl_803E5498;
@@ -40,14 +40,14 @@ void SHthorntail_init(double moveStepScale, int obj)
   float local_24;
   float local_20;
   pointIndex = 0;
-  lbl_803AD048.triggerCount = 0;
-  lbl_803AD048.rootCurveValid = 0;
-  advanceResult = ObjAnim_AdvanceCurrentMove(moveStepScale,timeDelta,obj,&lbl_803AD048);
-  if (lbl_803AD048.rootCurveValid != 0) {
-    *(short *)obj = *(short *)obj + lbl_803AD048.rootPitch;
+  gSClanternObjAnimEvents.triggerCount = 0;
+  gSClanternObjAnimEvents.rootCurveValid = 0;
+  advanceResult = ObjAnim_AdvanceCurrentMove(moveStepScale,timeDelta,obj,&gSClanternObjAnimEvents);
+  if (gSClanternObjAnimEvents.rootCurveValid != 0) {
+    *(short *)obj = *(short *)obj + gSClanternObjAnimEvents.rootPitch;
   }
-  event = lbl_803AD048.triggeredIds;
-  for (i = 0; i < lbl_803AD048.triggerCount; i++) {
+  event = gSClanternObjAnimEvents.triggeredIds;
+  for (i = 0; i < gSClanternObjAnimEvents.triggerCount; i++) {
     switch(*event) {
     case 1:
     case 3:
