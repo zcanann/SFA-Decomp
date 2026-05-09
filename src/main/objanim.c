@@ -49,7 +49,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
 
   moveIndex = (int)animDef->moveBaseTable[(int)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
               (moveId & OBJANIM_MOVE_INDEX_MASK);
-  if ((int)animDef->moveCount <= moveIndex) {
+  if (moveIndex >= (int)animDef->moveCount) {
     moveIndex = animDef->moveCount - 1;
   }
   if (moveIndex < 0) {
@@ -382,7 +382,6 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   int frameStep;
   int moveIndex;
   int moveData;
-  float segmentLength;
   float eventStepFrames;
   objAnim = (ObjAnimComponent *)objAnimArg;
   if (moveProgress > gObjAnimProgressOne) {
@@ -433,11 +432,10 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   }
   state->frameData = (u8 *)(moveData + OBJANIM_FRAME_CMD_OFFSET);
   state->frameType = *(s8 *)(moveData + 1) & OBJANIM_FRAME_TYPE_MASK;
-  segmentLength = (float)state->frameData[1];
+  state->segmentLength = (float)state->frameData[1];
   if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
-    segmentLength = segmentLength - gObjAnimProgressOne;
+    state->segmentLength = state->segmentLength - gObjAnimProgressOne;
   }
-  state->segmentLength = segmentLength;
   frameStep = *(s8 *)(moveData + 1) & OBJANIM_FRAME_STEP_MASK;
   if (frameStep != 0) {
     state->savedStep = state->step;
@@ -1117,7 +1115,6 @@ undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int
   int frameStep;
   int moveIndex;
   int moveData;
-  float segmentLength;
   float eventStepFrames;
   ObjHitReactState *hitState;
 
@@ -1180,11 +1177,10 @@ undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int
   }
   state->frameData = (u8 *)(moveData + OBJANIM_FRAME_CMD_OFFSET);
   state->frameType = *(s8 *)(moveData + 1) & OBJANIM_FRAME_TYPE_MASK;
-  segmentLength = (float)state->frameData[1];
+  state->segmentLength = (float)state->frameData[1];
   if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
-    segmentLength = segmentLength - gObjAnimProgressOne;
+    state->segmentLength = state->segmentLength - gObjAnimProgressOne;
   }
-  state->segmentLength = segmentLength;
   frameStep = *(s8 *)(moveData + 1) & OBJANIM_FRAME_STEP_MASK;
   if ((frameStep != 0) && ((flags & OBJANIM_SET_MOVE_FLAG_SKIP_EVENT_COUNTDOWN) == 0)) {
     state->savedStep = state->step;
