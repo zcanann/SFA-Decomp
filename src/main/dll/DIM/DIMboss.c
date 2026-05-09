@@ -220,48 +220,48 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
       case 0x14:
         (*(code *)(*lbl_803DCAAC + 0x50))(0x1c,2,0);
         break;
-      case 0x15:
+      case DIMBOSS_EVENT_FREE_DIMBOSS_ASSETS:
         OSReport(sDIMBossFreeingAssetsForDIMBoss);
         fn_80043074();
         unlockLevel(0,0,1);
-        uVar5 = mapGetDirIdx(0x1c);
-        mapUnload(uVar5,0x3ff);
-        uVar5 = mapGetDirIdx(0x1b);
-        mapUnload(uVar5,0x20000000);
+        uVar5 = mapGetDirIdx(DIMBOSS_MAP_DIR);
+        mapUnload(uVar5,DIMBOSS_MAP_UNLOAD_MASK);
+        uVar5 = mapGetDirIdx(DIMBOSS_GUT_MAP_DIR);
+        mapUnload(uVar5,DIMBOSS_GUT_MAP_UNLOAD_MASK);
         fn_80041E3C(0);
         break;
-      case 0x16:
+      case DIMBOSS_EVENT_LOAD_DIMTOP_ASSETS:
         OSReport(sDIMBossLoadingAssetsForDIMTop);
-        uVar5 = mapGetDirIdx(0x13);
+        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
         fn_80043560(uVar5,0);
-        mapGetDirIdx(0x13);
-        mapLoadDataFile(uVar5,0x20);
-        uVar5 = mapGetDirIdx(0x13);
-        mapLoadDataFile(uVar5,0x21);
-        uVar5 = mapGetDirIdx(0x13);
-        mapLoadDataFile(uVar5,0x23);
-        uVar5 = mapGetDirIdx(0x13);
-        mapLoadDataFile(uVar5,0x24);
-        uVar5 = mapGetDirIdx(0x13);
-        mapLoadDataFile(uVar5,0x30);
-        uVar5 = mapGetDirIdx(0x13);
-        mapLoadDataFile(uVar5,0x2f);
-        uVar5 = mapGetDirIdx(0x13);
-        mapLoadDataFile(uVar5,0x2b);
-        uVar5 = mapGetDirIdx(0x13);
-        mapLoadDataFile(uVar5,0x2a);
-        uVar5 = mapGetDirIdx(0x13);
-        mapLoadDataFile(uVar5,0x26);
-        uVar5 = mapGetDirIdx(0x13);
-        mapLoadDataFile(uVar5,0x25);
-        uVar5 = mapGetDirIdx(0x13);
-        mapLoadDataFile(uVar5,0x1a);
-        uVar5 = mapGetDirIdx(0x13);
-        mapLoadDataFile(uVar5,0x1b);
-        uVar5 = mapGetDirIdx(0x13);
-        mapLoadDataFile(uVar5,0xe);
-        uVar5 = mapGetDirIdx(0x13);
-        mapLoadDataFile(uVar5,0xd);
+        mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(uVar5,DIMTOP_BOOT_DATA_FILE);
+        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(uVar5,DIMTOP_INTRO_DATA_FILE);
+        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(uVar5,DIMTOP_PLATFORM_DATA_FILE);
+        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(uVar5,DIMTOP_LIFT_DATA_FILE);
+        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(uVar5,DIMTOP_SCENE_DATA_FILE);
+        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(uVar5,DIMTOP_STEAM_DATA_FILE);
+        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(uVar5,DIMTOP_BOSS_DATA_FILE_A);
+        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(uVar5,DIMTOP_BOSS_DATA_FILE_B);
+        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(uVar5,DIMTOP_EFFECT_DATA_FILE_A);
+        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(uVar5,DIMTOP_EFFECT_DATA_FILE_B);
+        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(uVar5,DIMTOP_ROOM_DATA_FILE_A);
+        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(uVar5,DIMTOP_ROOM_DATA_FILE_B);
+        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(uVar5,DIMTOP_AUDIO_DATA_FILE_A);
+        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(uVar5,DIMTOP_AUDIO_DATA_FILE_B);
         bVar2 = false;
         while (uVar6 = fn_800430AC(0), (uVar6 & 0xffefffff) != 0) {
           padUpdate();
@@ -389,7 +389,7 @@ int DIMboss_setScale(DIMbossObject *obj)
  */
 int DIMboss_getExtraSize(void)
 {
-  return 0x4c8;
+  return DIMBOSS_RUNTIME_SIZE;
 }
 
 /*
@@ -407,7 +407,7 @@ int DIMboss_getExtraSize(void)
  */
 int dimboss_func08(void)
 {
-  return 0x49;
+  return DIMBOSS_OBJECT_TYPE_ID;
 }
 
 /*
