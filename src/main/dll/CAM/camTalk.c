@@ -13,9 +13,9 @@ extern undefined4 Matrix_TransformPoint();
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern undefined4 camcontrol_getTargetPosition(int param_1,int param_2,float *outPos,void *outAngle);
-extern void fn_80010A6C(void *param_1);
-extern double fn_80010DC0(double param_1,float *param_2,float *param_3);
-extern void fn_80010D54(void);
+extern void curvesMove(void *param_1);
+extern double curveFn_80010dc0(double param_1,float *param_2,float *param_3);
+extern void curveFn_80010d54(void);
 extern int getAngle(double dx,double dz);
 extern void *fn_801E1DA8(void);
 extern int fn_801E12DC(int *obj);
@@ -355,8 +355,8 @@ void fn_80108194(short *param_1)
   *(undefined4 *)(lbl_803DD548 + 0x104) = 0;
   *(undefined4 *)(lbl_803DD548 + 0x108) = 4;
   *(undefined4 *)(lbl_803DD548 + 0xf8) = 0;
-  *(code **)(lbl_803DD548 + 0x10c) = (code *)fn_80010DC0;
-  *(void **)(lbl_803DD548 + 0x110) = fn_80010D54;
+  *(code **)(lbl_803DD548 + 0x10c) = (code *)curveFn_80010dc0;
+  *(void **)(lbl_803DD548 + 0x110) = curveFn_80010d54;
   uStack_14 = (int)*param_1 ^ 0x80000000;
   local_18 = 0x43300000;
   *(float *)(lbl_803DD548 + 0x40) =
@@ -399,7 +399,7 @@ void fn_80108194(short *param_1)
       *(float *)(lbl_803DD548 + 0x50) = *(float *)(lbl_803DD548 + 0x50) + lbl_803E17D0;
     }
   }
-  fn_80010A6C(lbl_803DD548 + 0x78);
+  curvesMove(lbl_803DD548 + 0x78);
 }
 
 

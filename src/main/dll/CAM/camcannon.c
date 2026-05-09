@@ -2,7 +2,7 @@
 #include "main/dll/CAM/camcannon.h"
 
 extern double fn_80010C50();
-extern double fn_80010DC0();
+extern double curveFn_80010dc0();
 extern undefined4 FUN_80017814();
 extern f32 sqrtf(f32 x);
 
@@ -59,7 +59,7 @@ uint fn_8010AEA8(short *param_1,uint param_2)
   if ((double)lbl_803E188C < dVar2) {
     dVar2 = (double)lbl_803E188C;
   }
-  dVar2 = fn_80010DC0(dVar2,(float *)(lbl_803DD560 + 0x48),(float *)0x0);
+  dVar2 = curveFn_80010dc0(dVar2,(float *)(lbl_803DD560 + 0x48),(float *)0x0);
   if (dVar2 < (double)lbl_803E18AC) {
     dVar2 = (double)lbl_803E18AC;
   }

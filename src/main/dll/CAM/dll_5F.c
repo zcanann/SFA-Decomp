@@ -3,8 +3,8 @@
 
 extern undefined4 FUN_800033a8();
 extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,float *outX,float *outY,float *outZ,int obj);
-extern double fn_80010C64();
-extern double fn_80010EE0();
+extern double mathFn_80010c64();
+extern double mathFn_80010ee0();
 extern undefined4 getButtonsJustPressed();
 extern int FUN_80017730();
 extern undefined4 FUN_80017830();
@@ -193,30 +193,30 @@ void fn_8010B424(short *param_1,undefined8 param_2,undefined8 param_3,undefined8
                    (double)(float)lbl_803DD560[0x16]);
     dVar16 = (double)fVar1;
     lbl_803DD560[0x16] = (int)fVar1;
-    dVar14 = fn_80010EE0(dVar16,afStack_a8,(float *)0x0);
+    dVar14 = mathFn_80010ee0(dVar16,afStack_a8,(float *)0x0);
     *(float *)(psVar3 + 0xc) = (float)dVar14;
-    dVar14 = fn_80010EE0(dVar16,afStack_b8,(float *)0x0);
+    dVar14 = mathFn_80010ee0(dVar16,afStack_b8,(float *)0x0);
     *(float *)(psVar3 + 0xe) = (float)dVar14;
-    dVar14 = fn_80010EE0(dVar16,afStack_c8,(float *)0x0);
+    dVar14 = mathFn_80010ee0(dVar16,afStack_c8,(float *)0x0);
     *(float *)(psVar3 + 0x10) = (float)dVar14;
     iVar6 = (**(code **)(*lbl_803DCA9C + 0x1c))(lbl_803DD560[2]);
     bVar2 = *(byte *)(iVar6 + 0x3b);
     if ((bVar2 & 1) == 0) {
-      dVar14 = fn_80010C64(dVar16,afStack_d8,(float *)0x0);
+      dVar14 = mathFn_80010c64(dVar16,afStack_d8,(float *)0x0);
       local_78 = (double)(longlong)(int)dVar14;
       *psVar3 = (short)(int)dVar14 + -0x8000;
     }
     if ((bVar2 & 2) == 0) {
-      dVar14 = fn_80010C64(dVar16,afStack_e8,(float *)0x0);
+      dVar14 = mathFn_80010c64(dVar16,afStack_e8,(float *)0x0);
       local_78 = (double)(longlong)(int)dVar14;
       psVar3[1] = (short)(int)dVar14;
     }
     if ((bVar2 & 4) == 0) {
-      dVar14 = fn_80010C64(dVar16,afStack_f8,(float *)0x0);
+      dVar14 = mathFn_80010c64(dVar16,afStack_f8,(float *)0x0);
       local_78 = (double)(longlong)(int)dVar14;
       psVar3[2] = (short)(int)dVar14;
     }
-    dVar14 = fn_80010EE0(dVar16,afStack_108,(float *)0x0);
+    dVar14 = mathFn_80010ee0(dVar16,afStack_108,(float *)0x0);
     *(float *)(psVar3 + 0x5a) = (float)dVar14;
     if ((*(char *)(lbl_803DD560 + 0x19) == '\0') &&
        (uVar7 = fn_8010AEA8(psVar3,(uint)bVar2), uVar7 != 0)) {
@@ -231,7 +231,7 @@ void fn_8010B424(short *param_1,undefined8 param_2,undefined8 param_3,undefined8
     if ((bVar2 & 2) != 0) {
       sqrtf((double)(float)(dVar17 * dVar17 + (double)(float)(dVar14 * dVar14)));
       uVar7 = FUN_80017730();
-      dVar14 = fn_80010C64(dVar16,afStack_e8,(float *)0x0);
+      dVar14 = mathFn_80010c64(dVar16,afStack_e8,(float *)0x0);
       local_78 = (double)CONCAT44(0x43300000,uVar7 & 0xffff ^ 0x80000000);
       uStack_6c = (ushort)psVar3[1] ^ 0x80000000;
       local_70 = 0x43300000;

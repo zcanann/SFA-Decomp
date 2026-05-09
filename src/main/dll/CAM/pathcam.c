@@ -9,8 +9,8 @@ extern void Obj_TransformLocalPointToWorld(f32 x,f32 y,f32 z,f32 *outX,f32 *outY
 extern s16 getAngle(f32 dx,f32 dz);
 extern void *mmAlloc(int size,int heap,int flags);
 extern undefined4 camcontrol_getTargetPosition();
-extern double fn_80010DC0();
-extern undefined4 fn_80010320();
+extern double curveFn_80010dc0();
+extern undefined4 curveFn_80010320();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern void fn_80023800(void *ptr);
@@ -374,11 +374,11 @@ void camcontrol_samplePathState(undefined4 param_1,undefined4 param_2,undefined4
   if ((dVar3 <= dVar4) && (dVar4 = dVar3, dVar3 < (double)lbl_803E1740)) {
     dVar4 = (double)lbl_803E1740;
   }
-  dVar3 = fn_80010DC0(dVar4,(float *)(lbl_803DD538 + 0x10c),(float *)0x0);
+  dVar3 = curveFn_80010dc0(dVar4,(float *)(lbl_803DD538 + 0x10c),(float *)0x0);
   if (dVar3 < (double)lbl_803E1748) {
     dVar3 = (double)lbl_803E1748;
   }
-  fn_80010320(dVar3,(float *)(lbl_803DD538 + 0x120));
+  curveFn_80010320(dVar3,(float *)(lbl_803DD538 + 0x120));
   *(undefined4 *)((ulonglong)uVar5 >> 0x20) = *(undefined4 *)(lbl_803DD538 + 0x188);
   *param_3 = *(undefined4 *)(lbl_803DD538 + 400);
   FUN_8028688c();
