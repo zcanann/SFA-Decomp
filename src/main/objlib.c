@@ -2285,12 +2285,15 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR
       effectPos.z = 0;
       effectPos.y = 0;
       effectPos.x = 0;
-      effectHandle = Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID,1);
+      effectHandle = Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID,
+                                      OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT);
       effectArgs.hitFxMode = hitFxMode & 0xff;
       effectArgs.colorR = colorR & 0xff;
       effectArgs.colorG = colorG & 0xff;
       effectArgs.colorB = colorB & 0xff;
-      effectHandle->vtable->spawn(0,1,&effectPos,OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,0xffffffff,
+      effectHandle->vtable->spawn(OBJHITREACT_HIT_EFFECT_PARENT_NONE,OBJHITREACT_HIT_EFFECT_MODE,
+                                  &effectPos,OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,
+                                  OBJHITREACT_HIT_EFFECT_NO_SOURCE,
                                   &effectArgs);
       if ((((sfxId & 0xffff) != 0) && (hitObject != 0)) && (*(short *)(hitObject + 0x46) == 0x69)) {
         Sfx_PlayFromObject(obj,sfxId);

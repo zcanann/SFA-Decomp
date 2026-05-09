@@ -90,8 +90,11 @@ int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
         Sfx_PlayFromObject(obj,(u16)reactionEntries->hitSfxB);
       }
       if (reactionEntries->hitFxMode == OBJHITREACT_HIT_FX_MODE_EFFECT) {
-        effectHandle = Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID,1);
-        effectHandle->vtable->spawn(0,1,&effectPos,OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,-1,
+        effectHandle =
+            Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID,OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT);
+        effectHandle->vtable->spawn(OBJHITREACT_HIT_EFFECT_PARENT_NONE,OBJHITREACT_HIT_EFFECT_MODE,
+                                    &effectPos,OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,
+                                    OBJHITREACT_HIT_EFFECT_NO_SOURCE,
                                     &effectColorArgs);
         if (effectHandle != (ObjHitReactEffectHandle *)0x0) {
           Resource_Release(effectHandle);
