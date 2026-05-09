@@ -264,7 +264,8 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,Obj
       }
       moveWrappedOrEnded = 1;
     }
-    if ((events != (ObjAnimEventList *)0) && (events->resetFlag = 0, objAnim->eventTable != 0)) {
+    if ((events != (ObjAnimEventList *)0) &&
+        (events->rootCurveValid = 0, objAnim->eventTable != 0)) {
       eventTable = objAnim->eventTable;
       events->triggerCount = 0;
       iVar11 = eventTable->byteCount >> 1;

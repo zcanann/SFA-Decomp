@@ -10,7 +10,7 @@ extern undefined4 FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern undefined4 Obj_GetPlayerObject();
 
-extern undefined lbl_803AD048[];
+extern ObjAnimEventList lbl_803AD048;
 extern undefined4* lbl_803DCAAC;
 extern f32 timeDelta;
 extern f32 lbl_803E5498;
@@ -33,23 +33,22 @@ extern f32 lbl_803E5498;
 void SHthorntail_init(double moveStepScale, int obj)
 {
   undefined4 advanceResult;
-  undefined *event;
+  u8 *event;
   int pointIndex;
   int i;
   float local_28;
   float local_24;
   float local_20;
   pointIndex = 0;
-  lbl_803AD048[0x1b] = 0;
-  lbl_803AD048[0x12] = 0;
-  advanceResult = ObjAnim_AdvanceCurrentMove(moveStepScale,timeDelta,obj,
-                                             (ObjAnimEventList *)lbl_803AD048);
-  if (lbl_803AD048[0x12] != 0) {
-    *(short *)obj = *(short *)obj + *(short *)(lbl_803AD048 + 0xe);
+  lbl_803AD048.triggerCount = 0;
+  lbl_803AD048.rootCurveValid = 0;
+  advanceResult = ObjAnim_AdvanceCurrentMove(moveStepScale,timeDelta,obj,&lbl_803AD048);
+  if (lbl_803AD048.rootCurveValid != 0) {
+    *(short *)obj = *(short *)obj + lbl_803AD048.rootPitch;
   }
-  event = lbl_803AD048;
-  for (i = 0; i < lbl_803AD048[0x1b]; i++) {
-    switch(event[0x13]) {
+  event = lbl_803AD048.triggeredIds;
+  for (i = 0; i < lbl_803AD048.triggerCount; i++) {
+    switch(*event) {
     case 1:
     case 3:
       pointIndex = 1;

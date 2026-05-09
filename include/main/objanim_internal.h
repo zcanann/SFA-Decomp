@@ -148,7 +148,7 @@ typedef struct ObjAnimEventList {
   s16 rootYaw;
   s16 rootPitch;
   s16 rootRoll;
-  u8 resetFlag;
+  u8 rootCurveValid;
   u8 triggeredIds[OBJANIM_EVENT_TRIGGER_CAPACITY];
   u8 triggerCount;
 } ObjAnimEventList;
