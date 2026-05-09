@@ -144,6 +144,18 @@ extern char sObjAddObjectTypeReachedMaxTypes[];
 #define OBJLINK_FLAGS_MODE_CLEAR_MASK 0xfff8
 #define OBJLINK_FLAGS_DEAD 0x0040
 
+#define OBJ_MODEL_INSTANCE_OFFSET 0x50
+#define OBJ_MODEL_INSTANCE_HALFWORD_OFFSET (OBJ_MODEL_INSTANCE_OFFSET / 2)
+#define OBJ_ACTIVE_MODEL_INDEX_OFFSET 0xad
+#define OBJ_POSITION_X_OFFSET 0x0c
+#define OBJ_POSITION_Y_OFFSET 0x10
+#define OBJ_POSITION_Z_OFFSET 0x14
+
+#define OBJ_MODEL_JOINT_COUNT_OFFSET 0xf3
+#define OBJPATH_POINTS_OFFSET 0x2c
+#define OBJPATH_POINT_COUNT_OFFSET 0x58
+#define OBJPATH_ROOT_JOINT_INDEX -1
+
 typedef struct ObjMsgEntry {
   uint message;
   uint sender;
@@ -2787,11 +2799,11 @@ void ObjPath_GetPointWorldPositionArray(int obj,int pointIndex,int count,float *
 void ObjPath_GetPointLocalPosition(int param_1,int param_2,float *param_3,float *param_4,
                  float *param_5)
 {
-  *param_3 = ((ObjPathPoint *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) +
+  *param_3 = ((ObjPathPoint *)(*(int *)(*(int *)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINTS_OFFSET) +
                                param_2 * sizeof(ObjPathPoint)))->x;
-  *param_4 = ((ObjPathPoint *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) +
+  *param_4 = ((ObjPathPoint *)(*(int *)(*(int *)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINTS_OFFSET) +
                                param_2 * sizeof(ObjPathPoint)))->y;
-  *param_5 = ((ObjPathPoint *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) +
+  *param_5 = ((ObjPathPoint *)(*(int *)(*(int *)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINTS_OFFSET) +
                                param_2 * sizeof(ObjPathPoint)))->z;
   return;
 }
@@ -2816,7 +2828,8 @@ void ObjPath_GetPointLocalMtx(int param_1,int param_2,float *param_3)
   ObjPathPoint *pathPoint;
   ObjPathTransform transform;
 
-  pathPoint = (ObjPathPoint *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) + param_2 * sizeof(ObjPathPoint));
+  pathPoint = (ObjPathPoint *)(*(int *)(*(int *)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) +
+                                        OBJPATH_POINTS_OFFSET) + param_2 * sizeof(ObjPathPoint));
   transform.x = pathPoint->x;
   transform.y = pathPoint->y;
   transform.z = pathPoint->z;
@@ -2850,10 +2863,10 @@ void ObjPath_GetPointModelMtx(int param_1,int param_2)
   int jointIndex;
 
   model = Obj_GetActiveModel(param_1);
-  pathPoint = (ObjPathPoint *)(*(int *)(*(int *)(param_1 + 0x50) + 0x2c) +
+  pathPoint = (ObjPathPoint *)(*(int *)(*(int *)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINTS_OFFSET) +
                                param_2 * sizeof(ObjPathPoint));
-  jointIndex = pathPoint->modelIndex[(int)*(char *)(param_1 + 0xad)];
-  if ((jointIndex >= 0) && (jointIndex < (int)(uint)*(byte *)(*model + 0xf3))) {
+  jointIndex = pathPoint->modelIndex[(int)*(char *)(param_1 + OBJ_ACTIVE_MODEL_INDEX_OFFSET)];
+  if ((jointIndex >= 0) && (jointIndex < (int)(uint)*(byte *)(*model + OBJ_MODEL_JOINT_COUNT_OFFSET))) {
     ObjModel_GetJointMatrix(model,jointIndex);
   }
   else {
@@ -2905,7 +2918,9 @@ void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *
   uVar6 = FUN_80286838();
   puVar1 = (ushort *)((ulonglong)uVar6 >> 0x20);
   iVar5 = (int)uVar6;
-  if ((iVar5 < 0) || ((int)(uint)*(byte *)(*(int *)(puVar1 + 0x28) + 0x58) <= iVar5)) {
+  if ((iVar5 < 0) ||
+      ((int)(uint)*(byte *)(*(int *)(puVar1 + OBJ_MODEL_INSTANCE_HALFWORD_OFFSET) +
+                            OBJPATH_POINT_COUNT_OFFSET) <= iVar5)) {
     *param_3 = *(float *)(puVar1 + 6);
     *param_4 = *(undefined4 *)(puVar1 + 8);
     *param_5 = *(float *)(puVar1 + 10);
@@ -2913,15 +2928,17 @@ void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *
   else {
     piVar2 = Obj_GetActiveModel((int)puVar1);
     iVar5 = iVar5 * 0x18;
-    iVar4 = (int)*(char *)(*(int *)(*(int *)(puVar1 + 0x28) + 0x2c) + iVar5 +
-                           (int)*(char *)((int)puVar1 + 0xad) + 0x12);
-    if ((iVar4 < -1) || ((int)(uint)*(byte *)(*piVar2 + 0xf3) <= iVar4)) {
+    iVar4 = (int)*(char *)(*(int *)(*(int *)(puVar1 + OBJ_MODEL_INSTANCE_HALFWORD_OFFSET) +
+                                    OBJPATH_POINTS_OFFSET) + iVar5 +
+                           (int)*(char *)((int)puVar1 + OBJ_ACTIVE_MODEL_INDEX_OFFSET) + 0x12);
+    if ((iVar4 < OBJPATH_ROOT_JOINT_INDEX) ||
+        ((int)(uint)*(byte *)(*piVar2 + OBJ_MODEL_JOINT_COUNT_OFFSET) <= iVar4)) {
       *param_3 = *(float *)(puVar1 + 6);
       *param_4 = *(undefined4 *)(puVar1 + 8);
       *param_5 = *(float *)(puVar1 + 10);
     }
     else {
-      if (iVar4 == -1) {
+      if (iVar4 == OBJPATH_ROOT_JOINT_INDEX) {
         FUN_80017a50(puVar1,afStack_60,'\0');
         pfVar3 = afStack_60;
       }
@@ -2929,8 +2946,10 @@ void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *
         pfVar3 = ObjModel_GetJointMatrix(piVar2,iVar4);
       }
       if (param_6 == 0) {
-        local_10c = *(float *)(*(int *)(*(int *)(puVar1 + 0x28) + 0x2c) + iVar5);
-        iVar5 = *(int *)(*(int *)(puVar1 + 0x28) + 0x2c) + iVar5;
+        local_10c = *(float *)(*(int *)(*(int *)(puVar1 + OBJ_MODEL_INSTANCE_HALFWORD_OFFSET) +
+                                        OBJPATH_POINTS_OFFSET) + iVar5);
+        iVar5 = *(int *)(*(int *)(puVar1 + OBJ_MODEL_INSTANCE_HALFWORD_OFFSET) +
+                         OBJPATH_POINTS_OFFSET) + iVar5;
         local_108 = *(undefined4 *)(iVar5 + 4);
         local_104 = *(float *)(iVar5 + 8);
         local_118 = *(undefined2 *)(iVar5 + 0xc);
