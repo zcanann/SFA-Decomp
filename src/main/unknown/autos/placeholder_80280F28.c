@@ -13,14 +13,14 @@ extern void fn_80280FFC(u32 flags);
 extern u8 lbl_803BD150[];
 extern u8 gSynthInitialized;
 extern u8 lbl_803DE270;
-extern u32 lbl_803DE350;
-extern u32 lbl_803DE354;
-extern u32 lbl_803DE358;
-extern u32 lbl_803DE35C;
-extern u32 lbl_803DE360;
-extern u32 lbl_803DE364;
-extern u8 lbl_803DE368;
-extern u8 lbl_803DE369;
+extern u32 s3dCallCnt;
+extern u32 s3dEmitterRoot;
+extern u32 s3dListenerRoot;
+extern u32 s3dRoomRoot;
+extern u32 s3dDoorRoot;
+extern u32 snd_used_studios;
+extern u8 snd_base_studio;
+extern u8 snd_max_studios;
 extern u8 lbl_803DE36A;
 
 /*
@@ -44,14 +44,14 @@ void fn_80280C30(void)
 void fn_80280FFC(u32 flags)
 {
     u8 stereo = (flags & 0x2) ? 1 : 0;
-    lbl_803DE354 = 0;
-    lbl_803DE358 = 0;
-    lbl_803DE35C = 0;
-    lbl_803DE360 = 0;
-    lbl_803DE364 = 0;
-    lbl_803DE368 = 1;
-    lbl_803DE369 = 3;
-    lbl_803DE350 = 0;
+    s3dEmitterRoot = 0;
+    s3dListenerRoot = 0;
+    s3dRoomRoot = 0;
+    s3dDoorRoot = 0;
+    snd_used_studios = 0;
+    snd_base_studio = 1;
+    snd_max_studios = 3;
+    s3dCallCnt = 0;
     lbl_803DE36A = stereo;
 }
 

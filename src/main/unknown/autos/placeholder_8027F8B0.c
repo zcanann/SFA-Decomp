@@ -51,13 +51,13 @@ typedef struct SndRuntimeVoice {
     u32 handle;
 } SndRuntimeVoice;
 
-extern SndRuntimeVoice *lbl_803DE354;
-extern SndSpatialListener *lbl_803DE358;
-extern SndSpatialEntry *lbl_803DE35C;
-extern SndStudioInputLink *lbl_803DE360;
-extern u32 lbl_803DE364;
-extern u8 lbl_803DE368;
-extern u8 lbl_803DE369;
+extern SndRuntimeVoice *s3dEmitterRoot;
+extern SndSpatialListener *s3dListenerRoot;
+extern SndSpatialEntry *s3dRoomRoot;
+extern SndStudioInputLink *s3dDoorRoot;
+extern u32 snd_used_studios;
+extern u8 snd_base_studio;
+extern u8 snd_max_studios;
 extern f32 lbl_803E7880;
 extern f32 lbl_803E7890;
 extern f32 lbl_803E7894;
@@ -89,15 +89,15 @@ void fn_8027FA44(void)
     u32 listenerCount;
 
     listenerCount = 0;
-    for (listener = lbl_803DE358; listener != NULL; listener = listener->next) {
+    for (listener = s3dListenerRoot; listener != NULL; listener = listener->next) {
         listenerCount++;
     }
 
     if (listenerCount != 0) {
-        for (entry = lbl_803DE35C; entry != NULL; entry = entry->next) {
+        for (entry = s3dRoomRoot; entry != NULL; entry = entry->next) {
             f32 distanceSq;
 
-            listener = lbl_803DE358;
+            listener = s3dListenerRoot;
             distanceSq = lbl_803E7880;
             if (entry->assignedVoice != -1) {
                 for (; listener != NULL; listener = listener->next) {
@@ -128,12 +128,12 @@ void fn_8027FB08(void)
     fn_8027FA44();
 
     listenerCount = 0;
-    for (listener = lbl_803DE358; listener != NULL; listener = listener->next) {
+    for (listener = s3dListenerRoot; listener != NULL; listener = listener->next) {
         listenerCount++;
     }
 
     if (listenerCount != 0) {
-        for (entry = lbl_803DE35C; entry != NULL; entry = entry->next) {
+        for (entry = s3dRoomRoot; entry != NULL; entry = entry->next) {
             if (entry->assignedVoice == -1) {
                 SndSpatialEntry *evictedEntry;
                 u32 studioCount;
@@ -141,7 +141,7 @@ void fn_8027FB08(void)
                 int listenerOwned;
 
                 distanceSq = lbl_803E7880;
-                for (listener = lbl_803DE358; listener != NULL; listener = listener->next) {
+                for (listener = s3dListenerRoot; listener != NULL; listener = listener->next) {
                     f32 dx = entry->x - listener->x;
                     f32 dy = entry->y - listener->y;
                     f32 dz = entry->z - listener->z;
@@ -150,20 +150,20 @@ void fn_8027FB08(void)
                 }
                 listenerOwned = false;
                 distanceSq = distanceSq / (f32)listenerCount;
-                for (listener = lbl_803DE358; listener != NULL; listener = listener->next) {
+                for (listener = s3dListenerRoot; listener != NULL; listener = listener->next) {
                     if (listener->entry == entry) {
                         listenerOwned = true;
                         break;
                     }
                 }
 
-                studioCount = lbl_803DE369;
-                if (((1u << studioCount) - 1) == (((1u << studioCount) - 1) & lbl_803DE364)) {
+                studioCount = snd_max_studios;
+                if (((1u << studioCount) - 1) == (((1u << studioCount) - 1) & snd_used_studios)) {
                     f32 worstDistance = lbl_803E7890;
                     SndRuntimeVoice *voice;
                     SndSpatialEntry *scanEntry;
 
-                    for (scanEntry = lbl_803DE35C; scanEntry != NULL; scanEntry = scanEntry->next) {
+                    for (scanEntry = s3dRoomRoot; scanEntry != NULL; scanEntry = scanEntry->next) {
                         if (scanEntry->assignedVoice != -1 &&
                             worstDistance < scanEntry->averageDistanceSq) {
                             evictedEntry = scanEntry;
@@ -173,7 +173,7 @@ void fn_8027FB08(void)
                     if (!listenerOwned && worstDistance <= distanceSq) {
                         continue;
                     }
-                    for (voice = lbl_803DE354; voice != NULL; voice = voice->next) {
+                    for (voice = s3dEmitterRoot; voice != NULL; voice = voice->next) {
                         if (voice->spatialEntry == evictedEntry) {
                             synthHandleKeyOff(voice->handle);
                             voice->flags |= 0x80000;
@@ -190,11 +190,11 @@ void fn_8027FB08(void)
                 } else {
                     int i;
 
-                    for (i = 0; (studioCount != 0 && ((lbl_803DE364 & (1 << i)) != 0)); i++) {
+                    for (i = 0; (studioCount != 0 && ((snd_used_studios & (1 << i)) != 0)); i++) {
                         studioCount--;
                     }
-                    lbl_803DE364 |= 1 << i;
-                    entry->assignedVoice = (s8)(i + lbl_803DE368);
+                    snd_used_studios |= 1 << i;
+                    entry->assignedVoice = (s8)(i + snd_base_studio);
                 }
 
                 entry->averageDistanceSq = distanceSq;
@@ -251,7 +251,7 @@ void fn_8027FEE4(void)
 {
     SndStudioInputLink *link;
 
-    for (link = lbl_803DE360; link != NULL; link = link->next) {
+    for (link = s3dDoorRoot; link != NULL; link = link->next) {
         if ((link->flags & 0x80000000) == 0) {
             if (link->source->assignedVoice != -1) {
                 if (link->target->assignedVoice != -1) {

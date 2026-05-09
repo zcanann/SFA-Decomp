@@ -72,7 +72,7 @@ extern u8 salTimeOffset;
 extern u8 salNumVoices;
 extern u8 salAuxFrame;
 extern u8 salFrame;
-extern u32 lbl_803DE348;
+extern u32 salMessageCallback;
 extern u8 *lbl_803DE344;
 
 extern void hwSetSRCType(int slot, u32 value);
@@ -192,7 +192,7 @@ int hwInit(u32 value, u8 valueA, u8 valueB, u32 flags)
     hwInitIrq();
     salFrame = 0;
     salAuxFrame = 0;
-    lbl_803DE348 = 0;
+    salMessageCallback = 0;
 
     if (salInitAi(snd_handle_irq, flags, value) != 0 &&
         fn_8027BA04(valueA, valueB, (flags & 1) != 0) != 0 &&
@@ -241,7 +241,7 @@ int hwIsActive(int slot)
 
 void hwSetMesgCallback(u32 value)
 {
-    lbl_803DE348 = value;
+    salMessageCallback = value;
 }
 
 void hwSetPriority(int slot, u32 value)
