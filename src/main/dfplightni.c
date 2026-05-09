@@ -36,6 +36,12 @@ extern f32 lbl_803E650C;
 
 #define DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES 10
 #define DFPLIGHTNI_ANGLE_STEP 0xc
+#define DFPLIGHTNI_EFFECT_ANGLE_MASK 0xff
+
+#define DFPLIGHTNI_OBJECT_POS_X_OFFSET 0xc
+#define DFPLIGHTNI_OBJECT_POS_Y_OFFSET 0x10
+#define DFPLIGHTNI_OBJECT_POS_Z_OFFSET 0x14
+#define DFPLIGHTNI_OBJECT_STATE_OFFSET 0xb8
 
 #define DFPLIGHTNI_PARAM_ANGLE_INDEX 0x18
 #define DFPLIGHTNI_PARAM_DELAY_TICKS 0x19
@@ -61,7 +67,7 @@ typedef void (*DfpPowerSlSpawnFn)(u8 *obj,int objectId,int param_3,int param_4,i
 
 static inline DfpLightniState *dfplightni_getState(u8 *obj)
 {
-  return *(DfpLightniState **)(obj + 0xb8);
+  return *(DfpLightniState **)(obj + DFPLIGHTNI_OBJECT_STATE_OFFSET);
 }
 
 static inline f64 dfplightni_u32AsDouble(u32 value)
@@ -149,22 +155,26 @@ void dfplightni_update(u8 *obj)
         state->timer = lbl_803E64F8;
       }
       if ((state->timer > state->triggerTime) && (state->timer < lbl_803E64E0)) {
-        start[0] = *(f32 *)(obj + 0xc);
-        start[1] = *(f32 *)(obj + 0x10);
-        start[2] = *(f32 *)(obj + 0x14);
+        start[0] = *(f32 *)(obj + DFPLIGHTNI_OBJECT_POS_X_OFFSET);
+        start[1] = *(f32 *)(obj + DFPLIGHTNI_OBJECT_POS_Y_OFFSET);
+        start[2] = *(f32 *)(obj + DFPLIGHTNI_OBJECT_POS_Z_OFFSET);
         if (eventActive != 0) {
           randomZ = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN,DFPLIGHTNI_RANDOM_XZ_MAX);
-          end[0] = (f32)(s32)randomZ * lbl_803E64FC + *(f32 *)(playerObj + 0xc);
+          end[0] = (f32)(s32)randomZ * lbl_803E64FC +
+                   *(f32 *)(playerObj + DFPLIGHTNI_OBJECT_POS_X_OFFSET);
           randomY = randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN,DFPLIGHTNI_RANDOM_Y_MAX);
-          end[1] = (f32)(s32)randomY * lbl_803E64FC + *(f32 *)(playerObj + 0x10);
+          end[1] = (f32)(s32)randomY * lbl_803E64FC +
+                   *(f32 *)(playerObj + DFPLIGHTNI_OBJECT_POS_Y_OFFSET);
           randomX = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN,DFPLIGHTNI_RANDOM_XZ_MAX);
-          end[2] = (f32)(s32)randomX * lbl_803E64FC + *(f32 *)(playerObj + 0x14);
+          end[2] = (f32)(s32)randomX * lbl_803E64FC +
+                   *(f32 *)(playerObj + DFPLIGHTNI_OBJECT_POS_Z_OFFSET);
         }
         else {
           randomX = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN,DFPLIGHTNI_RANDOM_XZ_MAX);
           end[0] = (f32)(s32)randomX * lbl_803E64FC + start[0];
           randomY = randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN,DFPLIGHTNI_RANDOM_Y_MAX);
-          end[1] = (f32)(s32)randomY * lbl_803E64FC + *(f32 *)(obj + 0x10);
+          end[1] = (f32)(s32)randomY * lbl_803E64FC +
+                   *(f32 *)(obj + DFPLIGHTNI_OBJECT_POS_Y_OFFSET);
           randomZ = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN,DFPLIGHTNI_RANDOM_XZ_MAX);
           end[2] = (f32)(s32)randomZ * lbl_803E64FC + start[2];
         }
@@ -186,7 +196,8 @@ void dfplightni_update(u8 *obj)
                        : (radiusX > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusX;
             state->effectHandle =
                 fn_8008FB20(clampX,clampY,start,end,DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES,
-                            state->angleIndex * DFPLIGHTNI_ANGLE_STEP & 0xff,0);
+                            state->angleIndex * DFPLIGHTNI_ANGLE_STEP &
+                                DFPLIGHTNI_EFFECT_ANGLE_MASK,0);
           }
           else {
             clampY = (radiusY < (double)lbl_803E6500) ? (double)lbl_803E6500
@@ -195,7 +206,8 @@ void dfplightni_update(u8 *obj)
                        : (radiusX > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusX;
             state->effectHandle =
                 fn_8008FB20(clampX,clampY,start,end,state->delayFrames,
-                            state->angleIndex * DFPLIGHTNI_ANGLE_STEP & 0xff,0);
+                            state->angleIndex * DFPLIGHTNI_ANGLE_STEP &
+                                DFPLIGHTNI_EFFECT_ANGLE_MASK,0);
           }
         }
         state->timer = lbl_803E64E0;
