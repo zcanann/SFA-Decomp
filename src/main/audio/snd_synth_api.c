@@ -3,7 +3,7 @@
 
 extern void sndBegin(void);
 extern void sndEnd(void);
-extern void fn_8026D6E4(u32 value0, u32 value1, u32 handle, u32 mode);
+extern void synthUpdateHandle(u32 value0, u32 value1, u32 handle, u32 mode);
 extern int synthSetHandleControllerValue(int handle, int controller, int value);
 extern int synthSetHandleControllerValue14Bit(int handle, int controller, int value);
 extern int synthHandleKeyOff(int handle);
@@ -45,7 +45,7 @@ extern u8 *lbl_803DE268;
 void sndSeqVolume(int seqId, int volume, int time, int mode)
 {
     sndBegin();
-    fn_8026D6E4(seqId, volume, time, mode);
+    synthUpdateHandle(seqId, volume, time, mode);
     sndEnd();
 }
 

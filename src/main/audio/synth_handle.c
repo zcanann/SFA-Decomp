@@ -9,7 +9,7 @@ extern void fn_80271b4c(u32 value0, u32 value1, u8 studio, u8 mode, u32 handle);
  *
  * EN v1.0 Address: 0x8026D6E4, size 0x19C
  */
-void fn_8026D6E4(u32 value0, u32 value1, u32 handle, u32 mode) {
+void synthUpdateHandle(u32 value0, u32 value1, u32 handle, u32 mode) {
     SynthVoice* voice;
     SynthVoice* voiceBase;
     u32 voiceIndex;
