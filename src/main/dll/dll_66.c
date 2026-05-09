@@ -18,6 +18,8 @@ extern f32 lbl_803E229C;
 extern f32 lbl_803E22A0;
 extern f32 lbl_803E22A4;
 
+#define PROJECTILE_UNSUPPORTED_RETURN -1
+
 /*
  * --INFO--
  *
@@ -112,16 +114,16 @@ extern char sProjlightning7DoNoLongerSupported[];
 extern char sProjlightning6DoNoLongerSupported[];
 #pragma scheduling off
 #pragma peephole off
-int projdummy_doUnsupported(void) { OSReport(sProjdummyDoNoLongerSupported); return -1; }
-int projmagicstream_doUnsupported(void) { OSReport(sProjmagicstreamDoNoLongerSupported); return -1; }
-int projmagicemmit1_doUnsupported(void) { OSReport(sProjmagicemmit1DoNoLongerSupported); return -1; }
-int projroombeam_doUnsupported(void) { OSReport(sProjroombeamDoNoLongerSupported); return -1; }
-int projlightning1_doUnsupported(void) { OSReport(sProjlightning1DoNoLongerSupported); return -1; }
-int projlightning2_doUnsupported(void) { OSReport(sProjlightning2DoNoLongerSupported); return -1; }
-int projlightning3_doUnsupported(void) { OSReport(sProjlightning3DoNoLongerSupported); return -1; }
-int projlightning4_doUnsupported(void) { OSReport(sProjlightning4DoNoLongerSupported); return -1; }
-int projlightning5_doUnsupported(void) { OSReport(sProjlightning5DoNoLongerSupported); return -1; }
-int projlightning7_doUnsupported(void) { OSReport(sProjlightning7DoNoLongerSupported); return -1; }
-int projlightning6_doUnsupported(void) { OSReport(sProjlightning6DoNoLongerSupported); return -1; }
+int projdummy_doUnsupported(void) { OSReport(sProjdummyDoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
+int projmagicstream_doUnsupported(void) { OSReport(sProjmagicstreamDoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
+int projmagicemmit1_doUnsupported(void) { OSReport(sProjmagicemmit1DoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
+int projroombeam_doUnsupported(void) { OSReport(sProjroombeamDoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
+int projlightning1_doUnsupported(void) { OSReport(sProjlightning1DoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
+int projlightning2_doUnsupported(void) { OSReport(sProjlightning2DoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
+int projlightning3_doUnsupported(void) { OSReport(sProjlightning3DoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
+int projlightning4_doUnsupported(void) { OSReport(sProjlightning4DoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
+int projlightning5_doUnsupported(void) { OSReport(sProjlightning5DoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
+int projlightning7_doUnsupported(void) { OSReport(sProjlightning7DoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
+int projlightning6_doUnsupported(void) { OSReport(sProjlightning6DoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
 #pragma peephole reset
 #pragma scheduling reset
