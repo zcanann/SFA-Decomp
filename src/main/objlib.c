@@ -125,6 +125,16 @@ extern char sObjAddObjectTypeReachedMaxTypes[];
 #define OBJCONTACT_OBJECT_REFCOUNT_OFFSET 0xe9
 #define gObjContactCallbackCount DAT_803dd878
 
+#define OBJTRIGGER_FLAGS_OFFSET 0xaf
+#define OBJTRIGGER_CURRENT_ENABLE_FLAG 0x01
+#define OBJTRIGGER_CURRENT_BLOCK_FLAG 0x08
+#define OBJTRIGGER_ID_ENABLE_FLAG 0x04
+#define OBJTRIGGER_ID_BLOCK_FLAG 0x10
+#define OBJTRIGGER_BUTTON_DISABLE_INDEX 0
+#define OBJTRIGGER_BUTTON_DISABLE_FLAG 0x100
+#define OBJTRIGGER_PLAYER_STATE_NONE -1
+#define OBJTRIGGER_PLAYER_STATE_CLEAR 0x40
+
 typedef struct ObjMsgEntry {
   uint message;
   uint sender;
@@ -2204,10 +2214,12 @@ bool FUN_80037d74(int param_1)
   iVar1 = (int)Obj_GetPlayerObject();
   bVar2 = FUN_80294c20(iVar1);
   if (bVar2 == 0) {
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xef;
+    *(byte *)(param_1 + OBJTRIGGER_FLAGS_OFFSET) =
+        *(byte *)(param_1 + OBJTRIGGER_FLAGS_OFFSET) & ~OBJTRIGGER_ID_BLOCK_FLAG;
   }
   else {
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 0x10;
+    *(byte *)(param_1 + OBJTRIGGER_FLAGS_OFFSET) =
+        *(byte *)(param_1 + OBJTRIGGER_FLAGS_OFFSET) | OBJTRIGGER_ID_BLOCK_FLAG;
   }
   return bVar2 == 0;
 }
@@ -2555,14 +2567,14 @@ undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
   int flagEnabled;
   int flagBlocked;
 
-  triggerFlags = *(byte *)(param_1 + 0xaf);
-  flagEnabled = triggerFlags & 4;
+  triggerFlags = *(byte *)(param_1 + OBJTRIGGER_FLAGS_OFFSET);
+  flagEnabled = triggerFlags & OBJTRIGGER_ID_ENABLE_FLAG;
   if (flagEnabled != 0) {
-    flagBlocked = triggerFlags & 0x10;
+    flagBlocked = triggerFlags & OBJTRIGGER_ID_BLOCK_FLAG;
     if ((flagBlocked == 0) && (iVar1 = (*lbl_803DCA68)->isTriggerSet((int)param_2), iVar1 != 0)) {
       iVar1 = fn_80296BA0(Obj_GetPlayerObject());
-      if (iVar1 == -1) {
-        buttonDisable(0,0x100);
+      if (iVar1 == OBJTRIGGER_PLAYER_STATE_NONE) {
+        buttonDisable(OBJTRIGGER_BUTTON_DISABLE_INDEX,OBJTRIGGER_BUTTON_DISABLE_FLAG);
         return 1;
       }
     }
@@ -2599,15 +2611,15 @@ undefined4 ObjTrigger_IsSet(int param_1)
     return 0;
   }
   flags = fn_80014B24(0);
-  if ((flags & 0x100) == 0) {
-    triggerFlags = *(byte *)(param_1 + 0xaf);
-    flagEnabled = triggerFlags & 1;
+  if ((flags & OBJTRIGGER_BUTTON_DISABLE_FLAG) == 0) {
+    triggerFlags = *(byte *)(param_1 + OBJTRIGGER_FLAGS_OFFSET);
+    flagEnabled = triggerFlags & OBJTRIGGER_CURRENT_ENABLE_FLAG;
     if (flagEnabled != 0) {
-      flagBlocked = triggerFlags & 8;
+      flagBlocked = triggerFlags & OBJTRIGGER_CURRENT_BLOCK_FLAG;
       if ((flagBlocked == 0) && (iVar1 = (*lbl_803DCA68)->isCurrentTriggerClear(), iVar1 == 0)) {
         iVar1 = fn_80296BA0(Obj_GetPlayerObject());
-        if ((iVar1 == -1) || (iVar1 == 0x40)) {
-          buttonDisable(0,0x100);
+        if ((iVar1 == OBJTRIGGER_PLAYER_STATE_NONE) || (iVar1 == OBJTRIGGER_PLAYER_STATE_CLEAR)) {
+          buttonDisable(OBJTRIGGER_BUTTON_DISABLE_INDEX,OBJTRIGGER_BUTTON_DISABLE_FLAG);
           return 1;
         }
       }
