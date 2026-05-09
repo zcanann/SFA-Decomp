@@ -31,7 +31,7 @@ extern void gameTextSetColor(int r,int g,int b,int a);
 extern void gameTextShow(int textId);
 extern void fn_801F3F18(int obj);
 extern uint GameBit_Get(int eventId);
-extern int fn_80080204(void);
+extern int getCurSeqNo(void);
 
 extern undefined4 DAT_802c2c44;
 extern undefined4 DAT_802c2c48;
@@ -343,7 +343,7 @@ void wmlevelcontrol_update(int obj)
     areaId = (*(code *)(*lbl_803DCAAC + 0x40))((int)*(char *)(obj + 0xac));
     areaId = __cntlzw(6 - (areaId & 0xff));
     areaId = areaId >> 5;
-    if (((areaId == 0) || (loadingDone = fn_80080204(), loadingDone == 0)) ||
+    if (((areaId == 0) || (loadingDone = getCurSeqNo(), loadingDone == 0)) ||
        (areaId = GameBit_Get(0xa7f), areaId == 0)) {
       SCGameBitLatch_UpdateInverted((SCGameBitLatchState *)(state + 4),0x10,-1,-1,0xa7f,0xa6);
       SCGameBitLatch_Update((SCGameBitLatchState *)(state + 4),2,-1,-1,0xa7f,0xa8);

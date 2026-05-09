@@ -49,8 +49,8 @@ extern void gameTextLoadDir(int dirId);
 extern void setDrawLights(int arg);
 extern void setIsOvercast(int arg);
 extern void saveFn_8007d960(int arg);
-extern void fn_800887F8(int arg);
-extern void fn_80117B68(int fade, int frames);
+extern void envFxActFn_800887f8(int arg);
+extern void movieFn_80117b68(int fade, int frames);
 extern void fn_80130478(void);
 extern void titleScreenPositionElements(f32 x, f32 y);
 extern void titleScreenFn_801368a4(u8 arg);
@@ -186,18 +186,18 @@ void TitleMenu_initialise(void)
     n_attractmode_prepareMovie();
     titleScreenPositionElements(lbl_803E1D10,lbl_803E1D18);
     lbl_803DD64F = 1;
-    fn_80117B68(0,0);
+    movieFn_80117b68(0,0);
     audioSetVolumes(0,10,1,0,0);
     lbl_803DD616 = 0;
   } else {
     titleScreenPositionElements(lbl_803E1D10,lbl_803E1D18);
     lbl_803DD64F = 0;
-    fn_80117B68(0,1);
+    movieFn_80117b68(0,1);
   }
   setIsOvercast(0);
   setDrawLights(0);
   lbl_803DD64E = 0;
-  fn_800887F8(0);
+  envFxActFn_800887f8(0);
   gameTimerStop();
   fn_8000B694(0);
   lbl_803DD698 = 0;
@@ -227,7 +227,7 @@ void fn_80117350(void *message)
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void fn_80117380(void *cursorArg)
+void thpAudioFn_80117380(void *cursorArg)
 {
   u32 *audioFrameSizes;
   u8 *audioFrame;
@@ -259,7 +259,7 @@ void fn_80117380(void *cursorArg)
 
 #pragma scheduling off
 #pragma peephole off
-void *fn_80117460(void *param)
+void *threadMainAlt_80117460(void *param)
 {
   int frame;
   int stride;
@@ -270,7 +270,7 @@ void *fn_80117460(void *param)
   frame = 0;
   while (true) {
     cursor.frameIndex = frame;
-    fn_80117380(&cursor);
+    thpAudioFn_80117380(&cursor);
     if (((frame + lbl_803A5D60.frameOffset) % lbl_803A5D60.framesPerGroup) ==
         (lbl_803A5D60.framesPerGroup - 1)) {
       if ((lbl_803A5D60.flags & 1) != 0) {
@@ -290,14 +290,14 @@ void *fn_80117460(void *param)
 #pragma peephole reset
 #pragma scheduling reset
 
-void *fn_8011750C(void *param)
+void *thpAudioThreadMain(void *param)
 {
   void *token;
 
   (void)param;
   while (true) {
     token = fn_801194EC();
-    fn_80117380(token);
+    thpAudioFn_80117380(token);
     fn_80119458(token);
   }
 }

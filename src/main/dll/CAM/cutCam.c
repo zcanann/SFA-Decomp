@@ -17,7 +17,7 @@ extern void hitDetectFn_800691c0(int a, void *b, int c, int d);
 extern void fn_8006961C(uint *boundsOut,float *startPoints,float *endPoints,
                         float *radii,int pointCount);
 extern int FUN_8007f7c0();
-extern int fn_80080204();
+extern int getCurSeqNo();
 extern void cameraSetInterpMode(u8);
 extern undefined4 FUN_80101980();
 extern undefined4 FUN_802473cc();
@@ -424,7 +424,7 @@ check_action_44:
       (*(code *)(*lbl_803DCA50 + 0x1c))(0x44,1,0,0xc,&local_24,0xf,0xfe);
     }
     else {
-      iVar3 = fn_80080204();
+      iVar3 = getCurSeqNo();
       if (((iVar3 == 0) && (uVar2 = fn_80014D9C(0), (uVar2 & 0x40) != 0)) &&
          ((*(ushort *)(param_1 + 6) & 4) == 0)) {
         local_28.action = 5;

@@ -10,7 +10,7 @@ extern void fn_80014B58(int a);
 extern void fn_80014B68(int a);
 extern void gameTextShow(int a);
 extern void fn_80088870(void *a, void *b, void *c, void *d);
-extern void fn_800887F8(int a);
+extern void envFxActFn_800887f8(int a);
 extern void fn_80088E54(int a, f32 b);
 extern void getEnvfxAct(int a, int b, int c, int d);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
@@ -246,13 +246,13 @@ void sh_levelcontrol_update(int param_1)
         *(undefined4 *)(param_1 + 0xf8) = 0;
         if (*(int *)(param_1 + 0xf4) == 2) {
           fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
-          fn_800887F8(0x3f);
+          envFxActFn_800887f8(0x3f);
           getEnvfxActImmediately(0, 0, 0x244, 0);
           fn_80088E54(0, lbl_803E54B4);
         }
         else {
           fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
-          fn_800887F8(0x1f);
+          envFxActFn_800887f8(0x1f);
           getEnvfxAct(0, 0, 0x244, 0);
         }
       }
@@ -260,14 +260,14 @@ void sh_levelcontrol_update(int param_1)
     else if (*(int *)(param_1 + 0xf8) != 1) {
       *(undefined4 *)(param_1 + 0xf8) = 1;
       if (*(int *)(param_1 + 0xf4) == 2) {
-        fn_800887F8(0);
+        envFxActFn_800887f8(0);
         getEnvfxActImmediately(0, 0, 0x1bf, 0);
         getEnvfxActImmediately(0, 0, 0x1be, 0);
         getEnvfxActImmediately(0, 0, 0x1c0, 0);
         getEnvfxActImmediately(0, 0, 0x244, 0);
       }
       else {
-        fn_800887F8(0);
+        envFxActFn_800887f8(0);
         getEnvfxAct(0, 0, 0x1bf, 0);
         getEnvfxAct(0, 0, 0x1be, 0);
         getEnvfxAct(0, 0, 0x1c0, 0);
@@ -277,7 +277,7 @@ void sh_levelcontrol_update(int param_1)
   }
   else if (*(int *)(param_1 + 0xf8) != 2) {
     *(undefined4 *)(param_1 + 0xf8) = 2;
-    fn_800887F8(0);
+    envFxActFn_800887f8(0);
     if (*(int *)(param_1 + 0xf4) == 2) {
       getEnvfxActImmediately(0, 0, 0x1bf, 0);
       getEnvfxActImmediately(0, 0, 0x231, 0);

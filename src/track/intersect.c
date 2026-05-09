@@ -6374,7 +6374,7 @@ void OSReport(const char* msg, ...)
 /*
  * --INFO--
  *
- * Function: fn_8007D72C
+ * Function: cardLoadFn_8007d72c
  * EN v1.0 Address: 0x8007D72C
  * EN v1.0 Size: 564b
  * EN v1.1 Address: 0x8007D8A8
@@ -6396,7 +6396,7 @@ void OSReport(const char* msg, ...)
  */
 #pragma peephole off
 #pragma scheduling off
-int fn_8007D72C(void)
+int cardLoadFn_8007d72c(void)
 {
     extern int cardProbe(int);
     extern void* mmAlloc(int, int, int);
@@ -6518,7 +6518,7 @@ void saveFn_8007d960(u32 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8007D988(void)
+void cardSetStatusNeedInit(void)
 {
     lbl_803DB700 = 0xd;
 }
@@ -6536,7 +6536,7 @@ void fn_8007D988(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-s32 fn_8007D994(void)
+s32 saveGameGetStatus(void)
 {
     return lbl_803DB700;
 }
@@ -6564,7 +6564,7 @@ extern u8 lbl_803DD058;
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8007D99C(void)
+int cardDeleteFn_8007d99c(void)
 {
     extern void* mmAlloc();
     extern s32 CARDMount();
@@ -6693,7 +6693,7 @@ int maybeTryLoadSave(int a)
  * PAL Size: TODO
  */
 #pragma scheduling off
-int fn_8007DC5C(int a, int b)
+int loadSaveGame(int a, int b)
 {
     int ret;
     lbl_803DD058 = 0;
@@ -6726,7 +6726,7 @@ int fn_8007DC5C(int a, int b)
 #pragma scheduling off
 int memCardFn_8007dd04(u8 retry)
 {
-    extern int fn_8007F83C(int);
+    extern int saveGame(int);
     extern void CARDClose(void*);
     extern void CARDUnmount(s32);
     extern void mm_free(void*);
@@ -6741,7 +6741,7 @@ int memCardFn_8007dd04(u8 retry)
         cardShowLoadingMsg(2);
     }
     do {
-        ret = fn_8007F83C(0);
+        ret = saveGame(0);
         if (ret != 0) {
             if (lbl_803DD05A != 0) {
                 lbl_803DD05A = 0;
@@ -6833,7 +6833,7 @@ int cardProbe(u8 retry)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8007DEF0(void)
+void _initCardAndDsp(void)
 {
     CARDInit();
 }
@@ -6853,7 +6853,7 @@ void fn_8007DEF0(void)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_8007DF10(u32* buttons, u32* texts, u32* count)
+void cardGetMessage(u32* buttons, u32* texts, u32* count)
 {
     extern u8 lbl_803DD059;
     if (lbl_803DD059 != 0 && (lbl_803DB700 == 7 || lbl_803DB700 == 9)) {

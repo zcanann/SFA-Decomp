@@ -1215,7 +1215,7 @@ extern u32 lbl_803DD0FC;
 extern s16 seqGlobal2;
 extern s16 seqGlobal1;
 extern u8 seqGlobal3;
-u8 fn_80080204(void) { return curSeqNo; }
+u8 getCurSeqNo(void) { return curSeqNo; }
 u32 fn_80080234(void) { return lbl_803DD0FC; }
 void fn_80080B9C(s16 x) { seqGlobal2 = x; }
 s16 fn_80080BA4(void) { return seqGlobal2; }

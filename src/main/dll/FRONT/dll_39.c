@@ -14,7 +14,7 @@ extern undefined4 FUN_80053c98();
 extern undefined4 FUN_800723a0();
 extern undefined8 FUN_80080f24();
 extern undefined8 FUN_801010b4();
-extern undefined4 fn_80117B68();
+extern undefined4 movieFn_80117b68();
 extern undefined4 fn_801181F8();
 extern undefined4 fn_8011881C();
 extern undefined4 fn_80118900();
@@ -394,10 +394,10 @@ void n_attractmode_prepareMovie(void)
         lbl_803DD64D = NATTRACTMODE_MOVIE_RETRACE_COUNTDOWN;
         lbl_803DD698 = 0;
         if ((int)lbl_803DD614 == NATTRACTMODE_MOVIE_STATE_RELEASED) {
-          fn_80117B68(NATTRACTMODE_MOVIE_START_FRAME_ALTERNATE,1);
+          movieFn_80117b68(NATTRACTMODE_MOVIE_START_FRAME_ALTERNATE,1);
         }
         else {
-          fn_80117B68(NATTRACTMODE_MOVIE_START_FRAME_DEFAULT,1);
+          movieFn_80117b68(NATTRACTMODE_MOVIE_START_FRAME_DEFAULT,1);
         }
       }
     }

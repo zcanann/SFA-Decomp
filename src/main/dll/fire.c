@@ -17,7 +17,7 @@ extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern undefined4 objRenderFn_8003b8f4(double scale);
 extern undefined4 unlockLevel(int param_1,int param_2,int param_3);
-extern undefined4 fn_800887F8(int param_1);
+extern undefined4 envFxActFn_800887f8(int param_1);
 
 typedef struct FireObjectInterface {
   u8 pad00[0x48];
@@ -217,7 +217,7 @@ void fireObj_init(FireObject *obj)
   unlockLevel(0,0,1);
   v = obj->flags | 0x2000;
   obj->flags = (u16)v;
-  fn_800887F8(0);
+  envFxActFn_800887f8(0);
   GameBit_Set(FIRE_INIT_GAMEBIT_0,1);
   GameBit_Set(FIRE_INIT_GAMEBIT_1,1);
   GameBit_Set(FIRE_INIT_GAMEBIT_2,1);

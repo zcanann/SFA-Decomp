@@ -2,8 +2,8 @@
 #include "main/unknown/autos/placeholder_801175B4.h"
 #include "dolphin/os.h"
 
-extern void *fn_80117460(void *);
-extern void *fn_8011750C(void *);
+extern void *threadMainAlt_80117460(void *);
+extern void *thpAudioThreadMain(void *);
 extern u8 lbl_803A4448[];
 extern int lbl_803DD658;
 
@@ -27,12 +27,12 @@ int fn_801175A4(OSPriority priority, void *param)
     u8 *base = lbl_803A4448;
 
     if (param != NULL) {
-        if (OSCreateThread((OSThread *)(base + 0x1058), fn_80117460, param,
+        if (OSCreateThread((OSThread *)(base + 0x1058), threadMainAlt_80117460, param,
                            base + 0x1058, 0x1000, priority, 1) == 0) {
             return 0;
         }
     } else {
-        if (OSCreateThread((OSThread *)(base + 0x1058), fn_8011750C, NULL,
+        if (OSCreateThread((OSThread *)(base + 0x1058), thpAudioThreadMain, NULL,
                            base + 0x1058, 0x1000, priority, 1) == 0) {
             return 0;
         }
