@@ -6,8 +6,8 @@ extern void GameBit_Set(u32 id, u32 value);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int Obj_GetPlayerObject(void);
 extern void buttonDisable(int a, int b);
-extern void fn_80014B58(int a);
-extern void fn_80014B68(int a);
+extern void padClearAnalogInputY(int a);
+extern void padClearAnalogInputX(int a);
 extern void gameTextShow(int a);
 extern void fn_80088870(void *a, void *b, void *c, void *d);
 extern void envFxActFn_800887f8(int a);
@@ -148,8 +148,8 @@ void sh_levelcontrol_update(int param_1)
     if (*(byte *)(puVar5 + 1) >= 2) {
       iVar1 = GameBit_Get(0xdff);
       if (iVar1 == 0) {
-        fn_80014B68(0);
-        fn_80014B58(0);
+        padClearAnalogInputX(0);
+        padClearAnalogInputY(0);
         buttonDisable(0, 0x100);
         buttonDisable(0, 0x200);
         buttonDisable(0, 0x1000);
@@ -207,8 +207,8 @@ void sh_levelcontrol_update(int param_1)
     if (*(byte *)(puVar5 + 1) >= 2) {
       iVar1 = GameBit_Get(0x177);
       if (iVar1 == 0) {
-        fn_80014B68(0);
-        fn_80014B58(0);
+        padClearAnalogInputX(0);
+        padClearAnalogInputY(0);
         buttonDisable(0, 0x100);
         buttonDisable(0, 0x200);
         buttonDisable(0, 0x1000);

@@ -7,7 +7,7 @@ extern undefined4 FUN_800069b8();
 extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006c88();
 extern undefined8 padUpdate();
-extern undefined4 fn_80015624();
+extern undefined4 dvdCheckError();
 extern undefined4 gameTextRun();
 extern undefined4 FUN_80017620();
 extern uint FUN_80017690();
@@ -270,7 +270,7 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
             waitNextFrame();
           }
           fn_800481D4();
-          fn_80015624();
+          dvdCheckError();
           if (bVar2) {
             mmFreeTick(0);
             gameTextRun();

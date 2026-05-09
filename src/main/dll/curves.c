@@ -4239,7 +4239,7 @@ void fn_800E7D9C(void) {}
  */
 extern void setWidescreen(u8 enabled);
 extern void setSubtitlesEnabled(u8 enabled);
-extern void fn_800154A4(u8 value);
+extern void setRumbleEnabled(u8 value);
 extern void audioSetSoundMode(u8 mode, u8 secondary);
 extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
 extern void **lbl_803DCA68;
@@ -4251,7 +4251,7 @@ void loadSaveSettings(void)
 {
   setWidescreen(*((u8 *)&lbl_803A31C4 + 6));
   setSubtitlesEnabled(*((u8 *)&lbl_803A31C4 + 2));
-  fn_800154A4(*((u8 *)&lbl_803A31C4 + 8));
+  setRumbleEnabled(*((u8 *)&lbl_803A31C4 + 8));
   audioSetSoundMode(*((u8 *)&lbl_803A31C4 + 9), 0);
   (*(void (**)(u8))((char *)*lbl_803DCA68 + 0x50))(*((u8 *)&lbl_803A31C4 + 3));
   (*(void (**)(u8))((char *)*lbl_803DCA50 + 0x6c))(*((u8 *)&lbl_803A31C4 + 4));

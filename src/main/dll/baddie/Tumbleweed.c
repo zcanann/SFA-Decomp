@@ -3807,7 +3807,7 @@ extern s16   lbl_803DD994;
 extern s16   lbl_803DD996;
 extern s16   lbl_803DD998;
 extern s16   lbl_803DD9A8;
-extern int   fn_80014940(void);
+extern int   getCurUiDll(void);
 
 /* EN v1.0 0x80134808  size: 44b  Release two buffer slots in sequence:
  * textureFree(lbl_803DD984) then textureFree(lbl_803DD980). */
@@ -3847,10 +3847,10 @@ void fn_80134BC4(void)
 #pragma scheduling reset
 
 /* EN v1.0 0x80134BE8  size: 60b  Predicate. Returns 1 when the value
- * from fn_80014940 is in {2..6} or equals 7, else 0. */
+ * from getCurUiDll is in {2..6} or equals 7, else 0. */
 int gameTextFn_80134be8(void)
 {
-    int x = fn_80014940();
+    int x = getCurUiDll();
     if ((u32)(x - 2) <= 4 || x == 7) {
         return 1;
     }

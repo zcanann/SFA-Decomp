@@ -8,7 +8,7 @@ extern undefined4 FUN_80006a88();
 extern undefined4 FUN_80006a8c();
 extern ushort FUN_80006be8();
 extern uint FUN_80006c00();
-extern ushort fn_80014D9C(int controller);
+extern ushort getPadFn_80014d9c(int controller);
 extern ushort getButtonsJustPressed(int controller);
 extern uint FUN_80017730();
 extern int objBboxFn_800640cc(float *p1, float *p2, float *p3, int *p4, int *p5, int p6, int p7, int p8, int p9);
@@ -425,7 +425,7 @@ check_action_44:
     }
     else {
       iVar3 = getCurSeqNo();
-      if (((iVar3 == 0) && (uVar2 = fn_80014D9C(0), (uVar2 & 0x40) != 0)) &&
+      if (((iVar3 == 0) && (uVar2 = getPadFn_80014d9c(0), (uVar2 & 0x40) != 0)) &&
          ((*(ushort *)(param_1 + 6) & 4) == 0)) {
         local_28.action = 5;
         local_28.enabled = 1;

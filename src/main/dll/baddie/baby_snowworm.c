@@ -1034,7 +1034,7 @@ extern s32 lbl_803DBA60;
 extern f32 lbl_803DD8CC;
 extern u32 lbl_803DD8A4;
 extern f32 timeDelta;
-extern void  fn_80014B0C(void);
+extern void  setJoypadDisabled(void);
 extern void* gameTextGet(u16);
 
 extern void* lbl_803A9410[6];
@@ -1045,7 +1045,7 @@ extern s16 lbl_803DD78C;
 extern s32  Obj_AllocObjectSetup(s32 size, void* type);
 extern void* Obj_SetupObject(s32, s32, s32, s32, s32);
 extern void Obj_SetModelColorFadeRecursive(void*, s32, s32, s32, s32, s32);
-extern void fn_80014B18(s32);
+extern void padFn_80014b18(s32);
 
 extern void* lbl_803DCCF0;
 extern void  Camera_SetCurrentViewRotation(s32, s32, s32);
@@ -1428,7 +1428,7 @@ void fn_80129CBC(f32 fov, f32 x, f32 y)
  *
  * After the slot pass, clears the three halfword counters at
  * lbl_803DD784/_786/_78C, asks the global tag system to register tag
- * id 0xf via fn_80014B18, runs Obj_SetModelColorFadeRecursive(obj2, 0, 0, 0, 0, 0) when
+ * id 0xf via padFn_80014b18, runs Obj_SetModelColorFadeRecursive(obj2, 0, 0, 0, 0, 0) when
  * the object handle from Obj_GetPlayerObject was non-null, then plays the
  * scene-down trio: Music_Trigger(0x23, 1) plus two SFX kicks (0x3e5 and
  * 0xff) on object 0.
@@ -1461,7 +1461,7 @@ void fn_8012C558(void)
     lbl_803DD786 = 0;
     lbl_803DD784 = 0;
     lbl_803DD78C = 0;
-    fn_80014B18(0xf);
+    padFn_80014b18(0xf);
     if (obj != NULL) {
         Obj_SetModelColorFadeRecursive(Obj_GetPlayerObject(), 0, 0, 0, 0, 0);
     }
@@ -1490,7 +1490,7 @@ void fn_8012C558(void)
  *    as timeListFn_8012be84's commit path: clear input gate flag, drop bit 9
  *    from lbl_803DD8A4, clear the dying byte, and (if lbl_803DD7A9 is
  *    set) call cutsceneFadeInOut(0) + clear the input-disable flag. If after
- *    all that the dying byte is still non-zero, run fn_80014B0C to do
+ *    all that the dying byte is still non-zero, run setJoypadDisabled to do
  *    the late frame-side flush.
  *
  * 4. Otherwise, advance the float counter at lbl_803DD8CC. When it
@@ -1536,7 +1536,7 @@ void npcTalkFn_8012e880(void)
             }
         }
         if ((s8)lbl_803DD7A8 != 0) {
-            fn_80014B0C();
+            setJoypadDisabled();
         }
         return;
     }

@@ -7015,7 +7015,7 @@ void cardShowLoadingMsg(u8 kind)
     extern f32 lbl_803DEF9C;
     extern void drawRect(int, int, f32, f32);
     extern int objRenderFn_8003b8f4(int, int, int, int, int, f32);
-    extern void fn_8001476C(int, int, int, int);
+    extern void curUiDllDraw(int, int, int, int);
     extern int lbl_803DB708;
     extern void getLastRenderedFrame(void);
     extern void hudDrawColored(int, int, int, void*, int, int);
@@ -7045,7 +7045,7 @@ void cardShowLoadingMsg(u8 kind)
             for (j = 0; j < count; j++) {
                 objRenderFn_8003b8f4(buttons[j], 0, 0, 0, 0, lbl_803DEF9C);
             }
-            fn_8001476C(0, 0, 0, 0);
+            curUiDllDraw(0, 0, 0, 0);
         } else {
             saved = lbl_803DB708;
             getLastRenderedFrame();

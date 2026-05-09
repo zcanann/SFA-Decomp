@@ -43,7 +43,7 @@ typedef struct MovieAudioState {
 extern void audioSetVolumes(int channel, int volume, int frames, int arg3, int arg4);
 extern void audioStopByMask(int mask);
 extern void fn_8000B694(int arg);
-extern int fn_80014930(void);
+extern int getUiDllFn_80014930(void);
 extern void gameTimerStop(void);
 extern void gameTextLoadDir(int dirId);
 extern void setDrawLights(int arg);
@@ -151,7 +151,7 @@ void TitleMenu_initialise(void)
   gameTextLoadDir(0x15);
   lbl_803DD650 = 0;
   lbl_803DD651 = 0;
-  mode = fn_80014930();
+  mode = getUiDllFn_80014930();
   if (mode == 3) {
     TitleMenu_OpenPanel(lbl_8031A1D8,1);
     lbl_803DD652 = 0;
@@ -162,10 +162,10 @@ void TitleMenu_initialise(void)
   TitleMenu_SetPanelSelection(lbl_803DD614);
   titleScreenFn_801368a4(0);
 
-  mode = fn_80014930();
-  if ((((mode == 0xd) || (mode = fn_80014930(), mode == 7)) ||
-       (mode = fn_80014930(), mode == 6)) ||
-      (mode = fn_80014930(), mode == 5)) {
+  mode = getUiDllFn_80014930();
+  if ((((mode == 0xd) || (mode = getUiDllFn_80014930(), mode == 7)) ||
+       (mode = getUiDllFn_80014930(), mode == 6)) ||
+      (mode = getUiDllFn_80014930(), mode == 5)) {
     TitleMenu_PlayPopup(0x23,5);
   } else {
     audioStopByMask(0xf);
