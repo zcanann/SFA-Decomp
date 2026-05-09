@@ -94,7 +94,7 @@ extern void voiceSetPriority(int state, u8 newGroup);
 extern u32 vidMakeNew(int state, int returnNewId);
 extern int hwIsActive(int slot);
 extern void hwBreak(int slot);
-extern void fn_80279B98(int state);
+extern void voiceFree(int state);
 extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
 extern void inpResetChannelDefaults(u8 a, u8 b);
 void fn_80278990(int state);
@@ -102,7 +102,7 @@ void fn_802788B4(int state, int skipFadeReset);
 u32 fn_80278610(int state);
 extern u32 inpGetExCtrl(int state, u32 ctrl);
 extern void inpSetExCtrl(int state, u32 ctrl, s16 value);
-extern void fn_8027A02C(u32 voice);
+extern void voiceKill(u32 voice);
 extern u8 lbl_803BD9E4[];
 extern void sndConvertTicks(u32 *p, int state);
 extern void sndConvertMs(u32 *p);
@@ -110,7 +110,7 @@ extern void inpSetMidiCtrl(int idx, u8 a, u8 b, u8 mask);
 extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
 extern void fn_8026F5B8(int state);
 extern u16 sndRand(void);
-extern int fn_8027A1DC(int state);
+extern int voiceIsRegistered(int state);
 extern void inpSetMidiLastNote(u8 a, u8 b, u8 v);
 extern int fn_80275364(int state, u32 *args);
 extern void inpAddCtrl(int obj, int b, int c, int d, u32 flag);
@@ -494,7 +494,7 @@ void fn_8027656C(int state, u32 *args)
     args[1] = 0;
     *(u16 *)(state + 0x12c) = (u16)(*args >> 8) & 0x7f;
     *(u8 *)(state + 0x12e) = *args >> 0x10;
-    if (fn_8027A1DC(state) != 0) {
+    if (voiceIsRegistered(state) != 0) {
         inpSetMidiLastNote(*(u8 *)(state + 0x121), *(u8 *)(state + 0x122),
                            *(u16 *)(state + 0x12c) & 0xff);
     }
@@ -800,7 +800,7 @@ void fn_80276E38(int state, u32 *args)
                     if (((command >> 0x10) & 0xff) == 0) {
                         fn_80278610(voice);
                     } else {
-                        fn_8027A02C(i);
+                        voiceKill(i);
                     }
                 }
             }
@@ -1232,7 +1232,7 @@ int fn_80278B94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 baseSampl
             if (wasActive != 0) {
                 hwBreak(voiceId);
             }
-            fn_80279B98(state);
+            voiceFree(state);
         }
     }
     return -1;

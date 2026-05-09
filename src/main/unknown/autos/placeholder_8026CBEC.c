@@ -50,7 +50,7 @@ void fn_8026D060(int node)
 }
 
 extern u8 gSynthVoices[];
-extern void fn_8027A0CC(int p);
+extern void voiceKillById(int p);
 extern void synthRecycleVoiceCallbacks(int voice);
 
 /*
@@ -118,7 +118,7 @@ done:
             for (i = 0; i < 2; i++) {
                 int *cb = *(int **)(base + 0xe64);
                 while (cb != 0) {
-                    fn_8027A0CC(*(int *)((u8 *)cb + 8));
+                    voiceKillById(*(int *)((u8 *)cb + 8));
                     cb = (int *)*cb;
                 }
                 base += 4;
@@ -127,7 +127,7 @@ done:
         {
             int *cb2 = *(int **)(voice + 0xe6c);
             while (cb2 != 0) {
-                fn_8027A0CC(*(int *)((u8 *)cb2 + 8));
+                voiceKillById(*(int *)((u8 *)cb2 + 8));
                 cb2 = (int *)*cb2;
             }
         }

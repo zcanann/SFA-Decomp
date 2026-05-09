@@ -3,6 +3,24 @@
 
 #include "ghidra_import.h"
 
-uint FUN_80279c7c(byte param_1,byte param_2,short param_3,char param_4);
+#define SYNTH_INVALID_VOICE 0xFFFFFFFFU
+#define SYNTH_INVALID_VOICE_U8 0xFF
+#define SYNTH_VOICE_STRIDE 0x404
+
+#define SYNTH_VOICE_NEXT_HANDLE_OFFSET 0xEC
+#define SYNTH_VOICE_HANDLE_OFFSET 0xF4
+#define SYNTH_VOICE_ACTIVE_HANDLE_OFFSET 0x34
+#define SYNTH_VOICE_PRIORITY_TICK_OFFSET 0x110
+#define SYNTH_VOICE_STATE_FLAGS_OFFSET 0x118
+#define SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET 0x11C
+#define SYNTH_VOICE_MIDI_SLOT_OFFSET 0x121
+#define SYNTH_VOICE_MIDI_KEY_OFFSET 0x122
+
+void voiceInitPriorityTables(void);
+void voiceBreakAndFree(u32 voice);
+void voiceKill(u32 voice);
+int voiceKillById(u32 id);
+int voiceIsRegistered(int state);
+void voiceRegister(int state);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80279EC0_H_ */

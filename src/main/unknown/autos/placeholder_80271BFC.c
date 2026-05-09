@@ -2,7 +2,7 @@
 #include "main/unknown/autos/placeholder_80271BFC.h"
 
 extern u32 fn_8027ADD8(u8 voiceIdx);
-extern void fn_8027A02C(u8 voiceIdx);
+extern void voiceKill(u8 voiceIdx);
 extern void fn_80278560(void);
 extern void fn_8027AFC0(u32 packed);
 extern u32 hwGetVirtualSampleID(int slot);
@@ -196,7 +196,7 @@ void fn_80271FB0(u32 voiceIdx, u8 value)
 /*
  * Voice command dispatcher: runs different actions per command code.
  *   0 -> claim slot via fn_8027ADD8
- *   1 -> fn_8027A02C
+ *   1 -> voiceKill
  *   2 -> vacate-or-skip via hwGetVirtualSampleID + fn_8027AFC0 + check
  *   3 -> simple vacate via hwGetVirtualSampleID + fn_8027AFC0
  *
@@ -227,7 +227,7 @@ int fn_80271FD8(int mode, u32 arg)
         break;
     }
     case 1:
-        fn_8027A02C(arg & 0xff);
+        voiceKill(arg & 0xff);
         break;
     case 2:
         result = fn_8027ADD8(arg & 0xff);

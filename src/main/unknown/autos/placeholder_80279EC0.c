@@ -1,9 +1,10 @@
 #include "ghidra_import.h"
+#include "main/unknown/autos/placeholder_80279EC0.h"
 
 extern u32 hwIsActive(u32 voice);
 extern void hwBreak(u32 voice);
 extern void fn_80279038(int handle);
-extern void fn_80279B98(int handle);
+extern void voiceFree(int handle);
 extern u32 get_vidlist(u32 id);
 extern void fn_802737EC(u8 voice);
 
@@ -22,7 +23,7 @@ extern u8 lbl_803DE301;
 /*
  * Initialize the voice priority and group linked-list tables.
  */
-void fn_80279C7C(void)
+void voiceInitPriorityTables(void)
 {
     s8 value;
     u8 lastVoice;
@@ -89,10 +90,10 @@ void fn_80279C7C(void)
     }
 
     lastVoice = lbl_803BD150[0x210];
-    *(u8 *)(lbl_803CA2D0 + 0xec0) = 0xff;
+    *(u8 *)(lbl_803CA2D0 + 0xec0) = SYNTH_INVALID_VOICE_U8;
     progress = 0;
     count = lbl_803BD150[0x210];
-    *(u8 *)(lbl_803CA2D0 + 0xec0 - 3 + count * 4) = 0xff;
+    *(u8 *)(lbl_803CA2D0 + 0xec0 - 3 + count * 4) = SYNTH_INVALID_VOICE_U8;
     lbl_803DE300 = lastVoice - 1;
     lbl_803DE301 = 0;
     if (count != 0) {
@@ -207,15 +208,15 @@ void fn_80279C7C(void)
  *
  * EN v1.1 Address: 0x80279FAC, size 128b
  */
-void fn_80279FAC(u32 voice)
+void voiceBreakAndFree(u32 voice)
 {
-    if (voice == 0xffffffff) return;
+    if (voice == SYNTH_INVALID_VOICE) return;
     if (hwIsActive(voice) != 0) {
         hwBreak(voice);
     }
-    *(u32 *)(lbl_803DE268 + voice * 0x404 + 0xf4) = voice;
-    fn_80279B98((int)(lbl_803DE268 + voice * 0x404));
-    *(u8 *)(lbl_803DE268 + voice * 0x404 + 0x11c) = 0;
+    *(u32 *)(lbl_803DE268 + voice * SYNTH_VOICE_STRIDE + SYNTH_VOICE_HANDLE_OFFSET) = voice;
+    voiceFree((int)(lbl_803DE268 + voice * SYNTH_VOICE_STRIDE));
+    *(u8 *)(lbl_803DE268 + voice * SYNTH_VOICE_STRIDE + SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET) = 0;
 }
 
 /*
@@ -223,17 +224,18 @@ void fn_80279FAC(u32 voice)
  *
  * EN v1.1 Address: 0x8027A02C, size 160b
  */
-void fn_8027A02C(u32 voice)
+void voiceKill(u32 voice)
 {
-    int base = (int)(lbl_803DE268 + voice * 0x404);
-    if (*(u32 *)(base + 0x34) != 0) {
+    int base = (int)(lbl_803DE268 + voice * SYNTH_VOICE_STRIDE);
+    if (*(u32 *)(base + SYNTH_VOICE_ACTIVE_HANDLE_OFFSET) != 0) {
         fn_80279038(base);
-        *(u32 *)(base + 0x118) = *(u32 *)(base + 0x118) & ~3;
+        *(u32 *)(base + SYNTH_VOICE_STATE_FLAGS_OFFSET) =
+            *(u32 *)(base + SYNTH_VOICE_STATE_FLAGS_OFFSET) & ~3;
         *(u32 *)(base + 0x114) = *(u32 *)(base + 0x114) & ~0;
-        *(u32 *)(base + 0x110) = 0;
-        fn_80279B98(base);
+        *(u32 *)(base + SYNTH_VOICE_PRIORITY_TICK_OFFSET) = 0;
+        voiceFree(base);
     }
-    if (*(u8 *)(base + 0x11c) != 0) {
+    if (*(u8 *)(base + SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET) != 0) {
         fn_802737EC((u8)voice);
     }
     hwBreak(voice);
@@ -245,36 +247,37 @@ void fn_8027A02C(u32 voice)
  *
  * EN v1.1 Address: 0x8027A0CC, size 272b
  */
-int fn_8027A0CC(u32 id)
+int voiceKillById(u32 id)
 {
     int result = -1;
     u32 next;
     if (gSynthInitialized == 0) return result;
 
-    if (id == 0xffffffff) {
-        next = 0xffffffff;
+    if (id == SYNTH_INVALID_VOICE) {
+        next = SYNTH_INVALID_VOICE;
     } else {
         u32 s = get_vidlist(id);
         if (s == 0) {
-            next = 0xffffffff;
+            next = SYNTH_INVALID_VOICE;
         } else {
             next = *(u32 *)(s + 0xc);
         }
     }
 
-    while (next != 0xffffffff) {
+    while (next != SYNTH_INVALID_VOICE) {
         u8 v = (u8)next;
-        int handle = (int)(lbl_803DE268 + v * 0x404);
-        u32 chain = *(u32 *)(handle + 0xec);
-        if (next == *(u32 *)(handle + 0xf4)) {
-            if (*(u32 *)(handle + 0x34) != 0) {
+        int handle = (int)(lbl_803DE268 + v * SYNTH_VOICE_STRIDE);
+        u32 chain = *(u32 *)(handle + SYNTH_VOICE_NEXT_HANDLE_OFFSET);
+        if (next == *(u32 *)(handle + SYNTH_VOICE_HANDLE_OFFSET)) {
+            if (*(u32 *)(handle + SYNTH_VOICE_ACTIVE_HANDLE_OFFSET) != 0) {
                 fn_80279038(handle);
-                *(u32 *)(handle + 0x118) = *(u32 *)(handle + 0x118) & ~3;
+                *(u32 *)(handle + SYNTH_VOICE_STATE_FLAGS_OFFSET) =
+                    *(u32 *)(handle + SYNTH_VOICE_STATE_FLAGS_OFFSET) & ~3;
                 *(u32 *)(handle + 0x114) = *(u32 *)(handle + 0x114) & ~0;
-                *(u32 *)(handle + 0x110) = 0;
-                fn_80279B98(handle);
+                *(u32 *)(handle + SYNTH_VOICE_PRIORITY_TICK_OFFSET) = 0;
+                voiceFree(handle);
             }
-            if (*(u8 *)(handle + 0x11c) != 0) {
+            if (*(u8 *)(handle + SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET) != 0) {
                 fn_802737EC(v);
             }
             hwBreak(v);
@@ -292,18 +295,18 @@ int fn_8027A0CC(u32 id)
  *
  * EN v1.1 Address: 0x8027A1DC, size 124b
  */
-int fn_8027A1DC(int state)
+int voiceIsRegistered(int state)
 {
-    u32 voice = *(u32 *)(state + 0xf4);
+    u32 voice = *(u32 *)(state + SYNTH_VOICE_HANDLE_OFFSET);
     u8 a;
     u8 b;
     u8 v;
-    if (voice == 0xffffffff) goto fail;
-    a = *(u8 *)(state + 0x121);
-    if (a == 0xff) goto fail;
-    b = *(u8 *)(state + 0x122);
+    if (voice == SYNTH_INVALID_VOICE) goto fail;
+    a = *(u8 *)(state + SYNTH_VOICE_MIDI_SLOT_OFFSET);
+    if (a == SYNTH_INVALID_VOICE_U8) goto fail;
+    b = *(u8 *)(state + SYNTH_VOICE_MIDI_KEY_OFFSET);
     v = (u8)voice;
-    if (b == 0xff) {
+    if (b == SYNTH_INVALID_VOICE_U8) {
         if (lbl_803CAB50[v] == v) return 1;
         goto fail;
     }
@@ -317,18 +320,18 @@ fail:
  *
  * EN v1.1 Address: 0x8027A258, size 92b
  */
-void fn_8027A258(int state)
+void voiceRegister(int state)
 {
-    u32 voice = *(u32 *)(state + 0xf4);
+    u32 voice = *(u32 *)(state + SYNTH_VOICE_HANDLE_OFFSET);
     u8 a;
     u8 b;
     u8 v;
-    if (voice == 0xffffffff) return;
-    a = *(u8 *)(state + 0x121);
-    if (a == 0xff) return;
-    b = *(u8 *)(state + 0x122);
+    if (voice == SYNTH_INVALID_VOICE) return;
+    a = *(u8 *)(state + SYNTH_VOICE_MIDI_SLOT_OFFSET);
+    if (a == SYNTH_INVALID_VOICE_U8) return;
+    b = *(u8 *)(state + SYNTH_VOICE_MIDI_KEY_OFFSET);
     v = (u8)voice;
-    if (b == 0xff) {
+    if (b == SYNTH_INVALID_VOICE_U8) {
         lbl_803CAB50[v] = v;
     } else {
         lbl_803CAAD0[b][a] = v;

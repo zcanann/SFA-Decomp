@@ -21,7 +21,7 @@ extern u32 hwIsActive(u32 slot);
 extern void hwOff(u32 slot);
 extern void hwDisableHRTF(void);
 extern u32 synthResolveHandle(u32 handle);
-extern void fn_8027A0CC(u32 value);
+extern void voiceKillById(u32 value);
 
 extern u8 lbl_803BCC90[];
 extern u8 lbl_803BD150[];
@@ -275,7 +275,7 @@ void synthDeactivateStudio(u8 slot)
         voice = lbl_803DE268 + offset;
         if (slot == *(u8 *)(voice + 0x11f)) {
             if (*(u32 *)(voice + 0xf4) != 0xffffffff) {
-                fn_8027A0CC(*(u32 *)(*(u32 *)(voice + 0xf8) + 8));
+                voiceKillById(*(u32 *)(*(u32 *)(voice + 0xf8) + 8));
             } else {
                 if (hwIsActive(i) != 0) {
                     hwOff(i);

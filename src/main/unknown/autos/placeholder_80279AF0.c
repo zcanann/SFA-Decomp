@@ -186,7 +186,7 @@ found_voice:
  *
  * EN v1.1 Address: 0x80279B98, size 228b
  */
-void fn_80279B98(int state)
+void voiceFree(int state)
 {
     fn_80278A98(state, 2);
     voiceRemovePriority(state);
