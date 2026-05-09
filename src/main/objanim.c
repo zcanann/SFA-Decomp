@@ -408,7 +408,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   state->prevFrameCmd = state->frameCmd;
   state->prevEventState = state->eventState;
   state->eventState = 0;
-  state->lastBlendMoveIndex = -1;
+  state->lastBlendMoveIndex = OBJANIM_BLEND_MOVE_INDEX_INVALID;
   previousMove = objAnim->activeMove;
   moveChanged = previousMove != moveId;
   objAnim->activeMove = (s16)moveId;
@@ -1148,7 +1148,7 @@ undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int
   state->prevFrameCmd = state->frameCmd;
   state->prevEventState = state->eventState;
   state->eventState = 0;
-  state->lastBlendMoveIndex = -1;
+  state->lastBlendMoveIndex = OBJANIM_BLEND_MOVE_INDEX_INVALID;
   hitState = objAnim->hitReactState;
   if ((hitState != (ObjHitReactState *)0x0) && (hitState->entries != (ObjHitReactEntry *)0x0)) {
     ObjHitReact_LoadMoveEntries(objAnimArg,bank,(int)objAnim->objType,hitState,moveId,0);

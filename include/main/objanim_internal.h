@@ -19,6 +19,7 @@ typedef struct ObjAnimHitReactRow {
 #define OBJANIM_SET_MOVE_FLAG_SKIP_EVENT_COUNTDOWN 0x10
 #define OBJANIM_MOVE_CACHE_SLOT_COUNT 2
 #define OBJANIM_MISSING_MOVE_ID -1
+#define OBJANIM_BLEND_MOVE_INDEX_INVALID -1
 #define OBJANIM_CACHED_MOVE_DATA_OFFSET 0x80
 #define OBJANIM_MOVE_ROOT_CURVE_OFFSET 4
 #define OBJANIM_FRAME_CMD_OFFSET 6
@@ -74,8 +75,8 @@ typedef struct ObjAnimState {
   f32 savedStep;
   f32 segmentLength;
   f32 prevSegmentLength;
-  u8 *moveCache[2];
-  u8 *blendMoveCache[2];
+  u8 *moveCache[OBJANIM_MOVE_CACHE_SLOT_COUNT];
+  u8 *blendMoveCache[OBJANIM_MOVE_CACHE_SLOT_COUNT];
   u8 pad2c[8];
   u8 *frameData;
   u8 *prevFrameData;
@@ -146,7 +147,7 @@ typedef struct ObjAnimEventList {
   s16 rootPitch;
   s16 rootRoll;
   u8 resetFlag;
-  u8 triggeredIds[8];
+  u8 triggeredIds[OBJANIM_EVENT_TRIGGER_CAPACITY];
   u8 triggerCount;
 } ObjAnimEventList;
 
