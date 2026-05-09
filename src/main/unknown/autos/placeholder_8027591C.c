@@ -12,7 +12,7 @@ extern void hwInitSamplePlayback(u32 voice, u32 sampleId, u32 *sampleInfo, u32 n
                                  u32 priority, u32 handle, u32 noStartOffset, u8 restart);
 extern u32 countLeadingZeros(u32 value);
 extern void fn_80271370(int state);
-extern u32 lbl_803CA2B0[];
+extern u32 dataSampleInfo[];
 extern void *dataGetCurve(u16 key);
 extern u32 fn_8027A60C(u32 value);
 extern int fn_8027A8D4(int state);
@@ -104,32 +104,32 @@ void fn_8027595C(int state, u32 *args)
     u32 sampleId;
 
     sampleId = (*args >> 8) & 0xffff;
-    found = dataGetSample(sampleId, lbl_803CA2B0);
+    found = dataGetSample(sampleId, dataSampleInfo);
     if (found == 0) {
         mode = *args >> 0x18;
         if (mode == 1) {
-            lbl_803CA2B0[3] =
+            dataSampleInfo[3] =
                 (args[1] * (0x7f - ((*(u32 *)(state + 0x154) >> 0x10) & 0xff))) / 0x7f;
         } else if (mode == 0) {
-            lbl_803CA2B0[3] = args[1];
+            dataSampleInfo[3] = args[1];
         } else if (mode < 3) {
-            lbl_803CA2B0[3] =
+            dataSampleInfo[3] =
                 (args[1] * ((*(u32 *)(state + 0x154) >> 0x10) & 0xff)) / 0x7f;
         } else {
-            lbl_803CA2B0[3] = 0;
+            dataSampleInfo[3] = 0;
         }
-        if (lbl_803CA2B0[4] <= lbl_803CA2B0[3]) {
-            lbl_803CA2B0[3] = lbl_803CA2B0[4] - 1;
+        if (dataSampleInfo[4] <= dataSampleInfo[3]) {
+            dataSampleInfo[3] = dataSampleInfo[4] - 1;
         }
         noStartOffset = countLeadingZeros(*(u32 *)(state + 0x114) & 0x800);
         noKeySync = countLeadingZeros(*(u32 *)(state + 0x118) & 0x100);
-        hwInitSamplePlayback(*(u32 *)(state + 0xf4) & 0xff, sampleId, lbl_803CA2B0,
+        hwInitSamplePlayback(*(u32 *)(state + 0xf4) & 0xff, sampleId, dataSampleInfo,
                              noKeySync >> 5,
                              ((u32)*(u8 *)(state + 0x10c) << 0x18) |
                                  (*(u32 *)(state + 0x110) >> 0xf),
                              *(u32 *)(state + 0xf4), noStartOffset >> 5,
                              *(u8 *)(state + 0x193));
-        *(u32 *)(state + 0x124) = lbl_803CA2B0[0];
+        *(u32 *)(state + 0x124) = dataSampleInfo[0];
         if (*(int *)(state + 0x128) != -1) {
             fn_80275CB8(state);
         }
