@@ -10,7 +10,7 @@ extern int synthHandleKeyOff(int handle);
 extern int audioGetSfxFn_802717b0(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux);
 extern int audioSetChannelVolume(int a, int b, int c, int d, int e);
 extern int vidGetInternalId(u32 id);
-extern void fn_80273870(void);
+extern void synthRefreshJobVolumes(void);
 extern void hwAddInput(u8 idx);
 extern void hwRemoveInput(u8 idx);
 extern void hwActivateStudio(int a, int b, int c);
@@ -198,7 +198,7 @@ void sndOutputMode(int mode)
             flags[0] |= 0x2000;
             flags[1] = nextFlags;
         }
-        fn_80273870();
+        synthRefreshJobVolumes();
     }
 }
 

@@ -4,7 +4,6 @@
 extern undefined4 FUN_8026fa70();
 extern undefined4 FUN_80272720();
 extern undefined4 FUN_80272724();
-extern undefined4 FUN_80272f70();
 extern undefined4 FUN_802757cc();
 extern undefined4 FUN_802757d0();
 extern undefined4 FUN_8027b25c();

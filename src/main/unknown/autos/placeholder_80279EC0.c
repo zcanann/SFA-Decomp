@@ -6,7 +6,7 @@ extern void hwBreak(u32 voice);
 extern void vidRemoveVoice(int handle);
 extern void voiceFree(int handle);
 extern u32 get_vidlist(u32 id);
-extern void fn_802737EC(u8 voice);
+extern void synthCancelJob(u8 voice);
 
 extern u8 *synthVoice;
 extern u8 lbl_803BD150[];
@@ -236,7 +236,7 @@ void voiceKill(u32 voice)
         voiceFree(base);
     }
     if (*(u8 *)(base + SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET) != 0) {
-        fn_802737EC((u8)voice);
+        synthCancelJob((u8)voice);
     }
     hwBreak(voice);
 }
@@ -278,7 +278,7 @@ int voiceKillById(u32 id)
                 voiceFree(handle);
             }
             if (*(u8 *)(handle + SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET) != 0) {
-                fn_802737EC(v);
+                synthCancelJob(v);
             }
             hwBreak(v);
             result = 0;

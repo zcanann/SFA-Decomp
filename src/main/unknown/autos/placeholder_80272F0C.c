@@ -3,8 +3,8 @@
 
 extern u8 lbl_803BD150[];
 extern u8 synthJobTable[];
-extern u8 lbl_803DE280;
-extern u8 lbl_803DE281;
+extern u8 synthJobTableCountdown;
+extern u8 synthJobTablePeriod;
 extern u32 lbl_803DE284;
 
 /*
@@ -25,8 +25,8 @@ void synthInitJobTable(void)
     int outerLoops;
     int tailRemaining;
 
-    lbl_803DE280 = 0;
-    lbl_803DE281 = 3;
+    synthJobTableCountdown = 0;
+    synthJobTablePeriod = 3;
     count = lbl_803BD150[0x210];
     progress = 0;
     if (count != 0) {
