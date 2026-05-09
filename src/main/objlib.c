@@ -1408,10 +1408,42 @@ void ObjHitReact_UpdateResetObjects(void)
 #pragma peephole off
 void ObjHits_ResetWorkBuffers(void)
 {
-  int i;
+  int clearedSlots;
+  int slotOffset;
+  int remainingSlots;
 
-  for (i = 0; i < OBJHITS_PRIORITY_WORK_SLOT_COUNT; i++) {
-    *(undefined4 *)(gObjHitsPriorityHitStates + i * OBJHITS_PRIORITY_WORK_SLOT_SIZE) = 0;
+  clearedSlots = 0;
+  slotOffset = 0;
+  remainingSlots = OBJHITS_PRIORITY_WORK_CLEAR_BLOCK_COUNT;
+  do {
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x3c) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x78) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0xb4) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0xf0) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x12c) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x168) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x1a4) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x1e0) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x21c) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x258) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x294) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x2d0) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x30c) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x348) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x384) = 0;
+    slotOffset += OBJHITS_PRIORITY_WORK_CLEAR_BLOCK_SIZE;
+    clearedSlots += OBJHITS_PRIORITY_WORK_CLEAR_BLOCK_SLOTS;
+    remainingSlots--;
+  } while (remainingSlots != 0);
+  remainingSlots = OBJHITS_PRIORITY_WORK_SLOT_COUNT - clearedSlots;
+  slotOffset = clearedSlots * OBJHITS_PRIORITY_WORK_SLOT_SIZE;
+  if (clearedSlots < OBJHITS_PRIORITY_WORK_SLOT_COUNT) {
+    do {
+      *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset) = 0;
+      slotOffset += OBJHITS_PRIORITY_WORK_SLOT_SIZE;
+      remainingSlots--;
+    } while (remainingSlots != 0);
   }
   gObjHitsResetObjectCount = 0;
   return;
@@ -1455,8 +1487,6 @@ int *ObjHitReact_GetResetObjects(undefined4 *param_1)
 #pragma peephole off
 void ObjHits_InitWorkBuffers(void)
 {
-  int i;
-
   gObjHitsResetObjects = (int *)mmAlloc(OBJHITREACT_MAX_RESET_OBJECTS * sizeof(int),0xe,0);
   gObjHitsPriorityHitStates =
       (undefined4)mmAlloc(OBJHITS_PRIORITY_WORK_SLOT_COUNT * OBJHITS_PRIORITY_WORK_SLOT_SIZE,0xe,0);
@@ -1466,9 +1496,11 @@ void ObjHits_InitWorkBuffers(void)
   lbl_803DCBC8[0] = mmAlloc(0x400,0xe,0);
   lbl_803DCBC8[1] = mmAlloc(0x400,0xe,0);
   gObjHitsPriorityHitTickDelta = lbl_803DE914;
-  for (i = 0; i < 5; i++) {
-    gObjHitsActiveHitVolumeObjects[i] = 0;
-  }
+  gObjHitsActiveHitVolumeObjects[0] = 0;
+  gObjHitsActiveHitVolumeObjects[1] = 0;
+  gObjHitsActiveHitVolumeObjects[2] = 0;
+  gObjHitsActiveHitVolumeObjects[3] = 0;
+  gObjHitsActiveHitVolumeObjects[4] = 0;
   return;
 }
 #pragma peephole reset
