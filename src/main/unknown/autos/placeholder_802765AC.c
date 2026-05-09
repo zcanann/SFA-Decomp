@@ -17,7 +17,6 @@ extern uint FUN_80279008();
 extern undefined4 FUN_8027975c();
 extern uint FUN_8027976c();
 extern undefined4 FUN_80279c7c();
-extern undefined4 FUN_8027a2b4();
 extern undefined4 FUN_8027a664();
 extern int FUN_8027a8fc();
 extern undefined4 FUN_8027a904();
@@ -89,7 +88,7 @@ extern void fn_8027132C(void *state);
 extern void *fn_80274E7C(u32 key);
 extern u16 seqGetMIDIPriority(u8 slot, u8 event);
 extern u32 voiceAllocate(u8 priority, u8 maxInstances, s16 key, s8 streamKind);
-extern void fn_80279038(int state);
+extern void vidRemoveVoice(int state);
 extern void voiceSetPriority(int state, u8 newGroup);
 extern u32 vidMakeNew(int state, int returnNewId);
 extern int hwIsActive(int slot);
@@ -1147,7 +1146,7 @@ int fn_80278B94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 baseSampl
         voiceId = voiceAllocate(priority, maxInstances, baseSample, streamKey != 0);
         if (voiceId != 0xffffffff) {
             state = (int)(lbl_803DE268 + voiceId * 0x404);
-            fn_80279038(state);
+            vidRemoveVoice(state);
             if (*(int *)(state + 0x4c) != 2) {
                 if (*(int *)(state + 0x4c) == 0) {
                     if (*(int *)(state + 0x40) == 0) {

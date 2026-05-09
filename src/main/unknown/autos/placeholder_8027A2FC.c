@@ -7,7 +7,7 @@ extern u8 lbl_803CAB50[];
 /*
  * --INFO--
  *
- * Function: fn_8027A2B4
+ * Function: voiceUnregister
  * EN v1.0 Address: 0x8027A2B4
  * EN v1.0 Size: 124b
  * EN v1.1 Address: 0x8027A2FC
@@ -17,7 +17,7 @@ extern u8 lbl_803CAB50[];
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8027A2B4(int obj)
+void voiceUnregister(int obj)
 {
     u32 a;
     u8 b;

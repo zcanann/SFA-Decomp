@@ -7,18 +7,18 @@ extern void *lbl_803DE2F4;
 extern void *lbl_803DE2F8;
 extern u16 lbl_803DE2FC;
 extern u8 *lbl_803DE268;
-extern void fn_8027A2B4(int state);
+extern void voiceUnregister(int state);
 
 /*
  * Remove a voice from the vid id list, recycling any allocated id-list nodes.
  */
-void fn_80279038(int state)
+void vidRemoveVoice(int state)
 {
     u32 *node;
     int next;
 
     if (*(int *)(state + 0xf4) != -1) {
-        fn_8027A2B4(state);
+        voiceUnregister(state);
         if (*(u32 *)(state + 0xf0) == 0xffffffff) {
             if (*(int *)(state + 0xec) == -1) {
                 node = *(u32 **)(state + 0xf8);

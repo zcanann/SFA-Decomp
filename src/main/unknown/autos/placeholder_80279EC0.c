@@ -3,7 +3,7 @@
 
 extern u32 hwIsActive(u32 voice);
 extern void hwBreak(u32 voice);
-extern void fn_80279038(int handle);
+extern void vidRemoveVoice(int handle);
 extern void voiceFree(int handle);
 extern u32 get_vidlist(u32 id);
 extern void fn_802737EC(u8 voice);
@@ -228,7 +228,7 @@ void voiceKill(u32 voice)
 {
     int base = (int)(lbl_803DE268 + voice * SYNTH_VOICE_STRIDE);
     if (*(u32 *)(base + SYNTH_VOICE_ACTIVE_HANDLE_OFFSET) != 0) {
-        fn_80279038(base);
+        vidRemoveVoice(base);
         *(u32 *)(base + SYNTH_VOICE_STATE_FLAGS_OFFSET) =
             *(u32 *)(base + SYNTH_VOICE_STATE_FLAGS_OFFSET) & ~3;
         *(u32 *)(base + 0x114) = *(u32 *)(base + 0x114) & ~0;
@@ -270,7 +270,7 @@ int voiceKillById(u32 id)
         u32 chain = *(u32 *)(handle + SYNTH_VOICE_NEXT_HANDLE_OFFSET);
         if (next == *(u32 *)(handle + SYNTH_VOICE_HANDLE_OFFSET)) {
             if (*(u32 *)(handle + SYNTH_VOICE_ACTIVE_HANDLE_OFFSET) != 0) {
-                fn_80279038(handle);
+                vidRemoveVoice(handle);
                 *(u32 *)(handle + SYNTH_VOICE_STATE_FLAGS_OFFSET) =
                     *(u32 *)(handle + SYNTH_VOICE_STATE_FLAGS_OFFSET) & ~3;
                 *(u32 *)(handle + 0x114) = *(u32 *)(handle + 0x114) & ~0;
