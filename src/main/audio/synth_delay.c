@@ -6,7 +6,7 @@ extern void inpSetMidiCtrl14(u8 controller, u8 slot, u8 key, u32 value);
 extern void inpFXCopyCtrl(u8 controller, u32 dstHandle, u32 srcHandle);
 extern void audioFn_80278610(SynthVoiceSlot* slot);
 
-extern u8* lbl_803DE268;
+extern u8* synthVoice;
 
 /*
  * synthSetHandleControllerValue - sndFXCtrl underlying impl.
@@ -23,15 +23,15 @@ u32 synthSetHandleControllerValue(u32 handle, u8 controller, u8 value) {
     handle = vidGetInternalId(handle);
     while (handle != 0xFFFFFFFFu) {
         idx = (u8)handle;
-        if (handle == *(u32*)(lbl_803DE268 + idx * 0x404 + 0xF4)) {
-            slotPtr = lbl_803DE268 + idx * 0x404;
+        if (handle == *(u32*)(synthVoice + idx * 0x404 + 0xF4)) {
+            slotPtr = synthVoice + idx * 0x404;
             if ((*(u32*)(slotPtr + 0x118) & 2) != 0) {
                 inpSetMidiCtrl(controller, idx, *(u8*)(slotPtr + 0x20B), value);
             } else {
                 inpSetMidiCtrl(controller, idx, *(u8*)(slotPtr + 0x122), value);
             }
             found = 1;
-            handle = *(u32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
+            handle = *(u32*)(synthVoice + idx * 0x404 + 0xEC);
         } else {
             return found;
         }
@@ -53,15 +53,15 @@ u32 synthSetHandleControllerValue14Bit(u32 handle, u8 controller, u32 value) {
     handle = vidGetInternalId(handle);
     while (handle != 0xFFFFFFFFu) {
         idx = (u8)handle;
-        if (handle == *(u32*)(lbl_803DE268 + idx * 0x404 + 0xF4)) {
-            slotPtr = lbl_803DE268 + idx * 0x404;
+        if (handle == *(u32*)(synthVoice + idx * 0x404 + 0xF4)) {
+            slotPtr = synthVoice + idx * 0x404;
             if ((*(u32*)(slotPtr + 0x118) & 2) != 0) {
                 inpSetMidiCtrl14(controller, idx, *(u8*)(slotPtr + 0x20B), value);
             } else {
                 inpSetMidiCtrl14(controller, idx, *(u8*)(slotPtr + 0x122), value);
             }
             found = 1;
-            handle = *(u32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
+            handle = *(u32*)(synthVoice + idx * 0x404 + 0xEC);
         } else {
             return found;
         }
@@ -98,11 +98,11 @@ u32 synthHandleKeyOff(u32 handle) {
         handle = vidGetInternalId(handle);
         while (handle != 0xFFFFFFFFu) {
             idx = (u8)handle;
-            if (handle == *(u32*)(lbl_803DE268 + idx * 0x404 + 0xF4)) {
-                audioFn_80278610((SynthVoiceSlot*)(lbl_803DE268 + idx * 0x404));
+            if (handle == *(u32*)(synthVoice + idx * 0x404 + 0xF4)) {
+                audioFn_80278610((SynthVoiceSlot*)(synthVoice + idx * 0x404));
                 found = 1;
             }
-            handle = *(u32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
+            handle = *(u32*)(synthVoice + idx * 0x404 + 0xEC);
         }
     }
     return found;

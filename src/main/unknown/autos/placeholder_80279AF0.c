@@ -10,10 +10,10 @@ typedef struct VoiceIdSlot {
 } VoiceIdSlot;
 
 extern VoiceIdSlot lbl_803CB190[];
-extern u8 *lbl_803DE268;
+extern u8 *synthVoice;
 extern u8 lbl_803BD150[];
 extern u8 lbl_803CA2D0[];
-extern u8 lbl_803DE270;
+extern u8 synthIdleWaitActive;
 extern u16 voicePrioSortRootListRoot;
 extern u8 voiceMusicRunning;
 extern u8 voiceFxRunning;
@@ -36,7 +36,7 @@ u32 voiceAllocate(u8 priority, u8 maxInstances, s16 key, s8 streamKind)
     u32 limit;
     int matchingCount;
 
-    if (lbl_803DE270 != 0) {
+    if (synthIdleWaitActive != 0) {
         return 0xffffffff;
     }
 
@@ -64,7 +64,7 @@ count_matching_key:
                    (selectedVoice == 0xffffffff)) {
                 voiceLink = *(u8 *)(lbl_803CA2D0 + 0x9c0 + priorityNode);
                 while ((current = voiceLink) != 0xff) {
-                    state = (int)(lbl_803DE268 + current * 0x404);
+                    state = (int)(synthVoice + current * 0x404);
                     candidate = selectedVoice;
                     if (key == *(s16 *)(state + 0x100)) {
                         matchingCount++;
@@ -75,7 +75,7 @@ count_matching_key:
                             if (selectedVoice != 0xffffffff) {
                                 candidate = selectedVoice;
                                 if (*(u32 *)(state + 0x110) <
-                                    *(u32 *)(lbl_803DE268 + selectedVoice * 0x404 + 0x110)) {
+                                    *(u32 *)(synthVoice + selectedVoice * 0x404 + 0x110)) {
                                     candidate = current;
                                 }
                             }
@@ -93,7 +93,7 @@ count_matching_key:
             while (((current = priorityNode) != 0xffff) && (matchingCount < (int)limit)) {
                 voiceLink = *(u8 *)(lbl_803CA2D0 + 0x9c0 + current);
                 while ((candidate = voiceLink) != 0xff) {
-                    if (key == *(s16 *)(lbl_803DE268 + candidate * 0x404 + 0x100)) {
+                    if (key == *(s16 *)(synthVoice + candidate * 0x404 + 0x100)) {
                         matchingCount++;
                     }
                     voiceLink = *(u8 *)(lbl_803CA2D0 + 0x8c1 + candidate * 4);
@@ -117,7 +117,7 @@ count_matching_key:
                (candidate == 0xffffffff)) {
             voiceLink = *(u8 *)(lbl_803CA2D0 + 0x9c0 + selectedVoice);
             while ((current = voiceLink) != 0xff) {
-                state = (int)(lbl_803DE268 + current * 0x404);
+                state = (int)(synthVoice + current * 0x404);
                 limit = candidate;
                 if ((*(s8 *)(state + 0x11c) == 0) &&
                     (!enforceKind || (streamKind == *(s8 *)(state + 0x11d))) &&
@@ -126,7 +126,7 @@ count_matching_key:
                     if (candidate != 0xffffffff) {
                         limit = candidate;
                         if (*(u32 *)(state + 0x110) <
-                            *(u32 *)(lbl_803DE268 + candidate * 0x404 + 0x110)) {
+                            *(u32 *)(synthVoice + candidate * 0x404 + 0x110)) {
                             limit = current;
                         }
                     }
@@ -142,7 +142,7 @@ count_matching_key:
         }
     }
 
-    if (priority < *(u8 *)(lbl_803DE268 + selectedVoice * 0x404 + 0x10c)) {
+    if (priority < *(u8 *)(synthVoice + selectedVoice * 0x404 + 0x10c)) {
         return 0xffffffff;
     }
 
@@ -166,7 +166,7 @@ found_voice:
             voiceListInsert = lbl_803CB190[selectedVoice].prev;
         }
         lbl_803CB190[selectedVoice].active = 0;
-    } else if (*(s8 *)(lbl_803DE268 + selectedVoice * 0x404 + 0x11d) == 0) {
+    } else if (*(s8 *)(synthVoice + selectedVoice * 0x404 + 0x11d) == 0) {
         voiceMusicRunning--;
     } else {
         voiceFxRunning--;

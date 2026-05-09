@@ -12,8 +12,8 @@ extern void fn_8027142C(u8 *fade);
 extern u8 lbl_803BCD90[];
 extern u8 lbl_803BD364[];
 extern u8 gSynthInitialized;
-extern u32 lbl_803DE260;
-extern u8 *lbl_803DE268;
+extern u32 synthMasterFaderActiveFlags;
+extern u8 *synthVoice;
 extern f32 lbl_803E7798;
 extern f32 lbl_803E77A8;
 extern f32 lbl_803E77D4;
@@ -69,7 +69,7 @@ void audioSetChannelVolume(u32 volume, u32 timeMs, u32 target, u8 action, u32 ha
                     fade->pos = lbl_803E77A8;
                     fade->step = lbl_803E77D4 / (f32)convertedTime;
                 }
-                lbl_803DE260 |= 1U << i;
+                synthMasterFaderActiveFlags |= 1U << i;
             }
         }
         return;
@@ -94,7 +94,7 @@ void audioSetChannelVolume(u32 volume, u32 timeMs, u32 target, u8 action, u32 ha
                     fade->pos = lbl_803E77A8;
                     fade->step = lbl_803E77D4 / (f32)convertedTime;
                 }
-                lbl_803DE260 |= 1U << i;
+                synthMasterFaderActiveFlags |= 1U << i;
             }
         }
         return;
@@ -134,7 +134,7 @@ void audioSetChannelVolume(u32 volume, u32 timeMs, u32 target, u8 action, u32 ha
                     fade->pos = lbl_803E77A8;
                     fade->step = lbl_803E77D4 / (f32)convertedTime;
                 }
-                lbl_803DE260 |= 1U << i;
+                synthMasterFaderActiveFlags |= 1U << i;
             }
         }
         return;
@@ -156,7 +156,7 @@ void audioSetChannelVolume(u32 volume, u32 timeMs, u32 target, u8 action, u32 ha
         fade->pos = lbl_803E77A8;
         fade->step = lbl_803E77D4 / (f32)convertedTime;
     }
-    lbl_803DE260 |= 1U << targetIndex;
+    synthMasterFaderActiveFlags |= 1U << targetIndex;
 }
 
 /*
@@ -172,7 +172,7 @@ void audioSetChannelVolume(u32 volume, u32 timeMs, u32 target, u8 action, u32 ha
 int fn_80271F5C(u8 voiceIdx)
 {
     u8 *v = lbl_803BCD90 + voiceIdx * 0x30;
-    if (((v[0x601] != 4) && ((lbl_803DE260 & (1U << voiceIdx)) != 0)) &&
+    if (((v[0x601] != 4) && ((synthMasterFaderActiveFlags & (1U << voiceIdx)) != 0)) &&
         (*(f32 *)(v + 0x5dc) > *(f32 *)(v + 0x5d8))) {
         return 1;
     }
@@ -214,12 +214,12 @@ int fn_80271FD8(int mode, u32 arg)
         u8 *entry;
         u32 offset;
         offset = (arg & 0xff) * 0x404;
-        entry = lbl_803DE268 + offset;
+        entry = synthVoice + offset;
         if (entry[0x11c] != 0) {
             break;
         }
         synthHandleVirtualSampleDone(hwGetVirtualSampleID(arg & 0xff));
-        entry = lbl_803DE268 + offset;
+        entry = synthVoice + offset;
         if (arg != *(u32 *)(entry + 0xf4)) {
             break;
         }

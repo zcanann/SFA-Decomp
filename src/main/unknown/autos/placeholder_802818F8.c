@@ -2,7 +2,7 @@
 
 extern u8 lbl_803CD760[];
 extern u8 lbl_803BD150[];
-extern u8 *lbl_803DE268;
+extern u8 *synthVoice;
 extern void fn_80271370(int voice);
 
 /*
@@ -33,10 +33,10 @@ void inpSetMidiCtrl(int idx, u8 a, u8 b, u8 mask)
                 lbl_803CD760[b * 0x10 + a + 0x6740] = v;
                 voff = 0;
                 for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
-                    u8 *vp = lbl_803DE268 + voff;
+                    u8 *vp = synthVoice + voff;
                     if (b == vp[0x122] && a == vp[0x121]) {
                         vp[0x1d7] = v;
-                        *(u8 *)(lbl_803DE268 + voff + 0x1d6) = v;
+                        *(u8 *)(synthVoice + voff + 0x1d6) = v;
                     }
                     voff += 0x404;
                 }
@@ -54,10 +54,10 @@ void inpSetMidiCtrl(int idx, u8 a, u8 b, u8 mask)
                 *p = v;
                 voff = 0;
                 for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
-                    u8 *vp = lbl_803DE268 + voff;
+                    u8 *vp = synthVoice + voff;
                     if (b == vp[0x122] && a == vp[0x121]) {
                         vp[0x1d7] = v;
-                        *(u8 *)(lbl_803DE268 + voff + 0x1d6) = v;
+                        *(u8 *)(synthVoice + voff + 0x1d6) = v;
                     }
                     voff += 0x404;
                 }
@@ -75,10 +75,10 @@ void inpSetMidiCtrl(int idx, u8 a, u8 b, u8 mask)
                 *p = v;
                 voff = 0;
                 for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
-                    u8 *vp = lbl_803DE268 + voff;
+                    u8 *vp = synthVoice + voff;
                     if (b == vp[0x122] && a == vp[0x121]) {
                         vp[0x1d7] = v;
-                        *(u8 *)(lbl_803DE268 + voff + 0x1d6) = v;
+                        *(u8 *)(synthVoice + voff + 0x1d6) = v;
                     }
                     voff += 0x404;
                 }
@@ -90,10 +90,10 @@ void inpSetMidiCtrl(int idx, u8 a, u8 b, u8 mask)
         base[0xc0] = mask & 0x7f;
         voff = 0;
         for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
-            u8 *vp = lbl_803DE268 + voff;
+            u8 *vp = synthVoice + voff;
             if (b == vp[0x122] && a == vp[0x121]) {
                 *(u32 *)(vp + 0x214) = 0x1fff;
-                fn_80271370((int)(lbl_803DE268 + voff));
+                fn_80271370((int)(synthVoice + voff));
             }
             voff += 0x404;
         }
@@ -110,10 +110,10 @@ void inpSetMidiCtrl(int idx, u8 a, u8 b, u8 mask)
                 lbl_803CD760[b * 0x10 + a + 0x6740] = v;
                 voff = 0;
                 for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
-                    u8 *vp = lbl_803DE268 + voff;
+                    u8 *vp = synthVoice + voff;
                     if (b == vp[0x122] && a == vp[0x121]) {
                         vp[0x1d7] = v;
-                        *(u8 *)(lbl_803DE268 + voff + 0x1d6) = v;
+                        *(u8 *)(synthVoice + voff + 0x1d6) = v;
                     }
                     voff += 0x404;
                 }
@@ -131,10 +131,10 @@ void inpSetMidiCtrl(int idx, u8 a, u8 b, u8 mask)
                 *p = v;
                 voff = 0;
                 for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
-                    u8 *vp = lbl_803DE268 + voff;
+                    u8 *vp = synthVoice + voff;
                     if (b == vp[0x122] && a == vp[0x121]) {
                         vp[0x1d7] = v;
-                        *(u8 *)(lbl_803DE268 + voff + 0x1d6) = v;
+                        *(u8 *)(synthVoice + voff + 0x1d6) = v;
                     }
                     voff += 0x404;
                 }
@@ -152,10 +152,10 @@ void inpSetMidiCtrl(int idx, u8 a, u8 b, u8 mask)
                 *p = v;
                 voff = 0;
                 for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
-                    u8 *vp = lbl_803DE268 + voff;
+                    u8 *vp = synthVoice + voff;
                     if (b == vp[0x122] && a == vp[0x121]) {
                         vp[0x1d7] = v;
-                        *(u8 *)(lbl_803DE268 + voff + 0x1d6) = v;
+                        *(u8 *)(synthVoice + voff + 0x1d6) = v;
                     }
                     voff += 0x404;
                 }
@@ -167,10 +167,10 @@ void inpSetMidiCtrl(int idx, u8 a, u8 b, u8 mask)
         aux[0x43c0] = mask & 0x7f;
         voff = 0;
         for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
-            u8 *vp = lbl_803DE268 + voff;
+            u8 *vp = synthVoice + voff;
             if (b == vp[0x122] && a == vp[0x121]) {
                 *(u32 *)(vp + 0x214) = 0x1fff;
-                fn_80271370((int)(lbl_803DE268 + voff));
+                fn_80271370((int)(synthVoice + voff));
             }
             voff += 0x404;
         }

@@ -34,8 +34,8 @@ extern u8 lbl_803DE23C;
 extern u8 lbl_803DE244;
 extern u8 lbl_803DE24C;
 extern u8 lbl_803DE254;
-extern u32 lbl_803DE264;
-extern u8 *lbl_803DE268;
+extern u32 synthFlags;
+extern u8 *synthVoice;
 
 /*
  * MusyX sequence volume API, wrapping the underlying synth volume helper.
@@ -166,34 +166,34 @@ void sndMasterVolume(int volume, int time, u8 musicFlag, u8 fxFlag)
 
 /*
  * MusyX output-mode setter. It toggles the HRTF/stereo bits in
- * lbl_803DE264 and marks all voices dirty when the output mask changes.
+ * synthFlags and marks all voices dirty when the output mask changes.
  *
  * EN v1.1 Address: 0x80272A64, size 248b
  */
 void sndOutputMode(int mode)
 {
-    u32 oldFlags = lbl_803DE264;
+    u32 oldFlags = synthFlags;
     switch (mode) {
     case 0:
-        lbl_803DE264 = lbl_803DE264 | 0x1;
-        lbl_803DE264 = lbl_803DE264 & ~0x2;
+        synthFlags = synthFlags | 0x1;
+        synthFlags = synthFlags & ~0x2;
         hwDisableHRTF();
         break;
     case 1:
-        lbl_803DE264 = lbl_803DE264 & ~0x1;
-        lbl_803DE264 = lbl_803DE264 & ~0x2;
+        synthFlags = synthFlags & ~0x1;
+        synthFlags = synthFlags & ~0x2;
         hwDisableHRTF();
         break;
     case 2:
-        lbl_803DE264 = lbl_803DE264 & ~0x1;
-        lbl_803DE264 = lbl_803DE264 | 0x2;
+        synthFlags = synthFlags & ~0x1;
+        synthFlags = synthFlags | 0x2;
         hwDisableHRTF();
         break;
     }
-    if (oldFlags != lbl_803DE264) {
+    if (oldFlags != synthFlags) {
         u32 i;
         for (i = 0; i < lbl_803BD150[0x210]; i++) {
-            u32 *flags = (u32 *)(lbl_803DE268 + i * 0x404 + 0x114);
+            u32 *flags = (u32 *)(synthVoice + i * 0x404 + 0x114);
             u32 nextFlags = flags[1];
             flags[0] |= 0x2000;
             flags[1] = nextFlags;
@@ -272,7 +272,7 @@ void synthDeactivateStudio(u8 slot)
 
     offset = 0;
     for (i = 0; i < lbl_803BD150[0x210]; i++) {
-        voice = lbl_803DE268 + offset;
+        voice = synthVoice + offset;
         if (slot == *(u8 *)(voice + 0x11f)) {
             if (*(u32 *)(voice + 0xf4) != 0xffffffff) {
                 voiceKillById(*(u32 *)(*(u32 *)(voice + 0xf8) + 8));

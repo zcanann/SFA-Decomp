@@ -8,7 +8,7 @@ extern void voiceFree(int handle);
 extern u32 get_vidlist(u32 id);
 extern void fn_802737EC(u8 voice);
 
-extern u8 *lbl_803DE268;
+extern u8 *synthVoice;
 extern u8 lbl_803BD150[];
 extern u8 gSynthInitialized;
 extern u8 lbl_803CA2D0[];
@@ -214,9 +214,9 @@ void voiceBreakAndFree(u32 voice)
     if (hwIsActive(voice) != 0) {
         hwBreak(voice);
     }
-    *(u32 *)(lbl_803DE268 + voice * SYNTH_VOICE_STRIDE + SYNTH_VOICE_HANDLE_OFFSET) = voice;
-    voiceFree((int)(lbl_803DE268 + voice * SYNTH_VOICE_STRIDE));
-    *(u8 *)(lbl_803DE268 + voice * SYNTH_VOICE_STRIDE + SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET) = 0;
+    *(u32 *)(synthVoice + voice * SYNTH_VOICE_STRIDE + SYNTH_VOICE_HANDLE_OFFSET) = voice;
+    voiceFree((int)(synthVoice + voice * SYNTH_VOICE_STRIDE));
+    *(u8 *)(synthVoice + voice * SYNTH_VOICE_STRIDE + SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET) = 0;
 }
 
 /*
@@ -226,7 +226,7 @@ void voiceBreakAndFree(u32 voice)
  */
 void voiceKill(u32 voice)
 {
-    int base = (int)(lbl_803DE268 + voice * SYNTH_VOICE_STRIDE);
+    int base = (int)(synthVoice + voice * SYNTH_VOICE_STRIDE);
     if (*(u32 *)(base + SYNTH_VOICE_ACTIVE_HANDLE_OFFSET) != 0) {
         vidRemoveVoice(base);
         *(u32 *)(base + SYNTH_VOICE_STATE_FLAGS_OFFSET) =
@@ -266,7 +266,7 @@ int voiceKillById(u32 id)
 
     while (next != SYNTH_INVALID_VOICE) {
         u8 v = (u8)next;
-        int handle = (int)(lbl_803DE268 + v * SYNTH_VOICE_STRIDE);
+        int handle = (int)(synthVoice + v * SYNTH_VOICE_STRIDE);
         u32 chain = *(u32 *)(handle + SYNTH_VOICE_NEXT_HANDLE_OFFSET);
         if (next == *(u32 *)(handle + SYNTH_VOICE_HANDLE_OFFSET)) {
             if (*(u32 *)(handle + SYNTH_VOICE_ACTIVE_HANDLE_OFFSET) != 0) {

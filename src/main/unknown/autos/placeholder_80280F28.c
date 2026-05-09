@@ -12,7 +12,7 @@ extern void fn_80280FFC(u32 flags);
 
 extern u8 lbl_803BD150[];
 extern u8 gSynthInitialized;
-extern u8 lbl_803DE270;
+extern u8 synthIdleWaitActive;
 extern u32 s3dCallCnt;
 extern u32 s3dEmitterRoot;
 extern u32 s3dListenerRoot;
@@ -101,7 +101,7 @@ int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, void *p7, u32 fla
         synthResetVirtualSampleCounter();
         fn_80275260(0, p7);
         fn_8026F30C();
-        lbl_803DE270 = 0;
+        synthIdleWaitActive = 0;
         synthInit(0x7d00, &voiceCountSnapshot);
         fn_80272EA4();
         synthInitVirtualSampleTable();

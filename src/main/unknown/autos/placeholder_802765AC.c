@@ -77,7 +77,7 @@ extern void* PTR_DAT_8032fc70;
 extern void* PTR_DAT_8032fca0;
 extern undefined4 uRam803def6c;
 
-extern u8 *lbl_803DE268;
+extern u8 *synthVoice;
 extern u8 lbl_803BD150[];
 extern int macActiveRoot;
 extern int macTimeQueueRoot;
@@ -114,7 +114,7 @@ extern int fn_80275364(int state, u32 *args);
 extern void inpAddCtrl(int obj, int b, int c, int d, u32 flag);
 extern void inpSetGlobalMIDIDirtyFlag(u8 a, u8 b, u32 flag);
 extern int vidGetInternalId(u32 id);
-extern void (*lbl_803DE26C)(u32 id);
+extern void (*synthMessageCallback)(u32 id);
 
 /*
  * --INFO--
@@ -720,18 +720,18 @@ void fn_80276C04(int state, u32 *args)
     if (((*args >> 8) & 0xff) == 0) {
         targetInstrument = *args >> 0x10;
         if (targetInstrument == 0xffff) {
-            if (lbl_803DE26C != 0) {
-                lbl_803DE26C(*(u32 *)(*(int *)(state + 0xf8) + 8));
+            if (synthMessageCallback != 0) {
+                synthMessageCallback(*(u32 *)(*(int *)(state + 0xf8) + 8));
             }
         } else {
             offset = 0;
             for (i = 0; i < *(u32 *)(lbl_803BD150 + 0x210); i++) {
-                voice = (int)(lbl_803DE268 + offset);
+                voice = (int)(synthVoice + offset);
                 if (*(int *)(voice + 0x34) != 0 &&
                     targetInstrument == *(u16 *)(voice + 0x102)) {
                     targetVoice = vidGetInternalId(*(u32 *)(*(int *)(voice + 0xf8) + 8));
                     if (targetVoice != -1) {
-                        voice = (int)(lbl_803DE268 + (targetVoice & 0xff) * 0x404);
+                        voice = (int)(synthVoice + (targetVoice & 0xff) * 0x404);
                         if (*(u8 *)(voice + 0x3ec) < 4) {
                             *(u8 *)(voice + 0x3ec) = *(u8 *)(voice + 0x3ec) + 1;
                             *(u32 *)(voice + (u32)*(u8 *)(voice + 0x3ee) * 4 + 0x3f0) =
@@ -758,7 +758,7 @@ void fn_80276C04(int state, u32 *args)
         }
         targetVoice = vidGetInternalId(targetInstrument);
         if (targetVoice != -1) {
-            voice = (int)(lbl_803DE268 + (targetVoice & 0xff) * 0x404);
+            voice = (int)(synthVoice + (targetVoice & 0xff) * 0x404);
             if (*(u8 *)(voice + 0x3ec) < 4) {
                 *(u8 *)(voice + 0x3ec) = *(u8 *)(voice + 0x3ec) + 1;
                 *(u32 *)(voice + (u32)*(u8 *)(voice + 0x3ee) * 4 + 0x3f0) = value;
@@ -791,7 +791,7 @@ void fn_80276E38(int state, u32 *args)
     group = (command >> 8) & 0xff;
     if (group != 0) {
         for (i = 0; i < *(u32 *)(lbl_803BD150 + 0x210); i++) {
-            voice = (int)(lbl_803DE268 + offset);
+            voice = (int)(synthVoice + offset);
             if (*(int *)(voice + 0x34) != 0) {
                 if (((*(u32 *)(voice + 0x118) & 2) == 0) &&
                     group == *(u8 *)(voice + 0x104)) {
@@ -1144,7 +1144,7 @@ int audioFn_80278b94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 base
         }
         voiceId = voiceAllocate(priority, maxInstances, baseSample, streamKey != 0);
         if (voiceId != 0xffffffff) {
-            state = (int)(lbl_803DE268 + voiceId * 0x404);
+            state = (int)(synthVoice + voiceId * 0x404);
             vidRemoveVoice(state);
             if (*(int *)(state + 0x4c) != 2) {
                 if (*(int *)(state + 0x4c) == 0) {
@@ -1250,9 +1250,9 @@ void fn_80278EA4(void)
     macTimeQueueRoot = 0;
     macRealTimeHi = 0;
     for (i = 0; i < *(u32 *)(lbl_803BD150 + 0x210); i++) {
-        *(u32 *)(lbl_803DE268 + offset + 0x34) = 0;
-        *(u32 *)(lbl_803DE268 + offset + 0x4c) = 2;
-        *(u16 *)(lbl_803DE268 + offset + 0xaa) = 0;
+        *(u32 *)(synthVoice + offset + 0x34) = 0;
+        *(u32 *)(synthVoice + offset + 0x4c) = 2;
+        *(u16 *)(synthVoice + offset + 0xaa) = 0;
         offset += 0x404;
     }
 }

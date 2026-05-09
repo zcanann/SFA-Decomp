@@ -25,13 +25,13 @@ extern u16 inpGetAuxA(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex);
 extern u16 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex);
 extern void hwFrameDone(void);
 extern u8 lbl_803BCD90[];
-extern u32 lbl_803DE25C;
-extern u32 lbl_803DE260;
+extern u32 synthMasterFaderPauseActiveFlags;
+extern u32 synthMasterFaderActiveFlags;
 extern u8 lbl_803DE23C;
 extern u8 lbl_803DE244;
 extern u8 lbl_803DE24C;
 extern u8 lbl_803DE254;
-extern u8 *lbl_803DE268;
+extern u8 *synthVoice;
 extern int lbl_803DE278;
 extern int lbl_803DE27C;
 extern f32 lbl_803E77D0;
@@ -149,7 +149,7 @@ int audioFn_8026feec(u32 sampleId, u8 key, u8 velocity, u32 flags, u32 volume, u
         if (handle != -1) {
             voice = vidGetInternalId(handle);
             while (voice != 0xffffffff) {
-                slot = lbl_803DE268 + ((voice & 0xff) * 0x404);
+                slot = synthVoice + ((voice & 0xff) * 0x404);
                 slot[0x11c] = 0;
                 voice = *(u32 *)(slot + 0xec);
             }
@@ -182,7 +182,7 @@ int audioFn_8026feec(u32 sampleId, u8 key, u8 velocity, u32 flags, u32 volume, u
             }
             voice = vidGetInternalId(handle);
             while (voice != 0xffffffff) {
-                slot = lbl_803DE268 + ((voice & 0xff) * 0x404);
+                slot = synthVoice + ((voice & 0xff) * 0x404);
                 slot[0x11c] = 0;
                 voice = *(u32 *)(slot + 0xec);
             }
@@ -344,7 +344,7 @@ void fn_80271398(void **head, void (*cb)(int idx))
         *(u8 *)((u8 *)cur + 0x9) = 0xff;
         {
             int idx = *(u8 *)((u8 *)cur + 0x8);
-            if (*(u8 *)(lbl_803DE268 + idx * 0x404 + 0x11c) == 0) {
+            if (*(u8 *)(synthVoice + idx * 0x404 + 0x11c) == 0) {
                 cb(idx);
             }
         }
@@ -408,32 +408,32 @@ void audioFn_80271498(u32 delta)
         fn_80271398((void **)&storage->bucketHeads[bucket][2], fn_80270938);
         gSynthDelayBucketCursor = (gSynthDelayBucketCursor + 1) & 0x1f;
         if (hwGetTimeOffset() == 0) {
-            if ((lbl_803DE260 | lbl_803DE25C) != 0) {
+            if ((synthMasterFaderActiveFlags | synthMasterFaderPauseActiveFlags) != 0) {
                 zeroThreshold = lbl_803E77D0;
                 fade = (f32 *)(stateBase + 0x5d4);
                 mask = 1;
                 for (fadeIndex = 0; fadeIndex < 0x20; fadeIndex++) {
-                    if ((lbl_803DE260 & mask) != 0) {
+                    if ((synthMasterFaderActiveFlags & mask) != 0) {
                         fadeDelta = fade[3] * (fade[1] - fade[2]);
                         fade[0] = fade[1] - fadeDelta;
                         fade[3] = fade[3] - fade[4];
                         if (fade[3] <= zeroThreshold) {
                             fade[0] = fade[1];
                             fn_8027142C((u8 *)fade);
-                            lbl_803DE260 &= ~mask;
-                            if ((lbl_803DE260 == 0) && (lbl_803DE25C == 0)) {
+                            synthMasterFaderActiveFlags &= ~mask;
+                            if ((synthMasterFaderActiveFlags == 0) && (synthMasterFaderPauseActiveFlags == 0)) {
                                 break;
                             }
                         }
                     }
-                    if ((lbl_803DE25C & mask) != 0) {
+                    if ((synthMasterFaderPauseActiveFlags & mask) != 0) {
                         fadeDelta = fade[8] * (fade[6] - fade[7]);
                         fade[5] = fade[6] - fadeDelta;
                         fade[8] = fade[8] - fade[9];
                         if (fade[8] <= zeroThreshold) {
                             fade[5] = fade[6];
-                            lbl_803DE25C &= ~mask;
-                            if ((lbl_803DE25C == 0) && (lbl_803DE260 == 0)) {
+                            synthMasterFaderPauseActiveFlags &= ~mask;
+                            if ((synthMasterFaderPauseActiveFlags == 0) && (synthMasterFaderActiveFlags == 0)) {
                                 break;
                             }
                         }

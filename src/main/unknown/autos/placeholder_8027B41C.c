@@ -9,7 +9,7 @@ extern u32 hwVoiceInStartup(int slot);
 extern void hwBreak(int slot);
 
 extern u8 lbl_803CB290[];
-extern u8 *lbl_803DE268;
+extern u8 *synthVoice;
 extern u16 lbl_803DE308;
 
 /*
@@ -75,7 +75,7 @@ void synthUpdateVirtualSamples(void)
                 }
                 *(u32 *)(entry + 0xc) = currentTick;
 
-                val = *(u16 *)(lbl_803DE268 + entry[3] * 0x404 + 0x206);
+                val = *(u16 *)(synthVoice + entry[3] * 0x404 + 0x206);
                 threshold = (u32)((s32)(val * 0xa0 + 0xfff) >> 12);
                 if ((s32)threshold > (s32)*(u32 *)(entry + 8)) {
                     if (hwVoiceInStartup(entry[3]) == 0) {

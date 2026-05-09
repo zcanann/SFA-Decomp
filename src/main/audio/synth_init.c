@@ -15,7 +15,7 @@ extern int audioFn_80278b94(u8 a0, u8 a1, int a2, int a3, int a4, u32 a5, u32 a6
                         u32 aE, u32 aF);
 extern int vidMakeRoot(void* slotPtr);
 
-extern u8* lbl_803DE268;
+extern u8* synthVoice;
 
 typedef struct SynthBuf {
     u16 count;
@@ -128,7 +128,7 @@ skipDispatch:
                 if ((handle & 0xFFFF0000) == 0xFFFF0000) {
                     if (arg13 != 0) {
                         u8 idx = (u8)subResult;
-                        u32* slotData = (u32*)(lbl_803DE268 + idx * 0x404);
+                        u32* slotData = (u32*)(synthVoice + idx * 0x404);
                         handle = vidMakeRoot(slotData);
                     } else {
                         handle = subResult;
@@ -136,19 +136,19 @@ skipDispatch:
                 } else {
                     u8 prevIdx = (u8)handle;
                     u8 newIdx = (u8)subResult;
-                    *(int*)(lbl_803DE268 + prevIdx * 0x404 + 0xEC) = subResult;
-                    *(int*)(lbl_803DE268 + newIdx * 0x404 + 0xF0) = handle;
+                    *(int*)(synthVoice + prevIdx * 0x404 + 0xEC) = subResult;
+                    *(int*)(synthVoice + newIdx * 0x404 + 0xF0) = handle;
                 }
                 {
                     u32 cur = (u32)handle;
                     while (1) {
                         u8 idx = (u8)cur;
-                        u32 next = *(u32*)(lbl_803DE268 + idx * 0x404 + 0xEC);
+                        u32 next = *(u32*)(synthVoice + idx * 0x404 + 0xEC);
                         if ((next & 0xFFFF0000) == 0xFFFF0000) {
-                            *(u8*)(lbl_803DE268 + idx * 0x404 + 0x11C) = 1;
+                            *(u8*)(synthVoice + idx * 0x404 + 0x11C) = 1;
                             break;
                         }
-                        *(u8*)(lbl_803DE268 + idx * 0x404 + 0x11C) = 1;
+                        *(u8*)(synthVoice + idx * 0x404 + 0x11C) = 1;
                         cur = next;
                     }
                 }
