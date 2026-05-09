@@ -194,8 +194,8 @@ extern u32 gExpgfxTrackedPoolSourceIds[];
 extern u32 gExpgfxTrackedSourceFrameMasks[];
 extern s16 gExpgfxStaticPoolSlotTypeIds[];
 extern int lbl_803DD258;
-extern volatile s16 lbl_803DD250;
-extern volatile u8 lbl_803DD252;
+extern volatile s16 gExpgfxSequenceCounter;
+extern volatile u8 gExpgfxFrameParityBit;
 extern char sExpgfxAddToTableUsageOverflow[];
 extern char sExpgfxExpTabIsFull[];
 extern char sExpgfxInvalidTabIndex[];
@@ -206,9 +206,6 @@ extern char sExpgfxNoTexture[];
 #define EXPGFX_SLOT_TABLE_INDEX_OFFSET 0x8A
 #define gExpgfxTrackedPoolMaskHighWords DAT_8039c7c8
 #define gExpgfxTrackedPoolMaskLowWords DAT_8039c7cc
-#define gExpgfxSequenceCounter lbl_803DD250
-#define gExpgfxFrameParityBit lbl_803DD252
-
 extern ExpgfxTableEntry gExpgfxTableEntries[];
 
 static inline ExpgfxTableEntry *Expgfx_GetTableEntry(int tableIndex) {
