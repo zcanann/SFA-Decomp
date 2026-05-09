@@ -5,6 +5,7 @@
 
 typedef struct ObjAnimBank ObjAnimBank;
 typedef struct ObjHitReactState ObjHitReactState;
+typedef void (*ObjContactCallback)(int objA,int objB);
 
 int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2);
 void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
@@ -66,7 +67,7 @@ void ObjLink_DetachChild(int param_1,int param_2);
 void ObjLink_AttachChild(int param_1,int param_2,ushort param_3);
 void ObjContact_DispatchCallbacks(void);
 void ObjContact_RemoveObjectCallbacks(int param_1);
-undefined4 ObjContact_AddCallback(int param_1,int param_2,undefined4 param_3);
+undefined4 ObjContact_AddCallback(int param_1,int param_2,ObjContactCallback callback);
 undefined4 ObjTrigger_IsSetById(int obj,short triggerId);
 undefined4 ObjTrigger_IsSet(int obj);
 int ObjList_FindNearestObjectByDefNo(int obj,int defNo,float *maxDistanceSq);
