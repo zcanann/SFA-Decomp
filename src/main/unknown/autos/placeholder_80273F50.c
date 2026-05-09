@@ -901,7 +901,7 @@ int dataGetSample(u16 key, u32 *out)
  * Comparator: return a->key2 - b->key2 (u16 at offset 4). Same body as
  * dataMacroKeyCompare but separate symbol used for a different bsearch table.
  */
-int audioFindKeymapCb(void *a, void *b)
+int dataRefKeyCompare(void *a, void *b)
 {
     return (int)*(u16 *)((u8 *)a + 4) - (int)*(u16 *)((u8 *)b + 4);
 }
@@ -930,7 +930,7 @@ extern void *dataGetLayer_result;
 void *dataGetCurve(u16 key)
 {
     *(u16 *)(dataGetCurve_key + 4) = key;
-    dataGetCurve_result = sndBSearch(dataGetCurve_key, dataCurveTable, dataCurveNum, 8, audioFindKeymapCb);
+    dataGetCurve_result = sndBSearch(dataGetCurve_key, dataCurveTable, dataCurveNum, 8, dataRefKeyCompare);
     if (dataGetCurve_result == 0) {
         return 0;
     }
@@ -943,7 +943,7 @@ void *dataGetCurve(u16 key)
 void *dataGetKeymap(u16 key)
 {
     *(u16 *)(dataGetKeymap_key + 4) = key;
-    dataGetKeymap_result = sndBSearch(dataGetKeymap_key, dataKeymapTable, dataKeymapNum, 8, audioFindKeymapCb);
+    dataGetKeymap_result = sndBSearch(dataGetKeymap_key, dataKeymapTable, dataKeymapNum, 8, dataRefKeyCompare);
     if (dataGetKeymap_result == 0) {
         return 0;
     }
