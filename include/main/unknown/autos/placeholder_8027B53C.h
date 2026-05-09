@@ -3,9 +3,10 @@
 
 #include "ghidra_import.h"
 
-uint FUN_8027b42c(byte param_1);
-void FUN_8027b434(uint param_1);
-void FUN_8027b438(int param_1,uint param_2);
-void FUN_8027b43c(void);
+void audioFn_8027b42c(u16 voiceId, u16 a, u16 b, u16 c);
+void fn_8027B690(u16 *list, u16 a, u16 b, u16 c);
+int sndPushGroup(u8 *groupBase, u32 groupId, u32 stream, u32 sdi, u32 tableSet);
+int fn_8027B89C(u32 groupId, u16 sampleId, u32 a, u32 b, u8 noLock, u32 c);
+int fn_8027B9DC(u32 groupId, u16 sampleId, u32 a, u32 b, u32 c);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027B53C_H_ */

@@ -7,7 +7,7 @@ extern void fn_8026F30C(void);
 extern void synthInit(int sampleRate, void *p2);
 extern void synthInitJobTable(void);
 extern void synthInitVirtualSampleTable(void);
-extern void synthResetVirtualSampleCounter(void);
+extern void synthResetLoadedGroupCount(void);
 extern void fn_80280FFC(u32 flags);
 
 extern u8 lbl_803BD150[];
@@ -98,7 +98,7 @@ int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, void *p7, u32 fla
     }
     {
         u8 voiceCountSnapshot = lbl_803BD150[0x210];
-        synthResetVirtualSampleCounter();
+        synthResetLoadedGroupCount();
         dataInitStack(0, p7);
         fn_8026F30C();
         synthIdleWaitActive = 0;

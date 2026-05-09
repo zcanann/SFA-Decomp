@@ -10,7 +10,7 @@ extern void hwBreak(int slot);
 
 extern u8 synthVirtualSampleState[];
 extern u8 *synthVoice;
-extern u16 synthVirtualSampleCounter;
+extern u16 synthLoadedGroupCount;
 
 /*
  * Periodic virtual-sample tick processor: walks 64 active voices, computes
@@ -92,10 +92,12 @@ void synthUpdateVirtualSamples(void)
 }
 
 /*
+ * Reset the loaded sound-group table count.
+ *
  * EN v1.1 Address: 0x8027B420
  * EN v1.1 Size: 12b
  */
-void synthResetVirtualSampleCounter(void)
+void synthResetLoadedGroupCount(void)
 {
-    synthVirtualSampleCounter = 0;
+    synthLoadedGroupCount = 0;
 }
