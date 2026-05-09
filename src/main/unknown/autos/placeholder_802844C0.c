@@ -2,7 +2,8 @@
 #include "main/unknown/autos/placeholder_802844C0.h"
 #include "dolphin/os/OSCache.h"
 
-extern int aramUploadData(void *src, void *dst, u32 size, int p4, int p5, int p6);
+extern void aramUploadData(void *src, void *dst, u32 size, int mode, int callback,
+                           int callbackArg);
 
 extern u8 lbl_803D3F60[];
 extern u8 lbl_803D4468[];

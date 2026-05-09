@@ -1,7 +1,8 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_80284410.h"
 
-extern int aramUploadData(void *src, void *dst, u32 size, int p4, int p5, int p6);
+extern void aramUploadData(void *src, void *dst, u32 size, int mode, int callback,
+                           int callbackArg);
 extern void *salMalloc(u32 size);
 extern void salFree(void *p);
 extern void InitStreamBuffers(void);

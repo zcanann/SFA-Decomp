@@ -3,7 +3,8 @@
 
 extern void salRemoveStudioInput(void *p);
 extern int aramGetStreamBufferAddress(int stream, void *out);
-extern int aramUploadData(int dest, int src, u32 size, int flag, undefined4 param_5, undefined4 param_6);
+extern void aramUploadData(int dest, int src, u32 size, int mode, undefined4 callback,
+                           undefined4 callbackArg);
 extern void DCStoreRange(void *addr, u32 nBytes);
 
 extern u8 lbl_803CC1E0[];

@@ -53,7 +53,7 @@ void aramQueueCallback(void *req)
  * EN v1.1 Address: 0x80284038
  * EN v1.1 Size: 464b
  */
-void aramUploadData(u32 src, u32 dst, u32 size, u32 type, u32 prio, u32 owner, u32 mode)
+void aramUploadData(u32 src, u32 dst, u32 size, u32 mode, u32 callback, u32 callbackArg)
 {
     u8 *base;
     u8 *slot;
@@ -76,8 +76,8 @@ void aramUploadData(u32 src, u32 dst, u32 size, u32 type, u32 prio, u32 owner, u
             *(u32 *)(slot + 0x14) = dst;
             *(u32 *)(slot + 0x18) = size;
             *(u32 *)(slot + 0x1c) = (u32)aramQueueCallback;
-            *(u32 *)(slot + 0x20) = type;
-            *(u32 *)(slot + 0x24) = prio;
+            *(u32 *)(slot + 0x20) = callback;
+            *(u32 *)(slot + 0x24) = callbackArg;
             ARQPostRequest((void *)(base + base[0x280] * 0x28),
                            *(u32 *)(base + base[0x280] * 0x28 + 0x4),
                            *(u32 *)(base + base[0x280] * 0x28 + 0x8),
