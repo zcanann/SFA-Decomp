@@ -1004,7 +1004,7 @@ extern void Camera_EnableViewYOffset(void);
 extern void Camera_RebuildProjectionMatrix(void);
 extern void Camera_SetFovY(f32);
 extern void setTimeStop(s32);
-extern void fn_800206E8(s32);
+extern void cutsceneFadeInOut(s32);
 extern void fn_80016C48(void* arg);
 extern void* gameTextGetBox(s32);
 
@@ -1085,7 +1085,7 @@ extern u32 GameBit_Get(u32);
 extern u8  lbl_803DD780;
 extern u8  pauseMenuFrameCounter;
 extern u32 getButtonsJustPressed(s32);
-extern void fn_80014B78(s32, u8*, u8*);
+extern void padGetAnalogInput(s32, u8*, u8*);
 extern void buttonDisable(s32, u32);
 extern int  Sfx_PlayFromObject(s32, s32);
 extern int  GameBit_Set(u32, u32);
@@ -1158,7 +1158,7 @@ void fn_8012DF14(void)
 {
     lbl_803DD75B = 1;
     (*(void(**)(s32, s32, s32))((char*)*lbl_803DCA50 + 0x24))(1, 0x94, 1);
-    fn_800206E8(1);
+    cutsceneFadeInOut(1);
     setTimeStop(0xff);
 }
 #pragma peephole reset
@@ -1188,7 +1188,7 @@ void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do
     lbl_803DD8C8 = 1;
     fn_80016C48(lbl_803A9440);
     if (do_input_disable != 0) {
-        fn_800206E8(1);
+        cutsceneFadeInOut(1);
         setTimeStop(0xff);
         lbl_803DD7A9 = 1;
     } else {
@@ -1258,7 +1258,7 @@ void fn_8012DDD8(s32 fade_target, u8 idx, u8 flags, u8 q)
 
 /* EN v1.0 0x8012BE84  size: 380b  Pause-menu input poll. While the
  * "freeze" byte at lbl_803DD780 is clear, polls the digital pad via
- * getButtonsJustPressed / fn_80014B78. The byte read into buf[0] is the d-pad
+ * getButtonsJustPressed / padGetAnalogInput. The byte read into buf[0] is the d-pad
  * direction (1 = right, -1 = left, 0 = neutral) and lbl_803DD75B
  * tracks the current selection (1 = right entry, 2 = left entry). On
  * confirm (button mask 0x100), commits the selection by setting the
@@ -1285,7 +1285,7 @@ void fn_8012BE84(void)
     if (lbl_803DD780 != 0) return;
 
     buttons = (u16)getButtonsJustPressed(0);
-    fn_80014B78(0, &buf[1], &buf[0]);
+    padGetAnalogInput(0, &buf[1], &buf[0]);
     if ((s8)buf[0] == 1) {
         lbl_803DD75B = 1;
     }
@@ -1303,7 +1303,7 @@ void fn_8012BE84(void)
             GameBit_Set(0x781, 1);
         }
         lbl_803DD75B = 0;
-        fn_800206E8(0);
+        cutsceneFadeInOut(0);
         (*(void(**)(s32, s32, s32))((char*)*lbl_803DCA50 + 0x24))(3, 0x80, 1);
         pauseMenuFrameCounter = 0x3c;
         Sfx_PlayFromObject(0, 0x418);
@@ -1311,7 +1311,7 @@ void fn_8012BE84(void)
     if ((buttons & 0x200) != 0) {
         buttonDisable(0, 0x200);
         lbl_803DD75B = 0;
-        fn_800206E8(0);
+        cutsceneFadeInOut(0);
         (*(void(**)(s32, s32, s32))((char*)*lbl_803DCA50 + 0x24))(3, 0x80, 1);
         pauseMenuFrameCounter = 0x3c;
         Sfx_PlayFromObject(0, 0x419);
@@ -1357,7 +1357,7 @@ int fn_8012B6BC(void)
 /* EN v1.0 0x80129698  size: 196b  Pickup-pickup state hook: latches the
  * resulting object id from fn_800E88B4 into lbl_803DBA91, and on the
  * "post-collect" mode codes (1 or 2) optionally fires off the cleanup
- * trio (Music_Trigger / fn_800206E8 / setTimeStop) when no slot was active
+ * trio (Music_Trigger / cutsceneFadeInOut / setTimeStop) when no slot was active
  * yet, then commits the new u8 active-id to lbl_803DBA90. The third arg
  * funnels through `c == 0xa` as a branchless boolean. Always returns 1. */
 #pragma scheduling off
@@ -1368,7 +1368,7 @@ int fn_80129698(s8 a, int b, u8 c, int mode)
     if ((u8)mode == 2 || (u8)mode == 1) {
         if (lbl_803DBA90 == -1) {
             Music_Trigger(0x23, 1);
-            fn_800206E8(1);
+            cutsceneFadeInOut(1);
             setTimeStop(0xff);
         }
         lbl_803DBA90 = a;
@@ -1489,7 +1489,7 @@ void fn_8012C558(void)
  *    lbl_803A9440[3]. When lbl_803A9440[2] == 1, run the same teardown
  *    as fn_8012BE84's commit path: clear input gate flag, drop bit 9
  *    from lbl_803DD8A4, clear the dying byte, and (if lbl_803DD7A9 is
- *    set) call fn_800206E8(0) + clear the input-disable flag. If after
+ *    set) call cutsceneFadeInOut(0) + clear the input-disable flag. If after
  *    all that the dying byte is still non-zero, run fn_80014B0C to do
  *    the late frame-side flush.
  *
@@ -1531,7 +1531,7 @@ void fn_8012E880(void)
             lbl_803DD8A4 &= ~0x100u;
             lbl_803DD7A8 = 0;
             if (lbl_803DD7A9 != 0) {
-                fn_800206E8(0);
+                cutsceneFadeInOut(0);
                 lbl_803DD7A9 = 0;
             }
         }

@@ -13,7 +13,7 @@ extern u8 *getTrickyObject(void);
 extern int GameBit_Get(int bit);
 extern void Obj_FreeObject(u8 *obj);
 extern u8 fn_80179A2C(u8 *obj);
-extern int fn_80014B24(int unused);
+extern int buttonGetDisabled(int unused);
 extern int ObjTrigger_IsSet(u8 *obj);
 extern void ObjHits_DisableObject(u8 *obj);
 extern void fn_801793B8(u8 *obj, u8 *state);
@@ -65,7 +65,7 @@ void sidekickball_update(u8 *self)
   case 2:
     self[0xAF] = (u8)(self[0xAF] & 0xF7);
     gotHit = 0;
-    if ((fn_80014B24(0) & 0x100) == 0
+    if ((buttonGetDisabled(0) & 0x100) == 0
         && *(int *)(self + 0xF8) == 0
         && ObjTrigger_IsSet(self) != 0) {
       ObjHits_DisableObject(self);

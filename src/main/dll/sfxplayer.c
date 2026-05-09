@@ -8,8 +8,8 @@ extern void GameBit_Set(int eventId,int value);
 extern void gameTimerStop(void);
 extern void gameTimerInit(int timerId,int frames);
 extern u32 GameBit_Get(int eventId);
-extern int fn_80014670(void);
-extern void fn_8001469C(void);
+extern int isGameTimerDisabled(void);
+extern void timerSetToCountUp(void);
 extern void TrickyCurve_activateEffectHandleRing(void);
 extern void TrickyCurve_updateEffectHandleRing(int obj);
 
@@ -82,10 +82,10 @@ void sfxplayer_update(int obj)
           else {
             gameTimerInit(0x1d,0xb4);
           }
-          fn_8001469C();
+          timerSetToCountUp();
         }
       }
-      if (fn_80014670() != 0) {
+      if (isGameTimerDisabled() != 0) {
         handles = (uint *)gSfxplayerEffectHandles;
         for (i = 0; i < 4; i++) {
           if (handles[0] != 0) {

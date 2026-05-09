@@ -11,7 +11,7 @@ extern int Stack_IsFull(int stack);
 extern int Stack_Pop(int stack, int *out);
 extern int Stack_Push(int stack, int *in);
 
-extern int fn_80014670(void);
+extern int isGameTimerDisabled(void);
 extern void gameTimerStop(void);
 extern void hudFn_8011f6f0(int x);
 extern void hudFn_8011f38c(int x);
@@ -136,7 +136,7 @@ int fn_801E69C8(int arg1)
 
     localC = localC - local10;
 
-    if (fn_80014670() != 0 || localC >= local8 || local10 != 0) {
+    if (isGameTimerDisabled() != 0 || localC >= local8 || local10 != 0) {
         gameTimerStop();
         hudFn_8011f6f0(0);
         GameBit_Set(0x626, 0);

@@ -46,8 +46,8 @@ extern void fn_8000B694(int arg);
 extern int fn_80014930(void);
 extern void gameTimerStop(void);
 extern void gameTextLoadDir(int dirId);
-extern void fn_8005CDF8(int arg);
-extern void fn_8005CEA8(int arg);
+extern void setDrawLights(int arg);
+extern void setIsOvercast(int arg);
 extern void saveFn_8007d960(int arg);
 extern void fn_800887F8(int arg);
 extern void fn_80117B68(int fade, int frames);
@@ -194,8 +194,8 @@ void fn_80116F84(void)
     lbl_803DD64F = 0;
     fn_80117B68(0,1);
   }
-  fn_8005CEA8(0);
-  fn_8005CDF8(0);
+  setIsOvercast(0);
+  setDrawLights(0);
   lbl_803DD64E = 0;
   fn_800887F8(0);
   gameTimerStop();

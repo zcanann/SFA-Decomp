@@ -24,8 +24,8 @@ extern void fn_8001FEE4(void);
 extern uint mmSetFreeDelay(uint delay);
 extern void mapUnload(int mapId, uint flags);
 extern void fn_8005CDD4(int arg);
-extern void fn_8005CDF8(int arg);
-extern void fn_8005CEA8(int arg);
+extern void setDrawLights(int arg);
+extern void setIsOvercast(int arg);
 extern void memCardFn_8007dd04(u8 retry);
 extern void loadSaveSettings(void);
 extern int titleLoadSaveFiles(void);
@@ -177,8 +177,8 @@ int fn_801166C8(void)
     return 0;
   }
 
-  fn_8005CEA8(0);
-  fn_8005CDF8(0);
+  setIsOvercast(0);
+  setDrawLights(0);
   if (shouldShowCredits() != 0) {
     return 0;
   }

@@ -7,10 +7,10 @@
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern int Stack_IsFull(void *stack);
 extern int Stack_Push(void *stack, void *value);
-extern void fn_8001469C(void);
+extern void timerSetToCountUp(void);
 extern void gameTimerInit(int, int);
 extern int buttonDisable(int, int);
-extern int fn_80014B78(int, char *, char *);
+extern int padGetAnalogInput(int, char *, char *);
 extern uint getButtonsJustPressed(int);
 extern uint GameBit_Get(int bit);
 extern int GameBit_Set(int bit, int value);
@@ -282,7 +282,7 @@ int fn_801E71A4(void *obj, void *param2, int dispatch)
 
     state = *(void **)((char *)obj + 0xb8);
     if (dispatch == 0x14) {
-        fn_80014B78(0, &stickHi, &stickLo);
+        padGetAnalogInput(0, &stickHi, &stickLo);
         if ((s8)stickLo < 0) {
             *(s16 *)((char *)state + 0x9d0) = *(s16 *)((char *)state + 0x9d0) - 1;
             Sfx_PlayFromObject(0, 0xf3);
@@ -305,7 +305,7 @@ int fn_801E71A4(void *obj, void *param2, int dispatch)
         if (slot > 9) slot = 9;
         *(int *)objFindTexture(obj, 6, 0) = slot << 8;
     } else if (dispatch == 0x17) {
-        fn_80014B78(0, &stickHi, &stickLo);
+        padGetAnalogInput(0, &stickHi, &stickLo);
         if ((s8)stickLo < 0) {
             *(u8 *)((char *)state + 0x9d5) = *(u8 *)((char *)state + 0x9d5) - 1;
             Sfx_PlayFromObject(0, 0xf3);
@@ -379,7 +379,7 @@ void fn_801E75EC(void *obj)
     if ((*(u8 *)((char *)state + 0x9d4) & 2) != 0) {
         int *target;
         gameTimerInit(0x11, 0x1e);
-        fn_8001469C();
+        timerSetToCountUp();
         hudFn_8011f6f0(1);
         GameBit_Set(0x626, 1);
         target = *(int **)((char *)state + 0x9b4);

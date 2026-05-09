@@ -11,7 +11,7 @@ extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b14();
 extern ObjHitReactEffectHandle *Resource_Acquire(int resourceId,int mode);
 extern int Sfx_PlayFromObject(int obj,int sfxId);
-extern uint fn_80014B24(int index);
+extern uint buttonGetDisabled(int index);
 extern void buttonDisable(int index,uint flags);
 extern undefined4 FUN_80017640();
 extern undefined4 FUN_80017700();
@@ -2635,7 +2635,7 @@ undefined4 ObjTrigger_IsSet(int param_1)
   if (*(uint *)(*(int *)(param_1 + 0x50) + 0x40) == 0) {
     return 0;
   }
-  flags = fn_80014B24(0);
+  flags = buttonGetDisabled(0);
   if ((flags & OBJTRIGGER_BUTTON_DISABLE_FLAG) == 0) {
     triggerFlags = *(byte *)(param_1 + OBJTRIGGER_FLAGS_OFFSET);
     flagEnabled = triggerFlags & OBJTRIGGER_CURRENT_ENABLE_FLAG;
