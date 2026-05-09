@@ -4,11 +4,11 @@ extern void *memset(void *dst, int val, u32 n);
 extern void DCFlushRangeNoSync(void *p, u32 n);
 extern void salFree(int p);
 
-extern u8 *lbl_803DE338;
-extern u8 *lbl_803DE344;
-extern u8 *lbl_803DE340;
-extern u8 *lbl_803DE33C;
-extern u8 *lbl_803DE330;
+extern u8 *dspCmdBuffer;
+extern u8 *dspVoice;
+extern u8 *dspITDBuffer;
+extern u8 *dspSurround;
+extern u8 *dspCmdList;
 extern u8 lbl_803CC1E0[][0xbc];
 extern u8 salMaxStudioNum;
 extern u8 salNumVoices;
@@ -27,8 +27,8 @@ void fn_8027BA04(void) {}
  */
 void fn_8027BDA8(void)
 {
-    memset(lbl_803DE338, 0, 0x100);
-    DCFlushRangeNoSync(lbl_803DE338, 0x100);
+    memset(dspCmdBuffer, 0, 0x100);
+    DCFlushRangeNoSync(dspCmdBuffer, 0x100);
 }
 
 /*
@@ -40,21 +40,21 @@ int audioFreeFn_8027bde0(void)
 {
     int i;
     int offset;
-    salFree((int)lbl_803DE338);
+    salFree((int)dspCmdBuffer);
     offset = 0;
     for (i = 0; (u8)i < salNumVoices; i++) {
-        salFree(*(int *)(lbl_803DE344 + offset));
-        salFree(*(int *)(lbl_803DE344 + offset + 4));
+        salFree(*(int *)(dspVoice + offset));
+        salFree(*(int *)(dspVoice + offset + 4));
         offset += 0xf4;
     }
     for (i = 0; (u8)i < salMaxStudioNum; i++) {
         salFree(*(int *)(&lbl_803CC1E0[i][0]));
         salFree(*(int *)(&lbl_803CC1E0[i][0x28]));
     }
-    salFree((int)lbl_803DE340);
-    salFree((int)lbl_803DE344);
-    salFree((int)lbl_803DE33C);
-    salFree((int)lbl_803DE330);
+    salFree((int)dspITDBuffer);
+    salFree((int)dspVoice);
+    salFree((int)dspSurround);
+    salFree((int)dspCmdList);
     return 1;
 }
 

@@ -5,7 +5,7 @@ extern void salDeactivateVoice(void *entry);
 extern void fn_8027BEBC(void);
 extern void fn_8027BFC4(void);
 extern void fn_8027F2AC();
-extern u8 *lbl_803DE344;
+extern u8 *dspVoice;
 extern u8 lbl_803CC1E0[];
 extern u8 lbl_802C2820[];
 
@@ -27,7 +27,7 @@ void hwSetVolume(int slot, undefined4 p2, f32 a, f32 b, f32 c, u32 aux, undefine
     f32 out[9];
     int v0, v1, v2;
 
-    voice = lbl_803DE344 + slot * 0xf4;
+    voice = dspVoice + slot * 0xf4;
 
     if (a >= 1.0f) a = 1.0f;
     if (b >= 1.0f) b = 1.0f;
@@ -100,7 +100,7 @@ void hwSetVolume(int slot, undefined4 p2, f32 a, f32 b, f32 c, u32 aux, undefine
  */
 void hwOff(int slot)
 {
-    salDeactivateVoice(lbl_803DE344 + slot * 0xf4);
+    salDeactivateVoice(dspVoice + slot * 0xf4);
 }
 
 /*

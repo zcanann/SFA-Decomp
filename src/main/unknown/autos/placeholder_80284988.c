@@ -7,8 +7,8 @@ extern u16 hwIrqLevel;
 extern u32 oldState;
 extern void *(*gSalMallocHook)(u32 size);
 extern u32 salLastTick;
-extern u16 lbl_803DE32C;
-extern u32 lbl_803DE330;
+extern u16 dspCmdFirstSize;
+extern u32 dspCmdList;
 extern u32 salDspCallbackEnabled;
 extern u32 salDspInitIsDone;
 extern u32 salGetStartDelay(void);
@@ -107,10 +107,10 @@ void salCtrlDsp(u32 param_1)
     u32 elapsed = salGetStartDelay();
     fn_8027C48C(param_1, elapsed);
     {
-        u32 saved = lbl_803DE330;
+        u32 saved = dspCmdList;
         salDspCallbackEnabled = 0;
         PPCSync();
-        DSPSendMailToDSP(((u32)0xbabe << 16) | lbl_803DE32C);
+        DSPSendMailToDSP(((u32)0xbabe << 16) | dspCmdFirstSize);
         while (DSPCheckMailToDSP() != 0) {}
         DSPSendMailToDSP(saved);
         while (DSPCheckMailToDSP() != 0) {}

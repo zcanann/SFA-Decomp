@@ -8,7 +8,7 @@ extern void aramUploadData(int dest, int src, u32 size, int mode, undefined4 cal
 extern void DCStoreRange(void *addr, u32 nBytes);
 
 extern u8 lbl_803CC1E0[];
-extern int lbl_803DE344;
+extern int dspVoice;
 
 /*
  * --INFO--
@@ -38,7 +38,7 @@ int hwChangeStudio(int param_1) {
     int offset;
 
     offset = param_1 * 0xf4;
-    base = lbl_803DE344;
+    base = dspVoice;
     entry = base + offset;
     if (*(u8 *)(entry + 0xec) != 2) {
         return 0;

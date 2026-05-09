@@ -73,7 +73,7 @@ extern u8 salNumVoices;
 extern u8 salAuxFrame;
 extern u8 salFrame;
 extern u32 salMessageCallback;
-extern u8 *lbl_803DE344;
+extern u8 *dspVoice;
 
 extern void hwSetSRCType(int slot, u32 value);
 extern void hwSetPolyPhaseFilter(int slot, u32 value);
@@ -136,15 +136,15 @@ void snd_handle_irq(void)
     offset = 0;
     i = 0;
     while ((u8)i < salNumVoices) {
-        entry = lbl_803DE344;
+        entry = dspVoice;
         *(u32 *)(entry + offset + 0x24) = 0;
-        entry = lbl_803DE344;
+        entry = dspVoice;
         *(u32 *)(entry + offset + 0x28) = 0;
-        entry = lbl_803DE344;
+        entry = dspVoice;
         *(u32 *)(entry + offset + 0x2c) = 0;
-        entry = lbl_803DE344;
+        entry = dspVoice;
         *(u32 *)(entry + offset + 0x30) = 0;
-        entry = lbl_803DE344;
+        entry = dspVoice;
         *(u32 *)(entry + offset + 0x34) = 0;
         offset += 0xf4;
         i++;
@@ -232,7 +232,7 @@ int hwIsActive(int slot)
     int active;
 
     slot *= 0xf4;
-    entry = lbl_803DE344;
+    entry = dspVoice;
     entry += slot;
     active = entry[0xec];
     return active != 0;
@@ -249,7 +249,7 @@ void hwSetPriority(int slot, u32 value)
     u8 *entry;
 
     slot *= 0xf4;
-    entry = lbl_803DE344;
+    entry = dspVoice;
     entry += slot;
     *(u32 *)(entry + 0x1c) = value;
 }
@@ -273,7 +273,7 @@ void hwInitSamplePlayback(int slot, u16 value70, u32 *values, u32 resetAdsr, u32
     offset = slot * 0xf4;
 
     while ((u8)i <= salTimeOffset) {
-        entry = lbl_803DE344;
+        entry = dspVoice;
         entry += inputOffset;
         entry += offset;
         flags |= *(u32 *)(entry + 0x24) & 0x20;
@@ -282,23 +282,23 @@ void hwInitSamplePlayback(int slot, u16 value70, u32 *values, u32 resetAdsr, u32
         i++;
     }
 
-    entry = lbl_803DE344;
+    entry = dspVoice;
     entry += offset;
     *(u32 *)(entry + 0x24) = flags;
-    entry = lbl_803DE344;
+    entry = dspVoice;
     entry += offset;
     *(u32 *)(entry + 0x1c) = priority;
-    entry = lbl_803DE344;
+    entry = dspVoice;
     entry += offset;
     *(u32 *)(entry + 0x18) = value18;
-    entry = lbl_803DE344;
+    entry = dspVoice;
     entry += offset;
     *(u32 *)(entry + 0xf0) = zero;
-    entry = lbl_803DE344;
+    entry = dspVoice;
     entry += offset;
     *(u16 *)(entry + 0x70) = value70;
 
-    entry = lbl_803DE344;
+    entry = dspVoice;
     entry += offset;
     dst = (u32 *)(entry + 0x74);
     valueA = values[0];
@@ -319,33 +319,33 @@ void hwInitSamplePlayback(int slot, u16 value70, u32 *values, u32 resetAdsr, u32
     dst[7] = valueB;
 
     if (resetAdsr != 0) {
-        entry = lbl_803DE344;
+        entry = dspVoice;
         entry += offset;
         *(u8 *)(entry + 0xa4) = zero;
-        entry = lbl_803DE344;
+        entry = dspVoice;
         entry += offset;
         *(u32 *)(entry + 0xb8) = zero;
-        entry = lbl_803DE344;
+        entry = dspVoice;
         entry += offset;
         *(u32 *)(entry + 0xbc) = zero;
-        entry = lbl_803DE344;
+        entry = dspVoice;
         entry += offset;
         *(u16 *)(entry + 0xc0) = 0x7fff;
-        entry = lbl_803DE344;
+        entry = dspVoice;
         entry += offset;
         *(u32 *)(entry + 0xc4) = zero;
     }
 
-    entry = lbl_803DE344;
+    entry = dspVoice;
     entry += offset;
     *(u8 *)(entry + 0xe4) = 0xff;
-    entry = lbl_803DE344;
+    entry = dspVoice;
     entry += offset;
     *(u8 *)(entry + 0xe5) = 0xff;
-    entry = lbl_803DE344;
+    entry = dspVoice;
     entry += offset;
     *(u8 *)(entry + 0xe6) = 0xff;
-    entry = lbl_803DE344;
+    entry = dspVoice;
     entry += offset;
     *(u8 *)(entry + 0xe7) = 0xff;
 

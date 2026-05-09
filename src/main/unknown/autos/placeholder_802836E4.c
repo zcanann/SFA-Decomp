@@ -2,7 +2,7 @@
 #include "main/unknown/autos/placeholder_802836E4.h"
 
 extern void salActivateVoice(void *entry);
-extern u8 *lbl_803DE344;
+extern u8 *dspVoice;
 extern u8 salTimeOffset;
 
 /*
@@ -23,6 +23,6 @@ void hwStart(int slot)
   int offset;
 
   offset = slot * 0xf4;
-  lbl_803DE344[offset + 0xd4] = salTimeOffset;
-  salActivateVoice(lbl_803DE344 + offset);
+  dspVoice[offset + 0xd4] = salTimeOffset;
+  salActivateVoice(dspVoice + offset);
 }

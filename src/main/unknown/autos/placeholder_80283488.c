@@ -4,7 +4,7 @@
 extern undefined4 FUN_80281a34();
 extern uint FUN_80282070();
 extern uint FUN_80282fe4();
-extern u8 *lbl_803DE344;
+extern u8 *dspVoice;
 extern u8 salTimeOffset;
 
 /*
@@ -27,11 +27,11 @@ void hwBreak(int slot)
   u32 channel;
 
   offset = slot * 0xf4;
-  entry = lbl_803DE344 + offset;
+  entry = dspVoice + offset;
   if ((entry[0xec] == 1) && (salTimeOffset == 0)) {
     entry[0xee] = 1;
   }
-  entry = lbl_803DE344;
+  entry = dspVoice;
   channel = salTimeOffset;
   channel <<= 2;
   entry += offset;

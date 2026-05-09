@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_802836F4.h"
 
-extern u8 *lbl_803DE344;
+extern u8 *dspVoice;
 extern u8 salTimeOffset;
 
 /*
@@ -23,7 +23,7 @@ void hwKeyOff(int slot)
   u32 offset;
 
   slot *= 0xf4;
-  entry = lbl_803DE344 + slot;
+  entry = dspVoice + slot;
   offset = salTimeOffset << 2;
   entry += offset;
   *(u32 *)(entry + 0x24) |= 0x40;

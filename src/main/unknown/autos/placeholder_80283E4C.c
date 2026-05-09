@@ -8,8 +8,8 @@ extern undefined4 DAT_803deff0;
 extern void aramSyncTransferQueue(void);
 extern void* aramStoreData(void* ptr, u32 size);
 extern void aramRemoveData(void* ptr, u32 size);
-extern u32 lbl_803DE334;
-extern u8 *lbl_803DE344;
+extern u32 dspHRTFOn;
+extern u8 *dspVoice;
 extern void *(*gSalMallocHook)(u32 size);
 extern void (*gSalFreeHook)(void *ptr);
 
@@ -131,7 +131,7 @@ void sndSetHooks(u32 *values)
 
 void hwDisableHRTF(void)
 {
-  lbl_803DE334 = 0;
+  dspHRTFOn = 0;
 }
 
 int hwGetVirtualSampleID(int slot)
@@ -139,7 +139,7 @@ int hwGetVirtualSampleID(int slot)
   u8 *entry;
 
   slot *= 0xf4;
-  entry = lbl_803DE344;
+  entry = dspVoice;
   entry += slot;
   if (entry[0xec] == 0) {
     return -1;
@@ -152,7 +152,7 @@ int hwVoiceInStartup(int slot)
   u8 *entry;
 
   slot *= 0xf4;
-  entry = lbl_803DE344;
+  entry = dspVoice;
   entry += slot;
   return entry[0xec] == 1;
 }
