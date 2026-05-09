@@ -1,9 +1,9 @@
 #include "ghidra_import.h"
 
-extern u8 lbl_803CB290[];
+extern u8 synthVirtualSampleState[];
 
 /*
- * Reset a 64-byte handle table at lbl_803CB290+0x908 to all-0xff,
+ * Reset a 64-byte handle table at synthVirtualSampleState+0x908 to all-0xff,
  * along with surrounding metadata.
  *
  * EN v1.1 Address: 0x8027ACB8, size 288b
@@ -11,12 +11,12 @@ extern u8 lbl_803CB290[];
 void synthInitVirtualSampleTable(void)
 {
     int i;
-    lbl_803CB290[0] = 0;
+    synthVirtualSampleState[0] = 0;
     for (i = 0; i < 64; i++) {
-        lbl_803CB290[0x908 + i] = 0xff;
+        synthVirtualSampleState[0x908 + i] = 0xff;
     }
-    *(u16 *)(lbl_803CB290 + 0x948) = 0;
-    *(u32 *)(lbl_803CB290 + 0x94c) = 0;
+    *(u16 *)(synthVirtualSampleState + 0x948) = 0;
+    *(u32 *)(synthVirtualSampleState + 0x94c) = 0;
 }
 
 /*

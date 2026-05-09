@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8027B038.h"
 
-extern u8 lbl_803CB290[];
+extern u8 synthVirtualSampleState[];
 
 /*
  * Sample-completion handler: if the packed (slotIdx, sampleId)
@@ -24,7 +24,7 @@ void synthHandleVirtualSampleDone(u32 packed)
     if (packed == 0xffffffffU) {
         return;
     }
-    state = lbl_803CB290;
+    state = synthVirtualSampleState;
     slots = state + 0x908;
     vid = slots[(u8)packed];
     if (vid == 0xff) {

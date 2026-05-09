@@ -57,7 +57,7 @@ void sndPushGroup(u16 voiceId)
 
 /*
  * fn_8027B89C — voice-bank scanning loop with 7-arg signature (~80
- * instructions, walks 'lbl_803DE308' entries against multiple keys).
+ * instructions, walks synthVirtualSampleCounter entries against multiple keys).
  * Stubbed pending full decode.
  */
 #pragma dont_inline on

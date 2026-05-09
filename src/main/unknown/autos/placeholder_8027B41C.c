@@ -8,9 +8,9 @@ extern u16 hwGetVirtualSampleID(int slot);
 extern u32 hwVoiceInStartup(int slot);
 extern void hwBreak(int slot);
 
-extern u8 lbl_803CB290[];
+extern u8 synthVirtualSampleState[];
 extern u8 *synthVoice;
-extern u16 lbl_803DE308;
+extern u16 synthVirtualSampleCounter;
 
 /*
  * Periodic virtual-sample tick processor: walks 64 active voices, computes
@@ -32,7 +32,7 @@ void synthUpdateVirtualSamples(void)
     u32 elapsed;
     u8 *entry;
 
-    state = lbl_803CB290;
+    state = synthVirtualSampleState;
     if (*(u32 *)(state + 0x94c) == 0) {
         return;
     }
@@ -97,5 +97,5 @@ void synthUpdateVirtualSamples(void)
  */
 void synthResetVirtualSampleCounter(void)
 {
-    lbl_803DE308 = 0;
+    synthVirtualSampleCounter = 0;
 }
