@@ -667,13 +667,16 @@ extern u8 gAudioStreamDefaultVolume;
 extern u8 gAudioStreamVolumeLeft;
 extern u8 gAudioStreamVolumeRight;
 extern u8 gAudioStreamDvdState;
-extern u8 lbl_803DC848;
+extern u8 gAudioStreamPlaying;
 extern u32 gAudioStreamMusicFadeFlagA;
 extern u32 gAudioStreamMusicFadeFlagB;
+extern void (*gAudioStreamPreparedCallback)(void);
 extern s32 gAudioStreamCurrentId;
 extern s32 gAudioStreamStartWhenPrepared;
 extern s32 gAudioStreamPreparingId;
 extern s32 gAudioStreamPreparedId;
+extern u32 gAudioStreamPlayAddrCallbackResult;
+extern u8 gAudioStreamPlayAddrCallbackDone;
 extern f32 gAudioStreamEndPos;
 extern f32 gAudioStreamPos;
 extern f32 timeDelta;
@@ -698,6 +701,7 @@ extern void AISetStreamVolLeft(u32 volume);
 extern void AISetStreamVolRight(u32 volume);
 extern s32 DVDCancelStreamAsync(void *streamInfo, void *callback);
 extern void OSReport(char *message, ...);
+extern s32 fn_80020620(void);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(u32 size, u32 tag, void *name);
 
@@ -2224,7 +2228,7 @@ void AudioStream_CancelCallback(s32 result)
         AISetStreamPlayState(0);
     }
     gAudioActiveChannelMask = 0;
-    lbl_803DC848 = 0;
+    gAudioStreamPlaying = 0;
 }
 
 /*
@@ -2247,7 +2251,7 @@ void AudioStream_StopCurrent(void)
         AISetStreamVolRight(0);
         if (DVDCancelStreamAsync(lbl_80336C40, AudioStream_CancelCallback) == 0) {
             OSReport(lbl_802C5DC4);
-            lbl_803DC848 = 0;
+            gAudioStreamPlaying = 0;
         }
         gAudioStreamPreparedId = 0;
         gAudioStreamPreparingId = 0;
@@ -2257,7 +2261,7 @@ void AudioStream_StopCurrent(void)
         gAudioStreamMusicFadeFlagB = 0;
         gAudioStreamMusicFadeFlagA = 0;
     } else {
-        lbl_803DC848 = 0;
+        gAudioStreamPlaying = 0;
     }
 }
 
@@ -2308,8 +2312,32 @@ void AudioStream_CancelPrepared(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8000689c(void)
+void AudioStream_StartPrepared(void)
 {
+    if (gAudioStreamPreparingId != 0) {
+        gAudioStreamStartWhenPrepared = 1;
+    } else if (gAudioStreamPreparedId != 0) {
+        if (fn_80020620() == 1) {
+            if (fn_80020620() == 1) {
+                AISetStreamVolLeft(gAudioStreamVolumeLeft);
+                AISetStreamVolRight(gAudioStreamVolumeRight);
+                AISetStreamPlayState(1);
+                gAudioStreamPlaying = 1;
+                gAudioStreamPos = lbl_803DE5D0;
+                gAudioStreamCurrentId = gAudioStreamPreparedId;
+                gAudioStreamPreparedId = 0;
+                gAudioStreamPreparingId = 0;
+                gAudioStreamStartWhenPrepared = 0;
+            } else {
+                gAudioStreamPlaying = 0;
+            }
+        }
+    } else if (gAudioStreamCurrentId == 0) {
+        gAudioStreamMusicFadeFlagB = 0;
+        gAudioStreamMusicFadeFlagA = 0;
+        gAudioStreamStartWhenPrepared = 0;
+        gAudioActiveChannelMask = 0;
+    }
 }
 
 /*
@@ -2408,8 +2436,32 @@ void AudioStream_Init(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800068b0(void)
+void AudioStream_PrepareCallback(void)
 {
+    if (fn_80020620() != 1) {
+        gAudioStreamDvdState = 0;
+        return;
+    }
+    gAudioStreamPreparedId = gAudioStreamPreparingId;
+    gAudioStreamPreparingId = 0;
+    if (gAudioStreamStartWhenPrepared != 0) {
+        if (fn_80020620() == 1) {
+            AISetStreamVolLeft(gAudioStreamVolumeLeft);
+            AISetStreamVolRight(gAudioStreamVolumeRight);
+            AISetStreamPlayState(1);
+            gAudioStreamPlaying = 1;
+            gAudioStreamPos = lbl_803DE5D0;
+            gAudioStreamCurrentId = gAudioStreamPreparedId;
+            gAudioStreamPreparedId = 0;
+            gAudioStreamPreparingId = 0;
+            gAudioStreamStartWhenPrepared = 0;
+        } else {
+            gAudioStreamPlaying = 0;
+        }
+    } else if (gAudioStreamPreparedCallback != NULL) {
+        gAudioStreamPreparedCallback();
+    }
+    gAudioStreamDvdState = 0;
 }
 
 /*
@@ -2425,8 +2477,19 @@ void FUN_800068b0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800068b4(uint param_1)
+void AudioStream_PlayAddrCallback(u32 result)
 {
+    if (((result & 0xff) == 0) && (gAudioStreamPlaying = 0, gAudioStreamCurrentId != 0)) {
+        AISetStreamVolLeft(0);
+        AISetStreamVolRight(0);
+        gAudioStreamCurrentId = 0;
+        gAudioActiveChannelMask = 0;
+        AISetStreamPlayState(0);
+        gAudioStreamMusicFadeFlagB = 0;
+        gAudioStreamMusicFadeFlagA = 0;
+    }
+    gAudioStreamPlayAddrCallbackResult = result;
+    gAudioStreamPlayAddrCallbackDone = 1;
 }
 
 /*
