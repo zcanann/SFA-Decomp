@@ -682,6 +682,7 @@ extern f32 gAudioStreamPos;
 extern f32 timeDelta;
 extern f32 lbl_803DE5D0;
 extern f32 lbl_803DE5E8;
+extern s8 gObjTransformMatrixSlot;
 extern u8 lbl_80336C40[];
 extern u8 lbl_80336C70[];
 extern char lbl_802C5DC4[];
@@ -3040,8 +3041,21 @@ void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800068fc(int param_1,float *param_2,float *param_3,float *param_4)
+void Obj_GetWorldPosition(u32 obj, f32 *outX, f32 *outY, f32 *outZ)
 {
+    u32 parent;
+    s32 matrixIndex;
+
+    parent = *(u32 *)(obj + 0x30);
+    if (parent == 0) {
+        *outX = *(f32 *)(obj + 0x0C);
+        *outY = *(f32 *)(obj + 0x10);
+        *outZ = *(f32 *)(obj + 0x14);
+    } else {
+        matrixIndex = *(s8 *)(parent + 0x35) << 4;
+        Matrix_TransformPoint(*(f32 *)(obj + 0x0C), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14),
+                              (f32 *)((u8 *)gObjYawTransformMatrices + (matrixIndex << 2)), outX, outY, outZ);
+    }
 }
 
 /*
@@ -3057,7 +3071,7 @@ void FUN_800068fc(int param_1,float *param_2,float *param_3,float *param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80006900(void)
+void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
 {
 }
 
@@ -3074,8 +3088,9 @@ void FUN_80006900(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80006904(void)
+void Obj_BuildTransformMatrices(u32 obj)
 {
+    Obj_BuildTransformMatricesForYaw(obj, *(s8 *)(obj + 0x35));
 }
 
 /*
@@ -3091,9 +3106,11 @@ void FUN_80006904(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_80006908(void)
+s32 Obj_BuildTransformMatrixSlot(u32 obj)
 {
-    return 0;
+    Obj_BuildTransformMatricesForYaw(obj, gObjTransformMatrixSlot);
+    gObjTransformMatrixSlot++;
+    return gObjTransformMatrixSlot - 1;
 }
 
 /*
