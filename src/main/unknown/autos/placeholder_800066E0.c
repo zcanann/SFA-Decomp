@@ -685,6 +685,7 @@ extern f32 lbl_803DE5E8;
 extern u8 lbl_80336C40[];
 extern u8 lbl_80336C70[];
 extern char lbl_802C5DC4[];
+extern f32 gObjYawTransformMatrices[][16];
 typedef struct SfxLoopedObjectSoundTable {
     u8 flags[0x80];
     u16 ids[0x80];
@@ -721,6 +722,7 @@ extern void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
 extern s32 Sfx_IsPlayingFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopFromObject(u32 obj, u16 sfxId);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+extern void Matrix_TransformPoint(f64 x, f64 y, f64 z, f32 *matrix, f32 *outX, f32 *outY, f32 *outZ);
 extern void *memmove(void *dest, const void *src, u32 count);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(u32 size, u32 tag, void *name);
@@ -2813,8 +2815,16 @@ void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800068d4(float *param_1,float *param_2,char param_3)
+void Obj_RotateLocalOffsetByYaw(f32 *local, f32 *out, s8 yawIndex)
 {
+    if (yawIndex < 0) {
+        out[0] = local[0];
+        out[1] = local[1];
+        out[2] = local[2];
+    } else {
+        Matrix_TransformPoint(local[0], local[1], local[2], gObjYawTransformMatrices[yawIndex], &out[0], &out[1],
+                              &out[2]);
+    }
 }
 
 /*
@@ -2830,8 +2840,26 @@ void FUN_800068d4(float *param_1,float *param_2,char param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800068d8(short *param_1)
+void Obj_UpdateWorldTransform(s16 *obj)
 {
+    s16 *parent;
+
+    parent = *(s16 **)(obj + 0x20);
+    if (parent == (s16 *)0) {
+        *(f32 *)(obj + 0x22) = *(f32 *)(obj + 6);
+        *(f32 *)(obj + 0x24) = *(f32 *)(obj + 8);
+        *(f32 *)(obj + 0x26) = *(f32 *)(obj + 10);
+        obj[0x28] = obj[0];
+        obj[0x29] = obj[1];
+        obj[0x2A] = obj[2];
+    } else {
+        Matrix_TransformPoint(*(f32 *)(obj + 6), *(f32 *)(obj + 8), *(f32 *)(obj + 10),
+                              gObjYawTransformMatrices[*(s8 *)((u8 *)parent + 0x35)], (f32 *)(obj + 0x22),
+                              (f32 *)(obj + 0x24), (f32 *)(obj + 0x26));
+        obj[0x28] = obj[0] - parent[0];
+        obj[0x29] = obj[1];
+        obj[0x2A] = obj[2];
+    }
 }
 
 /*
@@ -2847,9 +2875,16 @@ void FUN_800068d8(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800068dc(int param_1,short *param_2)
+#pragma scheduling off
+s32 Angle_AddWrappedS16(s32 angle, s16 *delta)
 {
-    return 0;
+    if ((angle += *delta) > 0x8000) {
+        angle -= 0xFFFF;
+    }
+    if (angle >= -0x8000) {
+        return angle;
+    }
+    return angle + 0xFFFF;
 }
 
 /*
@@ -2865,10 +2900,17 @@ int FUN_800068dc(int param_1,short *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800068e4(int param_1,short *param_2)
+s32 Angle_SubWrappedS16(s32 angle, s16 *delta)
 {
-    return 0;
+    if ((angle -= *delta) > 0x8000) {
+        angle -= 0xFFFF;
+    }
+    if (angle >= -0x8000) {
+        return angle;
+    }
+    return angle + 0xFFFF;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
