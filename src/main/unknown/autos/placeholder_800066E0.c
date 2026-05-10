@@ -702,6 +702,8 @@ extern void AISetStreamVolRight(u32 volume);
 extern s32 DVDCancelStreamAsync(void *streamInfo, void *callback);
 extern void OSReport(char *message, ...);
 extern s32 fn_80020620(void);
+extern void AudioStream_CancelCallback(s32 result);
+extern void fn_8000D0B4(void);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(u32 size, u32 tag, void *name);
 
@@ -2089,8 +2091,41 @@ int * FUN_8000685c(int param_1,ushort param_2,short param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80006864(void)
+void AudioStream_StopAll(void)
 {
+    if (gAudioStreamDvdState != 0) {
+        AISetStreamVolLeft(0);
+        AISetStreamVolRight(0);
+        if (DVDCancelStreamAsync(lbl_80336C70, fn_8000D0B4) == 0) {
+            OSReport(lbl_802C5DC4);
+        }
+        gAudioStreamPreparedId = 0;
+        gAudioStreamPreparingId = 0;
+        gAudioStreamCurrentId = 0;
+        gAudioStreamStartWhenPrepared = 0;
+        gAudioActiveChannelMask = 0;
+        gAudioStreamMusicFadeFlagB = 0;
+        gAudioStreamMusicFadeFlagA = 0;
+    }
+
+    if (gAudioStreamCurrentId != 0) {
+        AISetStreamVolLeft(0);
+        AISetStreamVolRight(0);
+        if (DVDCancelStreamAsync(lbl_80336C40, AudioStream_CancelCallback) == 0) {
+            OSReport(lbl_802C5DC4);
+            gAudioStreamPlaying = 0;
+        }
+    } else {
+        gAudioStreamPlaying = 0;
+    }
+
+    gAudioStreamPreparedId = 0;
+    gAudioStreamPreparingId = 0;
+    gAudioStreamCurrentId = 0;
+    gAudioStreamStartWhenPrepared = 0;
+    gAudioActiveChannelMask = 0;
+    gAudioStreamMusicFadeFlagB = 0;
+    gAudioStreamMusicFadeFlagA = 0;
 }
 
 /*
