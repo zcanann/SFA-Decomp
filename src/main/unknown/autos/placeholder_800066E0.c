@@ -691,6 +691,11 @@ typedef struct SfxLoopedObjectSoundTable {
     u32 objects[0x80];
 } SfxLoopedObjectSoundTable;
 
+#define SFX_LOOPED_OBJECT_SOUND_COUNT 0x80
+#define SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE 1
+#define SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN 2
+#define SFX_LOOPED_OBJECT_STOP_FLAG 0x40
+
 extern SfxLoopedObjectSoundTable gSfxLoopedObjectSoundFlags;
 extern u16 gSfxLoopedObjectSoundCount;
 
@@ -713,7 +718,10 @@ extern s32 fn_80020620(void);
 extern void AudioStream_CancelCallback(s32 result);
 extern void fn_8000D0B4(void);
 extern void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit);
+extern s32 Sfx_IsPlayingFromObject(u32 obj, u16 sfxId);
+extern void Sfx_StopFromObject(u32 obj, u16 sfxId);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+extern void *memmove(void *dest, const void *src, u32 count);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(u32 size, u32 tag, void *name);
 
@@ -2568,8 +2576,45 @@ void Sfx_ClearLoopedObjectSounds(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800068bc(void)
+void Sfx_UpdateLoopedObjectSounds(void)
 {
+    s16 i;
+    u32 obj;
+    u16 sfxId;
+    u16 oldCount;
+    u16 index;
+    u32 removeSound;
+
+    for (i = (s16)(gSfxLoopedObjectSoundCount - 1); i >= 0; i--) {
+        removeSound = 0;
+        if (((gSfxLoopedObjectSoundFlags.flags[i] & SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE) != 0) &&
+            ((gSfxLoopedObjectSoundFlags.flags[i] & SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN) == 0)) {
+            removeSound = 1;
+        }
+        obj = gSfxLoopedObjectSoundFlags.objects[i];
+        if (((obj != 0) && ((*(u16 *)(obj + 0xB0) & SFX_LOOPED_OBJECT_STOP_FLAG) != 0)) || removeSound) {
+            Sfx_StopFromObject(obj, gSfxLoopedObjectSoundFlags.ids[i]);
+            oldCount = gSfxLoopedObjectSoundCount;
+            gSfxLoopedObjectSoundCount = (u16)(oldCount - 1);
+            index = (u16)i;
+            memmove(&gSfxLoopedObjectSoundFlags.objects[index], &gSfxLoopedObjectSoundFlags.objects[index + 1],
+                    (((oldCount - 1) - index) * sizeof(u32)) & 0xFFFC);
+            memmove(&gSfxLoopedObjectSoundFlags.ids[index], &gSfxLoopedObjectSoundFlags.ids[index + 1],
+                    ((gSfxLoopedObjectSoundCount - index) * sizeof(u16)) & 0xFFFE);
+            memmove(&gSfxLoopedObjectSoundFlags.flags[index], &gSfxLoopedObjectSoundFlags.flags[index + 1],
+                    (gSfxLoopedObjectSoundCount - index) & 0xFFFF);
+        } else {
+            gSfxLoopedObjectSoundFlags.flags[i] &= ~SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
+        }
+    }
+
+    for (i = 0; i < gSfxLoopedObjectSoundCount; i++) {
+        obj = gSfxLoopedObjectSoundFlags.objects[i];
+        sfxId = gSfxLoopedObjectSoundFlags.ids[i];
+        if (Sfx_IsPlayingFromObject(obj, sfxId) == 0) {
+            Sfx_PlayFromObject(obj, sfxId);
+        }
+    }
 }
 
 /*
@@ -2585,8 +2630,49 @@ void FUN_800068bc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800068c0(uint param_1,ushort param_2,ushort param_3)
+void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
 {
+    s16 i;
+    u16 count = gSfxLoopedObjectSoundCount;
+    u16 sameSfxCount = 0;
+    u32 found;
+
+    for (i = 0; i < count; i++) {
+        if (sfxId == gSfxLoopedObjectSoundFlags.ids[i]) {
+            if (limit != 0) {
+                sameSfxCount++;
+            }
+            if (gSfxLoopedObjectSoundFlags.objects[i] == obj) {
+                gSfxLoopedObjectSoundFlags.flags[i] |=
+                    SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE | SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
+                return;
+            }
+        }
+    }
+
+    if (sameSfxCount <= limit) {
+        found = 0;
+        for (i = 0; i < count; i++) {
+            if ((gSfxLoopedObjectSoundFlags.objects[i] == obj) &&
+                (sfxId == gSfxLoopedObjectSoundFlags.ids[i])) {
+                found = 1;
+                break;
+            }
+        }
+
+        if ((found == 0) && (count != SFX_LOOPED_OBJECT_SOUND_COUNT)) {
+            gSfxLoopedObjectSoundFlags.objects[count] = obj;
+            gSfxLoopedObjectSoundFlags.ids[count] = sfxId;
+            gSfxLoopedObjectSoundFlags.flags[count] = 0;
+            gSfxLoopedObjectSoundCount++;
+            Sfx_PlayFromObject(obj, sfxId);
+        }
+    }
+
+    if (count != gSfxLoopedObjectSoundCount) {
+        gSfxLoopedObjectSoundFlags.flags[count] |=
+            SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE | SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
+    }
 }
 
 /*
@@ -2620,8 +2706,27 @@ void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800068c8(int param_1)
+void Sfx_RemoveLoopedObjectSoundForObject(u32 obj)
 {
+    s16 i;
+    u16 oldCount;
+    u16 index;
+
+    for (i = (s16)(gSfxLoopedObjectSoundCount - 1); i >= 0; i--) {
+        if (gSfxLoopedObjectSoundFlags.objects[i] == obj) {
+            Sfx_StopFromObject(obj, gSfxLoopedObjectSoundFlags.ids[i]);
+            oldCount = gSfxLoopedObjectSoundCount;
+            gSfxLoopedObjectSoundCount = (u16)(oldCount - 1);
+            index = (u16)i;
+            memmove(&gSfxLoopedObjectSoundFlags.objects[index], &gSfxLoopedObjectSoundFlags.objects[index + 1],
+                    (((oldCount - 1) - index) * sizeof(u32)) & 0xFFFC);
+            memmove(&gSfxLoopedObjectSoundFlags.ids[index], &gSfxLoopedObjectSoundFlags.ids[index + 1],
+                    ((gSfxLoopedObjectSoundCount - index) * sizeof(u16)) & 0xFFFE);
+            memmove(&gSfxLoopedObjectSoundFlags.flags[index], &gSfxLoopedObjectSoundFlags.flags[index + 1],
+                    (gSfxLoopedObjectSoundCount - index) & 0xFFFF);
+            return;
+        }
+    }
 }
 
 /*
@@ -2637,8 +2742,27 @@ void FUN_800068c8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800068cc(void)
+void Sfx_RemoveLoopedObjectSound(u32 obj, u16 sfxId)
 {
+    s16 i;
+    u16 oldCount;
+    u16 index;
+
+    for (i = (s16)(gSfxLoopedObjectSoundCount - 1); i >= 0; i--) {
+        if ((gSfxLoopedObjectSoundFlags.objects[i] == obj) && (gSfxLoopedObjectSoundFlags.ids[i] == sfxId)) {
+            oldCount = gSfxLoopedObjectSoundCount;
+            gSfxLoopedObjectSoundCount = (u16)(oldCount - 1);
+            index = (u16)i;
+            memmove(&gSfxLoopedObjectSoundFlags.objects[index], &gSfxLoopedObjectSoundFlags.objects[index + 1],
+                    (((oldCount - 1) - index) * sizeof(u32)) & 0xFFFC);
+            memmove(&gSfxLoopedObjectSoundFlags.ids[index], &gSfxLoopedObjectSoundFlags.ids[index + 1],
+                    ((gSfxLoopedObjectSoundCount - index) * sizeof(u16)) & 0xFFFE);
+            memmove(&gSfxLoopedObjectSoundFlags.flags[index], &gSfxLoopedObjectSoundFlags.flags[index + 1],
+                    (gSfxLoopedObjectSoundCount - index) & 0xFFFF);
+            Sfx_StopFromObject(obj, sfxId);
+            return;
+        }
+    }
 }
 
 /*
@@ -2667,7 +2791,7 @@ void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId)
         }
     }
 
-    if ((found == 0) && (count != 0x80)) {
+    if ((found == 0) && (count != SFX_LOOPED_OBJECT_SOUND_COUNT)) {
         gSfxLoopedObjectSoundFlags.objects[count] = obj;
         gSfxLoopedObjectSoundFlags.ids[count] = sfxId;
         gSfxLoopedObjectSoundFlags.flags[count] = 0;

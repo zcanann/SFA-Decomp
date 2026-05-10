@@ -93,7 +93,7 @@ typedef struct ObjAnimState {
   u16 eventCountdown;
   u16 eventState;
   u16 prevEventState;
-  u16 eventStep;
+  s16 eventStep;
   s8 frameType;
   s8 prevFrameType;
   s8 blendToggle;
