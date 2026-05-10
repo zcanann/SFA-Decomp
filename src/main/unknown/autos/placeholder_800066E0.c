@@ -685,6 +685,14 @@ extern f32 lbl_803DE5E8;
 extern u8 lbl_80336C40[];
 extern u8 lbl_80336C70[];
 extern char lbl_802C5DC4[];
+typedef struct SfxLoopedObjectSoundTable {
+    u8 flags[0x80];
+    u16 ids[0x80];
+    u32 objects[0x80];
+} SfxLoopedObjectSoundTable;
+
+extern SfxLoopedObjectSoundTable gSfxLoopedObjectSoundFlags;
+extern u16 gSfxLoopedObjectSoundCount;
 
 extern void fn_80281160(void);
 extern void AIReset(void);
@@ -704,6 +712,8 @@ extern void OSReport(char *message, ...);
 extern s32 fn_80020620(void);
 extern void AudioStream_CancelCallback(s32 result);
 extern void fn_8000D0B4(void);
+extern void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit);
+extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(u32 size, u32 tag, void *name);
 
@@ -2540,8 +2550,9 @@ void AudioStream_PlayAddrCallback(u32 result)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800068b8(void)
+void Sfx_ClearLoopedObjectSounds(void)
 {
+    gSfxLoopedObjectSoundCount = 0;
 }
 
 /*
@@ -2591,8 +2602,9 @@ void FUN_800068c0(uint param_1,ushort param_2,ushort param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800068c4(uint param_1,ushort param_2)
+void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId)
 {
+    Sfx_KeepAliveLoopedObjectSoundLimited(obj, sfxId, 0);
 }
 
 /*
@@ -2642,8 +2654,26 @@ void FUN_800068cc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800068d0(uint param_1,ushort param_2)
+void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId)
 {
+    s16 i;
+    u16 count = gSfxLoopedObjectSoundCount;
+    u32 found = 0;
+
+    for (i = 0; i < count; i++) {
+        if ((gSfxLoopedObjectSoundFlags.objects[i] == obj) && (gSfxLoopedObjectSoundFlags.ids[i] == sfxId)) {
+            found = 1;
+            break;
+        }
+    }
+
+    if ((found == 0) && (count != 0x80)) {
+        gSfxLoopedObjectSoundFlags.objects[count] = obj;
+        gSfxLoopedObjectSoundFlags.ids[count] = sfxId;
+        gSfxLoopedObjectSoundFlags.flags[count] = 0;
+        gSfxLoopedObjectSoundCount++;
+        Sfx_PlayFromObject(obj, sfxId);
+    }
 }
 
 /*
