@@ -685,6 +685,7 @@ extern f32 lbl_803DE5E8;
 extern u8 lbl_80336C40[];
 extern u8 lbl_80336C70[];
 extern char lbl_802C5DC4[];
+extern f32 gObjInverseYawTransformMatrices[][16];
 extern f32 gObjYawTransformMatrices[][16];
 typedef struct SfxLoopedObjectSoundTable {
     u8 flags[0x80];
@@ -722,6 +723,7 @@ extern void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
 extern s32 Sfx_IsPlayingFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopFromObject(u32 obj, u16 sfxId);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+extern void Matrix_TransformVector(f32 *matrix, f32 *in, f32 *out);
 extern void Matrix_TransformPoint(f64 x, f64 y, f64 z, f32 *matrix, f32 *outX, f32 *outY, f32 *outZ);
 extern void *memmove(void *dest, const void *src, u32 count);
 extern void mm_free(void *ptr);
@@ -2925,9 +2927,20 @@ s32 Angle_SubWrappedS16(s32 angle, s16 *delta)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800068ec(double param_1,double param_2,double param_3,float *param_4,float *param_5,
-                 float *param_6,int param_7)
+#pragma scheduling off
+void Obj_TransformLocalVectorToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, u32 obj)
 {
+    f32 vec[3];
+    s32 matrixIndex;
+
+    vec[0] = x;
+    vec[1] = y;
+    vec[2] = z;
+    matrixIndex = *(s8 *)(obj + 0x35) << 4;
+    Matrix_TransformVector((f32 *)((u8 *)gObjYawTransformMatrices + (matrixIndex << 2)), vec, vec);
+    *outX = vec[0];
+    *outY = vec[1];
+    *outZ = vec[2];
 }
 
 /*
@@ -2943,9 +2956,19 @@ void FUN_800068ec(double param_1,double param_2,double param_3,float *param_4,fl
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800068f0(double param_1,double param_2,double param_3,float *param_4,float *param_5,
-                 float *param_6,int param_7)
+void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, u32 obj)
 {
+    f32 vec[3];
+    s32 matrixIndex;
+
+    vec[0] = x;
+    vec[1] = y;
+    vec[2] = z;
+    matrixIndex = *(s8 *)(obj + 0x35) << 4;
+    Matrix_TransformVector((f32 *)((u8 *)gObjInverseYawTransformMatrices + (matrixIndex << 2)), vec, vec);
+    *outX = vec[0];
+    *outY = vec[1];
+    *outZ = vec[2];
 }
 
 /*
@@ -2961,9 +2984,19 @@ void FUN_800068f0(double param_1,double param_2,double param_3,float *param_4,fl
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800068f4(double param_1,double param_2,double param_3,float *param_4,float *param_5,
-                 float *param_6,int param_7)
+void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, u32 obj)
 {
+    s32 matrixIndex;
+
+    if (obj != 0) {
+        matrixIndex = *(s8 *)(obj + 0x35) << 4;
+        Matrix_TransformPoint(x, y, z, (f32 *)((u8 *)gObjInverseYawTransformMatrices + (matrixIndex << 2)), outX, outY,
+                              outZ);
+    } else {
+        *outX = x;
+        *outY = y;
+        *outZ = z;
+    }
 }
 
 /*
@@ -2979,10 +3012,20 @@ void FUN_800068f4(double param_1,double param_2,double param_3,float *param_4,fl
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800068f8(double param_1,double param_2,double param_3,float *param_4,float *param_5,
-                 float *param_6,int param_7)
+void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, u32 obj)
 {
+    s32 matrixIndex;
+
+    if (obj != 0) {
+        matrixIndex = *(s8 *)(obj + 0x35) << 4;
+        Matrix_TransformPoint(x, y, z, (f32 *)((u8 *)gObjYawTransformMatrices + (matrixIndex << 2)), outX, outY, outZ);
+    } else {
+        *outX = x;
+        *outY = y;
+        *outZ = z;
+    }
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
