@@ -10,8 +10,8 @@ int sndFXCtrl14(int handle, u8 controller, u16 value);
 int sndFXKeyOff(int handle);
 int sndFXStartEx(int fxId, int volume, int pan, int studio);
 int sndFXCheck(u32 id);
-void sndVolume(int group, int volume, int time);
-void sndMasterVolume(int volume, int time, u8 musicFlag, u8 fxFlag);
+void sndVolume(u8 volume, u16 time, u8 group);
+void sndMasterVolume(u8 volume, u16 time, u8 musicFlag, u8 fxFlag);
 void sndOutputMode(int mode);
 void sndSetAuxProcessingCallbacks(u32 studio, void *auxACallback, void *auxAUser, u8 auxAIndex,
                                   void *auxAData, void *auxBCallback, void *auxBUser,
