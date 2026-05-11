@@ -107,6 +107,14 @@ typedef struct ObjAnimRootCurve {
   s16 axisData[1];
 } ObjAnimRootCurve;
 
+typedef struct ObjAnimMoveData {
+  u8 pad00;
+  s8 frameInfo;
+  u8 pad02[OBJANIM_MOVE_ROOT_CURVE_OFFSET - 2];
+  s16 rootCurveOffset;
+  u8 frameCmd[1];
+} ObjAnimMoveData;
+
 typedef struct ObjAnimBank {
   ObjAnimDef *animDef;
   u8 pad04[0x2C - 4];
@@ -191,6 +199,22 @@ static inline ObjAnimState *ObjAnim_GetCurrentState(ObjAnimComponent *objAnim) {
 
 static inline s32 ObjAnim_GetHitReactEntryIndex(ObjAnimDef *animDef, s32 sphereIndex) {
   return animDef->hitReactTable[sphereIndex].entryIndex;
+}
+
+static inline ObjAnimMoveData *ObjAnim_GetMoveData(ObjAnimDef *animDef, ObjAnimState *state,
+                                                   u16 slot) {
+  if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
+    return (ObjAnimMoveData *)(state->moveCache[slot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
+  }
+  return (ObjAnimMoveData *)animDef->moveData[slot];
+}
+
+static inline ObjAnimMoveData *ObjAnim_GetBlendMoveData(ObjAnimDef *animDef, ObjAnimState *state,
+                                                        u16 slot) {
+  if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
+    return (ObjAnimMoveData *)(state->blendMoveCache[slot] + OBJANIM_CACHED_MOVE_DATA_OFFSET);
+  }
+  return (ObjAnimMoveData *)animDef->moveData[slot];
 }
 
 #endif /* MAIN_OBJANIM_INTERNAL_H_ */
