@@ -3,10 +3,13 @@
 
 #include "ghidra_import.h"
 
-void FUN_802721a0(int param_1,int param_2);
-undefined4 FUN_80272224(uint param_1);
-void FUN_802722b0(uint param_1,uint param_2,uint param_3,undefined param_4,undefined4 param_5);
-undefined4 FUN_802726c0(uint param_1);
-void FUN_80272714(uint param_1,undefined param_2);
+void synthSetFade(u8 value, u16 time, u8 selector, u8 action, u32 handle);
+u32 synthIsFadeActive(u32 fadeIndex);
+void synthSetFadeAction(u32 fadeIndex, u8 action);
+void synthExit(void);
+void sndSeqStop(u32 handle);
+void sndSeqSpeed(u32 handle, u32 speed);
+void sndSeqContinue(u32 handle);
+void sndSeqMute(u32 handle, u32 mute, u32 time);
 
 #endif /* MAIN_AUDIO_SYNTH_CONTROL_H_ */
