@@ -37,8 +37,7 @@ void fn_8026D060(SynthVoice* voice)
     if (voice->next != 0) {
         voice->next->prev = voice->prev;
     }
-    voice->next = gSynthAllocatedVoices;
-    if (gSynthAllocatedVoices != 0) {
+    if ((voice->next = gSynthAllocatedVoices) != 0) {
         gSynthAllocatedVoices->prev = voice;
     }
     voice->prev = 0;
@@ -100,8 +99,7 @@ done:
         }
 
         /* Push to allocated list head */
-        voice->next = gSynthAllocatedVoices;
-        if (gSynthAllocatedVoices != 0) {
+        if ((voice->next = gSynthAllocatedVoices) != 0) {
             gSynthAllocatedVoices->prev = voice;
         }
         voice->prev = 0;
