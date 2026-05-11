@@ -268,6 +268,13 @@ typedef struct SynthVoiceRuntime {
     ((SynthKeyGroupState*)&(voice)->unkEE0[0x608 + ((index) * 0x38)])
 #define SYNTH_SEQUENCE_STATE(voice, channel) ((SynthSequenceState*)&(voice)->unk364[(channel) * 0x2C])
 #define SYNTH_TRACK_CURSOR(voice, channel) ((SynthTrackCursor*)&(voice)->unk124[(channel) * 8])
+#define SYNTH_CHANNEL_SPEED_VALUE(voice, channel) (*(u16*)&(voice)->channelData[((channel) * 0x38) + 2])
+#define SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, voiceIndex, channel) \
+    (*(u16*)((u8*)(runtime) + 0x291A + ((voiceIndex) * sizeof(SynthVoice)) + ((channel) * 0x38)))
+#define SYNTH_RUNTIME_PENDING_VALUE16(runtime, voiceIndex) \
+    (*(u16*)((u8*)(runtime) + 0x22D8 + ((voiceIndex) * sizeof(SynthVoice))))
+#define SYNTH_RUNTIME_PENDING_FLAGS(runtime, voiceIndex) \
+    (*(u8*)((u8*)(runtime) + 0x22DA + ((voiceIndex) * sizeof(SynthVoice))))
 
 extern SynthDelayStorage gSynthDelayStorage;
 extern SynthCallbackLink gSynthCallbacks[SYNTH_CALLBACK_COUNT];

@@ -145,14 +145,65 @@ void fn_8026D278(int handle, int args)
 #pragma dont_inline reset
 
 /*
- * fn_8026D448 - voice flag setter (~220 instructions). Stubbed.
+ * Update sequence playback speed immediately, or queue it for a deferred
+ * handle update.
+ *
+ * EN v1.0 Address: 0x8026D448
+ * EN v1.0 Size: 220b
  */
-#pragma dont_inline on
-void fn_8026D448(int handle, int args)
+void fn_8026D448(u32 handle, u32 speed)
 {
-    (void)handle; (void)args;
+    u32 key;
+    u32 found;
+    SynthVoiceRuntime* runtime;
+    SynthVoice* voice;
+
+    runtime = SYNTH_VOICE_RUNTIME();
+    key = handle & 0x7fffffffu;
+
+    voice = gSynthQueuedVoices;
+    while (voice != 0) {
+        if (voice->handle == key) {
+            found = voice->slotIndex | (handle & 0x80000000);
+            goto done;
+        }
+        voice = voice->next;
+    }
+
+    voice = gSynthAllocatedVoices;
+    while (voice != 0) {
+        if (voice->handle == key) {
+            found = voice->slotIndex | (handle & 0x80000000);
+            goto done;
+        }
+        voice = voice->next;
+    }
+    found = 0xffffffff;
+done:
+
+    if ((found & 0x80000000) == 0) {
+        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, found, 0) = speed;
+        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, found, 1) = speed;
+        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, found, 2) = speed;
+        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, found, 3) = speed;
+        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, found, 4) = speed;
+        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, found, 5) = speed;
+        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, found, 6) = speed;
+        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, found, 7) = speed;
+        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, found, 8) = speed;
+        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, found, 9) = speed;
+        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, found, 10) = speed;
+        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, found, 11) = speed;
+        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, found, 12) = speed;
+        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, found, 13) = speed;
+        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, found, 14) = speed;
+        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, found, 15) = speed;
+    } else {
+        u32 idx = found & 0x7fffffffu;
+        SYNTH_RUNTIME_PENDING_FLAGS(runtime, idx) |= 0x20;
+        SYNTH_RUNTIME_PENDING_VALUE16(runtime, idx) = speed;
+    }
 }
-#pragma dont_inline reset
 
 /*
  * Continue a stopped sequence voice by moving it from the allocated list
