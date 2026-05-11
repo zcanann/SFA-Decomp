@@ -4,11 +4,11 @@
 extern void sndBegin(void);
 extern void sndEnd(void);
 extern void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode);
-extern int synthSetHandleControllerValue(int handle, int controller, int value);
-extern int synthSetHandleControllerValue14Bit(int handle, int controller, int value);
-extern int synthHandleKeyOff(int handle);
+extern u32 synthSetHandleControllerValue(u32 handle, u8 controller, u8 value);
+extern u32 synthSetHandleControllerValue14Bit(u32 handle, u8 controller, u16 value);
+extern u32 synthHandleKeyOff(u32 handle);
 extern int audioGetSfxFn_802717b0(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux);
-extern int audioSetChannelVolume(int a, int b, int c, int d, int e);
+extern void audioSetChannelVolume(u32 volume, u32 timeMs, u32 target, u8 action, u32 handle);
 extern int vidGetInternalId(u32 id);
 extern void synthRefreshJobVolumes(void);
 extern void hwAddInput(u8 idx);
@@ -64,7 +64,7 @@ u16 seqGetMIDIPriority(u8 slot, u8 event)
  *
  * EN v1.1 Address: 0x802727A8, size 96b
  */
-int sndFXCtrl(int handle, int controller, int value)
+int sndFXCtrl(int handle, u8 controller, u8 value)
 {
     int result;
     sndBegin();
@@ -78,7 +78,7 @@ int sndFXCtrl(int handle, int controller, int value)
  *
  * EN v1.1 Address: 0x80272808, size 96b
  */
-int sndFXCtrl14(int handle, int controller, int value)
+int sndFXCtrl14(int handle, u8 controller, u16 value)
 {
     int result;
     sndBegin();
