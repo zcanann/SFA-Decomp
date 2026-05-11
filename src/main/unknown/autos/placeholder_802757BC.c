@@ -26,7 +26,7 @@ typedef struct VoiceState {
 /*
  * --INFO--
  *
- * Function: fn_8027566C
+ * Function: mcmdLoop
  * EN v1.0 Address: 0x8027566C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802757BC
@@ -36,7 +36,7 @@ typedef struct VoiceState {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8027566C(int state, int params)
+void mcmdLoop(int state, int params)
 {
     u16 counter;
     u32 zero;

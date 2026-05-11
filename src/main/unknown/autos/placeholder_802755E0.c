@@ -13,7 +13,7 @@ extern u32 macRealTimeLo;
  * Delay/schedule a voice command, optionally randomizing the delay and
  * inserting the voice into the global time queue.
  */
-int fn_80275364(int state, u32 *args)
+int mcmdWait(int state, u32 *args)
 {
     u32 delay[2];
     u32 rand;

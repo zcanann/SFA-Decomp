@@ -110,7 +110,7 @@ extern void fn_8026F5B8(int state);
 extern u16 sndRand(void);
 extern int voiceIsRegistered(int state);
 extern void inpSetMidiLastNote(u8 a, u8 b, u8 v);
-extern int fn_80275364(int state, u32 *args);
+extern int mcmdWait(int state, u32 *args);
 extern void inpAddCtrl(int obj, int b, int c, int d, u32 flag);
 extern void inpSetGlobalMIDIDirtyFlag(u8 a, u8 b, u32 flag);
 extern int vidGetInternalId(u32 id);
@@ -497,7 +497,7 @@ void fn_8027656C(int state, u32 *args)
                            *(u16 *)(state + 0x12c) & 0xff);
     }
     *args = 4;
-    fn_80275364(state, args);
+    mcmdWait(state, args);
 }
 
 /*

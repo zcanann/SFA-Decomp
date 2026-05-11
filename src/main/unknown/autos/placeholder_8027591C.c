@@ -4,7 +4,7 @@ extern u8 *synthVoice;
 extern int audioFn_80278b94(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8,
                        int p9, int p10, int p11, int p12, int p13, int p14, int p15, int p16);
 extern void synthFXCloneMidiSetup(int voice, int state);
-void fn_80275CB8(int state);
+void DoSetPitch(int state);
 extern void sndConvertMs(u32 *p);
 extern void sndConvertTicks(u32 *p, int state);
 extern int dataGetSample(u32 key, u32 *out);
@@ -26,12 +26,12 @@ extern f64 lbl_803E7800;
 extern f64 lbl_803E7808;
 
 /*
- * fn_802757C4 - voice param/key/velocity processor.
+ * mcmdPlayMacro - voice param/key/velocity processor.
  *
  * EN v1.0 Address: 0x802757C4
  * EN v1.0 Size: 408b
  */
-void fn_802757C4(int state, int args)
+void mcmdPlayMacro(int state, int args)
 {
     int sum;
     u8 key;
@@ -95,7 +95,7 @@ void fn_802757C4(int state, int args)
 /*
  * Resolve a sample descriptor and start hardware playback for a voice.
  */
-void voiceStartSamplePlayback(int state, u32 *args)
+void mcmdStartSample(int state, u32 *args)
 {
     int found;
     u32 mode;
@@ -131,7 +131,7 @@ void voiceStartSamplePlayback(int state, u32 *args)
                              *(u8 *)(state + 0x193));
         *(u32 *)(state + 0x124) = dataSampleInfo[0];
         if (*(int *)(state + 0x128) != -1) {
-            fn_80275CB8(state);
+            DoSetPitch(state);
         }
         *(u32 *)(state + 0x118) |= 0x20;
         fn_80271370(state);
@@ -141,7 +141,7 @@ void voiceStartSamplePlayback(int state, u32 *args)
 /*
  * Configure the voice pitch bend ramp and curve flags.
  */
-void voiceConfigurePitchBend(int state, u32 *args)
+void mcmdVibrato(int state, u32 *args)
 {
     s8 start;
     s8 target;
@@ -196,10 +196,10 @@ void voiceConfigurePitchBend(int state, u32 *args)
 }
 
 /*
- * fn_80275CB8 - voice processor (~400 instructions). Stubbed.
+ * DoSetPitch - voice processor (~400 instructions). Stubbed.
  */
 #pragma dont_inline on
-void fn_80275CB8(int state)
+void DoSetPitch(int state)
 {
     (void)state;
 }
@@ -208,7 +208,7 @@ void fn_80275CB8(int state)
 /*
  * Resolve ADSR parameters and send them to the hardware voice.
  */
-void voiceApplyAdsrTable(int state, u32 *args)
+void mcmdSetADSR(int state, u32 *args)
 {
     u8 *table;
     u16 *words;
