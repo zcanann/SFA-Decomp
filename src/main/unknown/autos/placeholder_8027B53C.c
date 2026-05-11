@@ -11,9 +11,9 @@ extern int fn_8026C488(u8 *a, u8 *b, u8 *c, u32 d, u32 e, u32 f, u32 groupId);
 extern void sndBegin(void);
 extern void sndEnd(void);
 extern u32 hwInitStream(u32 stream);
-extern int audioLoadSdiFile(u32 sdi, u32 streamHandle);
+extern int dataInsertSDir(u32 sdi, u32 streamHandle);
 extern void hwSyncSampleMem(void);
-extern int dataAddFXGroup(u16 groupId, u16 *fxData, u16 count);
+extern int dataInsertFX(u16 groupId, u16 *fxData, u16 count);
 
 extern u8 gSynthInitialized;
 extern s16 synthLoadedGroupCount;
@@ -92,7 +92,7 @@ int sndPushGroup(u8 *groupBase, u32 groupId, u32 stream, u32 sdi, u32 tableSet)
             entry->sdi = sdi;
 
             preloadList = groupBase + *(u32 *)(group + 0xc);
-            if (audioLoadSdiFile(sdi, hwInitStream(stream)) != 0) {
+            if (dataInsertSDir(sdi, hwInitStream(stream)) != 0) {
                 fn_8027B690((u16 *)preloadList, sdi, 1, 0);
             }
             fn_8027B690((u16 *)(groupBase + *(u32 *)(group + 8)), tableSet, 0, 0);
@@ -101,7 +101,7 @@ int sndPushGroup(u8 *groupBase, u32 groupId, u32 stream, u32 sdi, u32 tableSet)
             fn_8027B690((u16 *)(groupBase + *(u32 *)(group + 0x18)), tableSet, 3, 0);
             if (*(u16 *)(group + 6) == 1) {
                 u16 *fxData = (u16 *)(groupBase + *(u32 *)(group + 0x1c));
-                dataAddFXGroup(groupId, fxData + 2, fxData[0]);
+                dataInsertFX(groupId, fxData + 2, fxData[0]);
             }
             hwSyncSampleMem();
             synthLoadedGroupCount++;

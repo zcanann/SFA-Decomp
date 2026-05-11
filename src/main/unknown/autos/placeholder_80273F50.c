@@ -347,7 +347,7 @@ remove:
 extern u8 dataSmpSDirTable[];
 extern u16 dataSmpSDirNum;
 
-int audioLoadSdiFile(s16 *sampleTable, void *baseAddr)
+int dataInsertSDir(s16 *sampleTable, void *baseAddr)
 {
     s16 **bucket;
     s16 *entry;
@@ -489,7 +489,7 @@ extern u16 dataFXGroupNum;
 extern void sndBegin(void);
 extern void sndEnd(void);
 
-int dataAddFXGroup(s16 fxId, u8 *samples, u32 count)
+int dataInsertFX(s16 fxId, u8 *samples, u32 count)
 {
     u32 i;
     u32 used;
@@ -550,7 +550,7 @@ extern u16 dataMacTotal;
 extern u8 dataMacroBucketTable[];
 extern u8 dataMacroTable[];
 
-int dataAddMacroRef(u32 key, void *value)
+int dataInsertMacro(u32 key, void *value)
 {
     u32 bucketOffset;
     u32 bucketCount;
@@ -679,7 +679,7 @@ insert:
 /*
  * Release an instrument entry from the bucketed sorted table.
  */
-int dataRemoveMacroRef(u32 key)
+int dataRemoveMacro(u32 key)
 {
     s16 refCount;
     int countOffset;
