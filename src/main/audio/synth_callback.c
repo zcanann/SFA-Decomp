@@ -116,7 +116,7 @@ s32 synthUpdateCallbacks(void) {
                 break;
             }
 
-            synthTriggerCallback(callback->callbackId);
+            synthHandleKeyOff(callback->callbackId);
             next = callback->next;
             gSynthCurrentVoice->callbackLists[listIndex] = next;
             if (next != 0) {
@@ -146,7 +146,7 @@ void synthFlushCallbacks(void) {
         callback = gSynthCurrentVoice->callbackLists[listIndex];
         while (callback != 0) {
             next = callback->next;
-            synthTriggerCallback(callback->callbackId);
+            synthHandleKeyOff(callback->callbackId);
             gSynthCurrentVoice->callbackLists[listIndex] = next;
             if (next != 0) {
                 next->prev = 0;
