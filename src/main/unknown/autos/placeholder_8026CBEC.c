@@ -155,11 +155,63 @@ void fn_8026D448(int handle, int args)
 #pragma dont_inline reset
 
 /*
- * fn_8026D524 - voice param multi-set (~268 instructions). Stubbed.
+ * Continue a stopped sequence voice by moving it from the allocated list
+ * back to the queued list, or clear the deferred continue flag.
+ *
+ * EN v1.0 Address: 0x8026D524
+ * EN v1.0 Size: 268b
  */
-#pragma dont_inline on
-void fn_8026D524(int handle, int a, int b, int c)
+void fn_8026D524(u32 handle)
 {
-    (void)handle; (void)a; (void)b; (void)c;
+    u32 key;
+    u32 found;
+    SynthVoice* voice;
+
+    key = handle & 0x7fffffffu;
+
+    voice = gSynthQueuedVoices;
+    while (voice != 0) {
+        if (voice->handle == key) {
+            found = voice->slotIndex | (handle & 0x80000000);
+            goto done;
+        }
+        voice = voice->next;
+    }
+
+    voice = gSynthAllocatedVoices;
+    while (voice != 0) {
+        if (voice->handle == key) {
+            found = voice->slotIndex | (handle & 0x80000000);
+            goto done;
+        }
+        voice = voice->next;
+    }
+    found = 0xffffffff;
+done:
+
+    if ((found & 0x80000000) == 0) {
+        voice = &gSynthVoices[found];
+        if (voice->state != 2) {
+            return;
+        }
+
+        if (voice->prev != 0) {
+            voice->prev->next = voice->next;
+        } else {
+            gSynthAllocatedVoices = voice->next;
+        }
+        if (voice->next != 0) {
+            voice->next->prev = voice->prev;
+        }
+
+        if ((voice->next = gSynthQueuedVoices) != 0) {
+            gSynthQueuedVoices->prev = voice;
+        }
+        voice->prev = 0;
+        gSynthQueuedVoices = voice;
+        voice->state = 1;
+    } else {
+        voice = &gSynthVoices[found & 0x7fffffffu];
+        voice->pendingUpdate.flags &= ~8;
+    }
 }
-#pragma dont_inline reset
