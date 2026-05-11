@@ -2,7 +2,7 @@
 
 extern s32 vidGetInternalId(u32 handle);
 extern void inpSetMidiCtrl(u8 controller, u8 slot, u8 key, u8 value);
-extern void inpSetMidiCtrl14(u8 controller, u8 slot, u8 key, u32 value);
+extern void inpSetMidiCtrl14(u8 controller, u8 slot, u8 key, u16 value);
 extern void inpFXCopyCtrl(u8 controller, u32 dstHandle, u32 srcHandle);
 extern void audioFn_80278610(SynthVoiceSlot* slot);
 
@@ -44,7 +44,7 @@ u32 synthSetHandleControllerValue(u32 handle, u8 controller, u8 value) {
  *
  * EN v1.0 Address: 0x80271954, size 0xE8
  */
-u32 synthSetHandleControllerValue14Bit(u32 handle, u8 controller, u32 value) {
+u32 synthSetHandleControllerValue14Bit(u32 handle, u8 controller, u16 value) {
     u32 found;
     u8 idx;
     SynthVoiceSlot* slot;
