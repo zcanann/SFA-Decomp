@@ -486,7 +486,7 @@ typedef struct SynthFxSampleInfo {
     u8 auxIndex;
 } SynthFxSampleInfo;
 
-extern SynthFxSampleInfo *audioGetSoundEffectById(u32 fxId);
+extern SynthFxSampleInfo *dataGetFX(u32 fxId);
 
 int synthFXStart(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux)
 {
@@ -494,7 +494,7 @@ int synthFXStart(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux)
     u32 handle;
 
     handle = 0xFFFFFFFF;
-    sampleInfo = audioGetSoundEffectById(fxId);
+    sampleInfo = dataGetFX(fxId);
     if (sampleInfo != (SynthFxSampleInfo *)0x0) {
         if ((volume & 0xff) == 0xff) {
             volume = sampleInfo->defaultVolume;

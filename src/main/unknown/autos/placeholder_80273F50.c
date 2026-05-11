@@ -796,7 +796,7 @@ done:
  * Comparator: return a->key2 - b->key2 (u16 at offset 4).
  *
  */
-int dataMacroKeyCompare(void *a, void *b)
+int maccmp(void *a, void *b)
 {
     return (int)*(u16 *)((u8 *)a + 4) - (int)*(u16 *)((u8 *)b + 4);
 }
@@ -824,7 +824,7 @@ void *dataGetMacro(u32 key)
         *(u16 *)(dataGetMacro_key + 4) = key;
         dataGetMacro_result =
             sndBSearch(dataGetMacro_key, dataMacroTable + dataGetMacro_main * 8,
-                       bucketTable[dataGetMacro_bucket * 2], 8, dataMacroKeyCompare);
+                       bucketTable[dataGetMacro_bucket * 2], 8, maccmp);
         if (dataGetMacro_result != 0) {
             return ((DataRefEntry *)dataGetMacro_result)->data;
         }
@@ -836,7 +836,7 @@ void *dataGetMacro(u32 key)
  * Comparator: return a->key - b->key (u16 at offset 0).
  *
  */
-int dataSampleIdCompare(void *a, void *b)
+int smpcmp(void *a, void *b)
 {
     return (int)*(u16 *)a - (int)*(u16 *)b;
 }
@@ -863,7 +863,7 @@ int dataGetSample(u16 key, u32 *out)
     *(u16 *)searchKey = key;
     while (i < dataSmpSDirNum) {
         dataGetSample_result = sndBSearch(searchKey, (void *)*bucket, *(u16 *)(bucket + 2), 0x20,
-                                  dataSampleIdCompare);
+                                  smpcmp);
         entry = dataGetSample_result;
         if ((entry != 0) && (*(s16 *)(entry + 2) != -1)) {
             dataGetSample_sheader = entry + 0xc;
@@ -887,9 +887,9 @@ int dataGetSample(u16 key, u32 *out)
 
 /*
  * Comparator: return a->key2 - b->key2 (u16 at offset 4). Same body as
- * dataMacroKeyCompare but separate symbol used for a different bsearch table.
+ * maccmp but separate symbol used for a different bsearch table.
  */
-int dataRefKeyCompare(void *a, void *b)
+int curvecmp(void *a, void *b)
 {
     return (int)*(u16 *)((u8 *)a + 4) - (int)*(u16 *)((u8 *)b + 4);
 }
@@ -918,7 +918,7 @@ extern void *dataGetLayer_result;
 void *dataGetCurve(u16 key)
 {
     *(u16 *)(dataGetCurve_key + 4) = key;
-    dataGetCurve_result = sndBSearch(dataGetCurve_key, dataCurveTable, dataCurveNum, 8, dataRefKeyCompare);
+    dataGetCurve_result = sndBSearch(dataGetCurve_key, dataCurveTable, dataCurveNum, 8, curvecmp);
     if (dataGetCurve_result == 0) {
         return 0;
     }
@@ -931,7 +931,7 @@ void *dataGetCurve(u16 key)
 void *dataGetKeymap(u16 key)
 {
     *(u16 *)(dataGetKeymap_key + 4) = key;
-    dataGetKeymap_result = sndBSearch(dataGetKeymap_key, dataKeymapTable, dataKeymapNum, 8, dataRefKeyCompare);
+    dataGetKeymap_result = sndBSearch(dataGetKeymap_key, dataKeymapTable, dataKeymapNum, 8, curvecmp);
     if (dataGetKeymap_result == 0) {
         return 0;
     }
@@ -943,7 +943,7 @@ void *dataGetKeymap(u16 key)
  * the others but separate symbol.
  *
  */
-int dataLayerKeyCompare(void *a, void *b)
+int layercmp(void *a, void *b)
 {
     return (int)*(u16 *)((u8 *)a + 4) - (int)*(u16 *)((u8 *)b + 4);
 }
@@ -957,7 +957,7 @@ void *dataGetLayer(u16 key, u16 *outCount)
 
     *(u16 *)(searchKey + 4) = key;
     dataGetLayer_result =
-        sndBSearch(searchKey, dataLayerTable, dataLayerNum, 0xc, dataLayerKeyCompare);
+        sndBSearch(searchKey, dataLayerTable, dataLayerNum, 0xc, layercmp);
     if (dataGetLayer_result == 0) {
         return 0;
     }
@@ -967,9 +967,9 @@ void *dataGetLayer(u16 key, u16 *outCount)
 
 /*
  * Comparator: return a->key - b->key (u16 at offset 0). Same body as
- * dataSampleIdCompare but separate symbol.
+ * smpcmp but separate symbol.
  */
-int audioIdListFindCb(void *a, void *b)
+int fxcmp(void *a, void *b)
 {
     return (int)*(u16 *)a - (int)*(u16 *)b;
 }
@@ -977,7 +977,7 @@ int audioIdListFindCb(void *a, void *b)
 /*
  * Search each FX sample-list bucket for the requested FX id.
  */
-void *audioGetSoundEffectById(u16 key)
+void *dataGetFX(u16 key)
 {
     u32 i;
     u16 *bucket;
@@ -989,7 +989,7 @@ void *audioGetSoundEffectById(u16 key)
     searchKey = dataGetFXSearchKey;
     *(u16 *)searchKey = key;
     while (i < dataFXGroupNum) {
-        entry = sndBSearch(searchKey, *(void **)(bucket + 2), bucket[1], 10, audioIdListFindCb);
+        entry = sndBSearch(searchKey, *(void **)(bucket + 2), bucket[1], 10, fxcmp);
         if (entry != 0) {
             return entry;
         }
@@ -1005,7 +1005,7 @@ void *audioGetSoundEffectById(u16 key)
 extern u16 dataMacTotal;
 extern void hwGetStreamPlayBuffer(void);
 
-void dataInitStack(void)
+void dataInit(u32 unused, void *base)
 {
     u16 *bucketTable;
     int i;
