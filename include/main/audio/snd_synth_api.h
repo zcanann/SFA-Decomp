@@ -16,7 +16,7 @@ void sndOutputMode(int mode);
 void sndSetAuxProcessingCallbacks(u32 studio, void *auxACallback, void *auxAUser, u8 auxAIndex,
                                   void *auxAData, void *auxBCallback, void *auxBUser,
                                   u8 auxBIndex, void *auxBData);
-void synthActivateStudio(u32 slot, int a, int b);
+void synthActivateStudio(u8 slot, int a, int b);
 void synthDeactivateStudio(u8 slot);
 void synthAddStudioInput(u8 idx);
 void synthRemoveStudioInput(u8 idx);
