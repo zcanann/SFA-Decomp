@@ -19,7 +19,7 @@ extern void audioFn_80271178(SynthDelayedNode *fade, int mode, u32 delay);
 extern void fn_8026D0C4(u32 handle);
 extern void fn_8026D278(u32 handle);
 extern void fn_8026D630(u32 handle, u32 mixValue0, u32 mixValue1);
-extern void fn_80278418(u32 delta);
+extern void macHandle(u32 delta);
 extern u8 hwGetTimeOffset(void);
 extern u16 inpGetAuxA(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex);
 extern u16 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex);
@@ -401,7 +401,7 @@ void audioFn_80271498(u32 delta)
     stateBase = lbl_803BCD90;
     if (*(u32 *)(stateBase + 0x3c4) != 0) {
         storage = (SynthDelayStorageLocal *)stateBase;
-        fn_80278418(delta);
+        macHandle(delta);
         bucket = gSynthDelayBucketCursor;
         fn_80271398((void **)&storage->bucketHeads[bucket][0], audioFn_80270184);
         fn_80271398((void **)&storage->bucketHeads[bucket][1], fn_80270FE8);

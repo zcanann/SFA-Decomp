@@ -3,7 +3,7 @@
 
 extern u32 synthClaimVirtualSampleSlot(u8 voiceIdx);
 extern void voiceKill(u8 voiceIdx);
-extern void fn_80278560(void);
+extern void macSampleEndNotify(void);
 extern void synthHandleVirtualSampleDone(u32 packed);
 extern u32 hwGetVirtualSampleID(int slot);
 extern void sndConvertMs(u32 *p);
@@ -223,7 +223,7 @@ int synthHWMessageHandler(int mode, u32 arg)
         if (arg != *(u32 *)(entry + 0xf4)) {
             break;
         }
-        fn_80278560();
+        macSampleEndNotify();
         break;
     }
     case 1:

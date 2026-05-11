@@ -283,7 +283,7 @@ void mcmdSetADSR(int state, u32 *args)
 /*
  * Configure the per-voice envelope state from an ADSR/keygroup table.
  */
-void voiceConfigureAdsrEnvelope(int state, u32 *args)
+void mcmdSetPitchADSR(int state, u32 *args)
 {
     s16 basePan;
     u16 decayRaw;

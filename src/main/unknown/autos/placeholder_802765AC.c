@@ -97,7 +97,7 @@ extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
 extern void inpResetChannelDefaults(u8 a, u8 b);
 void audioFn_80278990(int state);
 void fn_802788B4(int state, int skipFadeReset);
-u32 audioFn_80278610(int state);
+u32 macSetExternalKeyoff(int state);
 extern u32 inpGetExCtrl(int state, u32 ctrl);
 extern void inpSetExCtrl(int state, u32 ctrl, s16 value);
 extern void voiceKill(u32 voice);
@@ -448,7 +448,7 @@ void FUN_802765c4(int *param_1,int param_2)
  * Choose a randomized note/velocity command and dispatch it through the
  * normal sample-start handler.
  */
-void fn_8027656C(int state, u32 *args)
+void mcmdRandomKey(int state, u32 *args)
 {
     u32 command;
     u32 low;
@@ -605,7 +605,7 @@ void fn_80276A70(int state, int useExCtrl, u32 index, u32 value)
 /*
  * Configure the controller-0x41 ramp trigger for the current voice.
  */
-void fn_80276840(int state, u32 *args)
+void mcmdPortamento(int state, u32 *args)
 {
     u32 duration[2];
     u32 mode;
@@ -652,7 +652,7 @@ void fn_80276840(int state, u32 *args)
 /*
  * Arithmetic command over synth registers.
  */
-void fn_80276AD4(int state, u32 *args, u8 op)
+void mcmdVarCalculation(int state, u32 *args, u8 op)
 {
     s16 lhs;
     s16 rhs;
@@ -700,7 +700,7 @@ void fn_80276AD4(int state, u32 *args, u8 op)
 /*
  * Queue register-derived messages onto voices found through vid handles.
  */
-void fn_80276C04(int state, u32 *args)
+void mcmdSendMessage(int state, u32 *args)
 {
     u32 index;
     u32 value;
@@ -777,7 +777,7 @@ void fn_80276C04(int state, u32 *args)
 /*
  * Key off other voices in the same tag group, optionally by immediate stop.
  */
-void fn_80276E38(int state, u32 *args)
+void mcmdSetKeyGroup(int state, u32 *args)
 {
     u32 group;
     u32 command;
@@ -796,7 +796,7 @@ void fn_80276E38(int state, u32 *args)
                 if (((*(u32 *)(voice + 0x118) & 2) == 0) &&
                     group == *(u8 *)(voice + 0x104)) {
                     if (((command >> 0x10) & 0xff) == 0) {
-                        audioFn_80278610(voice);
+                        macSetExternalKeyoff(voice);
                     } else {
                         voiceKill(i);
                     }
@@ -813,7 +813,7 @@ void fn_80276E38(int state, u32 *args)
  * reference the recovered current EN boundary.
  */
 #pragma dont_inline on
-void audioFn_80276f0c(int state)
+void macHandleActive(int state)
 {
     (void)state;
 }
@@ -822,7 +822,7 @@ void audioFn_80276f0c(int state)
 /*
  * Advance the synth voice timer queue and process active voices.
  */
-void fn_80278418(u32 delta)
+void macHandle(u32 delta)
 {
     int timer;
     int active;
@@ -859,7 +859,7 @@ void fn_80278418(u32 delta)
             *(int *)(active + 0x54) = 0;
             audioFn_80278990(active);
         }
-        audioFn_80276f0c(active);
+        macHandleActive(active);
     }
     macRealTimeHi += CARRY4(macRealTimeLo, delta);
     macRealTimeLo += delta;
@@ -868,7 +868,7 @@ void fn_80278418(u32 delta)
 /*
  * Resume an active voice from its alternate command stream when needed.
  */
-void fn_80278560(int state)
+void macSampleEndNotify(int state)
 {
     int resumed;
 
@@ -891,7 +891,7 @@ void fn_80278560(int state)
 /*
  * Mark a voice for key-off/release, falling back to its release stream.
  */
-u32 audioFn_80278610(int state)
+u32 macSetExternalKeyoff(int state)
 {
     int resumed;
     u32 result;
@@ -927,7 +927,7 @@ u32 audioFn_80278610(int state)
 /*
  * Clear or defer the release request flag.
  */
-void fn_80278704(int state, int defer)
+void macSetPedalState(int state, int defer)
 {
     int resumed;
 

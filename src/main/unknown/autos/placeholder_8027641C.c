@@ -51,7 +51,7 @@ u32 fn_802763C0(u32 value, u16 keyId)
  * EN v1.1 Address: 0x80276440
  * EN v1.1 Size: 296b
  */
-void fn_80276440(int state, u32 *params, u32 timeArg)
+void mcmdScaleVolume(int state, u32 *params, u32 timeArg)
 {
     u32 t;
     int divisor;

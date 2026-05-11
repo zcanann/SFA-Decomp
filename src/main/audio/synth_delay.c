@@ -4,7 +4,7 @@ extern s32 vidGetInternalId(u32 handle);
 extern void inpSetMidiCtrl(u8 controller, u8 slot, u8 key, u8 value);
 extern void inpSetMidiCtrl14(u8 controller, u8 slot, u8 key, u16 value);
 extern void inpFXCopyCtrl(u8 controller, u32 dstHandle, u32 srcHandle);
-extern void audioFn_80278610(SynthVoiceSlot* slot);
+extern void macSetExternalKeyoff(SynthVoiceSlot* slot);
 
 extern u8* synthVoice;
 
@@ -99,7 +99,7 @@ u32 synthSendKeyOff(u32 handle) {
         while (handle != 0xFFFFFFFFu) {
             idx = (u8)handle;
             if (handle == *(u32*)(synthVoice + idx * 0x404 + 0xF4)) {
-                audioFn_80278610((SynthVoiceSlot*)(synthVoice + idx * 0x404));
+                macSetExternalKeyoff((SynthVoiceSlot*)(synthVoice + idx * 0x404));
                 found = 1;
             }
             handle = *(u32*)(synthVoice + idx * 0x404 + 0xEC);
