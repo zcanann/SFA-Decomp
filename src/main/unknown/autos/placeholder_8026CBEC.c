@@ -57,7 +57,7 @@ void fn_8026D0C4(u32 handle)
 {
     u32 key;
     u32 found;
-    int i;
+    u32 i;
     SynthVoice* voice;
 
     key = handle & 0x7fffffffu;
