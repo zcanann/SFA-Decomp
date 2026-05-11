@@ -35,7 +35,7 @@ typedef struct SynthFadeSlotLocal {
  * Route synth fade commands to one slot or to the broadcast pseudo-slots
  * 0xfa through 0xff.
  */
-void audioSetChannelVolume(u32 volume, u32 timeMs, u32 target, u8 action, u32 handle)
+void synthVolume(u32 volume, u32 timeMs, u32 target, u8 action, u32 handle)
 {
     u32 convertedTime;
     u32 targetIndex;
@@ -169,7 +169,7 @@ void audioSetChannelVolume(u32 volume, u32 timeMs, u32 target, u8 action, u32 ha
  * EN v1.1 Address: 0x80271F5C
  * EN v1.1 Size: 84b
  */
-int fn_80271F5C(u8 voiceIdx)
+int synthIsFadeOutActive(u8 voiceIdx)
 {
     u8 *v = lbl_803BCD90 + voiceIdx * 0x30;
     if (((v[0x601] != 4) && ((synthMasterFaderActiveFlags & (1U << voiceIdx)) != 0)) &&
@@ -185,7 +185,7 @@ int fn_80271F5C(u8 voiceIdx)
  * EN v1.1 Address: 0x80271FB0
  * EN v1.1 Size: 40b
  */
-void fn_80271FB0(u32 voiceIdx, u8 value)
+void synthSetMusicVolumeType(u32 voiceIdx, u8 value)
 {
     if (gSynthInitialized == 0) {
         return;
@@ -205,7 +205,7 @@ void fn_80271FB0(u32 voiceIdx, u8 value)
  * EN v1.1 Address: 0x80271FD8
  * EN v1.1 Size: 204b
  */
-int fn_80271FD8(int mode, u32 arg)
+int synthHWMessageHandler(int mode, u32 arg)
 {
     u32 result = 0;
 

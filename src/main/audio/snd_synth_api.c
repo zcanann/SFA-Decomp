@@ -8,7 +8,7 @@ extern u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value);
 extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
 extern u32 synthSendKeyOff(u32 handle);
 extern int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u8 studioAux);
-extern void audioSetChannelVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle);
+extern void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle);
 extern int vidGetInternalId(u32 id);
 extern void synthRefreshJobVolumes(void);
 extern void hwAddInput(u8 idx);
@@ -142,7 +142,7 @@ int sndFXCheck(u32 id)
 void sndVolume(u8 volume, u16 time, u8 group)
 {
     sndBegin();
-    audioSetChannelVolume(volume, time, group, 0, -1);
+    synthVolume(volume, time, group, 0, -1);
     sndEnd();
 }
 
@@ -156,10 +156,10 @@ void sndMasterVolume(u8 volume, u16 time, u8 musicFlag, u8 fxFlag)
 {
     sndBegin();
     if (musicFlag != 0) {
-        audioSetChannelVolume(volume, time, 0x15, 0, -1);
+        synthVolume(volume, time, 0x15, 0, -1);
     }
     if (fxFlag != 0) {
-        audioSetChannelVolume(volume, time, 0x16, 0, -1);
+        synthVolume(volume, time, 0x16, 0, -1);
     }
     sndEnd();
 }
