@@ -4,6 +4,7 @@
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
+typedef unsigned long long u64;
 typedef int s32;
 typedef short s16;
 typedef float f32;
@@ -77,7 +78,7 @@ typedef struct SynthVoiceSlot {
         u32 handle;
         u32 callbackLinkId;
     };
-    u8 unk0F8[0x20];
+    u8 unk0F8[0x1C];
     u32 inputFlags;
     u32 flags;
     u8 callbackActive;
@@ -288,6 +289,7 @@ extern SynthVoice* gSynthAllocatedVoices;
 extern u32 gSynthNextHandle;
 
 #define SYNTH_VOICE_RUNTIME() ((SynthVoiceRuntime*)(void*)gSynthCallbacks)
+#define SYNTH_VOICE_SLOT_FLAGS64(slot) (*(u64*)&(slot)->inputFlags)
 
 /* Recovered semantics for external audio helpers. */
 void synthReleaseVoiceSlot(SynthVoiceSlot* slot);

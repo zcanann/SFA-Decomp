@@ -17,18 +17,18 @@ extern u8* synthVoice;
 u32 synthSetHandleControllerValue(u32 handle, u8 controller, u8 value) {
     u32 found;
     u8 idx;
-    u8* slotPtr;
+    SynthVoiceSlot* slot;
 
     found = 0;
     handle = vidGetInternalId(handle);
     while (handle != 0xFFFFFFFFu) {
         idx = (u8)handle;
         if (handle == *(u32*)(synthVoice + idx * 0x404 + 0xF4)) {
-            slotPtr = synthVoice + idx * 0x404;
-            if ((*(u32*)(slotPtr + 0x118) & 2) != 0) {
-                inpSetMidiCtrl(controller, idx, *(u8*)(slotPtr + 0x20B), value);
+            slot = (SynthVoiceSlot*)(synthVoice + idx * 0x404);
+            if ((SYNTH_VOICE_SLOT_FLAGS64(slot) & 2) != 0) {
+                inpSetMidiCtrl(controller, idx, *(u8*)((u8*)slot + 0x20B), value);
             } else {
-                inpSetMidiCtrl(controller, idx, *(u8*)(slotPtr + 0x122), value);
+                inpSetMidiCtrl(controller, idx, *(u8*)((u8*)slot + 0x122), value);
             }
             found = 1;
             handle = *(u32*)(synthVoice + idx * 0x404 + 0xEC);
@@ -47,18 +47,18 @@ u32 synthSetHandleControllerValue(u32 handle, u8 controller, u8 value) {
 u32 synthSetHandleControllerValue14Bit(u32 handle, u8 controller, u32 value) {
     u32 found;
     u8 idx;
-    u8* slotPtr;
+    SynthVoiceSlot* slot;
 
     found = 0;
     handle = vidGetInternalId(handle);
     while (handle != 0xFFFFFFFFu) {
         idx = (u8)handle;
         if (handle == *(u32*)(synthVoice + idx * 0x404 + 0xF4)) {
-            slotPtr = synthVoice + idx * 0x404;
-            if ((*(u32*)(slotPtr + 0x118) & 2) != 0) {
-                inpSetMidiCtrl14(controller, idx, *(u8*)(slotPtr + 0x20B), value);
+            slot = (SynthVoiceSlot*)(synthVoice + idx * 0x404);
+            if ((SYNTH_VOICE_SLOT_FLAGS64(slot) & 2) != 0) {
+                inpSetMidiCtrl14(controller, idx, *(u8*)((u8*)slot + 0x20B), value);
             } else {
-                inpSetMidiCtrl14(controller, idx, *(u8*)(slotPtr + 0x122), value);
+                inpSetMidiCtrl14(controller, idx, *(u8*)((u8*)slot + 0x122), value);
             }
             found = 1;
             handle = *(u32*)(synthVoice + idx * 0x404 + 0xEC);

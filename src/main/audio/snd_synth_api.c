@@ -193,10 +193,10 @@ void sndOutputMode(int mode)
     if (oldFlags != synthFlags) {
         u32 i;
         for (i = 0; i < lbl_803BD150[0x210]; i++) {
-            u32 *flags = (u32 *)(synthVoice + i * 0x404 + 0x114);
+            volatile u32 *flags = (volatile u32 *)(synthVoice + i * 0x404 + 0x114);
             u32 nextFlags = flags[1];
-            flags[0] |= 0x2000;
             flags[1] = nextFlags;
+            flags[0] |= 0x2000;
         }
         synthRefreshJobVolumes();
     }
