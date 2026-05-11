@@ -3,7 +3,7 @@
 
 extern void sndBegin(void);
 extern void sndEnd(void);
-extern void synthUpdateHandle(u32 value0, u32 value1, u32 handle, u32 mode);
+extern void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode);
 extern int synthSetHandleControllerValue(int handle, int controller, int value);
 extern int synthSetHandleControllerValue14Bit(int handle, int controller, int value);
 extern int synthHandleKeyOff(int handle);

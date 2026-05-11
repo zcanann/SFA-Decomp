@@ -9,13 +9,15 @@ extern void audioSetChannelVolume(u32 value0, u32 value1, u8 studio, u8 mode, u3
  *
  * EN v1.0 Address: 0x8026D6E4, size 0x19C
  */
-void synthUpdateHandle(u32 value0, u32 value1, u32 handle, u32 mode) {
+void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode) {
     SynthVoice* voice;
-    SynthVoice* voiceBase;
+    SynthVoiceRuntime* runtime;
+    u8* studioMap;
+    u8* studioMapCursor;
     u32 voiceIndex;
     u32 studioIndex;
 
-    voiceBase = gSynthVoices;
+    runtime = SYNTH_VOICE_RUNTIME();
     for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next) {
         if (voice->handle == (handle & 0x7FFFFFFF)) {
             studioIndex = (handle & 0x80000000) | voice->slotIndex;
@@ -35,30 +37,34 @@ void synthUpdateHandle(u32 value0, u32 value1, u32 handle, u32 mode) {
 resolved:
     if (studioIndex != 0xFFFFFFFF) {
         if ((studioIndex & 0x80000000) == 0) {
-            audioSetChannelVolume(value0, value1, gSynthVoices[studioIndex].currentStudio, mode, handle);
-            voice = &gSynthVoices[studioIndex];
+            audioSetChannelVolume(value0, value1, runtime->voices[studioIndex].currentStudio, mode, handle);
+            voice = &runtime->voices[studioIndex];
+            studioMap = voice->studioMap;
+            studioMapCursor = voice->studioMap;
             voiceIndex = 0;
             do {
-                if (voice->studioMap[voiceIndex] != gSynthVoices[studioIndex].currentStudio) {
-                    audioSetChannelVolume(value0, value1, voice->studioMap[voiceIndex], 0, 0xFFFFFFFF);
+                if (*studioMap != runtime->voices[studioIndex].currentStudio) {
+                    audioSetChannelVolume(value0, value1, *studioMapCursor, 0, 0xFFFFFFFF);
                 }
+                studioMap++;
+                studioMapCursor++;
                 voiceIndex++;
             } while (voiceIndex < SYNTH_SEQUENCE_TRACK_COUNT);
         } else {
             mode &= 0xF;
             voiceIndex = studioIndex & 0x7FFFFFFF;
             if (mode == 2) {
-                voiceBase[voiceIndex].pendingUpdate.flags |= 8;
-                voiceBase[voiceIndex].pendingUpdate.studio = (u8)value0;
+                runtime->voices[voiceIndex].pendingUpdate.flags |= 8;
+                runtime->voices[voiceIndex].pendingUpdate.studio = (u8)value0;
             } else if (mode < 2) {
                 if (mode == 0) {
-                    voiceBase[voiceIndex].pendingUpdate.studio = (u8)value0;
+                    runtime->voices[voiceIndex].pendingUpdate.studio = (u8)value0;
                 } else {
-                    voiceBase[voiceIndex].pendingUpdate.output = 0;
+                    runtime->voices[voiceIndex].pendingUpdate.output = 0;
                 }
             } else if (mode < 4) {
-                voiceBase[voiceIndex].pendingUpdate.flags |= 0x80;
-                voiceBase[voiceIndex].pendingUpdate.studio = (u8)value0;
+                runtime->voices[voiceIndex].pendingUpdate.flags |= 0x80;
+                runtime->voices[voiceIndex].pendingUpdate.studio = (u8)value0;
             }
         }
     }
