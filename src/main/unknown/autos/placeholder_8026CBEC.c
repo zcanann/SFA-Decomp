@@ -135,14 +135,103 @@ done:
 }
 
 /*
- * fn_8026D278 - voice search and modify (~464 instructions). Stubbed.
+ * Stop a sequence voice, clean up callbacks, and return the voice to the
+ * free list. Deferred handles clear the pending output word instead.
+ *
+ * EN v1.0 Address: 0x8026D278
+ * EN v1.0 Size: 464b
  */
-#pragma dont_inline on
-void fn_8026D278(int handle, int args)
+void fn_8026D278(u32 handle)
 {
-    (void)handle; (void)args;
+    u32 key;
+    u32 found;
+    u32 i;
+    SynthVoiceRuntime* runtime;
+    SynthVoice* voice;
+
+    runtime = SYNTH_VOICE_RUNTIME();
+    key = handle & 0x7fffffffu;
+
+    voice = gSynthQueuedVoices;
+    while (voice != 0) {
+        if (voice->handle == key) {
+            found = voice->slotIndex | (handle & 0x80000000);
+            goto done;
+        }
+        voice = voice->next;
+    }
+
+    voice = gSynthAllocatedVoices;
+    while (voice != 0) {
+        if (voice->handle == key) {
+            found = voice->slotIndex | (handle & 0x80000000);
+            goto done;
+        }
+        voice = voice->next;
+    }
+    found = 0xffffffff;
+done:
+
+    if (found == 0xffffffff) {
+        return;
+    }
+
+    if ((found & 0x80000000) == 0) {
+        voice = &runtime->voices[found];
+        switch (voice->state) {
+            case 1:
+                if (voice->prev != 0) {
+                    voice->prev->next = voice->next;
+                } else {
+                    gSynthQueuedVoices = voice->next;
+                }
+
+                {
+                    SynthVoice* base = voice;
+                    for (i = 0; i < 2; i++) {
+                        SynthCallbackLink* cb = base->callbackLists[0];
+                        while (cb != 0) {
+                            voiceKillById(cb->callbackId);
+                            cb = cb->next;
+                        }
+                        base = (SynthVoice*)((u8*)base + 4);
+                    }
+                }
+                {
+                    SynthCallbackLink* cb = voice->callbackLists[2];
+                    while (cb != 0) {
+                        voiceKillById(cb->callbackId);
+                        cb = cb->next;
+                    }
+                }
+                synthRecycleVoiceCallbacks(voice);
+                break;
+            case 2:
+                if (voice->prev != 0) {
+                    voice->prev->next = voice->next;
+                } else {
+                    gSynthAllocatedVoices = voice->next;
+                }
+                break;
+        }
+
+        if (voice->next != 0) {
+            voice->next->prev = voice->prev;
+        }
+        voice->state = 0;
+        if (gSynthFreeVoices != 0) {
+            gSynthFreeVoices->prev = voice;
+        }
+        voice->next = gSynthFreeVoices;
+        voice->prev = 0;
+        gSynthFreeVoices = voice;
+    } else {
+        voice = &runtime->voices[found & 0x7fffffffu];
+        if (voice->state != 0) {
+            voice->pendingUpdate.output = 0;
+        }
+    }
 }
-#pragma dont_inline reset
 
 /*
  * Update sequence playback speed immediately, or queue it for a deferred
