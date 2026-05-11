@@ -1,21 +1,9 @@
 #include "ghidra_import.h"
+#include "main/audio/data_ref.h"
 
 extern int hwTransAddr(int x);
 extern void sndBegin(void);
 extern void sndEnd(void);
-
-typedef struct DataRefEntry {
-    void *data;
-    u16 key;
-    u16 refCount;
-} DataRefEntry;
-
-typedef struct DataLayerRef {
-    void *data;
-    u16 key;
-    u16 count;
-    u16 refCount;
-} DataLayerRef;
 
 /*
  * Insert a scene/sample-list entry, keeping the 12-byte table sorted by id.
@@ -24,7 +12,7 @@ extern u8 dataKeymapTable[];
 extern u8 dataLayerTable[];
 extern u16 dataLayerNum;
 
-int dataAddLayerRef(u16 key, void *value, u16 count)
+int dataInsertLayer(u16 key, void *value, u16 count)
 {
     u32 moveCount;
     u32 *entry;
@@ -113,7 +101,7 @@ insert:
 /*
  * Release a scene/sample-list entry, compacting the sorted table.
  */
-int dataRemoveLayerRef(s16 key)
+int dataRemoveLayer(s16 key)
 {
     s16 refCount;
     int next;
@@ -202,7 +190,7 @@ extern u16 dataCurveNum;
 extern void sndBegin(void);
 extern void sndEnd(void);
 
-int dataAddCurveRef(u16 key, void *value)
+int dataInsertCurve(u16 key, void *value)
 {
     u32 moveCount;
     u32 used;
@@ -281,7 +269,7 @@ insert:
 /*
  * Release a keygroup/sample indirection entry, compacting the sorted table.
  */
-int dataRemoveCurveRef(s16 key)
+int dataRemoveCurve(s16 key)
 {
     s16 refCount;
     int next;

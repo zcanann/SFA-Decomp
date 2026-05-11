@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/data_ref.h"
 #include "main/audio/synth_job.h"
 #include "main/unknown/autos/placeholder_802736D4.h"
 
@@ -34,12 +35,6 @@ extern f32 FLOAT_803e8470;
 extern f32 FLOAT_803e8480;
 extern f64 lbl_803E77E0;
 extern f32 lbl_803E77D8;
-
-typedef struct DataKeymapRef {
-    void *data;
-    u16 key;
-    u16 refCount;
-} DataKeymapRef;
 
 /*
  * --INFO--
@@ -115,10 +110,10 @@ void synthRefreshJobVolumes(void)
     sndEnd();
 }
 
-int dataAddKeymapRef(u32 keymapId, void *data)
+int dataInsertKeymap(u32 keymapId, void *data)
 {
-    DataKeymapRef *table;
-    DataKeymapRef *entry;
+    DataRefEntry *table;
+    DataRefEntry *entry;
     u16 count;
     u32 moveCount;
     u32 batches;
@@ -128,7 +123,7 @@ int dataAddKeymapRef(u32 keymapId, void *data)
 
     sndBegin();
     count = dataKeymapNum;
-    table = (DataKeymapRef *)dataKeymapTable;
+    table = (DataRefEntry *)dataKeymapTable;
     key = keymapId;
     entry = table;
     index = 0;
@@ -200,10 +195,10 @@ insert:
     return 1;
 }
 
-int dataRemoveKeymapRef(u32 keymapId)
+int dataRemoveKeymap(u32 keymapId)
 {
-    DataKeymapRef *table;
-    DataKeymapRef *entry;
+    DataRefEntry *table;
+    DataRefEntry *entry;
     u16 count;
     int index;
     int moveCount;
@@ -211,7 +206,7 @@ int dataRemoveKeymapRef(u32 keymapId)
 
     sndBegin();
     count = dataKeymapNum;
-    table = (DataKeymapRef *)dataKeymapTable;
+    table = (DataRefEntry *)dataKeymapTable;
     keymapId &= 0xffff;
     entry = table;
     index = 0;
