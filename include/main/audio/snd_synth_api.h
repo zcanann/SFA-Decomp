@@ -4,6 +4,10 @@
 #include "ghidra_import.h"
 
 void sndSeqVolume(int seqId, int volume, int time, int mode);
+void sndSeqStop(u32 handle);
+void sndSeqSpeed(u32 handle, u32 speed);
+void sndSeqContinue(u32 handle);
+void sndSeqMute(u32 handle, u32 mute, u32 time);
 u16 seqGetMIDIPriority(u8 slot, u8 event);
 int sndFXCtrl(int handle, u8 controller, u8 value);
 int sndFXCtrl14(int handle, u8 controller, u16 value);
