@@ -473,7 +473,7 @@ void audioFn_80271498(u32 delta)
 }
 
 /*
- * audioGetSfxFn_802717b0 - voice handler (~188 instructions). Stubbed.
+ * synthFXStart - start an FX sample by id, applying default volume/pan sentinels.
  */
 typedef struct SynthFxSampleInfo {
     u8 pad00[2];
@@ -488,7 +488,7 @@ typedef struct SynthFxSampleInfo {
 
 extern SynthFxSampleInfo *audioGetSoundEffectById(u32 fxId);
 
-int audioGetSfxFn_802717b0(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux)
+int synthFXStart(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux)
 {
     SynthFxSampleInfo *sampleInfo;
     u32 handle;

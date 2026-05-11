@@ -7,7 +7,7 @@ extern void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode);
 extern u32 synthSetHandleControllerValue(u32 handle, u8 controller, u8 value);
 extern u32 synthSetHandleControllerValue14Bit(u32 handle, u8 controller, u16 value);
 extern u32 synthHandleKeyOff(u32 handle);
-extern int audioGetSfxFn_802717b0(u32 fxId, u8 volume, u8 pan, u8 studio, u8 studioAux);
+extern int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u8 studioAux);
 extern void audioSetChannelVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle);
 extern int vidGetInternalId(u32 id);
 extern void synthRefreshJobVolumes(void);
@@ -113,7 +113,7 @@ int sndFXStartEx(u32 fxId, u8 volume, u8 pan, u8 studio)
     u8 auxIndex;
     sndBegin();
     auxIndex = lbl_803BDA24[studio][1];
-    result = audioGetSfxFn_802717b0(fxId, volume, pan, studio, auxIndex);
+    result = synthFXStart(fxId, volume, pan, studio, auxIndex);
     sndEnd();
     return result;
 }
