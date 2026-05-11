@@ -3,7 +3,7 @@
 extern u8 *synthVoice;
 extern int audioFn_80278b94(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8,
                        int p9, int p10, int p11, int p12, int p13, int p14, int p15, int p16);
-extern void synthCopyHandleFXState(int voice, int state);
+extern void synthFXCloneMidiSetup(int voice, int state);
 void fn_80275CB8(int state);
 extern void sndConvertMs(u32 *p);
 extern void sndConvertTicks(u32 *p, int state);
@@ -87,7 +87,7 @@ void fn_802757C4(int state, int args)
         *(int *)(state + 0xec) = result;
 
         if (*(u8 *)(state + 0x11d) != 0) {
-            synthCopyHandleFXState((int)(synthVoice + voice * 0x404), state);
+            synthFXCloneMidiSetup((int)(synthVoice + voice * 0x404), state);
         }
     }
 }

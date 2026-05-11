@@ -341,10 +341,10 @@ void synthRestoreQueuedHandle(u32 handle);
 void synthSetHandleMixData(u32 handle, u32 value0, u32 value1);
 void synthSetControllerValue(u8 controller, u8 studioIndex, u8 channelIndex, u8 value);
 void synthSetControllerValue14Bit(u8 controller, u8 studioIndex, u8 channelIndex, u32 value);
-u32 synthSetHandleControllerValue(u32 handle, u8 controller, u8 value);
-u32 synthSetHandleControllerValue14Bit(u32 handle, u8 controller, u16 value);
-void synthCopyHandleFXState(u32 dstHandle, u32 srcHandle);
-u32 synthHandleKeyOff(u32 handle);
+u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value);
+u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
+void synthFXCloneMidiSetup(u32 dstHandle, u32 srcHandle);
+u32 synthSendKeyOff(u32 handle);
 void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode);
 u32 synthCancelCallbackVoices(u32 callbackId);
 

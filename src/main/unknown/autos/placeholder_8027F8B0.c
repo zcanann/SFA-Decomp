@@ -64,7 +64,7 @@ extern f32 lbl_803E7894;
 extern f64 lbl_803E7898;
 extern f32 lbl_803E78A0;
 
-extern void synthHandleKeyOff(u32 handle);
+extern void synthSendKeyOff(u32 handle);
 extern void synthActivateStudio(u8 studio, int active, int unk);
 extern void synthDeactivateStudio(u8 studio);
 extern void synthAddStudioInput(u8 studio, u8 *input);
@@ -175,7 +175,7 @@ void fn_8027FB08(void)
                     }
                     for (voice = s3dEmitterRoot; voice != NULL; voice = voice->next) {
                         if (voice->spatialEntry == evictedEntry) {
-                            synthHandleKeyOff(voice->handle);
+                            synthSendKeyOff(voice->handle);
                             voice->flags |= 0x80000;
                             voice->handle = 0xffffffff;
                         }

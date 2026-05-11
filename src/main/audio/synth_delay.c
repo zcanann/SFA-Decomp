@@ -9,12 +9,12 @@ extern void audioFn_80278610(SynthVoiceSlot* slot);
 extern u8* synthVoice;
 
 /*
- * synthSetHandleControllerValue - sndFXCtrl underlying impl.
+ * synthFXSetCtrl - sndFXCtrl underlying impl.
  * Walks the handle's voice-slot chain, dispatching inpSetMidiCtrl per slot.
  *
  * EN v1.0 Address: 0x8027186C, size 0xE8
  */
-u32 synthSetHandleControllerValue(u32 handle, u8 controller, u8 value) {
+u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value) {
     u32 found;
     u8 idx;
     SynthVoiceSlot* slot;
@@ -40,11 +40,11 @@ u32 synthSetHandleControllerValue(u32 handle, u8 controller, u8 value) {
 }
 
 /*
- * synthSetHandleControllerValue14Bit - sndFXCtrl14 underlying impl.
+ * synthFXSetCtrl14 - sndFXCtrl14 underlying impl.
  *
  * EN v1.0 Address: 0x80271954, size 0xE8
  */
-u32 synthSetHandleControllerValue14Bit(u32 handle, u8 controller, u16 value) {
+u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value) {
     u32 found;
     u8 idx;
     SynthVoiceSlot* slot;
@@ -70,12 +70,12 @@ u32 synthSetHandleControllerValue14Bit(u32 handle, u8 controller, u16 value) {
 }
 
 /*
- * synthCopyHandleFXState - copies the five FX-stage controllers
+ * synthFXCloneMidiSetup - copies the five FX-stage controllers
  * (volume, pan, expression, reverb, chorus) between two handles.
  *
  * EN v1.0 Address: 0x80271A3C, size 0x84
  */
-void synthCopyHandleFXState(u32 dstHandle, u32 srcHandle) {
+void synthFXCloneMidiSetup(u32 dstHandle, u32 srcHandle) {
     inpFXCopyCtrl(0x07, dstHandle, srcHandle);
     inpFXCopyCtrl(0x0A, dstHandle, srcHandle);
     inpFXCopyCtrl(0x5B, dstHandle, srcHandle);
@@ -84,12 +84,12 @@ void synthCopyHandleFXState(u32 dstHandle, u32 srcHandle) {
 }
 
 /*
- * synthHandleKeyOff - sndFXKeyOff underlying impl.
+ * synthSendKeyOff - sndFXKeyOff underlying impl.
  * Walks the handle's voice-slot chain and signals key-off on each slot.
  *
  * EN v1.0 Address: 0x80271AC0, size 0x8C
  */
-u32 synthHandleKeyOff(u32 handle) {
+u32 synthSendKeyOff(u32 handle) {
     u32 found;
     u32 idx;
 
