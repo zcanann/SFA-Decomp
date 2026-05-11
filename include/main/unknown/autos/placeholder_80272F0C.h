@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void fn_80272EA4(void);
+void synthInitJobTable(void);
 void fn_80272F6C(void);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80272F0C_H_ */

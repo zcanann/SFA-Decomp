@@ -1,8 +1,9 @@
 #include "ghidra_import.h"
+#include "main/audio/synth_job.h"
 #include "main/unknown/autos/placeholder_80272F0C.h"
 
 extern u8 lbl_803BD150[];
-extern u8 synthJobTable[];
+extern SynthJob synthJobTable[];
 extern u8 synthJobTableCountdown;
 extern u8 synthJobTablePeriod;
 extern u32 lbl_803DE284;
@@ -20,8 +21,8 @@ void synthInitJobTable(void)
 {
     int count;
     int progress;
-    u8 *outerEntry;
-    u8 *tailEntry;
+    SynthJob *outerEntry;
+    SynthJob *tailEntry;
     int outerLoops;
     int tailRemaining;
 
@@ -35,26 +36,26 @@ void synthInitJobTable(void)
             outerEntry = synthJobTable;
             if ((int)(count - 8) > 0) {
                 do {
-                    outerEntry[0x008] = 0;
+                    outerEntry[0].state = 0;
                     progress += 8;
-                    outerEntry[0x06c] = 0;
-                    outerEntry[0x0d0] = 0;
-                    outerEntry[0x134] = 0;
-                    outerEntry[0x198] = 0;
-                    outerEntry[0x1fc] = 0;
-                    outerEntry[0x260] = 0;
-                    outerEntry[0x2c4] = 0;
-                    outerEntry += 0x320;
+                    outerEntry[1].state = 0;
+                    outerEntry[2].state = 0;
+                    outerEntry[3].state = 0;
+                    outerEntry[4].state = 0;
+                    outerEntry[5].state = 0;
+                    outerEntry[6].state = 0;
+                    outerEntry[7].state = 0;
+                    outerEntry += 8;
                     outerLoops--;
                 } while (outerLoops != 0);
             }
         }
-        tailEntry = synthJobTable + progress * 0x64;
+        tailEntry = synthJobTable + progress;
         tailRemaining = count - progress;
         if (progress < (int)count) {
             do {
-                tailEntry[8] = 0;
-                tailEntry += 0x64;
+                tailEntry->state = 0;
+                tailEntry++;
                 tailRemaining--;
             } while (tailRemaining != 0);
         }

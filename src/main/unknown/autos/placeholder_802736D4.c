@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/synth_job.h"
 #include "main/unknown/autos/placeholder_802736D4.h"
 
 extern undefined4 FUN_802420b0();
@@ -19,7 +20,7 @@ extern void hwSetVolume(int slot, undefined4 mode, f32 front, f32 left, f32 righ
 
 extern u8 lbl_803BD150[];
 extern u8 dataKeymapTable[];
-extern u8 synthJobTable[];
+extern SynthJob synthJobTable[];
 extern u32 synthFlags;
 extern u16 dataKeymapNum;
 
@@ -62,12 +63,11 @@ void doNothing_802737E8(void) {}
 
 void synthCancelJob(int voice)
 {
-    u8 *job;
+    SynthJob *job;
     int state;
-    void (*callback)(u32, u32, u32, u32, u32);
 
-    job = synthJobTable + voice * 0x64;
-    state = job[8];
+    job = synthJobTable + voice;
+    state = job->state;
     if (state >= 3) {
         goto done;
     }
@@ -77,18 +77,17 @@ void synthCancelJob(int voice)
     goto done;
 cancel:
     if ((u32)state == 2) {
-        voiceBreakAndFree(*(u32 *)(job + 0x48));
+        voiceBreakAndFree(job->voice);
     }
-    job[8] = 3;
-    callback = *(void (**)(u32, u32, u32, u32, u32))(job + 0xc);
-    callback(0, 0, 0, 0, *(u32 *)(job + 0x4c));
+    job->state = 3;
+    job->callback(0, 0, 0, 0, job->callbackUser);
 done:
     return;
 }
 
 void synthRefreshJobVolumes(void)
 {
-    u8 *job;
+    SynthJob *job;
     u32 i;
     f32 volumeScale;
 
@@ -96,22 +95,22 @@ void synthRefreshJobVolumes(void)
     volumeScale = lbl_803E77D8;
     job = synthJobTable;
     for (i = 0; i < lbl_803BD150[0x210]; i++) {
-        if (job[8] != 0) {
-            job[0x56] = job[0x5a];
-            job[0x57] = job[0x5b];
+        if (job->state != 0) {
+            job->pan = job->savedPan;
+            job->surroundPan = job->savedSurroundPan;
             if ((synthFlags & 1) != 0) {
-                job[0x56] = 0x40;
-                job[0x57] = 0;
+                job->pan = 0x40;
+                job->surroundPan = 0;
             } else if ((synthFlags & 2) == 0) {
-                job[0x57] = 0;
+                job->surroundPan = 0;
             }
-            if (job[8] != 3) {
-                hwSetVolume(*(u32 *)(job + 0x48), 0, volumeScale * job[0x55],
-                            volumeScale * job[0x58], volumeScale * job[0x59],
-                            job[0x56] << 0x10, job[0x57] << 0x10);
+            if (job->state != 3) {
+                hwSetVolume(job->voice, 0, volumeScale * job->volume,
+                            volumeScale * job->leftVolume, volumeScale * job->rightVolume,
+                            job->pan << 0x10, job->surroundPan << 0x10);
             }
         }
-        job += 0x64;
+        job++;
     }
     sndEnd();
 }
