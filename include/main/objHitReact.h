@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 
 typedef struct ObjHitReactEntry ObjHitReactEntry;
+typedef struct ObjAnimBank ObjAnimBank;
 typedef struct ObjAnimComponent ObjAnimComponent;
 
 typedef struct ObjHitReactEffectPos {
@@ -86,6 +87,12 @@ struct ObjHitReactEntry {
 int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEntryCount,
                        u32 reactionState,float *reactionStepScale);
 void ObjHitReact_ResetActiveObjects(int objectCount);
+void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
+                                 ObjHitReactState *hitState,int moveId,int async);
+uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitState,
+                           uint entryArena,int objAnim);
+void ObjHitReact_UpdateResetObjects(void);
+int *ObjHitReact_GetResetObjects(int *outObjectCount);
 
 #define objHitReactFn_80089890 objHitReact_update
 

@@ -8,8 +8,6 @@ extern undefined4 FUN_800723a0();
 extern void ObjAnim_LoadCachedMove(int animId,int moveIndex,u8 *cache,ObjAnimDef *animDef);
 extern void ObjAnim_LoadMoveEvents(int objAnim,int objType,ObjAnimEventTable *eventTable,u32 moveId,
                                    int async);
-extern void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
-                                        ObjHitReactState *hitState,u32 moveId,int async);
 
 extern char gObjAnimSetBlendMoveMissingAnimWarning[];
 extern f64 gObjAnimU32ToDoubleBias;

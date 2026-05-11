@@ -1464,9 +1464,9 @@ void ObjHits_ResetWorkBuffers(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int *ObjHitReact_GetResetObjects(undefined4 *param_1)
+int *ObjHitReact_GetResetObjects(int *outObjectCount)
 {
-  *param_1 = gObjHitsResetObjectCount;
+  *outObjectCount = gObjHitsResetObjectCount;
   return gObjHitsResetObjects;
 }
 

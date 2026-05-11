@@ -2,16 +2,12 @@
 #define MAIN_OBJLIB_H_
 
 #include "ghidra_import.h"
+#include "main/objHitReact.h"
 
 typedef struct ObjAnimBank ObjAnimBank;
-typedef struct ObjHitReactState ObjHitReactState;
 typedef void (*ObjContactCallback)(int objA,int objB);
 
 int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2);
-void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
-                                 ObjHitReactState *hitState,int moveId,int async);
-uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitState,
-                           uint entryArena,int objAnim);
 void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3);
 void ObjHits_SetTargetMask(int param_1,undefined param_2);
 void ObjHitbox_SetSphereRadius(int param_1,undefined2 param_2);
@@ -39,9 +35,7 @@ void ObjHits_AddContactObject(int param_1,int param_2);
 int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *outSphereIndex,
                 uint *outHitVolume,float *outHitPosX,float *outHitPosY,float *outHitPosZ);
 int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,uint *outHitVolume);
-void ObjHitReact_UpdateResetObjects(void);
 void ObjHits_ResetWorkBuffers(void);
-int *ObjHitReact_GetResetObjects(undefined4 *param_1);
 void ObjHits_InitWorkBuffers(void);
 uint ObjGroup_ContainsObject(uint obj,int group);
 int ObjGroup_FindNearestObjectToPoint(int group,float *point,float *maxDistance);
