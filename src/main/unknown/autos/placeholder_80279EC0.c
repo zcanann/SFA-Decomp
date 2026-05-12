@@ -232,7 +232,7 @@ void voiceKill(u32 voice)
     if (*(u32 *)(base + SYNTH_VOICE_ACTIVE_HANDLE_OFFSET) != 0) {
         vidRemoveVoice(base);
         *(u32 *)(base + SYNTH_VOICE_STATE_FLAGS_OFFSET) =
-            *(u32 *)(base + SYNTH_VOICE_STATE_FLAGS_OFFSET) & ~3;
+            *(u32 *)(base + SYNTH_VOICE_STATE_FLAGS_OFFSET) & 0xFFFFFFFC;
         *(u32 *)(base + 0x114) = *(u32 *)(base + 0x114) & ~0;
         *(u32 *)(base + SYNTH_VOICE_PRIORITY_TICK_OFFSET) = 0;
         voiceFree(base);
@@ -252,40 +252,35 @@ void voiceKill(u32 voice)
 int voiceKillById(u32 id)
 {
     int result = -1;
-    u32 next;
-    if (gSynthInitialized == 0) return result;
-
-    if (id == SYNTH_INVALID_VOICE) {
-        next = SYNTH_INVALID_VOICE;
-    } else {
-        u32 s = get_vidlist(id);
-        if (s == 0) {
-            next = SYNTH_INVALID_VOICE;
+    if (gSynthInitialized != 0) {
+        u32 s;
+        if ((id != SYNTH_INVALID_VOICE) && ((s = get_vidlist(id)) != 0)) {
+            id = *(u32 *)(s + 0xc);
         } else {
-            next = *(u32 *)(s + 0xc);
+            id = SYNTH_INVALID_VOICE;
         }
-    }
 
-    while (next != SYNTH_INVALID_VOICE) {
-        u8 v = (u8)next;
-        int handle = (int)(synthVoice + v * SYNTH_VOICE_STRIDE);
-        u32 chain = *(u32 *)(handle + SYNTH_VOICE_NEXT_HANDLE_OFFSET);
-        if (next == *(u32 *)(handle + SYNTH_VOICE_HANDLE_OFFSET)) {
-            if (*(u32 *)(handle + SYNTH_VOICE_ACTIVE_HANDLE_OFFSET) != 0) {
-                vidRemoveVoice(handle);
-                *(u32 *)(handle + SYNTH_VOICE_STATE_FLAGS_OFFSET) =
-                    *(u32 *)(handle + SYNTH_VOICE_STATE_FLAGS_OFFSET) & ~3;
-                *(u32 *)(handle + 0x114) = *(u32 *)(handle + 0x114) & ~0;
-                *(u32 *)(handle + SYNTH_VOICE_PRIORITY_TICK_OFFSET) = 0;
-                voiceFree(handle);
+        while (id != SYNTH_INVALID_VOICE) {
+            u8 v = (u8)id;
+            int handle = (int)(synthVoice + v * SYNTH_VOICE_STRIDE);
+            u32 chain = *(u32 *)(handle + SYNTH_VOICE_NEXT_HANDLE_OFFSET);
+            if (id == *(u32 *)(handle + SYNTH_VOICE_HANDLE_OFFSET)) {
+                if (*(u32 *)(handle + SYNTH_VOICE_ACTIVE_HANDLE_OFFSET) != 0) {
+                    vidRemoveVoice(handle);
+                    *(u32 *)(handle + SYNTH_VOICE_STATE_FLAGS_OFFSET) =
+                        *(u32 *)(handle + SYNTH_VOICE_STATE_FLAGS_OFFSET) & 0xFFFFFFFC;
+                    *(u32 *)(handle + 0x114) = *(u32 *)(handle + 0x114) & ~0;
+                    *(u32 *)(handle + SYNTH_VOICE_PRIORITY_TICK_OFFSET) = 0;
+                    voiceFree(handle);
+                }
+                if (*(u8 *)(handle + SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET) != 0) {
+                    synthCancelJob(v);
+                }
+                hwBreak(v);
+                result = 0;
             }
-            if (*(u8 *)(handle + SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET) != 0) {
-                synthCancelJob(v);
-            }
-            hwBreak(v);
-            result = 0;
+            id = chain;
         }
-        next = chain;
     }
 
     return result;
