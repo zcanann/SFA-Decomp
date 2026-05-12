@@ -4350,6 +4350,35 @@ void UIController_render(void *p, int a, int b) {
 #pragma scheduling on
 #pragma peephole on
 
+/* player_SetState */
+#pragma peephole off
+#pragma scheduling off
+void player_SetState(void *ctx, void *p, int new_state) {
+    void *q;
+    if (*(s16 *)((char *)p + 0x274) == new_state) goto end;
+    *(s16 *)((char *)p + 0x276) = *(s16 *)((char *)p + 0x274);
+    *(s16 *)((char *)p + 0x274) = (s16)new_state;
+    {
+        void (*fn)(void) = *(void (**)(void))((char *)p + 0x304);
+        if (fn != 0) {
+            fn();
+            *(void **)((char *)p + 0x304) = 0;
+        }
+    }
+    *(void **)((char *)p + 0x304) = *(void **)((char *)p + 0x308);
+end:
+    *(s16 *)((char *)p + 0x338) = 0;
+    *(u8 *)((char *)p + 0x27a) = 1;
+    *(u8 *)((char *)p + 0x34d) = 0;
+    *(u8 *)((char *)p + 0x34c) = 0;
+    *(u8 *)((char *)p + 0x356) = 0;
+    *(s16 *)((char *)p + 0x278) = 0;
+    q = *(void **)((char *)ctx + 0x54);
+    if (q != 0) *(u8 *)((char *)q + 0x70) = 0;
+}
+#pragma scheduling on
+#pragma peephole on
+
 /* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
 void fn_800D9EE8(float *p) {
     u32 *a = (u32 *)((char *)p + 0x9c);
