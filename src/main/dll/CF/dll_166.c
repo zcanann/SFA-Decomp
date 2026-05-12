@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/CF/dll_166.h"
 
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern undefined4 FUN_800305c4();
 extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjGroup_AddObject();
@@ -101,13 +101,13 @@ LAB_8018ab40:
     *(byte *)((int)pfVar3 + 0x1d) = *(byte *)((int)pfVar3 + 0x1d) & 0x7f | 0x80;
   }
   else {
-    uVar1 = FUN_80017690((int)*(short *)(param_2 + 0x22));
+    uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x22));
     *(byte *)((int)pfVar3 + 0x1d) =
          (byte)((uVar1 & 0xff) << 7) | *(byte *)((int)pfVar3 + 0x1d) & 0x7f;
   }
   *(byte *)((int)pfVar3 + 0x1d) = *(byte *)((int)pfVar3 + 0x1d) & 0xef;
   if (0 < *(short *)(param_2 + 0x24)) {
-    uVar1 = FUN_80017690((int)*(short *)(param_2 + 0x24));
+    uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x24));
     *(byte *)((int)pfVar3 + 0x1d) = (byte)((uVar1 & 1) << 6) | *(byte *)((int)pfVar3 + 0x1d) & 0xbf;
     if ((uVar1 & 1) != 0) {
       bVar2 = *(byte *)(param_2 + 0x1c);
