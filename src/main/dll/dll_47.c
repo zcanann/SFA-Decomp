@@ -89,6 +89,8 @@ extern undefined4* PTR_DAT_8031b43c;
 extern char s__savegame_save_d_bin_8031b4b4[];
 extern void mm_free(void *p);
 extern void *lbl_803A8658[10];
+extern void *lbl_803DD6A8;
+extern void *lbl_803DD6B0;
 
 /*
  * --INFO--
@@ -860,7 +862,39 @@ void fn_8011B354(void) {
 /* Stubs for as-yet-unmatched functions. */
 void fn_8011A0DC(void) {}
 void fn_8011A280(void) {}
-void fn_8011A410(void) {}
+/*
+ * --INFO--
+ *
+ * Function: fn_8011A410
+ * EN v1.0 Address: 0x8011A410
+ * EN v1.0 Size: 216b
+ */
+#pragma scheduling off
+void fn_8011A410(void **p) {
+    int i = 0;
+    int off1 = 0;
+    int off2 = 0;
+    char *base;
+    while (i < (int)*(u8 *)((char *)p + 0x4)) {
+        base = (char *)lbl_803DD6A8;
+        lbl_803DD6B0 = base;
+        if (*(u8 *)(base + off1 + 0x20) == 0) {
+            *(u16 *)((char *)*p + off2) = 0x39d;
+            *(u16 *)((char *)*p + off2 + 0x16) = (u16)(*(u16 *)((char *)*p + off2 + 0x16) & ~0x1);
+            *(u16 *)((char *)*p + off2 + 0x16) = (u16)(*(u16 *)((char *)*p + off2 + 0x16) | 0x2);
+            *(int *)((char *)*p + off2 + 0x10) = -1;
+        } else {
+            *(u16 *)((char *)*p + off2) = (u16)i;
+            *(u16 *)((char *)*p + off2 + 0x16) = (u16)(*(u16 *)((char *)*p + off2 + 0x16) & ~0x4);
+            *(u16 *)((char *)*p + off2 + 0x16) = (u16)(*(u16 *)((char *)*p + off2 + 0x16) | 0x1);
+            *(int *)((char *)*p + off2 + 0x10) = -1;
+        }
+        off1 += 0x24;
+        off2 += 0x3c;
+        i++;
+    }
+}
+#pragma scheduling reset
 void fn_8011A4E8(void) {}
 void fn_8011A70C(void) {}
 void saveSelectGoToChooseSlot(void) {}
