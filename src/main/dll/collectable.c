@@ -1987,3 +1987,78 @@ u8 Tricky_func0E(int *obj) { return *((u8*)((int**)obj)[0xb8/4][0x0/4] + 0x1); }
 u8 Tricky_render2(int *obj) { return *((u8*)((int**)obj)[0xb8/4][0x0/4] + 0x0); }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* fn_80145AD0: 24b - signed-byte load and store, return 1. */
+#pragma peephole off
+#pragma scheduling off
+int fn_80145AD0(int *obj, int *out) {
+    *out = *((s8*)obj[0xb8/4] + 0xd);
+    return 1;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern u32 GameBit_Get(int bit);
+
+/* fn_80145794: 72b - if GameBit_Get(0x4e4), OR 0x10000 into obj->_b8->_54. */
+void fn_80145794(int *obj) {
+    int *p = (int*)obj[0xb8/4];
+    if (GameBit_Get(0x4e4)) {
+        p[0x54/4] |= 0x10000;
+    }
+}
+
+/* fn_801457DC: 40b - lbz/cmplwi(8/0xe) selector returning 1 or 0. */
+#pragma peephole off
+#pragma scheduling off
+int fn_801457DC(int *obj) {
+    u8 v = *((u8*)obj[0xb8/4] + 8);
+    if (v == 8 || v == 0xe) return 1;
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/* fn_80145804: 36b - cmpwi(5) selector returning 1 or 0. */
+#pragma peephole off
+#pragma scheduling off
+#pragma optimize_for_size off
+int fn_80145804(int *obj) {
+    u8 v;
+    int r;
+    v = *((u8*)obj[0xb8/4] + 8);
+    switch (v) {
+    case 5:
+        r = 1;
+        break;
+    default:
+        r = 0;
+        break;
+    }
+    return r;
+}
+#pragma optimize_for_size reset
+#pragma scheduling reset
+#pragma peephole reset
+
+/* fn_80146158: 124b - GameBit_Get cascade returning flag bits. */
+#pragma peephole off
+#pragma scheduling off
+int fn_80146158(void) {
+    int r = 0;
+    if (GameBit_Get(0x4e4) != 0) {
+        r = 0xa;
+        if (GameBit_Get(0xdd) != 0) r |= 0x1;
+        if (GameBit_Get(0x25) != 0) r |= 0x20;
+        if (GameBit_Get(0x245) != 0) r |= 0x10;
+    }
+    return r;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/* trickyReportError: 80b - varargs OSReport-style stub. */
+void trickyReportError(const char *fmt, ...) { }
+
+/* trickyDebugPrint: 80b - varargs OSReport-style stub. */
+void trickyDebugPrint(const char *fmt, ...) { }
