@@ -217,7 +217,7 @@ resolved_reuse:
 
         if (noLock != 0) {
             fn_8026D524();
-            synthUpdateHandle(request->auxIndex, request->linkedFadeTime, request->linkedHandle, 0);
+            synthUpdateHandle(request->volume, request->linkedFadeTime, request->linkedHandle, 0);
             if ((request->flags & SYNTH_START_FLAG_MUTE) != 0) {
                 mixValue1 = request->mixValue1;
                 mixValue0 = request->mixValue0;
@@ -260,7 +260,7 @@ resolved_reuse:
             }
         } else {
             sndSeqContinue();
-            sndSeqVolume(request->auxIndex, request->linkedFadeTime, request->linkedHandle, 0);
+            sndSeqVolume(request->volume, request->linkedFadeTime, request->linkedHandle, 0);
             if ((request->flags & SYNTH_START_FLAG_MUTE) != 0) {
                 sndSeqMute(request->linkedHandle, request->mixValue0, request->mixValue1);
             }
@@ -286,11 +286,11 @@ resolved_reuse:
         params.muteTime = request->mixValue1;
     }
     params.volumeTime = request->linkedFadeTime;
-    params.volume = request->auxIndex;
+    params.volume = request->volume;
     params.active = 0;
 
     if (noLock != 0) {
-        newHandle = fn_8027B89C(request->key, request->velocity, request->sampleId, &params, 1, request->pad19[0]);
+        newHandle = fn_8027B89C(request->key, request->velocity, request->sampleId, &params, 1, request->startStudio);
         *outHandle = newHandle;
         if ((newHandle != 0xFFFFFFFF) && ((request->flags & SYNTH_START_FLAG_CLEAR_MUTE) != 0)) {
             newHandle = synthResolveHandle(*outHandle);
@@ -306,7 +306,7 @@ resolved_reuse:
             }
         }
     } else {
-        newHandle = fn_8027B9DC(request->key, request->velocity, request->sampleId, &params, request->pad19[0]);
+        newHandle = fn_8027B9DC(request->key, request->velocity, request->sampleId, &params, request->startStudio);
         *outHandle = newHandle;
         if ((newHandle != 0xFFFFFFFF) && ((request->flags & SYNTH_START_FLAG_CLEAR_MUTE) != 0)) {
             sndSeqMute(*outHandle, 0, 0);

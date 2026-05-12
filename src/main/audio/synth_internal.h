@@ -191,8 +191,9 @@ typedef struct SynthStartRequest {
     u32 sampleId;
     u16 key;
     u16 velocity;
-    u8 auxIndex;
-    u8 pad19[3];
+    u8 volume;
+    u8 startStudio;
+    u8 pad1A[2];
     u32 mixValue0;
     u32 mixValue1;
     u16 value16;
