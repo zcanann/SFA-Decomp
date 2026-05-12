@@ -103,6 +103,7 @@ extern undefined4 lbl_803AC9DC[];
 extern undefined4 lbl_802C2338[];
 extern undefined4 lbl_803AD018[];
 extern int lbl_803DCA8C;
+extern undefined4* lbl_803DCA54;
 extern undefined4* lbl_803DCAB8;
 extern undefined4 lbl_803DDB88;
 extern u8 lbl_803DDB84;
@@ -583,12 +584,12 @@ void dimboss_update2(DIMbossObject *obj)
       obj->posX = config->spawnX;
       obj->posY = config->spawnY;
       obj->posZ = config->spawnZ;
-      (**(code **)(*DAT_803dd6d4 + 0x48))((int)config->animObjId,obj,0xffffffff);
+      (**(code **)(*lbl_803DCA54 + 0x48))((int)config->animObjId,obj,0xffffffff);
       obj->updateInitialized = 1;
     }
     else {
       if ((runtime->stateFlags & 2) != 0) {
-        (**(code **)(*DAT_803dd738 + 0x28))
+        (**(code **)(*lbl_803DCAB8 + 0x28))
                   (obj,runtime,runtime->moveScratch,(int)runtime->activeMoveId,
                    &runtime->hitReactMode,0,0,0,1);
         runtime->stateFlags &= ~2;
