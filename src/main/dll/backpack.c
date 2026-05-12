@@ -13,8 +13,18 @@ extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 
 extern void* lbl_803DCAB8;
 extern void* lbl_803DCA8C;
+extern void* lbl_803DCAA8;
 extern void* pDll_expgfx;
 extern f32 lbl_803E2FC8;
+extern f32 lbl_803E2FCC;
+extern f32 lbl_803E2FD0;
+extern f32 lbl_803E2FB4;
+extern u8 lbl_803DBD40[8];
+extern u8 lbl_80320288[0xc];
+
+extern u32 randomGetRange(int min, int max);
+extern void ObjGroup_AddObject(int obj, int group);
+extern void ObjMsg_AllocQueue(int obj, int capacity);
 
 /*
  * --INFO--
@@ -38,6 +48,45 @@ void tumbleweed_update(int obj) {
 
 /* 8b "li r3, N; blr" returners. */
 int fn_801650D0(void) { return 0x0; }
+
+/*
+ * --INFO--
+ *
+ * Function: tumbleweed_init
+ * EN v1.0 Address: 0x80164F2C
+ * EN v1.0 Size: 420b
+ */
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void tumbleweed_init(int obj, int defData) {
+    int aux = *(int*)(obj + 0xb8);
+    u32 rnd;
+
+    *(f32*)(aux + 0x288) = *(f32*)(obj + 0xc);
+    *(f32*)(aux + 0x28c) = *(f32*)(obj + 0x14);
+    *(s16*)(aux + 0x26a) = (short)(lbl_803E2FCC * *(f32*)(defData + 0x1c));
+    *(u8*)(aux + 0x279) = *(u8*)(defData + 0x1b);
+    *(f32*)(aux + 0x26c) = *(f32*)(obj + 0x8);
+    rnd = randomGetRange(0xc8, 0x1f4);
+    *(f32*)(aux + 0x270) = *(f32*)(aux + 0x26c) / (f32)(s32)rnd;
+    *(u32*)(aux + 0x284) = 0;
+    *(f32*)(obj + 0x8) = lbl_803E2FD0;
+    (*(int(**)(int, int, int, int))(*(int*)lbl_803DCAA8 + 0x4))(aux, 0, 0x40000, 1);
+    (*(int(**)(int, int, void*, void*, int))(*(int*)lbl_803DCAA8 + 0x8))(aux, 1, lbl_80320288, lbl_803DBD40, 8);
+    (*(int(**)(int, int))(*(int*)lbl_803DCAA8 + 0x20))(obj, aux);
+    *(u8*)(aux + 0x278) = 0;
+    rnd = randomGetRange(-0x12c, 0x12c);
+    *(f32*)(aux + 0x2a0) = lbl_803E2FB4 + (f32)(s32)rnd;
+    ObjGroup_AddObject(obj, 3);
+    ObjGroup_AddObject(obj, 0x31);
+    ObjHits_DisableObject(obj);
+    ObjMsg_AllocQueue(obj, 1);
+    if (*(s16*)(obj + 0x46) == 0x4ba) {
+        *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 0x10);
+    }
+}
+#pragma pop
 
 /*
  * --INFO--
