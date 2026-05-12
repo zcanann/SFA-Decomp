@@ -12,8 +12,8 @@ extern int FUN_80006b7c();
 extern undefined4 FUN_80006bb4();
 extern uint FUN_80006c00();
 extern undefined4 FUN_80006c88();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern int FUN_800176d0();
 extern uint FUN_80017730();
 extern uint FUN_80017760();
@@ -111,14 +111,14 @@ undefined4 FUN_801e76a0(int param_1)
   int iVar3;
   
   iVar3 = *(int *)(param_1 + 0xb8);
-  uVar1 = FUN_80017690(0xcef);
+  uVar1 = GameBit_Get(0xcef);
   if (uVar1 == 0) {
     uVar2 = 0;
   }
   else {
-    uVar1 = FUN_80017690(0xad3);
+    uVar1 = GameBit_Get(0xad3);
     if (uVar1 == 0) {
-      FUN_80017698(0xad3,1);
+      GameBit_Set(0xad3,1);
       iVar3 = *(int *)(iVar3 + 0x9b4);
       (**(code **)(**(int **)(iVar3 + 0x68) + 0x24))(iVar3,1,2);
     }
@@ -302,7 +302,7 @@ void FUN_801e7b2c(int param_1)
     FUN_80006b54(0x11,0x1e);
     FUN_80006b50();
     FUN_8011eb38(1);
-    FUN_80017698(0x626,1);
+    GameBit_Set(0x626,1);
     (**(code **)(**(int **)(*(int *)(iVar1 + 0x9b4) + 0x68) + 0x4c))
               (*(int *)(iVar1 + 0x9b4),*(undefined *)(iVar1 + 0x9d5));
     (**(code **)(*DAT_803dd6f4 + 4))(0,0xf5,0,0,0);

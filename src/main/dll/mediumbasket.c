@@ -6,7 +6,7 @@ extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006920();
 extern undefined4 FUN_800069bc();
 extern undefined4 FUN_80006a54();
-extern undefined4 FUN_80017698();
+extern undefined4 GameBit_Set(int eventId, int value);
 extern uint FUN_80017760();
 extern undefined4 FUN_80017778();
 extern undefined4 FUN_80017964();
@@ -632,8 +632,8 @@ undefined4 FUN_8015bbc8(int param_1,int param_2)
   if (*(char *)(param_2 + 0x27b) != '\0') {
     iVar1 = *(int *)(param_1 + 0xb8);
     *(undefined *)(iVar1 + 0x405) = 0;
-    FUN_80017698((int)*(short *)(iVar1 + 0x3f4),0);
-    FUN_80017698((int)*(short *)(iVar1 + 0x3f2),1);
+    GameBit_Set((int)*(short *)(iVar1 + 0x3f4),0);
+    GameBit_Set((int)*(short *)(iVar1 + 0x3f2),1);
   }
   return 0;
 }
@@ -1365,7 +1365,7 @@ FUN_8015d324(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     *(float *)(param_10 + 0x280) = lbl_803E39AC;
   }
   if (*(char *)(param_10 + 0x346) != '\0') {
-    FUN_80017698((int)*(short *)(iVar1 + 0x3f4),0);
+    GameBit_Set((int)*(short *)(iVar1 + 0x3f4),0);
     FUN_800305f8((double)lbl_803E39AC,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  param_9,8,0,param_12,param_13,param_14,param_15,param_16);
     *(undefined4 *)(param_10 + 0x2d0) = 0;
@@ -1409,7 +1409,7 @@ FUN_8015d518(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     *(undefined *)(param_10 + 0x346) = 0;
   }
   if (*(char *)(param_10 + 0x27a) != '\0') {
-    FUN_80017698((int)*(short *)(iVar2 + 0x3f4),1);
+    GameBit_Set((int)*(short *)(iVar2 + 0x3f4),1);
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) & 0xf7;
     *(undefined *)(param_9 + 0x36) = 0xff;
     *(undefined *)(param_10 + 0x34d) = 1;
@@ -1468,7 +1468,7 @@ FUN_8015d6ec(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     *(undefined *)(param_10 + 0x346) = 0;
   }
   if (*(char *)(param_10 + 0x27a) != '\0') {
-    FUN_80017698((int)*(short *)(iVar2 + 0x3f4),1);
+    GameBit_Set((int)*(short *)(iVar2 + 0x3f4),1);
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) & 0xf7;
     *(undefined *)(param_9 + 0x36) = 0xff;
     *(undefined *)(param_10 + 0x34d) = 1;

@@ -4,7 +4,7 @@
 extern undefined4 FUN_800067c0();
 extern undefined4 FUN_800175cc();
 extern undefined4 FUN_80017620();
-extern undefined4 FUN_80017698();
+extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017710();
 extern uint FUN_80017730();
 extern int FUN_80017a98();
@@ -161,8 +161,8 @@ void FUN_801c61f4(undefined4 param_1,undefined4 param_2,int param_3)
         break;
       case '\a':
         FUN_80294ccc(iVar3,8,1);
-        FUN_80017698(0x143,1);
-        FUN_80017698(0xba8,1);
+        GameBit_Set(0x143,1);
+        GameBit_Set(0xba8,1);
         break;
       case '\r':
         (**(code **)(*DAT_803dd6d4 + 0x50))(0x48,100,0,0x50);
@@ -268,9 +268,9 @@ void FUN_801c6358(int param_1)
     *puVar2 = 0;
   }
   ObjGroup_RemoveObject(param_1,0xb);
-  FUN_80017698(0xefa,0);
-  FUN_80017698(0xcbb,1);
-  FUN_80017698(0xa7f,1);
+  GameBit_Set(0xefa,0);
+  GameBit_Set(0xcbb,1);
+  GameBit_Set(0xa7f,1);
   return;
 }
 
