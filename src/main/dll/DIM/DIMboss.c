@@ -162,7 +162,7 @@ void DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateStat
   iVar12 = (int)config;
   Obj_GetPlayerObject();
   iVar11 = (int)topState;
-  runtime->phase = 0;
+  runtime->phase = DIMBOSS_PHASE_START;
   (*(code *)(*lbl_803DCAAC + 0x50))(0x1c,5,0);
   if (obj->renderPause == 0) {
     puVar7 = lbl_803AC9DC;
@@ -197,7 +197,7 @@ void DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateStat
         break;
       case 8:
         iVar11 = (int)topState;
-        topState->steamSfxPending |= 0x80;
+        topState->steamSfxPending |= DIMBOSS_STEAM_SFX_PENDING_FLAG;
         Music_Trigger(0xee,0);
         break;
       case 9:
@@ -221,7 +221,7 @@ void DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateStat
       case 0x10:
         lbl_803DDB80 = lbl_803DDB80 | 0x8021;
         break;
-      case 0x11:
+      case DIMBOSS_EVENT_TRIGGER_DEFEAT_FLAGS:
         *(undefined4 *)(iVar11 + 0xb0) = 10;
         GameBit_Set(0x123,1);
         GameBit_Set(0x17,1);
@@ -229,14 +229,14 @@ void DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateStat
         Music_Trigger(0x36,0);
         Music_Trigger(0xee,0);
         break;
-      case 0x12:
-        (*(code *)(*DAT_803dd6d4 + 0x50))(0x49,4,puVar3,0x3c);
+      case DIMBOSS_EVENT_SPAWN_DIMBOSS_OBJECT:
+        (*(code *)(*DAT_803dd6d4 + 0x50))(DIMBOSS_OBJECT_TYPE_ID,4,puVar3,0x3c);
         break;
-      case 0x13:
-        (*(code *)(*lbl_803DCAAC + 0x50))(0x1c,2,1);
+      case DIMBOSS_EVENT_ENABLE_DIMBOSS_MAP_AREA:
+        (*(code *)(*lbl_803DCAAC + 0x50))(DIMBOSS_MAP_DIR,2,1);
         break;
-      case 0x14:
-        (*(code *)(*lbl_803DCAAC + 0x50))(0x1c,2,0);
+      case DIMBOSS_EVENT_DISABLE_DIMBOSS_MAP_AREA:
+        (*(code *)(*lbl_803DCAAC + 0x50))(DIMBOSS_MAP_DIR,2,0);
         break;
       case DIMBOSS_EVENT_FREE_DIMBOSS_ASSETS:
         OSReport(sDIMBossFreeingAssetsForDIMBoss);
@@ -300,10 +300,10 @@ void DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateStat
         }
         clearLoadedFileFlags_blocks1();
         break;
-      case 0x17:
+      case DIMBOSS_EVENT_SET_SEQUENCE_FLAG:
         lbl_803DDB80 = lbl_803DDB80 | 0x80000;
         break;
-      case 0x18:
+      case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG:
         lbl_803DDB80 = lbl_803DDB80 & 0xfff7ffff;
       }
     }
@@ -506,7 +506,7 @@ void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
   if (obj->renderPause != 0) {
     return;
   }
-  if (runtime->phase == 3) {
+  if (runtime->phase == DIMBOSS_PHASE_NO_RENDER) {
     return;
   }
   objRenderFn_8003b8f4((double)lbl_803E4C44);
@@ -597,20 +597,20 @@ void dimboss_update2(DIMbossObject *obj)
         obj->objectFlags |= 0x80;
         gameBitCount = GameBit_Get(0x20c);
         if (gameBitCount >= 3) {
-          runtime->phase = 2;
+          runtime->phase = DIMBOSS_PHASE_GAMEBIT_COUNT_MET;
           runtime->animMode = 3;
           obj->objectFlags &= ~8;
           GameBit_Set(0x9e,0);
         }
         else {
-          runtime->phase = 1;
+          runtime->phase = DIMBOSS_PHASE_LAUNCH_LIFT;
           runtime->animMode = 3;
           obj->objectFlags &= ~8;
           topState->launchLift = lbl_803E4C44;
           GameBit_Set(0x9e,1);
         }
       }
-      if ((runtime->phase == 0) || (runtime->phase == 3)) {
+      if ((runtime->phase == DIMBOSS_PHASE_START) || (runtime->phase == DIMBOSS_PHASE_NO_RENDER)) {
         if ((topState->stompDustDelay != 0) &&
             (--topState->stompDustDelay == 0)) {
           Obj_BuildWorldTransformMatrix(obj,lbl_803AC9AC,0);
@@ -618,13 +618,13 @@ void dimboss_update2(DIMbossObject *obj)
           ObjModel_EnableDefaultRenderCallback
                     ((double)(obj->modelScale * obj->baseScale),obj,targetModel,lbl_803AC9AC,1);
         }
-        if ((topState->steamSfxPending & 0x80) != 0) {
+        if ((topState->steamSfxPending & DIMBOSS_STEAM_SFX_PENDING_FLAG) != 0) {
           getEnvfxAct(0,0,0xdb,0);
           getEnvfxAct(0,0,0xdc,0);
           FUN_80080f80(7,1,0);
           FUN_80080f70((double)lbl_803E4C4C,(double)lbl_803E4C50,(double)lbl_803E4C54,7);
           FUN_80080f7c(7,0xa0,0xa0,0xff,0x7f,0x28);
-          topState->steamSfxPending &= ~0x80;
+          topState->steamSfxPending &= ~DIMBOSS_STEAM_SFX_PENDING_FLAG;
         }
       }
       else {
@@ -697,17 +697,17 @@ void DIMboss_update(DIMbossObject *obj,undefined4 param_2,int param_3)
   ((DIMbossAnimSetupFn)(*(code *)(*lbl_803DCAB8 + 0x58)))
       (obj,param_2,runtime,0xc,6,0x102,animFlags,lbl_803E4C28);
   obj->updateState = DIMboss_updateState;
-  runtime->phase = 0;
+  runtime->phase = DIMBOSS_PHASE_START;
   (*(code *)(*(int *)lbl_803DCA8C + 0x14))(obj,runtime,0);
   runtime->field270 = 0;
   runtime->animMode = 3;
   obj->objectFlags |= 0x88;
   if (GameBit_Get(0x210) != 0) {
-    runtime->phase = 4;
+    runtime->phase = DIMBOSS_PHASE_RENDER_PAUSE;
     obj->renderPause = 1;
   }
   if (GameBit_Get(0x20e) != 0) {
-    runtime->phase = 3;
+    runtime->phase = DIMBOSS_PHASE_NO_RENDER;
   }
   topState = runtime->topState;
   liftHeight = lbl_803E4BD8;
@@ -723,7 +723,7 @@ void DIMboss_update(DIMbossObject *obj,undefined4 param_2,int param_3)
   animFlagsByte = (u8 *)((int)lbl_803AC9DC + 0x611);
   *animFlagsByte |= 8;
   *animFlagsByte &= 0xfe;
-  topState->steamSfxPending = (topState->steamSfxPending & 0x7f) | 0x80;
+  topState->steamSfxPending = (topState->steamSfxPending & 0x7f) | DIMBOSS_STEAM_SFX_PENDING_FLAG;
   lbl_803DDB88 = (undefined4)Resource_Acquire(0x5a,1);
   if (GameBit_Get(0x1df) == 0) {
     topState->stompDustDelay = 2;
