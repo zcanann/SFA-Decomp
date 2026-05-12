@@ -4317,7 +4317,56 @@ void fn_800D9D3C(int unused, void *obj, int a, int b) {
 #pragma peephole on
 #pragma scheduling on
 
-/* fn_800DA928: clamp + curveFn call — 99% match, f1/f2 reg alloc diff */
+/* fn_800D9F38 — large init updating multiple float fields based on b's bytes */
+extern float fn_80293E80(double angle);
+extern float sin(double x);
+extern f32 lbl_803E05D0;
+extern f32 lbl_803E05D4;
+extern f32 lbl_803E05D8;
+#pragma peephole off
+#pragma scheduling off
+int fn_800D9F38(void *a, void *b) {
+    char *A = (char *)a;
+    char *B = (char *)b;
+    if (*(u32 *)(A + 0xa0) == 0 || *(u32 *)(A + 0xa4) == 0 || b == 0) return 1;
+    *(void **)(A + 0xa4) = b;
+    if (*(int *)(A + 0x80) != 0) {
+        /* branch1 */
+        f32 t;
+        *(f32 *)(A + 0xa8) = *(f32 *)(B + 0x8);
+        t = (float)(u32)*(u8 *)(B + 0x2e) *
+            fn_80293E80(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2c)) << 8) / lbl_803E05D8);
+        *(f32 *)(A + 0xb0) = lbl_803E05D0 * t;
+        *(f32 *)(A + 0xc8) = *(f32 *)(B + 0xc);
+        t = (float)(u32)*(u8 *)(B + 0x2e) *
+            fn_80293E80(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2d)) << 8) / lbl_803E05D8);
+        *(f32 *)(A + 0xd0) = lbl_803E05D0 * t;
+        *(f32 *)(A + 0xe8) = *(f32 *)(B + 0x10);
+        t = (float)(u32)*(u8 *)(B + 0x2e) *
+            sin(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2c)) << 8) / lbl_803E05D8);
+        *(f32 *)(A + 0xf0) = lbl_803E05D0 * t;
+    } else {
+        /* branch2 */
+        f32 t;
+        *(f32 *)(A + 0xbc) = *(f32 *)(B + 0x8);
+        t = (float)(u32)*(u8 *)(B + 0x2e) *
+            fn_80293E80(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2c)) << 8) / lbl_803E05D8);
+        *(f32 *)(A + 0xc4) = lbl_803E05D0 * t;
+        *(f32 *)(A + 0xdc) = *(f32 *)(B + 0xc);
+        t = (float)(u32)*(u8 *)(B + 0x2e) *
+            fn_80293E80(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2d)) << 8) / lbl_803E05D8);
+        *(f32 *)(A + 0xe4) = lbl_803E05D0 * t;
+        *(f32 *)(A + 0xfc) = *(f32 *)(B + 0x10);
+        t = (float)(u32)*(u8 *)(B + 0x2e) *
+            sin(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2c)) << 8) / lbl_803E05D8);
+        *(f32 *)(A + 0x104) = lbl_803E05D0 * t;
+    }
+    return 0;
+}
+#pragma scheduling on
+#pragma peephole on
+
+/* fn_800DA928: clamp + curveFn call — 99% match, f1 vs f2 reg alloc */
 void fn_800DA928(float *p) {
     if (*p <= lbl_803E05F0) {
         *p = lbl_803E05F4;
