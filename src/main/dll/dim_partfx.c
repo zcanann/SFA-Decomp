@@ -2471,6 +2471,7 @@ PartFxItem *fn_800D64EC(s32 target_rank)
 /* Walk a chain via fn_800D5530 lookups starting from o->_0x10. */
 #pragma push
 #pragma scheduling off
+#pragma peephole off
 void fn_800D65B8(PartFxNode *o)
 {
     s32 local_idx;
