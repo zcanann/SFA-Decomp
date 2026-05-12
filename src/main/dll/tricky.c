@@ -1826,7 +1826,7 @@ void fn_8011F3E0(int x) {
 
 /* fn_8011F394: zero out two halfwords */
 extern s16 lbl_803DD874;
-extern s16 lbl_803DD884;
+extern u16 lbl_803DD884;
 #pragma scheduling off
 void fn_8011F394(void) {
     lbl_803DD884 = 0;
@@ -1873,4 +1873,29 @@ void fn_8011F6F8(float v) {
     void *p = lbl_803DD7D0;
     if (p == 0) return;
     *(f32 *)((char *)p + 0x24) = v;
+}
+
+/* fn_8011F3A8: read lbl_DD884; if non-zero, set *out = yButtonItem; return lbl_DD884 */
+extern u16 yButtonItem;
+#pragma peephole off
+u16 fn_8011F3A8(s16 *out) {
+    s32 t;
+    if (lbl_803DD884 != 0) {
+        t = (s16)yButtonItem;
+        *out = (s16)t;
+    }
+    return lbl_803DD884;
+}
+#pragma peephole on
+
+/* fn_8011F70C: set bit 7 of (*p)+0x44 if p non-null — uses bitfield insert (rlwimi) */
+typedef struct {
+    char pad[0x44];
+    u8 bit7 : 1;
+    u8 bits_0to6 : 7;
+} _Obj8011F70C;
+void fn_8011F70C(void) {
+    _Obj8011F70C *p = (_Obj8011F70C *)lbl_803DD7D0;
+    if (p == 0) return;
+    p->bit7 = 1;
 }
