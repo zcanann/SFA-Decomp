@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/DF/DFlantern.h"
 
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern int FUN_80017730();
 extern undefined4 FUN_80017b00();
 extern undefined4 ObjGroup_AddObject();
@@ -269,7 +269,7 @@ undefined4 FUN_801c2e58(int param_1)
     }
   }
   else if (*(char *)((int)psVar4 + 3) == '\0') {
-    uVar1 = FUN_80017690((int)*(short *)(*(int *)(param_1 + 0x4c) + 0x22));
+    uVar1 = GameBit_Get((int)*(short *)(*(int *)(param_1 + 0x4c) + 0x22));
     if (uVar1 != 0) {
       *(undefined *)((int)psVar4 + 3) = 1;
     }

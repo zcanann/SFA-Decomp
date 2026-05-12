@@ -11,8 +11,8 @@ extern undefined4 FUN_800175cc();
 extern undefined4 FUN_800175d0();
 extern undefined4 FUN_80017620();
 extern void* FUN_80017624();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_8001771c();
 extern uint FUN_80017760();
 extern int FUN_80017a98();
@@ -107,8 +107,8 @@ void FUN_801c0564(undefined8 param_1,double param_2,double param_3,undefined8 pa
   
   iVar5 = *(int *)(param_9 + 0x4c);
   uVar1 = FUN_80017ae8();
-  if (((uVar1 & 0xff) != 0) && (uVar1 = FUN_80017690(0x26b), uVar1 != 0)) {
-    FUN_80017698(0x26b,0);
+  if (((uVar1 & 0xff) != 0) && (uVar1 = GameBit_Get(0x26b), uVar1 != 0)) {
+    GameBit_Set(0x26b,0);
     piVar2 = ObjGroup_GetObjects(4,local_28);
     iVar4 = 0;
     if (0 < local_28[0]) {
@@ -196,7 +196,7 @@ undefined4 FUN_801c0828(int param_1)
   int iVar2;
   
   iVar2 = *(int *)(param_1 + 0x4c);
-  uVar1 = FUN_80017690((int)*(short *)(iVar2 + 0x1e));
+  uVar1 = GameBit_Get((int)*(short *)(iVar2 + 0x1e));
   if (uVar1 != 0) {
     (**(code **)(*DAT_803dd708 + 8))(param_1,*(short *)(iVar2 + 0x1a) + 0x4c6,0,2,0xffffffff,0);
     (**(code **)(*DAT_803dd708 + 8))(param_1,0x4c8,0,2,0xffffffff,0);
@@ -242,7 +242,7 @@ void FUN_801c0908(int param_1)
   int iVar2;
   
   iVar2 = *(int *)(param_1 + 0x4c);
-  uVar1 = FUN_80017690((int)*(short *)(iVar2 + 0x1e));
+  uVar1 = GameBit_Get((int)*(short *)(iVar2 + 0x1e));
   if (uVar1 != 0) {
     (**(code **)(*DAT_803dd708 + 8))(param_1,*(short *)(iVar2 + 0x1a) + 0x4c6,0,2,0xffffffff,0);
     (**(code **)(*DAT_803dd708 + 8))(param_1,0x4c8,0,2,0xffffffff,0);
@@ -318,9 +318,9 @@ void FUN_801c0a18(uint param_1)
     }
   }
   else {
-    uVar1 = FUN_80017690((int)*(short *)(iVar4 + 0x20));
+    uVar1 = GameBit_Get((int)*(short *)(iVar4 + 0x20));
     if (uVar1 != 0) {
-      FUN_80017698((int)*(short *)(iVar4 + 0x20),0);
+      GameBit_Set((int)*(short *)(iVar4 + 0x20),0);
       *pbVar5 = *pbVar5 | 1;
       *(undefined4 *)(pbVar5 + 4) = *(undefined4 *)(&DAT_803269a8 + (uint)pbVar5[1] * 4);
       *(undefined4 *)(pbVar5 + 8) = *(undefined4 *)(pbVar5 + 4);

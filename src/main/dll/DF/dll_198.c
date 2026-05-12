@@ -4,7 +4,7 @@
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
 extern undefined4 FUN_80006930();
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern uint FUN_80017760();
 extern undefined4 FUN_80017814();
 extern void* ObjGroup_GetObjects();
@@ -113,7 +113,7 @@ void FUN_801c232c(undefined4 param_1,undefined4 param_2,undefined4 param_3)
   piVar9 = *(int **)(puVar3 + 0x5c);
   iVar8 = *(int *)(puVar3 + 0x26);
   if (((int)*(short *)(iVar8 + 0x1c) == 0) ||
-     (uVar4 = FUN_80017690((int)*(short *)(iVar8 + 0x1c)), uVar4 == 0)) {
+     (uVar4 = GameBit_Get((int)*(short *)(iVar8 + 0x1c)), uVar4 == 0)) {
     if (*(char *)(puVar3 + 0x1b) == '\0') {
       FUN_80006824((uint)puVar3,0x475);
     }
