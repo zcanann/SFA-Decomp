@@ -1875,6 +1875,50 @@ void fn_8011F6F8(float v) {
     *(f32 *)((char *)p + 0x24) = v;
 }
 
+/* fn_8011DD30: init / setup */
+extern void cutsceneFadeInOut(int x);
+extern void setTimeStop(int x);
+extern void pauseMenuInit(void);
+extern int fn_80019BF0(void);
+extern void gameTextLoadDir(int x);
+extern f32 lbl_803E1E60;
+extern f32 lbl_803DD764;
+extern int lbl_803DD8DC;
+extern int lbl_803DD7D8;
+#pragma scheduling off
+void fn_8011DD30(void) {
+    cutsceneFadeInOut(1);
+    setTimeStop(0xff);
+    pauseMenuInit();
+    lbl_803DD780 = 0xb;
+    lbl_803DD8DC = fn_80019BF0();
+    gameTextLoadDir(0xb);
+    lbl_803DD764 = lbl_803E1E60;
+    lbl_803DD7D8 = 1;
+}
+#pragma scheduling on
+
+/* fn_80121408 */
+extern int lbl_803DD8A0;
+extern s16 lbl_803DD89E;
+extern s16 lbl_803DD89C;
+extern u8 lbl_803DD8AC;
+#pragma scheduling off
+void fn_80121408(int x, s16 a, s16 b) {
+    if (x == -1) {
+        lbl_803DD8A0 = 0;
+        lbl_803DD89E = 0;
+        lbl_803DD89C = 0;
+        lbl_803DD8AC = 0;
+        return;
+    }
+    lbl_803DD8A0 = x;
+    lbl_803DD89E = a;
+    lbl_803DD89C = b;
+    lbl_803DD8AC = 1;
+}
+#pragma scheduling on
+
 /* fn_8011F354 */
 extern u8 lbl_803DD7CC;
 extern s16 lbl_803DD838;
