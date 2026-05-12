@@ -2095,6 +2095,102 @@ extern f32 lbl_803E2CC8;
 extern f32 lbl_803E2CCC;
 extern f32 lbl_803E2CD0;
 extern f32 lbl_803E2CD4;
+extern f32 lbl_803E2B18;
+extern f32 lbl_803E2B38;
+extern f32 lbl_803E2B40;
+extern f32 lbl_803E2B4C;
+extern f64 lbl_803E2B58;
+extern f32 lbl_803E2B64;
+extern f32 lbl_803E2B68;
+extern f32 lbl_803E2B6C;
+extern f32 lbl_803E2B70;
+extern f32 lbl_803E2B74;
+extern f32 lbl_803E2B78;
+
+/* fn_80157898: 240b - init basket with random factor. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80157898(int *obj, int *st) {
+    f32 ratio;
+    f32 base_v;
+    u32 v;
+    u32 amt;
+    amt = *((u8*)((int*)obj[0x4c/4]) + 0x2f);
+    ratio = (f32)amt;
+    if (lbl_803E2B18 == (f32)amt) {
+        ratio = lbl_803E2B38;
+    }
+    ratio = ratio / lbl_803E2B38;
+    *(f32*)((char*)st + 0x2ac) = lbl_803E2B64;
+    *(u32*)((char*)st + 0x2e4) = 0x8b;
+    v = *(u32*)((char*)st + 0x2e4);
+    *(u32*)((char*)st + 0x2e4) = v | 0x20;
+    *(f32*)((char*)st + 0x308) = lbl_803E2B68 * ratio;
+    base_v = lbl_803E2B40;
+    *(f32*)((char*)st + 0x300) = base_v;
+    *(f32*)((char*)st + 0x304) = lbl_803E2B6C;
+    *((u8*)st + 0x320) = 0;
+    *(f32*)((char*)st + 0x314) = lbl_803E2B70;
+    *((u8*)st + 0x321) = 3;
+    {
+        f32 d2 = lbl_803E2B4C;
+        *(f32*)((char*)st + 0x318) = d2;
+        *((u8*)st + 0x322) = 5;
+        *(f32*)((char*)st + 0x31c) = d2;
+    }
+    *(u16*)((char*)st + 0x338) = 0;
+    *(f32*)((char*)st + 0x324) = lbl_803E2B74;
+    *(f32*)((char*)st + 0x328) = base_v;
+    *((u8*)obj + 0x36) = 0;
+    *(f32*)((char*)st + 0x2fc) = lbl_803E2B78 * ratio;
+    *(u32*)((char*)st + 0x2e8) = 0;
+    ObjHits_EnableObject((int)obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+
+extern f32 lbl_803E2C1C;
+extern f32 lbl_803E2C20;
+extern f32 lbl_803E2C24;
+extern f64 lbl_803E2C28;
+extern f32 fn_802943F4(f32 a);
+extern void PSMTXRotRad(f32 *mtx, int axis, f32 angle);
+extern void PSMTXMultVecSR(f32 *mtx, f32 *in, f32 *out);
+
+/* fn_8015983C: 124b - rotate vector around Y axis by integer-degrees value. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8015983C(int p1, int p2, f32 *vec, f32 f1, int p5, u32 int_deg) {
+    f32 mtx[12];
+    f32 a;
+    a = lbl_803E2C20 * f1 - lbl_803E2C24 * (f32)(s32)int_deg;
+    a = fn_802943F4(a);
+    a = lbl_803E2C1C * a;
+    PSMTXRotRad(mtx, 0x79, a);
+    PSMTXMultVecSR(mtx, vec, vec);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* fn_801598DC: 124b - handle hit-state event (cmd 0x10 or 0x11). */
+#pragma scheduling off
+#pragma peephole off
+void fn_801598DC(int obj, int *st, int p3, int cmd) {
+    if (cmd == 0x11) {
+        /* fall through */
+    } else if (cmd == 0x10) {
+        *(u32*)((char*)st + 0x2e8) |= 0x20;
+    } else {
+        *(u32*)((char*)st + 0x2e8) |= 0x8;
+        Sfx_StopFromObject(obj, 0x3e8);
+        Sfx_PlayFromObject(obj, 0x3ea);
+        *(s16*)((char*)st + 0x2b0) = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* fn_8015ACC0: 156b - init basket state struct. */
 #pragma scheduling off
