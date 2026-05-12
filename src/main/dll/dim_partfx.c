@@ -2331,6 +2331,45 @@ void FUN_800c9c68(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
 }
 
 
+/* sda21 globals used by leaf accessors below. */
+extern s16 lbl_803DD414;
+extern s16 lbl_803DD416;
+extern u32 lbl_803DD418;
+extern u32 lbl_803DD41C;
+
+/* Set *p to lbl_803DD414 (sign-extended) and return lbl_803DD418. */
+u32 fn_800D65A8(s32 *p)
+{
+    *p = lbl_803DD414;
+    return lbl_803DD418;
+}
+
+/* Swap lbl_803DD418 with lbl_803DD41C; copy 416 into 414 then clear 416. */
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void fn_800D6584(void)
+{
+    u32 tmp = lbl_803DD418;
+    lbl_803DD418 = lbl_803DD41C;
+    lbl_803DD41C = tmp;
+    lbl_803DD414 = lbl_803DD416;
+    lbl_803DD416 = 0;
+}
+#pragma pop
+
+/* Append v to array pointed to by lbl_803DD41C, capped at 10 entries.
+ * NOTE: stuck on instruction order — compiler computes arr load early. */
+void fn_800D663C(u32 v)
+{
+    s32 i = lbl_803DD416;
+    u32 *arr;
+    if (i >= 10) return;
+    arr = (u32 *)lbl_803DD41C;
+    lbl_803DD416 = (s16)(i + 1);
+    arr[i] = v;
+}
+
 /* Trivial 4b 0-arg blr leaves. */
 void fn_800C9134(void) {}
 void Effect16_release(void) {}
