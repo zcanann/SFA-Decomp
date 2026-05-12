@@ -4404,6 +4404,35 @@ void player_hitDetect(char *p, char *obj, int unused) {
 #pragma scheduling on
 #pragma peephole on
 
+
+/* fn_800DE8F0: similar to fn_800D9F38 branch2 with different consts */
+extern f32 lbl_803E0610;
+extern f32 lbl_803E0614;
+extern f32 lbl_803E0618;
+#pragma peephole off
+#pragma scheduling off
+void fn_800DE8F0(void *a, void *b) {
+    char *A = (char *)a;
+    f32 t;
+    if (b != 0 && (u32)b != *(u32 *)(A + 0xa4)) {
+        *(void **)(A + 0xa4) = b;
+        *(f32 *)(A + 0xbc) = *(f32 *)((*(char **)(A + 0xa4)) + 0x8);
+        t = (float)(u32)*(u8 *)((*(char **)(A + 0xa4)) + 0x2e) *
+            fn_80293E80(lbl_803E0614 * (float)((s32)((s8)*((*(char **)(A + 0xa4)) + 0x2c)) << 8) / lbl_803E0618);
+        *(f32 *)(A + 0xc4) = lbl_803E0610 * t;
+        *(f32 *)(A + 0xdc) = *(f32 *)((*(char **)(A + 0xa4)) + 0xc);
+        t = (float)(u32)*(u8 *)((*(char **)(A + 0xa4)) + 0x2e) *
+            fn_80293E80(lbl_803E0614 * (float)((s32)((s8)*((*(char **)(A + 0xa4)) + 0x2d)) << 8) / lbl_803E0618);
+        *(f32 *)(A + 0xe4) = lbl_803E0610 * t;
+        *(f32 *)(A + 0xfc) = *(f32 *)((*(char **)(A + 0xa4)) + 0x10);
+        t = (float)(u32)*(u8 *)((*(char **)(A + 0xa4)) + 0x2e) *
+            sin(lbl_803E0614 * (float)((s32)((s8)*((*(char **)(A + 0xa4)) + 0x2c)) << 8) / lbl_803E0618);
+        *(f32 *)(A + 0x104) = lbl_803E0610 * t;
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
 /* fn_800DA928: clamp + curveFn call — 99% match, f1 vs f2 reg alloc */
 void fn_800DA928(float *p) {
     if (*p <= lbl_803E05F0) {
