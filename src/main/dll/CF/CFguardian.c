@@ -2,7 +2,6 @@
 #include "main/dll/CF/CFguardian.h"
 
 extern undefined4 FUN_80006b14();
-extern uint FUN_80017690();
 extern int FUN_80017730();
 extern undefined4 FUN_80017748();
 extern uint FUN_80017760();
