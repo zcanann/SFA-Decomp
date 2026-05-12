@@ -2353,6 +2353,8 @@ typedef struct PartFxNode {
 
 /* Binary search for key in lbl_8039C458 (count = lbl_803DD410). */
 #pragma dont_inline on
+#pragma push
+#pragma scheduling off
 u32 fn_800D5530(s32 key, s32 *idx_out)
 {
     s32 high;
@@ -2362,8 +2364,8 @@ u32 fn_800D5530(s32 key, s32 *idx_out)
     if (key < 0) return 0;
     high = lbl_803DD410 - 1;
     low = 0;
-    while (high >= low) {
-        mid = (high + low) >> 1;
+    while (low <= high) {
+        mid = (low + high) >> 1;
         if ((u32)key > lbl_8039C458[mid].key) {
             low = mid + 1;
         } else if ((u32)key == lbl_8039C458[mid].key) {
@@ -2376,6 +2378,7 @@ u32 fn_800D5530(s32 key, s32 *idx_out)
     *idx_out = -1;
     return 0;
 }
+#pragma pop
 #pragma dont_inline off
 
 /* Set *p to lbl_803DD414 (sign-extended) and return lbl_803DD418. */
