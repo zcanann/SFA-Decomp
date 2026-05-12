@@ -499,6 +499,27 @@ extern void objAudioFn_800393f8(int obj, void *p2, int p3, int p4, int p5, int p
 extern char lbl_8031D2E8[];
 extern void **lbl_803DCA9C;
 extern f32 timeDelta;
+extern double fn_80293E80(double);
+extern double sin(double);
+extern int getAngle(f32 x, f32 z);
+extern int randomGetRange(int lo, int hi);
+extern f32 getXZDistance(float *a, float *b);
+extern void *ObjGroup_GetObjects(int group, int *count);
+extern f32 lbl_803E23EC;
+extern f32 lbl_803E23F4;
+extern f32 lbl_803E2410;
+extern f32 lbl_803E2414;
+extern f32 lbl_803E2420;
+extern f32 lbl_803E243C;
+extern f32 lbl_803E2440;
+extern f32 lbl_803E2444;
+extern f32 lbl_803E2454;
+extern f32 lbl_803E2458;
+extern f64 lbl_803E2460;
+extern f32 lbl_803E247C;
+extern f32 lbl_803E24C4;
+extern f32 lbl_803E24D0;
+extern f32 lbl_803E24D8;
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E4;
 extern f32 lbl_803E2418;
@@ -762,8 +783,245 @@ void fn_801409DC(int p1, int p2) {
 }
 #pragma scheduling reset
 
-/* Stub for as-yet-unmatched large state-machine function. */
-void fn_8013FFB8(void) {}
+/*
+ * --INFO--
+ *
+ * Function: fn_8013FFB8
+ * EN v1.0 Address: 0x8013FFB8
+ * EN v1.0 Size: 2276b
+ */
+#pragma scheduling off
+void fn_8013FFB8(int p1, int p2) {
+    char *strBase = lbl_8031D2E8;
+    int *list;
+    int count;
+    int i;
+    void **slot;
+    void *setup;
+    void *state;
+    int found;
+
+    switch (*(u8 *)(p2 + 0xa)) {
+    case 0:
+        trickyDebugPrint(strBase + 0x648);
+        *(int *)(p2 + 0x730) = fn_800DBCFC((float *)(*(int *)(p2 + 0x28)), (void *)0x0);
+        *(f32 *)(p2 + 0x71c) = (f32)(*(f32 *)(*(int *)(p2 + 0x24) + 0x18) - lbl_803E247C *
+            fn_80293E80(((double)(int)*(s16 *)*(int *)(p2 + 0x24) * lbl_803E2454) / lbl_803E2458));
+        *(f32 *)(p2 + 0x720) = *(f32 *)(*(int *)(p2 + 0x24) + 0x1c);
+        *(f32 *)(p2 + 0x724) = (f32)(*(f32 *)(*(int *)(p2 + 0x24) + 0x20) - lbl_803E247C *
+            sin(((double)(int)*(s16 *)*(int *)(p2 + 0x24) * lbl_803E2454) / lbl_803E2458));
+        *(u8 *)(p2 + 0x734) = 0;
+        *(u8 *)(p2 + 0xa) = 1;
+        break;
+    case 1:
+        trickyDebugPrint(strBase + 0x654);
+        trickyFn_8013b368(p1, p2, lbl_803E2488);
+        if (*(int *)(p2 + 0x730) == fn_800DBCFC((float *)(p1 + 0x18), (void *)0x0)) {
+            *(u8 *)(p2 + 0xa) = 2;
+        }
+        break;
+    case 2:
+        trickyDebugPrint(strBase + 0x664);
+        if (trickyFn_8013b368(p1, p2, lbl_803E2488) == 0) {
+            if (*(uint *)(p2 + 0x28) != (uint)(p2 + 0x71c)) {
+                *(int *)(p2 + 0x28) = p2 + 0x71c;
+                *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & 0xfffffbff;
+                *(u16 *)(p2 + 0xd2) = 0;
+            }
+            *(u8 *)(p2 + 0xa) = 3;
+        } else {
+            fn_8014089C(p2);
+        }
+        break;
+    case 3:
+        trickyDebugPrint(strBase + 0x674);
+        if (trickyFn_8013b368(p1, p2, lbl_803E2488) == 0) {
+            if (lbl_803E23DC == *(f32 *)(p2 + 0x2ac)) {
+                found = 0;
+            } else if (lbl_803E2410 == *(f32 *)(p2 + 0x2b0)) {
+                found = 1;
+            } else if ((*(f32 *)(p2 + 0x2b4) - *(f32 *)(p2 + 0x2b0)) > lbl_803E2414) {
+                found = 1;
+            } else {
+                found = 0;
+            }
+            if (found != 0) {
+                objAnimFn_8013a3f0(p1, 0x8, lbl_803E243C, 0);
+                *(f32 *)(p2 + 0x79c) = lbl_803E2440;
+                *(f32 *)(p2 + 0x838) = lbl_803E23DC;
+                trickyDebugPrint(strBase + 0x184);
+            } else {
+                objAnimFn_8013a3f0(p1, 0, lbl_803E2444, 0);
+                trickyDebugPrint(strBase + 0x190);
+            }
+        }
+        fn_8014089C(p2);
+        break;
+    case 4:
+        trickyDebugPrint(strBase + 0x684);
+        if (trickyFn_8013b368(p1, p2, lbl_803E247C) == 0) {
+            *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) | 0x10;
+            if (*(u8 *)*(int *)p2 != 0 && *(u8 *)(p2 + 0x734) != 0 && (u8)Obj_IsLoadingLocked() != 0) {
+                *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) | 0x800;
+                slot = (void **)p2;
+                for (i = 0; i < 7; i++) {
+                    setup = Obj_AllocObjectSetup(0x24, 0x4f0);
+                    *(u8 *)((char *)setup + 0x4) = 2;
+                    *(u8 *)((char *)setup + 0x5) = 1;
+                    *(s16 *)((char *)setup + 0x1a) = (s16)i;
+                    slot[0x700 / 4] = (void *)Obj_SetupObject(setup, 5, *(s8 *)(p1 + 0xac), -1, *(void **)(p1 + 0x30));
+                    slot++;
+                }
+                Sfx_PlayFromObject(p1, 0x3db);
+                Sfx_AddLoopedObjectSound(p1, 0x3dc);
+            }
+            if (*(u8 *)*(int *)p2 != 0 && *(u8 *)(p2 + 0x734) != 0) {
+                (*(u8 *)*(int *)p2)--;
+                objAnimFn_8013a3f0(p1, 0x34, lbl_803E2444, 0x4000000);
+                *(u8 *)(p2 + 0xa) = 5;
+            } else {
+                objAnimFn_8013a3f0(p1, 0x32, lbl_803E23EC, 0x4000000);
+                *(u8 *)(p2 + 0xa) = 6;
+            }
+        } else {
+            if (*(int *)(p2 + 0x730) != fn_800DBCFC((float *)(*(int *)(p2 + 0x28)), (void *)0x0)) {
+                if (*(uint *)(p2 + 0x28) != (uint)(*(int *)(p2 + 0x24) + 0x18)) {
+                    *(int *)(p2 + 0x28) = *(int *)(p2 + 0x24) + 0x18;
+                    *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & 0xfffffbff;
+                    *(u16 *)(p2 + 0xd2) = 0;
+                }
+                *(u8 *)(p2 + 0xa) = 2;
+            }
+            break;
+        }
+        /* fallthrough into case 5 setup? No — case 4 has `b .L_801403D4` (= state 5 prologue). */
+        /* Actually case 4 ends with branch to .L_801403D4 (start of case 5). */
+        /* But MWCC will see this as fallthrough. */
+    case 5:
+        trickyDebugPrint(strBase + 0x694);
+        if ((double)*(f32 *)(p1 + 0x98) > (double)lbl_803E24D0) {
+            *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x800;
+            *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) | 0x1000;
+            slot = (void **)p2;
+            for (i = 0; i < 7; i++) {
+                objSetAnimSpeedTo1(slot[0x700 / 4]);
+                slot++;
+            }
+            Sfx_RemoveLoopedObjectSound(p1, 0x3dc);
+            state = *(void **)(p1 + 0xb8);
+            if (((*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
+                s16 a0 = *(s16 *)(p1 + 0xa0);
+                if (a0 >= 0x30 || a0 < 0x29) {
+                    if (Sfx_IsPlayingFromObjectChannel(p1, 0x10) == 0) {
+                        objAudioFn_800393f8(p1, (char *)state + 0x3a8, 0x29d, 0, -1, 0);
+                    }
+                }
+            }
+            *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x10;
+            if (fn_8014089C(p2) == 0) {
+                if (*(uint *)(p2 + 0x28) != (uint)(*(int *)(p2 + 0x24) + 0x18)) {
+                    *(int *)(p2 + 0x28) = *(int *)(p2 + 0x24) + 0x18;
+                    *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & 0xfffffbff;
+                    *(u16 *)(p2 + 0xd2) = 0;
+                }
+                *(u8 *)(p2 + 0xa) = 2;
+            }
+        }
+        break;
+    case 6:
+        trickyDebugPrint(strBase + 0x6a4);
+        if ((double)*(f32 *)(p1 + 0x98) > (double)lbl_803E24D0) {
+            objAnimFn_8013a3f0(p1, 0x33, lbl_803E2444, 0x4000000);
+            *(f32 *)(p2 + 0x728) = lbl_803E23DC;
+            state = *(void **)(p1 + 0xb8);
+            if (((*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
+                s16 a0 = *(s16 *)(p1 + 0xa0);
+                if (a0 >= 0x30 || a0 < 0x29) {
+                    if (Sfx_IsPlayingFromObjectChannel(p1, 0x10) == 0) {
+                        objAudioFn_800393f8(p1, (char *)state + 0x3a8, 0x299, 0x100, -1, 0);
+                    }
+                }
+            }
+            *(u8 *)(p2 + 0xa) = 7;
+        } else {
+            int *li = (int *)ObjGroup_GetObjects(3, &count);
+            int target = *(int *)(p2 + 0x72c);
+            found = 0;
+            for (i = 0; (s16)i < count; i++) {
+                if (*li == target) {
+                    found = 1;
+                    break;
+                }
+                li++;
+            }
+            if (found != 0) {
+                int targ = *(int *)(*(int *)(p1 + 0xb8) + 0x28);
+                fn_80139930(p1, (s16)getAngle(
+                    -(*(f32 *)targ - *(f32 *)(p1 + 0x18)),
+                    -(*(f32 *)(targ + 0x8) - *(f32 *)(p1 + 0x20))));
+            }
+        }
+        break;
+    case 7:
+        trickyDebugPrint(strBase + 0x6b8);
+        if (randomGetRange(0, 10) == 0) {
+            state = *(void **)(p1 + 0xb8);
+            if (((*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
+                s16 a0 = *(s16 *)(p1 + 0xa0);
+                if (a0 >= 0x30 || a0 < 0x29) {
+                    if (Sfx_IsPlayingFromObjectChannel(p1, 0x10) == 0) {
+                        objAudioFn_800393f8(p1, (char *)state + 0x3a8, 0x299, 0x100, -1, 0);
+                    }
+                }
+            }
+        }
+        *(f32 *)(p2 + 0x728) = *(f32 *)(p2 + 0x728) + timeDelta;
+        {
+            int closeOrTimeout = 0;
+            if ((double)*(f32 *)(p2 + 0x728) > (double)lbl_803E24D8) {
+                closeOrTimeout = 1;
+            } else if ((double)getXZDistance((float *)*(int *)(p2 + 0x28), (float *)(p1 + 0x18)) > (double)lbl_803E24C4) {
+                closeOrTimeout = 1;
+            }
+            if (closeOrTimeout) {
+                int *li = (int *)ObjGroup_GetObjects(3, &count);
+                int target = *(int *)(p2 + 0x72c);
+                found = 0;
+                for (i = 0; (s16)i < count; i++) {
+                    if (*li == target) { found = 1; break; }
+                    li++;
+                }
+                if (found == 0) {
+                    objAnimFn_8013a3f0(p1, 0x32, lbl_803E23F4, 0x4000000);
+                    *(u8 *)(p2 + 0xa) = 8;
+                    break;
+                }
+            }
+            {
+                int targ = *(int *)(*(int *)(p1 + 0xb8) + 0x28);
+                fn_80139930(p1, (s16)getAngle(
+                    -(*(f32 *)targ - *(f32 *)(p1 + 0x18)),
+                    -(*(f32 *)(targ + 0x8) - *(f32 *)(p1 + 0x20))));
+            }
+        }
+        break;
+    case 8:
+        trickyDebugPrint(strBase + 0x6c8);
+        if ((double)*(f32 *)(p1 + 0x98) > (double)lbl_803E2420) {
+            *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x10;
+            if (fn_8014089C(p2) == 0) {
+                if (*(uint *)(p2 + 0x28) != (uint)(*(int *)(p2 + 0x24) + 0x18)) {
+                    *(int *)(p2 + 0x28) = *(int *)(p2 + 0x24) + 0x18;
+                    *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & 0xfffffbff;
+                    *(u16 *)(p2 + 0xd2) = 0;
+                }
+                *(u8 *)(p2 + 0xa) = 2;
+            }
+        }
+        break;
+    }
+}
+#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_8014128C(void) {}
