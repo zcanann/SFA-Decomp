@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/CF/dll_165.h"
 
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId,int value);
 extern int FUN_80017a98();
 extern undefined4 FUN_801899b4();
 extern undefined4 FUN_80189cc4();
@@ -68,17 +68,17 @@ void staffactivated_init(undefined8 param_1,double param_2,double param_3,undefi
   else {
     if (bVar3 < 2) {
       if (bVar3 == 0) {
-        if (((*(byte *)(param_9 + 0xaf) & 4) != 0) && (uVar2 = FUN_80017690(0xd2a), uVar2 == 0)) {
+        if (((*(byte *)(param_9 + 0xaf) & 4) != 0) && (uVar2 = GameBit_Get(0xd2a), uVar2 == 0)) {
           (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_9,0xffffffff);
-          FUN_80017698(0xd2a,1);
+          GameBit_Set(0xd2a,1);
         }
-        uVar2 = FUN_80017690(0x957);
+        uVar2 = GameBit_Get(0x957);
         if (uVar2 == 0) {
           *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 0x10;
         }
         iVar1 = 0;
         if (((int)*(short *)(iVar5 + 0x22) == 0xffffffff) ||
-           (uVar2 = FUN_80017690((int)*(short *)(iVar5 + 0x22)), uVar2 != 0)) {
+           (uVar2 = GameBit_Get((int)*(short *)(iVar5 + 0x22)), uVar2 != 0)) {
           iVar1 = 1;
         }
         *(byte *)(iVar4 + 0x1d) = (byte)(iVar1 << 7) | *(byte *)(iVar4 + 0x1d) & 0x7f;
@@ -112,7 +112,7 @@ void staffactivated_init(undefined8 param_1,double param_2,double param_3,undefi
     }
     iVar1 = 0;
     if (((int)*(short *)(iVar5 + 0x22) == 0xffffffff) ||
-       (uVar2 = FUN_80017690((int)*(short *)(iVar5 + 0x22)), uVar2 != 0)) {
+       (uVar2 = GameBit_Get((int)*(short *)(iVar5 + 0x22)), uVar2 != 0)) {
       iVar1 = 1;
     }
     *(byte *)(iVar4 + 0x1d) = (byte)(iVar1 << 7) | *(byte *)(iVar4 + 0x1d) & 0x7f;

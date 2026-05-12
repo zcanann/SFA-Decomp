@@ -12,7 +12,7 @@ extern undefined4 FUN_800175cc();
 extern undefined4 FUN_800175d0();
 extern undefined4 FUN_800175ec();
 extern void* FUN_80017624();
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern undefined4 ObjHitbox_SetCapsuleBounds();
 
 extern undefined4* DAT_803dd6d8;
@@ -77,13 +77,13 @@ void FUN_8018d728(int param_1,int param_2)
          FLOAT_803e4a20 * (float)((double)CONCAT44(0x43300000,uVar3) - DOUBLE_803e4a38);
     uStack_3c = uVar3;
   }
-  uVar3 = FUN_80017690(0x8c);
+  uVar3 = GameBit_Get(0x8c);
   if (uVar3 != 0) {
     *(byte *)((int)piVar7 + 0x11) = *(byte *)((int)piVar7 + 0x11) | 1;
   }
   *(undefined2 *)(piVar7 + 3) = *(undefined2 *)(param_2 + 0x18);
   if (((int)*(short *)(piVar7 + 3) != 0xffffffff) &&
-     (uVar3 = FUN_80017690((int)*(short *)(piVar7 + 3)), uVar3 != 0)) {
+     (uVar3 = GameBit_Get((int)*(short *)(piVar7 + 3)), uVar3 != 0)) {
     *(byte *)((int)piVar7 + 0x11) = *(byte *)((int)piVar7 + 0x11) | 4;
   }
   *(undefined *)(piVar7 + 4) = *(undefined *)(param_2 + 0x1b);
