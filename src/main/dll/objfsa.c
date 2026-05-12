@@ -4296,6 +4296,11 @@ void fn_800D9EB8(void) { lbl_803DD458 = 0x3; }
 /* fn_800D9D3C: init / memset constructor */
 extern void *memset(void *dst, int val, u32 n);
 extern f32 lbl_803E05BC;
+extern f32 lbl_803E05C8;
+extern f32 lbl_803E05CC;
+extern f32 lbl_803E05F0;
+extern f32 lbl_803E05F4;
+extern void curveFn_80010320(float *p);
 #pragma scheduling off
 #pragma peephole off
 void fn_800D9D3C(int unused, void *obj, int a, int b) {
@@ -4311,4 +4316,26 @@ void fn_800D9D3C(int unused, void *obj, int a, int b) {
 }
 #pragma peephole on
 #pragma scheduling on
+
+/* fn_800DA928: clamp + curveFn call — 99% match, f1/f2 reg alloc diff */
+void fn_800DA928(float *p) {
+    if (*p <= lbl_803E05F0) {
+        *p = lbl_803E05F4;
+    } else if (*p >= lbl_803E05C8) {
+        *p = lbl_803E05CC;
+    }
+    curveFn_80010320(p);
+}
+
+/* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
+void fn_800D9EE8(float *p) {
+    u32 *a = (u32 *)((char *)p + 0x9c);
+    u32 *b = (u32 *)((char *)p + 0xa4);
+    *a ^= *b;
+    *b ^= *a;
+    *a ^= *b;
+    if (*p >= lbl_803E05C8) {
+        *p = lbl_803E05CC;
+    }
+}
 
