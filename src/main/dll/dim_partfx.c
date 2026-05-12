@@ -2341,7 +2341,6 @@ extern s32 lbl_803DD410;
 typedef struct PartFxKV { u32 key; u32 value; } PartFxKV;
 extern PartFxKV lbl_8039C458[];
 extern f32 lbl_803E04E8;
-extern const double lbl_803E04F0;
 extern f32 lbl_803E0500;
 extern u32 randomGetRange(s32 lo, s32 hi);
 
@@ -2518,22 +2517,11 @@ void fn_800D5F80(s32 key, f32 *out_vec, u8 *flag_byte)
     s32 local_idx;
     PartFxNode *n;
     s32 alt_found;
-    union { struct { u32 hi, lo; } i; double d; } m1, m2, m3;
-    s32 r;
     n = (PartFxNode *)fn_800D5530(key, &local_idx);
     if (n == 0) return;
-    r = (s32)randomGetRange(-0x63, 0x63);
-    m1.i.lo = (u32)r ^ 0x80000000;
-    m1.i.hi = 0x43300000;
-    out_vec[0] = (float)(m1.d - lbl_803E04F0) / lbl_803E0500;
-    r = (s32)randomGetRange(-0x63, 0x63);
-    m2.i.lo = (u32)r ^ 0x80000000;
-    m2.i.hi = 0x43300000;
-    out_vec[1] = (float)(m2.d - lbl_803E04F0) / lbl_803E0500;
-    r = (s32)randomGetRange(0, 0x63);
-    m3.i.lo = (u32)r ^ 0x80000000;
-    m3.i.hi = 0x43300000;
-    out_vec[2] = (float)(m3.d - lbl_803E04F0) / lbl_803E0500;
+    out_vec[0] = (f32)(s32)randomGetRange(-0x63, 0x63) / lbl_803E0500;
+    out_vec[1] = (f32)(s32)randomGetRange(-0x63, 0x63) / lbl_803E0500;
+    out_vec[2] = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E0500;
     alt_found = 0;
     {
         s32 v = *(s32 *)((char *)n + 0x20);
