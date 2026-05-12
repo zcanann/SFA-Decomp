@@ -4292,3 +4292,23 @@ void fn_800D9668(u32 x) { lbl_803DD430 = x; }
 /* Pattern wrappers. */
 extern u32 lbl_803DD458;
 void fn_800D9EB8(void) { lbl_803DD458 = 0x3; }
+
+/* fn_800D9D3C: init / memset constructor */
+extern void *memset(void *dst, int val, u32 n);
+extern f32 lbl_803E05BC;
+#pragma scheduling off
+#pragma peephole off
+void fn_800D9D3C(int unused, void *obj, int a, int b) {
+    memset(obj, 0, 0x35c);
+    *(s16 *)((char *)obj + 0x26c) = (s16)a;
+    *(s16 *)((char *)obj + 0x26e) = (s16)b;
+    *(u8 *)((char *)obj + 0x27a) = 1;
+    *(u8 *)((char *)obj + 0x27b) = 1;
+    *(f32 *)((char *)obj + 0x2b8) = lbl_803E05BC;
+    *(s32 *)((char *)obj + 0x33c) = -1;
+    *(s32 *)((char *)obj + 0x340) = -1;
+    *(u8 *)((char *)obj + 0x358) = 0;
+}
+#pragma peephole on
+#pragma scheduling on
+
