@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/WC/WCpressureSwitch.h"
 
-extern uint FUN_80017690();
-extern undefined8 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined8 GameBit_Set(int eventId, int value);
 extern uint FUN_80017760();
 extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
@@ -98,7 +98,7 @@ void FUN_801ef3a8(undefined8 param_1,double param_2,double param_3,undefined8 pa
     case 0:
       bVar1 = false;
       if (*(int *)(puVar2 + 0x7c) == 0) {
-        uVar3 = FUN_80017690(0x78);
+        uVar3 = GameBit_Get(0x78);
         bVar1 = uVar3 == 0;
         piVar4 = ObjGroup_GetObjects(3,&local_88);
         iVar6 = 0;
@@ -132,7 +132,7 @@ void FUN_801ef3a8(undefined8 param_1,double param_2,double param_3,undefined8 pa
       }
       break;
     case 1:
-      uVar3 = FUN_80017690((int)*psVar7);
+      uVar3 = GameBit_Get((int)*psVar7);
       if (((uVar3 != 0) || (*psVar7 == -1)) &&
          (psVar7[2] = psVar7[2] - (ushort)DAT_803dc070, psVar7[2] < 1)) {
         puVar5 = FUN_80017aa4(0x28,0x263);
@@ -165,7 +165,7 @@ void FUN_801ef3a8(undefined8 param_1,double param_2,double param_3,undefined8 pa
       }
       break;
     case 2:
-      uVar3 = FUN_80017690((int)*psVar7);
+      uVar3 = GameBit_Get((int)*psVar7);
       if (((uVar3 != 0) || (*psVar7 == -1)) &&
          (psVar7[2] = psVar7[2] - (ushort)DAT_803dc070, psVar7[2] < 1)) {
         puVar5 = FUN_80017aa4(0x28,0x263);
@@ -205,7 +205,7 @@ void FUN_801ef3a8(undefined8 param_1,double param_2,double param_3,undefined8 pa
       }
       break;
     case 4:
-      uVar3 = FUN_80017690((int)*psVar7);
+      uVar3 = GameBit_Get((int)*psVar7);
       if ((uVar3 != 0) || (*psVar7 == -1)) {
         iVar8 = 2;
         do {
@@ -254,11 +254,11 @@ void FUN_801ef3a8(undefined8 param_1,double param_2,double param_3,undefined8 pa
             uVar9 = (**(code **)(in_r9 + 8))(iVar6,0x1a7,&local_84,0x10000,0xffffffff);
           }
         } while (iVar8 != 0);
-        FUN_80017698((int)*psVar7,0);
+        GameBit_Set((int)*psVar7,0);
       }
       break;
     case 5:
-      uVar3 = FUN_80017690((int)*psVar7);
+      uVar3 = GameBit_Get((int)*psVar7);
       if (((uVar3 != 0) || (*psVar7 == -1)) &&
          (psVar7[2] = psVar7[2] - (ushort)DAT_803dc070, psVar7[2] < 1)) {
         puVar5 = FUN_80017aa4(0x24,0x275);
@@ -289,7 +289,7 @@ void FUN_801ef3a8(undefined8 param_1,double param_2,double param_3,undefined8 pa
       }
       break;
     case 6:
-      uVar3 = FUN_80017690((int)*psVar7);
+      uVar3 = GameBit_Get((int)*psVar7);
       if ((uVar3 != 0) || (*psVar7 == -1)) {
         puVar5 = FUN_80017aa4(0x24,700);
         uStack_54 = FUN_80017760(0xfffffefc,0x104);
@@ -332,11 +332,11 @@ void FUN_801ef3a8(undefined8 param_1,double param_2,double param_3,undefined8 pa
           local_74 = (float)dVar12;
           (**(code **)(*DAT_803dd708 + 8))(puVar2,0x1a6,&local_84,0x10002,0xffffffff,0);
         }
-        FUN_80017698((int)*psVar7,0);
+        GameBit_Set((int)*psVar7,0);
       }
       break;
     case 7:
-      uVar3 = FUN_80017690((int)*psVar7);
+      uVar3 = GameBit_Get((int)*psVar7);
       if (((uVar3 != 0) || (*psVar7 == -1)) &&
          (psVar7[2] = psVar7[2] - (ushort)DAT_803dc070, psVar7[2] < 1)) {
         puVar5 = FUN_80017aa4(0x28,0x263);
@@ -375,11 +375,11 @@ void FUN_801ef3a8(undefined8 param_1,double param_2,double param_3,undefined8 pa
       }
       break;
     case 8:
-      uVar3 = FUN_80017690((int)*psVar7);
+      uVar3 = GameBit_Get((int)*psVar7);
       if (((uVar3 != 0) || (*psVar7 == -1)) &&
          (psVar7[2] = psVar7[2] - (ushort)DAT_803dc070, psVar7[2] < 1)) {
         puVar5 = FUN_80017aa4(0x38,0x4ac);
-        uVar9 = FUN_80017698((int)*psVar7,0);
+        uVar9 = GameBit_Set((int)*psVar7,0);
         uVar3 = FUN_80017760(0xffffff81,0x7e);
         *(char *)(puVar5 + 0x15) = (char)uVar3;
         *(undefined4 *)(puVar5 + 4) = *(undefined4 *)(puVar2 + 6);

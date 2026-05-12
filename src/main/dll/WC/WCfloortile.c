@@ -1,8 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/WC/WCfloortile.h"
 
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
 extern undefined4 FUN_80017a7c();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800631d4();

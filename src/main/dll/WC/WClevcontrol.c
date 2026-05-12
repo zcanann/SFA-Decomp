@@ -8,7 +8,7 @@ extern undefined4 FUN_80006b94();
 extern char FUN_80006bc8();
 extern char FUN_80006bd0();
 extern uint FUN_80006c10();
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern byte FUN_80017a20();
 extern undefined4 FUN_80017a28();
 extern undefined4 FUN_80017a4c();
@@ -395,7 +395,7 @@ void FUN_801eefd0(uint param_1,int param_2)
     FUN_80017a28(param_1,0xaf,200,0,0,1);
     FUN_80006b94((double)lbl_803E6950);
     FUN_80006824(0,0x125);
-    uVar2 = FUN_80017690(0xf1e);
+    uVar2 = GameBit_Get(0xf1e);
     if (uVar2 != 0) {
       FUN_80006824(param_1,0x491);
     }
