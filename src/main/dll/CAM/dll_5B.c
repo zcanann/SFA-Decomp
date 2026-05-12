@@ -17,7 +17,6 @@ extern char FUN_80006bc8();
 extern char FUN_80006bd0();
 extern uint FUN_80006c00();
 extern uint FUN_80006c10();
-extern uint FUN_80017690();
 extern double FUN_800176f4();
 extern uint getAngle();
 extern undefined4 FUN_80017814();

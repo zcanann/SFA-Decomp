@@ -2,7 +2,6 @@
 #include "main/dll/colrise.h"
 
 extern void* FUN_80017624();
-extern undefined4 FUN_80017698();
 extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 dbsh_shrine_update();
 

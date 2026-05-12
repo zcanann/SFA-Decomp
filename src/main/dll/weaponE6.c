@@ -2,7 +2,6 @@
 #include "main/dll/weaponE6.h"
 
 extern bool FUN_800067f0();
-extern uint FUN_80017690();
 extern int FUN_80017728();
 extern uint FUN_80017760();
 extern undefined4 FUN_80017ac8();

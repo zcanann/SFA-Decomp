@@ -4,7 +4,7 @@
 extern undefined4 FUN_80006bb4();
 extern uint FUN_80006c00();
 extern int FUN_800174a0();
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern int FUN_800176d0();
 extern uint FUN_80017760();
 extern undefined8 FUN_80053754();
@@ -420,7 +420,7 @@ int FUN_801302b4(int *param_1)
   }
   if (DAT_803de568 != '\0') {
     uVar2 = FUN_80006c00(0);
-    if (((uVar2 & 0x1100) != 0) && (uVar3 = FUN_80017690(0x44f), uVar3 == 0)) {
+    if (((uVar2 & 0x1100) != 0) && (uVar3 = GameBit_Get(0x44f), uVar3 == 0)) {
       return (int)DAT_803de575;
     }
     if ((uVar2 & 0x200) != 0) {

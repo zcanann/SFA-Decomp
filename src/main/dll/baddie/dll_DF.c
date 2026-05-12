@@ -4,7 +4,6 @@
 #pragma peephole off
 #pragma scheduling off
 
-extern uint FUN_80017690();
 extern double FUN_80017708();
 extern int FUN_80017730();
 extern undefined4 FUN_80017748();

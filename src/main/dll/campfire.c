@@ -3,7 +3,6 @@
 
 extern undefined4 FUN_80006824();
 extern undefined4 Sfx_PlayFromObject();
-extern undefined4 FUN_80017698();
 extern uint FUN_80017760();
 extern undefined4 FUN_80017a28();
 extern undefined4 FUN_80017a98();

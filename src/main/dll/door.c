@@ -2,7 +2,6 @@
 #include "main/dll/door.h"
 
 extern undefined4 FUN_80006b4c();
-extern uint FUN_80017690();
 extern int objBboxFn_800640cc(f32 radius,f32 *from,f32 *to,int mode,void *hit,
                        DfpTargetBlockObject *obj,int flags,int mask,int arg9,int arg10);
 extern void Sfx_PlayFromObject(DfpTargetBlockObject *obj,u16 sfxId);
