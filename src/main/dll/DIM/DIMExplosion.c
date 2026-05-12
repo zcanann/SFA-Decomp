@@ -2,8 +2,8 @@
 #include "main/dll/DIM/DIMExplosion.h"
 
 extern undefined4 FUN_80006824();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern uint FUN_80017760();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
@@ -381,7 +381,7 @@ void FUN_801b1c30(int param_1)
           } while (iVar3 != 0);
         }
         if (bVar2) {
-          FUN_80017698((int)*(short *)(iVar5 + 0x1e),1);
+          GameBit_Set((int)*(short *)(iVar5 + 0x1e),1);
           if (*(char *)(*(int *)(param_1 + 0x54) + 0xb0) != '\x02') {
             ObjHitbox_SetStateIndex(param_1,*(int *)(param_1 + 0x54),2);
           }
@@ -505,7 +505,7 @@ void FUN_801b1d3c(void)
       }
       pcVar4[1] = '\x01';
       if ((int)*(short *)(iVar3 + 0x1e) != 0xffffffff) {
-        FUN_80017698((int)*(short *)(iVar3 + 0x1e),1);
+        GameBit_Set((int)*(short *)(iVar3 + 0x1e),1);
       }
     }
     else {

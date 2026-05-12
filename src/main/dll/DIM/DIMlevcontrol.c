@@ -11,8 +11,8 @@ extern char FUN_80006bd0();
 extern uint FUN_80006bf8();
 extern uint FUN_80006c00();
 extern uint FUN_80006c10();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern double FUN_80017708();
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
@@ -108,10 +108,10 @@ void FUN_801b2550(undefined8 param_1,undefined8 param_2,double param_3,undefined
     if (iVar5 == 0x51) {
       iVar5 = FUN_8003964c((int)psVar4,0);
       if (*(char *)(iVar12 + 0xb0) < '\x01') {
-        uVar6 = FUN_80017690(0xdb);
+        uVar6 = GameBit_Get(0xdb);
         if (uVar6 == 0) {
           (**(code **)(*DAT_803dd6e8 + 0x38))(0x4b9,0x14,0x8c,1);
-          FUN_80017698(0xdb,1);
+          GameBit_Set(0xdb,1);
         }
         cVar7 = FUN_80006bd0(0);
         uStack_2c = (int)cVar7 ^ 0x80000000;
@@ -200,7 +200,7 @@ void FUN_801b2550(undefined8 param_1,undefined8 param_2,double param_3,undefined
         }
         FUN_801b2640(dVar14,dVar15,param_3,param_4,param_5,param_6,param_7,param_8);
         if (((*(char *)(psVar4 + 0x56) == '\x13') && (*(char *)(iVar12 + 0xb2) == '\0')) &&
-           ((uVar6 = FUN_80017690(0xc17), uVar6 != 0 && (uVar6 = FUN_80017690(0xa21), uVar6 != 0))))
+           ((uVar6 = GameBit_Get(0xc17), uVar6 != 0 && (uVar6 = GameBit_Get(0xa21), uVar6 != 0))))
         {
           *(undefined *)(iVar12 + 0xb2) = 1;
           *(undefined *)(iVar12 + 0xb1) = 1;
@@ -339,7 +339,7 @@ void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,un
   }
   else {
     if (((*(byte *)((int)param_9 + 0xaf) & 8) != 0) &&
-       (uVar1 = FUN_80017690((int)*(short *)(iVar5 + 0x1a)), uVar1 != 0)) {
+       (uVar1 = GameBit_Get((int)*(short *)(iVar5 + 0x1a)), uVar1 != 0)) {
       *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) & 0xf7;
     }
     piVar6 = *(int **)(param_9 + 0x5c);
@@ -355,9 +355,9 @@ void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,un
     bVar4 = *(byte *)(piVar6 + 0x2b);
     if (bVar4 == 4) {
       FUN_801b2644();
-      uVar1 = FUN_80017690((int)*(short *)(iVar5 + 0x1a));
+      uVar1 = GameBit_Get((int)*(short *)(iVar5 + 0x1a));
       if (uVar1 == 0) {
-        if ((*piVar6 != 0) && (uVar1 = FUN_80017690((int)*(short *)(iVar5 + 0x1e)), uVar1 == 0)) {
+        if ((*piVar6 != 0) && (uVar1 = GameBit_Get((int)*(short *)(iVar5 + 0x1e)), uVar1 == 0)) {
           dVar7 = FUN_80017708((float *)(param_9 + 0xc),(float *)(*piVar6 + 0x18));
           uStack_1c = *(short *)(iVar5 + 0x26) * DAT_803dcb78 ^ 0x80000000;
           local_20 = 0x43300000;
@@ -376,9 +376,9 @@ void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,un
     }
     else if (bVar4 < 4) {
       if (bVar4 == 1) {
-        uVar1 = FUN_80017690((int)*(short *)(iVar5 + 0x1a));
+        uVar1 = GameBit_Get((int)*(short *)(iVar5 + 0x1a));
         if (uVar1 == 0) {
-          uVar1 = FUN_80017690((int)*(short *)(iVar5 + 0x1e));
+          uVar1 = GameBit_Get((int)*(short *)(iVar5 + 0x1e));
           if (uVar1 == 0) {
             if (*piVar6 == 0) {
               *(undefined *)(piVar6 + 0x2b) = 4;
@@ -432,7 +432,7 @@ void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,un
           *(undefined *)(piVar6 + 0x2b) = 5;
         }
       }
-      else if ((bVar4 == 0) && (uVar1 = FUN_80017690((int)*(short *)(iVar5 + 0x1c)), uVar1 != 0)) {
+      else if ((bVar4 == 0) && (uVar1 = GameBit_Get((int)*(short *)(iVar5 + 0x1c)), uVar1 != 0)) {
         *(undefined *)(piVar6 + 0x2b) = 4;
       }
     }

@@ -3,8 +3,8 @@
 
 extern undefined4 FUN_800067c0();
 extern undefined4 FUN_80006b14();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017a7c();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();

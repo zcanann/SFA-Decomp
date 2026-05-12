@@ -4,8 +4,8 @@
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern double FUN_80017708();
 extern undefined4 FUN_80017748();
 extern uint FUN_80017760();
@@ -80,7 +80,7 @@ void FUN_801a8f88(void)
   
   iVar1 = FUN_80286840();
   psVar3 = *(short **)(iVar1 + 0xb8);
-  if (((int)*psVar3 == 0xffffffff) || (uVar2 = FUN_80017690((int)*psVar3), uVar2 != 0)) {
+  if (((int)*psVar3 == 0xffffffff) || (uVar2 = GameBit_Get((int)*psVar3), uVar2 != 0)) {
     *(float *)(psVar3 + 0x14) = *(float *)(psVar3 + 0x14) - lbl_803DC074;
     if (*(float *)(psVar3 + 0x14) < lbl_803E5248) {
       *(float *)(psVar3 + 0xc) = lbl_803E524C;
@@ -142,7 +142,7 @@ void FUN_801a92cc(uint param_1)
 {
   uint uVar1;
   
-  uVar1 = FUN_80017690((int)*(short *)(*(int *)(param_1 + 0x4c) + 0x1e));
+  uVar1 = GameBit_Get((int)*(short *)(*(int *)(param_1 + 0x4c) + 0x1e));
   if (uVar1 == 0) {
     *(uint *)(param_1 + 0xf4) = *(int *)(param_1 + 0xf4) - (uint)DAT_803dc070;
     if (*(int *)(param_1 + 0xf4) < 0) {
@@ -442,14 +442,14 @@ undefined4 FUN_801a9c3c(int param_1,int param_2)
   }
   else if ((param_2 == 1) && (*pcVar3 == '\x03')) {
     uVar2 = 1;
-    uVar1 = FUN_80017690((int)*(short *)(pcVar3 + 8));
-    if ((uVar1 != 0) && (uVar1 = FUN_80017690((int)*(short *)(pcVar3 + 10)), uVar1 == 0)) {
+    uVar1 = GameBit_Get((int)*(short *)(pcVar3 + 8));
+    if ((uVar1 != 0) && (uVar1 = GameBit_Get((int)*(short *)(pcVar3 + 10)), uVar1 == 0)) {
       puVar4 = *(undefined **)(param_1 + 0xb8);
       iVar5 = *(int *)(param_1 + 0x4c);
-      uVar1 = FUN_80017690((int)*(short *)(puVar4 + 8));
+      uVar1 = GameBit_Get((int)*(short *)(puVar4 + 8));
       if (uVar1 != 0) {
         *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
-        FUN_80017698((int)*(short *)(puVar4 + 10),1);
+        GameBit_Set((int)*(short *)(puVar4 + 10),1);
         *puVar4 = 4;
         *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(iVar5 + 0xc);
       }
@@ -550,12 +550,12 @@ void FUN_801a9e5c(uint param_1)
   iVar4 = *(int *)(param_1 + 0x4c);
   if ((pbVar6[1] & 1) != 0) {
     *pbVar6 = 2;
-    FUN_80017698((int)*(short *)(pbVar6 + 8),1);
+    GameBit_Set((int)*(short *)(pbVar6 + 8),1);
     pbVar6[1] = pbVar6[1] & 0xfe;
     *(undefined *)(param_1 + 0x36) = 0xff;
   }
   if (((*(byte *)(param_1 + 0xaf) & 4) != 0) && ((*(byte *)(param_1 + 0xaf) & 8) == 0)) {
-    uVar2 = FUN_80017690(0x86a);
+    uVar2 = GameBit_Get(0x86a);
     if (uVar2 == 0) {
       *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 0x10;
     }
@@ -614,20 +614,20 @@ void FUN_801a9e5c(uint param_1)
     if (bVar1 == 0) {
       *pbVar6 = 1;
       *(float *)(param_1 + 0x10) = *(float *)(iVar4 + 0xc) - lbl_803E5288;
-      uVar2 = FUN_80017690((int)*(short *)(pbVar6 + 8));
+      uVar2 = GameBit_Get((int)*(short *)(pbVar6 + 8));
       if (uVar2 != 0) {
         *pbVar6 = 2;
         *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(iVar4 + 0xc);
         *(undefined *)(param_1 + 0x36) = 0xff;
       }
-      uVar2 = FUN_80017690((int)*(short *)(pbVar6 + 10));
+      uVar2 = GameBit_Get((int)*(short *)(pbVar6 + 10));
       if (uVar2 != 0) {
         puVar5 = *(undefined **)(param_1 + 0xb8);
         iVar4 = *(int *)(param_1 + 0x4c);
-        uVar2 = FUN_80017690((int)*(short *)(puVar5 + 8));
+        uVar2 = GameBit_Get((int)*(short *)(puVar5 + 8));
         if (uVar2 != 0) {
           *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
-          FUN_80017698((int)*(short *)(puVar5 + 10),1);
+          GameBit_Set((int)*(short *)(puVar5 + 10),1);
           *puVar5 = 4;
           *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(iVar4 + 0xc);
         }
@@ -635,11 +635,11 @@ void FUN_801a9e5c(uint param_1)
     }
     else if ((((*(byte *)(param_1 + 0xaf) & 1) != 0) &&
              (iVar3 = (**(code **)(*DAT_803dd6e8 + 0x20))(0x86a), iVar3 != 0)) &&
-            (uVar2 = FUN_80017690(0x86a), uVar2 != 0)) {
+            (uVar2 = GameBit_Get(0x86a), uVar2 != 0)) {
       *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(iVar4 + 0xc);
       *(undefined *)(param_1 + 0x36) = 0;
       (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
-      FUN_80017698(0x86a,uVar2 - 1);
+      GameBit_Set(0x86a,uVar2 - 1);
       *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
     }
   }
@@ -655,14 +655,14 @@ void FUN_801a9e5c(uint param_1)
       FUN_800810f4((double)lbl_803E5274,(double)lbl_803E5298,param_1,5,5,1,0x28,0,0);
     }
     if (((*(float *)(pbVar6 + 0x10) <= lbl_803E528C) &&
-        (uVar2 = FUN_80017690((int)*(short *)(pbVar6 + 8)), uVar2 != 0)) &&
-       (uVar2 = FUN_80017690((int)*(short *)(pbVar6 + 10)), uVar2 == 0)) {
+        (uVar2 = GameBit_Get((int)*(short *)(pbVar6 + 8)), uVar2 != 0)) &&
+       (uVar2 = GameBit_Get((int)*(short *)(pbVar6 + 10)), uVar2 == 0)) {
       puVar5 = *(undefined **)(param_1 + 0xb8);
       iVar4 = *(int *)(param_1 + 0x4c);
-      uVar2 = FUN_80017690((int)*(short *)(puVar5 + 8));
+      uVar2 = GameBit_Get((int)*(short *)(puVar5 + 8));
       if (uVar2 != 0) {
         *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
-        FUN_80017698((int)*(short *)(puVar5 + 10),1);
+        GameBit_Set((int)*(short *)(puVar5 + 10),1);
         *puVar5 = 4;
         *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(iVar4 + 0xc);
       }
@@ -732,7 +732,7 @@ void FUN_801aa3a0(int param_1)
   
   local_18[0] = lbl_803E52A8;
   pcVar2 = *(char **)(param_1 + 0xb8);
-  uVar1 = FUN_80017690(0x1c0);
+  uVar1 = GameBit_Get(0x1c0);
   if (uVar1 != 0) {
     ObjGroup_FindNearestObject(5,param_1,local_18);
     if (*pcVar2 == '\x01') {

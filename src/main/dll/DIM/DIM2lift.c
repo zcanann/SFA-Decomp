@@ -5,7 +5,7 @@ extern undefined4 FUN_80006824();
 extern undefined4 FUN_8000691c();
 extern undefined4 FUN_800069bc();
 extern undefined4 FUN_80006b94();
-extern undefined8 FUN_80017698();
+extern undefined8 GameBit_Set(int eventId, int value);
 extern uint FUN_80017760();
 extern int FUN_80017a98();
 extern void* FUN_80017aa4();
@@ -304,8 +304,8 @@ FUN_801ba9ec(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
     iVar1 = FUN_80017a98();
     ObjMsg_SendToObject(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,0xe0000,param_9
                  ,0,param_13,param_14,param_15,param_16);
-    FUN_80017698((int)*(short *)(iVar2 + 0x3f4),0);
-    uVar3 = FUN_80017698((int)*(short *)(iVar2 + 0x3f2),1);
+    GameBit_Set((int)*(short *)(iVar2 + 0x3f4),0);
+    uVar3 = GameBit_Set((int)*(short *)(iVar2 + 0x3f2),1);
     if (*(int *)(param_9 + 0x4c) == 0) {
       FUN_80017ac8(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9);
     }
@@ -484,7 +484,7 @@ FUN_801baefc(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     FUN_800069bc();
     FUN_8000691c((double)lbl_803E5860,(double)lbl_803E588C,(double)lbl_803E5890);
     FUN_80006b94((double)lbl_803E5894);
-    FUN_80017698(0x26b,1);
+    GameBit_Set(0x26b,1);
   }
   return 0;
 }

@@ -2,8 +2,8 @@
 #include "main/dll/DIM/DIMwooddoor.h"
 
 extern undefined4 FUN_80006824();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern uint FUN_80017730();
 extern uint FUN_80017760();
 extern undefined4 FUN_80017a88();
@@ -64,7 +64,7 @@ void FUN_801b1ff4(undefined2 *param_1,int param_2)
   puVar2 = *(undefined **)(param_1 + 0x5c);
   *puVar2 = (char)*(undefined2 *)(param_2 + 0x1a);
   if ((int)*(short *)(param_2 + 0x1e) != 0xffffffff) {
-    uVar1 = FUN_80017690((int)*(short *)(param_2 + 0x1e));
+    uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x1e));
     puVar2[1] = (char)uVar1;
   }
   *param_1 = (short)((int)*(char *)(param_2 + 0x18) << 8);
@@ -129,7 +129,7 @@ void FUN_801b2098(uint param_1)
     *(char *)(param_1 + 0x36) = (char)iVar3;
     *psVar6 = *psVar6 - (ushort)DAT_803dc070;
     if (*psVar6 < 1) {
-      FUN_80017698((int)*(short *)(iVar4 + 0x1e),1);
+      GameBit_Set((int)*(short *)(iVar4 + 0x1e),1);
       *(undefined *)(psVar6 + 1) = 2;
     }
   }
@@ -188,7 +188,7 @@ void FUN_801b21cc(undefined2 *param_1,int param_2)
   iVar2 = *(int *)(param_1 + 0x5c);
   *(undefined *)(iVar2 + 3) = 1;
   *(undefined *)(iVar2 + 2) = 0;
-  uVar1 = FUN_80017690((int)*(short *)(param_2 + 0x1e));
+  uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x1e));
   if (uVar1 != 0) {
     *(undefined *)(iVar2 + 3) = 0;
     *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) =
@@ -246,9 +246,9 @@ void FUN_801b2260(double param_1,double param_2,double param_3,double param_4,un
         param_9[3] = param_9[3] | 0x4000;
       }
     }
-    uVar1 = FUN_80017690(0x85e);
-    if (((uVar1 != 0) && (uVar1 = FUN_80017690(0xc2d), uVar1 == 0)) ||
-       ((uVar1 = FUN_80017690(0x874), uVar1 != 0 && (uVar1 = FUN_80017690(0xc2e), uVar1 == 0)))) {
+    uVar1 = GameBit_Get(0x85e);
+    if (((uVar1 != 0) && (uVar1 = GameBit_Get(0xc2d), uVar1 == 0)) ||
+       ((uVar1 = GameBit_Get(0x874), uVar1 != 0 && (uVar1 = GameBit_Get(0xc2e), uVar1 == 0)))) {
       param_9[0x7a] = 0;
       param_9[0x7b] = 0x4b0;
     }
