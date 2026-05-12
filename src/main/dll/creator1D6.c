@@ -2,8 +2,7 @@
 #include "main/dll/creator1D6.h"
 
 extern undefined4 FUN_8000680c();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern undefined4 GameBit_Set(int eventId, int value);
 extern int FUN_80017a90();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_801ce244();
@@ -72,7 +71,7 @@ undefined4 FUN_801cf7ec(void)
  */
 void FUN_801cf818(void)
 {
-  FUN_80017698(0x4e4,1);
+  GameBit_Set(0x4e4,1);
   return;
 }
 

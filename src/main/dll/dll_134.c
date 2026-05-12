@@ -2,7 +2,7 @@
 #include "main/dll/dll_134.h"
 
 extern undefined4 FUN_80006824();
-extern undefined4 FUN_80017698();
+extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
@@ -61,8 +61,8 @@ undefined4 FUN_80167d58(int param_1,int param_2)
   if (*(char *)(param_2 + 0x27b) != '\0') {
     iVar1 = *(int *)(param_1 + 0xb8);
     *(undefined *)(iVar1 + 0x405) = 0;
-    FUN_80017698((int)*(short *)(iVar1 + 0x3f4),0);
-    FUN_80017698((int)*(short *)(iVar1 + 0x3f2),1);
+    GameBit_Set((int)*(short *)(iVar1 + 0x3f4),0);
+    GameBit_Set((int)*(short *)(iVar1 + 0x3f2),1);
   }
   return 0;
 }

@@ -2,7 +2,7 @@
 #include "main/dll/dll_15A.h"
 
 extern undefined4 FUN_80006b0c();
-extern undefined8 FUN_80017698();
+extern undefined8 GameBit_Set(int eventId, int value);
 extern uint FUN_80017730();
 extern undefined4 FUN_80017748();
 extern uint FUN_80017760();
@@ -63,7 +63,7 @@ FUN_801833e4(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   
   uVar1 = FUN_80017ae8();
   if ((uVar1 & 0xff) != 0) {
-    uVar5 = FUN_80017698((int)*(short *)(param_11 + 0xe),1);
+    uVar5 = GameBit_Set((int)*(short *)(param_11 + 0xe),1);
     switch(*(char *)(param_11 + 0x11)) {
     case '\x01':
       puVar4 = FUN_80017aa4(0x24,0x3d3);
@@ -249,7 +249,7 @@ FUN_801833e4(undefined8 param_1,double param_2,double param_3,undefined8 param_4
       break;
     case '\a':
     case '\b':
-      FUN_80017698((int)*(short *)(param_11 + 0xe),1);
+      GameBit_Set((int)*(short *)(param_11 + 0xe),1);
       break;
     case '\t':
       uVar1 = FUN_80017ae8();

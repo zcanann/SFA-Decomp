@@ -2,8 +2,7 @@
 #include "main/dll/DR/DRearthwalk.h"
 
 extern undefined4 FUN_80006824();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
 extern double FUN_80017708();
 extern uint FUN_80017760();
 extern undefined4 FUN_80017a50();
@@ -89,7 +88,7 @@ void FUN_801d9bdc(undefined2 *param_1,int param_2)
   iVar3 = 0;
   puVar5 = (uint *)&DAT_803dccc0;
   do {
-    uVar2 = FUN_80017690(*puVar5);
+    uVar2 = GameBit_Get(*puVar5);
     if (uVar2 != 0) {
       *pbVar4 = (char)iVar3 + 1;
     }

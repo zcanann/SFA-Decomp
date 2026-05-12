@@ -12,7 +12,7 @@ extern undefined8 FUN_80006a68();
 extern byte FUN_80006b20();
 extern undefined4 FUN_80006b28();
 extern undefined4 FUN_80006b30();
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern double FUN_80017714();
 extern uint FUN_80017730();
 extern undefined4 FUN_80017754();
@@ -1065,9 +1065,9 @@ void FUN_800da700(undefined4 param_1,undefined4 param_2,int param_3)
           (((uint)uVar11 == 0xffffffff || ((uint)*(byte *)(iVar7 + 3) == (uint)uVar11)))) &&
          ((param_3 == -1 || (*(char *)(iVar7 + 0x1a) == param_3)))) &&
         (((int)*(short *)(iVar7 + 0x30) == 0xffffffff ||
-         (uVar6 = FUN_80017690((int)*(short *)(iVar7 + 0x30)), uVar6 != 0)))) &&
+         (uVar6 = GameBit_Get((int)*(short *)(iVar7 + 0x30)), uVar6 != 0)))) &&
        ((((int)*(short *)(iVar7 + 0x32) == 0xffffffff ||
-         (uVar6 = FUN_80017690((int)*(short *)(iVar7 + 0x32)), uVar6 == 0)) &&
+         (uVar6 = GameBit_Get((int)*(short *)(iVar7 + 0x32)), uVar6 == 0)) &&
         (fVar1 = *pfVar4 - *(float *)(iVar7 + 8), fVar2 = pfVar4[1] - *(float *)(iVar7 + 0xc),
         fVar3 = pfVar4[2] - *(float *)(iVar7 + 0x10),
         dVar9 = (double)(fVar3 * fVar3 + fVar1 * fVar1 + fVar2 * fVar2), dVar9 < dVar10)))) {

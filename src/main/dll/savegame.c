@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/savegame.h"
 
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern uint FUN_80017760();
 extern int FUN_80286834();
 extern int FUN_8028683c();
@@ -1473,7 +1473,7 @@ void FUN_800fa7e8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   uint uStack_24;
   
   iVar1 = FUN_8028683c();
-  uVar2 = FUN_80017690(0x63c);
+  uVar2 = GameBit_Get(0x63c);
   if (uVar2 == 0) {
     local_312 = 0;
     local_314 = 0x15;
@@ -1486,7 +1486,7 @@ void FUN_800fa7e8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
     local_2fc = 0x15;
     local_300 = &DAT_803183e8;
     local_310 = 2;
-    uVar2 = FUN_80017690(0x4e9);
+    uVar2 = GameBit_Get(0x4e9);
     if (uVar2 == 0) {
       uStack_24 = FUN_80017760(5,10);
       uStack_24 = uStack_24 ^ 0x80000000;

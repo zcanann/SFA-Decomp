@@ -7,7 +7,7 @@ extern int FUN_80006a10();
 extern double FUN_80006a30();
 extern char FUN_80006a64();
 extern undefined8 FUN_80006a68();
-extern undefined4 FUN_80017698();
+extern undefined4 GameBit_Set(int eventId, int value);
 extern uint FUN_80017730();
 extern int FUN_80017738();
 extern undefined4 FUN_80017744();
@@ -165,7 +165,7 @@ void FUN_801135c0(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
       *(undefined2 *)(iVar3 + 0x274) = param_5;
       *(undefined4 *)(iVar3 + 0x2d0) = 0;
       *(undefined *)(iVar3 + 0x25f) = 0;
-      FUN_80017698((int)*(short *)(iVar3 + 0x3f4),0);
+      GameBit_Set((int)*(short *)(iVar3 + 0x3f4),0);
     }
   }
   FUN_80286888();
@@ -280,7 +280,7 @@ void FUN_80113758(undefined4 param_1,undefined4 param_2,int param_3,undefined4 p
       *(undefined2 *)(iVar5 + 0x6e) = 0xffff;
       *(ushort *)(iVar5 + 0x6e) = *(ushort *)(iVar5 + 0x6e) & 0xffbf;
       *(undefined *)(param_3 + 0x25f) = 0;
-      FUN_80017698((int)*(short *)(param_3 + 0x3f4),0);
+      GameBit_Set((int)*(short *)(param_3 + 0x3f4),0);
     }
   }
   FUN_80286888();

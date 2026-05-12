@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b14();
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern undefined4 FUN_8001771c();
 extern uint FUN_80017760();
 extern int FUN_80017a98();
@@ -62,7 +62,7 @@ void FUN_801833e4(undefined2 *param_1,int param_2)
   *(undefined4 *)(param_1 + 0x40) = *(undefined4 *)(param_1 + 6);
   *(undefined4 *)(param_1 + 0x42) = *(undefined4 *)(param_1 + 8);
   *(undefined4 *)(param_1 + 0x40) = *(undefined4 *)(param_1 + 10);
-  uVar1 = FUN_80017690((int)*(short *)(iVar2 + 0x1c));
+  uVar1 = GameBit_Get((int)*(short *)(iVar2 + 0x1c));
   if (uVar1 != 0) {
     *(undefined4 *)(iVar2 + 0x14) = 1;
     ObjHits_DisableObject((int)param_1);
@@ -139,7 +139,7 @@ void FUN_801835c4(uint param_1,int param_2)
         ((((iVar4 = *(int *)(iVar4 + 0x14), iVar4 == 0x465d7 || (iVar4 - 0x465d5U < 2)) ||
           (iVar4 == 0x66)) || ((iVar4 == 0x465d0 || (iVar4 == 0x465d2)))))) &&
        ((dVar5 = (double)FUN_8001771c((float *)(iVar2 + 0x18),(float *)(param_1 + 0x18)),
-        dVar5 < (double)lbl_803E4654 && (uVar3 = FUN_80017690(0xa71), uVar3 == 0)))) {
+        dVar5 < (double)lbl_803E4654 && (uVar3 = GameBit_Get(0xa71), uVar3 == 0)))) {
       FUN_80006824(param_1,0x313);
     }
     *(float *)(param_1 + 0xc) = *(float *)(param_1 + 0xc) + *(float *)(param_1 + 0x24);

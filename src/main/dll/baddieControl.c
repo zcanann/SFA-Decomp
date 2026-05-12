@@ -16,8 +16,7 @@ extern char FUN_80006bb8();
 extern char FUN_80006bc0();
 extern undefined4 FUN_80006c00();
 extern uint FUN_80006c10();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern undefined4 GameBit_Set(int eventId, int value);
 extern double FUN_800176f4();
 extern int FUN_80017730();
 extern undefined4 FUN_80017754();
@@ -2853,7 +2852,7 @@ void FUN_8011221c(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(char *)(iVar2 + 0x25f) = param_17;
   }
   if ((int)(short)param_12 != 0xffffffff) {
-    FUN_80017698((int)(short)param_12,1);
+    GameBit_Set((int)(short)param_12,1);
   }
   FUN_80286888();
   return;

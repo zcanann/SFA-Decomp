@@ -2,7 +2,7 @@
 #include "main/dll/scene1C7.h"
 
 extern undefined4 FUN_800175cc();
-extern undefined4 FUN_80017698();
+extern undefined4 GameBit_Set(int eventId, int value);
 extern int FUN_80017a98();
 extern undefined4 FUN_80042b9c();
 extern undefined4 FUN_80042bec();
@@ -46,8 +46,8 @@ void dbsh_shrine_update(undefined4 param_1,undefined4 param_2,int param_3)
     if (bVar1 != 0) {
       if (bVar1 == 7) {
         FUN_80294ccc(iVar3,2,1);
-        FUN_80017698(0x15f,1);
-        FUN_80017698(0xc6e,1);
+        GameBit_Set(0x15f,1);
+        GameBit_Set(0xc6e,1);
         (**(code **)(*DAT_803dd72c + 0x44))(0xb,3);
         FUN_80042b9c(0,0,1);
         uVar4 = FUN_80044404(10);

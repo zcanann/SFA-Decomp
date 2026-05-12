@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_13F.h"
 
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined8 ObjHits_DisableObject();
@@ -75,7 +75,7 @@ void collectible_init(undefined8 param_1,undefined8 param_2,double param_3,undef
   dVar5 = (double)lbl_803E40F4;
   if (dVar7 == dVar5) {
     if ((int)*(short *)(iVar4 + 0x14) != 0xffffffff) {
-      uVar2 = FUN_80017690((int)*(short *)(iVar4 + 0x14));
+      uVar2 = GameBit_Get((int)*(short *)(iVar4 + 0x14));
       uVar2 = countLeadingZeros(uVar2);
       *(char *)(iVar4 + 0x1e) = (char)(uVar2 >> 5);
     }
@@ -132,7 +132,7 @@ void collectible_init(undefined8 param_1,undefined8 param_2,double param_3,undef
           }
           ObjHits_DisableObject((int)param_9);
           if (((int)*(short *)(iVar4 + 0x10) != 0xffffffff) &&
-             (uVar2 = FUN_80017690((int)*(short *)(iVar4 + 0x10)), uVar2 == 0)) {
+             (uVar2 = GameBit_Get((int)*(short *)(iVar4 + 0x10)), uVar2 == 0)) {
             param_9[0x7a] = 0;
             param_9[0x7b] = 0;
           }

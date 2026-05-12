@@ -4,7 +4,7 @@
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
 extern undefined4 FUN_80017688();
-extern undefined4 FUN_80017698();
+extern undefined4 GameBit_Set(int eventId, int value);
 extern double FUN_80017708();
 extern uint FUN_80017760();
 extern undefined4 FUN_80017a78();
@@ -544,7 +544,7 @@ void FUN_80164c58(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     (**(code **)(*DAT_803dd728 + 0x18))((double)lbl_803DC074,param_9,iVar5);
     iVar4 = ObjHits_GetPriorityHit((int)param_9,&uStack_54,&iStack_4c,&uStack_50);
     if (iVar4 != 0) {
-      FUN_80017698(0x642,1);
+      GameBit_Set(0x642,1);
       *(byte *)(iVar5 + 0x27a) = *(byte *)(iVar5 + 0x27a) | 7;
     }
   }
@@ -737,7 +737,7 @@ undefined4 FUN_801654bc(int param_1,int param_2)
   if (*(char *)(param_2 + 0x27a) != '\0') {
     (**(code **)(*DAT_803dd738 + 0x4c))(param_1,(int)*(short *)(iVar1 + 0x3f0),0xffffffff,0);
     (**(code **)(*DAT_803dd70c + 0x58))(param_1,param_2,0x3c,10,0);
-    FUN_80017698((int)*(short *)(iVar1 + 0x3f2),1);
+    GameBit_Set((int)*(short *)(iVar1 + 0x3f2),1);
     *(undefined *)(iVar1 + 0x405) = 0;
   }
   return 0;
