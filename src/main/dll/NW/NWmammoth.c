@@ -3,8 +3,7 @@
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80017688();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern undefined4 GameBit_Set(int eventId, int value);
 extern double FUN_80017714();
 extern undefined4 FUN_8001771c();
 extern undefined4 FUN_80017a28();
@@ -253,7 +252,7 @@ void FUN_801d1b50(undefined8 param_1,double param_2,double param_3,undefined8 pa
           puVar1[3] = puVar1[3] | 0x4000;
           ObjHits_DisableObject((int)puVar1);
           FUN_80017688((int)*(short *)(pfVar7 + 0x4d));
-          FUN_80017698(0x12e,0);
+          GameBit_Set(0x12e,0);
           if (puVar1[0x23] == 0x658) {
             FUN_80081118((double)FLOAT_803e5f40,puVar1,0xff,0x28);
           }

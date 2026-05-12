@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/SH/lily.h"
 
-extern undefined4 FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern double FUN_80017714();
 extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_8014ccac();
@@ -77,7 +77,7 @@ void FUN_801d5174(void)
       FUN_8014ccac(iVar4,iVar1);
       dVar9 = FUN_80017714((float *)(*piVar3 + 0x18),(float *)(iVar1 + 0x18));
       if (dVar9 < (double)lbl_803E60AC) {
-        FUN_80017690((int)*(short *)(*(int *)(*piVar3 + 0x4c) + 0x18));
+        GameBit_Get((int)*(short *)(*(int *)(*piVar3 + 0x4c) + 0x18));
       }
       cVar6 = cVar6 + '\x01';
       if (cVar6 == '\x03') break;

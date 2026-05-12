@@ -4,8 +4,7 @@
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
 extern undefined4 FUN_80017620();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern undefined4 GameBit_Set(int eventId, int value);
 extern double FUN_80017714();
 extern uint FUN_80017760();
 extern undefined4 FUN_80017a28();
@@ -128,7 +127,7 @@ void FUN_801d2c74(undefined8 param_1,double param_2,double param_3,undefined8 pa
     } while (iVar1 < 3);
   }
   else {
-    FUN_80017698((int)*(short *)(iVar2 + 0x1c),0);
+    GameBit_Set((int)*(short *)(iVar2 + 0x1c),0);
   }
   return;
 }

@@ -11,7 +11,6 @@ extern SHthorntailObject **ObjGroup_GetObjects(int group,int *countOut);
 extern int fn_8005A10C(Vec *pos,f32 radius);
 extern void fn_8014C66C(SHthorntailObject *obj,SHthorntailObject *other);
 extern void OSReport(const char *msg,...);
-extern uint FUN_80017690();
 extern uint FUN_80017758();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();

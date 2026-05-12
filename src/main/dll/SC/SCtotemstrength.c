@@ -2,8 +2,8 @@
 #include "main/dll/brokecannon.h"
 #include "main/dll/SC/SCtotemstrength.h"
 
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80080f14();
 extern undefined8 FUN_801d8524();
 
@@ -29,13 +29,13 @@ void SCtotemstrength_updateState
   uint uVar1;
   
   FUN_80080f14(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0);
-  uVar1 = FUN_80017690(0x13f);
+  uVar1 = GameBit_Get(0x13f);
   if (uVar1 == 0) {
     (**(code **)(*DAT_803dd6e8 + 100))();
   }
-  uVar1 = FUN_80017690(0x193);
+  uVar1 = GameBit_Get(0x193);
   if (uVar1 != 0) {
-    FUN_80017698(0x194,0);
+    GameBit_Set(0x194,0);
   }
   return;
 }

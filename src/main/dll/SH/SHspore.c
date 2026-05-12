@@ -8,8 +8,8 @@ extern undefined4 FUN_800175b0();
 extern undefined4 FUN_800175d0();
 extern void* FUN_80017624();
 extern undefined4 FUN_80017680();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern double FUN_80017708();
 extern uint FUN_80017760();
 extern undefined4 FUN_80017a6c();
@@ -119,8 +119,8 @@ void FUN_801d4524(undefined2 *param_1)
   iVar3 = *(int *)(param_1 + 0x26);
   *param_1 = (short)((int)*(char *)(iVar3 + 0x18) << 8);
   if (((int)*(short *)(iVar3 + 0x20) == 0xffffffff) ||
-     (uVar1 = FUN_80017690((int)*(short *)(iVar3 + 0x20)), uVar1 != 0)) {
-    uVar1 = FUN_80017690(0x66c);
+     (uVar1 = GameBit_Get((int)*(short *)(iVar3 + 0x20)), uVar1 != 0)) {
+    uVar1 = GameBit_Get(0x66c);
     if (uVar1 == 0) {
       *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 0x10;
     }
@@ -129,18 +129,18 @@ void FUN_801d4524(undefined2 *param_1)
     }
     iVar2 = ObjTrigger_IsSetById((int)param_1,0x66c);
     if (iVar2 == 0) {
-      if (((*(byte *)((int)param_1 + 0xaf) & 4) != 0) && (uVar1 = FUN_80017690(0x196), uVar1 == 0))
+      if (((*(byte *)((int)param_1 + 0xaf) & 4) != 0) && (uVar1 = GameBit_Get(0x196), uVar1 == 0))
       {
         (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
-        FUN_80017698(0x196,1);
+        GameBit_Set(0x196,1);
       }
     }
     else {
       FUN_80017680(0x66c);
-      FUN_80017698((int)*(short *)(iVar3 + 0x1e),1);
+      GameBit_Set((int)*(short *)(iVar3 + 0x1e),1);
       (**(code **)(*DAT_803dd6d4 + 0x48))(1,param_1,0xffffffff);
     }
-    uVar1 = FUN_80017690((int)*(short *)(iVar3 + 0x1e));
+    uVar1 = GameBit_Get((int)*(short *)(iVar3 + 0x1e));
     if (uVar1 == 0) {
       *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) & 0xf7;
       FUN_800400b0();
