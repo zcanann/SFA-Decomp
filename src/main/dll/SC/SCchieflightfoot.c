@@ -30,13 +30,13 @@ extern undefined4 FUN_80286888();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 
-extern ObjHitReactEntry DAT_80327b78;
-extern ObjHitReactEntry DAT_80327d6c;
-extern s16 DAT_80327f60[];
-extern f32 DAT_80327f84[];
-extern u8 DAT_80327fc8[];
-extern u16 DAT_80327fdc[];
-extern u8 DAT_80328000[];
+extern ObjHitReactEntry gSHthorntailNormalHitReactEntries;
+extern ObjHitReactEntry gSHthorntailHeavyHitReactEntries;
+extern s16 gSHthorntailStateMoveIds[];
+extern f32 gSHthorntailStateMoveStepScales[];
+extern u8 gSHthorntailStateFlags[];
+extern u16 gSHthorntailStateTrigger0Sfx[];
+extern u8 gSHthorntailStateTrigger7Sfx[];
 extern u8 lbl_80326EF8[0x30];
 extern u8 lbl_80326F28[0x4AC];
 extern undefined4 lbl_803E5410;
@@ -142,11 +142,11 @@ void SHthorntail_update(SHthorntailObject *obj)
     runtime->effectTimer = (float)(dVar11 - (double)timeDelta);
   }
   runtime->behaviorFlags = runtime->behaviorFlags & 0xf7;
-  if ((DAT_80327fc8[runtime->behaviorState] & 2) == 0) {
-    hitReactEntries = &DAT_80327b78;
+  if ((gSHthorntailStateFlags[runtime->behaviorState] & 2) == 0) {
+    hitReactEntries = &gSHthorntailNormalHitReactEntries;
   }
   else {
-    hitReactEntries = &DAT_80327d6c;
+    hitReactEntries = &gSHthorntailHeavyHitReactEntries;
   }
   iVar6 = 0x19;
   uVar7 = (uint)runtime->hitReactState;
@@ -171,7 +171,7 @@ void SHthorntail_update(SHthorntailObject *obj)
       SHthorntail_updateRootControlMode3(obj,runtime);
       break;
     }
-    if ((DAT_80327fc8[runtime->behaviorState] & 1) == 0) {
+    if ((gSHthorntailStateFlags[runtime->behaviorState] & 1) == 0) {
       *(byte *)((int)psVar2 + 0xaf) = *(byte *)((int)psVar2 + 0xaf) & 0xef;
       *(byte *)((int)psVar2 + 0xaf) = *(byte *)((int)psVar2 + 0xaf) & 0xf7;
     }
@@ -188,12 +188,12 @@ void SHthorntail_update(SHthorntailObject *obj)
         runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_FREEZE_MOTION;
       }
     }
-    if ((int)psVar2[0x50] != (int)DAT_80327f60[runtime->behaviorState]) {
+    if ((int)psVar2[0x50] != (int)gSHthorntailStateMoveIds[runtime->behaviorState]) {
       ObjAnim_SetCurrentMove((double)lbl_803E5418,(int)psVar2,
-                             (int)DAT_80327f60[runtime->behaviorState],0);
+                             (int)gSHthorntailStateMoveIds[runtime->behaviorState],0);
       runtime->storedFacingAngle = *psVar2;
     }
-    iVar6 = ObjAnim_AdvanceCurrentMove((double)DAT_80327f84[runtime->behaviorState],
+    iVar6 = ObjAnim_AdvanceCurrentMove((double)gSHthorntailStateMoveStepScales[runtime->behaviorState],
                                        (double)timeDelta,(int)psVar2,local_60);
     if (iVar6 == 0) {
       runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_MOVE_COMPLETE;
@@ -201,7 +201,7 @@ void SHthorntail_update(SHthorntailObject *obj)
     else {
       runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_MOVE_COMPLETE;
     }
-    if ((DAT_80327fc8[runtime->behaviorState] & 8) != 0) {
+    if ((gSHthorntailStateFlags[runtime->behaviorState] & 8) != 0) {
       if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
         runtime->storedFacingAngle = *psVar2;
       }
@@ -224,26 +224,26 @@ void SHthorntail_update(SHthorntailObject *obj)
     pfVar8 = local_60;
     for (iVar6 = 0; iVar6 < local_45; iVar6 = iVar6 + 1) {
       if (*(char *)((int)pfVar8 + 0x13) == '\0') {
-        if (DAT_80327fdc[runtime->behaviorState] != 0) {
-          Sfx_PlayFromObject((uint)psVar2,DAT_80327fdc[runtime->behaviorState]);
+        if (gSHthorntailStateTrigger0Sfx[runtime->behaviorState] != 0) {
+          Sfx_PlayFromObject((uint)psVar2,gSHthorntailStateTrigger0Sfx[runtime->behaviorState]);
         }
       }
       else if ((*(char *)((int)pfVar8 + 0x13) == '\a') &&
-              (DAT_80328000[runtime->behaviorState] != 0)) {
-        Sfx_PlayFromObject((uint)psVar2,(ushort)DAT_80328000[runtime->behaviorState]);
+              (gSHthorntailStateTrigger7Sfx[runtime->behaviorState] != 0)) {
+        Sfx_PlayFromObject((uint)psVar2,(ushort)gSHthorntailStateTrigger7Sfx[runtime->behaviorState]);
       }
       pfVar8 = (float *)((int)pfVar8 + 1);
     }
     objAudioFn_8006ef38((double)lbl_803E5448,(double)lbl_803E5448,psVar2,local_60,8,
                  (int)runtime->renderPathPoints,(int)runtime->moveScratch);
-    if ((DAT_80327fc8[runtime->behaviorState] & 4) == 0) {
+    if ((gSHthorntailStateFlags[runtime->behaviorState] & 4) == 0) {
       runtime->movementControlFlags = runtime->movementControlFlags | 1;
     }
     else {
       runtime->movementControlFlags = runtime->movementControlFlags & 0xfe;
     }
     dll_2E_func03(obj,runtime);
-    if ((DAT_80327fc8[runtime->behaviorState] & 2) == 0) {
+    if ((gSHthorntailStateFlags[runtime->behaviorState] & 2) == 0) {
       FUN_8003b280((int)psVar2,(int)runtime->collisionShapeState);
     }
     else {
