@@ -42,7 +42,7 @@ typedef struct DIMbossTopState {
   DIMbossEffect *effect;
   u8 pad004[0xA4 - 0x04];
   f32 launchLift;
-  u8 pad0A8[0xAC - 0xA8];
+  f32 idleLift;
   f32 introSinkHeight;
   s32 defeatTimer;
   u8 stompDustDelay;
@@ -51,7 +51,9 @@ typedef struct DIMbossTopState {
 } DIMbossTopState;
 
 typedef struct DIMbossRuntime {
-  u8 pad000[0x274];
+  u8 pad000[0x270];
+  s16 field270;
+  u8 pad272[0x274 - 0x272];
   s16 scale;
   u8 pad276[0x2D0 - 0x276];
   undefined4 targetModel;
@@ -89,15 +91,20 @@ typedef struct DIMbossObject {
   undefined4 facingAngle;
   u8 pad34[0x4C - 0x34];
   DIMbossConfig *config;
-  u8 pad50[0xA8 - 0x50];
+  u8 pad50[0xA2 - 0x50];
+  s16 activeModelId;
+  u8 padA4[0xA8 - 0xA4];
   f32 modelScale;
   u8 padAC[0xAF - 0xAC];
   u8 objectFlags;
   u8 padB0[0xB8 - 0xB0];
   DIMbossRuntime *runtime;
-  u8 padBC[0xC8 - 0xBC];
+  void (*updateState)(struct DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate);
+  u8 padC0[0xC8 - 0xC0];
   void *childObject;
-  u8 padCC[0xF4 - 0xCC];
+  u8 padCC[0xE4 - 0xCC];
+  u8 updateMode;
+  u8 padE5[0xF4 - 0xE5];
   int renderPause;
   int updateInitialized;
 } DIMbossObject;
@@ -112,9 +119,7 @@ void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
                     undefined4 param_5,char shouldRender);
 void DIMboss_hitDetect(DIMbossObject *obj);
 void dimboss_update2(DIMbossObject *obj);
-void DIMboss_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                    undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                    ushort *param_9);
+void DIMboss_update(DIMbossObject *obj,undefined4 param_2,int param_3);
 void dimboss_release(void);
 void dimboss_initialise(void);
 

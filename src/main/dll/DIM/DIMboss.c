@@ -45,12 +45,15 @@ extern undefined4 GXFlush_();
 extern undefined8 waitNextFrame();
 extern undefined4 FUN_80053b3c();
 extern undefined4 FUN_8005fe14();
+extern void fn_8005CEF0(int param_1);
 extern undefined4 FUN_80080f70();
 extern undefined4 FUN_80080f7c();
 extern undefined4 FUN_80080f80();
 extern undefined8 dll_2E_func07();
 extern undefined4 FUN_801150a4();
 extern undefined8 FUN_801150ac();
+extern undefined4 fn_80113F9C();
+extern undefined4 fn_80114F64();
 extern undefined4 FUN_801149bc();
 extern undefined4 FUN_801bbed0();
 extern undefined4 FUN_801bb848();
@@ -58,6 +61,7 @@ extern undefined4 warpDarkIceMines_801bbb44();
 extern undefined4 FUN_801bcc94();
 extern undefined8 fn_801BC7E4();
 extern undefined4 dll_2E_func04();
+extern void *Resource_Acquire(int id, int mode);
 extern void OSReport(const char *msg, ...);
 
 extern undefined4 Camera_DisableViewYOffset();
@@ -96,17 +100,24 @@ extern f32 lbl_803E58EC;
 extern f32 lbl_803E5908;
 extern undefined4 lbl_803AC9AC[];
 extern undefined4 lbl_803AC9DC[];
+extern undefined4 lbl_802C2338[];
 extern undefined4 lbl_803AD018[];
 extern int lbl_803DCA8C;
 extern undefined4* lbl_803DCAB8;
 extern undefined4 lbl_803DDB88;
+extern u8 lbl_803DDB84;
 extern f32 lbl_803E4BD8;
+extern f32 lbl_803E4C28;
 extern f32 lbl_803E4C44;
 extern f32 lbl_803E4C4C;
 extern f32 lbl_803E4C50;
 extern f32 lbl_803E4C54;
+extern f32 lbl_803E4C78;
 extern char sDIMBossFreeingAssetsForDIMBoss[];
 extern char sDIMBossLoadingAssetsForDIMTop[];
+
+typedef void (*DIMbossAnimSetupFn)(DIMbossObject *obj,undefined4 param_2,DIMbossRuntime *runtime,
+                                   int param_4,int param_5,int param_6,int param_7,float scale);
 
 /*
  * --INFO--
@@ -652,112 +663,90 @@ void dimboss_update2(DIMbossObject *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMboss_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                    undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                    ushort *param_9)
+void DIMboss_update(DIMbossObject *obj,undefined4 param_2,int param_3)
 {
-  uint uVar1;
-  undefined4 uVar2;
-  int in_r7;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  undefined8 uVar6;
+  typedef struct DIMbossLocalVec {
+    undefined4 x;
+    undefined4 y;
+    undefined4 z;
+    undefined2 mode;
+  } DIMbossLocalVec;
 
-  iVar4 = *(int *)(param_9 + 0x5c);
-  iVar3 = *(int *)(param_9 + 0x26);
-  FUN_80017a98();
-  iVar5 = *(int *)(iVar4 + 0x40c);
-  if (*(int *)(param_9 + 0x7a) == 0) {
-    if ((double)lbl_803E5870 < (double)*(float *)(iVar5 + 0xac)) {
-      FUN_80006c88((double)*(float *)(iVar5 + 0xac),param_2,param_3,param_4,param_5,param_6,param_7,
-                   param_8,0x432);
-      *(float *)(iVar5 + 0xac) = *(float *)(iVar5 + 0xac) - lbl_803DC074;
-      if (*(float *)(iVar5 + 0xac) < lbl_803E5870) {
-        *(float *)(iVar5 + 0xac) = lbl_803E5870;
-      }
-    }
-    uVar6 = ObjHits_RegisterActiveHitVolumeObject(param_9);
-    if (*(int *)(param_9 + 0x7c) == 0) {
-      *(undefined4 *)(param_9 + 6) = *(undefined4 *)(iVar3 + 8);
-      *(undefined4 *)(param_9 + 8) = *(undefined4 *)(iVar3 + 0xc);
-      *(undefined4 *)(param_9 + 10) = *(undefined4 *)(iVar3 + 0x10);
-      (**(code **)(*DAT_803dd6d4 + 0x48))((int)*(char *)(iVar3 + 0x2e),param_9,0xffffffff);
-      param_9[0x7c] = 0;
-      param_9[0x7d] = 1;
-    }
-    else {
-      if ((*(ushort *)(iVar4 + 0x400) & 2) != 0) {
-        in_r7 = iVar4 + 0x405;
-        in_r8 = 0;
-        in_r9 = 0;
-        in_r10 = 0;
-        (**(code **)(*DAT_803dd738 + 0x28))
-                  (param_9,iVar4,iVar4 + 0x35c,(int)*(short *)(iVar4 + 0x3f4));
-        *(ushort *)(iVar4 + 0x400) = *(ushort *)(iVar4 + 0x400) & 0xfffd;
-        *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) & 0xf7;
-        *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) | 0x80;
-        uVar1 = FUN_80017690(0x20c);
-        if (uVar1 < 3) {
-          *(undefined2 *)(iVar4 + 0x402) = 1;
-          *(undefined *)(iVar4 + 0x354) = 3;
-          *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) & 0xf7;
-          *(float *)(iVar5 + 0xa4) = lbl_803E58DC;
-          uVar6 = FUN_80017698(0x9e,1);
-        }
-        else {
-          *(undefined2 *)(iVar4 + 0x402) = 2;
-          *(undefined *)(iVar4 + 0x354) = 3;
-          *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) & 0xf7;
-          uVar6 = FUN_80017698(0x9e,0);
-        }
-      }
-      if ((*(short *)(iVar4 + 0x402) == 0) || (*(short *)(iVar4 + 0x402) == 3)) {
-        if ((*(char *)(iVar5 + 0xb4) != '\0') &&
-           (*(char *)(iVar5 + 0xb4) = *(char *)(iVar5 + 0xb4) + -1, *(char *)(iVar5 + 0xb4) == '\0')
-           ) {
-          FUN_80017a50(param_9,(float *)&DAT_803ad60c,'\0');
-          iVar3 = FUN_80017a54((int)param_9);
-          uVar6 = FUN_80017940(param_9,iVar3);
-        }
-        if (*(char *)(iVar5 + 0xb6) < '\0') {
-          uVar6 = FUN_80006728(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,
-                               0xdb,0,in_r7,in_r8,in_r9,in_r10);
-          FUN_80006728(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0xdc,0,
-                       in_r7,in_r8,in_r9,in_r10);
-          FUN_80080f80(7,1,0);
-          FUN_80080f70((double)lbl_803E58E4,(double)lbl_803E58E8,(double)lbl_803E58EC,7);
-          FUN_80080f7c(7,0xa0,0xa0,0xff,0x7f,0x28);
-          *(byte *)(iVar5 + 0xb6) = *(byte *)(iVar5 + 0xb6) & 0x7f;
-        }
-      }
-      else {
-        if ((*(ushort *)(iVar4 + 0x400) & 4) == 0) {
-          uVar2 = FUN_80017a98();
-          *(undefined4 *)(iVar4 + 0x2d0) = uVar2;
-        }
-        else {
-          uVar2 = FUN_80017a90();
-          *(undefined4 *)(iVar4 + 0x2d0) = uVar2;
-        }
-        if (*(int *)(param_9 + 100) != 0) {
-          *(undefined4 *)(*(int *)(param_9 + 100) + 0x30) = *(undefined4 *)(param_9 + 0x18);
-        }
-        iVar3 = iVar4;
-        iVar5 = iVar4;
-        FUN_801bcc94(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,0,iVar4,
-                     iVar4);
-        FUN_801150a4(-0x7fc529c4,*(undefined4 *)(iVar4 + 0x2d0));
-        uVar6 = FUN_801150ac();
-        FUN_801bbed0(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar4,
-                     iVar3,iVar5,in_r7,in_r8,in_r9,in_r10);
-      }
-    }
+  DIMbossRuntime *runtime;
+  DIMbossTopState *topState;
+  DIMbossLocalVec localVec;
+  undefined4 *localVecSrc;
+  u8 *animFlagsByte;
+  undefined4 mapDir;
+  int animFlags;
+  f32 liftHeight;
+
+  runtime = obj->runtime;
+  localVecSrc = lbl_802C2338;
+  localVec.x = localVecSrc[0];
+  localVec.y = localVecSrc[1];
+  localVec.z = localVecSrc[2];
+  localVec.mode = *(undefined2 *)&localVecSrc[3];
+  fn_8005CEF0(0);
+  obj->updateMode = 2;
+  animFlags = 6;
+  if (param_3 != 0) {
+    animFlags = (animFlags | 1) & 0xff;
   }
-  return;
+  ((DIMbossAnimSetupFn)(*(code *)(*lbl_803DCAB8 + 0x58)))
+      (obj,param_2,runtime,0xc,6,0x102,animFlags,lbl_803E4C28);
+  obj->updateState = DIMboss_updateState;
+  runtime->phase = 0;
+  (*(code *)(*(int *)lbl_803DCA8C + 0x14))(obj,runtime,0);
+  runtime->field270 = 0;
+  runtime->animMode = 3;
+  obj->objectFlags |= 0x88;
+  if (GameBit_Get(0x210) != 0) {
+    runtime->phase = 4;
+    obj->renderPause = 1;
+  }
+  if (GameBit_Get(0x20e) != 0) {
+    runtime->phase = 3;
+  }
+  topState = runtime->topState;
+  liftHeight = lbl_803E4BD8;
+  topState->idleLift = liftHeight;
+  topState->launchLift = liftHeight;
+  obj->activeModelId = -1;
+  topState->effect = NULL;
+  lbl_803DDB84 = 0;
+  lbl_803DDB80 = 0;
+  GameBit_Set(0x4e4,1);
+  fn_80114F64(obj,lbl_803AC9DC,0xffffd8e4,0x1c71,6);
+  fn_80113F9C(lbl_803AC9DC,&localVec,&localVec,6);
+  animFlagsByte = (u8 *)((int)lbl_803AC9DC + 0x611);
+  *animFlagsByte |= 8;
+  *animFlagsByte &= 0xfe;
+  topState->steamSfxPending = (topState->steamSfxPending & 0x7f) | 0x80;
+  lbl_803DDB88 = (undefined4)Resource_Acquire(0x5a,1);
+  if (GameBit_Get(0x1df) == 0) {
+    topState->stompDustDelay = 2;
+    topState->introSinkHeight = lbl_803E4C78;
+    (*(code *)(*lbl_803DCAAC + 0x50))(DIMBOSS_MAP_DIR,5,1);
+  }
+  else {
+    (*(code *)(*lbl_803DCAAC + 0x50))(DIMBOSS_MAP_DIR,5,0);
+  }
+  topState->defeatTimer = 0;
+  if ((*(code *)(*lbl_803DCAAC + 0x40))(7) == 2) {
+    (*(code *)(*lbl_803DCAAC + 0x44))(7,3);
+  }
+  GameBit_Set(0xefd,1);
+  unlockLevel(0,0,1);
+  mapDir = mapGetDirIdx(DIMBOSS_MAP_DIR);
+  lockLevel(mapDir,1);
+  mapDir = mapGetDirIdx(DIMBOSS_GUT_MAP_DIR);
+  lockLevel(mapDir,0);
+  GameBit_Set(0xcbb,0);
+  Music_Trigger(0x36,1);
+  GameBit_Set(0xda5,0);
+  Music_Trigger(0xd7,0);
+  Music_Trigger(0xe0,0);
 }
 
 extern void fn_801BDAF4(void);
