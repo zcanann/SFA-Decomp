@@ -2157,6 +2157,68 @@ extern int fn_8014D08C(int *obj, int *st, int p3, f32 f, int p5, int p6);
 extern int *fn_80026CFC(int p1, int p2);
 extern void fn_80026C38(int *p, f32 a, f32 b, f32 c);
 extern int fn_8014D0F0(void);
+extern f32 lbl_803E2CBC;
+extern int *pDll_expgfx;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+
+/* fn_8015A77C: 424b - switch on _a0, play sfx, optionally call vtable->8(). */
+#pragma scheduling off
+#pragma peephole off
+void fn_8015A77C(int *obj, int *st) {
+    u16 flag = 0;
+    switch (*(s16*)((char*)obj + 0xa0)) {
+    case 2:
+        if (*(u16*)((char*)st + 0x2f8) != 0) {
+            Sfx_PlayFromObjectLimited((int*)obj, 0x49b, 2);
+        }
+        flag = 1;
+        break;
+    case 3:
+        if (*(u16*)((char*)st + 0x2f8) != 0) {
+            Sfx_PlayFromObject((int)obj, 0x498);
+        }
+        break;
+    case 4:
+        if (*(u16*)((char*)st + 0x2f8) != 0) {
+            if (*(f32*)((char*)obj + 0x98) < lbl_803E2CBC) {
+                Sfx_PlayFromObject((int)obj, 0x499);
+            } else {
+                Sfx_PlayFromObject((int)obj, 0x24e);
+            }
+        }
+        break;
+    case 5:
+        if (*(u16*)((char*)st + 0x2f8) != 0) {
+            Sfx_PlayFromObject((int)obj, 0x49d);
+        }
+        break;
+    case 6:
+        if (*(u16*)((char*)st + 0x2f8) != 0) {
+            Sfx_PlayFromObject((int)obj, 0x49d);
+        }
+        break;
+    case 7:
+        if (*(u16*)((char*)st + 0x2f8) != 0) {
+            Sfx_PlayFromObjectLimited((int*)obj, 0x49c, 2);
+        }
+        flag = 1;
+        break;
+    case 9:
+        if (*(u16*)((char*)st + 0x2f8) != 0) {
+            Sfx_PlayFromObject((int)obj, 0x49a);
+        }
+        break;
+    }
+    if (flag != 0) {
+        if (*(u16*)((char*)st + 0x338) != 0) {
+            (*(void (**)(int*, int, int, int, int, int))(*pDll_expgfx + 0x8))(obj, 0x802, 0, 2, -1, 0);
+        } else {
+            (*(void (**)(int*, int, int, int, int, int))(*pDll_expgfx + 0x8))(obj, 0x809, 0, 2, -1, 0);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* fn_8015A424: 264b - state-2 init. */
 #pragma scheduling off
@@ -2235,8 +2297,6 @@ void fn_80157898(int *obj, int *st) {
 }
 #pragma peephole reset
 #pragma scheduling reset
-
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 extern f32 lbl_803E2C1C;
 extern f32 lbl_803E2C20;
