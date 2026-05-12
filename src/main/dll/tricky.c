@@ -1807,3 +1807,70 @@ void fn_8011F34C(u8 x) { lbl_803DD7B3 = x; }
 void hudFn_8011f38c(u8 x) { lbl_803DD792 = x; }
 void hudFn_8011f6f0(u8 x) { lbl_803DD75A = x; }
 void fn_80121180(u8 x) { lbl_803DBA88 = x; }
+
+/* sth (s16 store) of zero-extended u8 — extsh + sth pattern */
+extern s16 lbl_803DD76E;
+void fn_8011F6D4(u32 x) {
+    lbl_803DD76E = (s16)(u8)x;
+}
+
+/* fn_8011F3E0: extsh + sth aButtonIcon */
+extern s16 aButtonIcon;
+#pragma peephole off
+#pragma scheduling off
+void fn_8011F3E0(int x) {
+    aButtonIcon = (s16)x;
+}
+#pragma scheduling on
+#pragma peephole on
+
+/* fn_8011F394: zero out two halfwords */
+extern s16 lbl_803DD874;
+extern s16 lbl_803DD884;
+#pragma scheduling off
+void fn_8011F394(void) {
+    lbl_803DD884 = 0;
+    lbl_803DD874 = -1;
+}
+#pragma scheduling on
+
+/* fn_8011F3C8: stb if zero */
+extern u8 lbl_803DD7AC;
+#pragma peephole off
+#pragma scheduling off
+void fn_8011F3C8(int x) {
+    if (lbl_803DD7AC == 0) {
+        lbl_803DD7AC = (u8)x;
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
+/* setAButtonIcon: sth if aButtonIcon == 0 */
+#pragma peephole off
+#pragma scheduling off
+void setAButtonIcon(int x) {
+    if (aButtonIcon == 0) {
+        aButtonIcon = (s16)x;
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
+/* fn_8011F6E0: store 3 vals */
+extern u8 lbl_803DBA58;
+extern u8 lbl_803DBA59;
+extern s16 lbl_803DBA5A;
+void fn_8011F6E0(u8 a, u8 b, s16 c) {
+    lbl_803DBA58 = a;
+    lbl_803DBA59 = b;
+    lbl_803DBA5A = c;
+}
+
+/* fn_8011F6F8: store float at *p + 0x24 if p non-null */
+extern void *lbl_803DD7D0;
+void fn_8011F6F8(float v) {
+    void *p = lbl_803DD7D0;
+    if (p == 0) return;
+    *(f32 *)((char *)p + 0x24) = v;
+}
