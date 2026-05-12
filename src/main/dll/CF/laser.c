@@ -5,7 +5,7 @@ extern undefined4 FUN_800067bc();
 extern undefined8 FUN_800068c4();
 extern undefined8 FUN_80006b84();
 extern uint GameBit_Get(int eventId);
-extern undefined8 FUN_80017698();
+extern undefined8 GameBit_Set(int eventId,int value);
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
@@ -73,7 +73,7 @@ laser_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4
         spawnFlag = 0;
         param_12 = *DAT_803dd72c;
         (**(code **)(param_12 + 0x50))(10,7);
-        effectHandle = FUN_80017698(0x1ed,1);
+        effectHandle = GameBit_Set(0x1ed,1);
         FUN_80041ff8(effectHandle,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x17);
         mapResource = FUN_80044404(0x17);
         FUN_80042bec(mapResource,0);
@@ -86,7 +86,7 @@ laser_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     }
     else if (eventId == '\x02') {
       if (mode == 2) {
-        FUN_80017698(0x405,0);
+        GameBit_Set(0x405,0);
         bitValue = GameBit_Get(0xff);
         if (bitValue == 0) {
           bitValue = GameBit_Get(0xbfd);
