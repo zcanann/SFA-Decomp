@@ -2160,6 +2160,40 @@ extern int fn_8014D0F0(void);
 extern f32 lbl_803E2CBC;
 extern int *pDll_expgfx;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern u8 lbl_8031FD48[];
+
+extern void fn_8015A77C(int *obj, int *st);
+
+/* fn_8015ABFC: 196b - handle Sfx_PlayFromObject hit, then call fn_8015A77C. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8015ABFC(int *obj, int *st) {
+    u8 *t1;
+    {
+        u32 idx = *(u16*)((char*)st + 0x338);
+        t1 = *(u8**)((char*)lbl_8031FD48 + idx * 8);
+    }
+    *((u8*)obj + 0xaf) = (u8)(*((u8*)obj + 0xaf) | 0x8);
+    if ((*(u32*)((char*)st + 0x2dc) & 0x40000000) != 0) {
+        s16 a = *(s16*)((char*)obj + 0xa0);
+        if (a == 7) {
+            *((u8*)st + 0x33a) = 1;
+        } else if (a != 0) {
+            *((u8*)st + 0x33a) = 0;
+        }
+        {
+            u8 *bbase = t1;
+            f32 *fbase = (f32*)t1;
+            u32 idx2 = *((u8*)st + 0x33a);
+            u32 off = idx2 * 0xc;
+            fn_8014D08C(obj, st, bbase[off + 8],
+                        *(f32*)((char*)fbase + off), 0, 0);
+        }
+    }
+    fn_8015A77C(obj, st);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* fn_8015A77C: 424b - switch on _a0, play sfx, optionally call vtable->8(). */
 #pragma scheduling off
