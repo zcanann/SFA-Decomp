@@ -3,7 +3,7 @@
 
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006824();
-extern undefined8 FUN_80017698();
+extern undefined8 GameBit_Set(int eventId,int value);
 extern undefined4 FUN_80041ff8();
 extern undefined8 FUN_800427c8();
 extern undefined8 FUN_80042800();
@@ -76,7 +76,7 @@ void FUN_80190bd4(undefined8 param_1,double param_2,double param_3,undefined8 pa
       if (iVar4 == 0x48018) {
         iVar4 = FUN_80044404(0x22);
         FUN_80042b9c(iVar4,1,0);
-        FUN_80017698(0x36a,0);
+        GameBit_Set(0x36a,0);
         (**(code **)(*DAT_803dd72c + 0x50))(0xd,0,1);
         (**(code **)(*DAT_803dd72c + 0x50))(0xd,1,1);
         (**(code **)(*DAT_803dd72c + 0x50))(0xd,5,1);
@@ -84,7 +84,7 @@ void FUN_80190bd4(undefined8 param_1,double param_2,double param_3,undefined8 pa
         iVar4 = 1;
         param_12 = *DAT_803dd72c;
         (**(code **)(param_12 + 0x50))(0xd,0xb);
-        uVar8 = FUN_80017698(0xe05,0);
+        uVar8 = GameBit_Set(0xe05,0);
       }
       else if (iVar4 < 0x48018) {
         if (iVar4 == 0x45dd6) {
@@ -143,7 +143,7 @@ void FUN_80190bd4(undefined8 param_1,double param_2,double param_3,undefined8 pa
         }
       }
       else if (iVar4 == 0x49c33) {
-        FUN_80017698(0x884,1);
+        GameBit_Set(0x884,1);
         (**(code **)(*DAT_803dd72c + 0x50))(7,0,1);
         (**(code **)(*DAT_803dd72c + 0x50))(7,2,1);
         (**(code **)(*DAT_803dd72c + 0x50))(7,3,1);
@@ -244,7 +244,7 @@ LAB_80191960:
           FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,uVar1,
                        0x248,0,param_13,param_14,param_15,param_16);
           FUN_80053b3c();
-          uVar8 = FUN_80017698(0xef6,1);
+          uVar8 = GameBit_Set(0xef6,1);
         }
         else if (iVar3 < 0x4827e) {
           if (iVar3 == 0x4670d) goto LAB_80191960;
@@ -309,7 +309,7 @@ LAB_8019182c:
           FUN_80080f28(1,'\x01');
           FUN_80080f3c((double)FLOAT_803e4b30,0);
         }
-        uVar8 = FUN_80017698(0xef6,0);
+        uVar8 = GameBit_Set(0xef6,0);
       }
     }
     iVar7 = iVar7 + 1;
