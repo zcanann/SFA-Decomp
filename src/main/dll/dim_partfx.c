@@ -2345,6 +2345,46 @@ extern const double lbl_803E04F0;
 extern f32 lbl_803E0500;
 extern u32 randomGetRange(s32 lo, s32 hi);
 
+/* Globals for tick functions fn_800C900C / fn_800CB55C / fn_800CCE28 / fn_800CD2FC / fn_800D53FC. */
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern f32 fn_80293E80(f32 x);
+
+extern f32 lbl_803DB848; extern f32 lbl_803DB84C;
+extern f32 lbl_803E00A8; extern f32 lbl_803E00AC;
+extern f32 lbl_803E00B0; extern f32 lbl_803E00B8;
+extern s32 lbl_803DD3C0; extern s32 lbl_803DD3C4;
+extern f32 lbl_803DD3C8; extern f32 lbl_803DD3CC;
+extern f32 lbl_803E0108; extern f32 lbl_803E010C;
+
+extern f32 lbl_803DB858; extern f32 lbl_803DB85C;
+extern f32 lbl_803E01B8; extern f32 lbl_803E01BC;
+extern f32 lbl_803E01C0; extern f32 lbl_803E01C8;
+extern s32 lbl_803DD3D0; extern s32 lbl_803DD3D4;
+extern f32 lbl_803DD3D8; extern f32 lbl_803DD3DC;
+extern f32 lbl_803E0218; extern f32 lbl_803E021C;
+
+extern f32 lbl_803DB868; extern f32 lbl_803DB86C;
+extern f32 lbl_803E0220; extern f32 lbl_803E0224;
+extern f32 lbl_803E0228; extern f32 lbl_803E0230;
+extern s32 lbl_803DD3E0; extern s32 lbl_803DD3E4;
+extern f32 lbl_803DD3E8; extern f32 lbl_803DD3EC;
+extern f32 lbl_803E02D0; extern f32 lbl_803E02D4;
+
+extern f32 lbl_803DB878; extern f32 lbl_803DB87C;
+extern f32 lbl_803E02D8; extern f32 lbl_803E02DC;
+extern f32 lbl_803E02E0; extern f32 lbl_803E02E8;
+extern s32 lbl_803DD3F0; extern s32 lbl_803DD3F4;
+extern f32 lbl_803DD3F8; extern f32 lbl_803DD3FC;
+extern f32 lbl_803E0308; extern f32 lbl_803E030C;
+
+extern f32 lbl_803DB888; extern f32 lbl_803DB88C;
+extern f32 lbl_803E0310; extern f32 lbl_803E0314;
+extern f32 lbl_803E0318; extern f32 lbl_803E0320;
+extern s32 lbl_803DD400; extern s32 lbl_803DD404;
+extern f32 lbl_803DD408; extern f32 lbl_803DD40C;
+extern f32 lbl_803E0344; extern f32 lbl_803E0348;
+
 typedef struct PartFxNode {
     u8 _pad0[0xc];
     f32 _0xc;
@@ -2560,6 +2600,95 @@ void fn_800D663C(u32 v)
     lbl_803DD416 = (s16)(i + 1);
     ((u32 *)lbl_803DD41C)[i] = v;
 }
+
+/* Tick: counter1, counter2 + rate*timeDelta; clamp; periodic sin. */
+#pragma push
+#pragma scheduling off
+void fn_800C900C(void)
+{
+    f32 sum;
+    sum = lbl_803DB848 + lbl_803E00A8 * timeDelta;
+    lbl_803DB848 = sum;
+    if (sum > lbl_803E00B0) lbl_803DB848 = lbl_803E00AC;
+    sum = lbl_803DB84C + lbl_803E00A8 * timeDelta;
+    lbl_803DB84C = sum;
+    if (sum > lbl_803E00B0) lbl_803DB84C = lbl_803E00B8;
+    lbl_803DD3C0 = lbl_803DD3C0 + (s32)framesThisStep * 0x64;
+    if (lbl_803DD3C0 > 0x7fff) lbl_803DD3C0 = 0;
+    lbl_803DD3CC = fn_80293E80(lbl_803E0108 * (f32)(s16)lbl_803DD3C0 / lbl_803E010C);
+    lbl_803DD3C4 = lbl_803DD3C4 + (s32)framesThisStep * 0x32;
+    if (lbl_803DD3C4 > 0x7fff) lbl_803DD3C4 = 0;
+    lbl_803DD3C8 = fn_80293E80(lbl_803E0108 * (f32)(s16)lbl_803DD3C4 / lbl_803E010C);
+}
+
+void fn_800CB55C(void)
+{
+    f32 sum;
+    sum = lbl_803DB858 + lbl_803E01B8 * timeDelta;
+    lbl_803DB858 = sum;
+    if (sum > lbl_803E01C0) lbl_803DB858 = lbl_803E01BC;
+    sum = lbl_803DB85C + lbl_803E01B8 * timeDelta;
+    lbl_803DB85C = sum;
+    if (sum > lbl_803E01C0) lbl_803DB85C = lbl_803E01C8;
+    lbl_803DD3D0 = lbl_803DD3D0 + (s32)framesThisStep * 0x64;
+    if (lbl_803DD3D0 > 0x7fff) lbl_803DD3D0 = 0;
+    lbl_803DD3DC = fn_80293E80(lbl_803E0218 * (f32)(s16)lbl_803DD3D0 / lbl_803E021C);
+    lbl_803DD3D4 = lbl_803DD3D4 + (s32)framesThisStep * 0x32;
+    if (lbl_803DD3D4 > 0x7fff) lbl_803DD3D4 = 0;
+    lbl_803DD3D8 = fn_80293E80(lbl_803E0218 * (f32)(s16)lbl_803DD3D4 / lbl_803E021C);
+}
+
+void fn_800CCE28(void)
+{
+    f32 sum;
+    sum = lbl_803DB868 + lbl_803E0220 * timeDelta;
+    lbl_803DB868 = sum;
+    if (sum > lbl_803E0228) lbl_803DB868 = lbl_803E0224;
+    sum = lbl_803DB86C + lbl_803E0220 * timeDelta;
+    lbl_803DB86C = sum;
+    if (sum > lbl_803E0228) lbl_803DB86C = lbl_803E0230;
+    lbl_803DD3E0 = lbl_803DD3E0 + (s32)framesThisStep * 0x64;
+    if (lbl_803DD3E0 > 0x7fff) lbl_803DD3E0 = 0;
+    lbl_803DD3EC = fn_80293E80(lbl_803E02D0 * (f32)(s16)lbl_803DD3E0 / lbl_803E02D4);
+    lbl_803DD3E4 = lbl_803DD3E4 + (s32)framesThisStep * 0x32;
+    if (lbl_803DD3E4 > 0x7fff) lbl_803DD3E4 = 0;
+    lbl_803DD3E8 = fn_80293E80(lbl_803E02D0 * (f32)(s16)lbl_803DD3E4 / lbl_803E02D4);
+}
+
+void fn_800CD2FC(void)
+{
+    f32 sum;
+    sum = lbl_803DB878 + lbl_803E02D8 * timeDelta;
+    lbl_803DB878 = sum;
+    if (sum > lbl_803E02E0) lbl_803DB878 = lbl_803E02DC;
+    sum = lbl_803DB87C + lbl_803E02D8 * timeDelta;
+    lbl_803DB87C = sum;
+    if (sum > lbl_803E02E0) lbl_803DB87C = lbl_803E02E8;
+    lbl_803DD3F0 = lbl_803DD3F0 + (s32)framesThisStep * 0x64;
+    if (lbl_803DD3F0 > 0x7fff) lbl_803DD3F0 = 0;
+    lbl_803DD3FC = fn_80293E80(lbl_803E0308 * (f32)(s16)lbl_803DD3F0 / lbl_803E030C);
+    lbl_803DD3F4 = lbl_803DD3F4 + (s32)framesThisStep * 0x32;
+    if (lbl_803DD3F4 > 0x7fff) lbl_803DD3F4 = 0;
+    lbl_803DD3F8 = fn_80293E80(lbl_803E0308 * (f32)(s16)lbl_803DD3F4 / lbl_803E030C);
+}
+
+void fn_800D53FC(void)
+{
+    f32 sum;
+    sum = lbl_803DB888 + lbl_803E0310 * timeDelta;
+    lbl_803DB888 = sum;
+    if (sum > lbl_803E0318) lbl_803DB888 = lbl_803E0314;
+    sum = lbl_803DB88C + lbl_803E0310 * timeDelta;
+    lbl_803DB88C = sum;
+    if (sum > lbl_803E0318) lbl_803DB88C = lbl_803E0320;
+    lbl_803DD400 = lbl_803DD400 + (s32)framesThisStep * 0x64;
+    if (lbl_803DD400 > 0x7fff) lbl_803DD400 = 0;
+    lbl_803DD40C = fn_80293E80(lbl_803E0344 * (f32)(s16)lbl_803DD400 / lbl_803E0348);
+    lbl_803DD404 = lbl_803DD404 + (s32)framesThisStep * 0x32;
+    if (lbl_803DD404 > 0x7fff) lbl_803DD404 = 0;
+    lbl_803DD408 = fn_80293E80(lbl_803E0344 * (f32)(s16)lbl_803DD404 / lbl_803E0348);
+}
+#pragma pop
 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_800C9134(void) {}
