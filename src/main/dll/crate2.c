@@ -6,8 +6,8 @@ extern byte FUN_80006b44();
 extern undefined4 FUN_80006b4c();
 extern undefined8 FUN_80006b50();
 extern undefined4 FUN_80006b54();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined8 FUN_80017ac8();
 extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_80286840();
@@ -58,17 +58,17 @@ void dfpstatue1_updateState(undefined8 param_1,undefined8 param_2,undefined8 par
   psVar1 = (short *)FUN_80286840();
   state = *(DfpStatue1State **)(psVar1 + 0x5c);
   if (((state->stateFlags >> 5 & 1) == 0) &&
-     (uVar9 = extraout_f1, uVar2 = FUN_80017690((int)state->triggerSfxId), uVar2 == 0)) {
+     (uVar9 = extraout_f1, uVar2 = GameBit_Get((int)state->triggerSfxId), uVar2 == 0)) {
     if (state->effectPairCount == 4) {
       FUN_80006824(0,0x7e);
       state->stateFlags = state->stateFlags & 0xdf | 0x20;
       state->stateFlags = state->stateFlags & 0xef;
       state->stateFlags = state->stateFlags & 0xbf;
-      FUN_80017698((int)state->triggerSfxId,1);
-      FUN_80017698(0xedf,0);
+      GameBit_Set((int)state->triggerSfxId,1);
+      GameBit_Set(0xedf,0);
       cVar4 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(psVar1 + 0x56));
       if (cVar4 == '\x01') {
-        FUN_80017698(0x9f7,1);
+        GameBit_Set(0x9f7,1);
       }
       FUN_80006b4c();
     }
@@ -104,7 +104,7 @@ void dfpstatue1_updateState(undefined8 param_1,undefined8 param_2,undefined8 par
         state->effectPairCount = 0;
         state->stateFlags = state->stateFlags & 0xbf;
         state->stateFlags = state->stateFlags & 0xef;
-        FUN_80017698(0xedf,0);
+        GameBit_Set(0xedf,0);
       }
       sfxplayer_updateEffectHandlePositions(psVar1);
       piVar8 = gSfxplayerEffectHandles;

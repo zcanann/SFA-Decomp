@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b94();
-extern undefined4 FUN_80017698();
+extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_801be520();
 
 extern undefined4* DAT_803dd70c;
@@ -64,12 +64,12 @@ void dll_DIM_BossGutSpik_update(undefined8 param_1,undefined8 param_2,undefined8
       *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) =
            *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & 0xfffe;
       *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
-      FUN_80017698(0x20e,0);
+      GameBit_Set(0x20e,0);
       if (DAT_803de814 < '\a') {
-        FUN_80017698(0x268,1);
+        GameBit_Set(0x268,1);
       }
       else {
-        FUN_80017698(0x311,1);
+        GameBit_Set(0x311,1);
       }
     }
   }
@@ -94,12 +94,12 @@ void dll_DIM_BossGutSpik_update(undefined8 param_1,undefined8 param_2,undefined8
     *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) =
          *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & 0xfffe;
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
-    FUN_80017698(0x20e,0);
+    GameBit_Set(0x20e,0);
     if (DAT_803de814 == '\x03') {
-      FUN_80017698(0x268,1);
+      GameBit_Set(0x268,1);
     }
     else {
-      FUN_80017698(0x311,1);
+      GameBit_Set(0x311,1);
     }
   }
   *(undefined4 *)(param_11 + 0x3e0) = *(undefined4 *)(param_9 + 0xc0);

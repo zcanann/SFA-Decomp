@@ -2,8 +2,8 @@
 #include "main/dll/tesla.h"
 
 extern undefined4 FUN_800068c4();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern int FUN_80017a98();
 extern int FUN_80017b00();
 extern undefined4 FUN_8003b818();
@@ -136,7 +136,7 @@ void FUN_802069dc(void)
   uVar9 = 0xffff;
   bVar7 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(uVar3 + 0xac));
   if (bVar7 == 2) {
-    uVar4 = FUN_80017690(0xe58);
+    uVar4 = GameBit_Get(0xe58);
     if (uVar4 != 0) {
       *(float *)(uVar3 + 0x10) = *(float *)(iVar11 + 0xc) - lbl_803E70A4;
       goto LAB_80206e64;
@@ -144,14 +144,14 @@ void FUN_802069dc(void)
   }
   else if ((bVar7 < 2) && (bVar7 != 0)) {
     if (5 < *(byte *)(iVar10 + 5)) goto LAB_80206e64;
-    uVar4 = FUN_80017690(0xe57);
+    uVar4 = GameBit_Get(0xe57);
     if (uVar4 != 0) {
       *(float *)(uVar3 + 0x10) = *(float *)(iVar11 + 0xc) - lbl_803E70A4;
       goto LAB_80206e64;
     }
   }
-  uVar4 = FUN_80017690(0x5e4);
-  uVar5 = FUN_80017690(0x5e5);
+  uVar4 = GameBit_Get(0x5e4);
+  uVar5 = GameBit_Get(0x5e5);
   if ((uVar5 != 0) || ((uVar4 & 0xff) != (uint)*(byte *)(iVar10 + 7))) {
     *(undefined *)(iVar10 + 4) = 0;
   }
@@ -209,7 +209,7 @@ void FUN_802069dc(void)
               *(undefined *)(iVar10 + 4) = 1;
             }
             else {
-              FUN_80017698(0x5e5,1);
+              GameBit_Set(0x5e5,1);
             }
           }
         }

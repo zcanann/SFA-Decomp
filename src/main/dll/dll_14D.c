@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_14D.h"
 
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern uint FUN_80017760();
 extern undefined4 ObjGroup_FindNearestObject();
 extern undefined4 FUN_8003b818();
@@ -46,7 +46,7 @@ void FUN_8017eff0(undefined2 *param_1)
       pbVar4[2] = 0;
     }
     else {
-      uVar3 = FUN_80017690((int)*(short *)(iVar5 + 0x1a));
+      uVar3 = GameBit_Get((int)*(short *)(iVar5 + 0x1a));
       pbVar4[2] = (byte)uVar3;
     }
     *pbVar4 = 1;
@@ -59,7 +59,7 @@ void FUN_8017eff0(undefined2 *param_1)
   param_1[1] = *(undefined2 *)(*(int *)(pbVar4 + 4) + 2);
   bVar1 = *pbVar4;
   if (bVar1 == 2) {
-    uVar3 = FUN_80017690((int)*(short *)(iVar5 + 0x18));
+    uVar3 = GameBit_Get((int)*(short *)(iVar5 + 0x18));
     if (uVar3 != 0) {
       *pbVar4 = 1;
     }
@@ -67,17 +67,17 @@ void FUN_8017eff0(undefined2 *param_1)
   else if ((bVar1 < 2) && (bVar1 != 0)) {
     if ((pbVar4[2] == 0) || ((*(byte *)(iVar5 + 0x1f) & 1) != 0)) {
       if (((int)*(short *)(iVar5 + 0x18) == 0xffffffff) ||
-         (uVar3 = FUN_80017690((int)*(short *)(iVar5 + 0x18)), uVar3 != 0)) {
+         (uVar3 = GameBit_Get((int)*(short *)(iVar5 + 0x18)), uVar3 != 0)) {
         if ((*(byte *)((int)param_1 + 0xaf) & 1) == 0) {
           *(byte *)(*(int *)(pbVar4 + 4) + 0xaf) = *(byte *)(*(int *)(pbVar4 + 4) + 0xaf) | 0x20;
           *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) & 0xf7;
         }
         else {
           if ((*(byte *)(iVar5 + 0x1f) & 2) != 0) {
-            FUN_80017698((int)*(short *)(iVar5 + 0x18),0);
+            GameBit_Set((int)*(short *)(iVar5 + 0x18),0);
           }
           if ((int)*(short *)(iVar5 + 0x1a) != 0xffffffff) {
-            FUN_80017698((int)*(short *)(iVar5 + 0x1a),1);
+            GameBit_Set((int)*(short *)(iVar5 + 0x1a),1);
           }
           if ((*(byte *)(iVar5 + 0x1f) & 4) == 0) {
             pbVar4[1] = pbVar4[1] + 1;
