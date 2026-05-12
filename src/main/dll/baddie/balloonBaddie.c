@@ -13,7 +13,7 @@ extern undefined4 FUN_800069bc();
 extern undefined4 FUN_800069d4();
 extern double FUN_800069f8();
 extern undefined4 FUN_80006a00();
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern int FUN_800176d0();
 extern int FUN_8001792c();
 extern int FUN_80017a54();
@@ -197,15 +197,15 @@ int fn_801244B0(short *param_1,char param_2)
   psVar3 = param_1;
   if (param_2 == '\0') {
     for (; -1 < *psVar3; psVar3 = psVar3 + 8) {
-      uVar1 = FUN_80017690((int)*psVar3);
+      uVar1 = GameBit_Get((int)*psVar3);
       if (uVar1 != 0) {
         if (param_1 == (short *)&DAT_8031c130) {
-          if ((psVar3[2] < 0) || (uVar1 = FUN_80017690((int)psVar3[2]), uVar1 == 0)) {
+          if ((psVar3[2] < 0) || (uVar1 = GameBit_Get((int)psVar3[2]), uVar1 == 0)) {
             iVar2 = iVar2 + 1;
           }
         }
-        else if (((psVar3[1] < 0) || (uVar1 = FUN_80017690((int)psVar3[1]), uVar1 == 0)) &&
-                ((psVar3[2] < 0 || (uVar1 = FUN_80017690((int)psVar3[2]), uVar1 == 0)))) {
+        else if (((psVar3[1] < 0) || (uVar1 = GameBit_Get((int)psVar3[1]), uVar1 == 0)) &&
+                ((psVar3[2] < 0 || (uVar1 = GameBit_Get((int)psVar3[2]), uVar1 == 0)))) {
           iVar2 = iVar2 + 1;
         }
       }

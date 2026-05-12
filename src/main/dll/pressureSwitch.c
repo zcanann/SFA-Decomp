@@ -9,8 +9,8 @@ extern undefined4 FUN_80006824();
 extern int FUN_80006a10();
 extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006b14();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_8001771c();
 extern uint FUN_80017730();
 extern undefined4 FUN_80017814();
@@ -293,7 +293,7 @@ void FUN_8014e3a8(ushort *param_1)
         (**(code **)(*DAT_803dd72c + 100))
                   ((double)(float)(local_20 - DOUBLE_803e32e0),*(undefined4 *)(iVar3 + 0x14));
         if ((int)*(short *)(iVar3 + 0x20) != 0xffffffff) {
-          FUN_80017698((int)*(short *)(iVar3 + 0x20),1);
+          GameBit_Set((int)*(short *)(iVar3 + 0x20),1);
         }
       }
       ObjHits_SetHitVolumeSlot((int)param_1,10,1,0);
@@ -358,7 +358,7 @@ void FUN_8014e3a8(ushort *param_1)
     FUN_8014e244(param_1,piVar5);
   }
   else if ((((int)*(short *)(iVar3 + 0x20) == 0xffffffff) ||
-           (uVar1 = FUN_80017690((int)*(short *)(iVar3 + 0x20)), uVar1 == 0)) &&
+           (uVar1 = GameBit_Get((int)*(short *)(iVar3 + 0x20)), uVar1 == 0)) &&
           (iVar3 = (**(code **)(*DAT_803dd72c + 0x68))(*(undefined4 *)(iVar3 + 0x14)), iVar3 != 0))
   {
     param_1[0x7a] = 0;
@@ -412,7 +412,7 @@ void FUN_8014e898(int param_1,int param_2,int param_3)
     }
   }
   if (((int)*(short *)(param_2 + 0x20) != 0xffffffff) &&
-     (uVar3 = FUN_80017690((int)*(short *)(param_2 + 0x20)), uVar3 != 0)) {
+     (uVar3 = GameBit_Get((int)*(short *)(param_2 + 0x20)), uVar3 != 0)) {
     *(undefined4 *)(param_1 + 0xf4) = 1;
   }
   return;

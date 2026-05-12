@@ -5,8 +5,7 @@
 extern undefined4 FUN_800067c0();
 extern undefined4 FUN_80006c88();
 extern undefined8 FUN_80017484();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017a98();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_8003b818();
@@ -278,9 +277,9 @@ void FUN_801f4b64(int param_1)
 {
   ObjGroup_RemoveObject(param_1,9);
   FUN_800067c0((int *)0xa8,0);
-  FUN_80017698(0xa7f,0);
-  FUN_80017698(0x372,1);
-  FUN_80017698(0x390,1);
+  GameBit_Set(0xa7f,0);
+  GameBit_Set(0x372,1);
+  GameBit_Set(0x390,1);
   return;
 }
 

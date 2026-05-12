@@ -2,7 +2,7 @@
 #include "main/dll/crackanim.h"
 
 extern undefined8 FUN_80006824();
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern undefined4 FUN_80017a78();
 extern int FUN_80017a98();
 extern undefined8 FUN_80017ac8();
@@ -117,7 +117,7 @@ void appleontree_update(int param_1)
       iVar3 = ObjHits_GetPriorityHit((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
       if ((iVar3 == 0) &&
          (((int)*(short *)(iVar7 + 0x26) == 0xffffffff ||
-          (uVar5 = FUN_80017690((int)*(short *)(iVar7 + 0x26)), uVar5 == 0)))) {
+          (uVar5 = GameBit_Get((int)*(short *)(iVar7 + 0x26)), uVar5 == 0)))) {
         if (dVar13 <= (double)*(float *)(iVar8 + 0x10)) {
           iVar7 = *(int *)(puVar2 + 0x5c);
           *(float *)(puVar2 + 4) =
@@ -149,7 +149,7 @@ void appleontree_update(int param_1)
       iVar3 = ObjHits_GetPriorityHit((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
       if ((iVar3 == 0) &&
          (((int)*(short *)(iVar7 + 0x26) == 0xffffffff ||
-          (uVar5 = FUN_80017690((int)*(short *)(iVar7 + 0x26)), uVar5 == 0)))) {
+          (uVar5 = GameBit_Get((int)*(short *)(iVar7 + 0x26)), uVar5 == 0)))) {
         if (dVar13 <= (double)*(float *)(iVar8 + 0x14)) {
           iVar7 = (**(code **)(*DAT_803dd6d8 + 0x24))(auStack_74);
           if (iVar7 == 0) {
@@ -212,7 +212,7 @@ void appleontree_update(int param_1)
       iVar8 = ObjHits_GetPriorityHit((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
       if ((iVar8 != 0) ||
          (((int)*(short *)(iVar7 + 0x26) != 0xffffffff &&
-          (uVar5 = FUN_80017690((int)*(short *)(iVar7 + 0x26)), uVar5 != 0)))) {
+          (uVar5 = GameBit_Get((int)*(short *)(iVar7 + 0x26)), uVar5 != 0)))) {
         FUN_8017db40((uint)puVar2,1);
       }
       break;
@@ -222,7 +222,7 @@ void appleontree_update(int param_1)
         iVar8 = ObjHits_GetPriorityHit((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
         if ((iVar8 != 0) ||
            (((int)*(short *)(iVar7 + 0x26) != 0xffffffff &&
-            (uVar5 = FUN_80017690((int)*(short *)(iVar7 + 0x26)), uVar5 != 0)))) {
+            (uVar5 = GameBit_Get((int)*(short *)(iVar7 + 0x26)), uVar5 != 0)))) {
           FUN_8017db40((uint)puVar2,2);
         }
       }
