@@ -2336,6 +2336,35 @@ extern s16 lbl_803DD414;
 extern s16 lbl_803DD416;
 extern u32 lbl_803DD418;
 extern u32 lbl_803DD41C;
+extern s32 lbl_803DD410;
+
+typedef struct PartFxKV { u32 key; u32 value; } PartFxKV;
+extern PartFxKV lbl_8039C458[];
+
+/* Binary search for key in lbl_8039C458 (count = lbl_803DD410). */
+u32 fn_800D5530(s32 key, s32 *idx_out)
+{
+    s32 high;
+    s32 low;
+    s32 mid;
+    *idx_out = -1;
+    if (key < 0) return 0;
+    high = lbl_803DD410 - 1;
+    low = 0;
+    while (high >= low) {
+        mid = (high + low) >> 1;
+        if ((u32)key > lbl_8039C458[mid].key) {
+            low = mid + 1;
+        } else if ((u32)key == lbl_8039C458[mid].key) {
+            *idx_out = mid;
+            return lbl_8039C458[mid].value;
+        } else {
+            high = mid - 1;
+        }
+    }
+    *idx_out = -1;
+    return 0;
+}
 
 /* Set *p to lbl_803DD414 (sign-extended) and return lbl_803DD418. */
 u32 fn_800D65A8(s32 *p)
@@ -2357,6 +2386,72 @@ void fn_800D6584(void)
     lbl_803DD416 = 0;
 }
 #pragma pop
+
+/* Rank object r3 against array at lbl_803DD418 by (int@0x1c, float@0xc) descending. */
+typedef struct PartFxItem {
+    u8 _pad0[0xc];
+    f32 _0xc;
+    u8 _pad10[0xc];
+    s32 _0x1c;
+} PartFxItem;
+
+/* NOTE: 96.8% — register choice differs (r5 vs r7 for rank). */
+#pragma push
+#pragma scheduling off
+s32 fn_800D6488(PartFxItem *p)
+{
+    s32 rank = 1;
+    PartFxItem **arr = (PartFxItem **)lbl_803DD418;
+    s32 n = lbl_803DD414;
+    s32 i;
+    for (i = 0; i < n; i++) {
+        PartFxItem *q = *arr;
+        if (q != p) {
+            if (q->_0x1c > p->_0x1c) {
+                rank++;
+            } else if (q->_0x1c == p->_0x1c) {
+                if (q->_0xc > p->_0xc) {
+                    rank++;
+                }
+            }
+        }
+        arr++;
+    }
+    return rank;
+}
+#pragma pop
+
+/* Find item in lbl_803DD418 array whose rank equals target_rank. */
+PartFxItem *fn_800D64EC(s32 target_rank)
+{
+    s32 i;
+    PartFxItem **outer = (PartFxItem **)lbl_803DD418;
+    s32 n = lbl_803DD414;
+    for (i = 0; i < n; i++) {
+        PartFxItem *cur = *outer;
+        s32 rank = 1;
+        PartFxItem **inner = (PartFxItem **)lbl_803DD418;
+        s32 j;
+        for (j = 0; j < n; j++) {
+            PartFxItem *other = *inner;
+            if (other != cur) {
+                if (other->_0x1c > cur->_0x1c) {
+                    rank++;
+                } else if (other->_0x1c == cur->_0x1c) {
+                    if (other->_0xc > cur->_0xc) {
+                        rank++;
+                    }
+                }
+            }
+            inner++;
+        }
+        if (rank == target_rank) {
+            return cur;
+        }
+        outer++;
+    }
+    return 0;
+}
 
 /* Append v to array pointed to by lbl_803DD41C, capped at 10 entries.
  * NOTE: stuck on instruction order — compiler computes arr load early. */
