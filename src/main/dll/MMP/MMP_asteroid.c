@@ -2,8 +2,8 @@
 #include "main/dll/MMP/MMP_asteroid.h"
 
 extern undefined4 FUN_800068c4();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern uint FUN_80017760();
 extern undefined4 FUN_80017814();
 extern int FUN_80017830();
@@ -381,9 +381,9 @@ void FUN_801955c8(int param_1)
   iVar3 = *(int *)(param_1 + 0xb8);
   if ((*(byte *)(iVar3 + 2) & 1) == 0) {
     iVar2 = *(int *)(param_1 + 0x4c);
-    uVar1 = FUN_80017690((int)*(short *)(iVar2 + 0x34));
+    uVar1 = GameBit_Get((int)*(short *)(iVar2 + 0x34));
     if (uVar1 != 0) {
-      FUN_80017698((int)*(short *)(iVar2 + 0x32),1);
+      GameBit_Set((int)*(short *)(iVar2 + 0x32),1);
       *(byte *)(iVar3 + 2) = *(byte *)(iVar3 + 2) | 1;
       dVar5 = (double)lbl_803E4CB8;
       dVar4 = DOUBLE_803e4cc0;
@@ -435,7 +435,7 @@ void FUN_80195704(int param_1,int param_2)
   int iVar2;
   
   iVar2 = *(int *)(param_1 + 0xb8);
-  uVar1 = FUN_80017690((int)*(short *)(param_2 + 0x32));
+  uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x32));
   *(bool *)(iVar2 + 2) = uVar1 != 0;
   ObjGroup_AddObject(param_1,0x1a);
   return;
@@ -651,10 +651,10 @@ void FUN_80195b9c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     iVar8 = *(int *)(param_9 + 0x26);
     if ((bVar1 & 1) == 0) {
       if (*(char *)((int)param_9 + 0xad) == '\0') {
-        uVar6 = FUN_80017690((int)*(short *)(iVar8 + 0x40));
+        uVar6 = GameBit_Get((int)*(short *)(iVar8 + 0x40));
         if ((uVar6 != 0) || (*(short *)(iVar8 + 0x40) == -1)) {
           *(byte *)(iVar9 + 0x29e) = *(byte *)(iVar9 + 0x29e) | 1;
-          FUN_80017698((int)*(short *)(iVar8 + 0x3e),1);
+          GameBit_Set((int)*(short *)(iVar8 + 0x3e),1);
           DAT_803de780 = '\x01';
         }
       }
@@ -860,7 +860,7 @@ void FUN_80196244(undefined2 *param_1,int param_2)
   *(float *)(iVar4 + 0x270) = fVar1;
   *(float *)(iVar4 + 0x274) = fVar1;
   FUN_8019575c(param_1,iVar4,param_2);
-  uVar3 = FUN_80017690((int)*(short *)(param_2 + 0x3e));
+  uVar3 = GameBit_Get((int)*(short *)(param_2 + 0x3e));
   if (uVar3 == 0) {
     uVar2 = 0;
   }
@@ -924,7 +924,7 @@ void FUN_80196384(int param_1)
   piVar5 = *(int **)(param_1 + 0xb8);
   iVar4 = *(int *)(param_1 + 0x4c);
   if ((((*(byte *)(piVar5 + 5) >> 5 & 1) == 0) &&
-      (uVar1 = FUN_80017690((int)*(short *)(iVar4 + 0x20)), uVar1 != 0)) &&
+      (uVar1 = GameBit_Get((int)*(short *)(iVar4 + 0x20)), uVar1 != 0)) &&
      ((*(byte *)(piVar5 + 5) >> 6 & 1) == 0)) {
     *(byte *)(piVar5 + 5) = *(byte *)(piVar5 + 5) & 0xdf | 0x20;
     piVar5[4] = 0;
@@ -947,7 +947,7 @@ void FUN_80196384(int param_1)
           piVar5[4] = piVar5[3];
         }
         else {
-          FUN_80017698(uVar1,1);
+          GameBit_Set(uVar1,1);
           *(byte *)(piVar5 + 5) = *(byte *)(piVar5 + 5) & 0xdf;
           *(byte *)(piVar5 + 5) = *(byte *)(piVar5 + 5) & 0xbf | 0x40;
           piVar5[4] = piVar5[2];

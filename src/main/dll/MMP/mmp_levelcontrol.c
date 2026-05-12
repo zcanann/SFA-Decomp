@@ -2,8 +2,8 @@
 #include "main/dll/MMP/mmp_levelcontrol.h"
 
 extern undefined4 FUN_80006824();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017748();
 extern uint FUN_80017760();
 extern int FUN_80017a90();
@@ -58,7 +58,7 @@ void FUN_8019443c(int param_1,int param_2)
   pbVar3 = *(byte **)(param_1 + 0xb8);
   *pbVar3 = *(byte *)(param_2 + 0x1c) & 1;
   pbVar3[1] = 0;
-  uVar1 = FUN_80017690((int)*(short *)(param_2 + 0x18));
+  uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x18));
   if ((uVar1 != 0) && (*pbVar3 = *pbVar3 ^ 1, *(char *)(param_2 + 0x1a) == '\x01')) {
     pbVar3[1] = pbVar3[1] | 1;
   }
@@ -72,7 +72,7 @@ void FUN_8019443c(int param_1,int param_2)
   if ((*(byte *)(param_2 + 0x1c) & 4) != 0) {
     pbVar3[1] = pbVar3[1] | 4;
   }
-  uVar1 = FUN_80017690((int)*(short *)(param_2 + 0x18));
+  uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x18));
   pbVar3[2] = (byte)uVar1;
   pbVar3[3] = (byte)uVar1;
   *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x6000;
@@ -107,7 +107,7 @@ void FUN_80194544(int param_1)
     *pbVar4 = *pbVar4 | 1;
   }
   else {
-    uVar2 = FUN_80017690((int)*(short *)(iVar3 + 0x18));
+    uVar2 = GameBit_Get((int)*(short *)(iVar3 + 0x18));
     pbVar4[2] = pbVar4[4] & (byte)uVar2;
     if (pbVar4[3] != pbVar4[2]) {
       pbVar4[1] = pbVar4[1] ^ 1;
@@ -145,13 +145,13 @@ void FUN_801945fc(int param_1,int param_2)
   pbVar4 = *(byte **)(param_1 + 0xb8);
   pbVar4[1] = *(byte *)(param_2 + 0x1b);
   pbVar4[4] = (byte)(1 << (uint)*(byte *)(param_2 + 0x1c));
-  uVar2 = FUN_80017690((int)*(short *)(param_2 + 0x18));
+  uVar2 = GameBit_Get((int)*(short *)(param_2 + 0x18));
   if ((pbVar4[4] & uVar2) != 0) {
     pbVar4[1] = pbVar4[1] ^ 1;
   }
   iVar3 = FUN_8005b398((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0x10));
   FUN_8005af70(iVar3);
-  uVar2 = FUN_80017690((int)*(short *)(param_2 + 0x18));
+  uVar2 = GameBit_Get((int)*(short *)(param_2 + 0x18));
   bVar1 = pbVar4[4] & (byte)uVar2;
   pbVar4[2] = bVar1;
   pbVar4[3] = bVar1;
@@ -362,7 +362,7 @@ void FUN_801948d8(uint param_1)
     }
     else {
       *(byte *)(piVar2 + 1) = *(byte *)(piVar2 + 1) & 0x7f | 0x80;
-      FUN_80017698((int)*(short *)(iVar3 + 0x18),1);
+      GameBit_Set((int)*(short *)(iVar3 + 0x18),1);
       FUN_80006824(param_1,0x109);
     }
   }
@@ -391,7 +391,7 @@ void FUN_801949ec(undefined2 *param_1,int param_2)
   *param_1 = *(undefined2 *)(param_2 + 0x24);
   ObjGroup_AddObject((int)param_1,0x23);
   ObjGroup_AddObject((int)param_1,0x31);
-  uVar1 = FUN_80017690((int)*(short *)(param_2 + 0x18));
+  uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x18));
   if (uVar1 != 0) {
     *(byte *)(puVar2 + 1) = *(byte *)(puVar2 + 1) & 0x7f | 0x80;
     *puVar2 = 3000;
