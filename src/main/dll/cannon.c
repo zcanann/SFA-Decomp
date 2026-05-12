@@ -15,6 +15,8 @@ extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_80039468();
 extern int FUN_800da5f0();
 extern int FUN_800db47c();
+extern int fn_800DBCFC(float *pos, void *flag);
+extern f32 getXZDistance(float *a, float *b);
 extern undefined4 FUN_80139910();
 extern int FUN_80139a48();
 extern undefined4 FUN_80139a4c();
@@ -28,6 +30,8 @@ extern undefined4 FUN_80286884();
 extern undefined4 FUN_80286888();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
+
+int fn_8014089C(int p);
 
 extern undefined4* DAT_803dd71c;
 extern f32 lbl_803DC074;
@@ -425,6 +429,53 @@ LAB_8014149c:
   return;
 }
 
+
+/*
+ * --INFO--
+ *
+ * Function: fn_8014089C
+ * EN v1.0 Address: 0x8014089C
+ * EN v1.0 Size: 320b
+ */
+#pragma scheduling off
+int fn_8014089C(int p) {
+    int count;
+    f32 d;
+    f32 bestDist;
+    uint best;
+    int i;
+    int *list;
+
+    best = 0;
+    list = (int *)ObjGroup_GetObjects(3, &count);
+    for (i = 0; (s16)i < count; i++) {
+        d = (f32)getXZDistance((float *)(*list + 0x18), (float *)(p + 0x71c));
+        if (best == 0) {
+            if (*(int *)(p + 0x730) == fn_800DBCFC((float *)(*list + 0x18), (void *)0x0)) {
+                bestDist = d;
+                best = *list;
+            }
+        } else if (d < bestDist) {
+            if (*(int *)(p + 0x730) == fn_800DBCFC((float *)(*list + 0x18), (void *)0x0)) {
+                bestDist = d;
+                best = *list;
+            }
+        }
+        list++;
+    }
+    if (best == 0) {
+        return 0;
+    }
+    *(int *)(p + 0x72c) = best;
+    if (*(uint *)(p + 0x28) != (best + 0x18)) {
+        *(int *)(p + 0x28) = best + 0x18;
+        *(u32 *)(p + 0x54) = *(u32 *)(p + 0x54) & 0xfffffbff;
+        *(u16 *)(p + 0xd2) = 0;
+    }
+    *(u8 *)(p + 0xa) = 4;
+    return 1;
+}
+#pragma scheduling on
 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_8014128C(void) {}
