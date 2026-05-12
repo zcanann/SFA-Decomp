@@ -2,8 +2,6 @@
 #include "main/dll/groundAnimator.h"
 
 extern undefined8 FUN_80006824();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
 extern undefined4 FUN_80017710();
 extern undefined4 FUN_8001771c();
 extern uint FUN_80017760();
@@ -653,7 +651,7 @@ void FUN_8017de58(undefined8 param_1,double param_2,double param_3,undefined8 pa
   if ((dVar4 < (double)lbl_803E4484) &&
      (dVar4 = (double)FUN_8001771c((float *)(iVar1 + 0x18),(float *)(param_9 + 0x18)),
      dVar4 < (double)lbl_803E4488)) {
-    uVar2 = FUN_80017690(0x90f);
+    uVar2 = GameBit_Get(0x90f);
     if (uVar2 == 0) {
       uVar5 = (**(code **)(*DAT_803dd6d4 + 0x7c))(0x444,0,0);
       *(undefined2 *)(iVar3 + 0x5c) = 0xffff;
@@ -661,7 +659,7 @@ void FUN_8017de58(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(float *)(iVar3 + 0x60) = lbl_803E4460;
       ObjMsg_SendToObject(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,0x7000a,
                    param_9,iVar3 + 0x5c,in_r7,in_r8,in_r9,in_r10);
-      FUN_80017698(0x90f,1);
+      GameBit_Set(0x90f,1);
       *(byte *)(iVar3 + 0x5a) = *(byte *)(iVar3 + 0x5a) | 4;
     }
     else {

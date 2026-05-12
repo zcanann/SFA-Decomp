@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_E2.h"
 
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern double FUN_80017714();
 extern int ObjGroup_FindNearestObject();
 extern int FUN_8005b024();
@@ -43,9 +43,9 @@ undefined FUN_8013dc88(int param_1,int param_2)
        ((*(ushort *)(*(int *)(param_2 + 4) + 0xb0) & 0x1000) != 0)) {
       iVar2 = FUN_8005b024();
       if (iVar2 == 0x38) {
-        uVar3 = FUN_80017690(0x385);
-        if (((uVar3 == 0) && (uVar3 = FUN_80017690(900), uVar3 != 0)) &&
-           ((uVar3 = FUN_80017690(0xc1), uVar3 != 0 || (uVar3 = FUN_80017690(0x12e), uVar3 != 0))))
+        uVar3 = GameBit_Get(0x385);
+        if (((uVar3 == 0) && (uVar3 = GameBit_Get(900), uVar3 != 0)) &&
+           ((uVar3 = GameBit_Get(0xc1), uVar3 != 0 || (uVar3 = GameBit_Get(0x12e), uVar3 != 0))))
         {
           uVar4 = true;
         }

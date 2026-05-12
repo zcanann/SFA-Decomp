@@ -81,8 +81,8 @@ extern undefined4 FUN_80006974();
 extern void* FUN_800069a8();
 extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006b14();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017704();
 extern uint FUN_80017730();
 extern undefined4 FUN_80017748();
@@ -2810,9 +2810,9 @@ void FUN_800a1f80(undefined4 param_1,undefined4 param_2,uint param_3)
   fStack_54 = (float)in_ps26_1;
   uVar23 = FUN_80286818();
   uVar6 = (undefined4)((ulonglong)uVar23 >> 0x20);
-  uVar7 = FUN_80017690(0x468);
+  uVar7 = GameBit_Get(0x468);
   if (uVar7 != 0) {
-    FUN_80017698(0x468,0);
+    GameBit_Set(0x468,0);
     DAT_803ddf3c = 0xf;
     FUN_80006824(param_3,0x281);
   }

@@ -2,8 +2,8 @@
 #include "main/dll/dll_140.h"
 
 extern uint FUN_80006ba0();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
@@ -71,7 +71,7 @@ void FUN_80179a2c(double param_1,double param_2,double param_3,int param_4)
  */
 void FUN_80179ad4(void)
 {
-  FUN_80017698(0x3f8,1);
+  GameBit_Set(0x3f8,1);
   return;
 }
 
@@ -134,7 +134,7 @@ void FUN_80179b34(double param_1,double param_2,double param_3,undefined8 param_
   iVar5 = FUN_80017a90();
   if ((((iVar4 == 0) || ((*(ushort *)(iVar4 + 0xb0) & 0x1000) != 0)) || (iVar5 == 0)) ||
      ((uVar3 = countLeadingZeros((uint)*(ushort *)(iVar5 + 0xb0)), (uVar3 >> 5 & 0x1000) != 0 ||
-      (uVar3 = FUN_80017690(0xd00), uVar3 != 0)))) {
+      (uVar3 = GameBit_Get(0xd00), uVar3 != 0)))) {
     FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(int)param_9);
     return;
   }

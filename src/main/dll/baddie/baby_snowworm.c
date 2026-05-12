@@ -74,8 +74,7 @@ extern undefined8 FUN_80017494();
 extern undefined4 FUN_80017498();
 extern double FUN_800174a8();
 extern undefined4 FUN_800174d4();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern int GameBit_Set(u32 eventId, u32 value);
 extern undefined4 FUN_800176c0();
 extern undefined8 FUN_800176c8();
 extern int FUN_800176d0();
@@ -740,10 +739,10 @@ void FUN_8012c1c0(void)
     if ((uVar2 & 0x100) != 0) {
       FUN_80006ba8(0,0x100);
       if (DAT_803de3db == '\x01') {
-        FUN_80017698(0x2b3,1);
+        GameBit_Set(0x2b3,1);
       }
       else {
-        FUN_80017698(0x781,1);
+        GameBit_Set(0x781,1);
       }
       DAT_803de3db = '\0';
       FUN_800176c8(0);
