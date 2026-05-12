@@ -2341,6 +2341,9 @@ extern s32 lbl_803DD410;
 typedef struct PartFxKV { u32 key; u32 value; } PartFxKV;
 extern PartFxKV lbl_8039C458[];
 extern f32 lbl_803E04E8;
+extern const double lbl_803E04F0;
+extern f32 lbl_803E0500;
+extern u32 randomGetRange(s32 lo, s32 hi);
 
 typedef struct PartFxNode {
     u8 _pad0[0xc];
@@ -2467,6 +2470,61 @@ PartFxItem *fn_800D64EC(s32 target_rank)
     }
     return 0;
 }
+
+/* Init random offsets / chain advance with lookup. */
+#pragma push
+void fn_800D5F80(s32 key, f32 *out_vec, u8 *flag_byte)
+{
+    s32 local_idx;
+    PartFxNode *n;
+    s32 alt_found;
+    union { struct { u32 hi, lo; } i; double d; } m1, m2, m3;
+    s32 r;
+    n = (PartFxNode *)fn_800D5530(key, &local_idx);
+    if (n == 0) return;
+    r = (s32)randomGetRange(-0x63, 0x63);
+    m1.i.lo = (u32)r ^ 0x80000000;
+    m1.i.hi = 0x43300000;
+    out_vec[0] = (float)(m1.d - lbl_803E04F0) / lbl_803E0500;
+    r = (s32)randomGetRange(-0x63, 0x63);
+    m2.i.lo = (u32)r ^ 0x80000000;
+    m2.i.hi = 0x43300000;
+    out_vec[1] = (float)(m2.d - lbl_803E04F0) / lbl_803E0500;
+    r = (s32)randomGetRange(0, 0x63);
+    m3.i.lo = (u32)r ^ 0x80000000;
+    m3.i.hi = 0x43300000;
+    out_vec[2] = (float)(m3.d - lbl_803E04F0) / lbl_803E0500;
+    alt_found = 0;
+    {
+        s32 v = *(s32 *)((char *)n + 0x20);
+        if (v != 0) {
+            PartFxNode *m = (PartFxNode *)fn_800D5530(v, &local_idx);
+            if (*(s32 *)((char *)m + 0x20) > -1) {
+                alt_found = 1;
+            }
+        }
+    }
+    if ((s8)*flag_byte == 0) {
+        if (alt_found != 0) {
+            *(s32 *)(out_vec + 4) = *(s32 *)((char *)n + 0x20);
+        } else {
+            s32 v = *(s32 *)((char *)n + 0x18);
+            if (v > -1) {
+                *(s32 *)(out_vec + 4) = v;
+                *flag_byte = 1;
+            }
+        }
+    } else {
+        s32 v = *(s32 *)((char *)n + 0x18);
+        if (v != 0) {
+            *(s32 *)(out_vec + 4) = v;
+        } else if (alt_found != 0) {
+            *(s32 *)(out_vec + 4) = *(s32 *)((char *)n + 0x20);
+            *flag_byte = 0;
+        }
+    }
+}
+#pragma pop
 
 /* Walk a chain via fn_800D5530 lookups starting from o->_0x10. */
 #pragma push
