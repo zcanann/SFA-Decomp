@@ -5,7 +5,7 @@ extern undefined4 FUN_800067f0();
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006810();
 extern undefined4 FUN_80006824();
-extern undefined4 FUN_80017698();
+extern undefined4 GameBit_Set(int eventId,int value);
 extern uint FUN_80017730();
 extern undefined4 FUN_80017754();
 extern uint FUN_80017760();
@@ -453,7 +453,7 @@ LAB_801e0ac0:
       uVar9 = FUN_801e2184();
       FUN_80006810(uVar9,0x2c6);
       FUN_80006824(uVar9,0x146);
-      FUN_80017698(0xf1e,0);
+      GameBit_Set(0xf1e,0);
     }
   }
   else if (cVar1 < '\x01') {
@@ -534,7 +534,7 @@ LAB_801e1380:
           *(undefined *)(pfVar12 + 0x1f) = 0;
           *(undefined *)((int)pfVar12 + 0x7a) = 0;
           *(undefined2 *)((int)pfVar12 + 0x82) = 200;
-          FUN_80017698(0xf1e,1);
+          GameBit_Set(0xf1e,1);
         }
       }
       else if ((*(char *)((int)pfVar12 + 0x2b) < '\x05') &&

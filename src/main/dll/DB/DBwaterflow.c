@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/DB/DBwaterflow.h"
 
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_8003b818();
 
@@ -48,7 +48,7 @@ void FUN_801dfa50(undefined2 *param_1)
   uint uVar1;
   
   *param_1 = 0x2000;
-  uVar1 = FUN_80017690(0x75);
+  uVar1 = GameBit_Get(0x75);
   if (uVar1 == 0) {
     (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
   }

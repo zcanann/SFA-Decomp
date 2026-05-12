@@ -5,8 +5,8 @@
 extern uint FUN_80006c00();
 extern undefined4 FUN_80006c88();
 extern undefined8 FUN_80017484();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId,int value);
 extern int FUN_80017a98();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
@@ -70,7 +70,7 @@ void FUN_801df45c(undefined2 *param_1)
   
   state = *(Platform1State **)(param_1 + 0x5c);
   FUN_80017a98();
-  FUN_80017698(0xf1d,0);
+  GameBit_Set(0xf1d,0);
   cVar7 = (**(code **)(*DAT_803dd72c + 0x40))(0xe);
   if (cVar7 == '\x06') {
     if ((state->flags & PLATFORM1_FLAG_ACTIVE) == 0) {
@@ -87,7 +87,7 @@ void FUN_801df45c(undefined2 *param_1)
           state->flags = state->flags & ~PLATFORM1_TRIGGER_FLAG_01;
         }
         else if (sVar3 == 1) {
-          FUN_80017698(0xf1d,1);
+          GameBit_Set(0xf1d,1);
           FUN_8011e800(1);
           uVar6 = (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
           state->loopSfxHandle = uVar6;
@@ -121,11 +121,11 @@ void FUN_801df45c(undefined2 *param_1)
           if ((bVar2 & PLATFORM1_FLAG_EXIT_POSITIVE) != 0) {
             state->flags = bVar2 & ~PLATFORM1_FLAG_EXIT_POSITIVE;
             state->loopSfxHandle = -1;
-            FUN_80017698(0x786,1);
+            GameBit_Set(0x786,1);
           }
         }
         else {
-          FUN_80017698(0x784,1);
+          GameBit_Set(0x784,1);
           state->loopSfxHandle = -1;
           state->flags = state->flags & ~PLATFORM1_TRIGGER_MASK;
           state->flags = state->flags & ~PLATFORM1_FLAG_EXIT_NEGATIVE;
@@ -238,7 +238,7 @@ void FUN_801df788(int param_1)
   }
   else if (bVar1 == 0) {
     uVar2 = (uint)*(short *)(*(int *)(param_1 + 0x4c) + 0x1e);
-    if ((uVar2 == 0xffffffff) || (uVar2 = FUN_80017690(uVar2), uVar2 == 0)) {
+    if ((uVar2 == 0xffffffff) || (uVar2 = GameBit_Get(uVar2), uVar2 == 0)) {
       *pbVar3 = 1;
     }
     else {

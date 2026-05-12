@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/DB/DBpointmum.h"
 
-extern undefined4 FUN_80017698();
+extern undefined4 GameBit_Set(int eventId,int value);
 extern void* ObjGroup_GetObjects();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_SendToObject();
@@ -77,7 +77,7 @@ FUN_801dfa28(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
       }
       else if (bVar1 < 2) {
         if (bVar1 != 0) {
-          param_1 = FUN_80017698(0x75,1);
+          param_1 = GameBit_Set(0x75,1);
         }
       }
       else {
