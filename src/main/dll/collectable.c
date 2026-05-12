@@ -2062,3 +2062,46 @@ void trickyReportError(const char *fmt, ...) { }
 
 /* trickyDebugPrint: 80b - varargs OSReport-style stub. */
 void trickyDebugPrint(const char *fmt, ...) { }
+
+extern f32 lbl_803E25A4;
+extern f32 lbl_803E2594;
+
+/* fn_80149BB4: 312b - flag bits to byte field. */
+#pragma peephole off
+#pragma scheduling off
+void fn_80149BB4(int *obj, u32 flags, s16 val, f32 f) {
+    *((u8*)obj + 0x2f1) = 0;
+    if ((flags & 0x2) != 0) {
+        *((u8*)obj + 0x2f1) = (u8)(*((u8*)obj + 0x2f1) | 0x20);
+    }
+    if ((flags & 0x1) != 0) {
+        *((u8*)obj + 0x2f1) = (u8)(*((u8*)obj + 0x2f1) | 0x40);
+    }
+    if ((flags & 0x4) != 0) {
+        *((u8*)obj + 0x2f1) = (u8)(*((u8*)obj + 0x2f1) | 0x1);
+    }
+    if ((flags & 0x8) != 0) {
+        *((u8*)obj + 0x2f1) = (u8)(*((u8*)obj + 0x2f1) | 0x2);
+    }
+    if ((flags & 0x10) != 0) {
+        *((u8*)obj + 0x2f1) = (u8)(*((u8*)obj + 0x2f1) | 0x4);
+    }
+    if (lbl_803E25A4 == f) {
+        *((u8*)obj + 0x2f1) = (u8)(*((u8*)obj + 0x2f1) | 0x8);
+    } else if (lbl_803E2594 == f) {
+        *((u8*)obj + 0x2f1) = (u8)(*((u8*)obj + 0x2f1) | 0x10);
+    }
+    if ((flags & 0x80) != 0) {
+        *((u8*)obj + 0x2f1) = (u8)(*((u8*)obj + 0x2f1) | 0x80);
+    }
+    if ((flags & 0x100) != 0) {
+        *((u8*)obj + 0x2f5) = 1;
+    } else if ((flags & 0x200) != 0) {
+        *((u8*)obj + 0x2f5) = 2;
+    } else if ((flags & 0x400) != 0) {
+        *((u8*)obj + 0x2f5) = 3;
+    }
+    *(s16*)((char*)obj + 0x2ec) = val;
+}
+#pragma scheduling reset
+#pragma peephole reset
