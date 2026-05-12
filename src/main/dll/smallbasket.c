@@ -2164,6 +2164,54 @@ extern u8 lbl_8031FD48[];
 
 extern void fn_8015A77C(int *obj, int *st);
 
+extern f32 lbl_803E2CB8;
+extern u32 randomGetRange(u32 lo, u32 hi);
+
+/* fn_8015A660: 284b - event handler. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8015A660(int obj, int *st, int p3, int cmd, int p5, int sub) {
+    u8 *base;
+    u32 r;
+
+    {
+        u8 *bbase;
+        u32 idx;
+        bbase = lbl_8031FD48;
+        idx = *(u16*)((char*)st + 0x338);
+        bbase = bbase + idx * 8;
+        base = *(u8**)(bbase + 4);
+    }
+
+    if (cmd == 0x11) {
+        return;
+    }
+    if (cmd == 0x10) {
+        *(u32*)((char*)st + 0x2e8) |= 0x20;
+        return;
+    }
+    if (*(u16*)((char*)st + 0x2a0) > 3) {
+        fn_8014D08C((int*)obj, st, 6, lbl_803E2CB8, 0, 0);
+    } else {
+        fn_8014D08C((int*)obj, st, 5, lbl_803E2CB8, 0, 0);
+    }
+    r = randomGetRange(0, 3);
+    *((u8*)st + 0x33a) = base[r];
+    *(u32*)((char*)st + 0x2e8) |= 0x8;
+    if (sub > (int)*(u16*)((char*)st + 0x2b0)) {
+        *(u16*)((char*)st + 0x2b0) = 0;
+    } else {
+        *(u16*)((char*)st + 0x2b0) = (u16)(*(u16*)((char*)st + 0x2b0) - sub);
+    }
+    if (*(u16*)((char*)st + 0x2b0) == 0) {
+        Sfx_PlayFromObject(obj, 0x49e);
+    }
+    if (cmd == 0x1a) return;
+    Sfx_PlayFromObject(obj, 0x22);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* fn_8015ABFC: 196b - handle Sfx_PlayFromObject hit, then call fn_8015A77C. */
 #pragma scheduling off
 #pragma peephole off
