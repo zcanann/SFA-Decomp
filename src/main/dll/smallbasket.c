@@ -2088,3 +2088,36 @@ void fn_8015AD5C(void) {}
 void fn_801598B8(int x) { Sfx_StopFromObject(x, 0x3e8); }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E2CC0;
+extern f32 lbl_803E2CC4;
+extern f32 lbl_803E2CC8;
+extern f32 lbl_803E2CCC;
+extern f32 lbl_803E2CD0;
+extern f32 lbl_803E2CD4;
+
+/* fn_8015ACC0: 156b - init basket state struct. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8015ACC0(int *obj, int *st) {
+    *(f32*)((char*)st + 0x2ac) = lbl_803E2CC0;
+    *((u8*)st + 0x33b) = *(f32*)((char*)st + 0x2a8);
+    *(f32*)((char*)st + 0x2a8) = lbl_803E2CC4;
+    *(u32*)((char*)st + 0x2e4) = 0x42003;
+    *(f32*)((char*)st + 0x308) = lbl_803E2CC8;
+    *(f32*)((char*)st + 0x300) = lbl_803E2CCC;
+    *(f32*)((char*)st + 0x304) = lbl_803E2CD0;
+    *((u8*)st + 0x320) = 0;
+    {
+        f32 d = lbl_803E2CD4;
+        *(f32*)((char*)st + 0x314) = d;
+        *((u8*)st + 0x321) = 0xa;
+        *(f32*)((char*)st + 0x318) = d;
+        *((u8*)st + 0x322) = 7;
+        *(f32*)((char*)st + 0x31c) = d;
+    }
+    *((u8*)st + 0x33a) = 1;
+    *(u16*)((char*)st + 0x338) = (u16)(*(s16*)((char*)obj + 0x46) == 0x84b);
+}
+#pragma peephole reset
+#pragma scheduling reset
