@@ -4379,6 +4379,17 @@ end:
 #pragma scheduling on
 #pragma peephole on
 
+/* fn_800DB224: u16 split-into-2-bytes (LE) — 95% match, reg alloc diff */
+#pragma peephole off
+#pragma scheduling off
+void fn_800DB224(u32 v, u8 *dst) {
+    v = v & 0xffff;
+    dst[0] = (u8)v;
+    dst[1] = (u8)((s32)v >> 8);
+}
+#pragma scheduling on
+#pragma peephole on
+
 /* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
 void fn_800D9EE8(float *p) {
     u32 *a = (u32 *)((char *)p + 0x9c);
