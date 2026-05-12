@@ -477,9 +477,297 @@ int fn_8014089C(int p) {
 }
 #pragma scheduling on
 
-/* Stubs for as-yet-unmatched large state-machine functions. */
+extern int trickyDebugPrint(const char *fmt, ...);
+extern int trickyFn_8013b368(int p1, int p2, f32 f);
+extern int fn_800DAFDC(float *pos, int p2, int p3);
+extern int fn_8013D5A4(int p1, int p2, void *target, int p4, f32 f);
+extern int fn_80139A8C(int p1, void *p2);
+extern void fn_80139930(int p1, s16 angle);
+extern void objAnimFn_8013a3f0(int obj, int p2, f32 f, int p4);
+extern void *Obj_AllocObjectSetup(int p1, int p2);
+extern int Obj_SetupObject(void *setup, int p2, int p3, int p4, void *p5);
+extern int Sfx_PlayFromObject(int obj, int sfxId);
+extern int Sfx_AddLoopedObjectSound(int obj, int sfxId);
+extern int Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
+extern int Sfx_IsPlayingFromObjectChannel(int obj, int chan);
+extern int Obj_IsLoadingLocked(void);
+extern void objSetAnimSpeedTo1(void *obj);
+extern void objAudioFn_800393f8(int obj, void *p2, int p3, int p4, int p5, int p6);
+
+extern char lbl_8031D2E8[];
+extern void **lbl_803DCA9C;
+extern f32 timeDelta;
+extern f32 lbl_803E23DC;
+extern f32 lbl_803E23E4;
+extern f32 lbl_803E2418;
+extern f32 lbl_803E2488;
+extern f32 lbl_803E24AC;
+extern f32 lbl_803E24F8;
+extern f32 lbl_803E2504;
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801409DC
+ * EN v1.0 Address: 0x801409DC
+ * EN v1.0 Size: 2224b
+ */
+#pragma peephole off
+#pragma scheduling off
+void fn_801409DC(int p1, int p2) {
+    char *strBase = lbl_8031D2E8;
+    int i;
+    void **slot;
+    void *setup;
+    void *state;
+    void *target;
+    int dieFlag;
+
+    switch (*(u8 *)(p2 + 0xa)) {
+    case 0:
+        trickyDebugPrint(strBase + 0x700);
+        *(int *)(p2 + 0x71c) = fn_800DAFDC((float *)(*(int *)(p2 + 0x24) + 0x18), -1, 4);
+        {
+            int obj = *(int *)(p2 + 0x71c);
+            if (*(u8 *)(obj + 0x3) != 0) {
+                if (*(int *)(p2 + 0x28) != obj + 0x8) {
+                    *(int *)(p2 + 0x28) = obj + 0x8;
+                    *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x400;
+                    *(u16 *)(p2 + 0xd2) = 0;
+                }
+                *(u8 *)(p2 + 0xa) = 1;
+            } else {
+                int ret = (*(int (**)(int))((char *)*lbl_803DCA9C + 0x1c))(*(int *)(obj + 0x1c));
+                *(int *)(p2 + 0x720) = ret;
+                if (*(int *)(p2 + 0x28) != *(int *)(p2 + 0x720) + 0x8) {
+                    *(int *)(p2 + 0x28) = *(int *)(p2 + 0x720) + 0x8;
+                    *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x400;
+                    *(u16 *)(p2 + 0xd2) = 0;
+                }
+                *(u8 *)(p2 + 0xa) = 3;
+            }
+        }
+        trickyFn_8013b368(p1, p2, lbl_803E2488);
+        break;
+    case 1:
+        trickyDebugPrint(strBase + 0x70c);
+        trickyFn_8013b368(p1, p2, lbl_803E2488);
+        if ((u8)*(u8 *)(*(int *)(p2 + 0x720) + 0x3) == fn_800DBCFC((float *)(p1 + 0x18), (void *)0x0)) {
+            *(u8 *)(p2 + 0x9) = 1;
+            *(u8 *)(p2 + 0xa) = 4;
+        }
+        break;
+    case 2:
+        trickyDebugPrint(strBase + 0x720);
+        target = (void *)(*(int *)(p2 + 0x71c) + 0x8);
+        fn_8013D5A4(p1, p2, target, 1, lbl_803E2488);
+        fn_80139A8C(p1, target);
+        if (fn_800DBCFC((float *)(p1 + 0x18), (void *)0x0) == 0) {
+            *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) | 0x10;
+            *(u8 *)(p2 + 0xa) = 5;
+        }
+        break;
+    case 3:
+        trickyDebugPrint(strBase + 0x734);
+        target = (void *)(*(int *)(p2 + 0x71c) + 0x8);
+        fn_8013D5A4(p1, p2, target, 1, lbl_803E2488);
+        if (fn_80139A8C(p1, target) == 0) {
+            objAnimFn_8013a3f0(p1, 0x1a, lbl_803E23E4, 0x4000000);
+            *(u8 *)(p2 + 0xa) = 7;
+            (*(u8 *)*(int *)p2) -= 4;
+        }
+        /* fallthrough to case 7 */
+    case 7:
+        trickyDebugPrint(strBase + 0x744);
+        {
+            s16 srcAng = (s16)((s32)(s8)*(u8 *)(*(int *)(p2 + 0x71c) + 0x2c) << 8);
+            s16 cur = (s16)*(u16 *)p1;
+            s16 delta = (s16)(srcAng - cur);
+            if (delta > 0x8000) {
+                delta = delta + 1;
+            }
+            if (delta < -0x8000) {
+                delta = delta - 1;
+            }
+            {
+                int absDelta = (s32)delta;
+                if (absDelta < 0) absDelta = -absDelta;
+                if (absDelta >= 0x4000) {
+                    srcAng = srcAng + 0x8000;
+                }
+            }
+            fn_80139930(p1, srcAng);
+        }
+        if ((double)*(f32 *)(p1 + 0x98) <= (double)lbl_803E24AC) {
+            dieFlag = 1;
+        } else {
+            if ((*(u32 *)(p2 + 0x54) & 0x800) == 0) {
+                if ((u8)Obj_IsLoadingLocked() != 0) {
+                    *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) | 0x800;
+                    slot = (void **)p2;
+                    for (i = 0; i < 7; i++) {
+                        setup = Obj_AllocObjectSetup(0x24, 0x4f0);
+                        *(u8 *)((char *)setup + 0x4) = 2;
+                        *(u8 *)((char *)setup + 0x5) = 1;
+                        *(s16 *)((char *)setup + 0x1a) = (s16)i;
+                        slot[0x700 / 4] = (void *)Obj_SetupObject(setup, 5, *(s8 *)(p1 + 0xac), -1, *(void **)(p1 + 0x30));
+                        slot++;
+                    }
+                    Sfx_PlayFromObject(p1, 0x3db);
+                    Sfx_AddLoopedObjectSound(p1, 0x3dc);
+                }
+                dieFlag = 1;
+            } else {
+                int (*cb)(int, int) = *(int (**)(int, int))(p2 + 0x724);
+                if (cb != NULL && cb(*(int *)(p2 + 0x24), 1) == 0) {
+                    dieFlag = 1;
+                } else if (*(f32 *)(p1 + 0x98) <= lbl_803E2504) {
+                    dieFlag = 1;
+                } else {
+                    *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x800;
+                    *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) | 0x1000;
+                    slot = (void **)p2;
+                    for (i = 0; i < 7; i++) {
+                        objSetAnimSpeedTo1(slot[0x700 / 4]);
+                        slot++;
+                    }
+                    Sfx_RemoveLoopedObjectSound(p1, 0x3dc);
+                    state = *(void **)(p1 + 0xb8);
+                    if (((*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
+                        s16 a0 = *(s16 *)(p1 + 0xa0);
+                        if (a0 >= 0x30 || a0 < 0x29) {
+                            if (Sfx_IsPlayingFromObjectChannel(p1, 0x10) == 0) {
+                                objAudioFn_800393f8(p1, (char *)state + 0x3a8, 0x29d, 0, -1, 0);
+                            }
+                        }
+                    }
+                    dieFlag = 0;
+                }
+            }
+        }
+        if (dieFlag == 0) {
+            *(u8 *)(p2 + 0xa) = 8;
+            *(f32 *)(p2 + 0x728) = lbl_803E24F8;
+        }
+        break;
+    case 4:
+        trickyDebugPrint(strBase + 0x750);
+        {
+            int r = trickyFn_8013b368(p1, p2, lbl_803E2488);
+            if (r == 0) {
+                *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) | 0x10;
+                *(u8 *)(p2 + 0xa) = 2;
+            } else if (r == 2) {
+                *(u8 *)(p2 + 0x8) = 1;
+                *(u8 *)(p2 + 0xa) = 0;
+                *(f32 *)(p2 + 0x71c) = lbl_803E23DC;
+                *(f32 *)(p2 + 0x720) = lbl_803E23DC;
+                *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x10;
+                *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x10000;
+                *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x20000;
+                *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x40000;
+                *(u8 *)(p2 + 0xd) = 0xff;
+            }
+        }
+        break;
+    case 5:
+        trickyDebugPrint(strBase + 0x764);
+        target = (void *)(*(int *)(p2 + 0x24) + 0x18);
+        fn_8013D5A4(p1, p2, target, 1, lbl_803E2418);
+        if (fn_80139A8C(p1, target) == 0) {
+            objAnimFn_8013a3f0(p1, 0x1a, lbl_803E23E4, 0x4000000);
+            *(u8 *)(p2 + 0xa) = 6;
+            (*(u8 *)*(int *)p2) -= 4;
+        }
+        break;
+    case 6:
+        trickyDebugPrint(strBase + 0x778);
+        if ((double)*(f32 *)(p1 + 0x98) <= (double)lbl_803E24AC) {
+            dieFlag = 1;
+        } else {
+            if ((*(u32 *)(p2 + 0x54) & 0x800) == 0) {
+                if ((u8)Obj_IsLoadingLocked() != 0) {
+                    *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) | 0x800;
+                    slot = (void **)p2;
+                    for (i = 0; i < 7; i++) {
+                        setup = Obj_AllocObjectSetup(0x24, 0x4f0);
+                        *(u8 *)((char *)setup + 0x4) = 2;
+                        *(u8 *)((char *)setup + 0x5) = 1;
+                        *(s16 *)((char *)setup + 0x1a) = (s16)i;
+                        slot[0x700 / 4] = (void *)Obj_SetupObject(setup, 5, *(s8 *)(p1 + 0xac), -1, *(void **)(p1 + 0x30));
+                        slot++;
+                    }
+                    Sfx_PlayFromObject(p1, 0x3db);
+                    Sfx_AddLoopedObjectSound(p1, 0x3dc);
+                }
+                dieFlag = 1;
+            } else {
+                int (*cb)(int, int) = *(int (**)(int, int))(p2 + 0x724);
+                if (cb != NULL && cb(*(int *)(p2 + 0x24), 1) == 0) {
+                    dieFlag = 1;
+                } else if (*(f32 *)(p1 + 0x98) <= lbl_803E2504) {
+                    dieFlag = 1;
+                } else {
+                    *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x800;
+                    *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) | 0x1000;
+                    slot = (void **)p2;
+                    for (i = 0; i < 7; i++) {
+                        objSetAnimSpeedTo1(slot[0x700 / 4]);
+                        slot++;
+                    }
+                    Sfx_RemoveLoopedObjectSound(p1, 0x3dc);
+                    state = *(void **)(p1 + 0xb8);
+                    if (((*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
+                        s16 a0 = *(s16 *)(p1 + 0xa0);
+                        if (a0 >= 0x30 || a0 < 0x29) {
+                            if (Sfx_IsPlayingFromObjectChannel(p1, 0x10) == 0) {
+                                objAudioFn_800393f8(p1, (char *)state + 0x3a8, 0x29d, 0, -1, 0);
+                            }
+                        }
+                    }
+                    dieFlag = 0;
+                }
+            }
+        }
+        if (dieFlag == 0) {
+            *(u8 *)(p2 + 0x8) = 1;
+            *(u8 *)(p2 + 0xa) = 0;
+            *(f32 *)(p2 + 0x71c) = lbl_803E23DC;
+            *(f32 *)(p2 + 0x720) = lbl_803E23DC;
+            *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x10;
+            *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x10000;
+            *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x20000;
+            *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x40000;
+            *(u8 *)(p2 + 0xd) = 0xff;
+        }
+        break;
+    case 8:
+        trickyDebugPrint(strBase + 0x784);
+        *(f32 *)(p2 + 0x728) = *(f32 *)(p2 + 0x728) - timeDelta;
+        if (*(f32 *)(p2 + 0x728) <= lbl_803E23DC) {
+            target = (void *)(*(int *)(p2 + 0x720) + 0x8);
+            fn_8013D5A4(p1, p2, target, 1, lbl_803E2488);
+            fn_80139A8C(p1, target);
+            if (fn_800DBCFC((float *)(p1 + 0x18), (void *)0x0) != 0) {
+                *(u8 *)(p2 + 0x8) = 1;
+                *(u8 *)(p2 + 0xa) = 0;
+                *(f32 *)(p2 + 0x71c) = lbl_803E23DC;
+                *(f32 *)(p2 + 0x720) = lbl_803E23DC;
+                *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x10;
+                *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x10000;
+                *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x20000;
+                *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x40000;
+                *(u8 *)(p2 + 0xd) = 0xff;
+            }
+        }
+        break;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/* Stub for as-yet-unmatched large state-machine function. */
 void fn_8013FFB8(void) {}
-void fn_801409DC(void) {}
 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_8014128C(void) {}
