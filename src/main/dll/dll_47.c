@@ -857,5 +857,17 @@ void fn_8011B354(void) {
 }
 #pragma scheduling reset
 
+/* Stubs for as-yet-unmatched functions. */
+void fn_8011A0DC(void) {}
+void fn_8011A280(void) {}
+void fn_8011A410(void) {}
+void fn_8011A4E8(void) {}
+void fn_8011A70C(void) {}
+void saveSelectGoToChooseSlot(void) {}
+void fn_8011A914(void) {}
+void fn_8011AA50(void) {}
+void SaveSelectScreen_run(void) {}
+void fn_8011B3B4(void) {}
+
 /* Trivial 4b 0-arg blr leaves. */
 void SaveSelectScreen_frameEnd(void) {}
