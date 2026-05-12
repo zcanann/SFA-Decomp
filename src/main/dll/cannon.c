@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/cannon.h"
 
+#pragma peephole off
+
 extern bool FUN_800067f0();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068cc();
@@ -512,7 +514,6 @@ extern f32 lbl_803E2504;
  * EN v1.0 Address: 0x801409DC
  * EN v1.0 Size: 2224b
  */
-#pragma peephole off
 #pragma scheduling off
 void fn_801409DC(int p1, int p2) {
     char *strBase = lbl_8031D2E8;
@@ -527,29 +528,25 @@ void fn_801409DC(int p1, int p2) {
     case 0:
         trickyDebugPrint(strBase + 0x700);
         *(int *)(p2 + 0x71c) = fn_800DAFDC((float *)(*(int *)(p2 + 0x24) + 0x18), -1, 4);
-        {
-            int obj = *(int *)(p2 + 0x71c);
-            if (*(u8 *)(obj + 0x3) != 0) {
-                if (*(int *)(p2 + 0x28) != obj + 0x8) {
-                    *(int *)(p2 + 0x28) = obj + 0x8;
-                    *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x400;
-                    *(u16 *)(p2 + 0xd2) = 0;
-                }
-                *(u8 *)(p2 + 0xa) = 1;
-            } else {
-                int ret = (*(int (**)(int))((char *)*lbl_803DCA9C + 0x1c))(*(int *)(obj + 0x1c));
-                *(int *)(p2 + 0x720) = ret;
-                if (*(int *)(p2 + 0x28) != *(int *)(p2 + 0x720) + 0x8) {
-                    *(int *)(p2 + 0x28) = *(int *)(p2 + 0x720) + 0x8;
-                    *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x400;
-                    *(u16 *)(p2 + 0xd2) = 0;
-                }
-                *(u8 *)(p2 + 0xa) = 3;
+        if (*(u8 *)(*(int *)(p2 + 0x71c) + 0x3) != 0) {
+            if (*(uint *)(p2 + 0x28) != (uint)(*(int *)(p2 + 0x71c) + 0x8)) {
+                *(int *)(p2 + 0x28) = *(int *)(p2 + 0x71c) + 0x8;
+                *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & 0xfffffbff;
+                *(u16 *)(p2 + 0xd2) = 0;
             }
+            *(u8 *)(p2 + 0xa) = 1;
+        } else {
+            *(int *)(p2 + 0x720) = (*(int (**)(int))((char *)*lbl_803DCA9C + 0x1c))(*(int *)(*(int *)(p2 + 0x71c) + 0x1c));
+            if (*(uint *)(p2 + 0x28) != (uint)(*(int *)(p2 + 0x720) + 0x8)) {
+                *(int *)(p2 + 0x28) = *(int *)(p2 + 0x720) + 0x8;
+                *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & 0xfffffbff;
+                *(u16 *)(p2 + 0xd2) = 0;
+            }
+            *(u8 *)(p2 + 0xa) = 3;
         }
         trickyFn_8013b368(p1, p2, lbl_803E2488);
         break;
-    case 1:
+    case 3:
         trickyDebugPrint(strBase + 0x70c);
         trickyFn_8013b368(p1, p2, lbl_803E2488);
         if ((u8)*(u8 *)(*(int *)(p2 + 0x720) + 0x3) == fn_800DBCFC((float *)(p1 + 0x18), (void *)0x0)) {
@@ -557,7 +554,7 @@ void fn_801409DC(int p1, int p2) {
             *(u8 *)(p2 + 0xa) = 4;
         }
         break;
-    case 2:
+    case 4:
         trickyDebugPrint(strBase + 0x720);
         target = (void *)(*(int *)(p2 + 0x71c) + 0x8);
         fn_8013D5A4(p1, p2, target, 1, lbl_803E2488);
@@ -567,7 +564,7 @@ void fn_801409DC(int p1, int p2) {
             *(u8 *)(p2 + 0xa) = 5;
         }
         break;
-    case 3:
+    case 5:
         trickyDebugPrint(strBase + 0x734);
         target = (void *)(*(int *)(p2 + 0x71c) + 0x8);
         fn_8013D5A4(p1, p2, target, 1, lbl_803E2488);
@@ -576,7 +573,7 @@ void fn_801409DC(int p1, int p2) {
             *(u8 *)(p2 + 0xa) = 7;
             (*(u8 *)*(int *)p2) -= 4;
         }
-        /* fallthrough to case 7 */
+        break;
     case 7:
         trickyDebugPrint(strBase + 0x744);
         {
@@ -650,7 +647,7 @@ void fn_801409DC(int p1, int p2) {
             *(f32 *)(p2 + 0x728) = lbl_803E24F8;
         }
         break;
-    case 4:
+    case 1:
         trickyDebugPrint(strBase + 0x750);
         {
             int r = trickyFn_8013b368(p1, p2, lbl_803E2488);
@@ -670,7 +667,7 @@ void fn_801409DC(int p1, int p2) {
             }
         }
         break;
-    case 5:
+    case 2:
         trickyDebugPrint(strBase + 0x764);
         target = (void *)(*(int *)(p2 + 0x24) + 0x18);
         fn_8013D5A4(p1, p2, target, 1, lbl_803E2418);
@@ -764,7 +761,6 @@ void fn_801409DC(int p1, int p2) {
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 /* Stub for as-yet-unmatched large state-machine function. */
 void fn_8013FFB8(void) {}
