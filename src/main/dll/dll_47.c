@@ -87,6 +87,8 @@ extern undefined4* PTR_DAT_8031b40c;
 extern undefined4* PTR_DAT_8031b418;
 extern undefined4* PTR_DAT_8031b43c;
 extern char s__savegame_save_d_bin_8031b4b4[];
+extern void mm_free(void *p);
+extern void *lbl_803A8658[10];
 
 /*
  * --INFO--
@@ -833,6 +835,27 @@ void FUN_8011c080(void)
 {
 }
 
+
+/*
+ * --INFO--
+ *
+ * Function: fn_8011B354
+ * EN v1.0 Address: 0x8011B354
+ * EN v1.0 Size: 96b
+ */
+#pragma scheduling off
+void fn_8011B354(void) {
+    int i = 0;
+    void **p = lbl_803A8658;
+    void *zero = NULL;
+    do {
+        mm_free(*p);
+        *p = zero;
+        p++;
+        i++;
+    } while (i < 10);
+}
+#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void SaveSelectScreen_frameEnd(void) {}
