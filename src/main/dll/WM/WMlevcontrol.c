@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/WM/WMlevcontrol.h"
 
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern undefined4 FUN_80017a7c();
 
 extern undefined4* DAT_803dd6d4;
@@ -72,6 +72,6 @@ bool FUN_801dd5e4(void)
 {
   uint uVar1;
   
-  uVar1 = FUN_80017690(0x639);
+  uVar1 = GameBit_Get(0x639);
   return uVar1 == 0;
 }
