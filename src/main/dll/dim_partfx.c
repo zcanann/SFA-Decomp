@@ -2492,15 +2492,14 @@ void fn_800D65B8(PartFxNode *o)
 #pragma pop
 
 /* Append v to array pointed to by lbl_803DD41C, capped at 10 entries.
- * NOTE: stuck on instruction order — compiler computes arr load early. */
+ * NOTE: stuck at ~78% — instruction scheduling differs. */
 void fn_800D663C(u32 v)
 {
-    s32 i = lbl_803DD416;
-    u32 *arr;
+    s32 i;
+    i = lbl_803DD416;
     if (i >= 10) return;
-    arr = (u32 *)lbl_803DD41C;
     lbl_803DD416 = (s16)(i + 1);
-    arr[i] = v;
+    ((u32 *)lbl_803DD41C)[i] = v;
 }
 
 /* Trivial 4b 0-arg blr leaves. */
