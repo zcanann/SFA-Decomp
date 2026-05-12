@@ -91,6 +91,12 @@ extern void mm_free(void *p);
 extern void *lbl_803A8658[10];
 extern void *lbl_803DD6A8;
 extern void *lbl_803DD6B0;
+extern int lbl_803DB9FC;
+extern u8 lbl_803DB424;
+extern char sFrontendStringFormat[];
+extern char lbl_803DBA20[];
+extern int fn_800E8D9C(void);
+extern int sprintf(char *dst, const char *fmt, ...);
 
 /*
  * --INFO--
@@ -896,7 +902,39 @@ void fn_8011A410(void **p) {
 }
 #pragma scheduling reset
 void fn_8011A4E8(void) {}
-void fn_8011A70C(void) {}
+/*
+ * --INFO--
+ *
+ * Function: fn_8011A70C
+ * EN v1.0 Address: 0x8011A70C
+ * EN v1.0 Size: 216b
+ */
+#pragma scheduling off
+void fn_8011A70C(void) {
+    int i;
+    int off;
+    lbl_803DD6B0 = lbl_803DD6A8;
+    lbl_803DB9FC = 0;
+    if (lbl_803DB424 != 0) {
+        fn_800E8D9C();
+        if (lbl_803DB424 != 0) {
+            lbl_803DB9FC = 3;
+        }
+    }
+    i = lbl_803DB9FC;
+    off = i * 0x24;
+    while (i < 3) {
+        sprintf((char *)lbl_803DD6B0 + off, sFrontendStringFormat, lbl_803DBA20);
+        *((u8 *)lbl_803DD6B0 + off + 0x5) = 0;
+        *((u8 *)lbl_803DD6B0 + off + 0x6) = 0;
+        *((u8 *)lbl_803DD6B0 + off + 0x4) = 0;
+        *((int *)((char *)lbl_803DD6B0 + off + 0x8)) = 0;
+        *((u8 *)lbl_803DD6B0 + off + 0x21) = 0;
+        off += 0x24;
+        i++;
+    }
+}
+#pragma scheduling reset
 void saveSelectGoToChooseSlot(void) {}
 void fn_8011A914(void) {}
 void fn_8011AA50(void) {}
