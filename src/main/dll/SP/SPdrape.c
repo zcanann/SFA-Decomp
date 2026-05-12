@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/SP/SPdrape.h"
 
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern int FUN_80017a98();
 extern int FUN_80017af8();
 extern uint FUN_800d7824();
@@ -29,7 +29,7 @@ void FUN_801d8d20(undefined4 param_1,uint *param_2)
   uint uVar1;
   int iVar2;
   
-  uVar1 = FUN_80017690(0x193);
+  uVar1 = GameBit_Get(0x193);
   if (uVar1 == 0) {
     if (*(short *)((int)param_2 + 0x12) == 0xcc) {
       *(undefined2 *)((int)param_2 + 0x12) = 0xffff;
@@ -37,7 +37,7 @@ void FUN_801d8d20(undefined4 param_1,uint *param_2)
   }
   else if (*(short *)((int)param_2 + 0x12) != 0xcc) {
     *(undefined2 *)((int)param_2 + 0x12) = 0xcc;
-    FUN_80017698(0xc0,1);
+    GameBit_Set(0xc0,1);
     *param_2 = *param_2 & 0xfffffffd;
   }
   if (*(char *)((int)param_2 + 6) == '\x01') {
@@ -46,11 +46,11 @@ void FUN_801d8d20(undefined4 param_1,uint *param_2)
        (iVar2 = FUN_80017a98(), (*(ushort *)(iVar2 + 0xb0) & 0x1000) == 0)) {
       (**(code **)(*DAT_803dd6d4 + 0x48))(6,param_1,0xffffffff);
       *(undefined *)((int)param_2 + 6) = 7;
-      FUN_80017698(0xd39,1);
+      GameBit_Set(0xd39,1);
     }
   }
   else if (*(char *)((int)param_2 + 6) == '\0') {
-    uVar1 = FUN_80017690(0xd39);
+    uVar1 = GameBit_Get(0xd39);
     if (uVar1 == 0) {
       (**(code **)(*DAT_803dd6d4 + 0x48))(5,param_1,0xffffffff);
       *(undefined *)((int)param_2 + 6) = 1;
@@ -59,19 +59,19 @@ void FUN_801d8d20(undefined4 param_1,uint *param_2)
       *(undefined *)((int)param_2 + 6) = 7;
     }
   }
-  if (((((*param_2 & 0x40) == 0) && (uVar1 = FUN_80017690(400), uVar1 != 0)) &&
-      (uVar1 = FUN_80017690(0x191), uVar1 != 0)) && (uVar1 = FUN_80017690(0x192), uVar1 != 0)) {
-    uVar1 = FUN_80017690(0x193);
+  if (((((*param_2 & 0x40) == 0) && (uVar1 = GameBit_Get(400), uVar1 != 0)) &&
+      (uVar1 = GameBit_Get(0x191), uVar1 != 0)) && (uVar1 = GameBit_Get(0x192), uVar1 != 0)) {
+    uVar1 = GameBit_Get(0x193);
     if (uVar1 == 0) {
       iVar2 = FUN_80017af8(0x442ff);
       if ((iVar2 != 0) && (iVar2 = FUN_80017a98(), (*(ushort *)(iVar2 + 0xb0) & 0x1000) == 0)) {
         uVar1 = FUN_800d7824();
         if (uVar1 == 0) {
-          FUN_80017698(0x193,1);
+          GameBit_Set(0x193,1);
           (**(code **)(*DAT_803dd6cc + 8))(0x14,1);
         }
         else {
-          FUN_80017698(0x193,1);
+          GameBit_Set(0x193,1);
           (**(code **)(*DAT_803dd6d4 + 0x48))(1,param_1,0xffffffff);
           *param_2 = *param_2 | 0x40;
         }
@@ -86,9 +86,9 @@ void FUN_801d8d20(undefined4 param_1,uint *param_2)
       }
     }
   }
-  uVar1 = FUN_80017690(0xea9);
-  if ((uVar1 == 0) && (uVar1 = FUN_80017690(0x611), uVar1 != 0)) {
-    FUN_80017698(0xea9,1);
+  uVar1 = GameBit_Get(0xea9);
+  if ((uVar1 == 0) && (uVar1 = GameBit_Get(0x611), uVar1 != 0)) {
+    GameBit_Set(0xea9,1);
     (**(code **)(*DAT_803dd72c + 0x1c))(0,0,1,0);
   }
   return;

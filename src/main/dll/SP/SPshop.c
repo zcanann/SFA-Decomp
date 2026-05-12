@@ -2,8 +2,8 @@
 #include "main/dll/SP/SPshop.h"
 
 extern undefined4 FUN_800067c0();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined8 FUN_80286834();
 extern undefined8 FUN_80286838();
 extern undefined4 FUN_80286880();
@@ -44,30 +44,30 @@ void FUN_801d8308(undefined4 param_1,undefined4 param_2,short param_3,short para
   uVar6 = (uint)param_4;
   uVar2 = -uVar6 - 1 | uVar6 + 1;
   if ((*puVar3 & uVar5) == 0) {
-    if ((((int)uVar2 < 0) && (uVar4 = FUN_80017690(uVar6), uVar4 != 0)) ||
-       (uVar4 = FUN_80017690((int)param_5), uVar4 != 0)) {
+    if ((((int)uVar2 < 0) && (uVar4 = GameBit_Get(uVar6), uVar4 != 0)) ||
+       (uVar4 = GameBit_Get((int)param_5), uVar4 != 0)) {
       if ((int)uVar1 < 0) {
-        FUN_80017698((int)param_3,0);
+        GameBit_Set((int)param_3,0);
       }
       if ((int)uVar2 < 0) {
-        FUN_80017698((int)param_4,0);
+        GameBit_Set((int)param_4,0);
       }
-      FUN_80017698((int)param_5,1);
+      GameBit_Set((int)param_5,1);
       if (param_6 != (int *)0xffffffff) {
         FUN_800067c0(param_6,1);
       }
       *puVar3 = *puVar3 | uVar5;
     }
   }
-  else if ((((int)uVar1 < 0) && (uVar4 = FUN_80017690(uVar4), uVar4 != 0)) ||
-          (uVar4 = FUN_80017690((int)param_5), uVar4 == 0)) {
+  else if ((((int)uVar1 < 0) && (uVar4 = GameBit_Get(uVar4), uVar4 != 0)) ||
+          (uVar4 = GameBit_Get((int)param_5), uVar4 == 0)) {
     if ((int)uVar1 < 0) {
-      FUN_80017698((int)param_3,0);
+      GameBit_Set((int)param_3,0);
     }
     if ((int)uVar2 < 0) {
-      FUN_80017698((int)param_4,0);
+      GameBit_Set((int)param_4,0);
     }
-    FUN_80017698((int)param_5,0);
+    GameBit_Set((int)param_5,0);
     if (param_6 != (int *)0xffffffff) {
       FUN_800067c0(param_6,0);
     }
@@ -99,13 +99,13 @@ void FUN_801d8480(undefined4 param_1,undefined4 param_2,short param_3,short para
   
   uVar3 = FUN_80286838();
   uVar2 = (uint)param_5;
-  uVar1 = FUN_80017690(uVar2);
+  uVar1 = GameBit_Get(uVar2);
   uVar1 = countLeadingZeros(uVar1);
-  FUN_80017698(uVar2,uVar1 >> 5);
+  GameBit_Set(uVar2,uVar1 >> 5);
   FUN_801d8308((int)((ulonglong)uVar3 >> 0x20),(int)uVar3,param_3,param_4,param_5,param_6);
-  uVar1 = FUN_80017690(uVar2);
+  uVar1 = GameBit_Get(uVar2);
   uVar1 = countLeadingZeros(uVar1);
-  FUN_80017698(uVar2,uVar1 >> 5);
+  GameBit_Set(uVar2,uVar1 >> 5);
   FUN_80286884();
   return;
 }
