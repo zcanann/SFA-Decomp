@@ -2340,8 +2340,19 @@ extern s32 lbl_803DD410;
 
 typedef struct PartFxKV { u32 key; u32 value; } PartFxKV;
 extern PartFxKV lbl_8039C458[];
+extern f32 lbl_803E04E8;
+
+typedef struct PartFxNode {
+    u8 _pad0[0xc];
+    f32 _0xc;
+    s32 _0x10;
+    u8 _pad14[4];
+    s32 _0x18;
+    s32 _0x1c;
+} PartFxNode;
 
 /* Binary search for key in lbl_8039C458 (count = lbl_803DD410). */
+#pragma dont_inline on
 u32 fn_800D5530(s32 key, s32 *idx_out)
 {
     s32 high;
@@ -2365,6 +2376,7 @@ u32 fn_800D5530(s32 key, s32 *idx_out)
     *idx_out = -1;
     return 0;
 }
+#pragma dont_inline off
 
 /* Set *p to lbl_803DD414 (sign-extended) and return lbl_803DD418. */
 u32 fn_800D65A8(s32 *p)
@@ -2452,6 +2464,29 @@ PartFxItem *fn_800D64EC(s32 target_rank)
     }
     return 0;
 }
+
+/* Walk a chain via fn_800D5530 lookups starting from o->_0x10. */
+#pragma push
+#pragma scheduling off
+void fn_800D65B8(PartFxNode *o)
+{
+    s32 local_idx;
+    PartFxNode *ret;
+    s32 nxt;
+    ret = (PartFxNode *)fn_800D5530(o->_0x10, &local_idx);
+    if (ret == 0) {
+        o->_0x18 = 0;
+        o->_0xc = lbl_803E04E8;
+    } else {
+        while ((nxt = ret->_0x18) > -1) {
+            ret = (PartFxNode *)fn_800D5530(nxt, &local_idx);
+            o->_0x1c = o->_0x1c + 1;
+        }
+        o->_0x18 = o->_0x10;
+        o->_0xc = lbl_803E04E8;
+    }
+}
+#pragma pop
 
 /* Append v to array pointed to by lbl_803DD41C, capped at 10 entries.
  * NOTE: stuck on instruction order — compiler computes arr load early. */
