@@ -61,23 +61,20 @@ int fn_801650D0(void) { return 0x0; }
 #pragma peephole off
 void tumbleweed_init(int obj, int defData) {
     int aux = *(int*)(obj + 0xb8);
-    u32 rnd;
 
     *(f32*)(aux + 0x288) = *(f32*)(obj + 0xc);
     *(f32*)(aux + 0x28c) = *(f32*)(obj + 0x14);
     *(s16*)(aux + 0x26a) = (short)(lbl_803E2FCC * *(f32*)(defData + 0x1c));
     *(u8*)(aux + 0x279) = *(u8*)(defData + 0x1b);
     *(f32*)(aux + 0x26c) = *(f32*)(obj + 0x8);
-    rnd = randomGetRange(0xc8, 0x1f4);
-    *(f32*)(aux + 0x270) = *(f32*)(aux + 0x26c) / (f32)(s32)rnd;
+    *(f32*)(aux + 0x270) = *(f32*)(aux + 0x26c) / (f32)(s32)randomGetRange(0xc8, 0x1f4);
     *(u32*)(aux + 0x284) = 0;
     *(f32*)(obj + 0x8) = lbl_803E2FD0;
     (*(int(**)(int, int, int, int))(*(int*)lbl_803DCAA8 + 0x4))(aux, 0, 0x40000, 1);
     (*(int(**)(int, int, void*, void*, int))(*(int*)lbl_803DCAA8 + 0x8))(aux, 1, lbl_80320288, lbl_803DBD40, 8);
     (*(int(**)(int, int))(*(int*)lbl_803DCAA8 + 0x20))(obj, aux);
     *(u8*)(aux + 0x278) = 0;
-    rnd = randomGetRange(-0x12c, 0x12c);
-    *(f32*)(aux + 0x2a0) = lbl_803E2FB4 + (f32)(s32)rnd;
+    *(f32*)(aux + 0x2a0) = lbl_803E2FB4 + (f32)(s32)randomGetRange(-0x12c, 0x12c);
     ObjGroup_AddObject(obj, 3);
     ObjGroup_AddObject(obj, 0x31);
     ObjHits_DisableObject(obj);
@@ -149,11 +146,12 @@ void fn_80164C44(int obj) {
     }
 
     if ((*(u8*)(aux + 0x27a) & 0x10) != 0 && (*(u16*)(obj + 0xb0) & 0x800) != 0) {
-        u8 bVar2;
+        u32 r;
         ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
-        bVar2 = (u8)(*(s8*)(aux + 0x27b) + 1);
-        *(u8*)(aux + 0x27b) = bVar2;
-        if ((int)(uint)bVar2 % 6 == 0) {
+        r = *(u8*)(aux + 0x27b);
+        r = r + 1;
+        *(u8*)(aux + 0x27b) = (u8)r;
+        if ((int)(r & 0xff) % 6 == 0) {
             fn_80098B18(obj, *(f32*)(obj + 0x8), 1, 0, 0, 0);
         } else {
             fn_80098B18(obj, *(f32*)(obj + 0x8), 1, 3, 0, 0);
