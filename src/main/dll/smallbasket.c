@@ -2095,6 +2095,42 @@ extern f32 lbl_803E2CC8;
 extern f32 lbl_803E2CCC;
 extern f32 lbl_803E2CD0;
 extern f32 lbl_803E2CD4;
+extern u8 Obj_IsLoadingLocked(void);
+extern int *Obj_AllocObjectSetup(int p1, int p2);
+extern int *Obj_SetupObject(int *obj, int p1, int p2, int p3, int p4);
+extern void firepipe_setLinkedUpdateFlag(int *obj);
+
+/* fn_80157A58: 256b - alloc child object and attach to parent. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80157A58(int *obj) {
+    int *child;
+    if (Obj_IsLoadingLocked() != 0) {
+        child = Obj_AllocObjectSetup(0x24, 0x710);
+        ObjPath_GetPointWorldPosition(obj, 0, (char*)child + 0x8, (char*)child + 0xc, (char*)child + 0x10, 0);
+        *((u8*)child + 0x4) = 1;
+        *((u8*)child + 0x5) = 4;
+        *((u8*)child + 0x6) = 0xff;
+        *((u8*)child + 0x7) = 0xff;
+        *((u8*)child + 0x18) = 0;
+        *((u8*)child + 0x19) = 0;
+        *(s16*)((char*)child + 0x1a) = 0;
+        *(s16*)((char*)child + 0x1c) = 0xa;
+        *(s16*)((char*)child + 0x1e) = 0;
+        *(s16*)((char*)child + 0x20) = 0;
+        *((u8*)child + 0x22) = 3;
+        *((u8*)child + 0x23) = 0;
+        child = Obj_SetupObject(child, 5, -1, -1, 0);
+        if (child != 0) {
+            ObjLink_AttachChild(obj, child, 0);
+            firepipe_setLinkedUpdateFlag(child);
+            *(s16*)((char*)child + 0x6) = (s16)(*(s16*)((char*)child + 0x6) | 0x4000);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern f32 lbl_803E2B18;
 extern f32 lbl_803E2B38;
 extern f32 lbl_803E2B40;
@@ -2106,6 +2142,57 @@ extern f32 lbl_803E2B6C;
 extern f32 lbl_803E2B70;
 extern f32 lbl_803E2B74;
 extern f32 lbl_803E2B78;
+extern f32 lbl_803E2C3C;
+extern f32 lbl_803E2C58;
+extern f32 lbl_803E2C7C;
+extern f32 lbl_803E2C80;
+extern f32 lbl_803E2C84;
+extern f32 lbl_803E2C88;
+extern f32 lbl_803E2C8C;
+extern f32 lbl_803E2C90;
+extern f32 lbl_803E2C94;
+extern u8 lbl_8031FB70[];
+extern u8 lbl_8031FC2C[];
+extern int fn_8014D08C(int *obj, int *st, int p3, f32 f, int p5, int p6);
+extern int *fn_80026CFC(int p1, int p2);
+extern void fn_80026C38(int *p, f32 a, f32 b, f32 c);
+extern int fn_8014D0F0(void);
+
+/* fn_8015A424: 264b - state-2 init. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8015A424(int *obj, int *st) {
+    u8 *tab;
+    *(f32*)((char*)st + 0x2ac) = lbl_803E2C7C;
+    *(u32*)((char*)st + 0x2e4) = 0x405009;
+    *(f32*)((char*)st + 0x304) = lbl_803E2C80;
+    *((u8*)st + 0x320) = 0;
+    {
+        f32 d1 = lbl_803E2C84;
+        *(f32*)((char*)st + 0x314) = d1;
+        *((u8*)st + 0x321) = 0;
+        *(f32*)((char*)st + 0x318) = lbl_803E2C3C;
+        *((u8*)st + 0x322) = 0;
+        *(f32*)((char*)st + 0x31c) = d1;
+    }
+    *(f32*)((char*)st + 0x2fc) = *(f32*)((char*)st + 0x2fc) * lbl_803E2C88;
+    {
+        f32 *fbase = (f32*)lbl_8031FB70;
+        u8 *bbase = lbl_8031FB70;
+        u32 idx = *((u8*)st + 0x33a);
+        u32 off = idx * 0xc;
+        fn_8014D08C(obj, st, bbase[off + 8],
+                    *(f32*)((char*)fbase + off), 0, 0);
+    }
+    *(f32*)((char*)st + 0x328) = lbl_803E2C58;
+    ObjHits_SetHitVolumeMasks(obj, 0xe, 1, 0xfff);
+    *(int**)((char*)st + 0x36c) = fn_80026CFC((int)lbl_8031FC2C, 5);
+    fn_80026C38(*(int**)((char*)st + 0x36c), lbl_803E2C8C, lbl_803E2C90, lbl_803E2C94);
+    *(u32*)((char*)st + 0x2e8) = *(u32*)((char*)st + 0x2e8) | 0x100;
+    *(int*)((char*)obj + 0x108) = (int)&fn_8014D0F0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* fn_80157898: 240b - init basket with random factor. */
 #pragma scheduling off
