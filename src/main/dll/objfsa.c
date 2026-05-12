@@ -4327,6 +4327,29 @@ void fn_800DA928(float *p) {
     curveFn_80010320(p);
 }
 
+/* UIController vtable dispatch via lbl_803DCA68 */
+extern int *lbl_803DCA68;
+extern u8 fn_80014054(void *p, int a, int b);
+extern void fn_80014060(void *p);
+extern void gameTimerRun(void *p);
+void UIController_frameStart(void) {
+    (**(void (**)(void))(*lbl_803DCA68 + 0x4))();
+}
+void UIController_frameEnd(void) {
+    (**(void (**)(void))(*lbl_803DCA68 + 0x8))();
+}
+#pragma peephole off
+#pragma scheduling off
+void UIController_render(void *p, int a, int b) {
+    if (fn_80014054(p, a, b) != 0) {
+        gameTimerRun(p);
+    }
+    fn_80014060(p);
+    (**(void (**)(void *, int, int))(*lbl_803DCA68 + 0xc))(p, a, b);
+}
+#pragma scheduling on
+#pragma peephole on
+
 /* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
 void fn_800D9EE8(float *p) {
     u32 *a = (u32 *)((char *)p + 0x9c);
