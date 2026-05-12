@@ -477,5 +477,9 @@ int fn_8014089C(int p) {
 }
 #pragma scheduling on
 
+/* Stubs for as-yet-unmatched large state-machine functions. */
+void fn_8013FFB8(void) {}
+void fn_801409DC(void) {}
+
 /* Trivial 4b 0-arg blr leaves. */
 void fn_8014128C(void) {}
