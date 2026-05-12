@@ -102,7 +102,7 @@ typedef struct DIMbossObject {
   int updateInitialized;
 } DIMbossObject;
 
-void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate);
+void DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate);
 void dimboss_func11(void);
 int DIMboss_setScale(DIMbossObject *obj);
 int DIMboss_getExtraSize(void);

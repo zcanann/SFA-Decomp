@@ -123,8 +123,11 @@ extern char sDIMBossLoadingAssetsForDIMTop[];
  */
 #pragma scheduling off
 #pragma peephole off
-void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
+void DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
+  DIMbossRuntime *runtime;
+  DIMbossConfig *config;
+  DIMbossTopState *topState;
   byte bVar1;
   bool bVar2;
   undefined4 *puVar3;
@@ -139,14 +142,17 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
   int iVar12;
   undefined4 *puVar13;
   
-  puVar3 = (undefined4 *)param_1;
-  puVar13 = (undefined4 *)puVar3[0x2e];
-  iVar12 = puVar3[0x13];
+  runtime = obj->runtime;
+  config = obj->config;
+  topState = runtime->topState;
+  puVar3 = (undefined4 *)obj;
+  puVar13 = (undefined4 *)runtime;
+  iVar12 = (int)config;
   Obj_GetPlayerObject();
-  iVar11 = puVar13[0x103];
-  *(undefined2 *)((int)puVar13 + 0x402) = 0;
+  iVar11 = (int)topState;
+  runtime->phase = 0;
   (*(code *)(*lbl_803DCAAC + 0x50))(0x1c,5,0);
-  if (puVar3[0x3d] == 0) {
+  if (obj->renderPause == 0) {
     puVar7 = lbl_803AC9DC;
     puVar8 = (undefined4 *)0x1;
     puVar9 = (undefined4 *)0x1;
@@ -178,8 +184,8 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
         lbl_803DDB80 = lbl_803DDB80 | 2;
         break;
       case 8:
-        iVar11 = puVar13[0x103];
-        *(byte *)(iVar11 + 0xb6) = *(byte *)(iVar11 + 0xb6) & 0x7f | 0x80;
+        iVar11 = (int)topState;
+        topState->steamSfxPending |= 0x80;
         Music_Trigger(0xee,0);
         break;
       case 9:
@@ -297,13 +303,13 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
       if (puVar3[0x32] != 0) {
         *(undefined4 *)(puVar3[0x32] + 0x30) = puVar3[0xc];
       }
-      if (((int)*(short *)((int)puVar13 + 0x3f6) != 0xffffffff) &&
-          (uVar6 = GameBit_Get((int)*(short *)((int)puVar13 + 0x3f6)), uVar6 != 0)) {
+      if ((runtime->eventGameBit != -1) &&
+          (uVar6 = GameBit_Get((int)runtime->eventGameBit), uVar6 != 0)) {
         puVar7 = (undefined4 *)*DAT_803dd6d4;
         (*(code *)puVar7[0x16])(animUpdate,(int)*(short *)(iVar12 + 0x2c));
-        *(undefined2 *)((int)puVar13 + 0x3f6) = 0xffff;
+        runtime->eventGameBit = -1;
       }
-      bVar1 = *(byte *)((int)puVar13 + 0x405);
+      bVar1 = runtime->hitReactMode;
       if (bVar1 == 1) {
         iVar11 = (*(code *)(*DAT_803dd738 + 0x34))
                           (puVar3,animUpdate,puVar13,&DAT_803adc78,&DAT_803adc60,0);
@@ -318,7 +324,7 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
         puVar7 = puVar13;
         puVar8 = puVar13;
         fn_801BC7E4(puVar3,animUpdate,(int)puVar13,(int)puVar13);
-        if (*(char *)((int)puVar13 + 0x405) == '\x01') {
+        if (runtime->hitReactMode == 1) {
           *(undefined2 *)(puVar13 + 0x9c) = 0;
           puVar7 = &DAT_803adc78;
           puVar8 = &DAT_803adc60;
@@ -330,7 +336,7 @@ void DIMboss_updateState(DIMbossObject *param_1,undefined4 param_2,ObjAnimUpdate
     }
     warpDarkIceMines_801bbb44(puVar3,puVar13);
     if (*(short *)(puVar3 + 0x2d) == -1) {
-      *(ushort *)(puVar13 + 0x100) = *(ushort *)(puVar13 + 0x100) | 2;
+      runtime->stateFlags |= 2;
     }
   }
 LAB_801bd7dc:
