@@ -7,8 +7,8 @@ extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006b14();
 extern undefined4 FUN_80017688();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId,int value);
 extern undefined4 FUN_8001771c();
 extern undefined4 FUN_80017748();
 extern uint FUN_80017760();
@@ -114,7 +114,7 @@ void FUN_801fd398(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   if (cVar1 == '\x02') {
     iVar3 = *(int *)(param_9 + 0xb8);
     DAT_803de944 = DAT_803de944 - (short)(int)lbl_803DC074;
-    uVar2 = FUN_80017690((int)*(short *)(iVar3 + 2));
+    uVar2 = GameBit_Get((int)*(short *)(iVar3 + 2));
     if (((uVar2 == 0) && (DAT_803de944 < 0xc9)) &&
        ((*(char *)(iVar3 + 0xb) == DAT_803de946 && (uVar2 = FUN_80017760(0,2), uVar2 == 0)))) {
       (**(code **)(*DAT_803dd708 + 8))(param_9,0x391,0,4,0xffffffff,0);
@@ -138,7 +138,7 @@ void FUN_801fd398(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   else if (cVar1 == '\0') {
     iVar3 = *(int *)(param_9 + 0xb8);
     DAT_803de944 = DAT_803de944 - (short)(int)lbl_803DC074;
-    uVar2 = FUN_80017690(0x522);
+    uVar2 = GameBit_Get(0x522);
     if ((((uVar2 == 0) && (DAT_803de944 < 0xc9)) && (*(char *)(iVar3 + 0xb) == DAT_803de946)) &&
        (uVar2 = FUN_80017760(0,2), uVar2 == 0)) {
       (**(code **)(*DAT_803dd708 + 8))(param_9,0x391,0,4,0xffffffff,0);
@@ -146,7 +146,7 @@ void FUN_801fd398(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   else if (cVar1 == '\x01') {
     psVar4 = *(short **)(param_9 + 0xb8);
-    uVar2 = FUN_80017690((int)*psVar4);
+    uVar2 = GameBit_Get((int)*psVar4);
     if (uVar2 != 0) {
       (**(code **)(*DAT_803dd708 + 8))(param_9,0x390,0,4,0xffffffff,0);
       (**(code **)(*DAT_803dd708 + 8))(param_9,0x390,0,4,0xffffffff,0);
@@ -157,8 +157,8 @@ void FUN_801fd398(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     }
     iVar3 = ObjHits_GetPriorityHit(param_9,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
     if ((short)iVar3 != 0) {
-      uVar2 = FUN_80017690((int)*psVar4);
-      FUN_80017698((int)*psVar4,1 - uVar2);
+      uVar2 = GameBit_Get((int)*psVar4);
+      GameBit_Set((int)*psVar4,1 - uVar2);
     }
   }
   return;
@@ -284,17 +284,17 @@ void FUN_801fd828(int param_1)
   iVar1 = FUN_80017a98();
   if (iVar1 != 0) {
     if ((int)psVar5[1] != 0xffffffff) {
-      uVar2 = FUN_80017690((int)psVar5[1]);
+      uVar2 = GameBit_Get((int)psVar5[1]);
       sVar4 = (short)uVar2;
     }
-    uVar2 = FUN_80017690((int)*psVar5);
+    uVar2 = GameBit_Get((int)*psVar5);
     if ((((short)uVar2 == 0) && (*(char *)(psVar5 + 2) == '\0')) && (sVar4 != 0)) {
       *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
       iVar3 = (**(code **)(*DAT_803dd6e8 + 0x20))(DAT_803de948);
       if ((iVar3 != 0) &&
          (dVar6 = (double)FUN_8001771c((float *)(param_1 + 0x18),(float *)(iVar1 + 0x18)),
          dVar6 < (double)lbl_803E6DE8)) {
-        FUN_80017698((int)*psVar5,1);
+        GameBit_Set((int)*psVar5,1);
         *(undefined *)(psVar5 + 2) = 1;
         *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
       }
@@ -387,8 +387,8 @@ void FUN_801fdae0(int param_1)
   psVar4 = *(short **)(param_1 + 0xb8);
   *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
   if ((*(char *)((int)psVar4 + 5) < '\0') ||
-     (((int)psVar4[1] != 0xffffffff && (uVar1 = FUN_80017690((int)psVar4[1]), uVar1 == 0)))) {
-    uVar1 = FUN_80017690((int)*psVar4);
+     (((int)psVar4[1] != 0xffffffff && (uVar1 = GameBit_Get((int)psVar4[1]), uVar1 == 0)))) {
+    uVar1 = GameBit_Get((int)*psVar4);
     *(byte *)((int)psVar4 + 5) = (byte)((uVar1 & 1) << 7) | *(byte *)((int)psVar4 + 5) & 0x7f;
     if ((uVar1 & 1) == 0) {
       *(char *)(psVar4 + 2) = (char)*(undefined2 *)(*(int *)(param_1 + 0x4c) + 0x1a);
@@ -396,7 +396,7 @@ void FUN_801fdae0(int param_1)
   }
   else if ((*(char *)(psVar4 + 2) < '\x01') && (-1 < *(char *)((int)psVar4 + 5))) {
     if ((int)*psVar4 != 0xffffffff) {
-      FUN_80017698((int)*psVar4,1);
+      GameBit_Set((int)*psVar4,1);
       *(byte *)((int)psVar4 + 5) = *(byte *)((int)psVar4 + 5) & 0x7f | 0x80;
     }
   }
@@ -710,7 +710,7 @@ void FUN_801fe1c4(LaserObject *obj)
   
   state = obj->state;
   if ((state->sequenceLatched == '\0') &&
-     (uVar1 = FUN_80017690((int)state->primarySequenceId), uVar1 != 0)) {
+     (uVar1 = GameBit_Get((int)state->primarySequenceId), uVar1 != 0)) {
     obj->statusFlags = obj->statusFlags & ~LASER_OBJECT_STATUS_DISABLED;
   }
   else {
@@ -722,8 +722,8 @@ void FUN_801fe1c4(LaserObject *obj)
     if (bVar3 == LASEROBJ_MODE_SEQUENCE_B) {
       iVar2 = (**(code **)(*DAT_803dd6e8 + 0x20))(LASEROBJ_MAIN_SEQUENCE_B_EVENT);
       if (iVar2 != 0) {
-        FUN_80017698((int)state->primarySequenceId,1);
-        FUN_80017698((int)state->secondarySequenceId,0);
+        GameBit_Set((int)state->primarySequenceId,1);
+        GameBit_Set((int)state->secondarySequenceId,0);
         state->sequenceLatched = 1;
         obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_DISABLED;
       }
@@ -731,8 +731,8 @@ void FUN_801fe1c4(LaserObject *obj)
     else if ((bVar3 < 2) && (bVar3 != 0)) {
       iVar2 = (**(code **)(*DAT_803dd6e8 + 0x20))(LASEROBJ_MAIN_SEQUENCE_A_EVENT);
       if (iVar2 != 0) {
-        FUN_80017698((int)state->primarySequenceId,1);
-        FUN_80017698((int)state->secondarySequenceId,0);
+        GameBit_Set((int)state->primarySequenceId,1);
+        GameBit_Set((int)state->secondarySequenceId,0);
         state->sequenceLatched = 1;
         obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_DISABLED;
       }
@@ -764,7 +764,7 @@ void FUN_801fe324(LaserObject *obj,LaserObjectMapData *mapData)
   state->secondarySequenceId = mapData->secondarySequenceId;
   state->sequenceLatched = 0;
   obj->modeWord = (s16)(mapData->modeIndex << LASEROBJ_MODE_WORD_SHIFT);
-  uVar1 = FUN_80017690((int)state->primarySequenceId);
+  uVar1 = GameBit_Get((int)state->primarySequenceId);
   if (uVar1 != 0) {
     state->sequenceLatched = 1;
     obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_DISABLED;
@@ -830,7 +830,7 @@ LAB_801fe91c:
     }
     if (local_34 == 0x14) break;
     if ((int)local_34 < 0x14) {
-      FUN_80017698((int)config->primaryConditionId,1);
+      GameBit_Set((int)config->primaryConditionId,1);
       uVar1 = (uint)config->activationEventId;
       if (0 < (int)uVar1) {
         FUN_80017688(uVar1);
@@ -900,7 +900,7 @@ void FUN_801fe540(short *param_1,undefined4 *param_2)
   *(float *)(param_1 + 4) =
        (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e6e70) * lbl_803E6E68;
   *(float *)(param_1 + 4) = *(float *)(param_1 + 4) * *(float *)(*(int *)(param_1 + 0x28) + 4);
-  uVar3 = FUN_80017690((int)config->primaryConditionId);
+  uVar3 = GameBit_Get((int)config->primaryConditionId);
   if (uVar3 == 0) {
     uVar2 = 1;
   }
@@ -938,7 +938,7 @@ void FUN_801fe540(short *param_1,undefined4 *param_2)
       runtimeState->behaviorFlags = runtimeState->behaviorFlags | 0x20;
     }
   }
-  uVar3 = FUN_80017690((int)config->readyConditionId);
+  uVar3 = GameBit_Get((int)config->readyConditionId);
   if (uVar3 == 0) {
     uVar2 = 0xc;
   }
