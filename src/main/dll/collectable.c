@@ -2065,6 +2065,44 @@ void trickyDebugPrint(const char *fmt, ...) { }
 
 extern f32 lbl_803E25A4;
 extern f32 lbl_803E2594;
+extern f32 lbl_803E2538;
+extern f32 lbl_803E2500;
+extern f32 lbl_803E2418;
+extern f32 lbl_803E23DC;
+
+extern f32 getXZDistance(f32 *a, f32 *b);
+extern int fn_8005A10C(f32 *p, f32 f);
+
+/* fn_80144E40: 272b - find nearest object within distance threshold. */
+#pragma scheduling off
+int fn_80144E40(int *obj, int *p) {
+    int *objs;
+    int count[1];
+    int result;
+    f32 d;
+    f32 bestD;
+    int i;
+
+    result = 0;
+    objs = ObjGroup_GetObjects(0x4b, count);
+    d = getXZDistance((f32*)((char*)(int*)p[0x4/4] + 0x18), (f32*)((char*)obj + 0x18));
+    if ((d >= lbl_803E2538) || (*(f32*)((char*)p + 0x71c) > lbl_803E23DC)) {
+        if (fn_8005A10C((f32*)((char*)obj + 0xc), lbl_803E2500) == 0) {
+            bestD = lbl_803E2418;
+            for (i = 0; i < count[0]; i++) {
+                f32 cd = getXZDistance((f32*)((char*)(int*)p[0x4/4] + 0x18), (f32*)((char*)*objs + 0x18));
+                if (cd < d && cd < bestD) {
+                    bestD = cd;
+                    result = *objs;
+                }
+                objs++;
+            }
+        }
+    }
+    return result;
+}
+#pragma scheduling reset
+
 
 /* fn_80149BB4: 312b - flag bits to byte field. */
 #pragma peephole off
