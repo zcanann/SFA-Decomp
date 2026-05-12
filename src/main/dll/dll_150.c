@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_150.h"
 
-extern undefined4 FUN_80017698();
+extern undefined4 GameBit_Set(int eventId, int value);
 extern uint FUN_80017730();
 extern undefined4 FUN_80017748();
 extern uint FUN_80017760();
@@ -86,7 +86,7 @@ void FUN_801816f8(undefined8 param_1,double param_2,double param_3,undefined8 pa
   iVar6 = (int)((ulonglong)uVar11 >> 0x20);
   iVar5 = (int)uVar11;
   if ((int)*(short *)(param_11 + 0x1c) != 0xffffffff) {
-    FUN_80017698((int)*(short *)(param_11 + 0x1c),1);
+    GameBit_Set((int)*(short *)(param_11 + 0x1c),1);
   }
   uVar2 = FUN_80017ae8();
   if ((uVar2 & 0xff) != 0) {

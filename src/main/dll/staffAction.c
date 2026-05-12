@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/staffAction.h"
 
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern int FUN_80017728();
 extern undefined4 FUN_80017740();
 extern uint FUN_80017760();
@@ -150,7 +150,7 @@ FUN_801659b8(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     in_f30 = (double)(*(float *)(iVar1 + 0x10) - lbl_803E3C70);
     in_f29 = (double)*(float *)(iVar1 + 0x14);
     in_f28 = (double)lbl_803E3CA4;
-    uVar2 = FUN_80017690(0x698);
+    uVar2 = GameBit_Get(0x698);
     if (uVar2 != 0) {
       in_f28 = -(double)lbl_803E3CA4;
     }

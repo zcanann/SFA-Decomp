@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/DRhalolight.h"
 
-extern undefined4 FUN_80017698();
+extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017814();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjPath_GetPointWorldPosition();
@@ -71,7 +71,7 @@ void FUN_801ed014(int param_1,int param_2)
   iVar1 = *(int *)(param_1 + 0xb8);
   *(char *)(iVar1 + 0x421) = (char)param_2;
   if (param_2 == 2) {
-    FUN_80017698((int)*(short *)(iVar1 + 0x448),1);
+    GameBit_Set((int)*(short *)(iVar1 + 0x448),1);
     FUN_801ecdec(param_1,iVar1);
     if ((*(byte *)(iVar1 + 0x428) >> 5 & 1) != 0) {
       *(float *)(iVar1 + 0x4b8) = lbl_803E6828;

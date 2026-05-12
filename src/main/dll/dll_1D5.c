@@ -3,8 +3,6 @@
 #include "main/objHitReact.h"
 
 extern undefined4 FUN_80017680();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
 extern double FUN_80017714();
 extern uint FUN_80017760();
 extern undefined4 FUN_80017a6c();

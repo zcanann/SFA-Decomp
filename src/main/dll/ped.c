@@ -2,7 +2,7 @@
 #include "main/dll/ped.h"
 
 extern undefined4 FUN_80006b14();
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern undefined4 ObjGroup_FindNearestObject();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b818();
@@ -216,7 +216,7 @@ void FUN_801ce008(int param_1)
   if (*(char *)((int)psVar3 + 7) == '\0') {
     if (*(char *)(psVar3 + 3) == '\0') {
       if (psVar3[2] == 0) {
-        uVar2 = FUN_80017690((int)*psVar3);
+        uVar2 = GameBit_Get((int)*psVar3);
         if (uVar2 != 0) {
           (**(code **)(*DAT_803dd6d4 + 0x48))((int)psVar3[1],param_1,0xffffffff);
           *(undefined *)(psVar3 + 3) = 1;

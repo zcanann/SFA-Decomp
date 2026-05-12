@@ -10,8 +10,6 @@ extern void* FUN_80017470();
 extern undefined4 FUN_80017484();
 extern int FUN_8001748c();
 extern undefined8 FUN_80017494();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
 extern int FUN_800176d0();
 extern undefined4 FUN_80017a90();
 extern int FUN_80017a98();

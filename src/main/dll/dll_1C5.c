@@ -3,8 +3,6 @@
 
 extern undefined4 FUN_800067e8();
 extern void* FUN_80017624();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
 extern undefined4 FUN_8001771c();
 extern int FUN_80017a98();
 extern void* FUN_80017aa4();

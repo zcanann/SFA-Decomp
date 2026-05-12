@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006824();
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern double FUN_80017714();
 extern undefined4 FUN_80017748();
 extern undefined4 FUN_80017a90();
@@ -268,7 +268,7 @@ void FUN_801633e4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     }
     FUN_8002fc3c((double)lbl_803E3BD0,(double)lbl_803DC074);
     if ((iVar1 != 0) &&
-       (uVar2 = FUN_80017690((int)*(short *)(*(int *)(iVar1 + 0x4c) + 0x1a)), uVar2 != 0)) {
+       (uVar2 = GameBit_Get((int)*(short *)(*(int *)(iVar1 + 0x4c) + 0x1a)), uVar2 != 0)) {
       *(undefined4 *)(param_9 + 0xf4) = 1;
       *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
       ObjHits_DisableObject(param_9);

@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_180.h"
 
-extern uint FUN_80017690();
+extern uint GameBit_Get(int eventId);
 extern undefined4 FUN_800400b0();
 extern undefined4 FUN_80190148();
 extern undefined4 FUN_801905c4();
@@ -43,7 +43,7 @@ void transporter_init(int param_1)
     else {
       if ((*(char *)(iVar2 + 0xd) == '\0') && (*(char *)(iVar2 + 0xc) == '\0')) {
         uVar1 = (uint)*(short *)(*(int *)(param_1 + 0x4c) + 0x20);
-        if ((uVar1 == 0xffffffff) || (uVar1 = FUN_80017690(uVar1), uVar1 != 0)) {
+        if ((uVar1 == 0xffffffff) || (uVar1 = GameBit_Get(uVar1), uVar1 != 0)) {
           *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xe7;
           *(byte *)(iVar2 + 0xe) = *(byte *)(iVar2 + 0xe) | 1;
         }

@@ -4,7 +4,7 @@
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006920();
 extern undefined4 FUN_80006b94();
-extern undefined4 FUN_80017698();
+extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_800305f8();
 extern int ObjHits_GetPriorityHit();
 extern undefined4 ObjMsg_SendToObject();
@@ -110,7 +110,7 @@ void FUN_801be520(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       *(char *)(param_10 + 0x34f) = (char)iVar1;
       *(char *)(param_10 + 0x354) = *(char *)(param_10 + 0x354) + -1;
       DAT_803de814 = DAT_803de814 + '\x01';
-      FUN_80017698(0x20c,(int)DAT_803de814);
+      GameBit_Set(0x20c,(int)DAT_803de814);
       if ((DAT_803de814 == '\x03') || (DAT_803de814 == '\a')) {
         lbl_803DE818 = lbl_803E5948;
       }

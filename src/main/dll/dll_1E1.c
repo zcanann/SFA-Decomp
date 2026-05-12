@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
-extern undefined4 FUN_80017698();
+extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_8001771c();
 extern uint FUN_80017760();
 extern undefined4 FUN_80017a30();
@@ -290,7 +290,7 @@ void dll1E1_updateTrickyState
           }
           *(byte *)((int)pfVar14 + 0x37) = *(byte *)((int)pfVar14 + 0x37) & 0xfe;
           if ((int)*(short *)(iVar13 + 0x1c) != 0xffffffff) {
-            FUN_80017698((int)*(short *)(iVar13 + 0x1c),1);
+            GameBit_Set((int)*(short *)(iVar13 + 0x1c),1);
           }
           *(undefined *)((int)pfVar14 + 0x36) = 9;
           *pfVar14 = lbl_803E5F94;

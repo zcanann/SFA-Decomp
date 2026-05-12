@@ -4,8 +4,6 @@
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006814();
 extern undefined4 FUN_80006824();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
 extern int FUN_80017a98();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 FUN_80293f90();
