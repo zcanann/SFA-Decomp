@@ -4366,6 +4366,44 @@ int fn_800D9F38(void *a, void *b) {
 #pragma scheduling on
 #pragma peephole on
 
+/* player_hitDetect */
+extern f32 lbl_803E05A4;
+extern f32 lbl_803E05A8;
+extern u8 lbl_803DD434;
+extern u8 lbl_803DD44E;
+extern u8 lbl_803DD44F;
+extern f32 timeDelta;
+extern float sqrtf(float x);
+extern int fn_800D92D0(void *a, void *b, float t, int c);
+#pragma peephole off
+#pragma scheduling off
+void player_hitDetect(char *p, char *obj, int unused) {
+    float fcos, fsin;
+    if (((s32)(s8)*(obj + 0x34c) & 1) != 0) {
+        fcos = fn_80293E80(lbl_803E05A4 * (float)(s32)*(s16 *)p / lbl_803E05A8);
+        fsin = sin(lbl_803E05A4 * (float)(s32)*(s16 *)p / lbl_803E05A8);
+        if (((s32)(s8)*(obj + 0x34c) & 8) != 0) {
+            *(f32 *)(obj + 0x280) = -*(f32 *)(p + 0x2c) * fsin - *(f32 *)(p + 0x24) * fcos;
+            *(f32 *)(obj + 0x294) = *(f32 *)(obj + 0x280);
+        } else {
+            *(f32 *)(obj + 0x284) = *(f32 *)(p + 0x24) * fsin - *(f32 *)(p + 0x2c) * fcos;
+            *(f32 *)(obj + 0x280) = -*(f32 *)(p + 0x2c) * fsin - *(f32 *)(p + 0x24) * fcos;
+            if (((s32)(s8)*(obj + 0x34c) & 4) != 0) {
+                *(f32 *)(obj + 0x294) = sqrtf(*(f32 *)(p + 0x24) * *(f32 *)(p + 0x24) +
+                                                *(f32 *)(p + 0x2c) * *(f32 *)(p + 0x2c));
+            }
+        }
+        *(s8 *)(obj + 0x34c) = 0;
+        *(u32 *)obj |= 0x80000;
+        lbl_803DD434 = 1;
+        lbl_803DD44F = 0;
+        lbl_803DD44E = 1;
+        fn_800D92D0(p, obj, timeDelta, unused);
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
 /* fn_800DA928: clamp + curveFn call — 99% match, f1 vs f2 reg alloc */
 void fn_800DA928(float *p) {
     if (*p <= lbl_803E05F0) {
