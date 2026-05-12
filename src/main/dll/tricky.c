@@ -1875,6 +1875,25 @@ void fn_8011F6F8(float v) {
     *(f32 *)((char *)p + 0x24) = v;
 }
 
+/* fn_8011F354 */
+extern u8 lbl_803DD7CC;
+extern s16 lbl_803DD838;
+#pragma peephole off
+#pragma scheduling off
+void fn_8011F354(u32 x) {
+    u32 v = x & 0xff;
+    lbl_803DD7CC = (u8)(v & 1);
+    if ((s32)v != 3) {
+        if ((s32)v >= 3) return;
+        if ((s32)v < 2) return;
+        lbl_803DD838 = 0;
+        return;
+    }
+    lbl_803DD838 = (s16)0xff;
+}
+#pragma scheduling on
+#pragma peephole on
+
 /* fn_8011F3A8: read lbl_DD884; if non-zero, set *out = yButtonItem; return lbl_DD884 */
 extern u16 yButtonItem;
 #pragma peephole off
