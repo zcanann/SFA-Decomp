@@ -184,13 +184,13 @@ typedef struct SynthStartRequest {
     u32 handle;
     u16 fadeTime;
     u8 pad06[2];
-    u32 linkedHandle;
-    u16 linkedFadeTime;
+    u32 reuseHandle;
+    u16 volumeTime;
     u8 studio;
     u8 pad0F;
-    u32 sampleId;
-    u16 key;
-    u16 velocity;
+    u32 seqId;
+    u16 groupId;
+    u16 sampleId;
     u8 volume;
     u8 startStudio;
     u8 pad1A[2];
@@ -276,6 +276,9 @@ typedef struct SynthVoiceRuntime {
     (*(u16*)((u8*)(runtime) + 0x22D8 + ((voiceIndex) * sizeof(SynthVoice))))
 #define SYNTH_RUNTIME_PENDING_FLAGS(runtime, voiceIndex) \
     (*(u8*)((u8*)(runtime) + 0x22DA + ((voiceIndex) * sizeof(SynthVoice))))
+#define SYNTH_VOICE_PENDING_START_REQUEST(voice) ((SynthStartRequest*)((u8*)(voice) + 0xEB4))
+#define SYNTH_VOICE_PENDING_START_OUT_HANDLE(voice) (*(u32**)((u8*)(voice) + 0xEDC))
+#define SYNTH_VOICE_PENDING_START_ACTIVE(voice) (*(u8*)((u8*)(voice) + 0xEE0))
 
 extern SynthDelayStorage gSynthDelayStorage;
 extern SynthCallbackLink gSynthCallbacks[SYNTH_CALLBACK_COUNT];

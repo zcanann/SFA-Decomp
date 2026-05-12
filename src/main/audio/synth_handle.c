@@ -149,9 +149,9 @@ resolved_initial:
         runtimeSlot = (u8*)runtime + slot * sizeof(SynthVoice);
         *(u32*)(runtimeSlot + 0x22B4) = request->handle;
         *(u32*)(runtimeSlot + 0x22B8) = *(u32*)((u8*)request + 0x04);
-        *(u32*)(runtimeSlot + 0x22BC) = request->linkedHandle;
+        *(u32*)(runtimeSlot + 0x22BC) = request->reuseHandle;
         *(u32*)(runtimeSlot + 0x22C0) = *(u32*)((u8*)request + 0x0C);
-        *(u32*)(runtimeSlot + 0x22C4) = request->sampleId;
+        *(u32*)(runtimeSlot + 0x22C4) = request->seqId;
         *(u32*)(runtimeSlot + 0x22C8) = *(u32*)((u8*)request + 0x14);
         *(u32*)(runtimeSlot + 0x22CC) = *(u32*)((u8*)request + 0x18);
         *(u32*)(runtimeSlot + 0x22D0) = request->mixValue0;
@@ -191,7 +191,7 @@ resolved_initial:
     }
 
     if ((request->flags & SYNTH_START_FLAG_REUSE_HANDLE) != 0) {
-        handle = request->linkedHandle;
+        handle = request->reuseHandle;
         resolvedHandle = handle & 0x7FFFFFFF;
         for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next) {
             if (voice->handle == resolvedHandle) {
@@ -217,11 +217,11 @@ resolved_reuse:
 
         if (noLock != 0) {
             fn_8026D524();
-            synthUpdateHandle(request->volume, request->linkedFadeTime, request->linkedHandle, 0);
+            synthUpdateHandle(request->volume, request->volumeTime, request->reuseHandle, 0);
             if ((request->flags & SYNTH_START_FLAG_MUTE) != 0) {
                 mixValue1 = request->mixValue1;
                 mixValue0 = request->mixValue0;
-                newHandle = synthResolveHandle(request->linkedHandle);
+                newHandle = synthResolveHandle(request->reuseHandle);
                 if (newHandle != 0xFFFFFFFF) {
                     if ((newHandle & 0x80000000) == 0) {
                         runtime->voices[newHandle].immediateMixValue0 = mixValue0;
@@ -235,7 +235,7 @@ resolved_reuse:
             }
             if ((request->flags & SYNTH_START_FLAG_SPEED) != 0) {
                 speed = request->value16;
-                newHandle = synthResolveHandle(request->linkedHandle);
+                newHandle = synthResolveHandle(request->reuseHandle);
                 if ((newHandle & 0x80000000) == 0) {
                     SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 0) = speed;
                     SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 1) = speed;
@@ -260,15 +260,15 @@ resolved_reuse:
             }
         } else {
             sndSeqContinue();
-            sndSeqVolume(request->volume, request->linkedFadeTime, request->linkedHandle, 0);
+            sndSeqVolume(request->volume, request->volumeTime, request->reuseHandle, 0);
             if ((request->flags & SYNTH_START_FLAG_MUTE) != 0) {
-                sndSeqMute(request->linkedHandle, request->mixValue0, request->mixValue1);
+                sndSeqMute(request->reuseHandle, request->mixValue0, request->mixValue1);
             }
             if ((request->flags & SYNTH_START_FLAG_SPEED) != 0) {
-                sndSeqSpeed(request->linkedHandle, request->value16);
+                sndSeqSpeed(request->reuseHandle, request->value16);
             }
         }
-        *outHandle = request->linkedHandle;
+        *outHandle = request->reuseHandle;
         return;
     }
 
@@ -285,12 +285,12 @@ resolved_reuse:
         params.muteValue = request->mixValue0;
         params.muteTime = request->mixValue1;
     }
-    params.volumeTime = request->linkedFadeTime;
+    params.volumeTime = request->volumeTime;
     params.volume = request->volume;
     params.active = 0;
 
     if (noLock != 0) {
-        newHandle = fn_8027B89C(request->key, request->velocity, request->sampleId, &params, 1, request->startStudio);
+        newHandle = fn_8027B89C(request->groupId, request->sampleId, request->seqId, &params, 1, request->startStudio);
         *outHandle = newHandle;
         if ((newHandle != 0xFFFFFFFF) && ((request->flags & SYNTH_START_FLAG_CLEAR_MUTE) != 0)) {
             newHandle = synthResolveHandle(*outHandle);
@@ -306,7 +306,7 @@ resolved_reuse:
             }
         }
     } else {
-        newHandle = fn_8027B9DC(request->key, request->velocity, request->sampleId, &params, request->startStudio);
+        newHandle = fn_8027B9DC(request->groupId, request->sampleId, request->seqId, &params, request->startStudio);
         *outHandle = newHandle;
         if ((newHandle != 0xFFFFFFFF) && ((request->flags & SYNTH_START_FLAG_CLEAR_MUTE) != 0)) {
             sndSeqMute(*outHandle, 0, 0);
