@@ -2,6 +2,15 @@
 #include "dolphin/mtx.h"
 #include "main/dll/collectable.h"
 
+#define TRICKY_STATE_FLAG_FLOOR_RESPONSE 0x00100000
+#define TRICKY_STATE_FLAG_SPECIAL_FLOOR_RESPONSE 0x08000000
+#define TRICKY_STATE_FLAG_SPECIAL_FLOOR_ABOVE 0x10000000
+#define TRICKY_CONTROL_FLAG_BBOX_BLOCKS_SIGHT 0x00000008
+#define TRICKY_CONTROL_FLAG_USE_SPECIAL_FLOOR_Y 0x08000000
+#define TRICKY_CONTROL_FLAG_OFFSET_FLOOR_Y 0x20000000
+#define TRICKY_CONTROL_FLAG_FLOOR_RESPONSE_MASK 0x28000002
+#define TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR 0x10
+
 extern undefined4 FUN_800067e8();
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
@@ -1602,7 +1611,7 @@ int fn_8014A150(int obj,int state,void *from,void *to)
       }
     }
   }
-  if ((visible != 0) && ((*(u32 *)(state + 0x2e4) & 8) != 0)) {
+  if ((visible != 0) && ((*(u32 *)(state + 0x2e4) & TRICKY_CONTROL_FLAG_BBOX_BLOCKS_SIGHT) != 0)) {
     if (objBboxFn_800640cc(lbl_803E256C,(Vec *)from,&probe,0,bboxHit,obj,*(u8 *)(state + 0x261),
                            -1,0,0) != 0) {
       visible = 0;
@@ -1678,7 +1687,7 @@ void fn_8014A304(f32 radius,int obj,int state)
     else {
       visible = 0;
     }
-    if ((visible != 0) && ((*(u32 *)(state + 0x2e4) & 8) != 0)) {
+    if ((visible != 0) && ((*(u32 *)(state + 0x2e4) & TRICKY_CONTROL_FLAG_BBOX_BLOCKS_SIGHT) != 0)) {
       if (objBboxFn_800640cc(lbl_803E256C,(Vec *)(obj + 0x18),&probe,0,bboxHit,obj,
                              *(u8 *)(state + 0x261),-1,0,0) != 0) {
         visible = 0;
@@ -1697,6 +1706,7 @@ void fn_8014A304(f32 radius,int obj,int state)
 
 /* fn_8014A5FC: 624b - apply Tricky floor response and movement-control callbacks. */
 #pragma scheduling off
+#pragma peephole off
 void fn_8014A5FC(int obj,int state)
 {
   f32 nearestFloorY;
@@ -1707,27 +1717,27 @@ void fn_8014A5FC(int obj,int state)
 
   *(u32 *)(state + 0x2dc) &= 0xf7efffff;
   flags = *(u32 *)(state + 0x2e4);
-  if ((flags & 0x28000002) != 0) {
+  if ((flags & TRICKY_CONTROL_FLAG_FLOOR_RESPONSE_MASK) != 0) {
     fn_8014A86C(obj,state,&nearestFloorY,&nearestSpecialY);
     flags = *(u32 *)(state + 0x2e4);
-    if ((flags & 0x08000000) != 0) {
+    if ((flags & TRICKY_CONTROL_FLAG_USE_SPECIAL_FLOOR_Y) != 0) {
       *(f32 *)(obj + 0x28) = (nearestSpecialY - *(f32 *)(obj + 0x10)) * oneOverTimeDelta;
     }
-    else if ((flags & 0x20000000) != 0) {
+    else if ((flags & TRICKY_CONTROL_FLAG_OFFSET_FLOOR_Y) != 0) {
       dy = nearestFloorY - *(f32 *)(obj + 0x10);
       if ((lbl_803E25BC < dy) && (dy < lbl_803E25A0)) {
         *(f32 *)(obj + 0x28) = (lbl_803E25C0 + dy) * oneOverTimeDelta;
-        *(u32 *)(state + 0x2dc) |= 0x08000000;
+        *(u32 *)(state + 0x2dc) |= TRICKY_STATE_FLAG_SPECIAL_FLOOR_RESPONSE;
       }
     }
     else {
       dy = nearestFloorY - *(f32 *)(obj + 0x10);
       if ((lbl_803E25BC < dy) && (dy < lbl_803E25A0)) {
         *(f32 *)(obj + 0x28) = dy * oneOverTimeDelta;
-        *(u32 *)(state + 0x2dc) |= 0x00100000;
+        *(u32 *)(state + 0x2dc) |= TRICKY_STATE_FLAG_FLOOR_RESPONSE;
       }
     }
-    if ((*(u32 *)(state + 0x2e4) & 8) == 0) {
+    if ((*(u32 *)(state + 0x2e4) & TRICKY_CONTROL_FLAG_BBOX_BLOCKS_SIGHT) == 0) {
       *(u8 *)(state + 0x25f) = 0;
     }
   }
@@ -1746,10 +1756,11 @@ void fn_8014A5FC(int obj,int state)
   }
   (*(void (**)(f32,int,int))(*(int *)lbl_803DCAA8 + 0x18))(timeDelta,obj,state + 4);
 
-  if (((*(s8 *)(state + 0x25f) != 0) && ((*(u32 *)(state + 0x2e4) & 0x28000002) == 0)) &&
-      ((*(u8 *)(state + 0x264) & 0x10) != 0)) {
+  if (((*(s8 *)(state + 0x25f) != 0) &&
+       ((*(u32 *)(state + 0x2e4) & TRICKY_CONTROL_FLAG_FLOOR_RESPONSE_MASK) == 0)) &&
+      ((*(u8 *)(state + 0x264) & TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR) != 0)) {
     *(f32 *)(obj + 0x28) = lbl_803E2574;
-    *(u32 *)(state + 0x2dc) |= 0x00100000;
+    *(u32 *)(state + 0x2dc) |= TRICKY_STATE_FLAG_FLOOR_RESPONSE;
   }
   if ((*(u32 *)(state + 0x2e4) & 0x00200000) != 0) {
     ObjPath_GetPointWorldPositionArray(obj,2,2,points);
@@ -1757,10 +1768,12 @@ void fn_8014A5FC(int obj,int state)
                 (void *)(state + 4));
   }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* fn_8014A86C: 388b - find nearby floor heights and special surface deltas for Tricky. */
 #pragma scheduling off
+#pragma peephole off
 void fn_8014A86C(int obj,int state,f32 *nearestFloorY,f32 *nearestSpecialY)
 {
   int hitList[2];
@@ -1783,7 +1796,7 @@ void fn_8014A86C(int obj,int state,f32 *nearestFloorY,f32 *nearestSpecialY)
   nearestSpecialDelta = nearestFloorDelta;
   *(u32 *)(state + 0x2dc) &= 0xefffffff;
   *(f32 *)(state + 0x1b8) = lbl_803E2574;
-  *(u8 *)(state + 0x264) &= 0xef;
+  *(u8 *)(state + 0x264) &= ~TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
   for (i = 0; i < hitCount; i++) {
     hit = *(f32 **)(hitList[0] + ((u32)i << 2));
     hitY = hit[0];
@@ -1795,21 +1808,23 @@ void fn_8014A86C(int obj,int state,f32 *nearestFloorY,f32 *nearestSpecialY)
     if (*(s8 *)(hit + 5) == 0xe) {
       if (absDy < nearestSpecialDelta) {
         *(f32 *)(state + 0x1b8) = dy;
-        *(u8 *)(state + 0x264) |= 0x10;
+        *(u8 *)(state + 0x264) |= TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
         *nearestSpecialY = **(f32 **)(hitList[0] + ((u32)i << 2));
         nearestSpecialDelta = absDy;
         if (lbl_803E25A0 < *(f32 *)(state + 0x1b8)) {
-          *(u32 *)(state + 0x2dc) |= 0x10100000;
+          *(u32 *)(state + 0x2dc) |=
+              TRICKY_STATE_FLAG_SPECIAL_FLOOR_ABOVE | TRICKY_STATE_FLAG_FLOOR_RESPONSE;
         }
       }
     }
     else if (absDy < nearestFloorDelta) {
       *nearestFloorY = hitY;
-      *(u8 *)(state + 0x264) |= 0x10;
+      *(u8 *)(state + 0x264) |= TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
       nearestFloorDelta = absDy;
     }
   }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
