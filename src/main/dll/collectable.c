@@ -850,38 +850,39 @@ void FUN_80145ee8(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sideCommandEnable(int param_1,int param_2,int param_3,int param_4)
+void sideCommandEnable(int obj,int targetObj,int commandKind,int commandBit)
 {
-  int iVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
+  int commandCount;
+  int commandEntry;
+  int commandIndex;
+  int state;
   
-  iVar1 = *(int *)(param_1 + 0xb8);
-  if (*(byte *)(iVar1 + 0x798) == 10) {
+  state = *(int *)(obj + 0xb8);
+  if (*(byte *)(state + 0x798) == 10) {
     trickyReportError(sSidekickCommandDebugTextBlock);
     return;
   }
-  *(byte *)(iVar1 + 0xb) = *(byte *)(iVar1 + 0xb) | (byte)(1 << param_4);
-  iVar3 = 0;
-  iVar2 = iVar1;
-  for (iVar4 = (uint)*(byte *)(iVar1 + 0x798); 0 < iVar4; iVar4 = iVar4 - 1) {
-    if (*(uint *)(iVar2 + 0x748) == (uint)param_2) {
-      *(undefined *)(iVar1 + iVar3 * 8 + 0x74e) = 3;
+  *(byte *)(state + 0xb) = *(byte *)(state + 0xb) | (byte)(1 << commandBit);
+  commandIndex = 0;
+  commandEntry = state;
+  for (commandCount = (uint)*(byte *)(state + 0x798); 0 < commandCount;
+       commandCount = commandCount - 1) {
+    if (*(uint *)(commandEntry + 0x748) == (uint)targetObj) {
+      *(undefined *)(state + commandIndex * 8 + 0x74e) = 3;
       return;
     }
-    iVar2 = iVar2 + 8;
-    iVar3 = iVar3 + 1;
+    commandEntry = commandEntry + 8;
+    commandIndex = commandIndex + 1;
   }
-  iVar2 = iVar1 + (uint)*(byte *)(iVar1 + 0x798) * 8;
-  *(int *)(iVar2 + 0x748) = param_2;
-  iVar2 = iVar1 + (uint)*(byte *)(iVar1 + 0x798) * 8;
-  *(char *)(iVar2 + 0x74c) = (char)param_3;
-  iVar2 = iVar1 + (uint)*(byte *)(iVar1 + 0x798) * 8;
-  *(char *)(iVar2 + 0x74d) = (char)param_4;
-  iVar2 = iVar1 + (uint)*(byte *)(iVar1 + 0x798) * 8;
-  *(undefined *)(iVar2 + 0x74e) = 3;
-  *(char *)(iVar1 + 0x798) = *(char *)(iVar1 + 0x798) + '\x01';
+  commandEntry = state + (uint)*(byte *)(state + 0x798) * 8;
+  *(int *)(commandEntry + 0x748) = targetObj;
+  commandEntry = state + (uint)*(byte *)(state + 0x798) * 8;
+  *(char *)(commandEntry + 0x74c) = (char)commandKind;
+  commandEntry = state + (uint)*(byte *)(state + 0x798) * 8;
+  *(char *)(commandEntry + 0x74d) = (char)commandBit;
+  commandEntry = state + (uint)*(byte *)(state + 0x798) * 8;
+  *(undefined *)(commandEntry + 0x74e) = 3;
+  *(char *)(state + 0x798) = *(char *)(state + 0x798) + '\x01';
   return;
 }
 

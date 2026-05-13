@@ -22,7 +22,7 @@ void FUN_80145ea4(int param_1);
 void FUN_80145ee8(int param_1,int param_2,int param_3);
 int fn_80145828(int *obj,int targetObj);
 void fn_801458BC(int *obj,int commandEnabled,int targetObj);
-void sideCommandEnable(int param_1,int param_2,int param_3,int param_4);
+void sideCommandEnable(int obj,int targetObj,int commandKind,int commandBit);
 void FUN_801460b8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 uint FUN_80146874(void);

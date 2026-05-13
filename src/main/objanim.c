@@ -40,11 +40,13 @@ extern f32 lbl_803DE90C;
 void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimState *state,
                           uint moveId,s16 eventState)
 {
+  s16 nextEventState;
   int moveIndex;
   ObjAnimMoveData *moveData;
   int frameType;
   float frameValue;
 
+  nextEventState = eventState;
   moveIndex = (int)animDef->moveBaseTable[(int)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
               (moveId & OBJANIM_MOVE_INDEX_MASK);
   if (moveIndex >= (int)animDef->moveCount) {
@@ -87,7 +89,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
       state->eventState = 0;
     }
     else {
-      state->eventState = eventState;
+      state->eventState = nextEventState;
     }
   }
   return;
