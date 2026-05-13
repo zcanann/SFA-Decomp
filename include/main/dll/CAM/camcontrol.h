@@ -54,8 +54,7 @@ void camcontrol_releaseCurrentHandler(void);
 void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2);
 void Camera_setMode(s32 actionId,int priority,int startFlags,int dataSize,void *data,
                     undefined4 blendFrames,undefined queueMode);
-void Camera_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                   undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void Camera_update(void);
 void *Camera_func08(void);
 void *Camera_GetFollowPos(void);
 u32 Camera_getMode(void);

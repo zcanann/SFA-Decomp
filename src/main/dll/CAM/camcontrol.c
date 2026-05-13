@@ -13,13 +13,14 @@ extern int Obj_IsObjectAlive();
 extern undefined8 FUN_800723a0();
 extern undefined4 FUN_80081100();
 extern undefined4 FUN_800e8794();
-extern undefined4 camcontrol_findBestTarget();
+extern undefined4 camcontrol_findBestTarget(int cameraState, void *target);
 extern undefined4 camcontrol_updateMoveAverage();
 extern undefined4 camcontrol_applyState();
 extern undefined8 camcontrol_applyQueuedAction();
 extern int FUN_801113c0();
 extern int FUN_8012ef0c();
 extern int FUN_80133a28();
+extern int gameTextFn_80134be8(void);
 extern double FUN_8014cbcc();
 extern double FUN_80183544();
 extern f32 sqrtf(f32 x);
@@ -746,15 +747,13 @@ void Camera_setMode(s32 actionId,int priority,int startFlags,int dataSize,void *
  */
 #pragma scheduling off
 #pragma peephole off
-void Camera_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                   undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void Camera_update(void)
 {
   int iVar1;
   undefined4 uVar2;
   short *psVar3;
-  undefined8 uVar4;
   
-  iVar1 = FUN_80133a28();
+  iVar1 = gameTextFn_80134be8();
   psVar3 = *(short **)(gCamcontrolState + 0x52);
   if (psVar3 == (short *)0x0) {
     *(undefined4 *)(gCamcontrolState + 0x92) = 0;
@@ -772,9 +771,8 @@ void Camera_update(undefined8 param_1,double param_2,double param_3,undefined8 p
       *(undefined4 *)(psVar3 + 0xc) = *(undefined4 *)(gCamcontrolState + 0x6e);
       *(undefined4 *)(psVar3 + 0xe) = *(undefined4 *)(gCamcontrolState + 0x70);
       *(undefined4 *)(psVar3 + 0x10) = *(undefined4 *)(gCamcontrolState + 0x72);
-      param_2 = (double)*(float *)(psVar3 + 0xe);
-      param_3 = (double)*(float *)(psVar3 + 0x10);
-      FUN_800068f4((double)*(float *)(psVar3 + 0xc),param_2,param_3,(float *)(psVar3 + 6),
+      FUN_800068f4((double)*(float *)(psVar3 + 0xc),(double)*(float *)(psVar3 + 0xe),
+                   (double)*(float *)(psVar3 + 0x10),(float *)(psVar3 + 6),
                    (float *)(psVar3 + 8),(float *)(psVar3 + 10),*(int *)(psVar3 + 0x18));
       *(undefined *)((int)gCamcontrolState + 0x13d) = 0;
     }
@@ -791,9 +789,9 @@ void Camera_update(undefined8 param_1,double param_2,double param_3,undefined8 p
                    (double)*(float *)(gCamcontrolState + 0x10),(float *)(gCamcontrolState + 6),
                    (float *)(gCamcontrolState + 8),(float *)(gCamcontrolState + 10),*(int *)(psVar3 + 0x18))
       ;
-      param_2 = (double)*(float *)(gCamcontrolState + 0x5e);
-      param_3 = (double)*(float *)(gCamcontrolState + 0x60);
-      FUN_800068f4((double)*(float *)(gCamcontrolState + 0x5c),param_2,param_3,
+      FUN_800068f4((double)*(float *)(gCamcontrolState + 0x5c),
+                   (double)*(float *)(gCamcontrolState + 0x5e),
+                   (double)*(float *)(gCamcontrolState + 0x60),
                    (float *)(gCamcontrolState + 0x54),(float *)(gCamcontrolState + 0x56),
                    (float *)(gCamcontrolState + 0x58),*(int *)(psVar3 + 0x18));
       *(undefined4 *)(gCamcontrolState + 0x18) = *(undefined4 *)(psVar3 + 0x18);
@@ -804,18 +802,17 @@ void Camera_update(undefined8 param_1,double param_2,double param_3,undefined8 p
     camcontrol_applyQueuedAction();
     if (gCamcontrolCurrentHandler != 0) {
       (**(code **)(**(int **)(gCamcontrolCurrentHandler + 4) + 8))(gCamcontrolState);
-      param_2 = (double)*(float *)(gCamcontrolState + 8);
-      param_3 = (double)*(float *)(gCamcontrolState + 10);
-      FUN_800068f8((double)*(float *)(gCamcontrolState + 6),param_2,param_3,
+      FUN_800068f8((double)*(float *)(gCamcontrolState + 6),
+                   (double)*(float *)(gCamcontrolState + 8),
+                   (double)*(float *)(gCamcontrolState + 10),
                    (float *)(gCamcontrolState + 0xc),(float *)(gCamcontrolState + 0xe),
                    (float *)(gCamcontrolState + 0x10),*(int *)(gCamcontrolState + 0x18));
       camcontrol_applyState(gCamcontrolState);
     }
-    uVar4 = camcontrol_applyQueuedAction();
+    camcontrol_applyQueuedAction();
     if (iVar1 == 0) {
       if (*(int *)(gCamcontrolState + 0x8e) == 0) {
-        uVar2 = camcontrol_findBestTarget(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,
-                                          param_8);
+        uVar2 = camcontrol_findBestTarget((int)gCamcontrolState,psVar3);
         *(undefined4 *)(gCamcontrolState + 0x92) = uVar2;
       }
       else {
