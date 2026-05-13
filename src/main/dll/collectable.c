@@ -2008,6 +2008,8 @@ int fn_80145AD0(int *obj, int *out) {
 #pragma peephole reset
 
 extern u32 GameBit_Get(int bit);
+extern int fn_800DB0E0(void *pos,int param_2,int param_3);
+extern int randomGetRange(int lo,int hi);
 
 /* fn_80145794: 72b - if GameBit_Get(0x4e4), OR 0x10000 into obj->_b8->_54. */
 void fn_80145794(int *obj) {
@@ -2049,6 +2051,43 @@ int fn_80145804(int *obj) {
 #pragma optimize_for_size reset
 #pragma scheduling reset
 #pragma peephole reset
+
+/* fn_801458BC: 260b - start or refresh Tricky's targeted command state. */
+#pragma scheduling off
+void fn_801458BC(int *obj,int commandEnabled,int targetObj) {
+    int *state = (int*)obj[0xb8/4];
+
+    if (commandEnabled != 0) {
+        if (*((u8*)state + 8) == 5) {
+            if (*((u8*)state + 10) != 0) {
+                state[0x24/4] = targetObj;
+            }
+        } else {
+            u32 busy = state[0x54/4] & 0x10;
+            void *nextTarget;
+
+            if (busy != 0) {
+                return;
+            }
+            state[0x700/4] = fn_800DB0E0((void *)(targetObj + 0x18), -1, 3);
+            *(f32*)((u8*)state + 0x710) = (f32)randomGetRange(0x168, 0x28);
+            *((u8*)state + 8) = 5;
+            state[0x24/4] = targetObj;
+            nextTarget = (void *)(state[0x700/4] + 8);
+            if ((void *)state[0x28/4] != nextTarget) {
+                s32 clearTargetAnim = -1025;
+
+                state[0x28/4] = (int)nextTarget;
+                state[0x54/4] = state[0x54/4] & clearTargetAnim;
+                *(s16*)((u8*)state + 0xd2) = 0;
+            }
+            *((u8*)state + 10) = 0;
+        }
+    } else {
+        state[0x54/4] |= 0x10000;
+    }
+}
+#pragma scheduling reset
 
 /* Tricky_getAvailableCommands: 124b - GameBit_Get cascade returning command flags. */
 #pragma peephole off
