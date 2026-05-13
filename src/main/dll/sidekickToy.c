@@ -1618,7 +1618,7 @@ double FUN_8014d2a4(double param_1,double param_2,double param_3,double param_4,
 
 /* 8b "li r3, N; blr" returners. */
 int Baddie_EnemygetExtraSize(void) { return 0x370; }
-int fn_8014D15C(void) { return 0x14b; }
+int enemy_func08(void) { return 0x14b; }
 
 /* 12b 3-insn patterns. */
 void fn_8014C66C(int *obj, int x) { *(int*)((char*)((int**)obj)[0xb8/4] + 0x29c) = x; }

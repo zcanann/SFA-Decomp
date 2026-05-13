@@ -15,3 +15,6 @@
 // - 4: enemy_update (0x8014D4F0)
 // - 5: enemy_hitDetect (0x8014D430)
 // - 6: enemy_render (0x8014D29C)
+// - 7: enemy_free (0x8014D164)
+// - 8: enemy_func08 (0x8014D15C)
+// - 9: Baddie_EnemygetExtraSize (0x8014D154)
