@@ -145,6 +145,8 @@ extern void trickyReportError(const char *fmt, ...);
 extern void objParticleFn_80099d84(f32 param_1,f32 param_2,int obj,int param_4,int param_5);
 extern int objBboxFn_800640cc(f32 radius,Vec *from,Vec *to,int mode,void *hit,int obj,int param_7,
                               int param_8,int param_9,int param_10);
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
 
 extern undefined4 DAT_802c2948;
 extern undefined4 DAT_802c294c;
@@ -159,6 +161,7 @@ extern undefined4 DAT_802c2980;
 extern undefined4 DAT_802c2984;
 extern undefined4 DAT_802c2988;
 extern undefined4 DAT_802c298c;
+extern u32 lbl_802C21F0[4];
 extern undefined4 DAT_8031df38;
 extern undefined4 DAT_8031df50;
 extern undefined4 DAT_803dc8a8;
@@ -198,6 +201,8 @@ extern f32 lbl_803E2540;
 extern f32 lbl_803E256C;
 extern f32 lbl_803E25A0;
 extern f32 lbl_803E25B0;
+extern f32 lbl_803E25B4;
+extern f32 lbl_803E25B8;
 extern f32 lbl_803E306C;
 extern f32 lbl_803E3078;
 extern f32 lbl_803E307C;
@@ -1224,6 +1229,86 @@ int fn_8014A150(int obj,int state,void *from,void *to)
     }
   }
   return visible;
+}
+#pragma scheduling reset
+
+/* fn_8014A304: 760b - update Tricky's four quadrant line-of-sight state bits. */
+#pragma scheduling off
+void fn_8014A304(f32 radius,int obj,int state)
+{
+  u8 traceHit[4];
+  s16 probeGrid[4];
+  s16 baseGrid[4];
+  Vec probe;
+  u32 visibilityBits[4];
+  Vec delta;
+  u8 bboxHit[84];
+  s16 baseAngle;
+  int i;
+  u8 visible;
+  f32 angle;
+  f32 angleScale;
+  f32 angleDivisor;
+  f32 maxDistance;
+  s16 setupId;
+
+  visibilityBits[0] = lbl_802C21F0[0];
+  visibilityBits[1] = lbl_802C21F0[1];
+  visibilityBits[2] = lbl_802C21F0[2];
+  visibilityBits[3] = lbl_802C21F0[3];
+  probe.x = *(f32 *)(obj + 0xc);
+  probe.y = lbl_803E25A0 + *(f32 *)(obj + 0x10);
+  probe.z = *(f32 *)(obj + 0x14);
+  voxmaps_worldToGrid(&probe,baseGrid);
+  if (*(u32 *)(obj + 0x30) != 0) {
+    baseAngle = *(s16 *)obj + **(s16 **)(obj + 0x30);
+  }
+  else {
+    baseAngle = *(s16 *)obj;
+  }
+  angleScale = lbl_803E25B4;
+  angleDivisor = lbl_803E25B8;
+  maxDistance = lbl_803E25B0;
+  for (i = 0; i < 4; i++) {
+    angle = (angleScale * (f32)((s32)baseAngle + ((u32)(u16)i << 0xe))) / angleDivisor;
+    probe.x = *(f32 *)(obj + 0x18) - (radius * fn_80293E80(angle));
+    probe.y = *(f32 *)(obj + 0x1c);
+    probe.z = *(f32 *)(obj + 0x20) - (radius * sin(angle));
+    setupId = *(s16 *)(obj + 0x46);
+    if (((((setupId != 0x613) && (setupId != 0x642)) && (setupId != 0x3fe)) &&
+        ((setupId != 0x7c6) && (setupId != 0x7c8))) &&
+        ((setupId != 0x251) && (setupId != 0x851))) {
+      probe.y += lbl_803E25A0;
+    }
+    voxmaps_worldToGrid(&probe,probeGrid);
+    PSVECSubtract((Vec *)(obj + 0x18),&probe,&delta);
+    if (PSVECMag(&delta) < maxDistance) {
+      if (*(u32 *)(obj + 0x30) != 0) {
+        visible = 1;
+      }
+      else {
+        visible = voxmaps_traceLine(probeGrid,baseGrid,0,traceHit,0);
+        if (traceHit[0] == 1) {
+          visible = 1;
+        }
+      }
+    }
+    else {
+      visible = 0;
+    }
+    if ((visible != 0) && ((*(u32 *)(state + 0x2e4) & 8) != 0)) {
+      if (objBboxFn_800640cc(lbl_803E256C,(Vec *)(obj + 0x18),&probe,0,bboxHit,obj,
+                             *(u8 *)(state + 0x261),-1,0,0) != 0) {
+        visible = 0;
+      }
+    }
+    if (visible != 0) {
+      *(u32 *)(state + 0x2dc) |= visibilityBits[i];
+    }
+    else {
+      *(u32 *)(state + 0x2dc) &= ~visibilityBits[i];
+    }
+  }
 }
 #pragma scheduling reset
 
