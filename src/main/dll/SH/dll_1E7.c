@@ -50,6 +50,8 @@ extern f32 lbl_803E60B0;
 extern f32 lbl_803E60B4;
 extern f32 lbl_803E60B8;
 
+#define SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES 0x10
+
 /*
  * --INFO--
  *
@@ -68,7 +70,7 @@ extern f32 lbl_803E60B8;
 int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj)
 {
   SHthorntailObject **objects;
-  u32 *configTable;
+  u32 *linkedConfigRow;
   u32 configToken;
   int count;
   int index;
@@ -79,24 +81,29 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj)
   linkedEventPending = 0;
   groupIndex = -1;
   matchCount = 0;
-  configTable = lbl_80326E98[0];
+  linkedConfigRow = lbl_80326E98[0];
   configToken = obj->config->configToken;
-  if (configToken == configTable[0]) {
+  if (configToken == linkedConfigRow[0]) {
     groupIndex = 0;
   }
-  else if (configTable += 4, configToken == configTable[0]) {
+  else if (linkedConfigRow = (u32 *)((u8 *)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES),
+           configToken == linkedConfigRow[0]) {
     groupIndex = 1;
   }
-  else if (configTable += 4, configToken == configTable[0]) {
+  else if (linkedConfigRow = (u32 *)((u8 *)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES),
+           configToken == linkedConfigRow[0]) {
     groupIndex = 2;
   }
-  else if (configTable += 4, configToken == configTable[0]) {
+  else if (linkedConfigRow = (u32 *)((u8 *)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES),
+           configToken == linkedConfigRow[0]) {
     groupIndex = 3;
   }
-  else if (configTable += 4, configToken == configTable[0]) {
+  else if (linkedConfigRow = (u32 *)((u8 *)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES),
+           configToken == linkedConfigRow[0]) {
     groupIndex = 4;
   }
-  else if (configTable += 4, configToken == configTable[0]) {
+  else if (linkedConfigRow = (u32 *)((u8 *)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES),
+           configToken == linkedConfigRow[0]) {
     groupIndex = 5;
   }
   objects = ObjGroup_GetObjects(3,&count);
