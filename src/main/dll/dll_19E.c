@@ -122,7 +122,7 @@ void dfsh_objcreator_update(undefined8 param_1,undefined8 param_2,undefined8 par
 /*
  * --INFO--
  *
- * Function: FUN_801c3e94
+ * Function: DFSH_LaserBeam_init
  * EN v1.0 Address: 0x801C3E94
  * EN v1.0 Size: 516b
  * EN v1.1 Address: 0x801C3F28
@@ -132,7 +132,7 @@ void dfsh_objcreator_update(undefined8 param_1,undefined8 param_2,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c3e94(int param_1,int param_2)
+void DFSH_LaserBeam_init(int param_1,int param_2)
 {
   int *piVar1;
   uint uVar2;
@@ -363,4 +363,4 @@ void DFSH_LaserBeam_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int DFSH_LaserBeam_getExtraSize(void) { return 0x4c; }
-int fn_801C3E44(void) { return 0x0; }
+int DFSH_LaserBeam_func08(void) { return 0x0; }
