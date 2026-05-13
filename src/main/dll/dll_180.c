@@ -130,7 +130,7 @@ void cf_doorlight_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int cflightwall_getExtraSize(void) { return 0x0; }
-int fn_80191A78(void) { return 0x0; }
+int cflightwall_func08(void) { return 0x0; }
 int barrelpad_getExtraSize(void) { return 0x0; }
 int barrelpad_func08(void) { return 0x0; }
 int cf_doorlight_getExtraSize(void) { return 0x18; }
