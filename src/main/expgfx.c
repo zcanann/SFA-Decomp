@@ -714,7 +714,6 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
 {
   ExpgfxTableEntry *entry;
   ExpgfxTableEntry *entryBase;
-  u16 *refCount;
   int tableIndex;
   int freeIndex;
   
@@ -724,12 +723,12 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
   for (; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++) {
     if (((entry->refCount != 0 && (entry->textureOrResource == textureOrResource)) &&
         (entry->key0 == key0)) && (entry->key1 == key1)) {
-      refCount = &gExpgfxTableEntries[tableIndex].refCount;
-      if (*refCount >= EXPGFX_EXPTAB_REFCOUNT_MAX) {
+      entry = &gExpgfxTableEntries[tableIndex];
+      if (entry->refCount >= EXPGFX_EXPTAB_REFCOUNT_MAX) {
         debugPrintf(sExpgfxAddToTableUsageOverflow);
         return EXPGFX_INVALID_TABLE_INDEX;
       }
-      (*refCount)++;
+      entry->refCount++;
       return (int)(short)tableIndex;
     }
     entry = entry + 1;
@@ -920,8 +919,8 @@ void expgfx_renderSourcePools(int sourceId,int sourceMode)
   uint *slotPoolBases;
   int poolIndex;
   
-  expgfxBase = gExpgfxRuntimeData;
   poolIndex = 0;
+  expgfxBase = gExpgfxRuntimeData;
   poolActiveCounts = (char *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
   poolSourceIds = (int *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
   poolSourceModes = expgfxBase + EXPGFX_POOL_SOURCE_MODES_OFFSET;
