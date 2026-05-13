@@ -17,6 +17,7 @@ void FUN_801457a4(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 int fn_801451D8(int obj,int state);
+void fn_80144F50(int obj,int state);
 void FUN_80145ea4(int param_1);
 void FUN_80145ee8(int param_1,int param_2,int param_3);
 int fn_80145828(int *obj,int targetObj);

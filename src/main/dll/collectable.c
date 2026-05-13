@@ -76,6 +76,7 @@ extern int fn_800395D8(int obj,int param_2);
 extern undefined4 FUN_80046f44();
 extern undefined4 FUN_80046f84();
 extern void fn_8004B594(void *param_1);
+extern int fn_8005A10C(f32 *pos,f32 radius);
 extern undefined8 FUN_800571f8();
 extern int FUN_800575b4();
 extern int FUN_800620e8();
@@ -98,6 +99,9 @@ extern void GameBit_Set(int eventId,int value);
 extern undefined8 FUN_80135d54();
 extern void fn_801389E0(int param_1,int param_2,int *param_3);
 extern void trickyImpress(int obj);
+extern int fn_8014460C(int obj,int state);
+extern void objAnimFn_8013a3f0(int obj,int animId,f32 blend,int flags);
+extern int trickyFn_8013b368(int obj,f32 radius,int state);
 extern undefined4 FUN_80135f38();
 extern undefined4 FUN_80136310();
 extern undefined4 FUN_8013651c();
@@ -175,6 +179,8 @@ extern undefined4 DAT_802c298c;
 extern u32 lbl_802C21F0[4];
 extern undefined4 DAT_8031df38;
 extern undefined4 DAT_8031df50;
+extern char sInWaterMessage[];
+extern char lbl_8031D478[];
 extern undefined4 DAT_803dc8a8;
 extern undefined4 DAT_803dc8b0;
 extern undefined4* DAT_803dd6d4;
@@ -210,7 +216,16 @@ extern f32 oneOverTimeDelta;
 extern void *lbl_803DCAA8;
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E8;
+extern f32 lbl_803E2410;
+extern f32 lbl_803E2414;
+extern f32 lbl_803E243C;
+extern f32 lbl_803E2440;
+extern f32 lbl_803E2444;
 extern f32 lbl_803E24B8;
+extern f32 lbl_803E2454;
+extern f32 lbl_803E2458;
+extern f64 lbl_803E2460;
+extern f32 lbl_803E247C;
 extern f32 lbl_803E253C;
 extern f32 lbl_803E2540;
 extern u32 lbl_803E2558;
@@ -2800,8 +2815,6 @@ extern f32 lbl_803E2418;
 extern f32 lbl_803E23DC;
 
 extern f32 getXZDistance(f32 *a, f32 *b);
-extern int fn_8005A10C(f32 *p, f32 f);
-
 /* fn_80144E40: 272b - find nearest object within distance threshold. */
 #pragma scheduling off
 int fn_80144E40(int *obj, int *p) {
@@ -2829,6 +2842,67 @@ int fn_80144E40(int *obj, int *p) {
         }
     }
     return result;
+}
+#pragma scheduling reset
+
+/* fn_80144F50: 648b - update Tricky's water/out-of-water probe and animation. */
+#pragma scheduling off
+void fn_80144F50(int obj, int state) {
+    int sfxState;
+    int isInWater;
+    int sfxDisabled;
+    u32 transitionFlag;
+
+    if (fn_8014460C(obj, state) == 0) {
+        *(f32*)(state + 0x72c) =
+            *(f32*)(obj + 0x18) - fn_80293E80((lbl_803E2454 * (f32)*(s16*)obj) / lbl_803E2458);
+        *(f32*)(state + 0x730) = *(f32*)(obj + 0x1c);
+        *(f32*)(state + 0x734) =
+            *(f32*)(obj + 0x20) - sin((lbl_803E2454 * (f32)*(s16*)obj) / lbl_803E2458);
+
+        if (trickyFn_8013b368(obj, lbl_803E247C, state) != 1) {
+            *(f32*)(state + 0x740) -= timeDelta;
+            if (*(f32*)(state + 0x740) <= lbl_803E23DC) {
+                *(f32*)(state + 0x740) = (f32)randomGetRange(0x1f4, 0x2ee);
+                sfxState = *(int*)(obj + 0xb8);
+                sfxDisabled = (*(u8*)(sfxState + 0x58) >> 6) & 1;
+                if ((sfxDisabled == 0) &&
+                    ((*(s16*)(obj + 0xa0) >= 0x30) || (*(s16*)(obj + 0xa0) < 0x29)) &&
+                    (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)) {
+                    objAudioFn_800393f8(obj, (void*)(sfxState + 0x3a8), 0x360, 0x500, -1, 0);
+                }
+            }
+
+            if (lbl_803E23DC == *(f32*)(state + 0x2ac)) {
+                isInWater = 0;
+            } else if (lbl_803E2410 == *(f32*)(state + 0x2b0)) {
+                isInWater = 1;
+            } else if ((*(f32*)(state + 0x2b4) - *(f32*)(state + 0x2b0)) > lbl_803E2414) {
+                isInWater = 1;
+            } else {
+                isInWater = 0;
+            }
+
+            if (isInWater) {
+                objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
+                *(f32*)(state + 0x79c) = lbl_803E2440;
+                *(f32*)(state + 0x838) = lbl_803E23DC;
+                trickyDebugPrint(sInWaterMessage);
+            } else {
+                if (*(s16*)(obj + 0xa0) != 0x31) {
+                    if ((*(s16*)(obj + 0xa0) < 0x31) && (*(s16*)(obj + 0xa0) == 0xd)) {
+                        transitionFlag = *(u32*)(state + 0x54) & 0x08000000;
+                        if (transitionFlag != 0) {
+                            objAnimFn_8013a3f0(obj, 0x31, lbl_803E243C, 0);
+                        }
+                    } else {
+                        objAnimFn_8013a3f0(obj, 0xd, lbl_803E2444, 0);
+                    }
+                }
+                trickyDebugPrint(lbl_8031D478);
+            }
+        }
+    }
 }
 #pragma scheduling reset
 
