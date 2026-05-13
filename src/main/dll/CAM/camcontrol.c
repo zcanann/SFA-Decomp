@@ -38,16 +38,16 @@ extern undefined4 gCamcontrolTargetChanged;
 extern short* gCamcontrolTargetReticle;
 extern undefined4 DAT_803de140;
 extern undefined4 gCamcontrolTargetState;
-extern undefined4 gCamcontrolSavedActionMode;
-extern undefined4 gCamcontrolSavedActionFlags;
-extern undefined4 gCamcontrolSavedActionId;
-extern undefined lbl_803DD4F8;
-extern undefined4 lbl_803DD4FC;
-extern s8 lbl_803DD500;
-extern s8 lbl_803DD501;
-extern undefined lbl_803DD502;
-extern void *lbl_803DD504;
-extern undefined4 lbl_803DD510;
+extern int gCamcontrolSavedActionStartFlags;
+extern int gCamcontrolSavedActionPriority;
+extern int gCamcontrolSavedActionId;
+extern undefined gCamcontrolQueuedActionMode;
+extern undefined4 gCamcontrolQueuedActionBlendFrames;
+extern s8 gCamcontrolQueuedActionPriority;
+extern s8 gCamcontrolQueuedActionStartFlags;
+extern undefined gCamcontrolQueuedActionPending;
+extern void *gCamcontrolQueuedActionData;
+extern undefined4 gCamcontrolQueuedActionId;
 extern undefined4 gCamcontrolCurrentHandler;
 extern u8 gCamcontrolHandlerCount;
 extern short* gCamcontrolState;
@@ -95,19 +95,8 @@ typedef struct CamcontrolCurrentHandler {
 } CamcontrolCurrentHandler;
 
 extern CamcontrolCurrentHandler *lbl_803DD51C;
-extern int lbl_803DD4EC;
-extern int lbl_803DD4F0;
-extern int lbl_803DD4F4;
-extern u32 lbl_803DD518;
+extern u32 gCamcontrolActiveActionId;
 extern u32 pCamera;
-
-#define gCamcontrolQueuedActionMode lbl_803DD4F8
-#define gCamcontrolQueuedActionBlendFrames lbl_803DD4FC
-#define gCamcontrolQueuedActionPriority lbl_803DD500
-#define gCamcontrolQueuedActionStartFlags lbl_803DD501
-#define gCamcontrolQueuedActionPending lbl_803DD502
-#define gCamcontrolQueuedActionData lbl_803DD504
-#define gCamcontrolCurrentActionId lbl_803DD510
 
 /*
  * --INFO--
@@ -523,10 +512,10 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,s8 triggerM
     getTabEntry(camAction,CAMCONTROL_ACTION_FILE_ID,actionOffset,CAMCONTROL_ACTION_RECORD_SIZE);
     camAction->triggerMode = triggerMode;
     fn_800E84D8((short)actionNo);
-    if (((((int)lbl_803DD518 != CAMCONTROL_ACTION_DEFAULT) &&
-         ((int)lbl_803DD518 != CAMCONTROL_ACTION_TRIGGERED)) &&
-        ((int)lbl_803DD518 != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
-       ((int)lbl_803DD518 != CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
+    if (((((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_DEFAULT) &&
+         ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGERED)) &&
+        ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
+       ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
       handlerIndex = 0;
       handlerEntry = lbl_803A4228;
       for (handlerCount = (int)lbl_803DD520; 0 < handlerCount;
@@ -567,10 +556,10 @@ LAB_80102f3c:
     }
     camAction->triggerMode = triggerMode;
     fn_800E84D8(1);
-    if (((((int)lbl_803DD518 != CAMCONTROL_ACTION_DEFAULT) &&
-         ((int)lbl_803DD518 != CAMCONTROL_ACTION_TRIGGERED)) &&
-        ((int)lbl_803DD518 != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
-       ((int)lbl_803DD518 != CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
+    if (((((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_DEFAULT) &&
+         ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGERED)) &&
+        ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
+       ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
       handlerIndex = 0;
       handlerEntry = lbl_803A4228;
       for (handlerCount = (int)lbl_803DD520; 0 < handlerCount;
@@ -674,8 +663,9 @@ void camcontrol_releaseCurrentHandler(void)
 #pragma peephole off
 void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2)
 {
-  if (lbl_803DD4F4 != CAMCONTROL_SAVED_ACTION_NONE) {
-    Camera_setMode(lbl_803DD4F4,lbl_803DD4F0,lbl_803DD4EC,0,0,param_1,param_2);
+  if (gCamcontrolSavedActionId != CAMCONTROL_SAVED_ACTION_NONE) {
+    Camera_setMode(gCamcontrolSavedActionId,gCamcontrolSavedActionPriority,
+                   gCamcontrolSavedActionStartFlags,0,0,param_1,param_2);
   }
   return;
 }
@@ -705,7 +695,7 @@ void Camera_setMode(s32 actionId,int priority,int startFlags,int dataSize,void *
     gCamcontrolQueuedActionData = (void *)0x0;
     gCamcontrolQueuedActionPending = 0;
   }
-  gCamcontrolCurrentActionId = actionId;
+  gCamcontrolQueuedActionId = actionId;
   gCamcontrolQueuedActionBlendFrames = blendFrames;
   if (data != (void *)0x0) {
     gCamcontrolQueuedActionData = mmAlloc(dataSize,CAMCONTROL_ACTION_HEAP,0);
@@ -865,7 +855,7 @@ void *Camera_GetFollowPos(void)
 }
 
 /* sda21 accessors. */
-u32 Camera_getMode(void) { return lbl_803DD518; }
+u32 Camera_getMode(void) { return gCamcontrolActiveActionId; }
 u32 Camera_get(void) { return pCamera; }
 
 void Camera_init(void *focus,f32 x,f32 y,f32 z)
@@ -899,9 +889,9 @@ void Camera_initialise(void)
   pCamera = (u32)lbl_803A4278;
   memset((void *)pCamera,0,0x144);
   voxmaps_initialise();
-  lbl_803DD518 = -1;
+  gCamcontrolActiveActionId = -1;
   lbl_803DD514 = -1;
-  gCamcontrolCurrentActionId = -1;
+  gCamcontrolQueuedActionId = -1;
   lbl_803DD4CC = 0;
   lbl_803DD4CB = -1;
   lbl_803DB992 = 0xffff;

@@ -25,17 +25,17 @@ extern undefined4 gCamcontrolState;
 extern u8 *pCamera;
 extern f64 DOUBLE_803e22d0;
 extern f32 lbl_803DC074;
-extern undefined4 lbl_803DD4EC;
-extern undefined4 lbl_803DD4F0;
-extern undefined4 lbl_803DD4F4;
-extern u8 lbl_803DD4F8;
-extern s32 lbl_803DD4FC;
-extern u8 lbl_803DD502;
-extern void *lbl_803DD504;
-extern undefined4 lbl_803DD508;
-extern undefined4 lbl_803DD50C;
-extern undefined4 lbl_803DD510;
-extern undefined4 lbl_803DD518;
+extern undefined4 gCamcontrolSavedActionStartFlags;
+extern undefined4 gCamcontrolSavedActionPriority;
+extern undefined4 gCamcontrolSavedActionId;
+extern u8 gCamcontrolQueuedActionMode;
+extern s32 gCamcontrolQueuedActionBlendFrames;
+extern u8 gCamcontrolQueuedActionPending;
+extern void *gCamcontrolQueuedActionData;
+extern undefined4 gCamcontrolActiveActionStartFlags;
+extern undefined4 gCamcontrolActiveActionPriority;
+extern undefined4 gCamcontrolQueuedActionId;
+extern undefined4 gCamcontrolActiveActionId;
 extern f32 lbl_803DE148;
 extern f32 lbl_803E162C;
 extern f32 lbl_803E1630;
@@ -230,19 +230,19 @@ void camcontrol_applyQueuedAction(void)
   short *view;
   float blendStep;
 
-  if (lbl_803DD502 != '\0') {
-    if (lbl_803DD4FC < 2) {
+  if (gCamcontrolQueuedActionPending != '\0') {
+    if (gCamcontrolQueuedActionBlendFrames < 2) {
       *(float *)(pCamera + 0xf4) = lbl_803E1630;
       pCamera[0x13f] = 0;
     }
     else {
-      blendStep = lbl_803E162C / (float)lbl_803DD4FC;
+      blendStep = lbl_803E162C / (float)gCamcontrolQueuedActionBlendFrames;
       if ((blendStep <= lbl_803E1630) || (lbl_803E162C < blendStep)) {
         blendStep = lbl_803E162C;
       }
       *(float *)(pCamera + 0xf4) = lbl_803E162C;
       *(float *)(pCamera + 0xf8) = blendStep;
-      pCamera[0x13f] = lbl_803DD4F8;
+      pCamera[0x13f] = gCamcontrolQueuedActionMode;
     }
     view = Camera_GetCurrentViewSlot();
     if (lbl_803E162C == *(float *)(pCamera + 0xf4)) {
@@ -260,14 +260,14 @@ void camcontrol_applyQueuedAction(void)
       *(short *)(pCamera + 4) = view[2];
       *(float *)(pCamera + 0xb4) = Camera_GetFovY();
     }
-    lbl_803DD4F4 = lbl_803DD518;
-    lbl_803DD4F0 = lbl_803DD50C;
-    lbl_803DD4EC = lbl_803DD508;
-    camcontrol_activateHandler((u16)lbl_803DD510,lbl_803DD504);
-    lbl_803DD502 = '\0';
-    if (lbl_803DD504 != (void *)0x0) {
-      mm_free(lbl_803DD504);
-      lbl_803DD504 = (void *)0x0;
+    gCamcontrolSavedActionId = gCamcontrolActiveActionId;
+    gCamcontrolSavedActionPriority = gCamcontrolActiveActionPriority;
+    gCamcontrolSavedActionStartFlags = gCamcontrolActiveActionStartFlags;
+    camcontrol_activateHandler((u16)gCamcontrolQueuedActionId,gCamcontrolQueuedActionData);
+    gCamcontrolQueuedActionPending = '\0';
+    if (gCamcontrolQueuedActionData != (void *)0x0) {
+      mm_free(gCamcontrolQueuedActionData);
+      gCamcontrolQueuedActionData = (void *)0x0;
     }
   }
   return;
