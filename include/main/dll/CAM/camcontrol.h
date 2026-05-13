@@ -4,9 +4,9 @@
 #include "ghidra_import.h"
 
 typedef struct CamcontrolTriggeredAction {
-  u8 actionKind;
+  s8 actionKind;
   u8 pad01[0xC];
-  s8 triggerMode;
+  u8 triggerMode;
   u8 pad0E[2];
 } CamcontrolTriggeredAction;
 
@@ -15,10 +15,12 @@ typedef struct CamcontrolQueuedActionParam {
   byte noBlendFlag;
 } CamcontrolQueuedActionParam;
 
+#define CAMCONTROL_TRIGGER_KIND_LOAD_ACTION 0
 #define CAMCONTROL_TRIGGER_KIND_QUEUE_TYPE1 1
 #define CAMCONTROL_TRIGGER_KIND_QUEUE_TYPE2 2
 #define CAMCONTROL_TRIGGER_KIND_DEFAULT_ACTION 3
 #define CAMCONTROL_TRIGGER_KIND_DEFAULT_ACTION_OFFSET 4
+#define CAMCONTROL_TRIGGERED_ACTION_KIND_DEFAULT 0
 #define CAMCONTROL_TRIGGERED_ACTION_KIND_TRIGGERED 1
 #define CAMCONTROL_ACTION_DEFAULT 0x42
 #define CAMCONTROL_ACTION_TRIGGERED 0x4B
@@ -46,7 +48,7 @@ int Camera_getOverrideTarget(void);
 void Camera_moveBy(f32 x,f32 y,f32 z);
 void Camera_overridePos(f32 x,f32 y,f32 z);
 void Camera_setFocus(void *target);
-void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,s8 triggerMode);
+void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerMode);
 void *Camera_getCamActionsBinEntry(int actionNo);
 void camcontrol_releaseCurrentHandler(void);
 void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2);

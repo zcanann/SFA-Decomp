@@ -456,7 +456,7 @@ void Camera_setFocus(void *target)
  */
 #pragma scheduling off
 #pragma peephole off
-void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,s8 triggerMode)
+void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerMode)
 {
   int handlerCount;
   int handlerIndex;
@@ -469,9 +469,11 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,s8 triggerM
   CamcontrolQueuedActionParam triggerType2Param;
   
   switch (triggerType) {
+  case CAMCONTROL_TRIGGER_KIND_LOAD_ACTION:
+    break;
   case CAMCONTROL_TRIGGER_KIND_QUEUE_TYPE1:
     triggerType1Param.actionIndex = actionNo & CAMCONTROL_ACTION_INDEX_MASK;
-    triggerType1Param.noBlendFlag = (byte)actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND;
+    triggerType1Param.noBlendFlag = actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND;
     *(undefined *)((int)pCamera + 0x139) = 1;
     if (triggerType1Param.noBlendFlag != 0) {
       blendFrames = 0;
@@ -504,12 +506,17 @@ void camcontrol_loadTriggeredCamAction(int triggerType,uint actionNo,s8 triggerM
     return;
   }
   if (actionNo != CAMCONTROL_ACTION_NO_NONE) {
-    camAction = (CamcontrolTriggeredAction *)mmAlloc(CAMCONTROL_ACTION_RECORD_SIZE,CAMCONTROL_ACTION_HEAP,0);
+    camAction = (CamcontrolTriggeredAction *)0x0;
+    if (actionNo != CAMCONTROL_ACTION_NO_NONE) {
+      camAction = (CamcontrolTriggeredAction *)mmAlloc(CAMCONTROL_ACTION_RECORD_SIZE,CAMCONTROL_ACTION_HEAP,0);
+      if (camAction != (CamcontrolTriggeredAction *)0x0) {
+        actionOffset = (actionNo - 1) * CAMCONTROL_ACTION_RECORD_SIZE;
+        getTabEntry(camAction,CAMCONTROL_ACTION_FILE_ID,actionOffset,CAMCONTROL_ACTION_RECORD_SIZE);
+      }
+    }
     if (camAction == (CamcontrolTriggeredAction *)0x0) {
       return;
     }
-    actionOffset = (actionNo - 1) * CAMCONTROL_ACTION_RECORD_SIZE;
-    getTabEntry(camAction,CAMCONTROL_ACTION_FILE_ID,actionOffset,CAMCONTROL_ACTION_RECORD_SIZE);
     camAction->triggerMode = triggerMode;
     fn_800E84D8((short)actionNo);
     if (((((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_DEFAULT) &&
@@ -533,13 +540,16 @@ LAB_80102f3c:
                                                           CAMCONTROL_ACTION_RECORD_SIZE);
     }
     else {
-      if (camAction->actionKind == CAMCONTROL_TRIGGERED_ACTION_KIND_TRIGGERED) {
-        Camera_setMode(CAMCONTROL_ACTION_TRIGGERED,1,2,CAMCONTROL_ACTION_RECORD_SIZE,
-                       camAction,0,CAMCONTROL_QUEUE_SENTINEL);
-      }
-      else {
+      switch (camAction->actionKind) {
+      case CAMCONTROL_TRIGGERED_ACTION_KIND_DEFAULT:
+      default:
         Camera_setMode(CAMCONTROL_ACTION_DEFAULT,0,2,CAMCONTROL_ACTION_RECORD_SIZE,
                        camAction,0,CAMCONTROL_QUEUE_SENTINEL);
+        break;
+      case CAMCONTROL_TRIGGERED_ACTION_KIND_TRIGGERED:
+        Camera_setMode(CAMCONTROL_ACTION_TRIGGERED,1,2,CAMCONTROL_ACTION_RECORD_SIZE,
+                       camAction,0,CAMCONTROL_QUEUE_SENTINEL);
+        break;
       }
     }
     mm_free(camAction);
@@ -577,13 +587,16 @@ LAB_80102f3c_b:
                                                           CAMCONTROL_ACTION_RECORD_SIZE);
     }
     else {
-      if (camAction->actionKind == CAMCONTROL_TRIGGERED_ACTION_KIND_TRIGGERED) {
-        Camera_setMode(CAMCONTROL_ACTION_TRIGGERED,1,2,CAMCONTROL_ACTION_RECORD_SIZE,
-                       camAction,0,CAMCONTROL_QUEUE_SENTINEL);
-      }
-      else {
+      switch (camAction->actionKind) {
+      case CAMCONTROL_TRIGGERED_ACTION_KIND_DEFAULT:
+      default:
         Camera_setMode(CAMCONTROL_ACTION_DEFAULT,0,2,CAMCONTROL_ACTION_RECORD_SIZE,
                        camAction,0,CAMCONTROL_QUEUE_SENTINEL);
+        break;
+      case CAMCONTROL_TRIGGERED_ACTION_KIND_TRIGGERED:
+        Camera_setMode(CAMCONTROL_ACTION_TRIGGERED,1,2,CAMCONTROL_ACTION_RECORD_SIZE,
+                       camAction,0,CAMCONTROL_QUEUE_SENTINEL);
+        break;
       }
     }
     mm_free(camAction);
