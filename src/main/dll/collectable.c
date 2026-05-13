@@ -764,7 +764,7 @@ void FUN_80145ee8(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sideCommandEnable(int param_1,int param_2,char param_3,int param_4)
+void sideCommandEnable(int param_1,int param_2,int param_3,int param_4)
 {
   int iVar1;
   int iVar2;
@@ -789,9 +789,12 @@ void sideCommandEnable(int param_1,int param_2,char param_3,int param_4)
   }
   iVar2 = iVar1 + (uint)*(byte *)(iVar1 + 0x798) * 8;
   *(int *)(iVar2 + 0x748) = param_2;
-  *(char *)(iVar1 + (uint)*(byte *)(iVar1 + 0x798) * 8 + 0x74c) = param_3;
-  *(char *)(iVar1 + (uint)*(byte *)(iVar1 + 0x798) * 8 + 0x74d) = (char)param_4;
-  *(undefined *)(iVar1 + (uint)*(byte *)(iVar1 + 0x798) * 8 + 0x74e) = 3;
+  iVar2 = iVar1 + (uint)*(byte *)(iVar1 + 0x798) * 8;
+  *(char *)(iVar2 + 0x74c) = (char)param_3;
+  iVar2 = iVar1 + (uint)*(byte *)(iVar1 + 0x798) * 8;
+  *(char *)(iVar2 + 0x74d) = (char)param_4;
+  iVar2 = iVar1 + (uint)*(byte *)(iVar1 + 0x798) * 8;
+  *(undefined *)(iVar2 + 0x74e) = 3;
   *(char *)(iVar1 + 0x798) = *(char *)(iVar1 + 0x798) + '\x01';
   return;
 }
