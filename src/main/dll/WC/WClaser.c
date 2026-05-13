@@ -259,7 +259,7 @@ int fn_801F072C(void) { return 0x0; }
 int fn_801F0940(void) { return 0xc; }
 int fn_801F0948(void) { return 0x0; }
 int LaserBeam_getExtraSize(void) { return 0x50; }
-int fn_801F0AEC(void) { return 0x0; }
+int LaserBeam_func08(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5CF8;

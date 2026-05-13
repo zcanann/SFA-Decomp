@@ -10,5 +10,9 @@ FUN_801f02f0(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 void FUN_801f0674(int param_1,int param_2);
 void FUN_801f0678(void);
 void FUN_801f0718(short *param_1);
+int LaserBeam_getExtraSize(void);
+int LaserBeam_func08(void);
+void LaserBeam_render(void);
+void LaserBeam_hitDetect(void);
 
 #endif /* MAIN_DLL_WC_WCLASER_H_ */
