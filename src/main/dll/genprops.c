@@ -4457,9 +4457,9 @@ int flamethrowerspe_getExtraSize(void) { return 0x14; }
 int flamethrowerspe_func08(void) { return 0x0; }
 int shield_getExtraSize(void) { return 0x60; }
 int shield_func08(void) { return 0x0; }
-int fn_80171300(void) { return 0x0; }
+int curve_func11(void) { return 0x0; }
 int curve_getExtraSize(void) { return 0x0; }
-int fn_80171314(void) { return 0x0; }
+int curve_func08(void) { return 0x0; }
 int fn_801713FC(void) { return 0xc; }
 int fn_80171404(void) { return 0x2; }
 int checkpoint4_getExtraSize(void) { return 0x40; }

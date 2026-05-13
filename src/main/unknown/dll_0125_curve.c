@@ -11,20 +11,20 @@
  * Retail object defs: 1
  * Retail object record sizes: 0xA0
  * Retail root placement widths: 13w, 14w, 15w, 17w
- * EN descriptor: 0x80321710 lbl_80321710
+ * EN descriptor: 0x80320AC0 lbl_80320AC0
  * EN descriptor shape: slots=12 mask=000100111111
  *
  * Retail object defs:
  * - 0x0491 curve: class=0x002C, placements=5480, romlists=41, objsize=0xA0, widths=13w x4568, 14w x118, 15w x97, 17w x697, aliases=0x006E
  *
  * EN slot map with reference-only names by slot index:
- * - slot 03: 0x801717FC fn_801717FC ref=init
- * - slot 06: 0x801717CC fn_801717CC ref=render
- * - slot 07: 0x801717C8 fn_801717C8 stub=blr ref=free (stub)
- * - slot 08: 0x801717C0 fn_801717C0 stub=const 0
- * - slot 09: 0x801717B8 fn_801717B8 stub=const 0 ref=getExtraSize (stub)
- * - slot 10: 0x801717B4 fn_801717B4 stub=blr ref=setScale (stub)
- * - slot 11: 0x801717AC fn_801717AC stub=const 0
+ * - slot 03: 0x80171350 curve_init ref=init
+ * - slot 06: 0x80171320 curve_render ref=render
+ * - slot 07: 0x8017131C curve_free stub=blr ref=free (stub)
+ * - slot 08: 0x80171314 curve_func08 stub=const 0
+ * - slot 09: 0x8017130C curve_getExtraSize stub=const 0 ref=getExtraSize (stub)
+ * - slot 10: 0x80171308 curve_setScale stub=blr ref=setScale (stub)
+ * - slot 11: 0x80171300 curve_func11 stub=const 0
  *
  * Reference-only hints:
  * - reference DLL name: curve

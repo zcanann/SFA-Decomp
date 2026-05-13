@@ -1683,7 +1683,7 @@ int ShipBattle_getExtraSize(void) { return 0x140; }
 int fn_801E55C0(void) { return 0xb; }
 int Lamp_getExtraSize(void) { return 0x1; }
 int Flag_getExtraSize(void) { return 0x0; }
-int fn_801E5DCC(void) { return 0x0; }
+int Flag_func08(void) { return 0x0; }
 int SB_ShipGunBroke_getExtraSize(void) { return 0x1; }
 int fn_801E5F7C(void) { return 0x0; }
 int shop_getExtraSize(void) { return 0x5; }
