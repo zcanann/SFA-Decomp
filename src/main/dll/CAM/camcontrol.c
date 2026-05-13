@@ -73,7 +73,7 @@ extern f32 lbl_803E22F8;
 extern f32 lbl_803E22FC;
 extern f32 lbl_803E2300;
 extern f32 lbl_803E1684;
-extern s16 lbl_803DB992;
+extern u16 lbl_803DB992;
 extern undefined lbl_803DD4CA;
 extern s8 lbl_803DD4CB;
 extern undefined4 lbl_803DD4CC;
