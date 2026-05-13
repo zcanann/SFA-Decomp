@@ -33,7 +33,7 @@ extern undefined4 FUN_80286888();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 
-int fn_8014089C(int p);
+int trickyGuardFindBaddieTarget(int p);
 
 extern undefined4* DAT_803dd71c;
 extern f32 lbl_803DC074;
@@ -435,12 +435,12 @@ LAB_8014149c:
 /*
  * --INFO--
  *
- * Function: fn_8014089C
+ * Function: trickyGuardFindBaddieTarget
  * EN v1.0 Address: 0x8014089C
  * EN v1.0 Size: 320b
  */
 #pragma scheduling off
-int fn_8014089C(int p) {
+int trickyGuardFindBaddieTarget(int p) {
     int count;
     f32 d;
     f32 bestDist;
@@ -531,12 +531,12 @@ extern f32 lbl_803E2504;
 /*
  * --INFO--
  *
- * Function: fn_801409DC
+ * Function: trickyFlame
  * EN v1.0 Address: 0x801409DC
  * EN v1.0 Size: 2224b
  */
 #pragma scheduling off
-void fn_801409DC(int p1, int p2) {
+void trickyFlame(int p1, int p2) {
     char *strBase = lbl_8031D2E8;
     int i;
     void **slot;
@@ -786,12 +786,12 @@ void fn_801409DC(int p1, int p2) {
 /*
  * --INFO--
  *
- * Function: fn_8013FFB8
+ * Function: trickyGuard
  * EN v1.0 Address: 0x8013FFB8
  * EN v1.0 Size: 2276b
  */
 #pragma scheduling off
-void fn_8013FFB8(int p1, int p2) {
+void trickyGuard(int p1, int p2) {
     char *strBase = lbl_8031D2E8;
     int *list;
     int count;
@@ -830,7 +830,7 @@ void fn_8013FFB8(int p1, int p2) {
             }
             *(u8 *)(p2 + 0xa) = 3;
         } else {
-            fn_8014089C(p2);
+            trickyGuardFindBaddieTarget(p2);
         }
         break;
     case 3:
@@ -855,7 +855,7 @@ void fn_8013FFB8(int p1, int p2) {
                 trickyDebugPrint(strBase + 0x190);
             }
         }
-        fn_8014089C(p2);
+        trickyGuardFindBaddieTarget(p2);
         break;
     case 4:
         trickyDebugPrint(strBase + 0x684);
@@ -918,7 +918,7 @@ void fn_8013FFB8(int p1, int p2) {
                 }
             }
             *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x10;
-            if (fn_8014089C(p2) == 0) {
+            if (trickyGuardFindBaddieTarget(p2) == 0) {
                 if (*(uint *)(p2 + 0x28) != (uint)(*(int *)(p2 + 0x24) + 0x18)) {
                     *(int *)(p2 + 0x28) = *(int *)(p2 + 0x24) + 0x18;
                     *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & 0xfffffbff;
@@ -1009,7 +1009,7 @@ void fn_8013FFB8(int p1, int p2) {
         trickyDebugPrint(strBase + 0x6c8);
         if ((double)*(f32 *)(p1 + 0x98) > (double)lbl_803E2420) {
             *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x10;
-            if (fn_8014089C(p2) == 0) {
+            if (trickyGuardFindBaddieTarget(p2) == 0) {
                 if (*(uint *)(p2 + 0x28) != (uint)(*(int *)(p2 + 0x24) + 0x18)) {
                     *(int *)(p2 + 0x28) = *(int *)(p2 + 0x24) + 0x18;
                     *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & 0xfffffbff;
