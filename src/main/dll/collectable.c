@@ -2043,10 +2043,10 @@ int fn_80145804(int *obj) {
 #pragma scheduling reset
 #pragma peephole reset
 
-/* fn_80146158: 124b - GameBit_Get cascade returning flag bits. */
+/* Tricky_getAvailableCommands: 124b - GameBit_Get cascade returning command flags. */
 #pragma peephole off
 #pragma scheduling off
-int fn_80146158(void) {
+int Tricky_getAvailableCommands(void) {
     int r = 0;
     if (GameBit_Get(0x4e4) != 0) {
         r = 0xa;
