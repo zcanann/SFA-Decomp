@@ -19,13 +19,13 @@
  * - 0x04FE MagicPlant: dll=0x00FE, placements=217, romlists=32, objsize=0x100, widths=8w x217, aliases=0x02C0
  *
  * Descriptor slot maps:
- * - DLL 0x00FE: lbl_803221B8 (slots=10, mask=0001101111)
- *   slot 03: 0x801802DC fn_801802DC
- *   slot 04: 0x8017FF68 fn_8017FF68
- *   slot 06: 0x8017FEEC fn_8017FEEC
- *   slot 07: 0x8017FE70 fn_8017FE70
- *   slot 08: 0x8017FE5C fn_8017FE5C
- *   slot 09: 0x8017FE54 fn_8017FE54
+ * - DLL 0x00FE: gMagicPlantObjDescriptor @ 0x80321568 (slots=10, mask=0001101111)
+ *   slot 03: 0x8017FD84 MagicPlant_init
+ *   slot 04: 0x8017FA10 MagicPlant_update
+ *   slot 06: 0x8017F994 MagicPlant_render
+ *   slot 07: 0x8017F918 MagicPlant_free
+ *   slot 08: 0x8017F904 MagicPlant_func08
+ *   slot 09: 0x8017F8FC MagicPlant_getExtraSize
  */
 
 #if 0

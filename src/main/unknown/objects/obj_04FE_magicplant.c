@@ -39,13 +39,13 @@
  * - gives magic gems
  *
  * EN descriptor slot map:
- * - descriptor=0x803221B8 lbl_803221B8 (slots=10, mask=0001101111)
- * - slot 03: 0x801802DC fn_801802DC ref=init
- * - slot 04: 0x8017FF68 fn_8017FF68 ref=update
- * - slot 06: 0x8017FEEC fn_8017FEEC ref=render
- * - slot 07: 0x8017FE70 fn_8017FE70 ref=free
- * - slot 08: 0x8017FE5C fn_8017FE5C
- * - slot 09: 0x8017FE54 fn_8017FE54 stub=const 16 ref=getExtraSize (stub)
+ * - descriptor=0x80321568 gMagicPlantObjDescriptor (slots=10, mask=0001101111)
+ * - slot 03: 0x8017FD84 MagicPlant_init ref=init
+ * - slot 04: 0x8017FA10 MagicPlant_update ref=update
+ * - slot 06: 0x8017F994 MagicPlant_render ref=render
+ * - slot 07: 0x8017F918 MagicPlant_free ref=free
+ * - slot 08: 0x8017F904 MagicPlant_func08
+ * - slot 09: 0x8017F8FC MagicPlant_getExtraSize stub=const 16 ref=getExtraSize (stub)
  */
 
 #if 0
