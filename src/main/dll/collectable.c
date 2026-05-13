@@ -2008,8 +2008,57 @@ int fn_80145AD0(int *obj, int *out) {
 #pragma peephole reset
 
 extern u32 GameBit_Get(int bit);
+extern u8 fn_800DBCFC(void *pos,int param_2);
+extern int fn_800DBECC(void *pos);
+extern void fn_800DB224(int pathId,u8 *out);
+extern int Obj_AllocObjectSetup(int objId,int flags);
+extern int Obj_SetupObject(int setup,int param_2,int param_3,int param_4,int param_5);
 extern int fn_800DB0E0(void *pos,int param_2,int param_3);
 extern int randomGetRange(int lo,int hi);
+extern f32 lbl_803E23DC;
+
+/* fn_801451D8: 300b - seed Tricky's path state and ensure the helper object exists. */
+#pragma peephole off
+#pragma scheduling off
+int fn_801451D8(int obj,int state) {
+    u8 pathBytes[16];
+    u32 pathByte = fn_800DBCFC((void *)(obj + 0x18), 0);
+
+    pathByte = (u8)pathByte;
+    pathBytes[0] = pathByte;
+    if (pathByte == 0) {
+        int pathId = fn_800DBECC((void *)(obj + 0x18));
+        if (pathId != 0) {
+            fn_800DB224(pathId & 0xffff, pathBytes);
+        }
+    }
+    if (pathBytes[0] != 0) {
+        f32 resetTimer;
+
+        *(u16 *)(state + 0x532) = pathBytes[0];
+        *(u8 *)(state + 8) = 1;
+        *(u8 *)(state + 10) = 0;
+        resetTimer = lbl_803E23DC;
+        *(f32 *)(state + 0x71c) = resetTimer;
+        *(f32 *)(state + 0x720) = resetTimer;
+        *(s32 *)(state + 0x54) = *(s32 *)(state + 0x54) & -17;
+        *(s32 *)(state + 0x54) = *(s32 *)(state + 0x54) & -65537;
+        *(s32 *)(state + 0x54) = *(s32 *)(state + 0x54) & -131073;
+        *(s32 *)(state + 0x54) = *(s32 *)(state + 0x54) & -262145;
+        *(s8 *)(state + 0xd) = -1;
+    }
+    if (lbl_803DDA48 == 0) {
+        int setup = Obj_AllocObjectSetup(0x18, 0x25);
+        lbl_803DDA48 = Obj_SetupObject(setup, 4, -1, -1, *(int *)(obj + 0x30));
+    }
+    {
+        int ret = 1;
+        *(u8 *)(state + 0x58) = (*(u8 *)(state + 0x58) & 0x7f) | (ret << 7);
+        return ret;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 /* fn_80145794: 72b - if GameBit_Get(0x4e4), OR 0x10000 into obj->_b8->_54. */
 void fn_80145794(int *obj) {
