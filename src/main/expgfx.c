@@ -422,13 +422,13 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
   short foundPool;
   short poolIndex;
   u8 *expgfxBase;
-  char *poolActiveCounts;
-  char *emptyPoolScan;
+  s8 *poolActiveCounts;
+  s8 *emptyPoolScan;
   int scanPoolIndex;
-  char *activeCountBatch;
+  s8 *activeCountBatch;
   short *slotTypeBatch;
   uint *poolActiveMask;
-  int *sourceIdBatch;
+  u32 *sourceIdBatch;
   int batchCount;
   int freeSlotIndex;
   int slotTypeI;
@@ -437,9 +437,9 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
   foundPool = false;
   scanPoolIndex = 0;
   expgfxBase = gExpgfxRuntimeData;
-  sourceIdBatch = (int *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
+  sourceIdBatch = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
   slotTypeBatch = gExpgfxStaticPoolSlotTypeIds;
-  poolActiveCounts = (char *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
+  poolActiveCounts = (s8 *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
   emptyPoolScan = poolActiveCounts;
   slotTypeI = (int)slotType;
   batchCount = EXPGFX_POOL_SEARCH_BATCH_COUNT;
@@ -516,7 +516,7 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
     scanPoolIndex = 0;
     batchCount = EXPGFX_POOL_COUNT - 1;
     do {
-      if (*emptyPoolScan < '\x01') {
+      if (*emptyPoolScan <= 0) {
         poolIndex = (short)scanPoolIndex;
         foundPool = true;
         poolActiveCounts[scanPoolIndex] = 0;
@@ -537,8 +537,8 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
         *poolIndexOut = poolIndex;
         *poolActiveMask = *poolActiveMask | 1 << freeSlotIndex;
         gExpgfxStaticPoolSlotTypeIds[scanPoolIndex] = slotType;
-        ((char *)(gExpgfxRuntimeData + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET))[poolIndex] =
-            ((char *)(gExpgfxRuntimeData + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET))[poolIndex] + '\x01';
+        ((s8 *)(gExpgfxRuntimeData + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET))[poolIndex] =
+            ((s8 *)(gExpgfxRuntimeData + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET))[poolIndex] + 1;
         return 1;
       }
       freeSlotIndex = freeSlotIndex + 1;
