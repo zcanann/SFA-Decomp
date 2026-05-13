@@ -19,8 +19,8 @@
  * - retail message: addToTable usage overflow
  * - retail message: exptab is FULL
  * - retail message: invalid tabindex
- * - EN xref: 0x8009DE60 expgfxAddToTable + 0x74
- * - EN xref: 0x8009DEE8 expgfxAddToTable + 0xFC
+ * - EN xref: 0x8009DE60 expgfx_addToTable + 0x74
+ * - EN xref: 0x8009DEE8 expgfx_addToTable + 0xFC
  * - EN xref: 0x8009F640 expgfx_addremove + 0x374
  * - EN xref: 0x8009F700 expgfx_addremove + 0x434
  *
@@ -29,13 +29,13 @@
  * - blueprint action: corridor-packet, plan stays at the current seed
  *
  * Live EN anchors:
- * - expgfxAddToTable @ 0x8009DDEC reports the addToTable usage overflow
+ * - expgfx_addToTable @ 0x8009DDEC reports the addToTable usage overflow
  *   and exptab full strings.
  * - expgfx_addremove @ 0x8009F2CC reports invalid tabindex and scale overflow.
  * - expgfx_funcs @ 0x8030FA54 is a retail function table; Rena's EN map
- *   reconciles callback slots at 0x8009E004 expgfx_free0C, 0x8009E024
- *   expgfx_func0B_nop, 0x8009E028 expgfx_func0A_nop, 0x8009E02C
- *   expgfx_func09_ret_0, and 0x8009EEB8 expgfx_free08.
+ *   reconciles callback slots at 0x8009E004 expgfx_func0C, 0x8009E024
+ *   expgfx_func0B, 0x8009E028 expgfx_func0A, 0x8009E02C expgfx_func09,
+ *   and 0x8009EEB8 expgfx_func08.
  * - pDll_expgfx @ 0x803DCA88 matches Rena's debug-side loaded-DLL global and
  *   is the shared function-table anchor used by DFP helpers, SHthorntail dust
  *   effects, and expgfx_updateFrameState.
@@ -47,7 +47,7 @@
  * - 0x000B expgfx expgfx.c
  *
  * Reference-side function hints:
- * - expgfxAddToTable
+ * - expgfx_addToTable
  * - expgfx_addremove
  * - expgfx_initialise
  * - expgfx_release

@@ -698,7 +698,7 @@ void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_
 /*
  * --INFO--
  *
- * Function: expgfxAddToTable
+ * Function: expgfx_addToTable
  * EN v1.0 Address: 0x8009DDEC
  * EN v1.0 Size: 288b
  * EN v1.1 Address: 0x8009E078
@@ -710,7 +710,7 @@ void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_
  */
 #pragma scheduling off
 #pragma peephole off
-int expgfxAddToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
+int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
 {
   ExpgfxTableEntry *entry;
   ExpgfxTableEntry *entryBase;
@@ -824,7 +824,7 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
 /*
  * --INFO--
  *
- * Function: expgfx_free0C
+ * Function: expgfx_func0C
  * EN v1.0 Address: 0x8009E004
  * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x8009E290
@@ -834,7 +834,7 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void expgfx_free0C(u32 sourceId)
+void expgfx_func0C(u32 sourceId)
 {
   expgfx_free(sourceId);
   return;
@@ -843,7 +843,7 @@ void expgfx_free0C(u32 sourceId)
 /*
  * --INFO--
  *
- * Function: expgfx_func0B_nop
+ * Function: expgfx_func0B
  * EN v1.0 Address: 0x8009E024
  * EN v1.0 Size: 4b
  * EN v1.1 Address: TODO
@@ -853,14 +853,14 @@ void expgfx_free0C(u32 sourceId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void expgfx_func0B_nop(void)
+void expgfx_func0B(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: expgfx_func0A_nop
+ * Function: expgfx_func0A
  * EN v1.0 Address: 0x8009E028
  * EN v1.0 Size: 4b
  * EN v1.1 Address: TODO
@@ -870,14 +870,14 @@ void expgfx_func0B_nop(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void expgfx_func0A_nop(void)
+void expgfx_func0A(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: expgfx_func09_ret_0
+ * Function: expgfx_func09
  * EN v1.0 Address: 0x8009E02C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: TODO
@@ -887,7 +887,7 @@ void expgfx_func0A_nop(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int expgfx_func09_ret_0(void)
+int expgfx_func09(void)
 {
   return 0;
 }
@@ -1406,7 +1406,7 @@ void renderParticles(void)
 /*
  * --INFO--
  *
- * Function: expgfx_free08
+ * Function: expgfx_func08
  * EN v1.0 Address: 0x8009EEB8
  * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x8009F144
@@ -1416,7 +1416,7 @@ void renderParticles(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void expgfx_free08(u32 sourceId)
+void expgfx_func08(u32 sourceId)
 {
   expgfx_free(sourceId);
   return;
@@ -1813,7 +1813,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIdx, short slot
     attachedSource = NULL;
   }
 
-  subTableIndex = expgfxAddToTable((uint)resourceHandle, (uint)attachedSource, attachedKey1,
+  subTableIndex = expgfx_addToTable((uint)resourceHandle, (uint)attachedSource, attachedKey1,
                                      config->tableKeyType);
   if ((short)subTableIndex == EXPGFX_INVALID_TABLE_INDEX) {
     debugPrintf(sExpgfxInvalidTabIndex);

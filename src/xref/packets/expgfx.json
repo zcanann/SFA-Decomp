@@ -24,7 +24,7 @@
   "functions": [
     {
       "function_start": "0x8009DDEC",
-      "function_name": "expgfxAddToTable",
+      "function_name": "expgfx_addToTable",
       "xrefs": [
         {
           "xref_address": "0x8009DE60",
@@ -32,7 +32,7 @@
           "target_address": "0x8030FC28",
           "target_text": "expgfx.c: addToTable usage overflow",
           "pair_kind": "lis/addi",
-          "function_name": "expgfxAddToTable"
+          "function_name": "expgfx_addToTable"
         },
         {
           "xref_address": "0x8009DEE8",
@@ -40,7 +40,7 @@
           "target_address": "0x8030FC50",
           "target_text": "expgfx.c: exptab is FULL",
           "pair_kind": "lis/addi",
-          "function_name": "expgfxAddToTable"
+          "function_name": "expgfx_addToTable"
         }
       ]
     },
