@@ -1615,6 +1615,7 @@ int fn_8014A150(int obj,int state,void *from,void *to)
 
 /* fn_8014A304: 760b - update Tricky's four quadrant line-of-sight state bits. */
 #pragma scheduling off
+#pragma peephole off
 void fn_8014A304(f32 radius,int obj,int state)
 {
   u8 traceHit[4];
@@ -1691,6 +1692,7 @@ void fn_8014A304(f32 radius,int obj,int state)
     }
   }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* fn_8014A5FC: 624b - apply Tricky floor response and movement-control callbacks. */
