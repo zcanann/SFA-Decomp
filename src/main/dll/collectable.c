@@ -10,6 +10,7 @@
 #define TRICKY_CONTROL_FLAG_OFFSET_FLOOR_Y 0x20000000
 #define TRICKY_CONTROL_FLAG_FLOOR_RESPONSE_MASK 0x28000002
 #define TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR 0x10
+#define TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID 0x46406
 
 extern undefined4 FUN_800067e8();
 extern bool FUN_800067f0();
@@ -1934,11 +1935,11 @@ void fn_8014658C(int obj)
     }
   }
   else {
-    i = ObjList_FindObjectById(0x46406);
+    i = ObjList_FindObjectById(TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID);
     if ((i != 0) && (getXZDistance((f32 *)(obj + 0x18),(f32 *)(i + 0x18)) < lbl_803E2540)) {
       heightTrackBit = 1;
       *(u8 *)(state + 0x58) = (*(u8 *)(state + 0x58) & 0xdf) | (heightTrackBit << 5);
-      *(u32 *)(state + 0x5c) = 0x46406;
+      *(u32 *)(state + 0x5c) = TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID;
       *(f32 *)(state + 0x60) = lbl_803E23DC;
     }
   }
