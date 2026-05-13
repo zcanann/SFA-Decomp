@@ -1123,7 +1123,7 @@ int SB_Propeller_getExtraSize(void) { return 0x10; }
 int fn_801E2B28(void) { return 0x10; }
 int fn_801E2B30(void) { return 0x1; }
 int SB_ShipMast_getExtraSize(void) { return 0x0; }
-int fn_801E32C4(void) { return 0x0; }
+int SB_ShipMast_func08(void) { return 0x0; }
 int SB_ShipGun_getExtraSize(void) { return 0x10; }
 
 /* sda21 accessors. */
