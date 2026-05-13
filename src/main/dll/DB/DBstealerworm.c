@@ -1118,7 +1118,7 @@ void SB_ShipMast_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int SB_Galleon_getExtraSize(void) { return 0xb4; }
-int fn_801E1F10(void) { return 0x0; }
+int SB_Galleon_func08(void) { return 0x0; }
 int SB_Propeller_getExtraSize(void) { return 0x10; }
 int fn_801E2B28(void) { return 0x10; }
 int fn_801E2B30(void) { return 0x1; }
@@ -1136,7 +1136,7 @@ u32 fn_801E2570(void) { return lbl_803DDC40; }
 u8 SB_Galleon_render2(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x79); }
 
 /* 16b chained patterns. */
-s32 fn_801E1E64(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x2b); }
+s32 SB_Galleon_func11(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x2b); }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5810;
