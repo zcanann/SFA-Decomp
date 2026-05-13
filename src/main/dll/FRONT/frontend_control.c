@@ -5,17 +5,29 @@ extern u32 getButtonsHeld(int port);
 extern u32 getButtonsJustPressed(int port);
 extern void Sfx_PlayFromObject(int sfx, int id);
 extern void drawTexture(void *tex, int p2, f32 x, f32 y, int alpha);
-extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
+extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShowStr(void *str, int id, int p3, int p4);
 extern int sprintf(char *buf, const char *fmt, ...);
+
+typedef struct FrontendSaveSlot {
+    char name[4];
+    u8 completionPercent;
+    u8 magicCount;
+    u8 lifeCount;
+    u8 pad07;
+    u32 playTimeSeconds;
+    u8 pad0C[0x21 - 0x0C];
+    u8 cheatFlag;
+    u8 pad22[0x24 - 0x22];
+} FrontendSaveSlot;
 
 extern u8 lbl_803DD6BC;
 extern u8 lbl_803DD6BD;
 extern u8 lbl_803DD6BE;
 extern s8 lbl_803DD6A4;
 extern u8 lbl_803DD6A5;
-extern int lbl_803DD6A8;
-extern int lbl_803DD6B0;
+extern FrontendSaveSlot *lbl_803DD6A8;
+extern FrontendSaveSlot *lbl_803DD6B0;
 extern u8 enableDebugText;
 extern u16 lbl_8031A814[6];
 extern u16 lbl_8031A820[6];
@@ -41,11 +53,15 @@ void saveFileSelect_checkCheatCodes(void)
     u32 held;
     u32 pressed;
     u32 nibbles;
+    u32 hi;
+    u32 midHi;
+    u32 low;
+    u32 midLow;
 
     if (lbl_803DD6BC != 0 || lbl_803DD6BD != 0) {
-        u8 inc = lbl_803DD6BE + 1;
+        int inc = lbl_803DD6BE + 1;
         lbl_803DD6BE = inc;
-        if (inc > 0xF) {
+        if ((u8)inc > 0xF) {
             lbl_803DD6BC = 0;
             lbl_803DD6BD = 0;
             lbl_803DD6BE = 0;
@@ -56,12 +72,13 @@ void saveFileSelect_checkCheatCodes(void)
 
     if (lbl_803DD6BD == 0) {
         pressed = (u16)getButtonsJustPressed(0);
-        nibbles = (int)(pressed & 0xF000) >> 8;
-        nibbles |= (pressed & 0xF00) << 4;
-        nibbles |= (pressed & 0xF) << 8;
-        nibbles |= (int)(pressed & 0xF0) >> 4;
+        hi = (int)(pressed & 0xF000) >> 8;
+        midHi = (pressed & 0xF00) << 4;
+        low = (pressed & 0xF) << 8;
+        midLow = (int)(pressed & 0xF0) >> 4;
+        nibbles = hi | (midHi | (low | midLow));
         if ((int)(nibbles & lbl_8031A814[lbl_803DD6BC]) != 0) {
-            lbl_803DD6BC = lbl_803DD6BC + 1;
+            lbl_803DD6BC++;
             lbl_803DD6BE = 0;
         }
         if (lbl_803DD6BC == 5) {
@@ -73,16 +90,17 @@ void saveFileSelect_checkCheatCodes(void)
 
     {
         pressed = (u16)getButtonsJustPressed(0);
-        nibbles = (int)(pressed & 0xF000) >> 8;
-        nibbles |= (pressed & 0xF00) << 4;
-        nibbles |= (pressed & 0xF) << 8;
-        nibbles |= (int)(pressed & 0xF0) >> 4;
+        hi = (int)(pressed & 0xF000) >> 8;
+        midHi = (pressed & 0xF00) << 4;
+        low = (pressed & 0xF) << 8;
+        midLow = (int)(pressed & 0xF0) >> 4;
+        nibbles = hi | (midHi | (low | midLow));
         if ((int)(nibbles & lbl_8031A820[lbl_803DD6BD]) != 0) {
-            lbl_803DD6BD = lbl_803DD6BD + 1;
+            lbl_803DD6BD++;
             lbl_803DD6BE = 0;
         }
         if (lbl_803DD6BD == 5) {
-            *(u8 *)(lbl_803DD6B0 + (int)lbl_803DD6A4 * 0x24 + 0x21) = 5;
+            lbl_803DD6B0[(int)lbl_803DD6A4].cheatFlag = 5;
             lbl_803DD6A5 = 1;
             Sfx_PlayFromObject(0, 0x58);
         }
@@ -109,28 +127,26 @@ void saveSelect_drawText(int param_1, int param_2)
     gameTextSetColor(0xff, 0xff, 0xff, param_2);
 
     lbl_803DD6B0 = lbl_803DD6A8;
-    gameTextShowStr((void *)(lbl_803DD6B0 + (int)lbl_803DD6A4 * 0x24), 0x41, 0, 0);
+    gameTextShowStr(&lbl_803DD6B0[(int)lbl_803DD6A4], 0x41, 0, 0);
 
     sprintf(buf, sFrontendCompletionPercentFormat,
-            (u32) * (u8 *)(lbl_803DD6B0 + (int)lbl_803DD6A4 * 0x24 + 4));
+            (u32)lbl_803DD6B0[(int)lbl_803DD6A4].completionPercent);
     gameTextShowStr(buf, 0x42, 0, 0);
 
     {
-        u32 secs = *(u32 *)(lbl_803DD6B0 + (int)lbl_803DD6A4 * 0x24 + 8);
+        u32 secs = lbl_803DD6B0[(int)lbl_803DD6A4].playTimeSeconds;
         u32 mins = secs / 0xe10;
-        u32 rem = secs - mins * 0xe10;
-        u32 m_in_h = rem / 0x3c;
-        u32 s_in_m = rem - m_in_h * 0x3c;
-        sprintf(buf, sFrontendTimeFormat, (u32)(u8)mins, (u32)(u8)m_in_h, (u32)(u8)s_in_m);
+        int rem = secs - mins * 0xe10;
+        int m_in_h = rem / 0x3c;
+        int s_in_m = rem - m_in_h * 0x3c;
+        sprintf(buf, sFrontendTimeFormat, mins, (u32)(u8)m_in_h, (u32)(u8)s_in_m);
         gameTextShowStr(buf, 0x43, 0, 0);
     }
 
-    sprintf(buf, sFrontendSingleDigitFormat,
-            (u32) * (u8 *)(lbl_803DD6B0 + (int)lbl_803DD6A4 * 0x24 + 6));
+    sprintf(buf, sFrontendSingleDigitFormat, (u32)lbl_803DD6B0[(int)lbl_803DD6A4].lifeCount);
     gameTextShowStr(buf, 0x44, 0, 0);
 
-    sprintf(buf, sFrontendSingleDigitFormat,
-            (u32) * (u8 *)(lbl_803DD6B0 + (int)lbl_803DD6A4 * 0x24 + 5));
+    sprintf(buf, sFrontendSingleDigitFormat, (u32)lbl_803DD6B0[(int)lbl_803DD6A4].magicCount);
     gameTextShowStr(buf, 0x45, 0, 0);
 }
 #pragma scheduling reset
