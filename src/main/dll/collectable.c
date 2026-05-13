@@ -21,6 +21,7 @@ extern uint FUN_80017760();
 extern void Sfx_RemoveLoopedObjectSound(int param_1,int param_2);
 extern int Sfx_IsPlayingFromObjectChannel(int param_1,int param_2);
 extern int Sfx_PlayFromObject(int obj,int sfxId);
+extern int Sfx_PlayFromObjectLimited(int obj,int sfxId,int maxCount);
 extern undefined8 FUN_800178ec();
 extern undefined4 FUN_80017a28();
 extern undefined4 FUN_80017a30();
@@ -1176,6 +1177,46 @@ void Tricky_destroy(int obj,int shouldKeepFlameChildren)
   }
   return;
 }
+
+/* fn_80148C18: 372b - resume Tricky visibility, collision, and fade after command finish. */
+#pragma scheduling off
+void fn_80148C18(int obj,int state)
+{
+  u8 moveId;
+
+  *(u8 *)(state + 0x2ef) = 1;
+  if (((*(u32 *)(state + 0x2dc) & 0x1000) != 0) &&
+      ((*(u32 *)(state + 0x2e0) & 0x1000) == 0)) {
+    *(s16 *)(obj + 6) = *(s16 *)(obj + 6) & 0xbfff;
+    moveId = *(u8 *)(state + 0x320);
+    *(f32 *)(state + 0x308) = lbl_803E256C / (lbl_803E2570 * *(f32 *)(state + 0x314));
+    *(u8 *)(state + 0x323) = 1;
+    ObjAnim_SetCurrentMove(lbl_803E2574,obj,moveId,0x10);
+    if (*(int *)(obj + 0x54) != 0) {
+      *(u8 *)(*(int *)(obj + 0x54) + 0x70) = 0;
+    }
+    *(u32 *)(state + 0x2e8) = *(u32 *)(state + 0x2e8) | 4;
+    Sfx_PlayFromObjectLimited(obj,1099,2);
+    ObjHits_EnableObject(obj);
+  }
+  if ((*(u32 *)(state + 0x2dc) & 0x40000000) == 0) {
+    *(u8 *)(obj + 0x36) = (int)(lbl_803E257C * *(f32 *)(obj + 0x98));
+    *(f32 *)(state + 0x30c) = *(f32 *)(obj + 0x98);
+  }
+  else {
+    *(f32 *)(state + 0x308) = lbl_803E2578;
+    *(u8 *)(state + 0x323) = 0;
+    ObjAnim_SetCurrentMove(lbl_803E2574,obj,0,0);
+    if (*(int *)(obj + 0x54) != 0) {
+      *(u8 *)(*(int *)(obj + 0x54) + 0x70) = 0;
+    }
+    *(u32 *)(state + 0x2dc) = *(u32 *)(state + 0x2dc) & 0xffffef7f;
+    *(u32 *)(state + 0x2e8) = *(u32 *)(state + 0x2e8) & 0xfffffffb;
+    *(f32 *)(state + 0x30c) = lbl_803E2574;
+    *(u8 *)(obj + 0x36) = 0xff;
+  }
+}
+#pragma scheduling reset
 
 /* fn_80148D8C: 828b - handle Tricky's completed-command fade and reward spawning. */
 #pragma scheduling off
