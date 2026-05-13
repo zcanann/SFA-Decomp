@@ -2825,6 +2825,7 @@ int fn_80145828(int *obj,int targetObj) {
 #pragma peephole reset
 
 /* fn_801458BC: 260b - start or refresh Tricky's targeted command state. */
+#pragma peephole off
 #pragma scheduling off
 void fn_801458BC(int *obj,int commandEnabled,int targetObj) {
     int *state = (int*)obj[0xb8/4];
@@ -2837,6 +2838,7 @@ void fn_801458BC(int *obj,int commandEnabled,int targetObj) {
         } else {
             u32 busy = state[0x54/4] & 0x10;
             void *nextTarget;
+            s32 clearTargetAnim;
 
             if (busy != 0) {
                 return;
@@ -2847,8 +2849,7 @@ void fn_801458BC(int *obj,int commandEnabled,int targetObj) {
             state[0x24/4] = targetObj;
             nextTarget = (void *)(state[0x700/4] + 8);
             if ((void *)state[0x28/4] != nextTarget) {
-                s32 clearTargetAnim = -1025;
-
+                clearTargetAnim = -1025;
                 state[0x28/4] = (int)nextTarget;
                 state[0x54/4] = state[0x54/4] & clearTargetAnim;
                 *(s16*)((u8*)state + 0xd2) = 0;
@@ -2856,10 +2857,12 @@ void fn_801458BC(int *obj,int commandEnabled,int targetObj) {
             *((u8*)state + 10) = 0;
         }
     } else {
-        state[0x54/4] |= 0x10000;
+        u32 queuedTargetMask = 0x10000;
+        state[0x54/4] = state[0x54/4] | queuedTargetMask;
     }
 }
 #pragma scheduling reset
+#pragma peephole reset
 
 /* Tricky_getAvailableCommands: 124b - GameBit_Get cascade returning command flags. */
 #pragma peephole off
