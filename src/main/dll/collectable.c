@@ -75,6 +75,7 @@ extern int FUN_800575b4();
 extern int FUN_800620e8();
 extern u16 hitDetectFn_80065e50(f32 x,f32 y,f32 z,int obj,int *hits,int param_6,int param_7);
 extern undefined4 FUN_8006dca8();
+extern void fn_8006EDCC(f32 param_1,f32 param_2,int obj,u16 param_4,int param_5,float *points,void *aux);
 extern undefined4 FUN_8006ef38();
 extern undefined4 FUN_8008111c();
 extern undefined4 FUN_80081120();
@@ -194,6 +195,8 @@ extern f32 lbl_803DC078;
 extern f32 lbl_803DDA58;
 extern f32 lbl_803DDA5C;
 extern f32 timeDelta;
+extern f32 oneOverTimeDelta;
+extern void *lbl_803DCAA8;
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E8;
 extern f32 lbl_803E24B8;
@@ -205,6 +208,8 @@ extern f32 lbl_803E25A0;
 extern f32 lbl_803E25B0;
 extern f32 lbl_803E25B4;
 extern f32 lbl_803E25B8;
+extern f32 lbl_803E25BC;
+extern f32 lbl_803E25C0;
 extern f32 lbl_803E25C4;
 extern f32 lbl_803E25C8;
 extern f32 lbl_803E306C;
@@ -1312,6 +1317,70 @@ void fn_8014A304(f32 radius,int obj,int state)
     else {
       *(u32 *)(state + 0x2dc) &= ~visibilityBits[i];
     }
+  }
+}
+#pragma scheduling reset
+
+/* fn_8014A5FC: 624b - apply Tricky floor response and movement-control callbacks. */
+#pragma scheduling off
+void fn_8014A5FC(int obj,int state)
+{
+  f32 nearestFloorY;
+  f32 nearestSpecialY;
+  f32 points[6];
+  u32 flags;
+  f32 dy;
+
+  *(u32 *)(state + 0x2dc) &= 0xf7efffff;
+  flags = *(u32 *)(state + 0x2e4);
+  if ((flags & 0x28000002) != 0) {
+    fn_8014A86C(obj,state,&nearestFloorY,&nearestSpecialY);
+    flags = *(u32 *)(state + 0x2e4);
+    if ((flags & 0x08000000) != 0) {
+      *(f32 *)(obj + 0x28) = (nearestSpecialY - *(f32 *)(obj + 0x10)) * oneOverTimeDelta;
+    }
+    else if ((flags & 0x20000000) != 0) {
+      dy = nearestFloorY - *(f32 *)(obj + 0x10);
+      if ((lbl_803E25BC < dy) && (dy < lbl_803E25A0)) {
+        *(f32 *)(obj + 0x28) = (lbl_803E25C0 + dy) * oneOverTimeDelta;
+        *(u32 *)(state + 0x2dc) |= 0x08000000;
+      }
+    }
+    else {
+      dy = nearestFloorY - *(f32 *)(obj + 0x10);
+      if ((lbl_803E25BC < dy) && (dy < lbl_803E25A0)) {
+        *(f32 *)(obj + 0x28) = dy * oneOverTimeDelta;
+        *(u32 *)(state + 0x2dc) |= 0x00100000;
+      }
+    }
+    if ((*(u32 *)(state + 0x2e4) & 8) == 0) {
+      *(u8 *)(state + 0x25f) = 0;
+    }
+  }
+  else {
+    if ((flags & 0xc) != 0) {
+      *(u8 *)(state + 0x25f) = 1;
+    }
+    else {
+      *(u8 *)(state + 0x25f) = 0;
+    }
+  }
+
+  (*(void (**)(f32,int,int))(*(int *)lbl_803DCAA8 + 0x10))(timeDelta,obj,state + 4);
+  if ((*(u32 *)(state + 0x2e4) & 4) != 0) {
+    (*(void (**)(int,int))(*(int *)lbl_803DCAA8 + 0x14))(obj,state + 4);
+  }
+  (*(void (**)(f32,int,int))(*(int *)lbl_803DCAA8 + 0x18))(timeDelta,obj,state + 4);
+
+  if (((*(s8 *)(state + 0x25f) != 0) && ((*(u32 *)(state + 0x2e4) & 0x28000002) == 0)) &&
+      ((*(u8 *)(state + 0x264) & 0x10) != 0)) {
+    *(f32 *)(obj + 0x28) = lbl_803E2574;
+    *(u32 *)(state + 0x2dc) |= 0x00100000;
+  }
+  if ((*(u32 *)(state + 0x2e4) & 0x00200000) != 0) {
+    ObjPath_GetPointWorldPositionArray(obj,2,2,points);
+    fn_8006EDCC(*(f32 *)(state + 0x310),lbl_803E256C,obj,*(u16 *)(state + 0x2f8),7,points,
+                (void *)(state + 4));
   }
 }
 #pragma scheduling reset
