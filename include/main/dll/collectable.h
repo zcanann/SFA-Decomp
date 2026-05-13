@@ -22,9 +22,7 @@ void sideCommandEnable(int param_1,int param_2,char param_3,int param_4);
 void FUN_801460b8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 uint FUN_80146874(void);
-void Tricky_destroy(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                    undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                    int param_9,int param_10);
+void Tricky_destroy(int obj,int shouldKeepFlameChildren);
 void FUN_80146c14(void);
 void FUN_80146db8(int param_1);
 void FUN_80146f94(undefined8 param_1,double param_2,double param_3,undefined8 param_4,

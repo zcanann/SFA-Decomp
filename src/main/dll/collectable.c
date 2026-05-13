@@ -17,6 +17,8 @@ extern double FUN_80017708();
 extern uint FUN_80017730();
 extern undefined4 FUN_80017748();
 extern uint FUN_80017760();
+extern void Sfx_RemoveLoopedObjectSound(int param_1,int param_2);
+extern int Sfx_IsPlayingFromObjectChannel(int param_1,int param_2);
 extern undefined8 FUN_800178ec();
 extern undefined4 FUN_80017a28();
 extern undefined4 FUN_80017a30();
@@ -44,10 +46,13 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjLink_DetachChild();
 extern undefined8 ObjLink_AttachChild();
+extern void Obj_FreeObject(int param_1);
 extern undefined4 ObjPath_GetPointWorldPositionArray();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_80038f38();
 extern undefined8 FUN_80039468();
+extern void objAudioFn_800393f8(int param_1,void *param_2,int param_3,int param_4,int param_5,
+                                int param_6);
 extern int FUN_8003964c();
 extern undefined4 FUN_8003a1c4();
 extern undefined4 fn_8003A328();
@@ -56,6 +61,7 @@ extern undefined4 FUN_8003b280();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80046f44();
 extern undefined4 FUN_80046f84();
+extern void fn_8004B594(void *param_1);
 extern undefined8 FUN_800571f8();
 extern int FUN_800575b4();
 extern int FUN_800620e8();
@@ -70,7 +76,9 @@ extern ushort FUN_800db690();
 extern undefined4 FUN_800dbc68();
 extern undefined8 FUN_800dd3dc();
 extern undefined4 FUN_800dd3e0();
+extern void fn_800DD640(void);
 extern undefined8 FUN_80135d54();
+extern void fn_801389E0(int param_1,int param_2,int *param_3);
 extern undefined4 FUN_80135f38();
 extern undefined4 FUN_80136310();
 extern undefined4 FUN_8013651c();
@@ -103,6 +111,7 @@ extern undefined4 FUN_80159c60();
 extern undefined4 FUN_8015a4c4();
 extern undefined4 FUN_8015b2cc();
 extern undefined4 FUN_801778d0();
+extern void objSetAnimSpeedTo1(int param_1);
 extern double FUN_80194a70();
 extern undefined4 FUN_8020a568();
 extern undefined4 FUN_80247eb8();
@@ -158,6 +167,8 @@ extern undefined4 DAT_803e31f0;
 extern undefined4 DAT_803e31f4;
 extern undefined4 DAT_803e31f8;
 extern char sSidekickCommandDebugTextBlock[];
+extern undefined4 lbl_803DDA48;
+extern undefined4* lbl_803DCA78;
 extern f64 DOUBLE_803e30f0;
 extern f64 DOUBLE_803e3218;
 extern f32 lbl_803DC074;
@@ -1044,8 +1055,8 @@ uint FUN_80146874(void)
  * --INFO--
  *
  * Function: Tricky_destroy
- * EN v1.0 Address: 0x801468F0
- * EN v1.0 Size: 804b
+ * EN v1.0 Address: 0x801461DC
+ * EN v1.0 Size: 480b
  * EN v1.1 Address: 0x80146604
  * EN v1.1 Size: 480b
  * JP Address: TODO
@@ -1053,61 +1064,54 @@ uint FUN_80146874(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void Tricky_destroy(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                    undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                    int param_9,int param_10)
+void Tricky_destroy(int obj,int shouldKeepFlameChildren)
 {
   bool bVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  undefined8 uVar5;
+  int state;
+  int i;
+  int childSlot;
   
-  iVar2 = *(int *)(param_9 + 0xb8);
-  FUN_80046f44((uint *)(iVar2 + 0x538));
-  FUN_80046f44((uint *)(iVar2 + 0x568));
-  FUN_80046f44((uint *)(iVar2 + 0x598));
-  FUN_80046f44((uint *)(iVar2 + 0x5c8));
-  FUN_80046f44((uint *)(iVar2 + 0x5f8));
-  FUN_80046f44((uint *)(iVar2 + 0x628));
-  FUN_80046f44((uint *)(iVar2 + 0x658));
-  FUN_80046f44((uint *)(iVar2 + 0x688));
-  FUN_80046f44((uint *)(iVar2 + 0x6b8));
-  ObjGroup_RemoveObject(param_9,1);
-  (**(code **)(*DAT_803dd6f8 + 0x14))(param_9);
-  if ((param_10 == 0) && ((*(uint *)(iVar2 + 0x54) & 0x800) != 0)) {
-    *(uint *)(iVar2 + 0x54) = *(uint *)(iVar2 + 0x54) & 0xfffff7ff;
-    *(uint *)(iVar2 + 0x54) = *(uint *)(iVar2 + 0x54) | 0x1000;
-    iVar4 = 0;
-    iVar3 = iVar2;
+  state = *(int *)(obj + 0xb8);
+  fn_8004B594((void *)(state + 0x538));
+  fn_8004B594((void *)(state + 0x568));
+  fn_8004B594((void *)(state + 0x598));
+  fn_8004B594((void *)(state + 0x5c8));
+  fn_8004B594((void *)(state + 0x5f8));
+  fn_8004B594((void *)(state + 0x628));
+  fn_8004B594((void *)(state + 0x658));
+  fn_8004B594((void *)(state + 0x688));
+  fn_8004B594((void *)(state + 0x6b8));
+  ObjGroup_RemoveObject(obj,1);
+  (**(code **)(*lbl_803DCA78 + 0x14))(obj);
+  if ((shouldKeepFlameChildren == 0) && ((*(uint *)(state + 0x54) & 0x800) != 0)) {
+    *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xfffff7ff;
+    *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 0x1000;
+    i = 0;
+    childSlot = state;
     do {
-      FUN_801778d0(*(int *)(iVar3 + 0x700));
-      iVar3 = iVar3 + 4;
-      iVar4 = iVar4 + 1;
-    } while (iVar4 < 7);
-    FUN_800068cc();
-    iVar3 = *(int *)(param_9 + 0xb8);
-    if (((*(byte *)(iVar3 + 0x58) >> 6 & 1) == 0) &&
-       (((0x2f < *(short *)(param_9 + 0xa0) || (*(short *)(param_9 + 0xa0) < 0x29)) &&
-        (bVar1 = FUN_800067f0(param_9,0x10), !bVar1)))) {
-      FUN_80039468(param_9,iVar3 + 0x3a8,0x29d,0,0xffffffff,0);
+      objSetAnimSpeedTo1(*(int *)(childSlot + 0x700));
+      childSlot = childSlot + 4;
+      i = i + 1;
+    } while (i < 7);
+    Sfx_RemoveLoopedObjectSound(obj,0x3dc);
+    childSlot = *(int *)(obj + 0xb8);
+    if (((*(byte *)(childSlot + 0x58) >> 6 & 1) == 0) &&
+       (((0x2f < *(short *)(obj + 0xa0) || (*(short *)(obj + 0xa0) < 0x29)) &&
+        (bVar1 = Sfx_IsPlayingFromObjectChannel(obj,0x10), !bVar1)))) {
+      objAudioFn_800393f8(obj,(void *)(childSlot + 0x3a8),0x29d,0,0xffffffff,0);
     }
   }
-  uVar5 = FUN_800dd3dc();
-  uVar5 = FUN_80135d54(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar2,
-                       (int *)(iVar2 + 0x7a8));
-  uVar5 = FUN_80135d54(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar2,
-                       (int *)(iVar2 + 0x7b0));
-  uVar5 = FUN_80135d54(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar2,
-                       (int *)(iVar2 + 0x7b8));
-  if (*(int *)(iVar2 + 0x7cc) != 0) {
-    uVar5 = ObjLink_DetachChild(param_9,*(int *)(iVar2 + 0x7cc));
-    uVar5 = FUN_80017ac8(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                         *(int *)(iVar2 + 0x7cc));
+  fn_800DD640();
+  fn_801389E0(obj,state,(int *)(state + 0x7a8));
+  fn_801389E0(obj,state,(int *)(state + 0x7b0));
+  fn_801389E0(obj,state,(int *)(state + 0x7b8));
+  if (*(int *)(state + 0x7cc) != 0) {
+    ObjLink_DetachChild(obj,*(int *)(state + 0x7cc));
+    Obj_FreeObject(*(int *)(state + 0x7cc));
   }
-  if ((*(char *)(iVar2 + 0x58) < '\0') && (DAT_803de6c8 != 0)) {
-    FUN_80017ac8(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,DAT_803de6c8);
-    DAT_803de6c8 = 0;
+  if (((*(byte *)(state + 0x58) >> 7 & 1) != 0) && (lbl_803DDA48 != 0)) {
+    Obj_FreeObject(lbl_803DDA48);
+    lbl_803DDA48 = 0;
   }
   return;
 }
