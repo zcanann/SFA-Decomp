@@ -31,7 +31,7 @@ extern undefined8 ObjGroup_RemoveObject();
 /*
  * --INFO--
  *
- * Function: fn_8017AC2C
+ * Function: pressureswitchfb_updateStateMode
  * EN v1.0 Address: 0x8017AC2C
  * EN v1.0 Size: 348b
  * EN v1.1 Address: 0x8017AC40
@@ -43,7 +43,7 @@ extern undefined8 ObjGroup_RemoveObject();
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 fn_8017AC2C(int obj,undefined4 param_2,int stateParam)
+undefined4 pressureswitchfb_updateStateMode(int obj,undefined4 param_2,int stateParam)
 {
   s16 objType;
   int config;
@@ -51,7 +51,7 @@ undefined4 fn_8017AC2C(int obj,undefined4 param_2,int stateParam)
   u32 offset;
   u8 i;
   int runtime;
-  int particleObj;
+  int trackedObjectSlot;
 
   runtime = *(int *)(obj + 0xb8);
   config = *(int *)(obj + 0x4c);
@@ -74,12 +74,12 @@ undefined4 fn_8017AC2C(int obj,undefined4 param_2,int stateParam)
            PRESSURESWITCHFB_STATE_RESET) {
     for (i = 0; i < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT;
          i += PRESSURESWITCHFB_TRACKED_OBJECT_BATCH) {
-      particleObj = runtime + (u32)i * 4 + PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET;
-      *(undefined4 *)(particleObj + 0x0) = 0;
-      *(undefined4 *)(particleObj + 0x4) = 0;
-      *(undefined4 *)(particleObj + 0x8) = 0;
-      *(undefined4 *)(particleObj + 0xc) = 0;
-      *(undefined4 *)(particleObj + 0x10) = 0;
+      trackedObjectSlot = runtime + (u32)i * 4 + PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET;
+      *(undefined4 *)(trackedObjectSlot + 0x0) = 0;
+      *(undefined4 *)(trackedObjectSlot + 0x4) = 0;
+      *(undefined4 *)(trackedObjectSlot + 0x8) = 0;
+      *(undefined4 *)(trackedObjectSlot + 0xc) = 0;
+      *(undefined4 *)(trackedObjectSlot + 0x10) = 0;
     }
     *(f32 *)(obj + 0x14) = *(f32 *)(config + PRESSURESWITCHFB_CONFIG_BASE_COORD_OFFSET);
     *(f32 *)(obj + 0x10) = *(f32 *)(runtime + PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET);

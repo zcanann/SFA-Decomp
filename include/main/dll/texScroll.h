@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-undefined4 fn_8017AC2C(int obj,undefined4 param_2,int stateParam);
+undefined4 pressureswitchfb_updateStateMode(int obj,undefined4 param_2,int stateParam);
 int pressureswitchfb_getExtraSize(void);
 void pressureswitchfb_free(int obj);
 
