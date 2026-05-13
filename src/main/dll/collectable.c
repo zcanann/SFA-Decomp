@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "dolphin/mtx.h"
 #include "main/dll/collectable.h"
 
 extern undefined4 FUN_800067e8();
@@ -31,6 +32,8 @@ extern undefined8 FUN_80017ac8();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern int FUN_80017af8();
+extern int voxmaps_traceLine(void *from,void *to,int param_3,u8 *hit,int param_5);
+extern void voxmaps_worldToGrid(Vec *world,void *grid);
 extern int ObjList_FindObjectById(int objId);
 extern undefined4 FUN_8002f6ac();
 extern int FUN_8002fc3c();
@@ -140,6 +143,8 @@ extern undefined4 FUN_80294ca8();
 extern undefined4 FUN_80294dc4();
 extern void trickyReportError(const char *fmt, ...);
 extern void objParticleFn_80099d84(f32 param_1,f32 param_2,int obj,int param_4,int param_5);
+extern int objBboxFn_800640cc(f32 radius,Vec *from,Vec *to,int mode,void *hit,int obj,int param_7,
+                              int param_8,int param_9,int param_10);
 
 extern undefined4 DAT_802c2948;
 extern undefined4 DAT_802c294c;
@@ -190,6 +195,9 @@ extern f32 lbl_803E23E8;
 extern f32 lbl_803E24B8;
 extern f32 lbl_803E253C;
 extern f32 lbl_803E2540;
+extern f32 lbl_803E256C;
+extern f32 lbl_803E25A0;
+extern f32 lbl_803E25B0;
 extern f32 lbl_803E306C;
 extern f32 lbl_803E3078;
 extern f32 lbl_803E307C;
@@ -1163,6 +1171,59 @@ void fn_8014A058(int obj,int state)
       *(s16 *)(state + 0x2b4) = 0;
     }
   }
+}
+#pragma scheduling reset
+
+/* fn_8014A150: 436b - line-of-sight and bbox visibility check between Tricky and a target. */
+#pragma scheduling off
+int fn_8014A150(int obj,int state,void *from,void *to)
+{
+  u8 traceHit[4];
+  s16 toGrid[4];
+  s16 fromGrid[4];
+  Vec probe;
+  Vec delta;
+  u8 bboxHit[116];
+  s16 setupId;
+  u8 visible;
+  int keepGroundOffset;
+
+  traceHit[0] = 0;
+  visible = 0;
+  if (*(u32 *)(state + 0x29c) != 0) {
+    probe.x = *(f32 *)((int)from + 0);
+    probe.y = *(f32 *)((int)from + 4);
+    probe.z = *(f32 *)((int)from + 8);
+    keepGroundOffset = 1;
+    setupId = *(s16 *)(obj + 0x46);
+    if (((((setupId != 0x613) && (setupId != 0x642)) && (setupId != 0x3fe)) &&
+        ((setupId != 0x7c6) && (setupId != 0x7c8))) &&
+        ((setupId != 0x251) && (setupId != 0x851))) {
+      probe.y += lbl_803E25A0;
+      keepGroundOffset = 0;
+    }
+    voxmaps_worldToGrid(&probe,fromGrid);
+    probe.x = *(f32 *)((int)to + 0);
+    probe.y = lbl_803E25A0 + *(f32 *)((int)to + 4);
+    probe.z = *(f32 *)((int)to + 8);
+    voxmaps_worldToGrid(&probe,toGrid);
+    PSVECSubtract((Vec *)from,&probe,&delta);
+    if (PSVECMag(&delta) < lbl_803E25B0) {
+      if (*(u32 *)(obj + 0x30) == 0) {
+        visible = voxmaps_traceLine(toGrid,fromGrid,0,traceHit,0);
+      }
+      if ((keepGroundOffset == 0) && (traceHit[0] == 1)) {
+        visible = 1;
+      }
+    }
+  }
+  if ((visible != 0) && ((*(u32 *)(state + 0x2e4) & 8) != 0)) {
+    if (objBboxFn_800640cc(lbl_803E256C,(Vec *)from,&probe,0,bboxHit,obj,*(u8 *)(state + 0x261),
+                           -1,0,0) != 0) {
+      visible = 0;
+    }
+  }
+  return visible;
 }
 #pragma scheduling reset
 
