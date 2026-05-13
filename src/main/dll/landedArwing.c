@@ -15,7 +15,7 @@ extern void fn_80165C8C(int obj, int sub);
 extern void fn_80166444(int obj, int sub);
 extern void fn_80166A50(int obj, f32 a, f32 b, f32 c, f32 d);
 
-extern undefined4 *lbl_803DCAA8;
+extern void *lbl_803DCAA8;
 extern u8 framesThisStep;
 extern f32 timeDelta;
 
@@ -72,7 +72,7 @@ undefined4 fn_8016558C(int obj, int param_2)
     *(u8 *)(*(int *)(obj + 0x54) + 0x6d) = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
 
-    (*(code *)(*(int *)*lbl_803DCAA8 + 0x18))(obj, param_2 + 4, (double)timeDelta);
+    (*(code *)(*(int *)lbl_803DCAA8 + 0x18))(obj, param_2 + 4, (double)timeDelta);
 
     if (*(u8 *)(sub + 0x90) != 6) {
         if ((u32)playerObj != 0 &&
