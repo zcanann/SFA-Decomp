@@ -1888,14 +1888,16 @@ void fn_801463BC(int obj,int param_2,int param_3,int param_4,int param_5,char do
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
 #pragma scheduling off
 void fn_8014658C(int obj)
 {
   f32 dy;
-  int *objects;
   int i;
+  int *objects;
   int state;
   f32 height;
+  u8 heightTrackBit;
   int count[2];
 
   state = *(int *)(obj + 0xb8);
@@ -1905,7 +1907,8 @@ void fn_8014658C(int obj)
   }
   if (lbl_803E23E8 == dy) {
     if (*(f32 *)(obj + 0x10) == *(f32 *)(obj + 0x1c)) {
-      *(u8 *)(state + 0x58) = (*(u8 *)(state + 0x58) & 0xdf) | 0x20;
+      heightTrackBit = 1;
+      *(u8 *)(state + 0x58) = (*(u8 *)(state + 0x58) & 0xdf) | (heightTrackBit << 5);
       *(s32 *)(state + 0x5c) = -1;
       *(f32 *)(state + 0x60) = lbl_803E23DC;
     }
@@ -1913,7 +1916,8 @@ void fn_8014658C(int obj)
   else {
     i = ObjList_FindObjectById(0x46406);
     if ((i != 0) && (getXZDistance((f32 *)(obj + 0x18),(f32 *)(i + 0x18)) < lbl_803E2540)) {
-      *(u8 *)(state + 0x58) = (*(u8 *)(state + 0x58) & 0xdf) | 0x20;
+      heightTrackBit = 1;
+      *(u8 *)(state + 0x58) = (*(u8 *)(state + 0x58) & 0xdf) | (heightTrackBit << 5);
       *(u32 *)(state + 0x5c) = 0x46406;
       *(f32 *)(state + 0x60) = lbl_803E23DC;
     }
@@ -1938,19 +1942,22 @@ void fn_8014658C(int obj)
           *(f32 *)(state + 0x60) = height;
         }
         else {
-          *(u8 *)(state + 0x58) = *(u8 *)(state + 0x58) & 0xdf;
+          heightTrackBit = 0;
+          *(u8 *)(state + 0x58) = (*(u8 *)(state + 0x58) & 0xdf) | (heightTrackBit << 5);
         }
         break;
       }
       objects = objects + 1;
     }
     if (i == count[0]) {
-      *(u8 *)(state + 0x58) = *(u8 *)(state + 0x58) & 0xdf;
+      heightTrackBit = 0;
+      *(u8 *)(state + 0x58) = (*(u8 *)(state + 0x58) & 0xdf) | (heightTrackBit << 5);
     }
   }
   return;
 }
 #pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
