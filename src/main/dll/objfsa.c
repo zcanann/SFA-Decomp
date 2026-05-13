@@ -4292,3 +4292,229 @@ void fn_800D9668(u32 x) { lbl_803DD430 = x; }
 /* Pattern wrappers. */
 extern u32 lbl_803DD458;
 void fn_800D9EB8(void) { lbl_803DD458 = 0x3; }
+
+/* fn_800D9D3C: init / memset constructor */
+extern void *memset(void *dst, int val, u32 n);
+extern f32 lbl_803E05BC;
+extern f32 lbl_803E05C8;
+extern f32 lbl_803E05CC;
+extern f32 lbl_803E05F0;
+extern f32 lbl_803E05F4;
+extern void curveFn_80010320(float *p);
+#pragma scheduling off
+#pragma peephole off
+void fn_800D9D3C(int unused, void *obj, int a, int b) {
+    memset(obj, 0, 0x35c);
+    *(s16 *)((char *)obj + 0x26c) = (s16)a;
+    *(s16 *)((char *)obj + 0x26e) = (s16)b;
+    *(u8 *)((char *)obj + 0x27a) = 1;
+    *(u8 *)((char *)obj + 0x27b) = 1;
+    *(f32 *)((char *)obj + 0x2b8) = lbl_803E05BC;
+    *(s32 *)((char *)obj + 0x33c) = -1;
+    *(s32 *)((char *)obj + 0x340) = -1;
+    *(u8 *)((char *)obj + 0x358) = 0;
+}
+#pragma peephole on
+#pragma scheduling on
+
+/* fn_800D9F38 — large init updating multiple float fields based on b's bytes */
+extern float fn_80293E80(double angle);
+extern float sin(double x);
+extern f32 lbl_803E05D0;
+extern f32 lbl_803E05D4;
+extern f32 lbl_803E05D8;
+#pragma peephole off
+#pragma scheduling off
+int fn_800D9F38(void *a, void *b) {
+    char *A = (char *)a;
+    char *B = (char *)b;
+    if (*(u32 *)(A + 0xa0) == 0 || *(u32 *)(A + 0xa4) == 0 || b == 0) return 1;
+    *(void **)(A + 0xa4) = b;
+    if (*(int *)(A + 0x80) != 0) {
+        /* branch1 */
+        f32 t;
+        *(f32 *)(A + 0xa8) = *(f32 *)(B + 0x8);
+        t = (float)(u32)*(u8 *)(B + 0x2e) *
+            fn_80293E80(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2c)) << 8) / lbl_803E05D8);
+        *(f32 *)(A + 0xb0) = lbl_803E05D0 * t;
+        *(f32 *)(A + 0xc8) = *(f32 *)(B + 0xc);
+        t = (float)(u32)*(u8 *)(B + 0x2e) *
+            fn_80293E80(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2d)) << 8) / lbl_803E05D8);
+        *(f32 *)(A + 0xd0) = lbl_803E05D0 * t;
+        *(f32 *)(A + 0xe8) = *(f32 *)(B + 0x10);
+        t = (float)(u32)*(u8 *)(B + 0x2e) *
+            sin(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2c)) << 8) / lbl_803E05D8);
+        *(f32 *)(A + 0xf0) = lbl_803E05D0 * t;
+    } else {
+        /* branch2 */
+        f32 t;
+        *(f32 *)(A + 0xbc) = *(f32 *)(B + 0x8);
+        t = (float)(u32)*(u8 *)(B + 0x2e) *
+            fn_80293E80(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2c)) << 8) / lbl_803E05D8);
+        *(f32 *)(A + 0xc4) = lbl_803E05D0 * t;
+        *(f32 *)(A + 0xdc) = *(f32 *)(B + 0xc);
+        t = (float)(u32)*(u8 *)(B + 0x2e) *
+            fn_80293E80(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2d)) << 8) / lbl_803E05D8);
+        *(f32 *)(A + 0xe4) = lbl_803E05D0 * t;
+        *(f32 *)(A + 0xfc) = *(f32 *)(B + 0x10);
+        t = (float)(u32)*(u8 *)(B + 0x2e) *
+            sin(lbl_803E05D4 * (float)((s32)((s8)*(B + 0x2c)) << 8) / lbl_803E05D8);
+        *(f32 *)(A + 0x104) = lbl_803E05D0 * t;
+    }
+    return 0;
+}
+#pragma scheduling on
+#pragma peephole on
+
+/* player_hitDetect */
+extern f32 lbl_803E05A4;
+extern f32 lbl_803E05A8;
+extern u8 lbl_803DD434;
+extern u8 lbl_803DD44E;
+extern u8 lbl_803DD44F;
+extern f32 timeDelta;
+extern float sqrtf(float x);
+extern int fn_800D92D0(void *a, void *b, float t, int c);
+#pragma peephole off
+#pragma scheduling off
+void player_hitDetect(char *p, char *obj, int unused) {
+    float fcos, fsin;
+    if (((s32)(s8)*(obj + 0x34c) & 1) != 0) {
+        fcos = fn_80293E80(lbl_803E05A4 * (float)(s32)*(s16 *)p / lbl_803E05A8);
+        fsin = sin(lbl_803E05A4 * (float)(s32)*(s16 *)p / lbl_803E05A8);
+        if (((s32)(s8)*(obj + 0x34c) & 8) != 0) {
+            *(f32 *)(obj + 0x280) = -*(f32 *)(p + 0x2c) * fsin - *(f32 *)(p + 0x24) * fcos;
+            *(f32 *)(obj + 0x294) = *(f32 *)(obj + 0x280);
+        } else {
+            *(f32 *)(obj + 0x284) = *(f32 *)(p + 0x24) * fsin - *(f32 *)(p + 0x2c) * fcos;
+            *(f32 *)(obj + 0x280) = -*(f32 *)(p + 0x2c) * fsin - *(f32 *)(p + 0x24) * fcos;
+            if (((s32)(s8)*(obj + 0x34c) & 4) != 0) {
+                *(f32 *)(obj + 0x294) = sqrtf(*(f32 *)(p + 0x24) * *(f32 *)(p + 0x24) +
+                                                *(f32 *)(p + 0x2c) * *(f32 *)(p + 0x2c));
+            }
+        }
+        *(s8 *)(obj + 0x34c) = 0;
+        *(u32 *)obj |= 0x80000;
+        lbl_803DD434 = 1;
+        lbl_803DD44F = 0;
+        lbl_803DD44E = 1;
+        fn_800D92D0(p, obj, timeDelta, unused);
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
+
+/* fn_800DE8F0: similar to fn_800D9F38 branch2 with different consts */
+extern f32 lbl_803E0610;
+extern f32 lbl_803E0614;
+extern f32 lbl_803E0618;
+#pragma peephole off
+#pragma scheduling off
+void fn_800DE8F0(void *a, void *b) {
+    char *A = (char *)a;
+    f32 t;
+    if (b != 0 && (u32)b != *(u32 *)(A + 0xa4)) {
+        *(void **)(A + 0xa4) = b;
+        *(f32 *)(A + 0xbc) = *(f32 *)((*(char **)(A + 0xa4)) + 0x8);
+        t = (float)(u32)*(u8 *)((*(char **)(A + 0xa4)) + 0x2e) *
+            fn_80293E80(lbl_803E0614 * (float)((s32)((s8)*((*(char **)(A + 0xa4)) + 0x2c)) << 8) / lbl_803E0618);
+        *(f32 *)(A + 0xc4) = lbl_803E0610 * t;
+        *(f32 *)(A + 0xdc) = *(f32 *)((*(char **)(A + 0xa4)) + 0xc);
+        t = (float)(u32)*(u8 *)((*(char **)(A + 0xa4)) + 0x2e) *
+            fn_80293E80(lbl_803E0614 * (float)((s32)((s8)*((*(char **)(A + 0xa4)) + 0x2d)) << 8) / lbl_803E0618);
+        *(f32 *)(A + 0xe4) = lbl_803E0610 * t;
+        *(f32 *)(A + 0xfc) = *(f32 *)((*(char **)(A + 0xa4)) + 0x10);
+        t = (float)(u32)*(u8 *)((*(char **)(A + 0xa4)) + 0x2e) *
+            sin(lbl_803E0614 * (float)((s32)((s8)*((*(char **)(A + 0xa4)) + 0x2c)) << 8) / lbl_803E0618);
+        *(f32 *)(A + 0x104) = lbl_803E0610 * t;
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
+/* fn_800DA928: clamp + curveFn call — 99% match, f1 vs f2 reg alloc */
+void fn_800DA928(float *p) {
+    if (*p <= lbl_803E05F0) {
+        *p = lbl_803E05F4;
+    } else if (*p >= lbl_803E05C8) {
+        *p = lbl_803E05CC;
+    }
+    curveFn_80010320(p);
+}
+
+/* UIController vtable dispatch via lbl_803DCA68 */
+extern int *lbl_803DCA68;
+extern u8 fn_80014054(void *p, int a, int b);
+extern void fn_80014060(void *p);
+extern void gameTimerRun(void *p);
+void UIController_frameStart(void) {
+    (**(void (**)(void))(*lbl_803DCA68 + 0x4))();
+}
+void UIController_frameEnd(void) {
+    (**(void (**)(void))(*lbl_803DCA68 + 0x8))();
+}
+#pragma peephole off
+#pragma scheduling off
+void UIController_render(void *p, int a, int b) {
+    if (fn_80014054(p, a, b) != 0) {
+        gameTimerRun(p);
+    }
+    fn_80014060(p);
+    (**(void (**)(void *, int, int))(*lbl_803DCA68 + 0xc))(p, a, b);
+}
+#pragma scheduling on
+#pragma peephole on
+
+/* player_SetState */
+#pragma peephole off
+#pragma scheduling off
+void player_SetState(void *ctx, void *p, int new_state) {
+    void *q;
+    if (*(s16 *)((char *)p + 0x274) == new_state) goto end;
+    *(s16 *)((char *)p + 0x276) = *(s16 *)((char *)p + 0x274);
+    *(s16 *)((char *)p + 0x274) = (s16)new_state;
+    {
+        void (*fn)(void) = *(void (**)(void))((char *)p + 0x304);
+        if (fn != 0) {
+            fn();
+            *(void **)((char *)p + 0x304) = 0;
+        }
+    }
+    *(void **)((char *)p + 0x304) = *(void **)((char *)p + 0x308);
+end:
+    *(s16 *)((char *)p + 0x338) = 0;
+    *(u8 *)((char *)p + 0x27a) = 1;
+    *(u8 *)((char *)p + 0x34d) = 0;
+    *(u8 *)((char *)p + 0x34c) = 0;
+    *(u8 *)((char *)p + 0x356) = 0;
+    *(s16 *)((char *)p + 0x278) = 0;
+    q = *(void **)((char *)ctx + 0x54);
+    if (q != 0) *(u8 *)((char *)q + 0x70) = 0;
+}
+#pragma scheduling on
+#pragma peephole on
+
+/* fn_800DB224: u16 split-into-2-bytes (LE) — 95% match, reg alloc diff */
+#pragma peephole off
+#pragma scheduling off
+void fn_800DB224(u32 v, u8 *dst) {
+    v = v & 0xffff;
+    dst[0] = (u8)v;
+    dst[1] = (u8)((s32)v >> 8);
+}
+#pragma scheduling on
+#pragma peephole on
+
+/* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
+void fn_800D9EE8(float *p) {
+    u32 *a = (u32 *)((char *)p + 0x9c);
+    u32 *b = (u32 *)((char *)p + 0xa4);
+    *a ^= *b;
+    *b ^= *a;
+    *a ^= *b;
+    if (*p >= lbl_803E05C8) {
+        *p = lbl_803E05CC;
+    }
+}
+

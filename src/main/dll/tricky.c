@@ -1807,3 +1807,158 @@ void fn_8011F34C(u8 x) { lbl_803DD7B3 = x; }
 void hudFn_8011f38c(u8 x) { lbl_803DD792 = x; }
 void hudFn_8011f6f0(u8 x) { lbl_803DD75A = x; }
 void fn_80121180(u8 x) { lbl_803DBA88 = x; }
+
+/* sth (s16 store) of zero-extended u8 — extsh + sth pattern */
+extern s16 lbl_803DD76E;
+void fn_8011F6D4(u32 x) {
+    lbl_803DD76E = (s16)(u8)x;
+}
+
+/* fn_8011F3E0: extsh + sth aButtonIcon */
+extern s16 aButtonIcon;
+#pragma peephole off
+#pragma scheduling off
+void fn_8011F3E0(int x) {
+    aButtonIcon = (s16)x;
+}
+#pragma scheduling on
+#pragma peephole on
+
+/* fn_8011F394: zero out two halfwords */
+extern s16 lbl_803DD874;
+extern u16 lbl_803DD884;
+#pragma scheduling off
+void fn_8011F394(void) {
+    lbl_803DD884 = 0;
+    lbl_803DD874 = -1;
+}
+#pragma scheduling on
+
+/* fn_8011F3C8: stb if zero */
+extern u8 lbl_803DD7AC;
+#pragma peephole off
+#pragma scheduling off
+void fn_8011F3C8(int x) {
+    if (lbl_803DD7AC == 0) {
+        lbl_803DD7AC = (u8)x;
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
+/* setAButtonIcon: sth if aButtonIcon == 0 */
+#pragma peephole off
+#pragma scheduling off
+void setAButtonIcon(int x) {
+    if (aButtonIcon == 0) {
+        aButtonIcon = (s16)x;
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
+/* fn_8011F6E0: store 3 vals */
+extern u8 lbl_803DBA58;
+extern u8 lbl_803DBA59;
+extern s16 lbl_803DBA5A;
+void fn_8011F6E0(u8 a, u8 b, s16 c) {
+    lbl_803DBA58 = a;
+    lbl_803DBA59 = b;
+    lbl_803DBA5A = c;
+}
+
+/* fn_8011F6F8: store float at *p + 0x24 if p non-null */
+extern void *lbl_803DD7D0;
+void fn_8011F6F8(float v) {
+    void *p = lbl_803DD7D0;
+    if (p == 0) return;
+    *(f32 *)((char *)p + 0x24) = v;
+}
+
+/* fn_8011DD30: init / setup */
+extern void cutsceneFadeInOut(int x);
+extern void setTimeStop(int x);
+extern void pauseMenuInit(void);
+extern int fn_80019BF0(void);
+extern void gameTextLoadDir(int x);
+extern f32 lbl_803E1E60;
+extern f32 lbl_803DD764;
+extern int lbl_803DD8DC;
+extern int lbl_803DD7D8;
+#pragma scheduling off
+void fn_8011DD30(void) {
+    cutsceneFadeInOut(1);
+    setTimeStop(0xff);
+    pauseMenuInit();
+    lbl_803DD780 = 0xb;
+    lbl_803DD8DC = fn_80019BF0();
+    gameTextLoadDir(0xb);
+    lbl_803DD764 = lbl_803E1E60;
+    lbl_803DD7D8 = 1;
+}
+#pragma scheduling on
+
+/* fn_80121408 */
+extern int lbl_803DD8A0;
+extern s16 lbl_803DD89E;
+extern s16 lbl_803DD89C;
+extern u8 lbl_803DD8AC;
+#pragma scheduling off
+void fn_80121408(int x, s16 a, s16 b) {
+    if (x == -1) {
+        lbl_803DD8A0 = 0;
+        lbl_803DD89E = 0;
+        lbl_803DD89C = 0;
+        lbl_803DD8AC = 0;
+        return;
+    }
+    lbl_803DD8A0 = x;
+    lbl_803DD89E = a;
+    lbl_803DD89C = b;
+    lbl_803DD8AC = 1;
+}
+#pragma scheduling on
+
+/* fn_8011F354 */
+extern u8 lbl_803DD7CC;
+extern s16 lbl_803DD838;
+#pragma peephole off
+#pragma scheduling off
+void fn_8011F354(u32 x) {
+    u32 v = x & 0xff;
+    lbl_803DD7CC = (u8)(v & 1);
+    if ((s32)v != 3) {
+        if ((s32)v >= 3) return;
+        if ((s32)v < 2) return;
+        lbl_803DD838 = 0;
+        return;
+    }
+    lbl_803DD838 = (s16)0xff;
+}
+#pragma scheduling on
+#pragma peephole on
+
+/* fn_8011F3A8: read lbl_DD884; if non-zero, set *out = yButtonItem; return lbl_DD884 */
+extern u16 yButtonItem;
+#pragma peephole off
+u16 fn_8011F3A8(s16 *out) {
+    s32 t;
+    if (lbl_803DD884 != 0) {
+        t = (s16)yButtonItem;
+        *out = (s16)t;
+    }
+    return lbl_803DD884;
+}
+#pragma peephole on
+
+/* fn_8011F70C: set bit 7 of (*p)+0x44 if p non-null — uses bitfield insert (rlwimi) */
+typedef struct {
+    char pad[0x44];
+    u8 bit7 : 1;
+    u8 bits_0to6 : 7;
+} _Obj8011F70C;
+void fn_8011F70C(void) {
+    _Obj8011F70C *p = (_Obj8011F70C *)lbl_803DD7D0;
+    if (p == 0) return;
+    p->bit7 = 1;
+}

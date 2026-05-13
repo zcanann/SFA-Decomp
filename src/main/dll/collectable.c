@@ -1987,3 +1987,159 @@ u8 Tricky_func0E(int *obj) { return *((u8*)((int**)obj)[0xb8/4][0x0/4] + 0x1); }
 u8 Tricky_render2(int *obj) { return *((u8*)((int**)obj)[0xb8/4][0x0/4] + 0x0); }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* fn_80145AD0: 24b - signed-byte load and store, return 1. */
+#pragma peephole off
+#pragma scheduling off
+int fn_80145AD0(int *obj, int *out) {
+    *out = *((s8*)obj[0xb8/4] + 0xd);
+    return 1;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern u32 GameBit_Get(int bit);
+
+/* fn_80145794: 72b - if GameBit_Get(0x4e4), OR 0x10000 into obj->_b8->_54. */
+void fn_80145794(int *obj) {
+    int *p = (int*)obj[0xb8/4];
+    if (GameBit_Get(0x4e4)) {
+        p[0x54/4] |= 0x10000;
+    }
+}
+
+/* fn_801457DC: 40b - lbz/cmplwi(8/0xe) selector returning 1 or 0. */
+#pragma peephole off
+#pragma scheduling off
+int fn_801457DC(int *obj) {
+    u8 v = *((u8*)obj[0xb8/4] + 8);
+    if (v == 8 || v == 0xe) return 1;
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/* fn_80145804: 36b - cmpwi(5) selector returning 1 or 0. */
+#pragma peephole off
+#pragma scheduling off
+#pragma optimize_for_size off
+int fn_80145804(int *obj) {
+    u8 v;
+    int r;
+    v = *((u8*)obj[0xb8/4] + 8);
+    switch (v) {
+    case 5:
+        r = 1;
+        break;
+    default:
+        r = 0;
+        break;
+    }
+    return r;
+}
+#pragma optimize_for_size reset
+#pragma scheduling reset
+#pragma peephole reset
+
+/* fn_80146158: 124b - GameBit_Get cascade returning flag bits. */
+#pragma peephole off
+#pragma scheduling off
+int fn_80146158(void) {
+    int r = 0;
+    if (GameBit_Get(0x4e4) != 0) {
+        r = 0xa;
+        if (GameBit_Get(0xdd) != 0) r |= 0x1;
+        if (GameBit_Get(0x25) != 0) r |= 0x20;
+        if (GameBit_Get(0x245) != 0) r |= 0x10;
+    }
+    return r;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/* trickyReportError: 80b - varargs OSReport-style stub. */
+void trickyReportError(const char *fmt, ...) { }
+
+/* trickyDebugPrint: 80b - varargs OSReport-style stub. */
+void trickyDebugPrint(const char *fmt, ...) { }
+
+extern f32 lbl_803E25A4;
+extern f32 lbl_803E2594;
+extern f32 lbl_803E2538;
+extern f32 lbl_803E2500;
+extern f32 lbl_803E2418;
+extern f32 lbl_803E23DC;
+
+extern f32 getXZDistance(f32 *a, f32 *b);
+extern int fn_8005A10C(f32 *p, f32 f);
+
+/* fn_80144E40: 272b - find nearest object within distance threshold. */
+#pragma scheduling off
+int fn_80144E40(int *obj, int *p) {
+    int *objs;
+    int count[1];
+    int result;
+    f32 d;
+    f32 bestD;
+    int i;
+
+    result = 0;
+    objs = ObjGroup_GetObjects(0x4b, count);
+    d = getXZDistance((f32*)((char*)(int*)p[0x4/4] + 0x18), (f32*)((char*)obj + 0x18));
+    if ((d >= lbl_803E2538) || (*(f32*)((char*)p + 0x71c) > lbl_803E23DC)) {
+        if (fn_8005A10C((f32*)((char*)obj + 0xc), lbl_803E2500) == 0) {
+            bestD = lbl_803E2418;
+            for (i = 0; i < count[0]; i++) {
+                f32 cd = getXZDistance((f32*)((char*)(int*)p[0x4/4] + 0x18), (f32*)((char*)*objs + 0x18));
+                if (cd < d && cd < bestD) {
+                    bestD = cd;
+                    result = *objs;
+                }
+                objs++;
+            }
+        }
+    }
+    return result;
+}
+#pragma scheduling reset
+
+
+/* fn_80149BB4: 312b - flag bits to byte field. */
+#pragma peephole off
+#pragma scheduling off
+void fn_80149BB4(int *obj, u32 flags, s16 val, f32 f) {
+    *((u8*)obj + 0x2f1) = 0;
+    if ((flags & 0x2) != 0) {
+        *((u8*)obj + 0x2f1) = (u8)(*((u8*)obj + 0x2f1) | 0x20);
+    }
+    if ((flags & 0x1) != 0) {
+        *((u8*)obj + 0x2f1) = (u8)(*((u8*)obj + 0x2f1) | 0x40);
+    }
+    if ((flags & 0x4) != 0) {
+        *((u8*)obj + 0x2f1) = (u8)(*((u8*)obj + 0x2f1) | 0x1);
+    }
+    if ((flags & 0x8) != 0) {
+        *((u8*)obj + 0x2f1) = (u8)(*((u8*)obj + 0x2f1) | 0x2);
+    }
+    if ((flags & 0x10) != 0) {
+        *((u8*)obj + 0x2f1) = (u8)(*((u8*)obj + 0x2f1) | 0x4);
+    }
+    if (lbl_803E25A4 == f) {
+        *((u8*)obj + 0x2f1) = (u8)(*((u8*)obj + 0x2f1) | 0x8);
+    } else if (lbl_803E2594 == f) {
+        *((u8*)obj + 0x2f1) = (u8)(*((u8*)obj + 0x2f1) | 0x10);
+    }
+    if ((flags & 0x80) != 0) {
+        *((u8*)obj + 0x2f1) = (u8)(*((u8*)obj + 0x2f1) | 0x80);
+    }
+    if ((flags & 0x100) != 0) {
+        *((u8*)obj + 0x2f5) = 1;
+    } else if ((flags & 0x200) != 0) {
+        *((u8*)obj + 0x2f5) = 2;
+    } else if ((flags & 0x400) != 0) {
+        *((u8*)obj + 0x2f5) = 3;
+    }
+    *(s16*)((char*)obj + 0x2ec) = val;
+}
+#pragma scheduling reset
+#pragma peephole reset

@@ -1047,6 +1047,53 @@ LAB_800c826c:
 }
 
 
+/* sda21 externs for fn_800C4730 tick. */
+extern f32 lbl_803DB838;
+extern f32 lbl_803DB83C;
+extern f32 lbl_803DFEB8;
+extern f32 lbl_803DFEBC;
+extern f32 lbl_803DFEC0;
+extern f32 lbl_803DFEC8;
+extern s32 lbl_803DD3B0;
+extern s32 lbl_803DD3B4;
+extern f32 lbl_803DD3B8;
+extern f32 lbl_803DD3BC;
+extern const double lbl_803DFF28;
+extern f32 lbl_803DFF30;
+extern f32 lbl_803DFF34;
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern f32 fn_80293E80(f32 x);
+
+/* Advance two periodic counters; compute sin of phase. */
+#pragma push
+#pragma scheduling off
+void fn_800C4730(void)
+{
+    f32 sum;
+    sum = lbl_803DB838 + lbl_803DFEB8 * timeDelta;
+    lbl_803DB838 = sum;
+    if (sum > lbl_803DFEC0) {
+        lbl_803DB838 = lbl_803DFEBC;
+    }
+    sum = lbl_803DB83C + lbl_803DFEB8 * timeDelta;
+    lbl_803DB83C = sum;
+    if (sum > lbl_803DFEC0) {
+        lbl_803DB83C = lbl_803DFEC8;
+    }
+    lbl_803DD3B0 = lbl_803DD3B0 + (s32)framesThisStep * 0x64;
+    if (lbl_803DD3B0 > 0x7fff) {
+        lbl_803DD3B0 = 0;
+    }
+    lbl_803DD3BC = fn_80293E80(lbl_803DFF30 * (f32)(s16)lbl_803DD3B0 / lbl_803DFF34);
+    lbl_803DD3B4 = lbl_803DD3B4 + (s32)framesThisStep * 0x32;
+    if (lbl_803DD3B4 > 0x7fff) {
+        lbl_803DD3B4 = 0;
+    }
+    lbl_803DD3B8 = fn_80293E80(lbl_803DFF30 * (f32)(s16)lbl_803DD3B4 / lbl_803DFF34);
+}
+#pragma pop
+
 /* Trivial 4b 0-arg blr leaves. */
 void fn_800C4858(void) {}
 void Effect10_release(void) {}

@@ -2331,6 +2331,353 @@ void FUN_800c9c68(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
 }
 
 
+/* sda21 globals used by leaf accessors below. */
+extern s16 lbl_803DD414;
+extern s16 lbl_803DD416;
+extern u32 lbl_803DD418;
+extern u32 lbl_803DD41C;
+extern s32 lbl_803DD410;
+
+typedef struct PartFxKV { u32 key; u32 value; } PartFxKV;
+extern PartFxKV lbl_8039C458[];
+extern f32 lbl_803E04E8;
+extern f32 lbl_803E0500;
+extern u32 randomGetRange(s32 lo, s32 hi);
+
+/* Globals for tick functions fn_800C900C / fn_800CB55C / fn_800CCE28 / fn_800CD2FC / fn_800D53FC. */
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern f32 fn_80293E80(f32 x);
+
+extern f32 lbl_803DB848; extern f32 lbl_803DB84C;
+extern f32 lbl_803E00A8; extern f32 lbl_803E00AC;
+extern f32 lbl_803E00B0; extern f32 lbl_803E00B8;
+extern s32 lbl_803DD3C0; extern s32 lbl_803DD3C4;
+extern f32 lbl_803DD3C8; extern f32 lbl_803DD3CC;
+extern f32 lbl_803E0108; extern f32 lbl_803E010C;
+
+extern f32 lbl_803DB858; extern f32 lbl_803DB85C;
+extern f32 lbl_803E01B8; extern f32 lbl_803E01BC;
+extern f32 lbl_803E01C0; extern f32 lbl_803E01C8;
+extern s32 lbl_803DD3D0; extern s32 lbl_803DD3D4;
+extern f32 lbl_803DD3D8; extern f32 lbl_803DD3DC;
+extern f32 lbl_803E0218; extern f32 lbl_803E021C;
+
+extern f32 lbl_803DB868; extern f32 lbl_803DB86C;
+extern f32 lbl_803E0220; extern f32 lbl_803E0224;
+extern f32 lbl_803E0228; extern f32 lbl_803E0230;
+extern s32 lbl_803DD3E0; extern s32 lbl_803DD3E4;
+extern f32 lbl_803DD3E8; extern f32 lbl_803DD3EC;
+extern f32 lbl_803E02D0; extern f32 lbl_803E02D4;
+
+extern f32 lbl_803DB878; extern f32 lbl_803DB87C;
+extern f32 lbl_803E02D8; extern f32 lbl_803E02DC;
+extern f32 lbl_803E02E0; extern f32 lbl_803E02E8;
+extern s32 lbl_803DD3F0; extern s32 lbl_803DD3F4;
+extern f32 lbl_803DD3F8; extern f32 lbl_803DD3FC;
+extern f32 lbl_803E0308; extern f32 lbl_803E030C;
+
+extern f32 lbl_803DB888; extern f32 lbl_803DB88C;
+extern f32 lbl_803E0310; extern f32 lbl_803E0314;
+extern f32 lbl_803E0318; extern f32 lbl_803E0320;
+extern s32 lbl_803DD400; extern s32 lbl_803DD404;
+extern f32 lbl_803DD408; extern f32 lbl_803DD40C;
+extern f32 lbl_803E0344; extern f32 lbl_803E0348;
+
+typedef struct PartFxNode {
+    u8 _pad0[0xc];
+    f32 _0xc;
+    s32 _0x10;
+    u8 _pad14[4];
+    s32 _0x18;
+    s32 _0x1c;
+} PartFxNode;
+
+/* Binary search for key in lbl_8039C458 (count = lbl_803DD410). */
+#pragma dont_inline on
+#pragma push
+#pragma scheduling off
+u32 fn_800D5530(s32 key, s32 *idx_out)
+{
+    s32 high;
+    s32 low;
+    s32 mid;
+    *idx_out = -1;
+    if (key < 0) return 0;
+    high = lbl_803DD410 - 1;
+    low = 0;
+    while (low <= high) {
+        mid = (low + high) >> 1;
+        if ((u32)key > lbl_8039C458[mid].key) {
+            low = mid + 1;
+        } else if ((u32)key == lbl_8039C458[mid].key) {
+            *idx_out = mid;
+            return lbl_8039C458[mid].value;
+        } else {
+            high = mid - 1;
+        }
+    }
+    *idx_out = -1;
+    return 0;
+}
+#pragma pop
+#pragma dont_inline off
+
+/* Set *p to lbl_803DD414 (sign-extended) and return lbl_803DD418. */
+u32 fn_800D65A8(s32 *p)
+{
+    *p = lbl_803DD414;
+    return lbl_803DD418;
+}
+
+/* Swap lbl_803DD418 with lbl_803DD41C; copy 416 into 414 then clear 416. */
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void fn_800D6584(void)
+{
+    u32 tmp = lbl_803DD418;
+    lbl_803DD418 = lbl_803DD41C;
+    lbl_803DD41C = tmp;
+    lbl_803DD414 = lbl_803DD416;
+    lbl_803DD416 = 0;
+}
+#pragma pop
+
+/* Rank object r3 against array at lbl_803DD418 by (int@0x1c, float@0xc) descending. */
+typedef struct PartFxItem {
+    u8 _pad0[0xc];
+    f32 _0xc;
+    u8 _pad10[0xc];
+    s32 _0x1c;
+} PartFxItem;
+
+/* NOTE: 96.8% — register choice differs (r5 vs r7 for rank). */
+#pragma push
+#pragma scheduling off
+s32 fn_800D6488(PartFxItem *p)
+{
+    s32 rank = 1;
+    PartFxItem **arr = (PartFxItem **)lbl_803DD418;
+    s32 n = lbl_803DD414;
+    s32 i;
+    for (i = 0; i < n; i++) {
+        PartFxItem *q = *arr;
+        if (q != p) {
+            if (q->_0x1c > p->_0x1c) {
+                rank++;
+            } else if (q->_0x1c == p->_0x1c) {
+                if (q->_0xc > p->_0xc) {
+                    rank++;
+                }
+            }
+        }
+        arr++;
+    }
+    return rank;
+}
+#pragma pop
+
+/* Find item in lbl_803DD418 array whose rank equals target_rank. */
+PartFxItem *fn_800D64EC(s32 target_rank)
+{
+    s32 i;
+    PartFxItem **outer = (PartFxItem **)lbl_803DD418;
+    s32 n = lbl_803DD414;
+    for (i = 0; i < n; i++) {
+        PartFxItem *cur = *outer;
+        s32 rank = 1;
+        PartFxItem **inner = (PartFxItem **)lbl_803DD418;
+        s32 j;
+        for (j = 0; j < n; j++) {
+            PartFxItem *other = *inner;
+            if (other != cur) {
+                if (other->_0x1c > cur->_0x1c) {
+                    rank++;
+                } else if (other->_0x1c == cur->_0x1c) {
+                    if (other->_0xc > cur->_0xc) {
+                        rank++;
+                    }
+                }
+            }
+            inner++;
+        }
+        if (rank == target_rank) {
+            return cur;
+        }
+        outer++;
+    }
+    return 0;
+}
+
+/* Init random offsets / chain advance with lookup. */
+#pragma push
+void fn_800D5F80(s32 key, f32 *out_vec, u8 *flag_byte)
+{
+    s32 local_idx;
+    PartFxNode *n;
+    s32 alt_found;
+    n = (PartFxNode *)fn_800D5530(key, &local_idx);
+    if (n == 0) return;
+    out_vec[0] = (f32)(s32)randomGetRange(-0x63, 0x63) / lbl_803E0500;
+    out_vec[1] = (f32)(s32)randomGetRange(-0x63, 0x63) / lbl_803E0500;
+    out_vec[2] = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E0500;
+    alt_found = 0;
+    {
+        s32 v = *(s32 *)((char *)n + 0x20);
+        if (v != 0) {
+            PartFxNode *m = (PartFxNode *)fn_800D5530(v, &local_idx);
+            if (*(s32 *)((char *)m + 0x20) > -1) {
+                alt_found = 1;
+            }
+        }
+    }
+    if ((s8)*flag_byte == 0) {
+        if (alt_found != 0) {
+            *(s32 *)(out_vec + 4) = *(s32 *)((char *)n + 0x20);
+        } else {
+            s32 v = *(s32 *)((char *)n + 0x18);
+            if (v > -1) {
+                *(s32 *)(out_vec + 4) = v;
+                *flag_byte = 1;
+            }
+        }
+    } else {
+        s32 v = *(s32 *)((char *)n + 0x18);
+        if (v != 0) {
+            *(s32 *)(out_vec + 4) = v;
+        } else if (alt_found != 0) {
+            *(s32 *)(out_vec + 4) = *(s32 *)((char *)n + 0x20);
+            *flag_byte = 0;
+        }
+    }
+}
+#pragma pop
+
+/* Walk a chain via fn_800D5530 lookups starting from o->_0x10. */
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void fn_800D65B8(PartFxNode *o)
+{
+    s32 local_idx;
+    PartFxNode *ret;
+    s32 nxt;
+    ret = (PartFxNode *)fn_800D5530(o->_0x10, &local_idx);
+    if (ret == 0) {
+        o->_0x18 = 0;
+        o->_0xc = lbl_803E04E8;
+    } else {
+        while ((nxt = ret->_0x18) > -1) {
+            ret = (PartFxNode *)fn_800D5530(nxt, &local_idx);
+            o->_0x1c = o->_0x1c + 1;
+        }
+        o->_0x18 = o->_0x10;
+        o->_0xc = lbl_803E04E8;
+    }
+}
+#pragma pop
+
+/* Append v to array pointed to by lbl_803DD41C, capped at 10 entries.
+ * NOTE: stuck at ~78% — instruction scheduling differs. */
+void fn_800D663C(u32 v)
+{
+    s32 i;
+    i = lbl_803DD416;
+    if (i >= 10) return;
+    lbl_803DD416 = (s16)(i + 1);
+    ((u32 *)lbl_803DD41C)[i] = v;
+}
+
+/* Tick: counter1, counter2 + rate*timeDelta; clamp; periodic sin. */
+#pragma push
+#pragma scheduling off
+void fn_800C900C(void)
+{
+    f32 sum;
+    sum = lbl_803DB848 + lbl_803E00A8 * timeDelta;
+    lbl_803DB848 = sum;
+    if (sum > lbl_803E00B0) lbl_803DB848 = lbl_803E00AC;
+    sum = lbl_803DB84C + lbl_803E00A8 * timeDelta;
+    lbl_803DB84C = sum;
+    if (sum > lbl_803E00B0) lbl_803DB84C = lbl_803E00B8;
+    lbl_803DD3C0 = lbl_803DD3C0 + (s32)framesThisStep * 0x64;
+    if (lbl_803DD3C0 > 0x7fff) lbl_803DD3C0 = 0;
+    lbl_803DD3CC = fn_80293E80(lbl_803E0108 * (f32)(s16)lbl_803DD3C0 / lbl_803E010C);
+    lbl_803DD3C4 = lbl_803DD3C4 + (s32)framesThisStep * 0x32;
+    if (lbl_803DD3C4 > 0x7fff) lbl_803DD3C4 = 0;
+    lbl_803DD3C8 = fn_80293E80(lbl_803E0108 * (f32)(s16)lbl_803DD3C4 / lbl_803E010C);
+}
+
+void fn_800CB55C(void)
+{
+    f32 sum;
+    sum = lbl_803DB858 + lbl_803E01B8 * timeDelta;
+    lbl_803DB858 = sum;
+    if (sum > lbl_803E01C0) lbl_803DB858 = lbl_803E01BC;
+    sum = lbl_803DB85C + lbl_803E01B8 * timeDelta;
+    lbl_803DB85C = sum;
+    if (sum > lbl_803E01C0) lbl_803DB85C = lbl_803E01C8;
+    lbl_803DD3D0 = lbl_803DD3D0 + (s32)framesThisStep * 0x64;
+    if (lbl_803DD3D0 > 0x7fff) lbl_803DD3D0 = 0;
+    lbl_803DD3DC = fn_80293E80(lbl_803E0218 * (f32)(s16)lbl_803DD3D0 / lbl_803E021C);
+    lbl_803DD3D4 = lbl_803DD3D4 + (s32)framesThisStep * 0x32;
+    if (lbl_803DD3D4 > 0x7fff) lbl_803DD3D4 = 0;
+    lbl_803DD3D8 = fn_80293E80(lbl_803E0218 * (f32)(s16)lbl_803DD3D4 / lbl_803E021C);
+}
+
+void fn_800CCE28(void)
+{
+    f32 sum;
+    sum = lbl_803DB868 + lbl_803E0220 * timeDelta;
+    lbl_803DB868 = sum;
+    if (sum > lbl_803E0228) lbl_803DB868 = lbl_803E0224;
+    sum = lbl_803DB86C + lbl_803E0220 * timeDelta;
+    lbl_803DB86C = sum;
+    if (sum > lbl_803E0228) lbl_803DB86C = lbl_803E0230;
+    lbl_803DD3E0 = lbl_803DD3E0 + (s32)framesThisStep * 0x64;
+    if (lbl_803DD3E0 > 0x7fff) lbl_803DD3E0 = 0;
+    lbl_803DD3EC = fn_80293E80(lbl_803E02D0 * (f32)(s16)lbl_803DD3E0 / lbl_803E02D4);
+    lbl_803DD3E4 = lbl_803DD3E4 + (s32)framesThisStep * 0x32;
+    if (lbl_803DD3E4 > 0x7fff) lbl_803DD3E4 = 0;
+    lbl_803DD3E8 = fn_80293E80(lbl_803E02D0 * (f32)(s16)lbl_803DD3E4 / lbl_803E02D4);
+}
+
+void fn_800CD2FC(void)
+{
+    f32 sum;
+    sum = lbl_803DB878 + lbl_803E02D8 * timeDelta;
+    lbl_803DB878 = sum;
+    if (sum > lbl_803E02E0) lbl_803DB878 = lbl_803E02DC;
+    sum = lbl_803DB87C + lbl_803E02D8 * timeDelta;
+    lbl_803DB87C = sum;
+    if (sum > lbl_803E02E0) lbl_803DB87C = lbl_803E02E8;
+    lbl_803DD3F0 = lbl_803DD3F0 + (s32)framesThisStep * 0x64;
+    if (lbl_803DD3F0 > 0x7fff) lbl_803DD3F0 = 0;
+    lbl_803DD3FC = fn_80293E80(lbl_803E0308 * (f32)(s16)lbl_803DD3F0 / lbl_803E030C);
+    lbl_803DD3F4 = lbl_803DD3F4 + (s32)framesThisStep * 0x32;
+    if (lbl_803DD3F4 > 0x7fff) lbl_803DD3F4 = 0;
+    lbl_803DD3F8 = fn_80293E80(lbl_803E0308 * (f32)(s16)lbl_803DD3F4 / lbl_803E030C);
+}
+
+void fn_800D53FC(void)
+{
+    f32 sum;
+    sum = lbl_803DB888 + lbl_803E0310 * timeDelta;
+    lbl_803DB888 = sum;
+    if (sum > lbl_803E0318) lbl_803DB888 = lbl_803E0314;
+    sum = lbl_803DB88C + lbl_803E0310 * timeDelta;
+    lbl_803DB88C = sum;
+    if (sum > lbl_803E0318) lbl_803DB88C = lbl_803E0320;
+    lbl_803DD400 = lbl_803DD400 + (s32)framesThisStep * 0x64;
+    if (lbl_803DD400 > 0x7fff) lbl_803DD400 = 0;
+    lbl_803DD40C = fn_80293E80(lbl_803E0344 * (f32)(s16)lbl_803DD400 / lbl_803E0348);
+    lbl_803DD404 = lbl_803DD404 + (s32)framesThisStep * 0x32;
+    if (lbl_803DD404 > 0x7fff) lbl_803DD404 = 0;
+    lbl_803DD408 = fn_80293E80(lbl_803E0344 * (f32)(s16)lbl_803DD404 / lbl_803E0348);
+}
+#pragma pop
+
 /* Trivial 4b 0-arg blr leaves. */
 void fn_800C9134(void) {}
 void Effect16_release(void) {}

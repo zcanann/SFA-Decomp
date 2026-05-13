@@ -2088,3 +2088,361 @@ void fn_8015AD5C(void) {}
 void fn_801598B8(int x) { Sfx_StopFromObject(x, 0x3e8); }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E2CC0;
+extern f32 lbl_803E2CC4;
+extern f32 lbl_803E2CC8;
+extern f32 lbl_803E2CCC;
+extern f32 lbl_803E2CD0;
+extern f32 lbl_803E2CD4;
+extern u8 Obj_IsLoadingLocked(void);
+extern int *Obj_AllocObjectSetup(int p1, int p2);
+extern int *Obj_SetupObject(int *obj, int p1, int p2, int p3, int p4);
+extern void firepipe_setLinkedUpdateFlag(int *obj);
+
+/* fn_80157A58: 256b - alloc child object and attach to parent. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80157A58(int *obj) {
+    int *child;
+    if (Obj_IsLoadingLocked() != 0) {
+        child = Obj_AllocObjectSetup(0x24, 0x710);
+        ObjPath_GetPointWorldPosition(obj, 0, (char*)child + 0x8, (char*)child + 0xc, (char*)child + 0x10, 0);
+        *((u8*)child + 0x4) = 1;
+        *((u8*)child + 0x5) = 4;
+        *((u8*)child + 0x6) = 0xff;
+        *((u8*)child + 0x7) = 0xff;
+        *((u8*)child + 0x18) = 0;
+        *((u8*)child + 0x19) = 0;
+        *(s16*)((char*)child + 0x1a) = 0;
+        *(s16*)((char*)child + 0x1c) = 0xa;
+        *(s16*)((char*)child + 0x1e) = 0;
+        *(s16*)((char*)child + 0x20) = 0;
+        *((u8*)child + 0x22) = 3;
+        *((u8*)child + 0x23) = 0;
+        child = Obj_SetupObject(child, 5, -1, -1, 0);
+        if (child != 0) {
+            ObjLink_AttachChild(obj, child, 0);
+            firepipe_setLinkedUpdateFlag(child);
+            *(s16*)((char*)child + 0x6) = (s16)(*(s16*)((char*)child + 0x6) | 0x4000);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E2B18;
+extern f32 lbl_803E2B38;
+extern f32 lbl_803E2B40;
+extern f32 lbl_803E2B4C;
+extern f64 lbl_803E2B58;
+extern f32 lbl_803E2B64;
+extern f32 lbl_803E2B68;
+extern f32 lbl_803E2B6C;
+extern f32 lbl_803E2B70;
+extern f32 lbl_803E2B74;
+extern f32 lbl_803E2B78;
+extern f32 lbl_803E2C3C;
+extern f32 lbl_803E2C58;
+extern f32 lbl_803E2C7C;
+extern f32 lbl_803E2C80;
+extern f32 lbl_803E2C84;
+extern f32 lbl_803E2C88;
+extern f32 lbl_803E2C8C;
+extern f32 lbl_803E2C90;
+extern f32 lbl_803E2C94;
+extern u8 lbl_8031FB70[];
+extern u8 lbl_8031FC2C[];
+extern int fn_8014D08C(int *obj, int *st, int p3, f32 f, int p5, int p6);
+extern int *fn_80026CFC(int p1, int p2);
+extern void fn_80026C38(int *p, f32 a, f32 b, f32 c);
+extern int fn_8014D0F0(void);
+extern f32 lbl_803E2CBC;
+extern int *pDll_expgfx;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern u8 lbl_8031FD48[];
+
+extern void fn_8015A77C(int *obj, int *st);
+
+extern f32 lbl_803E2CB8;
+extern u32 randomGetRange(u32 lo, u32 hi);
+
+/* fn_8015A660: 284b - event handler. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8015A660(int obj, int *st, int p3, int cmd, int p5, int sub) {
+    u8 *base;
+    u32 r;
+
+    {
+        u8 *bbase;
+        u32 idx;
+        bbase = lbl_8031FD48;
+        idx = *(u16*)((char*)st + 0x338);
+        bbase = bbase + idx * 8;
+        base = *(u8**)(bbase + 4);
+    }
+
+    if (cmd == 0x11) {
+        return;
+    }
+    if (cmd == 0x10) {
+        *(u32*)((char*)st + 0x2e8) |= 0x20;
+        return;
+    }
+    if (*(u16*)((char*)st + 0x2a0) > 3) {
+        fn_8014D08C((int*)obj, st, 6, lbl_803E2CB8, 0, 0);
+    } else {
+        fn_8014D08C((int*)obj, st, 5, lbl_803E2CB8, 0, 0);
+    }
+    r = randomGetRange(0, 3);
+    *((u8*)st + 0x33a) = base[r];
+    *(u32*)((char*)st + 0x2e8) |= 0x8;
+    if (sub > (int)*(u16*)((char*)st + 0x2b0)) {
+        *(u16*)((char*)st + 0x2b0) = 0;
+    } else {
+        *(u16*)((char*)st + 0x2b0) = (u16)(*(u16*)((char*)st + 0x2b0) - sub);
+    }
+    if (*(u16*)((char*)st + 0x2b0) == 0) {
+        Sfx_PlayFromObject(obj, 0x49e);
+    }
+    if (cmd == 0x1a) return;
+    Sfx_PlayFromObject(obj, 0x22);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* fn_8015ABFC: 196b - handle Sfx_PlayFromObject hit, then call fn_8015A77C. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8015ABFC(int *obj, int *st) {
+    u8 *t1;
+    {
+        u32 idx = *(u16*)((char*)st + 0x338);
+        t1 = *(u8**)((char*)lbl_8031FD48 + idx * 8);
+    }
+    *((u8*)obj + 0xaf) = (u8)(*((u8*)obj + 0xaf) | 0x8);
+    if ((*(u32*)((char*)st + 0x2dc) & 0x40000000) != 0) {
+        s16 a = *(s16*)((char*)obj + 0xa0);
+        if (a == 7) {
+            *((u8*)st + 0x33a) = 1;
+        } else if (a != 0) {
+            *((u8*)st + 0x33a) = 0;
+        }
+        {
+            u8 *bbase = t1;
+            f32 *fbase = (f32*)t1;
+            u32 idx2 = *((u8*)st + 0x33a);
+            u32 off = idx2 * 0xc;
+            fn_8014D08C(obj, st, bbase[off + 8],
+                        *(f32*)((char*)fbase + off), 0, 0);
+        }
+    }
+    fn_8015A77C(obj, st);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* fn_8015A77C: 424b - switch on _a0, play sfx, optionally call vtable->8(). */
+#pragma scheduling off
+#pragma peephole off
+void fn_8015A77C(int *obj, int *st) {
+    u16 flag = 0;
+    switch (*(s16*)((char*)obj + 0xa0)) {
+    case 2:
+        if (*(u16*)((char*)st + 0x2f8) != 0) {
+            Sfx_PlayFromObjectLimited((int*)obj, 0x49b, 2);
+        }
+        flag = 1;
+        break;
+    case 3:
+        if (*(u16*)((char*)st + 0x2f8) != 0) {
+            Sfx_PlayFromObject((int)obj, 0x498);
+        }
+        break;
+    case 4:
+        if (*(u16*)((char*)st + 0x2f8) != 0) {
+            if (*(f32*)((char*)obj + 0x98) < lbl_803E2CBC) {
+                Sfx_PlayFromObject((int)obj, 0x499);
+            } else {
+                Sfx_PlayFromObject((int)obj, 0x24e);
+            }
+        }
+        break;
+    case 5:
+        if (*(u16*)((char*)st + 0x2f8) != 0) {
+            Sfx_PlayFromObject((int)obj, 0x49d);
+        }
+        break;
+    case 6:
+        if (*(u16*)((char*)st + 0x2f8) != 0) {
+            Sfx_PlayFromObject((int)obj, 0x49d);
+        }
+        break;
+    case 7:
+        if (*(u16*)((char*)st + 0x2f8) != 0) {
+            Sfx_PlayFromObjectLimited((int*)obj, 0x49c, 2);
+        }
+        flag = 1;
+        break;
+    case 9:
+        if (*(u16*)((char*)st + 0x2f8) != 0) {
+            Sfx_PlayFromObject((int)obj, 0x49a);
+        }
+        break;
+    }
+    if (flag != 0) {
+        if (*(u16*)((char*)st + 0x338) != 0) {
+            (*(void (**)(int*, int, int, int, int, int))(*pDll_expgfx + 0x8))(obj, 0x802, 0, 2, -1, 0);
+        } else {
+            (*(void (**)(int*, int, int, int, int, int))(*pDll_expgfx + 0x8))(obj, 0x809, 0, 2, -1, 0);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* fn_8015A424: 264b - state-2 init. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8015A424(int *obj, int *st) {
+    u8 *tab;
+    *(f32*)((char*)st + 0x2ac) = lbl_803E2C7C;
+    *(u32*)((char*)st + 0x2e4) = 0x405009;
+    *(f32*)((char*)st + 0x304) = lbl_803E2C80;
+    *((u8*)st + 0x320) = 0;
+    {
+        f32 d1 = lbl_803E2C84;
+        *(f32*)((char*)st + 0x314) = d1;
+        *((u8*)st + 0x321) = 0;
+        *(f32*)((char*)st + 0x318) = lbl_803E2C3C;
+        *((u8*)st + 0x322) = 0;
+        *(f32*)((char*)st + 0x31c) = d1;
+    }
+    *(f32*)((char*)st + 0x2fc) = *(f32*)((char*)st + 0x2fc) * lbl_803E2C88;
+    {
+        f32 *fbase = (f32*)lbl_8031FB70;
+        u8 *bbase = lbl_8031FB70;
+        u32 idx = *((u8*)st + 0x33a);
+        u32 off = idx * 0xc;
+        fn_8014D08C(obj, st, bbase[off + 8],
+                    *(f32*)((char*)fbase + off), 0, 0);
+    }
+    *(f32*)((char*)st + 0x328) = lbl_803E2C58;
+    ObjHits_SetHitVolumeMasks(obj, 0xe, 1, 0xfff);
+    *(int**)((char*)st + 0x36c) = fn_80026CFC((int)lbl_8031FC2C, 5);
+    fn_80026C38(*(int**)((char*)st + 0x36c), lbl_803E2C8C, lbl_803E2C90, lbl_803E2C94);
+    *(u32*)((char*)st + 0x2e8) = *(u32*)((char*)st + 0x2e8) | 0x100;
+    *(int*)((char*)obj + 0x108) = (int)&fn_8014D0F0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* fn_80157898: 240b - init basket with random factor. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80157898(int *obj, int *st) {
+    f32 ratio;
+    f32 base_v;
+    u32 v;
+    u32 amt;
+    amt = *((u8*)((int*)obj[0x4c/4]) + 0x2f);
+    ratio = (f32)amt;
+    if (lbl_803E2B18 == (f32)amt) {
+        ratio = lbl_803E2B38;
+    }
+    ratio = ratio / lbl_803E2B38;
+    *(f32*)((char*)st + 0x2ac) = lbl_803E2B64;
+    *(u32*)((char*)st + 0x2e4) = 0x8b;
+    v = *(u32*)((char*)st + 0x2e4);
+    *(u32*)((char*)st + 0x2e4) = v | 0x20;
+    *(f32*)((char*)st + 0x308) = lbl_803E2B68 * ratio;
+    base_v = lbl_803E2B40;
+    *(f32*)((char*)st + 0x300) = base_v;
+    *(f32*)((char*)st + 0x304) = lbl_803E2B6C;
+    *((u8*)st + 0x320) = 0;
+    *(f32*)((char*)st + 0x314) = lbl_803E2B70;
+    *((u8*)st + 0x321) = 3;
+    {
+        f32 d2 = lbl_803E2B4C;
+        *(f32*)((char*)st + 0x318) = d2;
+        *((u8*)st + 0x322) = 5;
+        *(f32*)((char*)st + 0x31c) = d2;
+    }
+    *(u16*)((char*)st + 0x338) = 0;
+    *(f32*)((char*)st + 0x324) = lbl_803E2B74;
+    *(f32*)((char*)st + 0x328) = base_v;
+    *((u8*)obj + 0x36) = 0;
+    *(f32*)((char*)st + 0x2fc) = lbl_803E2B78 * ratio;
+    *(u32*)((char*)st + 0x2e8) = 0;
+    ObjHits_EnableObject((int)obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E2C1C;
+extern f32 lbl_803E2C20;
+extern f32 lbl_803E2C24;
+extern f64 lbl_803E2C28;
+extern f32 fn_802943F4(f32 a);
+extern void PSMTXRotRad(f32 *mtx, int axis, f32 angle);
+extern void PSMTXMultVecSR(f32 *mtx, f32 *in, f32 *out);
+
+/* fn_8015983C: 124b - rotate vector around Y axis by integer-degrees value. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8015983C(int p1, int p2, f32 *vec, f32 f1, int p5, u32 int_deg) {
+    f32 mtx[12];
+    f32 a;
+    a = lbl_803E2C20 * f1 - lbl_803E2C24 * (f32)(s32)int_deg;
+    a = fn_802943F4(a);
+    a = lbl_803E2C1C * a;
+    PSMTXRotRad(mtx, 0x79, a);
+    PSMTXMultVecSR(mtx, vec, vec);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* fn_801598DC: 124b - handle hit-state event (cmd 0x10 or 0x11). */
+#pragma scheduling off
+#pragma peephole off
+void fn_801598DC(int obj, int *st, int p3, int cmd) {
+    if (cmd == 0x11) {
+        /* fall through */
+    } else if (cmd == 0x10) {
+        *(u32*)((char*)st + 0x2e8) |= 0x20;
+    } else {
+        *(u32*)((char*)st + 0x2e8) |= 0x8;
+        Sfx_StopFromObject(obj, 0x3e8);
+        Sfx_PlayFromObject(obj, 0x3ea);
+        *(s16*)((char*)st + 0x2b0) = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* fn_8015ACC0: 156b - init basket state struct. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8015ACC0(int *obj, int *st) {
+    *(f32*)((char*)st + 0x2ac) = lbl_803E2CC0;
+    *((u8*)st + 0x33b) = *(f32*)((char*)st + 0x2a8);
+    *(f32*)((char*)st + 0x2a8) = lbl_803E2CC4;
+    *(u32*)((char*)st + 0x2e4) = 0x42003;
+    *(f32*)((char*)st + 0x308) = lbl_803E2CC8;
+    *(f32*)((char*)st + 0x300) = lbl_803E2CCC;
+    *(f32*)((char*)st + 0x304) = lbl_803E2CD0;
+    *((u8*)st + 0x320) = 0;
+    {
+        f32 d = lbl_803E2CD4;
+        *(f32*)((char*)st + 0x314) = d;
+        *((u8*)st + 0x321) = 0xa;
+        *(f32*)((char*)st + 0x318) = d;
+        *((u8*)st + 0x322) = 7;
+        *(f32*)((char*)st + 0x31c) = d;
+    }
+    *((u8*)st + 0x33a) = 1;
+    *(u16*)((char*)st + 0x338) = (u16)(*(s16*)((char*)obj + 0x46) == 0x84b);
+}
+#pragma peephole reset
+#pragma scheduling reset
