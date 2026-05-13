@@ -354,11 +354,11 @@ void SB_ShipGun_init(int obj)
 
 /* 8b "li r3, N; blr" returners. */
 int SB_CannonBall_getExtraSize(void) { return 0x24; }
-int fn_801E3D38(void) { return 0x0; }
+int SB_CannonBall_func08(void) { return 0x0; }
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801E3D40(int obj)
+void SB_CannonBall_free(int obj)
 {
   int state;
 
