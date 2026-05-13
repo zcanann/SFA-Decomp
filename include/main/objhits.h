@@ -62,6 +62,23 @@ typedef struct ObjHitsSweepEntry {
   int obj;
 } ObjHitsSweepEntry;
 
+typedef struct ObjHitsPriorityState {
+  u8 pad00[0x50];
+  int lastHitObject;
+  u8 pad54[0x0C];
+  u16 flags;
+  u8 pad62[0x0F];
+  s8 priorityHitCount;
+  s8 sphereIndices[OBJHITS_PRIORITY_HIT_COUNT];
+  s8 priorities[OBJHITS_PRIORITY_HIT_COUNT];
+  u8 hitVolumes[OBJHITS_PRIORITY_HIT_COUNT];
+  u8 pad7B;
+  int hitObjects[OBJHITS_PRIORITY_HIT_COUNT];
+  f32 hitPosX[OBJHITS_PRIORITY_HIT_COUNT];
+  f32 hitPosY[OBJHITS_PRIORITY_HIT_COUNT];
+  f32 hitPosZ[OBJHITS_PRIORITY_HIT_COUNT];
+} ObjHitsPriorityState;
+
 /*
  * The skeleton collectors fill a 0x48-byte hit record and terminate the list
  * by writing -1 to pointIndexA. Response code then walks the same records to

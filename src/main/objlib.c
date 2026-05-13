@@ -195,23 +195,6 @@ typedef struct ObjPathTransform {
   f32 z;
 } ObjPathTransform;
 
-typedef struct ObjHitsPriorityState {
-  u8 pad00[0x50];
-  int lastHitObject;
-  u8 pad54[0xc];
-  u16 flags;
-  u8 pad62[0xf];
-  s8 priorityHitCount;
-  s8 sphereIndices[OBJHITS_PRIORITY_HIT_COUNT];
-  s8 priorities[OBJHITS_PRIORITY_HIT_COUNT];
-  u8 hitVolumes[OBJHITS_PRIORITY_HIT_COUNT];
-  u8 pad7b;
-  int hitObjects[OBJHITS_PRIORITY_HIT_COUNT];
-  f32 hitPosX[OBJHITS_PRIORITY_HIT_COUNT];
-  f32 hitPosY[OBJHITS_PRIORITY_HIT_COUNT];
-  f32 hitPosZ[OBJHITS_PRIORITY_HIT_COUNT];
-} ObjHitsPriorityState;
-
 /*
  * --INFO--
  *
