@@ -42,6 +42,7 @@
 #define EXPGFX_STATIC_POOL_FRAME_FLAGS_OFFSET 0xD0
 #define EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET 0x150
 #define EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET 0x168
+#define EXPGFX_STATIC_MISMATCH_ADD_REMOVE_STRING_OFFSET 0x358
 
 /*
  * Flag names describe observed behavior in expgfx_addremove. Keep them local

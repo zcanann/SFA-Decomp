@@ -1556,7 +1556,7 @@ void expgfx_resetAllPools(void)
           }
         }
         else {
-          debugPrintf(sExpgfxMismatchInAddRemove);
+          debugPrintf((char *)(staticDataBase + EXPGFX_STATIC_MISMATCH_ADD_REMOVE_STRING_OFFSET));
         }
         slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
         *poolActiveMasks = *poolActiveMasks & ~activeBit;
