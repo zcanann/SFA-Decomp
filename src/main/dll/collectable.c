@@ -20,6 +20,7 @@ extern undefined4 FUN_80017748();
 extern uint FUN_80017760();
 extern void Sfx_RemoveLoopedObjectSound(int param_1,int param_2);
 extern int Sfx_IsPlayingFromObjectChannel(int param_1,int param_2);
+extern int Sfx_PlayFromObject(int obj,int sfxId);
 extern undefined8 FUN_800178ec();
 extern undefined4 FUN_80017a28();
 extern undefined4 FUN_80017a30();
@@ -37,6 +38,8 @@ extern void voxmaps_worldToGrid(Vec *world,void *grid);
 extern int ObjList_FindObjectById(int objId);
 extern undefined4 FUN_8002f6ac();
 extern int FUN_8002fc3c();
+extern int getTrickyObject(void);
+extern void ObjAnim_SetCurrentMove(f32 moveProgress,int obj,int moveId,int flags);
 extern undefined4 FUN_800305c4();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
@@ -89,8 +92,11 @@ extern undefined4 FUN_800dbc68();
 extern undefined8 FUN_800dd3dc();
 extern undefined4 FUN_800dd3e0();
 extern void fn_800DD640(void);
+extern void gameBitIncrement(int eventId);
+extern void GameBit_Set(int eventId,int value);
 extern undefined8 FUN_80135d54();
 extern void fn_801389E0(int param_1,int param_2,int *param_3);
+extern void trickyImpress(int obj);
 extern undefined4 FUN_80135f38();
 extern undefined4 FUN_80136310();
 extern undefined4 FUN_8013651c();
@@ -191,6 +197,7 @@ extern char sSidekickCommandDebugTextBlock[];
 extern undefined4 lbl_803DDA48;
 extern int lbl_803DDA54;
 extern undefined4* lbl_803DCA78;
+extern int *lbl_803DCAAC;
 extern f64 DOUBLE_803e30f0;
 extern f64 DOUBLE_803e3218;
 extern f32 lbl_803DC074;
@@ -211,6 +218,9 @@ extern u32 lbl_803E2560;
 extern u32 lbl_803E2564;
 extern u16 lbl_803E2568;
 extern f32 lbl_803E2574;
+extern f32 lbl_803E2570;
+extern f32 lbl_803E2578;
+extern f32 lbl_803E257C;
 extern f32 lbl_803E256C;
 extern f32 lbl_803E2598;
 extern f32 lbl_803E25A0;
@@ -1166,6 +1176,103 @@ void Tricky_destroy(int obj,int shouldKeepFlameChildren)
   }
   return;
 }
+
+/* fn_80148D8C: 828b - handle Tricky's completed-command fade and reward spawning. */
+#pragma scheduling off
+void fn_80148D8C(int obj,int state)
+{
+  int setup;
+  int alpha;
+  int tricky;
+  u32 spawnBits;
+  u8 moveId;
+
+  setup = *(int *)(obj + 0x4c);
+  *(u8 *)(state + 0x2ef) = 0;
+  if (((*(u32 *)(state + 0x2dc) & 0x800) != 0) &&
+      ((*(u32 *)(state + 0x2e0) & 0x800) == 0)) {
+    tricky = getTrickyObject();
+    if (tricky != 0) {
+      trickyImpress(tricky);
+    }
+    if ((*(u32 *)(state + 0x2e4) & 0x40000000) == 0) {
+      if (*(s16 *)(setup + 0x18) != -1) {
+        gameBitIncrement(*(s16 *)(setup + 0x18));
+      }
+      if (*(s16 *)(setup + 0x1a) != -1) {
+        GameBit_Set(*(s16 *)(setup + 0x1a),0);
+      }
+    }
+    *(u32 *)(state + 0x29c) = 0;
+    ObjHits_DisableObject(obj);
+    *(u8 *)(obj + 0xaf) = *(u8 *)(obj + 0xaf) | 8;
+    moveId = *(u8 *)(state + 0x321);
+    *(f32 *)(state + 0x308) = lbl_803E256C / (lbl_803E2570 * *(f32 *)(state + 0x318));
+    *(u8 *)(state + 0x323) = 1;
+    ObjAnim_SetCurrentMove(lbl_803E2574,obj,moveId,0);
+    if (*(int *)(obj + 0x54) != 0) {
+      *(u8 *)(*(int *)(obj + 0x54) + 0x70) = 0;
+    }
+    *(u32 *)(state + 0x2e8) = *(u32 *)(state + 0x2e8) | 1;
+    Sfx_PlayFromObject(obj,0x233);
+    if (randomGetRange(0,100) > 50) {
+      if ((*(u32 *)(state + 0x2e4) & 0x100000) != 0) {
+        fn_80149CEC(obj,state,*(u8 *)(state + 0x2f5),0,4);
+      }
+      else {
+        spawnBits = *(s16 *)(setup + 0x22) & 0xf00;
+        if (spawnBits != 0) {
+          fn_80149CEC(obj,state,spawnBits,0,1);
+        }
+        spawnBits = *(s16 *)(setup + 0x22) & 0xf000;
+        if (spawnBits != 0) {
+          fn_80149CEC(obj,state,spawnBits,0,2);
+        }
+        spawnBits = *(s16 *)(setup + 0x22) & 0xff;
+        if (spawnBits != 0) {
+          fn_80149CEC(obj,state,spawnBits,0,3);
+        }
+      }
+    }
+  }
+  alpha = 0xff - (int)(lbl_803E257C * *(f32 *)(obj + 0x98));
+  if (alpha < 0) {
+    alpha = 0;
+  }
+  else if (alpha > 0xff) {
+    alpha = 0xff;
+  }
+  *(u8 *)(obj + 0x36) = alpha;
+  *(f32 *)(state + 0x30c) =
+      lbl_803E256C + (f32)(0xff - *(u8 *)(obj + 0x36)) / lbl_803E257C;
+  if (*(u8 *)(obj + 0x36) < 5) {
+    if ((*(u32 *)(state + 0x2e4) & 0x40000000) != 0) {
+      if (*(s16 *)(setup + 0x18) != -1) {
+        gameBitIncrement(*(s16 *)(setup + 0x18));
+      }
+      if (*(s16 *)(setup + 0x1a) != -1) {
+        GameBit_Set(*(s16 *)(setup + 0x1a),0);
+      }
+    }
+    *(f32 *)(state + 0x30c) = lbl_803E2574;
+    *(u32 *)(state + 0x2dc) = 0;
+    *(s16 *)(obj + 6) = *(s16 *)(obj + 6) | 0x4000;
+    *(u8 *)(obj + 0x36) = 0;
+    *(u32 *)(obj + 0xf4) = 1;
+    if (*(int *)(setup + 0x14) == -1) {
+      Obj_FreeObject(obj);
+    }
+    else {
+      if (*(s16 *)(setup + 0x2c) != 0) {
+        (*(void (**)(f32))(*(int *)lbl_803DCAAC + 0x64))
+            (lbl_803E2570 * (f32)*(s16 *)(setup + 0x2c));
+      }
+      *(u32 *)(state + 0x2dc) = *(u32 *)(state + 0x2dc) & 0xfffff7ff;
+      *(u32 *)(state + 0x2e8) = *(u32 *)(state + 0x2e8) & 0xfffffffc;
+    }
+  }
+}
+#pragma scheduling reset
 
 /* fn_80149CEC: 876b - spawn or reposition Tricky reward objects from packed command bits. */
 #pragma scheduling off
