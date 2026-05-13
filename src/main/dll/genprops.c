@@ -4441,7 +4441,7 @@ void DummyE9_init(void) {}
 int mikabombshadow_getExtraSize(void) { return 0x4; }
 int mikabombshadow_func08(void) { return 0x0; }
 int StaticCamera_getExtraSize(void) { return 0x8; }
-int fn_8016B8A0(void) { return 0x0; }
+int StaticCamera_func08(void) { return 0x0; }
 int gcbaddieshield_getExtraSize(void) { return 0x8; }
 int gcbaddieshield_func08(void) { return 0x0; }
 int baddieinterestp_getExtraSize(void) { return 0x0; }
