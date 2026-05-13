@@ -60,6 +60,8 @@ extern undefined4 fn_8003A328();
 extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
 extern undefined4 FUN_8003b818();
+extern void objRenderFn_8003b8f4(f32 scale,...);
+extern int fn_800395D8(int obj,int param_2);
 extern undefined4 FUN_80046f44();
 extern undefined4 FUN_80046f84();
 extern void fn_8004B594(void *param_1);
@@ -89,6 +91,8 @@ extern int FUN_80136870();
 extern undefined4 FUN_8013939c();
 extern undefined4 FUN_80139a4c();
 extern undefined4 FUN_8013a408();
+extern void fn_8013ADFC(int obj);
+extern void fn_80139164(int obj,int state);
 extern int FUN_8013b368();
 extern int FUN_8013dc88();
 extern int FUN_801451dc();
@@ -132,6 +136,7 @@ extern int FUN_80294c80();
 extern undefined4 FUN_80294ca8();
 extern undefined4 FUN_80294dc4();
 extern void trickyReportError(const char *fmt, ...);
+extern void objParticleFn_80099d84(f32 param_1,f32 param_2,int obj,int param_4,int param_5);
 
 extern undefined4 DAT_802c2948;
 extern undefined4 DAT_802c294c;
@@ -176,6 +181,10 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803DC078;
 extern f32 lbl_803DDA58;
 extern f32 lbl_803DDA5C;
+extern f32 timeDelta;
+extern f32 lbl_803E23DC;
+extern f32 lbl_803E23E8;
+extern f32 lbl_803E253C;
 extern f32 lbl_803E306C;
 extern f32 lbl_803E3078;
 extern f32 lbl_803E307C;
@@ -1155,71 +1164,68 @@ void fn_8014A058(int obj,int state)
 /*
  * --INFO--
  *
- * Function: FUN_80146c14
- * EN v1.0 Address: 0x80146C14
- * EN v1.0 Size: 420b
- * EN v1.1 Address: 0x801467E4
- * EN v1.1 Size: 464b
+ * Function: fn_801463BC
+ * EN v1.0 Address: 0x801463BC
+ * EN v1.0 Size: 464b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80146c14(void)
+void fn_801463BC(int obj,int param_2,int param_3,int param_4,int param_5,char doRender)
 {
-  byte bVar1;
-  undefined2 *puVar2;
-  char in_r8;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  
-  puVar2 = (undefined2 *)FUN_80286830();
-  if (in_r8 != '\0') {
-    iVar6 = *(int *)(puVar2 + 0x5c);
-    FUN_8003b818((int)puVar2);
-    iVar4 = *(int *)(puVar2 + 0x5c);
-    iVar5 = 0;
-    iVar3 = iVar4;
+  u8 mode;
+  int state;
+  int pathState;
+  int pathPoint;
+  int i;
+  int pathInfo;
+
+  if (doRender != '\0') {
+    state = *(int *)(obj + 0xb8);
+    objRenderFn_8003b8f4(lbl_803E23E8);
+    pathState = *(int *)(obj + 0xb8);
+    i = 0;
+    pathPoint = pathState;
     do {
-      ObjPath_GetPointWorldPosition(puVar2,iVar5 + 4,(float *)(iVar3 + 0x3d8),(undefined4 *)(iVar3 + 0x3dc),
-                   (float *)(iVar3 + 0x3e0),0);
-      iVar3 = iVar3 + 0xc;
-      iVar5 = iVar5 + 1;
-    } while (iVar5 < 4);
-    ObjPath_GetPointWorldPosition(puVar2,8,(float *)(iVar4 + 0x408),(undefined4 *)(iVar4 + 0x40c),
-                 (float *)(iVar4 + 0x410),0);
-    iVar3 = FUN_8003964c((int)puVar2,0);
-    *(undefined2 *)(iVar4 + 0x414) = *(undefined2 *)(iVar3 + 2);
-    if ((*(uint *)(iVar6 + 0x54) & 0x10) != 0) {
-      bVar1 = *(byte *)(iVar6 + 8);
-      if (bVar1 == 3) {
-        if (*(char *)(iVar6 + 10) == '\x04') {
-          FUN_8013a408(puVar2);
+      ObjPath_GetPointWorldPosition(obj,i + 4,(float *)(pathPoint + 0x3d8),
+                   (undefined4 *)(pathPoint + 0x3dc),(float *)(pathPoint + 0x3e0),0);
+      pathPoint = pathPoint + 0xc;
+      i = i + 1;
+    } while (i < 4);
+    ObjPath_GetPointWorldPosition(obj,8,(float *)(pathState + 0x408),
+                 (undefined4 *)(pathState + 0x40c),(float *)(pathState + 0x410),0);
+    pathInfo = fn_800395D8(obj,0);
+    *(s16 *)(pathState + 0x414) = *(s16 *)(pathInfo + 2);
+    if ((*(u32 *)(state + 0x54) & 0x10) != 0) {
+      mode = *(u8 *)(state + 8);
+      if (mode == 3) {
+        if (*(u8 *)(state + 10) == 4) {
+          fn_8013ADFC(obj);
         }
       }
-      else if ((bVar1 < 3) && (1 < bVar1)) {
-        FUN_8013a408(puVar2);
+      else if ((mode < 3) && (1 < mode)) {
+        fn_8013ADFC(obj);
       }
-      if ((((*(uint *)(iVar6 + 0x54) & 0x200) == 0) && (*(char *)(iVar6 + 8) == '\v')) &&
-         (2 < *(byte *)(iVar6 + 10))) {
-        if (*(byte *)(iVar6 + 10) != 3) {
-          *(undefined4 *)(*(int *)(iVar6 + 0x700) + 0xc) = *(undefined4 *)(iVar6 + 0x408);
-          *(undefined4 *)(*(int *)(iVar6 + 0x700) + 0x10) = *(undefined4 *)(iVar6 + 0x40c);
-          *(undefined4 *)(*(int *)(iVar6 + 0x700) + 0x14) = *(undefined4 *)(iVar6 + 0x410);
+      if ((((*(u32 *)(state + 0x54) & 0x200) == 0) && (*(u8 *)(state + 8) == 0xb)) &&
+         (2 < *(u8 *)(state + 10))) {
+        if (*(u8 *)(state + 10) != 3) {
+          *(f32 *)(*(int *)(state + 0x700) + 0xc) = *(f32 *)(state + 0x408);
+          *(f32 *)(*(int *)(state + 0x700) + 0x10) = *(f32 *)(state + 0x40c);
+          *(f32 *)(*(int *)(state + 0x700) + 0x14) = *(f32 *)(state + 0x410);
         }
-        FUN_8003b818(*(int *)(iVar6 + 0x700));
+        objRenderFn_8003b8f4(lbl_803E23E8,*(int *)(state + 0x700),param_2,param_3,param_4,param_5);
       }
     }
-    FUN_801367b4(puVar2,iVar6);
-    ObjPath_GetPointWorldPositionArray(puVar2,4,4,(float *)(iVar6 + 0x7d8));
-    *(float *)(iVar6 + 0x838) = *(float *)(iVar6 + 0x838) - lbl_803DC074;
-    if (lbl_803E306C < *(float *)(iVar6 + 0x838)) {
-      FUN_8008111c((double)lbl_803E31CC,(double)lbl_803E3078,puVar2,6,(int *)0x0);
+    fn_80139164(obj,state);
+    ObjPath_GetPointWorldPositionArray(obj,4,4,(float *)(state + 0x7d8));
+    *(f32 *)(state + 0x838) = *(f32 *)(state + 0x838) - timeDelta;
+    if (lbl_803E23DC < *(f32 *)(state + 0x838)) {
+      objParticleFn_80099d84(lbl_803E253C,lbl_803E23E8,obj,6,0);
     }
   }
-  FUN_8028687c();
   return;
 }
 

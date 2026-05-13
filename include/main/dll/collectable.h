@@ -26,7 +26,7 @@ void FUN_801460b8(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 uint FUN_80146874(void);
 void Tricky_destroy(int obj,int shouldKeepFlameChildren);
-void FUN_80146c14(void);
+void fn_801463BC(int obj,int param_2,int param_3,int param_4,int param_5,char doRender);
 void FUN_80146db8(int param_1);
 void FUN_80146f94(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
