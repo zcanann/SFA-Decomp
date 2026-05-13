@@ -192,11 +192,22 @@ void sndOutputMode(int mode)
     }
     if (oldFlags != synthFlags) {
         u32 i;
-        for (i = 0; i < lbl_803BD150[0x210]; i++) {
-            volatile u32 *flags = (volatile u32 *)(synthVoice + i * 0x404 + 0x114);
-            u32 nextFlags = flags[1];
-            flags[1] = nextFlags;
-            flags[0] |= 0x2000;
+        u32 offset;
+        for (i = 0, offset = 0; i < lbl_803BD150[0x210];) {
+            u32 flagsOffset = offset + 0x114;
+            volatile u32 *readFlags;
+            volatile u32 *writeFlags;
+            u32 lowFlags;
+            u32 highFlags;
+            offset += 0x404;
+            readFlags = (volatile u32 *)(synthVoice + flagsOffset);
+            lowFlags = readFlags[0];
+            writeFlags = (volatile u32 *)(synthVoice + flagsOffset);
+            highFlags = readFlags[1];
+            i++;
+            lowFlags |= 0x2000;
+            writeFlags[1] = highFlags;
+            writeFlags[0] = lowFlags;
         }
         synthRefreshJobVolumes();
     }
@@ -266,12 +277,13 @@ void synthActivateStudio(u8 slot, int a, int b)
  */
 void synthDeactivateStudio(u8 slot)
 {
-    u32 i;
     u32 offset;
+    u32 i;
     u8 *voice;
 
+    i = 0;
     offset = 0;
-    for (i = 0; i < lbl_803BD150[0x210]; i++) {
+    for (; i < lbl_803BD150[0x210]; i++) {
         voice = synthVoice + offset;
         if (slot == *(u8 *)(voice + 0x11f)) {
             if (*(u32 *)(voice + 0xf4) != 0xffffffff) {
