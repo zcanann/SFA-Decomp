@@ -2787,6 +2787,7 @@ int fn_80145804(int *obj) {
 #pragma peephole reset
 
 /* fn_80145828: 148b - enter or queue Tricky's target-driven state 10 command. */
+#pragma peephole off
 #pragma scheduling off
 int fn_80145828(int *obj,int targetObj) {
     int *state = (int*)obj[0xb8/4];
@@ -2796,13 +2797,15 @@ int fn_80145828(int *obj,int targetObj) {
         return 0;
     }
     if ((state[0x54/4] & 0x10) == 0) {
-        void *currentTarget = (void *)state[0x28/4];
-        void *nextTarget = (void *)(targetObj + 0x18);
+        s32 clearTargetAnim;
+        void *currentTarget;
+        void *nextTarget;
 
         state[0x24/4] = targetObj;
+        currentTarget = (void *)state[0x28/4];
+        nextTarget = (void *)(targetObj + 0x18);
         if (currentTarget != nextTarget) {
-            s32 clearTargetAnim = -1025;
-
+            clearTargetAnim = -1025;
             state[0x28/4] = (int)nextTarget;
             state[0x54/4] = state[0x54/4] & clearTargetAnim;
             *(s16*)((u8*)state + 0xd2) = 0;
@@ -2810,13 +2813,16 @@ int fn_80145828(int *obj,int targetObj) {
         *((u8*)state + 10) = 0;
         *((u8*)state + 8) = 10;
     } else {
+        u32 queuedTargetMask = 0x10000;
+
         *((u8*)state + 0x7d0) = 1;
         state[0x7d4/4] = targetObj;
-        state[0x54/4] |= 0x10000;
+        state[0x54/4] = state[0x54/4] | queuedTargetMask;
     }
     return 1;
 }
 #pragma scheduling reset
+#pragma peephole reset
 
 /* fn_801458BC: 260b - start or refresh Tricky's targeted command state. */
 #pragma scheduling off
