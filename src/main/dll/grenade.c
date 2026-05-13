@@ -90,9 +90,9 @@ extern void* PTR_FUN_8031dfa4;
 /*
  * --INFO--
  *
- * Function: FUN_80141880
+ * Function: trickyDigTunnel
  * EN v1.0 Address: 0x80141880
- * EN v1.0 Size: 2176b
+ * EN v1.0 Size: 1900b
  * EN v1.1 Address: 0x80141C08
  * EN v1.1 Size: 1900b
  * JP Address: TODO
@@ -100,10 +100,10 @@ extern void* PTR_FUN_8031dfa4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80141880(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 ushort *param_9,undefined4 *param_10,int param_11,undefined4 param_12,byte param_13
-                 ,uint param_14,undefined4 param_15,undefined4 param_16)
+void trickyDigTunnel(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+                     undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                     ushort *param_9,undefined4 *param_10,int param_11,undefined4 param_12,
+                     byte param_13,uint param_14,undefined4 param_15,undefined4 param_16)
 {
   float fVar1;
   float fVar2;
