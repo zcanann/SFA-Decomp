@@ -33,6 +33,7 @@ void FUN_80146f94(undefined8 param_1,double param_2,double param_3,undefined8 pa
 void FUN_80146f98(int param_1);
 void FUN_80146f9c(void);
 void FUN_80146fa0(void);
+void fn_8014A058(int obj,int state);
 void FUN_80146fa4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,int param_10,undefined4 param_11,undefined4 param_12,

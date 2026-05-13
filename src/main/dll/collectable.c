@@ -47,6 +47,7 @@ extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjLink_DetachChild();
 extern undefined8 ObjLink_AttachChild();
 extern void Obj_FreeObject(int param_1);
+extern u8 Obj_IsLoadingLocked(void);
 extern undefined4 ObjPath_GetPointWorldPositionArray();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_80038f38();
@@ -1119,6 +1120,38 @@ void Tricky_destroy(int obj,int shouldKeepFlameChildren)
   return;
 }
 
+/* fn_8014A058: 248b - refresh Tricky's attached child object when its setup id changes. */
+#pragma scheduling off
+void fn_8014A058(int obj,int state)
+{
+  int parentSetup;
+  int child;
+  int setup;
+
+  parentSetup = *(int *)(obj + 0x4c);
+  if ((*(s16 *)(state + 0x2b4) != *(s16 *)(state + 0x2b6)) &&
+      (*(u8 *)(obj + 0x36) != 0)) {
+    child = *(int *)(obj + 0xc8);
+    if (child != 0) {
+      ObjLink_DetachChild(obj,child);
+      Obj_FreeObject(child);
+    }
+    if (Obj_IsLoadingLocked() != 0) {
+      if (*(s16 *)(state + 0x2b6) > 0) {
+        setup = Obj_AllocObjectSetup(0x20);
+        *(u8 *)(setup + 5) = *(u8 *)(setup + 5) | (*(u8 *)(parentSetup + 5) & 0x18);
+        child = Obj_SetupObject(setup,4,*(s8 *)(obj + 0xac),-1,*(int *)(obj + 0x30));
+        ObjLink_AttachChild(obj,child,0);
+        *(s16 *)(state + 0x2b4) = *(s16 *)(state + 0x2b6);
+      }
+    }
+    else {
+      *(s16 *)(state + 0x2b4) = 0;
+    }
+  }
+}
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
@@ -2011,7 +2044,7 @@ extern u32 GameBit_Get(int bit);
 extern u8 fn_800DBCFC(void *pos,int param_2);
 extern int fn_800DBECC(void *pos);
 extern void fn_800DB224(int pathId,u8 *out);
-extern int Obj_AllocObjectSetup(int objId,int flags);
+extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject(int setup,int param_2,int param_3,int param_4,int param_5);
 extern int fn_800DB0E0(void *pos,int param_2,int param_3);
 extern int randomGetRange(int lo,int hi);
