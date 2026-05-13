@@ -26,6 +26,7 @@ void FUN_801460b8(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 uint FUN_80146874(void);
 void Tricky_destroy(int obj,int shouldKeepFlameChildren);
+int fn_80149CEC(int obj,int state,u32 spawnBits,u32 useAltMode,u32 mode);
 int fn_8014A150(int obj,int state,void *from,void *to);
 void fn_8014A304(float radius,int obj,int state);
 void fn_8014A5FC(int obj,int state);

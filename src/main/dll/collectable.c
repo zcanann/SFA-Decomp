@@ -44,13 +44,15 @@ extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjHits_SyncObjectPosition();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern int ObjHits_GetPriorityHit();
-extern undefined4 ObjGroup_FindNearestObject();
+extern int ObjGroup_FindNearestObject(int group,int obj,f32 *maxDistance);
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjLink_DetachChild();
 extern undefined8 ObjLink_AttachChild();
 extern void Obj_FreeObject(int param_1);
+extern int Obj_AllocObjectSetup();
+extern int Obj_SetupObject(int setup,int param_2,int param_3,int param_4,int param_5);
 extern u8 Obj_IsLoadingLocked(void);
 extern undefined4 ObjPath_GetPointWorldPositionArray();
 extern undefined4 ObjPath_GetPointWorldPosition();
@@ -187,6 +189,7 @@ extern undefined4 DAT_803e31f4;
 extern undefined4 DAT_803e31f8;
 extern char sSidekickCommandDebugTextBlock[];
 extern undefined4 lbl_803DDA48;
+extern int lbl_803DDA54;
 extern undefined4* lbl_803DCA78;
 extern f64 DOUBLE_803e30f0;
 extern f64 DOUBLE_803e3218;
@@ -202,9 +205,17 @@ extern f32 lbl_803E23E8;
 extern f32 lbl_803E24B8;
 extern f32 lbl_803E253C;
 extern f32 lbl_803E2540;
+extern u32 lbl_803E2558;
+extern u32 lbl_803E255C;
+extern u32 lbl_803E2560;
+extern u32 lbl_803E2564;
+extern u16 lbl_803E2568;
 extern f32 lbl_803E2574;
 extern f32 lbl_803E256C;
+extern f32 lbl_803E2598;
 extern f32 lbl_803E25A0;
+extern f32 lbl_803E25A8;
+extern f32 lbl_803E25AC;
 extern f32 lbl_803E25B0;
 extern f32 lbl_803E25B4;
 extern f32 lbl_803E25B8;
@@ -1155,6 +1166,131 @@ void Tricky_destroy(int obj,int shouldKeepFlameChildren)
   }
   return;
 }
+
+/* fn_80149CEC: 876b - spawn or reposition Tricky reward objects from packed command bits. */
+#pragma scheduling off
+int fn_80149CEC(int obj,int state,u32 spawnBits,u32 useAltMode,u32 mode)
+{
+  struct TrickyRewardSpawnTail {
+    u32 pair;
+    u16 single;
+  } rewardTail;
+  u32 commandSpawnIds[2];
+  u32 rewardSpawnIds0;
+  f32 nearestDistance;
+  int parentSetup;
+  int setup;
+  int index;
+  f32 savedX;
+  f32 savedY;
+  f32 savedZ;
+
+  (void)state;
+  parentSetup = *(int *)(obj + 0x4c);
+  commandSpawnIds[0] = lbl_803E2558;
+  commandSpawnIds[1] = lbl_803E255C;
+  rewardSpawnIds0 = lbl_803E2560;
+  rewardTail.pair = lbl_803E2564;
+  rewardTail.single = lbl_803E2568;
+  setup = 0;
+  if (spawnBits == 0) {
+    return 0;
+  }
+  if (Obj_IsLoadingLocked() == 0) {
+    return 0;
+  }
+  mode = (u8)mode;
+  if (mode == 1) {
+    index = ((int)(spawnBits & 0xf00) >> 8) - 1;
+    if (index > 3) {
+      index = 3;
+    }
+    setup = Obj_AllocObjectSetup(0x30,*(u16 *)((int)commandSpawnIds + index * 2));
+  }
+  else if (mode == 2) {
+    index = ((int)(spawnBits & 0xf000) >> 0xc) - 1;
+    if (index > 1) {
+      index = 1;
+    }
+    setup = Obj_AllocObjectSetup(0x30,*(u16 *)((int)&rewardSpawnIds0 + index * 2));
+  }
+  else if (mode == 3) {
+    if (spawnBits == 3) {
+      setup = Obj_AllocObjectSetup(0x30,0xb);
+    }
+    else if ((int)spawnBits < 3) {
+      if (spawnBits != 1) {
+        return 0;
+      }
+      setup = Obj_AllocObjectSetup(0x30,0x2cd);
+    }
+    else {
+      if (spawnBits == 5) {
+        savedX = *(f32 *)(obj + 0x18);
+        savedY = *(f32 *)(obj + 0x1c);
+        savedZ = *(f32 *)(obj + 0x20);
+        parentSetup = *(int *)(obj + 0x4c);
+        if (parentSetup != 0) {
+          *(f32 *)(obj + 0x18) = *(f32 *)(parentSetup + 8);
+          *(f32 *)(obj + 0x1c) = *(f32 *)(parentSetup + 0xc);
+          *(f32 *)(obj + 0x20) = *(f32 *)(parentSetup + 0x10);
+        }
+        nearestDistance = lbl_803E25A8;
+        lbl_803DDA54 = ObjGroup_FindNearestObject(4,obj,&nearestDistance);
+        *(f32 *)(obj + 0x18) = savedX;
+        *(f32 *)(obj + 0x1c) = savedY;
+        *(f32 *)(obj + 0x20) = savedZ;
+        if (lbl_803DDA54 != 0) {
+          *(f32 *)(lbl_803DDA54 + 0x18) = *(f32 *)(obj + 0xc);
+          *(f32 *)(lbl_803DDA54 + 0xc) = *(f32 *)(obj + 0xc);
+          *(f32 *)(lbl_803DDA54 + 0x1c) = lbl_803E25AC + *(f32 *)(obj + 0x10);
+          *(f32 *)(lbl_803DDA54 + 0x10) = lbl_803E25AC + *(f32 *)(obj + 0x10);
+          *(f32 *)(lbl_803DDA54 + 0x20) = *(f32 *)(obj + 0x14);
+          *(f32 *)(lbl_803DDA54 + 0x14) = *(f32 *)(obj + 0x14);
+        }
+        return lbl_803DDA54;
+      }
+      if ((int)spawnBits > 4) {
+        return 0;
+      }
+      setup = Obj_AllocObjectSetup(0x30,0x2cd);
+    }
+  }
+  else if (mode == 4) {
+    if ((int)spawnBits > 3) {
+      spawnBits = 3;
+    }
+    if ((int)spawnBits < 1) {
+      return 0;
+    }
+    setup = Obj_AllocObjectSetup(0x30,*(u16 *)((int)&rewardTail.pair + (spawnBits - 1) * 2));
+  }
+  *(u8 *)(setup + 0x1a) = 0x14;
+  *(s16 *)(setup + 0x2c) = -1;
+  *(s16 *)(setup + 0x1c) = -1;
+  *(s16 *)(setup + 0x24) = -1;
+  *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
+  *(f32 *)(setup + 0xc) = lbl_803E2598 + *(f32 *)(obj + 0x10);
+  *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+  if ((useAltMode & 0xff) != 0) {
+    *(s16 *)(setup + 0x2e) = 2;
+  }
+  else {
+    *(s16 *)(setup + 0x2e) = 1;
+  }
+  *(u8 *)(setup + 4) = *(u8 *)(parentSetup + 4);
+  *(u8 *)(setup + 6) = *(u8 *)(parentSetup + 6);
+  *(u8 *)(setup + 5) = *(u8 *)(parentSetup + 5);
+  *(u8 *)(setup + 7) = *(u8 *)(parentSetup + 7);
+  lbl_803DDA54 = Obj_SetupObject(setup,5,*(s8 *)(obj + 0xac),-1,*(int *)(obj + 0x30));
+  if ((*(s16 *)(lbl_803DDA54 + 0x46) == 0x3cd) ||
+      (*(s16 *)(lbl_803DDA54 + 0x46) == 0xb)) {
+    (*(void (**)(f32,f32,f32))(*(int *)(*(int *)(lbl_803DDA54 + 0x68)) + 0x2c))
+        (lbl_803E2574,lbl_803E256C,lbl_803E2574);
+  }
+  return lbl_803DDA54;
+}
+#pragma scheduling reset
 
 /* fn_8014A058: 248b - refresh Tricky's attached child object when its setup id changes. */
 #pragma scheduling off
