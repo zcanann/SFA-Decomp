@@ -18,6 +18,7 @@ void FUN_801457a4(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 void FUN_80145ea4(int param_1);
 void FUN_80145ee8(int param_1,int param_2,int param_3);
+int fn_80145828(int *obj,int targetObj);
 void fn_801458BC(int *obj,int commandEnabled,int targetObj);
 void sideCommandEnable(int param_1,int param_2,int param_3,int param_4);
 void FUN_801460b8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
