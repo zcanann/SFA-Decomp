@@ -73,6 +73,7 @@ extern void fn_8004B594(void *param_1);
 extern undefined8 FUN_800571f8();
 extern int FUN_800575b4();
 extern int FUN_800620e8();
+extern u16 hitDetectFn_80065e50(f32 x,f32 y,f32 z,int obj,int *hits,int param_6,int param_7);
 extern undefined4 FUN_8006dca8();
 extern undefined4 FUN_8006ef38();
 extern undefined4 FUN_8008111c();
@@ -198,11 +199,14 @@ extern f32 lbl_803E23E8;
 extern f32 lbl_803E24B8;
 extern f32 lbl_803E253C;
 extern f32 lbl_803E2540;
+extern f32 lbl_803E2574;
 extern f32 lbl_803E256C;
 extern f32 lbl_803E25A0;
 extern f32 lbl_803E25B0;
 extern f32 lbl_803E25B4;
 extern f32 lbl_803E25B8;
+extern f32 lbl_803E25C4;
+extern f32 lbl_803E25C8;
 extern f32 lbl_803E306C;
 extern f32 lbl_803E3078;
 extern f32 lbl_803E307C;
@@ -1307,6 +1311,59 @@ void fn_8014A304(f32 radius,int obj,int state)
     }
     else {
       *(u32 *)(state + 0x2dc) &= ~visibilityBits[i];
+    }
+  }
+}
+#pragma scheduling reset
+
+/* fn_8014A86C: 388b - find nearby floor heights and special surface deltas for Tricky. */
+#pragma scheduling off
+void fn_8014A86C(int obj,int state,f32 *nearestFloorY,f32 *nearestSpecialY)
+{
+  int hitList[2];
+  u16 hitCount;
+  u16 i;
+  f32 *hit;
+  f32 hitY;
+  f32 dy;
+  f32 absDy;
+  f32 nearestFloorDelta;
+  f32 nearestSpecialDelta;
+
+  *nearestFloorY = lbl_803E25C4;
+  *nearestSpecialY = lbl_803E25C4;
+  hitCount = hitDetectFn_80065e50(*(f32 *)(obj + 0xc),*(f32 *)(obj + 0x10),
+                                  *(f32 *)(obj + 0x14),obj,hitList,0,0);
+  *nearestFloorY = *(f32 *)(obj + 0x10);
+  *nearestSpecialY = *(f32 *)(obj + 0x10);
+  nearestFloorDelta = lbl_803E25C8;
+  nearestSpecialDelta = nearestFloorDelta;
+  *(u32 *)(state + 0x2dc) &= 0xefffffff;
+  *(f32 *)(state + 0x1b8) = lbl_803E2574;
+  *(u8 *)(state + 0x264) &= 0xef;
+  for (i = 0; i < hitCount; i++) {
+    hit = *(f32 **)(hitList[0] + ((u32)i << 2));
+    hitY = hit[0];
+    dy = hitY - *(f32 *)(obj + 0x10);
+    absDy = dy;
+    if (dy < lbl_803E2574) {
+      absDy = -dy;
+    }
+    if (*(s8 *)(hit + 5) == 0xe) {
+      if (absDy < nearestSpecialDelta) {
+        *(f32 *)(state + 0x1b8) = dy;
+        *(u8 *)(state + 0x264) |= 0x10;
+        *nearestSpecialY = **(f32 **)(hitList[0] + ((u32)i << 2));
+        nearestSpecialDelta = absDy;
+        if (lbl_803E25A0 < *(f32 *)(state + 0x1b8)) {
+          *(u32 *)(state + 0x2dc) |= 0x10100000;
+        }
+      }
+    }
+    else if (absDy < nearestFloorDelta) {
+      *nearestFloorY = hitY;
+      *(u8 *)(state + 0x264) |= 0x10;
+      nearestFloorDelta = absDy;
     }
   }
 }
