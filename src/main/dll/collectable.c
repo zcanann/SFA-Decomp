@@ -121,6 +121,7 @@ extern undefined4 FUN_80294c68();
 extern int FUN_80294c80();
 extern undefined4 FUN_80294ca8();
 extern undefined4 FUN_80294dc4();
+extern void trickyReportError(const char *fmt, ...);
 
 extern undefined4 DAT_802c2948;
 extern undefined4 DAT_802c294c;
@@ -156,6 +157,7 @@ extern undefined4 DAT_803e31ec;
 extern undefined4 DAT_803e31f0;
 extern undefined4 DAT_803e31f4;
 extern undefined4 DAT_803e31f8;
+extern char sSidekickCommandDebugTextBlock[];
 extern f64 DOUBLE_803e30f0;
 extern f64 DOUBLE_803e3218;
 extern f32 lbl_803DC074;
@@ -741,9 +743,9 @@ void FUN_80145ee8(int param_1,int param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_80145fdc
- * EN v1.0 Address: 0x80145FDC
- * EN v1.0 Size: 220b
+ * Function: sideCommandEnable
+ * EN v1.0 Address: 0x801459E0
+ * EN v1.0 Size: 240b
  * EN v1.1 Address: 0x80145E08
  * EN v1.1 Size: 264b
  * JP Address: TODO
@@ -751,7 +753,7 @@ void FUN_80145ee8(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80145fdc(int param_1,int param_2,undefined param_3,int param_4)
+void sideCommandEnable(int param_1,int param_2,undefined param_3,int param_4)
 {
   int iVar1;
   int iVar2;
@@ -760,7 +762,7 @@ void FUN_80145fdc(int param_1,int param_2,undefined param_3,int param_4)
   
   iVar1 = *(int *)(param_1 + 0xb8);
   if (*(char *)(iVar1 + 0x798) == '\n') {
-    FUN_80146f9c();
+    trickyReportError(sSidekickCommandDebugTextBlock);
   }
   else {
     *(byte *)(iVar1 + 0xb) = *(byte *)(iVar1 + 0xb) | (byte)(1 << param_4);
