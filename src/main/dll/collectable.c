@@ -31,6 +31,7 @@ extern undefined8 FUN_80017ac8();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern int FUN_80017af8();
+extern int ObjList_FindObjectById(int objId);
 extern undefined4 FUN_8002f6ac();
 extern int FUN_8002fc3c();
 extern undefined4 FUN_800305c4();
@@ -55,6 +56,7 @@ extern undefined8 FUN_80039468();
 extern void objAudioFn_800393f8(int param_1,void *param_2,int param_3,int param_4,int param_5,
                                 int param_6);
 extern int FUN_8003964c();
+extern f32 getXZDistance(f32 *a, f32 *b);
 extern undefined4 FUN_8003a1c4();
 extern undefined4 fn_8003A328();
 extern undefined4 FUN_8003b1a4();
@@ -117,6 +119,7 @@ extern undefined4 FUN_8015a4c4();
 extern undefined4 FUN_8015b2cc();
 extern undefined4 FUN_801778d0();
 extern void objSetAnimSpeedTo1(int param_1);
+extern f32 fn_801948C0(int obj,int param_2);
 extern double FUN_80194a70();
 extern undefined4 FUN_8020a568();
 extern undefined4 FUN_80247eb8();
@@ -184,7 +187,9 @@ extern f32 lbl_803DDA5C;
 extern f32 timeDelta;
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E8;
+extern f32 lbl_803E24B8;
 extern f32 lbl_803E253C;
+extern f32 lbl_803E2540;
 extern f32 lbl_803E306C;
 extern f32 lbl_803E3078;
 extern f32 lbl_803E307C;
@@ -1232,79 +1237,79 @@ void fn_801463BC(int obj,int param_2,int param_3,int param_4,int param_5,char do
 /*
  * --INFO--
  *
- * Function: FUN_80146db8
- * EN v1.0 Address: 0x80146DB8
- * EN v1.0 Size: 476b
- * EN v1.1 Address: 0x801469B4
- * EN v1.1 Size: 500b
+ * Function: fn_8014658C
+ * EN v1.0 Address: 0x8014658C
+ * EN v1.0 Size: 500b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80146db8(int param_1)
+#pragma scheduling off
+void fn_8014658C(int obj)
 {
-  float fVar1;
-  int *piVar2;
-  int iVar3;
-  int iVar4;
-  double dVar5;
-  int local_18 [2];
-  
-  iVar4 = *(int *)(param_1 + 0xb8);
-  fVar1 = *(float *)(param_1 + 0x10) - *(float *)(param_1 + 0x84);
-  if (fVar1 < lbl_803E306C) {
-    fVar1 = -fVar1;
+  f32 dy;
+  int *objects;
+  int i;
+  int state;
+  f32 height;
+  int count[2];
+
+  state = *(int *)(obj + 0xb8);
+  dy = *(f32 *)(obj + 0x10) - *(f32 *)(obj + 0x84);
+  if (dy < lbl_803E23DC) {
+    dy = -dy;
   }
-  if (lbl_803E3078 == fVar1) {
-    if (*(float *)(param_1 + 0x10) == *(float *)(param_1 + 0x1c)) {
-      *(byte *)(iVar4 + 0x58) = *(byte *)(iVar4 + 0x58) & 0xdf | 0x20;
-      *(undefined4 *)(iVar4 + 0x5c) = 0xffffffff;
-      *(float *)(iVar4 + 0x60) = lbl_803E306C;
+  if (lbl_803E23E8 == dy) {
+    if (*(f32 *)(obj + 0x10) == *(f32 *)(obj + 0x1c)) {
+      *(u8 *)(state + 0x58) = (*(u8 *)(state + 0x58) & 0xdf) | 0x20;
+      *(s32 *)(state + 0x5c) = -1;
+      *(f32 *)(state + 0x60) = lbl_803E23DC;
     }
   }
   else {
-    iVar3 = FUN_80017af8(0x46406);
-    if ((iVar3 != 0) &&
-       (dVar5 = FUN_80017708((float *)(param_1 + 0x18),(float *)(iVar3 + 0x18)),
-       dVar5 < (double)lbl_803E31D0)) {
-      *(byte *)(iVar4 + 0x58) = *(byte *)(iVar4 + 0x58) & 0xdf | 0x20;
-      *(undefined4 *)(iVar4 + 0x5c) = 0x46406;
-      *(float *)(iVar4 + 0x60) = lbl_803E306C;
+    i = ObjList_FindObjectById(0x46406);
+    if ((i != 0) && (getXZDistance((f32 *)(obj + 0x18),(f32 *)(i + 0x18)) < lbl_803E2540)) {
+      *(u8 *)(state + 0x58) = (*(u8 *)(state + 0x58) & 0xdf) | 0x20;
+      *(u32 *)(state + 0x5c) = 0x46406;
+      *(f32 *)(state + 0x60) = lbl_803E23DC;
     }
   }
-  if ((*(byte *)(iVar4 + 0x58) >> 5 & 1) != 0) {
-    piVar2 = ObjGroup_GetObjects(0x51,local_18);
-    for (iVar3 = 0; iVar3 < local_18[0]; iVar3 = iVar3 + 1) {
-      dVar5 = FUN_80194a70(*piVar2,3);
-      if (*(int *)(iVar4 + 0x5c) == -1) {
-        fVar1 = (float)(dVar5 - (double)*(float *)(param_1 + 0x10));
-        if (fVar1 < lbl_803E306C) {
-          fVar1 = -fVar1;
+  if ((*(u8 *)(state + 0x58) >> 5 & 1) != 0) {
+    objects = ObjGroup_GetObjects(0x51,count);
+    for (i = 0; i < count[0]; i++) {
+      height = fn_801948C0(*objects,3);
+      if (*(s32 *)(state + 0x5c) == -1) {
+        dy = height - *(f32 *)(obj + 0x10);
+        if (dy < lbl_803E23DC) {
+          dy = -dy;
         }
-        if (fVar1 < lbl_803E3148) {
-          *(undefined4 *)(iVar4 + 0x5c) = *(undefined4 *)(*(int *)(*piVar2 + 0x4c) + 0x14);
+        if (dy < lbl_803E24B8) {
+          *(u32 *)(state + 0x5c) = *(u32 *)(*(int *)(*objects + 0x4c) + 0x14);
         }
       }
-      if (*(int *)(iVar4 + 0x5c) == *(int *)(*(int *)(*piVar2 + 0x4c) + 0x14)) {
-        if (((double)*(float *)(iVar4 + 0x60) == (double)lbl_803E306C) ||
-           ((double)*(float *)(iVar4 + 0x60) != dVar5)) {
-          *(float *)(param_1 + 0x10) = (float)dVar5;
-          *(float *)(iVar4 + 0x60) = (float)dVar5;
+      if (*(u32 *)(state + 0x5c) == *(u32 *)(*(int *)(*objects + 0x4c) + 0x14)) {
+        if ((*(f32 *)(state + 0x60) == lbl_803E23DC) ||
+           (*(f32 *)(state + 0x60) != height)) {
+          *(f32 *)(obj + 0x10) = height;
+          *(f32 *)(state + 0x60) = height;
         }
         else {
-          *(byte *)(iVar4 + 0x58) = *(byte *)(iVar4 + 0x58) & 0xdf;
+          *(u8 *)(state + 0x58) = *(u8 *)(state + 0x58) & 0xdf;
         }
         break;
       }
-      piVar2 = piVar2 + 1;
+      objects = objects + 1;
     }
-    if (iVar3 == local_18[0]) {
-      *(byte *)(iVar4 + 0x58) = *(byte *)(iVar4 + 0x58) & 0xdf;
+    if (i == count[0]) {
+      *(u8 *)(state + 0x58) = *(u8 *)(state + 0x58) & 0xdf;
     }
   }
   return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
