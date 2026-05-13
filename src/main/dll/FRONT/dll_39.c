@@ -49,6 +49,7 @@ extern void titleScreenPositionElements(f32 param_1,f32 param_2);
 extern void titleScreenTextDrawFunc(void);
 
 extern int DAT_803a5098;
+extern char lbl_8031A1D8[];
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6cc;
 extern undefined4 DAT_803dd970;
@@ -83,13 +84,6 @@ extern f32 FLOAT_803e2970;
 extern f32 FLOAT_803e2980;
 extern int iRam803de2bc;
 static char sNRarewareReportTag[] = "n_rareware\n";
-static char s_starfox_thp_8031a32c[] = "starfox.thp";
-static char s__________________malloc_for_movi_8031a338[] =
-    "^^^^^^^^^^^^^^^^  malloc for movie failed\n";
-static char s__________________RESTRUCT_for_mo_8031a364[] =
-    "^^^^^^^^^^^^^^^^  RESTRUCT for movie\n";
-static char s_n_attractmode_c_8031a38c[] = "n_attractmode.c";
-static char s_Fail_to_prepare_8031a39c[] = "Fail to prepare\n";
 
 extern void *mmAlloc(int size,int heap,int flags);
 extern int mmSetFreeDelay(int delay);
@@ -135,9 +129,11 @@ extern f32 lbl_803E1D10;
 extern f32 lbl_803E1D14;
 extern f32 lbl_803E1D18;
 
-#define sNAttractModeSourceFile s_n_attractmode_c_8031a38c
-#define sNAttractModeFailToPrepare s_Fail_to_prepare_8031a39c
-#define sNAttractModeMoviePath s_starfox_thp_8031a32c
+#define NATTRACTMODE_MOVIE_PATH_OFFSET 0x154
+#define NATTRACTMODE_MALLOC_FAILED_OFFSET 0x160
+#define NATTRACTMODE_RESTRUCT_MOVIE_OFFSET 0x18C
+#define NATTRACTMODE_SOURCE_FILE_OFFSET 0x1B4
+#define NATTRACTMODE_FAIL_TO_PREPARE_OFFSET 0x1C4
 
 /*
  * --INFO--
@@ -295,6 +291,7 @@ void n_attractmode_releaseMovieBuffers(void)
 #pragma peephole off
 void n_attractmode_prepareMovie(void)
 {
+  char *attractModeData;
   int iVar1;
   int freeDelay;
   int local_18;
@@ -304,10 +301,12 @@ void n_attractmode_prepareMovie(void)
   int workBufferSize;
   uint local_14 [3];
   
+  attractModeData = lbl_8031A1D8;
   lbl_803DD619 = NATTRACTMODE_MOVIE_BUSY;
   iVar1 = attractModeAudioFn_80119338(NATTRACTMODE_MOVIE_SETUP_ID);
   if (iVar1 != 0) {
-    iVar1 = movieLoad(sNAttractModeMoviePath,NATTRACTMODE_MOVIE_START_FRAME_DEFAULT);
+    iVar1 = movieLoad(attractModeData + NATTRACTMODE_MOVIE_PATH_OFFSET,
+                      NATTRACTMODE_MOVIE_START_FRAME_DEFAULT);
     if (iVar1 == 0) {
       audioFn_801192ec();
     }
@@ -363,10 +362,10 @@ void n_attractmode_prepareMovie(void)
           lbl_803DD61C = 0;
         }
         mmSetFreeDelay(freeDelay);
-        OSReport(s__________________malloc_for_movi_8031a338);
+        OSReport(attractModeData + NATTRACTMODE_MALLOC_FAILED_OFFSET);
         printHeapStats(1);
         defragMemory(0);
-        OSReport(s__________________RESTRUCT_for_mo_8031a364);
+        OSReport(attractModeData + NATTRACTMODE_RESTRUCT_MOVIE_OFFSET);
         printHeapStats(1);
       }
       else {
@@ -384,8 +383,9 @@ void n_attractmode_prepareMovie(void)
                      lbl_803DD620);
         iVar1 = prepareAttractMode(0,1);
         if (iVar1 == 0) {
-          OSPanic(sNAttractModeSourceFile,NATTRACTMODE_PREPARE_FAIL_LINE,
-                  sNAttractModeFailToPrepare);
+          OSPanic(attractModeData + NATTRACTMODE_SOURCE_FILE_OFFSET,
+                  NATTRACTMODE_PREPARE_FAIL_LINE,
+                  attractModeData + NATTRACTMODE_FAIL_TO_PREPARE_OFFSET);
         }
         fn_80118900();
         lbl_803DD610 = NATTRACTMODE_MOVIE_STATE_PREPARED;
