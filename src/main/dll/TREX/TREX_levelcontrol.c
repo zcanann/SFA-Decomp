@@ -340,7 +340,7 @@ void SB_CannonBall_initialise(void) {}
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801E3D14(int obj)
+void SB_ShipGun_init(int obj)
 {
   int state;
 
