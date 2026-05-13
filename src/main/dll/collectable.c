@@ -753,35 +753,35 @@ void FUN_80145ee8(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sideCommandEnable(int param_1,int param_2,undefined param_3,int param_4)
+void sideCommandEnable(int param_1,int param_2,char param_3,int param_4)
 {
   int iVar1;
   int iVar2;
   int iVar3;
-  uint uVar4;
+  int iVar4;
   
   iVar1 = *(int *)(param_1 + 0xb8);
-  if (*(char *)(iVar1 + 0x798) == '\n') {
+  if (*(byte *)(iVar1 + 0x798) == 10) {
     trickyReportError(sSidekickCommandDebugTextBlock);
+    return;
   }
-  else {
-    *(byte *)(iVar1 + 0xb) = *(byte *)(iVar1 + 0xb) | (byte)(1 << param_4);
-    iVar3 = 0;
-    iVar2 = iVar1;
-    for (uVar4 = (uint)*(byte *)(iVar1 + 0x798); uVar4 != 0; uVar4 = uVar4 - 1) {
-      if (*(int *)(iVar2 + 0x748) == param_2) {
-        *(undefined *)(iVar1 + iVar3 * 8 + 0x74e) = 3;
-        return;
-      }
-      iVar2 = iVar2 + 8;
-      iVar3 = iVar3 + 1;
+  *(byte *)(iVar1 + 0xb) = *(byte *)(iVar1 + 0xb) | (byte)(1 << param_4);
+  iVar3 = 0;
+  iVar2 = iVar1;
+  for (iVar4 = (uint)*(byte *)(iVar1 + 0x798); 0 < iVar4; iVar4 = iVar4 - 1) {
+    if (*(uint *)(iVar2 + 0x748) == (uint)param_2) {
+      *(undefined *)(iVar1 + iVar3 * 8 + 0x74e) = 3;
+      return;
     }
-    *(int *)(iVar1 + (uint)*(byte *)(iVar1 + 0x798) * 8 + 0x748) = param_2;
-    *(undefined *)(iVar1 + (uint)*(byte *)(iVar1 + 0x798) * 8 + 0x74c) = param_3;
-    *(char *)(iVar1 + (uint)*(byte *)(iVar1 + 0x798) * 8 + 0x74d) = (char)param_4;
-    *(undefined *)(iVar1 + (uint)*(byte *)(iVar1 + 0x798) * 8 + 0x74e) = 3;
-    *(char *)(iVar1 + 0x798) = *(char *)(iVar1 + 0x798) + '\x01';
+    iVar2 = iVar2 + 8;
+    iVar3 = iVar3 + 1;
   }
+  iVar2 = iVar1 + (uint)*(byte *)(iVar1 + 0x798) * 8;
+  *(int *)(iVar2 + 0x748) = param_2;
+  *(char *)(iVar1 + (uint)*(byte *)(iVar1 + 0x798) * 8 + 0x74c) = param_3;
+  *(char *)(iVar1 + (uint)*(byte *)(iVar1 + 0x798) * 8 + 0x74d) = (char)param_4;
+  *(undefined *)(iVar1 + (uint)*(byte *)(iVar1 + 0x798) * 8 + 0x74e) = 3;
+  *(char *)(iVar1 + 0x798) = *(char *)(iVar1 + 0x798) + '\x01';
   return;
 }
 
