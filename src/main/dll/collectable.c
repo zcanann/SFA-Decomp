@@ -52,6 +52,8 @@ extern int ObjGroup_FindNearestObject(int group,int obj,f32 *maxDistance);
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
+extern int Obj_GetActiveModel(int obj);
+extern int Obj_GetPlayerObject(void);
 extern undefined8 ObjLink_DetachChild();
 extern undefined8 ObjLink_AttachChild();
 extern void Obj_FreeObject(int param_1);
@@ -76,6 +78,7 @@ extern int fn_800395D8(int obj,int param_2);
 extern undefined4 FUN_80046f44();
 extern undefined4 FUN_80046f84();
 extern void fn_8004B594(void *param_1);
+extern void fn_8004B5D4(void *param_1);
 extern int fn_8005A10C(f32 *pos,f32 radius);
 extern undefined8 FUN_800571f8();
 extern int FUN_800575b4();
@@ -94,12 +97,16 @@ extern undefined4 FUN_800dbc68();
 extern undefined8 FUN_800dd3dc();
 extern undefined4 FUN_800dd3e0();
 extern void fn_800DD640(void);
+extern void fn_800DD644(void);
+extern void fn_800DC398(void);
 extern void gameBitIncrement(int eventId);
+extern u32 GameBit_Get(int bit);
 extern void GameBit_Set(int eventId,int value);
 extern undefined8 FUN_80135d54();
 extern void fn_801389E0(int param_1,int param_2,int *param_3);
 extern void trickyImpress(int obj);
 extern int fn_8014460C(int obj,int state);
+extern void fn_80145304(void);
 extern void objAnimFn_8013a3f0(int obj,int animId,f32 blend,int flags);
 extern int trickyFn_8013b368(int obj,f32 radius,int state);
 extern undefined4 FUN_80135f38();
@@ -179,6 +186,8 @@ extern undefined4 DAT_802c298c;
 extern u32 lbl_802C21F0[4];
 extern undefined4 DAT_8031df38;
 extern undefined4 DAT_8031df50;
+extern char lbl_8031D2E8[];
+extern char lbl_8031D300[];
 extern char sInWaterMessage[];
 extern char lbl_8031D478[];
 extern undefined4 DAT_803dc8a8;
@@ -205,6 +214,8 @@ extern undefined4 lbl_803DDA48;
 extern int lbl_803DDA54;
 extern undefined4* lbl_803DCA78;
 extern int *lbl_803DCAAC;
+extern undefined4 lbl_803DBC40;
+extern undefined4 lbl_803DBC48;
 extern f64 DOUBLE_803e30f0;
 extern f64 DOUBLE_803e3218;
 extern f32 lbl_803DC074;
@@ -214,6 +225,7 @@ extern f32 lbl_803DDA5C;
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern void *lbl_803DCAA8;
+extern u16 lbl_803E23C0;
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E8;
 extern f32 lbl_803E2410;
@@ -1192,6 +1204,64 @@ void Tricky_destroy(int obj,int shouldKeepFlameChildren)
   }
   return;
 }
+
+/* Tricky_init: 536b - initialize Tricky state, command callback, and path controller. */
+#pragma scheduling off
+void Tricky_init(int obj)
+{
+  int state;
+  int model;
+  int pathState;
+  u32 modelVariant;
+  u8 enabledBit;
+  u16 startPath[4];
+
+  state = *(int *)(obj + 0xb8);
+  startPath[0] = lbl_803E23C0;
+  GameBit_Set(0x4e3,0xff);
+  if (GameBit_Get(0x25) != 0) {
+    GameBit_Set(0x3f8,1);
+  }
+  *(void (**)(void))(obj + 0xbc) = fn_80145304;
+  ObjGroup_AddObject(obj,1);
+  fn_8004B5D4((void *)(state + 0x538));
+  fn_8004B5D4((void *)(state + 0x568));
+  fn_8004B5D4((void *)(state + 0x598));
+  fn_8004B5D4((void *)(state + 0x5c8));
+  fn_8004B5D4((void *)(state + 0x5f8));
+  fn_8004B5D4((void *)(state + 0x628));
+  fn_8004B5D4((void *)(state + 0x658));
+  fn_8004B5D4((void *)(state + 0x688));
+  fn_8004B5D4((void *)(state + 0x6b8));
+  *(int *)(state + 0) = (*(int (**)(void))(*(int *)lbl_803DCAAC + 0x94))();
+  *(int *)(state + 4) = Obj_GetPlayerObject();
+  *(u8 *)(state + 8) = 0;
+  *(u8 *)(state + 0xb) = 0;
+  *(int *)(state + 0x6f0) = 0;
+  *(u16 *)(state + 0xd0) = 0;
+  *(f32 *)(state + 0xe0) = *(f32 *)(obj + 0x18);
+  *(f32 *)(state + 0xe4) = *(f32 *)(obj + 0x1c);
+  *(f32 *)(state + 0xe8) = *(f32 *)(obj + 0x20);
+  modelVariant = *(u8 *)(*(int *)(state + 0) + 2) / 10;
+  modelVariant = (u8)modelVariant;
+  *(u8 *)(state + 0x82c) = modelVariant;
+  model = Obj_GetActiveModel(obj);
+  *(u8 *)(*(int *)(model + 0x34) + 8) = *(u8 *)(state + 0x82c);
+  pathState = state + 0xf8;
+  (*(void (**)(int,int,int,int))(*(int *)lbl_803DCAA8 + 4))(pathState,1,0xa7,1);
+  (*(void (**)(int,int,char *,undefined4 *,int))(*(int *)lbl_803DCAA8 + 8))
+      (pathState,1,lbl_8031D300,&lbl_803DBC48,2);
+  (*(void (**)(int,int,char *,undefined4 *,u16 *))(*(int *)lbl_803DCAA8 + 0xc))
+      (pathState,2,lbl_8031D2E8,&lbl_803DBC40,startPath);
+  (*(void (**)(int,int))(*(int *)lbl_803DCAA8 + 0x20))(obj,pathState);
+  fn_800DD644();
+  fn_800DC398();
+  *(u8 *)(state + 0x374) = 2;
+  enabledBit = 1;
+  *(u8 *)(state + 0x82e) = (*(u8 *)(state + 0x82e) & 0x7f) | (enabledBit << 7);
+  *(s8 *)(state + 0xd) = -1;
+}
+#pragma scheduling reset
 
 /* fn_80148C18: 372b - resume Tricky visibility, collision, and fade after command finish. */
 #pragma scheduling off
