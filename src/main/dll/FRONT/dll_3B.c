@@ -244,13 +244,15 @@ void thpAudioFn_80117380(void *cursorArg)
     packet = received;
   }
   for (track = 0; track < lbl_803A5D60.audioTrackCount; track++) {
-    if (lbl_803A5D60.audioTrackEnabled[track] == 1) {
+    if (lbl_803A5D60.audioTrackEnabled[track] != 1) {
+    } else {
       packet->decodedSize = THPAudioDecode(packet->audioBuffer,audioFrame,0);
       packet->decodedBuffer = packet->audioBuffer;
       packet->frameIndex = cursor->frameIndex;
       OSSendMessage(&lbl_803A4460,packet,1);
     }
-    audioFrame += *audioFrameSizes++;
+    audioFrame += *audioFrameSizes;
+    audioFrameSizes++;
   }
 }
 #pragma dont_inline reset
