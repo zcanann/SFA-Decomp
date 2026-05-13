@@ -107,12 +107,11 @@ void fn_801F4D54(int param_1, u8 *param_2)
         *(f32 *)(param_2 + 0x50) -
         (f32)(s32)(randomGetRange(0x14, (s16)(s32)*(f32 *)(param_2 + 0x50)));
   }
-  *(s16 *)(param_2 + 0x60) =
-      *(s16 *)(param_2 + 0x60) + (s16)randomGetRange(0xbb8, 0x1388);
-  locals.m = lbl_803E5EB4;
+  *(s16 *)(param_2 + 0x60) += (s16)randomGetRange(0xbb8, 0x1388);
   locals.z0 = lbl_803E5EC4;
   locals.z1 = lbl_803E5EC4;
   locals.z2 = lbl_803E5EC4;
+  locals.m = lbl_803E5EB4;
   locals.b = 0;
   locals.a = 0;
   locals.angle = *(s16 *)(param_2 + 0x60);
