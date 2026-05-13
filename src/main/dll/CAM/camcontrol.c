@@ -55,12 +55,12 @@ extern short* gCamcontrolState;
 extern char sCamcontrolTriggeredCamActionLoadWarning[];
 extern f64 DOUBLE_803e22d0;
 extern f32 lbl_803DC074;
-extern f32 lbl_803DE14C;
-extern f32 lbl_803DE150;
-extern f32 lbl_803DE154;
-extern f32 lbl_803DE158;
-extern f32 lbl_803DE15C;
-extern f32 lbl_803DE160;
+extern f32 lbl_803DD4D4;
+extern f32 lbl_803DD4D8;
+extern f32 lbl_803DD4DC;
+extern f32 lbl_803DD4E0;
+extern f32 lbl_803DD4E4;
+extern f32 lbl_803DD4E8;
 extern f32 lbl_803E1630;
 extern f32 lbl_803E1680;
 extern f32 lbl_803E22AC;
@@ -760,12 +760,12 @@ void Camera_update(void)
     *(undefined4 *)(gCamcontrolState + 0x8e) = 0;
   }
   else {
-    lbl_803DE160 = *(float *)(psVar3 + 6);
-    lbl_803DE15C = *(float *)(psVar3 + 8);
-    lbl_803DE158 = *(float *)(psVar3 + 10);
-    lbl_803DE154 = *(float *)(psVar3 + 0xc);
-    lbl_803DE150 = *(float *)(psVar3 + 0xe);
-    lbl_803DE14C = *(float *)(psVar3 + 0x10);
+    lbl_803DD4E8 = *(float *)(psVar3 + 6);
+    lbl_803DD4E4 = *(float *)(psVar3 + 8);
+    lbl_803DD4E0 = *(float *)(psVar3 + 10);
+    lbl_803DD4DC = *(float *)(psVar3 + 0xc);
+    lbl_803DD4D8 = *(float *)(psVar3 + 0xe);
+    lbl_803DD4D4 = *(float *)(psVar3 + 0x10);
     camcontrol_updateMoveAverage((int)gCamcontrolState,(int)psVar3);
     if (*(char *)((int)gCamcontrolState + 0x13d) != '\0') {
       *(undefined4 *)(psVar3 + 0xc) = *(undefined4 *)(gCamcontrolState + 0x6e);
@@ -826,12 +826,12 @@ void Camera_update(void)
     *(undefined4 *)(gCamcontrolState + 0x5e) = *(undefined4 *)(gCamcontrolState + 0xe);
     *(undefined4 *)(gCamcontrolState + 0x60) = *(undefined4 *)(gCamcontrolState + 0x10);
     *(undefined *)(gCamcontrolState + 0xa0) = 0;
-    *(float *)(psVar3 + 6) = lbl_803DE160;
-    *(float *)(psVar3 + 8) = lbl_803DE15C;
-    *(float *)(psVar3 + 10) = lbl_803DE158;
-    *(float *)(psVar3 + 0xc) = lbl_803DE154;
-    *(float *)(psVar3 + 0xe) = lbl_803DE150;
-    *(float *)(psVar3 + 0x10) = lbl_803DE14C;
+    *(float *)(psVar3 + 6) = lbl_803DD4E8;
+    *(float *)(psVar3 + 8) = lbl_803DD4E4;
+    *(float *)(psVar3 + 10) = lbl_803DD4E0;
+    *(float *)(psVar3 + 0xc) = lbl_803DD4DC;
+    *(float *)(psVar3 + 0xe) = lbl_803DD4D8;
+    *(float *)(psVar3 + 0x10) = lbl_803DD4D4;
     if (*(short **)(psVar3 + 0x18) != (short *)0x0) {
       *psVar3 = *psVar3 - **(short **)(psVar3 + 0x18);
     }
