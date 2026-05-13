@@ -1560,6 +1560,7 @@ void fn_8014A058(int obj,int state)
 
 /* fn_8014A150: 436b - line-of-sight and bbox visibility check between Tricky and a target. */
 #pragma scheduling off
+#pragma peephole off
 int fn_8014A150(int obj,int state,void *from,void *to)
 {
   u8 traceHit[4];
@@ -1609,6 +1610,7 @@ int fn_8014A150(int obj,int state,void *from,void *to)
   }
   return visible;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* fn_8014A304: 760b - update Tricky's four quadrant line-of-sight state bits. */
