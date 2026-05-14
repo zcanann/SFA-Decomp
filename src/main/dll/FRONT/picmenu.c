@@ -63,6 +63,10 @@ BOOL movieLoad(const char* fileName, void* param2)
         return 0;
     }
 
+    if (*(u32*)(p + 0x98) != 0) {
+        return 0;
+    }
+
     memset(p + 0x80, 0, 8);
     memset(p + 0x88, 0, 0xC);
 
@@ -103,7 +107,7 @@ BOOL movieLoad(const char* fileName, void* param2)
         p[0x9F] = 0;
 
         for (i = 0; i < *(u32*)(p + 0x6C); i++) {
-            u8 compType = (u8)p[0x70];
+            u8 compType = (u8)p[0x70 + i];
             if (compType == 1) {
                 result = DVDRead(&lbl_803A5D60.mFileInfo, lbl_803A5D20, 0x20, readOff);
                 if (result < 0) {
@@ -124,7 +128,6 @@ BOOL movieLoad(const char* fileName, void* param2)
             } else {
                 return 0;
             }
-            p++;
         }
     }
 
@@ -133,8 +136,8 @@ BOOL movieLoad(const char* fileName, void* param2)
         q[0x9D] = 0;
         q[0x9C] = 0;
         q[0x9E] = 0;
-        *(u32*)(q + 0x98) = 1;
         *(u32*)(q + 0xA8) = (u32)param2;
+        *(u32*)(p + 0x98) = 1;
         *(f32*)(q + 0xD4) = lbl_803E1D54;
         *(f32*)(q + 0xD8) = lbl_803E1D54;
         *(u32*)(q + 0xE0) = 0;
@@ -280,7 +283,7 @@ void fn_80119520(void)
         OSReceiveMessage((OSMessageQueue*)(base + 0x13C8), &msgVal, OS_MESSAGE_BLOCK);
         req = (u32*)msgVal;
 
-        res = DVDReadPrio(&lbl_803A5D60.mFileInfo, (void*)req[0], readSize, readOff, 2);
+        res = DVDReadPrio((DVDFileInfo*)pb, (void*)req[0], readSize, readOff, 2);
         if (res != (s32)readSize) {
             if (res == -1) {
                 *(s32*)(pb + 0xA0) = -1;
@@ -401,21 +404,24 @@ void fn_80119798(void* param)
 {
     char* pb  = (char*)&lbl_803A5D60;
     char* db  = lbl_803A72F0;
-    void** pp = (void**)param;
-    u32 dvdOff = *(u32*)(pb + 0xB8);
-    u32 i;
+    char* cur = (char*)((void**)param)[0];
+    u32* compSizes = (u32*)(cur + 8);
+    char* dvdData = cur + *(u32*)(pb + 0x6C) * 4 + 8;
     void** readMsg;
+    u32 i;
+    char* pb2;
+    char* pbwalk;
 
-    OSReceiveMessage(&lbl_803A7308, (OSMessage*)&readMsg, OS_MESSAGE_BLOCK);
-
+    OSReceiveMessage((OSMessageQueue*)(db + 0x38), (OSMessage*)&readMsg, OS_MESSAGE_BLOCK);
     i = 0;
+    pb2 = (char*)&lbl_803A5D60;
+    pbwalk = pb2;
+
     while (i < *(u32*)(pb + 0x6C)) {
-        if (((u8*)pb)[0x70 + i] == 0) {
-            s32 dec = THPVideoDecode(
-                (char*)pp[0] + dvdOff,
-                readMsg[0], readMsg[1], readMsg[2],
-                (void*)*(u32*)(pb + 0x94));
-            *(s32*)(pb + 0xA4) = dec;
+        if (pbwalk[0x70] == 0) {
+            s32 dec = THPVideoDecode(dvdData, readMsg[0], readMsg[1], readMsg[2],
+                                     (void*)*(u32*)(pb2 + 0x94));
+            *(s32*)(pb2 + 0xA4) = dec;
             if (dec != 0) {
                 if (lbl_803DD694 != 0) {
                     fn_80118B88(0);
@@ -423,18 +429,19 @@ void fn_80119798(void* param)
                 }
                 OSSuspendThread((OSThread*)(db + 0x1058));
             }
-            readMsg[3] = pp[1];
-            OSSendMessage(&lbl_803A7308, (OSMessage)readMsg, OS_MESSAGE_BLOCK);
+            readMsg[3] = (void*)((u32*)param)[1];
+            OSSendMessage((OSMessageQueue*)(db + 0x18), (OSMessage)readMsg, OS_MESSAGE_BLOCK);
             {
                 u32 intr = OSDisableInterrupts();
-                *(s32*)(pb + 0xD0) += 1;
+                *(s32*)(pb2 + 0xD0) += 1;
                 OSRestoreInterrupts(intr);
             }
             lbl_803DD698 = 0;
         }
-        dvdOff += *(u32*)((char*)pp[0] + i * 4);
+        dvdData += *compSizes;
+        compSizes++;
+        pbwalk++;
         i++;
-        pp = (void**)((char*)pp + 4);
     }
 
     if (lbl_803DD694 != 0) {
@@ -448,41 +455,57 @@ void fn_80119798(void* param)
 /* ------------------------------------------------------------------ */
 void fn_801198E0(void* param)
 {
-    char* pb = (char*)&lbl_803A5D60;
-    char* db = lbl_803A72F0;
-    u32 frameSize = *(u32*)(pb + 0xB4);
-    void* cur = param;
-    int i = 0;
+    char* pb = (char*)&lbl_803A5D60;   /* r31 */
+    u32 frameSize = *(u32*)(pb + 0xB4); /* r30 */
+    void* cur = param;                  /* at stack[8], address taken by &cur */
+    int i = 0;                          /* r29 */
 
     while (1) {
-        while (*(s32*)(pb + 0xD0) < 0) {
-            u32 intr = OSDisableInterrupts();
-            *(s32*)(pb + 0xD0) += 1;
-            OSRestoreInterrupts(intr);
-            {
-                u32 cols = *(u32*)(pb + 0x50);
-                u32 bOff = *(u32*)(pb + 0xB8);
-                u32 pos  = (i + bOff) % cols;
-                if (pos == cols - 1 && !(*(u8*)(pb + 0x9E) & 1)) break;
+        if (*(u8*)(pb + 0x9F) != 0) {
+            while (*(s32*)(pb + 0xD0) < 0) {
+                {
+                    u32 intr = OSDisableInterrupts();
+                    *(s32*)(pb + 0xD0) += 1;
+                    OSRestoreInterrupts(intr);
+                }
+                {
+                    u32 bOff = *(u32*)(pb + 0xB8);
+                    u32 cols = *(u32*)(pb + 0x50);
+                    u32 pos  = ((u32)i + bOff) % cols;
+                    if (pos == cols - 1) {
+                        if (!(*(u8*)(pb + 0x9E) & 1)) {
+                            break; /* pos==cols-1, not looping: go to decode */
+                        }
+                        /* looping: update cur and frameSize */
+                        frameSize = *(u32*)cur;
+                        cur = (void*)*(u32*)(pb + 0xAC);
+                    } else {
+                        u32 nextSize = *(u32*)cur;
+                        cur = (char*)cur + frameSize;
+                        frameSize = nextSize;
+                    }
+                }
+                i++;
             }
-            i++;
         }
 
-        fn_80119798(cur);
+        fn_80119798(&cur);
 
         {
-            u32 cols = *(u32*)(pb + 0x50);
             u32 bOff = *(u32*)(pb + 0xB8);
-            u32 pos  = (i + bOff) % cols;
+            u32 cols = *(u32*)(pb + 0x50);
+            u32 pos  = ((u32)i + bOff) % cols;
             if (pos == cols - 1) {
                 if (!(*(u8*)(pb + 0x9E) & 1)) {
-                    OSSuspendThread((OSThread*)(db + 0x1058));
-                    cur = (char*)cur + *(u32*)(pb + 0xAC);
+                    OSSuspendThread(&lbl_803A8348);
                 } else {
-                    cur = (char*)cur + frameSize;
+                    frameSize = *(u32*)cur;
+                    cur = (void*)*(u32*)(pb + 0xAC);
                 }
             } else {
+                u32 nextSize = *(u32*)cur;
                 cur = (char*)cur + frameSize;
+                frameSize = nextSize;
             }
         }
         i++;
@@ -494,34 +517,36 @@ void fn_801198E0(void* param)
 /* ------------------------------------------------------------------ */
 void fn_80119A1C(void)
 {
-    char* pb = (char*)&lbl_803A5D60;
+    char* pb = (char*)&lbl_803A5D60;  /* r31 */
+    void* msg;                         /* r30 */
 
     while (1) {
-        while (*(s32*)(pb + 0xD0) < 0) {
-            void* msg = fn_80119488();
-            u32 cols = *(u32*)(pb + 0x50);
-            u32 bOff = *(u32*)(pb + 0xB8);
-            u32 pos  = (*(u32*)((char*)msg + 4) + bOff) % cols;
-            if (pos == cols - 1 && !(*(u8*)(pb + 0x9E) & 1)) {
-                fn_80119798(msg);
-            }
-            fn_801194BC((OSMessage)msg);
-            {
-                u32 intr = OSDisableInterrupts();
-                *(s32*)(pb + 0xD0) += 1;
-                OSRestoreInterrupts(intr);
-            }
-        }
-        {
-            void* msg;
-            if ((u8)pb[0x9F]) {
+        if (*(u8*)(pb + 0x9F) != 0) {
+            while (*(s32*)(pb + 0xD0) < 0) {
                 msg = fn_80119488();
-            } else {
-                msg = (void*)fn_801194EC();
+                {
+                    u32 cols = *(u32*)(pb + 0x50);
+                    u32 bOff = *(u32*)(pb + 0xB8);
+                    u32 pos  = (*(u32*)((char*)msg + 4) + bOff) % cols;
+                    if (pos == cols - 1 && !(*(u8*)(pb + 0x9E) & 1)) {
+                        fn_80119798(msg);
+                    }
+                }
+                fn_801194BC((OSMessage)msg);
+                {
+                    u32 intr = OSDisableInterrupts();
+                    *(s32*)(pb + 0xD0) += 1;
+                    OSRestoreInterrupts(intr);
+                }
             }
-            fn_80119798(msg);
-            fn_801194BC((OSMessage)msg);
         }
+        if (*(u8*)(pb + 0x9F) != 0) {
+            msg = fn_80119488();
+        } else {
+            msg = (void*)fn_801194EC();
+        }
+        fn_80119798(msg);
+        fn_801194BC((OSMessage)msg);
     }
 }
 
@@ -559,24 +584,25 @@ void fn_80119B24(void)
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
 #pragma peephole off
-BOOL fn_80119B58(int param_1, int param_2)
+BOOL fn_80119B58(OSPriority param_1, u32 param_2)
 {
     char* db = lbl_803A72F0;
+    OSThread* thread = (OSThread*)(db + 0x1058);
 
     if (param_2 != 0) {
-        if (!OSCreateThread(&lbl_803A8348, (void*(*)(void*))fn_801198E0, NULL,
-                            &lbl_803A8348, 0x1000, param_1, 1)) {
+        if (!OSCreateThread(thread, (void*(*)(void*))fn_801198E0, (void*)param_2,
+                            (void*)thread, 0x1000, param_1, 1)) {
             return 0;
         }
     } else {
-        if (!OSCreateThread(&lbl_803A8348, (void*(*)(void*))fn_80119A1C, NULL,
-                            &lbl_803A8348, 0x1000, param_1, 1)) {
+        if (!OSCreateThread(thread, (void*(*)(void*))fn_80119A1C, NULL,
+                            (void*)thread, 0x1000, param_1, 1)) {
             return 0;
         }
     }
 
     OSInitMessageQueue((OSMessageQueue*)(db + 0x38), (void*)(db + 0x0C), 3);
-    OSInitMessageQueue((OSMessageQueue*)(db + 0x18), (void*)(db + 0x00), 3);
+    OSInitMessageQueue((OSMessageQueue*)(db + 0x18), (void*)db, 3);
     lbl_803DD690 = 1;
     lbl_803DD694 = 1;
     return 1;
