@@ -11,7 +11,7 @@
  * Retail object defs: 4
  * Retail object record sizes: 0xA0, 0x300
  * Retail root placement widths: -
- * EN descriptor: 0x80327EF0 lbl_80327EF0
+ * EN descriptor: 0x80327EF0 gShipBattleObjDescriptor
  * EN descriptor shape: slots=10 mask=1101111111
  *
  * Retail object defs:
