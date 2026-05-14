@@ -7,15 +7,15 @@
  * DLL ID: 0x0126
  * Suggested family name: Trigger
  * Output path: src/main/unknown/dll_0126_trigger.c
- * Retail placements: 1483
+ * Retail placements: 1476
  * Retail object defs: 9
  * Retail object record sizes: 0xA0, 0xC0
  * Retail root placement widths: 20w
- * EN descriptor: 0x80323130 gTriggerObjDescriptor
+ * EN descriptor: 0x803224E0 lbl_803224E0
  * EN descriptor shape: slots=10 mask=1101111111
  *
  * Retail object defs:
- * - 0x051C TrigPln: class=0x0015, placements=1225, romlists=46, objsize=0xC0, widths=20w x1225, aliases=0x004C
+ * - 0x051C TrigPln: class=0x0015, placements=1218, romlists=46, objsize=0xC0, widths=20w x1218, aliases=0x004C
  * - 0x0521 TrigBits: class=0x001B, placements=112, romlists=19, objsize=0xC0, widths=20w x112, aliases=0x0054
  * - 0x051B TrigCyl: class=0x0016, placements=56, romlists=14, objsize=0xA0, widths=20w x56, aliases=0x0230
  * - 0x051A TrigPnt: class=0x0014, placements=47, romlists=14, objsize=0xC0, widths=20w x47, aliases=0x004B
@@ -26,15 +26,15 @@
  * - 0x0522 TrigCrve: class=0x003B, placements=0, romlists=0, objsize=0xC0, widths=none, aliases=0x00F4
  *
  * EN slot map with reference-only names by slot index:
- * - slot 00: 0x8019AFF4 trigger_initialise stub=blr ref=initialise (stub)
- * - slot 01: 0x8019AFF0 trigger_release stub=blr ref=release (stub)
- * - slot 03: 0x8019AE20 trigger_init ref=init
- * - slot 04: 0x8019AE1C trigger_update stub=blr ref=update (stub)
- * - slot 05: 0x8019A92C trigger_hitDetect ref=hitDetect
- * - slot 06: 0x8019A928 trigger_render stub=blr ref=render (stub)
- * - slot 07: 0x8019A88C trigger_free ref=free
- * - slot 08: 0x8019A884 trigger_func08 stub=const 0
- * - slot 09: 0x8019A87C trigger_getExtraSize stub=const 172 ref=getExtraSize (stub)
+ * - slot 00: 0x8019AA78 Trigger_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x8019AA74 Trigger_release stub=blr ref=release (stub)
+ * - slot 03: 0x8019A8A4 Trigger_init ref=init
+ * - slot 04: 0x8019A8A0 Trigger_update stub=blr ref=update (stub)
+ * - slot 05: 0x8019A3B0 Trigger_hitDetect ref=hitDetect
+ * - slot 06: 0x8019A3AC Trigger_render stub=blr ref=render (stub)
+ * - slot 07: 0x8019A310 Trigger_free ref=free
+ * - slot 08: 0x8019A308 Trigger_func08 stub=const 0
+ * - slot 09: 0x8019A300 Trigger_getExtraSize stub=const 172 ref=getExtraSize (stub)
  *
  * Reference-only hints:
  * - reference DLL name: Trigger

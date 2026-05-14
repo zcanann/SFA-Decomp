@@ -1177,7 +1177,7 @@ void cloudprisoncontrol_release(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int Trigger_getExtraSize(void) { return 0xac; }
-int fn_8019A308(void) { return 0x0; }
+int Trigger_func08(void) { return 0x0; }
 int cloudprisoncontrol_getExtraSize(void) { return 0x0; }
 int cloudprisoncontrol_func08(void) { return 0x0; }
 

@@ -11,14 +11,14 @@
  * Retail object defs: 1
  * Retail object record sizes: 0xA0
  * Retail root placement widths: 8w
- * EN descriptor: 0x80321870 lbl_80321870
+ * EN descriptor: 0x80320C20 lbl_80320C20
  * EN descriptor shape: slots=10 mask=0001000000
  *
  * Retail object defs:
  * - 0x0493 setuppoint: class=0x0004, placements=278, romlists=123, objsize=0xA0, widths=8w x278, aliases=0x000D
  *
  * EN slot map with reference-only names by slot index:
- * - slot 03: 0x801721BC fn_801721BC stub=blr ref=init (stub)
+ * - slot 03: 0x80171D10 DummyE9_init stub=blr ref=init (stub)
  *
  * Reference-only hints:
  * - reference DLL name: setuppoint
