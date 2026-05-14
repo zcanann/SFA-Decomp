@@ -25,26 +25,26 @@
  * - 0x05A2 FireWorkSou: dll=0x02B2, placements=6, romlists=1, objsize=0xA0, widths=12w x6, aliases=0x080E
  *
  * Descriptor slot maps:
- * - DLL 0x02B1: lbl_8032CA08 (slots=10, mask=1101111111)
- *   slot 00: 0x80237C34 fn_80237C34
- *   slot 01: 0x80237C30 fn_80237C30
- *   slot 03: 0x80237654 fn_80237654
- *   slot 04: 0x80237448 fn_80237448
- *   slot 05: 0x80237360 fn_80237360
- *   slot 06: 0x802372A8 fn_802372A8
- *   slot 07: 0x80237244 fn_80237244
- *   slot 08: 0x8023723C fn_8023723C
- *   slot 09: 0x80237234 fn_80237234
- * - DLL 0x02B2: lbl_8032CA40 (slots=10, mask=1101111111)
- *   slot 00: 0x80237EC8 fn_80237EC8
- *   slot 01: 0x80237EC4 fn_80237EC4
- *   slot 03: 0x80237E80 fn_80237E80
- *   slot 04: 0x80237C88 fn_80237C88
- *   slot 05: 0x80237C84 fn_80237C84
- *   slot 06: 0x80237C78 fn_80237C78
- *   slot 07: 0x80237C48 fn_80237C48
- *   slot 08: 0x80237C40 fn_80237C40
- *   slot 09: 0x80237C38 fn_80237C38
+ * - DLL 0x02B1: gCmbSrcObjDescriptor (slots=10, mask=1101111111)
+ *   slot 00: 0x80237570 cmbsrc_initialise
+ *   slot 01: 0x8023756C cmbsrc_release
+ *   slot 03: 0x80236F90 cmbsrc_init
+ *   slot 04: 0x80236D84 cmbsrc_update
+ *   slot 05: 0x80236C9C cmbsrc_hitDetect
+ *   slot 06: 0x80236BE4 cmbsrc_render
+ *   slot 07: 0x80236B80 cmbsrc_free
+ *   slot 08: 0x80236B78 cmbsrc_func08
+ *   slot 09: 0x80236B70 cmbsrc_getExtraSize
+ * - DLL 0x02B2: gDustMoteSouObjDescriptor (slots=10, mask=1101111111)
+ *   slot 00: 0x80237804 dustmotesou_initialise
+ *   slot 01: 0x80237800 dustmotesou_release
+ *   slot 03: 0x802377BC dustmotesou_init
+ *   slot 04: 0x802375C4 dustmotesou_update
+ *   slot 05: 0x802375C0 dustmotesou_hitDetect
+ *   slot 06: 0x802375B4 dustmotesou_render
+ *   slot 07: 0x80237584 dustmotesou_free
+ *   slot 08: 0x8023757C dustmotesou_func08
+ *   slot 09: 0x80237574 dustmotesou_getExtraSize
  */
 
 #if 0

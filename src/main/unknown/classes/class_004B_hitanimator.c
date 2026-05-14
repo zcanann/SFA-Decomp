@@ -8,7 +8,7 @@
  * Reference class name: HitAnimator
  * Suggested packet name: HitAnimator
  * Output path: src/main/unknown/classes/class_004B_hitanimator.c
- * Retail placements: 304
+ * Retail placements: 303
  * Retail object defs: 1
  * DLL IDs: 0x0139
  * Descriptor-backed DLL IDs: 0x0139
@@ -16,13 +16,13 @@
  * Retail root placement widths: 8w
  *
  * Retail object defs:
- * - 0x04BC HitAnimator: dll=0x0139, placements=304, romlists=29, objsize=0xA0, widths=8w x304, aliases=0x024F
+ * - 0x04BC HitAnimator: dll=0x0139, placements=303, romlists=29, objsize=0xA0, widths=8w x303, aliases=0x024F
  *
  * Descriptor slot maps:
- * - DLL 0x0139: lbl_80322E90 (slots=10, mask=0001100001)
- *   slot 03: 0x80194688 fn_80194688
- *   slot 04: 0x801944AC fn_801944AC
- *   slot 09: 0x801944A4 fn_801944A4
+ * - DLL 0x0139: gHitAnimatorObjDescriptor (slots=10, mask=0001100001)
+ *   slot 03: 0x8019410C hitanimator_init
+ *   slot 04: 0x80193F30 hitanimator_update
+ *   slot 09: 0x80193F28 hitanimator_getExtraSize
  */
 
 #if 0

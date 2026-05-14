@@ -6,10 +6,10 @@
  *
  * Object def: 0x04BC HitAnimator
  * Output path: src/main/unknown/objects/obj_04BC_hitanimator.c
- * Retail placements: 304
+ * Retail placements: 303
  * Root romlists: 29
  * Object-def size: 0xA0
- * Root placement widths: 8w x304
+ * Root placement widths: 8w x303
  * DLL ID: 0x0139
  * Class ID: 0x004B
  * Suggested outer boundary: singleton object boundary
@@ -29,17 +29,17 @@
  * - model IDs: 0x00000478
  * - help texts: 0xFFFF 0xFFFF 0xFFFF 0xFFFF
  *
- * Same-class objects (1 defs / 304 placements):
- * - 0x04BC HitAnimator: placements=304, dll=0x0139, widths=8w x304
+ * Same-class objects (1 defs / 303 placements):
+ * - 0x04BC HitAnimator: placements=303, dll=0x0139, widths=8w x303
  *
- * Same-DLL objects (1 defs / 304 placements):
- * - 0x04BC HitAnimator: placements=304, class=0x004B, widths=8w x304
+ * Same-DLL objects (1 defs / 303 placements):
+ * - 0x04BC HitAnimator: placements=303, class=0x004B, widths=8w x303
  *
  * EN descriptor slot map:
- * - descriptor=0x80322E90 lbl_80322E90 (slots=10, mask=0001100001)
- * - slot 03: 0x80194688 fn_80194688 ref=init
- * - slot 04: 0x801944AC fn_801944AC ref=update
- * - slot 09: 0x801944A4 fn_801944A4 stub=const 4 ref=getExtraSize (stub)
+ * - descriptor=0x80322240 gHitAnimatorObjDescriptor (slots=10, mask=0001100001)
+ * - slot 03: 0x8019410C hitanimator_init ref=init
+ * - slot 04: 0x80193F30 hitanimator_update ref=update
+ * - slot 09: 0x80193F28 hitanimator_getExtraSize stub=const 4 ref=getExtraSize (stub)
  */
 
 #if 0

@@ -19,12 +19,12 @@
  * - 0x0491 curve: dll=0x0125, placements=5480, romlists=41, objsize=0xA0, widths=13w x4568, 14w x118, 15w x97, 17w x697, aliases=0x006E
  *
  * Descriptor slot maps:
- * - DLL 0x0125: lbl_80321710 (slots=12, mask=000100111111)
- *   slot 03: 0x801717FC fn_801717FC
- *   slot 06: 0x801717CC fn_801717CC
- *   slot 07: 0x801717C8 fn_801717C8
- *   slot 08: 0x801717C0 fn_801717C0
- *   slot 09: 0x801717B8 fn_801717B8
+ * - DLL 0x0125: gCurveObjDescriptor (slots=12, mask=000100111111)
+ *   slot 03: 0x80171350 curve_init
+ *   slot 06: 0x80171320 curve_render
+ *   slot 07: 0x8017131C curve_free
+ *   slot 08: 0x80171314 curve_func08
+ *   slot 09: 0x8017130C curve_getExtraSize
  */
 
 #if 0

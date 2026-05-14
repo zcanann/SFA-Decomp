@@ -19,8 +19,8 @@
  * - 0x0493 setuppoint: dll=0x00E9, placements=278, romlists=123, objsize=0xA0, widths=8w x278, aliases=0x000D
  *
  * Descriptor slot maps:
- * - DLL 0x00E9: lbl_80321870 (slots=10, mask=0001000000)
- *   slot 03: 0x801721BC fn_801721BC
+ * - DLL 0x00E9: gSetuppointObjDescriptor (slots=10, mask=0001000000)
+ *   slot 03: 0x80171D10 setuppoint_init
  */
 
 #if 0
