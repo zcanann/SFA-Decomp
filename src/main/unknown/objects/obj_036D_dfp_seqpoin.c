@@ -49,7 +49,7 @@
  * - 0x036D DFP_seqpoin: placements=12, class=0x0030, widths=9w x12
  *
  * EN descriptor slot map:
- * - descriptor=0x80329968 lbl_80329968 (slots=10, mask=1101111111)
+ * - descriptor=0x80329968 gDFP_seqpointObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x802057C8 dfpseqpoint_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x802057C4 dfpseqpoint_release stub=blr ref=release (stub)
  * - slot 03: 0x80205730 dfpseqpoint_init ref=init
