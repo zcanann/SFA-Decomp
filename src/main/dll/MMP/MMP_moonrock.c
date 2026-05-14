@@ -1033,7 +1033,7 @@ void WaterFallSpray_render(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int WaterFallSpray_getExtraSize(void) { return 0x8; }
-int sfxPlayer_getExtraSize(void) { return 0x8; }
+int sfxplayerObj_getExtraSize(void) { return 0x8; }
 
 extern void WaterFallSpray_update(int *obj);
 #pragma scheduling off

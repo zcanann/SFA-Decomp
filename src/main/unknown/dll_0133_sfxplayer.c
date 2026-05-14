@@ -5,10 +5,10 @@
 // - Current EN family packet data ties object def 0x048F here.
 //
 // Current EN descriptor:
-// - gSfxPlayerObjDescriptor @ 0x803230F8
+// - gSfxPlayerObjDescriptor @ 0x803224A8
 //
 // Descriptor slots:
-// - 3: sfxplayerObj_init (0x80198ED0)
-// - 4: sfxplayerObj_update (0x801987C4)
-// - 7: sfxplayerObj_free (0x80198718)
-// - 9: sfxplayerObj_getExtraSize (0x80198710)
+// - 3: sfxplayerObj_init (0x80198954)
+// - 4: sfxplayerObj_update (0x80198248)
+// - 7: sfxplayerObj_free (0x8019819C)
+// - 9: sfxplayerObj_getExtraSize (0x80198194)

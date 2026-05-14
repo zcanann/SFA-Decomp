@@ -36,11 +36,11 @@
  * - 0x048F sfxPlayer: placements=72, class=0x005C, widths=9w x72
  *
  * EN descriptor slot map:
- * - descriptor=0x803230F8 gSfxPlayerObjDescriptor (slots=10, mask=0001100101)
- * - slot 03: 0x80198ED0 sfxplayerObj_init ref=init
- * - slot 04: 0x801987C4 sfxplayerObj_update ref=update
- * - slot 07: 0x80198718 sfxplayerObj_free ref=free
- * - slot 09: 0x80198710 sfxplayerObj_getExtraSize stub=const 8 ref=getExtraSize (stub)
+ * - descriptor=0x803224A8 gSfxPlayerObjDescriptor (slots=10, mask=0001100101)
+ * - slot 03: 0x80198954 sfxplayerObj_init ref=init
+ * - slot 04: 0x80198248 sfxplayerObj_update ref=update
+ * - slot 07: 0x8019819C sfxplayerObj_free ref=free
+ * - slot 09: 0x80198194 sfxplayerObj_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 
 #if 0
