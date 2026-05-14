@@ -11,7 +11,7 @@
  * Retail object defs: 3
  * Retail object record sizes: 0xC0
  * Retail root placement widths: 9w
- * EN descriptor: 0x80327E80 lbl_80327E80
+ * EN descriptor: 0x80327E80 gSB_SeqDoorObjDescriptor
  * EN descriptor shape: slots=10 mask=1101111111
  *
  * Retail object defs:

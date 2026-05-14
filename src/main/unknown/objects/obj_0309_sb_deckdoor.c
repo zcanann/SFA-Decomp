@@ -51,7 +51,7 @@
  * - 0x0308 SB_SeqDoor2: placements=1, class=0x0030, widths=9w x1
  *
  * EN descriptor slot map:
- * - descriptor=0x80327E80 lbl_80327E80 (slots=10, mask=1101111111)
+ * - descriptor=0x80327E80 gSB_SeqDoorObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801E5198 SB_SeqDoor_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801E5194 SB_SeqDoor_release stub=blr ref=release (stub)
  * - slot 03: 0x801E5154 SB_SeqDoor_init ref=init
