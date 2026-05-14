@@ -39,6 +39,20 @@ extern int FUN_80294d50();
 extern undefined4 FUN_80294d58();
 extern undefined4 builtin_strncpy();
 
+extern uint GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId, int value);
+extern void* Obj_GetPlayerObject(void);
+extern void* getTrickyObject(void);
+extern void* fn_80296AE8(void* player);
+extern void* fn_80296AD4(void* player);
+extern int fn_80296A14(void* player);
+extern int fn_80296A8C(void* player);
+extern int objIsCurModelNotZero(void* obj);
+extern void Sfx_KeepAliveLoopedObjectSound(int a, int b);
+extern void* Sfx_PlayFromObject(int a, int b);
+extern void playerGetMoney(void* player);
+extern int getHudHiddenFrameCount(void);
+
 extern undefined4 DAT_8031c340;
 extern undefined4 DAT_8031c341;
 extern undefined4 DAT_803a9610;
@@ -105,9 +119,27 @@ extern undefined4 DAT_803aa030;
 extern undefined4 DAT_803aa034;
 extern undefined4 DAT_803aa038;
 extern undefined4 DAT_803aa03c;
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803dc6d0;
-extern undefined4 DAT_803dc6d6;
+// v1.0 symbols for fn_8012310C
+extern sbyte lbl_803DD7A0;
+extern short lbl_803DD7A2;
+extern byte framesThisStep;
+extern short lbl_803DD8D2;
+extern short lbl_803DBA68;
+extern short lbl_803DBA6E;
+
+// v1.0 symbols for fn_80124068
+extern byte lbl_803DBA65;
+extern short lbl_803DD796;
+extern short lbl_803DD78E;
+extern byte cMenuOpen;
+extern short cMenuFadeCounter;
+extern short lbl_803DD8D6;
+extern short lbl_803DBA66;
+
+// v1.0 symbols for fn_801241CC
+extern int lbl_803DD738;
+extern short lbl_8031B4E0[];
+
 extern undefined4 DAT_803dc734;
 extern undefined4 DAT_803dc736;
 extern undefined4 DAT_803dc738;
@@ -209,9 +241,9 @@ extern undefined2 uRam803de4ce;
 /*
  * --INFO--
  *
- * Function: FUN_80121c4c
+ * Function: fn_80121C4C
  * EN v1.0 Address: 0x80121C4C
- * EN v1.0 Size: 2396b
+ * EN v1.0 Size: 0x9A8
  * EN v1.1 Address: 0x80121F30
  * EN v1.1 Size: 2472b
  * JP Address: TODO
@@ -219,7 +251,7 @@ extern undefined2 uRam803de4ce;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80121c4c(undefined4 param_1,undefined4 param_2,uint param_3)
+void fn_80121C4C(undefined4 param_1,undefined4 param_2,uint param_3)
 {
   int iVar1;
   uint uVar2;
@@ -459,9 +491,9 @@ void FUN_80121c4c(undefined4 param_1,undefined4 param_2,uint param_3)
 /*
  * --INFO--
  *
- * Function: FUN_801225a8
- * EN v1.0 Address: 0x801225A8
- * EN v1.0 Size: 1184b
+ * Function: fn_801225F4
+ * EN v1.0 Address: 0x801225F4
+ * EN v1.0 Size: 0x308
  * EN v1.1 Address: 0x801228D8
  * EN v1.1 Size: 776b
  * JP Address: TODO
@@ -469,7 +501,7 @@ void FUN_80121c4c(undefined4 param_1,undefined4 param_2,uint param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801225a8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void fn_801225F4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,short param_11,uint param_12,uint param_13,
                  int *param_14,uint param_15,undefined4 param_16)
@@ -575,9 +607,9 @@ LAB_80122bc8:
 /*
  * --INFO--
  *
- * Function: FUN_80122a48
- * EN v1.0 Address: 0x80122A48
- * EN v1.0 Size: 4b
+ * Function: fn_801228FC
+ * EN v1.0 Address: 0x801228FC
+ * EN v1.0 Size: 0x810
  * EN v1.1 Address: 0x80122BE0
  * EN v1.1 Size: 2064b
  * JP Address: TODO
@@ -585,16 +617,16 @@ LAB_80122bc8:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80122a48(void)
+void fn_801228FC(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80122a4c
- * EN v1.0 Address: 0x80122A4C
- * EN v1.0 Size: 200b
+ * Function: fn_8012310C
+ * EN v1.0 Address: 0x8012310C
+ * EN v1.0 Size: 0xF8
  * EN v1.1 Address: 0x801233F0
  * EN v1.1 Size: 248b
  * JP Address: TODO
@@ -602,45 +634,47 @@ void FUN_80122a48(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80122a4c(void)
+void fn_8012310C(void)
 {
-  if (DAT_803de420 == '\0') {
-    if ((DAT_803de552 == 0) &&
-       (DAT_803de422 = DAT_803de422 + (ushort)DAT_803dc070 * -0x20, DAT_803de422 < 0)) {
-      DAT_803de422 = 0;
+  if (lbl_803DD7A0 != '\0') {
+    lbl_803DD7A2 = lbl_803DD7A2 + framesThisStep * 0x20;
+    if (0xff < lbl_803DD7A2) {
+      lbl_803DD7A2 = 0xff;
     }
   }
   else {
-    DAT_803de422 = DAT_803de422 + (ushort)DAT_803dc070 * 0x20;
-    if (0xff < DAT_803de422) {
-      DAT_803de422 = 0xff;
+    if (lbl_803DD8D2 == 0) {
+      lbl_803DD7A2 = lbl_803DD7A2 - framesThisStep * 0x20;
+      if (lbl_803DD7A2 < 0) {
+        lbl_803DD7A2 = 0;
+      }
     }
   }
-  if ((DAT_803de420 == '\0') || (DAT_803de422 != 0xff)) {
-    DAT_803de552 = DAT_803de552 + (ushort)DAT_803dc070 * -4;
-    if (DAT_803de552 < 0) {
-      DAT_803de552 = 0;
+  if ((lbl_803DD7A0 != '\0') && (lbl_803DD7A2 == 0xff)) {
+    lbl_803DD8D2 = lbl_803DD8D2 + framesThisStep * 4;
+    if (lbl_803DBA68 < lbl_803DD8D2) {
+      lbl_803DD8D2 = lbl_803DBA68;
     }
   }
   else {
-    DAT_803de552 = DAT_803de552 + (ushort)DAT_803dc070 * 4;
-    if (DAT_803dc6d0 < DAT_803de552) {
-      DAT_803de552 = DAT_803dc6d0;
+    lbl_803DD8D2 = lbl_803DD8D2 - framesThisStep * 4;
+    if (lbl_803DD8D2 < 0) {
+      lbl_803DD8D2 = 0;
     }
   }
-  if (DAT_803de422 != 0) {
+  if (lbl_803DD7A2 != 0) {
     return;
   }
-  DAT_803dc6d6 = 0xffff;
+  lbl_803DBA6E = 0xffff;
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80122b14
- * EN v1.0 Address: 0x80122B14
- * EN v1.0 Size: 4332b
+ * Function: hudDrawButtons
+ * EN v1.0 Address: 0x80123204
+ * EN v1.0 Size: 0xE64
  * EN v1.1 Address: 0x801234E8
  * EN v1.1 Size: 3684b
  * JP Address: TODO
@@ -648,7 +682,7 @@ void FUN_80122a4c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80122b14(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void hudDrawButtons(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -1113,4 +1147,111 @@ LAB_8012431c:
   FUN_8005d370(0,0xff,0xff,0xff,0xff);
   FUN_8028686c();
   return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80124068
+ * EN v1.0 Address: 0x80124068
+ * EN v1.0 Size: 0x164
+ */
+void fn_80124068(void)
+{
+  sbyte s;
+  byte b;
+
+  s = (sbyte)lbl_803DBA65;
+  if (s >= 0) {
+    lbl_803DD796 = lbl_803DD796 - framesThisStep * s;
+    if (lbl_803DD796 < 0) {
+      lbl_803DD796 = 0;
+      lbl_803DBA65 = 0;
+      lbl_803DD78E = 0;
+    }
+  }
+  else {
+    lbl_803DD796 = lbl_803DD796 + framesThisStep * (-s);
+    if (lbl_803DD796 > 0) {
+      lbl_803DD796 = 0;
+      lbl_803DBA65 = 0;
+      lbl_803DD78E = 0;
+    }
+  }
+  b = cMenuOpen;
+  if ((sbyte)b != 0) {
+    cMenuFadeCounter = cMenuFadeCounter + framesThisStep * 8;
+    if (cMenuFadeCounter > 0xff) {
+      cMenuFadeCounter = 0xff;
+    }
+  }
+  else {
+    if (lbl_803DD8D6 == 0) {
+      cMenuFadeCounter = cMenuFadeCounter - framesThisStep * 8;
+      if (cMenuFadeCounter < 0) {
+        cMenuFadeCounter = 0;
+      }
+    }
+  }
+  if ((sbyte)b != 0 && cMenuFadeCounter > 0x40) {
+    lbl_803DD8D6 = lbl_803DD8D6 + framesThisStep * 16;
+    if (lbl_803DBA66 < lbl_803DD8D6) {
+      lbl_803DD8D6 = lbl_803DBA66;
+    }
+  }
+  else {
+    lbl_803DD8D6 = lbl_803DD8D6 - framesThisStep * 16;
+    if (lbl_803DD8D6 < 0) {
+      lbl_803DD8D6 = 0;
+    }
+  }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801241CC
+ * EN v1.0 Address: 0x801241CC
+ * EN v1.0 Size: 0x110
+ */
+int fn_801241CC(short* arr, sbyte flag)
+{
+  short* entry;
+  int count;
+  int mask;
+
+  count = 0;
+  if (flag == 0) {
+    entry = arr;
+    while (entry[0] > -1) {
+      if (GameBit_Get((int)entry[0]) != 0) {
+        if (arr == lbl_8031B4E0) {
+          if (entry[2] < 0 || GameBit_Get((int)entry[2]) == 0) {
+            count++;
+          }
+        }
+        else {
+          if (!(entry[1] >= 0 && GameBit_Get((int)entry[1]) != 0)) {
+            if (entry[2] < 0 || GameBit_Get((int)entry[2]) == 0) {
+              count++;
+            }
+          }
+        }
+      }
+      entry += 8;
+    }
+  }
+  else {
+    mask = lbl_803DD738;
+    if (mask > 0) {
+      entry = arr;
+      while (entry[0] > -1) {
+        if (mask != -1 && (mask & (int)entry[0]) != 0) {
+          count++;
+        }
+        entry += 8;
+      }
+    }
+  }
+  return count;
 }
