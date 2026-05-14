@@ -246,8 +246,7 @@ int fn_8005E560(int param_1,int *param_3,int *param_2)
   uVar3 = ((uint3)(uVar6 | (uVar4 << 8) | (uVar5 << 16)) >> (uVar2 & 7)) & 0x3f;
   iVar1 = iVar1 + uVar3 * 0x44;
   GXSetTevAlphaIn(0,7,4,5,7);
-  Shader_getLayer(iVar1,0);
-  selectTexture(*(int *)iVar1,0);
+  selectTexture(*(int *)Shader_getLayer(iVar1,0),0);
   if ((*(uint *)(iVar1 + 0x3c) & 4) != 0) {
     _gxSetFogParams();
     goto LAB_8005E630;
@@ -373,22 +372,21 @@ void fn_8005E730(undefined4 param_1,undefined4 param_2,int param_3)
 #pragma scheduling off
 #pragma peephole off
 undefined4
-fn_8005E97C(double param_1,double param_2,double param_3,double param_4,double param_5,
-            double param_6,float *param_7)
+fn_8005E97C(float param_1,float param_2,float param_3,float param_4,float param_5,
+            float param_6,float *param_7)
 {
   byte bVar1;
   float *pfVar2;
-  int iVar3;
-  double dVar4;
-  double dVar5;
-  double dVar6;
-  double dVar7;
-  double dVar8;
-  double dVar9;
+  int i;
+  float dVar4;
+  float dVar5;
+  float dVar6;
+  float dVar7;
+  float dVar8;
+  float dVar9;
 
   pfVar2 = (float *)&lbl_8038793C;
-  iVar3 = 5;
-  while( true ) {
+  for (i = 5; i != 0; i--, pfVar2 = pfVar2 + 5, param_7 = param_7 + 1) {
     bVar1 = *(byte *)(pfVar2 + 4);
     dVar5 = param_1;
     dVar8 = param_2;
@@ -408,24 +406,11 @@ fn_8005E97C(double param_1,double param_2,double param_3,double param_4,double p
       dVar6 = param_5;
       dVar9 = param_6;
     }
-    if ((*param_7 +
-         pfVar2[3] +
-         (float)(dVar9 * (double)pfVar2[2] +
-                (double)(float)(dVar5 * (double)*pfVar2 + (double)(float)(dVar4 * (double)pfVar2[1])
-                               )) < lbl_803DEBCC) &&
-       (*param_7 +
-        pfVar2[3] +
-        (float)(dVar6 * (double)pfVar2[2] +
-               (double)(float)(dVar8 * (double)*pfVar2 + (double)(float)(dVar7 * (double)pfVar2[1]))
-               ) < lbl_803DEBCC)) break;
-    pfVar2 = pfVar2 + 5;
-    param_7 = param_7 + 1;
-    iVar3 = iVar3 + -1;
-    if (iVar3 == 0) {
-      return 1;
-    }
+    if ((dVar4 * pfVar2[1] + dVar5 * *pfVar2 + dVar9 * pfVar2[2] + pfVar2[3] + *param_7 < lbl_803DEBCC) &&
+        (dVar7 * pfVar2[1] + dVar8 * *pfVar2 + dVar6 * pfVar2[2] + pfVar2[3] + *param_7 < lbl_803DEBCC))
+      return 0;
   }
-  return 0;
+  return 1;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -768,7 +753,7 @@ void fn_8005F1E0(int param_1, int param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-int fn_8005F558(char param_1,int param_2,int *param_3)
+int fn_8005F558(byte param_1,int param_2,int *param_3)
 {
   int iVar1;
   uint uVar2;
@@ -776,6 +761,13 @@ int fn_8005F558(char param_1,int param_2,int *param_3)
   undefined uVar4;
   undefined uVar5;
   uint uPos;
+  int local_8;
+  int local_c;
+  int local_10;
+  byte local_14[4];
+  byte local_18;
+  byte local_19;
+  byte local_1a;
   int local_1c;
 
   local_1c = lbl_803E8444;
@@ -789,7 +781,7 @@ int fn_8005F558(char param_1,int param_2,int *param_3)
   uVar2 = (uint3)(CONCAT12(uVar4,CONCAT11(uVar3,uVar5)) >> (uPos & 7)) & 0x3f;
   iVar1 = iVar1 + uVar2 * 0x44;
 
-  if ((param_1 & 0xff) == 0) {
+  if (param_1 == 0) {
     return iVar1;
   }
 
@@ -797,59 +789,51 @@ int fn_8005F558(char param_1,int param_2,int *param_3)
     _gxSetFogParams();
     goto LAB_8005F608;
   }
-  {
-    int local_10[2];
-    local_10[0] = local_1c;
-    GXSetFog(0,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,*(GXColor*)local_10);
-  }
+  local_10 = local_1c;
+  GXSetFog(0,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,*(GXColor*)&local_10);
 LAB_8005F608:
-  if ((iVar1 != 0) && ((*(uint *)(iVar1 + 0x3c) & 1) != 0)) {
+  if ((iVar1 != 0) && ((*(uint *)(iVar1 + 0x3c) & 0x80000000) != 0)) {
     return iVar1;
   }
-  if ((iVar1 != 0) && ((*(uint *)(iVar1 + 0x3c) & 0x4000) != 0)) {
-    {
-      int res;
-      res = fn_80118294(0,0,0);
-      if ((res & 0xff) != 0) {
-        return iVar1;
-      }
+  if ((iVar1 != 0) && ((*(uint *)(iVar1 + 0x3c) & 0x20000) != 0)) {
+    int res;
+    res = fn_80118294(0,0,0);
+    if ((res & 0xff) != 0) {
+      return iVar1;
     }
   }
   resetLotsOfRenderVars();
-  if ((*(uint *)(iVar1 + 0x3c) & 0x1000000) != 0) {
+  if ((*(uint *)(iVar1 + 0x3c) & 0x80) != 0) {
     fn_8004DA54(iVar1);
     goto LAB_8005F690;
   }
   fn_8005F1E0(iVar1,(int)0x80);
 LAB_8005F690:
-  if ((*(uint *)(iVar1 + 0x3c) & 0x4000000) != 0) {
+  if ((*(uint *)(iVar1 + 0x3c) & 0x20) != 0) {
     int *lPtr = lbl_803DCE34;
     if (lPtr != 0) {
       fn_8004FDA0(lPtr,(int*)&lbl_80382008,&lbl_803DB638);
       goto LAB_8005F6F4;
     }
   }
-  if ((*(uint *)(iVar1 + 0x3c) & 0x2000000) != 0) {
+  if ((*(uint *)(iVar1 + 0x3c) & 0x40) != 0) {
     fn_8004E0FC();
     goto LAB_8005F6F4;
   }
   if (isHeavyFogEnabled()) {
-    {
-      byte local_14[4];
-      getColor803dd01c(local_14);
-      fn_8004E7F8(local_14);
-    }
+    getColor803dd01c(local_14);
+    fn_8004E7F8(local_14);
   }
 LAB_8005F6F4:
-  if (((*(uint *)(iVar1 + 0x3c) & 2) != 0) || ((*(uint *)(iVar1 + 0x3c) & 4) != 0)) {
+  if (((*(uint *)(iVar1 + 0x3c) & 0x40000000) != 0) || ((*(uint *)(iVar1 + 0x3c) & 0x20000000) != 0)) {
     GXSetBlendMode(1,4,5,5);
     gxSetZMode_(1,3,0);
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(7,0,0,7,0);
     goto LAB_8005F7FC;
   }
-  if ((*(uint *)(iVar1 + 0x3c) & 0x200000) != 0) {
-    if ((*(uint *)(iVar1 + 0x3c) & 0x1000000) == 0) {
+  if ((*(uint *)(iVar1 + 0x3c) & 0x400) != 0) {
+    if ((*(uint *)(iVar1 + 0x3c) & 0x80) == 0) {
       GXSetBlendMode(0,1,0,5);
       gxSetZMode_(1,3,1);
       gxSetPeControl_ZCompLoc_(0);
@@ -863,38 +847,27 @@ LAB_8005F6F4:
   GXSetAlphaCompare(7,0,0,7,0);
 LAB_8005F7FC:
   if ((*(uint *)(iVar1 + 0x3c) & 1) == 0) {
-    if ((*(uint *)(iVar1 + 0x3c) & 0x2000) == 0) {
-      if ((*(uint *)(iVar1 + 0x3c) & 0x100000) == 0) {
-        if ((*(uint *)(iVar1 + 0x3c) & 0x80000) == 0) goto LAB_8005F89C;
+    if ((*(uint *)(iVar1 + 0x3c) & 0x40000) == 0) {
+      if ((*(uint *)(iVar1 + 0x3c) & 0x800) == 0) {
+        if ((*(uint *)(iVar1 + 0x3c) & 0x1000) == 0) goto LAB_8005F89C;
       }
     }
   }
-  {
-    int local_c[1];
-    local_c[0] = lbl_803DB63C;
-    GXSetChanAmbColor(0,*(GXColor *)local_c);
-    if ((*(uint *)(iVar1 + 0x3c) & 0x2000) != 0) {
-      GXSetChanCtrl(0,0,0,1,0,0,2);
-      goto LAB_8005F8E4;
-    }
-    GXSetChanCtrl(0,1,0,1,0,0,2);
+  local_c = lbl_803DB63C;
+  GXSetChanAmbColor(0,*(GXColor *)&local_c);
+  if ((*(uint *)(iVar1 + 0x3c) & 0x40000) != 0) {
+    GXSetChanCtrl(0,0,0,1,0,0,2);
     goto LAB_8005F8E4;
   }
+  GXSetChanCtrl(0,1,0,1,0,0,2);
+  goto LAB_8005F8E4;
 LAB_8005F89C:
-  {
-    byte local_18;
-    byte local_19;
-    byte local_1a;
-    fn_8008982C(0,&local_1a,&local_19,&local_18);
-    GXSetChanCtrl(0,1,0,1,0,0,2);
-    {
-      int local_8[1];
-      local_8[0] = local_18 | (local_19 << 8) | (local_1a << 16);
-      GXSetChanAmbColor(0,*(GXColor *)local_8);
-    }
-  }
+  fn_8008982C(0,&local_18,&local_19,&local_1a);
+  GXSetChanCtrl(0,1,0,1,0,0,2);
+  local_8 = *(int*)&local_18;
+  GXSetChanAmbColor(0,*(GXColor *)&local_8);
 LAB_8005F8E4:
-  if ((*(uint *)(iVar1 + 0x3c) & 0x10000000) != 0) {
+  if ((*(uint *)(iVar1 + 0x3c) & 0x8) != 0) {
     GXSetCullMode(2);
     goto LAB_8005F908;
   }
