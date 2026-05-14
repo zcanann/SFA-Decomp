@@ -210,8 +210,32 @@ void synthInit(u32 sampleRate, u32 voiceCount) {
     voiceInitRegistrationTables();
 
     delayBucket = (u32*)(state + 0x240);
-    for (auxIndex = 0; auxIndex < 0x60; auxIndex++) {
-        delayBucket[auxIndex] = 0;
+    for (auxIndex = 0; (u8)auxIndex < 0x20; auxIndex += 8) {
+        delayBucket[0] = 0;
+        delayBucket[1] = 0;
+        delayBucket[2] = 0;
+        delayBucket[3] = 0;
+        delayBucket[4] = 0;
+        delayBucket[5] = 0;
+        delayBucket[6] = 0;
+        delayBucket[7] = 0;
+        delayBucket[8] = 0;
+        delayBucket[9] = 0;
+        delayBucket[10] = 0;
+        delayBucket[11] = 0;
+        delayBucket[12] = 0;
+        delayBucket[13] = 0;
+        delayBucket[14] = 0;
+        delayBucket[15] = 0;
+        delayBucket[16] = 0;
+        delayBucket[17] = 0;
+        delayBucket[18] = 0;
+        delayBucket[19] = 0;
+        delayBucket[20] = 0;
+        delayBucket[21] = 0;
+        delayBucket[22] = 0;
+        delayBucket[23] = 0;
+        delayBucket += 24;
     }
 
     gSynthDelayBucketCursor = 0;
