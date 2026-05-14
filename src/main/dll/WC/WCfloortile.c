@@ -4,7 +4,7 @@
 extern undefined4 FUN_80017a7c();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800631d4();
-extern undefined4 FUN_801f02f0();
+extern undefined4 WM_Galleon_update();
 
 extern undefined4* DAT_803dd72c;
 

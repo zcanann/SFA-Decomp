@@ -410,4 +410,4 @@ void WM_Galleon_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int WM_Galleon_getExtraSize(void) { return 0x10; }
-int fn_801F01C4(void) { return 0x0; }
+int WM_Galleon_func08(void) { return 0x0; }

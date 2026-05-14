@@ -27,7 +27,7 @@ extern f32 lbl_803E698C;
 /*
  * --INFO--
  *
- * Function: FUN_801f02f0
+ * Function: WM_Galleon_update
  * EN v1.0 Address: 0x801F02F0
  * EN v1.0 Size: 900b
  * EN v1.1 Address: 0x801F05B4
@@ -38,9 +38,9 @@ extern f32 lbl_803E698C;
  * PAL Size: TODO
  */
 undefined4
-FUN_801f02f0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10
-            ,int param_11)
+WM_Galleon_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                 int param_9,undefined4 param_10,int param_11)
 {
   uint uVar1;
   char cVar2;
