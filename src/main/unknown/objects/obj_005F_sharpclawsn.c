@@ -65,16 +65,16 @@
  * - Various enemies
  *
  * EN descriptor slot map:
- * - descriptor=0x8031E880 lbl_8031E880 (slots=10, mask=1101111111)
- * - slot 00: 0x8014E638 fn_8014E638 ref=Enemyinitialise
- * - slot 01: 0x8014E604 fn_8014E604 ref=Enemyrelease
- * - slot 03: 0x8014DE78 fn_8014DE78 ref=Enemyinit
- * - slot 04: 0x8014D984 fn_8014D984 ref=update
- * - slot 05: 0x8014D8C4 fn_8014D8C4 ref=EnemyhitDetect
- * - slot 06: 0x8014D730 fn_8014D730 ref=Enemyrender
- * - slot 07: 0x8014D5F8 fn_8014D5F8 ref=Enemyfree
- * - slot 08: 0x8014D5F0 fn_8014D5F0 stub=const 331
- * - slot 09: 0x8014D5E8 fn_8014D5E8 stub=const 880 ref=EnemygetExtraSize (stub)
+ * - descriptor=0x8031DC30 gBaddieObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x8014E1A4 enemy_initialise ref=Enemyinitialise
+ * - slot 01: 0x8014E170 enemy_release ref=Enemyrelease
+ * - slot 03: 0x8014D9E4 enemy_init ref=Enemyinit
+ * - slot 04: 0x8014D4F0 enemy_update ref=update
+ * - slot 05: 0x8014D430 enemy_hitDetect ref=EnemyhitDetect
+ * - slot 06: 0x8014D29C enemy_render ref=Enemyrender
+ * - slot 07: 0x8014D164 enemy_free ref=Enemyfree
+ * - slot 08: 0x8014D15C enemy_func08 stub=const 331
+ * - slot 09: 0x8014D154 Baddie_EnemygetExtraSize stub=const 880 ref=EnemygetExtraSize (stub)
  */
 
 #if 0
