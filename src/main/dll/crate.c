@@ -28,12 +28,13 @@ typedef struct SfxplayerState {
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
 undefined4 sfxplayer_updateState(int obj,undefined4 param_2,int hitState)
 {
-  u8 event;
-  int i;
+  int event;
   SfxplayerState *state;
-  
+  int i;
+
   state = *(SfxplayerState **)(obj + 0xb8);
   *(s16 *)(hitState + 0x6e) = -1;
   *(u8 *)(hitState + 0x56) = 0;
@@ -44,7 +45,7 @@ undefined4 sfxplayer_updateState(int obj,undefined4 param_2,int hitState)
       state->effectFlags = 1;
     }
     else if (event < 2) {
-      if (event != 0) {
+      if (event >= 1) {
         GameBit_Set(state->effectSfxBaseId + 5,1);
       }
     }
