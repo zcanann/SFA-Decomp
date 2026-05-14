@@ -2,7 +2,7 @@
 #include "main/unknown/autos/placeholder_8027A3E0.h"
 
 extern u32 __cvt_fp2unsigned(double x);
-extern double __ieee754_pow(double x, double y);
+extern f32 powf(f32 x, f32 y);
 
 extern u8 voiceMidiKeySlots[];
 extern u8 voiceDirectSlots[];
@@ -139,13 +139,14 @@ u32 voiceConvertDbToLinear(u32 dbCents)
         struct { u32 hi, lo; } w;
         f64 d;
     } conv;
-    f64 base;
-    f64 result;
+    f32 scaledDb;
+    f32 base;
+    f32 result;
 
     conv.w.hi = 0x43300000;
     conv.w.lo = dbCents ^ 0x80000000U;
-    base = __ieee754_pow(lbl_803E7834,
-                         lbl_803E7838 * (conv.d - lbl_803E7840));
+    scaledDb = conv.d - lbl_803E7840;
+    base = powf(lbl_803E7834, lbl_803E7838 * scaledDb);
     result = lbl_803E7830 * base;
     return __cvt_fp2unsigned(result);
 }
