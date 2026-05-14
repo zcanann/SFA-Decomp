@@ -50,7 +50,7 @@
  * - 0x037C WM_newcryst: placements=1, class=0x0061, widths=8w x1
  *
  * EN descriptor slot map:
- * - descriptor=0x80328E58 lbl_80328E58 (slots=10, mask=1101111111)
+ * - descriptor=0x80328E58 gWM_newcrystalObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801F9800 wmnewcrystal_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801F97FC wmnewcrystal_release stub=blr ref=release (stub)
  * - slot 03: 0x801F978C wmnewcrystal_init ref=init
