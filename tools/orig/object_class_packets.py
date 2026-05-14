@@ -635,10 +635,13 @@ def render_class_stub(
     lines.append(" */")
     enum_name = identifier_from_name(f"class_{packet.class_id:04X}_{packet.suggested_name}_defs")
     lines.append(f"enum {enum_name} {{")
+    used_enum_names: set[str] = set()
     for item in packet.objects:
-        lines.append(
-            f"    {identifier_from_name(f'{packet.suggested_name}_{item.name}').upper()} = 0x{item.def_id:04X},"
-        )
+        enum_item = identifier_from_name(f"{packet.suggested_name}_{item.name}").upper()
+        if enum_item in used_enum_names:
+            enum_item = f"{enum_item}_{item.def_id:04X}"
+        used_enum_names.add(enum_item)
+        lines.append(f"    {enum_item} = 0x{item.def_id:04X},")
     lines.append("};")
     lines.append("#endif")
     lines.append("")

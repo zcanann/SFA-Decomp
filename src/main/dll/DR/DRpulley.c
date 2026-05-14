@@ -10,13 +10,13 @@ extern f32 lbl_803E5AEC;
 /*
  * --INFO--
  *
- * Function: fn_801ECEC4
+ * Function: SnowBike_render
  * EN v1.0 Address: 0x801ECEC4
  * EN v1.0 Size: 208b
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_801ECEC4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
+void SnowBike_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
     void *path;
 

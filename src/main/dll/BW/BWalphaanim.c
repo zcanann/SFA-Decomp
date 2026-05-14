@@ -42,7 +42,7 @@ extern f32 lbl_803E68B0;
 /*
  * --INFO--
  *
- * Function: FUN_801ed428
+ * Function: SnowBike_update
  * EN v1.0 Address: 0x801ED428
  * EN v1.0 Size: 1732b
  * EN v1.1 Address: 0x801EDA60
@@ -52,7 +52,7 @@ extern f32 lbl_803E68B0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ed428(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void SnowBike_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9)
 {

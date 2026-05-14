@@ -23,7 +23,7 @@ extern f32 lbl_803E6850;
 /*
  * --INFO--
  *
- * Function: FUN_801ecf94
+ * Function: SnowBike_hitDetect
  * EN v1.0 Address: 0x801ECF94
  * EN v1.0 Size: 128b
  * EN v1.1 Address: 0x801ED20C
@@ -33,7 +33,7 @@ extern f32 lbl_803E6850;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-double FUN_801ecf94(int param_1,undefined4 *param_2)
+double SnowBike_hitDetect(int param_1,undefined4 *param_2)
 {
   int iVar1;
   double dVar2;

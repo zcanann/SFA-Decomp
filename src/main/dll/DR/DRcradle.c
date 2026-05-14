@@ -324,18 +324,18 @@ void FUN_801ecdec(undefined4 param_1,int param_2)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801ECA5C(void) {}
-void fn_801ECA60(void) {}
+void SnowBike_func17(void) {}
+void SnowBike_func16(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801ECDD0(void) { return 0x2; }
+int SnowBike_func0E(void) { return 0x2; }
 int SnowBike_render2(void) { return 0x0; }
 int SnowBike_getExtraSize(void) { return 0x59c; }
-int fn_801ECE38(void) { return 0x3; }
+int SnowBike_func08(void) { return 0x3; }
 
 /* Pattern wrappers. */
-u8 fn_801ECE00(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x420); }
+u8 SnowBike_func0B(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x420); }
 
 /* 16b chained patterns. */
-s32 fn_801ECBC4(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x422); }
-s32 fn_801ECD88(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x421); }
+s32 SnowBike_func14(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x422); }
+s32 SnowBike_getType(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x421); }
