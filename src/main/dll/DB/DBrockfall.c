@@ -276,7 +276,7 @@ void fn_801DFA24(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int FEseqobject_getExtraSize(void) { return 0x1; }
-int fn_801DF854(void) { return 0x0; }
+int FEseqobject_func08(void) { return 0x0; }
 int FElevControl_getExtraSize(void) { return 0x0; }
 int fn_801DF93C(void) { return 0x0; }
 int fn_801DF9BC(void) { return 0x0; }

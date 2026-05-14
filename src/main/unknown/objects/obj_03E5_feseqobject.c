@@ -49,15 +49,15 @@
  * - 0x03E5 FEseqobject: placements=1, class=0x0030, widths=9w x1
  *
  * EN descriptor slot map:
- * - descriptor=0x80327B38 lbl_80327B38 (slots=10, mask=1101111111)
+ * - descriptor=0x80327B38 gFEseqobjectObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801DF930 FEseqobject_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801DF92C FEseqobject_release stub=blr ref=release (stub)
- * - slot 03: 0x801DF8F4 fn_801DF8F4 ref=init
- * - slot 04: 0x801DF894 fn_801DF894 ref=update
+ * - slot 03: 0x801DF8F4 FEseqobject_init ref=init
+ * - slot 04: 0x801DF894 FEseqobject_update ref=update
  * - slot 05: 0x801DF890 FEseqobject_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801DF860 FEseqobject_render ref=render
  * - slot 07: 0x801DF85C FEseqobject_free stub=blr ref=free (stub)
- * - slot 08: 0x801DF854 fn_801DF854 stub=const 0
+ * - slot 08: 0x801DF854 FEseqobject_func08 stub=const 0
  * - slot 09: 0x801DF84C FEseqobject_getExtraSize stub=const 1 ref=getExtraSize (stub)
  */
 
