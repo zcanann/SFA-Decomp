@@ -1694,8 +1694,8 @@ void dll_109_release_nop(void) {}
 void dll_109_initialise_nop(void) {}
 void Fall_Ladders_render(void) {}
 void Fall_Ladders_hitDetect(void) {}
-void coldwatercontrol_func07(void) {}
-void coldwatercontrol_func08(void) {}
+void Fall_Ladders_release(void) {}
+void Fall_Ladders_initialise(void) {}
 void infopoint_free(void) {}
 void infopoint_release(void) {}
 void infopoint_initialise(void) {}

@@ -48,14 +48,14 @@
  * - 0x048E Fall_Ladder: placements=3, class=0x0030, widths=9w x3
  *
  * EN descriptor slot map:
- * - descriptor=0x80321920 lbl_80321920 (slots=10, mask=1101111111)
- * - slot 00: 0x80188248 coldwatercontrol_func08 stub=blr ref=initialise (stub)
- * - slot 01: 0x80188244 coldwatercontrol_func07 stub=blr ref=release (stub)
- * - slot 03: 0x8018817C fn_8018817C ref=init
- * - slot 04: 0x80187F80 fn_80187F80 ref=update
+ * - descriptor=0x80321920 gFall_LaddersObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x80188248 Fall_Ladders_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x80188244 Fall_Ladders_release stub=blr ref=release (stub)
+ * - slot 03: 0x8018817C Fall_Ladders_init ref=init
+ * - slot 04: 0x80187F80 Fall_Ladders_update ref=update
  * - slot 05: 0x80187F7C Fall_Ladders_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80187F78 Fall_Ladders_render stub=blr ref=render (stub)
- * - slot 07: 0x80187F48 fn_80187F48 ref=free
+ * - slot 07: 0x80187F48 Fall_Ladders_free ref=free
  * - slot 08: 0x80187F40 Fall_Ladders_func08_ret_0 stub=const 0
  * - slot 09: 0x80187F38 Fall_Ladders_getExtraSize stub=const 12 ref=getExtraSize (stub)
  */
