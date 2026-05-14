@@ -49,7 +49,7 @@
  * - 0x034E VFP_SpellPl: placements=0, class=0x0030, widths=none
  *
  * EN descriptor slot map:
- * - descriptor=0x80329280 lbl_80329280 (slots=10, mask=1101111111)
+ * - descriptor=0x80329280 gVFP_SpellPlaceObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801FE114 vfpspellplace_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801FE110 vfpspellplace_release stub=blr ref=release (stub)
  * - slot 03: 0x801FE078 vfpspellplace_init ref=init
