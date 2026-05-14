@@ -64,13 +64,13 @@
  * - objparams size: 0x24
  *
  * EN descriptor slot map:
- * - descriptor=0x80321DB8 lbl_80321DB8 (slots=10, mask=0001101111)
- * - slot 03: 0x8017CC04 fn_8017CC04 ref=init
- * - slot 04: 0x8017C9B4 fn_8017C9B4 ref=update
- * - slot 06: 0x8017C984 fn_8017C984 ref=render
- * - slot 07: 0x8017C960 fn_8017C960 ref=free
- * - slot 08: 0x8017C958 fn_8017C958 stub=const 0
- * - slot 09: 0x8017C950 fn_8017C950 stub=const 3 ref=getExtraSize (stub)
+ * - descriptor=0x80321168 gSeqObjectObjDescriptor (slots=10, mask=0001101111)
+ * - slot 03: 0x8017C6AC seqobject_init ref=init
+ * - slot 04: 0x8017C45C seqobject_update ref=update
+ * - slot 06: 0x8017C42C seqobject_render ref=render
+ * - slot 07: 0x8017C408 seqobject_free ref=free
+ * - slot 08: 0x8017C400 seqobject_func08 stub=const 0
+ * - slot 09: 0x8017C3F8 seqobject_getExtraSize stub=const 3 ref=getExtraSize (stub)
  */
 
 #if 0

@@ -55,16 +55,16 @@
  * - 0x0270 NWSteppingS: placements=1, class=0x0056, widths=10w x1
  *
  * EN descriptor slot map:
- * - descriptor=0x80321DF0 lbl_80321DF0 (slots=10, mask=1101111111)
- * - slot 00: 0x8017D130 fn_8017D130 stub=blr ref=initialise (stub)
- * - slot 01: 0x8017D12C fn_8017D12C stub=blr ref=release (stub)
- * - slot 03: 0x8017D064 fn_8017D064 ref=init
- * - slot 04: 0x8017CE10 fn_8017CE10 ref=update
- * - slot 05: 0x8017CE0C fn_8017CE0C stub=blr ref=hitDetect (stub)
- * - slot 06: 0x8017CE08 fn_8017CE08 stub=blr ref=render (stub)
- * - slot 07: 0x8017CDE4 fn_8017CDE4 ref=free
- * - slot 08: 0x8017CDDC fn_8017CDDC stub=const 0
- * - slot 09: 0x8017CDD4 fn_8017CDD4 stub=const 1 ref=getExtraSize (stub)
+ * - descriptor=0x803211A0 gSeqObj2ObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x8017CBD8 SeqObj2_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x8017CBD4 SeqObj2_release stub=blr ref=release (stub)
+ * - slot 03: 0x8017CB0C seqobj2_init ref=init
+ * - slot 04: 0x8017C8B8 seqobj2_update ref=update
+ * - slot 05: 0x8017C8B4 seqobj2_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x8017C8B0 seqobj2_render stub=blr ref=render (stub)
+ * - slot 07: 0x8017C88C seqobj2_free ref=free
+ * - slot 08: 0x8017C884 seqobj2_func08 stub=const 0
+ * - slot 09: 0x8017C87C seqobj2_getExtraSize stub=const 1 ref=getExtraSize (stub)
  */
 
 #if 0
