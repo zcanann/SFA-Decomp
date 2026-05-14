@@ -593,20 +593,18 @@ void fn_80119B24(void)
 /* fn_80119B58 (200 bytes)                                             */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
-#pragma peephole off
 BOOL fn_80119B58(OSPriority param_1, u32 param_2)
 {
     char* db = lbl_803A72F0;
-    OSThread* thread = (OSThread*)(db + 0x1058);
 
     if (param_2 != 0) {
-        if (!OSCreateThread(thread, (void*(*)(void*))fn_801198E0, (void*)param_2,
-                            (void*)thread, 0x1000, param_1, 1)) {
+        if (!OSCreateThread((OSThread*)(db + 0x1058), (void*(*)(void*))fn_801198E0, (void*)param_2,
+                            (void*)(db + 0x1058), 0x1000, param_1, 1)) {
             return 0;
         }
     } else {
-        if (!OSCreateThread(thread, (void*(*)(void*))fn_80119A1C, NULL,
-                            (void*)thread, 0x1000, param_1, 1)) {
+        if (!OSCreateThread((OSThread*)(db + 0x1058), (void*(*)(void*))fn_80119A1C, NULL,
+                            (void*)(db + 0x1058), 0x1000, param_1, 1)) {
             return 0;
         }
     }
@@ -617,5 +615,4 @@ BOOL fn_80119B58(OSPriority param_1, u32 param_2)
     lbl_803DD694 = 1;
     return 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
