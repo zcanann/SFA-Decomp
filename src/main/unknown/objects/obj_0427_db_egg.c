@@ -49,7 +49,7 @@
  * - 0x0427 DB_egg: placements=5, class=0x0006, widths=12w x5
  *
  * EN descriptor slot map:
- * - descriptor=0x803292B8 lbl_803292B8 (slots=12, mask=110111111111)
+ * - descriptor=0x803292B8 gDB_eggObjDescriptor (slots=12, mask=110111111111)
  * - slot 00: 0x801FF880 dbegg_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801FF87C dbegg_release stub=blr ref=release (stub)
  * - slot 03: 0x801FF828 dbegg_init ref=init
@@ -59,8 +59,8 @@
  * - slot 07: 0x801FE9E8 dbegg_free ref=free
  * - slot 08: 0x801FE9E0 dbegg_func08 stub=const 8
  * - slot 09: 0x801FE9D8 dbegg_getExtraSize stub=const 292 ref=getExtraSize (stub)
- * - slot 10: 0x801FE150 fn_801FE150 ref=setScale
- * - slot 11: 0x801FE118 fn_801FE118
+ * - slot 10: 0x801FE150 dbegg_setScale ref=setScale
+ * - slot 11: 0x801FE118 dbegg_func0B
  */
 
 #if 0
