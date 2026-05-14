@@ -305,20 +305,20 @@ void fn_8005E730(undefined4 param_1,undefined4 param_2,int param_3)
 {
   int iVar2;
   int *piVar3;
-  int local_C;
-  byte local_8;
-  byte local_9;
-  byte local_A;
-  byte local_B;
-  f32 fStack_10;
-  f32 fStack_14;
-  f32 fStack_18;
-  SfaIntDouble iD1;
-  SfaIntDouble iD2;
-  SfaIntDouble iD3;
-  SfaIntDouble iD4;
-  SfaIntDouble iD5;
   SfaIntDouble iD6;
+  SfaIntDouble iD5;
+  SfaIntDouble iD4;
+  SfaIntDouble iD3;
+  SfaIntDouble iD2;
+  SfaIntDouble iD1;
+  f32 fStack_18;
+  f32 fStack_14;
+  f32 fStack_10;
+  int local_C;
+  byte local_B;
+  byte local_A;
+  byte local_9;
+  byte local_8;
 
   fn_8001E928((undefined*)&lbl_803DCE20,2,&local_C,
               (iD1.words.lo = (int)*(short *)((int)param_1 + 6) >> 3 ^ 0x80000000,
@@ -342,15 +342,22 @@ void fn_8005E730(undefined4 param_1,undefined4 param_2,int param_3)
   resetLotsOfRenderVars();
   fn_8004CE0C(param_3);
   piVar3 = (int *)&lbl_803DCE20;
-  for (iVar2 = 0; iVar2 < local_C; iVar2 = iVar2 + 1) {
-    fn_8001DACC(*piVar3,&local_8,&local_9,&local_A,&local_B);
-    local_8 = (char)((int)(uint)local_8 >> 1) + (char)((int)(uint)local_8 >> 2);
-    local_9 = (char)((int)(uint)local_9 >> 1) + (char)((int)(uint)local_9 >> 2);
-    local_A = (char)((int)(uint)local_A >> 1) + (char)((int)(uint)local_A >> 2);
-    fn_8001DD50(*piVar3,&fStack_10,&fStack_14,&fStack_18);
-    fn_8001DD48(*piVar3);
-    fn_8004FA30(&local_8,&fStack_10);
-    piVar3 = piVar3 + 1;
+  {
+    byte *p9 = &local_9;
+    byte *pA = &local_A;
+    byte *pB = &local_B;
+    f32 *p14 = &fStack_14;
+    f32 *p18 = &fStack_18;
+    for (iVar2 = 0; iVar2 < local_C; iVar2 = iVar2 + 1) {
+      fn_8001DACC(*piVar3,&local_8,p9,pA,pB);
+      local_8 = (char)((int)(uint)local_8 >> 1) + (char)((int)(uint)local_8 >> 2);
+      local_9 = (char)((int)(uint)local_9 >> 1) + (char)((int)(uint)local_9 >> 2);
+      local_A = (char)((int)(uint)local_A >> 1) + (char)((int)(uint)local_A >> 2);
+      fn_8001DD50(*piVar3,&fStack_10,p14,p18);
+      fn_8001DD48(*piVar3);
+      fn_8004FA30(&local_8,&fStack_10);
+      piVar3 = piVar3 + 1;
+    }
   }
   textureFn_800528bc();
   GXSetNumChans(1);
@@ -455,31 +462,33 @@ fn_8005EAA4(int param_1,int param_2,float *param_3,int param_4,float *param_5,fl
   float fVar5;
   float fVar6;
   float fVar7;
-  SfaIntDouble iD1;
-  SfaIntDouble iD2;
-  SfaIntDouble iD3;
-  SfaIntDouble iD4;
-  SfaIntDouble iD5;
   SfaIntDouble iD6;
+  SfaIntDouble iD5;
+  SfaIntDouble iD4;
+  SfaIntDouble iD3;
+  SfaIntDouble iD2;
+  SfaIntDouble iD1;
+  double bias;
 
+  bias = lbl_803DEBC0;
   iD1.words.lo = (int)*(short *)(param_1 + 0xc) >> 3 ^ 0x80000000;
   iD1.words.hi = 0x43300000;
-  *param_8 = (float)(iD1.d - lbl_803DEBC0) + *(float *)(param_2 + 0x18);
+  *param_8 = (float)(iD1.d - bias) + *(float *)(param_2 + 0x18);
   iD2.words.lo = (int)*(short *)(param_1 + 6) >> 3 ^ 0x80000000;
   iD2.words.hi = 0x43300000;
-  *param_5 = (float)(iD2.d - lbl_803DEBC0) + *(float *)(param_2 + 0x18);
+  *param_5 = (float)(iD2.d - bias) + *(float *)(param_2 + 0x18);
   iD3.words.lo = (int)*(short *)(param_1 + 0xe) >> 3 ^ 0x80000000;
   iD3.words.hi = 0x43300000;
-  *param_9 = (float)(iD3.d - lbl_803DEBC0) + *(float *)(param_2 + 0x28);
+  *param_9 = (float)(iD3.d - bias) + *(float *)(param_2 + 0x28);
   iD4.words.lo = (int)*(short *)(param_1 + 8) >> 3 ^ 0x80000000;
   iD4.words.hi = 0x43300000;
-  *param_6 = (float)(iD4.d - lbl_803DEBC0) + *(float *)(param_2 + 0x28);
+  *param_6 = (float)(iD4.d - bias) + *(float *)(param_2 + 0x28);
   iD5.words.lo = (int)*(short *)(param_1 + 0x10) >> 3 ^ 0x80000000;
   iD5.words.hi = 0x43300000;
-  *param_10 = (float)(iD5.d - lbl_803DEBC0) + *(float *)(param_2 + 0x38);
+  *param_10 = (float)(iD5.d - bias) + *(float *)(param_2 + 0x38);
   iD6.words.lo = (int)*(short *)(param_1 + 10) >> 3 ^ 0x80000000;
   iD6.words.hi = 0x43300000;
-  *param_7 = (float)(iD6.d - lbl_803DEBC0) + *(float *)(param_2 + 0x38);
+  *param_7 = (float)(iD6.d - bias) + *(float *)(param_2 + 0x38);
   if (0 < param_4) {
     do {
       bVar1 = *(byte *)(param_3 + 4);
