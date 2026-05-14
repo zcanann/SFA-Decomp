@@ -49,7 +49,7 @@
  * - 0x032F VFP_LiftInd: placements=0, class=0x0030, widths=none
  *
  * EN descriptor slot map:
- * - descriptor=0x803290C0 lbl_803290C0 (slots=10, mask=1101111111)
+ * - descriptor=0x803290C0 gVFP_DoorSwitchObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801FC6F0 vfpdoorswitch_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801FC6EC vfpdoorswitch_release stub=blr ref=release (stub)
  * - slot 03: 0x801FC604 vfpdoorswitch_init ref=init
