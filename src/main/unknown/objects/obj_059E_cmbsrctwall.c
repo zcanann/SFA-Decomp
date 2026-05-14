@@ -45,16 +45,16 @@
  * - 0x059F ThusterSour: placements=7, class=0x007E, widths=12w x7
  *
  * EN descriptor slot map:
- * - descriptor=0x8032CA08 lbl_8032CA08 (slots=10, mask=1101111111)
- * - slot 00: 0x80237C34 fn_80237C34 stub=blr ref=initialise (stub)
- * - slot 01: 0x80237C30 fn_80237C30 stub=blr ref=release (stub)
- * - slot 03: 0x80237654 fn_80237654 ref=init
- * - slot 04: 0x80237448 fn_80237448 ref=update
- * - slot 05: 0x80237360 fn_80237360 ref=hitDetect
- * - slot 06: 0x802372A8 fn_802372A8 ref=render
- * - slot 07: 0x80237244 fn_80237244 ref=free
- * - slot 08: 0x8023723C fn_8023723C stub=const 0
- * - slot 09: 0x80237234 fn_80237234 stub=const 40 ref=getExtraSize (stub)
+ * - descriptor=0x8032BDB0 gCmbSrcObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x80237570 cmbsrc_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x8023756C cmbsrc_release stub=blr ref=release (stub)
+ * - slot 03: 0x80236F90 cmbsrc_init ref=init
+ * - slot 04: 0x80236D84 cmbsrc_update ref=update
+ * - slot 05: 0x80236C9C cmbsrc_hitDetect ref=hitDetect
+ * - slot 06: 0x80236BE4 cmbsrc_render ref=render
+ * - slot 07: 0x80236B80 cmbsrc_free ref=free
+ * - slot 08: 0x80236B78 cmbsrc_func08 stub=const 0
+ * - slot 09: 0x80236B70 cmbsrc_getExtraSize stub=const 40 ref=getExtraSize (stub)
  */
 
 #if 0

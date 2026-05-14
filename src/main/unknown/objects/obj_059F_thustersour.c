@@ -4,25 +4,25 @@
  * This file is intentionally not wired into the build yet.
  * It exists as a retail-backed per-object packet for exploratory split work.
  *
- * Object def: 0x059C CmbSrc
- * Output path: src/main/unknown/objects/obj_059C_cmbsrc.c
- * Retail placements: 417
- * Root romlists: 27
+ * Object def: 0x059F ThusterSour
+ * Output path: src/main/unknown/objects/obj_059F_thustersour.c
+ * Retail placements: 7
+ * Root romlists: 1
  * Object-def size: 0xA0
- * Root placement widths: 12w x417
+ * Root placement widths: 12w x7
  * DLL ID: 0x02B1
  * Class ID: 0x007E
  * Suggested outer boundary: tight DLL family
  * Reference class name: CmbSrc
  * Reference DLL name: CmbSrc
- * Remap aliases: 0x06E8
+ * Remap aliases: 0x0758
  *
  * Related packet paths:
  * - class: src/main/unknown/classes/class_007E_cmbsrc.c
  * - family: src/main/unknown/dll_02B1_cmbsrc.c
  *
  * Width samples:
- * - 12w (0x30 bytes): capeclaw.romlist.zlb, clouddungeon.romlist.zlb, dbshrine.romlist.zlb, dfptop.romlist.zlb
+ * - 12w (0x30 bytes): imspacecraft.romlist.zlb
  *
  * Inline object-def evidence:
  * - inline fields: pModelList
@@ -61,12 +61,12 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_059C_CmbSrc_packet_info {
-    CMBSRC_DEF_ID = 0x059C,
-    CMBSRC_DLL_ID = 0x02B1,
-    CMBSRC_CLASS_ID = 0x007E,
-    CMBSRC_OBJECT_DEF_BYTES = 0xA0,
-    CMBSRC_PLACEMENT_BYTES_MIN = 0x30,
-    CMBSRC_PLACEMENT_BYTES_MAX = 0x30,
+enum obj_059F_ThusterSour_packet_info {
+    THUSTERSOUR_DEF_ID = 0x059F,
+    THUSTERSOUR_DLL_ID = 0x02B1,
+    THUSTERSOUR_CLASS_ID = 0x007E,
+    THUSTERSOUR_OBJECT_DEF_BYTES = 0xA0,
+    THUSTERSOUR_PLACEMENT_BYTES_MIN = 0x30,
+    THUSTERSOUR_PLACEMENT_BYTES_MAX = 0x30,
 };
 #endif
