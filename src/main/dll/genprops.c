@@ -4463,7 +4463,7 @@ int curve_func08(void) { return 0x0; }
 int fn_801713FC(void) { return 0xc; }
 int fn_80171404(void) { return 0x2; }
 int checkpoint4_getExtraSize(void) { return 0x40; }
-int fn_801719EC(void) { return 0x10; }
+int checkpoint4_func08(void) { return 0x10; }
 int siderepel_getExtraSize(void) { return 0x1; }
 
 /* Pattern wrappers. */

@@ -36,17 +36,17 @@
  * - 0x0492 checkpoint4: placements=181, class=0x0005, widths=16w x181
  *
  * EN descriptor slot map:
- * - descriptor=0x803217C0 gCheckpoint4ObjDescriptor (slots=11, mask=11011111111)
- * - slot 00: 0x80172054 checkpoint4_initialise stub=blr ref=initialise (stub)
- * - slot 01: 0x80172050 checkpoint4_release stub=blr ref=release (stub)
- * - slot 03: 0x80171ED0 checkpoint4_init ref=init
- * - slot 04: 0x80171ECC checkpoint4_update stub=blr ref=update (stub)
- * - slot 05: 0x80171EC8 checkpoint4_hitDetect stub=blr ref=hitDetect (stub)
- * - slot 06: 0x80171EA4 checkpoint4_render ref=render
- * - slot 07: 0x80171EA0 checkpoint4_free stub=blr ref=free (stub)
- * - slot 08: 0x80171E98 checkpoint4_func08 stub=const 16
- * - slot 09: 0x80171E90 checkpoint4_getExtraSize stub=const 64 ref=getExtraSize (stub)
- * - slot 10: 0x80171E8C checkpoint4_setScale stub=blr ref=setScale (stub)
+ * - descriptor=0x80320B70 lbl_80320B70 (slots=11, mask=11011111111)
+ * - slot 00: 0x80171BA8 checkpoint4_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x80171BA4 checkpoint4_release stub=blr ref=release (stub)
+ * - slot 03: 0x80171A24 checkpoint4_init ref=init
+ * - slot 04: 0x80171A20 checkpoint4_update stub=blr ref=update (stub)
+ * - slot 05: 0x80171A1C checkpoint4_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x801719F8 checkpoint4_render ref=render
+ * - slot 07: 0x801719F4 checkpoint4_free stub=blr ref=free (stub)
+ * - slot 08: 0x801719EC checkpoint4_func08 stub=const 16
+ * - slot 09: 0x801719E4 checkpoint4_getExtraSize stub=const 64 ref=getExtraSize (stub)
+ * - slot 10: 0x801719E0 checkpoint4_setScale stub=blr ref=setScale (stub)
  */
 
 #if 0

@@ -18,17 +18,17 @@
  * - 0x0492 checkpoint4: dll=0x00E8, placements=181, widths=16w x181
  *
  * Descriptor slot maps:
- * - DLL 0x00E8: gCheckpoint4ObjDescriptor @ 0x803217C0 (slots=11, mask=11011111111)
- *   slot 00: 0x80172054 checkpoint4_initialise
- *   slot 01: 0x80172050 checkpoint4_release
- *   slot 03: 0x80171ED0 checkpoint4_init
- *   slot 04: 0x80171ECC checkpoint4_update
- *   slot 05: 0x80171EC8 checkpoint4_hitDetect
- *   slot 06: 0x80171EA4 checkpoint4_render
- *   slot 07: 0x80171EA0 checkpoint4_free
- *   slot 08: 0x80171E98 checkpoint4_func08
- *   slot 09: 0x80171E90 checkpoint4_getExtraSize
- *   slot 10: 0x80171E8C checkpoint4_setScale
+ * - DLL 0x00E8: lbl_80320B70 @ 0x80320B70 (slots=11, mask=11011111111)
+ *   slot 00: 0x80171BA8 checkpoint4_initialise
+ *   slot 01: 0x80171BA4 checkpoint4_release
+ *   slot 03: 0x80171A24 checkpoint4_init
+ *   slot 04: 0x80171A20 checkpoint4_update
+ *   slot 05: 0x80171A1C checkpoint4_hitDetect
+ *   slot 06: 0x801719F8 checkpoint4_render
+ *   slot 07: 0x801719F4 checkpoint4_free
+ *   slot 08: 0x801719EC checkpoint4_func08
+ *   slot 09: 0x801719E4 checkpoint4_getExtraSize
+ *   slot 10: 0x801719E0 checkpoint4_setScale
  */
 
 #if 0
