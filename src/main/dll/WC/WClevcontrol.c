@@ -731,7 +731,7 @@ int fn_801EEE04(void) { return 0x0; }
 int fn_801EEE2C(void) { return 0x0; }
 int fn_801EEE34(void) { return 0x0; }
 int SB_CloudRunner_getExtraSize(void) { return 0x84; }
-int fn_801EEE44(void) { return 0x43; }
+int SB_CloudRunner_func08(void) { return 0x43; }
 int WM_ObjCreator_getExtraSize(void) { return 0x8; }
 int fn_801EF368(void) { return 0x0; }
 

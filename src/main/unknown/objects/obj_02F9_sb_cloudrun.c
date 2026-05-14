@@ -49,15 +49,15 @@
  * - 0x02F9 SB_Cloudrun: placements=2, class=0x0030, widths=9w x2
  *
  * EN descriptor slot map:
- * - descriptor=0x80328618 lbl_80328618 (slots=10, mask=1101111111)
+ * - descriptor=0x80328618 gSB_CloudRunnerObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801EF35C SB_CloudRunner_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801EF358 SB_CloudRunner_release stub=blr ref=release (stub)
- * - slot 03: 0x801EF2B0 fn_801EF2B0 ref=init
- * - slot 04: 0x801EF024 fn_801EF024 ref=update
+ * - slot 03: 0x801EF2B0 SB_CloudRunner_init ref=init
+ * - slot 04: 0x801EF024 SB_CloudRunner_update ref=update
  * - slot 05: 0x801EF020 SB_CloudRunner_hitDetect stub=blr ref=hitDetect (stub)
- * - slot 06: 0x801EEEE0 fn_801EEEE0 ref=render
- * - slot 07: 0x801EEE4C fn_801EEE4C ref=free
- * - slot 08: 0x801EEE44 fn_801EEE44 stub=const 67
+ * - slot 06: 0x801EEEE0 SB_CloudRunner_render ref=render
+ * - slot 07: 0x801EEE4C SB_CloudRunner_free ref=free
+ * - slot 08: 0x801EEE44 SB_CloudRunner_func08 stub=const 67
  * - slot 09: 0x801EEE3C SB_CloudRunner_getExtraSize stub=const 132 ref=getExtraSize (stub)
  */
 
