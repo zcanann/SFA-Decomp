@@ -255,7 +255,7 @@ void LaserBeam_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int WM_seqobject_getExtraSize(void) { return 0x1; }
-int fn_801F072C(void) { return 0x0; }
+int WM_seqobject_func08(void) { return 0x0; }
 int fn_801F0940(void) { return 0xc; }
 int fn_801F0948(void) { return 0x0; }
 int LaserBeam_getExtraSize(void) { return 0x50; }
