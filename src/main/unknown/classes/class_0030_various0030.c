@@ -903,7 +903,7 @@
  *   slot 07: 0x801C2DD4 dfsh_shrine_free
  *   slot 08: 0x801C2DCC dfsh_shrine_func08
  *   slot 09: 0x801C2DC4 dfsh_shrine_getExtraSize
- * - DLL 0x017B: lbl_803260B8 (slots=10, mask=1101111111)
+ * - DLL 0x017B: gDFSH_LaserBeamObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801C4660 DFSH_LaserBeam_initialise
  *   slot 01: 0x801C465C DFSH_LaserBeam_release
  *   slot 03: 0x801C45A0 DFSH_LaserBeam_free
