@@ -388,23 +388,26 @@ fn_8005E97C(float param_1,float param_2,float param_3,float param_4,float param_
   pfVar2 = (float *)&lbl_8038793C;
   for (i = 5; i != 0; i--, pfVar2 = pfVar2 + 5, param_7 = param_7 + 1) {
     bVar1 = *(byte *)(pfVar2 + 4);
-    dVar5 = param_1;
-    dVar8 = param_2;
     if ((bVar1 & 1) != 0) {
       dVar5 = param_2;
       dVar8 = param_1;
+    } else {
+      dVar5 = param_1;
+      dVar8 = param_2;
     }
-    dVar4 = param_3;
-    dVar7 = param_4;
     if ((bVar1 & 2) != 0) {
       dVar4 = param_4;
       dVar7 = param_3;
+    } else {
+      dVar4 = param_3;
+      dVar7 = param_4;
     }
-    dVar6 = param_6;
-    dVar9 = param_5;
     if ((bVar1 & 4) != 0) {
-      dVar6 = param_5;
       dVar9 = param_6;
+      dVar6 = param_5;
+    } else {
+      dVar9 = param_5;
+      dVar6 = param_6;
     }
     if ((dVar4 * pfVar2[1] + dVar5 * *pfVar2 + dVar9 * pfVar2[2] + pfVar2[3] + *param_7 < lbl_803DEBCC) &&
         (dVar7 * pfVar2[1] + dVar8 * *pfVar2 + dVar6 * pfVar2[2] + pfVar2[3] + *param_7 < lbl_803DEBCC))
@@ -619,31 +622,31 @@ void fn_8005F1E0(int param_1, int param_2)
   int *piVar5;
   int iVar6;
   int iVar7;
+  byte bVar1;
   undefined4 local_48;
   Mtx afStack_44;
 
   local_48 = lbl_803DEBB0;
-  if ((*(char *)(param_1 + 0x41) == '\x02') &&
+  if ((*(byte *)(param_1 + 0x41) == 2) &&
      (iVar1 = Shader_getLayer(param_1,1), (*(byte *)(iVar1 + 4) & 0x7f) == 9)) {
     piVar2 = (int *)Shader_getLayer(param_1,0);
-    if (*(char *)((int)piVar2 + 5) == '\0') {
+    bVar1 = *(byte *)((int)piVar2 + 5);
+    if (bVar1 == '\0') {
       iVar1 = *piVar2;
     }
     else {
       iVar1 = *piVar2;
-      iVar3 = 0;
-      iVar6 = 0x50;
+      iVar6 = 0;
       piVar5 = (int *)lbl_803DCE6C;
-      do {
+      for (iVar7 = 0x50; iVar7 != 0; iVar7--) {
         if (((0 < *(short *)(piVar5 + 3)) && (*piVar5 == iVar1)) &&
-           (*(char *)((int)piVar2 + 5) == *(char *)((int)piVar5 + 0xe))) {
-          iVar1 = fn_80054C30(iVar1,((int *)lbl_803DCE6C)[iVar3 * 4 + 1]);
+           (bVar1 == *(byte *)((int)piVar5 + 0xe))) {
+          iVar1 = fn_80054C30(iVar1,((int *)lbl_803DCE6C)[iVar6 * 4 + 1]);
           break;
         }
         piVar5 = piVar5 + 4;
-        iVar3 = iVar3 + 1;
-        iVar6 = iVar6 + -1;
-      } while (iVar6 != 0);
+        iVar6 = iVar6 + 1;
+      }
     }
     if (*(byte *)((int)piVar2 + 6) == 0xff) {
       pfVar4 = (float *)0x0;
@@ -661,24 +664,23 @@ void fn_8005F1E0(int param_1, int param_2)
       fn_8004D928();
     }
     piVar2 = (int *)Shader_getLayer(param_1,1);
-    if (*(char *)((int)piVar2 + 5) == '\0') {
+    bVar1 = *(byte *)((int)piVar2 + 5);
+    if (bVar1 == '\0') {
       iVar1 = *piVar2;
     }
     else {
       iVar1 = *piVar2;
-      iVar3 = 0;
-      iVar6 = 0x50;
+      iVar6 = 0;
       piVar5 = (int *)lbl_803DCE6C;
-      do {
+      for (iVar7 = 0x50; iVar7 != 0; iVar7--) {
         if (((0 < *(short *)(piVar5 + 3)) && (*piVar5 == iVar1)) &&
-           (*(char *)((int)piVar2 + 5) == *(char *)((int)piVar5 + 0xe))) {
-          iVar1 = fn_80054C30(iVar1,((int *)lbl_803DCE6C)[iVar3 * 4 + 1]);
+           (bVar1 == *(byte *)((int)piVar5 + 0xe))) {
+          iVar1 = fn_80054C30(iVar1,((int *)lbl_803DCE6C)[iVar6 * 4 + 1]);
           break;
         }
         piVar5 = piVar5 + 4;
-        iVar3 = iVar3 + 1;
-        iVar6 = iVar6 + -1;
-      } while (iVar6 != 0);
+        iVar6 = iVar6 + 1;
+      }
     }
     if (*(byte *)((int)piVar2 + 6) == 0xff) {
       pfVar4 = (float *)0x0;
@@ -695,27 +697,26 @@ void fn_8005F1E0(int param_1, int param_2)
     fn_800524EC((char *)&local_48);
   }
   else {
-    for (iVar1 = 0; iVar1 < (int)(uint)*(byte *)(param_1 + 0x41); iVar1 = iVar1 + 1) {
-      piVar2 = (int *)Shader_getLayer(param_1,iVar1);
-      iVar3 = *piVar2;
-      if (iVar3 == 0) {
+    for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_1 + 0x41); iVar3 = iVar3 + 1) {
+      piVar2 = (int *)Shader_getLayer(param_1,iVar3);
+      iVar1 = *piVar2;
+      if (iVar1 == 0) {
         fn_800523D0();
       }
       else {
-        if (*(char *)((int)piVar2 + 5) != '\0') {
+        bVar1 = *(byte *)((int)piVar2 + 5);
+        if (bVar1 != '\0') {
           iVar6 = 0;
-          iVar7 = 0x50;
           piVar5 = (int *)lbl_803DCE6C;
-          do {
-            if (((0 < *(short *)(piVar5 + 3)) && (*piVar5 == iVar3)) &&
-               (*(char *)((int)piVar2 + 5) == *(char *)((int)piVar5 + 0xe))) {
-              iVar3 = fn_80054C30(iVar3,((int *)lbl_803DCE6C)[iVar6 * 4 + 1]);
+          for (iVar7 = 0x50; iVar7 != 0; iVar7--) {
+            if (((0 < *(short *)(piVar5 + 3)) && (*piVar5 == iVar1)) &&
+               (bVar1 == *(byte *)((int)piVar5 + 0xe))) {
+              iVar1 = fn_80054C30(iVar1,((int *)lbl_803DCE6C)[iVar6 * 4 + 1]);
               break;
             }
             piVar5 = piVar5 + 4;
             iVar6 = iVar6 + 1;
-            iVar7 = iVar7 + -1;
-          } while (iVar7 != 0);
+          }
         }
         if (*(byte *)((int)piVar2 + 6) == 0xff) {
           pfVar4 = (float *)0x0;
@@ -726,10 +727,10 @@ void fn_8005F1E0(int param_1, int param_2)
           pfVar4 = (float*)afStack_44;
         }
         if ((*(uint *)(param_1 + 0x3c) & 0x40000) == 0) {
-          fn_80051868(iVar3,pfVar4,*(byte *)(piVar2 + 1) & 0x7f);
+          fn_80051868(iVar1,pfVar4,*(byte *)(piVar2 + 1) & 0x7f);
         }
         else {
-          fn_80051528(iVar3,pfVar4);
+          fn_80051528(iVar1,pfVar4);
         }
       }
     }
