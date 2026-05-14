@@ -4,30 +4,30 @@
  * This file is intentionally not wired into the build yet.
  * It exists as a retail-backed per-object packet for exploratory split work.
  *
- * Object def: 0x0328 VFPLift1
- * Output path: src/main/unknown/objects/obj_0328_vfplift1.c
- * Retail placements: 1
- * Root romlists: 1
+ * Object def: 0x032A VFPLift3
+ * Output path: src/main/unknown/objects/obj_032A_vfplift3.c
+ * Retail placements: 0
+ * Root romlists: 0
  * Object-def size: 0xE0
- * Root placement widths: 9w x1
+ * Root placement widths: none
  * DLL ID: 0x021D
  * Class ID: 0x0030
  * Suggested outer boundary: tight DLL family
  * Reference class name: various0030
  * Reference DLL name: VFPLift
- * Remap aliases: 0x03B7
+ * Remap aliases: 0x053F
  *
  * Related packet paths:
  * - class: src/main/unknown/classes/class_0030_various0030.c
  * - family: src/main/unknown/dll_021D_vfplift.c
  *
  * Width samples:
- * - 9w (0x24 bytes): temple.romlist.zlb
+ * - none
  *
  * Inline object-def evidence:
  * - inline fields: pModelList, pSeq, hitboxes, aButtonInteraction
  * - model IDs: 0x000001FE
- * - sequence IDs: 0x0403 0x0404 0x0405 0x0406 0x02DD
+ * - sequence IDs: 0x0403 0x0404 0x0405 0x0406
  * - help texts: 0xFFFF 0xFFFF 0xFFFF 0xFFFF
  *
  * Same-class objects (404 defs / 2358 placements):
@@ -67,12 +67,10 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0328_VFPLift1_packet_info {
-    VFPLIFT1_DEF_ID = 0x0328,
-    VFPLIFT1_DLL_ID = 0x021D,
-    VFPLIFT1_CLASS_ID = 0x0030,
-    VFPLIFT1_OBJECT_DEF_BYTES = 0xE0,
-    VFPLIFT1_PLACEMENT_BYTES_MIN = 0x24,
-    VFPLIFT1_PLACEMENT_BYTES_MAX = 0x24,
+enum obj_032A_VFPLift3_packet_info {
+    VFPLIFT3_DEF_ID = 0x032A,
+    VFPLIFT3_DLL_ID = 0x021D,
+    VFPLIFT3_CLASS_ID = 0x0030,
+    VFPLIFT3_OBJECT_DEF_BYTES = 0xE0,
 };
 #endif

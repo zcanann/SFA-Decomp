@@ -53,7 +53,7 @@
  * - 0x0332 VFP_Platfor: placements=0, class=0x0030, widths=none
  *
  * EN descriptor slot map:
- * - descriptor=0x80329088 lbl_80329088 (slots=10, mask=1101111111)
+ * - descriptor=0x80329088 gVFP_PlatformObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801FC374 vfpplatform_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801FC370 vfpplatform_release stub=blr ref=release (stub)
  * - slot 03: 0x801FC32C vfpplatform_init ref=init

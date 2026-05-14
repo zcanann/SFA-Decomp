@@ -51,7 +51,7 @@
  * - 0x032A VFPLift3: placements=0, class=0x0030, widths=none
  *
  * EN descriptor slot map:
- * - descriptor=0x80329018 lbl_80329018 (slots=10, mask=1101111111)
+ * - descriptor=0x80329018 gVFPLiftObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801FB9A8 vfplift_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801FB9A4 vfplift_release stub=blr ref=release (stub)
  * - slot 03: 0x801FB868 vfplift_init ref=init

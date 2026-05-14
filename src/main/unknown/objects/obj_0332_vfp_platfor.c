@@ -4,30 +4,30 @@
  * This file is intentionally not wired into the build yet.
  * It exists as a retail-backed per-object packet for exploratory split work.
  *
- * Object def: 0x0331 VFP_Platfor
- * Output path: src/main/unknown/objects/obj_0331_vfp_platfor.c
- * Retail placements: 4
- * Root romlists: 1
+ * Object def: 0x0332 VFP_Platfor
+ * Output path: src/main/unknown/objects/obj_0332_vfp_platfor.c
+ * Retail placements: 0
+ * Root romlists: 0
  * Object-def size: 0xC0
- * Root placement widths: 9w x4
+ * Root placement widths: none
  * DLL ID: 0x021F
  * Class ID: 0x0030
  * Suggested outer boundary: tight DLL family
  * Reference class name: various0030
  * Reference DLL name: VFP_Platform
  * Fixed map hint: vfpslide1
- * Remap aliases: 0x03BA
+ * Remap aliases: 0x07D9
  *
  * Related packet paths:
  * - class: src/main/unknown/classes/class_0030_various0030.c
  * - family: src/main/unknown/dll_021F_vfp_platform.c
  *
  * Width samples:
- * - 9w (0x24 bytes): temple.romlist.zlb
+ * - none
  *
  * Inline object-def evidence:
  * - inline fields: pModelList, pSeq, hitboxes
- * - model IDs: 0x00000201
+ * - model IDs: 0x000004E4
  * - sequence IDs: 0x052A
  * - help texts: 0xFFFF 0xFFFF 0xFFFF 0xFFFF
  *
@@ -69,12 +69,10 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0331_VFP_Platfor_packet_info {
-    VFP_PLATFOR_DEF_ID = 0x0331,
+enum obj_0332_VFP_Platfor_packet_info {
+    VFP_PLATFOR_DEF_ID = 0x0332,
     VFP_PLATFOR_DLL_ID = 0x021F,
     VFP_PLATFOR_CLASS_ID = 0x0030,
     VFP_PLATFOR_OBJECT_DEF_BYTES = 0xC0,
-    VFP_PLATFOR_PLACEMENT_BYTES_MIN = 0x24,
-    VFP_PLATFOR_PLACEMENT_BYTES_MAX = 0x24,
 };
 #endif
