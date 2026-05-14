@@ -48,7 +48,7 @@
  * - 0x02FF SB_ShipGun: placements=2, class=0x0030, widths=9w x2
  *
  * EN descriptor slot map:
- * - descriptor=0x80327D30 lbl_80327D30 (slots=10, mask=0001101101)
+ * - descriptor=0x80327D30 gSB_ShipGunObjDescriptor (slots=10, mask=0001101101)
  * - slot 03: 0x801E3D14 SB_ShipGun_init ref=init
  * - slot 04: 0x801E34C0 SB_ShipGun_update ref=update
  * - slot 06: 0x801E3454 SB_ShipGun_render ref=render

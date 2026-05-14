@@ -48,7 +48,7 @@
  * - 0x02FE SB_ShipMast: placements=1, class=0x0030, widths=9w x1
  *
  * EN descriptor slot map:
- * - descriptor=0x80327CF8 lbl_80327CF8 (slots=10, mask=1101111111)
+ * - descriptor=0x80327CF8 gSB_ShipMastObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801E3418 SB_ShipMast_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801E3414 SB_ShipMast_release stub=blr ref=release (stub)
  * - slot 03: 0x801E3410 SB_ShipMast_init stub=blr ref=init (stub)

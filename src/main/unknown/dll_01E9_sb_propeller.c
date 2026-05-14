@@ -11,7 +11,7 @@
  * Retail object defs: 2
  * Retail object record sizes: 0xC0, 0xE0
  * Retail root placement widths: 9w
- * EN descriptor: 0x80327C88 lbl_80327C88
+ * EN descriptor: 0x80327C88 gSB_PropellerObjDescriptor
  * EN descriptor shape: slots=10 mask=0001111001
  *
  * Retail object defs:

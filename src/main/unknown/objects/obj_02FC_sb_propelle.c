@@ -49,7 +49,7 @@
  * - 0x02FB SB_Propelle: placements=1, class=0x0030, widths=9w x1
  *
  * EN descriptor slot map:
- * - descriptor=0x80327C88 lbl_80327C88 (slots=10, mask=0001111001)
+ * - descriptor=0x80327C88 gSB_PropellerObjDescriptor (slots=10, mask=0001111001)
  * - slot 03: 0x801E2A88 SB_Propeller_init ref=init
  * - slot 04: 0x801E25CC SB_Propeller_update ref=update
  * - slot 05: 0x801E25B0 SB_Propeller_hitDetect ref=hitDetect
