@@ -49,7 +49,7 @@
  * - 0x04F6 FireFly: placements=12, class=0x0030, widths=9w x12
  *
  * EN descriptor slot map:
- * - descriptor=0x80328C30 lbl_80328C30 (slots=10, mask=1101111111)
+ * - descriptor=0x80328C30 gFireFlyObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801F5688 firefly_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801F5684 firefly_release stub=blr ref=release (stub)
  * - slot 03: 0x801F55FC firefly_init ref=init
