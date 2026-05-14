@@ -49,7 +49,7 @@
  * - 0x0431 DR_EarthWar: placements=1, class=0x0030, widths=9w x1
  *
  * EN descriptor slot map:
- * - descriptor=0x8033567C lbl_8033567C (slots=24, mask=110111111111111111111111)
+ * - descriptor=0x8033567C gDR_EarthWarriorObjDescriptor (slots=24, mask=110111111111111111111111)
  * - slot 00: 0x802BF04C fn_802BF04C ref=initialise
  * - slot 01: 0x802BF018 fn_802BF018 ref=release
  * - slot 03: 0x802BECF4 fn_802BECF4 ref=init

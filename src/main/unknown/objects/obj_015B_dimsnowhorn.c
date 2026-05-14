@@ -49,7 +49,7 @@
  * - 0x015B DIMSnowHorn: placements=11, class=0x0030, widths=9w x11
  *
  * EN descriptor slot map:
- * - descriptor=0x80335138 lbl_80335138 (slots=24, mask=110111111111111111111111)
+ * - descriptor=0x80335138 gDIMSnowHorn1ObjDescriptor (slots=24, mask=110111111111111111111111)
  * - slot 00: 0x802BBFF0 fn_802BBFF0 ref=initialise
  * - slot 01: 0x802BBFA8 fn_802BBFA8 ref=release
  * - slot 03: 0x802BBCDC fn_802BBCDC ref=init

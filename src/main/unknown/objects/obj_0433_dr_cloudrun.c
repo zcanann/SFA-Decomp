@@ -49,7 +49,7 @@
  * - 0x0433 DR_CloudRun: placements=1, class=0x0030, widths=9w x1
  *
  * EN descriptor slot map:
- * - descriptor=0x803357C0 lbl_803357C0 (slots=24, mask=110111111111111111111111)
+ * - descriptor=0x803357C0 gDR_CloudRunnerObjDescriptor (slots=24, mask=110111111111111111111111)
  * - slot 00: 0x802C1804 fn_802C1804 ref=initialise
  * - slot 01: 0x802C1800 fn_802C1800 stub=blr ref=release (stub)
  * - slot 03: 0x802C1674 fn_802C1674 ref=init
