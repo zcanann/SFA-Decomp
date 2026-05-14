@@ -128,7 +128,7 @@ extern f32 FLOAT_803e4848;
 /*
  * --INFO--
  *
- * Function: FUN_80187524
+ * Function: FireFlyLantern_init
  * EN v1.0 Address: 0x80187524
  * EN v1.0 Size: 320b
  * EN v1.1 Address: 0x80187608
@@ -138,7 +138,7 @@ extern f32 FLOAT_803e4848;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80187524(int param_1,int param_2)
+void FireFlyLantern_init(int param_1,int param_2)
 {
   float fVar1;
   uint uVar2;

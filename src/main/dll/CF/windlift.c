@@ -1436,7 +1436,7 @@ int Dummy108_func08_ret_0(void) { return 0x0; }
 int portalspelldoor_getExtraSize(void) { return 0x10; }
 int portalspelldoor_func08(void) { return 0x0; }
 int LanternFireFly_getExtraSize(void) { return 0x74; }
-int LanternFireFly_func08_ret_0(void) { return 0x0; }
+int LanternFireFly_func08(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3A88;
