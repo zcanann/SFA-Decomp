@@ -44,12 +44,12 @@
  * - 0x02C3 KP_Transpor: placements=2, class=0x0025, widths=9w x2
  *
  * EN descriptor slot map:
- * - descriptor=0x80322C48 lbl_80322C48 (slots=10, mask=0001111001)
- * - slot 03: 0x80191C1C fn_80191C1C ref=init
- * - slot 04: 0x80191BD4 fn_80191BD4 ref=update
- * - slot 05: 0x80191A28 fn_80191A28 ref=hitDetect
- * - slot 06: 0x80191A24 fn_80191A24 stub=blr ref=render (stub)
- * - slot 09: 0x80191A1C fn_80191A1C stub=const 16 ref=getExtraSize (stub)
+ * - descriptor=0x80321FF8 gTransporterObjDescriptor (slots=10, mask=0001111001)
+ * - slot 03: 0x801916A0 transporter_init ref=init
+ * - slot 04: 0x80191658 transporter_update ref=update
+ * - slot 05: 0x801914AC transporter_hitDetect ref=hitDetect
+ * - slot 06: 0x801914A8 transporter_render stub=blr ref=render (stub)
+ * - slot 09: 0x801914A0 transporter_getExtraSize stub=const 16 ref=getExtraSize (stub)
  */
 
 #if 0

@@ -40,16 +40,16 @@
  * - 0x05AA TAreaFXEmit: placements=21, class=0x0067, widths=10w x21
  *
  * EN descriptor slot map:
- * - descriptor=0x80322BD0 lbl_80322BD0 (slots=10, mask=1101111111)
- * - slot 00: 0x801904A0 fn_801904A0 stub=blr ref=initialise (stub)
- * - slot 01: 0x8019049C fn_8019049C stub=blr ref=release (stub)
- * - slot 03: 0x80190354 fn_80190354 ref=init
- * - slot 04: 0x801901CC fn_801901CC ref=update
- * - slot 05: 0x801901C8 fn_801901C8 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x801901BC fn_801901BC ref=render
- * - slot 07: 0x8019018C fn_8019018C ref=free
- * - slot 08: 0x80190184 fn_80190184 stub=const 0
- * - slot 09: 0x8019017C fn_8019017C stub=const 32 ref=getExtraSize (stub)
+ * - descriptor=0x80321F80 gAreaFXEmitObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x8018FF24 areafxemit_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x8018FF20 areafxemit_release stub=blr ref=release (stub)
+ * - slot 03: 0x8018FDD8 areafxemit_init ref=init
+ * - slot 04: 0x8018FC50 areafxemit_update ref=update
+ * - slot 05: 0x8018FC4C areafxemit_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x8018FC40 areafxemit_render ref=render
+ * - slot 07: 0x8018FC10 areafxemit_free ref=free
+ * - slot 08: 0x8018FC08 areafxemit_func08 stub=const 0
+ * - slot 09: 0x8018FC00 areafxemit_getExtraSize stub=const 32 ref=getExtraSize (stub)
  */
 
 #if 0

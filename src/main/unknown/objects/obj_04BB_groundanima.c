@@ -36,14 +36,14 @@
  * - 0x04BB GroundAnima: placements=25, class=0x004A, widths=10w x25
  *
  * EN descriptor slot map:
- * - descriptor=0x80322E48 lbl_80322E48 (slots=13, mask=0001101101111)
- * - slot 03: 0x80194238 fn_80194238 ref=init
- * - slot 04: 0x80193C5C fn_80193C5C ref=update
- * - slot 06: 0x80193C2C fn_80193C2C ref=render
- * - slot 07: 0x80193ACC fn_80193ACC ref=free
- * - slot 09: 0x80193AC4 fn_80193AC4 stub=const 48 ref=getExtraSize (stub)
- * - slot 10: 0x801936D0 fn_801936D0 ref=setScale
- * - slot 11: 0x80193688 fn_80193688
+ * - descriptor=0x803221F8 gGroundAnimatorObjDescriptor (slots=13, mask=0001101101111)
+ * - slot 03: 0x80193CBC groundanimator_init ref=init
+ * - slot 04: 0x801936E0 groundanimator_update ref=update
+ * - slot 06: 0x801936B0 groundanimator_render ref=render
+ * - slot 07: 0x80193550 groundanimator_free ref=free
+ * - slot 09: 0x80193548 groundanimator_getExtraSize stub=const 48 ref=getExtraSize (stub)
+ * - slot 10: 0x80193154 groundanimator_setScale ref=setScale
+ * - slot 11: 0x8019310C groundanimator_func0B
  */
 
 #if 0
