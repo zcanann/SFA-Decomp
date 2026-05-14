@@ -803,9 +803,9 @@ int animsharpclaw_getExtraSize(void) { return 0x140; }
 int animsharpclaw_func08(void) { return 0xb; }
 int MoonSeedPlantingSpot_render2(void) { return 0x2; }
 int MoonSeedPlantingSpot_modelMtxFn(void) { return 0x0; }
-int fn_801A9494(void) { return 0x0; }
+int MoonSeedPlantingSpot_func0B(void) { return 0x0; }
 int MoonSeedPlantingSpot_getExtraSize(void) { return 0x18; }
-int fn_801A959C(void) { return 0x1; }
+int MoonSeedPlantingSpot_func08(void) { return 0x1; }
 int ccgasvent_getExtraSize(void) { return 0x1; }
 int ccgasventcontrol_getExtraSize(void) { return 0x10; }
 int ccqueen_getExtraSize(void) { return 0x654; }
