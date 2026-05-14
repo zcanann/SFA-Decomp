@@ -20,26 +20,27 @@
  * - 0x04AE texscroll: dll=0x0135, placements=5, romlists=3, objsize=0xA0, widths=9w x5, aliases=0x000F
  *
  * Descriptor slot maps:
- * - DLL 0x0134: lbl_80322D50 (slots=11, mask=11011111111)
- *   slot 00: 0x8019285C fn_8019285C
- *   slot 01: 0x80192858 fn_80192858
- *   slot 03: 0x801927E4 fn_801927E4
- *   slot 04: 0x801926F8 fn_801926F8
- *   slot 05: 0x801926F4 fn_801926F4
- *   slot 06: 0x801926C4 fn_801926C4
- *   slot 07: 0x801926C0 fn_801926C0
- *   slot 08: 0x801926B8 fn_801926B8
- *   slot 09: 0x801926B0 fn_801926B0
- * - DLL 0x0135: lbl_80322D90 (slots=10, mask=1101111111)
- *   slot 00: 0x8019290C fn_8019290C
- *   slot 01: 0x80192908 fn_80192908
- *   slot 03: 0x801928AC fn_801928AC
- *   slot 04: 0x801928A8 fn_801928A8
- *   slot 05: 0x801928A4 fn_801928A4
- *   slot 06: 0x80192874 fn_80192874
- *   slot 07: 0x80192870 fn_80192870
- *   slot 08: 0x80192868 fn_80192868
- *   slot 09: 0x80192860 fn_80192860
+ * - DLL 0x0134: gTexscroll2ObjDescriptor @ 0x80322100 (slots=11, mask=11011111111)
+ *   slot 00: 0x801922E0 texscroll2_initialise
+ *   slot 01: 0x801922DC texscroll2_release
+ *   slot 03: 0x80192268 texscroll2_init
+ *   slot 04: 0x8019217C texscroll2_update
+ *   slot 05: 0x80192178 texscroll2_hitDetect
+ *   slot 06: 0x80192148 texscroll2_render
+ *   slot 07: 0x80192144 texscroll2_free
+ *   slot 08: 0x8019213C texscroll2_func08
+ *   slot 09: 0x80192134 texscroll2_getExtraSize
+ *   slot 10: 0x80191F2C texscroll2_setScale
+ * - DLL 0x0135: gTexscrollObjDescriptor @ 0x80322140 (slots=10, mask=1101111111)
+ *   slot 00: 0x80192390 texscroll_initialise
+ *   slot 01: 0x8019238C texscroll_release
+ *   slot 03: 0x80192330 texscroll_init
+ *   slot 04: 0x8019232C texscroll_update
+ *   slot 05: 0x80192328 texscroll_hitDetect
+ *   slot 06: 0x801922F8 texscroll_render
+ *   slot 07: 0x801922F4 texscroll_free
+ *   slot 08: 0x801922EC texscroll_func08
+ *   slot 09: 0x801922E4 texscroll_getExtraSize
  */
 
 #if 0

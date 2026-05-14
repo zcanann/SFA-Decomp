@@ -37,17 +37,17 @@
  * - 0x04AF texscroll2: placements=221, class=0x0021, widths=9w x221
  *
  * EN descriptor slot map:
- * - descriptor=0x80322D50 lbl_80322D50 (slots=11, mask=11011111111)
- * - slot 00: 0x8019285C fn_8019285C stub=blr ref=initialise (stub)
- * - slot 01: 0x80192858 fn_80192858 stub=blr ref=release (stub)
- * - slot 03: 0x801927E4 fn_801927E4 ref=init
- * - slot 04: 0x801926F8 fn_801926F8 ref=update
- * - slot 05: 0x801926F4 fn_801926F4 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x801926C4 fn_801926C4 ref=render
- * - slot 07: 0x801926C0 fn_801926C0 stub=blr ref=free (stub)
- * - slot 08: 0x801926B8 fn_801926B8 stub=const 0
- * - slot 09: 0x801926B0 fn_801926B0 stub=const 24 ref=getExtraSize (stub)
- * - slot 10: 0x801924A8 fn_801924A8 ref=setScale
+ * - descriptor=0x80322100 gTexscroll2ObjDescriptor (slots=11, mask=11011111111)
+ * - slot 00: 0x801922E0 texscroll2_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x801922DC texscroll2_release stub=blr ref=release (stub)
+ * - slot 03: 0x80192268 texscroll2_init ref=init
+ * - slot 04: 0x8019217C texscroll2_update ref=update
+ * - slot 05: 0x80192178 texscroll2_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x80192148 texscroll2_render ref=render
+ * - slot 07: 0x80192144 texscroll2_free stub=blr ref=free (stub)
+ * - slot 08: 0x8019213C texscroll2_func08 stub=const 0
+ * - slot 09: 0x80192134 texscroll2_getExtraSize stub=const 24 ref=getExtraSize (stub)
+ * - slot 10: 0x80191F2C texscroll2_setScale ref=setScale
  */
 
 #if 0

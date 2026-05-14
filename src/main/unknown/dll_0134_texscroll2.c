@@ -16,3 +16,4 @@
 // - 7: texscroll2_free (0x80192144)
 // - 8: texscroll2_func08 (0x8019213C)
 // - 9: texscroll2_getExtraSize (0x80192134)
+// - 10: texscroll2_setScale (0x80191F2C)

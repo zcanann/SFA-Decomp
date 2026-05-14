@@ -845,13 +845,13 @@ main/dll/dll_17F.c:
 	.text       start:0x801916A0 end:0x801916A0
 
 main/dll/dll_180.c:
-	.text       start:0x801916A0 end:0x80191F54
+	.text       start:0x801916A0 end:0x80191F2C
 
 main/dll/holoPoint.c:
-	.text       start:0x80191F54 end:0x80191F54
+	.text       start:0x80191F2C end:0x80191F2C
 
 main/dll/dll_182.c:
-	.text       start:0x80191F54 end:0x801923C4
+	.text       start:0x80191F2C end:0x801923C4
 
 main/dll/MMP/mmp_barrel.c:
 	.text       start:0x801923C4 end:0x8019443C

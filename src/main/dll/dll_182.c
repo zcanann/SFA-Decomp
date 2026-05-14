@@ -19,6 +19,18 @@ extern f32 lbl_803E4BB4;
 extern f32 lbl_803E4BB8;
 extern f32 lbl_803E4BBC;
 
+void texscroll2_setScale(int obj, s8 scale)
+{
+  s8 *state;
+
+  state = *(s8 **)(obj + 0xb8);
+  if (state[0x12] == scale) {
+    return;
+  }
+  state[0x12] = scale;
+  state[0x10] = 1;
+}
+
 /*
  * --INFO--
  *
