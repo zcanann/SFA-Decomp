@@ -11,7 +11,7 @@
  * Retail object defs: 1
  * Retail object record sizes: 0xE0
  * Retail root placement widths: 9w
- * EN descriptor: 0x80327BE0 lbl_80327BE0
+ * EN descriptor: 0x80327BE0 gSB_GalleonObjDescriptor
  * EN descriptor shape: slots=15 mask=110111111111111
  *
  * Retail object defs:
@@ -28,10 +28,10 @@
  * - slot 08: 0x801E1F10 SB_Galleon_func08 stub=const 0
  * - slot 09: 0x801E1F08 SB_Galleon_getExtraSize stub=const 180 ref=getExtraSize (stub)
  * - slot 10: 0x801E1E74 SB_Galleon_setScale ref=setScale
- * - slot 11: 0x801E1E64 SB_Galleon_func11
+ * - slot 11: 0x801E1E64 SB_Galleon_func0B
  * - slot 12: 0x801E1E00 SB_Galleon_modelMtxFn ref=modelMtxFn
  * - slot 13: 0x801E1DF4 SB_Galleon_render2 ref=render2
- * - slot 14: 0x801E1DB0 SB_Galleon_func14
+ * - slot 14: 0x801E1DB0 SB_Galleon_func0E
  *
  * Reference-only hints:
  * - reference DLL name: SB_Galleon

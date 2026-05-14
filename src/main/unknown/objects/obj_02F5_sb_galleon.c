@@ -50,7 +50,7 @@
  * - 0x02F5 SB_Galleon: placements=1, class=0x0030, widths=9w x1
  *
  * EN descriptor slot map:
- * - descriptor=0x80327BE0 lbl_80327BE0 (slots=15, mask=110111111111111)
+ * - descriptor=0x80327BE0 gSB_GalleonObjDescriptor (slots=15, mask=110111111111111)
  * - slot 00: 0x801E256C SB_Galleon_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801E2568 SB_Galleon_release stub=blr ref=release (stub)
  * - slot 03: 0x801E23E4 SB_Galleon_init ref=init
@@ -61,7 +61,7 @@
  * - slot 08: 0x801E1F10 SB_Galleon_func08 stub=const 0
  * - slot 09: 0x801E1F08 SB_Galleon_getExtraSize stub=const 180 ref=getExtraSize (stub)
  * - slot 10: 0x801E1E74 SB_Galleon_setScale ref=setScale
- * - slot 11: 0x801E1E64 SB_Galleon_func11
+ * - slot 11: 0x801E1E64 SB_Galleon_func0B
  */
 
 #if 0
