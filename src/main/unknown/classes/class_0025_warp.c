@@ -24,12 +24,12 @@
  * - 0x0397 WM_WarpPoin: dll=0x00F0, placements=0, widths=none
  *
  * Descriptor slot maps:
- * - DLL 0x00F0: gWarpPointObjDescriptor @ 0x80321A08 (slots=10, mask=0001101011)
- *   slot 03: 0x80177B6C warppoint_init
- *   slot 04: 0x8017750C warppoint_update
- *   slot 06: 0x801774EC warppoint_render
- *   slot 08: 0x801774E4 warppoint_func08
- *   slot 09: 0x801774DC warppoint_getExtraSize
+ * - DLL 0x00F0: gWarpPointObjDescriptor @ 0x80320DB8 (slots=10, mask=0001101011)
+ *   slot 03: 0x801776C0 WarpPoint_init
+ *   slot 04: 0x80177060 WarpPoint_update
+ *   slot 06: 0x80177040 WarpPoint_render
+ *   slot 08: 0x80177038 WarpPoint_func08
+ *   slot 09: 0x80177030 WarpPoint_getExtraSize
  * - DLL 0x012C: gTransporterObjDescriptor @ 0x80321FF8 (slots=10, mask=0001111001)
  *   slot 03: 0x801916A0 transporter_init
  *   slot 04: 0x80191658 transporter_update
