@@ -8,5 +8,5 @@
 // - gStayPointObjDescriptor @ 0x80321610
 //
 // Descriptor slots:
-// - 3: staypoint_init (0x801804B4)
-// - 4: staypoint_update (0x80180338)
+// - 3: StayPoint_init (0x801804B4)
+// - 4: StayPoint_update (0x80180338)

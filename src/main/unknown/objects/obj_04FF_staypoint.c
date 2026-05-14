@@ -50,7 +50,7 @@
  * EN descriptor slot map:
  * - descriptor=0x80321610 gStayPointObjDescriptor (slots=10, mask=0001100000)
  * - slot 03: 0x801804B4 StayPoint_init ref=init
- * - slot 04: 0x80180338 fn_80180338 ref=update
+ * - slot 04: 0x80180338 StayPoint_update ref=update
  */
 
 #if 0
