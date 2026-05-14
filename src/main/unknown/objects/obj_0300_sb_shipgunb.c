@@ -4,30 +4,29 @@
  * This file is intentionally not wired into the build yet.
  * It exists as a retail-backed per-object packet for exploratory split work.
  *
- * Object def: 0x030B SB_Lamp
- * Output path: src/main/unknown/objects/obj_030B_sb_lamp.c
- * Retail placements: 9
- * Root romlists: 1
- * Object-def size: 0xE0
- * Root placement widths: 9w x9
- * DLL ID: 0x01F4
+ * Object def: 0x0300 SB_ShipGunB
+ * Output path: src/main/unknown/objects/obj_0300_sb_shipgunb.c
+ * Retail placements: 0
+ * Root romlists: 0
+ * Object-def size: 0xA0
+ * Root placement widths: none
+ * DLL ID: 0x01F7
  * Class ID: 0x0030
  * Suggested outer boundary: tight DLL family
  * Reference class name: various0030
- * Reference DLL name: Lamp
- * Remap aliases: 0x0125
+ * Reference DLL name: SB_ShipGunBroke
+ * Remap aliases: 0x05A1
  *
  * Related packet paths:
  * - class: src/main/unknown/classes/class_0030_various0030.c
- * - family: src/main/unknown/dll_01F4_lamp.c
+ * - family: src/main/unknown/dll_01F7_sb_shipgunbroke.c
  *
  * Width samples:
- * - 9w (0x24 bytes): galleonship.romlist.zlb
+ * - none
  *
  * Inline object-def evidence:
- * - inline fields: pModelList, pSeq, hitboxes
- * - model IDs: 0x000000AF
- * - sequence IDs: 0x00E0
+ * - inline fields: pModelList
+ * - model IDs: 0x000000A7
  * - help texts: 0xFFFF 0xFFFF 0xFFFF 0xFFFF
  *
  * Same-class objects (404 defs / 2358 placements):
@@ -45,29 +44,30 @@
  * - 0x0507 SpiritDoorS: placements=38, dll=0x0157, widths=9w x38
  * - ... 392 more class siblings omitted
  *
- * Same-DLL objects (2 defs / 21 placements):
- * - 0x0107 CF_Lamp: placements=12, class=0x0061, widths=8w x12
- * - 0x030B SB_Lamp: placements=9, class=0x0030, widths=9w x9
+ * Same-DLL objects (1 defs / 0 placements):
+ * - 0x0300 SB_ShipGunB: placements=0, class=0x0030, widths=none
  *
  * EN descriptor slot map:
- * - descriptor=0x80327F28 gLampObjDescriptor (slots=10, mask=0001101101)
- * - slot 03: 0x801E5D64 Lamp_init ref=init
- * - slot 04: 0x801E5B54 Lamp_update ref=update
- * - slot 06: 0x801E59FC Lamp_render ref=render
- * - slot 07: 0x801E59B4 Lamp_free ref=free
- * - slot 09: 0x801E59AC Lamp_getExtraSize stub=const 1 ref=getExtraSize (stub)
+ * - descriptor=0x80327F98 gSB_ShipGunBrokeObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x801E604C SB_ShipGunBroke_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x801E6048 SB_ShipGunBroke_release stub=blr ref=release (stub)
+ * - slot 03: 0x801E6044 SB_ShipGunBroke_init stub=blr ref=init (stub)
+ * - slot 04: 0x801E5FFC SB_ShipGunBroke_update ref=update
+ * - slot 05: 0x801E5FF8 SB_ShipGunBroke_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x801E5F88 SB_ShipGunBroke_render ref=render
+ * - slot 07: 0x801E5F84 SB_ShipGunBroke_free stub=blr ref=free (stub)
+ * - slot 08: 0x801E5F7C SB_ShipGunBroke_func08 stub=const 0
+ * - slot 09: 0x801E5F74 SB_ShipGunBroke_getExtraSize stub=const 1 ref=getExtraSize (stub)
  */
 
 #if 0
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_030B_SB_Lamp_packet_info {
-    SB_LAMP_DEF_ID = 0x030B,
-    SB_LAMP_DLL_ID = 0x01F4,
-    SB_LAMP_CLASS_ID = 0x0030,
-    SB_LAMP_OBJECT_DEF_BYTES = 0xE0,
-    SB_LAMP_PLACEMENT_BYTES_MIN = 0x24,
-    SB_LAMP_PLACEMENT_BYTES_MAX = 0x24,
+enum obj_0300_SB_ShipGunB_packet_info {
+    SB_SHIPGUNB_DEF_ID = 0x0300,
+    SB_SHIPGUNB_DLL_ID = 0x01F7,
+    SB_SHIPGUNB_CLASS_ID = 0x0030,
+    SB_SHIPGUNB_OBJECT_DEF_BYTES = 0xA0,
 };
 #endif

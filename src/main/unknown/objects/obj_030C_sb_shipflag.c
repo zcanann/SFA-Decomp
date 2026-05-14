@@ -51,7 +51,7 @@
  * - 0x030C SB_ShipFlag: placements=1, class=0x0030, widths=9w x1
  *
  * EN descriptor slot map:
- * - descriptor=0x80327F60 lbl_80327F60 (slots=10, mask=1101111111)
+ * - descriptor=0x80327F60 gFlagObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801E5F70 Flag_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801E5F6C Flag_release stub=blr ref=release (stub)
  * - slot 03: 0x801E5F20 Flag_init ref=init

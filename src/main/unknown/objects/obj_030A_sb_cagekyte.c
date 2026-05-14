@@ -48,7 +48,7 @@
  * - 0x030A SB_CageKyte: placements=1, class=0x0030, widths=9w x1
  *
  * EN descriptor slot map:
- * - descriptor=0x80327E48 lbl_80327E48 (slots=10, mask=1101111111)
+ * - descriptor=0x80327E48 gSB_CageKyteObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801E505C SB_CageKyte_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801E5058 SB_CageKyte_release stub=blr ref=release (stub)
  * - slot 03: 0x801E5038 SB_CageKyte_init ref=init

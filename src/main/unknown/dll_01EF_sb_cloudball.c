@@ -11,7 +11,7 @@
  * Retail object defs: 1
  * Retail object record sizes: 0xA0
  * Retail root placement widths: -
- * EN descriptor: 0x80327DD8 lbl_80327DD8
+ * EN descriptor: 0x80327DD8 gSB_CloudBallObjDescriptor
  * EN descriptor shape: slots=10 mask=1101111111
  *
  * Retail object defs:

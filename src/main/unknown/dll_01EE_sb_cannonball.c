@@ -11,7 +11,7 @@
  * Retail object defs: 1
  * Retail object record sizes: 0xA0
  * Retail root placement widths: -
- * EN descriptor: 0x80327D68 lbl_80327D68
+ * EN descriptor: 0x80327D68 gSB_CannonBallObjDescriptor
  * EN descriptor shape: slots=10 mask=1101111111
  *
  * Retail object defs:

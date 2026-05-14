@@ -11,7 +11,7 @@
  * Retail object defs: 2
  * Retail object record sizes: 0xC0, 0xE0
  * Retail root placement widths: 8w, 9w
- * EN descriptor: 0x80327F28 lbl_80327F28
+ * EN descriptor: 0x80327F28 gLampObjDescriptor
  * EN descriptor shape: slots=10 mask=0001101101
  *
  * Retail object defs:

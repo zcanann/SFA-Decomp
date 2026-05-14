@@ -49,7 +49,7 @@
  * - 0x0306 SB_KyteCage: placements=1, class=0x0030, widths=9w x1
  *
  * EN descriptor slot map:
- * - descriptor=0x80327E10 lbl_80327E10 (slots=10, mask=1101111111)
+ * - descriptor=0x80327E10 gSB_KyteCageObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801E4F10 SB_KyteCage_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801E4F0C SB_KyteCage_release stub=blr ref=release (stub)
  * - slot 03: 0x801E4E60 SB_KyteCage_init ref=init

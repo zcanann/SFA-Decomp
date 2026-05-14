@@ -49,7 +49,7 @@
  * - 0x030B SB_Lamp: placements=9, class=0x0030, widths=9w x9
  *
  * EN descriptor slot map:
- * - descriptor=0x80327F28 lbl_80327F28 (slots=10, mask=0001101101)
+ * - descriptor=0x80327F28 gLampObjDescriptor (slots=10, mask=0001101101)
  * - slot 03: 0x801E5D64 Lamp_init ref=init
  * - slot 04: 0x801E5B54 Lamp_update ref=update
  * - slot 06: 0x801E59FC Lamp_render ref=render

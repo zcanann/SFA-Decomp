@@ -11,7 +11,7 @@
  * Retail object defs: 1
  * Retail object record sizes: 0xC0
  * Retail root placement widths: 9w
- * EN descriptor: 0x80327E48 lbl_80327E48
+ * EN descriptor: 0x80327E48 gSB_CageKyteObjDescriptor
  * EN descriptor shape: slots=10 mask=1101111111
  *
  * Retail object defs:
