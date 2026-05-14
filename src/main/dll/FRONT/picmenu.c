@@ -410,10 +410,12 @@ void fn_80119768(OSMessage msg)
 /* ------------------------------------------------------------------ */
 /* fn_80119798 (328 bytes) - video decode frame                        */
 /* ------------------------------------------------------------------ */
+#pragma scheduling off
+#pragma peephole off
 void fn_80119798(void* param)
 {
-    char* pb  = (char*)&lbl_803A5D60;
-    char* db  = lbl_803A72F0;
+    char* pb = (char*)&lbl_803A5D60;
+    char* db = lbl_803A72F0;
     char* cur = (char*)((void**)param)[0];
     u32* compSizes = (u32*)(cur + 8);
     char* dvdData = cur + *(u32*)(pb + 0x6C) * 4 + 8;
@@ -421,8 +423,10 @@ void fn_80119798(void* param)
     u32 i;
     char* pb2;
     char* pbwalk;
+    OSMessage tmpBuf;
 
-    OSReceiveMessage((OSMessageQueue*)(db + 0x38), (OSMessage*)&readMsg, OS_MESSAGE_BLOCK);
+    OSReceiveMessage((OSMessageQueue*)(db + 0x38), &tmpBuf, OS_MESSAGE_BLOCK);
+    readMsg = (void**)tmpBuf;
     i = 0;
     pb2 = (char*)&lbl_803A5D60;
     pbwalk = pb2;
@@ -459,6 +463,8 @@ void fn_80119798(void* param)
         lbl_803DD694 = 0;
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
 /* fn_801198E0 (316 bytes)                                             */
