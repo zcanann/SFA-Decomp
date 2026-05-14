@@ -39,16 +39,16 @@
  * - 0x0106 CF_WallTorc: placements=0, class=0x0079, widths=none
  *
  * EN descriptor slot map:
- * - descriptor=0x8032C5E8 lbl_8032C5E8 (slots=10, mask=1101111111)
- * - slot 00: 0x8023470C fn_8023470C stub=blr ref=initialise (stub)
- * - slot 01: 0x80234708 fn_80234708 stub=blr ref=release (stub)
- * - slot 03: 0x80234454 fn_80234454 ref=init
- * - slot 04: 0x802342A8 fn_802342A8 ref=update
- * - slot 05: 0x802342A4 fn_802342A4 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x8023425C fn_8023425C ref=render
- * - slot 07: 0x80234214 fn_80234214 ref=free
- * - slot 08: 0x8023420C fn_8023420C stub=const 0
- * - slot 09: 0x80234204 fn_80234204 stub=const 8 ref=getExtraSize (stub)
+ * - descriptor=0x8032B990 gPointLightObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x80234048 pointlight_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x80234044 pointlight_release stub=blr ref=release (stub)
+ * - slot 03: 0x80233D90 pointlight_init ref=init
+ * - slot 04: 0x80233BE4 pointlight_update ref=update
+ * - slot 05: 0x80233BE0 pointlight_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x80233B98 pointlight_render ref=render
+ * - slot 07: 0x80233B50 pointlight_free ref=free
+ * - slot 08: 0x80233B48 pointlight_func08 stub=const 0
+ * - slot 09: 0x80233B40 pointlight_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 
 #if 0

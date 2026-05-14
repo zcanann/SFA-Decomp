@@ -53,14 +53,14 @@
  * - 0x0545 ARWGroundGu: placements=0, class=0x007C, widths=none
  *
  * EN descriptor slot map:
- * - descriptor=0x8032C540 lbl_8032C540 (slots=10, mask=0001111111)
- * - slot 03: 0x80233438 fn_80233438 ref=init
- * - slot 04: 0x80232EF4 fn_80232EF4 ref=update
- * - slot 05: 0x80232EF0 fn_80232EF0 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x80232ECC fn_80232ECC ref=render
- * - slot 07: 0x80232EC8 fn_80232EC8 stub=blr ref=free (stub)
- * - slot 08: 0x80232EC0 fn_80232EC0 stub=const 0
- * - slot 09: 0x80232EB8 fn_80232EB8 stub=const 356 ref=getExtraSize (stub)
+ * - descriptor=0x8032B8E8 gARWSquadronObjDescriptor (slots=10, mask=0001111111)
+ * - slot 03: 0x80232D74 arwsquadron_init ref=init
+ * - slot 04: 0x80232830 arwsquadron_update ref=update
+ * - slot 05: 0x8023282C arwsquadron_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x80232808 arwsquadron_render ref=render
+ * - slot 07: 0x80232804 arwsquadron_free stub=blr ref=free (stub)
+ * - slot 08: 0x802327FC arwsquadron_func08 stub=const 0
+ * - slot 09: 0x802327F4 arwsquadron_getExtraSize stub=const 356 ref=getExtraSize (stub)
  */
 
 #if 0

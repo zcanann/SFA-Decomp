@@ -47,16 +47,16 @@
  * - 0x0542 ARWTimedMin: placements=0, class=0x007C, widths=none
  *
  * EN descriptor slot map:
- * - descriptor=0x8032C578 lbl_8032C578 (slots=10, mask=1101111111)
- * - slot 00: 0x80233FB0 fn_80233FB0 stub=blr ref=initialise (stub)
- * - slot 01: 0x80233FAC fn_80233FAC stub=blr ref=release (stub)
- * - slot 03: 0x80233EBC fn_80233EBC ref=init
- * - slot 04: 0x80233948 fn_80233948 ref=update
- * - slot 05: 0x80233944 fn_80233944 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x802338C4 fn_802338C4 ref=render
- * - slot 07: 0x80233884 fn_80233884 ref=free
- * - slot 08: 0x8023387C fn_8023387C stub=const 0
- * - slot 09: 0x80233874 fn_80233874 stub=const 24 ref=getExtraSize (stub)
+ * - descriptor=0x8032B920 gARWProximitObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x802338EC arwproximit_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x802338E8 arwproximit_release stub=blr ref=release (stub)
+ * - slot 03: 0x802337F8 arwproximit_init ref=init
+ * - slot 04: 0x80233284 arwproximit_update ref=update
+ * - slot 05: 0x80233280 arwproximit_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x80233200 arwproximit_render ref=render
+ * - slot 07: 0x802331C0 arwproximit_free ref=free
+ * - slot 08: 0x802331B8 arwproximit_func08 stub=const 0
+ * - slot 09: 0x802331B0 arwproximit_getExtraSize stub=const 24 ref=getExtraSize (stub)
  */
 
 #if 0
