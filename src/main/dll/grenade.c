@@ -31,6 +31,7 @@ extern int FUN_80139a48();
 extern undefined4 FUN_80139a4c();
 extern int FUN_8013b368();
 extern int trickyFn_8013b368(int param_1, f32 param_2, int *param_3);
+extern undefined4 objAnimFn_8013a3f0(int param_1, int param_2, f32 param_3, int param_4);
 extern undefined4 FUN_8013d8f0();
 extern undefined4 FUN_80144e40();
 extern undefined4 FUN_80145120();
@@ -1611,6 +1612,8 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_801441C0(void)
 {
   short *psVar1;
@@ -1702,6 +1705,8 @@ void fn_801441C0(void)
   FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1716,43 +1721,47 @@ void fn_801441C0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_801444A4(int param_1,int param_2)
 {
-  uint uVar1;
-  bool bVar2;
+  int iVar1;
   int iVar3;
-  
-  uVar1 = FUN_80017760(0,4);
-  if (uVar1 == 2) {
-    FUN_80139a4c((double)lbl_803E3108,param_1,0x21,0);
-    *(undefined *)(param_2 + 10) = 6;
-  }
-  else if ((int)uVar1 < 2) {
-    if (uVar1 == 0) {
-      FUN_80139a4c((double)lbl_803E30D4,param_1,0,0);
-      *(undefined *)(param_2 + 10) = 2;
-    }
-    else if (-1 < (int)uVar1) {
-      iVar3 = *(int *)(param_1 + 0xb8);
-      if (((*(byte *)(iVar3 + 0x58) >> 6 & 1) == 0) &&
-         (((0x2f < *(short *)(param_1 + 0xa0) || (*(short *)(param_1 + 0xa0) < 0x29)) &&
-          (bVar2 = FUN_800067f0(param_1,0x10), !bVar2)))) {
-        FUN_80039468(param_1,iVar3 + 0x3a8,0x357,0,0xffffffff,0);
-      }
-      FUN_80139a4c((double)lbl_803E31AC,param_1,0x26,0);
-      *(undefined *)(param_2 + 10) = 5;
-    }
-  }
-  else if (uVar1 == 4) {
-    FUN_80139a4c((double)lbl_803E31A8,param_1,0x25,0);
+
+  iVar1 = (int)FUN_80017760(0,4);
+  switch (iVar1) {
+  case 0:
+    objAnimFn_8013a3f0(param_1,0,lbl_803E30D4,0);
     *(undefined *)(param_2 + 10) = 2;
-  }
-  else if ((int)uVar1 < 4) {
-    FUN_80139a4c((double)lbl_803E3108,param_1,0x23,0);
+    break;
+  case 1:
+    iVar3 = *(int *)(param_1 + 0xb8);
+    if ((*(byte *)(iVar3 + 0x58) >> 6 & 1) == 0) {
+      if (*(short *)(param_1 + 0xa0) >= 0x30 || *(short *)(param_1 + 0xa0) < 0x29) {
+        if (FUN_800067f0(param_1,0x10) == 0) {
+          FUN_80039468(param_1,iVar3 + 0x3a8,0x357,0,0xffffffff,0);
+        }
+      }
+    }
+    objAnimFn_8013a3f0(param_1,0x26,lbl_803E31AC,0);
+    *(undefined *)(param_2 + 10) = 5;
+    break;
+  case 2:
+    objAnimFn_8013a3f0(param_1,0x21,lbl_803E3108,0);
+    *(undefined *)(param_2 + 10) = 6;
+    break;
+  case 3:
+    objAnimFn_8013a3f0(param_1,0x23,lbl_803E3108,0);
     *(undefined *)(param_2 + 10) = 7;
+    break;
+  case 4:
+    objAnimFn_8013a3f0(param_1,0x25,lbl_803E31A8,0);
+    *(undefined *)(param_2 + 10) = 2;
+    break;
   }
-  return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1767,6 +1776,8 @@ void fn_801444A4(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4 fn_8014460C(int param_1,int *param_2)
 {
   bool bVar1;
@@ -1817,13 +1828,13 @@ undefined4 fn_8014460C(int param_1,int *param_2)
             bVar1 = true;
           }
           if (bVar1) {
-            FUN_80139a4c((double)lbl_803E30CC,param_1,8,0);
+            objAnimFn_8013a3f0(param_1,8,lbl_803E30CC,0);
             *(float *)(iVar7 + 0x79c) = lbl_803E30D0;
             *(float *)(iVar7 + 0x838) = lbl_803E306C;
             FUN_80146fa0();
           }
           else {
-            FUN_80139a4c((double)lbl_803E30D4,param_1,0,0);
+            objAnimFn_8013a3f0(param_1,0,lbl_803E30D4,0);
             FUN_80146fa0();
           }
           (**(code **)(*DAT_803dd6d4 + 0x48))(3,param_1,0xffffffff);
@@ -1861,13 +1872,13 @@ undefined4 fn_8014460C(int param_1,int *param_2)
             bVar1 = true;
           }
           if (bVar1) {
-            FUN_80139a4c((double)lbl_803E30CC,param_1,8,0);
+            objAnimFn_8013a3f0(param_1,8,lbl_803E30CC,0);
             *(float *)(iVar7 + 0x79c) = lbl_803E30D0;
             *(float *)(iVar7 + 0x838) = lbl_803E306C;
             FUN_80146fa0();
           }
           else {
-            FUN_80139a4c((double)lbl_803E30D4,param_1,0,0);
+            objAnimFn_8013a3f0(param_1,0,lbl_803E30D4,0);
             FUN_80146fa0();
           }
           (**(code **)(*DAT_803dd6d4 + 0x48))(2,param_1,0xffffffff);
@@ -1923,3 +1934,5 @@ undefined4 fn_8014460C(int param_1,int *param_2)
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
