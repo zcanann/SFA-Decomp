@@ -43,7 +43,7 @@
  * - 0x0375 DFP_ObjCrea: placements=8, class=0x0037, widths=9w x8
  *
  * EN descriptor slot map:
- * - descriptor=0x80329898 lbl_80329898 (slots=10, mask=1101111111)
+ * - descriptor=0x80329898 gDFP_ObjCreatorObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x80204B50 dfpobjcreator_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x80204B4C dfpobjcreator_release stub=blr ref=release (stub)
  * - slot 03: 0x80204AF4 dfpobjcreator_init ref=init

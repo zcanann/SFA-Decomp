@@ -76,7 +76,7 @@
  *   slot 07: 0x801F9D88 vfpobjcreator_free
  *   slot 08: 0x801F9D80 vfpobjcreator_func08
  *   slot 09: 0x801F9D78 vfpobjcreator_getExtraSize
- * - DLL 0x022A: lbl_80329898 (slots=10, mask=1101111111)
+ * - DLL 0x022A: gDFP_ObjCreatorObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80204B50 dfpobjcreator_initialise
  *   slot 01: 0x80204B4C dfpobjcreator_release
  *   slot 03: 0x80204AF4 dfpobjcreator_init
