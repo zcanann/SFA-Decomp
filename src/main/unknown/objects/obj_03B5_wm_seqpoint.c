@@ -49,7 +49,7 @@
  * - 0x03B5 WM_seqpoint: placements=27, class=0x0030, widths=9w x27
  *
  * EN descriptor slot map:
- * - descriptor=0x80328CF0 lbl_80328CF0 (slots=10, mask=1101111111)
+ * - descriptor=0x80328CF0 gWM_seqpointObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801F6E88 wmseqpoint_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801F6E84 wmseqpoint_release stub=blr ref=release (stub)
  * - slot 03: 0x801F6E00 wmseqpoint_init ref=init
