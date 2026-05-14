@@ -25,7 +25,7 @@ extern f32 lbl_803E6974;
 /*
  * --INFO--
  *
- * Function: FUN_801ef3a8
+ * Function: WM_ObjCreator_update
  * EN v1.0 Address: 0x801EF3A8
  * EN v1.0 Size: 3548b
  * EN v1.1 Address: 0x801EF9E0
@@ -35,8 +35,8 @@ extern f32 lbl_803E6974;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ef3a8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void WM_ObjCreator_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                          undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   bool bVar1;
   undefined2 *puVar2;

@@ -733,7 +733,7 @@ int fn_801EEE34(void) { return 0x0; }
 int SB_CloudRunner_getExtraSize(void) { return 0x84; }
 int SB_CloudRunner_func08(void) { return 0x43; }
 int WM_ObjCreator_getExtraSize(void) { return 0x8; }
-int fn_801EF368(void) { return 0x0; }
+int WM_ObjCreator_func08(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5CC8;
