@@ -1345,7 +1345,7 @@ void mmp_gyservent_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int MoonSeedBush_getExtraSize(void) { return 0x2; }
-int fn_801A6D64(void) { return 0x0; }
+int MoonSeedBush_func08(void) { return 0x0; }
 int mmp_asteroid_re_getExtraSize(void) { return 0x1c; }
 int mmp_asteroid_re_func08(void) { return 0x0; }
 int mmp_moonrock_getExtraSize(void) { return 0x30; }
