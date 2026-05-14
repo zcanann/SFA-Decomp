@@ -120,11 +120,63 @@ void synthInit(u32 sampleRate, u32 voiceCount) {
         *(u8*)(synthVoice + voiceOffset + 0x21) = 0xFF;
     }
 
-    for (fadeIndex = 0; fadeIndex < SYNTH_FADE_COUNT; fadeIndex++) {
-        SynthFade* fade = (SynthFade*)(state + 0x5D4 + fadeIndex * sizeof(SynthFade));
-        fade->current = lbl_803E77D0;
-        fade->auxCurrent = lbl_803E77A8;
-        fade->type = SYNTH_FADE_ACTION_DISABLED;
+    {
+        SynthFade* fade = (SynthFade*)(state + 0x5D4);
+        f32 fadeCurrent = lbl_803E77D0;
+        f32 auxCurrent = lbl_803E77A8;
+        u32 pass;
+
+        for (pass = 0; pass < 2; pass++) {
+            fade[0].current = fadeCurrent;
+            fade[0].auxCurrent = auxCurrent;
+            fade[0].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[1].current = fadeCurrent;
+            fade[1].auxCurrent = auxCurrent;
+            fade[1].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[2].current = fadeCurrent;
+            fade[2].auxCurrent = auxCurrent;
+            fade[2].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[3].current = fadeCurrent;
+            fade[3].auxCurrent = auxCurrent;
+            fade[3].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[4].current = fadeCurrent;
+            fade[4].auxCurrent = auxCurrent;
+            fade[4].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[5].current = fadeCurrent;
+            fade[5].auxCurrent = auxCurrent;
+            fade[5].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[6].current = fadeCurrent;
+            fade[6].auxCurrent = auxCurrent;
+            fade[6].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[7].current = fadeCurrent;
+            fade[7].auxCurrent = auxCurrent;
+            fade[7].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[8].current = fadeCurrent;
+            fade[8].auxCurrent = auxCurrent;
+            fade[8].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[9].current = fadeCurrent;
+            fade[9].auxCurrent = auxCurrent;
+            fade[9].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[10].current = fadeCurrent;
+            fade[10].auxCurrent = auxCurrent;
+            fade[10].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[11].current = fadeCurrent;
+            fade[11].auxCurrent = auxCurrent;
+            fade[11].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[12].current = fadeCurrent;
+            fade[12].auxCurrent = auxCurrent;
+            fade[12].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[13].current = fadeCurrent;
+            fade[13].auxCurrent = auxCurrent;
+            fade[13].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[14].current = fadeCurrent;
+            fade[14].auxCurrent = auxCurrent;
+            fade[14].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[15].current = fadeCurrent;
+            fade[15].auxCurrent = auxCurrent;
+            fade[15].type = SYNTH_FADE_ACTION_DISABLED;
+            fade += 16;
+        }
     }
 
     synthMasterFaderActiveFlags = 0;
