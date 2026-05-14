@@ -37,8 +37,8 @@
  * - 0x0495 sideload: placements=129, class=0x001E, widths=7w x129
  *
  * EN descriptor slot map:
- * - descriptor=0x80321800 lbl_80321800 (slots=10, mask=0000100000)
- * - slot 04: 0x80172058 fn_80172058 ref=update
+ * - descriptor=0x80320BB0 gSideloadObjDescriptor (slots=10, mask=0000100000)
+ * - slot 04: 0x80171BAC sideload_update ref=update
  */
 
 #if 0

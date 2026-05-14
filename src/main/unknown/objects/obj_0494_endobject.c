@@ -51,7 +51,7 @@
  * - All functions stubbed
  *
  * EN descriptor slot map:
- * - descriptor=0x803217C0 gCheckpoint4ObjDescriptor (slots=10, mask=1101111111)
+ * - descriptor=0x803217C0 gDummy108ObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x80186494 Dummy108_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x80186490 Dummy108_release stub=blr ref=release (stub)
  * - slot 03: 0x8018648C Dummy108_init stub=blr ref=init (stub)

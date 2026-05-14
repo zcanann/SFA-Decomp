@@ -38,10 +38,10 @@
  * - 0x0497 siderepelWi: placements=5, class=0x001F, widths=7w x5
  *
  * EN descriptor slot map:
- * - descriptor=0x80321838 lbl_80321838 (slots=10, mask=0001000101)
- * - slot 03: 0x80172150 fn_80172150 ref=init
- * - slot 07: 0x8017212C fn_8017212C ref=free
- * - slot 09: 0x80172124 fn_80172124 stub=const 1 ref=getExtraSize (stub)
+ * - descriptor=0x80320BE8 gSiderepelObjDescriptor (slots=10, mask=0001000101)
+ * - slot 03: 0x80171CA4 siderepel_init ref=init
+ * - slot 07: 0x80171C80 siderepel_free ref=free
+ * - slot 09: 0x80171C78 siderepel_getExtraSize stub=const 1 ref=getExtraSize (stub)
  */
 
 #if 0

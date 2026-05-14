@@ -5,7 +5,7 @@
 // - Object def 0x0492 ("checkpoint4") resolves here.
 //
 // Current EN descriptor:
-// - lbl_80320B70 @ 0x80320B70
+// - gCheckpoint4ObjDescriptor @ 0x80320B70
 //
 // Descriptor slots:
 // - 0: checkpoint4_initialise (0x80171BA8)

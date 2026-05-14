@@ -18,7 +18,7 @@
  * - 0x0492 checkpoint4: dll=0x00E8, placements=181, widths=16w x181
  *
  * Descriptor slot maps:
- * - DLL 0x00E8: lbl_80320B70 @ 0x80320B70 (slots=11, mask=11011111111)
+ * - DLL 0x00E8: gCheckpoint4ObjDescriptor @ 0x80320B70 (slots=11, mask=11011111111)
  *   slot 00: 0x80171BA8 checkpoint4_initialise
  *   slot 01: 0x80171BA4 checkpoint4_release
  *   slot 03: 0x80171A24 checkpoint4_init

@@ -36,7 +36,7 @@
  * - 0x0492 checkpoint4: placements=181, class=0x0005, widths=16w x181
  *
  * EN descriptor slot map:
- * - descriptor=0x80320B70 lbl_80320B70 (slots=11, mask=11011111111)
+ * - descriptor=0x80320B70 gCheckpoint4ObjDescriptor (slots=11, mask=11011111111)
  * - slot 00: 0x80171BA8 checkpoint4_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x80171BA4 checkpoint4_release stub=blr ref=release (stub)
  * - slot 03: 0x80171A24 checkpoint4_init ref=init
