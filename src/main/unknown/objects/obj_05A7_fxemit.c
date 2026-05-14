@@ -37,16 +37,16 @@
  * - 0x05A7 FXEmit: placements=189, class=0x006B, widths=11w x189
  *
  * EN descriptor slot map:
- * - descriptor=0x80322B88 lbl_80322B88 (slots=10, mask=1101111111)
- * - slot 00: 0x8018F6C0 fn_8018F6C0 stub=blr ref=initialise (stub)
- * - slot 01: 0x8018F6BC fn_8018F6BC stub=blr ref=release (stub)
- * - slot 03: 0x8018F55C fn_8018F55C ref=init
- * - slot 04: 0x8018F214 fn_8018F214 ref=update
- * - slot 05: 0x8018F210 fn_8018F210 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x8018F204 fn_8018F204 ref=render
- * - slot 07: 0x8018F1B0 fn_8018F1B0 ref=free
- * - slot 08: 0x8018F1A8 fn_8018F1A8 stub=const 0
- * - slot 09: 0x8018F1A0 fn_8018F1A0 stub=const 32 ref=getExtraSize (stub)
+ * - descriptor=0x80321F38 gFXEmitObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x8018F144 fxemit_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x8018F140 fxemit_release stub=blr ref=release (stub)
+ * - slot 03: 0x8018EFE0 fxemit_init ref=init
+ * - slot 04: 0x8018EC98 fxemit_update ref=update
+ * - slot 05: 0x8018EC94 fxemit_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x8018EC88 fxemit_render ref=render
+ * - slot 07: 0x8018EC34 fxemit_free ref=free
+ * - slot 08: 0x8018EC2C fxemit_func08 stub=const 0
+ * - slot 09: 0x8018EC24 fxemit_getExtraSize stub=const 32 ref=getExtraSize (stub)
  */
 
 #if 0

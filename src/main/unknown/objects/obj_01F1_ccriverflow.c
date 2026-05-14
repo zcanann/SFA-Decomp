@@ -36,12 +36,12 @@
  * - 0x01F1 CCriverflow: placements=127, class=0x0035, widths=8w x127
  *
  * EN descriptor slot map:
- * - descriptor=0x80326A08 lbl_80326A08 (slots=10, mask=0001101101)
- * - slot 03: 0x801C10E8 fn_801C10E8 ref=init
- * - slot 04: 0x801C1054 fn_801C1054 ref=update
- * - slot 06: 0x801C1050 fn_801C1050 stub=blr ref=render (stub)
- * - slot 07: 0x801C101C fn_801C101C ref=free
- * - slot 09: 0x801C1014 fn_801C1014 stub=const 1 ref=getExtraSize (stub)
+ * - descriptor=0x80325DC8 gCCriverflowObjDescriptor (slots=10, mask=0001101101)
+ * - slot 03: 0x801C0B34 ccriverflow_init ref=init
+ * - slot 04: 0x801C0AA0 ccriverflow_update ref=update
+ * - slot 06: 0x801C0A9C ccriverflow_render stub=blr ref=render (stub)
+ * - slot 07: 0x801C0A68 ccriverflow_free ref=free
+ * - slot 09: 0x801C0A60 ccriverflow_getExtraSize stub=const 1 ref=getExtraSize (stub)
  */
 
 #if 0
