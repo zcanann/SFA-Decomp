@@ -6,10 +6,10 @@
  *
  * Object def: 0x04DF BlueMushroo
  * Output path: src/main/unknown/objects/obj_04DF_bluemushroo.c
- * Retail placements: 171
+ * Retail placements: 172
  * Root romlists: 17
  * Object-def size: 0x100
- * Root placement widths: 8w x171
+ * Root placement widths: 8w x172
  * DLL ID: 0x01A7
  * Class ID: 0x0029
  * Suggested outer boundary: tight class packet
@@ -30,23 +30,23 @@
  * - sequence IDs: 0x0000
  * - help texts: 0x000C 0xFFFF 0xFFFF 0xFFFF
  *
- * Same-class objects (3 defs / 180 placements):
- * - 0x04DF BlueMushroo: placements=171, dll=0x01A7, widths=8w x171
+ * Same-class objects (3 defs / 181 placements):
+ * - 0x04DF BlueMushroo: placements=172, dll=0x01A7, widths=8w x172
  * - 0x02B0 SH_whitemus: placements=6, dll=0x01A7, widths=8w x6
  * - 0x01D1 LINK_BlueMu: placements=3, dll=0x01A7, widths=8w x3
  *
- * Same-DLL objects (3 defs / 180 placements):
- * - 0x04DF BlueMushroo: placements=171, class=0x0029, widths=8w x171
+ * Same-DLL objects (3 defs / 181 placements):
+ * - 0x04DF BlueMushroo: placements=172, class=0x0029, widths=8w x172
  * - 0x02B0 SH_whitemus: placements=6, class=0x0029, widths=8w x6
  * - 0x01D1 LINK_BlueMu: placements=3, class=0x0029, widths=8w x3
  *
  * EN descriptor slot map:
- * - descriptor=0x80327854 lbl_80327854 (slots=10, mask=0001110101)
- * - slot 03: 0x801D1F68 fn_801D1F68 ref=init
- * - slot 04: 0x801D1CDC fn_801D1CDC ref=update
- * - slot 05: 0x801D1B90 fn_801D1B90 ref=hitDetect
- * - slot 07: 0x801D1B54 fn_801D1B54 ref=free
- * - slot 09: 0x801D1B4C fn_801D1B4C stub=const 324 ref=getExtraSize (stub)
+ * - descriptor=0x80326C14 gEdibleMushroomObjDescriptor (slots=10, mask=0001110101)
+ * - slot 03: 0x801D1978 ediblemushroom_init ref=init
+ * - slot 04: 0x801D16EC ediblemushroom_update ref=update
+ * - slot 05: 0x801D15A0 ediblemushroom_hitDetect ref=hitDetect
+ * - slot 07: 0x801D1564 ediblemushroom_free ref=free
+ * - slot 09: 0x801D155C ediblemushroom_getExtraSize stub=const 324 ref=getExtraSize (stub)
  */
 
 #if 0

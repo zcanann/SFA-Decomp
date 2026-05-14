@@ -63,12 +63,12 @@
  * - objparams size: 0x42
  *
  * EN descriptor slot map:
- * - descriptor=0x80323AF0 lbl_80323AF0 (slots=10, mask=0001101101)
- * - slot 03: 0x801A3CF0 fn_801A3CF0 ref=init
- * - slot 04: 0x801A3B9C fn_801A3B9C ref=update
- * - slot 06: 0x801A3B98 fn_801A3B98 stub=blr ref=render (stub)
- * - slot 07: 0x801A3B20 fn_801A3B20 ref=free
- * - slot 09: 0x801A3B18 fn_801A3B18 stub=const 1768 ref=getExtraSize (stub)
+ * - descriptor=0x80322EA0 gExplodableObjDescriptor (slots=10, mask=0001101101)
+ * - slot 03: 0x801A373C explodable_init ref=init
+ * - slot 04: 0x801A35E8 explodable_update ref=update
+ * - slot 06: 0x801A35E4 explodable_render stub=blr ref=render (stub)
+ * - slot 07: 0x801A356C explodable_free ref=free
+ * - slot 09: 0x801A3564 explodable_getExtraSize stub=const 1768 ref=getExtraSize (stub)
  */
 
 #if 0
