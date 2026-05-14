@@ -49,7 +49,7 @@
  * - 0x03B3 WM_spiritpl: placements=6, class=0x0030, widths=9w x6
  *
  * EN descriptor slot map:
- * - descriptor=0x80328C68 lbl_80328C68 (slots=10, mask=1101111111)
+ * - descriptor=0x80328C68 gWM_spiritplaceObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801F6548 wmspiritplace_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801F6544 wmspiritplace_release stub=blr ref=release (stub)
  * - slot 03: 0x801F63CC wmspiritplace_init ref=init
