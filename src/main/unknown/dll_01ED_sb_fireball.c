@@ -20,9 +20,9 @@
  * EN slot map with reference-only names by slot index:
  * - slot 00: 0x801E45A8 SB_FireBall_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801E45A4 SB_FireBall_release stub=blr ref=release (stub)
- * - slot 03: 0x801E458C fn_801E458C ref=init
- * - slot 04: 0x801E43C0 fn_801E43C0 ref=update
- * - slot 05: 0x801E42F8 fn_801E42F8 ref=hitDetect
+ * - slot 03: 0x801E458C SB_FireBall_init ref=init
+ * - slot 04: 0x801E43C0 SB_FireBall_update ref=update
+ * - slot 05: 0x801E42F8 SB_FireBall_hitDetect ref=hitDetect
  * - slot 06: 0x801E42C8 SB_FireBall_render ref=render
  * - slot 07: 0x801E4298 SB_FireBall_free ref=free
  * - slot 08: 0x801E4290 SB_FireBall_func08 stub=const 0

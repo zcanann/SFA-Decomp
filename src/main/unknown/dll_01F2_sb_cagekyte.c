@@ -20,10 +20,10 @@
  * EN slot map with reference-only names by slot index:
  * - slot 00: 0x801E505C SB_CageKyte_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801E5058 SB_CageKyte_release stub=blr ref=release (stub)
- * - slot 03: 0x801E5038 fn_801E5038 ref=init
- * - slot 04: 0x801E4F74 fn_801E4F74 ref=update
+ * - slot 03: 0x801E5038 SB_CageKyte_init ref=init
+ * - slot 04: 0x801E4F74 SB_CageKyte_update ref=update
  * - slot 05: 0x801E4F70 SB_CageKyte_hitDetect stub=blr ref=hitDetect (stub)
- * - slot 06: 0x801E4F64 fn_801E4F64 ref=render
+ * - slot 06: 0x801E4F64 SB_CageKyte_render ref=render
  * - slot 07: 0x801E4F60 SB_CageKyte_free stub=blr ref=free (stub)
  * - slot 08: 0x801E4F58 SB_CageKyte_func08 stub=const 1
  * - slot 09: 0x801E4F50 SB_CageKyte_getExtraSize stub=const 2 ref=getExtraSize (stub)
@@ -44,7 +44,7 @@ enum dll_01F2_SB_CageKyte_slot {
     SB_CAGEKYTE_HITDETECT = 5,
     SB_CAGEKYTE_RENDER = 6,
     SB_CAGEKYTE_FREE = 7,
-    SB_CAGEKYTE_SLOT_08 = 8,
+    SB_CAGEKYTE_FUNC08 = 8,
     SB_CAGEKYTE_GETEXTRASIZE = 9,
 };
 #endif

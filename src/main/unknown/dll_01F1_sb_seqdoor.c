@@ -22,8 +22,8 @@
  * EN slot map with reference-only names by slot index:
  * - slot 00: 0x801E5198 SB_SeqDoor_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801E5194 SB_SeqDoor_release stub=blr ref=release (stub)
- * - slot 03: 0x801E5154 fn_801E5154 ref=init
- * - slot 04: 0x801E50CC fn_801E50CC ref=update
+ * - slot 03: 0x801E5154 SB_SeqDoor_init ref=init
+ * - slot 04: 0x801E50CC SB_SeqDoor_update ref=update
  * - slot 05: 0x801E50C8 SB_SeqDoor_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801E5098 SB_SeqDoor_render ref=render
  * - slot 07: 0x801E5094 SB_SeqDoor_free stub=blr ref=free (stub)
@@ -46,7 +46,7 @@ enum dll_01F1_SB_SeqDoor_slot {
     SB_SEQDOOR_HITDETECT = 5,
     SB_SEQDOOR_RENDER = 6,
     SB_SEQDOOR_FREE = 7,
-    SB_SEQDOOR_SLOT_08 = 8,
+    SB_SEQDOOR_FUNC08 = 8,
     SB_SEQDOOR_GETEXTRASIZE = 9,
 };
 #endif

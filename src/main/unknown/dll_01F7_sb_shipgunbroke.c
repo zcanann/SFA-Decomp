@@ -21,9 +21,9 @@
  * - slot 00: 0x801E604C SB_ShipGunBroke_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801E6048 SB_ShipGunBroke_release stub=blr ref=release (stub)
  * - slot 03: 0x801E6044 SB_ShipGunBroke_init stub=blr ref=init (stub)
- * - slot 04: 0x801E5FFC fn_801E5FFC ref=update
+ * - slot 04: 0x801E5FFC SB_ShipGunBroke_update ref=update
  * - slot 05: 0x801E5FF8 SB_ShipGunBroke_hitDetect stub=blr ref=hitDetect (stub)
- * - slot 06: 0x801E5F88 fn_801E5F88 ref=render
+ * - slot 06: 0x801E5F88 SB_ShipGunBroke_render ref=render
  * - slot 07: 0x801E5F84 SB_ShipGunBroke_free stub=blr ref=free (stub)
  * - slot 08: 0x801E5F7C SB_ShipGunBroke_func08 stub=const 0
  * - slot 09: 0x801E5F74 SB_ShipGunBroke_getExtraSize stub=const 1 ref=getExtraSize (stub)
@@ -44,7 +44,7 @@ enum dll_01F7_SB_ShipGunBroke_slot {
     SB_SHIPGUNBROKE_HITDETECT = 5,
     SB_SHIPGUNBROKE_RENDER = 6,
     SB_SHIPGUNBROKE_FREE = 7,
-    SB_SHIPGUNBROKE_SLOT_08 = 8,
+    SB_SHIPGUNBROKE_FUNC08 = 8,
     SB_SHIPGUNBROKE_GETEXTRASIZE = 9,
 };
 #endif

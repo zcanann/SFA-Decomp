@@ -20,11 +20,11 @@
  * EN slot map with reference-only names by slot index:
  * - slot 00: 0x801E4ABC SB_CloudBall_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801E4AB8 SB_CloudBall_release stub=blr ref=release (stub)
- * - slot 03: 0x801E4A08 fn_801E4A08 ref=init
- * - slot 04: 0x801E46DC fn_801E46DC ref=update
- * - slot 05: 0x801E4640 fn_801E4640 ref=hitDetect
+ * - slot 03: 0x801E4A08 SB_CloudBall_init ref=init
+ * - slot 04: 0x801E46DC SB_CloudBall_update ref=update
+ * - slot 05: 0x801E4640 SB_CloudBall_hitDetect ref=hitDetect
  * - slot 06: 0x801E4610 SB_CloudBall_render ref=render
- * - slot 07: 0x801E45BC fn_801E45BC ref=free
+ * - slot 07: 0x801E45BC SB_CloudBall_free ref=free
  * - slot 08: 0x801E45B4 SB_CloudBall_func08 stub=const 0
  * - slot 09: 0x801E45AC SB_CloudBall_getExtraSize stub=const 36 ref=getExtraSize (stub)
  *
@@ -44,7 +44,7 @@ enum dll_01EF_SB_CloudBall_slot {
     SB_CLOUDBALL_HITDETECT = 5,
     SB_CLOUDBALL_RENDER = 6,
     SB_CLOUDBALL_FREE = 7,
-    SB_CLOUDBALL_SLOT_08 = 8,
+    SB_CLOUDBALL_FUNC08 = 8,
     SB_CLOUDBALL_GETEXTRASIZE = 9,
 };
 #endif

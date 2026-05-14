@@ -23,11 +23,11 @@
  * EN slot map with reference-only names by slot index:
  * - slot 00: 0x801E59A8 ShipBattle_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801E59A4 ShipBattle_release stub=blr ref=release (stub)
- * - slot 03: 0x801E5814 fn_801E5814 ref=init
- * - slot 04: 0x801E56A0 fn_801E56A0 ref=update
+ * - slot 03: 0x801E5814 ShipBattle_init ref=init
+ * - slot 04: 0x801E56A0 ShipBattle_update ref=update
  * - slot 05: 0x801E569C ShipBattle_hitDetect stub=blr ref=hitDetect (stub)
- * - slot 06: 0x801E5644 fn_801E5644 ref=render
- * - slot 07: 0x801E55C8 fn_801E55C8 ref=free
+ * - slot 06: 0x801E5644 ShipBattle_render ref=render
+ * - slot 07: 0x801E55C8 ShipBattle_free ref=free
  * - slot 08: 0x801E55C0 ShipBattle_func08 stub=const 11
  * - slot 09: 0x801E55B8 ShipBattle_getExtraSize stub=const 320 ref=getExtraSize (stub)
  *

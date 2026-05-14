@@ -20,11 +20,11 @@
  * EN slot map with reference-only names by slot index:
  * - slot 00: 0x801E55B4 SB_MiniFire_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801E55B0 SB_MiniFire_release stub=blr ref=release (stub)
- * - slot 03: 0x801E54AC fn_801E54AC ref=init
- * - slot 04: 0x801E527C fn_801E527C ref=update
+ * - slot 03: 0x801E54AC SB_MiniFire_init ref=init
+ * - slot 04: 0x801E527C SB_MiniFire_update ref=update
  * - slot 05: 0x801E5278 SB_MiniFire_hitDetect stub=blr ref=hitDetect (stub)
- * - slot 06: 0x801E5200 fn_801E5200 ref=render
- * - slot 07: 0x801E51AC fn_801E51AC ref=free
+ * - slot 06: 0x801E5200 SB_MiniFire_render ref=render
+ * - slot 07: 0x801E51AC SB_MiniFire_free ref=free
  * - slot 08: 0x801E51A4 SB_MiniFire_func08 stub=const 0
  * - slot 09: 0x801E519C SB_MiniFire_getExtraSize stub=const 2 ref=getExtraSize (stub)
  *
@@ -44,7 +44,7 @@ enum dll_01F3_SB_MiniFire_slot {
     SB_MINIFIRE_HITDETECT = 5,
     SB_MINIFIRE_RENDER = 6,
     SB_MINIFIRE_FREE = 7,
-    SB_MINIFIRE_SLOT_08 = 8,
+    SB_MINIFIRE_FUNC08 = 8,
     SB_MINIFIRE_GETEXTRASIZE = 9,
 };
 #endif
