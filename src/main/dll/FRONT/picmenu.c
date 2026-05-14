@@ -273,17 +273,19 @@ OSMessage fn_801194EC(void)
 /* ------------------------------------------------------------------ */
 /* fn_80119520 (248 bytes) - DVD-read thread                           */
 /* ------------------------------------------------------------------ */
+#pragma scheduling off
+#pragma peephole off
 void fn_80119520(void)
 {
     char* base = lbl_803A5F08;
-    char* pb   = (char*)&lbl_803A5D60;
-    u32 readOff  = *(u32*)(pb + 0xB0);
-    u32 readSize = *(u32*)(pb + 0xB4);
     int i = 0;
+    char* pb = (char*)&lbl_803A5D60;
+    u32* req;
+    u32 readOff = *(u32*)(pb + 0xB0);
+    u32 readSize = *(u32*)(pb + 0xB4);
 
     while (1) {
         OSMessage msgVal;
-        u32* req;
         s32 res;
 
         OSReceiveMessage((OSMessageQueue*)(base + 0x13C8), &msgVal, OS_MESSAGE_BLOCK);
@@ -311,16 +313,18 @@ void fn_80119520(void)
             u32 bOff = *(u32*)(pb + 0xB8);
             u32 pos  = (i + bOff) % cols;
             if (pos == cols - 1) {
-                if (!(*(u8*)(pb + 0x9E) & 1)) {
-                    OSSuspendThread((OSThread*)(base + 0x1000));
-                } else {
+                if (*(u8*)(pb + 0x9E) & 1) {
                     readOff = *(u32*)(pb + 0x64);
+                } else {
+                    OSSuspendThread((OSThread*)(base + 0x1000));
                 }
             }
         }
         i++;
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
 /* fn_80119618 (60 bytes)                                              */
