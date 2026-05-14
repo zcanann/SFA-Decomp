@@ -45,7 +45,7 @@ extern void fn_8006C4E0();
 extern void fn_80088730();
 extern void fn_8008982C();
 extern uint fn_80118294();
-extern int isHeavyFogEnabled();
+extern u8 isHeavyFogEnabled();
 
 extern f64 lbl_803DEBC0;
 extern f32 lbl_803DEBC8;
@@ -70,8 +70,8 @@ extern byte lbl_803DB638;
 extern int lbl_803DB63C;
 extern int lbl_803DB640;
 extern byte lbl_803DB644;
-extern int lbl_80382008;
-extern int lbl_8038793C;
+extern int lbl_80382008[5];
+extern int lbl_8038793C[25];
 extern int lbl_803E8444;
 extern int lbl_803E8448;
 extern undefined4 jumptable_8030E844;
@@ -756,15 +756,11 @@ void fn_8005F1E0(int param_1, int param_2)
 #pragma peephole off
 int fn_8005F558(byte param_1,int param_2,int *param_3)
 {
-  int iVar1;
+  uint iVar1;
   uint uVar2;
-  undefined uVar3;
-  undefined uVar4;
-  undefined uVar5;
   uint uPos;
   int local_8;
   int local_c;
-  int local_10;
   byte local_14[4];
   byte local_18;
   byte local_19;
@@ -773,14 +769,18 @@ int fn_8005F558(byte param_1,int param_2,int *param_3)
 
   local_1c = lbl_803E8444;
   uPos = param_3[4];
-  uVar5 = *(undefined *)(*param_3 + ((int)uPos >> 3));
-  iVar1 = *param_3 + ((int)uPos >> 3);
-  uVar3 = *(undefined *)(iVar1 + 1);
-  uVar4 = *(undefined *)(iVar1 + 2);
-  param_3[4] = uPos + 6;
-  iVar1 = *(int *)((int)param_2 + 0x64);
-  uVar2 = (uint3)(CONCAT12(uVar4,CONCAT11(uVar3,uVar5)) >> (uPos & 7)) & 0x3f;
-  iVar1 = iVar1 + uVar2 * 0x44;
+  {
+    int _off = (int)uPos >> 3;
+    int _base = *param_3;
+    uint3 _bits = *(undefined *)(_base + _off);
+    _base += _off;
+    _bits |= (uint3)*(undefined *)(_base + 1) << 8;
+    _bits |= (uint3)*(undefined *)(_base + 2) << 16;
+    param_3[4] = uPos + 6;
+    iVar1 = *(int *)((int)param_2 + 0x64);
+    uVar2 = (_bits >> (uPos & 7)) & 0x3f;
+    iVar1 = iVar1 + uVar2 * 0x44;
+  }
 
   if (param_1 == 0) {
     return iVar1;
@@ -790,14 +790,14 @@ int fn_8005F558(byte param_1,int param_2,int *param_3)
     _gxSetFogParams();
     goto LAB_8005F608;
   }
-  local_10 = local_1c;
-  GXSetFog(0,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,*(GXColor*)&local_10);
+  local_c = local_1c;
+  GXSetFog(0,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,*(GXColor*)&local_c);
 LAB_8005F608:
   if ((iVar1 != 0) && ((*(uint *)(iVar1 + 0x3c) & 0x80000000) != 0)) {
     return iVar1;
   }
   if ((iVar1 != 0) && ((*(uint *)(iVar1 + 0x3c) & 0x20000) != 0)) {
-    int res;
+    uint res;
     res = fn_80118294(0,0,0);
     if ((res & 0xff) != 0) {
       return iVar1;
