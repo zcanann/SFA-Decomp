@@ -63,9 +63,12 @@ int voiceScaleSampleRate(u16 x)
         struct { u32 hi, lo; } w;
         f64 d;
     } conv;
-    conv.w.hi = 0x43300000;
+    f32 scaled;
+
     conv.w.lo = (u32)x;
-    return (int)((conv.d - lbl_803E7820) * lbl_803E7818);
+    conv.w.hi = 0x43300000;
+    scaled = conv.d - lbl_803E7820;
+    return (int)(lbl_803E7818 * scaled);
 }
 
 /*
@@ -84,7 +87,6 @@ u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
     u8 baseNote;
     u8 inputNote;
     f32 freq;
-    f64 fracD;
     union {
         struct { u32 hi, lo; } w;
         f64 d;
@@ -95,34 +97,26 @@ u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
     }
     baseNote = (u8)(packed >> 24);
     inputNote = noteIn;
-    if (inputNote == baseNote) {
-        conv.w.hi = 0x43300000;
+    if (inputNote != baseNote) {
+        if (baseNote < inputNote) {
+            u32 d = inputNote - baseNote;
+            freq = voicePitchUpTable[d];
+        } else {
+            u32 d = baseNote - inputNote;
+            freq = voicePitchDownTable[d];
+        }
         conv.w.lo = packed & 0xffffff;
-        freq = (f32)(conv.d - lbl_803E7820);
-    } else if (baseNote >= inputNote) {
-        u32 d = baseNote - inputNote;
-        f32 mul = voicePitchDownTable[d];
         conv.w.hi = 0x43300000;
-        conv.w.lo = packed & 0xffffff;
-        freq = (f32)((conv.d - lbl_803E7820) * mul);
+        freq = (conv.d - lbl_803E7820) * freq;
     } else {
-        u32 d = inputNote - baseNote;
-        f32 mul = voicePitchUpTable[d];
-        conv.w.hi = 0x43300000;
         conv.w.lo = packed & 0xffffff;
-        freq = (f32)((conv.d - lbl_803E7820) * mul);
+        conv.w.hi = 0x43300000;
+        freq = conv.d - lbl_803E7820;
     }
-    {
-        union {
-            struct { u32 hi, lo; } w;
-            f64 d;
-        } conv2;
-        u32 sampleRate = *(u32 *)lbl_803BD150;
-        conv2.w.hi = 0x43300000;
-        conv2.w.lo = sampleRate;
-        return __cvt_fp2unsigned((f64)(freq * lbl_803E7828) /
-                                 (conv2.d - lbl_803E7820));
-    }
+    conv.w.lo = *(u32 *)lbl_803BD150;
+    conv.w.hi = 0x43300000;
+    return __cvt_fp2unsigned((freq * lbl_803E7828) /
+                             (f32)(conv.d - lbl_803E7820));
 }
 
 /*
