@@ -5,9 +5,9 @@
 // - Current EN object packets tie InvisibleHi here.
 //
 // Current EN descriptor:
-// - gInvisibleHitSwitchObjDescriptor @ 0x80321CA0
+// - gInvisibleHitSwitchObjDescriptor @ 0x80321050
 //
 // Descriptor slots:
-// - 3: invisiblehitswitch_init (0x8017B064)
-// - 4: invisiblehitswitch_update (0x8017AE38)
-// - 9: invisiblehitswitch_getExtraSize (0x8017AE30)
+// - 3: InvisibleHitSwitch_init (0x8017AB20)
+// - 4: InvisibleHitSwitch_update (0x8017A8F4)
+// - 9: InvisibleHitSwitch_getExtraSize (0x8017A8EC)

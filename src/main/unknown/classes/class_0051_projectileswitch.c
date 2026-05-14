@@ -30,10 +30,10 @@
  *   slot 07: 0x8017A8CC projectileswitch_free
  *   slot 08: 0x8017A89C projectileswitch_func08
  *   slot 09: 0x8017A894 projectileswitch_getExtraSize
- * - DLL 0x00FA: gInvisibleHitSwitchObjDescriptor @ 0x80321CA0 (slots=10, mask=0001100001)
- *   slot 03: 0x8017B064 invisiblehitswitch_init
- *   slot 04: 0x8017AE38 invisiblehitswitch_update
- *   slot 09: 0x8017AE30 invisiblehitswitch_getExtraSize
+ * - DLL 0x00FA: gInvisibleHitSwitchObjDescriptor @ 0x80321050 (slots=10, mask=0001100001)
+ *   slot 03: 0x8017AB20 InvisibleHitSwitch_init
+ *   slot 04: 0x8017A8F4 InvisibleHitSwitch_update
+ *   slot 09: 0x8017A8EC InvisibleHitSwitch_getExtraSize
  */
 
 #if 0

@@ -9,7 +9,7 @@ extern f32 lbl_803E3750;
 /*
  * --INFO--
  *
- * Function: fn_8017AB20
+ * Function: InvisibleHitSwitch_init
  * EN v1.0 Address: 0x8017AB20
  * EN v1.0 Size: 268b
  * EN v1.1 Address: TODO
@@ -21,7 +21,7 @@ extern f32 lbl_803E3750;
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_8017AB20(int param_1, u8 *param_2)
+void InvisibleHitSwitch_init(int param_1, u8 *param_2)
 {
   u8 *info;
 
