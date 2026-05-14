@@ -373,9 +373,9 @@ void SB_CannonBall_free(int obj)
 #pragma scheduling reset
 
 int SB_FireBall_getExtraSize(void) { return 0x18; }
-int fn_801E4290(void) { return 0x0; }
+int SB_FireBall_func08(void) { return 0x0; }
 
-void fn_801E4298(int obj)
+void SB_FireBall_free(int obj)
 {
   (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
 }
