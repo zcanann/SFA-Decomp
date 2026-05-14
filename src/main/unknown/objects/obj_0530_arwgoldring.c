@@ -52,16 +52,16 @@
  * - 0x0238 ANDSilverRi: placements=0, class=0x0030, widths=none
  *
  * EN descriptor slot map:
- * - descriptor=0x8032C3F0 lbl_8032C3F0 (slots=10, mask=1101111111)
- * - slot 00: 0x80230F74 fn_80230F74 stub=blr ref=initialise (stub)
- * - slot 01: 0x80230F70 fn_80230F70 stub=blr ref=release (stub)
- * - slot 03: 0x80230D88 fn_80230D88 ref=init
- * - slot 04: 0x80230598 fn_80230598 ref=update
- * - slot 05: 0x80230594 fn_80230594 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x80230514 fn_80230514 ref=render
- * - slot 07: 0x802304D4 fn_802304D4 ref=free
- * - slot 08: 0x802304CC fn_802304CC stub=const 0
- * - slot 09: 0x802304C4 fn_802304C4 stub=const 36 ref=getExtraSize (stub)
+ * - descriptor=0x8032B798 gRingObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x802308B0 ring_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x802308AC ring_release stub=blr ref=release (stub)
+ * - slot 03: 0x802306C4 ring_init ref=init
+ * - slot 04: 0x8022FED4 ring_update ref=update
+ * - slot 05: 0x8022FED0 ring_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x8022FE50 ring_render ref=render
+ * - slot 07: 0x8022FE10 ring_free ref=free
+ * - slot 08: 0x8022FE08 ring_func08 stub=const 0
+ * - slot 09: 0x8022FE00 ring_getExtraSize stub=const 36 ref=getExtraSize (stub)
  */
 
 #if 0

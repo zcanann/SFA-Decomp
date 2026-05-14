@@ -50,16 +50,16 @@
  * - 0x0311 CNTColideOb: placements=1, class=0x0030, widths=9w x1
  *
  * EN descriptor slot map:
- * - descriptor=0x8032CB5C lbl_8032CB5C (slots=10, mask=1101111111)
- * - slot 00: 0x80239644 fn_80239644 stub=blr ref=initialise (stub)
- * - slot 01: 0x80239640 fn_80239640 stub=blr ref=release (stub)
- * - slot 03: 0x8023952C fn_8023952C ref=init
- * - slot 04: 0x80239460 fn_80239460 ref=update
- * - slot 05: 0x802392B8 fn_802392B8 ref=hitDetect
- * - slot 06: 0x80239270 fn_80239270 ref=render
- * - slot 07: 0x8023926C fn_8023926C stub=blr ref=free (stub)
- * - slot 08: 0x80239264 fn_80239264 stub=const 0
- * - slot 09: 0x8023925C fn_8023925C stub=const 12 ref=getExtraSize (stub)
+ * - descriptor=0x8032BF04 gCNThitObjecObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x80238F4C cnthitobjec_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x80238F48 cnthitobjec_release stub=blr ref=release (stub)
+ * - slot 03: 0x80238E34 cnthitobjec_init ref=init
+ * - slot 04: 0x80238D68 cnthitobjec_update ref=update
+ * - slot 05: 0x80238BC0 cnthitobjec_hitDetect ref=hitDetect
+ * - slot 06: 0x80238B78 cnthitobjec_render ref=render
+ * - slot 07: 0x80238B74 cnthitobjec_free stub=blr ref=free (stub)
+ * - slot 08: 0x80238B6C cnthitobjec_func08 stub=const 0
+ * - slot 09: 0x80238B64 cnthitobjec_getExtraSize stub=const 12 ref=getExtraSize (stub)
  */
 
 #if 0

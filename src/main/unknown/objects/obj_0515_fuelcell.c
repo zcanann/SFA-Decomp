@@ -49,12 +49,12 @@
  * - 0x0515 fuelCell: placements=77, class=0x0030, widths=9w x77
  *
  * EN descriptor slot map:
- * - descriptor=0x80322A38 lbl_80322A38 (slots=10, mask=0001101101)
- * - slot 03: 0x8018CD04 fn_8018CD04 ref=init
- * - slot 04: 0x8018CACC fn_8018CACC ref=update
- * - slot 06: 0x8018C6BC fn_8018C6BC ref=render
- * - slot 07: 0x8018C630 fn_8018C630 ref=free
- * - slot 09: 0x8018C628 fn_8018C628 stub=const 96 ref=getExtraSize (stub)
+ * - descriptor=0x80321DE8 gFuelCellObjDescriptor (slots=10, mask=0001101101)
+ * - slot 03: 0x8018C788 fuelcell_init ref=init
+ * - slot 04: 0x8018C550 fuelcell_update ref=update
+ * - slot 06: 0x8018C140 fuelcell_render ref=render
+ * - slot 07: 0x8018C0B4 fuelcell_free ref=free
+ * - slot 09: 0x8018C0AC fuelcell_getExtraSize stub=const 96 ref=getExtraSize (stub)
  */
 
 #if 0

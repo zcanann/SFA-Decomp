@@ -55,12 +55,12 @@
  * - magic gem (same params as MoonSeedCol?)
  *
  * EN descriptor slot map:
- * - descriptor=0x80321914 lbl_80321914 (slots=10, mask=0001101101)
- * - slot 03: 0x80173F98 fn_80173F98 ref=init
- * - slot 04: 0x80173750 fn_80173750 ref=update
- * - slot 06: 0x8017372C fn_8017372C ref=render
- * - slot 07: 0x801736D8 fn_801736D8 ref=free
- * - slot 09: 0x801736D0 fn_801736D0 stub=const 648 ref=getExtraSize (stub)
+ * - descriptor=0x80320CC4 gMagicDustObjDescriptor (slots=10, mask=0001101101)
+ * - slot 03: 0x80173AEC magicdust_init ref=init
+ * - slot 04: 0x801732A4 magicdust_update ref=update
+ * - slot 06: 0x80173280 magicdust_render ref=render
+ * - slot 07: 0x8017322C magicdust_free ref=free
+ * - slot 09: 0x80173224 magicdust_getExtraSize stub=const 648 ref=getExtraSize (stub)
  */
 
 #if 0

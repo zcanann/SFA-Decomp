@@ -48,11 +48,11 @@
  * - 0x04C4 TrickyWarp: placements=2139, class=0x0061, widths=8w x2139
  *
  * EN descriptor slot map:
- * - descriptor=0x803221F0 lbl_803221F0 (slots=10, mask=0001100101)
- * - slot 03: 0x80180770 fn_80180770 ref=init
- * - slot 04: 0x801804A0 fn_801804A0 ref=update
- * - slot 07: 0x80180464 fn_80180464 ref=free
- * - slot 09: 0x80180498 fn_80180498 stub=const 100 ref=getExtraSize (stub)
+ * - descriptor=0x803215A0 gTrickyWarpObjDescriptor (slots=10, mask=0001100101)
+ * - slot 03: 0x80180218 trickywarp_init ref=init
+ * - slot 04: 0x8017FF48 trickywarp_update ref=update
+ * - slot 07: 0x8017FF0C trickywarp_free ref=free
+ * - slot 09: 0x8017FF40 trickywarp_getExtraSize stub=const 100 ref=getExtraSize (stub)
  */
 
 #if 0

@@ -55,13 +55,13 @@
  * - 0x046B SteamHoleDe: placements=0, class=0x0030, widths=none
  *
  * EN descriptor slot map:
- * - descriptor=0x8032B8E8 lbl_8032B8E8 (slots=10, mask=0001101111)
- * - slot 03: 0x80220908 fn_80220908 ref=init
- * - slot 04: 0x802208D8 fn_802208D8 ref=update
- * - slot 06: 0x80220830 fn_80220830 ref=render
- * - slot 07: 0x802207B4 fn_802207B4 ref=free
- * - slot 08: 0x802207AC fn_802207AC stub=const 1
- * - slot 09: 0x80220780 fn_80220780 stub=const 68 ref=getExtraSize (stub)
+ * - descriptor=0x8032AC90 gFirePipeObjDescriptor (slots=10, mask=0001101111)
+ * - slot 03: 0x802202B8 firepipe_init ref=init
+ * - slot 04: 0x80220288 firepipe_update ref=update
+ * - slot 06: 0x802201E0 firepipe_render ref=render
+ * - slot 07: 0x80220164 firepipe_free ref=free
+ * - slot 08: 0x8022015C firepipe_func08 stub=const 1
+ * - slot 09: 0x80220130 firepipe_getExtraSize stub=const 68 ref=getExtraSize (stub)
  */
 
 #if 0

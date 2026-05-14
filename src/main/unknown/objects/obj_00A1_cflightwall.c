@@ -60,16 +60,16 @@
  * - ... 44 more DLL siblings omitted
  *
  * EN descriptor slot map:
- * - descriptor=0x80322CA8 lbl_80322CA8 (slots=10, mask=1101111111)
- * - slot 00: 0x801920D8 fn_801920D8 stub=blr ref=initialise (stub)
- * - slot 01: 0x801920D4 fn_801920D4 stub=blr ref=release (stub)
- * - slot 03: 0x8019202C fn_8019202C ref=init
- * - slot 04: 0x80192028 fn_80192028 stub=blr ref=update (stub)
- * - slot 05: 0x80192024 fn_80192024 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x80192000 fn_80192000 ref=render
- * - slot 07: 0x80191FFC fn_80191FFC stub=blr ref=free (stub)
- * - slot 08: 0x80191FF4 fn_80191FF4 stub=const 0
- * - slot 09: 0x80191FEC fn_80191FEC stub=const 0 ref=getExtraSize (stub)
+ * - descriptor=0x80322058 gCflightwallObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x80191B5C cflightwall_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x80191B58 cflightwall_release stub=blr ref=release (stub)
+ * - slot 03: 0x80191AB0 cflightwall_init ref=init
+ * - slot 04: 0x80191AAC cflightwall_update stub=blr ref=update (stub)
+ * - slot 05: 0x80191AA8 cflightwall_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x80191A84 cflightwall_render ref=render
+ * - slot 07: 0x80191A80 cflightwall_free stub=blr ref=free (stub)
+ * - slot 08: 0x80191A78 cflightwall_func08 stub=const 0
+ * - slot 09: 0x80191A70 cflightwall_getExtraSize stub=const 0 ref=getExtraSize (stub)
  */
 
 #if 0

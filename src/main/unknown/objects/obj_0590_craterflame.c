@@ -50,16 +50,16 @@
  * - 0x0077 DIMbossfire: placements=6, class=0x0030, widths=9w x6
  *
  * EN descriptor slot map:
- * - descriptor=0x803269D0 lbl_803269D0 (slots=10, mask=1101111111)
- * - slot 00: 0x801C1010 fn_801C1010 stub=blr ref=initialise (stub)
- * - slot 01: 0x801C100C fn_801C100C stub=blr ref=release (stub)
- * - slot 03: 0x801C0F60 fn_801C0F60 ref=init
- * - slot 04: 0x801C0AF0 fn_801C0AF0 ref=update
- * - slot 05: 0x801C0AEC fn_801C0AEC stub=blr ref=hitDetect (stub)
- * - slot 06: 0x801C0AE0 fn_801C0AE0 ref=render
- * - slot 07: 0x801C0A7C fn_801C0A7C ref=free
- * - slot 08: 0x801C0A74 fn_801C0A74 stub=const 0
- * - slot 09: 0x801C0A6C fn_801C0A6C stub=const 20 ref=getExtraSize (stub)
+ * - descriptor=0x80325D90 gDIMbossfireObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x801C0A5C dimbossfire_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x801C0A58 dimbossfire_release stub=blr ref=release (stub)
+ * - slot 03: 0x801C09AC dimbossfire_init ref=init
+ * - slot 04: 0x801C053C dimbossfire_update ref=update
+ * - slot 05: 0x801C0538 dimbossfire_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x801C052C dimbossfire_render ref=render
+ * - slot 07: 0x801C04C8 dimbossfire_free ref=free
+ * - slot 08: 0x801C04C0 dimbossfire_func08 stub=const 0
+ * - slot 09: 0x801C04B8 dimbossfire_getExtraSize stub=const 20 ref=getExtraSize (stub)
  */
 
 #if 0

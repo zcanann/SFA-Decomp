@@ -51,16 +51,16 @@
  * - 0x04FA LargeCrateL: placements=11, class=0x0030, widths=9w x11
  *
  * EN descriptor slot map:
- * - descriptor=0x80322340 lbl_80322340 (slots=10, mask=1101111111)
- * - slot 00: 0x80184914 fn_80184914 stub=blr ref=initialise (stub)
- * - slot 01: 0x80184910 fn_80184910 stub=blr ref=release (stub)
- * - slot 03: 0x801846D8 fn_801846D8 ref=init
- * - slot 04: 0x801841F4 fn_801841F4 ref=update
- * - slot 05: 0x801841F0 fn_801841F0 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x801840E4 fn_801840E4 ref=render
- * - slot 07: 0x801840AC fn_801840AC ref=free
- * - slot 08: 0x801840A4 fn_801840A4 stub=const 0
- * - slot 09: 0x8018409C fn_8018409C stub=const 44 ref=getExtraSize (stub)
+ * - descriptor=0x803216F0 gLargeCrateObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x801843BC largecrate_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x801843B8 largecrate_release stub=blr ref=release (stub)
+ * - slot 03: 0x80184180 largecrate_init ref=init
+ * - slot 04: 0x80183C9C largecrate_update ref=update
+ * - slot 05: 0x80183C98 largecrate_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x80183B8C largecrate_render ref=render
+ * - slot 07: 0x80183B54 largecrate_free ref=free
+ * - slot 08: 0x80183B4C largecrate_func08 stub=const 0
+ * - slot 09: 0x80183B44 largecrate_getExtraSize stub=const 44 ref=getExtraSize (stub)
  */
 
 #if 0

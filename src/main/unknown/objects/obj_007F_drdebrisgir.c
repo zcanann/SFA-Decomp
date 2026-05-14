@@ -60,13 +60,13 @@
  * - ... 11 more DLL siblings omitted
  *
  * EN descriptor slot map:
- * - descriptor=0x80322640 lbl_80322640 (slots=10, mask=0001111101)
- * - slot 03: 0x80188D6C fn_80188D6C ref=init
- * - slot 04: 0x80188CEC fn_80188CEC stub=blr ref=update (stub)
- * - slot 05: 0x80188B18 fn_80188B18 ref=hitDetect
- * - slot 06: 0x80188AE8 fn_80188AE8 ref=render
- * - slot 07: 0x80188AE4 fn_80188AE4 stub=blr ref=free (stub)
- * - slot 09: 0x80188ADC fn_80188ADC stub=const 28 ref=getExtraSize (stub)
+ * - descriptor=0x803219F0 gDecoration11AObjDescriptor (slots=10, mask=0001111101)
+ * - slot 03: 0x80188814 decoration11a_init ref=init
+ * - slot 04: 0x80188794 decoration11a_update stub=blr ref=update (stub)
+ * - slot 05: 0x801885C0 decoration11a_hitDetect ref=hitDetect
+ * - slot 06: 0x80188590 decoration11a_render ref=render
+ * - slot 07: 0x8018858C decoration11a_free stub=blr ref=free (stub)
+ * - slot 09: 0x80188584 decoration11a_getExtraSize stub=const 28 ref=getExtraSize (stub)
  */
 
 #if 0

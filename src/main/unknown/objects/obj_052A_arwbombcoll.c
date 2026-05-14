@@ -53,16 +53,16 @@
  * - 0x052F ARWMoonSeed: placements=0, class=0x0030, widths=none
  *
  * EN descriptor slot map:
- * - descriptor=0x8032C340 lbl_8032C340 (slots=10, mask=1101111111)
- * - slot 00: 0x802300C0 fn_802300C0 stub=blr ref=initialise (stub)
- * - slot 01: 0x802300BC fn_802300BC stub=blr ref=release (stub)
- * - slot 03: 0x8023009C fn_8023009C ref=init
- * - slot 04: 0x8022FC88 fn_8022FC88 ref=update
- * - slot 05: 0x8022FC84 fn_8022FC84 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x8022FC60 fn_8022FC60 ref=render
- * - slot 07: 0x8022FC5C fn_8022FC5C stub=blr ref=free (stub)
- * - slot 08: 0x8022FC54 fn_8022FC54 stub=const 0
- * - slot 09: 0x8022FC4C fn_8022FC4C stub=const 8 ref=getExtraSize (stub)
+ * - descriptor=0x8032B6E8 gARWBombCollObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x8022F9FC arwbombcoll_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x8022F9F8 arwbombcoll_release stub=blr ref=release (stub)
+ * - slot 03: 0x8022F9D8 arwbombcoll_init ref=init
+ * - slot 04: 0x8022F5C4 arwbombcoll_update ref=update
+ * - slot 05: 0x8022F5C0 arwbombcoll_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x8022F59C arwbombcoll_render ref=render
+ * - slot 07: 0x8022F598 arwbombcoll_free stub=blr ref=free (stub)
+ * - slot 08: 0x8022F590 arwbombcoll_func08 stub=const 0
+ * - slot 09: 0x8022F588 arwbombcoll_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 
 #if 0

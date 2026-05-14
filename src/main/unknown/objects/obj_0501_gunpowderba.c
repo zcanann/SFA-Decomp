@@ -49,14 +49,14 @@
  * - 0x0502 MetalBarrel: placements=1, class=0x0030, widths=9w x1
  *
  * EN descriptor slot map:
- * - descriptor=0x80323978 lbl_80323978 (slots=11, mask=00011111011)
- * - slot 03: 0x801A2B9C fn_801A2B9C ref=init
- * - slot 04: 0x801A22FC fn_801A22FC ref=update
- * - slot 05: 0x801A2014 fn_801A2014 ref=hitDetect
- * - slot 06: 0x801A1F14 fn_801A1F14 ref=render
- * - slot 07: 0x801A1E50 fn_801A1E50 ref=free
- * - slot 09: 0x801A1E48 fn_801A1E48 stub=const 92 ref=getExtraSize (stub)
- * - slot 10: 0x801A1474 fn_801A1474 ref=setScale
+ * - descriptor=0x80322D28 gGunPowderBarrelObjDescriptor (slots=11, mask=00011111011)
+ * - slot 03: 0x801A25E8 gunpowderbarrel_init ref=init
+ * - slot 04: 0x801A1D48 gunpowderbarrel_update ref=update
+ * - slot 05: 0x801A1A60 gunpowderbarrel_hitDetect ref=hitDetect
+ * - slot 06: 0x801A1960 gunpowderbarrel_render ref=render
+ * - slot 07: 0x801A189C gunpowderbarrel_free ref=free
+ * - slot 09: 0x801A1894 gunpowderbarrel_getExtraSize stub=const 88 ref=getExtraSize (stub)
+ * - slot 10: 0x801A0EF8 gunpowderbarrel_setScale ref=setScale
  */
 
 #if 0

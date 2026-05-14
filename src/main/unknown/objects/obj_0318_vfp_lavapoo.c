@@ -48,16 +48,16 @@
  * - 0x0318 VFP_lavapoo: placements=107, class=0x0030, widths=9w x107
  *
  * EN descriptor slot map:
- * - descriptor=0x80329E50 lbl_80329E50 (slots=10, mask=1101111111)
- * - slot 00: 0x801FE1F0 fn_801FE1F0 stub=blr ref=initialise (stub)
- * - slot 01: 0x801FE1EC fn_801FE1EC stub=blr ref=release (stub)
- * - slot 03: 0x801FE0F8 fn_801FE0F8 ref=init
- * - slot 04: 0x801FE0D8 fn_801FE0D8 ref=update
- * - slot 05: 0x801FE0D4 fn_801FE0D4 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x801FE05C fn_801FE05C ref=render
- * - slot 07: 0x801FE058 fn_801FE058 stub=blr ref=free (stub)
- * - slot 08: 0x801FE050 fn_801FE050 stub=const 0
- * - slot 09: 0x801FE048 fn_801FE048 stub=const 24 ref=getExtraSize (stub)
+ * - descriptor=0x80329210 lbl_80329210 (slots=10, mask=1101111111)
+ * - slot 00: 0x801FDBB8 VFP_lavapool_initialise_nop stub=blr ref=initialise (stub)
+ * - slot 01: 0x801FDBB4 VFP_lavapool_release_nop stub=blr ref=release (stub)
+ * - slot 03: 0x801FDAC0 fn_801FDAC0 ref=init
+ * - slot 04: 0x801FDAA0 VFP_lavapool_update ref=update
+ * - slot 05: 0x801FDA9C VFP_lavapool_hitDetect_nop stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x801FDA24 fn_801FDA24 ref=render
+ * - slot 07: 0x801FDA20 VFP_lavapool_free_nop stub=blr ref=free (stub)
+ * - slot 08: 0x801FDA18 VFP_lavapool_func08_ret_0 stub=const 0
+ * - slot 09: 0x801FDA10 VFP_lavapool_getExtraSize_ret_24 stub=const 24 ref=getExtraSize (stub)
  */
 
 #if 0

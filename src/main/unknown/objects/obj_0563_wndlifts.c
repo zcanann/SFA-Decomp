@@ -52,16 +52,16 @@
  * - 0x0565 DIM_PitVort: placements=1, class=0x0030, widths=9w x1
  *
  * EN descriptor slot map:
- * - descriptor=0x8032CAA8 lbl_8032CAA8 (slots=10, mask=1101111111)
- * - slot 00: 0x80238AA0 fn_80238AA0 stub=blr ref=initialise (stub)
- * - slot 01: 0x80238A9C fn_80238A9C stub=blr ref=release (stub)
- * - slot 03: 0x802387F0 fn_802387F0 ref=init
- * - slot 04: 0x802386B8 fn_802386B8 ref=update
- * - slot 05: 0x802386B4 fn_802386B4 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x80237F0C fn_80237F0C ref=render
- * - slot 07: 0x80237EDC fn_80237EDC ref=free
- * - slot 08: 0x80237ED4 fn_80237ED4 stub=const 0
- * - slot 09: 0x80237ECC fn_80237ECC stub=const 40 ref=getExtraSize (stub)
+ * - descriptor=0x8032BE50 gVortexObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x802383DC vortex_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x802383D8 vortex_release stub=blr ref=release (stub)
+ * - slot 03: 0x8023812C vortex_init ref=init
+ * - slot 04: 0x80237FF4 vortex_update ref=update
+ * - slot 05: 0x80237FF0 vortex_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x80237848 vortex_render ref=render
+ * - slot 07: 0x80237818 vortex_free ref=free
+ * - slot 08: 0x80237810 vortex_func08 stub=const 0
+ * - slot 09: 0x80237808 vortex_getExtraSize stub=const 40 ref=getExtraSize (stub)
  */
 
 #if 0

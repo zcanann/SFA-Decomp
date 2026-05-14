@@ -48,16 +48,16 @@
  * - 0x0507 SpiritDoorS: placements=38, class=0x0030, widths=9w x38
  *
  * EN descriptor slot map:
- * - descriptor=0x80323940 lbl_80323940 (slots=10, mask=1101111111)
- * - slot 00: 0x801A108C fn_801A108C stub=blr ref=initialise (stub)
- * - slot 01: 0x801A1088 fn_801A1088 stub=blr ref=release (stub)
- * - slot 03: 0x801A1074 fn_801A1074 ref=init
- * - slot 04: 0x801A0F8C fn_801A0F8C ref=update
- * - slot 05: 0x801A0F88 fn_801A0F88 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x801A0F44 fn_801A0F44 ref=render
- * - slot 07: 0x801A0F20 fn_801A0F20 ref=free
- * - slot 08: 0x801A0F18 fn_801A0F18 stub=const 0
- * - slot 09: 0x801A0F10 fn_801A0F10 stub=const 1 ref=getExtraSize (stub)
+ * - descriptor=0x80322CF0 gSpiritDoorSpiritObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x801A0B10 spiritdoorspirit_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x801A0B0C spiritdoorspirit_release stub=blr ref=release (stub)
+ * - slot 03: 0x801A0AF8 spiritdoorspirit_init ref=init
+ * - slot 04: 0x801A0A10 spiritdoorspirit_update ref=update
+ * - slot 05: 0x801A0A0C spiritdoorspirit_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x801A09C8 spiritdoorspirit_render ref=render
+ * - slot 07: 0x801A09A4 spiritdoorspirit_free ref=free
+ * - slot 08: 0x801A099C spiritdoorspirit_func08 stub=const 0
+ * - slot 09: 0x801A0994 spiritdoorspirit_getExtraSize stub=const 1 ref=getExtraSize (stub)
  */
 
 #if 0

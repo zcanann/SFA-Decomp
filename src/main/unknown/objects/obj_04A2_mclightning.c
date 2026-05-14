@@ -48,12 +48,12 @@
  * - 0x04A2 MCLightning: placements=20, class=0x0061, widths=8w x20
  *
  * EN descriptor slot map:
- * - descriptor=0x8032CC40 lbl_8032CC40 (slots=10, mask=0001101101)
- * - slot 03: 0x80239EDC fn_80239EDC ref=init
- * - slot 04: 0x80239E70 fn_80239E70 ref=update
- * - slot 06: 0x80239C18 fn_80239C18 ref=render
- * - slot 07: 0x80239BD8 fn_80239BD8 ref=free
- * - slot 09: 0x80239BD0 fn_80239BD0 stub=const 28 ref=getExtraSize (stub)
+ * - descriptor=0x8032BFE8 gMCLightningObjDescriptor (slots=10, mask=0001101101)
+ * - slot 03: 0x802397E4 mclightning_init ref=init
+ * - slot 04: 0x80239778 mclightning_update ref=update
+ * - slot 06: 0x80239520 mclightning_render ref=render
+ * - slot 07: 0x802394E0 mclightning_free ref=free
+ * - slot 09: 0x802394D8 mclightning_getExtraSize stub=const 28 ref=getExtraSize (stub)
  */
 
 #if 0

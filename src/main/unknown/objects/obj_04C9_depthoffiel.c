@@ -48,10 +48,10 @@
  * - 0x04C9 DepthOfFiel: placements=32, class=0x0030, widths=9w x32
  *
  * EN descriptor slot map:
- * - descriptor=0x803214B8 lbl_803214B8 (slots=10, mask=0001100001)
- * - slot 03: 0x8016D35C fn_8016D35C ref=init
- * - slot 04: 0x8016D31C fn_8016D31C ref=update
- * - slot 09: 0x8016D314 fn_8016D314 stub=const 3 ref=getExtraSize (stub)
+ * - descriptor=0x80320868 gDepthOfFieldPointObjDescriptor (slots=10, mask=0001100001)
+ * - slot 03: 0x8016CEB0 depthoffieldpoint_init ref=init
+ * - slot 04: 0x8016CE70 depthoffieldpoint_update ref=update
+ * - slot 09: 0x8016CE68 depthoffieldpoint_getExtraSize stub=const 3 ref=getExtraSize (stub)
  */
 
 #if 0

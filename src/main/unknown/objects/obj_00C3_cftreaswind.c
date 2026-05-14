@@ -49,16 +49,16 @@
  * - 0x00C2 CFWindLift: placements=8, class=0x0030, widths=9w x8
  *
  * EN descriptor slot map:
- * - descriptor=0x803236D0 lbl_803236D0 (slots=10, mask=1101111111)
- * - slot 00: 0x8019DAF0 fn_8019DAF0 stub=blr ref=initialise (stub)
- * - slot 01: 0x8019DAEC fn_8019DAEC stub=blr ref=release (stub)
- * - slot 03: 0x8019D828 fn_8019D828 ref=init
- * - slot 04: 0x8019D314 fn_8019D314 ref=update
- * - slot 05: 0x8019D310 fn_8019D310 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x8019D2E0 fn_8019D2E0 ref=render
- * - slot 07: 0x8019D284 fn_8019D284 ref=free
- * - slot 08: 0x8019D27C fn_8019D27C stub=const 0
- * - slot 09: 0x8019D274 fn_8019D274 stub=const 376 ref=getExtraSize (stub)
+ * - descriptor=0x80322A80 gWindLiftObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x8019D574 windlift_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x8019D570 windlift_release stub=blr ref=release (stub)
+ * - slot 03: 0x8019D2AC windlift_init ref=init
+ * - slot 04: 0x8019CD98 windlift_update ref=update
+ * - slot 05: 0x8019CD94 windlift_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x8019CD64 windlift_render ref=render
+ * - slot 07: 0x8019CD08 windlift_free ref=free
+ * - slot 08: 0x8019CD00 windlift_func08 stub=const 0
+ * - slot 09: 0x8019CCF8 windlift_getExtraSize stub=const 376 ref=getExtraSize (stub)
  */
 
 #if 0

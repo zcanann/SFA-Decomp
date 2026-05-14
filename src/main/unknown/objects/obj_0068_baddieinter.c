@@ -48,16 +48,16 @@
  * - 0x0068 baddieInter: placements=175, class=0x0030, widths=9w x175
  *
  * EN descriptor slot map:
- * - descriptor=0x80321318 lbl_80321318 (slots=10, mask=1101111111)
- * - slot 00: 0x8016C318 fn_8016C318 stub=blr ref=initialise (stub)
- * - slot 01: 0x8016C314 fn_8016C314 stub=blr ref=release (stub)
- * - slot 03: 0x8016C310 fn_8016C310 stub=blr ref=init (stub)
- * - slot 04: 0x8016C004 fn_8016C004 ref=update
- * - slot 05: 0x8016C000 fn_8016C000 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x8016BFD0 fn_8016BFD0 ref=render
- * - slot 07: 0x8016BFCC fn_8016BFCC stub=blr ref=free (stub)
- * - slot 08: 0x8016BFC4 fn_8016BFC4 stub=const 0
- * - slot 09: 0x8016BFBC fn_8016BFBC stub=const 0 ref=getExtraSize (stub)
+ * - descriptor=0x803206C8 gBaddieInterestPObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x8016BE6C baddieinterestp_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x8016BE68 baddieinterestp_release stub=blr ref=release (stub)
+ * - slot 03: 0x8016BE64 baddieinterestp_init stub=blr ref=init (stub)
+ * - slot 04: 0x8016BB58 baddieinterestp_update ref=update
+ * - slot 05: 0x8016BB54 baddieinterestp_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x8016BB24 baddieinterestp_render ref=render
+ * - slot 07: 0x8016BB20 baddieinterestp_free stub=blr ref=free (stub)
+ * - slot 08: 0x8016BB18 baddieinterestp_func08 stub=const 0
+ * - slot 09: 0x8016BB10 baddieinterestp_getExtraSize stub=const 0 ref=getExtraSize (stub)
  */
 
 #if 0

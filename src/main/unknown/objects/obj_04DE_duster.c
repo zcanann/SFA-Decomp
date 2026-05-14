@@ -52,12 +52,12 @@
  * - Bafomdad
  *
  * EN descriptor slot map:
- * - descriptor=0x80322298 lbl_80322298 (slots=10, mask=0001111001)
- * - slot 03: 0x80181204 fn_80181204 ref=init
- * - slot 04: 0x80180B20 fn_80180B20 ref=update
- * - slot 05: 0x80180A94 fn_80180A94 ref=hitDetect
- * - slot 06: 0x80180A44 fn_80180A44 ref=render
- * - slot 09: 0x80180A3C fn_80180A3C stub=const 32 ref=getExtraSize (stub)
+ * - descriptor=0x80321648 gDusterObjDescriptor (slots=10, mask=0001111001)
+ * - slot 03: 0x80180CAC duster_init ref=init
+ * - slot 04: 0x801805C8 duster_update ref=update
+ * - slot 05: 0x8018053C duster_hitDetect ref=hitDetect
+ * - slot 06: 0x801804EC duster_render ref=render
+ * - slot 09: 0x801804E4 duster_getExtraSize stub=const 32 ref=getExtraSize (stub)
  */
 
 #if 0

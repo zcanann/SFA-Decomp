@@ -49,16 +49,16 @@
  * - 0x03B5 WM_seqpoint: placements=27, class=0x0030, widths=9w x27
  *
  * EN descriptor slot map:
- * - descriptor=0x80329930 lbl_80329930 (slots=10, mask=1101111111)
- * - slot 00: 0x801F74C0 fn_801F74C0 stub=blr ref=initialise (stub)
- * - slot 01: 0x801F74BC fn_801F74BC stub=blr ref=release (stub)
- * - slot 03: 0x801F7438 fn_801F7438 ref=init
- * - slot 04: 0x801F70C0 fn_801F70C0 ref=update
- * - slot 05: 0x801F70BC fn_801F70BC stub=blr ref=hitDetect (stub)
- * - slot 06: 0x801F708C fn_801F708C ref=render
- * - slot 07: 0x801F7088 fn_801F7088 stub=blr ref=free (stub)
- * - slot 08: 0x801F7080 fn_801F7080 stub=const 0
- * - slot 09: 0x801F7078 fn_801F7078 stub=const 16 ref=getExtraSize (stub)
+ * - descriptor=0x80328CF0 lbl_80328CF0 (slots=10, mask=1101111111)
+ * - slot 00: 0x801F6E88 wmseqpoint_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x801F6E84 wmseqpoint_release stub=blr ref=release (stub)
+ * - slot 03: 0x801F6E00 wmseqpoint_init ref=init
+ * - slot 04: 0x801F6A88 wmseqpoint_update ref=update
+ * - slot 05: 0x801F6A84 wmseqpoint_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x801F6A54 wmseqpoint_render ref=render
+ * - slot 07: 0x801F6A50 wmseqpoint_free stub=blr ref=free (stub)
+ * - slot 08: 0x801F6A48 wmseqpoint_func08 stub=const 0
+ * - slot 09: 0x801F6A40 wmseqpoint_getExtraSize stub=const 16 ref=getExtraSize (stub)
  */
 
 #if 0

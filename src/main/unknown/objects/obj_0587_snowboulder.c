@@ -53,10 +53,10 @@
  * - 0x057C MetalRafter: placements=0, class=0x0061, widths=none
  *
  * EN descriptor slot map:
- * - descriptor=0x8032C920 lbl_8032C920 (slots=10, mask=0001100001)
- * - slot 03: 0x80236858 fn_80236858 ref=init
- * - slot 04: 0x80236820 fn_80236820 ref=update
- * - slot 09: 0x80236818 fn_80236818 stub=const 4 ref=getExtraSize (stub)
+ * - descriptor=0x8032BCC8 gBrokenPipeObjDescriptor (slots=10, mask=0001100001)
+ * - slot 03: 0x80236194 brokenpipe_init ref=init
+ * - slot 04: 0x8023615C brokenpipe_update ref=update
+ * - slot 09: 0x80236154 brokenpipe_getExtraSize stub=const 4 ref=getExtraSize (stub)
  */
 
 #if 0

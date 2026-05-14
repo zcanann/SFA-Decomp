@@ -48,16 +48,16 @@
  * - 0x0401 MMSH_WaterS: placements=41, class=0x0030, widths=9w x41
  *
  * EN descriptor slot map:
- * - descriptor=0x80326DE0 lbl_80326DE0 (slots=10, mask=1101111111)
- * - slot 00: 0x801C5F40 fn_801C5F40 stub=blr ref=initialise (stub)
- * - slot 01: 0x801C5F3C fn_801C5F3C stub=blr ref=release (stub)
- * - slot 03: 0x801C5EE0 fn_801C5EE0 ref=init
- * - slot 04: 0x801C5D64 fn_801C5D64 ref=update
- * - slot 05: 0x801C5D60 fn_801C5D60 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x801C5D54 fn_801C5D54 ref=render
- * - slot 07: 0x801C5D50 fn_801C5D50 stub=blr ref=free (stub)
- * - slot 08: 0x801C5D48 fn_801C5D48 stub=const 0
- * - slot 09: 0x801C5D40 fn_801C5D40 stub=const 0 ref=getExtraSize (stub)
+ * - descriptor=0x803261A0 gMMSH_WaterSpikeObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x801C598C mmsh_waterspike_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x801C5988 mmsh_waterspike_release stub=blr ref=release (stub)
+ * - slot 03: 0x801C592C mmsh_waterspike_init ref=init
+ * - slot 04: 0x801C57B0 mmsh_waterspike_update ref=update
+ * - slot 05: 0x801C57AC mmsh_waterspike_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x801C57A0 mmsh_waterspike_render ref=render
+ * - slot 07: 0x801C579C mmsh_waterspike_free stub=blr ref=free (stub)
+ * - slot 08: 0x801C5794 mmsh_waterspike_func08 stub=const 0
+ * - slot 09: 0x801C578C mmsh_waterspike_getExtraSize stub=const 0 ref=getExtraSize (stub)
  */
 
 #if 0

@@ -49,12 +49,12 @@
  * - 0x04FB ReinforcedC: placements=26, class=0x0030, widths=9w x26
  *
  * EN descriptor slot map:
- * - descriptor=0x80322308 lbl_80322308 (slots=10, mask=0001101101)
- * - slot 03: 0x801835EC fn_801835EC ref=init
- * - slot 04: 0x80182C40 fn_80182C40 ref=update
- * - slot 06: 0x80182B44 fn_80182B44 ref=render
- * - slot 07: 0x80182AF4 fn_80182AF4 ref=free
- * - slot 09: 0x80182AEC fn_80182AEC stub=const 36 ref=getExtraSize (stub)
+ * - descriptor=0x803216B8 gSmallBasketObjDescriptor (slots=10, mask=0001101101)
+ * - slot 03: 0x80183094 smallbasket_init ref=init
+ * - slot 04: 0x801826E8 smallbasket_update ref=update
+ * - slot 06: 0x801825EC smallbasket_render ref=render
+ * - slot 07: 0x8018259C smallbasket_free ref=free
+ * - slot 09: 0x80182594 smallbasket_getExtraSize stub=const 36 ref=getExtraSize (stub)
  */
 
 #if 0

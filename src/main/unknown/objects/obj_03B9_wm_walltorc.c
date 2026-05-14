@@ -53,16 +53,16 @@
  * - 0x05A6 LightSource: placements=0, class=0x0030, widths=none
  *
  * EN descriptor slot map:
- * - descriptor=0x80329748 lbl_80329748 (slots=10, mask=1101111111)
- * - slot 00: 0x801F4260 fn_801F4260 stub=blr ref=initialise (stub)
- * - slot 01: 0x801F425C fn_801F425C stub=blr ref=release (stub)
- * - slot 03: 0x801F3E04 fn_801F3E04 ref=init
- * - slot 04: 0x801F3AE4 fn_801F3AE4 ref=update
- * - slot 05: 0x801F3AE0 fn_801F3AE0 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x801F3A48 fn_801F3A48 ref=render
- * - slot 07: 0x801F39FC fn_801F39FC ref=free
- * - slot 08: 0x801F39F4 fn_801F39F4 stub=const 1
- * - slot 09: 0x801F39EC fn_801F39EC stub=const 28 ref=getExtraSize (stub)
+ * - descriptor=0x80328B08 lbl_80328B08 (slots=10, mask=1101111111)
+ * - slot 00: 0x801F3C28 lightsource_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x801F3C24 lightsource_release stub=blr ref=release (stub)
+ * - slot 03: 0x801F37CC lightsource_init ref=init
+ * - slot 04: 0x801F34AC lightsource_update ref=update
+ * - slot 05: 0x801F34A8 lightsource_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x801F3410 lightsource_render ref=render
+ * - slot 07: 0x801F33C4 lightsource_free ref=free
+ * - slot 08: 0x801F33BC lightsource_func08 stub=const 1
+ * - slot 09: 0x801F33B4 lightsource_getExtraSize stub=const 28 ref=getExtraSize (stub)
  */
 
 #if 0
