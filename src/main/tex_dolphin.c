@@ -4,6 +4,14 @@
 #include "dolphin/mtx.h"
 #include "track/intersect.h"
 
+typedef union {
+    f64 d;
+    struct {
+        uint hi;
+        uint lo;
+    } words;
+} SfaIntDouble;
+
 extern void fn_8001DACC();
 extern void fn_8001DD48();
 extern void fn_8001DD50();
@@ -295,60 +303,53 @@ LAB_8005E718:
 #pragma peephole off
 void fn_8005E730(undefined4 param_1,undefined4 param_2,int param_3)
 {
-  int iVar1;
   int iVar2;
   int *piVar3;
-  f32 fVar4;
-  undefined8 uVar5;
   int local_C;
+  byte local_8;
   byte local_9;
   byte local_A;
   byte local_B;
-  f32 fStack_14;
   f32 fStack_10;
-  undefined4 uStack_18;
-  undefined4 auStack_14[2];
-  uint uStack_4c;
-  undefined4 local_48;
-  uint uStack_44;
-  undefined4 local_40;
-  uint uStack_3c;
-  undefined4 local_38;
-  uint uStack_34;
-  undefined4 local_30;
-  uint uStack_2c;
-  undefined4 local_28;
-  uint uStack_24;
+  f32 fStack_14;
+  f32 fStack_18;
+  SfaIntDouble iD1;
+  SfaIntDouble iD2;
+  SfaIntDouble iD3;
+  SfaIntDouble iD4;
+  SfaIntDouble iD5;
+  SfaIntDouble iD6;
 
-  uStack_4c = (int)*(short *)((int)param_1 + 6) >> 3 ^ 0x80000000;
-  local_48 = 0x43300000;
-  uStack_44 = (int)*(short *)((int)param_1 + 8) >> 3 ^ 0x80000000;
-  local_40 = 0x43300000;
-  uStack_3c = (int)*(short *)((int)param_1 + 10) >> 3 ^ 0x80000000;
-  local_38 = 0x43300000;
-  uStack_34 = (int)*(short *)((int)param_1 + 0xc) >> 3 ^ 0x80000000;
-  local_30 = 0x43300000;
-  uStack_2c = (int)*(short *)((int)param_1 + 0xe) >> 3 ^ 0x80000000;
-  local_28 = 0x43300000;
-  uStack_24 = (int)*(short *)((int)param_1 + 0x10) >> 3 ^ 0x80000000;
   fn_8001E928((undefined*)&lbl_803DCE20,2,&local_C,
-              (float)((double)CONCAT44(0x43300000,uStack_4c) - lbl_803DEBC0) + *(float *)((int)param_2 + 0x18) + playerMapOffsetX,
-              (float)((double)CONCAT44(0x43300000,uStack_44) - lbl_803DEBC0) + *(float *)((int)param_2 + 0x28),
-              (float)((double)CONCAT44(0x43300000,uStack_3c) - lbl_803DEBC0) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ,
-              (float)((double)CONCAT44(0x43300000,uStack_34) - lbl_803DEBC0) + *(float *)((int)param_2 + 0x18) + playerMapOffsetX,
-              (float)((double)CONCAT44(0x43300000,uStack_2c) - lbl_803DEBC0) + *(float *)((int)param_2 + 0x28),
-              (float)((double)CONCAT44(0x43300000,uStack_24) - lbl_803DEBC0) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ);
+              (iD1.words.lo = (int)*(short *)((int)param_1 + 6) >> 3 ^ 0x80000000,
+               iD1.words.hi = 0x43300000,
+               (float)(iD1.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x18) + playerMapOffsetX),
+              (iD2.words.lo = (int)*(short *)((int)param_1 + 8) >> 3 ^ 0x80000000,
+               iD2.words.hi = 0x43300000,
+               (float)(iD2.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x28)),
+              (iD3.words.lo = (int)*(short *)((int)param_1 + 10) >> 3 ^ 0x80000000,
+               iD3.words.hi = 0x43300000,
+               (float)(iD3.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ),
+              (iD4.words.lo = (int)*(short *)((int)param_1 + 0xc) >> 3 ^ 0x80000000,
+               iD4.words.hi = 0x43300000,
+               (float)(iD4.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x18) + playerMapOffsetX),
+              (iD5.words.lo = (int)*(short *)((int)param_1 + 0xe) >> 3 ^ 0x80000000,
+               iD5.words.hi = 0x43300000,
+               (float)(iD5.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x28)),
+              (iD6.words.lo = (int)*(short *)((int)param_1 + 0x10) >> 3 ^ 0x80000000,
+               iD6.words.hi = 0x43300000,
+               (float)(iD6.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ));
   resetLotsOfRenderVars();
   fn_8004CE0C(param_3);
   piVar3 = (int *)&lbl_803DCE20;
   for (iVar2 = 0; iVar2 < local_C; iVar2 = iVar2 + 1) {
-    fn_8001DACC(*piVar3,&local_B,&local_A,&local_9);
-    local_B = (char)((int)(uint)local_B >> 1) + (char)((int)(uint)local_B >> 2);
-    local_A = (char)((int)(uint)local_A >> 1) + (char)((int)(uint)local_A >> 2);
+    fn_8001DACC(*piVar3,&local_8,&local_9,&local_A,&local_B);
+    local_8 = (char)((int)(uint)local_8 >> 1) + (char)((int)(uint)local_8 >> 2);
     local_9 = (char)((int)(uint)local_9 >> 1) + (char)((int)(uint)local_9 >> 2);
-    fn_8001DD50(*piVar3,&fStack_14,&uStack_18,auStack_14);
+    local_A = (char)((int)(uint)local_A >> 1) + (char)((int)(uint)local_A >> 2);
+    fn_8001DD50(*piVar3,&fStack_10,&fStack_14,&fStack_18);
     fn_8001DD48(*piVar3);
-    fn_8004FA30(&local_B,&fStack_14);
+    fn_8004FA30(&local_8,&fStack_10);
     piVar3 = piVar3 + 1;
   }
   textureFn_800528bc();
@@ -454,21 +455,31 @@ fn_8005EAA4(int param_1,int param_2,float *param_3,int param_4,float *param_5,fl
   float fVar5;
   float fVar6;
   float fVar7;
-  double dVar8;
+  SfaIntDouble iD1;
+  SfaIntDouble iD2;
+  SfaIntDouble iD3;
+  SfaIntDouble iD4;
+  SfaIntDouble iD5;
+  SfaIntDouble iD6;
 
-  dVar8 = lbl_803DEBC0;
-  *param_8 = (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 0xc) >> 3 ^ 0x80000000) -
-                    lbl_803DEBC0) + *(float *)(param_2 + 0x18);
-  *param_5 = (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 6) >> 3 ^ 0x80000000) -
-                    dVar8) + *(float *)(param_2 + 0x18);
-  *param_9 = (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 0xe) >> 3 ^ 0x80000000) -
-                    dVar8) + *(float *)(param_2 + 0x28);
-  *param_6 = (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 8) >> 3 ^ 0x80000000) -
-                    dVar8) + *(float *)(param_2 + 0x28);
-  *param_10 = (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 0x10) >> 3 ^ 0x80000000)
-                     - dVar8) + *(float *)(param_2 + 0x38);
-  *param_7 = (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 10) >> 3 ^ 0x80000000) -
-                    dVar8) + *(float *)(param_2 + 0x38);
+  iD1.words.lo = (int)*(short *)(param_1 + 0xc) >> 3 ^ 0x80000000;
+  iD1.words.hi = 0x43300000;
+  *param_8 = (float)(iD1.d - lbl_803DEBC0) + *(float *)(param_2 + 0x18);
+  iD2.words.lo = (int)*(short *)(param_1 + 6) >> 3 ^ 0x80000000;
+  iD2.words.hi = 0x43300000;
+  *param_5 = (float)(iD2.d - lbl_803DEBC0) + *(float *)(param_2 + 0x18);
+  iD3.words.lo = (int)*(short *)(param_1 + 0xe) >> 3 ^ 0x80000000;
+  iD3.words.hi = 0x43300000;
+  *param_9 = (float)(iD3.d - lbl_803DEBC0) + *(float *)(param_2 + 0x28);
+  iD4.words.lo = (int)*(short *)(param_1 + 8) >> 3 ^ 0x80000000;
+  iD4.words.hi = 0x43300000;
+  *param_6 = (float)(iD4.d - lbl_803DEBC0) + *(float *)(param_2 + 0x28);
+  iD5.words.lo = (int)*(short *)(param_1 + 0x10) >> 3 ^ 0x80000000;
+  iD5.words.hi = 0x43300000;
+  *param_10 = (float)(iD5.d - lbl_803DEBC0) + *(float *)(param_2 + 0x38);
+  iD6.words.lo = (int)*(short *)(param_1 + 10) >> 3 ^ 0x80000000;
+  iD6.words.hi = 0x43300000;
+  *param_7 = (float)(iD6.d - lbl_803DEBC0) + *(float *)(param_2 + 0x38);
   if (0 < param_4) {
     do {
       bVar1 = *(byte *)(param_3 + 4);
@@ -496,8 +507,8 @@ fn_8005EAA4(int param_1,int param_2,float *param_3,int param_4,float *param_5,fl
         fVar6 = *param_10;
         fVar7 = *param_7;
       }
-      if ((param_3[3] + fVar6 * param_3[2] + fVar2 * *param_3 + fVar4 * param_3[1] < lbl_803DEBCC)
-         && (param_3[3] + fVar7 * param_3[2] + fVar3 * *param_3 + fVar5 * param_3[1] <
+      if ((fVar4 * param_3[1] + fVar2 * *param_3 + fVar6 * param_3[2] + param_3[3] < lbl_803DEBCC)
+         && (fVar5 * param_3[1] + fVar3 * *param_3 + fVar7 * param_3[2] + param_3[3] <
              lbl_803DEBCC)) {
         return 0;
       }

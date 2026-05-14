@@ -1,24 +1,28 @@
 #ifndef MAIN_DLL_FRONT_PICMENU_H_
 #define MAIN_DLL_FRONT_PICMENU_H_
 
-#include "ghidra_import.h"
+#include "dolphin/os.h"
+#include "dolphin/dvd.h"
+#include "dolphin/thp/THPPlayer.h"
 
-void FUN_80119000(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-void FUN_8011943c(void);
-undefined4 FUN_80119478(int param_1);
-void FUN_80119584(undefined4 param_1);
-undefined4 FUN_801195b0(void);
-void FUN_801195e0(undefined4 param_1);
-undefined4 FUN_8011960c(void);
-void FUN_8011963c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-void FUN_801197e0(void);
-void FUN_8011981c(void);
-bool FUN_80119850(int param_1);
-undefined4 FUN_801198e8(uint param_1);
-void FUN_80119928(undefined4 param_1);
-void FUN_80119954(void);
-void FUN_80119a90(void);
+BOOL movieLoad(const char* fileName, void* param2);
+void audioFn_801192ec(void);
+BOOL attractModeAudioFn_80119338(int param_1);
+void fn_80119458(OSMessage msg);
+OSMessage fn_80119488(void);
+void fn_801194BC(OSMessage msg);
+OSMessage fn_801194EC(void);
+void fn_80119520(void);
+void fn_80119618(void);
+void fn_80119654(void);
+BOOL fn_80119688(OSPriority priority);
+OSMessage fn_80119724(s32 flags);
+void fn_80119768(OSMessage msg);
+void fn_80119798(void* param);
+void fn_801198E0(void* param);
+void fn_80119A1C(void);
+void fn_80119AE8(void);
+void fn_80119B24(void);
+BOOL fn_80119B58(int param_1, int param_2);
 
 #endif /* MAIN_DLL_FRONT_PICMENU_H_ */
