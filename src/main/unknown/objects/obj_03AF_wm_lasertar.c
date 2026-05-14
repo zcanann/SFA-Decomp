@@ -48,7 +48,7 @@
  * - 0x03AF WM_LaserTar: placements=1, class=0x0030, widths=9w x1
  *
  * EN descriptor slot map:
- * - descriptor=0x80328860 lbl_80328860 (slots=10, mask=1101111111)
+ * - descriptor=0x80328860 gWM_LaserTargetObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801F20D0 wmlasertarget_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801F20CC wmlasertarget_release stub=blr ref=release (stub)
  * - slot 03: 0x801F206C wmlasertarget_init ref=init
