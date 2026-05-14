@@ -4435,7 +4435,7 @@ void checkpoint4_hitDetect(void) {}
 void checkpoint4_update(void) {}
 void checkpoint4_release(void) {}
 void checkpoint4_initialise(void) {}
-void DummyE9_init(void) {}
+void setuppoint_init(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int mikabombshadow_getExtraSize(void) { return 0x4; }

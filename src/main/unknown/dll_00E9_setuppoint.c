@@ -18,7 +18,7 @@
  * - 0x0493 setuppoint: class=0x0004, placements=278, romlists=123, objsize=0xA0, widths=8w x278, aliases=0x000D
  *
  * EN slot map with reference-only names by slot index:
- * - slot 03: 0x80171D10 DummyE9_init stub=blr ref=init (stub)
+ * - slot 03: 0x80171D10 setuppoint_init stub=blr ref=init (stub)
  *
  * Reference-only hints:
  * - reference DLL name: setuppoint
