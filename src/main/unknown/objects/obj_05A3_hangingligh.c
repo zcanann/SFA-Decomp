@@ -53,7 +53,7 @@
  * - 0x05A6 LightSource: placements=0, class=0x0030, widths=none
  *
  * EN descriptor slot map:
- * - descriptor=0x80328B08 lbl_80328B08 (slots=10, mask=1101111111)
+ * - descriptor=0x80328B08 gLightSourceObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801F3C28 lightsource_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801F3C24 lightsource_release stub=blr ref=release (stub)
  * - slot 03: 0x801F37CC lightsource_init ref=init
