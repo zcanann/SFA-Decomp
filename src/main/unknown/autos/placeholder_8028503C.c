@@ -18,6 +18,7 @@ int ReverbSTDCreate(AXFX_REVSTD_WORK *rv, f32 coloration, f32 time, f32 mix, f32
 {
     u8 i;
     u8 k;
+    f32 zero;
     f32 timeFactor;
     s32 delay;
     AXFX_REVSTD_DELAYLINE *delayLine;
@@ -32,6 +33,7 @@ int ReverbSTDCreate(AXFX_REVSTD_WORK *rv, f32 coloration, f32 time, f32 mix, f32
 
     memset(rv, 0, sizeof(AXFX_REVSTD_WORK));
     timeFactor = axfx_reverb_std_f32_32000 * time;
+    zero = axfx_reverb_std_f32_0;
 
     for (k = 0; k < 3; k++) {
         for (i = 0; i < 2; i++) {
@@ -40,7 +42,7 @@ int ReverbSTDCreate(AXFX_REVSTD_WORK *rv, f32 coloration, f32 time, f32 mix, f32
             delayLine->length = (delay + 2) * 4;
             delayLine->inputs = salMalloc(delayLine->length);
             memset(delayLine->inputs, 0, delayLine->length);
-            delayLine->lastOutput = axfx_reverb_std_f32_0;
+            delayLine->lastOutput = zero;
             delayLine->outPoint = delayLine->inPoint - (((delay + 2) >> 1) * 4);
             while (delayLine->outPoint < 0) {
                 delayLine->outPoint += delayLine->length;
@@ -60,7 +62,7 @@ int ReverbSTDCreate(AXFX_REVSTD_WORK *rv, f32 coloration, f32 time, f32 mix, f32
             delayLine->length = (delay + 2) * 4;
             delayLine->inputs = salMalloc(delayLine->length);
             memset(delayLine->inputs, 0, delayLine->length);
-            delayLine->lastOutput = axfx_reverb_std_f32_0;
+            delayLine->lastOutput = zero;
             delayLine->outPoint = delayLine->inPoint - (((delay + 2) >> 1) * 4);
             while (delayLine->outPoint < 0) {
                 delayLine->outPoint += delayLine->length;
@@ -72,7 +74,7 @@ int ReverbSTDCreate(AXFX_REVSTD_WORK *rv, f32 coloration, f32 time, f32 mix, f32
                 delayLine->outPoint += delayLine->length;
             }
         }
-        rv->lpLastout[k] = axfx_reverb_std_f32_0;
+        rv->lpLastout[k] = zero;
     }
 
     rv->allPassCoeff = coloration;
@@ -81,20 +83,23 @@ int ReverbSTDCreate(AXFX_REVSTD_WORK *rv, f32 coloration, f32 time, f32 mix, f32
     if (rv->damping < axfx_reverb_std_f32_0p05) {
         rv->damping = axfx_reverb_std_f32_0p05;
     }
-    rv->damping = axfx_reverb_std_f32_1 - (axfx_reverb_std_f32_0p05 + axfx_reverb_std_f32_0p8 * rv->damping);
+    {
+        f32 damp = axfx_reverb_std_f32_0p8 * rv->damping;
+        rv->damping = axfx_reverb_std_f32_1 - (axfx_reverb_std_f32_0p05 + damp);
+    }
 
-    if (predelay == axfx_reverb_std_f32_0) {
-        rv->preDelayTime = 0;
-        for (i = 0; i < 3; i++) {
-            rv->preDelayPtr[i] = 0;
-            rv->preDelayLine[i] = 0;
-        }
-    } else {
+    if (predelay != axfx_reverb_std_f32_0) {
         rv->preDelayTime = axfx_reverb_std_f32_32000 * predelay;
         for (i = 0; i < 3; i++) {
             rv->preDelayLine[i] = salMalloc(rv->preDelayTime * 4);
             memset(rv->preDelayLine[i], 0, rv->preDelayTime * 4);
             rv->preDelayPtr[i] = rv->preDelayLine[i];
+        }
+    } else {
+        rv->preDelayTime = 0;
+        for (i = 0; i < 3; i++) {
+            rv->preDelayPtr[i] = 0;
+            rv->preDelayLine[i] = 0;
         }
     }
 
