@@ -48,7 +48,7 @@
  * - 0x0374 DFP_LevelCo: placements=2, class=0x0030, widths=9w x2
  *
  * EN descriptor slot map:
- * - descriptor=0x8032985C lbl_8032985C (slots=11, mask=11011111111)
+ * - descriptor=0x8032985C gDFP_LevelControlObjDescriptor (slots=11, mask=11011111111)
  * - slot 00: 0x80204930 dfplevelcontrol_initialise ref=initialise
  * - slot 01: 0x8020492C dfplevelcontrol_release stub=blr ref=release (stub)
  * - slot 03: 0x802047F0 dfplevelcontrol_init ref=init
@@ -58,7 +58,7 @@
  * - slot 07: 0x802045B8 dfplevelcontrol_free ref=free
  * - slot 08: 0x802045B0 dfplevelcontrol_func08 stub=const 0
  * - slot 09: 0x802045A8 dfplevelcontrol_getExtraSize stub=const 12 ref=getExtraSize (stub)
- * - slot 10: 0x80204548 fn_80204548 ref=setScale
+ * - slot 10: 0x80204548 dfplevelcontrol_setScale ref=setScale
  */
 
 #if 0
