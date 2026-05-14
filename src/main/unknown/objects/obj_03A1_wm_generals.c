@@ -49,7 +49,7 @@
  * - 0x03A1 WM_GeneralS: placements=2, class=0x0030, widths=9w x2
  *
  * EN descriptor slot map:
- * - descriptor=0x80328BD0 lbl_80328BD0 (slots=10, mask=1101111111)
+ * - descriptor=0x80328BD0 gWM_GeneralScalesObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801F4C00 wmgeneralscales_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801F4BFC wmgeneralscales_release stub=blr ref=release (stub)
  * - slot 03: 0x801F4BD0 wmgeneralscales_init ref=init
