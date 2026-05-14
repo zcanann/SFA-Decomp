@@ -1670,7 +1670,7 @@ void shop_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int SB_CloudBall_getExtraSize(void) { return 0x24; }
-int fn_801E45B4(void) { return 0x0; }
+int SB_CloudBall_func08(void) { return 0x0; }
 int SB_KyteCage_getExtraSize(void) { return 0x8; }
 int fn_801E4B9C(void) { return 0x0; }
 int SB_CageKyte_getExtraSize(void) { return 0x2; }
@@ -1678,7 +1678,7 @@ int fn_801E4F58(void) { return 0x1; }
 int SB_SeqDoor_getExtraSize(void) { return 0x0; }
 int fn_801E508C(void) { return 0x0; }
 int SB_MiniFire_getExtraSize(void) { return 0x2; }
-int fn_801E51A4(void) { return 0x0; }
+int SB_MiniFire_func08(void) { return 0x0; }
 int ShipBattle_getExtraSize(void) { return 0x140; }
 int fn_801E55C0(void) { return 0xb; }
 int Lamp_getExtraSize(void) { return 0x1; }
