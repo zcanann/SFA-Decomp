@@ -48,7 +48,7 @@
  * - 0x0317 VFP_lavasta: placements=4, class=0x0030, widths=9w x4
  *
  * EN descriptor slot map:
- * - descriptor=0x80329248 lbl_80329248 (slots=10, mask=1101111111)
+ * - descriptor=0x80329248 gVFP_lavastarObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801FDEB8 vfplavastar_initialise ref=initialise
  * - slot 01: 0x801FDE8C vfplavastar_release ref=release
  * - slot 03: 0x801FDD7C vfplavastar_init ref=init
