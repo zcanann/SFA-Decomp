@@ -150,10 +150,8 @@ void fn_8005E348(undefined4 param_1,undefined4 param_2,int *param_3,Mtx param_4)
   float local_a0;
   undefined4 local_9c;
   Mtx afStack_98;
-  undefined4 local_68;
-  uint uStack_64;
-  undefined4 local_60;
-  uint uStack_5c;
+  SfaIntDouble iD2;
+  SfaIntDouble iD1;
   float local_28[6];
 
   uVar5 = param_3[4];
@@ -180,10 +178,10 @@ void fn_8005E348(undefined4 param_1,undefined4 param_2,int *param_3,Mtx param_4)
   }
   fVar7 = lbl_803DEC2C;
   for (uVar5 = 0; (int)uVar5 < iVar4; uVar5 = uVar5 + 1) {
-    uStack_64 = uVar5 + 1 ^ 0x80000000;
-    local_68 = 0x43300000;
+    iD1.words.lo = uVar5 + 1 ^ 0x80000000;
+    iD1.words.hi = 0x43300000;
     PSMTXTrans(afStack_98, lbl_803DEBCC,
-               fVar7 * (float)((double)CONCAT44(0x43300000,uStack_64) - lbl_803DEBC0),
+               fVar7 * (float)(iD1.d - lbl_803DEBC0),
                lbl_803DEBCC);
     PSMTXConcat(param_4,afStack_98,afStack_98);
     GXLoadPosMtxImm(afStack_98,0);
@@ -195,9 +193,9 @@ void fn_8005E348(undefined4 param_1,undefined4 param_2,int *param_3,Mtx param_4)
     local_28[5] = *(float*)((int)&lbl_802C1E40 + 20);
     fn_8006C4E0((int*)&local_b8,(int*)&uStack_b4);
     selectTexture(*(int *)(local_b8 + (uVar5 & 0xff) * 4),1);
-    uStack_5c = (uVar5 & 0xff) + 1 ^ 0x80000000;
-    local_60 = 0x43300000;
-    local_28[0] = (float)((double)CONCAT44(0x43300000,uStack_5c) - lbl_803DEBC0) *
+    iD2.words.lo = (uVar5 & 0xff) + 1 ^ 0x80000000;
+    iD2.words.hi = 0x43300000;
+    local_28[0] = (float)(iD2.d - lbl_803DEBC0) *
                   lbl_803DEC24 * displayOffsetH_803DEBFC;
     local_28[4] = local_28[0];
     GXSetIndTexMtx(1,(const float (*)[3])local_28,lbl_803DB644);
@@ -220,7 +218,7 @@ LAB_8005E528:
  */
 #pragma scheduling off
 #pragma peephole off
-int fn_8005E560(int param_1,int *param_2,int *param_3)
+int fn_8005E560(int param_1,int *param_3,int *param_2)
 {
   int iVar1;
   uint uVar2;
@@ -228,17 +226,24 @@ int fn_8005E560(int param_1,int *param_2,int *param_3)
   undefined uVar4;
   undefined uVar5;
   undefined uVar6;
-  int local_18;
+  volatile int local_18;
+  byte local_14;
+  byte local_15;
+  byte local_16;
+  int local_10;
+  int local_C;
+  int local_8;
 
   local_18 = lbl_803E8448;
   uVar2 = param_3[4];
-  uVar6 = *(undefined *)(*param_3 + ((int)uVar2 >> 3));
-  iVar1 = *param_3 + ((int)uVar2 >> 3);
+  iVar1 = *param_3;
+  uVar6 = *(undefined *)(iVar1 + ((int)uVar2 >> 3));
+  iVar1 = iVar1 + ((int)uVar2 >> 3);
   uVar4 = *(undefined *)(iVar1 + 1);
   uVar5 = *(undefined *)(iVar1 + 2);
   param_3[4] = uVar2 + 6;
   iVar1 = *(int *)((int)param_1 + 0x64);
-  uVar3 = (uint3)(CONCAT12(uVar5,CONCAT11(uVar4,uVar6)) >> (uVar2 & 7)) & 0x3f;
+  uVar3 = ((uint3)(uVar6 | (uVar4 << 8) | (uVar5 << 16)) >> (uVar2 & 7)) & 0x3f;
   iVar1 = iVar1 + uVar3 * 0x44;
   GXSetTevAlphaIn(0,7,4,5,7);
   Shader_getLayer(iVar1,0);
@@ -247,43 +252,29 @@ int fn_8005E560(int param_1,int *param_2,int *param_3)
     _gxSetFogParams();
     goto LAB_8005E630;
   }
-  {
-    int local_10[2];
-    local_10[0] = local_18;
-    GXSetFog(0,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,*(GXColor*)local_10);
-  }
+  local_10 = local_18;
+  GXSetFog(0,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,*(GXColor*)&local_10);
 LAB_8005E630:
   if ((*(uint *)(iVar1 + 0x3c) & 1) == 0) {
-    if ((*(uint *)(iVar1 + 0x3c) & 0x2000) == 0) {
-      if ((*(uint *)(iVar1 + 0x3c) & 0x100000) == 0) {
-        if ((*(uint *)(iVar1 + 0x3c) & 0x80000) == 0) goto LAB_8005E6D0;
+    if ((*(uint *)(iVar1 + 0x3c) & 0x40000) == 0) {
+      if ((*(uint *)(iVar1 + 0x3c) & 0x800) == 0) {
+        if ((*(uint *)(iVar1 + 0x3c) & 0x1000) == 0) goto LAB_8005E6D0;
       }
     }
   }
-  {
-    int local_C[1];
-    local_C[0] = lbl_803DB640;
-    GXSetChanAmbColor(0,*(GXColor *)local_C);
-    if ((*(uint *)(iVar1 + 0x3c) & 0x2000) != 0) {
-      GXSetChanCtrl(0,0,0,1,0,0,2);
-      goto LAB_8005E718;
-    }
-    GXSetChanCtrl(0,1,0,1,0,0,2);
+  local_C = lbl_803DB640;
+  GXSetChanAmbColor(0,*(GXColor *)&local_C);
+  if ((*(uint *)(iVar1 + 0x3c) & 0x40000) != 0) {
+    GXSetChanCtrl(0,0,0,1,0,0,2);
     goto LAB_8005E718;
   }
+  GXSetChanCtrl(0,1,0,1,0,0,2);
+  goto LAB_8005E718;
 LAB_8005E6D0:
-  {
-    byte local_14;
-    byte local_15;
-    byte local_16;
-    fn_8008982C(0,&local_16,&local_15,&local_14);
-    GXSetChanCtrl(0,1,0,1,0,0,2);
-    {
-      int local_8[1];
-      local_8[0] = local_14 | (local_15 << 8) | (local_16 << 16);
-      GXSetChanAmbColor(0,*(GXColor *)local_8);
-    }
-  }
+  fn_8008982C(0,&local_16,&local_15,&local_14);
+  GXSetChanCtrl(0,1,0,1,0,0,2);
+  local_8 = *(int*)&local_16;
+  GXSetChanAmbColor(0,*(GXColor *)&local_8);
 LAB_8005E718:
   return iVar1;
 }
@@ -303,7 +294,6 @@ LAB_8005E718:
 #pragma peephole off
 void fn_8005E730(undefined4 param_1,undefined4 param_2,int param_3)
 {
-  int iVar2;
   int *piVar3;
   SfaIntDouble iD6;
   SfaIntDouble iD5;
@@ -341,22 +331,22 @@ void fn_8005E730(undefined4 param_1,undefined4 param_2,int param_3)
                (float)(iD6.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ));
   resetLotsOfRenderVars();
   fn_8004CE0C(param_3);
+  param_3 = 0;
   piVar3 = (int *)&lbl_803DCE20;
   {
-    byte *p9 = &local_9;
-    byte *pA = &local_A;
     byte *pB = &local_B;
-    f32 *p14 = &fStack_14;
+    byte *pA = &local_A;
+    byte *p9 = &local_9;
     f32 *p18 = &fStack_18;
-    for (iVar2 = 0; iVar2 < local_C; iVar2 = iVar2 + 1) {
+    f32 *p14 = &fStack_14;
+    for (; param_3 < local_C; piVar3 = piVar3 + 1, param_3 = param_3 + 1) {
       fn_8001DACC(*piVar3,&local_8,p9,pA,pB);
-      local_8 = (char)((int)(uint)local_8 >> 1) + (char)((int)(uint)local_8 >> 2);
-      local_9 = (char)((int)(uint)local_9 >> 1) + (char)((int)(uint)local_9 >> 2);
-      local_A = (char)((int)(uint)local_A >> 1) + (char)((int)(uint)local_A >> 2);
+      local_8 = ((int)local_8 >> 1) + ((int)local_8 >> 2);
+      local_9 = ((int)local_9 >> 1) + ((int)local_9 >> 2);
+      local_A = ((int)local_A >> 1) + ((int)local_A >> 2);
       fn_8001DD50(*piVar3,&fStack_10,p14,p18);
       fn_8001DD48(*piVar3);
       fn_8004FA30(&local_8,&fStack_10);
-      piVar3 = piVar3 + 1;
     }
   }
   textureFn_800528bc();
