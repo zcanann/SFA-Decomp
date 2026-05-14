@@ -4,29 +4,29 @@
  * This file is intentionally not wired into the build yet.
  * It exists as a retail-backed per-object packet for exploratory split work.
  *
- * Object def: 0x0572 BullRushClu
- * Output path: src/main/unknown/objects/obj_0572_bullrushclu.c
- * Retail placements: 70
- * Root romlists: 5
+ * Object def: 0x0570 YellowWhite
+ * Output path: src/main/unknown/objects/obj_0570_yellowwhite.c
+ * Retail placements: 14
+ * Root romlists: 3
  * Object-def size: 0xA0
- * Root placement widths: 8w x70
+ * Root placement widths: 8w x14
  * DLL ID: 0x02AD
  * Class ID: 0x007F
  * Suggested outer boundary: shared DLL family
  * Reference class name: Decorative
  * Reference DLL name: SoftBody
- * Remap aliases: 0x05D0
+ * Remap aliases: 0x0632
  *
  * Related packet paths:
  * - class: src/main/unknown/classes/class_007F_decorative.c
  * - family: src/main/unknown/dll_02AD_softbody.c
  *
  * Width samples:
- * - 8w (0x20 bytes): dfptop.romlist.zlb, hollow.romlist.zlb, hollow2.romlist.zlb, linkg.romlist.zlb
+ * - 8w (0x20 bytes): capeclaw.romlist.zlb, fortress.romlist.zlb, hollow.romlist.zlb
  *
  * Inline object-def evidence:
  * - inline fields: pModelList
- * - model IDs: 0x00000114
+ * - model IDs: 0x0000010B
  * - help texts: 0xFFFF 0xFFFF 0xFFFF 0xFFFF
  *
  * Same-class objects (37 defs / 1825 placements):
@@ -76,12 +76,12 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_0572_BullRushClu_packet_info {
-    BULLRUSHCLU_DEF_ID = 0x0572,
-    BULLRUSHCLU_DLL_ID = 0x02AD,
-    BULLRUSHCLU_CLASS_ID = 0x007F,
-    BULLRUSHCLU_OBJECT_DEF_BYTES = 0xA0,
-    BULLRUSHCLU_PLACEMENT_BYTES_MIN = 0x20,
-    BULLRUSHCLU_PLACEMENT_BYTES_MAX = 0x20,
+enum obj_0570_YellowWhite_packet_info {
+    YELLOWWHITE_DEF_ID = 0x0570,
+    YELLOWWHITE_DLL_ID = 0x02AD,
+    YELLOWWHITE_CLASS_ID = 0x007F,
+    YELLOWWHITE_OBJECT_DEF_BYTES = 0xA0,
+    YELLOWWHITE_PLACEMENT_BYTES_MIN = 0x20,
+    YELLOWWHITE_PLACEMENT_BYTES_MAX = 0x20,
 };
 #endif

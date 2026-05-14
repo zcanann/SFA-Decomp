@@ -60,16 +60,16 @@
  * - ... 14 more DLL siblings omitted
  *
  * EN descriptor slot map:
- * - descriptor=0x8032C7C8 lbl_8032C7C8 (slots=10, mask=1101111111)
- * - slot 00: 0x802356E8 fn_802356E8 ref=initialise
- * - slot 01: 0x802356E4 fn_802356E4 stub=blr ref=release (stub)
- * - slot 03: 0x802355C0 fn_802355C0 ref=init
- * - slot 04: 0x802354E8 fn_802354E8 ref=update
- * - slot 05: 0x802354E4 fn_802354E4 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x802354B4 fn_802354B4 ref=render
- * - slot 07: 0x8023549C fn_8023549C ref=free
- * - slot 08: 0x80235494 fn_80235494 stub=const 0
- * - slot 09: 0x8023548C fn_8023548C stub=const 0 ref=getExtraSize (stub)
+ * - descriptor=0x8032BB70 gSoftBodyObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x80235024 softbody_initialise ref=initialise
+ * - slot 01: 0x80235020 softbody_release stub=blr ref=release (stub)
+ * - slot 03: 0x80234EFC softbody_init ref=init
+ * - slot 04: 0x80234E24 softbody_update ref=update
+ * - slot 05: 0x80234E20 softbody_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x80234DF0 softbody_render ref=render
+ * - slot 07: 0x80234DD8 softbody_free ref=free
+ * - slot 08: 0x80234DD0 softbody_func08 stub=const 0
+ * - slot 09: 0x80234DC8 softbody_getExtraSize stub=const 0 ref=getExtraSize (stub)
  */
 
 #if 0

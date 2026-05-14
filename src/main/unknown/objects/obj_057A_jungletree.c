@@ -4,29 +4,29 @@
  * This file is intentionally not wired into the build yet.
  * It exists as a retail-backed per-object packet for exploratory split work.
  *
- * Object def: 0x058C SnowTree4
- * Output path: src/main/unknown/objects/obj_058C_snowtree4.c
- * Retail placements: 298
+ * Object def: 0x057A JungleTree
+ * Output path: src/main/unknown/objects/obj_057A_jungletree.c
+ * Retail placements: 15
  * Root romlists: 1
- * Object-def size: 0xA0
- * Root placement widths: 8w x298
+ * Object-def size: 0x120
+ * Root placement widths: 8w x15
  * DLL ID: 0x02AF
  * Class ID: 0x007F
  * Suggested outer boundary: shared DLL family
  * Reference class name: Decorative
  * Reference DLL name: Tree
- * Remap aliases: 0x070D
+ * Remap aliases: 0x077A
  *
  * Related packet paths:
  * - class: src/main/unknown/classes/class_007F_decorative.c
  * - family: src/main/unknown/dll_02AF_tree.c
  *
  * Width samples:
- * - 8w (0x20 bytes): newicemount.romlist.zlb
+ * - 8w (0x20 bytes): wallcity.romlist.zlb
  *
  * Inline object-def evidence:
- * - inline fields: pModelList
- * - model IDs: 0x00000122
+ * - inline fields: pModelList, hitboxes
+ * - model IDs: 0x00000110 0x00000111
  * - help texts: 0xFFFF 0xFFFF 0xFFFF 0xFFFF
  *
  * Same-class objects (37 defs / 1825 placements):
@@ -69,12 +69,12 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_058C_SnowTree4_packet_info {
-    SNOWTREE4_DEF_ID = 0x058C,
-    SNOWTREE4_DLL_ID = 0x02AF,
-    SNOWTREE4_CLASS_ID = 0x007F,
-    SNOWTREE4_OBJECT_DEF_BYTES = 0xA0,
-    SNOWTREE4_PLACEMENT_BYTES_MIN = 0x20,
-    SNOWTREE4_PLACEMENT_BYTES_MAX = 0x20,
+enum obj_057A_JungleTree_packet_info {
+    JUNGLETREE_DEF_ID = 0x057A,
+    JUNGLETREE_DLL_ID = 0x02AF,
+    JUNGLETREE_CLASS_ID = 0x007F,
+    JUNGLETREE_OBJECT_DEF_BYTES = 0x120,
+    JUNGLETREE_PLACEMENT_BYTES_MIN = 0x20,
+    JUNGLETREE_PLACEMENT_BYTES_MAX = 0x20,
 };
 #endif

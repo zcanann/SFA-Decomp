@@ -48,16 +48,16 @@
  * - 0x028E WaterFlowWe: placements=100, class=0x007F, widths=8w x100
  *
  * EN descriptor slot map:
- * - descriptor=0x8032C800 lbl_8032C800 (slots=10, mask=1101111111)
- * - slot 00: 0x80235D78 fn_80235D78 ref=initialise
- * - slot 01: 0x80235D74 fn_80235D74 stub=blr ref=release (stub)
- * - slot 03: 0x80235CAC fn_80235CAC ref=init
- * - slot 04: 0x80235B90 fn_80235B90 ref=update
- * - slot 05: 0x80235B8C fn_80235B8C stub=blr ref=hitDetect (stub)
- * - slot 06: 0x80235B5C fn_80235B5C ref=render
- * - slot 07: 0x80235B44 fn_80235B44 ref=free
- * - slot 08: 0x80235B3C fn_80235B3C stub=const 0
- * - slot 09: 0x80235B34 fn_80235B34 stub=const 8 ref=getExtraSize (stub)
+ * - descriptor=0x8032BBA8 gWaterFlowWeObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x802356B4 waterflowwe_initialise ref=initialise
+ * - slot 01: 0x802356B0 waterflowwe_release stub=blr ref=release (stub)
+ * - slot 03: 0x802355E8 waterflowwe_init ref=init
+ * - slot 04: 0x802354CC waterflowwe_update ref=update
+ * - slot 05: 0x802354C8 waterflowwe_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x80235498 waterflowwe_render ref=render
+ * - slot 07: 0x80235480 waterflowwe_free ref=free
+ * - slot 08: 0x80235478 waterflowwe_func08 stub=const 0
+ * - slot 09: 0x80235470 waterflowwe_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 
 #if 0

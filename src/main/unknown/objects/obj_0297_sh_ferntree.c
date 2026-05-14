@@ -58,11 +58,11 @@
  * - 0x058E SnowFruitTr: placements=0, class=0x007F, widths=none
  *
  * EN descriptor slot map:
- * - descriptor=0x8032C8E8 lbl_8032C8E8 (slots=10, mask=0001101001)
- * - slot 03: 0x80236554 fn_80236554 ref=init
- * - slot 04: 0x80236090 fn_80236090 ref=update
- * - slot 06: 0x80235FC8 fn_80235FC8 ref=render
- * - slot 09: 0x80235FC0 fn_80235FC0 stub=const 92 ref=getExtraSize (stub)
+ * - descriptor=0x8032BC90 gTreeObjDescriptor (slots=10, mask=0001101001)
+ * - slot 03: 0x80235E90 tree_init ref=init
+ * - slot 04: 0x802359CC tree_update ref=update
+ * - slot 06: 0x80235904 tree_render ref=render
+ * - slot 09: 0x802358FC tree_getExtraSize stub=const 92 ref=getExtraSize (stub)
  */
 
 #if 0
