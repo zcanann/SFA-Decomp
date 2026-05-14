@@ -1120,8 +1120,8 @@ void SB_ShipMast_initialise(void) {}
 int SB_Galleon_getExtraSize(void) { return 0xb4; }
 int SB_Galleon_func08(void) { return 0x0; }
 int SB_Propeller_getExtraSize(void) { return 0x10; }
-int fn_801E2B28(void) { return 0x10; }
-int fn_801E2B30(void) { return 0x1; }
+int SB_ShipHead_getExtraSize(void) { return 0x10; }
+int SB_ShipHead_func08(void) { return 0x1; }
 int SB_ShipMast_getExtraSize(void) { return 0x0; }
 int SB_ShipMast_func08(void) { return 0x0; }
 int SB_ShipGun_getExtraSize(void) { return 0x10; }
@@ -1150,6 +1150,6 @@ void SB_ShipMast_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s3
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
 #pragma peephole off
-void fn_801E2B38(int x) { ObjGroup_RemoveObject(x, 0x3); }
+void SB_ShipHead_free(int x) { ObjGroup_RemoveObject(x, 0x3); }
 #pragma peephole reset
 #pragma scheduling reset

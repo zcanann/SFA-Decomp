@@ -48,13 +48,13 @@
  * - 0x02FD SB_ShipHead: placements=2, class=0x0030, widths=9w x2
  *
  * EN descriptor slot map:
- * - descriptor=0x80327CC0 lbl_80327CC0 (slots=10, mask=0001101111)
- * - slot 03: 0x801E324C fn_801E324C
- * - slot 04: 0x801E2CE4 fn_801E2CE4
- * - slot 06: 0x801E2B5C fn_801E2B5C
- * - slot 07: 0x801E2B38 fn_801E2B38
- * - slot 08: 0x801E2B30 fn_801E2B30 stub=const 1
- * - slot 09: 0x801E2B28 fn_801E2B28 stub=const 16
+ * - descriptor=0x80327CC0 gSB_ShipHeadObjDescriptor (slots=10, mask=0001101111)
+ * - slot 03: 0x801E324C SB_ShipHead_init
+ * - slot 04: 0x801E2CE4 SB_ShipHead_update
+ * - slot 06: 0x801E2B5C SB_ShipHead_render
+ * - slot 07: 0x801E2B38 SB_ShipHead_free
+ * - slot 08: 0x801E2B30 SB_ShipHead_func08 stub=const 1
+ * - slot 09: 0x801E2B28 SB_ShipHead_getExtraSize stub=const 16
  */
 
 #if 0
