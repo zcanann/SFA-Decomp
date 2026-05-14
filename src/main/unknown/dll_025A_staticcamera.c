@@ -6,7 +6,7 @@
  * - Object def 0x04D3 ("StaticCamer") resolves here.
  *
  * Current EN descriptor:
- * - lbl_80320658 @ 0x80320658
+ * - gStaticCameraObjDescriptor @ 0x80320658
  *
  * Descriptor slots:
  * - 0: StaticCamera_initialise (0x8016B998)

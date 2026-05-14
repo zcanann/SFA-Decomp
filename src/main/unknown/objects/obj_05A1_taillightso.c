@@ -4,25 +4,25 @@
  * This file is intentionally not wired into the build yet.
  * It exists as a retail-backed per-object packet for exploratory split work.
  *
- * Object def: 0x05A0 DustMoteSou
- * Output path: src/main/unknown/objects/obj_05A0_dustmotesou.c
- * Retail placements: 153
- * Root romlists: 24
+ * Object def: 0x05A1 TailLightSo
+ * Output path: src/main/unknown/objects/obj_05A1_taillightso.c
+ * Retail placements: 8
+ * Root romlists: 2
  * Object-def size: 0xA0
- * Root placement widths: 12w x153
+ * Root placement widths: 12w x8
  * DLL ID: 0x02B2
  * Class ID: 0x007E
  * Suggested outer boundary: tight DLL family
  * Reference class name: CmbSrc
  * Reference DLL name: DustMoteSou
- * Remap aliases: 0x0802
+ * Remap aliases: 0x0807
  *
  * Related packet paths:
  * - class: src/main/unknown/classes/class_007E_cmbsrc.c
  * - family: src/main/unknown/dll_02B2_dustmotesou.c
  *
  * Width samples:
- * - 12w (0x30 bytes): capeclaw.romlist.zlb, cloudrace.romlist.zlb, dbshrine.romlist.zlb, dfptop.romlist.zlb
+ * - 12w (0x30 bytes): gamefront.romlist.zlb, greatfox.romlist.zlb
  *
  * Inline object-def evidence:
  * - inline fields: pModelList
@@ -60,12 +60,12 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_05A0_DustMoteSou_packet_info {
-    DUSTMOTESOU_DEF_ID = 0x05A0,
-    DUSTMOTESOU_DLL_ID = 0x02B2,
-    DUSTMOTESOU_CLASS_ID = 0x007E,
-    DUSTMOTESOU_OBJECT_DEF_BYTES = 0xA0,
-    DUSTMOTESOU_PLACEMENT_BYTES_MIN = 0x30,
-    DUSTMOTESOU_PLACEMENT_BYTES_MAX = 0x30,
+enum obj_05A1_TailLightSo_packet_info {
+    TAILLIGHTSO_DEF_ID = 0x05A1,
+    TAILLIGHTSO_DLL_ID = 0x02B2,
+    TAILLIGHTSO_CLASS_ID = 0x007E,
+    TAILLIGHTSO_OBJECT_DEF_BYTES = 0xA0,
+    TAILLIGHTSO_PLACEMENT_BYTES_MIN = 0x30,
+    TAILLIGHTSO_PLACEMENT_BYTES_MAX = 0x30,
 };
 #endif

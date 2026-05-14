@@ -36,16 +36,16 @@
  * - 0x0553 LGTProjecte: placements=124, class=0x007B, widths=16w x124
  *
  * EN descriptor slot map:
- * - descriptor=0x8032C758 lbl_8032C758 (slots=10, mask=1101111111)
- * - slot 00: 0x802352D0 fn_802352D0 stub=blr ref=initialise (stub)
- * - slot 01: 0x802352CC fn_802352CC stub=blr ref=release (stub)
- * - slot 03: 0x80234F64 fn_80234F64 ref=init
- * - slot 04: 0x80234E6C fn_80234E6C ref=update
- * - slot 05: 0x80234E68 fn_80234E68 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x80234E64 fn_80234E64 stub=blr ref=render (stub)
- * - slot 07: 0x80234E1C fn_80234E1C ref=free
- * - slot 08: 0x80234E14 fn_80234E14 stub=const 0
- * - slot 09: 0x80234E0C fn_80234E0C stub=const 8 ref=getExtraSize (stub)
+ * - descriptor=0x8032BB00 gProjectedLightObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x80234C0C projectedlight_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x80234C08 projectedlight_release stub=blr ref=release (stub)
+ * - slot 03: 0x802348A0 projectedlight_init ref=init
+ * - slot 04: 0x802347A8 projectedlight_update ref=update
+ * - slot 05: 0x802347A4 projectedlight_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x802347A0 projectedlight_render stub=blr ref=render (stub)
+ * - slot 07: 0x80234758 projectedlight_free ref=free
+ * - slot 08: 0x80234750 projectedlight_func08 stub=const 0
+ * - slot 09: 0x80234748 projectedlight_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 
 #if 0

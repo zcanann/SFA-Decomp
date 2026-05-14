@@ -36,16 +36,16 @@
  * - 0x04D1 EffectBox: placements=46, class=0x0009, widths=9w x46
  *
  * EN descriptor slot map:
- * - descriptor=0x80321960 lbl_80321960 (slots=10, mask=1101111111)
- * - slot 00: 0x801748E0 fn_801748E0 stub=blr ref=initialise (stub)
- * - slot 01: 0x801748DC fn_801748DC stub=blr ref=release (stub)
- * - slot 03: 0x80174864 fn_80174864 ref=init
- * - slot 04: 0x80174490 fn_80174490 ref=update
- * - slot 05: 0x8017448C fn_8017448C stub=blr ref=hitDetect (stub)
- * - slot 06: 0x8017445C fn_8017445C ref=render
- * - slot 07: 0x8017443C fn_8017443C ref=free
- * - slot 08: 0x80174434 fn_80174434 stub=const 0
- * - slot 09: 0x8017442C fn_8017442C stub=const 0 ref=getExtraSize (stub)
+ * - descriptor=0x80320D10 gEffectBoxObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x80174434 effectbox_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x80174430 effectbox_release stub=blr ref=release (stub)
+ * - slot 03: 0x801743B8 effectbox_init ref=init
+ * - slot 04: 0x80173FE4 effectbox_update ref=update
+ * - slot 05: 0x80173FE0 effectbox_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x80173FB0 effectbox_render ref=render
+ * - slot 07: 0x80173F90 effectbox_free ref=free
+ * - slot 08: 0x80173F88 effectbox_func08 stub=const 0
+ * - slot 09: 0x80173F80 effectbox_getExtraSize stub=const 0 ref=getExtraSize (stub)
  */
 
 #if 0

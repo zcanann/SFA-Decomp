@@ -18,7 +18,7 @@
  * - 0x04D3 StaticCamer: dll=0x025A, placements=48, widths=9w x48
  *
  * Descriptor slot maps:
- * - DLL 0x025A: lbl_80320658 @ 0x80320658 (slots=10, mask=1101111111)
+ * - DLL 0x025A: gStaticCameraObjDescriptor @ 0x80320658 (slots=10, mask=1101111111)
  *   slot 00: 0x8016B998 StaticCamera_initialise
  *   slot 01: 0x8016B994 StaticCamera_release
  *   slot 03: 0x8016B904 StaticCamera_init
