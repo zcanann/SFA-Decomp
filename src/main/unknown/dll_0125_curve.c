@@ -11,7 +11,7 @@
  * Retail object defs: 1
  * Retail object record sizes: 0xA0
  * Retail root placement widths: 13w, 14w, 15w, 17w
- * EN descriptor: 0x80320AC0 lbl_80320AC0
+ * EN descriptor: 0x80320AC0 gCurveObjDescriptor
  * EN descriptor shape: slots=12 mask=000100111111
  *
  * Retail object defs:
