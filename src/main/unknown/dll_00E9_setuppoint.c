@@ -11,7 +11,7 @@
  * Retail object defs: 1
  * Retail object record sizes: 0xA0
  * Retail root placement widths: 8w
- * EN descriptor: 0x80320C20 lbl_80320C20
+ * EN descriptor: 0x80320C20 gSetuppointObjDescriptor
  * EN descriptor shape: slots=10 mask=0001000000
  *
  * Retail object defs:

@@ -14,12 +14,12 @@
  * Class ID: 0x0004
  * Suggested outer boundary: singleton object boundary
  * Reference class name: setuppoint
- * Reference DLL name: DummyE9
+ * Reference DLL name: setuppoint
  * Remap aliases: 0x000D
  *
  * Related packet paths:
  * - class: src/main/unknown/classes/class_0004_setuppoint.c
- * - family: src/main/unknown/dll_00E9_dummye9.c
+ * - family: src/main/unknown/dll_00E9_setuppoint.c
  *
  * Width samples:
  * - 8w (0x20 bytes): KamColumn.romlist.zlb, animtest.romlist.zlb, arwing.romlist.zlb, arwingcity.romlist.zlb
@@ -39,8 +39,8 @@
  * - All functions stubbed
  *
  * EN descriptor slot map:
- * - descriptor=0x80321870 lbl_80321870 (slots=10, mask=0001000000)
- * - slot 03: 0x801721BC fn_801721BC stub=blr ref=init (stub)
+ * - descriptor=0x80320C20 gSetuppointObjDescriptor (slots=10, mask=0001000000)
+ * - slot 03: 0x80171D10 setuppoint_init stub=blr ref=init (stub)
  */
 
 #if 0
