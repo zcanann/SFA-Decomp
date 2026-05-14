@@ -5,7 +5,7 @@ extern f32 lbl_803E242C;
 extern f32 lbl_803E24C4;
 
 extern u8 *ObjGroup_FindNearestObject(int kind, u8 *self, f32 *outDist);
-extern int GameBit_Get(int bit);
+extern uint GameBit_Get(int bit);
 extern int coordsToMapCell(u8 *p, f32 a, f32 b);
 extern f32 vec3f_distanceSquared(f32 *a, f32 *b);
 
@@ -23,9 +23,9 @@ int trickyFoodFn_8013db3c(u8 *arg1, u8 *arg2)
   int result = 0;
   f32 dist = lbl_803E242C;
   struct CritterByte {
-    u8 pad_high : 3;
-    u8 mode : 4;
-    u8 pad_low : 1;
+    uint pad_high : 3;
+    uint mode : 4;
+    uint pad_low : 1;
   } *bf = (struct CritterByte *)&arg2[0x58];
 
   if (bf->mode != 0) {
