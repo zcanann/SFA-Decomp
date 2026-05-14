@@ -1402,7 +1402,7 @@
  *   slot 07: 0x801F0734 WM_seqobject_free
  *   slot 08: 0x801F072C WM_seqobject_func08
  *   slot 09: 0x801F0724 WM_seqobject_getExtraSize
- * - DLL 0x01FC: lbl_803287B8 (slots=10, mask=1101111111)
+ * - DLL 0x01FC: gLaserBeamObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F15E0 LaserBeam_initialise
  *   slot 01: 0x801F15B4 LaserBeam_release
  *   slot 03: 0x801F1498 LaserBeam_free
@@ -1432,7 +1432,7 @@
  *   slot 07: 0x801F2EA8 WM_colrise_free
  *   slot 08: 0x801F2EA0 WM_colrise_func08_ret_0
  *   slot 09: 0x801F2E98 WM_colrise_getExtraSize
- * - DLL 0x0204: lbl_80328AA0 (slots=10, mask=1101111111)
+ * - DLL 0x0204: gWM_TorchObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F33B0 wmtorch_initialise
  *   slot 01: 0x801F33AC wmtorch_release
  *   slot 03: 0x801F31EC wmtorch_init
@@ -1453,7 +1453,7 @@
  *   slot 07: 0x801F33C4 lightsource_free
  *   slot 08: 0x801F33BC lightsource_func08
  *   slot 09: 0x801F33B4 lightsource_getExtraSize
- * - DLL 0x0207: lbl_80328B40 (slots=10, mask=1101111111)
+ * - DLL 0x0207: gWM_WormObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F3F14 wmworm_initialise
  *   slot 01: 0x801F3F10 wmworm_release
  *   slot 03: 0x801F3E88 wmworm_init
@@ -1503,7 +1503,7 @@
  *   slot 07: 0x801F6A50 wmseqpoint_free
  *   slot 08: 0x801F6A48 wmseqpoint_func08
  *   slot 09: 0x801F6A40 wmseqpoint_getExtraSize
- * - DLL 0x020E: lbl_80328D28 (slots=10, mask=1101111111)
+ * - DLL 0x020E: gWM_sunObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F7C4C wmsun_initialise
  *   slot 01: 0x801F7C48 wmsun_release
  *   slot 03: 0x801F7954 wmsun_init
@@ -1513,7 +1513,7 @@
  *   slot 07: 0x801F7300 wmsun_free
  *   slot 08: 0x801F72F8 wmsun_func08
  *   slot 09: 0x801F72F0 wmsun_getExtraSize
- * - DLL 0x020F: lbl_80328D60 (slots=10, mask=1101111111)
+ * - DLL 0x020F: gWM_SpiritSetObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F7D30 wmspiritset_initialise
  *   slot 01: 0x801F7D2C wmspiritset_release
  *   slot 03: 0x801F7CF4 wmspiritset_init
@@ -1523,7 +1523,7 @@
  *   slot 07: 0x801F7C60 wmspiritset_free
  *   slot 08: 0x801F7C58 wmspiritset_func08
  *   slot 09: 0x801F7C50 wmspiritset_getExtraSize
- * - DLL 0x0210: lbl_80328D98 (slots=10, mask=1101111111)
+ * - DLL 0x0210: gWM_PlanetsObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F7FF0 wmplanets_initialise
  *   slot 01: 0x801F7FEC wmplanets_release
  *   slot 03: 0x801F7EB0 wmplanets_init
@@ -1533,7 +1533,7 @@
  *   slot 07: 0x801F7D44 wmplanets_free
  *   slot 08: 0x801F7D3C wmplanets_func08
  *   slot 09: 0x801F7D34 wmplanets_getExtraSize
- * - DLL 0x0211: lbl_80328DEC (slots=10, mask=1101111111)
+ * - DLL 0x0211: gWM_WallCrawlerObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F9438 wmwallcrawler_initialise
  *   slot 01: 0x801F9434 wmwallcrawler_release
  *   slot 03: 0x801F91B8 wmwallcrawler_init
@@ -1564,7 +1564,7 @@
  *   slot 07: 0x801FA880 vfpstatueball_free
  *   slot 08: 0x801FA878 vfpstatueball_func08
  *   slot 09: 0x801FA870 vfpstatueball_getExtraSize
- * - DLL 0x021C: lbl_80328FE0 (slots=10, mask=1101111111)
+ * - DLL 0x021C: gVFP_LaddersObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801FB21C vfpladders_initialise
  *   slot 01: 0x801FB218 vfpladders_release
  *   slot 03: 0x801FB1D0 vfpladders_init
@@ -1624,7 +1624,7 @@
  *   slot 07: 0x801FC974 seqpoint_free
  *   slot 08: 0x801FC96C seqpoint_func08
  *   slot 09: 0x801FC964 seqpoint_getExtraSize
- * - DLL 0x0222: lbl_80329130 (slots=10, mask=1101111111)
+ * - DLL 0x0222: gVFPDragHeadObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801FD138 vfpdraghead_initialise
  *   slot 01: 0x801FD134 vfpdraghead_release
  *   slot 03: 0x801FD03C vfpdraghead_init
@@ -1634,7 +1634,7 @@
  *   slot 07: 0x801FCCF8 vfpdraghead_free
  *   slot 08: 0x801FCCF0 vfpdraghead_func08
  *   slot 09: 0x801FCCE8 vfpdraghead_getExtraSize
- * - DLL 0x0223: lbl_80329168 (slots=10, mask=1101111111)
+ * - DLL 0x0223: gVFP_coreplatObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801FD26C vfpcoreplat_initialise
  *   slot 01: 0x801FD268 vfpcoreplat_release
  *   slot 03: 0x801FD1B0 vfpcoreplat_init
