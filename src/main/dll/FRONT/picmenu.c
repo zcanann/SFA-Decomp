@@ -42,7 +42,7 @@ extern u32              lbl_803DD674;
 extern u32              lbl_803DD678;
 extern s32              lbl_803DD688;
 extern s32              lbl_803DD690;
-extern u32              lbl_803DD694;
+extern s32              lbl_803DD694;
 extern u32              lbl_803DD698;
 
 /* Forward declarations needed by OSCreateThread */
@@ -414,48 +414,56 @@ void fn_80119768(OSMessage msg)
 #pragma peephole off
 void fn_80119798(void* param)
 {
-    char* pb = (char*)&lbl_803A5D60;
-    char* db = lbl_803A72F0;
-    char* cur = (char*)((void**)param)[0];
-    u32* compSizes = (u32*)(cur + 8);
-    char* dvdData = cur + *(u32*)(pb + 0x6C) * 4 + 8;
-    void** readMsg;
-    u32 i;
-    char* pb2;
-    char* pbwalk;
-    OSMessage tmpBuf;
+    char* pb;           /* 1st function-scope callee-saved → r31 */
+    char* db;           /* 2nd → r30 */
+    u32 i;              /* 3rd → r29 */
+    u32* compSizes;     /* 4th → r28 */
+    char* dvdData;      /* 5th → r27 */
+    /* param (function arg) → r26 auto */
 
-    OSReceiveMessage((OSMessageQueue*)(db + 0x38), &tmpBuf, OS_MESSAGE_BLOCK);
-    readMsg = (void**)tmpBuf;
-    i = 0;
-    pb2 = (char*)&lbl_803A5D60;
-    pbwalk = pb2;
+    db = lbl_803A72F0;
+    compSizes = (u32*)(((char**)param)[0] + 8);
+    pb = (char*)&lbl_803A5D60;
+    dvdData = ((char**)param)[0] + *(u32*)(pb + 0x6C) * 4 + 8;
 
-    while (i < *(u32*)(pb + 0x6C)) {
-        if (pbwalk[0x70] == 0) {
-            s32 dec = THPVideoDecode(dvdData, readMsg[0], readMsg[1], readMsg[2],
-                                     (void*)*(u32*)(pb2 + 0x94));
-            *(s32*)(pb2 + 0xA4) = dec;
-            if (dec != 0) {
-                if (lbl_803DD694 != 0) {
-                    fn_80118B88(0);
-                    lbl_803DD694 = 0;
+    {
+        char* pb2;          /* block-local → r25 */
+        void** readMsg;     /* block-local → r24 */
+        char* pbwalk;       /* block-local → r23 */
+        OSMessage tmpBuf;
+
+        OSReceiveMessage((OSMessageQueue*)(db + 0x38), &tmpBuf, OS_MESSAGE_BLOCK);
+        readMsg = (void**)tmpBuf;
+        i = 0;
+        pb2 = (char*)&lbl_803A5D60;
+        pbwalk = pb2;
+
+        while (i < *(u32*)(pb + 0x6C)) {
+            if (pbwalk[0x70] == 0) {
+                s32 dec = THPVideoDecode(dvdData, readMsg[0], readMsg[1], readMsg[2],
+                                         (void*)*(u32*)(pb2 + 0x94));
+                *(s32*)(pb2 + 0xA4) = dec;
+                if (dec != 0) {
+                    if (lbl_803DD694 != 0) {
+                        fn_80118B88(0);
+                        lbl_803DD694 = 0;
+                    }
+                    OSSuspendThread((OSThread*)(db + 0x1058));
                 }
-                OSSuspendThread((OSThread*)(db + 0x1058));
+                readMsg[3] = (void*)((u32*)param)[1];
+                OSSendMessage((OSMessageQueue*)(db + 0x18), (OSMessage)readMsg, OS_MESSAGE_BLOCK);
+                {
+                    u32 intr = OSDisableInterrupts();
+                    *(s32*)(pb2 + 0xD0) += 1;
+                    OSRestoreInterrupts(intr);
+                }
+                lbl_803DD698 = 0;
             }
-            readMsg[3] = (void*)((u32*)param)[1];
-            OSSendMessage((OSMessageQueue*)(db + 0x18), (OSMessage)readMsg, OS_MESSAGE_BLOCK);
-            {
-                u32 intr = OSDisableInterrupts();
-                *(s32*)(pb2 + 0xD0) += 1;
-                OSRestoreInterrupts(intr);
-            }
-            lbl_803DD698 = 0;
+            dvdData += *compSizes;
+            compSizes++;
+            pbwalk++;
+            i++;
         }
-        dvdData += *compSizes;
-        compSizes++;
-        pbwalk++;
-        i++;
     }
 
     if (lbl_803DD694 != 0) {
