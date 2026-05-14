@@ -20,15 +20,17 @@ extern void fn_801C0E60(u8 *self);
 void fn_801C0FD8(u8 *self)
 {
   int j;
-  int k;
   u8 *link;
+  int k;
   u8 *parts;
   int i;
   u8 *partIter;
   Vec tmp;
   f32 zero;
+  u8 *partsInit;
 
-  parts = (u8 *)*(int *)(self + 0x0);
+  partsInit = (u8 *)*(int *)(self + 0x0);
+  parts = partsInit;
 
   if ((s8)self[0x34] < -0x32) {
     self[0x35] = 1;
@@ -42,17 +44,22 @@ void fn_801C0FD8(u8 *self)
     self[0x34]++;
   }
 
-  partIter = parts + 0x34;
-  for (i = 1; i < (int)self[0x8] - 1; i++) {
-    *(f32 *)(partIter + 0x18) =
-        *(f32 *)(partIter + 0x18) + lbl_803E4DF8 * (f32)(int)(s8)self[0x34];
-    partIter += 0x34;
+  i = 1;
+  partIter = partsInit + 0x34;
+  {
+    f32 rate = lbl_803E4DF8;
+    for (; i < (int)self[0x8] - 1; i++) {
+      *(f32 *)(partIter + 0x18) =
+          *(f32 *)(partIter + 0x18) + rate * (f32)(int)(s8)self[0x34];
+      partIter += 0x34;
+    }
   }
 
+  k = 0;
   zero = lbl_803E4DFC;
-  for (k = 0; k < *(int *)(self + 0x28); k++) {
+  for (; k < *(int *)(self + 0x28); k++) {
     link = (u8 *)*(int *)(self + 0x4);
-    for (j = 0; j < (int)self[0x8] - 1; j++) {
+    for (j = 0; j < (int)self[0x8] - 1; j++, link += 0x24) {
       PSVECSubtract((Vec *)*(int *)(link + 0x4), (Vec *)*(int *)(link + 0x8), &tmp);
       *(f32 *)(link + 0x0) = PSVECMag(&tmp);
       if (*(f32 *)(link + 0x0) > *(f32 *)(link + 0x14)) {
@@ -66,17 +73,18 @@ void fn_801C0FD8(u8 *self)
         PSVECScale(&tmp, (Vec *)(link + 0x18),
                    -*(f32 *)(link + 0x10) * (*(f32 *)(link + 0x0) - *(f32 *)(link + 0xC)));
       }
-      link += 0x24;
     }
     fn_801C0E60(self);
   }
 
-  partIter = parts;
-  for (i = 0; i < (int)self[0x8]; i++) {
-    *(f32 *)(partIter + 0x18) = lbl_803E4DFC;
-    *(f32 *)(partIter + 0x1C) = lbl_803E4DFC;
-    *(f32 *)(partIter + 0x20) = lbl_803E4DFC;
-    partIter += 0x34;
+  i = 0;
+  {
+    f32 cleanZero = lbl_803E4DFC;
+    for (; i < (int)self[0x8]; i++, parts += 0x34) {
+      *(f32 *)(parts + 0x18) = cleanZero;
+      *(f32 *)(parts + 0x1C) = cleanZero;
+      *(f32 *)(parts + 0x20) = cleanZero;
+    }
   }
 }
 
