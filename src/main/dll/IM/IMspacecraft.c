@@ -841,7 +841,7 @@ void MMP_levelcontrol_hitDetect(void) {}
 int SpiritDoorLock_getExtraSize(void) { return 0x14; }
 int SpiritDoorLock_func08(void) { return 0x0; }
 int RollingBarrel_getExtraSize(void) { return 0x118; }
-int fn_801A5F78(void) { return 0x0; }
+int RollingBarrel_func08(void) { return 0x0; }
 int MMP_levelcontrol_getExtraSize(void) { return 0x0; }
 int MMP_levelcontrol_func08(void) { return 0x0; }
 
