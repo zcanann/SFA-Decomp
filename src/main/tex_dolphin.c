@@ -1,139 +1,107 @@
 #include "ghidra_import.h"
 #include "main/tex_dolphin.h"
+#include "dolphin/gx.h"
+#include "dolphin/mtx.h"
+#include "track/intersect.h"
 
-extern undefined4 FUN_80017598();
-extern double FUN_800175dc();
-extern undefined4 FUN_800175e4();
-extern undefined4 FUN_8001760c();
-extern char FUN_80048094();
-extern int FUN_800480a0();
-extern undefined4 FUN_8004812c();
-extern undefined4 FUN_800487e0();
-extern undefined4 FUN_80048bc4();
-extern undefined4 FUN_80049260();
-extern undefined4 FUN_8004938c();
-extern undefined4 FUN_80049390();
-extern undefined4 FUN_80049910();
-extern undefined4 FUN_80049ee0();
-extern undefined4 FUN_80049fb0();
-extern undefined4 FUN_8004a094();
-extern undefined4 FUN_8004a2c4();
-extern undefined4 FUN_8004a394();
-extern undefined4 FUN_8004a670();
-extern undefined4 FUN_8004a94c();
-extern undefined4 FUN_8004ac40();
-extern undefined4 FUN_8004c178();
-extern undefined4 FUN_80051868();
-extern undefined4 FUN_80051b04();
-extern undefined4 FUN_800523e4();
-extern undefined4 FUN_80052500();
-extern undefined4 FUN_800528d0();
-extern undefined4 FUN_80052904();
-extern int FUN_8005375c();
-extern undefined4 FUN_8005d5f4();
-extern void newshadows_getShadowTextureTable16();
-extern undefined4 FUN_8006f8a4();
-extern undefined4 FUN_8006f8fc();
-extern void trackIntersect_drawColorBand(void);
-extern void trackIntersect_getColorRgb();
-extern undefined4 FUN_80080f00();
-extern undefined4 FUN_80080f88();
-extern uint FUN_801184b8();
-extern undefined4 FUN_80247618();
-extern undefined4 FUN_80247a48();
-extern undefined4 FUN_80247bf8();
-extern undefined4 FUN_80259288();
-extern undefined4 FUN_8025a2ec();
-extern undefined4 FUN_8025a5bc();
-extern undefined4 FUN_8025a608();
-extern undefined4 FUN_8025b9e8();
-extern undefined4 FUN_8025c224();
-extern undefined4 FUN_8025c754();
-extern undefined4 FUN_8025ca38();
-extern undefined4 FUN_8025cce8();
-extern undefined4 FUN_8025d63c();
-extern undefined4 FUN_8025d80c();
-extern ulonglong FUN_80286820();
-extern undefined8 FUN_80286838();
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_8028686c();
-extern undefined4 FUN_80286884();
-extern undefined4 FUN_80286888();
+extern void fn_8001DACC();
+extern void fn_8001DD48();
+extern void fn_8001DD50();
+extern void fn_8001E928(undefined *dest, int count, int *out, f32 x1, f32 y1, f32 z1, f32 x2, f32 y2, f32 z2);
+extern int Shader_getLayer();
+extern void selectTexture();
+extern void fn_8004CE0C();
+extern void fn_8004D928();
+extern void fn_8004D230();
+extern void fn_8004DA54();
+extern void fn_8004E0FC();
+extern void fn_8004E7F8();
+extern void fn_8004EECC();
+extern void fn_8004EF9C();
+extern void fn_8004F080();
+extern void fn_8004F2B0();
+extern void fn_8004F380();
+extern void fn_8004F6D8();
+extern void fn_8004FA30();
+extern void fn_8004FDA0();
+extern void fn_80051528();
+extern void fn_80051868();
+extern void fn_80051B00();
+extern void fn_800523D0();
+extern void fn_800524EC();
+extern int fn_80054C30();
+extern void textureFn_800528bc();
+extern void resetLotsOfRenderVars();
+extern void fn_8005D3B4();
+extern void fn_8006C4E0();
+extern void fn_80088730();
+extern void fn_8008982C();
+extern uint fn_80118294();
+extern int isHeavyFogEnabled();
 
-extern undefined4 DAT_802c25c0;
-extern undefined4 DAT_802c25c4;
-extern undefined4 DAT_802c25c8;
-extern undefined4 DAT_802c25cc;
-extern undefined4 DAT_802c25d0;
-extern undefined4 DAT_802c25d4;
-extern undefined4 DAT_8037ed2c;
-extern undefined4 DAT_80382c68;
-extern undefined4 DAT_80388538;
-extern undefined4 DAT_8038859c;
-extern undefined4 DAT_803dc29c;
-extern undefined4 DAT_803dc2a0;
-extern undefined4 DAT_803dc2a4;
-extern undefined4 DAT_803ddaa0;
-extern int DAT_803ddaa8;
-extern undefined4 DAT_803ddab0;
-extern undefined4 DAT_803ddab4;
-extern undefined4 DAT_803ddae8;
-extern int* DAT_803ddaec;
-extern undefined4 DAT_803df830;
-extern undefined4 DAT_803e90c4;
-extern undefined4 DAT_803e90c8;
-extern f64 DOUBLE_803df840;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
-extern f32 lbl_803DF848;
-extern f32 lbl_803DF84C;
-extern f32 lbl_803DF87C;
-extern f32 lbl_803DF8A0;
-extern f32 lbl_803DF8A4;
-extern f32 lbl_803DF8A8;
-extern f32 lbl_803DF8AC;
-extern void* PTR_LAB_8030f404;
+extern f64 lbl_803DEBC0;
+extern f32 lbl_803DEBC8;
+extern f32 lbl_803DEBCC;
+extern f32 displayOffsetH_803DEBFC;
+extern f32 CurrTiming_803DEC20;
+extern f32 lbl_803DEC24;
+extern f32 FBSet_803DEC28;
+extern f32 lbl_803DEC2C;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern int lbl_803DEBB0;
+extern int lbl_803DCE20;
+extern int lbl_803DCE28;
+extern int lbl_803DCE30;
+extern int *lbl_803DCE34;
+extern int lbl_803DCE68;
+extern int lbl_803DCE6C;
+extern int lbl_802C1E40;
+extern int lbl_8037E0C0;
+extern byte lbl_803DB638;
+extern int lbl_803DB63C;
+extern int lbl_803DB640;
+extern byte lbl_803DB644;
+extern int lbl_80382008;
+extern int lbl_8038793C;
+extern int lbl_803E8444;
+extern int lbl_803E8448;
+extern undefined4 jumptable_8030E844;
 
 /*
  * --INFO--
  *
- * Function: FUN_8005df5c
+ * Function: fn_8005DF5C
  * EN v1.0 Address: 0x8005DF5C
- * EN v1.0 Size: 232b
+ * EN v1.0 Size: 1004b
  * EN v1.1 Address: 0x8005E0D8
  * EN v1.1 Size: 1004b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
-undefined4 FUN_8005df5c(undefined4 param_1,float *param_2)
+#pragma scheduling off
+#pragma peephole off
+undefined4 fn_8005DF5C(int param_1,float *param_2)
 {
   undefined4 uVar1;
   int iVar2;
   uint uVar3;
-  double dVar4;
-  double dVar5;
-  float local_58;
-  float local_54;
-  float local_50;
-  
+  float local_10;
+  float local_C;
+  float local_8;
+
   uVar3 = 0;
   iVar2 = 0;
-  dVar4 = (double)lbl_803DF8A0;
-  dVar5 = (double)lbl_803DF8A8;
   while( true ) {
     if (uVar3 < 8) {
-                    /* WARNING: Could not recover jumptable at 0x8005e134. Too many branches */
+                    /* WARNING: Could not recover jumptable. Too many branches */
                     /* WARNING: Treating indirect jump as call */
-      uVar1 = (**(code **)((int)&PTR_LAB_8030f404 + iVar2))();
+      uVar1 = (**(code **)((int)&jumptable_8030E844 + iVar2))();
       return uVar1;
     }
-    local_58 = (float)((double)local_58 * dVar4);
-    local_54 = (float)((double)local_54 * dVar4);
-    local_50 = (float)((double)local_50 * dVar4);
-    FUN_80247bf8(param_2,&local_58,&local_58);
-    if (dVar5 <= (double)local_50) break;
+    local_8 = local_8 * CurrTiming_803DEC20;
+    local_C = local_C * CurrTiming_803DEC20;
+    local_10 = local_10 * CurrTiming_803DEC20;
+    PSMTXMultVec((const float (*)[4])param_2,(Vec *)&local_8,(Vec *)&local_8);
+    if (local_10 >= FBSet_803DEC28) break;
     uVar3 = uVar3 + 1;
     iVar2 = iVar2 + 4;
     if (7 < (int)uVar3) {
@@ -142,21 +110,21 @@ undefined4 FUN_8005df5c(undefined4 param_1,float *param_2)
   }
   return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
  *
- * Function: FUN_8005e044
- * EN v1.0 Address: 0x8005E044
+ * Function: fn_8005E348
+ * EN v1.0 Address: 0x8005E348
  * EN v1.0 Size: 536b
  * EN v1.1 Address: 0x8005E4C4
  * EN v1.1 Size: 536b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
-void FUN_8005e044(undefined4 param_1,undefined4 param_2,int *param_3,float *param_4)
+#pragma scheduling off
+#pragma peephole off
+void fn_8005E348(undefined4 param_1,undefined4 param_2,int *param_3,Mtx param_4)
 {
   undefined uVar1;
   undefined uVar2;
@@ -164,19 +132,7 @@ void FUN_8005e044(undefined4 param_1,undefined4 param_2,int *param_3,float *para
   int iVar4;
   uint uVar5;
   undefined4 *puVar6;
-  double in_f28;
-  double dVar7;
-  double in_f29;
-  double dVar8;
-  double in_f30;
-  double dVar9;
-  double in_f31;
-  double dVar10;
-  double in_ps28_1;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  undefined8 uVar11;
+  f32 fVar7;
   int local_b8;
   undefined4 uStack_b4;
   float local_b0;
@@ -185,29 +141,13 @@ void FUN_8005e044(undefined4 param_1,undefined4 param_2,int *param_3,float *para
   undefined4 local_a4;
   float local_a0;
   undefined4 local_9c;
-  float afStack_98 [12];
+  Mtx afStack_98;
   undefined4 local_68;
   uint uStack_64;
   undefined4 local_60;
   uint uStack_5c;
-  float local_38;
-  float fStack_34;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  local_38 = (float)in_f28;
-  fStack_34 = (float)in_ps28_1;
-  uVar11 = FUN_8028683c();
+  float local_28[6];
+
   uVar5 = param_3[4];
   uVar3 = *(undefined *)(*param_3 + ((int)uVar5 >> 3));
   iVar4 = *param_3 + ((int)uVar5 >> 3);
@@ -215,12 +155,12 @@ void FUN_8005e044(undefined4 param_1,undefined4 param_2,int *param_3,float *para
   uVar2 = *(undefined *)(iVar4 + 2);
   param_3[4] = uVar5 + 8;
   puVar6 = (undefined4 *)
-           (*(int *)((int)((ulonglong)uVar11 >> 0x20) + 0x68) +
+           (*(int *)((int)param_1 + 0x68) +
            ((uint3)(CONCAT12(uVar2,CONCAT11(uVar1,uVar3)) >> (uVar5 & 7)) & 0xff) * 0x1c);
-  uVar5 = *(uint *)((int)uVar11 + 0x3c);
+  uVar5 = *(uint *)((int)param_2 + 0x3c);
   if ((uVar5 & 0x4000) == 0) {
     if ((uVar5 & 0x8000) == 0) {
-      if ((uVar5 & 0x10000) == 0) goto LAB_8005e6a4;
+      if ((uVar5 & 0x10000) == 0) goto LAB_8005E528;
       iVar4 = 0x10;
     }
     else {
@@ -230,86 +170,144 @@ void FUN_8005e044(undefined4 param_1,undefined4 param_2,int *param_3,float *para
   else {
     iVar4 = 4;
   }
-  dVar7 = (double)lbl_803DF8AC;
-  dVar9 = (double)lbl_803DF8A4;
-  dVar10 = (double)lbl_803DF87C;
-  dVar8 = DOUBLE_803df840;
+  fVar7 = lbl_803DEC2C;
   for (uVar5 = 0; (int)uVar5 < iVar4; uVar5 = uVar5 + 1) {
     uStack_64 = uVar5 + 1 ^ 0x80000000;
     local_68 = 0x43300000;
-    FUN_80247a48((double)lbl_803DF84C,
-                 (double)(float)(dVar7 * (double)(float)((double)CONCAT44(0x43300000,uStack_64) -
-                                                        dVar8)),(double)lbl_803DF84C,afStack_98);
-    FUN_80247618(param_4,afStack_98,afStack_98);
-    FUN_8025d80c(afStack_98,0);
-    local_b0 = DAT_802c25c0;
-    local_ac = DAT_802c25c4;
-    local_a8 = DAT_802c25c8;
-    local_a4 = DAT_802c25cc;
-    local_a0 = (float)DAT_802c25d0;
-    local_9c = DAT_802c25d4;
-    newshadows_getShadowTextureTable16(&local_b8,&uStack_b4);
-    FUN_8004812c(*(int *)(local_b8 + (uVar5 & 0xff) * 4),1);
+    PSMTXTrans(afStack_98, lbl_803DEBCC,
+               fVar7 * (float)((double)CONCAT44(0x43300000,uStack_64) - lbl_803DEBC0),
+               lbl_803DEBCC);
+    PSMTXConcat(param_4,afStack_98,afStack_98);
+    GXLoadPosMtxImm(afStack_98,0);
+    local_28[0] = *(float*)((int)&lbl_802C1E40 + 0);
+    local_28[1] = *(float*)((int)&lbl_802C1E40 + 4);
+    local_28[2] = *(float*)((int)&lbl_802C1E40 + 8);
+    local_28[3] = *(float*)((int)&lbl_802C1E40 + 12);
+    local_28[4] = *(float*)((int)&lbl_802C1E40 + 16);
+    local_28[5] = *(float*)((int)&lbl_802C1E40 + 20);
+    fn_8006C4E0((int*)&local_b8,(int*)&uStack_b4);
+    selectTexture(*(int *)(local_b8 + (uVar5 & 0xff) * 4),1);
     uStack_5c = (uVar5 & 0xff) + 1 ^ 0x80000000;
     local_60 = 0x43300000;
-    local_b0 = (float)((double)(float)((double)(float)((double)CONCAT44(0x43300000,uStack_5c) -
-                                                      dVar8) * dVar9) * dVar10);
-    local_a0 = local_b0;
-    FUN_8025b9e8(1,&local_b0,DAT_803dc2a4);
-    FUN_8025d63c(*puVar6,(uint)*(ushort *)(puVar6 + 1));
+    local_28[0] = (float)((double)CONCAT44(0x43300000,uStack_5c) - lbl_803DEBC0) *
+                  lbl_803DEC24 * displayOffsetH_803DEBFC;
+    local_28[4] = local_28[0];
+    GXSetIndTexMtx(1,(const float (*)[3])local_28,lbl_803DB644);
+    GXCallDisplayList((void *)*(int *)puVar6,(uint)*(ushort *)(puVar6 + 1));
   }
-LAB_8005e6a4:
-  FUN_80286888();
+LAB_8005E528:
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
  *
- * Function: FUN_8005e25c
- * EN v1.0 Address: 0x8005E25C
- * EN v1.0 Size: 8b
+ * Function: fn_8005E560
+ * EN v1.0 Address: 0x8005E560
+ * EN v1.0 Size: 464b
  * EN v1.1 Address: 0x8005E6DC
  * EN v1.1 Size: 464b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
-int FUN_8005e25c(int param_1,int *param_2)
+#pragma scheduling off
+#pragma peephole off
+int fn_8005E560(int param_1,int *param_2,int *param_3)
 {
-    return 0;
+  int iVar1;
+  uint uVar2;
+  uint uVar3;
+  undefined uVar4;
+  undefined uVar5;
+  undefined uVar6;
+  int local_18;
+
+  local_18 = lbl_803E8448;
+  uVar2 = param_3[4];
+  uVar6 = *(undefined *)(*param_3 + ((int)uVar2 >> 3));
+  iVar1 = *param_3 + ((int)uVar2 >> 3);
+  uVar4 = *(undefined *)(iVar1 + 1);
+  uVar5 = *(undefined *)(iVar1 + 2);
+  param_3[4] = uVar2 + 6;
+  iVar1 = *(int *)((int)param_1 + 0x64);
+  uVar3 = (uint3)(CONCAT12(uVar5,CONCAT11(uVar4,uVar6)) >> (uVar2 & 7)) & 0x3f;
+  iVar1 = iVar1 + uVar3 * 0x44;
+  GXSetTevAlphaIn(0,7,4,5,7);
+  Shader_getLayer(iVar1,0);
+  selectTexture(*(int *)iVar1,0);
+  if ((*(uint *)(iVar1 + 0x3c) & 4) != 0) {
+    _gxSetFogParams();
+    goto LAB_8005E630;
+  }
+  {
+    int local_10[2];
+    local_10[0] = local_18;
+    GXSetFog(0,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,*(GXColor*)local_10);
+  }
+LAB_8005E630:
+  if ((*(uint *)(iVar1 + 0x3c) & 1) == 0) {
+    if ((*(uint *)(iVar1 + 0x3c) & 0x2000) == 0) {
+      if ((*(uint *)(iVar1 + 0x3c) & 0x100000) == 0) {
+        if ((*(uint *)(iVar1 + 0x3c) & 0x80000) == 0) goto LAB_8005E6D0;
+      }
+    }
+  }
+  {
+    int local_C[1];
+    local_C[0] = lbl_803DB640;
+    GXSetChanAmbColor(0,*(GXColor *)local_C);
+    if ((*(uint *)(iVar1 + 0x3c) & 0x2000) != 0) {
+      GXSetChanCtrl(0,0,0,1,0,0,2);
+      goto LAB_8005E718;
+    }
+    GXSetChanCtrl(0,1,0,1,0,0,2);
+    goto LAB_8005E718;
+  }
+LAB_8005E6D0:
+  {
+    byte local_14;
+    byte local_15;
+    byte local_16;
+    fn_8008982C(0,&local_16,&local_15,&local_14);
+    GXSetChanCtrl(0,1,0,1,0,0,2);
+    {
+      int local_8[1];
+      local_8[0] = local_14 | (local_15 << 8) | (local_16 << 16);
+      GXSetChanAmbColor(0,*(GXColor *)local_8);
+    }
+  }
+LAB_8005E718:
+  return iVar1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
  *
- * Function: FUN_8005e264
- * EN v1.0 Address: 0x8005E264
- * EN v1.0 Size: 756b
+ * Function: fn_8005E730
+ * EN v1.0 Address: 0x8005E730
+ * EN v1.0 Size: 588b
  * EN v1.1 Address: 0x8005E8AC
  * EN v1.1 Size: 588b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
-void FUN_8005e264(undefined4 param_1,undefined4 param_2,float *param_3)
+#pragma scheduling off
+#pragma peephole off
+void fn_8005E730(undefined4 param_1,undefined4 param_2,int param_3)
 {
   int iVar1;
   int iVar2;
   int *piVar3;
-  double dVar4;
+  f32 fVar4;
   undefined8 uVar5;
-  byte local_68;
-  byte local_67;
-  byte local_66;
-  undefined uStack_65;
-  int local_64;
-  float fStack_60;
-  undefined4 uStack_5c;
-  undefined4 auStack_58 [2];
-  undefined4 local_50;
+  int local_C;
+  byte local_9;
+  byte local_A;
+  byte local_B;
+  f32 fStack_14;
+  f32 fStack_10;
+  undefined4 uStack_18;
+  undefined4 auStack_14[2];
   uint uStack_4c;
   undefined4 local_48;
   uint uStack_44;
@@ -321,73 +319,63 @@ void FUN_8005e264(undefined4 param_1,undefined4 param_2,float *param_3)
   uint uStack_2c;
   undefined4 local_28;
   uint uStack_24;
-  
-  uVar5 = FUN_80286838();
-  iVar2 = (int)((ulonglong)uVar5 >> 0x20);
-  iVar1 = (int)uVar5;
-  uStack_4c = (int)*(short *)(iVar2 + 6) >> 3 ^ 0x80000000;
-  local_50 = 0x43300000;
-  uStack_44 = (int)*(short *)(iVar2 + 8) >> 3 ^ 0x80000000;
+
+  uStack_4c = (int)*(short *)((int)param_1 + 6) >> 3 ^ 0x80000000;
   local_48 = 0x43300000;
-  uStack_3c = (int)*(short *)(iVar2 + 10) >> 3 ^ 0x80000000;
+  uStack_44 = (int)*(short *)((int)param_1 + 8) >> 3 ^ 0x80000000;
   local_40 = 0x43300000;
-  uStack_34 = (int)*(short *)(iVar2 + 0xc) >> 3 ^ 0x80000000;
+  uStack_3c = (int)*(short *)((int)param_1 + 10) >> 3 ^ 0x80000000;
   local_38 = 0x43300000;
-  uStack_2c = (int)*(short *)(iVar2 + 0xe) >> 3 ^ 0x80000000;
+  uStack_34 = (int)*(short *)((int)param_1 + 0xc) >> 3 ^ 0x80000000;
   local_30 = 0x43300000;
-  uStack_24 = (int)*(short *)(iVar2 + 0x10) >> 3 ^ 0x80000000;
+  uStack_2c = (int)*(short *)((int)param_1 + 0xe) >> 3 ^ 0x80000000;
   local_28 = 0x43300000;
-  FUN_8001760c((double)((float)((double)CONCAT44(0x43300000,uStack_4c) - DOUBLE_803df840) +
-                        *(float *)(iVar1 + 0x18) + lbl_803DDA58),
-               (double)((float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803df840) +
-                       *(float *)(iVar1 + 0x28)),
-               (double)((float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803df840) +
-                        *(float *)(iVar1 + 0x38) + lbl_803DDA5C),
-               (double)((float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803df840) +
-                        *(float *)(iVar1 + 0x18) + lbl_803DDA58),
-               (double)((float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803df840) +
-                       *(float *)(iVar1 + 0x28)),
-               (double)((float)((double)CONCAT44(0x43300000,uStack_24) - DOUBLE_803df840) +
-                        *(float *)(iVar1 + 0x38) + lbl_803DDA5C),&DAT_803ddaa0,2,&local_64);
-  FUN_80052904();
-  FUN_800487e0(param_3);
-  piVar3 = (int *)&DAT_803ddaa0;
-  for (iVar2 = 0; iVar2 < local_64; iVar2 = iVar2 + 1) {
-    FUN_80017598(*piVar3,&local_68,&local_67,&local_66,&uStack_65);
-    local_68 = (char)((int)(uint)local_68 >> 1) + (char)((int)(uint)local_68 >> 2);
-    local_67 = (char)((int)(uint)local_67 >> 1) + (char)((int)(uint)local_67 >> 2);
-    local_66 = (char)((int)(uint)local_66 >> 1) + (char)((int)(uint)local_66 >> 2);
-    FUN_800175e4(*piVar3,&fStack_60,&uStack_5c,auStack_58);
-    dVar4 = FUN_800175dc(*piVar3);
-    FUN_8004a94c(dVar4,(undefined4 *)&local_68,&fStack_60);
+  uStack_24 = (int)*(short *)((int)param_1 + 0x10) >> 3 ^ 0x80000000;
+  fn_8001E928((undefined*)&lbl_803DCE20,2,&local_C,
+              (float)((double)CONCAT44(0x43300000,uStack_4c) - lbl_803DEBC0) + *(float *)((int)param_2 + 0x18) + playerMapOffsetX,
+              (float)((double)CONCAT44(0x43300000,uStack_44) - lbl_803DEBC0) + *(float *)((int)param_2 + 0x28),
+              (float)((double)CONCAT44(0x43300000,uStack_3c) - lbl_803DEBC0) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ,
+              (float)((double)CONCAT44(0x43300000,uStack_34) - lbl_803DEBC0) + *(float *)((int)param_2 + 0x18) + playerMapOffsetX,
+              (float)((double)CONCAT44(0x43300000,uStack_2c) - lbl_803DEBC0) + *(float *)((int)param_2 + 0x28),
+              (float)((double)CONCAT44(0x43300000,uStack_24) - lbl_803DEBC0) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ);
+  resetLotsOfRenderVars();
+  fn_8004CE0C(param_3);
+  piVar3 = (int *)&lbl_803DCE20;
+  for (iVar2 = 0; iVar2 < local_C; iVar2 = iVar2 + 1) {
+    fn_8001DACC(*piVar3,&local_B,&local_A,&local_9);
+    local_B = (char)((int)(uint)local_B >> 1) + (char)((int)(uint)local_B >> 2);
+    local_A = (char)((int)(uint)local_A >> 1) + (char)((int)(uint)local_A >> 2);
+    local_9 = (char)((int)(uint)local_9 >> 1) + (char)((int)(uint)local_9 >> 2);
+    fn_8001DD50(*piVar3,&fStack_14,&uStack_18,auStack_14);
+    fn_8001DD48(*piVar3);
+    fn_8004FA30(&local_B,&fStack_14);
     piVar3 = piVar3 + 1;
   }
-  FUN_800528d0();
-  FUN_8025a5bc(1);
-  FUN_80259288(2);
-  FUN_8006f8fc(1,3,0);
-  FUN_8006f8a4(1);
-  FUN_8025cce8(1,4,5,5);
-  FUN_8025c754(7,0,0,7,0);
-  FUN_80286884();
+  textureFn_800528bc();
+  GXSetNumChans(1);
+  GXSetCullMode(2);
+  gxSetZMode_(1,3,0);
+  gxSetPeControl_ZCompLoc_(1);
+  GXSetBlendMode(1,4,5,5);
+  GXSetAlphaCompare(7,0,0,7,0);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
  *
- * Function: FUN_8005e558
- * EN v1.0 Address: 0x8005E558
- * EN v1.0 Size: 288b
+ * Function: fn_8005E97C
+ * EN v1.0 Address: 0x8005E97C
+ * EN v1.0 Size: 296b
  * EN v1.1 Address: 0x8005EAF8
  * EN v1.1 Size: 296b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4
-FUN_8005e558(double param_1,double param_2,double param_3,double param_4,double param_5,
+fn_8005E97C(double param_1,double param_2,double param_3,double param_4,double param_5,
             double param_6,float *param_7)
 {
   byte bVar1;
@@ -399,8 +387,8 @@ FUN_8005e558(double param_1,double param_2,double param_3,double param_4,double 
   double dVar7;
   double dVar8;
   double dVar9;
-  
-  pfVar2 = (float *)&DAT_8038859c;
+
+  pfVar2 = (float *)&lbl_8038793C;
   iVar3 = 5;
   while( true ) {
     bVar1 = *(byte *)(pfVar2 + 4);
@@ -426,12 +414,12 @@ FUN_8005e558(double param_1,double param_2,double param_3,double param_4,double 
          pfVar2[3] +
          (float)(dVar9 * (double)pfVar2[2] +
                 (double)(float)(dVar5 * (double)*pfVar2 + (double)(float)(dVar4 * (double)pfVar2[1])
-                               )) < lbl_803DF84C) &&
+                               )) < lbl_803DEBCC) &&
        (*param_7 +
         pfVar2[3] +
         (float)(dVar6 * (double)pfVar2[2] +
                (double)(float)(dVar8 * (double)*pfVar2 + (double)(float)(dVar7 * (double)pfVar2[1]))
-               ) < lbl_803DF84C)) break;
+               ) < lbl_803DEBCC)) break;
     pfVar2 = pfVar2 + 5;
     param_7 = param_7 + 1;
     iVar3 = iVar3 + -1;
@@ -441,22 +429,22 @@ FUN_8005e558(double param_1,double param_2,double param_3,double param_4,double 
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
  *
- * Function: FUN_8005e678
- * EN v1.0 Address: 0x8005E678
- * EN v1.0 Size: 524b
+ * Function: fn_8005EAA4
+ * EN v1.0 Address: 0x8005EAA4
+ * EN v1.0 Size: 476b
  * EN v1.1 Address: 0x8005EC20
  * EN v1.1 Size: 476b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4
-FUN_8005e678(int param_1,int param_2,float *param_3,int param_4,float *param_5,float *param_6,
+fn_8005EAA4(int param_1,int param_2,float *param_3,int param_4,float *param_5,float *param_6,
             float *param_7,float *param_8,float *param_9,float *param_10)
 {
   byte bVar1;
@@ -467,10 +455,10 @@ FUN_8005e678(int param_1,int param_2,float *param_3,int param_4,float *param_5,f
   float fVar6;
   float fVar7;
   double dVar8;
-  
-  dVar8 = DOUBLE_803df840;
+
+  dVar8 = lbl_803DEBC0;
   *param_8 = (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 0xc) >> 3 ^ 0x80000000) -
-                    DOUBLE_803df840) + *(float *)(param_2 + 0x18);
+                    lbl_803DEBC0) + *(float *)(param_2 + 0x18);
   *param_5 = (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 6) >> 3 ^ 0x80000000) -
                     dVar8) + *(float *)(param_2 + 0x18);
   *param_9 = (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 0xe) >> 3 ^ 0x80000000) -
@@ -508,9 +496,9 @@ FUN_8005e678(int param_1,int param_2,float *param_3,int param_4,float *param_5,f
         fVar6 = *param_10;
         fVar7 = *param_7;
       }
-      if ((param_3[3] + fVar6 * param_3[2] + fVar2 * *param_3 + fVar4 * param_3[1] < lbl_803DF84C)
+      if ((param_3[3] + fVar6 * param_3[2] + fVar2 * *param_3 + fVar4 * param_3[1] < lbl_803DEBCC)
          && (param_3[3] + fVar7 * param_3[2] + fVar3 * *param_3 + fVar5 * param_3[1] <
-             lbl_803DF84C)) {
+             lbl_803DEBCC)) {
         return 0;
       }
       param_3 = param_3 + 5;
@@ -519,39 +507,115 @@ FUN_8005e678(int param_1,int param_2,float *param_3,int param_4,float *param_5,f
   }
   return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
  *
- * Function: FUN_8005e884
- * EN v1.0 Address: 0x8005E884
- * EN v1.0 Size: 4b
+ * Function: fn_8005EC80
+ * EN v1.0 Address: 0x8005EC80
+ * EN v1.0 Size: 1376b
  * EN v1.1 Address: 0x8005EDFC
  * EN v1.1 Size: 1376b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
-void FUN_8005e884(undefined4 param_1,undefined4 param_2,int param_3,int param_4,int *param_5,
-                 float *param_6)
+#pragma scheduling off
+#pragma peephole off
+void fn_8005EC80(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
+                int *param_5,undefined4 param_6,float *param_7,undefined4 param_8)
 {
+  int iVar1;
+  int iVar2;
+  int *piVar3;
+  int iVar4;
+  int iVar5;
+  int iVar6;
+  uint uVar7;
+  int local_30;
+  byte local_13;
+  byte local_12;
+  byte local_11;
+  byte local_10;
+  byte local_17;
+  byte local_16;
+  byte local_15;
+  byte local_14;
+  int local_34;
+  int local_38;
+  int local_3c;
+  float local_1c;
+  float local_18;
+  float local_20;
+  float local_24;
+  float local_28;
+  float local_2c;
+  undefined4 uStack_8;
+  undefined4 uStack_9;
+  undefined4 uStack_a;
+  undefined4 uStack_b;
+
+  /* decode bitstream */
+  {
+    uint uBits;
+    undefined uV1, uV2, uV3;
+    int iOff;
+    uint uPos;
+    uPos = param_5[4];
+    uV3 = *(undefined*)(*param_5 + ((int)uPos >> 3));
+    iOff = *param_5 + ((int)uPos >> 3);
+    uV1 = *(undefined*)(iOff + 1);
+    uV2 = *(undefined*)(iOff + 2);
+    param_5[4] = uPos + 8;
+    iVar1 = *(int *)((int)param_3 + 0x68);
+    uBits = (uint3)(CONCAT12(uV2,CONCAT11(uV1,uV3)) >> (uPos & 7)) & 0xff;
+    iVar1 = iVar1 + uBits * 0x1c;
+  }
+
+  if ((param_4 != 0) && ((*(uint *)((int)param_4 + 0x3c) & 2) != 0)) {
+    goto LAB_8005F1C8;
+  }
+
+  {
+    int local_8[2];
+    int local_c[2];
+    int local_2c_x, local_28_x, local_24_x, local_20_x;
+    int res;
+    local_8[0] = (int)&lbl_803E8444 + 0x1c;  /* placeholder for plane list ptr */
+    local_c[0] = (int)&lbl_803E8444 + 0x18;
+    local_2c_x = 0x2c;
+    local_28_x = 0x28;
+    local_24_x = 0x24;
+    local_20_x = 0x20;
+    res = fn_8005EAA4(iVar1,param_2,
+                      (float*)((int)&lbl_8037E0C0 + lbl_803DCE30 * 16 + 0xc - lbl_803DCE30 * 16),
+                      5,
+                      (float*)(local_2c_x + (int)&local_2c_x - local_2c_x),
+                      (float*)(local_28_x + (int)&local_28_x - local_28_x),
+                      (float*)(local_24_x + (int)&local_24_x - local_24_x),
+                      (float*)(local_20_x + (int)&local_20_x - local_20_x),
+                      (float*)(local_2c_x),
+                      (float*)(local_28_x));
+    (void)res;
+  }
+
+LAB_8005F1C8:
+  return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
  *
- * Function: FUN_8005e888
- * EN v1.0 Address: 0x8005E888
- * EN v1.0 Size: 900b
+ * Function: fn_8005F1E0
+ * EN v1.0 Address: 0x8005F1E0
+ * EN v1.0 Size: 888b
  * EN v1.1 Address: 0x8005F35C
  * EN v1.1 Size: 888b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
-void FUN_8005e888(int param_1)
+#pragma scheduling off
+#pragma peephole off
+void fn_8005F1E0(int param_1, int param_2)
 {
   int iVar1;
   int *piVar2;
@@ -561,12 +625,12 @@ void FUN_8005e888(int param_1)
   int iVar6;
   int iVar7;
   undefined4 local_48;
-  float afStack_44 [13];
-  
-  local_48 = DAT_803df830;
+  Mtx afStack_44;
+
+  local_48 = lbl_803DEBB0;
   if ((*(char *)(param_1 + 0x41) == '\x02') &&
-     (iVar1 = FUN_800480a0(param_1,1), (*(byte *)(iVar1 + 4) & 0x7f) == 9)) {
-    piVar2 = (int *)FUN_800480a0(param_1,0);
+     (iVar1 = Shader_getLayer(param_1,1), (*(byte *)(iVar1 + 4) & 0x7f) == 9)) {
+    piVar2 = (int *)Shader_getLayer(param_1,0);
     if (*(char *)((int)piVar2 + 5) == '\0') {
       iVar1 = *piVar2;
     }
@@ -574,11 +638,11 @@ void FUN_8005e888(int param_1)
       iVar1 = *piVar2;
       iVar3 = 0;
       iVar6 = 0x50;
-      piVar5 = DAT_803ddaec;
+      piVar5 = (int *)lbl_803DCE6C;
       do {
         if (((0 < *(short *)(piVar5 + 3)) && (*piVar5 == iVar1)) &&
            (*(char *)((int)piVar2 + 5) == *(char *)((int)piVar5 + 0xe))) {
-          iVar1 = FUN_8005375c(iVar1,DAT_803ddaec[iVar3 * 4 + 1]);
+          iVar1 = fn_80054C30(iVar1,((int *)lbl_803DCE6C)[iVar3 * 4 + 1]);
           break;
         }
         piVar5 = piVar5 + 4;
@@ -591,16 +655,17 @@ void FUN_8005e888(int param_1)
     }
     else {
       iVar3 = (uint)*(byte *)((int)piVar2 + 6) * 0x10;
-      FUN_80247a48((double)(*(float *)(DAT_803ddae8 + iVar3) / lbl_803DF848),
-                   (double)(*(float *)(DAT_803ddae8 + iVar3 + 4) / lbl_803DF848),
-                   (double)lbl_803DF84C,afStack_44);
-      pfVar4 = afStack_44;
+      PSMTXTrans(afStack_44,
+                 *(float *)(lbl_803DCE68 + iVar3) / lbl_803DEBC8,
+                 *(float *)(lbl_803DCE68 + iVar3 + 4) / lbl_803DEBC8,
+                 lbl_803DEBCC);
+      pfVar4 = (float*)afStack_44;
     }
-    FUN_80051b04(iVar1,pfVar4,0,(char *)&local_48);
+    fn_80051B00(iVar1,pfVar4,0,(char *)&local_48);
     if ((*(uint *)(param_1 + 0x3c) & 0x100) != 0) {
-      FUN_80049260();
+      fn_8004D928();
     }
-    piVar2 = (int *)FUN_800480a0(param_1,1);
+    piVar2 = (int *)Shader_getLayer(param_1,1);
     if (*(char *)((int)piVar2 + 5) == '\0') {
       iVar1 = *piVar2;
     }
@@ -608,11 +673,11 @@ void FUN_8005e888(int param_1)
       iVar1 = *piVar2;
       iVar3 = 0;
       iVar6 = 0x50;
-      piVar5 = DAT_803ddaec;
+      piVar5 = (int *)lbl_803DCE6C;
       do {
         if (((0 < *(short *)(piVar5 + 3)) && (*piVar5 == iVar1)) &&
            (*(char *)((int)piVar2 + 5) == *(char *)((int)piVar5 + 0xe))) {
-          iVar1 = FUN_8005375c(iVar1,DAT_803ddaec[iVar3 * 4 + 1]);
+          iVar1 = fn_80054C30(iVar1,((int *)lbl_803DCE6C)[iVar3 * 4 + 1]);
           break;
         }
         piVar5 = piVar5 + 4;
@@ -625,30 +690,31 @@ void FUN_8005e888(int param_1)
     }
     else {
       iVar3 = (uint)*(byte *)((int)piVar2 + 6) * 0x10;
-      FUN_80247a48((double)(*(float *)(DAT_803ddae8 + iVar3) / lbl_803DF848),
-                   (double)(*(float *)(DAT_803ddae8 + iVar3 + 4) / lbl_803DF848),
-                   (double)lbl_803DF84C,afStack_44);
-      pfVar4 = afStack_44;
+      PSMTXTrans(afStack_44,
+                 *(float *)(lbl_803DCE68 + iVar3) / lbl_803DEBC8,
+                 *(float *)(lbl_803DCE68 + iVar3 + 4) / lbl_803DEBC8,
+                 lbl_803DEBCC);
+      pfVar4 = (float*)afStack_44;
     }
-    FUN_80051868(iVar1,pfVar4,9);
-    FUN_80052500((char *)&local_48);
+    fn_80051868(iVar1,pfVar4,9);
+    fn_800524EC((char *)&local_48);
   }
   else {
     for (iVar1 = 0; iVar1 < (int)(uint)*(byte *)(param_1 + 0x41); iVar1 = iVar1 + 1) {
-      piVar2 = (int *)FUN_800480a0(param_1,iVar1);
+      piVar2 = (int *)Shader_getLayer(param_1,iVar1);
       iVar3 = *piVar2;
       if (iVar3 == 0) {
-        FUN_800523e4();
+        fn_800523D0();
       }
       else {
         if (*(char *)((int)piVar2 + 5) != '\0') {
           iVar6 = 0;
           iVar7 = 0x50;
-          piVar5 = DAT_803ddaec;
+          piVar5 = (int *)lbl_803DCE6C;
           do {
             if (((0 < *(short *)(piVar5 + 3)) && (*piVar5 == iVar3)) &&
                (*(char *)((int)piVar2 + 5) == *(char *)((int)piVar5 + 0xe))) {
-              iVar3 = FUN_8005375c(iVar3,DAT_803ddaec[iVar6 * 4 + 1]);
+              iVar3 = fn_80054C30(iVar3,((int *)lbl_803DCE6C)[iVar6 * 4 + 1]);
               break;
             }
             piVar5 = piVar5 + 4;
@@ -660,40 +726,171 @@ void FUN_8005e888(int param_1)
           pfVar4 = (float *)0x0;
         }
         else {
-          pfVar4 = (float *)(DAT_803ddae8 + (uint)*(byte *)((int)piVar2 + 6) * 0x10);
-          FUN_80247a48((double)(*pfVar4 / lbl_803DF848),(double)(pfVar4[1] / lbl_803DF848),
-                       (double)lbl_803DF84C,afStack_44);
-          pfVar4 = afStack_44;
+          pfVar4 = (float *)(lbl_803DCE68 + (uint)*(byte *)((int)piVar2 + 6) * 0x10);
+          PSMTXTrans(afStack_44,*pfVar4 / lbl_803DEBC8,pfVar4[1] / lbl_803DEBC8,lbl_803DEBCC);
+          pfVar4 = (float*)afStack_44;
         }
         if ((*(uint *)(param_1 + 0x3c) & 0x40000) == 0) {
-          FUN_80051868(iVar3,pfVar4,*(byte *)(piVar2 + 1) & 0x7f);
+          fn_80051868(iVar3,pfVar4,*(byte *)(piVar2 + 1) & 0x7f);
         }
         else {
-          FUN_8004c178(iVar3,pfVar4);
+          fn_80051528(iVar3,pfVar4);
         }
       }
     }
     if ((*(uint *)(param_1 + 0x3c) & 0x100) != 0) {
-      FUN_80049260();
+      fn_8004D928();
     }
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
  *
- * Function: FUN_8005ec0c
- * EN v1.0 Address: 0x8005EC0C
- * EN v1.0 Size: 8b
+ * Function: fn_8005F558
+ * EN v1.0 Address: 0x8005F558
+ * EN v1.0 Size: 968b
  * EN v1.1 Address: 0x8005F6D4
  * EN v1.1 Size: 968b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
-int FUN_8005ec0c(char param_1,int param_2,int *param_3)
+#pragma scheduling off
+#pragma peephole off
+int fn_8005F558(char param_1,int param_2,int *param_3)
 {
-    return 0;
+  int iVar1;
+  uint uVar2;
+  undefined uVar3;
+  undefined uVar4;
+  undefined uVar5;
+  uint uPos;
+  int local_1c;
+
+  local_1c = lbl_803E8444;
+  uPos = param_3[4];
+  uVar5 = *(undefined *)(*param_3 + ((int)uPos >> 3));
+  iVar1 = *param_3 + ((int)uPos >> 3);
+  uVar3 = *(undefined *)(iVar1 + 1);
+  uVar4 = *(undefined *)(iVar1 + 2);
+  param_3[4] = uPos + 6;
+  iVar1 = *(int *)((int)param_2 + 0x64);
+  uVar2 = (uint3)(CONCAT12(uVar4,CONCAT11(uVar3,uVar5)) >> (uPos & 7)) & 0x3f;
+  iVar1 = iVar1 + uVar2 * 0x44;
+
+  if ((param_1 & 0xff) == 0) {
+    return iVar1;
+  }
+
+  if ((*(uint *)(iVar1 + 0x3c) & 4) != 0) {
+    _gxSetFogParams();
+    goto LAB_8005F608;
+  }
+  {
+    int local_10[2];
+    local_10[0] = local_1c;
+    GXSetFog(0,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,*(GXColor*)local_10);
+  }
+LAB_8005F608:
+  if ((iVar1 != 0) && ((*(uint *)(iVar1 + 0x3c) & 1) != 0)) {
+    return iVar1;
+  }
+  if ((iVar1 != 0) && ((*(uint *)(iVar1 + 0x3c) & 0x4000) != 0)) {
+    {
+      int res;
+      res = fn_80118294(0,0,0);
+      if ((res & 0xff) != 0) {
+        return iVar1;
+      }
+    }
+  }
+  resetLotsOfRenderVars();
+  if ((*(uint *)(iVar1 + 0x3c) & 0x1000000) != 0) {
+    fn_8004DA54(iVar1);
+    goto LAB_8005F690;
+  }
+  fn_8005F1E0(iVar1,(int)0x80);
+LAB_8005F690:
+  if ((*(uint *)(iVar1 + 0x3c) & 0x4000000) != 0) {
+    int *lPtr = lbl_803DCE34;
+    if (lPtr != 0) {
+      fn_8004FDA0(lPtr,(int*)&lbl_80382008,&lbl_803DB638);
+      goto LAB_8005F6F4;
+    }
+  }
+  if ((*(uint *)(iVar1 + 0x3c) & 0x2000000) != 0) {
+    fn_8004E0FC();
+    goto LAB_8005F6F4;
+  }
+  if (isHeavyFogEnabled()) {
+    {
+      byte local_14[4];
+      getColor803dd01c(local_14);
+      fn_8004E7F8(local_14);
+    }
+  }
+LAB_8005F6F4:
+  if (((*(uint *)(iVar1 + 0x3c) & 2) != 0) || ((*(uint *)(iVar1 + 0x3c) & 4) != 0)) {
+    GXSetBlendMode(1,4,5,5);
+    gxSetZMode_(1,3,0);
+    gxSetPeControl_ZCompLoc_(1);
+    GXSetAlphaCompare(7,0,0,7,0);
+    goto LAB_8005F7FC;
+  }
+  if ((*(uint *)(iVar1 + 0x3c) & 0x200000) != 0) {
+    if ((*(uint *)(iVar1 + 0x3c) & 0x1000000) == 0) {
+      GXSetBlendMode(0,1,0,5);
+      gxSetZMode_(1,3,1);
+      gxSetPeControl_ZCompLoc_(0);
+      GXSetAlphaCompare(4,0,0,4,0);
+      goto LAB_8005F7FC;
+    }
+  }
+  GXSetBlendMode(0,1,0,5);
+  gxSetZMode_(1,3,1);
+  gxSetPeControl_ZCompLoc_(1);
+  GXSetAlphaCompare(7,0,0,7,0);
+LAB_8005F7FC:
+  if ((*(uint *)(iVar1 + 0x3c) & 1) == 0) {
+    if ((*(uint *)(iVar1 + 0x3c) & 0x2000) == 0) {
+      if ((*(uint *)(iVar1 + 0x3c) & 0x100000) == 0) {
+        if ((*(uint *)(iVar1 + 0x3c) & 0x80000) == 0) goto LAB_8005F89C;
+      }
+    }
+  }
+  {
+    int local_c[1];
+    local_c[0] = lbl_803DB63C;
+    GXSetChanAmbColor(0,*(GXColor *)local_c);
+    if ((*(uint *)(iVar1 + 0x3c) & 0x2000) != 0) {
+      GXSetChanCtrl(0,0,0,1,0,0,2);
+      goto LAB_8005F8E4;
+    }
+    GXSetChanCtrl(0,1,0,1,0,0,2);
+    goto LAB_8005F8E4;
+  }
+LAB_8005F89C:
+  {
+    byte local_18;
+    byte local_19;
+    byte local_1a;
+    fn_8008982C(0,&local_1a,&local_19,&local_18);
+    GXSetChanCtrl(0,1,0,1,0,0,2);
+    {
+      int local_8[1];
+      local_8[0] = local_18 | (local_19 << 8) | (local_1a << 16);
+      GXSetChanAmbColor(0,*(GXColor *)local_8);
+    }
+  }
+LAB_8005F8E4:
+  if ((*(uint *)(iVar1 + 0x3c) & 0x10000000) != 0) {
+    GXSetCullMode(2);
+    goto LAB_8005F908;
+  }
+  GXSetCullMode(0);
+LAB_8005F908:
+  return iVar1;
 }
+#pragma peephole reset
+#pragma scheduling reset
