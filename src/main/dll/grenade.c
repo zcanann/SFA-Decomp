@@ -30,6 +30,7 @@ extern undefined4 FUN_80139910();
 extern int FUN_80139a48();
 extern undefined4 FUN_80139a4c();
 extern int FUN_8013b368();
+extern int trickyFn_8013b368(int param_1, f32 param_2, int *param_3);
 extern undefined4 FUN_8013d8f0();
 extern undefined4 FUN_80144e40();
 extern undefined4 FUN_80145120();
@@ -1077,30 +1078,40 @@ undefined4 fn_801432CC(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4 fn_80143388(int param_1,int *param_2)
 {
   int iVar1;
-  bool bVar2;
   int iVar3;
-  
+
   iVar1 = fn_8014460C(param_1,param_2);
-  if (iVar1 == 0) {
-    for (iVar1 = 0; iVar1 < *(char *)((int)param_2 + 0x827); iVar1 = iVar1 + 1) {
-      if ((((*(char *)((int)param_2 + iVar1 + 0x81f) == '\0') &&
-           (iVar3 = *(int *)(param_1 + 0xb8), (*(byte *)(iVar3 + 0x58) >> 6 & 1) == 0)) &&
-          ((0x2f < *(short *)(param_1 + 0xa0) || (*(short *)(param_1 + 0xa0) < 0x29)))) &&
-         (bVar2 = FUN_800067f0(param_1,0x10), !bVar2)) {
+  if (iVar1 != 0) {
+    return 1;
+  }
+  for (iVar1 = 0; iVar1 < *(char *)((int)param_2 + 0x827); iVar1 = iVar1 + 1) {
+    if (*(char *)((int)param_2 + iVar1 + 0x81f) != '\0') continue;
+    iVar3 = *(int *)(param_1 + 0xb8);
+    if ((*(byte *)(iVar3 + 0x58) >> 6 & 1) != 0) continue;
+    if (*(short *)(param_1 + 0xa0) >= 0x30 || *(short *)(param_1 + 0xa0) < 0x29) {
+      if (FUN_800067f0(param_1,0x10) == 0) {
         FUN_80039468(param_1,iVar3 + 0x3a8,0x357,0,0xffffffff,0);
       }
     }
-    iVar1 = fn_8014460C(param_1,param_2);
-    if (((iVar1 == 0) && ((param_2[0x15] & 0x8000000U) != 0)) &&
-       (param_2[8] == (int)*(short *)(param_1 + 0xa0))) {
+  }
+  iVar1 = fn_8014460C(param_1,param_2);
+  if (iVar1 != 0) {
+    return 1;
+  }
+  if ((param_2[0x15] & 0x8000000U) != 0) {
+    if (param_2[8] == (int)*(short *)(param_1 + 0xa0)) {
       *(undefined *)((int)param_2 + 10) = 0;
     }
   }
   return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1325,17 +1336,25 @@ fn_801437D4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4 fn_80143B04(int param_1,int *param_2)
 {
   int iVar1;
-  
+
   iVar1 = fn_8014460C(param_1,param_2);
-  if (((iVar1 == 0) && ((param_2[0x15] & 0x8000000U) != 0)) &&
-     (param_2[8] == (int)*(short *)(param_1 + 0xa0))) {
-    *(undefined *)((int)param_2 + 10) = 0;
+  if (iVar1 != 0) {
+    return 1;
+  }
+  if ((param_2[0x15] & 0x8000000U) != 0) {
+    if (param_2[8] == (int)*(short *)(param_1 + 0xa0)) {
+      *(undefined *)((int)param_2 + 10) = 0;
+    }
   }
   return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1350,36 +1369,26 @@ undefined4 fn_80143B04(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-fn_80143B78(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
-            int *param_10,int param_11,undefined4 param_12,byte param_13,uint param_14,
-            undefined4 param_15,undefined4 param_16)
+#pragma scheduling off
+undefined4 fn_80143B78(int param_1,int *param_2)
 {
   int iVar1;
-  undefined4 uVar2;
-  
-  iVar1 = fn_8014460C(param_9,param_10);
-  if (iVar1 == 0) {
-    iVar1 = FUN_8013b368((double)lbl_803E3098,param_2,param_3,param_4,param_5,param_6,param_7,
-                         param_8,param_9,param_10,param_11,param_12,param_13,param_14,param_15,
-                         param_16);
-    if (iVar1 == 1) {
-      if (lbl_803E306C == (float)param_10[0x1c7]) {
-        *(undefined *)((int)param_10 + 10) = 0;
-      }
-      uVar2 = 1;
-    }
-    else {
-      *(undefined *)((int)param_10 + 10) = 0;
-      uVar2 = 0;
-    }
+
+  iVar1 = fn_8014460C(param_1,param_2);
+  if (iVar1 != 0) {
+    return 1;
   }
-  else {
-    uVar2 = 1;
+  iVar1 = trickyFn_8013b368(param_1,lbl_803E3098,param_2);
+  if (iVar1 == 1) {
+    if (lbl_803E306C == *(f32*)((int)param_2 + 0x71c)) {
+      *(undefined *)((int)param_2 + 10) = 0;
+    }
+    return 1;
   }
-  return uVar2;
+  *(undefined *)((int)param_2 + 10) = 0;
+  return 0;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
