@@ -5,11 +5,11 @@
 // - Current EN family packet data ties object def 0x05A9 here.
 //
 // Current EN descriptor:
-// - gWaterFallSprayObjDescriptor @ 0x803230C0
+// - gWaterFallSprayObjDescriptor @ 0x80322470
 //
 // Descriptor slots:
-// - 3: waterfallspray_init (0x8019866C)
-// - 4: waterfallspray_update (0x80198384)
-// - 6: waterfallspray_render (0x80198380)
-// - 7: waterfallspray_free (0x80198350)
-// - 9: waterfallspray_getExtraSize (0x80198324)
+// - 3: WaterFallSpray_init (0x801980F0)
+// - 4: WaterFallSpray_update (0x80197E08)
+// - 6: WaterFallSpray_render (0x80197E04)
+// - 7: WaterFallSpray_free (0x80197DD4)
+// - 9: WaterFallSpray_getExtraSize (0x80197DA8)

@@ -49,15 +49,15 @@
  * - 0x0506 SpiritDoorL: placements=13, class=0x0030, widths=9w x13
  *
  * EN descriptor slot map:
- * - descriptor=0x803230C0 gWaterFallSprayObjDescriptor (slots=10, mask=1101111111)
+ * - descriptor=0x803230C0 gSpiritDoorLockObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801A5D84 SpiritDoorLock_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801A5D80 SpiritDoorLock_release stub=blr ref=release (stub)
- * - slot 03: 0x801A5C70 fn_801A5C70 ref=init
- * - slot 04: 0x801A585C fn_801A585C ref=update
+ * - slot 03: 0x801A5C70 SpiritDoorLock_init ref=init
+ * - slot 04: 0x801A585C SpiritDoorLock_update ref=update
  * - slot 05: 0x801A5858 SpiritDoorLock_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801A5828 SpiritDoorLock_render ref=render
- * - slot 07: 0x801A57F8 fn_801A57F8 ref=free
- * - slot 08: 0x801A57F0 fn_801A57F0 stub=const 0
+ * - slot 07: 0x801A57F8 SpiritDoorLock_free ref=free
+ * - slot 08: 0x801A57F0 SpiritDoorLock_func08 stub=const 0
  * - slot 09: 0x801A57E8 SpiritDoorLock_getExtraSize stub=const 20 ref=getExtraSize (stub)
  */
 

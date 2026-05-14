@@ -36,12 +36,12 @@
  * - 0x05A9 WaterFallSp: placements=53, class=0x0073, widths=10w x53
  *
  * EN descriptor slot map:
- * - descriptor=0x803230C0 gWaterFallSprayObjDescriptor (slots=10, mask=0001101101)
- * - slot 03: 0x8019866C waterfallspray_init ref=init
- * - slot 04: 0x80198384 waterfallspray_update ref=update
- * - slot 06: 0x80198380 waterfallspray_render stub=blr ref=render (stub)
- * - slot 07: 0x80198350 waterfallspray_free ref=free
- * - slot 09: 0x80198324 waterfallspray_getExtraSize stub=const 8 ref=getExtraSize (stub)
+ * - descriptor=0x80322470 gWaterFallSprayObjDescriptor (slots=10, mask=0001101101)
+ * - slot 03: 0x801980F0 WaterFallSpray_init ref=init
+ * - slot 04: 0x80197E08 WaterFallSpray_update ref=update
+ * - slot 06: 0x80197E04 WaterFallSpray_render stub=blr ref=render (stub)
+ * - slot 07: 0x80197DD4 WaterFallSpray_free ref=free
+ * - slot 09: 0x80197DA8 WaterFallSpray_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 
 #if 0
