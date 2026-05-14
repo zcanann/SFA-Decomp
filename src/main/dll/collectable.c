@@ -1831,7 +1831,7 @@ void fn_8014A86C(int obj,int state,f32 *nearestFloorY,f32 *nearestSpecialY)
 /*
  * --INFO--
  *
- * Function: fn_801463BC
+ * Function: Tricky_render
  * EN v1.0 Address: 0x801463BC
  * EN v1.0 Size: 464b
  * EN v1.1 Address: TODO
@@ -1841,7 +1841,7 @@ void fn_8014A86C(int obj,int state,f32 *nearestFloorY,f32 *nearestSpecialY)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801463BC(int obj,int param_2,int param_3,int param_4,int param_5,char doRender)
+void Tricky_render(int obj,int param_2,int param_3,int param_4,int param_5,char doRender)
 {
   u8 mode;
   int state;
@@ -1899,7 +1899,7 @@ void fn_801463BC(int obj,int param_2,int param_3,int param_4,int param_5,char do
 /*
  * --INFO--
  *
- * Function: fn_8014658C
+ * Function: Tricky_hitDetect
  * EN v1.0 Address: 0x8014658C
  * EN v1.0 Size: 500b
  * EN v1.1 Address: TODO
@@ -1911,7 +1911,7 @@ void fn_801463BC(int obj,int param_2,int param_3,int param_4,int param_5,char do
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_8014658C(int obj)
+void Tricky_hitDetect(int obj)
 {
   f32 dy;
   int i;
@@ -2773,18 +2773,18 @@ int fn_801451D8(int obj,int state) {
 #pragma scheduling reset
 #pragma peephole reset
 
-/* fn_80145794: 72b - if GameBit_Get(0x4e4), OR 0x10000 into obj->_b8->_54. */
-void fn_80145794(int *obj) {
+/* Tricky_func11: 72b - if GameBit_Get(0x4e4), OR 0x10000 into obj->_b8->_54. */
+void Tricky_func11(int *obj) {
     int *p = (int*)obj[0xb8/4];
     if (GameBit_Get(0x4e4)) {
         p[0x54/4] |= 0x10000;
     }
 }
 
-/* fn_801457DC: 40b - lbz/cmplwi(8/0xe) selector returning 1 or 0. */
+/* Tricky_func13: 40b - lbz/cmplwi(8/0xe) selector returning 1 or 0. */
 #pragma peephole off
 #pragma scheduling off
-int fn_801457DC(int *obj) {
+int Tricky_func13(int *obj) {
     u8 v = *((u8*)obj[0xb8/4] + 8);
     if (v == 8 || v == 0xe) return 1;
     return 0;
@@ -2792,11 +2792,11 @@ int fn_801457DC(int *obj) {
 #pragma scheduling reset
 #pragma peephole reset
 
-/* fn_80145804: 36b - cmpwi(5) selector returning 1 or 0. */
+/* Tricky_func12: 36b - cmpwi(5) selector returning 1 or 0. */
 #pragma peephole off
 #pragma scheduling off
 #pragma optimize_for_size off
-int fn_80145804(int *obj) {
+int Tricky_func12(int *obj) {
     u8 v;
     int r;
     v = *((u8*)obj[0xb8/4] + 8);
@@ -2814,10 +2814,10 @@ int fn_80145804(int *obj) {
 #pragma scheduling reset
 #pragma peephole reset
 
-/* fn_80145828: 148b - enter or queue Tricky's target-driven state 10 command. */
+/* Tricky_func10: 148b - enter or queue Tricky's target-driven state 10 command. */
 #pragma peephole off
 #pragma scheduling off
-int fn_80145828(int *obj,int targetObj) {
+int Tricky_func10(int *obj,int targetObj) {
     int *state = (int*)obj[0xb8/4];
     u32 objBlocked = *(u16*)((u8*)obj + 0xb0) & 0x1000;
 
@@ -2852,10 +2852,10 @@ int fn_80145828(int *obj,int targetObj) {
 #pragma scheduling reset
 #pragma peephole reset
 
-/* fn_801458BC: 260b - start or refresh Tricky's targeted command state. */
+/* Tricky_func0F: 260b - start or refresh Tricky's targeted command state. */
 #pragma peephole off
 #pragma scheduling off
-void fn_801458BC(int *obj,int commandEnabled,int targetObj) {
+void Tricky_func0F(int *obj,int commandEnabled,int targetObj) {
     int *state = (int*)obj[0xb8/4];
 
     if (commandEnabled != 0) {
