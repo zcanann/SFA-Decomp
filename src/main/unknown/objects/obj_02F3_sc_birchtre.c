@@ -43,16 +43,16 @@
  * - 0x02EC SC_MusicTre: placements=3, class=0x006A, widths=9w x3
  *
  * EN descriptor slot map:
- * - descriptor=0x80328578 lbl_80328578 (slots=10, mask=1101111111)
- * - slot 00: 0x801DCEC0 fn_801DCEC0 stub=blr ref=initialise (stub)
- * - slot 01: 0x801DCEBC fn_801DCEBC stub=blr ref=release (stub)
- * - slot 03: 0x801DCD5C fn_801DCD5C ref=init
- * - slot 04: 0x801DC900 fn_801DC900 ref=update
- * - slot 05: 0x801DC8FC fn_801DC8FC stub=blr ref=hitDetect (stub)
- * - slot 06: 0x801DC834 fn_801DC834 ref=render
- * - slot 07: 0x801DC830 fn_801DC830 stub=blr ref=free (stub)
- * - slot 08: 0x801DC828 fn_801DC828 stub=const 0
- * - slot 09: 0x801DC820 fn_801DC820 stub=const 80 ref=getExtraSize (stub)
+ * - descriptor=0x80327938 gSC_MusicTreeObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x801DC8D0 sc_musictree_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x801DC8CC sc_musictree_release stub=blr ref=release (stub)
+ * - slot 03: 0x801DC76C sc_musictree_init ref=init
+ * - slot 04: 0x801DC310 sc_musictree_update ref=update
+ * - slot 05: 0x801DC30C sc_musictree_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x801DC244 sc_musictree_render ref=render
+ * - slot 07: 0x801DC240 sc_musictree_free stub=blr ref=free (stub)
+ * - slot 08: 0x801DC238 sc_musictree_func08 stub=const 0
+ * - slot 09: 0x801DC230 sc_musictree_getExtraSize stub=const 80 ref=getExtraSize (stub)
  */
 
 #if 0

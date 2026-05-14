@@ -36,16 +36,16 @@
  * - 0x02B1 SH_killermu: placements=36, class=0x002A, widths=9w x36
  *
  * EN descriptor slot map:
- * - descriptor=0x803278FC lbl_803278FC (slots=10, mask=1101111111)
- * - slot 00: 0x801D2E58 fn_801D2E58 stub=blr ref=initialise (stub)
- * - slot 01: 0x801D2E54 fn_801D2E54 stub=blr ref=release (stub)
- * - slot 03: 0x801D2DA8 fn_801D2DA8 ref=init
- * - slot 04: 0x801D2414 fn_801D2414 ref=update
- * - slot 05: 0x801D2410 fn_801D2410 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x801D23AC fn_801D23AC ref=render
- * - slot 07: 0x801D2364 fn_801D2364 ref=free
- * - slot 08: 0x801D2350 fn_801D2350
- * - slot 09: 0x801D2348 fn_801D2348 stub=const 60 ref=getExtraSize (stub)
+ * - descriptor=0x80326CBC gEnemyMushroomObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x801D2868 enemymushroom_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x801D2864 enemymushroom_release stub=blr ref=release (stub)
+ * - slot 03: 0x801D27B8 enemymushroom_init ref=init
+ * - slot 04: 0x801D1E24 enemymushroom_update ref=update
+ * - slot 05: 0x801D1E20 enemymushroom_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x801D1DBC enemymushroom_render ref=render
+ * - slot 07: 0x801D1D74 enemymushroom_free ref=free
+ * - slot 08: 0x801D1D60 enemymushroom_func08
+ * - slot 09: 0x801D1D58 enemymushroom_getExtraSize stub=const 60 ref=getExtraSize (stub)
  */
 
 #if 0
