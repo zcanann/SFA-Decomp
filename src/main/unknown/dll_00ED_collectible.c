@@ -22,3 +22,6 @@
 // - B: collectible_func0B (0x80171DF8)
 // - C: collectible_modelMtxFn (0x80171DA8)
 // - D: collectible_render2 (0x80171D70)
+// - E: collectible_func0E (0x80171D98)
+// - F: collectible_func0F (0x80171D8C)
+// - 10: collectible_func10 (0x80171D14)

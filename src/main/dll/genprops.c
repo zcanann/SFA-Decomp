@@ -4469,7 +4469,7 @@ int siderepel_getExtraSize(void) { return 0x1; }
 /* Pattern wrappers. */
 s16 staff_func13(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x88); }
 u8 fn_8016F16C(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x71); }
-u8 fn_80171D8C(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x1e); }
+u8 collectible_func0F(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x1e); }
 
 /* 16b chained patterns. */
 s32 staff_func16(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0xb9); }
