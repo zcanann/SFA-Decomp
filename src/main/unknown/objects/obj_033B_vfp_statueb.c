@@ -48,7 +48,7 @@
  * - 0x033B VFP_statueb: placements=10, class=0x0030, widths=9w x10
  *
  * EN descriptor slot map:
- * - descriptor=0x80328F70 lbl_80328F70 (slots=10, mask=1101111111)
+ * - descriptor=0x80328F70 gVFP_statueballObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801FAC68 vfpstatueball_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801FAC64 vfpstatueball_release stub=blr ref=release (stub)
  * - slot 03: 0x801FABBC vfpstatueball_init ref=init
