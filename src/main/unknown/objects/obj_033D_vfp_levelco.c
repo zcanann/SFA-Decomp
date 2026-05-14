@@ -48,7 +48,7 @@
  * - 0x033D VFP_LevelCo: placements=1, class=0x0030, widths=9w x1
  *
  * EN descriptor slot map:
- * - descriptor=0x80328E90 lbl_80328E90 (slots=10, mask=1101111111)
+ * - descriptor=0x80328E90 gVFP_LevelControlObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801F9D6C vfplevelcontrol_initialise ref=initialise
  * - slot 01: 0x801F9D68 vfplevelcontrol_release stub=blr ref=release (stub)
  * - slot 03: 0x801F9C38 vfplevelcontrol_init ref=init
