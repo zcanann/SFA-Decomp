@@ -3,7 +3,7 @@
 #define SYNTH_HANDLE_SLOT_INVALID 0xFFFFFFFF
 #define SYNTH_PENDING_FLAG_MIX_DATA 0x10
 
-void fn_8026D630(u32 handle, u32 mixValue0, u32 mixValue1)
+void synthSetHandleMixData(u32 handle, u32 mixValue0, u32 mixValue1)
 {
   SynthVoiceRuntime *runtime;
   SynthVoice *queuedVoice;

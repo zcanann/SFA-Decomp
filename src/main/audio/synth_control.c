@@ -164,10 +164,6 @@ void synthSetFadeAction(u32 fadeIndex, u8 action) {
 extern void sndBegin(void);
 extern void sndEnd(void);
 extern void salFree(void* ptr);
-extern void fn_8026D278(u32 handle);
-extern void fn_8026D448(u32 handle, u32 speed);
-extern void fn_8026D524(u32 handle);
-extern void fn_8026D630(u32 handle, u32 mute, u32 time);
 extern u8* synthVoice;
 
 void synthExit(void) {
@@ -176,24 +172,24 @@ void synthExit(void) {
 
 void sndSeqStop(u32 handle) {
     sndBegin();
-    fn_8026D278(handle);
+    synthFreeHandle(handle);
     sndEnd();
 }
 
 void sndSeqSpeed(u32 handle, u32 speed) {
     sndBegin();
-    fn_8026D448(handle, speed);
+    synthSetHandleValue16(handle, speed);
     sndEnd();
 }
 
 void sndSeqContinue(u32 handle) {
     sndBegin();
-    fn_8026D524(handle);
+    synthRestoreQueuedHandle(handle);
     sndEnd();
 }
 
 void sndSeqMute(u32 handle, u32 mute, u32 time) {
     sndBegin();
-    fn_8026D630(handle, mute, time);
+    synthSetHandleMixData(handle, mute, time);
     sndEnd();
 }

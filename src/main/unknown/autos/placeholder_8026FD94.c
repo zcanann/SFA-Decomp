@@ -16,9 +16,9 @@ typedef struct SynthDelayStorageLocal {
 extern SynthDelayStorageLocal gSynthDelayStorage;
 extern u8 gSynthDelayBucketCursor;
 extern void audioFn_80271178(SynthDelayedNode *fade, int mode, u32 delay);
-extern void fn_8026D0C4(u32 handle);
-extern void fn_8026D278(u32 handle);
-extern void fn_8026D630(u32 handle, u32 mixValue0, u32 mixValue1);
+extern void synthQueueHandle(u32 handle);
+extern void synthFreeHandle(u32 handle);
+extern void synthSetHandleMixData(u32 handle, u32 mixValue0, u32 mixValue1);
 extern void macHandle(u32 delta);
 extern u8 hwGetTimeOffset(void);
 extern u16 inpGetAuxA(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex);
@@ -366,13 +366,13 @@ void fn_8027142C(u8 *fade)
     action = fade[0x2c];
     switch (action) {
     case 1:
-        fn_8026D278(*(u32 *)(fade + 0x28));
+        synthFreeHandle(*(u32 *)(fade + 0x28));
         break;
     case 2:
-        fn_8026D0C4(*(u32 *)(fade + 0x28));
+        synthQueueHandle(*(u32 *)(fade + 0x28));
         break;
     case 3:
-        fn_8026D630(*(u32 *)(fade + 0x28), 0, 0);
+        synthSetHandleMixData(*(u32 *)(fade + 0x28), 0, 0);
         break;
     }
 }

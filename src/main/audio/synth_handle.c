@@ -5,9 +5,8 @@
 extern void synthVolume(u32 value0, u32 value1, u8 studio, u32 mode, u32 handle);
 extern void sndSeqVolume(u32 value0, u16 value1, u32 handle, u32 mode);
 extern void sndSeqMute(u32 handle, u32 value0, u32 value1);
-extern void sndSeqContinue(void);
+extern void sndSeqContinue(u32 handle);
 extern void sndSeqSpeed(u32 handle, u16 speed);
-extern void fn_8026D524(void);
 extern u32 synthResolveHandle(u32 handle);
 extern u32 fn_8027B89C(u16 groupId, u16 sampleId, u32 seqId, void* params, u8 noLock, u8 studio);
 extern u32 fn_8027B9DC(u16 groupId, u16 sampleId, u32 seqId, void* params, u8 studio);
@@ -216,7 +215,7 @@ resolved_reuse:
         }
 
         if (noLock != 0) {
-            fn_8026D524();
+            synthRestoreQueuedHandle(request->reuseHandle);
             synthUpdateHandle(request->volume, request->volumeTime, request->reuseHandle, 0);
             if ((request->flags & SYNTH_START_FLAG_MUTE) != 0) {
                 mixValue1 = request->mixValue1;
@@ -259,7 +258,7 @@ resolved_reuse:
                 }
             }
         } else {
-            sndSeqContinue();
+            sndSeqContinue(request->reuseHandle);
             sndSeqVolume(request->volume, request->volumeTime, request->reuseHandle, 0);
             if ((request->flags & SYNTH_START_FLAG_MUTE) != 0) {
                 sndSeqMute(request->reuseHandle, request->mixValue0, request->mixValue1);

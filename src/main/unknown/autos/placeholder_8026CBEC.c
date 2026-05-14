@@ -27,7 +27,7 @@ void fn_8026CF78(u8 idx)
  *
  * EN v1.0 Address: 0x8026D060, size 100b
  */
-void fn_8026D060(SynthVoice* voice)
+void synthQueueVoice(SynthVoice* voice)
 {
     if (voice->prev != 0) {
         voice->prev->next = voice->next;
@@ -48,12 +48,12 @@ void fn_8026D060(SynthVoice* voice)
 extern void voiceKillById(int p);
 
 /*
- * fn_8026D0C4 - voice handle lookup + cleanup with callbacks.
+ * Move a queued handle to the allocated list after a delayed fade completes.
  *
  * EN v1.0 Address: 0x8026D0C4
  * EN v1.0 Size: 436b
  */
-void fn_8026D0C4(u32 handle)
+void synthQueueHandle(u32 handle)
 {
     u32 key;
     u32 found;
@@ -141,7 +141,7 @@ done:
  * EN v1.0 Address: 0x8026D278
  * EN v1.0 Size: 464b
  */
-void fn_8026D278(u32 handle)
+void synthFreeHandle(u32 handle)
 {
     u32 key;
     u32 found;
@@ -240,7 +240,7 @@ done:
  * EN v1.0 Address: 0x8026D448
  * EN v1.0 Size: 220b
  */
-void fn_8026D448(u32 handle, u32 speed)
+void synthSetHandleValue16(u32 handle, u32 speed)
 {
     u32 key;
     u32 found;
@@ -301,7 +301,7 @@ done:
  * EN v1.0 Address: 0x8026D524
  * EN v1.0 Size: 268b
  */
-void fn_8026D524(u32 handle)
+void synthRestoreQueuedHandle(u32 handle)
 {
     u32 key;
     u32 found;
