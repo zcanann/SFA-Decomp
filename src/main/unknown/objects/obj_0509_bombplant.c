@@ -37,14 +37,14 @@
  * - 0x0509 BombPlant: placements=22, class=0x002B, widths=8w x22
  *
  * EN descriptor slot map:
- * - descriptor=0x8032799C lbl_8032799C (slots=10, mask=0001111111)
- * - slot 03: 0x801D3828 fn_801D3828 ref=init
- * - slot 04: 0x801D3244 fn_801D3244 ref=update
- * - slot 05: 0x801D315C fn_801D315C stub=blr ref=hitDetect (stub)
- * - slot 06: 0x801D3138 fn_801D3138 ref=render
- * - slot 07: 0x801D3134 fn_801D3134 stub=blr ref=free (stub)
- * - slot 08: 0x801D312C fn_801D312C stub=const 0
- * - slot 09: 0x801D3124 fn_801D3124 stub=const 24 ref=getExtraSize (stub)
+ * - descriptor=0x80326D5C gBombPlantObjDescriptor (slots=10, mask=0001111111)
+ * - slot 03: 0x801D3238 bombplant_init ref=init
+ * - slot 04: 0x801D2C54 bombplant_update ref=update
+ * - slot 05: 0x801D2B6C bombplant_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x801D2B48 bombplant_render ref=render
+ * - slot 07: 0x801D2B44 bombplant_free stub=blr ref=free (stub)
+ * - slot 08: 0x801D2B3C bombplant_func08 stub=const 0
+ * - slot 09: 0x801D2B34 bombplant_getExtraSize stub=const 24 ref=getExtraSize (stub)
  */
 
 #if 0

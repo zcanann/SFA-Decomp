@@ -36,12 +36,12 @@
  * - 0x04BF XYZAnimator: placements=27, class=0x004D, widths=12w x27
  *
  * EN descriptor slot map:
- * - descriptor=0x80322F48 lbl_80322F48 (slots=10, mask=0001101101)
- * - slot 03: 0x80196794 fn_80196794 ref=init
- * - slot 04: 0x80195584 fn_80195584 ref=update
- * - slot 06: 0x8019518C fn_8019518C ref=render
- * - slot 07: 0x801950E0 fn_801950E0 ref=free
- * - slot 09: 0x801950D8 fn_801950D8 stub=const 80 ref=getExtraSize (stub)
+ * - descriptor=0x803222F8 gXYZAnimatorObjDescriptor (slots=10, mask=0001101101)
+ * - slot 03: 0x80196218 xyzanimator_init ref=init
+ * - slot 04: 0x80195008 xyzanimator_update ref=update
+ * - slot 06: 0x80194C10 xyzanimator_render ref=render
+ * - slot 07: 0x80194B64 xyzanimator_free ref=free
+ * - slot 09: 0x80194B5C xyzanimator_getExtraSize stub=const 80 ref=getExtraSize (stub)
  */
 
 #if 0

@@ -36,10 +36,10 @@
  * - 0x0582 CurveFish: placements=28, class=0x0069, widths=9w x28
  *
  * EN descriptor slot map:
- * - descriptor=0x803222D0 lbl_803222D0 (slots=10, mask=0001100001)
- * - slot 03: 0x801819B0 fn_801819B0 ref=init
- * - slot 04: 0x80181328 fn_80181328 ref=update
- * - slot 09: 0x80181320 fn_80181320 stub=const 288 ref=getExtraSize (stub)
+ * - descriptor=0x80321680 gCurveFishObjDescriptor (slots=10, mask=0001100001)
+ * - slot 03: 0x80181458 curvefish_init ref=init
+ * - slot 04: 0x80180DD0 curvefish_update ref=update
+ * - slot 09: 0x80180DC8 curvefish_getExtraSize stub=const 288 ref=getExtraSize (stub)
  */
 
 #if 0
