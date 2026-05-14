@@ -48,7 +48,7 @@
  * - 0x0333 VFP_Block1: placements=3, class=0x0030, widths=9w x3
  *
  * EN descriptor slot map:
- * - descriptor=0x80329050 lbl_80329050 (slots=10, mask=1101111111)
+ * - descriptor=0x80329050 gVFP_Block1ObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x801FBAC4 vfpblock1_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801FBAC0 vfpblock1_release stub=blr ref=release (stub)
  * - slot 03: 0x801FBA8C vfpblock1_init ref=init
