@@ -843,7 +843,7 @@ int SpiritDoorLock_func08(void) { return 0x0; }
 int RollingBarrel_getExtraSize(void) { return 0x118; }
 int fn_801A5F78(void) { return 0x0; }
 int MMP_levelcontrol_getExtraSize(void) { return 0x0; }
-int fn_801A6704(void) { return 0x0; }
+int MMP_levelcontrol_func08(void) { return 0x0; }
 
 /* Pattern wrappers. */
 extern s16 lbl_803DDB20;
