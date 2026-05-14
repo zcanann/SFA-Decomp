@@ -13,6 +13,29 @@
 #define SYNTH_FADE_ONE sSynthFadeUnit
 #define SYNTH_FADE_TIME_SCALE sSynthFadeTimeScale
 
+extern void* salMalloc(u32 size);
+extern void memset(void* dst, int value, u32 size);
+extern void inpInit(void);
+extern void fn_80278EA4(void);
+extern void vidInit(void);
+extern void voiceInitPriorityTables(void);
+extern void voiceInitRegistrationTables(void);
+extern void hwSetMesgCallback(void (*callback)(void));
+extern void synthHWMessageHandler(void);
+
+extern u8 lbl_803BCD90[];
+extern u32 synthRealTimeLo;
+extern u32 synthRealTimeHi;
+extern u32 synthFlags;
+extern u32 synthMessageCallback;
+extern u32 synthMasterFaderActiveFlags;
+extern u32 synthMasterFaderPauseActiveFlags;
+extern u8* synthVoice;
+extern u8 synthAuxAIndex[];
+extern u8 synthAuxBIndex[];
+extern f32 lbl_803E77D0;
+extern f32 lbl_803E77A8;
+
 #define SYNTH_APPLY_FADE(fade, fadeIndex, fadeHandle)      \
     do {                                                   \
         (fade)->delayAction = action;                      \
@@ -34,6 +57,116 @@
                                                            \
         gSynthFadeMask |= 1 << (fadeIndex);                \
     } while (0)
+
+void synthInit(u32 sampleRate, u32 voiceCount) {
+    u8* state;
+    u32 voiceOffset;
+    u32 voiceIndex;
+    u32 fadeIndex;
+    u32 auxIndex;
+    u32* delayBucket;
+
+    state = lbl_803BCD90;
+    synthRealTimeLo = 0;
+    synthRealTimeHi = 0;
+    *(u32*)(state + 0x3C0) = sampleRate;
+    *(u32*)(state + 0x200) = 0x1800;
+    synthFlags = 0;
+    synthMessageCallback = 0;
+
+    synthVoice = salMalloc(voiceCount * 0x404);
+    memset(synthVoice, 0, voiceCount * 0x404);
+
+    for (voiceIndex = 0, voiceOffset = 0; voiceIndex < voiceCount; voiceIndex++, voiceOffset += 0x404) {
+        u8* voice;
+        u8 lowIndex;
+
+        voice = synthVoice + voiceOffset;
+        lowIndex = (u8)voiceIndex;
+        *(u32*)(voice + 0xF4) = SYNTH_INVALID_LINK_ID;
+        *(u32*)(voice + 0x114) = 0;
+        *(u32*)(voice + 0x118) = 0;
+        *(u32*)(voice + 0x110) = 0;
+        *(u8*)(voice + 0x10C) = 0;
+        *(u8*)(voice + 0x121) = 0xFF;
+        *(u32*)(voice + 0x154) = 0;
+        *(u8*)(voice + 0x192) = 0;
+        *(u8*)(voice + 0x190) = 0x80;
+        *(u8*)(voice + 0x191) = 0;
+        *(u32*)(voice + 0x180) = 0x400000;
+        *(u32*)(voice + 0x170) = 0x400000;
+        *(u32*)(voice + 0x184) = 0;
+        *(u32*)(voice + 0x174) = 0;
+        *(u32*)(voice + 0x1A0) = 0;
+        *(u32*)(voice + 0x1A4) = 0;
+        *(u8*)(voice + 0x1B8) = 0;
+        *(u8*)(voice + 0x1B9) = 0;
+        *(u8*)(voice + 0x11C) = 0;
+        *(u8*)(voice + 0x11E) = 0x17;
+        *(u8*)(voice + 0x104) = 0;
+        *(u8*)(voice + 0x193) = 1;
+        *(u32*)(voice + 0x1C0) = 0;
+        *(u16*)(voice + 0x1C4) = 0;
+        *(u16*)(voice + 0x1C6) = 0x7FFF;
+        *(u32*)(voice + 0x1CC) = 0;
+        *(u16*)(voice + 0x1D0) = 0;
+        *(u16*)(voice + 0x1D2) = 0x7FFF;
+        *(u32*)(voice + 0x13C) = 0x6400;
+        *(u8*)(voice + 0x131) = 0;
+        *(u8*)(voice + 0x11F) = 0;
+        *(u8*)(voice + 0x08) = lowIndex;
+        *(u8*)(voice + 0x09) = 0xFF;
+        *(u8*)(voice + 0x14) = lowIndex;
+        *(u8*)(voice + 0x15) = 0xFF;
+        *(u8*)(voice + 0x20) = lowIndex;
+        *(u8*)(voice + 0x21) = 0xFF;
+    }
+
+    for (fadeIndex = 0; fadeIndex < SYNTH_FADE_COUNT; fadeIndex++) {
+        SynthFade* fade = (SynthFade*)(state + 0x5D4 + fadeIndex * sizeof(SynthFade));
+        fade->current = lbl_803E77D0;
+        fade->auxCurrent = lbl_803E77A8;
+        fade->type = SYNTH_FADE_ACTION_DISABLED;
+    }
+
+    synthMasterFaderActiveFlags = 0;
+    synthMasterFaderPauseActiveFlags = 0;
+    *(u8*)(state + 0xBD1) = 1;
+    for (fadeIndex = 0; fadeIndex < 8; fadeIndex++) {
+        *(u8*)(state + 0xA51 + fadeIndex * sizeof(SynthFade)) = 0;
+    }
+    *(f32*)(state + 0x9C4) = lbl_803E77A8;
+    *(f32*)(state + 0x9F4) = lbl_803E77A8;
+
+    inpInit();
+
+    for (auxIndex = 0; auxIndex < 8; auxIndex++) {
+        *(u32*)(state + 0xC34 + auxIndex * 4) = 0;
+        *(u32*)(state + 0xC74 + auxIndex * 4) = 0;
+        synthAuxAIndex[auxIndex] = 0xFF;
+        synthAuxBIndex[auxIndex] = 0xFF;
+        *(u8*)(state + 0xC94 + auxIndex * 2) = 0;
+        *(u8*)(state + 0xC95 + auxIndex * 2) = 0;
+    }
+
+    fn_80278EA4();
+    vidInit();
+    voiceInitPriorityTables();
+
+    for (auxIndex = 0; auxIndex < 16; auxIndex++) {
+        *(u32*)(state + 0xCA4 + auxIndex * 4) = 0;
+    }
+
+    voiceInitRegistrationTables();
+
+    delayBucket = (u32*)(state + 0x240);
+    for (auxIndex = 0; auxIndex < 0x60; auxIndex++) {
+        delayBucket[auxIndex] = 0;
+    }
+
+    gSynthDelayBucketCursor = 0;
+    hwSetMesgCallback(synthHWMessageHandler);
+}
 
 void synthCopyVoiceSlotMixState(SynthVoiceSlot* dst, SynthVoiceSlot* src) {
     synthCopyControllerValue(7, dst, src);
