@@ -21,6 +21,16 @@
 // - 11: hightop_func0B (0x8021E93C)
 // - 12: hightop_modelMtxFn (0x8021E91C)
 // - 13: hightop_render2 (0x8021E914)
+// - 14: hightop_func0E (0x8021E90C)
+// - 15: hightop_func0F (0x8021E864)
+// - 16: hightop_func10 (0x8021E85C)
+// - 17: hightop_func11 (0x8021E84C)
+// - 18: hightop_func12 (0x8021E838)
+// - 19: hightop_func13 (0x8021E828)
+// - 20: hightop_func14 (0x8021E820)
+// - 21: hightop_func15 (0x8021E81C)
+// - 22: hightop_renderGroundMarker (0x8021E748)
+// - 23: hightop_getLookTargetYaw (0x8021E66C)
 //
 // Runtime state evidence:
 // - hightop_initialise fills gHighTopStateHandlers with 11 state handlers.

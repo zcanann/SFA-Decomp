@@ -7,7 +7,7 @@ int drshackle_func08(void) { return 0x0; }
 void drshackle_release(void) {}
 void drshackle_initialise(void) {}
 int hightop_defaultStateHandler(void) { return 0x0; }
-void fn_8021E81C(void) {}
-int fn_8021E820(void) { return 0x0; }
-int fn_8021E85C(void) { return 0x0; }
-int fn_8021E90C(void) { return 0x1; }
+void hightop_func15(void) {}
+int hightop_func14(void) { return 0x0; }
+int hightop_func10(void) { return 0x0; }
+int hightop_func0E(void) { return 0x1; }
