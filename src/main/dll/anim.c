@@ -4133,7 +4133,7 @@ int doorswitch_func08(void) { return 0x0; }
 int dfpseqpoint_getExtraSize(void) { return 0x10; }
 int dfpseqpoint_func08(void) { return 0x0; }
 int DFP_Torch_getExtraSize(void) { return 0x10; }
-int DFP_Torch_func08_ret_1(void) { return 0x1; }
+int DFP_Torch_func08(void) { return 0x1; }
 int return0_80205F40(void) { return 0x0; }
 int chuka_getExtraSize(void) { return 0xc; }
 int chuka_func08(void) { return 0x0; }
