@@ -51,7 +51,7 @@
  * - things Tricky needs to use flame on
  *
  * EN descriptor slot map:
- * - descriptor=0x803291D8 lbl_803291D8 (slots=10, mask=0001100001)
+ * - descriptor=0x803291D8 gVFP_flamepointObjDescriptor (slots=10, mask=0001100001)
  * - slot 03: 0x801FD66C vfpflamepoint_init ref=init
  * - slot 04: 0x801FD4EC vfpflamepoint_update ref=update
  * - slot 09: 0x801FD4E4 vfpflamepoint_getExtraSize stub=const 8 ref=getExtraSize (stub)
