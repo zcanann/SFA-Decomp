@@ -37,12 +37,12 @@
  * - 0x02AE SH_thorntai: placements=57, class=0x0044, widths=8w x57
  *
  * EN descriptor slot map:
- * - descriptor=0x80328078 lbl_80328078 (slots=10, mask=0001101101)
- * - slot 03: 0x801D6CD0 fn_801D6CD0 ref=init
- * - slot 04: 0x801D6548 fn_801D6548 ref=update
- * - slot 06: 0x801D64C4 fn_801D64C4 ref=render
- * - slot 07: 0x801D6484 fn_801D6484 ref=free
- * - slot 09: 0x801D647C fn_801D647C stub=const 2324 ref=getExtraSize (stub)
+ * - descriptor=0x80327438 gSH_thorntailObjDescriptor (slots=10, mask=0001101101)
+ * - slot 03: 0x801D66E0 sh_thorntail_init ref=init
+ * - slot 04: 0x801D5F58 SHthorntail_update ref=update
+ * - slot 06: 0x801D5ED4 SHthorntail_render ref=render
+ * - slot 07: 0x801D5E94 SHthorntail_free ref=free
+ * - slot 09: 0x801D5E8C SHthorntail_getExtraSize stub=const 2324 ref=getExtraSize (stub)
  */
 
 #if 0

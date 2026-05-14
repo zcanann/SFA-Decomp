@@ -48,7 +48,7 @@
  * - 0x007C DrakorEnerg: placements=19, class=0x0030, widths=9w x19
  *
  * EN descriptor slot map:
- * - descriptor=0x80329378 lbl_80329378 (slots=12, mask=110111111111)
+ * - descriptor=0x80329378 gDrakorEnergyObjDescriptor (slots=12, mask=110111111111)
  * - slot 00: 0x801FFE14 drakorenergy_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x801FFE10 drakorenergy_release stub=blr ref=release (stub)
  * - slot 03: 0x801FFD7C drakorenergy_init ref=init

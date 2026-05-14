@@ -52,7 +52,7 @@
  * - holes for egg thieves
  *
  * EN descriptor slot map:
- * - descriptor=0x80329810 lbl_80329810 (slots=10, mask=1101111111)
+ * - descriptor=0x80329810 gDBHoleControl1ObjDescriptor (slots=10, mask=1101111111)
  * - slot 00: 0x80204094 dbholecontrol1_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x80204090 dbholecontrol1_release stub=blr ref=release (stub)
  * - slot 03: 0x80204018 dbholecontrol1_init ref=init
