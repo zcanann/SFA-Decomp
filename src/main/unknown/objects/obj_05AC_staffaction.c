@@ -4,30 +4,30 @@
  * This file is intentionally not wired into the build yet.
  * It exists as a retail-backed per-object packet for exploratory split work.
  *
- * Object def: 0x05B1 StaffLeverO
- * Output path: src/main/unknown/objects/obj_05B1_stafflevero.c
- * Retail placements: 40
- * Root romlists: 15
- * Object-def size: 0xE0
- * Root placement widths: 10w x40
+ * Object def: 0x05AC StaffAction
+ * Output path: src/main/unknown/objects/obj_05AC_staffaction.c
+ * Retail placements: 0
+ * Root romlists: 0
+ * Object-def size: 0xC0
+ * Root placement widths: none
  * DLL ID: 0x011C
  * Class ID: 0x007A
  * Suggested outer boundary: shared DLL family
  * Reference class name: StaffActivated
  * Reference DLL name: StaffActivated
- * Remap aliases: 0x066B
+ * Remap aliases: 0x064D
  *
  * Related packet paths:
  * - class: src/main/unknown/classes/class_007A_staffactivated.c
  * - family: src/main/unknown/dll_011C_staffactivated.c
  *
  * Width samples:
- * - 10w (0x28 bytes): capeclaw.romlist.zlb, clouddungeon.romlist.zlb, dbshrine.romlist.zlb, dfptop.romlist.zlb
+ * - none
  *
  * Inline object-def evidence:
  * - inline fields: pModelList, hitboxes, aButtonInteraction
- * - model IDs: 0x0000008C
- * - help texts: 0x0134 0xFFFF 0xFFFF 0xFFFF
+ * - model IDs: 0x00000467
+ * - help texts: 0xFFFF 0xFFFF 0xFFFF 0xFFFF
  *
  * Same-class objects (8 defs / 115 placements):
  * - 0x05B1 StaffLeverO: placements=40, dll=0x011C, widths=10w x40
@@ -66,12 +66,10 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_05B1_StaffLeverO_packet_info {
-    STAFFLEVERO_DEF_ID = 0x05B1,
-    STAFFLEVERO_DLL_ID = 0x011C,
-    STAFFLEVERO_CLASS_ID = 0x007A,
-    STAFFLEVERO_OBJECT_DEF_BYTES = 0xE0,
-    STAFFLEVERO_PLACEMENT_BYTES_MIN = 0x28,
-    STAFFLEVERO_PLACEMENT_BYTES_MAX = 0x28,
+enum obj_05AC_StaffAction_packet_info {
+    STAFFACTION_DEF_ID = 0x05AC,
+    STAFFACTION_DLL_ID = 0x011C,
+    STAFFACTION_CLASS_ID = 0x007A,
+    STAFFACTION_OBJECT_DEF_BYTES = 0xC0,
 };
 #endif

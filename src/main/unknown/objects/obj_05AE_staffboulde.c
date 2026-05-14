@@ -53,13 +53,13 @@
  * - switches you put staff into
  *
  * EN descriptor slot map:
- * - descriptor=0x80322878 lbl_80322878 (slots=10, mask=0001101111)
- * - slot 03: 0x8018AA94 fn_8018AA94 ref=init
- * - slot 04: 0x8018A7DC fn_8018A7DC ref=update
- * - slot 06: 0x8018A7B8 fn_8018A7B8 ref=render
- * - slot 07: 0x8018A794 fn_8018A794 ref=free
- * - slot 08: 0x8018A78C fn_8018A78C stub=const 64
- * - slot 09: 0x8018A784 fn_8018A784 stub=const 36 ref=getExtraSize (stub)
+ * - descriptor=0x80321C28 gStaffActivatedObjDescriptor (slots=10, mask=0001101111)
+ * - slot 03: 0x8018A53C staffactivated_init ref=init
+ * - slot 04: 0x8018A284 staffactivated_update ref=update
+ * - slot 06: 0x8018A260 staffactivated_render ref=render
+ * - slot 07: 0x8018A23C staffactivated_free ref=free
+ * - slot 08: 0x8018A234 staffactivated_func08 stub=const 64
+ * - slot 09: 0x8018A22C staffactivated_getExtraSize stub=const 36 ref=getExtraSize (stub)
  */
 
 #if 0

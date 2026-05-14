@@ -4,30 +4,30 @@
  * This file is intentionally not wired into the build yet.
  * It exists as a retail-backed per-object packet for exploratory split work.
  *
- * Object def: 0x05B1 StaffLeverO
- * Output path: src/main/unknown/objects/obj_05B1_stafflevero.c
- * Retail placements: 40
- * Root romlists: 15
- * Object-def size: 0xE0
- * Root placement widths: 10w x40
+ * Object def: 0x05AF StaffBoulde
+ * Output path: src/main/unknown/objects/obj_05AF_staffboulde.c
+ * Retail placements: 8
+ * Root romlists: 1
+ * Object-def size: 0x100
+ * Root placement widths: 10w x8
  * DLL ID: 0x011C
  * Class ID: 0x007A
  * Suggested outer boundary: shared DLL family
  * Reference class name: StaffActivated
  * Reference DLL name: StaffActivated
- * Remap aliases: 0x066B
+ * Remap aliases: 0x0651
  *
  * Related packet paths:
  * - class: src/main/unknown/classes/class_007A_staffactivated.c
  * - family: src/main/unknown/dll_011C_staffactivated.c
  *
  * Width samples:
- * - 10w (0x28 bytes): capeclaw.romlist.zlb, clouddungeon.romlist.zlb, dbshrine.romlist.zlb, dfptop.romlist.zlb
+ * - 10w (0x28 bytes): wastes.romlist.zlb
  *
  * Inline object-def evidence:
  * - inline fields: pModelList, hitboxes, aButtonInteraction
- * - model IDs: 0x0000008C
- * - help texts: 0x0134 0xFFFF 0xFFFF 0xFFFF
+ * - model IDs: 0x0000008A
+ * - help texts: 0x0070 0xFFFF 0xFFFF 0xFFFF
  *
  * Same-class objects (8 defs / 115 placements):
  * - 0x05B1 StaffLeverO: placements=40, dll=0x011C, widths=10w x40
@@ -66,12 +66,12 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_05B1_StaffLeverO_packet_info {
-    STAFFLEVERO_DEF_ID = 0x05B1,
-    STAFFLEVERO_DLL_ID = 0x011C,
-    STAFFLEVERO_CLASS_ID = 0x007A,
-    STAFFLEVERO_OBJECT_DEF_BYTES = 0xE0,
-    STAFFLEVERO_PLACEMENT_BYTES_MIN = 0x28,
-    STAFFLEVERO_PLACEMENT_BYTES_MAX = 0x28,
+enum obj_05AF_StaffBoulde_packet_info {
+    STAFFBOULDE_DEF_ID = 0x05AF,
+    STAFFBOULDE_DLL_ID = 0x011C,
+    STAFFBOULDE_CLASS_ID = 0x007A,
+    STAFFBOULDE_OBJECT_DEF_BYTES = 0x100,
+    STAFFBOULDE_PLACEMENT_BYTES_MIN = 0x28,
+    STAFFBOULDE_PLACEMENT_BYTES_MAX = 0x28,
 };
 #endif
