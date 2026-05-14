@@ -1,610 +1,585 @@
-#include "ghidra_import.h"
-#include "main/dll/FRONT/picmenu.h"
+#include "dolphin/ai.h"
+#include "dolphin/dvd.h"
+#include "dolphin/os.h"
+#include "dolphin/thp/THPPlayer.h"
+#include "dolphin/thp/THPVideoDecode.h"
+#include "string.h"
 
-extern undefined4 FUN_800033a8();
-extern undefined8 FUN_80003494();
-extern int FUN_80006c30();
-extern undefined4 FUN_80118108();
-extern undefined8 FUN_80118c88();
-extern undefined4 FUN_802420e0();
-extern undefined4 FUN_80243e74();
-extern undefined4 FUN_80243e9c();
-extern undefined4 FUN_802446f8();
-extern undefined4 FUN_80244758();
-extern int FUN_80244820();
-extern int FUN_80246a0c();
-extern undefined4 FUN_80246c10();
-extern undefined4 FUN_80246dcc();
-extern undefined4 FUN_80247054();
-extern int FUN_80249300();
-extern undefined4 FUN_802493c8();
-extern int FUN_80249700();
-extern undefined4 FUN_8024fe1c();
-extern undefined4 FUN_8024fe60();
-extern undefined4 FUN_8024fee8();
-extern undefined4 FUN_80264c10();
-extern int FUN_8026c0d8();
-extern undefined8 FUN_80286830();
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_8028687c();
-extern int FUN_80291db4();
+/* DVDRead: sync DVD read (distinct from DVDReadPrio) */
+extern s32 DVDRead(DVDFileInfo* fileInfo, void* addr, s32 length, s32 offset);
 
-extern undefined4 DAT_803a6420;
-extern undefined4 DAT_803a6920;
-extern undefined4 DAT_803a692c;
-extern undefined4 DAT_803a6980;
-extern undefined DAT_803a69c0;
-extern undefined4 DAT_803a69fc;
-extern undefined4 DAT_803a6a00;
-extern undefined4 DAT_803a6a10;
-extern undefined4 DAT_803a6a1c;
-extern undefined4 DAT_803a6a24;
-extern undefined4 DAT_803a6a2c;
-extern undefined4 DAT_803a6a54;
-extern undefined4 DAT_803a6a58;
-extern undefined4 DAT_803a6a5c;
-extern undefined4 DAT_803a6a5d;
-extern undefined4 DAT_803a6a5e;
-extern undefined4 DAT_803a6a5f;
-extern undefined4 DAT_803a6a60;
-extern undefined4 DAT_803a6a64;
-extern undefined4 DAT_803a6a68;
-extern undefined4 DAT_803a6a70;
-extern undefined4 DAT_803a6a74;
-extern undefined4 DAT_803a6a78;
-extern undefined4 DAT_803a6a90;
-extern undefined4 DAT_803a6a94;
-extern undefined4 DAT_803a6a98;
-extern undefined4 DAT_803a6aa0;
-extern undefined4 DAT_803a7e78;
-extern undefined4 DAT_803a7ea0;
-extern undefined4 DAT_803a7ec8;
-extern undefined4 DAT_803a7ef0;
-extern undefined4 DAT_803a7f10;
-extern undefined4 DAT_803a7f30;
-extern undefined4 DAT_803a7f68;
-extern undefined4 DAT_803a7f88;
-extern undefined4 DAT_803dc648;
-extern undefined4 DAT_803de2e0;
-extern undefined4 DAT_803de2e8;
-extern undefined4 DAT_803de2ec;
-extern undefined4 DAT_803de2f0;
-extern undefined4 DAT_803de2f4;
-extern undefined4 DAT_803de2f8;
-extern undefined4 DAT_803de308;
-extern undefined4 DAT_803de314;
-extern undefined4 DAT_803de318;
-extern f32 FLOAT_803e29d4;
+/* External functions */
+extern BOOL THPInit(void);
+extern void fn_80118018(void);
+extern void fn_80118B88(int);
 
-/*
- * --INFO--
- *
- * Function: FUN_80119000
- * EN v1.0 Address: 0x80119000
- * EN v1.0 Size: 1084b
- * EN v1.1 Address: 0x801192A8
- * EN v1.1 Size: 748b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80119000(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+/* BSS objects (lis+addi addressing) */
+extern char             lbl_803A57C0[0x50C];
+extern THPPlayer        lbl_803A5D60;
+extern char             lbl_803A5F08[0x1000];
+extern OSThread         lbl_803A6F08;
+extern OSMessageQueue   lbl_803A7290;
+extern OSMessageQueue   lbl_803A72B0;
+extern OSMessageQueue   lbl_803A72D0;
+extern char             lbl_803A72F0[0x18];
+extern OSMessageQueue   lbl_803A7308;
+extern OSMessageQueue   lbl_803A7328;
+extern OSThread         lbl_803A8348;
+extern char             lbl_803A5D20[0x40];
+
+/* SDATA string (SDA21) */
+extern char             lbl_803DB9E8[];
+
+/* Float constant (sdata2) */
+extern f32              lbl_803E1D54;
+
+/* SBSS dword flags (SDA21) */
+extern u32              lbl_803DD660;
+extern AIDCallback      lbl_803DD668;
+extern s32              lbl_803DD66C;
+extern u32              lbl_803DD670;
+extern u32              lbl_803DD674;
+extern u32              lbl_803DD678;
+extern s32              lbl_803DD688;
+extern s32              lbl_803DD690;
+extern u32              lbl_803DD694;
+extern u32              lbl_803DD698;
+
+/* Forward declarations needed by OSCreateThread */
+void  fn_80119520(void);
+void  fn_801198E0(void*);
+void  fn_80119A1C(void);
+
+/* ------------------------------------------------------------------ */
+/* movieLoad (748 bytes)                                                */
+/* ------------------------------------------------------------------ */
+BOOL movieLoad(const char* fileName, void* param2)
 {
-  int iVar1;
-  undefined4 in_r7;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  uint uVar2;
-  uint uVar3;
-  undefined *puVar4;
-  undefined8 extraout_f1;
-  undefined8 uVar5;
-  undefined8 uVar6;
-  
-  uVar6 = FUN_80286830();
-  if ((DAT_803de2e0 != 0) && (DAT_803a6a58 == 0)) {
-    uVar5 = extraout_f1;
-    FUN_800033a8(-0x7fc595c0,0,8);
-    FUN_800033a8(-0x7fc595b8,0,0xc);
-    iVar1 = FUN_80249300(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                         (char *)((ulonglong)uVar6 >> 0x20),-0x7fc59640);
-    if (iVar1 != 0) {
-      iVar1 = FUN_80006c30(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                           &DAT_803a69c0,&DAT_803a6980,0x40,0,in_r7,in_r8,in_r9,in_r10);
-      if (iVar1 < 0) {
-        FUN_802493c8((int *)&DAT_803a69c0);
-      }
-      else {
-        uVar5 = FUN_80003494(0x803a69fc,0x803a6980,0x30);
-        iVar1 = FUN_80291db4((uint *)&DAT_803a69fc,(uint *)&DAT_803dc648);
-        uVar3 = DAT_803a6a1c;
-        if (iVar1 == 0) {
-          if (DAT_803a6a00 == 0x10000) {
-            iVar1 = FUN_80006c30(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                                 &DAT_803a69c0,&DAT_803a6980,0x20,DAT_803a6a1c,in_r7,in_r8,in_r9,
-                                 in_r10);
-            if (iVar1 < 0) {
-              FUN_802493c8((int *)&DAT_803a69c0);
-            }
-            else {
-              uVar5 = FUN_80003494(0x803a6a2c,0x803a6980,0x14);
-              uVar3 = uVar3 + 0x14;
-              puVar4 = &DAT_803a69c0;
-              DAT_803a6a5f = 0;
-              for (uVar2 = 0; uVar2 < DAT_803a6a2c; uVar2 = uVar2 + 1) {
-                if (puVar4[0x70] == '\x01') {
-                  iVar1 = FUN_80006c30(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8
-                                       ,&DAT_803a69c0,&DAT_803a6980,0x20,uVar3,in_r7,in_r8,in_r9,
-                                       in_r10);
-                  if (iVar1 < 0) {
-                    FUN_802493c8((int *)&DAT_803a69c0);
-                    goto LAB_8011957c;
-                  }
-                  uVar5 = FUN_80003494(0x803a6a48,0x803a6980,0xc);
-                  DAT_803a6a5f = 1;
-                  uVar3 = uVar3 + 0xc;
+    s32 result;
+    u32 i;
+    char* p = (char*)&lbl_803A5D60;
+
+    if (lbl_803DD660 != 0) {
+        return 0;
+    }
+
+    memset(p + 0x80, 0, 8);
+    memset(p + 0x88, 0, 0xC);
+
+    if (!DVDOpen(fileName, &lbl_803A5D60.mFileInfo)) {
+        return 0;
+    }
+
+    result = DVDRead(&lbl_803A5D60.mFileInfo, lbl_803A5D20, 0x40, 0);
+    if (result < 0) {
+        DVDClose(&lbl_803A5D60.mFileInfo);
+        return 0;
+    }
+
+    memcpy(p + 0x3C, lbl_803A5D20, 0x30);
+
+    if (strcmp(p + 0x3C, lbl_803DB9E8) != 0) {
+        DVDClose(&lbl_803A5D60.mFileInfo);
+        return 0;
+    }
+
+    if (*(u32*)(p + 0x40) - 0x10000 != 0) {
+        DVDClose(&lbl_803A5D60.mFileInfo);
+        return 0;
+    }
+
+    {
+        u32 compOff = *(u32*)(p + 0x5C);
+        u32 readOff;
+
+        result = DVDRead(&lbl_803A5D60.mFileInfo, lbl_803A5D20, 0x20, compOff);
+        if (result < 0) {
+            DVDClose(&lbl_803A5D60.mFileInfo);
+            return 0;
+        }
+
+        memcpy(p + 0x6C, lbl_803A5D20, 0x14);
+        readOff = compOff + 0x14;
+        p[0x9F] = 0;
+
+        for (i = 0; i < *(u32*)(p + 0x6C); i++) {
+            u8 compType = (u8)p[0x70];
+            if (compType == 1) {
+                result = DVDRead(&lbl_803A5D60.mFileInfo, lbl_803A5D20, 0x20, readOff);
+                if (result < 0) {
+                    DVDClose(&lbl_803A5D60.mFileInfo);
+                    return 0;
                 }
-                else {
-                  if (puVar4[0x70] != '\0') goto LAB_8011957c;
-                  iVar1 = FUN_80006c30(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8
-                                       ,&DAT_803a69c0,&DAT_803a6980,0x20,uVar3,in_r7,in_r8,in_r9,
-                                       in_r10);
-                  if (iVar1 < 0) {
-                    FUN_802493c8((int *)&DAT_803a69c0);
-                    goto LAB_8011957c;
-                  }
-                  uVar5 = FUN_80003494(0x803a6a40,0x803a6980,8);
-                  uVar3 = uVar3 + 8;
+                memcpy(p + 0x88, lbl_803A5D20, 0xC);
+                p[0x9F] = 1;
+                readOff += 0xC;
+            } else if (compType == 0) {
+                result = DVDRead(&lbl_803A5D60.mFileInfo, lbl_803A5D20, 0x20, readOff);
+                if (result < 0) {
+                    DVDClose(&lbl_803A5D60.mFileInfo);
+                    return 0;
                 }
-                puVar4 = puVar4 + 1;
-              }
-              DAT_803a6a5d = 0;
-              DAT_803a6a5c = 0;
-              DAT_803a6a5e = 0;
-              DAT_803a6a58 = 1;
-              DAT_803a6a94 = FLOAT_803e29d4;
-              DAT_803a6a98 = FLOAT_803e29d4;
-              DAT_803a6aa0 = 0;
-              DAT_803a6a68 = (int)uVar6;
+                memcpy(p + 0x80, lbl_803A5D20, 8);
+                readOff += 8;
+            } else {
+                return 0;
             }
-          }
-          else {
-            FUN_802493c8((int *)&DAT_803a69c0);
-          }
+            p++;
         }
-        else {
-          FUN_802493c8((int *)&DAT_803a69c0);
+    }
+
+    {
+        char* q = (char*)&lbl_803A5D60;
+        q[0x9D] = 0;
+        q[0x9C] = 0;
+        q[0x9E] = 0;
+        *(u32*)(q + 0x98) = 1;
+        *(u32*)(q + 0xA8) = (u32)param2;
+        *(f32*)(q + 0xD4) = lbl_803E1D54;
+        *(f32*)(q + 0xD8) = lbl_803E1D54;
+        *(u32*)(q + 0xE0) = 0;
+    }
+
+    return 1;
+}
+
+/* ------------------------------------------------------------------ */
+/* audioFn_801192ec (76 bytes)                                         */
+/* ------------------------------------------------------------------ */
+#pragma scheduling off
+#pragma peephole off
+void audioFn_801192ec(void)
+{
+    u32 saved = OSDisableInterrupts();
+    if (lbl_803DD668 != (AIDCallback)0) {
+        AIRegisterDMACallback(lbl_803DD668);
+    }
+    OSRestoreInterrupts(saved);
+    lbl_803DD660 = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* ------------------------------------------------------------------ */
+/* attractModeAudioFn_80119338 (288 bytes)                             */
+/* ------------------------------------------------------------------ */
+#pragma scheduling off
+#pragma peephole off
+BOOL attractModeAudioFn_80119338(int param_1)
+{
+    char* base = lbl_803A57C0;
+    u32 saved;
+    AIDCallback oldCb;
+
+    memset(base + 0x5A0, 0, 0x1A8);
+    OSInitMessageQueue((OSMessageQueue*)(base + 0x50C), (void*)(base + 0x500), 3);
+
+    if (!THPInit()) {
+        return 0;
+    }
+
+    saved = OSDisableInterrupts();
+    lbl_803DD66C = param_1;
+    lbl_803DD678 = 0;
+    lbl_803DD674 = 0;
+    lbl_803DD670 = 0;
+    oldCb = AIRegisterDMACallback((AIDCallback)fn_80118018);
+    lbl_803DD668 = oldCb;
+
+    if (oldCb == (AIDCallback)0) {
+        if (lbl_803DD66C != 0) {
+            AIRegisterDMACallback((AIDCallback)0);
+            OSRestoreInterrupts(saved);
+            return 0;
         }
-      }
     }
-  }
-LAB_8011957c:
-  FUN_8028687c();
-  return;
-}
 
-/*
- * --INFO--
- *
- * Function: FUN_8011943c
- * EN v1.0 Address: 0x8011943C
- * EN v1.0 Size: 60b
- * EN v1.1 Address: 0x80119594
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8011943c(void)
-{
-  FUN_80243e74();
-  if (DAT_803de2e8 != 0) {
-    FUN_8024fe1c(DAT_803de2e8);
-  }
-  FUN_80243e9c();
-  DAT_803de2e0 = 0;
-  return;
-}
+    OSRestoreInterrupts(saved);
 
-/*
- * --INFO--
- *
- * Function: FUN_80119478
- * EN v1.0 Address: 0x80119478
- * EN v1.0 Size: 268b
- * EN v1.1 Address: 0x801195E0
- * EN v1.1 Size: 288b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_80119478(int param_1)
-{
-  int iVar1;
-  undefined4 uVar2;
-  
-  FUN_800033a8(-0x7fc59640,0,0x1a8);
-  FUN_802446f8((undefined4 *)&DAT_803a692c,&DAT_803a6920,3);
-  iVar1 = FUN_8026c0d8();
-  if (iVar1 == 0) {
-    uVar2 = 0;
-  }
-  else {
-    FUN_80243e74();
-    DAT_803de2f8 = 0;
-    DAT_803de2f4 = 0;
-    DAT_803de2f0 = 0;
-    DAT_803de2ec = param_1;
-    DAT_803de2e8 = FUN_8024fe1c(FUN_80118108);
-    if ((DAT_803de2e8 == 0) && (DAT_803de2ec != 0)) {
-      FUN_8024fe1c(0);
-      FUN_80243e9c();
-      uVar2 = 0;
+    if (lbl_803DD66C == 0) {
+        memset(base, 0, 0x500);
+        DCFlushRange(base, 0x500);
+        AIInitDMA((u32)(base + lbl_803DD678 * 0x280), 0x280);
+        AIStartDMA();
     }
-    else {
-      FUN_80243e9c();
-      if (DAT_803de2ec == 0) {
-        FUN_800033a8(-0x7fc59be0,0,0x500);
-        FUN_802420e0(0x803a6420,0x500);
-        FUN_8024fe60(&DAT_803a6420 + DAT_803de2f8 * 0x280,0x280);
-        FUN_8024fee8();
-      }
-      DAT_803de2e0 = 1;
-      uVar2 = 1;
-    }
-  }
-  return uVar2;
-}
 
-/*
- * --INFO--
- *
- * Function: FUN_80119584
- * EN v1.0 Address: 0x80119584
- * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x80119700
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80119584(undefined4 param_1)
-{
-  FUN_80244758((int *)&DAT_803a7ef0,param_1,1);
-  return;
+    lbl_803DD660 = 1;
+    return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
-/*
- * --INFO--
- *
- * Function: FUN_801195b0
- * EN v1.0 Address: 0x801195B0
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x80119730
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_801195b0(void)
+/* ------------------------------------------------------------------ */
+/* fn_80119458 (48 bytes)                                              */
+/* ------------------------------------------------------------------ */
+#pragma scheduling off
+#pragma peephole off
+void fn_80119458(OSMessage msg)
 {
-  undefined4 local_8 [2];
-  
-  FUN_80244820((int *)&DAT_803a7ef0,local_8,1);
-  return local_8[0];
+    OSSendMessage(&lbl_803A7290, msg, OS_MESSAGE_BLOCK);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
-/*
- * --INFO--
- *
- * Function: FUN_801195e0
- * EN v1.0 Address: 0x801195E0
- * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x80119764
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801195e0(undefined4 param_1)
+/* ------------------------------------------------------------------ */
+/* fn_80119488 (52 bytes)                                              */
+/* ------------------------------------------------------------------ */
+#pragma scheduling off
+#pragma peephole off
+OSMessage fn_80119488(void)
 {
-  FUN_80244758((int *)&DAT_803a7f30,param_1,1);
-  return;
+    OSMessage msg;
+    OSReceiveMessage(&lbl_803A7290, &msg, OS_MESSAGE_BLOCK);
+    return msg;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
-/*
- * --INFO--
- *
- * Function: FUN_8011960c
- * EN v1.0 Address: 0x8011960C
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x80119794
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_8011960c(void)
+/* ------------------------------------------------------------------ */
+/* fn_801194BC (48 bytes)                                              */
+/* ------------------------------------------------------------------ */
+#pragma scheduling off
+#pragma peephole off
+void fn_801194BC(OSMessage msg)
 {
-  undefined4 local_8 [2];
-  
-  FUN_80244820((int *)&DAT_803a7f10,local_8,1);
-  return local_8[0];
+    OSSendMessage(&lbl_803A72D0, msg, OS_MESSAGE_BLOCK);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
-/*
- * --INFO--
- *
- * Function: FUN_8011963c
- * EN v1.0 Address: 0x8011963C
- * EN v1.0 Size: 420b
- * EN v1.1 Address: 0x801197C8
- * EN v1.1 Size: 248b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8011963c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+/* ------------------------------------------------------------------ */
+/* fn_801194EC (52 bytes)                                              */
+/* ------------------------------------------------------------------ */
+#pragma scheduling off
+#pragma peephole off
+OSMessage fn_801194EC(void)
 {
-  undefined4 *puVar1;
-  int iVar2;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  int iVar3;
-  uint uVar4;
-  uint uVar5;
-  int iVar6;
-  undefined8 uVar7;
-  undefined4 *local_28 [10];
-  
-  uVar7 = FUN_8028683c();
-  iVar6 = 0;
-  iVar3 = DAT_803a6a74;
-  uVar5 = DAT_803a6a70;
-  do {
-    FUN_80244820((int *)&DAT_803a7f30,local_28,1);
-    puVar1 = local_28[0];
-    iVar2 = FUN_80249700(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                         (undefined4 *)&DAT_803a69c0,*local_28[0],iVar3,uVar5,2,in_r8,in_r9,in_r10);
-    if (iVar2 != iVar3) {
-      if (iVar2 == -1) {
-        DAT_803a6a60 = 0xffffffff;
-      }
-      if (iVar6 == 0) {
-        uVar7 = FUN_80118c88(0);
-      }
-      FUN_80247054(-0x7fc58498);
-    }
-    puVar1[1] = iVar6;
-    FUN_80244758((int *)&DAT_803a7f10,puVar1,1);
-    uVar4 = uVar5 + iVar3;
-    iVar3 = *(int *)*puVar1;
-    uVar5 = uVar4;
-    if (((iVar6 + DAT_803a6a78) - ((uint)(iVar6 + DAT_803a6a78) / DAT_803a6a10) * DAT_803a6a10 ==
-         DAT_803a6a10 - 1) && (uVar5 = DAT_803a6a24, (DAT_803a6a5e & 1) == 0)) {
-      FUN_80247054(-0x7fc58498);
-      uVar5 = uVar4;
-    }
-    iVar6 = iVar6 + 1;
-  } while( true );
+    OSMessage msg;
+    OSReceiveMessage(&lbl_803A72B0, &msg, OS_MESSAGE_BLOCK);
+    return msg;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
-/*
- * --INFO--
- *
- * Function: FUN_801197e0
- * EN v1.0 Address: 0x801197E0
- * EN v1.0 Size: 60b
- * EN v1.1 Address: 0x801198C0
- * EN v1.1 Size: 60b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801197e0(void)
+/* ------------------------------------------------------------------ */
+/* fn_80119520 (248 bytes) - DVD-read thread                           */
+/* ------------------------------------------------------------------ */
+void fn_80119520(void)
 {
-  if (DAT_803de308 != 0) {
-    FUN_80246c10(-0x7fc58498);
-    DAT_803de308 = 0;
-  }
-  return;
-}
+    char* base = lbl_803A5F08;
+    char* pb   = (char*)&lbl_803A5D60;
+    u32 readOff  = *(u32*)(pb + 0xB0);
+    u32 readSize = *(u32*)(pb + 0xB4);
+    int i = 0;
 
-/*
- * --INFO--
- *
- * Function: FUN_8011981c
- * EN v1.0 Address: 0x8011981C
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x801198FC
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8011981c(void)
-{
-  if (DAT_803de308 != 0) {
-    FUN_80246dcc(-0x7fc58498);
-  }
-  return;
-}
+    while (1) {
+        OSMessage msgVal;
+        u32* req;
+        s32 res;
 
-/*
- * --INFO--
- *
- * Function: FUN_80119850
- * EN v1.0 Address: 0x80119850
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x80119930
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-bool FUN_80119850(int param_1)
-{
-  int iVar1;
-  
-  iVar1 = FUN_80246a0c(-0x7fc58498,FUN_8011963c,0,0x803a7b68,0x1000,param_1,1);
-  if (iVar1 != 0) {
-    FUN_802446f8((undefined4 *)&DAT_803a7f30,&DAT_803a7ec8,10);
-    FUN_802446f8((undefined4 *)&DAT_803a7f10,&DAT_803a7ea0,10);
-    FUN_802446f8((undefined4 *)&DAT_803a7ef0,&DAT_803a7e78,10);
-    DAT_803de308 = 1;
-  }
-  return iVar1 != 0;
-}
+        OSReceiveMessage((OSMessageQueue*)(base + 0x13C8), &msgVal, OS_MESSAGE_BLOCK);
+        req = (u32*)msgVal;
 
-/*
- * --INFO--
- *
- * Function: FUN_801198e8
- * EN v1.0 Address: 0x801198E8
- * EN v1.0 Size: 64b
- * EN v1.1 Address: 0x801199CC
- * EN v1.1 Size: 68b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_801198e8(uint param_1)
-{
-  int iVar1;
-  undefined4 local_8 [2];
-  
-  iVar1 = FUN_80244820((int *)&DAT_803a7f68,local_8,param_1);
-  if (iVar1 != 1) {
-    local_8[0] = 0;
-  }
-  return local_8[0];
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80119928
- * EN v1.0 Address: 0x80119928
- * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x80119A10
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80119928(undefined4 param_1)
-{
-  FUN_80244758((int *)&DAT_803a7f88,param_1,0);
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80119954
- * EN v1.0 Address: 0x80119954
- * EN v1.0 Size: 316b
- * EN v1.1 Address: 0x80119A40
- * EN v1.1 Size: 328b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80119954(void)
-{
-  int *piVar1;
-  undefined *puVar2;
-  int iVar3;
-  int *piVar4;
-  uint uVar5;
-  int *local_38 [14];
-  
-  piVar1 = (int *)FUN_80286830();
-  piVar4 = (int *)(*piVar1 + 8);
-  iVar3 = *piVar1 + DAT_803a6a2c * 4 + 8;
-  FUN_80244820((int *)&DAT_803a7f88,local_38,1);
-  puVar2 = &DAT_803a69c0;
-  for (uVar5 = 0; uVar5 < DAT_803a6a2c; uVar5 = uVar5 + 1) {
-    if (puVar2[0x70] == '\0') {
-      DAT_803a6a64 = FUN_80264c10(iVar3,*local_38[0],local_38[0][1],local_38[0][2],DAT_803a6a54);
-      if (DAT_803a6a64 != 0) {
-        if (DAT_803de314 != 0) {
-          FUN_80118c88(0);
-          DAT_803de314 = 0;
+        res = DVDReadPrio(&lbl_803A5D60.mFileInfo, (void*)req[0], readSize, readOff, 2);
+        if (res != (s32)readSize) {
+            if (res == -1) {
+                *(s32*)(pb + 0xA0) = -1;
+            }
+            if (i == 0) {
+                fn_80118B88(0);
+            }
+            OSSuspendThread((OSThread*)(base + 0x1000));
         }
-        FUN_80247054(-0x7fc57058);
-      }
-      local_38[0][3] = piVar1[1];
-      FUN_80244758((int *)&DAT_803a7f68,local_38[0],1);
-      FUN_80243e74();
-      DAT_803a6a90 = DAT_803a6a90 + 1;
-      FUN_80243e9c();
-      DAT_803de318 = 0;
+
+        req[1] = i;
+        OSSendMessage((OSMessageQueue*)(base + 0x13A8), (OSMessage)req, OS_MESSAGE_BLOCK);
+
+        readOff += readSize;
+        readSize = *(u32*)(req[0]);
+
+        {
+            u32 cols = *(u32*)(pb + 0x50);
+            u32 bOff = *(u32*)(pb + 0xB8);
+            u32 pos  = (i + bOff) % cols;
+            if (pos == cols - 1) {
+                if (!(*(u8*)(pb + 0x9E) & 1)) {
+                    OSSuspendThread((OSThread*)(base + 0x1000));
+                } else {
+                    readOff = *(u32*)(pb + 0x64);
+                }
+            }
+        }
+        i++;
     }
-    iVar3 = iVar3 + *piVar4;
-    piVar4 = piVar4 + 1;
-    puVar2 = puVar2 + 1;
-  }
-  if (DAT_803de314 != 0) {
-    FUN_80118c88(1);
-    DAT_803de314 = 0;
-  }
-  FUN_8028687c();
-  return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80119a90
- * EN v1.0 Address: 0x80119A90
- * EN v1.0 Size: 364b
- * EN v1.1 Address: 0x80119B88
- * EN v1.1 Size: 316b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80119a90(void)
+/* ------------------------------------------------------------------ */
+/* fn_80119618 (60 bytes)                                              */
+/* ------------------------------------------------------------------ */
+#pragma scheduling off
+#pragma peephole off
+void fn_80119618(void)
 {
-  int iVar1;
-  
-  iVar1 = 0;
-  do {
-    if (DAT_803a6a5f != '\0') {
-      while (DAT_803a6a90 < 0) {
-        FUN_80243e74();
-        DAT_803a6a90 = DAT_803a6a90 + 1;
-        FUN_80243e9c();
-        if (((iVar1 + DAT_803a6a78) - ((uint)(iVar1 + DAT_803a6a78) / DAT_803a6a10) * DAT_803a6a10
-             == DAT_803a6a10 - 1) && ((DAT_803a6a5e & 1) == 0)) break;
-        iVar1 = iVar1 + 1;
-      }
+    if (lbl_803DD688 != 0) {
+        OSCancelThread(&lbl_803A6F08);
+        lbl_803DD688 = 0;
     }
-    FUN_80119954();
-    if (((iVar1 + DAT_803a6a78) - ((uint)(iVar1 + DAT_803a6a78) / DAT_803a6a10) * DAT_803a6a10 ==
-         DAT_803a6a10 - 1) && ((DAT_803a6a5e & 1) == 0)) {
-      FUN_80247054(-0x7fc57058);
-    }
-    iVar1 = iVar1 + 1;
-  } while( true );
 }
+#pragma peephole reset
+#pragma scheduling reset
+
+/* ------------------------------------------------------------------ */
+/* fn_80119654 (52 bytes)                                              */
+/* ------------------------------------------------------------------ */
+#pragma scheduling off
+#pragma peephole off
+void fn_80119654(void)
+{
+    if (lbl_803DD688 != 0) {
+        OSResumeThread(&lbl_803A6F08);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* ------------------------------------------------------------------ */
+/* fn_80119688 (156 bytes)                                             */
+/* ------------------------------------------------------------------ */
+#pragma scheduling off
+#pragma peephole off
+BOOL fn_80119688(OSPriority priority)
+{
+    char* base = lbl_803A5F08;
+    char* stack = base + 0x1000;
+
+    if (!OSCreateThread((OSThread*)stack, (void*(*)(void*))fn_80119520, NULL,
+                        stack, 0x1000, priority, 1)) {
+        return 0;
+    }
+
+    OSInitMessageQueue((OSMessageQueue*)(base + 0x13C8), (void*)(base + 0x1360), 10);
+    OSInitMessageQueue((OSMessageQueue*)(base + 0x13A8), (void*)(base + 0x1338), 10);
+    OSInitMessageQueue((OSMessageQueue*)(base + 0x1388), (void*)(base + 0x1310), 10);
+    lbl_803DD688 = 1;
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* ------------------------------------------------------------------ */
+/* fn_80119724 (68 bytes)                                              */
+/* ------------------------------------------------------------------ */
+#pragma scheduling off
+#pragma peephole off
+OSMessage fn_80119724(s32 flags)
+{
+    OSMessage msg;
+    if (OSReceiveMessage(&lbl_803A7308, &msg, flags) == 1) {
+        return msg;
+    }
+    return (OSMessage)0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* ------------------------------------------------------------------ */
+/* fn_80119768 (48 bytes)                                              */
+/* ------------------------------------------------------------------ */
+#pragma scheduling off
+#pragma peephole off
+void fn_80119768(OSMessage msg)
+{
+    OSSendMessage(&lbl_803A7328, msg, OS_MESSAGE_NOBLOCK);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* ------------------------------------------------------------------ */
+/* fn_80119798 (328 bytes) - video decode frame                        */
+/* ------------------------------------------------------------------ */
+void fn_80119798(void* param)
+{
+    char* pb  = (char*)&lbl_803A5D60;
+    char* db  = lbl_803A72F0;
+    void** pp = (void**)param;
+    u32 dvdOff = *(u32*)(pb + 0xB8);
+    u32 i;
+    void** readMsg;
+
+    OSReceiveMessage(&lbl_803A7308, (OSMessage*)&readMsg, OS_MESSAGE_BLOCK);
+
+    i = 0;
+    while (i < *(u32*)(pb + 0x6C)) {
+        if (((u8*)pb)[0x70 + i] == 0) {
+            s32 dec = THPVideoDecode(
+                (char*)pp[0] + dvdOff,
+                readMsg[0], readMsg[1], readMsg[2],
+                (void*)*(u32*)(pb + 0x94));
+            *(s32*)(pb + 0xA4) = dec;
+            if (dec != 0) {
+                if (lbl_803DD694 != 0) {
+                    fn_80118B88(0);
+                    lbl_803DD694 = 0;
+                }
+                OSSuspendThread((OSThread*)(db + 0x1058));
+            }
+            readMsg[3] = pp[1];
+            OSSendMessage(&lbl_803A7308, (OSMessage)readMsg, OS_MESSAGE_BLOCK);
+            {
+                u32 intr = OSDisableInterrupts();
+                *(s32*)(pb + 0xD0) += 1;
+                OSRestoreInterrupts(intr);
+            }
+            lbl_803DD698 = 0;
+        }
+        dvdOff += *(u32*)((char*)pp[0] + i * 4);
+        i++;
+        pp = (void**)((char*)pp + 4);
+    }
+
+    if (lbl_803DD694 != 0) {
+        fn_80118B88(1);
+        lbl_803DD694 = 0;
+    }
+}
+
+/* ------------------------------------------------------------------ */
+/* fn_801198E0 (316 bytes)                                             */
+/* ------------------------------------------------------------------ */
+void fn_801198E0(void* param)
+{
+    char* pb = (char*)&lbl_803A5D60;
+    char* db = lbl_803A72F0;
+    u32 frameSize = *(u32*)(pb + 0xB4);
+    void* cur = param;
+    int i = 0;
+
+    while (1) {
+        while (*(s32*)(pb + 0xD0) < 0) {
+            u32 intr = OSDisableInterrupts();
+            *(s32*)(pb + 0xD0) += 1;
+            OSRestoreInterrupts(intr);
+            {
+                u32 cols = *(u32*)(pb + 0x50);
+                u32 bOff = *(u32*)(pb + 0xB8);
+                u32 pos  = (i + bOff) % cols;
+                if (pos == cols - 1 && !(*(u8*)(pb + 0x9E) & 1)) break;
+            }
+            i++;
+        }
+
+        fn_80119798(cur);
+
+        {
+            u32 cols = *(u32*)(pb + 0x50);
+            u32 bOff = *(u32*)(pb + 0xB8);
+            u32 pos  = (i + bOff) % cols;
+            if (pos == cols - 1) {
+                if (!(*(u8*)(pb + 0x9E) & 1)) {
+                    OSSuspendThread((OSThread*)(db + 0x1058));
+                    cur = (char*)cur + *(u32*)(pb + 0xAC);
+                } else {
+                    cur = (char*)cur + frameSize;
+                }
+            } else {
+                cur = (char*)cur + frameSize;
+            }
+        }
+        i++;
+    }
+}
+
+/* ------------------------------------------------------------------ */
+/* fn_80119A1C (204 bytes)                                             */
+/* ------------------------------------------------------------------ */
+void fn_80119A1C(void)
+{
+    char* pb = (char*)&lbl_803A5D60;
+
+    while (1) {
+        while (*(s32*)(pb + 0xD0) < 0) {
+            void* msg = fn_80119488();
+            u32 cols = *(u32*)(pb + 0x50);
+            u32 bOff = *(u32*)(pb + 0xB8);
+            u32 pos  = (*(u32*)((char*)msg + 4) + bOff) % cols;
+            if (pos == cols - 1 && !(*(u8*)(pb + 0x9E) & 1)) {
+                fn_80119798(msg);
+            }
+            fn_801194BC((OSMessage)msg);
+            {
+                u32 intr = OSDisableInterrupts();
+                *(s32*)(pb + 0xD0) += 1;
+                OSRestoreInterrupts(intr);
+            }
+        }
+        {
+            void* msg;
+            if ((u8)pb[0x9F]) {
+                msg = fn_80119488();
+            } else {
+                msg = (void*)fn_801194EC();
+            }
+            fn_80119798(msg);
+            fn_801194BC((OSMessage)msg);
+        }
+    }
+}
+
+/* ------------------------------------------------------------------ */
+/* fn_80119AE8 (60 bytes)                                              */
+/* ------------------------------------------------------------------ */
+#pragma scheduling off
+#pragma peephole off
+void fn_80119AE8(void)
+{
+    if (lbl_803DD690 != 0) {
+        OSCancelThread(&lbl_803A8348);
+        lbl_803DD690 = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* ------------------------------------------------------------------ */
+/* fn_80119B24 (52 bytes)                                              */
+/* ------------------------------------------------------------------ */
+#pragma scheduling off
+#pragma peephole off
+void fn_80119B24(void)
+{
+    if (lbl_803DD690 != 0) {
+        OSResumeThread(&lbl_803A8348);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* ------------------------------------------------------------------ */
+/* fn_80119B58 (200 bytes)                                             */
+/* ------------------------------------------------------------------ */
+#pragma scheduling off
+#pragma peephole off
+BOOL fn_80119B58(int param_1, int param_2)
+{
+    char* db = lbl_803A72F0;
+
+    if (param_2 != 0) {
+        if (!OSCreateThread(&lbl_803A8348, (void*(*)(void*))fn_801198E0, NULL,
+                            &lbl_803A8348, 0x1000, param_1, 1)) {
+            return 0;
+        }
+    } else {
+        if (!OSCreateThread(&lbl_803A8348, (void*(*)(void*))fn_80119A1C, NULL,
+                            &lbl_803A8348, 0x1000, param_1, 1)) {
+            return 0;
+        }
+    }
+
+    OSInitMessageQueue((OSMessageQueue*)(db + 0x38), (void*)(db + 0x0C), 3);
+    OSInitMessageQueue((OSMessageQueue*)(db + 0x18), (void*)(db + 0x00), 3);
+    lbl_803DD690 = 1;
+    lbl_803DD694 = 1;
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
