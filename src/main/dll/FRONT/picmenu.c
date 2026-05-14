@@ -459,6 +459,8 @@ void fn_80119798(void* param)
 /* ------------------------------------------------------------------ */
 /* fn_801198E0 (316 bytes)                                             */
 /* ------------------------------------------------------------------ */
+#pragma scheduling off
+#pragma peephole off
 void fn_801198E0(void* param)
 {
     char* pb = (char*)&lbl_803A5D60;   /* r31 */
@@ -476,8 +478,9 @@ void fn_801198E0(void* param)
                 }
                 {
                     u32 bOff = *(u32*)(pb + 0xB8);
+                    u32 sum  = (u32)i + bOff;
                     u32 cols = *(u32*)(pb + 0x50);
-                    u32 pos  = ((u32)i + bOff) % cols;
+                    u32 pos  = sum % cols;
                     if (pos == cols - 1) {
                         if (!(*(u8*)(pb + 0x9E) & 1)) {
                             break; /* pos==cols-1, not looping: go to decode */
@@ -495,18 +498,21 @@ void fn_801198E0(void* param)
             }
         }
 
+        /* Store i adjacent to cur on stack so fn_80119798 can read it as param[1] */
+        *(s32*)(&cur + 1) = i;
         fn_80119798(&cur);
 
         {
             u32 bOff = *(u32*)(pb + 0xB8);
+            u32 sum  = (u32)i + bOff;
             u32 cols = *(u32*)(pb + 0x50);
-            u32 pos  = ((u32)i + bOff) % cols;
+            u32 pos  = sum % cols;
             if (pos == cols - 1) {
-                if (!(*(u8*)(pb + 0x9E) & 1)) {
-                    OSSuspendThread(&lbl_803A8348);
-                } else {
+                if (*(u8*)(pb + 0x9E) & 1) {
                     frameSize = *(u32*)cur;
                     cur = (void*)*(u32*)(pb + 0xAC);
+                } else {
+                    OSSuspendThread(&lbl_803A8348);
                 }
             } else {
                 u32 nextSize = *(u32*)cur;
@@ -517,6 +523,8 @@ void fn_801198E0(void* param)
         i++;
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
 /* fn_80119A1C (204 bytes)                                             */
