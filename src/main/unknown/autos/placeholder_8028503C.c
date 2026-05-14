@@ -20,7 +20,8 @@ int ReverbSTDCreate(AXFX_REVSTD_WORK *rv, f32 coloration, f32 time, f32 mix, f32
     u8 k;
     f32 zero;
     f32 timeFactor;
-    s32 delay;
+    s32 maxLength;
+    s32 lengthBytes;
     AXFX_REVSTD_DELAYLINE *delayLine;
 
     if ((coloration < axfx_reverb_std_f32_0) || (coloration > axfx_reverb_std_f32_1) ||
@@ -37,39 +38,42 @@ int ReverbSTDCreate(AXFX_REVSTD_WORK *rv, f32 coloration, f32 time, f32 mix, f32
 
     for (k = 0; k < 3; k++) {
         for (i = 0; i < 2; i++) {
-            delay = sReverbStdDelayLengths[i];
             delayLine = &rv->C[i + k * 2];
-            delayLine->length = (delay + 2) * 4;
-            delayLine->inputs = salMalloc(delayLine->length);
-            memset(delayLine->inputs, 0, delayLine->length);
+            maxLength = sReverbStdDelayLengths[i] + 2;
+            lengthBytes = maxLength * 4;
+            delayLine->length = lengthBytes;
+            delayLine->inputs = salMalloc(lengthBytes);
+            memset(delayLine->inputs, 0, lengthBytes);
             delayLine->lastOutput = zero;
-            delayLine->outPoint = delayLine->inPoint - (((delay + 2) >> 1) * 4);
+            delayLine->outPoint = delayLine->inPoint - ((maxLength >> 1) * 4);
             while (delayLine->outPoint < 0) {
                 delayLine->outPoint += delayLine->length;
             }
             delayLine->inPoint = 0;
             delayLine->outPoint = 0;
-            delayLine->outPoint = delayLine->inPoint - (delay * 4);
+            delayLine->outPoint = delayLine->inPoint - (sReverbStdDelayLengths[i] * 4);
             while (delayLine->outPoint < 0) {
                 delayLine->outPoint += delayLine->length;
             }
-            rv->combCoef[i + k * 2] = powf(axfx_reverb_std_f32_10, (delay * -3) / timeFactor);
+            rv->combCoef[i + k * 2] =
+                powf(axfx_reverb_std_f32_10, (sReverbStdDelayLengths[i] * -3) / timeFactor);
         }
 
         for (i = 0; i < 2; i++) {
-            delay = sReverbStdDelayLengths[i + 2];
             delayLine = &rv->AP[i + k * 2];
-            delayLine->length = (delay + 2) * 4;
-            delayLine->inputs = salMalloc(delayLine->length);
-            memset(delayLine->inputs, 0, delayLine->length);
+            maxLength = sReverbStdDelayLengths[i + 2] + 2;
+            lengthBytes = maxLength * 4;
+            delayLine->length = lengthBytes;
+            delayLine->inputs = salMalloc(lengthBytes);
+            memset(delayLine->inputs, 0, lengthBytes);
             delayLine->lastOutput = zero;
-            delayLine->outPoint = delayLine->inPoint - (((delay + 2) >> 1) * 4);
+            delayLine->outPoint = delayLine->inPoint - ((maxLength >> 1) * 4);
             while (delayLine->outPoint < 0) {
                 delayLine->outPoint += delayLine->length;
             }
             delayLine->inPoint = 0;
             delayLine->outPoint = 0;
-            delayLine->outPoint = delayLine->inPoint - (delay * 4);
+            delayLine->outPoint = delayLine->inPoint - (sReverbStdDelayLengths[i + 2] * 4);
             while (delayLine->outPoint < 0) {
                 delayLine->outPoint += delayLine->length;
             }
@@ -88,7 +92,7 @@ int ReverbSTDCreate(AXFX_REVSTD_WORK *rv, f32 coloration, f32 time, f32 mix, f32
         rv->damping = axfx_reverb_std_f32_1 - (axfx_reverb_std_f32_0p05 + damp);
     }
 
-    if (predelay != axfx_reverb_std_f32_0) {
+    if (axfx_reverb_std_f32_0 != predelay) {
         rv->preDelayTime = axfx_reverb_std_f32_32000 * predelay;
         for (i = 0; i < 3; i++) {
             rv->preDelayLine[i] = salMalloc(rv->preDelayTime * 4);
