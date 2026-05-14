@@ -4,33 +4,33 @@
  * This file is intentionally not wired into the build yet.
  * It exists as a retail-backed per-object packet for exploratory split work.
  *
- * Object def: 0x051A TrigPnt
- * Output path: src/main/unknown/objects/obj_051A_trigpnt.c
- * Retail placements: 47
- * Root romlists: 14
+ * Object def: 0x0520 TriggSetp
+ * Output path: src/main/unknown/objects/obj_0520_triggsetp.c
+ * Retail placements: 2
+ * Root romlists: 2
  * Object-def size: 0xC0
- * Root placement widths: 20w x47
+ * Root placement widths: 20w x2
  * DLL ID: 0x0126
- * Class ID: 0x0014
+ * Class ID: 0x001A
  * Suggested outer boundary: single-def class inside shared DLL
- * Reference class name: TrigPnt
+ * Reference class name: TriggSetp
  * Reference DLL name: Trigger
- * Remap aliases: 0x004B
+ * Remap aliases: 0x0050
  *
  * Related packet paths:
- * - class: src/main/unknown/classes/class_0014_trigpnt.c
+ * - class: src/main/unknown/classes/class_001A_triggsetp.c
  * - family: src/main/unknown/dll_0126_trigger.c
  *
  * Width samples:
- * - 20w (0x50 bytes): clouddungeon.romlist.zlb, dfshrine.romlist.zlb, dragbot.romlist.zlb, dragrock.romlist.zlb
+ * - 20w (0x50 bytes): moonpass.romlist.zlb, wgshrine.romlist.zlb
  *
  * Inline object-def evidence:
  * - inline fields: pModelList
- * - model IDs: 0x00000473 0x00000461
+ * - model IDs: 0x00000474 0x00000461
  * - help texts: 0xFFFF 0xFFFF 0xFFFF 0xFFFF
  *
- * Same-class objects (1 defs / 47 placements):
- * - 0x051A TrigPnt: placements=47, dll=0x0126, widths=20w x47
+ * Same-class objects (1 defs / 2 placements):
+ * - 0x0520 TriggSetp: placements=2, dll=0x0126, widths=20w x2
  *
  * Same-DLL objects (9 defs / 1476 placements):
  * - 0x051C TrigPln: placements=1218, class=0x0015, widths=20w x1218
@@ -42,10 +42,6 @@
  * - 0x051F TrigButt: placements=1, class=0x0019, widths=20w x1
  * - 0x051E TrigTime: placements=0, class=0x0018, widths=none
  * - 0x0522 TrigCrve: placements=0, class=0x003B, widths=none
- *
- * Reference-only object params:
- * - 0x3A: size (s8)
- * - 0x3D: unnamed (s8)
  *
  * EN descriptor slot map:
  * - descriptor=0x803224E0 gTriggerObjDescriptor (slots=10, mask=1101111111)
@@ -64,12 +60,12 @@
 /*
  * Retail-backed packet constants. Promote only after EN code inspection.
  */
-enum obj_051A_TrigPnt_packet_info {
-    TRIGPNT_DEF_ID = 0x051A,
-    TRIGPNT_DLL_ID = 0x0126,
-    TRIGPNT_CLASS_ID = 0x0014,
-    TRIGPNT_OBJECT_DEF_BYTES = 0xC0,
-    TRIGPNT_PLACEMENT_BYTES_MIN = 0x50,
-    TRIGPNT_PLACEMENT_BYTES_MAX = 0x50,
+enum obj_0520_TriggSetp_packet_info {
+    TRIGGSETP_DEF_ID = 0x0520,
+    TRIGGSETP_DLL_ID = 0x0126,
+    TRIGGSETP_CLASS_ID = 0x001A,
+    TRIGGSETP_OBJECT_DEF_BYTES = 0xC0,
+    TRIGGSETP_PLACEMENT_BYTES_MIN = 0x50,
+    TRIGGSETP_PLACEMENT_BYTES_MAX = 0x50,
 };
 #endif

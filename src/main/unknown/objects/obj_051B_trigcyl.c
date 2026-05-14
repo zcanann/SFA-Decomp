@@ -32,8 +32,8 @@
  * Same-class objects (1 defs / 56 placements):
  * - 0x051B TrigCyl: placements=56, dll=0x0126, widths=20w x56
  *
- * Same-DLL objects (9 defs / 1483 placements):
- * - 0x051C TrigPln: placements=1225, class=0x0015, widths=20w x1225
+ * Same-DLL objects (9 defs / 1476 placements):
+ * - 0x051C TrigPln: placements=1218, class=0x0015, widths=20w x1218
  * - 0x0521 TrigBits: placements=112, class=0x001B, widths=20w x112
  * - 0x051B TrigCyl: placements=56, class=0x0016, widths=20w x56
  * - 0x051A TrigPnt: placements=47, class=0x0014, widths=20w x47
@@ -44,16 +44,16 @@
  * - 0x0522 TrigCrve: placements=0, class=0x003B, widths=none
  *
  * EN descriptor slot map:
- * - descriptor=0x80323130 gTriggerObjDescriptor (slots=10, mask=1101111111)
- * - slot 00: 0x8019AFF4 trigger_initialise stub=blr ref=initialise (stub)
- * - slot 01: 0x8019AFF0 trigger_release stub=blr ref=release (stub)
- * - slot 03: 0x8019AE20 trigger_init ref=init
- * - slot 04: 0x8019AE1C trigger_update stub=blr ref=update (stub)
- * - slot 05: 0x8019A92C trigger_hitDetect ref=hitDetect
- * - slot 06: 0x8019A928 trigger_render stub=blr ref=render (stub)
- * - slot 07: 0x8019A88C trigger_free ref=free
- * - slot 08: 0x8019A884 trigger_func08 stub=const 0
- * - slot 09: 0x8019A87C trigger_getExtraSize stub=const 172 ref=getExtraSize (stub)
+ * - descriptor=0x803224E0 gTriggerObjDescriptor (slots=10, mask=1101111111)
+ * - slot 00: 0x8019AA78 Trigger_initialise stub=blr ref=initialise (stub)
+ * - slot 01: 0x8019AA74 Trigger_release stub=blr ref=release (stub)
+ * - slot 03: 0x8019A8A4 Trigger_init ref=init
+ * - slot 04: 0x8019A8A0 Trigger_update stub=blr ref=update (stub)
+ * - slot 05: 0x8019A3B0 Trigger_hitDetect ref=hitDetect
+ * - slot 06: 0x8019A3AC Trigger_render stub=blr ref=render (stub)
+ * - slot 07: 0x8019A310 Trigger_free ref=free
+ * - slot 08: 0x8019A308 Trigger_func08 stub=const 0
+ * - slot 09: 0x8019A300 Trigger_getExtraSize stub=const 172 ref=getExtraSize (stub)
  */
 
 #if 0

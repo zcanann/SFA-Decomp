@@ -11,7 +11,7 @@
  * Retail object defs: 9
  * Retail object record sizes: 0xA0, 0xC0
  * Retail root placement widths: 20w
- * EN descriptor: 0x803224E0 lbl_803224E0
+ * EN descriptor: 0x803224E0 gTriggerObjDescriptor
  * EN descriptor shape: slots=10 mask=1101111111
  *
  * Retail object defs:
