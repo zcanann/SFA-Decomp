@@ -148,9 +148,9 @@ void dfropenode_render2(f32 phase, f32 force, int obj)
   f32 fraction;
 
   extra = *(DFropenodeExtra **)(obj + 0xb8);
-  phase = phase - (double)DFRope_S32AsFloat_SubAsFloat((s32)(s8)(s32)phase);
+  phase = phase - DFRope_S32AsFloat((s32)(s8)(s32)phase);
   segmentIndex = (s8)(s32)phase;
-  fraction = (f32)phase - DFRope_S32AsFloat_SubAsFloat(segmentIndex);
+  fraction = phase - DFRope_S32AsFloat(segmentIndex);
   segmentOffset = segmentIndex * 0x34;
   node = **(int **)&extra->rope + segmentOffset;
   *(f32 *)(node + 0x1c) = (f32)force * fraction + *(f32 *)(node + 0x1c);
