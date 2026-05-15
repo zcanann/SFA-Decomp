@@ -12,14 +12,14 @@ void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_
                  double param_6,undefined8 param_7,undefined8 param_8);
 int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType);
 int expgfx_updateSourceFrameFlags(void *sourceObject);
-void expgfx_func0C(u32 sourceId);
-void expgfx_func0B(void);
-void expgfx_func0A(void);
+void expgfx_ownerFree3(u32 sourceId);
+void expgfx_func0B_nop(void);
+void expgfx_func0A_nop(void);
 int expgfx_func09(void);
 void expgfx_renderSourcePools(int sourceId,int sourceMode);
 void drawGlow(uint slotPoolBase,int poolIndex);
 void renderParticles(void);
-void expgfx_func08(u32 sourceId);
+void expgfx_free2(u32 sourceId);
 void expgfx_free(u32 sourceId);
 void expgfx_resetAllPools(void);
 void expgfx_updateFrameState(int sourceMode,int sourceId);

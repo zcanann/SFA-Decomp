@@ -810,7 +810,7 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
 /*
  * --INFO--
  *
- * Function: expgfx_func0C
+ * Function: expgfx_ownerFree3
  * EN v1.0 Address: 0x8009E004
  * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x8009E290
@@ -820,7 +820,7 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void expgfx_func0C(u32 sourceId)
+void expgfx_ownerFree3(u32 sourceId)
 {
   expgfx_free(sourceId);
   return;
@@ -829,7 +829,7 @@ void expgfx_func0C(u32 sourceId)
 /*
  * --INFO--
  *
- * Function: expgfx_func0B
+ * Function: expgfx_func0B_nop
  * EN v1.0 Address: 0x8009E024
  * EN v1.0 Size: 4b
  * EN v1.1 Address: TODO
@@ -839,14 +839,14 @@ void expgfx_func0C(u32 sourceId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void expgfx_func0B(void)
+void expgfx_func0B_nop(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: expgfx_func0A
+ * Function: expgfx_func0A_nop
  * EN v1.0 Address: 0x8009E028
  * EN v1.0 Size: 4b
  * EN v1.1 Address: TODO
@@ -856,7 +856,7 @@ void expgfx_func0B(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void expgfx_func0A(void)
+void expgfx_func0A_nop(void)
 {
 }
 
@@ -1392,7 +1392,7 @@ void renderParticles(void)
 /*
  * --INFO--
  *
- * Function: expgfx_func08
+ * Function: expgfx_free2
  * EN v1.0 Address: 0x8009EEB8
  * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x8009F144
@@ -1402,7 +1402,7 @@ void renderParticles(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void expgfx_func08(u32 sourceId)
+void expgfx_free2(u32 sourceId)
 {
   expgfx_free(sourceId);
   return;

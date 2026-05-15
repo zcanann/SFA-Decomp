@@ -33,9 +33,9 @@
  *   and exptab full strings.
  * - expgfx_addremove @ 0x8009F2CC reports invalid tabindex and scale overflow.
  * - expgfx_funcs @ 0x8030FA54 is a retail function table; Rena's EN map
- *   reconciles callback slots at 0x8009E004 expgfx_func0C, 0x8009E024
- *   expgfx_func0B, 0x8009E028 expgfx_func0A, 0x8009E02C expgfx_func09,
- *   and 0x8009EEB8 expgfx_func08.
+ *   reconciles callback slots at 0x8009E004 expgfx_ownerFree3, 0x8009E024
+ *   expgfx_func0B_nop, 0x8009E028 expgfx_func0A_nop,
+ *   0x8009E02C expgfx_func09, and 0x8009EEB8 expgfx_free2.
  * - pDll_expgfx @ 0x803DCA88 matches Rena's debug-side loaded-DLL global and
  *   is the shared function-table anchor used by DFP helpers, SHthorntail dust
  *   effects, and expgfx_updateFrameState.
