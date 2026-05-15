@@ -64,6 +64,15 @@ extern f32 lbl_803E5484;
 extern f32 lbl_803E5488;
 extern f64 lbl_803E5490;
 
+typedef struct SHthorntailDustEffectParams {
+  undefined2 flags;
+  undefined2 count;
+  undefined2 effectType;
+  undefined2 radius;
+  f32 scale;
+  Vec position;
+} SHthorntailDustEffectParams;
+
 /*
  * --INFO--
  *
@@ -381,53 +390,44 @@ void SHthorntail_updateDustEffects(SHthorntailObject *obj)
   SHthorntailRuntime *runtime;
   undefined4 playerObj;
   char burstCount;
-  undefined2 local_38;
-  undefined2 local_36;
-  undefined2 local_34;
-  undefined2 local_32;
-  float local_30;
-  float local_2c;
-  float local_28;
-  float local_24;
-  undefined4 local_20;
-  uint uStack_1c;
+  SHthorntailDustEffectParams effectParams;
 
   playerObj = Obj_GetPlayerObject();
   runtime = obj->runtime;
-  local_2c = lbl_803E5460;
-  local_28 = lbl_803E5464;
-  local_24 = lbl_803E5460;
-  local_34 = 0xc0e;
-  local_36 = 1;
+  effectParams.position.x = lbl_803E5460;
+  effectParams.position.y = lbl_803E5464;
+  effectParams.position.z = lbl_803E5460;
+  effectParams.effectType = 0xc0e;
+  effectParams.count = 1;
   if ((runtime->dustEffectFlags & 4) != 0) {
     if (runtime->dustEffectTimer < lbl_803E5468) {
       if ((f32)(s32)randomGetRange(0,0x1e0) <
           runtime->dustEffectTimer * lbl_803E546C) {
-        (*(code *)(*pDll_expgfx + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
+        (*(code *)(*pDll_expgfx + 8))(playerObj,0x7ca,&effectParams,2,0xffffffff,0);
       }
     }
     else if (runtime->dustEffectTimer < lbl_803E5470) {
       if ((f32)(s32)randomGetRange(0,0x1e0) <
           runtime->dustEffectTimer / lbl_803E5474) {
-        (*(code *)(*pDll_expgfx + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
+        (*(code *)(*pDll_expgfx + 8))(playerObj,0x7ca,&effectParams,2,0xffffffff,0);
       }
-      local_32 = 0x28;
-      local_38 = 0;
-      local_30 = lbl_803E5478 * ((runtime->dustEffectTimer - lbl_803E5468) / lbl_803E547C);
-      (*(code *)(*pDll_expgfx + 8))(playerObj,0x7d2,&local_38,2,0xffffffff,0);
+      effectParams.radius = 0x28;
+      effectParams.flags = 0;
+      effectParams.scale = lbl_803E5478 * ((runtime->dustEffectTimer - lbl_803E5468) / lbl_803E547C);
+      (*(code *)(*pDll_expgfx + 8))(playerObj,0x7d2,&effectParams,2,0xffffffff,0);
       runtime->dustEffectFlags = runtime->dustEffectFlags | 2;
     }
     else if (runtime->dustEffectTimer < lbl_803E5480) {
       if ((f32)(s32)randomGetRange(0,0x1e0) <
           runtime->dustEffectTimer * lbl_803E546C) {
-        (*(code *)(*pDll_expgfx + 8))(playerObj,0x7ca,&local_38,2,0xffffffff,0);
+        (*(code *)(*pDll_expgfx + 8))(playerObj,0x7ca,&effectParams,2,0xffffffff,0);
       }
       if ((runtime->dustEffectFlags & 2) != 0) {
         runtime->dustEffectFlags = runtime->dustEffectFlags & 0xfd;
-        local_32 = 0x46;
-        local_30 = lbl_803E5484;
+        effectParams.radius = 0x46;
+        effectParams.scale = lbl_803E5484;
         for (burstCount = 0xf; burstCount != 0; burstCount = burstCount + -1) {
-          (*(code *)(*pDll_expgfx + 8))(playerObj,0x7d2,&local_38,2,0xffffffff,0);
+          (*(code *)(*pDll_expgfx + 8))(playerObj,0x7d2,&effectParams,2,0xffffffff,0);
         }
       }
     }
