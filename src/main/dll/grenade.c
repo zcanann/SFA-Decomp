@@ -1094,12 +1094,13 @@ undefined4 fn_80143388(int param_1,int *param_2)
     return 1;
   }
   for (iVar1 = 0; iVar1 < *(char *)((int)param_2 + 0x827); iVar1 = iVar1 + 1) {
-    if (*(char *)((int)param_2 + iVar1 + 0x81f) != '\0') continue;
+    iVar3 = iVar1 + 0x81f;
+    if (*(char *)((int)param_2 + iVar3) != '\0') continue;
     iVar3 = *(int *)(param_1 + 0xb8);
-    if ((*(byte *)(iVar3 + 0x58) >> 6 & 1) != 0) continue;
+    if (((u32)(*(byte *)(iVar3 + 0x58) >> 6 & 1)) != 0U) continue;
     if (*(short *)(param_1 + 0xa0) >= 0x30 || *(short *)(param_1 + 0xa0) < 0x29) {
-      if (FUN_800067f0(param_1,0x10) == 0) {
-        FUN_80039468(param_1,iVar3 + 0x3a8,0x357,0,0xffffffff,0);
+      if (Sfx_IsPlayingFromObjectChannel(param_1,0x10) == 0) {
+        objAudioFn_800393f8(param_1,(void *)(iVar3 + 0x3a8),0x357,0,0xffffffff,0);
       }
     }
   }
@@ -1512,7 +1513,7 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
     *(f32*)((int)param_2 + 0x724) = *(f32*)((int)param_2 + 0x724) - lbl_803DC074;
     if (*(f32*)((int)param_2 + 0x724) <= lbl_803E306C) {
       *(f32*)((int)param_2 + 0x71c) = lbl_803E30C8;
-      uVar3 = FUN_80017760(200,500);
+      uVar3 = randomGetRange(200,500);
       *(f32*)((int)param_2 + 0x724) =
            (float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - DOUBLE_803e30f0);
       ((FlagByte728*)((int)param_2 + 0x728))->bf6 = 0;
@@ -1520,7 +1521,7 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
     }
     return 0;
   }
-  if (FUN_800067f0(param_1,0x10)) {
+  if (Sfx_IsPlayingFromObjectChannel(param_1,0x10)) {
     return 1;
   }
   iVar1 = ((int (*)(int))(*(int *)(*DAT_803dd6d8 + 0x24)))(0);
@@ -1533,8 +1534,8 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
     iVar1 = *(int *)(param_1 + 0xb8);
     if (((*(byte *)(iVar1 + 0x58) >> 6 & 1) == 0U) &&
        ((*(short *)(param_1 + 0xa0) >= 0x30 || (*(short *)(param_1 + 0xa0) < 0x29)) &&
-        !FUN_800067f0(param_1,0x10))) {
-      FUN_80039468(param_1,iVar1 + 0x3a8,0x353,0x500,0xffffffff,0);
+         !Sfx_IsPlayingFromObjectChannel(param_1,0x10))) {
+      objAudioFn_800393f8(param_1,(void *)(iVar1 + 0x3a8),0x353,0x500,0xffffffff,0);
     }
     return 0;
   }
@@ -1548,7 +1549,7 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
   if (*(f32*)((int)param_2 + 0x724) > lbl_803E306C) {
     return 0;
   }
-  uVar3 = FUN_80017760(200,500);
+  uVar3 = randomGetRange(200,500);
   *(f32*)((int)param_2 + 0x724) =
        (float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - DOUBLE_803e30f0);
   if (*(byte *)*param_2 <= 7) {
@@ -1559,7 +1560,7 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
   }
   if (*(f32*)((int)param_2 + 0x71c) <= lbl_803E306C) {
     if (param_2[0x1ec] == 0) {
-      uVar3 = FUN_80017760(0,6);
+      uVar3 = randomGetRange(0,6);
       if (((int)uVar3 < 5) && (-1 < (int)uVar3)) {
         fn_801444A4(param_1,(int)param_2);
       }
@@ -1571,8 +1572,8 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
       iVar1 = *(int *)(param_1 + 0xb8);
       if ((((*(byte *)(iVar1 + 0x58) >> 6 & 1) == 0U) &&
           (*(short *)(param_1 + 0xa0) >= 0x30 || (*(short *)(param_1 + 0xa0) < 0x29)
-           ) && !FUN_800067f0(param_1,0x10))) {
-        FUN_80039468(param_1,iVar1 + 0x3a8,0x357,0,0xffffffff,0);
+           ) && !Sfx_IsPlayingFromObjectChannel(param_1,0x10))) {
+        objAudioFn_800393f8(param_1,(void *)(iVar1 + 0x3a8),0x357,0,0xffffffff,0);
       }
       objAnimFn_8013a3f0(param_1,0x26,lbl_803E31AC,0);
       *(undefined *)((int)param_2 + 10) = 5;
