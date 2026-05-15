@@ -3493,6 +3493,7 @@ extern u8  lbl_803DD988;
 extern u32 lbl_803DD9B8;
 extern u32 lbl_803DD9BC;
 extern u8  lbl_803DD9AB;
+extern u8  lbl_803DD993;
 
 /* 4-byte and 8-byte trivial leaves. */
 void dll_3F_frameEnd_nop(void) {}
@@ -3501,7 +3502,7 @@ void Credits_frameEnd(void) {}
 void WarpstoneUI_frameEnd(void) {}
 void reportAllocFail(void) {}
 int  dll_3F_frameStart_ret_0(void) { return 0; }
-u8   shouldShowCredits(u8* obj) { return *obj; }
+u8   shouldShowCredits(void) { return lbl_803DD993; }
 
 /* EN v1.0 0x801334D4  size: 12b  u16-narrow getter for lbl_803DD938. */
 u16 getMinimapY(void) { return (u16)lbl_803DD938; }
@@ -3662,7 +3663,7 @@ extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
 
 /* EN v1.0 0x80138920  size: 192b  Drop-anim trigger guard. Returns 1
  * (and dispatches the drop anim via objAudioFn_800393f8) only when:
- *   - bit 0x40 of obj->_b8->_58 is set,
+ *   - bit 0x40 of obj->_b8->_58 is clear,
  *   - the target halfword obj->_a0 is OUTSIDE the [41, 47] window,
  *   - Sfx_IsPlayingFromObjectChannel(obj, 16) returns 0. */
 #pragma scheduling off
