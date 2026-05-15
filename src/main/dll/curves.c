@@ -2645,7 +2645,7 @@ void curves_remove(int curve)
 #pragma peephole off
 void curves_addCurveDef(int curve)
 {
-  int *slot;
+  RomCurveDef **slot;
   int count;
   int insertIndex;
 
@@ -2655,8 +2655,8 @@ void curves_addCurveDef(int curve)
     return;
   }
 
-  for (insertIndex = 0, slot = gRomCurveTable;
-       (insertIndex < count) && (RomCurve_GetId(curve) > RomCurve_GetId(*slot));
+  for (insertIndex = 0, slot = (RomCurveDef **)gRomCurveTable;
+       (insertIndex < count) && (RomCurve_GetId(curve) > (*slot)->id);
        insertIndex++) {
     slot = slot + 1;
   }
