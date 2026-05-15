@@ -1017,26 +1017,34 @@ fn_801430E0(undefined8 param_1,undefined8 param_2,double param_3,undefined8 para
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4 fn_80143210(int param_1,int *param_2)
 {
   short sVar1;
   int iVar2;
-  uint uVar3;
   
   iVar2 = fn_8014460C(param_1,param_2);
-  if (iVar2 == 0) {
-    sVar1 = *(short *)(param_1 + 0xa0);
-    if (sVar1 == 0x24) {
-      if (((param_2[0x15] & 0x8000000U) != 0) && (uVar3 = randomGetRange(0,3), uVar3 == 0)) {
-        *(undefined *)((int)param_2 + 10) = 0;
-      }
+  if (iVar2 != 0) {
+    return 1;
+  }
+  sVar1 = *(short *)(param_1 + 0xa0);
+  switch (sVar1) {
+  case 0x23:
+    if ((param_2[0x15] & 0x8000000U) != 0) {
+      objAnimFn_8013a3f0(param_1,0x24,lbl_803E2478,0);
     }
-    else if (((sVar1 < 0x24) && (0x22 < sVar1)) && ((param_2[0x15] & 0x8000000U) != 0)) {
-      objAnimFn_8013a3f0(param_1,0x24,lbl_803E3108,0);
+    break;
+  case 0x24:
+    if (((param_2[0x15] & 0x8000000U) != 0) && ((int)randomGetRange(0,3) == 0)) {
+      *(undefined *)((int)param_2 + 10) = 0;
     }
+    break;
   }
   return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1051,26 +1059,34 @@ undefined4 fn_80143210(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4 fn_801432CC(int param_1,int *param_2)
 {
   short sVar1;
   int iVar2;
-  uint uVar3;
   
   iVar2 = fn_8014460C(param_1,param_2);
-  if (iVar2 == 0) {
-    sVar1 = *(short *)(param_1 + 0xa0);
-    if (sVar1 == 0x22) {
-      if (((param_2[0x15] & 0x8000000U) != 0) && (uVar3 = randomGetRange(0,3), uVar3 == 0)) {
-        *(undefined *)((int)param_2 + 10) = 0;
-      }
+  if (iVar2 != 0) {
+    return 1;
+  }
+  sVar1 = *(short *)(param_1 + 0xa0);
+  switch (sVar1) {
+  case 0x21:
+    if ((param_2[0x15] & 0x8000000U) != 0) {
+      objAnimFn_8013a3f0(param_1,0x22,lbl_803E2478,0);
     }
-    else if (((sVar1 < 0x22) && (0x20 < sVar1)) && ((param_2[0x15] & 0x8000000U) != 0)) {
-      objAnimFn_8013a3f0(param_1,0x22,lbl_803E3108,0);
+    break;
+  case 0x22:
+    if (((param_2[0x15] & 0x8000000U) != 0) && ((int)randomGetRange(0,3) == 0)) {
+      *(undefined *)((int)param_2 + 10) = 0;
     }
+    break;
   }
   return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
