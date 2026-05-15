@@ -642,7 +642,7 @@ void *Camera_getCamActionsBinEntry(int actionNo)
 /*
  * --INFO--
  *
- * Function: camcontrol_releaseCurrentHandler
+ * Function: camcontrol_release
  * EN v1.0 Address: 0x80102F08
  * EN v1.0 Size: 60b
  * EN v1.1 Address: 0x801031A4
@@ -652,7 +652,7 @@ void *Camera_getCamActionsBinEntry(int actionNo)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void camcontrol_releaseCurrentHandler(void)
+void camcontrol_release(void)
 {
   if (lbl_803DD51C != NULL) {
     lbl_803DD51C->handler->vtable->release();

@@ -50,7 +50,7 @@ void Camera_overridePos(f32 x,f32 y,f32 z);
 void Camera_setFocus(void *target);
 void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerMode);
 void *Camera_getCamActionsBinEntry(int actionNo);
-void camcontrol_releaseCurrentHandler(void);
+void camcontrol_release(void);
 void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2);
 void Camera_setMode(s32 actionId,int priority,int startFlags,int dataSize,void *data,
                     undefined4 blendFrames,undefined queueMode);
