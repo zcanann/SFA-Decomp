@@ -6,7 +6,7 @@ extern void lightVecFn_8001dd88(f32 x, f32 y, f32 z);
 extern void queueGlowRender(void *p);
 extern void ObjPath_GetPointWorldPosition(void *obj, int idx, void *out0, void *out1, void *out2, int flag);
 extern void *Obj_GetPlayerObject(void);
-extern int fn_801BE19C(void *obj, int p2, void *p3, void *p4);
+extern int dimBossTonsil_newState_hitFightMain(void *obj, int p2, void *p3, void *p4);
 extern void fn_8001D9F4(void *p1, void *p2, void *p3, void *p4);
 extern void fn_8001D71C(void *p1, u8 a, u8 b, u8 c, int d);
 extern int randomGetRange(int min, int max);
@@ -113,7 +113,7 @@ void dimbosstonsil_update(void *obj)
     if ((*(int (***)(void *, void *, int))lbl_803DCAB8)[0xc](obj, r30, 1) == 0) return;
 
     *(void **)((char *)r30 + 0x2d0) = Obj_GetPlayerObject();
-    fn_801BE19C(obj, 0, r30, r30);
+    dimBossTonsil_newState_hitFightMain(obj, 0, r30, r30);
 
     if (lbl_803DDB90 == NULL) return;
 

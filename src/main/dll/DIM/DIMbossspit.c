@@ -47,11 +47,11 @@ extern void fn_801BDF7C(u8 *arg1, u8 *arg4);
 /*
  * --INFO--
  *
- * Function: fn_801BE19C
+ * Function: dimBossTonsil_newState_hitFightMain
  * EN v1.0 Address: 0x801BE19C
  * EN v1.0 Size: 688b
  */
-void fn_801BE19C(u8 *obj, u8 *unused2, u8 *state, u8 *updateState)
+void dimBossTonsil_newState_hitFightMain(u8 *obj, u8 *unused2, u8 *state, u8 *updateState)
 {
   f32 timer;
   u8 *vt;
