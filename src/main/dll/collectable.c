@@ -50,7 +50,7 @@ extern int ObjList_FindObjectById(int objId);
 extern undefined4 FUN_8002f6ac();
 extern int FUN_8002fc3c();
 extern int getTrickyObject(void);
-extern void ObjAnim_SetCurrentMove(f32 moveProgress,int obj,int moveId,int flags);
+extern undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int obj,int moveId,int flags);
 extern undefined4 FUN_800305c4();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();

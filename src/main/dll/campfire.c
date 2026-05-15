@@ -10,7 +10,7 @@ extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 Resource_Acquire();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjAnim_SetCurrentMove();
+extern undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int flags);
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject();
 extern undefined4 Obj_SetModelColorFadeRecursive();
