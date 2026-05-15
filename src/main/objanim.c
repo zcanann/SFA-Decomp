@@ -747,7 +747,7 @@ undefined4 ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,f
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnimArg,
+undefined4 ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
                                       ObjAnimEventList *events)
 {
   ObjAnimComponent *objAnim;

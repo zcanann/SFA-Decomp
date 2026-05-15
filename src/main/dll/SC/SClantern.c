@@ -30,7 +30,7 @@ extern f32 lbl_803E5498;
  */
 #pragma scheduling off
 #pragma peephole off
-void SHthorntail_init(double moveStepScale, int obj)
+void SHthorntail_init(f32 moveStepScale, int obj)
 {
   undefined4 advanceResult;
   u8 *event;

@@ -4,6 +4,8 @@
 #include "main/dll/SC/SClevelcontrol.h"
 #include "main/dll/SC/SCchieflightfoot.h"
 #include "main/objHitReact.h"
+#include "main/objanim.h"
+#include "main/objanim_internal.h"
 
 extern undefined4 Sfx_PlayFromObject();
 extern double FUN_80017708();
@@ -13,9 +15,6 @@ extern uint randomGetRange(int min,int max);
 extern undefined4 Obj_GetActiveModel();
 extern undefined4 Obj_GetPlayerObject();
 extern undefined4 modelInitBones();
-extern int ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnimArg,
-                                      void *eventList);
-extern undefined4 ObjAnim_SetCurrentMove(double moveProgress,int objAnimArg,int moveId,u32 flags);
 extern undefined4 ObjGroup_AddObject();
 extern int ObjTrigger_IsSet();
 extern void ObjPath_GetPointWorldPosition(SHthorntailObject *obj,int pointIndex,f32 *x,f32 *y,f32 *z,int param_6);
@@ -98,6 +97,7 @@ void SHthorntail_update(SHthorntailObject *obj)
   undefined4 in_r10;
   int iVar9;
   int iVar10;
+  u8 *eventId;
   double extraout_f1;
   double dVar11;
   double extraout_f1_00;
@@ -108,11 +108,7 @@ void SHthorntail_update(SHthorntailObject *obj)
   float fStack_6c;
   float fStack_68;
   float fStack_64;
-  float local_60 [2];
-  float local_58;
-  short local_52;
-  char local_4d [8];
-  char local_45;
+  ObjAnimEventList animEvents;
   undefined4 local_40;
   uint uStack_3c;
   undefined4 local_38;
@@ -193,8 +189,8 @@ void SHthorntail_update(SHthorntailObject *obj)
                              (int)gSHthorntailStateMoveIds[runtime->behaviorState],0);
       runtime->storedFacingAngle = *psVar2;
     }
-    iVar6 = ObjAnim_AdvanceCurrentMove((double)gSHthorntailStateMoveStepScales[runtime->behaviorState],
-                                       (double)timeDelta,(int)psVar2,local_60);
+    iVar6 = ObjAnim_AdvanceCurrentMove(gSHthorntailStateMoveStepScales[runtime->behaviorState],
+                                       timeDelta,(int)psVar2,&animEvents);
     if (iVar6 == 0) {
       runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_MOVE_COMPLETE;
     }
@@ -212,29 +208,30 @@ void SHthorntail_update(SHthorntailObject *obj)
       uStack_34 = (int)runtime->storedFacingAngle ^ 0x80000000;
       local_38 = 0x43300000;
       dVar12 = (double)FUN_80294964();
-      *(float *)(psVar2 + 6) = (float)(dVar11 * -(double)local_58 + (double)*(float *)(psVar2 + 6));
-      *(float *)(psVar2 + 10) =
-           (float)(-dVar12 * -(double)local_58 + (double)*(float *)(psVar2 + 10));
       *(float *)(psVar2 + 6) =
-           (float)(-dVar12 * -(double)local_60[0] + (double)*(float *)(psVar2 + 6));
+           (float)(dVar11 * -(double)animEvents.rootDeltaZ + (double)*(float *)(psVar2 + 6));
       *(float *)(psVar2 + 10) =
-           (float)(dVar11 * (double)local_60[0] + (double)*(float *)(psVar2 + 10));
-      *psVar2 = *psVar2 + local_52;
+           (float)(-dVar12 * -(double)animEvents.rootDeltaZ + (double)*(float *)(psVar2 + 10));
+      *(float *)(psVar2 + 6) =
+           (float)(-dVar12 * -(double)animEvents.rootDeltaX + (double)*(float *)(psVar2 + 6));
+      *(float *)(psVar2 + 10) =
+           (float)(dVar11 * (double)animEvents.rootDeltaX + (double)*(float *)(psVar2 + 10));
+      *psVar2 = *psVar2 + animEvents.rootPitch;
     }
-    pfVar8 = local_60;
-    for (iVar6 = 0; iVar6 < local_45; iVar6 = iVar6 + 1) {
-      if (*(char *)((int)pfVar8 + 0x13) == '\0') {
+    eventId = animEvents.triggeredIds;
+    for (iVar6 = 0; iVar6 < animEvents.triggerCount; iVar6 = iVar6 + 1) {
+      if (*eventId == '\0') {
         if (gSHthorntailStateTrigger0Sfx[runtime->behaviorState] != 0) {
           Sfx_PlayFromObject((uint)psVar2,gSHthorntailStateTrigger0Sfx[runtime->behaviorState]);
         }
       }
-      else if ((*(char *)((int)pfVar8 + 0x13) == '\a') &&
+      else if ((*eventId == '\a') &&
               (gSHthorntailStateTrigger7Sfx[runtime->behaviorState] != 0)) {
         Sfx_PlayFromObject((uint)psVar2,(ushort)gSHthorntailStateTrigger7Sfx[runtime->behaviorState]);
       }
-      pfVar8 = (float *)((int)pfVar8 + 1);
+      eventId++;
     }
-    objAudioFn_8006ef38((double)lbl_803E5448,(double)lbl_803E5448,psVar2,local_60,8,
+    objAudioFn_8006ef38((double)lbl_803E5448,(double)lbl_803E5448,psVar2,&animEvents,8,
                  (int)runtime->renderPathPoints,(int)runtime->moveScratch);
     if ((gSHthorntailStateFlags[runtime->behaviorState] & 4) == 0) {
       runtime->movementControlFlags = runtime->movementControlFlags | 1;

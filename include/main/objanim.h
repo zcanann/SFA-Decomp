@@ -19,7 +19,7 @@ undefined2 ObjAnim_GetCurrentEventCountdown(ObjAnimComponent *objAnim);
 void ObjAnim_WriteStateWord(ObjAnimComponent *objAnim,int stateIndex,short wordIndex,int value);
 void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,uint frameCount);
 undefined4 ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *phaseOut);
-undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnim,
+undefined4 ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnim,
                                       ObjAnimEventList *events);
 undefined4 ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim);
 undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int objAnim,int moveId,int flags);
