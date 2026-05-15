@@ -6,7 +6,7 @@ extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b14();
 extern undefined4 FUN_800175cc();
 extern undefined4 FUN_80017620();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017a98();
 extern int FUN_80017af8();
 extern undefined4 FUN_800305f8();
@@ -94,9 +94,9 @@ void FUN_80169360(undefined8 param_1,double param_2,double param_3,undefined8 pa
   *(undefined4 *)(iVar10 + 0x2d0) = uVar7;
   *(undefined *)(iVar10 + 0x25f) = 0;
   ObjHits_DisableObject(iVar2);
-  uVar3 = FUN_80017760(300,600);
+  uVar3 = randomGetRange(300,600);
   puVar9[0xd] = (float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - DOUBLE_803e3d08);
-  uVar3 = FUN_80017760(0,499);
+  uVar3 = randomGetRange(0,499);
   dVar1 = DOUBLE_803e3d08;
   puVar9[0xe] = (float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - DOUBLE_803e3d08);
   puVar9[0xf] = lbl_803E3CF8;
@@ -436,8 +436,8 @@ void FUN_80169a44(undefined8 param_1,double param_2,double param_3,undefined8 pa
     FUN_800175cc((double)lbl_803E3D78,*piVar2,'\0');
   }
   if (*(short *)(param_9 + 0x46) == 0x869) {
-    uVar1 = FUN_80017760(0,1);
-    uStack_c = FUN_80017760(0x32,0x3c);
+    uVar1 = randomGetRange(0,1);
+    uStack_c = randomGetRange(0x32,0x3c);
     uStack_c = uStack_c ^ 0x80000000;
     local_10 = 0x43300000;
     FUN_8008112c((double)(float)((double)CONCAT44(0x43300000,uStack_c) - DOUBLE_803e3d80),param_2,

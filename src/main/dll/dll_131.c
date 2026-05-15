@@ -2,7 +2,7 @@
 #include "main/dll/dll_131.h"
 
 extern undefined4 FUN_800033a8();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 FUN_8003b818();
@@ -197,12 +197,12 @@ undefined4 FUN_80167ad4(int param_1,int param_2)
       return 5;
     }
     iVar2 = *(int *)(param_1 + 0x4c);
-    uVar1 = FUN_80017760(0,99);
+    uVar1 = randomGetRange(0,99);
     if ((int)uVar1 < (int)(uint)*(byte *)(iVar2 + 0x2f)) {
       (**(code **)(*DAT_803dd70c + 0x14))(param_1,param_2,3);
     }
     else {
-      uVar1 = FUN_80017760(300,600);
+      uVar1 = randomGetRange(300,600);
       *(float *)(iVar3 + 0x34) =
            (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - DOUBLE_803e3d08);
       (**(code **)(*DAT_803dd70c + 0x14))(param_1,param_2,2);

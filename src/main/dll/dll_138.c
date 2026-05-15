@@ -9,7 +9,7 @@ extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
 extern uint FUN_80017730();
 extern undefined4 FUN_80017754();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017778();
 extern int FUN_80017a98();
 extern undefined4 ObjGroup_FindNearestObject();
@@ -112,10 +112,10 @@ FUN_80174a80(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
                *(float *)(param_10 + 0xe8) * lbl_803DC074 + *(float *)(param_10 + 0xec);
           if (*(float *)(param_10 + 0xec) < *(float *)(param_10 + 0xe4)) {
             if (*(float *)(param_10 + 0xec) < lbl_803E41C0) {
-              uVar5 = FUN_80017760(0x19,0x4b);
+              uVar5 = randomGetRange(0x19,0x4b);
               local_30 = (double)CONCAT44(0x43300000,uVar5 ^ 0x80000000);
               *(float *)(param_10 + 0xe4) = lbl_803E41FC * (float)(local_30 - DOUBLE_803e4210);
-              uVar5 = FUN_80017760(0x28,0x46);
+              uVar5 = randomGetRange(0x28,0x46);
               local_28 = (double)CONCAT44(0x43300000,uVar5 ^ 0x80000000);
               *(float *)(param_10 + 0xe8) =
                    *(float *)(param_10 + 0xe4) / (float)(local_28 - DOUBLE_803e4210);
@@ -216,10 +216,10 @@ void FUN_80174ed4(int param_1,int param_2)
   fVar1 = lbl_803E421C;
   *(float *)(param_2 + 0xd0) = lbl_803E421C;
   *(float *)(param_2 + 0xd4) = fVar1;
-  uVar2 = FUN_80017760(0x19,0x4b);
+  uVar2 = randomGetRange(0x19,0x4b);
   *(float *)(param_2 + 0xe4) =
        lbl_803E41FC * (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e4210);
-  uVar2 = FUN_80017760(0x28,0x46);
+  uVar2 = randomGetRange(0x28,0x46);
   *(float *)(param_2 + 0xe8) =
        *(float *)(param_2 + 0xe4) /
        (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e4210);

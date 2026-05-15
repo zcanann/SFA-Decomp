@@ -4,7 +4,7 @@
 extern undefined4 FUN_80006824();
 extern int FUN_80006a10();
 extern uint FUN_80017730();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_8014ccb8();
@@ -108,10 +108,10 @@ void FUN_80154870(ushort *param_1,undefined4 *param_2)
   FUN_8014d164((double)lbl_803E365C,(double)lbl_803E362C,param_1,(int)param_2,0xf,'\0');
   if ((param_2[0xb7] & 0x40000000) != 0) {
     if (DOUBLE_803e3660 <= (double)*(float *)(param_1 + 0x4c)) {
-      uVar2 = FUN_80017760(0,0x3c);
+      uVar2 = randomGetRange(0,0x3c);
     }
     else {
-      uVar2 = FUN_80017760(0,200);
+      uVar2 = randomGetRange(0,200);
     }
     if ((uVar2 & 0xff) == 0) {
       if ((double)*(float *)(param_1 + 0x4c) <= DOUBLE_803e3660) {
@@ -290,11 +290,11 @@ void FUN_80154f8c(int param_1,int param_2)
   *(float *)(param_2 + 0x324) = lbl_803E3628;
   *(float *)(param_2 + 0x328) = fVar1;
   *(undefined4 *)(param_2 + 0x32c) = *(undefined4 *)(param_1 + 0x10);
-  uVar2 = FUN_80017760(0,0xff);
+  uVar2 = randomGetRange(0,0xff);
   *(char *)(param_2 + 0x33a) = (char)uVar2;
   *(undefined *)(param_2 + 0x33b) = 0;
   *(float *)(param_2 + 0x330) = lbl_803E368C;
-  uVar2 = FUN_80017760(0x32,0x4b);
+  uVar2 = randomGetRange(0x32,0x4b);
   *(float *)(param_2 + 0x2fc) =
        lbl_803E3690 * (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3640);
   return;

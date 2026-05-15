@@ -21,8 +21,7 @@ extern undefined4 FUN_800175ec();
 extern undefined4 FUN_80017620();
 extern void* FUN_80017624();
 extern int FUN_80017730();
-extern uint FUN_80017760();
-extern int randomGetRange(int min,int max);
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017a88();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
@@ -241,7 +240,7 @@ void FUN_80169d38(undefined8 param_1,undefined8 param_2,undefined8 param_3,doubl
       iVar2 = *piVar4;
       if (((iVar2 != 0) && (*(char *)(iVar2 + 0x2f8) != '\0')) && (*(char *)(iVar2 + 0x4c) != '\0'))
       {
-        uVar3 = FUN_80017760(0xffffffe7,0x19);
+        uVar3 = randomGetRange(0xffffffe7,0x19);
         iVar2 = *piVar4;
         sVar1 = (ushort)*(byte *)(iVar2 + 0x2f9) + (short)*(char *)(iVar2 + 0x2fa) + (short)uVar3;
         if (sVar1 < 0) {
@@ -704,19 +703,19 @@ void FUN_8016ae64(double param_1,double param_2,double param_3,undefined8 param_
       param_1 = extraout_f1;
       if (puVar3 != (undefined2 *)0x0) {
         puVar3[1] = 0;
-        uVar2 = FUN_80017760(0,0xffff);
+        uVar2 = randomGetRange(0,0xffff);
         *puVar3 = (short)uVar2;
-        uVar2 = FUN_80017760(0xffffffce,0x32);
+        uVar2 = randomGetRange(0xffffffce,0x32);
         *(float *)(puVar3 + 0x12) =
              lbl_803E3DDC *
              (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3de8) +
              *(float *)(param_9 + 0x24);
-        uVar2 = FUN_80017760(0xffffffce,0x32);
+        uVar2 = randomGetRange(0xffffffce,0x32);
         *(float *)(puVar3 + 0x14) =
              lbl_803E3DE0 *
              (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3de8) +
              *(float *)(param_9 + 0x28);
-        uVar2 = FUN_80017760(0xffffffce,0x32);
+        uVar2 = randomGetRange(0xffffffce,0x32);
         param_2 = (double)(float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3de8)
         ;
         param_1 = (double)lbl_803E3DDC;
