@@ -22,7 +22,6 @@ extern float Vec_distance(float *param_1,float *param_2);
 extern void OSReport(const char *fmt, ...);
 extern int FUN_80017730();
 extern undefined4 FUN_8001774c();
-extern uint FUN_80017760();
 extern uint roundUpTo4();
 extern uint roundUpTo8(uint param_1);
 extern uint FUN_800177dc();

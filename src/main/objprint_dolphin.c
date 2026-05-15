@@ -32,7 +32,7 @@ extern undefined4 FUN_800176a8();
 extern undefined4 FUN_80017700();
 extern int FUN_80017730();
 extern undefined4 FUN_80017754();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017778();
 extern undefined4 FUN_80017794();
 extern int FUN_8001779c();
@@ -485,9 +485,9 @@ void FUN_8003d97c(ushort *param_1,int param_2)
     iVar5 = iVar5 + 10;
   }
   FUN_8025d888(0);
-  uVar3 = FUN_80017760(0, 5);
+  uVar3 = randomGetRange(0, 5);
   if (uVar3 == 0) {
-    uVar3 = FUN_80017760(0, (int)*(short *)((int)piVar11 + 0xe) - 1);
+    uVar3 = randomGetRange(0, (int)*(short *)((int)piVar11 + 0xe) - 1);
     fVar1 = *(float *)(param_1 + 4);
     uStack_2c = (int)*(short *)(iVar10 + uVar3 * 6) >> 8 ^ 0x80000000;
     local_30 = 0x43300000;

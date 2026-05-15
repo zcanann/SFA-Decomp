@@ -38,7 +38,6 @@ extern undefined4 FUN_800176a8();
 extern undefined4 FUN_800176b4();
 extern int FUN_800176d0();
 extern double FUN_800176f4();
-extern uint FUN_80017760();
 extern undefined4 FUN_80017810();
 extern undefined8 FUN_80017814();
 extern undefined4 FUN_80017830();
