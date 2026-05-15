@@ -8,7 +8,7 @@
 extern int Sfx_IsPlayingFromObject(int obj,u16 sfxId);
 extern void Sfx_PlayFromObject(int obj,u16 sfxId);
 extern void Resource_Release(void *handle);
-extern int *ObjList_GetObjects(undefined *param_1,undefined *param_2);
+extern int *ObjList_GetObjects(int *startIndex,int *objectCount);
 extern void objLightFn_8009a1dc(int obj,double scale,undefined2 *pos,u32 count,int *param_5);
 typedef int (*ObjAnimAdvanceObjectFirstFn)(int obj,double moveStepScale,double deltaTime,
                                            ObjAnimEventList *events);
@@ -133,10 +133,10 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
   int *objectList;
   int stateActive;
   int resetPending;
-  undefined local_14[4];
-  undefined local_18[4];
+  int objectListCount;
+  int startIndex;
 
-  objectList = ObjList_GetObjects(local_18,local_14);
+  objectList = ObjList_GetObjects(&startIndex,&objectListCount);
   gObjHitReactResetObjectCount = 0;
   while (objectCount > 0) {
     obj = *objectList;

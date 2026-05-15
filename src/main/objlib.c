@@ -295,19 +295,17 @@ int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2)
 void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
                                  ObjHitReactState *hitState,int moveId,int async)
 {
-  s16 *moveEntry;
-  int iVar3;
-  s16 *moveEntryTable;
+  ObjHitReactMoveEntry *moveEntry;
+  ObjHitReactMoveEntry *moveEntryTable;
   s16 firstEntryOffset;
 
-  moveEntryTable = (s16 *)((ObjAnimDef *)((ObjAnimComponent *)objAnim)->modelInstance)->hitReactMoveTable;
+  moveEntryTable = ((ObjAnimDef *)((ObjAnimComponent *)objAnim)->modelInstance)->hitReactMoveTable;
   hitState->activeEntryCount = 0;
-  if (moveEntryTable != (s16 *)0x0) {
-    iVar3 = 0;
-    for (moveEntry = moveEntryTable; *moveEntry != -1; moveEntry = moveEntry + 3, iVar3 = iVar3 + 3) {
-      if (moveId == *moveEntry) {
-        firstEntryOffset = moveEntryTable[iVar3 + 1];
-        hitState->activeEntryCount = moveEntryTable[iVar3 + 2];
+  if (moveEntryTable != (ObjHitReactMoveEntry *)0x0) {
+    for (moveEntry = moveEntryTable; moveEntry->moveId != -1; moveEntry++) {
+      if (moveId == moveEntry->moveId) {
+        firstEntryOffset = moveEntry->firstEntryIndex;
+        hitState->activeEntryCount = moveEntry->entryCount;
         if (hitState->activeEntryCount > hitState->entryCapacity) {
           hitState->activeEntryCount = hitState->entryCapacity;
         }
