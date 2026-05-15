@@ -3,8 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801ea854(double param_1,uint param_2,int param_3,uint param_4,undefined4 param_5,
-                 uint param_6);
-double FUN_801eac78(int param_1,int param_2);
+int fn_801EA854(int obj, int state);
+int fn_801EAAC0(int obj, int state);
 
 #endif /* MAIN_DLL_DR_DRSHACKLE_H_ */
