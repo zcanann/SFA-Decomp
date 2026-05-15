@@ -114,7 +114,7 @@ extern undefined4 ObjPath_GetPointWorldPositionArray();
 extern uint ObjPath_GetPointModelMtx();
 extern undefined8 ObjPath_GetPointWorldPosition();
 extern int Obj_GetYawDeltaToObject();
-extern undefined4 FUN_80038bac();
+extern undefined4 fn_80038988();
 extern int FUN_80039520();
 extern undefined4 FUN_80039580();
 extern int FUN_8003964c();

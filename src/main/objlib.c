@@ -4,6 +4,8 @@
 #include "main/objhits.h"
 #include "main/objlib.h"
 
+typedef struct ObjLibRegionList ObjLibRegionList;
+
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern float sqrtf(float x);
 extern undefined4 FUN_800033a8();
@@ -40,6 +42,7 @@ extern undefined4 FUN_80045328();
 extern void getTabEntry(void *dst,int fileId,int offset,int size);
 extern void fileLoadToBufferOffset(int fileId,void *dst,int offset,int size);
 extern void fn_80054F74(int obj,float *pos);
+extern ObjLibRegionList **fn_8005AFA0(void);
 extern int * fn_8005B11C();
 extern void debugPrintf(const char *fmt, ...);
 extern void PSMTXConcat(float *a,float *b,float *out);
@@ -54,9 +57,11 @@ extern undefined4 FUN_80286884();
 extern undefined4 FUN_80286888();
 extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
+extern f32 fn_80293E80(f32 x);
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 extern undefined4 FUN_802949e8();
+extern f32 sin(f32 x);
 extern int fn_80295CD4(int obj);
 extern int objGetAnimState80A(void *obj);
 
@@ -71,6 +76,29 @@ typedef struct ObjContactCallbackEntry {
   int objB;
   ObjContactCallback callback;
 } ObjContactCallbackEntry;
+
+typedef struct ObjLibRegionEntry {
+  s16 type;
+  u8 wordCount;
+  u8 pad03[5];
+  f32 x;
+  f32 y;
+  f32 z;
+  u8 pad14[4];
+  u16 id;
+  u16 halfX;
+  u16 halfY;
+  u16 halfZ;
+  u8 yaw;
+  u8 pitch;
+} ObjLibRegionEntry;
+
+struct ObjLibRegionList {
+  u8 pad00[8];
+  u16 entryBytes;
+  u8 pad0A[0x16];
+  ObjLibRegionEntry *entries;
+};
 
 extern ObjContactCallbackEntry lbl_80342D50[];
 typedef struct ObjTriggerInterface {
@@ -104,6 +132,8 @@ extern f32 lbl_803DF5F0;
 extern f32 lbl_803DE970;
 extern f32 lbl_803DE974;
 extern f32 lbl_803DE978;
+extern f32 lbl_803DE980;
+extern f32 lbl_803DE984;
 extern f32 lbl_803DF5F4;
 extern f32 lbl_803DF5F8;
 extern f32 lbl_803DF5FC;
@@ -3027,9 +3057,9 @@ int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3)
 /*
  * --INFO--
  *
- * Function: FUN_80038b0c
- * EN v1.0 Address: 0x80038B0C
- * EN v1.0 Size: 160b
+ * Function: fn_800386BC
+ * EN v1.0 Address: 0x800386BC
+ * EN v1.0 Size: 716b
  * EN v1.1 Address: 0x800387B4
  * EN v1.1 Size: 716b
  * JP Address: TODO
@@ -3037,47 +3067,68 @@ int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80038b0c(void)
+uint fn_800386BC(f32 x,f32 y,f32 z)
 {
-  byte *pbVar1;
-  int *piVar2;
-  int iVar3;
-  int iVar4;
-  short *psVar5;
-  int iVar6;
-  
-  FUN_8028683c();
-  piVar2 = fn_8005B11C();
-  iVar4 = 0;
-  do {
-    iVar6 = *piVar2;
-    if (iVar6 != 0) {
-      psVar5 = *(short **)(iVar6 + 0x20);
-      for (iVar3 = 0; iVar3 < (int)(uint)*(ushort *)(iVar6 + 8); iVar3 = iVar3 + (uint)*pbVar1 * 4)
-      {
-        if (*psVar5 == 0x130) {
-          FUN_80293f90();
-          FUN_80294964();
-          FUN_80293f90();
-          FUN_80294964();
+  ObjLibRegionList **lists;
+  ObjLibRegionList *list;
+  ObjLibRegionEntry *entry;
+  int hitId;
+  int listIndex;
+  int entryOffset;
+
+  hitId = -1;
+  lists = fn_8005AFA0();
+  for (listIndex = 0; listIndex < 0x50; listIndex++) {
+    list = lists[listIndex];
+    if (list != 0) {
+      entry = list->entries;
+      entryOffset = 0;
+      while (entryOffset < (int)(uint)list->entryBytes) {
+        if (entry->type == 0x130) {
+          f32 yawCos =
+              fn_80293E80(lbl_803DE980 * (f32)-(s32)((uint)entry->yaw << 8) / lbl_803DE984);
+          f32 yawSin = sin(lbl_803DE980 * (f32)-(s32)((uint)entry->yaw << 8) / lbl_803DE984);
+          f32 pitchCos =
+              fn_80293E80(lbl_803DE980 * (f32)-(s32)((uint)entry->pitch << 8) / lbl_803DE984);
+          f32 pitchSin =
+              sin(lbl_803DE980 * (f32)-(s32)((uint)entry->pitch << 8) / lbl_803DE984);
+          f32 deltaX = x - entry->x;
+          f32 deltaY = y - entry->y;
+          f32 deltaZ = z - entry->z;
+          f32 localX = deltaX * yawSin - deltaZ * yawCos;
+          f32 yawZ = deltaX * yawCos + deltaZ * yawSin;
+          f32 localY = deltaY * pitchSin - yawZ * pitchCos;
+          f32 localZ = deltaY * pitchCos + yawZ * pitchSin;
+
+          if (localX < lbl_803DE970) {
+            localX = -localX;
+          }
+          if (localY < lbl_803DE970) {
+            localY = -localY;
+          }
+          if (localZ < lbl_803DE970) {
+            localZ = -localZ;
+          }
+          if ((localX <= (f32)(uint)entry->halfX) &&
+              (localY <= (f32)(uint)entry->halfY) &&
+              (localZ <= (f32)(uint)entry->halfZ)) {
+            hitId = entry->id;
+          }
         }
-        pbVar1 = (byte *)(psVar5 + 1);
-        psVar5 = psVar5 + (uint)*pbVar1 * 2;
+        entryOffset += (uint)entry->wordCount * 4;
+        entry = (ObjLibRegionEntry *)((u8 *)entry + (uint)entry->wordCount * 4);
       }
     }
-    piVar2 = piVar2 + 1;
-    iVar4 = iVar4 + 1;
-  } while (iVar4 < 0x50);
-  FUN_80286888();
-  return;
+  }
+  return (uint)hitId & 0xffff;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80038bac
- * EN v1.0 Address: 0x80038BAC
- * EN v1.0 Size: 4b
+ * Function: fn_80038988
+ * EN v1.0 Address: 0x80038988
+ * EN v1.0 Size: 1428b
  * EN v1.1 Address: 0x80038A80
  * EN v1.1 Size: 1428b
  * JP Address: TODO
@@ -3085,7 +3136,7 @@ void FUN_80038b0c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80038bac(int param_1,int param_2,uint param_3)
+void fn_80038988(int param_1,int param_2,uint param_3)
 {
 }
 

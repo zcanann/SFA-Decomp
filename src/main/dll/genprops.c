@@ -72,7 +72,7 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
-extern uint FUN_80038b0c();
+extern uint fn_800386BC();
 extern undefined4 FUN_8003b540();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8004036c();
@@ -4230,7 +4230,7 @@ undefined4 FUN_80171310(int param_1)
   
   iVar2 = *(int *)(param_1 + 0xb8);
   if (*(int *)(iVar2 + 0x18) == -2) {
-    uVar1 = FUN_80038b0c();
+    uVar1 = fn_800386BC();
     *(uint *)(iVar2 + 0x18) = uVar1 & 0xffff;
   }
   return *(undefined4 *)(iVar2 + 0x18);

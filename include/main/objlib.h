@@ -71,8 +71,8 @@ void ObjPath_GetPointModelMtx(int param_1,int param_2);
 void ObjPath_GetPointWorldPosition(int obj,int pointIndex,float *outX,float *outY,float *outZ,
                  int useInputPosition);
 int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3);
-void FUN_80038b0c(void);
-void FUN_80038bac(int param_1,int param_2,uint param_3);
+uint fn_800386BC(f32 x,f32 y,f32 z);
+void fn_80038988(int param_1,int param_2,uint param_3);
 void FUN_80038bb0(char param_1,int param_2);
 
 #endif /* MAIN_OBJLIB_H_ */
