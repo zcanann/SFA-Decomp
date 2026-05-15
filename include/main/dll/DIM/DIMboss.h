@@ -22,6 +22,8 @@
 #define DIMBOSS_PHASE_NO_RENDER 3
 #define DIMBOSS_PHASE_RENDER_PAUSE 4
 
+#define DIMBOSS_STATE_FLAG_START_MOVE 0x02
+#define DIMBOSS_STATE_FLAG_TARGET_TRICKY 0x04
 #define DIMBOSS_STEAM_SFX_PENDING_FLAG 0x80
 #define DIMBOSS_DEFEAT_TIMER_START 10
 
@@ -133,8 +135,8 @@ void DIMboss_free(DIMbossObject *obj);
 void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                     undefined4 param_5,char shouldRender);
 void DIMboss_hitDetect(DIMbossObject *obj);
-void dimboss_update2(DIMbossObject *obj);
-void DIMboss_update(DIMbossObject *obj,undefined4 param_2,int param_3);
+void DIMboss_update(DIMbossObject *obj);
+void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3);
 void dimboss_release(void);
 void dimboss_initialise(void);
 

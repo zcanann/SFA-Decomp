@@ -346,7 +346,7 @@ void DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateStat
     }
     warpDarkIceMines_801bbb44(puVar3,puVar13);
     if (*(short *)(puVar3 + 0x2d) == -1) {
-      runtime->stateFlags |= 2;
+      runtime->stateFlags |= DIMBOSS_STATE_FLAG_START_MOVE;
     }
   }
 LAB_801bd7dc:
@@ -544,7 +544,7 @@ void DIMboss_hitDetect(DIMbossObject *obj)
 /*
  * --INFO--
  *
- * Function: dimboss_update2
+ * Function: DIMboss_update
  * EN v1.0 Address: 0x801BD450
  * EN v1.0 Size: 860b
  * EN v1.1 Address: 0x801BDA04
@@ -556,7 +556,7 @@ void DIMboss_hitDetect(DIMbossObject *obj)
  */
 #pragma scheduling off
 #pragma peephole off
-void dimboss_update2(DIMbossObject *obj)
+void DIMboss_update(DIMbossObject *obj)
 {
   uint gameBitCount;
   undefined4 targetModel;
@@ -586,11 +586,11 @@ void dimboss_update2(DIMbossObject *obj)
       obj->updateInitialized = 1;
     }
     else {
-      if ((runtime->stateFlags & 2) != 0) {
+      if ((runtime->stateFlags & DIMBOSS_STATE_FLAG_START_MOVE) != 0) {
         (*(code *)(*lbl_803DCAB8 + 0x28))
                   (obj,runtime,runtime->moveScratch,(int)runtime->activeMoveId,
                    &runtime->hitReactMode,0,0,0,1);
-        runtime->stateFlags &= ~2;
+        runtime->stateFlags &= ~DIMBOSS_STATE_FLAG_START_MOVE;
         obj->objectFlags &= ~8;
         obj->objectFlags |= 0x80;
         gameBitCount = GameBit_Get(0x20c);
@@ -626,7 +626,7 @@ void dimboss_update2(DIMbossObject *obj)
         }
       }
       else {
-        if ((runtime->stateFlags & 4) == 0) {
+        if ((runtime->stateFlags & DIMBOSS_STATE_FLAG_TARGET_TRICKY) == 0) {
           targetModel = Obj_GetPlayerObject();
           runtime->targetModel = targetModel;
         }
@@ -652,7 +652,7 @@ void dimboss_update2(DIMbossObject *obj)
 /*
  * --INFO--
  *
- * Function: DIMboss_update
+ * Function: DIMboss_init
  * EN v1.0 Address: 0x801BD7AC
  * EN v1.0 Size: 1240b
  * EN v1.1 Address: 0x801BDA04
@@ -662,7 +662,7 @@ void dimboss_update2(DIMbossObject *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMboss_update(DIMbossObject *obj,undefined4 param_2,int param_3)
+void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
 {
   typedef struct DIMbossLocalVec {
     undefined4 x;
@@ -721,7 +721,9 @@ void DIMboss_update(DIMbossObject *obj,undefined4 param_2,int param_3)
   animFlagsByte = (u8 *)((int)lbl_803AC9DC + 0x611);
   *animFlagsByte |= 8;
   *animFlagsByte &= 0xfe;
-  topState->steamSfxPending = (topState->steamSfxPending & 0x7f) | DIMBOSS_STEAM_SFX_PENDING_FLAG;
+  topState->steamSfxPending =
+      (topState->steamSfxPending & ~DIMBOSS_STEAM_SFX_PENDING_FLAG) |
+      DIMBOSS_STEAM_SFX_PENDING_FLAG;
   lbl_803DDB88 = (undefined4)Resource_Acquire(0x5a,1);
   if (GameBit_Get(0x1df) == 0) {
     topState->stompDustDelay = 2;

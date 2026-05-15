@@ -9,8 +9,8 @@
 // Descriptor slots:
 // - 0: dimboss_initialise (0x801BDAD4)
 // - 1: dimboss_release (0x801BDAD0)
-// - 3: DIMboss_update (0x801BD7AC)
-// - 4: dimboss_update2 (0x801BD450)
+// - 3: DIMboss_init (0x801BD7AC)
+// - 4: DIMboss_update (0x801BD450)
 // - 5: DIMboss_hitDetect (0x801BD414)
 // - 6: DIMboss_render (0x801BD364)
 // - 7: DIMboss_free (0x801BD260)

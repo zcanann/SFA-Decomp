@@ -75,7 +75,7 @@ extern f32 lbl_803E5920;
 /*
  * --INFO--
  *
- * Function: DIMboss_init
+ * Function: fn_801BDCF8
  * EN v1.0 Address: 0x801BDCF8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801BDD60
@@ -85,14 +85,14 @@ extern f32 lbl_803E5920;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMboss_init(int param_1,undefined4 param_2,int param_3)
+void fn_801BDCF8(int param_1,undefined4 param_2,int param_3)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: DIMboss_initialise
+ * Function: fn_801BDD64
  * EN v1.0 Address: 0x801BDCFC
  * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x801BE088
@@ -102,16 +102,16 @@ void DIMboss_init(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMboss_initialise(void)
+void fn_801BDD64(void)
 {
-  FUN_801bdd1c();
+  fn_801BDDB4();
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_801bdd1c
+ * Function: fn_801BDDB4
  * EN v1.0 Address: 0x801BDD1C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801BE0A8
@@ -121,14 +121,14 @@ void DIMboss_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bdd1c(void)
+void fn_801BDDB4(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: DIMbossgut_render
+ * Function: fn_801BDF20
  * EN v1.0 Address: 0x801BDD20
  * EN v1.0 Size: 76b
  * EN v1.1 Address: 0x801BE1C0
@@ -138,7 +138,7 @@ void FUN_801bdd1c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMbossgut_render(void)
+void fn_801BDF20(void)
 {
   int iVar1;
   char in_r8;
@@ -155,7 +155,7 @@ void DIMbossgut_render(void)
 /*
  * --INFO--
  *
- * Function: DIMbossgut_init
+ * Function: fn_801BDF7C
  * EN v1.0 Address: 0x801BDD6C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801BE240
@@ -165,10 +165,9 @@ void DIMbossgut_render(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMbossgut_init(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                     undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                     int param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
-                     undefined4 param_13,undefined4 param_14,undefined4 param_15,
-                     undefined4 param_16)
+void fn_801BDF7C(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                 int param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
+                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
 }

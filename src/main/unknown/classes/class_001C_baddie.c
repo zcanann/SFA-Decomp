@@ -212,8 +212,8 @@
  * - DLL 0x01E0: gDIM_BossObjDescriptor (slots=12, mask=110111111111)
  *   slot 00: 0x801BDAD4 dimboss_initialise
  *   slot 01: 0x801BDAD0 dimboss_release
- *   slot 03: 0x801BD7AC DIMboss_update
- *   slot 04: 0x801BD450 dimboss_update2
+ *   slot 03: 0x801BD7AC DIMboss_init
+ *   slot 04: 0x801BD450 DIMboss_update
  *   slot 05: 0x801BD414 DIMboss_hitDetect
  *   slot 06: 0x801BD364 DIMboss_render
  *   slot 07: 0x801BD260 DIMboss_free
