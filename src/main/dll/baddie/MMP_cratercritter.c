@@ -11,15 +11,15 @@ extern f32 lbl_803E2444;
 extern f32 lbl_803E247C;
 extern f32 lbl_803E24C4;
 
-extern char sInWaterMessage[];
-extern char lbl_8031D478[];
+extern const char sInWaterMessage[];
+extern const char lbl_8031D478[];
 
 extern int trickyFoodFn_8013db3c(u8 *arg1, u8 *arg2);
 extern u8 **ObjGroup_GetObjects(int kind, int *count);
 extern f32 getXZDistance(f32 *a, f32 *b);
 extern int trickyFn_8013b368(u8 *arg1, u8 *arg2, f32 dist);
 extern void objAnimFn_8013a3f0(u8 *self, int a, int b, f32 f1);
-extern void trickyDebugPrint(char *msg);
+extern int trickyDebugPrint(const char *fmt, ...);
 
 /*
  * --INFO--
@@ -31,6 +31,7 @@ extern void trickyDebugPrint(char *msg);
 void trickyFn_8013d8f0(u8 *arg1, u8 *arg2)
 {
   f32 minDist;
+  f32 rejectDist;
   f32 dist;
   u8 *nearest;
   u8 **objs;
@@ -55,10 +56,11 @@ void trickyFn_8013d8f0(u8 *arg1, u8 *arg2)
   }
 
   objs = ObjGroup_GetObjects(0x4B, &count);
+  rejectDist = lbl_803E24C4;
   for (i = 0; i < count; i++) {
     dist = getXZDistance((f32 *)((u8 *)*(int *)(arg2 + 4) + 0x18),
                        (f32 *)(*objs + 0x18));
-    if (dist > lbl_803E24C4) {
+    if (dist > rejectDist) {
       dist = getXZDistance((f32 *)(arg1 + 0x18), (f32 *)(*objs + 0x18));
       if (dist < minDist) {
         nearest = *objs;
