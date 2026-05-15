@@ -189,20 +189,24 @@ void synthFreeCallback(SynthCallbackLink* callback) {
 u32 synthAssignHandle(s32 voiceIndex) {
     u32 handle;
     SynthVoice* current;
+    SynthVoice* queuedVoices;
+    SynthVoice* allocatedVoices;
 
     do {
+        queuedVoices = gSynthQueuedVoices;
+        allocatedVoices = gSynthAllocatedVoices;
         handle = gSynthNextHandle;
         gSynthNextHandle = handle + 1;
         gSynthNextHandle &= 0x7FFFFFFF;
 
-        for (current = gSynthQueuedVoices; current != 0; current = current->next) {
+        for (current = queuedVoices; current != 0; current = current->next) {
             if (current->handle == handle) {
                 handle = 0xFFFFFFFF;
                 break;
             }
         }
 
-        for (current = gSynthAllocatedVoices; current != 0; current = current->next) {
+        for (current = allocatedVoices; current != 0; current = current->next) {
             if (current->handle == handle) {
                 handle = 0xFFFFFFFF;
                 break;
