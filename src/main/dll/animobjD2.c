@@ -9,8 +9,8 @@ extern void **ObjGroup_GetObjects(int group, int *countOut);
 extern f32 Vec_xzDistance(void *a, void *b);
 extern int fn_8002178C(f32 dx, f32 dz);
 extern int randomGetRange(int lo, int hi);
-extern f32 __ieee754_rem_pio2(int angle);
-extern f32 fn_8029397C(int angle);
+extern f32 fsin16Precise(int angle);
+extern f32 fcos16Precise(int angle);
 extern int trickyFn_8013b368(void *p1, void *p2, f32 f);
 extern void trickyReportError(const char *fmt, ...);
 
@@ -79,12 +79,12 @@ void trickyFn_8013ef8c(void *p1, void *p2) {
 
     *(f32 *)((u8 *)p2 + 0x708) =
         *(f32 *)((u8 *)*(void **)((u8 *)p2 + 0x24) + 0x18) -
-        lbl_803E24D4 * __ieee754_rem_pio2((u16)*(s32 *)((u8 *)p2 + 0x704));
+        lbl_803E24D4 * fsin16Precise((u16)*(s32 *)((u8 *)p2 + 0x704));
     *(f32 *)((u8 *)p2 + 0x70c) =
         *(f32 *)((u8 *)*(void **)((u8 *)p2 + 0x24) + 0x1c);
     *(f32 *)((u8 *)p2 + 0x710) =
         *(f32 *)((u8 *)*(void **)((u8 *)p2 + 0x24) + 0x20) -
-        lbl_803E24D4 * fn_8029397C((u16)*(s32 *)((u8 *)p2 + 0x704));
+        lbl_803E24D4 * fcos16Precise((u16)*(s32 *)((u8 *)p2 + 0x704));
 
     if (trickyFn_8013b368(p1, p2, lbl_803E2488) == 0) {
         trickyReportError(sTrickyShouldNeverStopCirclingError);

@@ -66,7 +66,7 @@ extern float lbl_803E7DAC;
 float fastCastS16ToFloat(s16* p);
 float trigReduceQuadrant(u16* p, float x);
 
-float __ieee754_rem_pio2(int angle) {
+float fsin16Precise(int angle) {
     s16 reduced = (u16)angle << 2;
     float y = fastCastS16ToFloat(&reduced);
     float y2 = y * y;
@@ -171,7 +171,7 @@ float fsin16(int angle) {
     }
 }
 
-float fn_8029397C(int angle) {
+float fcos16Precise(int angle) {
     s16 reduced = (u16)angle << 2;
     float y = fastCastS16ToFloat(&reduced);
     float y2 = y * y;
