@@ -49,6 +49,26 @@ extern f32 lbl_803E5A18;
 extern f32 lbl_803E5A1C;
 extern f32 lbl_803E5A20;
 
+typedef struct DRLaserTurretState {
+    u8 pad000[0x9b0];
+    void *stateStack;
+    void *linkedTarget;
+    f32 bobAmplitude;
+    f32 bobBaseY;
+    f32 actionTimer;
+    u8 pad9c4[0x9c8 - 0x9c4];
+    s16 maxCount;
+    u16 bobPhase;
+    s16 countScale;
+    s16 countTarget;
+    s16 countValue;
+    u8 nudgeCount;
+    u8 pad9d3;
+    u8 flags;
+    u8 digitCount;
+    u8 promptState;
+} DRLaserTurretState;
+
 /*
  * --INFO--
  *
@@ -59,15 +79,15 @@ extern f32 lbl_803E5A20;
 int fn_801E6B10(void *obj, void *param2)
 {
     void *playerObj;
-    void *state;
+    DRLaserTurretState *state;
     void *psStack;
     int v;
     int sum;
     int rng;
 
     playerObj = Obj_GetPlayerObject();
-    state = *(void **)((char *)obj + 0xb8);
-    *(u8 *)((char *)state + 0x9d6) = 0xff;
+    state = *(DRLaserTurretState **)((char *)obj + 0xb8);
+    state->promptState = 0xff;
     *(f32 *)((char *)param2 + 0x2a0) = lbl_803E59E4;
     if (*(s16 *)((char *)obj + 0xa0) != 0) {
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E59DC, 0);
@@ -76,7 +96,7 @@ int fn_801E6B10(void *obj, void *param2)
     *(u8 *)((char *)obj + 0xaf) = *(u8 *)((char *)obj + 0xaf) & ~0x08;
     if (GameBit_Get(0x617) == 0) {
         v = 1;
-        psStack = *(void **)((char *)state + 0x9b0);
+        psStack = state->stateStack;
         if (Stack_IsFull(psStack) == 0) {
             Stack_Push(psStack, &v);
         }
@@ -84,18 +104,18 @@ int fn_801E6B10(void *obj, void *param2)
     }
     fn_801E7C4C(obj, playerObj, 0);
     *(f32 *)((char *)obj + 0x10) =
-        *(f32 *)((char *)state + 0x9b8) *
+        state->bobAmplitude *
             fn_80293E80(
                 (double)(lbl_803E59E8 *
-                         (float)(uint)*(u16 *)((char *)state + 0x9ca) /
+                         (float)(uint)state->bobPhase /
                          lbl_803E59EC)) +
-        *(f32 *)((char *)state + 0x9bc);
-    sum = (uint)*(u16 *)((char *)state + 0x9ca) + (uint)framesThisStep * 0x100;
+        state->bobBaseY;
+    sum = (uint)state->bobPhase + (uint)framesThisStep * 0x100;
     if (sum > 0xffff) {
         rng = randomGetRange(0xf, 0x23);
-        *(f32 *)((char *)state + 0x9b8) = (float)rng * lbl_803E59F0;
+        state->bobAmplitude = (float)rng * lbl_803E59F0;
     }
-    *(u16 *)((char *)state + 0x9ca) = (u16)sum;
+    state->bobPhase = (u16)sum;
     if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
         if (playerGetMoney(playerObj) >= 1) {
             GameBit_Set(0x61d, 1);
