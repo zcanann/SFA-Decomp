@@ -45,7 +45,7 @@ extern void fn_8006C4E0();
 extern void fn_80088730();
 extern void fn_8008982C();
 extern uint fn_80118294();
-extern int isHeavyFogEnabled();
+extern u8 isHeavyFogEnabled();
 
 extern f64 lbl_803DEBC0;
 extern f32 lbl_803DEBC8;
@@ -70,8 +70,8 @@ extern byte lbl_803DB638;
 extern int lbl_803DB63C;
 extern int lbl_803DB640;
 extern byte lbl_803DB644;
-extern int lbl_80382008;
-extern int lbl_8038793C;
+extern int lbl_80382008[5];
+extern int lbl_8038793C[25];
 extern int lbl_803E8444;
 extern int lbl_803E8448;
 extern undefined4 jumptable_8030E844;
@@ -246,8 +246,7 @@ int fn_8005E560(int param_1,int *param_3,int *param_2)
   uVar3 = ((uint3)(uVar6 | (uVar4 << 8) | (uVar5 << 16)) >> (uVar2 & 7)) & 0x3f;
   iVar1 = iVar1 + uVar3 * 0x44;
   GXSetTevAlphaIn(0,7,4,5,7);
-  Shader_getLayer(iVar1,0);
-  selectTexture(*(int *)iVar1,0);
+  selectTexture(*(int *)Shader_getLayer(iVar1,0),0);
   if ((*(uint *)(iVar1 + 0x3c) & 4) != 0) {
     _gxSetFogParams();
     goto LAB_8005E630;
@@ -373,59 +372,48 @@ void fn_8005E730(undefined4 param_1,undefined4 param_2,int param_3)
 #pragma scheduling off
 #pragma peephole off
 undefined4
-fn_8005E97C(double param_1,double param_2,double param_3,double param_4,double param_5,
-            double param_6,float *param_7)
+fn_8005E97C(float param_1,float param_2,float param_3,float param_4,float param_5,
+            float param_6,float *param_7)
 {
   byte bVar1;
   float *pfVar2;
-  int iVar3;
-  double dVar4;
-  double dVar5;
-  double dVar6;
-  double dVar7;
-  double dVar8;
-  double dVar9;
+  int i;
+  float dVar4;
+  float dVar5;
+  float dVar6;
+  float dVar7;
+  float dVar8;
+  float dVar9;
 
   pfVar2 = (float *)&lbl_8038793C;
-  iVar3 = 5;
-  while( true ) {
+  for (i = 5; i != 0; i--, pfVar2 = pfVar2 + 5, param_7 = param_7 + 1) {
     bVar1 = *(byte *)(pfVar2 + 4);
-    dVar5 = param_1;
-    dVar8 = param_2;
     if ((bVar1 & 1) != 0) {
       dVar5 = param_2;
       dVar8 = param_1;
+    } else {
+      dVar5 = param_1;
+      dVar8 = param_2;
     }
-    dVar4 = param_3;
-    dVar7 = param_4;
     if ((bVar1 & 2) != 0) {
       dVar4 = param_4;
       dVar7 = param_3;
+    } else {
+      dVar4 = param_3;
+      dVar7 = param_4;
     }
-    dVar6 = param_6;
-    dVar9 = param_5;
     if ((bVar1 & 4) != 0) {
-      dVar6 = param_5;
       dVar9 = param_6;
+      dVar6 = param_5;
+    } else {
+      dVar9 = param_5;
+      dVar6 = param_6;
     }
-    if ((*param_7 +
-         pfVar2[3] +
-         (float)(dVar9 * (double)pfVar2[2] +
-                (double)(float)(dVar5 * (double)*pfVar2 + (double)(float)(dVar4 * (double)pfVar2[1])
-                               )) < lbl_803DEBCC) &&
-       (*param_7 +
-        pfVar2[3] +
-        (float)(dVar6 * (double)pfVar2[2] +
-               (double)(float)(dVar8 * (double)*pfVar2 + (double)(float)(dVar7 * (double)pfVar2[1]))
-               ) < lbl_803DEBCC)) break;
-    pfVar2 = pfVar2 + 5;
-    param_7 = param_7 + 1;
-    iVar3 = iVar3 + -1;
-    if (iVar3 == 0) {
-      return 1;
-    }
+    if ((dVar4 * pfVar2[1] + dVar5 * *pfVar2 + dVar9 * pfVar2[2] + pfVar2[3] + *param_7 < lbl_803DEBCC) &&
+        (dVar7 * pfVar2[1] + dVar8 * *pfVar2 + dVar6 * pfVar2[2] + pfVar2[3] + *param_7 < lbl_803DEBCC))
+      return 0;
   }
-  return 0;
+  return 1;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -634,31 +622,31 @@ void fn_8005F1E0(int param_1, int param_2)
   int *piVar5;
   int iVar6;
   int iVar7;
+  byte bVar1;
   undefined4 local_48;
   Mtx afStack_44;
 
   local_48 = lbl_803DEBB0;
-  if ((*(char *)(param_1 + 0x41) == '\x02') &&
+  if ((*(byte *)(param_1 + 0x41) == 2) &&
      (iVar1 = Shader_getLayer(param_1,1), (*(byte *)(iVar1 + 4) & 0x7f) == 9)) {
     piVar2 = (int *)Shader_getLayer(param_1,0);
-    if (*(char *)((int)piVar2 + 5) == '\0') {
+    bVar1 = *(byte *)((int)piVar2 + 5);
+    if (bVar1 == '\0') {
       iVar1 = *piVar2;
     }
     else {
       iVar1 = *piVar2;
-      iVar3 = 0;
-      iVar6 = 0x50;
+      iVar6 = 0;
       piVar5 = (int *)lbl_803DCE6C;
-      do {
+      for (iVar7 = 0x50; iVar7 != 0; iVar7--) {
         if (((0 < *(short *)(piVar5 + 3)) && (*piVar5 == iVar1)) &&
-           (*(char *)((int)piVar2 + 5) == *(char *)((int)piVar5 + 0xe))) {
-          iVar1 = fn_80054C30(iVar1,((int *)lbl_803DCE6C)[iVar3 * 4 + 1]);
+           (bVar1 == *(byte *)((int)piVar5 + 0xe))) {
+          iVar1 = fn_80054C30(iVar1,((int *)lbl_803DCE6C)[iVar6 * 4 + 1]);
           break;
         }
         piVar5 = piVar5 + 4;
-        iVar3 = iVar3 + 1;
-        iVar6 = iVar6 + -1;
-      } while (iVar6 != 0);
+        iVar6 = iVar6 + 1;
+      }
     }
     if (*(byte *)((int)piVar2 + 6) == 0xff) {
       pfVar4 = (float *)0x0;
@@ -676,24 +664,23 @@ void fn_8005F1E0(int param_1, int param_2)
       fn_8004D928();
     }
     piVar2 = (int *)Shader_getLayer(param_1,1);
-    if (*(char *)((int)piVar2 + 5) == '\0') {
+    bVar1 = *(byte *)((int)piVar2 + 5);
+    if (bVar1 == '\0') {
       iVar1 = *piVar2;
     }
     else {
       iVar1 = *piVar2;
-      iVar3 = 0;
-      iVar6 = 0x50;
+      iVar6 = 0;
       piVar5 = (int *)lbl_803DCE6C;
-      do {
+      for (iVar7 = 0x50; iVar7 != 0; iVar7--) {
         if (((0 < *(short *)(piVar5 + 3)) && (*piVar5 == iVar1)) &&
-           (*(char *)((int)piVar2 + 5) == *(char *)((int)piVar5 + 0xe))) {
-          iVar1 = fn_80054C30(iVar1,((int *)lbl_803DCE6C)[iVar3 * 4 + 1]);
+           (bVar1 == *(byte *)((int)piVar5 + 0xe))) {
+          iVar1 = fn_80054C30(iVar1,((int *)lbl_803DCE6C)[iVar6 * 4 + 1]);
           break;
         }
         piVar5 = piVar5 + 4;
-        iVar3 = iVar3 + 1;
-        iVar6 = iVar6 + -1;
-      } while (iVar6 != 0);
+        iVar6 = iVar6 + 1;
+      }
     }
     if (*(byte *)((int)piVar2 + 6) == 0xff) {
       pfVar4 = (float *)0x0;
@@ -710,27 +697,26 @@ void fn_8005F1E0(int param_1, int param_2)
     fn_800524EC((char *)&local_48);
   }
   else {
-    for (iVar1 = 0; iVar1 < (int)(uint)*(byte *)(param_1 + 0x41); iVar1 = iVar1 + 1) {
-      piVar2 = (int *)Shader_getLayer(param_1,iVar1);
-      iVar3 = *piVar2;
-      if (iVar3 == 0) {
+    for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_1 + 0x41); iVar3 = iVar3 + 1) {
+      piVar2 = (int *)Shader_getLayer(param_1,iVar3);
+      iVar1 = *piVar2;
+      if (iVar1 == 0) {
         fn_800523D0();
       }
       else {
-        if (*(char *)((int)piVar2 + 5) != '\0') {
+        bVar1 = *(byte *)((int)piVar2 + 5);
+        if (bVar1 != '\0') {
           iVar6 = 0;
-          iVar7 = 0x50;
           piVar5 = (int *)lbl_803DCE6C;
-          do {
-            if (((0 < *(short *)(piVar5 + 3)) && (*piVar5 == iVar3)) &&
-               (*(char *)((int)piVar2 + 5) == *(char *)((int)piVar5 + 0xe))) {
-              iVar3 = fn_80054C30(iVar3,((int *)lbl_803DCE6C)[iVar6 * 4 + 1]);
+          for (iVar7 = 0x50; iVar7 != 0; iVar7--) {
+            if (((0 < *(short *)(piVar5 + 3)) && (*piVar5 == iVar1)) &&
+               (bVar1 == *(byte *)((int)piVar5 + 0xe))) {
+              iVar1 = fn_80054C30(iVar1,((int *)lbl_803DCE6C)[iVar6 * 4 + 1]);
               break;
             }
             piVar5 = piVar5 + 4;
             iVar6 = iVar6 + 1;
-            iVar7 = iVar7 + -1;
-          } while (iVar7 != 0);
+          }
         }
         if (*(byte *)((int)piVar2 + 6) == 0xff) {
           pfVar4 = (float *)0x0;
@@ -741,10 +727,10 @@ void fn_8005F1E0(int param_1, int param_2)
           pfVar4 = (float*)afStack_44;
         }
         if ((*(uint *)(param_1 + 0x3c) & 0x40000) == 0) {
-          fn_80051868(iVar3,pfVar4,*(byte *)(piVar2 + 1) & 0x7f);
+          fn_80051868(iVar1,pfVar4,*(byte *)(piVar2 + 1) & 0x7f);
         }
         else {
-          fn_80051528(iVar3,pfVar4);
+          fn_80051528(iVar1,pfVar4);
         }
       }
     }
@@ -768,28 +754,35 @@ void fn_8005F1E0(int param_1, int param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-int fn_8005F558(char param_1,int param_2,int *param_3)
+int fn_8005F558(byte param_1,int param_2,int *param_3)
 {
-  int iVar1;
+  uint iVar1;
   uint uVar2;
-  undefined uVar3;
-  undefined uVar4;
-  undefined uVar5;
   uint uPos;
+  int local_8;
+  int local_c;
+  byte local_14[4];
+  byte local_18;
+  byte local_19;
+  byte local_1a;
   int local_1c;
 
   local_1c = lbl_803E8444;
   uPos = param_3[4];
-  uVar5 = *(undefined *)(*param_3 + ((int)uPos >> 3));
-  iVar1 = *param_3 + ((int)uPos >> 3);
-  uVar3 = *(undefined *)(iVar1 + 1);
-  uVar4 = *(undefined *)(iVar1 + 2);
-  param_3[4] = uPos + 6;
-  iVar1 = *(int *)((int)param_2 + 0x64);
-  uVar2 = (uint3)(CONCAT12(uVar4,CONCAT11(uVar3,uVar5)) >> (uPos & 7)) & 0x3f;
-  iVar1 = iVar1 + uVar2 * 0x44;
+  {
+    int _off = (int)uPos >> 3;
+    int _base = *param_3;
+    uint3 _bits = *(undefined *)(_base + _off);
+    _base += _off;
+    _bits |= (uint3)*(undefined *)(_base + 1) << 8;
+    _bits |= (uint3)*(undefined *)(_base + 2) << 16;
+    param_3[4] = uPos + 6;
+    iVar1 = *(int *)((int)param_2 + 0x64);
+    uVar2 = (_bits >> (uPos & 7)) & 0x3f;
+    iVar1 = iVar1 + uVar2 * 0x44;
+  }
 
-  if ((param_1 & 0xff) == 0) {
+  if (param_1 == 0) {
     return iVar1;
   }
 
@@ -797,59 +790,51 @@ int fn_8005F558(char param_1,int param_2,int *param_3)
     _gxSetFogParams();
     goto LAB_8005F608;
   }
-  {
-    int local_10[2];
-    local_10[0] = local_1c;
-    GXSetFog(0,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,*(GXColor*)local_10);
-  }
+  local_c = local_1c;
+  GXSetFog(0,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,lbl_803DEBCC,*(GXColor*)&local_c);
 LAB_8005F608:
-  if ((iVar1 != 0) && ((*(uint *)(iVar1 + 0x3c) & 1) != 0)) {
+  if ((iVar1 != 0) && ((*(uint *)(iVar1 + 0x3c) & 0x80000000) != 0)) {
     return iVar1;
   }
-  if ((iVar1 != 0) && ((*(uint *)(iVar1 + 0x3c) & 0x4000) != 0)) {
-    {
-      int res;
-      res = fn_80118294(0,0,0);
-      if ((res & 0xff) != 0) {
-        return iVar1;
-      }
+  if ((iVar1 != 0) && ((*(uint *)(iVar1 + 0x3c) & 0x20000) != 0)) {
+    uint res;
+    res = fn_80118294(0,0,0);
+    if ((res & 0xff) != 0) {
+      return iVar1;
     }
   }
   resetLotsOfRenderVars();
-  if ((*(uint *)(iVar1 + 0x3c) & 0x1000000) != 0) {
+  if ((*(uint *)(iVar1 + 0x3c) & 0x80) != 0) {
     fn_8004DA54(iVar1);
     goto LAB_8005F690;
   }
   fn_8005F1E0(iVar1,(int)0x80);
 LAB_8005F690:
-  if ((*(uint *)(iVar1 + 0x3c) & 0x4000000) != 0) {
+  if ((*(uint *)(iVar1 + 0x3c) & 0x20) != 0) {
     int *lPtr = lbl_803DCE34;
     if (lPtr != 0) {
       fn_8004FDA0(lPtr,(int*)&lbl_80382008,&lbl_803DB638);
       goto LAB_8005F6F4;
     }
   }
-  if ((*(uint *)(iVar1 + 0x3c) & 0x2000000) != 0) {
+  if ((*(uint *)(iVar1 + 0x3c) & 0x40) != 0) {
     fn_8004E0FC();
     goto LAB_8005F6F4;
   }
   if (isHeavyFogEnabled()) {
-    {
-      byte local_14[4];
-      getColor803dd01c(local_14);
-      fn_8004E7F8(local_14);
-    }
+    getColor803dd01c(local_14);
+    fn_8004E7F8(local_14);
   }
 LAB_8005F6F4:
-  if (((*(uint *)(iVar1 + 0x3c) & 2) != 0) || ((*(uint *)(iVar1 + 0x3c) & 4) != 0)) {
+  if (((*(uint *)(iVar1 + 0x3c) & 0x40000000) != 0) || ((*(uint *)(iVar1 + 0x3c) & 0x20000000) != 0)) {
     GXSetBlendMode(1,4,5,5);
     gxSetZMode_(1,3,0);
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(7,0,0,7,0);
     goto LAB_8005F7FC;
   }
-  if ((*(uint *)(iVar1 + 0x3c) & 0x200000) != 0) {
-    if ((*(uint *)(iVar1 + 0x3c) & 0x1000000) == 0) {
+  if ((*(uint *)(iVar1 + 0x3c) & 0x400) != 0) {
+    if ((*(uint *)(iVar1 + 0x3c) & 0x80) == 0) {
       GXSetBlendMode(0,1,0,5);
       gxSetZMode_(1,3,1);
       gxSetPeControl_ZCompLoc_(0);
@@ -863,38 +848,27 @@ LAB_8005F6F4:
   GXSetAlphaCompare(7,0,0,7,0);
 LAB_8005F7FC:
   if ((*(uint *)(iVar1 + 0x3c) & 1) == 0) {
-    if ((*(uint *)(iVar1 + 0x3c) & 0x2000) == 0) {
-      if ((*(uint *)(iVar1 + 0x3c) & 0x100000) == 0) {
-        if ((*(uint *)(iVar1 + 0x3c) & 0x80000) == 0) goto LAB_8005F89C;
+    if ((*(uint *)(iVar1 + 0x3c) & 0x40000) == 0) {
+      if ((*(uint *)(iVar1 + 0x3c) & 0x800) == 0) {
+        if ((*(uint *)(iVar1 + 0x3c) & 0x1000) == 0) goto LAB_8005F89C;
       }
     }
   }
-  {
-    int local_c[1];
-    local_c[0] = lbl_803DB63C;
-    GXSetChanAmbColor(0,*(GXColor *)local_c);
-    if ((*(uint *)(iVar1 + 0x3c) & 0x2000) != 0) {
-      GXSetChanCtrl(0,0,0,1,0,0,2);
-      goto LAB_8005F8E4;
-    }
-    GXSetChanCtrl(0,1,0,1,0,0,2);
+  local_c = lbl_803DB63C;
+  GXSetChanAmbColor(0,*(GXColor *)&local_c);
+  if ((*(uint *)(iVar1 + 0x3c) & 0x40000) != 0) {
+    GXSetChanCtrl(0,0,0,1,0,0,2);
     goto LAB_8005F8E4;
   }
+  GXSetChanCtrl(0,1,0,1,0,0,2);
+  goto LAB_8005F8E4;
 LAB_8005F89C:
-  {
-    byte local_18;
-    byte local_19;
-    byte local_1a;
-    fn_8008982C(0,&local_1a,&local_19,&local_18);
-    GXSetChanCtrl(0,1,0,1,0,0,2);
-    {
-      int local_8[1];
-      local_8[0] = local_18 | (local_19 << 8) | (local_1a << 16);
-      GXSetChanAmbColor(0,*(GXColor *)local_8);
-    }
-  }
+  fn_8008982C(0,&local_18,&local_19,&local_1a);
+  GXSetChanCtrl(0,1,0,1,0,0,2);
+  local_8 = *(int*)&local_18;
+  GXSetChanAmbColor(0,*(GXColor *)&local_8);
 LAB_8005F8E4:
-  if ((*(uint *)(iVar1 + 0x3c) & 0x10000000) != 0) {
+  if ((*(uint *)(iVar1 + 0x3c) & 0x8) != 0) {
     GXSetCullMode(2);
     goto LAB_8005F908;
   }

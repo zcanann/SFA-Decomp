@@ -34,7 +34,7 @@ extern char             lbl_803DB9E8[];
 extern f32              lbl_803E1D54;
 
 /* SBSS dword flags (SDA21) */
-extern u32              lbl_803DD660;
+extern s32              lbl_803DD660;
 extern AIDCallback      lbl_803DD668;
 extern s32              lbl_803DD66C;
 extern u32              lbl_803DD670;
@@ -53,81 +53,93 @@ void  fn_80119A1C(void);
 /* ------------------------------------------------------------------ */
 /* movieLoad (748 bytes)                                                */
 /* ------------------------------------------------------------------ */
+#pragma scheduling off
 BOOL movieLoad(const char* fileName, void* param2)
 {
+    char* pb;         /* r30 */
+    char* memBase1;   /* r29 */
+    char* memBase2;   /* r28 */
+    char* pb2;        /* r27 */
+    char* pbwalk;     /* r26 */
+    char* pNumEntry;  /* r25 */
+    u32 readOff;      /* r24 */
     s32 result;
     u32 i;
-    char* p = (char*)&lbl_803A5D60;
 
-    if (lbl_803DD660 != 0) {
+    if (lbl_803DD660 == 0) {
         return 0;
     }
 
-    if (*(u32*)(p + 0x98) != 0) {
+    pb = (char*)&lbl_803A5D60;
+
+    if (*(s32*)(pb + 0x98) != 0) {
         return 0;
     }
 
-    memset(p + 0x80, 0, 8);
-    memset(p + 0x88, 0, 0xC);
+    memBase1 = pb + 0x80;
+    memset(memBase1, 0, 8);
+    memBase2 = pb + 0x88;
+    memset(memBase2, 0, 0xC);
 
-    if (!DVDOpen(fileName, &lbl_803A5D60.mFileInfo)) {
+    if (!DVDOpen(fileName, (DVDFileInfo*)pb)) {
         return 0;
     }
 
-    result = DVDRead(&lbl_803A5D60.mFileInfo, lbl_803A5D20, 0x40, 0);
+    result = DVDRead((DVDFileInfo*)pb, lbl_803A5D20, 0x40, 0);
     if (result < 0) {
-        DVDClose(&lbl_803A5D60.mFileInfo);
+        DVDClose((DVDFileInfo*)pb);
         return 0;
     }
 
-    memcpy(p + 0x3C, lbl_803A5D20, 0x30);
+    memcpy(pb + 0x3C, lbl_803A5D20, 0x30);
 
-    if (strcmp(p + 0x3C, lbl_803DB9E8) != 0) {
-        DVDClose(&lbl_803A5D60.mFileInfo);
+    if (strcmp(pb + 0x3C, lbl_803DB9E8) != 0) {
+        DVDClose((DVDFileInfo*)pb);
         return 0;
     }
 
-    if (*(u32*)(p + 0x40) - 0x10000 != 0) {
-        DVDClose(&lbl_803A5D60.mFileInfo);
+    if (*(u32*)(pb + 0x40) - 0x10000 != 0) {
+        DVDClose((DVDFileInfo*)pb);
         return 0;
     }
 
     {
-        u32 compOff = *(u32*)(p + 0x5C);
-        u32 readOff;
+        u32 compOff = *(u32*)(pb + 0x5C);
 
-        result = DVDRead(&lbl_803A5D60.mFileInfo, lbl_803A5D20, 0x20, compOff);
+        result = DVDRead((DVDFileInfo*)pb, lbl_803A5D20, 0x20, compOff);
         if (result < 0) {
-            DVDClose(&lbl_803A5D60.mFileInfo);
+            DVDClose((DVDFileInfo*)pb);
             return 0;
         }
 
-        memcpy(p + 0x6C, lbl_803A5D20, 0x14);
+        pNumEntry = pb + 0x6C;
+        memcpy(pNumEntry, lbl_803A5D20, 0x14);
         readOff = compOff + 0x14;
-        p[0x9F] = 0;
+        pb2 = (char*)&lbl_803A5D60;
+        pb2[0x9F] = 0;
+    }
 
-        for (i = 0; i < *(u32*)(p + 0x6C); i++) {
-            u8 compType = (u8)p[0x70 + i];
-            if (compType == 1) {
-                result = DVDRead(&lbl_803A5D60.mFileInfo, lbl_803A5D20, 0x20, readOff);
-                if (result < 0) {
-                    DVDClose(&lbl_803A5D60.mFileInfo);
-                    return 0;
-                }
-                memcpy(p + 0x88, lbl_803A5D20, 0xC);
-                p[0x9F] = 1;
-                readOff += 0xC;
-            } else if (compType == 0) {
-                result = DVDRead(&lbl_803A5D60.mFileInfo, lbl_803A5D20, 0x20, readOff);
-                if (result < 0) {
-                    DVDClose(&lbl_803A5D60.mFileInfo);
-                    return 0;
-                }
-                memcpy(p + 0x80, lbl_803A5D20, 8);
-                readOff += 8;
-            } else {
+    pbwalk = pb2;
+    for (i = 0; i < *(u32*)pNumEntry; pbwalk++, i++) {
+        if (pbwalk[0x70] == 1) {
+            result = DVDRead((DVDFileInfo*)pb, lbl_803A5D20, 0x20, readOff);
+            if (result < 0) {
+                DVDClose((DVDFileInfo*)pb);
                 return 0;
             }
+            memcpy(memBase2, lbl_803A5D20, 0xC);
+            pb2[0x9F] = 1;
+            readOff += 0xC;
+        } else if (pbwalk[0x70] == 0) {
+            result = DVDRead((DVDFileInfo*)pb, lbl_803A5D20, 0x20, readOff);
+            if (result < 0) {
+                DVDClose((DVDFileInfo*)pb);
+                return 0;
+            }
+            memcpy(memBase1, lbl_803A5D20, 8);
+            readOff += 8;
+        } else {
+            return 0;
         }
     }
 
@@ -137,7 +149,7 @@ BOOL movieLoad(const char* fileName, void* param2)
         q[0x9C] = 0;
         q[0x9E] = 0;
         *(u32*)(q + 0xA8) = (u32)param2;
-        *(u32*)(p + 0x98) = 1;
+        *(u32*)(pb + 0x98) = 1;
         *(f32*)(q + 0xD4) = lbl_803E1D54;
         *(f32*)(q + 0xD8) = lbl_803E1D54;
         *(u32*)(q + 0xE0) = 0;
@@ -145,6 +157,7 @@ BOOL movieLoad(const char* fileName, void* param2)
 
     return 1;
 }
+#pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
 /* audioFn_801192ec (76 bytes)                                         */
@@ -167,7 +180,6 @@ void audioFn_801192ec(void)
 /* attractModeAudioFn_80119338 (288 bytes)                             */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
-#pragma peephole off
 BOOL attractModeAudioFn_80119338(int param_1)
 {
     char* base = lbl_803A57C0;
@@ -209,7 +221,6 @@ BOOL attractModeAudioFn_80119338(int param_1)
     lbl_803DD660 = 1;
     return 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
@@ -411,7 +422,6 @@ void fn_80119768(OSMessage msg)
 /* fn_80119798 (328 bytes) - video decode frame                        */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
-#pragma peephole off
 void fn_80119798(void* param)
 {
     char* pb;           /* 1st function-scope callee-saved → r31 */
@@ -471,7 +481,6 @@ void fn_80119798(void* param)
         lbl_803DD694 = 0;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
@@ -495,9 +504,9 @@ void fn_801198E0(void* param)
                     OSRestoreInterrupts(intr);
                 }
                 {
+                    u32 cols = *(u32*)(pb + 0x50);
                     u32 bOff = *(u32*)(pb + 0xB8);
                     u32 sum  = (u32)i + bOff;
-                    u32 cols = *(u32*)(pb + 0x50);
                     u32 pos  = sum % cols;
                     if (pos == cols - 1) {
                         if (!(*(u8*)(pb + 0x9E) & 1)) {
@@ -521,9 +530,9 @@ void fn_801198E0(void* param)
         fn_80119798(&cur);
 
         {
+            u32 cols = *(u32*)(pb + 0x50);
             u32 bOff = *(u32*)(pb + 0xB8);
             u32 sum  = (u32)i + bOff;
-            u32 cols = *(u32*)(pb + 0x50);
             u32 pos  = sum % cols;
             if (pos == cols - 1) {
                 if (*(u8*)(pb + 0x9E) & 1) {
