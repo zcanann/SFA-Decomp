@@ -4,7 +4,7 @@
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80017710();
 extern undefined4 FUN_8001771c();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern int FUN_80017b00();
@@ -541,9 +541,9 @@ LAB_8017de10:
   *(undefined *)(iVar4 + 0x3a) = 4;
   *(float *)(iVar4 + 8) = lbl_803DC074;
   *(float *)(iVar4 + 0xc) = lbl_803DC074;
-  uVar2 = FUN_80017760(0xffff8000,0x7fff);
+  uVar2 = randomGetRange(0xffff8000,0x7fff);
   *(short *)(iVar4 + 0x48) = (short)uVar2;
-  uVar2 = FUN_80017760(0xffff8000,0x7fff);
+  uVar2 = randomGetRange(0xffff8000,0x7fff);
   *(short *)(iVar4 + 0x4a) = (short)uVar2;
   *(undefined2 *)(iVar4 + 0x4c) = 0x2000;
   dVar5 = (double)*(float *)(param_1 + 0xc);

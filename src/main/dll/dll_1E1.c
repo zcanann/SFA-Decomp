@@ -5,7 +5,7 @@ extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_8001771c();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017a30();
 extern byte FUN_80017a34();
 extern undefined4 FUN_80017a3c();
@@ -234,7 +234,7 @@ void dll1E1_updateTrickyState
         break;
       case 9:
         if (*pfVar14 <= lbl_803E5F94) {
-          uVar6 = FUN_80017760(0xf0,300);
+          uVar6 = randomGetRange(0xf0,300);
           local_30 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
           *pfVar14 = (float)(local_30 - DOUBLE_803e5fa0);
         }
@@ -294,7 +294,7 @@ void dll1E1_updateTrickyState
           }
           *(undefined *)((int)pfVar14 + 0x36) = 9;
           *pfVar14 = lbl_803E5F94;
-          uVar6 = FUN_80017760(0,0x28);
+          uVar6 = randomGetRange(0,0x28);
           local_20 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
           *(float *)(puVar3 + 0x4c) = (float)(local_20 - DOUBLE_803e5fa0) / lbl_803E5FD8;
         }

@@ -9,7 +9,7 @@ extern undefined4 FUN_800175b0();
 extern undefined4 FUN_800175d0();
 extern void* FUN_80017624();
 extern uint GameBit_Get(int eventId);
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
@@ -105,7 +105,7 @@ void dfsh_objcreator_update(undefined8 param_1,undefined8 param_2,undefined8 par
     *(float *)(iVar7 + 0x148) = *(float *)(iVar7 + 0x148) - lbl_803DC074;
     if (*(float *)(iVar7 + 0x148) < lbl_803E5B34) {
       iVar2 = FUN_80017a98();
-      local_24[2] = FUN_80017760(0xb4,0xf0);
+      local_24[2] = randomGetRange(0xb4,0xf0);
       local_24[2] = local_24[2] ^ 0x80000000;
       local_24[1] = 0x43300000;
       *(float *)(iVar7 + 0x148) =
@@ -178,7 +178,7 @@ void DFSH_LaserBeam_init(int param_1,int param_2)
     }
     *(undefined *)(param_1 + 0x36) = 0;
     *(undefined *)(param_1 + 0x37) = 0;
-    uVar2 = FUN_80017760(0xb4,0xf0);
+    uVar2 = randomGetRange(0xb4,0xf0);
     *(float *)(iVar4 + 0x148) =
          (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5b40);
   }

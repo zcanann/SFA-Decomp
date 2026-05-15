@@ -6,7 +6,7 @@ extern undefined4 FUN_800068c4();
 extern uint FUN_80017690();
 extern undefined8 FUN_80017698();
 extern undefined4 FUN_80017748();
-extern undefined4 FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined4 ObjMsg_SendToObject();
 extern undefined4 TrickyCurve_updateCooldownTrigger();
@@ -238,8 +238,8 @@ void TrickyCurve_updateBoundsTrigger(int param_1)
     iVar5 = iVar5 + 1;
   }
   if (iVar5 == 3) {
-    FUN_80017760(0xffffffe9,0x17);
-    FUN_80017760(0xffffffe9,0x17);
+    randomGetRange(0xffffffe9,0x17);
+    randomGetRange(0xffffffe9,0x17);
     FUN_80294c40();
   }
   return;

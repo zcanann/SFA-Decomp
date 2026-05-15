@@ -6,7 +6,7 @@ extern undefined4 FUN_8000680c();
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80017714();
 extern undefined4 FUN_8001771c();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017a28();
 extern undefined4 FUN_80017a3c();
 extern int FUN_80017a98();
@@ -159,7 +159,7 @@ void largecrate_init(ushort *param_1)
           FUN_80006824((uint)param_1,*(ushort *)(puVar11 + 5));
         }
         if (param_1[0x23] == 0x3de) {
-          uVar6 = FUN_80017760(600,800);
+          uVar6 = randomGetRange(600,800);
           *(short *)(puVar11 + 6) = (short)uVar6;
         }
       }
@@ -186,7 +186,7 @@ void largecrate_init(ushort *param_1)
     sVar3 = *(short *)((int)puVar11 + 10) - (ushort)DAT_803dc070;
     *(short *)((int)puVar11 + 10) = sVar3;
     if (sVar3 < 1) {
-      uVar6 = FUN_80017760(0,100);
+      uVar6 = randomGetRange(0,100);
       *(short *)((int)puVar11 + 10) = (short)uVar6 + 300;
     }
     if (*(int *)(param_1 + 0x18) != 0) {

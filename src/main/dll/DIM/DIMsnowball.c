@@ -14,7 +14,7 @@ extern undefined4 GameBit_Set(int eventId, int value);
 extern double FUN_80017708();
 extern double FUN_80017714();
 extern int FUN_80017730();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017a28();
 extern undefined4 FUN_80017a6c();
 extern undefined4 FUN_80017a78();
@@ -675,7 +675,7 @@ LAB_801ab118:
     piVar10[5] = (int)((float)piVar10[5] - lbl_803DC074);
     dVar11 = (double)(float)piVar10[5];
     if (dVar11 < (double)lbl_803E5318) {
-      uVar4 = FUN_80017760(0xb4,300);
+      uVar4 = randomGetRange(0xb4,300);
       local_40 = (double)CONCAT44(0x43300000,uVar4 ^ 0x80000000);
       piVar10[5] = (int)(float)(local_40 - DOUBLE_803e5338);
       dVar11 = (double)FUN_80006824((uint)psVar2,0x134);
@@ -701,7 +701,7 @@ LAB_801ab118:
       iVar8 = FUN_80017af8(0x45d7f);
       piVar10[3] = iVar8;
       *(undefined *)(piVar10 + 4) = 1;
-      uVar4 = FUN_80017760(0xb4,300);
+      uVar4 = randomGetRange(0xb4,300);
       local_40 = (double)CONCAT44(0x43300000,uVar4 ^ 0x80000000);
       piVar10[5] = (int)(float)(local_40 - DOUBLE_803e5338);
     }

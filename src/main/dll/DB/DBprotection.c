@@ -8,7 +8,7 @@ extern undefined4 FUN_80006824();
 extern undefined4 GameBit_Set(int eventId,int value);
 extern uint FUN_80017730();
 extern undefined4 FUN_80017754();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017778();
 extern int FUN_80017b00();
 extern undefined4 ObjHits_DisableObject();
@@ -247,7 +247,7 @@ void FUN_801dfa28(void)
     pfVar12[0x24] = pfVar12[0x24] - lbl_803DC074;
     if (pfVar12[0x24] <= lbl_803E6364) {
       *(byte *)(pfVar12 + 0x28) = *(byte *)(pfVar12 + 0x28) ^ 1;
-      uVar9 = FUN_80017760(0xb4,300);
+      uVar9 = randomGetRange(0xb4,300);
       local_e0 = (double)CONCAT44(0x43300000,uVar9 ^ 0x80000000);
       pfVar12[0x24] = (float)(local_e0 - DOUBLE_803e6458);
     }
@@ -260,7 +260,7 @@ void FUN_801dfa28(void)
     pfVar12[0x25] = pfVar12[0x25] - lbl_803DC074;
     if (pfVar12[0x25] <= lbl_803E6364) {
       *(byte *)((int)pfVar12 + 0xa1) = *(byte *)((int)pfVar12 + 0xa1) ^ 1;
-      uVar9 = FUN_80017760(0xb4,300);
+      uVar9 = randomGetRange(0xb4,300);
       local_e0 = (double)CONCAT44(0x43300000,uVar9 ^ 0x80000000);
       pfVar12[0x25] = (float)(local_e0 - DOUBLE_803e6458);
     }

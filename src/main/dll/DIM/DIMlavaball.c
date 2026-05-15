@@ -15,7 +15,7 @@ extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017710();
 extern undefined4 FUN_8001771c();
 extern undefined4 FUN_80017748();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017a88();
 extern int FUN_80017a98();
 extern int FUN_80017b00();
@@ -597,7 +597,7 @@ FUN_801a7874(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     else if (bVar1 < 4) {
       *pbVar4 = *pbVar4 & 0xdf;
       *pbVar4 = *pbVar4 | 0x50;
-      uVar2 = FUN_80017760(10,0x3c);
+      uVar2 = randomGetRange(10,0x3c);
       *(float *)(pbVar4 + 8) =
            (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5188);
       pbVar4[1] = 1;
@@ -750,7 +750,7 @@ void FUN_801a7a94(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if (((*pbVar4 & 0x40) != 0) &&
        (*(float *)(pbVar4 + 8) = *(float *)(pbVar4 + 8) - lbl_803DC074,
        *(float *)(pbVar4 + 8) < lbl_803E51B0)) {
-      uVar2 = FUN_80017760(10,0x3c);
+      uVar2 = randomGetRange(10,0x3c);
       *(float *)(pbVar4 + 8) =
            (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5188);
       (**(code **)(*DAT_803dd708 + 8))(param_9,0x71e,0,1,0xffffffff,0);

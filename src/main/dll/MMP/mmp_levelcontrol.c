@@ -5,7 +5,7 @@ extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017748();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a90();
 extern int ObjGroup_FindNearestObject();
 extern undefined8 ObjGroup_RemoveObject();
@@ -239,13 +239,13 @@ void FUN_801946b8(void)
   dVar12 = (double)lbl_803E4C74;
   dVar13 = DOUBLE_803e4c88;
   do {
-    uStack_7c = FUN_80017760(0xffffff9c,100);
+    uStack_7c = randomGetRange(0xffffff9c,100);
     uStack_7c = uStack_7c ^ 0x80000000;
     local_80 = 0x43300000;
     local_a8 = (float)(dVar9 * (double)(float)((double)CONCAT44(0x43300000,uStack_7c) - dVar13));
     local_a4 = (float)dVar10;
     local_a0 = (float)dVar10;
-    uVar4 = FUN_80017760(0xffff8001,0x8000);
+    uVar4 = randomGetRange(0xffff8001,0x8000);
     local_9c[2] = (ushort)uVar4;
     local_9c[1] = 0;
     local_9c[0] = 0;
