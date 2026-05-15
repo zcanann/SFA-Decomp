@@ -1,180 +1,175 @@
 #include "ghidra_import.h"
 #include "main/dll/DF/dll_196.h"
 
-extern undefined8 FUN_80286838();
-extern undefined4 FUN_80286884();
-extern double FUN_80293900();
+typedef struct DFRopeNode {
+  f32 pos[3];
+  f32 velocity[3];
+  f32 force[3];
+  u8 linkCount;
+  u8 pad25[3];
+  struct DFRopeLink *links[2];
+  u8 locked;
+  u8 pad31[3];
+} DFRopeNode;
 
-extern f64 DOUBLE_803e5a88;
-extern f32 lbl_803E5A94;
-extern f32 lbl_803E5AB0;
-extern f32 lbl_803E5AB4;
+typedef struct DFRopeLink {
+  f32 length;
+  DFRopeNode *a;
+  DFRopeNode *b;
+  f32 restLength;
+  f32 stiffness;
+  f32 maxLength;
+  f32 force[3];
+} DFRopeLink;
+
+typedef struct DFRope {
+  DFRopeNode *nodes;
+  DFRopeLink *links;
+  u8 count;
+  u8 pad09[3];
+  f32 start[3];
+  f32 end[3];
+  f32 totalLength;
+  s32 enabled;
+  f32 maxSlack;
+  f32 step;
+  u8 sway;
+  u8 direction;
+  u8 pad36[2];
+  f32 damping;
+  f32 inverseTicks;
+  f32 stepPerTick;
+} DFRope;
+
+typedef struct DFropenodeExtra {
+  int linkedObj;
+  f32 minX;
+  f32 maxX;
+  f32 minZ;
+  f32 maxZ;
+  f32 minY;
+  s16 angle;
+  u8 pad1A[0x12];
+  DFRope *rope;
+  u8 flags;
+  u8 pad31[3];
+} DFropenodeExtra;
+
+extern int getAngle(f32 dx, f32 dz);
+extern f32 sqrtf(f32 x);
+
+extern f64 lbl_803E4DF0;
+extern f32 lbl_803E4DFC;
+extern f32 lbl_803E4E20;
+extern f32 lbl_803E4E24;
 
 /*
  * --INFO--
  *
- * Function: FUN_801c1bf0
+ * Function: fn_801C1BF0
  * EN v1.0 Address: 0x801C1BF0
- * EN v1.0 Size: 232b
+ * EN v1.0 Size: 684b
  * EN v1.1 Address: 0x801C1C4C
- * EN v1.1 Size: 168b
+ * EN v1.1 Size: TODO
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-double FUN_801c1bf0(double param_1,double param_2,double param_3,double param_4,double param_5,
-                   double param_6,float *param_7,float *param_8,float *param_9)
+#pragma scheduling off
+int fn_801C1BF0(int obj)
 {
-  double dVar1;
-  double dVar2;
-  double dVar3;
-  
-  dVar2 = (double)(float)(param_4 - param_1);
-  dVar3 = (double)(float)(param_6 - param_3);
-  dVar1 = (double)lbl_803E5A94;
-  if ((dVar1 != dVar2) || (dVar1 != dVar3)) {
-    dVar1 = (double)((float)(dVar2 * (double)(float)((double)*param_7 - param_1) +
-                            (double)(float)(dVar3 * (double)(float)((double)*param_9 - param_3))) /
-                    (float)(dVar2 * dVar2 + (double)(float)(dVar3 * dVar3)));
-  }
-  if ((double)lbl_803E5A94 <= dVar1) {
-    if (dVar1 < (double)lbl_803E5AB0) {
-      *param_7 = (float)(dVar1 * dVar2 + param_1);
-      *param_8 = (float)(dVar1 * (double)(float)(param_5 - param_2) + param_2);
-      *param_9 = (float)(dVar1 * dVar3 + param_3);
-    }
-    else {
-      *param_7 = (float)param_4;
-      *param_8 = (float)param_5;
-      *param_9 = (float)param_6;
-    }
-  }
-  else {
-    *param_7 = (float)param_1;
-    *param_8 = (float)param_2;
-    *param_9 = (float)param_3;
-  }
-  return dVar1;
-}
+  DFropenodeExtra *extra;
+  DFRopeLink *link;
+  int endObj;
+  int baseObj;
+  int i;
+  int flag;
+  s16 angle;
+  f32 dx;
+  f32 dy;
+  f32 dz;
+  f32 length;
+  f32 clampY;
+  f32 temp;
+  f32 margin;
 
-/*
- * --INFO--
- *
- * Function: FUN_801c1cd8
- * EN v1.0 Address: 0x801C1CD8
- * EN v1.0 Size: 808b
- * EN v1.1 Address: 0x801C1CF4
- * EN v1.1 Size: 560b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801c1cd8(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
-                 undefined4 param_5,float *param_6,undefined *param_7)
-{
-  float *pfVar1;
-  float *pfVar2;
-  uint uVar3;
-  int iVar4;
-  int iVar5;
-  int *piVar6;
-  double extraout_f1;
-  double dVar7;
-  double dVar8;
-  double in_f27;
-  double in_f28;
-  double dVar9;
-  double in_f29;
-  double dVar10;
-  double in_f30;
-  double dVar11;
-  double in_f31;
-  double dVar12;
-  double in_ps27_1;
-  double in_ps28_1;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  undefined8 uVar13;
-  float local_88;
-  float local_84;
-  float local_80 [2];
-  undefined4 local_78;
-  uint uStack_74;
-  float local_48;
-  float fStack_44;
-  float local_38;
-  float fStack_34;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  local_38 = (float)in_f28;
-  fStack_34 = (float)in_ps28_1;
-  local_48 = (float)in_f27;
-  fStack_44 = (float)in_ps27_1;
-  uVar13 = FUN_80286838();
-  iVar4 = (int)((ulonglong)uVar13 >> 0x20);
-  pfVar1 = (float *)uVar13;
-  piVar6 = *(int **)(iVar4 + 0xb8);
-  if ((((((*(byte *)(*(int *)(iVar4 + 0x4c) + 0x18) & 1) != 0) && (*piVar6 != 0)) &&
-       ((double)(float)piVar6[1] <= extraout_f1)) &&
-      ((extraout_f1 <= (double)(float)piVar6[2] && ((double)(float)piVar6[3] <= param_3)))) &&
-     (param_3 <= (double)(float)piVar6[4])) {
-    *pfVar1 = lbl_803E5AB4;
-    dVar10 = (double)(float)(extraout_f1 - (double)*(float *)(iVar4 + 0xc));
-    dVar11 = (double)(float)(param_2 - (double)*(float *)(iVar4 + 0x10));
-    dVar12 = (double)(float)(param_3 - (double)*(float *)(iVar4 + 0x14));
-    iVar5 = 0;
-    iVar4 = 0;
-    dVar9 = (double)lbl_803E5A94;
-    for (uVar3 = 0; (int)uVar3 < (int)(*(byte *)(piVar6[0xb] + 8) - 1); uVar3 = uVar3 + 1) {
-      local_80[0] = (float)dVar10;
-      local_84 = (float)dVar11;
-      local_88 = (float)dVar12;
-      pfVar2 = (float *)(*(int *)piVar6[0xb] + iVar4);
-      dVar7 = FUN_801c1bf0((double)*pfVar2,(double)pfVar2[1],(double)pfVar2[2],(double)pfVar2[0xd],
-                           (double)pfVar2[0xe],(double)pfVar2[0xf],local_80,&local_84,&local_88);
-      if (((dVar9 <= dVar7) && (dVar7 < (double)lbl_803E5AB0)) &&
-         (dVar8 = FUN_80293900((double)((float)((double)local_88 - dVar12) *
-                                        (float)((double)local_88 - dVar12) +
-                                       (float)((double)local_80[0] - dVar10) *
-                                       (float)((double)local_80[0] - dVar10) +
-                                       (float)((double)local_84 - dVar11) *
-                                       (float)((double)local_84 - dVar11))), dVar8 < (double)*pfVar1
-         )) {
-        iVar5 = uVar3 + 1;
-        *pfVar1 = (float)dVar8;
-        uStack_74 = uVar3 ^ 0x80000000;
-        local_78 = 0x43300000;
-        *param_6 = (float)((double)(float)((double)CONCAT44(0x43300000,uStack_74) - DOUBLE_803e5a88)
-                          + dVar7);
-      }
-      iVar4 = iVar4 + 0x34;
+  baseObj = obj;
+  flag = *(u8 *)(*(int *)(baseObj + 0x4c) + 0x18) & 1;
+  if (flag != 0) {
+    extra = *(DFropenodeExtra **)(baseObj + 0xb8);
+    endObj = extra->linkedObj;
+  } else {
+    endObj = baseObj;
+    baseObj = *(int *)*(int *)(baseObj + 0xb8);
+    if (baseObj == 0) {
+      return 0;
     }
-    if (iVar5 != 0) {
-      if ((int)(uint)*(byte *)(piVar6[0xb] + 8) >> 1 < iVar5 + -1) {
-        *param_7 = 1;
-      }
-      else {
-        *param_7 = 0;
+    extra = *(DFropenodeExtra **)(baseObj + 0xb8);
+  }
+
+  if ((extra->rope == NULL) || (endObj == 0)) {
+    return 0;
+  }
+
+  dx = *(f32 *)(endObj + 0xc) - *(f32 *)(baseObj + 0xc);
+  dy = *(f32 *)(endObj + 0x10) - *(f32 *)(baseObj + 0x10);
+  dz = *(f32 *)(endObj + 0x14) - *(f32 *)(baseObj + 0x14);
+
+  angle = getAngle(dx, dz);
+  if (angle > 0x8000) {
+    angle = angle - 0xffff;
+  }
+  if (angle < -0x8000) {
+    angle = angle + 0xffff;
+  }
+  extra->angle = angle;
+
+  length = sqrtf(dx * dx + dy * dy + dz * dz);
+  length = length / (f32)(extra->rope->count - 1);
+  link = extra->rope->links;
+  extra->rope->damping = lbl_803E4E20;
+  for (i = 0; i < extra->rope->count - 1; i++, link++) {
+    link->restLength = length;
+  }
+
+  i = extra->rope->count - 1;
+  extra->rope->nodes[i].pos[0] = dx;
+  extra->rope->nodes[i].pos[1] = dy;
+  extra->rope->nodes[i].pos[2] = dz;
+
+  extra->minX = *(f32 *)(baseObj + 0xc);
+  extra->minZ = *(f32 *)(baseObj + 0x14);
+  extra->maxX = *(f32 *)(endObj + 0xc);
+  extra->maxZ = *(f32 *)(endObj + 0x14);
+  if (extra->minX > extra->maxX) {
+    temp = extra->minX;
+    extra->minX = extra->maxX;
+    extra->maxX = temp;
+  }
+  if (extra->minZ > extra->maxZ) {
+    temp = extra->minZ;
+    extra->minZ = extra->maxZ;
+    extra->maxZ = temp;
+  }
+
+  if (extra->minY != lbl_803E4DFC) {
+    clampY = extra->minY - *(f32 *)(baseObj + 0x10);
+    for (i = 0; i < extra->rope->count - 1; i++) {
+      if (extra->rope->nodes[i].pos[1] < clampY) {
+        extra->rope->nodes[i].pos[1] = clampY;
       }
     }
   }
-  FUN_80286884();
-  return;
+
+  margin = lbl_803E4E24;
+  extra->minX -= margin;
+  extra->minZ -= margin;
+  extra->maxX += margin;
+  extra->maxZ += margin;
+  return 0;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
