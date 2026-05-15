@@ -122,7 +122,7 @@ main/dll/DIM/DIM2projrock.c
 main/dll/DIM/DIM2snowball.c
 main/dll/DIM/DIMboss.c
 main/dll/DIM/DIMbossspit.c
-main/dll/DIM/DIMbosstonsil.c
+main/dll/DIM/DIMbossgut.c
 main/dll/DIM/DIMboulder.c
 main/dll/DIM/DIMcannon.c
 main/dll/DIM/DIMExplosion.c

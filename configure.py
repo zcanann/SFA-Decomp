@@ -1104,7 +1104,7 @@ config.libs = [
             Object(NonMatching, "main/dll/DIM/DIM2lift.c"),
             Object(NonMatching, "main/dll/DIM/DIM2icicle.c"),
             Object(NonMatching, "main/dll/DIM/DIMboss.c"),
-            Object(NonMatching, "main/dll/DIM/DIMbosstonsil.c"),
+            Object(NonMatching, "main/dll/DIM/DIMbossgut.c"),
             Object(NonMatching, "main/dll/DIM/dll_223.c"),
             Object(NonMatching, "main/dll/DIM/DIMbossspit.c"),
             Object(NonMatching, "main/dll/dll_224.c"),

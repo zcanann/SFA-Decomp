@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/DIM/DIMbosstonsil.h"
+#include "main/dll/DIM/DIMbossgut.h"
 
 extern void fn_8002B8C8(void *obj, int resourceId);
 extern undefined4 ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimArg,
