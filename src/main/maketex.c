@@ -19,7 +19,7 @@ extern undefined4 FUN_800174f0();
 extern undefined4 FUN_800174f4();
 extern uint FUN_80017658();
 extern int FUN_80017730();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017810();
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
@@ -818,7 +818,7 @@ uint FUN_8007f66c(int param_1)
   uint uVar2;
   
   iVar1 = (param_1 * 0x3c) / 0x3c + (param_1 * 0x3c >> 0x1f);
-  uVar2 = FUN_80017760(0,iVar1 - (iVar1 >> 0x1f));
+  uVar2 = randomGetRange(0,iVar1 - (iVar1 >> 0x1f));
   uVar2 = countLeadingZeros(uVar2);
   return uVar2 >> 5;
 }
