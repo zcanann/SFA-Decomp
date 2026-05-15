@@ -45,7 +45,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
   int frameType;
   float frameValue;
 
-  moveIndex = (int)animDef->moveBaseTable[(int)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
+  moveIndex = (int)animDef->moveGroupBaseIndices[(int)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
               (moveId & OBJANIM_MOVE_INDEX_MASK);
   if (moveIndex >= (int)animDef->moveCount) {
     moveIndex = animDef->moveCount - 1;
@@ -57,11 +57,11 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
     if (state->lastBlendMoveIndex != moveIndex) {
       state->blendCacheSlot = (u16)state->blendToggle;
       state->prevBlendCacheSlot = (u16)(OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle);
-      if (animDef->blendMoveIds[moveIndex] == OBJANIM_MISSING_MOVE_ID) {
+      if (animDef->cachedAnimIds[moveIndex] == OBJANIM_MISSING_MOVE_ID) {
         OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
         moveIndex = 0;
       }
-      ObjAnim_LoadCachedMove((int)animDef->blendMoveIds[moveIndex],(int)(s16)moveIndex,
+      ObjAnim_LoadCachedMove((int)animDef->cachedAnimIds[moveIndex],(int)(s16)moveIndex,
                              state->blendMoveCache[state->blendCacheSlot],animDef);
       state->lastBlendMoveIndex = (s16)moveIndex;
     }
@@ -411,7 +411,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   previousMove = objAnim->activeMove;
   moveChanged = previousMove != moveId;
   objAnim->activeMove = (s16)moveId;
-  moveId = (int)animDef->moveBaseTable[moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
+  moveId = (int)animDef->moveGroupBaseIndices[moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
            (moveId & OBJANIM_MOVE_INDEX_MASK);
   if (moveId >= (int)animDef->moveCount) {
     moveId = animDef->moveCount - 1;
@@ -423,11 +423,11 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
     if (moveChanged != 0) {
       state->blendToggle = OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle;
       state->moveCacheSlot = (u16)state->blendToggle;
-      if (animDef->blendMoveIds[moveId] == OBJANIM_MISSING_MOVE_ID) {
+      if (animDef->cachedAnimIds[moveId] == OBJANIM_MISSING_MOVE_ID) {
         OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
         moveId = 0;
       }
-      ObjAnim_LoadCachedMove((int)animDef->blendMoveIds[moveId],(int)(s16)moveId,
+      ObjAnim_LoadCachedMove((int)animDef->cachedAnimIds[moveId],(int)(s16)moveId,
                              state->moveCache[state->moveCacheSlot],animDef);
     }
     moveData =
@@ -1154,7 +1154,7 @@ undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int
   previousMove = objAnim->currentMove;
   moveChanged = previousMove != moveId;
   objAnim->currentMove = (s16)moveId;
-  moveId = (int)animDef->moveBaseTable[moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
+  moveId = (int)animDef->moveGroupBaseIndices[moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
            (moveId & OBJANIM_MOVE_INDEX_MASK);
   if (moveId >= (int)animDef->moveCount) {
     moveId = animDef->moveCount - 1;
@@ -1166,11 +1166,11 @@ undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int
     if (moveChanged != 0) {
       state->blendToggle = OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle;
       state->moveCacheSlot = (u16)state->blendToggle;
-      if (animDef->blendMoveIds[moveId] == OBJANIM_MISSING_MOVE_ID) {
+      if (animDef->cachedAnimIds[moveId] == OBJANIM_MISSING_MOVE_ID) {
         OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
         moveId = 0;
       }
-      ObjAnim_LoadCachedMove((int)animDef->blendMoveIds[moveId],(int)(s16)moveId,
+      ObjAnim_LoadCachedMove((int)animDef->cachedAnimIds[moveId],(int)(s16)moveId,
                              state->moveCache[state->moveCacheSlot],animDef);
     }
     moveData =

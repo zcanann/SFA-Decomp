@@ -40,6 +40,7 @@ typedef struct ObjAnimHitReactRow {
   (OBJANIM_EVENT_SCAN_WRAPPED | OBJANIM_EVENT_SCAN_REVERSE)
 #define OBJANIM_MOVE_GROUP_SHIFT 8
 #define OBJANIM_MOVE_INDEX_MASK 0xFF
+#define OBJANIM_MOVE_GROUP_BASE_COUNT 0x3E
 #define OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET 6
 #define OBJANIM_ROOT_CURVE_Z_AXIS_OFFSET 10
 #define OBJANIM_ROOT_CURVE_AXIS_COUNT 6
@@ -65,8 +66,8 @@ typedef struct ObjAnimDef {
   u8 pad5C[0x64 - 0x5C];
   u8 **moveData;
   u8 pad68[4];
-  s16 *blendMoveIds;
-  s16 moveBaseTable[0x3E];
+  s16 *cachedAnimIds;
+  s16 moveGroupBaseIndices[OBJANIM_MOVE_GROUP_BASE_COUNT];
   u16 moveCount;
 } ObjAnimDef;
 
@@ -177,7 +178,7 @@ static inline f64 ObjAnim_S32AsDouble(s32 value) {
 
 static inline s32 ObjAnim_ResolveMoveIndex(ObjAnimDef *animDef, u32 moveId) {
   s32 moveIndex =
-      animDef->moveBaseTable[(s32)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
+      animDef->moveGroupBaseIndices[(s32)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
       (moveId & OBJANIM_MOVE_INDEX_MASK);
 
   if (moveIndex >= animDef->moveCount) {
