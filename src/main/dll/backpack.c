@@ -2,7 +2,7 @@
 #include "main/dll/backpack.h"
 
 extern void tumbleweed_updateStateMachine(int obj);
-extern void fn_80164940(int obj);
+extern void tumbleweed_updateTargetedStateMachine(int obj);
 extern void tumbleweed_updateEffects(int obj);
 extern int GameBit_Set(int eventId, int value);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -84,7 +84,7 @@ typedef void (*ExpgfxSpawnObjectFn)(int obj, int objectId, void *params, int mod
 #pragma peephole off
 void tumbleweed_update(int obj) {
     if (*(s16*)(obj + 0x46) == TUMBLEWEED_TYPE_1) {
-        fn_80164940(obj);
+        tumbleweed_updateTargetedStateMachine(obj);
     } else {
         tumbleweed_updateStateMachine(obj);
     }
