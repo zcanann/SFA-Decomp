@@ -19,7 +19,7 @@ extern f32 lbl_803E24D4;
 extern f32 lbl_803E2488;
 extern const char sTrickyShouldNeverStopCirclingError[];
 
-void *fn_8013EE84(void *obj, void *arg2) {
+void *trickyFindCirclingTarget(void *obj, void *arg2) {
     void *p_24 = *(void **)((u8 *)arg2 + 0x24);
     void *target;
     void **list;
@@ -50,7 +50,7 @@ fail:
     return NULL;
 }
 
-void trickyFn_8013ef8c(void *p1, void *p2) {
+void trickyUpdateCirclingTargetPosition(void *p1, void *p2) {
     void *p_24 = *(void **)((u8 *)p2 + 0x24);
     f32 dx = *(f32 *)((u8 *)p_24 + 0x18) - *(f32 *)((u8 *)p1 + 0x18);
     f32 dz = *(f32 *)((u8 *)p_24 + 0x20) - *(f32 *)((u8 *)p1 + 0x20);
