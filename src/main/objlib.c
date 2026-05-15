@@ -2462,37 +2462,30 @@ void ObjLink_AttachChild(int param_1,int param_2,ushort param_3)
  */
 #pragma scheduling off
 #pragma peephole off
-void ObjContact_DispatchCallbacks(void)
+void ObjContact_DispatchCallbacks(int objA,int objB)
 {
   bool bVar1;
-  ObjContactCallbackEntry *entry;
-  int iVar3;
-  int iVar4;
-  int iVar5;
   int objARefCount;
   int objBRefCount;
-  undefined8 uVar8;
+  ObjContactCallbackEntry *entry;
+  int iVar5;
 
-  uVar8 = FUN_8028683c();
-  iVar3 = (int)((ulonglong)uVar8 >> 0x20);
-  iVar4 = (int)uVar8;
-  objARefCount = *(u8 *)(iVar3 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET);
-  objBRefCount = *(u8 *)(iVar4 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET);
+  objARefCount = *(u8 *)(objA + OBJCONTACT_OBJECT_REFCOUNT_OFFSET);
+  objBRefCount = *(u8 *)(objB + OBJCONTACT_OBJECT_REFCOUNT_OFFSET);
   entry = gObjContactCallbacks;
   iVar5 = gObjContactCallbackCount;
   while (((objARefCount != 0 && (objBRefCount != 0)) &&
-          (bVar1 = iVar5 != 0, iVar5 = iVar5 + -1, bVar1))) {
-    if (((u32)entry->objA == (u32)iVar3) && ((u32)entry->objB == (u32)iVar4)) {
+          (bVar1 = iVar5 != 0, iVar5 = iVar5 - 1, bVar1))) {
+    if (((u32)entry->objA == (u32)objA) && ((u32)entry->objB == (u32)objB)) {
       objARefCount = objARefCount - 1;
-      entry->callback(iVar3,iVar4);
+      entry->callback(objA,objB);
     }
-    if (((u32)entry->objA == (u32)iVar4) && ((u32)entry->objB == (u32)iVar3)) {
+    if (((u32)entry->objA == (u32)objB) && ((u32)entry->objB == (u32)objA)) {
       objBRefCount = objBRefCount - 1;
-      entry->callback(iVar4,iVar3);
+      entry->callback(objB,objA);
     }
     entry++;
   }
-  FUN_80286888();
   return;
 }
 #pragma peephole reset

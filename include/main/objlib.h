@@ -56,7 +56,7 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR
                                               uint colorB,uint sfxId,float *cooldown);
 void ObjLink_DetachChild(int param_1,int param_2);
 void ObjLink_AttachChild(int param_1,int param_2,ushort param_3);
-void ObjContact_DispatchCallbacks(void);
+void ObjContact_DispatchCallbacks(int objA,int objB);
 void ObjContact_RemoveObjectCallbacks(int param_1);
 undefined4 ObjContact_AddCallback(int param_1,int param_2,ObjContactCallback callback);
 undefined4 ObjTrigger_IsSetById(int obj,short triggerId);
