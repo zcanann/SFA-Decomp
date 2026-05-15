@@ -146,7 +146,7 @@ void SHthorntail_update(SHthorntailObject *obj)
     runtime->effectTimer = (float)(dVar11 - (double)timeDelta);
   }
   runtime->behaviorFlags = runtime->behaviorFlags & 0xf7;
-  if ((gSHthorntailStateFlags[runtime->behaviorState] & 2) == 0) {
+  if ((gSHthorntailStateFlags[runtime->behaviorState] & SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) == 0) {
     hitReactEntries = &gSHthorntailNormalHitReactEntries;
   }
   else {
@@ -175,7 +175,7 @@ void SHthorntail_update(SHthorntailObject *obj)
       SHthorntail_updateRootControlMode3(obj,runtime);
       break;
     }
-    if ((gSHthorntailStateFlags[runtime->behaviorState] & 1) == 0) {
+    if ((gSHthorntailStateFlags[runtime->behaviorState] & SHTHORNTAIL_STATE_FLAG_STATUS_ACTIVE) == 0) {
       *(byte *)((int)psVar2 + 0xaf) = *(byte *)((int)psVar2 + 0xaf) & 0xef;
       *(byte *)((int)psVar2 + 0xaf) = *(byte *)((int)psVar2 + 0xaf) & 0xf7;
     }
@@ -205,7 +205,7 @@ void SHthorntail_update(SHthorntailObject *obj)
     else {
       runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_MOVE_COMPLETE;
     }
-    if ((gSHthorntailStateFlags[runtime->behaviorState] & 8) != 0) {
+    if ((gSHthorntailStateFlags[runtime->behaviorState] & SHTHORNTAIL_STATE_FLAG_APPLY_ROOT_MOTION) != 0) {
       if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
         runtime->storedFacingAngle = *psVar2;
       }
@@ -241,14 +241,14 @@ void SHthorntail_update(SHthorntailObject *obj)
     }
     objAudioFn_8006ef38((int)psVar2,(int)&animEvents,8,(int)runtime->renderPathPoints,
                         (int)runtime->moveScratch,lbl_803E5448,lbl_803E5448);
-    if ((gSHthorntailStateFlags[runtime->behaviorState] & 4) == 0) {
+    if ((gSHthorntailStateFlags[runtime->behaviorState] & SHTHORNTAIL_STATE_FLAG_DISABLE_MOVE_CONTROL) == 0) {
       runtime->movementControlFlags = runtime->movementControlFlags | 1;
     }
     else {
       runtime->movementControlFlags = runtime->movementControlFlags & 0xfe;
     }
     dll_2E_func03(obj,runtime);
-    if ((gSHthorntailStateFlags[runtime->behaviorState] & 2) == 0) {
+    if ((gSHthorntailStateFlags[runtime->behaviorState] & SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) == 0) {
       fn_8003B228((int)psVar2,(int)runtime->collisionShapeState);
     }
     else {
@@ -336,7 +336,7 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
   switch (config->controlMode) {
   case SHTHORNTAIL_CONTROL_MODE_LEVEL_0:
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-    randomTime = randomGetRange(1000,2000);
+    randomTime = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
     runtime->idleTimer = (f32)(s32)randomTime;
     break;
   case SHTHORNTAIL_CONTROL_MODE_LEVEL_1:
@@ -345,12 +345,12 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
     break;
   case SHTHORNTAIL_CONTROL_MODE_ROOT_2:
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-    randomTime = randomGetRange(1000,2000);
+    randomTime = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
     runtime->idleTimer = (f32)(s32)randomTime;
     break;
   case SHTHORNTAIL_CONTROL_MODE_ROOT_3:
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
-    randomTime = randomGetRange(1000,2000);
+    randomTime = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
     runtime->idleTimer = (f32)(s32)randomTime;
     break;
   }
@@ -399,7 +399,7 @@ void SHthorntail_updateDustEffects(SHthorntailObject *obj)
   effectParams.position.z = lbl_803E5460;
   effectParams.effectType = 0xc0e;
   effectParams.count = 1;
-  if ((runtime->dustEffectFlags & 4) != 0) {
+  if ((runtime->dustEffectFlags & SHTHORNTAIL_DUST_FLAG_ACTIVE) != 0) {
     if (runtime->dustEffectTimer < lbl_803E5468) {
       if ((f32)(s32)randomGetRange(0,0x1e0) <
           runtime->dustEffectTimer * lbl_803E546C) {
@@ -415,15 +415,15 @@ void SHthorntail_updateDustEffects(SHthorntailObject *obj)
       effectParams.flags = 0;
       effectParams.scale = lbl_803E5478 * ((runtime->dustEffectTimer - lbl_803E5468) / lbl_803E547C);
       (*(code *)(*pDll_expgfx + 8))(playerObj,0x7d2,&effectParams,2,0xffffffff,0);
-      runtime->dustEffectFlags = runtime->dustEffectFlags | 2;
+      runtime->dustEffectFlags = runtime->dustEffectFlags | SHTHORNTAIL_DUST_FLAG_BURST_READY;
     }
     else if (runtime->dustEffectTimer < lbl_803E5480) {
       if ((f32)(s32)randomGetRange(0,0x1e0) <
           runtime->dustEffectTimer * lbl_803E546C) {
         (*(code *)(*pDll_expgfx + 8))(playerObj,0x7ca,&effectParams,2,0xffffffff,0);
       }
-      if ((runtime->dustEffectFlags & 2) != 0) {
-        runtime->dustEffectFlags = runtime->dustEffectFlags & ~2;
+      if ((runtime->dustEffectFlags & SHTHORNTAIL_DUST_FLAG_BURST_READY) != 0) {
+        runtime->dustEffectFlags = runtime->dustEffectFlags & ~SHTHORNTAIL_DUST_FLAG_BURST_READY;
         effectParams.radius = 0x46;
         effectParams.scale = lbl_803E5484;
         for (burstCount = 0xf; burstCount != 0; burstCount = burstCount + -1) {
@@ -436,7 +436,7 @@ void SHthorntail_updateDustEffects(SHthorntailObject *obj)
       }
       else {
         runtime->dustEffectTimer = lbl_803E5460;
-        runtime->dustEffectFlags = runtime->dustEffectFlags & ~4;
+        runtime->dustEffectFlags = runtime->dustEffectFlags & ~SHTHORNTAIL_DUST_FLAG_ACTIVE;
       }
     }
     runtime->dustEffectTimer = runtime->dustEffectTimer + timeDelta;
