@@ -109,7 +109,7 @@ void trickyGrowl(void *param_1, void *param_2)
         break;
     case 3:
         trickyDebugPrint(strBase + 0x590);
-        if (*(f32 *)((char *)param_1 + 0x98) <= lbl_803E24D0) {
+        if (*(f32 *)((char *)param_1 + 0x98) >= lbl_803E24D0) {
             *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) & ~0x800;
             *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) | 0x1000;
             for (i = 0, slot = (void **)param_2; i < 7; slot++, i++) {
