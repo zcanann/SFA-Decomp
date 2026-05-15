@@ -17,8 +17,8 @@ extern undefined4 modelInitBones();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjTrigger_IsSet();
 extern void ObjPath_GetPointWorldPosition(SHthorntailObject *obj,int pointIndex,f32 *x,f32 *y,f32 *z,int param_6);
-extern undefined4 FUN_8003b1a4();
-extern undefined4 FUN_8003b280();
+extern void characterDoEyeAnims(int obj,int collisionShapeState);
+extern void fn_8003B228(int obj,int collisionShapeState);
 extern int fn_8005A10C(f32 *pos,f32 scale);
 extern void objAudioFn_8006ef38(int obj,int joint,int pointCount,int pathPoints,int scratch,f32 scaleX,f32 scaleY);
 extern undefined4 fn_80114F64();
@@ -249,10 +249,10 @@ void SHthorntail_update(SHthorntailObject *obj)
     }
     dll_2E_func03(obj,runtime);
     if ((gSHthorntailStateFlags[runtime->behaviorState] & 2) == 0) {
-      FUN_8003b280((int)psVar2,(int)runtime->collisionShapeState);
+      fn_8003B228((int)psVar2,(int)runtime->collisionShapeState);
     }
     else {
-      FUN_8003b1a4((int)psVar2,(int)runtime->collisionShapeState);
+      characterDoEyeAnims((int)psVar2,(int)runtime->collisionShapeState);
     }
     runtime->behaviorFlags = runtime->behaviorFlags & 0xfd;
     if (((runtime->behaviorFlags & 4) == 0) && (iVar6 = ObjTrigger_IsSet((int)psVar2), iVar6 != 0)) {
