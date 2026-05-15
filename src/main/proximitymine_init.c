@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/proximitymine.h"
 
 extern void Obj_SetActiveModelIndex(void *obj,int modelIndex);
 extern void ObjHits_DisableObject(void *obj);
@@ -11,43 +12,6 @@ extern f32 lbl_803E6774;
 extern f64 lbl_803E6790;
 extern f32 lbl_803E6798;
 extern f32 lbl_803E679C;
-
-typedef struct ProximityMineState {
-  void *targetObj;
-  void *effectHandle;
-  f32 triggerDistance;
-  f32 verticalStep;
-  u8 unk10[4];
-  u8 renderTimer[4];
-  u8 launchTimer[4];
-  u8 resetTimer[4];
-  u8 bounceTimer[4];
-  u8 initTimer[4];
-  u8 lifespanTimer[4];
-  s8 mode;
-  u8 unk2D;
-  u8 flashMode;
-  u8 unk2F;
-  u8 effectVisible;
-  u8 unk31[3];
-} ProximityMineState;
-
-typedef struct ProximityMineObject {
-  s16 angle;
-  u8 unk2[6];
-  f32 height;
-  u8 unkC[0x3a];
-  s16 objId;
-  u8 unk48[0x70];
-  ProximityMineState *state;
-} ProximityMineObject;
-
-typedef struct ProximityMineDef {
-  u8 unk0[0x18];
-  s8 angleSeed;
-  s8 mode;
-  s16 parameter;
-} ProximityMineDef;
 
 #pragma scheduling off
 #pragma peephole off
