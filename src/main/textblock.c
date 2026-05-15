@@ -88,3 +88,22 @@ void textblockObj_release(void)
 void textblockObj_initialise(void)
 {
 }
+
+u32 gTextBlockObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (u32)textblockObj_initialise,
+    (u32)textblockObj_release,
+    0,
+    (u32)textblockObj_initUnsupported,
+    (u32)textblockObj_updateUnsupported,
+    (u32)textblockObj_hitDetect,
+    (u32)textblockObj_render,
+    (u32)textblockObj_freeUnsupported,
+    (u32)textblockObj_func08,
+    (u32)textblockObj_getExtraSize,
+};
+
+char sTextBlockObjInitNoLongerSupported[] = "<textblock.c Init>No Longer supported \n";
