@@ -186,13 +186,15 @@ void dfropenode_modelMtxFn(double distance, int obj, float *phase)
   DFropenodeExtra *extra;
   int nodeBase;
   int segmentOffset;
+  s32 segmentRaw;
   s8 segmentIndex;
   f32 dx;
   f32 dz;
   f32 segmentLength;
 
   extra = *(DFropenodeExtra **)(obj + 0xb8);
-  segmentIndex = (s8)(s32)*phase;
+  segmentRaw = (s32)*phase;
+  segmentIndex = (s8)segmentRaw;
   *phase = *phase - DFRope_S32AsFloat(segmentIndex);
   nodeBase = **(int **)&extra->rope;
   segmentOffset = segmentIndex * 0x34;
@@ -200,7 +202,7 @@ void dfropenode_modelMtxFn(double distance, int obj, float *phase)
   dz = *(f32 *)(nodeBase + segmentOffset + 8) - *(f32 *)(nodeBase + segmentOffset + 0x3c);
   segmentLength = sqrtf(dx * dx + dz * dz);
   *phase = *phase + (f32)(distance / (double)segmentLength);
-  *phase = *phase + DFRope_S32AsFloat(segmentIndex);
+  *phase = *phase + DFRope_S32AsFloat((s8)segmentRaw);
 }
 #pragma scheduling reset
 
