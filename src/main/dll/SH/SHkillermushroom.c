@@ -27,8 +27,8 @@ extern undefined4 FUN_80081120();
 extern undefined4 FUN_8008112c();
 extern undefined4 FUN_8013651c();
 extern undefined4 FUN_801d2db8();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
 
 extern undefined4 DAT_80327960;
 extern undefined4 DAT_80327964;
@@ -37,7 +37,6 @@ extern undefined4* DAT_803dd6d4;
 extern void *lbl_803DCA78;
 extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e5ff8;
-extern f64 DOUBLE_803e6038;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803dda58;
 extern f32 FLOAT_803dda5c;
@@ -47,8 +46,11 @@ extern f32 FLOAT_803e6000;
 extern f32 FLOAT_803e6004;
 extern f32 FLOAT_803e6010;
 extern f32 FLOAT_803e6014;
-extern f32 FLOAT_803e6028;
-extern f32 FLOAT_803e602c;
+extern f32 lbl_803E5390;
+extern f32 lbl_803E5394;
+extern f32 lbl_803E5398;
+extern f32 lbl_803E539C;
+extern f64 lbl_803E53A0;
 
 /*
  * --INFO--
@@ -199,9 +201,9 @@ void bombplantspore_free(void *obj)
 /*
  * --INFO--
  *
- * Function: FUN_801d2e30
- * EN v1.0 Address: 0x801D2E30
- * EN v1.0 Size: 400b
+ * Function: fn_801D33D4
+ * EN v1.0 Address: 0x801D33D4
+ * EN v1.0 Size: 456b
  * EN v1.1 Address: 0x801D39C4
  * EN v1.1 Size: 456b
  * JP Address: TODO
@@ -209,45 +211,48 @@ void bombplantspore_free(void *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d2e30(int param_1,int param_2)
+void fn_801D33D4(void *obj, void *state)
 {
-  ushort uVar1;
-  uint uVar2;
-  int iVar3;
-  int iVar4;
-  double dVar5;
+  void *params;
+  s16 baseAngle;
+  u32 randAsDouble[2];
+  s32 angleDelta;
   
-  iVar4 = *(int *)(param_1 + 0x4c);
-  uVar1 = *(ushort *)(iVar4 + 0x1c);
-  uVar2 = randomGetRange(0x1e,0x2d);
-  *(float *)(param_2 + 0x298) =
-       (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e6038);
-  uVar2 = randomGetRange(0x78,0xb4);
-  *(float *)(param_2 + 0x284) =
-       *(float *)(param_2 + 0x298) +
-       (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e6038);
-  uVar2 = randomGetRange(0xfffff830,2000);
-  *(short *)(param_2 + 0x2aa) = *(short *)(param_2 + 0x2a8) + (short)uVar2;
-  iVar3 = (int)*(short *)(param_2 + 0x2aa) - (uint)uVar1;
-  if (0x8000 < iVar3) {
-    iVar3 = iVar3 + -0xffff;
+  params = *(void **)((u8 *)obj + 0x4c);
+  baseAngle = *(s16 *)((u8 *)params + 0x1c);
+
+  randAsDouble[0] = 0x43300000;
+  randAsDouble[1] = randomGetRange(0x1e, 0x2d) ^ 0x80000000;
+  *(f32 *)((u8 *)state + 0x298) = *(f64 *)randAsDouble - lbl_803E53A0;
+
+  randAsDouble[0] = 0x43300000;
+  randAsDouble[1] = randomGetRange(0x78, 0xb4) ^ 0x80000000;
+  *(f32 *)((u8 *)state + 0x284) =
+      *(f32 *)((u8 *)state + 0x298) + (*(f64 *)randAsDouble - lbl_803E53A0);
+
+  *(s16 *)((u8 *)state + 0x2aa) =
+      *(s16 *)((u8 *)state + 0x2a8) + (s16)randomGetRange(-2000, 2000);
+  angleDelta = (s32)*(s16 *)((u8 *)state + 0x2aa) - (u16)baseAngle;
+  if (0x8000 < angleDelta) {
+    angleDelta -= 0xffff;
   }
-  if (iVar3 < -0x8000) {
-    iVar3 = iVar3 + 0xffff;
+  if (angleDelta < -0x8000) {
+    angleDelta += 0xffff;
   }
-  if (*(short *)(iVar4 + 0x1a) < iVar3) {
-    *(ushort *)(param_2 + 0x2aa) = uVar1 + *(short *)(iVar4 + 0x1a);
+  if (*(s16 *)((u8 *)params + 0x1a) < angleDelta) {
+    *(s16 *)((u8 *)state + 0x2aa) = (s16)(baseAngle + *(s16 *)((u8 *)params + 0x1a));
   }
-  if (iVar3 < -(int)*(short *)(iVar4 + 0x1a)) {
-    *(ushort *)(param_2 + 0x2aa) = uVar1 - *(short *)(iVar4 + 0x1a);
+  if (angleDelta < -(s32)*(s16 *)((u8 *)params + 0x1a)) {
+    *(s16 *)((u8 *)state + 0x2aa) = (s16)(baseAngle - *(s16 *)((u8 *)params + 0x1a));
   }
-  uVar2 = randomGetRange(900,0x514);
-  *(float *)(param_2 + 0x29c) =
-       (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e6038) / FLOAT_803e6028;
-  *(float *)(param_2 + 0x27c) = FLOAT_803e602c;
-  dVar5 = (double)FUN_80293f90();
-  *(float *)(param_2 + 0x290) = (float)dVar5;
-  dVar5 = (double)FUN_80294964();
-  *(float *)(param_2 + 0x294) = (float)dVar5;
-  return;
+
+  randAsDouble[0] = 0x43300000;
+  randAsDouble[1] = randomGetRange(900, 0x514) ^ 0x80000000;
+  *(f32 *)((u8 *)state + 0x29c) = (*(f64 *)randAsDouble - lbl_803E53A0) / lbl_803E5390;
+  *(f32 *)((u8 *)state + 0x27c) = lbl_803E5394;
+
+  *(f32 *)((u8 *)state + 0x290) =
+      fn_80293E80((lbl_803E5398 * (f32)*(s16 *)((u8 *)state + 0x2aa)) / lbl_803E539C);
+  *(f32 *)((u8 *)state + 0x294) =
+      sin((lbl_803E5398 * (f32)*(s16 *)((u8 *)state + 0x2aa)) / lbl_803E539C);
 }
