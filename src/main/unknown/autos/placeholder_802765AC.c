@@ -86,7 +86,7 @@ extern int macRealTimeLo;
 extern void audioFn_8027132c(void *state);
 extern void *dataGetMacro(u32 key);
 extern u16 seqGetMIDIPriority(u8 slot, u8 event);
-extern u32 voiceAllocate(u8 priority, u8 maxInstances, s16 key, s8 streamKind);
+extern u32 voiceAllocate(u8 priority, u8 maxInstances, u16 key, u8 streamKind);
 extern void vidRemoveVoice(int state);
 extern void voiceSetPriority(int state, u8 newGroup);
 extern u32 vidMakeNew(int state, int returnNewId);

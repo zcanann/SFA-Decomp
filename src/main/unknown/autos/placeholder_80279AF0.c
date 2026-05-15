@@ -28,7 +28,7 @@ extern u8 voiceListRoot;
  * Allocate a voice id, preferring a free slot but stealing the lowest-priority
  * compatible active voice when limits are exceeded.
  */
-u32 voiceAllocate(u8 priority, u8 maxInstances, s16 key, s8 streamKind)
+u32 voiceAllocate(u8 priority, u8 maxInstances, u16 key, u8 streamKind)
 {
     u8 voiceLink;
     u16 priorityNode;
@@ -44,22 +44,22 @@ u32 voiceAllocate(u8 priority, u8 maxInstances, s16 key, s8 streamKind)
         return 0xffffffff;
     }
 
-    if (streamKind == 0) {
-        enforceKind = 0;
-        if ((lbl_803BD150[0x211] <= voiceMusicRunning) &&
-            (lbl_803BD150[0x211] < lbl_803BD150[0x210])) {
-            enforceKind = 1;
-        }
-        if (maxInstances < lbl_803BD150[0x211]) {
-            goto count_matching_key;
-        }
-    } else {
+    if (streamKind != 0) {
         enforceKind = 0;
         if ((lbl_803BD150[0x212] <= voiceFxRunning) &&
             (lbl_803BD150[0x212] < lbl_803BD150[0x210])) {
             enforceKind = 1;
         }
         if (maxInstances < lbl_803BD150[0x212]) {
+            goto count_matching_key;
+        }
+    } else {
+        enforceKind = 0;
+        if ((lbl_803BD150[0x211] <= voiceMusicRunning) &&
+            (lbl_803BD150[0x211] < lbl_803BD150[0x210])) {
+            enforceKind = 1;
+        }
+        if (maxInstances < lbl_803BD150[0x211]) {
 count_matching_key:
             matchingCount = 0;
             selectedVoice = 0xffffffff;
@@ -70,10 +70,10 @@ count_matching_key:
                 while ((current = voiceLink) != 0xff) {
                     state = (int)(synthVoice + current * 0x404);
                     candidate = selectedVoice;
-                    if (key == *(s16 *)(state + 0x100)) {
+                    if (key == *(u16 *)(state + 0x100)) {
                         matchingCount++;
-                        if ((*(s8 *)(state + 0x11c) == 0) &&
-                            (!enforceKind || (streamKind == *(s8 *)(state + 0x11d))) &&
+                        if ((*(u8 *)(state + 0x11c) == 0) &&
+                            (!enforceKind || (streamKind == *(u8 *)(state + 0x11d))) &&
                             ((*(u32 *)(state + 0x118) & 2) == 0)) {
                             candidate = current;
                             if (selectedVoice != 0xffffffff) {
@@ -97,7 +97,7 @@ count_matching_key:
             while (((current = priorityNode) != 0xffff) && (matchingCount < (int)limit)) {
                 voiceLink = *(u8 *)(voicePriorityGroupHeads + current);
                 while ((candidate = voiceLink) != 0xff) {
-                    if (key == *(s16 *)(synthVoice + candidate * 0x404 + 0x100)) {
+                    if (key == *(u16 *)(synthVoice + candidate * 0x404 + 0x100)) {
                         matchingCount++;
                     }
                     voiceLink = *(u8 *)(voicePriorityLinks + 1 + candidate * 4);
@@ -123,8 +123,8 @@ count_matching_key:
             while ((current = voiceLink) != 0xff) {
                 state = (int)(synthVoice + current * 0x404);
                 limit = candidate;
-                if ((*(s8 *)(state + 0x11c) == 0) &&
-                    (!enforceKind || (streamKind == *(s8 *)(state + 0x11d))) &&
+                if ((*(u8 *)(state + 0x11c) == 0) &&
+                    (!enforceKind || (streamKind == *(u8 *)(state + 0x11d))) &&
                     ((*(u32 *)(state + 0x118) & 2) == 0)) {
                     limit = current;
                     if (candidate != 0xffffffff) {
