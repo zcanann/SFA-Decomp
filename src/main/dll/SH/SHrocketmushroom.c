@@ -13,6 +13,7 @@ extern void ObjHits_DisableObject(void *obj);
 extern void ObjHits_EnableObject(void *obj);
 extern void *ObjHits_GetPriorityHitWithPosition(void *obj, int *hit, void *pos, int flags);
 extern void *ObjHits_GetPriorityHit(void *obj, void *pos, int p3, int p4);
+extern int ObjMsg_Pop(void *obj, u32 *outMessage, u32 *outSender, u32 *outParam);
 extern int ObjTrigger_IsSetById(void *obj, int triggerId);
 extern void objRenderFn_80041018(void *obj);
 extern void Sfx_StopObjectChannel(void *obj, int channel);
@@ -66,23 +67,22 @@ extern f32 lbl_803E53F0;
 extern f32 lbl_803E53F4;
 
 void bombplantspore_update(void *obj) {
-    u32 particleAlpha;
-    f32 zero;
+    s32 particleAlpha;
     s16 hitId;
-    f32 xVelocity;
-    f32 zVelocity;
     void *hitObj;
     void *playerObj;
     void *state;
     undefined hitPosition[4];
-    undefined hitWork[4];
-    int priorityHit[2];
+    u32 poppedMessage;
+    u32 poppedSender;
+    u32 detonateMessage;
     int i;
 
     state = *(void **)((u8 *)obj + 0xb8);
     if ((*(u8 *)((u8 *)state + 0x2b0) >> 6 & 1) != 0) {
-        while ((hitObj = ObjHits_GetPriorityHitWithPosition(obj, priorityHit, hitWork, 0)) != NULL) {
-            if (priorityHit[0] == 0x7000b) {
+        detonateMessage = 0x7000b;
+        while (ObjMsg_Pop(obj, &poppedMessage, &poppedSender, NULL) != 0) {
+            if (poppedMessage == detonateMessage) {
                 gameBitIncrement(0x66c);
                 Sfx_PlayFromObject(obj, 0xa7);
                 (*(void (***)(void *))lbl_803DCA78)[5](obj);
@@ -103,13 +103,20 @@ void bombplantspore_update(void *obj) {
         }
     }
 
-    zero = lbl_803E5394;
-    if (*(f32 *)((u8 *)state + 0x2a4) == lbl_803E5394) {
-        zero = *(f32 *)((u8 *)state + 0x274);
-        if (zero < lbl_803E53C0) {
-            particleAlpha = (u32)-(lbl_803E53C8 * zero - lbl_803E53C4);
+    if (*(f32 *)((u8 *)state + 0x2a4) != lbl_803E5394) {
+        *(s16 *)obj += (u16)framesThisStep * 0x40;
+        *(f32 *)((u8 *)state + 0x2a4) -= timeDelta;
+        if (*(f32 *)((u8 *)state + 0x2a4) <= lbl_803E5394) {
+            Obj_FreeObject(obj);
+        }
+        return;
+    }
+
+        if (*(f32 *)((u8 *)state + 0x274) < lbl_803E53C0) {
+            particleAlpha = (s32)-(lbl_803E53C8 * *(f32 *)((u8 *)state + 0x274) - lbl_803E53C4);
             objFn_800972dc(lbl_803E53B0,
-                           (f32)(lbl_803E53D8 * (double)(lbl_803E53C0 - zero) +
+                           (f32)(lbl_803E53D8 *
+                                     (double)(lbl_803E53C0 - *(f32 *)((u8 *)state + 0x274)) +
                                  lbl_803E53D0),
                            obj, 5, 7, 1, particleAlpha & 0xff, 0, 0);
         }
@@ -140,11 +147,8 @@ void bombplantspore_update(void *obj) {
                 *(f32 *)((u8 *)state + 0x284) <= lbl_803E5394) {
                 fn_801D33D4(obj, state);
             }
-            zero = *(f32 *)((u8 *)state + 0x298) - timeDelta;
-            *(f32 *)((u8 *)state + 0x298) = zero;
-            zVelocity = lbl_803E53E8;
-            xVelocity = lbl_803E5394;
-            if (lbl_803E5394 < zero) {
+            *(f32 *)((u8 *)state + 0x298) -= timeDelta;
+            if (lbl_803E5394 < *(f32 *)((u8 *)state + 0x298)) {
                 *(f32 *)((u8 *)state + 0x27c) =
                     lbl_803E53EC *
                         (*(f32 *)((u8 *)state + 0x29c) - *(f32 *)((u8 *)state + 0x27c)) *
@@ -152,8 +156,8 @@ void bombplantspore_update(void *obj) {
                     *(f32 *)((u8 *)state + 0x27c);
             } else {
                 *(f32 *)((u8 *)state + 0x290) *= lbl_803E53E8;
-                *(f32 *)((u8 *)state + 0x294) *= zVelocity;
-                *(f32 *)((u8 *)state + 0x298) = xVelocity;
+                *(f32 *)((u8 *)state + 0x294) *= lbl_803E53E8;
+                *(f32 *)((u8 *)state + 0x298) = lbl_803E5394;
             }
             *(f32 *)((u8 *)obj + 0x24) =
                 *(f32 *)((u8 *)state + 0x290) * *(f32 *)((u8 *)state + 0x27c) +
@@ -189,9 +193,8 @@ void bombplantspore_update(void *obj) {
             ObjMsg_SendToObject(hitObj, 0x7000a, obj, state);
             *(u8 *)((u8 *)state + 0x2b0) = *(u8 *)((u8 *)state + 0x2b0) & 0xbf | 0x40;
         } else {
-            zero = *(f32 *)((u8 *)state + 0x274) - timeDelta;
-            *(f32 *)((u8 *)state + 0x274) = zero;
-            if (zero <= lbl_803E5394) {
+            *(f32 *)((u8 *)state + 0x274) -= timeDelta;
+            if (*(f32 *)((u8 *)state + 0x274) <= lbl_803E5394) {
                 Sfx_PlayFromObject(obj, 0xa2);
                 (*(void (***)(void *))lbl_803DCA78)[5](obj);
                 for (i = 0; i < 10; i++) {
@@ -204,13 +207,6 @@ void bombplantspore_update(void *obj) {
                 *(u16 *)((u8 *)obj + 0x6) |= 0x4000;
                 ObjHits_DisableObject(obj);
             }
-        }
-    } else {
-        *(s16 *)obj += (u16)framesThisStep * 0x40;
-        *(f32 *)((u8 *)state + 0x2a4) -= timeDelta;
-        if (*(f32 *)((u8 *)state + 0x2a4) <= zero) {
-            Obj_FreeObject(obj);
-        }
     }
 }
 
