@@ -272,19 +272,27 @@ void dfropenode_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 int fn_801C26E0(int obj)
 {
   int *texture;
   DFDoorSpeciExtra *extra;
   int objDef;
   int alpha;
+  u32 phaseStep;
   f64 phase;
   f64 phaseBits;
   u64 phaseBitsRaw;
 
   extra = *(DFDoorSpeciExtra **)(obj + 0xb8);
   objDef = *(int *)(obj + 0x4c);
-  if (extra->state == 1) {
+  switch (extra->state) {
+  case 0:
+    if (GameBit_Get(*(s16 *)(objDef + 0x22)) != 0) {
+      extra->state = 1;
+    }
+    break;
+  case 1:
     texture = objFindTexture(obj, 0, 0);
     if (texture != NULL) {
       alpha = *texture + framesThisStep * 0x10;
@@ -294,22 +302,22 @@ int fn_801C26E0(int obj)
       }
       *texture = alpha;
     }
-  } else if (extra->state == 0) {
-    if (GameBit_Get(*(s16 *)(objDef + 0x22)) != 0) {
-      extra->state = 1;
-    }
-  } else {
+    break;
+  default:
     texture = objFindTexture(obj, 0, 0);
     if (texture != NULL) {
-      extra->phase += framesThisStep * 800;
+      phaseStep = (extra->phase + framesThisStep * 800) & 0xffff;
+      extra->phase = phaseStep;
       phaseBitsRaw = CONCAT44(0x43300000, (u32)extra->phase);
       phaseBits = *(f64 *)&phaseBitsRaw;
       phase = (lbl_803E4E3C * (f32)(phaseBits - lbl_803E4E48)) / lbl_803E4E40;
       *texture = (s32)-(lbl_803E4E34 * (lbl_803E4E38 - sin(phase)) - lbl_803E4E30);
     }
+    break;
   }
   return 0;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
