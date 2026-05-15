@@ -3,7 +3,7 @@
 #include "main/dll/DF/DFbarrelanim.h"
 
 typedef struct DFropenodeExtra {
-  int linkedObj;
+  void *linkedObj;
   f32 minX;
   f32 maxX;
   f32 minZ;
@@ -19,13 +19,11 @@ typedef struct DFropenodeExtra {
 } DFropenodeExtra;
 
 typedef struct DFRope {
-  void *nodes;
-  void *links;
+  f32 *nodes;
+  f32 *links;
   u8 count;
 } DFRope;
 
-extern undefined8 FUN_802860d4(void);
-extern void FUN_80286120(int value);
 extern f32 sqrtf(f32 x);
 
 extern f64 lbl_803E4DF0;
@@ -57,11 +55,9 @@ static inline f32 DFRope_S32AsFloat_SubAsFloat(s32 value) {
  * PAL Size: TODO
  */
 #pragma scheduling off
-void dfropenode_func0E(undefined8 param_1, double y, double z, undefined4 param_4,
-                       undefined4 param_5, float *phaseOut, u8 *sideOut)
+int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float *distanceOut,
+                      float *phaseOut, u8 *sideOut)
 {
-  int obj;
-  float *distanceOut;
   DFropenodeExtra *extra;
   DFRope *rope;
   f32 localX;
@@ -78,26 +74,22 @@ void dfropenode_func0E(undefined8 param_1, double y, double z, undefined4 param_
   int segmentIndex;
   int nodeOffset;
   u32 i;
-  undefined8 current;
 
-  current = FUN_802860d4();
-  obj = (int)((u64)current >> 0x20);
-  distanceOut = (float *)current;
   extra = *(DFropenodeExtra **)(obj + 0xb8);
   segmentIndex = 0;
   if ((*(u8 *)(*(int *)(obj + 0x4c) + 0x18) & 1) == 0) {
     segmentIndex = 0;
-  } else if (extra->linkedObj == 0) {
+  } else if (extra->linkedObj == NULL) {
     segmentIndex = 0;
-  } else if ((((double)extra->minX > (double)(float)param_1) ||
-              ((double)extra->maxX < (double)(float)param_1)) ||
-             (z < (double)extra->minZ) || ((double)extra->maxZ < z)) {
+  } else if ((((double)extra->minX > (double)worldX) ||
+              ((double)extra->maxX < (double)worldX)) ||
+             ((double)worldZ < (double)extra->minZ) || ((double)extra->maxZ < (double)worldZ)) {
     segmentIndex = 0;
   } else {
     *distanceOut = lbl_803E4E1C;
-    localX = (f32)((double)(float)param_1 - (double)*(f32 *)(obj + 0xc));
-    localY = (f32)(y - (double)*(f32 *)(obj + 0x10));
-    localZ = (f32)(z - (double)*(f32 *)(obj + 0x14));
+    localX = (f32)((double)worldX - (double)*(f32 *)(obj + 0xc));
+    localY = (f32)((double)worldY - (double)*(f32 *)(obj + 0x10));
+    localZ = (f32)((double)worldZ - (double)*(f32 *)(obj + 0x14));
     rope = (DFRope *)extra->rope;
     nodeOffset = 0;
     bestDistance = lbl_803E4DFC;
@@ -129,7 +121,7 @@ void dfropenode_func0E(undefined8 param_1, double y, double z, undefined4 param_
       }
     }
   }
-  FUN_80286120(segmentIndex);
+  return segmentIndex;
 }
 #pragma scheduling reset
 
