@@ -8,8 +8,8 @@
 #include "main/objanim_internal.h"
 
 extern undefined4 Sfx_PlayFromObject();
-extern double FUN_80017708();
-extern int FUN_80017730();
+extern f32 getXZDistance(f32 *posA,f32 *posB);
+extern s16 getAngle(f32 deltaX,f32 deltaZ);
 extern u32 randomGetRange(int min, int max);
 extern undefined4 Obj_GetActiveModel();
 extern undefined4 Obj_GetPlayerObject();
@@ -19,8 +19,8 @@ extern int ObjTrigger_IsSet();
 extern void ObjPath_GetPointWorldPosition(SHthorntailObject *obj,int pointIndex,f32 *x,f32 *y,f32 *z,int param_6);
 extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
-extern int FUN_800575b4();
-extern undefined4 objAudioFn_8006ef38();
+extern int fn_8005A10C(f32 *pos,f32 scale);
+extern void objAudioFn_8006ef38(int obj,int joint,int pointCount,int pathPoints,int scratch,f32 scaleX,f32 scaleY);
 extern undefined4 fn_80114F64();
 extern undefined4 fn_8011507C();
 extern void dll_2E_func03(SHthorntailObject *obj,SHthorntailRuntime *runtime);
@@ -230,8 +230,8 @@ void SHthorntail_update(SHthorntailObject *obj)
       }
       eventId++;
     }
-    objAudioFn_8006ef38((double)lbl_803E5448,(double)lbl_803E5448,psVar2,&animEvents,8,
-                 (int)runtime->renderPathPoints,(int)runtime->moveScratch);
+    objAudioFn_8006ef38((int)psVar2,(int)&animEvents,8,(int)runtime->renderPathPoints,
+                        (int)runtime->moveScratch,lbl_803E5448,lbl_803E5448);
     if ((gSHthorntailStateFlags[runtime->behaviorState] & 4) == 0) {
       runtime->movementControlFlags = runtime->movementControlFlags | 1;
     }
@@ -253,11 +253,14 @@ void SHthorntail_update(SHthorntailObject *obj)
                 (*(undefined *)(runtime->impactSfxTable + uVar7),psVar2,0xffffffff);
     }
     if (config->leashRadiusByte != '\0') {
-      dVar11 = FUN_80017708((float *)(psVar2 + 0xc),(float *)&config->homePos);
-      if (((double)(f32)(s32)((uint)config->leashRadiusByte * (uint)config->leashRadiusByte) < dVar11) &&
-         (iVar9 = FUN_800575b4((double)(*(float *)(psVar2 + 0x54) * *(float *)(psVar2 + 4)),
-                               (float *)(psVar2 + 6)), iVar9 == 0)) {
-        iVar9 = FUN_80017730();
+      dVar11 = getXZDistance((float *)(psVar2 + 0xc),(float *)&config->homePos);
+      if ((dVar11 > (double)(f32)(s32)((uint)config->leashRadiusByte *
+                                      (uint)config->leashRadiusByte)) &&
+         (iVar9 = fn_8005A10C((float *)(psVar2 + 6),
+                              *(float *)(psVar2 + 0x54) * *(float *)(psVar2 + 4)),
+          iVar9 == 0)) {
+        iVar9 = getAngle(*(float *)(psVar2 + 6) - config->homePos.x,
+                         *(float *)(psVar2 + 10) - config->homePos.z);
         *psVar2 = (short)iVar9;
       }
     }
