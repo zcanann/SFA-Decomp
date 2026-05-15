@@ -4,7 +4,7 @@
 extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
 extern undefined4 FUN_80017748();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_800178b8();
 extern undefined4 FUN_80017a78();
 extern undefined4 FUN_80017a7c();
@@ -477,17 +477,17 @@ void FUN_801a35f8(int param_1,int param_2,int param_3)
     *(float *)(param_2 + 0x48) = (float)((double)local_58 * dVar4);
     uVar3 = (uint)(lbl_803E500C * (float)((double)lbl_803E5010 + dVar4));
     local_38 = (double)(longlong)(int)uVar3;
-    uStack_3c = FUN_80017760(0,uVar3);
+    uStack_3c = randomGetRange(0,uVar3);
     uStack_3c = uStack_3c ^ 0x80000000;
     local_40 = 0x43300000;
     *(float *)(param_2 + 0x1c) =
          (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e5020) / lbl_803E5014;
-    uStack_44 = FUN_80017760(0,uVar3);
+    uStack_44 = randomGetRange(0,uVar3);
     uStack_44 = uStack_44 ^ 0x80000000;
     local_48 = 0x43300000;
     *(float *)(param_2 + 0x20) =
          (float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e5020) / lbl_803E5014;
-    uStack_2c = FUN_80017760(0,uVar3);
+    uStack_2c = randomGetRange(0,uVar3);
     dVar4 = DOUBLE_803e5020;
     uStack_2c = uStack_2c ^ 0x80000000;
     local_30 = 0x43300000;
@@ -512,15 +512,15 @@ void FUN_801a35f8(int param_1,int param_2,int param_3)
     }
     uVar3 = (uint)(lbl_803E500C * (float)((double)lbl_803E5010 + dVar4));
     local_28 = (double)(longlong)(int)uVar3;
-    uStack_2c = FUN_80017760(0,uVar3);
+    uStack_2c = randomGetRange(0,uVar3);
     uStack_2c = uStack_2c ^ 0x80000000;
     local_30 = 0x43300000;
     *(float *)(param_2 + 0x28) =
          (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e5020) / lbl_803E500C;
-    uVar2 = FUN_80017760(0,uVar3);
+    uVar2 = randomGetRange(0,uVar3);
     local_38 = (double)CONCAT44(0x43300000,uVar2 ^ 0x80000000);
     *(float *)(param_2 + 0x2c) = (float)(local_38 - DOUBLE_803e5020) / lbl_803E500C;
-    uStack_3c = FUN_80017760(0,uVar3);
+    uStack_3c = randomGetRange(0,uVar3);
     dVar5 = DOUBLE_803e5020;
     uStack_3c = uStack_3c ^ 0x80000000;
     local_40 = 0x43300000;
@@ -538,7 +538,7 @@ void FUN_801a35f8(int param_1,int param_2,int param_3)
       *(undefined4 *)(param_2 + 0x60) = 0xffffffff;
     }
     else {
-      uVar3 = FUN_80017760(0,100);
+      uVar3 = randomGetRange(0,100);
       iVar1 = (uint)*(ushort *)(param_3 + 0x38) * (uVar3 + 100);
       iVar1 = iVar1 / 200 + (iVar1 >> 0x1f);
       *(int *)(param_2 + 0x60) = iVar1 - (iVar1 >> 0x1f);

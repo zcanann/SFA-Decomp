@@ -16,7 +16,7 @@ extern uint GameBit_Get(int eventId);
 extern double FUN_80017714();
 extern uint FUN_80017730();
 extern undefined4 FUN_80017754();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017778();
 extern undefined FUN_8002fc3c();
 extern undefined4 FUN_800571f8();
@@ -2517,7 +2517,7 @@ int FUN_800dd3ec(int param_1,int param_2,uint param_3)
       param_3 = iVar1 - 1U;
     }
     if (param_3 == 0xffffffff) {
-      param_3 = FUN_80017760(0,iVar1 - 1);
+      param_3 = randomGetRange(0,iVar1 - 1);
     }
     iVar1 = local_18[param_3];
   }
@@ -2576,7 +2576,7 @@ int FUN_800dd50c(int param_1,int param_2,uint param_3)
       param_3 = iVar1 - 1U;
     }
     if (param_3 == 0xffffffff) {
-      param_3 = FUN_80017760(0,iVar1 - 1);
+      param_3 = randomGetRange(0,iVar1 - 1);
     }
     iVar1 = local_18[param_3];
   }
@@ -2918,7 +2918,7 @@ FUN_800ddf8c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
         uVar5 = 0xffffffff;
       }
       else {
-        uVar5 = FUN_80017760(0,iVar3 - 1);
+        uVar5 = randomGetRange(0,iVar3 - 1);
         uVar5 = local_88[uVar5];
       }
     }
@@ -2956,7 +2956,7 @@ FUN_800ddf8c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
         uVar5 = 0xffffffff;
       }
       else {
-        uVar5 = FUN_80017760(0,iVar3 - 1);
+        uVar5 = randomGetRange(0,iVar3 - 1);
         uVar5 = local_78[uVar5];
       }
     }
@@ -3895,7 +3895,7 @@ void FUN_800df660(undefined4 param_1,undefined4 param_2,float *param_3,float *pa
           uVar12 = 0xffffffff;
         }
         else {
-          uVar12 = FUN_80017760(0,iVar11 - 1);
+          uVar12 = randomGetRange(0,iVar11 - 1);
           uVar12 = local_58[uVar12];
         }
         if ((int)uVar12 < 0) {
@@ -3959,7 +3959,7 @@ LAB_800e13a0:
       uVar12 = 0xffffffff;
     }
     else {
-      uVar12 = FUN_80017760(0,iVar9 - 1);
+      uVar12 = randomGetRange(0,iVar9 - 1);
       uVar12 = local_68[uVar12];
     }
     if ((int)uVar12 < 0) {
@@ -4024,7 +4024,7 @@ LAB_800e1564:
           uVar12 = 0xffffffff;
         }
         else {
-          uVar12 = FUN_80017760(0,iVar10 - 1);
+          uVar12 = randomGetRange(0,iVar10 - 1);
           uVar12 = local_78[uVar12];
         }
         if ((int)uVar12 < 0) {
@@ -4113,7 +4113,7 @@ void FUN_800dfc4c(double param_1,int param_2,float *param_3,float *param_4,float
     uVar8 = 0xffffffff;
   }
   else {
-    uVar8 = FUN_80017760(0,iVar6 - 1);
+    uVar8 = randomGetRange(0,iVar6 - 1);
     uVar8 = local_38[uVar8];
   }
   if ((int)uVar8 < 0) {
@@ -4242,7 +4242,7 @@ LAB_800e1c9c:
         uVar4 = 0xffffffff;
       }
       else {
-        uVar4 = FUN_80017760(0,iVar3 - 1);
+        uVar4 = randomGetRange(0,iVar3 - 1);
         uVar4 = local_6c[uVar4];
       }
       if (-1 < (int)uVar4) break;
@@ -4317,7 +4317,7 @@ void fn_800D9D3C(int unused, void *obj, int a, int b) {
 #pragma peephole on
 #pragma scheduling on
 
-/* fn_800D9F38 — large init updating multiple float fields based on b's bytes */
+/* fn_800D9F38 ? large init updating multiple float fields based on b's bytes */
 extern float fn_80293E80(double angle);
 extern float sin(double x);
 extern f32 lbl_803E05D0;
@@ -4433,7 +4433,7 @@ void fn_800DE8F0(void *a, void *b) {
 #pragma scheduling on
 #pragma peephole on
 
-/* fn_800DA928: clamp + curveFn call — 99% match, f1 vs f2 reg alloc */
+/* fn_800DA928: clamp + curveFn call ? 99% match, f1 vs f2 reg alloc */
 void fn_800DA928(float *p) {
     if (*p <= lbl_803E05F0) {
         *p = lbl_803E05F4;
@@ -4495,7 +4495,7 @@ end:
 #pragma scheduling on
 #pragma peephole on
 
-/* fn_800DB224: u16 split-into-2-bytes (LE) — 95% match, reg alloc diff */
+/* fn_800DB224: u16 split-into-2-bytes (LE) ? 95% match, reg alloc diff */
 #pragma peephole off
 #pragma scheduling off
 void fn_800DB224(u32 v, u8 *dst) {

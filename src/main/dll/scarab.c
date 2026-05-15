@@ -11,7 +11,7 @@ extern undefined4 FUN_80006a54();
 extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
 extern uint FUN_80017730();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017a88();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
@@ -519,7 +519,7 @@ void FUN_8015dda8(void)
           }
         }
       }
-      uVar5 = FUN_80017760(0,(uint)*(byte *)(iVar9 + 0x406));
+      uVar5 = randomGetRange(0,(uint)*(byte *)(iVar9 + 0x406));
       if ((iVar2 < 5) && ((*(byte *)(iVar8 + 9) & 1) == 0)) {
         if ((int)uVar5 < 0x21) {
           if ((int)uVar5 < 0x11) {
@@ -958,7 +958,7 @@ FUN_8015e9f4(undefined8 param_1,double param_2,double param_3,undefined8 param_4
         (**(code **)(iVar4 + 0x24))(iVar2,0x81,0);
       }
     }
-    uVar3 = FUN_80017760(0,1);
+    uVar3 = randomGetRange(0,1);
     if (uVar3 == 0) {
       if (*(char *)(param_10 + 0x27a) != '\0') {
         FUN_800305f8((double)lbl_803E3A60,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
@@ -1196,7 +1196,7 @@ void FUN_8015f224(undefined4 param_1,undefined4 param_2,int param_3)
     }
     if ((pfVar7[1] < *pfVar7) && (dVar8 < (double)lbl_803E3A98)) {
       FUN_80006824(uVar5,0x265);
-      uVar5 = FUN_80017760(0x32,0xfa);
+      uVar5 = randomGetRange(0x32,0xfa);
       pfVar7[1] = pfVar7[1] +
                   (float)((double)CONCAT44(0x43300000,uVar5 ^ 0x80000000) - DOUBLE_803e3aa0);
     }
@@ -1413,7 +1413,7 @@ void FUN_8015f75c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   (**(code **)(iVar6 + 0x58))((double)lbl_803E3AAC,param_9,param_10,iVar8);
   *(undefined4 *)(param_9 + 0xbc) = 0;
   pfVar7 = *(float **)(iVar8 + 0x40c);
-  uVar1 = FUN_80017760(10,300);
+  uVar1 = randomGetRange(10,300);
   *pfVar7 = (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - DOUBLE_803e3aa0);
   FUN_800305f8((double)lbl_803E3A60,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                param_9,8,0,uVar2,uVar3,uVar4,uVar5,iVar6);
@@ -1589,7 +1589,7 @@ void FUN_8015fb0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
       fVar1 = *pfVar7 + lbl_803E3AC8;
       *pfVar7 = fVar1;
       if (fVar2 == fVar1) {
-        uVar4 = FUN_80017760(0x10,0xf5);
+        uVar4 = randomGetRange(0x10,0xf5);
         local_20 = (double)CONCAT44(0x43300000,uVar4 ^ 0x80000000);
         *pfVar7 = (float)(local_20 - DOUBLE_803e3ae0);
       }
@@ -1620,7 +1620,7 @@ void FUN_8015fb0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
         }
         if (((uVar6 & 0xffff) < (uint)*(ushort *)((int)pfVar7 + 0xe)) ||
            ((0xffff - *(ushort *)((int)pfVar7 + 0xe) & 0xffff) < (uVar6 & 0xffff))) {
-          uVar6 = FUN_80017760(0,99);
+          uVar6 = randomGetRange(0,99);
           if (((int)uVar6 < (int)(uint)*(byte *)(pfVar7 + 5)) ||
              ((*(byte *)((int)pfVar7 + 0x12) & 4) != 0)) {
             uVar9 = FUN_80006824((uint)param_9,0x268);
@@ -2874,7 +2874,7 @@ FUN_80161ea0(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   *(undefined *)(*(int *)(param_9 + 0x54) + 0x6e) = 9;
   *(undefined *)(*(int *)(param_9 + 0x54) + 0x6f) = 1;
   ObjHits_RegisterActiveHitVolumeObject(param_9);
-  uVar1 = FUN_80017760(0,100);
+  uVar1 = randomGetRange(0,100);
   if ((int)uVar1 < 0x32) {
     if (*(char *)(param_10 + 0x27a) != '\0') {
       FUN_800305f8((double)lbl_803E3B50,param_2,param_3,param_4,param_5,param_6,param_7,param_8,

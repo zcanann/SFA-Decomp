@@ -13,7 +13,7 @@ extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern double FUN_80017714();
 extern undefined4 FUN_8001771c();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017a88();
 extern int FUN_80017a98();
 extern void* FUN_80017aa4();
@@ -639,33 +639,33 @@ void FUN_801b972c(undefined2 *param_1,int param_2)
   *(float *)(iVar3 + 0xa4) =
        (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_2 + 0x1c) ^ 0x80000000) -
               DOUBLE_803e57f8) / lbl_803E57E0;
-  uVar2 = FUN_80017760(0xffffffe2,0x1e);
+  uVar2 = randomGetRange(0xffffffe2,0x1e);
   *(float *)(iVar3 + 0xa8) =
        (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e57f8);
   *(undefined4 *)(param_2 + 0x14) = 0xffffffff;
-  uVar2 = FUN_80017760(0,(int)*(char *)(*(int *)(param_1 + 0x28) + 0x55) - 1);
+  uVar2 = randomGetRange(0,(int)*(char *)(*(int *)(param_1 + 0x28) + 0x55) - 1);
   *(char *)((int)param_1 + 0xad) = (char)uVar2;
   *param_1 = (short)((int)*(char *)(param_2 + 0x18) << 8);
-  uVar2 = FUN_80017760(0,0xffff);
+  uVar2 = randomGetRange(0,0xffff);
   *param_1 = (short)uVar2;
   *(undefined *)(param_1 + 0x1b) = 0;
   sVar1 = param_1[0x23];
   if (sVar1 == 0x10d) {
-    uVar2 = FUN_80017760(0,0x32);
+    uVar2 = randomGetRange(0,0x32);
     *(float *)(iVar3 + 0xac) =
          lbl_803E57EC + (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e57f8)
     ;
     *(float *)(iVar3 + 0xb0) = lbl_803E57E8;
   }
   else if ((sVar1 < 0x10d) && (sVar1 == 0x109)) {
-    uVar2 = FUN_80017760(0,0x28);
+    uVar2 = randomGetRange(0,0x28);
     *(float *)(iVar3 + 0xac) =
          lbl_803E57E4 + (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e57f8)
     ;
     *(float *)(iVar3 + 0xb0) = lbl_803E57E8;
   }
   else {
-    uVar2 = FUN_80017760(0,0x28);
+    uVar2 = randomGetRange(0,0x28);
     *(float *)(iVar3 + 0xac) =
          lbl_803E57F0 + (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e57f8)
     ;
@@ -732,7 +732,7 @@ void FUN_801b9914(uint param_1)
         if (iVar6 != 0xe) {
           return;
         }
-        uVar3 = FUN_80017760(800,0x4b0);
+        uVar3 = randomGetRange(800,0x4b0);
         *(short *)(pfVar7 + 1) = (short)uVar3;
         *(undefined *)((int)pfVar7 + 6) = 3;
         *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
