@@ -8,7 +8,7 @@ extern int FUN_80006a10();
 extern int FUN_80006a64();
 extern undefined8 FUN_80006a68();
 extern int FUN_80017730();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a5c();
 extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
@@ -235,7 +235,7 @@ void FUN_80152fb4(ushort *param_1,int param_2)
   FUN_8014d164((double)lbl_803E3528,(double)lbl_803E352C,param_1,param_2,0xf,'\0');
   *(float *)(param_2 + 0x334) = *(float *)(param_2 + 0x334) - lbl_803DC074;
   if (*(float *)(param_2 + 0x334) <= lbl_803E3500) {
-    uVar5 = FUN_80017760(0x3c,0x78);
+    uVar5 = randomGetRange(0x3c,0x78);
     local_28 = (double)CONCAT44(0x43300000,uVar5 ^ 0x80000000);
     *(float *)(param_2 + 0x334) = (float)(local_28 - DOUBLE_803e3508);
     FUN_80006824((uint)param_1,0x31);
@@ -606,7 +606,7 @@ void FUN_80153be0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if (iVar4 != 0) {
       *(float *)(iVar4 + 0x24) =
            lbl_803E358C * (*(float *)(*(int *)(param_10 + 0x29c) + 0xc) - *(float *)(puVar3 + 4));
-      uVar2 = FUN_80017760(0xfffffff6,10);
+      uVar2 = randomGetRange(0xfffffff6,10);
       fVar1 = lbl_803E358C;
       *(float *)(iVar4 + 0x28) =
            lbl_803E358C *
@@ -748,7 +748,7 @@ void FUN_80153e5c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   else if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
     if (cVar5 == '\0') {
-      uVar6 = FUN_80017760(2,4);
+      uVar6 = randomGetRange(2,4);
       uVar6 = uVar6 & 0xff;
       if (uVar6 == 2) {
         uVar6 = 0;
@@ -760,7 +760,7 @@ void FUN_80153e5c(undefined8 param_1,double param_2,double param_3,undefined8 pa
     else if (*(char *)(param_10 + 0x33a) == '\0') {
       if ((param_9[0x50] == 5) || (!bVar1)) {
         uVar6 = 4;
-        uVar4 = FUN_80017760(1,2);
+        uVar4 = randomGetRange(1,2);
         *(char *)(param_10 + 0x33a) = (char)uVar4;
       }
       else {
@@ -788,7 +788,7 @@ void FUN_80153e5c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   *(float *)(param_10 + 0x324) = *(float *)(param_10 + 0x324) - lbl_803DC074;
   if (*(float *)(param_10 + 0x324) <= lbl_803E35B8) {
-    uStack_14 = FUN_80017760(0x96,300);
+    uStack_14 = randomGetRange(0x96,300);
     uStack_14 = uStack_14 ^ 0x80000000;
     local_18 = 0x43300000;
     *(float *)(param_10 + 0x324) = (float)((double)CONCAT44(0x43300000,uStack_14) - DOUBLE_803e3590)

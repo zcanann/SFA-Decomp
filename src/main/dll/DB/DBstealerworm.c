@@ -14,7 +14,7 @@ extern undefined8 FUN_80017484();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId,int value);
 extern undefined4 FUN_8001771c();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_8001792c();
 extern undefined4 FUN_80017a28();
 extern undefined4 FUN_80017a54();
@@ -704,7 +704,7 @@ void FUN_801e21b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   if ((iVar4 < 2) && (*(char *)(pfVar6 + 3) < '\x01')) {
     *pfVar6 = *pfVar6 - lbl_803DC074;
     if (*pfVar6 <= lbl_803E64AC) {
-      uVar5 = FUN_80017760(10,0x19);
+      uVar5 = randomGetRange(10,0x19);
       dVar7 = (double)lbl_803E64A8;
       for (; uVar5 != 0; uVar5 = uVar5 - 1) {
         local_58 = *(float *)(uVar1 + 0x18);
@@ -713,7 +713,7 @@ void FUN_801e21b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
         local_5c = (float)dVar7;
         (**(code **)(*DAT_803dd708 + 8))(uVar1,0x9f,auStack_64,0x200001,0xffffffff,0);
       }
-      fStack_44 = (float)FUN_80017760(0x5a,0xf0);
+      fStack_44 = (float)randomGetRange(0x5a,0xf0);
       fStack_44 = -fStack_44;
       local_48 = 0x43300000;
       *pfVar6 = (float)((double)CONCAT44(0x43300000,fStack_44) - DOUBLE_803e64c0);
@@ -810,7 +810,7 @@ void FUN_801e2708(int param_1,int param_2)
   float *pfVar2;
   
   pfVar2 = *(float **)(param_1 + 0xb8);
-  uVar1 = FUN_80017760(0x5a,0xf0);
+  uVar1 = randomGetRange(0x5a,0xf0);
   *pfVar2 = (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - DOUBLE_803e64c0);
   pfVar2[1] = lbl_803E64A8;
   pfVar2[2] = 1.68156e-42;
@@ -1072,14 +1072,14 @@ void FUN_801e2940(undefined8 param_1,double param_2,double param_3,undefined8 pa
       iVar2 = FUN_80017a98();
       puVar6 = FUN_80017aa4(0x18,0x138);
       *(float *)(puVar6 + 4) = lbl_803E64EC + *(float *)(iVar2 + 0x18);
-      uStack_5c = FUN_80017760(0xfffffffa,6);
+      uStack_5c = randomGetRange(0xfffffffa,6);
       uStack_5c = uStack_5c ^ 0x80000000;
       local_60 = 0x43300000;
       *(float *)(puVar6 + 6) =
            lbl_803E64E0 +
            *(float *)(iVar2 + 0x1c) +
            (float)((double)CONCAT44(0x43300000,uStack_5c) - DOUBLE_803e64f8);
-      uStack_54 = FUN_80017760(0xfffffffa,6);
+      uStack_54 = randomGetRange(0xfffffffa,6);
       uStack_54 = uStack_54 ^ 0x80000000;
       local_58 = 0x43300000;
       dVar12 = (double)(*(float *)(iVar2 + 0x20) +

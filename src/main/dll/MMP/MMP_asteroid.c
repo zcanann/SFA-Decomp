@@ -4,7 +4,7 @@
 extern undefined4 FUN_800068c4();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017814();
 extern int FUN_80017830();
 extern undefined4 FUN_80017ac8();
@@ -388,23 +388,23 @@ void FUN_801955c8(int param_1)
       dVar5 = (double)lbl_803E4CB8;
       dVar4 = DOUBLE_803e4cc0;
       for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(iVar2 + 0x2c); iVar3 = iVar3 + 1) {
-        uStack_54 = FUN_80017760((int)*(short *)(iVar2 + 0x2e),(int)*(short *)(iVar2 + 0x28));
+        uStack_54 = randomGetRange((int)*(short *)(iVar2 + 0x2e),(int)*(short *)(iVar2 + 0x28));
         uStack_54 = uStack_54 ^ 0x80000000;
         local_58 = 0x43300000;
         local_78 = (float)(dVar5 * (double)(float)((double)CONCAT44(0x43300000,uStack_54) - dVar4));
-        uStack_4c = FUN_80017760((int)*(short *)(iVar2 + 0x30),(int)*(short *)(iVar2 + 0x2a));
+        uStack_4c = randomGetRange((int)*(short *)(iVar2 + 0x30),(int)*(short *)(iVar2 + 0x2a));
         uStack_4c = uStack_4c ^ 0x80000000;
         local_50 = 0x43300000;
         local_74 = (float)(dVar5 * (double)(float)((double)CONCAT44(0x43300000,uStack_4c) - dVar4));
-        uStack_44 = FUN_80017760((int)*(short *)(iVar2 + 0x18),(int)*(short *)(iVar2 + 0x1e));
+        uStack_44 = randomGetRange((int)*(short *)(iVar2 + 0x18),(int)*(short *)(iVar2 + 0x1e));
         uStack_44 = uStack_44 ^ 0x80000000;
         local_48 = 0x43300000;
         local_64 = (float)((double)CONCAT44(0x43300000,uStack_44) - dVar4);
-        uStack_3c = FUN_80017760((int)*(short *)(iVar2 + 0x1a),(int)*(short *)(iVar2 + 0x20));
+        uStack_3c = randomGetRange((int)*(short *)(iVar2 + 0x1a),(int)*(short *)(iVar2 + 0x20));
         uStack_3c = uStack_3c ^ 0x80000000;
         local_40 = 0x43300000;
         local_60 = (float)((double)CONCAT44(0x43300000,uStack_3c) - dVar4);
-        uStack_34 = FUN_80017760((int)*(short *)(iVar2 + 0x1c),(int)*(short *)(iVar2 + 0x22));
+        uStack_34 = randomGetRange((int)*(short *)(iVar2 + 0x1c),(int)*(short *)(iVar2 + 0x22));
         uStack_34 = uStack_34 ^ 0x80000000;
         local_38 = 0x43300000;
         local_5c = (float)((double)CONCAT44(0x43300000,uStack_34) - dVar4);

@@ -4,7 +4,7 @@
 extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern void* FUN_80017aa4();
@@ -297,7 +297,7 @@ void FUN_801b1a10(undefined8 param_1,undefined8 param_2,double param_3,undefined
         *(undefined4 *)(puVar6 + 10) = *(undefined4 *)(iVar5 + 0x14);
         *(undefined *)(puVar6 + 0xc) = *(undefined *)(iVar5 + 0x1c);
         puVar6[0xd] = (ushort)*(byte *)(iVar5 + 0x1a);
-        uVar4 = FUN_80017760(0,100);
+        uVar4 = randomGetRange(0,100);
         dVar3 = DOUBLE_803e5508;
         dVar8 = (double)((float)((double)CONCAT44(0x43300000,uVar4 ^ 0x80000000) - DOUBLE_803e5500)
                         / lbl_803E54FC);
@@ -470,12 +470,12 @@ void FUN_801b1d3c(void)
       dVar5 = (double)lbl_803E5520;
       dVar6 = DOUBLE_803e5528;
       do {
-        uStack_4c = FUN_80017760(0xffffff06,0xfa);
+        uStack_4c = randomGetRange(0xffffff06,0xfa);
         uStack_4c = uStack_4c ^ 0x80000000;
         local_50 = 0x43300000;
         local_5c = local_60 *
                    (float)(dVar5 * (double)(float)((double)CONCAT44(0x43300000,uStack_4c) - dVar6));
-        uStack_44 = FUN_80017760(0,0x1c2);
+        uStack_44 = randomGetRange(0,0x1c2);
         uStack_44 = uStack_44 ^ 0x80000000;
         local_48 = 0x43300000;
         local_58 = local_60 *
@@ -487,12 +487,12 @@ void FUN_801b1d3c(void)
       dVar5 = (double)lbl_803E5520;
       dVar6 = DOUBLE_803e5528;
       do {
-        uStack_44 = FUN_80017760(0xffffff06,0xfa);
+        uStack_44 = randomGetRange(0xffffff06,0xfa);
         uStack_44 = uStack_44 ^ 0x80000000;
         local_48 = 0x43300000;
         local_5c = local_60 *
                    (float)(dVar5 * (double)(float)((double)CONCAT44(0x43300000,uStack_44) - dVar6));
-        uStack_4c = FUN_80017760(0,0x1c2);
+        uStack_4c = randomGetRange(0,0x1c2);
         uStack_4c = uStack_4c ^ 0x80000000;
         local_50 = 0x43300000;
         local_58 = local_60 *
