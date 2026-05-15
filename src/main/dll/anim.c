@@ -29,7 +29,7 @@ extern undefined4 FUN_80017710();
 extern double FUN_80017714();
 extern undefined4 FUN_8001771c();
 extern uint FUN_80017758();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017784();
 extern undefined4 FUN_80017a5c();
 extern undefined4 FUN_80017a88();
@@ -391,14 +391,14 @@ void FUN_801feb30(void)
       else {
         *(float *)(psVar3 + 0x14) = local_58 * lbl_803E6ED0 * lbl_803DC078;
       }
-      FUN_80017760(100,5000);
-      FUN_80017760(100,5000);
+      randomGetRange(100,5000);
+      randomGetRange(100,5000);
       dVar14 = (double)(*(float *)(psVar3 + 0x14) * lbl_803DC074);
       dVar15 = (double)(*(float *)(psVar3 + 0x16) * lbl_803DC074);
       FUN_80017a88((double)(*(float *)(psVar3 + 0x12) * lbl_803DC074),dVar14,dVar15,(int)psVar3);
-      uVar6 = FUN_80017760(0,10);
+      uVar6 = randomGetRange(0,10);
       if ((uVar6 == 0) && (local_58 < lbl_803E6E98)) {
-        uVar6 = FUN_80017760(1,10);
+        uVar6 = randomGetRange(1,10);
         local_30 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
         in_f4 = (double)(float)(local_30 - DOUBLE_803e6ea8);
         dVar14 = (double)(*(float *)(psVar3 + 8) - *pfVar10);
@@ -542,7 +542,7 @@ void FUN_801feb30(void)
     case 8:
       uVar6 = FUN_80017690(0x42a);
       if (uVar6 == 0) {
-        uVar6 = FUN_80017760(0,10);
+        uVar6 = randomGetRange(0,10);
         if (uVar6 == 0) {
           in_r7 = -1;
           in_r8 = 0;
@@ -928,7 +928,7 @@ void FUN_801ffe30(int param_1,int param_2)
   *(float *)(param_1 + 0x2c) = lbl_803E6F14;
   *(float *)(param_1 + 0x24) = fVar1;
   *(float *)(param_1 + 0x28) = lbl_803E6F38;
-  uVar2 = FUN_80017760(0,0xffff);
+  uVar2 = randomGetRange(0,0xffff);
   *(uint *)(iVar3 + 4) = uVar2;
   uVar2 = FUN_80017690((int)*(short *)(param_2 + 0x20));
   if (uVar2 != 0) {
@@ -1799,11 +1799,11 @@ FUN_80201260(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     iVar1 = FUN_80017a98();
     iVar1 = (**(code **)(**(int **)(*(int *)(iVar1 + 200) + 0x68) + 0x44))();
     if (iVar1 == 0) {
-      uVar2 = FUN_80017760(0,2);
+      uVar2 = randomGetRange(0,2);
       FUN_80006824(param_9,(ushort)*(undefined4 *)(&DAT_8032a290 + uVar2 * 4));
     }
     else {
-      uVar2 = FUN_80017760(3,4);
+      uVar2 = randomGetRange(3,4);
       FUN_80006824(param_9,(ushort)*(undefined4 *)(&DAT_8032a290 + uVar2 * 4));
     }
     local_20 = *(undefined4 *)(iVar4 + 0x30);
@@ -1940,7 +1940,7 @@ FUN_802017a0(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   uVar2 = 0xffffffff;
   ObjHits_SetHitVolumeSlot(param_9,10,1,-1);
   if (*(char *)(param_10 + 0x27a) != '\0') {
-    uVar1 = FUN_80017760(0,1);
+    uVar1 = randomGetRange(0,1);
     if (uVar1 == 0) {
       if (*(char *)(param_10 + 0x27a) != '\0') {
         FUN_800305f8((double)lbl_803E6F40,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
@@ -2467,7 +2467,7 @@ void FUN_802026cc(undefined4 param_1,undefined4 param_2,int param_3)
     }
     if ((*(float *)(iVar5 + 0x10) < *(float *)(iVar5 + 0xc)) && (dVar6 < (double)lbl_803E701C)) {
       FUN_80006824(uVar1,(ushort)DAT_8032a284);
-      uStack_1c = FUN_80017760(0x32,0xfa);
+      uStack_1c = randomGetRange(0x32,0xfa);
       uStack_1c = uStack_1c ^ 0x80000000;
       local_20 = 0x43300000;
       *(float *)(iVar5 + 0x10) =
@@ -2995,7 +2995,7 @@ void FUN_8020368c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     FUN_80017698(0x1d7,1);
     puVar6 = &DAT_8032a488;
     for (sVar5 = 0; sVar5 < 9; sVar5 = sVar5 + 1) {
-      uVar3 = FUN_80017760(1,4);
+      uVar3 = randomGetRange(1,4);
       *puVar6 = (short)uVar3;
       puVar6 = puVar6 + 1;
     }
@@ -3029,7 +3029,7 @@ void FUN_8020368c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       FUN_80006824(0,0x1c4);
       puVar6 = &DAT_8032a488;
       for (sVar5 = 0; sVar5 < 9; sVar5 = sVar5 + 1) {
-        uVar3 = FUN_80017760(1,4);
+        uVar3 = randomGetRange(1,4);
         *puVar6 = (short)uVar3;
         puVar6 = puVar6 + 1;
       }
@@ -3091,7 +3091,7 @@ void FUN_802039e8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     DAT_8032a496 = 0;
     DAT_8032a498 = 0;
     for (sVar4 = 0; sVar4 < 6; sVar4 = sVar4 + 1) {
-      uVar3 = FUN_80017760(1,4);
+      uVar3 = randomGetRange(1,4);
       *puVar5 = (short)uVar3;
       puVar5 = puVar5 + 1;
     }
@@ -3118,7 +3118,7 @@ void FUN_802039e8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       FUN_80006824(0,0x447);
       puVar5 = &DAT_8032a488;
       for (sVar4 = 0; sVar4 < 6; sVar4 = sVar4 + 1) {
-        uVar3 = FUN_80017760(1,4);
+        uVar3 = randomGetRange(1,4);
         *puVar5 = (short)uVar3;
         puVar5 = puVar5 + 1;
       }
@@ -3955,7 +3955,7 @@ void FUN_80204f7c(int param_1)
           local_28 = lbl_803E7070;
           (**(code **)(*DAT_803dd708 + 8))(param_1,0x1f7,auStack_3c,0x12,0xffffffff,0);
         }
-        uVar4 = FUN_80017760(0xfffffff6,10);
+        uVar4 = randomGetRange(0xfffffff6,10);
         *(short *)(iVar5 + 4) = (short)uVar4 + 0x3c;
       }
       else {
