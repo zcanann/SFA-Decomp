@@ -139,7 +139,7 @@ int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float *distan
  * PAL Size: TODO
  */
 #pragma scheduling off
-void dfropenode_render2(double phase, double force, int obj)
+void dfropenode_render2(f32 phase, f32 force, int obj)
 {
   DFropenodeExtra *extra;
   int segmentOffset;
@@ -173,7 +173,7 @@ void dfropenode_render2(double phase, double force, int obj)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void dfropenode_modelMtxFn(double distance, int obj, float *phase)
+void dfropenode_modelMtxFn(f32 distance, int obj, float *phase)
 {
   DFropenodeExtra *extra;
   int nodeBase;
@@ -212,7 +212,7 @@ void dfropenode_modelMtxFn(double distance, int obj, float *phase)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void dfropenode_func0B(double phase, int obj, float *xOut, float *yOut, float *zOut)
+void dfropenode_func0B(f32 phase, int obj, float *xOut, float *yOut, float *zOut)
 {
   DFropenodeExtra *extra;
   int segmentOffset;
