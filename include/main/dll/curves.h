@@ -12,7 +12,10 @@
 #define ROMCURVE_LINK_ID_NONE 0xffffffff
 
 typedef struct RomCurveDef {
-  u8 pad00[ROMCURVE_ID_OFFSET];
+  u8 pad00[0x08];
+  f32 x;
+  f32 y;
+  f32 z;
   u32 id;
   u8 pad18[ROMCURVE_LINK_FLAGS_OFFSET - 0x18];
   s8 linkFlags;

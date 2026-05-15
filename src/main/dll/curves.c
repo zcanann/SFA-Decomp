@@ -1043,6 +1043,7 @@ f32 curves_distXZ(f32 param_1,f32 param_2,uint param_3)
 {
   float fVar1;
   float fVar2;
+  RomCurveDef *curve;
   int iVar3;
   int iVar4;
   int iVar5;
@@ -1072,8 +1073,9 @@ f32 curves_distXZ(f32 param_1,f32 param_2,uint param_3)
   }
 LAB_800e3628:
   if (iVar6 != 0) {
-    fVar1 = *(float *)(iVar6 + 8) - param_1;
-    fVar2 = *(float *)(iVar6 + 0x10) - param_2;
+    curve = (RomCurveDef *)iVar6;
+    fVar1 = curve->x - param_1;
+    fVar2 = curve->z - param_2;
     dist = sqrtf(fVar1 * fVar1 + fVar2 * fVar2);
   }
   else {
@@ -1104,6 +1106,7 @@ f32 RomCurve_distanceToObject(int param_1,uint param_2)
   float fVar1;
   float fVar2;
   float fVar3;
+  RomCurveDef *curve;
   int iVar4;
   int iVar5;
   int iVar6;
@@ -1131,9 +1134,10 @@ f32 RomCurve_distanceToObject(int param_1,uint param_2)
   }
 LAB_800e36d8:
   if ((iVar7 != 0) && ((uint)param_1 != 0)) {
-    fVar1 = *(float *)(iVar7 + 8) - *(float *)(param_1 + 0xc);
-    fVar2 = *(float *)(iVar7 + 0xc) - *(float *)(param_1 + 0x10);
-    fVar3 = *(float *)(iVar7 + 0x10) - *(float *)(param_1 + 0x14);
+    curve = (RomCurveDef *)iVar7;
+    fVar1 = curve->x - *(float *)(param_1 + 0xc);
+    fVar2 = curve->y - *(float *)(param_1 + 0x10);
+    fVar3 = curve->z - *(float *)(param_1 + 0x14);
     dist = sqrtf(fVar2 * fVar2 + fVar1 * fVar1 + fVar3 * fVar3);
   }
   else {
