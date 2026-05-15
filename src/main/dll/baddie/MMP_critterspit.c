@@ -29,7 +29,7 @@ int trickyFoodFn_8013db3c(u8 *arg1, u8 *arg2)
   } *bf = (struct CritterByte *)&arg2[0x58];
 
   if (bf->mode != 0) {
-    bf->mode = bf->mode - 1;
+    bf->mode--;
     result = 1;
   }
 
