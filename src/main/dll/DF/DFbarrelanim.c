@@ -262,6 +262,7 @@ int dfropenode_func0F(int obj)
   return *(short *)(*(int *)(obj + 0xb8) + 0x18);
 }
 
+#pragma scheduling off
 f32 fn_801C1698(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ, f32 *x, f32 *y,
                 f32 *z)
 {
@@ -293,3 +294,4 @@ f32 fn_801C1698(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ
   }
   return t;
 }
+#pragma scheduling reset
