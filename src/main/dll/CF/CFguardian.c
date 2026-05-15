@@ -4,7 +4,6 @@
 extern undefined4 FUN_80006b14();
 extern int FUN_80017730();
 extern undefined4 FUN_80017748();
-extern uint FUN_80017760();
 extern undefined4 ObjHits_DisableObject();
 extern byte FUN_80063a68();
 extern undefined4 FUN_80063a74();

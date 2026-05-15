@@ -15,7 +15,7 @@ extern undefined4 FUN_80006b54();
 extern uint FUN_80006bf8();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern uint FUN_80017a98();
 extern int FUN_80017b00();
 extern int FUN_8002fc3c();
@@ -214,12 +214,12 @@ void FUN_801c9660(undefined8 param_1,double param_2,double param_3,undefined8 pa
       piVar7[3] = (int)((float)piVar7[3] - lbl_803DC074);
       if ((float)piVar7[3] < lbl_803E5D84) {
         if (lbl_803E5D84 <= (float)piVar7[1]) {
-          uVar5 = FUN_80017760(0x78,0xf0);
+          uVar5 = randomGetRange(0x78,0xf0);
           local_68 = (double)CONCAT44(0x43300000,uVar5 ^ 0x80000000);
           piVar7[3] = (int)(float)(local_68 - DOUBLE_803e5da8);
         }
         else {
-          uVar5 = FUN_80017760(0x28,100);
+          uVar5 = randomGetRange(0x28,100);
           local_68 = (double)CONCAT44(0x43300000,uVar5 ^ 0x80000000);
           piVar7[3] = (int)(float)(local_68 - DOUBLE_803e5da8);
         }
@@ -228,12 +228,12 @@ void FUN_801c9660(undefined8 param_1,double param_2,double param_3,undefined8 pa
       piVar7[2] = (int)((float)piVar7[2] - lbl_803DC074);
       if ((float)piVar7[2] < lbl_803E5D84) {
         if ((float)piVar7[1] <= lbl_803E5D84) {
-          uVar3 = FUN_80017760(0x78,0xf0);
+          uVar3 = randomGetRange(0x78,0xf0);
           local_68 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
           piVar7[2] = (int)(float)(local_68 - DOUBLE_803e5da8);
         }
         else {
-          uVar3 = FUN_80017760(0x28,100);
+          uVar3 = randomGetRange(0x28,100);
           local_68 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
           piVar7[2] = (int)(float)(local_68 - DOUBLE_803e5da8);
         }
@@ -508,7 +508,7 @@ void FUN_801ca13c(int param_1)
         local_18 = lbl_803E5DC8;
         (**(code **)(*DAT_803dd708 + 8))(param_1,0x1f7,auStack_2c,0x12,0xffffffff,0);
       }
-      uVar4 = FUN_80017760(0xfffffff6,10);
+      uVar4 = randomGetRange(0xfffffff6,10);
       *(short *)(iVar5 + 4) = (short)uVar4 + 0x3c;
     }
     else {

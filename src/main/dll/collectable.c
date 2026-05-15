@@ -27,7 +27,7 @@ extern undefined8 FUN_80017698();
 extern double FUN_80017708();
 extern uint FUN_80017730();
 extern undefined4 FUN_80017748();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern void Sfx_RemoveLoopedObjectSound(int param_1,int param_2);
 extern int Sfx_IsPlayingFromObjectChannel(int param_1,int param_2);
 extern int Sfx_PlayFromObject(int obj,int sfxId);
@@ -489,7 +489,7 @@ void FUN_80145230(undefined8 param_1,undefined8 param_2,double param_3,undefined
     if (iVar2 != 1) {
       param_10[0x1d0] = (int)((float)param_10[0x1d0] - lbl_803DC074);
       if ((float)param_10[0x1d0] <= lbl_803E306C) {
-        uVar3 = FUN_80017760(500,0x2ee);
+        uVar3 = randomGetRange(500,0x2ee);
         param_10[0x1d0] =
              (int)(float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - DOUBLE_803e30f0);
         iVar2 = *(int *)(param_9 + 0xb8);
@@ -831,7 +831,7 @@ void FUN_80145ee8(int param_1,int param_2,int param_3)
   else if ((*(uint *)(iVar4 + 0x54) & 0x10) == 0) {
     uVar1 = FUN_800da700(param_3 + 0x18,0xffffffff,3);
     *(undefined4 *)(iVar4 + 0x700) = uVar1;
-    uVar2 = FUN_80017760(0x168,0x28);
+    uVar2 = randomGetRange(0x168,0x28);
     *(float *)(iVar4 + 0x710) =
          (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e30f0);
     *(undefined *)(iVar4 + 8) = 5;
@@ -990,7 +990,7 @@ void FUN_801460b8(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if ((bVar11) && ((*(uint *)(iVar13 + 0x54) & 0x200) == 0)) {
       *(float *)(iVar13 + 0x7b4) = lbl_803E3188;
       if ((*(int *)(iVar13 + 0x7b0) == 0) && (uVar7 = FUN_80017ae8(), (uVar7 & 0xff) != 0)) {
-        uVar7 = FUN_80017760(0,1);
+        uVar7 = randomGetRange(0,1);
         uVar2 = *(ushort *)((int)local_30 + uVar7 * 2);
         iVar8 = *(int *)(iVar6 + 0xb8);
         if (((*(byte *)(iVar8 + 0x58) >> 6 & 1) == 0) &&
@@ -1047,7 +1047,7 @@ void FUN_801460b8(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if ((bVar3) && ((*(uint *)(iVar13 + 0x54) & 0x200) == 0)) {
       *(float *)(iVar13 + 0x7ac) = lbl_803E3188;
       if ((*(int *)(iVar13 + 0x7a8) == 0) && (uVar7 = FUN_80017ae8(), (uVar7 & 0xff) != 0)) {
-        uVar7 = FUN_80017760(0,3);
+        uVar7 = randomGetRange(0,3);
         if (uVar7 == 0) {
           if (bVar4) {
             iVar8 = *(int *)(iVar6 + 0xb8);
@@ -2727,7 +2727,6 @@ extern void fn_800DB224(int pathId,u8 *out);
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject(int setup,int param_2,int param_3,int param_4,int param_5);
 extern int fn_800DB0E0(void *pos,int param_2,int param_3);
-extern int randomGetRange(int lo,int hi);
 extern f32 lbl_803E23DC;
 
 /* fn_801451D8: 300b - seed Tricky's path state and ensure the helper object exists. */

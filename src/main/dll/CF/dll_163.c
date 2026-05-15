@@ -3,7 +3,7 @@
 
 extern uint FUN_80017730();
 extern undefined4 FUN_80017748();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern void* FUN_80017aa4();
@@ -147,14 +147,14 @@ void FUN_80189f5c(undefined8 param_1,undefined8 param_2,double param_3,undefined
         *(float *)(psVar7 + 0x12) = (float)((double)*(float *)(psVar7 + 0x12) / dVar10);
         *(float *)(psVar7 + 0x16) = (float)((double)*(float *)(psVar7 + 0x16) / dVar10);
       }
-      uStack_7c = FUN_80017760(0,0x19);
+      uStack_7c = randomGetRange(0,0x19);
       uStack_7c = uStack_7c ^ 0x80000000;
       local_80 = 0x43300000;
       *(float *)(psVar7 + 0x12) =
            *(float *)(psVar7 + 0x12) *
            -(float)(dVar13 * (double)(float)((double)CONCAT44(0x43300000,uStack_7c) - dVar12) -
                    dVar14);
-      uStack_74 = FUN_80017760(0,0x19);
+      uStack_74 = randomGetRange(0,0x19);
       uStack_74 = uStack_74 ^ 0x80000000;
       local_78 = 0x43300000;
       *(float *)(psVar7 + 0x16) =
@@ -168,7 +168,7 @@ void FUN_80189f5c(undefined8 param_1,undefined8 param_2,double param_3,undefined
       local_90 = (float)dVar14;
       local_98[2] = 0;
       local_98[1] = 0;
-      uVar5 = FUN_80017760(0xffffd8f0,10000);
+      uVar5 = randomGetRange(0xffffd8f0,10000);
       local_98[0] = (ushort)uVar5;
       FUN_80017748(local_98,(float *)(psVar7 + 0x12));
       dVar10 = (double)*(float *)(psVar7 + 0x12);
