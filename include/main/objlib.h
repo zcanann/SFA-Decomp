@@ -39,9 +39,9 @@ int ObjGroup_FindNearestObjectToPoint(int group,float *point,float *maxDistance)
 int ObjGroup_FindNearestObjectForObject(int group,uint obj,float *maxDistance);
 int ObjGroup_FindNearestObject(int group,uint obj,float *maxDistance);
 undefined4 * ObjGroup_GetObjects(int group,int *countOut);
-void ObjGroup_RemoveObject(int obj,int group);
-int ObjGroup_GetObjectGroup(int obj);
-void ObjGroup_AddObject(int obj,int group);
+void ObjGroup_RemoveObject(uint obj,int group);
+int ObjGroup_GetObjectGroup(uint obj);
+void ObjGroup_AddObject(uint obj,int group);
 void ObjGroup_ClearAll(void);
 undefined4 ObjMsg_Peek(void *obj,uint *outMessage,uint *outSender,uint *outParam);
 undefined4 ObjMsg_Pop(void *obj,uint *outMessage,uint *outSender,uint *outParam);

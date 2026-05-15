@@ -60,7 +60,7 @@ extern int objGetAnimState80A(void *obj);
 #define OBJGROUP_OFFSET_CLEAR_COUNT (OBJGROUP_COUNT + 1)
 #define OBJGROUP_MAX_OBJECTS 0x100
 
-extern int gObjGroupObjects[OBJGROUP_MAX_OBJECTS];
+extern uint gObjGroupObjects[OBJGROUP_MAX_OBJECTS];
 extern u8 gObjGroupOffsets[0x58];
 typedef struct ObjContactCallbackEntry {
   int objA;
@@ -1728,14 +1728,14 @@ undefined4 * ObjGroup_GetObjects(int group,int *countOut)
  */
 #pragma scheduling off
 #pragma peephole off
-void ObjGroup_RemoveObject(int obj,int group)
+void ObjGroup_RemoveObject(uint obj,int group)
 {
   byte *bucketStarts;
   u8 *bucketEnds;
   int count;
   int index;
   int limit;
-  int *entries;
+  uint *entries;
 
   if ((group < 0) || (group >= OBJGROUP_COUNT)) {
     return;
@@ -1780,42 +1780,30 @@ void ObjGroup_RemoveObject(int obj,int group)
  */
 #pragma scheduling off
 #pragma peephole off
-int ObjGroup_GetObjectGroup(int obj)
+int ObjGroup_GetObjectGroup(uint obj)
 {
   int group;
-  int *entry;
-  byte *offset;
+  uint *entry;
+  u8 *offset;
   int objectIndex;
-  uint remainingObjects;
+  int objectCount;
   
   objectIndex = 0;
-  entry = &gObjGroupObjects[0];
-  remainingObjects = (uint)gObjGroupObjectCount;
-  while( true ) {
-    if (remainingObjects == 0) {
-      return 0;
-    }
+  entry = gObjGroupObjects;
+  objectCount = (int)gObjGroupObjectCount;
+  for (; objectIndex < objectCount; objectIndex++) {
     if (*entry == obj) {
-      break;
-    }
-    entry = entry + 1;
-    objectIndex = objectIndex + 1;
-    remainingObjects = remainingObjects - 1;
-  }
-  group = 0;
-  offset = gObjGroupOffsets;
-  while( true ) {
-    if (objectIndex < (int)(uint)*offset) {
+      group = 0;
+      offset = gObjGroupOffsets;
+      while (((int)(uint)*offset <= objectIndex) && (group < OBJGROUP_OFFSET_CLEAR_COUNT)) {
+        offset++;
+        group++;
+      }
       return group;
     }
-    if (group < OBJGROUP_OFFSET_CLEAR_COUNT) {
-      offset = offset + 1;
-      group = group + 1;
-    }
-    else {
-      return group;
-    }
+    entry++;
   }
+  return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1835,7 +1823,7 @@ int ObjGroup_GetObjectGroup(int obj)
  */
 #pragma scheduling off
 #pragma peephole off
-void ObjGroup_AddObject(int obj,int group)
+void ObjGroup_AddObject(uint obj,int group)
 {
   byte *bucketStarts;
   u8 *bucketEnds;
@@ -1843,7 +1831,7 @@ void ObjGroup_AddObject(int obj,int group)
   int index;
   int insertIndex;
   int limit;
-  int *entries;
+  uint *entries;
 
   if ((group < 0) || (group >= OBJGROUP_COUNT)) {
     return;
