@@ -43,14 +43,19 @@ extern f32 lbl_803E650C;
 #define DFPLIGHTNI_OBJECT_POS_Z_OFFSET 0x14
 #define DFPLIGHTNI_OBJECT_STATE_OFFSET 0xb8
 
-#define DFPLIGHTNI_PARAM_ANGLE_INDEX 0x18
-#define DFPLIGHTNI_PARAM_DELAY_TICKS 0x19
-#define DFPLIGHTNI_PARAM_RADIUS_X 0x1a
-#define DFPLIGHTNI_PARAM_RADIUS_Y 0x1c
-#define DFPLIGHTNI_PARAM_EVENT_ID 0x20
-
 #define DFPPOWERSL_SPAWN_OBJECT_ID 0x39e
 #define DFPPOWERSL_SPAWN_COUNT 0x14
+
+typedef struct DfpLightniMapData {
+  u8 pad00[0x18];
+  s8 angleIndex;
+  s8 delayTicks;
+  s16 radiusX;
+  s16 radiusY;
+  u8 pad1E[0x20 - 0x1E];
+  s16 eventId;
+  u8 pad22[0x24 - 0x22];
+} DfpLightniMapData;
 
 typedef struct DfpLightniState {
   u32 effectHandle;
@@ -222,7 +227,7 @@ void dfplightni_update(u8 *obj)
 
 #pragma scheduling off
 #pragma peephole off
-void dfplightni_init(u8 *obj,u8 *params)
+void dfplightni_init(u8 *obj,DfpLightniMapData *mapData)
 {
   DfpLightniState *state;
   f32 radiusMax;
@@ -234,23 +239,21 @@ void dfplightni_init(u8 *obj,u8 *params)
     randomValue = randomGetRange(DFPLIGHTNI_RANDOM_TIMER_MIN,DFPLIGHTNI_RANDOM_TIMER_MAX);
     state->timer = (f32)(s32)randomValue;
     state->effectHandle = 0;
-    if (*(s16 *)(params + DFPLIGHTNI_PARAM_RADIUS_X) <= 0) {
-      *(s16 *)(params + DFPLIGHTNI_PARAM_RADIUS_X) = 1;
+    if (mapData->radiusX <= 0) {
+      mapData->radiusX = 1;
     }
-    if (*(s16 *)(params + DFPLIGHTNI_PARAM_RADIUS_Y) <= 0) {
-      *(s16 *)(params + DFPLIGHTNI_PARAM_RADIUS_Y) = 1;
+    if (mapData->radiusY <= 0) {
+      mapData->radiusY = 1;
     }
     randomValue = randomGetRange(DFPLIGHTNI_RANDOM_TIMER_MIN,DFPLIGHTNI_RANDOM_TIMER_MAX);
     state->triggerTime = (f32)(s32)randomValue + lbl_803E6508;
     radiusMax = lbl_803E6504;
     radiusParamScale = lbl_803E650C;
-    state->radiusX = ((f32)(s32)*(s16 *)(params + DFPLIGHTNI_PARAM_RADIUS_X) /
-                      radiusParamScale) * radiusMax;
-    state->radiusY = ((f32)(s32)*(s16 *)(params + DFPLIGHTNI_PARAM_RADIUS_Y) /
-                      radiusParamScale) * radiusMax;
-    state->angleIndex = *(s8 *)(params + DFPLIGHTNI_PARAM_ANGLE_INDEX);
-    state->delayFrames = *(s8 *)(params + DFPLIGHTNI_PARAM_DELAY_TICKS) * DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES;
-    state->eventId = *(s16 *)(params + DFPLIGHTNI_PARAM_EVENT_ID);
+    state->radiusX = ((f32)(s32)mapData->radiusX / radiusParamScale) * radiusMax;
+    state->radiusY = ((f32)(s32)mapData->radiusY / radiusParamScale) * radiusMax;
+    state->angleIndex = mapData->angleIndex;
+    state->delayFrames = mapData->delayTicks * DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES;
+    state->eventId = mapData->eventId;
   }
   return;
 }
