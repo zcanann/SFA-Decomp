@@ -11,7 +11,7 @@ extern undefined4 FUN_80017680();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern double FUN_80017708();
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int min, int max);
 extern undefined4 FUN_80017a6c();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
@@ -26,6 +26,10 @@ extern void *Obj_GetPlayerObject(void);
 extern f32 getXZDistance(f32 *a, f32 *b);
 extern int fn_8003B500(void *obj, void *p2, f32 f1);
 extern int fn_801D4198(void *obj, void *unused, void *p5);
+extern void fn_8002B6D8(void *obj, int arg1, int arg2, int arg3, int arg4, int arg5);
+extern int cMenuGetSelectedItem(void);
+extern int fn_8011F3A8(s16 *outTrigger);
+extern void *getTrickyObject(void);
 extern int fn_802964F0(void *obj, int param);
 extern short FUN_8011e824();
 extern int FUN_8012efc4();
@@ -37,6 +41,8 @@ extern undefined4 DAT_803dcc38;
 extern undefined4 DAT_803dcc40;
 extern undefined4 DAT_803dcc44;
 extern undefined4 DAT_803dcc54;
+extern void *lbl_803DCA54;
+extern u8 lbl_803DBFD0;
 extern u8 lbl_803DBFD8;
 extern u8 lbl_803DBFDC;
 extern u8 lbl_803DBFEC;
@@ -46,6 +52,7 @@ extern undefined4* DAT_803dd728;
 extern f64 DOUBLE_803e6038;
 extern f32 lbl_803E53F8;
 extern f32 lbl_803E53FC;
+extern f32 lbl_803E5400;
 extern f32 lbl_803E6020;
 extern f32 lbl_803E6024;
 extern f32 lbl_803E6028;
@@ -281,6 +288,81 @@ int sh_queenearthwalker_getExtraSize(void)
 {
   return 0x40;
 }
+
+#pragma peephole off
+#pragma scheduling off
+void fn_801D44A4(void *obj, void *state)
+{
+  s16 triggerId;
+  s32 total;
+  void *tricky;
+  void *player;
+
+  switch (*(u8 *)state) {
+    case 0:
+      if (GameBit_Get(0xbf) != 0) {
+        (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](1, obj, -1);
+        *(u8 *)state = 1;
+      }
+      break;
+    case 1:
+      *(u8 *)((u8 *)obj + 0xaf) &= ~0x8;
+      if (cMenuGetSelectedItem() == -1) {
+        if (fn_8011F3A8(&triggerId) == 0 || triggerId != 0x66d) {
+          tricky = getTrickyObject();
+          if (tricky != NULL &&
+              getXZDistance((f32 *)((u8 *)tricky + 0x18), (f32 *)((u8 *)obj + 0x18)) <
+                  lbl_803E5400) {
+            fn_8002B6D8(obj, 0, 0, 0, 0, 2);
+          } else {
+            *(u8 *)((u8 *)obj + 0xaf) |= 0x8;
+          }
+          break;
+        }
+      }
+      fn_8002B6D8(obj, 0, 0, 0, 0, 4);
+      if (ObjTrigger_IsSetById(obj, 0x66d) != 0) {
+        *(u8 *)((u8 *)state + 0x2) |= 0x10;
+        total = GameBit_Get(0x66d);
+        total += GameBit_Get(0xc2);
+        GameBit_Set(0x66d, 0);
+        GameBit_Set(0xc2, total);
+        if (total != 6) {
+          *(u8 *)((u8 *)state + 0x2) |= 0x2;
+          if (randomGetRange(0, 1) != 0) {
+            (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](3, obj, -1);
+          } else {
+            (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](4, obj, -1);
+          }
+        } else {
+          (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](5, obj, -1);
+          *(u8 *)state = 2;
+        }
+      }
+      break;
+    case 2:
+      (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](6, obj, -1);
+      GameBit_Set(0x9e, 1);
+      *(u8 *)state = 3;
+      break;
+    case 3:
+      fn_8002B6D8(obj, 0, 0, 0, 0, 2);
+      *(u8 *)((u8 *)state + 0x2) &= ~0x4;
+      *(u8 *)((u8 *)state + 0x2) &= ~0x8;
+      *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFD0;
+      player = Obj_GetPlayerObject();
+      *(u8 *)((u8 *)state + 0x8) = 1;
+      *(f32 *)((u8 *)state + 0xc) = *(f32 *)((u8 *)player + 0xc);
+      *(f32 *)((u8 *)state + 0x10) = *(f32 *)((u8 *)player + 0x10);
+      *(f32 *)((u8 *)state + 0x14) = *(f32 *)((u8 *)player + 0x14);
+      fn_8003B500(obj, (u8 *)state + 0x8, lbl_803E53F8);
+      break;
+    default:
+      break;
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
