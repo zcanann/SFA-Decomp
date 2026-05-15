@@ -59,6 +59,12 @@ extern undefined4 DAT_803e3060;
 extern f64 DOUBLE_803e30f0;
 extern f64 DOUBLE_803e31b8;
 extern f32 lbl_803DC074;
+extern f32 lbl_803E23DC;
+extern f32 lbl_803E2408;
+extern f32 lbl_803E2444;
+extern f32 lbl_803E2478;
+extern f32 lbl_803E2518;
+extern f32 lbl_803E251C;
 extern f32 lbl_803E306C;
 extern f32 lbl_803E3074;
 extern f32 lbl_803E307C;
@@ -1371,6 +1377,7 @@ undefined4 fn_80143B04(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
 #pragma scheduling off
 undefined4 fn_80143B78(int param_1,int *param_2)
 {
@@ -1380,9 +1387,9 @@ undefined4 fn_80143B78(int param_1,int *param_2)
   if (iVar1 != 0) {
     return 1;
   }
-  iVar1 = trickyFn_8013b368(param_1,lbl_803E3098,param_2);
+  iVar1 = trickyFn_8013b368(param_1,lbl_803E2408,param_2);
   if (iVar1 == 1) {
-    if (lbl_803E306C == *(f32*)((int)param_2 + 0x71c)) {
+    if (lbl_803E23DC == *(f32*)((int)param_2 + 0x71c)) {
       *(undefined *)((int)param_2 + 10) = 0;
     }
     return 1;
@@ -1391,6 +1398,7 @@ undefined4 fn_80143B78(int param_1,int *param_2)
   return 0;
 }
 #pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -1707,7 +1715,7 @@ void fn_801444A4(int param_1,int param_2)
   iVar1 = randomGetRange(0,4);
   switch (iVar1) {
   case 0:
-    objAnimFn_8013a3f0(param_1,0,lbl_803E30D4,0);
+    objAnimFn_8013a3f0(param_1,0,lbl_803E2444,0);
     *(undefined *)(param_2 + 10) = 2;
     break;
   case 1:
@@ -1719,19 +1727,19 @@ void fn_801444A4(int param_1,int param_2)
         }
       }
     }
-    objAnimFn_8013a3f0(param_1,0x26,lbl_803E31AC,0);
+    objAnimFn_8013a3f0(param_1,0x26,lbl_803E251C,0);
     *(undefined *)(param_2 + 10) = 5;
     break;
   case 2:
-    objAnimFn_8013a3f0(param_1,0x21,lbl_803E3108,0);
+    objAnimFn_8013a3f0(param_1,0x21,lbl_803E2478,0);
     *(undefined *)(param_2 + 10) = 6;
     break;
   case 3:
-    objAnimFn_8013a3f0(param_1,0x23,lbl_803E3108,0);
+    objAnimFn_8013a3f0(param_1,0x23,lbl_803E2478,0);
     *(undefined *)(param_2 + 10) = 7;
     break;
   case 4:
-    objAnimFn_8013a3f0(param_1,0x25,lbl_803E31A8,0);
+    objAnimFn_8013a3f0(param_1,0x25,lbl_803E2518,0);
     *(undefined *)(param_2 + 10) = 2;
     break;
   }
