@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/NW/NWmammoth.h"
+#include "main/objanim_internal.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80017688();
@@ -74,7 +75,7 @@ void ediblemushroom_init(int obj, int aux)
     int state;
     int player;
     int local_x;
-    f32 anim_out[4];
+    ObjAnimEventList animEvents;
     f32 dist;
 
     state = *(int *)(obj + 0xb8);
@@ -97,8 +98,8 @@ void ediblemushroom_init(int obj, int aux)
         ((f32)*(u8 *)(aux + 0x1c) / lbl_803E52E8);
 
     ObjAnim_SetCurrentMove(obj, 1, lbl_803E5288, 0);
-    ObjAnim_AdvanceCurrentMove(obj, anim_out, lbl_803E52A8, lbl_803E52A8);
-    *(f32 *)(state + 0x118) = anim_out[0];
+    ObjAnim_AdvanceCurrentMove(obj, &animEvents, lbl_803E52A8, lbl_803E52A8);
+    *(f32 *)(state + 0x118) = animEvents.rootDeltaX;
     if (*(f32 *)(state + 0x118) < lbl_803E5288) {
         *(f32 *)(state + 0x118) = -*(f32 *)(state + 0x118);
     }
@@ -106,8 +107,8 @@ void ediblemushroom_init(int obj, int aux)
     *(f32 *)(state + 0x118) = *(f32 *)(state + 0x118) + lbl_803E52A0;
 
     ObjAnim_SetCurrentMove(obj, 4, lbl_803E5288, 0);
-    ObjAnim_AdvanceCurrentMove(obj, anim_out, lbl_803E52A8, lbl_803E52A8);
-    *(f32 *)(state + 0x11c) = anim_out[2];
+    ObjAnim_AdvanceCurrentMove(obj, &animEvents, lbl_803E52A8, lbl_803E52A8);
+    *(f32 *)(state + 0x11c) = animEvents.rootDeltaZ;
     if (*(f32 *)(state + 0x11c) < lbl_803E5288) {
         *(f32 *)(state + 0x11c) = -*(f32 *)(state + 0x11c);
     }
