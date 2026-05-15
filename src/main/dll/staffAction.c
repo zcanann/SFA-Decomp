@@ -4,7 +4,7 @@
 extern uint GameBit_Get(int eventId);
 extern int FUN_80017728();
 extern undefined4 FUN_80017740();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_8001776c();
 extern undefined4 FUN_80017784();
 extern undefined4 FUN_80017788();
@@ -128,16 +128,16 @@ FUN_801659b8(undefined8 param_1,double param_2,double param_3,undefined8 param_4
       *(ushort *)(iVar3 + 0x8c) = *(ushort *)(iVar3 + 0x8c) - (ushort)DAT_803dc070;
     }
     else {
-      uVar2 = FUN_80017760((int)*(float *)(iVar3 + 0x48),(int)*(float *)(iVar3 + 0x4c));
+      uVar2 = randomGetRange((int)*(float *)(iVar3 + 0x48),(int)*(float *)(iVar3 + 0x4c));
       *(float *)(iVar3 + 100) =
            (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3cb0);
-      uVar2 = FUN_80017760((int)*(float *)(iVar3 + 0x5c),(int)*(float *)(iVar3 + 0x58));
+      uVar2 = randomGetRange((int)*(float *)(iVar3 + 0x5c),(int)*(float *)(iVar3 + 0x58));
       *(float *)(iVar3 + 0x68) =
            (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3cb0);
-      uVar2 = FUN_80017760((int)*(float *)(iVar3 + 0x54),(int)*(float *)(iVar3 + 0x50));
+      uVar2 = randomGetRange((int)*(float *)(iVar3 + 0x54),(int)*(float *)(iVar3 + 0x50));
       *(float *)(iVar3 + 0x6c) =
            (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3cb0);
-      uVar2 = FUN_80017760(300,600);
+      uVar2 = randomGetRange(300,600);
       *(short *)(iVar3 + 0x8c) = (short)uVar2;
     }
     in_f31 = (double)*(float *)(iVar3 + 100);
