@@ -9,11 +9,9 @@ extern u32 get_vidlist(u32 id);
 extern void synthCancelJob(u8 voice);
 
 extern u8 *synthVoice;
+extern u8 vidListNodes[];
 extern u8 lbl_803BD150[];
 extern u8 gSynthInitialized;
-extern u8 voicePriorityLinks[];
-extern u8 voicePriorityGroupHeads[];
-extern u8 voiceFreeListSlots[];
 extern u8 voiceDirectSlots[];
 extern u8 voiceMidiKeySlots[][16];
 extern u16 voicePrioSortRootListRoot;
@@ -21,6 +19,10 @@ extern u8 voiceMusicRunning;
 extern u8 voiceFxRunning;
 extern u8 voiceListInsert;
 extern u8 voiceListRoot;
+
+#define voicePriorityLinks (vidListNodes + 0x8c0)
+#define voicePriorityGroupHeads (vidListNodes + 0x9c0)
+#define voiceFreeListSlots (vidListNodes + 0xec0)
 
 /*
  * Initialize the voice priority and group linked-list tables.
