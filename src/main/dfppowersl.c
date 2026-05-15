@@ -120,3 +120,20 @@ void dfppowersl_init(u8 *obj,u8 *params)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+u32 gDfppowerslObjDescriptor[] = {
+  0,
+  0,
+  0,
+  0x00090000,
+  0,
+  0,
+  0,
+  (u32)dfppowersl_init,
+  (u32)dfppowersl_update,
+  0,
+  (u32)dfppowersl_render,
+  (u32)dfppowersl_free,
+  0,
+  (u32)dfppowersl_getExtraSize,
+};

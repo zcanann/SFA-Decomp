@@ -283,3 +283,20 @@ undefined4 dfppowersl_spawnSeqObjectsOnHit(u8 *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+u32 gDfplightniObjDescriptor[] = {
+  0,
+  0,
+  0,
+  0x00090000,
+  0,
+  0,
+  0,
+  (u32)dfplightni_init,
+  (u32)dfplightni_update,
+  0,
+  (u32)dfplightni_render,
+  (u32)dfplightni_free,
+  0,
+  (u32)dfplightni_getExtraSize,
+};
