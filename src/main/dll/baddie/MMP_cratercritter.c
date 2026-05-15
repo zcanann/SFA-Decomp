@@ -51,7 +51,7 @@ void trickyFn_8013d8f0(u8 *arg1, u8 *arg2)
     *(u32 *)(arg2 + 0x54) = *(u32 *)(arg2 + 0x54) & 0xFFFEFFFF;
     *(u32 *)(arg2 + 0x54) = *(u32 *)(arg2 + 0x54) & 0xFFFDFFFF;
     *(u32 *)(arg2 + 0x54) = *(u32 *)(arg2 + 0x54) & 0xFFFBFFFF;
-    arg2[0xD] = 0xFF;
+    *(s8 *)(arg2 + 0xD) = -1;
     return;
   }
 

@@ -133,7 +133,7 @@ void trickyGrowl(void *param_1, void *param_2)
             *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) & ~0x10000;
             *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) & ~0x20000;
             *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) & ~0x40000;
-            *(u8 *)((char *)param_2 + 0xd) = 0xff;
+            *(s8 *)((char *)param_2 + 0xd) = -1;
         } else {
             void *target = *(void **)((char *)*(void **)((char *)param_1 + 0xb8) + 0x28);
             fn_80139930(param_1, (s16)getAngle(
