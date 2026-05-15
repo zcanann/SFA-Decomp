@@ -30,6 +30,8 @@ u32 aramStoreData(void *src, u32 size)
 {
     u32 alignedSize = (size + 0x1f) & ~0x1f;
     u32 startPos = aramWrite;
+    void *piece;
+    u32 chunk;
 
     if (aramChunkCallback == NULL) {
         DCFlushRange(src, alignedSize);
@@ -39,8 +41,7 @@ u32 aramStoreData(void *src, u32 size)
     }
 
     while (alignedSize != 0) {
-        u32 chunk = aramChunkSize;
-        void *piece;
+        chunk = aramChunkSize;
         if (alignedSize < chunk) {
             chunk = alignedSize;
         }
@@ -77,15 +78,31 @@ void aramRemoveData(void *unused, u32 size)
 void aramInitStreamBuffers(void)
 {
     u8 *base = lbl_803D3F60;
+    u8 *node;
     int i;
 
     aramQueueWrite = 0;
     aramQueueValid = 0;
     aramStreamFreeList = base + 0x508;
 
-    for (i = 1; i < 64; i++) {
-        u8 *node = base + i * 0x10 + 0x508;
+    node = base + 0x518;
+    for (i = 1; i < 57; i += 8) {
         *(u8 **)(node - 0x10) = node;
+        *(u8 **)(node + 0x00) = node + 0x10;
+        *(u8 **)(node + 0x10) = node + 0x20;
+        *(u8 **)(node + 0x20) = node + 0x30;
+        *(u8 **)(node + 0x30) = node + 0x40;
+        *(u8 **)(node + 0x40) = node + 0x50;
+        *(u8 **)(node + 0x50) = node + 0x60;
+        *(u8 **)(node + 0x60) = node + 0x70;
+        node += 0x80;
+    }
+tail_loop:
+    if (i < 64) {
+        *(u8 **)(node - 0x10) = node;
+        node += 0x10;
+        i++;
+        goto tail_loop;
     }
     *(u32 *)(base + i * 0x10 + 0x4f8) = 0;
     aramStream = aramTop;
@@ -104,11 +121,8 @@ void fn_80284634(void)
  */
 u32 aramGetStreamBufferAddress(u8 idx, u32 *outPos)
 {
-    u8 *entry;
     if (outPos != NULL) {
-        entry = lbl_803D4468 + idx * 16;
-        *outPos = *(u32 *)(entry + 8);
+        *outPos = *(u32 *)(lbl_803D4468 + idx * 16 + 8);
     }
-    entry = lbl_803D4468 + idx * 16;
-    return *(u32 *)(entry + 4);
+    return *(u32 *)(lbl_803D4468 + idx * 16 + 4);
 }
