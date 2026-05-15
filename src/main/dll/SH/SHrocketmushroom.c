@@ -93,7 +93,7 @@ void bombplantspore_update(void *obj) {
                 }
                 lightFn_8001db6c(lbl_803E53AC, *(void **)((u8 *)state + 0x270), 0);
                 *(f32 *)((u8 *)state + 0x2a4) = lbl_803E53BC;
-                *(u16 *)((u8 *)obj + 0x6) |= 0x4000;
+                *(s16 *)((u8 *)obj + 0x6) |= 0x4000;
                 ObjHits_DisableObject(obj);
                 *(u8 *)((u8 *)state + 0x2b0) &= 0xbf;
             }
@@ -133,10 +133,10 @@ void bombplantspore_update(void *obj) {
             }
             *(s16 *)obj += *(u16 *)((u8 *)state + 0x2ae);
             *(f32 *)((u8 *)obj + 0x28) = lbl_803E53E0 * timeDelta + *(f32 *)((u8 *)obj + 0x28);
-            if (*(f32 *)((u8 *)obj + 0x28) < lbl_803E53E4) {
+            if (lbl_803E53E4 > *(f32 *)((u8 *)obj + 0x28)) {
                 *(f32 *)((u8 *)obj + 0x28) = lbl_803E53E4;
             }
-            if (lbl_803E5394 < *(f32 *)((u8 *)obj + 0x28)) {
+            if (*(f32 *)((u8 *)obj + 0x28) > lbl_803E5394) {
                 *(f32 *)((u8 *)obj + 0x28) *= lbl_803E53E8;
             }
             if (*(f32 *)((u8 *)obj + 0x28) < lbl_803E5394) {
@@ -148,16 +148,16 @@ void bombplantspore_update(void *obj) {
                 fn_801D33D4(obj, state);
             }
             *(f32 *)((u8 *)state + 0x298) -= timeDelta;
-            if (lbl_803E5394 < *(f32 *)((u8 *)state + 0x298)) {
+            if (*(f32 *)((u8 *)state + 0x298) <= lbl_803E5394) {
+                *(f32 *)((u8 *)state + 0x290) *= lbl_803E53E8;
+                *(f32 *)((u8 *)state + 0x294) *= lbl_803E53E8;
+                *(f32 *)((u8 *)state + 0x298) = lbl_803E5394;
+            } else {
                 *(f32 *)((u8 *)state + 0x27c) =
                     lbl_803E53EC *
                         (*(f32 *)((u8 *)state + 0x29c) - *(f32 *)((u8 *)state + 0x27c)) *
                         timeDelta +
                     *(f32 *)((u8 *)state + 0x27c);
-            } else {
-                *(f32 *)((u8 *)state + 0x290) *= lbl_803E53E8;
-                *(f32 *)((u8 *)state + 0x294) *= lbl_803E53E8;
-                *(f32 *)((u8 *)state + 0x298) = lbl_803E5394;
             }
             *(f32 *)((u8 *)obj + 0x24) =
                 *(f32 *)((u8 *)state + 0x290) * *(f32 *)((u8 *)state + 0x27c) +
@@ -204,7 +204,7 @@ void bombplantspore_update(void *obj) {
                 }
                 lightFn_8001db6c(lbl_803E53AC, *(void **)((u8 *)state + 0x270), 0);
                 *(f32 *)((u8 *)state + 0x2a4) = lbl_803E53BC;
-                *(u16 *)((u8 *)obj + 0x6) |= 0x4000;
+                *(s16 *)((u8 *)obj + 0x6) |= 0x4000;
                 ObjHits_DisableObject(obj);
             }
     }
