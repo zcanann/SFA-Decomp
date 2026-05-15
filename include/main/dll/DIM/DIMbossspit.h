@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void fn_801BE19C(u8 *arg1, u8 *unused2, u8 *arg3, u8 *arg4);
+void fn_801BE19C(u8 *obj, u8 *unused2, u8 *state, u8 *updateState);
 
 #endif /* MAIN_DLL_DIM_DIMBOSSSPIT_H_ */
