@@ -269,41 +269,39 @@ int vidGetInternalId(u32 id)
 #pragma dont_inline on
 void voiceRemovePriority(int state)
 {
-    u32 voiceId;
+    u8 *nodes;
     int offset;
     u16 *priorityNode;
     u8 *slot;
 
-    voiceId = *(u32 *)(state + 0xf4) & 0xff;
-    offset = voiceId * 4;
-    slot = voicePriorityLinks + offset;
+    nodes = vidListNodes;
+    offset = (*(u32 *)(state + 0xf4) << 2) & 0x3fc;
+    slot = nodes + 0x8c0 + offset;
     if (*(u16 *)(slot + 2) != 1) {
         return;
     }
-    if (*slot == 0xff) {
-        *(u8 *)(voicePriorityGroupHeads + *(u8 *)(state + 0x10c)) = slot[1];
+    if (*slot != 0xff) {
+        *(u8 *)(nodes + 0x8c1 + (u32)*slot * 4) = slot[1];
     } else {
-        *(u8 *)(voicePriorityLinks + 1 + (u32)*slot * 4) = slot[1];
+        *(u8 *)(nodes + 0x9c0 + *(u8 *)(state + 0x10c)) = slot[1];
     }
-    if (slot[1] == 0xff) {
-        if (*slot == 0xff) {
-            offset = (u32)*(u8 *)(state + 0x10c) * 4;
-            priorityNode = (u16 *)(voicePrioritySortLinks + offset);
-            if (*(u16 *)(voicePrioritySortLinks + 2 + offset) == 0xffff) {
-                voicePrioSortRootListRoot = *priorityNode;
-            } else {
-                *(u16 *)(voicePrioritySortLinks +
-                         (u32)*(u16 *)(voicePrioritySortLinks + 2 + offset) * 4) =
-                    *priorityNode;
-            }
-            if (*priorityNode != 0xffff) {
-                *(u16 *)(voicePrioritySortLinks + 2 + (u32)*priorityNode * 4) =
-                    *(u16 *)(voicePrioritySortLinks + 2 + offset);
-            }
+    if (slot[1] != 0xff) {
+        *(u8 *)(nodes + 0x8c0 + (u32)slot[1] * 4) = *slot;
+    } else if (*slot == 0xff) {
+        offset = (u32)*(u8 *)(state + 0x10c) * 4;
+        priorityNode = (u16 *)(nodes + 0xac0 + offset);
+        if (*(u16 *)(nodes + 0xac2 + offset) == 0xffff) {
+            voicePrioSortRootListRoot = *priorityNode;
+        } else {
+            *(u16 *)(nodes + 0xac0 +
+                     (u32)*(u16 *)(nodes + 0xac2 + offset) * 4) =
+                *priorityNode;
         }
-    } else {
-        *(u8 *)(voicePriorityLinks + (u32)slot[1] * 4) = *slot;
+        if (*priorityNode != 0xffff) {
+            *(u16 *)(nodes + 0xac2 + (u32)*priorityNode * 4) =
+                *(u16 *)(nodes + 0xac2 + offset);
+        }
     }
-    *(u16 *)(voicePriorityLinks + 2 + voiceId * 4) = 0;
+    *(u16 *)(slot + 2) = 0;
 }
 #pragma dont_inline reset
