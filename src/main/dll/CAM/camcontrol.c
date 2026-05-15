@@ -558,10 +558,9 @@ LAB_80102f3c:
   else {
     OSReport(sCamcontrolTriggeredCamActionLoadWarning,actionNo);
     camAction = (CamcontrolTriggeredAction *)mmAlloc(CAMCONTROL_ACTION_RECORD_SIZE,CAMCONTROL_ACTION_HEAP,0);
-    if (camAction == (CamcontrolTriggeredAction *)0x0) {
-      return;
+    if (camAction != (CamcontrolTriggeredAction *)0x0) {
+      getTabEntry(camAction,CAMCONTROL_ACTION_FILE_ID,0,CAMCONTROL_ACTION_RECORD_SIZE);
     }
-    getTabEntry(camAction,CAMCONTROL_ACTION_FILE_ID,0,CAMCONTROL_ACTION_RECORD_SIZE);
     if (camAction == (CamcontrolTriggeredAction *)0x0) {
       return;
     }
