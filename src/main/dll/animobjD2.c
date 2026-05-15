@@ -11,7 +11,7 @@ extern int fn_8002178C(f32 dx, f32 dz);
 extern int randomGetRange(int lo, int hi);
 extern f32 fsin16Precise(int angle);
 extern f32 fcos16Precise(int angle);
-extern int trickyFn_8013b368(void *p1, void *p2, f32 f);
+extern int trickyFn_8013b368(void *p1, f32 radius, void *p2);
 extern void trickyReportError(const char *fmt, ...);
 
 extern f32 lbl_803E23F8;
@@ -67,14 +67,14 @@ void trickyFn_8013ef8c(void *p1, void *p2) {
         *(u8 *)((u8 *)p2 + 0xa) = 1;
     }
 
-    delta = angle - (s32)(u16)*(s32 *)((u8 *)p2 + 0x704);
+    delta = angle - (s32)(u16)*(volatile s32 *)((u8 *)p2 + 0x704);
     if (delta > 0x8000) delta -= 0xFFFF;
     if (delta < -0x8000) delta += 0xFFFF;
 
     absDelta = (delta < 0) ? -delta : delta;
     if (absDelta < 0x2000) {
         *(s32 *)((u8 *)p2 + 0x704) =
-            *(s32 *)((u8 *)p2 + 0x704) + (*(s32 *)((u8 *)p2 + 0x700) << 11);
+            *(volatile s32 *)((u8 *)p2 + 0x704) + (*(s32 *)((u8 *)p2 + 0x700) << 11);
     }
 
     *(f32 *)((u8 *)p2 + 0x708) =
@@ -86,7 +86,7 @@ void trickyFn_8013ef8c(void *p1, void *p2) {
         *(f32 *)((u8 *)*(void **)((u8 *)p2 + 0x24) + 0x20) -
         lbl_803E24D4 * fcos16Precise((u16)*(s32 *)((u8 *)p2 + 0x704));
 
-    if (trickyFn_8013b368(p1, p2, lbl_803E2488) == 0) {
+    if (trickyFn_8013b368(p1, lbl_803E2488, p2) == 0) {
         trickyReportError(sTrickyShouldNeverStopCirclingError);
     }
 }
