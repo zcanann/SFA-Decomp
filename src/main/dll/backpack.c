@@ -44,7 +44,7 @@ extern void fn_80163990(int obj, int aux);
 extern void fn_80165B3C(int obj, int state);
 extern void fn_80165C8C(int obj, int state);
 extern void fn_80166444(int obj, int state);
-extern void fn_80166A50(f32 x, f32 y, f32 z, f32 scale, int obj);
+extern void fn_80166A50(int obj, f32 x, f32 y, f32 z, f32 scale);
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
@@ -512,7 +512,6 @@ int fn_801653D8(int obj, int stateWord) {
     f32 x;
     f32 y;
     f32 z;
-    int countdown;
 
     state = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
     player = (int)Obj_GetPlayerObject();
@@ -525,7 +524,7 @@ int fn_801653D8(int obj, int stateWord) {
     if (*(u8 *)(state + 0x90) == 6) {
         goto use_player_reflect_position;
     }
-    if (player == 0) {
+    if ((u32)player == 0) {
         goto use_object_position;
     }
     if (*(f32 *)(player + 0x18) < *(f32 *)(state + 0x48)) {
@@ -561,21 +560,20 @@ use_player_reflect_position:
         scale = lbl_803E2FF4;
     }
 update_action:
-    fn_80166A50(x, y, z, scale, obj);
+    fn_80166A50(obj, x, y, z, scale);
     if (*(u8 *)(state + 0x90) == 6) {
-        if (((*(u8 *)(state + 0x92) >> 2) & 1) == 0) {
-            fn_80166444(obj, state);
-        } else {
+        if ((u32)((*(u8 *)(state + 0x92) >> 2) & 1) != 0U) {
             fn_80165B3C(obj, state);
+        } else {
+            fn_80166444(obj, state);
         }
     } else {
         fn_80165C8C(obj, state);
     }
-    countdown = *(u16 *)(state + 0x8e);
-    if (countdown > (int)(u32)framesThisStep) {
-        *(u16 *)(state + 0x8e) = countdown - (u32)framesThisStep;
-        return 0;
+    if ((int)*(u16 *)(state + 0x8e) <= (int)(u32)framesThisStep) {
+        return 2;
     }
-    return 2;
+    *(u16 *)(state + 0x8e) -= (u32)framesThisStep;
+    return 0;
 }
 #pragma pop
