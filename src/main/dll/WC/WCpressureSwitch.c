@@ -3,7 +3,7 @@
 
 extern uint GameBit_Get(int eventId);
 extern undefined8 GameBit_Set(int eventId, int value);
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
@@ -145,22 +145,22 @@ void WM_ObjCreator_update(undefined8 param_1,double param_2,double param_3,undef
         puVar5[0x10] = 0x50;
         puVar5[0xf] = 0x10f;
         puVar5[0x11] = 0xffff;
-        uVar3 = FUN_80017760(0xfffffe0c,500);
+        uVar3 = randomGetRange(0xfffffe0c,500);
         puVar5[0xc] = (short)uVar3 + 0x5dc;
         puVar5[0xd] = 0;
-        uVar3 = FUN_80017760(0xfffffe0c,500);
+        uVar3 = randomGetRange(0xfffffe0c,500);
         puVar5[0xe] = (short)uVar3 + 0x5dc;
         iVar8 = FUN_80017ae4(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar5,5,
                              *(undefined *)(puVar2 + 0x56),0xffffffff,*(uint **)(puVar2 + 0x18),
                              in_r8,in_r9,in_r10);
         if (iVar8 != 0) {
-          uStack_64 = FUN_80017760(0,10);
+          uStack_64 = randomGetRange(0,10);
           uStack_64 = uStack_64 ^ 0x80000000;
           local_68 = 0x43300000;
           *(float *)(iVar8 + 0x24) =
                lbl_803E6964 + (float)((double)CONCAT44(0x43300000,uStack_64) - DOUBLE_803e6978);
         }
-        uVar3 = FUN_80017760(0,(int)psVar7[3]);
+        uVar3 = randomGetRange(0,(int)psVar7[3]);
         psVar7[2] = psVar7[1] + (short)uVar3;
       }
       break;
@@ -172,13 +172,13 @@ void WM_ObjCreator_update(undefined8 param_1,double param_2,double param_3,undef
         *(undefined *)(puVar5 + 2) = 4;
         *(undefined *)((int)puVar5 + 5) = 2;
         *(undefined4 *)(puVar5 + 4) = *(undefined4 *)(iVar8 + 8);
-        uStack_5c = FUN_80017760(0xffffffd8,0x28);
+        uStack_5c = randomGetRange(0xffffffd8,0x28);
         uStack_5c = uStack_5c ^ 0x80000000;
         local_60 = 0x43300000;
         *(float *)(puVar5 + 6) =
              *(float *)(iVar8 + 0xc) +
              (float)((double)CONCAT44(0x43300000,uStack_5c) - DOUBLE_803e6978);
-        uStack_64 = FUN_80017760(0xffffffd8,0x28);
+        uStack_64 = randomGetRange(0xffffffd8,0x28);
         uStack_64 = uStack_64 ^ 0x80000000;
         local_68 = 0x43300000;
         dVar10 = (double)(float)((double)CONCAT44(0x43300000,uStack_64) - DOUBLE_803e6978);
@@ -186,21 +186,21 @@ void WM_ObjCreator_update(undefined8 param_1,double param_2,double param_3,undef
         puVar5[0x10] = 100;
         puVar5[0xf] = 0x10f;
         puVar5[0x11] = 0xffff;
-        uVar3 = FUN_80017760(0xfffffe0c,500);
+        uVar3 = randomGetRange(0xfffffe0c,500);
         puVar5[0xc] = (short)uVar3 + 0x5dc;
-        uVar3 = FUN_80017760(0xfffffe0c,500);
+        uVar3 = randomGetRange(0xfffffe0c,500);
         puVar5[0xe] = (short)uVar3 + 0x5dc;
         iVar8 = FUN_80017ae4(dVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar5,5
                              ,*(undefined *)(puVar2 + 0x56),0xffffffff,*(uint **)(puVar2 + 0x18),
                              in_r8,in_r9,in_r10);
         if (iVar8 != 0) {
-          uStack_5c = FUN_80017760(0,10);
+          uStack_5c = randomGetRange(0,10);
           uStack_5c = uStack_5c ^ 0x80000000;
           local_60 = 0x43300000;
           *(float *)(iVar8 + 0x24) =
                lbl_803E6968 - (float)((double)CONCAT44(0x43300000,uStack_5c) - DOUBLE_803e6978);
         }
-        uVar3 = FUN_80017760(0,(int)psVar7[3]);
+        uVar3 = randomGetRange(0,(int)psVar7[3]);
         psVar7[2] = psVar7[1] + (short)uVar3;
       }
       break;
@@ -231,12 +231,12 @@ void WM_ObjCreator_update(undefined8 param_1,double param_2,double param_3,undef
           if (iVar6 != 0) {
             *(byte *)(*(int *)(iVar6 + 0xb8) + 0x120) =
                  *(byte *)(*(int *)(iVar6 + 0xb8) + 0x120) | 2;
-            uStack_5c = FUN_80017760(0xffffffdd,0x23);
+            uStack_5c = randomGetRange(0xffffffdd,0x23);
             uStack_5c = uStack_5c ^ 0x80000000;
             local_60 = 0x43300000;
             *(float *)(iVar6 + 0x24) =
                  lbl_803E696C * (float)((double)CONCAT44(0x43300000,uStack_5c) - DOUBLE_803e6978);
-            uStack_64 = FUN_80017760(0xffffffdd,0x23);
+            uStack_64 = randomGetRange(0xffffffdd,0x23);
             uStack_64 = uStack_64 ^ 0x80000000;
             local_68 = 0x43300000;
             *(float *)(iVar6 + 0x2c) =
@@ -262,16 +262,16 @@ void WM_ObjCreator_update(undefined8 param_1,double param_2,double param_3,undef
       if (((uVar3 != 0) || (*psVar7 == -1)) &&
          (psVar7[2] = psVar7[2] - (ushort)DAT_803dc070, psVar7[2] < 1)) {
         puVar5 = FUN_80017aa4(0x24,0x275);
-        uVar3 = FUN_80017760(0xffffff81,0x7e);
+        uVar3 = randomGetRange(0xffffff81,0x7e);
         *(char *)(puVar5 + 0xc) = (char)uVar3;
-        uStack_64 = FUN_80017760(0xffffff9c,100);
+        uStack_64 = randomGetRange(0xffffff9c,100);
         uStack_64 = uStack_64 ^ 0x80000000;
         local_68 = 0x43300000;
         *(float *)(puVar5 + 4) =
              *(float *)(puVar2 + 6) +
              (float)((double)CONCAT44(0x43300000,uStack_64) - DOUBLE_803e6978);
         *(undefined4 *)(puVar5 + 6) = *(undefined4 *)(puVar2 + 8);
-        uStack_5c = FUN_80017760(0xffffff9c,100);
+        uStack_5c = randomGetRange(0xffffff9c,100);
         uStack_5c = uStack_5c ^ 0x80000000;
         local_60 = 0x43300000;
         dVar10 = (double)(float)((double)CONCAT44(0x43300000,uStack_5c) - DOUBLE_803e6978);
@@ -284,7 +284,7 @@ void WM_ObjCreator_update(undefined8 param_1,double param_2,double param_3,undef
         if (iVar8 != 0) {
           DAT_803de8e8 = DAT_803de8e8 + 1;
         }
-        uVar3 = FUN_80017760(0,(int)psVar7[3]);
+        uVar3 = randomGetRange(0,(int)psVar7[3]);
         psVar7[2] = psVar7[1] + (short)uVar3;
       }
       break;
@@ -292,14 +292,14 @@ void WM_ObjCreator_update(undefined8 param_1,double param_2,double param_3,undef
       uVar3 = GameBit_Get((int)*psVar7);
       if ((uVar3 != 0) || (*psVar7 == -1)) {
         puVar5 = FUN_80017aa4(0x24,700);
-        uStack_54 = FUN_80017760(0xfffffefc,0x104);
+        uStack_54 = randomGetRange(0xfffffefc,0x104);
         uStack_54 = uStack_54 ^ 0x80000000;
         local_58 = 0x43300000;
         *(float *)(puVar5 + 4) =
              *(float *)(puVar2 + 6) +
              (float)((double)CONCAT44(0x43300000,uStack_54) - DOUBLE_803e6978);
         *(float *)(puVar5 + 6) = lbl_803E6974 + *(float *)(puVar2 + 8);
-        uStack_5c = FUN_80017760(0xffffffb0,0x50);
+        uStack_5c = randomGetRange(0xffffffb0,0x50);
         uStack_5c = uStack_5c ^ 0x80000000;
         local_60 = 0x43300000;
         dVar10 = (double)(float)((double)CONCAT44(0x43300000,uStack_5c) - DOUBLE_803e6978);
@@ -312,7 +312,7 @@ void WM_ObjCreator_update(undefined8 param_1,double param_2,double param_3,undef
         FUN_80017ae4(dVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar5,5,
                      *(undefined *)(puVar2 + 0x56),0xffffffff,*(uint **)(puVar2 + 0x18),in_r8,in_r9,
                      in_r10);
-        uVar3 = FUN_80017760(2,5);
+        uVar3 = randomGetRange(2,5);
         dVar11 = (double)lbl_803E6960;
         dVar12 = (double)lbl_803E6974;
         dVar10 = DOUBLE_803e6978;
@@ -321,11 +321,11 @@ void WM_ObjCreator_update(undefined8 param_1,double param_2,double param_3,undef
           local_84 = 0;
           local_82 = 0;
           local_80 = 0;
-          uStack_54 = FUN_80017760(0xffffff38,200);
+          uStack_54 = randomGetRange(0xffffff38,200);
           uStack_54 = uStack_54 ^ 0x80000000;
           local_58 = 0x43300000;
           local_78 = (float)((double)CONCAT44(0x43300000,uStack_54) - dVar10);
-          uStack_5c = FUN_80017760(0xffffffec,0x14);
+          uStack_5c = randomGetRange(0xffffffec,0x14);
           uStack_5c = uStack_5c ^ 0x80000000;
           local_60 = 0x43300000;
           local_70 = (float)((double)CONCAT44(0x43300000,uStack_5c) - dVar10);
@@ -342,35 +342,35 @@ void WM_ObjCreator_update(undefined8 param_1,double param_2,double param_3,undef
         puVar5 = FUN_80017aa4(0x28,0x263);
         *(undefined *)(puVar5 + 2) = 4;
         *(undefined *)((int)puVar5 + 5) = 2;
-        uStack_5c = FUN_80017760(0xffffffd8,0x28);
+        uStack_5c = randomGetRange(0xffffffd8,0x28);
         uStack_5c = uStack_5c ^ 0x80000000;
         local_60 = 0x43300000;
         *(float *)(puVar5 + 4) =
              *(float *)(iVar8 + 8) +
              (float)((double)CONCAT44(0x43300000,uStack_5c) - DOUBLE_803e6978);
-        uStack_64 = FUN_80017760(0,0x14);
+        uStack_64 = randomGetRange(0,0x14);
         uStack_64 = uStack_64 ^ 0x80000000;
         local_68 = 0x43300000;
         *(float *)(puVar5 + 6) =
              *(float *)(iVar8 + 0xc) +
              (float)((double)CONCAT44(0x43300000,uStack_64) - DOUBLE_803e6978);
-        uStack_54 = FUN_80017760(0xffffffd8,0x28);
+        uStack_54 = randomGetRange(0xffffffd8,0x28);
         uStack_54 = uStack_54 ^ 0x80000000;
         local_58 = 0x43300000;
         dVar10 = (double)(float)((double)CONCAT44(0x43300000,uStack_54) - DOUBLE_803e6978);
         *(float *)(puVar5 + 8) = (float)((double)*(float *)(iVar8 + 0x10) + dVar10);
         puVar5[0x10] = 0x1c2;
-        uVar3 = FUN_80017760(0,2);
+        uVar3 = randomGetRange(0,2);
         puVar5[0xf] = (short)uVar3 + 0x1cc;
         puVar5[0x11] = 0xffff;
-        uVar3 = FUN_80017760(0xfffffe0c,500);
+        uVar3 = randomGetRange(0xfffffe0c,500);
         puVar5[0xc] = (short)uVar3 + 0x5dc;
-        uVar3 = FUN_80017760(0xfffffe0c,500);
+        uVar3 = randomGetRange(0xfffffe0c,500);
         puVar5[0xe] = (short)uVar3 + 0x5dc;
         FUN_80017ae4(dVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar5,5,
                      *(undefined *)(puVar2 + 0x56),0xffffffff,*(uint **)(puVar2 + 0x18),in_r8,in_r9,
                      in_r10);
-        uVar3 = FUN_80017760(0,(int)psVar7[3]);
+        uVar3 = randomGetRange(0,(int)psVar7[3]);
         psVar7[2] = psVar7[1] + (short)uVar3;
       }
       break;
@@ -380,7 +380,7 @@ void WM_ObjCreator_update(undefined8 param_1,double param_2,double param_3,undef
          (psVar7[2] = psVar7[2] - (ushort)DAT_803dc070, psVar7[2] < 1)) {
         puVar5 = FUN_80017aa4(0x38,0x4ac);
         uVar9 = GameBit_Set((int)*psVar7,0);
-        uVar3 = FUN_80017760(0xffffff81,0x7e);
+        uVar3 = randomGetRange(0xffffff81,0x7e);
         *(char *)(puVar5 + 0x15) = (char)uVar3;
         *(undefined4 *)(puVar5 + 4) = *(undefined4 *)(puVar2 + 6);
         *(undefined4 *)(puVar5 + 6) = *(undefined4 *)(puVar2 + 8);
@@ -393,7 +393,7 @@ void WM_ObjCreator_update(undefined8 param_1,double param_2,double param_3,undef
         if (iVar8 != 0) {
           (**(code **)(*DAT_803dd708 + 8))(puVar2,0x1c3,0,2,0xffffffff,0);
         }
-        uVar3 = FUN_80017760(0,(int)psVar7[3]);
+        uVar3 = randomGetRange(0,(int)psVar7[3]);
         psVar7[2] = psVar7[1] + (short)uVar3;
       }
     }
