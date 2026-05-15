@@ -13,7 +13,7 @@ extern undefined4 FUN_80017620();
 extern undefined4 FUN_80017664();
 extern undefined4 FUN_800176c8();
 extern double FUN_800176f4();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern void ModelLightStruct_free(void *effect);
@@ -356,7 +356,7 @@ void FUN_8018d110(void)
   FUN_80081110(uVar4,uVar8,uVar7,uVar6,&local_24);
   iVar5 = *piVar9;
   if (((iVar5 != 0) && (*(char *)(iVar5 + 0x2f8) != '\0')) && (*(char *)(iVar5 + 0x4c) != '\0')) {
-    uVar4 = FUN_80017760(0xffffffe7,0x19);
+    uVar4 = randomGetRange(0xffffffe7,0x19);
     iVar5 = *piVar9;
     sVar3 = (ushort)*(byte *)(iVar5 + 0x2f9) + (short)*(char *)(iVar5 + 0x2fa) + (short)uVar4;
     if (sVar3 < 0) {

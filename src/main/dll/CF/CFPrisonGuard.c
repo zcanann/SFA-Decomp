@@ -5,7 +5,7 @@ extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b94();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId,int value);
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
@@ -70,9 +70,9 @@ void FUN_801899b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
      (((*(byte *)(iVar4 + 0x1d) >> 6 & 1) == 0 || (*(char *)(iVar4 + 0x1c) != '\0')))) {
     if (*(char *)(iVar4 + 0x1c) == '\0') {
       if (*(char *)(iVar5 + 0x1e) == '\x02') {
-        uVar1 = FUN_80017760(0xffffff38,200);
+        uVar1 = randomGetRange(0xffffff38,200);
         *(short *)(iVar3 + 2) = (short)uVar1;
-        uVar1 = FUN_80017760(0xffffff38,200);
+        uVar1 = randomGetRange(0xffffff38,200);
         *(short *)(iVar3 + 4) = (short)uVar1;
       }
       ObjHits_PollPriorityHitEffectWithCooldown(iVar3,8,0xb4,0xf0,0xff,0x6f,(float *)(iVar4 + 0x20));
