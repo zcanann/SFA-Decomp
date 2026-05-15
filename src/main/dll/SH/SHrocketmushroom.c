@@ -67,14 +67,14 @@ extern f32 lbl_803E53F0;
 extern f32 lbl_803E53F4;
 
 void bombplantspore_update(void *obj) {
+    void *state;
     s32 particleAlpha;
     s16 hitId;
     void *hitObj;
     void *playerObj;
-    void *state;
-    undefined hitPosition[4];
     u32 poppedMessage;
     u32 poppedSender;
+    undefined hitPosition[4];
     u32 detonateMessage;
     int i;
 
@@ -122,7 +122,7 @@ void bombplantspore_update(void *obj) {
         }
         ObjHits_GetPriorityHit(obj, hitPosition, 0, 0);
         hitObj = **(void ***)((u8 *)obj + 0x54);
-        if (-1 < *(s8 *)((u8 *)state + 0x2b0)) {
+        if ((*(u8 *)((u8 *)state + 0x2b0) & 0x80) == 0) {
             *(f32 *)((u8 *)state + 0x284) -= timeDelta;
             if (*(f32 *)((u8 *)state + 0x284) < lbl_803E5394) {
                 *(f32 *)((u8 *)state + 0x284) = lbl_803E5394;
