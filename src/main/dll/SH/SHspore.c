@@ -22,7 +22,11 @@ extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
 extern undefined4 FUN_8003b444();
 extern undefined4 FUN_800400b0();
+extern void *Obj_GetPlayerObject(void);
+extern f32 getXZDistance(f32 *a, f32 *b);
+extern int fn_8003B500(void *obj, void *p2, f32 f1);
 extern int fn_801D4198(void *obj, void *unused, void *p5);
+extern int fn_802964F0(void *obj, int param);
 extern short FUN_8011e824();
 extern int FUN_8012efc4();
 extern uint FUN_80294cc4();
@@ -33,10 +37,15 @@ extern undefined4 DAT_803dcc38;
 extern undefined4 DAT_803dcc40;
 extern undefined4 DAT_803dcc44;
 extern undefined4 DAT_803dcc54;
+extern u8 lbl_803DBFD8;
+extern u8 lbl_803DBFDC;
+extern u8 lbl_803DBFEC;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd728;
 extern f64 DOUBLE_803e6038;
+extern f32 lbl_803E53F8;
+extern f32 lbl_803E53FC;
 extern f32 lbl_803E6020;
 extern f32 lbl_803E6024;
 extern f32 lbl_803E6028;
@@ -272,6 +281,42 @@ int sh_queenearthwalker_getExtraSize(void)
 {
   return 0x40;
 }
+
+#pragma peephole off
+#pragma scheduling off
+void fn_801D4364(void *obj, void *state)
+{
+  void *player;
+  u8 *trackingState;
+
+  player = Obj_GetPlayerObject();
+  *(u8 *)((u8 *)obj + 0xaf) &= ~0x8;
+  if (GameBit_Get(0xc48) != 0) {
+    *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFEC;
+  } else if (GameBit_Get(0x23c) != 0) {
+    *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFDC;
+  } else if (GameBit_Get(0x5bd) != 0) {
+    *(u8 *)((u8 *)obj + 0xaf) |= 0x8;
+    if (fn_802964F0(player, 3) != 0 &&
+        getXZDistance((f32 *)((u8 *)player + 0x18), (f32 *)((u8 *)obj + 0x18)) < lbl_803E53FC) {
+      GameBit_Set(0x23b, 1);
+    }
+  } else if (GameBit_Get(0xa31) != 0) {
+    *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFEC;
+  } else {
+    *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFD8;
+  }
+
+  player = Obj_GetPlayerObject();
+  ((u8 *)state)[8] = 1;
+  *(f32 *)((u8 *)state + 0xc) = *(f32 *)((u8 *)player + 0xc);
+  *(f32 *)((u8 *)state + 0x10) = *(f32 *)((u8 *)player + 0x10);
+  *(f32 *)((u8 *)state + 0x14) = *(f32 *)((u8 *)player + 0x14);
+  trackingState = (u8 *)state + 0x8;
+  fn_8003B500(obj, trackingState, lbl_803E53F8);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
