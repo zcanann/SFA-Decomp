@@ -38,7 +38,7 @@ extern void gameBitIncrement(int eventId);
 extern int ObjMsg_Pop(int obj, u32 *outMessage, u32 *outSender, u32 *outParam);
 extern void ObjMsg_SendToObject(int obj, int message, int sender, int *param);
 extern void ObjMsg_SendToObjects(int targetId, u32 flags, void *sender, u32 message, u32 param);
-extern void ObjAnim_SetCurrentMove(f32 moveProgress, int obj, int moveId, int flags);
+extern void ObjAnim_SetCurrentMove(int obj, int moveId, f32 moveProgress, int flags);
 extern void tumbleweed_updateRollingMotion(int obj, int aux);
 extern void fn_80163990(int obj, int aux);
 extern void fn_80165B3C(int obj, int state);
@@ -451,7 +451,7 @@ int fn_80165188(int obj, u32 *stateWord) {
         *(f32 *)(obj + 0x24) = -*(f32 *)(obj + 0x24);
         *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) + lbl_803E2FD8;
         *(f32 *)(obj + 0x2c) = -*(f32 *)(obj + 0x2c);
-        ObjAnim_SetCurrentMove(lbl_803E2FDC, obj, 3, 0);
+        ObjAnim_SetCurrentMove(obj, 3, lbl_803E2FDC, 0);
         *(f32 *)(state + 0x44) = lbl_803E2FE0;
     }
     *(u8 *)(*(int *)(obj + 0x54) + 0x6d) = 0;
@@ -465,7 +465,7 @@ int fn_80165188(int obj, u32 *stateWord) {
         *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x48);
         *(f32 *)(obj + 0x24) = lbl_803E2FF0 * -*(f32 *)(obj + 0x24);
     }
-    if (*(f32 *)(state + 0x4c) < *(f32 *)(obj + 0xc)) {
+    if (*(f32 *)(obj + 0xc) > *(f32 *)(state + 0x4c)) {
         *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x4c);
         *(f32 *)(obj + 0x24) = lbl_803E2FF0 * -*(f32 *)(obj + 0x24);
     }
@@ -473,7 +473,7 @@ int fn_80165188(int obj, u32 *stateWord) {
         *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x5c);
         *(f32 *)(obj + 0x28) = lbl_803E2FF0 * -*(f32 *)(obj + 0x28);
     }
-    if (*(f32 *)(state + 0x58) < *(f32 *)(obj + 0x10)) {
+    if (*(f32 *)(obj + 0x10) > *(f32 *)(state + 0x58)) {
         *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x58);
         *(f32 *)(obj + 0x28) = lbl_803E2FF0 * -*(f32 *)(obj + 0x28);
     }
@@ -481,15 +481,16 @@ int fn_80165188(int obj, u32 *stateWord) {
         *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x54);
         *(f32 *)(obj + 0x2c) = lbl_803E2FF0 * -*(f32 *)(obj + 0x2c);
     }
-    if (*(f32 *)(state + 0x50) < *(f32 *)(obj + 0x14)) {
+    if (*(f32 *)(obj + 0x14) > *(f32 *)(state + 0x50)) {
         *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x50);
         *(f32 *)(obj + 0x2c) = lbl_803E2FF0 * -*(f32 *)(obj + 0x2c);
     }
     if (lbl_803E2FF4 == *(f32 *)(obj + 0x98)) {
         ObjMsg_SendToObjects(0, 3, (void *)obj, 0xe0000, obj);
         Obj_FreeObject(obj);
+        return 0;
     } else {
-        *(s8 *)(obj + 0x36) = -1 - (s8)(s32)(lbl_803E2FF8 * *(f32 *)(obj + 0x98));
+        *(u8 *)(obj + 0x36) = (u8)(255 - (s32)(lbl_803E2FF8 * *(f32 *)(obj + 0x98)));
     }
     return 0;
 }
