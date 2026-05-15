@@ -456,8 +456,7 @@ int fn_80165188(int obj, u32 *stateWord) {
     }
     *(u8 *)(*(int *)(obj + 0x54) + 0x6d) = 0;
     *stateWord = *stateWord | 0x4000;
-    horizontalDamping = lbl_803E2FE4;
-    *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * lbl_803E2FE4;
+    *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * (horizontalDamping = lbl_803E2FE4);
     *(f32 *)(obj + 0x28) = lbl_803E2FE8 * (*(f32 *)(obj + 0x28) - lbl_803E2FEC);
     *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) * horizontalDamping;
     objMove(obj, *(f32 *)(obj + 0x24), *(f32 *)(obj + 0x28), *(f32 *)(obj + 0x2c));
