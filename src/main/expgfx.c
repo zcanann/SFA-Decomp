@@ -189,6 +189,27 @@ extern char sExpgfxMismatchInAddRemove[];
 extern char sExpgfxScaleOverflow[];
 extern char sExpgfxNoTexture[];
 
+u32 expgfx_funcs[] = {
+    0,
+    0,
+    0,
+    0x000D0000,
+    (u32)expgfx_initialise,
+    (u32)expgfx_release,
+    0,
+    (u32)expgfx_onMapSetup,
+    (u32)expgfx_addremove,
+    (u32)expgfx_updateFrameState,
+    (u32)expgfx_resetAllPools,
+    (u32)expgfx_free,
+    (u32)expgfx_free2,
+    (u32)expgfx_func09,
+    (u32)expgfx_func0A_nop,
+    (u32)expgfx_func0B_nop,
+    (u32)expgfx_ownerFree3,
+    (u32)expgfx_updateSourceFrameFlags,
+};
+
 #define EXPGFX_SLOT_TABLE_INDEX_OFFSET 0x8A
 #define gExpgfxTrackedPoolMaskHighWords DAT_8039c7c8
 #define gExpgfxTrackedPoolMaskLowWords DAT_8039c7cc
