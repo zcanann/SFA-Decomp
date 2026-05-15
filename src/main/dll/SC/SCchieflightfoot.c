@@ -10,7 +10,7 @@
 extern undefined4 Sfx_PlayFromObject();
 extern f32 getXZDistance(f32 *posA,f32 *posB);
 extern s16 getAngle(f32 deltaX,f32 deltaZ);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int min,int max);
 extern undefined4 Obj_GetActiveModel();
 extern undefined4 Obj_GetPlayerObject();
 extern undefined4 modelInitBones();
@@ -389,7 +389,7 @@ void SHthorntail_updateDustEffects(SHthorntailObject *obj)
 {
   SHthorntailRuntime *runtime;
   undefined4 playerObj;
-  char burstCount;
+  u8 burstCount;
   SHthorntailDustEffectParams effectParams;
 
   playerObj = Obj_GetPlayerObject();
@@ -423,7 +423,7 @@ void SHthorntail_updateDustEffects(SHthorntailObject *obj)
         (*(code *)(*pDll_expgfx + 8))(playerObj,0x7ca,&effectParams,2,0xffffffff,0);
       }
       if ((runtime->dustEffectFlags & 2) != 0) {
-        runtime->dustEffectFlags = runtime->dustEffectFlags & 0xfd;
+        runtime->dustEffectFlags = runtime->dustEffectFlags & ~2;
         effectParams.radius = 0x46;
         effectParams.scale = lbl_803E5484;
         for (burstCount = 0xf; burstCount != 0; burstCount = burstCount + -1) {
@@ -436,7 +436,7 @@ void SHthorntail_updateDustEffects(SHthorntailObject *obj)
       }
       else {
         runtime->dustEffectTimer = lbl_803E5460;
-        runtime->dustEffectFlags = runtime->dustEffectFlags & 0xfb;
+        runtime->dustEffectFlags = runtime->dustEffectFlags & ~4;
       }
     }
     runtime->dustEffectTimer = runtime->dustEffectTimer + timeDelta;
