@@ -3,7 +3,10 @@
 
 #include "ghidra_import.h"
 
-void FUN_801c1740(undefined8 param_1,double param_2,double param_3,double param_4,double param_5,
-                 double param_6,undefined8 param_7,double param_8);
+void dfropenode_func0E(undefined8 param_1, double y, double z, undefined4 param_4,
+                       undefined4 param_5, float *phaseOut, u8 *sideOut);
+void dfropenode_render2(double phase, double force, int obj);
+void dfropenode_modelMtxFn(double distance, int obj, float *phase);
+void dfropenode_func0B(double phase, int obj, float *xOut, float *yOut, float *zOut);
 
 #endif /* MAIN_DLL_DF_DLL_194_H_ */
