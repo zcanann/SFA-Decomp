@@ -78,7 +78,6 @@ extern int GameBit_Set(u32 eventId, u32 value);
 extern undefined4 FUN_800176c0();
 extern undefined8 FUN_800176c8();
 extern int FUN_800176d0();
-extern uint FUN_80017760();
 extern undefined4 FUN_80017a28();
 extern int FUN_80017a54();
 extern int FUN_80017a98();

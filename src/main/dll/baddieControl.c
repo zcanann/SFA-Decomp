@@ -20,7 +20,6 @@ extern undefined4 GameBit_Set(int eventId, int value);
 extern double FUN_800176f4();
 extern int FUN_80017730();
 extern undefined4 FUN_80017754();
-extern undefined4 FUN_80017760();
 extern undefined4 FUN_80017778();
 extern undefined4 FUN_80017814();
 extern int FUN_80017830();
