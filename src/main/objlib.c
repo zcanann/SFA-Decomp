@@ -1224,43 +1224,44 @@ void ObjHits_AddContactObject(int param_1,int param_2)
 int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *outSphereIndex,
                 uint *outHitVolume,float *outHitPosX,float *outHitPosY,float *outHitPosZ)
 {
-  char hitPriority;
+  u8 hitPriority;
   int hitCount;
   ObjHitsPriorityState *hitState;
   int hitSlot;
-  char bestPriority;
-  char bestHitSlot;
+  u8 bestPriority;
+  s8 bestHitSlot;
 
   hitState = *(ObjHitsPriorityState **)(obj + 0x54);
-  if (hitState != 0) {
-    hitCount = (int)hitState->priorityHitCount;
-    if (hitCount != 0) {
-      bestPriority = OBJHITS_PRIORITY_INVALID;
-      bestHitSlot = -1;
-      for (hitSlot = 0; hitSlot < hitCount; hitSlot++) {
-        hitPriority = hitState->priorities[hitSlot];
-        if (hitPriority < bestPriority) {
-          bestPriority = hitPriority;
-          bestHitSlot = (char)hitSlot;
-        }
+  if (hitState == 0) {
+    return 0;
+  }
+  hitCount = (int)hitState->priorityHitCount;
+  if (hitCount != 0) {
+    bestPriority = OBJHITS_PRIORITY_INVALID;
+    bestHitSlot = -1;
+    for (hitSlot = 0; hitSlot < hitCount; hitSlot++) {
+      hitPriority = hitState->priorities[hitSlot];
+      if ((s8)hitPriority < (s8)bestPriority) {
+        bestPriority = hitPriority;
+        bestHitSlot = (char)hitSlot;
       }
-      if (bestHitSlot != -1) {
-        if (outHitObject != (undefined4 *)0x0) {
-          *outHitObject = *(undefined4 *)((int)hitState->hitObjects + bestHitSlot * 4);
-        }
-        if (outSphereIndex != (int *)0x0) {
-          *outSphereIndex = (int)hitState->sphereIndices[bestHitSlot];
-        }
-        if (outHitVolume != (uint *)0x0) {
-          *outHitVolume = (uint)hitState->hitVolumes[bestHitSlot];
-        }
-        if (outHitPosX != (float *)0x0) {
-          *outHitPosX = *(float *)((int)hitState->hitPosX + bestHitSlot * 4);
-          *outHitPosY = *(float *)((int)hitState->hitPosY + bestHitSlot * 4);
-          *outHitPosZ = *(float *)((int)hitState->hitPosZ + bestHitSlot * 4);
-        }
-        return (int)bestPriority;
+    }
+    if (bestHitSlot != -1) {
+      if (outHitObject != (undefined4 *)0x0) {
+        *outHitObject = *(undefined4 *)((int)hitState->hitObjects + bestHitSlot * 4);
       }
+      if (outSphereIndex != (int *)0x0) {
+        *outSphereIndex = (int)hitState->sphereIndices[bestHitSlot];
+      }
+      if (outHitVolume != (uint *)0x0) {
+        *outHitVolume = (uint)hitState->hitVolumes[bestHitSlot];
+      }
+      if (outHitPosX != (float *)0x0) {
+        *outHitPosX = *(float *)((int)hitState->hitPosX + bestHitSlot * 4);
+        *outHitPosY = *(float *)((int)hitState->hitPosY + bestHitSlot * 4);
+        *outHitPosZ = *(float *)((int)hitState->hitPosZ + bestHitSlot * 4);
+      }
+      return (int)(s8)bestPriority;
     }
   }
   return 0;
@@ -1287,12 +1288,12 @@ int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *out
 #pragma peephole off
 int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,uint *outHitVolume)
 {
-  char hitPriority;
+  u8 hitPriority;
   int hitCount;
   ObjHitsPriorityState *hitState;
   int hitSlot;
-  char bestPriority;
-  char bestHitSlot;
+  u8 bestPriority;
+  s8 bestHitSlot;
 
   hitState = *(ObjHitsPriorityState **)(obj + 0x54);
   if (hitState == 0) {
@@ -1304,7 +1305,7 @@ int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,
     bestHitSlot = -1;
     for (hitSlot = 0; hitSlot < hitCount; hitSlot++) {
       hitPriority = hitState->priorities[hitSlot];
-      if (hitPriority < bestPriority) {
+      if ((s8)hitPriority < (s8)bestPriority) {
         bestPriority = hitPriority;
         bestHitSlot = (char)hitSlot;
       }
@@ -1319,7 +1320,7 @@ int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,
       if (outHitVolume != (uint *)0x0) {
         *outHitVolume = (uint)hitState->hitVolumes[bestHitSlot];
       }
-      return (int)bestPriority;
+      return (int)(s8)bestPriority;
     }
   }
   return 0;
