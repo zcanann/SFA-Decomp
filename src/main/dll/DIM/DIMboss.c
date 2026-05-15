@@ -44,9 +44,9 @@ extern undefined8 waitNextFrame();
 extern undefined4 FUN_80053b3c();
 extern undefined4 FUN_8005fe14();
 extern void fn_8005CEF0(int param_1);
-extern undefined4 FUN_80080f70();
-extern undefined4 FUN_80080f7c();
-extern undefined4 FUN_80080f80();
+extern undefined4 fn_800894A8();
+extern undefined4 fn_800895E0();
+extern undefined4 fn_80089710();
 extern undefined8 dll_2E_func07();
 extern undefined4 FUN_801150a4();
 extern undefined8 FUN_801150ac();
@@ -619,9 +619,9 @@ void dimboss_update2(DIMbossObject *obj)
         if ((topState->steamSfxPending & DIMBOSS_STEAM_SFX_PENDING_FLAG) != 0) {
           getEnvfxAct(0,0,0xdb,0);
           getEnvfxAct(0,0,0xdc,0);
-          FUN_80080f80(7,1,0);
-          FUN_80080f70((double)lbl_803E4C4C,(double)lbl_803E4C50,(double)lbl_803E4C54,7);
-          FUN_80080f7c(7,0xa0,0xa0,0xff,0x7f,0x28);
+          fn_80089710(7,1,0);
+          fn_800894A8((double)lbl_803E4C4C,(double)lbl_803E4C50,(double)lbl_803E4C54,7);
+          fn_800895E0(7,0xa0,0xa0,0xff,0x7f,0x28);
           topState->steamSfxPending &= ~DIMBOSS_STEAM_SFX_PENDING_FLAG;
         }
       }
