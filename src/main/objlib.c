@@ -1730,8 +1730,7 @@ undefined4 * ObjGroup_GetObjects(int group,int *countOut)
 #pragma peephole off
 void ObjGroup_RemoveObject(uint obj,int group)
 {
-  byte *bucketStarts;
-  u8 *bucketEnds;
+  u8 *offset;
   int count;
   int index;
   int limit;
@@ -1740,12 +1739,13 @@ void ObjGroup_RemoveObject(uint obj,int group)
   if ((group < 0) || (group >= OBJGROUP_COUNT)) {
     return;
   }
-  bucketStarts = gObjGroupOffsets;
-  bucketEnds = gObjGroupOffsets + 1;
-  entries = gObjGroupObjects;
-  index = (int)bucketStarts[group];
-  limit = (int)bucketEnds[group];
-  while ((index < limit) && (entries[index] != obj)) {
+  offset = gObjGroupOffsets;
+  index = (int)offset[group];
+  offset += group;
+  limit = (int)offset[1];
+  entries = gObjGroupObjects + index;
+  while ((index < limit) && (*entries != obj)) {
+    entries++;
     index++;
   }
   if (limit <= index) {
@@ -1753,12 +1753,17 @@ void ObjGroup_RemoveObject(uint obj,int group)
   }
   count = (int)gObjGroupObjectCount - 1;
   gObjGroupObjectCount = count;
+  entries = gObjGroupObjects + index;
   while (index < count) {
-    entries[index] = entries[index + 1];
+    *entries = entries[1];
+    entries++;
     index++;
   }
-  while (group < OBJGROUP_COUNT) {
-    bucketEnds[group] = bucketEnds[group] - 1;
+  group++;
+  offset = gObjGroupOffsets + group;
+  while (group <= OBJGROUP_COUNT) {
+    (*offset)--;
+    offset++;
     group++;
   }
 }
@@ -1825,8 +1830,7 @@ int ObjGroup_GetObjectGroup(uint obj)
 #pragma peephole off
 void ObjGroup_AddObject(uint obj,int group)
 {
-  byte *bucketStarts;
-  u8 *bucketEnds;
+  u8 *offset;
   int count;
   int index;
   int insertIndex;
@@ -1840,27 +1844,33 @@ void ObjGroup_AddObject(uint obj,int group)
     OSReport(sObjAddObjectTypeReachedMaxTypes);
     return;
   }
-  bucketStarts = gObjGroupOffsets;
-  entries = gObjGroupObjects;
-  bucketEnds = gObjGroupOffsets + 1;
-  insertIndex = (int)bucketStarts[group];
-  limit = (int)bucketEnds[group];
+  offset = gObjGroupOffsets;
+  insertIndex = (int)offset[group];
+  offset += group;
+  limit = (int)offset[1];
+  entries = gObjGroupObjects + insertIndex;
   for (index = insertIndex; index < limit; index++) {
-    if (entries[index] == obj) {
+    if (*entries == obj) {
       return;
     }
+    entries++;
   }
   if (limit != insertIndex) {
     insertIndex = limit - 1;
   }
-  count = (int)gObjGroupObjectCount;
-  gObjGroupObjectCount = count + 1;
+  gObjGroupObjectCount = gObjGroupObjectCount + 1;
+  count = (int)(uint)gObjGroupObjectCount - 1;
+  entries = gObjGroupObjects + count;
   for (index = count; insertIndex < index; index--) {
-    entries[index] = entries[index - 1];
+    *entries = entries[-1];
+    entries--;
   }
-  entries[insertIndex] = obj;
-  while (group < OBJGROUP_COUNT) {
-    bucketEnds[group] = bucketEnds[group] + 1;
+  gObjGroupObjects[insertIndex] = obj;
+  group++;
+  offset = gObjGroupOffsets + group;
+  while (group <= OBJGROUP_COUNT) {
+    *offset = *offset + 1;
+    offset++;
     group++;
   }
 }
