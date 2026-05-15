@@ -63,7 +63,7 @@ undefined4 fn_8016558C(int obj, int param_2)
         *(f32 *)(obj + 0x28) = lbl_803E2FDC;
         *(f32 *)(obj + 0x2c) = -*(f32 *)(sub + 0x60) * fn_8029397C((u16)*(s16 *)obj);
         *(u32 *)param_2 |= 0x02004000;
-        ObjAnim_SetCurrentMove((double)lbl_803E2FDC, obj, 0, 0);
+        ((void (*)(int, int, f32, int))ObjAnim_SetCurrentMove)(obj, 0, lbl_803E2FDC, 0);
         *(f32 *)(sub + 0x44) = lbl_803E3008;
     }
 
