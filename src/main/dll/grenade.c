@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/grenade.h"
 
-extern bool FUN_800067f0();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068cc();
 extern undefined4 FUN_800068d0();
@@ -19,10 +18,9 @@ extern int randomGetRange(int min,int max);
 extern undefined4 ObjHits_SyncObjectPosition();
 extern int ObjGroup_FindNearestObject();
 extern undefined4 ObjLink_AttachChild();
-extern undefined4 FUN_80039468();
 extern undefined4 FUN_80039580();
 extern int Sfx_IsPlayingFromObjectChannel(int obj,int channel);
-extern void objAudioFn_800393f8(int obj,void *audio,int soundId,int volume,int param5,int param6);
+extern undefined4 objAudioFn_800393f8(int obj,void *audio,int soundId,int volume,int param5,int param6);
 extern int FUN_800da5f0();
 extern undefined4 FUN_800da700();
 extern uint FUN_800db47c();
@@ -194,8 +192,8 @@ void trickyDigTunnel(undefined8 param_1,undefined8 param_2,double param_3,undefi
       iVar6 = *(int *)(param_9 + 0x5c);
       if (((*(byte *)(iVar6 + 0x58) >> 6 & 1) == 0) &&
          (((0x2f < (short)param_9[0x50] || ((short)param_9[0x50] < 0x29)) &&
-          (bVar8 = FUN_800067f0((int)param_9,0x10), !bVar8)))) {
-        FUN_80039468(param_9,iVar6 + 0x3a8,0x360,0x500,0xffffffff,0);
+          (bVar8 = Sfx_IsPlayingFromObjectChannel((int)param_9,0x10), !bVar8)))) {
+        objAudioFn_800393f8((int)param_9,(void *)(iVar6 + 0x3a8),0x360,0x500,0xffffffff,0);
       }
     }
     dVar12 = (double)(**(code **)(**(int **)(param_10[9] + 0x68) + 0x20))(param_10[9],param_9);
@@ -236,8 +234,8 @@ void trickyDigTunnel(undefined8 param_1,undefined8 param_2,double param_3,undefi
       iVar6 = *(int *)(param_9 + 0x5c);
       if ((((*(byte *)(iVar6 + 0x58) >> 6 & 1) == 0) &&
           ((0x2f < (short)param_9[0x50] || ((short)param_9[0x50] < 0x29)))) &&
-         (bVar8 = FUN_800067f0((int)param_9,0x10), !bVar8)) {
-        FUN_80039468(param_9,iVar6 + 0x3a8,uVar3,0x500,0xffffffff,0);
+         (bVar8 = Sfx_IsPlayingFromObjectChannel((int)param_9,0x10), !bVar8)) {
+        objAudioFn_800393f8((int)param_9,(void *)(iVar6 + 0x3a8),uVar3,0x500,0xffffffff,0);
       }
     }
     break;
@@ -427,8 +425,8 @@ void fn_80141FEC(undefined8 param_1,undefined8 param_2,double param_3,undefined8
       iVar4 = *(int *)(param_9 + 0xb8);
       if (((*(byte *)(iVar4 + 0x58) >> 6 & 1) == 0) &&
          (((0x2f < *(short *)(param_9 + 0xa0) || (*(short *)(param_9 + 0xa0) < 0x29)) &&
-          (bVar7 = FUN_800067f0(param_9,0x10), !bVar7)))) {
-        FUN_80039468(param_9,iVar4 + 0x3a8,0x360,0x500,0xffffffff,0);
+          (bVar7 = Sfx_IsPlayingFromObjectChannel(param_9,0x10), !bVar7)))) {
+        objAudioFn_800393f8(param_9,(void *)(iVar4 + 0x3a8),0x360,0x500,0xffffffff,0);
       }
     }
     dVar10 = (double)(**(code **)(**(int **)(iVar9 + 0x68) + 0x20))(iVar9,param_9);
@@ -455,8 +453,8 @@ void fn_80141FEC(undefined8 param_1,undefined8 param_2,double param_3,undefined8
       iVar9 = *(int *)(param_9 + 0xb8);
       if ((((*(byte *)(iVar9 + 0x58) >> 6 & 1) == 0) &&
           ((0x2f < *(short *)(param_9 + 0xa0) || (*(short *)(param_9 + 0xa0) < 0x29)))) &&
-         (bVar7 = FUN_800067f0(param_9,0x10), !bVar7)) {
-        FUN_80039468(param_9,iVar9 + 0x3a8,uVar2,0x500,0xffffffff,0);
+         (bVar7 = Sfx_IsPlayingFromObjectChannel(param_9,0x10), !bVar7)) {
+        objAudioFn_800393f8(param_9,(void *)(iVar9 + 0x3a8),uVar2,0x500,0xffffffff,0);
       }
     }
   }
@@ -545,8 +543,8 @@ void fn_80142524(undefined8 param_1,undefined8 param_2,double param_3,undefined8
             iVar5 = *(int *)(param_9 + 0x5c);
             if (((*(byte *)(iVar5 + 0x58) >> 6 & 1) == 0) &&
                (((0x2f < (short)param_9[0x50] || ((short)param_9[0x50] < 0x29)) &&
-                (bVar4 = FUN_800067f0((int)param_9,0x10), !bVar4)))) {
-              FUN_80039468(param_9,iVar5 + 0x3a8,0x360,0x500,0xffffffff,0);
+                (bVar4 = Sfx_IsPlayingFromObjectChannel((int)param_9,0x10), !bVar4)))) {
+              objAudioFn_800393f8((int)param_9,(void *)(iVar5 + 0x3a8),0x360,0x500,0xffffffff,0);
             }
           }
           if (lbl_803E306C == (float)param_10[0xab]) {
@@ -699,14 +697,14 @@ fn_80142A14(undefined8 param_1,undefined8 param_2,double param_3,undefined8 para
       iVar5 = *(int *)(param_9 + 0xb8);
       if (((*(byte *)(iVar5 + 0x58) >> 6 & 1) == 0) &&
          (((0x2f < *(short *)(param_9 + 0xa0) || (*(short *)(param_9 + 0xa0) < 0x29)) &&
-          (bVar2 = FUN_800067f0(param_9,0x10), !bVar2)))) {
-        FUN_80039468(param_9,iVar5 + 0x3a8,(ushort)uVar1,0x500,0xffffffff,0);
+          (bVar2 = Sfx_IsPlayingFromObjectChannel(param_9,0x10), !bVar2)))) {
+        objAudioFn_800393f8(param_9,(void *)(iVar5 + 0x3a8),(ushort)uVar1,0x500,0xffffffff,0);
       }
       return 0;
     }
   }
   else {
-    bVar2 = FUN_800067f0(param_9,0x10);
+    bVar2 = Sfx_IsPlayingFromObjectChannel(param_9,0x10);
     if (bVar2) {
       return 0;
     }
@@ -766,8 +764,8 @@ void fn_80142B6C(undefined8 param_1,double param_2,double param_3,undefined8 par
         iVar7 = *(int *)(uVar1 + 0xb8);
         if (((*(byte *)(iVar7 + 0x58) >> 6 & 1) == 0) &&
            (((0x2f < *(short *)(uVar1 + 0xa0) || (*(short *)(uVar1 + 0xa0) < 0x29)) &&
-            (bVar5 = FUN_800067f0(uVar1,0x10), !bVar5)))) {
-          FUN_80039468(uVar1,iVar7 + 0x3a8,0x29d,0,0xffffffff,0);
+            (bVar5 = Sfx_IsPlayingFromObjectChannel(uVar1,0x10), !bVar5)))) {
+          objAudioFn_800393f8(uVar1,(void *)(iVar7 + 0x3a8),0x29d,0,0xffffffff,0);
         }
         *(undefined *)(iVar6 + 10) = 10;
       }
@@ -854,12 +852,12 @@ bool fn_80142D2C(undefined8 param_1,undefined8 param_2,double param_3,undefined8
     iVar1 = *(int *)(param_9 + 0xb8);
     if (((*(byte *)(iVar1 + 0x58) >> 6 & 1) == 0) &&
        (((0x2f < *(short *)(param_9 + 0xa0) || (*(short *)(param_9 + 0xa0) < 0x29)) &&
-        (bVar2 = FUN_800067f0(param_9,0x10), !bVar2)))) {
+        (bVar2 = Sfx_IsPlayingFromObjectChannel(param_9,0x10), !bVar2)))) {
       iVar4 = 0x35d;
       puVar5 = (undefined4 *)0x500;
       param_13 = 0xff;
       param_14 = 0;
-      FUN_80039468(param_9,iVar1 + 0x3a8,0x35d,0x500,0xffffffff,0);
+      objAudioFn_800393f8(param_9,(void *)(iVar1 + 0x3a8),0x35d,0x500,0xffffffff,0);
     }
   }
 LAB_801431cc:
@@ -990,8 +988,8 @@ fn_801430E0(undefined8 param_1,undefined8 param_2,double param_3,undefined8 para
       iVar1 = *(int *)(param_9 + 0xb8);
       if (((*(byte *)(iVar1 + 0x58) >> 6 & 1) == 0) &&
          (((0x2f < *(short *)(param_9 + 0xa0) || (*(short *)(param_9 + 0xa0) < 0x29)) &&
-          (bVar4 = FUN_800067f0(param_9,0x10), !bVar4)))) {
-        FUN_80039468(param_9,iVar1 + 0x3a8,0x357,0,0xffffffff,0);
+          (bVar4 = Sfx_IsPlayingFromObjectChannel(param_9,0x10), !bVar4)))) {
+        objAudioFn_800393f8(param_9,(void *)(iVar1 + 0x3a8),0x357,0,0xffffffff,0);
       }
       objAnimFn_8013a3f0(param_9,0x26,lbl_803E31AC,0);
       *(undefined *)((int)param_10 + 10) = 5;
@@ -1163,10 +1161,10 @@ undefined4 fn_801434B0(int param_1,int *param_2)
       for (iVar5 = 0; iVar5 < *(char *)((int)param_2 + 0x827); iVar5 = iVar5 + 1) {
         cVar1 = *(char *)((int)param_2 + iVar5 + 0x81f);
         if (cVar1 == '\0') {
-          FUN_80039468(param_1,param_2 + 0xea,0x390,0x500,0xffffffff,0);
+          objAudioFn_800393f8(param_1,(void *)(param_2 + 0xea),0x390,0x500,0xffffffff,0);
         }
         else if (cVar1 == '\a') {
-          FUN_80039468(param_1,param_2 + 0xea,0x391,0x100,0xffffffff,0);
+          objAudioFn_800393f8(param_1,(void *)(param_2 + 0xea),0x391,0x100,0xffffffff,0);
         }
       }
       fVar3 = (float)param_2[0x1d1] - lbl_803DC074;
@@ -1257,9 +1255,9 @@ fn_801437D4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
         iVar2 = *(int *)(param_9 + 0xb8);
         if (((*(byte *)(iVar2 + 0x58) >> 6 & 1) == 0) &&
            (((0x2f < *(short *)(param_9 + 0xa0) || (*(short *)(param_9 + 0xa0) < 0x29)) &&
-            (bVar5 = FUN_800067f0(param_9,0x10), !bVar5)))) {
+            (bVar5 = Sfx_IsPlayingFromObjectChannel(param_9,0x10), !bVar5)))) {
           in_r8 = 0;
-          dVar6 = (double)FUN_80039468(param_9,iVar2 + 0x3a8,0x29a,0x100,0xffffffff,0);
+          dVar6 = (double)objAudioFn_800393f8(param_9,(void *)(iVar2 + 0x3a8),0x29a,0x100,0xffffffff,0);
         }
         param_10[0x1ce] = (int)lbl_803E30D0;
       }
@@ -1310,8 +1308,8 @@ fn_801437D4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
         iVar2 = *(int *)(param_9 + 0xb8);
         if (((*(byte *)(iVar2 + 0x58) >> 6 & 1) == 0) &&
            (((0x2f < *(short *)(param_9 + 0xa0) || (*(short *)(param_9 + 0xa0) < 0x29)) &&
-            (bVar5 = FUN_800067f0(param_9,0x10), !bVar5)))) {
-          FUN_80039468(param_9,iVar2 + 0x3a8,0x354,0x1000,0xffffffff,0);
+            (bVar5 = Sfx_IsPlayingFromObjectChannel(param_9,0x10), !bVar5)))) {
+          objAudioFn_800393f8(param_9,(void *)(iVar2 + 0x3a8),0x354,0x1000,0xffffffff,0);
         }
         param_10[0x15] = param_10[0x15] | 0x10;
         *(undefined *)((int)param_10 + 10) = 4;
@@ -1447,8 +1445,8 @@ fn_80143C04(undefined8 param_1,undefined8 param_2,double param_3,undefined8 para
     if ((((cVar3 == '\x02') && ((param_10[0x15] & 2U) != 0)) &&
         (iVar5 = *(int *)(param_9 + 0xb8), (*(byte *)(iVar5 + 0x58) >> 6 & 1) == 0)) &&
        (((0x2f < *(short *)(param_9 + 0xa0) || (*(short *)(param_9 + 0xa0) < 0x29)) &&
-        (bVar4 = FUN_800067f0(param_9,0x10), !bVar4)))) {
-      FUN_80039468(param_9,iVar5 + 0x3a8,0x35d,0x500,0xffffffff,0);
+        (bVar4 = Sfx_IsPlayingFromObjectChannel(param_9,0x10), !bVar4)))) {
+      objAudioFn_800393f8(param_9,(void *)(iVar5 + 0x3a8),0x35d,0x500,0xffffffff,0);
     }
     if (lbl_803E306C == (float)param_10[0xab]) {
       bVar4 = false;
@@ -1671,8 +1669,8 @@ void fn_801441C0(int param_1,int param_2)
     iVar2 = *(int *)(psVar1 + 0x5c);
     if (((*(byte *)(iVar2 + 0x58) >> 6 & 1) == 0) &&
        (((0x2f < psVar1[0x50] || (psVar1[0x50] < 0x29)) &&
-        (bVar5 = FUN_800067f0((int)psVar1,0x10), !bVar5)))) {
-      FUN_80039468(psVar1,iVar2 + 0x3a8,0x354,0x1000,0xffffffff,0);
+        (bVar5 = Sfx_IsPlayingFromObjectChannel((int)psVar1,0x10), !bVar5)))) {
+      objAudioFn_800393f8((int)psVar1,(void *)(iVar2 + 0x3a8),0x354,0x1000,0xffffffff,0);
     }
     *(uint *)(iVar6 + 0x54) = *(uint *)(iVar6 + 0x54) | 0x10;
     *(undefined *)(iVar6 + 10) = 4;
