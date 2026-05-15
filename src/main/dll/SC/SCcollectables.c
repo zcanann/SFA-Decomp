@@ -6,7 +6,7 @@ extern undefined4 FUN_80006824();
 extern undefined8 FUN_80006bb4();
 extern uint FUN_80006c00();
 extern uint GameBit_Get(int eventId);
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 ObjPath_GetPointWorldPosition();
@@ -91,7 +91,7 @@ void FUN_801d6d98(int param_1)
           }
         }
         else {
-          uStack_1c = FUN_80017760(0,0x1e0);
+          uStack_1c = randomGetRange(0,0x1e0);
           uStack_1c = uStack_1c ^ 0x80000000;
           local_20 = 0x43300000;
           if ((float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e6128) <
@@ -109,7 +109,7 @@ void FUN_801d6d98(int param_1)
         }
       }
       else {
-        uStack_1c = FUN_80017760(0,0x1e0);
+        uStack_1c = randomGetRange(0,0x1e0);
         uStack_1c = uStack_1c ^ 0x80000000;
         local_20 = 0x43300000;
         if ((float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e6128) <
@@ -124,7 +124,7 @@ void FUN_801d6d98(int param_1)
       }
     }
     else {
-      uStack_1c = FUN_80017760(0,0x1e0);
+      uStack_1c = randomGetRange(0,0x1e0);
       uStack_1c = uStack_1c ^ 0x80000000;
       local_20 = 0x43300000;
       if ((float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e6128) <

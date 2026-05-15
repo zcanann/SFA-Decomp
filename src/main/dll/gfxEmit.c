@@ -5,7 +5,7 @@ extern undefined4 FUN_80006824();
 extern uint FUN_80017690();
 extern undefined8 FUN_80017698();
 extern undefined4 FUN_80017710();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017a88();
 extern int FUN_80017a98();
 extern undefined8 ObjGroup_RemoveObject();
@@ -180,10 +180,10 @@ void FUN_801726ac(short *param_1)
           uVar2 = (ushort)DAT_803dc070;
           *(ushort *)(pfVar4 + 0xd) = sVar1 - uVar2;
           if ((short)(sVar1 - uVar2) < 1) {
-            uVar3 = FUN_80017760(600,800);
+            uVar3 = randomGetRange(600,800);
             local_18 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
             pfVar4[0xc] = (float)(local_18 - DOUBLE_803e40e0);
-            uVar3 = FUN_80017760(0xb4,0xf0);
+            uVar3 = randomGetRange(0xb4,0xf0);
             *(short *)(pfVar4 + 0xd) = (short)uVar3;
             FUN_80006824((uint)param_1,0x169);
           }
@@ -208,7 +208,7 @@ void FUN_801726ac(short *param_1)
         if (lbl_803E4114 <= *pfVar4) {
           return;
         }
-        uVar3 = FUN_80017760(0,10);
+        uVar3 = randomGetRange(0,10);
         if (uVar3 == 0) {
           (**(code **)(*DAT_803dd708 + 8))(param_1,0x423,0,2,0xffffffff,0);
         }

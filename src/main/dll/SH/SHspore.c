@@ -11,7 +11,7 @@ extern undefined4 FUN_80017680();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern double FUN_80017708();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017a6c();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
@@ -72,9 +72,9 @@ void FUN_801d4364(int param_1)
   *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x6000;
   *(float *)(param_1 + 0x28) = lbl_803E608C;
   ObjHits_DisableObject(param_1);
-  uVar1 = FUN_80017760(0,0xffff);
+  uVar1 = randomGetRange(0,0xffff);
   *(short *)(iVar3 + 0x2ac) = (short)uVar1;
-  uStack_1c = FUN_80017760(0,1000);
+  uStack_1c = randomGetRange(0,1000);
   uStack_1c = uStack_1c ^ 0x80000000;
   local_20 = 0x43300000;
   *(float *)(iVar3 + 0x280) =
@@ -92,7 +92,7 @@ void FUN_801d4364(int param_1)
   }
   *(int **)(iVar3 + 0x270) = piVar2;
   ObjMsg_AllocQueue(param_1,2);
-  uVar1 = FUN_80017760(0xfffffe00,0x200);
+  uVar1 = randomGetRange(0xfffffe00,0x200);
   *(short *)(iVar3 + 0x2ae) = (short)uVar1;
   return;
 }

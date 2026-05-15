@@ -2,7 +2,7 @@
 #include "main/dll/savegame.h"
 
 extern uint GameBit_Get(int eventId);
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80286834();
 extern int FUN_8028683c();
 extern undefined4 FUN_80286880();
@@ -894,7 +894,7 @@ void FUN_800fa6a8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_2fc = 0x15;
   local_300 = &DAT_80318060;
   local_310 = 2;
-  uStack_24 = FUN_80017760(0,10);
+  uStack_24 = randomGetRange(0,10);
   uStack_24 = uStack_24 ^ 0x80000000;
   local_28 = 0x43300000;
   local_30c = lbl_803E1EC8 * (float)((double)CONCAT44(0x43300000,uStack_24) - DOUBLE_803e1ee0) +
@@ -1488,7 +1488,7 @@ void FUN_800fa7e8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
     local_310 = 2;
     uVar2 = GameBit_Get(0x4e9);
     if (uVar2 == 0) {
-      uStack_24 = FUN_80017760(5,10);
+      uStack_24 = randomGetRange(5,10);
       uStack_24 = uStack_24 ^ 0x80000000;
       local_28 = 0x43300000;
       local_30c = lbl_803E1F48 * (float)((double)CONCAT44(0x43300000,uStack_24) - DOUBLE_803e1f60)
@@ -1922,7 +1922,7 @@ void FUN_800fa8e4(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   uVar5 = FUN_8028683c();
   iVar1 = (int)((ulonglong)uVar5 >> 0x20);
   puVar4 = &DAT_80318500;
-  uVar2 = FUN_80017760(0,0x1e);
+  uVar2 = randomGetRange(0,0x1e);
   DAT_80318716 = (short)uVar2 + 0x1e;
   local_302 = 0;
   local_304 = 0x12;
