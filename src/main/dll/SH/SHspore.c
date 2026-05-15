@@ -25,12 +25,20 @@ extern undefined4 FUN_800400b0();
 extern void *Obj_GetPlayerObject(void);
 extern f32 getXZDistance(f32 *a, f32 *b);
 extern int fn_8003B500(void *obj, void *p2, f32 f1);
+extern int fn_8003B228(void *obj, void *p2);
+extern int characterDoEyeAnims(void *obj, void *p2);
 extern int fn_801D4198(void *obj, void *unused, void *p5);
 extern void fn_8002B6D8(void *obj, int arg1, int arg2, int arg3, int arg4, int arg5);
 extern int cMenuGetSelectedItem(void);
 extern int fn_8011F3A8(s16 *outTrigger);
 extern void *getTrickyObject(void);
 extern int fn_802964F0(void *obj, int param);
+extern void *ObjGroup_FindNearestObject(int group, void *obj, f32 *distanceOut);
+extern int ObjTrigger_IsSet(void *obj);
+extern void ObjAnim_SetCurrentMove(void *obj, int moveId, f32 progress, int flags);
+extern void ObjAnim_AdvanceCurrentMove(void *obj, void *events, f32 stepScale, f32 deltaTime);
+extern int fn_8002208C(f32 *state, f32 min, f32 max);
+extern void Sfx_PlayFromObject(void *obj, int sfxId);
 extern short FUN_8011e824();
 extern int FUN_8012efc4();
 extern uint FUN_80294cc4();
@@ -42,17 +50,29 @@ extern undefined4 DAT_803dcc40;
 extern undefined4 DAT_803dcc44;
 extern undefined4 DAT_803dcc54;
 extern void *lbl_803DCA54;
+extern void *lbl_803DCAAC;
+extern u8 lbl_803DBFC8;
+extern u8 lbl_803DBFCC;
 extern u8 lbl_803DBFD0;
+extern u8 lbl_803DBFD4;
 extern u8 lbl_803DBFD8;
 extern u8 lbl_803DBFDC;
+extern u8 lbl_803DBFE0;
+extern u8 lbl_803DBFE4;
+extern u8 lbl_803DBFE8;
 extern u8 lbl_803DBFEC;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd728;
+extern f32 timeDelta;
 extern f64 DOUBLE_803e6038;
+extern s16 lbl_80326E18[];
+extern f32 lbl_80326E24[];
 extern f32 lbl_803E53F8;
 extern f32 lbl_803E53FC;
 extern f32 lbl_803E5400;
+extern f32 lbl_803E5404;
+extern f32 lbl_803E5408;
 extern f32 lbl_803E6020;
 extern f32 lbl_803E6024;
 extern f32 lbl_803E6028;
@@ -288,6 +308,160 @@ int sh_queenearthwalker_getExtraSize(void)
 {
   return 0x40;
 }
+
+#pragma peephole off
+#pragma scheduling off
+void sh_queenearthwalker_update(void *obj)
+{
+  void *state;
+  void *player;
+  void *target;
+  u8 action;
+  s8 actionParam;
+  u8 stateFlags;
+  u8 eventIndex;
+  s16 currentMove;
+  s16 targetMove;
+
+  state = *(void **)((u8 *)obj + 0xb8);
+  *(u8 *)((u8 *)state + 0x2) &= ~0x20;
+  actionParam = *(s8 *)((u8 *)obj + 0xac);
+  action = (*(u8 (***)(s8))lbl_803DCAAC)[0x10](actionParam);
+
+  if ((*(u8 *)((u8 *)state + 0x2) & 0x1) != 0) {
+    switch (action) {
+      case 0:
+        fn_801D44A4(obj, state);
+        break;
+      case 1:
+        if (GameBit_Get(0x193) != 0) {
+          *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFEC;
+        } else {
+          *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFD4;
+        }
+        player = Obj_GetPlayerObject();
+        *(u8 *)((u8 *)state + 0x8) = 1;
+        *(f32 *)((u8 *)state + 0xc) = *(f32 *)((u8 *)player + 0xc);
+        *(f32 *)((u8 *)state + 0x10) = *(f32 *)((u8 *)player + 0x10);
+        *(f32 *)((u8 *)state + 0x14) = *(f32 *)((u8 *)player + 0x14);
+        fn_8003B500(obj, (u8 *)state + 0x8, lbl_803E53F8);
+        break;
+      case 2:
+        fn_801D4364(obj, state);
+        break;
+      case 3:
+        if (GameBit_Get(0x13f) != 0) {
+          *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFEC;
+        } else {
+          *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFE0;
+        }
+        player = Obj_GetPlayerObject();
+        *(u8 *)((u8 *)state + 0x8) = 1;
+        *(f32 *)((u8 *)state + 0xc) = *(f32 *)((u8 *)player + 0xc);
+        *(f32 *)((u8 *)state + 0x10) = *(f32 *)((u8 *)player + 0x10);
+        *(f32 *)((u8 *)state + 0x14) = *(f32 *)((u8 *)player + 0x14);
+        fn_8003B500(obj, (u8 *)state + 0x8, lbl_803E53F8);
+        break;
+      case 4:
+        if (GameBit_Get(0x199) != 0) {
+          *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFEC;
+        } else {
+          *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFE4;
+        }
+        player = Obj_GetPlayerObject();
+        *(u8 *)((u8 *)state + 0x8) = 1;
+        *(f32 *)((u8 *)state + 0xc) = *(f32 *)((u8 *)player + 0xc);
+        *(f32 *)((u8 *)state + 0x10) = *(f32 *)((u8 *)player + 0x10);
+        *(f32 *)((u8 *)state + 0x14) = *(f32 *)((u8 *)player + 0x14);
+        fn_8003B500(obj, (u8 *)state + 0x8, lbl_803E53F8);
+        break;
+      case 5:
+        player = Obj_GetPlayerObject();
+        *(u8 *)((u8 *)state + 0x8) = 1;
+        *(f32 *)((u8 *)state + 0xc) = *(f32 *)((u8 *)player + 0xc);
+        *(f32 *)((u8 *)state + 0x10) = *(f32 *)((u8 *)player + 0x10);
+        *(f32 *)((u8 *)state + 0x14) = *(f32 *)((u8 *)player + 0x14);
+        fn_8003B500(obj, (u8 *)state + 0x8, lbl_803E53F8);
+        break;
+      case 6:
+      case 7:
+      case 8:
+        break;
+      default:
+        break;
+    }
+  } else {
+    switch (action) {
+      case 1:
+        target = ObjGroup_FindNearestObject(0xf, obj, NULL);
+        (*(void (***)(void *, int))lbl_803DCA54)[0x15](target, 0x1324);
+        (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](1, target, 0x10);
+        *(u8 *)((u8 *)state + 0x2) |= 0xc;
+        *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFC8;
+        break;
+      case 2:
+        if (GameBit_Get(0xc2) == 6) {
+          (*(void (***)(void *, int))lbl_803DCA54)[0x15](obj, 0x18f6);
+          (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](6, obj, 1);
+          *(u8 *)state = 3;
+        } else {
+          if (GameBit_Get(0xbf) != 0) {
+            *(u8 *)state = 1;
+          }
+          *(u8 *)((u8 *)state + 0x2) |= 0xc;
+          *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFCC;
+        }
+        break;
+      case 3:
+      case 4:
+        (*(void (***)(void *, int))lbl_803DCA54)[0x15](obj, 0x18f6);
+        (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](6, obj, 1);
+        *(u8 *)state = 3;
+        break;
+      case 8:
+        target = ObjGroup_FindNearestObject(0xf, obj, NULL);
+        (*(void (***)(void *, int))lbl_803DCA54)[0x15](target, 0x6a4);
+        (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](7, target, 8);
+        *(u8 *)state = 4;
+        *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFE8;
+        break;
+      default:
+        break;
+    }
+    *(u8 *)((u8 *)state + 0x2) |= 0x1;
+    return;
+  }
+
+  if ((*(u8 *)((u8 *)state + 0x2) & 0x8) != 0) {
+    fn_8003B228(obj, (u8 *)state + 0x8);
+  } else {
+    characterDoEyeAnims(obj, (u8 *)state + 0x8);
+  }
+
+  currentMove = *(s16 *)((u8 *)obj + 0xa0);
+  targetMove = lbl_80326E18[*(u8 *)state];
+  if (currentMove != targetMove) {
+    ObjAnim_SetCurrentMove(obj, targetMove, lbl_803E53F8, 0);
+  }
+  ObjAnim_AdvanceCurrentMove(obj, NULL, lbl_80326E24[*(u8 *)state], timeDelta);
+
+  stateFlags = *(u8 *)((u8 *)state + 0x2);
+  if ((stateFlags & 0x10) == 0) {
+    *(u8 *)((u8 *)state + 0x2) &= ~0x2;
+    if (ObjTrigger_IsSet(obj) != 0 && *(u8 *)(*(int *)((u8 *)obj + 0x78) + 0x4) != 4) {
+      eventIndex = (u8)randomGetRange(1, **(u8 **)((u8 *)state + 0x38));
+      *(u8 *)((u8 *)state + 0x2) |= 0x2;
+      (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](
+          ((u8 *)*(u8 **)((u8 *)state + 0x38))[eventIndex], obj, -1);
+    }
+  }
+
+  if (fn_8002208C((f32 *)((u8 *)state + 0x3c), lbl_803E5404, lbl_803E5408) != 0) {
+    Sfx_PlayFromObject(obj, 0x410);
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
