@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/backpack.h"
 
-extern void fn_801641B0(int obj);
+extern void tumbleweed_updateStateMachine(int obj);
 extern void fn_80164940(int obj);
 extern void tumbleweed_updateEffects(int obj);
 extern int GameBit_Set(int eventId, int value);
@@ -86,7 +86,7 @@ void tumbleweed_update(int obj) {
     if (*(s16*)(obj + 0x46) == TUMBLEWEED_TYPE_1) {
         fn_80164940(obj);
     } else {
-        fn_801641B0(obj);
+        tumbleweed_updateStateMachine(obj);
     }
     tumbleweed_updateEffects(obj);
 }
@@ -98,14 +98,14 @@ int fn_801650D0(void) { return 0x0; }
 /*
  * --INFO--
  *
- * Function: fn_801641B0
+ * Function: tumbleweed_updateStateMachine
  * EN v1.0 Address: 0x801641B0
  * EN v1.0 Size: 1936b
  */
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void fn_801641B0(int obj) {
+void tumbleweed_updateStateMachine(int obj) {
     int aux;
     int sphereIndex;
     u32 hitVolume;
