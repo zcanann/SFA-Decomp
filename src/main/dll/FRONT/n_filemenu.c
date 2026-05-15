@@ -186,17 +186,19 @@ int TitleMenu_run(void)
   if (lbl_803DD648 != 0) {
     lbl_803DD648--;
   }
-  if (lbl_803DD619 != 0) {
+  if (gAttractMoviePreparePending != 0) {
     n_attractmode_prepareMovie();
   }
-  if ((lbl_803DD64D != 0) && (--lbl_803DD64D == 0) && (lbl_803DD64F != 0)) {
+  if ((gAttractMovieRetraceCountdown != 0) && (--gAttractMovieRetraceCountdown == 0) &&
+      (gAttractMoviePlaybackEnabled != 0)) {
     movieFn_80117b68(100,1000);
   }
-  if ((lbl_803DD610 == NATTRACTMODE_MOVIE_STATE_PREPARED) &&
-      (++lbl_803DD698 > NATTRACTMODE_MOVIE_RETRACE_COUNTDOWN)) {
+  if ((gAttractMovieState == NATTRACTMODE_MOVIE_STATE_PREPARED) &&
+      (++gAttractMovieIdleFrameCount > NATTRACTMODE_MOVIE_RETRACE_COUNTDOWN)) {
     n_attractmode_releaseMovieBuffers();
   }
-  if (((lbl_803DD610 == NATTRACTMODE_MOVIE_STATE_PREPARED) && (lbl_803DD64F != 0)) &&
+  if (((gAttractMovieState == NATTRACTMODE_MOVIE_STATE_PREPARED) &&
+       (gAttractMoviePlaybackEnabled != 0)) &&
       (lbl_803DD64E != 0)) {
     buttons = FUN_80006c00(0);
     FUN_80006bb4(0,dpad,&face);
@@ -223,7 +225,7 @@ int TitleMenu_run(void)
         lbl_803DD64C = 2;
       }
       TitleMenu_SetPanelSelection(0);
-      lbl_803DD64F = 0;
+      gAttractMoviePlaybackEnabled = 0;
       TitleMenu_SetMenuState(0,1);
       if (lbl_803DB424 == 0xff) {
         TitleMenu_ReloadSaveSettings();
@@ -232,7 +234,7 @@ int TitleMenu_run(void)
         }
       }
     }
-  } else if ((lbl_803DD64E != 0) && (lbl_803DD64F == 0)) {
+  } else if ((lbl_803DD64E != 0) && (gAttractMoviePlaybackEnabled == 0)) {
     buttons = FUN_80006c00(0);
     FUN_80006bb4(0,dpad,&face);
     if ((buttons == 0) && ((dpad[0] == 0 && (face == 0)))) {
@@ -242,7 +244,7 @@ int TitleMenu_run(void)
         if (lbl_803DD64C == 0) {
           lbl_803DD64C = 1;
           TitleMenu_SetMenuState(4,1);
-          lbl_803DD64F = 1;
+          gAttractMoviePlaybackEnabled = 1;
           lbl_803DD617 = -0x19;
         }
       }
@@ -266,28 +268,28 @@ int TitleMenu_run(void)
   lbl_803DD64E = 1;
   if (lbl_803DD650 == 0) {
     menuId = TitleMenu_GetFadeState();
-    lbl_803DD614 = TitleMenu_GetSelection();
+    gTitleMenuSelection = TitleMenu_GetSelection();
     if ((((double)lbl_803E1D28 == (double)titleScreenGetCamProgress()) && (lbl_803DD616 < 0xff)) &&
-        (lbl_803DD64F == 0)) {
+        (gAttractMoviePlaybackEnabled == 0)) {
       lbl_803DD617 = 0x19;
-      if (lbl_803DD614 == 0) {
+      if (gTitleMenuSelection == 0) {
         lbl_803DD618 = 1;
       } else {
         lbl_803DD618 = 0;
       }
-    } else if (lbl_803DD615 != lbl_803DD614) {
-      TitleMenu_SetMenuState(lbl_803DD614,1);
+    } else if (lbl_803DD615 != gTitleMenuSelection) {
+      TitleMenu_SetMenuState(gTitleMenuSelection,1);
       FUN_80006824(0,0x37b);
       lbl_803DD617 = -0x19;
-      lbl_803DD615 = lbl_803DD614;
+      lbl_803DD615 = gTitleMenuSelection;
       titleScreenFn_80130464(0);
     }
     if ((int)((uint)lbl_803DD616 + (int)lbl_803DD617) < 0xff) {
       if ((int)((uint)lbl_803DD616 + (int)lbl_803DD617) < 1) {
-        TitleMenu_SetEntryHighlight(lbl_803DD614);
+        TitleMenu_SetEntryHighlight(gTitleMenuSelection);
         lbl_803DD616 = 0;
         lbl_803DD617 = 0;
-        if (lbl_803DD614 != 0) {
+        if (gTitleMenuSelection != 0) {
           lbl_803DD618 = 0;
         }
       } else {
@@ -305,23 +307,23 @@ int TitleMenu_run(void)
         lbl_803DD652 = 1;
       }
     } else {
-      titleScreenFn_801368c4(lbl_803DD614);
+      titleScreenFn_801368c4(gTitleMenuSelection);
       if ((menuId == 1) && (lbl_803DD616 == 0xff)) {
         titleScreenFn_801368a4(1);
         lbl_803DD651 = 1;
         titleScreenFn_80130464(1);
         FUN_80006824(0,0xff);
-        if (lbl_803DD614 == 2) {
+        if (gTitleMenuSelection == 2) {
           lbl_803DD650 = 7;
           lbl_803DD6F8 = 1;
-        } else if (lbl_803DD614 < 2) {
-          if (lbl_803DD614 == 0) {
+        } else if (gTitleMenuSelection < 2) {
+          if (gTitleMenuSelection == 0) {
             lbl_803DD650 = 5;
           } else {
             lbl_803DD650 = 7;
             lbl_803DD6F8 = 0;
           }
-        } else if (lbl_803DD614 < 4) {
+        } else if (gTitleMenuSelection < 4) {
           lbl_803DD650 = 7;
           lbl_803DD6F8 = 2;
         }
@@ -359,7 +361,7 @@ void TitleMenu_release(void)
 void fn_80116F44(int a)
 {
   u8 v = (u8)a;
-  lbl_803DD614 = v;
+  gTitleMenuSelection = v;
   lbl_803DD615 = 0xff;
   (*(*(void (**)(int))((int)lbl_803DCAA0->vtable + 0x18)))(v);
 }

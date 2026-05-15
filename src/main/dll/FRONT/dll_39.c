@@ -232,42 +232,42 @@ void n_attractmode_releaseMovieBuffers(void)
 {
   int freeDelay;
   
-  if (lbl_803DD610 == NATTRACTMODE_MOVIE_STATE_PREPARED) {
+  if (gAttractMovieState == NATTRACTMODE_MOVIE_STATE_PREPARED) {
     fn_8011881C();
     fn_80118FAC();
     audioFn_801192ec();
     freeDelay = mmSetFreeDelay(0);
-    if (lbl_803DD634 != 0) {
-      mm_free(lbl_803DD634);
-      lbl_803DD634 = 0;
+    if (gAttractMovieBuffer0 != 0) {
+      mm_free(gAttractMovieBuffer0);
+      gAttractMovieBuffer0 = 0;
     }
-    if (lbl_803DD630 != 0) {
-      mm_free(lbl_803DD630);
-      lbl_803DD630 = 0;
+    if (gAttractMovieBuffer1 != 0) {
+      mm_free(gAttractMovieBuffer1);
+      gAttractMovieBuffer1 = 0;
     }
-    if (lbl_803DD62C != 0) {
-      mm_free(lbl_803DD62C);
-      lbl_803DD62C = 0;
+    if (gAttractMovieBuffer2 != 0) {
+      mm_free(gAttractMovieBuffer2);
+      gAttractMovieBuffer2 = 0;
     }
-    if (lbl_803DD628 != 0) {
-      mm_free(lbl_803DD628);
-      lbl_803DD628 = 0;
+    if (gAttractMovieBuffer3 != 0) {
+      mm_free(gAttractMovieBuffer3);
+      gAttractMovieBuffer3 = 0;
     }
-    if (lbl_803DD624 != 0) {
-      mm_free(lbl_803DD624);
-      lbl_803DD624 = 0;
+    if (gAttractMovieOptionalBuffer != 0) {
+      mm_free(gAttractMovieOptionalBuffer);
+      gAttractMovieOptionalBuffer = 0;
     }
-    if (lbl_803DD620 != 0) {
-      mm_free(lbl_803DD620);
-      lbl_803DD620 = 0;
+    if (gAttractMovieWorkBuffer != 0) {
+      mm_free(gAttractMovieWorkBuffer);
+      gAttractMovieWorkBuffer = 0;
     }
-    if (lbl_803DD61C != 0) {
-      mm_free(lbl_803DD61C);
-      lbl_803DD61C = 0;
+    if (gAttractMovieScratchBuffer != 0) {
+      mm_free(gAttractMovieScratchBuffer);
+      gAttractMovieScratchBuffer = 0;
     }
     mmSetFreeDelay(freeDelay);
-    lbl_803DD610 = NATTRACTMODE_MOVIE_STATE_RELEASED;
-    lbl_803DD619 = NATTRACTMODE_MOVIE_BUSY;
+    gAttractMovieState = NATTRACTMODE_MOVIE_STATE_RELEASED;
+    gAttractMoviePreparePending = NATTRACTMODE_MOVIE_BUSY;
   }
   return;
 }
@@ -292,74 +292,76 @@ void n_attractmode_releaseMovieBuffers(void)
 void n_attractmode_prepareMovie(void)
 {
   char *attractModeData;
-  int iVar1;
+  int ok;
   int freeDelay;
-  int local_18;
-  int local_1c;
-  int local_20;
-  uint local_24;
+  int movieBuffer1Size;
+  int movieBuffer2Size;
+  int movieBuffer3Size;
+  uint optionalBufferSize;
   int workBufferSize;
-  uint local_14 [3];
+  uint movieBuffer0Size[3];
   
   attractModeData = lbl_8031A1D8;
-  lbl_803DD619 = NATTRACTMODE_MOVIE_BUSY;
-  iVar1 = attractModeAudioFn_80119338(NATTRACTMODE_MOVIE_SETUP_ID);
-  if (iVar1 != 0) {
-    iVar1 = movieLoad(attractModeData + NATTRACTMODE_MOVIE_PATH_OFFSET,
-                      NATTRACTMODE_MOVIE_START_FRAME_DEFAULT);
-    if (iVar1 == 0) {
+  gAttractMoviePreparePending = NATTRACTMODE_MOVIE_BUSY;
+  ok = attractModeAudioFn_80119338(NATTRACTMODE_MOVIE_SETUP_ID);
+  if (ok != 0) {
+    ok = movieLoad(attractModeData + NATTRACTMODE_MOVIE_PATH_OFFSET,
+                   NATTRACTMODE_MOVIE_START_FRAME_DEFAULT);
+    if (ok == 0) {
       audioFn_801192ec();
     }
     else {
-      fn_801181F8((uint)&lbl_803DD638);
-      lbl_803DD644 = ((uint)lbl_803DCCF0[2] - lbl_803DD638.width) >> 1;
-      lbl_803DD640 = ((uint)lbl_803DCCF0[3] - lbl_803DD638.height) >> 1;
-      fn_80118EAC(local_14,&local_18,&local_1c,&local_20,&local_24,&workBufferSize);
-      lbl_803DD634 = mmAlloc(local_14[0],NATTRACTMODE_MOVIE_HEAP,0);
-      lbl_803DD630 = mmAlloc(local_18,NATTRACTMODE_MOVIE_HEAP,0);
-      lbl_803DD62C = mmAlloc(local_1c,NATTRACTMODE_MOVIE_HEAP,0);
-      lbl_803DD628 = mmAlloc(local_20,NATTRACTMODE_MOVIE_HEAP,0);
-      if (local_24 != NATTRACTMODE_OPTIONAL_BUFFER_SIZE_NONE) {
-        lbl_803DD624 = mmAlloc(local_24,NATTRACTMODE_MOVIE_HEAP,0);
+      fn_801181F8((uint)&gAttractMovieDims);
+      gAttractMovieOffsetX = ((uint)lbl_803DCCF0[2] - gAttractMovieDims.width) >> 1;
+      gAttractMovieOffsetY = ((uint)lbl_803DCCF0[3] - gAttractMovieDims.height) >> 1;
+      fn_80118EAC(movieBuffer0Size,&movieBuffer1Size,&movieBuffer2Size,&movieBuffer3Size,
+                  &optionalBufferSize,&workBufferSize);
+      gAttractMovieBuffer0 = mmAlloc(movieBuffer0Size[0],NATTRACTMODE_MOVIE_HEAP,0);
+      gAttractMovieBuffer1 = mmAlloc(movieBuffer1Size,NATTRACTMODE_MOVIE_HEAP,0);
+      gAttractMovieBuffer2 = mmAlloc(movieBuffer2Size,NATTRACTMODE_MOVIE_HEAP,0);
+      gAttractMovieBuffer3 = mmAlloc(movieBuffer3Size,NATTRACTMODE_MOVIE_HEAP,0);
+      if (optionalBufferSize != NATTRACTMODE_OPTIONAL_BUFFER_SIZE_NONE) {
+        gAttractMovieOptionalBuffer = mmAlloc(optionalBufferSize,NATTRACTMODE_MOVIE_HEAP,0);
       }
       else {
-        lbl_803DD624 = 0;
+        gAttractMovieOptionalBuffer = 0;
       }
-      lbl_803DD620 = mmAlloc(workBufferSize,NATTRACTMODE_MOVIE_HEAP,0);
-      lbl_803DD61C = mmAlloc(NATTRACTMODE_WORK_BUFFER_SIZE,NATTRACTMODE_MOVIE_HEAP,0);
-      if (((((lbl_803DD634 == 0) || (lbl_803DD630 == 0)) || (lbl_803DD62C == 0)) ||
-          ((lbl_803DD628 == 0 ||
-           ((lbl_803DD624 == 0 && (local_24 != NATTRACTMODE_OPTIONAL_BUFFER_SIZE_NONE)))))) ||
-         ((lbl_803DD620 == 0 || (lbl_803DD61C == 0)))) {
+      gAttractMovieWorkBuffer = mmAlloc(workBufferSize,NATTRACTMODE_MOVIE_HEAP,0);
+      gAttractMovieScratchBuffer = mmAlloc(NATTRACTMODE_WORK_BUFFER_SIZE,NATTRACTMODE_MOVIE_HEAP,0);
+      if (((((gAttractMovieBuffer0 == 0) || (gAttractMovieBuffer1 == 0)) ||
+           (gAttractMovieBuffer2 == 0)) || ((gAttractMovieBuffer3 == 0 ||
+           ((gAttractMovieOptionalBuffer == 0 &&
+            (optionalBufferSize != NATTRACTMODE_OPTIONAL_BUFFER_SIZE_NONE)))))) ||
+         ((gAttractMovieWorkBuffer == 0 || (gAttractMovieScratchBuffer == 0)))) {
         audioFn_801192ec();
         freeDelay = mmSetFreeDelay(0);
-        if (lbl_803DD634 != 0) {
-          mm_free(lbl_803DD634);
-          lbl_803DD634 = 0;
+        if (gAttractMovieBuffer0 != 0) {
+          mm_free(gAttractMovieBuffer0);
+          gAttractMovieBuffer0 = 0;
         }
-        if (lbl_803DD630 != 0) {
-          mm_free(lbl_803DD630);
-          lbl_803DD630 = 0;
+        if (gAttractMovieBuffer1 != 0) {
+          mm_free(gAttractMovieBuffer1);
+          gAttractMovieBuffer1 = 0;
         }
-        if (lbl_803DD62C != 0) {
-          mm_free(lbl_803DD62C);
-          lbl_803DD62C = 0;
+        if (gAttractMovieBuffer2 != 0) {
+          mm_free(gAttractMovieBuffer2);
+          gAttractMovieBuffer2 = 0;
         }
-        if (lbl_803DD628 != 0) {
-          mm_free(lbl_803DD628);
-          lbl_803DD628 = 0;
+        if (gAttractMovieBuffer3 != 0) {
+          mm_free(gAttractMovieBuffer3);
+          gAttractMovieBuffer3 = 0;
         }
-        if (lbl_803DD624 != 0) {
-          mm_free(lbl_803DD624);
-          lbl_803DD624 = 0;
+        if (gAttractMovieOptionalBuffer != 0) {
+          mm_free(gAttractMovieOptionalBuffer);
+          gAttractMovieOptionalBuffer = 0;
         }
-        if (lbl_803DD620 != 0) {
-          mm_free(lbl_803DD620);
-          lbl_803DD620 = 0;
+        if (gAttractMovieWorkBuffer != 0) {
+          mm_free(gAttractMovieWorkBuffer);
+          gAttractMovieWorkBuffer = 0;
         }
-        if (lbl_803DD61C != 0) {
-          mm_free(lbl_803DD61C);
-          lbl_803DD61C = 0;
+        if (gAttractMovieScratchBuffer != 0) {
+          mm_free(gAttractMovieScratchBuffer);
+          gAttractMovieScratchBuffer = 0;
         }
         mmSetFreeDelay(freeDelay);
         OSReport(attractModeData + NATTRACTMODE_MALLOC_FAILED_OFFSET);
@@ -369,30 +371,30 @@ void n_attractmode_prepareMovie(void)
         printHeapStats(1);
       }
       else {
-        lbl_803DD619 = NATTRACTMODE_MOVIE_READY;
-        DCInvalidateRange(lbl_803DD634,local_14[0]);
-        DCInvalidateRange(lbl_803DD630,local_18);
-        DCInvalidateRange(lbl_803DD62C,local_1c);
-        DCInvalidateRange(lbl_803DD628,local_20);
-        if (lbl_803DD624 != 0) {
-          DCInvalidateRange(lbl_803DD624,local_24);
+        gAttractMoviePreparePending = NATTRACTMODE_MOVIE_READY;
+        DCInvalidateRange(gAttractMovieBuffer0,movieBuffer0Size[0]);
+        DCInvalidateRange(gAttractMovieBuffer1,movieBuffer1Size);
+        DCInvalidateRange(gAttractMovieBuffer2,movieBuffer2Size);
+        DCInvalidateRange(gAttractMovieBuffer3,movieBuffer3Size);
+        if (gAttractMovieOptionalBuffer != 0) {
+          DCInvalidateRange(gAttractMovieOptionalBuffer,optionalBufferSize);
         }
-        DCInvalidateRange(lbl_803DD620,workBufferSize);
-        DCInvalidateRange(lbl_803DD61C,NATTRACTMODE_WORK_BUFFER_SIZE);
-        fn_80118C88(lbl_803DD634,lbl_803DD630,lbl_803DD62C,lbl_803DD628,lbl_803DD624,
-                     lbl_803DD620);
-        iVar1 = prepareAttractMode(0,1);
-        if (iVar1 == 0) {
+        DCInvalidateRange(gAttractMovieWorkBuffer,workBufferSize);
+        DCInvalidateRange(gAttractMovieScratchBuffer,NATTRACTMODE_WORK_BUFFER_SIZE);
+        fn_80118C88(gAttractMovieBuffer0,gAttractMovieBuffer1,gAttractMovieBuffer2,
+                     gAttractMovieBuffer3,gAttractMovieOptionalBuffer,gAttractMovieWorkBuffer);
+        ok = prepareAttractMode(0,1);
+        if (ok == 0) {
           OSPanic(attractModeData + NATTRACTMODE_SOURCE_FILE_OFFSET,
                   NATTRACTMODE_PREPARE_FAIL_LINE,
                   attractModeData + NATTRACTMODE_FAIL_TO_PREPARE_OFFSET);
         }
         fn_80118900();
-        lbl_803DD610 = NATTRACTMODE_MOVIE_STATE_PREPARED;
+        gAttractMovieState = NATTRACTMODE_MOVIE_STATE_PREPARED;
         VIWaitForRetrace();
-        lbl_803DD64D = NATTRACTMODE_MOVIE_RETRACE_COUNTDOWN;
-        lbl_803DD698 = 0;
-        if ((int)lbl_803DD614 == NATTRACTMODE_MOVIE_STATE_RELEASED) {
+        gAttractMovieRetraceCountdown = NATTRACTMODE_MOVIE_RETRACE_COUNTDOWN;
+        gAttractMovieIdleFrameCount = 0;
+        if ((int)gTitleMenuSelection == NATTRACTMODE_MOVIE_STATE_RELEASED) {
           movieFn_80117b68(NATTRACTMODE_MOVIE_START_FRAME_ALTERNATE,1);
         }
         else {
@@ -440,7 +442,7 @@ void TitleMenu_render(u8 *param_1)
     (*(code *)(*lbl_803DCAA0 + 0x30))(0xff);
     (*(code *)(*lbl_803DCAA0 + 0x10))(param_1);
     gameTextSetDrawFunc(0);
-    titleScreenShowCopyright(lbl_803DD64F);
+    titleScreenShowCopyright(gAttractMoviePlaybackEnabled);
   }
 }
 #pragma peephole reset

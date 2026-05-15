@@ -122,7 +122,7 @@ static void TitleMenu_SetEntryHighlight(void)
   int i;
 
   for (i = 0; i < 4; i++) {
-    if (i == lbl_803DD614) {
+    if (i == gTitleMenuSelection) {
       lbl_8031A214[i].flags &= ~0x4000;
     } else {
       lbl_8031A214[i].flags |= 0x4000;
@@ -174,7 +174,7 @@ void TitleMenu_initialise(void)
     TitleMenu_OpenPanel(lbl_8031A214,4);
     lbl_803DD652 = 1;
   }
-  TitleMenu_SetPanelSelection(lbl_803DD614);
+  TitleMenu_SetPanelSelection(gTitleMenuSelection);
   titleScreenFn_801368a4(0);
 
   mode = getUiDllFn_80014930();
@@ -189,24 +189,24 @@ void TitleMenu_initialise(void)
 
   setLinkIsRotated();
   TitleMenu_SetEntryHighlight();
-  lbl_803DD619 = 0;
-  lbl_803DD64D = 0;
+  gAttractMoviePreparePending = 0;
+  gAttractMovieRetraceCountdown = 0;
   lbl_803DD64C = 1;
   lbl_803DD648 = 0x3c;
   lbl_803DD680 = 0;
 
   if ((lbl_803DD61A != 0) &&
-      ((lbl_803DD610 == NATTRACTMODE_MOVIE_READY) ||
-       (lbl_803DD610 == NATTRACTMODE_MOVIE_STATE_RELEASED))) {
+      ((gAttractMovieState == NATTRACTMODE_MOVIE_READY) ||
+       (gAttractMovieState == NATTRACTMODE_MOVIE_STATE_RELEASED))) {
     n_attractmode_prepareMovie();
     titleScreenPositionElements(lbl_803E1D10,lbl_803E1D18);
-    lbl_803DD64F = 1;
+    gAttractMoviePlaybackEnabled = 1;
     movieFn_80117b68(0,0);
     audioSetVolumes(0,10,1,0,0);
     lbl_803DD616 = 0;
   } else {
     titleScreenPositionElements(lbl_803E1D10,lbl_803E1D18);
-    lbl_803DD64F = 0;
+    gAttractMoviePlaybackEnabled = 0;
     movieFn_80117b68(0,1);
   }
   setIsOvercast(0);
@@ -215,7 +215,7 @@ void TitleMenu_initialise(void)
   envFxActFn_800887f8(0);
   gameTimerStop();
   audioFn_8000b694(0);
-  lbl_803DD698 = 0;
+  gAttractMovieIdleFrameCount = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset

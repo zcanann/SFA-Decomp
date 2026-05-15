@@ -21,6 +21,23 @@ typedef struct NAttractModeMovieDims {
 #define NATTRACTMODE_MOVIE_START_FRAME_ALTERNATE 100
 #define NATTRACTMODE_MOVIE_RETRACE_COUNTDOWN 10
 
+#define gAttractMovieState lbl_803DD610
+#define gTitleMenuSelection lbl_803DD614
+#define gAttractMoviePreparePending lbl_803DD619
+#define gAttractMovieScratchBuffer lbl_803DD61C
+#define gAttractMovieWorkBuffer lbl_803DD620
+#define gAttractMovieOptionalBuffer lbl_803DD624
+#define gAttractMovieBuffer3 lbl_803DD628
+#define gAttractMovieBuffer2 lbl_803DD62C
+#define gAttractMovieBuffer1 lbl_803DD630
+#define gAttractMovieBuffer0 lbl_803DD634
+#define gAttractMovieDims lbl_803DD638
+#define gAttractMovieOffsetY lbl_803DD640
+#define gAttractMovieOffsetX lbl_803DD644
+#define gAttractMovieRetraceCountdown lbl_803DD64D
+#define gAttractMoviePlaybackEnabled lbl_803DD64F
+#define gAttractMovieIdleFrameCount lbl_803DD698
+
 int n_rareware_frameStart(void);
 void n_rareware_release(void);
 void n_rareware_initialise(void);
