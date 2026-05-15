@@ -52,3 +52,24 @@ void laser_releaseUnsupported(void)
 void laser_initialiseUnsupported(void)
 {
 }
+
+u32 gLaserUnsupportedObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (u32)laser_initialiseUnsupported,
+    (u32)laser_releaseUnsupported,
+    0,
+    (u32)laser_init,
+    (u32)laser_updateUnsupported,
+    (u32)laser_hitDetectUnsupported,
+    (u32)laser_renderUnsupported,
+    (u32)laser_freeUnsupported,
+    (u32)laser_func08,
+    (u32)laser_getExtraSizeUnsupported,
+};
+
+char sTextBlockInitNoLongerSupported[] = "<textblock.c Init>No Longer supported \n";
+char sLaserInitNoLongerSupported[] = "<laser.c Init>No Longer supported \n";
+static u32 sLaserUnsupportedDataPad = 0;
