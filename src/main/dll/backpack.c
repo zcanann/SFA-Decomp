@@ -3,7 +3,7 @@
 
 extern void fn_801641B0(int obj);
 extern void fn_80164940(int obj);
-extern void fn_80164C44(int obj);
+extern void tumbleweed_updateEffects(int obj);
 extern int GameBit_Set(int eventId, int value);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
@@ -58,6 +58,20 @@ extern f64 lbl_803E2F90;
 
 extern f32 sqrtf(f32 x);
 
+typedef void (*ExpgfxSpawnObjectFn)(int obj, int objectId, void *params, int mode,
+                                    int preferredPoolIdx, void *outObj);
+
+#define TUMBLEWEED_TYPE_1 0x39d
+#define TUMBLEWEED_TYPE_3 0x4ba
+#define TUMBLEWEED_TYPE_4 0x4c1
+
+#define TUMBLEWEED_EFFECT_BURST_SPECIAL 0x34d
+#define TUMBLEWEED_EFFECT_BURST_DEFAULT 0x32e
+#define TUMBLEWEED_EFFECT_PUFF_SPECIAL 0x34c
+#define TUMBLEWEED_EFFECT_PUFF_DEFAULT 0x32d
+#define TUMBLEWEED_EFFECT_SPAWN_COUNT 0x14
+#define TUMBLEWEED_EXPGFX_MODE_ACTIVE 2
+
 /*
  * --INFO--
  *
@@ -69,12 +83,12 @@ extern f32 sqrtf(f32 x);
 #pragma scheduling off
 #pragma peephole off
 void tumbleweed_update(int obj) {
-    if (*(s16*)(obj + 0x46) == 0x39d) {
+    if (*(s16*)(obj + 0x46) == TUMBLEWEED_TYPE_1) {
         fn_80164940(obj);
     } else {
         fn_801641B0(obj);
     }
-    fn_80164C44(obj);
+    tumbleweed_updateEffects(obj);
 }
 #pragma pop
 
@@ -114,7 +128,7 @@ void fn_801641B0(int obj) {
             ObjHits_EnableObject(obj);
             *(u8*)(aux + 0x278) = 2;
             *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 3);
-            if (*(s16*)(obj + 0x46) == 0x4c1) {
+            if (*(s16*)(obj + 0x46) == TUMBLEWEED_TYPE_4) {
                 *(f32*)(aux + 0x2a0) = lbl_803E2F9C;
             }
         }
@@ -172,7 +186,7 @@ void fn_801641B0(int obj) {
         if (*(f32*)(aux + 0x2a0) >= lbl_803E2F68) {
             if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0 &&
                 *(s16*)(hitObject + 0x46) != *(s16*)(obj + 0x46)) {
-                if (*(s16*)(obj + 0x46) == 0x4ba) {
+                if (*(s16*)(obj + 0x46) == TUMBLEWEED_TYPE_3) {
                     *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 3);
                     *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) & ~0x10);
                     *(u8*)(aux + 0x278) = 3;
@@ -288,7 +302,7 @@ void tumbleweed_init(int obj, int defData) {
     ObjGroup_AddObject(obj, 0x31);
     ObjHits_DisableObject(obj);
     ObjMsg_AllocQueue(obj, 1);
-    if (*(s16*)(obj + 0x46) == 0x4ba) {
+    if (*(s16*)(obj + 0x46) == TUMBLEWEED_TYPE_3) {
         *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 0x10);
     }
 }
@@ -297,33 +311,37 @@ void tumbleweed_init(int obj, int defData) {
 /*
  * --INFO--
  *
- * Function: fn_80164C44
+ * Function: tumbleweed_updateEffects
  * EN v1.0 Address: 0x80164C44
  * EN v1.0 Size: 672b
  */
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void fn_80164C44(int obj) {
+void tumbleweed_updateEffects(int obj) {
     int aux = *(int*)(obj + 0xb8);
     int i;
     s16 type;
 
     if ((*(u8*)(aux + 0x27a) & 1) != 0) {
         switch (*(s16*)(obj + 0x46)) {
-        case 0x4ba:
-        case 0x39d:
-        case 0x4c1:
-            i = 0x14;
+        case TUMBLEWEED_TYPE_3:
+        case TUMBLEWEED_TYPE_1:
+        case TUMBLEWEED_TYPE_4:
+            i = TUMBLEWEED_EFFECT_SPAWN_COUNT;
             do {
-                (*(void(**)(int, int, int, int, int, int))(*(int*)pDll_expgfx + 0x8))(obj, 0x34d, 0, 2, -1, 0);
+                ((ExpgfxSpawnObjectFn)(*(u32 *)(*(int *)pDll_expgfx + 0x8)))
+                    (obj, TUMBLEWEED_EFFECT_BURST_SPECIAL, 0,
+                     TUMBLEWEED_EXPGFX_MODE_ACTIVE, -1, 0);
                 i = i - 1;
             } while (i != 0);
             break;
         default:
-            i = 0x14;
+            i = TUMBLEWEED_EFFECT_SPAWN_COUNT;
             do {
-                (*(void(**)(int, int, int, int, int, int))(*(int*)pDll_expgfx + 0x8))(obj, 0x32e, 0, 2, -1, 0);
+                ((ExpgfxSpawnObjectFn)(*(u32 *)(*(int *)pDll_expgfx + 0x8)))
+                    (obj, TUMBLEWEED_EFFECT_BURST_DEFAULT, 0,
+                     TUMBLEWEED_EXPGFX_MODE_ACTIVE, -1, 0);
                 i = i - 1;
             } while (i != 0);
             break;
@@ -334,13 +352,15 @@ void fn_80164C44(int obj) {
 
     if ((*(u8*)(aux + 0x27a) & 2) != 0) {
         switch (*(s16*)(obj + 0x46)) {
-        case 0x4ba:
-        case 0x39d:
-        case 0x4c1:
-            (*(void(**)(int, int, int, int, int, int))(*(int*)pDll_expgfx + 0x8))(obj, 0x34c, 0, 2, -1, 0);
+        case TUMBLEWEED_TYPE_3:
+        case TUMBLEWEED_TYPE_1:
+        case TUMBLEWEED_TYPE_4:
+            ((ExpgfxSpawnObjectFn)(*(u32 *)(*(int *)pDll_expgfx + 0x8)))
+                (obj, TUMBLEWEED_EFFECT_PUFF_SPECIAL, 0, TUMBLEWEED_EXPGFX_MODE_ACTIVE, -1, 0);
             break;
         default:
-            (*(void(**)(int, int, int, int, int, int))(*(int*)pDll_expgfx + 0x8))(obj, 0x32d, 0, 2, -1, 0);
+            ((ExpgfxSpawnObjectFn)(*(u32 *)(*(int *)pDll_expgfx + 0x8)))
+                (obj, TUMBLEWEED_EFFECT_PUFF_DEFAULT, 0, TUMBLEWEED_EXPGFX_MODE_ACTIVE, -1, 0);
             break;
         }
         *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) & ~2);
