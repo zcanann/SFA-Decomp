@@ -22,6 +22,7 @@ extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
 extern undefined4 FUN_8003b444();
 extern undefined4 FUN_800400b0();
+extern int fn_801D4198(void *obj, void *unused, void *p5);
 extern short FUN_8011e824();
 extern int FUN_8012efc4();
 extern uint FUN_80294cc4();
@@ -271,3 +272,14 @@ int sh_queenearthwalker_getExtraSize(void)
 {
   return 0x40;
 }
+
+#pragma peephole off
+#pragma scheduling off
+void sh_queenearthwalker_init(void *obj, void *param2)
+{
+  *(s16 *)obj = (s16)((s8)*((s8 *)param2 + 0x18) << 8);
+  *(int *)((u8 *)obj + 0xbc) = (int)fn_801D4198;
+  *(u16 *)((u8 *)obj + 0xb0) |= 0x4000;
+}
+#pragma peephole reset
+#pragma scheduling reset
