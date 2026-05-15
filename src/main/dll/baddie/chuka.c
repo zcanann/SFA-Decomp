@@ -1,20 +1,24 @@
 #include "ghidra_import.h"
 #include "main/dll/baddie/chuka.h"
 
-extern undefined4 FUN_80006b14();
-
 extern undefined4* lbl_803DCA78;
-extern f64 lbl_803E7088;
-extern f32 lbl_803E7078;
-extern f32 lbl_803E707C;
-extern f32 lbl_803E7080;
+extern u8 gChukaModeTable[9];
+extern f32 lbl_803E63F8;
+extern f32 lbl_803E63FC;
+extern int return0_80205F40(void);
+
+typedef struct ChukaState {
+    f32 startY;
+    int linkedObject;
+    u8 modeIndex;
+} ChukaState;
 
 /*
  * --INFO--
  *
  * Function: chuka_init
  * EN v1.0 Address: 0x8020637C
- * EN v1.0 Size: 260b
+ * EN v1.0 Size: 240b
  * EN v1.1 Address: 0x80206444
  * EN v1.1 Size: 332b
  * JP Address: TODO
@@ -24,39 +28,38 @@ extern f32 lbl_803E7080;
  */
 #pragma scheduling off
 #pragma peephole off
-void chuka_init(undefined2 *param_1,int param_2)
+void chuka_init(int obj, int params)
 {
-  int *piVar1;
-  int *piVar2;
-  undefined auStack_38 [16];
-  float local_28;
-  undefined4 local_20;
-  uint uStack_1c;
-  
-  piVar2 = *(int **)(param_1 + 0x5c);
-  *param_1 = (short)(((int)*(char *)(param_2 + 0x18) & 0x3fU) << 10);
-  if (*(short *)(param_2 + 0x1a) < 1) {
-    *(float *)(param_1 + 4) = lbl_803E7080;
-  }
-  else {
-    uStack_1c = (int)*(short *)(param_2 + 0x1a) ^ 0x80000000;
-    local_20 = 0x43300000;
-    *(float *)(param_1 + 4) =
-         (float)((double)CONCAT44(0x43300000,uStack_1c) - lbl_803E7088) / lbl_803E707C;
-  }
-  *(undefined *)((int)piVar2 + 9) = *(undefined *)(param_2 + 0x19);
-  *piVar2 = (int)*(short *)(param_2 + 0x1e);
-  local_28 = lbl_803E7078;
-  if (*(char *)((int)piVar2 + 9) == '\0') {
-    *(undefined *)((int)piVar2 + 10) = 1;
-    piVar1 = (int *)FUN_80006b14(0x69);
-    if (*(short *)(param_2 + 0x1c) == 0) {
-      (**(code **)(*piVar1 + 4))(param_1,0,auStack_38,0x10004,0xffffffff,0);
+    ChukaState *state = *(ChukaState **)(obj + 0xb8);
+    u8 *modeTable;
+
+    *(s16 *)(obj + 0x0) = (s16)((s8)*(u8 *)(params + 0x18) << 8);
+    *(int *)(obj + 0xbc) = (int)&return0_80205F40;
+    state->startY = *(f32 *)(obj + 0x10);
+    state->modeIndex = *(u8 *)(params + 0x19);
+
+    if (*(s16 *)(params + 0x1c) != 0) {
+        *(f32 *)(obj + 0x8) =
+            lbl_803E63F8 / ((f32)(s32)*(s16 *)(params + 0x1c) / lbl_803E63FC);
     }
-  }
-  *(char *)((int)piVar2 + 0xd) = (char)*(undefined2 *)(param_2 + 0x1c);
-  param_1[0x58] = param_1[0x58] | 0x2000;
-  return;
+
+    if (*(s16 *)(params + 0x1a) != 0) {
+        *(s16 *)(obj + 0x4) = *(s16 *)(params + 0x1a);
+    }
+
+    *(u16 *)(obj + 0xb0) |= 0x4000;
+    state->linkedObject = 0;
+
+    modeTable = gChukaModeTable;
+    *modeTable = 0; modeTable++;
+    *modeTable = 0; modeTable++;
+    *modeTable = 0; modeTable++;
+    *modeTable = 0; modeTable++;
+    *modeTable = 0; modeTable++;
+    *modeTable = 0; modeTable++;
+    *modeTable = 0; modeTable++;
+    *modeTable = 0; modeTable++;
+    *modeTable = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset

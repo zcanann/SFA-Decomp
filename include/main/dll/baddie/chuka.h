@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void chuka_init(undefined2 *param_1,int param_2);
+void chuka_init(int obj, int params);
 void dfpfloorbar_free(int *obj);
 void chuka_release(void);
 void chuka_initialise(void);
