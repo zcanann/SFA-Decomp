@@ -13,7 +13,7 @@ extern f32 fn_8029397C(int angle);
 extern void fn_80165B3C(int obj, int sub);
 extern void fn_80165C8C(int obj, int sub);
 extern void fn_80166444(int obj, int sub);
-extern void fn_80166A50(int obj, f32 a, f32 b, f32 c, f32 d);
+extern void updateConstrainedChaseVelocity(int obj, f32 x, f32 y, f32 z, f32 scale);
 
 extern void *lbl_803DCAA8;
 extern u8 framesThisStep;
@@ -132,7 +132,7 @@ undefined4 fn_8016558C(int obj, int param_2)
         break;
     }
 
-    fn_80166A50(obj, fa, fb, fc, fd);
+    updateConstrainedChaseVelocity(obj, fa, fb, fc, fd);
 
     if (*(u8 *)(sub + 0x90) == 6) {
         if ((((u32)*(u8 *)(sub + 0x92)) >> 2) & 1) {

@@ -44,7 +44,7 @@ extern void fn_80163990(int obj, int aux);
 extern void fn_80165B3C(int obj, int state);
 extern void fn_80165C8C(int obj, int state);
 extern void fn_80166444(int obj, int state);
-extern void fn_80166A50(int obj, f32 x, f32 y, f32 z, f32 scale);
+extern void updateConstrainedChaseVelocity(int obj, f32 x, f32 y, f32 z, f32 scale);
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
@@ -560,7 +560,7 @@ use_player_reflect_position:
         scale = lbl_803E2FF4;
     }
 update_action:
-    fn_80166A50(obj, x, y, z, scale);
+    updateConstrainedChaseVelocity(obj, x, y, z, scale);
     if (*(u8 *)(state + 0x90) == 6) {
         if ((u32)((*(u8 *)(state + 0x92) >> 2) & 1) != 0U) {
             fn_80165B3C(obj, state);
