@@ -41,6 +41,21 @@ typedef struct DFRope {
   f32 stepPerTick;
 } DFRope;
 
+typedef struct DFropenodeExtra {
+  void *linkedObj;
+  f32 minX;
+  f32 maxX;
+  f32 minZ;
+  f32 maxZ;
+  f32 minY;
+  s16 angle;
+  u8 pad1A[0x12];
+  DFRope *rope;
+  u8 hidden : 1;
+  u8 pad30 : 7;
+  u8 pad31[3];
+} DFropenodeExtra;
+
 extern f32 sqrtf(f32 x);
 extern void *mmAlloc(int size, int heap, int flags);
 extern void fn_801C11B8(void *link, void *a, void *b);
@@ -191,29 +206,31 @@ void *fn_801C1238(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f32 e
  */
 void dfropenode_func12(int obj, float value)
 {
-  *(float *)(*(int *)(obj + 0xb8) + 0x14) = value;
+  ((DFropenodeExtra *)*(int *)(obj + 0xb8))->minY = value;
 }
 
 int dfropenode_func11(int obj)
 {
-  u32 bit = (*(u8 *)(*(int *)(obj + 0xb8) + 0x30) >> 7);
+  u32 bit = (*(u8 *)(*(int *)(obj + 0xb8) + 0x30) & 0x80) >> 7;
 
   return (s16)(bit == 0);
 }
 
 void dfropenode_func10(int obj, int value)
 {
-  u8 bit;
-  u8 *extra;
-  int nextObj;
+  u32 bit;
+  u8 bitByte;
+  DFropenodeExtra *extra;
+  void *linkedObj;
 
-  extra = (u8 *)*(int *)(obj + 0xb8);
+  extra = (DFropenodeExtra *)*(int *)(obj + 0xb8);
   bit = (value == 0);
-  extra[0x30] = (extra[0x30] & 0x7F) | (bit << 7);
-  nextObj = *(int *)extra;
-  if (nextObj != 0) {
-    extra = (u8 *)*(int *)(nextObj + 0xb8);
-    extra[0x30] = (extra[0x30] & 0x7F) | (bit << 7);
+  bitByte = bit;
+  extra->hidden = bitByte;
+  linkedObj = extra->linkedObj;
+  if (linkedObj != NULL) {
+    extra = (DFropenodeExtra *)*(int *)((u8 *)linkedObj + 0xb8);
+    extra->hidden = bitByte;
   }
 }
 
@@ -233,10 +250,7 @@ void dfropenode_func10(int obj, int value)
 #pragma scheduling off
 void dfropenode_func13(int obj)
 {
-  int value = 0;
-  int extra = *(int *)(obj + 0xb8);
-
-  *(int *)extra = value;
+  ((DFropenodeExtra *)*(int *)(obj + 0xb8))->linkedObj = NULL;
 }
 #pragma scheduling reset
 
@@ -255,7 +269,7 @@ void dfropenode_func13(int obj)
  */
 int dfropenode_func0F(int obj)
 {
-  return *(short *)(*(int *)(obj + 0xb8) + 0x18);
+  return ((DFropenodeExtra *)*(int *)(obj + 0xb8))->angle;
 }
 
 #pragma scheduling off
