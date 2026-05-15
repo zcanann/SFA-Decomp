@@ -94,6 +94,7 @@ extern f32 lbl_803E5A94;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void *fn_801C1238(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ,
                     f32 unused, f32 tickScale)
 {
@@ -190,6 +191,7 @@ void *fn_801C1238(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f32 e
   }
   return rope;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
