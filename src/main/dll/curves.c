@@ -2384,7 +2384,7 @@ f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment)
  */
 #pragma scheduling off
 #pragma peephole off
-int RomCurve_getRandomBlockedLink(int param_1,int param_2)
+int RomCurve_getRandomBlockedLink(int curvePtr,int excludeLinkId)
 {
   RomCurveDef *curve;
   int link;
@@ -2392,22 +2392,22 @@ int RomCurve_getRandomBlockedLink(int param_1,int param_2)
   uint mask;
   int i;
   int result;
-  int local_18[4];
+  int eligibleLinks[ROMCURVE_LINK_COUNT];
 
   count = 0;
   mask = 1;
-  curve = (RomCurveDef *)param_1;
+  curve = (RomCurveDef *)curvePtr;
 
   for (i = 0; i < ROMCURVE_LINK_COUNT; i = i + 1) {
     link = curve->linkIds[i];
-    if ((-1 < link) && ((curve->linkFlags & mask) != 0) && (link != param_2)) {
-      local_18[count++] = link;
+    if ((-1 < link) && ((curve->blockedLinkMask & mask) != 0) && (link != excludeLinkId)) {
+      eligibleLinks[count++] = link;
     }
     mask = mask << 1;
   }
 
   if (count != 0) {
-    result = local_18[randomGetRange(0, count - 1)];
+    result = eligibleLinks[randomGetRange(0, count - 1)];
   } else {
     result = -1;
   }
@@ -2431,7 +2431,7 @@ int RomCurve_getRandomBlockedLink(int param_1,int param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-int RomCurve_getRandomUnblockedLink(int param_1,int param_2)
+int RomCurve_getRandomUnblockedLink(int curvePtr,int excludeLinkId)
 {
   RomCurveDef *curve;
   int link;
@@ -2439,22 +2439,22 @@ int RomCurve_getRandomUnblockedLink(int param_1,int param_2)
   uint mask;
   int i;
   int result;
-  int local_18[4];
+  int eligibleLinks[ROMCURVE_LINK_COUNT];
 
   count = 0;
   mask = 1;
-  curve = (RomCurveDef *)param_1;
+  curve = (RomCurveDef *)curvePtr;
 
   for (i = 0; i < ROMCURVE_LINK_COUNT; i = i + 1) {
     link = curve->linkIds[i];
-    if ((-1 < link) && ((curve->linkFlags & mask) == 0) && (link != param_2)) {
-      local_18[count++] = link;
+    if ((-1 < link) && ((curve->blockedLinkMask & mask) == 0) && (link != excludeLinkId)) {
+      eligibleLinks[count++] = link;
     }
     mask = mask << 1;
   }
 
   if (count != 0) {
-    result = local_18[randomGetRange(0, count - 1)];
+    result = eligibleLinks[randomGetRange(0, count - 1)];
   } else {
     result = -1;
   }

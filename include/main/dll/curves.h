@@ -18,7 +18,7 @@ typedef struct RomCurveDef {
   f32 z;
   u32 id;
   u8 pad18[ROMCURVE_LINK_FLAGS_OFFSET - 0x18];
-  s8 linkFlags;
+  s8 blockedLinkMask;
   u32 linkIds[ROMCURVE_LINK_COUNT];
 } RomCurveDef;
 
@@ -52,8 +52,8 @@ void RomCurve_getAdjacentWindow(int param_1,int *param_2);
 int RomCurve_getNearestAdjacentLink(double param_1,double param_2,double param_3,int param_4,
                                     int param_5);
 f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment);
-int RomCurve_getRandomBlockedLink(int param_1,int param_2);
-int RomCurve_getRandomUnblockedLink(int param_1,int param_2);
+int RomCurve_getRandomBlockedLink(int curve,int excludeLinkId);
+int RomCurve_getRandomUnblockedLink(int curve,int excludeLinkId);
 RomCurveDef *RomCurve_getById(uint curveId);
 void FUN_800e4628(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,int param_6);
