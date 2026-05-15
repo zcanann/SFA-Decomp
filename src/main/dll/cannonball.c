@@ -3,7 +3,7 @@
 
 extern bool FUN_800067f0();
 extern double FUN_80017708();
-extern undefined4 FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80039468();
 extern undefined4 FUN_800d9de0();
 extern undefined4 FUN_800da594();
@@ -200,7 +200,7 @@ void FUN_80141290(undefined8 param_1,undefined8 param_2,double param_3,undefined
     }
     *(float *)(iVar6 + 0x708) = *(float *)(iVar6 + 0x708) - lbl_803DC074;
     if (*(float *)(iVar6 + 0x708) < lbl_803E306C) {
-      local_48[5] = FUN_80017760(200,600);
+      local_48[5] = randomGetRange(200,600);
       local_48[5] = local_48[5] ^ 0x80000000;
       local_48[4] = 0x43300000;
       *(float *)(iVar6 + 0x708) =

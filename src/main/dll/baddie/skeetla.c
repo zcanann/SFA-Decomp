@@ -7,7 +7,7 @@ extern uint FUN_80017690();
 extern double FUN_80017708();
 extern double FUN_80017714();
 extern int FUN_80017730();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern int FUN_80017b00();
 extern int ObjGroup_FindNearestObject();
@@ -857,11 +857,11 @@ void FUN_8013a408(undefined2 *param_1)
   else {
     local_24 = 0;
   }
-  uVar2 = FUN_80017760(0,4);
+  uVar2 = randomGetRange(0,4);
   if (uVar2 == 0) {
     (**(code **)(*DAT_803dd708 + 8))(param_1,0xca,local_28,0x200001,0xffffffff,0);
   }
-  uVar2 = FUN_80017760(0,4);
+  uVar2 = randomGetRange(0,4);
   if (uVar2 == 0) {
     (**(code **)(*DAT_803dd708 + 8))(param_1,0xcb,local_28,0x200001,0xffffffff,0);
   }
@@ -869,11 +869,11 @@ void FUN_8013a408(undefined2 *param_1)
   local_18 = *(undefined4 *)(iVar3 + 1000);
   local_14 = *(undefined4 *)(iVar3 + 0x3ec);
   local_28[0] = *param_1;
-  uVar2 = FUN_80017760(0,4);
+  uVar2 = randomGetRange(0,4);
   if (uVar2 == 0) {
     (**(code **)(*DAT_803dd708 + 8))(param_1,0xca,local_28,0x200001,0xffffffff,0);
   }
-  uVar2 = FUN_80017760(0,4);
+  uVar2 = randomGetRange(0,4);
   if (uVar2 == 0) {
     (**(code **)(*DAT_803dd708 + 8))(param_1,0xcb,local_28,0x200001,0xffffffff,0);
   }

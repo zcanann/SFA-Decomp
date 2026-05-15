@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_80017710();
 extern uint FUN_80017730();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 ObjHits_SetHitVolumeSlot();
@@ -65,11 +65,11 @@ void FUN_801c8ebc(int param_1,int param_2)
   puVar3[5] = fVar1;
   puVar3[9] = 0;
   puVar3[10] = (int)*(short *)(param_2 + 0x1a);
-  uStack_c = FUN_80017760(0,600);
+  uStack_c = randomGetRange(0,600);
   uStack_c = uStack_c ^ 0x80000000;
   local_10 = 0x43300000;
   puVar3[8] = (float)((double)CONCAT44(0x43300000,uStack_c) - DOUBLE_803e5d28);
-  uVar2 = FUN_80017760(0xfffffce0,800);
+  uVar2 = randomGetRange(0xfffffce0,800);
   *(short *)(puVar3 + 0xb) = (short)uVar2;
   *(undefined *)((int)puVar3 + 0x2e) = 1;
   *(undefined *)(param_1 + 0x37) = 0;

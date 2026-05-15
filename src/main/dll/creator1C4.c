@@ -11,7 +11,7 @@ extern undefined4 FUN_80006b50();
 extern undefined4 FUN_80006b54();
 extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern void* ObjGroup_GetObjects();
@@ -140,7 +140,7 @@ void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefin
         *(float *)(iVar13 + 8) = fVar1;
         if ((double)fVar1 <= dVar16) {
           FUN_80006824((uint)puVar2,0x343);
-          uStack_2c = FUN_80017760(500,1000);
+          uStack_2c = randomGetRange(500,1000);
           uStack_2c = uStack_2c ^ 0x80000000;
           local_30 = 0x43300000;
           *(float *)(iVar13 + 8) = (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e5cc8)

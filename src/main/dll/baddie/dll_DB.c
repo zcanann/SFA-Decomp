@@ -6,7 +6,7 @@ extern uint FUN_80006c00();
 extern int FUN_800174a0();
 extern uint GameBit_Get(int eventId);
 extern int FUN_800176d0();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined8 FUN_80053754();
 extern undefined4 FUN_8005398c();
 extern uint FUN_8006f764();
@@ -525,12 +525,12 @@ void FUN_80130434(int param_1)
         *(undefined *)(param_1 + iVar4 + 0x1f) = 5;
       }
       else {
-        uVar2 = FUN_80017760(4,5);
+        uVar2 = randomGetRange(4,5);
         *(char *)(param_1 + iVar4 + 0x1f) = (char)uVar2;
       }
     }
     else {
-      uVar2 = FUN_80017760(2,5);
+      uVar2 = randomGetRange(2,5);
       *(char *)(param_1 + iVar4 + 0x1f) = (char)uVar2;
     }
     iVar1 = iVar4 + 0x1f;

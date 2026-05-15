@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_80006824();
 extern int FUN_80017730();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_800305f8();
 extern void* ObjGroup_GetObjects();
 extern undefined8 ObjGroup_RemoveObject();
@@ -283,7 +283,7 @@ FUN_80162450(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     *(char *)(iVar5 + 0x45) = '\x01' - *(char *)(iVar5 + 0x45);
     uVar2 = countLeadingZeros((int)*(char *)(iVar5 + 0x45));
     *param_9 = *(short *)(iVar5 + 0x58) + (short)((uVar2 >> 5) << 0xf);
-    uVar2 = FUN_80017760(0x32,100);
+    uVar2 = randomGetRange(0x32,100);
     local_30 = (double)CONCAT44(0x43300000,uVar2 ^ 0x80000000);
     fVar1 = (float)((double)CONCAT44(0x43300000,*(char *)(iVar5 + 0x45) * 2 - 1U ^ 0x80000000) -
                    DOUBLE_803e3b70) * ((float)(local_30 - DOUBLE_803e3b70) / lbl_803E3B9C);
@@ -564,7 +564,7 @@ void FUN_80162ec0(short *param_1)
       *(undefined *)((int)pfVar8 + 0x45) = uVar3;
       uVar2 = countLeadingZeros((int)*(char *)((int)pfVar8 + 0x45));
       *param_1 = *(short *)(pfVar8 + 0x16) + (short)((uVar2 >> 5) << 0xf);
-      uVar2 = FUN_80017760(10,0x3c);
+      uVar2 = randomGetRange(10,0x3c);
       pfVar8[0x15] = -((float)((double)CONCAT44(0x43300000,
                                                 *(char *)((int)pfVar8 + 0x45) * 2 - 1U ^ 0x80000000)
                               - DOUBLE_803e3b70) *
