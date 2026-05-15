@@ -27,6 +27,9 @@ extern uint roundUpTo8(uint param_1);
 extern uint FUN_800177dc();
 extern void *mmAlloc(int size,int heap,int flags);
 extern float *ObjModel_GetJointMatrix(int *model,int jointIndex);
+extern void Obj_BuildWorldTransformMatrix(void *obj,float *mtx,int flags);
+extern void mtx44Transpose(float *src,float *dst);
+extern void mtxRotateByVec3s(float *mtx,void *transform);
 extern undefined4 FUN_80017a50();
 extern int *Obj_GetActiveModel(int obj);
 extern void *Obj_GetPlayerObject(void);
@@ -39,6 +42,7 @@ extern void fileLoadToBufferOffset(int fileId,void *dst,int offset,int size);
 extern void fn_80054F74(int obj,float *pos);
 extern int * fn_8005B11C();
 extern void debugPrintf(const char *fmt, ...);
+extern void PSMTXConcat(float *a,float *b,float *out);
 extern undefined4 FUN_80247618();
 extern float PSVECSquareDistance(float *a,float *b);
 extern undefined8 FUN_80286834();
@@ -2794,8 +2798,7 @@ void ObjPath_GetPointWorldPositionArray(int obj,int pointIndex,int count,float *
   int i;
 
   for (i = 0; i < count; i++) {
-    ObjPath_GetPointWorldPosition(obj,pointIndex + i,positions,(undefined4 *)(positions + 1),
-                                  positions + 2,0);
+    ObjPath_GetPointWorldPosition(obj,pointIndex + i,positions,positions + 1,positions + 2,0);
     positions = positions + 3;
   }
 }
@@ -2913,88 +2916,71 @@ void ObjPath_GetPointModelMtx(int param_1,int param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *param_3,undefined4 *param_4,
-                 float *param_5,int param_6)
+void ObjPath_GetPointWorldPosition(int obj,int pointIndex,float *outX,float *outY,float *outZ,
+                 int useInputPosition)
 {
-  ushort *puVar1;
-  int *piVar2;
-  float *pfVar3;
-  int iVar4;
-  int iVar5;
-  undefined8 uVar6;
-  undefined2 local_118;
-  undefined2 local_116;
-  undefined2 local_114;
-  float local_10c;
-  undefined4 local_108;
-  float local_104;
-  float afStack_100 [16];
-  float afStack_c0 [3];
-  float local_b4;
-  undefined4 local_a4;
-  float local_94;
-  float afStack_90 [12];
-  float afStack_60 [24];
-  
-  uVar6 = FUN_80286838();
-  puVar1 = (ushort *)((ulonglong)uVar6 >> 0x20);
-  iVar5 = (int)uVar6;
-  if ((iVar5 < 0) ||
-      ((int)(uint)*(byte *)(*(int *)(puVar1 + OBJ_MODEL_INSTANCE_HALFWORD_OFFSET) +
-                            OBJPATH_POINT_COUNT_OFFSET) <= iVar5)) {
-    *param_3 = *(float *)(puVar1 + 6);
-    *param_4 = *(undefined4 *)(puVar1 + 8);
-    *param_5 = *(float *)(puVar1 + 10);
+  ObjPathPoint *pathPoint;
+  int *model;
+  float *jointMtx;
+  int jointIndex;
+  int pointOffset;
+  ObjPathTransform transform;
+  float rotMtx[16];
+  float transposedMtx[12];
+  float concatMtx[12];
+  float rootMtx[12];
+
+  if ((pointIndex < 0) ||
+      ((int)(uint)*(u8 *)(*(int *)(obj + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINT_COUNT_OFFSET) <=
+       pointIndex)) {
+    *outX = *(float *)(obj + OBJ_POSITION_X_OFFSET);
+    *outY = *(float *)(obj + OBJ_POSITION_Y_OFFSET);
+    *outZ = *(float *)(obj + OBJ_POSITION_Z_OFFSET);
   }
   else {
-    piVar2 = Obj_GetActiveModel((int)puVar1);
-    iVar5 = iVar5 * 0x18;
-    iVar4 = (int)*(char *)(*(int *)(*(int *)(puVar1 + OBJ_MODEL_INSTANCE_HALFWORD_OFFSET) +
-                                    OBJPATH_POINTS_OFFSET) + iVar5 +
-                           (int)*(char *)((int)puVar1 + OBJ_ACTIVE_MODEL_INDEX_OFFSET) + 0x12);
-    if ((iVar4 < OBJPATH_ROOT_JOINT_INDEX) ||
-        ((int)(uint)*(byte *)(*piVar2 + OBJ_MODEL_JOINT_COUNT_OFFSET) <= iVar4)) {
-      *param_3 = *(float *)(puVar1 + 6);
-      *param_4 = *(undefined4 *)(puVar1 + 8);
-      *param_5 = *(float *)(puVar1 + 10);
+    model = Obj_GetActiveModel(obj);
+    pointOffset = pointIndex * sizeof(ObjPathPoint);
+    pathPoint = (ObjPathPoint *)(*(int *)(*(int *)(obj + OBJ_MODEL_INSTANCE_OFFSET) +
+                                          OBJPATH_POINTS_OFFSET) + pointOffset);
+    jointIndex = pathPoint->modelIndex[(int)*(char *)(obj + OBJ_ACTIVE_MODEL_INDEX_OFFSET)];
+    if ((jointIndex < OBJPATH_ROOT_JOINT_INDEX) ||
+        ((int)(uint)*(u8 *)(*model + OBJ_MODEL_JOINT_COUNT_OFFSET) <= jointIndex)) {
+      *outX = *(float *)(obj + OBJ_POSITION_X_OFFSET);
+      *outY = *(float *)(obj + OBJ_POSITION_Y_OFFSET);
+      *outZ = *(float *)(obj + OBJ_POSITION_Z_OFFSET);
     }
     else {
-      if (iVar4 == OBJPATH_ROOT_JOINT_INDEX) {
-        FUN_80017a50(puVar1,afStack_60,'\0');
-        pfVar3 = afStack_60;
+      if (jointIndex == OBJPATH_ROOT_JOINT_INDEX) {
+        Obj_BuildWorldTransformMatrix((void *)obj,rootMtx,0);
+        jointMtx = rootMtx;
       }
       else {
-        pfVar3 = ObjModel_GetJointMatrix(piVar2,iVar4);
+        jointMtx = ObjModel_GetJointMatrix(model,jointIndex);
       }
-      if (param_6 == 0) {
-        local_10c = *(float *)(*(int *)(*(int *)(puVar1 + OBJ_MODEL_INSTANCE_HALFWORD_OFFSET) +
-                                        OBJPATH_POINTS_OFFSET) + iVar5);
-        iVar5 = *(int *)(*(int *)(puVar1 + OBJ_MODEL_INSTANCE_HALFWORD_OFFSET) +
-                         OBJPATH_POINTS_OFFSET) + iVar5;
-        local_108 = *(undefined4 *)(iVar5 + 4);
-        local_104 = *(float *)(iVar5 + 8);
-        local_118 = *(undefined2 *)(iVar5 + 0xc);
-        local_116 = *(undefined2 *)(iVar5 + 0xe);
-        local_114 = *(undefined2 *)(iVar5 + 0x10);
+      if (useInputPosition != 0) {
+        transform.x = *outX;
+        transform.y = *outY;
+        transform.z = *outZ;
+        transform.rotX = 0;
+        transform.rotY = 0;
+        transform.rotZ = 0;
       }
       else {
-        local_10c = *param_3;
-        local_108 = *param_4;
-        local_104 = *param_5;
-        local_118 = 0;
-        local_116 = 0;
-        local_114 = 0;
+        transform.x = pathPoint->x;
+        transform.y = pathPoint->y;
+        transform.z = pathPoint->z;
+        transform.rotX = pathPoint->rotX;
+        transform.rotY = pathPoint->rotY;
+        transform.rotZ = pathPoint->rotZ;
       }
-      FUN_8001774c(afStack_100,(int)&local_118);
-      FUN_80017704(afStack_100,afStack_90);
-      FUN_80247618(pfVar3,afStack_90,afStack_c0);
-      *param_3 = local_b4 + playerMapOffsetX;
-      *param_4 = local_a4;
-      *param_5 = local_94 + playerMapOffsetZ;
+      mtxRotateByVec3s(rotMtx,&transform);
+      mtx44Transpose(rotMtx,transposedMtx);
+      PSMTXConcat(jointMtx,transposedMtx,concatMtx);
+      *outX = concatMtx[3] + playerMapOffsetX;
+      *outY = concatMtx[7];
+      *outZ = concatMtx[11] + playerMapOffsetZ;
     }
   }
-  FUN_80286884();
-  return;
 }
 #pragma peephole reset
 #pragma scheduling reset

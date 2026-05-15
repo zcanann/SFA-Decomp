@@ -68,8 +68,8 @@ void ObjPath_GetPointLocalPosition(int param_1,int param_2,float *param_3,float 
                  float *param_5);
 void ObjPath_GetPointLocalMtx(int param_1,int param_2,float *param_3);
 void ObjPath_GetPointModelMtx(int param_1,int param_2);
-void ObjPath_GetPointWorldPosition(undefined4 param_1,undefined4 param_2,float *param_3,undefined4 *param_4,
-                 float *param_5,int param_6);
+void ObjPath_GetPointWorldPosition(int obj,int pointIndex,float *outX,float *outY,float *outZ,
+                 int useInputPosition);
 int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3);
 void FUN_80038b0c(void);
 void FUN_80038bac(int param_1,int param_2,uint param_3);
