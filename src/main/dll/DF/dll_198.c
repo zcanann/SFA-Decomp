@@ -200,13 +200,14 @@ void dfropenode_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void dfropenode_init(int obj, int objDef)
 {
   DFropenodeExtra *extra;
 
   extra = *(DFropenodeExtra **)(obj + 0xb8);
   if ((&lbl_803DBF58)[*(u8 *)(objDef + 0x1b)] == 0) {
-    *(s16 *)(obj + 6) = *(u16 *)(obj + 6) & 0xff7f;
+    *(s16 *)(obj + 6) = *(s16 *)(obj + 6) & 0xff7f;
   }
   ObjGroup_AddObject(obj, 0x17);
   *(void **)(obj + 0xbc) = fn_801C1BF0;
@@ -214,6 +215,7 @@ void dfropenode_init(int obj, int objDef)
   extra->linkedObj = 0;
   *(u8 *)(obj + 0x36) = 0x46;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -228,6 +230,7 @@ void dfropenode_init(int obj, int objDef)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void dfropenode_release(void)
 {
   int i;
@@ -236,6 +239,7 @@ void dfropenode_release(void)
     textureFree((&lbl_803DBF48)[i]);
   }
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -250,6 +254,7 @@ void dfropenode_release(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void dfropenode_initialise(void)
 {
   int i;
@@ -258,6 +263,7 @@ void dfropenode_initialise(void)
     (&lbl_803DBF48)[i] = textureLoadAsset((&lbl_803DBF40)[i]);
   }
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
