@@ -1,6 +1,50 @@
 #include "ghidra_import.h"
 #include "main/dll/DF/DFbarrelanim.h"
 
+typedef struct DFRopeNode {
+  f32 pos[3];
+  f32 velocity[3];
+  f32 force[3];
+  u8 linkCount;
+  u8 pad25[3];
+  struct DFRopeLink *links[2];
+  u8 locked;
+  u8 pad31[3];
+} DFRopeNode;
+
+typedef struct DFRopeLink {
+  f32 length;
+  DFRopeNode *a;
+  DFRopeNode *b;
+  f32 restLength;
+  f32 stiffness;
+  f32 maxLength;
+  f32 force[3];
+} DFRopeLink;
+
+typedef struct DFRope {
+  DFRopeNode *nodes;
+  DFRopeLink *links;
+  u8 count;
+  u8 pad09[3];
+  f32 start[3];
+  f32 end[3];
+  f32 totalLength;
+  s32 enabled;
+  f32 maxSlack;
+  f32 step;
+  u8 sway;
+  u8 direction;
+  u8 pad36[2];
+  f32 damping;
+  f32 inverseTicks;
+  f32 stepPerTick;
+} DFRope;
+
+extern f32 sqrtf(f32 x);
+extern void *mmAlloc(int size, int heap, int flags);
+extern void fn_801C11B8(void *link, void *a, void *b);
+
 extern undefined4 FUN_80247e94();
 extern undefined4 FUN_80247eb8();
 extern undefined4 FUN_80247edc();
@@ -8,6 +52,16 @@ extern double FUN_80247f54();
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 
+extern f64 DOUBLE_803e4df0;
+extern f32 lbl_803E4DF8;
+extern f32 lbl_803E4DFC;
+extern f32 lbl_803E4E00;
+extern f32 lbl_803E4E04;
+extern f32 lbl_803E4E08;
+extern f32 lbl_803E4E0C;
+extern f32 lbl_803E4E10;
+extern f32 lbl_803E4E14;
+extern f32 lbl_803E4E18;
 extern f64 DOUBLE_803e5a88;
 extern f32 lbl_803E5A90;
 extern f32 lbl_803E5A94;
@@ -25,122 +79,105 @@ extern f32 lbl_803E5A94;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c1238(void)
+void *fn_801C1238(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ,
+                    f32 unused, f32 tickScale)
 {
-  undefined4 *puVar1;
-  float fVar2;
-  int iVar3;
-  int iVar4;
-  float *pfVar5;
-  float *pfVar6;
-  double dVar7;
-  double in_f31;
-  double dVar8;
-  double in_ps31_1;
-  float afStack_58 [3];
-  float afStack_4c [3];
-  float local_40;
-  float local_3c;
-  float local_38;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  puVar1 = (undefined4 *)FUN_80286840();
-  pfVar5 = (float *)*puVar1;
-  dVar8 = (double)lbl_803E5A94;
-  for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(puVar1 + 2); iVar3 = iVar3 + 1) {
-    local_38 = (float)dVar8;
-    local_3c = (float)dVar8;
-    local_40 = (float)dVar8;
-    if (*(char *)(pfVar5 + 0xc) == '\0') {
-      pfVar6 = pfVar5;
-      for (iVar4 = 0; iVar4 < (int)(uint)*(byte *)(pfVar5 + 9); iVar4 = iVar4 + 1) {
-        fVar2 = pfVar6[10];
-        if (pfVar5 == *(float **)((int)fVar2 + 4)) {
-          FUN_80247e94(&local_40,(float *)((int)fVar2 + 0x18),&local_40);
-        }
-        else {
-          FUN_80247eb8(&local_40,(float *)((int)fVar2 + 0x18),&local_40);
-        }
-        pfVar6 = pfVar6 + 1;
-      }
-      dVar7 = FUN_80247f54(&local_40);
-      if ((double)(float)puVar1[0xb] < dVar7) {
-        FUN_80247edc((double)(float)((double)(float)puVar1[0xb] / dVar7),&local_40,&local_40);
-      }
-      FUN_80247edc((double)(float)puVar1[0x10],&local_40,&local_40);
-      FUN_80247e94(&local_40,pfVar5 + 6,&local_40);
-      FUN_80247e94(pfVar5 + 3,&local_40,pfVar5 + 3);
-      FUN_80247edc((double)(float)puVar1[0xe],pfVar5 + 3,afStack_4c);
-      FUN_80247eb8(pfVar5 + 3,afStack_4c,pfVar5 + 3);
-      pfVar5[4] = (float)puVar1[0xc] * (float)puVar1[0xf] + pfVar5[4];
-      FUN_80247edc((double)(float)puVar1[0xc],pfVar5 + 3,afStack_58);
-      FUN_80247e94(pfVar5,afStack_58,pfVar5);
-    }
-    pfVar5 = pfVar5 + 0xd;
-  }
-  FUN_8028688c();
-  return;
-}
+  DFRope *rope;
+  DFRopeNode *node;
+  DFRopeLink *link;
+  DFRopeNode *nextNode;
+  s32 linkCount;
+  s32 i;
+  f32 dx;
+  f32 dy;
+  f32 dz;
+  f32 length;
+  f32 invSegments;
+  f32 zero;
 
-/*
- * --INFO--
- *
- * Function: FUN_801c1450
- * EN v1.0 Address: 0x801C1450
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801C158C
- * EN v1.1 Size: 480b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801c1450(void)
-{
-}
+  dx = endX - startX;
+  dy = endY - startY;
+  dz = endZ - startZ;
+  length = sqrtf(dz * dz + (dx * dx + dy * dy));
 
-/*
- * --INFO--
- *
- * Function: FUN_801c1454
- * EN v1.0 Address: 0x801C1454
- * EN v1.0 Size: 124b
- * EN v1.1 Address: 0x801C176C
- * EN v1.1 Size: 128b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801c1454(int param_1,int param_2,int param_3)
-{
-  int iVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  
-  iVar3 = 0;
-  iVar4 = 0;
-  for (iVar1 = param_2; iVar2 = param_3, *(int *)(iVar1 + 0x28) != 0; iVar1 = iVar1 + 4) {
-    iVar3 = iVar3 + 1;
+  invSegments = (f32)(count - 1);
+  dx = dx / invSegments;
+  dy = dy / invSegments;
+  dz = dz / invSegments;
+
+  rope = (DFRope *)mmAlloc(count * sizeof(DFRopeNode) + (count - 1) * sizeof(DFRopeLink) + sizeof(DFRope),
+                           0xFF, 0);
+  rope->nodes = (DFRopeNode *)((u8 *)rope + sizeof(DFRope));
+  rope->links = (DFRopeLink *)((u8 *)rope + count * sizeof(DFRopeNode) + sizeof(DFRope));
+  rope->count = (u8)count;
+  rope->totalLength = length;
+  rope->start[0] = startX;
+  rope->start[1] = startY;
+  rope->start[2] = startZ;
+  rope->end[0] = endX;
+  rope->end[1] = endY;
+  rope->end[2] = endZ;
+  rope->sway = 0;
+  rope->direction = 1;
+  rope->damping = lbl_803E4E00;
+  rope->enabled = 1;
+  rope->step = lbl_803E4DF8;
+  if (lbl_803E4E04 < rope->step * length) {
+    rope->step = lbl_803E4E04 / length;
   }
-  for (; *(int *)(iVar2 + 0x28) != 0; iVar2 = iVar2 + 4) {
-    iVar4 = iVar4 + 1;
-  }
-  if (iVar3 <= (int)(uint)*(byte *)(param_2 + 0x24)) {
-    if (iVar4 <= (int)(uint)*(byte *)(param_3 + 0x24)) {
-      *(int *)(param_2 + iVar3 * 4 + 0x28) = param_1;
-      *(int *)(param_3 + iVar4 * 4 + 0x28) = param_1;
-      *(int *)(param_1 + 4) = param_2;
-      *(int *)(param_1 + 8) = param_3;
-      return;
+  rope->maxSlack = lbl_803E4E08;
+  rope->stepPerTick = rope->step / tickScale;
+  rope->inverseTicks = lbl_803E4E0C / tickScale;
+
+  zero = lbl_803E4DFC;
+  node = rope->nodes;
+  for (i = 0; i < count; i++, node++) {
+    node->pos[0] = (f32)i * dx + rope->start[0];
+    node->pos[1] = (f32)i * dy + rope->start[1];
+    node->pos[2] = (f32)i * dz + rope->start[2];
+    node->velocity[2] = zero;
+    node->velocity[1] = zero;
+    node->velocity[0] = zero;
+    node->force[2] = zero;
+    node->force[1] = zero;
+    node->force[0] = zero;
+    node->links[1] = NULL;
+    node->links[0] = NULL;
+    node->locked = 0;
+    if ((i == 0) || (i == count - 1)) {
+      node->linkCount = 1;
+    } else if ((i == 1) || (i == count - 2)) {
+      node->linkCount = 2;
+    } else {
+      node->linkCount = 2;
     }
-    return;
+    {
+      s32 j;
+      for (j = 0; j < node->linkCount; j++) {
+        node->links[j] = NULL;
+      }
+    }
   }
-  return;
+
+  rope->nodes[count - 1].locked = 1;
+  rope->nodes[0].locked = 1;
+
+  link = rope->links;
+  node = rope->nodes;
+  linkCount = count - 1;
+  for (i = 0; i < linkCount; i++) {
+    link->restLength = rope->totalLength / (f32)linkCount;
+    link->stiffness = lbl_803E4E10;
+    link->force[2] = zero;
+    link->force[1] = zero;
+    link->force[0] = zero;
+    link->maxLength = lbl_803E4E14 * link->restLength;
+    nextNode = (DFRopeNode *)((u8 *)rope->nodes + (i + 1) * sizeof(DFRopeNode));
+    fn_801C11B8(link, node, nextNode);
+    link++;
+    node++;
+  }
+  return rope;
 }
 
 /*
@@ -159,6 +196,29 @@ void FUN_801c1454(int param_1,int param_2,int param_3)
 void dfropenode_func12(int obj, float value)
 {
   *(float *)(*(int *)(obj + 0xb8) + 0x14) = value;
+}
+
+int dfropenode_func11(int obj)
+{
+  u32 bit = (*(u8 *)(*(int *)(obj + 0xb8) + 0x30) >> 7);
+
+  return (s16)(bit == 0);
+}
+
+void dfropenode_func10(int obj, int value)
+{
+  u8 bit;
+  u8 *extra;
+  int nextObj;
+
+  extra = (u8 *)*(int *)(obj + 0xb8);
+  bit = (value == 0);
+  extra[0x30] = (extra[0x30] & 0x7F) | (bit << 7);
+  nextObj = *(int *)extra;
+  if (nextObj != 0) {
+    extra = (u8 *)*(int *)(nextObj + 0xb8);
+    extra[0x30] = (extra[0x30] & 0x7F) | (bit << 7);
+  }
 }
 
 /*
@@ -200,4 +260,36 @@ void dfropenode_func13(int obj)
 int dfropenode_func0F(int obj)
 {
   return *(short *)(*(int *)(obj + 0xb8) + 0x18);
+}
+
+f32 fn_801C1698(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ, f32 *x, f32 *y,
+                f32 *z)
+{
+  f32 dx;
+  f32 dy;
+  f32 dz;
+  f32 t;
+
+  dx = endX - startX;
+  dy = endY - startY;
+  dz = endZ - startZ;
+  if ((lbl_803E4DFC == dx) && (lbl_803E4DFC == dz)) {
+    t = lbl_803E4DFC;
+  } else {
+    t = (dx * (*x - startX) + dz * (*z - startZ)) / (dx * dx + dz * dz);
+  }
+  if (t < lbl_803E4DFC) {
+    *x = startX;
+    *y = startY;
+    *z = startZ;
+  } else if (t >= lbl_803E4E18) {
+    *x = endX;
+    *y = endY;
+    *z = endZ;
+  } else {
+    *x = t * dx + startX;
+    *y = t * dy + startY;
+    *z = t * dz + startZ;
+  }
+  return t;
 }
