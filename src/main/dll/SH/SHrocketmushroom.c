@@ -224,8 +224,8 @@ void bombplantspore_init(void *obj, void *param2) {
     ObjHits_DisableObject(obj);
     *(s16 *)((u8 *)state + 0x2ac) = (s16)randomGetRange(0, 0xffff);
 
-    randAsDouble[0] = 0x43300000;
     randAsDouble[1] = randomGetRange(0, 1000) ^ 0x80000000;
+    randAsDouble[0] = 0x43300000;
     *(f32 *)((u8 *)state + 0x280) =
         (*(f64 *)randAsDouble - lbl_803E53A0) / lbl_803E5390;
 
@@ -301,7 +301,7 @@ int fn_801D4198(void *obj, void *unused, void *p5) {
     }
 
     for (i = 0; i < *(u8 *)((u8 *)p5 + 0x8b); i++) {
-        switch (*(u8 *)((int)p5 + i + 0x81)) {
+        switch (*((u8 *)p5 + i + 0x81)) {
             case 0:
                 *(u8 *)((u8 *)pState + 0x2) |= 0x8;
                 break;
