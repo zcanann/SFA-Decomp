@@ -62,9 +62,13 @@ extern int objGetAnimState80A(void *obj);
 
 extern int gObjGroupObjects[OBJGROUP_MAX_OBJECTS];
 extern u8 gObjGroupOffsets[0x58];
-extern int DAT_803439b0;
-extern undefined4 DAT_803439b4;
-extern undefined4 DAT_803439b8;
+typedef struct ObjContactCallbackEntry {
+  int objA;
+  int objB;
+  ObjContactCallback callback;
+} ObjContactCallbackEntry;
+
+extern ObjContactCallbackEntry lbl_80342D50[];
 typedef struct ObjTriggerInterface {
   u8 pad00[0x1c];
   int (*isCurrentTriggerClear)(void);
@@ -79,7 +83,7 @@ extern undefined4 gObjHitsPriorityHitStates;
 extern int gObjHitReactResetObjectCount;
 extern int *gObjHitReactResetObjects;
 extern u8 gObjGroupObjectCount;
-extern undefined4 DAT_803dd878;
+extern int lbl_803DCBF8;
 extern undefined4 DAT_803dd880;
 extern f64 DOUBLE_803df5c0;
 extern f64 DOUBLE_803df640;
@@ -120,9 +124,9 @@ extern char sObjAddObjectTypeReachedMaxTypes[];
 
 #define OBJCONTACT_CALLBACK_CAPACITY 0x10
 #define OBJCONTACT_CALLBACK_LAST_INDEX (OBJCONTACT_CALLBACK_CAPACITY - 1)
-#define OBJCONTACT_CALLBACK_ENTRY_WORD_COUNT 3
 #define OBJCONTACT_OBJECT_REFCOUNT_OFFSET 0xe9
-#define gObjContactCallbackCount DAT_803dd878
+#define gObjContactCallbacks lbl_80342D50
+#define gObjContactCallbackCount lbl_803DCBF8
 
 #define OBJTRIGGER_FLAGS_OFFSET 0xaf
 #define OBJTRIGGER_CURRENT_ENABLE_FLAG 0x01
@@ -2461,31 +2465,32 @@ void ObjLink_AttachChild(int param_1,int param_2,ushort param_3)
 void ObjContact_DispatchCallbacks(void)
 {
   bool bVar1;
-  int *entryWords;
+  ObjContactCallbackEntry *entry;
   int iVar3;
   int iVar4;
   int iVar5;
-  uint uVar6;
-  uint uVar7;
+  int objARefCount;
+  int objBRefCount;
   undefined8 uVar8;
 
   uVar8 = FUN_8028683c();
   iVar3 = (int)((ulonglong)uVar8 >> 0x20);
   iVar4 = (int)uVar8;
-  uVar7 = (uint)*(byte *)(iVar3 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET);
-  uVar6 = (uint)*(byte *)(iVar4 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET);
-  entryWords = &DAT_803439b0;
+  objARefCount = *(u8 *)(iVar3 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET);
+  objBRefCount = *(u8 *)(iVar4 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET);
+  entry = gObjContactCallbacks;
   iVar5 = gObjContactCallbackCount;
-  while (((uVar7 != 0 && (uVar6 != 0)) && (bVar1 = iVar5 != 0, iVar5 = iVar5 + -1, bVar1))) {
-    if ((*entryWords == iVar3) && (entryWords[1] == iVar4)) {
-      uVar7 = uVar7 - 1;
-      (*(code *)entryWords[2])(iVar3,iVar4);
+  while (((objARefCount != 0 && (objBRefCount != 0)) &&
+          (bVar1 = iVar5 != 0, iVar5 = iVar5 + -1, bVar1))) {
+    if (((u32)entry->objA == (u32)iVar3) && ((u32)entry->objB == (u32)iVar4)) {
+      objARefCount = objARefCount - 1;
+      entry->callback(iVar3,iVar4);
     }
-    if ((*entryWords == iVar4) && (entryWords[1] == iVar3)) {
-      uVar6 = uVar6 - 1;
-      (*(code *)entryWords[2])(iVar4,iVar3);
+    if (((u32)entry->objA == (u32)iVar4) && ((u32)entry->objB == (u32)iVar3)) {
+      objBRefCount = objBRefCount - 1;
+      entry->callback(iVar4,iVar3);
     }
-    entryWords = entryWords + OBJCONTACT_CALLBACK_ENTRY_WORD_COUNT;
+    entry++;
   }
   FUN_80286888();
   return;
@@ -2510,31 +2515,35 @@ void ObjContact_DispatchCallbacks(void)
 #pragma peephole off
 void ObjContact_RemoveObjectCallbacks(int param_1)
 {
-  int *entryWords;
-  int iVar2;
+  ObjContactCallbackEntry *entry;
+  ObjContactCallbackEntry *lastEntry;
+  int obj;
+  int refCount;
   int iVar3;
   int iVar4;
 
-  entryWords = &DAT_803439b0;
+  entry = gObjContactCallbacks;
   iVar3 = gObjContactCallbackCount;
   while (iVar4 = iVar3 + -1, 0 < iVar3) {
-    if ((*entryWords == param_1) || (entryWords[1] == param_1)) {
+    if (((u32)entry->objA == (u32)param_1) || ((u32)entry->objB == (u32)param_1)) {
       gObjContactCallbackCount = gObjContactCallbackCount + -1;
       iVar4 = iVar3 + -2;
-      *(char *)(*entryWords + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) =
-          *(char *)(*entryWords + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) + -1;
-      *(char *)(entryWords[1] + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) =
-          *(char *)(entryWords[1] + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) + -1;
+      obj = entry->objA;
+      refCount = *(u8 *)(obj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET);
+      *(u8 *)(obj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) = refCount - 1;
+      obj = entry->objB;
+      refCount = *(u8 *)(obj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET);
+      *(u8 *)(obj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) = refCount - 1;
       iVar3 = gObjContactCallbackCount;
       if ((gObjContactCallbackCount != OBJCONTACT_CALLBACK_LAST_INDEX) &&
           (gObjContactCallbackCount != 0)) {
-        iVar2 = (&DAT_803439b4)[gObjContactCallbackCount * OBJCONTACT_CALLBACK_ENTRY_WORD_COUNT];
-        *entryWords = (&DAT_803439b0)[gObjContactCallbackCount * OBJCONTACT_CALLBACK_ENTRY_WORD_COUNT];
-        entryWords[1] = iVar2;
-        entryWords[2] = (&DAT_803439b8)[iVar3 * OBJCONTACT_CALLBACK_ENTRY_WORD_COUNT];
+        lastEntry = &gObjContactCallbacks[iVar3];
+        entry->objA = lastEntry->objA;
+        entry->objB = lastEntry->objB;
+        entry->callback = lastEntry->callback;
       }
     }
-    entryWords = entryWords + OBJCONTACT_CALLBACK_ENTRY_WORD_COUNT;
+    entry++;
     iVar3 = iVar4;
   }
   return;
@@ -2557,35 +2566,36 @@ void ObjContact_RemoveObjectCallbacks(int param_1)
  */
 undefined4 ObjContact_AddCallback(int param_1,int param_2,ObjContactCallback callback)
 {
-  int iVar1;
-  int *entryWords;
+  int count;
+  ObjContactCallbackEntry *entry;
   int iVar3;
 
-  iVar1 = gObjContactCallbackCount;
   if ((param_1 == 0) || (param_2 == 0)) {
     return 0;
   }
-  entryWords = &DAT_803439b0;
-  iVar3 = gObjContactCallbackCount;
-  if (gObjContactCallbackCount != 0) {
+  entry = gObjContactCallbacks;
+  count = gObjContactCallbackCount;
+  iVar3 = count;
+  if (count != 0) {
     do {
-      if ((*entryWords == param_1) && (entryWords[1] == param_2)) {
+      if (((u32)entry->objA == (u32)param_1) && ((u32)entry->objB == (u32)param_2)) {
         return 0;
       }
-      entryWords = entryWords + OBJCONTACT_CALLBACK_ENTRY_WORD_COUNT;
+      entry++;
       iVar3 = iVar3 + -1;
     } while (iVar3 != 0);
   }
-  if (OBJCONTACT_CALLBACK_LAST_INDEX < gObjContactCallbackCount) {
+  if (count >= OBJCONTACT_CALLBACK_CAPACITY) {
     return 0;
   }
-  (&DAT_803439b0)[gObjContactCallbackCount * OBJCONTACT_CALLBACK_ENTRY_WORD_COUNT] = param_1;
-  (&DAT_803439b4)[iVar1 * OBJCONTACT_CALLBACK_ENTRY_WORD_COUNT] = param_2;
-  (&DAT_803439b8)[iVar1 * OBJCONTACT_CALLBACK_ENTRY_WORD_COUNT] = (undefined4)callback;
-  *(char *)(param_1 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) =
-      *(char *)(param_1 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) + '\x01';
-  *(char *)(param_2 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) =
-      *(char *)(param_2 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) + '\x01';
+  entry = &gObjContactCallbacks[count];
+  entry->objA = param_1;
+  entry->objB = param_2;
+  entry->callback = callback;
+  *(u8 *)(param_1 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) =
+      *(u8 *)(param_1 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) + 1;
+  *(u8 *)(param_2 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) =
+      *(u8 *)(param_2 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) + 1;
   gObjContactCallbackCount = gObjContactCallbackCount + 1;
   return 1;
 }
