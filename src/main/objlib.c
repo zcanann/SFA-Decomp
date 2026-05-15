@@ -15,6 +15,7 @@ extern ObjHitReactEffectHandle *Resource_Acquire(int resourceId,int mode);
 extern int Sfx_PlayFromObject(int obj,int sfxId);
 extern uint buttonGetDisabled(int index);
 extern void buttonDisable(int index,uint flags);
+extern u32 randomGetRange(int min,int max);
 extern undefined4 FUN_80017640();
 extern undefined4 FUN_80017700();
 extern undefined4 FUN_80017704();
@@ -58,6 +59,7 @@ extern undefined4 FUN_80286888();
 extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
 extern f32 fn_80293E80(f32 x);
+extern f32 fn_802943F4(f32 x);
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 extern undefined4 FUN_802949e8();
@@ -134,6 +136,15 @@ extern f32 lbl_803DE974;
 extern f32 lbl_803DE978;
 extern f32 lbl_803DE980;
 extern f32 lbl_803DE984;
+extern f32 lbl_803DE998;
+extern f32 lbl_803DE99C;
+extern f32 lbl_803DE9A0;
+extern f32 lbl_803DE9A4;
+extern f32 lbl_803DE9A8;
+extern f32 lbl_803DE9AC;
+extern f32 lbl_803DE9B0;
+extern f32 lbl_803DE9B4;
+extern f32 lbl_803DE9B8;
 extern f32 lbl_803DF5F4;
 extern f32 lbl_803DF5F8;
 extern f32 lbl_803DF5FC;
@@ -3136,8 +3147,165 @@ uint fn_800386BC(f32 x,f32 y,f32 z)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80038988(int param_1,int param_2,uint param_3)
+void fn_80038988(int obj,int blinkState,uint flags)
 {
+  u8 step;
+  f32 leftScale;
+  f32 rightScale;
+  f32 phase;
+  f32 wave;
+  int joint;
+  int model;
+  int jointData;
+  int jointDataOffset;
+  int poseOffset;
+  uint jointCount;
+  s16 rotation;
+  u8 state;
+
+  step = (u8)(s32)(lbl_803DE998 * timeDelta);
+  leftScale = lbl_803DE99C;
+  rightScale = leftScale;
+  state = *(u8 *)(blinkState + 0x2b);
+  if (state == 3) {
+    *(u8 *)(blinkState + 0x2c) = (u8)((f32)*(u8 *)(blinkState + 0x2c) + timeDelta);
+    if ((s16)*(u8 *)(blinkState + 0x2d) - (s16)step < 0) {
+      *(u8 *)(blinkState + 0x2b) = 0;
+      step = *(u8 *)(blinkState + 0x2d);
+    }
+    *(u8 *)(blinkState + 0x2d) -= step;
+  }
+  else if (state < 3) {
+    if (state == 1) {
+      *(u8 *)(blinkState + 0x2c) = (u8)((f32)*(u8 *)(blinkState + 0x2c) + timeDelta);
+      if (0xff < (uint)((s16)*(u8 *)(blinkState + 0x2d) + (s16)step)) {
+        step = 0xff - *(u8 *)(blinkState + 0x2d);
+        *(u8 *)(blinkState + 0x2b) = 2;
+      }
+      *(u8 *)(blinkState + 0x2d) += step;
+    }
+    else if (state == 0) {
+      *(u8 *)(blinkState + 0x2c) = (u8)((f32)*(u8 *)(blinkState + 0x2c) + timeDelta);
+      *(u8 *)(blinkState + 0x2d) = 0;
+      if ((flags & 1) != 0) {
+        if (randomGetRange(0,100) == 1) {
+          state = *(u8 *)(blinkState + 0x2b);
+          if (state == 3) {
+            *(u8 *)(blinkState + 0x2b) = 1;
+          }
+          else if ((state < 3) && (state == 0)) {
+            *(u8 *)(blinkState + 0x2b) = 1;
+            *(u8 *)(blinkState + 0x2c) = 0;
+            *(u8 *)(blinkState + 0x2d) = 0;
+          }
+        }
+        else if (randomGetRange(0,0x4b) == 1) {
+          if (randomGetRange(0,1) == 0) {
+            *(u8 *)(blinkState + 0x2b) = 4;
+          }
+          else {
+            *(u8 *)(blinkState + 0x2b) = 5;
+          }
+        }
+      }
+    }
+    else {
+      *(u8 *)(blinkState + 0x2c) = (u8)((f32)*(u8 *)(blinkState + 0x2c) + timeDelta);
+      if (randomGetRange(0,100) == 1) {
+        state = *(u8 *)(blinkState + 0x2b);
+        if (state != 3) {
+          if (state < 3) {
+            if (state != 0) {
+              *(u8 *)(blinkState + 0x2b) = 3;
+            }
+          }
+          else if (state < 6) {
+            *(u8 *)(blinkState + 0x2b) = 0;
+          }
+        }
+      }
+    }
+  }
+  else if (state == 5) {
+    *(u8 *)(blinkState + 0x2c) =
+        (u8)(lbl_803DE9A0 * timeDelta + (f32)*(u8 *)(blinkState + 0x2c));
+    *(u8 *)(blinkState + 0x2d) = 0xff;
+    leftScale = lbl_803DE9A4;
+    if (randomGetRange(0,0x19) == 1) {
+      state = *(u8 *)(blinkState + 0x2b);
+      if (state != 3) {
+        if (state < 3) {
+          if (state != 0) {
+            *(u8 *)(blinkState + 0x2b) = 3;
+          }
+        }
+        else if (state < 6) {
+          *(u8 *)(blinkState + 0x2b) = 0;
+        }
+      }
+    }
+  }
+  else if (state < 5) {
+    *(u8 *)(blinkState + 0x2c) =
+        (u8)(lbl_803DE9A0 * timeDelta + (f32)*(u8 *)(blinkState + 0x2c));
+    *(u8 *)(blinkState + 0x2d) = 0xff;
+    rightScale = lbl_803DE9A4;
+    if (randomGetRange(0,0x19) == 1) {
+      state = *(u8 *)(blinkState + 0x2b);
+      if (state != 3) {
+        if (state < 3) {
+          if (state != 0) {
+            *(u8 *)(blinkState + 0x2b) = 3;
+          }
+        }
+        else if (state < 6) {
+          *(u8 *)(blinkState + 0x2b) = 0;
+        }
+      }
+    }
+  }
+
+  phase = lbl_803DE9AC * (f32)*(u8 *)(blinkState + 0x2c);
+  wave = (lbl_803DE9A8 * fn_802943F4(phase) * (f32)*(u8 *)(blinkState + 0x2d)) / lbl_803DE9B0;
+  rotation = (s16)(s32)((lbl_803DE9B4 * (leftScale * wave)) / lbl_803DE9B8);
+  joint = 0;
+  model = *(int *)(obj + 0x50);
+  if (model != 0) {
+    jointDataOffset = 0;
+    poseOffset = 0;
+    jointCount = (uint)*(u8 *)(model + 0x5a);
+    while (jointCount != 0) {
+      jointData = *(int *)(model + 0x10);
+      if ((*(s8 *)(jointData + *(s8 *)(obj + 0xad) + jointDataOffset + 1) != -1) &&
+          (*(s8 *)(jointData + jointDataOffset) == 5)) {
+        joint = *(int *)(obj + 0x6c) + poseOffset;
+      }
+      jointDataOffset += *(s8 *)(model + 0x55) + 1;
+      poseOffset += 0x12;
+      jointCount--;
+    }
+  }
+  *(s16 *)(joint + 2) = rotation;
+
+  rotation = (s16)(s32)((lbl_803DE9B4 * (rightScale * wave)) / lbl_803DE9B8);
+  joint = 0;
+  model = *(int *)(obj + 0x50);
+  if (model != 0) {
+    jointDataOffset = 0;
+    poseOffset = 0;
+    jointCount = (uint)*(u8 *)(model + 0x5a);
+    while (jointCount != 0) {
+      jointData = *(int *)(model + 0x10);
+      if ((*(s8 *)(jointData + *(s8 *)(obj + 0xad) + jointDataOffset + 1) != -1) &&
+          (*(s8 *)(jointData + jointDataOffset) == 4)) {
+        joint = *(int *)(obj + 0x6c) + poseOffset;
+      }
+      jointDataOffset += *(s8 *)(model + 0x55) + 1;
+      poseOffset += 0x12;
+      jointCount--;
+    }
+  }
+  *(s16 *)(joint + 2) = -rotation;
 }
 
 /*
