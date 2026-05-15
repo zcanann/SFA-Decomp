@@ -37,7 +37,7 @@ extern f32 getXZDistance(f32 *p1, f32 *p2);
 extern void gameBitIncrement(int eventId);
 extern int ObjMsg_Pop(int obj, u32 *outMessage, u32 *outSender, u32 *outParam);
 extern void ObjMsg_SendToObject(int obj, int message, int sender, int *param);
-extern void fn_80163BBC(int obj, int aux);
+extern void tumbleweed_updateRollingMotion(int obj, int aux);
 extern void fn_80163990(int obj, int aux);
 
 extern f32 timeDelta;
@@ -180,7 +180,7 @@ void fn_801641B0(int obj) {
                 }
             }
         }
-        fn_80163BBC(obj, aux);
+        tumbleweed_updateRollingMotion(obj, aux);
         (*(int(**)(int, int, f32))(*(int*)lbl_803DCAA8 + 0x18))(obj, aux, timeDelta);
         *(f32*)(aux + 0x2a0) = *(f32*)(aux + 0x2a0) - timeDelta;
         if (*(f32*)(aux + 0x2a0) >= lbl_803E2F68) {

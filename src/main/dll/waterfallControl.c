@@ -22,7 +22,7 @@ extern f32 lbl_803E3C20;
 /*
  * --INFO--
  *
- * Function: FUN_80163bbc
+ * Function: tumbleweed_updateRollingMotion
  * EN v1.0 Address: 0x80163BBC
  * EN v1.0 Size: 648b
  * EN v1.1 Address: 0x80163E3C
@@ -32,7 +32,7 @@ extern f32 lbl_803E3C20;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80163bbc(short *param_1,int param_2)
+void tumbleweed_updateRollingMotion(short *param_1,int param_2)
 {
   double dVar1;
   int iVar2;
