@@ -4919,7 +4919,7 @@ void textRenderSetupFn_80079804(void)
         GXSetTevColorOp(lbl_803DD030, 0, 0, 0, 1, 0);
         GXSetTevAlphaOp(lbl_803DD030, 0, 0, 0, 1, 0);
         lbl_803DD030 = lbl_803DD030 + 1;
-        lbl_803DD00B = lbl_803DD00B + 1;
+        lbl_803DD00B++;
     }
     GXSetNumTevStages(lbl_803DD00B);
     if (lbl_803DD009 != 0) {
