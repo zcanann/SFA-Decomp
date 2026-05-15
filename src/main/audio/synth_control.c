@@ -31,8 +31,8 @@ extern u32 synthMessageCallback;
 extern u32 synthMasterFaderActiveFlags;
 extern u32 synthMasterFaderPauseActiveFlags;
 extern u8* synthVoice;
-extern u8 synthAuxAIndex[];
-extern u8 synthAuxBIndex[];
+extern u8 synthAuxAIndex[8];
+extern u8 synthAuxBIndex[8];
 extern f32 lbl_803E77D0;
 extern f32 lbl_803E77A8;
 
@@ -60,8 +60,8 @@ extern f32 lbl_803E77A8;
 
 void synthInit(u32 sampleRate, u32 voiceCount) {
     u8* state;
-    u32 voiceOffset;
     u32 voiceIndex;
+    u32 voiceOffset;
     u32 fadeIndex;
     u32 auxIndex;
     u32* delayBucket;
@@ -185,18 +185,22 @@ void synthInit(u32 sampleRate, u32 voiceCount) {
     for (fadeIndex = 0; fadeIndex < 8; fadeIndex++) {
         *(u8*)(state + 0xA51 + fadeIndex * sizeof(SynthFade)) = 0;
     }
-    *(f32*)(state + 0x9C4) = lbl_803E77A8;
-    *(f32*)(state + 0x9F4) = lbl_803E77A8;
+    {
+        f32 auxCurrent = lbl_803E77A8;
+
+        *(f32*)(state + 0x9C4) = auxCurrent;
+        *(f32*)(state + 0x9F4) = auxCurrent;
+    }
 
     inpInit();
 
     for (auxIndex = 0; auxIndex < 8; auxIndex++) {
         *(u32*)(state + 0xC34 + auxIndex * 4) = 0;
-        *(u32*)(state + 0xC74 + auxIndex * 4) = 0;
         synthAuxAIndex[auxIndex] = 0xFF;
+        *(u32*)(state + 0xC74 + auxIndex * 4) = 0;
         synthAuxBIndex[auxIndex] = 0xFF;
-        *(u8*)(state + 0xC94 + auxIndex * 2) = 0;
         *(u8*)(state + 0xC95 + auxIndex * 2) = 0;
+        *(u8*)(state + 0xC94 + auxIndex * 2) = 0;
     }
 
     fn_80278EA4();
