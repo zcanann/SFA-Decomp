@@ -139,15 +139,15 @@ void DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateStat
   DIMbossConfig *config;
   DIMbossTopState *topState;
   byte bVar1;
-  bool bVar2;
+  bool loadWaitStarted;
   undefined4 *puVar3;
   int iVar4;
-  undefined4 uVar5;
-  uint uVar6;
+  undefined4 mapDirIndex;
+  uint statusFlags;
   undefined4 *puVar7;
   undefined4 *puVar8;
   undefined4 *puVar9;
-  int iVar10;
+  int eventIndex;
   int iVar11;
   int iVar12;
   undefined4 *puVar13;
@@ -167,8 +167,8 @@ void DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateStat
     puVar8 = (undefined4 *)0x1;
     puVar9 = (undefined4 *)0x1;
     dll_2E_func07(puVar3,animUpdate,(float *)lbl_803AC9DC,1,1);
-    for (iVar10 = 0; iVar10 < (int)(uint)animUpdate->eventCount; iVar10 = iVar10 + 1) {
-      switch(animUpdate->eventIds[iVar10]) {
+    for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1) {
+      switch(animUpdate->eventIds[eventIndex]) {
       case 1:
         (*(code *)(*lbl_803DCAB4 + 0xc))(puVar3,0x800,0,100,0);
         (*(code *)(*lbl_803DCAB4 + 0xc))(puVar3,0x800,0,100,0);
@@ -220,7 +220,7 @@ void DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateStat
         lbl_803DDB80 = lbl_803DDB80 | 0x8021;
         break;
       case DIMBOSS_EVENT_TRIGGER_DEFEAT_FLAGS:
-        *(undefined4 *)(iVar11 + 0xb0) = 10;
+        topState->defeatTimer = DIMBOSS_DEFEAT_TIMER_START;
         GameBit_Set(0x123,1);
         GameBit_Set(0x17,1);
         Music_Trigger(0x27,0);
@@ -240,60 +240,60 @@ void DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateStat
         OSReport(sDIMBossFreeingAssetsForDIMBoss);
         setLoadedFileFlags_blocks1();
         unlockLevel(0,0,1);
-        uVar5 = mapGetDirIdx(DIMBOSS_MAP_DIR);
-        mapUnload(uVar5,DIMBOSS_MAP_UNLOAD_MASK);
-        uVar5 = mapGetDirIdx(DIMBOSS_GUT_MAP_DIR);
-        mapUnload(uVar5,DIMBOSS_GUT_MAP_UNLOAD_MASK);
+        mapDirIndex = mapGetDirIdx(DIMBOSS_MAP_DIR);
+        mapUnload(mapDirIndex,DIMBOSS_MAP_UNLOAD_MASK);
+        mapDirIndex = mapGetDirIdx(DIMBOSS_GUT_MAP_DIR);
+        mapUnload(mapDirIndex,DIMBOSS_GUT_MAP_UNLOAD_MASK);
         defragMemory(0);
         break;
       case DIMBOSS_EVENT_LOAD_DIMTOP_ASSETS:
         OSReport(sDIMBossLoadingAssetsForDIMTop);
-        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
-        lockLevel(uVar5,0);
+        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+        lockLevel(mapDirIndex,0);
         mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(uVar5,DIMTOP_BOOT_DATA_FILE);
-        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(uVar5,DIMTOP_INTRO_DATA_FILE);
-        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(uVar5,DIMTOP_PLATFORM_DATA_FILE);
-        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(uVar5,DIMTOP_LIFT_DATA_FILE);
-        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(uVar5,DIMTOP_SCENE_DATA_FILE);
-        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(uVar5,DIMTOP_STEAM_DATA_FILE);
-        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(uVar5,DIMTOP_BOSS_DATA_FILE_A);
-        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(uVar5,DIMTOP_BOSS_DATA_FILE_B);
-        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(uVar5,DIMTOP_EFFECT_DATA_FILE_A);
-        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(uVar5,DIMTOP_EFFECT_DATA_FILE_B);
-        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(uVar5,DIMTOP_ROOM_DATA_FILE_A);
-        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(uVar5,DIMTOP_ROOM_DATA_FILE_B);
-        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(uVar5,DIMTOP_AUDIO_DATA_FILE_A);
-        uVar5 = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(uVar5,DIMTOP_AUDIO_DATA_FILE_B);
-        bVar2 = false;
-        while (uVar6 = getLoadedFileFlags(0), (uVar6 & 0xffefffff) != 0) {
+        mapLoadDataFile(mapDirIndex,DIMTOP_BOOT_DATA_FILE);
+        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(mapDirIndex,DIMTOP_INTRO_DATA_FILE);
+        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(mapDirIndex,DIMTOP_PLATFORM_DATA_FILE);
+        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(mapDirIndex,DIMTOP_LIFT_DATA_FILE);
+        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(mapDirIndex,DIMTOP_SCENE_DATA_FILE);
+        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(mapDirIndex,DIMTOP_STEAM_DATA_FILE);
+        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(mapDirIndex,DIMTOP_BOSS_DATA_FILE_A);
+        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(mapDirIndex,DIMTOP_BOSS_DATA_FILE_B);
+        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(mapDirIndex,DIMTOP_EFFECT_DATA_FILE_A);
+        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(mapDirIndex,DIMTOP_EFFECT_DATA_FILE_B);
+        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(mapDirIndex,DIMTOP_ROOM_DATA_FILE_A);
+        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(mapDirIndex,DIMTOP_ROOM_DATA_FILE_B);
+        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(mapDirIndex,DIMTOP_AUDIO_DATA_FILE_A);
+        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+        mapLoadDataFile(mapDirIndex,DIMTOP_AUDIO_DATA_FILE_B);
+        loadWaitStarted = false;
+        while (statusFlags = getLoadedFileFlags(0), (statusFlags & 0xffefffff) != 0) {
           padUpdate();
           checkReset();
-          if (bVar2) {
+          if (loadWaitStarted) {
             waitNextFrame();
           }
           loadDataFiles();
           dvdCheckError();
-          if (bVar2) {
+          if (loadWaitStarted) {
             mmFreeTick(0);
             gameTextRun();
             GXFlush_(1,0);
           }
           if (DAT_803dd5d0 != '\0') {
-            bVar2 = true;
+            loadWaitStarted = true;
           }
         }
         clearLoadedFileFlags_blocks1();
@@ -314,7 +314,7 @@ void DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateStat
         *(undefined4 *)(puVar3[0x32] + 0x30) = puVar3[0xc];
       }
       if ((runtime->eventGameBit != -1) &&
-          (uVar6 = GameBit_Get((int)runtime->eventGameBit), uVar6 != 0)) {
+          (statusFlags = GameBit_Get((int)runtime->eventGameBit), statusFlags != 0)) {
         puVar7 = (undefined4 *)*DAT_803dd6d4;
         (*(code *)puVar7[0x16])(animUpdate,(int)*(short *)(iVar12 + 0x2c));
         runtime->eventGameBit = -1;
