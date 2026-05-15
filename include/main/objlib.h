@@ -28,10 +28,9 @@ ushort ObjHits_IsObjectEnabled(int param_1);
 void ObjHits_SyncObjectPosition(u32 param_1);
 int ObjHits_AllocObjectState(int param_1,uint param_2);
 void ObjHits_RefreshObjectState(int param_1);
-undefined4 ObjHits_RecordObjectHit(int obj,int hitObj,char priority,undefined hitVolume,undefined sphereIndex);
-undefined4
-ObjHits_RecordPositionHit(double hitPosX,double hitPosY,double hitPosZ,int obj,int hitObj,char priority,
-            undefined hitVolume,undefined sphereIndex);
+int ObjHits_RecordObjectHit(int obj,int hitObj,char priority,u8 hitVolume,u8 sphereIndex);
+int ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hitObj,char priority,
+                              u8 hitVolume,u8 sphereIndex);
 void ObjHits_AddContactObject(int param_1,int param_2);
 void ObjHits_ResetWorkBuffers(void);
 void ObjHits_InitWorkBuffers(void);

@@ -1047,9 +1047,8 @@ void ObjHits_RefreshObjectState(int param_1)
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 ObjHits_RecordObjectHit(int obj,int hitObj,char priority,undefined hitVolume,undefined sphereIndex)
+int ObjHits_RecordObjectHit(int obj,int hitObj,char priority,u8 hitVolume,u8 sphereIndex)
 {
-  int hitObjectOffset;
   ObjHitsPriorityState *hitState;
   int hitSlot;
   
@@ -1064,32 +1063,29 @@ undefined4 ObjHits_RecordObjectHit(int obj,int hitObj,char priority,undefined hi
     (*(ObjHitsPriorityState **)(hitObj + 0x54))->lastHitObject = obj;
   }
   hitSlot = 0;
-  while( true ) {
-    hitObjectOffset = (int)hitState->priorityHitCount;
-    if (hitObjectOffset <= hitSlot) break;
-    hitObjectOffset = hitSlot * 4;
+  while (hitSlot < hitState->priorityHitCount) {
     if (hitState->hitObjects[hitSlot] == hitObj) {
-      hitSlot = (int)hitState + hitSlot;
-      if (priority < *(char *)(hitSlot + 0x75)) {
-        *(undefined *)(hitSlot + 0x72) = sphereIndex;
-        *(char *)(hitSlot + 0x75) = priority;
-        *(undefined *)(hitSlot + 0x78) = hitVolume;
-        *(undefined4 *)((int)hitState->hitPosX + hitObjectOffset) = *(undefined4 *)(obj + 0xc);
-        *(undefined4 *)((int)hitState->hitPosY + hitObjectOffset) = *(undefined4 *)(obj + 0x10);
-        *(undefined4 *)((int)hitState->hitPosZ + hitObjectOffset) = *(undefined4 *)(obj + 0x14);
+      if (hitState->priorities[hitSlot] > priority) {
+        hitState->sphereIndices[hitSlot] = sphereIndex;
+        hitState->priorities[hitSlot] = priority;
+        hitState->hitVolumes[hitSlot] = hitVolume;
+        hitState->hitPosX[hitSlot] = *(float *)(obj + 0xc);
+        hitState->hitPosY[hitSlot] = *(float *)(obj + 0x10);
+        hitState->hitPosZ[hitSlot] = *(float *)(obj + 0x14);
       }
       hitSlot = hitState->priorityHitCount + 1;
     }
     hitSlot = hitSlot + 1;
   }
-  if ((hitSlot == hitObjectOffset) && (hitObjectOffset < OBJHITS_PRIORITY_HIT_COUNT)) {
-    hitState->sphereIndices[hitObjectOffset] = sphereIndex;
+  if ((hitSlot == hitState->priorityHitCount) &&
+      (hitState->priorityHitCount < OBJHITS_PRIORITY_HIT_COUNT)) {
+    hitState->sphereIndices[hitState->priorityHitCount] = sphereIndex;
     *(char *)((int)hitState->priorities + hitState->priorityHitCount) = priority;
     *(undefined *)((int)hitState->hitVolumes + hitState->priorityHitCount) = hitVolume;
     hitState->hitObjects[hitState->priorityHitCount] = hitObj;
-    *(undefined4 *)((int)hitState->hitPosX + hitState->priorityHitCount * 4) = *(undefined4 *)(obj + 0xc);
-    *(undefined4 *)((int)hitState->hitPosY + hitState->priorityHitCount * 4) = *(undefined4 *)(obj + 0x10);
-    *(undefined4 *)((int)hitState->hitPosZ + hitState->priorityHitCount * 4) = *(undefined4 *)(obj + 0x14);
+    hitState->hitPosX[hitState->priorityHitCount] = *(float *)(obj + 0xc);
+    hitState->hitPosY[hitState->priorityHitCount] = *(float *)(obj + 0x10);
+    hitState->hitPosZ[hitState->priorityHitCount] = *(float *)(obj + 0x14);
     hitState->priorityHitCount = hitState->priorityHitCount + '\x01';
   }
   return 1;
@@ -1110,9 +1106,9 @@ undefined4 ObjHits_RecordObjectHit(int obj,int hitObj,char priority,undefined hi
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-ObjHits_RecordPositionHit(double hitPosX,double hitPosY,double hitPosZ,int obj,int hitObj,char priority,
-            undefined hitVolume,undefined sphereIndex)
+int
+ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hitObj,char priority,
+            u8 hitVolume,u8 sphereIndex)
 {
   int hitObjectOffset;
   int hitSlot;
@@ -1139,9 +1135,9 @@ ObjHits_RecordPositionHit(double hitPosX,double hitPosY,double hitPosZ,int obj,i
         *(undefined *)(hitSlot + 0x72) = sphereIndex;
         *(char *)(hitSlot + 0x75) = priority;
         *(undefined *)(hitSlot + 0x78) = hitVolume;
-        *(float *)((int)hitState->hitPosX + hitObjectOffset) = (float)hitPosX;
-        *(float *)((int)hitState->hitPosY + hitObjectOffset) = (float)hitPosY;
-        *(float *)((int)hitState->hitPosZ + hitObjectOffset) = (float)hitPosZ;
+        *(float *)((int)hitState->hitPosX + hitObjectOffset) = hitPosX;
+        *(float *)((int)hitState->hitPosY + hitObjectOffset) = hitPosY;
+        *(float *)((int)hitState->hitPosZ + hitObjectOffset) = hitPosZ;
       }
       hitSlot = hitState->priorityHitCount + 1;
     }
@@ -1152,9 +1148,9 @@ ObjHits_RecordPositionHit(double hitPosX,double hitPosY,double hitPosZ,int obj,i
     *(char *)((int)hitState->priorities + hitState->priorityHitCount) = priority;
     *(undefined *)((int)hitState->hitVolumes + hitState->priorityHitCount) = hitVolume;
     hitState->hitObjects[hitState->priorityHitCount] = hitObj;
-    *(float *)((int)hitState->hitPosX + hitState->priorityHitCount * 4) = (float)hitPosX;
-    *(float *)((int)hitState->hitPosY + hitState->priorityHitCount * 4) = (float)hitPosY;
-    *(float *)((int)hitState->hitPosZ + hitState->priorityHitCount * 4) = (float)hitPosZ;
+    *(float *)((int)hitState->hitPosX + hitState->priorityHitCount * 4) = hitPosX;
+    *(float *)((int)hitState->hitPosY + hitState->priorityHitCount * 4) = hitPosY;
+    *(float *)((int)hitState->hitPosZ + hitState->priorityHitCount * 4) = hitPosZ;
     hitState->priorityHitCount = hitState->priorityHitCount + '\x01';
   }
   return 1;

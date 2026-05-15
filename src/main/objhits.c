@@ -9,8 +9,9 @@ extern undefined4 mtxRotateByVec3s();
 extern undefined4 setMatrixFromObjectPos();
 extern int FUN_80017970();
 extern undefined4 ObjList_GetObjects();
-extern undefined4 ObjHits_RecordObjectHit();
-extern undefined4 ObjHits_RecordPositionHit();
+extern int ObjHits_RecordObjectHit(int obj,int hitObj,char priority,u8 hitVolume,u8 sphereIndex);
+extern int ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hitObj,char priority,
+                                     u8 hitVolume,u8 sphereIndex);
 extern undefined4 ObjContact_DispatchCallbacks();
 extern byte FUN_80063a68();
 extern undefined4 FUN_80063a74();

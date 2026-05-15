@@ -66,7 +66,7 @@ typedef struct ObjHitsPriorityState {
   u8 pad00[0x50];
   int lastHitObject;
   u8 pad54[0x0C];
-  u16 flags;
+  s16 flags;
   u8 pad62[0x0F];
   s8 priorityHitCount;
   s8 sphereIndices[OBJHITS_PRIORITY_HIT_COUNT];
