@@ -45,8 +45,8 @@ void fn_801BE19C(u8 *arg1, u8 *unused2, u8 *arg3, u8 *arg4)
 
   arg4[0x25F] = 1;
 
-  vt = (u8 *)*(int *)lbl_803DCAB8;
-  ((void (*)(u8 *, u8 *, f32, int, u8 *))*(void **)(vt + 0x2C))(arg1, arg4, timer, 1, vt);
+  (*(void (**)(u8 *, u8 *, double, int))(*(int *)lbl_803DCAB8 + 0x2C))(
+      arg1, arg4, (double)timer, 1);
 
   vt = (u8 *)*(int *)lbl_803DCAB8;
   ((void (*)(u8 *, u8 *, u8 *, s16, u8 *, int, int, int))*(void **)(vt + 0x54))(
@@ -103,9 +103,8 @@ void fn_801BE19C(u8 *arg1, u8 *unused2, u8 *arg3, u8 *arg4)
   *(u32 *)(arg3 + 0x3E0) = *(u32 *)(arg1 + 0xC0);
   *(u32 *)(arg1 + 0xC0) = 0;
 
-  vt = (u8 *)*(int *)lbl_803DCA8C;
-  ((void (*)(u8 *, u8 *, u8 *, u8 *, u8 *, f32, f32))*(void **)(vt + 0x8))(
-      arg1, arg4, lbl_803DDBB0, lbl_803DDBA8, vt, timeDelta, timeDelta);
+  (*(void (**)(double, double, u8 *, u8 *, u8 *, u8 *))(*(int *)lbl_803DCA8C + 0x8))(
+      (double)timeDelta, (double)timeDelta, arg1, arg4, lbl_803DDBB0, lbl_803DDBA8);
 
   *(u32 *)(arg1 + 0xC0) = *(u32 *)(arg3 + 0x3E0);
 }
