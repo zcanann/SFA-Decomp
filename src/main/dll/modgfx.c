@@ -4535,3 +4535,28 @@ int projgfx_setzscale_doUnsupported(void) { OSReport(sProjgfxSetzscaleDoNoLonger
 
 /* Pattern wrappers. */
 int fn_800A3AB4(void) { return -0x1; }
+
+u32 projgfx_funcs[] = {
+    0,
+    0,
+    0,
+    0x000A0000,
+    (u32)projgfx_initialise,
+    (u32)projgfx_release_doUnsupported,
+    0,
+    (u32)projgfx_onMapSetup,
+    (u32)fn_800A3AB4,
+    (u32)fn_800A3AB0,
+    (u32)fn_800A3AAC,
+    (u32)fn_800A3AA8,
+    (u32)fn_800A3AA0,
+    (u32)projgfx_setzscale_doUnsupported,
+    (u32)projgfx_rayhit_doUnsupported,
+};
+
+char sProjgfxRayhitDoNoLongerSupported[] = "<projgfx rayhit Do>No Longer supported \n";
+static u8 sProjgfxStringPad0[] = { 0, 0, 0 };
+char sProjgfxSetzscaleDoNoLongerSupported[] = "<projgfx setzscale  Do>No Longer supported \n";
+static u8 sProjgfxStringPad1[] = { 0, 0, 0 };
+char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
+static u8 sProjgfxStringPad2[] = { 0, 0, 0, 0, 0, 0 };

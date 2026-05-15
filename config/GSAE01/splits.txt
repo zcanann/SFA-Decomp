@@ -85,6 +85,7 @@ main/expgfx.c:
 
 main/dll/modgfx.c:
 	.text       start:0x8009FED0 end:0x800C291C
+	.data       start:0x8030FD20 end:0x8030FDE8
 
 main/dll/modelfx.c:
 	.text       start:0x800C291C end:0x800C8008
