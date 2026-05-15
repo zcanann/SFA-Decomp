@@ -2513,7 +2513,6 @@ void curves_addCurveDef(int curve)
   int *slot;
   int count;
   int insertIndex;
-  int remaining;
 
   count = gRomCurveCount;
   if (count == ROMCURVE_MAX_CURVES) {
@@ -2521,20 +2520,14 @@ void curves_addCurveDef(int curve)
     return;
   }
 
-  insertIndex = 0;
-  slot = gRomCurveTable;
-  while ((insertIndex < count) &&
-         (RomCurve_GetId(curve) > RomCurve_GetId(*slot))) {
+  for (insertIndex = 0, slot = gRomCurveTable;
+       (insertIndex < count) && (RomCurve_GetId(curve) > RomCurve_GetId(*slot));
+       insertIndex++) {
     slot = slot + 1;
-    insertIndex = insertIndex + 1;
   }
 
-  slot = gRomCurveTable + count;
-  remaining = count - insertIndex;
-  while (remaining > 0) {
-    *slot = slot[-1];
-    slot = slot + -1;
-    remaining = remaining + -1;
+  for (count = count; count > insertIndex; count--) {
+    gRomCurveTable[count] = gRomCurveTable[count - 1];
   }
 
   gRomCurveCount = gRomCurveCount + 1;
