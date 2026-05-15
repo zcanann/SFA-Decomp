@@ -92,7 +92,6 @@ void *fn_801C1238(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f32 e
   f32 dy;
   f32 dz;
   f32 length;
-  f32 invSegments;
   f32 zero;
 
   dx = endX - startX;
@@ -100,10 +99,9 @@ void *fn_801C1238(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f32 e
   dz = endZ - startZ;
   length = sqrtf(dz * dz + (dx * dx + dy * dy));
 
-  invSegments = (f32)(count - 1);
-  dx = dx / invSegments;
-  dy = dy / invSegments;
-  dz = dz / invSegments;
+  dx = dx / (f32)(count - 1);
+  dy = dy / (f32)(count - 1);
+  dz = dz / (f32)(count - 1);
 
   rope = (DFRope *)mmAlloc(count * sizeof(DFRopeNode) + (count - 1) * sizeof(DFRopeLink) + sizeof(DFRope),
                            0xFF, 0);
@@ -141,8 +139,6 @@ void *fn_801C1238(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f32 e
     node->force[2] = zero;
     node->force[1] = zero;
     node->force[0] = zero;
-    node->links[1] = NULL;
-    node->links[0] = NULL;
     node->locked = 0;
     if ((i == 0) || (i == count - 1)) {
       node->linkCount = 1;
