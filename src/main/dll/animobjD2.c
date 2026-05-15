@@ -71,7 +71,11 @@ void trickyUpdateCirclingTargetPosition(void *p1, void *p2) {
     if (delta > 0x8000) delta -= 0xFFFF;
     if (delta < -0x8000) delta += 0xFFFF;
 
-    absDelta = (delta < 0) ? -delta : delta;
+    if (delta >= 0) {
+        absDelta = delta;
+    } else {
+        absDelta = -delta;
+    }
     if (absDelta < 0x2000) {
         *(s32 *)((u8 *)p2 + 0x704) =
             *(volatile s32 *)((u8 *)p2 + 0x704) + (*(s32 *)((u8 *)p2 + 0x700) << 11);
