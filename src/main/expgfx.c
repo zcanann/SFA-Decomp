@@ -698,23 +698,24 @@ void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_
 #pragma peephole off
 int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
 {
+  u16 *refCount;
   ExpgfxTableEntry *entry;
   ExpgfxTableEntry *entryBase;
   int tableIndex;
   int freeIndex;
   
   tableIndex = 0;
-  entryBase = gExpgfxTableEntries;
-  entry = entryBase;
+  entry = gExpgfxTableEntries;
+  entryBase = entry;
   for (; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++) {
     if (((entry->refCount != 0 && (entry->textureOrResource == textureOrResource)) &&
         (entry->key0 == key0)) && (entry->key1 == key1)) {
-      entry = &gExpgfxTableEntries[tableIndex];
-      if (entry->refCount >= EXPGFX_EXPTAB_REFCOUNT_MAX) {
+      refCount = &gExpgfxTableEntries[tableIndex].refCount;
+      if (*refCount >= EXPGFX_EXPTAB_REFCOUNT_MAX) {
         debugPrintf(sExpgfxAddToTableUsageOverflow);
         return EXPGFX_INVALID_TABLE_INDEX;
       }
-      entry->refCount++;
+      (*refCount)++;
       return (int)(short)tableIndex;
     }
     entry = entry + 1;
