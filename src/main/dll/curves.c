@@ -63,6 +63,9 @@ extern f64 DOUBLE_803e12a8;
 extern f64 DOUBLE_803e12f0;
 extern f64 DOUBLE_803e1318;
 extern f32 lbl_803E1290;
+extern f32 lbl_803E0634;
+extern f32 lbl_803E0638;
+extern f32 lbl_803E0658;
 extern f32 lbl_803E12B0;
 extern f32 lbl_803E12B4;
 extern f32 lbl_803E12B8;
@@ -93,12 +96,40 @@ static inline u32 RomCurve_GetId(int curve) {
   return ((RomCurveDef *)curve)->id;
 }
 
+static inline RomCurveDef *RomCurve_FindByIdInline(u32 curveId) {
+  RomCurveDef *curve;
+  int high;
+  int low;
+  int mid;
+
+  if ((s32)curveId < 0) {
+    return NULL;
+  }
+
+  high = gRomCurveCount - 1;
+  low = 0;
+  while (low <= high) {
+    mid = (high + low) >> 1;
+    curve = (RomCurveDef *)gRomCurveTable[mid];
+    if (curveId <= curve->id) {
+      if (curve->id <= curveId) {
+        return curve;
+      }
+      high = mid - 1;
+    } else {
+      low = mid + 1;
+    }
+  }
+
+  return NULL;
+}
+
 /*
  * --INFO--
  *
- * Function: FUN_800e1b24
+ * Function: fn_800E1B24
  * EN v1.0 Address: 0x800E1B24
- * EN v1.0 Size: 8b
+ * EN v1.0 Size: 1048b
  * EN v1.1 Address: 0x800E1DA8
  * EN v1.1 Size: 1048b
  * JP Address: TODO
@@ -107,10 +138,110 @@ static inline u32 RomCurve_GetId(int curve) {
  * PAL Size: TODO
  */
 undefined4
-FUN_800e1b24(double param_1,double param_2,double param_3,uint *param_4,float *param_5,
-            float *param_6,float *param_7)
+fn_800E1B24(double x,double y,double z,u32 *curveIds,float *outLateralOffset,
+            float *outVerticalOffset,float *outPhase)
 {
+  RomCurveDef *curves[4];
+  RomCurveDef *prevCurve;
+  RomCurveDef *segmentStart;
+  RomCurveDef *segmentEnd;
+  RomCurveDef *nextCurve;
+  f32 segmentDx;
+  f32 segmentDy;
+  f32 segmentDz;
+  f32 tangentDx;
+  f32 tangentDz;
+  f32 nextTangentDx;
+  f32 nextTangentDz;
+  f32 tangentLen;
+  f32 nextTangentLen;
+  f32 startDenom;
+  f32 endDenom;
+  f32 startPhase;
+  f32 endPhase;
+  f32 phase;
+  f32 segmentLen;
+  f32 lateralX;
+  f32 lateralZ;
+  int i;
+
+  for (i = 0; i < 4; i++) {
+    curves[i] = RomCurve_FindByIdInline(curveIds[i]);
+  }
+
+  prevCurve = curves[0];
+  segmentStart = curves[1];
+  segmentEnd = curves[2];
+  nextCurve = curves[3];
+
+  segmentDx = segmentEnd->x - segmentStart->x;
+  segmentDz = segmentEnd->z - segmentStart->z;
+  tangentDx = segmentDx;
+  tangentDz = segmentDz;
+  if (prevCurve != NULL) {
+    tangentDx = segmentStart->x - prevCurve->x;
+    tangentDz = segmentStart->z - prevCurve->z;
+  }
+  tangentDx = lbl_803E0658 * (tangentDx + segmentDx);
+  tangentDz = lbl_803E0658 * (tangentDz + segmentDz);
+  tangentLen = sqrtf(tangentDx * tangentDx + tangentDz * tangentDz);
+  if (tangentLen != lbl_803E0638) {
+    tangentDx = tangentDx / tangentLen;
+    tangentDz = tangentDz / tangentLen;
+  }
+
+  startDenom = tangentDx * segmentDx + tangentDz * segmentDz;
+  startPhase = lbl_803E0638;
+  if (startDenom != lbl_803E0638) {
+    startPhase =
+        -(-((tangentDx * segmentStart->x) + (tangentDz * segmentStart->z)) +
+          ((tangentDx * (f32)x) + (tangentDz * (f32)z))) /
+        startDenom;
+  }
+
+  nextTangentDx = segmentDx;
+  nextTangentDz = segmentDz;
+  if (nextCurve != NULL) {
+    nextTangentDx = nextCurve->x - segmentEnd->x;
+    nextTangentDz = nextCurve->z - segmentEnd->z;
+  }
+  nextTangentDx = lbl_803E0658 * (nextTangentDx + segmentDx);
+  nextTangentDz = lbl_803E0658 * (nextTangentDz + segmentDz);
+  nextTangentLen = sqrtf(nextTangentDx * nextTangentDx + nextTangentDz * nextTangentDz);
+  if (nextTangentLen != lbl_803E0638) {
+    nextTangentDx = nextTangentDx / nextTangentLen;
+    nextTangentDz = nextTangentDz / nextTangentLen;
+  }
+
+  endDenom = nextTangentDx * segmentDx + nextTangentDz * segmentDz;
+  endPhase = lbl_803E0638;
+  if (endDenom != lbl_803E0638) {
+    endPhase =
+        -(-((nextTangentDx * segmentEnd->x) + (nextTangentDz * segmentEnd->z)) +
+          ((nextTangentDx * (f32)x) + (nextTangentDz * (f32)z))) /
+        endDenom;
+  }
+
+  phase = -startPhase / (endPhase - startPhase);
+  if ((phase < lbl_803E0638) || (lbl_803E0634 <= phase)) {
     return 0;
+  }
+
+  segmentDy = segmentEnd->y - segmentStart->y;
+  segmentLen = sqrtf(segmentDz * segmentDz + segmentDx * segmentDx + segmentDy * segmentDy);
+  lateralX = segmentDx;
+  lateralZ = segmentDz;
+  if (lbl_803E0638 < segmentLen) {
+    lateralX = -segmentDx * (lbl_803E0634 / segmentLen);
+    lateralZ = -segmentDz * (lbl_803E0634 / segmentLen);
+  }
+
+  *outLateralOffset = -(((segmentDx * phase + segmentStart->x) * lateralZ) -
+                        ((segmentDz * phase + segmentStart->z) * lateralX)) +
+                      ((f32)x * lateralZ - (f32)z * lateralX);
+  *outVerticalOffset = (f32)y - (segmentDy * phase + segmentStart->y);
+  *outPhase = phase;
+  return 1;
 }
 
 /*

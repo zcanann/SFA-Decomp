@@ -25,7 +25,7 @@ extern int FUN_800620e8();
 extern undefined4 FUN_800723a0();
 extern undefined4 FUN_800d8088();
 extern undefined4 FUN_800d8240();
-extern int FUN_800e1b24();
+extern int fn_800E1B24();
 extern int FUN_800e1c00();
 extern int RomCurve_findByIdWithIndex();
 extern undefined4 RomCurve_getAdjacentWindow();
@@ -4208,7 +4208,7 @@ LAB_800e1c9c:
         return param_4;
       }
       RomCurve_getAdjacentWindow(param_4,(int *)auStack_5c);
-      iVar2 = FUN_800e1b24(param_1,param_2,param_3,auStack_5c,&local_70,&local_74,&local_78);
+      iVar2 = fn_800E1B24(param_1,param_2,param_3,auStack_5c,&local_70,&local_74,&local_78);
       if ((((iVar2 != 0) && (lbl_803E12C8 < local_70)) && (local_70 < lbl_803E12CC)) &&
          ((lbl_803E12D0 < local_74 && (local_74 < lbl_803E12D4)))) {
         *param_5 = local_78;
