@@ -298,7 +298,7 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
   s16 *moveEntry;
   int iVar3;
   s16 *moveEntryTable;
-  s16 firstEntryIndex;
+  s16 firstEntryOffset;
 
   moveEntryTable = (s16 *)((ObjAnimDef *)((ObjAnimComponent *)objAnim)->modelInstance)->hitReactMoveTable;
   hitState->activeEntryCount = 0;
@@ -306,16 +306,18 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
     iVar3 = 0;
     for (moveEntry = moveEntryTable; *moveEntry != -1; moveEntry = moveEntry + 3, iVar3 = iVar3 + 3) {
       if (moveId == *moveEntry) {
-        firstEntryIndex = moveEntryTable[iVar3 + 1];
+        firstEntryOffset = moveEntryTable[iVar3 + 1];
         hitState->activeEntryCount = moveEntryTable[iVar3 + 2];
         if (hitState->activeEntryCount > hitState->entryCapacity) {
           hitState->activeEntryCount = hitState->entryCapacity;
         }
         if (async == 0) {
-          getTabEntry(hitState->entries,0x41,(int)firstEntryIndex,(int)hitState->activeEntryCount);
+          getTabEntry(hitState->entries,OBJHITREACT_ENTRY_TAB_FILE_ID,(int)firstEntryOffset,
+                      (int)hitState->activeEntryCount);
           return;
         }
-        fileLoadToBufferOffset(0x41,hitState->entries,(int)firstEntryIndex,(int)hitState->activeEntryCount);
+        fileLoadToBufferOffset(OBJHITREACT_ENTRY_TAB_FILE_ID,hitState->entries,
+                               (int)firstEntryOffset,(int)hitState->activeEntryCount);
         return;
       }
     }
@@ -349,13 +351,13 @@ uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitSt
   if (bank == (ObjAnimBank *)0x0) {
     return entryArena;
   }
-  hitState->entryCapacity = 300;
+  hitState->entryCapacity = OBJHITREACT_ENTRY_ARENA_BYTES;
   entries = (ObjHitReactEntry *)roundUpTo8(entryArena);
   hitState->entries = entries;
   entryArena = (uint)entries + hitState->entryCapacity;
-  hitState->activeHitboxMode = 1;
-  if ((hitState->resetFlags & 0x30) != 0) {
-    hitState->resetHitboxMode = 2;
+  hitState->activeHitboxMode = OBJHITREACT_ACTIVE_HITBOX_MODE;
+  if ((hitState->resetFlags & OBJHITREACT_RESET_MODE_MASK) != 0) {
+    hitState->resetHitboxMode = OBJHITREACT_RESET_HITBOX_MODE;
   }
   ObjHitReact_LoadMoveEntries(objAnim,bank,objType,hitState,0,1);
   return entryArena;
