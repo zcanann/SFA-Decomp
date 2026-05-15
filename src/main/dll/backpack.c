@@ -512,6 +512,7 @@ int fn_801653D8(int obj, int stateWord) {
     f32 x;
     f32 y;
     f32 z;
+    int countdown;
 
     state = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
     player = (int)Obj_GetPlayerObject();
@@ -521,25 +522,47 @@ int fn_801653D8(int obj, int stateWord) {
         *(f32 *)(state + 0x60) = lbl_803E2FFC;
         ObjHits_DisableObject(obj);
     }
-    if ((*(s8 *)(state + 0x90) == 6) ||
-        ((((player != 0 && *(f32 *)(state + 0x48) <= *(f32 *)(player + 0x18)) &&
-           ((*(f32 *)(player + 0x18) <= *(f32 *)(state + 0x4c) ||
-             *(f32 *)(state + 0x5c) <= *(f32 *)(player + 0x1c)))) &&
-          ((*(f32 *)(player + 0x1c) <= *(f32 *)(state + 0x58) ||
-            *(f32 *)(state + 0x54) <= *(f32 *)(player + 0x20)) &&
-           *(f32 *)(player + 0x20) <= *(f32 *)(state + 0x50))))) {
-        x = -(lbl_803E3000 * (*(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc)) - *(f32 *)(obj + 0xc));
-        y = -(lbl_803E3000 * (*(f32 *)(player + 0x10) - *(f32 *)(obj + 0x10)) - *(f32 *)(obj + 0x10));
-        z = -(lbl_803E3000 * (*(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14)) - *(f32 *)(obj + 0x14));
-        scale = lbl_803E2FF4;
-    } else {
+    if (*(u8 *)(state + 0x90) == 6) {
+        goto use_player_reflect_position;
+    }
+    if (player == 0) {
+        goto use_object_position;
+    }
+    if (*(f32 *)(player + 0x18) < *(f32 *)(state + 0x48)) {
+        goto use_object_position;
+    }
+    if (*(f32 *)(player + 0x18) > *(f32 *)(state + 0x4c)) {
+        if (*(f32 *)(player + 0x1c) < *(f32 *)(state + 0x5c)) {
+            goto use_object_position;
+        }
+    }
+    if (*(f32 *)(player + 0x1c) > *(f32 *)(state + 0x58)) {
+        if (*(f32 *)(player + 0x20) < *(f32 *)(state + 0x54)) {
+            goto use_object_position;
+        }
+    }
+    if (*(f32 *)(player + 0x20) > *(f32 *)(state + 0x50)) {
+        goto use_object_position;
+    }
+    goto use_player_reflect_position;
+use_object_position:
+    {
         x = *(f32 *)(obj + 0xc);
         y = *(f32 *)(obj + 0x10);
         z = *(f32 *)(obj + 0x14);
         scale = lbl_803E2FDC;
+        goto update_action;
     }
+use_player_reflect_position:
+    {
+        x = *(f32 *)(obj + 0xc) - lbl_803E3000 * (*(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc));
+        y = *(f32 *)(obj + 0x10) - lbl_803E3000 * (*(f32 *)(player + 0x10) - *(f32 *)(obj + 0x10));
+        z = *(f32 *)(obj + 0x14) - lbl_803E3000 * (*(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14));
+        scale = lbl_803E2FF4;
+    }
+update_action:
     fn_80166A50(x, y, z, scale, obj);
-    if (*(s8 *)(state + 0x90) == 6) {
+    if (*(u8 *)(state + 0x90) == 6) {
         if (((*(u8 *)(state + 0x92) >> 2) & 1) == 0) {
             fn_80166444(obj, state);
         } else {
@@ -548,8 +571,9 @@ int fn_801653D8(int obj, int stateWord) {
     } else {
         fn_80165C8C(obj, state);
     }
-    if ((u16)framesThisStep < *(u16 *)(state + 0x8e)) {
-        *(u16 *)(state + 0x8e) = *(u16 *)(state + 0x8e) - (u16)framesThisStep;
+    countdown = *(u16 *)(state + 0x8e);
+    if (countdown > (int)(u32)framesThisStep) {
+        *(u16 *)(state + 0x8e) = countdown - (u32)framesThisStep;
         return 0;
     }
     return 2;
